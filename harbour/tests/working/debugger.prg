@@ -18,7 +18,7 @@ function Main()
    CLS
    oMenu:Display()
 
-   SET COLOR TO GR+/B
+   SET COLOR TO BG+/B
    @ 1, 0 CLEAR TO MaxRow() - 6, MaxCol()
 
    @ 1, 0, MaxRow() - 6, MaxCol() BOX B_DOUBLE
@@ -27,17 +27,17 @@ function Main()
    @ MaxRow() - 5, ( MaxCol() / 2 ) - 4 SAY " Command "
 
    @ MaxRow(), 0 SAY ;
-   "F1-Help F2-Zoom F3-Repeat F4-User F5-Go F6-WA F7-Here F8-Step F9-BkPt F10-Trace" COLOR "N/W"
-   @ MaxRow(),  0 SAY "F1" COLOR "R/W"
-   @ MaxRow(),  8 SAY "F2" COLOR "R/W"
-   @ MaxRow(), 16 SAY "F3" COLOR "R/W"
-   @ MaxRow(), 26 SAY "F4" COLOR "R/W"
-   @ MaxRow(), 34 SAY "F5" COLOR "R/W"
-   @ MaxRow(), 40 SAY "F6" COLOR "R/W"
-   @ MaxRow(), 46 SAY "F7" COLOR "R/W"
-   @ MaxRow(), 54 SAY "F8" COLOR "R/W"
-   @ MaxRow(), 62 SAY "F9" COLOR "R/W"
-   @ MaxRow(), 70 SAY "F10" COLOR "R/W"
+   "F1-Help F2-Zoom F3-Repeat F4-User F5-Go F6-WA F7-Here F8-Step F9-BkPt F10-Trace" COLOR "N/BG"
+   @ MaxRow(),  0 SAY "F1" COLOR "GR+/BG"
+   @ MaxRow(),  8 SAY "F2" COLOR "GR+/BG"
+   @ MaxRow(), 16 SAY "F3" COLOR "GR+/BG"
+   @ MaxRow(), 26 SAY "F4" COLOR "GR+/BG"
+   @ MaxRow(), 34 SAY "F5" COLOR "GR+/BG"
+   @ MaxRow(), 40 SAY "F6" COLOR "GR+/BG"
+   @ MaxRow(), 46 SAY "F7" COLOR "GR+/BG"
+   @ MaxRow(), 54 SAY "F8" COLOR "GR+/BG"
+   @ MaxRow(), 62 SAY "F9" COLOR "GR+/BG"
+   @ MaxRow(), 70 SAY "F10" COLOR "GR+/BG"
 
    while ! lEnd
 
@@ -118,10 +118,10 @@ METHOD New() CLASS TDbMenu
    ::nBottom      = 0
    ::nRight       = 0
    ::aItems       = {}
-   ::cClrHilite   = "GR+/B"
-   ::cClrHotFocus = "R/BG"
-   ::cClrHotKey   = "R/W"
-   ::cClrPopup    = "N/W"
+   ::cClrHilite   = "W+/N"
+   ::cClrHotFocus = "GR+/N"
+   ::cClrHotKey   = "GR+/BG"
+   ::cClrPopup    = "N/BG"
    ::nOpenPopup   = 0
 
    AAdd( ::aMenus, Self )
