@@ -83,7 +83,6 @@ FUNCTION __dbOpenSDF()     ; RETURN NIL
 FUNCTION __dbTrans()       ; RETURN NIL
 FUNCTION __dbTransRec()    ; RETURN NIL
 
-FUNCTION dbEdit()          ; RETURN NIL
 FUNCTION __TypeFile()      ; RETURN NIL
 FUNCTION __LabelForm()     ; RETURN NIL
 FUNCTION __ReportForm()    ; RETURN NIL

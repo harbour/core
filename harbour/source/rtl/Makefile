@@ -57,6 +57,7 @@ PRG_SOURCES=\
         asort.prg \
         browdb.prg \
         browse.prg \
+        dbedit.prg \
         devoutp.prg \
         dircmd.prg \
         dummy.prg \

@@ -1,3 +1,11 @@
+19991111-06:02 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/dbedit.prg
+    source/rtl/dummy.prg
+    source/rtl/Makefile
+    doc/funclist.txt
+    + DBEDIT() function added.
+      Please update other makefiles.
+
 19991111-05:39 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/fm.c
     ! hb_xalloc() chaining bug fixed.
