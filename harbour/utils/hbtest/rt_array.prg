@@ -42,76 +42,100 @@ FUNCTION Main_ARRAY()
 
    /* ARRAY function error conditions. */
 
+#ifndef __XPP__
    TEST_LINE( aCopy()                         , NIL                                        )
+#endif
    TEST_LINE( aCopy({}, "C")                  , NIL                                        )
    TEST_LINE( aCopy("C", {})                  , NIL                                        )
    TEST_LINE( aCopy({}, {})                   , "{.[0].}"                                  )
    TEST_LINE( aCopy({}, ErrorNew())           , "ERROR Object"                             )
    TEST_LINE( aCopy(ErrorNew(), {})           , "{.[0].}"                                  )
+#ifndef __XPP__
    TEST_LINE( aClone()                        , NIL                                        )
+#endif
    TEST_LINE( aClone( NIL )                   , NIL                                        )
    TEST_LINE( aClone( {} )                    , "{.[0].}"                                  )
    TEST_LINE( aClone( ErrorNew() )            , NIL                                        )
+#ifndef __XPP__
    TEST_LINE( aEval()                         , "E BASE 2017 Argument error AEVAL "        )
    TEST_LINE( aEval( NIL )                    , "E BASE 2017 Argument error AEVAL "        )
    TEST_LINE( aEval( {} )                     , "E BASE 2017 Argument error AEVAL "        )
+#endif
    TEST_LINE( aEval( {}, NIL )                , "E BASE 2017 Argument error AEVAL "        )
    TEST_LINE( aEval( {}, {|| NIL } )          , "{.[0].}"                                  )
    TEST_LINE( aEval( ErrorNew(), {|| NIL } )  , "ERROR Object"                             )
+#ifndef __XPP__
    TEST_LINE( aScan()                         , 0                                          )
    TEST_LINE( aScan( NIL )                    , 0                                          )
    TEST_LINE( aScan( "A" )                    , 0                                          )
    TEST_LINE( aScan( {} )                     , 0                                          )
+#endif
    TEST_LINE( aScan( {}, "" )                 , 0                                          )
    TEST_LINE( aScan( ErrorNew(), "NOT_FOUND") , 0                                          )
+#ifndef __XPP__
    TEST_LINE( aSort()                         , NIL                                        )
+#endif
    TEST_LINE( aSort(10)                       , NIL                                        )
    TEST_LINE( aSort({})                       , "{.[0].}"                                  )
    TEST_LINE( aSort(ErrorNew())               , NIL                                        )
 #ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+#ifndef __XPP__
    TEST_LINE( aFill()                         , "E BASE 2017 Argument error AEVAL "        )
+#endif
    TEST_LINE( aFill( NIL )                    , "E BASE 2017 Argument error AEVAL "        )
 #else
+#ifndef __XPP__
    TEST_LINE( aFill()                         , "E BASE 9999 Argument error AFILL "        )
+#endif
    TEST_LINE( aFill( NIL )                    , "E BASE 9999 Argument error AFILL "        )
 #endif
    TEST_LINE( aFill( {} )                     , "{.[0].}"                                  )
    TEST_LINE( aFill( {}, 1 )                  , "{.[0].}"                                  )
    TEST_LINE( aFill( ErrorNew() )             , "ERROR Object"                             )
    TEST_LINE( aFill( ErrorNew(), 1 )          , "ERROR Object"                             )
+#ifndef __XPP__
    TEST_LINE( aDel()                          , NIL                                        )
    TEST_LINE( aDel( NIL )                     , NIL                                        )
    TEST_LINE( aDel( { 1 } )                   , "{.[1].}"                                  )
+#endif
    TEST_LINE( aDel( { 1 }, 0 )                , "{.[1].}"                                  )
    TEST_LINE( aDel( { 1 }, 100 )              , "{.[1].}"                                  )
    TEST_LINE( aDel( { 1 }, 1 )                , "{.[1].}"                                  )
    TEST_LINE( aDel( { 1 }, -1 )               , "{.[1].}"                                  )
    TEST_LINE( aDel( { 1 }, 0 )                , "{.[1].}"                                  )
    TEST_LINE( aDel( { 1 }, NIL )              , "{.[1].}"                                  )
+#ifndef __XPP__
    TEST_LINE( aDel( ErrorNew() )              , "ERROR Object"                             )
+#endif
    TEST_LINE( aDel( ErrorNew(), 0 )           , "ERROR Object"                             )
    TEST_LINE( aDel( ErrorNew(), 100 )         , "ERROR Object"                             )
    TEST_LINE( aDel( ErrorNew(), 1 )           , "ERROR Object"                             )
    TEST_LINE( aDel( ErrorNew(), -1 )          , "ERROR Object"                             )
    TEST_LINE( aDel( ErrorNew(), 0 )           , "ERROR Object"                             )
    TEST_LINE( aDel( ErrorNew(), NIL )         , "ERROR Object"                             )
+#ifndef __XPP__
    TEST_LINE( aIns()                          , NIL                                        )
    TEST_LINE( aIns( NIL )                     , NIL                                        )
    TEST_LINE( aIns( { 1 } )                   , "{.[1].}"                                  )
+#endif
    TEST_LINE( aIns( { 1 }, 0 )                , "{.[1].}"                                  )
    TEST_LINE( aIns( { 1 }, 100 )              , "{.[1].}"                                  )
    TEST_LINE( aIns( { 1 }, 1 )                , "{.[1].}"                                  )
    TEST_LINE( aIns( { 1 }, -1 )               , "{.[1].}"                                  )
    TEST_LINE( aIns( { 1 }, 0 )                , "{.[1].}"                                  )
    TEST_LINE( aIns( { 1 }, NIL )              , "{.[1].}"                                  )
+#ifndef __XPP__
    TEST_LINE( aIns( ErrorNew() )              , "ERROR Object"                             )
+#endif
    TEST_LINE( aIns( ErrorNew(), 0 )           , "ERROR Object"                             )
    TEST_LINE( aIns( ErrorNew(), 100 )         , "ERROR Object"                             )
    TEST_LINE( aIns( ErrorNew(), 1 )           , "ERROR Object"                             )
    TEST_LINE( aIns( ErrorNew(), -1 )          , "ERROR Object"                             )
    TEST_LINE( aIns( ErrorNew(), 0 )           , "ERROR Object"                             )
    TEST_LINE( aIns( ErrorNew(), NIL )         , "ERROR Object"                             )
+#ifndef __XPP__
    TEST_LINE( aTail()                         , NIL                                        )
+#endif
    TEST_LINE( aTail( NIL )                    , NIL                                        )
    TEST_LINE( aTail( "" )                     , NIL                                        )
    TEST_LINE( aTail( {} )                     , NIL                                        )
@@ -121,10 +145,12 @@ FUNCTION Main_ARRAY()
 #else
    TEST_LINE( aTail( ErrorNew() )             , NIL                                        )
 #endif
+#ifndef __XPP__
    TEST_LINE( aSize()                         , "E BASE 2023 Argument error ASIZE "        )
    TEST_LINE( aSize( NIL )                    , "E BASE 2023 Argument error ASIZE "        )
    TEST_LINE( aSize( {} )                     , "E BASE 2023 Argument error ASIZE "        )
    TEST_LINE( aSize( ErrorNew() )             , "E BASE 2023 Argument error ASIZE "        )
+#endif
    TEST_LINE( aSize( NIL, 0 )                 , "E BASE 2023 Argument error ASIZE "        )
    TEST_LINE( aSize( {}, 0 )                  , "{.[0].}"                                  )
    TEST_LINE( aSize( ErrorNew(), 0 )          , "ERROR Object"                             )
@@ -149,7 +175,9 @@ FUNCTION Main_ARRAY()
    TEST_LINE( aAdd( {}, "A" )                 , "A"                                        )
    TEST_LINE( aAdd( ErrorNew(), NIL )         , NIL                                        )
    TEST_LINE( aAdd( ErrorNew(), "A" )         , "A"                                        )
+#ifndef __XPP__
    TEST_LINE( Array()                         , NIL                                        )
+#endif
    TEST_LINE( Array( 0 )                      , "{.[0].}"                                  )
 #ifdef __HARBOUR__
    TEST_LINE( Array( 5000 )                   , "{.[5000].}"                               )
@@ -267,9 +295,11 @@ FUNCTION Main_ARRAY()
 
    /* ASCAN() */
 
+#ifndef __XPP__
    TEST_LINE( aScan()                         , 0           )
    TEST_LINE( aScan( NIL )                    , 0           )
    TEST_LINE( aScan( "A" )                    , 0           )
+#endif
    TEST_LINE( aScan( "A", "A" )               , 0           )
    TEST_LINE( aScan( "A", {|| .F. } )         , 0           )
    TEST_LINE( aScan( {1,2,3}, {|x| NIL } )    , 0           )

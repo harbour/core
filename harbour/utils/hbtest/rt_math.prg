@@ -44,7 +44,7 @@ FUNCTION Main_MATH()
 
    TEST_LINE( Log("A")                        , "E BASE 1095 Argument error LOG F:S"   )
    TEST_LINE( Str(Log(-1))                    , "***********************"              )
-//   TEST_LINE( Str(Log(0))                     , "***********************"              )
+// TEST_LINE( Str(Log(0))                     , "***********************"              )
    TEST_LINE( Str(Log(1))                     , "         0.00"                        )
    TEST_LINE( Str(Log(12))                    , "         2.48"                        )
    TEST_LINE( Str(Log(snIntP))                , "         2.30"                        )

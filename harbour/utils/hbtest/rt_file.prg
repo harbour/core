@@ -58,7 +58,9 @@ FUNCTION Main_FILE()
    TEST_LINE( FError()                                                 , 0 )
    TEST_LINE( TESTFIER( FWrite( fhnd, ">1234567890<" ) )               , "E: 0      R: 12"     )
    TEST_LINE( TESTFIER( FWrite( fhnd, "(123" + Chr(0) + "4567890)" ) ) , "E: 0      R: 13"     )
+#ifndef __XPP__
    TEST_LINE( TESTFIER( FSeek( fhnd ) )                                , "E: 0      R: 0"      )
+#endif
    TEST_LINE( TESTFIER( FSeek( fhnd, 5 ) )                             , "E: 0      R: 5"      )
    TEST_LINE( TESTFIER( FSeek( fhnd, -1, FS_SET ) )                    , "E: 25     R: 5"      )
    TEST_LINE( TESTFIER( FSeek( fhnd, -10, FS_SET ) )                   , "E: 25     R: 5"      )
@@ -77,9 +79,13 @@ FUNCTION Main_FILE()
    TEST_LINE( TESTFIER( FSeek( fhnd, -1, FS_END ) )                    , "E: 0      R: 28"     )
    TEST_LINE( TESTFIER( FWrite( fhnd, "F" ) )                          , "E: 0      R: 1"      )
    TEST_LINE( TESTFIER( FSeek( fhnd, 0 ) )                             , "E: 0      R: 0"      )
+#ifndef __XPP__
    TEST_LINE( TESTFIER( FRead( fhnd, mnLongP ) )                       , "E: 0      R: 0"      )
+#endif
    TEST_LINE( TESTFIER( FRead( fhnd, @mnLongP, 2 ) )                   , "E: 0      R: 0"      )
+#ifndef __XPP__
    TEST_LINE( TESTFIER( FRead( fhnd, cBuff4 ) )                        , "E: 0      R: 0"      )
+#endif
    TEST_LINE( TESTFIER( FRead( fhnd, cBuff4, 2 ) )                     , "E: 0      R: 0"      )
 #ifdef __CLIPPER__
 // TEST_LINE( TESTFIER( FRead( fhnd, @cBuff4, Len( cBuff4 ) + 1 ) )    , "E: 0      R: 0"      )
@@ -105,7 +111,9 @@ FUNCTION Main_FILE()
    TEST_LINE( TESTFIER( FWrite( fhnd, "V" ) )                          , 'E: 0      R: 1'                    )
    TEST_LINE( TESTFIER( FSeek( fhnd, -3, FS_END ) )                    , 'E: 0      R: 43'                   )
    TEST_LINE( TESTFIER( FWrite( fhnd, "W" ) )                          , 'E: 0      R: 1'                    )
+#ifndef __XPP__
    TEST_LINE( TESTFIER( FClose() )                                     , 'E: 0      R: .F.'                  )
+#endif
    TEST_LINE( TESTFIER( FClose( fhnd ) )                               , 'E: 0      R: .T.'                  )
    TEST_LINE( TESTFIER( FClose( fhnd ) )                               , 'E: 6      R: .F.'                  )
    TEST_LINE( TESTFIER( FErase( "NOT_HERE.$$$" ) )                     , 'E: 2      R: -1'                   )
@@ -119,7 +127,9 @@ FUNCTION Main_FILE()
    TEST_LINE( FError()                                                 , 0 )
    TEST_LINE( TESTFIER( FWrite( fhnd, ">1234567890<" ) )               , "E: 0      R: 12"     )
    TEST_LINE( TESTFIER( FWrite( fhnd, "(123" + Chr(0) + "4567890)" ) ) , "E: 0      R: 13"     )
+#ifndef __XPP__
    TEST_LINE( TESTFIER( FSeek( fhnd ) )                                , "E: 0      R: 0"      )
+#endif
    TEST_LINE( TESTFIER( FSeek( fhnd, 5 ) )                             , "E: 0      R: 5"      )
    TEST_LINE( TESTFIER( FSeek( fhnd, -1, FS_SET ) )                    , "E: 25     R: 5"      )
    TEST_LINE( TESTFIER( FSeek( fhnd, -10, FS_SET ) )                   , "E: 25     R: 5"      )
@@ -138,9 +148,13 @@ FUNCTION Main_FILE()
    TEST_LINE( TESTFIER( FSeek( fhnd, -1, FS_END ) )                    , "E: 0      R: 49"     )
    TEST_LINE( TESTFIER( FWrite( fhnd, "F" ) )                          , "E: 0      R: 1"      )
    TEST_LINE( TESTFIER( FSeek( fhnd, 0 ) )                             , "E: 0      R: 0"      )
+#ifndef __XPP__
    TEST_LINE( TESTFIER( FRead( fhnd, mnLongP ) )                       , "E: 0      R: 0"      )
+#endif
    TEST_LINE( TESTFIER( FRead( fhnd, @mnLongP, 2 ) )                   , "E: 0      R: 0"      )
+#ifndef __XPP__
    TEST_LINE( TESTFIER( FRead( fhnd, cBuff4 ) )                        , "E: 0      R: 0"      )
+#endif
    TEST_LINE( TESTFIER( FRead( fhnd, cBuff4, 2 ) )                     , "E: 0      R: 0"      )
 #ifdef __CLIPPER__
 // TEST_LINE( TESTFIER( FRead( fhnd, @cBuff4, Len( cBuff4 ) + 1 ) )    , "E: 0      R: 0"      )
@@ -168,7 +182,9 @@ FUNCTION Main_FILE()
    TEST_LINE( TESTFIER( FWrite( fhnd, "W" ) )                          , 'E: 0      R: 1'                  )
    TEST_LINE( TESTFIER( FWrite( fhnd, "" ) )                           , 'E: 0      R: 0'                  )
    TEST_LINE( TESTFIER( FSeek( fhnd, 0, FS_END ) )                     , 'E: 0      R: 65'                 )
+#ifndef __XPP__
    TEST_LINE( TESTFIER( FClose() )                                     , 'E: 0      R: .F.'                )
+#endif
    TEST_LINE( TESTFIER( FClose( fhnd ) )                               , 'E: 0      R: .T.'                )
    TEST_LINE( TESTFIER( FClose( fhnd ) )                               , 'E: 6      R: .F.'                )
    TEST_LINE( TESTFIER( FErase( "NOT_HERE.$$$" ) )                     , 'E: 2      R: -1'                 )

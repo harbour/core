@@ -37,6 +37,7 @@
 
 #include "hbapi.h"
 #include "hbapifs.h"
+#include "hbapierr.h"
 
 #ifdef HB_COMPAT_XPP
 
@@ -52,9 +53,12 @@ HB_FUNC( CURDRIVE )
 
    if( ISCHAR( 1 ) && hb_parclen( 1 ) > 0 )
    {
-      if( hb_fsChDrv( ( BYTE )( toupper( *hb_parc( 1 ) ) - 'A' ) ) != 0 )
+      while( hb_fsChDrv( ( BYTE )( toupper( *hb_parc( 1 ) ) - 'A' ) ) != 0 )
       {
-         /* TODO: Throw some XBase++ like runtime error. [vszakats] */
+         USHORT uiAction = hb_errRT_BASE_Ext1( EG_OPEN, 9999, "Operating system error", "CURDRIVE", 0, EF_CANDEFAULT | EF_CANRETRY );
+      
+         if( uiAction != E_RETRY )
+            break;
       }
    }
 

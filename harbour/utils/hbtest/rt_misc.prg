@@ -84,6 +84,7 @@ FUNCTION Main_MISC()
 
    TEST_LINE( TSTRING(1000)                   , "00:16:40" )
 
+#ifndef __XPP__
    TEST_LINE( SoundEx()                       , "0000" )
    TEST_LINE( SoundEx( 10 )                   , "0000" )
    TEST_LINE( SoundEx( @scString )            , "H400" )
@@ -102,10 +103,13 @@ FUNCTION Main_MISC()
    TEST_LINE( SoundEx( "C"+Chr(0)+"olt" )     , "C430" )
    TEST_LINE( SoundEx( "µ†AêÇ" )              , "A000" )
    TEST_LINE( SoundEx( "12345" )              , "0000" )
+#endif
 
    /* NATION functions (do not exist in 5.2e US) */
 
+#ifndef __XPP__
    TEST_LINE( NationMsg()                     , "Invalid argument" )
+#endif
    TEST_LINE( NationMsg("A")                  , "" )
    TEST_LINE( NationMsg(-1)                   , "" ) /* CA-Cl*pper bug: 5.3 may return trash. */
    TEST_LINE( NationMsg(0)                    , "" )
@@ -126,6 +130,8 @@ FUNCTION Main_MISC()
 #ifndef __CLIPPER__ /* Causes GPF in CA-Cl*pper (5.2e International, 5.3b) */
    TEST_LINE( NationMsg(200)                  , "" ) /* Bug in CA-Cl*pper, it will return "74?" or other trash */
 #endif
+
+#ifndef __XPP__
 
 /* These will cause a GPF in CA-Cl*pper (5.2e International, 5.3b) */
 #ifndef __CLIPPER__
@@ -164,6 +170,8 @@ FUNCTION Main_MISC()
    TEST_LINE( IsNegative("N")                 , .T.    )
    TEST_LINE( IsNegative("no")                , .T.    )
    TEST_LINE( IsNegative("NO")                , .T.    )
+
+#endif /* __XPP__ */
 
    /* FOR/NEXT */
 
@@ -242,7 +250,9 @@ FUNCTION Main_MISC()
       }
    */
 
+#ifndef __XPP__
    TEST_LINE( SToD()                          , SToD("        ")             )
+#endif
    TEST_LINE( SToD(1)                         , SToD("        ")             )
    TEST_LINE( SToD(NIL)                       , SToD("        ")             )
    TEST_LINE( SToD("")                        , SToD("        ")             )
@@ -271,8 +281,10 @@ FUNCTION Main_MISC()
 
    /* DESCEND() */
 
-#ifndef __CLIPPER__
-   TEST_LINE( Descend()                       , NIL                                                 ) /* Bug in CA-Cl*pper, it returns undefined trash */
+#ifndef __CLIPPER__ /* Bug in CA-Cl*pper, it returns undefined trash */
+#ifndef __XPP__ /* Compiler time error */
+   TEST_LINE( Descend()                       , NIL                                                 )
+#endif
 #endif
    TEST_LINE( Descend( NIL )                  , NIL                                                 )
    TEST_LINE( Descend( { "A", "B" } )         , NIL                                                 )
@@ -348,6 +360,8 @@ FUNCTION Main_MISC()
 
 #endif
 
+#ifndef __XPP__
+
    /* FKMAX(), FKLABEL() */
 
    TEST_LINE( FKMax()                         , 40               )
@@ -364,13 +378,17 @@ FUNCTION Main_MISC()
    TEST_LINE( FKLabel( 40 )                   , "F40"            )
    TEST_LINE( FKLabel( 41 )                   , ""               )
 
+#endif /* __XPP__ */
+
    /* NOTE: BIN2*() functions are quite untable in CA-Cl*pper when the passed
       parameter is smaller than the required length. */
 
    /* BIN2I() */
 
 #ifndef __CLIPPER__
+#ifndef __XPP__
    TEST_LINE( BIN2I()                         , 0                ) /* Bug in CA-Cl*pper, this causes a GPF */
+#endif
    TEST_LINE( BIN2I(100)                      , 0                ) /* Bug in CA-Cl*pper, this causes a GPF */
    TEST_LINE( BIN2I("")                       , 0                ) /* Bug in CA-Cl*pper, it will return trash */
 #endif
@@ -386,7 +404,9 @@ FUNCTION Main_MISC()
    /* BIN2W() */
 
 #ifndef __CLIPPER__
+#ifndef __XPP__
    TEST_LINE( BIN2W()                         , 0                ) /* Bug in CA-Cl*pper, this causes a GPF */
+#endif
    TEST_LINE( BIN2W(100)                      , 0                ) /* Bug in CA-Cl*pper, this causes a GPF */
    TEST_LINE( BIN2W("")                       , 0                ) /* Bug in CA-Cl*pper, it will return trash */
 #endif
@@ -402,7 +422,9 @@ FUNCTION Main_MISC()
    /* BIN2L() */
 
 #ifndef __CLIPPER__
+#ifndef __XPP__
    TEST_LINE( BIN2L()                                    , 0                ) /* Bug in CA-Cl*pper, this causes a GPF */
+#endif
    TEST_LINE( BIN2L(100)                                 , 0                ) /* Bug in CA-Cl*pper, this causes a GPF */
    TEST_LINE( BIN2L("")                                  , 0                ) /* Bug in CA-Cl*pper, it will return trash */
 #endif
@@ -420,7 +442,9 @@ FUNCTION Main_MISC()
 
    /* I2BIN() */
 
+#ifndef __XPP__
    TEST_LINE( I2BIN()                         , ""+Chr(0)+""+Chr(0)+"" )
+#endif
    TEST_LINE( I2BIN(""     )                  , ""+Chr(0)+""+Chr(0)+"" )
    TEST_LINE( I2BIN(0      )                  , ""+Chr(0)+""+Chr(0)+"" )
    TEST_LINE( I2BIN(16961  )                  , "AB"                   )
@@ -434,7 +458,9 @@ FUNCTION Main_MISC()
 
    /* L2BIN() */
 
+#ifndef __XPP__
    TEST_LINE( L2BIN()                         , ""+Chr(0)+""+Chr(0)+""+Chr(0)+""+Chr(0)+""  )
+#endif
    TEST_LINE( L2BIN("")                       , ""+Chr(0)+""+Chr(0)+""+Chr(0)+""+Chr(0)+""  )
    TEST_LINE( L2BIN(0          )              , ""+Chr(0)+""+Chr(0)+""+Chr(0)+""+Chr(0)+""  )
    TEST_LINE( L2BIN(1145258561 )              , "ABCD"                                      )
@@ -446,6 +472,8 @@ FUNCTION Main_MISC()
    TEST_LINE( L2BIN(0          )              , Chr(0)+Chr(0)+Chr(0)+Chr(0)                 )
    TEST_LINE( L2BIN(4407873    )              , "ABC"+Chr(0)+""                             )
    TEST_LINE( L2BIN(1145258561 )              , "ABCD"                                      )
+
+#ifndef __XPP__
 
    /* __COPYFILE() */
 
@@ -465,6 +493,10 @@ FUNCTION Main_MISC()
    FErase("$$COPYFR.TMP")
    FErase("$$COPYTO.TMP")
 
+#endif /* __XPP__ */
+
+#ifndef __XPP__
+
    /* __RUN() */
 
    /* NOTE: Only error cases are tested. */
@@ -472,6 +504,8 @@ FUNCTION Main_MISC()
    TEST_LINE( __RUN()                         , NIL              )
    TEST_LINE( __RUN( NIL )                    , NIL              )
    TEST_LINE( __RUN( 10 )                     , NIL              )
+
+#endif /* __XPP__ */
 
    /* MEMVARBLOCK() */
 
@@ -490,7 +524,9 @@ FUNCTION Main_MISC()
 
    /* HARDCR() */
 
+#ifndef __XPP__
    TEST_LINE( HardCR()                                                      , ""                                                                                 )
+#endif
    TEST_LINE( HardCR(NIL)                                                   , ""                                                                                 )
    TEST_LINE( HardCR(100)                                                   , ""                                                                                 )
 #ifdef __HARBOUR__
@@ -501,7 +537,9 @@ FUNCTION Main_MISC()
 
    /* MEMOTRAN() */
 
+#ifndef __XPP__
    TEST_LINE( MemoTran()                                                    , ""                                                 )
+#endif
    TEST_LINE( MemoTran(NIL)                                                 , ""                                                 )
    TEST_LINE( MemoTran(100)                                                 , ""                                                 )
    TEST_LINE( MemoTran(100,"1","2")                                         , ""                                                 )
@@ -516,8 +554,10 @@ FUNCTION Main_MISC()
 
    /* MEMOWRITE()/MEMOREAD() */
 
+#ifndef __XPP__
    TEST_LINE( MemoWrit()                         , .F.              )
    TEST_LINE( MemoWrit("$$MEMOFI.TMP")           , .F.              )
+#endif
    TEST_LINE( MemoWrit("$$MEMOFI.TMP","")        , .T.              )
    TEST_LINE( MemoRead("$$MEMOFI.TMP")           , ""               )
    TEST_LINE( MemoWrit("$$MEMOFI.TMP",scStringZ) , .T.              )
@@ -527,7 +567,9 @@ FUNCTION Main_MISC()
    TEST_LINE( MemoWrit("$$MEMOFI.TMP",scStringW) , .T.              )
    TEST_LINE( MemoRead("$$MEMOFI.TMP")           , ""+Chr(13)+""+Chr(10)+"ç"+Chr(10)+""+Chr(9)+"" )
    TEST_LINE( MemoWrit("*INVALI*.TMP",scStringZ) , .F.              )
+#ifndef __XPP__
    TEST_LINE( MemoRead()                         , ""               )
+#endif
    TEST_LINE( MemoRead("*INVALI*.TMP")           , ""               )
 
    FErase("$$MEMOFI.TMP")

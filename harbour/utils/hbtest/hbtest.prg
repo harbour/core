@@ -111,8 +111,11 @@ FUNCTION Main( cPar1, cPar2 )
    Main_TRANS()
    Comp_Str()
    Exact_Str()
-#ifdef __HARBOUR__
    New_STRINGS()
+#ifdef __HARBOUR__
+   Long_STRINGS()
+#endif
+#ifdef __XPP__
    Long_STRINGS()
 #endif
    Main_ARRAY()
@@ -138,12 +141,18 @@ FUNCTION Main( cPar1, cPar2 )
 STATIC FUNCTION Main_LAST()
 
    TEST_LINE( MEMVARBLOCK( "mcString" )           , "{||...}"                                         )
+#ifndef __XPP__
    TEST_LINE( __MRestore()                        , "E BASE 2007 Argument error __MRESTORE "          )
+#endif
    TEST_LINE( MEMVARBLOCK( "mcString" )           , "{||...}"                                         )
+#ifndef __XPP__
    TEST_LINE( __MSave()                           , "E BASE 2008 Argument error __MSAVE "             )
    TEST_LINE( __MRestore( "$NOTHERE.MEM", .F. )   , "E BASE 2005 Open error $NOTHERE.MEM F:DR"        )
+#endif
    TEST_LINE( MEMVARBLOCK( "mcString" )           , NIL                                               )
+#ifndef __XPP__
    TEST_LINE( __MSave( "*BADNAM*.MEM", "*", .T. ) , "E BASE 2006 Create error *BADNAM*.MEM F:DR"      )
+#endif
 
    RETURN NIL
 
@@ -175,8 +184,13 @@ STATIC FUNCTION TEST_BEGIN( cParam )
    CASE "CLIPPER (R)" $ Upper( Version() ) ; s_cFileName := "rtl_test.c5x"
    ENDCASE
 
-   s_nFhnd := 1 /* FHND_STDOUT */
+#ifdef __XPP__
+   s_cFileName := "hbtest.xpp"
+   s_nFhnd := FCreate( s_cFileName )
+#else
    s_cFileName := "(stdout)"
+   s_nFhnd := 1 /* FHND_STDOUT */
+#endif
 
    s_nCount := 0
    s_nPass := 0
@@ -240,7 +254,9 @@ STATIC FUNCTION TEST_BEGIN( cParam )
    PUBLIC mbBlockC  := sbBlockC
    PUBLIC maArray   := { 9898 }
 
+#ifndef __XPP__
    rddSetDefault( "DBFNTX" )
+#endif
 
    dbCreate( "!TEMP!.DBF",;
       { { "TYPE_C"   , "C", 15, 0 } ,;
@@ -371,6 +387,10 @@ STATIC FUNCTION TEST_END()
       ENDIF
    ENDIF
 
+#ifdef __XPP__
+   FClose( s_nFhnd )
+#endif
+
    ErrorLevel( iif( s_nFail != 0, 1, 0 ) )
 
    RETURN NIL
@@ -392,7 +412,11 @@ FUNCTION XToStr( xValue )
    CASE cType == "N" ; RETURN LTrim( Str( xValue ) )
    CASE cType == "D" ; RETURN 'SToD("' + DToS( xValue ) + '")'
    CASE cType == "L" ; RETURN iif( xValue, ".T.", ".F." )
+#ifdef __XPP__
+   CASE cType == "O" ; RETURN xValue:className() + "Object"
+#else
    CASE cType == "O" ; RETURN xValue:className + " Object"
+#endif
    CASE cType == "U" ; RETURN "NIL"
    CASE cType == "B" ; RETURN '{||...}'
    CASE cType == "A" ; RETURN '{.[' + LTrim( Str( Len( xValue ) ) ) + '].}'
@@ -413,9 +437,13 @@ STATIC FUNCTION ErrorMessage( oError )
       CASE oError:severity == ES_CATASTROPHIC ; cMessage += "C "
       ENDCASE
    ENDIF
+#ifdef __XPP__
+   cMessage += "BASE" + " "
+#else
    IF ValType( oError:subsystem ) == "C"
       cMessage += oError:subsystem() + " "
    ENDIF
+#endif
    IF ValType( oError:subCode ) == "N"
       cMessage += LTrim( Str( oError:subCode ) ) + " "
    ENDIF

@@ -163,7 +163,9 @@ FUNCTION Main_STR()
 
    /* ISDIGIT() */
 
+#ifndef __XPP__
    TEST_LINE( IsDigit()                       , .F.              )
+#endif
    TEST_LINE( IsDigit( 100 )                  , .F.              )
 #ifdef __HARBOUR__
    TEST_LINE( IsDigit( @scString )            , .F.              ) /* Bug in CA-Cl*pper, it will always return .F. */
@@ -182,7 +184,9 @@ FUNCTION Main_STR()
 
    /* ISALPHA() */
 
+#ifndef __XPP__
    TEST_LINE( IsAlpha()                       , .F.              )
+#endif
    TEST_LINE( IsAlpha( 100 )                  , .F.              )
 #ifdef __HARBOUR__
    TEST_LINE( IsAlpha( @scString )            , .T.              ) /* Bug in CA-Cl*pper, it will always return .F. */
@@ -209,7 +213,9 @@ FUNCTION Main_STR()
 
    /* ISUPPER() */
 
+#ifndef __XPP__
    TEST_LINE( IsUpper()                       , .F.              )
+#endif
    TEST_LINE( IsUpper( 100 )                  , .F.              )
 #ifdef __HARBOUR__
    TEST_LINE( IsUpper( @scString )            , .T.              ) /* Bug in CA-Cl*pper, it will always return .F. */
@@ -227,7 +233,9 @@ FUNCTION Main_STR()
 
    /* ISLOWER() */
 
+#ifndef __XPP__
    TEST_LINE( IsLower()                       , .F.              )
+#endif
    TEST_LINE( IsLower( 100 )                  , .F.              )
 #ifdef __HARBOUR__
    TEST_LINE( IsLower( @scString )            , .F.              ) /* Bug in CA-Cl*pper, it will always return .F. */
@@ -346,9 +354,11 @@ FUNCTION Main_STR()
          the error handler, so the error is thrown, but we can't catch it.
          This bug is fixed in CA-Clipper 5.3 [vszel] */
 #ifndef __CLIPPER__
+#ifndef __XPP__
    TEST_LINE( StrTran()                       , "E BASE 1126 Argument error STRTRAN F:S" ) /* CA-Cl*pper bug, it will exit on this */
    TEST_LINE( StrTran( NIL )                  , "E BASE 1126 Argument error STRTRAN F:S" ) /* CA-Cl*pper bug, it will exit on this */
    TEST_LINE( StrTran( 100 )                  , "E BASE 1126 Argument error STRTRAN F:S" ) /* CA-Cl*pper bug, it will exit on this */
+#endif
    TEST_LINE( StrTran( "AA", 1 )              , "E BASE 1126 Argument error STRTRAN F:S" ) /* CA-Cl*pper bug, it will exit on this */
 #endif
    TEST_LINE( StrTran( "AA", "A" )            , "" )
@@ -488,22 +498,26 @@ FUNCTION Main_STR()
    TEST_LINE( SubStr("abcdef", 2, 1)          , "b"              )
    TEST_LINE( SubStr("abcdef", 2, 7)          , "bcdef"          )
    TEST_LINE( SubStr("abcdef", 2)             , "bcdef"          )
+#ifndef __XPP__
    TEST_LINE( SubStr("abcdef", -2, -1)        , ""               )
    TEST_LINE( SubStr("abcdef", -2, 0)         , ""               )
    TEST_LINE( SubStr("abcdef", -2, 1)         , "e"              )
    TEST_LINE( SubStr("abcdef", -2, 7)         , "ef"             )
    TEST_LINE( SubStr("abcdef", -2)            , "ef"             )
+#endif
    TEST_LINE( SubStr("abcdef", 10, -1)        , ""               )
    TEST_LINE( SubStr("abcdef", 10, 0)         , ""               )
    TEST_LINE( SubStr("abcdef", 10, 1)         , ""               )
    TEST_LINE( SubStr("abcdef", 10, 7)         , ""               )
    TEST_LINE( SubStr("abcdef", 10)            , ""               )
+#ifndef __XPP__
    TEST_LINE( SubStr("abcdef", -10, -1)       , ""               )
    TEST_LINE( SubStr("abcdef", -10, 0)        , ""               )
    TEST_LINE( SubStr("abcdef", -10, 1)        , "a"              )
    TEST_LINE( SubStr("abcdef", -10, 7)        , "abcdef"         )
    TEST_LINE( SubStr("abcdef", -10, 15)       , "abcdef"         )
    TEST_LINE( SubStr("abcdef", -10)           , "abcdef"         )
+#endif
    TEST_LINE( SubStr("ab" + Chr(0) + "def", 2, 3) , "b" + Chr(0) + "d" )
    TEST_LINE( SubStr("abc" + Chr(0) + "def", 3, 1) , "c" )
    TEST_LINE( SubStr("abc" + Chr(0) + "def", 4, 1) , "" + Chr(0) + "" )
@@ -548,8 +562,10 @@ FUNCTION Main_STR()
    TEST_LINE( Pad(@scString, 10)              , "HELLO     "     ) /* Bug in CA-Cl*pper, it will return "" */
    TEST_LINE( Pad(scString, @snIntP)          , "HELLO     "     ) /* Bug in CA-Cl*pper, it will return "" */
 #endif
+#ifndef __XPP__
    TEST_LINE( Pad("abcdef", "A")              , ""               )
    TEST_LINE( Pad("abcdef", -5)               , ""               )
+#endif
    TEST_LINE( Pad("abcdef", 0)                , ""               )
    TEST_LINE( Pad("abcdef", 5)                , "abcde"          )
    TEST_LINE( Pad("abcdef", 10)               , "abcdef    "     )
@@ -573,8 +589,10 @@ FUNCTION Main_STR()
    TEST_LINE( PadR(@scString, 10)             , "HELLO     "     ) /* Bug in CA-Cl*pper, it will return "" */
    TEST_LINE( PadR(scString, @snIntP)         , "HELLO     "     ) /* Bug in CA-Cl*pper, it will return "" */
 #endif
+#ifndef __XPP__
    TEST_LINE( PadR("abcdef", "A")             , ""               )
    TEST_LINE( PadR("abcdef", -5)              , ""               )
+#endif
    TEST_LINE( PadR("abcdef", 0)               , ""               )
    TEST_LINE( PadR("abcdef", 5)               , "abcde"          )
    TEST_LINE( PadR("abcdef", 10)              , "abcdef    "     )
@@ -598,8 +616,10 @@ FUNCTION Main_STR()
    TEST_LINE( PadL(@scString, 10)             , "     HELLO"     ) /* Bug in CA-Cl*pper, it will return "" */
    TEST_LINE( PadL(scString, @snIntP)         , "     HELLO"     ) /* Bug in CA-Cl*pper, it will return "" */
 #endif
+#ifndef __XPP__
    TEST_LINE( PadL("abcdef", "A")             , ""               )
    TEST_LINE( PadL("abcdef", -5)              , ""               )
+#endif
    TEST_LINE( PadL("abcdef", 0)               , ""               )
    TEST_LINE( PadL("abcdef", 5)               , "abcde"          ) /* QUESTION: CA-Cl*pper "bug", should return: "bcdef" ? */
    TEST_LINE( PadL("abcdef", 10)              , "    abcdef"     )
@@ -623,8 +643,10 @@ FUNCTION Main_STR()
    TEST_LINE( PadC(@scString, 10)             , "  HELLO   "     ) /* Bug in CA-Cl*pper, it will return "" */
    TEST_LINE( PadC(scString, @snIntP)         , "  HELLO   "     ) /* Bug in CA-Cl*pper, it will return "" */
 #endif
+#ifndef __XPP__
    TEST_LINE( PadC("abcdef", "A")             , ""               )
    TEST_LINE( PadC("abcdef", -5)              , ""               )
+#endif
    TEST_LINE( PadC("abcdef", 0)               , ""               )
    TEST_LINE( PadC("abcdef", 2)               , "ab"             ) /* QUESTION: CA-Cl*pper "bug", should return: "cd" ? */
    TEST_LINE( PadC("abcdef", 5)               , "abcde"          )
@@ -635,8 +657,10 @@ FUNCTION Main_STR()
 
    /* STUFF() */
 
+#ifndef __XPP__
    TEST_LINE( Stuff()                                          , ""                        )
    TEST_LINE( Stuff( 100 )                                     , ""                        )
+#endif
    TEST_LINE( Stuff("ABCDEF", -6, -5, "xyz")                   , "ABCDEFxyz"               )
    TEST_LINE( Stuff("ABCDEF", -6, -2, "xyz")                   , "ABCDEFxyz"               )
    TEST_LINE( Stuff("ABCDEF", -6,  0, "xyz")                   , "ABCDEFxyz"               )
@@ -726,6 +750,7 @@ FUNCTION Main_STR()
    TEST_LINE( Str(-100000, 5)                 , "*****"          )
    TEST_LINE( Str(-100000, 6)                 , "******"         )
    TEST_LINE( Str(-100000, 8)                 , " -100000"       )
+#ifndef __XPP__ /* Internal structures corrupted */
    TEST_LINE( Str(10, -5)                     , "        10"     )
    TEST_LINE( Str(10.0, -5)                   , "        10"     )
    TEST_LINE( Str(10.00, -5)                  , "        10"     )
@@ -739,6 +764,7 @@ FUNCTION Main_STR()
    TEST_LINE( Str(-100000, -5)                , "   -100000"     )
    TEST_LINE( Str(-100000, -6)                , "   -100000"     )
    TEST_LINE( Str(-100000, -8)                , "   -100000"     )
+#endif
    TEST_LINE( Str(10, 5, 0)                   , "   10"          )
    TEST_LINE( Str(10.0, 5, 0)                 , "   10"          )
    TEST_LINE( Str(10.00, 5, 0)                , "   10"          )
@@ -763,6 +789,7 @@ FUNCTION Main_STR()
    TEST_LINE( Str(-100000, 5, 1)              , "*****"          )
    TEST_LINE( Str(-100000, 6, 1)              , "******"         )
    TEST_LINE( Str(-100000, 8, 1)              , "********"       )
+#ifndef __XPP__ /* Internal structures corrupted */
    TEST_LINE( Str(10, 5, -1)                  , "   10"          )
    TEST_LINE( Str(10.0, 5, -1)                , "   10"          )
    TEST_LINE( Str(10.00, 5, -1)               , "   10"          )
@@ -775,6 +802,7 @@ FUNCTION Main_STR()
    TEST_LINE( Str(-100000, 5, -1)             , "*****"          )
    TEST_LINE( Str(-100000, 6, -1)             , "******"         )
    TEST_LINE( Str(-100000, 8, -1)             , " -100000"       )
+#endif
 
    /* STRZERO() */
 
@@ -814,6 +842,7 @@ FUNCTION Main_STR()
    TEST_LINE( StrZero(-100000, 5)             , "*****"          )
    TEST_LINE( StrZero(-100000, 6)             , "******"         )
    TEST_LINE( StrZero(-100000, 8)             , "-0100000"       )
+#ifndef __XPP__ /* Internal structures corrupted */
    TEST_LINE( StrZero(10, -5)                 , "0000000010"     )
    TEST_LINE( StrZero(10.0, -5)               , "0000000010"     )
    TEST_LINE( StrZero(10.00, -5)              , "0000000010"     )
@@ -827,6 +856,7 @@ FUNCTION Main_STR()
    TEST_LINE( StrZero(-100000, -5)            , "-000100000"     )
    TEST_LINE( StrZero(-100000, -6)            , "-000100000"     )
    TEST_LINE( StrZero(-100000, -8)            , "-000100000"     )
+#endif
    TEST_LINE( StrZero(10, 5, 0)               , "00010"          )
    TEST_LINE( StrZero(10.0, 5, 0)             , "00010"          )
    TEST_LINE( StrZero(10.50, 5, 0)            , "00011"          )
@@ -849,6 +879,7 @@ FUNCTION Main_STR()
    TEST_LINE( StrZero(-100000, 5, 1)          , "*****"          )
    TEST_LINE( StrZero(-100000, 6, 1)          , "******"         )
    TEST_LINE( StrZero(-100000, 8, 1)          , "********"       )
+#ifndef __XPP__ /* Internal structures corrupted */
    TEST_LINE( StrZero(10, 5, -1)              , "00010"          )
    TEST_LINE( StrZero(10.0, 5, -1)            , "00010"          )
    TEST_LINE( StrZero(10.50, 5, -1)           , "00011"          )
@@ -860,6 +891,7 @@ FUNCTION Main_STR()
    TEST_LINE( StrZero(-100000, 5, -1)         , "*****"          )
    TEST_LINE( StrZero(-100000, 6, -1)         , "******"         )
    TEST_LINE( StrZero(-100000, 8, -1)         , "-0100000"       )
+#endif
 
    RETURN NIL
 
@@ -1087,9 +1119,9 @@ FUNCTION Exact_Str()
    SET( _SET_EXACT, old_exact )
    RETURN NIL
 
-#ifdef __HARBOUR__
-
 FUNCTION New_STRINGS()
+
+#ifdef __HARBOUR__
 
    TEST_LINE( HB_ValToStr( 4 )                   , "         4"    )
    TEST_LINE( HB_ValToStr( 4.0 / 2 )             , "         2.00" )
@@ -1098,6 +1130,8 @@ FUNCTION New_STRINGS()
    TEST_LINE( HB_ValToStr( NIL )                 , "NIL"           )
    TEST_LINE( HB_ValToStr( .F. )                 , ".F."           )
    TEST_LINE( HB_ValToStr( .T. )                 , ".T."           )
+
+#endif
 
    RETURN NIL
 
@@ -1108,8 +1142,6 @@ FUNCTION Long_STRINGS()
    TEST_LINE( ( "1234567890" + SPACE( 810910 ) ) - ( "1234567890" + SPACE( 810910 ) ), "12345678901234567890" + SPACE( 810910 * 2 ) )
 
    RETURN NIL
-
-#endif
 
 /* Don't change the position of this #include. */
 #include "rt_init.ch"

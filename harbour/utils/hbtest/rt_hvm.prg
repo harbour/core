@@ -139,9 +139,11 @@ FUNCTION Main_HVM()
 
    /* TYPE() */
 
+#ifndef __XPP__
    TEST_LINE( Type( NIL )                     , "E BASE 1121 Argument error TYPE F:S" )
    TEST_LINE( Type( 100 )                     , "E BASE 1121 Argument error TYPE F:S" )
    TEST_LINE( Type( {} )                      , "E BASE 1121 Argument error TYPE F:S" )
+#endif
    TEST_LINE( Type( "w_TEST->TYPE_C" )        , "C"   )
    TEST_LINE( Type( "w_TEST->TYPE_D" )        , "D"   )
    TEST_LINE( Type( "w_TEST->TYPE_M" )        , "M"   )
@@ -173,8 +175,11 @@ FUNCTION Main_HVM()
 
 /* Harbour compiler not yet handles these */
 #ifndef __HARBOUR__
+#ifndef __XPP__
    TEST_LINE( NIL:className                   , "NIL"       )
+#endif
 #endif                                                      )
+#ifndef __XPP__
    TEST_LINE( "":className                    , "CHARACTER" )
    TEST_LINE( 0:className                     , "NUMERIC"   )
    TEST_LINE( SToD( "" ):className            , "DATE"      )
@@ -182,10 +187,14 @@ FUNCTION Main_HVM()
    TEST_LINE( {|| NIL }:className             , "BLOCK"     )
    TEST_LINE( {}:className                    , "ARRAY"     )
    TEST_LINE( ErrorNew():className            , "ERROR"     )
+#endif
 /* Harbour compiler not yet handles these */
 #ifndef __HARBOUR__
+#ifndef __XPP__
    TEST_LINE( NIL:classH                      , 0           )
 #endif
+#endif
+#ifndef __XPP__
    TEST_LINE( "":classH                       , 0           )
    TEST_LINE( 0:classH                        , 0           )
    TEST_LINE( SToD( "" ):classH               , 0           )
@@ -193,11 +202,15 @@ FUNCTION Main_HVM()
    TEST_LINE( {|| NIL }:classH                , 0           )
    TEST_LINE( {}:classH                       , 0           )
    TEST_LINE( ErrorNew():classH > 0           , .T.         )
+#endif
 
 /* Harbour compiler not yet handles these */
 #ifndef __HARBOUR__
+#ifndef __XPP__
    TEST_LINE( suNIL:className                 , "NIL"       )
 #endif
+#endif
+#ifndef __XPP__
    TEST_LINE( scString:className              , "CHARACTER" )
    TEST_LINE( snIntP:className                , "NUMERIC"   )
    TEST_LINE( sdDateE:className               , "DATE"      )
@@ -205,10 +218,14 @@ FUNCTION Main_HVM()
    TEST_LINE( sbBlock:className               , "BLOCK"     )
    TEST_LINE( saArray:className               , "ARRAY"     )
    TEST_LINE( soObject:className              , "ERROR"     )
+#endif
 /* Harbour compiler not yet handles these */
 #ifndef __HARBOUR__
+#ifndef __XPP__
    TEST_LINE( suNIL:classH                    , 0           )
 #endif
+#endif
+#ifndef __XPP__
    TEST_LINE( scString:classH                 , 0           )
    TEST_LINE( snIntP:classH                   , 0           )
    TEST_LINE( sdDateE:classH                  , 0           )
@@ -216,6 +233,7 @@ FUNCTION Main_HVM()
    TEST_LINE( sbBlock:classH                  , 0           )
    TEST_LINE( saArray:classH                  , 0           )
    TEST_LINE( soObject:classH > 0             , .T.         )
+#endif
 
    /* (operators) */
 
@@ -661,8 +679,10 @@ FUNCTION Main_HVM()
    TEST_LINE( ++{ 1, 2 }[ ( 2, 1 ) ]          , 2 )
    TEST_LINE( { 1, 2 }[ 1 ]++                 , 1 )
    TEST_LINE( ++{ 1, 2 }[ 1 ]                 , 2 )
+#ifndef __XPP__
    TEST_LINE( ({ 1, 2 }[ 1 ])++               , 1 )
    TEST_LINE( ++({ 1, 2 }[ 1 ])               , 2 )
+#endif
 #endif
 
    /* Operator precedence */
@@ -708,6 +728,8 @@ FUNCTION Main_HVM()
    TEST_LINE( "de" $ "bcde"                   , .T. )
    TEST_LINE( "bd" $ "bcde"                   , .F. )
    TEST_LINE( "BD" $ "bcde"                   , .F. )
+
+#ifndef __XPP__
 
    IF TEST_OPT_Z()
 
@@ -783,13 +805,16 @@ FUNCTION Main_HVM()
 
    ENDIF
 
+#endif
+
    TEST_LINE( .NOT. .T.                       , .F.                                       )
    TEST_LINE( .NOT. .F.                       , .T.                                       )
    TEST_LINE( .NOT. 1                         , "E BASE 1077 Argument error .NOT. F:S"    )
 
-#ifndef __HARBOUR__
-   // this error is reported at compile time
+#ifndef __HARBOUR__ // this error is reported at compile time
+#ifndef __XPP__ // this error is reported at compile time
    TEST_LINE( iif( "A", ":T:", ":F:" )        , "E BASE 1066 Argument error conditional " )
+#endif
 #endif
    TEST_LINE( iif( .T., ":T:", ":F:" )        , ":T:"                                     )
    TEST_LINE( iif( .F., ":T:", ":F:" )        , ":F:"                                     )
@@ -834,6 +859,7 @@ FUNCTION Main_HVM()
    TEST_LINE( (SToD(""))->NOFIELD             , "E BASE 1065 Argument error & F:S"                )
    TEST_LINE( (ErrorNew())->NOFIELD           , "E BASE 1065 Argument error & F:S"                )
 
+#ifndef __XPP__
    TEST_LINE( ("NOTHERE")->(Eof())            , .T.                                               )
    TEST_LINE( (mcString)->(Eof())             , .T.                                               )
    TEST_LINE( ({})->(Eof())                   , .T.                                               )
@@ -845,6 +871,7 @@ FUNCTION Main_HVM()
    TEST_LINE( (2.5)->(Eof())                  , .T.                                               )
    TEST_LINE( (SToD(""))->(Eof())             , .T.                                               )
    TEST_LINE( (ErrorNew())->(Eof())           , .T.                                               )
+#endif
 
    TEST_LINE( NOTHERE->NOFIELD                , "E BASE 1002 Alias does not exist NOTHERE F:R"    )
    TEST_LINE( NOTHERE->("NOFIELD")            , "E BASE 1002 Alias does not exist NOTHERE F:R"    )
