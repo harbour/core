@@ -186,7 +186,10 @@ HB_FUNC( __PP_FREE )
 
    hb_pp_Free();
    if( hb_pp_aCondCompile )
+   {
       hb_xfree( hb_pp_aCondCompile );
+      hb_pp_aCondCompile = NULL;
+   }
 }
 
 HB_FUNC( __PPADDRULE )

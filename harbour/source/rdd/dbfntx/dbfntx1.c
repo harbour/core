@@ -380,6 +380,11 @@ static void hb_ntxGetCurrentKey( LPTAGINFO pTag, LPKEYINFO pKey )
            hb_itemGetDS( &hb_stack.Return, szBuffer );
            hb_itemPutC( pKey->pItem,szBuffer );
            break;
+        case HB_IT_LOGICAL:
+           szBuffer[0] = ( hb_itemGetL( &hb_stack.Return ) ? 'T':'F' );
+           szBuffer[1] = 0;
+           hb_itemPutC( pKey->pItem, szBuffer );
+           break;
       }
    }
    else
@@ -400,6 +405,11 @@ static void hb_ntxGetCurrentKey( LPTAGINFO pTag, LPKEYINFO pKey )
         case HB_IT_DATE:
            hb_itemGetDS( hb_stackItemFromTop( - 1 ), szBuffer );
            hb_itemPutC( pKey->pItem,szBuffer );
+           break;
+        case HB_IT_LOGICAL:
+           szBuffer[0] = ( hb_itemGetL( hb_stackItemFromTop( - 1 ) ) ? 'T' : 'F' );
+           szBuffer[1] = 0;
+           hb_itemPutC( pKey->pItem, szBuffer );
            break;
       }
       hb_stackPop();
@@ -872,6 +882,8 @@ static int hb_ntxItemCompare( PHB_ITEM pKey1, PHB_ITEM pKey2, BOOL Exact )
          break;
       case HB_IT_DATE:
          iResult = hb_itemGetDL( pKey1 ) - hb_itemGetDL( pKey2 );
+         break;
+      case HB_IT_LOGICAL:
          break;
 */
       default:
@@ -1794,6 +1806,11 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
                hb_itemGetDS( pItem, szBuffer );
                hb_ntxSortKeyAdd( pTag, &sortInfo, szBuffer );
                break;
+            case HB_IT_LOGICAL:
+               szBuffer[0] = ( hb_itemGetL( pItem ) ? 'T' : 'F' );
+               szBuffer[1] = 0;
+               hb_ntxSortKeyAdd( pTag, &sortInfo, szBuffer );
+               break;
             default:
                printf( "ntxCreateOrder" );
          }
@@ -2113,6 +2130,11 @@ static ERRCODE ntxSeek( NTXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
         case HB_IT_DATE:
            hb_itemGetDS( pKey, szBuffer );
            hb_itemPutC( pKey2->pItem,szBuffer );
+           break;
+        case HB_IT_LOGICAL:
+           szBuffer[0] = ( hb_itemGetL( pKey ) ? 'T' : 'F' );
+           szBuffer[1] = 0;
+           hb_itemPutC( pKey2->pItem, szBuffer );
            break;
      }
      /* hb_itemCopy( pKey2->pItem, pKey ); */
