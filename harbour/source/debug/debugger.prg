@@ -106,6 +106,7 @@ CLASS TDebugger
    DATA   cAppImage, nAppRow, nAppCol, cAppColors, nAppCursor
    DATA   aBreakPoints, aCallStack
    DATA   lGo
+   DATA   cClrDialog
 
    METHOD New()
    METHOD Activate( cModuleName )
@@ -129,6 +130,7 @@ CLASS TDebugger
    METHOD ShowCode( cModuleName )
    METHOD ShowVars()
    METHOD ToggleBreakPoint()
+   METHOD ViewSets()
 
 ENDCLASS
 
@@ -173,6 +175,7 @@ METHOD New() CLASS TDebugger
 
    ::aWindows       = {}
    ::nCurrentWindow = 1
+   ::cClrDialog     = "N/W"
    ::oPullDown      = BuildMenu( Self )
    ::oWndCode       = TDbWindow():New( 1, 0, MaxRow() - 6, MaxCol(),, "BG+/B" )
    ::oWndCommand    = TDbWindow():New( MaxRow() - 5, 0, MaxRow() - 1, MaxCol(),;
@@ -608,20 +611,112 @@ METHOD ToggleBreakPoint() CLASS TDebugger
 
 return nil
 
-CLASS TDbWindow  // Debugger windows
+METHOD ViewSets() CLASS TDebugger
+
+   local oWndSets := TDbWindow():New( 1, 8, MaxRow() - 2, MaxCol() - 8,;
+                                      "System Settings[1..20]", ::cClrDialog )
+   local aSets := { "Exact", "Fixed", "Decimals", "DateFormat", "Epoch", "Path",;
+                    "Default", "Exclusive", "SoftSeek", "Unique", "Deleted",;
+                    "Cancel", "Debug", "TypeAhead", "Color", "Cursor", "Console",;
+                    "Alternate", "AltFile", "Device", "Extra", "ExtraFile",;
+                    "Printer", "PrintFile", "Margin", "Bell", "Confirm", "Escape",;
+                    "Insert", "Exit", "Intensity", "ScoreBoard", "Delimeters",;
+                    "DelimChars", "Wrap", "Message", "MCenter", "ScrollBreak",;
+                    "EventMask", "VideoMode", "MBlockSize", "MFileExt",;
+                    "StrictRead", "Optimize", "Autopen", "Autorder", "AutoShare" }
+
+   local oBrwSets := TBrowseNew( oWndSets:nTop + 1, oWndSets:nLeft + 1,;
+                                 oWndSets:nBottom - 1, oWndSets:nRight - 1 )
+   local n := 1
+   local nWidth := oWndSets:nRight - oWndSets:nLeft - 1
+   local oCol, cSet
+
+   oBrwSets:ColorSpec = "N/W, W+/W, N/BG"
+   oBrwSets:GoTopBlock = { || n := 1 }
+   oBrwSets:GoBottomBlock = { || n := Len( aSets ) }
+   oBrwSets:SkipBlock = { | nSkip, nPos | nPos := n,;
+                          n := If( nSkip > 0, Min( Len( aSets ), n + nSkip ),;
+                          Max( 1, n + nSkip ) ), n - nPos }
+   oBrwSets:AddColumn( TBColumnNew( "", { || PadR( aSets[ n ], 12 ) } ) )
+   oBrwSets:AddColumn( oCol := TBColumnNew( "",;
+                       { || PadR( ValToStr( Set( n ) ), nWidth - 13 ) } ) )
+   oBrwSets:Cargo = 1 // Actual highligthed row
+   oCol:ColorBlock = { || { If( n == oBrwSets:Cargo, 3, 1 ), 3 } }
+
+   oWndSets:bPainted    = { || oBrwSets:ForceStable() }
+   oWndSets:bKeyPressed = { | nKey | SetsKeyPressed( nKey, oBrwSets, Len( aSets ) ) }
+
+   SetCursor( 0 )
+   oWndSets:ShowModal()
+
+return nil
+
+static function SetsKeyPressed( nKey, oBrwSets, nSets )
+
+   do case
+      case nKey == K_UP
+           if oBrwSets:Cargo > 1
+              oBrwSets:Cargo--
+           endif
+           SetsUp( oBrwSets )
+
+      case nKey == K_DOWN
+           if oBrwSets:Cargo < nSets
+              oBrwSets:Cargo++
+           endif
+           SetsDown( oBrwSets )
+   endcase
+
+return nil
+
+static function SetsUp( oBrw )
+
+   local nRow := oBrw:RowPos
+
+   oBrw:Up()
+   oBrw:RefreshCurrent()
+
+   if nRow != oBrw:Cargo
+      oBrw:aReDraw[ nRow ] = .f.
+   endif
+
+   oBrw:ForceStable()
+
+return nil
+
+static function SetsDown( oBrw )
+
+   local nRow := oBrw:RowPos
+
+   oBrw:Down()
+   oBrw:RefreshCurrent()
+
+   if nRow != oBrw:Cargo
+      oBrw:aReDraw[ nRow ] = .f.
+   endif
+
+   oBrw:ForceStable()
+
+return nil
+
+CLASS TDbWindow  // Debugger windows and dialogs
 
    DATA   nTop, nLeft, nBottom, nRight
    DATA   cCaption
    DATA   cBackImage, cColor
    DATA   lFocused, bGotFocus, bLostFocus
-   DATA   bKeyPressed
+   DATA   bKeyPressed, bPainted
+   DATA   lShadow
+   DATA   Cargo
 
    METHOD New( nTop, nLeft, nBottom, nRight, cCaption, cColor )
+   METHOD Hide()
    METHOD nWidth() INLINE ::nRight - ::nLeft + 1
    METHOD ScrollUp( nLines )
    METHOD SetCaption( cCaption )
    METHOD SetFocus( lOnOff )
    METHOD Show( lFocused )
+   METHOD ShowModal()
    METHOD Move()
    METHOD KeyPressed( nKey )
 
@@ -635,8 +730,17 @@ METHOD New( nTop, nLeft, nBottom, nRight, cCaption, cColor ) CLASS TDbWindow
    ::nRight   = nRight
    ::cCaption = cCaption
    ::cColor   = cColor
+   ::lShadow  = .f.
 
 return Self
+
+METHOD Hide() CLASS TDbWindow
+
+   RestScreen( ::nTop, ::nLeft, ::nBottom + If( ::lShadow, 1, 0 ),;
+               ::nRight + If( ::lShadow, 2, 0 ), ::cBackImage )
+   ::cBackImage = nil
+
+return nil
 
 METHOD ScrollUp( nLines ) CLASS TDbWindow
 
@@ -676,6 +780,10 @@ METHOD SetFocus( lOnOff ) CLASS TDbWindow
          " " + ::cCaption + " ", ::cColor )
    endif
 
+   if ::bPainted != nil
+      Eval( ::bPainted, Self )
+   endif
+
    DispEnd()
 
    if lOnOff .and. ::bGotFocus != nil
@@ -688,10 +796,39 @@ METHOD Show( lFocused ) CLASS TDbWindow
 
    DEFAULT lFocused TO .f.
 
-   ::cBackImage = SaveScreen( ::nTop, ::nLeft, ::nBottom, ::nRight )
+   ::cBackImage = SaveScreen( ::nTop, ::nLeft, ::nBottom + If( ::lShadow, 1, 0 ),;
+                              ::nRight + If( ::lShadow, 2, 0 ) )
    SetColor( ::cColor )
-   SCROLL( ::nTop, ::nLeft, ::nBottom, ::nRight )
+   Scroll( ::nTop, ::nLeft, ::nBottom, ::nRight )
    ::SetFocus( lFocused )
+
+   If ::lShadow
+      __Shadow( ::nTop, ::nLeft, ::nBottom, ::nRight )
+   endif
+
+return nil
+
+METHOD ShowModal() CLASS TDbWindow
+
+   local lExit := .f.
+
+   ::lShadow = .t.
+   ::Show()
+
+   while ! lExit
+      nKey = InKey( 0 )
+
+      if ::bKeyPressed != nil
+         Eval( ::bKeyPressed, nKey )
+      endif
+
+      do case
+         case nKey == K_ESC
+              lExit = .t.
+      endcase
+   end
+
+   ::Hide()
 
 return nil
 
@@ -1150,7 +1287,7 @@ function BuildMenu( oDebugger )  // Builds the debugger pulldown menu
 
       MENUITEM " ~View "
       MENU
-         MENUITEM " ~Sets"            ACTION Alert( "Not implemented yet!" )
+         MENUITEM " ~Sets"            ACTION oDebugger:ViewSets()
          MENUITEM " ~WorkAreas   F6"  ACTION Alert( "Not implemented yet!" )
          MENUITEM " ~App Screen  F4 " ACTION oDebugger:ShowAppScreen()
          SEPARATOR
@@ -1232,6 +1369,35 @@ function BuildMenu( oDebugger )  // Builds the debugger pulldown menu
 
 return oMenu
 
-Function AltD()
+function AltD()
+
    s_lExit := .F.
-return NIL
+
+return nil
+
+static function ValToStr( uVal )
+
+   local cType := ValType( uVal )
+   local cResult := "U"
+
+   do case
+      case cType == "A"
+           cResult = "{ ... }"
+
+      case cType == "C"
+           cResult = '"' + uVal + '"'
+
+      case cType == "L"
+           cResult = If( uVal, ".T.", ".F." )
+
+      case cType == "D"
+           cResult = DToC( uVal )
+
+      case cType == "N"
+           cResult = AllTrim( Str( uVal ) )
+
+      case cType == "O"
+           cResult = "Class " + uVal:ClassName() + " object"
+   endcase
+
+return cResult
