@@ -3268,7 +3268,7 @@ static ERRCODE ntxGoHot( NTXAREAP pArea )
 
    HB_TRACE(HB_TR_DEBUG, ("ntxGoHot(%p)", pArea));
 
-   if( SUPER_GOHOT( ( AREAP ) pArea ) == SUCCESS )
+   if( SUPER_GOHOT( ( AREAP ) pArea ) == SUCCESS && !pArea->fNtxAppend )
    {
       pTag = pArea->lpNtxTag;
       while( pTag )
@@ -3887,6 +3887,9 @@ static ERRCODE ntxOrderListClear( NTXAREAP pArea )
    LPTAGINFO pTag, pTagNext;
 
    HB_TRACE(HB_TR_DEBUG, ("ntxOrderListClear(%p)", pArea));
+
+   if( SELF_GOCOLD( ( AREAP ) pArea ) == FAILURE )
+      return FAILURE;
 
    pTag = pArea->lpNtxTag;
    while( pTag )
