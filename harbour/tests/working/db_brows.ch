@@ -1,3 +1,7 @@
+/*
+ * $Id: db_brows.ch
+ */
+// Header file for db_brows.prg
 #define KLRECF    200
 #define LI_LEN    24
 #define LI_NSTR   mslist[1]

@@ -1,3 +1,12 @@
+19991002-18:10 GMT+3 Alexander Kresin
+  * source/hbpp/hbpp.c
+    * Fixed some bugs, reported by Victor Szel, Ryszard Glab, Jose Lalin and 
+    * Robert Arseniuk
+  * tests/working/db_browse.ch renamed to db_brows.ch
+  * tests/working/db_browse.prg renamed to db_brows.prg
+    * added $Id
+    * these two files added to makefile
+
 19991002-03:20 EDT Paul Tucker <ptucker@sympatico.ca>
   * buildvc.bat
     makefile.vc

@@ -51,6 +51,7 @@ PRG_SOURCES=\
         dates2.prg \
         dates3.prg \
         dates4.prg \
+        db_brows.prg \
         debugtst.prg \
         dirtest.prg \
         docase.prg \
@@ -149,6 +150,7 @@ PRG_SOURCES=\
         while.prg \
 
 PRG_HEADERS=\
+        db_brows.ch
         cgi.ch \
         keywords.ch \
         test.ch \

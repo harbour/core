@@ -446,6 +446,7 @@ void ConvertPatterns ( char *mpatt, int mlen, char *rpatt, int rlen )
      if ( *(mpatt+i) == '<' )
      {  /* Drag match marker, determine it type */
        explen = 0; ipos = i; i++; exptype = '0';
+       while( *(mpatt+i) == ' ' || *(mpatt+i) == '\t' ) i++;
        if ( *(mpatt+i) == '*' )        /* Wild match marker */
          { exptype = '3'; i++; }
        else if ( *(mpatt+i) == '(' )   /* Extended expression match marker */
@@ -653,8 +654,6 @@ int ParseExpression( char* sLine, char* sOutLine )
 
                if ( ( *ptri == '\0' || ( *ptri != '=' &&
                   (!IsInStr(*ptri,":/*+-") || *(ptri+1) != '=') &&
-                  ( *ptri != '+' || *(ptri+1) != '+' ) &&
-                  ( *ptri != '-' || *(ptri+1) != '-' ) &&
                   ( *ptri != '-' || *(ptri+1) != '>' ) ) )
                   && ( stcmd = ComSearch(sToken,NULL) ) != NULL )
                {
@@ -1719,13 +1718,13 @@ int md_strAt(char *szSub, int lSubLen, char *szText, int checkword, int checkPrt
    {
      if( State == STATE_QUOTE1 )
      {
-       if ( *(szText+lPos) == '\'' && ( lPos == 0 || *(szText+lPos-1) != '\\' ) )
+       if ( *(szText+lPos) == '\'' )
           State = STATE_NORMAL;
        lPos++;
      }
      else if( State == STATE_QUOTE2 )
      {
-       if ( *(szText+lPos) == '\"' && ( lPos == 0 || *(szText+lPos-1) != '\\' ) )
+       if ( *(szText+lPos) == '\"' )
           State = STATE_NORMAL;
        lPos++;
      }
