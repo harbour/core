@@ -12,26 +12,18 @@ function Main()
 
    QOut( oForm:ClassName() )
    oForm:Show()
-
    QOut()
+
    QOut( "-DEBUG Functions-")
-   QOut()
-
-   QOut( "-oForm-" )
-   QOut( ToChar( oForm:ClassSel(), ", ", .T. ))
-   QOut()
 
    QOut( "-Statics-" )
    QOut( ToChar ( __aStatic(), ", ", .T. ) )
-   QOut()
 
-   QOut( "-Global Stack- Len=", __GlobalStackLen() )
+   QOut( "-Global Stack-" )
    QOut( ToChar ( __aGlobalStack(), ", ", .T. ) )
-   QOut()
 
-   QOut( "-Local Stack- Len=", __StackLen() )
+   QOut( "-Local Stack-" )
    QOut( ToChar ( __aStack(), ", ", .T. ) )
-   QOut()
 
    QOut( "-Parameters-" )
    QOut( ToChar ( __aParam(), ", ", .T. ) )
@@ -123,16 +115,10 @@ function ToChar( xTxt, cSeparator, lDebug )
             cOut := if( xTxt, "True", "False" )
          endif
 
-      case cValTxt=="A" .or. if( lDebug, cValTxt=="O", .F.)
-                                                // Array or debug object
+      case cValTxt=="A"                         // Array
          cOut       := ""
-         cSeparator := Default( cSeparator, " ")
          if lDebug
-            if cValTxt=="A"
-               cOut += "{"
-            else
-               cOut += "Class#"+ToChar( xTxt:ClassH() )+"("
-            endif
+            cOut += "{"
          endif
          nLen := Len( xTxt )
          for n := 1 to nLen                     // For each item : Recurse !
@@ -142,7 +128,7 @@ function ToChar( xTxt, cSeparator, lDebug )
             endif
          next n
          if lDebug
-            cOut += if( cValTxt=="O", ")", "}" )
+            cOut += "}"
          endif
 
       case cValTxt=="B"                         // Codeblock
@@ -153,7 +139,23 @@ function ToChar( xTxt, cSeparator, lDebug )
          endif
 
       case cValTxt=="O"                         // Object
-         cOut := ToChar( xTxt:Run(), cSeparator, lDebug )
+         if lDebug
+            if lDebug
+                cOut := "Class#"+ToChar( xTxt:ClassH() )+"{"
+            endif
+            nLen := Len( xTxt )
+            for n := 1 to nLen                     // For each item : Recurse !
+               cOut += ToChar( xTxt[n], cSeparator, lDebug )
+               if n != nLen
+                  cOut += cSeparator
+               endif
+            next n
+            if lDebug
+               cOut += ";" + ToChar( aoData( xTxt ), ", " ) + "}"
+            endif
+         else
+            cOut := ToChar( xTxt:Run(), cSeparator, lDebug )
+         endif
 
    endcase
 return cOut
@@ -211,6 +213,60 @@ static function Show()
 
    QOut( "lets show a form from here :-)" )
 
+return nil
+
+
+function aOData( oObject )
+
+   local aInfo  := aSort( oObject:ClassSel() )
+   local aData  := {}
+   local n
+
+   for n := 1 to Len(aInfo)
+      if SubStr( aInfo[ n ], 1, 1 ) != "_"
+         if aScan( aInfo, "_" + aInfo[ n ] ) != 0
+            aAdd( aData, aInfo[ n ] )
+         endif
+      endif
+   next n
+
+return aData
+
+
+function aSort( aIn )                           /* Was not implemented yet  */
+   QuickSort( 1, Len(aIn), aIn )
+return aIn
+
+function QuickSort( nLeft, nRight, aSort )
+
+   local nI := nLeft
+   local nJ := nRight
+   local nX := aSort[ ( nLeft + nRight ) / 2 ]
+   local lOk := .T.
+   local xTemp
+
+   do while lOk
+      do while aSort[ nI ] < nX
+         nI++
+      enddo
+      do while nX < aSort[ nJ ]
+         nJ--
+      enddo
+      if nI <= nJ
+         xTemp       := aSort[ nI ]
+         aSort[ nI ] := aSort[ nJ ]
+         aSort[ nJ ] := xTemp
+         nI++
+         nJ--
+      endif
+      lOk := nI <= nJ
+   enddo
+   if nLeft < nJ
+      QuickSort( nLeft, nJ, aSort )
+   endif
+   if nI < nRight
+      QuickSort( nI, nRight, aSort )
+   endif
 return nil
 
 
