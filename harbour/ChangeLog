@@ -1,3 +1,9 @@
+2000-10-17 11:35 UTC+0800 Ron Pinkas <ron@profit-master.com>
+    * contrib/dot/pp.prg
+      ! Fixed few more associations within NextExp()
+      + Added logic to auto create vars refernced in command line.
+	/* Now the DOT prompt is much more functional, in both Clipper and Harbour. */
+
 2000-10-17 18:21 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
    * source/rtl/tbrowse.prg
       ! ::DispCell() was using Lef(Str(xValue)) when xValue was a Numeric one, this is

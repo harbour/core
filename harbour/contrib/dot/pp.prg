@@ -99,6 +99,7 @@ RETURN
 PROCEDURE RP_Dot()
 
    LOCAL sLine := Space(256), bBlock, GetList := {}, sPPed, nNext, sBlock, sTemp
+   LOCAL sTemp2, nLen, sLeft, sSymbol
 
    bCount := .F.
 
@@ -134,15 +135,65 @@ PROCEDURE RP_Dot()
             sBlock := Left( sTemp, nNext - 1 )
             ExtractLeadingWS( @sBlock )
             DropTrailingWS( @sBlock )
+
+            sTemp2 := sBlock
+            WHILE ( nNext := At( ":=", sTemp2 ) ) > 0
+               sLeft  := Left( sTemp2, nNext - 1 )
+               sTemp2 := SubStr( sTemp2, nNext + 2 )
+
+               DropTrailingWS( @sLeft )
+               nLen := Len( sLeft )
+               WHILE nLen > 0
+                  IF SubStr( sLeft, nLen, 1 ) $ " (,=><*+-\^&@["
+                     EXIT
+                  ENDIF
+                  nLen--
+               ENDDO
+               IF nLen == 0
+                  sSymbol := sLeft
+               ELSE
+                  sSymbol := SubStr( sLeft, nLen + 1 )
+               ENDIF
+               IF ( Type( sSymbol ) == 'U' )
+                  PUBLIC &sSymbol
+               ENDIF
+            ENDDO
+
             bBlock := &( "{|| " + sBlock + " }" )
             Eval( bBlock )
             sTemp  := DropTrailingWS( SubStr( sTemp, nNext + 1 ) )
             ExtractLeadingWS( @sTemp )
          ENDDO
+
          ExtractLeadingWS( @sTemp )
          DropTrailingWS( @sTemp )
+
          IF ! ( sTemp == '' )
-            bBlock := &( "{|| " + sTemp + " }" )
+            sTemp2 := sTemp
+            WHILE ( nNext := At( ":=", sTemp2 ) ) > 0
+               sLeft  := Left( sTemp2, nNext - 1 )
+               sTemp2 := SubStr( sTemp2, nNext + 2 )
+
+               DropTrailingWS( @sLeft )
+               nLen := Len( sLeft )
+               WHILE nLen > 0
+                  IF SubStr( sLeft, nLen, 1 ) $ " (,=><*+-\^&@["
+                     EXIT
+                  ENDIF
+                  nLen--
+               ENDDO
+               IF nLen == 0
+                  sSymbol := sLeft
+               ELSE
+                  sSymbol := SubStr( sLeft, nLen + 1 )
+               ENDIF
+               IF ( Type( sSymbol ) == 'U' )
+                  PUBLIC &sSymbol
+               ENDIF
+            ENDDO
+
+            sTemp := "{|| " + sTemp + " }"
+            bBlock := &sTemp
             Eval( bBlock )
          ENDIF
          @ 0,0 SAY "PP: "
@@ -1680,7 +1731,7 @@ RETURN sReturn
 
 FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
 
-  LOCAL sExp, nClose, cChar, sTemp, Counter, sWorkLine, sPad, sToken
+  LOCAL sExp, nClose, cChar, sTemp, Counter, sWorkLine, sPad, sToken, sGrabber
 
   DO CASE
      CASE cType == '*'
@@ -1945,38 +1996,12 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
 
          EXIT
 
-      ELSEIF Left( sLine, 2 ) == "->" .AND. ( sNextAnchor == NIL .OR. ( ! ( sNextAnchor == "->" ) ) )
+      ELSEIF ( ( sGrabber := Left( sLine, 2 ) ) == "->"  .OR. ;
+               sGrabber == ":=" .OR. sGrabber == "==" .OR. sGrabber == "!=" .OR. sGrabber == "<>" .OR. sGrabber == ">=" .OR. ;
+               sGrabber == "<=" .OR. sGrabber == "+=" .OR. sGrabber == "-=" .OR. sGrabber == "*=" .OR. sGrabber == "^=" ) ;
+             .AND. ( sNextAnchor == NIL .OR. ( ! ( sNextAnchor == sGrabber ) ) )
 
-         sExp  += Left( sLine, 2 )
-
-         IF bDbgExp
-            ? "Grabber: '" + sExp + "'"
-         ENDIF
-
-         sLine := SubStr( sLine, 3 )
-         sExp  += ExtractLeadingWS( @sLine )
-
-         IF bDbgExp
-            ? "Next : '" + sLine + "'"
-            WAIT
-         ENDIF
-
-         IF cType == 'A'
-            sExp  += NextExp( @sLine, '<', NIL, NIL, sNextAnchor )
-         ELSE
-            sTemp := NextExp( @sLine, cType, NIL, NIL, sNextAnchor )
-            IF sTemp == NIL
-               Alert( "ERROR! Unbalanced: '->'" )
-            ELSE
-               sExp +=  sTemp
-            ENDIF
-         ENDIF
-
-         LOOP
-
-      ELSEIF Left( sLine, 2 ) == ":=" .AND. ( sNextAnchor == NIL .OR. ( ! ( sNextAnchor == ":=" ) ) )
-
-         sExp  += Left( sLine, 2 )
+         sExp  += sGrabber
 
          IF bDbgExp
             ? "Grabber: '" + sExp + "'"
@@ -1995,7 +2020,7 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
          ELSE
             sTemp := NextExp( @sLine, cType, NIL, NIL, sNextAnchor )
             IF sTemp == NIL
-               Alert( "ERROR! Unbalanced: ':='" )
+               Alert( "ERROR! Unbalanced '" + sGrabber + "'" + "at: '" + sExp + "'" )
             ELSE
                sExp +=  sTemp
             ENDIF
@@ -2003,7 +2028,7 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
 
          LOOP
 
-      ELSEIF Left( sLine, 1 ) $ "+-*/:=^!" .AND. ( sNextAnchor == NIL .OR. ( ! ( sNextAnchor $ "+-*/:=^!<>" ) ) )
+      ELSEIF Left( sLine, 1 ) $ "+-*/:=^!><" .AND. ( sNextAnchor == NIL .OR. ( ! ( sNextAnchor $ "+-*/:=^!<>" ) ) )
 
          sExp  += Left( sLine, 1 )
 
