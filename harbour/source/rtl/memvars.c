@@ -32,6 +32,7 @@
    their web site at http://www.gnu.org/).
 
 */
+#include <ctype.h>      /* for toupper() function */
 
 #include "extend.h"
 #include "itemapi.h"
@@ -719,6 +720,33 @@ static HB_ITEM_PTR hb_memvarDebugVariable( int iScope, int iPos, char * *pszName
    return pValue;
 }
 
+static HB_DYNS_PTR hb_memvarFindSymbol( HB_ITEM_PTR pName )
+{
+   HB_DYNS_PTR pDynSym = NULL;
+
+   if( pName )
+   {
+      ULONG ulLen   = pName->item.asString.length;
+
+      if( ulLen )
+      {
+         char * szName = (char *) hb_xgrab( ulLen + 1 );
+         char * szArg  = pName->item.asString.value;
+
+         szName[ ulLen ] = '\x0';
+         do
+         {
+            --ulLen;
+            szName[ ulLen ] = toupper( szArg[ ulLen ] );
+         } while( ulLen );
+
+         pDynSym = hb_dynsymFind( szName );
+         hb_xfree( szName );
+      }
+   }
+   return pDynSym;
+}
+
 
 /* ************************************************************************** */
 
@@ -1163,9 +1191,9 @@ HARBOUR HB___MVCLEAR( void )
  *    and variable name is set to "?"
  *
  *      The dynamic symbols table is used to find a PUBLIC variable then
- *    the PUBLIC variables are always sorted alphabetically. The PRIVATE 
+ *    the PUBLIC variables are always sorted alphabetically. The PRIVATE
  *    variables are sorted in the creation order.
- * 
+ *
  *    Note:
  *    Due to dynamic nature of memvar variables there is no guarantee that
  *    successive calls to retrieve the value of <Nth> PUBLIC variable will
@@ -1186,57 +1214,57 @@ HARBOUR HB___MVCLEAR( void )
  *
  *  #include <memvars.ch>
  *  PROCEDURE MAIN()
- *  
+ *
  *    ? 'PUBLIC=', __mvDBGINFO( MV_PUBLIC )
  *    ? 'PRIVATE=', __mvDBGINFO( MV_PRIVATE )
- *  
+ *
  *    PUBLIC cPublic:='cPublic in MAIN'
- *  
+ *
  *    ? 'PUBLIC=', __mvDBGINFO( MV_PUBLIC )
  *    ? 'PRIVATE=', __mvDBGINFO( MV_PRIVATE )
- *  
+ *
  *    PRIVATE cPrivate:='cPrivate in MAIN'
- *  
+ *
  *    ? 'PUBLIC=', __mvDBGINFO( MV_PUBLIC )
  *    ? 'PRIVATE=', __mvDBGINFO( MV_PRIVATE )
- *  
+ *
  *    CountMemvars()
- *  
+ *
  *    ? 'Back in Main'
  *    ? 'PUBLIC=', __mvDBGINFO( MV_PUBLIC )
  *    ? 'PRIVATE=', __mvDBGINFO( MV_PRIVATE )
- *  
- *  
+ *
+ *
  *  RETURN
- *  
+ *
  *  PROCEDURE CountMemvars()
  *  LOCAL i, nCnt, xVal, cName
  *  PUBLIC ccPublic:='ccPublic'
  *  PRIVATE ccPrivate:='ccPrivate'
- *  
+ *
  *    ? 'In CountMemvars'
  *    ? 'PUBLIC=', __mvDBGINFO( MV_PUBLIC )
  *    ? 'PRIVATE=', __mvDBGINFO( MV_PRIVATE )
- *  
+ *
  *    PRIVATE cPublic:='cPublic'
- *  
+ *
  *    ? 'PUBLIC=', __mvDBGINFO( MV_PUBLIC )
  *    ? 'PRIVATE=', __mvDBGINFO( MV_PRIVATE )
- *  
+ *
  *    nCnt =__mvDBGINFO( MV_PRIVATE ) +1
  *    FOR i:=1 TO nCnt
  *        xVal =__mvDBGINFO( MV_PRIVATE, i, @cName )
  *        ? i, '=', cName, xVal
  *    NEXT
- *  
+ *
  *    nCnt =__mvDBGINFO( MV_PUBLIC ) +1
  *    FOR i:=1 TO nCnt
  *        xVal =__mvDBGINFO( MV_PUBLIC, i, @cName )
  *        ? i, '=', cName, xVal
  *    NEXT
- *  
+ *
  *  RETURN
- * 
+ *
  *  $STATUS$
  *
  *  $COMPLIANCE$
@@ -1293,5 +1321,162 @@ HARBOUR HB___MVDBGINFO( void )
             hb_itemPutC( pName, "?" ); /* clear an old value and copy a new one */
          }
       }
+   }
+}
+
+/* -------------------------------------------------------------------------- */
+/*  $DOC$
+ *  $FUNCNAME$
+ *    __MVGET()
+ *  $CATEGORY$
+ *    Variable management
+ *  $ONELINER$
+ *    This function returns value of memory variable
+ *  $SYNTAX$
+ *    __MVGET( <cVarName> )
+ *  $ARGUMENTS$
+ *    <cVarName> - string that specifies the name of variable
+ *  $RETURNS$
+ *    The value of variable
+ *  $DESCRIPTION$
+ *      This function returns the value of PRIVATE or PUBLIC variable if
+ *    this variable exists otherwise it generates a runtime error.
+ *    The variable is specified by its name passed as the function parameter.
+ *  $EXAMPLES$
+ *    FUNCTION MEMVARBLOCK( cMemvar )
+ *    RETURN {|x| IIF( x==NIL, __MVGET( cMemvar ), __MVPUT( cMemvar, x ) ) }
+ *  $STATUS$
+ *
+ *  $COMPLIANCE$
+ *
+ *  $SEEALSO$
+ *    MVPUT()
+ *  $END$
+ */
+HARBOUR HB___MVGET( void )
+{
+   BOOL bInvalidArg =TRUE;
+   HB_ITEM_PTR pName = hb_param( 1, IT_STRING );
+
+   if( pName )
+   {
+      HB_DYNS_PTR pDynVar = hb_memvarFindSymbol( pName );
+
+      if( pDynVar )
+      {
+         HB_ITEM retValue;
+         hb_memvarGetValue( &retValue, pDynVar->pSymbol );
+         hb_itemReturn( &retValue );
+         hb_itemClear( &retValue );
+      }
+      else
+      {
+         HB_ITEM_PTR pRetValue = hb_errRT_BASE_Subst( EG_NOVAR, 1003, NULL, pName->item.asString.value );
+
+         if( pRetValue )
+         {
+            hb_itemReturn( pRetValue );
+            hb_itemRelease( pRetValue );
+         }
+      }
+   }
+   else
+   {
+      /* either the first parameter is not specified or it has a wrong type
+       * (it must be a string)
+       * This is not a critical error - we can continue normal processing
+       */
+      /* TODO: This should be expanded a little to report a passed incorrect
+       * value to the error handler
+       */
+      HB_ITEM_PTR pRetValue = hb_errRT_BASE_Subst( EG_ARG, 3009, NULL, NULL );
+
+      if( pRetValue )
+      {
+         hb_itemReturn( pRetValue );
+         hb_itemRelease( pRetValue );
+      }
+   }
+}
+
+/* -------------------------------------------------------------------------- */
+/*  $DOC$
+ *  $FUNCNAME$
+ *    __MVPUT()
+ *  $CATEGORY$
+ *    Variable management
+ *  $ONELINER$
+ *    This function set the value of memory variable
+ *  $SYNTAX$
+ *    __MVGET( <cVarName> [, <xValue>] )
+ *  $ARGUMENTS$
+ *    <cVarName> - string that specifies the name of variable
+ *    <xValue>   - a value of any type that will be set - if it is not
+ *      specified then NIL is assumed
+ *  $RETURNS$
+ *    A value assigned to the given variable.
+ *  $DESCRIPTION$
+ *      This function sets the value of PRIVATE or PUBLIC variable if
+ *    this variable exists otherwise it generates a runtime error.
+ *    The variable is specified by its name passed as the function
+ *    parameter.
+ *    If a value is not specified then the NIL is assumed
+ *  $EXAMPLES$
+ *    FUNCTION MEMVARBLOCK( cMemvar )
+ *    RETURN {|x| IIF( x==NIL, __MVGET( cMemvar ), __MVPUT( cMemvar, x ) ) }
+ *  $STATUS$
+ *
+ *  $COMPLIANCE$
+ *
+ *  $SEEALSO$
+ *    MVPUT()
+ *  $END$
+ */
+HARBOUR HB___MVPUT( void )
+{
+   BOOL bInvalidArg =TRUE;
+   HB_ITEM_PTR pName = hb_param( 1, IT_STRING );
+   HB_ITEM nil;
+   HB_ITEM_PTR pValue = &nil;
+
+   nil.type = IT_NIL;
+   if( hb_pcount() >= 2 )
+      pValue = hb_param( 2, IT_ANY );
+
+   if( pName )
+   {
+      /* the first parameter is a string with not empty variable name
+       */
+      HB_DYNS_PTR pDynVar = hb_memvarFindSymbol( pName );
+
+      if( pDynVar )
+      {
+         /* variable was declared somwhere - assign a new value
+          */
+         hb_memvarSetValue( pDynVar->pSymbol, pValue );
+      }
+      else
+      {
+         /* attempt to assign a value to undeclared variable
+          * create the PRIVATE one
+          */
+         hb_memvarCreateFromDynSymbol( hb_dynsymGet( pName->item.asString.value ), VS_PRIVATE, pValue );
+      }
+      hb_itemReturn( pValue );
+   }
+   else
+   {
+      /* either the first parameter is not specified or it has a wrong type
+       * (it must be a string)
+       * This is not a critical error - we can continue normal processing
+       */
+      /* TODO: This should be expanded a little to report a passed incorrect
+       * value to the error handler
+       */
+      HB_ITEM_PTR pRetValue = hb_errRT_BASE_Subst( EG_ARG, 3010, NULL, NULL );
+
+      if( pRetValue )
+         hb_itemRelease( pRetValue );
+      hb_itemReturn( pValue );
    }
 }

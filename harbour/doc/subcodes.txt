@@ -1173,7 +1173,6 @@ start from 3000
  *  $FUNCTION$
  *  $STATUS$
  *  $SEEALSO$
- *
  *  $END$
  */
 
@@ -1218,12 +1217,18 @@ start from 3000
  *  $SUBCODE$
  *      BASE/3009
  *  $CATEGORY$
- *      (not used yet)
+ *      arguments
  *  $ONELINER$
+ *      Incorrect argument passed to __MVGET function
  *  $DESCRIPTION$
+ *      __MVGET function expects only one argument: a string with a name
+ *      of variable. The value of this variable will be returned.
  *  $FUNCTION$
+ *      __MVGET
  *  $STATUS$
+ *      Harbour specific
  *  $SEEALSO$
+ *
  *  $END$
  */
 
@@ -1231,11 +1236,16 @@ start from 3000
  *  $SUBCODE$
  *      BASE/3010
  *  $CATEGORY$
- *      (not used yet)
+ *      arguments
  *  $ONELINER$
+ *      Incorrect argument passed to __MVPUT function
  *  $DESCRIPTION$
+ *      __MVPUT function expects at least one argument: a string with a name
+ *      of variable. The value of this variable will be set.
  *  $FUNCTION$
+ *      __MVPUT
  *  $STATUS$
+ *      Harbour specific
  *  $SEEALSO$
  *
  *  $END$
