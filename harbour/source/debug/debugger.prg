@@ -84,8 +84,9 @@ procedure __dbgEntry( uParam1, uParam2 )  // debugger entry point
 
       case ValType( uParam1 ) == "N"   // called from hvm.c hb_vmDebuggerShowLines()
            if s_oDebugger != nil
-              if PCount() == 2 // called from hvm.c hb_vmDebuggerLocalName()
-                 AAdd( s_oDebugger:aVars, { uParam2, "Local", uParam1 } )
+              if PCount() == 2 // called from hvm.c hb_vmLocalName()
+                 AAdd( s_oDebugger:aVars, { uParam2, uParam1, "Local" } )
+                 Alert( uParam1 )
                  if s_oDebugger:oBrwVars != nil
                     s_oDebugger:oBrwVars:RefreshAll()
                  endif
@@ -604,14 +605,14 @@ return nil
 static function GetVarInfo( aVar )
 
    do case
+      case aVar[ 3 ] == "Local"
+           return aVar[ 1 ] + " <" + aVar[ 3 ] + ", " + ;
+                  ValType( __vmVarLGet( 8, aVar[ 2 ] ) ) + ;
+                  ">: " + ValToStr( __vmVarLGet( 8, aVar[ 2 ] ) )
+
       case aVar[ 3 ] == "Public" .or. aVar[ 3 ] == "Private"
            return aVar[ 1 ] + " <" + aVar[ 3 ] + ", " + ValType( aVar[ 2 ] ) + ;
                   ">: " + ValToStr( aVar[ 2 ] )
-
-      case aVar[ 3 ] == "Local"
-           return aVar[ 1 ] + " <" + aVar[ 2 ] + ", " + ;
-                  ValType( __vmVarLGet( 7, aVar[ 3 ] ) ) + ;
-                  ">: " + ValToStr( __vmVarLGet( 7, aVar[ 3 ] ) )
    endcase
 
 return ""
@@ -696,7 +697,7 @@ METHOD GotoLine( nLine ) CLASS TDebugger
    ::oBrwText:GotoLine( nLine )
 
    if ::oBrwVars != nil
-      ::LoadVars()
+      // ::LoadVars()
       ::oBrwVars:RefreshAll()
       ::oBrwVars:ForceStable()
    endif
@@ -856,7 +857,7 @@ static procedure SetsUp( oBrw )
    if nRow != oBrw:Cargo
       oBrw:aReDraw[ nRow ] := .f.
       oBrw:Up()
-   endif 
+   endif
    oBrw:ForceStable()
    myColors(oBrw,{1,2})
 return
