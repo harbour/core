@@ -85,6 +85,7 @@ HARBOUR HB_DBCOMMITALL( void );
 HARBOUR HB___DBCONTINUE( void );
 HARBOUR HB_DBCREATE( void );
 HARBOUR HB_DBDELETE( void );
+HARBOUR HB_DBEVAL( void );
 HARBOUR HB_DBF( void );
 HARBOUR HB_DBFILTER( void );
 HARBOUR HB_DBGOBOTTOM( void );
@@ -317,6 +318,96 @@ static ERRCODE defError( AREAP pArea, PHB_ITEM pError )
    hb_errPutSubSystem( pError, szRddName );
    hb_xfree( szRddName );
    return hb_errLaunch( pError );
+}
+
+static ERRCODE defEval( AREAP pArea, LPDBEVALINFO pEvalInfo )
+{
+   BOOL bEof, bFor, bWhile;
+   ULONG ulNext;
+
+   HB_TRACE(HB_TR_DEBUG, ("defEval(%p, %p)", pArea, pEvalInfo));
+
+   if( pEvalInfo->dbsci.itmRecID )
+   {
+      SELF_GOTOID( ( AREAP ) pCurrArea->pArea, pEvalInfo->dbsci.itmRecID );
+      SELF_EOF( ( AREAP ) pCurrArea->pArea, &bEof );
+      if( !bEof )
+      {
+         if( pEvalInfo->dbsci.itmCobWhile )
+         {
+            hb_vmPushSymbol( &hb_symEval ); 
+            hb_vmPush( pEvalInfo->dbsci.itmCobWhile );
+            hb_vmDo( 0 ); 
+            bWhile = hb_itemGetL( &hb_stack.Return ); 
+         }
+         else
+            bWhile = TRUE;
+
+         if( pEvalInfo->dbsci.itmCobFor )
+         {
+            hb_vmPushSymbol( &hb_symEval );
+            hb_vmPush( pEvalInfo->dbsci.itmCobFor );
+            hb_vmDo( 0 );
+            bFor = hb_itemGetL( &hb_stack.Return );
+         }
+         else
+            bFor = TRUE;
+
+         if( bWhile && bFor )
+         {
+            hb_vmPushSymbol( &hb_symEval );
+            hb_vmPush( pEvalInfo->itmBlock );
+            hb_vmDo( 0 );
+         }
+      }
+      return SUCCESS;
+   }
+      
+   if( !pEvalInfo->dbsci.fRest || !hb_itemGetL( pEvalInfo->dbsci.fRest ) )
+      SELF_GOTOP( ( AREAP ) pCurrArea->pArea );
+
+   if( pEvalInfo->dbsci.lNext )
+      ulNext = hb_itemGetNL( pEvalInfo->dbsci.lNext );
+
+   SELF_EOF( ( AREAP ) pCurrArea->pArea, &bEof );
+   while( !bEof )
+   {
+      if( pEvalInfo->dbsci.lNext && ulNext-- < 1 )
+         break;
+
+      if( pEvalInfo->dbsci.itmCobWhile )
+      {
+         hb_vmPushSymbol( &hb_symEval ); 
+         hb_vmPush( pEvalInfo->dbsci.itmCobWhile );
+         hb_vmDo( 0 ); 
+         bWhile = hb_itemGetL( &hb_stack.Return ); 
+         if( !bWhile )
+            break;
+      }
+      else
+         bWhile = TRUE;
+
+      if( pEvalInfo->dbsci.itmCobFor )
+      {
+         hb_vmPushSymbol( &hb_symEval );
+         hb_vmPush( pEvalInfo->dbsci.itmCobFor );
+         hb_vmDo( 0 );
+         bFor = hb_itemGetL( &hb_stack.Return );
+      }
+      else
+         bFor = TRUE;
+
+      if( bFor && bWhile )
+      {
+         hb_vmPushSymbol( &hb_symEval );
+         hb_vmPush( pEvalInfo->itmBlock );
+         hb_vmDo( 0 );
+      }
+      SELF_SKIP( ( AREAP ) pCurrArea->pArea, 1 );
+      SELF_EOF( ( AREAP ) pCurrArea->pArea, &bEof );
+   }
+
+   return SUCCESS;
 }
 
 static ERRCODE defFieldCount( AREAP pArea, USHORT * uiFields )
@@ -728,6 +819,7 @@ static RDDFUNCS defTable = { defBof,
                              defRelease,
                              defStructSize,
                              defSysName,
+                             defEval,
                              defUnSupported,
                              defUnSupported,
                              defClearFilter,
@@ -1302,6 +1394,75 @@ HARBOUR HB_ALIAS( void )
       pAreaNode = pAreaNode->pNext;
    }
    hb_retc( "" );
+}
+
+HARBOUR HB_DBEVAL( void )
+{
+   DBEVALINFO pEvalInfo;
+
+   if( !pCurrArea )
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "DBEVAL" );
+   else
+   {
+      pEvalInfo.itmBlock = hb_param( 1, IT_BLOCK );
+      if( !pEvalInfo.itmBlock )
+      {
+         hb_errRT_DBCMD( EG_ARG, 12019, NULL, "DBEVAL" );
+         return;
+      }
+
+      pEvalInfo.dbsci.itmCobFor = hb_param( 2, IT_BLOCK );
+      if( !pEvalInfo.dbsci.itmCobFor )
+      {
+         if( !ISNIL( 2 ) )
+         {
+            hb_errRT_DBCMD( EG_ARG, 22019, NULL, "DBEVAL" );
+            return;
+         }
+      }
+
+      pEvalInfo.dbsci.itmCobWhile = hb_param( 3, IT_BLOCK );
+      if( !pEvalInfo.dbsci.itmCobWhile )
+      {
+         if( !ISNIL( 3 ) )
+         {
+            hb_errRT_DBCMD( EG_ARG, 32019, NULL, "DBEVAL" );
+            return;
+         }
+      }
+
+      pEvalInfo.dbsci.lNext = hb_param( 4, IT_NUMERIC );
+      if( !pEvalInfo.dbsci.lNext )
+      {
+         if( !ISNIL( 4 ) )
+         {
+            hb_errRT_DBCMD( EG_ARG, 42019, NULL, "DBEVAL" );
+            return;
+         }
+      }
+
+      pEvalInfo.dbsci.itmRecID = hb_param( 5, IT_NUMERIC );
+      if( !pEvalInfo.dbsci.itmRecID )
+      {
+         if( !ISNIL( 5 ) )
+         {
+            hb_errRT_DBCMD( EG_ARG, 52019, NULL, "DBEVAL" );
+            return;
+         }
+      }
+
+      pEvalInfo.dbsci.fRest = hb_param( 6, IT_LOGICAL );
+      if( !pEvalInfo.dbsci.fRest )
+      {
+         if( !ISNIL( 6 ) )
+         {
+            hb_errRT_DBCMD( EG_ARG, 62019, NULL, "DBEVAL" );
+            return;
+         }
+      }
+
+      SELF_DBEVAL( ( AREAP ) pCurrArea->pArea, &pEvalInfo );
+   }
 }
 
 HARBOUR HB_DBF( void )

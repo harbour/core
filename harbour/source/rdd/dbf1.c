@@ -652,6 +652,7 @@ static RDDFUNCS dbfSuper = { 0 };
 #define dbfNewArea                              NULL
 #define dbfStructSize                           NULL
 #define dbfSysName                              NULL
+#define dbfEval                                 NULL
 #define dbfClearFilter                          NULL
 #define dbfClearLocate                          NULL
 #define dbfFilterText                           NULL
@@ -2038,6 +2039,7 @@ static RDDFUNCS dbfTable = { dbfBof,
                              dbfRelease,
                              dbfStructSize,
                              dbfSysName,
+                             dbfEval,
                              dbfPack,
                              dbfZap,
                              dbfClearFilter,

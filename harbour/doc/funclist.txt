@@ -77,7 +77,7 @@ DBCREATE                ;R;
 DBCREATEIND             ;S;
 DBDELETE                ;R;
 DBEDIT                  ;R;
-DBEVAL                  ;S;
+DBEVAL                  ;R;
 DBF                     ;R;
 DBFILTER                ;R;
 DBGOBOTTOM              ;R;

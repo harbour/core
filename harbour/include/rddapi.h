@@ -583,6 +583,7 @@ typedef USHORT ( * DBENTRYP_VP   )( AREAP area, LPDBOPENINFO param );
 typedef USHORT ( * DBENTRYP_VF   )( AREAP area, LPDBFIELDINFO param );
 typedef USHORT ( * DBENTRYP_VL   )( AREAP area, LPDBLOCKINFO param );
 typedef USHORT ( * DBENTRYP_VFI  )( AREAP area, LPDBFILTERINFO param );
+typedef USHORT ( * DBENTRYP_VEI  )( AREAP area, LPDBEVALINFO param );
 typedef USHORT ( * DBENTRYP_VLO  )( AREAP area, LPDBSCOPEINFO param );
 typedef USHORT ( * DBENTRYP_SP   )( AREAP area, USHORT * param );
 typedef USHORT ( * DBENTRYP_P    )( AREAP area, BYTE * param );
@@ -662,9 +663,7 @@ typedef struct _RDDFUNCS
    DBENTRYP_V    release;
    DBENTRYP_SP   structSize;
    DBENTRYP_P    sysName;
-#if 0
-   DBENTRYP_VP   dbEval;
-#endif
+   DBENTRYP_VEI  dbEval;
    DBENTRYP_V    pack;
 #if 0
    DBENTRYP_LSP  packRec;

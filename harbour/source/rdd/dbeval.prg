@@ -80,7 +80,7 @@
  *  $END$
  */
 
-FUNCTION dbEval( bBlock, bFor, bWhile, nNext, nRecord, lRest )
+FUNCTION Bad_dbEval( bBlock, bFor, bWhile, nNext, nRecord, lRest )
    LOCAL oError
    LOCAL nCounter
 

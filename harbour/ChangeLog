@@ -1,3 +1,13 @@
+19991202-18:00 GMT+1 Bruno Cantero <bruno@issnet.net>
+  * source/rdd/dbeval.prg
+    * Function dbEval() renamed to Bad_dbEval()
+  * include/rddapi.h
+    source/rdd/dbcmd.c
+    source/rdd/dbf1.c
+    source/rdd/dbfcdx/dbfcdx1.c
+    doc/funclist.txt
+    + Added dbEval() function.
+
 19991202-01:45 EST Paul Tucker <ptucker@sympatico.ca>
   * makefile.vc
     + source/rtl/break.c
