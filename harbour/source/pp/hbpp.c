@@ -2543,7 +2543,7 @@ static void DebugPragma( char * szStr, int iValue, BOOL bValue )
    if( s_bTracePragma )
    {
       char * ptr = strchr( szStr, '=' );
-      char * temp = hb_xgrab( strlen( szStr ) + 1 );
+      char * temp = ( char * ) hb_xgrab( strlen( szStr ) + 1 );
       BOOL bIsSwitch = TRUE;
 
       * temp = '\0';

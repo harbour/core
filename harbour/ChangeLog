@@ -1,3 +1,7 @@
+19991130-04:30 EST Paul Tucker <ptucker@sympatico.ca>
+  * source/pp/hbpp.c
+    * added a cast on xgrab call.
+
 19991130-01:55 GMT+1 Victor Szel <info@szelvesz.hu>
   * tests/regress/rt_trans.prg
     + ~200 TRANSFORM() regression tests added, 43 of them fail.
