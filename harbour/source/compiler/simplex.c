@@ -317,6 +317,8 @@ int Reduce( int iToken, BOOL bReal );
                      { \
                         DEBUG_INFO( printf( "Reducing Self >%s<\n", sSelf ) ); \
                         \
+                        bIgnoreWords = FALSE;\
+                        \
                         if( bNewLine )\
                         {\
                            bNewLine = FALSE;\
@@ -443,10 +445,6 @@ int Reduce( int iToken, BOOL bReal );
                {\
                   bNewLine = TRUE;\
                }\
-               else\
-               {\
-                  bNewLine = FALSE;\
-               }\
             }\
             \
             DEBUG_INFO( printf(  "Reducing Held: %i Pos: %i\n", iRet, iHold ) ); \
@@ -535,11 +533,18 @@ int Reduce( int iToken, BOOL bReal );
       }\
       else\
       {\
-         /* No longer a prospect. */\
-         REMOVE_PROSPECT(iScan);\
+         if( bReal )\
+         {\
+            /* No longer a prospect. */\
+            REMOVE_PROSPECT(iScan);\
 \
-         /* Has to continue without increasing the counter, because of side effect of REMOVE_PROSPECT(). */\
-         continue;\
+            /* Has to continue without increasing the counter, because of side effect of REMOVE_PROSPECT(). */\
+            continue;\
+         }\
+         else\
+         {\
+            iRemoved++;\
+         }\
       }\
 \
       iScan++;\
@@ -927,6 +932,8 @@ YY_DECL
                     goto CheckToken ;
                 }
 
+                bIgnoreWords = FALSE;
+
                 IF_BELONG_LEFT( chr )
                 {
                     DEBUG_INFO( printf(  "Reducing Left '%c'\n", chr ) );
@@ -1039,12 +1046,12 @@ YY_DECL
                     sToken[ iLen ] = '\0';
 
                     DEBUG_INFO( printf(  "Token: \"%s\" at <NewLine> Holding: \'%c\'\n", sToken, chr ) );
-
                     goto CheckToken;
                 }
                 else
                 {
                     DEBUG_INFO( printf(  "Reducing NewLine '%c'\n", chr ) );
+                    bIgnoreWords = FALSE;
                     bNewLine = TRUE;
                     RETURN_TOKEN( REDUCE( (int) chr ), NULL );
                 }
@@ -1078,6 +1085,8 @@ YY_DECL
                 else
                 {
                     DEBUG_INFO( printf(  "Reducing Delimiter: '%c'\n", chr ) );
+
+                    bIgnoreWords = FALSE;
 
                     if( bNewLine )
                     {
@@ -1244,6 +1253,8 @@ YY_DECL
 
 int Reduce( int iToken, BOOL bReal )
 {
+   int iRemoved = 0; /* Simulted Removed Prospects if bReal is FALSE. */
+
    /* The search rutine will "return" the number of Matches in iFound, number of Prospects in iProspects, and the last
       (and hopefuly only) Matched Rule No in iReduce. */
 
@@ -1266,7 +1277,7 @@ int Reduce( int iToken, BOOL bReal )
 
    if( ! bReal )
    {
-      return ( iFound || iProspects );
+      return ( iFound || ( iProspects - iRemoved ) );
    }
 
    DEBUG_INFO( printf(  "Found %i Rules and %i Prospects for Token %i After %i %i %i\n", iFound, iProspects, iToken, aiMatched[0], aiMatched[1], aiMatched[2] ) );

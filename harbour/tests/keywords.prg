@@ -222,8 +222,11 @@ LOCAL case
 case )
   NEXT case
 
-  case[ case ] :=case //in Clipper: Case is not immediatelly within DO CASE
-  case[ 2 ] :=2 //in Clipper: the same as above - Harbour compiles both
+ do case
+  case[ case ] == "case"
+  case[ 2 ] == "2"
+ endcase
+
   case :=case[ 2 ]
   case =case + case - case
   case :={|case| case( case )}
@@ -337,19 +340,25 @@ LOCAL with
 
   do->do :=while->while
 
-  while[ 1 ] :=while
-  while[ 2 ] +=2
+  while[ 1 ] ==while
+     while[ 2 ] $ "2"
+       while( while )
+         while( while[1] )
+           while[ while ] == while[ 1 ]
 
-  while( while )
-    while( while[1] )
-      while[ while ] :=while[ 1 ]  //in Clipper: syntax error ' 1 '
-      while :={|while| while}
+             while :={|while| while}
 
-      while while++ < 10
-        ( while )->( while() )
-      enddo
-    enddo
+           enddo
+         enddo
+       enddo
+
+       while while++ < 10
+          ( while )->( while() )
+       enddo
+
+     enddo
   enddo
+
 
   while while[1]   //in Clipper: syntax error ' 1 '
   enddo
