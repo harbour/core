@@ -50,6 +50,7 @@ HARBOURFLAGS=-iinclude
 #
 
 HARBOUR_LIB_OBJS = \
+    $(OBJ_DIR)\alert.obj \
     $(OBJ_DIR)\arrays.obj \
     $(OBJ_DIR)\asort.obj \
     $(OBJ_DIR)\classes.obj \
@@ -101,6 +102,7 @@ TOOLS_LIB_OBJS = \
     $(OBJ_DIR)\dates2.obj \
     $(OBJ_DIR)\datesx.obj \
     $(OBJ_DIR)\debug.obj \
+    $(OBJ_DIR)\fileread.obj \
     $(OBJ_DIR)\hb_f.obj \
     $(OBJ_DIR)\io.obj \
     $(OBJ_DIR)\mathx.obj \
@@ -200,6 +202,12 @@ $(RTL_DIR)\achoice.c : $(RTL_DIR)\achoice.prg
     $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(**D) $**
 
 $(OBJ_DIR)\achoice.obj : $(RTL_DIR)\achoice.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(RTL_DIR)\alert.c : $(RTL_DIR)\alert.prg
+    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(**D) $** -n
+
+$(OBJ_DIR)\alert.obj : $(RTL_DIR)\alert.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\arrays.obj : $(RTL_DIR)\arrays.c
@@ -367,6 +375,12 @@ $(OBJ_DIR)\datesx.obj : $(TOOLS_DIR)\datesx.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\debug.obj : $(TOOLS_DIR)\debug.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(TOOLS_DIR)\fileread.c : $(TOOLS_DIR)\fileread.prg
+    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(**D) $**
+
+$(OBJ_DIR)\fileread.obj : $(TOOLS_DIR)\fileread.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 #$(OBJ_DIR)\genobj.obj : $(TOOLS_DIR)\genobj.c

@@ -1,3 +1,8 @@
+19990730-14:00 EDT Paul Tucker <ptucker@sympatico.ca>
+   * makefile.vc (reported by Matteo Baccan)
+     + source/tools/fileread.prg
+     + source/rtl/alert.prg
+
 19990730-19:51 CET Victor Szel <info@szelvesz.hu>
    ! source/rtl/strings.c/HB_STRTRAN()
      Fixed so that it throws an error instead of
