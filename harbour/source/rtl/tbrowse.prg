@@ -20,6 +20,7 @@
  */
 
 #include "classes.ch"
+#include "color.ch"
 
 CLASS TBrowse
 
@@ -115,6 +116,7 @@ METHOD New() CLASS TBrowse
    ::FootSep   = ""
    ::HeadSep   = ""
    ::StabLevel = 0
+   ::RowPos    = 1
 
 return Self
 
@@ -166,6 +168,7 @@ METHOD Stabilize() CLASS TBrowse
       SetPos( ::nTop + nRow, ::nLeft )
       DevOut( Space( ( nWidth - nColsWidth ) / 2 ), ::ColorSpec )
       for n = 1 to nColsVisible
+         ::aColumns[ n ]:ColPos = Col()
          if lDisplay
             DevOut( PadR( Eval( ::aColumns[ n ]:block ),;
                     ::aColumns[ n ]:Width ), ::ColorSpec )
@@ -179,6 +182,11 @@ METHOD Stabilize() CLASS TBrowse
       DevOut( Space( ( nWidth - nColsWidth ) / 2 ), ::ColorSpec )
       lDisplay = Eval( ::SkipBlock, 1 ) != 0
    next
+
+   Eval( ::SkipBlock, -( ::nBottom - ::nTop + If( lHeaders, 1, 0 ) ) )
+   @ ::nTop + ::RowPos - If( lHeaders, 0, 1 ), ::aColumns[ ::ColPos ]:ColPos ;
+      SAY PadR( Eval( ::aColumns[ ::ColPos ]:block ), ::aColumns[ ::ColPos ]:Width ) ;
+      COLOR __ColorIndex( ::ColorSpec, CLR_ENHANCED )
 
 return .t.
 

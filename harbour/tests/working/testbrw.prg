@@ -24,4 +24,6 @@ function Main()
       InKey( 0 )
    end
 
+   SetPos( 17, 0 )
+
 return nil

@@ -33,6 +33,7 @@ CLASS TBColumn
    DATA Heading    // Column heading
    DATA HeadSep    // Heading separator character
    DATA Width      // Column display width
+   DATA ColPos     // Temporary column position on screen
 
    METHOD New()    // Constructor
 
