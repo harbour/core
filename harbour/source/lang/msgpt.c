@@ -2,19 +2,60 @@
  * $Id$
  */
 
-/* Language Support Module */
+/*
+ * Harbour Project source code:
+ * Language Support Module (Template)
+ *
+ * Copyright 1999 {list of individual authors and e-mail addresses}
+ * www - http://www.harbour-project.org
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version, with one exception:
+ *
+ * The exception is that if you link the Harbour Runtime Library (HRL)
+ * and/or the Harbour Virtual Machine (HVM) with other files to produce
+ * an executable, this does not by itself cause the resulting executable
+ * to be covered by the GNU General Public License. Your use of that
+ * executable is in no way restricted on account of linking the HRL
+ * and/or HVM code into it.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
+ * their web site at http://www.gnu.org/).
+ *
+ */
 
-/* Language name: Portugese */
+/* Language name: Portuguese> */
 /* ISO language code (2 chars): PT */
-/* Codepage: ???? */
+/* Codepage: 850 */
 
-#include "hbdefs.h"
+#include "hbapilng.h"
 
-char *hb_dateMonthsName[ 12 ] =
+static HB_LANG s_lang =
 {
+   {
+      /* Identification */
+   
+      "PT",                        /* ID */
+      "Portuguese",                   /* Name (in English) */
+      "Portuguese",                   /* Name (in native language) */
+      "PT",                        /* RFC ID */
+      "437",                       /* Codepage */
+      "$Revision$ $Date$",         /* Version */
+   
+      /* Month names */
+
    "Janeiro",
    "Fevereiro",
-   "Março",
+   "Mar‡o",
    "Abril",
    "Maio",
    "Junho",
@@ -23,70 +64,112 @@ char *hb_dateMonthsName[ 12 ] =
    "Setembro",
    "Outubro",
    "Novembro",
-   "Dezembro"
-};
+   "Dezembro",
 
-char *hb_dateDaysName[ 7 ] =
-{
+   
+      /* Day names */
+
    "Domingo",
    "Segunda-feira",
-   "Terça-feira",
+   "Ter‡a-feira",
    "Quarta-feira",
    "Quinta-feira",
    "Sexta-feira",
-   "Sábado"
-};
+   "S bado",
 
-char *hb_errorsGeneric[] =
-{
+   
+      /* CA-Cl*pper compatible natmsg items */
+   
+      "Database Files    # Records    Last Update     Size",
+      "Voce quer mais testes?",
+      "Pagina No.",
+      "** Subtotal **",
+      "* Subsubtotal *",
+      "*** Total ***",
+      "Ins",
+      "   ",
+      "Data invalida",
+      "Range: ",
+      " - ",
+      "S/N",
+      "EXPRESSÇO INVALIDA",
+   
+      /* Error description names */
+   
    "Erro desconhecido",
-   "Erro nos parâmetros",
+   "Erro nos parƒmetros",
    "Erro de limite",
    "Overflow de string",
    "Overflow numérico",
-   "Divizao por zero",
-   "Erro numérico",
+   "DivisÆo por zero",
+   "Erro num‚rico",
    "Erro de sintaxe",
-   "Operação muito complexa",
+   "Opera‡Æo muito complexa",
    "",
    "",
-   "Memória insuficiente",
-   "Função indefinida",
-   "Método não exportado",
-   "Variável não existe",
-   "Alias não existe",
-   "Nenhuma variável exportada",
+   "Mem¢ria insuficiente",
+   "Fun‡Æo indefinida",
+   "M‚todo nÆo exportado",
+   "Vari vel nÆo existe",
+   "Alias nÆo existe",
+   "Nenhuma vari vel exportada",
    "Nome de alias incorreto",
    "Nome de alias duplicado",
    "",
-   "Erro de criação",
+   "Erro de cria‡Æo",
    "Erro de abertura",
    "Erro ao fechar",
    "Erro de leitura",
    "Erro de escrita",
-   "Erro de impressão",
+   "Erro de impressÆo",
    "",
    "",
    "",
    "",
-   "Operação não suportada",
+   "Opera‡Æo nÆo suportada",
    "Limite excedido",
-   "Detectado índice corrompido",
+   "Detectado ¡ndice corrompido",
    "Tipo incorreto de dado",
    "Tamanho do dato muito longo",
-   "Workarea não está em uso",
-   "Workarea não indexada",
+   "Workarea nÆo est  em uso",
+   "Workarea nÆo indexada",
    "Uso exclusivo requerido",
    "Travamento requerido",
-   "Escrita não permitida",
+   "Escrita nÆo permitida",
    "Falha no travamento do Append",
    "Falha no travamento",
    "",
    "",
    "",
-   "Numero de parâmetros incorretos",
+   "Numero de parƒmetros incorretos",
    "acesso de array",
    "array assign",
-   "não é um array",
-   "condicional"
+   "nÆo ‚ um array",
+   "condicional",
+
+      /* Internal error names */
+ 
+      "NÆo pode localizar procedure inicial",
+      "NÆo pode alocar mem¢ria (%s)",
+      "NÆo pode realocar mem¢ria (%s)",
+      "Livre chamada usado ponteino NULL", /* DEBUG */
+      "Opcode nÆo implementado (%s)",
+      "NÆo implementado (%s)",
+
+      /* Texts */
+   
+      "DD/MM/YYYY",
+      "S",
+      "N"
+   }
 };
+
+HB_LANG_ANNOUNCE( PT );
+
+HB_CALL_ON_STARTUP_BEGIN( hb_lang_Init_PT )
+   hb_langRegister( &s_lang );
+HB_CALL_ON_STARTUP_END( hb_lang_Init_PT )
+#if ! defined(__GNUC__) && ! defined(_MSC_VER)
+   #pragma startup hb_lang_Init_PT
+#endif
+
