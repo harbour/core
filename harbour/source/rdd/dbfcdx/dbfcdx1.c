@@ -555,6 +555,43 @@ static BOOL hb_cdxPutMemo( CDXAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
    return TRUE;
 }
 
+static void hb_cdxCreateCompoundTag( LPCDXINDEX pIndex )
+{
+   CDXTAGHEADER cdxTagHeader;
+   CDXLEAFHEADER cdxLeafHeader;
+
+   pIndex->pCompound = ( LPCDXTAG ) hb_xgrab( sizeof( CDXTAG ) );
+   pIndex->pCompound->szName = NULL;
+   pIndex->pCompound->uiType = HB_IT_STRING;
+   pIndex->pCompound->uiLen = CDX_MAXTAGNAMELEN;
+   pIndex->pCompound->pKeyExp = pIndex->pCompound->pForExp = NULL;
+   pIndex->pCompound->pIndex = pIndex;
+
+   /* Write header */
+   memset( &cdxTagHeader, 0, sizeof( CDXTAGHEADER ) );
+   cdxTagHeader.lRoot = CDX_PAGELEN * 2;
+   cdxTagHeader.uiKeySize = CDX_MAXTAGNAMELEN;
+   cdxTagHeader.iExprLen = cdxTagHeader.iFilterLen = cdxTagHeader.iFilterPos = 1;
+   cdxTagHeader.bType = 0xE0;
+   hb_fsWrite( pIndex->hFile, ( BYTE * ) &cdxTagHeader, CDX_PAGELEN );
+
+   // Append the empty keypool */
+   memset( &cdxTagHeader, 0, sizeof( CDXTAGHEADER ) );
+   hb_fsWrite( pIndex->hFile, ( BYTE * ) &cdxTagHeader, CDX_PAGELEN );
+printf("\n%hu  %hu\n",sizeof(LONG),sizeof(CDXLEAFHEADER));
+   // Append the empty root node */
+//   memset( &cdxLeafHeader, 0, sizeof( CDXLEAFHEADER ) );
+//   cdxLeafHeader.uiNodeType = CDX_ROOTTYPE | CDX_LEAFTYPE;
+//   cdxLeafHeader.lLeftNode = cdxLeafHeader.lRightNode = -1;
+//   cdxLeafHeader.uiFreeSpace = CDX_LEAFFREESPACE;
+//   cdxLeafHeader.ulRecNumMask = 0xFFFF;
+//   cdxLeafHeader.bDupByteMask = cdxLeafHeader.bTrailByteMask = 0xF;
+//   cdxLeafHeader.bRecNumLen = 16;
+//   cdxLeafHeader.bDupCntLen = cdxLeafHeader.bTrailCntLen = 4;
+//   cdxLeafHeader.bInfo = 3;
+//   hb_fsWrite( pIndex->hFile, ( BYTE * ) &cdxLeafHeader, CDX_PAGELEN );
+}
+
 /*
  * -- DBFCDX METHODS --
  */
@@ -655,7 +692,8 @@ ERRCODE hb_cdxClose( CDXAREAP pArea )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_cdxClose(%p)", pArea));
 
-/*   SELF_ORDLSTCLEAR( ( AREAP ) pArea ); */
+   /* Close all index */
+   SELF_ORDLSTCLEAR( ( AREAP ) pArea ); 
 
    /* Free Indexes array */
    if( pArea->lpIndexes )
@@ -772,16 +810,262 @@ ERRCODE hb_cdxSysName( CDXAREAP pArea, BYTE * pBuffer )
 }
 
 /*
+ * Clear the current order list.
+ */
+ERRCODE hb_cdxOrderListClear( CDXAREAP pArea )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_cdxOrderListClear(%p)", pArea));
+   HB_SYMBOL_UNUSED( pArea );
+
+   return SUCCESS;
+}
+
+/*
  * Create new order.
  */
 ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
 {
+   USHORT uiType, uiLen;
+   char * szFileName, * szTagName;
+   PHB_ITEM pKeyExp, pForExp, pResult, pError;
+   HB_MACRO_PTR pExpMacro, pForMacro;
+   PHB_FNAME pFileName;
+   DBORDERINFO dbOrderInfo;
+   LPCDXINDEX pIndex;
+   LPCDXTAG pTag;
+   BOOL bNewFile;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_cdxOrderCreate(%p, %p)", pArea, pOrderInfo));
-   HB_SYMBOL_UNUSED( pOrderInfo );
 
    if( SELF_GOCOLD( ( AREAP ) pArea ) == FAILURE )
       return FAILURE;
 
+   /* If we have a codeblock for the expression, use it */
+   if( pOrderInfo->itmCobExpr )
+      pKeyExp = hb_itemNew( pOrderInfo->itmCobExpr );
+   else /* Otherwise, try compiling the key expression string */
+   {
+      if( SELF_COMPILE( ( AREAP ) pArea, ( BYTE * ) pOrderInfo->abExpr->item.asString.value ) == FAILURE )
+         return FAILURE;
+      pKeyExp = hb_itemNew( pArea->valResult );
+   }
+
+   /* Get a blank record before testing expression */
+   SUPER_GOTO( ( AREAP ) pArea, 0 );
+   if( hb_itemType( pKeyExp ) == HB_IT_BLOCK )
+   {
+      if( SELF_EVALBLOCK( ( AREAP ) pArea, pKeyExp ) == FAILURE )
+      {
+         hb_itemRelease( pKeyExp );
+         return FAILURE;
+      }
+      pResult = hb_itemNew( pArea->valResult );
+      pExpMacro = NULL;
+   }
+   else
+   {
+      pExpMacro = ( HB_MACRO_PTR ) hb_itemGetPtr( pKeyExp );
+      hb_macroRun( pExpMacro );
+      pResult = hb_itemNew( &hb_stack.Return );
+   }
+   uiType = hb_itemType( pResult );
+   uiLen = 0;
+   switch( uiType )
+   {
+      case HB_IT_INTEGER:
+      case HB_IT_LONG:
+      case HB_IT_DOUBLE:
+      case HB_IT_DATE:
+         uiLen = 8;
+         break;
+
+      case HB_IT_LOGICAL:
+         uiLen = 1;
+         break;
+
+      case HB_IT_STRING:
+         uiLen = ( USHORT ) HB_MAX( hb_itemGetCLen( pResult ), CDX_MAXKEY );
+         break;
+   }
+   hb_itemRelease( pResult );
+
+   /* Make sure uiLen is not 0 */
+   if( uiLen == 0 )
+   {
+      hb_itemRelease( pKeyExp );
+      if( pExpMacro )
+         hb_macroDelete( pExpMacro );
+      pError = hb_errNew();
+      hb_errPutGenCode( pError, EG_DATAWIDTH );
+      hb_errPutSubCode( pError, EDBF_INVALIDKEY );
+      hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_DATAWIDTH ) );
+      SELF_ERROR( ( AREAP ) pArea, pError );
+      hb_errRelease( pError );
+      return FAILURE;
+   }
+
+   /* Check conditional expression */
+   pForExp = NULL;
+   if( pArea->lpdbOrdCondInfo )
+   {
+      /* If we have a codeblock for the conditional expression, use it */
+      if( pArea->lpdbOrdCondInfo->itmCobFor )
+         pForExp = hb_itemNew( pArea->lpdbOrdCondInfo->itmCobFor );
+      else /* Otherwise, try compiling the conditional expression string */
+      {
+         if( SELF_COMPILE( ( AREAP ) pArea, pArea->lpdbOrdCondInfo->abFor ) == FAILURE )
+         {
+            hb_itemRelease( pKeyExp );
+            if( pExpMacro )
+               hb_macroDelete( pExpMacro );
+            return FAILURE;
+         }
+         pForExp = hb_itemNew( pArea->valResult );
+      }
+   }
+
+   /* Test conditional expression */
+   if( pForExp )
+   {
+      if( hb_itemType( pForExp ) == HB_IT_BLOCK )
+      {
+         if( SELF_EVALBLOCK( ( AREAP ) pArea, pForExp ) == FAILURE )
+         {
+            hb_itemRelease( pKeyExp );
+            hb_itemRelease( pForExp );
+            if( pExpMacro )
+               hb_macroDelete( pExpMacro );
+            return FAILURE;
+         }
+         uiType = hb_itemType( pArea->valResult );
+      }
+      else
+      {
+         pForMacro = ( HB_MACRO_PTR ) hb_itemGetPtr( pForExp );
+         hb_macroRun( pForMacro );
+         uiType = hb_itemType( &hb_stack.Return );
+      }
+      if( uiType != HB_IT_LOGICAL )
+      {
+         hb_itemRelease( pKeyExp );
+         hb_itemRelease( pForExp );
+         if( pExpMacro )
+            hb_macroDelete( pExpMacro );
+         if( pForMacro )
+            hb_macroDelete( pForMacro );
+         return FAILURE;
+      }
+   }
+   else
+      pForMacro = NULL;
+
+   /* Check file name */
+   szFileName = ( char * ) hb_xgrab( _POSIX_PATH_MAX + 1 );
+   szTagName = ( char * ) hb_xgrab( CDX_MAXTAGNAMELEN + 1 );
+   if( strlen( ( char * ) pOrderInfo->abBagName ) == 0 )
+   {
+      pFileName = hb_fsFNameSplit( pArea->szDataFileName );
+      dbOrderInfo.itmResult = hb_itemPutC( NULL, "" );
+      SELF_ORDINFO( ( AREAP ) pArea, DBOI_BAGEXT, &dbOrderInfo );
+      if( pFileName->szDrive )
+         strcpy( szFileName, pFileName->szDrive );
+      else
+         szFileName[ 0 ] = 0;
+      if( pFileName->szPath )
+         strcat( szFileName, pFileName->szPath );
+      strcat( szFileName, pFileName->szName );
+      strncat( szFileName, hb_itemGetCPtr( dbOrderInfo.itmResult ), _POSIX_PATH_MAX -
+               strlen( szFileName ) );
+      hb_itemRelease( dbOrderInfo.itmResult );
+      if( strlen( ( char * ) pOrderInfo->atomBagName ) == 0 )
+         hb_strncpyUpper( szTagName, pFileName->szName, CDX_MAXTAGNAMELEN );
+      else
+         hb_strncpyUpper( szTagName, ( char * ) pOrderInfo->atomBagName, CDX_MAXTAGNAMELEN );
+      hb_xfree( pFileName );
+   }
+   else
+   {
+      strcpy( szFileName, ( char * ) pOrderInfo->abBagName );
+      pFileName = hb_fsFNameSplit( szFileName );
+      if( !pFileName->szExtension )
+      {
+         dbOrderInfo.itmResult = hb_itemPutC( NULL, "" );
+         SELF_ORDINFO( ( AREAP ) pArea, DBOI_BAGEXT, &dbOrderInfo );
+         strncat( szFileName, hb_itemGetCPtr( dbOrderInfo.itmResult ), _POSIX_PATH_MAX -
+                  strlen( szFileName ) );
+         hb_itemRelease( dbOrderInfo.itmResult );
+      }
+      if( strlen( ( char * ) pOrderInfo->atomBagName ) == 0 )
+         hb_strncpyUpper( szTagName, pFileName->szName, CDX_MAXTAGNAMELEN );
+      else
+         hb_strncpyUpper( szTagName, ( char * ) pOrderInfo->atomBagName, CDX_MAXTAGNAMELEN );
+      hb_xfree( pFileName );
+   }
+
+   /* Close all index */
+   SELF_ORDLSTCLEAR( ( AREAP ) pArea );
+
+   pIndex = ( LPCDXINDEX ) hb_xgrab( sizeof( CDXINDEX ) );
+   pIndex->pArea = pArea;
+   pIndex->szFileName = szFileName;
+
+   /* New file? */
+   if( !hb_fsFile( ( BYTE * ) szFileName ) )
+   {
+      pIndex->hFile = hb_fsCreate( ( BYTE * ) szFileName, FC_NORMAL );
+      bNewFile = TRUE;
+   }
+   else
+   {
+      printf("TODO: OpenIndex()\n");
+      pIndex->hFile = FS_ERROR;
+      bNewFile = FALSE;
+   }
+
+   pTag = ( LPCDXTAG ) hb_xgrab( sizeof( CDXTAG ) );
+   pTag->szName = szTagName;
+   pTag->uiType = uiType;
+   pTag->uiLen = uiLen;
+   pTag->pKeyExp = pKeyExp;
+   pTag->pForExp = pForExp;
+   pTag->pIndex = pIndex;
+
+   if( bNewFile )
+      hb_cdxCreateCompoundTag( pIndex );
+
+
+
+hb_fsClose( pIndex->hFile );
+hb_xfree( pTag->szName );
+hb_xfree( pTag->pKeyExp );
+hb_xfree( pTag );
+hb_xfree( pIndex->szFileName );
+hb_xfree( pIndex->pCompound );
+hb_xfree( pIndex );
+
+
+   /* Free all macros */
+   if( pExpMacro )
+      hb_macroDelete( pExpMacro );
+   if( pForMacro )
+      hb_macroDelete( pForMacro );
+   return SUCCESS;
+}
+
+/*
+ * Provides information about order management.
+ */
+ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrderInfo )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_cdxOrderInfo(%p, %hu, %p)", pArea, uiIndex, pOrderInfo));
+   HB_SYMBOL_UNUSED( pArea );
+
+   switch( uiIndex )
+   {
+      case DBOI_BAGEXT:
+         hb_itemPutC( pOrderInfo->itmResult, CDX_INDEXEXT );
+         break;
+   }
    return SUCCESS;
 }
 

@@ -200,7 +200,8 @@ static ERRCODE hb_adsCheckBofEof( ADSAREAP pArea )
 
   if( pArea->fBof && !pArea->fEof )
      AdsSkip  ( (pArea->hOrdCurrent) ? pArea->hOrdCurrent:pArea->hTable, 1 );
-   return SUPER_SKIPFILTER( (AREAP)pArea, 1 );
+/*   return SUPER_SKIPFILTER( (AREAP)pArea, 1 ); */
+   return SUCCESS;
 }
 
 static BOOL strcmpNoCase( char * s1, char * s2, int n )

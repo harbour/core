@@ -21,15 +21,15 @@ function Main()
    Select( "TESTDBF" )
    SET FILTER TO TESTDBF->SALARY > 140000
    TESTDBF->( dbGoTop() )
-   while !TESTDBF->( Eof() )
-      TESTCDX->( dbAppend() )
-      TESTCDX->CHARACTER = TESTDBF->FIRST
-      TESTCDX->NUMERIC = TESTDBF->SALARY
-      TESTCDX->MEMO := TESTDBF->FIRST + Chr( 13 ) + Chr( 10 ) + ;
-                       TESTDBF->LAST + Chr( 13 ) + Chr( 10 ) + ;
-                       TESTDBF->STREET
-      TESTDBF->( dbSkip() )
-   end
+//   while !TESTDBF->( Eof() )
+//      TESTCDX->( dbAppend() )
+//      TESTCDX->CHARACTER = TESTDBF->FIRST
+//      TESTCDX->NUMERIC = TESTDBF->SALARY
+//      TESTCDX->MEMO := TESTDBF->FIRST + Chr( 13 ) + Chr( 10 ) + ;
+//                       TESTDBF->LAST + Chr( 13 ) + Chr( 10 ) + ;
+//                       TESTDBF->STREET
+//      TESTDBF->( dbSkip() )
+//   end
 
    ? TESTCDX->( RecCount() )
    TESTCDX->( dbGoTop() )
@@ -41,6 +41,8 @@ function Main()
 //      ? "Press any key to continue..."
 //      InKey( 0 )
    end
+
+   FErase( "testcdx.cdx" )
 
    Select( "TESTCDX" )
    OrdCreate( "testcdx", "Character", "CHARACTER", FIELD->CHARACTER, .F. )

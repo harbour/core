@@ -60,8 +60,9 @@ extern "C" {
 
 
 
-/* DBFCDX default memo extension */
+/* DBFCDX default extensions */
 #define CDX_MEMOEXT                               ".fpt"
+#define CDX_INDEXEXT                              ".cdx"
 
 
 
@@ -71,8 +72,16 @@ extern "C" {
 #define SIZEOFMEMOFREEBLOCK                           6
 #define MAXFREEBLOCKS                                82
 #define CDX_MAXKEY                                  240
+#define CDX_MAXTAGNAMELEN                            10
+#define CDX_PAGELEN                                 512
+#define CDX_RIGHTTYPE                                 0
+#define CDX_ROOTTYPE                                  1
+#define CDX_LEAFTYPE                                  2
+#define CDX_LEAFFREESPACE                           488
 
 
+
+struct _CDXAREA;
 
 typedef struct _MEMOHEADER
 {
@@ -120,12 +129,70 @@ typedef MEMOROOT * LPMEMOROOT;
 
 /* CDX's */
 
-typedef struct _TAG
+typedef struct _CDXTAG
 {
-   BYTE * pKeyBuffer;                 /* Buffer of keys */
-} TAG;
+   char * szName;                     /* Name of tag */
+   PHB_ITEM pKeyExp;
+   PHB_ITEM pForExp;
+   USHORT uiType;
+   USHORT uiLen;
+   struct _CDXINDEX * pIndex;
+} CDXTAG;
 
-typedef TAG * LPTAG;
+typedef CDXTAG * LPCDXTAG;
+
+
+
+typedef struct _CDXINDEX
+{
+   char * szFileName;                 /* Name of index file */
+   FHANDLE hFile;                     /* Index file handle */
+   struct _CDXAREA * pArea;           /* Parent WorkArea */
+   LPCDXTAG pCompound;
+} CDXINDEX;
+
+typedef CDXINDEX * LPCDXINDEX;
+
+
+
+typedef struct _CDXTAGHEADER
+{
+   LONG lRoot;
+   LONG lFreeList;
+   LONG lLength;
+   USHORT uiKeySize;
+   BYTE bType;
+   BYTE bSignature;
+   BYTE bReserved1[ 486 ];
+   USHORT iDescending;
+   USHORT iFilterPos;
+   USHORT iFilterLen;
+   USHORT iExprPos;
+   USHORT iExprLen;
+} CDXTAGHEADER;
+
+typedef CDXTAGHEADER * LPCDXTAGHEADERP;
+
+
+
+typedef struct _CDXLEAFHEADER
+{
+   USHORT uiNodeType;
+   USHORT uiKeyCount;
+   LONG lLeftNode;
+   LONG lRightNode;
+   USHORT uiFreeSpace;
+   ULONG ulRecNumMask;
+   BYTE bDupByteMask;
+   BYTE bTrailByteMask;
+   BYTE bRecNumLen;
+   BYTE bDupCntLen;
+   BYTE bTrailCntLen;
+   BYTE bInfo;
+   BYTE bData[ CDX_LEAFFREESPACE ];
+} CDXLEAFHEADER;
+
+typedef CDXLEAFHEADER * LPCDXLEAFHEADERP;
 
 
 
@@ -206,7 +273,7 @@ typedef struct _CDXAREA
 
    USHORT uiMemoBlockSize;       /* Size of memo block */
    LPMEMOROOT pMemoRoot;         /* Array of free memo blocks */
-   LPTAG * lpIndexes;            /* Pointer to indexes array */
+   LPCDXTAG * lpIndexes;         /* Pointer to indexes array */
 
 } CDXAREA;
 
@@ -283,14 +350,14 @@ extern ERRCODE hb_cdxSysName( CDXAREAP pArea, BYTE * pBuffer );
 #define hb_cdxRelText                              NULL
 #define hb_cdxSetRel                               NULL
 #define hb_cdxOrderListAdd                         NULL
-#define hb_cdxOrderListClear                       NULL
+extern ERRCODE hb_cdxOrderListClear( CDXAREAP pArea );
 #define hb_cdxOrderListDelete                      NULL
 #define hb_cdxOrderListFocus                       NULL
 #define hb_cdxOrderListRebuild                     NULL
 #define hb_cdxOrderCondition                       NULL
 extern ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo );
 #define hb_cdxOrderDestroy                         NULL
-#define hb_cdxOrderInfo                            NULL
+extern ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrderInfo );
 #define hb_cdxClearFilter                          NULL
 #define hb_cdxClearLocate                          NULL
 #define hb_cdxClearScope                           NULL

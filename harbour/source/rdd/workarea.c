@@ -848,12 +848,18 @@ ERRCODE hb_waSetLocate( AREAP pArea, LPDBSCOPEINFO pScopeInfo )
  */
 ERRCODE hb_waCompile( AREAP pArea, BYTE * pExpr )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_waCompile(%p, %p)", pArea, pExpr));
-   HB_SYMBOL_UNUSED( pArea );
-   HB_SYMBOL_UNUSED( pExpr );
+   HB_MACRO_PTR pMacro;
 
-   printf( "\nTODO: hb_waCompile()\n" );
-   return SUCCESS;
+   HB_TRACE(HB_TR_DEBUG, ("hb_waCompile(%p, %p)", pArea, pExpr));
+
+   pMacro = hb_macroCompile( ( char * ) pExpr );
+   if( pMacro )
+   {
+      hb_itemPutPtr( pArea->valResult, ( void * ) pMacro );
+      return SUCCESS;
+   }
+   else
+      return FAILURE;
 }
 
 /*

@@ -1,3 +1,7 @@
+2000-09-05 21:30 GMT+1 Bruno Cantero <bruno@issnet.net>
+   * contrib/rdd_ads/ads1.c
+      * Bug fixed!
+
 2000-09-05 14:47 GMT+1 Bruno Cantero <bruno@issnet.net>
    * contrib/rdd_ads/ads1.c
    * contrib/rdd_ads/rddads.h
