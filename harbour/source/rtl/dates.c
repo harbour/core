@@ -65,8 +65,12 @@
  *
  */
 
-#ifdef HARBOUR_USE_WIN_GTAPI
+#if defined(_Windows) || defined(WINNT)
+   #define WIN32_LEAN_AND_MEAN
    #include <windows.h>
+   #if defined(__MINGW32__)
+      #define HB_DONT_DEFINE_BASIC_TYPES
+   #endif
 #endif
 
 #include "extend.h"
@@ -605,7 +609,7 @@ HARBOUR HB_TIME( void )
    {
       char szResult[ 9 ];
 
-      #ifdef HARBOUR_USE_WIN_GTAPI
+      #if defined(_Windows) || defined(WINNT)
          SYSTEMTIME st;
          GetLocalTime( &st );
          sprintf( szResult, "%02d:%02d:%02d", st.wHour, st.wMinute, st.wSecond );
@@ -630,7 +634,7 @@ HARBOUR HB_DATE( void )
    {
       char szResult[ 9 ];
 
-      #ifdef HARBOUR_USE_WIN_GTAPI
+      #if defined(_Windows) || defined(WINNT)
          SYSTEMTIME st;
          GetLocalTime( &st );
          sprintf( szResult, "%04d%02d%02d", st.wYear, st.wMonth, st.wDay );

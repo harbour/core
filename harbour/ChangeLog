@@ -1,3 +1,7 @@
+19991013-01:40 GMT+1 Victor Szel <info@szelvesz.hu>
+   * source/rtl/dates.c
+     ! #ifdef ...WIN_GTAPI changed to proper platform tests.
+
 19991013-19:05 EDT David G. Holm <dholm@jsd-llc.com>
 
    * include/itemapi.h
