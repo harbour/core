@@ -1,3 +1,7 @@
+20000208-12:00 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * tests/bld_b32.bat
+     * updated to use latest Borland makefile changes
+
 20000208-11:48 GMT+1 Antonio Linares <alinares@fivetech.com>
    * makefile.b32
      + oemansi.c was missing and it is required from hbdoc
