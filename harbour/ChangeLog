@@ -10,9 +10,9 @@
      + New Harbour internal function __GetListActive() added to provide an
        interface between TGETLIST and GETSYS.
      + The active getlist holder moved to a separate file GETLIST.
+     + READVAR() moved back into separate file.
      + RANGECHECK() function added to GETSYS. Now the namespace of GETLIST is
        is equivalent to CA-Cl*pper.
-     + READVAR() moved back into separate file.
      + TGetList class separated from the GETSYS procedural (compatibility)
        interface. This way it's possible to override the GETSYS, READVAR or
        TGETLIST modules at link time just like in CA-Clipper.
