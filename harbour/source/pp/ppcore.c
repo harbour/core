@@ -177,7 +177,7 @@ static int  s_ParseState;
 static int  s_maxCondCompile;
 static int  s_aIsRepeate[ 5 ];
 static int  s_Repeate;
-static BOOL s_bReplacePat;
+static BOOL s_bReplacePat = TRUE;
 static int  s_numBrackets;
 static char s_groupchar;
 static char s_prevchar;

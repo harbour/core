@@ -1,3 +1,7 @@
+2001-07-16 22:55 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/pp/ppcore.c
+    ! minor fix, related to using of __PreProcess() function
+
 2001-07-16 09:45 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/vm/hvm.c
    * source/vm/macro.c
