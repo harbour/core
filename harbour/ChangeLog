@@ -1,3 +1,8 @@
+2001-01-01 22:15 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
+   *utils/hbdoc/genpdf.prg
+   *contrib/pdflib/pdfhbdoc.c
+     *Fixed handling of 4 column table items
+
 2000-12-29 01:30 UTC-0800 Brian Hays <bhays@abacuslaw.com>
    * source/rtl/memoline.c
       Added OS_UNIX_COMPATIBLE test for single-byte EOL markers

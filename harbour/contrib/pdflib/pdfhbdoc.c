@@ -63,6 +63,8 @@ PHB_ITEM pArray=NULL;
 static float hb_checkStringWidth(const char *szString);
 static float hb_pdfGetHeight(const char *szText);
 static void hb_ProcessTableItem(PHB_ITEM p1,PHB_ITEM p2,PHB_ITEM p3,PHB_ITEM p4);
+float getText(PDF *p,const char *szText,int iFont,float irow,float icol,float iw);
+void setText(PDF *p,const char *szText,float irow,float icol,float h,float iw);
 
 HB_FUNC(HB_PDFNEW)
 {
@@ -301,8 +303,9 @@ if (pTableItem2 != NULL){
 }
 if (pTableItem3 != NULL){
    bFItems=TRUE;
+   bTItems=FALSE;
 }
-
+iRow-=LEAD;
 for (ulPos=1;ulPos<=hb_arrayLen(pTableItem);ulPos++) {
 PHB_ITEM pTempArray  ;
 PHB_ITEM pTempArray1 ;
@@ -346,68 +349,135 @@ bFItems=FALSE;
 }
 static  void hb_ProcessTableItem(PHB_ITEM p1,PHB_ITEM p2,PHB_ITEM p3,PHB_ITEM p4)
 {
-ULONG ulTempPos;
-ULONG ulLen;
-float fHeight;
-float fI;
-ulLen=hb_arrayLen(p1);
-for (ulTempPos=1;ulTempPos<=ulLen;ulTempPos++){
-   const char *szTemp=(char *) hb_arrayGetCPtr(p1,ulTempPos);
-   const char *szTemp1=(char *) hb_arrayGetCPtr(p2,ulTempPos);
-   if (!bTItems && !bFItems) {
-      PDF_setfont(szPDFFile, sziFont, FONTSIZETABLE);
-      PDF_show_xy(szPDFFile,szTemp,27,iRow-=LEAD);
-      PDF_show_xy(szPDFFile,szTemp1,286,iRow);
-/*      iRow-=LEAD;
-      iCol-=LEAD;*/
-      fHeight+=FONTSIZE;
-   }
-     if (bTItems && !bFItems) {
-      const char * szTemp2=(char *) hb_arrayGetCPtr(p3,ulTempPos);
+   ULONG ulTempPos;
+   ULONG ulLen;
+   float fHeight;
+   float fI;
+   float iitem,iitem1,iitem2,iitem3;
+   
+   ulLen=hb_arrayLen(p1);
+   for (ulTempPos=1;ulTempPos<=ulLen;ulTempPos++){
+      const char *szTemp=(char *) hb_arrayGetCPtr(p1,ulTempPos);
+      const char *szTemp1=(char *) hb_arrayGetCPtr(p2,ulTempPos);
 
-      PDF_setfont(szPDFFile, sziFont, FONTSIZETABLE);
-      PDF_show_xy(szPDFFile,szTemp,27,iRow-=LEAD);
-      PDF_show_xy(szPDFFile,szTemp1,200,iRow);
-      PDF_show_xy(szPDFFile,szTemp2,370,iRow);
-      PDF_setfont(szPDFFile, sziFont, FONTSIZESMALL);
-/*      PDF_show_xy(szPDFFile,szTemp,27,iCol);
-      PDF_show_xy(szPDFFile,szTemp1,200,iCol);
-      PDF_show_xy(szPDFFile,szTemp2,370,iCol);
-      iRow-=LEAD;
-      iCol-=LEAD;**/
-      fHeight+=FONTSIZE;
-
-}
-}
-   if (fOldPos==0) {
       if (!bTItems && !bFItems) {
-         PDF_rect(szPDFFile,25,iRow-2,510,fHeight);
-         PDF_rect(szPDFFile,280,iRow-2,255,fHeight);
-         PDF_stroke(szPDFFile);
-         fOldPos=iRow;
-         }
-     if (bTItems && !bFItems) {
-         PDF_rect(szPDFFile,25,iRow-2,510,fHeight);
-         PDF_rect(szPDFFile,195,iRow-2,171,fHeight);
-         PDF_rect(szPDFFile,367,iRow-2,168,fHeight);
-         PDF_stroke(szPDFFile);
-         fOldPos=iRow;
+         PDF_setfont(szPDFFile, sziFont, FONTSIZETABLE);
+       iitem=getText(szPDFFile,szTemp1,sziFont,293,iRow,261);
+       iitem1=getText(szPDFFile,szTemp,sziFont,27,iRow,261);
+       if (iitem <iitem1) {
+         setText(szPDFFile ,szTemp1,293,iRow,iitem1,261);
+         setText(szPDFFile ,szTemp,27,iRow,iitem1,261);
+         iRow-=iitem1;
       }
+         else {
+         setText(szPDFFile ,szTemp1,293,iRow,iitem,261);
+         setText(szPDFFile ,szTemp,27,iRow,iitem,261);
+         iRow-=iitem;
+      }
+
    }
+     if (bTItems && !bFItems) {
+         const char * szTemp2=(char *) hb_arrayGetCPtr(p3,ulTempPos);
+         PDF_setfont(szPDFFile, sziFont, FONTSIZETABLE);
+       iitem=getText(szPDFFile,szTemp2,sziFont,381,iRow,173);
+       iitem1=getText(szPDFFile,szTemp1,sziFont,204,iRow,172);
+       iitem2=getText(szPDFFile,szTemp,sziFont,27,iRow,172);
+      if (iitem > iitem1 && iitem >iitem2) {
+         setText(szPDFFile  ,szTemp2,381,iRow,iitem,173);
+         setText(szPDFFile  ,szTemp1,204,iRow,iitem,172);
+         setText(szPDFFile  ,szTemp,27,iRow,iitem,172);
+         iRow-=iitem;
+      }
+
+      if (iitem2> iitem && iitem2>iitem1){
+         setText(szPDFFile  ,szTemp2,381,iRow,iitem2,173);
+         setText(szPDFFile  ,szTemp1,204,iRow,iitem2,172);
+         setText(szPDFFile  ,szTemp,27,iRow,iitem2,172);
+         iRow-=iitem2;
+      }
+
+      if (iitem1> iitem && iitem1>iitem2 ){
+         setText(szPDFFile  ,szTemp2,381,iRow,iitem1,173);
+         setText(szPDFFile  ,szTemp1,204,iRow,iitem1,172);
+         setText(szPDFFile  ,szTemp,27,iRow,iitem1,172);
+         iRow-=iitem1;
+   }
+
+}
+     if (!bTItems && bFItems) {
+         const char * szTemp2=(char *) hb_arrayGetCPtr(p3,ulTempPos);
+         const char * szTemp3=(char *) hb_arrayGetCPtr(p4,ulTempPos);
+         PDF_setfont(szPDFFile, sziFont, FONTSIZETABLE);
+    iitem1=getText(szPDFFile ,szTemp3,sziFont,426,iRow,128);
+    iitem2=getText(szPDFFile ,szTemp2,sziFont,293,iRow,128);
+    iitem=getText(szPDFFile ,szTemp1,sziFont,160,iRow,128);
+    iitem3=getText(szPDFFile ,szTemp,sziFont,27,iRow,128);
+   if (iitem > iitem1 && iitem >iitem2 && iitem>iitem3) {
+      setText(szPDFFile  ,szTemp3,426,iRow,iitem,128);
+      setText(szPDFFile  ,szTemp2,293,iRow,iitem,128);
+      setText(szPDFFile  ,szTemp1,160,iRow,iitem,128);
+      setText(szPDFFile  ,szTemp,27,iRow,iitem,128);
+      iRow-=iitem;
+   }
+   else { 
+      if (iitem2> iitem && iitem2>iitem1 && iitem2>iitem3){
+         setText(szPDFFile  ,szTemp3,426,iRow,iitem2,128);
+         setText(szPDFFile  ,szTemp2,293,iRow,iitem2,128);
+         setText(szPDFFile  ,szTemp1,160,iRow,iitem2,128);
+         setText(szPDFFile  ,szTemp,27,iRow,iitem2,128);
+         iRow-=iitem2;
+      }
    else {
-      if (!bTItems && !bFItems) {
-         PDF_rect(szPDFFile,25,iRow-2,510,fHeight);
-         PDF_rect(szPDFFile,280,iRow-2,255,fHeight);
-         PDF_stroke(szPDFFile);
-         fOldPos=iRow;
-         }
-     if (bTItems && !bFItems) {
-         PDF_rect(szPDFFile,25,iRow-2,510,fHeight);
-         PDF_rect(szPDFFile,195,iRow-2,171,fHeight);
-         PDF_rect(szPDFFile,367,iRow-2,168,fHeight);
-         PDF_stroke(szPDFFile);
-         fOldPos=iRow;
+      if (iitem1> iitem && iitem1>iitem2 && iitem1>iitem3){
+         setText(szPDFFile  ,szTemp3,426,iRow,iitem1,128);
+         setText(szPDFFile  ,szTemp2,293,iRow,iitem1,128);
+         setText(szPDFFile  ,szTemp1,160,iRow,iitem1,128);
+         setText(szPDFFile  ,szTemp,27,iRow,iitem1,128);
+         iRow-=iitem1;
       }
+   else {
+      if (iitem3> iitem && iitem3>iitem2 && iitem3>iitem){
+         setText(szPDFFile  ,szTemp3,426,iRow,iitem3,128);
+         setText(szPDFFile  ,szTemp2,293,iRow,iitem3,128);
+         setText(szPDFFile  ,szTemp1,160,iRow,iitem3,128);
+         setText(szPDFFile  ,szTemp,27,iRow,iitem3,128);
+         iRow-=iitem3;
+}
+      else {
+         setText(szPDFFile  ,szTemp3,426,iRow,iitem3,128);
+         setText(szPDFFile  ,szTemp2,293,iRow,iitem3,128);
+         setText(szPDFFile  ,szTemp1,160,iRow,iitem3,128);
+         setText(szPDFFile  ,szTemp,27,iRow,iitem3,128);
+         iRow-=iitem3;
+
+      }
+      }
+      }
+      }
+}
 
 }
+}
+
+float getText(PDF *p,const char *szText,int iFont,float irow,float icol,float iw)
+{
+float h;
+float w;
+int c;
+h=FONTSIZETABLE*2;
+PDF_setfont(p, iFont, 7.0);
+c=PDF_show_boxed(p, szText, irow, icol, iw, h, "justify", "blind");
+while (c>0){
+   h+= FONTSIZETABLE;  
+   c=PDF_show_boxed(p, szText, irow, icol, iw, h, "justify", "blind");
+}
+return h;
+}
+
+void setText(PDF *p,const char *szText,float irow,float icol,float h,float iw)
+{
+
+      PDF_show_boxed(p, szText, irow, icol, iw, h, "justify", "");
+      PDF_rect(p,irow,icol,iw+5,h);
+      PDF_stroke(p);
 }

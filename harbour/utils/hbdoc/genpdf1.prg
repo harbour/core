@@ -150,7 +150,7 @@ FUNCTION ProcessPdf(lMemory)
    LOCAL cData          := DELIM + "DATA" + DELIM
    LOCAL cMethod        := DELIM + 'METHOD' + DELIM
    LOCAL cClassDoc      := DELIM + "CLASSDOC" + DELIM
-
+local hhh
    DEFAULT lMemory to .F.
    lData         := .F.
    lMethod       := .F.
@@ -178,6 +178,7 @@ FUNCTION ProcessPdf(lMemory)
    hb_pdfnewpage("Harbour Guide",'Harbour Guide')
    hb_pdfinitbook(aResult)
    hb_pdfendpage()
+   hhh:=fcreate('ssss.sss')
    endif
 
    FOR i := 1 TO nFiles
@@ -207,8 +208,18 @@ FUNCTION ProcessPdf(lMemory)
       DO WHILE .NOT. lEof
 
          //  Read a line
-
-         cBuffer := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
+         cBuffer:=ReadLN( @lEof )
+         if !lmemory
+            ? valtype(cBuffer)
+            ? cBuffer
+            fWrite(hhh,cBuffer+hb_osnewline())
+//            cBuffer:=" "
+         Endif
+         if !lmemory
+         cBuffer := TRIM( SUBSTR( cBuffer, nCommentLen ) )
+         else
+         cBuffer :=  SUBSTR( cBuffer, nCommentLen )
+         endif
          cBuffer := STRTRAN( cBuffer, CHR( 10 ), "" )
          nLineCnt ++
 //         IF nLineCnt % 10 = 0
@@ -687,6 +698,7 @@ FUNCTION ProcessPdf(lMemory)
 HB_PDFCLOSE()
    if lmemory
 //      ferase('pdf\temp.pdf')
+fclose(hhh)
    endif
 
 RETURN Nil
@@ -746,10 +758,13 @@ RETURN nil
 FUNCTION GenPdfTable( oPdf ,nNumTableItems)
 
 if nNumTableItems <3
+hb_pdfWriteText( " " )
 HB_PDFTABLE(aFitable,aSitable)
 elseif nNumTableItems<4
+hb_pdfWriteText( " " )
 HB_PDFTABLE(aFitable,aSitable,aTitable)
 else
+hb_pdfWriteText( " " )
 HB_PDFTABLE(aFitable,aSitable,aTitable,aFoiTable)
 endif
 
@@ -1373,120 +1388,20 @@ Local aItems2:={}
 Local aItems3:={}
       
 Local aItems4:={}
-Local nCount:=0
-Local nPos:=0
-Local nResult:=0
-Local lEndPar:=.f.
-Local cTemp:=''
-Local nLen:=Len(cItem)
-local nLen1:=Len(cItem2)
-local nLen2:=Len(cItem3)
-local nLen3:=Len(cItem4)
-Local nMaxArray:=0
+
 if nItem <3
-   do While nLen>0
-          cTemp:=substr(cItem,1,47)
-          if nLen>47
-          nPos:=Rat(" ",cTemp)
-         endif
-          if nPos>0 
-            cTemp:=substr(cItem,1,nPos)
-            aadd(aItems,cTemp)
-            else
-            aadd(aItems,cTemp)
-          endif
-            cItem:=strtran(cItem,cTemp,"")
-            nLen:=len(cItem)
-      enddo
-    do While nLen1>0
-          cTemp:=substr(cItem2,1,47)
-          if nLen1>47
-          nPos:=Rat(" ",cTemp)
-         endif
-          if nPos>0
-            cTemp:=substr(cItem2,1,nPos)
-            aadd(aItems2,cTemp)
-          else
-           aadd(aItems2,cTemp)
-          endif
-            cItem2:=strtran(cItem2,cTemp,"")
-            nLen1:=len(cItem2)
-enddo
+   aadd(aitems,citem)
+   aadd(aItems2,citem2)
 elseif nItem <4
-   do While nLen>0
-          cTemp:=substr(cItem,1,32)
-          if nLen>32
-          nPos:=Rat(" ",cTemp)
-          endif
-
-          if nPos>0
-            cTemp:=substr(cItem,1,nPos)
-            aadd(aItems,cTemp)
-            else
-            aadd(aItems,cTemp)
-          endif
-            cItem:=strtran(cItem,cTemp,"")
-            nLen:=len(cItem)
-      enddo
-    do While nLen1>0
-          cTemp:=substr(cItem2,1,32)
-          if nLen1>32
-          nPos:=Rat(" ",cTemp)
-          endif
-          if nPos>0
-            cTemp:=substr(cItem2,13nPos)
-            aadd(aItems2,cTemp)
-          else
-           aadd(aItems2,cTemp)
-          endif
-            cItem2:=strtran(cItem2,cTemp,"")
-            nLen1:=len(cItem2)
-enddo
-
-endif
-if  nItem <4
-    do While nLen2>0 
-          cTemp:=substr(cItem3,1,32)
-          if nLen2>32
-          nPos:=Rat(" ",cTemp)
-          endif
-          if nPos>0
-            cTemp:=substr(cItem3,1,nPos)
-            aadd(aItems3,cTemp)
+   aadd(aitems,cItem)
+   aadd(aitems2,citem2)
+   aadd(aitems3,citem3)
 else
-        aadd(aItems3,cTemp)
-          endif
-            cItem3:=strtran(cItem3,cTemp,"")
-            nLen2:=len(cItem3)
-enddo
+   aadd(aitems,cItem)
+   aadd(aitems2,citem2)
+   aadd(aitems3,citem3)
+   aadd(aItems4,citem4)
 endif
-    do While nLen3>0
-          cTemp:=substr(cItem4,1,40)
-          nPos:=Rat(" ",cTemp)
-          if nPos>0
-            cTemp:=substr(cItem4,1,nPos)
-                        aadd(aItems4,cTemp)
-            else
-            aadd(aItems4,cTemp)
-          endif
-            cItem4:=strtran(cItem4,cTemp,"")
-            nLen3:=len(cItem4)
-enddo
-nMaxArray:=getArray(aItems,aItems2,Aitems3,aItems4)
-
-do while Len(aItems) <nMaxArray
-   aadd(aitems,"")
-enddo
-do while Len(aItems2) <nMaxArray
-   aadd(aitems2,"")
-enddo
-do while Len(aItems3) <nMaxArray
-   aadd(aitems3,"")
-enddo
-do while Len(aItems4) <nMaxArray
-   aadd(aitems4,"")
-enddo
-
 aadd(aFiTable,aItems)
 aadd(aSiTable,aItems2)
 aadd(aTitable,aItems3)
