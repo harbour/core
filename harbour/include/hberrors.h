@@ -23,6 +23,7 @@
 #define ERR_UNCLOSED_STRU       18
 #define ERR_UNMATCHED_EXIT      19
 #define ERR_SYNTAX2             20
+#define ERR_INCOMPLETE_STMT     21
 
 #define WARN_AMBIGUOUS_VAR       1
 #define WARN_VAR_NOT_USED        2

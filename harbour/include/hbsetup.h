@@ -17,7 +17,7 @@
  * By default we are using automatic lookup (symbol not defined)
 */
 #ifdef __WATCOMC__
-  #define HARBOUR_START_PROCEDURE "MAIN" */
+  #define HARBOUR_START_PROCEDURE "MAIN"
 #endif
 
 /* This symbol defines if we want an ability to create and link OBJ files

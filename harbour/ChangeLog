@@ -1,3 +1,21 @@
+19990615-07:00 Ryszard Glab <rglab@imid.med.pl>
+
+* source/compiler/harbour.y
+ * removed bug in CodeblockEnd (the names of local variables shoudn't
+   be released here)
+
+* source/compiler/harbour.l
+ * corrected line continnuation logic
+
+* include/hberrors.h
+ + added new error message 
+
+* include/hbsetup.h
+ * removed unneccessary '*/' defined for Watcom compiler
+
++ broken/linecont.prg
+ + new file to test if linne continnuation ';' is handled correctly
+
 19990614-15:40 EDT David G. Holm <dholm@jsd-llc.com>
   * include/extend.h
     - Added declaration for hb_stricmp()

@@ -1069,7 +1069,6 @@ int harbour_main( int argc, char * argv[] )
    char szFileName[ _POSIX_PATH_MAX ];    /* filename to parse */
    char *szOutPath ="";
    FILENAME *pFileName =NULL;
-   PDECLARED_VAR pVarDef, pRelease;
 
    if( argc > 1 )
    {
@@ -3509,7 +3508,6 @@ void CodeBlockEnd()
     GenPCode1( HIBYTE(wPos) );
     pFree =pVar;
     pVar =pVar->pNext;
-    OurFree( pFree->szName );
     OurFree( pFree );
   }
 
@@ -3524,7 +3522,6 @@ void CodeBlockEnd()
     /* free used variables */
     pFree =pVar;
     pVar =pVar->pNext;
-    OurFree( pFree->szName );
     OurFree( pFree );
   }
   OurFree( pCodeblock );
