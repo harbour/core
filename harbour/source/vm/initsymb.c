@@ -15,10 +15,14 @@ HARBOUR AADD( void );
 HARBOUR ABS( void );
 HARBOUR ASC( void );
 HARBOUR AT( void );
+HARBOUR CDOW( void );
 HARBOUR CHR( void );
+HARBOUR COL( void );
+HARBOUR CMONTH( void );
 HARBOUR CTOD( void );
 HARBOUR DATE( void );
 HARBOUR DAY( void );
+HARBOUR DOW( void );
 HARBOUR DTOC( void );
 HARBOUR DTOS( void );
 HARBOUR EMPTY( void );
@@ -32,8 +36,11 @@ HARBOUR LTRIM( void );
 HARBOUR MAX( void );
 HARBOUR MIN( void );
 HARBOUR MONTH( void );
+HARBOUR PCOL( void );
 HARBOUR PCOUNT( void );
+HARBOUR PROW( void );
 HARBOUR REPLICATE( void );
+HARBOUR ROW( void );
 HARBOUR RTRIM( void );
 HARBOUR SPACE( void );
 HARBOUR SQRT( void );
@@ -55,17 +62,17 @@ static SYMBOL symbols[] = {
     { "AT"        , FS_PUBLIC, AT           , 0 },
     { "BOF"       , FS_PUBLIC, NULL         , 0 },
     { "BREAK"     , FS_PUBLIC, NULL         , 0 },
-    { "CDOW"      , FS_PUBLIC, NULL         , 0 },
+    { "CDOW"      , FS_PUBLIC, CDOW         , 0 },
     { "CHR"       , FS_PUBLIC, CHR          , 0 },
-    { "CMONTH"    , FS_PUBLIC, NULL         , 0 },
-    { "COL"       , FS_PUBLIC, NULL         , 0 },
+    { "CMONTH"    , FS_PUBLIC, CMONTH       , 0 },
+    { "COL"       , FS_PUBLIC, COL          , 0 },
     { "CTOD"      , FS_PUBLIC, CTOD         , 0 },
     { "DATE"      , FS_PUBLIC, DATE         , 0 },
     { "DAY"       , FS_PUBLIC, DAY          , 0 },
     { "DELETED"   , FS_PUBLIC, NULL         , 0 },
     { "DEVPOS"    , FS_PUBLIC, NULL         , 0 },
     { "DO"        , FS_PUBLIC, NULL         , 0 },
-    { "DOW"       , FS_PUBLIC, NULL         , 0 },
+    { "DOW"       , FS_PUBLIC, DOW          , 0 },
     { "DTOC"      , FS_PUBLIC, DTOC         , 0 },
     { "DTOS"      , FS_PUBLIC, DTOS         , 0 },
     { "EMPTY"     , FS_PUBLIC, EMPTY        , 0 },
@@ -87,16 +94,16 @@ static SYMBOL symbols[] = {
     { "MAX"       , FS_PUBLIC, MAX          , 0 },
     { "MIN"       , FS_PUBLIC, MIN          , 0 },
     { "MONTH"     , FS_PUBLIC, MONTH        , 0 },
-    { "PCOL"      , FS_PUBLIC, NULL         , 0 },
+    { "PCOL"      , FS_PUBLIC, PCOL         , 0 },
     { "PCOUNT"    , FS_PUBLIC, PCOUNT       , 0 },
-    { "PROW"      , FS_PUBLIC, NULL         , 0 },
+    { "PROW"      , FS_PUBLIC, PROW         , 0 },
     { "QSELF"     , FS_PUBLIC, NULL         , 0 },
     { "RECCOUNT"  , FS_PUBLIC, NULL         , 0 },
     { "RECNO"     , FS_PUBLIC, NULL         , 0 },
     { "REPLICATE" , FS_PUBLIC, REPLICATE    , 0 },
     { "RLOCK"     , FS_PUBLIC, NULL         , 0 },
     { "ROUND"     , FS_PUBLIC, NULL         , 0 },
-    { "ROW"       , FS_PUBLIC, NULL         , 0 },
+    { "ROW"       , FS_PUBLIC, ROW          , 0 },
     { "RTRIM"     , FS_PUBLIC, RTRIM        , 0 },
     { "SECONDS"   , FS_PUBLIC, NULL         , 0 },
     { "SELECT"    , FS_PUBLIC, NULL         , 0 },

@@ -51,8 +51,6 @@ HARBOUR BIN2W();
 HARBOUR I2BIN();
 HARBOUR L2BIN();
 HARBOUR W2BIN();
-HARBOUR EXP();
-HARBOUR LOG();
 HARBOUR MOD();
 HARBOUR DEFAULT();
 HARBOUR TOCHAR();
@@ -74,7 +72,6 @@ HARBOUR SPACE();
 HARBOUR STUFF();
 HARBOUR STRTRAN();
 HARBOUR DATETIME();
-HARBOUR DOW();
 HARBOUR __ASTATIC();
 HARBOUR __STATIC();
 HARBOUR __GLOBALSTACKLEN();
@@ -180,8 +177,6 @@ static SYMBOL symbols[] = {
 { "I2BIN",          FS_PUBLIC, I2BIN         , 0 },
 { "L2BIN",          FS_PUBLIC, L2BIN         , 0 },
 { "W2BIN",          FS_PUBLIC, W2BIN         , 0 },
-{ "EXP",            FS_PUBLIC, EXP           , 0 },
-{ "LOG",            FS_PUBLIC, LOG           , 0 },
 { "MOD",            FS_PUBLIC, MOD           , 0 },
 { "DEFAULT",        FS_PUBLIC, DEFAULT       , 0 },
 { "TOCHAR",         FS_PUBLIC, TOCHAR        , 0 },
@@ -203,7 +198,6 @@ static SYMBOL symbols[] = {
 { "STUFF",          FS_PUBLIC, STUFF         , 0 },
 { "STRTRAN",        FS_PUBLIC, STRTRAN       , 0 },
 { "DATETIME",       FS_PUBLIC, DATETIME      , 0 },
-{ "DOW",            FS_PUBLIC, DOW           , 0 },
 { "__ASTATIC",      FS_PUBLIC, __ASTATIC     , 0 },
 { "__STATIC",       FS_PUBLIC, __STATIC      , 0 },
 { "__GLOBALSTACKLEN", FS_PUBLIC, __GLOBALSTACKLEN, 0 },
