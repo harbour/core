@@ -171,6 +171,35 @@ static BOOL hb_ndtoa( double dValue, char * szBuffer, USHORT uiLen, USHORT uiDec
    return TRUE;
 }
 
+void FoxToDbl
+   (
+   UNSIGNED8 *pucKey,    /* (I) key - expected to be 8 bytes long */
+   double    *pdDouble   /* (O) converted value */
+   )
+{
+   UNSIGNED16 iCnt;
+   UNSIGNED8  *pucDbl;
+
+   /* do a cast of the double to make the code simpler */
+   pucDbl = (UNSIGNED8*)pdDouble;
+
+   if ( pucKey[0] & 0x80 )
+      {
+      /* it is positive */
+      for ( iCnt = 0; iCnt < 8; iCnt++ )
+         pucDbl[7 - iCnt] = pucKey[iCnt];
+      pucDbl[7] &= ~0x80;   /* clear the bit */
+      }
+   else
+      {
+      /* it is negative */
+      for ( iCnt = 0; iCnt < 8; iCnt++ )
+         pucDbl[iCnt] = ~pucKey[7 - iCnt];
+      }
+
+} /* FoxToDbl */
+
+
 static BOOL hb_adsUnLockAllRecords( ADSAREAP pArea )
 {
    UNSIGNED16 i;
@@ -243,11 +272,13 @@ ERRCODE adsCloseCursor( ADSAREAP pArea )
    }
 
    /* Free all filenames */
+HB_TRACE(HB_TR_DEBUG, ("adsCloseCursor free buf (%p)", pArea));
    if( pArea->szDataFileName )
    {
       hb_xfree( pArea->szDataFileName );
       pArea->szDataFileName = NULL;
    }
+HB_TRACE(HB_TR_DEBUG, ("adsCloseCursor 3(%p)", pArea));
    return uiError;
 }
 
@@ -313,7 +344,7 @@ static ERRCODE adsGoTo( ADSAREAP pArea, ULONG ulRecNo )
 //// TODO: bh: Note  Explicitly moving to a deleted record when using the Advantage proprietary
 ////   table format (ADT) is an illegal operation and will return the
 ////   error 5022 (AE_INVALID_RECORD_NUMBER), invalid record number.
-   UNSIGNED32 ulRetVal;
+   UNSIGNED32 ulRetVal = 0;
 
    ULONG ulRecCount;
 
@@ -341,13 +372,14 @@ static ERRCODE adsGoTo( ADSAREAP pArea, ULONG ulRecNo )
    {
       ulRecNo = 0;
       if ( !pArea->fEof )
-         AdsGotoRecord( pArea->hTable, ulRecNo );
+         ulRetVal = AdsGotoRecord( pArea->hTable, ulRecNo );
          // don't do a GO 0 if already at EOF because we can't skip -1 off of it if you do
       pArea->ulRecNo = pArea->ulRecCount + 1;
-      pArea->fBof = pArea->fEof = TRUE;
+      //pArea->fBof = TRUE;
+      pArea->fEof = TRUE;
    }
 
-   return SUCCESS;
+   return (ulRetVal == 0 ? SUCCESS : FAILURE );
 }
 
 static ERRCODE adsGoToId( ADSAREAP pArea, PHB_ITEM pItem )
@@ -484,6 +516,7 @@ static ERRCODE adsSkip( ADSAREAP pArea, LONG lToSkip )
    if ( lToSkip==0 )
 	{
       AdsSkip  ( (pArea->hOrdCurrent) ? pArea->hOrdCurrent : pArea->hTable, lToSkip );
+      AdsRefreshRecord(pArea->hTable);
       return SUCCESS;    /*bh: dbskip(0) created infinite loop; this should never move the record pointer via skipfilter */
    }else
 	{
@@ -642,8 +675,10 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
       return FAILURE;
 
    pField = pArea->lpFields + uiIndex - 1;
+
    if( pArea->fEof )
    {
+      bOnPhantom = TRUE;
       /* -----------------12/15/00 11:43pm-----------------
       TODO: The following seems inefficient to clear the buffer this way for every field
        when retrieving values at eof.
@@ -651,33 +686,41 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
        If pBuffer is initialized to pRecord above, if pRecord were always cleared
        at EOF then this would be unnecessary here.
        --------------------------------------------------*/
-      int i;
-      for( i=0; i < (int) pArea->maxFieldLen; i++ )
-         *( pBuffer+i ) = ' ';
-      *( pBuffer + ( int ) pField->uiLen ) = '\0';
-      bOnPhantom = TRUE;
+      memset( pBuffer, ' ', pField->uiLen );
+
+      //      int i;
+      //      for( i=0; i < (int) pArea->maxFieldLen; i++ )
+      //         *( pBuffer+i ) = ' ';
+      //      *( pBuffer + ( int ) pField->uiLen ) = '\0';
+      //Children may not have eof flag set right, so have to check GetField ret val anyway
    }
 
    AdsGetFieldName( pArea->hTable, uiIndex, szName, &pusBufLen );
+
    switch( pField->uiType )
    {
       case HB_IT_STRING:
          if( !bOnPhantom )
          {
             pulLength = pArea->maxFieldLen;
-            AdsGetField( pArea->hTable, szName, pBuffer, &pulLength, ADS_NONE );
+            if (AdsGetField( pArea->hTable, szName, pBuffer, &pulLength, ADS_NONE ) == AE_NO_CURRENT_RECORD  )
+            {
+               memset( pBuffer, ' ', pField->uiLen );
+               pArea->fEof = TRUE;
+            }
          }
          hb_itemPutCL( pItem, ( char * ) pBuffer, pField->uiLen );
          break;
 
       case HB_IT_LONG:
-//         memcpy( szBuffer, pBuffer + pArea->pFieldOffset[ uiIndex - 1 ],
-//                 pField->uiLen );
-//         szBuffer[ pField->uiLen ] = 0;
          if( !bOnPhantom )
          {
             pulLength = pArea->maxFieldLen;
-            AdsGetField( pArea->hTable, szName, pBuffer, &pulLength, ADS_NONE );
+            if (AdsGetField( pArea->hTable, szName, pBuffer, &pulLength, ADS_NONE ) == AE_NO_CURRENT_RECORD  )
+            {
+               memset( pBuffer, ' ', pField->uiLen );
+               pArea->fEof = TRUE;
+            }
          }
          if( pField->uiDec )
             hb_itemPutNDLen( pItem, atof( pBuffer ),
@@ -696,7 +739,11 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
             if( !bOnPhantom )
             {
                pulLength = pArea->maxFieldLen;
-               AdsGetField( pArea->hTable, szName, pBuffer, &pulLength, ADS_NONE );
+               if (AdsGetField( pArea->hTable, szName, pBuffer, &pulLength, ADS_NONE ) == AE_NO_CURRENT_RECORD  )
+               {
+                  memset( pBuffer, ' ', pField->uiLen );
+                  pArea->fEof = TRUE;
+               }
             }
             hb_itemPutDS( pItem, pBuffer );
             AdsSetDateFormat  ( pucFormat );
@@ -708,7 +755,11 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
             UNSIGNED16 pbValue = FALSE;
             if( !bOnPhantom )
             {
-               AdsGetLogical( pArea->hTable, szName, &pbValue );
+               if (AdsGetLogical( pArea->hTable, szName, &pbValue ) == AE_NO_CURRENT_RECORD  )
+               {
+                  pbValue = FALSE;
+                  pArea->fEof = TRUE;
+               }
             }
             hb_itemPutL( pItem, pbValue);
             break;
@@ -882,7 +933,7 @@ static ERRCODE adsRecCount( ADSAREAP pArea, ULONG * pRecCount )
 {
    HB_TRACE(HB_TR_DEBUG, ("adsRecCount(%p, %p)", pArea, pRecCount));
 
-   AdsGetRecordCount( pArea->hTable, ADS_IGNOREFILTERS, pRecCount );
+   AdsGetRecordCount( pArea->hTable, ADS_IGNOREFILTERS | ADS_REFRESHCOUNT, pRecCount );
    pArea->ulRecCount = *pRecCount;
    return SUCCESS;
 }
@@ -945,7 +996,8 @@ static ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo)
 
    HB_TRACE(HB_TR_DEBUG, ("adsCreate(%p, %p)", pArea, pCreateInfo));
 
-   pArea->szDataFileName = ( char * ) pCreateInfo->abName;
+   pArea->szDataFileName = hb_xgrab( strlen(pCreateInfo->abName)+1 );
+   strcpy( pArea->szDataFileName, ( char * ) pCreateInfo->abName );
    uiLen = (pArea->uiFieldCount * 22) + 1;
    ucfieldDefs = (UNSIGNED8 *) hb_xgrab( uiLen );
    ucfieldDefs[0]='\0';
@@ -1112,7 +1164,9 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
 
    if( pOpenInfo->atomAlias )
    {
-      pArea->szDataFileName = ( char * ) pOpenInfo->abName;
+      pArea->szDataFileName = hb_xgrab( strlen(pOpenInfo->abName)+1 );
+      strcpy( pArea->szDataFileName, ( char * ) pOpenInfo->abName );
+      //pArea->szDataFileName = ( char * ) pOpenInfo->abName;
       pArea->atomAlias = hb_dynsymGet( ( char * ) pOpenInfo->atomAlias );
       if( ( ( PHB_DYNS ) pArea->atomAlias )->hArea )
       {
@@ -1132,7 +1186,7 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
 
       if( ulRetVal != AE_SUCCESS )
       {
-         commonError( pArea, EG_OPEN, ( USHORT ) ulRetVal, ( char * ) pOpenInfo->abName );
+         // set neterr instead (bh) commonError( pArea, EG_OPEN, ( USHORT ) ulRetVal, ( char * ) pOpenInfo->abName );
          return FAILURE;
       }
       pArea->hTable    = hTable;
@@ -1575,19 +1629,19 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
          if ( !pArea->fEof && pArea->hOrdCurrent )
          {
             AdsExtractKey( phIndex, aucBuffer, &pusLen);
-//   UNSIGNED8 szText[ADS_MAX_KEY_LENGTH];
-// bh HB_TRACE(HB_TR_ALWAYS, ("keyval(%s, %d, %d, %d, %d, %d, %d, %d, %d)", szText,
-      //                        aucBuffer[0], aucBuffer[1], aucBuffer[2], aucBuffer[3], aucBuffer[4], aucBuffer[5], aucBuffer[6], aucBuffer[7], aucBuffer[8] ));
             AdsGetKeyType( phIndex, &pus16);
             switch( pus16 )
             {
                case ADS_STRING:
                   hb_itemPutCL( pOrderInfo->itmResult, (char*)aucBuffer, pusLen);
                   break;
-                  /* TODO: convert correctly from raw data in the buffer for other types (what's below is wrong or untested at best) */
                case ADS_NUMERIC:
-                  hb_itemPutND( pOrderInfo->itmResult, (double) *aucBuffer );
-                  break;
+                  {
+                     double nValue;
+                     FoxToDbl(aucBuffer, &nValue);
+                     hb_itemPutND( pOrderInfo->itmResult, nValue );
+                     break;
+                  }
                case ADS_DATE:
                   hb_itemPutDS( pOrderInfo->itmResult, (char*)aucBuffer );
                   break;
@@ -1595,6 +1649,7 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
                   hb_itemPutL( pOrderInfo->itmResult, (int) *aucBuffer );
                   break;
                case ADS_RAW:
+                  /* TODO: convert correctly from raw data in the buffer for other types (what's below is wrong or untested at best) */
                default:
                   hb_itemPutC( pOrderInfo->itmResult, "" );
             }
@@ -1952,6 +2007,32 @@ static ERRCODE adsUnLock( ADSAREAP pArea, ULONG lRecNo )
    return SUCCESS;
 }
 
+static ERRCODE adsDrop( PHB_ITEM pItemTable )
+{
+  BYTE   * pBuffer;
+  char szFileName[ _POSIX_PATH_MAX + 1 ];
+
+  pBuffer = hb_itemGetCPtr( pItemTable );
+  strcpy( szFileName, pBuffer );
+  if ( !strchr( szFileName, '.' ))
+    strcat( szFileName, ((adsFileType==ADS_ADT) ? ".adt" : ".dbf") );
+  return hb_fsDelete( szFileName );
+}
+
+/* returns 1 if exists, 0 else */
+BOOL adsExists( PHB_ITEM pItemTable, PHB_ITEM pItemIndex )
+{
+  char szFileName[ _POSIX_PATH_MAX + 1 ];
+  BYTE * pBuffer;
+
+  pBuffer = hb_itemGetCPtr( pItemIndex != NULL ? pItemIndex : pItemTable );
+  strcpy( szFileName, pBuffer );
+  if ( pItemTable && !strchr( szFileName, '.' ))
+    strcat( szFileName, ((adsFileType==ADS_ADT) ? ".adt" : ".dbf") );
+  return hb_fsFile( szFileName );
+}
+
+
 #define  adsCloseMemFile          NULL
 #define  adsCreateMemFile         NULL
 #define  adsGetValueFile          NULL
@@ -1959,6 +2040,7 @@ static ERRCODE adsUnLock( ADSAREAP pArea, ULONG lRecNo )
 #define  adsPutValueFile          NULL
 #define  adsReadDBHeader          NULL
 #define  adsWriteDBHeader         NULL
+#define  adsExit                  NULL
 #define  adsWhoCares              NULL
 
 static RDDFUNCS adsTable = { ( DBENTRYP_BP ) adsBof,
@@ -2052,6 +2134,9 @@ static RDDFUNCS adsTable = { ( DBENTRYP_BP ) adsBof,
                              ( DBENTRYP_SVP ) adsPutValueFile,
                              ( DBENTRYP_V ) adsReadDBHeader,
                              ( DBENTRYP_V ) adsWriteDBHeader,
+                             ( DBENTRYP_I0 ) adsExit,
+                             ( DBENTRYP_I1 ) adsDrop,
+                             ( DBENTRYP_I2 ) adsExists,
                              ( DBENTRYP_SVP ) adsWhoCares
                            };
 
@@ -2126,4 +2211,5 @@ HB_FUNC( ADSCUSTOMIZEAOF )
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSCUSTOMIZEAOF" );
 }
+
 

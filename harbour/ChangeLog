@@ -1,3 +1,16 @@
+2001-02-17 15:50 UTC-0800 Brian Hays <bhays@abacuslaw.com>
+   * contrib/rdd_ads/ads1.c
+      * added conversion code for numeric key types to support DBOI_KEYVAL
+      * fixed RecCount() to get a refreshed count (read the header from disk)
+      * Implemented pArea->szDataFileName = hb_xgrab( ...
+      * Implemented new Exists and Drop methods, stubbed out Exit
+
+   * contrib/rdd_ads/adsfunc.c
+      * removed hb_gc*LockItem calls
+
+   * source/rdd/dbcmd.c
+      * added partial fix to NetErr() problem in dbUseArea
+
 2001-03-17 21:50 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
   + contrib/Makefile
   * Makefile
@@ -19,12 +32,12 @@
     *source/vm/itemapi.c
         * new functions: hb_gcGripGet() and hb_gcGripDrop() for dynamic
         allocation/deallocation of items
-        * added redefinition of _getGrip/_dropGrip to use 
+        * added redefinition of _getGrip/_dropGrip to use
         hb_gcGripGet/hb_gcGripDrop
         * items allocated with hb_itemNew() or direct _getGrip() calls are
         maintained properly by the Garbage Collector - there is no need
         to locking/unlocking such items.
-        * removed no longer needed hb_gcLockItem/hb_gcUnlockItem    
+        * removed no longer needed hb_gcLockItem/hb_gcUnlockItem
 
     *source/rdd/dbcmd.c
     *source/rdd/workarea.c
@@ -32,11 +45,11 @@
     *source/rtl/errorapi.c
     *source/rtl/idle.c
     *source/rtl/setkey.c
-        * removed no longer needed calls for hb_gcLockItem/hb_gcUnlockItem    
-        
+        * removed no longer needed calls for hb_gcLockItem/hb_gcUnlockItem
+
 NOTE: there is no hb_gcLockItem/hb_gcUnlockItem functions - please remove
     calls for these functions from your code.
-        
+
 2001-03-15 17:00 UTC-0500 David G. Holm <dholm@jsd-llc.com>
 
   * contrib/libmisc/Makefile

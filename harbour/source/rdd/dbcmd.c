@@ -1906,6 +1906,7 @@ HB_FUNC( DBUSEAREA )
    /* Open file */
    if( SELF_OPEN( ( AREAP ) s_pCurrArea->pArea, &pInfo ) == FAILURE )
    {
+      s_bNetError = TRUE;           /* Temp fix! What about other types of errors? */
       hb_xfree( pInfo.abName );
       hb_rddReleaseCurrentArea();
       return;
@@ -3239,20 +3240,21 @@ HB_FUNC( DBEXISTS )
     return;
   }
 
-  if ( SELF_EXISTS( pRDDNode, 
+  if ( SELF_EXISTS( pRDDNode,
                     ISCHAR( 1 ) ? hb_param( 1, HB_IT_STRING ) : NULL,
                     ISCHAR( 2 ) ? hb_param( 2, HB_IT_STRING ) : NULL ))
-   hb_retl( TRUE );
+    hb_retl( TRUE );
   else
-   hb_retl( FALSE );
+    hb_retl( FALSE );
 }
 
 /*******************************************/
-// as we are in C, the code is upside down,
-//  find __SBAPP & __DBCOPY at the bottom
+/* as we are in C, the code is upside down,
+   find __SBAPP & __DBCOPY at the bottom
 
-// create a new AREANODE and open it's Area
-// If the file exists it will be deteted & a new one created
+   create a new AREANODE and open it's Area
+   If the file exists it will be deteted & a new one created
+*/
 static LPAREANODE GetTheOtherArea( char *szDriver, char * szFileName, BOOL createIt )
 {
   LPAREANODE pAreaNode;

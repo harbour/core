@@ -826,12 +826,10 @@ HB_FUNC( ADSREGCALLBACK    )
       hb_retl( FALSE );
       return;
    }
-   hb_gcLockItem( itmCobCallBack );
 
    ulRetVal = AdsRegisterProgressCallback( ShowPercentage );
    if ( ulRetVal != AE_SUCCESS )
    {
-      hb_gcUnlockItem( itmCobCallBack );
       hb_itemRelease( itmCobCallBack );
       itmCobCallBack = 0;
       hb_retl( FALSE );
@@ -847,7 +845,6 @@ HB_FUNC( ADSCLRCALLBACK  )
    {
       hb_retni( AdsClearProgressCallback  () );
 
-      hb_gcUnlockItem( itmCobCallBack );
       hb_itemRelease( itmCobCallBack );
       itmCobCallBack = 0;
 
