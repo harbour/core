@@ -32,6 +32,17 @@
  * their web site at http://www.gnu.org/).
  *
  */
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 1999 Luiz Rafael Culik <culik@sl.conex.net>
+ *    DB*() documentation
+ *    ORD*() documentation
+ *    RDD*() documentation
+ * See doc/license.txt for licensing terms.
+ *
+ */
 
 #include <ctype.h>
 #include "extend.h"
@@ -1582,7 +1593,10 @@ HARBOUR HB_ALIAS( void )
  *  $ONELINER$
  *      Performs a code block operation on the current DATA BASE
  *  $SYNTAX$
- *      DBEVAL( <bBlock>, [<bFor>], [<bWhile>], [<nNext>], [<nRecord>], [<lRest>] ) --> NIL
+ *      DBEVAL( <bBlock>,
+ *      [<bFor>], [<bWhile>],
+ *      [<nNext>], [<nRecord>],
+ *      [<lRest>] ) --> NIL
  *  $ARGUMENTS$
  *      <bBlock> Operation that is to be performed
  *      <bFor> Code block for the For condition
@@ -4613,6 +4627,104 @@ HARBOUR HB_DBUSEAREA( void )
    SELF_RECCOUNT( ( AREAP ) pCurrArea->pArea, &ulLen );
    ( ( AREAP ) pCurrArea->pArea )->lpExtendInfo->ulRecCount = ulLen;
 }
+/*  $DOC$
+ *  $FUNCNAME$
+ *     __DBZAP()
+ *  $CATEGORY$
+ *     Data Base
+ *  $ONELINER$
+ *     Remove all records from the current database file
+ *  $SYNTAX$
+ *     __DbZap()  -> NIL
+ *  $ARGUMENTS$
+ *     
+ *  $RETURNS$
+ *     __DbZap()   will always return nil
+ *  $DESCRIPTION$
+ *     __DbZap*( is a database command that permanently removes all records from
+ *   files open in the current work area.  This includes the current database
+ *   file, index files, and associated memo file.  Disk space previously
+ *   occupied by the ZAPped files is released to the operating system.
+ *   __DbZap() performs the same operation as DELETE ALL followed by PACK but is
+ *   almost  instantaneous.
+ *
+ *   To ZAP in a network environment, the current database file must be USEd
+ *   EXCLUSIVEly. 
+ *     
+ *  $EXAMPLES$
+ *   ^CFE  This example demonstrates a typical ZAP operation in a network
+ *      environment:
+ *
+ *      USE Sales EXCLUSIVE NEW
+ *      IF !NETERR()
+ *         SET INDEX TO Sales, Branch, Salesman
+ *         __dbZAP()
+ *         CLOSE Sales
+ *      ELSE
+ *         ? "Zap operation failed"
+ *         BREAK
+ *      ENDIF
+ *  $TESTS$
+ *
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *
+ *  $SEEALSO$
+ *     
+ *  $INCLUDE$
+ *     
+ *  $END$
+ */
+/*  $DOC$
+ *  $COMMANDNAME$
+ *     ZAP
+ *  $CATEGORY$
+ *     Command
+ *  $ONELINER$
+ *     Remove all records from the current database file
+ *  $SYNTAX$
+ *     ZAP
+ *  $ARGUMENTS$
+ *     
+ *  $RETURNS$
+ *    
+ *  $DESCRIPTION$
+ *     ZAP is a database command that permanently removes all records from
+ *   files open in the current work area.  This includes the current database
+ *   file, index files, and associated memo file.  Disk space previously
+ *   occupied by the ZAPped files is released to the operating system.  ZAP
+ *   performs the same operation as DELETE ALL followed by PACK but is almost
+ *   instantaneous.
+ *
+ *   To ZAP in a network environment, the current database file must be USEd
+ *   EXCLUSIVEly. 
+ *     
+ *  $EXAMPLES$
+ *   ^CFE  This example demonstrates a typical ZAP operation in a network
+ *      environment:
+ *
+ *      USE Sales EXCLUSIVE NEW
+ *      IF !NETERR()
+ *         SET INDEX TO Sales, Branch, Salesman
+ *         ZAP
+ *         CLOSE Sales
+ *      ELSE
+ *         ? "Zap operation failed"
+ *         BREAK
+ *      ENDIF
+ *  $TESTS$
+ *
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *
+ *  $SEEALSO$
+ *     
+ *  $INCLUDE$
+ *     
+ *  $END$
+ */
 
 HARBOUR HB___DBZAP( void )
 {
@@ -5895,9 +6007,29 @@ HARBOUR HB_ORDBAGNAME( void )
  *  $ONELINER$
  *     Set the Condition and scope for an order
  *  $SYNTAX$
- *     
+ *     ORDCONSET([<cForCondition>],
+          [<bForCondition>],
+          [<lAll>],
+          [<bWhileCondition>],
+          [<bEval>],
+          [<nInterval>],
+          [<nStart>],
+          [<nNext>],
+          [<nRecord>],
+          [<lRest>],
+          [<lDescend>],
+          [<lAdditive>],
+          [<lCurrent>],
+          [<lCustom>],
+          [<lNoOptimize>])
  *  $ARGUMENTS$
- *     
+ *     <cForCondition> is a string that specifies the FOR condition for the
+     order.
+       <bForCondition> is a code block that defines a FOR condition that
+     each record within the scope must meet in order to be processed. If
+     a record does not meet the specified condition,it is ignored and the
+     next  record is processed.Duplicate keys values are not added to the
+     index file when a FOR condition is Used.
  *  $RETURNS$
  *     
  *  $DESCRIPTION$
@@ -6864,27 +6996,27 @@ HARBOUR HB_RDDLIST( void )
  *  $CATEGORY$
  *     Data Base
  *  $ONELINER$
- *     Return the name of the RDD active in the current or specified work area
+ *     Return the name of the currently active RDD
  *  $SYNTAX$
  *     RDDNAME() --> cRDDName
  *  $ARGUMENTS$
  *     
  *  $RETURNS$     
-       Returns a character string, cRDDName, the registered name of the active
-     RDD in the current or specified work area.
+ *     Returns a character string, cRDDName, the registered name of the active
+ *   RDD in the current or specified work area.
  *  $DESCRIPTION$     
-       RDDNAME() is an RDD function that returns a character string, cRDDName,
-     the name of the active RDD in the current or specified work area.
-
-       You can specify a work area other than the currently active work area by
-     aliasing the function.
+ *     RDDNAME() is an RDD function that returns a character string, cRDDName,
+ *   the name of the active RDD in the current or specified work area.
+ *
+ *     You can specify a work area other than the currently active work area by
+ *   aliasing the function.
  *  $EXAMPLES$
-     USE Customer VIA "DBFNTX" NEW
-     USE Sales    VIA "DBFCDX" NEW
-
-     ? RDDNAME()                          // Returns: DBFCDX
-     ? Customer->( RDDNAME() )            // Returns: DBFNTX
-     ? Sales->( RDDNAME() )               // Returns: DBFCDX
+ *   USE Customer VIA "DBFNTX" NEW
+ *   USE Sales    VIA "DBFCDX" NEW
+ *
+ *   ? RDDNAME()                          // Returns: DBFCDX
+ *   ? Customer->( RDDNAME() )            // Returns: DBFNTX
+ *   ? Sales->( RDDNAME() )               // Returns: DBFCDX
  *  $TESTS$
  *
  *  $STATUS$
@@ -6947,31 +7079,31 @@ HARBOUR HB_RDDREGISTER( void )
  *  $ONELINER$
  *     Set or return the default RDD for the application
  *  $SYNTAX$
-       RDDSETDEFAULT([<cNewDefaultRDD>])
-        --> cPreviousDefaultRDD
+ *     RDDSETDEFAULT([<cNewDefaultRDD>])
+ *      --> cPreviousDefaultRDD
  *     
  *  $ARGUMENTS$     
-       <cNewDefaultRDD> is a character string, the name of the RDD that is
-     to be made the new default RDD in the application.
+ *     <cNewDefaultRDD> is a character string, the name of the RDD that is
+ *   to be made the new default RDD in the application.
  *  $RETURNS$     
-       RDDSETDEFAULT() returns a character string, cPreviousDefaultRDD, the
-     name of the previous default driver.  The default driver is the driver
-     that HARBOUR uses if you do not explicitly specify an RDD with the
-     VIA clause of the USE command.
+ *     RDDSETDEFAULT() returns a character string, cPreviousDefaultRDD, the
+ *   name of the previous default driver.  The default driver is the driver
+ *   that HARBOUR uses if you do not explicitly specify an RDD with the
+ *   VIA clause of the USE command.
  *  $DESCRIPTION$     
-       RDDSETDEFAULT() is an RDD function that sets or returns the name of the
-     previous default RDD driver and, optionally, sets the current driver to
-     the new RDD driver specified by cNewDefaultRDD.  If <cNewDefaultDriver>
-     is not specified, the current default driver name is returned and
-     continues to be the current default driver.
-
-      This function replaces the DBSETDRIVER() function.
+ *     RDDSETDEFAULT() is an RDD function that sets or returns the name of the
+ *   previous default RDD driver and, optionally, sets the current driver to
+ *   the new RDD driver specified by cNewDefaultRDD.  If <cNewDefaultDriver>
+ *   is not specified, the current default driver name is returned and
+ *   continues to be the current default driver.
+ *
+ *    This function replaces the DBSETDRIVER() function.
  *  $EXAMPLES$
-     // If the default driver is not DBFNTX, make it the default
-
-     IF ( RDDSETDEFAULT() != "DBFNTX" )
-        cOldRdd := RDDSETDEFAULT( "DBFNTX" )
-     ENDIF
+ *   // If the default driver is not DBFNTX, make it the default
+ *
+ *   IF ( RDDSETDEFAULT() != "DBFNTX" )
+ *      cOldRdd := RDDSETDEFAULT( "DBFNTX" )
+ *   ENDIF
  *  $TESTS$
  *
  *  $STATUS$

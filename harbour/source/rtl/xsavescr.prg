@@ -189,7 +189,7 @@ PROCEDURE __XSAVESCREEN()
  */
 /*  $DOC$
  *  $FUNCNAME$
- *      REST SCREEN    
+ *      RESTORE SCREEN    
  *  $CATEGORY$
  *      Command
  *  $ONELINER$

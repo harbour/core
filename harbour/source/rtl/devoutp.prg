@@ -52,7 +52,7 @@
  *  $CATEGORY$
  *      Terminal
  *  $ONELINER$
- *      Outputs the result of any expression using a picture transformation
+ *      Displays a value to a device using a picture template
  *  $SYNTAX$
  *      DEVOUTPICT(<xExp>,<cPicture>[,<cColorString>]) --> NIL
  *  $ARGUMENTS$

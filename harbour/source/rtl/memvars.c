@@ -1162,7 +1162,7 @@ HARBOUR HB___MVXRELEASE( void )
  *  $CATEGORY$
  *    Variable Management
  *  $ONELINER$
- * This function releases PRIVATE variables created in current procedure
+ * This function releases PRIVATE variables 
  *  $SYNTAX$
  *    __MVRELEASE( <skeleton>, <include_exclude_flag> )
  *  $ARGUMENTS$
@@ -1233,12 +1233,15 @@ HARBOUR HB___MVRELEASE( void )
  *    <cVarName> = a string with a variable name to check
  *  $RETURNS$
  *    The symbolic values are defined in include/hbmemvar.ch
- *    HB_MV_NOT_FOUND      =variable is not declared (not found in symbol table)
- *    HB_MV_UNKNOWN        =if variable doesn't exist (but found in symbol table)
- *    HB_MV_ERROR          =if information cannot be obtained (memory error or argument error)
+ *    HB_MV_NOT_FOUND     =variable is not declared (not found in symbol table)
+ *    HB_MV_UNKNOWN       =if variable doesn't exist (but found in symbol table)
+ *    HB_MV_ERROR         =if information cannot be obtained (memory error
+ *       or argument error)
  *    HB_MV_PUBLIC         =for public variables
- *    HB_MV_PRIVATE_GLOBAL =for private variables declared outside of current function/procedure
- *    HB_MV_PRIVATE_LOCAL  =for private variables declared in current function/procedure
+ *    HB_MV_PRIVATE_GLOBAL =for private variables declared outside of current
+ *       function/procedure
+ *    HB_MV_PRIVATE_LOCAL  =for private variables declared in current
+ *       function/procedure
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1356,9 +1359,9 @@ HARBOUR HB___MVCLEAR( void )
  *      It also returns the name of a variable if optional third argument
  *    is passed by reference.
  *
- *      If requested variable doesn't exist (requested position is greater
- *    then the number of defined variables) then NIL value is returned
- *    and variable name is set to "?"
+ *      If requested variable doesn't exist (requested position is 
+ *    greater then the number of defined variables) then NIL value is 
+ *    returned and variable name is set to "?"
  *
  *      The dynamic symbols table is used to find a PUBLIC variable then
  *    the PUBLIC variables are always sorted alphabetically. The PRIVATE
@@ -1514,7 +1517,8 @@ HARBOUR HB___MVDBGINFO( void )
  *    The variable is specified by its name passed as the function parameter.
  *  $EXAMPLES$
  *    FUNCTION MEMVARBLOCK( cMemvar )
- *    RETURN {|x| IIF( PCOUNT()==0, __MVGET( cMemvar ), __MVPUT( cMemvar, x ) ) }
+ *    RETURN {|x| IIF( PCOUNT()==0, __MVGET( cMemvar ),;
+ *    __MVPUT( cMemvar, x ) ) }
  *  $STATUS$
  *
  *  $COMPLIANCE$
@@ -1611,7 +1615,8 @@ HARBOUR HB___MVGET( void )
  *    If a value is not specified then the NIL is assumed
  *  $EXAMPLES$
  *    FUNCTION MEMVARBLOCK( cMemvar )
- *    RETURN {|x| IIF( PCOUNT()==0, __MVGET( cMemvar ), __MVPUT( cMemvar, x ) ) }
+ *    RETURN {|x| IIF( PCOUNT()==0, __MVGET( cMemvar ),;
+ *     __MVPUT( cMemvar, x ) ) }
  *  $STATUS$
  *
  *  $COMPLIANCE$

@@ -189,38 +189,37 @@ return NIL //bReturn
 
 /*  $DOC$
  *  $FUNCNAME$
- *      HB_SETKEYSAVE()
+ *     HB_SETKEYSAVE()
  *  $CATEGORY$
- *      Events
+ *     Events
  *  $ONELINER$
- *      Returns a copy of internal set-key list,
- *      optionally overwriting
+ *     Returns a copy of internal set-key list, optionally overwriting
  *  $SYNTAX$
- *      HB_SETKEYSAVE( [ <OldKeys> ] )
+ *     HB_SETKEYSAVE( [ <OldKeys> ] )
  *  $ARGUMENTS$
- *      <OldKeys> is an optional set-key list from a previous call to
- *      HB_SetKeySave(), or NIL to clear current set-key list
+ *     <OldKeys> is an optional set-key list from a previous call to
+ *     HB_SetKeySave(), or NIL to clear current set-key list
  *  $RETURNS$
- *      Current set-key list
+ *     Current set-key list
  *  $DESCRIPTION$
- *      HB_SetKeySave() is designed to act like the set() function which 
- *      returns the current state of an environment setting, and optionally 
- *      assigning a new value.  In this case, the "environment setting" is the 
- *      internal set-key list, and the optional new value is either a value 
- *      returned from a previous call to SetKeySave() - to restore that list, 
- *      or the value of NIL to clear the current list.
+ *     HB_SetKeySave() is designed to act like the set() function which 
+ *     returns the current state of an environment setting, and optionally 
+ *     assigning a new value.  In this case, the "environment setting" is the 
+ *     internal set-key list, and the optional new value is either a value 
+ *     returned from a previous call to SetKeySave() - to restore that list, 
+ *     or the value of NIL to clear the current list.
  *  $EXAMPLES$
- *      local aKeys := HB_SetKeySave( NIL )  // removes all current set=keys
- *      ... // some other processing
- *      HB_SetKeySave( aKeys )
+ *     local aKeys := HB_SetKeySave( NIL )  // removes all current set=keys
+ *     ... // some other processing
+ *     HB_SetKeySave( aKeys )
  *  $TESTS$
- *      None definable
+ *     None definable
  *  $STATUS$
- *      R
+ *     R
  *  $COMPLIANCE$
- *      HB_SETKEYSAVE() is new.
+ *     HB_SETKEYSAVE() is new.
  *  $SEEALSO$
- *      SETKEY()
+ *     SETKEY()
  *  $END$
  */
 Function HB_SetKeySave( OldKeys )

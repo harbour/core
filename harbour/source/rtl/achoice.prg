@@ -26,7 +26,6 @@
  *
  *  $ONELINER$
  *      Allows selection of an element from an array
- *
  *  $SYNTAX$
  *      ACHOICE(<nTop>, <nLeft>, <nBottom>, <nRight>,
  *         <acMenuItems>,

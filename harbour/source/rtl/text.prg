@@ -54,12 +54,12 @@ STATIC s_cOldExtraFile
 
 /*  $DOC$
  *  $FUNCNAME$
- *      __TextSave()
+ *     __TextSave()
  *  $CATEGORY$
- *      Internal
+ *     Internal
  *  $ONELINER$
- *      Redirect console output to printer or a file and
- *      save old settings
+ *     Redirect console output to printer or file and save old settings
+ *      
  *  $SYNTAX$
  *      __TextSave( <cFile> ) --> NIL
  *  $ARGUMENTS$
@@ -80,7 +80,7 @@ STATIC s_cOldExtraFile
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
- *      envirom.ngi:SET()  'SET ALTERNATE' 'SET PRINTER' 'TEXT' __TextRestore()
+ *      envirom.ngo:SET()  'SET ALTERNATE' 'SET PRINTER' 'TEXT' __TextRestore()
  *  $END$
  */
 
@@ -122,7 +122,7 @@ PROCEDURE __TextSave( cFile )
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
- *      envirom.ngi:SET()  'SET ALTERNATE' 'SET PRINTER' 'TEXT' __TextSave()
+ *      envirom.ngo:SET()  'SET ALTERNATE' 'SET PRINTER' 'TEXT' __TextSave()
  *  $END$
  */
 

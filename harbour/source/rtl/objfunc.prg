@@ -684,8 +684,7 @@ return oObject
  *  $CATEGORY$
  *      Object manipulation
  *  $ONELINER$
- *      Modify (replace) an INLINE method in an already
- *      existing class
+ *      Modify (replace) an INLINE method in an already existing class
  *  $SYNTAX$
  *      __objModInline( <oObject>, <cInlineName>, <bInline> ) --> oObject
  *  $ARGUMENTS$

@@ -1,3 +1,21 @@
+20000101-22:50 GMT+3 Luiz Rafael Culik <culik@sl.conex.net>
+* doc/funclist.txt
+   +Update some function status  
+* source/rdd/dbcmd.c
+   +Added  to missing documentation of __dbzap() and OrdCondSet()
+* source/rtl/FileSys.c
+    + doc for  FOPEN()    
+    + doc for  FCLOSE()   
+    + doc for  FWRITE()   
+    + doc for  FSEEK()    
+    + doc for  FREAD()    
+    + doc for  FILE()     
+    + doc for  FREADSTR() 
+    + doc for  FRENAME()  
+    + doc for  FERROR()   
+    + doc for  RENAME     
+    + doc for  ERASE     
+
 20000101-07:18 GMT+3 Luiz Rafael Culik <culik@sl.conex.net>
 * source/rdd/dbcmd.c
 * source/rtl/alert.prg

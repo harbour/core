@@ -579,8 +579,8 @@ HARBOUR HB_GETE( void )
  *  $DESCRIPTION$
  *      This command runs an external program. Please make sure that you have
  *      enough free memory to be able to run the external program.
- *      Do not use it to run Terminate and Stay Resident programs (in case of DOS)
- *      since it cause several problems
+ *      Do not use it to run Terminate and Stay Resident programs
+ *      (in case of DOS) since it cause several problems
  *  $EXAMPLES$
  *      __Run( "edit " + cMyTextFile )    // Runs an external editor
  *      __Run( "command" )                // Gives a DOS shell (DOS only)
