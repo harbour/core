@@ -1,3 +1,11 @@
+2000-08-02 19:50 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * include/hberrors.h
+     * Changed #define HB_PP_ERR_INCLUDE_SELF to HB_PP_ERR_INCLUDE_CYCLIC
+
+   * source/pp/ppcore.c
+     * Changed "Can\'t #include self \'%s\'" to "Cyclic #include not allowed: \'%s\'"
+     * Changed self refernce #include detection, to detect any #include of an already opened file.
+
 2000-08-02 14:10 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/harbour.l
      * Changed USUAL to ANYTYPE

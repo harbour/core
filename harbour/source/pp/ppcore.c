@@ -172,7 +172,7 @@ char * hb_pp_szErrors[] =
    "Value out of range in #pragma directive",
    "Can\'t open command definitions file: \'%s\'",
    "Invalid command definitions file name: \'%s\'",
-   "Can\'t #include self \'%s\'"
+   "Cyclic #include not allowed: \'%s\'"
 };
 
 /* Table with warnings */
@@ -2908,85 +2908,65 @@ static BOOL OpenInclude( char * szFileName, PATHNAMES * pSearch, PHB_FNAME pMain
   HB_TRACE(HB_TR_DEBUG, ("OpenInclude(%s, %p, %p, %p, %d)", szFileName, pSearch, pMainFileName, fptr, (int) bStandardOnly));
 
   if( bStandardOnly )
-    {
-      fptr = 0;
-      szInclude[ 0 ] = '\0';
-    }
+  {
+     fptr = 0;
+     szInclude[ 0 ] = '\0';
+  }
   else
-    {
-      pFileName = hb_fsFNameSplit( szFileName );
+  {
+     pFileName = hb_fsFNameSplit( szFileName );
 
-      if( pFileName->szPath == NULL || *(pFileName->szPath) == '\0' )
-         pFileName->szPath = pMainFileName->szPath;
+     if( pFileName->szPath == NULL || *(pFileName->szPath) == '\0' )
+        pFileName->szPath = pMainFileName->szPath;
 
-      /*
-      printf( "Name=%s Ext=%s Path=%s\n", pFileName->szName, pFileName->szExtension, pFileName->szPath );
-      printf( "Name=%s Ext=%s Path=%s\n", pMainFileName->szName, pMainFileName->szExtension, pMainFileName->szPath );
-      */
+     hb_fsFNameMerge( szInclude, pFileName );
 
-      {
-         char * szName, * szMainName, * szExt, * szMainExt, * szPath, * szMainPath;
+     {
+        char * szRequested, * szOpened;
+        PFILE pFile = hb_comp_files.pLast;
 
-         if( pFileName->szName )
-            szName = hb_strupr( hb_strdup( pFileName->szName ) );
-         else
-            szName = hb_strdup( "" );
+        #if 1
+           #define HB_OS_CASE(s) hb_strupr(s)
+        #else
+           #define HB_OS_CASE(s) s
+        #endif
 
-         if( pMainFileName->szName )
-            szMainName = hb_strupr( hb_strdup( pMainFileName->szName ) );
-         else
-            szMainName = hb_strdup( "" );
+        szRequested = HB_OS_CASE( hb_strdup( szInclude ) );
 
-         if( pFileName->szExtension )
-            szExt = hb_strupr( hb_strdup( pFileName->szExtension ) );
-         else
-            szExt = hb_strdup( "" );
+        while ( pFile )
+        {
+           szOpened = HB_OS_CASE( hb_strdup( pFile->szFileName ) );
 
-         if( pMainFileName->szExtension )
-            szMainExt = hb_strupr( hb_strdup( pMainFileName->szExtension ) );
-         else
-            szMainExt = hb_strdup( "" );
+           if( strcmp( szRequested, szOpened  ) == 0 )
+              hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_INCLUDE_CYCLIC, szFileName, NULL );
 
-         if( pFileName->szPath )
-            szPath = hb_strupr( hb_strdup( pFileName->szPath ) );
-         else
-            szPath = hb_strdup( "" );
+           pFile = pFile->pPrev;
+        }
 
-         if( pMainFileName->szPath )
-            szMainPath = hb_strupr( hb_strdup( pMainFileName->szPath ) );
-         else
-            szMainPath = hb_strdup( "" );
+        #undef HB_OS_CASE
 
-         if( strcmp( szName, szMainName  ) == 0 && strcmp( szExt, szMainExt ) == 0 && strcmp( szPath, szMainPath ) == 0 )
-            hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_INCLUDE_SELF, szFileName, NULL );
+        hb_xfree( szRequested );
+        hb_xfree( szOpened );
+     }
 
-         hb_xfree( szName );
-         hb_xfree( szMainName );
-         hb_xfree( szExt );
-         hb_xfree( szMainExt );
-         hb_xfree( szPath );
-         hb_xfree( szMainPath );
-      }
-
-      hb_fsFNameMerge( szInclude, pFileName );
-      fptr = fopen( szInclude, "r" );
-      hb_xfree( pFileName );
-    }
+     fptr = fopen( szInclude, "r" );
+     hb_xfree( pFileName );
+  }
 
   if( !fptr && pSearch )
-    {
+  {
       pFileName = hb_fsFNameSplit( szFileName );
       pFileName->szName = szFileName;
       pFileName->szExtension = NULL;
       while( pSearch && !fptr )
-        {
+      {
           pFileName->szPath = pSearch->szPath;
           hb_fsFNameMerge( szInclude, pFileName );
           fptr = fopen( szInclude, "r" );
           pSearch = pSearch->pNext;
-        }
+      }
       hb_xfree( pFileName );
-    }
+  }
 
   if( fptr )
   {
