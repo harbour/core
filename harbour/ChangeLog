@@ -1,3 +1,8 @@
+Wed May 05 09:24:22 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* Added back include/set.ch, now in lowercase; same thing for
+	tests/working/block2.prg.
+
 Wed May 05 09:19:23 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* Removed include/Set.ch in preparation to move it to
