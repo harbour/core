@@ -126,6 +126,8 @@ TERMINAL_LIB_OBJS = \
 
 RDD_LIB_OBJS = \
     $(OBJ_DIR)\dbcmd.obj \
+    $(OBJ_DIR)\dbfntx0.obj \
+    $(OBJ_DIR)\dbfntx1.obj \
     $(OBJ_DIR)\rddsys.obj
 
 #
@@ -162,6 +164,9 @@ $(TOOLS_LIB) : $(TOOLS_LIB_OBJS)
 
 $(TERMINAL_LIB) : $(TERMINAL_LIB_OBJS)
     lib /OUT:$(TERMINAL_LIB) $(TERMINAL_LIB_OBJS)
+
+$(RDD_LIB) : $(RDD_LIB_OBJS)
+    lib /OUT:$(RDD_LIB) $(RDD_LIB_OBJS)
 
 #
 # Compiler source depencies and build rules
@@ -406,5 +411,14 @@ $(RDD_DIR)\rddsys.c : $(RDD_DIR)\rddsys.prg
     $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(**D) $** -n
 
 $(OBJ_DIR)\rddsys.obj : $(RDD_DIR)\rddsys.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(RDD_DIR)\dbfntx0.c : $(RDD_DIR)\dbfntx0.prg
+    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(**D) $** -n
+
+$(OBJ_DIR)\dbfntx0.obj : $(RDD_DIR)\dbfntx0.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\dbfntx1.obj : $(RDD_DIR)\dbfntx1.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
