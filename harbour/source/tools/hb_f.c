@@ -1,3 +1,4 @@
+
 /*
 nanforum ft_f*() clones
 * hb_fuse
@@ -283,5 +284,17 @@ HARBOUR hb_flastrec( void )
 
    recno[area] = old_rec;
    offset[area] = old_offset;
+
+}
+
+
+HARBOUR hb_fselect( void )
+
+{
+
+   _retni( area + 1 );
+
+   if ( ISNUM(1) )
+      area = _parni(1) - 1;
 
 }

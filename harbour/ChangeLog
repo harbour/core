@@ -1,3 +1,10 @@
+19990528-23:15 WIB Andi Jahja <andij@aonlippo.co.id>
+  * source/tools/hb_f.c
+    - add hb_fselect
+
+  + tests/working/testsel.prg
+    test program for hb_fselect()
+
 19990529-10:11 EST Les Griffith
   * added both builddos.bat and makefile.dos for djgpp dos enviroment
 
