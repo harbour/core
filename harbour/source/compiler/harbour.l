@@ -1003,7 +1003,7 @@ Separator     {SpaceTab}
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                unput( yytext[ yyleng-1 ] );
                unput( yytext[ yyleng-2 ] );
-	       _iState =WHILE;
+               _iState =WHILE;
                return WHILE;
              }
 <WHILE_>{Separator}*.      { /* identifiers and literals */
@@ -1230,7 +1230,7 @@ Separator     {SpaceTab}
                                  yyleng = 10;
                               }
                               yylval.string = yy_strupr( yy_strdup( yytext ) );
-			      _iState =IDENTIFIER;
+                              _iState =IDENTIFIER;
                               return IDENTIFIER;
                            }
 
@@ -1245,10 +1245,7 @@ Separator     {SpaceTab}
 
 int yy_lex_input( char *buffer, int iBufferSize )
 {
-#ifdef __WATCOMC__
-   iBufferSize =iBufferSize;
-#else
-   if( 0 && iBufferSize ) printf( "/* compiler warning */" );
-#endif
+   HB_SYMBOL_UNUSED( iBufferSize );
+
    return PreProcess( yyin, (lPpo)? yyppo:NULL, buffer );
 }

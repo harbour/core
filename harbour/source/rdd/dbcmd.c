@@ -377,8 +377,9 @@ static ERRCODE Release( AREAP pArea )
 
 static ERRCODE StructSize( AREAP pArea, USHORT * uiSize )
 {
-   pArea = pArea;     /* Just to keep compiler silent */
-   uiSize = uiSize;   /* Just to keep compiler silent */
+   HB_SYMBOL_UNUSED( pArea );
+   HB_SYMBOL_UNUSED( uiSize );
+
    return SUCCESS;
 }
 

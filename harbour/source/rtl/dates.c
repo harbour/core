@@ -69,7 +69,19 @@ HARBOUR HB_TIME( void );
 HARBOUR HB_YEAR( void );
 
 HB_INIT_SYMBOLS_BEGIN( Dates__InitSymbols )
-{ "STOD",    FS_PUBLIC, HB_STOD,    0 }
+{ "CDOW"     , FS_PUBLIC, HB_CDOW    , 0 },
+{ "CMONTH"   , FS_PUBLIC, HB_CMONTH  , 0 },
+{ "CTOD"     , FS_PUBLIC, HB_CTOD    , 0 },
+{ "DATE"     , FS_PUBLIC, HB_DATE    , 0 },
+{ "DAY"      , FS_PUBLIC, HB_DAY     , 0 },
+{ "DOW"      , FS_PUBLIC, HB_DOW     , 0 },
+{ "DTOC"     , FS_PUBLIC, HB_DTOC    , 0 },
+{ "DTOS"     , FS_PUBLIC, HB_DTOS    , 0 },
+{ "MONTH"    , FS_PUBLIC, HB_MONTH   , 0 },
+{ "SECONDS"  , FS_PUBLIC, HB_SECONDS , 0 },
+{ "STOD"     , FS_PUBLIC, HB_STOD    , 0 },
+{ "TIME"     , FS_PUBLIC, HB_TIME    , 0 },
+{ "YEAR"     , FS_PUBLIC, HB_YEAR    , 0 }
 HB_INIT_SYMBOLS_END( Dates__InitSymbols )
 #if ! defined(__GNUC__)
 #pragma startup Dates__InitSymbols

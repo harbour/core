@@ -31,8 +31,13 @@
 
 HARBOUR HB___ERRRT_BASE(void);
 
+extern HARBOUR HB_ERRORSYS( void ); /* from errorsys.prg */
+extern HARBOUR HB_ERRORNEW( void ); /* from terror.prg */
+
 HB_INIT_SYMBOLS_BEGIN( Errorapi__InitSymbols )
-{ "__ERRRT_BASE"  , FS_PUBLIC, HB___ERRRT_BASE , 0 }
+{ "__ERRRT_BASE"  , FS_PUBLIC, HB___ERRRT_BASE , 0 },
+{ "ERRORSYS"      , FS_PUBLIC, HB_ERRORSYS     , 0 },
+{ "ERRORNEW"      , FS_PUBLIC, HB_ERRORNEW     , 0 }
 HB_INIT_SYMBOLS_END( Errorapi__InitSymbols )
 #if ! defined(__GNUC__)
 #pragma startup Errorapi__InitSymbols

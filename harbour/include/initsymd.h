@@ -15,12 +15,15 @@ extern void Dates__InitSymbols( void );
 extern void Dates2__InitSymbols( void );
 extern void Descend__InitSymbols( void );
 extern void Dir__InitSymbols( void );
+extern void Do__InitSymbols( void );
 extern void Environ__InitSymbols( void );
 extern void Errorapi__InitSymbols( void );
 extern void Files__InitSymbols( void );
 extern void HardCR__InitSymbols( void );
+extern void Hvm__InitSymbols( void );
 extern void Math__InitSymbols( void );
 extern void Memotran__InitSymbols( void );
+extern void Memvars__InitSymbols( void );
 extern void Set__InitSymbols( void );
 extern void Strings__InitSymbols( void );
 #ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY  

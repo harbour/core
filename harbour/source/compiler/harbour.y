@@ -2366,11 +2366,7 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
 
    FILE * yyc;             /* file handle for C output */
 
-#ifdef __WATCOMC__
-   szName =NULL;  /* Watcom complains about unreachable code in if(0) */
-#else
-   if( 0 && szName ) printf("/* just to keep compiler silent */" );
-#endif
+   HB_SYMBOL_UNUSED( szName );
 
    yyc = fopen( szFileName, "wb" );
    if( ! yyc )
@@ -3198,7 +3194,7 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
                  break;
 
             default:
-                 printf( "Incorrect pcode value!\n" );
+                 printf( "Incorrect pcode value: %u\n", pFunc->pCode[ lPCodePos ] );
                  lPCodePos = pFunc->lPCodePos;
                  break;
          }
@@ -5323,7 +5319,7 @@ void GenPortObj( char *szFileName, char *szName )
    ULONG ulCodeLength;
    FILE * yyc;             /* file handle for C output */
 
-   if( ! szName ) szName = 0; /* compiler warning */
+   HB_SYMBOL_UNUSED( szName );
 
    yyc = fopen( szFileName, "wb" );
    if( ! yyc )
@@ -5331,10 +5327,6 @@ void GenPortObj( char *szFileName, char *szName )
      printf( "Error opening file %s\n", szFileName );
      return;
    }
-
-#ifndef __WATCOMC__
-   if( 0 && szName ) printf("/* just to keep compiler silent */" );
-#endif
 
    if( ! _bQuiet )
       printf( "\ngenerating portable object file...\n" );
@@ -5439,6 +5431,7 @@ void GenPortObj( char *szFileName, char *szName )
             case HB_P_DIVIDE:
             case HB_P_DUPLICATE:
             case HB_P_DUPLTWO:
+            case HB_P_ENDBLOCK:
             case HB_P_EQUAL:
             case HB_P_EXACTLYEQUAL:
             case HB_P_FALSE:
@@ -5459,13 +5452,13 @@ void GenPortObj( char *szFileName, char *szName )
             case HB_P_OR:
             case HB_P_PLUS:
             case HB_P_POP:
-	    case HB_P_POPALIAS:
+            case HB_P_POPALIAS:
             case HB_P_POWER:
-	    case HB_P_PUSHALIAS:
+            case HB_P_PUSHALIAS:
             case HB_P_PUSHNIL:
             case HB_P_PUSHSELF:
             case HB_P_RETVALUE:
-	    case HB_P_SWAPALIAS:
+            case HB_P_SWAPALIAS:
             case HB_P_TRUE:
             case HB_P_ZERO:
                  fputc( pFunc->pCode[ lPCodePos++ ], yyc );
@@ -5473,7 +5466,6 @@ void GenPortObj( char *szFileName, char *szName )
 
             case HB_P_DIMARRAY:
             case HB_P_DO:
-            case HB_P_ENDBLOCK:
             case HB_P_FUNCTION:
             case HB_P_GENARRAY:
             case HB_P_JUMP:
@@ -5624,7 +5616,7 @@ void GenPortObj( char *szFileName, char *szName )
                  break;
 
             default:
-                 printf( "Incorrect pcode value!\n" );
+                 printf( "Incorrect pcode value: %u\n", pFunc->pCode[ lPCodePos ] );
                  lPCodePos = pFunc->lPCodePos;
                  break;
          }
@@ -5635,16 +5627,16 @@ void GenPortObj( char *szFileName, char *szName )
       else
       {
          /* HB_P_ENDPROC was the last opcode: we have to fill the byte
-	  * reserved earlier
-	  */
-         lPad++; 
+          * reserved earlier
+          */
+         lPad++;
       }
       for( ; lPad; lPad-- )
       {
          /* write additional bytes to agree with stored earlier
-	  * function/procedure size
-	  */
-         fputc( 0, yyc );      
+          * function/procedure size
+          */
+         fputc( 0, yyc );
       }
       pFunc = pFunc->pNext;
    }

@@ -115,8 +115,7 @@ PHB_ITEM hb_itemNew( PHB_ITEM pNull )
 {
    PHB_ITEM pItem = ( PHB_ITEM ) hb_xgrab( sizeof( HB_ITEM ) );
 
-   if( pNull )       /* keep the C compiler silent */
-      pNull->type = 0;   /* keep the C compiler silent */
+   HB_SYMBOL_UNUSED( pNull );
 
    memset( pItem, 0, sizeof( HB_ITEM ) );
    pItem->type = IT_NIL;
@@ -174,7 +173,7 @@ PHB_ITEM hb_itemArrayPut( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem )
 PHB_ITEM hb_itemPutC( PHB_ITEM pItem, char * szText )
 {
    if( pItem )
-      hb_itemClear( pItem );  /* warning: this is hvm.c one not this one */
+      hb_itemClear( pItem );
    else
       pItem = hb_itemNew(0);
 
@@ -188,7 +187,7 @@ PHB_ITEM hb_itemPutC( PHB_ITEM pItem, char * szText )
 PHB_ITEM hb_itemPutCL( PHB_ITEM pItem, char * nszText, ULONG ulLen )
 {
    if( pItem )
-      hb_itemClear( pItem );  /* warning: this is hvm.c one not this one */
+      hb_itemClear( pItem );
    else
       pItem = hb_itemNew(0);
 
@@ -313,7 +312,7 @@ PHB_ITEM hb_itemPutDS( PHB_ITEM pItem, char *szDate )
    long lDay, lMonth, lYear;
 
    if( pItem )
-      hb_itemClear( pItem );  /* warning: this is hvm.c one not this one */
+      hb_itemClear( pItem );
    else
       pItem = hb_itemNew(0);
 
@@ -333,7 +332,7 @@ PHB_ITEM hb_itemPutDS( PHB_ITEM pItem, char *szDate )
 PHB_ITEM hb_itemPutL( PHB_ITEM pItem, BOOL bValue )
 {
    if( pItem )
-      hb_itemClear( pItem );  /* warning: this is hvm.c one not this one */
+      hb_itemClear( pItem );
    else
       pItem = hb_itemNew(0);
 
@@ -346,7 +345,7 @@ PHB_ITEM hb_itemPutL( PHB_ITEM pItem, BOOL bValue )
 PHB_ITEM hb_itemPutND( PHB_ITEM pItem, double dNumber )
 {
    if( pItem )
-      hb_itemClear( pItem );  /* warning: this is hvm.c one not this one */
+      hb_itemClear( pItem );
    else
       pItem = hb_itemNew(0);
 
@@ -361,7 +360,7 @@ PHB_ITEM hb_itemPutND( PHB_ITEM pItem, double dNumber )
 PHB_ITEM hb_itemPutNL( PHB_ITEM pItem, long lNumber )
 {
    if( pItem )
-      hb_itemClear( pItem );  /* warning: this is hvm.c one not this one */
+      hb_itemClear( pItem );
    else
       pItem = hb_itemNew(0);
 

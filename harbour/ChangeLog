@@ -1,3 +1,43 @@
+19990818-03:00 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * source/compiler/harbour.y
+    ! Fixed "incorrect pcode" error with /gh switch and certain .prg files.
+      (Thanks to: Ryszard Glab <rglab@imid.med.pl>)
+
+  * source/compiler/harbour.y
+    + Invalid pcode error now shows the failing pcode number.
+
+  * source/vm/hvm.c
+    + TODO: added to include the actual unsupported pcode in the error
+      message.
+
+  * include/run_exp.h
+    include/initsymc.h
+    include/initsymd.h
+    source/vm/hvm.c
+    source/rtl/memvars.c
+    source/rtl/math.c
+    source/rtl/arrays.c
+    source/rtl/console.c
+    source/rtl/dates.c
+    source/rtl/do.c
+    source/rtl/errorapi.c
+    source/rtl/filesys.c
+    source/rtl/strings.c
+    + Standard name registration method added (hvm.c).
+    ! Completed init tables so that all declared Harbour function get 
+      registered.
+
+  * include/run_exp.h
+    + ACHOICE added.
+
+  * source/compiler/harbour.y
+    source/compiler/harbour.l
+    source/rtl/itemapi.c
+    source/rdd/dbcmd.c
+    * Some tricks used to suppress unused variable warnings changed
+      to HB_SYMBOL_UNUSED().
+
 19990817-15:36 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/debug/tbrwtext.prg
      * modified to with with cr/lf or just lf
@@ -35,7 +75,7 @@
 
 19990817-20:14 GMT+1 Victor Szel <info@szelvesz.hu>
   * tests/working/Makefile
-    tests/working/colorind.prg (moved to rtl_test.prg)
+    tests/working/colorind.prg (content moved to rtl_test.prg)
     tests/working/rtl_test.prg
     tests/working/testhbf.prg
     tests/working/and_or.prg

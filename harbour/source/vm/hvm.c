@@ -43,6 +43,7 @@
 #include "pcode.h"
 #include "set.h"
 #include "inkey.h"
+#include "init.h"
 
 extern void hb_consoleInitialize( void );
 extern void hb_consoleRelease( void );
@@ -117,6 +118,23 @@ BYTE     bErrorLevel = 0;  /* application exit errorlevel */
 
 #define HB_DEBUG( x )     if( bHB_DEBUG ) printf( x )
 #define HB_DEBUG2( x, y ) if( bHB_DEBUG ) printf( x, y )
+
+HB_INIT_SYMBOLS_BEGIN( Hvm__InitSymbols )
+{ "EVAL"             , FS_PUBLIC, HB_EVAL               , 0 },
+{ "LEN"              , FS_PUBLIC, HB_LEN                , 0 },
+{ "EMPTY"            , FS_PUBLIC, HB_EMPTY              , 0 },
+{ "VALTYPE"          , FS_PUBLIC, HB_VALTYPE            , 0 },
+{ "ERRORBLOCK"       , FS_PUBLIC, HB_ERRORBLOCK         , 0 },
+{ "PROCNAME"         , FS_PUBLIC, HB_PROCNAME           , 0 },
+{ "PROCLINE"         , FS_PUBLIC, HB_PROCLINE           , 0 },
+{ "__QUIT"           , FS_PUBLIC, HB___QUIT             , 0 },
+{ "ERRORLEVEL"       , FS_PUBLIC, HB_ERRORLEVEL         , 0 },
+{ "PCOUNT"           , FS_PUBLIC, HB_PCOUNT             , 0 },
+{ "PVALUE"           , FS_PUBLIC, HB_PVALUE             , 0 }
+HB_INIT_SYMBOLS_END( Hvm__InitSymbols )
+#if ! defined(__GNUC__)
+#pragma startup Hvm__InitSymbols
+#endif
 
 /* application entry point */
 
@@ -601,6 +619,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
               break;
 
          default:
+              /* TODO: Include to failing pcode in the error message */
               hb_errInternal( 9999, "Unsupported VM opcode", NULL, NULL );
               break;
       }

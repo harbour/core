@@ -44,6 +44,7 @@ HARBOUR HB_ASORT(void);
 HARBOUR HB_ATAIL(void);
 
 HB_INIT_SYMBOLS_BEGIN( Arrays__InitSymbols )
+{ "AADD",           FS_PUBLIC, HB_AADD          , 0 },
 { "ACLONE",         FS_PUBLIC, HB_ACLONE        , 0 },
 { "ACOPY",          FS_PUBLIC, HB_ACOPY         , 0 },
 { "ADEL",           FS_PUBLIC, HB_ADEL          , 0 },
