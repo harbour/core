@@ -305,6 +305,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\memvarbl.obj \
    $(OBJ_DIR)\menuto.obj \
    $(OBJ_DIR)\objfunc.obj \
+   $(OBJ_DIR)\profiler.obj \
    $(OBJ_DIR)\readkey.obj \
    $(OBJ_DIR)\readvar.obj \
    $(OBJ_DIR)\setfunc.obj \
@@ -1462,6 +1463,13 @@ $(OBJ_DIR)\philes53.obj : $(RTL_DIR)\philes53.c
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\philesx.obj : $(RTL_DIR)\philesx.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\profiler.c : $(RTL_DIR)\profiler.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\profiler.obj : $(OBJ_DIR)\profiler.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
