@@ -1,3 +1,7 @@
+19991108-09:25 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/rtl/classes.c
+     * hb_clsRelease() modified. Still there is a problem with CLASSDATA ... INIT
+
 19991108-07:38 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/rtl/classes.c
      * Arrays used for DATA ... INIT values, properly initalized.
