@@ -65,3 +65,4 @@ HARBOUR HB_DELIM_GETFUNCTABLE( void )
    else
       hb_retni( FAILURE );
 }
+

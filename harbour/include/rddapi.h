@@ -115,10 +115,12 @@ typedef USHORT ERRCODE;
 #define APPEND_LOCK        7
 #define APPEND_UNLOCK      8
 
-
 typedef struct _FILEINFO
 {
    FHANDLE hFile;
+   LONG *  pLocksPos;          /* List of records locked */
+   LONG    lNumLocksPos;       /* Number of records locked */
+   BOOL    fFileLocked;        /* TRUE if entire file is locked */
    struct _FILEINFO * pNext;   /* The next file in the list */
 } FILEINFO;
 
@@ -158,7 +160,6 @@ typedef struct
    BYTE * atomAlias;       /* The logical name of the data store */
    BOOL   fShared;         /* Share mode of the data store */
    BOOL   fReadonly;       /* Readonly mode of the data store */
-
    void * lpdbHeader;      /* Pointer to a header of the data store */
 } DBOPENINFO;
 
@@ -180,7 +181,6 @@ typedef struct
    BOOL     fHasMemo;        /* Work Area with Memo fields */
    PHB_ITEM pRecNo;          /* Current record */
    BOOL     fExclusive;      /* Share the Work Area */
-   BOOL     fFileLocked;     /* File Locked */
 } DBEXTENDINFO;
 
 typedef DBEXTENDINFO * LPDBEXTENDINFO;
@@ -208,13 +208,11 @@ typedef struct _DBORDERCONDINFO
    BOOL     fDescending;
    BOOL     fScoped;
    BOOL     fAll;
-
    BOOL     fAdditive;
    BOOL     fUseCurrent;
    BOOL     fCustom;
    BOOL     fNoOptimize;
    void *   lpvCargo;
-
 } DBORDERCONDINFO;
 
 typedef DBORDERCONDINFO * LPDBORDERCONDINFO;
@@ -234,8 +232,6 @@ typedef struct
    BYTE *            atomBagName;     /* Name of the Order */
    PHB_ITEM          itmOrder;
    BOOL              fUnique;         /* Flag to determine if all keys are unique */
-                                      /* las claves con £nicas */
-
    PHB_ITEM          itmCobExpr;      /* Code block containing the KEY expression */
    PHB_ITEM          abExpr;          /* String containing the KEY expression */
 } DBORDERCREATEINFO;
@@ -254,13 +250,9 @@ typedef struct
 {
    PHB_ITEM atomBagName;  /* Name of the Order Bag */
    PHB_ITEM itmOrder;     /* Name or Number of the Order */
-
    PHB_ITEM itmCobExpr;   /* Code block containing the KEY expression */
-
    PHB_ITEM itmResult;    /* Operation result */
-
-   BOOL     fAllTags;     /* Indicador de todos los tags a abrir */
-
+   BOOL     fAllTags;     /* Open all tags */
 } DBORDERINFO;
 
 typedef DBORDERINFO * LPDBORDERINFO;
@@ -282,12 +274,10 @@ typedef struct
    PHB_ITEM lNext;       /* NEXT record */
    PHB_ITEM itmRecID;
    PHB_ITEM fRest;       /* TRUE if start from the current record */
-
    BOOL     fIgnoreFilter;
    BOOL     fIncludeDeleted;
    BOOL     fLast;
    BOOL     fIgnoreDuplicates;
-
 } DBSCOPEINFO;
 
 typedef DBSCOPEINFO * LPDBSCOPEINFO;
@@ -321,12 +311,9 @@ typedef struct _DBRELINFO
 {
    PHB_ITEM           itmCobExpr;   /* Block representation of the relational SEEK key */
    PHB_ITEM           abKey;        /* String representation of the relational SEEK key */
-
    struct _AREA      *lpaParent;    /* The parent of this relation */
    struct _AREA      *lpaChild;     /* The parents children */
-
    struct _DBRELINFO *lpdbriNext;   /* Next child or parent */
-
 } DBRELINFO;
 
 typedef DBRELINFO * LPDBRELINFO;
@@ -385,9 +372,7 @@ typedef struct
    struct _AREA *lpaSource;     /* Pointer to source work area */
    struct _AREA *lpaDest;       /* Pointer to dest work area */
    DBSCOPEINFO   dbsci;         /* Scope to limit transfer */
-
    USHORT        uiFlags;       /* Transfer attributes */
-
    USHORT        uiItemCount;   /* Number of items below */
    LPDBTRANSITEM lpTransItems;  /* Array of items */
 } DBTRANSINFO;
@@ -436,10 +421,8 @@ typedef DBSORTITEM * LPDBSORTITEM;
 typedef struct
 {
    DBTRANSINFO   dbtri;        /* Destination workarea transfer information */
-
    LPDBSORTITEM  lpdbsItem;    /* Fields which compose the key values for the sort */
    USHORT        uiItemCount;  /* The number of fields above */
-
 } DBSORTINFO;
 
 typedef DBSORTINFO * LPDBSORTINFO;
@@ -481,9 +464,7 @@ typedef struct _FIELD
    USHORT  uiDec;            /* Decimal length */
    USHORT  uiArea;           /* Area this field resides in */
    void *  sym;              /* Symbol that represents the field */
-
    struct _FIELD *lpfNext;   /* The next field in the list */
-
 } FIELD;
 
 typedef FIELD * LPFIELD;
@@ -504,40 +485,28 @@ struct _RDDFUNCS;       /* forward declaration */
 typedef struct _AREA
 {
    struct _RDDFUNCS * lprfsHost; /* Virtual method table for this workarea */
-
    USHORT   uiArea;              /* The number assigned to this workarea */
    void *   atomAlias;           /* Pointer to the alias symbol for this workarea */
-
    USHORT   uiFieldExtent;       /* Total number of fields allocated */
    USHORT   uiFieldCount;        /* Total number of fields used */
    LPFIELD  lpFields;            /* Pointer to an array of fields */
-
    void *   lpFieldExtents;      /* Void ptr for additional field properties */
-
    PHB_ITEM valResult;           /* All purpose result holder */
-
    BOOL fTop;                    /* TRUE if "top" */
    BOOL fBottom;                 /* TRUE if "bottom" */
    BOOL fBof;                    /* TRUE if "bof" */
    BOOL fEof;                    /* TRUE if "eof" */
    BOOL fFound;                  /* TRUE if "found" */
-
    DBSCOPEINFO  dbsi;            /* Info regarding last LOCATE */
    DBFILTERINFO dbfi;            /* Filter in effect */
-
    LPDBORDERCONDINFO lpdbOrdCondInfo;
-
    LPDBRELINFO  lpdbRelations;   /* Parent/Child relationships used */
    USHORT       uiParents;       /* Number of parents for this area */
-
    USHORT   heap;
    USHORT   heapSize;
-
    USHORT   rddID;
-
    LPFILEINFO lpFileInfo;        /* Files used by this workarea */
    LPDBEXTENDINFO lpExtendInfo;  /* Additional properties */
-
 } AREA;
 
 typedef AREA * LPAREA;

@@ -73,6 +73,9 @@ HARBOUR HB_DBGOBOTTOM( void );
 HARBOUR HB_DBGOTO( void );
 HARBOUR HB_DBGOTOP( void );
 HARBOUR HB_DBRECALL( void );
+HARBOUR HB_DBRLOCK( void );
+HARBOUR HB_DBRLOCKLIST( void );
+HARBOUR HB_DBRUNLOCK( void );
 HARBOUR HB_DBSELECTAREA( void );
 HARBOUR HB_DBSETDRIVER( void );
 HARBOUR HB_DBSKIP( void );
@@ -94,6 +97,7 @@ HARBOUR HB_RDDSETDEFAULT( void );
 HARBOUR HB_RDDSHUTDOWN( void );
 HARBOUR HB_RECCOUNT( void );
 HARBOUR HB_RECNO( void );
+HARBOUR HB_RLOCK( void );
 HARBOUR HB_SELECT( void );
 HARBOUR HB_USED( void );
 
@@ -109,6 +113,9 @@ HB_INIT_SYMBOLS_BEGIN( dbCmd__InitSymbols )
 { "DBGOTO",        FS_PUBLIC, HB_DBGOTO,        0 },
 { "DBGOTOP",       FS_PUBLIC, HB_DBGOTOP,       0 },
 { "DBRECALL",      FS_PUBLIC, HB_DBRECALL,      0 },
+{ "DBRLOCK",       FS_PUBLIC, HB_DBRLOCK,       0 },
+{ "DBRLOCKLIST",   FS_PUBLIC, HB_DBRLOCKLIST,   0 },
+{ "DBRUNLOCK",     FS_PUBLIC, HB_DBRUNLOCK,     0 },
 { "DBSELECTAREA",  FS_PUBLIC, HB_DBSELECTAREA,  0 },
 { "DBSETDRIVER",   FS_PUBLIC, HB_DBSETDRIVER,   0 },
 { "DBSKIP",        FS_PUBLIC, HB_DBSKIP,        0 },
@@ -130,6 +137,7 @@ HB_INIT_SYMBOLS_BEGIN( dbCmd__InitSymbols )
 { "RDDSHUTDOWN",   FS_PUBLIC, HB_RDDSHUTDOWN,   0 },
 { "RECCOUNT",      FS_PUBLIC, HB_RECCOUNT,      0 },
 { "RECNO",         FS_PUBLIC, HB_RECNO,         0 },
+{ "RLOCK",         FS_PUBLIC, HB_RLOCK,         0 },
 { "SELECT",        FS_PUBLIC, HB_SELECT,        0 },
 { "USED",          FS_PUBLIC, HB_USED,          0 }
 HB_INIT_SYMBOLS_END( dbCmd__InitSymbols )
@@ -275,8 +283,8 @@ static ERRCODE Info( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 static ERRCODE NewArea( AREAP pArea )
 {
    pArea->lpFileInfo = ( LPFILEINFO ) hb_xgrab( sizeof( FILEINFO ) );
+   memset( pArea->lpFileInfo, 0, sizeof( FILEINFO ) );
    pArea->lpFileInfo->hFile = FS_ERROR;
-   pArea->lpFileInfo->pNext = 0;
    pArea->lpExtendInfo = ( LPDBEXTENDINFO ) hb_xgrab( sizeof( DBEXTENDINFO ) );
    memset( pArea->lpExtendInfo, 0, sizeof( DBEXTENDINFO ) );
    pArea->lpExtendInfo->pRecNo = hb_itemNew( NULL );
@@ -285,8 +293,6 @@ static ERRCODE NewArea( AREAP pArea )
 
 static ERRCODE Open( AREAP pArea, LPDBOPENINFO pOpenInfo )
 {
-   USHORT uiFlags;
-
    pArea->atomAlias = hb_dynsymFind( ( char * ) pOpenInfo->atomAlias );
    if( pArea->atomAlias && ( ( PHB_DYNS ) pArea->atomAlias )->hArea )
    {
@@ -686,7 +692,7 @@ HARBOUR HB_BOF( void )
 {
    BOOL bBof = TRUE;
 
-   if( pCurrArea && ( ( AREAP ) pCurrArea->pArea )->lprfsHost )
+   if( pCurrArea )
       SELF_BOF( ( AREAP ) pCurrArea->pArea, &bBof );
    hb_retl( bBof );
 }
@@ -721,7 +727,7 @@ HARBOUR HB_DBCLOSEAREA( void )
 
 HARBOUR HB_DBCOMMIT( void )
 {
-   if( pCurrArea && ( ( AREAP ) pCurrArea->pArea )->lprfsHost )
+   if( pCurrArea )
       SELF_FLUSH( ( AREAP ) pCurrArea->pArea );
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, 0, "DBCOMMIT" );
@@ -814,7 +820,7 @@ HARBOUR HB_DBCREATE( void )
 
 HARBOUR HB_DBDELETE( void )
 {
-   if( pCurrArea && ( ( AREAP ) pCurrArea->pArea )->lprfsHost )
+   if( pCurrArea )
       SELF_DELETE( ( AREAP ) pCurrArea->pArea );
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, 0, "DBDELETE" );
@@ -822,7 +828,7 @@ HARBOUR HB_DBDELETE( void )
 
 HARBOUR HB_DBGOBOTTOM( void )
 {
-   if( pCurrArea && ( ( AREAP ) pCurrArea->pArea )->lprfsHost )
+   if( pCurrArea )
       SELF_GOBOTTOM( ( AREAP ) pCurrArea->pArea );
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, 0, "DBGOBOTTOM" );
@@ -832,7 +838,7 @@ HARBOUR HB_DBGOTO( void )
 {
    PHB_ITEM pItem;
    
-   if( !pCurrArea || !( ( AREAP ) pCurrArea->pArea )->lprfsHost )
+   if( !pCurrArea )
    {
       hb_errRT_DBCMD( EG_NOTABLE, 2001, 0, "DBGOTOP" );
       return;
@@ -847,7 +853,7 @@ HARBOUR HB_DBGOTO( void )
 
 HARBOUR HB_DBGOTOP( void )
 {
-   if( pCurrArea && ( ( AREAP ) pCurrArea->pArea )->lprfsHost )
+   if( pCurrArea )
       SELF_GOTOP( ( AREAP ) pCurrArea->pArea );
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, 0, "DBGOTOP" );
@@ -855,10 +861,55 @@ HARBOUR HB_DBGOTOP( void )
 
 HARBOUR HB_DBRECALL( void )
 {
-   if( pCurrArea && ( ( AREAP ) pCurrArea->pArea )->lprfsHost )
+   if( pCurrArea )
       SELF_RECALL( ( AREAP ) pCurrArea->pArea );
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, 0, "DBRECALL" );
+}
+
+HARBOUR HB_DBRLOCK( void )
+{
+   DBLOCKINFO pLockInfo;
+
+   pLockInfo.fResult = FALSE;
+   if( pCurrArea )
+   {
+      pLockInfo.itmRecID = hb_parnl( 1 );
+      pLockInfo.uiMethod = REC_LOCK;
+      SELF_LOCK( ( AREAP ) pCurrArea->pArea, &pLockInfo );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, 0, "DBRLOCK" );
+
+   hb_retl( pLockInfo.fResult );
+}
+
+HARBOUR HB_DBRLOCKLIST( void )
+{
+   PHB_ITEM pList;
+
+   pList = hb_itemArrayNew( 0 );
+   if( pCurrArea )
+      SELF_INFO( ( AREAP ) pCurrArea->pArea, DBI_GETLOCKARRAY, pList );
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, 0, "DBRLOCKLIST" );
+
+   hb_itemReturn( pList );
+   hb_itemRelease( pList );
+}
+
+HARBOUR HB_DBRUNLOCK( void )
+{
+   DBLOCKINFO pLockInfo;
+
+   if( pCurrArea )
+   {
+      pLockInfo.itmRecID = hb_parnl( 1 );
+      pLockInfo.uiMethod = REC_UNLOCK;
+      SELF_LOCK( ( AREAP ) pCurrArea->pArea, &pLockInfo );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, 0, "DBRUNLOCK" );
 }
 
 HARBOUR HB_DBSELECTAREA( void )
@@ -909,7 +960,7 @@ HARBOUR HB_DBSKIP( void )
    PHB_ITEM pItem;
    LONG lToSkip = 1;
 
-   if( pCurrArea && ( ( AREAP ) pCurrArea->pArea )->lprfsHost )
+   if( pCurrArea )
    {
       pItem = hb_param( 1, IT_NUMERIC );
       if( pItem )
@@ -1127,7 +1178,7 @@ HARBOUR HB_DELETED( void )
 {
    BOOL bDeleted = FALSE;
    
-   if( pCurrArea && ( ( AREAP ) pCurrArea->pArea )->lprfsHost )
+   if( pCurrArea )
       SELF_DELETED( ( AREAP ) pCurrArea->pArea, &bDeleted );
    hb_retl( bDeleted );
 }
@@ -1136,7 +1187,7 @@ HARBOUR HB_EOF( void )
 {
    BOOL bEof = TRUE;
 
-   if( pCurrArea && ( ( AREAP ) pCurrArea->pArea )->lprfsHost )
+   if( pCurrArea )
       SELF_EOF( ( AREAP ) pCurrArea->pArea, &bEof );
    hb_retl( bEof );
 }
@@ -1145,7 +1196,7 @@ HARBOUR HB_FCOUNT( void )
 {
    USHORT uiFields = 0;
    
-   if( pCurrArea && ( ( AREAP ) pCurrArea->pArea )->lprfsHost )
+   if( pCurrArea )
       SELF_FIELDCOUNT( ( AREAP ) pCurrArea->pArea, &uiFields );
    hb_retni( uiFields );
 }
@@ -1158,7 +1209,7 @@ HARBOUR HB_FIELDGET( void )
    pItem = hb_itemNew( 0 );
    uiField = hb_parni( 1 );
 
-   if( pCurrArea && ( ( AREAP ) pCurrArea->pArea )->lprfsHost && uiField )
+   if( pCurrArea && uiField )
       SELF_GETVALUE( ( AREAP ) pCurrArea->pArea, uiField, pItem );
 
    hb_itemReturn( pItem );
@@ -1170,7 +1221,7 @@ HARBOUR HB_FIELDNAME( void )
    USHORT uiFields, uiIndex;
    char * szName;
    
-   if( pCurrArea && ( ( AREAP ) pCurrArea->pArea )->lprfsHost )
+   if( pCurrArea )
    {
       uiIndex = hb_parni( 1 );
       if( SELF_FIELDCOUNT( ( AREAP ) pCurrArea->pArea, &uiFields ) == SUCCESS )
@@ -1195,7 +1246,7 @@ HARBOUR HB_FIELDPOS( void )
    char * szName;
    LPFIELD pField;
    
-   if( pCurrArea && ( ( AREAP ) pCurrArea->pArea )->lprfsHost )
+   if( pCurrArea )
    {
       szName = hb_parc( 1 );
       hb_strUpper( szName, strlen( szName ) );
@@ -1221,7 +1272,7 @@ HARBOUR HB_FIELDPUT( void )
    PHB_ITEM pItem;
    
    uiIndex = hb_parni( 1 );
-   if( pCurrArea && ( ( AREAP ) pCurrArea->pArea )->lprfsHost && uiIndex )
+   if( pCurrArea && uiIndex )
    {
       pItem = hb_param( 2, IT_ANY );
       if( SELF_PUTVALUE( ( AREAP ) pCurrArea->pArea, uiIndex, pItem ) == SUCCESS )
@@ -1237,7 +1288,7 @@ HARBOUR HB_FOUND( void )
 {
    BOOL bFound = FALSE;
 
-   if( pCurrArea && ( ( AREAP ) pCurrArea->pArea )->lprfsHost )
+   if( pCurrArea )
       SELF_FOUND( ( AREAP ) pCurrArea->pArea, &bFound );
    hb_retl( bFound );
 }
@@ -1271,7 +1322,7 @@ HARBOUR HB_RDDNAME( void )
 {
    char * pBuffer;
 
-   if( pCurrArea && ( ( AREAP ) pCurrArea->pArea )->lprfsHost )
+   if( pCurrArea )
    {
       pBuffer = ( char * ) hb_xgrab( HARBOUR_MAX_RDD_DRIVERNAME_LENGTH + 1 );
       pBuffer[ 0 ] = '\0';
@@ -1343,7 +1394,7 @@ HARBOUR HB_RECCOUNT( void )
 {
    LONG ulRecCount = 0;
 
-   if( pCurrArea && ( ( AREAP ) pCurrArea->pArea )->lprfsHost )
+   if( pCurrArea )
       SELF_RECCOUNT( ( AREAP ) pCurrArea->pArea, &ulRecCount );
    hb_retnl( ulRecCount );
 }
@@ -1353,9 +1404,28 @@ HARBOUR HB_RECNO( void )
    PHB_ITEM pRecNo;
    
    pRecNo = hb_itemPutNL( NULL, 0 );
-   if( pCurrArea && ( ( AREAP ) pCurrArea->pArea )->lprfsHost )
+   if( pCurrArea )
       SELF_RECNO( ( AREAP ) pCurrArea->pArea, pRecNo );
    hb_itemReturn( pRecNo );
+}
+
+HARBOUR HB_RLOCK( void )
+{
+   DBLOCKINFO pLockInfo;
+   PHB_ITEM pRecNo;
+
+   pLockInfo.fResult = FALSE;
+   if( pCurrArea )
+   {
+      SELF_RECNO( ( AREAP ) pCurrArea->pArea, pRecNo );
+      pLockInfo.itmRecID = pRecNo->item.asLong.value;
+      pLockInfo.uiMethod = REC_LOCK;
+      SELF_LOCK( ( AREAP ) pCurrArea->pArea, &pLockInfo );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, 0, "RLOCK" );
+
+   hb_retl( pLockInfo.fResult );
 }
 
 HARBOUR HB_SELECT( void )
@@ -1376,4 +1446,3 @@ HARBOUR HB_USED( void )
    else
       hb_retl( 0 );
 }
-

@@ -1,3 +1,10 @@
+19990824-11:07 GMT+1 Bruno Cantero <bruno@issnet.net>
+   * funclist.txt
+     include/rddapi.h
+     source/rdd/dbcmd.c
+     source/rdd/dbf1.c
+     + Added RLOCK, DBRLOCK and DBRUNLOCK functions
+
 19990824-03:50 GMT+1 Victor Szel <info@szelvesz.hu>
   * tests/working/fileio.prg
     + Rewritten to check more functions in more situations, displaying all
