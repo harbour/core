@@ -8,6 +8,15 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-06-14 09:23 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+  * include/hbrddcdx.h
+  * source/rdd/dbfcdx/dbfcdx1.c
+  * source/rdd/dbfcdx/dbfcdx1.h
+  * source/rdd/dbfcdx/dbfcdx2.h
+    ! Recent changes and enhancements on DBFCDX from Horacio.
+
+  Thanks Horacio!
+
 2003-06-09 11:26 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
   * source/rtl/tget.prg
     ! fix on Method Picture() provided by Lorenzo Fiorini
