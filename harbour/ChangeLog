@@ -8,6 +8,15 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-05-06 15:40 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+   * include/hbexpra.c
+   * source/common/expropt2.c
+   * source/compiler/expropta.c
+   * source/macro/macroa.c
+      ! Fixed optimalization of AT,ASC,LEN,CHR functions
+      in the macro compiler (this fixes GPF reported
+      by Alexander)
+
 2004-05-05 08:08 UTC+0200 Ilias Lazaridis <ilias@lazaridis.com>
    * source/codepage/cdpesdos.c
      ! Whitespace reformatting

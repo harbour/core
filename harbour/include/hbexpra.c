@@ -157,7 +157,7 @@ HB_EXPR_PTR hb_compExprNew( int iType )
 void hb_compExprClear( HB_EXPR_PTR pExpr )
 {
 #if defined( HB_MACRO_SUPPORT )
-   HB_SYMBOL_UNUSED( pExpr );
+   pExpr->ExprType = HB_ET_NONE;
 #else
    if( --pExpr->Counter == 0 )
       HB_XFREE( pExpr );
