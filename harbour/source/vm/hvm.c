@@ -565,13 +565,11 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          /* Execution */
 
          case HB_P_DO:
-            hb_inkeyPoll();           /* Poll the console keyboard */
             hb_vmDo( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
             w += 3;
             break;
 
          case HB_P_DOSHORT:
-            hb_inkeyPoll();           /* Poll the console keyboard */
             hb_vmDo( pCode[ w + 1 ] );
             w += 2;
             break;
@@ -2788,6 +2786,8 @@ void hb_vmDo( USHORT uiParams )
    BOOL bDebugPrevState;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmDo(%hu)", uiParams));
+
+   hb_inkeyPoll();           /* Poll the console keyboard */
 
    pItem = hb_stackNewFrame( &sStackState, uiParams );
    pSym = pItem->item.asSymbol.value;

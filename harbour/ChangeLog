@@ -1,3 +1,10 @@
+2001-01-19 18:30 UTC-0500 David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/gtcgi/Makefile
+    ! The library is supposed to be 'gtcgi', not 'gtstd'!
+
+  * source/vm/hvm.c
+    * Moved hb_inkeyPoll() call to inside the hb_vmDo() function.
+
 2001-01-18 22:41 GMT+1 JFL (Mafact) <jfl@mafact.com>
    *harbour/hb_slex.vc
     * added HBMAKE 
