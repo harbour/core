@@ -86,6 +86,13 @@ void yy_lex_count_lf( void )
 
 %}
 
+%{
+#ifdef __WATCOMC__
+/* disable warnings for unreachable code */
+#pragma warning 13 9
+#endif
+%}
+
 SpaceTab      [ \t]+
 InvalidNumber [0-9]+\.
 Number        ([0-9]+)|([0-9]*\.[0-9]+)
@@ -1318,6 +1325,13 @@ Separator     {SpaceTab}|{Comment}
                                  return IDENTIFIER;
                               }
                            }
+
+%{
+#ifdef __WATCOMC__
+/* enable warnings for unreachable code */
+#pragma warning 13 1
+#endif
+%}
 
 %%
 

@@ -1,0 +1,60 @@
+#
+# $Id$
+#
+
+include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
+
+OBJ_EXT = .obj
+EXE_EXT = .exe
+LIB_PREF =
+LIB_EXT = .lib
+
+$(HB_ARCHITECTURE)_$(HB_COMPILER)_GRANDP = $(subst /,\\,$(GRANDP))
+_HB_INC_DIR = $(subst /,\\,$(HB_INC_DIR))
+_HB_LIB_DIR = $(subst /,\,$(HB_LIB_DIR))
+WATCOM_INCLUDE = $(subst \,\\,$(WATCOM))\\h
+
+CC = wpp386
+CC_IN =
+CC_OUT = -fo=
+CPPFLAGS = -d2 -w2 -5r -zq -zt0 -bt=DOS4G
+CFLAGS = -i$(WATCOM_INCLUDE) -i$(_HB_INC_DIR) -i.
+
+#Note: The empty line below HAVE TO exist!
+define link_file
+echo FILE $(file) >> __link__.tmp
+
+endef
+
+define link_exe_file
+echo $(LDFLAGS) > __link__.tmp
+echo NAME $@ >> __link__.tmp
+$(foreach file, $^, $(link_file))
+echo $(LINKLIBS) >> __link__.tmp
+$(LD) @__link__.tmp
+del __link__.tmp
+endef
+
+LD = wlink
+LDFLAGS = debug all OP osn=DOS4G OP stack=16384
+LINKLIBS = LIBP $(_HB_LIB_DIR) LIB $(foreach lib, $(LIBS), $(lib))
+LD_RULE = $(link_exe_file)
+
+#Note: The empty line below HAVE TO exist!
+define lib_object
+echo -+$(file) >> __lib__.tmp
+
+endef
+
+define create_library
+echo $@ > __lib__.tmp
+$(foreach file, $^, $(lib_object))
+$(AR) @__lib__.tmp
+del __lib__.tmp
+endef
+
+AR = wlib
+ARFLAGS =
+AR_RULE = $(create_library)
+
+include $(TOP)$(ROOT)config/rules.cf

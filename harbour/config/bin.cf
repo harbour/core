@@ -6,7 +6,14 @@ include $(TOP)$(ROOT)config/global.cf
 include $(TOP)$(ROOT)config/c.cf
 
 EXE_NAME = $(C_MAIN:.c=$(EXE_EXT))
+
+_EXE_ARCH = $(notdir $(ARCH_DIR))
+ifeq ($(_EXE_ARCH),)
+# ARCH_DIR ends with a slash
 EXE_ARCH = $(ARCH_DIR)$(EXE_NAME)
+else
+EXE_ARCH = $(ARCH_DIR)/$(EXE_NAME)
+endif
 
 ALL_OBJS = $(ALL_C_OBJS) $(ALL_PRG_OBJS)
 

@@ -11,12 +11,20 @@ LEX = flex
 LEX_FLAGS = -i -8
 
 # How to run Harbour.
-HB = harbour$(EXE_EXT)
+_HB = $(notdir $(HB_BIN_DIR))
+ifeq ($(_HB),)
+# there is a slash at the end
+HB = $(HB_BIN_DIR)harbour$(EXE_EXT)
+else
+HB = $(HB_BIN_DIR)/harbour$(EXE_EXT)
+endif
 HB_FLAGS = -n -q -I$(TOP) -I$(HB_INC_DIR)
 
 # The rule to link an executable.
+ifeq ($(LD_RULE),)
+# Use default rule if architecture/compiler specific rule is not defined
 LD_RULE = $(LD) $(CFLAGS) $(LD_OUT)$@ $^ $(LDFLAGS) $(LINKLIBS)
-
+endif
 
 # Eliminate these rules.
 
@@ -24,14 +32,21 @@ LD_RULE = $(LD) $(CFLAGS) $(LD_OUT)$@ $^ $(LDFLAGS) $(LINKLIBS)
 
 %.c : %.l
 
+# Location of source C files
+# Some DOS compilers doesn't like '/' in filenames - however the MAKE system
+# requires '/' in filenames - this trick allows to solve this conflict
+SOURCE_DIR := $($(HB_ARCHITECTURE)_$(HB_COMPILER)_GRANDP)
+ifeq ($(SOURCE_DIR),)
+SOURCE_DIR = $(GRANDP)
+endif
 
 # Rule to generate an object file from a C source file in the parent.
-%$(OBJ_EXT) : $(GRANDP)%.c
-	$(CC) $(CPPFLAGS) $(CFLAGS) -c $? $(CC_OUT)$(subst .c,$(OBJ_EXT),$(subst $(GRANDP),,$?))
+%$(OBJ_EXT) : $(SOURCE_DIR)%.c
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(CC_IN) $? $(CC_OUT)$(subst .c,$(OBJ_EXT),$(subst $(SOURCE_DIR),,$?))
 
 # Rule to generate an object file from a C source file.
 %$(OBJ_EXT) : %.c
-	$(CC) $(CPPFLAGS) $(CFLAGS) -c $? $(CC_OUT)$(?:.c=$(OBJ_EXT))
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(CC_IN) $? $(CC_OUT)$(?:.c=$(OBJ_EXT))
 
 # Rule to generate an executable file from an object file.
 %$(EXE_EXT) : %$(OBJ_EXT)

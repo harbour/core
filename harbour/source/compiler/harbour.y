@@ -23,6 +23,7 @@
 #include "types.h"      /* our defined types */
 #include "compiler.h"
 #include "hberrors.h"
+#include "hbpp.h"
 
 
 #undef OurFree
@@ -128,16 +129,17 @@ extern "C" int yywrap( void );
 #else
 int yywrap( void );     /* manages the EOF of current processed file */
 #endif
-void AddDefine( char * szDefine, char * szValue ); /* add a new Lex define from the command line */
+DEFINES *AddDefine( char * szDefine, char * szValue ); /* add a new Lex define from the command line */
   /* Following line added for preprocessor */
 void Hbpp_init ( void );
 
-void * yy_create_buffer( FILE *, int ); /* yacc functions to manage multiple files */
 #ifdef __cplusplus
 typedef struct yy_buffer_state *YY_BUFFER_STATE;
+YY_BUFFER_STATE yy_create_buffer( FILE *, int ); /* yacc functions to manage multiple files */
 void yy_switch_to_buffer( YY_BUFFER_STATE ); /* yacc functions to manage multiple files */
 void yy_delete_buffer( YY_BUFFER_STATE ); /* yacc functions to manage multiple files */
 #else
+void * yy_create_buffer( FILE *, int ); /* yacc functions to manage multiple files */
 void yy_switch_to_buffer( void * ); /* yacc functions to manage multiple files */
 void yy_delete_buffer( void * ); /* yacc functions to manage multiple files */
 #endif

@@ -43,21 +43,7 @@ void * _xgrab( ULONG );         /* allocates fixed memory */
 void * _xrealloc( void *, ULONG );       /* reallocates memory */
 void _xfree( void * );            /* frees fixed memory */
 
-/* ------------------------------------------ */
-typedef struct
-{
-  char *name;
-  char *pars;
-  int npars;
-  char *value;
-} DEFINES;
-
-typedef struct
-{
-  int com_or_xcom;
-  char *name;
-  char *mpatt;
-  char *value;
-} COMMANDS, TRANSLATES;
+/* includes common definitions shared by preprocessor and harbour.y */
+#include "hbpp.h"
 
 #endif  /* HARB_H_ */

@@ -2,10 +2,27 @@
 # $Id$
 #
 
-ARCH_DIR = $(subst /,\,$(ARCH)\)
-MK = $(subst /,\,$(subst \~,~,$(MAKE)))
+all : first
 
-RM = del /q
+ARCH_DIR = $(subst \,/,$(ARCH))
+ARCH_DOS = $(subst /,\,$(ARCH))
+MK = $(subst \,/,$(subst \~,~,$(MAKE)))
+
+ifeq ($(HB_INC_DIR),)
+  HB_INC_DIR=$(TOP)$(ROOT)include
+endif
+ifeq ($(HB_LIB_DIR),)
+  HB_LIB_DIR=$(TOP)$(ROOT)libs
+endif
+ifeq ($(HB_BIN_DIR),)
+  HB_BIN_DIR=$(TOP)$(ROOT)bin
+endif
+
+ifeq ($(COMSPEC),) #location of command.com
+  COMSPEC = command.com
+endif
+
+RM = del
 RD = rmdir
 CP = copy
 MV = move
@@ -13,9 +30,9 @@ MD = md
 
 dirbase::
 	-$(MD) $(HB_ARCHITECTURE) >NUL
-	-$(MD) $(ARCH_DIR) >NUL
-
+	-$(MD) $(ARCH_DOS) >NUL
 
 clean::
-	-$(RM) $(ARCH_DIR)\*.*
-	-$(RD) $(ARCH_DIR)
+	-echo Y | $(RM) $(ARCH_DOS)\*.* 
+	-$(RD) $(ARCH_DOS)
+	-$(RD) $(HB_ARCHITECTURE)

@@ -10,6 +10,7 @@ LIB_PREF = lib
 LIB_EXT = .a
 
 CC = gcc
+CC_IN = -c
 CC_OUT = -o
 CPPFLAGS = -DDEBUG -I. -I$(HB_INC_DIR)
 CFLAGS = -Wall -g
@@ -21,7 +22,6 @@ LDFLAGS = -L$(HB_LIB_DIR)
 endif
 LINKLIBS = $(foreach lib, $(LIBS), -l$(lib))
 LINKLIBS += -L/usr/lib -lm
-# LINKLIBS += -lm
 
 AR = ar
 ARFLAGS =
