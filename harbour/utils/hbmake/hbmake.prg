@@ -139,7 +139,7 @@ If Pcount() == 0
    ? "          or use one macro per -D switch"
    Return NIL
 Endif
-If cFile == NIL .or. !file(cfile)
+If cFile == NIL 
    ? "File not Found"
    Return Nil
 Endif
@@ -285,7 +285,9 @@ if at("-E",allparam)>0
       Next
    Endif
 Endif
-
+if !file(cfile)
+   return nil
+endif
 parsemakfi( cFile )
 If lPrint
    PrintMacros()

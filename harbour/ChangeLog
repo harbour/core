@@ -1,3 +1,7 @@
+2001-06-24 23:43 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
+   *utils/hbmake/hbmake.prg
+     * Reverted last change to hbmake, and put the file existence test on the correct place
+
 2001-06-24 11:15 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/vm/arrays.c
      ! Fixed but in hb_arrayDel() which caused a GPF by accessing an item beyond the array end.
