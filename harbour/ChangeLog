@@ -1,3 +1,8 @@
+2001-02-28 00:05 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * source/rtl/filesys.c
+     * Temporarily changed all #if defined(__WIN32__) to #if defined(X__WIN32__) to disable
+       newly added logic, until fixed.
+
 2001-02-27 09:09 GMT+1 Maurilio Longo <maurilio.longo@libero.it>
    * source/rtl/gtos2/gtos2.c
      ! fixed (sort of) changing used variables to statics so that I don't have to alloc them
