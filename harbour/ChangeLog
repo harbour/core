@@ -1,3 +1,9 @@
+2000-09-20 15:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+   * include/hbver.h
+     * Bumped revision to "c" and date to 2000-09-20 for
+       an interim release with the ADS RDD indexing fix.
+
 2000-09-20 11:20 UTC+0800 Brian Hays <bhays@abacuslaw.com>
    * source\rdd\dbf1.c
       !removed reference to unknown pItem in HB_TRACE for hb_dbfUnlockAllRecords
