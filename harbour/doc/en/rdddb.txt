@@ -371,76 +371,6 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *      __DBCONTINUE()
- *  $CATEGORY$
- *      Database
- *  $ONELINER$
- *      Resume a pending LOCATE
- *  $SYNTAX$
- *      __DbCONTINUE() --> NIL
- *  $RETURNS$
- *      __DbCONTINUE() Always return NIL
- *  $DESCRIPTION$
- *      __DBCONTINUE is a database command that searches from the current record
- *      position for the next record meeting the most recent LOCATE condition
- *      executed in the current work area.  It terminates when a match is found
- *      or end of file is encountered.  If __DBCONTINUE is successful, the matching
- *      record becomes the current record and FOUND() returns true (.T.); if
- *      unsuccessful, FOUND() returns false (.F.).
- *
- *      Each work area may have an active LOCATE condition.  In CA-Clipper, a
- *      LOCATE condition remains pending until a new LOCATE condition is
- *      specified.  No other commands release the condition.
- *
- *      Notes
- *
- *      Scope and WHILE condition: Note that the scope and WHILE
- *      condition of the initial LOCATE are ignored; only the FOR condition
- *      is used with CONTINUE.  If you are using a LOCATE with a WHILE
- *      condition and want to continue the search for a matching record, use
- *      SKIP and then repeat the original LOCATE statement adding REST as the
- *      scope.
- *
- *  $EXAMPLES$
- *     This example scans records in Sales.dbf for a particular
- *      salesman and displays a running total sales amounts:
- *
- *      LOCAL nRunTotal := 0
- *      USE Sales NEW
- *      LOCATE FOR Sales->Salesman = "1002"
- *      DO WHILE FOUND()
- *         ? Sales->Salesname, nRunTotal += Sales->Amount
- *         __DBCONTINUE()
- *      ENDDO
- *
- *     This example demonstrates how to continue if the pending
- *      LOCATE scope contains a WHILE condition:
- *
- *      LOCAL nRunTotal := 0
- *      USE Sales INDEX Salesman NEW
- *      SEEK "1002"
- *      LOCATE REST WHILE Sales->Salesman = "1002";
- *            FOR Sales->Amount > 5000
- *      DO WHILE FOUND()
- *         ? Sales->Salesname, nRunTotal += Sales->Amount
- *         SKIP
- *         LOCATE REST WHILE Sales->Salesman = "1002";
- *            FOR Sales->Amount > 5000
- *      ENDDO
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      This function is CA-Clipper compliant.
- *  $FILES$
- *      Library is rdd
- *  $SEEALSO$
- *      EOF(),FOUND()
- *  $END$
- */
-
-/*  $DOC$
- *  $FUNCNAME$
  *      DBCREATE()
  *  $CATEGORY$
  *      Database
@@ -695,7 +625,7 @@
  *  $CATEGORY$
  *      Database
  *  $ONELINER$
- *      Moves the record pointer to the bottom of the database.
+ *      Moves the record pointer to the top of the database.
  *  $SYNTAX$
  *      DBGOTOP() --> NIL
  *  $RETURNS$
@@ -1288,48 +1218,3 @@
  *  $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      __DBZAP()
- *  $CATEGORY$
- *      Database
- *  $ONELINER$
- *      Remove all records from the current database file
- *  $SYNTAX$
- *      __DbZap() --> NIL
- *  $RETURNS$
- *      __DbZap()   will always return NIL
- *  $DESCRIPTION$
- *      __DbZap() is a database command that permanently removes all records
- *      from files open in the current work area.  This includes the current
- *      database file, index files, and associated memo file. Disk space
- *      previously occupied by the ZAPped files is released to the operating
- *      system.
- *
- *      __DbZap() performs the same operation as DELETE ALL followed by PACK
- *      but is almost instantaneous.
- *
- *      To ZAP in a network environment, the current database file must be
- *      USEd EXCLUSIVEly.
- *
- *  $EXAMPLES$
- *      This example demonstrates a typical ZAP operation in a network
- *      environment:
- *
- *      USE Sales EXCLUSIVE NEW
- *      IF !NETERR()
- *         SET INDEX TO Sales, Branch, Salesman
- *         __dbZAP()
- *         CLOSE Sales
- *      ELSE
- *         ? "Zap operation failed"
- *         BREAK
- *      ENDIF
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      This function is CA Clipper compliant
- *  $FILES$
- *      Library is rdd
- *  $END$
- */

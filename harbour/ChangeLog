@@ -8,6 +8,15 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-04-19 11:43 UTC+0300 Chen Kedem <niki@actcom.co.il>
+  * doc/en/rdd.txt
+    - Remove docs for: RDDLIST(), RDDNAME(), RDDSETDEFAULT(), __RDDSETDEFAULT()
+      because of copyright violation! (the file is now EMPTY)
+
+  * doc/en/rdddb.txt
+    - Remove docs for: __DBCONTINUE(), __DBZAP()
+      because of copyright violation!
+
 2004-04-17 12:30 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * include/hbapi.h
    * source/rtl/empty.c
