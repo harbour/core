@@ -110,37 +110,13 @@ LIBLIST = \
    $(MAKE) -nologo /$(MK_FLAGS) /f$(MK_FILE) $(TOOLS_LIB)2
 
 TOOLS_LIB_OBJS = \
-   $(OBJ_DIR)\asciisum.obj \
-   $(OBJ_DIR)\ascpos.obj \
-   $(OBJ_DIR)\atdiff.obj \
-   $(OBJ_DIR)\chareven.obj \
-   $(OBJ_DIR)\charmix.obj \
-   $(OBJ_DIR)\charodd.obj \
-   $(OBJ_DIR)\chrcount.obj \
-   $(OBJ_DIR)\chrfirst.obj \
-   $(OBJ_DIR)\chrtotal.obj \
-   $(OBJ_DIR)\ctchksum.obj \
-   $(OBJ_DIR)\ctchrmix.obj \
-   $(OBJ_DIR)\ctcolton.obj \
-   $(OBJ_DIR)\ctcrypt.obj \
-   $(OBJ_DIR)\ctposupp.obj \
    $(OBJ_DIR)\dates2.obj \
    $(OBJ_DIR)\dbftools.obj \
    $(OBJ_DIR)\hb_f.obj \
    $(OBJ_DIR)\mathx.obj \
-   $(OBJ_DIR)\strasint.obj \
-   $(OBJ_DIR)\strcount.obj \
-   $(OBJ_DIR)\strcspn.obj \
-   $(OBJ_DIR)\strdiff.obj \
-   $(OBJ_DIR)\strexpan.obj \
    $(OBJ_DIR)\strfmt.obj \
    $(OBJ_DIR)\stringsx.obj \
-   $(OBJ_DIR)\strleft.obj \
-   $(OBJ_DIR)\strpbrk.obj \
-   $(OBJ_DIR)\strright.obj \
    \
-   $(OBJ_DIR)\ctmisc.obj \
-   $(OBJ_DIR)\cttoken.obj \
    $(OBJ_DIR)\fileread.obj \
    $(OBJ_DIR)\nconvert.obj \
    $(OBJ_DIR)\numtxten.obj \
@@ -160,36 +136,12 @@ all: zot \
 MK_FLAGS = $(MK_FLAGS:A=)
 
 zot:
-   -@if exist $(OBJ_DIR)\asciisum.obj del $(OBJ_DIR)\asciisum.obj
-   -@if exist $(OBJ_DIR)\ascpos.obj del $(OBJ_DIR)\ascpos.obj
-   -@if exist $(OBJ_DIR)\atdiff.obj del $(OBJ_DIR)\atdiff.obj
-   -@if exist $(OBJ_DIR)\chareven.obj del $(OBJ_DIR)\chareven.obj
-   -@if exist $(OBJ_DIR)\charmix.obj del $(OBJ_DIR)\charmix.obj
-   -@if exist $(OBJ_DIR)\charodd.obj del $(OBJ_DIR)\charodd.obj
-   -@if exist $(OBJ_DIR)\chrcount.obj del $(OBJ_DIR)\chrcount.obj
-   -@if exist $(OBJ_DIR)\chrfirst.obj del $(OBJ_DIR)\chrfirst.obj
-   -@if exist $(OBJ_DIR)\chrtotal.obj del $(OBJ_DIR)\chrtotal.obj
-   -@if exist $(OBJ_DIR)\ctchksum.obj del $(OBJ_DIR)\ctchksum.obj
-   -@if exist $(OBJ_DIR)\ctchrmix.obj del $(OBJ_DIR)\ctchrmix.obj
-   -@if exist $(OBJ_DIR)\ctcolton.obj del $(OBJ_DIR)\ctcolton.obj
-   -@if exist $(OBJ_DIR)\ctcrypt.obj del $(OBJ_DIR)\ctcrypt.obj
-   -@if exist $(OBJ_DIR)\ctposupp.obj del $(OBJ_DIR)\ctposupp.obj
    -@if exist $(OBJ_DIR)\dates2.obj del $(OBJ_DIR)\dates2.obj
    -@if exist $(OBJ_DIR)\dbftools.obj del $(OBJ_DIR)\dbftools.obj
    -@if exist $(OBJ_DIR)\hb_f.obj del $(OBJ_DIR)\hb_f.obj
    -@if exist $(OBJ_DIR)\mathx.obj del $(OBJ_DIR)\mathx.obj
-   -@if exist $(OBJ_DIR)\strasint.obj del $(OBJ_DIR)\strasint.obj
-   -@if exist $(OBJ_DIR)\strcount.obj del $(OBJ_DIR)\strcount.obj
-   -@if exist $(OBJ_DIR)\strcspn.obj del $(OBJ_DIR)\strcspn.obj
-   -@if exist $(OBJ_DIR)\strdiff.obj del $(OBJ_DIR)\strdiff.obj
-   -@if exist $(OBJ_DIR)\strexpan.obj del $(OBJ_DIR)\strexpan.obj
    -@if exist $(OBJ_DIR)\strfmt.obj del $(OBJ_DIR)\strfmt.obj
    -@if exist $(OBJ_DIR)\stringsx.obj del $(OBJ_DIR)\stringsx.obj
-   -@if exist $(OBJ_DIR)\strleft.obj del $(OBJ_DIR)\strleft.obj
-   -@if exist $(OBJ_DIR)\strpbrk.obj del $(OBJ_DIR)\strpbrk.obj
-   -@if exist $(OBJ_DIR)\strright.obj del $(OBJ_DIR)\strright.obj
-   -@if exist $(OBJ_DIR)\ctmisc.* del $(OBJ_DIR)\ctmisc.*
-   -@if exist $(OBJ_DIR)\cttoken.* del $(OBJ_DIR)\cttoken.*
    -@if exist $(OBJ_DIR)\fileread.* del $(OBJ_DIR)\fileread.*
    -@if exist $(OBJ_DIR)\nconvert.* del $(OBJ_DIR)\nconvert.*
    -@if exist $(OBJ_DIR)\numtxten.* del $(OBJ_DIR)\numtxten.*
