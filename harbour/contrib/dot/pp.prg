@@ -38,8 +38,6 @@
 
    EXTERNAL ARRAY,ASIZE,ATAIL,AINS,ADEL,AFILL,ASCAN,AEVAL,ACOPY,ACLONE,ADIR, ASORT
 
-   EXTERNAL MEMORY
-
    EXTERNAL ERRORLEVEL
 
    EXTERNAL __QQPUB,__MCLEAR,__MRELEASE,__MXRELEASE,__MSAVE,__MRESTORE ;
@@ -49,7 +47,7 @@
    EXTERNAL BIN2W,BIN2I,BIN2L,I2BIN,L2BIN
 
    EXTERNAL OUTSTD,OUTERR,QQOUT,QOUT,DISPOUT,DISPOUTAT,__EJECT, ;
-            SETPRC,MAXROW,MAXCOL,DISPBOX,DISPBEGIN,DISPEND,DISPCOUNT,ISCOLOR, ;
+            SETPRC,DISPBOX,DISPBEGIN,DISPEND,DISPCOUNT,ISCOLOR, ;
             NOSNOW,DBGSHADOW,SAVESCREEN,RESTSCREEN,SETCURSOR,SETBLINK,SETMODE,__ACCEPT, ;
             __ACCEPTSTR
 
@@ -295,12 +293,18 @@ PROCEDURE ExecuteProcedure( aProc )
    LOCAL nBlock, nBlocks := Len( aProc[2] ), oErr
    LOCAL nVar, nVars
 
-   /* Releasing Locals of upper level. */
-   nVars := Len( s_asLocals )
-   FOR nVar := 1 TO nVars
-       RELEASE &( s_asLocals[nVar] )
-   NEXT
-   aSize( s_asLocals, 0 )
+   /* Saving and Releasing Locals of upper level. */
+   IF s_nProcStack > 0
+      nVars := Len( s_asLocals )
+      aAdd( aProcStack[s_nProcStack], Array( nVars, 2 ) )
+      FOR nVar := 1 TO nVars
+         aProcStack[s_nProcStack][4][nVar][1] := s_asLocals[nVar]
+         aProcStack[s_nProcStack][4][nVar][2] := &( s_asLocals[nVar] )
+         //Alert( "Released upper local: " + s_asLocals[nVar] + " in " + aProcStack[s_nProcStack][1] )
+         __MXRelease( s_asLocals[nVar] )
+      NEXT
+      aSize( s_asLocals, 0 )
+   ENDIF
 
    aAdd( aProcStack, { aProc[1], 0, {} } )
    s_nProcStack++
@@ -311,9 +315,12 @@ PROCEDURE ExecuteProcedure( aProc )
          ( aProc[2][nBlock][1] == nIf .AND. abIf[ nIf ] )
 
          BEGIN SEQUENCE
+
             aProcStack[ Len( aProcStack ) ][2] := aProc[2][nBlock][3] // Line No.
             Eval( aProc[2][nBlock][2] )
+
          RECOVER USING oErr
+
          END SEQUENCE
       ENDIF
    NEXT
@@ -321,12 +328,31 @@ PROCEDURE ExecuteProcedure( aProc )
    /* Releasing Privates created by the Procedure */
    nVars := Len( aProcStack[s_nProcStack][3] )
    FOR nVar := 1 TO nVars
-      RELEASE &( aProcStack[s_nProcStack][3][nVar] )
+      //Alert( "Released: " + aProcStack[s_nProcStack][3][nVar] + " in " + aProcStack[s_nProcStack][1] )
+      __MXRelease( aProcStack[s_nProcStack][3][nVar] )
    NEXT
    aSize( aProcStack[s_nProcStack][3], 0 )
 
+   /* Releasing Locals created by the Procedure */
+   nVars := Len( s_asLocals )
+   FOR nVar := 1 TO nVars
+      //Alert( "Released local: " + s_asLocals[nVar] + " in " + aProcStack[s_nProcStack][1] )
+      __MXRelease( s_asLocals[nVar] )
+   NEXT
+   aSize( s_asLocals, 0 )
+
    s_nProcStack--
    aSize( aProcStack, s_nProcStack )
+
+   IF s_nProcStack > 0
+      /* Restoring Locals of parrent. */
+      nVars := Len( aProcStack[s_nProcStack][4] )
+      FOR nVar := 1 TO nVars
+         aAdd( s_asLocals, aProcStack[s_nProcStack][4][nVar][1] )
+         __QQPub( aProcStack[s_nProcStack][4][nVar][1] )
+         &( aProcStack[s_nProcStack][4][nVar][1] ) := aProcStack[s_nProcStack][4][nVar][2]
+      NEXT
+   ENDIF
 
 RETURN
 
@@ -713,6 +739,8 @@ PROCEDURE PP_Run( cFile )
 
    #ifdef __CLIPPER__
       Memory(-1)
+   #else
+
    #endif
 
 RETURN
@@ -833,7 +861,7 @@ FUNCTION RP_Run_Err( oErr )
 
    LOCAL Counter, xArg, sArgs := "", nProc
 
-   IF oErr:Args != NIL
+   IF ValType( oErr:Args ) == 'A'
       sArgs := " - Arguments: "
 
       FOR Counter := 1 TO Len( oErr:Args )

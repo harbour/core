@@ -1,3 +1,10 @@
+2001-02-28 22:15 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * contrib/dot/pp.prg
+     * Improved managment of variable scoping.
+
+   /* Appears to work correctly when compiled with Clipper, but is incorrect under Harbour, because
+      __MXRelease() is not releasing memvars as it should. */
+
 2001-28-02 23:41 GMT+1 JFL (Mafact) <jfl@mafact.com>
    *harbour/include/hb_class.ch
     * Reset :Class within the control of Class(y) define
