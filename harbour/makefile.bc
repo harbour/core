@@ -55,7 +55,7 @@ COMMON_LIB_OBJS   = $(OBJ_DIR)\hbfsapi.obj \
                     $(OBJ_DIR)\reserved.obj \
                     $(OBJ_DIR)\hbtrace.obj
 
-PP_LIB            = $(LIB_DIR)\hbpp.lib
+PP_LIB            = $(LIB_DIR)\pp.lib
 PP_LIB_OBJS       = $(OBJ_DIR)\hbppint.obj \
                     $(OBJ_DIR)\hbpp.obj \
                     $(OBJ_DIR)\table.obj \
@@ -1193,7 +1193,7 @@ $(OBJ_DIR)\nulsys.c : $(RDD_DIR)\nulsys\nulsys.prg
 
 $(OBJ_DIR)\nulsys.obj : $(OBJ_DIR)\nulsys.c
    $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
-   tlib $(DBFNTX_LIB) -+$@,,
+   tlib $(NULSYS_LIB) -+$@,,
 
 #
 # dbfntx.lib
