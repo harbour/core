@@ -157,7 +157,7 @@ void yy_delete_buffer( YY_BUFFER_STATE ); /* yacc functions to manage multiple f
 void yy_switch_to_buffer( void * ); /* yacc functions to manage multiple files */
 void yy_delete_buffer( void * ); /* yacc functions to manage multiple files */
 #endif
-void __yy_memcpy( char * from, char * to, int count ); /* Bison prototype */
+static void __yy_memcpy( char * from, char * to, int count ); /* Bison prototype */
 
 /* production related functions */
 PFUNCTION AddFunCall( char * szFuntionName );
@@ -358,7 +358,7 @@ static const char * _szReservedFun[] = {
  * SECO() is not allowed because of Clipper function SECONDS()
  * however SECO32() is a valid name.
  */
-int sz_compare4( const void *pLookup, const void *pReserved )
+int EXTERNAL_LINKAGE sz_compare4( const void *pLookup, const void *pReserved )
 {
   int iCmp;
 
@@ -972,7 +972,7 @@ void GenError( int iError, char * szError1, char * szError2 )
   exit( 1 );
 }
 
-void close_on_exit( void )
+void EXTERNAL_LINKAGE close_on_exit( void )
 {
   PFILE pFile = files.pLast;
 
@@ -2805,7 +2805,7 @@ void PushString( char * szText )
    WORD wStrLen = strlen( szText );
 
    GenPCode3( _PUSHSTR, LOBYTE(wStrLen), HIBYTE(wStrLen) );
-   GenPCodeN( szText, wStrLen );
+   GenPCodeN( ( BYTE * ) szText, wStrLen );
 }
 
 /* generates the pcode to push a symbol on the virtual machine stack */

@@ -15,7 +15,7 @@
 #include "y_tab.h"
 
 void yyerror( char * );
-void yyunput( int, char * );
+static void yyunput( int, char * );
 #undef yywrap        /* to implement our own yywrap() funtion to handle EOFs */
 #ifdef __cplusplus
 extern "C" int yywrap( void );

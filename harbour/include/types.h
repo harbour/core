@@ -40,8 +40,15 @@ typedef void * PVOID;
 
 #ifdef _MSC_VER
    #define HARBOUR void
+   #define EXTERNAL_LINKAGE
+#else
+#ifdef __IBMCPP__
+   #define HARBOUR void
+   #define EXTERNAL_LINKAGE _LNK_CONV
 #else
    #define HARBOUR void pascal
+   #define EXTERNAL_LINKAGE
+#endif
 #endif
 typedef HARBOUR ( * HARBOURFUNC )( void );
 

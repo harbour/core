@@ -1,3 +1,23 @@
+19990507-23:45 EDT David G. Holm <dholm@jsd-llc.com>
+  This update makes Harbour compatible with the IBM C++ compiler.
+  * include/init.h
+    - Added test for IBM C++ compiler to Microsoft C #if block
+  * include/types.h
+    - Added #ifdef block for IBM C++ compiler to set #define for
+      HARBOUR as simply void and also to set up a new #define
+      for EXTERNAL_LINKAGE (as _LNK_CONV) in order for the
+      IBM C++ compiler to compile harbour.y.
+  * source/compiler/harbour.l
+    - Added static to forward delcaration for yyunput in order to
+      match the actual definition.
+  * source/compiler/harbour.y
+    - Added static to forward declaration of __yy_memcpy in order
+      to match the actual definition.
+    - Added EXTERNAL_LINKAGE to sz_compare4 definition, so
+      that the IBM C++ compiler can successfully compile Harbour.
+    - Added (BYTE *) type override to szText parameter in second
+      invocation of GenPCodeN (the first one already had an override).
+
 19990507-23:15 EDT David G. Holm <dholm@jsd-llc.com>
   * source/vm/hvm.c
     - Changed byte by byte copy used in PushString to memcpy,

@@ -23,8 +23,7 @@ static void InitSymbols( void )
 #pragma startup InitSymbols
 #endif
 
-
-#ifdef _MSC_VER
+#if (defined(_MSC_VER) || defined(__IBMCPP__))
 static int InitSymbols( void )
 {
    ProcessSymbols( symbols, sizeof( symbols ) / sizeof( SYMBOL ) );
