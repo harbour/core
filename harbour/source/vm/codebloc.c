@@ -283,12 +283,17 @@ HB_GARBAGE_FUNC( hb_codeblockDeleteGarbage )
 void hb_codeblockEvaluate( HB_ITEM_PTR pItem )
 {
    int iStatics = hb_stack.iStatics;
+   ULONG ulPrivateBase = hb_memvarGetPrivatesBase();
+   /* NOTE: All PRIVATE variables created during codeblock evaluation have
+    * a scope of a codeblock where they were created.
+    */
 
    HB_TRACE(HB_TR_DEBUG, ("hb_codeblockEvaluate(%p)", pItem));
 
    hb_stack.iStatics = pItem->item.asBlock.statics;
    hb_vmExecute( pItem->item.asBlock.value->pCode, pItem->item.asBlock.value->pSymbols );
    hb_stack.iStatics = iStatics;
+   hb_memvarSetPrivatesBase( ulPrivateBase );
 }
 
 /* Get local variable referenced in a codeblock
