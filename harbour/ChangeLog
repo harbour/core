@@ -1,3 +1,7 @@
+19991109-01:09 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/filesys.c
+    ! tell() changed to lseek() for Posix (tell() is not a Posix function)
+
 19991108-23:41 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/filesys.c
     % hb_fsWrite(), hb_fsReadLarge(), hb_fsWriteLarge() double var 

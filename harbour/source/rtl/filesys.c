@@ -557,7 +557,7 @@ USHORT  hb_fsWrite( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
    else
    {
       uiWritten = 0;
-      ftruncate( hFileHandle, tell( hFileHandle ) );
+      ftruncate( hFileHandle, lseek( hFileHandle, 0L, SEEK_CUR ) );
    }
    s_uiErrorLast = errno;
 
@@ -677,7 +677,7 @@ ULONG   hb_fsWriteLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
    else
    {
       ulWritten = 0;
-      ftruncate( hFileHandle, tell( hFileHandle ) );
+      ftruncate( hFileHandle, lseek( hFileHandle, 0L, SEEK_CUR ) );
    }
    s_uiErrorLast = errno;
 
