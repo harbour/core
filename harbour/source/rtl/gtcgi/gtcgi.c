@@ -237,7 +237,7 @@ static void hb_gt_xPutch( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE byChar )
    szBuffer[ 1 ] = '\0';
    out_stdout( szBuffer, 1 );
 
-   hb_gt_AdjustPos( szBuffer, 1 );
+   hb_gt_AdjustPos( ( BYTE * ) szBuffer, 1 );
 }
 
 void hb_gt_Puts( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE * pbyStr, ULONG ulLen )
@@ -248,7 +248,7 @@ void hb_gt_Puts( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE * pbyStr, ULONG u
 
    hb_gt_SetPos( uiRow, uiCol, HB_GT_SET_POS_BEFORE );
 
-   out_stdout( pbyStr, ulLen );
+   out_stdout( ( char * ) pbyStr, ulLen );
 
    hb_gt_AdjustPos( pbyStr, ulLen );
 }
