@@ -68,7 +68,7 @@ static LPAREANODE GetTheOtherArea( char *szDriver, char * szFileName )
 
   if( SELF_OPEN( ( AREAP ) pAreaNode->pArea, &pInfo ) == FAILURE )
   {
-    hb_errRT_DBCMD( EG_OPEN, 0, NULL, "DBAPP" ); // Could not open it
+    hb_errRT_DBCMD( EG_OPEN, NULL, NULL, "DBAPP" ); // Could not open it
     SELF_RELEASE( ( AREAP ) pAreaNode->pArea );
     hb_xfree( pAreaNode );
     return NULL;
@@ -146,19 +146,19 @@ static ERRCODE rddMoveRecords( char *cAreaFrom, char *cAreaTo, PHB_ITEM pFields,
   if ( cAreaTo ) // it's a COPY TO
   {
     pAreaRelease = GetTheOtherArea( szDriver, cAreaTo );
-    pAreaTo = (AREAP) pAreaRelease->pArea;
+    pAreaTo = pAreaRelease->pArea;
   }
   else
-    pAreaTo = (AREAP) s_pCurrArea->pArea;
+    pAreaTo = s_pCurrArea->pArea;
 
 
   if ( cAreaFrom ) // it's an APPEND FROM
   {                // make it current
     pAreaRelease = s_pCurrArea = GetTheOtherArea( szDriver, cAreaFrom );
-    pAreaFrom =  (AREAP) pAreaRelease->pArea; 
+    pAreaFrom =  pAreaRelease->pArea; 
   }
   else
-    pAreaFrom = (AREAP) s_pCurrArea->pArea;
+    pAreaFrom = s_pCurrArea->pArea;
 
   // or one or the other but necer none
   if ( !pAreaRelease )  // We need another Area to APPEND TO
@@ -222,30 +222,34 @@ static ERRCODE rddMoveRecords( char *cAreaFrom, char *cAreaTo, PHB_ITEM pFields,
 
 HB_FUNC( __DBAPP )
 {
-  hb_retni( rddMoveRecords(  hb_parc( 1 ), // File From
-                             NULL,         // TO current area
-                             ISNIL( 2 ) ? NULL : hb_param( 2, HB_IT_ARRAY ), // Fuelds
-                             ISNIL( 3 ) ? NULL : hb_param( 3, HB_IT_BLOCK ), // For
-                             ISNIL( 4 ) ? NULL : hb_param( 4, HB_IT_BLOCK ), // While
-                             ISNIL( 5 ) ? 0 : hb_parni( 5 ),                 // Next
-                             ISNIL( 6 ) ? 0 : hb_parni( 6 ),                 // Record
-                             ISNIL( 7 ) ? 0 : hb_parnl( 7 ),                 // Rest
-                             ISNIL( 8 ) ? NULL : hb_parc( 8 ) ));            // RDD 
-
+  if( ISCHAR( 1 ) )
+  {
+    rddMoveRecords(  hb_parc( 1 ),                /* File From */
+                     NULL,                        /* TO current area */
+                     hb_param( 2, HB_IT_ARRAY ),  /* Fields */
+                     hb_param( 3, HB_IT_BLOCK ),  /* For */
+                     hb_param( 4, HB_IT_BLOCK ),  /* While */
+                     hb_parnl( 5 ),               /* Next */ /* Defaults to zero on bad type */
+                     hb_parnl( 6 ),               /* Record */ /* Defaults to zero on bad type */
+                     hb_parl( 7 ),                /* Rest */ /* Defaults to zero on bad type */
+                     ISCHAR( 8 ) ? hb_parc( 8 ) : NULL ); /* RDD */
+  }
 }
 
 HB_FUNC( __DBCOPY )
 {
-  hb_retni(  rddMoveRecords( NULL,         // FROM current area
-                             hb_parc( 1 ), // File To
-                             ISNIL( 2 ) ? NULL : hb_param( 2, HB_IT_ARRAY ), // Fuelds
-                             ISNIL( 3 ) ? NULL : hb_param( 3, HB_IT_BLOCK ), // For
-                             ISNIL( 4 ) ? NULL : hb_param( 4, HB_IT_BLOCK ), // While
-                             ISNIL( 5 ) ? 0 : hb_parni( 5 ),                 // Next
-                             ISNIL( 6 ) ? 0 : hb_parni( 6 ),                 // Record
-                             ISNIL( 7 ) ? 0 : hb_parnl( 7 ),                 // Rest
-                             ISNIL( 8 ) ? NULL : hb_parc( 8 ) ));            // RDD 
-
+  if( ISCHAR( 1 ) )
+  {
+    rddMoveRecords(  NULL,                        /* fro CURRENT Area */
+                     hb_parc( 1 ),                /* To File */
+                     hb_param( 2, HB_IT_ARRAY ),  /* Fields */
+                     hb_param( 3, HB_IT_BLOCK ),  /* For */
+                     hb_param( 4, HB_IT_BLOCK ),  /* While */
+                     hb_parnl( 5 ),               /* Next */ /* Defaults to zero on bad type */
+                     hb_parnl( 6 ),               /* Record */ /* Defaults to zero on bad type */
+                     hb_parl( 7 ),                /* Rest */ /* Defaults to zero on bad type */
+                     ISCHAR( 8 ) ? hb_parc( 8 ) : NULL ); /* RDD */
+  }
 }
 
 

@@ -1,3 +1,7 @@
+2000-11-09 23:30 GMT -3 (for) Harrier <culik@sl.conex.net>
+  *source/rdd/rddcpy.c
+    *Some fix suggested by Victor
+
 2000-11-09 11:00 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/pp/ppcore.c
      * Added parameter BOOL bRule to md_strAt() to differentiate between searching a Rule Text or an Expression.
