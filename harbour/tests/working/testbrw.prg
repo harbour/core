@@ -13,7 +13,9 @@ function Main()
                              n := If( nSkip > 0, Min( Len( aTest ), n + nSkip ),;
                              Max( 1, n + nSkip )), n - nPos }
 
-   oBrowse:AddColumn( TBColumnNew( "Test", { || aTest[ n ] } ) )
+   oBrowse:AddColumn( TBColumnNew( "First",  { || aTest[ n ] } ) )
+   oBrowse:AddColumn( TBColumnNew( "Second", { || aTest[ n ] } ) )
+   oBrowse:AddColumn( TBColumnNew( "Third",  { || aTest[ n ] } ) )
 
    Alert( oBrowse:ClassName() )
    Alert( oBrowse:GetColumn( 1 ):ClassName() )
