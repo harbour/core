@@ -1,0 +1,23 @@
+# makefile for Borland C/C++ 32 bits
+# terminal makefile
+
+.path.c   = source\rtl;source\rtl\gt
+.path.h   = include
+.path.lib = libs\win32
+.path.obj = obj
+
+libs\b32\terminal.lib : console.obj gtapi.obj gtdos.obj
+
+libs\win32\terminal.lib : console.obj gtapi.obj gtwin.obj
+
+console.obj  : console.c  extend.h types.h
+gtapi.obj    : gtapi.c    extend.h types.h
+gtdos.obj    : gtdos.c    extend.h types.h
+gtwin.obj    : gtwin.c    extend.h types.h
+
+.c.obj:
+  bcc32 -wmsg -c -O2 -I.\include -o$@ $<
+  tlib .\libs\b32\terminal.lib -+$@,,
+  del obj\console.obj
+  bcc32 -wmsg -c -O2 -DWINDOWS -I.\include -o$@ $<
+  tlib .\libs\win32\terminal.lib -+$@,,

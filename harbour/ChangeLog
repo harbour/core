@@ -1,3 +1,12 @@
+19990607-12:50 CET Eddie Runia
+  * makefile.b32, build32.bat
+    changed to split the terminal driver into seperate makefile for Windows
+    support
+  + terminal.b32
+    split terminal driver
+  * tests/working/bld32w.bat
+    windows build file uses echo now
+
 19990607-03:05 PST Ron Pinkas
   * include/hberrors.h
     added WARN_VAR_NOT_USED

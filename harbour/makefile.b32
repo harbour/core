@@ -21,20 +21,6 @@ harbour.lib : arrays.obj asort.obj classes.obj codebloc.obj \
               symbols.obj strings.obj stringp.obj \
               stringsx.obj strcmp.obj tclass.obj transfrm.obj
 
-libs\b32\terminal.lib : console.obj gtapi.obj gtdos.obj
-
-libs\win32\terminal.lib : console.obj gtapi.obj gtwin.obj
-
-console.obj  : console.c  extend.h types.h
-gtapi.obj    : gtapi.c    extend.h types.h
-gtdos.obj    : gtdos.c    extend.h types.h
-gtwin.obj    : gtwin.c    extend.h types.h
-  bcc32 -c -O2 -I.\include -o$@ source\rtl\console.c source\rtl\gtapi.c source\rtl\gt\gtdos.c
-  tlib .\libs\b32\terminal.lib -+$@,,
-  bcc32 -c -O2 -DWINDOWS -I.\include -o$@ source\rtl\console.c source\rtl\gtapi.c source\rtl\gt\gtwin.c
-  tlib .\libs\win32\terminal.lib -+$@,,
-
-
 symbols.obj  : symbols.asm
 
 arrays.obj   : arrays.c   extend.h types.h
@@ -45,15 +31,16 @@ dates.obj    : dates.c    extend.h types.h
 datesx.obj   : datesx.c   extend.h types.h
 debug.obj    : debug.c    extend.h types.h
 descend.obj  : descend.c  extend.h types.h
-dir.obj      : extend.c   extend.h types.h
+dir.obj      : dir.c      extend.h types.h
 dynsym.obj   : dynsym.c   extend.h types.h
 environ.obj  : environ.c  extend.h types.h
 error.obj    : error.c    extend.h types.h
 errorapi.obj : errorapi.c extend.h types.h
 errorsys.obj : errorsys.c extend.h types.h
 extend.obj   : extend.c   extend.h types.h
-files.obj    : extend.c   extend.h types.h
+files.obj    : files.c    extend.h types.h
 hardcr.obj   : hardcr.c   extend.h types.h
+hb_f.obj     : hb.c       extend.h types.h
 initsymb.obj : initsymb.c extend.h types.h
 itemapi.obj  : itemapi.c  extend.h types.h
 math.obj     : math.c     extend.h types.h
@@ -68,7 +55,6 @@ strings.obj  : strings.c  extend.h types.h
 stringsx.obj : stringsx.c extend.h types.h
 tclass.obj   : tclass.c   extend.h types.h
 transfrm.obj : transfrm.c extend.h types.h
-hb_f.obj     : hb_f.c     extend.h types.h
 
 asort.c      : asort.prg     harbour.exe
 error.c      : error.prg     harbour.exe
