@@ -35,6 +35,17 @@
  */
 
 /*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 1999 Victor Szel <info@szelvesz.hu>
+ *    hb_gt_CtrlHandler()
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
+
+/*
  *  Portions of this module are based (somewhat) on VIDMGR by
  *   Andrew Clarke and modified for the Harbour project
  */
@@ -52,6 +63,8 @@
 
 #include <windows.h>
 #include "gtapi.h"
+#include "set.h" /* For Ctrl+Break handling */
+#include "ctoharb.h" /* For Ctrl+Break handling */
 
 #if defined(__IBMCPP__)
    #undef WORD                            /* 2 bytes unsigned */
@@ -90,6 +103,34 @@ static HANDLE HCursor;  /* When DispBegin is in effect, all cursor related
                            be different than the one being written to.
                          */
 
+static BOOL hb_gt_CtrlHandler( DWORD dwCtrlType )
+{
+   BOOL bHandled;
+
+   switch( dwCtrlType )
+   {
+   case CTRL_C_EVENT:
+      bHandled = FALSE;
+      break;
+
+   case CTRL_BREAK_EVENT:
+
+      if( hb_set.HB_SET_CANCEL )
+         hb_vmRequestCancel();
+
+      bHandled = TRUE;
+      break;
+
+   case CTRL_CLOSE_EVENT:
+   case CTRL_LOGOFF_EVENT:
+   case CTRL_SHUTDOWN_EVENT:
+   default:
+      bHandled = FALSE;
+   }
+
+   return bHandled;
+}
+
 void hb_gt_Init( void )
 {
    HB_TRACE(("hb_gt_Init()"));
@@ -111,6 +152,9 @@ void hb_gt_Init( void )
                        NULL,                                  /* security attributes */
                        OPEN_EXISTING,                         /* create mode */
                        0, 0 );
+
+   /* Add Ctrl+Break handler [vszel] */
+   SetConsoleCtrlHandler( hb_gt_CtrlHandler, TRUE );
 }
 
 void hb_gt_Done( void )
@@ -140,6 +184,9 @@ void hb_gt_Done( void )
       CloseHandle( HStealth );
       HStealth = INVALID_HANDLE_VALUE;
    }
+
+   /* Remove Ctrl+Break handler [vszel] */
+   SetConsoleCtrlHandler( hb_gt_CtrlHandler, FALSE );
 }
 
 BOOL hb_gt_IsColor( void )

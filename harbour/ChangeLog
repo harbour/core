@@ -1,3 +1,17 @@
+19991026-18:10 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/gt/gtwin.c
+    + Ctrl+Break handler added for Win32 console mode, now Ctrl+Break will not
+      break an application with SetCancel(.F.), and will terminate it with
+      the proper message with SetCancel(.T.).
+      INCOMPATIBILITY: With SetCancel(.F.) the inkey code 876 will be passed
+      to Harbour which should be ignored and not returned by Inkey().
+      David, could you check this ?
+  * source/rtl/gt/gtdos.c
+    + Ctrl+Break handler added for DOS character mode.
+      Please test this, since I could only test if it compile.
+  * tests/tstalias.prg
+    + New alias related tests added.
+
 Tue Oct 26 13:11:19 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* source/tools/dates2.c: 

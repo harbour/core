@@ -34,6 +34,18 @@
  */
 
 /*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 1999 Victor Szel <info@szelvesz.hu>
+ *    hb_gt_CtrlBrkHandler()
+ *    hb_gt_CtrlBrkRestore()
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
+
+/*
  *  This module is based on VIDMGR by Andrew Clarke and modified for
  *  the Harbour project
  */
@@ -43,6 +55,8 @@
 #include <string.h>
 #include <dos.h>
 #include "gtapi.h"
+#include "set.h" /* For Ctrl+Break handling */
+#include "ctoharb.h" /* For Ctrl+Break handling */
 
 #if defined(__POWERC) || (defined(__TURBOC__) && !defined(__BORLANDC__)) || \
    (defined(__ZTC__) && !defined(__SC__))
@@ -79,8 +93,32 @@ static void hb_gt_GetCursorSize( char * start, char * end );
    static char FAR * hb_gt_ScreenAddress( void );
 #endif
 
+static int s_iOldCtrlBreak = 0;
+
+static int hb_gt_CtrlBrkHandler( void )
+{
+   if( hb_set.HB_SET_CANCEL )
+      hb_vmRequestCancel();
+
+   return 1;
+}
+
+static void hb_gt_CtrlBrkRestore( void )
+{
+   setcbrk( s_iOldCtrlBreak );
+}
+
 void hb_gt_Init( void )
 {
+   /* Set the Ctrl+Break handler [vszel] */
+
+   ctrlbrk( hb_gt_CtrlBrkHandler );
+   s_iOldCtrlBreak = getcbrk();
+   setcbrk( 1 );
+   atexit( hb_gt_CtrlBrkRestore );
+
+   /* */
+
 #ifdef __DJGPP__
    gppconio_init();
 #else
