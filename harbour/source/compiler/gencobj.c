@@ -171,7 +171,12 @@ void hb_compGenCObj( PHB_FNAME pFileName )
 #endif
       hb_fsFNameMerge( pszTemp, pOut );
 
+#if defined(_MSC_VER)
+      strcat( szOutPath, "-Fo" );
+#elif
       strcat( szOutPath, "-o" );
+#endif
+
       strcat( szOutPath, pszTemp );
 
       hb_xfree( pOut );

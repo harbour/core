@@ -1,3 +1,7 @@
+2001-08-17 22:15 GMT -3 Luiz Rafael Culik<culik@sl.conex.net>
+    *source/compiler/gencobj.c
+      *added conditional for _MSC_VER when checking if harbour -o is used
+
 2001-08-17 18:10 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * doc/en/hb_set.txt
