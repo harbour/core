@@ -639,7 +639,7 @@ char * hb_objGetRealClsName( PHB_ITEM pObject, char * szName )
          uiClass = pObject->item.asArray.value->uiClass;
 
          /* default value to current class object */
-         if (pObject->item.asArray.value->puiClsTree[0])
+         if (pObject->item.asArray.value->puiClsTree && pObject->item.asArray.value->puiClsTree[0])
           {
            uiClsTree = pObject->item.asArray.value->puiClsTree[0] ;
            uiCurCls  = pObject->item.asArray.value->puiClsTree[uiClsTree] ;
@@ -1437,8 +1437,10 @@ static PHB_ITEM hb_clsInst( USHORT uiClass )
       pSelf->item.asArray.value->uiClass    = uiClass;
       pSelf->item.asArray.value->uiPrevCls  = 0;
 
-      pSelf->item.asArray.value->puiClsTree   = ( USHORT * ) hb_xgrab( sizeof( USHORT ) );
-      pSelf->item.asArray.value->puiClsTree[0]=0;
+      pSelf->item.asArray.value->puiClsTree   = NULL;
+
+      //pSelf->item.asArray.value->puiClsTree   = ( USHORT * ) hb_xgrab( sizeof( USHORT ) );
+      //pSelf->item.asArray.value->puiClsTree[0]=0;
 
       /* Initialise value if initialisation was requested                      */
       pMeth = pClass->pMethods;
@@ -1639,8 +1641,11 @@ HB_FUNC( __OBJCLONE )
    if( pSrcObject )
     {
       pDstObject= hb_arrayClone( pSrcObject, NULL ) ;
-      pDstObject->item.asArray.value->puiClsTree = ( USHORT * ) hb_xgrab( sizeof( USHORT ) );
-      pDstObject->item.asArray.value->puiClsTree[0]=0;
+
+      pDstObject->item.asArray.value->puiClsTree = NULL;
+      //pDstObject->item.asArray.value->puiClsTree = ( USHORT * ) hb_xgrab( sizeof( USHORT ) );
+      //pDstObject->item.asArray.value->puiClsTree[0]=0;
+
       hb_itemRelease( hb_itemReturn( pDstObject ) );
     }
    else

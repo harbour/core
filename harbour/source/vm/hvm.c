@@ -3025,6 +3025,12 @@ void hb_vmDo( USHORT uiParams )
               /* Push current SuperClass handle */
               lPopSuper = TRUE ;
 
+              if ( ! pSelf->item.asArray.value->puiClsTree)
+              {
+               pSelf->item.asArray.value->puiClsTree   = ( USHORT * ) hb_xgrab( sizeof( USHORT ) );
+               pSelf->item.asArray.value->puiClsTree[0]=0;
+              }
+
               nPos=pSelfBase->puiClsTree[0]+1;
               pSelfBase->puiClsTree = ( USHORT * ) hb_xrealloc( pSelfBase->puiClsTree, sizeof( USHORT ) * ( nPos + 1 ) );
 
@@ -3042,12 +3048,22 @@ void hb_vmDo( USHORT uiParams )
 
          pFunc();
 
-         if (lPopSuper)
+         if (lPopSuper && pSelfBase->puiClsTree)
          {
+
            USHORT nPos=pSelfBase->puiClsTree[0]-1;
            /* POP SuperClass handle */
-           pSelfBase->puiClsTree = ( USHORT * ) hb_xrealloc( pSelfBase->puiClsTree, sizeof( USHORT ) * (nPos + 1) );
-           pSelfBase->puiClsTree[0]=nPos;
+
+           if (nPos)
+            {
+             pSelfBase->puiClsTree = ( USHORT * ) hb_xrealloc( pSelfBase->puiClsTree, sizeof( USHORT ) * (nPos + 1) );
+             pSelfBase->puiClsTree[0]=nPos;
+            }
+           else
+            {
+             hb_xfree(pSelfBase->puiClsTree);
+             pSelfBase->puiClsTree = NULL ;
+            }
 
          }
 
@@ -3170,6 +3186,14 @@ void hb_vmSend( USHORT uiParams )
 
               /* Push current SuperClass handle */
               lPopSuper = TRUE ;
+
+
+              if ( ! pSelf->item.asArray.value->puiClsTree)
+              {
+               pSelf->item.asArray.value->puiClsTree   = ( USHORT * ) hb_xgrab( sizeof( USHORT ) );
+               pSelf->item.asArray.value->puiClsTree[0]=0;
+              }
+
               nPos=pSelfBase->puiClsTree[0]+1;
               pSelfBase->puiClsTree = ( USHORT * ) hb_xrealloc( pSelfBase->puiClsTree, sizeof( USHORT ) * (nPos+1) ) ;
               pSelfBase->puiClsTree[0] = nPos ;
@@ -3183,12 +3207,21 @@ void hb_vmSend( USHORT uiParams )
 
                pFunc();
 
-               if (lPopSuper)
+               if (lPopSuper && pSelfBase->puiClsTree)
                {
                 USHORT nPos=pSelfBase->puiClsTree[0]-1;
                 /* POP SuperClass handle */
-                pSelfBase->puiClsTree = ( USHORT * ) hb_xrealloc( pSelfBase->puiClsTree, sizeof( USHORT ) * (nPos + 1) );
-                pSelfBase->puiClsTree[0]=nPos;
+                if (nPos)
+                 {
+                  pSelfBase->puiClsTree = ( USHORT * ) hb_xrealloc( pSelfBase->puiClsTree, sizeof( USHORT ) * (nPos + 1) );
+                  pSelfBase->puiClsTree[0]=nPos;
+                 }
+                else
+                 {
+                  hb_xfree(pSelfBase->puiClsTree);
+                  pSelfBase->puiClsTree = NULL ;
+                 }
+
                }
 
                if( bProfiler )
