@@ -268,12 +268,12 @@ METHOD New(nTop, nLeft, nBottom, nRight) CLASS TBrowse
 
       ::mColPos         := 0
       ::mRowPos         := 0
-      ::rect            :={nTop,nLeft,nBottom,nRight}
-      ::aVisibleCols    :={}
-      ::message         :=''
+      ::rect            := {nTop,nLeft,nBottom,nRight}
+      ::aVisibleCols    := {}
+      ::message         := ''
       ::nRow            := 0
       ::nCol            := 0
-      ::aSetStyle       := ARRAY( 4096 )
+      ::aSetStyle       := Array( TBR_CUSTOM - 1 )
     
       ::aSetStyle[ TBR_APPEND ]    := .f.
       ::aSetStyle[ TBR_APPENDING ] := .f.
@@ -363,12 +363,12 @@ METHOD Configure(nMode) CLASS TBrowse
    // 20/nov/2000 - maurilio.longo@libero.it
    // If I add (or remove) header or footer (separator) I have to change number
    // of available rows
-   ::RowCount := ::nBottom - ::nTop + 1 - iif( ::lHeaders, ::nHeaderHeight, 0 ) - ;
-                  iif( ::lFooters, ::nFooterHeight, 0 ) - iif( Empty( ::HeadSep ) .OR. !::lHeaders, 0, 1 ) - ;
-                  iif( Empty( ::FootSep ) .OR. !::lFooters, 0, 1 )
+   ::RowCount := ::nBottom - ::nTop + 1 - ;
+                  iif( ::lHeaders, ::nHeaderHeight + iif( Empty( ::HeadSep ), 0, 1 ), 0 ) - ;
+                  iif( ::lFooters, ::nFooterHeight + iif( Empty( ::FootSep ), 0, 1 ), 0 )
 
    if Len(::aRedraw) <> ::RowCount
-      ::aRedraw := Array(::RowCount)
+      ASize(::aRedraw, ::RowCount)
    endif
 
    ::Invalidate()
@@ -427,33 +427,29 @@ return iif( 0 < nColumn .AND. nColumn <= ::nColumns, ::aColumns[ nColumn ], NIL 
 // Replaces one TBColumn object with another
 METHOD SetColumn( nColumn, oCol )
 
-   LOCAL oOldCol
-
-   if  0 < nColumn .AND. nColumn <= ::nColumns
-       oOldCol := ::aColumns[ nColumn ]
+   if 0 < nColumn .AND. nColumn <= ::nColumns
        ::aColumns[ nColumn ] := oCol
-       ::aColsWidth[nColumn] := ::SetColumnWidth(oCol)
+       ::aColsWidth[ nColumn ] := ::SetColumnWidth( oCol )
        ::Configure( 2 )
    endif
 
-return oOldCol
+return oCol
 
 
 // Returns the display width of a particular column
 METHOD ColWidth( nColumn )
 
-return iif( 0 < nColumn .AND. nColumn <= ::nColumns, ::aColsWidth[ nColumn ], NIL )
+return iif( 0 < nColumn .AND. nColumn <= ::nColumns, ::aColsWidth[ nColumn ], 0 )
 
 
 METHOD DelColumn( nPos ) CLASS TBrowse
 
    local oCol := ::aColumns[ nPos ]
-   local n
 
    ADel( ::aColumns, nPos )
-   ADel( ::aColsWidth, nPos)
-   ASize( ::aColumns, --::nColumns)
-   ASize( ::aColsWidth, ::nColumns)
+   ASize( ::aColumns, --::nColumns )
+   ADel( ::aColsWidth, nPos )
+   ASize( ::aColsWidth, ::nColumns )
 
    ::Configure( 2 )
 
@@ -1129,15 +1125,9 @@ METHOD Stabilize() CLASS TBrowse
 
                   // I've scrolled on screen rows, now I need to scroll ::aRedraw array as well!
                   if nRecsSkipped > 0
-                     /*for nRow := 2 to Len(::aRedraw)
-                        ::aRedraw[nRow - 1] := ::aRedraw[nRow]
-                     next*/
-                     ACopy(::aRedraw, ::aRedraw, 2,, 1)
+                     ADel(::aRedraw, 1)
                   else
-                     // Cannot use ACopy() here
-                     for nRow := ::RowCount - 1 to 1 step -1
-                        ::aRedraw[nRow + 1] := ::aRedraw[nRow]
-                     next
+                     AIns(::aRedraw, 1)
                   endif
 
                   ::aRedraw[::nNewRowPos] := .T.
@@ -1607,7 +1597,8 @@ METHOD SetStyle( nMode, lSetting ) CLASS TBROWSE
   LOCAL lRet := .F.
 
   IF nMode > LEN( ::aSetStyle )
-     RETURN .F.
+     ASize( ::aSetStyle, nMode )
+     ::aSetStyle[ nMode ] := .F.
   ENDIF
 
   lRet := ::aSetStyle[ nMode ]

@@ -84,7 +84,7 @@ CLASS TBColumn
    HIDDEN:     /* H I D D E N */
 
    DATA  nWidth
-   METHOD SetWidth(n)
+   METHOD SetWidth( n )
 
 #ifdef HB_COMPAT_C53
    DATA aSetStyle
@@ -111,13 +111,15 @@ METHOD New( cHeading, bBlock ) CLASS TBColumn
    ::Footing  := ""
    ::block    := bBlock
 
-#ifdef HB_COMPAT_C53
-   ::aSetStyle := ARRAY( 4096 )
+   #ifdef HB_COMPAT_C53
 
-   ::aSetStyle[ TBC_READWRITE ] := .f.
-   ::aSetStyle[ TBC_MOVE ]      := .f.
-   ::aSetStyle[ TBC_SIZE ]      := .f.
-#endif
+      ::aSetStyle := Array( TBC_CUSTOM - 1 )
+   
+      ::aSetStyle[ TBC_READWRITE ] := .f.
+      ::aSetStyle[ TBC_MOVE ]      := .f.
+      ::aSetStyle[ TBC_SIZE ]      := .f.
+
+   #endif
 
 return Self
 
@@ -134,11 +136,13 @@ return n
 
 
 #ifdef HB_COMPAT_C53
+
 METHOD SetStyle( nMode, lSetting ) CLASS TBColumn
   LOCAL lRet := .F.
 
   IF nMode > LEN( ::aSetStyle )
-     RETURN .F.
+     ASize( ::aSetStyle, nMode )
+     ::aSetStyle[ nMode ] := .F.
   ENDIF
 
   lRet := ::aSetStyle[ nMode ]
@@ -148,6 +152,7 @@ METHOD SetStyle( nMode, lSetting ) CLASS TBColumn
   ENDIF
  
 RETURN lRet
+
 #endif
 
 

@@ -8,6 +8,33 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-02-21 07:39 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * source/rtl/memoread.c
+     * Previous change reverted. hb_retc( NULL ) was intentional 
+       and is an optimized version of hb_retc( "" ). Both will return 
+       an empty string.
+     % hb_fsClose() calls reduced.
+
+   * src/rtl/tbcolumn.prg
+   * src/rtl/tbrowse.prg
+     ! :SetColumn() retval made compatible.
+     ! :ColWidth() retval made compatible.
+     % Using array functions to speed up a few things.
+     % Got rid of the predefined 4096 long array in every 
+       columns plus the browse object.
+     ; More and more incompatibilities are popping up, some 
+       of them quite strange, and only coming up in a large 
+       app's sophisticated browse stressing environment.
+       - Removing rightmost column while active will do RTE,
+       - If headsep is initialized after the columns and cargo, 
+         browse will sometimes behave strangely (headsep value 
+         disappears??)
+       - Moving columns off the visible area will screw up 
+         internals.
+       - Modifying columns is slow because of the unconditional 
+         :configure() calls.
+
 2004-02-20 8:55 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
    * contrib/mysql/mysql.c
      ! Fixed declaration for filelength() from int to long to match io.h

@@ -93,21 +93,18 @@ HB_FUNC( MEMOREAD )
             hb_fsSeek( fhnd, 0, FS_SET );
             hb_fsReadLarge( fhnd, pbyBuffer, ulSize );
 
-            hb_fsClose( fhnd );
-
             hb_retclen_buffer( ( char * ) pbyBuffer, ulSize );
          }
          else
-         {
-            hb_fsClose( fhnd );
-            hb_retc( "" );
-         }
+            hb_retc( NULL );
+
+         hb_fsClose( fhnd );
       }
       else
-         hb_retc( "" );
+         hb_retc( NULL );
    }
    else
-      hb_retc( "" );
+      hb_retc( NULL );
 }
 
 HB_FUNC( MEMOWRIT )
