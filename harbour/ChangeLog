@@ -1,3 +1,8 @@
+19990525-22:45 CET Eddie Runia
+  * tests/working/spawn2.prg; tests/working/runner.c
+    support for STATIC functions added and error message for duplicate
+    identifiers
+
 19990525-21:30 CET Eddie Runia
   * tests/working/spawn2.prg
     Warning added if not compiled using /gHRB

@@ -1,7 +1,9 @@
 //
 // Spawn2 called from Spawn
 //
-function Spawn2()
+// Function should be static to avoid collision with Spawn/Main
+//
+static function Main()
 
    local n := 0
 
@@ -19,4 +21,5 @@ function Spawn2()
       QOut( "Back to Spawn2" )
    endif
 return nil
+
 

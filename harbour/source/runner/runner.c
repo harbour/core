@@ -15,7 +15,7 @@ static BYTE prgFunction[] = { 0x68, 0x00, 0x00, 0x00, 0x00,
         add esp, 8
         ret near                   */
 
-     /* This is the assembler output from : VirtualMachine(pcode,symbols). */
+     /* This is the assembler output from : VirtualMachine(pcode,symbols).  */
 
 /* #elseif INTEL16 */
 /* #elseif MOTOROLA */
@@ -25,36 +25,40 @@ static BYTE prgFunction[] = { 0x68, 0x00, 0x00, 0x00, 0x00,
 
 typedef union
 {
-   PBYTE       pAsmData;       /* The assembler bytes            */
-   HARBOURFUNC pFunPtr;        /* The (dynamic) harbour function */
+   PBYTE       pAsmData;                        /* The assembler bytes      */
+   HARBOURFUNC pFunPtr;                         /* The (dynamic) harbour
+                                                   function                 */
 } ASM_CALL, *PASM_CALL;
 
 typedef struct
 {
-   char      *szName;          /* Name of the function         */
-   PASM_CALL  pAsmCall;        /* Assembler call               */
-   PBYTE      pCode;           /* P-code                       */
+   char      *szName;                           /* Name of the function     */
+   PASM_CALL  pAsmCall;                         /* Assembler call           */
+   PBYTE      pCode;                            /* P-code                   */
 } DYNFUNC, *PDYNFUNC;
 
 
-#define SYM_NOLINK  0              /* Symbol does not have to be linked */
-#define SYM_FUNC    1              /* Defined function                  */
-#define SYM_EXTERN  2              /* Previously defined function       */
+#define SYM_NOLINK  0                           /* Symbol does not have to
+                                                                  be linked */
+#define SYM_FUNC    1                           /* Defined function         */
+#define SYM_EXTERN  2                           /* Prev. defined function   */
 
-#define SYM_NOT_FOUND 0xFFFFFFFF   /* Symbol not found. FindSymbol      */
+#define SYM_NOT_FOUND 0xFFFFFFFF                /* Symbol not found.
+                                                   FindSymbol               */
 
-PASM_CALL CreateFun( PSYMBOL, PBYTE );   /* Create a dynamic function*/
+PASM_CALL CreateFun( PSYMBOL, PBYTE );          /* Create a dynamic function*/
 void      Do( WORD );
 ULONG     FindSymbol( char *, PDYNFUNC, ULONG );
 HARBOUR   HB_RUN();
 void      HRB_FileClose( _FILE * );
-void      HRB_FileRead ( char *, int, int, FILE * );
+void      HRB_FileRead ( char *, int, int, _FILE * );
 _FILE    *HRB_FileOpen ( char * );
 void      Push( PITEM );
 void      PushNil( void );
 void      PushSymbol( PSYMBOL );
-char     *ReadId( FILE * );
-long      ReadLong( FILE * );
+BYTE      ReadByte( _FILE * );
+char     *ReadId  ( _FILE * );
+long      ReadLong( _FILE * );
 
 #undef  FILE
 #include "run_exp.h"
@@ -75,7 +79,7 @@ long      ReadLong( FILE * );
 ULONG ulSymEntry = 0;                           /* Link enhancement         */
 
 /*
-   HB_Run alias TugBoat alias Runner.
+   HB_Run( <cFile> )
 
    This program will get the data from the .HRB file and run the p-code
    contained in it.
@@ -83,12 +87,9 @@ ULONG ulSymEntry = 0;                           /* Link enhancement         */
    In due time it should also be able to collect the data from the
    binary/executable itself
 */
-HARBOUR HB_RUN( void )                          /* HB_Run( <cFile> )        */
+HARBOUR HB_RUN( void )
 {
-   char  cLong[4];                              /* Temporary long           */
    char *szFileName;
-   char *szTemp;                                /* Temporary buffer         */
-   char *szIdx;
 
    FILE *file;
 
@@ -98,8 +99,6 @@ HARBOUR HB_RUN( void )                          /* HB_Run( <cFile> )        */
    ULONG ul, ulPos;
 
    int i;
-
-   BYTE  bCont;
 
    PSYMBOL  pSymRead;                           /* Symbols read             */
    PDYNFUNC pDynFunc;                           /* Functions read           */
@@ -116,16 +115,11 @@ HARBOUR HB_RUN( void )                          /* HB_Run( <cFile> )        */
          ulSymbols = ReadLong( file );
          pSymRead = _xgrab( ulSymbols * sizeof( SYMBOL ) );
 
-         szTemp   = _xgrab( 256 );              /* Must be enough for now   */
-
          for( ul=0; ul < ulSymbols; ul++)       /* Read symbols in .HRB     */
          {
             pSymRead[ ul ].szName  = ReadId( file );
-
-            HRB_FileRead( szTemp, 2, 1, file );
-
-            pSymRead[ ul ].cScope  = szTemp[ 0 ];
-            pSymRead[ ul ].pFunPtr = (void *) szTemp[ 1 ];
+            pSymRead[ ul ].cScope  = ReadByte( file );
+            pSymRead[ ul ].pFunPtr = (void *) ReadByte( file );
             pSymRead[ ul ].pDynSym = NULL;
          }
 
@@ -153,7 +147,16 @@ HARBOUR HB_RUN( void )                          /* HB_Run( <cFile> )        */
             {
                ulPos = FindSymbol( pSymRead[ ul ].szName, pDynFunc, ulFuncs );
                if( ulPos != SYM_NOT_FOUND )
+               {
+                  if(    FindDynSym( pSymRead[ ul ].szName ) &&
+                      !( pSymRead[ ul ].cScope & FS_STATIC ) )
+                  {                             /* Exists and NOT static ?  */
+                     printf( "\nDuplicate identifier '%s'.",
+                             pSymRead[ ul ].szName );
+                     exit( 1 );
+                  }
                   pSymRead[ ul ].pFunPtr = pDynFunc[ ulPos ].pAsmCall->pFunPtr;
+               }
                else
                   pSymRead[ ul ].pFunPtr = (void *) SYM_EXTERN;
             }
@@ -161,7 +164,7 @@ HARBOUR HB_RUN( void )                          /* HB_Run( <cFile> )        */
             {                                   /* External function        */
                pDynSym = FindDynSym( pSymRead[ ul ].szName );
                if( !pDynSym )
-               {
+               {                                
                   printf( "\nUnknown or unregistered function '%s'.",
                           pSymRead[ ul ].szName );
                   exit( 1 );
@@ -199,7 +202,8 @@ HARBOUR HB_RUN( void )                          /* HB_Run( <cFile> )        */
                 PushNil();
                 Do( 0 );                        /* Run exit function        */
                 pSymRead[ ul ].cScope = pSymRead[ ul ].cScope & (~FS_EXIT);
-                      /* Exit function cannot be handled by main() in hvm.c */
+                                                /* Exit function cannot be
+                                                   handled by main in hvm.c */
             }
          }
 
@@ -217,7 +221,6 @@ HARBOUR HB_RUN( void )                          /* HB_Run( <cFile> )        */
          }
 
          _xfree( pDynFunc );
-         _xfree( szTemp );
          _xfree( pSymRead );
          HRB_FileClose( file );
       }
@@ -285,11 +288,20 @@ char *ReadId( FILE *file )
 }
 
 
+BYTE ReadByte( FILE *file )
+{
+   BYTE bRet;
+
+   HRB_FileRead( &bRet, 1, 1, file );
+   return( bRet );
+}
+
+
 long ReadLong( FILE *file )
 {
    char cLong[4];                               /* Temporary long           */
 
-   HRB_FileRead( cLong, 4, 1, file );           /* Read number of symbols   */
+   HRB_FileRead( cLong, 4, 1, file );
 
    if( cLong[3] )                               /* Convert to long if ok    */
    {
