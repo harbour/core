@@ -2652,7 +2652,7 @@ static void hb_vmArrayPop( void )
    PHB_ITEM pArray;
    ULONG ulIndex;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmArrayPut()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmArrayPop()"));
 
    pValue = hb_stackItemFromTop( -3 );
    pArray = hb_stackItemFromTop( -2 );
@@ -2988,14 +2988,7 @@ void hb_vmDo( USHORT uiParams )
       PHB_BASEARRAY pSelfBase = NULL;
 
       if( pSym == &( hb_symEval ) && HB_IS_BLOCK( pSelf ) )
-         if( strncmp( pSym->szName, "EVAL", 4 ) == 0 )
-         {
-            printf("%s\n",pSym->szName);
-            pSym = &hb_symEval;
-            pFunc = pSym->pFunPtr;                 /* __EVAL method = function */
-         }
-         else
-            pFunc = pSym->pFunPtr;                 /* __EVAL method = function */
+         pFunc = pSym->pFunPtr;                 /* __EVAL method = function */
       else
       {
          pFunc = hb_objGetMethod( pSelf, pSym );
@@ -3778,11 +3771,13 @@ void hb_vmPushString( char * szText, ULONG length )
 
 void hb_vmPushSymbol( PHB_SYMB pSym )
 {
+   PHB_ITEM pStackTopItem = hb_stackTopItem();
+
    HB_TRACE(HB_TR_DEBUG, ("hb_vmPushSymbol(%p)", pSym));
 
-   ( hb_stackTopItem() )->type = HB_IT_SYMBOL;
-   ( hb_stackTopItem() )->item.asSymbol.value = pSym;
-   ( hb_stackTopItem() )->item.asSymbol.stackbase = hb_stackTopOffset();
+   pStackTopItem->type = HB_IT_SYMBOL;
+   pStackTopItem->item.asSymbol.value = pSym;
+   pStackTopItem->item.asSymbol.stackbase = hb_stackTopOffset();
    hb_stackPush();
 }
 
