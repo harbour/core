@@ -1,3 +1,24 @@
+2001-07-22 18:00 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
+   * utils/hbmake/hbmake.prg
+      * Added suport for !iffile/!else/!endif and !stdout
+   * utils/hbdoc/hbdoc.prg
+      * Updated Copyright Date
+   +include/hbgetcmt.ch
+      *Include file for Ca-Clippr 5.3 Get Compatible Controls
+   +source/rtl/radiobtn.prg
+      *Radio Button Class Compatible with Ca-Clipper 5.3
+   +source/rtl/radiogrp.prg
+      *Radio Group Class Compatible with Ca-Clipper 5.3
+   *tests/tstchbx.prg
+      *Updated to demostrate the work of RadioButton/RadioGroup Classes
+   *hb_slex.bc
+    makefile.bc
+    hb_slex.vc
+    makefile.vc
+    source/rtl/makefile
+      *Added radiobtn.prg and radiogrp.prg to dependencie list
+
+
 2001-07-22 20:15 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *include/hbapi.h

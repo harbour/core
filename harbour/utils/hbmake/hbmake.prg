@@ -375,7 +375,7 @@ While !leof
 
   aTemp := listasArray2( Alltrim( cTemp ), "=" )
   If lmacrosec
-     If Alltrim( Left( ctemp, 7 ) ) <> '!ifndef' .and. Alltrim( Left( ctemp, 6 ) ) <> "!endif" .and. Alltrim( Left( ctemp, 7 ) ) <> '!iffile'
+     If Alltrim( Left( ctemp, 7 ) ) <> '!ifndef' .and. Alltrim( Left( ctemp, 6 ) ) <> "!endif" .and. Alltrim( Left( ctemp, 7 ) ) <> '!iffile' .and. Alltrim( Left( ctemp, 7 ) ) <> '!stdout' .and. Alltrim( Left( ctemp, 6 ) ) <> '!ifdef'
 
         If Len( atemp ) > 1
            If At( "$", atemp[ 2 ] ) > 0
@@ -429,10 +429,16 @@ While !leof
 
      Else
         //           cTemp1:=TRIM( SUBSTR( ReadLN( @lEof ),1 ) )
+
+
         if at('!ifndef',cTemp)>0
-        checkDefine( cTemp )
+           checkDefine( cTemp )
+        elseif  at('!ifdef',ctemp)>0
+            CheckifDef(cTemp)
         elseif at('!iffile',cTemp)>0
             checkiffile(cTemp)
+        elseif at('!stdout',cTemp)>0
+            checkstdout(cTemp)            
         endif
         //   endif
      Endif
@@ -2134,3 +2140,58 @@ if nPos>0
     endif
 endif
 return ctemp
+function checkstdout(cText)
+cText:=strtran(cText,"!stdout","")
+outstd(cText)
+return nil
+function CheckifDef(cTemp)
+Local cDef
+Local nPos
+Local cRead:=""
+Local aSet     := {}
+Local nMakePos
+Local cTemp1:=''
+If cTemp == "!endif"
+   Return nil
+Endif
+
+While at("!endif",cRead)==0
+   cRead := Trim( Substr( ReadLN( @lEof ), 1 ) )
+   if at("!endif",cRead)>0
+      FT_FSKIP(-1)
+      exit
+   endif
+
+   cTemp := Strtran( cTemp, "!ifdef ", "" )
+   if at('=',cRead)>0
+      aSet  := listasarray2( cRead, "=" )
+      nPos  := Ascan( adefines, { | x, y | x[ 1 ] == cTemp } )
+
+      If nPos > 0
+         cRead    := Alltrim( Strtran( aset[ 1 ], "$(", "" ) )
+         cRead    := Strtran( cRead, ")\..", "" )
+         nMakePos := Ascan( amaCros, { | x, y | x[ 1 ] == cRead } )
+         If nMakePos == 0
+            Aadd( amacros, { aset[ 1 ], aset[ 2 ] } )
+         Endif
+      ELSE  /* Locate For !Else    */
+         While at("!endif",cRead)==0 
+           cRead := Trim( Substr( ReadLN( @lEof ), 1 ) )
+               if at("!else",cRead)>0
+                  While at("!endif",cRead)==0 
+                  cRead := Trim( Substr( ReadLN( @lEof ), 1 ) )
+                  if at("!endif",cRead)>0
+                     FT_FSKIP(-1)
+                     exit
+                  endif
+                  aSet  := listasarray2( cRead, "=" )
+                  Aadd( amacros, { aset[ 1 ], aset[ 2 ] } )
+                  enddo
+               endif
+         Enddo
+      Endif
+   Elseif at('!stdout',cRead)>0
+      checkstdout(cRead)            
+   Endif
+enddo
+Return nil

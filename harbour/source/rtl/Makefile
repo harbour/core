@@ -135,6 +135,8 @@ PRG_SOURCES=\
 	menuto.prg   \
 	objfunc.prg  \
 	profiler.prg \
+   radiobtn.prg \
+   radiogrp.prg \
 	readkey.prg  \
 	readvar.prg  \
 	setfunc.prg  \

@@ -1,43 +1,27 @@
 /*
  * $Id$
  */
+#include "hbgetcmt.ch"
 
-#ifdef __HARBOUR__
-#command @ <row>, <col> GET <var>                                       ;
-                        CHECKBOX                                        ;
-                        [VALID <valid>]                                 ;
-                        [WHEN <when>]                                   ;
-                        [CAPTION <caption>]                             ;
-                        [MESSAGE <message>]                             ;
-                        [COLOR <color>]                                 ;
-                        [FOCUS <fblock>]                                ;
-                        [STATE <sblock>]                                ;
-                        [STYLE <style>]                                 ;
-                        [SEND <msg>]                                    ;
-                        [GUISEND <guimsg>]                              ;
-                                                                        ;
-      => SetPos( <row>, <col> )                                         ;
-       ; AAdd( GetList,                                                 ;
-              _GET_( <var>, <(var)>, NIL, <{valid}>, <{when}> ) )       ;
-       ; ATail(GetList):Control := _CheckBox_( <var>, <caption>,        ;
-                        <message>, <color>, <{fblock}>, <{sblock}>,     ;
-                        <style> )                           ;
-       ; ATail(GetList):reader  := { | a, b, c, d |                     ;
-                                    GuiReader( a, b, c, d ) }           ;
-      [; ATail(GetList):<msg>]                                          ;
-      [; ATail(GetList):Control:<guimsg>]                               ;
-       ; ATail(GetList):Control:Display()
-#endif
 function Main
 Local lx :=.f.
 local ly :=.f.
+Local citem:="Windows NT/2000"
+Local aitems[4]
+aitems[1]:=RADIOBUTTO( 3,3,"&Windows NT/2000")
+aitems[2]:=RADIOBUTTO( 4,3,"W&indows 9x")
+aitems[3]:=RADIOBUTTO( 5,3,"&Linux")
+aitems[4]:=RADIOBUTTO( 6,3,"&Mac OS")
+
 cls
-Setcolor('w/b+,w/b,w+/b,w/b+,w/b+,w/b+')
-@ 2,3 Say "Married"
-@ 2,12 Get lx CHECKBOX color 'w/b+,w/b,w+/r,w/g+'
-@ 3,3 Say "Single"
-@ 3,12 Get ly CHECKBOX color 'w/b+,w/b,w+/r,w/g+'
-read
+Setcolor('w/b+,r/b,g+/r,b+/r+,bg/n+,w/bg,rb/bg')
+@  2,2,7,40 get citem radiogroup aitems color 'w/b+,r/b,g/b+' MESSAGE "Select Your Os"
+@ 8,3 Say "Married"
+@ 8,12 Get lx CHECKBOX color 'w/b+,w/b,w+/r,w/g+' MESSAGE "Is You Married?"
+@ 9,3 Say "Singer"
+@ 9,12 Get ly CHECKBOX color 'w/b+,w/b,w+/r,w/g+' MESSAGE "Are You a  Singer"
+read MSG AT maxrow(), 0, maxcol() MSG Color "w/b+"
 ? "Is the Person Married",if(lx," Yes ", " No ")
-? "Is the Person Single",if(ly," Yes ", " No ")
+? "Is the Person a Singer",if(ly," Yes ", " No ")
+? "Your Os is ",cItem
 return Nil

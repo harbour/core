@@ -36,11 +36,11 @@
  *      todos los *.DBF en la ruta SET DEFAULT. Esta información contiene:
  *      - Nombre del archivo
  *      - Numero de registros
- *	- Fecha de la ultima actualización
- *	- Tamaño de cada archivo.
+ *      - Fecha de la ultima actualización
+ *      - Tamaño de cada archivo.
  *
  *      Si <cFileMask> es dada, __Dir() lista todos los archivos que coinciden
- *	con la máscara en los siguientes detalles: Nombre, Extensión, Tamaño,
+ *      con la máscara en los siguientes detalles: Nombre, Extensión, Tamaño,
  *      Fecha.
  *
  *      El comando DIR es pre-procesado en la función __Dir() durante el
@@ -103,11 +103,11 @@
  *      todos los *.DBF en la ruta SET DEFAULT. esta información contiene:
  *      - Nombre del archivo
  *      - Número de registros
- *	- Fecha de la ultima actualización
- *	- Tamaño de cada archivo.
+ *      - Fecha de la ultima actualización
+ *      - Tamaño de cada archivo.
  *
  *      Si <cFileMask> es dada, __Dir() lista todos los archivos que coinciden
- *	con la máscara en los siguientes detalles: Nombre, Extensión, Tamaño,
+ *      con la máscara en los siguientes detalles: Nombre, Extensión, Tamaño,
  *      Fecha.
  *
  *      El comando DIR es pre-procesado en la función __Dir() durante el
@@ -116,7 +116,7 @@
  *      __Dir() es una función de compatibilidad, esta fué superada por
  *      DIRECTORY(), la cual devuelve toda la información en un arreglo
  *      multidimensional.
-  *  $EXAMPLES$
+ *  $EXAMPLES$
     <fixed>
  *      __Dir()   // Información de todos los DBF en el directorio actual
  *
@@ -167,7 +167,7 @@
  *
  *      <aNombre> Array para llenar con el Nombre de los archivos que cumplen
  *      con <cFileMask>. Cada elemento es una cadena de caracteres que incluye
- *	el Nombre y Extensión del archivo sin la ruta de acceso.
+ *      el Nombre y Extensión del archivo sin la ruta de acceso.
  *      Nombre es el nombre largo de archivo como es reportado por el sistema
  *      operativo y no necesariamente en el formato mayúsculas 8.3 del D.O.S.
  *
@@ -188,7 +188,7 @@
  *      Vea DIRECTORY() por información sobre los valores de los atributos.
  *      Si Ud. pasa un array a <aAtrib>, la función va a devolver archivos
  *      con los atributos Normal, Oculto (H), sistema (S) y directorio (D)
- *	Si <aAtrib> no es especificado o es distinto de un array solo
+ *      Si <aAtrib> no es especificado o es distinto de un array solo
  *      archivos con atributo normal porian ser devueltos.
  *
  *      Nota: Al momento de escribir esta documentación todavia no había 
@@ -201,8 +201,8 @@
  *      ADIR() retorna el número de archivos y/o directorios que cumplen con
  *      un formato especificado, este tambien llena una serie de arrays con
  *      Nombre, Tamaño, Fecha, Hora y Atributo de estos archivos.
- * 	El array pasado debe ser pre-inicializado al tamaño apropiado, vea el
- * 	ejemplo más abajo.
+ *      El array pasado debe ser pre-inicializado al tamaño apropiado, vea el
+ *      ejemplo más abajo.
  *      Con motivo de incluir los atributos Oculto (H), sistema (S) o de
  *      directorio (D) <aAtrib> debe ser especificado.
  *

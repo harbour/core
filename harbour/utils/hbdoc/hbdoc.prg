@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * HBDOC document Extractor
  *
- * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
+ * Copyright 1999-2001 Luiz Rafael Culik <culik@sl.conex.net>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -245,7 +245,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
 
    IF cLinkName = NIL
       ?? "Harbour Doc Extractor"
-      ? "Copyright 1999-2000, http://www.harbour-project.org"
+      ? "Copyright 1999-2001, http://www.harbour-project.org"
       ? ""
       ? "Syntax:  hbdoc [options] <linkname> [<ifile>]"
       ? ""

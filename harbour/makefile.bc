@@ -307,6 +307,8 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\menuto.obj \
    $(OBJ_DIR)\objfunc.obj \
    $(OBJ_DIR)\profiler.obj \
+   $(OBJ_DIR)\radiobtn.obj \
+   $(OBJ_DIR)\radiogrp.obj \
    $(OBJ_DIR)\readkey.obj \
    $(OBJ_DIR)\readvar.obj \
    $(OBJ_DIR)\setfunc.obj \
@@ -1481,6 +1483,21 @@ $(OBJ_DIR)\profiler.c : $(RTL_DIR)\profiler.prg
 $(OBJ_DIR)\profiler.obj : $(OBJ_DIR)\profiler.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\radiobtn.c : $(RTL_DIR)\radiobtn.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\radiobtn.obj : $(OBJ_DIR)\radiobtn.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\radiogrp.c : $(RTL_DIR)\radiogrp.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\radiogrp.obj : $(OBJ_DIR)\radiogrp.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
+
 
 $(OBJ_DIR)\rat.obj : $(RTL_DIR)\rat.c
    $(CC) $(CLIBFLAGS) -o$@ $**
