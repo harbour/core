@@ -407,6 +407,7 @@ extern void     hb_memvarGetRefer( HB_ITEM_PTR, PHB_SYMB );
 extern ULONG    hb_memvarGetPrivatesBase( void );
 extern void     hb_memvarSetPrivatesBase( ULONG );
 extern void     hb_memvarNewParameter( PHB_SYMB, HB_ITEM_PTR );
+extern char   * hb_memvarGetStrValuePtr( char *, ULONG * );
 
 /* console I/O subsystem */
 extern void     hb_consoleInitialize( void );
@@ -455,6 +456,7 @@ typedef struct HB_MACRO_    /* a macro compiled pcode container */
 
 extern void hb_macroGetValue( HB_ITEM_PTR );
 extern void hb_macroSetValue( HB_ITEM_PTR );
+extern void hb_macroTextValue( HB_ITEM_PTR );
 extern void hb_macroPushSymbol( HB_ITEM_PTR );
 extern void hb_macroRun( HB_MACRO_PTR );
 extern HB_MACRO_PTR hb_macroCompile( char * );

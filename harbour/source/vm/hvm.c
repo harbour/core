@@ -940,7 +940,10 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_MACROTEXT:
-            /* macro text substitution */
+            /* macro text substitution 
+             * "text &macro.other text"
+             */
+            hb_macroTextValue( hb_stack.pPos - 1 );
             w++;
             break;
 

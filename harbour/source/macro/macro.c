@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Compiler main file
+ * Macro compiler main file
  *
  * Copyright 1999 Ryszard Glab <rglab@imid.med.pl>
  * www - http://www.harbour-project.org
@@ -47,7 +47,13 @@ static BOOL hb_comp_bUseName10 = FALSE;  /* names limited to 10 characters */
 
 /* ************************************************************************* */
 
-/* Compile passes string into a pcode buffer
+/* Compile passed string into a pcode buffer
+ *
+ * 'pMacro' - pointer to HB_MACRO structure that will hold all information
+ *    nedded for macro compilation and evaluation
+ * 'szString'  - a string to compile
+ * 'iFlag' - specifies if compiled code should generate pcodes either for push
+ *    operation (for example: var :=&macro) or for pop operation (&macro :=var)
  */
 static int hb_macroParse( HB_MACRO_PTR pMacro, char * szString, int iFlag )
 {
@@ -67,7 +73,7 @@ static int hb_macroParse( HB_MACRO_PTR pMacro, char * szString, int iFlag )
    HB_TRACE(HB_TR_DEBUG, ("hb_macroParse.(%p, %s, %i)", pMacro, szString, iFlag));
    pMacro->pCodeInfo->pCode      = ( BYTE * ) hb_xgrab( HB_PCODE_SIZE );
 
-   /* We have to specify if we want a push or pop operation because
+   /* We have to specify if we want either a push or a pop operation because
     * we are using different pcodes for these operations
     */
    pMacro->Flags = iFlag;
@@ -75,6 +81,12 @@ static int hb_macroParse( HB_MACRO_PTR pMacro, char * szString, int iFlag )
    return hb_compParse( pMacro );
 }
 
+/* releases all memory allocated for macro evaluation
+ * NOTE:
+ *    Only members of HB_MACRO structure are deallocated
+ *    the 'pMacro' pointer is not released - it can be a pointer
+ *    to a memory allocated on the stack.
+ */
 void hb_macroDelete( HB_MACRO_PTR pMacro )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_macroDelete(%p)", pMacro));
@@ -83,6 +95,8 @@ void hb_macroDelete( HB_MACRO_PTR pMacro )
    hb_xfree( (void *) pMacro->pCodeInfo );
 }
 
+/* checks if a correct ITEM was passed from the virtual machine eval stack
+ */
 static BOOL hb_macroCheckParam( HB_ITEM_PTR pItem )
 {
    BOOL bValid = TRUE;
@@ -139,37 +153,189 @@ static void hb_macroSyntaxError( HB_MACRO_PTR pMacro )
 static BOOL hb_macroIsIdent( char * szString )
 {
    char * pTmp = szString;
+   BOOL bIsIdent = FALSE;
 
    /* NOTE: This uses _a-zA-Z0-9 pattern to check for a valid name
     */
-   if( *pTmp == '_' || (*pTmp >= 'A' && *pTmp <= 'Z') || (*pTmp >= 'a' && *pTmp <= 'z') )
+   if( *pTmp )
    {
-      ++pTmp;
-      while( *pTmp && (*pTmp == '_' || (*pTmp >= 'A' && *pTmp <= 'Z') || (*pTmp >= 'a' && *pTmp <= 'z') || (*pTmp >= '0' && *pTmp <= '9')) )
-         ++pTmp;
+      if( ! ( pTmp[ 0 ] == '_' && pTmp[ 1 ] == 0 ) )
+      {
+         /* this is not a "_" string
+          */
+         if( *pTmp == '_' || (*pTmp >= 'A' && *pTmp <= 'Z') || (*pTmp >= 'a' && *pTmp <= 'z') )
+         {
+            ++pTmp;
+            while( *pTmp && (*pTmp == '_' || (*pTmp >= 'A' && *pTmp <= 'Z') || (*pTmp >= 'a' && *pTmp <= 'z') || (*pTmp >= '0' && *pTmp <= '9')) )
+               ++pTmp;
+            /* the name is valid if pTmp is at the end of a string
+            */
+            bIsIdent = (*pTmp ? FALSE : TRUE );
+         }
+      }
    }
 
-   /* the name was valid if pTmp is at the end of a string
-    */
-   return (*pTmp ? FALSE : TRUE );
+   return bIsIdent;
 }
 
-/* Replace all nested macro operators
+/* This replaces all '&var' or '&var.' occurences within a given string
+ * with the value of variable 'var' if this variable exists and contains
+ * a string value. The value of variable is also searched for
+ * occurences of macro operator and if it is found then it is expanded
+ * until there is no more macro operators.
+ * NOTE:
+ *    this does not evaluate a macro expression - there is a simple text
+ *    substitution only
+ * NOTE:
+ *    hb_macroTextSubst returns either a pointer that points to the passed
+ *    string if there was no macro operator in it or a pointer to a new
+ *    allocated memory with expanded string if there was a macro operator
+ *    in passed string.
  */
-static char * hb_macroTextSubst( char * szString )
+static char * hb_macroTextSubst( char * szString, ULONG *pulStringLen )
 {
-   char * szText;
-   ULONG ulLen;
+   char * szResult;
+   ULONG ulCopy;
+   ULONG ulResLen;
+   ULONG ulResPos;
+   ULONG ulCharsLeft;
+   char * pHead;
+   char * pTail;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_macroTextSubst(%s)", szString));
+   HB_TRACE(HB_TR_DEBUG, ("hb_macroTextSubst(%s, %li)", szString, *pulStringLen));
 
-/* TODO: Nested macro or complex macro ( e.g. &macro&macro2.end )
- */
-   ulLen = strlen( szString ) + 1;
-   szText = (char *) hb_xgrab( ulLen );
-   memcpy( szText, szString, ulLen );
+   pHead = (char *)memchr( (void *)szString, '&', *pulStringLen );
+   if( pHead == NULL )
+      return szString;  /* no more processing is required */
 
-   return szText;
+   /* initial buffer for return value */
+   szResult = (char *) hb_xgrab( *pulStringLen + 1 );
+   /* copy initial length of the string (it can contain null bytes) */
+   ulResLen  = ulCharsLeft = *pulStringLen;
+   /* current position within the buffer where byte will be copied */
+   ulResPos  = 0;
+
+   pTail = szString;
+   do
+   {
+      ulCopy = pHead - pTail;
+      if( ulCopy )
+      {
+         /* copy bytes located before '&' character */
+         memcpy( szResult + ulResPos, pTail, ulCopy );
+         ulResPos += ulCopy;
+         pTail = pHead;
+      }
+
+      /* check if the next character can start a valid identifier
+      * (only _a-zA-Z are allowed)
+      */
+      ++pHead;
+      if( *pHead == '_' || (*pHead >= 'A' && *pHead <= 'Z') || (*pHead >= 'a' && *pHead <= 'z') )
+      {
+         /* extract a variable name */
+         /* NOTE: the extracted name can be longer then supported maximal
+          * length of identifiers (HB_SYMBOL_NAME_LEN) - only the max allowed
+          * are used for name lookup however the whole string is replaced
+          */
+         ULONG ulNameLen = 0;
+         char * pName = pHead;
+
+         while( *pHead && (*pHead == '_' || (*pHead >= 'A' && *pHead <= 'Z') || (*pHead >= 'a' && *pHead <= 'z') || (*pHead >= '0' && *pHead <= '9')) )
+         {
+            ++pHead;
+            ++ulNameLen;
+         }
+         /* pHead points now at the character that terminated a variable name */
+
+         /* NOTE: '_' is invalid variable name
+          */
+         if( ! ( *pName == '_' && ulNameLen == 1 ) )
+         {
+            /* this is not the "&_" string */
+            char * szValPtr;
+            ULONG ulValLen;
+
+            /* Get a pointer to the string value stored in this variable
+             * or NULL if variable doesn't exist or doesn't contain a string
+             * value.
+             * NOTE: This doesn't create a copy of the value then it
+             * shouldn't be released here.
+             */
+            ulValLen = ulNameLen;   /* the length of name */
+            szValPtr = hb_memvarGetStrValuePtr( pName, &ulValLen );
+            if( szValPtr )
+            {
+               char * szValSubst;
+
+               if( *pHead == '.' )
+               {
+                  /* we have stopped at the macro terminator '.' - skip it */
+                  ++pHead;
+                  ++ulNameLen;
+               }
+
+               /* Check if returned string contains nested macro operators
+                * and expand them if they exist
+                */
+               szValSubst = hb_macroTextSubst( szValPtr, &ulValLen );
+
+               /* expand the result buffer if the substituted value is too
+                * long to be stored in the current buffer
+                */
+               if( (ulResPos + ulValLen) >= ulResLen )
+               {
+                  ulResLen = ulResPos + ulValLen;
+                  szResult = ( char * ) hb_xrealloc( szResult, ulResLen + 1 );
+               }
+               memcpy( szResult + ulResPos, szValSubst, ulValLen );
+               ulResPos += ulValLen;
+               if( szValSubst != szValPtr )
+               {
+                  /* a new pointer was created in hb_macroTextSubst
+                   * (if a macro operator was expanded) - we should release it
+                   */
+                  hb_xfree( szValSubst );
+               }
+               /* move a pointer to the characters processed so far -
+                * replaced characters shouldn't be copied
+                */
+               pTail = pHead;
+            }
+
+         }
+      }
+      /* copy characters that were not a valid identifier */
+      ulCopy = pHead - pTail;
+      if( ulCopy )
+      {
+         memcpy( szResult + ulResPos, pTail, ulCopy );
+         ulResPos += ulCopy;
+         pTail = pHead;
+      }
+      ulCharsLeft = *pulStringLen - ( pTail - szString );
+   }
+   while( ulCharsLeft && ( pHead = (char *) memchr( (void *)pTail, '&', ulCharsLeft ) ) );
+
+   if( ulCharsLeft )
+   {
+      /* copy trailing characters */
+      memcpy( szResult + ulResPos, pTail, ulCharsLeft );
+      ulResPos += ulCharsLeft;
+   }
+
+   if( ulResPos < ulResLen )
+   {
+      /* result string is shorter then allocated buffer -
+       * cut it to a required length
+       */
+      szResult = ( char * ) hb_xrealloc( szResult, ulResPos + 1 );
+   }
+   szResult[ ulResPos ] = 0;  /* place terminating null character */
+   /* return a length of result string */
+   *pulStringLen = ulResPos;
+
+   return szResult;   /* a new memory buffer was allocated */
 }
 
 
@@ -257,16 +423,24 @@ HB_MACRO_PTR hb_macroCompile( char * szString )
    return pMacro;
 }
 
+/* This function handles a macro function calls, e.g. var :=&macro()
+ *
+ * 'pItem' points to a ITEM that contains a string value which after
+ *    text substitution will return a function name
+ */
 void hb_macroPushSymbol( HB_ITEM_PTR pItem )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_macroGetValue(%p)", pItem));
+   HB_TRACE(HB_TR_DEBUG, ("hb_macroPushSymbol(%p)", pItem));
 
    if( hb_macroCheckParam( pItem ) )
    {
       HB_MACRO struMacro;
       char * szString;
+      BOOL bNewBuffer;
+      ULONG ulLength = pItem->item.asString.length;
 
-      szString = hb_macroTextSubst( pItem->item.asString.value );
+      szString = hb_macroTextSubst( pItem->item.asString.value, &ulLength );
+      bNewBuffer = ( szString != pItem->item.asString.value );
 
       hb_stackPop();    /* remove compiled string */
       if( hb_macroIsIdent( szString ) )
@@ -274,16 +448,53 @@ void hb_macroPushSymbol( HB_ITEM_PTR pItem )
          HB_DYNS_PTR pDynSym;
 
          pDynSym = hb_dynsymGet( szString );
-         /* NOTE: checking for valid function name is done in hb_vmDo()
+         /* NOTE: checking for valid function name (valid pointer) is done
+          * in hb_vmDo()
           */
          hb_vmPushSymbol( pDynSym->pSymbol );
 
-         hb_xfree( szString );
+         if( bNewBuffer )
+            hb_xfree( szString );   /* free space allocated in hb_macroTextSubst */
       }
       else
+      {
+         if( bNewBuffer )
+            hb_xfree( szString );   /* free space allocated in hb_macroTextSubst */
          hb_macroSyntaxError( &struMacro );
+      }
    }
 }
+
+/* Macro text substitution
+ *
+ * 'pItem' points to a ITEM that contains a string value which after
+ *    text substitution will be returned
+ */
+void hb_macroTextValue( HB_ITEM_PTR pItem )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_macroTextValue(%p)", pItem));
+
+   if( hb_macroCheckParam( pItem ) )
+   {
+      char * szString;
+      ULONG ulLength = pItem->item.asString.length;
+
+      szString = hb_macroTextSubst( pItem->item.asString.value, &ulLength );
+
+      if( szString != pItem->item.asString.value )
+      {
+         /* replace the old value on the eval stack with the new one
+         */
+         hb_itemPutCPtr( pItem, szString, ulLength );
+      }
+      /*
+       * else
+       *    leave original value on the eval stack - there was no '&' operator
+       *    inside a string
+       */
+   }
+}
+
 
 /* ************************************************************************* */
 

@@ -87,6 +87,7 @@ struct mv_PUBLIC_var_info
 static void hb_memvarCreateFromItem( PHB_ITEM, BYTE, PHB_ITEM );
 static void hb_memvarCreateFromDynSymbol( PHB_DYNS, BYTE, PHB_ITEM );
 static void hb_memvarAddPrivate( PHB_DYNS );
+static HB_DYNS_PTR hb_memvarFindSymbol( HB_ITEM_PTR );
 
 void hb_memvarsInit( void )
 {
@@ -513,13 +514,56 @@ void hb_memvarGetRefer( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
       hb_errInternal( 9999, "Invalid symbol item passed as memvar %s", pMemvarSymb->szName, NULL );
 }
 
-/*
+/* Create a new variable declared as procedure/function PARAMETER
  */
 void hb_memvarNewParameter( PHB_SYMB pSymbol, PHB_ITEM pValue )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_memvarNewParameter(%p, %p)", pSymbol, pValue));
 
    hb_memvarCreateFromDynSymbol( pSymbol->pDynSym, HB_MV_PRIVATE, pValue );
+}
+
+/* This function returns a string value of memvar variable with passed name.
+ * If a requested variable does not exist or contains non-string value
+ * then the NULL pointer is returned.
+ * NOTE:
+ *    This is a helper function for macro text substitution
+ *    var1 := "&var2.value"
+ */
+char * hb_memvarGetStrValuePtr( char * szVarName, ULONG *pulLen )
+{
+   HB_ITEM itName;
+   HB_DYNS_PTR pDynVar;
+   char * szValue = NULL;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarGetStrValuePtr(%s, %li)", szVarName, pulLen));
+
+   itName.type = IT_STRING;
+   itName.item.asString.value  = szVarName;
+   itName.item.asString.length = *pulLen;
+   pDynVar = hb_memvarFindSymbol( &itName );
+
+   if( pDynVar )
+   {
+      /* there is dynamic symbol with the requested name - check if it is
+       * a memvar variable
+       */
+      if( pDynVar->hMemvar )
+      {
+         /* variable contains some data
+          */
+         HB_ITEM_PTR pItem = &s_globalTable[ pDynVar->hMemvar ].item;
+         if( IS_BYREF( pItem ) )
+            pItem = hb_itemUnRef( pItem );   /* it is a PARAMETER variable */
+         if( IS_STRING( pItem ) )
+         {
+            szValue = pItem->item.asString.value;
+            *pulLen = pItem->item.asString.length;
+         }
+      }
+   }
+
+   return szValue;
 }
 
 
@@ -847,12 +891,19 @@ static HB_DYNS_PTR hb_memvarFindSymbol( HB_ITEM_PTR pName )
 
    if( pName )
    {
-      ULONG ulLen = pName->item.asString.length;
+      ULONG ulLen;
+
+      /* truncate a passed name to maximal allowed symbol name
+       */
+      if( pName->item.asString.length < HB_SYMBOL_NAME_LEN )
+         ulLen = pName->item.asString.length;
+      else
+         ulLen = HB_SYMBOL_NAME_LEN;
 
       if( ulLen )
       {
-         char * szName = ( char * ) hb_xgrab( ulLen + 1 );
          char * szArg  = pName->item.asString.value;
+         char szName[ HB_SYMBOL_NAME_LEN + 1 ];
 
          szName[ ulLen ] = '\0';
          do
@@ -862,7 +913,6 @@ static HB_DYNS_PTR hb_memvarFindSymbol( HB_ITEM_PTR pName )
          } while( ulLen );
 
          pDynSym = hb_dynsymFind( szName );
-         hb_xfree( szName );
       }
    }
    return pDynSym;
