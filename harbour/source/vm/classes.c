@@ -202,7 +202,7 @@ static PHB_DYNS s_msgClsParent = NULL;
 static PHB_ITEM hb_clsInst( USHORT uiClass );
 static void     hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod );
 static ULONG    hb_cls_MsgToNum( PHB_DYNS pMsg );
-static BOOL     hb_clsIsParent( PCLASS pClass, char * szParentName );
+static BOOL     hb_clsIsParent( USHORT uiClass, char * szParentName );
 static void     hb_clsDictRealloc( PCLASS pClass );
 static void     hb_clsRelease( PCLASS );
        void     hb_clsReleaseAll( void );
@@ -401,7 +401,7 @@ void hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod )
    char * szCallerNameMsg;
    char * szCallerNameObject;
    char * szSelfNameMsg;
-/* char * szSelfNameObject; */
+   char * szSelfNameObject;    /* debug */
    char * szSelfNameRealClass;
 
    if ( (( uiScope & HB_OO_CLSTP_PROTECTED ) ) ||
@@ -410,7 +410,7 @@ void hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod )
       )
     {
 
-    /*szSelfNameObject    = hb_objGetClsName( pObject );*/
+      szSelfNameObject    = hb_objGetClsName( pObject );  /* debug */
       szSelfNameMsg       = pMessage->pSymbol->szName  ;
       szSelfNameRealClass = hb_objGetRealClsName( pObject, pMessage->pSymbol->szName );
 
@@ -446,19 +446,19 @@ void hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod )
         pCaller = * (pBase+1 ) ;
         szCallerNameObject    = hb_objGetRealClsName( pCaller, szCallerNameMsg ) ;
 
-        /*strcpy( szName, szCallerNameObject );   */
-        /*strcat( szName, ":" );                  */
-        /*strcat( szName, szCallerNameMsg );      */
-        /*strcat( szName, ">" );                  */
-        /*strcat( szName, szSelfNameRealClass );  */
-        /*strcat( szName, ">" );                  */
-        /*strcat( szName, szSelfNameObject );     */
-        /*strcat( szName, ":" );                  */
-        /*strcat( szName, szSelfNameMsg );        */
-
-        strcpy( szName, szSelfNameRealClass );
+        strcpy( szName, szCallerNameObject );
+        strcat( szName, ":" );
+        strcat( szName, szCallerNameMsg );
+        strcat( szName, ">" );
+        strcat( szName, szSelfNameRealClass );
+        strcat( szName, ">" );
+        strcat( szName, szSelfNameObject );
         strcat( szName, ":" );
         strcat( szName, szSelfNameMsg );
+
+        /*strcpy( szName, szSelfNameRealClass ); */
+        /*strcat( szName, ":" );                 */
+        /*strcat( szName, szSelfNameMsg );       */
 
         if ( uiScope & HB_OO_CLSTP_PROTECTED )
          {
@@ -555,22 +555,28 @@ ULONG hb_cls_MsgToNum( PHB_DYNS pMsg )
    return nRetVal;
 }
 
-BOOL hb_clsIsParent( PCLASS pClass, char * szParentName )
+BOOL hb_clsIsParent(  USHORT uiClass, char * szParentName )
 {
-   USHORT uiAt, uiLimit;
+  USHORT uiAt, uiLimit;
 
-   uiLimit = ( USHORT ) ( pClass->uiHashKey * BUCKET );
-
-   if( strcmp( pClass->szName, szParentName ) == 0 )
-     return TRUE;
-
-   for( uiAt = 0; uiAt < uiLimit; uiAt++)
+  if( uiClass && uiClass <= s_uiClasses )
    {
-      if( ( pClass->pMethods[ uiAt ].uiScope & HB_OO_CLSTP_CLASS ) == HB_OO_CLSTP_CLASS )
-      {
-         if( strcmp( pClass->pMethods[ uiAt ].pMessage->pSymbol->szName, szParentName ) == 0 )
-            return TRUE;
-      }
+    PCLASS pClass = s_pClasses + ( uiClass - 1 );
+
+    uiLimit = ( USHORT ) ( pClass->uiHashKey * BUCKET );
+
+    if( strcmp( pClass->szName, szParentName ) == 0 )
+      return TRUE;
+
+    for( uiAt = 0; uiAt < uiLimit; uiAt++)
+    {
+       if( ( pClass->pMethods[ uiAt ].uiScope & HB_OO_CLSTP_CLASS ) == HB_OO_CLSTP_CLASS )
+       {
+          if( strcmp( pClass->pMethods[ uiAt ].pMessage->pSymbol->szName, szParentName ) == 0 )
+             return TRUE;
+       }
+    }
+
    }
 
    return FALSE;
@@ -797,7 +803,7 @@ PHB_FUNC hb_objGetMthd( PHB_ITEM pObject, PHB_SYMB pMessage, BOOL lAllowErrFunc 
          {
             pMethod = pClass->pMethods + uiAt;
             pFunction = pMethod->pFunction;
-            hb_clsScope( pObject, pMethod );
+            /*hb_clsScope( pObject, pMethod );*/  /* debug */
             s_pMethod = pMethod ;
 
             if( hb_bProfiler )
@@ -1947,7 +1953,7 @@ HB_FUNC( __GETMESSAGE )
 
 HB_FUNC( __CLSPARENT )
 {
-   hb_retl( hb_clsIsParent( s_pClasses + ( hb_parni( 1 ) - 1 ), hb_parc( 2 ) ) );
+   hb_retl( hb_clsIsParent( hb_parni( 1 ) , hb_parc( 2 ) ) );
 }
 
 HB_FUNC( __SENDER )
@@ -2062,7 +2068,7 @@ static HARBOUR hb___msgClsParent( void )
    for( i = 0; szParentName[ i ] != '\0'; i++ )
       szParentName[ i ] = ( char ) toupper( szParentName[ i ] );
 
-   hb_retl( hb_clsIsParent( pClass, szParentName ) );
+   hb_retl( hb_clsIsParent( uiClass , szParentName ) );
 
    if (lClass)
     hb_itemFreeC( szParentName );
@@ -2224,14 +2230,36 @@ static HARBOUR hb___msgEval( void )
  *
  * Internal function to return a superobject
  */
+//static HARBOUR hb___msgSuper( void )
+//{
+//   PHB_ITEM pObject = hb_stackSelfItem();
+//
+//   pObject->item.asArray.value->uiPrevCls  = pObject->item.asArray.value->uiClass; /* backup of actual handel */
+//   pObject->item.asArray.value->uiClass    = s_pMethod->uiSprClass;                /* superclass handel casting */
+//
+//   hb_itemReturn( pObject );
+//}
+
 static HARBOUR hb___msgSuper( void )
 {
    PHB_ITEM pObject = hb_stackSelfItem();
+   //ULONG ulLen = pObject->item.asArray.value->ulLen;
+   PHB_ITEM pCopy = hb_itemArrayNew(1);
 
-   pObject->item.asArray.value->uiPrevCls  = pObject->item.asArray.value->uiClass; /* backup of actual handel */
-   pObject->item.asArray.value->uiClass    = s_pMethod->uiSprClass;                /* superclass handel casting */
+   /* Now save the Self object as the 1st elem. */
+   hb_itemArrayPut( pCopy, 1 , pObject );
 
-   hb_itemReturn( pObject );
+   /* Or Store original object as 1st elem */
+   /* hb_itemCopy( pCopy->item.asArray.value->pItems , pObject) ; */
+
+   /* And transform it into a fake object */
+   pCopy->item.asArray.value->uiPrevCls  = pObject->item.asArray.value->uiClass; /* backup of actual handel */
+   pCopy->item.asArray.value->uiClass    = s_pMethod->uiSprClass;                /* superclass handel casting */
+
+   pCopy->item.asArray.value->puiClsTree = 0 ;
+
+
+   hb_itemRelease(hb_itemReturn( pCopy ));
 }
 
 /*

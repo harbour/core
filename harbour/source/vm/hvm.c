@@ -2956,6 +2956,7 @@ void hb_vmDo( USHORT uiParams )
 
       BOOL lPopSuper = FALSE ;
       PHB_BASEARRAY pSelfBase = NULL;
+      PHB_ITEM pRealSelf=NULL;
       USHORT uiClass;
 
       if( pSym == &( hb_symEval ) && HB_IS_BLOCK( pSelf ) )
@@ -2974,8 +2975,13 @@ void hb_vmDo( USHORT uiParams )
               */
               uiClass=pSelfBase->uiClass;
 
-              pSelfBase->uiClass = pSelfBase->uiPrevCls;
-              pSelfBase->uiPrevCls = 0 ;
+              pRealSelf = hb_itemNew( NULL ) ;
+              hb_itemCopy(pRealSelf ,pSelf->item.asArray.value->pItems) ;  // hb_arrayGetItemPtr(pSelf,1) ;
+              /* and take back the good pSelfBase */
+              pSelfBase = pRealSelf->item.asArray.value;
+              /* Now I should exchnage it with the current stacked value */
+              hb_itemSwap( pSelf, pRealSelf );
+              hb_itemRelease(pRealSelf) ; /* and release the fake one */
 
               /* Push current SuperClass handle */
               lPopSuper = TRUE ;
@@ -3125,6 +3131,7 @@ void hb_vmSend( USHORT uiParams )
 
       BOOL lPopSuper = FALSE ;
       PHB_BASEARRAY pSelfBase;
+      PHB_ITEM pRealSelf=NULL;
       USHORT uiClass;
 
       if( ! ( pSym == &( hb_symEval ) && HB_IS_BLOCK( pSelf ) ) )
@@ -3142,8 +3149,13 @@ void hb_vmSend( USHORT uiParams )
               */
               uiClass = pSelfBase->uiClass;
 
-              pSelfBase->uiClass = pSelfBase->uiPrevCls;
-              pSelfBase->uiPrevCls = 0 ;
+              pRealSelf = hb_itemNew( NULL ) ;
+              hb_itemCopy(pRealSelf ,pSelf->item.asArray.value->pItems) ;  // hb_arrayGetItemPtr(pSelf,1) ;
+              /* and take back the good pSelfBase */
+              pSelfBase = pRealSelf->item.asArray.value;
+              /* Now I should exchnage it with the current stacked value */
+              hb_itemSwap( pSelf, pRealSelf );
+              hb_itemRelease(pRealSelf) ; /* and release the fake one */
 
               /* Push current SuperClass handle */
               lPopSuper = TRUE ;
