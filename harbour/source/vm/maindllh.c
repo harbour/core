@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Harbour DLL entry point
+ * Windows Harbour DLL entry point
  *
  * Copyright 2001 Antonio Linares <alinares@fivetech.com>
  * www - http://www.harbour-project.org
