@@ -8,7 +8,34 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
-2004-02-21 07:39 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+2004-02-21 8:14 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * source/common/hbffind.c
+   * source/rtl/direct.c
+     + Completely rearranged, so that the platform specific stuff 
+       is kept in one function. Redundant code removed.
+     * Attrib filters needed to make DIRECTORY() CA-Cl*pper 
+       compatible have been moved to the low-level file-find 
+       functions.
+     + Added label support for Win32.
+     ! Fix for Win32. It has been made compatible with the 
+       C RTL _dos_findfirst pattern matching, which is what 
+       CA-Clipper is compatible with.
+     * Adding space to the stringified attribute list on 
+       HB_FA_NORMAL removed, since it's not compatible, and it 
+       doesn't get executed anyway, since HB_FA_NORMAL == 0.
+     * UNIX part formatted.
+     ; All this means that file find API is fixed now and compatible 
+       with CA-Cl*pper on the lower level. Heavily tested under 
+       Win32, and probably easy to fix for any other platforms 
+       now in case of incompatibility. Changes has be merged from 
+       an older version of the file, so please double chk your 
+       changes/platforms.
+     ; Note that other file-find API based functions will also 
+       automatically benefit from the above changes, like FILE()/
+       hb_fsFile().
+
+2004-02-21 7:39 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * source/rtl/memoread.c
      * Previous change reverted. hb_retc( NULL ) was intentional 

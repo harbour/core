@@ -87,12 +87,8 @@
  * - Clipper can sometimes drop the ReadOnly indication of directories.
  *   Harbour detects this correctly.
  *
- * TODO: - Under an MS Windows implimentation, an optional 3rd parameter to
- *         Directory to allow you to receive the compatible '8.3' filename.
- *       - check that path support vis stat works on all platforms
+ * TODO: - check that path support vis stat works on all platforms
  *       - UNC Support? ie: dir \\myserver\root
- *
- * TOFIX:- Volume label support
  *
  */
 
@@ -108,31 +104,24 @@
    #define HB_DIR_ALL_FILES_MASK        "*.*"
 #endif
 
+/* NOTE: 8.3 three support should be added in a separate way, like 
+         as a function which converts full names to 8.3 names, since 
+         this issue is very much platform specific, and this is 
+         not the only place which may need the conversion [vszakats]. */
+
 HB_FUNC( DIRECTORY )
 {
    PHB_ITEM  pDirSpec = hb_param( 1, HB_IT_STRING );
    PHB_ITEM  pAttributes = hb_param( 2, HB_IT_STRING );
    USHORT    uiMask;
 
-/*
-#if defined(__MINGW32__) || ( defined(_MSC_VER) && _MSC_VER >= 910 )
-   PHB_ITEM pEightDotThree = hb_param( 3, HB_IT_LOGICAL );
-   BOOL     bEightDotThree;
-
-   // Do we want 8.3 support?
-   bEightDotThree = ( pEightDotThree ? hb_itemGetL( pEightDotThree ) : FALSE );
-#endif
-*/
-
    PHB_ITEM  pDir = hb_itemArrayNew( 0 );
-
    PHB_FFIND ffind;
 
    /* Get the passed attributes and convert them to Harbour Flags */
 
    uiMask = HB_FA_ARCHIVE
           | HB_FA_READONLY
-          | HB_FA_NORMAL
           | HB_FA_DEVICE
           | HB_FA_TEMPORARY
           | HB_FA_SPARSE
@@ -144,11 +133,13 @@ HB_FUNC( DIRECTORY )
           | HB_FA_VOLCOMP;
 
    if( pAttributes && hb_itemGetCLen( pAttributes ) > 0 )
+   {
       if ( ( uiMask |= hb_fsAttrEncode( hb_itemGetCPtr( pAttributes ) ) ) & HB_FA_LABEL )
       {
          /* NOTE: This is Clipper Doc compatible. (not operationally) */
          uiMask = HB_FA_LABEL;
       }
+   }
 
    /* Get the file list */
 
@@ -162,25 +153,19 @@ HB_FUNC( DIRECTORY )
 
       do
       {
-         if( !( ( ( uiMask & HB_FA_HIDDEN    ) == 0 && ( ffind->attr & HB_FA_HIDDEN    ) != 0 ) ||
-                ( ( uiMask & HB_FA_SYSTEM    ) == 0 && ( ffind->attr & HB_FA_SYSTEM    ) != 0 ) ||
-                ( ( uiMask & HB_FA_LABEL     ) == 0 && ( ffind->attr & HB_FA_LABEL     ) != 0 ) ||
-                ( ( uiMask & HB_FA_DIRECTORY ) == 0 && ( ffind->attr & HB_FA_DIRECTORY ) != 0 ) ) )
-         {
-            PHB_ITEM pSubarray = hb_itemArrayNew( F_LEN );
-            char buffer[ 32 ];
+         PHB_ITEM pSubarray = hb_itemArrayNew( F_LEN );
+         char buffer[ 32 ];
 
-            hb_arraySet( pSubarray, F_NAME, hb_itemPutC( pFilename, ffind->szName ) );
-            hb_arraySet( pSubarray, F_SIZE, hb_itemPutNL( pSize, ffind->size ) );
-            hb_arraySet( pSubarray, F_DATE, hb_itemPutDL( pDate, ffind->lDate ) );
-            hb_arraySet( pSubarray, F_TIME, hb_itemPutC( pTime, ffind->szTime ) );
-            hb_arraySet( pSubarray, F_ATTR, hb_itemPutC( pAttr, hb_fsAttrDecode( ffind->attr, buffer ) ) );
+         hb_arraySet( pSubarray, F_NAME, hb_itemPutC( pFilename, ffind->szName ) );
+         hb_arraySet( pSubarray, F_SIZE, hb_itemPutNL( pSize, ffind->size ) );
+         hb_arraySet( pSubarray, F_DATE, hb_itemPutDL( pDate, ffind->lDate ) );
+         hb_arraySet( pSubarray, F_TIME, hb_itemPutC( pTime, ffind->szTime ) );
+         hb_arraySet( pSubarray, F_ATTR, hb_itemPutC( pAttr, hb_fsAttrDecode( ffind->attr, buffer ) ) );
 
-            /* Don't exit when array limit is reached */
-            hb_arrayAdd( pDir, pSubarray );
+         /* Don't exit when array limit is reached */
+         hb_arrayAdd( pDir, pSubarray );
 
-            hb_itemRelease( pSubarray );
-         }
+         hb_itemRelease( pSubarray );
       }
       while( hb_fsFindNext( ffind ) );
 

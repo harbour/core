@@ -87,14 +87,14 @@ HB_FILE_VER( "$Id$" )
    {
       struct find_t    entry;
    } HB_FFIND_INFO, * PHB_FFIND_INFO;
-
+   
    #define FA_ARCH      _A_ARCH
    #define FA_DIREC     _A_SUBDIR
    #define FA_HIDDEN    _A_HIDDEN
    #define FA_RDONLY    _A_RDONLY
    #define FA_LABEL     _A_VOLID
    #define FA_SYSTEM    _A_SYSTEM
-
+   
    #define ff_name   name
    #define ff_fsize  size
    #define ff_attrib attrib
@@ -123,12 +123,19 @@ HB_FILE_VER( "$Id$" )
 #elif defined(HB_OS_WIN_32)
 
    #include <errno.h>
+
    typedef struct
    {
       HANDLE          hFindFile;
       WIN32_FIND_DATA pFindFileData;
       DWORD           dwAttr;
    } HB_FFIND_INFO, * PHB_FFIND_INFO;
+
+   #define HB_WIN_32_MATCH() \
+      ( \
+        ( ( info->pFindFileData.dwFileAttributes & ( FILE_ATTRIBUTE_DIRECTORY | FILE_ATTRIBUTE_HIDDEN | FILE_ATTRIBUTE_SYSTEM ) ) == 0 ) || \
+        ( ( info->dwAttr & info->pFindFileData.dwFileAttributes & ( FILE_ATTRIBUTE_DIRECTORY | FILE_ATTRIBUTE_HIDDEN | FILE_ATTRIBUTE_SYSTEM ) ) != 0 ) \
+      )
 
 #elif defined(HB_OS_UNIX)
 
@@ -139,12 +146,12 @@ HB_FILE_VER( "$Id$" )
    #include <dirent.h>
    #include <time.h>
    #include <fnmatch.h>
+
    typedef struct
    {
       DIR *           dir;
       struct dirent * entry;
-      char   pattern[_POSIX_PATH_MAX +1];
-
+      char            pattern[ _POSIX_PATH_MAX + 1 ];
    } HB_FFIND_INFO, * PHB_FFIND_INFO;
 
 #else
@@ -156,7 +163,7 @@ HB_FILE_VER( "$Id$" )
 /* Internal funtion , Convert Windows Error Values to Dos Error Values */
 #ifdef HB_OS_WIN_32
 
-static int WintoDosError( unsigned long lError)
+static int WinToDosError( unsigned long lError)
 {
    int iReturn;
 
@@ -390,7 +397,6 @@ char * hb_fsAttrDecode( USHORT uiAttr, char * szAttr )
    if( uiAttr & HB_FA_LABEL      ) *ptr++ = 'V';
    if( uiAttr & HB_FA_DIRECTORY  ) *ptr++ = 'D';
    if( uiAttr & HB_FA_ARCHIVE    ) *ptr++ = 'A';
-   if( uiAttr & HB_FA_NORMAL     ) *ptr++ = ' ';
 #ifdef HB_EXTENSION
    if( uiAttr & HB_FA_ENCRYPTED  ) *ptr++ = 'E';
    if( uiAttr & HB_FA_TEMPORARY  ) *ptr++ = 'T';
@@ -408,9 +414,13 @@ char * hb_fsAttrDecode( USHORT uiAttr, char * szAttr )
    return szAttr;
 }
 
-static void hb_fsFindFill( PHB_FFIND ffind )
+/* Finds the first then the next matching file on 
+   each call. Does low-level (platform dependent 
+   filtering if needed. */
+
+static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
 {
-   PHB_FFIND_INFO info = ( PHB_FFIND_INFO ) ffind->info;
+   BOOL bFound;
 
    USHORT nYear;
    USHORT nMonth;
@@ -420,318 +430,270 @@ static void hb_fsFindFill( PHB_FFIND ffind )
    USHORT nMin;
    USHORT nSec;
 
-   ULONG  raw_attr;
+   ULONG raw_attr;
 
    /* Set the default values in case some platforms don't
       support some of these, or they may fail on them. */
 
    ffind->szName[ 0 ] = '\0';
-//   printf(" filename: %s",info->entry->d_name);
    ffind->size = 0;
 
-   /* Convert platform specific find info structure into
-      the Harbour spcific structure. */
+   /* Do platform dependant first/next search */
 
 #if defined(HB_OS_DOS)
 
    {
-      ffind->szName[0] = '\0';
-      strncat( ffind->szName, info->entry.ff_name, _POSIX_PATH_MAX );
-      ffind->size = info->entry.ff_fsize;
+      PHB_FFIND_INFO info = ( PHB_FFIND_INFO ) ffind->info;
 
-      raw_attr = info->entry.ff_attrib;
-
+      /* Handling HB_FA_LABEL doesn't need any special tricks 
+         under the DOS platform. */
+         
+      if( ffind->bFirst )
       {
-         time_t ftime;
-         struct tm * ft;
-         struct stat sStat;
-
-         stat( info->entry.ff_name, &sStat );
-
-         ftime = sStat.st_mtime;
-         ft = localtime( &ftime );
-
-         nYear  = ft->tm_year + 1900;
-         nMonth = ft->tm_mon + 1;
-         nDay   = ft->tm_mday;
-
-         nHour  = ft->tm_hour;
-         nMin   = ft->tm_min;
-         nSec   = ft->tm_sec;
-      }
-   }
-
-#elif defined(HB_OS_OS2)
-
-   {
-      struct stat sStat;
-
-      stat( info->entry.achName, &sStat );
-
-      ffind->szName[0] = '\0';
-      strncat( ffind->szName, info->entry.achName, _POSIX_PATH_MAX );
-      ffind->size = sStat.st_size;
-
-      raw_attr = info->entry.attrFile;
-
-      {
-         time_t ftime;
-         struct tm * ft;
-
-         ftime = sStat.st_mtime;
-         ft = localtime( &ftime );
-
-         nYear  = ft->tm_year + 1900;
-         nMonth = ft->tm_mon + 1;
-         nDay   = ft->tm_mday;
-
-         nHour  = ft->tm_hour;
-         nMin   = ft->tm_min;
-         nSec   = ft->tm_sec;
-      }
-   }
-
-#elif defined(HB_OS_WIN_32)
-
-   {
-      ffind->szName[0] = '\0';
-      strncat( ffind->szName, info->pFindFileData.cFileName, _POSIX_PATH_MAX );
-
-      if( info->pFindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY )
-         ffind->size = 0;
-      else
-         /* TOFIX: Use the complete value, to get around the 4GB limit, must use some
-                   larger type (double ?) in order to do this. [vszakats] */
-/*       ffind->size = ( info->pFindFileData.nFileSizeHigh * MAXDWORD ) + info->pFindFileData.nFileSizeLow; */
-         ffind->size = info->pFindFileData.nFileSizeLow;
-
-      raw_attr = ( USHORT ) info->pFindFileData.dwFileAttributes;
-
-      /* NOTE: One of these may fail when searching on an UNC path, I
-               don't know yet what's the reason. [vszakats] */
-
-      {
-         FILETIME ft;
-         SYSTEMTIME time;
-
-         if( FileTimeToLocalFileTime( &info->pFindFileData.ftLastWriteTime, &ft ) &&
-             FileTimeToSystemTime( &ft, &time ) )
-         {
-            nYear  = time.wYear;
-            nMonth = time.wMonth;
-            nDay   = time.wDay;
-
-            nHour  = time.wHour;
-            nMin   = time.wMinute;
-            nSec   = time.wSecond;
-         }
-         else
-         {
-            nYear  =
-            nMonth =
-            nDay   =
-            nHour  =
-            nMin   =
-            nSec   = 0;
-         }
-      }
-   }
-
-#elif defined(HB_OS_UNIX)
-
-   {
-      struct stat sStat;
-
-      stat( info->entry->d_name, &sStat );
-
-
-      ffind->szName[0] = '\0';
-      strncat( ffind->szName, info->entry->d_name, 256 );
-
-      ffind->size = sStat.st_size;
-
-      raw_attr = sStat.st_mode;
-
-      {
-         time_t ftime;
-         struct tm * ft;
-
-         ftime = sStat.st_mtime;
-         ft = localtime( &ftime );
-
-         nYear  = ft->tm_year + 1900;
-         nMonth = ft->tm_mon + 1;
-         nDay   = ft->tm_mday;
-
-         nHour  = ft->tm_hour;
-         nMin   = ft->tm_min;
-         nSec   = ft->tm_sec;
-      }
-   }
-
-#elif defined(HB_OS_MAC)
-
-   {
-      /* TODO */
-   }
-
-#else
-
-   {
-      HB_SYMBOL_UNUSED( info );
-
-      raw_attr = 0;
-
-      nYear  =
-      nMonth =
-      nDay   =
-      nHour  =
-      nMin   =
-      nSec   = 0;
-   }
-
-#endif
-
-   /* Do the conversions common for all platforms */
-
-   ffind->szName[ _POSIX_PATH_MAX ] = '\0';
-
-   ffind->attr = hb_fsAttrFromRaw( raw_attr );
-
-   ffind->lDate = hb_dateEncode( nYear, nMonth, nDay );
-   hb_dateStrPut( ffind->szDate, nYear, nMonth, nDay );
-   ffind->szDate[ 8 ] = '\0';
-
-   sprintf( ffind->szTime, "%02d:%02d:%02d", nHour, nMin, nSec );
-}
-
-PHB_FFIND hb_fsFindFirst( const char * pszFileName, USHORT uiAttr )
-{
-   PHB_FFIND ffind = ( PHB_FFIND ) hb_xgrab( sizeof( HB_FFIND ) );
-   BOOL bFound;
-
-   /* Make sure we have this cleared */
-
-   ffind->info = NULL;
-
-   /* Do platform dependant first search */
-
-#if defined(HB_OS_DOS)
-
-   {
-      PHB_FFIND_INFO info;
-      errno = 0;
-
-      ffind->info = ( void * ) hb_xgrab( sizeof( HB_FFIND_INFO ) );
-      info = ( PHB_FFIND_INFO ) ffind->info;
-
-      tzset();
-
+         ffind->bFirst = FALSE;
+         
+         tzset();
+         
 #if defined(__WATCOMC__)
-      bFound = ( _dos_findfirst( pszFileName, ( USHORT ) hb_fsAttrToRaw( uiAttr ), &info->entry ) == 0 );
+         bFound = ( _dos_findfirst( ffind->pszFileMask, ( USHORT ) hb_fsAttrToRaw( ffind->attrmask ), &info->entry ) == 0 );
 #else
-      bFound = ( findfirst( pszFileName, &info->entry, ( USHORT ) hb_fsAttrToRaw( uiAttr ) ) == 0 );
+         bFound = ( findfirst( ffind->pszFileMask, &info->entry, ( USHORT ) hb_fsAttrToRaw( ffind->attrmask ) ) == 0 );
 #endif
-      #if defined(__DJGPP__) || defined(__RSX32__)
-         if (errno==22)
-            errno=2;
-         if (errno==4)
-            errno=5;
-      #endif
+      }
+      else
+      {
+#if defined(__WATCOMC__)
+         bFound = ( _dos_findnext( &info->entry ) == 0 );
+#else
+         bFound = ( findnext( &info->entry ) == 0 );
+#endif
+      }
 
-      hb_fsSetError( errno );
+      /* Fill Harbour found file info */
 
+      if( bFound )
+      {
+         strncpy( ffind->szName, info->entry.ff_name, _POSIX_PATH_MAX );
+         ffind->size = info->entry.ff_fsize;
+      
+         raw_attr = info->entry.ff_attrib;
+      
+         {
+            time_t ftime;
+            struct tm * ft;
+            struct stat sStat;
+      
+            stat( info->entry.ff_name, &sStat );
+      
+            ftime = sStat.st_mtime;
+            ft = localtime( &ftime );
+      
+            nYear  = ft->tm_year + 1900;
+            nMonth = ft->tm_mon + 1;
+            nDay   = ft->tm_mday;
+      
+            nHour  = ft->tm_hour;
+            nMin   = ft->tm_min;
+            nSec   = ft->tm_sec;
+         }
+      }
+      else
+      {
+         #if defined(__DJGPP__) || defined(__RSX32__)
+            if( errno == 22 )
+               errno = 2;
+            if( errno == 4 )
+               errno = 5;
+         #endif
+         
+         hb_fsSetError( errno );
+      }
    }
 
 #elif defined(HB_OS_OS2)
 
    {
-      PHB_FFIND_INFO info;
+      PHB_FFIND_INFO info = ( PHB_FFIND_INFO ) ffind->info;
 
-      ffind->info = ( void * ) hb_xgrab( sizeof( HB_FFIND_INFO ) );
-      info = ( PHB_FFIND_INFO ) ffind->info;
+      /* TODO: HB_FA_LABEL handling */
+         
+      if( ffind->bFirst )
+      {
+         ffind->bFirst = FALSE;
+         
+         tzset();
+         
+         info->hFindFile = HDIR_CREATE;
+         info->findCount = 1;
+         
+         bFound = DosFindFirst( ffind->pszFileMask,
+                                &info->hFindFile,
+                                ( LONG ) hb_fsAttrToRaw( ffind->attrmask ),
+                                &info->entry,
+                                sizeof( info->entry ),
+                                &info->findCount,
+                                FIL_STANDARD ) == NO_ERROR && info->findCount > 0;
+      }
+      else
+         bFound = DosFindNext( info->hFindFile, 
+                               &info->entry, 
+                               sizeof( info->entry ), 
+                               &info->findCount ) == NO_ERROR && info->findCount > 0;
 
-      tzset();
+      /* Fill Harbour found file info */
 
-      info->hFindFile = HDIR_CREATE;
-      info->findCount = 1;
-
-      bFound = DosFindFirst( pszFileName,
-                             &info->hFindFile,
-                             ( LONG ) hb_fsAttrToRaw( uiAttr ),
-                             &info->entry,
-                             sizeof( info->entry ),
-                             &info->findCount,
-                             FIL_STANDARD ) == NO_ERROR && info->findCount > 0;
+      if( bFound )
+      {
+         struct stat sStat;
+      
+         stat( info->entry.achName, &sStat );
+      
+         strncpy( ffind->szName, info->entry.achName, _POSIX_PATH_MAX );
+         ffind->size = sStat.st_size;
+      
+         raw_attr = info->entry.attrFile;
+      
+         {
+            time_t ftime;
+            struct tm * ft;
+      
+            ftime = sStat.st_mtime;
+            ft = localtime( &ftime );
+      
+            nYear  = ft->tm_year + 1900;
+            nMonth = ft->tm_mon + 1;
+            nDay   = ft->tm_mday;
+      
+            nHour  = ft->tm_hour;
+            nMin   = ft->tm_min;
+            nSec   = ft->tm_sec;
+         }
+      }
    }
 
 #elif defined(HB_OS_WIN_32)
 
    {
-      PHB_FFIND_INFO info;
-      errno = 0;
+      PHB_FFIND_INFO info = ( PHB_FFIND_INFO ) ffind->info;
 
-      ffind->info = ( void * ) hb_xgrab( sizeof( HB_FFIND_INFO ) );
-      info = ( PHB_FFIND_INFO ) ffind->info;
-
-      info->hFindFile = FindFirstFile( pszFileName, &info->pFindFileData );
-      info->dwAttr    = ( DWORD ) hb_fsAttrToRaw( uiAttr );
-      errno = 0;
-
-      if( info->hFindFile != INVALID_HANDLE_VALUE )
+      bFound = FALSE;
+         
+      if( ffind->attrmask & HB_FA_LABEL )
       {
-         if( info->dwAttr == 0 ||
-           ( info->pFindFileData.dwFileAttributes == 0 ) ||
-           ( info->pFindFileData.dwFileAttributes & FILE_ATTRIBUTE_NORMAL ) ||
-           ( info->dwAttr & info->pFindFileData.dwFileAttributes ))
+         if( ffind->bFirst )
          {
-            bFound = TRUE;
+            ffind->bFirst = FALSE;
+            ffind->szName[ 0 ] = '\0';
+
+            bFound = GetVolumeInformation( ffind->pszFileMask, ffind->szName, _POSIX_PATH_MAX, NULL, NULL, NULL, NULL, 0 );
+
+            nYear = 
+            nMonth = 
+            nDay = 
+            nHour = 
+            nMin = 
+            nSec = 
+            raw_attr = 0;
          }
-         else if ( info->pFindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY  ||
-           ( info->dwAttr & info->pFindFileData.dwFileAttributes ))
+      }
+      else
+      {
+         if( ffind->bFirst )
          {
-            bFound = TRUE;
+            ffind->bFirst = FALSE;
+            
+            info->hFindFile = FindFirstFile( ffind->pszFileMask, &info->pFindFileData );
+            info->dwAttr    = ( DWORD ) hb_fsAttrToRaw( ffind->attrmask );
+            
+            if( ( info->hFindFile != INVALID_HANDLE_VALUE ) && HB_WIN_32_MATCH() )
+               bFound = TRUE;
          }
-         else
+
+         if( ! bFound )
          {
-            bFound = FALSE;
             while( FindNextFile( info->hFindFile, &info->pFindFileData ) )
             {
-               if( info->dwAttr == 0 ||
-                 ( info->pFindFileData.dwFileAttributes == 0 ) ||
-                 ( info->pFindFileData.dwFileAttributes & FILE_ATTRIBUTE_NORMAL )  ||
-                 ( info->dwAttr & info->pFindFileData.dwFileAttributes ) )
+               if( HB_WIN_32_MATCH() )
                {
                   bFound = TRUE;
                   break;
                }
             }
          }
+         
+         /* Fill Harbour found file info */
+         
+         if( bFound )
+         {
+            strncpy( ffind->szName, info->pFindFileData.cFileName, _POSIX_PATH_MAX );
+         
+            if( info->pFindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY )
+               ffind->size = 0;
+            else
+               /* TOFIX: Use the complete value, to get around the 4GB limit, must use some
+                         larger type (double ?) in order to do this. [vszakats] */
+/*             ffind->size = ( info->pFindFileData.nFileSizeHigh * MAXDWORD ) + info->pFindFileData.nFileSizeLow; */
+               ffind->size = info->pFindFileData.nFileSizeLow;
+         
+            raw_attr = ( USHORT ) info->pFindFileData.dwFileAttributes;
+         
+            /* NOTE: One of these may fail when searching on an UNC path, I
+                     don't know yet what's the reason. [vszakats] */
+         
+            {
+               FILETIME ft;
+               SYSTEMTIME time;
+         
+               if( FileTimeToLocalFileTime( &info->pFindFileData.ftLastWriteTime, &ft ) &&
+                   FileTimeToSystemTime( &ft, &time ) )
+               {
+                  nYear  = time.wYear;
+                  nMonth = time.wMonth;
+                  nDay   = time.wDay;
+                  nHour  = time.wHour;
+                  nMin   = time.wMinute;
+                  nSec   = time.wSecond;
+               }
+               else
+               {
+                  nYear  =
+                  nMonth =
+                  nDay   =
+                  nHour  =
+                  nMin   =
+                  nSec   = 0;
+               }
+            }
+         }
+         else
+         {
+            errno = WinToDosError( GetLastError() );
+            hb_fsSetError( errno );
+         }
       }
-      else {
-         bFound = FALSE;
-         errno = WintoDosError( GetLastError() );
-         hb_fsSetError( errno );
-     }
    }
 
 #elif defined(HB_OS_UNIX)
 
    {
-      PHB_FFIND_INFO info;
-      char     string[ _POSIX_PATH_MAX + 1 ];
+      PHB_FFIND_INFO info = ( PHB_FFIND_INFO ) ffind->info;
 
-      char     dirname[ _POSIX_PATH_MAX + 1 ];
+      char string[ _POSIX_PATH_MAX + 1 ];
 
+      bFound = FALSE;
 
-      char *   pos;
-      ffind->info = ( void * ) hb_xgrab( sizeof( HB_FFIND_INFO ) );
-      info = ( PHB_FFIND_INFO ) ffind->info;
-      bFound =0;
-      dirname[ 0 ] = '\0';
-      info->pattern[ 0 ] = '\0';
-      if( pszFileName )
+      /* TODO: HB_FA_LABEL handling */
+
+      if( ffind->bFirst )
       {
+         char dirname[ _POSIX_PATH_MAX + 1 ];
+         char * pos;
+
+         ffind->bFirst = FALSE;
+         
+         dirname[ 0 ] = '\0';
+         info->pattern[ 0 ] = '\0';
+         
          strcpy( string, pszFileName );
          pos = strrchr( string, OS_PATH_DELIMITER );
          if( pos )
@@ -745,169 +707,146 @@ PHB_FFIND hb_fsFindFirst( const char * pszFileName, USHORT uiAttr )
             strcpy( info->pattern, string );
             strcpy( dirname, ".X" );
             dirname[ 1 ] = OS_PATH_DELIMITER;
-            dirname[ 2 ] = '\0';
          }
+         
+         if( info->pattern[ 0 ] == '\0' )
+            strcpy( info->pattern, "*.*" );
+         
+         tzset();
+         
+         info->dir = opendir( dirname );
       }
-      if( !*info->pattern )
-         strcpy( info->pattern, "*.*" );
-
-      tzset();
-
-      info->dir = opendir( dirname );
 
       if( info->dir != NULL)
+      {
          while( ( info->entry = readdir( info->dir ) ) != NULL )
          {
             strcpy( string, info->entry->d_name );
-            if( fnmatch( info->pattern,string,FNM_PERIOD|FNM_PATHNAME)==0)
+      
+            if( fnmatch( info->pattern, string, FNM_PERIOD | FNM_PATHNAME ) == 0 )
             {
-               bFound=TRUE;
+               bFound = TRUE;
                break;
             }
-
          }
-      else
-         bFound = FALSE;
-   }
+      }
 
-#elif defined(HB_OS_MAC)
+      /* Fill Harbour found file info */
 
-   {
-      /* TODO */
-
-      bFound = FALSE;
+      if( bFound )
+      {
+         struct stat sStat;
+      
+         stat( info->entry->d_name, &sStat );
+      
+         strncpy( ffind->szName, info->entry->d_name, _POSIX_PATH_MAX );
+         ffind->size = sStat.st_size;
+      
+         raw_attr = sStat.st_mode;
+      
+         {
+            time_t ftime;
+            struct tm * ft;
+      
+            ftime = sStat.st_mtime;
+            ft = localtime( &ftime );
+      
+            nYear  = ft->tm_year + 1900;
+            nMonth = ft->tm_mon + 1;
+            nDay   = ft->tm_mday;
+      
+            nHour  = ft->tm_hour;
+            nMin   = ft->tm_min;
+            nSec   = ft->tm_sec;
+         }
+      }
    }
 
 #else
 
    {
-      HB_SYMBOL_UNUSED( pszFileName );
-      HB_SYMBOL_UNUSED( uiAttr );
+      HB_SYMBOL_UNUSED( ffind );
+      HB_SYMBOL_UNUSED( info );
+
+      HB_SYMBOL_UNUSED( nYear );
+      HB_SYMBOL_UNUSED( nMonth );
+      HB_SYMBOL_UNUSED( nDay );
+      HB_SYMBOL_UNUSED( nHour );
+      HB_SYMBOL_UNUSED( nMin );
+      HB_SYMBOL_UNUSED( nSec );
+      HB_SYMBOL_UNUSED( raw_attr );
 
       bFound = FALSE;
    }
 
 #endif
 
-   /* Return file info or close the search automatically */
+   /* Fill common Harbour found file info */
 
    if( bFound )
-      hb_fsFindFill( ffind );
-   else
    {
-      hb_fsFindClose( ffind );
-      ffind = NULL;
+      /* Do the conversions common for all platforms */
+      
+      ffind->szName[ _POSIX_PATH_MAX ] = '\0';
+      
+      ffind->attr = hb_fsAttrFromRaw( raw_attr );
+      
+      ffind->lDate = hb_dateEncode( nYear, nMonth, nDay );
+      hb_dateStrPut( ffind->szDate, nYear, nMonth, nDay );
+      ffind->szDate[ 8 ] = '\0';
+      
+      sprintf( ffind->szTime, "%02d:%02d:%02d", nHour, nMin, nSec );
    }
 
-   return ffind;
+   return bFound;
 }
+
+PHB_FFIND hb_fsFindFirst( const char * pszFileMask, USHORT attrmask )
+{
+   PHB_FFIND ffind = ( PHB_FFIND ) hb_xgrab( sizeof( HB_FFIND ) );
+   PHB_FFIND_INFO info;
+
+   /* Allocate platform dependent file find info storage */
+
+   ffind->info = ( void * ) hb_xgrab( sizeof( HB_FFIND_INFO ) );
+
+   /* Store search parameters */
+
+   ffind->pszFileMask = pszFileMask;
+   ffind->attrmask = attrmask;
+   ffind->bFirst = TRUE;
+
+   /* Find first/next matching file */
+
+   if( hb_fsFindNext( ffind ) )
+      return ffind;
+
+   /* If no file found at all, free stuff allocated so far and return NULL. */
+
+   hb_fsFindClose( ffind );
+
+   return NULL;
+}
+
+/* Finds next matching file, and applies a filter which makes 
+   searching CA-Cl*pper/MS-DOS compatible. */
 
 BOOL hb_fsFindNext( PHB_FFIND ffind )
 {
-   PHB_FFIND_INFO info = ( PHB_FFIND_INFO ) ffind->info;
-   BOOL bFound;
-
-   /* Do platform dependant search */
-
-#if defined(HB_OS_DOS)
-
+   while( hb_fsFindNextLow( ffind ) )
    {
-      errno = 0;
-#if defined(__WATCOMC__)
-      bFound = ( _dos_findnext( &info->entry ) == 0 );
-#else
-      bFound = ( findnext( &info->entry ) == 0 );
-#endif
-      #if defined(__DJGPP__) || defined(__RSX32__)
-         if (errno==22)
-            errno=2;
-         if (errno==4)
-            errno=5;
-      #endif
-      hb_fsSetError( errno );
+      /* Filter the result to stay MS-DOS and CA-Cl*pper compatible. */
 
-   }
-
-#elif defined(HB_OS_OS2)
-
-   {
-      bFound = DosFindNext( info->hFindFile, &info->entry, sizeof( info->entry ), &info->findCount ) == NO_ERROR &&
-                            info->findCount > 0;
-   }
-
-#elif defined(HB_OS_WIN_32)
-
-   {
-      bFound = FALSE;
-      errno = 0;
-      while( FindNextFile( info->hFindFile, &info->pFindFileData ) )
+      if( !( ( ( ffind->attrmask & HB_FA_HIDDEN    ) == 0 && ( ffind->attr & HB_FA_HIDDEN    ) != 0 ) ||
+             ( ( ffind->attrmask & HB_FA_SYSTEM    ) == 0 && ( ffind->attr & HB_FA_SYSTEM    ) != 0 ) ||
+             ( ( ffind->attrmask & HB_FA_LABEL     ) == 0 && ( ffind->attr & HB_FA_LABEL     ) != 0 ) ||
+             ( ( ffind->attrmask & HB_FA_DIRECTORY ) == 0 && ( ffind->attr & HB_FA_DIRECTORY ) != 0 ) ) )
       {
-         if( info->dwAttr == 0 ||
-             ( info->pFindFileData.dwFileAttributes == 0 ) ||
-             ( info->pFindFileData.dwFileAttributes & FILE_ATTRIBUTE_NORMAL ) ||
-             ( info->pFindFileData.dwFileAttributes & FILE_ATTRIBUTE_HIDDEN ) ||
-             ( info->pFindFileData.dwFileAttributes & FILE_ATTRIBUTE_SYSTEM ) ||
-             ( info->pFindFileData.dwFileAttributes == FILE_ATTRIBUTE_DIRECTORY ) ||
-             ( info->dwAttr & info->pFindFileData.dwFileAttributes ))
-         {
-            bFound = TRUE;
-            break;
-         }
-         else {
-            errno = WintoDosError(GetLastError()) ;
-            hb_fsSetError( errno );
-            break;
-         }
-
+         return TRUE;
       }
    }
 
-#elif defined(HB_OS_UNIX)
-
-   {
-      char     string[ _POSIX_PATH_MAX + 1 ];
-
-      bFound=FALSE;
-
-      while( ( info->entry = readdir( info->dir ) ) != NULL )
-      {
-
-         strcpy( string, info->entry->d_name );
-            if( fnmatch( info->pattern,string,FNM_PERIOD|FNM_PATHNAME)==0)
-            {
-               bFound=TRUE;
-               break;
-            }
-
-
-      }
-
-   }
-
-#elif defined(HB_OS_MAC)
-
-   {
-      /* TODO */
-
-      bFound = FALSE;
-   }
-
-#else
-
-   {
-      HB_SYMBOL_UNUSED( info );
-
-      bFound = FALSE;
-   }
-
-#endif
-
-   /* Return file info */
-
-   if( bFound )
-      hb_fsFindFill( ffind );
-
-   return bFound;
+   return FALSE;
 }
 
 void hb_fsFindClose( PHB_FFIND ffind )
@@ -952,12 +891,6 @@ void hb_fsFindClose( PHB_FFIND ffind )
 
          {
             closedir( info->dir );
-         }
-
-#elif defined(HB_OS_MAC)
-
-         {
-            /* TODO */
          }
 
 #else
