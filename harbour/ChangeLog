@@ -8,6 +8,14 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-05-06 18:00 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+   + CVSROOT/avail
+   * CVSROOT/checkoutlist
+   * CVSROOT/commitinfo
+   * CVSROOT/loginfo
+      + access to CVSROOT files is now available for 
+      project admins only
+
 2004-05-06 15:40 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * include/hbexpra.c
    * source/common/expropt2.c

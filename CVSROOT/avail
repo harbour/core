@@ -1,0 +1,4 @@
+unavail
+avail||bin,codepage,config,contrib,doc,include,lib,libs,obj,samples,source,tests,utils
+avail||COPYING,ChangeLog,ChangeLog.001,ChangeLog.002,ChangeLog.003,ChangeLog.004,ChangeLog.005,ChangeLog.006,ChangeLog.007,ChangeLog.008,ChangeLog.009,ChangeLog.010,ChangeLog.011,ChangeLog.012,ChangeLog.013,ChangeLog.014,ERRATA,Makefile,TODO,cvsplay.txt,cvsplay2.txt,harbour.spec,hbchk.tgz,hbgtmk.sh,hrbdll.bc,hrbdll.vc,make_b16.bat,make_b32.bat,make_gnu.bat,make_gnu.cmd,make_gnu.sh,make_rpm.sh,make_tgz.sh,make_vc.bat,makefile.bc,makefile.nt,makefile.vc,mkbcdll.bat
+avail|alkresin,dholm,philb,rglab
