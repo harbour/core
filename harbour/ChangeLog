@@ -2,7 +2,7 @@
   * doc/license.txt
     + Added a text file containing the license text.
   * doc/hdr_tpl.txt
-    ! Typo fixed (v1.8)
+    ! Typo fixed (now v1.8)
 
 19990915-14:04 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/dir.c
