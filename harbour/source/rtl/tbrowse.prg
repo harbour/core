@@ -603,6 +603,13 @@ METHOD Hilite() CLASS TBrowse
 
       SetPos( nRow, nCol )
       ::DispCell(::ColPos, 2)
+   /*QUESTION : Is this the correct fix when autolite is .f. */
+   else
+      nRow := ::nTop + ::RowPos - iif( ::lHeaders, 0, 1 ) + iif( Empty( ::HeadSep ), 0, 1 )
+      nCol := ::aColumns[ ::ColPos ]:ColPos
+
+      SetPos( nRow, nCol )
+      ::DispCell(::ColPos, 3)
 
    endif
 

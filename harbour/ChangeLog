@@ -1,3 +1,8 @@
+2001-08-11 22:45 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
+  * include/hbextern.ch
+    * removed extern declaration for ALTD() function
+  * source/rtl/tbrowse.prg
+    * Added support for Autolite = .f. (I hope this is the right fix)     
 2001-08-11 08:40 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
   *tests/testbrw.prg
     * updated to show the use of pictures with tbrowse
