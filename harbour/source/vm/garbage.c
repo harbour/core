@@ -257,8 +257,21 @@ void hb_gcItemRef( HB_ITEM_PTR pItem )
    {
       HB_GARBAGE_PTR pAlloc = ( HB_GARBAGE_PTR ) pItem->item.asBlock.value;
       --pAlloc;
+      
       if( pAlloc->used == s_uUsedFlag )
+      {
+         HB_CODEBLOCK_PTR pCBlock = pItem->item.asBlock.value;
+         USHORT ui = 1;
+         
          pAlloc->used ^= HB_GC_USED_FLAG;  /* mark this codeblock as used */
+
+         /* mark as used all detached variables in a codeblock */
+         while( ui <= pCBlock->uiLocals )
+         {
+            hb_gcItemRef( &pCBlock->pLocals[ ui ] );
+            ++ui;
+         }
+      }
    }
    /* all other data types don't need the GC */
 }

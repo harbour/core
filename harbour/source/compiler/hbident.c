@@ -38,9 +38,9 @@
 #include "hbhash.h"
 #include "hbcomp.h"
 
-static HB_HASH_TABLE_PTR s_comp_Identifiers;    /* table of identifiers for reuse */
+#define HB_IDENT_TABLE_SIZE    523UL
 
-#define HB_IDENT_TABLE_SIZE    373UL
+static HB_HASH_TABLE_PTR s_comp_Identifiers;    /* table of identifiers for reuse */
 
 /* create a new identifier or return the existing one 
 */
@@ -55,7 +55,7 @@ char * hb_compIdentifierNew( char * szName, BOOL bCopy )
          szIdent = hb_strdup( szName );
       else
          szIdent = szName;
-         
+
       hb_hashTableAdd( s_comp_Identifiers, (void *)szIdent );
    }
 

@@ -351,15 +351,15 @@ void hb_vmQuit( void )
    hb_conRelease();             /* releases Console */
    hb_setRelease();             /* releases Sets */
 
-   /* release all known garbage */
-   hb_gcCollectAll();
-
    /* release all remaining items */
    while( hb_stack.pPos > hb_stack.pItems )
       hb_stackPop();
    hb_itemClear( &hb_stack.Return );
    hb_arrayRelease( &s_aStatics );
    hb_memvarsRelease();
+
+   /* release all known garbage */
+   hb_gcCollectAll();
    
    hb_stackFree();
 /* hb_dynsymLog(); */
@@ -4385,6 +4385,6 @@ void hb_vmIsStaticRef( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_vmIsStaticRef()"));
 
    /* statics are stored as an item of array type */
-   hb_gcItemRef( &s_aStatics );
+   hb_gcItemRef( &s_aStatics ); 
 }
 

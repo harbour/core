@@ -1,3 +1,19 @@
+2000-07-16 17:40 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+    *include/hbhash.h
+    *source/common/hash.c
+        * added ulCount and ulUsed members of HB_HASH_TABLE structure
+        * added hb_hashTableResize() function
+        
+    *source/compiler/hbident.c
+        *increased the hash table 
+        
+    *source/vm/garbage.c
+    *source/vm/hvm.c
+        * all detached variables are scanned now correctly
+        * on exit the GC is called after cleaning all other internal
+        data structures
+
 2000-07-16 13:38 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
    * source/rtl/binnum.c
