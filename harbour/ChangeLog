@@ -1,3 +1,9 @@
+20000516-03:55 GMT+4 April White <awhite@user.rose.com>
+
+  * source\rtl\makefile
+    - setkey.prg from PRG_SOURCES section (a conflict prevented the prev update)
+    + setkey.c to C_SOURCES section
+
 20000515-19:45 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
   * source/compiler/harbour.l
