@@ -72,7 +72,9 @@ CLASS TDbMenu  /* debugger menu */
    METHOD GoTop()
    METHOD GoUp() INLINE ::aItems[ ::nOpenPopup ]:bAction:GoLeft()
    METHOD IsOpen() INLINE ::nOpenPopup != 0
+   METHOD LoadColors()  // Load current debugger colors settings
    METHOD ProcessKey( nKey )
+   METHOD Refresh() // Repaints the top bar
    METHOD ShowPopup( nPopup )
 
 ENDCLASS
@@ -93,10 +95,7 @@ METHOD New() CLASS TDbMenu
    ::nBottom      := 0
    ::nRight       := 0
    ::aItems       := {}
-   ::cClrPopup    := __DbgColors()[  8 ]
-   ::cClrHotKey   := __DbgColors()[  9 ]
-   ::cClrHilite   := __DbgColors()[ 10 ]
-   ::cClrHotFocus := __DbgColors()[ 11 ]
+   ::LoadColors()
    ::nOpenPopup   := 0
 
    AAdd( ::aMenus, Self )
@@ -320,6 +319,43 @@ METHOD GoTop() CLASS TDbMenu
 
 return nil
 
+METHOD LoadColors() CLASS TDbMenu
+
+   local aColors := __DbgColors()
+   local n
+
+   ::cClrPopup    := aColors[  8 ]
+   ::cClrHotKey   := aColors[  9 ]
+   ::cClrHilite   := aColors[ 10 ]
+   ::cClrHotFocus := aColors[ 11 ]
+
+   for n = 1 to Len( ::aItems )
+      if ValType( ::aItems[ n ]:bAction ) == "O"
+         ::aItems[ n ]:bAction:LoadColors()
+      endif
+   next
+
+return nil
+
+METHOD Refresh() CLASS TDbMenu
+
+   local n
+
+   DispBegin()
+
+   if ! ::lPopup
+      DispOutAt( 0, 0, Space( MaxCol() + 1 ), ::cClrPopup )
+      SetPos( 0, 0 )
+   endif
+
+   for n = 1 to Len( ::aItems )
+      ::aItems[ n ]:Display( ::cClrPopup, ::cClrHotKey )
+   next
+
+   DispEnd()
+
+return nil
+
 METHOD ShowPopup( nPopup ) CLASS TDbMenu
 
    ::aItems[ nPopup ]:Display( ::cClrHilite, ::cClrHotFocus )
@@ -415,4 +451,3 @@ function __dbgAltToKey( nKey )
                             K_ALT_Y, K_ALT_Z }, nKey )
 
 return iif( nIndex > 0, SubStr( "ABCDEFGHIJKLMNOPQRSTUVWXYZ", nIndex, 1 ), "" )
-
