@@ -1,3 +1,7 @@
+20000401-02:00 EST Paul Tucker <ptucker@sympatico.ca>
+   * include/hbvmpub.h
+     * turns out msc8 doesn't know pack(push)
+
 20000401-06:09 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    - source/rtl/environ.c

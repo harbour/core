@@ -48,7 +48,7 @@ struct _HB_DYNS;
 	OS/2 GCC valid values for pragma pack are 1, 2, 4 with 4 being default
 */
 #if defined(_MSC_VER) && _MSC_VER < 1000
-   #pragma pack(push, 8)
+   #pragma pack(8)
 #endif
 
 /* symbol support structure */
@@ -60,7 +60,7 @@ typedef struct
    struct _HB_DYNS * pDynSym; /* pointer to its dynamic symbol if defined */
 } HB_SYMB, * PHB_SYMB;
 #if defined(_MSC_VER) && _MSC_VER < 1000
-   #pragma pack(pop)
+   #pragma pack()
 #endif
 
 /* dynamic symbol structure */
