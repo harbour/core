@@ -1,0 +1,10 @@
+#ifndef __FM_API
+#define __FM_API
+
+#include <extend.h>
+
+#define _xgrab    hb_xgrab
+#define _xrealloc hb_xrealloc
+#define _xfree    hb_xfree
+
+#endif

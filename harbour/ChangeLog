@@ -1,3 +1,11 @@
+19990617-02:15 EDT David G. Holm <dholm@jsd-llc.com>
+  * include/extend.api
+    - Moved fixed memory functions to fm.api
+  + include/fm.api
+    - Fixed memory API functions (converts _x... to hb_x...)
+  + include/item.api
+    - Item API functions (converts _item... to hb_item..., etc.)
+
 19990617-02:00 EDT David G. Holm <dholm@jsd-llc.com>
   All Extend API and GT API functions have been convert from _ to hb_
   * include/compiler.h

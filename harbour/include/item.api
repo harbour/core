@@ -1,0 +1,42 @@
+#ifndef __ITEM_API
+#define __ITEM_API
+
+#include <extend.h>
+
+#define _arrayNew    ArrayNew
+#define _arrayLen    ArrayLen
+#define _arrayGet    ArrayGet
+#define _arrayPut    ArraySet
+#define _arrayResize ArraySize
+#define _arrayGetC   ArrayGetString
+#define _arrayGetCL  ArrayGetStringLen
+
+#define _evalLaunch   hb_evalLaunch
+#define _evalNew      hb_evalNew
+#define _evalPutParam hb_evalPutParam
+#define _evalRelease  hb_evalRelease
+
+#define _itemArrayGet   hb_itemArrayGet
+#define _itemArrayNew   hb_itemArrayNew
+#define _itemArrayPut   hb_itemArrayPut
+#define _itemCopyC      hb_itemCopyC
+#define _itemFreeC      hb_itemFreeC
+#define _itemGetC       hb_itemGetC
+#define _itemGetDS      hb_itemGetDS
+#define _itemGetL       hb_itemGetL
+#define _itemGetND      hb_itemGetND
+#define _itemGetNL      hb_itemGetNL
+#define _itemNew        hb_itemNew
+#define _itemParam      hb_itemParam
+#define _itemPutC       hb_itemPutC
+#define _itemPutCL      hb_itemPutCL
+#define _itemPutDS      hb_itemPutDS
+#define _itemPutL       hb_itemPutL
+#define _itemPutND      hb_itemPutND
+#define _itemPutNL      hb_itemPutNL
+#define _itemRelease    hb_itemRelease
+#define _itemReturn     hb_itemReturn
+#define _itemSize       hb_itemSize
+#define _itemType       hb_itemType
+
+#endif

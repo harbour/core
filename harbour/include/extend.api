@@ -31,8 +31,4 @@
 #define _storni   hb_storni
 #define _stornl   hb_stornl
 
-#define _xgrab    hb_xgrab
-#define _xrealloc hb_xrealloc
-#define _xfree    hb_xfree
-
 #endif
