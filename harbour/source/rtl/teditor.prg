@@ -1019,10 +1019,6 @@ METHOD Edit(nPassedKey) CLASS HBEditor
                ::lSaved := .T.
                ::lExitEdit := .T.
 
-            case nKey == K_ESC
-               ::lSaved := .F.
-               ::lExitEdit := .T.
-
             otherwise
                /* NOTE: if you call ::Edit() with a key that is passed to ::KeyboardHook() and then
                         ::KeyboardHook() calls ::Edit() with the same key you end up with an endless loop */
@@ -1038,8 +1034,12 @@ return Self
 // to handle particular keys.
 METHOD KeyboardHook(nKey)  CLASS HBEditor
 
-return Self
+   if nKey == K_ESC
+      ::lSaved := .F.
+      ::lExitEdit := .T.
+   endif
 
+return Self
 
 // There are no more keys to handle. Can I do something for you?
 METHOD IdleHook()  CLASS HBEditor
