@@ -4,45 +4,34 @@
 
 ROOT = ../
 
-ifeq ($(HB_ARCHITECTURE),w32)
-
-ifeq ($(HB_COMPILER),msvc)
-
 DIRS=\
+	btree \
 	htmllib \
 	libct \
 	libgt \
 	libmisc \
-	rdd_ads \
-	odbc \
+	libnf \
 	samples \
+
+
+ifeq ($(HB_ARCHITECTURE),w32)
+
+DIRS +=\
+	rdd_ads \
+
+ifeq ($(HB_COMPILER),msvc)
+
+DIRS +=\
+	odbc \
 
 else
 ifeq ($(HB_COMPILER),rsxnt)
 
-DIRS=\
-	btree \
-	htmllib \
-	libct \
-	libgt \
-	libmisc \
-	libnf \
-	rdd_ads \
-	samples \
-
 else
 
-DIRS=\
-	btree \
-	htmllib \
-	libct \
-	libgt \
-	libmisc \
-	libnf \
-	rdd_ads \
+DIRS +=\
 	ole \
 	odbc \
-	samples \
 
 endif
 endif
@@ -50,70 +39,21 @@ endif
 else
 ifeq ($(HB_COMPILER),icc)
 
-DIRS=\
+DIRS +=\
 	hgf/os2pm \
-	htmllib \
-	libct \
-	libgt \
-	libmisc \
-	libnf \
-	samples \
 
 else
 ifeq ($(HB_ARCHITECTURE),os2)
 
-DIRS=\
-	btree \
+DIRS +=\
 	hgf/os2pm \
-	htmllib \
-	libct \
-	libgt \
-	libmisc \
-	libnf \
-	samples \
 
 else
-ifeq ($(HB_ARCHITECTURE),bsd)
+ifeq ($(HB_ARCHITECTURE),linux)
 
-DIRS=\
-	htmllib \
-	libct \
-	libgt \
-	libmisc \
-	samples \
- 
-else
-ifeq ($(HB_ARCHITECTURE),darwin)
-
-DIRS=\
-	htmllib \
-	libct \
-	libgt \
-	libmisc \
-	samples \
- 
-else
-ifeq ($(HB_ARCHITECTURE),dos)
-
-DIRS=\
-	htmllib \
-	libct \
-	libgt \
-	libmisc \
-	samples \
- 
-else
-
-DIRS=\
-	htmllib \
-	libct \
-	libgt \
-	libmisc \
+DIRS +=\
 	rdd_ads \
-	samples \
- 
-endif
-endif
+
 endif
 endif
 endif

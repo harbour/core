@@ -8,6 +8,29 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-12-12 22:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/make_gnu.sh
+    + added platform autodetection if HB_ARCHITECTURE not set
+      and choosing the preferred compiler if HB_COMPILER not set
+    + added new platforms (Darwin, SunOS, BSD, HPUX) for info
+      descriptions - I do not want to decide if this should be
+      also added for make_gnu.bat, make_gnu.cmd because these
+      files cannot be used for this platforms.
+      Now make_bsd.sh and make_drw.sh are redundant - we should
+      decide if they should be kept in CVS or removed
+
+  * harbour/make_tgz.sh
+    + added platform autodetection if HB_ARCHITECTURE not set
+      and choosing the preferred compiler if HB_COMPILER not set
+
+  * harbour/contrib/Makefile
+    * changed the list of compiled contrib libs - now there is a
+      list of some default libs which can be compiled for all
+      platforms and only the chosen ones are added for some
+      platforms - it will be easier to manage because the number
+      of supported platforms is growing up.
+      Please check if it will work for other platforms/compilers.
+
 2004-12-12 02:55 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   + harbour/config/hpux/dir.cf
   + harbour/config/hpux/gcc.cf
