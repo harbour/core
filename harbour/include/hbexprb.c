@@ -218,9 +218,6 @@ HB_EXPR_FUNC_PTR hb_comp_ExprTable[] = {
    hb_compExprUsePreDec     /* highest precedence */
 };
 
-extern BOOL hb_exp_bArgList;
-extern HB_EXPR_PTR hb_exp_pSelf;
-
 /* ************************************************************************* */
 
 static HB_EXPR_FUNC( hb_compExprUseDummy )
@@ -1005,10 +1002,10 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
                HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROSYMBOL );
             else if( pSelf->value.asMacro.SubType != HB_ET_MACRO_ALIASED )
             {
-               if( hb_exp_bArgList )
+               if( pSelf->value.asMacro.SubType & HB_ET_MACRO_ARGLIST )
                {
                   HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPUSHARG );
-                  HB_EXPR_USE( hb_exp_pSelf->value.asFunCall.pFunName, HB_EA_PUSH_PCODE );
+                  HB_EXPR_USE( pSelf->value.asMacro.pFunCall->value.asFunCall.pFunName, HB_EA_PUSH_PCODE );
                }
                else
                {
@@ -1113,10 +1110,18 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                   --usCount;
                if( usCount )
                {
-                  hb_exp_bArgList = TRUE;
-                  hb_exp_pSelf = pSelf;
+                  /* check if &macro is used as a function call argument */
+                  HB_EXPR_PTR pExpr = pSelf->value.asFunCall.pParms->value.asList.pExprList;
+                  while( pExpr )
+                  {
+                      if( pExpr->ExprType == HB_ET_MACRO )
+                      {
+                          pExpr->value.asMacro.SubType |= HB_ET_MACRO_ARGLIST;
+                          pExpr->value.asMacro.pFunCall = pSelf;
+                      }
+                      pExpr = pExpr->pNext;
+                  }
                   HB_EXPR_USE( pSelf->value.asFunCall.pParms, HB_EA_PUSH_PCODE );
-                  hb_exp_bArgList = FALSE;
                }
             }
             else
@@ -1147,10 +1152,19 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                   --usCount;
                if( usCount )
                {
-                  hb_exp_bArgList = TRUE;
-                  hb_exp_pSelf = pSelf;
+                  HB_EXPR_PTR pExpr = pSelf->value.asFunCall.pParms->value.asList.pExprList;
+                  /* check if &macro is used as a function call argument */
+                  while( pExpr )
+                  {
+                      if( pExpr->ExprType == HB_ET_MACRO )
+                      {
+                          /* &macro was passed - handle it differently then in a normal statement */
+                          pExpr->value.asMacro.SubType |= HB_ET_MACRO_ARGLIST;
+                          pExpr->value.asMacro.pFunCall = pSelf;
+                      }
+                      pExpr = pExpr->pNext;
+                  }
                   HB_EXPR_USE( pSelf->value.asFunCall.pParms, HB_EA_PUSH_PCODE );
-                  hb_exp_bArgList = FALSE;
                }
             }
             else
@@ -1724,17 +1738,11 @@ static HB_EXPR_FUNC( hb_compExprUseAssign )
             {
                /* it assigns a value and leaves it on the stack */
 
-               /* Temporarily disable HB_P_MACROPUSHARG support. */
-               BOOL bArg = hb_exp_bArgList; hb_exp_bArgList = FALSE;
-
                HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
                /* QUESTION: Can  we replace DUPLICATE+POP with a single PUT opcode
                */
                HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_DUPLICATE );
                HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_POP_PCODE );
-
-               /* Restore HB_P_MACROPUSHARG support. */
-               hb_exp_bArgList = bArg;
             }
          }
          break;

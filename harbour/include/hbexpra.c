@@ -129,9 +129,6 @@ static BYTE s_PrecedTable[] = {
    HB_ET_NIL                  /*   HB_EO_PREDEC,      pre-operators */
 };
 
-BOOL hb_exp_bArgList = FALSE;
-HB_EXPR_PTR hb_exp_pSelf;
-
 static HB_CBVAR_PTR hb_compExprCBVarNew( char *, BYTE );
 
 /* ************************************************************************ */

@@ -99,6 +99,7 @@ typedef enum
 #define  HB_ET_MACRO_SYMBOL   1   /* &fimcall() */
 #define  HB_ET_MACRO_ALIASED  2   /* &alias->&variable */
 #define  HB_ET_MACRO_EXPR     4   /* &( expr ) */
+#define  HB_ET_MACRO_ARGLIST  8   /* &variable used as a function call argument */
 
 /* types of expressions
  * NOTE: the order of these definition is important - change it carefully
@@ -193,6 +194,7 @@ typedef struct HB_EXPR_
          unsigned char SubType;        /* context in which macro is used */
          char * szMacro;               /* identifier after the macro operator */
          struct HB_EXPR_ *pExprList;   /* list elements if &(...) was used */
+         struct HB_EXPR_ *pFunCall;    /* pointer to a function if used as function's call argument */
       } asMacro;
       struct
       {

@@ -60,13 +60,13 @@
    #include <slang.h>
 #endif
 
-/* missing defines in previous versions of Slang - this can not work ! */
-#if SLANG_VERSION < 10400
    typedef unsigned short SLsmg_Char_Type;
    #define SLSMG_EXTRACT_CHAR( x ) ( ( x ) & 0xFF )
    #define SLSMG_EXTRACT_COLOR( x ) ( ( ( x ) >> 8 ) & 0xFF )
    #define SLSMG_BUILD_CHAR( ch, color ) ( ( ( SLsmg_Char_Type ) ( unsigned char )( ch ) ) | ( ( color ) << 8 ) )
 
+/* missing defines in previous versions of Slang - this can not work ! */
+#if SLANG_VERSION < 10308
    #define SLSMG_DIAMOND_CHAR	0x04
    #define SLSMG_DEGREE_CHAR	0xF8
    #define SLSMG_PLMINUS_CHAR	0xF1

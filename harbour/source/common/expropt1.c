@@ -429,6 +429,13 @@ HB_EXPR_PTR hb_compExprNewAliasExpr( HB_EXPR_PTR pAlias, HB_EXPR_PTR pExpList )
    pExpr->value.asAlias.pAlias    = pAlias;
    pExpr->value.asAlias.pExpList  = pExpList;
    pExpr->value.asAlias.pVar      = NULL;
+   
+   if( pAlias->ExprType == HB_ET_MACRO )
+   {
+       /* Is it a special case &variable->( expressionList ) */
+       if( pAlias->value.asMacro.SubType == HB_ET_MACRO_VAR )
+           pAlias->value.asMacro.SubType = HB_ET_MACRO_ALIASED;
+   }
 
    return pExpr;
 }

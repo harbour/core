@@ -199,9 +199,10 @@ function __GUICOLOR( cPair, nPos )
       ccolor := SubStr(ccolor, 1, nCommaPos - 1)
    endif
    return ccolor
-function _CHECKBOX_( Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7)
 
-   local Local1, Local2, Local3, Local4
+function _CHECKBOX_( Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7)
+LOCAL oCheck
+
    oCheck := checkbox(Row(), Col(), Arg2)
    if ( !( ISNIL( oCheck ) ) )
       oCheck:select(Arg1)
