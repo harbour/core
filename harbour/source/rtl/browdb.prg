@@ -33,10 +33,59 @@
  *
  */
 
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 1999 Chen Kedem <niki@actcom.co.il>
+ *    Documentation
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
+
 #include "hbsetup.ch"
 
 /* NOTE: XBase++ has a standard function named dbSkipper(), it's not a
          standard CA-Cl*pper 5.x function, though. */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      TBrowseDB()
+ *  $CATEGORY$
+ *      TBrowse class
+ *  $ONELINER$
+ *      Create a new TBrowse object to be used with database file
+ *  $SYNTAX$
+ *      TBrowseDB( [<nTop>], [<nLeft>], [<nBottom>], [<nRight>] ) --> oBrowse
+ *  $ARGUMENTS$
+ *      <nTop> coordinate for top row display.
+ *
+ *      <nLeft> coordinate for left column display.
+ *
+ *      <nBottom> coordinate for bottom row display.
+ *
+ *      <nRight> coordinate for right column display.
+ *  $RETURNS$
+ *      TBrowseDB() return new TBrowse object with the specified coordinate
+ *      and a default :SkipBlock, :GoTopBlock and :GoBottomBlock to browse
+ *      a database file.
+ *  $DESCRIPTION$
+ *      TBrowseDB() is a quick way to create a TBrowse object along with
+ *      the minimal support needed to browse a database. Note that the
+ *      returned TBrowse object contain no TBColumn objects and you need
+ *      to add column for each field by your self.
+ *  $EXAMPLES$
+ *      for a good example, look at the source code for BROWSE() function
+ *      at source/rtl/browse.prg
+ *  $TESTS$
+ *  $STATUS$
+ *  $COMPLIANCE$
+ *      TBrowseDB() works exactly like CA-Clipper's TBrowseDB().
+ *  $SEEALSO$
+ *      BROWSE(), TBColumn class, TBrowse class, TBrowseNew()
+ *  $END$
+ */
 
 FUNCTION TBrowseDB( nTop, nLeft, nBottom, nRight )
 
@@ -51,6 +100,48 @@ FUNCTION TBrowseDB( nTop, nLeft, nBottom, nRight )
    oBrowse:GoBottomBlock := { || dbGoBottom() }
 
    RETURN oBrowse
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      dbSkipper()
+ *  $CATEGORY$
+ *      Databases
+ *  $ONELINER$
+ *      Helper function to skip a database
+ *  $SYNTAX$
+ *      dbSkipper( <nRecs> ) --> nSkipped
+ *  $ARGUMENTS$
+ *      <nRecs> is the number of records to skip relative to current record.
+ *      Positive number would try to move the record pointer forward, while
+ *      a negative number would try to move the record pointer back <nRecs>
+ *      records.
+ *  $RETURNS$
+ *      dbSkipper() return the number of actual record skipped.
+ *  $DESCRIPTION$
+ *      dbSkipper() is a helper function used in browse mechanism to skip
+ *      a number of records while giving the caller indication about the
+ *      actual records skipped.
+ *  $EXAMPLES$
+ *      // open a file and find if we've got enough records in it
+ *      USE MonthSales
+ *      IF dbSkipper( 100 ) == 100
+ *         ? "Good work! You can party now"
+ *      ELSE
+ *         ? "Too bad, you should really work harder"
+ *      ENDIF
+ *      CLOSE
+ *  $TESTS$
+ *  $STATUS$
+ *  $COMPLIANCE$
+ *      dbSkipper() is an XBase++ compatibility function and does not exist
+ *      as a standard CA-Clipper 5.x function.
+ *
+ *      This function is only visible if source/rtl/browdb.prg was compiled
+ *      with the HB_COMPAT_XPP flag.
+ *  $SEEALSO$
+ *      DBSKIP(), SKIP
+ *  $END$
+ */
 
 #ifdef HB_COMPAT_XPP
 FUNCTION dbSkipper( nRecs )

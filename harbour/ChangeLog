@@ -1,3 +1,13 @@
+19991128-22:24 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/asort.prg
+    source/rtl/browdb.prg
+    + Documentation by Chen Kedem added
+  * include/extend.h
+    ! ISNIL() macro fixed.
+  * source/rtl/dbeval.prg
+    source/rtl/alert.prg
+    * Small corrections.
+
 19991127-15:57 EDT Paul Tucker <ptucker@sympatico.ca>
   * source/rdd/dbeval.prg
     * ISNUM() -> ISNUMBER

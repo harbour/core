@@ -152,14 +152,13 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
    LOCAL nCount
 
    /* TOFIX: Clipper decides at runtime, whether the GT is linked in, */
-   /*        if it is not, the console mode is choosed here */
+   /*        if it is not, the console mode is choosen here */
    LOCAL lConsole := .F.
 
    DEFAULT s_lNoAlert TO __argCheck( "NOALERT" )
 
    IF s_lNoAlert
-//      QUIT
-      return nil
+      RETURN NIL
    ENDIF
 
    aSay := {}

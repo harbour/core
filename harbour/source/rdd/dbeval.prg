@@ -45,7 +45,7 @@
  *  $ONELINER$
  *      Performs a code block operation on the current data base
  *  $SYNTAX$
- *      DBEVAL( <bBlock>, <bFor>, <bWhile>, <nNext>, <nRecord>, <lRest> ) --> <NIL>
+ *      DBEVAL( <bBlock>, [<bFor>], [<bWhile>], [<nNext>], [<nRecord>], [<lRest>] ) --> NIL
  *  $ARGUMENTS$
  *      <bBlock> Operation that is to be performed
  *      <bFor> Code block for the For condition
