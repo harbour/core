@@ -1,3 +1,7 @@
+2001-10-22 01:28 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
+   * utils\hbmake\hbmake.prg
+     * corrected a couple of typos.
+
 2001-10-22 01:10 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
    * makefile.vc
      * corrected ECHO and PDF definition.

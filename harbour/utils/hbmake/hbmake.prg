@@ -1384,7 +1384,7 @@ for x:=1 to len(amacros)
        if !amacros[x,3]
             Fwrite( nLinkHandle, amacros[x,1] + ' = ' +left(amacros[x,2],len(amacros[x,2])-1) +" " + CRLF )
             amacros[x,3]:=.t.
-        endfif
+        endif
       endif
       nPos:=ascan(acs,{|z| hb_FNAMESPLIT(z,@cPath ,@cTest, @cExt , @cDrive),cpath==citem})
       if nPos>0
@@ -1392,7 +1392,7 @@ for x:=1 to len(amacros)
          AEVAL(acs,{|a,b| hb_FNAMESPLIT(a,@cPath ,@cTest, @cExt , @cDrive),if(cPath==citem,acs[b]:=strtran(a,cpath,"$("+amacros[x,1]+if(lgcc,")/",')\')),)})
             Fwrite( nLinkHandle, amacros[x,1] + ' = ' +left(amacros[x,2],len(amacros[x,2])-1) +" " + CRLF )
             amacros[x,3]:=.t.
-        endfif
+        endif
 
       endif
       nPos:=ascan(aObjs,{|z| hb_FNAMESPLIT(z,@cPath ,@cTest, @cExt , @cDrive),cpath==citem})
