@@ -1,0 +1,13 @@
+Build #26 12 June 1999
+
+- Check for non used declared variable
+- Better support for different platforms and compilers.
+- New Inifiles class
+- Support for IBM C++ compiler for OS/2
+- Harb26.Zip includes Runner.exe now
+  So NO NEED for any external software to run Harbour PRG's!
+- Many resolved Bugs
+- Many new functions
+- New National language message files
+- New TestBank. It compiles ALL Harbour samples 
+- <object>:<data> := <value> can now be used inside expressions (codeblocks)
