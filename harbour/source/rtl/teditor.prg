@@ -39,6 +39,7 @@
 #include "error.ch"
 #include "fileio.ch"
 #include "inkey.ch"
+#include "setcurs.ch"
 
 CLASS TEditor
 
@@ -64,8 +65,10 @@ CLASS TEditor
    DATA  lInsert   INIT .F.   // Is editor in Insert mode or in Overstrike one?
    DATA  nTabWidth INIT 8     // Size of Tab chars
    DATA  lEditAllow INIT .T.  // Are changes to text allowed?
+   DATA  lSaved INIT .F.      // True if user exited editor with K_CTRL_W
 
    METHOD New(cString, nTop, nLeft, nBottom, nRight, lEditMode)
+   METHOD GetText()                 // Returns aText as a string (for MemoEdit())
    METHOD RefreshWindow()
    METHOD RefreshLine()
    METHOD RefreshColumn()
@@ -89,26 +92,6 @@ METHOD New(cFile, nTop, nLeft, nBottom, nRight) CLASS TEditor
       end while
       oFile:Close()
 
-      ::cFile := cFile
-      ::naTextLen := Len(::aText)
-
-      // editor window boundaries
-      ::nTop := nTop
-      ::nLeft := nLeft
-      ::nBottom := nBottom
-      ::nRight := nRight
-
-      // How many cols and rows are available
-      ::nNumCols := nRight - nLeft + 1
-      ::nNumRows := nBottom - nTop + 1
-
-      // Empty area of screen which will hold editor window
-      Scroll(nTop, nLeft, nBottom, nRight)
-
-      // Set cursor upper left corner
-      SetPos(::nTop, ::nLeft)
-   endif
-
 return Self
 */
 
@@ -121,7 +104,7 @@ STATIC function Text2Array(cString)
    aArray := {}
 
    while nLastEOL > 0
-      cLine := Left(cString, (nLastEol := at(HB_OSNewLine(), cString)) - 1)
+      cLine := Left(cString, (nLastEOL := at(HB_OSNewLine(), cString)) - 1)
       cLine := StrTran(cLine, HB_OSNewLine(), "")
       if nLastEOL > 0
          AAdd(aArray, cLine)
@@ -131,6 +114,15 @@ STATIC function Text2Array(cString)
    enddo
 
 return aArray
+
+
+METHOD GetText() CLASS TEditor
+
+   LOCAL cString := ""
+
+   AEval(::aText, {|cItem| cString += cItem + HB_OSNewLine() })
+
+return cString
 
 
 METHOD New(cString, nTop, nLeft, nBottom, nRight, lEditMode) CLASS TEditor
@@ -150,6 +142,11 @@ METHOD New(cString, nTop, nLeft, nBottom, nRight, lEditMode) CLASS TEditor
 
    if !lEditMode == NIL
       ::lEditAllow := lEditMode
+   endif
+
+   // set correct insert state
+   if ::lEditAllow
+      ::InsertState(::lInsert)
    endif
 
    // Empty area of screen which will hold editor window
@@ -256,6 +253,14 @@ METHOD MoveCursor(nKey) CLASS TEditor
          endif
          ::RefreshWindow()
 
+      case (nKey == K_CTRL_PGDN)
+         ::nRow := ::naTextLen
+         ::nCol := Max(Len(::aText[::nRow]), 1)
+         ::nFirstRow := Max(::naTextLen - ::nNumRows + 1, 1)
+         ::nFirstCol := Max(::nCol - ::nNumCols + 1, 1)
+         SetPos(Min(::nBottom, ::naTextLen), Min(::nLeft + ::nCol - 1, ::nRight))
+         ::RefreshWindow()
+
       case (nKey == K_UP)
          if !::lEditAllow
             while Row() > ::nTop .AND. ::nRow > 1
@@ -289,6 +294,14 @@ METHOD MoveCursor(nKey) CLASS TEditor
          endif
          ::RefreshWindow()
 
+      case (nKey == K_CTRL_PGUP)
+         ::nRow := 1
+         ::nCol := 1
+         ::nFirstCol := 1
+         ::nFirstRow := 1
+         SetPos(::nTop, ::nLeft)
+         ::RefreshWindow()
+
       case (nKey == K_RIGHT)
          if Col() == ::nRight
             // can go (<=) past end of line
@@ -303,6 +316,14 @@ METHOD MoveCursor(nKey) CLASS TEditor
             SetPos(Row(), Col() + 1)
          endif
 
+      case (nKey == K_CTRL_RIGHT)
+         while ::nCol <= Len(::aText[::nRow]) .AND. SubStr(::aText[::nRow], ::nCol, 1) <> " "
+            ::MoveCursor(K_RIGHT)
+         enddo
+         while ::nCol <= Len(::aText[::nRow]) .AND. SubStr(::aText[::nRow], ::nCol, 1) == " "
+            ::MoveCursor(K_RIGHT)
+         enddo
+
       case (nKey == K_LEFT)
          if Col() == ::nLeft
             if ::nCol > 1
@@ -316,10 +337,25 @@ METHOD MoveCursor(nKey) CLASS TEditor
             SetPos(Row(), Col() - 1)
          endif
 
+      case (nKey == K_CTRL_LEFT)
+         while ::nCol > 1 .AND. SubStr(::aText[::nRow], ::nCol, 1) <> " "
+            ::MoveCursor(K_LEFT)
+         enddo
+         while ::nCol <= Len(::aText[::nRow]) .AND. SubStr(::aText[::nRow], ::nCol, 1) == " "
+            ::MoveCursor(K_LEFT)
+         enddo
+
       case (nKey == K_HOME)
          ::nCol := 1
          ::nFirstCol := 1
          SetPos(Row(), ::nLeft)
+         ::RefreshWindow()
+
+      case (nKey == K_CTRL_HOME)
+         ::nCol := 1
+         ::nFirstCol := 1
+         ::nRow -= (Row() - ::nTop)
+         SetPos(::nTop, ::nLeft)
          ::RefreshWindow()
 
       case (nKey == K_END)
@@ -327,6 +363,16 @@ METHOD MoveCursor(nKey) CLASS TEditor
          ::nCol := Max(Len(::aText[::nRow]), 1)
          ::nFirstCol := Max(::nCol - ::nNumCols + 1, 1)
          SetPos(Row(), Min(::nLeft + ::nCol - 1, ::nRight))
+         ::RefreshWindow()
+
+      case (nKey == K_CTRL_END)
+         ::nRow += (::nBottom - Row())
+         if ::nRow > ::naTextLen
+            ::nRow := ::naTextLen
+         endif
+         ::nCol := Max(Len(::aText[::nRow]), 1)
+         ::nFirstCol := Max(::nCol - ::nNumCols + 1, 1)
+         SetPos(Min(::nBottom, ::naTextLen), Min(::nLeft + ::nCol - 1, ::nRight))
          ::RefreshWindow()
 
       otherwise
@@ -341,6 +387,7 @@ return lMoveKey
 METHOD InsertState(lInsState) CLASS TEditor
 
    ::lInsert := lInsState
+   SET(_SET_INSERT, ::lInsert)
 
 return Self
 
@@ -358,7 +405,7 @@ METHOD Edit() CLASS TEditor
       do case
          case (nKey >= 32 .AND. nKey < 256)
             // insert char if in insert mode or at end of current line
-            if ::lInsert .OR. (::nCol == Len(::aText[::nRow]))
+            if ::lInsert .OR. (::nCol > Len(::aText[::nRow]))
                ::aText[::nRow] := Stuff(::aText[::nRow], ::nCol, 0, Chr(nKey))
             else
                ::aText[::nRow] := Stuff(::aText[::nRow], ::nCol, 1, Chr(nKey))
@@ -390,6 +437,9 @@ METHOD Edit() CLASS TEditor
          case (nKey == K_DEL)
             ::aText[::nRow] := Stuff(::aText[::nRow], ::nCol, 1, "")
             ::RefreshLine()
+            if Len(::aText[::nRow]) == 0
+               KEYBOARD Chr(K_CTRL_Y)
+            endif
 
          case (nKey == K_TAB)
             // insert char if in insert mode or at end of current line
@@ -413,16 +463,13 @@ METHOD Edit() CLASS TEditor
             if ::naTextLen > 1
                // delete current line of text
                ADel(::aText, ::nRow)
-               // Last element of array would be NIL, I need to transform it to an empy string because other methods
-               // expect every element to be a string
-               ::aText[::naTextLen] := ""
-               ::naTextLen--
+               ASize(::aText, --::naTextLen)
                // if we now have less than a screen full of text, adjust nFirstRow position
                if ::nFirstRow + ::nNumRows > ::naTextLen
-                  ::nFirstRow := Max(::nFirstRow--, 1)
+                  ::nFirstRow := Max(::nFirstRow - 1, 1)
                   // if we have less lines of text than our current position on scree, up one line
                   if ::nRow > ::naTextLen
-                     ::nRow := Max(::nRow--, 1)
+                     ::nRow := Max(::nRow - 1, 1)
                      SetPos(Max(Row() -1, ::nTop), Col())
                   endif
                endif
@@ -434,6 +481,10 @@ METHOD Edit() CLASS TEditor
 
          case (::MoveCursor(nKey))
             // if it's a movement key ::MoveCursor() handles it
+
+         case (nKey == K_CTRL_W)
+            ::lSaved := .T.
+            exit
 
          case (nKey == K_ESC)
             exit

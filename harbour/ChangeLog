@@ -1,3 +1,14 @@
+20000501-23:19 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+
+   * source/rtl/teditor.prg
+     ! fixed a few errors in aText handling
+     * added missing navigation functions
+     % aText shrinks when deleting lines of text
+   * source/rtl/memoedit.prg
+     * when exiting editor, if exited with K_CTRL_W gets modified text from
+       editor to save it. IT DOESN'T work right now because I don't know
+       how to distinguish K_CRTL_W from K_CTRL_END. :-|
+
 20000501-14:15 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
     * source/compiler/harbour.c
@@ -12,7 +23,7 @@
 20000501-19:05 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/vm/hvm.c
-	* fixed unused variable warning
+      * fixed unused variable warning
 
 20000501-18:55 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
@@ -106,9 +117,15 @@
       * some common parts moved into separate functions
 
     *include/hbcomp.h
-	* changed 'BYTE iJumps' into 'ULONG iJumps' to stop reallocation
-	error mentioned by Victor
+<<<<<<< ChangeLog
+   * changed 'BYTE iJumps' into 'ULONG iJumps' to stop reallocation
+   error mentioned by Victor
 
+=======
+   * changed 'BYTE iJumps' into 'ULONG iJumps' to stop reallocation
+   error mentioned by Victor
+
+>>>>>>> 1.2098
 20000501-15:37 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/rtl/teditor.prg
@@ -212,7 +229,7 @@
 20000430-22:15 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
     * source/compiler/harbour.y
       ! Fixed { hb_compVariableDim( $1, $2 ); } to { hb_comp_cVarType = 'A'; hb_compVariableDim( $1, $2 ); }
-	so that correct type is saved.
+   so that correct type is saved.
 
     * source/compiler/hbpcode.c
       * Enhancements to hb_compStrongType()
@@ -259,7 +276,7 @@
 20000430-13:50 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.c
-	*fixed possible memory reallocation error in hb_compNOOPadd()
+   *fixed possible memory reallocation error in hb_compNOOPadd()
 
    *fixed possible memory reallocation error in hb_compNOOPadd()
 

@@ -33,7 +33,7 @@
  *
  */
 
-/* TODO: MemoEdit() is not compatible with clipper one. 
+/* TODO: MemoEdit() is not compatible with clipper one.
          Needs a lot more work to become */
 
 #include "common.ch"
@@ -67,9 +67,12 @@ FUNCTION MemoEdit( cString,;
    oEd := TEditor():New( cString, nTop, nLeft, nBottom, nRight, lEditMode )
    oEd:RefreshWindow()
 
-   IF ! ISLOGICAL( cUserFunction ) .OR. cUserFunction == .T.
+   if ! ISLOGICAL( cUserFunction ) .OR. cUserFunction == .T.
       oEd:Edit()
-   ENDIF
+      if oEd:lSaved
+         cString := oEd:GetText()
+      endif
+   endif
 
    RETURN cString
 
