@@ -1,3 +1,23 @@
+20000411-15:55 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *config/dos/watcom.cf
+        *added support for HB_GT_LIB variable
+
+    *include/inkey.ch
+        *new K_HB_KEYCODES definition to signal that multi-character keycodes
+        are available.
+
+    *source/rtl/gtapi.c
+        *hb_gtWwriteCon() fixed to correctly support LF characters in
+	U*nix environment (LF should move carriage return to the leftmost
+	column)
+	
+    *source/rtl/gtcrs/gtcrs.c
+        *updated to return multi-character keycodes that are not mapped
+        to Clipper INKEY() keycodes
+	*full color support
+	*scrolling up-down
+
 20000411-13:12 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * include/hbextern.ch

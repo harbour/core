@@ -62,6 +62,11 @@
 #define K_LDBLCLK               1006
 #define K_RDBLCLK               1007
 
+/* Harbour extension - this marks that multi-characters keycode will be
+   returned - call INKEY() until ZERO will be returned
+*/
+#define K_HB_KEYCODES		4096
+
 /* Cursor movement keys */
 
 #define K_UP                    5     /*   Up arrow, Ctrl-E              */

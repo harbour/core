@@ -61,35 +61,60 @@ struct key_map_struc
 };
 
 static struct key_map_struc *s_keymap_table = NULL;
+static unsigned s_attribmap_table[ 256 ]; /* mapping from DOS style attributes */
 
 void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Init()"));
 
-   s_uiDispCount=0;
+   s_uiDispCount = 0;
 
    initscr();
    if( has_colors() )
    {
       int i;
-      start_color();
-      for( i = 1; i <= COLOR_PAIRS; i++ )
-      {
-        init_pair( i, i % COLORS, i / COLORS );
-      }
+      int backg, foreg;
       /* NOTE: color order=
-          COLOR_BLACK
-          COLOR_RED
-          COLOR_GREEN
-          COLOR_YELLOW
-          COLOR_BLUE
-          COLOR_MAGENTA
-          COLOR_CYAN
-          COLOR_WHITE
+          DOS style    -> ncurses style
+	  --------------------------------
+          0 black         0-> COLOR_BLACK
+          1 blue          4-> COLOR_RED
+          2 green         2-> COLOR_GREEN
+          3 cyan          6-> COLOR_YELLOW
+          4 red           1-> COLOR_BLUE
+          5 magenta       5-> COLOR_MAGENTA
+          6 yellow        3-> COLOR_CYAN
+          7 light gray    7-> COLOR_WHITE
+	  8 gray          0-> BOLD BLACK
+	  9 light blue    4-> BOLD RED
+	 10 light green   2-> BOLD GREEN
+	 11 light cyan    6-> BOLD YELLOW
+	 12 light red     1-> BOLD BLUE
+	 13 light magenta 5-> BOLD MAGENTA
+	 14 light yellow  3-> BOLD CYAN
+	 15 white         7-> BOLD WHITE
       */
+      static char color_map[] = { 0, 4, 2, 6, 1, 5, 3, 7 };
+      
+      start_color();
+      for( backg=0; backg<COLORS; backg++ )
+         for( foreg=0; foreg<COLORS; foreg++ )
+	    init_pair( backg*COLORS+foreg, color_map[foreg], color_map[backg] );
+	    
+      for( i=0; i<256; i++  )
+      {
+         backg = ( i >> 4 ) & 0x07;    /* bits 4-6, bit 7 is blinking attribute */
+	 foreg = ( i & 0x07 );  
+	 s_attribmap_table[ i ] = COLOR_PAIR( backg*COLORS + foreg );
+	 if( i & 0x08 )
+	     s_attribmap_table[ i ] |= A_BOLD;  /* 4-th bit is an intensity bit */
+	 if( i & 0x80 )
+	     s_attribmap_table[ i ] |= A_BLINK;  /* 7-th bit is blinking bit */
+      }
    }
 
     hb_gt_Add_terminfo_keymap( K_ENTER, "kent" );
+    hb_gt_Add_terminfo_keymap( K_ENTER, "ind" );
     hb_gt_Add_terminfo_keymap( K_TAB, "ht" );
     hb_gt_Add_terminfo_keymap( K_DOWN, "kcud1" );
     hb_gt_Add_terminfo_keymap( K_UP, "kcuu1" );
@@ -196,6 +221,8 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
     hb_gt_Add_keymap( K_ALT_8, "\0338" );
     hb_gt_Add_keymap( K_ALT_9, "\0339" );
     hb_gt_Add_keymap( K_ALT_0, "\0330" );
+    hb_gt_Add_keymap( K_ALT_ENTER, "\033\n" );
+    hb_gt_Add_keymap( K_ALT_EQUALS, "\033=" );
     
    cbreak();
    noecho();
@@ -226,12 +253,23 @@ void hb_gt_Done( void )
 
 int hb_gt_ReadKey( HB_inkey_enum eventmask )
 {
+   static char key_codes[ HB_MAX_KEYMAP_CHARS+1 ]; /* buffer for multi-characters keycodes */
+   static int key_waiting = -1; /* position of next character from buffer if > 0 */
    int ch;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_ReadKey(%d)", (int) eventmask));
 
    HB_SYMBOL_UNUSED( eventmask );
 
+   if( key_waiting >= 0 )
+   {
+       /* return next character from the buffer */
+       ch = key_codes[ key_waiting++ ];
+       if( key_codes[ key_waiting ] == 0 )
+           key_waiting = -1; /* the last character was retrieved */
+       return ch;
+   }
+       
    ch = getch();
    if( ch == ERR )
       ch = 0;
@@ -244,19 +282,18 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
       }
       else if( s_keymap_table )
       {
-         char code[ HB_MAX_KEYMAP_CHARS+1 ]; 
          struct key_map_struc *tmp = s_keymap_table;
 	 int i = 0;
 	 
-	 code[ 0 ] = ch;
+	 key_codes[ 0 ] = ch;
 	 while( ( ch = getch() ) != ERR && i <= HB_MAX_KEYMAP_CHARS )
-	     code[ ++i ] = ch;
-	 code[ ++i ] = 0;
+	     key_codes[ ++i ] = ch;
+	 key_codes[ ++i ] = 0;
 
          ch = 0;
 	 while( tmp )
 	 {
-	     if( (i == tmp->length) && (strcmp( tmp->key_string, code ) == 0 ) )
+	     if( (i == tmp->length) && (strcmp( tmp->key_string, key_codes ) == 0 ) )
 	     {
 	         ch = tmp->inkey_code;
 		 tmp = NULL;
@@ -264,12 +301,18 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
 	    else
 		tmp = tmp->Next;		         
          }
-	 if( ch == 0 && i == 1 )
-	     ch = code[ 0 ];
-/*TEST
-	else
-	    printf( "key=%s", code );
-*/	    
+	 
+	 if( ch == 0 )
+	 {
+	     /* keymap not found */
+            if( i == 1 )
+	        ch = key_codes[ 0 ];
+	    else
+	    {
+	       key_waiting = 0;	/* return raw key sequence */
+	       ch = K_HB_KEYCODES;
+	    }
+	}
       }
    }
    return ch;
@@ -303,6 +346,7 @@ BOOL hb_gt_AdjustPos( BYTE * pStr, ULONG ulLen )
             break;
 
          case HB_CHAR_LF:
+            col = 0;
             if( row < max_row )
                row++;
             break;
@@ -412,10 +456,13 @@ void hb_gt_Puts( USHORT uiRow,
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Puts(%hu, %hu, %d, %p, %lu)", uiRow, uiCol, (int) byAttr, pbyStr, ulLen));
 
-   move( uiRow, uiCol );
-   attron( COLOR_PAIR( byAttr ) );
+   move( uiRow, uiCol ); 
+   attron( s_attribmap_table[ byAttr ] );
    for( i = 0; i < ulLen; ++i )
       addch( pbyStr[ i ] );
+   attroff( s_attribmap_table[ byAttr ] );
+   if( s_uiDispCount == 0 )
+      refresh();
 }
 
 void hb_gt_GetText( USHORT uiTop,
@@ -462,9 +509,17 @@ void hb_gt_Scroll( USHORT uiTop,
                    SHORT iRows,
                    SHORT iCols )
 {
+   WINDOW *subw;
+   
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Scroll(%hu, %hu, %hu, %hu, %d, %hd, %hd)", uiTop, uiLeft, uiBottom, uiRight, (int) byAttr, iRows, iCols));
 
-   /* TODO */
+/* TODO: scrolling left-right */   
+   subw = subwin( stdscr, uiBottom-uiTop+1, uiRight-uiLeft+1, uiTop, uiLeft );
+   scrollok( subw, TRUE );
+   wscrl( subw, iRows );
+   if( s_uiDispCount == 0 )
+      touchwin( stdscr );
+   delwin( subw );
 }
 
 void hb_gt_DispBegin( void )
@@ -472,19 +527,14 @@ void hb_gt_DispBegin( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_DispBegin()"));
 
    ++s_uiDispCount;
-   /* TODO: Is there a way to change screen buffers?
-      ie: can we write somewhere without it going to the screen
-      and then update the screen from this buffer at a later time?
-      We will initially want to copy the current screen to this buffer.
-   */
 }
 
 void hb_gt_DispEnd()
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_DispEnd()"));
 
-   --s_uiDispCount;
-   /* TODO: here we flush the buffer, and restore normal screen writes */
+   if( --s_uiDispCount == 0 );
+      refresh();
 }
 
 BOOL hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
@@ -557,7 +607,8 @@ static void gt_GetRC(int* r, int* c)
 static void gt_SetRC(int r, int c)
 {
    move(r, c);
-   refresh();
+   if( s_uiDispCount == 0 )
+      refresh();
 }
 
 char * hb_gt_Version( void )
@@ -574,14 +625,7 @@ static void hb_gt_Add_keymap( int InkeyCode, char *key_string )
 {
    struct key_map_struc *keymap;
    int iLength = strlen( key_string );
-/*TEST
-{
-   int j;
- for( j=0; key_string[j]; j++ )
-     printf( "%i, ", key_string[j] );
- printf( "\n" );
-} 
-*/     
+   
       if( iLength && iLength <= HB_MAX_KEYMAP_CHARS )
       {
          keymap = hb_xgrab( sizeof( struct key_map_struc ) );
@@ -610,9 +654,6 @@ static void hb_gt_Add_terminfo_keymap( int InkeyCode, char *capname )
    if( (code != NULL) && (code != (char *)-1) )
    {
        hb_gt_Add_keymap( InkeyCode, code );
-/*TEST
-printf( "code for %s = %s ", capname, code ); 
-*/
    }
 }
 

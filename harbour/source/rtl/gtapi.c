@@ -872,14 +872,23 @@ USHORT hb_gtWriteCon( BYTE * fpStr, ULONG length )
             break;
 
          case HB_CHAR_LF:
-            if( iRow >= 0 ) ++iRow;
+            iCol = 0;
+	    if( iRow >= 0 ) ++iRow;
             ldisp = TRUE;
             lnewline = TRUE;
             break;
 
          case HB_CHAR_CR:
             iCol = 0;
-            if( *fpPtr != HB_CHAR_LF ) ldisp = TRUE;
+            if( *fpPtr != HB_CHAR_LF ) 
+	       ldisp = TRUE;
+	    else
+	    {
+               if( iRow >= 0 ) ++iRow;
+               ldisp = TRUE;
+               lnewline = TRUE;
+	       ++fpPtr;
+	    }
             break;
 
          default:
