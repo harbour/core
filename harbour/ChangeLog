@@ -1,3 +1,10 @@
+19990919-21:40 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * source/rtl/console.c
+    include/extend.h
+    + BYTE* changed back to char* for the Console API functions, BYTE* casts
+      were added for all hb_gt* and hb_fs*() calls.
+
 19990919-17:14 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/rtl/errorapi.c
@@ -46,7 +53,7 @@
   * source/rtl/itemapi.c
     ! hb_itemPutC() and hb_itemPutCL() now handles when the szText parameter
       is NULL. Clipper seems to handle this. GT_*() functions relies on this
-      feature so they will GPF now.
+      feature so they will not GPF now.
 
 19990919-17:14 GMT+1 Victor Szel <info@szelvesz.hu>
 

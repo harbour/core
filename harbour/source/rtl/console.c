@@ -194,10 +194,10 @@ USHORT hb_max_col( void )
 }
 
 #ifndef HARBOUR_USE_GTAPI
-static void adjust_pos( BYTE * pStr, ULONG ulLen, USHORT * row, USHORT * col, USHORT max_row, USHORT max_col )
+static void adjust_pos( char * pStr, ULONG ulLen, USHORT * row, USHORT * col, USHORT max_row, USHORT max_col )
 {
    ULONG ulCount;
-   BYTE * pPtr = pStr;
+   char * pPtr = pStr;
 
    for( ulCount = 0; ulCount < ulLen; ulCount++ )
    {
@@ -235,7 +235,7 @@ static void adjust_pos( BYTE * pStr, ULONG ulLen, USHORT * row, USHORT * col, US
 }
 #endif
 
-typedef void hb_out_func_typedef( BYTE *, ULONG );
+typedef void hb_out_func_typedef( char *, ULONG );
 
 /* Format items for output, then call specified output function */
 static void hb_out( USHORT uiParam, hb_out_func_typedef * hb_out_func )
@@ -245,14 +245,14 @@ static void hb_out( USHORT uiParam, hb_out_func_typedef * hb_out_func )
    switch( pItem->type )
    {
       case IT_STRING:
-         hb_out_func( ( BYTE * ) hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ) );
+         hb_out_func( hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ) );
          break;
 
       case IT_DATE:
       {
          char szBuffer[ 11 ];
          hb_dtoc( hb_pards( uiParam ), szBuffer, hb_set.HB_SET_DATEFORMAT );
-         hb_out_func( ( BYTE * ) szBuffer, strlen( szBuffer ) );
+         hb_out_func( szBuffer, strlen( szBuffer ) );
          break;
       }
 
@@ -263,20 +263,20 @@ static void hb_out( USHORT uiParam, hb_out_func_typedef * hb_out_func )
          char * szText = hb_itemStr( pItem, NULL, NULL ); /* Let hb_itemStr() do the hard work */
          if( szText )
          {
-            hb_out_func( ( BYTE * ) szText, strlen( szText ) );
+            hb_out_func( szText, strlen( szText ) );
             hb_xfree( szText );
          }
          break;
       }
       case IT_NIL:
-         hb_out_func( ( BYTE * ) "NIL", 3 );
+         hb_out_func( "NIL", 3 );
          break;
 
       case IT_LOGICAL:
          if( hb_itemGetL( pItem ) )
-            hb_out_func( ( BYTE * ) ".T.", 3 );
+            hb_out_func( ".T.", 3 );
          else
-            hb_out_func( ( BYTE * ) ".F.", 3 );
+            hb_out_func( ".F.", 3 );
          break;
 
       default:
@@ -285,12 +285,12 @@ static void hb_out( USHORT uiParam, hb_out_func_typedef * hb_out_func )
 }
 
 /* Output an item to STDOUT */
-void hb_outstd( BYTE * pStr, ULONG ulLen )
+void hb_outstd( char * pStr, ULONG ulLen )
 {
    USHORT user_ferror;
 
    if( ulLen == 0 )
-      ulLen = strlen( ( char * ) pStr );
+      ulLen = strlen( pStr );
 
 #ifdef HARBOUR_USE_GTAPI
    if( s_bInit )
@@ -298,7 +298,7 @@ void hb_outstd( BYTE * pStr, ULONG ulLen )
 #endif
 
    user_ferror = hb_fsError(); /* Save current user file error code */
-   hb_fsWriteLarge( s_iFilenoStdout, pStr, ulLen );
+   hb_fsWriteLarge( s_iFilenoStdout, ( BYTE * ) pStr, ulLen );
    hb_fsSetError( user_ferror ); /* Restore last user file error code */
 
 #ifdef HARBOUR_USE_GTAPI
@@ -320,12 +320,12 @@ void hb_outstd( BYTE * pStr, ULONG ulLen )
 }
 
 /* Output an item to STDERR */
-void hb_outerr( BYTE * pStr, ULONG ulLen )
+void hb_outerr( char * pStr, ULONG ulLen )
 {
    USHORT user_ferror;
 
    if( ulLen == 0 )
-      ulLen = strlen( ( char * ) pStr );
+      ulLen = strlen( pStr );
 
 #ifdef HARBOUR_USE_GTAPI
    if( s_bInit )
@@ -333,7 +333,7 @@ void hb_outerr( BYTE * pStr, ULONG ulLen )
 #endif
 
    user_ferror = hb_fsError(); /* Save current user file error code */
-   hb_fsWriteLarge( s_iFilenoStderr, pStr, ulLen );
+   hb_fsWriteLarge( s_iFilenoStderr, ( BYTE * ) pStr, ulLen );
    hb_fsSetError( user_ferror ); /* Restore last user file error code */
 
 #ifdef HARBOUR_USE_GTAPI
@@ -355,16 +355,16 @@ void hb_outerr( BYTE * pStr, ULONG ulLen )
 }
 
 /* Output an item to the screen and/or printer and/or alternate */
-static void hb_altout( BYTE * pStr, ULONG ulLen )
+static void hb_altout( char * pStr, ULONG ulLen )
 {
    if( hb_set.HB_SET_CONSOLE )
    {
 #ifdef HARBOUR_USE_GTAPI
-      hb_gtWriteCon( pStr, ulLen );
+      hb_gtWriteCon( ( BYTE * ) pStr, ulLen );
       hb_gtGetPos( &s_uiDevRow, &s_uiDevCol );
 #else
       USHORT user_ferror = hb_fsError(); /* Save current user file error code */
-      hb_fsWriteLarge( s_iFilenoStdout, pStr, ulLen );
+      hb_fsWriteLarge( s_iFilenoStdout, ( BYTE * ) pStr, ulLen );
       hb_fsSetError( user_ferror ); /* Restore last user file error code */
       adjust_pos( pStr, ulLen, &s_uiDevRow, &s_uiDevCol, hb_max_row(), hb_max_col() );
 #endif
@@ -374,7 +374,7 @@ static void hb_altout( BYTE * pStr, ULONG ulLen )
    {
       /* Print to alternate file if SET ALTERNATE ON and valid alternate file */
       USHORT user_ferror = hb_fsError(); /* Save current user file error code */
-      hb_fsWriteLarge( hb_set_althan, pStr, ulLen );
+      hb_fsWriteLarge( hb_set_althan, ( BYTE * ) pStr, ulLen );
       hb_fsSetError( user_ferror ); /* Restore last user file error code */
    }
 
@@ -382,7 +382,7 @@ static void hb_altout( BYTE * pStr, ULONG ulLen )
    {
       /* Print to extra file if valid alternate file */
       USHORT user_ferror = hb_fsError(); /* Save current user file error code */
-      hb_fsWriteLarge( hb_set_extrahan, pStr, ulLen );
+      hb_fsWriteLarge( hb_set_extrahan, ( BYTE * ) pStr, ulLen );
       hb_fsSetError( user_ferror ); /* Restore last user file error code */
    }
 
@@ -390,7 +390,7 @@ static void hb_altout( BYTE * pStr, ULONG ulLen )
    {
       /* Print to printer if SET PRINTER ON and valid printer file */
       USHORT user_ferror = hb_fsError(); /* Save current user file error code */
-      hb_fsWriteLarge( hb_set_printhan, pStr, ulLen );
+      hb_fsWriteLarge( hb_set_printhan, ( BYTE * ) pStr, ulLen );
       hb_fsSetError( user_ferror ); /* Restore last user file error code */
       if( ulLen + s_uiPCol > USHRT_MAX ) s_uiPCol = USHRT_MAX;
       else s_uiPCol += ulLen;
@@ -398,13 +398,13 @@ static void hb_altout( BYTE * pStr, ULONG ulLen )
 }
 
 /* Output an item to the screen and/or printer */
-static void hb_devout( BYTE * pStr, ULONG ulLen )
+static void hb_devout( char * pStr, ULONG ulLen )
 {
    if( hb_set_printhan != FS_ERROR && hb_stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 )
    {
       /* Display to printer if SET DEVICE TO PRINTER and valid printer file */
       USHORT user_ferror = hb_fsError(); /* Save current user file error code */
-      hb_fsWriteLarge( hb_set_printhan, pStr, ulLen );
+      hb_fsWriteLarge( hb_set_printhan, ( BYTE * ) pStr, ulLen );
       hb_fsSetError( user_ferror ); /* Restore last user file error code */
       if( ulLen + s_uiPCol > USHRT_MAX ) s_uiPCol = USHRT_MAX;
       else s_uiPCol += ulLen;
@@ -413,11 +413,11 @@ static void hb_devout( BYTE * pStr, ULONG ulLen )
    {
 #ifdef HARBOUR_USE_GTAPI
       /* Otherwise, display to console */
-      hb_gtWrite( pStr, ulLen );
+      hb_gtWrite( ( BYTE * ) pStr, ulLen );
       hb_gtGetPos( &s_uiDevRow, &s_uiDevCol );
 #else
       USHORT user_ferror = hb_fsError(); /* Save current user file error code */
-      hb_fsWriteLarge( s_iFilenoStdout, pStr, ulLen );
+      hb_fsWriteLarge( s_iFilenoStdout, ( BYTE * ) pStr, ulLen );
       hb_fsSetError( user_ferror ); /* Restore last user file error code */
       adjust_pos( pStr, ulLen, &s_uiDevRow, &s_uiDevCol, hb_max_row(), hb_max_col() );
 #endif
@@ -425,15 +425,15 @@ static void hb_devout( BYTE * pStr, ULONG ulLen )
 }
 
 /* Output an item to the screen */
-static void hb_dispout( BYTE * pStr, ULONG ulLen )
+static void hb_dispout( char * pStr, ULONG ulLen )
 {
 #ifdef HARBOUR_USE_GTAPI
    /* Display to console */
-   hb_gtWrite( pStr, ulLen );
+   hb_gtWrite( ( BYTE * ) pStr, ulLen );
    hb_gtGetPos( &s_uiDevRow, &s_uiDevCol );
 #else
    USHORT user_ferror = hb_fsError(); /* Save current user file error code */
-   hb_fsWriteLarge( s_iFilenoStdout, pStr, ulLen );
+   hb_fsWriteLarge( s_iFilenoStdout, ( BYTE * ) pStr, ulLen );
    hb_fsSetError( user_ferror ); /* Restore last user file error code */
    adjust_pos( pStr, ulLen, &s_uiDevRow, &s_uiDevCol, hb_max_row(), hb_max_col() );
 #endif
@@ -503,7 +503,7 @@ HARBOUR HB_OUTSTD( void ) /* writes a list of values to the standard output devi
    {
       hb_out( uiParam, hb_outstd );
       if( uiParam < uiPCount )
-         hb_outstd( ( BYTE * ) " ", 1 );
+         hb_outstd( " ", 1 );
    }
 }
 
@@ -515,7 +515,7 @@ HARBOUR HB_OUTERR( void ) /* writes a list of values to the standard error devic
    {
       hb_out( uiParam, hb_outerr );
       if( uiParam < uiPCount )
-         hb_outerr( ( BYTE * ) " ", 1 );
+         hb_outerr( " ", 1 );
    }
 }
 
@@ -527,7 +527,7 @@ HARBOUR HB_QQOUT( void ) /* writes a list of values to the current device (scree
    {
       hb_out( uiParam, hb_altout );
       if( uiParam < uiPCount )
-         hb_altout( ( BYTE * ) " ", 1 );
+         hb_altout( " ", 1 );
    }
 }
 
@@ -535,7 +535,7 @@ HARBOUR HB_QOUT( void )
 {
    USHORT uiCount;
 
-   hb_altout( ( BYTE * ) s_szCrLf, CRLF_BUFFER_LEN - 1 );
+   hb_altout( s_szCrLf, CRLF_BUFFER_LEN - 1 );
 
    if( hb_set.HB_SET_PRINTER && hb_set_printhan != FS_ERROR )
    {
@@ -1146,7 +1146,7 @@ HARBOUR HB___ACCEPT( void ) /* Internal Clipper function used in ACCEPT command 
             if( ulLen < ( ACCEPT_BUFFER_LEN - 1 ) && input >= 32 )
             {
                s_szAcceptResult[ ulLen ] = input; /* Accept the input */
-               hb_dispout( ( BYTE * ) &s_szAcceptResult[ ulLen ], sizeof( char ) ); /* Then display it */
+               hb_dispout( &s_szAcceptResult[ ulLen ], sizeof( char ) ); /* Then display it */
                ulLen++;  /* Then adjust the input count */
             }
       }
