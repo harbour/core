@@ -824,12 +824,6 @@ int hb_inkeyTranslate( int key, HB_inkey_enum event_mask )
       case HB_KP_SHIFT_STAR:
          key = '*';
          break;
-      case HB_KP_ENTER:
-         key = K_ENTER;
-         break;
-      case HB_KP_CTRL_ENTER:
-         key = K_CTRL_ENTER;
-         break;
       case HB_K_HOME:
          key = K_HOME;
          break;
@@ -1075,6 +1069,18 @@ int hb_inkeyTranslate( int key, HB_inkey_enum event_mask )
          break;
       case HB_KP_SHIFT_DEL:
          key = K_DEL;
+         break;
+      case HB_KP_ENTER:
+         key = K_ENTER;
+         break;
+      case HB_KP_ALT_ENTER:
+         key = K_ALT_ENTER;
+         break;
+      case HB_KP_CTRL_ENTER:
+         key = K_CTRL_ENTER;
+         break;
+      case HB_KP_SHIFT_ENTER:
+         key = K_ENTER;
          break;
       }
    }

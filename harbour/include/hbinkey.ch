@@ -248,10 +248,10 @@
 #define HB_KP_CTRL_STAR                 567
 #define HB_KP_SHIFT_STAR                695
 
-#define HB_KP_ENTER			284
-#define HB_KP_ALT_ENTER			412
-#define HB_KP_CTRL_ENTER		540
-#define HB_KP_SHIFT_ENTER		668
+#define HB_KP_ENTER                     1052
+#define HB_KP_ALT_ENTER                 1180
+#define HB_KP_CTRL_ENTER                1308
+#define HB_KP_SHIFT_ENTER               1436
 
 #define HB_KP_HOME			327
 #define HB_KP_UP			328

@@ -279,6 +279,7 @@ static int StdFnKeys( WORD wKey, BOOL bEnhanced )
    int ch;
    /* Normal function key */
    ch = wKey + HB_INKEY_NONE;
+   if( bEnhanced ) ch += HB_INKEY_ENHANCED;
    return ch;
 }
 
@@ -515,7 +516,6 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
                            fprintf( stdout, "d" );
                         #endif
                         ch = StdFnKeys( wKey, bEnhanced );
-                        if( bEnhanced ) ch += HB_INKEY_ENHANCED;
                      }
                   }
                }
