@@ -1,3 +1,11 @@
+2001-09-04 22:50 GMT +1 JFL (mafact) <jfl@mafact.com>
+   * harbour\include\hbclass.ch
+     Improved support for PERSISTENT keyword (ACCESS and SETGET)
+   * harbour\source\rtl\tobject.prg
+     added two methods ...
+        (xBase++)  ISDERIVEDFROM
+        (Class(y)) ISKINDOF
+
 2001-09-04 16:06 GMT+1 Antonio Linares <alinares@fivetech.com>
    * harbour/source/rtl/persist.prg
      oNew use fixed. Some formating fixes implemented also.

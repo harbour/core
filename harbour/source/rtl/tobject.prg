@@ -89,7 +89,11 @@ FUNCTION TObject()
       /*s_oClass:AddInline( "CLASSH"         , {| Self | __CLASSH( Self )            }, nScope ) */
       /*s_oClass:AddInline( "CLASSSEL"       , {| Self | __CLASSSEL( Self:CLASSH() ) }, nScope ) */
       /*s_oClass:AddInline( "EVAL"           , {| Self | __EVAL( Self )             }, nScope ) */
-      /*s_oClass:AddInline( "ISDERIVEDFROM"  , {| Self, xPar1 | __ObjDerivedFrom( Self, xPar1 ) }, nScope ) */
+
+      /* xBase++ */
+      s_oClass:AddInline( "ISDERIVEDFROM"  , {| Self, xPar1 | __ObjDerivedFrom( Self, xPar1 ) }, nScope )
+      /* Class(y) */
+      s_oClass:AddInline( "ISKINDOF"       , {| Self, xPar1 | __ObjDerivedFrom( Self, xPar1 ) }, nScope )
 
       s_oClass:AddMethod( "NEW"  , @TObject_New()  , nScope )
       s_oClass:AddMethod( "INIT" , @TObject_Init() , nScope )
@@ -108,7 +112,6 @@ FUNCTION TObject()
 
       /* Those one exist within Class(y), so we will probably try to implement it               */
 
-      /*s_oClass:AddInline( "ISKINDOF"       , {| Self |                            }, nScope ) */
       /*s_oClass:AddInline( "asString"       , {| Self | ::class:name + " object"   }, nScope ) */
       /*s_oClass:AddInline( "asExpStr"       , {| Self |                            }, nScope ) */
       /*s_oClass:AddInline( "basicSize"      , {| Self | Len( Self )                }, nScope ) */
