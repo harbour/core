@@ -2119,6 +2119,10 @@ int hb_pp_RdStr( FILE * handl_i, char * buffer, int maxlen, BOOL lDropSpaces, ch
   int State = 0;
   char cha, cLast = '\0', symbLast = '\0';
 
+  /* Ron Pinkas Begin 2000-06-04 */
+  BOOL bNewLine = TRUE;
+  /* Ron Pinkas End */
+
   HB_TRACE(HB_TR_DEBUG, ("hb_pp_RdStr(%p, %s, %d, %d, %s, %p, %p)", handl_i, buffer, maxlen, lDropSpaces, sBuffer, lenBuffer, iBuffer));
 
   if( *lenBuffer == 0 ) return -1;
@@ -2136,6 +2140,9 @@ int hb_pp_RdStr( FILE * handl_i, char * buffer, int maxlen, BOOL lDropSpaces, ch
       {
          if( s_ParseState == STATE_COMMENT && symbLast == ';' )
             buffer[readed++] = ';';
+         /* Ron Pinkas Begin 2000-06-04 */
+         bNewLine = TRUE;
+         /* Ron Pinkas End */
          break;
       }
       if( maxlen > 0 )
@@ -2184,7 +2191,7 @@ int hb_pp_RdStr( FILE * handl_i, char * buffer, int maxlen, BOOL lDropSpaces, ch
 
             /* Ron Pinkas Begin 2000-06-01 */
             case '@':
-              if( sBuffer[ *iBuffer ] != ' ' && sBuffer[ *iBuffer ] != '\t' )
+              if( bNewLine && sBuffer[ *iBuffer ] != ' ' && sBuffer[ *iBuffer ] != '\t' )
               {
                  buffer[readed++] = cha;
                  s_prevchar = cha;
@@ -2194,6 +2201,9 @@ int hb_pp_RdStr( FILE * handl_i, char * buffer, int maxlen, BOOL lDropSpaces, ch
             /* Ron Pinkas End */
             }
             if( cha != ' ' && cha != ';' ) s_prevchar = cha;
+            /* Ron Pinkas Begin 2000-06-04 */
+            if( cha != ' ' && cha != '\t' ) bNewLine = FALSE;
+            /* Ron Pinkas End */
           }
           if( cha != ' ' && cha != '\t' ) State = 1;
           if( lDropSpaces && State ) lDropSpaces = 0;
