@@ -464,11 +464,20 @@ ERRCODE hb_waOrderCondition( AREAP pArea, LPDBORDERCONDINFO param )
       if( pArea->lpdbOrdCondInfo->abFor )
          hb_xfree( pArea->lpdbOrdCondInfo->abFor );
       if( pArea->lpdbOrdCondInfo->itmCobFor )
+      {
+         hb_gcUnlockItem( pArea->lpdbOrdCondInfo->itmCobFor );
          hb_itemRelease( pArea->lpdbOrdCondInfo->itmCobFor );
+      }
       if( pArea->lpdbOrdCondInfo->itmCobWhile )
+      {
+         hb_gcUnlockItem( pArea->lpdbOrdCondInfo->itmCobWhile );
          hb_itemRelease( pArea->lpdbOrdCondInfo->itmCobWhile );
+      }
       if( pArea->lpdbOrdCondInfo->itmCobEval )
+      {
+         hb_gcUnlockItem( pArea->lpdbOrdCondInfo->itmCobEval );
          hb_itemRelease( pArea->lpdbOrdCondInfo->itmCobEval );
+      }
       hb_xfree( pArea->lpdbOrdCondInfo );
    }
    pArea->lpdbOrdCondInfo = param;
@@ -488,6 +497,8 @@ ERRCODE hb_waRelease( AREAP pArea )
       hb_xfree( pArea->lpFields );
    if( pArea->valResult )
       hb_itemRelease( pArea->valResult );
+   if( pArea->lpdbOrdCondInfo )
+      hb_waOrderCondition( pArea,NULL );
    hb_xfree( pArea );
    return SUCCESS;
 }

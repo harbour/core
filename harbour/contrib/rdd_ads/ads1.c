@@ -1151,8 +1151,9 @@ static ERRCODE adsOrderCreate( ADSAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
    }
 
    ulRetVal = AdsCreateIndex( pArea->hTable, pOrderInfo->abBagName,
-           pOrderInfo->atomBagName, (UCHAR*)hb_itemGetCPtr( pItem ), (UCHAR*)"", (UCHAR*)"",
-           ulOptions, &phIndex);
+           pOrderInfo->atomBagName, (UCHAR*)hb_itemGetCPtr( pItem ), 
+           ( pArea->lpdbOrdCondInfo && pArea->lpdbOrdCondInfo->abFor )? (UCHAR*)pArea->lpdbOrdCondInfo->abFor:(UCHAR*)"",
+           (UCHAR*)"", ulOptions, &phIndex);
    if ( ulRetVal != AE_SUCCESS )
    {
       commonError( pArea, EG_CREATE, ( USHORT ) ulRetVal, (char*) pOrderInfo->abBagName );

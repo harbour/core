@@ -1,3 +1,10 @@
+2000-09-21 12:59 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   * source/rdd/workarea.c
+   * source/rdd/dbcmd.c
+     * Some bugs fixed related to ordcondset()
+   * contrib/rdd_ads/ads1.c
+     * Conditional indexing implemented
+
 2000-09-21 00:40 UTC+0800 Brian Hays <bhays@abacuslaw.com>
    * contrib/rdd_ads/ads1.c
       ! fixed buffer allocation and item assignment in adsOrderListFocus

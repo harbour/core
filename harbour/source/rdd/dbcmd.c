@@ -2205,71 +2205,75 @@ HB_FUNC( ORDBAGNAME )
 
 HB_FUNC( ORDCONDSET )
 {
-   DBORDERCONDINFO dbOrderCondInfo;
+   LPDBORDERCONDINFO lpdbOrdCondInfo;
    char * szFor;
    ULONG ulLen;
    PHB_ITEM pItem;
 
    if( s_pCurrArea )
    {
+      lpdbOrdCondInfo = ( LPDBORDERCONDINFO ) hb_xgrab( sizeof( DBORDERCONDINFO ) );
       szFor = hb_parc( 1 );
       ulLen = strlen( szFor );
       if( ulLen )
       {
-         dbOrderCondInfo.abFor = ( BYTE * ) hb_xgrab( ulLen + 1 );
-         strcpy( ( char * ) dbOrderCondInfo.abFor, szFor );
+         lpdbOrdCondInfo->abFor = ( BYTE * ) hb_xgrab( ulLen + 1 );
+         strcpy( ( char * ) lpdbOrdCondInfo->abFor, szFor );
       }
       else
-         dbOrderCondInfo.abFor = NULL;
+         lpdbOrdCondInfo->abFor = NULL;
 
       pItem = hb_param( 2, HB_IT_BLOCK );
       if( pItem )
       {
-         dbOrderCondInfo.itmCobFor = hb_itemNew( NULL );
-         hb_itemCopy( dbOrderCondInfo.itmCobFor, pItem );
+         lpdbOrdCondInfo->itmCobFor = hb_itemNew( NULL );
+         hb_itemCopy( lpdbOrdCondInfo->itmCobFor, pItem );
+         hb_gcLockItem( lpdbOrdCondInfo->itmCobFor );
       }
       else
-         dbOrderCondInfo.itmCobFor = NULL;
+         lpdbOrdCondInfo->itmCobFor = NULL;
       if( ISLOG( 3 ) )
-         dbOrderCondInfo.fAll = hb_parl( 3 );
+         lpdbOrdCondInfo->fAll = hb_parl( 3 );
       else
-         dbOrderCondInfo.fAll = TRUE;
+         lpdbOrdCondInfo->fAll = TRUE;
 
       pItem = hb_param( 4, HB_IT_BLOCK );
       if( pItem )
       {
-         dbOrderCondInfo.itmCobWhile = hb_itemNew( NULL );
-         hb_itemCopy( dbOrderCondInfo.itmCobWhile, pItem );
+         lpdbOrdCondInfo->itmCobWhile = hb_itemNew( NULL );
+         hb_itemCopy( lpdbOrdCondInfo->itmCobWhile, pItem );
+         hb_gcLockItem( lpdbOrdCondInfo->itmCobWhile );
       }
       else
-         dbOrderCondInfo.itmCobWhile = NULL;
+         lpdbOrdCondInfo->itmCobWhile = NULL;
 
       pItem = hb_param( 5, HB_IT_BLOCK );
       if( pItem )
       {
-         dbOrderCondInfo.itmCobEval = hb_itemNew( NULL );
-         hb_itemCopy( dbOrderCondInfo.itmCobEval, pItem );
+         lpdbOrdCondInfo->itmCobEval = hb_itemNew( NULL );
+         hb_itemCopy( lpdbOrdCondInfo->itmCobEval, pItem );
+         hb_gcLockItem( lpdbOrdCondInfo->itmCobEval );
       }
       else
-         dbOrderCondInfo.itmCobEval = NULL;
+         lpdbOrdCondInfo->itmCobEval = NULL;
 
-      dbOrderCondInfo.lStep = hb_parnl( 6 );
-      dbOrderCondInfo.lStartRecno = hb_parnl( 7 );
-      dbOrderCondInfo.lNextCount = hb_parnl( 8 );
-      dbOrderCondInfo.lRecno = hb_parnl( 9 );
-      dbOrderCondInfo.fRest = hb_parl( 10 );
-      dbOrderCondInfo.fDescending = hb_parl( 11 );
-      dbOrderCondInfo.fAdditive = hb_parl( 12 );
-      dbOrderCondInfo.fScoped = hb_parl( 13 );
-      dbOrderCondInfo.fCustom = hb_parl( 14 );
-      dbOrderCondInfo.fNoOptimize = hb_parl( 15 );
+      lpdbOrdCondInfo->lStep = hb_parnl( 6 );
+      lpdbOrdCondInfo->lStartRecno = hb_parnl( 7 );
+      lpdbOrdCondInfo->lNextCount = hb_parnl( 8 );
+      lpdbOrdCondInfo->lRecno = hb_parnl( 9 );
+      lpdbOrdCondInfo->fRest = hb_parl( 10 );
+      lpdbOrdCondInfo->fDescending = hb_parl( 11 );
+      lpdbOrdCondInfo->fAdditive = hb_parl( 12 );
+      lpdbOrdCondInfo->fScoped = hb_parl( 13 );
+      lpdbOrdCondInfo->fCustom = hb_parl( 14 );
+      lpdbOrdCondInfo->fNoOptimize = hb_parl( 15 );
 
-      if( !dbOrderCondInfo.itmCobWhile )
-         dbOrderCondInfo.fRest = TRUE;
-      if( dbOrderCondInfo.lNextCount || dbOrderCondInfo.lRecno || dbOrderCondInfo.fRest )
-         dbOrderCondInfo.fAll = FALSE;
+      if( !lpdbOrdCondInfo->itmCobWhile )
+         lpdbOrdCondInfo->fRest = TRUE;
+      if( lpdbOrdCondInfo->lNextCount || lpdbOrdCondInfo->lRecno || lpdbOrdCondInfo->fRest )
+         lpdbOrdCondInfo->fAll = FALSE;
 
-      hb_retl( SELF_ORDSETCOND( ( AREAP ) s_pCurrArea->pArea, &dbOrderCondInfo ) == SUCCESS );
+      hb_retl( SELF_ORDSETCOND( ( AREAP ) s_pCurrArea->pArea, lpdbOrdCondInfo ) == SUCCESS );
    }
    else
       hb_retl( FALSE );
