@@ -25,6 +25,7 @@ PRG_SOURCES=\
         asort.prg \
 	error.prg \
 	errorsys.prg \
+        objfunc.prg \
 	tclass.prg \
 
 LIB=rtl

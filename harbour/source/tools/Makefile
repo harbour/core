@@ -11,6 +11,9 @@ C_SOURCES=\
 	mathx.c \
 	stringsx.c \
 
+PRG_SOURCES=\
+        stringp.prg \
+
 # io.c should be in the list, but it is DOS-specific.
 
 LIB=tools

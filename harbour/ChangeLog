@@ -1,3 +1,9 @@
+19990511-09:55 Eddie Runia
+  * source/rtl/objfunc.prg, source/tools/stringp.prg
+    created from tests/working/debugtst.prg
+  * Makefile.*
+    files added to list. (Except makefile.vc)
+
 19990511-09:40 Eddie Runia
   * source/rtl/asort.prg
     added a seperate function
