@@ -1,3 +1,12 @@
+2001-12-08 16:20 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
+  * source/rtl/checkbox.prg
+    * fixed an smallbug on isdefcolor() function
+  * source/rtl/radiobtn.prg
+    source/rtl/radiogrp.prg
+    * minor fixes
+  * contrib/libct/files.c
+    * Added code to support unix for the follow functions:FileSize(),FileDate(),FileTime()
+
 2001-12-08 08:40 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
   * source/rtl/checkbox.prg
     * fixed an smallbug on __guicolor() function

@@ -54,7 +54,6 @@
 #define HB_OS_WIN_32_USED
 #include <hbapi.h>
 
-
 #if defined(HB_OS_DOS) 
 static struct ffblk fsOldFiles;
 #endif
@@ -78,6 +77,18 @@ static struct ffblk fsOldFiles;
       #include "dos.h"
       #include <dir.h>
 #endif
+#if defined(__GNUC__) && !defined(__MINGW32__)
+   #include <sys/types.h>
+   #include <sys/stat.h>
+   #include <fcntl.h>
+   #include <errno.h>
+   #include <dirent.h>
+   #include <time.h>
+   #if !defined(HAVE_POSIX_IO)
+      #define HAVE_POSIX_IO
+   #endif
+
+#endif
 #if (defined(HB_OS_WIN_32) || defined(__MINGW32__)) && !defined(__CYGWIN__)
 static       HANDLE hLastFind;
 static       WIN32_FIND_DATA  Lastff32;
@@ -95,6 +106,65 @@ LPTSTR GetTime(FILETIME *rTime);
    #define FA_ARCH            32   /* A */
    #define FA_NORMAL           0
 #endif
+#if !defined(FA_DEVICE)
+   #define FA_DEVICE          64   /* I */
+/*   #define FA_NORMAL         128 */  /* N */  /* ignored */ /* Exists in BORLANDC */
+   #define FA_TEMPORARY      256   /* T */
+   #define FA_SPARSE         512   /* P */
+   #define FA_REPARSE       1024   /* L */
+   #define FA_COMPRESSED    2048   /* C */
+   #define FA_OFFLINE       4096   /* O */
+   #define FA_NOTINDEXED    8192   /* X */
+   #define FA_ENCRYPTED    16384   /* E */
+   #define FA_VOLCOMP      32768   /* M */
+#endif
+
+static USHORT osToHarbourMask( USHORT usMask )
+{
+   USHORT usRetMask;
+
+   HB_TRACE(HB_TR_DEBUG, ("osToHarbourMask(%hu)", usMask));
+
+   usRetMask = usMask;
+
+   /* probably access denied when requesting mode */
+   if( usMask == (USHORT) -1 )
+      return 0;
+
+#if defined(OS_UNIX_COMPATIBLE)
+   /* The use of any particular FA_ define here is meaningless */
+   /* they are essentially placeholders */
+   usRetMask = 0;
+   if( S_ISREG( usMask ) )
+      usRetMask |= FA_ARCH;        /* A */
+   if( S_ISDIR( usMask ) )
+      usRetMask |= FA_DIREC;       /* D */
+   if( S_ISLNK( usMask ) )
+      usRetMask |= FA_REPARSE;     /* L */
+   if( S_ISCHR( usMask ) )
+      usRetMask |= FA_COMPRESSED;  /* C */
+   if( S_ISBLK( usMask ) )
+      usRetMask |= FA_DEVICE;      /* B  (I) */
+   if( S_ISFIFO( usMask ) )
+      usRetMask |= FA_TEMPORARY;   /* F  (T) */
+   if( S_ISSOCK( usMask ) )
+      usRetMask |= FA_SPARSE;      /* K  (P) */
+#elif defined(HB_OS_OS2)
+   usRetMask = 0;
+   if( usMask & FILE_ARCHIVED )
+      usRetMask |= FA_ARCH;
+   if( usMask & FILE_DIRECTORY )
+      usRetMask |= FA_DIREC;
+   if( usMask & FILE_HIDDEN )
+      usRetMask |= FA_HIDDEN;
+   if( usMask & FILE_READONLY )
+      usRetMask |= FA_RDONLY;
+   if( usMask & FILE_SYSTEM )
+      usRetMask |= FA_SYSTEM;
+#endif
+
+   return usRetMask;
+}
 
 
 
@@ -383,8 +453,9 @@ HB_FUNC(FILESIZE)
    int iFind;
    if (hb_pcount() >0) {
       char *szFiles=hb_parc(1);
-      int iAttr=0 ;   
+      int iAttr=0 ;
       struct ffblk fsFiles;
+      
       if (ISNUM(2))
          iAttr=hb_parni(2);
          iFind=findfirst(szFiles,&fsFiles,iAttr);
@@ -400,6 +471,26 @@ HB_FUNC(FILESIZE)
   {
    hb_retnl(fsOldFiles.ff_fsize);
    }
+}
+#elif defined(OS_UNIX_COMPATIBLE)
+{
+   if (hb_pcount() >0) {
+   const char *szFile=hb_parc(1);
+   USHORT   ushbMask = FA_ARCH;
+   USHORT   usFileAttr;
+   struct stat sStat;
+   if (ISNUM(2))
+      ushbMask=hb_parni(2);
+   if (stat(szFile,&sStat )!=-1){
+       usFileAttr=osToHarbourMask(sStat.st_mode);
+       if ((ushbMask>0) & (ushbMask&usFileAttr))
+           hb_retnl(sStat.st_size);
+       else
+           hb_retnl(sStat.st_size);
+           }
+   else
+        hb_retnl(-1);
+}
 }
 #else
 {
@@ -479,6 +570,32 @@ HB_FUNC(FILEDATE)
   else
    hb_retd( (long) (fsOldFiles.ff_fdate >> 9) +1980 ,     (long)  ((fsOldFiles.ff_fdate & ~0xFE00) >> 5) ,(long)fsOldFiles.ff_fdate & ~0xFFE0); 
  }
+#elif defined(OS_UNIX_COMPATIBLE)
+{
+   if (hb_pcount() >0) {
+      const char *szFile=hb_parc(1);
+      struct stat sStat;
+      time_t tm_t=0;
+      char szDate[9];
+      struct tm *filedate;
+      USHORT   ushbMask = FA_ARCH;
+      USHORT   usFileAttr;
+      if (ISNUM(2))
+         ushbMask=hb_parni(2);
+      if (stat(szFile,&sStat) != -1) {
+         tm_t = sStat.st_mtime;
+         filedate = localtime(&tm_t);
+         sprintf(szDate,"%04d%02d%02d",filedate->tm_year+1900,filedate->tm_mon+1,filedate->tm_mday);
+         usFileAttr=osToHarbourMask(sStat.st_mode);
+      if ((ushbMask>0) & (ushbMask&usFileAttr))
+         hb_retds(szDate);
+      else
+         hb_retds(szDate);
+           }
+   else
+        hb_retds("        ");
+   }
+}
 #else
 {
                           hb_retds("        ");
@@ -564,6 +681,20 @@ HB_FUNC(FILETIME)
    hb_retc(szTime);
    }
 }
+#elif defined(OS_UNIX_COMPATIBLE)
+{ 
+   const char *szFile=hb_parc(1);
+   struct stat sStat;
+   time_t tm_t=0;
+   char szTime[9];
+   struct tm *ft;
+   stat(szFile,&sStat   );
+   tm_t = sStat.st_mtime;
+
+   sprintf( szTime, "%02d:%02d:%02d",ft->tm_hour, ft->tm_min, ft->tm_sec );
+   hb_retc(szTime);
+}
+
 #else
 {
             hb_retc("  :  ");
