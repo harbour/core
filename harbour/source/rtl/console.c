@@ -127,7 +127,15 @@ HB_INIT_SYMBOLS_END( Console__InitSymbols );
 static unsigned short dev_row, dev_col, p_row, p_col;
 static char CrLf [ CRLF_BUFFER_LEN ];
 
-HB_CALL_ON_STARTUP_BEGIN( InitializeConsole )
+void hb_consoleRelease( void )
+{
+#ifdef HARBOUR_USE_GTAPI
+   hb_gtExit ();
+#endif
+}
+
+void hb_consoleInitialize( void )
+{
 #if defined(OS_DOS_COMPATIBLE)
    CrLf [0] = 13;
    CrLf [1] = 10;
@@ -145,10 +153,7 @@ HB_CALL_ON_STARTUP_BEGIN( InitializeConsole )
    dev_col = 0;
 #endif
    p_row = p_col = 0;
-HB_CALL_ON_STARTUP_END( InitializeConsole );
-#if ! defined(__GNUC__)
-#pragma startup InitializeConsole
-#endif
+}
 
 WORD hb_max_row( void )
 {

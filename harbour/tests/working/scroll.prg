@@ -11,8 +11,14 @@
 
 function main()
 
-   CLS
-   @ MAXROW(), 0 SAY "If the GT API was linked in, the rest of the screen should be blank now."
+   DEVPOS(MAXROW(),0)
+   ? "If you have the GT API linked in, the screen will be blanked, a text block"
+   ? "will be drawn in the upper-left hand corner of the screen, and then the inside"
+   ? "of the text block will be scrolled around. Otherwise, you will see the screen"
+   ? "scroll, the text block will be drawn starting from the bottom right and scroll"
+   ? "up, but there will be no scrolling inside the text block."
+   ?
+   ?
    Pause()
    CLS
    @ 0,0  SAY "01234567890123456789012345678901"

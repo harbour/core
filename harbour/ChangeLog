@@ -1,3 +1,38 @@
+19990719-16:50 EDT David G. Holm <dholm@jsd-llc.com>
+  * config/dos/bcc31.cf
+    + Added -DHARBOUR_USE_GTAPI and -DHARBOUR_USE_DOS_GTAPI
+      to the C preprocessor options
+  * include/set.h
+    + Added prototypes for hb_consoleInitialize() and
+      hb_consoleRelease(), because console doesn't own
+      an include file and these two functions were added
+      to allow synchronization with hb_setInitialize() and
+      hb_setRelease(), both of which are prototyped here
+  * include/version.h
+    * Updated build to 29, set revision to "", and set date
+      to 1999, 7, 19, in anticipation of a new public release
+  * source/compiler/harbour.y
+    + Added #include "version.h"
+    * Changed version printout to use hb_build from version.h
+    * Changed version printout us use "Summer" instead of "Spring"
+    * Removed newline from middle of version printout
+    * Moved prinout of version ahead of command line option checks,
+      so that the version is always displayed, like in Clipper
+  * source/rtl/console.c
+    + Added hb_consoleRelease() function that calls hb_gtExit()
+    * Converted InitializeConsole() from an HB_CALL_ON_STARTUP
+      function to a normal function named hb_consoleInitialize()
+  * source/rtl/setcolor.c
+    - Removed HARBOUR GTEXIT() function
+  * source/vm/hvm.c
+    + Added call to hb_consoleInitialize() immediately following call to
+      hb_setInitialize and added call to hb_consoleRelease() immediately
+      prior to calling hb_setRelease().
+  * tests/working scroll.prg
+    * Changed the introductory text message
+  * tests/working/tstcolor.prg
+    - Removed GTEXIT() call
+
 19990719-16:15 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/gtapi.c
      * Minor change to catch last color parameter

@@ -5,7 +5,7 @@
 
 /*
  * Harbour compiler (yacc rules and actions)
- * Build 27 summer 1999
+ * Build 29 summer 1999
  * Usage: bison -d -v harbour.y
  * You may find Bison at www.harbour.project.org
  *
@@ -36,8 +36,6 @@
  *   partial copyright regarding generation portable objects
  */
 
-#define BUILD         27    /* current harbour.y build */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -50,6 +48,7 @@
 #include "compiler.h"
 #include "hberrors.h"
 #include "hbpp.h"
+#include "version.h"
 
 #define debug_msg( x, z )
 
@@ -1175,6 +1174,9 @@ int harbour_main( int argc, char * argv[] )
    char *szOutPath ="";
    FILENAME *pFileName =NULL;
 
+   if( !_iQuiet )
+     printf( "Harbour compiler build %i Summer 1999\n", hb_build );
+
    if( argc > 1 )
    {
       Hbpp_init();  /* Initialization of preprocessor arrays */
@@ -1322,9 +1324,6 @@ int harbour_main( int argc, char * argv[] )
             pFileName =SplitFilename( argv[ iArg ] );
          iArg++;
       }
-
-      if( !_iQuiet )
-        printf( "Harbour compiler\nbuild %i Spring 1999\n", BUILD );
 
       if( pFileName )
       {

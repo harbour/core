@@ -61,11 +61,9 @@ char *hb_setColor( char *sColor )
 }
 
 HARBOUR HB_SETCOLOR( void );
-HARBOUR HB_GTEXIT( void );
 
 HB_INIT_SYMBOLS_BEGIN( SETCOLOR__InitSymbols )
 { "SETCOLOR", FS_PUBLIC, HB_SETCOLOR, 0 },
-{ "GTEXIT", FS_PUBLIC, HB_GTEXIT, 0 }
 HB_INIT_SYMBOLS_END( SETCOLOR__InitSymbols );
 #if ! defined(__GNUC__)
 #pragma startup SETCOLOR__InitSymbols
@@ -74,13 +72,4 @@ HB_INIT_SYMBOLS_END( SETCOLOR__InitSymbols );
 HARBOUR HB_SETCOLOR( void )
 {
     hb_retc( hb_setColor( hb_pcount() ? hb_parc(1) : NULL ) );
-}
-
-/* TODO: This is a temporary fix  - Call it on exit if you use SetColor() */
-
-HARBOUR HB_GTEXIT( void )
-{
-#ifdef HARBOUR_USE_GTAPI
-   hb_gtExit();
-#endif
 }

@@ -27,9 +27,3 @@ proc main
 ? "input    ", cColor
 ? "return   ", setcolor()
 ? set(_SET_COLOR )
- 
-
-/* TODO: gt_exit needs to be called! */
-
-gtexit()
-

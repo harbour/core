@@ -29,7 +29,11 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
    their web site at http://www.gnu.org/).
 
-   V 1.47   David G. Holm               Changed hb_set.HB_SET_COLOR to be a
+   V 1.16   David G. Holm               Added prototypes for hb_consoleRelease
+                                        and hb_consoleInitialize, because set
+                                        must be initialized before console and
+                                        released after console.
+   V 1.15   David G. Holm               Changed hb_set.HB_SET_COLOR to be a
                                         fixed 64 byte buffer. Added prototype
                                         for hb_setColor()
    V 1.14   David G. Holm               Removed the obsolete hb_set_fixed
@@ -67,7 +71,9 @@ HARBOUR HB_SET (void);
 HARBOUR HB_SETCENTURY (void);
 char * hb_setColor (char *);
 void hb_setInitialize (void);
+void hb_consoleInitialize (void);
 void hb_setRelease (void);
+void hb_consoleRelease (void);
 
 typedef enum
 {
