@@ -1,3 +1,7 @@
+199908.02-12:15 GMT+3 Alexander Kresin
+  * source/hbpp/hbpp.c
+    * Bug fixed ( mentioned by Victor Szel )
+
 19990802-02:30 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/gtapi.c
      ! hb_gtDispbegin/end and hb_gtSetMode now supported for gtwin

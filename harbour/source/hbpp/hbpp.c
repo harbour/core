@@ -553,12 +553,12 @@ int ParseExpression( char* sLine, char* sOutLine )
   do
   {
     strotrim ( sLine );
-    ptri = sLine; ptro = sOutLine;
     rezDef = 0; rezTra = 0; rezCom = 0;
     lastused = kolused;
     isdvig = 0;
     do
     {
+      ptro = sOutLine;
       ptri = sLine + isdvig;
       ipos = md_strAt( ";", 1, ptri, FALSE );
       if ( ipos > 0 ) *(ptri+ipos-1) = '\0';
