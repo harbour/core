@@ -1,10 +1,10 @@
-2000-11-02 20:35 UTC+0800 Ron Pinkas <ron@profit-master.com>
+2000-11-03 15:50 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/harbour.sly
      + Added rule to accept Get and GetA as FunCall
 
-   * source/compiler/harbour.y
-     + Added support for pseudo function _GET_()
    * source/compiler/harbour.l
+     + Added support for pseudo function _GET_()
+   * source/compiler/harbour.y
      + Added _GET_(...) => __GET(...)/__GETA(...) logic from harbour.sly
 
    * source/macro/macro.slx
