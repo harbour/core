@@ -218,7 +218,7 @@ CLASS TMySQLQuery
 
    METHOD   Skip(nRows)                // Same as clipper ones
 
-   METHOD   Bof() INLINE ::nCurRow == 1
+   METHOD   Bof() INLINE ::nCurRow < 1
    METHOD   Eof() INLINE ::nCurRow > ::nNumRows
    METHOD   RecNo() INLINE ::nCurRow
    METHOD   LastRec() INLINE ::nNumRows
@@ -276,7 +276,7 @@ METHOD Skip(nRows) CLASS TMySQLQuery
 
    elseif nRows < 0
       // Negative movement
-      ::nCurRow := Max(::nCurRow - nRows, 1)
+      ::nCurRow := Max(::nCurRow + nRows, 1)
 
    else
       // positive movement
