@@ -403,7 +403,9 @@ LANG_LIB_OBJS = \
    $(OBJ_DIR)\msgru866.obj \
    $(OBJ_DIR)\msgruwin.obj \
    $(OBJ_DIR)\msgsr852.obj \
-   $(OBJ_DIR)\msgsriso.obj
+   $(OBJ_DIR)\msgsriso.obj \
+   $(OBJ_DIR)\msgzhgb.obj \
+   $(OBJ_DIR)\msgzhb5.obj
 
 #
 # MACRO.LIB rules
@@ -2077,6 +2079,14 @@ $(OBJ_DIR)\msgsr852.obj : $(LANG_DIR)\msgsr852.c
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\msgsriso.obj : $(LANG_DIR)\msgsriso.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\msgzhb5.obj : $(LANG_DIR)\msgzhb5.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\msgzhgb.obj : $(LANG_DIR)\msgzhgb.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 

@@ -1,3 +1,27 @@
+2001-11-16 05:15 GMT+0700 Andi Jahja <harbour@cbn.net.id>
+   * contrib/libnf/getver.c
+     ! HB_FUNC(_FT_TEMPFIL), initialize cPath #if !defined(HB_OS_DOS)
+   * source/lang/msgru866.c
+     ! function renamed: hb_lang_Init_TPL => hb_lang_Init_RU866
+   * source/lang/msgruwin.c
+     ! function renamed: hb_lang_Init_TPL => hb_lang_Init_RUWIN
+   * source/lang ( <freexbase@yahoo.com.cn> )
+     + add msgzhb5.c ( Chinese Traditional )
+     ! revised msgzhgb.c ( Chinese Traditional )
+   * doc/en/lang.txt
+     + add documentation of RU866 and RUWIN (Russian)
+     + add documentation of ZH_GB and ZH_BIG5 (Chinese)
+   * makefile.bc ( lang.lib section )
+     ! add file dependency - msgzhb5.obj ( Chinese Traditional )
+     ! add file dependency - msgzhgb.obj ( Chinese Simplified )
+   * makefile.vc ( lang.lib section )
+     ! add file dependency - msgzhb5.obj ( Chinese Traditional )
+     ! add file dependency - msgzhgb.obj ( Chinese Simplified )
+   * source/compiler/genobj32.c
+     ! add type casts for MsVC
+   * source/compiler/genc.c
+     ! add type casts for MsVC
+
 2001-11-16 08:44 GMT Dave Pearson <davep@davep.org>
    * source/compiler/gencobj.c
       * Fixed core dump when using -o switch.

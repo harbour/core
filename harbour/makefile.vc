@@ -450,7 +450,9 @@ LANG_LIB_OBJS = \
    $(OBJ_DIR)\msgru866.obj \
    $(OBJ_DIR)\msgruwin.obj \
    $(OBJ_DIR)\msgsr852.obj \
-   $(OBJ_DIR)\msgsriso.obj
+   $(OBJ_DIR)\msgsriso.obj \
+   $(OBJ_DIR)\msgzhgb.obj \
+   $(OBJ_DIR)\msgzhb5.obj
 
 #
 # MACRO.LIB rules
