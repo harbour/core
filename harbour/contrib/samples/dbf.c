@@ -53,7 +53,7 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 
-extern HB_FUNC( ALIAS );
+HB_FUNC_EXTERN( ALIAS );
 
 HB_FUNC( DBF )
 {

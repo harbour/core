@@ -65,7 +65,7 @@
 #include "hbapigt.h"
 #include "inkey.ch"
 
-extern HB_FUNC( QOUT );
+HB_FUNC_EXTERN( QOUT );
 
 #define ACCEPT_BUFFER_LEN 256 /* length of input buffer for ACCEPT command */
 

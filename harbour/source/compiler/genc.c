@@ -133,7 +133,7 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
       {
          if( hb_compFunctionFind( pFunc->szName ) == NULL &&
              hb_compInlineFind( pFunc->szName ) == NULL )
-            fprintf( yyc, "extern HB_FUNC( %s );\n", pFunc->szName );
+            fprintf( yyc, "HB_FUNC_EXTERN( %s );\n", pFunc->szName );
 
          pFunc = pFunc->pNext;
       }

@@ -91,7 +91,7 @@ static HB_ITEM_PTR s_errorBlock;
 static int     s_iLaunchCount = 0;
 static USHORT  s_uiErrorDOS = 0; /* The value of DOSERROR() */
 
-extern HB_FUNC( ERRORNEW );
+HB_FUNC_EXTERN( ERRORNEW );
 
 /* NOTE: This is called via its symbol name, so we should make sure
          that it gets linked. WARNING ! DON'T make this function static.

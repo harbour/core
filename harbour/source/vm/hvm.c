@@ -76,6 +76,7 @@
 #include "hbapilng.h"
 #include "hbapirdd.h"
 #include "hbapigt.h"
+#include "hbapicdp.h"
 #include "hbvm.h"
 #include "hbpcode.h"
 #include "hbset.h"
@@ -100,7 +101,7 @@ typedef struct _SYMBOLS
    HB_SYMBOLSCOPE hScope;    /* scope collected from all symbols in module used to speed initialization code */
 } SYMBOLS, * PSYMBOLS;       /* structure to keep track of all modules symbol tables */
 
-extern HB_FUNC( SYSINIT );
+HB_FUNC_EXTERN( SYSINIT );
 
 /* PCode functions */
 
@@ -208,7 +209,6 @@ static void    hb_vmReleaseLocalSymbols( void );  /* releases the memory of the 
 
 extern void * hb_mthRequested( void ); /* profiler from classes.c */
 extern void hb_mthAddTime( void *, ULONG ); /* profiler from classes.c */
-extern void hb_cdpReleaseAll( void );
 
 BOOL hb_bProfiler = FALSE; /* profiler status is off */
 BOOL hb_bTracePrgCalls = FALSE; /* prg tracing is off */

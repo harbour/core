@@ -85,10 +85,10 @@ typedef struct _AREANODE
 
 typedef AREANODE * LPAREANODE;
 
-extern HB_FUNC( _DBF );
-extern HB_FUNC( _SDF );
-extern HB_FUNC( _DELIM );
-extern HB_FUNC( RDDSYS );
+HB_FUNC_EXTERN( _DBF );
+HB_FUNC_EXTERN( _SDF );
+HB_FUNC_EXTERN( _DELIM );
+HB_FUNC_EXTERN( RDDSYS );
 
 static char * s_szDefDriver = NULL;    /* Default RDD name */
 static USHORT s_uiCurrArea = 1;        /* Selectd area */

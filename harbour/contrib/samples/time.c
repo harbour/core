@@ -55,11 +55,11 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 
-extern HB_FUNC( DAYS );
-extern HB_FUNC( AMPM );
-extern HB_FUNC( SECS );
-extern HB_FUNC( TSTRING );
-extern HB_FUNC( ELAPTIME );
+HB_FUNC_EXTERN( DAYS );
+HB_FUNC_EXTERN( AMPM );
+HB_FUNC_EXTERN( SECS );
+HB_FUNC_EXTERN( TSTRING );
+HB_FUNC_EXTERN( ELAPTIME );
 
 /* SECONDSASDAYS( <nSeconds> ) --> <nDays>
 */

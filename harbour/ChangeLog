@@ -8,6 +8,21 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-12-28 11:35 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/samples/dbf.c
+  * harbour/contrib/samples/time.c
+  * harbour/source/compiler/genc.c
+  * harbour/source/compiler/gencli.c
+  * harbour/source/rdd/dbcmd.c
+  * harbour/source/rtl/accept.c
+  * harbour/source/rtl/errorapi.c
+  * harbour/source/vm/hvm.c
+  * harbour/source/vm/initsymb.c
+  * harbour/source/vm/macro.c
+  * harbour/source/vm/memvclip.c
+    * changed 'extern HB_FUNC' to HB_FUNC_EXTERN for easier ABI
+      manipulations
+
 2004-12-28 10:30 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/harbour.spec
   * harbour/hbgtmk.sh

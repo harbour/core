@@ -63,7 +63,7 @@
   #include "hbpp.h"
 #endif
 
-extern HB_FUNC( __MVPUBLIC );
+HB_FUNC_EXTERN( __MVPUBLIC );
 
 /* .and. & .or. expressions shortcuts - the expression optimiser needs
  * a global variable
