@@ -1,3 +1,7 @@
+2001-05-03 07:30 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * source/pp/ppcore.c
+     + Added missing valid string prefix (|) in getExpReal()
+
 2001-05-02 21:20 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/pp/ppcore.c
      ! Corrected bug in getExpReal() where strings could be appended to an invalid expression.

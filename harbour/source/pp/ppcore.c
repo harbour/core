@@ -1873,7 +1873,7 @@ static int getExpReal( char * expreal, char ** ptri, BOOL prlist, int maxrez, BO
    while( **ptri != '\0' && !rez && lens < maxrez )
    {
       /* Added by Ron Pinkas 2000-11-08 ( removed lots of related scattered logic below! */
-      if( State == STATE_EXPRES || strchr( "({[,$!#=<>^%*/+-", cLastChar ) ) /* Ron Pinkas added if on State 2001-05-02 to avoid multiple strings concatination. */
+      if( State == STATE_EXPRES || strchr( "({[|,$!#=<>^%*/+-", cLastChar ) ) /* Ron Pinkas added if on State 2001-05-02 to avoid multiple strings concatination. */
       {
          if( **ptri == '"' )
          {
