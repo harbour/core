@@ -1,3 +1,18 @@
+20000227-11:47 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * source/rtl/console.c
+     ! Fixed non-GT API mode initialization.
+   * source/rtl/typefile.prg
+     - Removed unused code.
+   * source/runner/stdalone/hbrun.prg
+     + Now shows the Harbour version which it's linked with.
+   * source/rtl/console.c
+     source/rtl/strings.c
+     ! RTL_TEST.PRG reference removed, since this file no longer exists.
+   * source/rtl/inkey.c
+     % Variable scope adjusted.
+   * contrib/rdd_ads/rddads.b32
+     + Use the BCC_OPT setting.
+
 20000227-00:39 GMT-8 Brian Hays <bhays@abacuslaw.com>
    * include/hbclass.ch
      ! added Docs for all Class Commands
@@ -109,10 +124,10 @@
      * Update docs to reflect changes made by Victor (20000220-14:30 GMT+1)
 
 20000220-06:20 GMT-8 Brian Hays <bhays@abacuslaw.com>
-    * ng.prg
-    * os2.prg
-    * rtf.prg
-    * troff.prg
+    * source/tools/ng.prg
+    * source/tools/os2.prg
+    * source/tools/rtf.prg
+    * source/tools/troff.prg
       * edited docs
 
 20000220-03:40 GMT-8 Brian Hays <bhays@abacuslaw.com>

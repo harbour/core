@@ -1622,7 +1622,7 @@ HARBOUR HB_VAL( void )
  *      ? STR( 10, 6, 2 ) // " 10.00"
  *      ? STR( -10, 8, 2 ) // "  -10.00"
  *  $TESTS$
- *      see in rtl_test.prg for a comprehensive regression test suit.
+ *      see the regression test suit for comprehensive tests.
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -1737,7 +1737,7 @@ HARBOUR HB_STR( void )
  *      ? STRZERO( 10, 6, 2 ) // "010.00"
  *      ? STRZERO( -10, 8, 2 ) // "-0010.00"
  *  $TESTS$
- *      see in rtl_test.prg for a comprehensive regression test suit.
+ *      see the regression test suit for comprehensive tests.
  *  $STATUS$
  *      R
  *  $COMPLIANCE$

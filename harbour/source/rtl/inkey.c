@@ -1078,7 +1078,6 @@ HARBOUR HB___KEYBOARD( void )
       if( size != 0 )
       {
          /* Stuff the string */
-         int ch;
          BYTE * fPtr = ( BYTE * ) hb_parc( 1 );
 
          if( size >= hb_set.HB_SET_TYPEAHEAD )
@@ -1090,7 +1089,7 @@ HARBOUR HB___KEYBOARD( void )
 
          while( size-- )
          {
-            ch = *fPtr++;
+            int ch = *fPtr++;
             if( ch == 59 ) ch = 13; /* Convert ";" to CR, like Clipper does */
             hb_inkeyPut( ch );
          }

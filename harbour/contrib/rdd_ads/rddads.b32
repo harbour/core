@@ -16,8 +16,9 @@ ads0.obj : ads0.c
 adsfunc.obj : adsfunc.c
 
 .c.obj :
-  bcc32 -c -O2 -I..\..\include -o$@ -v $<
+  bcc32 $(BCC_OPT) -c -O2 -I..\..\include -o$@ -v $<
   tlib ..\..\lib\b32\rddads.lib -+$@,,
 
 .prg.c:
   ..\..\bin\harbour $< /n /i..\..\include
+

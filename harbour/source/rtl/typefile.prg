@@ -49,15 +49,6 @@
 #include 'fileio.ch'
 
 #define pBUFFER_LENGTH 2048
-// #define EOL HB_OSNEWLINE()
-
-#xtranslate FTELL(<nhandle>) => FSEEK(<nhandle>,0,FS_RELATIVE)
-
-#ifdef TEST
-function main
-type typefile.prg
-return nil
-#endif
 
 /*  $DOC$
  *  $FUNCNAME$
@@ -181,47 +172,24 @@ ENDDO
 IF lPrint
     aSaveSet[ 1 ] := Set( _SET_DEVICE, "PRINTER" )
     aSaveSet[ 2 ] := Set( _SET_PRINTER, .T. )
-/*  SET CONSOLE OFF */
 ENDIF
 
 // here we try to read a line at a time but I think we could just
 // display the whole buffer since it said: "without any headings or formating"
-
-// DO WHILE Freadln( nHandle, @cbuffer, pBUFFER_LENGTH )
-//    ? cBuffer
-// ENDDO
 
 ?                                                      // start in a new line
 DO WHILE fread( nHandle, @cbuffer, pBUFFER_LENGTH ) > 0
     ?? cBuffer
 ENDDO
 
-
 FCLOSE( nHandle )
 
 IF lPrint
     Set( _SET_DEVICE,  aSaveSet[ 1 ] )
     Set( _SET_PRINTER, aSaveSet[ 2 ] )
-/*  SET CONSOLE ON */
 ENDIF
 
 RETURN NIL
-
-/*
-STATIC FUNCTION Freadln( nH, cB, nMaxLine )
-LOCAL cLine, nSavePos, nEol, nNumRead
-cLine := space( nMaxLine )
-cB := ''
-nSavePos := FTELL( nH )
-nNumRead := fread( nH, @cLine, nMaxLine )
-IF ( nEol := at( EOL, substr( cLine, 1, nNumRead ) ) ) == 0
-    cB := cLine
-ELSE
-    cB := substr( cLine, 1, nEol - 1 )
-    fseek( nH, nSavePos + nEol + 1, FS_SET )
-ENDIF
-RETURN nNumRead != 0
-*/
 
 /*----------------------------------------------------------------------------*/
 /*         Function aDvd : Divide string to tokens and put tokens into array  */

@@ -144,15 +144,10 @@ void hb_consoleInitialize( void )
 
    hb_fsSetDevMode( s_iFilenoStderr, FD_BINARY );
 
-#ifdef HARBOUR_USE_GTAPI
    hb_mouseInit();
    hb_gtInit();
    hb_gtGetPos( &s_iDevRow, &s_iDevCol );
    hb_gtSetCursor( SC_NORMAL );
-#else
-   s_iDevRow = 0;
-   s_iDevCol = 0;
-#endif
 
    s_bInit = TRUE;
 }
@@ -1147,7 +1142,7 @@ HARBOUR HB___ACCEPTSTR( void )
  *  $EXAMPLES$
  *      ? hb_ColorIndex( "W/N, N/W", CLR_ENHANCED ) // "N/W"
  *  $TESTS$
- *      see rtl_test.prg for a comprehensive regression test suite.
+ *      see the regression test suit for comprehensive tests.
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
