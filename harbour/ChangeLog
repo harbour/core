@@ -1,3 +1,7 @@
+2000-04-20 15:50 GMT-4 David G. Holm <dholm@jsd-llc.com>
+  * config/w32/msvc.cf
+    ! Added $(LIB_EXT) following $(HB_GT_LIB) for LINKLIBS variable.
+
 20000420-11:15 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
    * source/compiler/hausage.c

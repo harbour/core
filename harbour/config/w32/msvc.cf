@@ -35,7 +35,7 @@ endif
 # Add the specified GT driver library
 ifeq ($(findstring rtl,$(LIBS)),rtl)
 LINKPATHS += -LIBPATH:$(TOP)$(ROOT)source/rtl/$(HB_GT_LIB)/$(ARCH)
-LINKLIBS += $(HB_GT_LIB)
+LINKLIBS += $(HB_GT_LIB)$(LIB_EXT)
 endif
 
 LDFLAGS = $(LINKPATHS)
