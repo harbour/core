@@ -1,3 +1,14 @@
+20000421-00:34 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/compiler/genc.c
+     % Variable scopes adjusted.
+     ! Some GCC warnings removed.
+
+   * source/compiler/harbour.c
+     ! Some GCC warnings removed
+     ! One int changed to BOOL
+     ! Indentation fixed
+
 20000420-23:58 GMT+1 Victor Szakats <info@szelvesz.hu>
    * source/compiler/genc.c
      ! STATICS and SFRAME fixed with -gc0 mode.

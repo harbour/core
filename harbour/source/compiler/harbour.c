@@ -861,11 +861,11 @@ PFUNCTION hb_compFunctionKill( PFUNCTION pFunc )
    }
 
    /* Release the NOOP array. */
-   if ( pFunc->pNOOPs )
+   if( pFunc->pNOOPs )
       hb_xfree( ( void * ) pFunc->pNOOPs );
 
    /* Release the Jumps array. */
-   if ( pFunc->pJumps )
+   if( pFunc->pJumps )
       hb_xfree( ( void * ) pFunc->pJumps );
 
    hb_xfree( ( void * ) pFunc->pCode );
@@ -1268,7 +1268,7 @@ USHORT hb_compFunctionGetPos( char * szFunctionName ) /* return 0 if not found o
 
 void hb_compPrepareOptimize()
 {
-   if ( ! hb_comp_iJumpOptimize )
+   if( ! hb_comp_iJumpOptimize )
       return;
 
    hb_comp_functions.pLast->iJumps++;
@@ -1276,7 +1276,7 @@ void hb_compPrepareOptimize()
    //printf( "Preparing for Jump #%i in: %li 3rd Byte=%i", hb_comp_functions.pLast->iJumps, ( ULONG ) ( hb_comp_functions.pLast->lPCodePos - 4 ), hb_comp_functions.pLast->pCode[ hb_comp_functions.pLast->lPCodePos ] );
    //getchar();
 
-   if ( hb_comp_functions.pLast->pJumps )
+   if( hb_comp_functions.pLast->pJumps )
    {
 
       hb_comp_functions.pLast->pJumps = ( ULONG * ) hb_xrealloc( hb_comp_functions.pLast->pJumps, sizeof( ULONG ) * hb_comp_functions.pLast->iJumps );
@@ -1289,9 +1289,9 @@ void hb_compPrepareOptimize()
    }
 
    /* Only Reserve Request - Don't know if NOOPs will remain yet. */
-   if ( hb_comp_functions.pLast->pCode[ hb_comp_functions.pLast->lPCodePos - 3 ] == 0 &&
-        hb_comp_functions.pLast->pCode[ hb_comp_functions.pLast->lPCodePos - 2 ] == 0 &&
-        hb_comp_functions.pLast->pCode[ hb_comp_functions.pLast->lPCodePos - 1 ] == 0 )
+   if( hb_comp_functions.pLast->pCode[ hb_comp_functions.pLast->lPCodePos - 3 ] == 0 &&
+       hb_comp_functions.pLast->pCode[ hb_comp_functions.pLast->lPCodePos - 2 ] == 0 &&
+       hb_comp_functions.pLast->pCode[ hb_comp_functions.pLast->lPCodePos - 1 ] == 0 )
       return;
 
    /* 3rd. Byte might be not used */
@@ -1299,7 +1299,7 @@ void hb_compPrepareOptimize()
    {
       hb_comp_functions.pLast->iNOOPs++;
 
-      if ( hb_comp_functions.pLast->pNOOPs )
+      if( hb_comp_functions.pLast->pNOOPs )
       {
          hb_comp_functions.pLast->pNOOPs = ( ULONG * ) hb_xrealloc( hb_comp_functions.pLast->pNOOPs, sizeof( ULONG ) * hb_comp_functions.pLast->iNOOPs );
          hb_comp_functions.pLast->pNOOPs[ hb_comp_functions.pLast->iNOOPs - 1 ] = hb_comp_functions.pLast->lPCodePos - 1;
@@ -1315,7 +1315,7 @@ void hb_compPrepareOptimize()
       {
          hb_comp_functions.pLast->iNOOPs++;
 
-         if ( hb_comp_functions.pLast->pNOOPs )
+         if( hb_comp_functions.pLast->pNOOPs )
          {
             hb_comp_functions.pLast->pNOOPs = ( ULONG * ) hb_xrealloc( hb_comp_functions.pLast->pNOOPs, sizeof( ULONG ) * hb_comp_functions.pLast->iNOOPs );
             hb_comp_functions.pLast->pNOOPs[ hb_comp_functions.pLast->iNOOPs - 1 ] = hb_comp_functions.pLast->lPCodePos - 2;
@@ -1332,22 +1332,22 @@ void hb_compPrepareOptimize()
 ULONG hb_compGenJump( LONG lOffset )
 {
    /* Just a place holder, it might be a far jump...*/
-   if ( lOffset == 0 )
+   if( lOffset == 0 )
    {
       hb_compGenPCode3( HB_P_JUMPFAR, 0, 0 );
       hb_compGenPCode1( 0 );
    }
-   else if ( lOffset >= -128 && lOffset <= 127 )
+   else if( lOffset >= -128 && lOffset <= 127 )
    {
       hb_compGenPCode3( HB_P_JUMPSHORT, HB_LOBYTE( lOffset ), HB_P_NOOP );
       hb_compGenPCode1( HB_P_NOOP );
    }
-   else if ( lOffset >= SHRT_MIN && lOffset <= SHRT_MAX )
+   else if( lOffset >= SHRT_MIN && lOffset <= SHRT_MAX )
    {
       hb_compGenPCode3( HB_P_JUMP, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ) );
       hb_compGenPCode1( HB_P_NOOP );
    }
-   else if ( lOffset >= (-8388608L) && lOffset <= 8388607L )
+   else if( lOffset >= (-8388608L) && lOffset <= 8388607L )
    {
       hb_compGenPCode3( HB_P_JUMPFAR, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ) );
       hb_compGenPCode1( ( BYTE ) ( ( ( USHORT ) ( lOffset ) >> 16 ) & 0xFF ) );
@@ -1365,22 +1365,22 @@ ULONG hb_compGenJump( LONG lOffset )
 ULONG hb_compGenJumpFalse( LONG lOffset )
 {
    /* Just a place holder, it might be a far jump...*/
-   if ( lOffset == 0 )
+   if( lOffset == 0 )
    {
       hb_compGenPCode3( HB_P_JUMPFARFALSE, 0, 0 );
       hb_compGenPCode1( 0 );
    }
-   else if ( lOffset >= -128 && lOffset <= 127 )
+   else if( lOffset >= -128 && lOffset <= 127 )
    {
       hb_compGenPCode3( HB_P_JUMPSHORTFALSE, HB_LOBYTE( lOffset ), HB_P_NOOP );
       hb_compGenPCode1( HB_P_NOOP );
    }
-   else if ( lOffset >= SHRT_MIN && lOffset <= SHRT_MAX )
+   else if( lOffset >= SHRT_MIN && lOffset <= SHRT_MAX )
    {
       hb_compGenPCode3( HB_P_JUMPFALSE, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ) );
       hb_compGenPCode1( HB_P_NOOP );
    }
-   else if ( lOffset >= (-8388608L) && lOffset <= 8388607L )
+   else if( lOffset >= (-8388608L) && lOffset <= 8388607L )
    {
       hb_compGenPCode3( HB_P_JUMPFARFALSE, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ) );
       hb_compGenPCode1( ( BYTE ) ( ( ( USHORT ) ( lOffset ) >> 16 ) & 0xFF ) );
@@ -1398,22 +1398,22 @@ ULONG hb_compGenJumpFalse( LONG lOffset )
 ULONG hb_compGenJumpTrue( LONG lOffset )
 {
    /* Just a place holder, it might be a far jump...*/
-   if ( lOffset == 0 )
+   if( lOffset == 0 )
    {
       hb_compGenPCode3( HB_P_JUMPFARTRUE, 0, 0 );
       hb_compGenPCode1( 0 );
    }
-   else if ( lOffset >= -128 && lOffset <= 127 )
+   else if( lOffset >= -128 && lOffset <= 127 )
    {
       hb_compGenPCode3( HB_P_JUMPSHORTTRUE, HB_LOBYTE( lOffset ), HB_P_NOOP );
       hb_compGenPCode1( HB_P_NOOP );
    }
-   else if ( lOffset >= SHRT_MIN && lOffset <= SHRT_MAX )
+   else if( lOffset >= SHRT_MIN && lOffset <= SHRT_MAX )
    {
       hb_compGenPCode3( HB_P_JUMPTRUE, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ) );
       hb_compGenPCode1( HB_P_NOOP );
    }
-   else if ( lOffset >= (-8388608L) && lOffset <= 8388607L )
+   else if( lOffset >= (-8388608L) && lOffset <= 8388607L )
    {
       hb_compGenPCode3( HB_P_JUMPFARTRUE, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ) );
       hb_compGenPCode1( ( BYTE ) ( ( ( USHORT ) ( lOffset ) >> 16 ) & 0xFF ) );
@@ -1432,11 +1432,11 @@ void hb_compGenJumpThere( ULONG ulFrom, ULONG ulTo )
 {
    BYTE * pCode  = hb_comp_functions.pLast->pCode;
    LONG lOffset  = ulTo - ulFrom + 1;
-   int iOptimize = 1 && hb_comp_iJumpOptimize ;
+   int iOptimize = hb_comp_iJumpOptimize;
 
-   if ( lOffset >= -128 && lOffset <= 127 )
+   if( lOffset >= -128 && lOffset <= 127 )
    {
-      switch ( pCode[ ( ULONG ) ( ulFrom - 1 ) ] )
+      switch( pCode[ ( ULONG ) ( ulFrom - 1 ) ] )
       {
          /*
          case HB_P_JUMPSHORT :
@@ -1501,31 +1501,31 @@ void hb_compGenJumpThere( ULONG ulFrom, ULONG ulTo )
 
       pCode[ ( ULONG ) ulFrom ] = HB_LOBYTE( lOffset );
 
-      if ( ! iOptimize  )
+      if( ! iOptimize  )
          return;
 
       /* Check if 3rd. Byte not used. */
-      if ( pCode[ ( ULONG ) ( ulFrom + 2 ) ] == HB_P_NOOP )
+      if( pCode[ ( ULONG ) ( ulFrom + 2 ) ] == HB_P_NOOP )
       {
          hb_comp_functions.pLast->iNOOPs++;
 
-         if ( hb_comp_functions.pLast->pNOOPs )
+         if( hb_comp_functions.pLast->pNOOPs )
          {
-           hb_comp_functions.pLast->pNOOPs = ( ULONG * ) hb_xrealloc( hb_comp_functions.pLast->pNOOPs, sizeof( ULONG ) * hb_comp_functions.pLast->iNOOPs );
-           hb_comp_functions.pLast->pNOOPs[ hb_comp_functions.pLast->iNOOPs - 1 ] = ( ULONG ) ulFrom + 2;
+            hb_comp_functions.pLast->pNOOPs = ( ULONG * ) hb_xrealloc( hb_comp_functions.pLast->pNOOPs, sizeof( ULONG ) * hb_comp_functions.pLast->iNOOPs );
+            hb_comp_functions.pLast->pNOOPs[ hb_comp_functions.pLast->iNOOPs - 1 ] = ( ULONG ) ulFrom + 2;
          }
          else
          {
-           hb_comp_functions.pLast->pNOOPs = ( ULONG * ) hb_xgrab( sizeof( ULONG ) );
-           hb_comp_functions.pLast->pNOOPs[ 0 ] = ( ULONG ) ulFrom + 2;
+            hb_comp_functions.pLast->pNOOPs = ( ULONG * ) hb_xgrab( sizeof( ULONG ) );
+            hb_comp_functions.pLast->pNOOPs[ 0 ] = ( ULONG ) ulFrom + 2;
          }
 
          /* Check if 2nd. Byte not used. */
-         if ( pCode[ ( ULONG ) ulFrom + 1 ] == HB_P_NOOP )
+         if( pCode[ ( ULONG ) ulFrom + 1 ] == HB_P_NOOP )
          {
             hb_comp_functions.pLast->iNOOPs++;
 
-            if ( hb_comp_functions.pLast->pNOOPs )
+            if( hb_comp_functions.pLast->pNOOPs )
             {
                hb_comp_functions.pLast->pNOOPs = ( ULONG * ) hb_xrealloc( hb_comp_functions.pLast->pNOOPs, sizeof( ULONG ) * hb_comp_functions.pLast->iNOOPs );
                hb_comp_functions.pLast->pNOOPs[ hb_comp_functions.pLast->iNOOPs - 1 ] = ( ULONG ) ulFrom + 1;
@@ -1538,9 +1538,9 @@ void hb_compGenJumpThere( ULONG ulFrom, ULONG ulTo )
          }
       }
    }
-   else if ( lOffset >= SHRT_MIN && lOffset <= SHRT_MAX )
+   else if( lOffset >= SHRT_MIN && lOffset <= SHRT_MAX )
    {
-      switch ( pCode[ ( ULONG ) ( ulFrom - 1 ) ] )
+      switch( pCode[ ( ULONG ) ( ulFrom - 1 ) ] )
       {
          /*
          case HB_P_JUMPSHORT :
@@ -1600,15 +1600,15 @@ void hb_compGenJumpThere( ULONG ulFrom, ULONG ulTo )
       pCode[ ulFrom ] = HB_LOBYTE( lOffset );
       pCode[ ( ULONG ) ( ulFrom + 1 ) ] = HB_HIBYTE( lOffset );
 
-      if ( ! iOptimize )
+      if( ! iOptimize )
          return;
 
       /* Check if 3rd. Byte not used. */
-      if ( pCode[ ( ULONG ) ulFrom + 2 ] == HB_P_NOOP )
+      if( pCode[ ( ULONG ) ulFrom + 2 ] == HB_P_NOOP )
       {
          hb_comp_functions.pLast->iNOOPs++;
 
-         if ( hb_comp_functions.pLast->pNOOPs )
+         if( hb_comp_functions.pLast->pNOOPs )
          {
             hb_comp_functions.pLast->pNOOPs = ( ULONG * ) hb_xrealloc( hb_comp_functions.pLast->pNOOPs, sizeof( ULONG ) * hb_comp_functions.pLast->iNOOPs );
             hb_comp_functions.pLast->pNOOPs[ hb_comp_functions.pLast->iNOOPs - 1 ] = ( ULONG ) ulFrom + 2;
@@ -1620,16 +1620,14 @@ void hb_compGenJumpThere( ULONG ulFrom, ULONG ulTo )
          }
       }
    }
-   else if ( lOffset >= (-8388608L) && lOffset <= 8388607L )
+   else if( lOffset >= ( -8388608L ) && lOffset <= 8388607L )
    {
       pCode[ ulFrom ] = HB_LOBYTE( lOffset );
       pCode[ ( ULONG ) ( ulFrom + 1 ) ] = HB_HIBYTE( lOffset );
       pCode[ ( ULONG ) ( ulFrom + 2 ) ] = ( BYTE ) ( ( ( USHORT ) ( lOffset ) >> 16 ) & 0xFF );
    }
    else
-   {
       hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_JUMP_TOO_LONG, NULL, NULL );
-   }
 }
 
 void hb_compGenJumpHere( ULONG ulOffset )
@@ -2301,9 +2299,10 @@ void hb_compFixReturns( void ) /* fixes all last defined function returns jumps 
       hb_compGenPCode1( HB_P_ENDPROC );
    }
 
-   if ( hb_comp_iJumpOptimize )
-      if ( hb_comp_functions.pLast && hb_comp_functions.pLast->iNOOPs )
-         hb_compOptimizeJumps();
+   if( hb_comp_iJumpOptimize && 
+       hb_comp_functions.pLast && 
+       hb_comp_functions.pLast->iNOOPs )
+      hb_compOptimizeJumps();
 
    if( hb_comp_iWarnings && hb_comp_functions.pLast )
    {
@@ -2341,9 +2340,9 @@ int hb_compSort_ULONG( const void * pLeft, const void * pRight )
     ULONG ulLeft  = *( (ULONG *) (pLeft) );
     ULONG ulRight = *( (ULONG *) (pRight) );
 
-    if ( ulLeft == ulRight )
+    if( ulLeft == ulRight )
        return 0 ;
-    else if ( ulLeft < ulRight )
+    else if( ulLeft < ulRight )
        return -1;
     else
        return 1;
@@ -2352,18 +2351,18 @@ int hb_compSort_ULONG( const void * pLeft, const void * pRight )
 void hb_compOptimizeJumps( void )
 {
    /* Jump Optimizer */
-   BYTE  * pCode      = hb_comp_functions.pLast->pCode;
-   BYTE  * pOptimized = ( BYTE * ) hb_xgrab( hb_comp_functions.pLast->lPCodePos - hb_comp_functions.pLast->iNOOPs );
-   ULONG * pNOOPs     = hb_comp_functions.pLast->pNOOPs;
-   ULONG * pJumps     = hb_comp_functions.pLast->pJumps;
-   int   * piShifts   = ( int * ) hb_xgrab( sizeof( int ) * hb_comp_functions.pLast->iJumps );
-   ULONG ulOptimized  = 0;
-   ULONG ulNextByte   = 0;
+   BYTE * pCode      = hb_comp_functions.pLast->pCode;
+   BYTE * pOptimized = ( BYTE * ) hb_xgrab( hb_comp_functions.pLast->lPCodePos - hb_comp_functions.pLast->iNOOPs );
+   ULONG * pNOOPs    = hb_comp_functions.pLast->pNOOPs;
+   ULONG * pJumps    = hb_comp_functions.pLast->pJumps;
+   int * piShifts    = ( int * ) hb_xgrab( sizeof( int ) * hb_comp_functions.pLast->iJumps );
+   ULONG ulOptimized = 0;
+   ULONG ulNextByte  = 0;
    int iNOOP;
    ULONG ulOffset;
    ULONG ulBytes2Copy;
    int iJump;
-   int iForward;
+   BOOL bForward = FALSE;
 
    //printf( "\rOptimize ON" );
    //getchar();
@@ -2371,16 +2370,16 @@ void hb_compOptimizeJumps( void )
    /* Needed so the pasting of PCODE pieces below will work correctly  */
    qsort( (void *) pNOOPs, hb_comp_functions.pLast->iNOOPs, sizeof( ULONG ), hb_compSort_ULONG );
 
-   /*
+/*
    for( iNOOP = 0; iNOOP < hb_comp_functions.pLast->iNOOPs; iNOOP++ )
    {
       printf( "\rNOOP #%i at:%li", iNOOP, pNOOPs[ iNOOP ] );
       getchar();
 
-      if ( pNOOPs[ iNOOP ] == 0 )
+      if( pNOOPs[ iNOOP ] == 0 )
       {
-        printf( "\r*** 0 *** NOOP # %i at:%li", iNOOP, pNOOPs[ iNOOP ] );
-        getchar();
+         printf( "\r*** 0 *** NOOP # %i at:%li", iNOOP, pNOOPs[ iNOOP ] );
+         getchar();
       }
    }
 
@@ -2392,15 +2391,15 @@ void hb_compOptimizeJumps( void )
          case HB_P_JUMPSHORTFALSE :
          case HB_P_JUMPSHORTTRUE :
          {
-             ulOffset = pCode[ pJumps[ iJump ] + 1 ];
+            ulOffset = pCode[ pJumps[ iJump ] + 1 ];
 
-             if ( ulOffset > 127 )
-             {
-                 ulOffset -= 256;
-                 iForward = 0;
-             }
-             else
-                 iForward = 1;
+            if( ulOffset > 127 )
+            {
+               ulOffset -= 256;
+               bForward = FALSE;
+            }
+            else
+               bForward = TRUE;
          }
          break;
 
@@ -2408,25 +2407,25 @@ void hb_compOptimizeJumps( void )
          case HB_P_JUMPFALSE :
          case HB_P_JUMPTRUE :
          {
-             ulOffset = ( ULONG ) ( pCode[ pJumps[ iJump ] + 1 ] + ( pCode[ pJumps[ iJump ] + 2 ] * 256 ) );
-             if ( ulOffset > SHRT_MAX )
-             {
-                 ulOffset -= 65536;
-                 iForward = 0;
-             }
-             else
-                 iForward = 1;
+            ulOffset = ( ULONG ) ( pCode[ pJumps[ iJump ] + 1 ] + ( pCode[ pJumps[ iJump ] + 2 ] * 256 ) );
+            if( ulOffset > SHRT_MAX )
+            {
+               ulOffset -= 65536;
+               bForward = FALSE;
+            }
+            else
+               bForward = TRUE;
          }
          break;
 
          default:
          {
-             ulOffset = ( ULONG )( pCode[ pJumps[ iJump ] + 1 ] + ( pCode[ pJumps[ iJump ] + 2 ] * 256 ) + ( pCode[ pJumps[ iJump ] + 3 ] * 65536 ) );
-             if ( ulOffset > 8388607L )
-             {
-                 ulOffset -= 16777216L;
-                 iForward = 0;
-             }
+            ulOffset = ( ULONG )( pCode[ pJumps[ iJump ] + 1 ] + ( pCode[ pJumps[ iJump ] + 2 ] * 256 ) + ( pCode[ pJumps[ iJump ] + 3 ] * 65536 ) );
+            if( ulOffset > 8388607L )
+            {
+               ulOffset -= 16777216L;
+               bForward = FALSE;
+            }
          }
          break;
       }
@@ -2434,13 +2433,13 @@ void hb_compOptimizeJumps( void )
       printf( "\rJump=%li, Base=%li, Offset=%li, Target=%li", iJump, pJumps[ iJump ], ulOffset, pJumps[ iJump ] + ulOffset );
       getchar();
 
-      if ( pJumps[ iJump ] == 0 || ulOffset == 0 )
+      if( pJumps[ iJump ] == 0 || ulOffset == 0 )
       {
          printf( "\r*** 0 *** Jump=%li, Base=%li, Offset=%li, Target=%li", iJump, pJumps[ iJump ], ulOffset, pJumps[ iJump ] + ulOffset );
          getchar();
       }
    }
-   */
+*/
 
    for( iJump = 0; iJump < hb_comp_functions.pLast->iJumps; iJump++ )
       piShifts[ iJump ] = 0;
@@ -2457,15 +2456,15 @@ void hb_compOptimizeJumps( void )
             case HB_P_JUMPSHORTFALSE :
             case HB_P_JUMPSHORTTRUE :
             {
-                ulOffset = pCode[ pJumps[ iJump ] + 1 ];
+               ulOffset = pCode[ pJumps[ iJump ] + 1 ];
 
-                if ( ulOffset > 127 )
-                {
-                    ulOffset -= 256;
-                    iForward = 0;
-                }
-                else
-                    iForward = 1;
+               if( ulOffset > 127 )
+               {
+                  ulOffset -= 256;
+                  bForward = FALSE;
+               }
+               else
+                  bForward = TRUE;
             }
             break;
 
@@ -2474,41 +2473,41 @@ void hb_compOptimizeJumps( void )
             case HB_P_JUMPTRUE :
             {
                ulOffset = ( ULONG ) ( pCode[ pJumps[ iJump ] + 1 ] + ( pCode[ pJumps[ iJump ] + 2 ] * 256 ) );
-               if ( ulOffset > SHRT_MAX )
+               if( ulOffset > SHRT_MAX )
                {
-                   ulOffset -= 65536;
-                   iForward = 0;
+                  ulOffset -= 65536;
+                  bForward = FALSE;
                }
                else
-                   iForward = 1;
+                  bForward = TRUE;
             }
             break;
 
             default:
             {
                ulOffset = ( ULONG )( pCode[ pJumps[ iJump ] + 1 ] + ( pCode[ pJumps[ iJump ] + 2 ] * 256 ) + ( pCode[ pJumps[ iJump ] + 3 ] * 65536 ) );
-               if ( ulOffset > 8388607L )
+               if( ulOffset > 8388607L )
                {
-                   ulOffset -= 16777216L;
-                   iForward = 0;
+                  ulOffset -= 16777216L;
+                  bForward = FALSE;
                }
             }
             break;
          }
 
          /* Only intrested in forward (positive) jumps. */
-         if ( iForward )
+         if( bForward )
          {
             //printf( "\rCurrent NOOP=%li, Address=%li, Jump=%i, Base=%li, Offset=%li, Target=%li", iNOOP, pNOOPs[ iNOOP ], iJump, pJumps[ iJump ], ulOffset, pJumps[ iJump ] + ulOffset );
             //getchar();
 
             /* Only if points to code beyond the current fix. */
-            if ( pJumps[ iJump ] < pNOOPs[ iNOOP ] && pJumps[ iJump ] + piShifts[ iJump ] + ulOffset > pNOOPs[ iNOOP ] )
+            if( pJumps[ iJump ] < pNOOPs[ iNOOP ] && pJumps[ iJump ] + piShifts[ iJump ] + ulOffset > pNOOPs[ iNOOP ] )
             {
                /* Increasing Shift Counter for this Jump. */
                piShifts[ iJump ]++;
 
-               if ( pCode[ pJumps[ iJump ] + 1 ] )
+               if( pCode[ pJumps[ iJump ] + 1 ] )
                   pCode[ pJumps[ iJump ] + 1 ]--;
                else
                {
@@ -2528,12 +2527,12 @@ void hb_compOptimizeJumps( void )
             //getchar();
 
             // Only if points to code beyond the current fix.
-            if (  pJumps[ iJump ] > pNOOPs[ iNOOP ] && pJumps[ iJump ] + piShifts[ iJump ] + ulOffset < pNOOPs[ iNOOP ] )
+            if(  pJumps[ iJump ] > pNOOPs[ iNOOP ] && pJumps[ iJump ] + piShifts[ iJump ] + ulOffset < pNOOPs[ iNOOP ] )
             {
                /* Decreasing Shift Counter for this Jump. */
                piShifts[ iJump ]--;
 
-               if ( pCode[ pJumps[ iJump ] + 1 ] < 255 )
+               if( pCode[ pJumps[ iJump ] + 1 ] < 255 )
                   pCode[ pJumps[ iJump ] + 1 ]++;
                else
                {
@@ -2735,9 +2734,10 @@ void hb_compCodeBlockEnd( void )
    USHORT wPos;
    PVAR pVar, pFree;
 
-   if ( hb_comp_iJumpOptimize )
-      if ( hb_comp_functions.pLast && hb_comp_functions.pLast->iNOOPs )
-         hb_compOptimizeJumps();
+   if( hb_comp_iJumpOptimize && 
+       hb_comp_functions.pLast && 
+       hb_comp_functions.pLast->iNOOPs )
+      hb_compOptimizeJumps();
 
    pCodeblock = hb_comp_functions.pLast;
 
@@ -2808,11 +2808,11 @@ void hb_compCodeBlockEnd( void )
       hb_xfree( ( void * ) pFree );
    }
    /* Release the NOOP array. */
-   if ( pCodeblock->pNOOPs )
+   if( pCodeblock->pNOOPs )
       hb_xfree( ( void * ) pCodeblock->pNOOPs );
 
    /* Release the Jumps array. */
-   if ( pCodeblock->pJumps )
+   if( pCodeblock->pJumps )
       hb_xfree( ( void * ) pCodeblock->pJumps );
 
    hb_xfree( ( void * ) pCodeblock );
