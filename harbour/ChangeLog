@@ -1,3 +1,8 @@
+20000521-14:42 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+   * tests/testwarn.prg
+     ! Consolidate #translate rules, and verified that it can compile under Clipper
+
 20000521-14:15 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
    * source/compiler/harbour.l
@@ -20,7 +25,7 @@
      + Added logic to add | HB_FS_FIRST to first defined symbol in a prg.
 
    * source/vm/hvm.c
-     * Modified hb_vmProcessSymbols() to llok for HB_FS_FIRST for startup procedure instead of any first symbol.
+     * Modified hb_vmProcessSymbols() to look for HB_FS_FIRST for startup procedure instead of any first symbol.
 
    * source/compiler/harbour.y
      * Minor consilidation in AsType
