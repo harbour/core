@@ -302,7 +302,7 @@ void hb_cmdargProcessVM( void )
       hb_outerr( hb_consoleGetNewLine(), 0 );
 #endif
 
-#if defined( HB_COMPAT_XPP ) || defined( HB_COMPAT_XPP ) || defined( HB_COMPAT_VO )
+#if defined( HB_COMPAT_C53 ) || defined( HB_COMPAT_XPP ) || defined( HB_COMPAT_VO )
       hb_outerr( "  With some support for:", 0 );
       hb_outerr( hb_consoleGetNewLine(), 0 );
 

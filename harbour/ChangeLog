@@ -1,3 +1,7 @@
+20000206-16:55 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * source/vm/cmdarg.c
+     ! Mistyped #ifdef fixed in //BUILD functionality (mentioned by Jose)
+
 20000206-16:15 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/vm/hvm.c
