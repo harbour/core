@@ -39,14 +39,27 @@
 
 static oDebugger
 
-function Debugger( cModuleName )
+function Debugger( uParam )
 
-   if oDebugger == nil
-      oDebugger = TDebugger():New()
-      oDebugger:Activate( cModuleName )
-   else
-      oDebugger:ShowCode( cModuleName )
-   endif
+   do case
+      case ValType( uParam ) == "C"
+           if oDebugger == nil
+              oDebugger = TDebugger():New()
+              oDebugger:Activate( uParam )
+           endif
+
+      case ValType( uParam ) == "N"
+           if oDebugger != nil
+              oDebugger:cAppImage  = SaveScreen()
+              oDebugger:nAppRow    = Row()
+              oDebugger:nAppCol    = Col()
+              oDebugger:cAppColors = SetColor()
+              RestScreen( 0, 0, MaxRow(), MaxCol(), oDebugger:cImage )
+              DispEnd()
+              oDebugger:GoToLine( uParam )
+              oDebugger:HandleEvent()
+           endif
+   endcase
 
 return nil
 
@@ -55,8 +68,9 @@ CLASS TDebugger
    DATA   oPullDown
    DATA   oWndCode, oWndCommand
    DATA   oBar, oBrwText
-   DATA   cBackImage, nOldCursor
+   DATA   cImage, nOldCursor
    DATA   lEnd
+   DATA   cAppImage, nAppRow, nAppCol, cAppColors
 
    METHOD New()
    METHOD Activate( cModuleName )
@@ -68,6 +82,8 @@ CLASS TDebugger
    METHOD Open()
    METHOD InputBox( cMsg, uValue )
    METHOD Exit() INLINE ::lEnd := .t.
+
+   METHOD GoToLine( nLine )
 
 ENDCLASS
 
@@ -86,13 +102,15 @@ METHOD Activate( cModuleName ) CLASS TDebugger
    ::Show()
    ::ShowCode( cModuleName )
    ::HandleEvent()
-   ::Hide()
+   // ::Hide()
 
 return nil
 
 METHOD HandleEvent() CLASS TDebugger
 
    local nPopup
+
+   ::lEnd = .f.
 
    while ! ::lEnd
 
@@ -121,6 +139,20 @@ METHOD HandleEvent() CLASS TDebugger
               ::oBrwText:GoBottom()
               ::oBrwText:ForceStable()
 
+         case nKey == K_F4
+              ::cImage = SaveScreen()
+              RestScreen( 0, 0, MaxRow(), MaxCol(), ::cAppImage )
+              InKey( 0 )
+              RestScreen( 0, 0, MaxRow(), MaxCol(), ::cImage )
+
+         case nKey == K_F8
+              ::cImage = SaveScreen()
+              DispBegin()
+              RestScreen( 0, 0, MaxRow(), MaxCol(), ::cAppImage )
+              SetPos( ::nAppRow, ::nAppCol )
+              SetColor( ::cAppColors )
+              ::Exit()
+
          otherwise
               if ( nPopup := ::oPullDown:GetHotKeyPos( AltToKey( nKey ) ) ) != 0
                  ::oPullDown:ShowPopup( nPopup )
@@ -132,8 +164,8 @@ return nil
 
 METHOD Hide() CLASS TDebugger
 
-   RestScreen( ,,,, ::cBackImage )
-   ::cBackImage = nil
+   RestScreen( ,,,, ::cAppImage )
+   ::cAppImage = nil
    SetCursor( ::nOldCursor )
    SetColor( "N/W" )
 
@@ -142,7 +174,10 @@ return nil
 METHOD Show() CLASS TDebugger
 
    ::nOldCursor = SetCursor( 0 )
-   ::cBackImage = SaveScreen()
+   ::cAppImage  = SaveScreen()
+   ::nAppRow    = Row()
+   ::nAppCol    = Col()
+   ::cAppColors = SetColor()
    ::oPullDown:Display()
    ::oWndCode:Show( .t. )
    ::oWndCommand:Show()
@@ -207,6 +242,12 @@ METHOD InputBox( cMsg, uValue ) CLASS TDebugger
    Set( _SET_SCOREBOARD, lScoreBoard )
 
 return If( LastKey() != K_ESC, uTemp, uValue )
+
+METHOD GotoLine( nLine ) CLASS TDebugger
+
+   ::oBrwText:GotoLine( nLine )
+
+return nil
 
 CLASS TDbWindow  // Debugger windows
 

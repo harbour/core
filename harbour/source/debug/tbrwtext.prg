@@ -20,6 +20,8 @@ CLASS TBrwText FROM TBrowse
    METHOD GoBottom()
    METHOD Skipper( nLines )
 
+   METHOD GotoLine( nLine )
+
 ENDCLASS
 
 METHOD New( nTop, nLeft, nBottom, nRight, cFileName, cColors ) CLASS TBrwText
@@ -94,6 +96,22 @@ METHOD Skipper( nLines ) CLASS TBrwText
    ::nLine += nSkipped
 
 return nSkipped
+
+METHOD GotoLine( nLine ) CLASS TBrwText
+
+   if nLine > ::nLine
+      while ::nLine < nLine
+         ::Down()
+         ::ForceStable()
+      end
+   else
+      while ::nLine > nLine
+         ::Up()
+         ::ForceStable()
+      end
+   endif
+
+return nil
 
 static function FReadLn( nHandle, cBuffer )
 
