@@ -109,17 +109,6 @@ extern void *   hb_xgrab( ULONG lSize );   /* allocates memory, exists on failur
 extern void *   hb_xrealloc( void * pMem, ULONG lSize );   /* reallocates memory */
 extern void     hb_xfree( void * pMem );    /* frees memory */
 
-#ifdef __cplusplus
-typedef struct yy_buffer_state *YY_BUFFER_STATE;
-YY_BUFFER_STATE yy_create_buffer( FILE *, int ); /* yacc functions to manage multiple files */
-void yy_switch_to_buffer( YY_BUFFER_STATE ); /* yacc functions to manage multiple files */
-void yy_delete_buffer( YY_BUFFER_STATE ); /* yacc functions to manage multiple files */
-#else
-void * yy_create_buffer( FILE *, int ); /* yacc functions to manage multiple files */
-void yy_switch_to_buffer( void * ); /* yacc functions to manage multiple files */
-void yy_delete_buffer( void * ); /* yacc functions to manage multiple files */
-#endif
-
 char * yy_strdup( char * p );  /* this will exit if there is not enough memory */
 char * yy_strupr( char * p );
 
@@ -142,6 +131,8 @@ extern PHB_FNAME _pFileName;
 extern BOOL _bQuiet;
 extern BOOL _bStartProc;
 extern char _szPrefix[ 20 ];         /* holds the prefix added to the generated symbol init function name (in C output currently) */
+
+extern char * _szCErrors[];
 
 #define VS_LOCAL      1
 #define VS_STATIC     2

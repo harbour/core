@@ -129,15 +129,15 @@ char groupchar;
 /* Table with parse errors */
 char * _szPErrors[] =
 {
-   "Can\'t open include file \"%s\"",
-   "#else does not match #if",
-   "#endif does not match #if",
-   "Error in include file name",
+   "Can\'t open #include file: \'%s\'",
+   "#else does not match #ifdef",
+   "#endif does not match #ifdef",
+   "Bad filename in #include",
    "#define without parameters",
-   "Absent \"=>\" in command definition",
+   "Missing => in #translate/#command",
    "Error in pattern definition",
    "Cycled #define",
-   "Wrong directive \"%s\"",
+   "Invalid name follows #: \'%s\'",
    "#error: \'%s\'",
    "Memory allocation error",
    "Memory reallocation error",

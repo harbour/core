@@ -41,6 +41,7 @@
 #include <string.h>
 #include <limits.h>
 #include "harboury.h"
+#include "compiler.h"
 #include "hbsetup.h"    /* main configuration file */
 #include "hberrors.h"
 #include "hbdefs.h"
@@ -64,7 +65,7 @@ extern FILE * yyin;  /* currently yacc parsed file */
 
 /* Following three lines added for preprocessor */
 extern FILE *yyppo;  /* output .ppo file */
-extern int lPpo;     /* flag indicating, is ppo output needed */
+extern BOOL _bPPO;   /* flag indicating, is ppo output needed */
 extern int PreProcess( FILE*, FILE*, char *);
 int yy_lex_input( char *, int );
 #define YY_INPUT( buf, result, max_size ) result = yy_lex_input( buf, max_size );
@@ -77,7 +78,6 @@ extern WORD _wForCounter;
 extern WORD _wIfCounter;
 extern WORD _wWhileCounter;
 extern WORD _wCaseCounter;
-extern char * _szCErrors[];
 
 int iLine = 1;
 long lNumber = 0;
@@ -1271,5 +1271,5 @@ int yy_lex_input( char *buffer, int iBufferSize )
 {
    HB_SYMBOL_UNUSED( iBufferSize );
 
-   return PreProcess( yyin, (lPpo)? yyppo:NULL, buffer );
+   return PreProcess( yyin, _bPPO ? yyppo : NULL, buffer );
 }

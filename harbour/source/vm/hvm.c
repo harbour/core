@@ -789,13 +789,13 @@ void hb_vmArrayAt( void )
    ULONG ulIndex;
 
    if( IS_INTEGER( pIndex ) )
-      ulIndex = pIndex->item.asInteger.value;
+      ulIndex = ( ULONG ) pIndex->item.asInteger.value;
 
    else if( IS_LONG( pIndex ) )
-      ulIndex = pIndex->item.asLong.value;
+      ulIndex = ( ULONG ) pIndex->item.asLong.value;
 
    else if( IS_DOUBLE( pIndex ) )
-      ulIndex = pIndex->item.asDouble.value;
+      ulIndex = ( ULONG ) pIndex->item.asDouble.value;
 
    else
    {
@@ -1938,7 +1938,7 @@ static void hb_vmPopAlias( void )
    HB_DEBUG( "hb_vmPopAlias\n" );
 }
 
-/* Pops the alias to use it to select a workarea and next pops a value 
+/* Pops the alias to use it to select a workarea and next pops a value
  * into given field
  */
 static void hb_vmPopAliasedField( PHB_SYMB pSym )

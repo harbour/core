@@ -36,6 +36,7 @@
 #include "extend.h"
 #include "compiler.h"
 #include "pcode.h"
+#include "hberrors.h"
 
 void GenPascal( char * szFileName, char * szName )
 {

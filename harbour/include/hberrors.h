@@ -70,6 +70,9 @@
 #define ERR_MEMFREE                29
 #define ERR_YACC                   30
 #define ERR_JUMP_TOO_LONG          31
+#define ERR_CREATE_OUTPUT          32
+#define ERR_CREATE_PPO             33
+#define ERR_BADOPTION              34
 
 #define WARN_AMBIGUOUS_VAR         1
 #define WARN_MEMVAR_ASSUMED        2

@@ -36,6 +36,7 @@
 #include "extend.h"
 #include "compiler.h"
 #include "pcode.h"
+#include "hberrors.h"
 
 #define SYM_NOLINK  0              /* Symbol does not have to be linked */
 #define SYM_FUNC    1              /* Defined function                  */
@@ -58,7 +59,7 @@ void GenPortObj( char * szFileName, char * szName )
    yyc = fopen( szFileName, "wb" );
    if( ! yyc )
    {
-      printf( "Error opening file %s\n", szFileName );
+      GenError( _szCErrors, 'E', ERR_CREATE_OUTPUT, szFileName, NULL );
       return;
    }
 

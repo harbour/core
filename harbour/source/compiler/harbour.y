@@ -64,7 +64,7 @@
 extern FILE *yyin;      /* currently yacc parsed file */
 extern int iLine;       /* currently parsed file line number */
   /* Following two lines added for preprocessor */
-extern int lPpo;        /* flag indicating, is ppo output needed */
+extern BOOL _bPPO;       /* flag indicating, is ppo output needed */
 extern FILE *yyppo;     /* output .ppo file */
 
 typedef struct          /* #include support */
@@ -157,6 +157,17 @@ typedef struct _EXPLIST
 
 void ExpListPush( void );  /* pushes the new expression on the stack */
 void ExpListPop( int );    /* pops previous N expressions */
+
+#ifdef __cplusplus
+typedef struct yy_buffer_state *YY_BUFFER_STATE;
+YY_BUFFER_STATE yy_create_buffer( FILE *, int ); /* yacc functions to manage multiple files */
+void yy_switch_to_buffer( YY_BUFFER_STATE ); /* yacc functions to manage multiple files */
+void yy_delete_buffer( YY_BUFFER_STATE ); /* yacc functions to manage multiple files */
+#else
+void * yy_create_buffer( FILE *, int ); /* yacc functions to manage multiple files */
+void yy_switch_to_buffer( void * ); /* yacc functions to manage multiple files */
+void yy_delete_buffer( void * ); /* yacc functions to manage multiple files */
+#endif
 
 /* lex & yacc related prototypes */
 void yyerror( char * ); /* parsing error management function */
@@ -303,7 +314,10 @@ char * _szCErrors[] =
    "Memory reallocation error",
    "Freeing a NULL memory pointer",
    "%s", /* YACC error messages */
-   "Jump offset too long"
+   "Jump offset too long",
+   "Can't create output file: \'%s\'",
+   "Can't create preprocessed output file: \'%s\'",
+   "Bad command line option: \'%s\'"
 };
 
 /* Table with parse warnings */
@@ -1285,13 +1299,12 @@ void * GenElseIf( void * pFirst, ULONG ulOffset )
 
 void GenError( char* _szErrors[], char cPrefix, int iError, char * szError1, char * szError2 )
 {
-   if( files.pLast->szFileName != NULL )
+   if( files.pLast != NULL && files.pLast->szFileName != NULL )
       printf( "\r%s(%i) ", files.pLast->szFileName, iLine );
-   else
-      printf( "\rLine %i ", iLine );
-   printf( "Error %c%i  ", cPrefix, iError );
+
+   printf( "Error %c%04i  ", cPrefix, iError );
    printf( _szErrors[ iError - 1 ], szError1, szError2 );
-   printf( "\n\n" );
+   printf( "\n" );
 
    exit( EXIT_FAILURE );
 }
@@ -1301,7 +1314,7 @@ void GenWarning( char* _szWarnings[], char cPrefix, int iWarning, char * szWarni
    if( _bWarnings && iWarning < WARN_ASSIGN_SUSPECT ) /* TODO: add switch to set level */
    {
       printf( "\r%s(%i) ", files.pLast->szFileName, iLine );
-      printf( "Warning %c%i  ", cPrefix, iWarning );
+      printf( "Warning %c%04i  ", cPrefix, iWarning );
       printf( _szWarnings[ iWarning - 1 ], szWarning1, szWarning2 );
       printf( "\n" );
 
@@ -1315,7 +1328,9 @@ void EXTERNAL_LINKAGE close_on_exit( void )
 
    while( pFile )
    {
+/*
       printf( "\nClosing file: %s\n", pFile->szFileName );
+*/
       fclose( pFile->handle );
       pFile = ( PFILE ) pFile->pPrev;
    }
@@ -1326,8 +1341,9 @@ int harbour_main( int argc, char * argv[] )
    int iStatus = 0, iArg = 1;
    BOOL bSkipGen;
 
-   printf( "Harbour compiler build %i%s (%04d.%02d.%02d)\n",
+   printf( "Harbour Compiler, Build %i%s (%04d.%02d.%02d)\n",
       hb_build, hb_revision, hb_year, hb_month, hb_day );
+   printf( "Copyright 1999, http://www.harbour-project.org\n" );
 
    if( argc > 1 )
    {
@@ -1399,19 +1415,11 @@ int harbour_main( int argc, char * argv[] )
                            break;
 
                         default:
-                           /* NOTE: Redundant code */
-                           printf( "Invalid command line option: %s\n",
-                              &argv[ iArg ][ 0 ] );
-                           exit( EXIT_FAILURE );
+                           GenError( _szCErrors, 'E', ERR_BADOPTION, &argv[ iArg ][ 0 ], NULL );
                      }
                   }
                   else
-                  {
-                     /* NOTE: Redundant code */
-                     printf( "Invalid command line option: %s\n",
-                        &argv[ iArg ][ 0 ] );
-                     exit( EXIT_FAILURE );
-                  }
+                     GenError( _szCErrors, 'E', ERR_BADOPTION, &argv[ iArg ][ 0 ], NULL );
 
                   break;
 
@@ -1490,7 +1498,7 @@ int harbour_main( int argc, char * argv[] )
                /* Added for preprocessor needs */
                case 'p':
                case 'P':
-                  lPpo = 1;
+                  _bPPO = TRUE;
                   break;
 
                case 'q':
@@ -1558,8 +1566,7 @@ int harbour_main( int argc, char * argv[] )
                   break;
 
                default:
-                  printf( "Invalid command line option: %s\n",
-                          &argv[ iArg ][ 0 ] );
+                  GenError( _szCErrors, 'E', ERR_BADOPTION, &argv[ iArg ][ 0 ], NULL );
                   break;
             }
          }
@@ -1577,11 +1584,16 @@ int harbour_main( int argc, char * argv[] )
          if( !_pFileName->szExtension )
             _pFileName->szExtension = ".prg";
          hb_fsFNameMerge( szFileName, _pFileName );
-         if( lPpo )
+         if( _bPPO )
          {
             _pFileName->szExtension = ".ppo";
             hb_fsFNameMerge( szPpoName, _pFileName );
-            yyppo = fopen ( szPpoName, "w" );
+            yyppo = fopen( szPpoName, "w" );
+            if( ! yyin )
+            {
+               GenError( _szCErrors, 'E', ERR_CREATE_PPO, szPpoName, NULL );
+               return iStatus;
+            }
          }
       }
       else
@@ -1741,7 +1753,7 @@ int harbour_main( int argc, char * argv[] )
             GenObj32( szFileName, _pFileName->szName );
          }
 #endif
-         if( lPpo )
+         if( _bPPO )
             fclose( yyppo );
       }
       else
@@ -2219,7 +2231,7 @@ int Include( char * szFileName, PATHNAMES * pSearch )
    }
 
    if( ! _bQuiet )
-      printf( "\nparsing file %s\n", szFileName );
+      printf( "\nCompiling %s\n", szFileName );
 
    pFile = ( PFILE ) hb_xgrab( sizeof( _FILE ) );
    pFile->handle = yyin;
@@ -2257,7 +2269,7 @@ int yywrap( void )   /* handles the EOF of the currently processed file */
       files.pLast = ( PFILE ) ( ( PFILE ) files.pLast )->pPrev;
       iLine = files.pLast->iLine;
       if( ! _bQuiet )
-         printf( "\nparsing file %s\n", files.pLast->szFileName );
+         printf( "\nCompiling %s\n", files.pLast->szFileName );
 #ifdef __cplusplus
       yy_delete_buffer( ( YY_BUFFER_STATE ) ( ( PFILE ) pLast )->pBuffer );
 #else

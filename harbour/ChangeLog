@@ -1,3 +1,22 @@
+19990913-10:00 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * include/compiler.h
+    include/hberrors.h
+    source/compiler/harbour.l
+    source/compiler/harbour.y
+    source/compiler/gen*.c
+    source/hbpp/hbpp.c
+    source/hbpp/hbppint.c
+    source/hbpp/stdalone/hbpp.c
+    ! Fixed a GPF when the .PPO file could not be created.
+    * The compiler screen output made more Clipper like.
+    * Some error messages made Clipper like.
+    + Some printf()s changed to use GenError() instead.
+    + Added www site name and Copyright notice to the header.
+    * lPpo -> _bPPO variable name change.
+  * source/vm/hvm.c
+    + Some casts added.
+
 19990913-01:40 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/rtl/memvars.c

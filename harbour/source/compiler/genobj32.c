@@ -36,6 +36,7 @@
 #include "extend.h"
 #include "compiler.h"
 #include "pcode.h"
+#include "hberrors.h"
 
 static void CompiledFileName( FILE * hObjFile, char * szFileName );
 static void CompilerVersion( FILE * hObjFile, char * szVersion );
@@ -71,7 +72,7 @@ void GenObj32( char * szObjFileName, char * szFileName )
 
   if( ! ( hObjFile = fopen( szObjFileName, "wb" ) ) )
     {
-      printf( "Error opening file %s\n", szObjFileName );
+      GenError( _szCErrors, 'E', ERR_CREATE_OUTPUT, szFileName, NULL );
       return;
     }
 

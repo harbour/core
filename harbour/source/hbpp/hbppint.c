@@ -55,13 +55,14 @@ int PreProcess( FILE*, FILE*, char *);
 int Hp_Parse( FILE*, FILE* );
 
 int iBuffer, lenBuffer;
-int lPpo = 0;
-char sLine[STR_SIZE], sOutLine[STR_SIZE];
+BOOL _bPPO = 0;
+char sLine[ STR_SIZE ], sOutLine[ STR_SIZE ];
 FILE *yyppo;
 
 void Hbpp_init ( void )
 {
-  lenBuffer = 10; iBuffer = 10;
+  lenBuffer = 10;
+  iBuffer = 10;
   aCondCompile = (int*) hb_xgrab( sizeof(int) * 5 );
 }
 
@@ -122,7 +123,7 @@ int PreProcess( FILE* handl_i, FILE* handl_o, char *sOut )
  *( sOut + lens++ ) = '\n';
  *( sOut + lens ) = '\0';
 
- if ( lPpo )
+ if ( _bPPO )
     pp_WrStr(handl_o,sOut);
 
  return lens;

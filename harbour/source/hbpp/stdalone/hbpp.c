@@ -409,7 +409,7 @@ void AddSearchPath( char *szPath, PATHNAMES * *pSearchList )
 void GenError( char* _szErrors[], char cPrefix, int iError, char * szError1, char * szError2 )
 {
   printf( "\r(%i) ", nline );
-  printf( "Error %c%i  ", cPrefix, iError );
+  printf( "Error %c%04i  ", cPrefix, iError );
   printf( _szErrors[ iError - 1 ], szError1, szError2 );
   printf( "\n\n" );
 
@@ -421,7 +421,7 @@ void GenWarning( char* _szWarnings[], char cPrefix, int iWarning, char * szWarni
     if( _bWarnings && iWarning < WARN_ASSIGN_SUSPECT ) /* TODO: add switch to set level */
     {
         printf( "\r(%i) ", nline );
-        printf( "Warning %c%i  ", cPrefix, iWarning );
+        printf( "Warning %c%04i  ", cPrefix, iWarning );
         printf( _szWarnings[ iWarning - 1 ], szWarning1, szWarning2 );
         printf( "\n" );
     }

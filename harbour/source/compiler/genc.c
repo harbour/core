@@ -36,6 +36,7 @@
 #include "extend.h"
 #include "compiler.h"
 #include "pcode.h"
+#include "hberrors.h"
 
 void GenCCode( char * szFileName, char * szName )       /* generates the C language output */
 {
@@ -47,7 +48,6 @@ void GenCCode( char * szFileName, char * szName )       /* generates the C langu
    char chr;
    BOOL bEndProcRequired;
 
-
    FILE * yyc;             /* file handle for C output */
 
    HB_SYMBOL_UNUSED( szName );
@@ -55,7 +55,7 @@ void GenCCode( char * szFileName, char * szName )       /* generates the C langu
    yyc = fopen( szFileName, "wb" );
    if( ! yyc )
    {
-      printf( "Error opening file %s\n", szFileName );
+      GenError( _szCErrors, 'E', ERR_CREATE_OUTPUT, szFileName, NULL );
       return;
    }
 
