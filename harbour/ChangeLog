@@ -1,3 +1,35 @@
+2001-09-09 21:00 MEST Martin Vogel <vogel@inttec.de>
+
+   + contrib/libct/token2.c
+     + Incremental tokenizer: TOKENINIT(), TOKENEXIT(), TOKENNEXT()
+                              TOKENNUM(), TOKENAT(), SAVETOKEN()
+                              RESTTOKEN(), TOKENEND()
+       with some enhanced functionality
+
+   + contrib/libct/tests/token2.prg
+     + test program for incremental tokenizer
+
+   - contrib/libct/ct.c
+   + contrib/libct/ctc.c
+     ! file renamed from ct.c to ctc.c, contains now C part of lib init/exit
+       code
+
+   + contrib/libct/ct.prg
+     ! contains PRG part of lib init/exit code
+
+   - contrib/libct/temper.c
+     ! file removed since CELSIUS() and FAHRENHEIT() functions have already
+       been implemted in num1.c
+
+   * contrib/libct/Makefile
+   * contrib/libct/makefile.bc
+   * contrib/libct/makefile.vc
+   * contrib/libct/cterror.ch
+   * contrib/libct/ctflist.txt
+   * contrib/libct/readme.txt
+     * changes according to the above
+
+
 2001-09-09 15:48 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
    + contrib/hgf/os2pm/winctrl.prg
      + added

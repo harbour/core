@@ -107,7 +107,7 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\charsort.obj \
    $(OBJ_DIR)\charswap.obj \
    $(OBJ_DIR)\count.obj \
-   $(OBJ_DIR)\ct.obj \
+   $(OBJ_DIR)\ctc.obj \
    $(OBJ_DIR)\ctmath.obj \
    $(OBJ_DIR)\ctset.obj \
    $(OBJ_DIR)\ctstr.obj \
@@ -129,10 +129,12 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\replace.obj \
    $(OBJ_DIR)\strswap.obj \
    $(OBJ_DIR)\token1.obj \
+   $(OBJ_DIR)\token2.obj \
    $(OBJ_DIR)\trig.obj \
    $(OBJ_DIR)\wordrepl.obj \
    $(OBJ_DIR)\wordtoch.obj \
    \
+   $(OBJ_DIR)\ct.obj \
    $(OBJ_DIR)\ctmisc.obj \
 
 #
@@ -220,7 +222,7 @@ $(OBJ_DIR)\count.obj : $(TOOLS_DIR)\count.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
-$(OBJ_DIR)\ct.obj : $(TOOLS_DIR)\ct.c
+$(OBJ_DIR)\ctc.obj : $(TOOLS_DIR)\ctc.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
@@ -308,6 +310,10 @@ $(OBJ_DIR)\token1.obj : $(TOOLS_DIR)\token1.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\token2.obj : $(TOOLS_DIR)\token2.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\trig.obj : $(TOOLS_DIR)\trig.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
@@ -317,6 +323,13 @@ $(OBJ_DIR)\wordrepl.obj : $(TOOLS_DIR)\wordrepl.c
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\wordtoch.obj : $(TOOLS_DIR)\wordtoch.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\ct.c : $(TOOLS_DIR)\ct.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\ct.obj : $(OBJ_DIR)\ct.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 

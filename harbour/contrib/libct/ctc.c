@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   CT3 general functions
+ *   CT3 general functions (C part)
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -265,35 +265,36 @@ static int s_initialized = 0;  /* TODO: make this thread safe */
 
 /*  $DOC$
  *  $FUNCNAME$
- *      CTINIT()
+ *      CTCINIT()
  *  $CATEGORY$
  *      CT3 general functions
  *  $ONELINER$
- *      Initializes the CT3 library
+ *      Initializes the CT3 library, C part
  *  $SYNTAX$
- *      CTINIT () -> lInitialized
+ *      CTCINIT () -> lInitialized
  *  $ARGUMENTS$
  *      None
  *  $RETURNS$
  *      lInitialized     .T. if the function has been correctly initialized
  *  $DESCRIPTION$
- *      The CTINIT() function initializes the CT3 library. Always call it
- *      once somewhere at the beginning of your program.
+ *      The CTCINIT() function initializes the C source part of the CT3
+ *      library. Do not call this function directly.
  *  $EXAMPLES$
  *  $TESTS$
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
- *      CTINIT() is a new function in Harbour's CT3 library.
+ *      CTCINIT() is a new function in Harbour's CT3 library.
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is ct.c, library is libct.
+ *      Source is ctc.c, library is libct.
  *  $SEEALSO$
+ *      CTINIT(),CTEXIT()
  *  $END$
  */
 
-HB_FUNC (CTINIT)
+HB_FUNC (CTCINIT)
 {
   
   if (s_initialized == 0)
@@ -304,16 +305,6 @@ HB_FUNC (CTINIT)
     s_initialized = iSuccess;
   }
 
-  if (hb_pcount() > 0)  /* CTINIT accepts no params */
-  {
-    int iArgErrorMode = ct_getargerrormode();
-    if (iArgErrorMode != CT_ARGERR_IGNORE)
-    {
-      ct_error ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_CTINIT,
-                NULL, "CTINIT", 0, EF_CANDEFAULT, 1, hb_paramError (1));
-    }
-  }
-  
   hb_retl (s_initialized);
 
 }
@@ -321,50 +312,43 @@ HB_FUNC (CTINIT)
 
 /*  $DOC$
  *  $FUNCNAME$
- *      CTEXIT()
+ *      CTCEXIT()
  *  $CATEGORY$
  *      CT3 general functions
  *  $ONELINER$
- *      Uninitializes the CT3 library
+ *      Uninitializes the CT3 library, C part
  *  $SYNTAX$
- *      CTEXIT () -> nil
+ *      CTCEXIT () -> nil
  *  $ARGUMENTS$
  *      none
  *  $RETURNS$
  *      nil
  *  $DESCRIPTION$
- *      The CTEXIT() function uninitializes the CT3 library. Always call it
- *      somewhere at the end of your program.
+ *      The CTCEXIT() function uninitializes the C part of the CT3 library.
+ *      Do not call this function directly.
  *  $EXAMPLES$
  *  $TESTS$
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
- *      CTEXIT() is a new function in Harbour's CT3 library.
+ *      CTCEXIT() is a new function in Harbour's CT3 library.
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is ct.c, library is libct.
+ *      Source is ctc.c, library is libct.
  *  $SEEALSO$
+ *      CTINIT(),CTEXIT()
  *  $END$
  */
 
-HB_FUNC (CTEXIT)
+HB_FUNC (CTCEXIT)
 {
+
   ct_str_exit();
   ct_math_exit();
 
   s_initialized = 0;
 
-  if (hb_pcount() > 0)  /* CTEXIT accepts no params */
-  {
-    int iArgErrorMode = ct_getargerrormode();
-    if (iArgErrorMode != CT_ARGERR_IGNORE)
-    {
-      ct_error ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_CTEXIT,
-                NULL, "CTEXIT", 0, EF_CANDEFAULT, 1, hb_paramError (1));
-    }
-  }
-
   hb_ret();
+
 }

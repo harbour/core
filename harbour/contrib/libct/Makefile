@@ -22,7 +22,7 @@ C_SOURCES = \
         charsort.c \
         charswap.c \
 	count.c \
-	ct.c \
+	ctc.c \
 	ctmath.c \
         ctset.c \
         ctstr.c \
@@ -31,7 +31,7 @@ C_SOURCES = \
         ctcrypt.c \
         finan.c \
 	justify.c \
-   files.c \
+	files.c \
 	math.c \
 	num1.c \
 	numat.c \
@@ -45,12 +45,13 @@ C_SOURCES = \
 	replace.c \
 	strswap.c \
         token1.c \
+	token2.c \
 	trig.c \
-   temper.c \
 	wordrepl.c \
 	wordtoch.c \
 
 PRG_SOURCES= \
+	ct.prg \
         ctmisc.prg \
 
 LIBNAME=libct

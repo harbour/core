@@ -352,15 +352,16 @@
 #define CT_ERROR_TOKENINIT       3954
 #define CT_ERROR_TOKENLOWER      3961
 #define CT_ERROR_TOKENNEXT       3971
-#define CT_ERROR_TOKENSEP        3981
-#define CT_ERROR_TOKENUPPER      3991
-#define CT_ERROR_VALPOS          4002
-#define CT_ERROR_WORDONE         4011
-#define CT_ERROR_WORDONLY        4021
-#define CT_ERROR_WORDREM         4031
-#define CT_ERROR_WORDREPL        4041
-#define CT_ERROR_WORDSWAP        4051
-#define CT_ERROR_WORDTOCHAR      4061
+#define CT_ERROR_TOKENNUM        3982
+#define CT_ERROR_TOKENSEP        3991
+#define CT_ERROR_TOKENUPPER      4001
+#define CT_ERROR_VALPOS          4012
+#define CT_ERROR_WORDONE         4021
+#define CT_ERROR_WORDONLY        4031
+#define CT_ERROR_WORDREM         4041
+#define CT_ERROR_WORDREPL        4051
+#define CT_ERROR_WORDSWAP        4061
+#define CT_ERROR_WORDTOCHAR      4071
                                  
 /* number and bit manipulation */
 #define CT_ERROR_BITTOC          4111

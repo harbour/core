@@ -241,19 +241,21 @@ REMRIGHT      ;S;
 REPLALL       ;S; 
 REPLLEFT      ;S; 
 REPLRIGHT     ;S; 
-RESTTOKEN     ;N; 
-SAVETOKEN     ;N; 
+RESTTOKEN     ;R; 
+SAVETOKEN     ;R; 
 SETATLIKE     ;R; 
 STRDIFF       ;N; 
 STRSWAP       ;S; 
 TABEXPAND     ;N; 
 TABPACK       ;N; 
 TOKEN         ;R;
-TOKENAT       ;N; 
-TOKENEND      ;N; 
-TOKENINIT     ;N; 
+TOKENAT       ;R; 
+TOKENEND      ;R; 
+TOKENEXIT     ;R;   !NEW!
+TOKENINIT     ;R; 
 TOKENLOWER    ;R; 
-TOKENNEXT     ;N; 
+TOKENNEXT     ;R; 
+TOKENNUM      ;R;   !NEW!
 TOKENSEP      ;R; 
 TOKENUPPER    ;R; 
 VALPOS        ;R; 

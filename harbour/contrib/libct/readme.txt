@@ -57,6 +57,15 @@ Martin Vogel <vogel@inttec.de>
 * TOKEN()      New 5th and 6th parameter where the function can store
                the tokenizer before and after the extracted token.
 
+* TOKENINIT()  all incremental tokenizer functions
+                 TOKENINIT(),TOKENEXIT(),TOKENNEXT(),TOKENNUM(),
+                 TOKENAT(),SAVETOKEN(),RESTTOKEN(),TOKENEND()
+               now support locally stored token environments
+
++ TOKENEXIT()  new function related to TOKENINIT
+
++ TOKENNUM()   numtoken() functionality for incremental tokenizer
+
 * TOKENLOWER() New 4th parameter <nSkipWidth>
 
 * TOKENUPPER() New 4th parameter <nSkipWidth>

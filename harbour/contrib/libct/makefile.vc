@@ -127,7 +127,7 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\charsort.obj \
    $(OBJ_DIR)\charswap.obj \
    $(OBJ_DIR)\count.obj \
-   $(OBJ_DIR)\ct.obj \
+   $(OBJ_DIR)\ctc.obj \
    $(OBJ_DIR)\ctmath.obj \
    $(OBJ_DIR)\ctset.obj \
    $(OBJ_DIR)\ctstr.obj \
@@ -149,10 +149,12 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\replace.obj \
    $(OBJ_DIR)\strswap.obj \
    $(OBJ_DIR)\token1.obj \
+   $(OBJ_DIR)\token2.obj \
    $(OBJ_DIR)\trig.obj \
    $(OBJ_DIR)\wordrepl.obj \
    $(OBJ_DIR)\wordtoch.obj \
    \
+   $(OBJ_DIR)\ct.obj \
    $(OBJ_DIR)\ctmisc.obj \
 
 #
@@ -181,7 +183,7 @@ CLEAN:
    -@if exist $(OBJ_DIR)\charsort.* del $(OBJ_DIR)\charsort.*
    -@if exist $(OBJ_DIR)\charswap.* del $(OBJ_DIR)\charswap.*
    -@if exist $(OBJ_DIR)\count.* del $(OBJ_DIR)\count.*
-   -@if exist $(OBJ_DIR)\ct.* del $(OBJ_DIR)\ct.*
+   -@if exist $(OBJ_DIR)\ctc.* del $(OBJ_DIR)\ctc.*
    -@if exist $(OBJ_DIR)\ctmath.* del $(OBJ_DIR)\ctmath.*
    -@if exist $(OBJ_DIR)\ctset.* del $(OBJ_DIR)\ctset.*
    -@if exist $(OBJ_DIR)\ctstr.* del $(OBJ_DIR)\ctstr.*
@@ -203,9 +205,11 @@ CLEAN:
    -@if exist $(OBJ_DIR)\replace.* del $(OBJ_DIR)\replace.*
    -@if exist $(OBJ_DIR)\strswap.* del $(OBJ_DIR)\strswap.*
    -@if exist $(OBJ_DIR)\token1.* del $(OBJ_DIR)\token1.*
+   -@if exist $(OBJ_DIR)\token2.* del $(OBJ_DIR)\token2.*
    -@if exist $(OBJ_DIR)\trig.* del $(OBJ_DIR)\trig.*
    -@if exist $(OBJ_DIR)\wordrepl.* del $(OBJ_DIR)\wordrepl.*
    -@if exist $(OBJ_DIR)\wordtoch.* del $(OBJ_DIR)\wordtoch.*
+   -@if exist $(OBJ_DIR)\ct.* del $(OBJ_DIR)\ct.*
    -@if exist $(OBJ_DIR)\ctmisc.* del $(OBJ_DIR)\ctmisc.*
    -@if exist $(TOOLS_LIB) del $(TOOLS_LIB)
 
