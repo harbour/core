@@ -1,3 +1,10 @@
+2001-03-13 14:30 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   * source/rdd/dbfntx/dbfntx1.c
+   * include/hbrddntx.h
+     + creating of indexes with numeric and date type expression
+     ! fixed some problems with movement when key have characters with 
+       codes > 128
+
 2001-03-13 11:50 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
   * source/lang/msgeo.c
     ! Updated

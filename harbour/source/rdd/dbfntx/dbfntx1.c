@@ -95,7 +95,7 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex );
          /* Create index from database */
 
 static LPTAGINFO hb_ntxTagNew( LPNTXINDEX PIF, char * ITN, char *szKeyExpr,
-         PHB_ITEM pKeyExpr, BYTE bKeyType, USHORT uiKeyLen, char *szForExp,
+         PHB_ITEM pKeyExpr, BYTE bKeyType, USHORT uiKeyLen, USHORT uiKeyDec, char *szForExp,
          PHB_ITEM pForExp, BOOL fAscendKey, BOOL fUnique );
          /* Create Compound Tag with information about index */
 
@@ -694,7 +694,6 @@ static void hb_ntxTagKeyRead( LPTAGINFO pTag, BYTE bTypRead )
 static int hb_ntxItemCompare( PHB_ITEM pKey1, PHB_ITEM pKey2, BOOL Exact )
 {
    int iLimit, iResult, i;
-   USHORT EndPos = 0;
 
    if( pKey2 == NULL || pKey2->item.asString.length == 0 )
       return 1;
@@ -707,16 +706,11 @@ static int hb_ntxItemCompare( PHB_ITEM pKey1, PHB_ITEM pKey2, BOOL Exact )
          iLimit = ( pKey1->item.asString.length >
                     pKey2->item.asString.length ) ?
                     pKey2->item.asString.length : pKey1->item.asString.length;
-         do
+         if( ( iResult = memcmp( pKey1->item.asString.value, 
+                               pKey2->item.asString.value, iLimit ) ) != 0 )
+            break;
+         else
          {
-            iResult = pKey1->item.asString.value[ EndPos ] -
-                      pKey2->item.asString.value[ EndPos ];
-            EndPos++;
-         } while( iResult == 0 && EndPos < iLimit );
-
-         if( iResult == 0 )
-         {
-            EndPos++;
             if( ( iResult = pKey1->item.asString.length -
                       pKey2->item.asString.length ) != 0 )
             {
@@ -738,7 +732,7 @@ static int hb_ntxItemCompare( PHB_ITEM pKey1, PHB_ITEM pKey2, BOOL Exact )
                   iResult = 0;
             }
          }
-         if( iResult < 0 && (ULONG)EndPos > pKey1->item.asString.length && !Exact )
+         if( iResult < 0 && !Exact )
             iResult = 0;
          break;
       default:
@@ -801,7 +795,6 @@ static LPPAGEINFO hb_ntxPageLoad( ULONG ulOffset )
    BOOL bReplace = FALSE;
    USHORT uiKeysBefore;
 
-   /* printf( "\nntxPageLoad - 0" ); */
    pArea = (NTXAREAP) hb_rddGetCurrentWorkAreaPointer();
    pIndex = pArea->lpCurIndex;
    pPage = hb_ntxPageFind( pIndex, (ulOffset)? ulOffset:pIndex->CompoundTag->RootBlock );
@@ -830,29 +823,20 @@ static LPPAGEINFO hb_ntxPageLoad( ULONG ulOffset )
 
    if( !bReplace )
    {
+      LPPAGEINFO pLastPage;
+
       pPage = ( LPPAGEINFO ) hb_xgrab( sizeof( HB_PAGEINFO ) );
       memset( pPage , 0 ,sizeof( HB_PAGEINFO ) );
       pPage->TagParent = pIndex->CompoundTag;
-      if( !ulOffset )
-      {
-         /* printf( "\nntxPageLoad - 1 ( %5lx )",pPage ); */
-         // pPage->pPrev = NULL;
-         pPage->Page = pIndex->CompoundTag->RootBlock;
-         // pIndex->CompoundTag->RootPage = pPage;
-      }
+      pPage->Page = ( ulOffset )? ulOffset:pIndex->CompoundTag->RootBlock;
+
+      pLastPage = hb_ntxPageLast( pIndex );
+      pPage->pPrev = pLastPage;
+      if( pLastPage )
+         pLastPage->pNext = pPage;
       else
-         pPage->Page = ulOffset;
-      {
-            LPPAGEINFO pLastPage;
-            /* printf( "\nntxPageLoad - 2 ( %5lx %5lx )",pIndex->CompoundTag->RootPage,pPage ); */
-            pLastPage = hb_ntxPageLast( pIndex );
-            /* printf( "\nntxPageLoad - 3 ( %5lx )",pLastPage ); */
-            pPage->pPrev = pLastPage;
-            if( pLastPage )
-               pLastPage->pNext = pPage;
-            else
-               pIndex->CompoundTag->RootPage = pPage;
-      }
+         pIndex->CompoundTag->RootPage = pPage;
+
       pPage->pKeys = ( LPKEYINFO ) hb_xgrab( sizeof( KEYINFO ) * ( pPage->TagParent->MaxKeys + 1 ) );
       memset( pPage->pKeys, 0, sizeof( KEYINFO ) * ( pPage->TagParent->MaxKeys + 1 ) );
       pPage->pNext = NULL;
@@ -868,7 +852,6 @@ static LPPAGEINFO hb_ntxPageLoad( ULONG ulOffset )
    if( bReplace )
    {
       uiKeysBefore = pPage->uiKeys;
-      /* printf( "\nntxPageLoad - 4 ( %5lx %d %d)",pPage,pPage->uiKeys,itemlist->item_count ); */
       for( i = itemlist->item_count; i< pPage->uiKeys; i++)
          hb_itemRelease( pPage->pKeys[i].pItem );
    }
@@ -885,17 +868,6 @@ static LPPAGEINFO hb_ntxPageLoad( ULONG ulOffset )
    }
    item=(NTXITEM *)(buffer+itemlist->item_offset[i]);
    pPage->pKeys[i].Tag = item->page;
-
-/*
-   {
-      LPPAGEINFO pP = pIndex->CompoundTag->RootPage;
-      while( pP )
-      {
-         printf( "\nPageLoad  %d( %5lx %d )",bReplace,pP,pP->uiKeys );
-         pP = pP->pNext;
-      }
-   }
-*/
 
    return pPage;
 }
@@ -1302,14 +1274,13 @@ static int hb_ntxPageKeyAdd( LPPAGEINFO pPage, PHB_ITEM pKey, int level, BOOL is
    return 1;
 }
 
+/*
 static ERRCODE hb_ntxTagKeyAdd( LPTAGINFO pTag, PHB_ITEM pKey)
 {
    LPPAGEINFO pPage;
 
    if( pTag->RootPage )
    {
-      /* TODO :
-         Add next keys */
       return hb_ntxPageKeyAdd( pTag->RootPage, pKey, 0, FALSE );
 
    }
@@ -1326,6 +1297,7 @@ static ERRCODE hb_ntxTagKeyAdd( LPTAGINFO pTag, PHB_ITEM pKey)
    }
    return SUCCESS;
 }
+*/
 
 /*
 typedef struct _SORTITEM
@@ -1585,11 +1557,15 @@ static void hb_ntxReadBuf( NTXAREAP pArea, BYTE* readBuffer, USHORT* numRecinBuf
    (*numRecinBuf) ++;
 }
 
+/* DJGPP can sprintf a float that is almost 320 digits long */
+#define HB_MAX_DOUBLE_LENGTH 320
+
 static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
 {
 
    ULONG ulRecNo, ulRecCount;
    USHORT uiCurLen;
+   char szBuffer[ HB_MAX_DOUBLE_LENGTH + 1 ];
    NTXAREAP pArea;
    LPTAGINFO pTag;
    HB_MACRO_PTR pMacro;
@@ -1622,14 +1598,6 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
    hb_fsSeek( pArea->hDataFile, pArea->uiHeaderLen, FS_SET );
    for( ulRecNo = 1; ulRecNo <= ulRecCount; ulRecNo++)
    {
-      /* printf( "\nntxIndexCreate - 1" ); */
-      /*
-      hb_fsSeek( pArea->hDataFile,
-                 pArea->uiHeaderLen + ( ulRecNo - 1 ) * pArea->uiRecordLen,
-                 FS_SET );
-      hb_fsRead( pArea->hDataFile,
-                 pArea->pRecord,
-                 pArea->uiRecordLen ); */
       hb_ntxReadBuf( pArea, readBuffer, &numRecinBuf );
       pArea->ulRecNo = ulRecNo;
       if( pTag->pForItem != NULL )
@@ -1667,6 +1635,40 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
                // hb_ntxTagKeyAdd( pTag, pItem );
                hb_ntxSortKeyAdd( pTag, &sortInfo, pItem->item.asString.value );
                break;
+            case HB_IT_INTEGER:
+            case HB_IT_LONG:
+            case HB_IT_DOUBLE:
+               if( HB_IS_DOUBLE( pItem ) )
+               {
+                  if( pTag->KeyDec == 0 )
+                  {
+                     if( pTag->KeyLength > 9 )
+                        sprintf( szBuffer, "%0*.0f", pTag->KeyLength,
+                            hb_numRound( hb_itemGetND( pItem ), 0 ) );
+                     else
+                        sprintf( szBuffer, "%0*li", pTag->KeyLength,
+                            ( LONG ) hb_numRound( hb_itemGetND( pItem ), 0 ) );
+                  }
+                  else
+                     sprintf( szBuffer, "%0*.0*f", pTag->KeyLength,
+                            pTag->KeyDec, hb_numRound( hb_itemGetND( pItem ),
+                            pTag->KeyDec ) );
+               }
+               else
+               {
+                  if( pTag->KeyDec == 0 )
+                     sprintf( szBuffer, "%0*li", pTag->KeyLength, hb_itemGetNL( pItem ) );
+                  else
+                     sprintf( szBuffer, "%0*.0*f", pTag->KeyLength,
+                            pTag->KeyDec, hb_itemGetND( pItem ) );
+               }
+               szBuffer[ pTag->KeyLength ] = 0;
+               hb_ntxSortKeyAdd( pTag, &sortInfo,szBuffer );
+               break;
+            case HB_IT_DATE:
+               hb_itemGetDS( pItem, szBuffer );
+               hb_ntxSortKeyAdd( pTag, &sortInfo, szBuffer );
+               break;
             default:
                printf( "ntxCreateOrder" );
          }
@@ -1694,10 +1696,8 @@ static void hb_ntxHeaderSave( LPNTXINDEX pIndex )
    Header.root = pIndex->CompoundTag->RootBlock;
    Header.next_page = pIndex->NextAvail;
    Header.item_size = pIndex->CompoundTag->KeyLength+8;
-
-
    Header.key_size = pIndex->CompoundTag->KeyLength;
-   Header.key_dec = 0;
+   Header.key_dec = pIndex->CompoundTag->KeyDec;
    Header.max_item = pIndex->CompoundTag->MaxKeys;
    Header.half_page = Header.max_item/2;
    strcpy( Header.key_expr , pIndex->CompoundTag->KeyExpr );
@@ -1708,7 +1708,7 @@ static void hb_ntxHeaderSave( LPNTXINDEX pIndex )
       pIndex->CompoundTag->RootPage->NewRoot = FALSE;
 }
 
-static LPTAGINFO hb_ntxTagNew( LPNTXINDEX PIF, char * ITN, char *szKeyExpr, PHB_ITEM pKeyExpr, BYTE bKeyType, USHORT uiKeyLen, char *szForExp, PHB_ITEM pForExp, BOOL fAscendKey, BOOL fUnique )
+static LPTAGINFO hb_ntxTagNew( LPNTXINDEX PIF, char * ITN, char *szKeyExpr, PHB_ITEM pKeyExpr, BYTE bKeyType, USHORT uiKeyLen, USHORT uiKeyDec, char *szForExp, PHB_ITEM pForExp, BOOL fAscendKey, BOOL fUnique )
 {
    LPTAGINFO pTag;
 
@@ -1739,6 +1739,7 @@ static LPTAGINFO hb_ntxTagNew( LPNTXINDEX PIF, char * ITN, char *szKeyExpr, PHB_
    pTag->UniqueKey = fUnique;
    pTag->KeyType = bKeyType;
    pTag->KeyLength = uiKeyLen;
+   pTag->KeyDec = uiKeyDec;
    pTag->Owner = PIF;
    pTag->MaxKeys = (NTXBLOCKSIZE-6)/(uiKeyLen+10) - 1;
    pTag->CurKeyInfo = hb_ntxKeyNew( NULL );
@@ -1825,6 +1826,7 @@ static ERRCODE hb_ntxHeaderLoad( LPNTXINDEX pIndex , char *ITN)
    pTag->UniqueKey = Header.unique;
    pTag->KeyType = 'C'; /* bKeyType; */
    pTag->KeyLength = Header.key_size;
+   pTag->KeyDec = Header.key_dec;
    pTag->Owner = pIndex;
    pTag->MaxKeys = Header.max_item;
    pTag->CurKeyInfo = hb_ntxKeyNew( NULL );
@@ -2177,7 +2179,8 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
    PHB_ITEM pExpr, pResult, pError;
    PHB_ITEM pKeyExp, pForExp;
    HB_MACRO_PTR pExpMacro, pForMacro;
-   USHORT uiType, uiLen;
+   USHORT uiType;
+   int uiLen, uiDec;
    char * szFileName, * szTagName;
    LPNTXINDEX pIndex;
    LPTAGINFO pTag;
@@ -2228,7 +2231,7 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
    }
 
    uiType = hb_itemType( pResult );
-   uiLen = 0;
+   uiLen = uiDec = 0;
    bType = '\0';
    switch( uiType )
    {
@@ -2236,7 +2239,8 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
       case HB_IT_LONG:
       case HB_IT_DOUBLE:
          bType = 'N';
-         uiLen = 10;
+         hb_itemGetNLen( pResult, (int*) &uiLen, (int*) &uiDec );
+         /* printf( "\nLength: %d %d",uiLen,uiDec ); */
          break;
 
       case HB_IT_DATE:
@@ -2365,7 +2369,7 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
    pArea->lpNtxIndex = pIndex;
    pArea->lpCurIndex = pIndex;
    pTag = hb_ntxTagNew( pIndex, szTagName, pOrderInfo->abExpr->item.asString.value,
-                        pKeyExp, bType, uiLen, (char *) ( pArea->lpdbOrdCondInfo ? pArea->lpdbOrdCondInfo->abFor : NULL ),
+                        pKeyExp, bType, (USHORT) uiLen, (USHORT) uiDec, (char *) ( pArea->lpdbOrdCondInfo ? pArea->lpdbOrdCondInfo->abFor : NULL ),
                         pForExp, pArea->lpdbOrdCondInfo ? !pArea->lpdbOrdCondInfo->fDescending : TRUE,
                         pOrderInfo->fUnique );
    pIndex->CompoundTag = pTag;

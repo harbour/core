@@ -131,6 +131,7 @@ typedef struct _TAGINFO
    LONG       RootBlock;
    USHORT     uiPages;
    USHORT     KeyLength;
+   USHORT     KeyDec;
    USHORT     MaxKeys;
    LONG       blockPrev;
    LONG       blockNext;
