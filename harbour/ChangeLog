@@ -1,3 +1,8 @@
+19991112-11:40 EDT Paul Tucker <ptucker@sympatico.ca>
+  * makefile.vc
+    + source/rtl/dbedit
+    + source/common/hbtrace
+
 19991112-18:45 GMT+3 Alexander Kresin
   * source/pp/hbpp.c
     * Fixed bug, related to memory leaks, reported by Victor Szel

@@ -81,6 +81,7 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\ctchrmix.obj \
     $(OBJ_DIR)\ctcrypt.obj \
     $(OBJ_DIR)\dates.obj \
+    $(OBJ_DIR)\dbedit.obj \
     $(OBJ_DIR)\debug.obj \
     $(OBJ_DIR)\descend.obj \
     $(OBJ_DIR)\devoutp.obj \
@@ -98,6 +99,7 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\fm.obj \
     $(OBJ_DIR)\harbinit.obj \
     $(OBJ_DIR)\hardcr.obj \
+    $(OBJ_DIR)\hbtrace.obj \
     $(OBJ_DIR)\hvm.obj \
     $(OBJ_DIR)\initsymb.obj \
     $(OBJ_DIR)\inkey.obj \
@@ -435,6 +437,12 @@ $(OBJ_DIR)\copyfile.obj : $(RTL_DIR)\copyfile.c
 $(OBJ_DIR)\dates.obj : $(RTL_DIR)\dates.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
+$(RTL_DIR)\dbedit.c : $(RTL_DIR)\dbedit.prg
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
+
+$(OBJ_DIR)\dbedit.obj : $(RTL_DIR)\dbedit.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
 $(OBJ_DIR)\descend.obj : $(RTL_DIR)\descend.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
@@ -502,6 +510,9 @@ $(OBJ_DIR)\harbinit.obj : $(RTL_DIR)\harbinit.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\hardcr.obj : $(RTL_DIR)\hardcr.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\hbtrace.obj : $(COMMON_DIR)\hbtrace.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\inkey.obj : $(RTL_DIR)\inkey.c
