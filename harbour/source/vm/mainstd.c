@@ -33,6 +33,10 @@
  *
  */
 
+void hb_cmdargInit( int argc, char * argv[] );
+void hb_vmInit( void );
+void hb_vmQuit( void );
+
 #include "extend.h"
 #include "ctoharb.h"
 
