@@ -511,7 +511,10 @@ PHB_FFIND hb_fsFindFirst( const char * pszFileName, USHORT uiAttr )
 #if defined(HB_OS_DOS)
 
    {
-      PHB_FFIND_INFO info = ( PHB_FFIND_INFO ) ffind->info = ( PHB_FFIND_INFO ) hb_xgrab( sizeof( HB_FFIND_INFO ) );
+      PHB_FFIND_INFO info;
+
+      ffind->info = ( void * ) hb_xgrab( sizeof( HB_FFIND_INFO ) );
+      info = ( PHB_FFIND_INFO ) ffind->info;
 
       bFound = ( findfirst( pszFileName, &info->entry, ( USHORT ) hb_fsAttrToRaw( uiAttr ) ) == 0 );
    }
@@ -519,7 +522,10 @@ PHB_FFIND hb_fsFindFirst( const char * pszFileName, USHORT uiAttr )
 #elif defined(HB_OS_OS2)
 
    {
-      PHB_FFIND_INFO info = ( PHB_FFIND_INFO ) ffind->info = ( PHB_FFIND_INFO ) hb_xgrab( sizeof( HB_FFIND_INFO ) );
+      PHB_FFIND_INFO info;
+
+      ffind->info = ( void * ) hb_xgrab( sizeof( HB_FFIND_INFO ) );
+      info = ( PHB_FFIND_INFO ) ffind->info;
 
       info->hFindFile = HDIR_CREATE;
 
@@ -535,7 +541,10 @@ PHB_FFIND hb_fsFindFirst( const char * pszFileName, USHORT uiAttr )
 #elif defined(HB_OS_WIN_32)
 
    {
-      PHB_FFIND_INFO info = ( PHB_FFIND_INFO ) ffind->info = ( PHB_FFIND_INFO ) hb_xgrab( sizeof( HB_FFIND_INFO ) );
+      PHB_FFIND_INFO info;
+
+      ffind->info = ( void * ) hb_xgrab( sizeof( HB_FFIND_INFO ) );
+      info = ( PHB_FFIND_INFO ) ffind->info;
 
       info->hFindFile = FindFirstFile( pszFileName, &info->pFindFileData );
       info->dwAttr    = ( DWORD ) hb_fsAttrToRaw( uiAttr );
@@ -567,7 +576,10 @@ PHB_FFIND hb_fsFindFirst( const char * pszFileName, USHORT uiAttr )
 #elif defined(HB_OS_UNIX)
 
    {
-      PHB_FFIND_INFO info = ( PHB_FFIND_INFO ) ffind->info = ( PHB_FFIND_INFO ) hb_xgrab( sizeof( HB_FFIND_INFO ) );
+      PHB_FFIND_INFO info;
+
+      ffind->info = ( void * ) hb_xgrab( sizeof( HB_FFIND_INFO ) );
+      info = ( PHB_FFIND_INFO ) ffind->info;
 
       info->dir = opendir( pszFileName );
 
