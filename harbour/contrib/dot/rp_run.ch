@@ -1,20 +1,46 @@
+#ifdef __HARBOUR__
+#else
+   //#define __CLIPPER__
+#endif
+
+#TRANSLATE AS <type: ANYTYPE, ARRAY, CHARACTER, CODEBLOCK, DATE, LOGICAL, NUMERIC, OBJECT, STRING, USUAL> =>
+#TRANSLATE AS ARRAY OF <x> =>
+#TRANSLATE AS CLASS <x> =>
+
+
 #COMMAND MEMVAR <*x*> =>
 
-#COMMAND BROWSE => Browse( 1, 0, MaxRow() - 1, MaxCol() )
+//#COMMAND BROWSE => Browse( 1, 0, MaxRow() - 1, MaxCol() )
 
 #TRANSLATE _GET_( <var>, <varname>, <pic>, <valid>, <when> ) => __GET( MEMVARBLOCK(<varname>), <varname>, <pic>, <valid>, <when> )
-#TRANSLATE __GET( <parlist,...>):Display() => __GET(<parlist>)
+//#TRANSLATE __GET( <parlist,...>):Display() => __GET(<parlist>)
 
-#COMMAND IF <ifExp>         => __SetIf( <ifExp> )
-#COMMAND ELSEIF <elseifExp> => __SetElseIf( <elseifExp> )
-#COMMAND ELSE               => __SetElse()
-#COMMAND ENDIF [<*x*>]      => __SetEnd()
-#COMMAND END [<*x*>]        => __SetEnd()
+//#COMMAND EXTERNAL <file1> [, <fileN> ] => PP_ProcessFile( <file1> ) [; PP_ProcessFile( <fileN> ) ]
+#COMMAND EXTERNAL <file1> [, <fileN> ] =>
 
-#COMMAND DO CASE         => __SetDoCase()
-#COMMAND CASE <caseExp>  => __SetCase( <caseExp> )
-#COMMAND OTHERWISE       => __SetOtherwise()
-#COMMAND ENDCASE [<*x*>] => __SetEndCase()
+#COMMAND DECLARE <class> <declaraion> <*x*> =>
+
+#COMMAND IF <ifExp>         => PP__IF <ifExp>
+#COMMAND ELSEIF <elseifExp> => PP__ELSEIF <elseifExp>
+#COMMAND ELSE               => PP__ELSE
+#COMMAND ENDIF [<*x*>]      => PP__ENDIF
+#COMMAND END [<*x*>]        => PP__END
+
+#COMMAND DO CASE            => PP__DOCASE
+#COMMAND CASE <caseExp>     => PP__CASE <caseExp>
+#COMMAND OTHERWISE          => PP__OTHERWISE
+#COMMAND ENDCASE [<*x*>]    => PP__ENDCASE
+
+#COMMAND FOR <counter> := <start> TO <end> [STEP <step>] => PP__FOR <counter>:=<start>~TO~<end>~STEP~<step>
+#COMMAND FOR <counter> =  <start> TO <end> [STEP <step>] => PP__FOR <counter>:=<start>~TO~<end>~STEP~<step>
+#COMMAND LOOP [<*x*>]                                    => PP__LOOP
+#COMMAND EXIT [<*x*>]                                    => PP__EXIT
+#COMMAND NEXT [<*x*>]                                    => PP__NEXT
+
+#COMMAND DO WHILE <cond>                                 => PP__WHILE <cond>
+#COMMAND WHILE <cond>                                    => PP__WHILE <cond>
+#COMMAND ENDDO [<*x*>]                                   => PP__ENDDO
+
 
 #COMMAND DO <file>.prg => PP_Run( #<file> + ".prg" )
 
@@ -35,6 +61,7 @@
 
 #COMMAND PARAMETERS <par,...> => PP_Params( { <"par"> } )
 #COMMAND PRIVATE <var,...>    => PP_Privates( { <"var"> } )
+#COMMAND DECLARE <var,...>    => PP_Privates( { <"var"> } )
 #COMMAND PUBLIC <var,...>     => PP_Publics( { <"var"> } )
 #COMMAND LOCAL <var,...>      => PP_Locals( { <"var"> } )
 #COMMAND STATIC <var,...>     => PP_Statics( { <"var"> } )

@@ -3,6 +3,7 @@
 //
 
 #include "set.ch"
+#xtranslate Default( <Var>, <xVal> ) => IIF( <Var> == NIL, <xVal>, <Var> )
 
 //
 // Strip
@@ -253,5 +254,39 @@ function Goto( nLine )
    endif
 return !::lEoF
 
+function ToChar( xVal )
 
+  local cType := ValType( xVal )
+
+  do case
+     case cType == 'U'
+        return "NIL"
+
+     case cType == 'A'
+        return "{}"
+
+     case cType == 'B'
+        return "{|| }"
+
+     case cType == 'C'
+        return xVal
+
+     case cType == 'D'
+        return dtoc( xVal )
+
+     case cType == 'L'
+        return IIF( xVal, ".T.", ".F." )
+
+     case cType == 'M'
+        return xVal
+
+     case cType == 'N'
+        return Str( xVal )
+
+     case cType == 'O'
+        return "{::}"
+
+  endcase
+
+return "?"
 

@@ -1,3 +1,17 @@
+2001-05-01 02:35 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * contrib/dot/rp_run.ch
+   * contrib/dot/pp.prg
+     % Optimozed and improved handling of IF [ELSEIF] [ELSE] ENDIF in Interpreter mode.
+     % Optimozed and improved handling of DO CASE [CASE] [OTHERWISE] END[CASE] in Interpreter mode.
+     + Added support for FOR [LOOP] [EXIT] NEXT to Interpreter mode.
+     + Added support for [DO] WHILE [LOOP] [EXIT] END[DO] to Interpreter mode.
+     + Added support for file statics to Interpreter mode.
+     + Added supprt for Command-Line Parameters to Interpreter mode.
+       /* PP "FileName Param1 ParamN" -r */
+
+   * tests/stripem.prg
+     ! Resolved missing Default() and ToChar()
+
 2001-04-30 13:00 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * include/hbinkey.ch

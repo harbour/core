@@ -170,7 +170,7 @@ STATIC s_asPaths := {}
 
 STATIC s_cLastChar := ' '
 
-STATIC s_sIncludeFile := NIL
+STATIC s_sFile := "", s_sIncludeFile := NIL
 
 STATIC nRow, nCol
 
@@ -182,11 +182,15 @@ STATIC s_asPrivates := {}, s_asPublics := {}, s_asLocals := {}, ;
 
 STATIC s_sModule, s_aInitExit := { {}, {} }
 
+STATIC s_nCompIf := 0,  s_nCompLoop := 0, s_aIfJumps := {}, s_aLoopJumps := {}
+STATIC s_acFlowType := {},  s_nFlowId := 0
+
 //--------------------------------------------------------------//
 
 PROCEDURE Main( sSource, p1, p2, p3, p4, p5, p6, p7, p8, p9 )
 
    LOCAL sIncludePath, nNext, sPath, sSwitch := ""
+   LOCAL nAt, sParams
 
    IF p1 != NIL
       sSwitch += p1
@@ -256,10 +260,6 @@ PROCEDURE Main( sSource, p1, p2, p3, p4, p5, p6, p7, p8, p9 )
       ENDIF
    ENDIF
 
-   #ifdef __HARBOUR__
-      ProcessLine( "#DEFINE __HARBOUR__  1", 0, '' )
-   #endif
-
    IF bLoadRules
       InitRules()
       InitResults()
@@ -267,11 +267,30 @@ PROCEDURE Main( sSource, p1, p2, p3, p4, p5, p6, p7, p8, p9 )
       Alert( "Not using standard rules." )
    ENDIF
 
+   #ifdef __HARBOUR__
+      //ProcessLine( "#DEFINE __HARBOUR__", 0, '' )
+      CompileDefine( "__HARBOUR__" )
+   #endif
+
    IF sSource != NIL
       nRow := Row()
       nCol := Col()
 
       IF bCompile
+         // Populate possible Command-line Parameters
+         IF ( nAt := At( " ", sSource ) ) > 0
+            sParams := LTrim( SubStr( sSource, nAt + 1 ) )
+            sSource := Left( sSource, nAt - 1 )
+
+            WHILE ( nAt := At( " ", sParams ) ) > 0
+               aAdd( s_aParams, Left( sParams, nAt - 1 ) )
+               sParams := LTrim( SubStr( sParams, nAt + 1 ) )
+            ENDDO
+            IF ! sParams == ""
+               aAdd( s_aParams, sParams )
+            ENDIF
+         ENDIF
+
          PP_Run( sSource )
       ELSE
          ProcessFile( sSource )
@@ -320,14 +339,23 @@ PROCEDURE ExecuteProcedure( aProc )
    s_nProcStack++
 
    FOR nBlock := 1 TO nBlocks
-      IF aProc[2][nBlock][1] == 0 .OR. ;
-         ( aProc[2][nBlock][1] == ( nIf - 1 ) .AND. abIf[ nIf -1 ] ) .OR. ;
-         ( aProc[2][nBlock][1] == nIf .AND. abIf[ nIf ] )
+      IF aProc[2][nBlock][2] == NIL
+         IF aProc[2][nBlock][1] != 0 // Uncondtional Jump.
+            nBlock := aProc[2][nBlock][1]
+         ENDIF
+      ELSE
+         s_aProcStack[ Len( s_aProcStack ) ][2] := aProc[2][nBlock][3] // Line No.
 
          BEGIN SEQUENCE
 
-            s_aProcStack[ Len( s_aProcStack ) ][2] := aProc[2][nBlock][3] // Line No.
-            Eval( aProc[2][nBlock][2] )
+            IF aProc[2][nBlock][1] == 0
+               //? aProc[2][nBlock][3]
+               Eval( aProc[2][nBlock][2] )
+            ELSE
+               IF ! Eval( aProc[2][nBlock][2] ) // Jump if FALSE.
+                  nBlock := aProc[2][nBlock][1]
+               ENDIF
+            ENDIF
 
          RECOVER USING oErr
 
@@ -556,17 +584,26 @@ PROCEDURE CompileLine( sPPed, nLine )
 
    LOCAL nNext, sBlock, sTemp
    LOCAL sSymbol
-   LOCAL nIncrease := 0, nOffset := 0
    LOCAL nAt, nPos, cChr
+   LOCAL nJumps, nJump
+   LOCAL sCounter, sStart, sEnd, sStep
 
    ExtractLeadingWS( @sPPed )
    DropTrailingWS( @sPPed )
-   sTemp := sPPed
 
    BEGIN SEQUENCE
 
+      IF sPPed = "_HB_CLASS"
+         BREAK
+      ENDIF
+
+      sTemp := sPPed
       WHILE ( nNext := At( ';', sTemp ) ) > 0
          sBlock := Left( sTemp, nNext - 1 )
+
+         sTemp  := RTrim( SubStr( sTemp, nNext + 1 ) )
+         ExtractLeadingWS( @sTemp )
+
          ExtractLeadingWS( @sBlock )
          DropTrailingWS( @sBlock )
 
@@ -575,6 +612,10 @@ PROCEDURE CompileLine( sPPed, nLine )
             CompileNestedBlocks( sBlock, @sBlock )
          #endif
 
+         IF sBlock = "#line"
+            LOOP
+         ENDIF
+
          IF sBlock = "PP_PROC"
             sSymbol := Upper( LTrim( SubStr( sBlock, At( ' ', sBlock ) ) ) )
             aSize( s_aProcedures, ++s_nProcId )
@@ -589,19 +630,8 @@ PROCEDURE CompileLine( sPPed, nLine )
 
             s_aProcedures[s_nProcId] := { sSymbol, {} }
          ELSE
-            IF sBlock = "__"
-               sSymbol := Upper( SubStr( sBlock, 3, 12 ) )
-
-               IF sSymbol = "SETIF" .OR. sSymbol = "SETDOCASE"
-                  nIncrease := 1
-               ELSEIF sSymbol = "SETEND"
-                  nOffset := 1
-                  nIncrease := -1
-               ELSEIF sSymbol = "SETELSEIF" .OR. sSymbol = "SETCASE"
-                  nOffset := 1
-               ELSEIF sSymbol = "SETELSE" .OR. sSymbol = "OTHERWISE"
-                  nOffset := 1
-               ENDIF
+            IF sBlock = "PP__"
+               // ??? Might need to have logic for flow control here too.
             ELSE
                nAt := At( "=", sBlock )
                IF nAt > 1
@@ -618,17 +648,21 @@ PROCEDURE CompileLine( sPPed, nLine )
                ENDIF
             ENDIF
 
-            aAdd( s_aProcedures[ s_nProcId ][2], { s_nIfLevel - nOffset, &( "{|| " + sBlock + " }" ), nLine } )
-
-            s_nIfLevel += nIncrease
+            IF sBlock == ""
+               aAdd( s_aProcedures[ s_nProcId ][2], { 0, NIL, nLine } )
+            ELSE
+               //? nLine, s_nProcId, sBlock
+               aAdd( s_aProcedures[ s_nProcId ][2], { 0, &( "{|| " + sBlock + " }" ), nLine } )
+            ENDIF
          ENDIF
-
-         sTemp  := RTrim( SubStr( sTemp, nNext + 1 ) )
-         ExtractLeadingWS( @sTemp )
       ENDDO
 
       sBlock := sTemp
       DropTrailingWS( @sBlock )
+
+      IF sBlock = "#line"
+         BREAK
+      ENDIF
 
       IF ! ( sBlock == '' )
          #ifdef __CLIPPER__
@@ -636,13 +670,13 @@ PROCEDURE CompileLine( sPPed, nLine )
              CompileNestedBlocks( sBlock, @sBlock )
          #endif
 
-         IF sBlock = "PP_PROC"
+         IF sBlock = "PP_PROC" .OR. s_nProcId == 0 .AND. sBlock = "PP_Statics"
             sSymbol := Upper( LTrim( SubStr( sBlock, At( ' ', sBlock ) ) ) )
             aSize( s_aProcedures, ++s_nProcId )
 
             IF sBlock = "PP_PROC_PRG"
                sSymbol := s_sModule + sSymbol
-            ELSEIF sBlock = "PP_PROC_INIT"
+            ELSEIF sBlock = "PP_PROC_INIT" .OR. sBlock = "PP_Statics"
                aAdd( s_aInitExit[1], s_nProcId )
             ELSEIF sBlock = "PP_PROC_EXIT"
                aAdd( s_aInitExit[2], s_nProcId )
@@ -650,17 +684,264 @@ PROCEDURE CompileLine( sPPed, nLine )
 
             s_aProcedures[s_nProcId] := { sSymbol, {} }
          ELSE
-            IF sBlock = "__"
-               sSymbol := Upper( SubStr( sBlock, 3, 12 ) )
-               IF sSymbol = "SETIF" .OR. sSymbol = "SETDOCASE"
-                  nIncrease := 1
-               ELSEIF sSymbol = "SETEND"
-                  nOffset := 1
-                  nIncrease := -1
-               ELSEIF sSymbol = "SETELSEIF" .OR. sSymbol = "SETCASE"
-                  nOffset := 1
-               ELSEIF sSymbol = "SETELSE" .OR. sSymbol = "OTHERWISE"
-                  nOffset := 1
+            IF sBlock = "PP__"
+               IF sBlock = "PP__FOR"
+                  s_nFlowId++
+                  aSize( s_acFlowType, s_nFlowId )
+                  s_acFlowType[ s_nFlowId ] := "F"
+
+                  sBlock := SubStr( sBlock, 9 )
+                  sCounter := Left( sBlock, ( nAt := AT( ":=", sBlock ) ) - 1 )
+                  sBlock   := SubStr( sBlock, nAt + 2 )
+                  sStart   := Left( sBlock, ( nAt := At( "~TO~", sBlock ) ) - 1 )
+                  sBlock   := SubStr( sBlock, nAt + 4 )
+                  sEnd     := Left( sBlock, ( nAt := At( "~STEP~", sBlock ) ) - 1 )
+                  sStep    := SubStr( sBlock, nAt + 6 )
+                  IF sStep == ""
+                     sStep := "1"
+                  ENDIF
+
+                  aAdd( s_aProcedures[ s_nProcId ][2], { 0, &( "{||" + sCounter + ":=" + sStart + "}" ), nLine } ) // Loop back
+
+                  sBlock := sCounter + "<=" + sEnd
+
+                  s_nCompLoop++
+                  aSize( s_aLoopJumps, s_nCompLoop )
+                  s_aLoopJumps[ s_nCompLoop ] := { Len( s_aProcedures[ s_nProcId ][2] ) + 1, {}, "F", &( "{||" + sCounter + ":=" + sCounter + "+" + sStep + "}" ) } // Address of line to later place conditional Jump instruction into.
+
+               ELSEIF sBlock = "PP__NEXT"
+
+                  IF s_nCompLoop == 0 .OR. s_aLoopJumps[ s_nCompLoop ][3] != "F"
+                     Alert( "NEXT does not match FOR" )
+                  ELSE
+                     aAdd( s_aProcedures[ s_nProcId ][2], { 0, s_aLoopJumps[ s_nCompLoop ][4], nLine } ) // STEP
+                     aAdd( s_aProcedures[ s_nProcId ][2], { s_aLoopJumps[ s_nCompLoop ][1] - 1, NIL, nLine } ) // Loop back
+                     s_aProcedures[ s_nProcId ][2][ s_aLoopJumps[s_nCompLoop][1] ][1] := Len( s_aProcedures[ s_nProcId ][2] ) // Patching the previous conditional Jump Instruction
+
+                     nJumps := Len( s_aLoopJumps[s_nCompLoop][2] )
+                     FOR nJump := 1 TO nJumps
+                        s_aProcedures[ s_nProcId ][2][ s_aLoopJumps[s_nCompLoop][2][nJump] ][1] := Len( s_aProcedures[ s_nProcId ][2] ) // Patching the unconditional Jump Instruction
+                     NEXT
+
+                     s_nCompLoop--
+                     //aSize( s_aIfJumps, s_nCompIf )
+                  ENDIF
+
+                  BREAK
+
+               ELSEIF sBlock = "PP__WHILE"
+                  s_nFlowId++
+                  aSize( s_acFlowType, s_nFlowId )
+                  s_acFlowType[ s_nFlowId ] := "W"
+
+                  sBlock := SubStr( sBlock, 11 )
+                  s_nCompLoop++
+                  aSize( s_aLoopJumps, s_nCompLoop )
+                  s_aLoopJumps[ s_nCompLoop ] := { Len( s_aProcedures[ s_nProcId ][2] ) + 1, {}, "W" } // Address of line to later place conditional Jump instruction into.
+
+               ELSEIF sBlock = "PP__LOOP"
+
+                  IF s_nCompLoop == 0
+                     Alert( "LOOP with no loop in sight!" )
+                  ELSE
+                     IF s_aLoopJumps[ s_nCompLoop ][3] == "F"
+                        aAdd( s_aProcedures[ s_nProcId ][2], { 0, s_aLoopJumps[ s_nCompLoop ][4], nLine } ) // STEP
+                     ENDIF
+
+                     aAdd( s_aProcedures[ s_nProcId ][2], { s_aLoopJumps[ s_nCompLoop ][1] - 1, NIL, nLine } ) // Loop back
+                  ENDIF
+
+                  BREAK
+
+               ELSEIF sBlock = "PP__EXIT"
+
+                  IF s_nCompLoop == 0
+                     Alert( "EXIT with no loop in sight!" )
+                  ELSE
+                     aAdd( s_aLoopJumps[ s_nCompLoop ][2], Len( s_aProcedures[ s_nProcId ][2] ) + 1 ) // Address of line to later place unconditional Jump instruction into.
+                  ENDIF
+
+                  BREAK
+
+               ELSEIF sBlock = "PP__ENDDO"
+                  s_nFlowId--
+                  //aSize( s_acFlowType, s_nFlowId )
+
+                  IF s_nCompLoop == 0
+                     Alert( "ENDDO does not match WHILE" )
+                  ELSE
+                     aAdd( s_aProcedures[ s_nProcId ][2], { s_aLoopJumps[ s_nCompLoop ][1] - 1, NIL, nLine } ) // Loop back
+                     s_aProcedures[ s_nProcId ][2][ s_aLoopJumps[s_nCompLoop][1] ][1] := Len( s_aProcedures[ s_nProcId ][2] ) // Patching the previous conditional Jump Instruction
+
+                     nJumps := Len( s_aLoopJumps[s_nCompLoop][2] )
+                     FOR nJump := 1 TO nJumps
+                        s_aProcedures[ s_nProcId ][2][ s_aLoopJumps[s_nCompLoop][2][nJump] ][1] := Len( s_aProcedures[ s_nProcId ][2] ) // Patching the unconditional Jump Instruction
+                     NEXT
+
+                     s_nCompLoop--
+                     //aSize( s_aIfJumps, s_nCompIf )
+                  ENDIF
+
+                  BREAK
+
+               ELSEIF sBlock = "PP__DOCASE"
+                  s_nFlowId++
+                  aSize( s_acFlowType, s_nFlowId )
+                  s_acFlowType[ s_nFlowId ] := "C"
+
+                  sBlock := SubStr( sBlock, 12 )
+                  s_nCompIf++
+                  aSize( s_aIfJumps, s_nCompIf )
+                  s_aIfJumps[ s_nCompIf ] := { 0, {}, "C", .F. } // Address of line to later place conditional Jump instruction into.
+
+               ELSEIF sBlock = "PP__CASE"
+
+                  IF s_nCompIf == 0 .OR. s_aIfJumps[ s_nCompIf ][3] != "C" .OR. s_aIfJumps[ s_nCompIf ][4]
+                     sBlock := ""
+                     Alert( "CASE does not match DO CASE" )
+                  ELSE
+                     IF s_aIfJumps[ s_nCompIf ][1] > 0
+                        aAdd( s_aProcedures[ s_nProcId ][2], { 0, NIL, nLine } ) // Place holder for unconditional Jump to END.
+                        aAdd( s_aIfJumps[ s_nCompIf ][2], Len( s_aProcedures[ s_nProcId ][2] ) ) // Address of line to later place unconditional Jump instruction into.
+                        s_aProcedures[ s_nProcId ][2][ s_aIfJumps[s_nCompIf][1] ][1] := Len( s_aProcedures[ s_nProcId ][2] ) // Patching the previous conditional Jump Instruction
+                     ENDIF
+
+                     sBlock := SubStr( sBlock, 10 )
+                     s_aIfJumps[ s_nCompIf ][1] := Len( s_aProcedures[ s_nProcId ][2] ) + 1 // Address of line to later place conditional Jump instruction into.
+                  ENDIF
+
+               ELSEIF sBlock = "PP__OTHERWISE"
+
+                  IF s_nCompIf == 0 .OR. s_aIfJumps[ s_nCompIf ][3] != "C" .OR. s_aIfJumps[ s_nCompIf ][4]
+                     Alert( "OTHERWISE does not match DO CASE" )
+                  ELSE
+                     s_aIfJumps[ s_nCompIf ][4] := .T.
+                     IF s_aIfJumps[ s_nCompIf ][1] > 0
+                        s_aProcedures[ s_nProcId ][2][ s_aIfJumps[s_nCompIf][1] ][1] := Len( s_aProcedures[ s_nProcId ][2] ) + 1 // Patching the previous conditional Jump Instruction
+                        s_aIfJumps[ s_nCompIf ][1] := Len( s_aProcedures[ s_nProcId ][2] ) + 1 // Address of line to later place Jump instruction into.
+                     ENDIF
+                  ENDIF
+
+                  BREAK
+
+               ELSEIF sBlock = "PP__ENDCASE"
+                  s_nFlowId--
+                  //aSize( s_acFlowType, s_nFlowId )
+
+                  IF s_nCompIf == 0
+                     Alert( "ENDCASE with no DO CASE in sight!" )
+                  ELSE
+                     IF s_aIfJumps[ s_nCompIf ][1] > 0
+                        s_aProcedures[ s_nProcId ][2][ s_aIfJumps[s_nCompIf][1] ][1] := Len( s_aProcedures[ s_nProcId ][2] ) // Patching the previous conditional Jump Instruction
+
+                        nJumps := Len( s_aIfJumps[s_nCompIf][2] )
+                        FOR nJump := 1 TO nJumps
+                           s_aProcedures[ s_nProcId ][2][ s_aIfJumps[s_nCompIf][2][nJump] ][1] := Len( s_aProcedures[ s_nProcId ][2] ) // Patching the unconditional Jump Instruction
+                        NEXT
+                     ENDIF
+
+                     s_nCompIf--
+                     //aSize( s_aIfJumps, s_nCompIf )
+                  ENDIF
+
+                  BREAK
+
+               ELSEIF sBlock = "PP__IF"
+                  s_nFlowId++
+                  aSize( s_acFlowType, s_nFlowId )
+                  s_acFlowType[ s_nFlowId ] := "I"
+
+                  sBlock := SubStr( sBlock, 8 )
+                  s_nCompIf++
+                  aSize( s_aIfJumps, s_nCompIf )
+                  s_aIfJumps[ s_nCompIf ] := { Len( s_aProcedures[ s_nProcId ][2] ) + 1, {}, "I", .F. } // Address of line to later place conditional Jump instruction into.
+
+               ELSEIF sBlock = "PP__ELSEIF"
+
+                  IF s_nCompIf == 0 .OR. s_aIfJumps[ s_nCompIf ][3] != "I" .OR. s_aIfJumps[ s_nCompIf ][4]
+                     Alert( "ELSEIF does not match IF" )
+                     BREAK
+                  ELSE
+                     IF s_aIfJumps[ s_nCompIf ][1] > 0
+                        aAdd( s_aProcedures[ s_nProcId ][2], { 0, NIL, nLine } ) // Place holder for unconditional Jump to END.
+                        aAdd( s_aIfJumps[ s_nCompIf ][2], Len( s_aProcedures[ s_nProcId ][2] ) ) // Address of line to later place unconditional Jump instruction into.
+                        s_aProcedures[ s_nProcId ][2][ s_aIfJumps[s_nCompIf][1] ][1] := Len( s_aProcedures[ s_nProcId ][2] ) // Patching the previous conditional Jump Instruction
+                     ENDIF
+
+                     sBlock := SubStr( sBlock, 12 )
+                     s_aIfJumps[ s_nCompIf ][1] := Len( s_aProcedures[ s_nProcId ][2] ) + 1 // Address of line to later place Jump instruction into.
+                  ENDIF
+
+               ELSEIF sBlock = "PP__ELSE"
+
+                  sBlock := ""
+                  IF s_nCompIf == 0 .OR. s_aIfJumps[ s_nCompIf ][3] != "I" .OR. s_aIfJumps[ s_nCompIf ][4]
+                     Alert( "ELSE does not match IF" )
+                     BREAK
+                  ELSE
+                     s_aIfJumps[ s_nCompIf ][4] := .T.
+                     s_aProcedures[ s_nProcId ][2][ s_aIfJumps[s_nCompIf][1] ][1] := Len( s_aProcedures[ s_nProcId ][2] ) + 1 // Patching the prebvious conditional Jump Instruction
+                     s_aIfJumps[ s_nCompIf ][1] := Len( s_aProcedures[ s_nProcId ][2] ) + 1 // Address of line to later place Jump instruction into.
+                  ENDIF
+
+               ELSEIF sBlock = "PP__ENDIF"
+                  s_nFlowId--
+                  //aSize( s_acFlowType, s_nFlowId )
+
+                  IF s_nCompIf == 0
+                     Alert( "ENDIF does not match IF" )
+                  ELSE
+                     s_aProcedures[ s_nProcId ][2][ s_aIfJumps[s_nCompIf][1] ][1] := Len( s_aProcedures[ s_nProcId ][2] ) // Patching the previous conditional Jump Instruction
+
+                     nJumps := Len( s_aIfJumps[s_nCompIf][2] )
+                     FOR nJump := 1 TO nJumps
+                        s_aProcedures[ s_nProcId ][2][ s_aIfJumps[s_nCompIf][2][nJump] ][1] := Len( s_aProcedures[ s_nProcId ][2] ) // Patching the unconditional Jump Instruction
+                     NEXT
+
+                     s_nCompIf--
+                     //aSize( s_aIfJumps, s_nCompIf )
+                  ENDIF
+
+                  BREAK
+
+               ELSEIF sBlock = "PP__END"
+
+                  IF s_nCompIf == 0 .AND. s_nCompLoop == 0
+                     Alert( "END with no Flow-Control structure in sight!" )
+                  ELSE
+                     IF s_acFlowType[ s_nFlowId ] $ "FW"
+                        IF s_acFlowType[ s_nFlowId ] $ "F"
+                           aAdd( s_aProcedures[ s_nProcId ][2], { 0, s_aLoopJumps[ s_nCompLoop ][4], nLine } ) // STEP
+                        ENDIF
+                        aAdd( s_aProcedures[ s_nProcId ][2], { s_aLoopJumps[ s_nCompLoop ][1] - 1, NIL, nLine } ) // Loop back
+
+                        s_aProcedures[ s_nProcId ][2][ s_aLoopJumps[s_nCompLoop][1] ][1] := Len( s_aProcedures[ s_nProcId ][2] ) // Patching the previous conditional Jump Instruction
+
+                        nJumps := Len( s_aLoopJumps[s_nCompLoop][2] )
+                        FOR nJump := 1 TO nJumps
+                           s_aProcedures[ s_nProcId ][2][ s_aLoopJumps[s_nCompLoop][2][nJump] ][1] := Len( s_aProcedures[ s_nProcId ][2] ) // Patching the unconditional Jump Instruction
+                        NEXT
+
+                        s_nCompLoop--
+                        //aSize( s_aLoopJumps, s_nCompLoop )
+                     ELSE
+                        s_aProcedures[ s_nProcId ][2][ s_aIfJumps[s_nCompIf][1] ][1] := Len( s_aProcedures[ s_nProcId ][2] ) // Patching the previous conditional Jump Instruction
+
+                        nJumps := Len( s_aIfJumps[s_nCompIf][2] )
+                        FOR nJump := 1 TO nJumps
+                           s_aProcedures[ s_nProcId ][2][ s_aIfJumps[s_nCompIf][2][nJump] ][1] := Len( s_aProcedures[ s_nProcId ][2] ) // Patching the unconditional Jump Instruction
+                        NEXT
+
+                        s_nCompIf--
+                        //aSize( s_aIfJumps, s_nCompIf )
+                     ENDIF
+                  ENDIF
+
+                  s_nFlowId--
+                  //aSize( s_acFlowType, s_nFlowId )
+
+                  BREAK
+
                ENDIF
             ELSE
                nAt := At( "=", sBlock )
@@ -678,9 +959,12 @@ PROCEDURE CompileLine( sPPed, nLine )
                ENDIF
             ENDIF
 
-            aAdd( s_aProcedures[ s_nProcId ][2], { s_nIfLevel - nOffset, &( "{|| " + sBlock + " }" ), nLine } )
-
-            s_nIfLevel += nIncrease
+            IF sBlock == ""
+               aAdd( s_aProcedures[ s_nProcId ][2], { 0, NIL, nLine } )
+            ELSE
+               //? nLine, s_nProcId, sBlock
+               aAdd( s_aProcedures[ s_nProcId ][2], { 0, &( "{||" + sBlock + "}" ), nLine } )
+            ENDIF
          ENDIF
       ENDIF
 
@@ -856,12 +1140,12 @@ PROCEDURE PP_Statics( aVars )
          cInit := "NIL"
       ENDIF
 
-      IF Type( aVars[nVar] ) = 'U'
+      IF ( Left( Type( aVars[nVar] ), 1 ) ) = 'U'
          __QQPUB( aVars[nVar] )
          &( aVars[nVar] ) := &( cInit )
          aAdd( s_asStatics, aVars[nVar] )
       ELSE
-         Alert( "Static redeclaration: " + aVars[nVar] )
+         Alert( "Static redeclaration: '" + aVars[nVar] )
       ENDIF
    NEXT
 
@@ -879,7 +1163,9 @@ PROCEDURE PP_Run( cFile )
 
    ErrorBlock( {|oErr| RP_Comp_Err( oErr ) } )
    ProcessFile( "rp_run.ch" )
+
    ProcessFile( cFile )
+
    ErrorBlock( {|oErr| RP_Run_Err( oErr ) } )
 
    IF nBaseProc == 0
@@ -1307,6 +1593,8 @@ FUNCTION ProcessFile( sSource )
      sSource += ".prg"
    ENDIF
 
+   s_sFile := sSource
+
    hSource := FOpen( sSource, 0 )
    IF hSource == -1
       nPath := 1
@@ -1413,7 +1701,7 @@ FUNCTION ProcessFile( sSource )
                       FSeek( hSource, -1, 1 )
                       nLen := FRead( hSource, @sBuffer, PP_BUFFER_SIZE )
                       IF nLen < 2
-                         BREAK
+                         BREAK "//"
                       ENDIF
                       nMaxPos   := nLen - 1
                       nPosition := 0
@@ -1473,7 +1761,7 @@ FUNCTION ProcessFile( sSource )
                       FSeek( hSource, -1, 1 )
                       nLen := FRead( hSource, @sBuffer, PP_BUFFER_SIZE )
                       IF nLen < 2
-                         BREAK
+                         BREAK "&&"
                       ENDIF
                       nMaxPos   := nLen - 1
                       nPosition := 0
@@ -1509,7 +1797,7 @@ FUNCTION ProcessFile( sSource )
                          FSeek( hSource, -1, 1 )
                          nLen := FRead( hSource, @sBuffer, PP_BUFFER_SIZE )
                          IF nLen < 2
-                            BREAK
+                            BREAK "*"
                          ENDIF
                          nMaxPos   := nLen - 1
                          nPosition := 1
@@ -1708,7 +1996,7 @@ FUNCTION ProcessFile( sSource )
    ENDDO
 
    RECOVER USING cError
-      Alert( cError )
+      Alert( "No EOL after: " + cError )
       nPosition := nMaxPos + 2
       sLine := ""
    END SEQUENCE
@@ -2012,7 +2300,13 @@ FUNCTION ProcessLine( sLine, nLine, sSource )
                      aSize( aPendingLines, nPendingLines )
                   ENDIF
 
+                  // *** Check this !!!
+                  IF nPosition >= Len( aPendingLines )
+                     aSize( aPendingLines, nPosition + 1 )
+                  ENDIF
+
                   nPosition++
+
                   aIns( aPendingLines, nPosition )
                   aPendingLines[ nPosition ] := sLine
 
@@ -4515,7 +4809,7 @@ FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
    ENDIF
 
    IF nOptional <> 0
-      Alert( "ERROR! Internal logic failure - nOptional =" + Str( nOptional, 3 ) + "[" + Str( ProcLine(0), 4 ) )
+      Alert( "ERROR! Internal logic failure, nOptional = " + Str( nOptional, 3 ) + " [" + Str( ProcLine(0), 4 ) + "]" )
       BREAK
    ENDIF
 
@@ -4969,7 +5263,7 @@ FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
    ENDDO
 
    IF nOptional <> 0
-      Alert( "ERROR! Internal logic failure - nOptional =" + Str( nOptional, 3 ) + "[" + Str( ProcLine(0), 4 ) )
+      Alert( "ERROR! Internal logic failure, nOptional = " + Str( nOptional, 3 ) + " [" + Str( ProcLine(0), 4 ) + "]" )
       BREAK
    ENDIF
 
@@ -5054,7 +5348,7 @@ FUNCTION CompileDefine( sRule )
 //? "Rest: '" + sRule + "'"
 
    IF ( nId := aScan( aDefRules, {|aDefine| aDefine[1] == sKey } ) ) > 0
-      Alert( "Redefinition of " + sKey )
+      Alert( "Redefinition of '" + sKey + "' in file: " + s_sFile )
       aRule      := aDefRules[nId]
       //aRule[1]   := sKey
       aRule[2]   := {}
@@ -6113,3 +6407,11 @@ aAdd( aCommResults, { { {   0, 'ordSetFocus(0)' } }, { -1} , { }  } )
 RETURN .T.
 
 //--------------------------------------------------------------//
+
+/*
+Function Alert( cMsg )
+
+   ? ProcName(1), ProcLine(1), cMsg
+
+return NIL
+*/
