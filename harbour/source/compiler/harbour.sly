@@ -532,7 +532,7 @@ MacroVar    : MACROVAR        { $$ = hb_compExprNewMacro( NULL, '&', $1 );
             | MACROTEXT       { $$ = hb_compExprNewMacro( NULL, 0, $1 ); }
 	    ;
 
-MacroVarAlias  : MacroVar ALIASOP   { $$ = $1; $$->value.asMacro.SubType = HB_ET_MACRO_SYMBOL; }
+MacroVarAlias  : MacroVar ALIASOP   { $$ = $1; }
 ;
 
 /* Macro expressions
