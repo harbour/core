@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 //NOTEST
 // Warning: This sample must be tested using /dTEST compiler flag
 

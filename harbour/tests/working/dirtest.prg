@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 // directory test
 function main(filespec,attribs)
 

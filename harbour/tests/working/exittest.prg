@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 // quick exit test
 
 function main

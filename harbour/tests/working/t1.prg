@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 // while loop test
 
 function Main()

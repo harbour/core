@@ -1,11 +1,16 @@
 /*
- *
+ * $Id$
+ */
+
+#ifndef HB_RUN_EXP_H_
+#define HB_RUN_EXP_H_
+
+/*
  * This file contains the exportable functions available to the Harbour program
  *
  * Currently being discussed in 'Static initializers'
  *
  * If the discussion has finished, it can be removed from here.
- *
  */
 HARBOUR HB___AGLOBALSTACK();
 HARBOUR HB___APARAM();
@@ -127,4 +132,4 @@ HB_INIT_SYMBOLS_BEGIN( RUNNER )
 HB_INIT_SYMBOLS_END( RUNNER );
 #pragma startup RUNNER
 
-
+#endif /* HB_RUN_EXP_H_ */

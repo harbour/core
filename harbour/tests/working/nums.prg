@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 // Testing the different numeric formats Harbour produces
 
 function main()

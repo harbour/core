@@ -1,4 +1,8 @@
 //
+// $Id$
+//
+
+//
 // Compile Hello
 //
 // This program compiles hello.prg

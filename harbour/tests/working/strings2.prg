@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 procedure main()
    local AString := "A should be 65"
    local Another := "   lost in space   "

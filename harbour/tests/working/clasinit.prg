@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 // Using Harbour Class TClass
 
 function Main()

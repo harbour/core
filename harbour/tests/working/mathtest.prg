@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 func main()
 qout(sin(33)  )
 qout(cos(43) )

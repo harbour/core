@@ -1,5 +1,12 @@
+/*
+ * $Id$
+ */
+
+#ifndef HB_EXTRA_H_
+#define HB_EXTRA_H_
+
 #ifndef HARBOUR_OK
-#define HARBOUR_OK	0	// ES_WHOCARES
+#define HARBOUR_OK	0	/* ES_WHOCARES */
 #endif
 
 
@@ -16,7 +23,7 @@ typedef BOOL *		BOOLP;
 #define HARBOUR_ParamList	void *
 #define paramList		paramList
 #define XBONLY( x )		x
-//	xbReleaseC( cFieldName )
+/*	xbReleaseC( cFieldName ) */
 #else
 
 #define PCOUNT( paramList )	hb_parinfo(0)
@@ -26,8 +33,12 @@ typedef BOOL *		BOOLP;
 #endif
 
 #ifdef __GNUC__
-//define HARBOUR		 void __attribute__ ((stdcall))
-//already defined in ./include/
+
+#if 0
+/* already defined in ./include/ */
+#define HARBOUR		 void __attribute__ ((stdcall))
+#endif
+
 #else
 #define HARBOUR 		void
 #endif
@@ -128,3 +139,5 @@ void logmsg( char *s, ...);
 #define DEBUGTRACE10(x1, x2, x3, x4, x5, x6, x7, x8, x9, x10 )
 #define DEBUGTRACEX( x, y )
 #endif
+
+#endif /* HB_EXTRA_H_ */

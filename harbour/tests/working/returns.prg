@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 // Testing multiple returns into a function
 
 function Main()

@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 function main()
 
   OutStd( cMonth( date() ) + chr(10) )

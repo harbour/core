@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 // Testing Harbour operators management
 
 #define CRLF  Chr( 13 ) + Chr( 10 )

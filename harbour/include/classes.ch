@@ -1,3 +1,10 @@
+/*
+ * $Id$
+ */
+
+#ifndef _CLASSES_CH
+#define _CLASSES_CH
+
 /* Harbour classes commands
 
    Copyright(C) 1999 by Antonio Linares.
@@ -46,3 +53,4 @@
 #xcommand METHOD <MethodName>([<params,...>]) CLASS <ClassName> => ;
           static function <MethodName>( [<params>] ) ; local Self := QSelf()
 
+#endif /* _CLASSES_CH */

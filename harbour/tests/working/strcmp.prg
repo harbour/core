@@ -1,4 +1,8 @@
 //
+// $Id$
+//
+
+//
 // OurStrCmp() tests
 //
 // Date : 24/4/99 Time : 17:50

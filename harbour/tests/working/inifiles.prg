@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 #define IF_BUFFER 65535
 
 function Main(cFilename, cSection)

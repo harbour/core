@@ -1,6 +1,9 @@
 /*
+ * $Id$
+ */
+
+/*
  * Language support unit for Basque
- *
  */
 
 char *hb_monthsname[ 12 ] = {

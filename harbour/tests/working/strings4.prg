@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 function Main()
 
    QOut( "Inside strings4" )

@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 // Managing variables by reference
 
 function Main()

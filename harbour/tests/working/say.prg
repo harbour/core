@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 // Tests @ SAY with and without PICTURE clauses
 
 function Main()

@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 // Testing the VERSION function
 /* Harbour Project source code
    http://www.Harbour-Project.org/

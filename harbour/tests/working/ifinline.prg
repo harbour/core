@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 // Testing Harbour If inline
 
 function Main()

@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 // Testing Harbour strings management runtime library
 
 function Main()

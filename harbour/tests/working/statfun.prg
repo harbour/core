@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 // Testing a static function call
 
 function Main()

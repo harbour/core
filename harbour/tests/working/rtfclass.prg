@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 /*
 harbour rtfclass demo
 notes : - raw enough but it works

@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 #include "set.ch"
 function main()
    local newline := CHR(10)

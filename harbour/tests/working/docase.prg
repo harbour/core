@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 // Testing Harbour Do case
 
 function Main()

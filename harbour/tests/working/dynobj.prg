@@ -1,4 +1,8 @@
 //
+// $Id$
+//
+
+//
 // DynObj
 //
 // Implementation of dynamic objects in Harbour

@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 // Testing memory release
 
 function main()

@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 //NOTEST
 // Testing Harbour duplicate variable definition detection
 

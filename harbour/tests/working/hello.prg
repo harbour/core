@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 // Typical welcome message
 
 function Main()

@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 // Testing Harbour file io features
 // using freadstr instead of fread
 

@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 //NOTEST
 // AutoMatic Test Bank
 // Patrick Mast and David G. Holm

@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 //NOTEST - You'll want to test this with the output redirected to a file!
 
 function Main()

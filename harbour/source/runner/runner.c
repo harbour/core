@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 #include "pcode.h"
 
 #include <errorapi.h>

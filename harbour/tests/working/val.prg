@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 // Testing ValType
 
 function Main()

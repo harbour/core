@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 Function Main()
 
    local o := TObject():New()

@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 // Testing #includes
 
 #include "test.ch"

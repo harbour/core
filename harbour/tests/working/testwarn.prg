@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 DECLARE FUNCTION nMyFunc( ) AS NUMERIC
 
 FUNCTION Hex2Dec( lVar AS LOGICAL )

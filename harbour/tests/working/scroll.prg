@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 // Testing Harbour screen scrolling (requires the GT API)
 /* Harbour Project source code
    http://www.Harbour-Project.org/

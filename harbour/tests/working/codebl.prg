@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 STATIC cbStatic
 
 Function Main()

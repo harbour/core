@@ -1,5 +1,8 @@
-/* $Id$
+//
+// $Id$
+//
 
+/*
    Harbour Project source code
 
    Runtime library regression tests, currently for some of the

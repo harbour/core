@@ -1,4 +1,8 @@
 //
+// $Id$
+//
+
+//
 // Mankala. The first Harbour board game.
 //
 // Written by Eddie Runia <eddie@runia.com>

@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 // Testing Harbour INIT and EXIT functions
 
 function Main()

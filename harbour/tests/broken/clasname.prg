@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 // The following code tests the application of the className message
 // against the "fundemental" types of Clipper.
 

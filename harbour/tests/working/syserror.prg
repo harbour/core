@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 // Testing the Harbour related error system functions
 
 function Main()

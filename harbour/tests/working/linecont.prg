@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 //NOTEST
 FUNCTION MAIN()
 LOCAL a, b

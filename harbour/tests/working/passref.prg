@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 /* test of pass by reference @ */
 
 function main

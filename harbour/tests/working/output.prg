@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 // Testing Harbour device management.
 /* Harbour Project source code
    http://www.Harbour-Project.org/

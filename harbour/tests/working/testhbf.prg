@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 /*
 test program for hb_f*()
 harbour clones for nanfor's ft_f*()

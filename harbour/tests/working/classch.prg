@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 // Testing Harbour classes.ch commands
 
 #include "classes.ch"

@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 // Testing Harbour statics variables management
 
 static z := "First"

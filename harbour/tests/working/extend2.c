@@ -1,6 +1,13 @@
-// Testing Harbour Extended system.
-//
-// NOTE: compile extend1.prg and extend2.c and link both files
+/*
+ * $Id$
+ */
+
+/*
+ * Testing Harbour Extended system.
+ *
+ * NOTE: compile extend1.prg and extend2.c and link both files
+ */
+
 #include <extend.api>
 #include <string.h>
 

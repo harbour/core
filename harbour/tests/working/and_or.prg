@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 // Testing Harbour AND OR operators
 
 function And_Or()  // Main() is not required!

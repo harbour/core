@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 procedure main()
 
    local aArray := {{NIL}}

@@ -1,4 +1,8 @@
 //
+// $Id$
+//
+
+//
 // Test of inline function
 //
 function Main()

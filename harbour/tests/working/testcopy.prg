@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 /*
 __copyfile( csource, cdestination )
 initial release : 23 June 1999 Andi Jahja

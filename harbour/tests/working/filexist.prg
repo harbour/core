@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 // test of file function
 function main
 

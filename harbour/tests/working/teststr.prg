@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 function main()
 
    outstd (CHR(13)+CHR(10))
