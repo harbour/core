@@ -21,7 +21,7 @@
  * their web site at http://www.gnu.org/).
  */
 
-#DEFINE MAX_CICLES 64
+#DEFINE MAX_TOKENS 1024
 
 #ifdef __HARBOUR__
    #include "hbextern.ch"
@@ -816,16 +816,10 @@ FUNCTION ProcessLine( sLine, nLine, sSource )
    LOCAL nNext, sDirective, bX, sToken, nRule
    LOCAL nNewLineAt, aLines, nLines, Counter
    LOCAL sLeft, sPassed := '', asOutLines := {}, sOut := ''
-   LOCAL cChar, sLastToken, sTemp, cFirstChar, cLastChar
-   LOCAL bString, nLen, iCicles := 0, aDefined := {}, aTranslated := {}, aCommanded := {}
+   LOCAL cChar, sTemp, cFirstChar, cLastChar
+   LOCAL bString, nLen, iCycles, aDefined := {}, aTranslated := {}, aCommanded := {}
 
    WHILE .T.
-      IF iCicles < MAX_CICLES
-         iCicles++
-      ELSE
-         Alert( "ERROR! Circularity detected [" + sSource + "(" + LTrim( Str( nLine ) ) + ")]"  )
-         BREAK
-      ENDIF
 
       //? "Raw Processing: '", sLine, "'"
       //? nPendingLines, nIfDef, IIF( nIfDef > 0, abIfDef[nIfDef] , )
@@ -1007,7 +1001,18 @@ FUNCTION ProcessLine( sLine, nLine, sSource )
 
       ENDIF
 
+      iCycles := 0
+
       WHILE .T.
+
+         IF iCycles < MAX_TOKENS
+            iCycles++
+         ELSE
+            Alert( "ERROR! Circularity detected [" + sSource + "(" + LTrim( Str( nLine ) ) + ")]" )
+            ? sPassed
+            ? sLine
+            BREAK
+         ENDIF
 
          IF nIfDef > 0 .AND. ! abIfDef[nIfDef]
             //? "Ignored: " + sLine
@@ -1023,40 +1028,35 @@ FUNCTION ProcessLine( sLine, nLine, sSource )
          //? "Token = '"  + sToken + "'"
          //WAIT
 
-         IF ( Left( sToken, 1 ) $ "'[" + '"' .AND. Len( sToken ) > 1 ) .OR. ;
-            Left( sToken, 1 ) $ "0123456789"
+         cChar := Left( sToken , 1 )
 
-            /* Can't be a key. */
+         IF ( cChar = '_' .OR. IsAlpha( cChar ) ) .AND. ( nRule := MatchRule( sToken, @sLine, aDefRules, aDefResults, .F., .F. ) ) > 0
+            //? "DEFINED: " + sLine
+            //WAIT
 
-         ELSE
+            IF sPassed == '' .AND. aScan( aDefined, nRule ) > 0
+               Alert( "Cyclic directive: #define " + sToken )
+               BREAK
+            ELSE
+               aAdd( aDefined, nRule )
+            ENDIF
 
-            IF ( nRule := MatchRule( sToken, @sLine, aDefRules, aDefResults, .F., .F. ) ) > 0
-               //? "DEFINED: " + sLine
-               //WAIT
-
-               IF sPassed == '' .AND. aScan( aDefined, nRule ) > 0
-                  Alert( "Ciclic directive: #define " + sToken )
-                  BREAK
+            WHILE ( nNewLineAt := At( ';', sLine ) ) > 0
+               nPendingLines++
+               IF nPendingLines > Len( aPendingLines )
+                  aAdd( aPendingLines, Left( sLine, nNewLineAt - 1 ) )
                ELSE
-                  aAdd( aDefined, nRule )
+                  aPendingLines[nPendingLines] := Left( sLine, nNewLineAt - 1 )
                ENDIF
 
-               sLine   := sLeft + sPassed + sLine
-               sPassed := ''
+               //? "Pending #", nPendingLines,  Left( sLine, nNewLineAt - 1 ), aPendingLines[nPendingLines]
+               sLine := SubStr( sLine, nNewLineAt + 1 )
+            ENDDO
 
-               WHILE ( nNewLineAt := At( ';', sLine ) ) > 0
-                  nPendingLines++
-                  IF nPendingLines > Len( aPendingLines )
-                     aAdd( aPendingLines, Left( sLine, nNewLineAt - 1 ) )
-                  ELSE
-                     aPendingLines[nPendingLines] := Left( sLine, nNewLineAt - 1 )
-                  ENDIF
-
-                  //? "Pending #", nPendingLines,  Left( sLine, nNewLineAt - 1 ), aPendingLines[nPendingLines]
-                  sLine := SubStr( sLine, nNewLineAt + 1 )
-               ENDDO
-
-               IF ! ( sLine == '' )
+            IF ( sLine == '' )
+               EXIT
+            ELSE
+               IF nPendingLines > 0
                   nPendingLines++
                   IF nPendingLines > Len( aPendingLines )
                      aAdd( aPendingLines, sLine )
@@ -1065,46 +1065,43 @@ FUNCTION ProcessLine( sLine, nLine, sSource )
                   ENDI
 
                   //? "Pending #", nPendingLines, sLine, aPendingLines[nPendingLines]
-                  //sLine := ''
                   sLine := aPendingLines[1]
                   aDel( aPendingLines, 1 )
                   nPendingLines--
                ENDIF
 
-               //? "Lines Pending:", nPendingLines
+               LOOP
+            ENDIF
+         ENDIF
 
-               EXIT
+         IF ( nRule := MatchRule( sToken, @sLine, aTransRules, aTransResults, .F., .T. ) ) > 0
 
+            //? "TRANSLATED: " + sLine
+            //WAIT
+
+            IF sPassed == '' .AND. aScan( aTranslated, nRule ) > 0
+               Alert( "Cyclic directive: #translate " + sToken )
+               BREAK
+            ELSE
+               aAdd( aTranslated, nRule )
             ENDIF
 
-            IF ( nRule := MatchRule( sToken, @sLine, aTransRules, aTransResults, .F., .T. ) ) > 0
-
-               //? "TRANSLATED: " + sLine
-               //WAIT
-
-               IF sPassed == '' .AND. aScan( aTranslated, nRule ) > 0
-                  Alert( "Ciclic directive: #translate " + sToken )
-                  BREAK
+            WHILE ( nNewLineAt := At( ';', sLine ) ) > 0
+               nPendingLines++
+               IF nPendingLines > Len( aPendingLines )
+                  aAdd( aPendingLines, Left( sLine, nNewLineAt - 1 ) )
                ELSE
-                  aAdd( aTranslated, nRule )
+                  aPendingLines[nPendingLines] := Left( sLine, nNewLineAt - 1 )
                ENDIF
 
-               sLine   := sLeft + sPassed + sLine
-               sPassed := ''
+               //? "Pending #", nPendingLines,  Left( sLine, nNewLineAt - 1 ), aPendingLines[nPendingLines]
+               sLine := SubStr( sLine, nNewLineAt + 1 )
+            ENDDO
 
-               WHILE ( nNewLineAt := At( ';', sLine ) ) > 0
-                  nPendingLines++
-                  IF nPendingLines > Len( aPendingLines )
-                     aAdd( aPendingLines, Left( sLine, nNewLineAt - 1 ) )
-                  ELSE
-                     aPendingLines[nPendingLines] := Left( sLine, nNewLineAt - 1 )
-                  ENDIF
-
-                  //? "Pending #", nPendingLines,  Left( sLine, nNewLineAt - 1 ), aPendingLines[nPendingLines]
-                  sLine := SubStr( sLine, nNewLineAt + 1 )
-               ENDDO
-
-               IF ! ( sLine == '' )
+            IF ( sLine == '' )
+               EXIT
+            ELSE
+               IF nPendingLines > 0
                   nPendingLines++
                   IF nPendingLines > Len( aPendingLines )
                      aAdd( aPendingLines, sLine )
@@ -1113,46 +1110,44 @@ FUNCTION ProcessLine( sLine, nLine, sSource )
                   ENDI
 
                   //? "Pending #", nPendingLines,  sLine, aPendingLines[nPendingLines]
-                  //sLine := ''
                   sLine := aPendingLines[1]
                   aDel( aPendingLines, 1 )
                   nPendingLines--
                ENDIF
 
-               //? "Lines Pending:", nPendingLines
+               LOOP
+            ENDIF
+         ENDIF
 
-               EXIT
+         IF sPassed == '' .AND. ( nRule := MatchRule( sToken, @sLine, aCommRules, aCommResults, .T., .T. ) ) > 0
 
+            //? "COMMANDED: " + sLine
+            //? '"' + sLeft +'"', '"' + sPassed + '"'
+            //WAIT
+
+            IF sPassed == '' .AND. aScan( aCommanded, nRule ) > 0
+               Alert( "Cyclic directive: #command " + sToken )
+               BREAK
+            ELSE
+               aAdd( aCommanded, nRule )
             ENDIF
 
-            IF sPassed == '' .AND. ( nRule := MatchRule( sToken, @sLine, aCommRules, aCommResults, .T., .T. ) ) > 0
-
-               //? "COMMANDED: " + sLine
-               //? '"' + sLeft +'"', '"' + sPassed + '"'
-               //WAIT
-
-               IF sPassed == '' .AND. aScan( aCommanded, nRule ) > 0
-                  Alert( "Ciclic directive: #command " + sToken )
-                  BREAK
+            WHILE ( nNewLineAt := At( ';', sLine ) ) > 0
+               nPendingLines++
+               IF nPendingLines > Len( aPendingLines )
+                  aAdd( aPendingLines, Left( sLine, nNewLineAt - 1 ) )
                ELSE
-                  aAdd( aCommanded, nRule )
+                  aPendingLines[nPendingLines] := Left( sLine, nNewLineAt - 1 )
                ENDIF
 
-               sLine := sLeft /*+ sPassed */ + sLine // Can't have sPassed for #COMMAND
+               //? "Pending #", nPendingLines,  Left( sLine, nNewLineAt - 1 ), aPendingLines[nPendingLines]
+               sLine := SubStr( sLine, nNewLineAt + 1 )
+            ENDDO
 
-               WHILE ( nNewLineAt := At( ';', sLine ) ) > 0
-                  nPendingLines++
-                  IF nPendingLines > Len( aPendingLines )
-                     aAdd( aPendingLines, Left( sLine, nNewLineAt - 1 ) )
-                  ELSE
-                     aPendingLines[nPendingLines] := Left( sLine, nNewLineAt - 1 )
-                  ENDIF
-
-                  //? "Pending #", nPendingLines,  Left( sLine, nNewLineAt - 1 ), aPendingLines[nPendingLines]
-                  sLine := SubStr( sLine, nNewLineAt + 1 )
-               ENDDO
-
-               IF ! ( sLine == '' )
+            IF ( sLine == '' )
+               EXIT
+            ELSE
+               IF nPendingLines > 0
                   nPendingLines++
                   IF nPendingLines > Len( aPendingLines )
                      aAdd( aPendingLines, sLine )
@@ -1161,21 +1156,16 @@ FUNCTION ProcessLine( sLine, nLine, sSource )
                   ENDI
 
                   //? "Pending #", nPendingLines,  sLine, aPendingLines[nPendingLines]
-                  //sLine := ''
                   sLine := aPendingLines[1]
                   aDel( aPendingLines, 1 )
                   nPendingLines--
                ENDIF
 
-               //? "Lines Pending:", nPendingLines
-
-               EXIT
-
+               LOOP
             ENDIF
 
          ENDIF
 
-         sLastToken := sToken
          sPassed += sToken
 
       ENDDO
@@ -1309,7 +1299,7 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
          IF nMarkerID > 0 .AND. nMarkerID < 1000
             IF aMarkers != NIL .AND. aMarkers[nMarkerID] != NIL
                IF bDbgMatch
-                  ? "Used:", nMatch, nMarkerId, aMarkers[nMarkerId]
+                  ? "Used:", nMatch, nMarkerId, aMarkers[nMarkerId], nOptional, aMP[2]
                   WAIT
                ENDIF
 
@@ -1468,10 +1458,11 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
                   ELSE
 
                      sWorkLine     := sPreStoppers
-                     sMultiStopper := NIl
+                     sMultiStopper := NIL
 
                      IF bDbgMatch
                         ? sToken, "Not a stopper."
+                        ? "Reverted: ", sWorkLine
                      ENDIF
 
                   ENDIF
@@ -1486,17 +1477,17 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
 
          ENDIF
 
-         IF bDbgMatch
-            IF sAnchor == NIL
-               ? nMatch, 'of', nMatches, "NO Anchore!", nMarkerId, nOptional, aMP[2], sMultiStopper
-            ELSE
-               ? nMatch, 'of', nMatches, "Searching for Anchore: '" + sAnchor + "'", nMarkerId, nOptional, aMP[2], sMultiStopper
-            ENDIF
-            WAIT
-         ENDIF
-
          IF nMatch < nMatches
             sNextAnchor := aRules[Counter][2][nMatch + 1][3]
+         ENDIF
+
+         IF bDbgMatch
+            IF sAnchor == NIL
+               ? nMatch, 'of', nMatches, "NO Anchore!", nMarkerId, nOptional, aMP[2], sMultiStopper, sNextAnchor
+            ELSE
+               ? nMatch, 'of', nMatches, "Searching for Anchore: '" + sAnchor + "'", nMarkerId, nOptional, aMP[2], sMultiStopper, sNextAnchor
+            ENDIF
+            WAIT
          ENDIF
 
          sToken    := NIL
@@ -1725,13 +1716,13 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
 
                         WHILE nMatch > 1
                            nMatch--
-                           IF aRules[nRule][2][nMatch][2] >= 0 .AND. aRules[nRule][2][nMatch][2] < nOPtional
+                           IF aRules[nRule][2][nMatch][2] == 0 .OR. ( aRules[nRule][2][nMatch][2] > 0 .AND. aRules[nRule][2][nMatch][2] < nOPtional )
                               EXIT
                            ENDIF
                         ENDDO
-                        //IF nMatch == 0 .OR. ( aRules[nRule][2][nMatch][2] >= 0 .AND. aRules[nRule][2][nMatch][2] < nOptional )
+                        IF nMatch == 0 .OR. ( aRules[nRule][2][nMatch][2] == 0 .OR. ( aRules[nRule][2][nMatch][2] > 0 .AND. aRules[nRule][2][nMatch][2] < nOptional ) )
                            nMatch++
-                        //ENDIF
+                        ENDIF
 
                         nOptional := 0
 
@@ -1905,7 +1896,7 @@ FUNCTION NextToken( sLine, bCheckRules )
 
   LOCAL  sReturn := NIL, cChar, Counter, nLen, sPad, nClose, sLeft2Chars := Left( sLine, 2 )
 
-  //? "Called from: " + ProcName(1) + " Line: " + Str( ProcLine(1) ) + " Scaning: " + sLine
+  //? bCheckRules, "Called from: " + ProcName(1) + " Line: " + Str( ProcLine(1) ) + " Scaning: " + sLine
 
   IF sLeft2Chars == "=="
 
@@ -2020,7 +2011,7 @@ FUNCTION NextToken( sLine, bCheckRules )
 
         nClose := AT( ']', sLine )
         IF nClose == 0
-           Alert( "ERROR! [NextExp()] Unterminated ']' at: " + sLine )
+           Alert( "ERROR! [NextToken()] Unterminated ']' at: " + sLine )
            RETURN NIL
         ELSE
            sReturn := SubStr( sLine, 2, nClose - 2 )
@@ -2109,22 +2100,20 @@ FUNCTION NextToken( sLine, bCheckRules )
 
   IF bCheckRules
 
-     IF sReturn == NIL .OR. ;
-        ( sReturn = sLeft2Chars /* intentionaly not == */ ) .OR. ;
-        ( Left( sReturn, 1 ) $ "'[" + '"' .AND. Len( sReturn ) > 1 ) .OR. ;
-        Left( sReturn, 1 ) $ "0123456789"
+     IF sReturn != NIL
 
-        /* Can't be a KEY. */
+        cChar := Left( sReturn, 1 )
 
-     ELSE
-
-        IF MatchRule( sReturn, @sLine, aDefRules, aDefResults, .F., .F. ) > 0
+        IF ( cChar = '_' .OR. IsAlpha( cChar ) ) .AND. MatchRule( sReturn, @sLine, aDefRules, aDefResults, .F., .F. ) > 0
            RETURN NextToken( @sLine, .T. )
         ENDIF
 
         IF MatchRule( sReturn, @sLine, aTransRules, aTransResults, .F., .T. ) > 0
            RETURN NextToken( @sLine, .T. )
         ENDIF
+
+        //? sReturn, "not defined/translated."
+        //WAIT
 
      ENDIF
 
@@ -2135,6 +2124,8 @@ RETURN sReturn
 FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
 
   LOCAL sExp, nClose, cChar, sTemp, Counter, sWorkLine, sPad, sToken, sGrabber
+
+  //? ProcName(1), ProcLine(1), cType, sLine
 
   DO CASE
      CASE cType == '*'
@@ -2193,6 +2184,58 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
      sLine := sToken + sLine
      sExp := NIL
 
+  ELSEIF Left( sToken, 2 ) == '++'
+
+     sExp  := sToken
+
+     IF sNextAnchor != '++'
+        sTemp := NextExp( @sLine, '<', NIL, NIL, sNextAnchor )
+        IF sTemp == NIL
+           Alert( "ERROR! orphan '++'" )
+        ELSE
+           sExp +=  sTemp
+        ENDIF
+     ENDIF
+
+  ELSEIF Left( sToken, 2 ) == '--'
+
+     sExp  := sToken
+
+     IF sNextAnchor != '--'
+        sTemp := NextExp( @sLine, '<', NIL, NIL, sNextAnchor )
+        IF sTemp == NIL
+           Alert( "ERROR! orphan '--'" )
+        ELSE
+           sExp +=  sTemp
+        ENDIF
+     ENDIF
+
+  ELSEIF Left( sToken, 1 ) == '+'
+
+     sExp  := sToken
+
+     IF sNextAnchor != '+'
+        sTemp := NextExp( @sLine, '<', NIL, NIL, sNextAnchor )
+        IF sTemp == NIL
+           Alert( "ERROR! orphan '+'" )
+        ELSE
+           sExp +=  sTemp
+        ENDIF
+     ENDIF
+
+  ELSEIF Left( sToken, 1 ) == '-'
+
+     sExp  := sToken
+
+     IF sNextAnchor != '-'
+        sTemp := NextExp( @sLine, '<', NIL, NIL, sNextAnchor )
+        IF sTemp == NIL
+           Alert( "ERROR! orphan '-'" )
+        ELSE
+           sExp +=  sTemp
+        ENDIF
+     ENDIF
+
   ELSEIF Left( sToken, 1 ) == '!'
 
      sExp  := sToken
@@ -2200,7 +2243,7 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
      IF sNextAnchor != '!'
         sTemp := NextExp( @sLine, '<', NIL, NIL, sNextAnchor )
         IF sTemp == NIL
-           Alert( "ERROR! orphan ':='" )
+           Alert( "ERROR! orphan '!'" )
         ELSE
            sExp +=  sTemp
         ENDIF
@@ -2347,7 +2390,7 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
         ENDIF
 
         IF Left( sLine, 1 ) == ')'
-           sExp  += Left( sLine, 1 ) // Open
+           sExp  += Left( sLine, 1 ) // Close
            sLine := SubStr( sLine, 2 )
            sExp  += ExtractLeadingWS( @sLine )
         ELSE
@@ -2379,7 +2422,7 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
   ENDIF
 
   IF bDbgExp
-     ? "sLine: '" + sLine + "'"
+     ? "sExp: '" + sExp + "'"
      WAIT
   ENDIF
 
@@ -2567,9 +2610,9 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
   ENDDO
 
   IF cType == 'A'
-      IF sExp != NIL
-         aAdd( aExp, sExp )
-      ENDIF
+     IF sExp != NIL
+        aAdd( aExp, sExp )
+     ENDIF
 
      IF bDbgExp
         IF ! ( ProcName(1) == "NEXTEXP" )
@@ -2735,7 +2778,7 @@ FUNCTION PPOut( aResults, aMarkers )
               ENDIF
            ENDIF
 
-        /* #<x> Dumb */
+        /* #<x> Dumb Stringify */
         CASE aResults[2][Counter] == 2
            IF ValType( xValue ) == 'A'
               sResult += '"'
@@ -2759,15 +2802,15 @@ FUNCTION PPOut( aResults, aMarkers )
               ENDIF
            ENDIF
 
-        /* <"x"> Normal */
+        /* <"x"> Normal Stringify */
         CASE aResults[2][Counter] == 3
            IF ValType( xValue ) == 'A'
               nMatches := Len( xValue )
               FOR nMatch := 1 TO nMatches
                  IF Left( xValue[nMatch], 1 ) $ '"['
-                    sResult += '[' + xValue[nMatch] + ']'
+                    sResult += '[' + RTrim( xValue[nMatch] ) + ']'
                  ELSE
-                    sResult += '"' + xValue[nMatch] + '"'
+                    sResult += '"' + RTrim( xValue[nMatch] ) + '"'
                  ENDIF
 
                  IF nMatch < nMatches
@@ -2777,14 +2820,14 @@ FUNCTION PPOut( aResults, aMarkers )
            ELSE
               IF ! ( xValue == NIL )
                  IF Left( xValue, 1 ) $ '"['
-                    sResult += '[' + xValue + ']'
+                    sResult += '[' + RTrim( xValue ) + ']'
                  ELSE
-                    sResult += '"' + xValue + '"'
+                    sResult += '"' + RTrim( xValue ) + '"'
                  ENDIF
               ENDIF
            ENDIF
 
-        /* <(x)> Smart */
+        /* <(x)> Smart Stringify */
         CASE aResults[2][Counter] == 4
            IF ValType( xValue ) == 'A'
               nMatches := Len( xValue )
@@ -2793,9 +2836,9 @@ FUNCTION PPOut( aResults, aMarkers )
                     sResult += xValue[nMatch]
                  ELSE
                        IF Left( xValue[nMatch], 1 ) $ '"['
-                          sResult += '[' + xValue[nMatch] + ']'
+                          sResult += '[' + RTrim( xValue[nMatch] ) + ']'
                        ELSE
-                          sResult += '"' + xValue[nMatch] + '"'
+                          sResult += '"' + RTrim( xValue[nMatch] ) + '"'
                        ENDIF
                  ENDIF
 
@@ -2809,9 +2852,9 @@ FUNCTION PPOut( aResults, aMarkers )
                     sResult += xValue
                  ELSE
                     IF Left( xValue, 1 ) $ '"['
-                       sResult += '[' + xValue + ']'
+                       sResult += '[' + RTrim( xValue ) + ']'
                     ELSE
-                       sResult += '"' + xValue + '"'
+                       sResult += '"' + RTrim( xValue ) + '"'
                     ENDIF
                  ENDIF
               ENDIF
