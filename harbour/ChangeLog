@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2001-12-18 06:36 UTC+0100 Antonio Linares <alinares@fivetech.com>
+   + source/vm/maindllh.c
+     Harbour DLL entry point
+
 2001-12-18 01:03 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * source/common/hbffind.c
@@ -20,7 +24,7 @@
    * source/compiler/gencobj.c
      ! Fix provided by Jose Lalin
        bDelTemp was initialized to TRUE by default and this was
-       causing that MAKE utilities rebuilds all the files in a 
+       causing that MAKE utilities rebuilds all the files in a
        project since the intermediate C file was deleted.
 
    * source/rtl/gt_tpl/gt_tpl.c
@@ -29,11 +33,11 @@
 2001-12-17 17:02 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * source/rtl/tbrowse.prg
-     ! Fix added again for displaying logical field in a 
+     ! Fix added again for displaying logical field in a
        100% CA-Cl*pper compatible way.
 
    * source/rtl/tget.prg
-     ! Fixes by Walter Negro (GET single color colorspec and 
+     ! Fixes by Walter Negro (GET single color colorspec and
        picture modifying on-the-fly)
 
    * source/common/hbffind.c
@@ -52,28 +56,28 @@
 2001-12-17 14:57 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * include/hbver.h
-   * source/common/hbver.c 
-   * source/compiler/genc.c 
-   * source/compiler/genjava.c 
-   * source/compiler/genobj32.c 
+   * source/common/hbver.c
+   * source/compiler/genc.c
+   * source/compiler/genjava.c
+   * source/compiler/genobj32.c
    * source/compiler/hbusage.c
-   * utils/hbpp/hbpp.c 
-     - Build number removed, since it was the same as the 
-       version number, and it doesn stands for something 
-       which doesn't have too much meaning in an open-source 
+   * utils/hbpp/hbpp.c
+     - Build number removed, since it was the same as the
+       version number, and it doesn stands for something
+       which doesn't have too much meaning in an open-source
        project anyway.
-     - Removed the date/month/day of the version number, 
+     - Removed the date/month/day of the version number,
        since it was only yet another version-number duplicate.
-     + Added #defines for last ChangeLog entry, ChangeLog CVS 
+     + Added #defines for last ChangeLog entry, ChangeLog CVS
        version string, optional C, PRG and linker option.
-       As of now these should be manually edited whenever 
-       doing a build, but the goal is make this step completely 
+       As of now these should be manually edited whenever
+       doing a build, but the goal is make this step completely
        automated.
-       One can retrieve these new version details by running 
-       Harbour compiler with the -build switch, or any 
+       One can retrieve these new version details by running
+       Harbour compiler with the -build switch, or any
        Harbour applications by running it with //BUILD switch.
        Optional switches are only displayed when not empty.
-     + -build and -credits undocumented options now put into 
+     + -build and -credits undocumented options now put into
        the command-line help screen.
 
 2001-12-17 14:13 UTC+0100 Maurilio Longo <maurilio.longo@libero.it>
