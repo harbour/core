@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+    * some absolute paths changed to relative paths
+  + contrib\delphi\hbdll\main.dfm
+    + Delphi's main form, as a binary file, because it's a D3 form it will be
+      compatible with newer Delphis
   ; Changes thanks to Alexander's feedback
 
 2002-02-26 17:20 UTC-0500 David G. Holm <dholm@jsd-llc.com>
