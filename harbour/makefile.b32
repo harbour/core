@@ -11,7 +11,7 @@
    BCC_OPT = -O2 -DHARBOUR_USE_WIN_GTAPI
 !endif
 
-INCLUDE_DIR       = include;source\compiler;source\vm;obj\b32
+INCLUDE_DIR       = include;source\compiler;source\vm
 COMPILER_DIR      = source\compiler
 COMMON_DIR        = source\common
 PP_DIR            = source\pp
@@ -353,7 +353,7 @@ $(OBJ_DIR)\harbourl.c : $(COMPILER_DIR)\harbour.l
    flex -i -8 -o$@ $**
 
 $(OBJ_DIR)\harbourl.obj : $(OBJ_DIR)\harbourl.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR);$(OBJ_DIR) -o$@ $**
 
 $(OBJ_DIR)\cmdcheck.obj : $(COMPILER_DIR)\cmdcheck.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**

@@ -317,22 +317,22 @@ void hb_compChkEnvironVar( char * szSwitch )
                /* NOTE:
                   It already has support for several include files
                */
-               case 'i':
-               case 'I':
-                  {
-                     char * pPath;
-                     char * pDelim;
+             case 'i':
+             case 'I':
+                {
+                   char * pPath;
+                   char * pDelim;
 
-                     pPath = hb_strdup( s + 1 );
-                     while( ( pDelim = strchr( pPath, OS_PATH_LIST_SEPARATOR ) ) != NULL )
-                     {
-                        * pDelim = '\0';
-                        AddSearchPath( pPath, &hb_comp_pIncludePath );
-                        pPath = pDelim + 1;
-                     }
-                     AddSearchPath( pPath, &hb_comp_pIncludePath );
-                  }
-                  break;
+                   pPath = hb_strdup( s + 1 );
+                   while( ( pDelim = strchr( pPath, OS_PATH_LIST_SEPARATOR ) ) != NULL )
+                   {
+                      * pDelim = '\0';
+                      AddSearchPath( pPath, &hb_comp_pIncludePath );
+                      pPath = pDelim + 1;
+                   }
+                   AddSearchPath( pPath, &hb_comp_pIncludePath );
+                }
+                break;
 
              case 'l':
              case 'L':
@@ -427,15 +427,12 @@ void hb_compChkEnvironVar( char * szSwitch )
                    szPrefix[ i ] = '\0';
 
                    if( strlen( szPrefix ) == 0 )
-                   {
                       sprintf( szPrefix, "%08lX_", PackDateTime() );
-                   }
-                   else
-                   {
-                      strncpy( hb_comp_szPrefix, szPrefix, 16 );
-                      hb_comp_szPrefix[ 20 ] = '\0';
-                      strcat( hb_comp_szPrefix, "_" );
-                   }
+
+                   strncpy( hb_comp_szPrefix, szPrefix, 16 );
+                   hb_comp_szPrefix[ 20 ] = '\0';
+                   strcat( hb_comp_szPrefix, "_" );
+
                    free( szPrefix );
                 }
                 break;

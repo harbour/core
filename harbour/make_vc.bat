@@ -3,5 +3,5 @@ rem
 rem $Id$
 rem 
 
-nmake /f makefile.vc %1 > make_vc.err
-notepad make_vc.err
+nmake /f makefile.vc %1 > make_vc.log
+notepad make_vc.log

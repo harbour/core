@@ -1,3 +1,15 @@
+20000213-04:02 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * source/compiler/cmdcheck.c
+     ! Fixed broken handling of the /x switch without parameter.
+   * *.bat
+     * make*.err changed to make*.log
+   * makefile.vc
+     + NOTE: added about UNISTD.H
+   * makefile.b32
+     ! Fixed the fix for the HARBOURY.H not found error in some Borland
+       compilers. Now the same compile command is used than *was* already
+       used previously with MACROL.C, so it should work now.
+
 20000212-22:50 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
   *source/rdd/dbcmd.c
     *Some docs changed
@@ -10,6 +22,7 @@
     *Added obj\b32 to the include dir
   *source/rtl/strings.c
     *Fixed VAL() function provided by Jose Lanin
+
 20000212-14:00 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/macro/macro.l
@@ -20,6 +33,7 @@
    * contrib/rdd_ads/ads1.c
      + Added adsCreate function for creating ads tables. It also supports 
        adt tables with short names.	 	
+
 20000212-02:30 GMT+1 Victor Szakats <info@szelvesz.hu>
    * include/gtapi.h
      + NOTE: added about incompatibilities between Harbour and CA-Cl*pper
