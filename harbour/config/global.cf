@@ -3,7 +3,7 @@
 #
 
 GRANDP = ../../
-ARCH := $(HB_ARCHITECTURE)/$(HB_COMPILER)
+HB_ARCH := $(HB_ARCHITECTURE)/$(HB_COMPILER)
 
 HB_DB_DRIVERS=\
 	nulsys \
@@ -13,7 +13,7 @@ HB_DB_DRIVERS=\
 	dbfdbt \
 
 ifeq ($(HB_BIN_COMPILE),)
-HB_BIN_COMPILE := $(TOP)$(ROOT)source/compiler/$(ARCH)
+HB_BIN_COMPILE := $(TOP)$(ROOT)source/compiler/$(HB_ARCH)
 endif
 
 ifeq ($(HB_INC_COMPILE),)
@@ -24,4 +24,4 @@ ifeq ($(HB_LIB_COMPILE),)
 HB_LIB_COMPILE :=
 endif
 
-include $(TOP)$(ROOT)config/$(ARCH).cf
+include $(TOP)$(ROOT)config/$(HB_ARCH).cf

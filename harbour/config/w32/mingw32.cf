@@ -24,8 +24,8 @@ LD_OUT = -o
 
 # Add all libraries specified in CONTRIBS and LIBS.
 ifeq ($(HB_LIB_COMPILE),)
-LINKPATHS += $(foreach lib, $(CONTRIBS), -L$(TOP)$(ROOT)contrib/$(lib)/$(ARCH))
-LINKPATHS += $(foreach lib, $(LIBS), -L$(TOP)$(ROOT)source/$(lib)/$(ARCH))
+LINKPATHS += $(foreach lib, $(CONTRIBS), -L$(TOP)$(ROOT)contrib/$(lib)/$(HB_ARCH))
+LINKPATHS += $(foreach lib, $(LIBS), -L$(TOP)$(ROOT)source/$(lib)/$(HB_ARCH))
 else
 LINKPATHS += -L$(HB_LIB_COMPILE)
 endif
@@ -38,13 +38,13 @@ LINKLIBS += -luser32 -lwinspool
 
 # If LIBS specifies the rdd library, add all DB drivers.
 ifeq ($(findstring rdd,$(LIBS)),rdd)
-LINKPATHS += $(foreach drv, $(HB_DB_DRIVERS), -L$(TOP)$(ROOT)source/rdd/$(drv)/$(ARCH))
+LINKPATHS += $(foreach drv, $(HB_DB_DRIVERS), -L$(TOP)$(ROOT)source/rdd/$(drv)/$(HB_ARCH))
 LINKLIBS += $(foreach drv, $(HB_DB_DRIVERS), -l$(drv))
 endif
 
 # Add the specified GT driver library
 ifeq ($(findstring rtl,$(LIBS)),rtl)
-LINKPATHS += -L$(TOP)$(ROOT)source/rtl/$(HB_GT_LIB)/$(ARCH)
+LINKPATHS += -L$(TOP)$(ROOT)source/rtl/$(HB_GT_LIB)/$(HB_ARCH)
 LINKLIBS += -l$(HB_GT_LIB)
 endif
 

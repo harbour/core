@@ -44,8 +44,8 @@ endef
 LD = wlink
 LDFLAGS = debug all OP osn=DOS4G OP stack=65536 OP CASEEXACT
 ifeq ($(HB_LIB_COMPILE),)
-LINKLIBS := $(foreach lib, $(CONTRIBS), $(subst /,\,$(TOP)$(ROOT)contrib/$(lib)/$(ARCH)/$(subst lib,,$(lib))))
-LINKLIBS += $(foreach lib, $(LIBS), $(subst /,\,$(TOP)$(ROOT)source/$(lib)/$(ARCH)/$(lib)))
+LINKLIBS := $(foreach lib, $(CONTRIBS), $(subst /,\,$(TOP)$(ROOT)contrib/$(lib)/$(HB_ARCH)/$(subst lib,,$(lib))))
+LINKLIBS += $(foreach lib, $(LIBS), $(subst /,\,$(TOP)$(ROOT)source/$(lib)/$(HB_ARCH)/$(lib)))
 else
 LINKLIBS := $(foreach lib, $(CONTRIBS), $(subst /,\,$(HB_LIB_COMPILE)/$(lib)))
 LINKLIBS += $(foreach lib, $(LIBS), $(subst /,\,$(HB_LIB_COMPILE)/$(lib)))
@@ -53,10 +53,10 @@ endif
 
 # If LIBS specifies the rdd library, add all DB drivers.
 ifeq ($(findstring rdd,$(LIBS)),rdd)
-RDDLIBS := $(foreach drv, $(HB_DB_DRIVERS), $(subst /,\,$(TOP)$(ROOT)source/rdd/$(drv)/$(ARCH)/$(drv)))
+RDDLIBS := $(foreach drv, $(HB_DB_DRIVERS), $(subst /,\,$(TOP)$(ROOT)source/rdd/$(drv)/$(HB_ARCH)/$(drv)))
 endif
 
-GTLIBS := $(TOP)$(ROOT)source/rtl/$(HB_GT_LIB)/$(ARCH)/$(HB_GT_LIB)
+GTLIBS := $(TOP)$(ROOT)source/rtl/$(HB_GT_LIB)/$(HB_ARCH)/$(HB_GT_LIB)
 GTLIBS := $(subst /,\,$(GTLIBS))
 
 LD_RULE = $(link_exe_file)

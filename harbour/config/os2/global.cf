@@ -16,8 +16,8 @@ endif
 
 ifeq ($(SHLVL),) # An OS/2 command shell
 
-ARCH_DIR = $(ARCH)
-OS2_ARCH_DIR = $(subst /,\,$(ARCH))
+ARCH_DIR = $(HB_ARCH)
+OS2_ARCH_DIR = $(subst /,\,$(HB_ARCH))
 MK = $(subst /,\,$(subst \~,~,$(MAKE)))
 
 ifeq ($(OS2_SHELL),)
@@ -43,7 +43,7 @@ clean::
 
 else  # bash
 
-ARCH_DIR = $(ARCH)/
+ARCH_DIR = $(HB_ARCH)/
 MK = $(MAKE)
 
 RM = rm -f
@@ -54,7 +54,7 @@ MD = mkdir
 
 dirbase::
 	@[ -d $(HB_ARCHITECTURE) ] || $(MD) $(HB_ARCHITECTURE); \
-	 [ -d $(ARCH) ] || $(MD) $(ARCH)
+	 [ -d $(HB_ARCH) ] || $(MD) $(HB_ARCH)
 
 clean::
 	-$(RD) $(ARCH_DIR)

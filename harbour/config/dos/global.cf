@@ -25,8 +25,8 @@ ifeq ($(SHLVL),) # COMMAND.COM
 # There is a conflict with the use of '\' and '/' characters
 # The MAKE requires '/' in filenames (ARCH_DIR) however some compilers
 # and some DOS commands require '\' (ARCH_DOS)
-ARCH_DIR = $(subst \,/,$(ARCH))
-ARCH_DOS = $(subst /,\,$(ARCH))
+ARCH_DIR = $(subst \,/,$(HB_ARCH))
+ARCH_DOS = $(subst /,\,$(HB_ARCH))
 MK := $(subst \,/,$(subst \~,~,$(MAKE)))
 
 ifeq ($(COMSPEC),) #location of command.com
@@ -73,7 +73,7 @@ clean::
 
 else  # bash
 
-ARCH_DIR = $(ARCH)
+ARCH_DIR = $(HB_ARCH)
 MK = $(MAKE)
 
 RM = rm -f
@@ -91,7 +91,7 @@ dirbase::
 	 [ -d $(ARCH_DIR) ] || $(MD) $(ARCH_DIR)
 
 clean::
-	-$(RD) $(ARCH)
+	-$(RD) $(HB_ARCH)
 
 endif
 endif

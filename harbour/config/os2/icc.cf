@@ -23,18 +23,18 @@ ifeq ($(HB_MAIN),)
 else
 ifeq ($(C_MAIN),)
 ifeq ($(HB_GT_LIB),os2pm)
-LDFLAGS +=/B"/PMtype:PM" $(TOP)$(ROOT)source/vm/$(ARCH)/mainpm.obj
+LDFLAGS +=/B"/PMtype:PM" $(TOP)$(ROOT)source/vm/$(HB_ARCH)/mainpm.obj
 else
-LDFLAGS += $(TOP)$(ROOT)source/vm/$(ARCH)/mainstd.obj
+LDFLAGS += $(TOP)$(ROOT)source/vm/$(HB_ARCH)/mainstd.obj
 endif
 endif
 endif
 ifeq ($(HB_LIB_COMPILE),)
-LINKLIBS = $(foreach lib, $(CONTRIBS), $(TOP)$(ROOT)contrib/$(lib)/$(ARCH)/$(subst lib,,$(lib))$(LIB_EXT))
-LINKLIBS += $(foreach lib, $(LIBS), $(TOP)$(ROOT)source/$(lib)/$(ARCH)/$(lib)$(LIB_EXT))
+LINKLIBS = $(foreach lib, $(CONTRIBS), $(TOP)$(ROOT)contrib/$(lib)/$(HB_ARCH)/$(subst lib,,$(lib))$(LIB_EXT))
+LINKLIBS += $(foreach lib, $(LIBS), $(TOP)$(ROOT)source/$(lib)/$(HB_ARCH)/$(lib)$(LIB_EXT))
 # If LIBS specifies the rdd library, add all DB drivers.
 ifeq ($(findstring rdd,$(LIBS)),rdd)
-LINKLIBS += $(foreach lib, $(HB_DB_DRIVERS), $(TOP)$(ROOT)source/rdd/$(lib)/$(ARCH)/$(lib)$(LIB_EXT))
+LINKLIBS += $(foreach lib, $(HB_DB_DRIVERS), $(TOP)$(ROOT)source/rdd/$(lib)/$(HB_ARCH)/$(lib)$(LIB_EXT))
 endif
 else
 LINKLIBS = $(foreach lib, $(LIBS), $(lib)$(LIB_EXT))
@@ -49,10 +49,10 @@ ifeq ($(C_MAIN),)
 ifeq ($(findstring rtl,$(LIBS)),rtl)
 ifeq ($(HB_GT_LIB),os2pm)
 # Special handling for PM mode
-LINKLIBS += $(TOP)$(ROOT)contrib/hgf/$(HB_GT_LIB)/$(ARCH)/$(HB_GT_LIB)$(LIB_EXT)
-LINKLIBS += $(TOP)$(ROOT)source/rtl/gtos2/$(ARCH)/gtos2.lib
+LINKLIBS += $(TOP)$(ROOT)contrib/hgf/$(HB_GT_LIB)/$(HB_ARCH)/$(HB_GT_LIB)$(LIB_EXT)
+LINKLIBS += $(TOP)$(ROOT)source/rtl/gtos2/$(HB_ARCH)/gtos2.lib
 else
-LINKLIBS += $(TOP)$(ROOT)source/rtl/$(HB_GT_LIB)/$(ARCH)/$(HB_GT_LIB)$(LIB_EXT)
+LINKLIBS += $(TOP)$(ROOT)source/rtl/$(HB_GT_LIB)/$(HB_ARCH)/$(HB_GT_LIB)$(LIB_EXT)
 endif
 endif
 endif

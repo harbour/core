@@ -8,6 +8,37 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-12-20 05:00 UTC-0500 David G. Holm <dholm@jsd-llc.com>
+  * config/global.cf
+  * config/bsd/gcc.cf
+  * config/bsd/global.cf
+  * config/darwin/gcc.cf
+  * config/darwin/global.cf
+  * config/dos/bcc16.cf
+  * config/dos/djgpp.cf
+  * config/dos/global.cf
+  * config/dos/owatcom.cf
+  * config/dos/rsx32.cf
+  * config/dos/watcom.cf
+  * config/hpux/gcc.cf
+  * config/hpux/global.cf
+  * config/linux/gcc.cf
+  * config/linux/global.cf
+  * config/os2/gcc.cf
+  * config/os2/global.cf
+  * config/os2/icc.cf
+  * config/sunos/gcc.cf
+  * config/sunos/global.cf
+  * config/w32/bcc32.cf
+  * config/w32/gcc.cf
+  * config/w32/global.cf
+  * config/w32/mingw32.cf
+  * config/w32/msvc.cf
+  * config/w32/rsxnt.cf
+  * config/w32/watcom.cf
+    * Changed ARCH variable to HB_ARCH due to a conflict with a permanent,
+      non-replacable FreeBSD 5.3 environment variable with the same name.
+
 2004-12-16 13:32 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/make_gnu.sh
   * harbour/make_tgz.sh

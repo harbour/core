@@ -24,7 +24,7 @@ endif
 
 MAKE = gmake
 
-ARCH_DIR = $(ARCH)/
+ARCH_DIR = $(HB_ARCH)/
 
 MK = $(MAKE)
 
