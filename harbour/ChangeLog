@@ -7,6 +7,11 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+  + contrib/odbc/browodbc.prg
+  * contrib/odbc/Makefile
+    + Added browseodbc() function for browsing ODBC data.
+
+2002-05-08 07:15 UTC+0100 "J. lefebvre (mafact)" <jfl@mafact.com>
   * source/rdd/dbf1.c
     * Msvc compiler need tmp to be unsigned char * at line 1605/1607
 
