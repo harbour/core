@@ -85,6 +85,7 @@
 
 #elif defined(HB_OS_UNIX)
 
+   #include <unistd.h>
    #define MAXGETHOSTNAME 256      /* should be enough for a host name */
 
 #endif
