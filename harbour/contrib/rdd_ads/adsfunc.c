@@ -425,3 +425,17 @@ HB_FUNC( ADSSETAOF )
 
 }
 
+HB_FUNC( ADSGETRELKEYPOS )
+{
+   ADSAREAP pArea;
+   DOUBLE pdPos;
+
+   pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
+   if( pArea && pArea->hOrdCurrent )
+   {
+       AdsGetRelKeyPos  ( pArea->hOrdCurrent, &pdPos);
+       hb_retnd( pdPos );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSREFRESHAOF" );
+}

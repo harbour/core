@@ -1,3 +1,9 @@
+20000405-10:00 GMT+3 Alexander Kresin
+  * contrib/rdd_ads/ads1.c
+    * added adsFlush() function
+  * contrib/rdd_ads/adsfunc.c
+    * Added adsGetRelKeyPos() function
+
 20000405-02:03 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/rtl/math.c

@@ -401,7 +401,13 @@ static ERRCODE adsFieldName( ADSAREAP pArea, USHORT uiIndex, void * szName )
    return SUCCESS;
 }
 
-#define  adsFlush                 NULL
+static ERRCODE adsFlush( ADSAREAP pArea )
+{
+   HB_SYMBOL_UNUSED( pArea );
+   HB_TRACE(HB_TR_DEBUG, ("adsFlush(%p)", pArea ));
+   AdsWriteAllRecords();
+   return SUCCESS;
+}
 
 static ERRCODE adsGetRec( ADSAREAP pArea, BYTE ** pBuffer )
 {
@@ -1265,7 +1271,7 @@ static RDDFUNCS adsTable = { adsBof,
                              adsFieldDisplay,
                              adsFieldInfo,
                              ( DBENTRYP_SVP ) adsFieldName,
-                             adsFlush,
+                             ( DBENTRYP_V ) adsFlush,
                              ( DBENTRYP_PP ) adsGetRec,
                              ( DBENTRYP_SI ) adsGetValue,
                              ( DBENTRYP_SVL ) adsGetVarLen,
