@@ -74,7 +74,7 @@ static jmp_buf s_env;
 /* TODO: This function should return an error code. The preprocessed sting
  * should be returned  by a reference.
  */
-HARBOUR HB___PREPROCESS( void )
+HB_FUNC( __PREPROCESS )
 {
    if( ISCHAR( 1 ) )
    {

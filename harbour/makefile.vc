@@ -221,6 +221,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\mlpos.obj \
    $(OBJ_DIR)\mod.obj \
    $(OBJ_DIR)\mouseapi.obj \
+   $(OBJ_DIR)\mousex.obj \
    $(OBJ_DIR)\mtran.obj \
    $(OBJ_DIR)\natmsg.obj \
    $(OBJ_DIR)\net.obj \
@@ -637,9 +638,11 @@ $(HBPP_EXE) : \
 # HBRUN.EXE rules
 #
 
-$(HBRUN_EXE) : $(HBRUN_DIR)\hbrun.prg
+$(HBRUN_EXE) : \
+   $(HBRUN_DIR)\hbrun.prg
+   $(HBRUN_DIR)\exttools.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $**
-   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\hbrun.c -o $(BIN_DIR)\hbrun /link $(LIBS2)
+   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\hbrun.c $(OBJ_DIR)\exttools.c -o $(HBRUN_EXE) /link $(LIBS2)
 
 !ifdef DO_HBRUNJAV
 
@@ -647,7 +650,7 @@ $(HBRUN_EXE) : $(HBRUN_DIR)\hbrun.prg
 # To compile this you must have a JDK installed
 #
 $(HBRUNJAV_DLL) : $(HBRUN_DIR)\runjava.c
-   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ $(HBRUN_DIR)\runjava.c -o $(BIN_DIR)\runjava.dll /link-dll $(LIBS)
+   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ $(HBRUN_DIR)\runjava.c -o $(HBRUNJAV_DLL) /link-dll $(LIBS)
     -del $(BIN_DIR)\runjava.exp
     -del $(BIN_DIR)\runjava.lib
 

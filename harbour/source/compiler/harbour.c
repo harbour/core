@@ -724,7 +724,7 @@ void hb_compFunctionAdd( char * szFunName, HB_SYMBOLSCOPE cScope, int iType )
       /* there is not a symbol on the symbol table for this function name */
       pSym = hb_compSymbolAdd( szFunName, NULL );
 
-   if( cScope != _HB_FS_PUBLIC )
+   if( cScope != HB_FS_PUBLIC )
       pSym->cScope |= cScope; /* we may have a non public function and a object message */
 
    pFunc = hb_compFunctionNew( szFunName, cScope );
@@ -769,7 +769,7 @@ void hb_compAnnounce( char * szFunName )
       /* there is a function/procedure defined already - ANNOUNCEd procedure
        * have to be a public symbol - check if existing symbol is public
        */
-      if( pFunc->cScope & _HB_FS_STATIC )
+      if( pFunc->cScope & HB_FS_STATIC )
          hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_FUNC_ANNOUNCE, szFunName, NULL );
    }
    else
@@ -779,9 +779,9 @@ void hb_compAnnounce( char * szFunName )
       /* create a new procedure
        */
       pSym = hb_compSymbolAdd( szFunName, NULL );
-      pSym->cScope = _HB_FS_PUBLIC;
+      pSym->cScope = HB_FS_PUBLIC;
 
-      pFunc = hb_compFunctionNew( szFunName, _HB_FS_PUBLIC );
+      pFunc = hb_compFunctionNew( szFunName, HB_FS_PUBLIC );
       pFunc->bFlags |= FUN_PROCEDURE;
 
       if( hb_comp_functions.iCount == 0 )
@@ -1006,7 +1006,7 @@ static int hb_compLocalGetPos( char * szVarName ) /* returns the order + 1 of a 
          while( pFunc )
          {
             bStatic = FALSE;
-            if( ( pFunc->cScope & ( _HB_FS_INIT | _HB_FS_EXIT ) ) == ( _HB_FS_INIT | _HB_FS_EXIT ) )
+            if( ( pFunc->cScope & ( HB_FS_INIT | HB_FS_EXIT ) ) == ( HB_FS_INIT | HB_FS_EXIT ) )
             {
                /* we are in a codeblock used to initialize a static variable -
                 * skip to a function where this static variable was declared
@@ -1458,7 +1458,7 @@ void hb_compGenMessage( char * szMsgName )       /* sends a message to an object
 
    if( ! pSym )  /* the symbol was not found on the symbol table */
       pSym = hb_compSymbolAdd( szMsgName, &wSym );
-   pSym->cScope |= _HB_FS_MESSAGE;
+   pSym->cScope |= HB_FS_MESSAGE;
    hb_compGenPCode3( HB_P_MESSAGE, HB_LOBYTE( wSym ), HB_HIBYTE( wSym ) );
 }
 
@@ -1501,7 +1501,7 @@ void hb_compGenPopVar( char * szVarName ) /* generates the pcode to pop a value 
        * initialization function - if YES then we have to switch to a function
        * where the static variable was declared
        */
-      if( ( hb_comp_functions.pLast->cScope & ( _HB_FS_INIT | _HB_FS_EXIT ) ) == ( _HB_FS_INIT | _HB_FS_EXIT ) )
+      if( ( hb_comp_functions.pLast->cScope & ( HB_FS_INIT | HB_FS_EXIT ) ) == ( HB_FS_INIT | HB_FS_EXIT ) )
           pFunc = hb_comp_functions.pLast->pOwner;
       else
           pFunc = hb_comp_functions.pLast;
@@ -2089,10 +2089,10 @@ void hb_compStaticDefStart( void )
    {
       BYTE pBuffer[ 5 ];
 
-      hb_comp_pInitFunc = hb_compFunctionNew( hb_strdup("(_INITSTATICS)"), _HB_FS_INIT );
+      hb_comp_pInitFunc = hb_compFunctionNew( hb_strdup("(_INITSTATICS)"), HB_FS_INIT );
       hb_comp_pInitFunc->pOwner = hb_comp_functions.pLast;
       hb_comp_pInitFunc->bFlags = FUN_USES_STATICS | FUN_PROCEDURE;
-      hb_comp_pInitFunc->cScope = _HB_FS_INIT | _HB_FS_EXIT;
+      hb_comp_pInitFunc->cScope = HB_FS_INIT | HB_FS_EXIT;
       hb_comp_functions.pLast = hb_comp_pInitFunc;
 
       pBuffer[ 0 ] = HB_P_STATICS;
@@ -2126,7 +2126,7 @@ void hb_compStaticDefEnd( void )
 */
 void hb_compCodeBlockStart()
 {
-   PFUNCTION pFunc = hb_compFunctionNew( NULL, _HB_FS_STATIC );
+   PFUNCTION pFunc = hb_compFunctionNew( NULL, HB_FS_STATIC );
 
    pFunc->pOwner       = hb_comp_functions.pLast;
    pFunc->iStaticsBase = hb_comp_functions.pLast->iStaticsBase;

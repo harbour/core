@@ -50,8 +50,8 @@
 ERRCODE adsRecCount( ADSAREAP pArea, ULONG * pRecCount );
 ERRCODE adsReadDBHeader( ADSAREAP pArea );
 
-HARBOUR HB__ADS( void );
-HARBOUR HB_ADS_GETFUNCTABLE( void );
+HB_FUNC( _ADS );
+HB_FUNC( ADS_GETFUNCTABLE );
 
 extern int adsFileType;
 extern int adsLockType;
@@ -59,8 +59,8 @@ extern int adsRights;
 extern int adsCharType;
 
 HB_INIT_SYMBOLS_BEGIN( ads1__InitSymbols )
-{ "_ADS",             _HB_FS_PUBLIC, HB__ADS,             0 },
-{ "ADS_GETFUNCTABLE", _HB_FS_PUBLIC, HB_ADS_GETFUNCTABLE, 0 }
+{ "_ADS",             HB_FS_PUBLIC, HB_FUNCNAME( _ADS ), NULL },
+{ "ADS_GETFUNCTABLE", HB_FS_PUBLIC, HB_FUNCNAME( ADS_GETFUNCTABLE ), NULL }
 HB_INIT_SYMBOLS_END( ads1__InitSymbols )
 #if ! defined(__GNUC__) && ! defined(_MSC_VER)
    #pragma startup ads1__InitSymbols
@@ -1316,11 +1316,11 @@ static RDDFUNCS adsTable = { adsBof,
                              adsWhoCares
                            };
 
-HARBOUR HB__ADS( void )
+HB_FUNC( _ADS )
 {
 }
 
-HARBOUR HB_ADS_GETFUNCTABLE( void )
+HB_FUNC( ADS_GETFUNCTABLE )
 {
    RDDFUNCS * pTable;
    USHORT * uiCount;

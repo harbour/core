@@ -40,12 +40,12 @@
 #include "hbapirdd.h"
 #include "rddsys.ch"
 
-HARBOUR HB__DELIMC( void );
-HARBOUR HB_DELIM_GETFUNCTABLE( void );
+HB_FUNC( _DELIMC );
+HB_FUNC( DELIM_GETFUNCTABLE );
 
 HB_INIT_SYMBOLS_BEGIN( delim1__InitSymbols )
-{ "_DELIMC",            _HB_FS_PUBLIC, HB__DELIMC,            0 },
-{ "DELIM_GETFUNCTABLE", _HB_FS_PUBLIC, HB_DELIM_GETFUNCTABLE, 0 }
+{ "_DELIMC",            HB_FS_PUBLIC, HB_FUNCNAME( _DELIMC ), NULL },
+{ "DELIM_GETFUNCTABLE", HB_FS_PUBLIC, HB_FUNCNAME( DELIM_GETFUNCTABLE ), NULL }
 HB_INIT_SYMBOLS_END( delim1__InitSymbols )
 #if ! defined(__GNUC__) && ! defined(_MSC_VER)
    #pragma startup delim1__InitSymbols
@@ -59,11 +59,11 @@ static RDDFUNCS delimSuper = { 0 };
 
 static RDDFUNCS delimTable = { 0 };
 
-HARBOUR HB__DELIMC( void )
+HB_FUNC( _DELIMC )
 {
 }
 
-HARBOUR HB_DELIM_GETFUNCTABLE( void )
+HB_FUNC( DELIM_GETFUNCTABLE )
 {
    RDDFUNCS * pTable;
    USHORT * uiCount;

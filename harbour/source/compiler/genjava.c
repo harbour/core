@@ -111,7 +111,7 @@ void hb_compGenJava( PHB_FNAME pFileName )
    {
       hb_fputs( pSym->szName, yyc );
       hb_fputc( 0, yyc );
-      if( pSym->cScope != _HB_FS_MESSAGE )
+      if( pSym->cScope != HB_FS_MESSAGE )
          hb_fputc( pSym->cScope, yyc );
       else
          hb_fputc( 0, yyc );

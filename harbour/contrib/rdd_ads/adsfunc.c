@@ -50,7 +50,7 @@ int adsLockType = ADS_PROPRIETARY_LOCKING;
 int adsRights = 1;
 int adsCharType = ADS_ANSI;
 
-HARBOUR HB_ADSSETFILETYPE( void )
+HB_FUNC( ADSSETFILETYPE )
 {
    int fileType, oldType = adsFileType;
    if( hb_pcount() > 0 )
@@ -63,7 +63,7 @@ HARBOUR HB_ADSSETFILETYPE( void )
    return;
 }
 
-HARBOUR HB_ADSSETSERVERTYPE( void )
+HB_FUNC( ADSSETSERVERTYPE )
 {
    int servType;
    if( hb_pcount() > 0 )
@@ -76,7 +76,7 @@ HARBOUR HB_ADSSETSERVERTYPE( void )
    return;
 }
 
-HARBOUR HB_ADSLOCKING( void )
+HB_FUNC( ADSLOCKING )
 {
    int oldType = adsLockType;
 
@@ -86,7 +86,7 @@ HARBOUR HB_ADSLOCKING( void )
    hb_retl( oldType );
 }
 
-HARBOUR HB_ADSRIGHTSCHECK( void )
+HB_FUNC( ADSRIGHTSCHECK )
 {
    int oldType = (adsRights==1)? 1:0;
 
@@ -96,7 +96,7 @@ HARBOUR HB_ADSRIGHTSCHECK( void )
    hb_retl( oldType );
 }
 
-HARBOUR HB_ADSSETCHARTYPE( void )
+HB_FUNC( ADSSETCHARTYPE )
 {
    int charType, oldType = adsCharType;
    if( hb_pcount() > 0 )
@@ -109,18 +109,18 @@ HARBOUR HB_ADSSETCHARTYPE( void )
    return;
 }
 
-HARBOUR HB_ADSSETDEFAULT( void )
+HB_FUNC( ADSSETDEFAULT )
 {
    AdsSetDefault  ( (UNSIGNED8*) hb_parc( 1 ) );
 }
 
-HARBOUR HB_ADSSETDELETED( void )
+HB_FUNC( ADSSETDELETED )
 {
    UNSIGNED16 usShowDeleted = hb_parl( 1 );
    AdsShowDeleted( usShowDeleted );
 }
 
-HARBOUR HB_ADSBLOB2FILE( void )
+HB_FUNC( ADSBLOB2FILE )
 {
    char * szFileName, *szFieldName;
    ADSAREAP pArea;
@@ -142,7 +142,7 @@ HARBOUR HB_ADSBLOB2FILE( void )
      hb_retl( 0 );
 }
 
-HARBOUR HB_ADSFILE2BLOB( void )
+HB_FUNC( ADSFILE2BLOB )
 {
    char * szFileName, *szFieldName;
    UNSIGNED16 usBinaryType;
@@ -170,7 +170,7 @@ HARBOUR HB_ADSFILE2BLOB( void )
      hb_retl( 0 );
 }
 
-HARBOUR HB_ADSKEYNO( void )
+HB_FUNC( ADSKEYNO )
 {
    ADSAREAP pArea;
    UNSIGNED8* ordName;
@@ -212,7 +212,7 @@ HARBOUR HB_ADSKEYNO( void )
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSKEYNO" );
 }
 
-HARBOUR HB_ADSKEYCOUNT( void )
+HB_FUNC( ADSKEYCOUNT )
 {
    ADSAREAP pArea;
    UNSIGNED8* ordName;
@@ -247,7 +247,7 @@ HARBOUR HB_ADSKEYCOUNT( void )
 }
 
 
-HARBOUR HB_ADSCLEARAOF( void )
+HB_FUNC( ADSCLEARAOF )
 {
    ADSAREAP pArea;
 
@@ -258,7 +258,7 @@ HARBOUR HB_ADSCLEARAOF( void )
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSCLEARAOF" );
 }
 
-HARBOUR HB_ADSCUSTOMIZEAOF( void )
+HB_FUNC( ADSCUSTOMIZEAOF )
 {
    ADSAREAP pArea;
    UNSIGNED32 pulRecords[1];
@@ -281,7 +281,7 @@ HARBOUR HB_ADSCUSTOMIZEAOF( void )
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSCUSTOMIZEAOF" );
 }
 
-HARBOUR HB_ADSEVALAOF( void )
+HB_FUNC( ADSEVALAOF )
 {
    ADSAREAP pArea;
    char * pucFilter;
@@ -300,7 +300,7 @@ HARBOUR HB_ADSEVALAOF( void )
    
 }
 
-HARBOUR HB_ADSGETAOF( void )
+HB_FUNC( ADSGETAOF )
 {
    ADSAREAP pArea;
    UNSIGNED8 pucFilter[HARBOUR_MAX_RDD_FILTER_LENGTH+1];
@@ -320,7 +320,7 @@ HARBOUR HB_ADSGETAOF( void )
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSGETAOF" );
 }
 
-HARBOUR HB_ADSGETAOFOPTLEVEL( void )
+HB_FUNC( ADSGETAOFOPTLEVEL )
 {
    ADSAREAP pArea;
    UNSIGNED16 pusOptLevel;
@@ -337,7 +337,7 @@ HARBOUR HB_ADSGETAOFOPTLEVEL( void )
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSGETAOFOPTLEVEL" );
 }
 
-HARBOUR HB_ADSGETAOFNOOPT( void )
+HB_FUNC( ADSGETAOFNOOPT )
 {
    ADSAREAP pArea;
    UNSIGNED16 pusOptLevel;
@@ -354,7 +354,7 @@ HARBOUR HB_ADSGETAOFNOOPT( void )
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSGETAOFNOOPT" );
 }
 
-HARBOUR HB_ADSISRECORDINAOF( void )
+HB_FUNC( ADSISRECORDINAOF )
 {
    ADSAREAP pArea;
    UNSIGNED32 ulRecordNumber = 0;
@@ -376,7 +376,7 @@ HARBOUR HB_ADSISRECORDINAOF( void )
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSISRECORDINAOF" );
 }
 
-HARBOUR HB_ADSREFRESHAOF( void )
+HB_FUNC( ADSREFRESHAOF )
 {
    ADSAREAP pArea;
 
@@ -387,7 +387,7 @@ HARBOUR HB_ADSREFRESHAOF( void )
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSREFRESHAOF" );
 }
 
-HARBOUR HB_ADSSETAOF( void )
+HB_FUNC( ADSSETAOF )
 {
    ADSAREAP pArea;
    char * pucFilter;

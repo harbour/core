@@ -62,15 +62,13 @@ typedef struct _HB_DYNS
 typedef HB_DYNS_FUNC( PHB_DYNS_FUNC );
 
 /* Harbour Functions scope ( HB_SYMBOLSCOPE ) */
-/* The underscore prefix is needed to avoid collision with function names
-   like FS_INIT() when generating C output. [vszakats] */
-#define _HB_FS_PUBLIC   ( ( HB_SYMBOLSCOPE ) 0x00 )
-#define _HB_FS_STATIC   ( ( HB_SYMBOLSCOPE ) 0x02 )
-#define _HB_FS_INIT     ( ( HB_SYMBOLSCOPE ) 0x08 )
-#define _HB_FS_EXIT     ( ( HB_SYMBOLSCOPE ) 0x10 )
-#define _HB_FS_INITEXIT ( _HB_FS_INIT | _HB_FS_EXIT )
-#define _HB_FS_MESSAGE  ( ( HB_SYMBOLSCOPE ) 0x20 )
-#define _HB_FS_MEMVAR   ( ( HB_SYMBOLSCOPE ) 0x80 )
+#define HB_FS_PUBLIC   ( ( HB_SYMBOLSCOPE ) 0x00 )
+#define HB_FS_STATIC   ( ( HB_SYMBOLSCOPE ) 0x02 )
+#define HB_FS_INIT     ( ( HB_SYMBOLSCOPE ) 0x08 )
+#define HB_FS_EXIT     ( ( HB_SYMBOLSCOPE ) 0x10 )
+#define HB_FS_INITEXIT ( HB_FS_INIT | HB_FS_EXIT )
+#define HB_FS_MESSAGE  ( ( HB_SYMBOLSCOPE ) 0x20 )
+#define HB_FS_MEMVAR   ( ( HB_SYMBOLSCOPE ) 0x80 )
 
 extern void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols );  /* invokes the virtual machine */
 

@@ -38,8 +38,6 @@
 
 #include "hbsetup.ch"
 
-/* TOFIX: Add #ifdefs for the Xbase++/VO/C5.3 extension parts [vszakats] */
-
 // Files from: vm
 //
 //
@@ -170,11 +168,13 @@ EXTERNAL __SETHELPK
 EXTERNAL BIN2W
 EXTERNAL BIN2I
 EXTERNAL BIN2L
-EXTERNAL BIN2U
 EXTERNAL I2BIN
-EXTERNAL W2BIN
 EXTERNAL L2BIN
+#ifdef HB_COMPAT_XPP
+EXTERNAL BIN2U
+EXTERNAL W2BIN
 EXTERNAL U2BIN
+#endif
 //
 //symbols from file: rtl\console.c
 //
@@ -224,7 +224,9 @@ EXTERNAL __COPYFILE
 EXTERNAL CTOD
 EXTERNAL DTOC
 EXTERNAL DTOS
+#ifdef HB_COMPAT_XPP
 EXTERNAL STOD
+#endif
 EXTERNAL HB_STOD
 EXTERNAL YEAR
 EXTERNAL MONTH
@@ -283,17 +285,21 @@ EXTERNAL FSEEK
 EXTERNAL FILE
 EXTERNAL FREADSTR
 EXTERNAL CURDIR
+EXTERNAL DISKSPACE
+EXTERNAL HB_FNAMESPLIT
+EXTERNAL HB_FNAMEMERGE
+#ifdef HB_COMPAT_XPP
+EXTERNAL CURDRIVE
+#endif
+#ifdef HB_COMPAT_53
 EXTERNAL DIRCHANGE
 EXTERNAL MAKEDIR
 EXTERNAL DIRREMOVE
-EXTERNAL DISKSPACE
 EXTERNAL ISDISK
 EXTERNAL DISKCHANGE
 EXTERNAL DISKNAME
-EXTERNAL CURDRIVE
-EXTERNAL HB_FNAMESPLIT
-EXTERNAL HB_FNAMEMERGE
 EXTERNAL FSETDEVMOD
+#endif
 //
 //symbols from file: rtl\hardcr.c
 //
@@ -348,6 +354,7 @@ EXTERNAL MLPOS
 //
 //symbols from file: rtl\mouseapi.c
 //
+#ifdef HB_COMPAT_C53
 EXTERNAL MPRESENT
 EXTERNAL MHIDE
 EXTERNAL MSHOW
@@ -361,8 +368,11 @@ EXTERNAL MDBLCLK
 EXTERNAL MSAVESTATE
 EXTERNAL MRESTSTATE
 EXTERNAL MSETBOUNDS
+#endif
+#ifdef HB_COMPAT_XPP
 EXTERNAL NUMBUTTONS
 EXTERNAL SETMOUSE
+#endif
 //
 //symbols from file: rtl\mtran.c
 //
@@ -384,8 +394,10 @@ EXTERNAL NETNAME
 //
 EXTERNAL HB_ANSITOOEM
 EXTERNAL HB_OEMTOANSI
+#ifdef HB_COMPAT_XPP
 EXTERNAL CONVTOOEMCP
 EXTERNAL CONVTOANSICP
+#endif
 //
 //symbols from file: rtl\oldbox.c
 //
@@ -505,7 +517,9 @@ EXTERNAL ASORT
 //symbols from file: rtl\browdb.prg
 //
 EXTERNAL TBROWSEDB
+#ifdef HB_COMPAT_XPP
 EXTERNAL DBSKIPPER
+#endif
 //
 //symbols from file: rtl\browse.prg
 //
@@ -830,193 +844,6 @@ EXTERNAL INDEXKEY
 //symbols from file: pp\hbpplib.c
 //
 EXTERNAL __PREPROCESS
-//------------------------------------------------------------
-// Files from: tools
-//
-//
-//symbols from file: tools\asciisum.c
-//
-EXTERNAL GT_ASCIISUM
-//
-//symbols from file: tools\ascpos.c
-//
-EXTERNAL GT_ASCPOS
-//
-//symbols from file: tools\atdiff.c
-//
-EXTERNAL GT_ATDIFF
-//
-//symbols from file: tools\chareven.c
-//
-EXTERNAL GT_CHAREVEN
-//
-//symbols from file: tools\charmix.c
-//
-EXTERNAL GT_CHARMIX
-//
-//symbols from file: tools\charodd.c
-//
-EXTERNAL GT_CHARODD
-//
-//symbols from file: tools\chrcount.c
-//
-EXTERNAL GT_CHRCOUNT
-//
-//symbols from file: tools\chrfirst.c
-//
-EXTERNAL GT_CHRFIRST
-//
-//symbols from file: tools\chrtotal.c
-//
-EXTERNAL GT_CHRTOTAL
-//
-//symbols from file: tools\ctchksum.c
-//
-EXTERNAL CT_CHECKSUM
-//
-//symbols from file: tools\ctchrmix.c
-//
-EXTERNAL CT_CHARMIX
-//
-//symbols from file: tools\ctcrypt.c
-//
-EXTERNAL CT_CRYPT
-//
-//symbols from file: tools\dates2.c
-//
-EXTERNAL AMONTHS
-EXTERNAL ADAYS
-EXTERNAL ISLEAPYEAR
-EXTERNAL DAYSINMONTH
-EXTERNAL EOM
-EXTERNAL BOM
-EXTERNAL WOM
-EXTERNAL DOY
-EXTERNAL WOY
-EXTERNAL EOY
-EXTERNAL BOY
-//
-//symbols from file: tools\datesx.c
-//
-EXTERNAL DATETIME
-//
-//symbols from file: tools\dbftools.c
-//
-EXTERNAL FIELDTYPE
-EXTERNAL FIELDSIZE
-EXTERNAL FIELDDECI
-//
-//symbols from file: tools\hb_f.c
-//
-EXTERNAL HB_FUSE
-EXTERNAL HB_FRECNO
-EXTERNAL HB_FSKIP
-EXTERNAL HB_FREADLN
-EXTERNAL HB_FEOF
-EXTERNAL HB_FGOTO
-EXTERNAL HB_FGOBOTTOM
-EXTERNAL HB_FGOTOP
-EXTERNAL HB_FLASTREC
-EXTERNAL HB_FSELECT
-//
-//symbols from file: tools\io.c
-//
-EXTERNAL CD
-EXTERNAL MD
-EXTERNAL RD
-EXTERNAL DISKUSED
-EXTERNAL DISKFREE
-EXTERNAL DISKFULL
-//
-//symbols from file: tools\mathx.c
-//
-EXTERNAL ACOS
-EXTERNAL ASIN
-EXTERNAL ATAN
-EXTERNAL COS
-EXTERNAL COSH
-EXTERNAL LOG10
-EXTERNAL SIN
-EXTERNAL SINH
-EXTERNAL TAN
-EXTERNAL TANH
-EXTERNAL PI
-//
-//symbols from file: tools\strasint.c
-//
-//
-//symbols from file: tools\strcount.c
-//
-EXTERNAL GT_STRCOUNT
-//
-//symbols from file: tools\strcspn.c
-//
-EXTERNAL GT_STRCSPN
-//
-//symbols from file: tools\strdiff.c
-//
-EXTERNAL GT_STRDIFF
-//
-//symbols from file: tools\strexpan.c
-//
-EXTERNAL GT_STREXPAND
-//
-//symbols from file: tools\strfmt.c
-//
-EXTERNAL STRFORMAT
-//
-//symbols from file: tools\stringsx.c
-//
-EXTERNAL STRTOKEN
-EXTERNAL STRDUMP
-EXTERNAL ROT13
-//
-//symbols from file: tools\strleft.c
-//
-EXTERNAL GT_STRLEFT
-//
-//symbols from file: tools\strpbrk.c
-//
-EXTERNAL GT_STRPBRK
-//
-//symbols from file: tools\strright.c
-//
-EXTERNAL GT_STRRIGHT
-//
-//symbols from file: tools\fileread.prg
-//
-EXTERNAL TFILEREAD
-//
-//symbols from file: tools\html.prg
-//
-//
-//symbols from file: tools\nconvert.prg
-//
-EXTERNAL ISBIN
-EXTERNAL ISOCTAL
-EXTERNAL ISDEC
-EXTERNAL ISHEXA
-EXTERNAL DECTOBIN
-EXTERNAL DECTOOCTAL
-EXTERNAL DECTOHEXA
-EXTERNAL BINTODEC
-EXTERNAL OCTALTODEC
-EXTERNAL HEXATODEC
-//
-//symbols from file: tools\numtxten.prg
-//
-EXTERNAL NUMTOTXTEN
-//
-//symbols from file: tools\numtxthu.prg
-//
-EXTERNAL NUMTOTXTHU
-//
-//symbols from file: tools\stringp.prg
-//
-EXTERNAL DEFAULT
-EXTERNAL TOCHAR
-EXTERNAL DEBUG
-//------------------------------------------------------------
 
 EXTERNAL HB_FSIZE
 EXTERNAL HB_FTEMPNAME

@@ -40,12 +40,12 @@
 #include "hbapirdd.h"
 #include "rddsys.ch"
 
-HARBOUR HB__SDFC( void );
-HARBOUR HB_SDF_GETFUNCTABLE( void );
+HB_FUNC( _SDFC );
+HB_FUNC( SDF_GETFUNCTABLE );
 
 HB_INIT_SYMBOLS_BEGIN( sdf1__InitSymbols )
-{ "_SDFC",            _HB_FS_PUBLIC, HB__SDFC,            0 },
-{ "SDF_GETFUNCTABLE", _HB_FS_PUBLIC, HB_SDF_GETFUNCTABLE, 0 }
+{ "_SDFC",            HB_FS_PUBLIC, HB_FUNCNAME( _SDFC ), NULL },
+{ "SDF_GETFUNCTABLE", HB_FS_PUBLIC, HB_FUNCNAME( SDF_GETFUNCTABLE ), NULL }
 HB_INIT_SYMBOLS_END( sdf1__InitSymbols )
 #if ! defined(__GNUC__) && ! defined(_MSC_VER)
    #pragma startup sdf1__InitSymbols
@@ -59,11 +59,11 @@ static RDDFUNCS sdfSuper = { 0 };
 
 static RDDFUNCS sdfTable = { 0 };
 
-HARBOUR HB__SDFC( void )
+HB_FUNC( _SDFC )
 {
 }
 
-HARBOUR HB_SDF_GETFUNCTABLE( void )
+HB_FUNC( SDF_GETFUNCTABLE )
 {
    RDDFUNCS * pTable;
    USHORT * uiCount;

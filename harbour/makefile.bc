@@ -181,6 +181,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\mlpos.obj \
    $(OBJ_DIR)\mod.obj \
    $(OBJ_DIR)\mouseapi.obj \
+   $(OBJ_DIR)\mousex.obj \
    $(OBJ_DIR)\mtran.obj \
    $(OBJ_DIR)\natmsg.obj \
    $(OBJ_DIR)\net.obj \
@@ -466,6 +467,14 @@ HARBOUR_EXE_OBJS = \
    $(OBJ_DIR)\exproptb.obj \
    $(OBJ_DIR)\exproptc.obj \
    $(OBJ_DIR)\hbfunchk.obj
+
+#
+# HBRUN.EXE rules
+#
+
+HBRUN_EXE_OBJS = \
+   $(OBJ_DIR)\hbrun.obj \
+   $(OBJ_DIR)\exttools.obj \
 
 #
 # HBTEST.EXE rules
@@ -1166,6 +1175,10 @@ $(OBJ_DIR)\mouseapi.obj : $(RTL_DIR)\mouseapi.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) -+$@,,
 
+$(OBJ_DIR)\mousex.obj : $(RTL_DIR)\mousex.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) -+$@,,
+
 $(OBJ_DIR)\msgxxx.obj : $(RTL_DIR)\msgxxx.c
    $(CC) $(CLIBFLAGS) -I$(RTL_DIR) -o$@ $**
    tlib $(RTL_LIB) -+$@,,
@@ -1815,15 +1828,13 @@ $(HBPP_EXE) : \
 #
 # HBRUN.EXE dependencies
 #
-$(HBRUN_EXE) : $(HBRUN_DIR)\hbrun.prg 
-
-   $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $(HBRUN_DIR)\hbrun.prg
-   $(CC) $(CLIBFLAGS) -o$(OBJ_DIR)\hbrun.obj $(OBJ_DIR)\hbrun.c
+$(HBRUN_EXE) : $(HBRUN_EXE_OBJS)
 
    echo. $(CFLAGS) > make.tmp
    echo. -e$(HBRUN_EXE) >> make.tmp
    echo. -I$(INCLUDE_DIR) >> make.tmp
    echo. $(OBJ_DIR)\hbrun.obj >> make.tmp
+   echo. $(OBJ_DIR)\exttools.obj >> make.tmp
    echo. $(PP_LIB) >> make.tmp
    echo. $(COMMON_LIB) >> make.tmp
    echo. $(VM_LIB) >> make.tmp
@@ -1837,13 +1848,25 @@ $(HBRUN_EXE) : $(HBRUN_DIR)\hbrun.prg
    $(CC) @make.tmp
    del make.tmp
 
+$(OBJ_DIR)\hbrun.c : $(HBRUN_DIR)\hbrun.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\hbrun.obj : $(OBJ_DIR)\hbrun.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\exttools.c : $(HBRUN_DIR)\exttools.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\exttools.obj : $(OBJ_DIR)\exttools.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
 #
 # HBTEST.EXE dependencies
 #
 $(HBTEST_EXE) : $(HBTEST_EXE_OBJS)
 
    echo. $(CFLAGS) > make.tmp
-   echo. -e$(BIN_DIR)\hbtest.exe >> make.tmp
+   echo. -e$(HBTEST_EXE) >> make.tmp
    echo. -I$(INCLUDE_DIR) >> make.tmp
    echo. $(OBJ_DIR)\hbtest.obj >> make.tmp
    echo. $(OBJ_DIR)\rt_hvm.obj >> make.tmp
@@ -1926,7 +1949,7 @@ $(OBJ_DIR)\rt_misc.obj : $(OBJ_DIR)\rt_misc.c
 $(HBDOC_EXE) : $(HBDOC_EXE_OBJS)
 
    echo. $(CFLAGS) > make.tmp
-   echo. -e$(BIN_DIR)\hbdoc.exe >> make.tmp
+   echo. -e$(HBDOC_EXE) >> make.tmp
    echo. -I$(INCLUDE_DIR) >> make.tmp
    echo. $(OBJ_DIR)\hbdoc.obj >> make.tmp
    echo. $(OBJ_DIR)\genasc.obj >> make.tmp

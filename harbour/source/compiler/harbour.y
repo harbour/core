@@ -269,10 +269,10 @@ Function   : FunScope FUNCTION  IdentName { hb_comp_cVarType = ' '; hb_compFunct
            | FunScope DECLARE_FUN IdentName Params AsType Crlf { hb_compSymbolAdd( $3, NULL ); }
            ;
 
-FunScope   :                  { $$ = _HB_FS_PUBLIC; }
-           | STATIC           { $$ = _HB_FS_STATIC; }
-           | INIT             { $$ = _HB_FS_INIT; }
-           | EXIT             { $$ = _HB_FS_EXIT; }
+FunScope   :                  { $$ = HB_FS_PUBLIC; }
+           | STATIC           { $$ = HB_FS_STATIC; }
+           | INIT             { $$ = HB_FS_INIT; }
+           | EXIT             { $$ = HB_FS_EXIT; }
            ;
 
 Params     :                                               { $$ = 0; }
@@ -1435,13 +1435,13 @@ int hb_compYACCMain( char * szName )
    /* Generate the starting procedure frame
       */
    if( hb_comp_bStartProc )
-      hb_compFunctionAdd( hb_strupr( hb_strdup( szName ) ), _HB_FS_PUBLIC, FUN_PROCEDURE );
+      hb_compFunctionAdd( hb_strupr( hb_strdup( szName ) ), HB_FS_PUBLIC, FUN_PROCEDURE );
    else
          /* Don't pass the name of module if the code for starting procedure
          * will be not generated. The name cannot be placed as first symbol
          * because this symbol can be used as function call or memvar's name.
          */
-      hb_compFunctionAdd( hb_strupr( hb_strdup( "" ) ), _HB_FS_PUBLIC, FUN_PROCEDURE );
+      hb_compFunctionAdd( hb_strupr( hb_strdup( "" ) ), HB_FS_PUBLIC, FUN_PROCEDURE );
 
    yyparse();
 

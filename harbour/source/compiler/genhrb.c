@@ -93,7 +93,7 @@ void hb_compGenPortObj( PHB_FNAME pFileName )
    {
       fputs( pSym->szName, yyc );
       fputc( 0, yyc );
-      if( pSym->cScope != _HB_FS_MESSAGE )
+      if( pSym->cScope != HB_FS_MESSAGE )
          fputc( pSym->cScope, yyc );
       else
          fputc( 0, yyc );

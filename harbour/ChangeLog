@@ -1,3 +1,66 @@
+20000321-12:32 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * include/hbdefs.h
+     + HB_FUNCNAME() macro added for Harbour name mangling:
+       HB_FUNCNAME( DTOC ) -> HB_DTOC
+     * Changed the prefix for Harbour callable functions from "HB_" to
+       "HB_FUN_" this way any possible collisions with internal symbols is
+       avoided. Previously a Harbour function with the name DYNS() would
+       fail to compile, using the the C generation feature of the compiler.
+
+   * source/vm/*.c
+     source/rdd/*
+     source/pp/pplib.c
+     source/tools/*.c
+     source/rtl/*.c
+     source/compiler/genc.c
+     contrib/rdd_ads/*.c
+     * Uses HB_FUNC*() macros.
+     * Code generation modified to use HB_FUNC*() macros.
+
+   * utils/hbextern/hbextern.prg
+     * Updated to scan for "HB_FUNC(" instead of "HARBOUR"
+
+   * source/vm/runner.c
+     - One TODO removed
+     + One TOFIX added
+
+   * source/rtl/mouseapi.c
+   + source/rtl/mousex.c
+     source/rtl/Makefile
+     makefile.bc
+     makefile.vc
+     + XBase++ functions separated.
+
+   * include/hbextern.ch
+   + utils/hbrun/exttools.prg
+     utils/hbrun/Makefile
+     makefile.bc
+     makefile.vc
+     * EXTERN belonging to tools moved from the central HBEXTERN.CH file to
+       local list in HBRUN.
+     % Minor optimization in makefiles.
+     ! HBEXTERN.CH TOFIX fixed.
+
+   * include/hbvmpub.h
+     compiler/genc.c
+     compiler/genhrb.c
+     compiler/genjava.c
+     compiler/genobj32.c
+     compiler/harbour.c
+     compiler/harbour.y
+     rdd/dbfcdx/dbfcdx1.c
+     rdd/dbfntx/dbfntx1.c
+     rdd/dbf1.c
+     rdd/delim1.c
+     rdd/sdf1.c
+     vm/dynsym.c
+     vm/hvm.c
+     vm/runner.c
+     contrib/rdd_ads/ads1.c
+     * _HB_FS_* macros changed to HB_FS_*, since the reason for the prefix
+       will be nilled soon.
+
 20000321-07:46 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * include/hbdefs.h
