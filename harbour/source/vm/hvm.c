@@ -91,6 +91,7 @@ void    Inc( void );             /* increment the latest numeric value on the st
 void    Instring( void );        /* check whether string 1 is contained in string 2 */
 void    Less( void );            /* checks if the latest - 1 value is less than the latest, removes both and leaves result */
 void    LessEqual( void );       /* checks if the latest - 1 value is less than or equal the latest, removes both and leaves result */
+void    LocalName( WORD wLocal, char * szLocalName ); /* locals and parameters index and name information for the debugger */
 void    Message( PHB_SYMB pSymMsg ); /* sends a message to an object */
 void    Minus( void );           /* substracts the latest two values on the stack, removes them and leaves the result */
 void    ModuleName( char * szModuleName ); /* PRG and function name information for the debugger */
@@ -423,6 +424,13 @@ void VirtualMachine( BYTE * pCode, PHB_SYMB pSymbols )
          case HB_P_LINE:
               stack.pBase->item.asSymbol.lineno = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
               w += 3;
+              break;
+
+         case HB_P_LOCALNAME:
+              LocalName( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ),
+                        ( char * ) pCode + w + 3 );
+              w += 3;
+              while( pCode[ w++ ] );
               break;
 
          case HB_P_MESSAGE:
@@ -1238,6 +1246,10 @@ void LessEqual( void )
    {
       hb_errorRT_BASE(EG_ARG, 1074, NULL, "<=");
    }
+}
+
+void LocalName( WORD wLocal, char * szLocalName ) /* locals and parameters index and name information for the debugger */
+{
 }
 
 void Message( PHB_SYMB pSymMsg ) /* sends a message to an object */

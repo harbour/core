@@ -1863,17 +1863,29 @@ void AddVar( char * szVarName )
       {
           case VS_LOCAL:
           case VS_PARAMETER:
-              if( ! pFunc->pLocals )
-                  pFunc->pLocals = pVar;
-              else
-              {
-                  pLastVar = pFunc->pLocals;
-                  while( pLastVar->pNext )
-                    pLastVar = pLastVar->pNext;
-                  pLastVar->pNext = pVar;
+              { WORD wLocal = 1;
+
+                 if( ! pFunc->pLocals )
+                    pFunc->pLocals = pVar;
+                 else
+                 {
+                    pLastVar = pFunc->pLocals;
+                    while( pLastVar->pNext )
+                    {
+                       pLastVar = pLastVar->pNext;
+                       wLocal++;
+                    }
+                    pLastVar->pNext = pVar;
+                 }
+                 if( iVarScope == VS_PARAMETER )
+                    ++functions.pLast->wParamCount;
+                 if( _bDebugInfo )
+                 {
+                    GenPCode3( HB_P_LOCALNAME, LOBYTE( wLocal ), HIBYTE( wLocal ) );
+                    GenPCodeN( szVarName, strlen( szVarName ) );
+                    GenPCode1( 0 );
+                 }
               }
-              if( iVarScope == VS_PARAMETER )
-                  ++functions.pLast->wParamCount;
               break;
 
           case VS_STATIC:
@@ -2467,6 +2479,25 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
                           pFunc->pCode[ lPCodePos + 1 ],
                           pFunc->pCode[ lPCodePos + 2 ], w );
                  lPCodePos += 3;
+                 break;
+
+            case HB_P_LOCALNAME:
+                 fprintf( yyc, "                HB_P_LOCALNAME, %i, %i,\t/* %s */\n",
+                          pFunc->pCode[ lPCodePos + 1 ],
+                          pFunc->pCode[ lPCodePos + 2 ],
+                          ( char * ) pFunc->pCode + lPCodePos + 3 );
+                 lPCodePos += 3;
+                 while( pFunc->pCode[ lPCodePos ] )
+                 {
+                    chr = pFunc->pCode[ lPCodePos++ ];
+                    if( chr == '\'' || chr == '\\')
+                      fprintf( yyc, " \'\\%c\',", chr );
+                    else
+                      fprintf( yyc, " \'%c\',", chr );
+                 }
+                 fprintf( yyc, " 0,\n" );
+                 lPCodePos++;
+                 break;
                  break;
 
             case HB_P_MESSAGE:
