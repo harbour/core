@@ -343,14 +343,23 @@ HB_FUNC(SQLSRVINFO)
    _retc( mysql_get_server_info( (MYSQL *)_parnl(1) ) );
 }
 
+#ifdef __GNUC__
+int filelength( int handle )
+{
+    int nEnd = hb_fsSeek( handle, 0 , 2 );
+    int nStart = hb_fsSeek( handle , 0 , 0 );
+    return nEnd - nStart;
+}
+#endif    
+
 char *filetoBuff(char *f,char *s)
 {
-/* int i=0; */
+
    int i;
-   int fh= hb_fsOpen((BYTE*)s,2);
-   i=hb_fsReadLarge(fh,(BYTE*)f,filelength(fh));
+   int fh = hb_fsOpen( ( BYTE * ) s , 2 );
+   i = hb_fsReadLarge( fh , ( BYTE * ) f , filelength( fh ) );
    f[ i ] = '\0';
-   hb_fsClose(fh);
+   hb_fsClose( fh );
    return f   ;
 }
 

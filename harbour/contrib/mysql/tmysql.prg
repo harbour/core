@@ -743,6 +743,7 @@ CLASS TMySQLServer
 
    METHOD   NetErr() INLINE ::lError         // Returns .T. if something went wrong
    METHOD   Error()                          // Returns textual description of last error
+   METHOD   CreateDatabase( cDataBase )      // Create an New Mysql Database
 
 ENDCLASS
 
@@ -775,6 +776,16 @@ METHOD SelectDB(cDBName) CLASS TMySQLServer
       return .T.
    else
       ::cDBName := ""
+   endif
+
+return .F.
+
+
+METHOD CreateDatabase ( cDataBase ) CLASS TMySQLServer
+   local cCreateQuery := "CREATE DATABASE "+ lower(cDatabase)
+
+   if sqlQuery(::nSocket, cCreateQuery) == 0
+      return .T.
    endif
 
 return .F.
