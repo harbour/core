@@ -1,0 +1,414 @@
+/*
+ * $Id$
+ */
+
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2000 Chen Kedem <niki@actcom.co.il>
+ *    Documentation for: __dbCopyStruct(), COPY STRUCTURE, __dbCopyXStruct(),
+ *                       COPY STRUCTURE EXTENDED, __FLEDIT()*,
+ *                       __dbStructFilter()
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      __dbCopyStruct()
+ *  $CATEGORY$
+ *      Databases
+ *  $ONELINER$
+ *      Create a new database based on current database structure
+ *  $SYNTAX$
+ *      __dbCopyStruct( <cFileName>, [<aFieldList>] ) --> NIL
+ *  $ARGUMENTS$
+ *      <cFileName> is the name of the new database file to create. (.dbf)
+ *      is the default extension if none is given.
+ *
+ *      <aFieldList> is an array where each element is a field name.
+ *      Names could be specified as uppercase or lowercase.
+ *  $RETURNS$
+ *      __dbCopyStruct() always return NIL.
+ *  $DESCRIPTION$
+ *      __dbCopyStruct() create a new empty database file with a structure
+ *      that is based on the currently open database in this work-area. If
+ *      <aFieldList> is empty, the newly created file would have the same
+ *      structure as the currently open database. Else, the new file would
+ *      contain only fields that exactly match <aFieldList>.
+ *
+ *      __dbCopyStruct() can be use to create a sub-set of the currently
+ *      open database, based on a given field list.
+ *
+ *      COPY STRUCTURE command is preprocessed into __dbCopyStruct()
+ *      function during compile time.
+ *  $EXAMPLES$
+ *     // Create a new file that contain the same structure
+ *      USE TEST
+ *      __dbCopyStruct( "MyCopy.DBF" )
+ *
+ *      // Create a new file that contain part of the original structure
+ *      LOCAL aList
+ *      USE TEST
+ *      aList := { "NAME" }
+ *      __dbCopyStruct( "OnlyName.DBF", aList )
+ *  $TESTS$
+ *  $STATUS$
+ *  $COMPLIANCE$
+ *      __dbCopyStruct() works exactly like CA-Clipper's __dbCopyStruct()
+ *  $PLATFORMS$
+ *  $FILES$
+ *  $SEEALSO$
+ *      COPY STRUCTURE,COPY STRUCTURE EXTENDED,DBCREATE(),DBSTRUCT(),__dbCopyXStruct(),__dbCreate(),__dbStructFilter()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      COPY STRUCTURE
+ *  $CATEGORY$
+ *      Databases
+ *  $ONELINER$
+ *      Create a new database based on current database structure
+ *  $SYNTAX$
+ *      COPY STRUCTURE TO <xcFileName> [FIELDS <field,...>]
+ *  $ARGUMENTS$
+ *      TO <xcFileName> is the name of the new database file to create.
+ *      (.dbf) is the default extension if none is given. It can be
+ *      specified as literal file name or as a character expression
+ *      enclosed in parentheses.
+ *
+ *      FIELDS <field,...> is an optional list of field names to copy from
+ *      the currently open database in the specified order, the default is
+ *      all fields. Names could be specified as uppercase or lowercase.
+ *  $DESCRIPTION$
+ *      COPY STRUCTURE create a new empty database file with a structure
+ *      that is based on the currently open database in this work-area.
+ *
+ *      COPY STRUCTURE can be use to create a sub-set of the currently
+ *      open database, based on a given field list.
+ *
+ *      COPY STRUCTURE command is preprocessed into __dbCopyStruct()
+ *      function during compile time.
+ *  $EXAMPLES$
+ *     // Create a new file that contain the same structure
+ *      USE TEST
+ *      COPY STRUCTURE TO MyCopy
+ *
+ *      // Create a new file that contain part of the original structure
+ *      USE TEST
+ *      COPY STRUCTURE TO SomePart FIELDS name, address
+ *  $TESTS$
+ *  $STATUS$
+ *  $COMPLIANCE$
+ *      COPY STRUCTURE works exactly like CA-Clipper's COPY STRUCTURE
+ *  $PLATFORMS$
+ *  $FILES$
+ *  $SEEALSO$
+ *      COPY STRUCTURE EXTENDED,DBCREATE(),DBSTRUCT(),__dbCopyStruct(),__dbCopyXStruct(),__dbCreate(),__dbStructFilter()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      __dbCopyXStruct()
+ *  $CATEGORY$
+ *      Databases
+ *  $ONELINER$
+ *      Copy current database structure into a definition file
+ *  $SYNTAX$
+ *      __dbCopyXStruct( <cFileName> ) --> lSuccess
+ *  $ARGUMENTS$
+ *      <cFileName> is the name of target definition file to create. (.dbf)
+ *      is the default extension if none is given.
+ *  $RETURNS$
+ *      __dbCopyXStruct() return (.F.) if no database is USED in the current
+ *      work-area, (.T.) on success, or a run-time error if the file create
+ *      operation had failed.
+ *  $DESCRIPTION$
+ *      __dbCopyXStruct() create a new database named <cFileName> with a
+ *      pre-defined structure (also called "structure extended file"):
+ *
+ *      <table>
+ *              Field name  Type  Length  Decimals
+ *              ----------------------------------
+ *              FIELD_NAME   C      10       0
+ *              FIELD_TYPE   C       1       0
+ *              FIELD_LEN    N       3       0
+ *              FIELD_DEC    N       3       0
+ *      </table>
+ *
+ *      Each record in the new file contain information about one field in
+ *      the original file. CREATE FROM could be used to create a database
+ *      from the structure extended file.
+ *
+ *      For prehistoric compatibility reasons, Character fields which are
+ *      longer than 255 characters are treated in a special way by writing
+ *      part of the length in the FIELD_DEC according to the following
+ *      formula (this is done internally):
+ *
+ *      FIELD->FIELD_DEC := int( nLength / 256 )
+ *      FIELD->FIELD_LEN := ( nLength % 256 )
+ *
+ *      Later if you want to calculate the length of a field you can use
+ *      the following formula:
+ *
+ *      nLength := IIF( FIELD->FIELD_TYPE == "C", ;
+ *                      FIELD->FIELD_DEC * 256 + FIELD->FIELD_LEN, ;
+ *                      FIELD->FIELD_LEN )
+ *
+ *      COPY STRUCTURE EXTENDED command is preprocessed into
+ *      __dbCopyXStruct() function during compile time.
+ *  $EXAMPLES$
+ *      // Open a database, then copy its structure to a new file,
+ *      // Open the new file and list all its records
+ *      USE Test
+ *      __dbCopyXStruct( "TestStru" )
+ *      USE TestStru
+ *      LIST
+ *  $TESTS$
+ *  $STATUS$
+ *  $COMPLIANCE$
+ *      __dbCopyXStruct() works exactly like CA-Clipper's __dbCopyXStruct()
+ *  $PLATFORMS$
+ *  $FILES$
+ *  $SEEALSO$
+ *      COPY STRUCTURE,COPY STRUCTURE EXTENDED,CREATE,CREATE FROM,DBCREATE(),DBSTRUCT(),__dbCopyStruct(),__dbCreate()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      COPY STRUCTURE EXTENDED
+ *  $CATEGORY$
+ *      Databases
+ *  $ONELINER$
+ *      Copy current database structure into a definition file
+ *  $SYNTAX$
+ *      COPY STRUCTURE EXTENDED TO <xcFileName>
+ *  $ARGUMENTS$
+ *      TO <xcFileName> is the name of target definition file to create.
+ *      (.dbf) is the default extension if none is given. It can be
+ *      specified as literal file name or as a character expression
+ *      enclosed in parentheses.
+ *  $DESCRIPTION$
+ *      COPY STRUCTURE EXTENDED create a new database named <cFileName> with
+ *      a pre-defined structure (also called "structure extended file"):
+ *
+ *      <table>
+ *              Field name  Type  Length  Decimals
+ *              ----------------------------------
+ *              FIELD_NAME   C      10       0
+ *              FIELD_TYPE   C       1       0
+ *              FIELD_LEN    N       3       0
+ *              FIELD_DEC    N       3       0
+ *      </table>
+ *
+ *      Each record in the new file contain information about one field in
+ *      the original file. CREATE FROM could be used to create a database
+ *      from the structure extended file.
+ *
+ *      For prehistoric compatibility reasons, Character fields which are
+ *      longer than 255 characters are treated in a special way by writing
+ *      part of the length in the FIELD_DEC according to the following
+ *      formula (this is done internally):
+ *
+ *      FIELD->FIELD_DEC := int( nLength / 256 )
+ *      FIELD->FIELD_LEN := ( nLength % 256 )
+ *
+ *      Later if you want to calculate the length of a field you can use
+ *      the following formula:
+ *
+ *      nLength := IIF( FIELD->FIELD_TYPE == "C", ;
+ *                      FIELD->FIELD_DEC * 256 + FIELD->FIELD_LEN, ;
+ *                      FIELD->FIELD_LEN )
+ *
+ *      COPY STRUCTURE EXTENDED command is preprocessed into
+ *      __dbCopyXStruct() function during compile time.
+ *  $EXAMPLES$
+ *      // Open a database, then copy its structure to a new file,
+ *      // Open the new file and list all its records
+ *      USE Test
+ *      COPY STRUCTURE EXTENDED TO TestStru
+ *      USE TestStru
+ *      LIST
+ *  $TESTS$
+ *  $STATUS$
+ *  $COMPLIANCE$
+ *      COPY STRUCTURE EXTENDED works exactly as in CA-Clipper
+ *  $PLATFORMS$
+ *  $FILES$
+ *  $SEEALSO$
+ *      COPY STRUCTURE,CREATE,CREATE FROM,DBCREATE(),DBSTRUCT(),__dbCopyStruct(),__dbCopyXStruct(),__dbCreate()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      __FLEDIT()*
+ *  $CATEGORY$
+ *      Databases
+ *  $ONELINER$
+ *      Filter a database structure array
+ *  $SYNTAX$
+ *      __FLEDIT( <aStruct>, [<aFieldList>] ) --> aStructFiltered
+ *  $ARGUMENTS$
+ *      <aStruct> is a multidimensional array with database fields
+ *      structure, which is usually the output from DBSTRUCT(), where each
+ *      array element has the following structure:
+ *
+ *      <table>
+ *              Position  Description   dbstruct.ch
+ *              -----------------------------------
+ *              1         cFieldName    DBS_NAME
+ *              2         cFieldType    DBS_TYPE
+ *              3         nFieldLength  DBS_LEN
+ *              4         nDecimals     DBS_DEC
+ *      </table>
+ *
+ *      <aFieldList> is an array where each element is a field name.
+ *      Names could be specified as uppercase or lowercase.
+ *  $RETURNS$
+ *      __FLEDIT() return a new multidimensional array where each element is
+ *      in the same structure as the original <aStruct>, but the array is
+ *      built according to the list of fields in <aFieldList>. If
+ *      <aFieldList> is empty, __FLEDIT() return reference to the original
+ *      <aStruct> array.
+ *  $DESCRIPTION$
+ *      __FLEDIT() can be use to create a sub-set of a database structure,
+ *      based on a given field list.
+ *
+ *      Note that field names in <aStruct> MUST be specified in uppercase
+ *      or else no match would found.
+ *
+ *      SET EXACT has no effect on the return value.
+ *
+ *      __FLEDIT() is a compatibility function and it is synonym for
+ *      __dbStructFilter() which does exactly the same.
+ *  $EXAMPLES$
+ *      LOCAL aStruct, aList, aRet
+ *      aStruct := { { "CODE",  "N",  4, 0 }, ;
+ *                   { "NAME",  "C", 10, 0 }, ;
+ *                   { "PHONE", "C", 13, 0 }, ;
+ *                   { "IQ",    "N",  3, 0 } }
+ *      aList := { "IQ", "NAME" }
+ *      aRet := __FLEDIT( aStruct, aList )
+ *                        // { { "IQ", "N", 3, 0 }, { "NAME", "C", 10, 0 } }
+ *
+ *      aRet := __FLEDIT( aStruct, {} )
+ *      ? aRet == aStruct // .T.
+ *
+ *      aList := { "iq", "NOTEXIST" }
+ *      aRet := __FLEDIT( aStruct, aList )
+ *                        // { { "IQ", "N", 3, 0 } }
+ *
+ *      aList := { "NOTEXIST" }
+ *      aRet := __FLEDIT( aStruct, aList )   // {}
+ *
+ *
+ *      // Create a new file that contain part of the original structure
+ *      LOCAL aStruct, aList, aRet
+ *      USE TEST
+ *      aStruct := DBSTRUCT()
+ *      aList := { "NAME" }
+ *      DBCREATE( "OnlyName.DBF", __FLEDIT( aStruct, aList ) )
+ *  $TESTS$
+ *  $STATUS$
+ *  $COMPLIANCE$
+ *      CA-Clipper have internal undocumented function named __FLEDIT(),
+ *      in Harbour we name it __dbStructFilter(). The new name give better
+ *      description of what this function do. In Harbour __FLEDIT() simply
+ *      call __dbStructFilter() and therefor the later is the recommended
+ *      function to use.
+ *
+ *      This function is only visible if source/rdd/dbstrux.prg was compiled
+ *      with the HARBOUR_STRICT_CLIPPER_COMPATIBILITY flag.
+ *  $PLATFORMS$
+ *  $FILES$
+ *      Header file is dbstruct.ch
+ *  $SEEALSO$
+ *      DBCREATE(),DBSTRUCT(),__dbCopyStruct(),__dbStructFilter()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      __dbStructFilter()
+ *  $CATEGORY$
+ *      Databases
+ *  $ONELINER$
+ *      Filter a database structure array
+ *  $SYNTAX$
+ *      __dbStructFilter( <aStruct>, [<aFieldList>] ) --> aStructFiltered
+ *  $ARGUMENTS$
+ *      <aStruct> is a multidimensional array with database fields
+ *      structure, which is usually the output from DBSTRUCT(), where each
+ *      array element has the following structure:
+ *
+ *      <table>
+ *              Position  Description   dbstruct.ch
+ *              -----------------------------------
+ *              1         cFieldName    DBS_NAME
+ *              2         cFieldType    DBS_TYPE
+ *              3         nFieldLength  DBS_LEN
+ *              4         nDecimals     DBS_DEC
+ *      </table>
+ *
+ *      <aFieldList> is an array where each element is a field name.
+ *      Names could be specified as uppercase or lowercase.
+ *  $RETURNS$
+ *      __dbStructFilter() return a new multidimensional array where each
+ *      element is in the same structure as the original <aStruct>, but the
+ *      array is built according to the list of fields in <aFieldList>. If
+ *      <aFieldList> is empty, __dbStructFilter() return reference to the
+ *      original <aStruct> array.
+ *  $DESCRIPTION$
+ *      __dbStructFilter() can be use to create a sub-set of a database
+ *      structure, based on a given field list.
+ *
+ *      Note that field names in <aStruct> MUST be specified in uppercase
+ *      or else no match would found.
+ *
+ *      SET EXACT has no effect on the return value.
+ *  $EXAMPLES$
+ *      LOCAL aStruct, aList, aRet
+ *      aStruct := { { "CODE",  "N",  4, 0 }, ;
+ *                   { "NAME",  "C", 10, 0 }, ;
+ *                   { "PHONE", "C", 13, 0 }, ;
+ *                   { "IQ",    "N",  3, 0 } }
+ *      aList := { "IQ", "NAME" }
+ *      aRet := __dbStructFilter( aStruct, aList )
+ *                        // { { "IQ", "N", 3, 0 }, { "NAME", "C", 10, 0 } }
+ *
+ *      aRet := __dbStructFilter( aStruct, {} )
+ *      ? aRet == aStruct // .T.
+ *
+ *      aList := { "iq", "NOTEXIST" }
+ *      aRet := __dbStructFilter( aStruct, aList )
+ *                        // { { "IQ", "N", 3, 0 } }
+ *
+ *      aList := { "NOTEXIST" }
+ *      aRet := __dbStructFilter( aStruct, aList )   // {}
+ *
+ *
+ *      // Create a new file that contain part of the original structure
+ *      LOCAL aStruct, aList, aRet
+ *      USE TEST
+ *      aStruct := DBSTRUCT()
+ *      aList := { "NAME" }
+ *      DBCREATE( "OnlyName.DBF", __dbStructFilter( aStruct, aList ) )
+ *  $TESTS$
+ *  $STATUS$
+ *  $COMPLIANCE$
+ *      __dbStructFilter() is a Harbour extension, CA-Clipper have internal
+ *      undocumented function named __FLEDIT() that does exactly the same.
+ *      The new name give better description of what this function do.
+ *  $PLATFORMS$
+ *  $FILES$
+ *      Header file is dbstruct.ch
+ *  $SEEALSO$
+ *      DBCREATE(),DBSTRUCT(),__dbCopyStruct(),__FLEDIT()*
+ *  $END$
+ */
