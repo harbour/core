@@ -535,7 +535,7 @@ extern int _iState;     /* current parser state (defined in harbour.l */
 %token FUNCTION PROCEDURE IDENTIFIER RETURN NIL NUM_DOUBLE INASSIGN NUM_INTEGER NUM_LONG
 %token LOCAL STATIC IIF IF ELSE ELSEIF END ENDIF LITERAL TRUEVALUE FALSEVALUE
 %token EXTERN INIT EXIT AND OR NOT PUBLIC EQ NE1 NE2
-%token INC DEC ALIASOP DOCASE CASE OTHERWISE ENDCASE ENDDO MEMVAR
+%token INC DEC ALIASOP MACROALIAS DOCASE CASE OTHERWISE ENDCASE ENDDO MEMVAR
 %token WHILE EXIT LOOP END FOR NEXT TO STEP LE GE FIELD IN PARAMETERS
 %token PLUSEQ MINUSEQ MULTEQ DIVEQ POWER EXPEQ MODEQ EXITLOOP
 %token PRIVATE BEGINSEQ BREAK RECOVER USING DO WITH SELF LINE
@@ -638,6 +638,15 @@ ParamList  : IDENTIFIER AsType                { AddVar( $1 ); $$ = 1; }
            | ParamList ',' IDENTIFIER AsType  { AddVar( $3 ); $$++; }
            ;
 
+MacroAssign: INASSIGN
+	   | '='
+
+VarMacro   : ExpMacro
+
+ExpMacro   : '&' IDENTIFIER             { PushId( $2 ); }
+	   | MACROALIAS IDENTIFIER      { PushId( $2 ); }
+	   | Macro
+
 Statement  : ExecFlow Crlf        {}
            | FunCall Crlf         { Do( $1 ); }
            | AliasFunc Crlf       {}
@@ -645,6 +654,8 @@ Statement  : ExecFlow Crlf        {}
            | ObjectMethod Crlf    { GenPopPCode(); }
            | VarUnary Crlf        { GenPopPCode(); }
            | VarExpr Crlf         { RemoveExtraPush(); }
+
+           | { PushSymbol( yy_strdup( "__MVPUT" ), 1); PushNil(); } VarMacro MacroAssign Expression { Do( 2 ); } Crlf
 
            | IDENTIFIER '=' Expression { PopId( $1 ); } Crlf
            | AliasVar '=' { $<pVoid>$=( void * )pAliasId; pAliasId = NULL; } Expression { pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); AliasRemove(); } Crlf
@@ -819,6 +830,8 @@ IfInline   : IIF PareExpList3       { GenIfInline(); }
 
 Macro      : '&' Variable
            | '&' '(' Expression ')'
+	   | MACROALIAS Variable
+           | MACROALIAS '(' Expression ')'
            ;
 
 AliasVar   : NUM_INTEGER ALIASOP { AliasAddInt( $1 ); } IDENTIFIER  { $$ = $4; }

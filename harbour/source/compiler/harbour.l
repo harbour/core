@@ -1136,6 +1136,8 @@ Separator     {SpaceTab}
 "++"           _iState =OPERATOR; return INC;
 "--"           _iState =OPERATOR; return DEC;
 "->"           _iState =OPERATOR; return ALIASOP;
+"M->&"          _iState =OPERATOR; return MACROALIAS;
+"MEMVAR->&"     _iState =OPERATOR; return MACROALIAS;
 "<="           _iState =OPERATOR; return LE;
 ">="           _iState =OPERATOR; return GE;
 "+="           _iState =OPERATOR; return PLUSEQ;
