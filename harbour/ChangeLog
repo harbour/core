@@ -1,3 +1,9 @@
+19990612-14:10 CET Eddie Runia
+  * source/rtl/dir.c
+    month started with 0 (Jan). Harbour months start with 1.
+  * tests/working/dirtest.prg
+    output sorted alphabetically and case insensitive.
+
 19990612-13:45 CET Eddie Runia
   * source/rtl/files.c
     read-only file creation resolved. The permission should be passed as

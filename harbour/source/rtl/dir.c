@@ -239,7 +239,7 @@ HARBOUR HB_DIRECTORY( void )
          ft = localtime(&ftime);
 
 	 sprintf(ddate, "%04d%02d%02d",
-		 ft->tm_year+1900, ft->tm_mon, ft->tm_mday);
+         ft->tm_year+1900, ft->tm_mon + 1, ft->tm_mday);
 	 sprintf(ttime, "%02d:%02d:%02d",
 		 ft->tm_hour, ft->tm_min, ft->tm_sec);
 
