@@ -197,20 +197,16 @@ $(path_obj)\stringp.obj   : {$(path_prg)}\stringp.prg $(path_h)\pcode.h $(path_h
   icc /C+ $(c_opt) /Fo$@ /Tp$<
   ilib .\libs\icc\hbtools.lib -+$@,,
 
-$(path_exe)\harbour.exe : $(path_obj)\harboury.obj $(path_obj)\harbourl.obj $(path_obj)\genobj32.obj $(path_obj)\harbour.obj $(path_obj)\hbpp.obj $(path_obj)\hbppint.obj $(path_obj)\table.obj
- icc /C- $(c_opt) /Fe$(path_exe)\harbour.exe /Isource\compiler \
-    $(path_obj)\harboury.obj \
-    $(path_obj)\harbourl.obj \
-    $(path_obj)\genobj32.obj \
-    $(path_obj)\hbpp.obj     \
-    $(path_obj)\hbppint.obj  \
-    $(path_obj)\table.obj    \
-    $(path_obj)\harbour.obj
+source\compiler\harboury.c : source\compiler\harbour.y
+   bison -d -v -y -osource\compiler\harboury.c source\compiler\harbour.y
+
+source\compiler\harbourl.c : source\compiler\harbour.l
+   flex -i -8 -osource\compiler\harbourl.c source\compiler\harbour.l
 
 $(path_obj)\genobj32.obj : {$(path_c)}genobj32.c
 $(path_obj)\harbour.obj  : {$(path_c)}harbour.c
-$(path_obj)\harbourl.obj : {$(path_c)}harbourl.c
-$(path_obj)\harboury.obj : {$(path_c)}harboury.c
+$(path_obj)\harbourl.obj : source\compiler\harbourl.c
+$(path_obj)\harboury.obj : source\compiler\harboury.c
 $(path_obj)\hbpp.obj     : {$(path_c)}hbpp.c
 $(path_obj)\hbppint.obj  : {$(path_c)}hbppint.c
 $(path_obj)\table.obj    : {$(path_c)}table.c
@@ -221,8 +217,12 @@ $(path_obj)\table.obj    : {$(path_c)}table.c
 {source\hbpp}.c{$(path_obj)}.obj:
   icc /C+ $(c_opt) /Fo$@ /Tp$<
 
-harboury.c : {$(path_y)}harbour.y
-#  bison -d -v -y -osource\compiler\harboury.c source\compiler\harbour.y
-
-harbourl.c : {$(path_l)}harbour.l
-#  flex -i -8 -osource\compiler\harbourl.c -Sd:\bin\emx\lib\flexskel.cc -Hd:\bin\emx\include\flexskel.h source\compiler\harbour.l
+$(path_exe)\harbour.exe : $(path_obj)\harboury.obj $(path_obj)\harbourl.obj $(path_obj)\genobj32.obj $(path_obj)\harbour.obj $(path_obj)\hbpp.obj $(path_obj)\hbppint.obj $(path_obj)\table.obj
+ icc /C- $(c_opt) /Fe$(path_exe)\harbour.exe /Isource\compiler \
+    $(path_obj)\harboury.obj \
+    $(path_obj)\harbourl.obj \
+    $(path_obj)\genobj32.obj \
+    $(path_obj)\hbpp.obj     \
+    $(path_obj)\hbppint.obj  \
+    $(path_obj)\table.obj    \
+    $(path_obj)\harbour.obj

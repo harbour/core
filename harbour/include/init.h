@@ -28,7 +28,7 @@ static SYMBOL symbols[] = {
 #ifdef __GNUC__
 #define HB_INIT_SYMBOLS_BEGIN( func ) \
   static SYMBOL symbols[] = {
-  
+
 #define HB_INIT_SYMBOLS_END( func )  }; \
   static void __attribute__ ((constructor)) func( void ) \
   { \
@@ -46,7 +46,7 @@ static SYMBOL symbols[] = {
 #ifdef __BORLANDC__
 #define HB_INIT_SYMBOLS_BEGIN( func ) \
   static SYMBOL symbols[] = {
-  
+
 #define HB_INIT_SYMBOLS_END( func )  }; \
   static void func( void ) \
   { \
@@ -74,14 +74,14 @@ static SYMBOL symbols[] = {
 #define HB_CALL_ON_STARTUP_BEGIN( func ) \
 static int func( void ) {
 
-#define HB_CALL_ON_STARTUP_END( func ) return 1 }; \
+#define HB_CALL_ON_STARTUP_END( func ) return 1; } \
   static int static_int_##func = func()
 #endif
 
 #ifdef __WATCOMC__
 #define HB_INIT_SYMBOLS_BEGIN( func ) \
   static SYMBOL symbols[] = {
-  
+
 #define HB_INIT_SYMBOLS_END( func ) }; \
   static int func( void ) \
   { \

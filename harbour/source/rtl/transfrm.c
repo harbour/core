@@ -27,7 +27,7 @@ HARBOUR HB_TRANSFORM( void );
 
 HB_INIT_SYMBOLS_BEGIN( Transfrm__InitSymbols )
 { "TRANSFORM" , FS_PUBLIC, HB_TRANSFORM  , 0 }
-HB_INIT_SYMBOLS_END( Transfrm__InitSymbols )
+HB_INIT_SYMBOLS_END( Transfrm__InitSymbols );
 #pragma startup Transfrm__InitSymbols
 
 extern STACK stack;

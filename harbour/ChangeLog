@@ -1,3 +1,17 @@
+19990707-23:10 EDT David G. Holm <dholm@jsd-llc.com>
+  + harbour.b31
+    + Separate harbour.exe makefile, so that it is possible to build
+      16-bit Harbour programs using a 32-bit compiler and the 16-bit
+      libraries or by using a 16-bit compiler and libraries.
+  * makefile.icc
+    + Put bison and flex back into operation after finding OS/2 versions
+      of each that work as expected: gnubison.zip and flex254-2.zip from
+      http://www.leo.org/pub/comp/os/os2/leo/gnu/index.html
+  * include/init.h
+    ! Missing ; after return 1 in HB_STARTUP_SYMBOLS_END for MSC and IBMCPP
+  * source/rtl/transfrm.c
+    ! Missing ; after HB_INIT_SYMBOLS_END
+
 19990707-20:45 EDT David G. Holm <dholm@jsd-llc.com>
   * doc/gmake.txt
     + Added NOTES section with steps needed for a clean build
@@ -63,7 +77,7 @@ tests/working :
 CVSed by Andi Jahja <andij@aonlippo.co.id>
 
   * source/rtl/natmsg/msgspa.c
-  
+
 
 19990707-16:20:20 Bruno Cantero <bruno@issnet.net>
 CVSed by Andi Jahja <andij@aonlippo.co.id>
@@ -249,7 +263,7 @@ include/extend.h
 
 * source/compiler/harbour.y
  * changed generated C code to support new HB_INIT_SYMBOLS_* macros
-    
+
 * source/rtl/arrays.c
 * source/rtl/classes.c
 * source/rtl/console.c
@@ -266,7 +280,7 @@ include/extend.h
 * source/rtl/transfrm.c
  * changed to use he new definition of HB_INIT_SYMBOLS_* and
    HB_CALL_ON_STARTUP_* macros
-   
+
 * tests/working/box.prg
  * changed "BOX.CH" to lowercase (Linux is case-sensitive OS)
 
