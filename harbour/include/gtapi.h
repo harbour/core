@@ -38,7 +38,7 @@
 
 #include "extend.h"
 #include "color.ch"
-#include "setcurs.ch"
+#include "setcurs.h"
 #include "box.h"
 
 /* maximum length of color string */

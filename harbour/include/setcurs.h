@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * Header file for SETCURSOR() function
+ * Header file for the Cursor style constants
  *
- * Copyright 1999 {list of individual authors and e-mail addresses}
+ * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -33,13 +33,16 @@
  *
  */
 
-#ifndef _SETCURS_CH
-#define _SETCURS_CH
+#ifndef HB_SETCURS_H_
+#define HB_SETCURS_H_
 
-#define SC_NONE         0
-#define SC_NORMAL       1
-#define SC_INSERT       2
-#define SC_SPECIAL1     3
-#define SC_SPECIAL2     4
+typedef enum
+{
+   SC_NONE              = 0,    /* None */
+   SC_NORMAL            = 1,    /* Underline */
+   SC_INSERT            = 2,    /* Lower half block */
+   SC_SPECIAL1          = 3,    /* Full block */
+   SC_SPECIAL2          = 4     /* Upper half block */
+} HB_cursor_enum;
 
-#endif /* _SETCURS_CH */
+#endif /* HB_SETCURS_H_ */

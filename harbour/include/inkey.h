@@ -37,7 +37,18 @@
 #define HB_INKEY_H_
 
 #include "hbdefs.h"
-#include "set.h" /* for HB_inkey_enum */
+
+typedef enum
+{
+   INKEY_MOVE           = 1,    /* Mouse Events */
+   INKEY_LDOWN          = 2,    /* Mouse Left Click Down */
+   INKEY_LUP            = 4,    /* Mouse Left Click Up */
+   INKEY_RDOWN          = 8,    /* Mouse Right Click Down */
+   INKEY_RUP            = 16,   /* Mouse Right Click Up */
+   INKEY_KEYBOARD       = 128,  /* Keyboard Events */
+   INKEY_ALL            = 159,  /* All Mouse and Keyboard Events */
+   INKEY_EXTENDED       = 256   /* Extended Keyboard Events */
+} HB_inkey_enum;
 
 /* Harbour keyboard support functions */
 extern int  hb_inkey ( double seconds, HB_inkey_enum event_mask, BOOL wait, BOOL forever ); /* Wait for keyboard input */

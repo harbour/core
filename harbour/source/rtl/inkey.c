@@ -82,6 +82,7 @@
 #include "ctoharb.h"
 #include "errorapi.h"
 #include "itemapi.h"
+#include "set.h"
 #include "inkey.h"
 #include "inkey.ch"
 #include "init.h"

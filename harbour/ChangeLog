@@ -1,3 +1,20 @@
+19990923-10:55 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * include/gtapi.h
+    include/set.h
+    include/Makefile
+    include/setcurs.ch
+  + include/setcurs.h (new)
+    ! Cursor style constants moved to a separate file setcurs.h, this new
+      file is included to gtapi.h and set.h. The .ch file is no longer used
+      from C code. Previously the constants defined in setcurs.ch and set.h
+      collided, and could not compile.
+
+  * include/set.h
+    include/inkey.h
+    source/rtl/inkey.c
+    * HB_inkey_enum moved to inkey.h from set.h.
+
 19990923-09:16 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * include/vm.api

@@ -28,6 +28,7 @@ C_HEADERS=\
         pcode.h      \
         rddapi.h     \
         set.h        \
+        setcurs.h    \
 
 PRG_HEADERS=\
         achoice.ch   \
