@@ -66,9 +66,9 @@
 
  */
 
-#define DEBUG  /* This is only for testing of this module a possibility
+//#define DEBUG  
 
-                  of finding errors */
+   /* This is only for testing of this module a possibility of finding errors */
 
 
 
@@ -108,9 +108,27 @@ HB_INIT_SYMBOLS_BEGIN( dbfntx1__InitSymbols )
 
 HB_INIT_SYMBOLS_END( dbfntx1__InitSymbols )
 
-#if ! defined(__GNUC__) && ! defined(_MSC_VER)
+#if defined(_MSC_VER)
 
-   #pragma startup dbfntx1__InitSymbols
+   #if _MSC_VER >= 1010
+
+      #pragma data_seg( ".CRT$XIY" )
+
+      #pragma comment( linker, "/Merge:.CRT=.data" )
+
+   #else
+
+      #pragma data_seg( "XIY" )
+
+   #endif
+
+   static HB_$INITSYM hb_vm_auto_dbfcdx1__InitSymbols = dbfcdx1__InitSymbols;
+
+   #pragma data_seg()
+
+#elif ! defined(__GNUC__)
+
+   #pragma startup dbfcdx1__InitSymbols
 
 #endif
 
@@ -272,6 +290,20 @@ static LPPAGEINFO hb_ntxPageLoad( LPPAGEINFO pParentPage, ULONG ulOffset );
 
          /* Load page from disk */
 
+static ERRCODE hb_ntxPageKeyAdd( LPPAGEINFO pPage, PHB_ITEM pKey, int level);
+
+         /* Add key to page */
+
+static ERRCODE hb_ntxPageKeyInsert( LPPAGEINFO pPage, PHB_ITEM pKey, int pos );
+
+         /* Insert page in position pos */
+
+static int hb_ntxItemCompare( PHB_ITEM pKey1, PHB_ITEM pKey2 );
+
+         /* Comapare 2 Keys (They mus be keys !!! */
+
+static ERRCODE hb_ntxPageAddPageKeyAdd( LPPAGEINFO pPage, PHB_ITEM pKey, int level, int pos );
+
 
 
 /* Exported functions via table */
@@ -388,6 +420,322 @@ static void hb_ntxIndexDump( LPINDEXINFO pIndex )
 
 
 
+static int hb_ntxItemCompare( PHB_ITEM pKey1, PHB_ITEM pKey2 )
+
+{
+
+   int iLimit, iResult;
+
+   int EndPos = 0;
+
+
+
+   if( pKey2 == NULL || pKey2->item.asString.length == 0 )
+
+      return 1;
+
+   if( pKey1 == NULL || pKey1->item.asString.length == 0 )
+
+      return ( pKey2->item.asString.length == 0 ) ? 0: -1;
+
+   switch( hb_itemType( pKey1 ) )
+
+   {
+
+      case HB_IT_STRING:
+
+         iLimit = ( pKey1->item.asString.length >
+
+                    pKey2->item.asString.length ) ?
+
+                    pKey2->item.asString.length : pKey1->item.asString.length;
+
+         do
+
+         {
+
+            iResult = pKey1->item.asString.value[ EndPos ] -
+
+                      pKey2->item.asString.value[ EndPos ];
+
+            EndPos += 1;
+
+         } while( iResult == 0 && EndPos < iLimit );
+
+         if( iResult == 0 )
+
+         {
+
+            EndPos += 1;
+
+            iResult = pKey1->item.asString.length -
+
+                      pKey2->item.asString.length;
+
+         }
+
+         break;
+
+      default:
+
+         iResult = 0;
+
+         printf( "hb_ntxKeyCompare()" );
+
+   }
+
+   if( iResult < 0 )
+
+      return -1;
+
+   else if( iResult > 0 )
+
+      return 1;
+
+   else
+
+      return 0;
+
+}
+
+
+
+static ERRCODE hb_ntxPageAddPageKeyAdd( LPPAGEINFO pPage, PHB_ITEM pKey, int level, int pos )
+
+{
+
+   int nBegin, nEnd;
+
+   int nNewPos;
+
+   int MaxKeys = pPage->TagParent->MaxKeys - 1 ;
+
+   int nCount, nMaxCount = MaxKeys / 5;
+
+   LPPAGEINFO pNewPage;
+
+
+
+   pNewPage = hb_ntxPageNew( pPage->TagParent, pPage );
+
+   if ( pNewPage == NULL )
+
+      return FAILURE;
+
+   nBegin = pos;
+
+   nCount = 0;
+
+   while ( ( nCount < nMaxCount ) && ( nBegin > 0 ) && ( pPage->pKeys[ nBegin - 1 ].Tag == 0 ) )
+
+   {
+
+      nBegin--;
+
+      nCount++;
+
+   }
+
+   nEnd = pos;
+
+   while ( ( nCount < nMaxCount ) && ( nEnd < MaxKeys ) && ( pPage->pKeys[ nEnd + 1 ].Tag == 0 ) )
+
+   {
+
+      nEnd++;
+
+      nCount++;
+
+   }
+
+   nNewPos = pos - nBegin ;
+
+   if ( nNewPos > 0 )
+
+      memmove( pNewPage->pKeys, pPage->pKeys + nBegin,  nNewPos * sizeof( KEYINFO ));
+
+   pNewPage->pKeys[nNewPos].Xtra = pPage->TagParent->Owner->Owner->lpExtendInfo->ulRecNo;
+
+   pNewPage->pKeys[nNewPos].pItem = hb_itemNew( pKey );
+
+   if ( nEnd > pos )
+
+      memmove( pNewPage->pKeys + nNewPos + 1, pPage->pKeys + pos,  ( nEnd - pos ) * sizeof( KEYINFO ));
+
+   pPage->pKeys[nEnd].Tag = pNewPage->Page;
+
+   memmove( pPage->pKeys + nBegin , pPage->pKeys + nEnd, 
+
+         ( pPage->uiKeys - nEnd ) * sizeof( KEYINFO ) + sizeof( pPage->pKeys->Tag ) );
+
+   //memset( pPage->pKeys + nBegin + nCount, 0 ,
+
+         //( pPage->uiKeys - nEnd ) * sizeof( KEYINFO ) + sizeof( pPage->pKeys->Tag ) );
+
+   pPage->uiKeys -= nCount;
+
+   pNewPage->uiKeys = nCount + 1;
+
+   pPage->Changed = TRUE;
+
+   pNewPage->Changed = TRUE;
+
+   hb_ntxPageFree( pNewPage ); 
+
+   return SUCCESS;
+
+}
+
+
+
+static ERRCODE hb_ntxPageKeyInsert( LPPAGEINFO pPage, PHB_ITEM pKey, int pos )
+
+{
+
+   memcpy( pPage->pKeys + pos + 1 , pPage->pKeys + pos ,
+
+            ( pPage->uiKeys - pos ) * sizeof( KEYINFO ) + sizeof( pPage->pKeys->Tag ) );
+
+   pPage->uiKeys++;
+
+   pPage->Changed = TRUE;
+
+   pPage->pKeys[pos].Xtra = pPage->TagParent->Owner->Owner->lpExtendInfo->ulRecNo;
+
+   pPage->pKeys[pos].pItem = hb_itemNew( pKey );
+
+   pPage->pKeys[pos].Tag = 0;
+
+   return SUCCESS;
+
+}
+
+
+
+static ERRCODE hb_ntxPageKeyAdd( LPPAGEINFO pPage, PHB_ITEM pKey, int level)
+
+{
+
+   int i,cmp;
+
+   LPPAGEINFO pLoadedPage;
+
+   
+
+   i=0;
+
+   if ( pPage->uiKeys == 0 )
+
+   {
+
+      pPage->uiKeys=1;
+
+      pPage->Changed = TRUE;
+
+      pPage->pKeys->Xtra = pPage->TagParent->Owner->Owner->lpExtendInfo->ulRecNo;
+
+      pPage->pKeys->pItem = hb_itemNew( pKey );
+
+      return SUCCESS;
+
+   }
+
+   while ( i < pPage->uiKeys )
+
+   {
+
+      cmp = hb_ntxItemCompare( pPage->pKeys[ i ].pItem , pKey );
+
+      if ( cmp > 0 )
+
+      {
+
+         if ( pPage->uiKeys == pPage->TagParent->MaxKeys )
+
+         {
+
+            hb_ntxPageAddPageKeyAdd(pPage, pKey, level, i );
+
+         }
+
+         else if ( pPage->pKeys[i].Tag != 0 )
+
+         {
+
+            pLoadedPage = hb_ntxPageLoad( pPage, pPage->pKeys[i].Tag );
+
+            if ( pLoadedPage == NULL )
+
+            {
+
+               // TODO : Error recovery ???
+
+               return FAILURE;
+
+            }
+
+            hb_ntxPageKeyAdd( pLoadedPage, pKey, level+1 );
+
+            hb_ntxPageFree( pLoadedPage );
+
+         }
+
+         else
+
+         {
+
+            hb_ntxPageKeyInsert( pPage, pKey, i );
+
+         }
+
+         return SUCCESS;
+
+      }
+
+      i++;
+
+   }
+
+   if ( pPage->uiKeys == pPage->TagParent->MaxKeys )
+
+   {
+
+   } else if ( pPage->pKeys[i].Tag != 0 )
+
+   {
+
+      pLoadedPage = hb_ntxPageLoad( pPage, pPage->pKeys[i].Tag );
+
+      if ( pLoadedPage == NULL )
+
+      {
+
+         // TODO : Error recovery ???
+
+         return FAILURE;
+
+      }
+
+      hb_ntxPageKeyAdd( pLoadedPage, pKey, level+1 );
+
+      hb_ntxPageFree( pLoadedPage );
+
+   }
+
+   else
+
+   {
+
+      hb_ntxPageKeyInsert( pPage, pKey, i );
+
+   }
+
+   return SUCCESS;
+
+}
+
+
+
 static ERRCODE hb_ntxTagKeyAdd( LPTAGINFO pTag, PHB_ITEM pKey)
 
 {
@@ -403,6 +751,8 @@ static ERRCODE hb_ntxTagKeyAdd( LPTAGINFO pTag, PHB_ITEM pKey)
       /* TODO :
 
          Add next keys */
+
+      return hb_ntxPageKeyAdd( pTag->RootPage, pKey, 0);
 
       
 
@@ -588,7 +938,7 @@ static LPTAGINFO hb_ntxTagNew( LPINDEXINFO PIF, char * ITN, char *szKeyExpr, PHB
 
    pTag->Owner = PIF;
 
-   pTag->MaxKeys = (NTXBLOCKSIZE-2)/(uiKeyLen+10);
+   pTag->MaxKeys = (NTXBLOCKSIZE-6)/(uiKeyLen+10);
 
    return pTag;
 

@@ -1,3 +1,13 @@
+2000-06-09 08:15 UTC+0100 Lubos Janica <janica@fornax.sk>
+    * source/rdd/dbfntx1.c
+    	After this change we can create indexes. And they working with Clipper !
+	But this isn't optimized.
+      * Module initialization for other then GNU compilers
+      + static ERRCODE hb_ntxPageKeyAdd( LPPAGEINFO pPage, PHB_ITEM pKey, int level)
+      + static ERRCODE hb_ntxPageKeyInsert( LPPAGEINFO pPage, PHB_ITEM pKey, int pos )
+      + static int hb_ntxItemCompare( PHB_ITEM pKey1, PHB_ITEM pKey2 )
+      + static ERRCODE hb_ntxPageAddPageKeyAdd( LPPAGEINFO pPage, PHB_ITEM pKey, int level, int pos )
+
 20000608-22:10 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
 
    * source/rtl/teditorl.c
