@@ -1010,7 +1010,11 @@ ERRCODE hb_dbfGetValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
                                 ( int ) pField->uiLen - ( ( int ) pField->uiDec + 1 ),
                                 ( int ) pField->uiDec );
             else
-               hb_itemPutNLLen( pItem, atol( szBuffer ), ( int ) pField->uiLen );
+               if( pField->uiLen > 9 )
+                  hb_itemPutNDLen( pItem, atof( szBuffer ),
+                                   ( int ) pField->uiLen, ( int ) pField->uiDec );
+               else
+                  hb_itemPutNLLen( pItem, atol( szBuffer ), ( int ) pField->uiLen );
          }
          break;
 
@@ -1194,8 +1198,14 @@ ERRCODE hb_dbfPutValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
             if( HB_IS_DOUBLE( pItem ) )
             {
                if( pField->uiDec == 0 )
-                  uiSize = sprintf( szBuffer, "%*li", pField->uiLen,
+               {
+                  if( pField->uiLen > 9 )
+                     uiSize = sprintf( szBuffer, "%*.0f", pField->uiLen,
+                                    hb_numRound( hb_itemGetND( pItem ), 0 ) );
+                  else
+                     uiSize = sprintf( szBuffer, "%*li", pField->uiLen,
                                     ( LONG ) hb_numRound( hb_itemGetND( pItem ), 0 ) );
+               }
                else
                   uiSize = sprintf( szBuffer, "%*.*f", pField->uiLen - pField->uiDec - 1,
                                     pField->uiDec, hb_numRound( hb_itemGetND( pItem ),
@@ -1204,7 +1214,9 @@ ERRCODE hb_dbfPutValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
             else
             {
                if( pField->uiDec == 0 )
+               {
                   uiSize = sprintf( szBuffer, "%*li", pField->uiLen, hb_itemGetNL( pItem ) );
+               }
                else
                   uiSize = sprintf( szBuffer, "%*.*f", pField->uiLen,
                                     pField->uiDec, hb_itemGetND( pItem ) );

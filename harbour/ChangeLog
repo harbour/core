@@ -1,3 +1,10 @@
+2000-09-11 13:45 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+   * source/rdd/dbf1.c
+     ! Modified hb_dbfGetValue() and hb_dbfPutValue() to use double
+       conversions instead of long conversions when the length of a
+       numeric database field without any decimal places exceeds 9.
+
 2000-09-08 03:50 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * config/dos/djgpp.cf
      + Added support for $(C_USER) and $(L_USER) /* Could someone please verify, that this is the correct way. */
