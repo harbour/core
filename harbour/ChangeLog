@@ -1,3 +1,12 @@
+19990816-13:30 CET Eddie Runia <eddie@runia.com>
+  * source/compiler/harbour.y
+    EndProc error resolved.
+    PushDouble error resolved.
+    Padding problem resolved
+  * source/runner/runner.c; include/run_exp.h
+    First symbol should be executed. Main renamed to HB_RUN
+    Init symbol code fixed
+
 19990816-13:20 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/Makefile
     + browdb.prg added
@@ -57,43 +66,43 @@
       ClassCreate     -> __clsNew
       ClassInstance   -> __clsInst
       __InstSuper     -> __clsInstSuper
-      ClassAdd        -> __clsAddMsg
-      ClassDel        -> __clsDelMsg
-      ClassMod        -> __clsModMsg
+      ClassAdd	      -> __clsAddMsg
+      ClassDel	      -> __clsDelMsg
+      ClassMod	      -> __clsModMsg
       WClsDatas       -> __cls_CntClsData
-      __wDatas        -> __cls_CntData
+      __wDatas	      -> __cls_CntData
       __wDataDec      -> __cls_DecData
       __wDataInc      -> __cls_IncData
 
-      aOMethod        -> __objGetMethodList
-      aOData          -> __objGetMsgList
-      aOGet           -> __objGetValueList
-      aOSet           -> __objSetValueList
-      oClone          -> __objClone
+      aOMethod	      -> __objGetMethodList
+      aOData	      -> __objGetMsgList
+      aOGet	      -> __objGetValueList
+      aOSet	      -> __objSetValueList
+      oClone	      -> __objClone
       ClassName       -> __objGetClsName
-      oSend           -> __objSendMsg
+      oSend	      -> __objSendMsg
       isMessage       -> __objHasMsg
-      IsData          -> __objHasData
-      IsMethod        -> __objHasMethod
+      IsData	      -> __objHasData
+      IsMethod	      -> __objHasMethod
       oAddMethod      -> __objAddMethod
       oAddInline      -> __objAddInLine
-      oAddData        -> __objAddData
+      oAddData	      -> __objAddData
       oModMethod      -> __objModMethod
       oModInline      -> __objModInLine
       oDelMethod      -> __objDelMethod
       oDelInline      -> __objDelInLine
-      oDelData        -> __objDelData
+      oDelData	      -> __objDelData
 
-      ClassH          -> __msgClsH
+      ClassH	      -> __msgClsH
       ClassName       -> __msgClsName
-      ClassSel        -> __msgClsSel
+      ClassSel	      -> __msgClsSel
       SelectSuper     -> __msgSuper
       EvalInline      -> __msgEvalInline
       GetClassData    -> __msgGetClsData
       SetClassData    -> __msgSetClsData
-      GetData         -> __msgGetData
-      SetData         -> __msgSetData
-      Virtual         -> __msgVirtual
+      GetData	      -> __msgGetData
+      SetData	      -> __msgSetData
+      Virtual	      -> __msgVirtual
 
       DictRealloc     -> hb_clsDictRealloc
       ReleaseClass    -> hb_clsRelease
@@ -147,33 +156,33 @@
 19990815-18:45 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *source/rtl/hvm.c
-         * added 'hb_vm' prefix to alias/field related functions
-         * some functions declared 'static'
+	 * added 'hb_vm' prefix to alias/field related functions
+	 * some functions declared 'static'
 
     *include/ctoharb.h
-         - removed declarations of internal virtual machine functions
+	 - removed declarations of internal virtual machine functions
 
     *source/compiler/harbour.y
-         * changed an error description for incorrect use of PARAMETERS
-         statement
-         * added type casting to compile under C++ compilers
-         * static frame is correctly generated if static variable
-         is used in a codeblock only
+	 * changed an error description for incorrect use of PARAMETERS
+	 statement
+	 * added type casting to compile under C++ compilers
+	 * static frame is correctly generated if static variable
+	 is used in a codeblock only
 
     *include/extend.h
-         - removed obsolete declaration of hb_memvarNewSymbol()
+	 - removed obsolete declaration of hb_memvarNewSymbol()
 
     *include/hb_vmpub.h
-         + added definition of callback function HB_DYNS_FUNC used
-         to enumerate dynamic symbols
+	 + added definition of callback function HB_DYNS_FUNC used
+	 to enumerate dynamic symbols
 
     *source/vm/dynsym.c
-         + new function hb_dynsymEval() that enumerates dynamic symbols
-         by calling specified HB_DYNS_FUNC * function
+	 + new function hb_dynsymEval() that enumerates dynamic symbols
+	 by calling specified HB_DYNS_FUNC * function
 
     *source/rtl/memvars.c
-         + added __MVCLEAR function to release all PRIVATE and PUBLIC
-         variables (this function is used in CLEAR MEMORY statement)
+	 + added __MVCLEAR function to release all PRIVATE and PUBLIC
+	 variables (this function is used in CLEAR MEMORY statement)
 
 19990815-19:59 GMT+3 Alexander Kresin
   * source/rtl/tbrowse.prg

@@ -74,7 +74,7 @@ typedef struct
 #define SYM_NOT_FOUND 0xFFFFFFFF                /* Symbol not found.
                                                    FindSymbol               */
 
-       HARBOUR   HB_MAIN();
+       HARBOUR   HB_HB_RUN();
 static PASM_CALL CreateFun( PHB_SYMB, BYTE * ); /* Create a dynamic function*/
 static ULONG     FindSymbol( char *, PDYNFUNC, ULONG );
 static void      HRB_FileClose( FILE * );
@@ -110,7 +110,7 @@ ULONG ulSymEntry = 0;                           /* Link enhancement         */
    In due time it should also be able to collect the data from the
    binary/executable itself
 */
-HARBOUR HB_MAIN( void )
+HARBOUR HB_HB_RUN( void )
 {
    char *szFileName;
 
@@ -202,15 +202,19 @@ HARBOUR HB_MAIN( void )
           */
          for( ul = 0; ul < ulSymbols; ul++ )    /* Check INIT functions     */
          {
-            if( (pSymRead[ ul ].cScope & (FS_INIT|FS_EXIT)) == (FS_INIT|FS_EXIT) )
+            if( (pSymRead[ ul ].cScope & FS_INITEXIT == FS_INITEXIT )
             {
-               if( pSymRead[ ul ].pFunPtr )
-                     pSymRead[ ul ].pFunPtr();
+                hb_vmPushSymbol( pSymRead + ul );
+                hb_vmPushNil();
+                for( i = 0; i < (hb_pcount() - 1); i++ )
+                   hb_vmPush( hb_param( i + 2, IT_ANY ) );
+                                                /* Push other cmdline params*/
+                hb_vmDo( hb_pcount() - 1 );            /* Run init function        */
             }
          }
          for( ul = 0; ul < ulSymbols; ul++ )    /* Check INIT functions     */
          {
-            if( (pSymRead[ ul ].cScope & (FS_INIT|FS_EXIT)) == FS_INIT )
+            if( (pSymRead[ ul ].cScope & FS_INITEXIT) == FS_INIT )
             {
                 hb_vmPushSymbol( pSymRead + ul );
                 hb_vmPushNil();
