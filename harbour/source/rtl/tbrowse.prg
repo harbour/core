@@ -508,7 +508,7 @@ METHOD SetColumnWidth( oCol ) CLASS TBrowse
                nColWidth += nL
          enddo
       endif
-   endif
+
     if nColWidth>nWidthMax
         nColWidth:=nWidthMax
     endif
@@ -516,7 +516,7 @@ METHOD SetColumnWidth( oCol ) CLASS TBrowse
         nLen:=nWidthMax
     endif
     nWidth:= if(nColwidth>nLen,nColwidth,nLen)
-
+   endif
 return nWidth
 
 
