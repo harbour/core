@@ -7,6 +7,13 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+2002-11-08 13:19 UTC+0100 Ignacio Ortiz <ignacio@fivetech.com>
+  * source/rtl/errorapi.c
+    !Fixed severity to 'can retry' on Base errors (as Clipper)
+  * source/rtl/mlcount.c
+    !Fixed bug reported Brian Hays (the solution is also from Brian)
+
 2002-11-07 22:05 UTC-0300 Luiz Rafael Culik <culikr@uol.com.br>
   ! due an little mistake i`ve posted xharbour code, i`ve reverted back to version 1.38 and applyed the patch
 2002-11-07 08:30 UTC-0300 Luiz Rafael Culik <culikr@uol.com.br>
@@ -68,7 +75,7 @@
   * make_vc.bat
     * if building Harbour under NT, use the alternate makefile.nt
     * for faster builds.
-    * if you would prefer not to use batch mode, 
+    * if you would prefer not to use batch mode,
     *  run make_vc /y (just like nmake)
 
 2002-11-03 20:28 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
@@ -169,13 +176,13 @@
   + source/lang/msgrukoi.c
     + added a msg file for koi8-r
   * source/lang/Makefile
-    * msgrukoi.c added to Makefile 
+    * msgrukoi.c added to Makefile
   + source/rtl/cdpapi.c
     + added codepages api source
       Functions HB_SETCODEPAGE() and HB_TRANSLATE() are implemented
   * source/rtl/is.c
   * source/rtl/strcase.c
-    * IsAlpha(), IsUpper(), IsLower(), Upper(), Lower() functions modified to 
+    * IsAlpha(), IsUpper(), IsLower(), Upper(), Lower() functions modified to
       use codepages
   * source/rdd/dbcmd.c
   * source/rdd/dbf1.c
@@ -184,7 +191,7 @@
     * Rdd sources are modified to use codepages
       dbUseArea() and dbCreate() has new optional parameter - codepage id.
   * source/pp/pptable.c
-    * Commands USE and CREATE FROM are changed - new optional clause 
+    * Commands USE and CREATE FROM are changed - new optional clause
       'CODEPAGE <id>' is added
   * source/vm/itemapi.c
     * hb_itemStrCmp() is modified to use codepages
