@@ -1,3 +1,9 @@
+Wed Jul 21 17:39:35 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* include/hbsetup.h: 
+	Added Win32 as a case when CR/LF must be output for a new line to
+	appear on the screen.
+
 19990721-22:36 CET Patrick Mast <harbour@PatrickMast.com>
   * Makefile.vc errorsys compiles with /iinclude now
 

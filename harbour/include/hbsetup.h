@@ -118,7 +118,7 @@
  */
 #ifdef __GNUC__
   /* The GNU C compiler is used */
-  #if defined(__DJGPP__) || defined(HARBOUR_GCC_OS2)
+  #if defined(__DJGPP__) || defined(HARBOUR_GCC_OS2) || defined(_Windows) || defined(_WIN32)
     /* The DJGPP port of GNU C is used - for DOS platform */
     #define OS_PATH_LIST_SEPARATOR   ';'
     #define OS_PATH_DELIMITER '\\'
