@@ -1307,7 +1307,7 @@ int harbour_main( int argc, char * argv[] )
         {
           pFileName->extension =".ppo";
           MakeFilename( szPpoName, pFileName );
-          yyppo = fopen ( szPpoName, "wt" );
+          yyppo = fopen ( szPpoName, "w" );
         }
       }
       else

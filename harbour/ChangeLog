@@ -1,3 +1,9 @@
+19990628-21:50 EDT David G. Holm <dholm@jsd-llc.com>
+  * source/compiler/harbour.y
+    * Changed fopen() call used to create .PPO files from using
+      mode "wt", which is not ANSI-C compliant, to "w", which is
+      the ANSI-C way to create or open/truncate a text mode file.
+
 19990627-23:50 CET Victor Szel <info@szelvesz.hu>
  * source/compiler/harbour.l
    ! Fixed line number bug. (LINE opcode, PROCLINE(), error messages)
