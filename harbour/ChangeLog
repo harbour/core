@@ -1,3 +1,10 @@
+19990730-15:33 CET Victor Szel <info@szelvesz.hu>
+   + source/rtl/descend.c
+     source/rtl/hardcr.c
+     source/rtl/mtran.c
+     Added documentation.
+     Posted by Jose Lalin <dezac@corevia.com>
+
 19990730-09:20 EDT Paul Tucker <ptucker@sympatico.ca>
    * makefile.vc
      + added sdf and delim support

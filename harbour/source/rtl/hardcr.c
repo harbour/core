@@ -31,15 +31,45 @@
    You can contact me at: dezac@corevia.com
  */
 
-#include "extend.h"
+/*  $DOC$
+ *  $FUNCNAME$
+ *      HARDCR
+ *  $CATEGORY$
+ *      
+ *  $ONELINER$
+ *      Converts soft carriage pair chr(141)/chr(10) into hard carriage chr(13)
+ *  $SYNTAX$
+ *      HARDCR( <cString> ) --> <cConvertedString>
+ *  $ARGUMENTS$
+ *      <cString> is a string of chars to convert.
+ *  $RETURNS$
+ *      Trasformed string.
+ *  $DESCRIPTION$
+ *      Returns a string/memo with soft carriages chars converted to
+ *      hard carraige char.
+ *  $EXAMPLES$
+ *      ? HARDCR( Data->CNOTES )
+ *  $TESTS$
+ *      @ 1, 1 SAY HARDCR( Data->CNOTES )
+ *      will display converted string starting on row two, column two of the
+ *      current device.
+ *  $STATUS$
+ *      C
+ *  $COMPLIANCE$
+ *      HARDCR is fully CA-Clipper compliant.
+ *  $SEEALSO$
+ *      MEMOTRAN(), STRTRAN()
+ *  $END$
+ */
+
 #include <ctype.h>
+#include "extend.h"
 #include "init.h"
 
 #define CHR_HARD1   (char)141
 #define CHR_HARD2   (char)10
 
 HARBOUR HB_HARDCR(void);
-
 
 HB_INIT_SYMBOLS_BEGIN( HardCR__InitSymbols )
 { "HARDCR", FS_PUBLIC, HB_HARDCR, 0 }

@@ -30,9 +30,44 @@
    You can contact me at: dezac@corevia.com
 */
 
+/*  $DOC$
+ *  $FUNCNAME$
+ *      MEMOTRAN
+ *  $CATEGORY$
+ *      
+ *  $ONELINER$
+ *      Converts hard and soft carriages within strings.
+ *  $SYNTAX$
+ *      MEMOTRAN( <cString>, <cHard>, <cSoft> ) --> <cConvertedString>
+ *  $ARGUMENTS$
+ *      <cString> is a string of chars to convert.
+ *      <cHard> is the character to replace hard carriages with. If not
+ *      specified defaults to semicolon.
+ *      <cSoft> is the character to replace soft carriages with. If not
+ *      specified defaults to single space.
+ *  $RETURNS$
+ *      Trasformed string.
+ *  $DESCRIPTION$
+ *      Returns a string/memo with carriage chars converted to specified
+ *      chars.
+ *  $EXAMPLES$
+ *      ? MEMOTRAN( DATA->CNOTES )
+ *  $TESTS$
+ *      @ 1, 1 SAY MEMOTRAN( Data->CNOTES )
+ *      will display converted string starting on row two, column two of the
+ *      current device.
+ *  $STATUS$
+ *      C
+ *  $COMPLIANCE$
+ *      MEMOTRAN is fully CA-Clipper compliant.
+ *  $SEEALSO$
+ *      HARDCR(), STRTRAN()
+ *  $END$
+ */
+
+#include <ctype.h>
 #include "extend.h"
 #include "init.h"
-#include <ctype.h>
 
 #define CHR_HARD1   (char)141
 #define CHR_HARD2   (char)10

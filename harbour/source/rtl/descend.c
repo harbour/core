@@ -31,9 +31,40 @@
    You can contact me at: dezac@corevia.com
  */
 
+/*  $DOC$
+ *  $FUNCNAME$
+ *      DESCEND
+ *  $CATEGORY$
+ *      
+ *  $ONELINER$
+ *      Inverts an expression of string, logical, date or numeric type.
+ *  $SYNTAX$
+ *      DESCEND( <xExp> ) --> <xExpInverted>
+ *  $ARGUMENTS$
+ *      <xExp> is any valid expression.
+ *  $RETURNS$
+ *      Inverted value of the same type as passed.
+ *  $DESCRIPTION$
+ *      This function converts an expression in his inverted form. It is
+ *      useful to build descending indexes.
+ *  $EXAMPLES$
+ *      // Seek for Smith in a descending index
+ *      SEEK DESCEND( "SMITH" )
+ *  $TESTS$
+ *      DATA->( DBSEEK( DESCEND( "SMITH" ) ) )
+ *      will seek "SMITH" into a descending index.
+ *  $STATUS$
+ *      C
+ *  $COMPLIANCE$
+ *      DESCEND is fully CA-Clipper compliant.
+ *  $SEEALSO$
+ *      INDEX, SEEK
+ *  $END$
+ */
+
+#include <ctype.h>
 #include "extend.h"
 #include "itemapi.h"
-#include <ctype.h>
 #include "init.h"
 
 HARBOUR HB_DESCEND(void);
@@ -44,7 +75,7 @@ HB_INIT_SYMBOLS_END( Descend__InitSymbols );
 #if ! defined(__GNUC__)
 #pragma Descend__InitSymbols
 #endif
-
+                            
 char *hb_strdescend( char *string )
 {
    char *s;
