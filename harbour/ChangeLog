@@ -1,3 +1,10 @@
+19990527-12:15 CET Eddie Runia
+  * tests/working/strip.prg
+    slight modification
+  * source/rtl/classes.c
+    Problem with DynSym (??). Quick fix added to classes.c to stop
+    message '<x>' not implemented in class '<y>'
+
 19990527-08:45 CET Eddie Runia
   * makefile.b32
     gtdos added

@@ -467,6 +467,22 @@ HARBOURFUNC GetMethod( PITEM pObject, PSYMBOL pMessage )
          }
          wAt++;
       }
+
+      wAt = 0;                                  /* 'Quick' Dynsym patch     */
+      wLimit = pClass->wHashKey * BUCKET;
+      while( wAt < wLimit )
+      {
+         if( pClass->pMethods[ wAt ].pMessage )
+         {
+            if( !strcmp( ( ( PDYNSYM )pClass->pMethods[ wAt ].pMessage)->pSymbol->szName,
+                         pMsg->pSymbol->szName ) )
+            {
+               pMethod = &pClass->pMethods[ wAt ];
+               return pClass->pMethods[ wAt ].pFunction;
+            }
+         }
+         wAt++;
+      }
    }
 
    if( pMsg == msgClassName )
