@@ -8,6 +8,20 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-06-23 10:20 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+  + source/compiler/gencli.c
+    ! Compiler .NET .il source generation
+    * It is just a copy of genc.c with some minor changes, just to set a
+      starting point for IL generation.
+
+  * include/hbcomp.h
+  * source/compiler/cmdcheck.c
+  * source/compiler/harbour.c
+  * source/compiler/hbusage.c
+    + Added support for IL generation
+
+  Warning: This is not even an early prototype :-) More coming soon...
+
 2003-06-23 10:05 UTC+0300 Chen Kedem <niki@actcom.co.il>
   * doc/en/lang.txt
     + Added the following to HB_LANGSELECT() list of supported ID's:
