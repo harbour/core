@@ -111,15 +111,11 @@ HB_INIT_SYMBOLS_END( dbf1__InitSymbols )
       #pragma data_seg( "XIY" )
    #endif
    #pragma warning( disable: 4152 )
-   static void *hb_vm_auto_dbf1__InitSymbols = &dbf1__InitSymbols;
+   static void * hb_vm_auto_dbf1__InitSymbols = &dbf1__InitSymbols;
    #pragma warning( default: 4152 )
    #pragma data_seg()
-
-#else
-
-   #if ! defined(__GNUC__)
-      #pragma startup dbf1__InitSymbols
-   #endif
+#elif ! defined(__GNUC__)
+   #pragma startup dbf1__InitSymbols
 #endif
 
 #define LOCK_START                          0x40000000L

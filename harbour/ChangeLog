@@ -1,3 +1,15 @@
+20000331-15:10 EST Paul Tucker <ptucker@sympatico.ca>
+   * source/rdd/dbf1.c
+   * source/rdd/sdf1.c
+   * source/rdd/delim1.c
+   * source/rdd/dbfcdx/dbfcdx1.c
+   * source/rdd/dbfntx/dbfntx1.c
+   * source/compiler/genc.c
+   * contrib/rdd_ads/ads1.c
+   * include/hbinit.h
+     * updated initSymbols handling - particularly for msc flavours.
+     * Still a work in progress.  Thanks also to Victor
+
 20000331-19:24 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/rtl/valtype.c

@@ -156,8 +156,28 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
 
       pSym = pSym->pNext;
    }
-   fprintf( yyc, "\nHB_INIT_SYMBOLS_END( hb_vm_SymbolInit_%s%s )\n", hb_comp_szPrefix, pFileName->szName );
-   fprintf( yyc, "#if ! defined(__GNUC__) && ! defined(_MSC_VER)\n   #pragma startup hb_vm_SymbolInit_%s%s\n#endif\n\n\n", hb_comp_szPrefix, pFileName->szName );
+
+   fprintf( yyc, "\nHB_INIT_SYMBOLS_END( hb_vm_SymbolInit_%s%s )\n"
+                 "#if defined(_MSC_VER)\n"
+                 "   #if _MSC_VER >= 1010\n"
+                 /* [pt] First version of MSC I have that supports this */
+                 /* is msvc4.1 (msc 10.10) */
+                 "      #pragma data_seg( \".CRT$XIY\" )\n"
+                 "      #pragma comment( linker, \"/Merge:.CRT=.data\" )\n"
+                 "   #else\n"
+                 "      #pragma data_seg( \"XIY\" )\n"
+                 "   #endif\n"
+                 "   #pragma warning( disable: 4152 )\n"
+                 "   static void * hb_vm_auto_SymbolInit_%s%s = &hb_vm_SymbolInit_%s%s;\n"
+                 "   #pragma warning( default: 4152 )\n"
+                 "   #pragma data_seg()\n"
+                 "#elif ! defined(__GNUC__)\n"
+                 "   #pragma startup hb_vm_SymbolInit_%s%s\n"
+                 "#endif\n\n",
+                 hb_comp_szPrefix, pFileName->szName,
+                 hb_comp_szPrefix, pFileName->szName,
+                 hb_comp_szPrefix, pFileName->szName,
+                 hb_comp_szPrefix, pFileName->szName );
 
    /* Generate functions data
     */
