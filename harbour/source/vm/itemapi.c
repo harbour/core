@@ -239,7 +239,7 @@ PHB_ITEM hb_itemDo( PHB_ITEM pItem, ULONG ulPCount, ... )
             hb_vmPushNil();
             for( ulParam = 1; ulParam <= ulPCount; ulParam++ )
                hb_vmPush( va_arg( va, PHB_ITEM ) );
-            hb_vmDo( ulPCount );
+            hb_vmDo( ( unsigned short ) ulPCount );
             va_end( va );
 
             pResult = hb_itemNew( NULL );
@@ -258,7 +258,7 @@ PHB_ITEM hb_itemDo( PHB_ITEM pItem, ULONG ulPCount, ... )
          hb_vmPush( pItem );
          for( ulParam = 1; ulParam <= ulPCount; ulParam++ )
             hb_vmPush( va_arg( va, PHB_ITEM ) );
-         hb_vmDo( ulPCount );
+         hb_vmDo( ( unsigned short ) ulPCount );
          va_end( va );
 
          pResult = hb_itemNew( NULL );
@@ -274,7 +274,7 @@ PHB_ITEM hb_itemDo( PHB_ITEM pItem, ULONG ulPCount, ... )
          hb_vmPushNil();
          for( ulParam = 1; ulParam <= ulPCount; ulParam++ )
             hb_vmPush( va_arg( va, PHB_ITEM ) );
-         hb_vmDo( ulPCount );
+         hb_vmDo( ( unsigned short ) ulPCount );
          va_end( va );
 
          pResult = hb_itemNew( NULL );
@@ -316,7 +316,7 @@ PHB_ITEM hb_itemDoC( char * szFunc, ULONG ulPCount, ... )
          hb_vmPushNil();
          for( ulParam = 1; ulParam <= ulPCount; ulParam++ )
             hb_vmPush( va_arg( va, PHB_ITEM ) );
-         hb_vmDo( ulPCount );
+         hb_vmDo( ( unsigned short ) ulPCount );
          va_end( va );
 
          pResult = hb_itemNew( NULL );
@@ -1300,7 +1300,7 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
 
             if( ! s_bInfinityInit )
             {
-               s_dInfinity = -log( 0 );
+               s_dInfinity = -log( ( double ) 0 );
                s_bInfinityInit = TRUE;
             }
             #endif
@@ -1499,4 +1499,3 @@ PHB_ITEM hb_itemValToStr( PHB_ITEM pItem )
 
    return pResult;
 }
-
