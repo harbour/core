@@ -33,7 +33,13 @@
  *
  */
 
+#if defined(HARBOUR_OBJ_GENERATION) || defined(HB_INCLUDE_WINEXCHANDLER)
+   #define HB_OS_WIN_32
+   #define HB_OS_WIN_32_USED
+#endif
+
 #include "hbapi.h"
+#include "hbdefs.h"
 #include "hbstack.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
