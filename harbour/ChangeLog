@@ -1,3 +1,7 @@
+19990919-09:31 GMT+3 Alexander Kresin
+  * source/hbpp/hbpp.c
+    * fixed bug with repeating result clauses ( noted by Antonio Linares )
+
 19990919-06:21 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/vm/hvm.c
@@ -6,11 +10,11 @@
       starting proc.
     ! Fixed the case when no PUBLIC functions were declared with no
       explicit starting procedure. Now it will silently exit (STRICT mode)
-      or show a proper unrecoverable error message, instead of a possible GPF, 
+      or show a proper unrecoverable error message, instead of a possible GPF,
     * __XHELP() - hb_dynsymFindName() changed to hb_dynsymFind()
   * source/rtl/environ.c
     include/extend.h
-    + hb_version() added, separated from HB_VERSION(), to make it callable 
+    + hb_version() added, separated from HB_VERSION(), to make it callable
       from C, too. //INFO needed it.
   * source/rtl/console.c
     + Added undocumented //STDERR feature, when specified it will redirect
@@ -34,7 +38,7 @@
       __ARGV()
       __ARGCHECK()
       __ARGGET()
-    ! Now the internal parameters (//INFO) are no more passed to the Harbour 
+    ! Now the internal parameters (//INFO) are no more passed to the Harbour
       MAIN and INIT functions.
     + Harbour now prints the version when //INFO switch is speficied.
   * source/rtl/fm.c
@@ -44,7 +48,7 @@
   * source/rtl/strings.c
     include/extend.h
     + hb_strnicmp() added.
-    % hb_stricmp() formatted, variable scopes adjusted, int type changed to 
+    % hb_stricmp() formatted, variable scopes adjusted, int type changed to
       char.
   * source/rtl/classes.c
     * Small modification.
@@ -52,11 +56,11 @@
 19990918-17:42 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/rtl/set.c
-    * printhan < 0 changed to printhan == FS_ERROR, to not rely on the fact 
+    * printhan < 0 changed to printhan == FS_ERROR, to not rely on the fact
       that FS_ERROR is negative.
   * source/rtl/console.c
     ! hb_out - One fsError() save/restore added for non GT mode console output.
-    * *han >= 0 changed to *han != FS_ERROR, to not rely on the fact that 
+    * *han >= 0 changed to *han != FS_ERROR, to not rely on the fact that
       FS_ERROR is negative.
     - Removed the // commented sections.
   * source/rtl/copyfile.c
@@ -82,9 +86,9 @@
 19990918-14:05 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *source/vm/hvm.c
-	* corrected operators overloading
-	(tests/working/overload.prg works correctly now)
-	
+        * corrected operators overloading
+        (tests/working/overload.prg works correctly now)
+
 19990918-13:07 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * tests/working/rtl_test.prg
@@ -162,10 +166,10 @@
     + MEMOREAD()/MEMOWRIT() tests added.
   * include/itemapi.h
     source/rtl/itemapi.c
-    + hb_itemPutCPtr() Item API function added, to make it possible to 
+    + hb_itemPutCPtr() Item API function added, to make it possible to
       attach a buffer directly to a string item in a standard way, this
       way one memcpy()/strcpy() can be saved, this can be used when the caller
-      have already allocated a buffer. Recommended when the expected string 
+      have already allocated a buffer. Recommended when the expected string
       size is very large. The allocated buffer size must be ulLen + 1.
   * source/tools/io.c
     - CD(), MD(), RD(), DISKFREE() removed since these are in the standard
@@ -252,7 +256,7 @@
   * include/compiler.h
     include/hbdefs.h
     source/rtl/gt/gtwin.c
-    ! WORD/DWORD type declaration moved from hbdefs.h to compiler.h and 
+    ! WORD/DWORD type declaration moved from hbdefs.h to compiler.h and
       gtwin.c
     - LOWORD() removed from hbdefs.h
     * HIBYTE() now uses USHORT instead of WORD. (Is this OK ?)
@@ -279,13 +283,13 @@
     % Internal vmDo() call replaced with standard API functions.
     ! Internal error removed, direct buffer string modification resolved.
   * source/rtl/objfunc.prg
-    + Explcitly repeated function names in the __ERR*() calls changed to 
+    + Explcitly repeated function names in the __ERR*() calls changed to
       PROCNAME(0).
   * source/vm/hvm.c
     include/ctoharb.h
     include/init.h
     ! Typo fixed.
-    * WORD -> USHORT (for parameter count, local/static indexes and almost 
+    * WORD -> USHORT (for parameter count, local/static indexes and almost
       all the others)
       Only one WORD declaration stayed, this one is related to OBJ generation
       and SYMBOLS.ASM, so it should have strictly fixed size.
@@ -316,7 +320,7 @@
     + WORD -> USHORT
     * Using hb_itemRelease() instead of hb_itemClear() + hb_xfree()
     * Small formatting changes.
-  * source/vm/dynsym.c 
+  * source/vm/dynsym.c
     + WORD -> USHORT
   * source/rtl/gtapi.c
     + Some types changed from char* to BYTE* to match the environment, so a
@@ -363,7 +367,7 @@
     % [f]printf( "%s", s ) -> fputs( s, std??? ) for speed.
     % printf( constant ) -> fputs( constant, std??? ) for speed.
     ; Since I'm not sure whether fflush() is called from fput*() functions,
-      it may be needed to place more explicit flush calls. This may have been 
+      it may be needed to place more explicit flush calls. This may have been
       an issue already since printf() is only flushing on \n chars, at least
       in MINGW32.
     ! s_szAcceptResult is now initialized on startup as an empty string.
@@ -519,22 +523,22 @@
 
     *source/vm/dynsym.c
     *include/extend.h
-	+ new function HB_DYNS hb_dynsymFindName( char * szName )
-	that checks if given name is a public symbol - this function
-	converts given name to uppercase before checking
-	
+        + new function HB_DYNS hb_dynsymFindName( char * szName )
+        that checks if given name is a public symbol - this function
+        converts given name to uppercase before checking
+
     *source/rtl/itemapi.c
     *source/rtl/classes.c
     *source/rtl/do.c
     *source/vm/hvm.c
-	* replaced hb_dynsymGet with new hb_dynsymFindName
-	
+        * replaced hb_dynsymGet with new hb_dynsymFindName
+
     *source/rdd/dbcmd.c
-	* replaced hb_dynsymFind with new hb_dynsymFindName
-	
+        * replaced hb_dynsymFind with new hb_dynsymFindName
+
     *source/rtl/dir.c
-	* corrected invalid mask value in HarbourToOsMask()
-    
+        * corrected invalid mask value in HarbourToOsMask()
+
 19990916-14:30 GMT+1 Victor Szel <info@szelvesz.hu>
   * makefile.vc
     ! Fixed version by Matteo Baccan.
@@ -559,14 +563,14 @@
   * source/rtl/errorapi.c
     * hb_errPutArgs() Now using Item API instead of Array API.
 
-  * source/rtl/console.c 
+  * source/rtl/console.c
     source/rtl/gtapi.c
     source/rtl/gt/*.c
     include/gtapi.h
     + API functions made more Clipper compatible with some arg type changes:
       hb_gtBox() - Character parameter: char * -> BYTE *
       hb_gtRepChar() - USHORT character changed to BYTE, this is not completely
-           Clipper compatible, but I've considered a bug to accept a character 
+           Clipper compatible, but I've considered a bug to accept a character
            in an USHORT.
       hb_gtRest() - Buffer parameter: char * -> void *
       hb_gtSave() - Buffer parameter: char * -> void *
@@ -598,7 +602,7 @@
     source/rtl/Makefile
     makefile.*
     ! ClipInit() INIT procedure moved from ERRORSYS to a separate .prg,
-      this way the ERRORSYS.PRG module is completely replacable, like in 
+      this way the ERRORSYS.PRG module is completely replacable, like in
       Clipper.
       ( ! Borland and MSVC users please check the modified Makefiles ! )
   * source/rtl/*.prg

@@ -68,6 +68,7 @@ int RemoveSlash( char * );
 int WorkMarkers( char**, char**, char*, int* );
 int getExpReal ( char *, char **, int, int );
 int isExpres ( char* );
+int TestOptional( char*, char* );
 void SkipOptional( char**, char*, int* );
 
 DEFINES* DefSearch(char *);
@@ -811,9 +812,9 @@ int WorkTranslate ( char* ptri, char* ptro, COMMANDS *sttra, int *lens )
 
 int CommandStuff ( char *ptrmp, char *inputLine, char * ptro, int *lenres, int com_or_tra, int com_or_xcom )
 {
-  int endTranslation = FALSE;
+  int endTranslation = FALSE, ipos;
   char *lastopti[2];
-  char *ptri = inputLine, *ptr;
+  char *ptri = inputLine, *ptr, tmpname[MAX_NAME];;
 
   numBrackets = 0;
   SKIPTABSPACES( ptri );
@@ -833,7 +834,28 @@ int CommandStuff ( char *ptrmp, char *inputLine, char * ptro, int *lenres, int c
          if ( Repeate )
          {
             Repeate--;
-            if( aIsRepeate[ Repeate ] ) ptrmp = lastopti[Repeate];
+            if( aIsRepeate[ Repeate ] )
+            {
+               if( ISNAME(*ptri) )
+               {
+                  ptr = ptri;
+                  ipos = NextName( &ptr, tmpname, NULL );
+                  ipos = md_strAt( tmpname, ipos, ptrmp, TRUE );
+                  if( ipos && TestOptional( ptrmp+1, ptrmp+ipos-2 ) )
+                  {
+                     ptrmp = lastopti[Repeate];
+                     ptrmp++;
+                     Repeate++;
+                     SkipOptional( &ptrmp, ptro, lenres );
+                     numBrackets++;
+                     ptrmp++;
+                  }
+                  else
+                     ptrmp = lastopti[Repeate];
+               }
+               else
+                  ptrmp = lastopti[Repeate];
+            }            
             else ptrmp++;
             numBrackets--;
          }
@@ -1201,6 +1223,33 @@ int isExpres ( char* stroka )
   return 0;
  else
   return 1;
+}
+
+int TestOptional( char *ptr1, char *ptr2 )
+{
+   int nbr = 0, flagname = 0, statevar = 0;
+
+   while( ptr1 <= ptr2 )
+   {
+      if( *ptr1 == '[' ) nbr++;
+      else if( *ptr1 == ']' )
+      {
+         if( nbr )
+         {
+            nbr--;
+            flagname = 0;
+         }
+      }
+      else if( *ptr1 == '\1' && *(ptr1+2) == '2' && nbr ) statevar = 1;
+      else if( *ptr1 == '>' && statevar ) statevar = 0;
+      else if( *ptr1 != ' ' && *ptr1 != '\t' && !statevar )
+      {
+         if( nbr ) flagname = 1;
+         else return 0;
+      }
+      ptr1++;
+   }
+   return !flagname;
 }
 
 void SkipOptional( char** ptri, char *ptro, int* lenres )
@@ -1742,7 +1791,7 @@ int strincmp (char* ptro, char** ptri, int lTrunc )
        ci == ']' || ci == '\1' || ci == '\0' ) &&
        ( ( !ISNAME(*ptro) && ISNAME(co) ) ||
        ( !ISNAME(co) ) ) ) )
-      return 0;       
+      return 0;
    else if ( lTrunc && ptro-ptrb >= 4 && ISNAME(ci) && !ISNAME(*ptro) && ISNAME(co) )
    {
       while( ISNAME(**ptri) ) (*ptri)++;
