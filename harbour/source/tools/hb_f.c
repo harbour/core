@@ -223,7 +223,6 @@ HARBOUR HB_HB_FGOTO( void )
    long last;
 
    target = hb_parnl(1);
-   last = 0;
 
    if ( recno[area] > target ) {
       while ( recno[area] != target )   {

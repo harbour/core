@@ -2428,8 +2428,8 @@ void hb_vmDo( USHORT uiParams )
 
 static HARBOUR hb_vmDoBlock( void )
 {
-   PHB_ITEM pBlock = hb_stack.pBase + 1;
-   USHORT uiStackBase = hb_stack.pBase - hb_stack.pItems; /* as the stack memory block could change */
+   PHB_ITEM pBlock;
+   USHORT uiStackBase;
    USHORT uiLine;
    int iParam;
 

@@ -79,7 +79,6 @@ static BOOL hb_fsCopy( char * szSource, char * szDest )
 #endif
          BYTE * buffer;
          USHORT usRead;
-         USHORT usWritten;
 
          buffer = ( BYTE * ) hb_xgrab( BUFFER_SIZE );
 
@@ -87,7 +86,7 @@ static BOOL hb_fsCopy( char * szSource, char * szDest )
 
          while( ( usRead = hb_fsRead( fhndSource, buffer, BUFFER_SIZE ) ) != 0 )
          {
-            while( ( usWritten = hb_fsWrite( fhndDest, buffer, usRead ) ) != usRead )
+            while( hb_fsWrite( fhndDest, buffer, usRead ) != usRead )
             {
                USHORT uiAction = hb_errRT_BASE_Ext1( EG_WRITE, 2016, NULL, szDest, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY );
 

@@ -1,3 +1,26 @@
+19991127-20:42 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/dummy.prg
+  + source/rdd/dbeval.prg
+    source/rdd/Makefile
+    + DBEVAL() function by Luiz Rafael Culik added.
+      ! WARNING ! Please add it to non-GNU makefiles.
+    ! Fixed next parameter handling for indexed tables.
+    ! Fixed nRecord = 1 situtation.
+    + Added Clipper compatible error handling.
+    + Added TODO (optimizing, C rewrite).
+    - Removed locking feature.
+    * Formatted.
+    % Slightly optimized.
+    - Extensions removed.
+  + tests/dbevalts.prg
+    tests/Makefile
+    + DBEVALTS.PRG added.
+  * source/rtl/copyfile.c
+    source/vm/hvm.c
+    source/vm/mainwin.c
+    source/tools/hb_f.c
+    ! Borland warnings fixed.
+
 19991127-17:25 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/alert.prg
     + Documentation by Chen Kedem added
@@ -8,6 +31,7 @@
   * source/rtl/adir.prg
     + Documentation by Chen Kedem added
   * source/pp/*
+    source/common/hbfsapi.c
     ! Some Borland warnings fixed.
 
 19991126-12:00 WIB Andi Jahja <andij@aonlippo.co.id>

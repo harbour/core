@@ -65,7 +65,6 @@ FUNCTION IndexOrd()        ; RETURN 0
 FUNCTION dbSeek()          ; RETURN .F.
 FUNCTION dbSetRelation()   ; RETURN NIL
 FUNCTION dbClearRelation() ; RETURN NIL
-FUNCTION dbEval()          ; RETURN NIL
 FUNCTION dbFileGet()       ; RETURN .F. /* 5.3 */
 FUNCTION dbFilePut()       ; RETURN .F. /* 5.3 */
 FUNCTION dbInfo()          ; RETURN NIL /* 5.3 */

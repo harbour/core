@@ -49,6 +49,11 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
 
    HB_TRACE(HB_TR_DEBUG, ("WinMain(%p, %p, %s, %d)", hInstance, hPrevInstance, lpCmdLine, iCmdShow));
 
+   HB_SYMBOL_UNUSED( hInstance );
+   HB_SYMBOL_UNUSED( hPrevInstance );
+   HB_SYMBOL_UNUSED( lpCmdLine );
+   HB_SYMBOL_UNUSED( iCmdShow );
+
    argv[ 0 ] = NULL;  /* temporary workaround */
 
    hb_cmdargInit( 0, argv );
@@ -60,3 +65,4 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
 
    return 0;
 }
+
