@@ -1,3 +1,12 @@
+2000-03-31 18:25 GMT-5 David G. Holm <dholm@jsd-llc.com>
+  * source/debug/Makefile
+  + source/debug/dbgtmenu.prg
+  + source/debug/dbgtwin.prg
+  * source/debug/debugger.prg
+    % I split the TDbWindow class into a new program module and
+      the TDbMenu and TDbMenuItem classes into another so that
+      Harbour can be built with dos/b16.
+
 2000-03-31 18:00 GMT-5 David G. Holm <dholm@jsd-llc.com>
    * config/dos/bcc16.cf
      + It helps to use $(ARFLAGS) when running $(AR).

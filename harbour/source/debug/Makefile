@@ -6,8 +6,10 @@ ROOT = ../../
 
 PRG_SOURCES=\
         dbgmenu.prg \
+        dbgtmenu.prg \
+        dbgtwin.prg \
         debugger.prg \
-        tbrwtext.prg
+        tbrwtext.prg \
 
 LIBNAME=debug
 
