@@ -9,11 +9,10 @@
 */
 
 2004-06-21 14:07 UTC-0500 Randy Portnoff <randy@palmasdev.com>
-
   * source/rdd/dbcmd.c
-  * Fixed rddMoveRecords() so that copied records, which are
-    deleted, maintain their deleted status.
-    Reported by Marcos Gambeta
+    * Fixed rddMoveRecords() so that copied records, which are
+      deleted, maintain their deleted status.
+      Reported by Marcos Gambeta
 
 2004-06-08 22:50 UTC+0300 Phil Krylov <phil@newstar.rinet.ru>
   * source/rtl/inkey.c
