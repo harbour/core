@@ -587,7 +587,7 @@ FHANDLE hb_fsOpen( BYTE * pFilename, USHORT uiFlags )
 
 #endif
 
-   free( pFilename );
+   hb_xfree( pFilename );
    return hFileHandle;
 }
 
@@ -648,7 +648,7 @@ FHANDLE hb_fsCreate( BYTE * pFilename, USHORT uiAttr )
 
 #endif
 
-   free( pFilename );
+   hb_xfree( pFilename );
    return hFileHandle;
 }
 
@@ -690,7 +690,7 @@ FHANDLE hb_fsCreateEx( BYTE * pFilename, USHORT uiAttr, USHORT uiFlags )
 
 #endif
 
-   free( pFilename );
+   hb_xfree( pFilename );
    return hFileHandle;
 }
 
