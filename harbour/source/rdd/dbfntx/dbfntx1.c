@@ -1420,6 +1420,11 @@ static BOOL hb_ntxSortKeyAdd( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo, char* szk
          result = ( result > 0 )? -1:1;
       if( result < 0 )
          pKeyNew->pNext = pKeyTmp;
+      else if( !result && pTag->UniqueKey )
+      {
+         pSortInfo->ulKeyCount --;
+         ( pSortInfo->nItems ) --;
+      }
       else
       {
          pKeyTmp->pNext = pKeyNew;
