@@ -146,19 +146,19 @@ static ERRCODE rddMoveRecords( char *cAreaFrom, char *cAreaTo, PHB_ITEM pFields,
   if ( cAreaTo ) // it's a COPY TO
   {
     pAreaRelease = GetTheOtherArea( szDriver, cAreaTo );
-    pAreaTo = pAreaRelease->pArea;
+    pAreaTo = (AREAP) pAreaRelease->pArea;
   }
   else
-    pAreaTo = s_pCurrArea->pArea;
+    pAreaTo = (AREAP) s_pCurrArea->pArea;
 
 
   if ( cAreaFrom ) // it's an APPEND FROM
   {                // make it current
     pAreaRelease = s_pCurrArea = GetTheOtherArea( szDriver, cAreaFrom );
-    pAreaFrom =  pAreaRelease->pArea; 
+    pAreaFrom =  (AREAP) pAreaRelease->pArea; 
   }
   else
-    pAreaFrom = s_pCurrArea->pArea;
+    pAreaFrom = (AREAP) s_pCurrArea->pArea;
 
   // or one or the other but necer none
   if ( !pAreaRelease )  // We need another Area to APPEND TO

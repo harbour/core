@@ -394,7 +394,7 @@ static ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
          hb_ndtoa( hb_itemGetND( pKey ), ( char * ) szText, uiLen, uiDec );
          szText[ uiLen ] = '\0';
          AdsSeekLast( pArea->hOrdCurrent, szText,
-                 8, ADS_DOUBLEKEY, (UNSIGNED16*) &(pArea->fFound) );
+                 8, ADS_STRINGKEY, (UNSIGNED16*) &(pArea->fFound) );
       }
    }
    else

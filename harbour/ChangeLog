@@ -1,3 +1,9 @@
+2000-10-12 10:30 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   * source/rdd/rddcpy.c
+     * added casts, posted by John Skelton
+   * contrib/rdd_ads/ads1.c
+     * minor bug fixed in adsSeek()
+
 2000-10-11 3:58 UTC+0800 Brian Hays <bhays@abacuslaw.com>
    Re-posting changes that had a CVS error yesterday...
    * contrib/rdd_ads/ads1.c
