@@ -1,3 +1,7 @@
+19990907-20:17 EDT Paul Tucker <ptucker@sympatico.ca>
+  * source/rtl/console.c
+    + added HB_SETMODE() (reported by Matteo Bacaan
+
 19990908-00:33 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/filesys.c
     % FREAD() now uses the fixed ISCHAR() macro for parameter checking,
