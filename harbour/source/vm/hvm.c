@@ -2919,7 +2919,14 @@ void hb_vmDo( USHORT uiParams )
       PHB_BASEARRAY pSelfBase = NULL;
 
       if( pSym == &( hb_symEval ) && HB_IS_BLOCK( pSelf ) )
-         pFunc = pSym->pFunPtr;                 /* __EVAL method = function */
+         if( strncmp( pSym->szName, "EVAL", 4 ) == 0 )
+         {
+            printf("%s\n",pSym->szName);
+            pSym = &hb_symEval;
+            pFunc = pSym->pFunPtr;                 /* __EVAL method = function */
+         }
+         else
+            pFunc = pSym->pFunPtr;                 /* __EVAL method = function */
       else
       {
          pFunc = hb_objGetMethod( pSelf, pSym );
@@ -3062,10 +3069,10 @@ void hb_vmSend( USHORT uiParams )
    PHB_SYMB pSym;
    HB_STACK_STATE sStackState;
    PHB_ITEM pSelf;
-   PHB_FUNC pFunc;
+   PHB_FUNC pFunc = NULL;
    BOOL bDebugPrevState;
    ULONG ulClock = 0;
-   void * pMethod = NULL;
+   void *pMethod;
    BOOL bProfiler = hb_bProfiler; /* because profiler state may change */
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmSend(%hu)", uiParams));
@@ -3080,7 +3087,9 @@ void hb_vmSend( USHORT uiParams )
    }
 
    if( bProfiler )
+   {
       ulClock = ( ULONG ) clock();
+   }
 
    pItem = hb_stackNewFrame( &sStackState, uiParams );   /* procedure name */
    pSym = pItem->item.asSymbol.value;
@@ -3088,147 +3097,9 @@ void hb_vmSend( USHORT uiParams )
    bDebugPrevState = s_bDebugging;
    s_bDebugging = FALSE;
 
-   if( ! HB_IS_NIL( pSelf ) ) /* are we sending a message ? */
-   {
-      if( ! ( pSym == &( hb_symEval ) && HB_IS_BLOCK( pSelf ) ) )
-      {
-         if( HB_IS_OBJECT( pSelf ) )               /* Object passed            */
-         {
-            PHB_BASEARRAY pSelfBase;
-            BOOL lPopSuper = FALSE;
+   //printf( "Symbol: '%s'\n", pSym->szName );
 
-            pFunc = hb_objGetMethod( pSelf, pSym );
-            pSelfBase = pSelf->item.asArray.value;
-
-            if( pSelfBase->uiPrevCls ) /* Is is a Super cast ? */
-            {
-              PHB_ITEM pRealSelf;
-              USHORT nPos;
-              USHORT uiClass;
-
-              /*
-              printf( "\n VmSend Method: %s \n", pSym->szName );
-              */
-              uiClass = pSelfBase->uiClass;
-
-              pRealSelf = hb_itemNew( NULL ) ;
-              hb_itemCopy(pRealSelf ,pSelf->item.asArray.value->pItems) ;  // hb_arrayGetItemPtr(pSelf,1) ;
-              /* and take back the good pSelfBase */
-              pSelfBase = pRealSelf->item.asArray.value;
-              /* Now I should exchnage it with the current stacked value */
-              hb_itemSwap( pSelf, pRealSelf );
-              hb_itemRelease(pRealSelf) ; /* and release the fake one */
-
-              /* Push current SuperClass handle */
-              lPopSuper = TRUE ;
-
-
-              if ( ! pSelf->item.asArray.value->puiClsTree)
-              {
-               pSelf->item.asArray.value->puiClsTree   = ( USHORT * ) hb_xgrab( sizeof( USHORT ) );
-               pSelf->item.asArray.value->puiClsTree[0]=0;
-              }
-
-              nPos=pSelfBase->puiClsTree[0]+1;
-              pSelfBase->puiClsTree = ( USHORT * ) hb_xrealloc( pSelfBase->puiClsTree, sizeof( USHORT ) * (nPos+1) ) ;
-              pSelfBase->puiClsTree[0] = nPos ;
-              pSelfBase->puiClsTree[ nPos ] = uiClass;
-            }
-
-            if( pFunc )
-            {
-               if( bProfiler )
-                  pMethod = hb_mthRequested();
-
-               if ( hb_bTracePrgCalls )
-                  HB_TRACE(HB_TR_ALWAYS, ("Calling: %s", pSym->szName));
-
-               pFunc();
-
-               if (lPopSuper && pSelfBase->puiClsTree)
-               {
-                USHORT nPos=pSelfBase->puiClsTree[0]-1;
-                /* POP SuperClass handle */
-                if (nPos)
-                 {
-                  pSelfBase->puiClsTree = ( USHORT * ) hb_xrealloc( pSelfBase->puiClsTree, sizeof( USHORT ) * (nPos + 1) );
-                  pSelfBase->puiClsTree[0]=nPos;
-                 }
-                else
-                 {
-                  hb_xfree(pSelfBase->puiClsTree);
-                  pSelfBase->puiClsTree = NULL ;
-                 }
-
-               }
-
-               if( bProfiler )
-                  hb_mthAddTime( pMethod, clock() - ulClock );
-            }
-            else if( pSym->szName[ 0 ] == '_' )
-            {
-               PHB_ITEM pArgsArray = hb_arrayFromStack( uiParams );
-               hb_errRT_BASE_SubstR( EG_NOVARMETHOD, 1005, NULL, pSym->szName + 1, 1, pArgsArray );
-               hb_itemRelease( pArgsArray );
-            }
-            else
-            {
-               PHB_ITEM pArgsArray = hb_arrayFromStack( uiParams );
-               hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, NULL, pSym->szName, 1, pArgsArray );
-               hb_itemRelease( pArgsArray );
-            }
-         }
-         else
-         {
-            char *sClass, sDesc[64];
-
-            if( HB_IS_POINTER( pSelf ) )
-              sClass = "POINTER";
-            else if( HB_IS_DATE( pSelf ) )
-              sClass = "DATE";
-            else if( HB_IS_LOGICAL( pSelf ) )
-              sClass = "LOGICAL";
-            else if( HB_IS_SYMBOL( pSelf ) )
-              sClass = "SYMBOL";
-            else if( HB_IS_STRING( pSelf ) )
-              sClass = "CHARACTER";
-            else if( HB_IS_MEMO( pSelf ) )
-              sClass = "MEMO";
-            else if( HB_IS_BLOCK( pSelf ) )
-              sClass = "BLOCK";
-            else if( HB_IS_BYREF( pSelf ) )
-              sClass = "BYREF";
-            else if( HB_IS_MEMVAR( pSelf ) )
-              sClass = "MEMVAR";
-            else if( HB_IS_ARRAY( pSelf ) )
-              sClass = "ARRAY";
-            else if( HB_IS_NUMERIC( pSelf ) )
-              sClass = "NUMERIC";
-            else
-              sClass = "UNKNOWN";
-
-            if( strncmp( pSym->szName, "CLASSNAME", strlen( pSym->szName ) < 4 ? 4 : strlen( pSym->szName ) ) == 0 )
-            {
-               hb_itemPutC( &hb_stack.Return, sClass );
-            }
-            else if( pSym->szName[ 0 ] == '_' )
-            {
-              PHB_ITEM pArgsArray = hb_arrayFromStack( uiParams );
-              sprintf( (char *) sDesc, "Class: %s has no property", sClass );
-              hb_errRT_BASE_SubstR( EG_NOVARMETHOD, 1005, (char *) sDesc, pSym->szName + 1, 1, pArgsArray );
-              hb_itemRelease( pArgsArray );
-            }
-            else
-            {
-              PHB_ITEM pArgsArray = hb_arrayFromStack( uiParams );
-              sprintf( (char *) sDesc, "Class: %s has no exported method", sClass );
-              hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, (char *) sDesc, pSym->szName, 1, pArgsArray );
-              hb_itemRelease( pArgsArray );
-            }
-         }
-      }
-   }
-   else /* it is a function */
+   if( HB_IS_NIL( pSelf ) ) /* are we sending a message ? */
    {
       pFunc = pSym->pFunPtr;
 
@@ -3280,11 +3151,138 @@ void hb_vmSend( USHORT uiParams )
          }
       }
    }
+   else
+   {
+      PHB_BASEARRAY pSelfBase;
+      BOOL lPopSuper;
+
+      if( HB_IS_BLOCK( pSelf ) )
+      {
+         if( strncmp( pSym->szName, "EVAL", 4 ) == 0 )
+         {
+            pSym = &hb_symEval;
+            pFunc = pSym->pFunPtr;                 /* __EVAL method = function */
+         }
+      }
+      else if( HB_IS_OBJECT( pSelf ) )               /* Object passed            */
+      {
+         lPopSuper = FALSE;
+         pFunc     = hb_objGetMethod( pSelf, pSym );
+         pSelfBase = pSelf->item.asArray.value;
+
+         if( pSelfBase->uiPrevCls ) /* Is is a Super cast ? */
+         {
+            PHB_ITEM pRealSelf;
+            USHORT nPos;
+            USHORT uiClass;
+
+            /*
+            printf( "\n VmSend Method: %s \n", pSym->szName );
+            */
+            uiClass = pSelfBase->uiClass;
+
+            pRealSelf = hb_itemNew( NULL ) ;
+            hb_itemCopy( pRealSelf, pSelf->item.asArray.value->pItems ) ;  // hb_arrayGetItemPtr(pSelf,1) ;
+            /* and take back the good pSelfBase */
+            pSelfBase = pRealSelf->item.asArray.value;
+            /* Now I should exchnage it with the current stacked value */
+            hb_itemSwap( pSelf, pRealSelf );
+            hb_itemRelease( pRealSelf ) ; /* and release the fake one */
+
+            /* Push current SuperClass handle */
+            lPopSuper = TRUE ;
+
+            if ( ! pSelf->item.asArray.value->puiClsTree )
+            {
+               pSelf->item.asArray.value->puiClsTree   = ( USHORT * ) hb_xgrab( sizeof( USHORT ) );
+               pSelf->item.asArray.value->puiClsTree[0]=0;
+            }
+
+            nPos=pSelfBase->puiClsTree[0]+1;
+            pSelfBase->puiClsTree = ( USHORT * ) hb_xrealloc( pSelfBase->puiClsTree, sizeof( USHORT ) * (nPos+1) ) ;
+            pSelfBase->puiClsTree[0] = nPos ;
+            pSelfBase->puiClsTree[ nPos ] = uiClass;
+         }
+      }
+
+      if( pFunc )
+      {
+         if( bProfiler )
+         {
+            pMethod = hb_mthRequested();
+         }
+
+         if ( hb_bTracePrgCalls )
+         {
+            HB_TRACE(HB_TR_ALWAYS, ("Calling: %s", pSym->szName));
+         }
+
+         pFunc();
+
+         if ( pSym != &hb_symEval && lPopSuper && pSelfBase->puiClsTree )
+         {
+            USHORT nPos=pSelfBase->puiClsTree[0] - 1;
+
+            /* POP SuperClass handle */
+            if (nPos)
+            {
+               pSelfBase->puiClsTree = ( USHORT * ) hb_xrealloc( pSelfBase->puiClsTree, sizeof( USHORT ) * (nPos + 1) );
+               pSelfBase->puiClsTree[0]=nPos;
+            }
+            else
+            {
+               hb_xfree(pSelfBase->puiClsTree);
+               pSelfBase->puiClsTree = NULL ;
+            }
+         }
+
+         if( bProfiler )
+         {
+            hb_mthAddTime( pMethod, clock() - ulClock );
+         }
+      }
+      else
+      {
+         char *sClass = hb_objGetClsName( pSelf );
+
+         if( strncmp( pSym->szName, "CLASSNAME", strlen( pSym->szName ) < 4 ? 4 : strlen( pSym->szName ) ) == 0 )
+         {
+            hb_itemPutC( &hb_stack.Return, sClass );
+         }
+         else if( strncmp( pSym->szName, "CLASSH", 6 ) == 0 )
+         {
+            hb_itemPutNI( &hb_stack.Return, 0 );
+         }
+         else
+         {
+            char sDesc[128];
+
+            if( pSym->szName[ 0 ] == '_' )
+            {
+               PHB_ITEM pArgsArray = hb_arrayFromStack( uiParams );
+
+               sprintf( (char *) sDesc, "Class: '%s' has no property", sClass );
+               hb_errRT_BASE_SubstR( EG_NOVARMETHOD, 1005, (char *) sDesc, pSym->szName + 1, 1, pArgsArray );
+               hb_itemRelease( pArgsArray );
+            }
+            else
+            {
+               PHB_ITEM pArgsArray = hb_arrayFromStack( uiParams );
+
+               sprintf( (char *) sDesc, "Class: '%s' has no exported method", sClass );
+               hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, (char *) sDesc, pSym->szName, 1, pArgsArray );
+               hb_itemRelease( pArgsArray );
+            }
+         }
+      }
+   }
 
    hb_stackOldFrame( &sStackState );
 
    if( s_bDebugging )
+   {
       hb_vmDebuggerEndProc();
+   }
 
    s_bDebugging = bDebugPrevState;
 }
