@@ -1,3 +1,10 @@
+19990915-00:38 GMT+1 Victor Szel <info@szelvesz.hu>
+  * tests/working/sound.prg
+    tests/working/*.bat
+    tests/working/*.ch
+    + CVS header added to all files.
+    + @echo off added were missing.
+
 19990915-00:30 GMT+1 Victor Szel <info@szelvesz.hu>
   * (*.* in the root directory)
     + CVS header added to all files.

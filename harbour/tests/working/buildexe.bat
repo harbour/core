@@ -1,3 +1,7 @@
+rem 
+rem $Id$
+rem 
+
 @echo off
 
 IF A%1 == A GOTO :SINTAX

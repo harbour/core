@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 function main()
 local start := seconds(), stop
    qout( "start   ", start )

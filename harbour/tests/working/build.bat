@@ -1,3 +1,7 @@
+rem 
+rem $Id$
+rem 
+
 @echo off
 if %hb_architecture%.==. goto bad_arch
 if %hb_compiler%.==. goto bad_comp

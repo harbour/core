@@ -1,3 +1,7 @@
+rem 
+rem $Id$
+rem 
+
 @echo off
 
 REM From .PRG to .C = Harbour
