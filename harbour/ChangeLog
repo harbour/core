@@ -7,6 +7,11 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+   * source/rtl/strings.c
+     ! hb_strnicmp() fixed, now it's compatible with strnicmp().
+       This fixes the previous fix in hvm.c which uses hb_strnicmp()
+       And it also fixes a few functions which also used this:
+       ISPRINTER(), HB_ARGCHECK(), HB_ARGSTRING()
      This fix has been implemented by Viktor
 
 2002-02-01 07:43 UTC+0100 Antonio Linares <alinares@fivetech.com>
