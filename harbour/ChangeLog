@@ -1,3 +1,10 @@
+19990925-00:42 EDT Paul Tucker <ptucker@sympatico.ca>
+  * tests/working/adirtest.prg
+    * slight modification to the first call to Adir() to account for
+      documented behaviour that you could get back a different length
+      from Adir depending on the inclusion of the 5th parameter.
+      (The docs don't exactly phrase it that way)
+
 19990925-00:20 EDT Paul Tucker <ptucker@sympatico.ca>
   * source/rtl/adir.prg
     made a change - then reversed it.

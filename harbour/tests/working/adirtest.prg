@@ -13,7 +13,7 @@ FUNCTION Main()
 
 STATIC FUNCTION TestIt( cSpec )
 
-   LOCAL a := ADIR( cSpec )
+   LOCAL a
    LOCAL a1
    LOCAL a2
    LOCAL a3
@@ -21,6 +21,13 @@ STATIC FUNCTION TestIt( cSpec )
    LOCAL a5
 
    LOCAL cNewLine := HB_OSNewLine()
+
+   // In order to account for documented behavour, this call will ensure
+   // that Adir() returns the same length array in both cases.
+   // ie: adir( cSpec ) could return a different length array than
+   // ADIR( cSpec,,,,,{} )
+
+   a := ADIR( cSpec,,,,,{} )
 
    SET DATE ANSI
    SET CENTURY ON
