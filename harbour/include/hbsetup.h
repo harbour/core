@@ -275,7 +275,7 @@
 #ifndef HB_OS_DOS
    #if defined(DOS) || defined(_QC) || defined(__DOS__) || defined(MSDOS) || defined(__MSDOS__) || defined(__RSX32__)
       #define HB_OS_DOS
-      #if defined(__386__)
+      #if defined(__386__) || defined(__DJGPP__)
          #define HB_OS_DOS_32
       #else
          #define HB_OS_DOS_16
