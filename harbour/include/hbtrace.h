@@ -80,37 +80,37 @@
 #if HB_TR_LEVEL >= HB_TR_DEBUG
 #define _ECHO_TRACE_HB_TR_DEBUG(x)    ECHO_CREATE(HB_TR_DEBUG, x)
 #else
-#define _ECHO_TRACE_HB_TR_DEBUG(x)    do {} while (0)
+#define _ECHO_TRACE_HB_TR_DEBUG(x)    
 #endif
 
 #if HB_TR_LEVEL >= HB_TR_INFO
 #define _ECHO_TRACE_HB_TR_INFO(x)     ECHO_CREATE(HB_TR_INFO, x)
 #else
-#define _ECHO_TRACE_HB_TR_INFO(x)     do {} while (0)
+#define _ECHO_TRACE_HB_TR_INFO(x)     
 #endif
 
 #if HB_TR_LEVEL >= HB_TR_WARNING
 #define _ECHO_TRACE_HB_TR_WARNING(x)  ECHO_CREATE(HB_TR_WARNING, x)
 #else
-#define _ECHO_TRACE_HB_TR_WARNING(x)  do {} while (0)
+#define _ECHO_TRACE_HB_TR_WARNING(x)  
 #endif
 
 #if HB_TR_LEVEL >= HB_TR_ERROR
 #define _ECHO_TRACE_HB_TR_ERROR(x)    ECHO_CREATE(HB_TR_ERROR, x)
 #else
-#define _ECHO_TRACE_HB_TR_ERROR(x)    do {} while (0)
+#define _ECHO_TRACE_HB_TR_ERROR(x)    
 #endif
 
 #if HB_TR_LEVEL >= HB_TR_FATAL
 #define _ECHO_TRACE_HB_TR_FATAL(x)    ECHO_CREATE(HB_TR_FATAL, x)
 #else
-#define _ECHO_TRACE_HB_TR_FATAL(x)    do {} while (0)
+#define _ECHO_TRACE_HB_TR_FATAL(x)    
 #endif
 
 #if 1  /* always! */
 #define _ECHO_TRACE_HB_TR_ALWAYS(x)   ECHO_CREATE(HB_TR_ALWAYS, x)
 #else
-#define _ECHO_TRACE_HB_TR_ALWAYS(x)   do {} while (0)
+#define _ECHO_TRACE_HB_TR_ALWAYS(x)   
 #endif
 
      

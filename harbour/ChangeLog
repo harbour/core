@@ -1,7 +1,22 @@
+19991110-23:20 GMT+1 Victor Szel <info@szelvesz.hu>
+  * include/hbtrace.h
+    % Excluded trace calls are converted to nohting instead of "do {} while 0"
+      since the latter was generating jumps for MINGW32. This is now violating
+      a -pedantic warning in GCC (duplicated ";"), so this may not be the 
+      perfect solution, but at least it doesn't generate any code.
+  * source/rtl/fm.c
+    ! Casts added.
+    ! ulProcLine changed to USHORT.
+    + Added signature support.
+    + The whole mem tracing stuff can be excluded by a #define.
+    + The memory trace info level is HB_TR_ERROR now, so that it gets logged 
+      by default.
+  * tests/Makefile
+    + fsplit.prg added.
+
 19991110-20:45 WIB Andi Jahja <andij@aonlippo.co.id>
   * tests/fsplit.prg
     * Harbour file splitter
-
 
 19991110-14:11 GMT+1 Victor Szel <info@szelvesz.hu>
   * include/hbsetup.h

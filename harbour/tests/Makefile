@@ -68,6 +68,7 @@ PRG_SOURCES=\
         fib.prg \
         fornext.prg \
         fortest.prg \
+        fsplit.prg \
         funcarr.prg \
         hello.prg \
         ifelse.prg \
