@@ -150,7 +150,7 @@ else
    cFile := ""
 endif
 
-If (empty(cFile) .and. !lEditMode) .or. !file(cfile) 
+If (empty(cFile) .and. !lEditMode) 
    ? "File not Found"
    Return Nil
 Endif
