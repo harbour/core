@@ -1,3 +1,70 @@
+2001-06-14 17:15 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+  * contrib/libmisc/dates2.c
+  * contrib/samples/date.c
+  * contrib/samples/dbf.c
+  * contrib/samples/environ.c
+  * contrib/samples/gauge.c
+  * contrib/samples/num.c
+  * contrib/samples/stack.c
+  * contrib/samples/status.c
+  * contrib/samples/time.c
+  * include/hberrors.h
+  * include/hbexpra.c
+  * include/hbexprb.c
+  * include/hbexprc.c
+  * include/hbexprop.h
+  * include/hbextern.ch
+  * include/hbhash.h
+  * include/hbmacro.h
+  * include/hbmemvar.ch
+  * include/hbsetup.h
+  * source/common/expropt1.c
+  * source/common/expropt2.c
+  * source/common/hash.c
+  * source/common/reserved.c
+  * source/compiler/hbfix.c
+  * source/compiler/hbfunchk.c
+  * source/compiler/hbident.c
+  * source/lang/msgca.c
+  * source/lang/msgeo.c
+  * source/lang/msges.c
+  * source/lang/msggl.c
+  * source/pp/pragma.c
+  * source/rtl/datec.c
+  * source/rtl/defpath.c
+  * source/rtl/descend.c
+  * source/rtl/do.c
+  * source/rtl/hardcr.c
+  * source/rtl/idle.c
+  * source/rtl/input.prg
+  * source/rtl/memvarbl.prg
+  * source/rtl/mtran.c
+  * source/rtl/natmsg.c
+  * source/rtl/oldbox.c
+  * source/rtl/philes53.c
+  * source/rtl/seconds.c
+  * source/rtl/setta.prg
+  * source/rtl/tmenuitm.prg
+  * source/rtl/tpopup.prg
+  * source/rtl/ttopbar.prg
+  * source/rtl/type.c
+  * source/rtl/wait.prg
+  * source/rtl/gtcrs/kbdcrs.c
+  * source/rtl/gtdos/mousedos.c
+  * source/vm/break.c
+  * source/vm/codebloc.c
+  * source/vm/eval.c
+  * source/vm/garbage.c
+  * source/vm/macro.c
+  * source/vm/memvars.c
+  * utils/hbextern/hbextern.prg
+  * utils/hbrun/external.prg
+  * utils/hbrun/hbrun.prg
+    * Updated from the old Harbour Exception to the new Harbour Exception
+      with permission from Jose Lalin <dezac@corevia.com> and Ryszard Glab
+      <rglab@imid.med.pl>.
+
 2001-06-14 14:00 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * source/rdd/dbfcdx/dbfcdx1.h
