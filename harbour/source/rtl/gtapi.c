@@ -6,9 +6,11 @@
  *  GTAPI.C: Generic Terminal for Harbour
  *
  * Latest mods:
+ * 1.28   19990719   ptucker   Added support for numeric color strings
+ *                             like "1/7,8/15"
  * 1.26   19990719   ptucker   Changed call in hb_gtinit() to pass the
  *                             literal initial color setting in case
- *                             the GT system is initialised prior to Set
+ *                             the GT system is initialised prior to Set.
  *                             Skipped color params in a string now keep
  *                             their previous value.  ie ",,,r/b"
  * 1.25   19990718   dholm     Moved calls to various gtFunctions out of
@@ -49,7 +51,7 @@ void hb_gtInit(void)
     _Color = (int *)hb_xgrab(5*sizeof(int));
     _ColorCount = 5;
     hb_gtSetColorStr( "W/N,N/W,N/N,N/N,N/W" );
-/*    hb_gtSetColorStr( hb_set.HB_SET_COLOR ); */
+/*  hb_gtSetColorStr( hb_set.HB_SET_COLOR ); */
 }
 
 void hb_gtExit(void)
@@ -184,14 +186,38 @@ int hb_gtDispEnd(void)
 
 int hb_gtSetColorStr(char * fpColorString)
 {
-    char c;
-    int nPos = 0, nSkip = 0, nCount=-1;
+    char c, buff[6];
+    int nPos = 0, nSkip = 0, nCount=-1, i=0, y;
     int nBack = 0, nColor = 0, nHasX=0;
 
+    buff[0] = '\0';
     do
     {
         if( ( c=*fpColorString++  ) > 'A' )
             c &= 0x5f;			/* convert to upper case */
+
+        while( c <= '9' && c >= '0' && i < 6 )
+        {
+           if( i==0 )
+              memset( buff, '\0', 6 );
+
+           buff[i++] = c;
+           c = *fpColorString++;
+        }
+        if( i )
+        {
+            i--;
+            nColor = 0;
+            /* TODO: this can probably be replaced with atoi() */
+            /* ie: nColor = atoi(buff); */
+            for( y=1; i+1; y *= 10, i-- )
+            {
+                if( buff[ i ] )
+                    nColor += ( ( buff[i] - '0' ) * y );
+            }
+        
+            i=0;
+        }
 
         if( nSkip && !( c=='\0' || c==','  ))
             continue;
