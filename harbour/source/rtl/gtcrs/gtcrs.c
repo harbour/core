@@ -41,6 +41,14 @@
 
 #include "inkey.ch"
 
+/* functions defined in mousecrs.c
+ */
+extern int hb_mouse_xevent( char *, HB_inkey_enum );
+extern int hb_mouse_key( void );
+extern int hb_mouse_initialize( void );
+
+/* static data
+ */
 static USHORT s_uiDispCount;
 
 static void gt_GetMaxRC(int* r, int* c);
@@ -51,7 +59,7 @@ static void hb_gt_Add_terminfo_keymap( int, char * );
 static void hb_gt_Add_keymap( int, char * );
 
 /* max number of characters in a keymapped string */
-#define HB_MAX_KEYMAP_CHARS	8
+#define HB_MAX_KEYMAP_CHARS	16
 
 struct key_map_struc
 {
@@ -61,11 +69,15 @@ struct key_map_struc
     struct key_map_struc *Next;
 };
 
-static struct key_map_struc *s_keymap_table = NULL;
+#define HB_HASH_KEY   128
+static struct key_map_struc * s_keymap_table[ HB_HASH_KEY ];
 static unsigned s_attribmap_table[ 256 ]; /* mapping from DOS style attributes */
 static BOOL s_under_xterm;
 static int s_alternate_char_set;
 static  char s_xTermBox[ 10 ] = "lqkxjqmx ";
+
+static char * s_mouse_event_seq;
+static int s_mouse_event_len;
 
 static void hb_gt_Initialize_Terminal( void )
 {
@@ -120,25 +132,31 @@ static void hb_gt_Initialize_Terminal( void )
    keypad( stdscr, FALSE );
 
    s_under_xterm = !strncmp( getenv("TERM"), "xterm", 5 );
-   /* NOTE: using A_ALTCHARSET attribute is causing that small letters
-     a-z are not printed under xterm (at least xterm from Linux
-     RedHat 6.1 distribution)
-   */
-   if( s_under_xterm )
-   {
-      s_alternate_char_set = 0;
-   }
-   else
-   {
-      s_alternate_char_set = A_ALTCHARSET;
-   }
+    if( s_under_xterm )
+    {
+      /* Alternate characters set will be enabled only by request because
+       * it changes character mapping under xterm
+       */
+       s_alternate_char_set = 0;
+    }
+    else
+    {
+      /* If running under Linux console enable alternate character set
+       * by default
+       */
+       s_alternate_char_set = A_ALTCHARSET;
+    }
    bkgdset( ' ' );
    ripoffline( 0, NULL );
 
+   /* Mouse sub-sytem have to be initialized after ncurses initialization */
+   hb_mouse_initialize();
 }
 
 void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
 {
+   int i;
+   
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Init()"));
 
    s_uiDispCount = 0;
@@ -146,6 +164,39 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
    initscr();
    hb_gt_Initialize_Terminal();
 
+   /* Initialize keycode table */
+   for( i = 0; i < HB_HASH_KEY; i++ )
+      s_keymap_table[ i ] = NULL;
+
+   if( s_under_xterm )      
+   {
+      /* NOTE: under xterm \E[M is used as a leading code for a mouse event
+         Events are as follows:
+         \E[M   - prefix
+         b0     - a byte with buttons state
+         b1     - column position of a mouse pointer
+         b2     - row position of a mouse pointer
+      */
+      s_mouse_event_seq = tigetstr( "kmous" );
+      if( s_mouse_event_seq == NULL || s_mouse_event_seq == (char *)-1 )
+         s_mouse_event_len =0;
+      else
+         s_mouse_event_len = strlen( s_mouse_event_seq );
+      hb_gt_Add_terminfo_keymap( K_HOME, "kfnd" );
+      hb_gt_Add_terminfo_keymap( K_END, "kslt" );
+      /* workaraound for xterm bug */
+      hb_gt_Add_terminfo_keymap( K_UP, "cuu1" );
+      hb_gt_Add_terminfo_keymap( K_RIGHT, "cuf1" );
+      hb_gt_Add_keymap( K_LEFT, "\033[D" );
+      hb_gt_Add_keymap( K_DOWN, "\033[B" );
+   }
+   else
+   {
+      /* NOTE: ncurses doesn't report any mouse events when run under GPM
+      */
+      s_mouse_event_len = 0;
+   }
+    
     hb_gt_Add_terminfo_keymap( K_ENTER, "kent" );
     hb_gt_Add_terminfo_keymap( K_ENTER, "ind" );
     hb_gt_Add_terminfo_keymap( K_TAB, "ht" );
@@ -154,9 +205,7 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
     hb_gt_Add_terminfo_keymap( K_LEFT, "kcub1" );
     hb_gt_Add_terminfo_keymap( K_RIGHT, "kcuf1" );
     hb_gt_Add_terminfo_keymap( K_HOME, "khome" );
-    hb_gt_Add_terminfo_keymap( K_HOME, "kfnd" ); /* xterm */
     hb_gt_Add_terminfo_keymap( K_END, "kend" );
-    hb_gt_Add_terminfo_keymap( K_END, "kslt" ); /* xterm */
     hb_gt_Add_terminfo_keymap( K_BS, "kbs" );
     hb_gt_Add_terminfo_keymap( K_BS, "kcbt" );
     hb_gt_Add_terminfo_keymap( K_INS, "kich1" );
@@ -261,20 +310,25 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
 
 void hb_gt_Exit( void )
 {
+   int i, k;
+   struct key_map_struc *tmp;
+   
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Exit()"));
 
    noraw();
    refresh();
    endwin();
 
-   if( s_keymap_table )
+   for( i = 0; i < HB_HASH_KEY; i++ )
    {
-      struct key_map_struc *tmp = s_keymap_table;
+      tmp = s_keymap_table[ i ];
+      k = 0;
       while( tmp )
       {
-         s_keymap_table = s_keymap_table->Next;
+         s_keymap_table[ i ] = tmp->Next;
          hb_xfree( tmp );
-	      tmp = s_keymap_table;
+	      tmp = s_keymap_table[ i ];
+         k++;
       }
    }
 }
@@ -287,8 +341,6 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_ReadKey(%d)", (int) eventmask));
 
-   HB_SYMBOL_UNUSED( eventmask );
-
    if( key_waiting >= 0 )
    {
        /* return next character from the buffer */
@@ -300,7 +352,7 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
 
    ch = getch();
    if( ch == ERR )
-      ch = 0;
+      ch = hb_mouse_key();
    else
    {
       if( ch == 3 )
@@ -308,39 +360,63 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
          /* Ctrl-C was pressed */
 	       ch = HB_BREAK_FLAG;
       }
-      else if( s_keymap_table )
+      else
       {
-         struct key_map_struc *tmp = s_keymap_table;
-	 int i = 0;
+	      int i = 0;
+         BYTE sum;
 
-	 key_codes[ 0 ] = ch;
-	 while( ( ch = getch() ) != ERR && i <= HB_MAX_KEYMAP_CHARS )
-	     key_codes[ ++i ] = ch;
-	 key_codes[ ++i ] = 0;
+	      key_codes[ 0 ] = sum = ch;
+	      while( ( ch = getch() ) != ERR && i <= HB_MAX_KEYMAP_CHARS )
+         {
+            key_codes[ ++i ] = ch;
+/*fprintf( stderr, "key%i=%i(%c)\n", i, ch, ch );
+fflush( stderr );
+*/
+            sum += ch;
+         }
+	      key_codes[ ++i ] = 0;
+         sum &= HB_HASH_KEY - 1;
 
          ch = 0;
-	 while( tmp )
-	 {
-	     if( (i == tmp->length) && (strcmp( tmp->key_string, key_codes ) == 0 ) )
-	     {
-	         ch = tmp->inkey_code;
-		 tmp = NULL;
-	    }
-	    else
-		tmp = tmp->Next;
+         if( s_keymap_table[ sum ] )
+         {
+            /* there is an entry in the hash table */
+            struct key_map_struc *tmp = s_keymap_table[ sum ];
+            
+            while( (ch == 0) && tmp )
+            {
+               /* now look for exact match */
+               if( (i == tmp->length) && (memcmp( tmp->key_string, key_codes, i ) == 0 ) )
+               {
+	               ch = tmp->inkey_code;   /* keycode found */
+                  tmp = NULL; /* NOTE: tmp->inkey_code can be set to 0 */
+               }
+               else
+                  tmp = tmp->Next;
+            }
+   
          }
 
-	 if( ch == 0 )
-	 {
-	     /* keymap not found */
+         if( ch == 0 )
+	      {
+            if( s_mouse_event_len )
+            {
+               /* check for mouse event */
+               if( memcmp( s_mouse_event_seq, key_codes, s_mouse_event_len ) == 0 )
+               {
+                  /* Convert the mouse event into INKEY keycodes */
+                  return hb_mouse_xevent( key_codes+s_mouse_event_len, eventmask );
+               }
+            }
+            /* keymap not found */
             if( i == 1 )
-	        ch = key_codes[ 0 ];
-	    else
-	    {
-	       key_waiting = 0;	/* return raw key sequence */
-	       ch = K_HB_KEYCODES;
-	    }
-	}
+               ch = key_codes[ 0 ];
+            else
+            {
+               key_waiting = 0;	/* return raw key sequence */
+               ch = K_HB_KEYCODES;
+            }
+	      }
       }
    }
    return ch;
@@ -760,24 +836,31 @@ static void hb_gt_Add_keymap( int InkeyCode, char *key_string )
 {
    struct key_map_struc *keymap;
    int iLength = strlen( key_string );
+   int i = 0;
+   BYTE sum = 0;
+   
 
       if( iLength && iLength <= HB_MAX_KEYMAP_CHARS )
       {
+         while( i < iLength )
+            sum += key_string[ i++ ];
+         sum &= HB_HASH_KEY-1;
+   
          keymap = hb_xgrab( sizeof( struct key_map_struc ) );
          keymap->inkey_code = InkeyCode;
          keymap->key_string = key_string;
          keymap->length = iLength;
          keymap->Next = NULL;
 
-         if( s_keymap_table )
+         if( s_keymap_table[ sum ] )
          {
-             struct key_map_struc *tmp = s_keymap_table;
+             struct key_map_struc *tmp = s_keymap_table[ sum ];
              while( tmp->Next )
                 tmp =tmp->Next;
              tmp->Next = keymap;
          }
          else
-            s_keymap_table = keymap;
+            s_keymap_table[ sum ] = keymap;
      }
 }
 

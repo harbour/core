@@ -1,3 +1,14 @@
+20000422-13:50 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/rtl/gtcrs/gtcrs.c
+    *source/rtl/gtcrs/mousecrs.c
+	*fixed arrow keys under xterm
+	*added support for mouse under xterm
+	
+    *source/compiler/harbour.c
+	*fixed duplicated variable error when PARAMETER variable was
+	also declared as a MEMVAR variable
+
 20000422 08:20 gmt -3 Luiz Rafael Culik <culik@sl.conex.net>
 +contrib\libnf\getenvrn.c
  contrib\libnf\n2color.c

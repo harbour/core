@@ -423,7 +423,7 @@ void hb_compVariableAdd( char * szVarName, char cValueType )
       /* variable defined in a function/procedure */
       hb_compCheckDuplVars( pFunc->pFields, szVarName, hb_comp_iVarScope );
       hb_compCheckDuplVars( pFunc->pStatics, szVarName, hb_comp_iVarScope );
-      if( !( hb_comp_iVarScope == VS_PRIVATE || hb_comp_iVarScope == VS_PUBLIC ) )
+      if( !( hb_comp_iVarScope & VS_PRIVATE || hb_comp_iVarScope == VS_PUBLIC ) )
          hb_compCheckDuplVars( pFunc->pMemvars, szVarName, hb_comp_iVarScope );
    }
    else
