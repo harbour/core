@@ -1,3 +1,7 @@
+2001-09-02 16:15 GMT -3 Luiz Rafael Culik<culik@sl.conex.net>
+    * source/rtl/isprint.c
+      * Replaced HB_OS_WIN_32_USED with HB_OS_WIN_32
+
 2001-09-04 22:50 GMT +1 JFL (mafact) <jfl@mafact.com>
    * harbour\include\hbclass.ch
      Improved support for PERSISTENT keyword (ACCESS and SETGET)
@@ -62,6 +66,7 @@
   + harbour/source/rtl/persist.prg
     arrays support started
 
+>>>>>>> 1.3405
 2001-09-02 19:30 GMT+1 Antonio Linares <alinares@fivetech.com>
   + harbour/source/rtl/persist.prg
     Class TPersistent to implement objects persistence
