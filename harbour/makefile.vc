@@ -48,8 +48,8 @@ CLIBFLAGSDEBUG=$(CFLAGS) -c -Zi /TP
 
 HARBOUR_LIB=$(LIB_DIR)\harbour.lib
 TERMINAL_LIB=$(LIB_DIR)\terminal.lib
-TOOLS_LIB=$(LIB_DIR)\hbtools.lib
-PP_LIB=$(LIB_DIR)\hbpp.lib
+TOOLS_LIB=$(LIB_DIR)\tools.lib
+PP_LIB=$(LIB_DIR)\pp.lib
 DEBUG_LIB=$(LIB_DIR)\debug.lib
 DBFNTX_LIB=$(LIB_DIR)\dbfntx.lib
 DBFCDX_LIB=$(LIB_DIR)\dbfcdx.lib
@@ -170,7 +170,7 @@ HARBOUR_LIB_OBJS = \
     $(RDD_OBJS)
 
 #
-# OBJ list for hbtools.lib. Add new ones as needed
+# OBJ list for tools.lib. Add new ones as needed
 #
 #$(OBJ_DIR)\genobj.obj \ PatrickMast
 TOOLS_LIB_OBJS = \
@@ -260,7 +260,7 @@ RUNNER_LIB_OBJS = \
     $(OBJ_DIR)\runlib.obj
 
 #
-# OBJ list for hbpp.lib. Add new ones as needed
+# OBJ list for pp.lib. Add new ones as needed
 #
 
 PP_LIB_OBJS = \

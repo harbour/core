@@ -1,3 +1,11 @@
+20000210-03:44 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * makefile.vc
+     * HBTOOLS.LIB renamed to TOOLS.LIB to better resemble to the other
+       make systems.
+   * makefile.b32
+     makefile.vc
+     * HBPP.LIB renamed to PP.LIB to better resemble to the GNU-make system.
+
 20000210-03:24 GMT+1 Victor Szakats <info@szelvesz.hu>
    * makefile.b32
      ! Modified to generate all the intermediate .c/.y/.l files in the obj dir
