@@ -88,7 +88,6 @@ extern "C" {
    #define exception _exception
 #elif defined(__DJGPP__)
    #define HB_MATH_HANDLER
-   _LIB_VERSION_TYPE _LIB_VERSION = _XOPEN_;
 #endif
 
 typedef struct _HB_MATH_EXCEPTION
