@@ -46,15 +46,17 @@ return Get():New( nRow, nCol, bVarBlock, cVarName, cPicture, cColor )
 //---------------------------------------------------------------------------//
 
 FUNCTION __GET( uVar, cVarName, cPicture, bValid, bWhen, bSetGet )
+
    LOCAL oGet
 
    IF( bSetGet == NIL )
        IF( uVar == NIL )
-           bSetGet := {|xValue| IIF( PCOUNT()==0, &cVarName, &cVarname:=xValue)}
+           bSetGet := &( "{|xValue| IIF( PCOUNT()==0, " + cVarName + "," + cVarname + ":=xValue)}" )
        ELSE
            bSetGet := {|xValue| IIF( PCOUNT()==0, uVar, uVar:=xValue)}
        ENDIF
    ENDIF
+
    oGet := Get():New(,, bSetGet, cVarName, cPicture )
 
    oGet:PreBlock := bWhen
