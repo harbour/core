@@ -157,6 +157,7 @@ CLASS TDebugger
    METHOD ShowVars()
    METHOD ToggleBreakPoint()
    METHOD ViewSets()
+   METHOD WndVarsLButtonDown( nMRow, nMCol )
 
 ENDCLASS
 
@@ -385,7 +386,25 @@ METHOD HandleEvent() CLASS TDebugger
               endif
 
          case nKey == K_LDBLCLK
-              Alert( "Mouse Left button doble click" )
+              if MRow() == 0
+
+              elseif MRow() == MaxRow()
+
+              else
+                 nMRow := MRow()
+                 nMCol := MCol()
+                 for n := 1 to Len( ::aWindows )
+                    if ::aWindows[ n ]:IsOver( nMRow, nMCol )
+                       if ! ::aWindows[ n ]:lFocused
+                          ::aWindows[ ::nCurrentWindow ]:SetFocus( .f. )
+                          ::nCurrentWindow := n
+                          ::aWindows[ n ]:SetFocus( .t. )
+                       endif
+                       ::aWindows[ n ]:LDblClick( nMRow, nMCol )
+                       n := Len( ::aWindows ) + 1
+                    endif
+                 next
+              endif
 
          case nKey == K_LBUTTONDOWN
               if MRow() == 0
@@ -400,11 +419,13 @@ METHOD HandleEvent() CLASS TDebugger
                  nMRow := MRow()
                  nMCol := MCol()
                  for n := 1 to Len( ::aWindows )
-                    if ::aWindows[ n ]:IsOver( nMRow, nMCol ) .and. ;
-                       ! ::aWindows[ n ]:lFocused
-                       ::aWindows[ ::nCurrentWindow ]:SetFocus( .f. )
-                       ::nCurrentWindow := n
-                       ::aWindows[ n ]:SetFocus( .t. )
+                    if ::aWindows[ n ]:IsOver( nMRow, nMCol )
+                       if ! ::aWindows[ n ]:lFocused
+                          ::aWindows[ ::nCurrentWindow ]:SetFocus( .f. )
+                          ::nCurrentWindow := n
+                          ::aWindows[ n ]:SetFocus( .t. )
+                       endif
+                       ::aWindows[ n ]:LButtonDown( nMRow, nMCol )
                        n := Len( ::aWindows ) + 1
                     endif
                  next
@@ -604,6 +625,9 @@ METHOD ShowVars(bSort,nType) CLASS TDebugger
       ::oWndVars:bKeyPressed := { | nKey | iif( nKey == K_DOWN, ( ::oBrwVars:Down(),;
       ::oBrwVars:ForceStable() ), nil ), iif( nKey == K_UP, ( ::oBrwVars:Up(),;
       ::oBrwVars:ForceStable() ), nil ), iif( nKey == K_ENTER, ::EditVar( n ), nil ) }
+
+      ::oWndVars:bLButtonDown = { | nMRow, nMCol | ::WndVarsLButtonDown( nMRow, nMCol ) }
+      ::oWndVars:bLDblClick = { | nMRow, nMCol | ::EditVar( n ) }
 
       ::oBrwVars := TBrowseNew( 2, 1, 4, MaxCol() - iif( ::oWndStack != nil,;
                                ::oWndStack:nWidth(), 0 ) - 1 )
@@ -815,6 +839,27 @@ METHOD ViewSets() CLASS TDebugger
 
    SetCursor( SC_NONE )
    oWndSets:ShowModal()
+
+return nil
+
+METHOD WndVarsLButtonDown( nMRow, nMCol ) CLASS TDebugger
+
+   if nMRow > ::oWndVars:nTop .and. ;
+      nMRow < ::oWndVars:nBottom .and. ;
+      nMCol > ::oWndVars:nLeft .and. ;
+      nMCol < ::oWndVars:nRight
+      if nMRow - ::oWndVars:nTop >= 1 .and. ;
+         nMRow - ::oWndVars:nTop <= Len( ::aVars )
+         while ::oBrwVars:RowPos > nMRow - ::oWndVars:nTop
+            ::oBrwVars:Up()
+            ::oBrwVars:ForceStable()
+         end
+         while ::oBrwVars:RowPos < nMRow - ::oWndVars:nTop
+            ::oBrwVars:Down()
+            ::oBrwVars:ForceStable()
+         end
+      endif
+   endif
 
 return nil
 
