@@ -1,7 +1,11 @@
+/*
+ * $Id$
+ */
+
  Proposition:
 
- *  If the error is raised in the same condition as in Clipper then the same
- subcode number should be used.
+*   If the error is raised in the same condition as in Clipper then the same
+subcode number should be used.
 
 *   Errors specific to the Harbour and generated in RTL modules should
 start from 3000

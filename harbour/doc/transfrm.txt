@@ -1,6 +1,7 @@
 /*
  * $Id$
  */
+
 Addendum Clipper documentation. Original transform docs are too limited :
 
 /* TODO: Make a real document out of this */

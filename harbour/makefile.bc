@@ -2,14 +2,31 @@
 # $Id$
 #
 
-# makefile for Borland C/C++ 32 bits
+# makefile for Borland C/C++ compilers
 
-# avoid optimizer bug, when using compiler version 4.0
-!if $d(B40)
-   BCC_OPT = -DHARBOUR_USE_WIN_GTAPI
+!if $d(B16)
+   # Borland C/C++ (DOS 16 bits)
+   BCC_OPT = -O2 -DHARBOUR_USE_DOS_GTAPI
+   BCC_EXE = bcc
+   TASM_EXE = tasm
+   OBJ_DIR = obj\b16
+   LIB_DIR = lib\b16
 !else
-   BCC_OPT = -O2 -DHARBOUR_USE_WIN_GTAPI
+   # Borland C/C++ (Windows 32 bits)
+   BCC_EXE = bcc32
+   TASM_EXE = tasm32
+   OBJ_DIR = obj\b32
+   LIB_DIR = lib\b32
+   if $d(B40)
+      # Borland C/C++ 4.x (Avoid optimizer bug)
+      BCC_OPT = -DHARBOUR_USE_WIN_GTAPI
+   !else
+      # Borland C/C++ 5.x
+      BCC_OPT = -O2 -DHARBOUR_USE_WIN_GTAPI
+   !endif
 !endif
+
+HARBOUR_OPT = -q
 
 INCLUDE_DIR       = include;source\compiler;source\vm
 COMPILER_DIR      = source\compiler
@@ -22,8 +39,6 @@ MACRO_DIR         = source\macro
 RDD_DIR           = source\rdd
 RUNNER_DIR        = source\runner
 DEBUG_DIR         = source\debug
-OBJ_DIR           = obj\b32
-LIB_DIR           = lib\b32
 BIN_DIR           = bin
 REGRESS_DIR       = tests\regress
 HBDOC_DIR         = utils\hbdoc
@@ -278,19 +293,19 @@ PROJECT: $(COMMON_LIB) \
 $(COMMON_LIB) : $(COMMON_LIB_OBJS)
 
 $(OBJ_DIR)\hbfsapi.obj : $(COMMON_DIR)\hbfsapi.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(COMMON_LIB) -+$@,,
 
 $(OBJ_DIR)\hbstr.obj : $(COMMON_DIR)\hbstr.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(COMMON_LIB) -+$@,,
 
 $(OBJ_DIR)\reserved.obj : $(COMMON_DIR)\reserved.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(COMMON_LIB) -+$@,,
 
 $(OBJ_DIR)\hbtrace.obj : $(COMMON_DIR)\hbtrace.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(COMMON_LIB) -+$@,,
 
 #
@@ -299,19 +314,19 @@ $(OBJ_DIR)\hbtrace.obj : $(COMMON_DIR)\hbtrace.c
 $(PP_LIB) : $(PP_LIB_OBJS)
 
 $(OBJ_DIR)\hbppint.obj : $(PP_DIR)\hbppint.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(PP_LIB) -+$@,,
 
 $(OBJ_DIR)\hbpp.obj : $(PP_DIR)\hbpp.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(PP_LIB) -+$@,,
 
 $(OBJ_DIR)\table.obj : $(PP_DIR)\table.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(PP_LIB) -+$@,,
 
 $(OBJ_DIR)\hbpplib.obj : $(PP_DIR)\hbpplib.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(PP_LIB) -+$@,,
 
 #
@@ -337,69 +352,69 @@ $(HARBOUR_EXE) : $(HARBOUR_EXE_OBJS)
    echo $(OBJ_DIR)\expropt.obj >> temp.bld
    echo $(OBJ_DIR)\hbfunchk.obj >> temp.bld
    echo $(COMMON_LIB) $(PP_LIB) >> temp.bld
-   bcc32 @temp.bld
+   $(BCC_EXE) @temp.bld
    del temp.bld
 
 $(OBJ_DIR)\harbour.obj : $(COMPILER_DIR)\harbour.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
 $(OBJ_DIR)\harboury.c : $(COMPILER_DIR)\harbour.y
    bison -d -v -y $** -o$@
 
 $(OBJ_DIR)\harboury.obj : $(OBJ_DIR)\harboury.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
 $(OBJ_DIR)\harbourl.c : $(COMPILER_DIR)\harbour.l
    flex -i -8 -o$@ $**
 
 $(OBJ_DIR)\harbourl.obj : $(OBJ_DIR)\harbourl.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR);$(OBJ_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR);$(OBJ_DIR) -o$@ $**
 
 $(OBJ_DIR)\cmdcheck.obj : $(COMPILER_DIR)\cmdcheck.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
 $(OBJ_DIR)\hbusage.obj : $(COMPILER_DIR)\hbusage.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
 $(OBJ_DIR)\hbgenerr.obj : $(COMPILER_DIR)\hbgenerr.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
 $(OBJ_DIR)\hbpcode.obj : $(COMPILER_DIR)\hbpcode.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
 $(OBJ_DIR)\genc.obj : $(COMPILER_DIR)\genc.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
 $(OBJ_DIR)\genjava.obj : $(COMPILER_DIR)\genjava.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
 $(OBJ_DIR)\genpas.obj : $(COMPILER_DIR)\genpas.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
 $(OBJ_DIR)\genrc.obj : $(COMPILER_DIR)\genrc.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
 $(OBJ_DIR)\genhrb.obj : $(COMPILER_DIR)\genhrb.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
 $(OBJ_DIR)\expropt.obj : $(COMPILER_DIR)\expropt.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
 $(OBJ_DIR)\hbfunchk.obj : $(COMPILER_DIR)\hbfunchk.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
 #
 # hbpp.exe
 #
 $(PP_EXE) : $(PP_LIB_OBJS) $(COMMON_LIB_OBJS)
 
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$(OBJ_DIR)\hbpp.obj $(PP_DIR)\stdalone\hbpp.c
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$(OBJ_DIR)\hbpp.obj $(PP_DIR)\stdalone\hbpp.c
    echo $(BCC_OPT) > temp.bld
    echo -e$(PP_EXE) >> temp.bld
    echo -I$(INCLUDE_DIR) >> temp.bld
    echo $(OBJ_DIR)\hbpp.obj >> temp.bld
    echo $(COMMON_LIB) $(PP_LIB) >> temp.bld
-   bcc32 @temp.bld
+   $(BCC_EXE) @temp.bld
    del temp.bld
 
 #
@@ -408,527 +423,527 @@ $(PP_EXE) : $(PP_LIB_OBJS) $(COMMON_LIB_OBJS)
 $(HARBOUR_LIB) : $(HARBOUR_LIB_OBJS)
 
 $(OBJ_DIR)\achoice.c : $(RTL_DIR)\achoice.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\achoice.obj : $(OBJ_DIR)\achoice.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\adir.c : $(RTL_DIR)\adir.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\adir.obj : $(OBJ_DIR)\adir.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\alert.c : $(RTL_DIR)\alert.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\alert.obj : $(OBJ_DIR)\alert.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\arrays.obj : $(RTL_DIR)\arrays.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\asort.c : $(RTL_DIR)\asort.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\asort.obj : $(OBJ_DIR)\asort.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\binnum.obj : $(RTL_DIR)\binnum.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\break.obj : $(RTL_DIR)\break.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\browdb.c : $(RTL_DIR)\browdb.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\browdb.obj : $(OBJ_DIR)\browdb.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\browse.c : $(RTL_DIR)\browse.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\browse.obj : $(OBJ_DIR)\browse.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\classes.obj : $(RTL_DIR)\classes.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\cmdarg.obj : $(VM_DIR)\cmdarg.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\codebloc.obj : $(RTL_DIR)\codebloc.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\console.obj : $(RTL_DIR)\console.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\copyfile.obj : $(RTL_DIR)\copyfile.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\ctchksum.obj : $(TOOLS_DIR)\ctchksum.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\ctchrmix.obj : $(TOOLS_DIR)\ctchrmix.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\ctcrypt.obj : $(TOOLS_DIR)\ctcrypt.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\dates.obj : $(RTL_DIR)\dates.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\dbedit.c : $(RTL_DIR)\dbedit.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\dbedit.obj : $(OBJ_DIR)\dbedit.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\debug.obj : $(VM_DIR)\debug.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\descend.obj : $(RTL_DIR)\descend.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\devoutp.c : $(RTL_DIR)\devoutp.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\devoutp.obj : $(OBJ_DIR)\devoutp.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\dir.obj : $(RTL_DIR)\dir.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\dircmd.c : $(RTL_DIR)\dircmd.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\dircmd.obj : $(OBJ_DIR)\dircmd.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\do.obj : $(RTL_DIR)\do.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\dummy.c : $(RTL_DIR)\dummy.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\dummy.obj : $(OBJ_DIR)\dummy.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\dynsym.obj : $(VM_DIR)\dynsym.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\empty.obj : $(RTL_DIR)\empty.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\environ.obj : $(RTL_DIR)\environ.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\errorapi.obj : $(RTL_DIR)\errorapi.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\errorsys.c : $(RTL_DIR)\errorsys.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\errorsys.obj : $(OBJ_DIR)\errorsys.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\extend.obj : $(RTL_DIR)\extend.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\fieldbl.c : $(RTL_DIR)\fieldbl.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\fieldbl.obj : $(OBJ_DIR)\fieldbl.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\filesys.obj : $(RTL_DIR)\filesys.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\fm.obj : $(RTL_DIR)\fm.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\harbinit.c : $(RTL_DIR)\harbinit.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\harbinit.obj : $(OBJ_DIR)\harbinit.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\hardcr.obj : $(RTL_DIR)\hardcr.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\hvm.obj : $(VM_DIR)\hvm.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\initexit.obj : $(RTL_DIR)\initexit.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\initsymb.obj : $(VM_DIR)\initsymb.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\inkey.obj : $(RTL_DIR)\inkey.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\input.c : $(RTL_DIR)\input.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\input.obj : $(OBJ_DIR)\input.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\isprint.obj : $(RTL_DIR)\isprint.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\itemapi.obj : $(RTL_DIR)\itemapi.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\langapi.obj : $(RTL_DIR)\langapi.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\len.obj : $(RTL_DIR)\len.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\main.obj : $(VM_DIR)\main.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\maindll.obj : $(VM_DIR)\maindll.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\mainwin.obj : $(VM_DIR)\mainwin.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\math.obj : $(RTL_DIR)\math.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\memofile.obj : $(RTL_DIR)\memofile.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\memoline.obj : $(RTL_DIR)\memoline.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\memvarbl.c : $(RTL_DIR)\memvarbl.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\memvarbl.obj : $(OBJ_DIR)\memvarbl.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\memvars.obj : $(RTL_DIR)\memvars.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\menuto.c : $(RTL_DIR)\menuto.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\menuto.obj : $(OBJ_DIR)\menuto.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\mlcount.obj : $(RTL_DIR)\mlcount.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\mlpos.obj : $(RTL_DIR)\mlpos.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\msgxxx.obj : $(RTL_DIR)\msgxxx.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR);$(RTL_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR);$(RTL_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\mtran.obj : $(RTL_DIR)\mtran.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\natmsg.obj : $(RTL_DIR)\natmsg.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\net.obj : $(RTL_DIR)\net.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\objfunc.c : $(RTL_DIR)\objfunc.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\objfunc.obj : $(OBJ_DIR)\objfunc.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\oemansi.obj : $(RTL_DIR)\oemansi.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\oldbox.obj : $(RTL_DIR)\oldbox.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\oldclear.obj : $(RTL_DIR)\oldclear.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\pcount.obj : $(RTL_DIR)\pcount.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\proc.obj : $(RTL_DIR)\proc.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\pvalue.obj : $(RTL_DIR)\pvalue.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\readkey.c : $(RTL_DIR)\readkey.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\readkey.obj : $(OBJ_DIR)\readkey.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\samples.obj : $(RTL_DIR)\samples.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\set.obj : $(RTL_DIR)\set.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\setcolor.obj : $(RTL_DIR)\setcolor.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\setfunc.c : $(RTL_DIR)\setfunc.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\setfunc.obj : $(OBJ_DIR)\setfunc.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\setkey.c : $(RTL_DIR)\setkey.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\setkey.obj : $(OBJ_DIR)\setkey.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\setta.c : $(RTL_DIR)\setta.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\setta.obj : $(OBJ_DIR)\setta.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\soundex.obj : $(RTL_DIR)\soundex.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\strings.obj : $(RTL_DIR)\strings.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\symbols.obj : $(VM_DIR)\symbols.asm
-   tasm32 $**, $@
+   $(TASM_EXE) $**, $@
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\tbcolumn.c : $(RTL_DIR)\tbcolumn.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\tbcolumn.obj : $(OBJ_DIR)\tbcolumn.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\tbrowse.c : $(RTL_DIR)\tbrowse.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\tbrowse.obj : $(OBJ_DIR)\tbrowse.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\tclass.c : $(RTL_DIR)\tclass.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\tclass.obj : $(OBJ_DIR)\tclass.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\terror.c : $(RTL_DIR)\terror.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\terror.obj : $(OBJ_DIR)\terror.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\text.c : $(RTL_DIR)\text.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\text.obj : $(OBJ_DIR)\text.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\tget.c : $(RTL_DIR)\tget.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\tget.obj : $(OBJ_DIR)\tget.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\tgetlist.c : $(RTL_DIR)\tgetlist.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\tgetlist.obj : $(OBJ_DIR)\tgetlist.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\tone.obj : $(RTL_DIR)\tone.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\transfrm.obj : $(RTL_DIR)\transfrm.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\type.obj : $(RTL_DIR)\type.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\valtype.obj : $(RTL_DIR)\valtype.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\wait.c : $(RTL_DIR)\wait.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\wait.obj : $(OBJ_DIR)\wait.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\word.obj : $(RTL_DIR)\word.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\xhelp.obj : $(RTL_DIR)\xhelp.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\xsavescr.c : $(RTL_DIR)\xsavescr.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\xsavescr.obj : $(OBJ_DIR)\xsavescr.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\dbcmd.obj : $(RDD_DIR)\dbcmd.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\dbf0.c : $(RDD_DIR)\dbf0.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\dbf0.obj : $(OBJ_DIR)\dbf0.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\dbf1.obj : $(RDD_DIR)\dbf1.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\dbnubs.obj : $(RDD_DIR)\dbnubs.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\dbstrux.c : $(RDD_DIR)\dbstrux.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\dbstrux.obj : $(OBJ_DIR)\dbstrux.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\sdf0.c : $(RDD_DIR)\sdf0.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\sdf0.obj : $(OBJ_DIR)\sdf0.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\sdf1.obj : $(RDD_DIR)\sdf1.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\delim0.c : $(RDD_DIR)\delim0.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\delim0.obj : $(OBJ_DIR)\delim0.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\delim1.obj : $(RDD_DIR)\delim1.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\rddord.c : $(RDD_DIR)\rddord.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\rddord.obj : $(OBJ_DIR)\rddord.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\rddsys.c : $(RDD_DIR)\rddsys.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\rddsys.obj : $(OBJ_DIR)\rddsys.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
 #
@@ -937,169 +952,169 @@ $(OBJ_DIR)\rddsys.obj : $(OBJ_DIR)\rddsys.c
 $(TOOLS_LIB) : $(TOOLS_LIB_OBJS)
 
 $(OBJ_DIR)\asciisum.obj : $(TOOLS_DIR)\asciisum.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
 $(OBJ_DIR)\ascpos.obj : $(TOOLS_DIR)\ascpos.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
 $(OBJ_DIR)\atdiff.obj : $(TOOLS_DIR)\atdiff.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
 $(OBJ_DIR)\chareven.obj : $(TOOLS_DIR)\chareven.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
 $(OBJ_DIR)\charmix.obj : $(TOOLS_DIR)\charmix.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
 $(OBJ_DIR)\charodd.obj : $(TOOLS_DIR)\charodd.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
 $(OBJ_DIR)\chrcount.obj : $(TOOLS_DIR)\chrcount.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
 $(OBJ_DIR)\chrfirst.obj : $(TOOLS_DIR)\chrfirst.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
 $(OBJ_DIR)\chrtotal.obj : $(TOOLS_DIR)\chrtotal.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
 $(OBJ_DIR)\dates2.obj : $(TOOLS_DIR)\dates2.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
 $(OBJ_DIR)\datesx.obj : $(TOOLS_DIR)\datesx.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
 $(OBJ_DIR)\fileread.c : $(TOOLS_DIR)\fileread.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\fileread.obj : $(OBJ_DIR)\fileread.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
 $(OBJ_DIR)\hb_f.obj : $(TOOLS_DIR)\hb_f.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
 $(OBJ_DIR)\html.c : $(TOOLS_DIR)\html.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\html.obj : $(OBJ_DIR)\html.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
 $(OBJ_DIR)\io.obj : $(TOOLS_DIR)\io.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
 $(OBJ_DIR)\mathx.obj : $(TOOLS_DIR)\mathx.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
 $(OBJ_DIR)\nconvert.c : $(TOOLS_DIR)\nconvert.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\nconvert.obj : $(OBJ_DIR)\nconvert.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
 $(OBJ_DIR)\ng.c : $(TOOLS_DIR)\ng.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\ng.obj : $(OBJ_DIR)\ng.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
 $(OBJ_DIR)\numtxten.c : $(TOOLS_DIR)\numtxten.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\numtxten.obj : $(OBJ_DIR)\numtxten.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
 $(OBJ_DIR)\numtxthu.c : $(TOOLS_DIR)\numtxthu.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\numtxthu.obj : $(OBJ_DIR)\numtxthu.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
 $(OBJ_DIR)\os2.c : $(TOOLS_DIR)\os2.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\os2.obj : $(OBJ_DIR)\os2.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
 $(OBJ_DIR)\rtf.c : $(TOOLS_DIR)\rtf.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\rtf.obj : $(OBJ_DIR)\rtf.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
 $(OBJ_DIR)\strasint.obj : $(TOOLS_DIR)\strasint.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
 $(OBJ_DIR)\strcount.obj : $(TOOLS_DIR)\strcount.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
 $(OBJ_DIR)\strcspn.obj : $(TOOLS_DIR)\strcspn.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
 $(OBJ_DIR)\strdiff.obj : $(TOOLS_DIR)\strdiff.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
 $(OBJ_DIR)\strexpan.obj : $(TOOLS_DIR)\strexpan.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
 $(OBJ_DIR)\strfmt.obj : $(TOOLS_DIR)\strfmt.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
 $(OBJ_DIR)\stringp.c : $(TOOLS_DIR)\stringp.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\stringp.obj : $(OBJ_DIR)\stringp.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
 $(OBJ_DIR)\stringsx.obj : $(TOOLS_DIR)\stringsx.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
 $(OBJ_DIR)\strleft.obj : $(TOOLS_DIR)\strleft.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
 $(OBJ_DIR)\strpbrk.obj : $(TOOLS_DIR)\strpbrk.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
 $(OBJ_DIR)\strright.obj : $(TOOLS_DIR)\strright.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
 $(OBJ_DIR)\troff.c : $(TOOLS_DIR)\troff.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\troff.obj : $(OBJ_DIR)\troff.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
 #
@@ -1111,18 +1126,18 @@ $(OBJ_DIR)\macroy.c : $(MACRO_DIR)\macro.y
    bison -d -v -y $** -o$@
 
 $(OBJ_DIR)\macroy.obj : $(OBJ_DIR)\macroy.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(MACRO_LIB) -+$@,,
 
 $(OBJ_DIR)\macrol.c : $(MACRO_DIR)\macro.l
    flex -i -8 -o$@ $**
 
 $(OBJ_DIR)\macrol.obj : $(OBJ_DIR)\macrol.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR);$(OBJ_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR);$(OBJ_DIR) -o$@ $**
    tlib $(MACRO_LIB) -+$@,,
 
 $(OBJ_DIR)\macro.obj : $(MACRO_DIR)\macro.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(MACRO_LIB) -+$@,,
 
 #
@@ -1131,19 +1146,19 @@ $(OBJ_DIR)\macro.obj : $(MACRO_DIR)\macro.c
 $(TERMINAL_LIB) : $(TERMINAL_LIB_OBJS)
 
 $(OBJ_DIR)\gtapi.obj : $(RTL_DIR)\gtapi.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TERMINAL_LIB) -+$@,,
 
 $(OBJ_DIR)\gtxxx.obj : $(RTL_DIR)\gtxxx.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR);$(RTL_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR);$(RTL_DIR) -o$@ $**
    tlib $(TERMINAL_LIB) -+$@,,
 
 $(OBJ_DIR)\mouseapi.obj : $(RTL_DIR)\mouseapi.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TERMINAL_LIB) -+$@,,
 
 $(OBJ_DIR)\mousexxx.obj : $(RTL_DIR)\mousexxx.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR);$(RTL_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR);$(RTL_DIR) -o$@ $**
    tlib $(TERMINAL_LIB) -+$@,,
 
 #
@@ -1152,10 +1167,10 @@ $(OBJ_DIR)\mousexxx.obj : $(RTL_DIR)\mousexxx.c
 $(NULSYS_LIB) : $(NULSYS_LIB_OBJS)
 
 $(OBJ_DIR)\nulsys.c : $(RDD_DIR)\nulsys\nulsys.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\nulsys.obj : $(OBJ_DIR)\nulsys.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(DBFNTX_LIB) -+$@,,
 
 #
@@ -1164,14 +1179,14 @@ $(OBJ_DIR)\nulsys.obj : $(OBJ_DIR)\nulsys.c
 $(DBFNTX_LIB) : $(DBFNTX_LIB_OBJS)
 
 $(OBJ_DIR)\dbfntx0.c : $(RDD_DIR)\dbfntx\dbfntx0.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\dbfntx0.obj : $(OBJ_DIR)\dbfntx0.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(DBFNTX_LIB) -+$@,,
 
 $(OBJ_DIR)\dbfntx1.obj : $(RDD_DIR)\dbfntx\dbfntx1.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(DBFNTX_LIB) -+$@,,
 
 #
@@ -1180,14 +1195,14 @@ $(OBJ_DIR)\dbfntx1.obj : $(RDD_DIR)\dbfntx\dbfntx1.c
 $(DBFCDX_LIB) : $(DBFCDX_LIB_OBJS)
 
 $(OBJ_DIR)\dbfcdx0.c : $(RDD_DIR)\dbfcdx\dbfcdx0.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\dbfcdx0.obj : $(OBJ_DIR)\dbfcdx0.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(DBFCDX_LIB) -+$@,,
 
 $(OBJ_DIR)\dbfcdx1.obj : $(RDD_DIR)\dbfcdx\dbfcdx1.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(DBFCDX_LIB) -+$@,,
 
 #
@@ -1196,7 +1211,7 @@ $(OBJ_DIR)\dbfcdx1.obj : $(RDD_DIR)\dbfcdx\dbfcdx1.c
 $(RUNNER_LIB) : $(RUNNER_LIB_OBJS)
 
 $(OBJ_DIR)\runlib.obj : $(RUNNER_DIR)\runlib.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(RUNNER_LIB) -+$@,,
 
 #
@@ -1205,10 +1220,10 @@ $(OBJ_DIR)\runlib.obj : $(RUNNER_DIR)\runlib.c
 $(RUNNER_EXE) : $(RUNNER_DIR)\stdalone\external.prg \
                 $(RUNNER_DIR)\stdalone\hbrun.prg
 
-   $(HARBOUR_EXE) -i$(INCLUDE_DIR) -n -q -o$(OBJ_DIR)\ $(RUNNER_DIR)\stdalone\external.prg
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$(OBJ_DIR)\external.obj $(OBJ_DIR)\external.c
-   $(HARBOUR_EXE) -i$(INCLUDE_DIR) -i$(RUNNER_DIR)\stdalone -n -q -o$(OBJ_DIR)\ $(RUNNER_DIR)\stdalone\hbrun.prg
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$(OBJ_DIR)\hbrun.obj $(OBJ_DIR)\hbrun.c
+   $(HARBOUR_EXE) -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$(OBJ_DIR)\ $(RUNNER_DIR)\stdalone\external.prg
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$(OBJ_DIR)\external.obj $(OBJ_DIR)\external.c
+   $(HARBOUR_EXE) -i$(INCLUDE_DIR) -i$(RUNNER_DIR)\stdalone -n $(HARBOUR_OPT) -o$(OBJ_DIR)\ $(RUNNER_DIR)\stdalone\hbrun.prg
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$(OBJ_DIR)\hbrun.obj $(OBJ_DIR)\hbrun.c
 
    echo $(BCC_OPT) > temp.bld
    echo -e$(RUNNER_EXE) >> temp.bld
@@ -1224,7 +1239,7 @@ $(RUNNER_EXE) : $(RUNNER_DIR)\stdalone\external.prg \
    echo $(RUNNER_LIB) >> temp.bld
    echo $(DBFNTX_LIB) >> temp.bld
    echo $(DBFCDX_LIB) >> temp.bld
-   bcc32 @temp.bld
+   $(BCC_EXE) @temp.bld
    del temp.bld
 
 #
@@ -1233,17 +1248,17 @@ $(RUNNER_EXE) : $(RUNNER_DIR)\stdalone\external.prg \
 $(DEBUG_LIB) : $(DEBUG_LIB_OBJS)
 
 $(OBJ_DIR)\debugger.c : $(DEBUG_DIR)\debugger.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\debugger.obj : $(OBJ_DIR)\debugger.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(DEBUG_LIB) -+$@,,
 
 $(OBJ_DIR)\tbrwtext.c : $(DEBUG_DIR)\tbrwtext.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\tbrwtext.obj : $(OBJ_DIR)\tbrwtext.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(DEBUG_LIB) -+$@,,
 
 #
@@ -1271,62 +1286,62 @@ $(REGRESS_EXE) : $(REGRESS_EXE_OBJS)
    echo $(TOOLS_LIB) >> temp.bld
    echo $(DBFNTX_LIB) >> temp.bld
    echo $(DBFCDX_LIB) >> temp.bld
-   bcc32 @temp.bld
+   $(BCC_EXE) @temp.bld
    del temp.bld
 
 $(OBJ_DIR)\rt_main.c : $(REGRESS_DIR)\rt_main.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\rt_main.obj : $(OBJ_DIR)\rt_main.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
 $(OBJ_DIR)\rt_hvm.c : $(REGRESS_DIR)\rt_hvm.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\rt_hvm.obj : $(OBJ_DIR)\rt_hvm.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
 $(OBJ_DIR)\rt_math.c : $(REGRESS_DIR)\rt_math.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\rt_math.obj : $(OBJ_DIR)\rt_math.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
 $(OBJ_DIR)\rt_date.c : $(REGRESS_DIR)\rt_date.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\rt_date.obj : $(OBJ_DIR)\rt_date.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
 $(OBJ_DIR)\rt_str.c : $(REGRESS_DIR)\rt_str.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\rt_str.obj : $(OBJ_DIR)\rt_str.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
 $(OBJ_DIR)\rt_trans.c : $(REGRESS_DIR)\rt_trans.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\rt_trans.obj : $(OBJ_DIR)\rt_trans.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
 $(OBJ_DIR)\rt_array.c : $(REGRESS_DIR)\rt_array.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\rt_array.obj : $(OBJ_DIR)\rt_array.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
 $(OBJ_DIR)\rt_file.c : $(REGRESS_DIR)\rt_file.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\rt_file.obj : $(OBJ_DIR)\rt_file.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
 $(OBJ_DIR)\rt_misc.c : $(REGRESS_DIR)\rt_misc.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\rt_misc.obj : $(OBJ_DIR)\rt_misc.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
 #
 # hbdoc.exe
@@ -1352,53 +1367,54 @@ $(HBDOC_EXE) : $(HBDOC_EXE_OBJS)
    echo $(TOOLS_LIB) >> temp.bld
    echo $(DBFNTX_LIB) >> temp.bld
    echo $(DBFCDX_LIB) >> temp.bld
-   bcc32 @temp.bld
+   $(BCC_EXE) @temp.bld
    del temp.bld
 
 $(OBJ_DIR)\hbdoc.c : $(HBDOC_DIR)\hbdoc.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\hbdoc.obj : $(OBJ_DIR)\hbdoc.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
 $(OBJ_DIR)\genasc.c : $(HBDOC_DIR)\genasc.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\genasc.obj : $(OBJ_DIR)\genasc.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
 $(OBJ_DIR)\genhpc.c : $(HBDOC_DIR)\genhpc.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\genhpc.obj : $(OBJ_DIR)\genhpc.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
 $(OBJ_DIR)\genhtm.c : $(HBDOC_DIR)\genhtm.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\genhtm.obj : $(OBJ_DIR)\genhtm.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
 $(OBJ_DIR)\genng.c : $(HBDOC_DIR)\genng.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\genng.obj : $(OBJ_DIR)\genng.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
 $(OBJ_DIR)\genos2.c : $(HBDOC_DIR)\genos2.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\genos2.obj : $(OBJ_DIR)\genos2.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
 $(OBJ_DIR)\genrtf.c : $(HBDOC_DIR)\genrtf.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\genrtf.obj : $(OBJ_DIR)\genrtf.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
 $(OBJ_DIR)\gentrf.c : $(HBDOC_DIR)\gentrf.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\gentrf.obj : $(OBJ_DIR)\gentrf.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+

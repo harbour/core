@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 Harbour run-time preprocessing library.
 Felipe Coury <fcoury@flexsys-ci.com>
 

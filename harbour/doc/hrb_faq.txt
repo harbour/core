@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 .HRB FAQ list 1999/05/19:
 
 Current only available in a 32bit Intel version.
