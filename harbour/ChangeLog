@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+  * include/hbsetup.h
+    + defines for compiler __DJGPP__ is HB_OS_DOS_32.
+
+2002-04-17 13:15 UTC-0300 Luiz Rafael Culik<culikr@uol.com.br>
   * contrib/htmllib/ohtm.prg
     contrib/htmllib/oedit.prg
     contrib/htmllib/forms.ch
