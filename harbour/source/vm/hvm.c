@@ -225,7 +225,7 @@ static BOOL     s_bDebugRequest;    /* debugger invoked via the VM */
 static BOOL     s_bDebugShowLines;  /* update source code line on the debugger display */
 static BOOL     s_bDebuggerIsWorking; /* to know when __DBGENTRY is beeing invoked */
 
-/* Various compatibility flags 
+/* Various compatibility flags
 */
 static ULONG	s_VMFlags = HB_VMFLAG_HARBOUR;
 #undef hb_vmFlagEnabled
@@ -355,7 +355,7 @@ void HB_EXPORT hb_vmInit( BOOL bStartMainProc )
    /* Check for some internal switches */
    s_VMFlags = hb_cmdargProcessVM( &s_VMCancelKey, &s_VMCancelKeyEx );
 	hb_inkeySetCancelKeys( s_VMCancelKey, s_VMCancelKeyEx );
-	
+
    /* Initialize opcodes profiler support arrays */
    {
       ULONG ul;
@@ -530,7 +530,7 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
       }
 
 #ifndef HB_GUI
-      if( ++uiPolls == 1 )      
+      if( ++uiPolls == 1 )
          hb_inkeyPoll();
 #endif
 
@@ -3263,7 +3263,7 @@ void hb_vmDo( USHORT uiParams )
    printf( "\VmDo nItems: %i Params: %i Extra %i\n", hb_stack.pPos - hb_stack.pBase, uiParams, hb_vm_aiExtraParams[hb_vm_iExtraParamsIndex - 1] );
    */
    s_ulProcLevel++;
-   
+
    if( hb_vm_iExtraParamsIndex && HB_IS_SYMBOL( pItem = hb_stackItemFromTop( -( uiParams + hb_vm_aiExtraParams[hb_vm_iExtraParamsIndex - 1] + 2 ) ) ) && pItem->item.asSymbol.value == hb_vm_apExtraParamsSymbol[hb_vm_iExtraParamsIndex - 1] )
    {
       uiParams += hb_vm_aiExtraParams[--hb_vm_iExtraParamsIndex];
@@ -5199,3 +5199,23 @@ void _hb_froceLinkMain()
    hb_froceLinkMain();
 }
 #endif
+
+HB_FUNC( __VMVARSLIST )
+{
+   HB_FUNCNAME(HB_DBG_VMVARSLIST)();
+}
+
+HB_FUNC( __VMVARSLEN )
+{
+   HB_FUNCNAME(HB_DBG_VMVARSLEN)();
+}
+
+HB_FUNC( __VMVARSGET )
+{
+   HB_FUNCNAME(HB_DBG_VMVARSGET)();
+}
+
+HB_FUNC( __VMVARSSET )
+{
+   HB_FUNCNAME(HB_DBG_VMVARSSET)();
+}
