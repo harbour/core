@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-07-14 13:50 UTC-0300 Antonio Carlos Pantaglione <toninho@fwi.com.br>
+  * contrib/rdd_ads/ads1.c
+  * contrib/rdd_ads/adsfunc.c
+    ! Changes in adsGetValue and AdsKeyCount() for speed(). Tested with
+      ADS Local 6.2, not tested with prior versions of ADS.
+
 2003-07-14 14:39 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
   * source/vm/classes.c
     + HB_SETCLSHANDLE() implemented
