@@ -117,3 +117,9 @@
       => AdsSetCharType( if( upper( <(x)> ) == "OEM", 2, 1 ) )
 
 #command COMMIT                 => AdsWriteAllRecords()
+
+#command BEGIN TRANSACTION      => AdsBeginTransaction()
+
+#command COMMIT TRANSACTION     => AdsCommitTransaction()
+
+#command ROLLBACK TRANSACTION   => AdsRollbackTransaction()

@@ -8,6 +8,15 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-02-25 22:10 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * contrib/rdd_ads/adsfunc.c
+    + Transaction processing functions added.
+  * contrib/rdd_ads/ads.ch
+    + New commands added:
+      BEGIN TRANSACTION
+      COMMIT TRANSACTION
+      ROLLBACK TRANSACTION
+
 2003-02-18 22:05 UTC+0100 Tomaz Zupan <tomaz.zupan@orpo.si>
   * include/hbdbf.h
   * include/hbdbsort.h

@@ -1274,6 +1274,36 @@ HB_FUNC( ADSGETCONNECTIONHANDLE )
    hb_retni( adsConnectHandle );
 }
 
+HB_FUNC( ADSBEGINTRANSACTION )
+{
+   hb_retnl( AdsBeginTransaction( (hb_pcount()>1)? (ADSHANDLE)hb_parnl(1) : adsConnectHandle ) );
+}
+
+HB_FUNC( ADSCOMMITTRANSACTION )
+{
+   hb_retnl( AdsCommitTransaction( (hb_pcount()>1)? (ADSHANDLE)hb_parnl(1) : adsConnectHandle ) );
+}
+
+HB_FUNC( ADSROLLBACKTRANSACTION )
+{
+   hb_retnl( AdsRollbackTransaction( (hb_pcount()>1)? (ADSHANDLE)hb_parnl(1) : adsConnectHandle ) );
+}
+
+HB_FUNC( ADSFAILEDTRANSACTIONRECOVERY )
+{
+   hb_retnl( AdsFailedTransactionRecovery( (ISCHAR(1))? hb_parc(1) : NULL ) );
+}
+
+HB_FUNC( ADSINTRANSACTION )
+{
+   UNSIGNED16 pbInTrans;
+
+   if( AdsInTransaction( (hb_pcount()>1)? (ADSHANDLE)hb_parnl(1) : adsConnectHandle,&pbInTrans ) )
+      hb_retl( (int) pbInTrans );
+   else
+      hb_retl( 0 );
+}
+
 HB_FUNC( ADSGETLASTERROR )
 {
    /*  nLastErr := AdsGetLastError( [ @cLastErr ] )  */
