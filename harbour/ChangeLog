@@ -7,6 +7,13 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+  * source/pp/pptable.c
+    * Fixed command for SET PRINTER TO
+  * source/rtl/set.c
+    * Fixed The SET_PRINTFILE
+
+2002-03-08 18:35 UTC-0500 Phil Barnett <midnight@the-oasis.net
+  * include/hbver.h
     * Updated version numbers to Alpha 39 release
   * Tagged Repository With BUILD39
 
