@@ -76,6 +76,7 @@ typedef struct _COMMANDS
 
 /* HBPP.C exported functions */
 
+extern void   hb_pp_Init( void );
 extern int    hb_pp_ParseDirective( char * ); /* Parsing preprocessor directives ( #... ) */
 extern int    hb_pp_ParseExpression( char *, char * ); /* Parsing a line ( without preprocessor directive ) */
 extern int    hb_pp_WrStr( FILE *, char * );
@@ -86,7 +87,6 @@ extern DEFINES * hb_pp_AddDefine( char *, char * );         /* Add new #define t
 
 /* HBPPINT.C exported functions */
 
-extern void   hb_pp_Init( void );
 extern int    hb_pp_Internal( FILE *, char * );
 
 /* HBPP.C exported variables */

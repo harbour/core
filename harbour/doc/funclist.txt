@@ -23,6 +23,7 @@
 ;              mac[-mpw][+T]
 ;
 ;              Examples: w32-gcc+T, w32, w32-icc
+;              (+T means multithreading ready)
 ;
 ; Use ';' for comments
 ;

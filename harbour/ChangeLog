@@ -1,3 +1,16 @@
+20000301-03:04 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * source/pp/*
+     include/hbpp.h
+     + Added support for __DATE__ and __TIME__ predefined macros.
+       Note that this will not work in the library version.
+     * hb_pp_AddDefine() fixed to work without any hacks from the caller side.
+     * hb_pp_Init() moved to hbpp.c and is used from standalone hbpp.c, too.
+   * doc/funclist.txt
+     + "+T" symbol explained.
+   * source/rtl/filesys.c
+     - Some "add documentation" note removed.
+     + One copyright added.
+
 20000229-23:13 GMT+1 Victor Szakats <info@szelvesz.hu>
    + doc/en/array.txt
    + doc/en/binnum.txt

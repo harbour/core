@@ -50,36 +50,29 @@
 #include "compiler.h"
 
 extern FILES       hb_comp_files;
-extern int hb_comp_iLine;       /* currently parsed file line number */
+extern int         hb_comp_iLine; /* currently parsed file line number */
 
 static char s_szLine[ HB_PP_STR_SIZE ];
 static char s_szOutLine[ HB_PP_STR_SIZE ];
 
-void hb_pp_Init( void )
-{
-  HB_TRACE(HB_TR_DEBUG, ("Hbpp_init()"));
-
-  hb_pp_aCondCompile = ( int * ) hb_xgrab( sizeof( int ) * 5 );
-}
-
 int hb_pp_Internal( FILE * handl_o, char * sOut )
 {
   PFILE pFile;
-  char *ptr, *ptrOut;
+  char * ptr, * ptrOut;
   int lContinue;
   int lens, rdlen;
   int nEmptyStrings = 0, lLine = 0, i;
 
   HB_TRACE(HB_TR_DEBUG, ("PreProcess(%p, %p, %s)", handl_o, sOut));
 
-  while( 1 )
+  while( TRUE )
   {
      pFile = hb_comp_files.pLast;
      lens = lContinue = 0;
      ptrOut = sOut;
      while( ( rdlen = hb_pp_RdStr( pFile->handle, s_szLine + lens, HB_PP_STR_SIZE -
-                  lens, lContinue, (char*)pFile->pBuffer, &(pFile->lenBuffer),
-                  &(pFile->iBuffer) ) ) >= 0 )
+                  lens, lContinue, ( char * ) pFile->pBuffer, &( pFile->lenBuffer ),
+                  &( pFile->iBuffer ) ) ) >= 0 )
        {
          lens += rdlen;
 
@@ -92,7 +85,7 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
              s_szLine[ ++lens ] = ' ';
              s_szLine[ ++lens ] = '\0';
 
-               nEmptyStrings++;
+             nEmptyStrings++;
            }
          else
            {

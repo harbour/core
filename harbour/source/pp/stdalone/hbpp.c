@@ -63,9 +63,9 @@ static char s_szOutLine[ HB_PP_STR_SIZE ];
 static int  s_iWarnings = 0;
 
 PATHNAMES * hb_comp_pIncludePath = NULL;
-PHB_FNAME hb_comp_pFileName = NULL;
+PHB_FNAME   hb_comp_pFileName = NULL;
 FILES       hb_comp_files;
-int hb_comp_iLine = 1;       /* currently parsed file line number */
+int         hb_comp_iLine = 1; /* currently parsed file line number */
 
 /* These are need for the PP #pragma support */
 BOOL hb_comp_bPPO = FALSE;                      /* flag indicating, is ppo output needed */
@@ -150,6 +150,7 @@ int main( int argc, char * argv[] )
       else  hb_comp_pFileName = hb_fsFNameSplit( argv[ iArg ] );
       iArg++;
     }
+
   if( hb_comp_pFileName )
     {
       if( ! hb_comp_pFileName->szExtension )
@@ -210,9 +211,10 @@ int main( int argc, char * argv[] )
         AddSearchPath( pPath, &hb_comp_pIncludePath );
       }
   }
-  hb_pp_aCondCompile = ( int * ) hb_xgrab( sizeof( int ) * 5 );
 
-  while ( hb_pp_Parse( handl_o ) > 0 );
+  hb_pp_Init();
+
+  while( hb_pp_Parse( handl_o ) > 0 );
   fclose( hb_comp_files.pLast->handle );
   hb_xfree( hb_comp_files.pLast->pBuffer );
   hb_xfree( hb_comp_files.pLast );
@@ -231,14 +233,14 @@ int main( int argc, char * argv[] )
 int hb_pp_Parse( FILE * handl_o )
 {
   PFILE pFile;
-  char *ptr;
+  char * ptr;
   int lContinue;
   int lens, rdlen;
   int nEmptyStrings = 0, lLine = 0, i;
 
   HB_TRACE(HB_TR_DEBUG, ("PreProcess(%p, %p, %s)", handl_o, sOut));
 
-  while( 1 )
+  while( TRUE )
   {
      pFile = hb_comp_files.pLast;
      lens = lContinue = 0;
@@ -257,7 +259,7 @@ int hb_pp_Parse( FILE * handl_o )
              s_szLine[ ++lens ] = ' ';
              s_szLine[ ++lens ] = '\0';
 
-               nEmptyStrings++;
+             nEmptyStrings++;
            }
          else
            {

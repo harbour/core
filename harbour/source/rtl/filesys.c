@@ -42,6 +42,7 @@
  *    hb_fsSetDevMode()
  *    hb_fsReadLarge()
  *    hb_fsWriteLarge()
+ *    hb_fsCurDirBuff()
  *    HB_CURDIR()
  *    HB_CURDRIVE()
  *    HB_DIRCHANGE()
@@ -1069,7 +1070,9 @@ USHORT  hb_fsCurDirBuff( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen )
       s_uiErrorLast = errno;
 
       /* Strip the leading drive spec, and leading underscore. */
-      /* NOTE: The trailing underscore is not returned on this platform */
+
+      /* NOTE: A trailing underscore is not returned on this platform,
+               so we don't need to strip it. [vszakats] */
 
       if( pbyStart[ 1 ] == ':' )
          pbyStart += 2;
@@ -1090,7 +1093,6 @@ USHORT  hb_fsCurDirBuff( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen )
 }
 
 /* NOTE: 0=A:, 1=B:, 2=C:, 3=D:, ... */
-/* TODO: add documentation */
 
 USHORT  hb_fsChDrv( BYTE nDrive )
 {
@@ -1157,7 +1159,6 @@ USHORT  hb_fsChDrv( BYTE nDrive )
 }
 
 /* NOTE: 0=A:, 1=B:, 2=C:, 3=D:, ... */
-/* TODO: add documentation */
 
 /* TOFIX: This isn't fully compliant because CA-Cl*pper doesn't access
           the drive before checking. hb_fsIsDrv only returns TRUE
@@ -1249,7 +1250,6 @@ BOOL    hb_fsIsDevice( FHANDLE hFileHandle )
 }
 
 /* NOTE: 0=A:, 1=B:, 2=C:, 3=D:, ... */
-/* TODO: add documentation */
 
 BYTE    hb_fsCurDrv( void )
 {

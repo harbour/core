@@ -58,6 +58,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <time.h>
+#if defined( OS_UNIX_COMPATIBLE )
+   #include <sys/timeb.h>
+#else
+   #include <sys\timeb.h>
+#endif
+
 #include "hbpp.h"
 #include "hberrors.h"
 #include "compiler.h"
@@ -68,9 +75,9 @@ static DEFINES *  DefSearch( char *, BOOL * );
 static COMMANDS * ComSearch( char *, COMMANDS * );
 static COMMANDS * TraSearch( char *, COMMANDS * );
 
-static int    ParseDefine( char * );                        /* Process #define directive */
-static int    ParseUndef( char * );                         /* Process #undef directive */
-static int    ParseIfdef( char *, int );                    /* Process #ifdef directive */
+static int    ParseDefine( char * );                       /* Process #define directive */
+static int    ParseUndef( char * );                        /* Process #undef directive */
+static int    ParseIfdef( char *, int );                   /* Process #ifdef directive */
 static void   ParseCommand( char *, BOOL, BOOL );          /* Process #command or #translate directive */
 static void   ConvertPatterns( char *, int, char *, int ); /* Converting result pattern in #command and #translate */
 static int    WorkDefine( char **, char *, DEFINES * );    /* Replace fragment of code with a #defined result text */
@@ -144,8 +151,8 @@ static char s_groupchar;
 static char s_prevchar = 'A';
 
 extern int hb_comp_iLine;       /* currently parsed file line number */
-int * hb_pp_aCondCompile;
-int   hb_pp_nCondCompile = 0;
+int *      hb_pp_aCondCompile;
+int        hb_pp_nCondCompile = 0;
 
 /* Table with parse errors */
 char * hb_pp_szErrors[] =
@@ -165,6 +172,28 @@ char * hb_pp_szErrors[] =
    "Freeing a NULL memory pointer",
    "Value out of range in #pragma directive"
 };
+
+void hb_pp_Init( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_pp_Init()"));
+
+   hb_pp_aCondCompile = ( int * ) hb_xgrab( sizeof( int ) * 5 );
+
+   {
+      char szResult[ 11 ];
+      time_t t;
+      struct tm * oTime;
+
+      time( &t );
+      oTime = localtime( &t );
+
+      sprintf( szResult, "\"%04d%02d%02d\"", oTime->tm_year + 1900, oTime->tm_mon + 1, oTime->tm_mday );
+      hb_pp_AddDefine( "__DATE__", szResult );
+
+      sprintf( szResult, "\"%02d:%02d:%02d\"", oTime->tm_hour, oTime->tm_min, oTime->tm_sec );
+      hb_pp_AddDefine( "__TIME__", szResult );
+   }
+}
 
 /* Table with parse warnings */
 /* NOTE: The first character stores the warning's level that triggers this
@@ -268,14 +297,14 @@ int hb_pp_ParseDirective( char * sLine )
 
 static int ParseDefine( char * sLine )
 {
-  char defname[MAX_NAME], pars[MAX_NAME];
+  char defname[ MAX_NAME ], pars[ MAX_NAME ];
   int i, npars = -1;
   DEFINES * lastdef;
 
   HB_TRACE(HB_TR_DEBUG, ("ParseDefine(%s)", sLine));
 
   HB_SKIPTABSPACES( sLine );
-  if( isalpha( *sLine ) || *sLine == '_' || *sLine > 0x7e )
+  if( ISNAME( *sLine ) )
     {
       NextName( &sLine, defname );
       if( *sLine == '(' ) /* If pseudofunction was found */
@@ -294,20 +323,21 @@ static int ParseDefine( char * sLine )
         }
       HB_SKIPTABSPACES(sLine);
 
-      lastdef = hb_pp_AddDefine( defname, ( *sLine == '\0' )? NULL : sLine );
+      lastdef = hb_pp_AddDefine( defname, ( *sLine == '\0' ) ? NULL : sLine );
 
       lastdef->npars = npars;
-      lastdef->pars = ( npars <= 0 )? NULL : hb_strdup( pars );
+      lastdef->pars = ( npars <= 0 ) ? NULL : hb_strdup( pars );
     }
   else
     hb_compGenError( hb_pp_szErrors, 'F', ERR_DEFINE_ABSENT, NULL, NULL );
+
   return 0;
 }
 
 DEFINES * hb_pp_AddDefine( char * defname, char * value )
 {
   BOOL isNew;
-  DEFINES* stdef = DefSearch( defname, &isNew );
+  DEFINES * stdef = DefSearch( defname, &isNew );
 
   HB_TRACE(HB_TR_DEBUG, ("hb_pp_AddDefine(%s, %s)", defname, value));
 
@@ -320,21 +350,25 @@ DEFINES * hb_pp_AddDefine( char * defname, char * value )
     }
   }
   else
-    {
-      stdef = ( DEFINES * ) hb_xgrab( sizeof( DEFINES ) );
-      stdef->last = hb_pp_topDefine;
-      hb_pp_topDefine = stdef;
-      stdef->name = hb_strdup( defname );
-      s_kolAddDefs++;
-    }
-  stdef->value = ( value == NULL )? NULL : hb_strdup( value );
+  {
+    stdef = ( DEFINES * ) hb_xgrab( sizeof( DEFINES ) );
+    stdef->last = hb_pp_topDefine;
+    hb_pp_topDefine = stdef;
+    stdef->name = hb_strdup( defname );
+    stdef->npars = -1;
+
+    s_kolAddDefs++;
+  }
+
+  stdef->value = ( value == NULL ) ? NULL : hb_strdup( value );
+
   return stdef;
 }
 
 static int ParseUndef( char * sLine )
 {
-  char defname[MAX_NAME];
-  DEFINES* stdef;
+  char defname[ MAX_NAME ];
+  DEFINES * stdef;
   BOOL isNew;
 
   HB_TRACE(HB_TR_DEBUG, ("ParseUndef(%s)", sLine));
@@ -351,6 +385,7 @@ static int ParseUndef( char * sLine )
     }
     stdef->name = NULL;
   }
+
   return 0;
 }
 
@@ -660,6 +695,7 @@ int hb_pp_ParseExpression( char * sLine, char * sOutLine )
           else
             {   /* Look for macros from #define      */
               while( ( lenToken = NextName( &ptri, sToken ) ) > 0 )
+              {
                 if( (stdef=DefSearch(sToken,NULL)) != NULL )
                   {
                     ptrb = ptri - lenToken;
@@ -681,7 +717,7 @@ int hb_pp_ParseExpression( char * sLine, char * sOutLine )
                         ptri += i - (ptri-ptrb);
                       }
                   }
-
+              }
               /* Look for definitions from #translate    */
               stcmd = hb_pp_topTranslate;
               while( stcmd != NULL )
