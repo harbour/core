@@ -75,6 +75,7 @@
 #define ERR_BADOPTION              34
 #define ERR_BADPARAM               35
 #define ERR_BADFILENAME            36
+#define ERR_MAYHEM_IN_CASE         37
 
 #define WARN_AMBIGUOUS_VAR         1
 #define WARN_MEMVAR_ASSUMED        2

@@ -1,3 +1,13 @@
+19990926-14:10 GMT+2 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/compiler/harbour.y
+        * fixed generation of invalid pcodes when nested IIF were used
+        * added an error message when any statements are used after 
+        DO CASE and before the first CASE or the OTHERWISE 
+
+    *include/hberrors.h
+        * added ERR_MAYHEM_IN_CASE error code
+
 19990925-11:10 GMT+3 Alexander Kresin
   * source/hbpp/hbpp.c
     * Fixed some bugs, noted by Victor Szel, Andi Jahja and Antonio Linares
