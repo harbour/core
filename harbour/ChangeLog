@@ -1,3 +1,9 @@
+2001-05-21 21:35 UTC+1 JFL (mafact) <jfl@mafact.com>
+   * harbour/source/vm/Proc.c
+     + MethodName(nLevel) ==> Same as ProcName(nLevel)
+   * harbour/include/hbclass.ch
+     - delete xTranslate 'MethodName' 
+
 2001-05-21 14:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * source/rtl/tget.prg

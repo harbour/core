@@ -64,6 +64,13 @@
 #include "hbapi.h"
 #include "hbstack.h"
 
+HB_FUNC( METHODNAME )
+{
+   char szName[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 2 ];
+
+   hb_retc( hb_procname( hb_parni( 1 ) + 1, szName ) );
+}
+
 HB_FUNC( PROCNAME )
 {
    char szName[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 2 ];
