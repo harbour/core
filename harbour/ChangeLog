@@ -1,3 +1,9 @@
+2001-06-10 18:35 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   * source/pp/pplib.c
+     + __PP_PATH( cPath, lClear ) added
+       * This function sets path for following #include's and clears existing
+         paths if lClear is passed and is TRUE
+
 2001-06-10 15:06 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
    * source/rtl/memoedit.prg
       ! fixed error in handling of text (EOL delimiters handling was wrong)

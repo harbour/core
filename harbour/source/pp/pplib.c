@@ -143,6 +143,35 @@ HB_FUNC( __PP_INIT )
    }
 }
 
+HB_FUNC( __PP_PATH )
+{
+   PATHNAMES * pPath = hb_comp_pIncludePath, * pPathNext;
+
+   if( ISLOG( 2 ) && hb_parl( 2 ) )
+   {
+      while( pPath )
+      {
+         pPathNext = pPath->pNext;
+         hb_xfree( pPath->szPath );
+         hb_xfree( pPath );
+         pPath = pPathNext;
+      }
+   }
+   if( ISCHAR( 1 ) )
+   {     
+      char * cDelim;
+      char * cPath = hb_parc( 1 );
+     
+      while( ( cDelim = strchr( cPath, OS_PATH_LIST_SEPARATOR ) ) != NULL )
+        {
+          *cDelim = '\0';
+          AddSearchPath( cPath, &hb_comp_pIncludePath );
+          cPath = cDelim + 1;
+        }
+      AddSearchPath( cPath, &hb_comp_pIncludePath );
+   }
+}
+
 HB_FUNC( __PP_FREE )
 {
   PATHNAMES * pPath = hb_comp_pIncludePath, * pPathNext;
