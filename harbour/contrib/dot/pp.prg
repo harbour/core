@@ -3108,6 +3108,7 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
             aSize( asRevert, 0 )
          ENDIF
          */
+
          /* "Used" non repeatable! */
          IF nMarkerID > 0 .AND. nMarkerID < 1000
             IF aMarkers != NIL .AND. aMarkers[nMarkerID] != NIL
@@ -3162,8 +3163,6 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
 
             /* Do we have to look for a stopper? */
             IF cType != ':' .AND. sAnchor == NIL .AND. ValType( aList ) == 'A'
-
-               nOptional := aMP[2]
 
                sPreStoppers := sWorkLine
                sPrimaryStopper := NextToken( @sWorkLine )
@@ -3309,7 +3308,7 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
 
          IF ( sAnchor == NIL .OR. sMultiStopper != NIL .OR. ;
               ( ( ( sToken := NextToken( @sWorkLine ) ) != NIL  .AND. ( DropTrailingWS( @sToken, @sPad ), nLen := Max( 4, Len( sToken ) ), Upper( sToken ) == Left( sAnchor, nLen ) ) ) ) ) ;
-            .AND. ( nMarkerId == 0 .OR. ( sAnchor == NIL .AND. sMultiStopper != NIL ) .OR. ( ( xMarker := NextExp( @sWorkLine, cType, aList, NIL, sNextAnchor ) ) != NIL ) )
+            .AND. ( nMarkerId == 0 .OR. ( sAnchor == NIL .AND. sMultiStopper != NIL ) .OR. ( ( xMarker := NextExp( @sWorkLine, cType, aList, NIL, sNextAnchor, aRules[nRule][3] ) ) != NIL ) )
 
             IF sMultiStopper != NIL
                IF sAnchor == NIL
@@ -4356,11 +4355,13 @@ HB_FUNC( NEXTTOKEN )
 
 //--------------------------------------------------------------//
 
-FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
+FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor, bX )
 
-  LOCAL  sExp, sTemp, Counter, sWorkLine, sPad, sToken, sList
+  LOCAL  sExp, sTemp, Counter, sPad, sToken, sList
   LOCAL  sNextLine, sNextToken, sLastToken, sJustToken, sJustNext, cLastChar
   LOCAL  s1, s2, s4, s5, sNext1, sNext2, sNext4, sNext5, nLen, nNextLen
+  LOCAL  sWorkLine, sPrimaryStopper, nStoppers, nStopper, sStopLine, sStopper, ;
+         sMultiStopper, nSpaceAt, sNextStopper
 
   IF Empty( sLine )
      RETURN NIL
@@ -4388,23 +4389,70 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
         RETURN sExp
 
      CASE cType == ':'
-        sWorkLine := sLine
-        sExp := NextToken( @sLine )
+        sWorkLine       := sLine
+        sPrimaryStopper := NextToken( @sWorkLine )
 
-        IF( sExp == NIL )
+        IF sPrimaryStopper == NIL
+           //? "No primary", sPrimaryStopper
            RETURN NIL
         ELSE
-           sExp := Upper( sExp )
-           DropTrailingWS( @sExp, @sPad )
-        ENDIF
+           sPrimaryStopper := Upper( RTrim( sPrimaryStopper ) )
 
-        IF aScan( aWords, sExp ) > 0
-           //? "EXP = " + sExp
-           RETURN sExp + sPad
+           /* Is it a stopper (the anchor of another acceptable match) ? */
+           IF bDbgExp
+              ? "Stopper?: '" + sPrimaryStopper +"'"
+           ENDIF
+
+           nStoppers := Len( aWords )
+           FOR nStopper := 1 TO nStoppers
+
+              sStopLine := sWorkLine
+              sToken    := sPrimaryStopper
+              sStopper  := aWords[ nStopper ]
+
+              sMultiStopper := ""
+              WHILE ( nSpaceAt := At( ' ', sStopper ) ) > 0
+                 sNextStopper := Left( sStopper, nSpaceAt - 1 )
+
+                 IF bX
+                    nLen := 10
+                 ELSE
+                    nLen := Max( 4, Len( sToken ) )
+                 ENDIF
+
+                 //? "Next Stopper: " + sNextStopper, sToken
+                 IF Left( sNextStopper, nLen ) == sToken
+                    sMultiStopper += sNextStopper
+                    sStopper      := SubStr( sStopper, nSpaceAt )
+                    sMultiStopper += ExtractLeadingWS( @sStopper )
+                    sToken        := NextToken( @sStopLine )
+                    sToken        := Upper( RTrim( sToken ) )
+                 ELSE
+                    EXIT
+                 ENDIF
+              ENDDO
+
+              IF bX
+                 nLen := 10
+              ELSE
+                 nLen := Max( 4, Len( sToken ) )
+              ENDIF
+
+              IF Left( sStopper, nLen ) == sToken
+                 sMultiStopper += sStopper
+                 EXIT
+              ENDIF
+           NEXT
+
+           IF nStopper <= nStoppers
+              sLine := sStopLine
+              //TraceLog( sMultiStopper, sStopLine )
+              RETURN sMultiStopper
+           ELSE
+              sLine := sWorkLine
+              RETURN NIL
+           ENDIF
         ENDIF
-        // Else
-           sLine := sWorkLine
-           RETURN NIL
 
      CASE cType == NIL
         RETURN "-"

@@ -1,3 +1,7 @@
+2001-05-28 02:45 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * contrib/dot/pp.prg
+     ! Fixed support for multi-words in restricted list matching in NextExp()
+
 2001-05-27 21:20 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * contrib/dot/pp.prg
      * Few minor corrections to NextExp()
