@@ -182,7 +182,7 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
             if( ( pSym->cScope != HB_FS_MESSAGE ) && ( pSym->cScope & HB_FS_MESSAGE ) ) /* only for non public symbols */
                fprintf( yyc, " | HB_FS_MESSAGE" );
 
-            if( pSym->cScope & HB_FS_FIRST )
+            if ( ( pSym->cScope & HB_FS_FIRST ) && ( hb_comp_iGenCOutput != HB_COMPGENC_NO_STARTUP ) )
                fprintf( yyc, " | HB_FS_FIRST" );
 
             /* specify the function address if it is a defined function or an
