@@ -11,7 +11,7 @@
    #define _OPTIMIZE_DTOS
 #endif
 
-long hb_greg2julian( long lDay, long lMonth, long lYear )
+long hb_dateEncode( long lDay, long lMonth, long lYear )
 {
    long lFactor = ( lMonth < 3 ) ? -1: 0;
 
@@ -21,7 +21,7 @@ long hb_greg2julian( long lDay, long lMonth, long lYear )
           lDay - 32075;
 }
 
-void hb_julian2greg( long julian, long * plDay, long * plMonth, long * plYear )
+void hb_dateDecode( long julian, long * plDay, long * plMonth, long * plYear )
 {
   long U, V, W, X;
 
@@ -299,7 +299,7 @@ HARBOUR DAY( void )
 
    if( pDate )
    {
-      hb_julian2greg( pDate->value.lDate, &lDay, &lMonth, &lYear );
+      hb_dateDecode( pDate->value.lDate, &lDay, &lMonth, &lYear );
       _retni( lDay );
    }
    else
@@ -318,7 +318,7 @@ HARBOUR MONTH( void )
 
    if( pDate )
    {
-      hb_julian2greg( pDate->value.lDate, &lDay, &lMonth, &lYear );
+      hb_dateDecode( pDate->value.lDate, &lDay, &lMonth, &lYear );
       _retni( lMonth );
    }
    else
@@ -337,7 +337,7 @@ HARBOUR YEAR( void )
 
    if( pDate )
    {
-      hb_julian2greg( pDate->value.lDate, &lDay, &lMonth, &lYear );
+      hb_dateDecode( pDate->value.lDate, &lDay, &lMonth, &lYear );
       _retni( lYear );
    }
    else

@@ -1,3 +1,11 @@
+19990509-18:00 CET Victor Szel <info@szelvesz.hu>
+
+   * source/rtl/strings.c:
+     hb_At() -> hb_strAt()
+   * source/rtl/*.c, source/include/extend.h
+     hb_julian2greg() -> hb_dateDecode()
+     hb_greg2julian() -> hb_dateEncode()
+
 19990508-20:57 Eddie Runia
    * source/rtl/arrays.c:
      Fixed unreleased memory block in aEval.
@@ -76,7 +84,7 @@ Sat May  8 03:02:04 1999 Ryszard Glab <rglab@imid.med.pl>
 Thu May 07 17:00:00 1999  Victor Szel <info@szelvesz.hu>
 
    * source/rtl/strings.c:
-     Adapted changes by "Matthew Hamilton" <MHamilton@bunge.com.au>
+     Adapted changes by Matthew Hamilton <MHamilton@bunge.com.au>
      Some internal functions renamed
      long type changed to ULONG.
 

@@ -271,7 +271,7 @@ HARBOUR PADC( void )
       _retc("");
 }
 
-ULONG hb_At(char *szSub, long lSubLen, char *szText, long lLen)
+ULONG hb_strAt(char *szSub, long lSubLen, char *szText, long lLen)
 {
    if( lSubLen )
    {
@@ -311,7 +311,7 @@ HARBOUR AT( void )
    {
       if( pText->wType == IT_STRING && pSub->wType == IT_STRING )
       {
-         _retnl( hb_At(pSub->value.szText, pSub->wLength, pText->value.szText, pText->wLength) );
+         _retnl( hb_strAt(pSub->value.szText, pSub->wLength, pText->value.szText, pText->wLength) );
       }
       else
       {

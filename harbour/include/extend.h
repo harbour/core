@@ -152,8 +152,8 @@ ULONG ArrayGetStringLen( PITEM pArray, ULONG ulIndex ); /* retrieves the string 
 
 int  hb_itemStrCmp( PITEM pFirst, PITEM pSecond ); /* our string compare */
 BOOL hb_strempty( char * szText, ULONG ulLen );
-long hb_greg2julian( long lDay, long lMonth, long lYear );
-void hb_julian2greg( long julian, long * plDay, long * plMonth, long * plYear );
+long hb_dateEncode( long lDay, long lMonth, long lYear );
+void hb_dateDecode( long julian, long * plDay, long * plMonth, long * plYear );
 
 HARBOURFUNC GetMethod( PITEM pObject, PSYMBOL pSymMsg ); /* returns the method pointer of a object class */
 char * _GetClassName( PITEM pObject ); /* retrieves an object class name */

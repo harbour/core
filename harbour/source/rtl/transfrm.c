@@ -376,7 +376,7 @@ char *DatePicture( long lDate, int iPicFlags, long *lRetSize )
    else
    {
       iPicFlags |= PF_ZERO;                     /* Pad with zeros           */
-      hb_julian2greg( lDate, &lDay, &lMonth, &lYear );
+      hb_dateDecode( lDate, &lDay, &lMonth, &lYear );
                                                 /* Calculate d/m/y          */
    }
    iLenPic = strlen( szDateFormat );
