@@ -1,5 +1,4 @@
-19990726-14:30 CET Victor Szel <info@szelvesz.hu>
-   + source/rdd/makefile - Added new files.
+19990726-20:52 CET Victor Szel <info@szelvesz.hu>
    * tests/working/rtl_test.prg - make use of the preproc
      and thus it's more easy to expand it, and fewer human
      errors can be made. We could use this idea in several
