@@ -1,3 +1,11 @@
+2001-06-21 18:20 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * source/pp/ppcore.c
+     * Reinstated test for continuation token at the end of an Expression in isExpress()
+       /* Clipper does not validate extracted expression like that, but Harbour PP has internal dependancy due to matching logic.
+          Alexander, Clipper stops an expression when encountering the Anchor of the next NON optional Match Marker.
+          Clipper accepts that expression even if it ends with continuation token (like '*').
+       */
+
 2001-06-21 14:55 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/pp/ppcore.c
      * Commented out test for continuation token at the end of an Expression in isExpress()

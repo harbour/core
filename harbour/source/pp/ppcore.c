@@ -1761,6 +1761,11 @@ static int WorkMarkers( char ** ptrmp, char ** ptri, char * ptro, int * lenres, 
           else
             {
               lenreal = stroncpy( expreal, *ptri, ipos-1 );
+
+              #if 0
+                 printf( "\nExpr: '%s' ptrtemp: '%s' exppat: '%s'\n", expreal, ptrtemp, exppatt );
+              #endif
+
               if( ipos > 1 && isExpres( expreal ) )
                 {
                   /*
@@ -2318,7 +2323,7 @@ static BOOL isExpres( char * stroka )
   return ( l1 <= l2 );
   */
 
-  return ( l1 <= l2 /*&& ! IsInStr( ( stroka - l2 )[l1-1], ":/+*-%^=(<>[{" ) */ );
+  return ( l1 <= l2 && ! IsInStr( ( stroka - l2 )[l1-1], ":/+*-%^=(<>[{" ) );
 }
 
 static BOOL TestOptional( char *ptr1, char *ptr2 )
