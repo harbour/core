@@ -1082,7 +1082,7 @@ FUNCTION Compfiles()
             IF nPos > 0
 
                 cComm := aCommands[ nPos, 2 ]
-
+                cold  := ccomm 
             ENDIF
 
             FOR nFiles := 1 TO Len( aRes )
@@ -1094,6 +1094,8 @@ FUNCTION Compfiles()
                     ! ( cComm )
 
                 ENDIF
+
+                  ccomm := cold
 
             NEXT
 
@@ -2210,6 +2212,7 @@ FUNCTION CompUpdatedfiles()
             IF nPos > 0
 
                 cComm := aCommands[ nPos, 2 ]
+                cold  := ccomm 
 
             ENDIF
 
@@ -2222,7 +2225,7 @@ FUNCTION CompUpdatedfiles()
                     ! ( cComm )
 
                 ENDIF
-
+                  ccomm := cold
             NEXT
 
         ENDIF
