@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+     ! Change ZH_GB --> ZHGB, ZH_BIG5 --> ZHB5
+
+   * source/lang/msgzhb5.c
+   * source/lang/msgzhgb.c
      ! Added missing commas
      * Some text translated from English to Chinese
 
