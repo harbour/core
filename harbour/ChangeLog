@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+     + Added DateTime field
+     * Added more info on Alert message for Unknown type
+     * Modified ClipValue2SQL() to process empty strings
+
 2002-01-28 20:43 UTC+0100 Patrick Mast <email@patrickmast.com>
    * contrib/mysql
      + Added CLEAN to make_b32.bat

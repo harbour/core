@@ -2342,7 +2342,7 @@ static ERRCODE ntxGoBottom( NTXAREAP pArea )
      hb_ntxTagKeyRead( pTag, BTTM_RECORD, &lContinue );
      SELF_GOTO( ( AREAP ) pArea, pTag->CurKeyInfo->Xtra );
    }
-   return SELF_SKIPFILTER( ( AREAP ) pArea, 1 );
+   return SELF_SKIPFILTER( ( AREAP ) pArea, -1 );
 }
 
 static ERRCODE ntxGoTo( NTXAREAP pArea, ULONG ulRecNo )
