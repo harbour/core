@@ -42,26 +42,25 @@
    extern unsigned _stklen = UINT_MAX;
 #endif
 
-extern int harbour_main( char *szName );
-extern BOOL Include( char * szFileName, PATHNAMES * pSearchPath );  /* end #include support */
+extern int hb_compYACCMain( char * szName );
+extern BOOL hb_compInclude( char * szFileName, PATHNAMES * pSearchPath );  /* end #include support */
 
 /* output related functions */
-extern void GenCCode( PHB_FNAME );      /* generates the C language output */
-extern void GenJava( PHB_FNAME );       /* generates the Java language output */
-extern void GenPascal( PHB_FNAME );     /* generates the Pascal language output */
-extern void GenRC( PHB_FNAME );         /* generates the RC language output */
-extern void GenPortObj( PHB_FNAME );    /* generates the portable objects */
+extern void hb_compGenCCode( PHB_FNAME );      /* generates the C language output */
+extern void hb_compGenJava( PHB_FNAME );       /* generates the Java language output */
+extern void hb_compGenPascal( PHB_FNAME );     /* generates the Pascal language output */
+extern void hb_compGenRC( PHB_FNAME );         /* generates the RC language output */
+extern void hb_compGenPortObj( PHB_FNAME );    /* generates the portable objects */
 #ifdef HARBOUR_OBJ_GENERATION
-extern void GenObj32( PHB_FNAME );      /* generates OBJ 32 bits */
+extern void hb_compGenObj32( PHB_FNAME );      /* generates OBJ 32 bits */
 #endif
 
-extern void PrintUsage( char * );
-extern void PrintCredits( void );
-extern void PrintLogo( void );
+void hb_compInitVars( void );
+void hb_compGenOutput( int );
+void hb_compOutputFile( void );
+void EXTERNAL_LINKAGE close_on_exit( void );
 
-void AddSearchPath( char *, PATHNAMES * * ); /* add pathname to a search list */
 static char * RESERVED_FUNC( char * );
-
 static void hb_compCheckDuplVars( PVAR pVars, char * szVarName, int iVarScope ); /*checks for duplicate variables definitions */
 static void hb_compFieldGenPCode( BYTE , char * );      /* generates the pcode for database field */
 static int hb_compFieldGetVarPos( char *, PFUNCTION );   /* return if passed name is a field variable */
@@ -73,51 +72,44 @@ static void hb_compMemvarGenPCode( BYTE , char * );      /* generates the pcode 
 static USHORT hb_compVariableGetPos( PVAR pVars, char * szVarName ); /* returns the order + 1 of a variable if defined or zero */
 static void hb_compVariableGenPCode( BYTE , char * );    /* generates the pcode for undeclared variable */
 
-void EXTERNAL_LINKAGE close_on_exit( void );
-
-extern int hb_comp_iLine;       /* currently parsed file line number */
-
 /* global variables */
-FILES hb_comp_files;
-FUNCTIONS hb_comp_functions, hb_comp_funcalls;
-SYMBOLS hb_comp_symbols;
+FILES       hb_comp_files;
+FUNCTIONS   hb_comp_functions;
+FUNCTIONS   hb_comp_funcalls;
+SYMBOLS     hb_comp_symbols;
 
-int hb_comp_iLine = 1;     /* currently processed line number */
-PFUNCTION hb_comp_pInitFunc;
-PHB_FNAME hb_comp_pFileName = NULL;
-BOOL hb_comp_bPPO = FALSE;                      /* flag indicating, is ppo output needed */
-FILE * hb_comp_yyppo = NULL;                    /* output .ppo file */
-BOOL hb_comp_bStartProc = TRUE;                 /* holds if we need to create the starting procedure */
-BOOL hb_comp_bLineNumbers = TRUE;               /* holds if we need pcodes with line numbers */
-BOOL hb_comp_bQuiet = FALSE;                    /* quiet mode */
-BOOL hb_comp_bRestrictSymbolLength = FALSE;     /* generate 10 chars max symbols length */
-BOOL hb_comp_bShortCuts = TRUE;                 /* .and. & .or. expressions shortcuts */
-int  hb_comp_iWarnings = 0;                     /* enable parse warnings */
-BOOL hb_comp_bAnyWarning = FALSE;               /* holds if there was any warning during the compilation process */
-BOOL hb_comp_bAutoMemvarAssume = FALSE;         /* holds if undeclared variables are automatically assumed MEMVAR (-a)*/
-BOOL hb_comp_bForceMemvars = FALSE;             /* holds if memvars are assumed when accesing undeclared variable (-v)*/
-BOOL hb_comp_bDebugInfo = FALSE;                /* holds if generate debugger required info */
-char hb_comp_szPrefix[ 20 ] = { '\0' };         /* holds the prefix added to the generated symbol init function name (in C output currently) */
-BOOL hb_comp_bGenCVerbose = TRUE;               /* C code generation should be verbose (use comments) or not */
-int  hb_comp_iExitLevel = HB_EXITLEVEL_DEFAULT; /* holds if there was any warning during the compilation process */
-PATHNAMES *hb_comp_pIncludePath = NULL;
-int hb_comp_iFunctionCnt = 0;
-int hb_comp_iErrorCount = 0;
-char hb_comp_cVarType = ' ';               /* current declared variable type */
-BOOL hb_comp_bDontGenLineNum = FALSE;   /* suppress line number generation */
-ULONG hb_comp_ulLastLinePos = 0;    /* position of last opcode with line number */
-ULONG hb_comp_ulMessageFix = 0;  /* Position of the message which needs to be changed */
-int hb_comp_iStaticCnt = 0;       /* number of defined statics variables on the PRG */
-int hb_comp_iVarScope = VS_LOCAL;   /* holds the scope for next variables to be defined */
-                            /* different values for hb_comp_iVarScope */
-
-/* local variables */
-/* CHANGED to global */
-PHB_FNAME hb_comp_pOutPath = NULL;
-BOOL hb_comp_bCredits = FALSE;                  /* print credits */
-BOOL hb_comp_bLogo = TRUE;                      /* print logo */
-BOOL hb_comp_bSyntaxCheckOnly = FALSE;          /* syntax check only */
-int  hb_comp_iLanguage = LANG_C;                /* default Harbour generated output language */
+int         hb_comp_iLine = 1;                         /* currently processed line number */
+PFUNCTION   hb_comp_pInitFunc;
+PHB_FNAME   hb_comp_pFileName = NULL;
+BOOL        hb_comp_bPPO = FALSE;                      /* flag indicating, is ppo output needed */
+FILE *      hb_comp_yyppo = NULL;                      /* output .ppo file */
+BOOL        hb_comp_bStartProc = TRUE;                 /* holds if we need to create the starting procedure */
+BOOL        hb_comp_bLineNumbers = TRUE;               /* holds if we need pcodes with line numbers */
+BOOL        hb_comp_bQuiet = FALSE;                    /* quiet mode */
+BOOL        hb_comp_bRestrictSymbolLength = FALSE;     /* generate 10 chars max symbols length */
+BOOL        hb_comp_bShortCuts = TRUE;                 /* .and. & .or. expressions shortcuts */
+int         hb_comp_iWarnings = 0;                     /* enable parse warnings */
+BOOL        hb_comp_bAnyWarning = FALSE;               /* holds if there was any warning during the compilation process */
+BOOL        hb_comp_bAutoMemvarAssume = FALSE;         /* holds if undeclared variables are automatically assumed MEMVAR (-a)*/
+BOOL        hb_comp_bForceMemvars = FALSE;             /* holds if memvars are assumed when accesing undeclared variable (-v)*/
+BOOL        hb_comp_bDebugInfo = FALSE;                /* holds if generate debugger required info */
+char        hb_comp_szPrefix[ 20 ] = { '\0' };         /* holds the prefix added to the generated symbol init function name (in C output currently) */
+BOOL        hb_comp_bGenCVerbose = TRUE;               /* C code generation should be verbose (use comments) or not */
+int         hb_comp_iExitLevel = HB_EXITLEVEL_DEFAULT; /* holds if there was any warning during the compilation process */
+PATHNAMES * hb_comp_pIncludePath = NULL;
+int         hb_comp_iFunctionCnt = 0;
+int         hb_comp_iErrorCount = 0;
+char        hb_comp_cVarType = ' ';                    /* current declared variable type */
+BOOL        hb_comp_bDontGenLineNum = FALSE;           /* suppress line number generation */
+ULONG       hb_comp_ulLastLinePos = 0;                 /* position of last opcode with line number */
+ULONG       hb_comp_ulMessageFix = 0;                  /* Position of the message which needs to be changed */
+int         hb_comp_iStaticCnt = 0;                    /* number of defined statics variables on the PRG */
+int         hb_comp_iVarScope = VS_LOCAL;              /* holds the scope for next variables to be defined */
+PHB_FNAME   hb_comp_pOutPath = NULL;
+BOOL        hb_comp_bCredits = FALSE;                  /* print credits */
+BOOL        hb_comp_bLogo = TRUE;                      /* print logo */
+BOOL        hb_comp_bSyntaxCheckOnly = FALSE;          /* syntax check only */
+int         hb_comp_iLanguage = LANG_C;                /* default Harbour generated output language */
 
 typedef struct __EXTERN
 {
@@ -139,7 +131,7 @@ static PEXTERN hb_comp_pExterns = NULL;
 /* Table with reserved functions names
  * NOTE: THIS TABLE MUST BE SORTED ALPHABETICALLY
  */
-static const char * _szReservedFun[] = {
+static const char * s_szReservedFun[] = {
    "AADD"      ,
    "ABS"       ,
    "ASC"       ,
@@ -205,16 +197,6 @@ static const char * _szReservedFun[] = {
    "WORD"      ,
    "YEAR"
 };
-#define RESERVED_FUNCTIONS  sizeof( _szReservedFun ) / sizeof( char * )
-
-void hb_compInitVars( void );
-void hb_compGenOutput( int );
-void hb_compCheckPaths( void );
-void hb_compOutputFile( void );
-
-extern void hb_ChkCompilerSwitch( int, char * Args [] );
-extern void hb_ChkEnvironVar( char * );
-extern void hb_ChkCompileFileName( int, char * Args[] );
 
 int main( int argc, char * argv[] )
 {
@@ -228,21 +210,21 @@ int main( int argc, char * argv[] )
    hb_comp_pOutPath = NULL;
 
    /* Initializes hb_comp_pFileName with file name to compile */
-   hb_ChkCompileFileName( argc, argv );
+   hb_compChkCompileFileName( argc, argv );
 
    /* First check the environment variables */
-   hb_ChkCompilerSwitch( 0, NULL );
+   hb_compChkCompilerSwitch( 0, NULL );
 
    /* Then check command line arguments
       This will override duplicated environment settings */
-   hb_ChkCompilerSwitch( argc, argv );
+   hb_compChkCompilerSwitch( argc, argv );
 
    if( hb_comp_bLogo )
-      PrintLogo();
+      hb_compPrintLogo();
 
    if( hb_comp_bCredits )
    {
-      PrintCredits();
+      hb_compPrintCredits();
       return iStatus;
    }
 
@@ -265,7 +247,7 @@ int main( int argc, char * argv[] )
    }
    else
    {
-      PrintUsage( argv[ 0 ] );
+      hb_compPrintUsage( argv[ 0 ] );
       return iStatus;
    }
 
@@ -277,14 +259,14 @@ int main( int argc, char * argv[] )
 
    atexit( close_on_exit );
 
-   if( Include( szFileName, NULL ) )
+   if( hb_compInclude( szFileName, NULL ) )
    {
       hb_compCheckPaths();
 
       /*
        * Start processing
        */
-      harbour_main( hb_comp_pFileName->szName );
+      hb_compYACCMain( hb_comp_pFileName->szName );
 
       bSkipGen = FALSE;
 
@@ -346,28 +328,6 @@ int isatty( int handle )
 }
 #endif
 
-/*
- * Function that adds specified path to the list of pathnames to search
- */
-void AddSearchPath( char * szPath, PATHNAMES * * pSearchList )
-{
-   PATHNAMES * pPath = *pSearchList;
-
-   if( pPath )
-   {
-      while( pPath->pNext )
-      pPath = pPath->pNext;
-      pPath->pNext = ( PATHNAMES * ) hb_xgrab( sizeof( PATHNAMES ) );
-      pPath = pPath->pNext;
-   }
-   else
-   {
-      *pSearchList = pPath = ( PATHNAMES * ) hb_xgrab( sizeof( PATHNAMES ) );
-   }
-   pPath->pNext  = NULL;
-   pPath->szPath = szPath;
-}
-
 void EXTERNAL_LINKAGE close_on_exit( void )
 {
    PFILE pFile = hb_comp_files.pLast;
@@ -415,25 +375,24 @@ void hb_xfree( void * pMem )            /* frees fixed memory */
  */
 static char * RESERVED_FUNC( char * szName )
 {
-   USHORT wNum = 0;
+   USHORT uiNum = 0;
    int iFound = 1;
 
-   while( wNum < RESERVED_FUNCTIONS && iFound )
+   while( uiNum < ( ( sizeof( s_szReservedFun ) / sizeof( char * ) ) ) && iFound != 0 )
    {
       /* Compare first 4 characters
       * If they are the same then compare the whole name
       * SECO() is not allowed because of Clipper function SECONDS()
       * however SECO32() is a valid name.
       */
-      iFound = strncmp( szName, _szReservedFun[ wNum ], 4 );
+      iFound = strncmp( szName, s_szReservedFun[ uiNum ], 4 );
       if( iFound == 0 )
-         iFound = strncmp( szName, _szReservedFun[ wNum ], strlen( szName ) );
-      ++wNum;
+         iFound = strncmp( szName, s_szReservedFun[ uiNum ], strlen( szName ) );
+
+      ++uiNum;
    }
-   if( iFound )
-      return NULL;
-   else
-      return (char *) _szReservedFun[ wNum - 1 ];
+
+   return iFound == 0 ? ( char * ) s_szReservedFun[ uiNum - 1 ] : NULL;
 }
 
 /* ------------------------------------------------------------------------- */
@@ -2102,50 +2061,30 @@ void hb_compGenOutput( int iLanguage )
    switch( iLanguage )
    {
       case LANG_C:
-         GenCCode( hb_comp_pFileName );
+         hb_compGenCCode( hb_comp_pFileName );
          break;
 
       case LANG_OBJ32:
 #ifdef HARBOUR_OBJ_GENERATION
-         GenObj32( hb_comp_pFileName );
+         hb_compGenObj32( hb_comp_pFileName );
 #endif
          break;
 
       case LANG_JAVA:
-         GenJava( hb_comp_pFileName );
+         hb_compGenJava( hb_comp_pFileName );
          break;
 
       case LANG_PASCAL:
-         GenPascal( hb_comp_pFileName );
+         hb_compGenPascal( hb_comp_pFileName );
          break;
 
       case LANG_RESOURCES:
-         GenRC( hb_comp_pFileName );
+         hb_compGenRC( hb_comp_pFileName );
          break;
 
       case LANG_PORT_OBJ:
-         GenPortObj( hb_comp_pFileName );
+         hb_compGenPortObj( hb_comp_pFileName );
          break;
-   }
-}
-
-void hb_compCheckPaths( void )
-{
-   char * szInclude = getenv( "INCLUDE" );
-
-   if( szInclude )
-   {
-      char * pPath;
-      char * pDelim;
-
-      pPath = szInclude = hb_strdup( szInclude );
-      while( ( pDelim = strchr( pPath, OS_PATH_LIST_SEPARATOR ) ) != NULL )
-      {
-         *pDelim = '\0';
-         AddSearchPath( pPath, &hb_comp_pIncludePath );
-         pPath = pDelim + 1;
-      }
-      AddSearchPath( pPath, &hb_comp_pIncludePath );
    }
 }
 

@@ -38,7 +38,7 @@
 #include "pcode.h"
 #include "hberrors.h"
 
-void GenPascal( PHB_FNAME pFileName )
+void hb_compGenPascal( PHB_FNAME pFileName )
 {
    char szFileName[ _POSIX_PATH_MAX ];
 

@@ -41,13 +41,13 @@ void hb_compGenPCode1( BYTE byte )
 
    if( ! pFunc->pCode )   /* has been created the memory block to hold the pcode ? */
    {
-      pFunc->pCode      = ( BYTE * ) hb_xgrab( PCODE_CHUNK );
-      pFunc->lPCodeSize = PCODE_CHUNK;
+      pFunc->pCode      = ( BYTE * ) hb_xgrab( HB_PCODE_CHUNK );
+      pFunc->lPCodeSize = HB_PCODE_CHUNK;
       pFunc->lPCodePos  = 0;
    }
    else
       if( ( pFunc->lPCodeSize - pFunc->lPCodePos ) < 1 )
-         pFunc->pCode = ( BYTE * ) hb_xrealloc( pFunc->pCode, pFunc->lPCodeSize += PCODE_CHUNK );
+         pFunc->pCode = ( BYTE * ) hb_xrealloc( pFunc->pCode, pFunc->lPCodeSize += HB_PCODE_CHUNK );
 
    pFunc->pCode[ pFunc->lPCodePos++ ] = byte;
 }
@@ -58,13 +58,13 @@ void hb_compGenPCode3( BYTE byte1, BYTE byte2, BYTE byte3 )
 
    if( ! pFunc->pCode )   /* has been created the memory block to hold the pcode ? */
    {
-      pFunc->pCode      = ( BYTE * ) hb_xgrab( PCODE_CHUNK );
-      pFunc->lPCodeSize = PCODE_CHUNK;
+      pFunc->pCode      = ( BYTE * ) hb_xgrab( HB_PCODE_CHUNK );
+      pFunc->lPCodeSize = HB_PCODE_CHUNK;
       pFunc->lPCodePos  = 0;
    }
    else
       if( ( pFunc->lPCodeSize - pFunc->lPCodePos ) < 3 )
-         pFunc->pCode = ( BYTE * ) hb_xrealloc( pFunc->pCode, pFunc->lPCodeSize += PCODE_CHUNK );
+         pFunc->pCode = ( BYTE * ) hb_xrealloc( pFunc->pCode, pFunc->lPCodeSize += HB_PCODE_CHUNK );
 
    pFunc->pCode[ pFunc->lPCodePos++ ] = byte1;
    pFunc->pCode[ pFunc->lPCodePos++ ] = byte2;
@@ -77,14 +77,14 @@ void hb_compGenPCodeN( BYTE * pBuffer, ULONG ulSize )
 
    if( ! pFunc->pCode )   /* has been created the memory block to hold the pcode ? */
    {
-      pFunc->lPCodeSize = ( ( ulSize / PCODE_CHUNK ) + 1 ) * PCODE_CHUNK;
+      pFunc->lPCodeSize = ( ( ulSize / HB_PCODE_CHUNK ) + 1 ) * HB_PCODE_CHUNK;
       pFunc->pCode      = ( BYTE * ) hb_xgrab( pFunc->lPCodeSize );
       pFunc->lPCodePos  = 0;
    }
    else if( pFunc->lPCodePos + ulSize > pFunc->lPCodeSize )
    {
       /* not enough free space in pcode buffer - increase it */
-      pFunc->lPCodeSize += ( ( ( ulSize / PCODE_CHUNK ) + 1 ) * PCODE_CHUNK );
+      pFunc->lPCodeSize += ( ( ( ulSize / HB_PCODE_CHUNK ) + 1 ) * HB_PCODE_CHUNK );
       pFunc->pCode = ( BYTE * ) hb_xrealloc( pFunc->pCode, pFunc->lPCodeSize );
    }
 

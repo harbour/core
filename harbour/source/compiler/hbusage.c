@@ -38,7 +38,7 @@
 /*
  * Prints available options
  */
-void PrintUsage( char * szSelf )
+void hb_compPrintUsage( char * szSelf )
 {
    printf( "\nSyntax:  %s <file[.prg]> [options]"
            "\n"
@@ -84,7 +84,7 @@ void PrintUsage( char * szSelf )
 /*
  * Prints credits
  */
-void PrintCredits( void )
+void hb_compPrintCredits( void )
 {
    printf( "\nCredits:  The Harbour Team at www.harbour-project.org" );
 }
@@ -92,7 +92,7 @@ void PrintCredits( void )
 /*
  * Prints logo
  */
-void PrintLogo( void )
+void hb_compPrintLogo( void )
 {
    printf( "Harbour Compiler, Build %i%s (%04d.%02d.%02d)\n",
       hb_build, hb_revision, hb_year, hb_month, hb_day );

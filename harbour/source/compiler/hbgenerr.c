@@ -124,9 +124,9 @@ void hb_compGenError( char * szErrors[], char cPrefix, int iError, char * szErro
 
 void hb_compGenWarning( char * szWarnings[], char cPrefix, int iWarning, char * szWarning1, char * szWarning2)
 {
-   char *szText = szWarnings[ iWarning - 1 ];
+   char * szText = szWarnings[ iWarning - 1 ];
 
-   if( (szText[ 0 ] - '0') <= hb_comp_iWarnings )
+   if( ( szText[ 0 ] - '0' ) <= hb_comp_iWarnings )
    {
       printf( "\r%s(%i) ", hb_comp_files.pLast->szFileName, hb_comp_iLine );
       printf( "Warning %c%04i  ", cPrefix, iWarning );

@@ -1343,7 +1343,7 @@ Crlf       : '\n'          { ++hb_comp_iLine; }
  ** ------------------------------------------------------------------------ **
  */
 
-int harbour_main( char * szName )
+int hb_compYACCMain( char * szName )
 {
    /* Generate the starting procedure frame
       */
@@ -1375,7 +1375,7 @@ int harbour_main( char * szName )
       ++hb_comp_functions.iCount;
    }
 
-   /* Close processed file (it is opened in Include() function )
+   /* Close processed file (it is opened in hb_compInclude() function )
    */
    fclose( yyin );
 
@@ -1396,7 +1396,7 @@ void yyerror( char * s )
 }
 
 
-BOOL Include( char * szFileName, PATHNAMES * pSearch )
+BOOL hb_compInclude( char * szFileName, PATHNAMES * pSearch )
 {
    PFILE pFile;
 

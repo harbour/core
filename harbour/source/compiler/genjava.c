@@ -47,9 +47,9 @@
 static void hb_fputc( BYTE b, FILE * yyc );
 static void hb_fputs( char * szName, FILE * yyc );
 
-static int _nChar = 0;
+static int s_nChar = 0;
 
-void GenJava( PHB_FNAME pFileName )
+void hb_compGenJava( PHB_FNAME pFileName )
 {
    char szFileName[ _POSIX_PATH_MAX ];
    PFUNCTION pFunc /*= hb_comp_functions.pFirst */;
@@ -79,7 +79,7 @@ void GenJava( PHB_FNAME pFileName )
       fflush( stdout );
    }
 
-   _nChar = 0;
+   s_nChar = 0;
 
    fprintf( yyc, "/*\n * Harbour Compiler, Build %i%s (%04d.%02d.%02d)\n",
          hb_build, hb_revision, hb_year, hb_month, hb_day );
@@ -423,15 +423,15 @@ static void hb_fputc( BYTE b, FILE * yyc )
 {
    int x = b;
 
-   _nChar++;
+   s_nChar++;
 
-   if( _nChar > 1 )
+   if( s_nChar > 1 )
       fprintf( yyc, ", " );
 
-   if( _nChar == 9 )
+   if( s_nChar == 9 )
    {
       fprintf( yyc, "\n      " );
-      _nChar = 1;
+      s_nChar = 1;
    }
 
    fprintf( yyc, "0x%02X", x );

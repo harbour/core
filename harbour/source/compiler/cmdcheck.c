@@ -48,21 +48,81 @@
 
 #include "compiler.h"
 
-/* QUESTION:
-   Should we move these prototypes to compiler.h ?
-*/
-void hb_ChkCompilerSwitch( int, char * Args[] );
-void hb_ChkEnvironVar( char * );
-void hb_ChkCompileFileName( int, char * Args[] );
-void AddSearchPath( char *, PATHNAMES * * );
-
-static ULONG PackDateTime( void );
-
 /* TODO: Add support for this compiler switches
    -m -r -t || getenv( "TMP" ) -u
 */
 
-void hb_ChkCompilerSwitch( int iArg, char * Args[] )
+/*
+ * Function that adds specified path to the list of pathnames to search list
+ */
+static void AddSearchPath( char * szPath, PATHNAMES * * pSearchList )
+{
+   PATHNAMES * pPath = *pSearchList;
+
+   if( pPath )
+   {
+      while( pPath->pNext )
+         pPath = pPath->pNext;
+
+      pPath->pNext = ( PATHNAMES * ) hb_xgrab( sizeof( PATHNAMES ) );
+      pPath = pPath->pNext;
+   }
+   else
+      *pSearchList = pPath = ( PATHNAMES * ) hb_xgrab( sizeof( PATHNAMES ) );
+
+   pPath->pNext  = NULL;
+   pPath->szPath = szPath;
+}
+
+/* NOTE: Making the date and time info to fit into 32 bits can only be done
+         in a "lossy" way, in practice that means it's not possible to unpack
+         the exact date/time info from the resulting ULONG. Since the year
+         is only stored in 6 bits, 1980 will result in the same bit pattern
+         as 2044. The purpose of this value is only used to *differenciate*
+         between the dates ( the exact dates are not significant ), so this 
+         can be used here without problems. */
+
+/* 76543210765432107654321076543210
+   |.......|.......|.......|.......
+   |____|                               Year    6 bits
+         |__|                           Month   4 bits
+             |___|                      Day     5 bits
+                  |___|                 Hour    5 bits
+                       |____|           Minute  6 bits
+                             |____|     Second  6 bits */
+
+static ULONG PackDateTime( void )
+{
+   BYTE szString[ 4 ];
+   BYTE nValue;
+
+   time_t t;
+   struct tm * oTime;
+
+   time( &t );
+   oTime = localtime( &t );
+
+   nValue = ( BYTE ) ( ( ( oTime->tm_year + 1900 ) - 1980 ) & ( 2 ^ 6 ) ) ; /* 6 bits */
+   szString[ 0 ]  = nValue << 2;
+   nValue = ( BYTE ) ( oTime->tm_mon + 1 ); /* 4 bits */
+   szString[ 0 ] |= nValue >> 2;
+   szString[ 1 ]  = nValue << 6;
+   nValue = ( BYTE ) ( oTime->tm_mday ); /* 5 bits */
+   szString[ 1 ] |= nValue << 1;
+
+   nValue = ( BYTE ) oTime->tm_hour; /* 5 bits */
+   szString[ 1 ]  = nValue >> 4;
+   szString[ 2 ]  = nValue << 4;
+   nValue = ( BYTE ) oTime->tm_min; /* 6 bits */
+   szString[ 2 ] |= nValue >> 2;
+   szString[ 3 ]  = nValue << 6;
+   nValue = ( BYTE ) oTime->tm_sec; /* 6 bits */
+   szString[ 3 ] |= nValue;
+
+   return HB_MKLONG( szString[ 3 ], szString[ 2 ], szString[ 1 ], szString[ 0 ] );
+}
+
+void hb_compChkCompilerSwitch( int iArg, char * Args[] )
 {
    /* If iArg is passed check the command line options */
    if( iArg )
@@ -75,7 +135,7 @@ void hb_ChkCompilerSwitch( int iArg, char * Args[] )
       for( i = 0; i < iArg; i++ )
       {
          if( HB_ISOPTSEP( * Args[ i ] ) )
-            hb_ChkEnvironVar( Args[ i ] );
+            hb_compChkEnvironVar( Args[ i ] );
       }
    } 
    else
@@ -98,14 +158,14 @@ void hb_ChkCompilerSwitch( int iArg, char * Args[] )
          */
          while( szSwitch != NULL )
          {
-            hb_ChkEnvironVar( szSwitch );
+            hb_compChkEnvironVar( szSwitch );
             szSwitch = strtok( NULL, " " );
          }
       }
    }
 }
 
-void hb_ChkEnvironVar( char * szSwitch )
+void hb_compChkEnvironVar( char * szSwitch )
 {
    if( szSwitch )
    {
@@ -393,7 +453,7 @@ void hb_ChkEnvironVar( char * szSwitch )
    }
 }
 
-void hb_ChkCompileFileName( int iArg, char * Args[] )
+void hb_compChkCompileFileName( int iArg, char * Args[] )
 {
    /* If we already have a filename shows a runtime error */
    /* NOTE:
@@ -432,51 +492,23 @@ void hb_ChkCompileFileName( int iArg, char * Args[] )
    }
 }
 
-/* NOTE: Making the date and time info to fit into 32 bits can only be done
-         in a "lossy" way, in practice that means it's not possible to unpack
-         the exact date/time info from the resulting ULONG. Since the year
-         is only stored in 6 bits, 1980 will result in the same bit pattern
-         as 2044. The purpose of this value is only used to *differenciate*
-         between the dates ( the exact dates are not significant ), so this 
-         can be used here without problems. */
-
-/* 76543210765432107654321076543210
-   |.......|.......|.......|.......
-   |____|                               Year    6 bits
-         |__|                           Month   4 bits
-             |___|                      Day     5 bits
-                  |___|                 Hour    5 bits
-                       |____|           Minute  6 bits
-                             |____|     Second  6 bits */
-
-static ULONG PackDateTime( void )
+void hb_compCheckPaths( void )
 {
-   BYTE szString[ 4 ];
-   BYTE nValue;
+   char * szInclude = getenv( "INCLUDE" );
 
-   time_t t;
-   struct tm * oTime;
+   if( szInclude )
+   {
+      char * pPath;
+      char * pDelim;
 
-   time( &t );
-   oTime = localtime( &t );
-
-   nValue = ( BYTE ) ( ( ( oTime->tm_year + 1900 ) - 1980 ) & ( 2 ^ 6 ) ) ; /* 6 bits */
-   szString[ 0 ]  = nValue << 2;
-   nValue = ( BYTE ) ( oTime->tm_mon + 1 ); /* 4 bits */
-   szString[ 0 ] |= nValue >> 2;
-   szString[ 1 ]  = nValue << 6;
-   nValue = ( BYTE ) ( oTime->tm_mday ); /* 5 bits */
-   szString[ 1 ] |= nValue << 1;
-
-   nValue = ( BYTE ) oTime->tm_hour; /* 5 bits */
-   szString[ 1 ]  = nValue >> 4;
-   szString[ 2 ]  = nValue << 4;
-   nValue = ( BYTE ) oTime->tm_min; /* 6 bits */
-   szString[ 2 ] |= nValue >> 2;
-   szString[ 3 ]  = nValue << 6;
-   nValue = ( BYTE ) oTime->tm_sec; /* 6 bits */
-   szString[ 3 ] |= nValue;
-
-   return HB_MKLONG( szString[ 3 ], szString[ 2 ], szString[ 1 ], szString[ 0 ] );
+      pPath = szInclude = hb_strdup( szInclude );
+      while( ( pDelim = strchr( pPath, OS_PATH_LIST_SEPARATOR ) ) != NULL )
+      {
+         *pDelim = '\0';
+         AddSearchPath( pPath, &hb_comp_pIncludePath );
+         pPath = pDelim + 1;
+      }
+      AddSearchPath( pPath, &hb_comp_pIncludePath );
+   }
 }
 

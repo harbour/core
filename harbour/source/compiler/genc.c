@@ -35,7 +35,7 @@
 
 #include "compiler.h"
 
-void GenCCode( PHB_FNAME pFileName )       /* generates the C language output */
+void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language output */
 {
    char szFileName[ _POSIX_PATH_MAX ];
    PFUNCTION pFunc = hb_comp_functions.pFirst, pFTemp;
@@ -64,11 +64,6 @@ void GenCCode( PHB_FNAME pFileName )       /* generates the C language output */
       printf( "\nGenerating C source output to \'%s\'... ", szFileName );
       fflush( stdout );
    }
-
-/*
- * Harbour Compiler, Build 30 (1999.09.30)
- * Generated C source code
- */
 
    fprintf( yyc, "/*\n * Harbour Compiler, Build %i%s (%04d.%02d.%02d)\n",
          hb_build, hb_revision, hb_year, hb_month, hb_day );

@@ -1,3 +1,19 @@
+19991209-01:05 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/compiler/*
+    include/compiler.h
+    + Additional function renaming (prefixing with hb_comp), some functions 
+      moved to other files. Declarations fixed, some static vars prefixed
+      with s_.
+      hb_Chk*() -> hb_compChk*()
+      Print*() -> hb_compPrint*()
+      Gen*() -> hb_Gen*()
+      PCODE_CHUNK -> HB_PCODE_CHUNK
+      harbour_main() -> hb_compYACCMain()
+      Include() -> hb_compInclude()
+      hb_compCheckPaths() -> Moved to cmdcheck.c
+      AddSearchPath() - Moved to cmdcheck.c and made static.
+      etc...
+
 19991208-18:06 GMT+1 Victor Szel <info@szelvesz.hu>
   * bin/bld_tpl.bat
     bin/bld_tpl.cmd

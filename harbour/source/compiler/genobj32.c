@@ -71,7 +71,7 @@ static BYTE prgFunction[] = { 0x68, 0x00, 0x00, 0x00, 0x00, 0x68, 0x00, 0x00, 0x
 static char * * externNames = 0;
 static USHORT wExternals = 1; /* _hb_vmExecute is always added */
 
-void GenObj32( PHB_FNAME pFileName )
+void hb_compGenObj32( PHB_FNAME pFileName )
 {
   char szFileName[ _POSIX_PATH_MAX ];
   FILE * hObjFile;  /* file handle for OBJ output */

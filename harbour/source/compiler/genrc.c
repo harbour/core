@@ -38,7 +38,7 @@
 #include "pcode.h"
 #include "hberrors.h"
 
-void GenRC( PHB_FNAME pFileName )
+void hb_compGenRC( PHB_FNAME pFileName )
 {
    char szFileName[ _POSIX_PATH_MAX ];
 

@@ -39,7 +39,7 @@
 #define SYM_FUNC    1              /* Defined function                  */
 #define SYM_EXTERN  2              /* Previously defined function       */
 
-void GenPortObj( PHB_FNAME pFileName )
+void hb_compGenPortObj( PHB_FNAME pFileName )
 {
    char szFileName[ _POSIX_PATH_MAX ];
    PFUNCTION pFunc /*= hb_comp_functions.pFirst */;
