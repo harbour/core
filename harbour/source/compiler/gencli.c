@@ -1134,28 +1134,34 @@ static HB_GENC_FUNC( hb_p_poplocal )
 
 static HB_GENC_FUNC( hb_p_poplocalnear )
 {
-   fprintf( cargo->yyc, "\tHB_P_POPLOCALNEAR, %i,",
-            pFunc->pCode[ lPCodePos + 1 ] );
-   if( cargo->bVerbose )
-   {
-      char wVar = ( char ) pFunc->pCode[ lPCodePos + 1 ];
-      /* Variable with negative order are local variables
-         * referenced in a codeblock -handle it with care
-         */
+   // important: check the below code for codeblock locals management
+   // warning: IL requires zero based locals index
 
-      if( cargo->iNestedCodeblock )
-      {
-         /* we are accesing variables within a codeblock */
-         /* the names of codeblock variable are lost     */
-         if( wVar < 0 )
-            fprintf( cargo->yyc, "\t/* localvar%i */", -wVar );
-         else
-            fprintf( cargo->yyc, "\t/* codeblockvar%i */", wVar );
-      }
-      else
-         fprintf( cargo->yyc, "\t/* %s */", hb_compLocalVariableFind( pFunc, wVar )->szName );
-   }
-   fprintf( cargo->yyc, "\n" );
+   fprintf( cargo->yyc, "   stloc.%i\n", pFunc->pCode[ lPCodePos + 1 ] - 1 );
+
+   // fprintf( cargo->yyc, "\tHB_P_POPLOCALNEAR, %i,",
+   //          pFunc->pCode[ lPCodePos + 1 ] );
+   // if( cargo->bVerbose )
+   // {
+   //    char wVar = ( char ) pFunc->pCode[ lPCodePos + 1 ];
+   //    /* Variable with negative order are local variables
+   //       * referenced in a codeblock -handle it with care
+   //       */
+   //
+   //    if( cargo->iNestedCodeblock )
+   //    {
+   //       /* we are accesing variables within a codeblock */
+   //       /* the names of codeblock variable are lost     */
+   //       if( wVar < 0 )
+   //          fprintf( cargo->yyc, "\t/* localvar%i */", -wVar );
+   //       else
+   //          fprintf( cargo->yyc, "\t/* codeblockvar%i */", wVar );
+   //    }
+   //    else
+   //       fprintf( cargo->yyc, "\t/* %s */", hb_compLocalVariableFind( pFunc, wVar )->szName );
+   // }
+   // fprintf( cargo->yyc, "\n" );
+
    return 2;
 }
 
@@ -1392,28 +1398,33 @@ static HB_GENC_FUNC( hb_p_pushlocal )
 
 static HB_GENC_FUNC( hb_p_pushlocalnear )
 {
-   fprintf( cargo->yyc, "\tHB_P_PUSHLOCALNEAR, %i,",
-            pFunc->pCode[ lPCodePos + 1 ] );
-   if( cargo->bVerbose )
-   {
-      signed char wVar = ( signed char ) pFunc->pCode[ lPCodePos + 1 ];
-      /* Variable with negative order are local variables
-       * referenced in a codeblock -handle it with care
-       */
+   // Important: check the below code for codeblocks locals
+   // Warning: IL uses zero based locals indexes
+   fprintf( cargo->yyc, "   ldloc.%i\n", pFunc->pCode[ lPCodePos + 1 ] - 1 );
 
-      if( cargo->iNestedCodeblock )
-      {
-         /* we are accesing variables within a codeblock */
-         /* the names of codeblock variable are lost     */
-         if( wVar < 0 )
-            fprintf( cargo->yyc, "\t/* localvar%i */", -wVar );
-         else
-            fprintf( cargo->yyc, "\t/* codeblockvar%i */", wVar );
-      }
-      else
-         fprintf( cargo->yyc, "\t/* %s */", hb_compLocalVariableFind( pFunc, wVar )->szName );
-   }
-   fprintf( cargo->yyc, "\n" );
+   // fprintf( cargo->yyc, "\tHB_P_PUSHLOCALNEAR, %i,",
+   //          pFunc->pCode[ lPCodePos + 1 ] );
+   // if( cargo->bVerbose )
+   // {
+   //    signed char wVar = ( signed char ) pFunc->pCode[ lPCodePos + 1 ];
+   //    /* Variable with negative order are local variables
+   //     * referenced in a codeblock -handle it with care
+   //     */
+   //
+   //    if( cargo->iNestedCodeblock )
+   //    {
+   //       /* we are accesing variables within a codeblock */
+   //       /* the names of codeblock variable are lost     */
+   //       if( wVar < 0 )
+   //          fprintf( cargo->yyc, "\t/* localvar%i */", -wVar );
+   //       else
+   //          fprintf( cargo->yyc, "\t/* codeblockvar%i */", wVar );
+   //    }
+   //    else
+   //       fprintf( cargo->yyc, "\t/* %s */", hb_compLocalVariableFind( pFunc, wVar )->szName );
+   // }
+   // fprintf( cargo->yyc, "\n" );
+
    return 2;
 }
 
