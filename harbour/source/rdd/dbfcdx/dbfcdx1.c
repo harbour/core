@@ -1232,7 +1232,7 @@ static int hb_cdxKeyCompare( LPKEYINFO pKey1, LPKEYINFO pKey2, USHORT * EndPos, 
       * EndPos += 1;
       iResult = pKey1->length - pKey2->length;
    }
-   if( iResult < 0 && * EndPos > pKey1->length && !Exact )
+   if( (iResult < 0) && ((ULONG)* EndPos > pKey1->length) && !Exact )
       iResult = 0;
 
    if( iResult < 0 )
@@ -2108,7 +2108,7 @@ static void hb_cdxTagTagLoad( LPCDXTAG pTag )
     * invalid key value length
     */
    if( pTag->RootBlock == 0 || pTag->RootBlock % CDX_PAGELEN > 0 ||
-       pTag->RootBlock > hb_fsSeek( pTag->pIndex->hFile, 0, FS_END ) ||
+       (ULONG) pTag->RootBlock > hb_fsSeek( pTag->pIndex->hFile, 0, FS_END ) ||
        pHeader.uiKeySize > CDX_MAXKEY )
       return;
 
@@ -3003,14 +3003,14 @@ static void hb_cdxIndexResetAvailPage( LPCDXINDEX pIndex )
 static void hb_cdxIndexPageRead( LPCDXINDEX pIndex, LONG lPos, void * pBuffer,
                                  USHORT uiSize )
 {
-   if( hb_fsSeek( pIndex->hFile, lPos, FS_SET ) == lPos )
+   if( hb_fsSeek( pIndex->hFile, lPos, FS_SET ) == (ULONG) lPos )
       hb_fsRead( pIndex->hFile, ( BYTE * ) pBuffer, uiSize );
 }
 
 static void hb_cdxIndexPageWrite( LPCDXINDEX pIndex, LONG lPos, void * pBuffer,
                                   USHORT uiSize )
 {
-   if( hb_fsSeek( pIndex->hFile, lPos, FS_SET ) == lPos )
+   if( hb_fsSeek( pIndex->hFile, lPos, FS_SET ) == (ULONG) lPos )
       hb_fsWrite( pIndex->hFile, ( BYTE * ) pBuffer, uiSize );
 }
 
@@ -3674,12 +3674,12 @@ ERRCODE hb_cdxOrderCreate( CDXAREAP pAreaCdx, LPDBORDERCREATEINFO pOrderInfo )
    BYTE bType;
    BOOL bNewFile;
    AREAP pArea = (AREAP) pAreaCdx;
-
+   /*  this is for testing when doing changes or testing a new platform/compiler
    if ( sizeof(CDXINTERNAL) != 500 )
      printf("cdxOrdCreate: Error, size of CDXINTERNAL: %i\n", sizeof(CDXINTERNAL));
    if ( sizeof(CDXDATA) != 512 )
      printf("cdxOrdCreate: Error, size of CDXDATA: %i\n", sizeof(CDXDATA));
-
+   */
    HB_TRACE(HB_TR_DEBUG, ("cdxOrderCreate(%p, %p)", pArea, pOrderInfo));
 
    if( SELF_GOCOLD( ( AREAP ) pArea ) == FAILURE )
@@ -3842,8 +3842,10 @@ ERRCODE hb_cdxOrderCreate( CDXAREAP pAreaCdx, LPDBORDERCREATEINFO pOrderInfo )
    if( strlen( ( char * ) pOrderInfo->abBagName ) == 0 )
    {
       pFileName = hb_fsFNameSplit( pAreaCdx->szDataFileName );
+      /*
       if( pFileName->szDrive )
          strcat( szFileName, pFileName->szDrive );
+      */
       if( pFileName->szPath )
          strcat( szFileName, pFileName->szPath );
       strcat( szFileName, pFileName->szName );
@@ -4292,7 +4294,7 @@ ERRCODE hb_cdxSeek( CDXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFindLas
        }
      }
    }
-   return SUCCESS;
+   //return SUCCESS;
 }
 
 /*
@@ -4314,7 +4316,7 @@ ERRCODE hb_cdxGoTo( CDXAREAP pArea, ULONG ulRecNo )
    if ( ! pTag )
       return SUCCESS;
 
-   if( !pTag->CurKeyInfo || pTag->CurKeyInfo->Tag != ulRecNo )
+   if( !pTag->CurKeyInfo || (ULONG) pTag->CurKeyInfo->Tag != ulRecNo )
    {
 
       pKey = hb_cdxKeyNew();
@@ -4340,7 +4342,7 @@ ERRCODE hb_cdxGoTo( CDXAREAP pArea, ULONG ulRecNo )
 
       if ( lRecno > 0 )
       {
-         if ( lRecno == pArea->ulRecNo )
+         if ( (ULONG) lRecno == pArea->ulRecNo )
             return SUCCESS;
          else
          {
@@ -4398,7 +4400,7 @@ ERRCODE hb_cdxGoToId( CDXAREAP pArea, PHB_ITEM pItem )
 ERRCODE hb_cdxGoHot( CDXAREAP pArea )
 {
    LPCDXTAG     pTag;
-   USHORT       uiTag;
+   //USHORT       uiTag;
    LPKEYINFO    pKey;
    HB_MACRO_PTR pMacro;
 
@@ -4410,7 +4412,7 @@ ERRCODE hb_cdxGoHot( CDXAREAP pArea )
    if( pArea->lpIndexes && pArea->lpIndexes->TagList )
    {
       pTag = pArea->lpIndexes->TagList;
-      uiTag = 1;
+      //uiTag = 1;
       while( pTag )
       {
             pKey = hb_cdxKeyNew();
@@ -4432,7 +4434,7 @@ ERRCODE hb_cdxGoHot( CDXAREAP pArea )
 
             pTag->HotKey = pKey;
             pTag = pTag->pNext;
-            ++uiTag;
+            //++uiTag;
       }
    }
 
@@ -4524,4 +4526,3 @@ ERRCODE hb_cdxGoCold( CDXAREAP pArea )
       return FAILURE;
    return SUCCESS;
 }
-

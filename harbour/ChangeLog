@@ -1,3 +1,8 @@
+2001-04-17 02:50 GMT-3 Horacio Roldan <horacioroldan@usa.net>
+   *source/rdd/dbfcdx/dbfcdx1.c
+     * fixed some warnings
+     * fixed bug with pathname in hb_cdxOrderCreate
+
 2001-04-16 14:40 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/harbour.c
      + Added all GET Methods definitions (still need Exported Vars ) - Thanks to Luiz.
