@@ -136,6 +136,7 @@ PRG_SOURCES=\
 	memvarbl.prg \
 	menuto.prg   \
 	objfunc.prg  \
+	perfuncs.prg \
 	persist.prg  \
 	profiler.prg \
 	pushbtn.prg  \

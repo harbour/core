@@ -1,3 +1,7 @@
+2001-09-05 07:53 GMT Dave Pearson <davep@davep.org>
+  * source/rtl/Makefile
+    * Added perfuncs.prg to PRG_SOURCES.
+
 2001-09-05 09:00 GMT+1 Antonio Linares <alinares@fivetech.com>
 
    + harbour/include/hbpers.ch
@@ -85,7 +89,7 @@
 
 2001-09-03 17:19 GMT Dave Pearson <davep@davep.org>
   * source/rtl/Makefile
-    * Added persist.org to PRG_SOURCES.
+    * Added persist.prg to PRG_SOURCES.
 
 2001-09-03 16:56 GMT Dave Pearson <davep@davep.org>
   * source/rtl/isprint.c
@@ -107,7 +111,6 @@
   + harbour/source/rtl/persist.prg
     arrays support started
 
->>>>>>> 1.3405
 2001-09-02 19:30 GMT+1 Antonio Linares <alinares@fivetech.com>
   + harbour/source/rtl/persist.prg
     Class TPersistent to implement objects persistence
