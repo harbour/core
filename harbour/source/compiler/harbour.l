@@ -1895,11 +1895,6 @@ static int yy_ConvertNumber( char * szBuffer )
    }
 }
 
-
-void hb_compReleaseStrings( void )
-{
-}
-
 #ifdef HB_NESTED_COMPILE
 void * hb_compGet_YY_CURRENT_BUFFER()
 {

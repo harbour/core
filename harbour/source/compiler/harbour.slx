@@ -45,9 +45,7 @@
 #define YY_INPUT( buf, result, max_size ) result = yy_lex_input( buf, max_size );
 
 static int iTexts = 0, iStrings = 0, iString;
-static char * aTexts[256];
-static char * aStrings[2048];
-static char * pString;
+static char * aTexts[64];
 
 /* -----------------------------------------------------  Language Definitions. ---------------------------------------------------- */
 
@@ -909,11 +907,7 @@ LANGUAGE_RULES_ARE {
 	       	  yytext++;\
 	      	  yyleng--;\
 \
-                  yytext = hb_strdup( yytext );\
-		  /* aTexts[iTexts++] = yytext; */\
-		  /* printf( "Text %i At: %i for %s\n", iTexts, aTexts[iTexts - 1], aTexts[iTexts - 1] ); */\
-\
-                  yylval.string = yytext;\
+                  yylval.string = hb_compIdentifierNew( yytext, TRUE );\
 	       	  iRet = MACROVAR;\
                }\
 	       else if( tmpPtr == yytext + yyleng - 1 )\
@@ -922,21 +916,16 @@ LANGUAGE_RULES_ARE {
 \
 	       	  /* Remove the '&' and the '.' */ \
 	       	  yytext++;\
-                  yylval.string = yytext;\
 	       	  yyleng -= 2;\
 	       	  yytext[yyleng] = '\0';\
 \
-                  yytext = hb_strdup( yytext );\
-		  /* aTexts[iTexts++] = yytext; */\
-		  /* printf( "Text %i At: %i for %s\n", iTexts, aTexts[iTexts - 1], aTexts[iTexts - 1] ); */\
-\
-                  yylval.string = yytext;\
+                  yylval.string = hb_compIdentifierNew( yytext, TRUE );\
 	       	  iRet = MACROVAR;\
 	       }\
 	       else\
 	       {\
                   yytext = hb_strdup( yytext );\
-		  /* aTexts[iTexts++] = yytext; */\
+		  aTexts[iTexts++] = yytext; \
 		  /* printf( "Text %i At: %i for %s\n", iTexts, aTexts[iTexts - 1], aTexts[iTexts - 1] ); */\
 \
                   yylval.string = yytext;\
@@ -957,32 +946,7 @@ LANGUAGE_RULES_ARE {
          {\
       	    DEBUG_INFO( printf(  "Element \"%s\" is IDENTIFIER\n", yytext ) );\
 \
-	    iString = 0; \
-	    while( iString < iStrings ) \
-	    { \
-	       if( strcmp( yytext, aStrings[ iString ] ) == 0 ) \
-	       { \
-		  pString = aStrings[ iString ]; \
-		  break; \
-	       } \
-	       iString++; \
-	    } \
-\
-	    if( iString < iStrings ) \
-	    { \
-		yytext = pString; \
-	    	DEBUG_INFO( printf( "Re-Using Allocation for String \"%s\"\n", yytext ) ); \
-	    } \
-	    else \
-	    { \
-            	yytext = hb_strdup( yytext ); \
-		aStrings[iStrings++] = yytext; \
-\
-	    	/* aTexts[iTexts++] = yytext; */ \
-	    	DEBUG_INFO( printf( "Allocated long term String \"%s\"\n", yytext ) ); \
-	    } \
-\
-            yylval.string = yytext; \
+            yylval.string = hb_compIdentifierNew( yytext, TRUE );\
       	    iRet = IDENTIFIER; \
          }\
       }\
@@ -1050,17 +1014,13 @@ LANGUAGE_RULES_ARE {
    }
 
 #undef CUSTOM_ACTION(x)
-#define CUSTOM_ACTION(x) \
+   #define CUSTOM_ACTION(x) \
 \
    DEBUG_INFO( printf( "Custom Action for %i\n", x ) );\
 \
    /* Resetting (prepairing). */\
    yytext = hb_xgrab( iWordLen + 1 );\
-   /* aTexts[iTexts++] = yytext; */\
-\
    yytext[0] = '\0';\
-   yylval.string = yytext;\
-   /* printf( "Text %i At: %i for Var As Id\n", iTexts, aTexts[iTexts - 1] ); */\
 \
    DEBUG_INFO( printf( "Prepared Text: %i Pointer: %i\n", iTexts, yytext ) );\
 \
@@ -1395,6 +1355,11 @@ LANGUAGE_RULES_ARE {
 \
    if( x == IDENTIFIER )\
    {\
+      yylval.string = hb_compIdentifierNew( yytext, TRUE );\
+\
+      /* No longer needed. */\
+      hb_xfree( yytext );\
+\
       PUSH_TOKEN( IDENTIFIER );\
       x = 0;\
    }
@@ -1408,16 +1373,4 @@ int yy_lex_input( char *buffer, int iBufferSize )
    HB_SYMBOL_UNUSED( iBufferSize );
 
    return hb_pp_Internal( hb_comp_bPPO ? hb_comp_yyppo : NULL, buffer );
-}
-
-void hb_compReleaseStrings( void )
-{
-   DEBUG_INFO( printf( "Releasing: %i Strings\n", iStrings ) );
-
-   iString = 0;
-   while( iString < iStrings )
-   {
-       hb_xfree( aStrings[ iString ] );
-       iString++;
-   }
 }

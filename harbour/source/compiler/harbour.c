@@ -183,9 +183,6 @@ extern char * hb_comp_szAnnounce;
 
 extern void yyrestart( FILE * );
 
-/* Simplex requirement */
-extern void hb_compReleaseStrings( void );
-
 /* ************************************************************************* */
 
 int main( int argc, char * argv[] )
@@ -245,7 +242,7 @@ int main( int argc, char * argv[] )
             break;
       }
    }
-   
+
    hb_compIdentifierClose();
 
    if( ! bAnyFiles )
@@ -3604,9 +3601,6 @@ int hb_compCompile( char * szPrg, int argc, char * argv[] )
                   printf( "\rLines %i, Functions/Procedures %i\n", hb_comp_iLine, hb_comp_iFunctionCnt );
 
                hb_compGenOutput( hb_comp_iLanguage );
-
-               if( hb_comp_bSimpLex )
-                  hb_compReleaseStrings();
             }
          }
          else
