@@ -1,3 +1,12 @@
+19990608-11:45 CET Eddie Runia
+   * source/tools/debug.c
+     even though it makes no difference hb_arrayClone is used in statics(),
+     since it will no longer allow modification of the static table
+   * source/rtl/classes.c
+     class wrap bug eliminated
+   * source/rtl/files.c; source/rtl/set.c
+     temporary patches with regard to sys/stat.h removed
+
 Mon Jun 07 20:42:04 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* config/dir.cf: 

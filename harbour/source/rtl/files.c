@@ -40,7 +40,7 @@
 #endif
 
 #if defined(__BORLANDC__)
-/*  #include <sys\stat.h> */
+  #include <sys\stat.h>
   #include <io.h>
   #include <fcntl.h>
   #include <share.h>

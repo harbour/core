@@ -325,7 +325,11 @@ HARBOUR CLASSDEL()
       while( ( wAt != wLimit ) &&
              ( pClass->pMethods[ wAt ].pMessage &&
              ( pClass->pMethods[ wAt ].pMessage != pMsg ) ) )
-         wAt = ( wAt == wMask ) ? 0 : wAt + 1;
+      {
+         wAt++;
+         if( wAt == wMask)
+            wAt = 0;
+      }
 
       if( wAt != wLimit )
       {                                         /* Requested method found   */
@@ -341,7 +345,9 @@ HARBOUR CLASSDEL()
             memcpy( pClass->pMethods + wAt,
                     pClass->pMethods + ( ( wAt == wMask ) ? 0 : wAt + 1 ),
                     sizeof( METHOD ) );
-            wAt = ( wAt == wMask ) ? 0 : wAt + 1;
+            wAt++;
+            if( wAt == wMask)
+               wAt = 0;
          }
 
          memset( pClass->pMethods + wAt, 0, sizeof( METHOD ) );
@@ -420,7 +426,11 @@ HARBOUR CLASSMOD()
       while( ( wAt != wLimit ) &&
              ( pClass->pMethods[ wAt ].pMessage &&
              ( pClass->pMethods[ wAt ].pMessage != pMsg ) ) )
-         wAt = ( wAt == wMask ) ? 0 : wAt + 1;
+      {
+         wAt++;
+         if( wAt == wMask)
+            wAt = 0;
+      }
 
       if( wAt != wLimit )
       {                                         /* Requested method found   */
@@ -704,7 +714,9 @@ HARBOURFUNC GetMethod( PHB_ITEM pObject, PSYMBOL pMessage )
             pMethod = pClass->pMethods + wAt;
             return pMethod->pFunction;
          }
-         wAt = ( wAt == wMask ) ? 0 : wAt + 1;
+         wAt++;
+         if( wAt == wMask)
+            wAt = 0;
       }
    }
 
@@ -936,10 +948,10 @@ static HARBOUR Virtual( void )
  */
 HARBOUR __INSTSUPER( void )
 {
-   PHB_ITEM   pString = _param( 1, IT_STRING );
-   PDYNSYM pDynSym;
-   BYTE    bFound  = FALSE;
-   WORD    w;
+   PHB_ITEM pString = _param( 1, IT_STRING );
+   PDYNSYM  pDynSym;
+   BYTE     bFound  = FALSE;
+   WORD     w;
 
    if( pString )
    {

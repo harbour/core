@@ -22,7 +22,10 @@ PHB_ITEM ArrayClone( PHB_ITEM );
  * $End$ */
 HARBOUR __ASTATIC()
 {
-   hb_itemReturn( &aStatics );
+   PHB_ITEM pStatics = hb_arrayClone( &aStatics );
+
+   ItemCopy( &stack.Return, pStatics );
+   hb_itemRelease( pStatics );
 }
 
 
