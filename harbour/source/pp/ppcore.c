@@ -2779,6 +2779,11 @@ static BOOL ScanMacro( char * expreal, int lenitem, int * pNewLen )
 			lennew = lenitem-1;
 			break;
 		}
+		else if( expreal[ i ] == '(' )
+		{
+			/* &(var)  => "(var)" */
+			break;
+		}
 	} while( i++ < lenitem );
 
 	if( bSmartMacro )
