@@ -1,3 +1,7 @@
+19990718-15:25 CET Bruno Cantero / Eddie Runia
+  * source/vm/hvm.c
+    PushString endian ordered not determined by compiler but by HVM
+
 19990718-14:13 CET Patrick Mast <harbour@PatrickMast.com>
   * /source/hbpp
     latest files from Alexander. With these files Build32.bat works ok.

@@ -559,7 +559,7 @@ void VirtualMachine( PBYTE pCode, PSYMBOL pSymbols )
               break;
 
          case HB_P_PUSHSTR:
-              wSize =*( (WORD *) &( pCode[ w + 1 ] ) );
+              wSize = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
               PushString( (char*)pCode + w + 3, wSize );
               w += ( wSize + 3 );
               break;
