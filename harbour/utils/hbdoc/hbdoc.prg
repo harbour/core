@@ -123,6 +123,7 @@ MEMVAR lWww
 MEMVAR lNorton
 MEMVAR aWWW
 MEMVAR lTroff
+STATIC cTitle:=''
 /*
 */
 
@@ -424,9 +425,9 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
       FWRITE( nHpj, 'LCID=0x416 0x0 0x0 ;Português (brasileiro)' + CRLF )
       FWRITE( nHpj, 'REPORT=Yes' + CRLF )
       FWRITE( nHpj, 'CONTENTS=IDH_OVERVIEW' + CRLF )
-      FWRITE( nHpj, 'TITLE=Harbour Winhelp' + CRLF )
+      FWRITE( nHpj, 'TITLE='+cTitle + CRLF )
       FWRITE( nHpj, 'COPYRIGHT=Harbour (C) http://www.harbour-project.org' + CRLF )
-      FWRITE( nHpj, 'HLP=.\harbour.hlp' + CRLF )
+      FWRITE( nHpj, 'HLP=.\'+ substr(cLinkName,1,AT(".",cLinkName)) +".hlp"+ CRLF )
       FWRITE( nHpj, 'ROOT=' + CURDIR() + "\RTF" + CRLF )
       FWRITE( nHpj, 'CNT=.\Harbour.cnt' + CRLF )
       FWRITE( nHpj, '[FILES]' + CRLF )
@@ -1107,7 +1108,9 @@ FUNCTION fill_link_info( cLinkName )
 
       //  Read a line
       cBuffer := UPPER( ReadLN( @lEof ) )
-
+      if AT("!NAME:",cBuffer)>0
+            cTitle:=Substr(cBuffer,AT(":",cBuffer)+1)
+      Endif
       //  Does it have a !menu?
 
       IF AT( "!MENU", cBuffer ) > 0
