@@ -38,7 +38,7 @@ function __AtPrompt( nRow, nCol, cPrompt, cMsg, cColor )
    aadd( s_aLevel[ s_nPointer ], { nRow, nCol, cPrompt, cMsg, cColor} )
 
    // put this prompt on the screen right now
-   DispOutAt( nRow, nCol, cPrompt, if( cColor <> NIL , cColor, NIL ) )
+   DispOutAt( nRow, nCol, cPrompt, cColor )
 
    return .f.
 

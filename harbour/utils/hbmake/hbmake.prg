@@ -1066,7 +1066,7 @@ FUNCTION Compfiles()
 
 //                        Outstd( cComm )
 //                        Outstd( hb_osnewline() )
-                        @ 4,16 Say cPrg
+                        @ 4,16 Say aprgs[ nFiles ]
                         GaugeUpdate(aGauge,nFile/Len( aprgs ))
 //                        Outstd( hb_osnewline() )
     nFile++
