@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2001-12-18 07:44 UTC+0000 Dave Pearson <davep@davep.org>
+  * doc/howtocvs.txt
+    * Updated the pointer to details about harbour's mailing lists.
+	
 2001-12-18 07:21 UTC+0100 JFL (Mafact) <jfl@mafact.com>
   * source/vm/garbage.c
     ! RON Further Fix for forever loop when GC try to free first item in the

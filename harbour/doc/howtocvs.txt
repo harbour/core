@@ -21,10 +21,10 @@ Content
 =========================================================
 by Viktor Szakats <viktor.szakats@syenar.hu>
 
- 1) Read the Harbour FAQ (www.harbour-project.org), monitor the 
-    mailing-list (Harbour at www.egroups.com), consult with the
-    developers, make contributions. This way your chances are high
-    to get a RW access to the CVS.
+ 1) Read the Harbour FAQ (www.harbour-project.org), monitor the mailing-list
+    (http://www.harbour-project.org/faq/harbour-4.html), consult with the
+    developers, make contributions. This way your chances are high to get a
+    RW access to the CVS.
  2) Before uploading anything you'll need Developer (RW) status for the 
     Harbour CVS server. To get this please make a request on the list, 
     or contact the Harbour Administrators. Note that getting Developer 
