@@ -9,10 +9,14 @@
 */
 
 2004-01-08 16:00 UTC-0500 David G. Holm <dholm@jsd-llc.com>
+  *  source/rtl/filesys.c
+    + Added an error return check to fdatasync when using POSIX
+      synchronized I/O, so that if unimplemented, the slower
+      method will be used to ensure that the file gets flushed.
+
   *  utils/hbpp/hbpp.c
-    ! Never include malloc.h, because: 1) It been obsoleted by stdlib.h
-      in Standard C; and 2) The use of malloc.h is forbidden in GCC 3.x
-      (I missed this one somehow during my earlier cleanup on 2003-12-10).
+    ! Removed another refererence to malloc.h, which is obsoleted by
+      stdlib.h and doesn't even exist in gcc 3.x implementations.
 
 2003-12-25 19:40 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
   * include/hbapifs.ch
