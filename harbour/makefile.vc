@@ -837,7 +837,7 @@ $(OBJ_DIR)\tone.obj : $(RTL_DIR)\tone.c
     $(CC) -W1 -nologo -I$(INCLUDE_DIR) -DHARBOUR_USE_WIN_GTAPI -c -TP -Fo$@ $**
 
 $(OBJ_DIR)\trace.obj : $(RTL_DIR)\trace.c
-    $(CC) -W1 -nologo -I$(INCLUDE_DIR) -DHARBOUR_USE_WIN_GTAPI -c -TP -Fo$@ $**
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\transfrm.obj : $(RTL_DIR)\transfrm.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**

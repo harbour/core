@@ -1068,6 +1068,9 @@ return TGet():New( nRow, nCol, bVarBlock, cVarName, cPicture, cColor )
 
 //---------------------------------------------------------------------------//
 
+/* TOFIX: Clipper will do a compiler hack to internally generate a setget
+          block for these function calls when not specified. */
+
 function __GET( uVar, cVarName, cPicture, bValid, bWhen, bSetGet )
    return _GET_( uVar, cVarName, cPicture, bValid, bWhen, bSetGet )
 
