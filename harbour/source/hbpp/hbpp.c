@@ -255,24 +255,9 @@ int ParseUndef( char* sLine)
 
  NextWord( &sLine, defname, FALSE );
 
- if ( ( stdef = DefSearch(defname) ) >= 0 )
+ if ( ( stdef = DefSearch(defname) ) != NULL )
  {
-#if 0
-  _xfree ( stdef->name );
-  _xfree ( stdef->pars );
-  _xfree ( stdef->value );
-#endif
   stdef->name = NULL;
-#if 0
-  for ( ; i < koldefines-1; i++ )
-  {
-   aDefines[i].name = aDefines[i+1].name;
-   aDefines[i].value = aDefines[i+1].value;
-   aDefines[i].pars = aDefines[i+1].pars;
-   aDefines[i].npars = aDefines[i+1].npars;
-  }
-  koldefines--;
-#endif
  }
  return 0;
 }
@@ -323,9 +308,9 @@ int ComSearch(char *cmdname, int ncmd)
   {
    for ( j=0; (*(aCommnew[i].name+j)==toupper(*(cmdname+j))) &&
              (*(aCommnew[i].name+j)!='\0') &&
-             ((aCommnew[i].com_or_xcom)? 1:(j<4)); j++ );
+             ((aCommnew[i].com_or_xcom)? 1:(j<4 || isname(*(cmdname+j+1)))); j++ );
    if ( (*(aCommnew[i].name+j)==toupper(*(cmdname+j))) ||
-       ( !aCommnew[i].com_or_xcom && j == 4 && *(aCommnew[i].name+j)!='\0') )
+       ( !aCommnew[i].com_or_xcom && j >= 4 && *(aCommnew[i].name+j)!='\0') )
    return kolcomm+i;
   }
 
@@ -333,9 +318,9 @@ int ComSearch(char *cmdname, int ncmd)
  {
   for ( j=0; (*(aCommands[i].name+j)==toupper(*(cmdname+j))) &&
              (*(aCommands[i].name+j)!='\0') &&
-             ((aCommands[i].com_or_xcom)? 1:(j<4)); j++ );
+             ((aCommands[i].com_or_xcom)? 1:(j<4 || isname(*(cmdname+j+1)))); j++ );
   if ( (*(aCommands[i].name+j)==toupper(*(cmdname+j))) ||
-       ( !aCommands[i].com_or_xcom && j == 4 && *(aCommands[i].name+j)!='\0'
+       ( !aCommands[i].com_or_xcom && j >= 4 && *(aCommands[i].name+j)!='\0'
                                              && *(cmdname+j) == '\0' ) )
   break;
  }
@@ -717,6 +702,7 @@ int CommandStuff ( char *ptrmp, char *inputLine, char * ptro, int *lenres, int c
  char *lastopti[2];
  char *ptri = inputLine, *ptr;
 
+  SKIPTABSPACES( ptri );
   if ( ptrmp == NULL ) { if ( *ptri != '\0' ) return 0; }
   else
    while ( *ptri != '\0' && !endTranslation )
@@ -1159,32 +1145,35 @@ char cha,cLast='\0';
    cha = sBuffer[*iBuffer];
    (*iBuffer)++;
    if( cha == '\n' )  break;
-   switch ( ParseState ) {
-     case STATE_COMMENT:
-      if ( cha == '/' && cLast == '*' )
-       { ParseState = STATE_NORMAL; cha = ' '; }
-      cLast = cha;
-      break;
-     case STATE_QUOTE1: if(cha=='\'') ParseState = STATE_NORMAL; break;
-     case STATE_QUOTE2: if(cha=='\"') ParseState = STATE_NORMAL; break;
-     default:
-      switch ( cha ) {
-       case '\"': ParseState = STATE_QUOTE2; break;
-       case '\'': ParseState = STATE_QUOTE1; break;
-       case '&': if ( readed>0 && buffer[readed-1] == '&' ) { maxlen = 0; readed--; } break;
-       case '/': if ( readed>0 && buffer[readed-1] == '/' ) { maxlen = 0; readed--; } break;
-       case '*':
-        if ( readed > 0 && buffer[readed-1] == '/' )
-         { ParseState = STATE_COMMENT; readed--; }
-        else if ( !State ) maxlen = readed = 0;
-        break;
-      }
+   if ( maxlen > 0 )
+   {
+    switch ( ParseState ) {
+      case STATE_COMMENT:
+       if ( cha == '/' && cLast == '*' )
+        { ParseState = STATE_NORMAL; cha = ' '; }
+       cLast = cha;
+       break;
+      case STATE_QUOTE1: if(cha=='\'') ParseState = STATE_NORMAL; break;
+      case STATE_QUOTE2: if(cha=='\"') ParseState = STATE_NORMAL; break;
+      default:
+       switch ( cha ) {
+        case '\"': ParseState = STATE_QUOTE2; break;
+        case '\'': ParseState = STATE_QUOTE1; break;
+        case '&': if ( readed>0 && buffer[readed-1] == '&' ) { maxlen = 0; readed--; } break;
+        case '/': if ( readed>0 && buffer[readed-1] == '/' ) { maxlen = 0; readed--; } break;
+        case '*':
+         if ( readed > 0 && buffer[readed-1] == '/' )
+          { ParseState = STATE_COMMENT; readed--; }
+         else if ( !State ) maxlen = readed = 0;
+         break;
+       }
+    }
+    if ( cha != ' ' && cha != '\t' ) State = 1;
+    if( lDropSpaces && State ) lDropSpaces = 0;
+    if( readed<maxlen && (!lDropSpaces || readed==0) &&
+       ParseState != STATE_COMMENT )
+     buffer[readed++]=cha;
    }
-   if ( cha != ' ' && cha != '\t' ) State = 1;
-   if( lDropSpaces && State ) lDropSpaces = 0;
-   if( readed<maxlen && (!lDropSpaces || readed==0) &&
-      ParseState != STATE_COMMENT )
-    buffer[readed++]=cha;
   }
   while(--readed >= 0 && ( buffer[readed] == ' ' || buffer[readed] == '\t') );
   readed++;

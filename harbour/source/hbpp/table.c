@@ -19,7 +19,7 @@ typedef struct
   char *value;
 } COMMANDS, TRANSLATES;
 
-int koldef = 41;
+int koldef = 42;
 DEFINES aDefines[] =
 {
  {"__HARBOUR__",NULL,0,"" },
