@@ -1,3 +1,7 @@
+19990603-13:10 CET Eddie Runia
+  * source/rtl/classes.c
+    small optimalization
+
 19990603-11:40 CET Eddie Runia
   * source/compiler/harbour.y
     <obj>:<meth>[<index>] := <value> syntax added
