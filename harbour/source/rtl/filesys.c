@@ -1,3 +1,4 @@
+
 /*
  * $Id$
  */
@@ -1327,33 +1328,21 @@ FHANDLE hb_fsExtOpen( BYTE * pFilename, BYTE * pDefExt,
 
 /*  $DOC$
  *  $FUNCNAME$
- *     FOPEN()
+ *      FOPEN()
  *  $CATEGORY$
- *     LOW LEVEL
+ *      LOW LEVEL
  *  $ONELINER$
- *     Open a binary file
+ *      Open a file.
  *  $SYNTAX$
  *     FOPEN(<cFile>, [<nMode>]) --> nHandle
  *  $ARGUMENTS$
- *     <cFile> is the name of the file to open, including the path if there
- *   is one.
- *
- *     <nMode> is the requested DOS open mode indicating how the opened
+ *     <cFile> Name of file to open
+ *     <nMode> Dos file open mode
  *   file is to be accessed.  The open mode is composed of elements from the
  *   two types of modes described in the tables below.  If just the Access
  *   Mode is used, the file is opened non-sharable.  The default open mode is
  *   zero, which indicates non-sharable and read-only.
  *
- *   FOPEN() Access Modes
- *   컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
- *   Mode    Fileio.ch      Operation
- *   컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
- *   0       FO_READ        Open for reading (default)
- *   1       FO_WRITE       Open for writing
- *   2       FO_READWRITE   Open for reading or writing
- *   컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
- *
- *     The Sharing Modes determine how other processes may access the file.
  *
  *   FOPEN() Sharing Modes
  *   컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
@@ -1371,52 +1360,49 @@ FHANDLE hb_fsExtOpen( BYTE * pFilename, BYTE * pDefExt,
  *   accessibility of the file in a network environment.
  *
  *  $RETURNS$
- *     FOPEN() returns the file handle of the opened file in the range of zero
- *   to 65,535.  If an error occurs, FOPEN() returns -1.
+ *      FOPEN() returns a DOS file handle
  *  $DESCRIPTION$
- *     FOPEN() is a low-level file function that opens an existing binary file
- *   for reading and writing, depending on the <nMode> argument.  Whenever
- *   there is an open error, use FERROR() to return the DOS error number.
- *   For example, if the file does not exist, FOPEN() returns -1 and FERROR()
- *   returns 2 to indicate that the file was not found.  See FERROR() for a
- *   complete list of error numbers.
+ *      This function opens a file expressed as <cFile> and returns a DOS
+ *      file handle to be used with other low-level file functions.The
+ *      value of <nMode> represents the status of the file to be opened;
+ *      the default value is 0.The DOS file open modes are as the follows:
  *
- *     If the specified file is opened successfully, the value returned is the
- *   DOS handle for the file.  This value is similar to an alias in the
- *   database system and is required to identify the open file to other file
- *   functions.  It is, therefore, important to assign the return value to a
- *   variable for later use as in the example below.
+ *      0          Read only
+ *      1          Write only
+ *      2          Read/write
+ *      16         Exclusive read only
+ *      17         Exclusive write only
+ *      18         Exclusive read/write only
+ *      32         Prevent others from writing
+ *      33         Prevent others from reading
+ *      34         Prevent read/write only
+ *      48         Deny read only
+ *      49         Deny write only
+ *      50         Deny read/Write
+ *      64         Share read only
+ *      65         Share write only
+ *      66         Share read/write
  *
- *     Warning!  This function allows low-level access to DOS files and
- *   devices.  It should be used with extreme care and requires a thorough
- *   knowledge of the operating system.
- *
- *   Notes
- *
- *   ^CFE  Accessing files in other directories: FOPEN() does not obey
- *      either SET DEFAULT or SET PATH.  Instead, it searches the current DOS
- *      directory and path setting unless a path is explicitly stated as part
- *      of the <cFile> argument.
+ *      If there is an error in opening a file, a -1 will be returned by
+ *      the function.Files handles may be in the range of 0 to 65535. The
+ *      status of the SET DEFAULT TO and SET PATH TO commands has no effect
+ *      on this function.Directory names and paths must be specified along
+ *      with the file that is to be opened.
+ *      If an error has occured, see the returns values from FERROR() for
+ *      possible reasons for the error.
  *  $EXAMPLES$
- *   ^CFE  This example uses FOPEN() to open a file with  sharable
- *      read/write status and displays an error message if the open fails:
- *
- *      #include "Fileio.ch"
- *      //
- *      nHandle := FOPEN("Temp.txt", FO_READWRITE + FO_SHARED)
- *      IF FERROR() != 0
- *         ? "Cannot open file, DOS error ", FERROR()
- *         BREAK
+ *      IF (nH:=FOPEN('X.TXT',66)<0
+ *         ? 'File cann't be open'
  *      ENDIF
  *  $TESTS$
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
- *     This function is CA-Clipper compliant
+ *      This function is CA-Clipper compliant
  *  $SEEALSO$
- *     FCREATE(),FERROR(),FCLOSE()
+ *      FCREATE(),FERROR(),FCLOSE()
  *  $INCLUDE$
- *     Fileio.ch
+ *  
  *  $END$
  */
 
@@ -1431,35 +1417,35 @@ HARBOUR HB_FOPEN( void )
 
 /*  $DOC$
  *  $FUNCNAME$
- *     FCREATE()
+ *      FCREATE()
  *  $CATEGORY$
- *     LOW LEVEL
+ *      LOW LEVEL
  *  $ONELINER$
- *     Creates a file
+ *      Creates a file
  *  $SYNTAX$
- *     FCREATE(<cFile>, [<nAttribute>]) --> nHandle
+ *      FCREATE(<cFile>, [<nAttribute>]) --> nHandle
  *  $ARGUMENTS$
- *     <cFile> is the name of the file to create.
+ *      <cFile> is the name of the file to create.
  *
- *     <nAttribute> Numeric code for the DOS file attribute
+ *      <nAttribute> Numeric code for the DOS file attribute
  *
  *  $RETURNS$
- *     <nHandle>  Numeric expression
+ *      <nHandle>  Numeric expression
  *  $DESCRIPTION$
  *      This function creates a new file with a filename of <cFile>. The
- *    default value of <nAttribute> is 0 and is used to set the DOS
- *    attribute byte for the file being created by this function.
- *    The return value will be DOS file handle that is associated
- *    with the new file. This number will be between zero to 65,535,
- *    inclusive. If an error occurs, the return value of this function
- *    will be -1
+ *      default value of <nAttribute> is 0 and is used to set the DOS
+ *      attribute byte for the file being created by this function.
+ *      The return value will be DOS file handle that is associated
+ *      with the new file. This number will be between zero to 65,535,
+ *      inclusive. If an error occurs, the return value of this function
+ *      will be -1
  *      If the file <cFile> already exists, the existing file will be
- *    truncated to a file lenght of 0 bytes.
+ *      truncated to a file lenght of 0 bytes.
  *      If specified, the folowing table shows the value for <nAttribute>
- *     and their related meaning to the file <cFile> being created by
- *     this Function.
+ *      and their related meaning to the file <cFile> being created by
+ *      this Function.
  *
- *      ^bValue of <nAttribute>     File Attribute
+ *      Value of <nAttribute>       File Attribute
  *          0                       Normal/Default,Read/Write
  *          1                       Read-only,Attemptinf to open for
  *                                  output returns an error
@@ -1468,19 +1454,9 @@ HARBOUR HB_FOPEN( void )
  *          4                       Create,Excluded from normal DIR
  *                                  search
  *  $EXAMPLES$
- *   ^CFE  This example creates a file called Testfile and opens it for
- *      reading and writing:
- *
- *      #include "Fileio.ch"
- *
- *      //
- *      IF (nHandle := FCREATE("Testfile", FC_NORMAL)) == -1
- *         ? "File cannot be created:", FERROR()
- *         BREAK
- *      ELSE
- *         FWRITE(nHandle, "Hello there")
- *         FCLOSE(nHandle)
- *      ENDIF
+ *      IF (nh:=FCREATE("TEST.TXT") <0
+ *          ? "Can not create file"
+ *      ENDIF 
  *  $TESTS$
  *
  *  $STATUS$
@@ -1505,74 +1481,55 @@ HARBOUR HB_FCREATE( void )
 
 /*  $DOC$
  *  $FUNCNAME$
- *     FREAD()
+ *      FREAD()
  *  $CATEGORY$
- *     Low Level
+ *      Low Level
  *  $ONELINER$
- *     Read characters from a binary file into a buffer variable
+ *      Reads a specified number of bytes from a file.
  *  $SYNTAX$
- *     FREAD(<nHandle>, @<cBufferVar>, <nBytes>) --> nBytes
+ *      FREAD(<nHandle>, @<cBuffer>, <nBytes>) --> nBytes
  *  $ARGUMENTS$
- *     <nHandle> is the file handle obtained from FOPEN(), FCREATE(), or
- *   predefined by DOS.
- *
- *     <cBufferVar> is the name of an existing and initialized character
- *   variable used to store data read from the specified file.  The length of
- *   this variable must be greater than or equal to <nBytes>.  <cBufferVar>
- *   must be passed by reference and, therefore, must be prefaced by the
- *   pass-by-reference operator (@).
- *
- *     <nBytes> is the number of bytes to read into the buffer.
+ *      <nHandle>     Dos file handle
+ *      <cBufferVar>  Character expression passed by reference
+ *      <nBytes>      Number of bytes to read.
  *  $RETURNS$
- *     FREAD() returns the number of bytes successfully read as an integer
- *   numeric value.  A return value less than <nBytes> or zero indicates end
- *   of file or some other read error.
+ *      FREAD() returns the number of bytes successfyly read from the file
+ *      <nHandle>
  *  $DESCRIPTION$
- *     FREAD() is a low-level file function that reads characters from a binary
- *   file into an existing character variable.  It reads from the file
- *   starting at the current DOS file pointer position, advancing the file
- *   pointer by the number of bytes read.  All characters are read including
- *   control, null, and high-order (above CHR(127)) characters.
- *
- *     FREAD() is similar in some respects to both FREADSTR() and FSEEK().
- *   FREADSTR() reads a specified number of bytes from a file up to the next
- *   null (CHR(0)) character.  FSEEK() moves the file pointer without
- *   reading.
- *
- *     If there is an error during the file read, FERROR() returns the DOS
- *   error number.  See FERROR() for the list of error numbers.
- *
- *     Warning!  This function allows low-level access to DOS files and
- *   devices.  It should be used with extreme care and requires a thorough
- *   knowledge of the operating system.
+ *      This function reads the characters from a DOS file whose file handle
+ *      is <nHandle> into it character memory variable expressed as <cBuffer>.
+ *      The function returns the number of bytes successfully read into
+ *      <cBuffer>.
+ *      The value of <nHandle> is obtained from either it call to the FOPEN()
+ *      or the FCREATE() function.
+ *      The <cBuffer> expression is passed by reference and must be defined
+ *      before this function is called. It also must be at least the same
+ *      length as <nBytes>.
+ *      <nBytes> is the number of bytes to read, starting at the current DOS
+ *      file pointer position. If this function is successful in reading
+ *      the characters from the file, the length of <cBuffer> or the number
+ *      of bytes specified in <nBytes> will be the value returned. The current
+ *      DOS file pointer advances the number of bytes read with each succe-
+ *      ssive read.The return value is the number of byte successfully read
+ *      from the file <nHandle>. If a 0 is returned, or if the number of
+ *      bytes read matches neither the length of <cBuffer> nor the specified
+ *      value in <nBytes> an end-of-file condition has been reached.
  *  $EXAMPLES$
- *   ^CFE  This example uses FREAD() after successfully opening a file to
- *      read 128 bytes into a buffer area:
- *
- *      #define F_BLOCK      128
- *
- *      //
- *      cBuffer := SPACE(F_BLOCK)
- *      nHandle := FOPEN("Temp.txt")
- *      //
- *      IF FERROR() != 0
- *         ? "File open error:", FERROR()
- *      ELSE
- *         IF FREAD(nHandle, @cBuffer, F_BLOCK) <> F_BLOCK
- *            ? "Error reading Temp.txt"
- *         ENDIF
- *         FCLOSE(nHandle)
+ *      cBuffer:=SPACE(500)
+ *      IF (nH:=FOPEN('X.TXT))>0
+ *         FREAD(Hh,@cBuffer,500)
+ *         ? cbuffer
  *      ENDIF
+ *      FCLOSE(nH)
  *  $TESTS$
- *
  *  $STATUS$
  *     R
  *  $COMPLIANCE$
- *     This function is CA-Clipper compliant
+ *     This function is not CA-Clipper compliant since may can read
+ *     strings greather the 65K depending of platform.
  *  $SEEALSO$
  *     BIN2I(),BIN2L(),BIN2W(),FERROR(),FWRITE()
  *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -1606,73 +1563,49 @@ HARBOUR HB_FREAD( void )
 
 /*  $DOC$
  *  $FUNCNAME$
- *     FWRITE()
+ *      FWRITE()
  *  $CATEGORY$
- *     Low Level
+ *      Low Level
  *  $ONELINER$
- *     Write to an open binary file
+ *      Writes characters to a file
  *  $SYNTAX$
  *     FWRITE(<nHandle>, <cBuffer>, [<nBytes>])
  *      --> nBytesWritten
  *  $ARGUMENTS$
- *     <nHandle> is the file handle obtained from FOPEN(), FCREATE(), or
- *   predefined by DOS.
- *
- *     <cBuffer> is the character string to write to the specified file.
- *
- *     <nBytes> indicates the number of bytes to write beginning at the
- *   current file pointer position.  If omitted, the entire content of
- *   <cBuffer> is written.
+ *     <nHandle>  DOS file handle number.
+ *     <cBuffer>  Character expression to be written.
+ *     <nBytes>   The number of bytes to write.
  *  $RETURNS$
- *     FWRITE() returns the number of bytes written as an integer numeric
- *   value.  If the value returned is equal to <nBytes>, the operation was
- *   successful.  If the return value is less than <nBytes> or zero, either
- *   the disk is full or another error has occurred.
+ *      FWRITE() returns the number of bytes successfully written.
  *  $DESCRIPTION$
- *     FWRITE() is a low-level file function that writes data to an open binary
- *   file from a character string buffer.  You can either write all or a
- *   portion of the buffer contents.  Writing begins at the current file
- *   position, and the function returns the actual number of bytes written.
- *
- *     If FWRITE() results in an error condition, FERROR() can be used to
- *   determine the specific error.
- *
- *     Warning!  This function allows low-level access to DOS files and
- *   devices.  It should be used with extreme care and requires a thorough
- *   knowledge of the operating system
+ *      This function writes the contents of <cBuffer> to the file designa-
+ *      ted by its file handle <nHandle>. If used, <nBytes> is the number of
+ *      bytes in <cBuffer> to write.
+ *      The returned value is the number of bytes successfully written to the
+ *      DOS file. If the returned value is 0, an error has occurred (unless
+ *      this is intended). A successful write occurs when the number returned
+ *      by FWRITE() is equal to either LEN( <cBuffer>) or <nBytes>.
+ *      The value of <cBuffer> is the string or variable to be written to the
+ *      open DOS file <nHandle>.
+ *      The value of <nBytes> is the number of bytes to write out to the file.
+ *      The disk write begins with the current file position in <nHandle>. If
+ *      this variable is not used, the entire contents of <cBuffer> is written
+ *      to the file.
+ *      To truncate a file. a call of FWRITE( nHandle, "", 0 ) is needed.
  *  $EXAMPLES$
- *   ^CFE  This example copies the contents of one file to another:
- *
- *      #include "Fileio.ch"
- *      #define F_BLOCK   512
- *      //
- *      cBuffer := SPACE(F_BLOCK)
- *      nInfile := FOPEN("Temp.txt", FO_READ)
- *      nOutfile := FCREATE("Newfile.txt", FC_NORMAL)
- *      lDone := .F.
- *      //
- *      DO WHILE !lDone
- *
- *         nBytesRead := FREAD(nInfile, @cBuffer, F_BLOCK)
- *         IF FWRITE(nOutfile, cBuffer, nBytesRead) < ;
- *                     nBytesRead
- *            ? "Write fault: ", FERROR()
- *            lDone := .T.
- *         ELSE
- *            lDone := (nBytesRead == 0)
- *         ENDIF
- *      ENDDO
- *      //
- *      FCLOSE(nInfile)
- *      FCLOSE(nOutfile)
+ *      nHandle:=FCREATE('x.txt')
+ *      FOR X:=1 to 10
+ *        FWRITE(nHandle,STR(x))
+ *      NEXT
+ *      FCLOSE(nHandle)
  *  $TESTS$
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
- *     This function is not CA-Clipper compatile since
- *   it can writes strings greather the 64K
+ *      This function is not CA-Clipper compatile since
+ *      it can writes strings greather the 64K
  *  $SEEALSO$
- *     FCLOSE(),FCREATE(),FERROR(),FOPEN(),I2BIN(),L2BIN()
+ *      FCLOSE(),FCREATE(),FERROR(),FOPEN(),I2BIN(),L2BIN()
  *  $INCLUDE$
  *
  *  $END$
@@ -1690,66 +1623,45 @@ HARBOUR HB_FWRITE( void )
 
 /*  $DOC$
  *  $FUNCNAME$
- *     FERROR()
+ *      FERROR()
  *  $CATEGORY$
- *     Low Level
+ *      Low Level
  *  $ONELINER$
  *      Reports the error status of low-level file functions
  *  $SYNTAX$
- *     FERROR() --> <nErrorCode>
+ *      FERROR() --> <nErrorCode>
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *     <nErrorCode> Value of the DOS error last encountered by a
- *     low-level file function.
- *     FERROR() returns the DOS error from the last file operation as an
- *   integer numeric value.  If there is no error, FERROR() returns zero.
+ *      <nErrorCode> Value of the DOS error last encountered by a
+ *      low-level file function.
  *
- *   FERROR() Return Values
- *   컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
- *   Error   Meaning
- *   컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
- *   0       Successful
- *   2       File not found
- *   3       Path not found
- *   4       Too many files open
- *   5       Access denied
- *   6       Invalid handle
- *   8       Insufficient memory
- *   15      Invalid drive specified
- *   19      Attempted to write to a write-protected disk
- *   21      Drive not ready
- *   23      Data CRC error
- *   29      Write fault
- *   30      Read fault
- *   32      Sharing violation
- *   33      Lock Violation
- *   컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
+ *      FERROR() Return Values
+ *   
+ *      Error   Meaning
+ *   
+ *      0       Successful
+ *      2       File not found
+ *      3       Path not found
+ *      4       Too many files open
+ *      5       Access denied
+ *      6       Invalid handle
+ *      8       Insufficient memory
+ *      15      Invalid drive specified
+ *      19      Attempted to write to a write-protected disk
+ *      21      Drive not ready
+ *      23      Data CRC error
+ *      29      Write fault
+ *      30      Read fault
+ *      32      Sharing violation
+ *      33      Lock Violation
+ *   
  *  $DESCRIPTION$
- *     After every low-level file function,this function will return
- *     a value that provides additional informationon the status of
- *     the last low-level file functions's performance.If the FERROR()
- *     function returns a 0, no error was detected.Below is a table
- *     of possibles values returned by the FERROR() function.
- *
- *   FERROR() Return Values
- *   Value   Reason
- *   컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
- *   0       Successful
- *   2       File not found
- *   3       Path not found
- *   4       Too many files open
- *   5       Access denied
- *   6       Invalid handle
- *   8       Insufficient memory
- *   15      Invalid drive specified
- *   19      Attempted to write to a write-protected disk
- *   21      Drive not ready
- *   23      Data CRC error
- *   29      Write fault
- *   30      Read fault
- *   32      Sharing violation
- *   33      Lock Violation
+ *      After every low-level file function,this function will return
+ *      a value that provides additional informationon the status of
+ *      the last low-level file functions's performance.If the FERROR()
+ *      function returns a 0, no error was detected.Below is a table
+ *      of possibles values returned by the FERROR() function.
  *
  *  $EXAMPLES$
  *   ^CFE  This example tests FERROR() after the creation of a binary
@@ -1785,7 +1697,7 @@ HARBOUR HB_FERROR( void )
  *  $CATEGORY$
  *     Low Level
  *  $ONELINER$
- *     Closesan open file
+ *     Closes an open file
  *  $SYNTAX$
  *     FCLOSE(<nHandle>) --> <lSuccess>
  *  $ARGUMENTS$
@@ -1827,46 +1739,37 @@ HARBOUR HB_FCLOSE( void )
 
 /*  $DOC$
  *  $FUNCNAME$
- *     FERASE()
+ *      FERASE()
  *  $CATEGORY$
- *     Low Level
+ *      Low Level
  *  $ONELINER$
- *     Erase a file from disk
+ *      Erase a file from disk
  *  $SYNTAX$
- *     FERASE(<cFile>) --> nSuccess
+ *      FERASE(<cFile>) --> nSuccess
  *  $ARGUMENTS$
- *     <cFile> Name of file to erase.
+ *      <cFile> Name of file to erase.
  *  $RETURNS$
- *     <nSuccess> 0 if successful, -1 if not
+ *      <nSuccess> 0 if successful, -1 if not
  *  $DESCRIPTION$
- *     This function deletes the file specified in <cFile> from the disk.
- *     No extensions are assumed. The drive and path my be included in
- *     <cFile>; neither the SET DEFAULT not the SET PATH command controls
- *     the performance of this function.If the drive or path is not used,
- *     the function will look for the file only on the currently selected
- *     direcytory on the logged drive.
+ *      This function deletes the file specified in <cFile> from the disk.
+ *      No extensions are assumed. The drive and path my be included in
+ *      <cFile>; neither the SET DEFAULT not the SET PATH command controls
+ *      the performance of this function.If the drive or path is not used,
+ *      the function will look for the file only on the currently selected
+ *      direcytory on the logged drive.
  *
- *     If the function is able to successfully delete the file from the
- *     disk, the value of the function will be 0; otherwise a -1 will
- *     be returned.If not successfu, aditional information may be
- *     obtained by calling the FERROR() function.
- *     Note: Any file to be removed by FERASE() must still be closed.
+ *      If the function is able to successfully delete the file from the
+ *      disk, the value of the function will be 0; otherwise a -1 will
+ *      be returned.If not successfu, aditional information may be
+ *      obtained by calling the FERROR() function.
+ *      Note: Any file to be removed by FERASE() must still be closed.
  *
  *  $EXAMPLES$
- *   ^CFE  This example deletes a set of files matching a wildcard
- *      pattern:
- *
- *      #include "Directry.ch"
- *      AEVAL(DIRECTORY("*.BAK"), { |aFile| ;
- *         FERASE(aFile[F_NAME]) })
- *
- *   ^CFE  This example erases a file and displays a message if the
- *      operation fails:
- *
- *      IF FERASE("AFile.txt") == -1
- *         ? "File erase error:", FERROR()
- *         BREAK
- *      ENDIF
+ *      IF (FERASE("TEST.TXT")==0)
+ *          ? "File successfully erased"
+ *      ELSE
+ *          ? "File can not be deleted"
+ *      ENDIF 
  *  $TESTS$
  *
  *  $STATUS$
@@ -1892,51 +1795,45 @@ HARBOUR HB_FERASE( void )
 
 /*  $DOC$
  *  $FUNCNAME$
- *     FRENAME()
+ *      FRENAME()
  *  $CATEGORY$
- *     Low Level
+ *      Low Level
  *  $ONELINER$
- *     Change the name of a file
+ *      Renames a file
  *  $SYNTAX$
- *     FRENAME(<cOldFile>, <cNewFile>) --> nSuccess
+ *      FRENAME(<cOldFile>, <cNewFile>) --> nSuccess
  *  $ARGUMENTS$
- *     <cOldFile> is the name of the file to rename, including the file
- *   extension.  A drive letter and/or path name may also be included as part
- *   of the filename.
- *
- *     <cNewFile> is the new name of the file, including the file
- *   extension.  A drive letter and/or path name may also be included as part
- *   of the name.
+ *     <cOldFile> Old filenarne to he changed
+ *     <cNewFile> New filename
  *  $RETURNS$
- *     FRENAME() returns -1 if the operation fails and zero if it succeeds.  In
- *   the case of a failure, FERROR() can be used to determine the nature of
- *   the error.
+ *     FRENAME() returns If sucessful, a 0 will he returned otherwise,
+ *     a -1 will be returned.
  *  $DESCRIPTION$
- *     FRENAME() is a file function that changes the name of a specified file
- *   to a new name and is identical to the RENAME command.
- *
- *     When FRENAME() is called, <cOldFile> is renamed only if it is located in
- *   the current DOS directory or in the specified path.  FRENAME() does not
- *   use SET DEFAULT or SET PATH to locate <cOldFile>.
- *
- *     If the source directory is different from the target directory, the file
- *   moves to the target directory.  In the instance that either <cNewFile>
- *   exists or is currently open, FRENAME() fails and returns -1, indicating
- *   that it did not perform its designated action.  The nature of the error
- *   can be determined with FERROR().
- *
- *     Warning!  Files must be CLOSEd before renaming.  Attempting to
- *   rename an open file will produce unpredictable results.  When a database
- *   file is renamed, the associated memo (.dbt) file must also be renamed.
- *   Failure to do so may compromise the integrity of your databases.
+ *      This function renames the specified file <cOldFile> to <cNewFile>.
+ *      A filename and/or directory name may be specified for either para-
+ *      meter. However, if a path is supplied as part of <cNewFile> and
+ *      this path is different from either the path specified in <cOldFile>
+ *      or (if none is used) the current drive and directory, the function
+ *      will not execute successfully.
+ *      Neither parameter is subject to the control of the SET PATH TO or
+ *      SET DEFAULT TO commands. In attempting to locate the file to be
+ *      renamed, this function will search the default drive and directory
+ *      or the drive and path specified in <cOldFile>. It will not search
+ *      directories named by the SET PATH TO and SET DEFAULT TO commands
+ *      or by the DOS PATH statement.
+ *      If the file specified in <cNewFile> exists or the file is open,
+ *      the function will be unable to rename the file.If the function
+ *      is unable to complete its operation,it will return a value of -1.
+ *      If it is able to rename the file, the return value for the function
+ *      will be 0.A call to FERROR() function will give additional infor-
+ *      mation about any error found.
+
  *  $EXAMPLES$
- *   ^CFE  This example demonstrates a file rename:
- *
- *      IF FRENAME("OldFile.txt", "NewFile.txt") == -1
- *         ? "File error:", FERROR()
+ *      nResult:=FRENAME("x.txt","x1.txt")
+ *      IF nResult <0
+ *         ? "File could not be renamed."
  *      ENDIF
  *  $TESTS$
- *
  *  $STATUS$
  *     R
  *  $COMPLIANCE$
@@ -1960,93 +1857,67 @@ HARBOUR HB_FRENAME( void )
 
 /*  $DOC$
  *  $FUNCNAME$
- *     FSEEK()
+ *      FSEEK()
  *  $CATEGORY$
- *     Low Level
+ *      Low Level
  *  $ONELINER$
- *     Set a binary file pointer to a new position
+ *      Positions the file pointer in a file.
  *  $SYNTAX$
- *     FSEEK(<nHandle>, <nOffset>, [<nOrigin>]) --> nPosition
+ *      FSEEK(<nHandle>, <nOffset>, [<nOrigin>]) --> nPosition
  *  $ARGUMENTS$
- *     <nHandle> is the file handle obtained from FOPEN(), FCREATE(), or
- *   predefined by DOS.
- *
- *     <nOffset> is the number of bytes to move the file pointer from the
- *   position defined by <nOrigin>.  It can be a positive or negative number.
- *   A positive number moves the pointer forward, and a negative number moves
- *   the pointer backward in the file.
- *
- *     <nOrigin> defines the starting location of the file pointer before
- *   FSEEK() is executed.  The default value is zero, representing the
- *   beginning of file.  If <nOrigin> is the end of file, <nOffset> must be
- *   zero or negative.
- *
- *   Methods of Moving the File Pointer
- *   컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
- *   Origin  Fileio.ch      Description
- *   컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
- *   0       FS_SET         Seek from beginning of file
- *   1       FS_RELATIVE    Seek from the current pointer position
- *   2       FS_END         Seek from end of file
- *   컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
+ *     <nHandle> DOS file handle.
+ *     <nOffset> The number of bytes to move.
+ *     <nOrigin> The relative position in the file.
  *  $RETURNS$
- *     FSEEK() returns the new position of the file pointer relative to the
- *   beginning of file (position 0) as an integer numeric value.  This value
- *   is without regard to the original position of the file pointer.
+ *      FSEEK() return the current position relative to begin-of-file
  *  $DESCRIPTION$
- *     FSEEK() is a low-level file function that moves the file pointer forward
- *   or backward in an open binary file without actually reading the contents
- *   of the specified file.  The beginning position and offset are specified
- *   as function arguments, and the new file position is returned.
- *   Regardless of the function arguments specified, the file pointer cannot
- *   be moved beyond the beginning or end of file boundaries.
+ *      This function sets the file pointer in the file whose DOS file
+ *      handle is <nHandle> and moves the file pointer by <expN2> bytes
+ *      from the file position designated by <nOrigin>. The returned value
+ *      is the relative position of the file pointer to the beginning-of-file
+ *      marker once the operation has been completed.
+ *      <nHandle> is the file handle number. It is obtained from the FOPEN()
+ *      or FCREATE() function.
+ *      The value of <nOffSet> is the number of bytes to move the file pointer
+ *      from the position determined by <nOrigin>.The value of <nOffset> may
+ *      be a negative number, suggesting backward movement.
+ *      The value of <nOrigin> designates the starting point from which the
+ *      file pointer should he moved, as shown in the following table:
  *
- *     Warning!  This function allows low-level access to DOS files and
- *   devices.  It should be used with extreme care and requires a thorough
- *   knowledge of the operating system.
+ *      <nOrigin> File position
+ *
+ *        0     Beginning of file
+ *        1     Current file pointer position
+ *        2     End of file
+ *
+ *      If a value is not provided for <nOrigin>, it defaults to 0 and
+ *      moves the file pointer from the beginning of the file.
  *  $EXAMPLES$
- *   ^CFE  This example uses FSEEK() to determine the length of a file by
- *      seeking from the end of file.  Then, the file pointer is reset to the
- *      beginning of file:
+ *      STATIC FUNCTION FREADln(nH,cB,nMaxLine)
+ *   
+ *      LOCAL cLine,nSavePos,nEol,nNumRead
  *
- *      #include "Fileio.ch"
- *      //
- *      // Open the file read-only
- *      IF (nHandle := FOPEN("Temp.txt")) >= 0
- *         //
- *         // Get length of the file
- *         nLength := FSEEK(nHandle, 0, FS_END)
- *         //
- *         // Reset file position to beginning of file
- *         FSEEK(nHandle, 0)
- *         FCLOSE(nHandle)
+ *      cLine:=space(nMaxLine)
+ *
+ *      cB:=''
+ *
+ *      nSavePos:=FTELL(nH)
+ *
+ *      nNumRead:=FREAD(nH,@cLine,nMaxLine)
+ *
+ *      IF (nEol:= AT(CRLF,RETURN(cLine,1,nNumRead)))==0
+ *        cB:=cLine
  *      ELSE
- *         ? "File open error:", FERROR()
+ *        cB:=SUBSTR(cLine,1,nEol-1)
+ *        FSEEK(nH,nSavePos+nEol+1,FS_SET)
  *      ENDIF
  *
- *   ^CFE  This pseudofunction positions the file pointer at the last
- *      byte in a binary file:
- *
- *      #define FileBottom(nHandle);
- *            (FSEEK(nHandle, 0, FS_END))
- *
- *   ^CFE  This pseudofunction positions the file pointer at the first
- *      byte in a binary file:
- *
- *      #define FileTop(nHandle);
- *            (FSEEK(nHandle, 0))
- *
- *   ^CFE  This pseudofunction reports the current position of the file
- *      pointer in a specified binary file:
- *
- *      #define FilePos(nHandle);
- *            (FSEEK(nHandle, 0, FS_RELATIVE))
- *
+ *      RETURN nNumRead != 0
  *  $TESTS$
  *  $STATUS$
  *     R
  *  $COMPLIANCE$
- *     This function is CA-Clipper compliant
+ *     This function is CA-Clipper compliant.
  *  $SEEALSO$
  *     FCREATE(),FERROR(),FOPEN(),FREAD(),FREADSTR(),FWRITE()
  *  $INCLUDE$
@@ -2098,50 +1969,35 @@ BOOL hb_fsFile( BYTE * pFilename )
 
 /*  $DOC$
  *  $FUNCNAME$
- *     FILE()
+ *      FILE()
  *  $CATEGORY$
- *     Low Level
+ *      Low Level
  *  $ONELINER$
- *     Tests for the existence of file(s)
+ *      Tests for the existence of file(s)
  *  $SYNTAX$
- *     FILE(<cFilespec>) --> lExists
+ *      FILE(<cFileSpec>) --> lExists
  *  $ARGUMENTS$
- *     <cFilespec> is in the current Harbour  default directory and path.
- *   It is a standard file specification that can include the wildcard
- *   characters * and ? as well as a drive and path reference.  Explicit
- *   references to a file must also include an extension.
+ *      <cFileSpec> Dos Skeleton or file name to find.
  *  $RETURNS$
- *     FILE() returns true (.T.) if there is a match for any file matching the
- *   <cFilespec> pattern; otherwise, it returns false (.F.).
+ *      FILE() return a logical true (.T.) or logical false (.F.).    
  *  $DESCRIPTION$
- *     FILE() is an environment function that determines whether any file
- *   matching a file specification pattern is found.  FILE() searches the
- *   specified directory if a path is explicitly specified.
- *
- *     If a path is not specified,  FILE() searches the current CA-Clipper
- *   default directory and then the CA-Clipper path.  In no case is the DOS
- *   path searched.  Note also that FILE() does not recognize hidden or
- *   system files in its search.
+ *      This function return a logical true (.T.) if the given filename
+ *      <cFileSpec> exist.
+ *      Dos skeletons symbols may be used in the filename in <cFileSpec>,
+ *      as may the drive and/or path name. If a drive are not explicity
+ *      specified,FILE() will first search the current drive and directory,
+ *      and will look for the file in the directories specified by SET PATH
+ *      TO and ST DEFAULT TO commands.However, this command does not look
+ *      at the values in the DOS PATH command.
  *  $EXAMPLES$
- *   ^CFE  In this example FILE() attempts to find Sales.dbf in other
- *      than the current CA-Clipper default:
- *
- *      ? FILE("Sales.dbf")               // Result: .F.
- *      ? FILE("\APPS\DBF\Sales.dbf")     // Result: .T.
- *      //
- *      SET PATH TO \APPS\DBF
- *      ? FILE("Sales.dbf")               // Result: .T.
- *      //
- *      SET PATH TO
- *      SET DEFAULT TO \APPS\DBF\
- *      ? FILE("Sales.dbf")               // Result: .T.
- *      ? FILE("*.dbf")                   // Result: .T.
+ *      ? file('c:\harbour\doc\compiler.txt")
+ *      ? file('c:/harbour/doc/subcodes.txt")
  *  $TESTS$
  *
  *  $STATUS$
  *     R
  *  $COMPLIANCE$
- *     This function is CA-Clipper compatible
+ *     This function is CA-Clipper compatible.
  *  $SEEALSO$
  *
  *  $INCLUDE$
@@ -2160,53 +2016,41 @@ HARBOUR HB_FILE( void )
  *  $CATEGORY$
  *     Low Level
  *  $ONELINER$
- *      Read characters from a binary file
+ *      Reads a string from a file.
  *  $SYNTAX$
  *      FREADSTR(<nHandle>, <nBytes>) --> cString
  *  $ARGUMENTS$
- *     <nHandle> is the file handle obtained from FOPEN(), FCREATE(), or
- *   predefined by DOS.
- *
- *     <nBytes> is the number of bytes to read, beginning at the current
- *   DOS file pointer position.
+ *     <nHandle> DOS file handle number
+ *     <nBytes>  Number of bytes to read
  *  $RETURNS$
- *     FREADSTR() returns a character string with any size including
- *  strings greather then 64K. A return value ("") indicates an
- *  error or end of file.
+ *     FREADSTR() return an characted expression
  *  $DESCRIPTION$
- *     FREADSTR() is a low-level file function that reads characters from an
- *   open binary file beginning with the current DOS file pointer position.
- *   Characters are read up to <nBytes> or until a null character (CHR(0)) is
- *   encountered.  All characters are read including control characters
- *   except for CHR(0).  The file pointer is then moved forward <nBytes>.  If
- *   <nBytes> is greater than the number of bytes from the pointer position
- *   to the end of the file, the file pointer is positioned to the last byte
- *   in the file.
- *
- *     Warning!  This function allows low-level access to DOS files and
- *   devices.  It should be used with extreme care and requires a thorough
- *   knowledge of the operating system.
+ *      This function returns a character string of <nBytes> bytes from a
+ *      file whose DOS file handle is <nHandle>.
+ *      The value of the file handle <nHandle> is obtained from either the
+ *      FOPEN() or FCREATE() functions.
+ *      The value of <nBytes> is the number of bytes to read from the file.
+ *      The returned string will be the number of characters specified in
+ *      <nBytes> or the number of bytes read before an end-of-file charac-
+ *      ter (ASCII 26) is found.
+ *      NOTE  This function is similar to the FREAD() function, except that
+ *      it will not	read binary characters that may he required as part of
+ *      a header of a file construct. Characters Such as CHR(0) and CHR(26)
+ *      may keep this	function from performing its intended operation. In this
+ *      event, the FREAD() function should he used in place of the FREADSTR()
+ *      function.
  *  $EXAMPLES$
- *   ^CFE  This example displays the ASCII values of the first 16 bytes
- *      of a text file:
- *
- *      #include "Fileio.ch"
- *      //
- *      nHandle := FOPEN("New.txt", FC_NORMAL)
- *      IF FERROR() != 0
- *         ? "File open error:", FERROR()
- *      ELSE
- *         cString := FREADSTR(nHandle, 16)
- *         ? cString
- *         FCLOSE(nHandle)
+ *      IF ( nH := FOPEN("x.txt") ) > 0
+ *         cStr := Freadstr(nH,100)
+ *         ? cStr
  *      ENDIF
+ *      FCLOSE(nH)
  *  $TESTS$
- *
  *  $STATUS$
  *     R
  *  $COMPLIANCE$
- *     This function is not CA-Clipper compliant since can read
- *     strings greather the 65K
+ *     This function is not CA-Clipper compliant since may read
+ *     strings greather the 65K depending of platform.
  *  $SEEALSO$
  *     BIN2I(),BIN2L(),BIN2W(),FERROR(),FREAD(),FSEEK()
  *  $INCLUDE$
@@ -2480,63 +2324,35 @@ HARBOUR HB_FSETDEVMOD( void )
 
 /*  $DOC$
  *  $FUNCNAME$
- *     RENAME
+ *      RENAME
  *  $CATEGORY$
- *     Command
+ *      Command
  *  $ONELINER$
- *     Change the name of a file
+ *      Changes the name of a specified file
  *  $SYNTAX$
- *     RENAME <xcOldFile> TO <xcNewFile>
- *
+ *     RENAME <cOldFile> TO <cNewFile>
  *  $ARGUMENTS$
- *     <xcOldFile> is the name of the file to rename including an extension
- *   and optionally preceded by a drive and/or path designator.  <xcOldFile>
- *   can be specified as a literal string or a character expression enclosed
- *   in parentheses.
- *
- *     TO <xcNewFile> specifies the new filename including extension and
- *   optionally prefaced by a drive and/or path designator.  <xcNewFile> can
- *   be specified as a literal string or a character expression enclosed in
- *   parentheses.
- *
+ *      <cOldFile> Old filename
+ *      <cNewFile> New Filename
  *  $RETURNS$
  *  $DESCRIPTION$
- *     RENAME is a file command that changes the name of a specified file to a
- *   new name.  If the source directory is different from the target
- *   directory, the file moves to the new directory.  RENAME does not use SET
- *   DEFAULT and SET PATH to locate <xcOldFile>.  Instead, the <xcOldFile> is
- *   renamed only if it is located in the current DOS directory or in the
- *   specified path.
- *
- *     In the instance that either <xcNewFile> exists or is currently open,
- *   RENAME does nothing.  To trap this condition as an error, use the FILE()
- *   function before executing the command.  See the example below.
- *
- *     Warning!  Files must be CLOSEd before renaming.  Attempting to
- *   rename an open file will produce unpredictable results.  When a database
- *   file is RENAMEd, remember that any associated memo (.dbt) file must also
- *   be RENAMEd.  Failure to do so may compromise the integrity of your
- *   program.
- *
+ *      This command changes the name of <cOldFile> to <cNewFile>.Both
+ *      <cOldFile> and <cNewFile> must include a file extension.This command
+ *      if not affected by the SET PATH TO or SET DEFAULT TO commands;drive
+ *      and directoy designaters must be specified if either file is in a
+ *      directory other then the default drive and directory.
+ *      If <cNewFile> id currently open or if it previously exists, this
+ *      command will not perform the desired operation. 
  *  $EXAMPLES$
- *   ^CFE  This example renames a file, checking for the existence of the
- *      target file before beginning the RENAME operation:
- *
- *      xcOldFile := "OldFile.txt"
- *      xcNewFile := "NewFile.txt"
- *      IF !FILE(xcNewFile)
- *         RENAME (xcOldFile) TO (xcNewFile)
- *         ELSE
- *      ? "File already exists"
- *      ENDIF
+ *      RENAME c:\autoexec.bat to c:\autoexec.old
  *  $TESTS$
  *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
  *      This command is CA-Clipper compatible
  *  $SEEALSO$
- *     CURDIR(),ERASE,FILE(),FERASE(),FRENAME()
+ *      CURDIR(),ERASE,FILE(),FERASE(),FRENAME()
  *  $INCLUDE$
  *
  *  $END$
@@ -2544,53 +2360,70 @@ HARBOUR HB_FSETDEVMOD( void )
 
 /*  $DOC$
  *  $FUNCNAME$
- *     ERASE
+ *      ERASE
  *  $CATEGORY$
- *     Command
+ *      Command
  *  $ONELINER$
- *     Remove a file from disk
+ *      Remove a file from disk
  *  $SYNTAX$
- *
- *     DELETE FILE | ERASE <xcFile>
- *
+ *      ERASE <xcFile>
  *  $ARGUMENTS$
- *
- *     <xcFile> is the name of the file to be deleted from disk and can be
- *   specified either as a literal filename or as a character expression
- *   enclosed in parentheses.  You must specify the filename, including the
- *   extension, and it may optionally be preceded by a drive and/or path
- *   specification.
+ *      <xcFile> Name of file to remove
  *  $RETURNS$
  *  $DESCRIPTION$
- *
- *     DELETE FILE, a synonym for ERASE, is a file command that removes the
- *   specified file from disk.  SET DEFAULT and SET PATH do not affect DELETE
- *   FILE.  The file is deleted from disk only if found in the current DOS
- *   directory or in the directory explicitly specified as part of the
- *   filename.
- *
- *     Warning!  Files must be CLOSEd before deleting them.
- *
+ *      This command removes a file from the disk.The use of a drive,directo-
+ *      ry,and wild-card skeleton operator is allowed for the root of the
+ *      filename.The file extension is required.The SET DEFAULT and SET PATH
+ *      commands do not affect this command.
+ *      The file must be considered closed by the operating system before it
+ *      may be deleted.
  *  $EXAMPLES$
- *
- *   ^CFE  This example removes a specified file from disk then tests to
- *      see if the file was in fact removed:
- *
- *      ? FILE("Temp.dbf")               // Result: .T.
- *      DELETE FILE Temp.dbf
- *      ? FILE("Temp.dbf")               // Result: .F.
- *
- *
+ *      Erase c:\autoexec.bat
+ *      Erase c:/temp/read.txt
  *  $TESTS$
  *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
- *     This command is CA-Clipper compatible
+ *      This command is CA-Clipper compatible
  *  $SEEALSO$
- *     CURDIR(),FILE()
+ *      CURDIR(),FILE(),FERASE(),DELETE FILE
  *  $INCLUDE$
  *
  *  $END$
  */
 
+/*  $DOC$
+ *  $FUNCNAME$
+ *      DELETE FILE
+ *  $CATEGORY$
+ *      Command
+ *  $ONELINER$
+ *      Remove a file from disk
+ *  $SYNTAX$
+ *      DELETE FILE <xcFile>
+ *  $ARGUMENTS$
+ *      <xcFile> Name of file to remove
+ *  $RETURNS$
+ *  $DESCRIPTION$
+ *      This command removes a file from the disk.The use of a drive,directo-
+ *      ry,and wild-card skeleton operator is allowed for the root of the
+ *      filename.The file extension is required.The SET DEFAULT and SET PATH
+ *      commands do not affect this command.
+ *      The file must be considered closed by the operating system before it
+ *      may be deleted.
+ *  $EXAMPLES$
+ *      Erase c:\autoexec.bat
+ *      Erase c:/temp/read.txt
+ *  $TESTS$
+ *
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This command is CA-Clipper compatible
+ *  $SEEALSO$
+ *      CURDIR(),FILE(),FERASE(),ERASE
+ *  $INCLUDE$
+ *
+ *  $END$
+ */

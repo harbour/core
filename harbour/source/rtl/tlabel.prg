@@ -33,6 +33,16 @@
  *
  */
 
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
+ *
+ *   LABEL COMMAND  Documentation
+ *
+ */
+
 #include "hbclass.ch"
 #include "hbrptlbl.ch"
 #include "error.ch"

@@ -1,3 +1,21 @@
+20000222-07:30 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
+   *doc/harbext.txt
+     *Small changes
+   *source/rtl/filesys.c
+     *Finish rewriting docs stolen from Clipper Ng
+   *source/rtl/strings.c
+   *source/rtl/oemansi.c
+   *source/rtl/tlabel.prg
+   *source/rtl/treport.prg
+     + Add missing copyrigth for the docs
+   *source/rdd/dbcmd.c
+     *small changes to the docs
+   *source/tools/html.prg
+     *Changed to generate the new HTML template
+   *utils/hbdoc/genhtm.prg
+   *utils/hbdoc/hbdoc.prg
+      *Changed to generate the new HTML template output
+   
 2000-02-21 15:45 GMT-5 David G. Holm <dholm@ sd-llc.com>
    * config/rules.cf
    * config/w32/bcc32.cf

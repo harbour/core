@@ -4242,29 +4242,16 @@ HARBOUR HB_DBUSEAREA( void )
  *  $RETURNS$
  *    
  *  $DESCRIPTION$
- *      ZAP is a database command that permanently removes all records from
- *   files open in the current work area.  This includes the current database
- *   file, index files, and associated memo file.  Disk space previously
- *   occupied by the ZAPped files is released to the operating system.  ZAP
- *   performs the same operation as DELETE ALL followed by PACK but is almost
- *   instantaneous.
- *
- *   To ZAP in a network environment, the current database file must be USEd
- *   EXCLUSIVEly. 
- *      
+ *      This command removes all of the records from the database in the
+ *      current work area.This operation also updates any index file in
+ *      use at the time of this operation.In addition, this command removes
+ *      all items within an associated memo file.
+ *      In a network enviroment,any file that is about to be ZAPped must
+ *      be used exclusively.
  *  $EXAMPLES$
- *      This example demonstrates a typical ZAP operation in a network
- *      environment:
- *
- *      USE Sales EXCLUSIVE NEW
- *      IF !NETERR()
- *         SET INDEX TO Sales, Branch, Salesman
- *         ZAP
- *         CLOSE Sales
- *      ELSE
- *         ? "Zap operation failed"
- *         BREAK
- *      ENDIF
+ *      USE Tests NEW index Tests
+ *      ZAP
+ *      USE 
  *  $TESTS$
  *
  *  $STATUS$
@@ -4272,7 +4259,7 @@ HARBOUR HB_DBUSEAREA( void )
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *      
+ *      DELETE,PACK,USE
  *  $INCLUDE$
  *      
  *  $END$

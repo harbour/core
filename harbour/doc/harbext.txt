@@ -1,59 +1,68 @@
 /*
  * $Id$
  */
-
-Language extensions:
---------------------
-
-* Class generation and management.
-
-        Clipper only allowed creation of objects from a few standard
-        classes.
-        In Harbour, you can create your own classes--complete with
-        Methods, Instance Variables, Class Variables and Inheritance.
-        Entire applications can be designed and coded in Object Oriented
-        style.
-
-* @<FunctionName>()
-        Returns the pointer (address) to a function.
-
-        The returned value is not useful to application-level programming, but
-        is used at a low level to implement object oriented coding.
-        (Internally, a class method is a static function and there is no
-        symbol for it, so it is accessed via its address).
-
-* Class TGetList
-        Object oriented support for GetLists management.
-
-* ProcName() support for class Method names.
-        Class Methods can be retrieved from the call stack.
-
-* Memory() has new return values.
-        See hbmemory.ch
-
-* Transform()  --> new function in format string
-        @0      Make a zero padded string out of the number.
-
-* Optional Compile Time STRONG TYPE declaration (and compile time TYPE
-  MISMATCH warnings)
-
-  Example: LOCAL/STATIC Var AS ...
-
-* The Harbour debugger provides new interesting classes:
-  - Class TDbWindow could be the foundation for a generic multiplatform
-  - Class TForm
-  - Class TDbMenu implement both pulldown and popup menus.
-
-
-
-RTL enhanced functionality:
----------------------------
-
-- Directory( <cMask>, <cFlags>, <lEightDotThree> )
-  The 3rd parameter is a Harbour (optional) parameter and indicates that on
-  those platforms that support long filenames, that you wish to receive what
-  would be considered the dos equivalant 8.3 name.
-  Could affect Adir() and Dir if they were modified to take advantage
-  of it - currently, they will return long names if the os supports it.
-
+/*  $DOC$
+ *  $FUNCNAME$
+ *      Harbour Extensions 
+ *  $CATEGORY$
+ *      Document
+ *  $ONELINER$
+ *      Harbour Extensions
+ *  $DESCRIPTION$
+ *Language extensions:
+ *--------------------
+ *
+ ** Class generation and management.
+ *
+ *        Clipper only allowed creation of objects from a few standard
+ *        classes.
+ *        In Harbour, you can create your own classes--complete with
+ *        Methods, Instance Variables, Class Variables and Inheritance.
+ *        Entire applications can be designed and coded in Object Oriented
+ *        style.
+ *
+ ** @<FunctionName>()
+ *        Returns the pointer (address) to a function.
+ *
+ *        The returned value is not useful to application-level programming, but
+ *        is used at a low level to implement object oriented coding.
+ *        (Internally, a class method is a static function and there is no
+ *        symbol for it, so it is accessed via its address).
+ *
+ ** Class TGetList
+ *        Object oriented support for GetLists management.
+ *
+ ** ProcName() support for class Method names.
+ *        Class Methods can be retrieved from the call stack.
+ *
+ ** Memory() has new return values.
+ *        See hbmemory.ch
+ *
+ ** Transform()  --> new function in format string
+ *        @0      Make a zero padded string out of the number.
+ *
+ ** Optional Compile Time STRONG TYPE declaration (and compile time TYPE
+ *  MISMATCH warnings)
+ *
+ *  Example: LOCAL/STATIC Var AS ...
+ *
+ ** The Harbour debugger provides new interesting classes:
+ *  - Class TDbWindow could be the foundation for a generic multiplatform
+ *  - Class TForm
+ *  - Class TDbMenu implement both pulldown and popup menus.
+ *
+ *
+ *
+ *RTL enhanced functionality:
+ *---------------------------
+ *
+ *- Directory( <cMask>, <cFlags>, <lEightDotThree> )
+ *  The 3rd parameter is a Harbour (optional) parameter and indicates that on
+ *  those platforms that support long filenames, that you wish to receive what
+ *  would be considered the dos equivalant 8.3 name.
+ *  Could affect Adir() and Dir if they were modified to take advantage
+ *  of it - currently, they will return long names if the os supports it.
+ *
+ **  $END$
+ */
 

@@ -463,15 +463,15 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
    ELSEIF lWWW
       oHtm := THTML():New( "htm\harbour.htm" )
       oHtm:WriteTitle( "Harbour Reference Guide" )
-      oHtm:WritePar( "HARBOUR" )
+      oHtm:WriteText("<H1>Harbour Reference Guide</H1>")
+      oHtm:WriteText( "<H2>HARBOUR</H2>"+hb_osnEwline()+'<UL>' )
       oHtm:WriteLink( "overview",UpperLower("Harbour Read me" ))
       oHtm:WriteLink( "license", UpperLower("Harbour License" ))
       oHtm:WriteLink( "http://www.gnu.org/copyleft/gpl.html","GNU License" )
       oHtm:WriteLink( "compileroptions.htm","Compiler Options")
-      oHtm:WritePar( "" )
-      oHtm:WritePar("")
-      oHtm:WritePar( "Functions A-M" )
-      oHtm:WritePar("")
+      oHtm:WriteText( "</UL>" )
+      oHtm:WriteText("<H2>Alphabetical list of functions</H2>")
+      oHtm:WriteText( "<UL>" )
       ASORT( awww,,,{|x,y| x[1]<y[1] })
 
       FOR nPos := 1 TO LEN( aWww )
@@ -480,18 +480,15 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
             oHtm:WriteLink( Lower(aWww[ nPos ,2]),UpperLower(aWww[nPos,1] ))
          ENDIF
       NEXT
-      oHtm:WritePar("")
-      oHtm:WritePar( "Functions N-_" )
-      oHtm:WritePar("")
       FOR nPos := 1 TO LEN( aWww )
          cTemp := aWww[ nPos,1 ]
          IF LEFT( cTemp, 1 ) >= "N" .AND. LEFT( cTemp, 1 ) < "_" .AND. AT( "()", cTemp ) > 0
             oHtm:WriteLink(Lower(aWww[ nPos ,2]),UpperLower(aWww[nPos,1]   )       )
          ENDIF
       NEXT
-      oHtm:WritePar("")
-      oHtm:WritePar( "Commands" )
-      oHtm:WritePar("")
+      oHtm:WriteText("</ul>")
+      oHtm:Writetext( "<h2>Commands</h2>" )
+      oHtm:WriteText("<UL>")
       FOR nPos := 1 TO LEN( aWww )
          cTemp := aWww[ nPos,1 ]
          IF AT( "()", cTemp ) == 0 .AND. ctemp <> "LICENSE" .AND. cTemp <> "OVERVIEW" .and. cTemp<>"Compiler Options" ;
@@ -500,16 +497,16 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
             oHtm:WriteLink( Lower(aWww[ nPos ,2]),UpperLower(aWww[nPos,1]))
          ENDIF
       NEXT
-      oHtm:WritePar("")
-      oHtm:WritePar( "Run Time Error" )
-      oHtm:WritePar("")
+      oHtm:WriteText("</ul>")
+      oHtm:WriteText( "<h2>Run Time Error</h2>" )
+      oHtm:WriteText("<ul>")
       FOR nPos := 1 TO LEN( aWww )
          cTemp := aWww[ nPos,1 ]
          IF AT( "()", cTemp ) == 0 .OR. UPPER(Left(ctemp,4)) =="BASE" .OR. UPPER(LEFT(cTemp,4))=="TERM" .OR. UPPER(LEFT(cTemp,5))=="TOOLS"
             oHtm:WriteLink( Lower(aWww[ nPos ,2]),UpperLower(aWww[nPos,1]))
          ENDIF
       NEXT
-
+      oHtm:WriteText("</ul>")
       oHtm:Close()
    ELSEIF lNgi
       SET ALTERNATE TO "assembl.bat" ADDITIVE

@@ -45,6 +45,17 @@
  *    hb_strMatchDOS()
  *    HB_STRZERO()
  *    hb_strnicmp()
+ * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
+ *    ISALPHA()   Documentation
+ *    ISDIGIT()   Documentation
+ *    ISUPPER()   Documentation
+ *    ISLOWER()   Documentation
+ *    LTRIM()     Documentation
+ *    AT()        Documentation
+ *    RAT()       Documentation  
+ *    LEFT()      Documentation
+ *    RIGHT()     Documentation
+ *    SUBSTR()    Documentation  
  *
  * See doc/license.txt for licensing terms.
  *

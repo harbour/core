@@ -80,6 +80,7 @@ FUNCTION ProcessWww()
 #define D_INCLUDE 6
 #define D_ONELINE 7
 #define D_STATUS  8
+#define D_EXAMPLE 9
    LOCAL i
    LOCAL j
    LOCAL nFiles      := LEN( aDirList )
@@ -100,6 +101,13 @@ FUNCTION ProcessWww()
    LOCAL cSeeAlso
    LOCAL cTemp
    LOCAL cChar
+   LOCAL nPos
+   LOCAL lFirstArg := .T. 
+   LOCAL lAddEndPreTag := .T.
+   LOCAL lEndDesc := .F.
+   LOCAL lEndArgs :=.F.
+   LOCAL lEndSyntax := .F.
+   LOCAL lEndReturns := .F.
    LOCAL lBlankLine := .F.                 // Blank line encountered and sent out
    LOCAL lAddBlank  := .F.                 // Need to add a blank line if next line is not blank
    LOCAL oHtm
@@ -132,7 +140,7 @@ FUNCTION ProcessWww()
    @ INFILELINE, 20 SAY "Extracting: "
    @ MODULELINE, 20 SAY "Documenting: "
    //  loop through all of the files
-
+   lFirstArg:=.T.
    FOR i := 1 TO nFiles
 
       //  Open file for input
@@ -197,10 +205,13 @@ FUNCTION ProcessWww()
                //  Now close down this little piece
                lDoc := .F.
                IF .NOT. EMPTY( cSeeAlso )
-                  oHtm:WritePar( "See Also " )
-                  ProcWwwalso( oHtm, cSeealso )
-               ENDIF
 
+                  oHtm:WriteParBold( "See Also " )
+                  oHtm:WriteText("<UL>")
+                  ProcWwwalso( oHtm, cSeealso )
+                  oHtm:WriteText("</UL>")
+               ENDIF
+               oHtm:WriteText("</DL>")
                oHtm:Close()
                nMode := D_IGNORE
             ENDIF
@@ -292,10 +303,9 @@ FUNCTION ProcessWww()
 
                nMode := D_ONELINE
                //  Now start writing out what we know
-               oHtm:WriteTitle( PAD( cFuncName, 21 ) )
-               AADD( aWWW,{ cFuncName,LEFT(cFileName,AT(".",cFileName)-1)} )
-               oHtm:WriteParBold( cOneLine )
-               oHtm:WritePar( cBar )
+               oHtm:WriteText("<H1>"+ alltrim(PAD( cFuncName, 21 )) + "</H1>")
+               AADD( aWWW,{ cFuncName+"  "+UPPERLOWER(cOneLine),LEFT(cFileName,AT(".",cFileName)-1)} )
+               oHtm:WriteText("<p>"+cOneline+"</p>"+ hb_osnewline())
                //  4) all other stuff
 
             ELSE
@@ -303,102 +313,151 @@ FUNCTION ProcessWww()
                IF AT( cSyn, cBuffer ) > 0
 
                   oHtm:WriteParBold( " Syntax" )
-
+                  ohtm:WriteText('<DD><P>')
                   nMode     := D_SYNTAX
                   lAddBlank := .T.
-
+                  lEndSyntax := .T.
                ELSEIF AT( cArg, cBuffer ) > 0
+                  if lEndSyntax
+                    lEndSyntax:=.f.
+                    oHtm:WriteText("</P></dd>") 
+/*                    oHtm:WriteText("</Pre></dd>") */
+                  endif
 
-                  IF !lBlankLine
-
-                     oHtm:WriteParBold( " Arguments" )
-
-                  ENDIF
+                  oHtm:WriteParBold( " Arguments" )
+                  ohtm:WriteText('<DD><P>') 
 
                   nMode     := D_ARG
                   lAddBlank := .T.
-
+                  lEndArgs:=.t.
                ELSEIF AT( cRet, cBuffer ) > 0
+                  if lEndArgs
+                    lEndArgs:=.f.
+                    
+                                        oHtm:WriteText("</P></dd>")
+                  endif
 
                   IF !lBlankLine
-                     oHtm:WritePar( "" )
+*                     oHtm:WritePar( "" )
                   ENDIF
 
                   oHtm:WriteParBold( " Returns" )
-
+                  ohtm:WriteText('<DD><P>')
                   nMode     := D_ARG
                   lAddBlank := .T.
-
+                  lEndReturns:=.t.
                ELSEIF AT( cDesc, cBuffer ) > 0
+                  if lEndReturns
+                    lEndReturns:=.f.
+                    oHtm:WriteText("</P></dd>")
+                  endif
 
-                  IF !lBlankLine
-                     oHtm:WritePar( "" )
-                  ENDIF
                   oHtm:WriteParBold( " Description" )
-
+                  ohtm:WriteText('<DD><P>')
                   nMode     := D_NORMAL
                   lAddBlank := .T.
+                  lEndDesc:=.t.
 
                ELSEIF AT( cExam, cBuffer ) > 0
+                  if lEndDesc
+                    lEndDesc:=.f.
+                    oHtm:WriteText("<P></dd>")
+                  endif
 
                   IF !lBlankLine
-                     oHtm:WritePar( "" )
+*                     oHtm:WritePar( "" )
                   ENDIF
                   oHtm:WriteParBold( " Examples" )
-                  nMode     := D_NORMAL
+                  oHtm:WriteText("<DD><PRE>")
+                  nMode     := D_EXAMPLE
                   lAddBlank := .T.
+                  lAddEndPreTag:=.T.                     
+                  
+
                ELSEIF AT( cTest, cBuffer ) > 0
+                  if lAddEndPreTag
+                     oHtm:WriteText("</PRE></DD>")
+                     lAddEndPreTag:=.f.                     
+                  Endif
 
                   IF !lBlankLine
-                     oHtm:WritePar( "" )
+ *                    oHtm:WritePar( "" )
                   ENDIF
-
-                  oHtm:WriteParBold( " Tests" )
+                   oHtm:WriteParBold( " Tests" )
+                   oHtm:WriteText("<DD><PRE>")
                   nMode     := D_NORMAL
                   lAddBlank := .T.
 
                ELSEIF AT( cStatus, cBuffer ) > 0
+                  if lAddEndPreTag
+                     oHtm:WriteText("</PRE></DD>")
+                     lAddEndPreTag:=.f.                     
+                  Endif
 
                   nMode := D_STATUS
 
                ELSEIF AT( cCompl, cBuffer ) > 0
+                  if lAddEndPreTag
+                     oHtm:WriteText("</PRE></DD>")
+                     lAddEndPreTag:=.f.                     
+                  Endif
 
                   IF !lBlankLine
-                     oHtm:WritePar( "" )
+*                     oHtm:WritePar( "" )
                   ENDIF
                   oHtm:WriteParBold( " Compliance" )
+                  oHtm:WriteText("<DD><PRE>")
                   nMode     := D_NORMAL
                   lAddBlank := .T.
                ELSEIF AT( cPlat, cBuffer ) > 0
+                  if lAddEndPreTag
+                     oHtm:WriteText("</PRE></DD>")
+                     lAddEndPreTag:=.f.                     
+                  Endif
 
                   IF !lBlankLine
-                     oHtm:WritePar( "" )
+                  *   oHtm:WritePar( "" )
                   ENDIF
                   oHtm:WriteParBold( " Platforms" )
+                  oHtm:WriteText("<DD><PRE>")
                   nMode     := D_NORMAL
                   lAddBlank := .T.
                ELSEIF AT( cFiles, cBuffer ) > 0
 
                   IF !lBlankLine
-                     oHtm:WritePar( "" )
+                  *   oHtm:WritePar( "" )
                   ENDIF
                   oHtm:WriteParBold( " Files" )
-
+                  oHtm:WriteText("<DD><PRE>")
                   nMode     := D_NORMAL
                   lAddBlank := .T.
                ELSEIF AT( cFunction, cBuffer ) > 0
+                  if lAddEndPreTag
+                     oHtm:WriteText("</PRE></DD>")
+                     lAddEndPreTag:=.f.                     
+                  Endif
 
                   IF !lBlankLine
-                     oHtm:WritePar( "" )
+                  *   oHtm:WritePar( "" )
                   ENDIF
                   oHtm:WriteParBold( " Functions" )
-
+                  oHtm:WriteText("<DD><PRE>")
                   nMode     := D_NORMAL
                   lAddBlank := .T.
 
                ELSEIF AT( cSee, cBuffer ) > 0
+                  if lAddEndPreTag
+                     oHtm:WriteText("</PRE></DD>")
+                     lAddEndPreTag:=.f.                     
+                  Endif
+
                   nMode := D_SEEALSO
                ELSEIF AT( cInc, cBuffer ) > 0
+                  if lAddEndPreTag
+                     oHtm:WriteText("</PRE></DD>")
+                     lAddEndPreTag:=.f.                     
+                  Endif
+
                   nMode := D_INCLUDE
 
                   //  All other input is trimmed of comments and sent out
@@ -413,12 +472,12 @@ FUNCTION ProcessWww()
                      ENDIF
                      lBlankLine := EMPTY( cBuffer )
                      IF lAddBlank
-                        oHtm:WritePar( "" )
                         lAddBlank := .F.
                      ENDIF
                      cBuffer := ProcwwwBuf( cBuffer )
 
-                     oHtm:WritePar( cBuffer )
+                     oHtm:WriteText( cBuffer )
+                     lFirstArg := .T.
                   ELSEIF nMode = D_ARG
                      IF LEN( cBuffer ) > LONGLINE
                         write_error( "Arguments", cBuffer, nLineCnt, ;
@@ -426,12 +485,27 @@ FUNCTION ProcessWww()
                      ENDIF
                      lBlankLine := EMPTY( cBuffer )
                      IF lAddBlank
-                        oHtm:WritePar( "" )
                         lAddBlank := .F.
                      ENDIF
-                     cBuffer := STRTRAN( cBuffer, "<", "<", 1 )
-                     cBuffer := STRTRAN( cBuffer, ">", ">", 1 )
-                     oHtm:WritePar( cBuffer )
+                     IF AT("<",Alltrim(cBuffer))> 0
+                        nPos := AT("<",ALLTRIM(cBuffer))
+                        IF nPos <= 3 
+                          cBuffer := STRTRAN( cBuffer, "<", "&lt;" )                     
+                          cBuffer := STRTRAN( cBuffer, ">", "&gt;" )
+                          IF lFirstArg
+                            cBuffer:= "<B>" + Substr(cBuffer,At("&lt;",cBuffer)-1,At("&gt;",cBuffer)-2)+"</b>"+Substr(cBuffer,At("&gt;",cBuffer)+4)
+                            lFirstArg:=.F.
+                          ELSE
+                            cBuffer:= "<br><B>" + Substr(cBuffer,At("&lt;",cBuffer)-1,At("&gt;",cBuffer)-2)+"</b>"+Substr(cBuffer,At("&gt;",cBuffer)+4)
+                          ENDIF
+                        ELSE
+                          cBuffer := STRTRAN( cBuffer, "<", "&lt;" )                     
+                          cBuffer := STRTRAN( cBuffer, ">", "&gt;" )                        
+                        ENDIF
+                     ENDIF 
+                                         
+                     oHtm:WriteText( cBuffer )
+
                   ELSEIF nMode = D_NORMAL
                      IF LEN( cBuffer ) > LONGLINE
                         write_error( "General", cBuffer, nLineCnt, ;
@@ -439,10 +513,21 @@ FUNCTION ProcessWww()
                      ENDIF
                      lBlankLine := EMPTY( cBuffer )
                      IF lAddBlank
-                        oHtm:WritePar( "" )
                         lAddBlank := .F.
                      ENDIF
-                     oHtm:WritePar( StripNgControls( cBuffer ) )
+                     ohtm:WriteText(Alltrim(StripNgControls( cBuffer )))
+
+                  ELSEIF nMode = D_EXAMPLE
+                     IF LEN( cBuffer ) > LONGLINE
+                        write_error( "General", cBuffer, nLineCnt, ;
+                                     LONGLINE, aDirList[ i, F_NAME ] )
+                     ENDIF
+                     lBlankLine := EMPTY( cBuffer )
+                     IF lAddBlank
+                        lAddBlank := .F.
+                     ENDIF
+                     oHtm:WriteText( strtran(StripNgControls( cBuffer ),space(6),"") )
+
                   ELSEIF nMode = D_SEEALSO
                      IF .NOT. EMPTY( cBuffer )
                         cSeeAlso := StripFiles( ALLTRIM( cBuffer ) )
@@ -451,14 +536,12 @@ FUNCTION ProcessWww()
                      //  read next line
                      IF .NOT. EMPTY( cBuffer )
                         IF !lBlankLine
-                           oHtm:WritePar( "" )
                         ENDIF
-                        oHtm:WritePar( " Header File: " ;
-                                       + ALLTRIM( cBuffer ) )
                      ENDIF
                   ELSEIF nMode = D_STATUS
                      IF !EMPTY( cBuffer )
                         oHtm:WriteParBold( "Status" )
+                        oHtm:WriteText("<DD><P>")
                      ENDIF
                      ProcStatusWww( oHtm, cBuffer )
 
@@ -579,14 +662,15 @@ RETURN nil
 *+
 FUNCTION ProcStatusWww( nWriteHandle, cBuffer )
    IF LEN( ALLTRIM( cBuffer ) ) >1
-      nWriteHandle:WritePar( cBuffer)
+      nWriteHandle:WriteText( cBuffer)
    ELSEIF SUBSTR( ALLTRIM( cBuffer ), 1 ) == "R"
-      nWriteHandle:WritePar( "   Ready" )
+      nWriteHandle:WriteText( "   Ready" )
    ELSEIF SUBSTR( ALLTRIM( cBuffer ), 1 ) == "S"
-      nWriteHandle:WritePar( "   Started" )
+      nWriteHandle:WriteText( "   Started" )
    ELSEIF SUBSTR( ALLTRIM( cBuffer ), 1 ) == "C"
-      nWriteHandle:WritePar( "   Clipper" )
+      nWriteHandle:WriteText( "   Clipper" )
    ELSE
-      nWriteHandle:WritePar( "   Not Started" )
+      nWriteHandle:WriteText( "   Not Started" )
    ENDIF
+   nWriteHandle:WriteText(  " </P></dd>")
 RETURN nil

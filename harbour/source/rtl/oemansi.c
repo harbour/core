@@ -33,6 +33,16 @@
  *
  */
 
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
+ *
+ *    HB_OEMTOANSI() Documentation
+ *    HB_ANSITOOEM() Documentation
+ *
+ */
 /* NOTE: These are Win32 specific, for other platforms it will return the
          passed parameter unchanged. */
 
