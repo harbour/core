@@ -1,7 +1,7 @@
 # makefile for Borland C/C++ 32 bits
 
 .path.asm = source\compiler
-.path.c   = source\compiler;source\vm;source\rtl;source\tools;source\rtl\gt
+.path.c   = source\compiler;source\vm;source\rtl;source\tools;source\rtl\gt;source\rtl\natmsg
 .path.h   = include
 .path.l   = source\compiler
 .path.y   = source\compiler
@@ -12,7 +12,8 @@
 
 PROJECT: harbour.exe harbour.lib libs\b32\terminal.lib libs\win32\terminal.lib
 
-harbour.lib : arrays.obj asort.obj classes.obj codebloc.obj dates.obj datesx.obj \
+harbour.lib : arrays.obj asort.obj classes.obj codebloc.obj \
+              dates.obj datesx.obj msguk.obj \
               debug.obj descend.obj dynsym.obj environ.obj error.obj \
               errorapi.obj errorsys.obj extend.obj files.obj \
               initsymb.obj itemapi.obj hb_f.obj\
@@ -42,6 +43,7 @@ classes.obj  : classes.c  extend.h types.h
 codebloc.obj : codebloc.c extend.h types.h
 dates.obj    : dates.c    extend.h types.h
 datesx.obj   : datesx.c   extend.h types.h
+msguk.obj    : msguk.c    extend.h types.h
 debug.obj    : debug.c    extend.h types.h
 descend.obj  : descend.c  extend.h types.h
 dynsym.obj   : dynsym.c   extend.h types.h
