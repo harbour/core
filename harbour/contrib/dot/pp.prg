@@ -3805,7 +3805,12 @@ FUNCTION NextToken( sLine )
         ELSEIF s1 == "\"
            sReturn := s2
            EXIT
-        ELSEIF s1 $ ".+-*/:=^!&()[]{}@,|<>#%?"
+        ELSEIF s1 == "."
+           IF ! IsDigit( SubStr( sLine, 2, 1 ) )
+              sReturn := s1
+              EXIT
+           ENDIF
+        ELSEIF s1 $ "+-*/:=^!&()[]{}@,|<>#%?"
            sReturn := s1
            EXIT
         ENDIF
@@ -3817,7 +3822,7 @@ FUNCTION NextToken( sLine )
            sReturn := Left( sLine, 2 )
            EXIT
         ELSEIF cChar == "."
-           IF ! ( IsDigit( SubStr( sLine, Counter - 1, 1 ) ) .AND. IsDigit( SubStr( sLine, Counter + 1, 1 ) ) )
+           IF ! IsDigit( SubStr( sLine, Counter + 1, 1 ) )
               sReturn := Left( sLine, Counter - 1 )
               EXIT
            ENDIF
@@ -4823,13 +4828,16 @@ FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
             ELSEIF s1 == '_' .OR. IsAlpha( s1 )
                sTemp := Upper( RTrim( NextToken( sRule ) ) ) // Not by refernce because of SubStr() below!!!
                BREAK
+            ELSEIF s1 == '.' // Might pull decimal numbers...
+               sTemp := RTrim( NextToken( sRule ) ) // Not by refernce because of SubStr() below!!!
+               BREAK
             ELSEIF IsDigit( s1 )
                sTemp := RTrim( NextToken( sRule ) ) // Not by refernce because of SubStr() below!!!
                BREAK
             ELSEIF s1 == ']' .AND. nOptional == 0
                sTemp := ']'
                BREAK
-            ELSEIF s1 $ ".+-*/:=^!&(){}@,|>#%?"
+            ELSEIF s1 $ "+-*/:=^!&(){}@,|>#%?"
                sTemp := s1
                BREAK
             ENDIF
