@@ -1246,7 +1246,7 @@ BOOL    hb_fsMkDir( BYTE * pDirname )
    errno = 0;
 
    #if !defined(__WATCOMC__) && !defined(__BORLANDC__) && !defined(__IBMCPP__) && !defined(__MINGW32__)
-      iResult = mkdir( ( char * ) pDirname, S_IWUSR | S_IRUSR );
+      iResult = mkdir( ( char * ) pDirname, S_IWUSR | S_IRUSR | S_IXUSR );
    #else
       iResult = mkdir( ( char * ) pDirname );
    #endif
