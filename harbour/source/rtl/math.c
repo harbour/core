@@ -7,6 +7,11 @@
  * Math functions
  *
  * Copyright 1999 Matthew Hamilton <mhamilton@bunge.com.au>
+ *
+ * Functions for user defined math error handlers 
+ * Copyright 2001 IntTec GmbH, Freiburg, Germany,
+ *                Author: Martin Vogel <vogel@inttec.de>
+ *   
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -55,28 +60,8 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
+#include "hbmath.h"
 
-#if defined(__WATCOMC__)
-   #define HB_MATH_HANDLER
-   #define exception _exception
-#elif defined(__BORLANDC__)
-   #if (__BORLANDC__ == 1328) && defined(__cplusplus)
-      /* NOTE: There seem to be a bug in Borland C++ 5.3 C++ mode which prevents
-               the redefinition of matherr, because nor "_exception" neither
-               "exception" will work. [vszakats] */
-   #else
-      #define HB_MATH_HANDLER
-      #define matherr _matherr
-      /* NOTE: This is needed for Borland C++ 5.5 in C++/STDC mode. [vszakats] */
-      #if (__BORLANDC__ >= 1360)
-         #define exception _exception
-      #endif
-   #endif
-#elif defined(__MINGW32__)
-   #define HB_MATH_HANDLER
-   #define matherr _matherr
-   #define exception _exception
-#endif
 
 #if defined(HB_MATH_HANDLER)
 
@@ -92,11 +77,116 @@ void hb_resetMathError( void )
    s_internal_math_error = 0;
 }
 
+/* math handler present ? */
+int hb_isMathHandler( void )
+{
+   return (1);
+}
+
+
+static PHB_MATH_HANDLERCHAINELEMENT s_pChain = NULL; /* TODO: make this thread safe */
+
+/* install custom math handler */
+HB_MATH_HANDLERHANDLE hb_installMathHandler (HB_MATH_HANDLERPROC handlerproc)
+{
+  
+  PHB_MATH_HANDLERCHAINELEMENT pChain, pNewChainelement;
+
+  pNewChainelement = hb_xgrab (sizeof (HB_MATH_HANDLERCHAINELEMENT));
+  pNewChainelement->handlerproc = handlerproc;
+  pNewChainelement->status      = HB_MATH_HANDLER_STATUS_ACTIVE;
+                                  /* initially activated */
+  pNewChainelement->pnext       = NULL;
+
+  pChain = s_pChain;
+  if (pChain == NULL)
+  {
+    s_pChain = pNewChainelement;
+  }
+  else
+  {
+    while (pChain->pnext != NULL)
+      pChain = pChain->pnext;
+    pChain->pnext = pNewChainelement;
+  }
+
+  return ((HB_MATH_HANDLERHANDLE)pNewChainelement);
+
+}
+
+/* deinstall custom math handler */
+int hb_deinstallMathHandler (HB_MATH_HANDLERHANDLE handle)
+{
+  
+  PHB_MATH_HANDLERCHAINELEMENT pChain;
+
+  if (handle != NULL)
+  {
+    if (s_pChain == (PHB_MATH_HANDLERCHAINELEMENT)handle)
+    {
+      s_pChain = ((PHB_MATH_HANDLERCHAINELEMENT)handle)->pnext;
+      return (0);
+    }
+    else
+    {
+      pChain = s_pChain;
+    
+      while (pChain != NULL)
+      {
+        if (pChain->pnext == (PHB_MATH_HANDLERCHAINELEMENT)handle)
+        {
+          pChain->pnext = ((PHB_MATH_HANDLERCHAINELEMENT)handle)->pnext;
+          hb_xfree ((void *)handle);
+          return (0);
+        }
+
+        pChain = pChain->pnext;
+      }
+    }
+  }
+
+  return (-1);  /* not found, not deinstalled, so return error code */
+
+}
+
+/* set custom math handler status */
+int hb_setMathHandlerStatus (HB_MATH_HANDLERHANDLE handle, int status)
+{
+  int oldstatus = ((PHB_MATH_HANDLERCHAINELEMENT)handle)->status;
+  ((PHB_MATH_HANDLERCHAINELEMENT)handle)->status = status;
+
+  return (oldstatus);
+}
+
+/* get custom math handler status */
+int hb_getMathHandlerStatus (HB_MATH_HANDLERHANDLE handle)
+{
+  return (((PHB_MATH_HANDLERCHAINELEMENT)handle)->status);
+}
+
+
 /* define harbour specific error handler for math errors
  */
 int matherr( struct exception * err )
 {
+
+   PHB_MATH_HANDLERCHAINELEMENT pChain = s_pChain;
+   int retval = -1;
+
    HB_TRACE(HB_TR_DEBUG, ("matherr(%p)", err));
+   
+   /* call custom math handlers */
+   while (pChain != NULL)
+   {
+     int ret;
+     if (pChain->status == HB_MATH_HANDLER_STATUS_ACTIVE)
+     {
+       ret = (*(pChain->handlerproc))(err);
+       /* store the maximum return value */
+       retval = (retval <= ret ? ret : retval);
+     }
+     pChain = pChain->pnext;
+   }
 
    switch( err->type )
    {
@@ -129,11 +219,58 @@ int matherr( struct exception * err )
          break;
    }
 
-   err->retval = 0.0;
+   if (retval == -1)
+   {
+     /* default behaviour */
+     err->retval = 0.0;
+     return 1;   /* don't print any message and don't set errno */
+   }
+   
+   return (retval);
 
-   return 1;   /* don't print any message and don't set errno */
 }
+
+#else /* defined (HB_MATH_HANDLER) */
+
+/* the functions don't do anything but they must exist */
+
+int hb_getMathError (void)
+{
+  return (0);
+}
+
+void hb_resetMathError (void)
+{
+  return;
+}
+
+int hb_isMathHandler (void)
+{
+  return (0);
+}
+
+HB_MATH_HANDLERHANDLE hb_installMathHandler (HB_MATH_HANDLERPROC handlerproc)
+{
+  return ((HB_MATH_HANDLERHANDLE)NULL);
+}
+
+int hb_deinstallMathHandler (HB_MATH_HANDLERHANDLE handle)
+{
+  return (-1);
+}
+
+int hb_setMathHandlerStatus (HB_MATH_HANDLERHANDLE handle, int status)
+{
+  return (0);
+}
+
+int hb_getMathHandlerStatus (HB_MATH_HANDLERHANDLE handle)
+{
+  return (0);
+}
+
 #endif
+
 
 HB_FUNC( EXP )
 {
@@ -208,4 +345,3 @@ HB_FUNC( SQRT )
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1097, NULL, "SQRT", 1, hb_paramError( 1 ) );
 }
-

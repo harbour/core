@@ -1,3 +1,11 @@
+2001-07-15 20:15 MEST Martin Vogel <vogel@inttec.de>
+   * source/rtl/math.c
+     + added functions for custom math handlers
+   + include/hbmath.h
+     + created header file for Harbour Math API
+   * doc/en/math.txt
+     + added some documentation for Harbour Math API functions
+
 2001-07-15 16:23 GMT+1 Patrick Mast <harbour@PatrickMast.com>
    * source/rtl/profiler.prg
      + Added the <lOnlyUsed> parameter. If profiler is used like

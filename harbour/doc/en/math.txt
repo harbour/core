@@ -9,6 +9,9 @@
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
  *    Documentation for: ABS(),EXP(),LOG(),INT(),MAX()
  *    MIN(),SQRT(),ROUND()
+ * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
+ *           Author: Martin Vogel <vogel@inttec.de>
+ *    Documentation for Math API functions
  * See doc/license.txt for licensing terms.
  *
  */
@@ -337,3 +340,241 @@
  *      INT(),STR(),VAL(),SET FIXED
  *  $END$
  */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_getMathError()
+ *  $CATEGORY$
+ *      Math API
+ *  $ONELINER$
+ *      get the last math lib error
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbmath.h>
+ *      hb_getMathError (void) --> int iMathError
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_resetMathError()
+ *  $CATEGORY$
+ *      Math API
+ *  $ONELINER$
+ *      reset the math error, i.e. set it to 0
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbmath.h>
+ *      hb_resetMathError (void) --> void
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_isMathHandler()
+ *  $CATEGORY$
+ *      Math API
+ *  $ONELINER$
+ *      check if harbour math error handler is available
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbmath.h>
+ *      hb_isMathHandler (void) --> int iIsMathHandler
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_installMathHandler()
+ *  $CATEGORY$
+ *      Math API
+ *  $ONELINER$
+ *      add a custom math handler to the math error handler chain
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbmath.h>
+ *      hb_installMathHandler (HB_MATH_HANDLERPROC handlerproc) --> HB_MATH_HANDLERHANDLE handle
+ *  $ARGUMENTS$
+ *      handlerproc   custom math handler 
+ *  $RETURNS$
+ *      handle        handle to handlerproc in handle chain 
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_deinstallMathHandler()
+ *  $CATEGORY$
+ *      Math API
+ *  $ONELINER$
+ *      remove custom math handler from the math error handler chain
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbmath.h>
+ *      hb_deinstallMathHandler (HB_MATH_HANDLERHANDLE handle) --> int iSuccess
+ *  $ARGUMENTS$
+ *      handle        handle returned be hb_installMathHandler() 
+ *  $RETURNS$
+ *      iSuccess      success of operation 
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_setMathHandlerStatus()
+ *  $CATEGORY$
+ *      Math API
+ *  $ONELINER$
+ *      set the status of a custom math handler in the math error handler chain
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbmath.h>
+ *      hb_setMathHandlerStatus (HB_MATH_HANDLERHANDLE handle, int status) --> int iSuccess
+ *  $ARGUMENTS$
+ *      handle        handle returned be hb_installMathHandler() 
+ *      status        new status value, can be one of:
+ *                       HB_MATH_HANDLER_STATUS_INACTIVE  
+ *                         --> handler is present but not active
+ *                       HB_MATH_HANDLER_STATUS_ACTIVE     
+ *                         --> handler is present and active
+ *  $RETURNS$
+ *      iSuccess      success of operation 
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_getMathHandlerStatus()
+ *  $CATEGORY$
+ *      Math API
+ *  $ONELINER$
+ *      get the status of a custom math handler in the math error handler chain
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbmath.h>
+ *      hb_getMathHandlerStatus (HB_MATH_HANDLERHANDLE handle) --> int iStatus
+ *  $ARGUMENTS$
+ *      handle        handle returned be hb_installMathHandler() 
+ *  $RETURNS$
+ *      iStatus       status of math handler
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+
