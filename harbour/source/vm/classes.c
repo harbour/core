@@ -201,7 +201,7 @@ static PHB_DYNS s_msgClsParent = NULL;
 /* All functions contained in classes.c */
 
 static PHB_ITEM hb_clsInst( USHORT uiClass );
-#if 0 
+#if 0
 /* see function definition */
 static void     hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod );
 #endif
@@ -427,7 +427,7 @@ void hb_clsIsClassRef( void )
    }
 }
 
-/* Currently (2004.04.02) this function is not used 
+/* Currently (2004.04.02) this function is not used
  it is commented out to suppress warning message in gcc
 */
 #if 0
@@ -2683,3 +2683,45 @@ HB_FUNC( HB_SETCLSHANDLE ) /* ( oObject, nClassHandle ) --> nPrevClassHandle */
 
    hb_retnl( uiPrevClassHandle );
 }
+
+/* Harbour equivalent for Clipper internal __mdCreate() */
+
+USHORT hb_clsCreate( USHORT usSize, char * szClassName )
+{
+   PHB_DYNS pDynSym = hb_dynsymFind( "__CLSNEW" );
+
+   hb_vmPushSymbol( pDynSym->pSymbol );
+   hb_vmPushNil();
+   hb_vmPushString( szClassName, strlen( szClassName ) );
+   hb_vmPushLong( usSize );
+   hb_vmFunction( 2 );
+
+   return ( USHORT ) hb_parnl( -1 );
+}
+
+/* Harbour equivalent for Clipper internal __mdAdd() */
+
+void hb_clsAdd( USHORT usClassH, char * szMethodName, void * pFunction )
+{
+   PHB_DYNS pDynSym = hb_dynsymFind( "__CLSADDMSG" );
+
+   hb_vmPushSymbol( pDynSym->pSymbol );
+   hb_vmPushNil();
+   hb_vmPushLong( usClassH );
+   hb_vmPushString( szMethodName, strlen( szMethodName ) );
+   hb_vmPushPointer( pFunction );
+   hb_vmFunction( 3 );
+}
+
+/* Harbour equivalent for Clipper internal __mdAssociate() */
+
+void hb_clsAssociate( USHORT usClassH )
+{
+   PHB_DYNS pDynSym = hb_dynsymFind( "__CLSINST" );
+
+   hb_vmPushSymbol( pDynSym->pSymbol );
+   hb_vmPushNil();
+   hb_vmPushLong( usClassH );
+   hb_vmFunction( 1 );
+}
+
