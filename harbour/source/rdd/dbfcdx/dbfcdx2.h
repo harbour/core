@@ -41,7 +41,7 @@ static BOOL hb_cdxPageReadNextKey( LPPAGEINFO pPage );
 static BOOL hb_cdxPageReadPrevKey( LPPAGEINFO pPage );
 static LPKEYINFO hb_cdxPageGetKey( LPPAGEINFO pPage, USHORT uiKey );
 static void hb_cdxPagePageLoad( LPPAGEINFO pPage );
-static int hb_cdxPageRetrieveKey( LPPAGEINFO pPage, LPKEYINFO pKey );
+static int hb_cdxPageRetrieveKey( LPPAGEINFO pPage, LPKEYINFO *pKey );
 static void hb_cdxPageAddNodeKey( LPPAGEINFO pPage, LPKEYINFO pKey );
 static int hb_cdxPageSeekNodeTag( LPPAGEINFO pPage, LONG Tag );
 static BOOL hb_cdxPageGetChild( LPPAGEINFO pPage, LONG Tag );

@@ -1282,7 +1282,8 @@ static LPKEYINFO hb_cdxKeyPutItem( LPKEYINFO pKey, PHB_ITEM pItem )
 
            i++;
            pKey->length = i;
-           pKey->Value = (char *) hb_xgrab( i );
+           pKey->Value = (char *) hb_xgrab( i + 1 );
+           pKey->Value[i] = 0;
            memcpy( pKey->Value, cTemp, i );
            pKey->fString = FALSE;
 
@@ -1297,7 +1298,8 @@ static LPKEYINFO hb_cdxKeyPutItem( LPKEYINFO pKey, PHB_ITEM pItem )
 
            i++;
            pKey->length = i;
-           pKey->Value = (char *) hb_xgrab( i );
+           pKey->Value = (char *) hb_xgrab( i + 1 );
+           pKey->Value[i] = 0;
            memcpy( pKey->Value, cTemp, i );
            pKey->fString = FALSE;
 
@@ -1376,6 +1378,7 @@ static LPKEYINFO hb_cdxKeyCopy( LPKEYINFO pKeyDest, LPKEYINFO pKey )
        pKeyDest->Value = (char *) hb_xgrab( pKey->length + 1 );
        memcpy( pKeyDest->Value, pKey->Value, pKey->length );
        pKeyDest->length = pKey->length;
+       pKeyDest->Value[ pKeyDest->length ] = 0;
        pKeyDest->fString = pKey->fString;
        pKeyDest->Tag = pKey->Tag;
        pKeyDest->Xtra = pKey->Xtra;
@@ -1839,7 +1842,7 @@ static void hb_cdxTagKeyAdd( LPCDXTAG pTag, LPKEYINFO pKey )
       hb_cdxPageInsertKey( pTag->RootPage, pNewKey, FALSE );
       hb_cdxTagTagOpen( pTag, 0 );
       hb_cdxPageSeekKey( pTag->RootPage, pNewKey->Tag, pNewKey, FALSE );
-      iSeek = hb_cdxPageRetrieveKey( pTag->RootPage, pTag->CurKeyInfo );
+      iSeek = hb_cdxPageRetrieveKey( pTag->RootPage, &pTag->CurKeyInfo );
       if( !pTag->AscendKey )
       {
          pTag->TagBOF = ( iSeek & 2 );
@@ -2338,7 +2341,7 @@ static void hb_cdxTagIntNodeBuild( LPCDXTAG pTag, LPCDXDATA pData, LPPAGEINFO pP
          szBuffer[ v ] = 0;
       }
       pKey->length = v;
-      pKey->Value = (char *) hb_xgrab( v );
+      pKey->Value = (char *) hb_xgrab( v + 1 );
       memcpy( pKey->Value, szBuffer, v );
       pKey->Value[v] = 0;
       pKey->fString = ( pTag->uiType == 'C' ? TRUE : FALSE);
@@ -2371,7 +2374,7 @@ static LONG hb_cdxTagKeyFind( LPCDXTAG pTag, LPKEYINFO pKey )
    K = hb_cdxPageSeekKey( pTag->RootPage, pKey->Tag, pKey, FALSE );
    if( K == 0 )
    {
-      hb_cdxPageRetrieveKey( pTag->RootPage, pTag->CurKeyInfo );
+      hb_cdxPageRetrieveKey( pTag->RootPage, &pTag->CurKeyInfo );
       if( pTag->pForItem == NULL )
          return pTag->CurKeyInfo->Tag;
       else
@@ -2380,7 +2383,7 @@ static LONG hb_cdxTagKeyFind( LPCDXTAG pTag, LPKEYINFO pKey )
    }
    else if( K < 0 )
    {
-      hb_cdxPageRetrieveKey( pTag->RootPage, pTag->CurKeyInfo );
+      hb_cdxPageRetrieveKey( pTag->RootPage, &pTag->CurKeyInfo );
       if( pTag->pForItem != NULL )
          /* TODO: test for expression */
          pTag->TagEOF = TRUE;
@@ -2752,7 +2755,7 @@ static void hb_cdxPagePageLoad( LPPAGEINFO pPage )
    pPage->Changed = FALSE;
 }
 
-static int hb_cdxPageRetrieveKey( LPPAGEINFO pPage, LPKEYINFO pKey )
+static int hb_cdxPageRetrieveKey( LPPAGEINFO pPage, LPKEYINFO *pKey )
 {
    int iCheck;
    LPKEYINFO pNewKey;
@@ -2766,7 +2769,7 @@ static int hb_cdxPageRetrieveKey( LPPAGEINFO pPage, LPKEYINFO pKey )
    else
    {
       pNewKey = hb_cdxPageGetKey( pPage, pPage->CurKey );
-      pKey = hb_cdxKeyCopy( pKey, pNewKey );
+      *pKey = hb_cdxKeyCopy( *pKey, pNewKey );
       iCheck = 0;
       if( pPage->ChkBOF )
          iCheck = 1;
@@ -3200,12 +3203,11 @@ static void hb_cdxSortInsertWord( LPSORTINFO pSort, LONG Tag, char * Value,
          pSort->KeySize = pSort->WPch[0];
       pSort->WPch[0]--;
    }
-   while( pSort->WPch[0] >= 0 && pSort->WPch[ pSort->WPch[0] + 1 ] ==
+   while( pSort->WPch[0] > 0 && pSort->WPch[ pSort->WPch[0] ] ==
                                 ( pSort->CurTag->uiType == 'C' ? ' ' : 0 ) )
    {
       pSort->WPch[0]--;
    }
-   pSort->WPch[0]++;
    pSort->LevelPtr = pSort->RootLink;
    pSort->PriorPtr = 0;
    pSort->WCur = 0;

@@ -1,3 +1,8 @@
+2001-02-25 20:25 UTC+0300 Alex Shashkov <shashkov@ostu.ru>
+   * harbour/source/rdd/dbfcdx2.h
+   * harbour/source/rdd/dbfcdx1.c
+     ! Fixed some bugs
+
 2001-02-25 06:00 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
    *utils/hbmake/hbmake.prg
       *Fixed an small bug regarding the number of select files on editor mode
