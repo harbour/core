@@ -1,3 +1,24 @@
+2001-09-01 08:35 GMT+1 Antonio Linares <alinares@fivetech.com>
+
+  + harbour/contrib/hgf/win32/make_b32.bat
+    batch file to invoke the
+    makefile for Harbour GUI framework Win32 using Borland C compiler
+
+  + harbour/contrib/hgf/win32/makefile.bc
+    makefile for Harbour GUI framework Win32 using Borland C compiler
+
+  * harbour/contrib/hgf/win32/win32.c
+  * harbour/contrib/hgf/win32/tform.prg
+  * harbour/contrib/hgf/win32/tmenu.prg
+  * harbour/contrib/hgf/win32/tmenuitm.prg
+    some minor fixes
+
+  + harbour/contrib/hgf/win32/tests/build_b32.bc
+    batch file to build Harbour GUI framework for Win32 tests
+
+  + harbour/contrib/hgf/win32/tests/testform.prg
+    Harbour GUI framework for Win32 TestForm.prg sample
+
 2001-08-31 14:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * config/os2/icc.cf
