@@ -8,6 +8,13 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-04-21 16:35 UTC+0300 Chen Kedem <niki@actcom.co.il>
+  * doc/en/rddord.txt
+    - Remove docs for: ORDKEY() $DESCRIPTION$ section, ORDLISTADD(),
+                       ORDLISTCLEAR(), ORDLISTREBUILD(), ORDNAME(),
+                       ORDNUMBER(), ORDSETFOCUS()
+      because of copyright violation!
+
 2004-04-20 16:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
   * contrib/Makefile
     + Added an ifeq section for bsd builds.
@@ -48,7 +55,7 @@
       * added code to test TYPE() function
 
 2004-04-16 17:08 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
-   * harbour/contrib/rdd_ads/adsfunc.c
+   * contrib/rdd_ads/adsfunc.c
      Renamed adsGetConnectionType() as AdsGetTableConType() and added
      adsGetConnectionType( [hConnect] ) from Brian Hays' implementation in xHarbour.
 
@@ -79,24 +86,24 @@
        definitions to make it possible to call them when they are in the dll.
 
 2004-04-14 19:05 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
-   * harbour/contrib/rdd_ads/adsfunc.c
+   * contrib/rdd_ads/adsfunc.c
      Added adsGetConnectionType() provided by Randy Portnoff
 
 2004-04-14 12:20 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
-  * harbour/tests/bldtest/Makefile
+  * tests/bldtest/Makefile
     * fixed typo in file name
 
-  * harbour/include/hbdefs.h
+  * include/hbdefs.h
     + added HB_COUNTER and HB_PTRDIFF types - first for reference
       counters and second for any pointer differences and pointer to
       integer conversions - this modification is synced with xHarbour
 
-  * harbour/include/hbapi.h
-  * harbour/include/hbdefs.h
-  * harbour/source/rtl/philes.c
-  * harbour/source/vm/arrays.c
-  * harbour/source/vm/hvm.c
-  * harbour/source/vm/itemapi.c
+  * include/hbapi.h
+  * include/hbdefs.h
+  * source/rtl/philes.c
+  * source/vm/arrays.c
+  * source/vm/hvm.c
+  * source/vm/itemapi.c
     * use HB_COUNTER type
 
 2004-04-09 15:00 UTC-0500 David G. Holm <dholm@jsd-llc.com>
@@ -236,10 +243,10 @@
      * Updated
 
 2004-03-31 21:45 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
-   * harbour/source/rdd/workarea.c
+   * source/rdd/workarea.c
      + added scopped relations. Now OrdSetRelation() works with DBFCDX like it
        does with Clipper 5.3b
-   * harbour/contrib/rdd_ads/ads1.c
+   * contrib/rdd_ads/ads1.c
      + adsClearScope() method added to avoid r/t error with ADS and scoped relations
      Thanks to Przemyslaw Czerpak for the fix (borrowed from xHarbour)
 
@@ -312,8 +319,8 @@
       + added PreBlock and PostBlock instance variables for Clipper 5.3x compatibility
 
 2004-03-20 15:05 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
-  + harbour/tests/bldtest/Makefile
-  + harbour/tests/bldtest/bldtest.c
+  + tests/bldtest/Makefile
+  + tests/bldtest/bldtest.c
     + simple C program to check if Harbour can be compiled on
       used machine / system / C compiler
 
