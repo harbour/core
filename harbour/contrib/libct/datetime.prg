@@ -207,7 +207,7 @@ Function EOQ( date)
  if (empty(date))
   return (date)
  endif
- yyyy := NtoS( Year( date))
+ yyyy := Str( Year( date), 4, 0)
  If ( m := Month( date)) <= 3
   eoq := StoD( yyyy + '0331')
  ElseIf m <= 6
