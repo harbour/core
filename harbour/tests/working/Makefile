@@ -53,6 +53,7 @@ PRG_SOURCES=\
 	iotest.prg \
 	iotest2.prg \
 	longstr.prg \
+	longstr2.prg \
 	mankala.prg \
 	mathtest.prg \
 	mtran.prg \
