@@ -100,10 +100,16 @@ return Self
 
 METHOD Activate( cModuleName ) CLASS TDebugger
 
+   ::cAppImage  = SaveScreen()
+   ::nAppRow    = Row()
+   ::nAppCol    = Col()
+   ::cAppColors = SetColor()
+   ::nAppCursor = SetCursor()
    ::Show()
    ::ShowCode( cModuleName )
-   ::HandleEvent()
-   // ::Hide()
+   ::cImage := SaveScreen()
+   DispBegin()
+   RestScreen( 0, 0, MaxRow(), MaxCol(), ::cAppImage )
 
 return nil
 

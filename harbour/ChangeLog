@@ -1,3 +1,8 @@
+19990823-01:11 EDT Paul Tucker <ptucker@sympatico.ca>
+  * source/debug/debugger.prg
+    * ::Activate - fix for trashed screens
+      Escape key is still a problem for now.
+
 19990823-01:11 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/alert.prg
     ! PreExt/PostExt code moved inside Alert(), then the STATIC variable
