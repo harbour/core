@@ -1,3 +1,8 @@
+20000314-13:35 EST Paul Tucker <ptucker@sympatico.ca>
+   * makefile.vc
+     * added a few additional comments on recurrsion.
+     * ... and thanks to Victor Szakats for the fine fine-tuning.
+
 20000314-18:56 GMT+1 Victor Szakats <info@szelvesz.hu>
    * include/hbdefs.h
      source/rtl/dates.c

@@ -16,7 +16,7 @@
 #
 # 3. Recurrsion rules are quite simple:
 #     If you specifiy /a on the command line, files in the obj\vc dir
-#     will be deleted, and nmake will recurse without the /a flag
+#     will be deleted, and when nmake recurses, it's without the /a flag
 #
 #     If a .prg.obj rule is fired, nmake will execute this script with
 #     a specific target as a parameter immediatley after compiling a given
@@ -24,9 +24,11 @@
 #      ie: Harbour $<
 #          nmake /fmakefile.vc obj\vc\rtl.lib2
 #     which will simply get make to re-evaluate the dependancy list for the
-#     lib, and as a result, it will execute the C compiler to create the obj's
-#     for the prg's that were created just prior to the recurrsive call. Once
-#     the obj's are created, the recurrsion is complete.
+#     lib, and as a result, it will execute the C compiler using the .c.obj
+#     rule below to create the obj's for the prg's that were created just
+#     prior to the recurrsive call. Once the obj's are created, the
+#     recurrsion is complete.
+#     See additional notes under RTL.LIB below.
 #
 
 MK_FILE      = makefile.vc
@@ -59,11 +61,10 @@ HBDOC_DIR    = utils\hbdoc
 #
 
 AS = masm
-CFLAGS = -TP -W1 -nologo -I$(INCLUDE_DIR) -DHB_GT_WIN
-CLIBFLAGS = $(CFLAGS) -c
+CFLAGS         = -TP -W1 -nologo -I$(INCLUDE_DIR) -DHB_GT_WIN
+CLIBFLAGS      = $(CFLAGS) -c
 CLIBFLAGSDEBUG = $(CLIBFLAGS) -Zi
-
-HARBOURFLAGS = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0
+HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0
 
 #
 # Macros to access our library names
@@ -93,7 +94,7 @@ RUNNER_DLL   = $(BIN_DIR)\runjava.dll
 # Rules
 #
 
-.SUFFIXES: .prg .lib
+.SUFFIXES: .prg .lib .c .obj .asm
 
 # override builtin
 
@@ -137,6 +138,19 @@ LIBS2 = \
 #
 # RTL.LIB rules
 #
+# how this works:
+#
+#  {target>.prg{objdir}.obj
+#  Harbour (flags) -oobjdir\ $<
+#    The list of dependant prgs is sent to the harbour compiler
+#    Since the rule is .prg to .obj and the compiler spits out
+#    C code (as we use it), we need to get those into obj format.
+#    Since $(<:.prg=.c) doesn't work, we execute this script again
+#    with a specific target via:
+#  nMake /fmakefile.vc target.lib2
+#    If you view that target at the bottom of this file, all it does
+#    is cause make to evaluate the obj list of dependants which then
+#    causes the .c.obj rule above to fire. (by inference)
 
 {$(RTL_DIR)}.c{$(OBJ_DIR)}.obj::
    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
@@ -318,6 +332,10 @@ RDD_LIB_OBJS = \
    $(OBJ_DIR)\sdf0.obj
 
 
+#
+# NULSYS.LIB rules
+#
+
 {$(RDD_DIR)\nulsys}.c{$(OBJ_DIR)}.obj::
    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 
@@ -328,6 +346,10 @@ RDD_LIB_OBJS = \
 NULSYS_LIB_OBJS = \
    $(OBJ_DIR)\nulsys.obj
 
+
+#
+# DBFNTX.LIB rules
+#
 
 {$(RDD_DIR)\dbfntx}.c{$(OBJ_DIR)}.obj::
    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
@@ -341,6 +363,10 @@ DBFNTX_LIB_OBJS = \
    \
    $(OBJ_DIR)\dbfntx0.obj
 
+
+#
+# DBFCDX.LIB rules
+#
 
 {$(RDD_DIR)\dbfcdx}.c{$(OBJ_DIR)}.obj::
    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
@@ -581,6 +607,7 @@ $(HARBOUR_EXE) : \
    -echo. > $(INCLUDE_DIR)\unistd.h
    $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ -w $** -o $(HARBOUR_EXE) /link $(PP_LIB) $(COMMON_LIB)
    -del $(INCLUDE_DIR)\unistd.h
+
 
 #
 # Library dependencies and build rules
