@@ -164,13 +164,16 @@ HB_FUNC( __VMSTKLLIST )
                /* and locals                        */
 HB_FUNC( __VMPARLLIST )
 {
+   int iLevel = hb_parni( 1 ) + 1;
+   PHB_ITEM * pBase = hb_stack.pBase;
    PHB_ITEM pReturn;
    PHB_ITEM * pItem;
-   PHB_ITEM * pBase = hb_stack.pItems + ( *(hb_stack.pBase) )->item.asSymbol.stackbase;
-                                                /* Skip function + self     */
-   USHORT uiLen = ( *pBase )->item.asSymbol.paramcnt;
-   USHORT uiPos = 1;
+   USHORT uiLen, uiPos = 1;
 
+   while( ( iLevel-- > 0 ) && pBase != hb_stack.pItems )
+      pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackbase;
+
+   uiLen = ( * pBase )->item.asSymbol.paramcnt;
    pReturn = hb_itemArrayNew( uiLen );           /* Create a transfer array  */
 
    for( pItem = pBase + 2; uiLen--; pItem++ )
