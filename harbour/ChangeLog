@@ -1,3 +1,21 @@
+2000-04-26 20:40 GMT-4 David G. Holm <dholm@jsd-llc.com>
+
+  * include/hbcomp.h
+    ! Change hb_comp_iGenCOutput from BOOL to int, because it can have
+      one of three values, not just TRUE or FALSE.
+
+  * source/compiler/harbour.c
+    ! Change hb_comp_iGenCOutput from BOOL to int, because it can have
+      one of three values, not just TRUE or FALSE.
+    ! Changed 'char * szSize [10];' to 'char szSize [10];' in hb_xgrab()
+      and hb_xrealloc().
+
+  * source/compiler/hbpcode
+    ! Added parentheses around & expressions in comparisons for the
+      HB_P_PUSHSYMNEAR case due to operator precedence confusion
+      resulting in compiler warnings.
+
+
 20000426-12:30 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
     * harbour/include/hbcomp.h

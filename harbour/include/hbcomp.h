@@ -358,7 +358,7 @@ extern BOOL        hb_comp_bAutoMemvarAssume;
 extern BOOL        hb_comp_bForceMemvars;
 extern BOOL        hb_comp_bDebugInfo;
 extern char        hb_comp_szPrefix[ 20 ];
-extern BOOL        hb_comp_iGenCOutput;
+extern int         hb_comp_iGenCOutput;
 extern int         hb_comp_iExitLevel;
 extern int         hb_comp_iFunctionCnt;
 extern char        hb_comp_cVarType;

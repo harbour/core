@@ -442,10 +442,10 @@ void hb_compStrongType( int iSize )
        if ( pSym )
        {
           /* TODO: Check this!!! */
-          if ( pSym->cScope & HB_FS_PUBLIC == HB_FS_PUBLIC ||
-               pSym->cScope & HB_FS_STATIC == HB_FS_STATIC ||
-               pSym->cScope & HB_FS_INIT   == HB_FS_INIT   ||
-               pSym->cScope & HB_FS_EXIT   == HB_FS_EXIT      )
+          if ( ( pSym->cScope & HB_FS_PUBLIC ) == HB_FS_PUBLIC ||
+               ( pSym->cScope & HB_FS_STATIC ) == HB_FS_STATIC ||
+               ( pSym->cScope & HB_FS_INIT   ) == HB_FS_INIT   ||
+               ( pSym->cScope & HB_FS_EXIT   ) == HB_FS_EXIT      )
              /* Storing a Book Mark of the last pushed symbol so we know how many bytes to pop when encountering function call. */
              pFunc->pFunctionCalls[ pFunc->iFunctionIndex++ ] = pFunc->iStackIndex;
 
