@@ -5,6 +5,7 @@
 /*
  * Harbour Project source code:
  * Harbour GUI framework for Win32
+ * Class HBMenuItem
  *
  * Copyright 2001 Antonio Linares <alinares@fivetech.com>
  * www - http://www.harbour-project.org
@@ -53,7 +54,7 @@
 #include "common.ch"
 #include "hbclass.ch"
 
-CLASS TMenuItem FROM HBPersistent
+CLASS HBMenuItem FROM HBPersistent
 
    DATA   Caption  PROPERTY // Specifies the text of the menu item
    DATA   Name     PROPERTY // The name of this component
@@ -73,7 +74,7 @@ CLASS TMenuItem FROM HBPersistent
 
 ENDCLASS
 
-METHOD New( oOwner ) CLASS TMenuItem
+METHOD New( oOwner ) CLASS HBMenuItem
 
    DEFAULT ::nIdStart TO 110
 
@@ -84,7 +85,7 @@ METHOD New( oOwner ) CLASS TMenuItem
 
 return Self
 
-METHOD Add( oMenuItem ) CLASS TMenuItem
+METHOD Add( oMenuItem ) CLASS HBMenuItem
 
    DEFAULT ::Items  TO {}
    DEFAULT ::nHandle TO WinCreateSubMenu( ::oParent:nHandle, ::nId )
@@ -97,7 +98,7 @@ METHOD Add( oMenuItem ) CLASS TMenuItem
 
 return nil
 
-METHOD FindItem( nId ) CLASS TMenuItem
+METHOD FindItem( nId ) CLASS HBMenuItem
 
    local oMenuItem, n
 
