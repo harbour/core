@@ -12,22 +12,23 @@
 
 PROJECT: harbour.exe harbour.lib libs\b32\terminal.lib libs\win32\terminal.lib
 
-harbour.lib : arrays.obj asort.obj classes.obj codebloc.obj alert.obj \
+harbour.lib : alert.obj arrays.obj asort.obj classes.obj codebloc.obj copyfile.obj \
               dates.obj dates2.obj datesx.obj debug.obj descend.obj devoutp.obj \
               dir.obj do.obj dynsym.obj environ.obj error.obj menu.obj \
               errorapi.obj errorsys.obj extend.obj files.obj fm.obj \
               hardcr.obj hb_f.obj initsymb.obj inkey.obj itemapi.obj memvars.obj \
-              math.obj mathx.obj msguk.obj mtran.obj objfunc.obj \
+              math.obj mathx.obj msges.obj mtran.obj objfunc.obj \
               set.obj setcolor.obj setkey.obj strings.obj symbols.obj stringp.obj \
-              stringsx.obj tclass.obj transfrm.obj copyfile.obj
+              stringsx.obj tclass.obj tget.obj tgetlist.obj transfrm.obj
 
 symbols.obj  : symbols.asm
 
-copyfile.obj : copyfile.c extend.h hbdefs.h
+alert.obj    : alert.c    extend.h hbdefs.h
 arrays.obj   : arrays.c   extend.h hbdefs.h
 asort.obj    : asort.c    extend.h hbdefs.h
 classes.obj  : classes.c  extend.h hbdefs.h
 codebloc.obj : codebloc.c extend.h hbdefs.h
+copyfile.obj : copyfile.c extend.h hbdefs.h
 dates.obj    : dates.c    extend.h hbdefs.h
 dates2.obj   : dates2.c   extend.h hbdefs.h
 datesx.obj   : datesx.c   extend.h hbdefs.h
@@ -50,8 +51,9 @@ initsymb.obj : initsymb.c extend.h hbdefs.h
 inkey.obj    : inkey.c    extend.h hbdefs.h
 itemapi.obj  : itemapi.c  extend.h hbdefs.h
 math.obj     : math.c     extend.h hbdefs.h
-memvars.obj  : memvars.c  extend.h hbdefs.h
 mathx.obj    : mathx.c    extend.h hbdefs.h
+memvars.obj  : memvars.c  extend.h hbdefs.h
+menu.obj     : menu.c     extend.h hbdefs.h
 msguk.obj    : msguk.c    extend.h hbdefs.h
 mtran.obj    : mtran.c    extend.h hbdefs.h
 objfunc.obj  : objfunc.c  extend.h hbdefs.h
@@ -62,19 +64,21 @@ stringp.obj  : stringp.c  extend.h hbdefs.h
 strings.obj  : strings.c  extend.h hbdefs.h
 stringsx.obj : stringsx.c extend.h hbdefs.h
 tclass.obj   : tclass.c   extend.h hbdefs.h
+tget.obj     : tget.c     extend.h hbdefs.h
+tgetlist.obj : tgetlist.c extend.h hbdefs.h
 transfrm.obj : transfrm.c extend.h hbdefs.h
-menu.obj     : menu.c     extend.h hbdefs.h
-alert.obj    : alert.c    extend.h hbdefs.h
 
+alert.c      : alert.prg     harbour.exe
 asort.c      : asort.prg     harbour.exe
 devoutp.c    : devoutp.prg   harbour.exe
 error.c      : error.prg     harbour.exe
 errorsys.c   : errorsys.prg  harbour.exe
+menu.c       : menu.prg      harbour.exe
 objfunc.c    : objfunc.prg   harbour.exe
 stringp.c    : stringp.prg   harbour.exe
 tclass.c     : tclass.prg    harbour.exe
-menu.c       : menu.prg      harbour.exe
-alert.c      : alert.prg     harbour.exe
+tget.c       : tget.prg      harbour.exe
+tgetlist.c   : tgetlist.prg  harbour.exe
 
 .asm.obj:
   tasm32 $<, $@
