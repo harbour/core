@@ -2930,7 +2930,7 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
 
       fprintf( yyc, "/* %05li */", lPCodePos );
       fprintf( yyc, "  HB_P_ENDPROC };\n\n" );
-      fprintf( yyc, "   VirtualMachine( pcode, symbols );\n}\n\n" );
+      fprintf( yyc, "   hb_vmExecute( pcode, symbols );\n}\n\n" );
       pFunc = pFunc->pNext;
    }
 

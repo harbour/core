@@ -50,11 +50,11 @@ HARBOUR HB_DO( void )
       {
          int i;
 
-         PushSymbol( pDynSym->pSymbol );
-         PushNil();
+         hb_vmPushSymbol( pDynSym->pSymbol );
+         hb_vmPushNil();
          for( i = 2; i <= hb_pcount(); i++ )
-            Push( hb_param( i, IT_ANY ) );
-         Do( hb_pcount() - 1 );
+            hb_vmPush( hb_param( i, IT_ANY ) );
+         hb_vmDo( hb_pcount() - 1 );
       }
       else
          hb_errorRT_BASE( EG_NOFUNC, 1001, NULL, pItem->item.asString.value );
@@ -63,21 +63,21 @@ HARBOUR HB_DO( void )
    {
       int i;
 
-      PushSymbol( &symEval );
-      Push( pItem );
+      hb_vmPushSymbol( &symEval );
+      hb_vmPush( pItem );
       for( i = 2; i <= hb_pcount(); i++ )
-         Push( hb_param( i, IT_ANY ) );
-      Do( hb_pcount() - 1 );
+         hb_vmPush( hb_param( i, IT_ANY ) );
+      hb_vmDo( hb_pcount() - 1 );
    }
    else if( IS_SYMBOL(pItem) )
    {
       int i;
 
-      PushSymbol( pItem->item.asSymbol.value );
-      PushNil();
+      hb_vmPushSymbol( pItem->item.asSymbol.value );
+      hb_vmPushNil();
       for( i = 2; i <= hb_pcount(); i++ )
-         Push( hb_param( i, IT_ANY ) );
-      Do( hb_pcount() - 1 );
+         hb_vmPush( hb_param( i, IT_ANY ) );
+      hb_vmDo( hb_pcount() - 1 );
    }
    else
       hb_errorRT_BASE( EG_ARG, 3012, NULL, "DO" );

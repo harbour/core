@@ -38,7 +38,6 @@
  * $End$ */
 
 #include "extend.h"
-#include "ctoharb.h"
 #include "itemapi.h"
 
 PHB_ITEM ArrayClone( PHB_ITEM );
@@ -78,7 +77,7 @@ HARBOUR HB___STATIC(void)
  * $FuncName$     AddToArray( <pItem>, <pReturn>, <wPos> )
  * $Description$  Add <pItem> to array <pReturn> at pos <wPos>
  * $End$ */
-void AddToArray( PHB_ITEM pItem, PHB_ITEM pReturn, WORD wPos )
+static void AddToArray( PHB_ITEM pItem, PHB_ITEM pReturn, WORD wPos )
 {
    PHB_ITEM pTemp;
 
@@ -104,7 +103,7 @@ void AddToArray( PHB_ITEM pItem, PHB_ITEM pReturn, WORD wPos )
  * $FuncName$     <nVars> __GlobalStackLen()
  * $Description$  Returns the length of the global stack
  * $End$ */
-WORD GlobalStackLen( void )
+static WORD GlobalStackLen( void )
 {
    PHB_ITEM pItem;
    WORD  nCount = 0;
@@ -143,7 +142,7 @@ HARBOUR HB___AGLOBALSTACK(void)
  * $FuncName$     <nVars> __StackLen()
  * $Description$  Returns the length of the stack of the calling function
  * $End$ */
-WORD StackLen( void )
+static WORD StackLen( void )
 {
    PHB_ITEM pItem;
    PHB_ITEM pBase = stack.pItems + stack.pBase->item.asSymbol.stackbase;

@@ -220,18 +220,18 @@ char *NumPicture( char *szPic, long lPic, int iPicFlags, double dValue,
 
    bEmpty = !dPush && ( iPicFlags & PF_EMPTY ); /* Suppress 0               */
 
-   PushSymbol ( hb_dynsymGet( "STR" )->pSymbol );  /* Push STR function        */
-   PushNil    ();                               /* Function call. No object */
+   hb_vmPushSymbol ( hb_dynsymGet( "STR" )->pSymbol );  /* Push STR function        */
+   hb_vmPushNil    ();                               /* Function call. No object */
 
-   PushDouble ( dPush, iDecimals );             /* Push value to transform  */
+   hb_vmPushDouble ( dPush, iDecimals );             /* Push value to transform  */
    if( !iWidth  )                               /* Width calculated ??      */
    {
       iWidth    = iOrigWidth;                   /* Push original width      */
       iDecimals = iOrigDec;                     /* Push original decimals   */
    }
-   PushInteger( iWidth );                       /* Push numbers width       */
-   PushInteger( iDecimals );                    /* Push decimals            */
-   Function( 3 );                               /* 3 Parameters             */
+   hb_vmPushInteger( iWidth );                       /* Push numbers width       */
+   hb_vmPushInteger( iDecimals );                    /* Push decimals            */
+   hb_vmFunction( 3 );                               /* 3 Parameters             */
    pItem = &stack.Return;
    if( IS_STRING( pItem ) )                     /* Is it a string           */
    {

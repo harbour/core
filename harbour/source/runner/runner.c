@@ -212,28 +212,28 @@ HARBOUR HB_MAIN( void )
          {
             if( (pSymRead[ ul ].cScope & (FS_INIT|FS_EXIT)) == FS_INIT )
             {
-                PushSymbol( pSymRead + ul );
-                PushNil();
+                hb_vmPushSymbol( pSymRead + ul );
+                hb_vmPushNil();
                 for( i = 0; i < (hb_pcount() - 1); i++ )
-                   Push( hb_param( i + 2, IT_ANY ) );
+                   hb_vmPush( hb_param( i + 2, IT_ANY ) );
                                                 /* Push other cmdline params*/
-                Do( hb_pcount() - 1 );            /* Run init function        */
+                hb_vmDo( hb_pcount() - 1 );            /* Run init function        */
             }
          }
 
-         PushSymbol( pSymRead );
-         PushNil();
+         hb_vmPushSymbol( pSymRead );
+         hb_vmPushNil();
          for( i = 0; i < (hb_pcount() - 1); i++ )
-            Push( hb_param( i + 2, IT_ANY ) );    /* Push other cmdline params*/
-         Do( hb_pcount() - 1 );                   /* Run the thing !!!        */
+            hb_vmPush( hb_param( i + 2, IT_ANY ) );    /* Push other cmdline params*/
+         hb_vmDo( hb_pcount() - 1 );                   /* Run the thing !!!        */
 
          for( ul = 0; ul < ulSymbols; ul++ )    /* Check EXIT functions     */
          {
             if( ( pSymRead[ ul ].cScope & FS_INITEXIT ) == FS_EXIT )
             {
-                PushSymbol( pSymRead + ul );
-                PushNil();
-                Do( 0 );                        /* Run exit function        */
+                hb_vmPushSymbol( pSymRead + ul );
+                hb_vmPushNil();
+                hb_vmDo( 0 );                        /* Run exit function        */
                 pSymRead[ ul ].cScope = pSymRead[ ul ].cScope & (~FS_EXIT);
                                                 /* Exit function cannot be
                                                    handled by main in hvm.c */

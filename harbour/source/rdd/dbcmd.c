@@ -29,8 +29,8 @@
 #include "errorapi.h"
 #include "rddapi.h"
 #include "set.h"
-#include "rddsys.ch"
 #include "ctoharb.h"
+#include "rddsys.ch"
 #include "set.ch"
 
 #define HARBOUR_MAX_RDD_DRIVERNAME_LENGTH       32
@@ -204,11 +204,11 @@ static int hb_rddRegister( char * szDriver, USHORT uiType )
    pRddNewNode->uiType = uiType;
 
    /* Call <szDriver>_GETFUNCTABLE() */
-   PushSymbol( pGetFuncTable->pSymbol );
-   PushNil();
-   PushLong( ( long ) &pRddNewNode->uiFunctions );
-   PushLong( ( long ) &pRddNewNode->pTable );
-   Do( 2 );
+   hb_vmPushSymbol( pGetFuncTable->pSymbol );
+   hb_vmPushNil();
+   hb_vmPushLong( ( long ) &pRddNewNode->uiFunctions );
+   hb_vmPushLong( ( long ) &pRddNewNode->pTable );
+   hb_vmDo( 2 );
    if ( hb_parni( -1 ) != SUCCESS )
    {
       hb_xfree( pRddNewNode );         /* Delete de new RDD node */
@@ -817,7 +817,7 @@ HARBOUR HB_DBUSEAREA( void )
       /* Need more space? */
       SELF_STRUCTSIZE( ( AREAP ) pCurrArea->pArea, &uiSize );
       if( uiSize > sizeof( AREA ) )   /* Size of Area changed */
-	 pCurrArea->pArea = ( AREAP ) hb_xrealloc( pCurrArea->pArea, uiSize );
+         pCurrArea->pArea = ( AREAP ) hb_xrealloc( pCurrArea->pArea, uiSize );
 
       pRddNode->uiAreaSize = uiSize; /* Update the size of WorkArea */
    }
@@ -880,12 +880,12 @@ HARBOUR HB_DBUSEAREA( void )
    {
       if( ( ( AREAP ) pAreaNode->pArea )->uiArea > uiCurrArea )
       {
-	 /* Insert the new WorkArea node */
-	 pCurrArea->pPrev = pAreaNode->pPrev;
-	 pCurrArea->pNext = pAreaNode;
-	 pAreaNode->pPrev = pCurrArea;
-	 if( pCurrArea->pPrev )
-	    pCurrArea->pPrev->pNext = pCurrArea;
+         /* Insert the new WorkArea node */
+         pCurrArea->pPrev = pAreaNode->pPrev;
+         pCurrArea->pNext = pAreaNode;
+         pAreaNode->pPrev = pCurrArea;
+         if( pCurrArea->pPrev )
+            pCurrArea->pPrev->pNext = pCurrArea;
       }
       pAreaNode = pAreaNode->pNext;
    }

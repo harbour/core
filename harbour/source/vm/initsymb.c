@@ -9,6 +9,7 @@
 #include "hbsetup.h"
 #include "extend.h"
 #include "hbdefs.h"
+#include "ctoharb.h"
 #include "initsymd.h"
 
 HARBOUR HB_AADD( void );
@@ -145,5 +146,5 @@ void InitSymbolTable( void )
   /*
    * The system symbol table with runtime functions HAVE TO be called last
    */
-  ProcessSymbols( symbols, sizeof(symbols)/sizeof( HB_SYMB ) );
+  hb_vmProcessSymbols( symbols, sizeof(symbols)/sizeof( HB_SYMB ) );
 }

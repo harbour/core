@@ -60,11 +60,11 @@ static HB_VALUE_PTR _globalTable = NULL;
 #define MEMVARDEBUG
 */
 
-static void hb_MemvarCreateFromItem( PHB_ITEM, BYTE, PHB_ITEM );
-static void hb_MemvarCreateFromDynSymbol( PHB_DYNS, BYTE, PHB_ITEM );
-static void hb_MemvarAddPrivate( PHB_DYNS );
+static void hb_memvarCreateFromItem( PHB_ITEM, BYTE, PHB_ITEM );
+static void hb_memvarCreateFromDynSymbol( PHB_DYNS, BYTE, PHB_ITEM );
+static void hb_memvarAddPrivate( PHB_DYNS );
 
-void hb_MemvarsInit( void )
+void hb_memvarsInit( void )
 {
    _globalTable = (HB_VALUE_PTR) hb_xgrab( sizeof(HB_VALUE) * TABLE_INITHB_VALUE );
    _globalTableSize = TABLE_INITHB_VALUE;
@@ -77,7 +77,7 @@ void hb_MemvarsInit( void )
 }
 
 
-void hb_MemvarsRelease( void )
+void hb_memvarsRelease( void )
 {
    ULONG ulCnt = _globalLastFree;
 
@@ -103,7 +103,7 @@ void hb_MemvarsRelease( void )
 /*
  * This function base address of values table
  */
-HB_VALUE_PTR *hb_MemvarValueBaseAddress( void )
+HB_VALUE_PTR *hb_memvarValueBaseAddress( void )
 {
    return &_globalTable;
 }
@@ -125,7 +125,7 @@ HB_VALUE_PTR *hb_MemvarValueBaseAddress( void )
  *  handle to variable memory or fails
  *
 */
-HB_HANDLE hb_MemvarValueNew( HB_ITEM_PTR pSource, int iTrueMemvar )
+HB_HANDLE hb_memvarValueNew( HB_ITEM_PTR pSource, int iTrueMemvar )
 {
    HB_VALUE_PTR pValue;
    HB_HANDLE hValue = 1;   /* handle 0 is reserved */
@@ -198,7 +198,7 @@ HB_HANDLE hb_MemvarValueNew( HB_ITEM_PTR pSource, int iTrueMemvar )
  * an exit from the function/procedure)
  *
  */
-static void hb_MemvarAddPrivate( PHB_DYNS pDynSym )
+static void hb_memvarAddPrivate( PHB_DYNS pDynSym )
 {
    /* Allocate the value from the end of table
     */
@@ -216,7 +216,7 @@ static void hb_MemvarAddPrivate( PHB_DYNS pDynSym )
 /*
  * This function returns current PRIVATE variables stack base
  */
-ULONG hb_MemvarGetPrivatesBase( void )
+ULONG hb_memvarGetPrivatesBase( void )
 {
    ULONG ulBase = _privateStackBase;
    _privateStackBase =_privateStackCnt;
@@ -227,7 +227,7 @@ ULONG hb_MemvarGetPrivatesBase( void )
  * This function releases PRIVATE variables created after passed base
  *
  */
-void hb_MemvarSetPrivatesBase( ULONG ulBase )
+void hb_memvarSetPrivatesBase( ULONG ulBase )
 {
    HB_HANDLE hVar, hOldValue;
 
@@ -236,7 +236,7 @@ void hb_MemvarSetPrivatesBase( ULONG ulBase )
       --_privateStackCnt;
       hVar =_privateStack[ _privateStackCnt ]->hMemvar;
       hOldValue =_globalTable[ hVar ].hPrevMemvar;
-      hb_MemvarValueDecRef( hVar );
+      hb_memvarValueDecRef( hVar );
       /*
       * Restore previous value for variables that were overridden
       */
@@ -249,7 +249,7 @@ void hb_MemvarSetPrivatesBase( ULONG ulBase )
  * This function increases the number of references to passed global value
  *
  */
-void hb_MemvarValueIncRef( HB_HANDLE hValue )
+void hb_memvarValueIncRef( HB_HANDLE hValue )
 {
    #ifdef MEMVARDEBUG
    if( hValue < 1 || hValue > _globalTableSize )
@@ -271,7 +271,7 @@ void hb_MemvarValueIncRef( HB_HANDLE hValue )
  * If it is the last reference then this value is deleted.
  *
  */
-void hb_MemvarValueDecRef( HB_HANDLE hValue )
+void hb_memvarValueDecRef( HB_HANDLE hValue )
 {
    HB_VALUE_PTR pValue;
 
@@ -317,7 +317,7 @@ void hb_MemvarValueDecRef( HB_HANDLE hValue )
       }
    }
 /* This can happen if for example PUBLIC variable holds a codeblock with
- * detached variable. When hb_MemvarsRelease() is called then detached
+ * detached variable. When hb_memvarsRelease() is called then detached
  * variable can be released before the codeblock. So if the codeblock
  * will be released later then it will try to release again this detached
  * variable.
@@ -334,7 +334,7 @@ void hb_MemvarValueDecRef( HB_HANDLE hValue )
  * pItem   - value to store in memvar
  *
  */
-void hb_MemvarSetValue( PHB_SYMB pMemvarSymb, HB_ITEM_PTR pItem )
+void hb_memvarSetValue( PHB_SYMB pMemvarSymb, HB_ITEM_PTR pItem )
 {
    PHB_DYNS pDyn;
 
@@ -358,14 +358,14 @@ void hb_MemvarSetValue( PHB_SYMB pMemvarSymb, HB_ITEM_PTR pItem )
       {
          /* assignment to undeclared memvar - PRIVATE is assumed
           */
-         hb_MemvarCreateFromDynSymbol( pDyn, VS_PRIVATE, pItem );
+         hb_memvarCreateFromDynSymbol( pDyn, VS_PRIVATE, pItem );
       }
    }
    else
       hb_errorRT_BASE( EG_NOVAR, 1003, NULL, pMemvarSymb->szName );
 }
 
-void hb_MemvarGetValue( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
+void hb_memvarGetValue( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
 {
    PHB_DYNS pDyn;
 
@@ -393,7 +393,7 @@ void hb_MemvarGetValue( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
       hb_errorRT_BASE( EG_NOVAR, 1003, NULL, pMemvarSymb->szName );
 }
 
-void hb_MemvarGetRefer( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
+void hb_memvarGetRefer( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
 {
    PHB_DYNS pDyn;
 
@@ -433,7 +433,7 @@ void hb_MemvarGetRefer( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
  *          or NULL
  *
  */
-static void hb_MemvarCreateFromItem( PHB_ITEM pMemvar, BYTE bScope, PHB_ITEM pValue )
+static void hb_memvarCreateFromItem( PHB_ITEM pMemvar, BYTE bScope, PHB_ITEM pValue )
 {
    PHB_DYNS pDynVar;
 
@@ -446,10 +446,10 @@ static void hb_MemvarCreateFromItem( PHB_ITEM pMemvar, BYTE bScope, PHB_ITEM pVa
       hb_errorRT_BASE( EG_ARG, 3008, NULL, "&" );
 
    if( pDynVar )
-      hb_MemvarCreateFromDynSymbol( pDynVar, bScope, pValue );
+      hb_memvarCreateFromDynSymbol( pDynVar, bScope, pValue );
 }
 
-static void hb_MemvarCreateFromDynSymbol( PHB_DYNS pDynVar, BYTE bScope, PHB_ITEM pValue )
+static void hb_memvarCreateFromDynSymbol( PHB_DYNS pDynVar, BYTE bScope, PHB_ITEM pValue )
 {
    if( bScope & VS_PUBLIC )
    {
@@ -458,7 +458,7 @@ static void hb_MemvarCreateFromDynSymbol( PHB_DYNS pDynVar, BYTE bScope, PHB_ITE
        */
       if( ! pDynVar->hMemvar )
       {
-         pDynVar->hMemvar = hb_MemvarValueNew( pValue, TRUE );
+         pDynVar->hMemvar = hb_memvarValueNew( pValue, TRUE );
          if( !pValue )
          {
             /* new PUBLIC variable - initialize it to .F.
@@ -476,12 +476,12 @@ static void hb_MemvarCreateFromDynSymbol( PHB_DYNS pDynVar, BYTE bScope, PHB_ITE
        */
       HB_HANDLE hCurrentValue =pDynVar->hMemvar;
 
-      pDynVar->hMemvar = hb_MemvarValueNew( pValue, TRUE );
+      pDynVar->hMemvar = hb_memvarValueNew( pValue, TRUE );
       _globalTable[ pDynVar->hMemvar ].hPrevMemvar =hCurrentValue;
 
       /* Add this variable to the PRIVATE variables stack
        */
-      hb_MemvarAddPrivate( pDynVar );
+      hb_memvarAddPrivate( pDynVar );
    }
 }
 
@@ -489,7 +489,7 @@ static void hb_MemvarCreateFromDynSymbol( PHB_DYNS pDynVar, BYTE bScope, PHB_ITE
  * It also restores the value that was hidden if there is another
  * PRIVATE variable with the same name.
  */
-void hb_MemvarRelease( HB_ITEM_PTR pMemvar )
+void hb_memvarRelease( HB_ITEM_PTR pMemvar )
 {
    ULONG ulBase = _privateStackCnt;
    PHB_DYNS pDynVar;
@@ -526,7 +526,7 @@ void hb_MemvarRelease( HB_ITEM_PTR pMemvar )
  * procedure only.
  * The scope of released variables are specified using passed name's mask
  */
-void hb_MemvarReleaseWithMask( char *szMask, BOOL bInclude )
+void hb_memvarReleaseWithMask( char *szMask, BOOL bInclude )
 {
    ULONG ulBase = _privateStackCnt;
    PHB_DYNS pDynVar;
@@ -612,12 +612,12 @@ HARBOUR HB___MVPUBLIC( void )
                for( j=1; j<=ulLen; j++ )
                {
                   hb_arrayGet( pMemvar, j, &VarItem );
-                  hb_MemvarCreateFromItem( &VarItem, VS_PUBLIC, NULL );
+                  hb_memvarCreateFromItem( &VarItem, VS_PUBLIC, NULL );
                   hb_itemClear( &VarItem );
                }
             }
             else
-               hb_MemvarCreateFromItem( pMemvar, VS_PUBLIC, NULL );
+               hb_memvarCreateFromItem( pMemvar, VS_PUBLIC, NULL );
          }
       }
    }
@@ -680,12 +680,12 @@ HARBOUR HB___MVPRIVATE( void )
                for( j=1; j<=ulLen; j++ )
                {
                   hb_arrayGet( pMemvar, j, &VarItem );
-                  hb_MemvarCreateFromItem( &VarItem, VS_PRIVATE, NULL );
+                  hb_memvarCreateFromItem( &VarItem, VS_PRIVATE, NULL );
                   hb_itemClear( &VarItem );
                }
             }
             else
-               hb_MemvarCreateFromItem( pMemvar, VS_PRIVATE, NULL );
+               hb_memvarCreateFromItem( pMemvar, VS_PRIVATE, NULL );
          }
       }
    }
@@ -749,12 +749,12 @@ HARBOUR HB___MVXRELEASE( void )
                for( j=1; j<=ulLen; j++ )
                {
                   hb_arrayGet( pMemvar, j, &VarItem );
-                  hb_MemvarRelease( &VarItem );
+                  hb_memvarRelease( &VarItem );
                   hb_itemClear( &VarItem );
                }
             }
             else
-               hb_MemvarRelease( pMemvar );
+               hb_memvarRelease( pMemvar );
          }
       }
    }
@@ -814,7 +814,7 @@ HARBOUR HB___MVRELEASE( void )
 
          if( pMask->item.asString.value[ 0 ] == '*' )
             bIncludeVar =TRUE;   /* delete all memvar variables */
-         hb_MemvarReleaseWithMask( pMask->item.asString.value, bIncludeVar );
+         hb_memvarReleaseWithMask( pMask->item.asString.value, bIncludeVar );
       }
    }
 }

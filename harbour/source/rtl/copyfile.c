@@ -25,7 +25,6 @@
 #include "itemapi.h"
 #include "extend.h"
 #include "errorapi.h"
-#include "ctoharb.h"
 #include "filesys.h"
 #include "init.h"
 

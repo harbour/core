@@ -86,21 +86,21 @@ PHB_ITEM hb_evalLaunch( PEVALINFO pEvalInfo )
    {
       if( IS_STRING( pEvalInfo->pItems[ 0 ] ) )
       {
-         PushSymbol( hb_dynsymGet( hb_itemGetC( pEvalInfo->pItems[ 0 ] ) )->pSymbol );
-         PushNil();
+         hb_vmPushSymbol( hb_dynsymGet( hb_itemGetC( pEvalInfo->pItems[ 0 ] ) )->pSymbol );
+         hb_vmPushNil();
          while( w < (HB_EVAL_PARAM_MAX_ + 1) && pEvalInfo->pItems[ w ] )
-            Push( pEvalInfo->pItems[ w++ ] );
-         Do( w - 1 );
+            hb_vmPush( pEvalInfo->pItems[ w++ ] );
+         hb_vmDo( w - 1 );
          pResult = hb_itemNew( 0 );
          hb_itemCopy( pResult, &stack.Return );
       }
       else if( IS_BLOCK( pEvalInfo->pItems[ 0 ] ) )
       {
-         PushSymbol( &symEval );
-         Push( pEvalInfo->pItems[ 0 ] );
+         hb_vmPushSymbol( &symEval );
+         hb_vmPush( pEvalInfo->pItems[ 0 ] );
          while( w < (HB_EVAL_PARAM_MAX_ + 1) && pEvalInfo->pItems[ w ] )
-            Push( pEvalInfo->pItems[ w++ ] );
-         Do( w - 1 );
+            hb_vmPush( pEvalInfo->pItems[ w++ ] );
+         hb_vmDo( w - 1 );
          pResult = hb_itemNew( 0 );
          hb_itemCopy( pResult, &stack.Return );
       }
@@ -406,10 +406,10 @@ void hb_itemClear( PHB_ITEM pItem )
    }
    else if( IS_BLOCK( pItem ) )
    {
-      hb_CodeblockDelete( pItem );
+      hb_codeblockDelete( pItem );
    }
    else if( IS_MEMVAR( pItem ) )
-      hb_MemvarValueDecRef( pItem->item.asMemvar.value );
+      hb_memvarValueDecRef( pItem->item.asMemvar.value );
 
    pItem->type = IT_NIL;
 }
@@ -441,11 +441,11 @@ void hb_itemCopy( PHB_ITEM pDest, PHB_ITEM pSource )
 
    else if( IS_BLOCK( pSource ) )
    {
-      hb_CodeblockCopy( pDest, pSource );
+      hb_codeblockCopy( pDest, pSource );
    }
    else if( IS_MEMVAR( pSource ) )
    {
-      hb_MemvarValueIncRef( pSource->item.asMemvar.value );
+      hb_memvarValueIncRef( pSource->item.asMemvar.value );
    }
 }
 
@@ -460,20 +460,20 @@ PHB_ITEM hb_itemUnRef( PHB_ITEM pItem )
       {
          HB_VALUE_PTR pValue;
 
-         pValue =*(pItem->item.asMemvar.itemsbase) + pItem->item.asMemvar.offset +
-                  pItem->item.asMemvar.value;
-         pItem =&pValue->item;
+         pValue = *(pItem->item.asMemvar.itemsbase) + pItem->item.asMemvar.offset +
+                   pItem->item.asMemvar.value;
+         pItem = &pValue->item;
       }
       else
       {
          if( pItem->item.asRefer.value >= 0 )
-            pItem =*(pItem->item.asRefer.itemsbase) + pItem->item.asRefer.offset +
-                     pItem->item.asRefer.value;
+            pItem = *(pItem->item.asRefer.itemsbase) + pItem->item.asRefer.offset +
+                      pItem->item.asRefer.value;
          else
          {
             /* local variable referenced in a codeblock
             */
-            pItem =hb_CodeblockGetRef( *(pItem->item.asRefer.itemsbase) + pItem->item.asRefer.offset,
+            pItem = hb_codeblockGetRef( *(pItem->item.asRefer.itemsbase) + pItem->item.asRefer.offset,
                      pItem );
          }
       }

@@ -29,7 +29,7 @@
 #ifndef HB_INIT_H_
 #define HB_INIT_H_
 
-extern void ProcessSymbols( PHB_SYMB pSymbols, WORD wSymbols ); /* statics symbols initialization */
+extern void hb_vmProcessSymbols( PHB_SYMB pSymbols, WORD wSymbols ); /* statics symbols initialization */
 
 #ifdef HARBOUR_STRICT_ANSI_C
 
@@ -39,7 +39,7 @@ extern void ProcessSymbols( PHB_SYMB pSymbols, WORD wSymbols ); /* statics symbo
 #define HB_INIT_SYMBOLS_END( func ) }; \
   void func( void ) \
   { \
-    ProcessSymbols( symbols, sizeof( symbols ) / sizeof( HB_SYMB ) ); \
+    hb_vmProcessSymbols( symbols, sizeof( symbols ) / sizeof( HB_SYMB ) ); \
   }
 
 #define HB_CALL_ON_STARTUP_BEGIN( func ) func( void ) {
@@ -54,7 +54,7 @@ extern void ProcessSymbols( PHB_SYMB pSymbols, WORD wSymbols ); /* statics symbo
 #define HB_INIT_SYMBOLS_END( func )  }; \
   void __attribute__ ((constructor)) func( void ) \
   { \
-     ProcessSymbols( symbols, sizeof( symbols ) / sizeof( HB_SYMB ) ); \
+     hb_vmProcessSymbols( symbols, sizeof( symbols ) / sizeof( HB_SYMB ) ); \
   }
 
 
@@ -72,7 +72,7 @@ extern void ProcessSymbols( PHB_SYMB pSymbols, WORD wSymbols ); /* statics symbo
 #define HB_INIT_SYMBOLS_END( func )  }; \
   void func( void ) \
   { \
-    ProcessSymbols( symbols, sizeof( symbols ) / sizeof( HB_SYMB ) ); \
+    hb_vmProcessSymbols( symbols, sizeof( symbols ) / sizeof( HB_SYMB ) ); \
   }
 
 #define HB_CALL_ON_STARTUP_BEGIN( func ) \
@@ -88,7 +88,7 @@ extern void ProcessSymbols( PHB_SYMB pSymbols, WORD wSymbols ); /* statics symbo
 #define HB_INIT_SYMBOLS_END( func ) }; \
   int func( void ) \
   { \
-     ProcessSymbols( symbols, sizeof( symbols ) / sizeof( HB_SYMB ) ); \
+     hb_vmProcessSymbols( symbols, sizeof( symbols ) / sizeof( HB_SYMB ) ); \
      return 1; \
   }; \
   static int static_int_##func = func()
@@ -107,7 +107,7 @@ extern void ProcessSymbols( PHB_SYMB pSymbols, WORD wSymbols ); /* statics symbo
 #define HB_INIT_SYMBOLS_END( func ) }; \
   static int func( void ) \
   { \
-     ProcessSymbols( symbols, sizeof( symbols ) / sizeof( HB_SYMB ) ); \
+     hb_vmProcessSymbols( symbols, sizeof( symbols ) / sizeof( HB_SYMB ) ); \
      return 1; \
   }; \
   static int static_int_##func = func()

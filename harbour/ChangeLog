@@ -1,3 +1,54 @@
+19990808-03:00 GMT+1 Victor Szel <info@szelvesz.hu>
+   * source/rtl/codebloc.c
+     source/rtl/itemapi.c
+     source/vm/hvm.c
+     include/extend.h
+     ! hb_Codeblock*() -> hb_codeblock*()
+   * source/rtl/codebloc.c
+     source/rtl/itemapi.c
+     source/rtl/memvars.c
+     source/vm/hvm.c
+     include/extend.h
+     ! hb_Memvar*() -> hb_memvar*()
+   * source/vm/hvm.c
+     ! Fixed and updated declaration list for HARBOUR functions.
+   * source/rdd/dbcmd.c
+     source/rtl/arrays.c
+     source/rtl/classes.c
+     source/rtl/do.c
+     source/rtl/errorapi.c
+     source/rtl/itemapi.c
+     source/rtl/transfrm.c
+     source/runner/runner.c
+     source/vm/hvm.c
+     source/vm/initsymb.c
+     include/ctoharb.h
+     include/hb_vmpub.h
+     * All function belonging to the vm renamed to hb_vm*()
+   * source/tools/debug.c
+     ! Some functions made static.
+   * source/vm/hvm.c
+     % Some variable declarations moved to the block which uses it.
+   * source/vm/hvm.c
+     include/ctoharb.h
+     * PushLogical(), PopLogical() uses BOOL instead of int.
+   * source/vm/hvm.c
+     include/extend.h
+     include/ctoharb.h
+     * declarations belonging to the vm moved to ctoharb.h
+     * declarations belonging to extend moved to extend.h (ulMemory* variables)
+   * source/rtl/console.c
+     source/rtl/copyfile.c
+     source/tools/debug.c
+     ! Removed #include "ctoharb.h"
+   * source/rtl/gt/gtwin.c
+     ! Fixed warning about missing parenthesis.
+   * include/ctoharb.h
+     ! #include "extend.h"
+   * source/runner/runner.c
+     ! HB_HB_RUN -> HB_MAIN - So it now works with Win32/GCC.
+       (this change belongs to 19990807-22:55 GMT+1)
+
 19990808-17:25 EDT Paul Tucker <ptucker@sympatico.ca>
    * makefile.vc
      + debug.lib
@@ -70,7 +121,7 @@
    * tests/working/Makefile
      -debugger
      +cursrtst
-   + tests/working\cursrtst.prg
+   + tests/working/cursrtst.prg
 
 19990808-15:00 EDT Paul Tucker <ptucker@sympatico.ca>
    * makefile.vc
@@ -141,7 +192,7 @@
 
 199908.07-12:03 GMT+3 Alexander Kresin
   * makefile.b32
-    * added 'source\debug' to .prg path for build32.bat to work
+    * added 'source/debug' to .prg path for build32.bat to work
 
 19990807-9:38 GMT+1 Antonio Linares <alinares@fivetech.com>
    * tests/working/hb32.bat
@@ -219,7 +270,7 @@ Fri Aug 06 20:04:05 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
      + Added support for HB_P_MODULENAME opcode
 
 19990806-18:00 WIB Andi Jahja
-   * source\rt;\menuto.prg
+   * source/rtl/menuto.prg
      - added error checker
 
 19990806-10:48 GMT+1 Victor Szel <info@szelvesz.hu>

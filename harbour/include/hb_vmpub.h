@@ -76,7 +76,7 @@ typedef struct
    PHB_DYNS    pDynSym; /* pointer to its dynamic symbol if defined */
 } HB_SYMB, * PHB_SYMB;
 
-extern void VirtualMachine( BYTE * pCode, PHB_SYMB pSymbols );  /* invokes the virtual machine */
+extern void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols );  /* invokes the virtual machine */
 
 /* Harbour Functions scope (SYMBOLSCOPE) */
 #define FS_PUBLIC       0x00

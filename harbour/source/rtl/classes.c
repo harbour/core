@@ -614,12 +614,12 @@ static HARBOUR EvalInline( void )
 
    hb_arrayGet( pClasses[ wClass - 1 ].pInlines, pMethod->wData, &block );
 
-   PushSymbol( &symEval );
-   Push( &block );
-   Push( stack.pBase + 1 );                     /* Push self                */
+   hb_vmPushSymbol( &symEval );
+   hb_vmPush( &block );
+   hb_vmPush( stack.pBase + 1 );                     /* Push self                */
    for( w = 1; w <= hb_pcount(); w++ )
-      Push( hb_param( w, IT_ANY ) );
-   Do( hb_pcount() + 1 );                       /* Self is also an argument */
+      hb_vmPush( hb_param( w, IT_ANY ) );
+   hb_vmDo( hb_pcount() + 1 );                       /* Self is also an argument */
 
    hb_itemClear( &block );                       /* Release block            */
 }
@@ -849,12 +849,12 @@ HARBOUR HB_OSEND(void)
 
    if( pMessage && pObject )                /* Object & message passed      */
    {
-      Push( pObject );                      /* Push object                  */
-      Message( hb_dynsymGet( pMessage->item.asString.value )->pSymbol );
+      hb_vmPush( pObject );                      /* Push object                  */
+      hb_vmMessage( hb_dynsymGet( pMessage->item.asString.value )->pSymbol );
                                             /* Push char symbol as message  */
       for( w = 3; w <= hb_pcount(); w++ )   /* Push arguments on stack      */
-         Push( hb_param( w, IT_ANY ) );
-      Do( hb_pcount()-2 );                  /* Execute message              */
+         hb_vmPush( hb_param( w, IT_ANY ) );
+      hb_vmDo( hb_pcount()-2 );                  /* Execute message              */
    }
    else
    {
@@ -994,9 +994,9 @@ HARBOUR HB___INSTSUPER( void )
       pDynSym = hb_dynsymFind( pString->item.asString.value );
       if( pDynSym )                             /* Find function            */
       {
-         PushSymbol( pDynSym->pSymbol );        /* Push function name       */
-         PushNil();
-         Function( 0 );                         /* Execute super class      */
+         hb_vmPushSymbol( pDynSym->pSymbol );        /* Push function name       */
+         hb_vmPushNil();
+         hb_vmFunction( 0 );                         /* Execute super class      */
 
          if( !IS_OBJECT( &stack.Return ) )
          {

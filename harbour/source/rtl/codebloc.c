@@ -37,6 +37,7 @@
 
 #include <string.h>
 #include "extend.h"
+#include "ctoharb.h"
 #include "itemapi.h"
 
 /* Uncomment this to trace codeblocks activity
@@ -53,7 +54,7 @@
  * Note: pLocalPosTable cannot be used if wLocals is ZERO
  *
  */
-HB_CODEBLOCK_PTR hb_CodeblockNew( BYTE * pBuffer,
+HB_CODEBLOCK_PTR hb_codeblockNew( BYTE * pBuffer,
             WORD wLocals,
             WORD *pLocalPosTable,
             PHB_SYMB pSymbols )
@@ -96,14 +97,14 @@ HB_CODEBLOCK_PTR hb_CodeblockNew( BYTE * pBuffer,
           * pool so it can be shared by codeblocks
           */
 
-         hMemvar =hb_MemvarValueNew( pLocal, FALSE );
+         hMemvar =hb_memvarValueNew( pLocal, FALSE );
 
          pLocal->type =IT_BYREF | IT_MEMVAR;
-         pLocal->item.asMemvar.itemsbase =hb_MemvarValueBaseAddress();
+         pLocal->item.asMemvar.itemsbase =hb_memvarValueBaseAddress();
          pLocal->item.asMemvar.offset    =0;
          pLocal->item.asMemvar.value     =hMemvar;
 
-         hb_MemvarValueIncRef( pLocal->item.asMemvar.value );
+         hb_memvarValueIncRef( pLocal->item.asMemvar.value );
          memcpy( pCBlock->pLocals + w, pLocal, sizeof(HB_ITEM) );
       }
       else
@@ -114,7 +115,7 @@ HB_CODEBLOCK_PTR hb_CodeblockNew( BYTE * pBuffer,
          /* Increment the reference counter so this value will not be
           * released if other codeblock will be deleted
           */
-         hb_MemvarValueIncRef( pLocal->item.asMemvar.value );
+         hb_memvarValueIncRef( pLocal->item.asMemvar.value );
          memcpy( pCBlock->pLocals + w, pLocal, sizeof(HB_ITEM) );
 
       }
@@ -143,7 +144,7 @@ HB_CODEBLOCK_PTR hb_CodeblockNew( BYTE * pBuffer,
 
 /* Delete a codeblock
  */
-void  hb_CodeblockDelete( HB_ITEM_PTR pItem )
+void  hb_codeblockDelete( HB_ITEM_PTR pItem )
 {
    HB_CODEBLOCK_PTR pCBlock = pItem->item.asBlock.value;
 #ifdef CODEBLOCKDEBUG
@@ -158,7 +159,7 @@ void  hb_CodeblockDelete( HB_ITEM_PTR pItem )
          WORD w = 0;
          while( w < pCBlock->wLocals )
          {
-            hb_MemvarValueDecRef( pCBlock->pLocals[ w ].item.asMemvar.value );
+            hb_memvarValueDecRef( pCBlock->pLocals[ w ].item.asMemvar.value );
             ++w;
          }
          hb_xfree( pCBlock->pLocals );
@@ -179,18 +180,18 @@ void  hb_CodeblockDelete( HB_ITEM_PTR pItem )
  * (The codeblock can only see the static variables defined in a module
  * where the codeblock was created)
  */
-void hb_CodeblockEvaluate( HB_ITEM_PTR pItem )
+void hb_codeblockEvaluate( HB_ITEM_PTR pItem )
 {
   int iStatics = stack.iStatics;
 
   stack.iStatics = pItem->item.asBlock.statics;
-  VirtualMachine( pItem->item.asBlock.value->pCode, pItem->item.asBlock.value->pSymbols );
+  hb_vmExecute( pItem->item.asBlock.value->pCode, pItem->item.asBlock.value->pSymbols );
   stack.iStatics = iStatics;
 }
 
 /* Get local variable referenced in a codeblock
  */
-PHB_ITEM  hb_CodeblockGetVar( PHB_ITEM pItem, LONG iItemPos )
+PHB_ITEM  hb_codeblockGetVar( PHB_ITEM pItem, LONG iItemPos )
 {
    HB_CODEBLOCK_PTR pCBlock = pItem->item.asBlock.value;
    /* local variables accessed in a codeblock are always stored as reference */
@@ -199,7 +200,7 @@ PHB_ITEM  hb_CodeblockGetVar( PHB_ITEM pItem, LONG iItemPos )
 
 /* Get local variable passed by reference
  */
-PHB_ITEM  hb_CodeblockGetRef( PHB_ITEM pItem, PHB_ITEM pRefer )
+PHB_ITEM  hb_codeblockGetRef( PHB_ITEM pItem, PHB_ITEM pRefer )
 {
   HB_CODEBLOCK_PTR pCBlock = pItem->item.asBlock.value;
 
@@ -210,7 +211,7 @@ PHB_ITEM  hb_CodeblockGetRef( PHB_ITEM pItem, PHB_ITEM pRefer )
  * TODO: check if such simple pointer coping will allow to evaluate
  * codeblocks recursively
  */
-void  hb_CodeblockCopy( PHB_ITEM pDest, PHB_ITEM pSource )
+void  hb_codeblockCopy( PHB_ITEM pDest, PHB_ITEM pSource )
 {
   pDest->item.asBlock.value =pSource->item.asBlock.value;
   pDest->item.asBlock.value->lCounter++;

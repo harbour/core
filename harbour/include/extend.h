@@ -61,9 +61,6 @@ typedef struct
 #define FS_MEMVAR       0x80
 #define FS_ALLOCATED    (-1)
 
-extern void VirtualMachine( BYTE * pCode, PHB_SYMB pSymbols );  /* invokes the virtual machine */
-extern void ProcessSymbols( PHB_SYMB pSymbols, WORD wSymbols ); /* statics symbols initialization */
-
 /* items types */
 #define IT_NIL          0x0000
 #define IT_INTEGER      0x0002
@@ -283,6 +280,11 @@ extern void     hb_xfree( void * pMem );    /* frees memory */
 extern void *   hb_xrealloc( void * pMem, ULONG lSize );   /* reallocates memory */
 extern ULONG    hb_xsize( void * pMem ); /* returns the size of an allocated memory block */
 
+extern ULONG    ulMemoryBlocks;      /* memory blocks used */
+extern ULONG    ulMemoryMaxBlocks;   /* maximum number of used memory blocks */
+extern ULONG    ulMemoryConsumed;    /* memory size consumed */
+extern ULONG    ulMemoryMaxConsumed; /* memory max size consumed */
+
 /* array management */
 extern void     hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ); /* creates a new array */
 extern void     hb_arrayGet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ); /* retrieves an item */
@@ -332,26 +334,26 @@ extern void     hb_dynsymRelease( void );         /* releases the memory of the 
 extern PHB_SYMB hb_symbolNew( char * szName );
 
 /* Codeblock management */
-extern HB_CODEBLOCK_PTR hb_CodeblockNew( BYTE *, WORD, WORD *, PHB_SYMB );
-extern void     hb_CodeblockDelete( PHB_ITEM );
-extern PHB_ITEM hb_CodeblockGetVar( PHB_ITEM, LONG );
-extern PHB_ITEM hb_CodeblockGetRef( PHB_ITEM, PHB_ITEM );
-extern void     hb_CodeblockEvaluate( PHB_ITEM );
-extern void     hb_CodeblockCopy( PHB_ITEM, PHB_ITEM );
+extern HB_CODEBLOCK_PTR hb_codeblockNew( BYTE *, WORD, WORD *, PHB_SYMB );
+extern void     hb_codeblockDelete( PHB_ITEM );
+extern PHB_ITEM hb_codeblockGetVar( PHB_ITEM, LONG );
+extern PHB_ITEM hb_codeblockGetRef( PHB_ITEM, PHB_ITEM );
+extern void     hb_codeblockEvaluate( PHB_ITEM );
+extern void     hb_codeblockCopy( PHB_ITEM, PHB_ITEM );
 
 /* memvars subsystem */
-extern HB_HANDLE hb_MemvarValueNew( PHB_ITEM, int );
-extern HB_VALUE_PTR * hb_MemvarValueBaseAddress( void );
-extern void     hb_MemvarsInit( void );
-extern void     hb_MemvarsRelease( void );
-extern void     hb_MemvarValueIncRef( HB_HANDLE );
-extern void     hb_MemvarValueDecRef( HB_HANDLE );
-extern void     hb_MemvarSetValue( PHB_SYMB, HB_ITEM_PTR );
-extern void     hb_MemvarGetValue( HB_ITEM_PTR, PHB_SYMB );
-extern void     hb_MemvarGetRefer( HB_ITEM_PTR, PHB_SYMB );
-extern void     hb_MemvarNewSymbol( PHB_SYMB );
-extern ULONG    hb_MemvarGetPrivatesBase( void );
-extern void     hb_MemvarSetPrivatesBase( ULONG );
+extern HB_HANDLE hb_memvarValueNew( PHB_ITEM, int );
+extern HB_VALUE_PTR * hb_memvarValueBaseAddress( void );
+extern void     hb_memvarsInit( void );
+extern void     hb_memvarsRelease( void );
+extern void     hb_memvarValueIncRef( HB_HANDLE );
+extern void     hb_memvarValueDecRef( HB_HANDLE );
+extern void     hb_memvarSetValue( PHB_SYMB, HB_ITEM_PTR );
+extern void     hb_memvarGetValue( HB_ITEM_PTR, PHB_SYMB );
+extern void     hb_memvarGetRefer( HB_ITEM_PTR, PHB_SYMB );
+extern void     hb_memvarNewSymbol( PHB_SYMB );
+extern ULONG    hb_memvarGetPrivatesBase( void );
+extern void     hb_memvarSetPrivatesBase( ULONG );
 
 extern char *   hb_setColor( char * );
 

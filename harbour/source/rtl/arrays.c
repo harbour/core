@@ -459,10 +459,10 @@ int hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG ulStart, ULONG ulCount
 
           if ( pValue->type == IT_BLOCK )
             {
-              PushSymbol( &symEval );
-              Push( pValue );
-              Push( pItem );
-              Do( 1 );
+              hb_vmPushSymbol( &symEval );
+              hb_vmPush( pValue );
+              hb_vmPush( pItem );
+              hb_vmDo( 1 );
               if ( stack.Return.item.asLogical.value )
                 iRet = 1;
             }
@@ -531,11 +531,11 @@ void hb_arrayEval( PHB_ITEM pArray, PHB_ITEM bBlock, ULONG ulStart, ULONG ulCoun
         {
           PHB_ITEM pItem = pBaseArray->pItems + ulStart;
 
-          PushSymbol( &symEval );
-          Push( bBlock );
-          Push( pItem );
-          PushNumber( (double)(ulStart + 1), 0 );
-          Do( 2 );
+          hb_vmPushSymbol( &symEval );
+          hb_vmPush( bBlock );
+          hb_vmPush( pItem );
+          hb_vmPushNumber( (double)(ulStart + 1), 0 );
+          hb_vmDo( 2 );
         }
     }
   else

@@ -32,9 +32,9 @@ PHB_ITEM hb_errNew( void )
 {
    PHB_ITEM pReturn = hb_itemNew( NULL );
 
-   PushSymbol( hb_dynsymGet( "ERRORNEW" )->pSymbol );
-   PushNil();
-   Do( 0 );
+   hb_vmPushSymbol( hb_dynsymGet( "ERRORNEW" )->pSymbol );
+   hb_vmPushNil();
+   hb_vmDo( 0 );
 
    hb_itemCopy( pReturn, &stack.Return );
 
@@ -63,10 +63,10 @@ WORD hb_errLaunch( PHB_ITEM pError )
          exit( 1 );
       }
 
-      PushSymbol( &symEval );
-      Push( &errorBlock );
-      Push( pError );
-      Do( 1 );
+      hb_vmPushSymbol( &symEval );
+      hb_vmPush( &errorBlock );
+      hb_vmPush( pError );
+      hb_vmDo( 1 );
 
       /* TODO: Handle the canSubstitute case somehow */
       /*       Clipper doesn't document the case where canSubstitute is set */
@@ -107,155 +107,155 @@ void hb_errRelease( PHB_ITEM pError )
 
 char * hb_errGetDescription( PHB_ITEM pError )
 {
-   PushSymbol( hb_dynsymGet( "DESCRIPTION" )->pSymbol );
-   Push( pError );
-   Do( 0 );
+   hb_vmPushSymbol( hb_dynsymGet( "DESCRIPTION" )->pSymbol );
+   hb_vmPush( pError );
+   hb_vmDo( 0 );
    return stack.Return.item.asString.value;
 }
 
 PHB_ITEM hb_errPutDescription( PHB_ITEM pError, char * szDescription )
 {
-   PushSymbol( hb_dynsymGet( "_DESCRIPTION" )->pSymbol );
-   Push( pError );
-   PushString( szDescription, strlen( szDescription ) );
-   Do( 1 );
+   hb_vmPushSymbol( hb_dynsymGet( "_DESCRIPTION" )->pSymbol );
+   hb_vmPush( pError );
+   hb_vmPushString( szDescription, strlen( szDescription ) );
+   hb_vmDo( 1 );
 
    return pError;
 }
 
 char * hb_errGetFileName( PHB_ITEM pError )
 {
-   PushSymbol( hb_dynsymGet( "FILENAME" )->pSymbol );
-   Push( pError );
-   Do( 0 );
+   hb_vmPushSymbol( hb_dynsymGet( "FILENAME" )->pSymbol );
+   hb_vmPush( pError );
+   hb_vmDo( 0 );
    return stack.Return.item.asString.value;
 }
 
 PHB_ITEM hb_errPutFileName( PHB_ITEM pError, char * szFileName )
 {
-   PushSymbol( hb_dynsymGet( "_FILENAME" )->pSymbol );
-   Push( pError );
-   PushString( szFileName, strlen( szFileName ) );
-   Do( 1 );
+   hb_vmPushSymbol( hb_dynsymGet( "_FILENAME" )->pSymbol );
+   hb_vmPush( pError );
+   hb_vmPushString( szFileName, strlen( szFileName ) );
+   hb_vmDo( 1 );
    return pError;
 }
 
 USHORT hb_errGetGenCode( PHB_ITEM pError )
 {
-   PushSymbol( hb_dynsymGet( "GENCODE" )->pSymbol );
-   Push( pError );
-   Do( 0 );
+   hb_vmPushSymbol( hb_dynsymGet( "GENCODE" )->pSymbol );
+   hb_vmPush( pError );
+   hb_vmDo( 0 );
    return stack.Return.item.asInteger.value;
 }
 
 PHB_ITEM hb_errPutGenCode( PHB_ITEM pError, USHORT uiGenCode )
 {
-   PushSymbol( hb_dynsymGet( "_GENCODE" )->pSymbol );
-   Push( pError );
-   PushInteger( uiGenCode );
-   Do( 1 );
+   hb_vmPushSymbol( hb_dynsymGet( "_GENCODE" )->pSymbol );
+   hb_vmPush( pError );
+   hb_vmPushInteger( uiGenCode );
+   hb_vmDo( 1 );
    return pError;
 }
 
 char * hb_errGetOperation( PHB_ITEM pError )
 {
-   PushSymbol( hb_dynsymGet( "OPERATION" )->pSymbol );
-   Push( pError );
-   Do( 0 );
+   hb_vmPushSymbol( hb_dynsymGet( "OPERATION" )->pSymbol );
+   hb_vmPush( pError );
+   hb_vmDo( 0 );
    return stack.Return.item.asString.value;
 }
 
 PHB_ITEM hb_errPutOperation( PHB_ITEM pError, char * szOperation )
 {
-   PushSymbol( hb_dynsymGet( "_OPERATION" )->pSymbol );
-   Push( pError );
-   PushString( szOperation, strlen( szOperation ) );
-   Do( 1 );
+   hb_vmPushSymbol( hb_dynsymGet( "_OPERATION" )->pSymbol );
+   hb_vmPush( pError );
+   hb_vmPushString( szOperation, strlen( szOperation ) );
+   hb_vmDo( 1 );
    return pError;
 }
 
 USHORT hb_errGetOsCode( PHB_ITEM pError )
 {
-   PushSymbol( hb_dynsymGet( "OSCODE" )->pSymbol );
-   Push( pError );
-   Do( 0 );
+   hb_vmPushSymbol( hb_dynsymGet( "OSCODE" )->pSymbol );
+   hb_vmPush( pError );
+   hb_vmDo( 0 );
    return stack.Return.item.asInteger.value;
 }
 
 PHB_ITEM hb_errPutOsCode( PHB_ITEM pError, USHORT uiOsCode )
 {
-   PushSymbol( hb_dynsymGet( "_OSCODE" )->pSymbol );
-   Push( pError );
-   PushInteger( uiOsCode );
-   Do( 1 );
+   hb_vmPushSymbol( hb_dynsymGet( "_OSCODE" )->pSymbol );
+   hb_vmPush( pError );
+   hb_vmPushInteger( uiOsCode );
+   hb_vmDo( 1 );
    return pError;
 }
 
 USHORT hb_errGetSeverity( PHB_ITEM pError )
 {
-   PushSymbol( hb_dynsymGet( "SEVERITY" )->pSymbol );
-   Push( pError );
-   Do( 0 );
+   hb_vmPushSymbol( hb_dynsymGet( "SEVERITY" )->pSymbol );
+   hb_vmPush( pError );
+   hb_vmDo( 0 );
    return stack.Return.item.asInteger.value;
 }
 
 PHB_ITEM hb_errPutSeverity( PHB_ITEM pError, USHORT uiSeverity )
 {
-   PushSymbol( hb_dynsymGet( "_SEVERITY" )->pSymbol );
-   Push( pError );
-   PushInteger( uiSeverity );
-   Do( 1 );
+   hb_vmPushSymbol( hb_dynsymGet( "_SEVERITY" )->pSymbol );
+   hb_vmPush( pError );
+   hb_vmPushInteger( uiSeverity );
+   hb_vmDo( 1 );
    return pError;
 }
 
 USHORT hb_errGetSubCode( PHB_ITEM pError )
 {
-   PushSymbol( hb_dynsymGet( "SUBCODE" )->pSymbol );
-   Push( pError );
-   Do( 0 );
+   hb_vmPushSymbol( hb_dynsymGet( "SUBCODE" )->pSymbol );
+   hb_vmPush( pError );
+   hb_vmDo( 0 );
    return stack.Return.item.asInteger.value;
 }
 
 PHB_ITEM hb_errPutSubCode( PHB_ITEM pError, USHORT uiSubCode )
 {
-   PushSymbol( hb_dynsymGet( "_SUBCODE" )->pSymbol );
-   Push( pError );
-   PushInteger( uiSubCode );
-   Do( 1 );
+   hb_vmPushSymbol( hb_dynsymGet( "_SUBCODE" )->pSymbol );
+   hb_vmPush( pError );
+   hb_vmPushInteger( uiSubCode );
+   hb_vmDo( 1 );
    return pError;
 }
 
 char * hb_errGetSubSystem( PHB_ITEM pError )
 {
-   PushSymbol( hb_dynsymGet( "SUBSYSTEM" )->pSymbol );
-   Push( pError );
-   Do( 0 );
+   hb_vmPushSymbol( hb_dynsymGet( "SUBSYSTEM" )->pSymbol );
+   hb_vmPush( pError );
+   hb_vmDo( 0 );
    return stack.Return.item.asString.value;
 }
 
 PHB_ITEM hb_errPutSubSystem( PHB_ITEM pError, char * szSubSystem )
 {
-   PushSymbol( hb_dynsymGet( "_SUBSYSTEM" )->pSymbol );
-   Push( pError );
-   PushString( szSubSystem, strlen( szSubSystem ) );
-   Do( 1 );
+   hb_vmPushSymbol( hb_dynsymGet( "_SUBSYSTEM" )->pSymbol );
+   hb_vmPush( pError );
+   hb_vmPushString( szSubSystem, strlen( szSubSystem ) );
+   hb_vmDo( 1 );
    return pError;
 }
 
 USHORT hb_errGetTries( PHB_ITEM pError )
 {
-   PushSymbol( hb_dynsymGet( "TRIES" )->pSymbol );
-   Push( pError );
-   Do( 0 );
+   hb_vmPushSymbol( hb_dynsymGet( "TRIES" )->pSymbol );
+   hb_vmPush( pError );
+   hb_vmDo( 0 );
    return stack.Return.item.asInteger.value;
 }
 
 PHB_ITEM hb_errPutTries( PHB_ITEM pError, USHORT uiTries )
 {
-   PushSymbol( hb_dynsymGet( "_TRIES" )->pSymbol );
-   Push( pError );
-   PushInteger( uiTries );
-   Do( 1 );
+   hb_vmPushSymbol( hb_dynsymGet( "_TRIES" )->pSymbol );
+   hb_vmPush( pError );
+   hb_vmPushInteger( uiTries );
+   hb_vmDo( 1 );
    return pError;
 }
 
@@ -265,25 +265,25 @@ USHORT hb_errGetFlags( PHB_ITEM pError )
 
    /* ; */
 
-   PushSymbol( hb_dynsymGet( "CANRETRY" )->pSymbol );
-   Push( pError );
-   Do( 0 );
+   hb_vmPushSymbol( hb_dynsymGet( "CANRETRY" )->pSymbol );
+   hb_vmPush( pError );
+   hb_vmDo( 0 );
 
    if (stack.Return.item.asLogical.value) uiFlags |= EF_CANRETRY;
 
    /* ; */
 
-   PushSymbol( hb_dynsymGet( "CANSUBSTITUTE" )->pSymbol );
-   Push( pError );
-   Do( 0 );
+   hb_vmPushSymbol( hb_dynsymGet( "CANSUBSTITUTE" )->pSymbol );
+   hb_vmPush( pError );
+   hb_vmDo( 0 );
 
    if (stack.Return.item.asLogical.value) uiFlags |= EF_CANSUBSTITUTE;
 
    /* ; */
 
-   PushSymbol( hb_dynsymGet( "CANDEFAULT" )->pSymbol );
-   Push( pError );
-   Do( 0 );
+   hb_vmPushSymbol( hb_dynsymGet( "CANDEFAULT" )->pSymbol );
+   hb_vmPush( pError );
+   hb_vmDo( 0 );
 
    if (stack.Return.item.asLogical.value) uiFlags |= EF_CANDEFAULT;
 
@@ -294,24 +294,24 @@ USHORT hb_errGetFlags( PHB_ITEM pError )
 
 PHB_ITEM hb_errPutFlags( PHB_ITEM pError, USHORT uiFlags )
 {
-   PushSymbol( hb_dynsymGet( "_CANRETRY" )->pSymbol );
-   Push( pError );
-   PushLogical( uiFlags & EF_CANRETRY );
-   Do( 1 );
+   hb_vmPushSymbol( hb_dynsymGet( "_CANRETRY" )->pSymbol );
+   hb_vmPush( pError );
+   hb_vmPushLogical( uiFlags & EF_CANRETRY );
+   hb_vmDo( 1 );
 
    /* ; */
 
-   PushSymbol( hb_dynsymGet( "_CANSUBSTITUTE" )->pSymbol );
-   Push( pError );
-   PushLogical( uiFlags & EF_CANSUBSTITUTE );
-   Do( 1 );
+   hb_vmPushSymbol( hb_dynsymGet( "_CANSUBSTITUTE" )->pSymbol );
+   hb_vmPush( pError );
+   hb_vmPushLogical( uiFlags & EF_CANSUBSTITUTE );
+   hb_vmDo( 1 );
 
    /* ; */
 
-   PushSymbol( hb_dynsymGet( "_CANDEFAULT" )->pSymbol );
-   Push( pError );
-   PushLogical( uiFlags & EF_CANDEFAULT );
-   Do( 1 );
+   hb_vmPushSymbol( hb_dynsymGet( "_CANDEFAULT" )->pSymbol );
+   hb_vmPush( pError );
+   hb_vmPushLogical( uiFlags & EF_CANDEFAULT );
+   hb_vmDo( 1 );
 
    /* ; */
 
