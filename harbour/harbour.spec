@@ -32,7 +32,7 @@
 %define hb_lnkso yes
 %define hb_libs  vm pp rtl rdd dbfdbt dbffpt dbfcdx dbfntx macro common lang codepage gtnul gtcrs gtsln gtcgi gtstd gtpca odbc ct debug profiler
 %define hb_cc    export HB_COMPILER=gcc
-%define hb_cflag export C_USR="-DHB_FM_STATISTICS_OFF -O3"
+%define hb_cflag export C_USR="-DHB_FM_STATISTICS_OFF -O2"
 %define hb_arch  export HB_ARCHITECTURE=linux
 %define hb_cmt   export HB_MT=%{hb_mt}
 %define hb_cgt   export HB_GT_LIB=gt%{hb_gt}

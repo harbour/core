@@ -9,6 +9,11 @@
 */
 
 2004-07-18 19:50 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * harbour.spec
+    * Changed Optimisation level for rpm package to -O2,
+      because there are pboblems with -O3 and gcc 3.3 on Mandrake Linux
+
+2004-07-18 19:50 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * contrib/mysql/mysql.c
     * Some fixes and formatting.
 
