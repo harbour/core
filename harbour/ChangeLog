@@ -7,6 +7,18 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+         hrbLib :=  __hrbLoad( "Mylib.hrb" )
+         hFu1   :=  __hrbGetFu( hrbLib,"fu1" )
+         __hrbDoFu( hFu1 )
+         ...
+         __hrbUnload( hrbLib )
+
+2002-02-01 10:30 UTC-0300 Horacio Roldán <harbour_ar@yahoo.com.ar>
+   * utils/hbmake/hbmake.prg
+     utils/hbmake/hbmutils.prg
+     * Better support for big project(Read and Generations)
+   From Luiz Rafael Culik <culik@sl.conex.net>
+
 2002-02-01 12:10 UTC+0100 Ignacio Ortiz <ignacio@fivetech.com>
    * source/rtl/transfrm.c
      * Memory buffer overflow reported by Lorenzo Fiorini
