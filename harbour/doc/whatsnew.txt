@@ -1,3 +1,24 @@
+Build #29 27 July 1999
+- Support for these compilers:
+   C++ Builder
+   DJGPP for Dos/Windows
+   MacIntosh
+   BC 3.1, 4.0, 4.5, 5.2
+   GCC OS/2
+   GCC Win32
+   MS VC
+   GCC Linux / Unix
+   IBM C
+   Watcom C/C++ 10
+- New INI file support
+- Enhanced support for MEMVAR's
+- Added support for PUBLIC, PRIVATE and PARAMETERS
+- Added support for empty arguments in functions.
+- Added colors support
+- Added support for concatenation operator "-"
+- Added support to generate runtime errors in functions
+
+
 Build #28 18 July 1999
 
 - Added support for MS Visual C++

@@ -449,6 +449,9 @@ Mon Jul 26 11:42:11 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
    * source/rdd/nulsys/nulsys.prg
      New file. Allow compile without RDD driver
 
+19990727-21:11 CET Patrick Mast <harbour@PatrickMast.com>
+  * Release of Build 29
+
 19990724-11:50 CET Patrick Mast <harbour@PatrickMast.com>
   * Makefile.b16 and Makefile.b32
     added -DHARBOUR_USE_GTAPI swicth
