@@ -1,3 +1,11 @@
+19990923-13:58 GMT+3 Alexander Kresin
+  * source/hbpp/hbpp.c
+    * Fixed a bug with clauses definition order.
+      Now we can write
+        use ... alias ... new shared
+          or
+        use ... shared new alias ... , etc.
+
 19990923-11:40 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/rtl/extend.c

@@ -69,7 +69,7 @@ int WorkMarkers( char**, char**, char*, int* );
 int getExpReal ( char *, char **, int, int );
 int isExpres ( char* );
 int TestOptional( char*, char* );
-void SkipOptional( char**, char*, int* );
+void SkipOptional( char** );
 
 DEFINES* DefSearch(char *);
 COMMANDS* ComSearch( char *, COMMANDS* );
@@ -87,13 +87,13 @@ int strocpy (char*, char* );
 int stroncpy (char*, char*, int);
 int strincpy (char*, char*);
 int truncmp (char*, char**, int);
-int strincmp (char*, char** );
+int strincmp (char*, char**);
 int strolen ( char* );
 void stroupper ( char* );
 int strotrim ( char* );
 char* strodup ( char * );
 int NextWord ( char**, char*, int);
-int NextName ( char**, char*, char**);
+int NextName ( char**, char* );
 int NextParm ( char**, char* );
 int Include( char *, PATHNAMES *, FILE** );
 BOOL OpenInclude( char *, PATHNAMES *, FILE**, BOOL bStandardOnly );
@@ -156,7 +156,7 @@ int ParseDirective( char* sLine )
    int i;
    FILE* handl_i;
 
-   i = NextName( &sLine, sDirective, NULL );
+   i = NextName( &sLine, sDirective );
    stroupper( sDirective );
 
    SKIPTABSPACES(sLine);
@@ -242,33 +242,38 @@ int ParseDirective( char* sLine )
 
 int ParseDefine( char* sLine)
 {
- char defname[MAX_NAME], pars[MAX_NAME];
- int i, npars = -1;
- DEFINES *lastdef;
+   char defname[MAX_NAME], pars[MAX_NAME];
+   int i, npars = -1;
+   DEFINES *lastdef;
 
- NextName( &sLine, defname, NULL );
- if ( *sLine == '(' ) /* If pseudofunction was found */
- {
-  sLine++; i = 0;
-  npars = 0;
-  while ( *sLine != '\0' && *sLine != ')')
-  {
-   if ( *sLine == ',' ) npars++;
-   if ( *sLine != ' ' && *sLine != '\t' ) *(pars+i++) = *sLine;
-   sLine++;
-  }
-  if ( i > 0 ) npars++;
-  *(pars+i) = '\0';
-  sLine++;
- }
- SKIPTABSPACES(sLine);
+   SKIPTABSPACES( sLine );
+   if( isalpha( *sLine ) || *sLine == '_' || *sLine > 0x7e )
+   {
+      NextName( &sLine, defname );
+      if ( *sLine == '(' ) /* If pseudofunction was found */
+      {
+         sLine++; i = 0;
+         npars = 0;
+         while ( *sLine != '\0' && *sLine != ')')
+         {
+            if ( *sLine == ',' ) npars++;
+            if ( *sLine != ' ' && *sLine != '\t' ) *(pars+i++) = *sLine;
+            sLine++;
+         }
+         if ( i > 0 ) npars++;
+         *(pars+i) = '\0';
+         sLine++;
+      }
+      SKIPTABSPACES(sLine);
 
- lastdef = AddDefine ( defname, ( *sLine == '\0' )? NULL : sLine );
+      lastdef = AddDefine ( defname, ( *sLine == '\0' )? NULL : sLine );
 
- lastdef->npars = npars;
- lastdef->pars = ( npars == 0 )? NULL : strodup ( pars );
+      lastdef->npars = npars;
+      lastdef->pars = ( npars == 0 )? NULL : strodup ( pars );
 
- return 0;
+      return 0;
+   }
+   else GenError( _szPErrors, 'P', ERR_DEFINE_ABSENT, NULL, NULL );
 }
 
 DEFINES* AddDefine ( char* defname, char* value )
@@ -560,7 +565,7 @@ int ParseExpression( char* sLine, char* sOutLine )
          }
          else
          {   /* Look for macros from #define      */
-            while ( ( lenToken = NextName( &ptri, sToken, NULL ) ) > 0 )
+            while ( ( lenToken = NextName( &ptri, sToken ) ) > 0 )
             if ( (stdef=DefSearch(sToken)) != NULL )
             {
                ptrb = ptri - lenToken;
@@ -621,7 +626,7 @@ int ParseExpression( char* sLine, char* sOutLine )
                ptri = sLine + isdvig;
                SKIPTABSPACES( ptri );
                if ( ISNAME(*ptri) )
-                  NextName( &ptri, sToken, NULL);
+                  NextName( &ptri, sToken );
                else
                {
                   i = 0;
@@ -814,7 +819,7 @@ int WorkTranslate ( char* ptri, char* ptro, COMMANDS *sttra, int *lens )
 int CommandStuff ( char *ptrmp, char *inputLine, char * ptro, int *lenres, int com_or_tra, int com_or_xcom )
 {
   int endTranslation = FALSE, ipos;
-  char *lastopti[2];
+  char *lastopti[2], *strtopti = NULL, *strtptri = NULL;
   char *ptri = inputLine, *ptr, tmpname[MAX_NAME];;
 
   numBrackets = 0;
@@ -826,13 +831,20 @@ int CommandStuff ( char *ptrmp, char *inputLine, char * ptro, int *lenres, int c
       SKIPTABSPACES( ptrmp );
       switch ( *ptrmp ) {
        case '[':
+         if( !numBrackets && !strtopti )
+            strtopti = ptrmp;
+         if( !numBrackets && strtopti && strtptri != ptri && ISNAME( *ptri ) )
+         {
+            strtptri = ptri;
+            ptrmp = strtopti;
+         }
          numBrackets++;
          aIsRepeate[ Repeate ] = 0;
          lastopti[Repeate++] = ptrmp;
          ptrmp++;
          break;
        case ']':
-         if ( Repeate )
+         if( Repeate )
          {
             Repeate--;
             if( aIsRepeate[ Repeate ] )
@@ -840,16 +852,17 @@ int CommandStuff ( char *ptrmp, char *inputLine, char * ptro, int *lenres, int c
                if( ISNAME(*ptri) )
                {
                   ptr = ptri;
-                  ipos = NextName( &ptr, tmpname, NULL );
+                  ipos = NextName( &ptr, tmpname );
                   ipos = md_strAt( tmpname, ipos, ptrmp, TRUE );
                   if( ipos && TestOptional( ptrmp+1, ptrmp+ipos-2 ) )
                   {
                      ptrmp = lastopti[Repeate];
                      ptrmp++;
                      Repeate++;
-                     SkipOptional( &ptrmp, ptro, lenres );
+                     SkipOptional( &ptrmp );
                      numBrackets++;
                      ptrmp++;
+                     strtptri = ptri;
                   }
                   else
                      ptrmp = lastopti[Repeate];
@@ -863,23 +876,21 @@ int CommandStuff ( char *ptrmp, char *inputLine, char * ptro, int *lenres, int c
          else { numBrackets--; ptrmp++; }
          break;
        case ',':
+         if( !numBrackets ) strtopti = NULL;
          if ( *ptri == ',' ) { ptrmp++; ptri++; }
          else
          {
            if ( numBrackets )
-           {
-             SkipOptional( &ptrmp, ptro, lenres );
-           }
+              SkipOptional( &ptrmp );
            else return -1;
          }
          break;
        case '\1':  /*  Match marker */
+         if( !numBrackets ) strtopti = NULL;
          if ( !WorkMarkers( &ptrmp, &ptri, ptro, lenres ) )
          {
            if ( numBrackets )
-           {
-             SkipOptional( &ptrmp, ptro, lenres );
-           }
+              SkipOptional( &ptrmp );
            else return -1;
          }
          break;
@@ -889,13 +900,12 @@ int CommandStuff ( char *ptrmp, char *inputLine, char * ptro, int *lenres, int c
          else endTranslation = TRUE;
          break;
        default:    /*   Key word    */
+         if( !numBrackets ) strtopti = NULL;
          ptr = ptrmp;
          if ( *ptri == ',' || truncmp(ptri, &ptrmp, !com_or_xcom ) )
          {
            if ( numBrackets )
-           {
-              SkipOptional( &ptrmp, ptro, lenres );
-           }
+              SkipOptional( &ptrmp );
            else return -1;
          }
          else if ( *ptri != ',' ) ptri += (ptrmp - ptr);
@@ -914,7 +924,7 @@ int CommandStuff ( char *ptrmp, char *inputLine, char * ptro, int *lenres, int c
         switch ( *ptrmp ) {
           case '[':
             ptrmp++;
-            SkipOptional( &ptrmp, ptro, lenres );
+            SkipOptional( &ptrmp );
             ptrmp++;
             break;
           case ']': ptrmp++; break;
@@ -924,6 +934,7 @@ int CommandStuff ( char *ptrmp, char *inputLine, char * ptro, int *lenres, int c
     }
     while ( *ptrmp != '\0' );
   }
+  SearnRep( "\1","",0,ptro,lenres);
 
   *(ptro + *lenres) = '\0';
   *lenres = RemoveSlash( ptro );   /* Removing '\' from result string */
@@ -988,7 +999,7 @@ int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres )
   {
     if ( numBrackets )
     {
-      SearnRep( exppatt,"",0,ptro,lenres);
+//      SearnRep( exppatt,"",0,ptro,lenres);
       return 0;
     }
   }
@@ -1010,7 +1021,7 @@ int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres )
       {
         if ( numBrackets )
         {
-          SearnRep( exppatt,"",0,ptro,lenres);
+//          SearnRep( exppatt,"",0,ptro,lenres);
           return 0;
         }
       }
@@ -1029,7 +1040,7 @@ int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres )
       {
         if ( numBrackets )
         {
-          SearnRep( exppatt,"",0,ptro,lenres);
+//          SearnRep( exppatt,"",0,ptro,lenres);
           return 0;
         }
       }
@@ -1039,7 +1050,7 @@ int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres )
    {
      if ( numBrackets )
      {
-       SearnRep( exppatt,"",0,ptro,lenres);
+//       SearnRep( exppatt,"",0,ptro,lenres);
        return 0;
      }
      else lenreal = 0;
@@ -1103,7 +1114,7 @@ int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres )
    {  /* If restricted match marker doesn't correspond to real parameter */
       if ( numBrackets )
       {
-        SearnRep( exppatt,"",0,ptro,lenres);
+//        SearnRep( exppatt,"",0,ptro,lenres);
         return 0;
       }
       else return 0;
@@ -1240,6 +1251,7 @@ int TestOptional( char *ptr1, char *ptr2 )
             nbr--;
             flagname = 0;
          }
+         else return 0;
       }
       else if( *ptr1 == '\1' && *(ptr1+2) == '2' && nbr ) statevar = 1;
       else if( *ptr1 == '>' && statevar ) statevar = 0;
@@ -1250,32 +1262,28 @@ int TestOptional( char *ptr1, char *ptr2 )
       }
       ptr1++;
    }
+/*   if( !flagname )
+      while( *ptr1 != ']' )
+      {
+         if( *ptr1 == '[' || *ptr1 == '\0' ) return 0;
+         ptr1++;
+      } */
    return !flagname;
 }
 
-void SkipOptional( char** ptri, char *ptro, int* lenres )
+void SkipOptional( char** ptri )
 {
    int nbr = 0;
-   char exppatt[MAX_NAME];
-   int lenpatt;
 
-   while ( ISNAME(**ptri) ) (*ptri)++;
-   SKIPTABSPACES( *ptri );
    while ( **ptri != ']' || nbr )
    {
       switch ( **ptri ) {
       case '[':  nbr++; break;
       case ']':  nbr--; break;
       case '\1':
-/*         if ( numBrackets < 2 ) */
-/*         { */
-            for ( lenpatt=0; lenpatt<4; lenpatt++ )
-               *(exppatt+lenpatt) = *((*ptri)++);
-            (*ptri)--;
-            if ( exppatt[2] == '2' )
+         (*ptri) += 3;
+         if ( *(*ptri-1) == '2' )
             while ( **ptri != '>' ) (*ptri)++;
-            SearnRep( exppatt,"",0,ptro,lenres);
-/*         } */
          break;
       }
       (*ptri)++;
@@ -1296,7 +1304,7 @@ void SearnRep( char *exppatt,char *expreal,int lenreal,char *ptro, int *lenres)
    char expnew[MAX_NAME];
    char *ptr, *ptr2, *ptrOut = ptro;
 
-   while ( (ifou = pp_strAt( exppatt, 2, ptrOut, *lenres-isdvig )) > 0 )
+   while ( (ifou = pp_strAt( exppatt, (*(exppatt+1))? 2:1, ptrOut, *lenres-isdvig )) > 0 )
    {
       rezs = 0;
       ptr = ptrOut + ifou - 2;
@@ -1368,7 +1376,7 @@ void SearnRep( char *exppatt,char *expreal,int lenreal,char *ptro, int *lenres)
       }
       if ( !rezs )
       {
-         if ( *(ptrOut + ifou + 2) != '0' )
+         if ( *(ptrOut + ifou + 2) != '0' && *(exppatt+1) )
          {
             if ( lastchar == '0' ) lastchar = *(ptrOut + ifou + 2);
             if ( lastchar != *(ptrOut + ifou + 2) )
@@ -1895,7 +1903,7 @@ int NextWord ( char** sSource, char* sDest, int lLower )
  return i;
 }
 
-int NextName ( char** sSource, char* sDest, char **sOut )
+int NextName ( char** sSource, char* sDest )
 {
  int lenName = 0, State = STATE_NORMAL;
  while ( **sSource != '\0' && ( !ISNAME(**sSource) || State != STATE_NORMAL ) )
@@ -1907,13 +1915,11 @@ int NextName ( char** sSource, char* sDest, char **sOut )
   else if ( **sSource == '\"' ) State = STATE_QUOTE2;
   else if ( **sSource == '\'' ) State = STATE_QUOTE1;
 
-  if ( sOut !=NULL ) *(*sOut)++ = **sSource;
   (*sSource)++;
  }
 
  while ( **sSource != '\0' && ISNAME(**sSource) )
   {
-   if ( sOut !=NULL ) *(*sOut)++ = **sSource;
    *sDest++ = *(*sSource)++;
    lenName++;
   }
