@@ -68,6 +68,7 @@
 #include "hbapierr.h"
 #include "hbdate.h"
 #include "hbset.h"
+#include "hbapicdp.h"
 
 /* Picture function flags */
 #define PF_LEFT       0x0001   /* @B */
@@ -84,6 +85,9 @@
 #define PF_NUMDATE    0x0400   /* Internal flag. Ignore decimal dot */
 #define PF_WIDTH      0x0800   /* @S */
 #define PF_PARNEGWOS  0x1000   /* @) Similar to PF_PARNEG but without leading spaces */
+
+extern PHB_CODEPAGE s_cdpage;
+#define TOUPPER(c)    ((s_cdpage->nChars)? (char)s_cdpage->s_upper[c&255] : toupper(c))
 
 HB_FUNC( TRANSFORM )
 {
@@ -230,7 +234,7 @@ HB_FUNC( TRANSFORM )
                      /* Upper */
                      case '!':
                      {
-                        szResult[ ulResultPos++ ] = toupper( szExp[ ulExpPos ] );
+                        szResult[ ulResultPos++ ] = TOUPPER( szExp[ ulExpPos ] );
                         ulExpPos++;
                         bAnyPic = TRUE;
                         break;
@@ -248,7 +252,7 @@ HB_FUNC( TRANSFORM )
                      case 'x':
                      case 'X':
                      {
-                        szResult[ ulResultPos++ ] = ( uiPicFlags & PF_UPPER ) ? toupper( szExp[ ulExpPos ] ) : szExp[ ulExpPos ];
+                        szResult[ ulResultPos++ ] = ( uiPicFlags & PF_UPPER ) ? TOUPPER( szExp[ ulExpPos ] ) : szExp[ ulExpPos ];
                         ulExpPos++;
                         bAnyPic = TRUE;
                         break;
@@ -335,12 +339,12 @@ HB_FUNC( TRANSFORM )
                         break;
                      }
                      default:
-                        szResult[ ulResultPos++ ] = ( uiPicFlags & PF_UPPER ) ? toupper( *szExp ) : *szExp;
+                        szResult[ ulResultPos++ ] = ( uiPicFlags & PF_UPPER ) ? TOUPPER( *szExp ) : *szExp;
                   }
                }
                else
                {
-                  szResult[ ulResultPos++ ] = ( uiPicFlags & PF_UPPER ) ? toupper( *szExp ) : *szExp;
+                  szResult[ ulResultPos++ ] = ( uiPicFlags & PF_UPPER ) ? TOUPPER( *szExp ) : *szExp;
                }
                szExp++;
             }
@@ -350,7 +354,7 @@ HB_FUNC( TRANSFORM )
          {
             while( ulExpPos++ < ulExpLen )
             {
-               szResult[ ulResultPos++ ] = ( uiPicFlags & PF_UPPER ) ? toupper( *szExp ) : *szExp;
+               szResult[ ulResultPos++ ] = ( uiPicFlags & PF_UPPER ) ? TOUPPER( *szExp ) : *szExp;
                szExp++;
             }
          }

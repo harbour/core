@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-04-01 16:12 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/rtl/transfrm.c
+    * Transform() now uses codepages while converting to upper case.
+
 2003-03-27 11:34 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
   * include/hbapi.h
   * source/vm/classes.c
@@ -1328,12 +1332,6 @@
   * source/rtl/dbdelim.prg
     ! Code fix to handle the field delimiters, provided by the
       APPEND FROM code author, Marco Braida <marcobra@elart.it>.
-
-
-
-
-
-
 
 2006-02-15 13:50 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/hvm.c
