@@ -7,6 +7,31 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+     * Fixed bug when browsing vars
+       reported by Jorge A. Giraldo
+
+    * METHOD ::ParsePict() - The change is because if ::Original it is not 
+
+  * contrib\delphi\hbdll\start.bat
+    - METHOD ::Undo() - Delete assignment to ::buffer because 
+  * contrib\delphi\hbdll\errorsys.prg
+    * For a DLL there is not main procedure, there seems to be something
+    - METHOD ::VarPut() - Delete ::nDispLen := NIL line, because 
+      called stack.  A specific workaround is provided to fix the problem.
+                      - Revert changes of Ignacio Ortiz because the 
+    * Id included
+  * contrib\delphi\hbdll\Main.pas
+    * Id included
+    + In case of an error, the QUIT from the DLL has been moved to Delphi.
+    + Other small changes
+  * contrib\delphi\hbdll\MyProg.prg
+          Only ::ParsePict() can load a value that can differ of 
+
+2002-02-21 06:00 UTC-0300 Walter Negro <anegro@overnet.com.ar>
+    ! METHOD ::KillFocus() - Change position of lines, hasfocus should be 
+    * METHOD ::ParsePict() - The change is because if ::Original it is not
+          This makes that in numeric fields, points or comas are not 
+
     - METHOD ::Undo() - Delete assignment to ::buffer because
           ::VarPut( ::Original, .t. ) makes this assignment.
 
