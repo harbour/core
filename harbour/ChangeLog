@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+  * contrib/libct/keyset.c
+    ! DOS BCC fixes.
+  * contrib/libgt/Makefile
+  * contrib/libgt/makefile.bc
   * contrib/libgt/makefile.vc
     ! Renamed the GT library file from libgt to gt in order to match
       the library file renaming for the libct and libmisc libraries.

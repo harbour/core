@@ -56,39 +56,49 @@
  * Clipper is a bit schizoid with the treatment of file attributes, but we've
  * emulated that weirdness here for your viewing amusement.
  *
- * In Clippers' homeworld of DOS, there are essentially 5 basic attributes:
- * 'A'rchive, 'H'idden, 'S'ystem, 'R'eadonly and 'D'irectory.  In addition, a
- * file can have no attributes, and only 1 file can have the 'V'olume label.
+ * In Clippers' homeworld of DOS, there are 5 basic attributes: 'A'rchive,
+ * 'H'idden, 'S'ystem, 'R'eadonly and 'D'irectory.  In addition, a file can
+ * have no attributes, and only 1 file per physical partition can have the
+ * 'V'olume label.
  *
- * For a given file request, you will receive any files that match the
- * passed filemask.  Included in this list are files which have attributes
- * matching the requested attribute as well as files that have no attribute,
- * or that have the 'A'rchive, or 'R'eadOnly attribute.
+ * For a given file request, it is implied that the attribute mask includes
+ * all attributes except 'H'idden, 'S'ystem and 'D'irectory and 'V'olume.
+ * The returned file list will always include (for instance) 'R'eadOnly files
+ * unless they also happen to be 'H'idden and that attribute was not requested.
  *
  * The exception is Directory entries - these will always be excluded
  * even if they have the requested bit set. (Unless of course, you request "D"
  * as an attribute as well)
  *
- * The only valid characters that can be passed as an attribute request are
- * any of "DHS". Anything else is already implied, so it is ignored. Except
- * under NT, which may accept other attributes, but it is still a work in
- * progress - NT that is ;-).
- *
- * "V" is also valid, but is a special case - you will get back 1 entry only
- * that describes the volume label for the drive implied by the filemask.
+ * The only valid characters that can be passed as an attribute request then,
+ * are any of "DHSV". Anything else is already implied, so it is ignored. "V"
+ * is a special case - you will get back the entry that describes the volume
+ * label for the drive implied by the filemask.
  *
  * Differences from the 'standard':
- * Where supported, filenames will be returned in the same case as they
- * are stored in the directory.  Clipper (and VO too) will convert the
- * names to upper case.
- * Where supported, filenames will be the full filename as supported by
- * the os in use.  Under an MS Windows implimentation, an optional
- * 3rd parameter to Directory will allow you to receive the normal '8.3'
- * filename.
+ * - Where supported, filenames will be returned in the same case as they
+ *   are stored in the directory.  Clipper (and VO too) will convert the
+ *   names to upper case.
+ * - Where supported, filenames will be the full filename as supported by
+ *   the OS in use.
+ * - Where supported, there are a number of additional file attributes
+ *   returned.  They are:
+ *       'I' - DEVICE      File is a device
+ *       'T' - TEMPORARY   File is a Temporary file
+ *       'P' - SPARSE      File is Sparse
+ *       'L' - REPARSE     File/Dir is a reparse point
+ *       'C' - COMPRESSED  File/Dir is compressed
+ *       'O' - OFFLINE     File/Dir is not online
+ *       'X' - NOTINDEXED  Exclude File/Dir from Indexing Service
+ *       'E' - ENCRYPTED   File/Dir is Encrypted
+ *       'M' - VOLCOMP     Volume Supports Compression
  *
- * TODO: - Volume label support
+ * TODO: - Under an MS Windows implimentation, an optional 3rd parameter to
+ *         Directory to allow you to receive the compatible '8.3' filename.
  *       - check that path support vis stat works on all platforms
  *       - UNC Support? ie: dir \\myserver\root
+ *
+ * TOFIX:- Volume label support
  *
  */
 
