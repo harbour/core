@@ -16,6 +16,7 @@ LIBS=\
         debug \
 	rdd \
 	vm \
+	rdd \
 	rtl \
 	hbpp \
 

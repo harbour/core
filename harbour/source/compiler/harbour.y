@@ -3176,7 +3176,7 @@ void GenExterns( void ) /* generates the symbols for the EXTERN names */
   PEXTERN pDelete;
 
   if( _bDebugInfo )
-     AddExtern( yy_strdup( "DEBUGGER" ) );
+     AddExtern( yy_strdup( "__DBGENTRY" ) );
 
   while( pExterns )
   {

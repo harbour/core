@@ -39,26 +39,25 @@
 #include "itemapi.h"
 #include "errorapi.h"
 #include "set.h"
-#include "init.h"
-
-#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
-static double infinity = 0;
-#endif
 
 #define HB_ISSPACE(c) ((c) == 9 || (c) == 10 || (c) == 13 || (c) == 32)
 
 /* DJGPP can sprintf a float that is almost 320 digits long */
 #define HB_MAX_DOUBLE_LENGTH 320
 
-/* The rest of functions is pulled automatically by initsymb.c */
-
 #ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+
+#include "init.h"
+
+static double infinity = 0;
+
 HB_CALL_ON_STARTUP_BEGIN( Strings_InitInfinity )
    infinity = -log( 0 );
 HB_CALL_ON_STARTUP_END( Strings_InitInfinity )
 #if ! defined(__GNUC__)
 #pragma startup Strings_InitInfinity
 #endif
+
 #endif
 
 BOOL hb_strEmpty( char * szText, ULONG ulLen )

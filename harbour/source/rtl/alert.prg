@@ -13,8 +13,6 @@
 #include "box.ch"
 #include "inkey.ch"
 
-Static snDcount
-
 // ; TOFIX: Clipper defines a clipped window for Alert()
 // ; Clipper will return NIL if the first parameter is not a string, but
 //   this is not documented. This implementation converts the first parameter
@@ -35,6 +33,9 @@ FUNCTION Alert(xMessage, aOptions, cColorNorm, nDelay)
    LOCAL nOldCol
    LOCAL nOldCursor
    LOCAL cOldScreen
+
+   LOCAL nOldDispCount
+   LOCAL nCount
 
    /* TOFIX: Clipper decides at runtime, whether the GT is linked in, */
    /*        if it is not, the console mode is choosed here */
@@ -148,8 +149,6 @@ FUNCTION Alert(xMessage, aOptions, cColorNorm, nDelay)
    nCurrent := nInitCol + Int((nWidth - nOpWidth) / 2) + 2
    AEval(aOptionsOK, { |x| AAdd(aPos, nCurrent), AAdd(aHotKey, Upper(Left(x, 1))), nCurrent += Len(x) + 4 })
 
-   PreExt()
-
    IF lConsole
 
       FOR iEval := 1 TO Len(aSay)
@@ -169,6 +168,13 @@ FUNCTION Alert(xMessage, aOptions, cColorNorm, nDelay)
       OutStd(") ")
 
    ELSE
+
+      /* PreExt */
+      nCount := nOldDispCount := DispCount()
+
+      DO WHILE nCount-- != 0
+         DispEnd()
+      ENDDO
 
       /* save status */
       nOldRow := Row()
@@ -245,22 +251,11 @@ FUNCTION Alert(xMessage, aOptions, cColorNorm, nDelay)
       SetCursor(nOldCursor)
       SetPos(nOldRow, nOldCol)
 
+      /* PostExt */
+      DO WHILE nOldDispCount-- != 0
+         DispBegin()
+      ENDDO
+
    ENDIF
 
-   PostExt()
-
    RETURN nChoice
-
-Proc PreExt
-   Local nCount := snDCount := DispCount()
-
-   while ncount-- != 0
-      DispEnd()
-   Enddo
-
-Proc PostExt
-   Local nCount
-
-   While snDcount-- != 0
-      DispBegin()
-   Enddo

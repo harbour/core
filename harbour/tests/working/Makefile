@@ -10,6 +10,7 @@ LIBS=\
         rtl \
         rdd \
         vm \
+        rdd \
         rtl \
         hbpp \
         runner \
@@ -142,7 +143,6 @@ PRG_SOURCES=\
         testwarn.prg \
         tstcolor.prg \
         transdef.prg \
-        transfrm.prg \
         val.prg \
         version.prg \
         while.prg \

@@ -39,7 +39,6 @@
 #include "pcode.h"
 #include "set.h"
 #include "inkey.h"
-#include "init.h"
 
 extern void hb_consoleInitialize( void );
 extern void hb_consoleRelease( void );
@@ -57,18 +56,6 @@ typedef struct _SYMBOLS
 
 extern HARBOUR HB_ERRORSYS( void );
 extern HARBOUR HB_ERRORNEW( void );
-
-HARBOUR HB_EVAL( void );         /* Evaluates a codeblock from Harbour */
-HARBOUR HB_LEN( void );          /* Evaluates a codeblock from Harbour */
-HARBOUR HB_EMPTY( void );        /* fixed entry point by now */
-HARBOUR HB_VALTYPE( void );      /* returns a string description of a value */
-HARBOUR HB_ERRORBLOCK( void );
-HARBOUR HB_PROCNAME( void );
-HARBOUR HB_PROCLINE( void );
-HARBOUR HB___QUIT( void );
-HARBOUR HB_ERRORLEVEL( void );
-HARBOUR HB_PCOUNT( void );
-HARBOUR HB_PVALUE( void );
 
 static void    hb_vmAliasPop( void );        /* pops the workarea number form the eval stack */
 static void    hb_vmAliasPush( void );       /* pushes the current workarea number */

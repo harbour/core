@@ -5,6 +5,10 @@
 #ifndef HB_DEFS_H_
 #define HB_DEFS_H_
 
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <limits.h>
 
 #if defined(__IBMCPP__)

@@ -25,11 +25,8 @@
  *
  */
 
-#include <stdio.h>
-#include <string.h>
-#include "hbdefs.h"
-#include "compiler.h"
 #include "extend.h"
+#include "compiler.h"
 #include "pcode.h"
 
 static void CompiledFileName( FILE * hObjFile, char * szFileName );
@@ -56,7 +53,8 @@ static void GenerateSymbolsSegment( FILE * hObjFile );
 
 extern FUNCTIONS functions, funcalls;
 extern SYMBOLS symbols;
-extern int _bQuiet, _bStartProc;
+extern BOOL _bQuiet;
+extern BOOL _bStartProc;
 
 static BYTE prgFunction[] = { 0x68, 0x00, 0x00, 0x00, 0x00, 0x68, 0x00, 0x00, 0x00,
                               0x00, 0xE8, 0x00, 0x00, 0x00, 0x00, 0x83, 0xC4, 0x08, 0xC3 };
