@@ -1,3 +1,9 @@
+19990804-00:40 EDT Paul Tucker <ptucker@sympatico.ca>
+   * source/rtl/gtwin.c
+      * reduced the internal buffering to 1 level to improve speed.
+   * source/rtl/gtapi.c
+      * commented out dispbegin calls in gtbox (for now!)
+
 Wed Aug 04 12:25:12 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* source/rdd/dbcmd.c: 

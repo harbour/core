@@ -105,42 +105,6 @@ void hb_gt_SetPos(char cRow, char cCol)
   LOG("..  Called SetConsoleCursorPosition()");
 }
 
-void hb_gt_SetCursorStyle(int style)
-{
-  CONSOLE_CURSOR_INFO cci;
-
-  LOG("SetCursorStyle");
-  GetConsoleCursorInfo(HCursor, &cci);
-  cci.bVisible = 1; /* always visible unless explicitly request off */
-  switch (style)
-    {
-    case SC_NONE:
-      cci.bVisible = 0;
-      break;
-
-    case SC_INSERT:
-      cci.dwSize = 50;
-      break;
-
-    case SC_SPECIAL1:
-      cci.dwSize = 99;
-      break;
-
-    case SC_SPECIAL2:
-      cci.dwSize = 66;
-      /* In their infinite wisdom, MS doesn't support cursors that
-         don't start at the bottom of the cell */
-      break;
-    case SC_NORMAL:
-    default:           /* traps for invalid values */
-      cci.dwSize = 25; /* this was 12, but when used in full screen dos window
-                          cursor state is erratic  - doesn't turn off, etc. */
-      break;
-
-    }
-  SetConsoleCursorInfo(HCursor, &cci);
-}
-
 int hb_gt_GetCursorStyle(void)
 {
   CONSOLE_CURSOR_INFO cci;
@@ -178,6 +142,43 @@ int hb_gt_GetCursorStyle(void)
     }
 
   return(rc);
+}
+
+void hb_gt_SetCursorStyle(int style)
+{
+  CONSOLE_CURSOR_INFO cci;
+
+  LOG("SetCursorStyle");
+  GetConsoleCursorInfo(HCursor, &cci);
+  cci.bVisible = 1; /* always visible unless explicitly request off */
+  switch (style)
+    {
+    case SC_NONE:
+      cci.bVisible = 0;
+      break;
+
+    case SC_INSERT:
+      cci.dwSize = 50;
+      break;
+
+    case SC_SPECIAL1:
+      cci.dwSize = 99; 
+      break;
+
+    case SC_SPECIAL2:
+      cci.dwSize = 66;
+      /* In their infinite wisdom, MS doesn't support cursors that
+         don't start at the bottom of the cell */
+      break;
+    case SC_NORMAL:
+    default:           /* traps for invalid values */
+      cci.dwSize = 25; /* this was 12, but when used in full screen dos window
+                          cursor state is erratic  - doesn't turn off, etc. */
+      break;
+
+    }
+   SetConsoleCursorInfo(HCursor, &cci);
+
 }
 
 void hb_gt_Puts(char cRow, char cCol, char attr, char *str, int len)
@@ -365,39 +366,43 @@ void hb_gt_DispBegin(void)
   COORD coBuf;                        /* the size of the buffer to read into */
   CHAR_INFO *pCharInfo;       /* buffer to store info from ReadConsoleOutput */
   SMALL_RECT srWin;                         /* source rectangle to read from */
+  USHORT uiCount;
 
-  srWin.Top    = srWin.Left = 0;
-  srWin.Right  = (coBuf.X = hb_gt_GetScreenWidth()) -1;
-  srWin.Bottom = (coBuf.Y = hb_gt_GetScreenHeight()) -1;
+  if( ( uiCount = hb_gtDispCount() ) == 1)
+  {
+    srWin.Top    = srWin.Left = 0;
+    srWin.Right  = (coBuf.X = hb_gt_GetScreenWidth()) -1;
+    srWin.Bottom = (coBuf.Y = hb_gt_GetScreenHeight()) -1;
 
-  /* allocate a buffer for the screen rectangle */
-  pCharInfo = (CHAR_INFO *)hb_xgrab(coBuf.X * coBuf.Y * sizeof(CHAR_INFO));
+    /* allocate a buffer for the screen rectangle */
+    pCharInfo = (CHAR_INFO *)hb_xgrab(coBuf.X * coBuf.Y * sizeof(CHAR_INFO));
 
-  hb_gt_ScreenBuffer( (ULONG)HOutput );            /* store current handle   */
+    hb_gt_ScreenBuffer( (ULONG)HOutput );          /* store current handle   */
 
-  /* read the screen rectangle into the buffer */
-  ReadConsoleOutput(HOutput,                       /* current screen handle  */
-               pCharInfo,                          /* transfer area          */
-               coBuf,                          /* size of destination buffer */
-               coDest,                 /* upper-left cell to write data to   */
-               &srWin);              /* screen buffer rectangle to read from */
+    /* read the screen rectangle into the buffer */
+    ReadConsoleOutput(HOutput,                     /* current screen handle  */
+                 pCharInfo,                        /* transfer area          */
+                 coBuf,                        /* size of destination buffer */
+                 coDest,               /* upper-left cell to write data to   */
+                 &srWin);            /* screen buffer rectangle to read from */
 
-  HOutput = CreateConsoleScreenBuffer(
+    HOutput = CreateConsoleScreenBuffer(
                GENERIC_READ    | GENERIC_WRITE,    /* Access flag            */
                FILE_SHARE_READ | FILE_SHARE_WRITE, /* Buffer share mode      */
                NULL,                               /* Security attribute ptr */
                CONSOLE_TEXTMODE_BUFFER,            /* Type of buffer         */
                NULL);                              /* reserved               */
 
-  SetConsoleScreenBufferSize(HOutput, coBuf);
+    SetConsoleScreenBufferSize(HOutput, coBuf);
 
-  WriteConsoleOutput(HOutput,                               /* output handle */
-               pCharInfo,                                   /* data to write */
-               coBuf,                       /* col/row size of source buffer */
-               coDest,          /* upper-left cell to write data from in src */
-               &srWin);               /* screen buffer rect to write data to */
+    WriteConsoleOutput(HOutput,                             /* output handle */
+                 pCharInfo,                                 /* data to write */
+                 coBuf,                     /* col/row size of source buffer */
+                 coDest,        /* upper-left cell to write data from in src */
+                 &srWin);             /* screen buffer rect to write data to */
 
-  hb_xfree(pCharInfo);
+    hb_xfree(pCharInfo);
+  }
 }
 
 void hb_gt_DispEnd(void)
@@ -407,32 +412,36 @@ void hb_gt_DispEnd(void)
   COORD coBuf;                        /* the size of the buffer to read into */
   CHAR_INFO *pCharInfo;       /* buffer to store info from ReadConsoleOutput */
   SMALL_RECT srWin;                         /* source rectangle to read from */
+  USHORT uiCount;
 
-  srWin.Top    = srWin.Left = 0;
-  srWin.Right  = (coBuf.X = hb_gt_GetScreenWidth()) -1;
-  srWin.Bottom = (coBuf.Y = hb_gt_GetScreenHeight()) -1;
+  if( ( uiCount = hb_gtDispCount() ) == 1 )
+  {
+    srWin.Top    = srWin.Left = 0;
+    srWin.Right  = (coBuf.X = hb_gt_GetScreenWidth()) -1;
+    srWin.Bottom = (coBuf.Y = hb_gt_GetScreenHeight()) -1;
 
-  /* allocate a buffer for the screen rectangle */
-  pCharInfo = (CHAR_INFO *)hb_xgrab(coBuf.X * coBuf.Y * sizeof(CHAR_INFO));
+    /* allocate a buffer for the screen rectangle */
+    pCharInfo = (CHAR_INFO *)hb_xgrab(coBuf.X * coBuf.Y * sizeof(CHAR_INFO));
 
-  /* read the screen rectangle into the buffer */
-  ReadConsoleOutput(HOutput,                        /* current screen buffer */
-             pCharInfo,                             /* transfer area         */
-             coBuf,                    /* col/row size of destination buffer */
-             coDest,             /* upper-left cell to write data to in dest */
-             &srWin);                /* screen buffer rectangle to read from */
+    /* read the screen rectangle into the buffer */
+    ReadConsoleOutput(HOutput,                      /* current screen buffer */
+               pCharInfo,                           /* transfer area         */
+               coBuf,                  /* col/row size of destination buffer */
+               coDest,           /* upper-left cell to write data to in dest */
+               &srWin);              /* screen buffer rectangle to read from */
 
-  CloseHandle( HOutput );
+    CloseHandle( HOutput );
 
-  HOutput = (HANDLE)hb_gt_ScreenBuffer( 0 );    /* get previous handle       */
+    HOutput = (HANDLE)hb_gt_ScreenBuffer( 0 );  /* get previous handle       */
 
-  WriteConsoleOutput(HOutput,                   /* output buffer             */
-                pCharInfo,                      /* buffer with data to write */
-                coBuf,                      /* col/row size of source buffer */
-                coDest,         /* upper-left cell to write data from in src */
-                &srWin);              /* screen buffer rect to write data to */
+    WriteConsoleOutput(HOutput,                 /* output buffer             */
+                  pCharInfo,                    /* buffer with data to write */
+                  coBuf,                    /* col/row size of source buffer */
+                  coDest,       /* upper-left cell to write data from in src */
+                  &srWin);            /* screen buffer rect to write data to */
 
-  hb_xfree(pCharInfo);
+    hb_xfree(pCharInfo);
+  }
 }
 
 void hb_gt_SetMode( USHORT uiRows, USHORT uiCols )

@@ -173,7 +173,7 @@ int hb_gtBox (USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char
     /* Draw the box or line as specified */
     height = uiBottom - uiTop + 1;
     width  = uiRight - uiLeft + 1;
-    hb_gtDispBegin();
+//    hb_gtDispBegin();
 
     if( height > 1 && width > 1 )
     {
@@ -213,7 +213,7 @@ int hb_gtBox (USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char
     }
 
 /*    speed issue for now */
-    hb_gtDispEnd();
+//    hb_gtDispEnd();
 
     hb_gtSetPos(uiTopBak + 1, uiLeftBak + 1);
 
