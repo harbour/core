@@ -79,7 +79,7 @@ static USHORT s_uiCursorStyle;
 
 static USHORT s_uiColorIndex;
 static USHORT s_uiColorCount;
-static int *  s_Color;
+static int *  s_pColor;
 
 /* masks: 0x0007     Foreground
           0x0070     Background
@@ -91,12 +91,14 @@ static int *  s_Color;
 
 /* gt API functions */
 
+#define COLOR_COUNT_DEF 5
+
 void hb_gtInit( int s_iFilenoStdin, int s_iFilenoStdout, int s_iFilenoStderr )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gtInit()"));
 
-   s_Color = ( int * ) hb_xgrab( 5 * sizeof( int ) );
-   s_uiColorCount = 5;
+   s_pColor = ( int * ) hb_xgrab( COLOR_COUNT_DEF * sizeof( int ) );
+   s_uiColorCount = COLOR_COUNT_DEF;
 
    hb_gt_Init( s_iFilenoStdin, s_iFilenoStdout, s_iFilenoStderr );
 
@@ -128,7 +130,7 @@ void hb_gtExit( void )
 
    hb_gt_Done();
 
-   hb_xfree( s_Color );
+   hb_xfree( s_pColor );
 }
 
 int hb_gtReadKey( HB_inkey_enum eventmask )
@@ -377,7 +379,7 @@ USHORT hb_gtGetColorStr( char * pszColorString )
    /* Go on if there's space left for the largest color string plus EOF */
    for( uiColorIndex = 0; uiColorIndex < s_uiColorCount && iPos < ( CLR_STRLEN - 8 ); uiColorIndex++ )
    {
-      int nColor = s_Color[ uiColorIndex ] & 7;
+      int nColor = s_pColor[ uiColorIndex ] & 7;
       int j;
 
       if( uiColorIndex > 0 )
@@ -385,7 +387,7 @@ USHORT hb_gtGetColorStr( char * pszColorString )
 
       for( j = 0; j <= 1; j++ )
       {
-         if( ( s_Color[ uiColorIndex ] & ( j ? 0x8000 : 0x0800 ) ) == 0 )
+         if( ( s_pColor[ uiColorIndex ] & ( j ? 0x8000 : 0x0800 ) ) == 0 )
          {
             if( nColor == 7 )
                 pszColorString[ iPos++ ] = 'W';
@@ -411,16 +413,16 @@ USHORT hb_gtGetColorStr( char * pszColorString )
 
          if( j == 0 )
          {
-            if( ( s_Color[ uiColorIndex ] & 0x80 ) != 0 )
+            if( ( s_pColor[ uiColorIndex ] & 0x80 ) != 0 )
                pszColorString[ iPos++ ] = '*';
 
-            if( ( s_Color[ uiColorIndex ] & 0x08 ) != 0 )
+            if( ( s_pColor[ uiColorIndex ] & 0x08 ) != 0 )
                pszColorString[ iPos++ ] = '+';
 
             pszColorString[ iPos++ ] = '/';
          }
 
-         nColor = ( s_Color[ uiColorIndex ] >> 4 ) & 7;
+         nColor = ( s_pColor[ uiColorIndex ] >> 4 ) & 7;
       }
    }
 
@@ -449,11 +451,11 @@ USHORT hb_gtSetColorStr( char * szColorString )
 
    if( *szColorString == '\0' )
    {
-      s_Color[ 0 ] = 0x07;
-      s_Color[ 1 ] = 0x70;
-      s_Color[ 2 ] = 0;
-      s_Color[ 3 ] = 0;
-      s_Color[ 4 ] = 0x07;
+      s_pColor[ 0 ] = 0x07;
+      s_pColor[ 1 ] = 0x70;
+      s_pColor[ 2 ] = 0;
+      s_pColor[ 3 ] = 0;
+      s_pColor[ 4 ] = 0x07;
    }
 
    do
@@ -543,11 +545,11 @@ USHORT hb_gtSetColorStr( char * szColorString )
          case ',':
          case '\0':
             if( ! nCount )
-               nFore = s_Color[ nPos ];
+               nFore = s_pColor[ nPos ];
             nCount = -1;
             if( nPos == s_uiColorCount )
             {
-               s_Color = ( int * ) hb_xrealloc( s_Color, sizeof( int ) * ( nPos + 1 ) );
+               s_pColor = ( int * ) hb_xrealloc( s_pColor, sizeof( int ) * ( nPos + 1 ) );
                ++s_uiColorCount;
             }
             if( bHasX )
@@ -575,9 +577,9 @@ USHORT hb_gtSetColorStr( char * szColorString )
                nFore |= 1;
 
             if( bSlash )
-               s_Color[ nPos++ ] = ( nColor << 4 ) | nFore;
+               s_pColor[ nPos++ ] = ( nColor << 4 ) | nFore;
             else
-               s_Color[ nPos++ ] = nColor | nFore;
+               s_pColor[ nPos++ ] = nColor | nFore;
 
             nColor = nFore = 0;
             bSlash = bHasX = bHasU = bHasI = FALSE;
@@ -586,7 +588,7 @@ USHORT hb_gtSetColorStr( char * szColorString )
    while( c );
 
    if( nPos > 0 && nPos < 4 )
-      s_Color[ 4 ] = s_Color[ 1 ];
+      s_pColor[ 4 ] = s_pColor[ 1 ];
 
    hb_gtColorSelect( CLR_STANDARD );
 
@@ -817,7 +819,7 @@ USHORT hb_gtWrite( BYTE * pStr, ULONG ulLength )
       else
          ulSize = ulLength;
 
-      hb_gt_Puts( s_iRow, s_iCol, ( BYTE ) s_Color[ s_uiColorIndex ], pStr, ulSize );
+      hb_gt_Puts( s_iRow, s_iCol, ( BYTE ) s_pColor[ s_uiColorIndex ], pStr, ulSize );
    }
 
    /* Finally, save the new cursor position, even if off-screen */
@@ -961,7 +963,7 @@ USHORT hb_gtScroll( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gtScroll(%hu, %hu, %hu, %hu, %hd, %hd)", uiTop, uiLeft, uiBottom, uiRight, iRows, iCols));
 
-   hb_gt_Scroll( uiTop, uiLeft, uiBottom, uiRight, s_Color[ s_uiColorIndex ], iRows, iCols );
+   hb_gt_Scroll( uiTop, uiLeft, uiBottom, uiRight, ( BYTE ) s_pColor[ s_uiColorIndex ], iRows, iCols );
 
    return 0;
 }
