@@ -3,7 +3,7 @@ rem
 rem $Id$
 rem 
 
-rem Flavour: OS/2
+rem Flavour: OS/2 command file
 
 rem ---------------------------------------------------------------
 rem Template to initialize the environment before starting
@@ -11,6 +11,9 @@ rem the GNU make system for Harbour
 rem
 rem For further information about the GNU make system please
 rem check doc/gmake.txt
+rem
+rem Copyright 1999 Victor Szel <info@szelvesz.hu>
+rem See doc/license.txt for licensing terms.
 rem ---------------------------------------------------------------
 
 rem ---------------------------------------------------------------

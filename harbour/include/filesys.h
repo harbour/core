@@ -79,10 +79,10 @@ typedef int    FHANDLE;
 /* Filename support */
 typedef struct
 {
-  char   szBuffer[ _POSIX_PATH_MAX + 3 ];
-  char * szPath;
-  char * szName;
-  char * szExtension;
+   char   szBuffer[ _POSIX_PATH_MAX + 3 ];
+   char * szPath;
+   char * szName;
+   char * szExtension;
 } HB_FNAME, * PHB_FNAME, * HB_FNAME_PTR;
 
 extern BOOL     hb_fsChDir      ( BYTE * pDirName );

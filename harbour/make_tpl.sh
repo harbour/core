@@ -11,6 +11,9 @@
 #
 # For further information about the GNU make system please
 # check doc/gmake.txt
+#
+# Copyright 1999 Victor Szel <info@szelvesz.hu>
+# See doc/license.txt for licensing terms.
 # ---------------------------------------------------------------
 
 # ---------------------------------------------------------------

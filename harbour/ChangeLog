@@ -1,3 +1,13 @@
+19991118-05:29 GMT+1 Victor Szel <info@szelvesz.hu>
+  - bin\buildexe*.bat
+  + bin\bld_tpl.*
+    * New style build batch file templates added instead of the long-named
+      ones.
+  * make_tpl.*
+    + Copyright info added.
+  * include/filesys.h
+    + Indenting corrected.
+
 19991117-13:05 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.y
@@ -153,7 +163,7 @@
     source/rtl/text.prg
     source/rtl/harbinit.prg
     source/rtl/browse.prg
-    % Optimzalization. (FUNCTION/RETURN NIL->PROCEDURE)
+    % Optimization. (FUNCTION/RETURN NIL->PROCEDURE)
   * tests/memfile.prg
     + Added tests for long variable names.
     ! Make it possible to compile with CA-Cl*pper.
