@@ -6,7 +6,7 @@
 
 - Final cleanups on global macro and symbol names.
 - DISKSPACE() enhancements
-- Microsoft C++ 8.x compiler support
+- Microsoft C++ 8.x compiler support started
 - 10 character symbol support finalized
 - VAL() made fully compatible
 - Source files split to several smaller files
@@ -19,13 +19,11 @@
 - Version numbering standardized
 - Multiple source file support in Harbour command line
 - HBCLIP and RUNJAVA contribution dirs added
-- HBDOC Enhacements: New subtags for better output: <par>,</par> for paragraphe
-  <b></b> for bold , <i></i> for italic ,<em></em> for bold italic font
+- HBDOC Enhacements: New subtags for better output: <par>,</par> for paragraph
+  <b></b> for bold, <i></i> for italic, <em></em> for bold italic font
   <color:></color> for color <fixed></fixed> for fixed text
   <table></table> for tables <insertfile:> to insert the content of another
   file.
-
-
     
 Build 0.32 2000-03-07
 

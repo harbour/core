@@ -1,3 +1,11 @@
+20000402-14:35 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * makefile.vc
+     * Updated for HBDOC changes.
+
+   * doc/whatsnew.txt
+     * Minor chg
+
 20000402-07:00 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
     *doc/whatsnew.txt
         *some changes
@@ -44,7 +52,6 @@
      ! Minor fix in comment.
    * source/rtl/filesys.c
      ! Bug fixed for __WATCOMC__
-
 
 20000401-18:00 GMT+1 Victor Szakats <info@szelvesz.hu>
 

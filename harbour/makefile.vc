@@ -685,9 +685,11 @@ $(HBDOC_EXE) : \
    $(HBDOC_DIR)\os2.prg \
    $(HBDOC_DIR)\rtf.prg \
    $(HBDOC_DIR)\troff.prg \
-   $(HBDOC_DIR)\fileread.prg
+   $(HBDOC_DIR)\fclass1.prg \
+   $(HBDOC_DIR)\ffile1.prg \
+   $(HBDOC_DIR)\ft_funcs.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $**
-   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\hbdoc.c $(OBJ_DIR)\genos2.c $(OBJ_DIR)\gentrf.c $(OBJ_DIR)\genng.c $(OBJ_DIR)\genhtm.c $(OBJ_DIR)\genrtf.c $(OBJ_DIR)\genhpc.c $(OBJ_DIR)\genasc.c $(OBJ_DIR)\html.c $(OBJ_DIR)\ng.c $(OBJ_DIR)\os2.c $(OBJ_DIR)\rtf.c $(OBJ_DIR)\troff.c $(OBJ_DIR)\fileread.c -o $(HBDOC_EXE) /link $(LIBS2)
+   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\hbdoc.c $(OBJ_DIR)\genos2.c $(OBJ_DIR)\gentrf.c $(OBJ_DIR)\genng.c $(OBJ_DIR)\genhtm.c $(OBJ_DIR)\genrtf.c $(OBJ_DIR)\genhpc.c $(OBJ_DIR)\genasc.c $(OBJ_DIR)\html.c $(OBJ_DIR)\ng.c $(OBJ_DIR)\os2.c $(OBJ_DIR)\rtf.c $(OBJ_DIR)\troff.c $(OBJ_DIR)\fclass1.c $(OBJ_DIR)\ffile1.c $(OBJ_DIR)\ft_funcs.c -o $(HBDOC_EXE) /link $(LIBS2)
 
 #
 # HARBOUR.EXE rules
