@@ -8,7 +8,7 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
-2001-12-15 10:05 UTC+0100 Antonio Linares <Antonio Linares@alinares@fivetech.com>
+2001-12-15 10:05 UTC+0100 Antonio Linares <alinares@fivetech.com>
    + source/vm/dynlibhb.c
      + HB_LIBLOAD()
      + HB_LIBFREE()
@@ -212,6 +212,7 @@
 
 2001-12-09 14:50 GMT+1 JFL (mafact) <jfl@mafact.com>
    * harbour/makefile.vc
+e.vc
      * Checked and corrected when used for SIMPLEX compilation
 
 2001-12-09 12:30 GMT+1 JFL (mafact) <jfl@mafact.com>
