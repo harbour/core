@@ -1,12 +1,11 @@
 //
 // $Id$
 //
-
 #define CRLF (Chr(13) + Chr(10))
 
 function Main(cFilename, cSection)
-   local oIni := TIniFile():New(Default( cFilename, "harbour.ini" ) )
-   local s, n := Val( Default( cSection, "1" ) )
+   local oIni := TIniFile():New(Default( cFilename, 'harbour.ini' ) )
+   local s, n := Val( Default( cSection, '1' ) )
 
    qout('')
    qout('Sections:')
@@ -29,25 +28,25 @@ function TIniFile()
    static oClass
 
    if oClass == nil
-      oClass := TClass():New( "TINIFILE" ) // starts a new class definition
+      oClass := TClass():New( 'TINIFILE' ) // starts a new class definition
 
-      oClass:AddData( "FileName" )           // define this class objects datas
-      oClass:AddData( "Contents" )
+      oClass:AddData( 'FileName' )           // define this class objects datas
+      oClass:AddData( 'Contents' )
 
-      oClass:AddMethod( "New",  @New() )  // define this class objects methods
-      oClass:AddMethod( "ReadString", @ReadString() )
-      oClass:AddMethod( "WriteString", @WriteString() )
-      oClass:AddMethod( "ReadNumber", @ReadNumber() )
-      oClass:AddMethod( "WriteNumber", @WriteNumber() )
-      oClass:AddMethod( "ReadDate", @ReadDate() )
-      oClass:AddMethod( "WriteDate", @WriteDate() )
-      oClass:AddMethod( "ReadBool", @ReadBool() )
-      oClass:AddMethod( "WriteBool", @WriteBool() )
-      oClass:AddMethod( "ReadSection", @ReadSection() )
-      oClass:AddMethod( "ReadSections", @ReadSections() )
-      oClass:AddMethod( "DeleteKey", @DeleteKey() )
-      oClass:AddMethod( "EraseSection", @EraseSection() )
-      oClass:AddMethod( "UpdateFile", @UpdateFile() )
+      oClass:AddMethod( 'New',  @New() )  // define this class objects methods
+      oClass:AddMethod( 'ReadString', @ReadString() )
+      oClass:AddMethod( 'WriteString', @WriteString() )
+      oClass:AddMethod( 'ReadNumber', @ReadNumber() )
+      oClass:AddMethod( 'WriteNumber', @WriteNumber() )
+      oClass:AddMethod( 'ReadDate', @ReadDate() )
+      oClass:AddMethod( 'WriteDate', @WriteDate() )
+      oClass:AddMethod( 'ReadBool', @ReadBool() )
+      oClass:AddMethod( 'WriteBool', @WriteBool() )
+      oClass:AddMethod( 'ReadSection', @ReadSection() )
+      oClass:AddMethod( 'ReadSections', @ReadSections() )
+      oClass:AddMethod( 'DeleteKey', @DeleteKey() )
+      oClass:AddMethod( 'EraseSection', @EraseSection() )
+      oClass:AddMethod( 'UpdateFile', @UpdateFile() )
 
       oClass:Create()                     // builds this class
    endif
@@ -137,7 +136,7 @@ static function ReadString(cSection, cIdent, cDefault)
 
    if Empty(cSection)
       cFind := lower(cIdent)
-      j := AScan( ::Contents, {|x| lower(x[1]) == cFind .and. ValType(x[2]) == 'C'} )
+      j := AScan( ::Contents, {|x| valtype(x[1]) == 'C' .and. lower(x[1]) == cFind .and. ValType(x[2]) == 'C'} )
 
       if j > 0
           cResult := ::Contents[j][2]
@@ -145,11 +144,11 @@ static function ReadString(cSection, cIdent, cDefault)
 
    else
       cFind := lower(cSection)
-      i := AScan( ::Contents, {|x| lower(x[1]) == cFind} )
+      i := AScan( ::Contents, {|x| valtype(x[1]) == 'C' .and. lower(x[1]) == cFind} )
 
       if i > 0
          cFind := lower(cIdent)
-         j := AScan( ::Contents[i][2], {|x| lower(x[1]) == cFind} )
+         j := AScan( ::Contents[i][2], {|x| valtype(x[1]) == 'C' .and. lower(x[1]) == cFind} )
 
          if j > 0
             cResult := ::Contents[i][2][j][2]
@@ -167,7 +166,7 @@ static procedure WriteString(cSection, cIdent, cString)
 
    elseif Empty(cSection)
       cFind := lower(cIdent)
-      j := AScan( ::Contents, {|x| lower(x[1]) == cFind .and. ValType(x[2]) == 'C'} )
+      j := AScan( ::Contents, {|x| valtype(x[1]) == 'C' .and. lower(x[1]) == cFind .and. ValType(x[2]) == 'C'} )
 
       if j > 0
          ::Contents[j][2] := cString
@@ -180,9 +179,9 @@ static procedure WriteString(cSection, cIdent, cString)
 
    else
       cFind := lower(cSection)
-      if (i := AScan( ::Contents, {|x| lower(x[1]) == cFind .and. ValType(x[2]) == 'A'})) > 0
+      if (i := AScan( ::Contents, {|x| valtype(x[1]) == 'C' .and. lower(x[1]) == cFind .and. ValType(x[2]) == 'A'})) > 0
          cFind := lower(cIdent)
-         j := AScan( ::Contents[i][2], {|x| lower(x[1]) == cFind} )
+         j := AScan( ::Contents[i][2], {|x| valtype(x[1]) == 'C' .and. lower(x[1]) == cFind} )
 
          if j > 0
             ::Contents[i][2][j][2] := cString
@@ -234,11 +233,11 @@ static procedure DeleteKey(cSection, cIdent)
    local i, j
 
    cSection := lower(cSection)
-   i := AScan( ::Contents, {|x| lower(x[1]) == cSection} )
+   i := AScan( ::Contents, {|x| valtype(x[1]) == 'C' .and. lower(x[1]) == cSection} )
    
    if i > 0
       cIdent := lower(cIdent)
-      j := AScan( ::Contents[i][2], {|x| lower(x[1]) == cIdent} )
+      j := AScan( ::Contents[i][2], {|x| valtype(x[1]) == 'C' .and. lower(x[1]) == cIdent} )
 
       ADel( ::Contents[i][2], j )
       ASize( ::Contents[i][2], Len(::Contents[i][2]) - 1 )
@@ -257,7 +256,7 @@ static procedure EraseSection(cSection)
 
    else
       cSection := lower(cSection)
-      if (i := AScan( ::Contents, {|x| lower(x[1]) == cSection .and. ValType(x[2]) == 'A'})) > 0
+      if (i := AScan( ::Contents, {|x| valtype(x[1]) == 'C' .and. lower(x[1]) == cSection .and. ValType(x[2]) == 'A'})) > 0
          ADel( ::Contents, i )
          ASize( ::Contents, Len(::Contents) - 1 )
       endif
@@ -277,7 +276,7 @@ static function ReadSection(cSection)
 
    else
       cSection := lower(cSection)
-      if (i := AScan( ::Contents, {|x| x[1] == cSection .and. ValType(x[2]) == 'A'})) > 0
+      if (i := AScan( ::Contents, {|x| valtype(x[1]) == 'C' .and. x[1] == cSection .and. ValType(x[2]) == 'A'})) > 0
 
          for j := 1 to Len(::Contents[i][2])
 
