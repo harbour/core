@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-07-25 13:42 UTC+0100 Ignacio Ortiz <ignacio@fivetech.com>
+  * source/pp/ppcore.c
+    * Bug fixed when an already existing #define (with no value) was redeclared
+
 2002-07-22 01:29 UTC+0500 April White <awhite@mail.rosecom.ca>
   * doc/en/set.txt
   * source/compiler/hbusage.c
