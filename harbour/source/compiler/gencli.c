@@ -534,11 +534,26 @@ static HB_GENC_FUNC( hb_p_fortest )
 
 static HB_GENC_FUNC( hb_p_frame )
 {
-   fprintf( cargo->yyc, "\tHB_P_FRAME, %i, %i,",
-            pFunc->pCode[ lPCodePos + 1 ],
-            pFunc->pCode[ lPCodePos + 2 ] );
-   if( cargo->bVerbose ) fprintf( cargo->yyc, "\t/* locals, params */" );
-   fprintf( cargo->yyc, "\n" );
+   int i;
+
+   fprintf( cargo->yyc, "   .locals init (" );
+
+   for( i = 0; i < pFunc->pCode[ lPCodePos + 1 ]; i++ )
+   {
+      if( i > 0 )
+         fprintf( cargo->yyc, "," );
+
+      fprintf( cargo->yyc, " object V_%i", i );
+   }
+
+   fprintf( cargo->yyc, " )\n" );
+
+   // fprintf( cargo->yyc, "\tHB_P_FRAME, %i, %i,",
+   //          pFunc->pCode[ lPCodePos + 1 ],
+   //          pFunc->pCode[ lPCodePos + 2 ] );
+   // if( cargo->bVerbose ) fprintf( cargo->yyc, "\t/* locals, params */" );
+   // fprintf( cargo->yyc, "\n" );
+
    return 3;
 }
 
