@@ -419,6 +419,7 @@ extern void     hb_clsReleaseAll( void );    /* releases all defined classes */
 
 /* object management */
 extern char *   hb_objGetClsName( PHB_ITEM pObject ); /* retrieves an object class name */
+extern char *   hb_objGetRealClsName( PHB_ITEM pObject, char * szString  ); /* retrieves an object class name for a specific message */
 extern PHB_FUNC hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pSymMsg ); /* returns the method pointer of a object class */
 extern ULONG    hb_objHasMsg( PHB_ITEM pObject, char * szString ); /* returns TRUE/FALSE whether szString is an existing message for object */
 
@@ -535,7 +536,7 @@ extern void   hb_macroPushAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar ); 
 extern char * hb_macroGetType( HB_ITEM_PTR pItem ); /* determine the type of an expression */
 
 /* garbage collector */
-#define HB_GARBAGE_FUNC( hbfunc )   void hbfunc( void * Cargo )	/* callback function for cleaning garbage memory pointer */
+#define HB_GARBAGE_FUNC( hbfunc )   void hbfunc( void * Cargo ) /* callback function for cleaning garbage memory pointer */
 typedef HB_GARBAGE_FUNC( HB_GARBAGE_FUNC_ );
 typedef HB_GARBAGE_FUNC_ *HB_GARBAGE_FUNC_PTR;
 

@@ -1,3 +1,16 @@
+2001-05-20 23:15 UTC+1 JFL (mafact) <jfl@mafact.com>
+   * harbour/source/vm/classes.c
+     + hb_objGetRealClsName(object, szmsg )
+       Return the real class name regarding the Message called
+       So as an inherited method will return it's real class parent 
+   * harbour/source/vm/proc.c
+     * modified PROCNAME() to call the new classes function
+   * harbour/include/hbapi.h
+     + added hb_objGetRealClsName
+   * harbour/include/hbclass.ch
+     + added xtranslate to allow MethodName as the same as ProcName
+       (a la class(y) )
+
 2001-05-20 13:35 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
 
 *contrib/hbzlib/zip.c

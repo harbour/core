@@ -111,7 +111,7 @@ char * hb_procname( int iLevel, char * szName )
    {
       if( ( *( pBase + 1 ) )->type == HB_IT_ARRAY )  /* it is a method name */
       {
-         strcpy( szName, hb_objGetClsName( *( pBase + 1 ) ) );
+         strcpy( szName, hb_objGetRealClsName( *( pBase + 1 ), ( *pBase )->item.asSymbol.value->szName ) );
          strcat( szName, ":" );
          strcat( szName, ( *pBase )->item.asSymbol.value->szName );
       }

@@ -601,6 +601,103 @@ char * hb_objGetClsName( PHB_ITEM pObject )
    return szClassName;
 }
 
+/*
+ * <szName> = ( pObject )
+ *
+ * Get the real class name of an object message
+ * Will return the class name from wich the message is inherited in case
+ * of inheritance.
+ *
+ */
+char * hb_objGetRealClsName( PHB_ITEM pObject, char * szName )
+{
+   char * szClassName;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_objGetrealClsName(%p)", pObject));
+
+   if( HB_IS_ARRAY( pObject ) )
+   {
+      if( ! pObject->item.asArray.value->uiClass )
+         szClassName = "ARRAY";
+      else
+       {
+         PHB_DYNS pMsg    = hb_dynsymFindName( szName );
+         USHORT uiClass;
+
+         /* default value to current class object */
+         uiClass = pObject->item.asArray.value->uiClass;
+
+         if( uiClass && uiClass <= s_uiClasses )
+         {
+            PCLASS pClass  = s_pClasses + ( uiClass - 1 );
+            USHORT uiAt    = ( USHORT ) ( ( ( hb_cls_MsgToNum( pMsg ) ) % pClass->uiHashKey ) * BUCKET );
+            USHORT uiMask  = ( USHORT ) ( pClass->uiHashKey * BUCKET );
+            USHORT uiLimit = ( USHORT ) ( uiAt ? ( uiAt - 1 ) : ( uiMask - 1 ) );
+
+            s_pMethod = NULL;                            /* Current method pointer   */
+
+            while( uiAt != uiLimit )
+            {
+               if( pClass->pMethods[ uiAt ].pMessage == pMsg )
+               {
+                  s_pMethod = pClass->pMethods + uiAt;
+                  uiClass = s_pMethod->uiSprClass;
+                  break;
+               }
+               uiAt++;
+               if( uiAt == uiMask )
+                  uiAt = 0;
+            }
+         }
+
+         szClassName =
+            ( s_pClasses + uiClass - 1 )->szName;
+
+       }
+   }
+   else                                         /* built in types */
+   {
+      switch( pObject->type )
+      {
+         case HB_IT_NIL:
+            szClassName = "NIL";
+            break;
+
+         case HB_IT_STRING:
+            szClassName = "CHARACTER";
+            break;
+
+         case HB_IT_BLOCK:
+            szClassName = "BLOCK";
+            break;
+
+         case HB_IT_SYMBOL:
+            szClassName = "SYMBOL";
+            break;
+
+         case HB_IT_DATE:
+            szClassName = "DATE";
+            break;
+
+         case HB_IT_INTEGER:
+         case HB_IT_LONG:
+         case HB_IT_DOUBLE:
+            szClassName = "NUMERIC";
+            break;
+
+         case HB_IT_LOGICAL:
+            szClassName = "LOGICAL";
+            break;
+
+         default:
+            szClassName = "UNKNOWN";
+            break;
+      }
+   }
+
+   return szClassName;
+}
+
 
 /*
  * <pFunc> = hb_objGetMethod( <pObject>, <pMessage> )

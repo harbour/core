@@ -144,6 +144,7 @@ DECLARE TClass ;
 /* CLASSY SYNTAX */
 #IFDEF HB_CLS_CSY
 #xtranslate CREATE CLASS => CLASS
+#xtranslate METHODNAME => PROCNAME
 #endif
 
 #ifndef HB_SHORTNAMES
