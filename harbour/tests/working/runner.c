@@ -45,19 +45,19 @@ typedef struct
 #define SYM_NOT_FOUND 0xFFFFFFFF                /* Symbol not found.
                                                    FindSymbol               */
 
-static PASM_CALL CreateFun( PSYMBOL, PBYTE );          /* Create a dynamic function*/
-void      Do( WORD );
+static PASM_CALL CreateFun( PSYMBOL, PBYTE );   /* Create a dynamic function*/
+       void      Do( WORD );
 static ULONG     FindSymbol( char *, PDYNFUNC, ULONG );
-HARBOUR   HB_RUN();
+       HARBOUR   HB_RUN();
 static void      HRB_FileClose( FILE * );
 static void      HRB_FileRead ( char *, int, int, FILE * );
 static FILE     *HRB_FileOpen ( char * );
-void      Push( PHB_ITEM );
-void      PushNil( void );
-void      PushSymbol( PSYMBOL );
-BYTE      ReadByte( FILE * );
-char     *ReadId  ( FILE * );
-long      ReadLong( FILE * );
+       void      Push( PHB_ITEM );
+       void      PushNil( void );
+       void      PushSymbol( PSYMBOL );
+       BYTE      ReadByte( FILE * );
+       char     *ReadId  ( FILE * );
+       long      ReadLong( FILE * );
 
 #include "run_exp.h"
 

@@ -1,3 +1,7 @@
+19990611-17:00 CET Matthew Hamiltion
+  * tests/working/inifiles.prg
+    new version installed
+
 19990610-23:40 EDT David G. Holm <dholm@jsd-llc.com>
   * include/fileio.ch
     - Corrected $Id: header
