@@ -123,7 +123,7 @@ CLASS Get
    METHOD SetFocus()
    METHOD Undo()
    METHOD UnTransform()
-   METHOD UpdateBuffer() INLINE  ::buffer := ::PutMask(), ::Assign():Display(), Self
+   METHOD UpdateBuffer() INLINE  ::buffer := ::PutMask( ), ::Assign():Display(), Self
 
    METHOD VarGet()
    METHOD VarPut(xValue, lReFormat)
@@ -459,7 +459,7 @@ METHOD KillFocus() CLASS Get
    ::Assign()
 
    ::hasfocus := .f.
-   ::buffer   := ::PutMask()
+   ::buffer   := ::PutMask( )
    ::pos      := NIL
 
    ::Display()
@@ -575,8 +575,8 @@ METHOD overstrike( cChar ) CLASS Get
    endif
 
    if ! ::lEdit
-      ::buffer := ::PutMask( ::VarGet(), .t. )
       ::lEdit  := .t.
+      ::buffer := ::PutMask( ::VarGet(), .t. )
    endif
 
 
@@ -629,8 +629,8 @@ METHOD Insert( cChar ) CLASS Get
    endif
 
    if ! ::lEdit
-      ::buffer := ::PutMask( ::VarGet(), .t. )
       ::lEdit  := .t.
+      ::buffer := ::PutMask( ::VarGet(), .t. )
    endif
 
    do while ! ::IsEditable( ::pos ) .and. ::pos <= ::nMaxLen
@@ -859,9 +859,9 @@ METHOD ToDecPos() CLASS Get
    endif
 
    ::Clear  := .f.
+   ::lEdit  := .t.
    ::buffer := ::PutMask( ::UnTransform(), .f. )
    ::pos    := ::DecPos + 1
-   ::lEdit  := .t.
 
    ::Display( .t. )
 
@@ -999,7 +999,7 @@ METHOD PutMask( xValue, lEdit ) CLASS Get
             cBuffer := SubStr( cBuffer, 1, nFor - 1 ) + cChar + SubStr( cBuffer, nFor + 1 )
          endif
       next
-      if Empty(xValue)
+      if ::lEdit .and. Empty(xValue)
          cBuffer := StrTran(cBuffer, "0", " ")
       endif
       if ::lDecRev
