@@ -60,6 +60,7 @@ extern int      hb_itemGetNI    ( PHB_ITEM pItem );
 extern long     hb_itemGetNL    ( PHB_ITEM pItem );
 extern void     hb_itemGetNLen  ( PHB_ITEM pItem, int * piWidth, int * piDec );
 extern PHB_ITEM hb_itemNew      ( PHB_ITEM pNull );
+extern USHORT   hb_itemPCount   ( void );
 extern PHB_ITEM hb_itemParam    ( USHORT uiParam );
 extern PHB_ITEM hb_itemPutC     ( PHB_ITEM pItem, char * szText );
 extern PHB_ITEM hb_itemPutCL    ( PHB_ITEM pItem, char * szText, ULONG ulLen );
@@ -76,8 +77,10 @@ extern PHB_ITEM hb_itemReturn   ( PHB_ITEM pItem );
 extern ULONG    hb_itemSize     ( PHB_ITEM pItem );
 extern USHORT   hb_itemType     ( PHB_ITEM pItem );
 
-/* Non Clipper compliant API */
+/* Non Clipper compliant internal API */
 
+extern PHB_ITEM hb_itemParamPtr ( USHORT uiParam, int iMask );
+extern PHB_ITEM hb_itemReturnPtr( void );
 extern int      hb_itemStrCmp   ( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact ); /* our string compare */
 extern void     hb_itemCopy     ( PHB_ITEM pDest, PHB_ITEM pSource ); /* copies an item to one place to another respecting its containts */
 extern void     hb_itemClear    ( PHB_ITEM pItem );

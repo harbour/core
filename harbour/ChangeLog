@@ -1,3 +1,25 @@
+19990910-17:40 GMT+1 Victor Szel <info@szelvesz.hu>
+  * tests/working/rtl_test.prg
+    + Added a more complete ALIAS regression test suite.
+  * source/compiler/harbour.y
+    ! Compiles even if the YYDEBUG constant is *not* defined, the compiler
+      also hides the /y switch from the help screen.
+    + Added command line switch /x. The init symbol function name can be
+      set to an explicit value (using /xMyCoolLib) or to an automatically 
+      generated one (using /x). By default no mangling takes place.
+  * include/itemapi.h
+    source/rtl/itemapi.c
+    + hb_itemPCount(), hb_itemParamPtr(), hb_itemReturnPtr() Item API calls 
+      added, to provide full functionality by the Item API. The longer term 
+      goal would be to make the Item API as the preferred, most complete and 
+      flexible API, and leave the Extend API as a secondary, bit slower, but 
+      simpler and more compatible option. Also the Item API should make it
+      unnecessary to directly access internals, so it should provide a full but
+      controlled access to all those. Only the VM itself should have access to 
+      internals IMO.
+  * include/compiler.h
+    * Some formatting.
+
 19990910-16:00 GMT+2 Ryszard Glab <rglab@imim.med.pl>
 
     *source/vm/hvm.c
@@ -9,7 +31,7 @@
 19990910-11:10 GMT+1 Victor Szel <info@szelvesz.hu>
   * tests/working/rtl_test.prg
     + Enabled some alias tests which fail. (Ryszard, could you take a look
-      at it ?)
+      at them ?)
   * source/vm/hvm.c
     ! hb_vmSwapAlias() - Fixed mistyped variable name, pItem was accessed 
       instead of pWorkarea. (Is this OK, Ryszard ?)

@@ -32,10 +32,10 @@
 /* locals, static, public variables support */
 typedef struct _VAR
 {
-   char *szName;           /* variable name */
-   char *szAlias;          /* variable alias namespace */
-   int  iUsed;             /* number of times used */
-   char cType;             /* optional strong typing */
+   char * szName;          /* variable name */
+   char * szAlias;         /* variable alias namespace */
+   int    iUsed;           /* number of times used */
+   char   cType;           /* optional strong typing */
    struct _VAR * pNext;    /* pointer to next defined variable */
 } VAR, * PVAR;
 
@@ -52,9 +52,9 @@ typedef struct __FUNC      /* functions definition support */
    PVAR   pFields;         /* pointer to fields variables list */
    PVAR   pMemvars;        /* pointer to memvar variables list */
    BYTE * pCode;           /* pointer to a memory block where pcode is stored */
-   ULONG   lPCodeSize;     /* total memory size for pcode */
-   ULONG   lPCodePos;      /* actual pcode offset */
-   int   iStaticsBase;     /* base for this function statics */
+   ULONG  lPCodeSize;      /* total memory size for pcode */
+   ULONG  lPCodePos;       /* actual pcode offset */
+   int    iStaticsBase;    /* base for this function statics */
    struct __FUNC * pOwner; /* pointer to the function/procedure that owns the codeblock */
    struct __FUNC * pNext;  /* pointer to the next defined function */
 } _FUNC, * PFUNCTION;
@@ -64,7 +64,7 @@ typedef struct
 {
    PFUNCTION pFirst;       /* pointer to the first defined funtion */
    PFUNCTION pLast;        /* pointer to the last defined function */
-   int      iCount;        /* number of defined functions */
+   int       iCount;       /* number of defined functions */
 } FUNCTIONS;
 
 /* compiler symbol support structure */
@@ -81,7 +81,7 @@ typedef struct
 {
    PCOMSYMBOL pFirst;      /* pointer to the first defined symbol */
    PCOMSYMBOL pLast;       /* pointer to the last defined symbol */
-   int    iCount;          /* number of defined symbols */
+   int        iCount;      /* number of defined symbols */
 } SYMBOLS;
 
 /* locals, static, public variables support */
@@ -92,7 +92,7 @@ typedef struct _STACK_VAL_TYPE
 } STACK_VAL_TYPE, * PSTACK_VAL_TYPE;
 
 extern PFUNCTION GetFunction( char * szFunName ); /* locates a previously defined function */
-extern WORD GetFunctionPos( char * szSymbolName ); /* returns the index + 1 of a function on the functions defined list */
+extern WORD      GetFunctionPos( char * szSymbolName ); /* returns the index + 1 of a function on the functions defined list */
 
 extern void *   hb_xgrab( ULONG lSize );   /* allocates memory, exists on failure */
 extern void *   hb_xrealloc( void * pMem, ULONG lSize );   /* reallocates memory */

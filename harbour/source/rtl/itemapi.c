@@ -27,6 +27,9 @@
 /* Harbour Project source code
    http://www.Harbour-Project.org/
    The following functions are Copyright 1999 Victor Szel <info@szelvesz.hu>:
+      hb_itemPCount()
+      hb_itemParamPtr()
+      hb_itemReturnPtr()
       hb_itemDo() ( based on HB_DO() by Ryszard Glab )
       hb_itemDoC() ( based on HB_DO() by Ryszard Glab )
       hb_itemPutNI()
@@ -276,6 +279,18 @@ PHB_ITEM hb_itemParam( USHORT uiParam )
    return pNew;
 }
 
+/* Internal Item API. Use this with care. */
+
+PHB_ITEM hb_itemParamPtr( USHORT uiParam, int iMask )
+{
+   return hb_param( ( int ) uiParam, iMask );
+}
+
+USHORT hb_itemPCount( void )
+{
+   return ( USHORT ) hb_pcount();
+}
+
 BOOL hb_itemRelease( PHB_ITEM pItem )
 {
    BOOL bResult = FALSE;
@@ -515,6 +530,13 @@ PHB_ITEM hb_itemReturn( PHB_ITEM pItem )
       hb_itemCopy( &stack.Return, pItem );
 
    return pItem;
+}
+
+/* Internal Item API. Use this with care. */
+
+PHB_ITEM hb_itemReturnPtr( void )
+{
+   return &stack.Return;
 }
 
 PHB_ITEM hb_itemPutDS( PHB_ITEM pItem, char * szDate )
