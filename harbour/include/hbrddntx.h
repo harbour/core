@@ -260,7 +260,7 @@ typedef struct _NTXAREA
    USHORT heap;
    USHORT heapSize;
    USHORT rddID;
-
+   USHORT uiMaxFieldNameLength;
    /*
    *  DBFS's additions to the workarea structure
    *

@@ -318,6 +318,7 @@ typedef struct _CDXAREA
    USHORT heap;
    USHORT heapSize;
    USHORT rddID;
+   USHORT uiMaxFieldNameLength;
 
    /*
    *  DBFS's additions to the workarea structure

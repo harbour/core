@@ -62,7 +62,7 @@ extern "C" {
 
 #define HARBOUR_MAX_RDD_DRIVERNAME_LENGTH       32
 #define HARBOUR_MAX_RDD_ALIAS_LENGTH            32
-#define HARBOUR_MAX_RDD_FIELDNAME_LENGTH        32
+/* #define HARBOUR_MAX_RDD_FIELDNAME_LENGTH        32 */
 
 
 
@@ -624,6 +624,7 @@ typedef struct _AREA
    USHORT heap;
    USHORT heapSize;
    USHORT rddID;
+   USHORT uiMaxFieldNameLength;
 } AREA;
 
 typedef AREA * LPAREA;

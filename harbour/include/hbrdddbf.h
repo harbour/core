@@ -124,6 +124,7 @@ typedef struct _DBFAREA
    USHORT   heap;
    USHORT   heapSize;
    USHORT   rddID;
+   USHORT uiMaxFieldNameLength;
 
    /*
    *  DBFS's additions to the workarea structure
