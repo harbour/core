@@ -1,3 +1,12 @@
+19990719-17:55 EDT Paul Tucker <ptucker@sympatico.ca>
+  * source/rtl/gtapi.c
+    - removed temp init line now that init order is fixed.
+    + added call to gtDone from hb_gtExit
+  * source/rtl/setcolor.c
+    * removed a comma
+  * tests/working tstcolor.prg
+    + Added 'numeric' color example.
+
 19990719-16:50 EDT David G. Holm <dholm@jsd-llc.com>
   * config/dos/bcc31.cf
     + Added -DHARBOUR_USE_GTAPI and -DHARBOUR_USE_DOS_GTAPI

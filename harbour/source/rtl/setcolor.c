@@ -63,7 +63,7 @@ char *hb_setColor( char *sColor )
 HARBOUR HB_SETCOLOR( void );
 
 HB_INIT_SYMBOLS_BEGIN( SETCOLOR__InitSymbols )
-{ "SETCOLOR", FS_PUBLIC, HB_SETCOLOR, 0 },
+{ "SETCOLOR", FS_PUBLIC, HB_SETCOLOR, 0 }
 HB_INIT_SYMBOLS_END( SETCOLOR__InitSymbols );
 #if ! defined(__GNUC__)
 #pragma startup SETCOLOR__InitSymbols

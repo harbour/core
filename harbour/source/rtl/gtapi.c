@@ -6,6 +6,8 @@
  *  GTAPI.C: Generic Terminal for Harbour
  *
  * Latest mods:
+ * 1.30   19990719   ptucker   Removed temp init hack
+ *                             call gtDone from hb_gtExit
  * 1.29   19990719   ptucker   Minor change to catch last color parameter
  *                             that may be empty
  * 1.28   19990719   ptucker   Added support for numeric color strings
@@ -48,16 +50,16 @@ int _ColorCount;
 
 void hb_gtInit(void)
 {
-    gtInit();
-    hb_gtSetPos( gtWhereY(), gtWhereX() );
     _Color = (int *)hb_xgrab(5*sizeof(int));
     _ColorCount = 5;
-    hb_gtSetColorStr( "W/N,N/W,N/N,N/N,N/W" );
-/*  hb_gtSetColorStr( hb_set.HB_SET_COLOR ); */
+    gtInit();
+    hb_gtSetPos( gtWhereY(), gtWhereX() );
+    hb_gtSetColorStr( hb_set.HB_SET_COLOR );
 }
 
 void hb_gtExit(void)
 {
+    gtDone();
     hb_xfree( _Color );
 }
 
