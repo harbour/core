@@ -98,6 +98,7 @@ DATA MaxLength                // length in chars
 DATA MaxChars                 // length on screen
 
 DATA Checked    INIT .F.      // checkboxes...
+DATA lLabel     init .f.
 
 DATA Source, Align            // images...
 DATA Wrap                     // textarea
@@ -146,7 +147,7 @@ METHOD SetOnKPress(c)    INLINE ::onKeyPress  := c
 METHOD SetOnKDown(c)     INLINE ::onKeyDown   := c
 METHOD SetOnKUp(c)       INLINE ::onKeyUp     := c
 METHOD SetOnSelect(c)    INLINE ::onSelect    := c
-      
+METHOD SetLabel(l)       INLINE ::lLabel      := l  
 //METHOD Debug()         INLINE __clsDebug( self )
 
 METHOD Put(lPut)
@@ -155,7 +156,7 @@ METHOD SetControl( name,rows,cols,size,maxchars,value,onfocus,;
                            onblur,onchange,onselect,onclick,onmsover,onmsout,;
                            onmsdown,onmsup,onkdown,onkup,onkprs, ;
                            pic,cap,dis,ro,lMulti,checked,;
-                           align,wrap,type, Style, Id ) 
+                           align,wrap,type, Style, Id ,lLabel) 
 
 ENDCLASS
 
@@ -175,7 +176,9 @@ LOCAL i, cStr := ""
 ::form := currentForm()
 
 ::cOutput += IF( ::lBreak, CRLF()+"<BR>", CRLF() )
-
+IF  ::lLabel
+   ::cOutPut+=CRLF()+"<LABEL>"+CRLF()
+ENDIF
 IF ::Caption != NIL
    ::cOutput += ::Caption + HTMLSPACE(2) +" <!-- "+::Type+" Control Caption -->"+CRLF()
 ENDIF
@@ -300,8 +303,11 @@ IF ::onKeyPress != NIL
 ::cOutput += space(1)+'onKeyPress="'+::onKeyPress+'"'+CRLF()
 ENDIF
 
-
 ::cOutput += " >"+CRLF()
+
+if ::lLabel
+    ::cOutPut+=CRLF()+"</LABEL>"+CRLF()
+Endif
 
 FWrite( ::nH, ::cOutput )
 
@@ -352,7 +358,7 @@ method setControl( name,rows,cols,size,maxchars,value,onfocus,;
                            onblur,onchange,onselect,onclick,onmsover,onmsout,;
                            onmsdown,onmsup,onkdown,onkup,onkprs, ;
                            pic,cap,dis,ro,lMulti,checked,;
-                           align,wrap,type, Style, Id ) CLASS HControl 
+                           align,wrap,type, Style, Id,lLabel ) CLASS HControl 
 ::name        := name
 ::rows        := rows
 ::cols        := cols
@@ -382,7 +388,7 @@ method setControl( name,rows,cols,size,maxchars,value,onfocus,;
 ::type        := type
 ::Style       := Style
 ::Id          := Id
-
+::lLabel      := lLabel
 RETURN Self
 
   
@@ -600,7 +606,7 @@ IF ::onReset != NIL
     FWrite( ::nH, ::cOutput )
 ENDIF
 
-//::cOutPut := ">"+CRLF()
+::cOutPut := ">"+CRLF()
 
 FWrite( ::nH, ::cOutput )
 

@@ -7,6 +7,12 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+    + Add new parameter. FT_TEMPFIL( cPath, [lHidden], [@nHandle] )
+      if [@]nHandle is used, the function not close the temp file and
+      return the handle by nHandle.
+      This parameter should be passed by reference.
+      If this parameter is not used or not passed by reference, the temp
+      file is closed.
 
   * contrib/libnf/dispc.c
     + ported to Harbour of FT_DISPFILE().

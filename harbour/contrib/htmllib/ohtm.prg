@@ -457,7 +457,7 @@ DEFAULT cTitle        := "CGI HTML page"
 DEFAULT cLinkTitle    := cTitle
 DEFAULT cRefreshURL:= ""
 DEFAULT cCharset   := "windows-1253"
-
+default lNocache := .f.
 ::nH     := STD_OUT       //FCreate( cFile )
 ::Title  := cTitle
 ::FName  := "CGIOUT.HTM"

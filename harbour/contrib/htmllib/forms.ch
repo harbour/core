@@ -117,6 +117,7 @@
           [CAPTION <cap>]                     ;
           [STYLE <style>]                     ;
           [ID <id>]                           ;
+          [<l:LABEL>]                         ;
           IN <oForm>                          ;
           =>                                  ;
           <oForm>:addControl( ;
@@ -131,7 +132,7 @@
                   __ALIGN__ [<aln>], ;
                   __WRAP__ [<wrap>], ;
                   __TYPE__ [<typ>],;
-                  <style>, <id> ) )
+                  <style>, <id> ,<.l.>) )
 
 
 #xCommand DEFINE <typ:EDIT,TEXT,TEXTAREA,PASSWORD,BUTTON,IMAGE,CHECKBOX,CHECK,HIDDEN,RADIO,FILE,RESET,SUBMIT,SELECT,LISTBOX> <oCtr>;
@@ -162,6 +163,7 @@
           [CAPTION <cap>]                          ;
           [STYLE <style>]                          ;
           [ID <id>]                                ;
+          [<l:LABEL>]                         ;
           IN <oForm>                               ;
           =>                                       ;
           <oCtr> := HControl()                    ;;
@@ -192,6 +194,7 @@
           [<oCtr>:SetMultiple(<.mult.>);]          ;
           [<oCtr>:SetDisabled(<.dis.>);]           ;
           [<oCtr>:SetReadonly(<.ro.>);]            ;
+          [<oCtr>:SetLabel(<.l.>);]            ;
           <oCtr>:Type := __TYPE__ <typ>           ;;
           <oForm>:AddControl( <oCtr> )
 
