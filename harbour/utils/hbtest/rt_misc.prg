@@ -248,12 +248,12 @@ FUNCTION Main_MISC()
    TEST_LINE( saArray:Eval                    , "E BASE 1004 No exported method EVAL F:S" )
    TEST_LINE( soObject:Eval                   , "E BASE 1004 No exported method EVAL F:S" )
 
-   /* STOD() */
+   /* HB_STOD() */
 
-   /* For these tests in CA-Cl*pper 5.2e the following native STOD() has
+   /* For these tests in CA-Cl*pper 5.2e the following native HB_STOD() has
       been used ( not the emulated one written in Clipper ):
 
-      CLIPPER STOD( void )
+      CLIPPER HB_STOD( void )
       {
          // The length check is a fix to avoid buggy behaviour of _retds()
          _retds( ( ISCHAR( 1 ) && _parclen( 1 ) == 8 ) ? _parc( 1 ) : "        " );
@@ -261,33 +261,33 @@ FUNCTION Main_MISC()
    */
 
 #ifndef __XPP__
-   TEST_LINE( SToD()                          , SToD("        ")             )
+   TEST_LINE( HB_SToD()                       , HB_SToD("        ")          )
 #endif
-   TEST_LINE( SToD(1)                         , SToD("        ")             )
-   TEST_LINE( SToD(NIL)                       , SToD("        ")             )
-   TEST_LINE( SToD("")                        , SToD("        ")             )
-   TEST_LINE( SToD("        ")                , SToD("        ")             )
-   TEST_LINE( SToD("       ")                 , SToD("        ")             )
-   TEST_LINE( SToD("         ")               , SToD("        ")             )
-   TEST_LINE( SToD(" 1234567")                , SToD("        ")             )
-   TEST_LINE( SToD("1999    ")                , SToD("        ")             )
-   TEST_LINE( SToD("99999999")                , SToD("        ")             )
-   TEST_LINE( SToD("99990101")                , SToD("        ")             )
-   TEST_LINE( SToD("19991301")                , SToD("        ")             )
-   TEST_LINE( SToD("19991241")                , SToD("        ")             )
-   TEST_LINE( SToD("01000101")                , SToD("01000101")             )
-   TEST_LINE( SToD("29991231")                , SToD("29991231")             )
-   TEST_LINE( SToD("19990905")                , SToD("19990905")             )
-   TEST_LINE( SToD(" 9990905")                , SToD("        ")             )
-   TEST_LINE( SToD("1 990905")                , SToD("        ")             )
-   TEST_LINE( SToD("19 90905")                , SToD("17490905")             )
-   TEST_LINE( SToD("199 0905")                , SToD("19740905")             )
-   TEST_LINE( SToD("1999 905")                , SToD("        ")             )
-   TEST_LINE( SToD("19990 05")                , SToD("        ")             )
-   TEST_LINE( SToD("199909 5")                , SToD("        ")             )
-   TEST_LINE( SToD("1999090 ")                , SToD("        ")             )
-   TEST_LINE( SToD("1999 9 5")                , SToD("        ")             )
-   TEST_LINE( SToD("1999090" + Chr(0))        , SToD("        ")             )
+   TEST_LINE( HB_SToD(1)                      , HB_SToD("        ")          )
+   TEST_LINE( HB_SToD(NIL)                    , HB_SToD("        ")          )
+   TEST_LINE( HB_SToD("")                     , HB_SToD("        ")          )
+   TEST_LINE( HB_SToD("        ")             , HB_SToD("        ")          )
+   TEST_LINE( HB_SToD("       ")              , HB_SToD("        ")          )
+   TEST_LINE( HB_SToD("         ")            , HB_SToD("        ")          )
+   TEST_LINE( HB_SToD(" 1234567")             , HB_SToD("        ")          )
+   TEST_LINE( HB_SToD("1999    ")             , HB_SToD("        ")          )
+   TEST_LINE( HB_SToD("99999999")             , HB_SToD("        ")          )
+   TEST_LINE( HB_SToD("99990101")             , HB_SToD("        ")          )
+   TEST_LINE( HB_SToD("19991301")             , HB_SToD("        ")          )
+   TEST_LINE( HB_SToD("19991241")             , HB_SToD("        ")          )
+   TEST_LINE( HB_SToD("01000101")             , HB_SToD("01000101")          )
+   TEST_LINE( HB_SToD("29991231")             , HB_SToD("29991231")          )
+   TEST_LINE( HB_SToD("19990905")             , HB_SToD("19990905")          )
+   TEST_LINE( HB_SToD(" 9990905")             , HB_SToD("        ")          )
+   TEST_LINE( HB_SToD("1 990905")             , HB_SToD("        ")          )
+   TEST_LINE( HB_SToD("19 90905")             , HB_SToD("17490905")          )
+   TEST_LINE( HB_SToD("199 0905")             , HB_SToD("19740905")          )
+   TEST_LINE( HB_SToD("1999 905")             , HB_SToD("        ")          )
+   TEST_LINE( HB_SToD("19990 05")             , HB_SToD("        ")          )
+   TEST_LINE( HB_SToD("199909 5")             , HB_SToD("        ")          )
+   TEST_LINE( HB_SToD("1999090 ")             , HB_SToD("        ")          )
+   TEST_LINE( HB_SToD("1999 9 5")             , HB_SToD("        ")          )
+   TEST_LINE( HB_SToD("1999090" + Chr(0))     , HB_SToD("        ")          )
 
    /* DESCEND() */
 
@@ -323,9 +323,9 @@ FUNCTION Main_MISC()
    TEST_LINE( Descend( Chr(0) )               , ""+Chr(0)+""                                        )
    TEST_LINE( Descend( Chr(0) + "Hello" )     , ""+Chr(0)+"¸›””‘"                                   )
    TEST_LINE( Descend( "Hello"+Chr(0)+"wo" )  , "¸›””‘"+Chr(0)+"‰‘"                                 )
-   TEST_LINE( Descend( SToD( "" ) )           , 5231808                                             )
-   TEST_LINE( Descend( SToD( "01000101" ) )   , 3474223                                             )
-   TEST_LINE( Descend( SToD( "19801220" ) )   , 2787214                                             )
+   TEST_LINE( Descend( HB_SToD( "" ) )        , 5231808                                             )
+   TEST_LINE( Descend( HB_SToD( "01000101" ) ), 3474223                                             )
+   TEST_LINE( Descend( HB_SToD( "19801220" ) ), 2787214                                             )
 
 #ifdef __HARBOUR__
 

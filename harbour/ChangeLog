@@ -1,3 +1,12 @@
+20000411-03:04 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * utils/hbtest/*
+     ! Fixed to work when HB_COMPAT_XPP mode is turned off.
+
+   * include/hbsetup.ch
+   * source/vm/cmdarg.c
+     + Added defines for Flagship/FoxPro/dBase extensions.
+
 20000411-02:32 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/common/hbver.h

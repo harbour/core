@@ -249,25 +249,25 @@ FUNCTION Main_MATH()
 
    /* MIN()/MAX() */
 
-   TEST_LINE( Max(NIL, NIL)                           , "E BASE 1093 Argument error MAX F:S" )
-   TEST_LINE( Max(10, NIL)                            , "E BASE 1093 Argument error MAX F:S" )
-   TEST_LINE( Max(SToD("19800101"), 10)               , "E BASE 1093 Argument error MAX F:S" )
-   TEST_LINE( Max(SToD("19800101"), SToD("19800101")) , SToD("19800101")                     )
-   TEST_LINE( Max(SToD("19800102"), SToD("19800101")) , SToD("19800102")                     )
-   TEST_LINE( Max(SToD("19800101"), SToD("19800102")) , SToD("19800102")                     )
-   TEST_LINE( Max(snIntP, snLongP)                    , 100000                               )
-#ifdef __HARBOUR__
-   TEST_LINE( Max(@snIntP, @snLongP)                  , 100000                               ) /* Bug in CA-Cl*pper, it will return: "E BASE 1093 Argument error MAX F:S" */
-#endif
-   TEST_LINE( Min(NIL, NIL)                           , "E BASE 1092 Argument error MIN F:S" )
-   TEST_LINE( Min(10, NIL)                            , "E BASE 1092 Argument error MIN F:S" )
-   TEST_LINE( Min(SToD("19800101"), 10)               , "E BASE 1092 Argument error MIN F:S" )
-   TEST_LINE( Min(SToD("19800101"), SToD("19800101")) , SToD("19800101")                     )
-   TEST_LINE( Min(SToD("19800102"), SToD("19800101")) , SToD("19800101")                     )
-   TEST_LINE( Min(SToD("19800101"), SToD("19800102")) , SToD("19800101")                     )
-   TEST_LINE( Min(snIntP, snLongP)                    , 10                                   )
-#ifdef __HARBOUR__
-   TEST_LINE( Min(@snIntP, @snLongP)                  , 10                                   ) /* Bug in CA-Cl*pper, it will return: "E BASE 1092 Argument error MIN F:S" */
+   TEST_LINE( Max(NIL, NIL)                                 , "E BASE 1093 Argument error MAX F:S" )
+   TEST_LINE( Max(10, NIL)                                  , "E BASE 1093 Argument error MAX F:S" )
+   TEST_LINE( Max(HB_SToD("19800101"), 10)                  , "E BASE 1093 Argument error MAX F:S" )
+   TEST_LINE( Max(HB_SToD("19800101"), HB_SToD("19800101")) , HB_SToD("19800101")                  )
+   TEST_LINE( Max(HB_SToD("19800102"), HB_SToD("19800101")) , HB_SToD("19800102")                  )
+   TEST_LINE( Max(HB_SToD("19800101"), HB_SToD("19800102")) , HB_SToD("19800102")                  )
+   TEST_LINE( Max(snIntP, snLongP)                          , 100000                               )
+#ifdef __HARBOUR__                                          
+   TEST_LINE( Max(@snIntP, @snLongP)                        , 100000                               ) /* Bug in CA-Cl*pper, it will return: "E BASE 1093 Argument error MAX F:S" */
+#endif                                                      
+   TEST_LINE( Min(NIL, NIL)                                 , "E BASE 1092 Argument error MIN F:S" )
+   TEST_LINE( Min(10, NIL)                                  , "E BASE 1092 Argument error MIN F:S" )
+   TEST_LINE( Min(HB_SToD("19800101"), 10)                  , "E BASE 1092 Argument error MIN F:S" )
+   TEST_LINE( Min(HB_SToD("19800101"), HB_SToD("19800101")) , HB_SToD("19800101")                  )
+   TEST_LINE( Min(HB_SToD("19800102"), HB_SToD("19800101")) , HB_SToD("19800101")                  )
+   TEST_LINE( Min(HB_SToD("19800101"), HB_SToD("19800102")) , HB_SToD("19800101")                  )
+   TEST_LINE( Min(snIntP, snLongP)                          , 10                                   )
+#ifdef __HARBOUR__                                          
+   TEST_LINE( Min(@snIntP, @snLongP)                        , 10                                   ) /* Bug in CA-Cl*pper, it will return: "E BASE 1092 Argument error MIN F:S" */
 #endif
 
    /* Decimals handling */

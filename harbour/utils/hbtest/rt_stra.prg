@@ -462,13 +462,13 @@ FUNCTION New_STRINGS()
 
 #ifdef __HARBOUR__
 
-   TEST_LINE( HB_ValToStr( 4 )                   , "         4"    )
-   TEST_LINE( HB_ValToStr( 4.0 / 2 )             , "         2.00" )
-   TEST_LINE( HB_ValToStr( "String" )            , "String"        )
-   TEST_LINE( HB_ValToStr( SToD( "20010101" ) )  , "2001.01.01"    )
-   TEST_LINE( HB_ValToStr( NIL )                 , "NIL"           )
-   TEST_LINE( HB_ValToStr( .F. )                 , ".F."           )
-   TEST_LINE( HB_ValToStr( .T. )                 , ".T."           )
+   TEST_LINE( HB_ValToStr( 4 )                     , "         4"    )
+   TEST_LINE( HB_ValToStr( 4.0 / 2 )               , "         2.00" )
+   TEST_LINE( HB_ValToStr( "String" )              , "String"        )
+   TEST_LINE( HB_ValToStr( HB_SToD( "20010101" ) ) , "2001.01.01"    )
+   TEST_LINE( HB_ValToStr( NIL )                   , "NIL"           )
+   TEST_LINE( HB_ValToStr( .F. )                   , ".F."           )
+   TEST_LINE( HB_ValToStr( .T. )                   , ".T."           )
 
 #endif
 

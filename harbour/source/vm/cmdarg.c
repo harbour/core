@@ -347,6 +347,30 @@ void hb_cmdargProcessVM( void )
 #endif
       hb_conOutErr( hb_conNewLine(), 0 );
 
+      hb_conOutErr( "Multisoft Flagship compatible extensions: ", 0 );
+#if defined( HB_FLAGSHIP_VO )
+      hb_conOutErr( "Yes", 0 );
+#else
+      hb_conOutErr( "No", 0 );
+#endif
+      hb_conOutErr( hb_conNewLine(), 0 );
+
+      hb_conOutErr( "Microsoft FoxPro compatible extensions: ", 0 );
+#if defined( HB_FOXPRO_VO )
+      hb_conOutErr( "Yes", 0 );
+#else
+      hb_conOutErr( "No", 0 );
+#endif
+      hb_conOutErr( hb_conNewLine(), 0 );
+
+      hb_conOutErr( "dBase compatible extensions: ", 0 );
+#if defined( HB_DBASE_VO )
+      hb_conOutErr( "Yes", 0 );
+#else
+      hb_conOutErr( "No", 0 );
+#endif
+      hb_conOutErr( hb_conNewLine(), 0 );
+
       hb_conOutErr( "Object file generation support: ", 0 );
 #if defined( HARBOUR_OBJ_GENERATION )
       hb_conOutErr( "Yes", 0 );
@@ -377,6 +401,9 @@ void hb_cmdargProcessVM( void )
          hb_conOutErr( buffer, 0 );
          hb_conOutErr( hb_conNewLine(), 0 );
       }
+
+      hb_conOutErr( "---------------------------", 0 );
+      hb_conOutErr( hb_conNewLine(), 0 );
    }
 }
 

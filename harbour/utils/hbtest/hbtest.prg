@@ -417,7 +417,7 @@ FUNCTION XToStr( xValue )
       RETURN '"' + xValue + '"'
 
    CASE cType == "N" ; RETURN LTrim( Str( xValue ) )
-   CASE cType == "D" ; RETURN 'SToD("' + DToS( xValue ) + '")'
+   CASE cType == "D" ; RETURN 'HB_SToD("' + DToS( xValue ) + '")'
    CASE cType == "L" ; RETURN iif( xValue, ".T.", ".F." )
    CASE cType == "O" ; RETURN xValue:className() + " Object"
    CASE cType == "U" ; RETURN "NIL"
@@ -515,11 +515,15 @@ STATIC FUNCTION CMDLGetValue( cCommandLine, cName, cRetVal )
 
    RETURN cRetVal
 
+#ifdef __XPP__
+FUNCTION HB_SToD( cDate )
+   RETURN SToD( cDate )
+#endif
+
 #ifndef HAVE_HBCLIP
 #ifndef __HARBOUR__
-#ifndef __XPP__
 
-FUNCTION SToD( cDate )
+FUNCTION HB_SToD( cDate )
    LOCAL cOldDateFormat
    LOCAL dDate
 
@@ -537,7 +541,6 @@ FUNCTION SToD( cDate )
 
    RETURN dDate
 
-#endif
 #endif
 #endif
 

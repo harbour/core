@@ -525,135 +525,135 @@ FUNCTION Main_STR()
 
    /* LEFT() */
 
-   TEST_LINE( Left(100     , -10)             , "E BASE 1124 Argument error LEFT F:S" )
-   TEST_LINE( Left("abcdef", "A")             , "E BASE 1124 Argument error LEFT F:S" )
-   TEST_LINE( Left("abcdef", -10)             , ""               )
-   TEST_LINE( Left("abcdef", -2)              , ""               )
-   TEST_LINE( Left("abcdef", 0)               , ""               )
-   TEST_LINE( Left("abcdef", 2)               , "ab"             )
-   TEST_LINE( Left("abcdef", 10)              , "abcdef"         )
-   TEST_LINE( Left("ab" + Chr(0) + "def", 5)  , "ab" + Chr(0) + "de" )
-
-   /* RIGHT() */
-
-   TEST_LINE( Right(100     , -10)            , ""               )
-   TEST_LINE( Right("abcdef", "A")            , ""               )
-   TEST_LINE( Right("abcdef", -10)            , ""               )
-   TEST_LINE( Right("abcdef", -2)             , ""               )
-   TEST_LINE( Right("abcdef", 0)              , ""               )
-   TEST_LINE( Right("abcdef", 2)              , "ef"             )
-   TEST_LINE( Right("abcdef", 10)             , "abcdef"         )
-   TEST_LINE( Right("ab" + Chr(0) + "def", 5) , "b" + Chr(0) + "def" )
-
-   /* PADR() */
-
-   TEST_LINE( Pad(NIL, 5)                     , ""               )
-   TEST_LINE( Pad(.T., 5)                     , ""               )
-   TEST_LINE( Pad(10, 5)                      , "10   "          )
-   TEST_LINE( Pad(10.2, 5)                    , "10.2 "          )
-   TEST_LINE( Pad(100000, 8)                  , "100000  "       )
-   TEST_LINE( Pad(100000, 8, "-")             , "100000--"       )
-   TEST_LINE( Pad(-100000, 8, "-")            , "-100000-"       )
-   TEST_LINE( Pad(5000000000, 15)             , "5000000000     ")
-   TEST_LINE( Pad(SToD("19840325"), 12)       , "1984.03.25  "   )
-   TEST_LINE( Pad(Year(SToD("19840325")), 5)  , "1984 "          )
-   TEST_LINE( Pad(Day(SToD("19840325")), 5)   , "25   "          )
-#ifdef __HARBOUR__
-   TEST_LINE( Pad(@scString, 10)              , "HELLO     "     ) /* Bug in CA-Cl*pper, it will return "" */
-   TEST_LINE( Pad(scString, @snIntP)          , "HELLO     "     ) /* Bug in CA-Cl*pper, it will return "" */
-#endif
-#ifndef __XPP__
-   TEST_LINE( Pad("abcdef", "A")              , ""               )
-   TEST_LINE( Pad("abcdef", -5)               , ""               )
-#endif
-   TEST_LINE( Pad("abcdef", 0)                , ""               )
-   TEST_LINE( Pad("abcdef", 5)                , "abcde"          )
-   TEST_LINE( Pad("abcdef", 10)               , "abcdef    "     )
-   TEST_LINE( Pad("abcdef", 10, "")           , "abcdef"+Chr(0)+""+Chr(0)+""+Chr(0)+""+Chr(0)+"" )
-   TEST_LINE( Pad("abcdef", 10, "1")          , "abcdef1111"     )
-   TEST_LINE( Pad("abcdef", 10, "12")         , "abcdef1111"     )
-
-   /* PADR() */
-
-   TEST_LINE( PadR(NIL, 5)                    , ""               )
-   TEST_LINE( PadR(.T., 5)                    , ""               )
-   TEST_LINE( PadR(10, 5)                     , "10   "          )
-   TEST_LINE( PadR(10.2, 5)                   , "10.2 "          )
-   TEST_LINE( PadR(100000, 8)                 , "100000  "       )
-   TEST_LINE( PadR(100000, 8, "-")            , "100000--"       )
-   TEST_LINE( PadR(-100000, 8, "-")           , "-100000-"       )
-   TEST_LINE( PadR(SToD("19840325"), 12)      , "1984.03.25  "   )
-   TEST_LINE( PadR(Year(SToD("19840325")), 5) , "1984 "          )
-   TEST_LINE( PadR(Day(SToD("19840325")), 5)  , "25   "          )
-#ifdef __HARBOUR__
-   TEST_LINE( PadR(@scString, 10)             , "HELLO     "     ) /* Bug in CA-Cl*pper, it will return "" */
-   TEST_LINE( PadR(scString, @snIntP)         , "HELLO     "     ) /* Bug in CA-Cl*pper, it will return "" */
-#endif
-#ifndef __XPP__
-   TEST_LINE( PadR("abcdef", "A")             , ""               )
-   TEST_LINE( PadR("abcdef", -5)              , ""               )
-#endif
-   TEST_LINE( PadR("abcdef", 0)               , ""               )
-   TEST_LINE( PadR("abcdef", 5)               , "abcde"          )
-   TEST_LINE( PadR("abcdef", 10)              , "abcdef    "     )
-   TEST_LINE( PadR("abcdef", 10, "")          , "abcdef"+Chr(0)+""+Chr(0)+""+Chr(0)+""+Chr(0)+"" )
-   TEST_LINE( PadR("abcdef", 10, "1")         , "abcdef1111"     )
-   TEST_LINE( PadR("abcdef", 10, "12")        , "abcdef1111"     )
-
-   /* PADL() */
-
-   TEST_LINE( PadL(NIL, 5)                    , ""               )
-   TEST_LINE( PadL(.T., 5)                    , ""               )
-   TEST_LINE( PadL(10, 5)                     , "   10"          )
-   TEST_LINE( PadL(10.2, 5)                   , " 10.2"          )
-   TEST_LINE( PadL(100000, 8)                 , "  100000"       )
-   TEST_LINE( PadL(100000, 8, "-")            , "--100000"       )
-   TEST_LINE( PadL(-100000, 8, "-")           , "--100000"       )
-   TEST_LINE( PadL(SToD("19840325"), 12)      , "  1984.03.25"   )
-   TEST_LINE( PadL(Year(SToD("19840325")), 5) , " 1984"          )
-   TEST_LINE( PadL(Day(SToD("19840325")), 5)  , "   25"          )
-#ifdef __HARBOUR__
-   TEST_LINE( PadL(@scString, 10)             , "     HELLO"     ) /* Bug in CA-Cl*pper, it will return "" */
-   TEST_LINE( PadL(scString, @snIntP)         , "     HELLO"     ) /* Bug in CA-Cl*pper, it will return "" */
-#endif
-#ifndef __XPP__
-   TEST_LINE( PadL("abcdef", "A")             , ""               )
-   TEST_LINE( PadL("abcdef", -5)              , ""               )
-#endif
-   TEST_LINE( PadL("abcdef", 0)               , ""               )
-   TEST_LINE( PadL("abcdef", 5)               , "abcde"          ) /* QUESTION: CA-Cl*pper "bug", should return: "bcdef" ? */
-   TEST_LINE( PadL("abcdef", 10)              , "    abcdef"     )
-   TEST_LINE( PadL("abcdef", 10, "")          , ""+Chr(0)+""+Chr(0)+""+Chr(0)+""+Chr(0)+"abcdef" )
-   TEST_LINE( PadL("abcdef", 10, "1")         , "1111abcdef"     )
-   TEST_LINE( PadL("abcdef", 10, "12")        , "1111abcdef"     )
-
-   /* PADC() */
-
-   TEST_LINE( PadC(NIL, 5)                    , ""               )
-   TEST_LINE( PadC(.T., 5)                    , ""               )
-   TEST_LINE( PadC(10, 5)                     , " 10  "          )
-   TEST_LINE( PadC(10.2, 5)                   , "10.2 "          )
-   TEST_LINE( PadC(100000, 8)                 , " 100000 "       )
-   TEST_LINE( PadC(100000, 8, "-")            , "-100000-"       )
-   TEST_LINE( PadC(-100000, 8, "-")           , "-100000-"       )
-   TEST_LINE( PadC(SToD("19840325"), 12)      , " 1984.03.25 "   )
-   TEST_LINE( PadC(Year(SToD("19840325")), 5) , "1984 "          )
-   TEST_LINE( PadC(Day(SToD("19840325")), 5)  , " 25  "          )
-#ifdef __HARBOUR__
-   TEST_LINE( PadC(@scString, 10)             , "  HELLO   "     ) /* Bug in CA-Cl*pper, it will return "" */
-   TEST_LINE( PadC(scString, @snIntP)         , "  HELLO   "     ) /* Bug in CA-Cl*pper, it will return "" */
-#endif
-#ifndef __XPP__
-   TEST_LINE( PadC("abcdef", "A")             , ""               )
-   TEST_LINE( PadC("abcdef", -5)              , ""               )
-#endif
-   TEST_LINE( PadC("abcdef", 0)               , ""               )
-   TEST_LINE( PadC("abcdef", 2)               , "ab"             ) /* QUESTION: CA-Cl*pper "bug", should return: "cd" ? */
-   TEST_LINE( PadC("abcdef", 5)               , "abcde"          )
-   TEST_LINE( PadC("abcdef", 10)              , "  abcdef  "     )
-   TEST_LINE( PadC("abcdef", 10, "")          , ""+Chr(0)+""+Chr(0)+"abcdef"+Chr(0)+""+Chr(0)+"" )
-   TEST_LINE( PadC("abcdef", 10, "1")         , "11abcdef11"     )
-   TEST_LINE( PadC("abcdef", 10, "12")        , "11abcdef11"     )
+   TEST_LINE( Left(100     , -10)                , "E BASE 1124 Argument error LEFT F:S" )
+   TEST_LINE( Left("abcdef", "A")                , "E BASE 1124 Argument error LEFT F:S" )
+   TEST_LINE( Left("abcdef", -10)                , ""               )
+   TEST_LINE( Left("abcdef", -2)                 , ""               )
+   TEST_LINE( Left("abcdef", 0)                  , ""               )
+   TEST_LINE( Left("abcdef", 2)                  , "ab"             )
+   TEST_LINE( Left("abcdef", 10)                 , "abcdef"         )
+   TEST_LINE( Left("ab" + Chr(0) + "def", 5)     , "ab" + Chr(0) + "de" )
+                                                 
+   /* RIGHT() */                                 
+                                                 
+   TEST_LINE( Right(100     , -10)               , ""               )
+   TEST_LINE( Right("abcdef", "A")               , ""               )
+   TEST_LINE( Right("abcdef", -10)               , ""               )
+   TEST_LINE( Right("abcdef", -2)                , ""               )
+   TEST_LINE( Right("abcdef", 0)                 , ""               )
+   TEST_LINE( Right("abcdef", 2)                 , "ef"             )
+   TEST_LINE( Right("abcdef", 10)                , "abcdef"         )
+   TEST_LINE( Right("ab" + Chr(0) + "def", 5)    , "b" + Chr(0) + "def" )
+                                                 
+   /* PADR() */                                  
+                                                 
+   TEST_LINE( Pad(NIL, 5)                        , ""               )
+   TEST_LINE( Pad(.T., 5)                        , ""               )
+   TEST_LINE( Pad(10, 5)                         , "10   "          )
+   TEST_LINE( Pad(10.2, 5)                       , "10.2 "          )
+   TEST_LINE( Pad(100000, 8)                     , "100000  "       )
+   TEST_LINE( Pad(100000, 8, "-")                , "100000--"       )
+   TEST_LINE( Pad(-100000, 8, "-")               , "-100000-"       )
+   TEST_LINE( Pad(5000000000, 15)                , "5000000000     ")
+   TEST_LINE( Pad(HB_SToD("19840325"), 12)       , "1984.03.25  "   )
+   TEST_LINE( Pad(Year(HB_SToD("19840325")), 5)  , "1984 "          )
+   TEST_LINE( Pad(Day(HB_SToD("19840325")), 5)   , "25   "          )
+#ifdef __HARBOUR__                               
+   TEST_LINE( Pad(@scString, 10)                 , "HELLO     "     ) /* Bug in CA-Cl*pper, it will return "" */
+   TEST_LINE( Pad(scString, @snIntP)             , "HELLO     "     ) /* Bug in CA-Cl*pper, it will return "" */
+#endif                                           
+#ifndef __XPP__                                  
+   TEST_LINE( Pad("abcdef", "A")                 , ""               )
+   TEST_LINE( Pad("abcdef", -5)                  , ""               )
+#endif                                           
+   TEST_LINE( Pad("abcdef", 0)                   , ""               )
+   TEST_LINE( Pad("abcdef", 5)                   , "abcde"          )
+   TEST_LINE( Pad("abcdef", 10)                  , "abcdef    "     )
+   TEST_LINE( Pad("abcdef", 10, "")              , "abcdef"+Chr(0)+""+Chr(0)+""+Chr(0)+""+Chr(0)+"" )
+   TEST_LINE( Pad("abcdef", 10, "1")             , "abcdef1111"     )
+   TEST_LINE( Pad("abcdef", 10, "12")            , "abcdef1111"     )
+                                                 
+   /* PADR() */                                  
+                                                 
+   TEST_LINE( PadR(NIL, 5)                       , ""               )
+   TEST_LINE( PadR(.T., 5)                       , ""               )
+   TEST_LINE( PadR(10, 5)                        , "10   "          )
+   TEST_LINE( PadR(10.2, 5)                      , "10.2 "          )
+   TEST_LINE( PadR(100000, 8)                    , "100000  "       )
+   TEST_LINE( PadR(100000, 8, "-")               , "100000--"       )
+   TEST_LINE( PadR(-100000, 8, "-")              , "-100000-"       )
+   TEST_LINE( PadR(HB_SToD("19840325"), 12)      , "1984.03.25  "   )
+   TEST_LINE( PadR(Year(HB_SToD("19840325")), 5) , "1984 "          )
+   TEST_LINE( PadR(Day(HB_SToD("19840325")), 5)  , "25   "          )
+#ifdef __HARBOUR__                               
+   TEST_LINE( PadR(@scString, 10)                , "HELLO     "     ) /* Bug in CA-Cl*pper, it will return "" */
+   TEST_LINE( PadR(scString, @snIntP)            , "HELLO     "     ) /* Bug in CA-Cl*pper, it will return "" */
+#endif                                           
+#ifndef __XPP__                                  
+   TEST_LINE( PadR("abcdef", "A")                , ""               )
+   TEST_LINE( PadR("abcdef", -5)                 , ""               )
+#endif                                           
+   TEST_LINE( PadR("abcdef", 0)                  , ""               )
+   TEST_LINE( PadR("abcdef", 5)                  , "abcde"          )
+   TEST_LINE( PadR("abcdef", 10)                 , "abcdef    "     )
+   TEST_LINE( PadR("abcdef", 10, "")             , "abcdef"+Chr(0)+""+Chr(0)+""+Chr(0)+""+Chr(0)+"" )
+   TEST_LINE( PadR("abcdef", 10, "1")            , "abcdef1111"     )
+   TEST_LINE( PadR("abcdef", 10, "12")           , "abcdef1111"     )
+                                                 
+   /* PADL() */                                  
+                                                 
+   TEST_LINE( PadL(NIL, 5)                       , ""               )
+   TEST_LINE( PadL(.T., 5)                       , ""               )
+   TEST_LINE( PadL(10, 5)                        , "   10"          )
+   TEST_LINE( PadL(10.2, 5)                      , " 10.2"          )
+   TEST_LINE( PadL(100000, 8)                    , "  100000"       )
+   TEST_LINE( PadL(100000, 8, "-")               , "--100000"       )
+   TEST_LINE( PadL(-100000, 8, "-")              , "--100000"       )
+   TEST_LINE( PadL(HB_SToD("19840325"), 12)      , "  1984.03.25"   )
+   TEST_LINE( PadL(Year(HB_SToD("19840325")), 5) , " 1984"          )
+   TEST_LINE( PadL(Day(HB_SToD("19840325")), 5)  , "   25"          )
+#ifdef __HARBOUR__                               
+   TEST_LINE( PadL(@scString, 10)                , "     HELLO"     ) /* Bug in CA-Cl*pper, it will return "" */
+   TEST_LINE( PadL(scString, @snIntP)            , "     HELLO"     ) /* Bug in CA-Cl*pper, it will return "" */
+#endif                                           
+#ifndef __XPP__                                  
+   TEST_LINE( PadL("abcdef", "A")                , ""               )
+   TEST_LINE( PadL("abcdef", -5)                 , ""               )
+#endif                                           
+   TEST_LINE( PadL("abcdef", 0)                  , ""               )
+   TEST_LINE( PadL("abcdef", 5)                  , "abcde"          ) /* QUESTION: CA-Cl*pper "bug", should return: "bcdef" ? */
+   TEST_LINE( PadL("abcdef", 10)                 , "    abcdef"     )
+   TEST_LINE( PadL("abcdef", 10, "")             , ""+Chr(0)+""+Chr(0)+""+Chr(0)+""+Chr(0)+"abcdef" )
+   TEST_LINE( PadL("abcdef", 10, "1")            , "1111abcdef"     )
+   TEST_LINE( PadL("abcdef", 10, "12")           , "1111abcdef"     )
+                                                 
+   /* PADC() */                                  
+                                                 
+   TEST_LINE( PadC(NIL, 5)                       , ""               )
+   TEST_LINE( PadC(.T., 5)                       , ""               )
+   TEST_LINE( PadC(10, 5)                        , " 10  "          )
+   TEST_LINE( PadC(10.2, 5)                      , "10.2 "          )
+   TEST_LINE( PadC(100000, 8)                    , " 100000 "       )
+   TEST_LINE( PadC(100000, 8, "-")               , "-100000-"       )
+   TEST_LINE( PadC(-100000, 8, "-")              , "-100000-"       )
+   TEST_LINE( PadC(HB_SToD("19840325"), 12)      , " 1984.03.25 "   )
+   TEST_LINE( PadC(Year(HB_SToD("19840325")), 5) , "1984 "          )
+   TEST_LINE( PadC(Day(HB_SToD("19840325")), 5)  , " 25  "          )
+#ifdef __HARBOUR__                               
+   TEST_LINE( PadC(@scString, 10)                , "  HELLO   "     ) /* Bug in CA-Cl*pper, it will return "" */
+   TEST_LINE( PadC(scString, @snIntP)            , "  HELLO   "     ) /* Bug in CA-Cl*pper, it will return "" */
+#endif                                           
+#ifndef __XPP__                                  
+   TEST_LINE( PadC("abcdef", "A")                , ""               )
+   TEST_LINE( PadC("abcdef", -5)                 , ""               )
+#endif                                           
+   TEST_LINE( PadC("abcdef", 0)                  , ""               )
+   TEST_LINE( PadC("abcdef", 2)                  , "ab"             ) /* QUESTION: CA-Cl*pper "bug", should return: "cd" ? */
+   TEST_LINE( PadC("abcdef", 5)                  , "abcde"          )
+   TEST_LINE( PadC("abcdef", 10)                 , "  abcdef  "     )
+   TEST_LINE( PadC("abcdef", 10, "")             , ""+Chr(0)+""+Chr(0)+"abcdef"+Chr(0)+""+Chr(0)+"" )
+   TEST_LINE( PadC("abcdef", 10, "1")            , "11abcdef11"     )
+   TEST_LINE( PadC("abcdef", 10, "12")           , "11abcdef11"     )
 
    /* STUFF() */
 

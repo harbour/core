@@ -49,14 +49,20 @@
  * You can select here, whether you want to include feature introduced in
  * Clipper implementations other than Cl*pper 5.2e.
  *
- * By default these are all turned on
+ * By default 5.3x and Xbase++ are turned on
 */
 
-/* Include new CA-Cl*pper 5.3[a,b] functions */
+/* Include CA-Cl*pper 5.3[a,b] extensions */
 #define HB_COMPAT_C53
-/* Include new Alaska Xbase++ functions */
+/* Include Alaska Xbase++ extensions */
 #define HB_COMPAT_XPP
-/* Include new CA-VO functions */
-#define HB_COMPAT_VO
+/* Include CA-VO extensions */
+/* #define HB_COMPAT_VO */
+/* Include Flagship extensions */
+/* #define HB_COMPAT_FLAGSHIP */
+/* Include FoxPro extensions */
+/* #define HB_COMPAT_FOXPRO */
+/* Include dBase extensions */
+/* #define HB_COMPAT_DBASE */
 
 #endif /* HB_SETUP_CH_ */
