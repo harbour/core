@@ -1,3 +1,7 @@
+2000-07-13 07:45 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * source/compiler/harbour.slx
+     * Corrected premature release of MACROTEXT
+
 2000-07-12 20:45 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/harbour.slx
      * Corrected support for PARAMETERS

@@ -944,9 +944,7 @@ LANGUAGE_RULES_ARE {
 	       }\
 	       else\
 	       {\
-                  yytext = hb_strdup( yytext );\
-		  aTexts[iTexts++] = yytext; \
-		  /* printf( "Text %i At: %i for %s\n", iTexts, aTexts[iTexts - 1], aTexts[iTexts - 1] ); */\
+                  yytext = hb_compIdentifierNew( yytext, TRUE );\
 \
                   yylval.string = yytext;\
 	       	  iRet = MACROTEXT;\
@@ -954,9 +952,7 @@ LANGUAGE_RULES_ARE {
 	    }\
 	    else\
 	    {\
-               yytext = hb_strdup( yytext );\
-	       aTexts[iTexts++] = yytext;\
-	       /* printf( "Text %i At: %i for %s\n", iTexts, aTexts[iTexts - 1], aTexts[iTexts - 1] ); */\
+               yytext = hb_compIdentifierNew( yytext, TRUE );\
 \
                yylval.string = yytext;\
 	       iRet = MACROTEXT;\
