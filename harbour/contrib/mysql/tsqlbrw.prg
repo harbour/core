@@ -40,6 +40,22 @@
 #include "dbstruct.ch"
 #include "mysql.ch"
 
+/* NOTE:
+
+In fact no, the 'regular syntax is the same as the VO one,
+
+ACCESS Block Method Block()
+or
+ACCESS Block Inline ::MyVal
+
+and
+
+ASSIGN Block(x) Method Block(x)
+or
+ASSIGN Block(x) INLINE  ::MyVal := x
+
+*/
+
 
 CLASS TBColumnSQL from TBColumn
 
@@ -69,7 +85,6 @@ return Self
 METHOD Block() CLASS TBColumnSQL
 
    local xValue := ::oBrw:oCurRow:FieldGet(::nFieldNum)
-   local bBlock := "{|| '"
 
    do case
    case ValType(xValue) == "N"
@@ -79,21 +94,22 @@ METHOD Block() CLASS TBColumnSQL
       xValue := DToC(xValue)
 
    case ValType(xValue) == "L"
-      xValue := iif(xValue, "T", "F")
+      xValue := iif(xValue, ".T.", ".F.")
+
+   case ValType(xValue) $ "CM"
+      xValue := "'" + xValue + "'"
 
    otherwise
    endcase
 
-   bBlock += xValue + " '}"
-
-return &(bBlock)
+return &("{|| " + xValue + "}")
 
 
 /*--------------------------------------------------------------------------------------------------*/
 
 
 /*
-   This class is more or less like a TBrowseDB() object in that is receives an oQuery/oTable
+   This class is more or less like a TBrowseDB() object in that it receives an oQuery/oTable
    object and gives back a browseable view of it
 */
 CLASS TBrowseSQL from TBrowse
@@ -145,7 +161,7 @@ METHOD New(nTop, nLeft, nBottom, nRight, oServer, oQuery, cTable) CLASS TBrowseS
    // Add a column for each field
    for i := 1 to ::oQuery:FCount()
       // No bBlock now since New() would use it to find column length, but column is not ready yet at this point
-      oCol := TBColumnSQL():New(::oCurRow:FieldName(i), {|val| iif(val <> nil, alert(val),)}, Self)
+      oCol := TBColumnSQL():New(::oCurRow:FieldName(i),, Self)
 
       oCol:Width := Max(::oCurRow:aFieldStruct[i][MYSQL_FS_LENGTH], Len(oCol:Heading))
 
@@ -153,15 +169,15 @@ METHOD New(nTop, nLeft, nBottom, nRight, oServer, oQuery, cTable) CLASS TBrowseS
       oCol:nFieldNum := i
 
       // Add a picture
-      do case
+      /*do case
       case ISNUMBER(::oCurRow:FieldGet(i))
-          oCol:picture    := "999,999"
+          oCol:picture    := "@N999,999"
 
       case ISCHARACTER(::oCurRow:FieldGet(i))
          // For non-numeric, just use colors 3 and 4 ("B/W" and "B/BG")
          oCol:picture  := replicate("!", ::oCurRow:aFieldStruct[i][MYSQL_FS_LENGTH])
 
-      endcase
+      endcase*/
 
       ::AddColumn(oCol)
    next
@@ -252,7 +268,7 @@ METHOD EditField() CLASS TBrowseSQL
    aGetList := { getnew( row(), col(),    ;
                         {|xValue| iif(xValue == nil, ::oCurRow:FieldGet(oCol:nFieldNum), ::oCurRow:FieldPut(oCol:nFieldNum, xValue))} ,;
                         oCol:heading,     ;
-                        oCol:picture,     ;
+                        nil,     ;
                         ::colorSpec ) }
 
    // Set insert key to toggle insert mode and cursor shape
@@ -309,6 +325,10 @@ RETURN Self
 
 
 METHOD BrowseTable(nKey, lCanEdit) CLASS TBrowseSQL
+
+   default nKey      to nil
+   default lCanEdit  to .F.
+
 
    do case
    case nKey == K_DOWN
