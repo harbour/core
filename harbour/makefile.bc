@@ -301,11 +301,13 @@ LANG_LIB_OBJS = \
    $(OBJ_DIR)\msgen.obj \
    $(OBJ_DIR)\msges.obj \
    $(OBJ_DIR)\msgeu.obj \
+   $(OBJ_DIR)\msgfr.obj \
    $(OBJ_DIR)\msggl.obj \
    $(OBJ_DIR)\msghu852.obj \
    $(OBJ_DIR)\msghucwi.obj \
    $(OBJ_DIR)\msghuwin.obj \
-   $(OBJ_DIR)\msgpt.obj 
+   $(OBJ_DIR)\msgpt.obj \
+   $(OBJ_DIR)\msgro.obj 
 
 #
 # TOOLS.LIB rules
@@ -1603,6 +1605,10 @@ $(OBJ_DIR)\msgeu.obj : $(LANG_DIR)\msgeu.c
    $(CC) $(CLIBFLAGS) -I$(LANG_DIR) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\msgfr.obj : $(LANG_DIR)\msgfr.c
+   $(CC) $(CLIBFLAGS) -I$(LANG_DIR) -o$@ $**
+   tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\msggl.obj : $(LANG_DIR)\msggl.c
    $(CC) $(CLIBFLAGS) -I$(LANG_DIR) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
@@ -1620,6 +1626,10 @@ $(OBJ_DIR)\msghuwin.obj : $(LANG_DIR)\msghuwin.c
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\msgpt.obj : $(LANG_DIR)\msgpt.c
+   $(CC) $(CLIBFLAGS) -I$(LANG_DIR) -o$@ $**
+   tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\msgro.obj : $(LANG_DIR)\msgro.c
    $(CC) $(CLIBFLAGS) -I$(LANG_DIR) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 

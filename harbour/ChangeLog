@@ -1,3 +1,23 @@
+20000416-12:34 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/lang/msgfr.c
+   + source/lang/msgro.c
+   * source/lang/Makefile
+   * makefile.bc
+   * makefile.vc
+     + Added French and Romanian language modules.
+
+   * make_gnu.*
+   * bin/bld.*
+     * Made them even more similar to make the updates easier.
+
+   * source/rdd/dbfcdx/dbfcdx1.c
+     ! One warning fixed.
+     ! One trace call fixed.
+
+   * doc/howtomak.txt
+     + Added that Bison 1.25 is required as a minimum.
+
 20000416-12:11 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
 
    * source/rdd/dbfcdx/dbfcdx1.c
@@ -7,7 +27,7 @@
    * source/compiler/genobj32.c
      + prefix "_HB_FUN_" added to function and external generated names.
 
-20000415-21:1 GMT -3 Luiz Rafael Culik <culik@sl.conex.net)
+20000415-21:10 GMT-3 Luiz Rafael Culik <culik@sl.conex.net)
  *doc/subcodes.txt
     *renamed all categories to Run time Error
  *doc/en/command.txt

@@ -3,8 +3,6 @@ rem
 rem $Id$
 rem 
 
-rem Flavour: DOS/Windows batch file
-
 rem ---------------------------------------------------------------
 rem Template to initialize the environment before starting
 rem the GNU make system for Harbour
@@ -40,7 +38,7 @@ set HB_INC_INSTALL=include\
 :HELP
 
    echo.
-   echo Usage: make_gnu.bat [command]
+   echo Usage: make_gnu [command]
    echo.
    echo The following commands are supported:
    echo   - all (default)
@@ -111,7 +109,7 @@ set HB_INC_INSTALL=include\
    rem ---------------------------------------------------------------
    rem Start the GNU make system
 
-   make %1 %2 %3 %4 %5 %6 %7 %8 %9 > make_gnu.log
+   make %1 %2 %3 %4 %5 %6 %7 %8 %9 2> make_gnu.log
    goto END
 
 :END

@@ -3,8 +3,6 @@
 # $Id$
 #
 
-# Flavour: Bash script
-
 # ---------------------------------------------------------------
 # Template to build a final Harbour executable, using Harbour
 # with the C code generation feature, then calling the proper C

@@ -3,8 +3,6 @@ rem
 rem $Id$
 rem
 
-rem Flavour: DOS/Windows batch file
-
 rem ---------------------------------------------------------------
 rem Template to build a final Harbour executable, using Harbour
 rem with the C code generation feature, then calling the proper C
@@ -28,7 +26,7 @@ rem if "%HB_GT_LIB%" == "" set HB_GT_LIB=
 :HELP
 
    echo.
-   echo Usage: bld.bat filename
+   echo Usage: bld filename
    echo.
    echo Notes:
    echo.

@@ -9,11 +9,13 @@ C_SOURCES=\
 	msgen.c      \
 	msges.c      \
 	msgeu.c      \
+	msgfr.c      \
 	msggl.c      \
 	msghu852.c   \
 	msghucwi.c   \
 	msghuwin.c   \
 	msgpt.c      \
+	msgro.c      \
 
 LIBNAME=lang
 

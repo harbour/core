@@ -3,8 +3,6 @@
 # $Id$
 #
 
-# Flavour: Bash script
-
 # ---------------------------------------------------------------
 # Template to initialize the environment before starting
 # the GNU make system for Harbour

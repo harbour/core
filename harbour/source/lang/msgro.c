@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (FR)
+ * Language Support Module (RO)
  *
  * Copyright 2000 Victor Szakats <info@szelvesz.hu>
  * www - http://www.harbour-project.org
@@ -33,9 +33,9 @@
  *
  */
 
-/* Language name: French */
-/* ISO language code (2 chars): FR */
-/* Codepage: ???? */
+/* Language name: Romanian */
+/* ISO language code (2 chars): RO */
+/* Codepage: 852 */
 
 #include "hbapilng.h"
 
@@ -44,52 +44,52 @@ static HB_LANG s_lang =
    {
       /* Identification */
    
-      "FR",                        /* ID */
-      "French",                    /* Name (in English) */
-      "fran‡ais",                  /* Name (in native language) */
-      "FR",                        /* RFC ID */
-      "850",                       /* Codepage */
+      "RO",                        /* ID */
+      "Romanian",                  /* Name (in English) */
+      "Romƒn",                     /* Name (in native language) */
+      "RO",                        /* RFC ID */
+      "852",                       /* Codepage */
       "$Revision$ $Date$",         /* Version */
    
       /* Month names */
    
-      "Janvier",
-      "F‚vrier",
-      "Mars",
-      "Avril",
-      "May",
-      "Juin",
-      "Juillet",
-      "Ao–t",
-      "Septembre",
-      "Octobre",
-      "Novembre",
-      "D‚cembre",
+      "ianuarie",
+      "februarie",
+      "martie",
+      "aprilie",
+      "mai",
+      "iunie",
+      "iulie",
+      "august",
+      "septembrie",
+      "octombrie",
+      "noiembrie",
+      "decembrie",
    
       /* Day names */
    
-      "Dimanche",
-      "Lundi",
-      "Mardi",
-      "Mercredi",
-      "Jeudi",
-      "Vendredi",
-      "Samedi"
-   
+      "duminicÇ",
+      "luni",
+      "marîi",
+      "miercuri",
+      "joi",
+      "vineri",
+      "sƒmbÇtÇ",
+
       /* CA-Cl*pper compatible natmsg items */
    
-      "Base de donn‚es   Nb d'enreg   Date j-m-ae    Taille",
-      "Voulez-vous d'autres ‚chantillons?",
-      "No. de pages",
-      "** Total interm‚diaire **",
-      "* Total partiel *",
+      "Database Files    # Records    Last Update     Size",
+      "Do you want more samples?",
+      "Page No.",
+      "** Subtotal **",
+      "* Subsubtotal *",
       "*** Total ***",
       "Ins",
       "   ",
-      "Date invalide",
-      "Limites : ",
+      "Invalid date",
+      "Range: ",
       " - ",
-      "O/N",
+      "Y/N",
       "INVALID EXPRESSION",
    
       /* Error description names */
@@ -173,18 +173,18 @@ static HB_LANG s_lang =
    
       /* Texts */
    
-      "DD-MM-YYYY",
-      "O",
+      "DD.MM.YYYY",
+      "D",
       "N"
    }
 };
 
-HB_LANG_ANNOUNCE( FR );
+HB_LANG_ANNOUNCE( RO );
 
-HB_CALL_ON_STARTUP_BEGIN( hb_lang_Init_FR )
+HB_CALL_ON_STARTUP_BEGIN( hb_lang_Init_RO )
    hb_langRegister( &s_lang );
-HB_CALL_ON_STARTUP_END( hb_lang_Init_FR )
+HB_CALL_ON_STARTUP_END( hb_lang_Init_RO )
 #if ! defined(__GNUC__) && ! defined(_MSC_VER)
-   #pragma startup hb_lang_Init_FR
+   #pragma startup hb_lang_Init_RO
 #endif
 

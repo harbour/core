@@ -7,7 +7,7 @@ HOW TO BUILD HARBOUR FROM THE SOURCE
 
 You'll need these:
   - Flex
-  - Bison (set BISON_SIMPLE envvar to point to bison.simple)
+  - Bison 1.25 or upper (set BISON_SIMPLE envvar to point to bison.simple)
   - A supported (check MAKE_GNU.BAT for a list) C compiler
     (with all the envvars set (PATH, LIB, INCLUDE, etc...))
   - GNU-make if you want to use it with some other C compiler than GCC

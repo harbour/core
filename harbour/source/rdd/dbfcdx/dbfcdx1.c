@@ -355,7 +355,7 @@ static BOOL hb_cdxltoa( LONG lValue, char * szBuffer, USHORT uiLen )
    LONG lAbsNumber;
    int iCount, iPos;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_nltoa(%ld, %p, %hu)", lValue, szBuffer, uiLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_cdxltoa(%ld, %p, %hu)", lValue, szBuffer, uiLen));
 
    lAbsNumber = ( lValue > 0 ) ? lValue : - lValue;
    iCount = iPos = uiLen;
@@ -806,7 +806,6 @@ static LONG hb_cdxTagNewRoot( LPTAGINFO pTag )
 static void hb_cdxTagPageLoad( LPTAGINFO pTag, LPPAGEINFO pPage )
 {
    CDXDATA pData;
-   /* LPKEYINFO pKey; */
 
    hb_cdxIndexPageRead( pTag->Owner, pPage->Page, &pData, sizeof( CDXDATA ) );
    if( pData.Node_Atr > 1 )
