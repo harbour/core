@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
   * source/rtl/dummy.prg
+      and BrowseText() then this are not Handle by TMemoEditor:Edit() method
+
+2002-04-27 19:15 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>
+   * include/hbapirdd.h
    * source/rdd/dbcmd.c
      + added functions ordKeyAdd and ordKeyDel (need support from each RDD)
      ! fixed compatibility issue: ordListAdd(nil) is valid in Clipper

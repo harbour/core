@@ -129,11 +129,18 @@ else
       fi
 
    elif [ "$HB_ARCHITECTURE" = "linux" ]; then
-
+      if [ "$HB_GT_LIB" = "gtcrs" ]; then
+         export HB_SCREEN_LIB="-lncurses"
+      fi
+      
+      if [ "$HB_GT_LIB" = "gtsln" ]; then
+         export HB_SCREEN_LIB="-lslang"
+      fi
+      
       if [ -z "$HB_GT_LIB" ]; then HB_GT_LIB=gtstd; fi
 
       if [ "$HB_COMPILER" = "gcc" ]; then
-         gcc $1.c -o$1 $CFLAGS -I$HB_INC_INSTALL -L$HB_LIB_INSTALL -ldebug -lvm -lrtl -llang -lrdd -lrtl -lvm -lmacro -lpp -lcommon -lnulsys -ldbfntx -ldbfcdx -l$HB_GT_LIB -lm
+         gcc $1.c -o$1 $CFLAGS -I$HB_INC_INSTALL -L$HB_LIB_INSTALL -ldebug -lvm -lrtl -llang -lrdd -lrtl -lvm -lmacro -lpp -lcommon -lnulsys -ldbfntx -ldbfcdx -l$HB_GT_LIB $HB_SCREEN_LIB -lm
       else
          echo Error: HB_COMPILER value is unsupported.
       fi
