@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-06-24 24:35 UTC+0100 Ignacio Ortiz <ignacio@fivetech.com>
+  * source/rtl/tget.prg
+    !Fixed date input when set century on and the year was typed
+     with only two digits
+    !Fixed minus property value, did not work correctly
+
 2002-06-23 00:50 UTC-0300 Walter Negro <anegro@overnet.com.ar>
   * contrib/hbzlib/strcomp.c
     ! Fixed eliminated warning in declaration of var: const char
