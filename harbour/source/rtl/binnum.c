@@ -44,13 +44,9 @@ HB_FUNC( BIN2W )
    {
       char * pszString = hb_itemGetCPtr( pItem );
       ULONG ulLen = hb_itemGetCLen( pItem );
-      BYTE byBuffer[ 2 ];
 
-      byBuffer[ 0 ] = ( ulLen >= 1 ) ? ( BYTE ) pszString[ 0 ] : 0;
-      byBuffer[ 1 ] = ( ulLen >= 2 ) ? ( BYTE ) pszString[ 1 ] : 0;
-
-      hb_retni( HB_MKUSHORT( byBuffer[ 0 ],
-                             byBuffer[ 1 ] ) );
+      hb_retni( HB_MKUSHORT( ( ulLen >= 1 ) ? ( BYTE ) pszString[ 0 ] : 0,
+                             ( ulLen >= 2 ) ? ( BYTE ) pszString[ 1 ] : 0 ) );
    }
    else
       hb_retni( 0 );
@@ -64,13 +60,9 @@ HB_FUNC( BIN2I )
    {
       char * pszString = hb_itemGetCPtr( pItem );
       ULONG ulLen = hb_itemGetCLen( pItem );
-      BYTE byBuffer[ 2 ];
 
-      byBuffer[ 0 ] = ( ulLen >= 1 ) ? ( BYTE ) pszString[ 0 ] : 0;
-      byBuffer[ 1 ] = ( ulLen >= 2 ) ? ( BYTE ) pszString[ 1 ] : 0;
-
-      hb_retni( HB_MKSHORT( byBuffer[ 0 ],
-                            byBuffer[ 1 ] ) );
+      hb_retni( HB_MKSHORT( ( ulLen >= 1 ) ? ( BYTE ) pszString[ 0 ] : 0,
+                            ( ulLen >= 2 ) ? ( BYTE ) pszString[ 1 ] : 0 ) );
    }
    else
       hb_retni( 0 );
@@ -84,17 +76,11 @@ HB_FUNC( BIN2L )
    {
       char * pszString = hb_itemGetCPtr( pItem );
       ULONG ulLen = hb_itemGetCLen( pItem );
-      BYTE byBuffer[ 4 ];
 
-      byBuffer[ 0 ] = ( ulLen >= 1 ) ? ( BYTE ) pszString[ 0 ] : 0;
-      byBuffer[ 1 ] = ( ulLen >= 2 ) ? ( BYTE ) pszString[ 1 ] : 0;
-      byBuffer[ 2 ] = ( ulLen >= 3 ) ? ( BYTE ) pszString[ 2 ] : 0;
-      byBuffer[ 3 ] = ( ulLen >= 4 ) ? ( BYTE ) pszString[ 3 ] : 0;
-
-      hb_retnl( HB_MKLONG( byBuffer[ 0 ],
-                           byBuffer[ 1 ],
-                           byBuffer[ 2 ],
-                           byBuffer[ 3 ] ) );
+      hb_retnl( HB_MKLONG( ( ulLen >= 1 ) ? ( BYTE ) pszString[ 0 ] : 0,
+                           ( ulLen >= 2 ) ? ( BYTE ) pszString[ 1 ] : 0,
+                           ( ulLen >= 3 ) ? ( BYTE ) pszString[ 2 ] : 0,
+                           ( ulLen >= 4 ) ? ( BYTE ) pszString[ 3 ] : 0 ) );
    }
    else
       hb_retnl( 0 );

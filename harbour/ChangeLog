@@ -1,3 +1,12 @@
+2000-07-16 13:38 UTC+0100 Victor Szakats <info@szelvesz.hu>
+
+   * source/rtl/binnum.c
+   * source/rtl/binnumx.c
+     % Optimized for size and speed.
+
+   * include/hbdefs.h
+     ! Minor fix to HB_MKUSHORT(), HB_MKSHORT(), HB_MKLONG(), HB_MKULONG()
+
 2000-07-15 20:00 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *include/hbexpra.c
