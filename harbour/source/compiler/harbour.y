@@ -1166,7 +1166,7 @@ DecMethod  : IdentName '(' { hb_comp_pLastMethod = hb_compMethodAdd( hb_comp_pLa
                    if( ! hb_comp_pLastMethod->pClass )
                    {
                      hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, hb_comp_szFromClass, hb_comp_pLastMethod->szName );
-                     hb_comp_pLastMethod->cType = ( isupper( hb_comp_cVarType ) ? 'O' : 'o' );
+                     hb_comp_pLastMethod->cType = ( isupper(  ( int ) hb_comp_cVarType ) ? 'O' : 'o' );
                    }
 
                    /* Resetting */
@@ -1193,7 +1193,7 @@ DecData    : IdentName { hb_comp_pLastMethod = hb_compMethodAdd( hb_comp_pLastCl
                    if( ! hb_comp_pLastMethod->pClass )
                    {
                      hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, hb_comp_szFromClass, hb_comp_pLastMethod->szName );
-                     hb_comp_pLastMethod->cType = ( isupper( hb_comp_cVarType ) ? 'O' :'o' );
+                     hb_comp_pLastMethod->cType = ( isupper(  ( int ) hb_comp_cVarType ) ? 'O' :'o' );
                    }
                  }
                  else

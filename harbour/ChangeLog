@@ -13,6 +13,9 @@
    * source/compiler/harbour.c
      ! Fixed GCC -O2 warning. 
 
+   * source/compiler/harbour.y
+     ! Two RSXNT warnings fixed.
+
 2000-06-01 22:18 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
    * source/lang/msgcswin.c
