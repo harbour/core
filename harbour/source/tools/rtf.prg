@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * RTF Support Code For FT_HELPC
  *
@@ -101,8 +97,7 @@ FWRITE(Self:nHandle,cColorTable)
 RETURN Self
 
 METHOD WritePar(cPar)  CLASS TRTF
-
-        FWRITE(Self:nHandle,'\pard{\cf1\fs20 '+alltrim(cPar))
+        FWRITE(Self:nHandle,'\pard{\cf1\fs20 '+cPar)
 RETURN Self
 METHOD EndPar() CLASS TRTF
  FWRITE(Self:nHandle,     ' }\par'+CRLF)
@@ -122,13 +117,13 @@ else
 endif
 cTopic:=Alltrim(cTopic)
 cWrite:='{\f2'+CRLF+;
-'  #{\footnote \pard\plain \fs20 # '+cTemp  +' }'+CRLF+;
+'  #{\footnote \pard\plain \fs20 # '+"IDH_"+cTemp  +' }'+CRLF+;
 '  ${\footnote \pard\plain \fs20 $ '+Alltrim(cTopic) +' }'+CRLF+;
 '  K{\footnote \pard\plain \fs20 K '+Alltrim(cTopic) +' }'+CRLF+;
 '}'+CRLF
 
      FWRITE(Self:nHandle,cWrite)
-     Self:WritePar(cTopic):EndPar()
+     Self:WriteParBold(cTopic)
 RETURN Self
 METHOD CLOSE()  CLASS TRTF
 FWRITE(Self:nHandle,'\page'+CRLF)
@@ -138,5 +133,7 @@ FCLOSE(Self:nHandle)
 RETURN Self
 
 METHOD WriteLink(cLink) CLASS TRTF
-FWRITE(Self:nHandle,'\pard{\cf1\fs20 {\f2\uldb '+alltrim(cLink)+'}{\v\f2 '+alltrim(strtran(cLink,"()","xx")) +'} }\par'+CRLF)
+
+     FWRITE(Self:nHandle,'\pard{\cf1\fs20 {\f2\uldb '+alltrim(cLink)+'}{\v\f2 '+"IDH_"+alltrim(strtran(cLink,"()","xx")) +'} }\par'+CRLF)
+
 RETURN Self
