@@ -1,3 +1,7 @@
+20000421-10:30 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/compiler/genobj32.c
+     * GetFunctionLocalsCount() removed. No longer needed.
+
 20000421-14:20 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
    * source/compiler/hvm.c
