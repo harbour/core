@@ -755,6 +755,9 @@ void Equal( void )
       PushLogical( i == 0 );
    }
 
+   else if( IS_LOGICAL( pItem1 ) && IS_LOGICAL( pItem2 ) )
+      PushLogical( PopLogical() == PopLogical() );
+
    else if( IS_NUMERIC( pItem1 ) && IS_NUMERIC( pItem2 ) )
       PushLogical( PopDouble() == PopDouble() );
 
@@ -854,6 +857,7 @@ void Greater( void )
    double dNumber1, dNumber2;
    LONG lDate1, lDate2;
    int i;
+   int iLogical1, iLogical2;
 
    if( IS_STRING( stack.pPos - 2 ) && IS_STRING( stack.pPos - 1 ) )
    {
@@ -877,6 +881,13 @@ void Greater( void )
       PushLogical( lDate1 > lDate2 );
    }
 
+   else if( IS_LOGICAL( stack.pPos - 1 ) && IS_LOGICAL( stack.pPos -2 ) )
+   {
+      iLogical1 = PopLogical();
+      iLogical2 = PopLogical();
+      PushLogical( iLogical1 > iLogical2 );
+   }
+
    else if( ( stack.pPos - 2 )->wType != ( stack.pPos - 1 )->wType )
    {
       printf( "types not match on greater operation\n" );
@@ -889,6 +900,7 @@ void GreaterEqual( void )
    double dNumber1, dNumber2;
    LONG lDate1, lDate2;
    int i;
+   int iLogical1, iLogical2;
 
    if( IS_STRING( stack.pPos - 2 ) && IS_STRING( stack.pPos - 1 ) )
    {
@@ -910,6 +922,13 @@ void GreaterEqual( void )
       lDate2 = PopDate();
       lDate1 = PopDate();
       PushLogical( lDate1 >= lDate2 );
+   }
+
+   else if( IS_LOGICAL( stack.pPos - 1 ) && IS_LOGICAL( stack.pPos -2 ) )
+   {
+      iLogical1 = PopLogical();
+      iLogical2 = PopLogical();
+      PushLogical( iLogical1 >= iLogical2 );
    }
 
    else if( ( stack.pPos - 2 )->wType != ( stack.pPos - 1 )->wType )
@@ -999,6 +1018,7 @@ void Less( void )
    double dNumber1, dNumber2;
    LONG lDate1, lDate2;
    int i;
+   int iLogical1, iLogical2;
 
    if( IS_STRING( stack.pPos - 2 ) && IS_STRING( stack.pPos - 1 ) )
    {
@@ -1022,6 +1042,13 @@ void Less( void )
       PushLogical( lDate1 < lDate2 );
    }
 
+   else if( IS_LOGICAL( stack.pPos - 1 ) && IS_LOGICAL( stack.pPos -2 ) )
+   {
+      iLogical1 = PopLogical();
+      iLogical2 = PopLogical();
+      PushLogical( iLogical1 < iLogical2 );
+   }
+
    else if( ( stack.pPos - 2 )->wType != ( stack.pPos - 1 )->wType )
    {
       printf( "types not match on less operation\n" );
@@ -1034,6 +1061,7 @@ void LessEqual( void )
    double dNumber1, dNumber2;
    LONG lDate1, lDate2;
    int i;
+   int iLogical1, iLogical2;
 
    if( IS_STRING( stack.pPos - 2 ) && IS_STRING( stack.pPos - 1 ) )
    {
@@ -1055,6 +1083,13 @@ void LessEqual( void )
       lDate2 = PopDate();
       lDate1 = PopDate();
       PushLogical( lDate1 <= lDate2 );
+   }
+
+   else if( IS_LOGICAL( stack.pPos - 1 ) && IS_LOGICAL( stack.pPos -2 ) )
+   {
+      iLogical1 = PopLogical();
+      iLogical2 = PopLogical();
+      PushLogical( iLogical1 <= iLogical2 );
    }
 
    else if( ( stack.pPos - 2 )->wType != ( stack.pPos - 1 )->wType )
@@ -1133,6 +1168,9 @@ void NotEqual( void )
 
    else if( IS_NUMERIC( pItem1 ) && IS_NUMERIC( pItem2 ) )
       PushLogical( PopDouble() != PopDouble() );
+
+   else if( IS_LOGICAL( pItem1 ) && IS_LOGICAL( pItem2 ) )
+      PushLogical( PopLogical() != PopLogical() );
 
    else if( pItem1->wType != pItem2->wType )
    {

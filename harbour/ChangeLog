@@ -1,3 +1,9 @@
+19990509-21:00 Eddie Runia
+   * hvm.c
+     Logical equivalence tests added ( ==, !=, >, <, >=, <= )
+   * debugtst.c
+     Logical equivalence used. (==) aoMethod down to one-liner !
+
 19990509-19:30 Eddie Runia
    * makefile.b16, makefile.b32
      debug.obj added

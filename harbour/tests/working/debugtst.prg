@@ -384,7 +384,7 @@ function aOData( oObject, lDataMethod )
 
 /* Find position of matching set function in array with all symbols         */
 
-      if lFoundDM /* == lDataMethod */          // If found -> DATA
+      if lFoundDM == lDataMethod                // If found -> DATA
                                                 //     else    METHOD
          aAdd( aData, aInfo[ n ] )
       endif
@@ -401,20 +401,20 @@ return aData
 //
 function aOMethod( oObject )
 
-// should become return aOData( oObject, .F. )
-   local aInfo  := aSort( oObject:ClassSel() )
-   local aData  := {}
-   local n      := 1
-   local nLen   := Len( aInfo )
+return aOData( oObject, .F. )
+//   local aInfo  := aSort( oObject:ClassSel() )
+//   local aData  := {}
+//   local n      := 1
+//   local nLen   := Len( aInfo )
 
-   do while n <= nLen .and. Substr( aInfo[ n ], 1, 1 ) != "_"
-      if Empty( aScan( aInfo, "_" + aInfo[ n ], n + 1 ) )
-         aAdd( aData, aInfo[ n ] )
-      endif
-      n++
-   enddo
+//   do while n <= nLen .and. Substr( aInfo[ n ], 1, 1 ) != "_"
+//      if Empty( aScan( aInfo, "_" + aInfo[ n ], n + 1 ) )
+//         aAdd( aData, aInfo[ n ] )
+//      endif
+//      n++
+//   enddo
 
-return aData
+//return aData
 
 //
 // <aData> aOGet( <oObject>, [<aExcept>] )
