@@ -3,6 +3,17 @@
     *source/compiler/harbour.l
         * changed handling of array indexes - to code is now simpler,
         smaller and even more faster :)
+        
+    *source/rtl/gtsln/gtsln.c
+        * fixed error in hb_gtSetPos call
+
+    *source/rtl/gtstd/gtstd.c
+        * fixed unused wariable warning
+        
+    *source/vm/classes.c
+        * fixed unused variable and unused function warnings
+        (reported with GCC)
+        
 
 2000-07-28 06:30 UTC+0800 Ron Pinkas <ron@profit-master.com>
    + doc/simplex.txt
