@@ -1,3 +1,10 @@
+2001-12-03 11:20 GTM+1 Antonio Linares <alinares@fivetech.com>
+   * harbour/include/clipdefs.h
+     #ifndef used to avoid Windows.h collisions
+
+   * harbour/include/extend.api
+     #ifndef used to avoid Windows.h collisions
+
 2001-12-02 23:15 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
    * contrib/mysql/mysql.c
      + DatatoSql() and FILETOSQLBINARY() functions.First to format characters to
