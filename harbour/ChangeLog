@@ -1,3 +1,8 @@
+19990604-12:30 EDT David G. Holm <dholm@jsd-llc.com>
+  * source/vm/hvm.c
+    - Corrected HARBOUR ERRORLEVEL() to not change the error level if
+      it is called with no parameters.
+
 19990604-18:05 CET Jose Lalin (upload Eddie Runia)
   * makefile.*
     descend added

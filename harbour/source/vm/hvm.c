@@ -2228,7 +2228,9 @@ HARBOUR ERRORLEVEL()
 {
    BYTE bPrevValue = bErrorLevel;
 
-   bErrorLevel = _parni( 1 );
+   if( _pcount() > 0 )
+      /* Only replace the error level if a parameter was passed */
+      bErrorLevel = _parni( 1 );
    _retni( bPrevValue );
 }
 
