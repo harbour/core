@@ -185,12 +185,7 @@ void HB_EXPORT * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, re
 
    HB_TRACE(HB_TR_DEBUG, ("hb_xalloc(%lu)", ulSize));
 
-   #define ALIGN_SIZE       sizeof (double)
-   #define RESERVE_SIZE     (((sizeof (ulSize) + (ALIGN_SIZE - 1)) \
-                                             / ALIGN_SIZE) * ALIGN_SIZE)
-   return malloc( ulSize + RESERVE_SIZE );
-
-/* return malloc( ulSize ); */
+   return malloc( ulSize );
 
 #endif
 }
@@ -267,10 +262,7 @@ void HB_EXPORT * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exi
 
 #else
 
-   #define ALIGN_SIZE       sizeof (double)
-   #define RESERVE_SIZE     (((sizeof (ulSize) + (ALIGN_SIZE - 1)) \
-                                             / ALIGN_SIZE) * ALIGN_SIZE)
-   pMem = malloc( ulSize + RESERVE_SIZE );
+   pMem = malloc( ulSize );
 
    if( ! pMem )
       hb_errInternal( HB_EI_XGRABALLOC, NULL, NULL, NULL );

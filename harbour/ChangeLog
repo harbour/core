@@ -8,6 +8,14 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
    * source/rtl/filesys.c
+     - Removed two wrapper functions to hb_fsSetDevMode
+       which were there to maintain supposed compatibility
+       with _tdevraw, but that turned to be unneeded.
+
+   * include/hbundoc.api
+     ! Fixed _tdevraw
+
+   * source/rtl/filesys.c
      ! Re-disabled native Win32 file handling system.
      ! hb_fsCommit() fixed Win32 branch, and put it
        in the right place multiplatform #define-wise.
