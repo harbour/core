@@ -145,20 +145,21 @@ static procedure ProcessKey( nKey, oDlg, oBrw, aTopics, cColor )
            ShowTopic( oDlg, aTopics, oBrw:Cargo, 1 )  // Skip to next page
 
       case nKey == K_LBUTTONDOWN
-           /* waiting to know the proper way to do this
            if ( nSkip := MRow() - oDlg:nTop - oBrw:RowPos ) != 0
               if nSkip > 0
                  for n = 1 to nSkip
                     oBrw:Down()
+                    oBrw:Stabilize()
                  next
               else
-                 for n = 1 to nSkip step -1
+                 for n = 1 to nSkip + 2 step -1
                     oBrw:Up()
+                    oBrw:Stabilize()
                  next
               endif
               oBrw:ForceStable()
               ShowTopic( oDlg, aTopics, oBrw:Cargo, 0 )  // Start on page 1
-           endif */
+           endif
    endcase
 
 return
