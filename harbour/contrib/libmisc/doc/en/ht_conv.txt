@@ -17,7 +17,7 @@
  *  $FUNCNAME$
  *      ISBIN()
  *  $CATEGORY$
- *      Conversion
+ *      Conversion Tools
  *  $ONELINER$
  *      Check if the value is a Binary  Number
  *  $SYNTAX$
@@ -29,7 +29,7 @@
  *  $DESCRIPTION$
  *      check if the passed string is a bynary number or not   
  *  $FILES$
- *      Library is Tools.lib
+ *      Library is tools
  *  $SEEALSO$
  *      ISOCTAL(),ISDEC(),ISHEXA()
  *  $END$
@@ -39,7 +39,7 @@
  *  $FUNCNAME$
  *      ISOCTAL()
  *  $CATEGORY$
- *     Conversion
+ *     Conversion Tools
  *  $ONELINER$
  *     Check if the value is a Octal  Number
  *  $SYNTAX$
@@ -51,7 +51,7 @@
  *  $DESCRIPTION$
  *      check if the passed string is a octal number or not   
  *  $FILES$
- *      Library is Tools.lib
+ *      Library is tools
  *  $SEEALSO$
  *      ISBIN(),ISDEC(),ISHEXA()
  *  $END$
@@ -61,7 +61,7 @@
  *  $FUNCNAME$
  *      ISDEC()
  *  $CATEGORY$
- *      Conversion
+ *      Conversion Tools
  *  $ONELINER$
  *      Check if the value is a Decimal  Number
  *  $SYNTAX$
@@ -73,7 +73,7 @@
  *  $DESCRIPTION$
  *      check if the passed string is a decimal number or not   
  *  $FILES$
- *      Library is Tools.lib
+ *      Library is tools
  *  $SEEALSO$
  *      ISOCTAL(),ISBIN(),ISHEXA()
  *  $END$
@@ -83,7 +83,7 @@
  *  $FUNCNAME$
  *      ISHEXA()
  *  $CATEGORY$
- *      Conversion
+ *      Conversion Tools
  *  $ONELINER$
  *      Check if the value is a Hexal  Number
  *  $SYNTAX$
@@ -95,7 +95,7 @@
  *  $DESCRIPTION$
  *      check if the passed string is a hexa number or not   
  *  $FILES$
- *      Library is Tools.lib
+ *      Library is tools
  *  $SEEALSO$
  *      ISOCTAL(),ISDEC(),ISBIN()
  *  $END$
@@ -105,7 +105,7 @@
  *  $FUNCNAME$
  *      DECTOBIN()
  *  $CATEGORY$
- *      Conversion
+ *      Conversion Tools
  *  $ONELINER$
  *      Converts a Decimal Value to Binary
  *  $SYNTAX$
@@ -118,7 +118,7 @@
  *      This function converts a string <cN> from an decimal value
  *      to an binary value.   
  *  $FILES$
- *      Library is Tools.lib
+ *      Library is tools
  *  $SEEALSO$
  *      Dectohexa(),dectooctal()
  *  $END$
@@ -128,7 +128,7 @@
  *  $FUNCNAME$
  *      DECTOOCTAL()
  *  $CATEGORY$
- *      Conversion
+ *      Conversion Tools
  *  $ONELINER$
  *      Converts a Decimal Value to Octal
  *  $SYNTAX$
@@ -141,7 +141,7 @@
  *      This function converts a string <cN> from an decimal value
  *      to an octal value.   
  *  $FILES$
- *      Library is Tools.lib
+ *      Library is tools
  *  $SEEALSO$
  *      Dectohexa(),dectobin()
  *  $END$
@@ -151,7 +151,7 @@
  *  $FUNCNAME$
  *      DECTOHEXA()
  *  $CATEGORY$
- *      Conversion
+ *      Conversion Tools
  *  $ONELINER$
  *      Converts a Decimal Value to Hexa
  *  $SYNTAX$
@@ -164,7 +164,7 @@
  *      This function converts a string <cN> from an decimal value
  *      to an hexadecimal value.   
  *  $FILES$
- *      Library is Tools.lib
+ *      Library is tools
  *  $SEEALSO$
  *      Dectobin(),dectooctal()
  *  $END$
@@ -174,7 +174,7 @@
  *  $FUNCNAME$
  *      BINTODEC()
  *  $CATEGORY$
- *      Conversion
+ *      Conversion Tools
  *  $ONELINER$
  *      Converts a Binary Value to Decimal
  *  $SYNTAX$
@@ -187,7 +187,7 @@
  *      This function converts a string <cN> from an binary value
  *      to a numeric decimal value.   
  *  $FILES$
- *      Library is Tools.lib
+ *      Library is tools
  *  $SEEALSO$
  *      OctaltoDec(),HexatoDec()
  *  $END$
@@ -197,7 +197,7 @@
  *  $FUNCNAME$
  *      OCTALTODEC()
  *  $CATEGORY$
- *      Conversion
+ *      Conversion Tools
  *  $ONELINER$
  *      Converts a Octal Value to Decimal
  *  $SYNTAX$
@@ -210,7 +210,7 @@
  *      This function converts a string <cN> from an octal value
  *      to a numeric decimal value.   
  *  $FILES$
- *      Library is Tools.lib
+ *      Library is tools
  *  $SEEALSO$
  *      BintoDec(),HexatoDec()
  *  $END$
@@ -220,7 +220,7 @@
  *  $FUNCNAME$
  *      HEXATODEC()
  *  $CATEGORY$
- *      Conversion
+ *      Conversion Tools
  *  $ONELINER$
  *      Converts a Hexa Value to Decimal
  *  $SYNTAX$
@@ -233,7 +233,7 @@
  *      This function converts a string <cN> from an hexadecimal value
  *      to a numeric decimal value.   
  *  $FILES$
- *      Library is Tools.lib
+ *      Library is tools
  *  $SEEALSO$
  *      OctaltoDec(),BintoDec()
  *  $END$

@@ -18,7 +18,7 @@
  *  $FUNCNAME$
  *      GT_ASCPOS()
  *  $CATEGORY$
- *      String
+ *      String Tools
  *  $ONELINER$
  *      Return the ascii value of a specified character in a string
  *  $SYNTAX$
@@ -52,7 +52,7 @@
  *  $FUNCNAME$
  *      GT_ASCIISUM()
  *  $CATEGORY$
- *      String
+ *      String Tools
  *  $ONELINER$
  *      Sum the ascii values in a string.
  *  $SYNTAX$
@@ -75,7 +75,7 @@
  *  $FUNCNAME$
  *      GT_ATDIFF()
  *  $CATEGORY$
- *      String
+ *      String Tools
  *  $ONELINER$
  *      Return the position where two strings begin to differ
  *  $SYNTAX$
@@ -106,7 +106,7 @@
  *  $FUNCNAME$
  *      GT_CHAREVEN()
  *  $CATEGORY$
- *      String
+ *      String Tools
  *  $ONELINER$
  *      Return a string of all the characters in even positions
  *  $SYNTAX$
@@ -134,7 +134,7 @@
  *  $FUNCNAME$
  *      GT_CHARMIX()
  *  $CATEGORY$
- *      String
+ *      String Tools
  *  $ONELINER$
  *      Amalgamate two strings to form the return value
  *  $SYNTAX$
@@ -166,7 +166,7 @@
  *  $FUNCNAME$
  *      GT_CHARODD()
  *  $CATEGORY$
- *      String
+ *      String Tools
  *  $ONELINER$
  *      Return a string of all the characters in odd positions
  *  $SYNTAX$
@@ -194,7 +194,7 @@
  *  $FUNCNAME$
  *      GT_CHRCOUNT()
  *  $CATEGORY$
- *      String
+ *      String Tools
  *  $ONELINER$
  *      Count the number of times a character appears in a string
  *  $SYNTAX$
@@ -223,7 +223,7 @@
  *  $FUNCNAME$
  *      GT_CHRFIRST()
  *  $CATEGORY$
- *      String
+ *      String Tools
  *  $ONELINER$
  *      Find which character occurs first in a string
  *  $SYNTAX$
@@ -251,7 +251,7 @@
  *  $FUNCNAME$
  *      GT_CHRTOTAL()
  *  $CATEGORY$
- *      String
+ *      String Tools
  *  $ONELINER$
  *      Find number of times a set of characters appears in a string
  *  $SYNTAX$
@@ -285,7 +285,7 @@
  *  $FUNCNAME$
  *      GT_STRCOUNT()
  *  $CATEGORY$
- *      String
+ *      String Tools
  *  $ONELINER$
  *      Count the number of times a substring appears in a string
  *  $SYNTAX$
@@ -318,7 +318,7 @@
  *  $FUNCNAME$
  *      GT_STRCSPN()
  *  $CATEGORY$
- *      String
+ *      String Tools
  *  $ONELINER$
  *      Return length of prefix in string of chars NOT in set.
  *  $SYNTAX$
@@ -345,7 +345,7 @@
  *  $FUNCNAME$
  *      GT_STRDIFF()
  *  $CATEGORY$
- *      String
+ *      String Tools
  *  $ONELINER$
  *      Return a string where it begins to differ from another
  *  $SYNTAX$
@@ -377,7 +377,7 @@
  *  $FUNCNAME$
  *      GT_STREXPAND()
  *  $CATEGORY$
- *      String
+ *      String Tools
  *  $ONELINER$
  *      Insert fillers between characters in a passed string
  *  $SYNTAX$
@@ -409,7 +409,7 @@
  *  $FUNCNAME$
  *      GT_STRLEFT()
  *  $CATEGORY$
- *      String
+ *      String Tools
  *  $ONELINER$
  *      Find length of prefix of a string
  *  $SYNTAX$
@@ -441,7 +441,7 @@
  *  $FUNCNAME$
  *      GT_STRPBRK()
  *  $CATEGORY$
- *      String
+ *      String Tools
  *  $ONELINER$
  *      Return string after 1st char from a set
  *  $SYNTAX$
@@ -469,7 +469,7 @@
  *  $FUNCNAME$
  *      GT_STRRIGHT()
  *  $CATEGORY$
- *      String
+ *      String Tools
  *  $ONELINER$
  *      Find length of a suffix of a string
  *  $SYNTAX$

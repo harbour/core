@@ -52,9 +52,9 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-CLIPPER TOOLS compatible   
+ *      This function is CA-CLIPPER tools compatible   
  *  $FILES$
- *      Library is Tools
+ *      Library is tools
  *  $SEEALSO$
  *      FIELDSIZE(),FIELDDECI()
  *  $END$
@@ -64,7 +64,7 @@
  *  $FUNCNAME$
  *      FIELDSIZE()
  *  $CATEGORY$
- *      Database Tools
+ *      Database tools
  *  $ONELINER$
  *      Determines the size of a given field.
  *  $SYNTAX$
@@ -89,9 +89,9 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-CLIPPER TOOLS compatible   
+ *      This function is CA-CLIPPER tools compatible   
  *  $FILES$
- *      Library is Tools
+ *      Library is tools
  *  $SEEALSO$
  *      FIELDTYPE(),FIELDDECI()
  *  $END$
@@ -101,7 +101,7 @@
  *  $FUNCNAME$
  *      FIELDDECI()
  *  $CATEGORY$
- *      Database Tools
+ *      Database tools
  *  $ONELINER$
  *      Determines the number of decimal places of a given numeric field.
  *  $SYNTAX$
@@ -127,9 +127,9 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-CLIPPER TOOLS compatible
+ *      This function is CA-CLIPPER tools compatible
  *  $FILES$
- *      Library is Tools
+ *      Library is tools
  *  $SEEALSO$
  *      FIELDTYPE(),FIELDSIZE()
  *  $END$

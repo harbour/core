@@ -17,7 +17,7 @@
  *  $FUNCNAME$
  *      StrFormat()
  *  $CATEGORY$
- *      String
+ *      String Tools
  *  $ONELINER$
  *      Format a string
  *  $SYNTAX$
@@ -57,7 +57,7 @@
  *  $COMPLIANCE$
  *      All platforms   </par>
  *  $FILES$
- *      Library is Tools
+ *      Library is tools
  *  $END$
  */
 

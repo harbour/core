@@ -95,7 +95,7 @@
  *  $COMPLIANCE$
  *      This is a new Harbour Tools class   </par>
  *  $FILES$
- *      Library is Tools
+ *      Library is tools
  *  $SEEALSO$
  *      TClass()
  *  $END$
