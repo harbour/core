@@ -1060,8 +1060,8 @@ VarDef     : IdentName AsType { hb_compVariableAdd( $1, $2 ); }
                   }
                }
 
-           | IdentName AsType { hb_compVariableAdd( $1, $2 );
-                                 $<iNumber>$ = hb_comp_iVarScope;
+           | IdentName AsType { $<iNumber>$ = hb_comp_iVarScope;
+                                hb_compVariableAdd( $1, $2 );
                               }
              INASSIGN Expression
                {
@@ -1081,6 +1081,7 @@ VarDef     : IdentName AsType { hb_compVariableAdd( $1, $2 ); }
                   {
                      hb_compExprDelete( hb_compExprGenStatement( hb_compExprAssign( hb_compExprNewVar( $1 ), $5 ) ) );
                   }
+                  hb_comp_iVarScope = $<iNumber>3;
                }
 
            | IdentName DimList        { hb_compVariableDim( $1, $2 ); }

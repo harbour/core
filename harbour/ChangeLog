@@ -1,3 +1,9 @@
+20000423-18:18 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/compiler/harbour.y
+	*fixed incorrect error when a public/private variable was
+	initialized with a codeblock using a local parameters
+	
 20000423-15:57 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/compiler/hbusage.c
