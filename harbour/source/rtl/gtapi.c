@@ -6,6 +6,8 @@
  *  GTAPI.C: Generic Terminal for Harbour
  *
  * Latest mods:
+ * 1.24   19990718   ptucker   corrected returned color strings so ordering
+ *                             is the same as clipper.
  * 1.23   19990718   ptucker   implimented surface for gtGet/SetColorStr()
  *                             changed to allow unlimited color pairs.
  */
@@ -265,14 +267,14 @@ int hb_gtGetColorStr(char * fpColorString)
                     sColors[k++] = 'N';
                 else
                 {
-                    if( nColor & 4 )
-                        sColors[k++] = 'R';
+                    if( nColor & 1 )
+                        sColors[k++] = 'B';
 
                     if( nColor & 2 )
                         sColors[k++] = 'G';
 
-                    if( nColor & 1 )
-                        sColors[k++] = 'B';
+                    if( nColor & 4 )
+                        sColors[k++] = 'R';
                 }
             }
             if( j == 0 )

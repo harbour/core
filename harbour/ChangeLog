@@ -1,3 +1,8 @@
+19990718-22:25 EDT Paul Tucker <ptucker@sympatico.ca>
+  * source/rtl/gtapi.c
+    * corrected returned color strings so pair ordering is
+      the same as Clipper
+
 19990718-21:20 EDT Paul Tucker <ptucker@sympatico.ca>
   * source/rtl/gt/gtwin.c
     * call hb_gtinit from gtinit
