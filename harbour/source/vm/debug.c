@@ -190,3 +190,13 @@ HB_FUNC( __VMVARLGET )
    hb_itemReturn( *(pBase + 1 + hb_parni( 2 )) );
 }
 
+HB_FUNC( __VMVARLSET )
+{
+   int iLevel = hb_parni( 1 ) + 1;
+   PHB_ITEM * pBase = hb_stack.pBase;
+
+   while( ( iLevel-- > 0 ) && pBase != hb_stack.pItems )
+      pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackbase;
+
+   hb_itemCopy( *(pBase + 1 + hb_parni( 2 )), *(hb_stack.pBase + 4) );
+}
