@@ -52,6 +52,7 @@ PRG_HEADERS=\
         set.ch       \
         setcurs.ch   \
         simpleio.ch  \
+        std.ch       \
 
 API_HEADERS=\
         caundoc.api  \

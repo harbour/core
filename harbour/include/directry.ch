@@ -2,6 +2,8 @@
  * $Id$
  */
 
+/* NOTE: This file is also used by C code. */
+
 #ifndef _DIRECTRY_CH
 #define _DIRECTRY_CH
 

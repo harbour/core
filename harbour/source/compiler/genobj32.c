@@ -38,27 +38,32 @@
 #include "pcode.h"
 #include "hberrors.h"
 
+static ULONG GetSymbolsSize( void );
+static PCOMSYMBOL GetFirstSymbol( void );
+static char * GetSymbolName( ULONG ulPos );
+static ULONG GetPCodesSize( void );
+static ULONG GetSymbolsAmount( void );
+static BOOL IsExternal( ULONG ulSymbol );
+static WORD GetExternalPos( char * szExternal );
+static void GenerateLocalNames( FILE * hObjFile );
+static void GenerateSymbolsSegment( FILE * hObjFile );
+static void GenerateDataSegment( FILE * hObjFile );
+static void GenerateCodeSegment( FILE * hObjFile );
+static void GenerateExternals( FILE * hObjFile );
+static void putbyte( BYTE b, FILE * hObjFile );
+static void putword( WORD w, FILE * hObjFile );
 static void CompiledFileName( FILE * hObjFile, char * szFileName );
 static void CompilerVersion( FILE * hObjFile, char * szVersion );
 static void LocalNames( FILE * hObjFile, char * szNames[] );
 static void ExternalNames( FILE * hObjFile, char * szNames[] );
-static void Fixup( FILE * hObjFile, BYTE bType, WORD wOffset, BYTE bFlags, BYTE bSymbol );
+static void CodeSegment( FILE * hObjFile, BYTE * prgCode, ULONG ulPrgLen, WORD wFunctions );
+static void DataSegment( FILE * hObjFile, BYTE * symbol, WORD wSymLen, WORD wSymbols, ULONG ulTotalSize );
 static void DefineSegment( FILE * hObjFile, BYTE bName, BYTE bClass, WORD wLen );
 static void PubDef( FILE * hObjFile, char * szName, WORD wSegment, WORD wOffset );
+static void Fixup( FILE * hObjFile, BYTE bType, WORD wOffset, BYTE bFlags, BYTE bSymbol );
 static void EnumeratedData( FILE * hObjFile, BYTE bSegment, BYTE * pData, WORD wLen, WORD wOffset );
-static void GroupDef( FILE * hObjFile, BYTE bName, BYTE * aSegs );
 static void End( FILE * hObjFile );
-
-static void CodeSegment( FILE * hObjFile, BYTE * prgCode, ULONG ulPrgLen,
-                         WORD wFunctions );
-static void DataSegment( FILE * hObjFile, BYTE * symbol, WORD wSymLen,
-                         WORD wSymbols, ULONG ulTotalSize );
-
-static void GenerateLocalNames( FILE * hObjFile );
-static void GenerateExternals( FILE * hObjFile );
-static void GenerateCodeSegment( FILE * hObjFile );
-static void GenerateDataSegment( FILE * hObjFile );
-static void GenerateSymbolsSegment( FILE * hObjFile );
+static void GroupDef( FILE * hObjFile, BYTE bName, BYTE * aSegs );
 
 static BYTE prgFunction[] = { 0x68, 0x00, 0x00, 0x00, 0x00, 0x68, 0x00, 0x00, 0x00,
                               0x00, 0xE8, 0x00, 0x00, 0x00, 0x00, 0x83, 0xC4, 0x08, 0xC3 };
@@ -144,7 +149,7 @@ static ULONG GetPCodesSize( void )
   return ulTotal;
 }
 
-ULONG GetSymbolsAmount( void )
+static ULONG GetSymbolsAmount( void )
 {
   PCOMSYMBOL pSymbol = GetFirstSymbol();
   ULONG ulAmount = 1;
@@ -157,7 +162,7 @@ ULONG GetSymbolsAmount( void )
   return ulAmount;
 }
 
-BOOL IsExternal( ULONG ulSymbol )
+static BOOL IsExternal( ULONG ulSymbol )
 {
   PCOMSYMBOL pSymbol = GetFirstSymbol();
   ULONG ul = 0;
@@ -168,7 +173,7 @@ BOOL IsExternal( ULONG ulSymbol )
   return ! GetFunction( pSymbol->szName );
 }
 
-WORD GetExternalPos( char * szExternal )
+static WORD GetExternalPos( char * szExternal )
 {
   WORD w = 0;
 
@@ -324,7 +329,7 @@ static void putbyte( BYTE b, FILE * hObjFile )
   fputc( b, hObjFile );
 }
 
-void putword( WORD w, FILE * hObjFile )
+static void putword( WORD w, FILE * hObjFile )
 {
   putbyte( LOBYTE( w ), hObjFile );
   putbyte( HIBYTE( w ), hObjFile );

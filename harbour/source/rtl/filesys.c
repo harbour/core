@@ -1437,6 +1437,8 @@ PHB_FNAME hb_fsFNameSplit( char * szFileName )
    return pFileName;
 }
 
+/* TOFIX: Add a check for buffer overrun sitiuations. */
+
 /* This function joins path, name and extension into a string with a filename */
 char * hb_fsFNameMerge( char * szFileName, PHB_FNAME pFileName )
 {

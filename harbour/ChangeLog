@@ -1,3 +1,33 @@
+19990915-14:04 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/dir.c
+    include/directry.ch
+    ! printf()s commented out, proper (but silent) error handling added.
+    + Now using directry.ch for the array format.
+    + A TODO: added about changing the file composing/decomposing functionality
+      to hb_fsFNameSplit()/Merge() functions.
+    + NOTE added that the third parameter is a Harbour extension.
+    % Some small logic streamlining.
+    * Some variable names changes, some variable scopes adjusted.
+  * source/compiler/genobj32.c
+    + Every static thing is now declared static.
+    + Missing prototypes added.
+  * source/rtl/hardcr.c
+    source/rtl/mtran.c
+    source/tools/dates2.c
+    * Slight change in the format of the copyright header, the text itself
+      has not changed.
+  * source/rtl/filesys.c
+    + hb_fnFNameMerge() - TOFIX: added again about the lack of buffer overlow 
+      handling.
+  * .cvsignore
+    ! DOS/LINUX/OS2 GNU Make systems working directories added.
+  * doc/hdr_tpl.txt
+    + Some fine tunings, see the files own history. The copyright text hasn't
+      changed. Version 1.7
+  * include/std.ch
+    include/Makefile
+    + Added a skeleton and a TODO for the STD.CH file.
+
 19990915-11:15 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/dir.c
     ! Two warnings fixed about possibly missing paranthesis.

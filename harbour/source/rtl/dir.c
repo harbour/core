@@ -20,6 +20,7 @@
  *                             been requested.
  *
  */
+
 /*
  * Notes from the fringe... <ptucker@sympatico.ca>
  *
@@ -59,6 +60,7 @@
  * TODO: - Volume label support
  *       - check that path support vis stat works on all platforms
  *       - UNC Support? ie: dir \\myserver\root
+ *       - Use hb_fsFNameSplit()/Merge() for filename composing/decomposing.
  *
  */
 
@@ -75,6 +77,7 @@
 #include <ctype.h>
 #include "extend.h"
 #include "itemapi.h"
+#include "directry.ch"
 
 #if defined(__GNUC__)
    #include <sys/types.h>
@@ -394,14 +397,37 @@ static BYTE * HarbourMaskToAttributes( USHORT usMask, BYTE * byAttrib )
    return byAttrib;
 }
 
+/* NOTE: The third (lEightDotThree) parameter is a Harbour extension. */
 
 HARBOUR HB_DIRECTORY( void )
 {
 #if defined(HAVE_POSIX_IO)
 
-   PHB_ITEM arg1_it = hb_param( 1, IT_STRING );
-   PHB_ITEM arg2_it = hb_param( 2, IT_STRING );
-   PHB_ITEM arg3_it = hb_param( 3, IT_LOGICAL );
+   PHB_ITEM pDirSpec = hb_param( 1, IT_STRING );
+   PHB_ITEM pAttributes = hb_param( 2, IT_STRING );
+   PHB_ITEM pEightDotThree = hb_param( 3, IT_LOGICAL );
+
+   char     fullfile[ _POSIX_PATH_MAX + 1 ];
+   char     filename[ _POSIX_PATH_MAX + 1 ];
+   char     pattern[ _POSIX_PATH_MAX + 1 ];
+   char     dirname[ _POSIX_PATH_MAX + 1 ];
+   char     string[ _POSIX_PATH_MAX + 1 ];
+   char     pfname[ _POSIX_PATH_MAX + 1 ];
+   char     pfext[ _POSIX_PATH_MAX + 1 ];
+   char     fname[ _POSIX_PATH_MAX + 1 ];
+   char     fext[ _POSIX_PATH_MAX + 1 ];
+   BOOL     bEightDotThree;
+   char     ddate[ 9 ];
+   char     ttime[ 9 ];
+   char     aatrib[ 17 ];
+   int      attrib;
+   long     fsize;
+   time_t   ftime;
+   char *   pos;
+   int      iDirnameLen;
+   USHORT   usosMask;
+   USHORT   ushbMask = FA_ARCH;
+   PHB_ITEM pDir;
 
    struct stat statbuf;
    struct tm * ft;
@@ -420,47 +446,18 @@ HARBOUR HB_DIRECTORY( void )
    DIR  * dir;
 #endif
 
-   char   fullfile[ _POSIX_PATH_MAX + 1 ];
-   char   filename[ _POSIX_PATH_MAX + 1 ];
-   char   pattern[ _POSIX_PATH_MAX + 1 ];
-   char   dirname[ _POSIX_PATH_MAX + 1 ];
-   char   string[ _POSIX_PATH_MAX + 1 ];
-   char   pfname[ _POSIX_PATH_MAX + 1 ];
-   char   pfext[ _POSIX_PATH_MAX + 1 ];
-   char   fname[ _POSIX_PATH_MAX + 1 ];
-   char   fext[ _POSIX_PATH_MAX + 1 ];
-   BOOL   blEightDotThree = FALSE;
-   char   ddate[ 9 ];
-   char   ttime[ 9 ];
-   char   aatrib[ 17 ];
-   int    attrib;
-   long   fsize;
-   time_t ftime;
-   char * pos;
-   int    iDirnameLen;
-   USHORT usosMask;
-   USHORT ushbMask = FA_ARCH;
-   PHB_ITEM  pdir;
-   PHB_ITEM  psubarray;
-   PHB_ITEM  pfilename;
-   PHB_ITEM  psize;
-   PHB_ITEM  pdate;
-   PHB_ITEM  ptime;
-   PHB_ITEM  pattr;
-
    dirname[ 0 ] = '\0';
    pattern[ 0 ] = '\0';
 
    /* Get the passed attributes and convert them to Harbour Flags */
-   if( arg2_it && hb_parclen( 2 ) >= 1 )
-      ushbMask |= HarbourAttributesToMask( ( BYTE * ) hb_parc( 2 ) );
+   if( pAttributes && hb_itemGetCLen( pAttributes ) >= 1 )
+      ushbMask |= HarbourAttributesToMask( ( BYTE * ) hb_itemGetCPtr( pAttributes ) );
 
    /* Translate Harbour Flags into OS specific flags */
    usosMask = HarbourToOsMask( ushbMask );
 
    /* Do we want 8.3 support? */
-   if( arg3_it )
-      blEightDotThree = ( hb_parl( 3 ) ? TRUE : FALSE );
+   bEightDotThree = ( pEightDotThree ? hb_itemGetL( pEightDotThree ) : FALSE );
 
    pattern[ 0 ] = '\0';
 
@@ -471,9 +468,9 @@ HARBOUR HB_DIRECTORY( void )
       /* get rid of anything else */
       ushbMask = FA_LABEL;
 
-      if( arg1_it )
+      if( pDirSpec )
       {
-         strcpy( string, hb_parc( 1 ) );
+         strcpy( string, hb_itemGetCPtr( pDirSpec ) );
          pos = strrchr( string, ':' );
          if( pos )
             *( ++pos ) = '\0';
@@ -485,9 +482,9 @@ HARBOUR HB_DIRECTORY( void )
    }
    else
    {
-      if( arg1_it )
+      if( pDirSpec )
       {
-         strcpy( string, hb_parc( 1 ) );
+         strcpy( string, hb_itemGetCPtr( pDirSpec ) );
          pos = strrchr( string, OS_PATH_DELIMITER );
          if( pos )
          {
@@ -542,7 +539,7 @@ HARBOUR HB_DIRECTORY( void )
    /* should have drive,directory in dirname and filespec in pattern */
 
    tzset();
-   pdir = hb_itemArrayNew( 0 );
+   pDir = hb_itemArrayNew( 0 );
 
 #if defined(_MSC_VER)
 
@@ -557,7 +554,7 @@ HARBOUR HB_DIRECTORY( void )
          strcat( string, entry.name );
 
          /* this needs the full path to the file */
-         if( blEightDotThree )
+         if( bEightDotThree )
             GetShortPathName( string, string, _POSIX_PATH_MAX );
 
 #elif defined(__IBMCPP__)
@@ -571,18 +568,23 @@ HARBOUR HB_DIRECTORY( void )
 #else
    #if defined(__WATCOMC__)
    /* opendir in Watcom doesn't like the path delimiter at the end of a string */
-      dirname[ iDirnameLen   ] = '.';
-      dirname[ iDirnameLen+1 ] = '\0';
+      dirname[ iDirnameLen ] = '.';
+      dirname[ iDirnameLen + 1 ] = '\0';
    #endif
    dir = opendir( dirname );
    #if defined(__WATCOMC__)
       dirname[ iDirnameLen ] = '\0';
    #endif
+
    if( NULL == dir )
    {
-      /* TODO: proper error handling */
+/*   debug code
       printf( "\n invalid dirname %s ", dirname );
       while( 0 == getchar() );
+ */
+      hb_itemReturn( pDir );
+      hb_itemRelease( pDir );
+      return;
    }
 
    /* now put everything into an array */
@@ -593,7 +595,7 @@ HARBOUR HB_DIRECTORY( void )
 #endif
       pos = strrchr( string, OS_PATH_DELIMITER );
       if( pos )
-         pos = strrchr( pos+1, '.' );
+         pos = strrchr( pos + 1, '.' );
       else
          pos = strrchr( string, '.' );
 
@@ -607,7 +609,7 @@ HARBOUR HB_DIRECTORY( void )
 
       pos = strrchr( string, OS_PATH_DELIMITER );
       if( pos )
-         strcpy( fname, pos +1 );
+         strcpy( fname, pos + 1 );
       else
          strcpy( fname, string );
 
@@ -624,7 +626,7 @@ HARBOUR HB_DIRECTORY( void )
 
 #if defined(_MSC_VER)
          /* due to short-name support: reconstruct the filename */
-         if( blEightDotThree )
+         if( bEightDotThree )
          {
             pos = strrchr( string, OS_PATH_DELIMITER );
             if( pos )
@@ -658,13 +660,7 @@ HARBOUR HB_DIRECTORY( void )
          strcat( fullfile, filename );
 
 
-         if( -1 == stat( fullfile, &statbuf ) )
-         {
-            /* TODO: proper error handling */
-            printf( "\n invalid file %s ", fullfile );
-            while( 0 == getchar() );
-         }
-         else
+         if( -1 != stat( fullfile, &statbuf ) )
          {
             fsize = statbuf.st_size;
             ftime = statbuf.st_mtime;
@@ -678,7 +674,7 @@ HARBOUR HB_DIRECTORY( void )
                #else
                   #if defined(_MSC_VER)
                      attrib = entry.attrib;
-                     if( blEightDotThree )
+                     if( bEightDotThree )
                      {
                          /* need to strip off the path */
                          pos = strrchr( filename, OS_PATH_DELIMITER );
@@ -715,34 +711,42 @@ HARBOUR HB_DIRECTORY( void )
  */
 
          }
+/* debug code
+         else
+         {
+            printf( "\n invalid file %s ", fullfile );
+            while( 0 == getchar() );
+         }
+ */
 
          if( !( ( ( ushbMask & FA_HIDDEN ) == 0 && ( attrib & FA_HIDDEN ) > 0 ) ||
                 ( ( ushbMask & FA_SYSTEM ) == 0 && ( attrib & FA_SYSTEM ) > 0 ) ||
                 ( ( ushbMask & FA_DIREC  ) == 0 && ( attrib & FA_DIREC  ) > 0 ) ) )
          {
-            /* array  cname, csize, ddate, ctime, cattributes */
-            pfilename = hb_itemPutC( NULL, filename );
-            psize     = hb_itemPutNL( NULL, fsize );
-            pdate     = hb_itemPutDS( NULL, ddate );
-            ptime     = hb_itemPutC( NULL, ttime );
-            pattr     = hb_itemPutC( NULL, ( char * ) HarbourMaskToAttributes( attrib, ( BYTE * ) aatrib ) );
-            psubarray = hb_itemArrayNew( 5 );
-            hb_itemArrayPut( psubarray, 1, pfilename );
-            hb_itemArrayPut( psubarray, 2, psize );
-            hb_itemArrayPut( psubarray, 3, pdate );
-            hb_itemArrayPut( psubarray, 4, ptime );
-            hb_itemArrayPut( psubarray, 5, pattr );
+            PHB_ITEM  pSubarray = hb_itemArrayNew( F_LEN );
+
+            PHB_ITEM  pFilename = hb_itemPutC( NULL, filename );
+            PHB_ITEM  pSize = hb_itemPutNL( NULL, fsize );
+            PHB_ITEM  pDate = hb_itemPutDS( NULL, ddate );
+            PHB_ITEM  pTime = hb_itemPutC( NULL, ttime );
+            PHB_ITEM  pAttr = hb_itemPutC( NULL, ( char * ) HarbourMaskToAttributes( attrib, ( BYTE * ) aatrib ) );
+
+            hb_itemArrayPut( pSubarray, F_NAME, pFilename );
+            hb_itemArrayPut( pSubarray, F_SIZE, pSize );
+            hb_itemArrayPut( pSubarray, F_DATE, pDate );
+            hb_itemArrayPut( pSubarray, F_TIME, pTime );
+            hb_itemArrayPut( pSubarray, F_ATTR, pAttr );
 
             /* NOTE: Simply ignores the situation where the array length
                      limit is reached. */
-            hb_arrayAdd( pdir, psubarray );
+            hb_arrayAdd( pDir, pSubarray );
 
-            hb_itemRelease( pfilename );
-            hb_itemRelease( psize );
-            hb_itemRelease( pdate );
-            hb_itemRelease( ptime );
-            hb_itemRelease( pattr );
-            hb_itemRelease( psubarray );
+            hb_itemRelease( pFilename );
+            hb_itemRelease( pSize );
+            hb_itemRelease( pDate );
+            hb_itemRelease( pTime );
+            hb_itemRelease( pAttr );
+            hb_itemRelease( pSubarray );
          }
       }
    }
@@ -756,8 +760,8 @@ HARBOUR HB_DIRECTORY( void )
    closedir( dir );
 #endif
 
-   hb_itemReturn( pdir ); /* DIRECTORY() returns an array */
-   hb_itemRelease( pdir );
+   hb_itemReturn( pDir ); /* DIRECTORY() returns an array */
+   hb_itemRelease( pDir );
 
 #if defined(_MSC_VER) || defined(__IBMCPP__)
 
@@ -765,3 +769,4 @@ HARBOUR HB_DIRECTORY( void )
 #endif
 #endif /* HAVE_POSIX_IO */
 }
+
