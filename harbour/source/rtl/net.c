@@ -38,26 +38,36 @@
 #include "hbapi.h"
 
 /* TODO: Implement NETNAME() for other platforms */
+
 /* NOTE: Clipper will only return a maximum of 15 bytes from this function.
+         And it will be padded with spaces. Harbour does the same in the
+         DOS platform.
          [vszakats] */
 
 HB_FUNC( NETNAME )
 {
 #if defined(HB_OS_DOS)
-
-   #define LP_SEG( lp ) ( ( unsigned )( ( unsigned )( lp ) >> 16 ) )
-   #define LP_OFF( lp ) ( ( unsigned )( lp ) )
-
    {
       char szValue[ 16 ];
       union REGS regs;
-      struct SREGS sregs;
 
       regs.x.ax = 0x5E00;
-      regs.x.dx = LP_OFF( szValue );
-      sregs.ds = LP_SEG( szValue );
 
-      HB_DOS_INT86X( 0x21, &regs, &regs, &sregs );
+      #if defined(__DJGPP__)
+      {
+         /* TODO: Add support for protected mode */
+         szValue[ 0 ] = '\0';
+      }
+      #else
+      {
+         struct SREGS sregs;
+         
+         regs.x.dx = FP_OFF( szValue );
+         sregs.ds = FP_SEG( szValue );
+         
+         HB_DOS_INT86X( 0x21, &regs, &regs, &sregs );
+      }
+      #endif
 
       hb_retc( regs.h.ch == 0 ? "" : szValue );
    }

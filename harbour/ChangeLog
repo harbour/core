@@ -1,3 +1,15 @@
+20000415-15:07 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/rtl/net.c
+     + NETNAME() now works with BCC16 (and any other real mode DOS compiler for 
+       that matter).
+     - Commented out for DJGPP. I leave this for someone who has the nerve 
+       to tweak it for PM.
+
+   * bin/bld.bat
+   * bin/bld.cmd
+     ! Fix for bcc16 HB_GT_LIB selection.
+
 20000415-13:01 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * bin/bld.bat

@@ -115,7 +115,7 @@ rem if "%HB_GT_LIB%" == "" set HB_GT_LIB=
       echo debug.lib >> build.tmp
       echo vm.lib >> build.tmp
       echo rtl.lib >> build.tmp
-      echo gtdos.lib >> build.tmp
+      echo %HB_GT_LIB%.lib >> build.tmp
       echo lang.lib >> build.tmp
       echo rdd.lib >> build.tmp
       echo macro.lib >> build.tmp
