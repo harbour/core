@@ -1,3 +1,14 @@
+19991108-23:41 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/filesys.c
+    % hb_fsWrite(), hb_fsReadLarge(), hb_fsWriteLarge() double var 
+      assigments optimized.
+    * Some small cleanups.
+  * tests/rtl_test.prg
+    + Two new SOUNDEX() tests added.
+    + FWRITE() tests for the truncate feature.
+  * source/rtl/soundex.c
+    ! SOUNDEX() - Fixed handling of accented/national characters.
+
 19991108-09:25 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/rtl/classes.c
      * hb_clsRelease() modified. Still there is a problem with CLASSDATA ... INIT

@@ -2231,6 +2231,8 @@ STATIC FUNCTION Main_FILE()
    TEST_LINE( TESTFIER( FWrite( fhnd, "V" ) )                          , 'E: 0      R: 1'                  )
    TEST_LINE( TESTFIER( FSeek( fhnd, -3, FS_END ) )                    , 'E: 0      R: 64'                 )
    TEST_LINE( TESTFIER( FWrite( fhnd, "W" ) )                          , 'E: 0      R: 1'                  )
+   TEST_LINE( TESTFIER( FWrite( fhnd, "" ) )                           , 'E: 0      R: 0'                  )
+   TEST_LINE( TESTFIER( FSeek( fhnd, 0, FS_END ) )                     , 'E: 0      R: 65'                 )
    TEST_LINE( TESTFIER( FClose() )                                     , 'E: 0      R: .F.'                )
    TEST_LINE( TESTFIER( FClose( fhnd ) )                               , 'E: 0      R: .T.'                )
    TEST_LINE( TESTFIER( FClose( fhnd ) )                               , 'E: 6      R: .F.'                )
@@ -2311,6 +2313,8 @@ STATIC FUNCTION Main_MISC()
    TEST_LINE( SoundEx( "Cold" )               , "C430" )
    TEST_LINE( SoundEx( "Colt" )               , "C430" )
    TEST_LINE( SoundEx( "C"+Chr(0)+"olt" )     , "C430" )
+   TEST_LINE( SoundEx( "µ†AêÇ" )              , "A000" )
+   TEST_LINE( SoundEx( "12345" )              , "0000" )
 
    /* NATION functions */
 

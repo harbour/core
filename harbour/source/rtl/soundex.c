@@ -61,12 +61,22 @@ HARBOUR HB_SOUNDEX( void )
 
       while( nPos < ulLen && nResultPos < SOUNDEX_LEN_MAX )
       {
-         if( isalpha( pszString[ nPos ] ) )
-         {
-                                         /* "ABCDEFGHIJKLMNOPQRSTUVWXYZ" */
-            static const char s_szTable[] = "01230120022455012623010202"; /* NOTE: SoundEx result codes for letters from "A" to "Z" */
+         char cChar = pszString[ nPos ];
 
-            char cChar = toupper( pszString[ nPos ] );
+         /* NOTE: Intentionally not using toupper()/isalpha() to be 100%
+                  Clipper compatible here, these ANSI C functions may behave
+                  differently for accented and national characters. It's also
+                  faster this way. */
+
+         /* Convert to uppercase: toupper() */
+         if( cChar >= 'a' && cChar <= 'z' )
+            cChar -= ( 'a' - 'A' );
+
+         /* Check if isalpha() */
+         if( cChar >= 'A' && cChar <= 'Z' )
+         {
+            static const char s_szTable[] = "01230120022455012623010202"; /* NOTE: SoundEx result codes for letters from "A" to "Z" */
+                                         /* "ABCDEFGHIJKLMNOPQRSTUVWXYZ" */
             char cCharConverted = ( ( cChar - 'A' ) > ( sizeof( s_szTable ) - 1 ) ) ? '9' : s_szTable[ cChar - 'A' ];
 
             if( nResultPos == 0 )

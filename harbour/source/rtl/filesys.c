@@ -541,18 +541,25 @@ USHORT  hb_fsRead( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
 
 USHORT  hb_fsWrite( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
 {
-   USHORT uiWritten = 0;
+   USHORT uiWritten;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsWrite(%p, %p, %hu)", hFileHandle, pBuff, uiCount));
 
 #if defined(HAVE_POSIX_IO) || defined(_MSC_VER) || defined(__MINGW32__)
 
    errno = 0;
-   if( uiCount ) uiWritten = write( hFileHandle, pBuff, uiCount );
-   else ftruncate( hFileHandle, tell( hFileHandle ) );
-   s_uiErrorLast = errno;
-   if( uiWritten == ( USHORT ) -1 )
+   if( uiCount )
+   {
+      uiWritten = write( hFileHandle, pBuff, uiCount );
+      if( uiWritten == ( USHORT ) -1 )
+         uiWritten = 0;
+   }
+   else
+   {
       uiWritten = 0;
+      ftruncate( hFileHandle, tell( hFileHandle ) );
+   }
+   s_uiErrorLast = errno;
 
 #else
 
@@ -566,50 +573,54 @@ USHORT  hb_fsWrite( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
 
 ULONG   hb_fsReadLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
 {
-   ULONG ulRead = 0;
-#if ! defined(HB_FS_LARGE_OPTIMIZED)
-   ULONG ulLeftToRead = ulCount;
-   USHORT uiToRead;
-   USHORT uiRead;
-   BYTE * pPtr = pBuff;
-#endif
+   ULONG ulRead;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsReadLarge(%p, %p, %lu)", hFileHandle, pBuff, ulCount));
 
 #if defined(HAVE_POSIX_IO) || defined(_MSC_VER) || defined(__MINGW32__)
 
    errno = 0;
- #if defined(HB_FS_LARGE_OPTIMIZED)
-   ulRead = read( hFileHandle, pBuff, ulCount );
- #else
-   while( ulLeftToRead )
-   {
-      /* Determine how much to read this time */
-      if( ulLeftToRead > ( ULONG ) INT_MAX )
+   #if defined(HB_FS_LARGE_OPTIMIZED)
+      ulRead = read( hFileHandle, pBuff, ulCount );
+   #else
       {
-         uiToRead = INT_MAX;
-         ulLeftToRead -= ( ULONG ) uiToRead;
-      }
-      else
-      {
-         uiToRead = ( USHORT ) ulLeftToRead;
-         ulLeftToRead = 0L;
-      }
-      uiRead = read( hFileHandle, pPtr, uiToRead );
-      /* -1 on bad hFileHandle
-          0 on disk full
-       */
-      if( uiRead == ( USHORT ) -1 || uiRead == 0 )
-         break;
+         ULONG ulLeftToRead = ulCount;
+         USHORT uiToRead;
+         USHORT uiRead;
+         BYTE * pPtr = pBuff;
 
-      ulRead += ( ULONG ) uiRead;
-      pPtr += uiRead;
-   }
-  #endif
+         ulRead = 0;
+
+         while( ulLeftToRead )
+         {
+            /* Determine how much to read this time */
+            if( ulLeftToRead > ( ULONG ) INT_MAX )
+            {
+               uiToRead = INT_MAX;
+               ulLeftToRead -= ( ULONG ) uiToRead;
+            }
+            else
+            {
+               uiToRead = ( USHORT ) ulLeftToRead;
+               ulLeftToRead = 0L;
+            }
+            uiRead = read( hFileHandle, pPtr, uiToRead );
+            /* -1 on bad hFileHandle
+                0 on disk full
+             */
+            if( uiRead == ( USHORT ) -1 || uiRead == 0 )
+               break;
+
+            ulRead += ( ULONG ) uiRead;
+            pPtr += uiRead;
+         }
+      }
+   #endif
    s_uiErrorLast = errno;
 
 #else
 
+   ulRead = 0;
    s_uiErrorLast = FS_ERROR;
 
 #endif
@@ -619,13 +630,7 @@ ULONG   hb_fsReadLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
 
 ULONG   hb_fsWriteLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
 {
-   ULONG ulWritten = 0;
-#if ! defined(HB_FS_LARGE_OPTIMIZED)
-   ULONG ulLeftToWrite = ulCount;
-   USHORT uiToWrite;
-   USHORT uiWritten;
-   BYTE * pPtr = pBuff;
-#endif
+   ULONG ulWritten;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsWriteLarge(%p, %p, %lu)", hFileHandle, pBuff, ulCount));
 
@@ -633,38 +638,52 @@ ULONG   hb_fsWriteLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
 
    errno = 0;
    if( ulCount )
-  #if defined(HB_FS_LARGE_OPTIMIZED)
-   ulWritten = write( hFileHandle, pBuff, ulCount );
-  #else
-   while( ulLeftToWrite )
-   {
-      /* Determine how much to write this time */
-      if( ulLeftToWrite > ( ULONG ) INT_MAX )
+   #if defined(HB_FS_LARGE_OPTIMIZED)
+      ulWritten = write( hFileHandle, pBuff, ulCount );
+   #else
       {
-         uiToWrite = INT_MAX;
-         ulLeftToWrite -= ( ULONG ) uiToWrite;
-      }
-      else
-      {
-         uiToWrite = ( USHORT ) ulLeftToWrite;
-         ulLeftToWrite = 0L;
-      }
-      uiWritten = write( hFileHandle, pPtr, uiToWrite );
-      /* -1 on bad hFileHandle
-          0 on disk full
-       */
-      if( uiWritten == ( USHORT ) -1 || uiWritten == 0 )
-         break;
+         ULONG ulLeftToWrite = ulCount;
+         USHORT uiToWrite;
+         USHORT uiWritten;
+         BYTE * pPtr = pBuff;
 
-      ulWritten += ( ULONG ) uiWritten;
-      pPtr += uiWritten;
+         ulWritten = 0;
+
+         while( ulLeftToWrite )
+         {
+            /* Determine how much to write this time */
+            if( ulLeftToWrite > ( ULONG ) INT_MAX )
+            {
+               uiToWrite = INT_MAX;
+               ulLeftToWrite -= ( ULONG ) uiToWrite;
+            }
+            else
+            {
+               uiToWrite = ( USHORT ) ulLeftToWrite;
+               ulLeftToWrite = 0L;
+            }
+            uiWritten = write( hFileHandle, pPtr, uiToWrite );
+            /* -1 on bad hFileHandle
+                0 on disk full
+             */
+            if( uiWritten == ( USHORT ) -1 || uiWritten == 0 )
+               break;
+
+            ulWritten += ( ULONG ) uiWritten;
+            pPtr += uiWritten;
+         }
+      }
+   #endif
+   else
+   {
+      ulWritten = 0;
+      ftruncate( hFileHandle, tell( hFileHandle ) );
    }
-  #endif
-   else ftruncate( hFileHandle, tell( hFileHandle ) );
    s_uiErrorLast = errno;
 
 #else
 
+   ulWritten = 0;
    s_uiErrorLast = FS_ERROR;
 
 #endif
@@ -1556,9 +1575,9 @@ HARBOUR HB_DISKSPACE( void )
       szPath[ 3 ] = '\0';
 
       if( GetDiskFreeSpace( szPath,
-                            &dwSectorsPerCluster,     
-                            &dwBytesPerSector,        
-                            &dwNumberOfFreeClusters,  
+                            &dwSectorsPerCluster,
+                            &dwBytesPerSector,
+                            &dwNumberOfFreeClusters,
                             &dwTotalNumberOfClusters ) )
       {
          ulSpaceFree = dwNumberOfFreeClusters *
