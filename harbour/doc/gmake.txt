@@ -177,7 +177,7 @@ For GCC on OS/2:
         you must also point LIBRARY_PATH to the EMX library directory.
   HB_ARCHITECTURE   os2
   HB_COMPILER       gcc
-  HB_GT_LIB         gtpca
+  HB_GT_LIB         gtos2
 
 For IBM Visual Age C++ on OS/2:
   Note: You must create an empty unistd.h in the IBMCPP\INCLUDE directory.

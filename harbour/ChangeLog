@@ -1,3 +1,9 @@
+2000-04-06 21:30 GMT-4 David G. Holm <dholm@jsd-llc.com>
+  * doc/gmake.txt
+    % Change to os2/gcc documentation to show gtos2 for HT_GT_LIB,
+      (thanks to Maurilio Longo <maurilio.longo@libero.it> for
+      his work on making the gtos2 library work with os2/gcc)
+
 20000406-10:55 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.y
