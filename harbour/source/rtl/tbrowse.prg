@@ -801,6 +801,9 @@ METHOD Stabilize() CLASS TBrowse
             if (::nNewRowPos + nRecsSkipped >= 1) .AND. (::nNewRowPos + nRecsSkipped <= ::RowCount)
                ::nNewRowPos += nRecsSkipped
                ::nLastRetrieved := ::nNewRowPos
+               // This is needed since present TBrowse has no cache, so I need to repaint current row
+               // rereading it from data source and to force rereading from data source I have to mark
+               // row as invalid
                ::aRedraw[::nNewRowPos] := .T.
 
             else
@@ -980,12 +983,15 @@ return .F.
 // Movement keys cause TBrowse to become unstable.
 METHOD Moved() CLASS TBrowse
 
-   // Internal flags used to set ::HitTop/Bottom during next stabilization
-   ::lHitTop := .F.
-   ::lHitBottom := .F.
+   // No need to Dehilite() current cell more than once
+   if ::stable
+      // Internal flags used to set ::HitTop/Bottom during next stabilization
+      ::lHitTop := .F.
+      ::lHitBottom := .F.
 
-   ::DeHilite()
-   ::stable := .F.
+      ::DeHilite()
+      ::stable := .F.
+   endif
 
 return Self
 

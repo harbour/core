@@ -1,3 +1,8 @@
+2001-02-09 23:46 GMT+1 Maurilio Longo <maurilio.longo@libero.it>
+   * source/rtl/tbrowse.prg
+     ! fixed ::Moved() method which was calling ::Dehilite() even if TBrowse was already
+     unstable causing wrong painting of current row
+
 2001-02-09 11:25 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * harbour/source/debug/debugger.prg
      ! Fixesd ValType( &cColor ) to Type( cColor )
