@@ -807,7 +807,7 @@ PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray, PHB_NESTED_CLONED pClonedList )
             }
             hb_xfree( pCloned );
          }
-         if( pCloned->pDest != pDstArray )
+         if( pClonedList->pDest != pDstArray )
          {
             hb_itemRelease( pClonedList->pDest );
          }

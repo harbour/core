@@ -1,3 +1,7 @@
+2001-04-18 01:30 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * source/vm/arrays.c
+     ! Corrected a minor typo, that could cause some un-released memory on some occasions.
+
 2001-04-17 23:55 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * include/hbapi.h
      * Removed 3rd paramater from declaration of hb_arrayClone().
