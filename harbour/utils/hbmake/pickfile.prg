@@ -70,9 +70,9 @@
 
 */
 
-#include "COMMON.CH"
-#include "BOX.CH"
-#include "DIRECTRY.CH"
+#include "common.ch"
+#include "box.ch"
+#include "directry.ch"
 
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+

@@ -8,6 +8,9 @@ endif
 
 ROOT = ../
 
+CONTRIBS=\
+	libmisc\
+
 LIBS=\
 	debug \
 	vm \
@@ -98,6 +101,7 @@ PRG_SOURCES=\
 	passref.prg \
 	procline.prg \
 	procname.prg \
+	readfile.prg \
 	readhrb.prg \
 	recursiv.prg \
 	returns.prg \
@@ -167,7 +171,6 @@ BAD_PRG_SOURCES=\
 	mathtest.prg \
 	objarr.prg \
 	objasign.prg \
-	readfile.prg \
 	rtfclass.prg \
 	spawn.prg \
 	spawn2.prg \

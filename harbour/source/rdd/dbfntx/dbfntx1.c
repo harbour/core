@@ -1650,7 +1650,7 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
                             ( LONG ) hb_numRound( hb_itemGetND( pItem ), 0 ) );
                   }
                   else
-                     sprintf( szBuffer, "%0*.0*f", pTag->KeyLength,
+                     sprintf( szBuffer, "%0*.*f", pTag->KeyLength,
                             pTag->KeyDec, hb_numRound( hb_itemGetND( pItem ),
                             pTag->KeyDec ) );
                }
@@ -1659,7 +1659,7 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
                   if( pTag->KeyDec == 0 )
                      sprintf( szBuffer, "%0*li", pTag->KeyLength, hb_itemGetNL( pItem ) );
                   else
-                     sprintf( szBuffer, "%0*.0*f", pTag->KeyLength,
+                     sprintf( szBuffer, "%0*.*f", pTag->KeyLength,
                             pTag->KeyDec, hb_itemGetND( pItem ) );
                }
                szBuffer[ pTag->KeyLength ] = 0;
@@ -2233,6 +2233,8 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
       case HB_IT_DOUBLE:
          bType = 'N';
          hb_itemGetNLen( pResult, (int*) &uiLen, (int*) &uiDec );
+         if( uiDec )
+            uiLen += uiDec + 1;
          /* printf( "\nLength: %d %d",uiLen,uiDec ); */
          break;
 
