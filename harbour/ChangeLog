@@ -1,3 +1,7 @@
+20000323-09:10 GMT+3 Alexander Kresin
+   * contrib/rdd_ads/adsfunc.c
+     * Fixed bug in ADSSETDELETED(), as proposed by Sid Sailors
+
 20000322-21:55 EST Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/diskspac.c
      * accounted for possibility of retrying the operation
@@ -126,7 +130,7 @@
    + contrib/hbclip/make_clp.bat
    + contrib/hbclip/readme.txt
 
-     + Harbour Compatibility Library for CA-Clipper 5.x/'87 contribution 
+     + Harbour Compatibility Library for CA-Clipper 5.x/'87 contribution
        started.
      + STOD(), HB_VALTOSTR(), HB_KEYPUT(), HB_COLORINDEX() functions added.
      + Some functions from hbclip.ch also added to the library so that the
@@ -166,7 +170,7 @@
      ! Workaround for GCC/Win32 (Cygwin and Mingw32).
    * include/*.h
      + extern "C" added for C++ builds, to better interface with plain C.
-     ; Note that the support is not yet complete, because the Harbour level 
+     ; Note that the support is not yet complete, because the Harbour level
        functions are not yet marked as extern "C".
    * makefile.vc
      ! Fix for exttools.prg
@@ -473,17 +477,17 @@
      + Added new GT API call: hb_gtVersion()
      + The GT type is now displayed when //INFO is specified.
      % Some static variable initialization moved to the init routine.
-     ! Setting the default cursor is done in hb_gtInit() instead of 
+     ! Setting the default cursor is done in hb_gtInit() instead of
        consoleInitialize()
 
    * config/*/global.cf
      config/*/<compiler>.cf
      + Added the list of possible GT drivers and the default for the
        actual architecture.
-       The default GT driver can be selected by setting the 
+       The default GT driver can be selected by setting the
        HB_GT_LIB envvar to the proper value.
      + Added logic to add the selected GT driver to libs.
-       This is not complete, and could be refined for some platform, for 
+       This is not complete, and could be refined for some platform, for
        example to automatically link in the related slang.lib or curses.lib.
        ! WARNING ! Check it with your platform. (BCC16, WATCOM, ICC not added)
 
@@ -514,7 +518,7 @@
      + Build batch files modified to include a default GT driver lib.
        The default can be overriden with the BLD_TPL batch files by setting
        the HB_GT_LIB envvar, see the help for more.
-     + GT + MOUSE driver code unified and moved to new self-containing 
+     + GT + MOUSE driver code unified and moved to new self-containing
        directories. Makefiles added.
      % Some static variable initialization moved to the init routine.
        (GTDOS, GTWIN)
@@ -546,25 +550,25 @@
 20000320-13:45 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/macro/macro.y
-	*added declaration of yyparse() function
+        *added declaration of yyparse() function
 
 20000320-13:10 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.y
-	* fixed compilation of empty files
-	
+        * fixed compilation of empty files
+
     *include/hbexpra.c
     *include/hbexprb.c
     *source/macro/macro.c
-	*fixed passing of the second parameter in hb_compGenPushSymbol
-	
+        *fixed passing of the second parameter in hb_compGenPushSymbol
+
     *source/rtl/gt/gtstd.c
-	*fixed to get a clean compile on Linux
+        *fixed to get a clean compile on Linux
 
     *source/rtl/gt/gtcrs.c
-	*matching #endif added
-	*inkey.ch added again - we need these definitions to define the
-	 keys translation table - TOFIX
+        *matching #endif added
+        *inkey.ch added again - we need these definitions to define the
+         keys translation table - TOFIX
 
 20000319-01:35 EST Paul Tucker <ptucker@sympatico.ca>
    * source/pp/ppcore.c
@@ -599,7 +603,7 @@
      source/rtl/gtapi.c
      include/hbsetup.h
      - Removed the non-GTAPI branch. Last one.
-       Now the box drawing in GTSTD is probably flawed. The non-GT code snipped 
+       Now the box drawing in GTSTD is probably flawed. The non-GT code snipped
        from console.c has moved to gtstd.c
      + hb_gtBox() modified to draw the box from top to bottom and left to
        right to better support GTSTD. Tested all weirt combination to be
@@ -672,62 +676,62 @@
 20000318-21:30 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *include/hbexpr.c
-	-removed
+        -removed
     *include/hbexpra.c
     *include/hbexprb.c
     *include/hbexprc.c
-	+new files with expression optimizer shared by the standalone
-	and the macro compilers - these files produces different code
-	for the compilers
-    
+        +new files with expression optimizer shared by the standalone
+        and the macro compilers - these files produces different code
+        for the compilers
+
     *source/compiler/expropt.c
-	-removed
+        -removed
     *source/compiler/expropta.c
     *source/compiler/exproptb.c
     *source/compiler/exproptc.c
-	+new files with expression optimizer used by the standalone compiler
-    
+        +new files with expression optimizer used by the standalone compiler
+
     *source/macro/macroa.c
     *source/macro/macrob.c
     *source/macro/macroc.c
-	+new files with expression optimizer shared by the macro compiler
+        +new files with expression optimizer shared by the macro compiler
 
     *source/common/expropt1.c
     *source/common/expropt2.c
-	+new files with expression optimizer shared by the standalone
-	and the macro compilers - the common part of expression optimizer
-	
+        +new files with expression optimizer shared by the standalone
+        and the macro compilers - the common part of expression optimizer
+
     *source/macro/macro.l
-	+added HB_MACRO_SUPPORT definition
+        +added HB_MACRO_SUPPORT definition
 
     *source/macro/macro.c
-	*removed including of hbexprop.h
-	
+        *removed including of hbexprop.h
+
     *include/hbexprop.h
     *include/hbcomp.h
-	*corrected to support new design of expression optimizer
+        *corrected to support new design of expression optimizer
 
     *source/common/Makefile
     *source/compiler/Makefile
     *source/macro/Makefile
     *makefile.bc
     *makefile.vc
-	+added the depenencies for the new files (BC & VC not tested !)
-	
+        +added the depenencies for the new files (BC & VC not tested !)
+
     *source/rtl/console.c
     *source/rtl/filesys.c
     *source/rtl/fssize.c
     *source/rtl/gtapi.c
-	*"io.h" is not included if OS_UNIX_COMPATIBLE is defined
-	(in some places #include hbsetup.h" was added to get a chance to
-	define OS_xxx_COMPATIBLE before it is checked)
-	
+        *"io.h" is not included if OS_UNIX_COMPATIBLE is defined
+        (in some places #include hbsetup.h" was added to get a chance to
+        define OS_xxx_COMPATIBLE before it is checked)
+
     *source/rtl/gt/gtcrs.c
-	*a very basic support for colors was added
-	*a very basic support for inkey was added
-	(these two changes are for testing and checking rather than a real
-	solution)
-    
+        *a very basic support for colors was added
+        *a very basic support for inkey was added
+        (these two changes are for testing and checking rather than a real
+        solution)
+
 20000318-12:45 EST Paul Tucker <ptucker@sympatico.ca>
    * contrib/rdd_ads/ads1.c
      * added cast in strlen()
@@ -736,11 +740,11 @@
 
 20000318-19:38 GMT+3 Alexander Kresin
    * include/hbapirdd.h
-   * contrib/rdd_ads/ads.ch   
+   * contrib/rdd_ads/ads.ch
    * contrib/rdd_ads/ads1.c
      * Internal scope functions adsScopeInfo() and adsSetScope() added
    * source/rdd/dbcmd.c
-     * OrdScope() function implemented 
+     * OrdScope() function implemented
    * source/rtl/dummy.prg
      - Ordscope() removed
 

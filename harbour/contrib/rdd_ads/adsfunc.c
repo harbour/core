@@ -117,7 +117,7 @@ HB_FUNC( ADSSETDEFAULT )
 HB_FUNC( ADSSETDELETED )
 {
    UNSIGNED16 usShowDeleted = hb_parl( 1 );
-   AdsShowDeleted( usShowDeleted );
+   AdsShowDeleted( !usShowDeleted );
 }
 
 HB_FUNC( ADSBLOB2FILE )
@@ -297,7 +297,7 @@ HB_FUNC( ADSEVALAOF )
    }
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSEVALAOF" );
-   
+
 }
 
 HB_FUNC( ADSGETAOF )
@@ -409,6 +409,6 @@ HB_FUNC( ADSSETAOF )
    }
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSSETAOF" );
-   
+
 }
 
