@@ -1,3 +1,15 @@
+2001-09-03 11:30 GMT+1 Antonio Linares <alinares@fivetech.com>
+  + harbour/contrib/hgf/gtk/makefile
+  + harbour/contrib/hgf/gtk/creamenu.c
+  + harbour/contrib/hgf/gtk/creawin.c
+  + harbour/contrib/hgf/gtk/harbgtk.ch
+  + harbour/contrib/hgf/gtk/shared.ch
+  + harbour/contrib/hgf/gtk/harbgtk.h
+  + harbour/contrib/hgf/gtk/menuitem.prg
+  + harbour/contrib/hgf/gtk/tform.prg
+  + harbour/contrib/hgf/gtk/tmenu.prg
+    HGF GTK support by Marek Paliwoda
+
 2001-09-02 21:30 GMT+1 Antonio Linares <alinares@fivetech.com>
   + harbour/source/rtl/persist.prg
     arrays support started
