@@ -272,7 +272,7 @@ void hb_compChkCompilerSwitch( int iArg, char * Args[] )
                              j += 2;
                           }
                           hb_compChkEnvironVar( (char*) Switch );
-                          break;
+                          continue;
 
                      case 'i' :
                      case 'I' :

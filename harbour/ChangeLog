@@ -1,3 +1,8 @@
+2000-10-05 16:00 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+   * source/compiler/cmdcheck.c
+     ! Corrected new bug in my earlier "fix" of handling the -g option
+       (I left in the 'break', but should have left in the 'continue').
+
 2000-10-05 15:00 UTC-0400 David G. Holm <dholm@jsd-llc.com>
    * source/compiler/cmdcheck.c
      ! Corrected handling of 'g' option when option lead-in is '-'.
