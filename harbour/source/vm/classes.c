@@ -1082,7 +1082,7 @@ HB_FUNC( __CLSADDMSG )
 
          case HB_OO_MSG_ONERROR:
 
-            pClass->pFunError = ( PHB_FUNC ) hb_parnl( 2 );
+            pClass->pFunError = ( PHB_FUNC ) hb_parnl( 3 );
             break;
 
          default:
