@@ -1,3 +1,13 @@
+20000501 14:35 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
+*contrib/libgt/doc/gendoc.bat
+ contrib/libgt/doc/gendoc.cmd
+ contrib/libmisc/doc/gendoc.bat
+ contrib/libmisc/doc/gendoc.cmd
+     *Small changes
+*utils/hbdoc/hbdoc.prg
+    *small bug fixed
+
+
 20000501-18:05 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/rtl/filesys.c
