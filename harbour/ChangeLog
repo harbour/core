@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-03-13 14:07 UTC-0800 Ron Pinkas <ron@ronpinkas.com>
+  * source/compiler/harbour.slx
+    + Enabled support for TEXT ... ENDTEXT utilizing new hb_ppInsideTextBlock
+
   * source/compiler/harbour.sly
     ! Correted minor bug in GetA
 

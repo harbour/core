@@ -83,13 +83,12 @@ HB_INIT_SYMBOLS_END( dbfntx1__InitSymbols )
 
 static RDDFUNCS ntxSuper = { 0 };
 static USHORT maxPagesPerTag = 20;
-static int maxLevel = 0;
 
 /* Internal functions */
 static LPKEYINFO hb_ntxKeyNew( LPKEYINFO pKeyFrom );
 static void hb_ntxKeyFree( LPKEYINFO pKey );
 static LONG hb_ntxTagKeyFind( LPTAGINFO pTag, LPKEYINFO pKey, BOOL* result );
-static BOOL ntxIsDeleted( NTXAREAP pArea, LONG ulRecNo );
+static BOOL ntxIsRecBad( NTXAREAP pArea, LONG ulRecNo );
 static int hb_ntxTagFindCurrentKey( LPPAGEINFO pPage, LONG lBlock, LPKEYINFO pKey, BOOL bExact, BOOL lSeek, int level );
 static USHORT hb_ntxPageFindCurrentKey( LPPAGEINFO pPage, ULONG ulRecno );
 static void hb_ntxGetCurrentKey( LPTAGINFO pTag, LPKEYINFO pKey );
@@ -258,20 +257,12 @@ static LONG hb_ntxTagKeyFind( LPTAGINFO pTag, LPKEYINFO pKey, BOOL * result )
    K = hb_ntxTagFindCurrentKey( hb_ntxPageLoad( pTag->Owner,0 ), pKey->Tag, pKey, FALSE, TRUE, 1 );
    if( K == 0 )
    {
-      /* if( pTag->pForItem == NULL )
-         { */
-         *result = TRUE;
-         return pKey->Xtra;
-      /* }
-         else
-            pTag->TagEOF = TRUE; */
+      *result = TRUE;
+      return pKey->Xtra;
    }
    else if( K < 0 )
    {
-      /* if( pTag->pForItem == NULL ) */
-         return pKey->Xtra;
-      /* else
-           pTag->TagEOF = TRUE; */
+      return pKey->Xtra;
    }
    else
       pTag->TagEOF = TRUE;
@@ -284,11 +275,6 @@ static int hb_ntxTagFindCurrentKey( LPPAGEINFO pPage, LONG lBlock, LPKEYINFO pKe
    LPKEYINFO p;
    LPPAGEINFO pChildPage;
 
-   if( level > maxLevel )  /* for debugging purposes only */
-   {
-      maxLevel = level;
-      /* printf( "\n\rLevel: %d\n\r",maxLevel ); */
-   }
    bExact = ( bExact || pPage->TagParent->KeyType != 'C' );
    pPage->CurKey = 0;
    while( k > 0 && pPage->CurKey <= pPage->uiKeys )
@@ -320,7 +306,7 @@ static int hb_ntxTagFindCurrentKey( LPPAGEINFO pPage, LONG lBlock, LPKEYINFO pKe
       /* pKey <= p */
       {
          if( ( k == 0 && !lSeek && (ULONG)p->Xtra != pPage->TagParent->Owner->Owner->ulRecNo )
-             || ( lSeek && hb_set.HB_SET_DELETED && ntxIsDeleted( pPage->TagParent->Owner->Owner, p->Xtra ) ) )
+             || ( lSeek && ntxIsRecBad( pPage->TagParent->Owner->Owner, p->Xtra ) ) )
             k = 1;
          if( k <= 0 )
          {
@@ -374,16 +360,24 @@ static int hb_ntxTagFindCurrentKey( LPPAGEINFO pPage, LONG lBlock, LPKEYINFO pKe
    return k;
 }
 
-static BOOL ntxIsDeleted( NTXAREAP pArea, LONG ulRecNo )
+static BOOL ntxIsRecBad( NTXAREAP pArea, LONG ulRecNo )
 {
 
-   BOOL lDeleted;
+   BOOL lResult = FALSE;
 
-   if( SELF_GOTO( ( AREAP ) pArea,ulRecNo ) == SUCCESS &&
-                     SUPER_DELETED( ( AREAP ) pArea,&lDeleted ) == SUCCESS )
-      return lDeleted;
-   else
-      return FALSE;
+   if( hb_set.HB_SET_DELETED || pArea->dbfi.itmCobExpr )
+      SELF_GOTO( ( AREAP ) pArea,ulRecNo );
+
+   if( hb_set.HB_SET_DELETED )
+      SUPER_DELETED( ( AREAP ) pArea,&lResult );
+
+   if( !lResult && pArea->dbfi.itmCobExpr )
+   {
+      PHB_ITEM pResult = hb_vmEvalBlock( pArea->dbfi.itmCobExpr );
+      lResult = HB_IS_LOGICAL( pResult ) && !hb_itemGetL( pResult );
+   }
+
+   return lResult;
 }
 
 static USHORT hb_ntxPageFindCurrentKey( LPPAGEINFO pPage, ULONG ulRecno )
