@@ -22,4 +22,7 @@ PRG_SOURCES=\
 
 LIBNAME=misc
 
+DIRS=tests
+
 include $(TOP)$(ROOT)config/lib.cf
+include $(TOP)$(ROOT)config/dir.cf

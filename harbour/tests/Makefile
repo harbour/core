@@ -170,7 +170,6 @@ BAD_PRG_SOURCES=\
 	mathtest.prg \
 	objarr.prg \
 	objasign.prg \
-	readfile.prg \
 	rtfclass.prg \
 	spawn.prg \
 	spawn2.prg \

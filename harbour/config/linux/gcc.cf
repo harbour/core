@@ -30,7 +30,7 @@ else
 LINKPATHS += -L$(HB_LIB_COMPILE)
 endif
 LINKLIBS += -Wl,--start-group
-LINKLIBS += $(foreach lib, $(CONTRIBS), -l$(lib))
+LINKLIBS += $(foreach lib, $(CONTRIBS), -l$(subst lib,,$(lib)))
 LINKLIBS += $(foreach lib, $(LIBS), -l$(lib))
 
 # If LIBS specifies the rdd library, add all DB drivers.

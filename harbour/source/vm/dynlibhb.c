@@ -62,7 +62,11 @@
 #include "hbvm.h"
 
 #if defined(HB_OS_WIN_32)
-   extern HMODULE _hInstance;
+   #if defined(__BORLANDC__)
+      extern HMODULE _hInstance;
+   #else
+      HMODULE _hInstance;
+   #endif
 #endif
 
 HB_FUNC( LIBLOAD )

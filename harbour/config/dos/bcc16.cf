@@ -44,11 +44,13 @@ endef
 LD = bcc
 LDFLAGS = -O2 -mh $(L_USR)
 ifeq ($(HB_LIB_COMPILE),)
+LINKLIBS = $(foreach lib, $(CONTRIBS), $(TOP)$(ROOT)contrib/$(lib)/$(ARCH)/$(subst lib,,$(lib))$(LIB_EXT))
 LINKLIBS = $(foreach lib, $(LIBS), $(TOP)$(ROOT)source/$(lib)/$(ARCH)/$(lib)$(LIB_EXT))
 ifeq ($(findstring rdd,$(LIBS)),rdd)
 LINKLIBS += $(foreach lib, $(HB_DB_DRIVERS), $(TOP)$(ROOT)source/rdd/$(lib)/$(ARCH)/$(lib)$(LIB_EXT))
 endif
 else
+LINKLIBS = $(foreach lib, $(CONTRIBS), $(lib)$(LIB_EXT))
 LINKLIBS = $(foreach lib, $(LIBS), $(lib)$(LIB_EXT))
 ifeq ($(findstring rdd,$(LIBS)),rdd)
 LINKLIBS += $(foreach lib, $(HB_DB_DRIVERS), $(lib)$(LIB_EXT))

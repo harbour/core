@@ -30,7 +30,7 @@ else
 LINKPATHS += -L$(HB_LIB_COMPILE)
 endif
 
-LINKLIBS += $(foreach lib, $(CONTRIBS), -l$(lib))
+LINKLIBS += $(foreach lib, $(CONTRIBS), -l$(subst lib,,$(lib)))
 LINKLIBS += $(foreach lib, $(LIBS), -l$(lib))
 
 # This library is needed for CharToOemBuff() and OemToCharBuff() support.

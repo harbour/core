@@ -25,7 +25,7 @@ LINKPATHS += -link $(foreach lib, $(LIBS), -LIBPATH:$(TOP)$(ROOT)source/$(lib)/$
 else
 LINKPATHS += -link -LIBPATH:$(HB_LIB_COMPILE)
 endif
-LINKLIBS += $(foreach lib, $(CONTRIBS), $(lib)$(LIB_EXT))
+LINKLIBS += $(foreach lib, $(CONTRIBS), $(subst lib,,$(lib))$(LIB_EXT))
 LINKLIBS += $(foreach lib, $(LIBS), $(lib)$(LIB_EXT))
 
 # If LIBS specifies the rdd library, add all DB drivers.

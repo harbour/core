@@ -36,11 +36,11 @@ LD_OUT = -e
 
 # Add all libraries specified in CONTRIBS and LIBS.
 ifeq ($(HB_LIB_COMPILE),)
-LINKLIBS += $(foreach lib, $(CONTRIBS), $(TOP)$(ROOT)/contrib/$(lib)/$(ARCH)/$(lib)$(LIB_EXT))
+LINKLIBS += $(foreach lib, $(CONTRIBS), $(TOP)$(ROOT)/contrib/$(lib)/$(ARCH)/$(subst lib,,$(lib))$(LIB_EXT))
 LINKLIBS += $(foreach lib, $(LIBS), $(TOP)$(ROOT)/source/$(lib)/$(ARCH)/$(lib)$(LIB_EXT))
 else
 LINKPATHS += -L$(HB_LIB_COMPILE)
-LINKLIBS += $(foreach lib, $(CONTRIBS), $(lib)$(LIB_EXT))
+LINKLIBS += $(foreach lib, $(CONTRIBS), $(subst lib,,$(lib))$(lib)$(LIB_EXT))
 LINKLIBS += $(foreach lib, $(LIBS), $(lib)$(LIB_EXT))
 endif
 

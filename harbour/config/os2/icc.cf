@@ -30,7 +30,7 @@ endif
 endif
 endif
 ifeq ($(HB_LIB_COMPILE),)
-LINKLIBS = $(foreach lib, $(CONTRIBS), $(TOP)$(ROOT)contrib/$(lib)/$(ARCH)/$(lib)$(LIB_EXT))
+LINKLIBS = $(foreach lib, $(CONTRIBS), $(TOP)$(ROOT)contrib/$(lib)/$(ARCH)/$(subst lib,,$(lib))$(LIB_EXT))
 LINKLIBS += $(foreach lib, $(LIBS), $(TOP)$(ROOT)source/$(lib)/$(ARCH)/$(lib)$(LIB_EXT))
 # If LIBS specifies the rdd library, add all DB drivers.
 ifeq ($(findstring rdd,$(LIBS)),rdd)

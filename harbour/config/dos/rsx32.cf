@@ -33,7 +33,7 @@ endif
 # cyclic dependencies, but I think it is not really necessary if the
 # libraries are kept in proper order.
 # LINKLIBS += -Wl,-(
-LINKLIBS += $(foreach lib, $(CONTRIBS), -l$(lib))
+LINKLIBS += $(foreach lib, $(CONTRIBS), -l$(subst lib,,$(lib)))
 LINKLIBS += $(foreach lib, $(LIBS), -l$(lib))
 
 # If LIBS specifies the rdd library, add all DB drivers.
