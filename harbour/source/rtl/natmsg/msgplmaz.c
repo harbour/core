@@ -7,7 +7,7 @@
 char *hb_monthsname[ 12 ] = {
    "Stycze¤", "Luty", "Marzec",
    "Kwiecie¤", "Maj", "Czerwiec", "Lipiec",
-   "Sierpie¤", "Wrzesie¤", "Pa¦d¦iernik",
+   "Sierpie¤", "Wrzesie¤", "Pa¦dziernik",
    "Listopad", "Grudzie¤" };
 
 char *hb_daysname[ 7 ] = {

@@ -38,6 +38,10 @@
 #include "natmsg/msgczkam.c"
 #elif defined(HARBOUR_LANGUAGE_YU852)
 #include "natmsg/msgyu852.c"
+#elif defined(HARBOUR_LANGUAGE_PL852)
+#include "natmsg/msgpl852.c"
+#elif defined(HARBOUR_LANGUAGE_PLMAZ)
+#include "natmsg/msgplmaz.c"
 #else
 #include "natmsg/msguk.c"
 #endif
