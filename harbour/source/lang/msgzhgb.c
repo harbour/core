@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (ZH_GB)
+ * Language Support Module (ZHGB)
  *
  * Copyright 1999-2001 dongming <dongming@km169.net>
  *                           or <freexbase@yahoo.com.cn>
@@ -64,7 +64,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
    
-      "ZH",                        /* ID */
+      "ZHGB",                      /* ID */
       "Chinese Simplified",        /* Name (in English) */
       "ÖÐÎÄ¼òÌåGB",                /* Name (in native language) */
       "ZH",                        /* RFC ID */
@@ -200,12 +200,12 @@ static HB_LANG s_lang =
    }
 };
 
-HB_LANG_ANNOUNCE( ZH_GB );
+HB_LANG_ANNOUNCE( ZHGB );
 
-HB_CALL_ON_STARTUP_BEGIN( hb_lang_Init_ZH_GB )
+HB_CALL_ON_STARTUP_BEGIN( hb_lang_Init_ZHGB )
    hb_langRegister( &s_lang );
-HB_CALL_ON_STARTUP_END( hb_lang_Init_ZH_GB )
+HB_CALL_ON_STARTUP_END( hb_lang_Init_ZHGB )
 #if ! defined(__GNUC__) && ! defined(_MSC_VER)
-   #pragma startup hb_lang_Init_ZH_GB
+   #pragma startup hb_lang_Init_ZHGB
 #endif
 

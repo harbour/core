@@ -1,3 +1,13 @@
+2001-11-20 21:02 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * source/lang/Makefile
+     + Added missing language.
+
+   * source/lang/msgruwin.c
+   * source/lang/msgzhb5.c
+   * source/lang/msgzhgb.c
+     * Small changes.
+
 2001-11-20 16:36 GMT-3 Horacio Roldan <harbour_ar@yahoo.com.ar>
    * source/rdd/dbfcdx/dbfcdx1.c
      + added support for AUTO OPEN

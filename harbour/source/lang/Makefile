@@ -37,6 +37,8 @@ C_SOURCES=\
 	msgruwin.c   \
 	msgsr852.c   \
 	msgsriso.c   \
+	msgzhb5.c    \
+	msgzhgb.c    \
 	
 LIBNAME=lang
 

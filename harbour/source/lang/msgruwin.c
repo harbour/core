@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (RU1251)
+ * Language Support Module (RUWIN)
  *
  * Copyright 2000 Alexander S.Kresin <alex@belacy.belgorod.su>
  * www - http://www.harbour-project.org
@@ -61,7 +61,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
    
-      "RU1251",                    /* ID */
+      "RUWIN",                     /* ID */
       "Russian",                   /* Name (in English) */
       "Русский",                   /* Name (in native language) */
       "RU",                        /* RFC ID */

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (ZH_BIG5)
+ * Language Support Module (ZHB5)
  *
  * Copyright 1999-2001 dongming <dongming@km169.net>
  *                           or <freexbase@yahoo.com.cn>
@@ -63,10 +63,10 @@ static HB_LANG s_lang =
    {
       /* Identification */
    
-      "ZH",                        /* ID */
+      "ZHB5",                      /* ID */
       "Chinese Traditional",       /* Name (in English) */
       "§§§Â¡c≈ÈBIG5",              /* Name (in native language) */
-      "ZH",                     /* RFC ID */
+      "ZH",                        /* RFC ID */
       "950",                       /* Codepage */
       "$Revision$ $Date$",         /* Version */
    
@@ -199,12 +199,12 @@ static HB_LANG s_lang =
    }
 };
 
-HB_LANG_ANNOUNCE( ZH_BIG5 );
+HB_LANG_ANNOUNCE( ZHB5 );
 
-HB_CALL_ON_STARTUP_BEGIN( hb_lang_Init_ZH_BIG5 )
+HB_CALL_ON_STARTUP_BEGIN( hb_lang_Init_ZHB5 )
    hb_langRegister( &s_lang );
-HB_CALL_ON_STARTUP_END( hb_lang_Init_ZH_BIG5 )
+HB_CALL_ON_STARTUP_END( hb_lang_Init_ZHB5 )
 #if ! defined(__GNUC__) && ! defined(_MSC_VER)
-   #pragma startup hb_lang_Init_ZH_BIG5
+   #pragma startup hb_lang_Init_ZHB5
 #endif
 
