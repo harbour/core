@@ -1,3 +1,8 @@
+2001-12-01 18:10 GMT+1 JFL (mafact) <jfl@mafact.com>
+   * harbour/source/vm/arrays.c
+     * Last version from RON. No change in logic.
+
+
 2001-11-30 22:05 GMT+1 JFL (mafact) <jfl@mafact.com>
    * harbour/source/vm/arrays.c
      * Corrected an error I added while creating null item when not needed

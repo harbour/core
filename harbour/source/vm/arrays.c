@@ -64,9 +64,6 @@
  *    hb_arrayFromStack()
  *    hb_arrayFromParams()
  *
- * Copyright 2001 jfl (mafact) jfl@mafact.com>
- *    hb_arrayClone() fixed againt unneded itemrelease
- *
  * See doc/license.txt for licensing terms.
  *
  */
@@ -723,8 +720,6 @@ BOOL hb_arrayCopy( PHB_ITEM pSrcArray, PHB_ITEM pDstArray, ULONG * pulStart,
 
 PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray, PHB_NESTED_CLONED pClonedList )
 {
-   PHB_ITEM pDstArray;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_arrayClone(%p, %p)", pSrcArray, pClonedList));
 
    if( HB_IS_ARRAY( pSrcArray ) )
@@ -733,6 +728,7 @@ PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray, PHB_NESTED_CLONED pClonedList )
       PHB_BASEARRAY pDstBaseArray;
       ULONG ulSrcLen = pSrcBaseArray->ulLen;
       ULONG ulCount;
+      PHB_ITEM pDstArray;
       PHB_NESTED_CLONED pCloned;
       BOOL bTop;
 
@@ -744,10 +740,11 @@ PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray, PHB_NESTED_CLONED pClonedList )
          bTop = TRUE;
 
          pClonedList = ( PHB_NESTED_CLONED ) hb_xgrab( sizeof( HB_NESTED_CLONED ) );
+
          pCloned = pClonedList;
 
-         pCloned->pSrcBaseArray = pSrcArray->item.asArray.value;
-         pCloned->pDest     = pDstArray;
+         pCloned->pSrcBaseArray = pSrcBaseArray;
+         pCloned->pDest         = pDstArray;
 
          pCloned->pNext = NULL;
       }
@@ -764,8 +761,8 @@ PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray, PHB_NESTED_CLONED pClonedList )
          pCloned->pNext = ( PHB_NESTED_CLONED ) hb_xgrab( sizeof( HB_NESTED_CLONED ) );
          pCloned = pCloned->pNext;
 
-         pCloned->pSrcBaseArray = pSrcArray->item.asArray.value;
-         pCloned->pDest     = pDstArray;
+         pCloned->pSrcBaseArray = pSrcBaseArray;
+         pCloned->pDest         = pDstArray;
 
          pCloned->pNext = NULL;
       }
@@ -780,69 +777,65 @@ PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray, PHB_NESTED_CLONED pClonedList )
          if( pSrcItem->type == HB_IT_ARRAY )
          {
             PHB_ITEM pClone;
-            BOOL bSkip= FALSE ;
-            BOOL bEnd=FALSE ;
 
+            /* Broken down like this to avoid redundant comparisons. */
             pCloned = pClonedList;
-
-            while( ! bEnd )
+            if( pCloned->pSrcBaseArray == pSrcItem->item.asArray.value )
             {
+               pClone = pCloned->pDest;
+               goto DontClone;
+            }
+            while( pCloned->pNext )
+            {
+               pCloned = pCloned->pNext;
+
                if( pCloned->pSrcBaseArray == pSrcItem->item.asArray.value )
                {
                   pClone = pCloned->pDest;
-                  bSkip = TRUE;
-                  bEnd  = TRUE;
+                  goto DontClone;
                }
-               else
-               {
-                pCloned = pCloned->pNext;
-                bEnd = ! (BOOL) pCloned;
-               }
-
+            }
+            if( pCloned->pSrcBaseArray == pSrcItem->item.asArray.value )
+            {
+               pClone = pCloned->pDest;
+               goto DontClone;
             }
 
-            if( !bSkip )
-             pClone = hb_arrayClone( pSrcItem, pClonedList );
+            pClone = hb_arrayClone( pSrcItem, pClonedList );
 
-            hb_itemArrayPut( pDstArray, ulCount + 1, pClone );
-
+           DontClone :
+            hb_arraySet( pDstArray, ulCount + 1, pClone );
          }
          else
          {
-            hb_itemArrayPut( pDstArray, ulCount + 1, pSrcItem );
+            hb_arraySet( pDstArray, ulCount + 1, pSrcItem );
          }
       }
 
       /* Top Level - Release the created list. */
       if( bTop )
       {
-         pCloned = pClonedList;
-         while( pCloned )
+         /* 1st. Chain alway exists, and points to our top level pDstArray, which should NOT be (item) released. */
+         pCloned     = pClonedList;
+         pClonedList = pClonedList->pNext;
+         hb_xfree( pCloned );
+
+         while( pClonedList )
          {
+            pCloned     = pClonedList;
             pClonedList = pClonedList->pNext;
 
-    /*  Not needed as we need to keep all the cloned array */
-    /*  including all subarray                             */
-
-    /*      if( pCloned->pDest != pDstArray )     */
-    /*         hb_itemRelease( pCloned->pDest );  */
-
+            hb_itemRelease( pCloned->pDest );
             hb_xfree( pCloned );
-
-            pCloned = pClonedList;
          }
-
       }
 
       return pDstArray;
-
    }
    else
    {
       return hb_itemNew( NULL );
    }
-
-
 }
 
 PHB_ITEM hb_arrayFromStack( USHORT uiLen )
