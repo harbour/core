@@ -1,3 +1,11 @@
+19990525-15:40 CET Eddie Runia
+  * bin, libs/b16, libs/b32, libs/vc, libs/icc, libs/win16 & libs/win32
+    added as per request
+
+19990525-10:40 CET Eddie Runia
+  * source/vm/initsymb.c
+    DATE added to init symbols
+
 19990525-10:03 CET Antonio Linares <alinares@fivetech.com>
   * tests/working/runner.c (shouldn't this file be located at source/runner?)
     - some small changes to admit FILE() Harbour name.

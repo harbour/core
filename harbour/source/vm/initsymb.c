@@ -14,6 +14,7 @@ HARBOUR ASC( void );
 HARBOUR AT( void );
 HARBOUR CHR( void );
 HARBOUR CTOD( void );
+HARBOUR DATE( void );
 HARBOUR DAY( void );
 HARBOUR DTOC( void );
 HARBOUR DTOS( void );
@@ -56,7 +57,7 @@ static SYMBOL symbols[] = {
     { "CMONTH"    , FS_PUBLIC, NULL         , 0 },
     { "COL"       , FS_PUBLIC, NULL         , 0 },
     { "CTOD"      , FS_PUBLIC, CTOD         , 0 },
-    { "DATE"      , FS_PUBLIC, NULL         , 0 },
+    { "DATE"      , FS_PUBLIC, DATE         , 0 },
     { "DAY"       , FS_PUBLIC, DAY          , 0 },
     { "DELETED"   , FS_PUBLIC, NULL         , 0 },
     { "DEVPOS"    , FS_PUBLIC, NULL         , 0 },
