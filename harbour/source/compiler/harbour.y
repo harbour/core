@@ -509,7 +509,6 @@ Main       : { Line(); } Source       {
                                       }
 
 Source     : Crlf
-           | Extern
            | VarDefs
            | FieldsDef
            | MemvarDef
@@ -517,9 +516,8 @@ Source     : Crlf
            | Statement
            | Line
            | Source Crlf
-           | Source Extern
            | Source Function
-           | Source { LineBody(); } Statement
+           | Source Statement
            | Source VarDefs
            | Source FieldsDef
            | Source MemvarDef
@@ -528,13 +526,6 @@ Source     : Crlf
 
 Line       : LINE INTEGER LITERAL Crlf
            | LINE INTEGER LITERAL '@' LITERAL Crlf   /* XBase++ style */
-           ;
-
-Extern     : EXTERN ExtList { _iState =LOOKUP; } Crlf
-           ;
-
-ExtList    : IDENTIFIER                               { AddExtern( $1 ); }
-           | ExtList ',' IDENTIFIER                   { AddExtern( $3 ); }
            ;
 
 Function   : FunScope FUNCTION  IDENTIFIER { cVarType = ' '; FunDef( $3, $1, 0 ); } Params Crlf { SetFrame(); }
@@ -575,32 +566,37 @@ Statements : Statement
            | Statements { Line(); } Statement
            ;
 
-Statement  : ExecFlow { _iState =LOOKUP; } Crlf        {}
-           | FunCall { _iState =LOOKUP; } Crlf         { Do( $1 ); }
-           | AliasFunc { _iState =LOOKUP; } Crlf       {}
-           | IfInline { _iState =LOOKUP; } Crlf        { GenPCode1( HB_P_POP ); }
-           | ObjectMethod { _iState =LOOKUP; } Crlf    { GenPCode1( HB_P_POP ); }
-           | VarUnary { _iState =LOOKUP; } Crlf        { GenPCode1( HB_P_POP ); }
-           | VarAssign { _iState =LOOKUP; } Crlf       { GenPCode1( HB_P_POP ); }
+Statement  : ExecFlow { LineBody(); } Crlf        {}
+           | FunCall { LineBody(); } Crlf         { Do( $1 ); }
+           | AliasFunc { LineBody(); } Crlf       {}
+           | IfInline { LineBody(); } Crlf        { GenPCode1( HB_P_POP ); }
+           | ObjectMethod { LineBody(); } Crlf    { GenPCode1( HB_P_POP ); }
+           | VarUnary { LineBody(); } Crlf        { GenPCode1( HB_P_POP ); }
+           | VarAssign { LineBody(); } Crlf       { GenPCode1( HB_P_POP ); }
 
-           | IDENTIFIER '=' Expression { _iState =LOOKUP; } Crlf            { PopId( $1 ); }
-           | AliasExp '=' Expression { _iState =LOOKUP; } Crlf              { /* TODO */ GenPCode1( HB_P_POP ); }
-           | VarId ArrayIndex '=' Expression { _iState =LOOKUP; } Crlf      { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); }
-           | FunArrayCall '=' Expression { _iState =LOOKUP; } Crlf          { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); }
-           | IdSend IDENTIFIER '='      { Message( SetData( $2 ) ); } Expression { _iState =LOOKUP; } Crlf  { Function( 1 ); }
-           | ObjectData ArrayIndex '=' Expression { _iState =LOOKUP; } Crlf    { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); }
-           | ObjectMethod ArrayIndex '=' Expression { _iState =LOOKUP; } Crlf  { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); }
+           | IDENTIFIER '=' Expression { LineBody(); } Crlf            { PopId( $1 ); }
+           | AliasExp '=' Expression { LineBody(); } Crlf              { /* TODO */ GenPCode1( HB_P_POP ); }
+           | VarId ArrayIndex '=' Expression { LineBody(); } Crlf      { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); }
+           | FunArrayCall '=' Expression { LineBody(); } Crlf          { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); }
+           | IdSend IDENTIFIER '='      { Message( SetData( $2 ) ); } Expression { LineBody(); } Crlf  { Function( 1 ); }
+           | ObjectData ArrayIndex '=' Expression { LineBody(); } Crlf    { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); }
+           | ObjectMethod ArrayIndex '=' Expression { LineBody(); } Crlf  { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); }
 
-           | BREAK { _iState =LOOKUP; } Crlf
-           | BREAK Expression { _iState =LOOKUP; } Crlf
-           | RETURN { _iState =LOOKUP; } Crlf              { GenReturn( Jump( 0 ) ); }
-           | RETURN Expression { _iState =LOOKUP; } Crlf   { GenPCode1( HB_P_RETVALUE ); GenReturn( Jump ( 0 ) ); }
-           | PUBLIC { iVarScope = VS_MEMVAR; } VarList { _iState =LOOKUP; } Crlf
-           | PRIVATE { iVarScope = VS_MEMVAR; } VarList { _iState =LOOKUP; } Crlf
-           | PARAMETERS { iVarScope = VS_MEMVAR; } IdentList { _iState =LOOKUP; } Crlf
-           | EXITLOOP { _iState =LOOKUP; } Crlf            { LoopExit(); }
-           | LOOP { _iState =LOOKUP; } Crlf                { LoopLoop(); }
-           | DoProc { _iState =LOOKUP; } Crlf
+           | BREAK { LineBody(); } Crlf
+           | BREAK Expression { LineBody(); } Crlf
+           | RETURN { LineBody(); } Crlf              { GenReturn( Jump( 0 ) ); }
+           | RETURN Expression { LineBody(); } Crlf   { GenPCode1( HB_P_RETVALUE ); GenReturn( Jump ( 0 ) ); }
+           | PUBLIC { iVarScope = VS_MEMVAR; } VarList { LineBody(); } Crlf
+           | PRIVATE { iVarScope = VS_MEMVAR; } VarList { LineBody(); } Crlf
+           | PARAMETERS { iVarScope = VS_MEMVAR; } IdentList { LineBody(); } Crlf
+           | EXITLOOP { LineBody(); } Crlf            { LoopExit(); }
+           | LOOP { LineBody(); } Crlf                { LoopLoop(); }
+           | DoProc { LineBody(); } Crlf
+           | EXTERN ExtList { _iState =LOOKUP; } Crlf
+           ;
+
+ExtList    : IDENTIFIER                               { AddExtern( $1 ); }
+           | ExtList ',' IDENTIFIER                   { AddExtern( $3 ); }
            ;
 
 FunCall    : FunStart ')'                { $$ = 0; }
@@ -3257,6 +3253,7 @@ void LineBody( void ) /* generates the pcode with the currently compiled source 
    {
      GenError( _szCErrors, 'E', ERR_OUTSIDE, NULL, NULL );
    }
+  _iState =LOOKUP;
   functions.pLast->bFlags |= FUN_STATEMENTS;
   if( _iLineNumbers )
    GenPCode3( HB_P_LINE, LOBYTE( iLine ), HIBYTE( iLine ) );

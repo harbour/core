@@ -11,7 +11,6 @@ PRG_SOURCES=\
 	arrayidx.prg \
 	arrays.prg \
 	arrindex.prg \
-	asctest.prg \
 	atest.prg \
 	box.prg \
 	byref.prg \
@@ -34,7 +33,6 @@ PRG_SOURCES=\
 	dosshell.prg \
 	dynobj.prg \
 	empty.prg \
-	errorsys.prg \
 	exittest.prg \
 	fib.prg \
 	fileio.prg \
@@ -88,6 +86,7 @@ PRG_SOURCES=\
 	strings3.prg \
 	strings4.prg \
 	strip.prg \
+	syserror.prg \
 	t1.prg \
 	test.prg \
 	test_all.prg \

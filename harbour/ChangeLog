@@ -1,3 +1,18 @@
+19990710-14:00 Ryszard Glab <rglab@imid.med.pl>
+
+* tests/working/Makefile
+ * removed asctest.prg
+ * renamed errorsys.prg to syserror.prg
+ 
+* tests/working/errorsys.prg
+ - renamed to syserror.prg to avoid duplicated symbol ERRORSYS__initSymbols
+ 
+* source/compiler/harbour.y
+ * EXTERN definition is now in 'Statement' section to compile code:
+   if .T.
+     EXTERNAL xx
+   ENDIF
+ 
 19990709-19:00 Eddie Runia <eddie@runia.com>
   + tests/working/clsdata.prg
     Test program supplied by Bruno Cantero
