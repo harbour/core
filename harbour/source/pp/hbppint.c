@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Preprocessor & Compiler integration module
  *
- * Copyright 1999 Alexander S.Kresin  <alex@belacy.belgorod.su>
+ * Copyright 1999 Alexander S.Kresin <alex@belacy.belgorod.su>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -64,19 +64,15 @@ void hb_pp_Init( void )
 
 int hb_pp_Internal( FILE * handl_o, char * sOut )
 {
-  char *sBuffer;    /* File read buffer */
-  char * ptr, * ptrOut;
-  int lContinue;
-  int lens, rdlen;
-  FILE * handl_i;
+  char *sBuffer = (char*) hb_comp_files.pLast->pBuffer;  /* File read buffer */
+  char * ptr, * ptrOut = sOut;
+  int lContinue = 0;
+  int lens = 0, rdlen;
+  FILE * handl_i = hb_comp_files.pLast->handle;
 
   HB_TRACE(HB_TR_DEBUG, ("PreProcess(%p, %p, %s)", handl_i, handl_o, sOut));
 
-     handl_i = hb_comp_files.pLast->handle;
-     sBuffer = (char *)hb_comp_files.pLast->pBuffer;
-     lContinue = lens = 0;
-     ptrOut = sOut;
-     while( ( rdlen = hb_pp_RdStr( handl_i, s_szLine + lens, HB_PP_STR_SIZE - 
+     while( ( rdlen = hb_pp_RdStr( handl_i, s_szLine + lens, HB_PP_STR_SIZE -
                   lens, lContinue, sBuffer, &(hb_comp_files.pLast->lenBuffer),
                   &(hb_comp_files.pLast->iBuffer) ) ) >= 0 )
        {
@@ -134,6 +130,7 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
            PFILE pFile;
            fclose( hb_comp_files.pLast->handle );
            hb_xfree( hb_comp_files.pLast->pBuffer );
+           hb_xfree( hb_comp_files.pLast->szFileName );
            pFile = ( PFILE ) ( ( PFILE ) hb_comp_files.pLast )->pPrev;
            hb_xfree( hb_comp_files.pLast );
            hb_comp_files.pLast = pFile;

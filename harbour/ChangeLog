@@ -1,3 +1,8 @@
+20000218-15:23 GMT+3 Alexander Kresin
+   * source/pp/hbpp.c
+   * source/pp/hbppint.c
+     * Bug fixed, reported by Brian Hays
+
 20000218-10:02 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
     *doc/compiler.txt
      doc/readme.txt
@@ -149,7 +154,7 @@
      ! Fixed adsOrderListAdd() for setting up the default index.
      ! Fixed table, index and memo file extensions.
    * contrib/rdd_ads/adsfunc.c
-     ! Modified HB_ADSSETDELETED() for making similar to clipper 
+     ! Modified HB_ADSSETDELETED() for making similar to clipper
         set deleted command.
 
 20000214-19:35 GMT+1 Ryszard Glab <rglab@imid.med.pl>
@@ -157,11 +162,11 @@
     *source/compiler/expropt.c
     *source/macro/macro.c
     *include/hbexpr.c
-	* fixed generation of incorrect HB_P_MACROSYMBOL pcode when
-	&( expression ) syntax was used
-	
+        * fixed generation of incorrect HB_P_MACROSYMBOL pcode when
+        &( expression ) syntax was used
+
     *tests/tstmacro.prg
-	* cleared to allow Clipper compatible syntax only
+        * cleared to allow Clipper compatible syntax only
 
 20000214-17:10 GMT+1 Victor Szakats <info@szelvesz.hu>
    * config/w32/bcc32.cf
@@ -210,8 +215,8 @@
      ! Fixed hb_mouse_GetBounds().
        (Have this function been ever tested/compiled ??)
 
-   ; COMMENT: Borland 16 bit support is still broken. Large symbol tables and 
-     strings makes the final .EXE exit without any messages. HBDOC works, 
+   ; COMMENT: Borland 16 bit support is still broken. Large symbol tables and
+     strings makes the final .EXE exit without any messages. HBDOC works,
      HBRUN not, RT_MAIN not (but it can work if larger parts are removed).
      xmemset() and xmemcpy() crashes for larger values (like 100000),
      and the symbol processing used to fail right on startup.
@@ -297,38 +302,38 @@
 20000213-16:15 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.y
-	* line number opcodes are correctly generated inside IF/ENDIF,
-	WHILE/END
-	
+        * line number opcodes are correctly generated inside IF/ENDIF,
+        WHILE/END
+
     *source/macro/macro.c
-	* fixed unreleased memory when database alias was used
+        * fixed unreleased memory when database alias was used
 
     *source/macro/macro.y
-	* fixed unreleased memory when invalid syntax was found during
-	macro string parsing
+        * fixed unreleased memory when invalid syntax was found during
+        macro string parsing
 
     *include/hbexpr.c
-	* added more tracing information
-	
+        * added more tracing information
+
     *source/common/hbstr.c
-	* hb_strdup() reports the length of a string in tracing info	
+        * hb_strdup() reports the length of a string in tracing info
 
     *source/rtl/gt/gtdos.c
-	* fixed unreleased memory block
-	
+        * fixed unreleased memory block
+
     *include/hbtrace.h
     *source/common/hbtrace.c
-	* added HB_TRACE_STEALTH definition to print tracing information 
-	without changing filename/linenum information
-	* hb_tr_trace() doesn't clear filename/linenum info on exit - this
-	info is used in fm.c to store the location of code that requested
-	memory allocation
+        * added HB_TRACE_STEALTH definition to print tracing information
+        without changing filename/linenum information
+        * hb_tr_trace() doesn't clear filename/linenum info on exit - this
+        info is used in fm.c to store the location of code that requested
+        memory allocation
 
     *source/rtl/fm.c
-	* when HB_TR_LEVEL is set to HB_TR_DEBUG then allocated memory blocks
-	store C function name and line number instead of PRG filename/linenum
-	This allows to easy locate the source of unrealeased memory blocks
-		
+        * when HB_TR_LEVEL is set to HB_TR_DEBUG then allocated memory blocks
+        store C function name and line number instead of PRG filename/linenum
+        This allows to easy locate the source of unrealeased memory blocks
+
 20000213-13:27 GMT+1 Victor Szakats <info@szelvesz.hu>
    ! makefile.bc
      ! Some bugs fixed related to the previous change.
@@ -340,8 +345,8 @@
      make_b*.bat
      + Merged to functionality of makefile.b16 into makefile.b32 resulting in
        a generic makefile.bc for all Borland compilers.
-       Note that MAINDLL.C, MAINWIN.C, SYMBOLS.ASM should be fixed to be 
-       multiplatform, and currently the 16bits Borland choks on DEBUGGER.PRG. 
+       Note that MAINDLL.C, MAINWIN.C, SYMBOLS.ASM should be fixed to be
+       multiplatform, and currently the 16bits Borland choks on DEBUGGER.PRG.
        But it mostly works. The old makefile.b16 was completely outdated.
      + Added HARBOUR_OPT support.
    * doc/*
@@ -390,12 +395,12 @@
 
     *source/macro/macro.l
     *source/macro/macro.y
-	* fixed recognition of FIELD-> syntax
+        * fixed recognition of FIELD-> syntax
 
 20000212-12:22 GMT+1 Philip Joseph <philjo@writeme.com>
    * contrib/rdd_ads/ads1.c
-     + Added adsCreate function for creating ads tables. It also supports 
-       adt tables with short names.	 	
+     + Added adsCreate function for creating ads tables. It also supports
+       adt tables with short names.
 
 20000212-02:30 GMT+1 Victor Szakats <info@szelvesz.hu>
    * include/gtapi.h
@@ -442,14 +447,14 @@
 20000211-19:11 GMT+1 Victor Szakats <info@szelvesz.hu>
    * source/rtl/Makefile
      - readvar.prg removed.
-   * doc/harbext.txt 
+   * doc/harbext.txt
      + CVS ID added
        !! Please remember to add this to every file CVS-d !!
-   * tests/bld_b16.bat 
-     tests/bld_b32.bat 
+   * tests/bld_b16.bat
+     tests/bld_b32.bat
      tests/bld_b32o.bat
      tests/bld_b32w.bat
-     tests/bld_vc.bat  
+     tests/bld_vc.bat
      * Files moved to the bin\ directory.
    - tests/test_all.lnk
      - Blinker specific, probably obsolete file removed.
@@ -520,17 +525,17 @@
 20000210-13:20 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.l
-	* fixed syntax for RETURN statement
+        * fixed syntax for RETURN statement
 
     *source/compiler/hbgenerr.c
-	* changed warning level for 'unreachable code' - it will be generated
-	if /w2 option is used
+        * changed warning level for 'unreachable code' - it will be generated
+        if /w2 option is used
 
     *source/genc.c
-	* fixed 'unused "wSym" variable' warning
+        * fixed 'unused "wSym" variable' warning
 
     *tests/keywords.prg
-	* added some more code related to RETURN statement
+        * added some more code related to RETURN statement
 
 20000209-22:37 EST Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/tone.c
@@ -691,11 +696,11 @@
         * added some more test code
 
     *source/rtl/wait.prg
-	* fixed code to stop generation of error 'unreachable code'
+        * fixed code to stop generation of error 'unreachable code'
 
     *source/rtl/gt/gtstd.c
         * added dummy function hb_gt_ReadKey() if compiled for U*ix
-	  (I don't know why it worked previously without this function)
+          (I don't know why it worked previously without this function)
 
 20000208-12:00 GMT+1 Antonio Linares <alinares@fivetech.com>
    * tests/bld_b32.bat

@@ -1869,7 +1869,7 @@ int hb_pp_RdStr( FILE * handl_i, char * buffer, int maxlen, BOOL lDropSpaces, ch
       if( cha == '\n' )
       {
          if( s_ParseState == STATE_COMMENT && symbLast == ';' )
-            buffer[readed++] = ';';         
+            buffer[readed++] = ';';
          break;
       }
       if( maxlen > 0 )
@@ -2312,7 +2312,8 @@ static BOOL OpenInclude( char * szFileName, PATHNAMES * pSearch, PHB_FNAME pMain
      pFile->handle = fptr;
      pFile->pBuffer = hb_xgrab( HB_PP_BUFF_SIZE );
      pFile->iBuffer = pFile->lenBuffer = 10;
-     pFile->szFileName = szFileName;
+     pFile->szFileName = (char*) hb_xgrab( strlen( szFileName ) + 1 );
+     hb_pp_strocpy( pFile->szFileName, szFileName );
      hb_comp_files.pLast->iLine = hb_comp_iLine;
      hb_comp_iLine = 1;
      pFile->pPrev = hb_comp_files.pLast;
