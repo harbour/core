@@ -76,7 +76,7 @@ void GenObj32( char * szObjFileName, char * szFileName )
     }
 
   if( ! _bQuiet )
-    printf( "\ngenerating Windows/Dos OBJ 32 bits..." );
+    printf( "\nGenerating Windows/Dos OBJ 32 bits..." );
 
   CompiledFileName( hObjFile, szFileName );
   CompilerVersion( hObjFile, "Harbour" );

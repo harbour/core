@@ -49,7 +49,6 @@ extern HARBOUR HB_MONTH( void );
 extern HARBOUR HB_PCOL( void );
 extern HARBOUR HB_PCOUNT( void );
 extern HARBOUR HB_PROW( void );
-/* extern HARBOUR HB_QSELF( void ); */
 extern HARBOUR HB_RECCOUNT( void );
 extern HARBOUR HB_RECNO( void );
 extern HARBOUR HB_REPLICATE( void );
@@ -68,7 +67,7 @@ extern HARBOUR HB_SUBSTR( void );
 extern HARBOUR HB_TIME( void );
 extern HARBOUR HB_TRANSFORM( void );
 extern HARBOUR HB_TRIM( void );
-/* extern HARBOUR HB_TYPE( void ); */
+extern HARBOUR HB_TYPE( void );
 extern HARBOUR HB_UPPER( void );
 extern HARBOUR HB_VAL( void );
 extern HARBOUR HB_WORD( void );
@@ -115,7 +114,6 @@ static HB_SYMB symbols[] = {
    { "PCOL"      , FS_PUBLIC, HB_PCOL         , 0 },
    { "PCOUNT"    , FS_PUBLIC, HB_PCOUNT       , 0 },
    { "PROW"      , FS_PUBLIC, HB_PROW         , 0 },
-   { "QSELF"     , FS_PUBLIC, NULL            , 0 }, /* TODO: ? */
    { "RECCOUNT"  , FS_PUBLIC, HB_RECCOUNT     , 0 },
    { "RECNO"     , FS_PUBLIC, HB_RECNO        , 0 },
    { "REPLICATE" , FS_PUBLIC, HB_REPLICATE    , 0 },
@@ -134,7 +132,7 @@ static HB_SYMB symbols[] = {
    { "TIME"      , FS_PUBLIC, HB_TIME         , 0 },
    { "TRANSFORM" , FS_PUBLIC, HB_TRANSFORM    , 0 },
    { "TRIM"      , FS_PUBLIC, HB_TRIM         , 0 },
-   { "TYPE"      , FS_PUBLIC, NULL            , 0 }, /* TODO: */
+   { "TYPE"      , FS_PUBLIC, HB_TYPE         , 0 },
    { "UPPER"     , FS_PUBLIC, HB_UPPER        , 0 },
    { "VAL"       , FS_PUBLIC, HB_VAL          , 0 },
    { "WORD"      , FS_PUBLIC, HB_WORD         , 0 },

@@ -1,3 +1,16 @@
+19990912-07:43 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/vm/hvm.c
+    ! hb_vmSwapAlias() removed the RT error 9993, not it works like Clipper.
+    + Added an empty TYPE() function prototype with a TODO:
+  * source/vm/initsymb.c
+    - QSELF removed from the list, since it's a native opcode in Harbour, 
+      there's not need to initialize it, the function address was NULL anyway.
+    + Changed NULL pointer to HB_TYPE for the "TYPE" symbol.
+      initsymb.c is complete now.
+  * source/rtl/terror.prg
+    source/compiler/genobj32.c
+    * Small corrections.
+
 19990912-01:29 EDT Paul Tucker <ptucker@sympatico.ca>
   * source/rtl/dir.c
     ! Changed selection criteria to include files that do not have

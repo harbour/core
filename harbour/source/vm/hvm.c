@@ -2681,8 +2681,7 @@ static void hb_vmSwapAlias( void )
 
       default:
          hb_itemClear( pWorkArea );
-         hb_errRT_BASE( EG_BADALIAS, 9993, NULL, NULL );
-         return;
+         break;
    }
 
    memcpy( pWorkArea, pItem, sizeof( HB_ITEM ) );
@@ -3017,6 +3016,11 @@ HARBOUR HB_VALTYPE( void )
    }
    else
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "VALTYPE" ); /* NOTE: Clipper catches this at compile time! */
+}
+
+HARBOUR HB_TYPE( void )
+{
+   /* TODO: Implement this. */
 }
 
 /* INCOMPATIBILITY: The Clipper NG states that WORD() will only work when used
