@@ -78,22 +78,12 @@ static struct ffblk fsOldFiles;
       #include "dos.h"
       #include <dir.h>
 #endif
-#if defined(HB_OS_WIN_32) || defined(__MINGW32__)
+#if defined(HB_OS_WIN_32) || defined(__MINGW32__) && !defined(__CYGWIN__)
 static       HANDLE hLastFind;
 static       WIN32_FIND_DATA  Lastff32;
 LPTSTR GetDate(FILETIME *rTime);
 LPTSTR GetTime(FILETIME *rTime);
 #include <dir.h>
-/*
-   #if defined(__MINGW32__)
-   #define FA_RDONLY           1   
-   #define FA_HIDDEN           2   
-   #define FA_SYSTEM           4   
-   #define FA_LABEL            8   
-   #define FA_DIREC           16   
-   #define FA_ARCH            32   
-   #endif
-   */
 #endif
 
 #if !defined(FA_ARCH)

@@ -115,6 +115,7 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\ctcolton.obj \
    $(OBJ_DIR)\ctcrypt.obj \
    $(OBJ_DIR)\finan.obj \
+   $(OBJ_DIR)\files.obj \
    $(OBJ_DIR)\justify.obj \
    $(OBJ_DIR)\math.obj \
    $(OBJ_DIR)\num1.obj \
@@ -251,6 +252,10 @@ $(OBJ_DIR)\ctcrypt.obj : $(TOOLS_DIR)\ctcrypt.c
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\finan.obj : $(TOOLS_DIR)\finan.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\files.obj : $(TOOLS_DIR)\files.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
