@@ -1,3 +1,6 @@
+19990620-21:00 CET Victor Szel <info@szelvesz.hu>
+  * CGI.CH moved to /tests/working/
+
 19990620-20:00 CET Victor Szel <info@szelvesz.hu>
   * source/rtl/gtapi.c
     hb_gtGetColorStr() fixed, so that is doesn't
