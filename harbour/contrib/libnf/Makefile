@@ -11,6 +11,8 @@ C_SOURCES = \
 	color2n.c \
 	ctrl.c \
 	descend.c \
+        dispc.c \
+        ftattr.c \
 	getenvrn.c \
 	getver.c \
 	getvid.c \
