@@ -1,3 +1,8 @@
+19990712-19:30 EDT David G. Holm <dholm@jsd-llc.com>
+  * tests/working/inifiles.prg
+    ! new() no longer returns nil and now checks to see if the file was
+      successfully opened or created before attempting to access it
+
 19990712-19:15 EDT David G. Holm <dholm@jsd-llc.com>
   * source/rtl/files.c
     ! hb_fsCreate now creates files that are read-write instead of write-only

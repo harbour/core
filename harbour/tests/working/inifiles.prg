@@ -61,8 +61,6 @@ static function New(cFileName)
    if empty(cFileName)
       // raise an error?
       outerr('No filename passed to TIniFile():New()')
-      return nil
-
    else
       ::FileName := cFilename
       ::Contents := {}
@@ -71,57 +69,54 @@ static function New(cFileName)
 
       if File(cFileName)
          hFile := fopen(cFilename, 0)
-
       else
          hFile := fcreate(cFilename)
       endif
 
-      cFile := space(IF_BUFFER)
-      do while (nPos := fread(hFile, @cFile, IF_BUFFER)) > 0
+      if hFile <> -1
+         cFile := space(IF_BUFFER)
+         do while (nPos := fread(hFile, @cFile, IF_BUFFER)) > 0
 
-         do while !Empty(cFile)
-            if (nPos := At(Chr(13), cFile)) > 1
-               cLine := alltrim(Left(cFile, nPos - 1))
-               cFile := substr(cFile, nPos + 1)
-
-            else
-               cLine := cFile
-               cFile := ''
-            endif
-
-            if !Empty(cLine)
-               if Left(cLine, 1) == '[' // new section
-                  if (nPos := At(']', cLine)) > 1
-                     cLine := substr(cLine, 2, nPos - 2);
-           
-                  else
-                     cLine := substr(cLine, 2)
-                  endif
-
-                  AAdd(::Contents, { cLine, { /* this will be CurrArray */ } } )
-                  CurrArray := ::Contents[Len(::Contents)][2]
-
-               elseif Left(cLine, 1) == ';' // preserve comments
-                  AAdd( CurrArray, { NIL, cLine } )
-
+            do while !Empty(cFile)
+               if (nPos := At(Chr(13), cFile)) > 1
+                  cLine := alltrim(Left(cFile, nPos - 1))
+                  cFile := substr(cFile, nPos + 1)
                else
-                  if (nPos := At('=', cLine)) > 0
-                     cIdent := Left(cLine, nPos - 1)
-                     cLine := SubStr(cLine, nPos + 1)
-                  
-                     AAdd( CurrArray, { cIdent, cLine } )
-     
+                  cLine := cFile
+                  cFile := ''
+               endif
+
+               if !Empty(cLine)
+                  if Left(cLine, 1) == '[' // new section
+                     if (nPos := At(']', cLine)) > 1
+                        cLine := substr(cLine, 2, nPos - 2);
+                     else
+                        cLine := substr(cLine, 2)
+                     endif
+
+                     AAdd(::Contents, { cLine, { /* this will be CurrArray */ } } )
+                     CurrArray := ::Contents[Len(::Contents)][2]
+
+                  elseif Left(cLine, 1) == ';' // preserve comments
+                     AAdd( CurrArray, { NIL, cLine } )
+
                   else
-                     AAdd( CurrArray, { cLine, '' } )
+                     if (nPos := At('=', cLine)) > 0
+                        cIdent := Left(cLine, nPos - 1)
+                        cLine := SubStr(cLine, nPos + 1)
+                        AAdd( CurrArray, { cIdent, cLine } )
+                     else
+                        AAdd( CurrArray, { cLine, '' } )
+                     endif
                   endif
                endif
-            endif
-         end
+            end
 
-         cFile := space(IF_BUFFER)
-         fread(hFile, cFile, IF_BUFFER)
-      end
-      fclose(hFile)
+            cFile := space(IF_BUFFER)
+            fread(hFile, cFile, IF_BUFFER)
+         end
+         fclose(hFile)
+      endif
    endif
 return Self
 
