@@ -1,5 +1,8 @@
 20000502-19:12 GMT+1 Victor Szakats <info@szelvesz.hu>
 
+   * makefile.vc
+     * EVAL.C moved to VM from RTL
+
    * source/vm/proc.c
      ! Typo.
 
