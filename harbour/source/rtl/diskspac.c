@@ -105,6 +105,20 @@ double hb_DiskSpace( USHORT uiDrive, USHORT uiType )
       typedef BOOL (WINAPI *P_GDFSE)(LPCTSTR, PULARGE_INTEGER, 
                                      PULARGE_INTEGER, PULARGE_INTEGER);
 
+      #if defined( __BORLANDC__ )
+         typedef union _LARGE_INTEGER {
+            struct {
+               DWORD LowPart;
+               LONG HighPart;
+            };
+            struct {
+               DWORD LowPart;
+               LONG HighPart;
+            } u;
+            LONGLONG QuadPart;
+         } LARGE_INTEGER;
+      #endif
+
       char szPath[ 4 ];
       P_GDFSE pGetDiskFreeSpaceEx;
 

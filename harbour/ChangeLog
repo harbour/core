@@ -1,3 +1,7 @@
+20000321-18:20 EST Paul Tucker <ptucker@sympatico.ca>
+   * source/rtl/diskspac.c
+     * Fix for borland's def of ULARGE_INTEGER
+
 20000321-17:05 EST Paul Tucker <ptucker@sympatico.ca>
    * tests/Makefile
      + tests/tstdspac.prg
