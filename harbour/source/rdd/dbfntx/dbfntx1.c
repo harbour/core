@@ -3993,6 +3993,9 @@ static ERRCODE ntxOrderListRebuild( NTXAREAP pArea )
 
    HB_TRACE(HB_TR_DEBUG, ("ntxOrderListRebuild(%p)", pArea));
 
+   if( SELF_GOCOLD( ( AREAP ) pArea ) == FAILURE )
+      return FAILURE;
+
    pTag = pArea->lpNtxTag;
    pTagTmp = pArea->lpCurTag;
    pArea->fValidBuffer = TRUE;

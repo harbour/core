@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-11-27 13:30 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/rdd/dbfntx/dbfntx1.c
+    ! Bug fixed, reported by Carlos Andr©s
+  * source/rtl/cdpapi.c
+    ! Bug fixed in HB_TRANSLATE()
+
 2002-11-26 21:20 UTC+0100 Tomaz Zupan <tomaz.zupan@orpo.si>
   * contrib/odbc/browodbc.prg
     ! There was a bug in skipping, that threw an error when 
@@ -18,6 +24,7 @@
     ! removed unused Var
   * source/rtl/menuto.prg
     ! minor formating
+
 2002-11-21 12:05 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rdd/dbfntx/dbfntx1.c
     * DBOI_ORDERCOUNT is supported now

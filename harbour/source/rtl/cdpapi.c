@@ -396,9 +396,9 @@ HB_FUNC( HB_TRANSLATE )
       ilen = hb_parclen(1);
       cdpIn  = ( szIdIn )? hb_cdpFind( szIdIn ):s_cdpage;
       cdpOut = ( szIdOut )? hb_cdpFind( szIdOut ):s_cdpage;
-
       szResult = (char*) hb_xgrab( ilen + 1 );
       memcpy( szResult, szIn, ilen );
+      szResult[ ilen ] = '\0';
       hb_cdpTranslate( szResult, cdpIn, cdpOut );
 
       hb_retc_buffer( szResult );
