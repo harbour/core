@@ -36,7 +36,7 @@ RUNNER_DIR=source\runner
 #
 
 CC=cl
-CFLAGS=-w -nologo -I$(INCLUDE_DIR) -DHARBOUR_USE_WIN_GTAPI -DHARBOUR_OBJ_GENERATION
+CFLAGS=-w -nologo -I$(INCLUDE_DIR) -DHARBOUR_USE_WIN_GTAPI
 CLIBFLAGS=$(CFLAGS) -c /TP
 CLIBFLAGSDEBUG=$(CFLAGS) -c -Zi /TP
 
@@ -261,7 +261,7 @@ $(HARBOUR_EXE) : \
     $(PP_DIR)\hbpp.c \
     $(PP_DIR)\hbppint.c \
     $(PP_DIR)\table.c
-    $(CC) $(CFLAGS) $(COMPILER_DIR)\harboury.c $(COMPILER_DIR)\harbourl.c $(COMPILER_DIR)\harbour.c $(COMPILER_DIR)\genobj32.c $(COMPILER_DIR)\genc.c $(COMPILER_DIR)\genhrb.c $(COMPILER_DIR)\genrc.c $(COMPILER_DIR)\genjava.c $(COMPILER_DIR)\genpas.c $(PP_DIR)\hbppint.c $(PP_DIR)\hbpp.c $(PP_DIR)\table.c -o $(BIN_DIR)\harbour
+    $(CC) $(CFLAGS) -DHARBOUR_OBJ_GENERATION $(COMPILER_DIR)\harboury.c $(COMPILER_DIR)\harbourl.c $(COMPILER_DIR)\harbour.c $(COMPILER_DIR)\genobj32.c $(COMPILER_DIR)\genc.c $(COMPILER_DIR)\genhrb.c $(COMPILER_DIR)\genrc.c $(COMPILER_DIR)\genjava.c $(COMPILER_DIR)\genpas.c $(PP_DIR)\hbppint.c $(PP_DIR)\hbpp.c $(PP_DIR)\table.c -o $(BIN_DIR)\harbour
     @Echo :	Ignore Lnk4033 warning
     -del harboury.obj
     -del harbourl.obj

@@ -1,6 +1,7 @@
 19991006-15:05 EDT Paul Tucker <ptucker@sympatico.ca>
    * makefile.vc
      + source/rtl/dummy.prg
+     * move -DHARBOUR_OBJ_GENERATION flag to harbour.exe generation only
    * source/rtl/memoline.c
      * added a cast (again) on xgrab call.
 
