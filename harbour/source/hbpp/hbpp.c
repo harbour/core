@@ -80,7 +80,7 @@ void pp_rQuotes( char *, char * );
 int pp_RdStr(FILE*,char *,int,int,char*,int*,int*);
 int pp_WrStr(FILE*,char *);
 int pp_strAt(char *, int, char*, int);
-int md_strAt(char *, int, char*, int);
+int md_strAt(char *, int, char*, int, int);
 int IsInStr ( char, char*);
 void pp_Stuff (char*, char*, int, int, int);
 int strocpy (char*, char* );
@@ -232,7 +232,7 @@ int ParseDirective( char* sLine )
       else if ( i == 5 && memcmp ( sDirective, "ERROR", 5 ) == 0 )
                               /* --- #error  --- */
          GenError( _szPErrors, 'P', ERR_EXPLICIT, sLine, NULL );
-      
+
       else if ( i == 4 && memcmp ( sDirective, "LINE", 4 ) == 0 )
          return -1;
       else
@@ -340,9 +340,12 @@ DEFINES* DefSearch(char *defname)
 
    while( stdef != NULL )
    {
-     for ( j=0; *(stdef->name+j) == *(defname+j) &&
+     if( stdef->name != NULL )
+     {
+        for ( j=0; *(stdef->name+j) == *(defname+j) &&
              *(stdef->name+j) != '\0'; j++ );
-     if ( *(stdef->name+j) == *(defname+j) ) return stdef;
+        if ( *(stdef->name+j) == *(defname+j) ) return stdef;
+     }
      stdef = stdef->last;
    }
    return NULL;
@@ -551,7 +554,7 @@ int ParseExpression( char* sLine, char* sOutLine )
       {
          ptro = sOutLine;
          ptri = sLine + isdvig;
-         ipos = md_strAt( ";", 1, ptri, FALSE );
+         ipos = md_strAt( ";", 1, ptri, FALSE, FALSE );
          if ( ipos > 0 ) *(ptri+ipos-1) = '\0';
          SKIPTABSPACES( ptri );
          if ( *ptri == '#' )
@@ -594,7 +597,7 @@ int ParseExpression( char* sLine, char* sOutLine )
                ptri = sLine + isdvig;
                lenToken = strolen(stcmd->name);
                while( ( ifou = md_strAt( stcmd->name, lenToken,
-                                                 ptri, 0 )) > 0 )
+                                                 ptri, FALSE, FALSE )) > 0 )
                {
                   ptri += ifou -1;
                   if( (i = WorkTranslate( ptri+lenToken, ptro, stcmd, &lens )) >= 0 )
@@ -836,7 +839,7 @@ int CommandStuff ( char *ptrmp, char *inputLine, char * ptro, int *lenres, int c
          ptrmp = strtopti;
          ptr = ptri;
          ipos = NextName( &ptr, tmpname );
-         ipos = md_strAt( tmpname, ipos, strtopti, TRUE );
+         ipos = md_strAt( tmpname, ipos, strtopti, FALSE, TRUE );
          if( ipos && TestOptional( strtopti, strtopti+ipos-2 ) )
          {
             ptr = strtopti+ipos-2;
@@ -862,7 +865,7 @@ int CommandStuff ( char *ptrmp, char *inputLine, char * ptro, int *lenres, int c
                {
                   ptr = ptri;
                   ipos = NextName( &ptr, tmpname );
-                  ipos = md_strAt( tmpname, ipos, ptrmp, TRUE );
+                  ipos = md_strAt( tmpname, ipos, ptrmp, FALSE, TRUE );
                   if( ipos && TestOptional( ptrmp+1, ptrmp+ipos-2 ) )
                   {
                      ptrmp = lastopti[Repeate];
@@ -1022,7 +1025,7 @@ int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres )
         *ptrtemp != '[' && *ptrtemp != ']' && *ptrtemp != '\0' )
   {
    lenreal = strincpy ( expreal, ptrtemp );
-   if ( (ipos = md_strAt( expreal, lenreal, *ptri, TRUE )) > 0 )
+   if ( (ipos = md_strAt( expreal, lenreal, *ptri, FALSE, TRUE )) > 0 )
    {
     if ( ptrtemp > *ptrmp )
     {
@@ -1317,7 +1320,8 @@ void SearnRep( char *exppatt,char *expreal,int lenreal,char *ptro, int *lenres)
    char expnew[MAX_NAME];
    char *ptr, *ptr2, *ptrOut = ptro;
 
-   while ( (ifou = pp_strAt( exppatt, (*(exppatt+1))? 2:1, ptrOut, *lenres-isdvig )) > 0 )
+   if( *(exppatt+1) == '\0' ) *( ptro + *lenres ) = '\0';
+   while ( (ifou = md_strAt( exppatt, (*(exppatt+1))? 2:1, ptrOut, FALSE, FALSE )) > 0 )
    {
       rezs = 0;
       ptr = ptrOut + ifou - 2;
@@ -1326,7 +1330,7 @@ void SearnRep( char *exppatt,char *expreal,int lenreal,char *ptro, int *lenres)
       {
          if ( (*ptr == '[' || *ptr == ']') && *(ptr-1) != '\\' ) break;
          if  ( *ptr == '\1' ) kolmarkers++;
-         ptr--;
+	 ptr--;
       }
       if ( *ptr == '[' )
       {
@@ -1341,7 +1345,7 @@ void SearnRep( char *exppatt,char *expreal,int lenreal,char *ptro, int *lenres)
          if ( Repeate && lenreal && kolmarkers && lastchar != '0' &&
                                              *(ptrOut + ifou + 2) == '0' )
          {
-            isdvig += ifou;
+	    isdvig += ifou;
             rezs = 1;
          }
          else
@@ -1356,7 +1360,7 @@ void SearnRep( char *exppatt,char *expreal,int lenreal,char *ptro, int *lenres)
                else
                {
                   pp_Stuff ( "", ptr, 0, ptr2-ptr+1, *lenres-(ptr-ptro) );
-                  *lenres -= ptr2-ptr+1;
+		  *lenres -= ptr2-ptr+1;
                   isdvig = ptr - ptro;
                   rezs = 1;
                }
@@ -1371,7 +1375,7 @@ void SearnRep( char *exppatt,char *expreal,int lenreal,char *ptro, int *lenres)
                while ( (i = pp_strAt( exppatt, 2, expnew, lennew )) > 0 )
                lennew += ReplacePattern ( exppatt[2], expreal, lenreal, expnew+i-1, lennew );
                if ( kolmarkers )
-               {
+	       {
                   groupchar = (char) ( (unsigned int)groupchar + 1 );
                   for ( i=0; i<lennew; i++ )
                      if ( *(expnew+i) == '\1' )
@@ -1389,19 +1393,19 @@ void SearnRep( char *exppatt,char *expreal,int lenreal,char *ptro, int *lenres)
       }
       if ( !rezs )
       {
-         if ( *(ptrOut + ifou + 2) != '0' && *(exppatt+1) )
-         {
-            if ( lastchar == '0' ) lastchar = *(ptrOut + ifou + 2);
-            if ( lastchar != *(ptrOut + ifou + 2) )
-            {
-               isdvig += ifou + 3;
-               ptrOut = ptro + isdvig;
-               continue;
-            }
-         }
-         *lenres += ReplacePattern ( exppatt[2], expreal, lenreal,
-                             ptrOut + ifou - 1, *lenres-isdvig-ifou+1 );
-         isdvig += ifou;
+	 if ( *(ptrOut + ifou + 2) != '0' && *(exppatt+1) )
+	 {
+	    if ( lastchar == '0' ) lastchar = *(ptrOut + ifou + 2);
+	    if ( lastchar != *(ptrOut + ifou + 2) )
+	    {
+	       isdvig += ifou + 3;
+	       ptrOut = ptro + isdvig;
+	       continue;
+	    }
+	 }
+	 *lenres += ReplacePattern ( exppatt[2], expreal, lenreal,
+			     ptrOut + ifou - 1, *lenres-isdvig-ifou+1 );
+	 isdvig += ifou - 1;
       }
       ptrOut = ptro + isdvig;
    }
@@ -1691,7 +1695,7 @@ int pp_strAt(char *szSub, int lSubLen, char *szText, int lLen)
       return 1;
 }
 
-int md_strAt(char *szSub, int lSubLen, char *szText, int checkPrth)
+int md_strAt(char *szSub, int lSubLen, char *szText, int checkword, int checkPrth)
 {
  int State = STATE_NORMAL;
  long lPos = 0, lSubPos = 0;
@@ -1738,7 +1742,7 @@ int md_strAt(char *szSub, int lSubLen, char *szText, int checkPrth)
        {
          lSubPos++;
          lPos++;
-         if ( lSubPos >= lSubLen  &&
+         if ( lSubPos >= lSubLen  && checkword &&
           ( ( ISNAME(*szSub) && lPos>lSubPos && ISNAME(*(szText+lPos-lSubPos-1)) ) ||
             ( ISNAME(*(szSub+lSubLen-1)) && ISNAME(*(szText+lPos)) ) ) )
           lSubPos = 0;
