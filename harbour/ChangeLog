@@ -8,6 +8,23 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-05-01 12:10 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+  + source/codepage/cdpesdos.c
+    ! codepage support for Spanish MS-DOS
+
+  + source/codepage/cdpeswin.c
+    ! codepage support for Spanish Windows
+
+  + source/lang/msgeswin.c
+    ! language messages support for Spanish Windows
+
+  * makefile.bc
+  * makefile.nt
+  * makefile.vc
+  * source/codepage/makefile
+  * source/lang/makefile
+    ! updated for cdpesdos.c, cdpeswin.c and msgeswin.c
+
 2003-04-28 23:00 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
   * source/rtl/tget.prg
     ! numbers editing bug (side effect from previous change) fixed
