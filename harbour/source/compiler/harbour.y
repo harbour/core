@@ -139,12 +139,22 @@ char *MakeFilename( char *, FILENAME *);  /* joins a path, a name an an extensio
 void yyerror( char * ); /* parsing error management function */
 int yylex( void );      /* main lex token function, called by yyparse() */
 int yyparse( void );    /* main yacc parsing function */
+#ifdef __cplusplus
+extern "C" int yywrap( void );
+#else
 int yywrap( void );     /* manages the EOF of current processed file */
+#endif
 void AddDefine( char * szDefine, char * szValue ); /* add a new Lex define from the command line */
 
 void * yy_create_buffer( FILE *, int ); /* yacc functions to manage multiple files */
+#ifdef __cplusplus
+typedef struct yy_buffer_state *YY_BUFFER_STATE;
+void yy_switch_to_buffer( YY_BUFFER_STATE ); /* yacc functions to manage multiple files */
+void yy_delete_buffer( YY_BUFFER_STATE ); /* yacc functions to manage multiple files */
+#else
 void yy_switch_to_buffer( void * ); /* yacc functions to manage multiple files */
 void yy_delete_buffer( void * ); /* yacc functions to manage multiple files */
+#endif
 void __yy_memcpy( char * from, char * to, int count ); /* Bison prototype */
 
 /* production related functions */
@@ -965,7 +975,7 @@ void close_on_exit( void )
   {
     printf( "\nClosing file: %s\n", pFile->szFileName );
     fclose( pFile->handle );
-    pFile = pFile->pPrev;
+    pFile = (PFILE) pFile->pPrev;
   }
 }
 
@@ -1496,7 +1506,11 @@ int Include( char * szFileName )
       pFile->pPrev = files.pLast;
       files.pLast  = pFile;
    }
-   yy_switch_to_buffer( pFile->pBuffer = yy_create_buffer( yyin, 8192 * 2 ) );
+#ifdef __cplusplus
+   yy_switch_to_buffer( (YY_BUFFER_STATE) (pFile->pBuffer = yy_create_buffer( yyin, 8192 * 2 ) ) );
+#else
+   yy_switch_to_buffer( (pFile->pBuffer = yy_create_buffer( yyin, 8192 * 2 ) ) );
+#endif
    files.iFiles++;
    return 1;
 }
@@ -1514,11 +1528,19 @@ int yywrap( void )   /* handles the EOF of the currently processed file */
       files.pLast = ( PFILE ) ( ( PFILE ) files.pLast )->pPrev;
       iLine = files.pLast->iLine;
       printf( "\nparsing file %s\n", files.pLast->szFileName );
+#ifdef __cplusplus
+      yy_delete_buffer( (YY_BUFFER_STATE) ( ( PFILE ) pLast )->pBuffer );
+#else
       yy_delete_buffer( ( ( PFILE ) pLast )->pBuffer );
+#endif
       free( pLast );
       files.iFiles--;
       yyin = files.pLast->handle;
+#ifdef __cplusplus
+      yy_switch_to_buffer( (YY_BUFFER_STATE) files.pLast->pBuffer );
+#else
       yy_switch_to_buffer( files.pLast->pBuffer );
+#endif
       return 0;      /* we close the currently include file and continue */
    }
 }

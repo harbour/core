@@ -17,7 +17,11 @@
 void yyerror( char * );
 void yyunput( int, char * );
 #undef yywrap        /* to implement our own yywrap() funtion to handle EOFs */
+#ifdef __cplusplus
+extern "C" int yywrap( void );
+#else
 int yywrap( void );
+#endif
 #undef YY_INPUT      /* to implement our own YY_INPUT function to manage PRGs without \n at the end */
 extern FILE * yyin;  /* currently yacc parsed file */
 int yy_lex_input( char *, int );
@@ -337,7 +341,7 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
 PDEFINE LastDef( PDEFINE pDef )
 {
    while( pDef->pNext )
-      pDef = pDef->pNext;
+      pDef = (PDEFINE) pDef->pNext;
 
    return pDef;
 }
@@ -363,7 +367,7 @@ void DefineKey( char * szKey )
    PDEFINE pLast = LastDef( pDefs );
 
    if( pLast->pKeys )
-     LastDef( pLast->pKeys )->pNext = pDef;
+     LastDef( (PDEFINE) pLast->pKeys )->pNext = pDef;
    else
      pLast->pKeys = pDef;
 
@@ -384,7 +388,7 @@ PDEFINE FindDef( char * szText )
       else
       {
          if( pDef->pNext )
-            pDef = pDef->pNext;
+            pDef = (PDEFINE) pDef->pNext;
          else
             return 0;
       }

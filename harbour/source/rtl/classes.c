@@ -275,7 +275,7 @@ static HARBOUR ClassSel()
                                                 /* Create a transfer array  */
       for( wAt = 0; wAt < wLimit ; wAt++ )
       {
-         pMessage = pClass->pMethods[ wAt ].pMessage;
+         pMessage = (PDYNSYM) pClass->pMethods[ wAt ].pMessage;
          if( pMessage )                         /* Hash Entry used ?        */
          {
             pItem  = _itemNew(  NULL );         /* Add to array             */
