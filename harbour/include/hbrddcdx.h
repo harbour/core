@@ -248,7 +248,7 @@ typedef struct _CDXTAGHEADER
 {
    LONG lRoot;                /* offset of the root node */
    LONG lFreeList;            /* offset of list of free   pages or -1 */
-   LONG lChgFlag; //lLength;  /* Version number ? */
+   LONG lChgFlag; //lLength;  /* Version number ? MSDN: pointer to end of file */
    USHORT uiKeySize;          /* key length */
    BYTE bType;                /* index options see CDX_TYPE_* */
    BYTE bSignature;           /* index signature */

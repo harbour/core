@@ -51,6 +51,9 @@
  */
 
 #include "hbapi.h"
+
+#ifndef HB_CDP_SUPPORT_OFF
+
 #include "hbapicdp.h"
 
 #define HB_CDP_MAX_ 64
@@ -75,7 +78,7 @@ static int hb_cdpFindPos( char * pszID )
    return -1;
 }
 
-BOOL hb_cdpRegister( PHB_CODEPAGE cdpage )
+BOOL  hb_cdpRegister( PHB_CODEPAGE cdpage )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_codepageRegister(%p)", cdpage));
 
@@ -121,8 +124,8 @@ BOOL hb_cdpRegister( PHB_CODEPAGE cdpage )
                   }
                   if( strpbrk(cdpage->CharsUpper, "~.") != NULL )
                   {
-                     ptrUpper = cdpage->CharsUpper = strdup(cdpage->CharsUpper);
-                     ptrLower = cdpage->CharsLower = strdup(cdpage->CharsLower);
+                     ptrUpper = cdpage->CharsUpper = hb_strdup(cdpage->CharsUpper);
+                     ptrLower = cdpage->CharsLower = hb_strdup(cdpage->CharsLower);
                   }
                   for( i=1; *ptrUpper; i++,ptrUpper++,ptrLower++ )
                   {
@@ -179,7 +182,7 @@ BOOL hb_cdpRegister( PHB_CODEPAGE cdpage )
                      if( iu < iumax || il < ilmax )
                         cdpage->lSort = TRUE;
                      iumax = iu; ilmax = il;
-                     
+
                      iu = ((int)(*ptrLower))&255;
                      cdpage->s_upper[iu] = *ptrUpper;
                      il = ((int)(*ptrUpper))&255;
@@ -224,7 +227,7 @@ BOOL hb_cdpRegister( PHB_CODEPAGE cdpage )
    return FALSE;
 }
 
-PHB_CODEPAGE hb_cdpFind( char * pszID )
+PHB_CODEPAGE  hb_cdpFind( char * pszID )
 {
    int iPos;
 
@@ -235,7 +238,7 @@ PHB_CODEPAGE hb_cdpFind( char * pszID )
    return ( iPos != -1 ) ? s_cdpList[ iPos ] : NULL;
 }
 
-PHB_CODEPAGE hb_cdpSelect( PHB_CODEPAGE cdpage )
+PHB_CODEPAGE  hb_cdpSelect( PHB_CODEPAGE cdpage )
 {
    PHB_CODEPAGE cdpOld = s_cdpage;
 
@@ -249,7 +252,7 @@ PHB_CODEPAGE hb_cdpSelect( PHB_CODEPAGE cdpage )
    return cdpOld;
 }
 
-char * hb_cdpSelectID( char * pszID )
+char  * hb_cdpSelectID( char * pszID )
 {
    char * pszIDOld = s_cdpage->id;
 
@@ -260,7 +263,7 @@ char * hb_cdpSelectID( char * pszID )
    return pszIDOld;
 }
 
-void hb_cdpTranslate( char* psz, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut )
+void  hb_cdpTranslate( char* psz, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut )
 {
    int n;
 
@@ -269,19 +272,19 @@ void hb_cdpTranslate( char* psz, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut )
       int nAddLower = (cdpIn->lLatin)? 6:0;
       for( ; *psz; psz++ )
       {
-         if( ( ( n = (int)cdpIn->s_chars[ ((int)*psz)&255 ] ) != 0 ) && 
-             ( n <= cdpIn->nChars || ( n > (cdpOut->nChars+nAddLower) ) && 
+         if( ( ( n = (int)cdpIn->s_chars[ ((int)*psz)&255 ] ) != 0 ) &&
+             ( n <= cdpIn->nChars || ( n > (cdpOut->nChars+nAddLower) ) &&
              ( n <= (cdpOut->nChars*2+nAddLower) ) ) )
          {
             n--;
-            *psz = ( n >= (cdpOut->nChars+nAddLower) )? 
+            *psz = ( n >= (cdpOut->nChars+nAddLower) )?
                         cdpOut->CharsLower[n-cdpOut->nChars-nAddLower]:cdpOut->CharsUpper[n];
          }
       }
    }
 }
 
-void hb_cdpnTranslate( char* psz, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut, unsigned int nChars )
+void  hb_cdpnTranslate( char* psz, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut, unsigned int nChars )
 {
    int n;
    unsigned int i;
@@ -291,19 +294,34 @@ void hb_cdpnTranslate( char* psz, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut, unsig
       int nAddLower = (cdpIn->lLatin)? 6:0;
       for( i=0; i<nChars; i++,psz++ )
       {
-         if( ( ( n = (int)cdpIn->s_chars[ ((int)*psz)&255 ] ) != 0 ) && 
-             ( n <= cdpIn->nChars || ( n > (cdpOut->nChars+nAddLower) ) && 
+         if( ( ( n = (int)cdpIn->s_chars[ ((int)*psz)&255 ] ) != 0 ) &&
+             ( n <= cdpIn->nChars || ( n > (cdpOut->nChars+nAddLower) ) &&
              ( n <= (cdpOut->nChars*2+nAddLower) ) ) )
          {
             n--;
-            *psz = ( n >= (cdpOut->nChars+nAddLower) )? 
+            *psz = ( n >= (cdpOut->nChars+nAddLower) )?
                         cdpOut->CharsLower[n-cdpOut->nChars-nAddLower]:cdpOut->CharsUpper[n];
          }
       }
    }
 }
 
-int hb_cdpcmp( char* szFirst, char* szSecond, ULONG ulLen, PHB_CODEPAGE cdpage, ULONG* piCounter )
+int  hb_cdpchrcmp( char cFirst, char cSecond, PHB_CODEPAGE cdpage )
+{
+   int n1, n2;
+
+   if( cFirst == cSecond )
+      return 0;
+
+   if( ( n1 = (int)cdpage->s_chars[ ((int)cFirst)&255 ] ) != 0 &&
+       ( n2 = (int)cdpage->s_chars[ ((int)cSecond)&255 ] ) != 0 )
+      return ( n1 < n2 )? -1 : 1;
+
+   return ( (((int)cFirst)&255) < (((int)cSecond)&255) ) ? -1 : 1;
+
+}
+
+int  hb_cdpcmp( char* szFirst, char* szSecond, ULONG ulLen, PHB_CODEPAGE cdpage, ULONG* piCounter )
 {
    ULONG ul;
    int iRet = 0, n1, n2;
@@ -327,14 +345,14 @@ int hb_cdpcmp( char* szFirst, char* szSecond, ULONG ulLen, PHB_CODEPAGE cdpage, 
             /* printf( "\nhb_cdpcmp-1 %c %c",*szFirst,*szSecond ); */
             for( j=0; j<cdpage->nMulti; j++,pmulti++ )
             {
-               if( ( *szFirst == pmulti->cLast[0] || 
-                     *szFirst == pmulti->cLast[1] ) && 
-                   ( *(szFirst-1) == pmulti->cFirst[0] || 
+               if( ( *szFirst == pmulti->cLast[0] ||
+                     *szFirst == pmulti->cLast[1] ) &&
+                   ( *(szFirst-1) == pmulti->cFirst[0] ||
                      *(szFirst-1) == pmulti->cFirst[1] )  )
                    nd1 = pmulti->nCode;
-               if( ( *szSecond == pmulti->cLast[0] || 
-                     *szSecond == pmulti->cLast[1] ) && 
-                   ( *(szSecond-1) == pmulti->cFirst[0] || 
+               if( ( *szSecond == pmulti->cLast[0] ||
+                     *szSecond == pmulti->cLast[1] ) &&
+                   ( *(szSecond-1) == pmulti->cFirst[0] ||
                      *(szSecond-1) == pmulti->cFirst[1] )  )
                    nd2 = pmulti->nCode;
             }
@@ -387,7 +405,7 @@ int hb_cdpcmp( char* szFirst, char* szSecond, ULONG ulLen, PHB_CODEPAGE cdpage, 
    return iRet;
 }
 
-void hb_cdpReleaseAll( void )
+void  hb_cdpReleaseAll( void )
 {
    int iPos = 0;
 
@@ -444,6 +462,8 @@ HB_FUNC( HB_TRANSLATE )
 HB_CALL_ON_STARTUP_BEGIN( hb_codepage_Init_EN )
    hb_cdpRegister( &s_en_codepage );
 HB_CALL_ON_STARTUP_END( hb_codepage_Init_EN )
-#if ! defined(__GNUC__) && ! defined(_MSC_VER)
+#if defined(HB_STATIC_STARTUP) || ( (! defined(__GNUC__)) && (! defined(_MSC_VER)) )
    #pragma startup hb_codepage_Init_EN
 #endif
+
+#endif /* HB_CDP_SUPPORT_OFF */
