@@ -1,3 +1,12 @@
+19991018-00:03 GMT+1 Victor Szel <info@szelvesz.hu>
+   * source/vm/hvm.c
+     + Support for overloading the following operators:
+       *, /, %, ^, **, !, .NOT., .AND., .OR.
+   * tests/rtl_test.prg
+     + Tests added for new operator overloading features.
+   * source/vm/dynsym.c
+     ! Small formatting fixes.
+
 19991017-21:24 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/rtl/samples.c
      ! hb_SecToTimeStr() bug (typo) fixed.

@@ -1192,6 +1192,10 @@ static void hb_vmMult( void )
 
       hb_vmPushNumber( d1 * d2, iDec1 + iDec2 );
    }
+
+   else if( IS_OBJECT( hb_stack.pPos - 2 ) && hb_objHasMsg( hb_stack.pPos - 2, "*" ) )
+      hb_vmOperatorCall( hb_stack.pPos - 2, hb_stack.pPos - 1, "*" );
+
    else
    {
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1083, NULL, "*" );
@@ -1235,6 +1239,10 @@ static void hb_vmDivide( void )
             hb_vmPushNumber( d1 / d2, hb_set.HB_SET_DECIMALS );
       }
    }
+
+   else if( IS_OBJECT( hb_stack.pPos - 2 ) && hb_objHasMsg( hb_stack.pPos - 2, "/" ) )
+      hb_vmOperatorCall( hb_stack.pPos - 2, hb_stack.pPos - 1, "/" );
+
    else
    {
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1084, NULL, "/" );
@@ -1272,6 +1280,10 @@ static void hb_vmModulus( void )
                   with the SET number of decimal places. */
          hb_vmPushNumber( fmod( d1, d2 ), hb_set.HB_SET_DECIMALS );
    }
+
+   else if( IS_OBJECT( hb_stack.pPos - 2 ) && hb_objHasMsg( hb_stack.pPos - 2, "%" ) )
+      hb_vmOperatorCall( hb_stack.pPos - 2, hb_stack.pPos - 1, "%" );
+
    else
    {
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1085, NULL, "%" );
@@ -1298,6 +1310,13 @@ static void hb_vmPower( void )
                with the SET number of decimal places. */
       hb_vmPushNumber( pow( d1, d2 ), hb_set.HB_SET_DECIMALS );
    }
+
+   else if( IS_OBJECT( hb_stack.pPos - 2 ) && hb_objHasMsg( hb_stack.pPos - 2, "^" ) )
+      hb_vmOperatorCall( hb_stack.pPos - 2, hb_stack.pPos - 1, "^" );
+
+   else if( IS_OBJECT( hb_stack.pPos - 2 ) && hb_objHasMsg( hb_stack.pPos - 2, "**" ) )
+      hb_vmOperatorCall( hb_stack.pPos - 2, hb_stack.pPos - 1, "**" );
+
    else
    {
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1088, NULL, "^" );
@@ -1790,6 +1809,13 @@ static void hb_vmNot( void )
 
    if( IS_LOGICAL( pItem ) )
       pItem->item.asLogical.value = ! pItem->item.asLogical.value;
+
+   else if( IS_OBJECT( pItem ) && hb_objHasMsg( pItem, "!" ) )
+      hb_vmOperatorCallUnary( pItem, "!" );
+
+   else if( IS_OBJECT( pItem ) && hb_objHasMsg( pItem, ".NOT." ) )
+      hb_vmOperatorCallUnary( pItem, ".NOT." );
+
    else
    {
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1077, NULL, ".NOT." );
@@ -1817,6 +1843,10 @@ static void hb_vmAnd( void )
       hb_stackPop();
       hb_vmPushLogical( bResult );
    }
+
+   else if( IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem1, ".AND." ) )
+      hb_vmOperatorCall( pItem1, pItem2, ".AND." );
+
    else
    {
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1078, NULL, ".AND." );
@@ -1843,6 +1873,10 @@ static void hb_vmOr( void )
       hb_stackDec();
       hb_vmPushLogical( bResult );
    }
+
+   else if( IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem1, ".OR." ) )
+      hb_vmOperatorCall( pItem1, pItem2, ".OR." );
+
    else
    {
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1079, NULL, ".OR." );

@@ -168,6 +168,7 @@ PHB_DYNS hb_dynsymFind( char * szName )
       s_pDynItems->pDynSym->hMemvar = 0;
       s_pDynItems->pDynSym->pSymbol = NULL;
       s_pDynItems->pDynSym->pFunPtr = NULL;
+
       return NULL;
    }
    else
@@ -201,18 +202,18 @@ PHB_DYNS hb_dynsymFind( char * szName )
          switch( hb_strgreater( s_pDynItems[ uiMiddle ].pDynSym->pSymbol->szName, szName ) )
          {
             case HB_STRGREATER_EQUAL:  /* they are equals */
-                 s_uiClosestDynSym = uiMiddle;
-                 return s_pDynItems[ uiMiddle ].pDynSym;
+               s_uiClosestDynSym = uiMiddle;
+               return s_pDynItems[ uiMiddle ].pDynSym;
 
             case HB_STRGREATER_LEFT:  /* pMiddle is greater */
-                 uiLast = uiMiddle;
-                 s_uiClosestDynSym = uiMiddle;
-                 break;
+               uiLast = uiMiddle;
+               s_uiClosestDynSym = uiMiddle;
+               break;
 
             case HB_STRGREATER_RIGHT:  /* szName is greater */
-                 uiFirst = uiMiddle + 1;
-                 s_uiClosestDynSym = uiFirst;
-                 break;
+               uiFirst = uiMiddle + 1;
+               s_uiClosestDynSym = uiFirst;
+               break;
          }
 
          uiMiddle = uiFirst + ( ( uiLast - uiFirst ) / 2 );
@@ -230,7 +231,6 @@ void hb_dynsymEval( PHB_DYNS_FUNC pFunction, void * Cargo )
    for( uiPos = 0; uiPos < s_uiDynSymbols && bCont; uiPos++ )
       bCont = ( pFunction )( s_pDynItems[ uiPos ].pDynSym, Cargo );
 }
-
 
 void hb_dynsymRelease( void )
 {
