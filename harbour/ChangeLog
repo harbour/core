@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-07-16 02:14 UTC+0500 April White <awhite@mail.rosecom.ca>
+  * source/rtl/strings.c
+  * include/hbapi.h
+    * changed last param of hb_strnicmp() from ULONG to size_t
+
 2002-07-14 13:50 UTC-0300 Walter Negro <anegro@overnet.com.ar>
   * doc/transfrm.txt
     + Add information about new functionalities.

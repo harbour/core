@@ -71,7 +71,7 @@ BOOL hb_strEmpty( const char * szText, ULONG ulLen )
 
 /* warning: It is not case sensitive */
 
-int hb_strnicmp( const char * s1, const char * s2, ULONG count )
+int hb_strnicmp( const char * s1, const char * s2, size_t count )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_strnicmp(%s, %s, %lu)", s1, s2, count));
 

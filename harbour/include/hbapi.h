@@ -411,7 +411,7 @@ extern PHB_ITEM hb_arrayFromParams( PHB_ITEM *pBase ); /* Creates and returns an
                           ( c ) == HB_CHAR_CR )
 
 extern int      hb_stricmp( const char * s1, const char * s2 ); /* compare two strings without regards to case */
-extern int      hb_strnicmp( const char * s1, const char * s2, ULONG ulLen ); /* compare two string without regards to case, limited by length */
+extern int      hb_strnicmp( const char * s1, const char * s2, size_t ulLen ); /* compare two string without regards to case, limited by length */
 extern char *   hb_strupr( char * pszText ); /* convert a string in-place to upper-case */
 extern char *   hb_strdup( const char * pszText ); /* returns a pointer to a newly allocated copy of the source string */
 extern BOOL     hb_strMatchRegExp( const char * szString, const char * szMask ); /* compare two strings using a regular expression pattern */
