@@ -1459,49 +1459,37 @@ Separator     {SpaceTab}
 		yylval.asCodeblock.lateEval = FALSE;
 		cText = yytext+1;
 		iLen = 1;
-		while( *cText || ((cMark != '\0') && (*cText == '\0')) )
+
+		while( *cText || iLen < yyleng )
 		{
 		    iLen++;
-		    if( *cText == '\'' )
-		    {
-			if( cMark == '\'' )
-			    cMark = '\0';
-			else if( cMark == '\0' )
-			    cMark = '\'';
-		    }    
-		    else if( *cText == '"' )
-		    {
-			if( cMark == '"' )
-			    cMark = '\0';
-			else if( cMark == '\0' )
-			    cMark = '"';
-		    }
-		    else if( *cText == '[' )
-		    {
-			if( cMark == ']' )
-			    cMark = '\0';
-			else if( cMark == '\0' )
-			    cMark = ']';
-		    }
+		    if( *cText == '\'' && cMark == '\0' )
+			    	cMark = '\'';
+		    else if( *cText == '"' && cMark == '\0' )
+			    	cMark = '"';
+		    else if( *cText == '[' && cMark == '\0' )
+			    	cMark = ']';
+			 else if( *cText == cMark )
+			 	cMark = '\0';
 		    else if( *cText == '|' && iPos == 0 )
-			iPos = iLen;
+				iPos = iLen;
 		    else if( *cText == '&' && cMark == '\0' )
 		    {
-			yylval.asCodeblock.isMacro = TRUE;
-			++cText;
-			while( *cText == ' ' || *cText == '\t' )
-			    ++cText;
-			if( *cText == '(' )
-			    yylval.asCodeblock.lateEval = TRUE;
-			--cText;
+				yylval.asCodeblock.isMacro = TRUE;
+				++cText;
+				while( *cText == ' ' || *cText == '\t' )
+			    	++cText;
+				if( *cText == '(' )
+			    	yylval.asCodeblock.lateEval = TRUE;
+				--cText;
 		    }
 		    else if( *cText == '{' && cMark == '\0' )
-			iCode++;
+				iCode++;
 		    else if( *cText == '}' && cMark == '\0' )
 		    {
-			iCode--;
-			if( iCode == 0 )
-			    break;
+				iCode--;
+				if( iCode == 0 )
+			    	break;
 		    }
 		    cText++;
 		}
