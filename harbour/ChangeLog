@@ -1,3 +1,7 @@
+19990719-00:12 EDT Paul Tucker <ptucker@sympatico.ca>
+  * corrected new parameter check
+    added {"SET",1,3}
+
 19990718-22:25 EDT Paul Tucker <ptucker@sympatico.ca>
   * source/rtl/gtapi.c
     * corrected returned color strings so pair ordering is

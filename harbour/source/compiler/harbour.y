@@ -4997,6 +4997,7 @@ static FUNCINFO _StdFun[] = {
 { "RTRIM"     , 1, 1 },
 { "SECONDS"   , 0, 0 },
 { "SELECT"    , 1, 1 },
+{ "SET"       , 1, 3 },
 { "SETPOS"    , 2, 2 },
 { "SPACE"     , 1, 1 },
 { "SQRT"      , 1, 1 },
