@@ -8,7 +8,7 @@
 # with the C code generation feature, then calling the proper C
 # linker/compiler.
 #
-# Copyright 1999-2000 Victor Szakats (info@szelvesz.hu)
+# Copyright 1999-2001 Viktor Szakats (viktor.szakats@syenar.hu)
 # See doc/license.txt for licensing terms.
 # ---------------------------------------------------------------
 

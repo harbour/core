@@ -10,7 +10,7 @@
 # For further information about the GNU make system please
 # check doc/gmake.txt
 #
-# Copyright 1999-2000 Victor Szakats (info@szelvesz.hu)
+# Copyright 1999-2001 Viktor Szakats (viktor.szakats@syenar.hu)
 # See doc/license.txt for licensing terms.
 # ---------------------------------------------------------------
 

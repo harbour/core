@@ -8,7 +8,7 @@ rem Template to build a final Harbour executable, using Harbour
 rem with the C code generation feature, then calling the proper C
 rem linker/compiler.
 rem
-rem Copyright 1999-2000 Victor Szakats (info@szelvesz.hu)
+rem Copyright 1999-2001 Viktor Szakats (viktor.szakats@syenar.hu)
 rem See doc/license.txt for licensing terms.
 rem ---------------------------------------------------------------
 

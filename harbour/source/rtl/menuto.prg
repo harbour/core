@@ -11,17 +11,6 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://www.harbour-project.org
- *
- * Copyright 1999 Victor Szakats <info@szelvesz.hu>
- *    Changes for higher Clipper compatibility
- *
- * See doc/license.txt for licensing terms.
- *
- */
-
 /* NOTE: Recursive use is supported. */
 
 #include "color.ch"

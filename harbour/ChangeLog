@@ -1,3 +1,19 @@
+2001-05-15 13:46 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * make_gnu.bat
+   * make_gnu.cmd
+   * make_gnu.sh
+   * bin/bld.bat
+   * bin/bld.cmd
+   * bin/bld.sh
+   * compiler/hbusage.c
+     * Changed e-mail address and copyright dates.
+
+   * source/rtl/menuto.prg
+     - Removed my partial copyright.
+
+   First round of copyright/e-mail address update. To be continued.
+
 2001-05-15 13:20 UTC+0300 Chen Kedem <niki@actcom.co.il>
    * doc/en/objfunc.txt
      * update the doc for __objGetMsgList() to reflect

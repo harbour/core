@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Compile help & info related functions
  *
- * Copyright 1999 Victor Szakats <info@szelvesz.hu>
+ * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -124,7 +124,7 @@ void hb_compPrintCredits( void )
            "Ron Pinkas <ron@profit-master.com>\n"
            "Ryszard Glab <rglab@imid.med.pl>\n"
            "Tim Stone <timstone@mstrlink.com>\n"
-           "Victor Szakats <info@szelvesz.hu>\n"
+           "Viktor Szakats <viktor.szakats@syenar.hu>\n"
            "Vladimir Kazimirchik <v_kazimirchik@yahoo.com>\n"
            );
 }
