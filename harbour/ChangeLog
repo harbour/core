@@ -1,8 +1,23 @@
+2000-10-27 08:50 UTC+0800 Ron Pinkas <ron@profit-master.com>
+
+    * source/compiler/genc.c
+    * source/compiler/genhrb.c
+    * source/compiler/genjava.c
+    * source/compiler/genobj32.c
+    * source/compiler/harbour.c
+    * source/compiler/harbour.l
+    * source/compiler/harbour.slx
+    * source/compiler/harbour.sly
+    * source/compiler/harbour.y
+      - Removed License Exception from core compiler files that are not part of HVM or HRL
+
+    /* Dave, could you please verify this is correct. */
+
 2000-10-27 10:40 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *include/hbrddcdx.h
         *some comments added
-        
+
     *source/rdd/dbfcdx/dbfcdx1.c
         * result of macro evaluation (hb_macroRun()) has to be popped
         from the stack
