@@ -70,7 +70,7 @@ CFLAGS = -O2 $(CFLAGS)
 # Directory macros. These should never have to change.
 #
 
-INCLUDE_DIR  = include;source\compiler
+INCLUDE_DIR  = include;source\compiler;source\macro
 COMMON_DIR   = source\common
 COMPILER_DIR = source\compiler
 DEBUG_DIR    = source\debug
@@ -352,7 +352,7 @@ LANG_LIB_OBJS = \
 
 MACRO_LIB_OBJS = \
    $(OBJ_DIR)\macroy.obj \
-   $(OBJ_DIR)\macrol.obj \
+   $(OBJ_DIR)\macroslx.obj \
    $(OBJ_DIR)\macroa.obj \
    $(OBJ_DIR)\macrob.obj \
    $(OBJ_DIR)\macroc.obj
@@ -1814,14 +1814,20 @@ $(OBJ_DIR)\msgsriso.obj : $(LANG_DIR)\msgsriso.c
 $(OBJ_DIR)\macroy.c : $(MACRO_DIR)\macro.y
    bison -d $** -o$@
 
-$(OBJ_DIR)\macrol.c : $(MACRO_DIR)\macro.l
-   flex -i -8 -o$@ $**
+#$(OBJ_DIR)\macrol.c : $(MACRO_DIR)\macro.l
+#   flex -i -8 -o$@ $**
 
 $(OBJ_DIR)\macroy.obj : $(OBJ_DIR)\macroy.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(MACRO_LIB) $(ARFLAGS) -+$@,,
 
-$(OBJ_DIR)\macrol.obj : $(OBJ_DIR)\macrol.c
+#$(OBJ_DIR)\macrol.obj : $(OBJ_DIR)\macrol.c
+#   -echo. > $(OBJ_DIR)\unistd.h
+#   $(CC) $(CLIBFLAGS) -I$(OBJ_DIR) -o$@ $**
+#   -del $(OBJ_DIR)\unistd.h
+#   tlib $(MACRO_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\macroslx.obj : $(MACRO_DIR)\macroslx.c
    -echo. > $(OBJ_DIR)\unistd.h
    $(CC) $(CLIBFLAGS) -I$(OBJ_DIR) -o$@ $**
    -del $(OBJ_DIR)\unistd.h

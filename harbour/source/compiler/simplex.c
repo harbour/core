@@ -99,7 +99,7 @@ typedef struct _LEX_PAIR
 #define LEX_CUSTOM_ACTION    -65
 #define ERR_TOO_COMPLEX_RULE -66
 #define YY_BUF_SIZE 16384
-
+#define YY_INPUT( a, b, c )
 
 #define INIT_ACTION()
 #define INTERCEPT_ACTION(x)
@@ -1113,15 +1113,22 @@ YY_DECL
             }
             else
             {
-                /* <EOF> */
-                HOLD_TOKEN(-1, NULL);
+                if( iLen )
+                {
+                   /* <EOF> */
+                   HOLD_TOKEN(-1, NULL);
 
-                /* Terminate current token and check it. */
-                sToken[ iLen ] = '\0';
+                   /* Terminate current token and check it. */
+                   sToken[ iLen ] = '\0';
 
-                DEBUG_INFO( printf(  "Token: \"%s\" At: \'<EOF>\'\n", sToken ) );
+                   DEBUG_INFO( printf(  "Token: \"%s\" at: \'<EOF>\'\n", sToken ) );
 
-                goto Start;
+                   goto CheckToken;
+                }
+                else
+                {
+                   goto Start;
+                }
             }
         }
 
@@ -1326,4 +1333,10 @@ int Reduce( int iToken, BOOL bReal )
    HB_SYMBOL_UNUSED( pBuffer );
    FORCE_REDUCE();
    iSize = 0;
+}
+
+void yy_bytes_buffer( char * pBuffer, int iBufSize )
+{
+   s_szBuffer = pBuffer;
+   iSize = iBufSize;
 }

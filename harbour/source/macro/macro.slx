@@ -1,0 +1,530 @@
+/*
+ * Harbour Project source code:
+ * Compiler MACRO SimpLex rules
+ *
+ * Copyright 2000 Ron Pinkas <ronpinkas@profit-master.com>
+ * www - http://www.harbour-project.org
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version, with one exception:
+ *
+ * The exception is that if you link the Harbour Runtime Library (HRL)
+ * and/or the Harbour Virtual Machine (HVM) with other files to produce
+ * an executable, this does not by itself cause the resulting executable
+ * to be covered by the GNU General Public License. Your use of that
+ * executable is in no way restricted on account of linking the HRL
+ * and/or HVM code into it.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
+ * their web site at http://www.gnu.org/).
+ */
+
+//#define SHOW_LEX_TOKENS
+//#define DEBUG_LEX
+
+#ifdef DEBUG_LEX
+   #undef DEBUG_INFO
+      #define DEBUG_INFO(x) x
+#endif
+
+#undef LEX_ABBREVIATE_WORDS
+   #define LEX_ABBREVIATE_WORDS 4
+
+/* declaration of yylex function
+ * NOTE: yylval is paassed automaticaly by bison if %pure_parser is used
+ */
+#undef YY_DECL
+#define YY_DECL int yylex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
+#define YYLEX_PARAM pMacro
+
+/* code that fills input buffer
+ */
+#define YY_INPUT( buf, result, max_size ) result = 0;
+
+#undef STREAM_EXCEPTION
+   #define STREAM_EXCEPTION( sPair, cChar ) \
+	   hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_STRING_TERMINATOR, sPair, NULL ); \
+           aiReturn[ iReturn++ ] = '\n'; \
+           aiReturn[ iReturn++ ] = LITERAL;
+
+static int iTexts = 0;
+static char * aTexts[128];
+static char* sIdOnHold;
+
+long hb_lex_Hex2L( char* sHex );
+
+void * yy_init_buffer( char * pBuffer, int iBufSize );
+
+/* -----------------------------------------------------  Language Definitions. ---------------------------------------------------- */
+
+/* Delimiters. */
+ACCEPT_TOKEN_AND_DROP_DELIMITER_IF_ONE_OF_THESE( " \t" );
+ACCEPT_TOKEN_AND_RETURN_DELIMITER_IF_ONE_OF_THESE( "|,()[]{}^%*/+-:=!<>#@$" );
+DELIMITER_BELONGS_TO_TOKEN_IF_ONE_OF_THESE( "" );
+
+/* Custom Action can be requested by setting reduction to LEX_CUSTOM_ACTION or lower. */
+
+/* Intermediate Token needed to be expanded. */
+#define HB_LIT_ACT    -1000
+
+/* Stream Pairs. */
+DEFINE_STREAM_AS_ONE_OF_THESE {
+                                START_WITH('\'') END_WITH('\'') STOP_IF_ONE_OF_THESE("\n") AND_IGNORE_DELIMITERS(TRUE) AS_PAIR_TOKEN(HB_LIT_ACT),
+                                START_WITH('"')  END_WITH('"' ) STOP_IF_ONE_OF_THESE("\n") AND_IGNORE_DELIMITERS(TRUE) AS_PAIR_TOKEN(HB_LIT_ACT),
+                                START_WITH('[')  END_WITH(']' ) STOP_IF_ONE_OF_THESE("\n") AND_IGNORE_DELIMITERS(TRUE) AS_PAIR_TOKEN(HB_LIT_ACT),
+                              };
+
+START_NEW_LINE_IF_ONE_OF_THESE( "\n;" );
+
+/* Intermediate Token neede to be expanded. */
+#define _DOT_DOT_  -1001
+
+SELF_CONTAINED_WORDS_ARE {
+                           LEX_WORD( ".T."   ) AS_TOKEN( TRUEVALUE  ),
+                           LEX_WORD( ".Y."   ) AS_TOKEN( TRUEVALUE  ),
+                           LEX_WORD( ".F."   ) AS_TOKEN( FALSEVALUE ),
+                           LEX_WORD( ".N."   ) AS_TOKEN( FALSEVALUE ),
+                           LEX_WORD( ".NOT." ) AS_TOKEN( NOT        ),
+                           LEX_WORD( ".AND." ) AS_TOKEN( AND        ),
+                           LEX_WORD( ".OR."  ) AS_TOKEN( OR         ),
+                           LEX_WORD( ":="    ) AS_TOKEN( INASSIGN   ),
+                           LEX_WORD( "=="    ) AS_TOKEN( EQ         ),
+                           LEX_WORD( "<>"    ) AS_TOKEN( NE2        ),
+                           LEX_WORD( "!="    ) AS_TOKEN( NE2        ),
+                           LEX_WORD( "++"    ) AS_TOKEN( INC        ),
+                           LEX_WORD( "--"    ) AS_TOKEN( DEC        ),
+                           LEX_WORD( "->"    ) AS_TOKEN( ALIASOP    ),
+                           LEX_WORD( "<="    ) AS_TOKEN( LE         ),
+                           LEX_WORD( ">="    ) AS_TOKEN( GE         ),
+                           LEX_WORD( "+="    ) AS_TOKEN( PLUSEQ     ),
+                           LEX_WORD( "-="    ) AS_TOKEN( MINUSEQ    ),
+                           LEX_WORD( "*="    ) AS_TOKEN( MULTEQ     ),
+                           LEX_WORD( "/="    ) AS_TOKEN( DIVEQ      ),
+                           LEX_WORD( "**"    ) AS_TOKEN( POWER      ),
+                           LEX_WORD( "^="    ) AS_TOKEN( EXPEQ      ),
+                           LEX_WORD( "%="    ) AS_TOKEN( MODEQ      ),
+                           LEX_WORD( "::"    ) AS_TOKEN( _DOT_DOT_  )
+                         };
+
+/* Key Words. */
+LANGUAGE_KEY_WORDS_ARE { ""
+                       };
+
+/* Intermediate Words when ambigious. */
+#define _IF_        2001
+#define QSELF       2002
+#define _FIELD_     2003
+#define _FIELD      2004
+#define _SELF_      2005
+
+/* Words. */
+LANGUAGE_WORDS_ARE {
+                     LEX_WORD( "IF"        ) AS_TOKEN( _IF_        ),
+                     LEX_WORD( "NIL"       ) AS_TOKEN( NIL         ),
+                     LEX_WORD( "IIF"       ) AS_TOKEN( IIF         ),
+                     LEX_WORD( "SELF"      ) AS_TOKEN( _SELF_      ),
+                     LEX_WORD( "QSELF"     ) AS_TOKEN( QSELF       ),
+                     LEX_WORD( "FIELD"     ) AS_TOKEN( _FIELD_     ),
+                     LEX_WORD( "_FIELD"    ) AS_TOKEN( _FIELD      )
+                   };
+
+/* When reservered words are used as Identifier. */
+#define HB_FIELD_ID       -1002
+#define HB_SELF_ID        -1003
+#define HB_IF_ID          -1004
+#define HB_IIF_ID         -1005
+#define HB__FIELD_ID      -1006
+#define HB_QSELF_ID       -1007
+
+LANGUAGE_RULES_ARE {
+                    IF_SEQUENCE_IS( '^'         , 0           , 0      , 0          ) REDUCE_TO( POWER             , 0             ),
+                    IF_SEQUENCE_IS( '!'         , 0           , 0      , 0          ) REDUCE_TO( NOT               , 0             ),
+
+		    /* FIELD ALIASOP was removed because FIELD-> is still FIELD.*/
+                    IF_SEQUENCE_IS( FIELD       , INASSIGN    , 0      , 0          ) REDUCE_TO( HB_FIELD_ID       , INASSIGN      ),
+                    IF_SEQUENCE_IS( FIELD       , INC         , 0      , 0          ) REDUCE_TO( HB_FIELD_ID       , INC           ),
+                    IF_SEQUENCE_IS( FIELD       , DEC         , 0      , 0          ) REDUCE_TO( HB_FIELD_ID       , DEC           ),
+                    IF_SEQUENCE_IS( FIELD       , PLUSEQ      , 0      , 0          ) REDUCE_TO( HB_FIELD_ID       , PLUSEQ        ),
+                    IF_SEQUENCE_IS( FIELD       , MINUSEQ     , 0      , 0          ) REDUCE_TO( HB_FIELD_ID       , MINUSEQ       ),
+                    IF_SEQUENCE_IS( FIELD       , MULTEQ      , 0      , 0          ) REDUCE_TO( HB_FIELD_ID       , MULTEQ        ),
+                    IF_SEQUENCE_IS( FIELD       , DIVEQ       , 0      , 0          ) REDUCE_TO( HB_FIELD_ID       , DIVEQ         ),
+                    IF_SEQUENCE_IS( FIELD       , EXPEQ       , 0      , 0          ) REDUCE_TO( HB_FIELD_ID       ,  EXPEQ        ),
+                    IF_SEQUENCE_IS( FIELD       , MODEQ       , 0      , 0          ) REDUCE_TO( HB_FIELD_ID       ,  MODEQ        ),
+                    IF_SEQUENCE_IS( FIELD       , '('         , 0      , 0          ) REDUCE_TO( HB_FIELD_ID       , '('           ),
+                    IF_SEQUENCE_IS( FIELD       , '['         , 0      , 0          ) REDUCE_TO( HB_FIELD_ID       , '['           ),
+                    IF_SEQUENCE_IS( FIELD       , '='         , 0      , 0          ) REDUCE_TO( HB_FIELD_ID       , '='           ),
+                    IF_SEQUENCE_IS( FIELD       , ':'         , 0      , 0          ) REDUCE_TO( HB_FIELD_ID       , ':'           ),
+                    IF_SEQUENCE_IS( FIELD       , '\n'        , 0      , 0          ) REDUCE_TO( HB_FIELD_ID       , '\n'          ),
+                    IF_SEQUENCE_IS( FIELD       , ';'         , 0      , 0          ) REDUCE_TO( HB_FIELD_ID       , ';'           ),
+                    IF_SEQUENCE_IS( FIELD       , 0           , 0      , 0          ) PASS_THROUGH(),
+
+		    /* This _FIELD_ is FIELD NOT at BOL wants only ->. */
+                    IF_SEQUENCE_IS( _FIELD_     , ALIASOP     , 0      , 0          ) REDUCE_TO( FIELD             , ALIASOP       ),
+                    IF_SEQUENCE_IS( _FIELD_     , '['         , 0      , 0          ) REDUCE_TO( HB_FIELD_ID       , '['           ),
+                    IF_SEQUENCE_IS( _FIELD_     , 0           , 0      , 0          ) REDUCE_TO( HB_FIELD_ID       , 0             ),
+
+		    /* This _FIELD is _FIELD NOT at BOL wants only ->. */
+                    IF_SEQUENCE_IS( _FIELD      , ALIASOP     , 0      , 0          ) REDUCE_TO( FIELD             , ALIASOP       ),
+                    IF_SEQUENCE_IS( _FIELD      , '['         , 0      , 0          ) REDUCE_TO( HB__FIELD_ID      , '['           ),
+                    IF_SEQUENCE_IS( _FIELD      , 0           , 0      , 0          ) REDUCE_TO( HB__FIELD_ID      , 0             ),
+
+                    /* Left Associate '[' to seperate from string delimiter. */
+                    IF_SEQUENCE_IS( IDENTIFIER  , '['         , 0      , 0          ) PASS_THROUGH(),
+                    IF_SEQUENCE_IS( MACROVAR    , '['         , 0      , 0          ) PASS_THROUGH(),
+                    IF_SEQUENCE_IS( MACROTEXT   , '['         , 0      , 0          ) PASS_THROUGH(),
+                    IF_SEQUENCE_IS( ')'         , '['         , 0      , 0          ) PASS_THROUGH(),
+                    IF_SEQUENCE_IS( ']'         , '['         , 0      , 0          ) PASS_THROUGH(),
+                    IF_SEQUENCE_IS( '}'         , '['         , 0      , 0          ) PASS_THROUGH(),
+
+                    IF_SEQUENCE_IS( _DOT_DOT_   , 0           , 0      , 0          ) REDUCE_TO( HB_SELF_ID        , ':'           ),
+
+                    IF_SEQUENCE_IS( _SELF_      , ':'         , 0      , 0          ) REDUCE_TO( SELF         	    , ':'          ),
+                    IF_SEQUENCE_IS( _SELF_      , '['         , 0      , 0          ) REDUCE_TO( HB_SELF_ID        , '['           ),
+                    IF_SEQUENCE_IS( _SELF_      , 0           , 0      , 0          ) REDUCE_TO( HB_SELF_ID        , 0             ),
+
+                    IF_SEQUENCE_IS( QSELF       , '('         , ')'    , 0          ) REDUCE_TO( SELF              , 0             ),
+                    IF_SEQUENCE_IS( QSELF       , '['         , 0      , 0          ) REDUCE_TO( HB_QSELF_ID       , '['           ),
+                    IF_SEQUENCE_IS( QSELF       , 0           , 0      , 0          ) REDUCE_TO( HB_QSELF_ID       , 0             ),
+
+                    IF_SEQUENCE_IS( _IF_        , '('         , 0      , 0         ) REDUCE_TO( IIF                , '('           ),
+                    IF_SEQUENCE_IS( _IF_        , '['         , 0      , 0         ) REDUCE_TO( HB_IF_ID           , '['           ),
+                    IF_SEQUENCE_IS( _IF_        , 0           , 0      , 0         ) REDUCE_TO( HB_IF_ID           , 0             ),
+
+                    IF_SEQUENCE_IS( IIF         , '('         , 0      , 0         ) PASS_THROUGH(),
+                    IF_SEQUENCE_IS( IIF         , '['         , 0      , 0         ) REDUCE_TO( HB_IIF_ID          , '['           ),
+                    IF_SEQUENCE_IS( IIF         , 0           , 0      , 0         ) REDUCE_TO( HB_IIF_ID          , 0             ),
+                   };
+
+/* -------------------------------------------------  End of Language Definitions. ------------------------------------------------ */
+
+/* SimpLex Macros. */
+
+#undef LEX_CASE
+   #define LEX_CASE(x) toupper(x)
+
+#undef NEW_LINE_ACTION
+   #define NEW_LINE_ACTION() \
+		while( iTexts ) \
+                { \
+                   DEBUG_INFO( printf( "Releasing short term Text: %i = %s At: %i\n", iTexts, aTexts[iTexts - 1], aTexts[iTexts - 1] ) ); \
+                   iTexts--; \
+                   hb_xfree( aTexts[iTexts] ); \
+                }
+
+#ifdef SHOW_LEX_TOKENS
+   #undef INTERCEPT_ACTION
+   	#define INTERCEPT_ACTION(x) \
+	\
+      	if( x == IDENTIFIER ) \
+         	printf( "   IDENTIFIER = \"%s\"\n", yylval_ptr->string  ); \
+      	else if( x == LITERAL ) \
+         	printf( "   LITERAL = \"%s\"\n", yylval_ptr->string  ); \
+      	else if( x == MACROVAR ) \
+         	printf( "   MACROVAR = \"%s\"\n", yylval_ptr->string  ); \
+      	else if( x == MACROTEXT ) \
+         	printf( "   MACROTEXT = \"%s\"\n", yylval_ptr->string  ); \
+      	else if( x == NUM_LONG ) \
+         	printf( "   INTEGER = %il\n", yylval_ptr->valLong.lNumber  ); \
+      	else if( x == NUM_DOUBLE ) \
+         	printf( "   DOUBLE = %f\n", yylval_ptr->valDouble.dNumber  ); \
+      	else if( x < 256 ) \
+         	if( x == '\n' || x == ';' ) \
+            	printf( "                           NEW LINE %i\n", hb_comp_iLine - 1  ); \
+         	else \
+            	printf( "   DELIMITER = \"%c\"\n", x  ); \
+      	else \
+          	printf( "   TOKEN = %i\n", x  );
+#endif
+
+/* Support Functions implemented as macros for speed. */
+
+#undef ELEMENT_TOKEN
+  #define ELEMENT_TOKEN(x)\
+\
+   if( x == NULL || *x == '\0' )\
+   {\
+      printf( "Invalid Token passed to ELEMENT_TOKEN()\n" );\
+      iRet = 0;\
+   }\
+   else\
+   {\
+      yytext = x;\
+      yyleng = strlen( yytext );\
+\
+      if( *yytext == '_' || *yytext == '&' || isalpha( *yytext ) )\
+      {\
+         /* Macro. */\
+         if( ( tmpPtr = strrchr( yytext, '&' ) )  != NULL ) /* Right Search. */\
+         {\
+            /* Is '&' the first char? - Since its was right search that would be the only '&'. */\
+	    if( tmpPtr == yytext )\
+	    {\
+	       /* Maybe just the Macro Operator. */\
+	       if( yyleng == 1 )\
+	       {\
+	          iRet = '&';\
+	       }\
+	       /* No '.' so Simple Macro. */ \
+	       else if( ( tmpPtr = strchr( yytext, '.' ) ) == NULL ) /* Left Search. */ \
+	       {\
+	          /* Remove the '&'. */ \
+	       	  yytext++;\
+	      	  yyleng--;\
+\
+                  yylval_ptr->string = hb_strdup( yytext );\
+	       	  iRet = MACROVAR;\
+               }\
+	       else if( tmpPtr == yytext + yyleng - 1 )\
+	       {\
+	          /* The only '.' is last char, so Simple Macro. */ \
+\
+	       	  /* Remove the '&' and the '.' */ \
+	       	  yytext++;\
+	       	  yyleng -= 2;\
+	       	  yytext[yyleng] = '\0';\
+\
+                  yylval_ptr->string = hb_strdup( yytext );\
+	       	  iRet = MACROVAR;\
+	       }\
+	       else\
+	       {\
+                  yytext = hb_strdup( yytext );\
+\
+                  yylval_ptr->string = yytext;\
+	       	  iRet = MACROTEXT;\
+	       }\
+	    }\
+	    else\
+	    {\
+               yytext = hb_strdup( yytext );\
+\
+               yylval_ptr->string = yytext;\
+	       iRet = MACROTEXT;\
+	    }\
+         }\
+         else\
+         {\
+      	    DEBUG_INFO( printf(  "Element \"%s\" is IDENTIFIER\n", yytext ) );\
+\
+            if( strlen( yytext ) > HB_SYMBOL_NAME_LEN )\
+            {\
+               yytext[ HB_SYMBOL_NAME_LEN ] = '\0';\
+               yyleng = HB_SYMBOL_NAME_LEN;\
+            }\
+\
+            yylval_ptr->string = hb_strdup( yytext );\
+      	    iRet = IDENTIFIER;\
+         }\
+      }\
+      else\
+      {\
+         DEBUG_INFO( printf(  "Passing Element \"%s\" to CONVERT_NUMBER()\n", sToken ) );\
+\
+         /* "Returns" Token in iRet. (yylval_ptr->string already allocated). */\
+	 yylval_ptr->string = (char*) hb_xgrab( TOKEN_SIZE );\
+	 yylval_ptr->string[0] = 0;\
+	 aTexts[iTexts++] = yylval_ptr->string;\
+	 /* printf( "Text %i At: %i for Converted %s\n", iTexts, aTexts[iTexts - 1], sToken ); */\
+\
+         CONVERT_NUMBER();\
+\
+         DEBUG_INFO( printf(  "Element \"%s\" is %i\n", sToken, iRet ) );\
+       }\
+    }
+
+#define CONVERT_NUMBER()\
+\
+   if( yytext == NULL || *yytext == '\0' )\
+   {\
+      printf( "Invalid Token passed to CONVERT_NUMBER()\n" );\
+      iRet = 0;\
+   }\
+   /* Hex Number */\
+   else if( yytext[0] == '0' && yytext[1] == 'X' )\
+   {\
+      long lNumber = hb_lex_Hex2L( yytext + 2 );\
+\
+      /* sscanf( yytext, "%lxI", &lNumber );*/\
+\
+      if( ( double ) LONG_MIN <= lNumber && lNumber <= ( double ) LONG_MAX )\
+      {\
+         yylval_ptr->valLong.lNumber = lNumber;\
+         yylval_ptr->valLong.szValue = yytext;\
+         iRet = NUM_LONG;\
+      }\
+      else\
+      {\
+         /* NOTE: This will never happen */\
+         yylval_ptr->valDouble.dNumber = lNumber;\
+         yylval_ptr->valDouble.bWidth = HB_DEFAULT_WIDTH;\
+         yylval_ptr->valDouble.bDec = 0;\
+         yylval_ptr->valDouble.szValue = yytext;\
+         iRet = NUM_DOUBLE;\
+      }\
+   }\
+   else\
+   {\
+      yylval_ptr->valDouble.dNumber = atof( yytext );\
+      tmpPtr = strchr( yytext, '.' );\
+\
+      if( tmpPtr )\
+      {\
+         yylval_ptr->valDouble.bDec = strlen( tmpPtr + 1 );\
+         yylval_ptr->valDouble.bWidth = strlen( yytext ) - yylval_ptr->valDouble.bDec;\
+         if( yylval_ptr->valDouble.bDec )\
+	 {\
+            yylval_ptr->valDouble.bWidth--;\
+	 }\
+         yylval_ptr->valDouble.szValue = yytext;\
+         iRet = NUM_DOUBLE;\
+      }\
+      else\
+      {\
+         if( ( double )LONG_MIN <= yylval_ptr->valDouble.dNumber && yylval_ptr->valDouble.dNumber <= ( double )LONG_MAX )\
+         {\
+            yylval_ptr->valLong.lNumber = ( long ) yylval_ptr->valDouble.dNumber;\
+            yylval_ptr->valLong.szValue = yytext;\
+            iRet = NUM_LONG;\
+         }\
+         else\
+         {\
+            yylval_ptr->valDouble.bWidth = strlen( yytext ) + 1;\
+            yylval_ptr->valDouble.bDec = 0;\
+            yylval_ptr->valDouble.szValue = yytext;\
+            iRet = NUM_DOUBLE;\
+         }\
+      }\
+   }
+
+#undef CUSTOM_ACTION
+   #define CUSTOM_ACTION(x) x = hb_lex_CustomAction(x, iWordLen, aiHold, asHold, &iHold, yylval_ptr )
+
+#undef INIT_ACTION
+   #define INIT_ACTION() hb_comp_bSimpLex = TRUE;
+
+long hb_lex_Hex2L( char* sHex )
+{
+   int i, iExp = 0, iLen = strlen( sHex ) - 1;
+   long lVal, lSum = 0;
+   char cChar;
+
+   while( iLen >= 0 )
+   {
+      cChar = sHex[ iLen-- ];
+
+      if( isalpha( cChar ) )
+      {
+         lVal = cChar - 55;
+      }
+      else
+      {
+         lVal = cChar - 48;
+      }
+
+      if( lVal )
+      {
+	 i = 0;
+	 while( i++ < iExp )
+	 {
+	    lVal *= 16;
+	 }
+
+         lSum += lVal;
+      }
+
+      iExp++;
+   }
+
+   return lSum;
+}
+
+int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], char asHold[][TOKEN_SIZE], int *ptr_iHold, YYSTYPE *yylval_ptr )
+{
+   char * sIdentifier;
+
+   DEBUG_INFO( printf( "Custom Action for %i\n", x ) );
+
+   /* Resetting (prepairing). */
+   sIdentifier = (char*) hb_xgrab( iWordLen + 1 );
+   sIdentifier[0] = '\0';
+
+   DEBUG_INFO( printf( "Prepared Text: %i Pointer: %i\n", iTexts, sIdentifier ) );
+
+   switch ( x )
+   {
+      case HB_LIT_ACT :\
+         yylval_ptr->string = hb_strdup( sPair );
+         x = LITERAL;
+         break;
+
+      case HB_FIELD_ID :\
+         strncpy( sIdentifier, "FIELD" , iWordLen );
+	 sIdentifier[iWordLen] = '\0';
+         x = IDENTIFIER;
+         break;
+
+      case HB__FIELD_ID :\
+         strncpy( sIdentifier, "_FIELD" , iWordLen );
+	 sIdentifier[iWordLen] = '\0';
+         x = IDENTIFIER;
+         break;
+
+      case HB_SELF_ID :\
+         strcpy( sIdentifier, "SELF" );
+	 sIdentifier[4] = '\0';
+         x = IDENTIFIER;
+         break;
+
+      case HB_IF_ID :\
+         strcpy( sIdentifier, "IF" );
+	 sIdentifier[2] = '\0';
+         x = IDENTIFIER;
+         break;
+
+      case HB_IIF_ID :\
+         strcpy( sIdentifier, "IIF" );
+	 sIdentifier[3] = '\0';
+         x = IDENTIFIER;
+         break;
+
+      default:
+         printf( "No Handler for Custom Action %i\n", x );
+   }
+
+   if( x == IDENTIFIER )
+   {
+      yylval_ptr->string = hb_strdup( sIdentifier );
+
+      /* No longer needed. */
+      hb_xfree( sIdentifier );
+
+      /* Equivalent of PUSH_TOKEN(x). */
+      aiHold[ (*ptr_iHold)++ ] = x;
+      strcpy( asHold[ (*ptr_iHold) - 1 ], yylval_ptr->string );
+
+      x = 0;
+   }
+
+   return x;
+}
+
+void * hb_compFlexNew( HB_MACRO_PTR pMacro )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_compFlexNew(%s, %i)", pMacro->string, pMacro->length));
+
+   return yy_init_buffer( pMacro->string, pMacro->length );
+}
+
+void hb_compFlexDelete( void * pBuffer )
+{
+   HB_SYMBOL_UNUSED( pBuffer );
+}

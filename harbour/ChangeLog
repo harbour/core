@@ -1,3 +1,15 @@
+2000-07-30 17:30 UTC+0800 Ron Pinkas <ron@profit-master.com>
+  + source/macro/macro.slx
+  + source/macro/macroslx.c
+    + Added SimpLex based macro lexer
+
+  * hb_slex.bc
+    * Modified to use SimpLex based macro support.
+    /* Could some one please add same to GNU make system? */
+
+  * source/compiler/simplex.c
+    * Added void yy_bytes_buffer()
+
 2000-07-30 12:45 UTC+0800 Ron Pinkas <ron@profit-master.com>
   * source/compiler/harbour.slx
     - Removed AS CHARACTER, AS BOOLEAN, AS OBJ, AS NUM
