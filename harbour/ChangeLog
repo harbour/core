@@ -1,3 +1,26 @@
+20000325-03:38 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * contrib/rdd_ads/ads1.c
+     ! BCC55 warning fixed.
+   * contrib/hbclip/make_clp.bat
+     ! Removed hard coded path for c compiler
+   * utils/hbextern/hbextern.prg
+     * Doesn't use hbclip.ch anymore.
+   * source/vm/pvalue.c
+     doc/subcodes.txt
+     - HB_PVALUE() removed the runtime error. From now on NIL will be returned 
+       if the requested parameter doesn't exist. This better fits in the 
+       average pattern of usage, and if needed the error case can checked by 
+       the caller.
+   * config/w32/global.cf
+   * config/dos/global.cf
+     * Slang and ncurses commented out for w32, added for dos but commented
+       out, too.
+   * bin/bld_tpl.*
+     ! GCC bug fixed (hard-coded .lib extension for the GT lib).
+   * source/rtl/diskspac.c
+     * Small opt.
+
 2000-03-23 20:45 GMT-5 David G. Holm <dholm@jsd-llc.com>
 
    * contrib/rdd_ads/ads1.c
@@ -22,7 +45,7 @@
      * (though I didn't activate it - see notes)
      * optimized some assigns.
 
-20000322-21:10 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
+20000322-21:10 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
     Missed from previos session
     *doc/en/array.txt
     doc/en/binnum.txt
@@ -43,7 +66,6 @@
         +code to generate tables
         +code to support new subtags.
         *some enhacements
-
 
 20000322-22:30 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
     *doc/compiler.txt
@@ -68,7 +90,6 @@
      utils/hbdoc/genrtf.prg
         !fix code when a Return or Argument is only one line , to add the
          propery tags to enhace the first word
-
 
 20000322-19:35 EST Paul Tucker <ptucker@sympatico.ca>
    * include/fileio.ch

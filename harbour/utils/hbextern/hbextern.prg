@@ -39,7 +39,9 @@
 #include "common.ch"
 #include "fileio.ch"
 
-#include "hbclip.ch"
+#ifndef __HARBOUR__
+   #define hb_OSNewLine() ( Chr( 13 ) + Chr( 10 ) )
+#endif
 
 #define PATH_SEPARATOR "\"
 #define BASE_DIR "..\..\source\"
@@ -57,7 +59,7 @@ PROCEDURE MAIN()
    LOCAL nOutput
    LOCAL nTime:=SECONDS()
    
-   nOutput =FCREATE( "hbextern.ch_" )
+   nOutput := FCREATE( "hbextern.ch_" )
    IF nOutput > 0
       FOR i:=1 TO LEN(aDirs)
          FWRITE( nOutput, "// Files from: " +aDirs[i] )

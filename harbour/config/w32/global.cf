@@ -5,11 +5,11 @@
 all : first
 
 HB_GT_LIBS=\
-        gtcrs \
         gtpca \
-        gtsln \
         gtstd \
         gtwin \
+#       gtcrs \
+#       gtsln \
 
 ifeq ($(HB_GT_LIB),)
    HB_GT_LIB = gtwin

@@ -34,7 +34,6 @@
  */
 
 #include "hbapi.h"
-#include "hbapierr.h"
 #include "hbapiitm.h"
 
 HB_FUNC( HB_PVALUE )
@@ -44,7 +43,5 @@ HB_FUNC( HB_PVALUE )
 
    if( uiParam && uiParam <= pBase->item.asSymbol.paramcnt ) /* Valid number */
       hb_itemReturn( pBase + 1 + uiParam );
-   else
-      hb_errRT_BASE( EG_ARG, 3011, NULL, "HB_PVALUE" );
 }
 

@@ -1251,26 +1251,6 @@ start from 3000
 
 /*  $DOC$
  *  $SUBCODE$
- *      BASE/3011
- *  $CATEGORY$
- *      arguments
- *  $ONELINER$
- *      Invalid argument passed to a function
- *  $DESCRIPTION$
- *      The attempt to retrieve the function argument that was not passed.
- *      The number of requested argument is greated then the number of
- *      passed arguments.
- *  $FUNCTION$
- *      PVALUE
- *  $STATUS$
- *      Harbour specific
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $SUBCODE$
  *      BASE/3012
  *  $CATEGORY$
  *      arguments

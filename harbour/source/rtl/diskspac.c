@@ -83,7 +83,7 @@ HB_FUNC( DISKSPACE )
                EF_CANDEFAULT above)
       */
 
-      if( uiAction == E_DEFAULT || uiAction == E_BREAK )
+      if( uiAction != E_RETRY )
          break;
    }
 
@@ -116,7 +116,7 @@ HB_FUNC( DISKSPACE )
 
    uiType = HB_MIN( uiType, HB_DISK_TOTAL );
 
-   while( 1 )
+   while( TRUE )
    {
 
       typedef BOOL (WINAPI *P_GDFSE)(LPCTSTR, PULARGE_INTEGER, 
@@ -144,7 +144,7 @@ HB_FUNC( DISKSPACE )
 
       uiErrMode = SetErrorMode( SEM_FAILCRITICALERRORS );
 
-      SetLastError(0);
+      SetLastError( 0 );
 
       pGetDiskFreeSpaceEx = ( P_GDFSE ) GetProcAddress( GetModuleHandle( "kernel32.dll" ),
                                                         "GetDiskFreeSpaceExA");
@@ -220,7 +220,7 @@ HB_FUNC( DISKSPACE )
          DWORD dwNumberOfFreeClusters;
          DWORD dwTotalNumberOfClusters;
 
-         SetLastError(0);
+         SetLastError( 0 );
 
          if( GetDiskFreeSpace( szPath,
                                &dwSectorsPerCluster,
@@ -264,11 +264,9 @@ HB_FUNC( DISKSPACE )
                   with EF_CANDEFAULT above)
          */
 
-         if( uiAction == E_RETRY )
-            continue;
+         if( uiAction != E_RETRY )
+            break;
       }
-
-      break;
    }
 
 #else

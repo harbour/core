@@ -10,6 +10,8 @@ HB_GT_LIBS=\
         gtdos \
         gtpca \
         gtstd \
+#       gtcrs \
+#       gtsln \
 
 ifeq ($(HB_GT_LIB),)
    HB_GT_LIB = gtdos

@@ -1067,20 +1067,19 @@ static ERRCODE adsSetFilter( ADSAREAP pArea, LPDBFILTERINFO pFilterInfo )
 
 static ERRCODE adsSetScope( ADSAREAP pArea, LPDBORDSCOPEINFO sInfo )
 {
-   UNSIGNED32 ulRetVal;
-
    HB_TRACE(HB_TR_DEBUG, ("adsSetScope(%p, %p)", pArea, sInfo));
 
    if( pArea->hOrdCurrent )
    {
       if( sInfo->scopeValue )
       {
-         ulRetVal = AdsSetScope( pArea->hOrdCurrent, (UNSIGNED16) sInfo->nScope,
+         AdsSetScope( pArea->hOrdCurrent, (UNSIGNED16) sInfo->nScope,
               (UNSIGNED8*) sInfo->scopeValue,
               (UNSIGNED16) strlen( (const char *)sInfo->scopeValue), ADS_STRINGKEY );
       }
       else
          AdsClearScope( pArea->hOrdCurrent, (UNSIGNED16) sInfo->nScope );
+
       return SUCCESS;
    }
    else
