@@ -41,6 +41,9 @@
  *    hb_xmemcpy()
  *    hb_xmemset()
  *
+ * Copyright 1999 Victor Szel <info@szelvesz.hu>
+ *    HB_MEMORY()
+ *
  * See doc/license.txt for licensing terms.
  *
  */
@@ -276,17 +279,65 @@ void * hb_xmemset( void * pDestArg, int iFill, ULONG ulLen )
 
 HARBOUR HB_MEMORY( void )
 {
-   /* TODO: Implement MEMORY() */
+   USHORT uiMode = hb_parni( 1 );
+   ULONG ulResult;
 
-   hb_retni( 9999 );
+   /* TODO: Return the correct values instead of 9999 [vszel] */
+
+   switch( uiMode )
+   {
+   case 0:              /*               (Free Variable Space [KB])          */
+      ulResult = 9999;
+      break;
+
+   case 1:              /*               (Largest String [KB])               */
+      ulResult = 9999;
+      break;
+
+   case 2:              /*               (RUN Memory [KB])                   */
+      ulResult = 9999;
+      break;
+
+   case 3:              /* UNDOCUMENTED! (Virtual Memory [KB])               */
+      ulResult = 9999;
+      break;
+
+   case 4:              /* UNDOCUMENTED! (Free Expanded Memory [KB]) (?)     */
+      ulResult = 9999;
+      break;
+
+   case 101:            /* UNDOCUMENTED! (Fixed Memory/Heap [KB]) (?)        */
+      ulResult = 9999;
+      break;
+
+   case 102:            /* UNDOCUMENTED! (Segments in Fixed Memory/Heap) (?) */
+      ulResult = 9999;
+      break;
+
+   case 103:            /* UNDOCUMENTED! (Free Swap Memory [KB])             */
+      ulResult = 9999;
+      break;
+
+   case 104:            /* UNDOCUMENTED! (Free Conventional [KB])            */
+      ulResult = 9999;
+      break;
+
+   case 105:            /* UNDOCUMENTED! (Used Expanded Memory [KB]) (?)     */
+      ulResult = ( s_ulMemoryConsumed / 1024 );
+      break;
+
+   case 1001:           /* Harbour extension (Memory used [bytes])           */
+      ulResult = s_ulMemoryConsumed;
+      break;
+
+   case 1002:           /* Harbour extension (Maximum memory used [bytes])   */
+      ulResult = s_ulMemoryMaxConsumed;
+      break;
+
+   default:
+      ulResult = 0;
+   }
+
+   hb_retnl( ulResult );
 }
 
-HARBOUR HB_MEMUSED()
-{
-   hb_retnl( s_ulMemoryConsumed );
-}
-
-HARBOUR HB_MEMMAX()
-{
-   hb_retnl( s_ulMemoryMaxConsumed );
-}

@@ -1,3 +1,9 @@
+19991022-10:03 GMT+1 Victor Szel <info@szelvesz.hu>
+   * source/rtl/fm.c
+     + MEMORY() function enhanced internally.
+     ! MEMUSED()/MEMFREE() non-standard functionality moved inside
+       MEMORY().
+
 19991022-09:27 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/rtl/console.c
      ! New C syntax bug fixed in hb_setpos()
