@@ -666,7 +666,7 @@ HARBOUR HB_DISPOUTAT( void ) /* writes a single value to the screen at speficic 
          char szOldColor[ CLR_STRLEN ];
 
          hb_gtGetColorStr( szOldColor );
-         hb_gtSetColorStr( hb_parc( 2 ) );
+         hb_gtSetColorStr( hb_parc( 4 ) );
 
          hb_out( 3, hb_dispout );
 

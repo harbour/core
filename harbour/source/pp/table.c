@@ -297,9 +297,9 @@
    static COMMANDS sC___187 = {0,"CONTINUE","","__dbContinue()",&sC___186 };
    static COMMANDS sC___188 = {0,"LOCATE","[FOR \1A00] [WHILE \1B00] [NEXT \1C00] [RECORD \1D00] [\1E20REST>] [ALL]",
        "__dbLocate(\1A40,\1B40,\1C00,\1D00,\1E50)",&sC___187 };
-   static COMMANDS sC___189 = {0,"SET","RELATION TO","dbClearRel()",&sC___188 };
+   static COMMANDS sC___189 = {0,"SET","RELATION TO","dbClearRelation()",&sC___188 };
    static COMMANDS sC___190 = {0,"SET","RELATION [\1A20ADDITIVE>] [TO \1B00 INTO \1C40 [, [TO] \1D00 INTO \1E40]]",
-       "if ( !\1A50 ) ;    dbClearRel() ; end ; dbSetRelation(\1C30,\1B40,\1B20) [; dbSetRelation(\1E30,\1D40,\1D20)]",&sC___189 };
+       "if ( !\1A50 ) ;    dbClearRelation() ; end ; dbSetRelation(\1C30,\1B40,\1B20) [; dbSetRelation(\1E30,\1D40,\1D20)]",&sC___189 };
    static COMMANDS sC___191 = {0,"SET","FILTER TO","dbClearFilter(NIL)",&sC___190 };
    static COMMANDS sC___192 = {0,"SET","FILTER TO \1A00","dbSetFilter( \1A40, \1A20 )",&sC___191 };
    static COMMANDS sC___193 = {0,"SET","FILTER TO \1A20&>",

@@ -1,3 +1,15 @@
+19991018-14:54 GMT+1 Victor Szel <info@szelvesz.hu>
+   * source/rtl/tbrowse.prg
+     ! PgUp() fixed to set HitTop instead of HitBottom, now the cursor will
+       not lock up in the first position.
+     ! DevOut() changed to DispOut(), faster and Clipper compatible.
+     % SetPos() + DispOut() -> DispOutAt() to be even faster.
+   * source/rtl/console.c
+     ! DISPOUTAT() color bug fixed.
+   * source/pp/table.c
+     ! dbClearRel() -> dbClearRelation()
+       Using full name, otherwise Harbour will not find it.
+
 19991018-14:10 GMT+3 Alexander Kresin
   * source/pp/hbpp.c
     * Fixed bugs, reported by Antonio Linares
