@@ -60,6 +60,7 @@
  *    hb_dateDecStr()
  *    hb_dateStrPut()
  *    hb_dateStrGet()
+ *    HB_STOD()
  *    HB_HB_STOD()
  *
  * See doc/license.txt for licensing terms.
@@ -86,9 +87,6 @@
 #if defined(__TURBOC__) || defined(__BORLANDC__)  || defined(__DJGPP__)
    #include <dos.h>
 #endif
-#ifndef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
-   #define HB_OPTIMIZE_DTOS
-#endif
 
 double hb_secondsToday( void )
 {
@@ -113,20 +111,14 @@ char * hb_cmonth( int iMonth )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_cmonth(%d)", iMonth));
 
-   if( iMonth >= 1 && iMonth <= 12 )
-      return hb_monthsname[ iMonth - 1 ];
-   else
-      return "";
+   return ( iMonth >= 1 && iMonth <= 12 ) ? hb_monthsname[ iMonth - 1 ] : "";
 }
 
 char * hb_cdow( int iDay )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_cdow(%d)", iDay));
 
-   if( iDay >= 1 && iDay <= 7 )
-      return hb_daysname[ iDay - 1 ];
-   else
-      return "";
+   return ( iDay >= 1 && iDay <= 7 ) ? hb_daysname[ iDay - 1 ] : "";
 }
 
 long hb_dateEncode( long lDay, long lMonth, long lYear )
@@ -535,21 +527,15 @@ HARBOUR HB_DTOC( void )
 /*           Clipper does these checks, anyway. */
 HARBOUR HB_DTOS( void )
 {
-#ifndef HB_OPTIMIZE_DTOS
    if( hb_pcount() == 1 )
    {
       if( ISDATE( 1 ) )
-      {
-#endif
          hb_retc( hb_pards( 1 ) );
-#ifndef HB_OPTIMIZE_DTOS
-      }
       else
          hb_errRT_BASE( EG_ARG, 1120, NULL, "DTOS" );
    }
    else
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "DTOS" ); /* NOTE: Clipper catches this at compile time! */
-#endif
 }
 
 #ifdef HB_COMPAT_XPP

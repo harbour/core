@@ -1,10 +1,20 @@
+19991113-03:23 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/itemapi.c
+    % hb_evalNew(), hb_evalPutParam(), hb_evalRelease(), hb_itemRelease(),
+      hb_itemFreeC() - Variables and double initializations elimiated, faster, 
+      simpler.
+  * source/rtl/dates.c
+    - DTOS() optimalization removed, it's now always 100% Clipper compatible,
+      STRICT option removed.
+    % hb_cmonth(), hb_cdow() optimalized.
+
 19991112-19:29 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/itemapi.c
     source/rtl/strings.c
     ! Moved the infinity support from strings.c to itemapi.c.
     + The infinity support changed to not require the init on startup feature
       of the compilers, it's now plain ANSI C.
-    + Removed to STRICT option from the infinity support, it's now turned on
+    + Removed the STRICT option from the infinity support, it's now turned on
       all the time. Now one more RTL_TEST line will pass.
 
 19991112-11:40 EDT Paul Tucker <ptucker@sympatico.ca>

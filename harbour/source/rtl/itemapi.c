@@ -78,8 +78,6 @@
 
 BOOL hb_evalNew( PEVALINFO pEvalInfo, PHB_ITEM pItem )
 {
-   BOOL bResult;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_evalNew(%p, %p)", pEvalInfo, pItem));
 
    if( pEvalInfo )
@@ -87,12 +85,11 @@ BOOL hb_evalNew( PEVALINFO pEvalInfo, PHB_ITEM pItem )
       memset( pEvalInfo, 0, sizeof( EVALINFO ) );
       pEvalInfo->pItems[ 0 ] = pItem;
       pEvalInfo->paramCount = 0;
-      bResult = TRUE;
+
+      return TRUE;
    }
    else
-      bResult = FALSE;
-
-   return bResult;
+      return FALSE;
 }
 
 /* NOTE: CA-Cl*pper is buggy and will not check if more parameters are
@@ -100,19 +97,16 @@ BOOL hb_evalNew( PEVALINFO pEvalInfo, PHB_ITEM pItem )
 
 BOOL hb_evalPutParam( PEVALINFO pEvalInfo, PHB_ITEM pItem )
 {
-   BOOL bResult;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_evalPutParam(%p, %p)", pEvalInfo, pItem));
 
    if( pEvalInfo && pItem && pEvalInfo->paramCount < HB_EVAL_PARAM_MAX_ )
    {
       pEvalInfo->pItems[ ++pEvalInfo->paramCount ] = pItem;
-      bResult = TRUE;
+
+      return TRUE;
    }
    else
-      bResult = FALSE;
-
-   return bResult;
+      return FALSE;
 }
 
 PHB_ITEM hb_evalLaunch( PEVALINFO pEvalInfo )
@@ -158,8 +152,6 @@ PHB_ITEM hb_evalLaunch( PEVALINFO pEvalInfo )
 
 BOOL hb_evalRelease( PEVALINFO pEvalInfo )
 {
-   BOOL bResult;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_evalRelease(%p)", pEvalInfo));
 
    if( pEvalInfo )
@@ -173,12 +165,11 @@ BOOL hb_evalRelease( PEVALINFO pEvalInfo )
       }
 
       pEvalInfo->paramCount = 0;
-      bResult = TRUE;
+
+      return TRUE;
    }
    else
-      bResult = FALSE;
-
-   return bResult;
+      return FALSE;
 }
 
 /* NOTE: Same purpose as hb_evalLaunch(), but simpler, faster and more flexible.
@@ -358,18 +349,17 @@ USHORT hb_itemPCount( void )
 
 BOOL hb_itemRelease( PHB_ITEM pItem )
 {
-   BOOL bResult = FALSE;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_itemRelease(%p)", pItem));
 
    if( pItem )
    {
       hb_itemClear( pItem );
       hb_xfree( pItem );
-      bResult = TRUE;
-   }
 
-   return bResult;
+      return TRUE;
+   }
+   else
+      return FALSE;
 }
 
 PHB_ITEM hb_itemArrayNew( ULONG ulLen )
@@ -532,17 +522,16 @@ ULONG hb_itemCopyC( PHB_ITEM pItem, char * szBuffer, ULONG ulLen )
 
 BOOL hb_itemFreeC( char * szText )
 {
-   BOOL bResult = FALSE;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_itemFreeC(%s)", szText));
 
    if( szText )
    {
       hb_xfree( szText );
-      bResult = TRUE;
-   }
 
-   return bResult;
+      return TRUE;
+   }
+   else
+      return FALSE;
 }
 
 /* NOTE: Clipper is buggy and will not append a trailing zero, although
