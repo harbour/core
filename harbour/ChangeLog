@@ -2,7 +2,7 @@
    * makefile.vc
      * changed msguk to msgxxx
 
-19990724-00:20 EDT Paul Tucker (from Felipe Coury) <ptucker@sympatico.ca>
+19990726-00:20 EDT Paul Tucker (from Felipe Coury) <ptucker@sympatico.ca>
    * rdd.b32
    * buildrdd.bat
    * tests/working/bld32w.bat

@@ -102,12 +102,10 @@ HARBOUR HB_REQUEST_DBFNTX1( void )
 
 HARBOUR HB_DBFNTX_GETFUNCTABLE( void )
 {
-   USHORT * uiCount;
    RDDFUNCS * pTable;
 
-/*    *uiCount = RDDFUNCSCOUNT; */
+   * ( USHORT * ) hb_parnl( 1 ) = RDDFUNCSCOUNT;
 
-   uiCount = ( USHORT * ) hb_parnl( 1 );
    pTable = ( RDDFUNCS * ) hb_parnl( 2 );
    if( pTable )
       hb_rddInherit( pTable, &ntxTable, &ntxSuper, 0 );
