@@ -77,10 +77,11 @@ Static aMacros     := {}
 Static aPrgs       := {}
 Static aCs         := {}
 Static aObjs       := {}
+Static aObjsc       := {}
 Static lEof        := .F.
 Static aRes        := {}
 Static nLinkHandle
-Static cLinker     := "makefile.@@@"
+Static cLinker     := "makefile.tmp"
 Static cLinkcomm   := ''
 Static nFilePos    := 1
 Static aFile       := {}
@@ -92,6 +93,8 @@ Static lLinux      := .F.
 Static szProject:=""
 Static lLibrary:=.f.
 Static lIgnoreErrors:=.F.
+Static lExtended := .F.
+Static lOs2 := .F.
 Static aDir
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
@@ -121,7 +124,9 @@ allParam:=p1 + p2 +p3+p4 + p5 +p6
 
 allparam:=strtran(allparam,"/","-")
 allparam:=strtran(allparam,"-el","-EL")
+allparam:=strtran(allparam,"-el","-ELX")
 allparam:=strtran(allparam,"-e","-E")
+allparam:=strtran(allparam,"-ex","-EX")
 allparam:=strtran(allparam,"-i","-I")
 allparam:=strtran(allparam,"-p","-P")
 allparam:=strtran(allparam,"-b","-B")
@@ -135,8 +140,10 @@ If Pcount() == 0
    ? ""
    ? "Syntax:  hbmake cFile [options]"
    ? ""
-   ? "Options:  /e[l]  Create a new Makefile. If /el is"
-   ? "          used it creates a new make file to build a library"
+   ? "Options:  /e[x]  Create a new Makefile. If /ex is"
+   ? "          used it creates a new make file in extended mode"
+   ? "          /el[x]  Create a new Makefile. If /elx is"
+   ? "          used it creates a new make file to build a library in extended mode"
    ? "          /D  Define a macro"
    ? "          /p  Print all commands and depencies"
 
@@ -199,18 +206,25 @@ if at("-G",allparam)>0
       allparam:=strtran(allparam,"-V","")
 
    Endif
-if at("-EL",allparam)>0
-
-      allparam:=strtran(allparam,"-EL","")
+if at("-EL",allparam)>0 .or. at("-ELX",allparam)>0
+      if at("-ELX",allparam)>0
+         lExtended := .T.
+         allparam:=strtran(allparam,"-ELX","")
+      Else
+         allparam:=strtran(allparam,"-EL","")
+      endif
       lLibrary:=.T.
       crtlibmakfile( cFile )
       Return nil
    Endif
 
-if at("-E",allparam)>0
-
-      allparam:=strtran(allparam,"-E","")
-
+if at("-E",allparam)>0 .or. at("-EX",allparam)>0
+      if at("-EX",allparam)>0
+         lExtended := .T.
+         allparam:=strtran(allparam,"-EX","")
+      else
+         allparam:=strtran(allparam,"-E","")
+      endif
       crtmakfile( cFile )
       Return nil
    Endif
@@ -281,18 +295,33 @@ if at("-G",allparam)>0
 
 
    Endif
-if at("-EL",allparam)>0
+/*if at("-EL",allparam)>0
       allparam:=strtran(allparam,"-EL","")
 
       lLibrary:=.T.
       crtlibmakfile( cFile )
       Return nil
+   Endif*/
+if at("-EL",allparam)>0 .or. at("-ELX",allparam)>0
+      if at("-ELX",allparam)>0
+         lExtended := .T.
+         allparam:=strtran(allparam,"-ELX","")
+      Else
+         allparam:=strtran(allparam,"-EL","")
+      endif
+      lLibrary:=.T.
+      crtlibmakfile( cFile )
+      Return nil
    Endif
 
+
 if at("-E",allparam)>0
-      allparam:=strtran(allparam,"-E","")
-
-
+      if at("-EX",allparam)>0
+         lExtended := .T.
+         allparam:=strtran(allparam,"-EX","")
+      else
+         allparam:=strtran(allparam,"-E","")
+      endif
       crtmakfile( cFile )
       Return nil
    Endif
@@ -361,6 +390,10 @@ Local aTemp     := {}
 Local lMacrosec := .f.
 Local lBuildSec := .f.
 Local lComSec   := .f.
+Local aTemp1    := {}
+Local cCfg :=""
+Local lCfgFound := .F.
+Local aTempCFiles := {}
 nHandle := FT_FUSE( cFile )
 If nHandle < 0
    Return nil
@@ -419,33 +452,68 @@ While !leof
                         lLibrary:=.t.
                 endif
         endif
+        /*
         If aTemp[ 1 ] = "OBJFILES"
            aObjs := listasArray2( replacemacros(atemp[ 2 ]), " " )
-/*            for nPos:=1 to len(aObjs)
-               if at('$(CF)',aObjs[nPos])>0
-                  aObjs[nPos]:=replacemacros(aObjs[nPos])
-               endif
-            next
-  */
         Endif
         If atemp[ 1 ] = "CFILES"
            aCs := listasArray2( replacemacros(atemp[ 2 ]), " " )
-   /*         for nPos:=1 to len(acs)
-               if at('$(CF)',acs[nPos])>0
-                  acs[nPos]:=replacemacros(acs[nPos])
-               endif
-            next*/
-            for nPos:=1 to len(acs)
-               ? acs[nPos]
-            next
         Endif
         If atemp[ 1 ] = "RESFILES"
            aRes := listasArray2( replacemacros(atemp[ 2 ]), " " )
-/*            for nPos:=1 to len(aRes)
-               if at('$(CF)',aRes[nPos])>0
-                  aRes[nPos]:=replacemacros(aRes[nPos])
+        Endif
+          if aTemp[ 1 ] = "PRGFILES"
+           aPrgs := listasArray2( replacemacros(atemp[ 2 ]), " " )
+        Endif
+
+        If aTemp[ 1 ] = "OBJFILES"
+           aObjs := listasArray2( replacemacros(atemp[ 2 ]), " " )
+        Endif
+        If aTemp[ 1 ] = "OBJCFILES"
+           aObjsC := listasArray2( replacemacros(atemp[ 2 ]), " " )
+        Endif
+
+        If atemp[ 1 ] = "CFILES"          
+           aCs := listasArray2( replacemacros(atemp[ 2 ]), " " )
+        Endif
+        If atemp[ 1 ] = "RESFILES"
+           aRes := listasArray2( replacemacros(atemp[ 2 ]), " " )
+        Endif
+*/
+        If aTemp[ 1 ] = "OBJFILES"
+           aObjs := listasArray2( replacemacros(atemp[ 2 ]), " " )
+        Endif
+        If aTemp[ 1 ] = "OBJCFILES"
+            aTemp1 := listasArray2( replacemacros(atemp[ 2 ]), " " )
+            if len(atemp1) ==1
+               if !empty(atemp[1])
+                 aObjsC := listasArray2( replacemacros(atemp[ 2 ]), " " )
                endif
-            next*/
+            else
+             aObjsC := listasArray2( replacemacros(atemp[ 2 ]), " " )
+            endif
+        Endif
+        if aTemp[ 1 ] = "PRGFILES"
+           aPrgs := listasArray2( replacemacros(atemp[ 2 ]), " " )
+           lExtended := .T.
+           lCfgFound := findHarbourcfg(@cCfg)
+        Endif
+        If atemp[ 1 ] = "CFILES"
+           if lExtended
+               aTempCFiles := listasArray2( replacemacros(atemp[ 2 ]), " " )
+               if len(aTempCFiles) ==1
+                  if !empty(aTempCFiles)
+                    aCs := listasArray2( replacemacros(atemp[ 2 ]), " " )
+                  endif
+               else
+                   aCs := listasArray2( replacemacros(atemp[ 2 ]), " " )
+               endif
+           else
+               aCs := listasArray2( replacemacros(atemp[ 2 ]), " " )
+           endif
+        Endif
+        If atemp[ 1 ] = "RESFILES"
+           aRes := listasArray2( replacemacros(atemp[ 2 ]), " " )
 
         Endif
 
@@ -486,7 +554,7 @@ While !leof
      cbuffer := ctemp
   Endif
 Enddo
-
+/*
 If Len( aCs ) > 0
    For nPos := 1 To Len( aCs )
       If !Empty( acs[ nPos ] )
@@ -506,7 +574,27 @@ If Len( aCs ) > 0
       Endif
    Next
 Endif
+*/
+if !lExtended
+   If Len( aCs ) > 0
+      For nPos := 1 To Len( aCs )
+         If !Empty( acs[ nPos ] )
+            cTemp1:=substr(acs[nPos],at('\',acs[npos])+1)
+            TestforPrg(cTemp1)
+         Endif
+      Next
+   Endif
+Endif
+
 Fclose( nhandle )
+   if lExtended .and. !lCfgFound
+      if lBcc
+         BuildBorCfgFile()
+      elseif lVcc
+         BuildMSCCfgFile()
+      endif
+endif
+
 Return nil
 
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
@@ -1830,10 +1918,8 @@ For x := 1 To Len( aOutC )
        cItem:= aOutC[ x ]
       hb_FNAMESPLIT(ciTem,@cPath ,@cTest, @cExt , @cDrive)
       cExt:=substr(cExt,2)
+      aadd(acs,cTest+"."+cExt)
 
-       aadd(acs,cTest+"."+exte( cExt,1))
-
-//       aadd(aCs,cItem)*/
 Next
 //aObjs := aClone(aout)
 For x := 1 To Len( aoutC )
@@ -1846,10 +1932,15 @@ For x := 1 To Len( aoutC )
    */
       hb_FNAMESPLIT(ciTem,@cPath ,@cTest, @cExt , @cDrive)
       cExt:=substr(cExt,2)
-   If !lGcc
+/*   If !lGcc
       aObjs[ x ]:=cTest+"."+exte( cExt,2)
    Else
       aObjs[ x ]:=cTest+"."+exte( cExt,3)
+   Endif*/
+   If !lGcc
+      aadd(aObjs,cTest+"."+exten( cExt,2))
+   Else
+      aadd(aObjs,cTest+"."+exten( cExt,1))
    Endif
 
 Next
@@ -1858,7 +1949,7 @@ Next
 
 if lGcc
    if at("linux",Getenv("HB_ARCHITECTURE"))>0 .or.  cOs=="Linux"
-            Fwrite( nLinkHandle, "PROJECT = " + alltrim(lower(cfwhpath))+".a "+CRLF )
+        Fwrite( nLinkHandle, "PROJECT = " + alltrim(cfwhpath)+".a "+CRLF )
    else
         Fwrite( nLinkHandle, "PROJECT = " + alltrim(lower(cfwhpath))+".a "+CRLF )
    endif
@@ -2079,7 +2170,7 @@ fwrite(nLinkHandle, "SAVE" +CRLF)
 fwrite(nLinkHandle, "END " +CRLF)
 endif
 Fclose( nLinkhandle )
-
+outstd(cLinkComm)
 
 Return nil
 
@@ -2259,3 +2350,125 @@ Return nil
          Endif
          */
 
+function exten(cExt,nType)
+Local aext:={'C', 'c'}
+Local nPos
+Local cTemp :=""
+nPos:=ascan(aext,{|a| a==cExt})
+if nPos>0
+   if nTYpe==1
+    cTemp:=strtran(cExt,aExt[nPos],'o')
+    elseif ntype==2
+        cTemp:=strtran(cExt,aExt[nPos],'obj')
+    endif
+endif
+return ctemp
+
+
+
+function BuildBorCfgFile()
+Local nCfg 
+If !file(GetMakeDir()  +'\harbour.cfg')
+   nCfg:=FCREATE( GetMakeDir()  +'\harbour.cfg')
+   fwrite(nCfg,"CC=BCC32"+CRLF)
+   fWrite(nCfg,"CFLAGS= -c " +Replacemacros( "-I$(BHC)\include -OS $(CFLAGS) -d -L$(BHC)\lib")+CRLF)
+   Fwrite(nCfg,"VERBOSE=NO"+CRLF)
+   Fwrite(nCfg,"DELTMP=YES"+CRLF)
+   Fclose(nCfg)
+Endif
+return Nil
+function BuildMSCCfgFile()
+Local nCfg 
+If !file(GetMakeDir()  +'\harbour.cfg')
+   nCfg:=FCREATE( GetMakeDir()  +'\harbour.cfg')
+   fwrite(nCfg,"CC=cl"+CRLF)
+   fWrite(nCfg,"CFLAGS= -c " +Replacemacros( "-I$(INCLUDE_DIR) -TP -W3 -nologo $(C_USR) $(CFLAGS)")+CRLF)
+
+   Fwrite(nCfg,"VERBOSE=NO"+CRLF)
+   Fwrite(nCfg,"DELTMP=YES"+CRLF)
+   Fclose(nCfg)
+Endif
+return Nil
+
+function TestforPrg(cFile)
+Local aFiles:={}
+Local cPath:=''
+Local cTest:=""
+Local cDrive:=""
+Local cExt:=""
+Local cItem:=""
+Local aDir
+Local nPos,nFiles
+      hb_FNAMESPLIT(cFile,@cPath ,@cTest, @cExt , @cDrive)
+      cExt:=substr(cExt,2)
+
+aDir:=directory(cTest+'.*')
+
+   For nPos:=1 to 7
+      cItem:=cTest+"."+extenprg( cExt,nPos)
+      aadd(aFiles,cItem)
+   next
+   For nFiles:=1 to len(aFiles)
+         nPos:=ascan(aDir,{|a| a[1]==aFiles[nFiles]})
+         if nPos>0
+         Aadd( aPrgs, aFiles[nFiles] )
+         endif
+next
+
+return nil
+Function findHarbourcfg(cCfg)
+
+Local cPath  := ''
+Local lFound := .f.
+Local cEnv   
+Local aEnv
+
+Local nPos
+if !lLinux .or. lOs2
+   cEnv:= Gete( "PATH" )+";"+curdir()
+   aEnv   := listasarray2( cEnv, ";" )
+
+
+   For nPos := 1 To Len( aEnv )
+      If File( aenv[ nPos ] + '\harbour.cfg' )
+         cPath := aenv[ nPos ]
+         lFound := .T.
+         Exit
+      Endif
+   Next
+   cCfg:=cPath
+else
+   if file('/etc/harbour.cfg')
+      lFound:=.t.
+      cPath='/etc/harbour.cfg'
+   endif
+   if file('/usr/local/etc/harbour.cfg')
+      lFound:=.t.
+      cPath='/usr/local/etc/harbour.cfg'
+   endif
+endif
+Return lFound
+function extenprg(cExt,nType)
+Local aext:={'C', 'c'}
+Local nPos
+Local cTemp :=""
+nPos:=ascan(aext,{|a| a==cExt})
+if nPos>0
+   if nTYpe==1
+    cTemp:=strtran(cExt,aExt[nPos],'prg')
+    elseif ntype==2
+        cTemp:=strtran(cExt,aExt[nPos],'prG')
+    elseif ntype==3
+        cTemp:=strtran(cExt,aExt[nPos],'pRg')
+    elseif ntype==4
+        cTemp:=strtran(cExt,aExt[nPos],'Prg')
+    elseif ntype==5
+        cTemp:=strtran(cExt,aExt[nPos],'PRg')
+    elseif ntype==6
+        cTemp:=strtran(cExt,aExt[nPos],'PrG')
+    elseif ntype==7
+        cTemp:=strtran(cExt,aExt[nPos],'PRG')
+
+    endif
+endif
+return ctemp
