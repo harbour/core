@@ -1873,7 +1873,7 @@ static int getExpReal( char * expreal, char ** ptri, BOOL prlist, int maxrez, BO
    while( **ptri != '\0' && !rez && lens < maxrez )
    {
       /* Added by Ron Pinkas 2000-11-08 ( removed lots of related scattered logic below! */
-      if( State == STATE_EXPRES || strchr( "({[|,$!#=<>^%*/+-", cLastChar ) ) /* Ron Pinkas added if on State 2001-05-02 to avoid multiple strings concatination. */
+      if( State == STATE_EXPRES || ( cLastChar && strchr( "({[.|,$!#=<>^%*/+-", cLastChar ) ) ) /* Ron Pinkas added if on State 2001-05-02 to avoid multiple strings concatination. */
       {
          if( **ptri == '"' )
          {
@@ -1904,6 +1904,7 @@ static int getExpReal( char * expreal, char ** ptri, BOOL prlist, int maxrez, BO
             (*ptri)++;
             lens++;
 
+            cLastChar = '"';
             State = ( StBr1==0 && StBr2==0 && StBr3==0 )? STATE_ID_END: STATE_BRACKET;
             continue;
          }
@@ -1954,6 +1955,7 @@ static int getExpReal( char * expreal, char ** ptri, BOOL prlist, int maxrez, BO
             (*ptri)++;
             lens++;
 
+            cLastChar = '\'';
             State = ( StBr1==0 && StBr2==0 && StBr3==0 )? STATE_ID_END: STATE_BRACKET;
             continue;
          }
@@ -2009,6 +2011,7 @@ static int getExpReal( char * expreal, char ** ptri, BOOL prlist, int maxrez, BO
             (*ptri)++;
             lens++;
 
+            cLastChar = ']';
             State = ( StBr1==0 && StBr2==0 && StBr3==0 )? STATE_ID_END: STATE_BRACKET;
             continue;
          }
@@ -2099,10 +2102,23 @@ static int getExpReal( char * expreal, char ** ptri, BOOL prlist, int maxrez, BO
                if( **ptri=='.' && bMacro )
                {
                   /* Macro terminator '.' */
-                  if( *(*ptri+1)==' ' )
+                  if( *(*ptri+1) == ' ' )
+                  {
                      State = STATE_ID_END;
+                  }
 
                   bMacro = FALSE;
+
+                  /* Ron Pinkas added 2000-05-03 */
+                  /* Macro terminator is NOT a coninutation char unlike '.' of logical operators, so we don't want it recorded as cLastChar! */
+                  if( expreal != NULL )
+                  {
+                     *expreal++ = **ptri;
+                  }
+                  (*ptri)++;
+                  lens++;
+                  continue;
+                  /* END - Ron Pinkas added 2000-05-03 */
                }
                else
                /* Ron Pinkas end 2000-06-02 */

@@ -1,8 +1,13 @@
+2001-05-03 17:40 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * source/pp/ppcore.c
+     ! Corrected minor bug with test for valid string prefixs
+     + Added missing valid string prefix (.) (except macro terminator) in getExpReal()
+
 2001-05-03 19:35 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.l
-        *fixed support for macro expressions 
-        
+        *fixed support for macro expressions
+
     *tests/keywords.prg
         *added some code to test compilation of macro expressions
         *added HB_CLIPPER_COMPATIBLE to correctly report errors with
