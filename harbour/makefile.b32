@@ -24,10 +24,11 @@
 PROJECT: harbour.exe harbour.lib lib\b32\terminal.lib lib\b32\termwin.lib
 
 harbour.lib : achoice.obj adir.obj alert.obj arrays.obj asort.obj \
-              browdb.obj browse.obj classes.obj codebloc.obj copyfile.obj \
+              binnum.obj browdb.obj browse.obj \
+              classes.obj cmdarg.obj codebloc.obj copyfile.obj \
               dates.obj dates2.obj datesx.obj debug.obj debugger.obj \
               descend.obj devoutp.obj dir.obj do.obj dynsym.obj dummy.obj \
-              environ.obj fieldbl.obj cmdarg.obj errorapi.obj errorsys.obj \
+              environ.obj fieldbl.obj errorapi.obj errorsys.obj \
               harbinit.obj extend.obj fileread.obj filesys.obj fm.obj \
               hardcr.obj hb_f.obj hvm.obj initsymb.obj inkey.obj input.obj \
               itemapi.obj langapi.obj mainstd.obj mainwin.obj math.obj \
@@ -35,9 +36,9 @@ harbour.lib : achoice.obj adir.obj alert.obj arrays.obj asort.obj \
               mlcount.obj mtran.obj msges.obj objfunc.obj oldbox.obj \
               readvar.obj xsavescr.obj memvarbl.obj readkey.obj set.obj \
               setta.obj setcolor.obj setta.obj setkey.obj strfmt.obj \
-              strings.obj symbols.obj stringp.obj stringsx.obj tbcolumn.obj \
-              tbrowse.obj tbrwtext.obj tclass.obj terror.obj tget.obj tgetlist.obj \
-              tone.obj transfrm.obj \
+              strings.obj symbols.obj stringp.obj stringsx.obj \
+              tbcolumn.obj tbrowse.obj tbrwtext.obj tclass.obj terror.obj \
+              tget.obj tgetlist.obj tone.obj transfrm.obj \
               wait.obj
 
 symbols.obj  : symbols.asm
@@ -47,6 +48,7 @@ adir.obj     : adir.c     extend.h hbdefs.h
 alert.obj    : alert.c    extend.h hbdefs.h
 arrays.obj   : arrays.c   extend.h hbdefs.h
 asort.obj    : asort.c    extend.h hbdefs.h
+binnum.obj   : binnum.c   extend.h hbdefs.h
 browdb.obj   : browdb.c   extend.h hbdefs.h
 browse.obj   : browse.c   extend.h hbdefs.h
 classes.obj  : classes.c  extend.h hbdefs.h
