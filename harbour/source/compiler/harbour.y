@@ -1191,12 +1191,12 @@ IfEndif    : IfBegin EndIf                    { hb_compGenJumpHere( $1 ); }
            | IfBegin IfElseIf IfElse EndIf    { hb_compGenJumpHere( $1 ); hb_compElseIfFix( $2 ); }
            ;
 
-EmptyStatements : LineStat             { }
-           | EmptyStatements { hb_compLinePush(); } LineStat       {  }
+EmptyStatements : LineStat                                    { $<lNumber>$ = $<lNumber>1; }
+           | EmptyStatements { hb_compLinePush(); } LineStat  { $<lNumber>$ += $<lNumber>3; }
            ;
 
-EmptyStats : /* empty */           { hb_comp_bDontGenLineNum = TRUE; hb_comp_EOL = FALSE; }
-           | EmptyStatements       { hb_comp_EOL = FALSE; }
+EmptyStats : /* empty */           { hb_comp_bDontGenLineNum = TRUE; hb_comp_EOL = FALSE; $<lNumber>$ = 0; }
+           | EmptyStatements       { hb_comp_EOL = FALSE; $<lNumber>$ = $<lNumber>1; }
            ;
 
 IfBegin    : IF SimpleExpression { ++hb_comp_wIfCounter; hb_compLinePush(); } Crlf { hb_compExprDelete( hb_compExprGenPush( $2 ) ); $$ = hb_compGenJumpFalse( 0 ); hb_compLinePush(); }
