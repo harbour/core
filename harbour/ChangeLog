@@ -1,3 +1,7 @@
+19990831-20:55 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/rtl/tbrowse.prg
+     * Methods RefreshAll() and Invalidate() were not recalculating ::RowCount.
+
 19990831-19:47 GMT+1 Bruno Cantero <bruno@issnet.net>
    * source/rdd/dbf1.c
      * Bug fixed
@@ -39,11 +43,11 @@
   * source/vm/hvm.c
     + Added value substitution for errors 1081, 1082, 1083, 1084, 1085, 1088
   * source/rtl/transfrm.c
-    + Put all stuff related to the @0 picture clause between 
+    + Put all stuff related to the @0 picture clause between
       #ifndef HARBOUR_STRICT_CLIPPER_COMPATIBILITY guards, since this was
       not in original Clipper, that's why the tests failed.
   * source/rtl/set.c
-    ! Fixed "ON"/"OFF" error where OFF was not recognized, this bug was 
+    ! Fixed "ON"/"OFF" error where OFF was not recognized, this bug was
       introduced yesterday.
     % Some variables scopes optimalized, some internals changed to standard
       interface calls.
@@ -98,7 +102,7 @@
     * Error code 1000 in BADALIAS errors changed to 9999, until someone finds
       out the correct error code, since there's no 1000 error code in Clipper.
   * source/rtl/set.c
-    ! Fixed to also accept strings that *begin* with "ON" or "OFF", like 
+    ! Fixed to also accept strings that *begin* with "ON" or "OFF", like
       Clipper.
   * source/rtl/tone.c
     source/rtl/codebloc.c
@@ -123,19 +127,19 @@
 19990830-16:59 +0300 Chen Kedem <niki@actcom.co.il>
    * source/rtl/mouse/mouseos2.c
      * hb_mouse_Hide() now work in any text screen mode.
-     * hb_mouse_IsButtonPressed() now return TRUE if any button was 
+     * hb_mouse_IsButtonPressed() now return TRUE if any button was
        pressed.
        TOFIX: every time I read event from the queue I lose the result
        so I can not check if iButton was pressed, so for now I ignore
        iButton and return TRUE if the last event saved had DOWN in it.
-       also to keep the noise level down I mask out MOUSE_MOTION 
+       also to keep the noise level down I mask out MOUSE_MOTION
        events.
      * suMouHandle changed to s_uMouHandle
      * Some reformatting.
 
 19990830-12:49 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/gtapi.c
-     * Handle nesting of gtPre/PostExt 
+     * Handle nesting of gtPre/PostExt
      * corrected s_uiPreCount handling in gtDispEnd
 
 19990830-14:25 GMT+1 Victor Szel <info@szelvesz.hu>
@@ -174,20 +178,20 @@
   * source/rtl/errorapi.c
     include/errorapi.h
     + Error launcher with substitution added.
-    + Added an emulation to the Clipper "Processor stack fault" error to 
-      indicate the situation where there is an error in the error handler 
-      itself, and thus infinite recursive calls are being executed. The 
-      Harbour error message gives a better idea about the problem than in 
+    + Added an emulation to the Clipper "Processor stack fault" error to
+      indicate the situation where there is an error in the error handler
+      itself, and thus infinite recursive calls are being executed. The
+      Harbour error message gives a better idea about the problem than in
       Clipper.
   * source/vm/hvm.c
     ! hb_vmEqual() - Exact error message now depends on the bExact setting.
       (1070 vs. 1071)
   * source/vm/hvm.c
-    ! hb_vmNegate() - Throws a proper runtime error, instead of an internal 
+    ! hb_vmNegate() - Throws a proper runtime error, instead of an internal
       error. (like Clipper)
       ( -("1") )
   * source/compiler/harbour.y
-    + Added compile time parameter check for LOCK() (BTW, there should be no 
+    + Added compile time parameter check for LOCK() (BTW, there should be no
       parameter passed.)
   * source/rtl/copyfile.c
     ! Fixed one error code (2012 -> 2016).
@@ -216,7 +220,7 @@
   * source/rtl/filesys.c
     source/rtl/strings.c
     source/rtl/copyfile.c
-    + NOTE: added that the runtime errors are Clipper compatible, but 
+    + NOTE: added that the runtime errors are Clipper compatible, but
       undocumented (FOPEN(), STRTRAN(), __COPYFILE())
   * source/rtl/transfrm.c
     * Some reformatting.
@@ -247,7 +251,7 @@
 19990829-14:45 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/vm/hvm.c
-    ! hb_vmArrayPut() - QUESTION: replaced with the proper runtime error 
+    ! hb_vmArrayPut() - QUESTION: replaced with the proper runtime error
       message. (like Clipper)
       ( array[ .T. ] := 1 )
     ! hb_vmArrayAt() - Fixed: Now throws a proper runtime error instead
