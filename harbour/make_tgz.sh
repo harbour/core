@@ -18,7 +18,7 @@ hb_platform=`rel=$(rpm -q --queryformat='.%{VERSION}' mandrake-release 2>/dev/nu
 [ "${hb_platform}" = "" ] || hb_platform="-${hb_platform}"
 
 name="harbour"
-hb_ver="0.43.0"
+hb_ver="0.44.0"
 hb_lnkso="yes"
 hb_pref="hb"
 hb_libs="vm pp rtl rdd dbfdbt dbffpt dbfcdx dbfntx macro common lang codepage gtnul gtcrs gtsln gtcgi gtstd gtpca odbc ct debug profiler"

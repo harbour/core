@@ -62,7 +62,7 @@
 /* NOTE: One of these next three fields can be incremented by the hbverfix program */
 
 #define HB_VER_MAJOR    0       /* Major version number */
-#define HB_VER_MINOR    43      /* Minor version number */
+#define HB_VER_MINOR    44      /* Minor version number */
 #define HB_VER_REVISION 0       /* Revision number */
 
 /* NOTE: The next two fields are automatically updated by the hbverfix program */

@@ -3,7 +3,7 @@
  */
 
 ----------------------------------------------------------------------
-Version 0.44 Alpha Build 44 (2004-07-??)
+Version 0.44 Alpha Build 44 (2004-07-19)
 The compiler
 ------------
 - Fixed support for late/early evaluation of macro exressions in a codeblock

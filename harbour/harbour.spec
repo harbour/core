@@ -21,7 +21,7 @@
 
 %define name     harbour
 %define dname    Harbour
-%define version  0.43.0
+%define version  0.44.0
 %define releasen 0
 %define prefix   /usr
 %define hb_pref  hb

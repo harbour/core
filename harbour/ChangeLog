@@ -8,6 +8,14 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-07-19 21:42 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * include/hbver.h
+  * doc/whatsnew.txt
+  * bin/pack_src.sh
+  * harbour.spec
+  * make_tgz.sh
+    * Release info has been changed for release 44.
+
 2004-07-19 17:05 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * contrib/mysql/tmysql.prg
     ! Added checking for decimal field type in :GetRow() and :GetBlankRow() -
