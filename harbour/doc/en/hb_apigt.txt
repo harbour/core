@@ -274,6 +274,39 @@
 
 /*  $DOC$
  *  $FUNCNAME$
+ *      hb_gtColorToN()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *
+ *  $SYNTAX$
+ *      C Prototype
+ *
+ *      #include <hbapigt.h>
+ *      hb_gtColorToN( char * szColorString ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <szColorString>
+ *  $RETURNS$
+ *
+ *  $DESCRIPTION$
+ *
+ *  $EXAMPLES$
+ *
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
  *      hb_gtDispBegin()
  *  $CATEGORY$
  *      Terminal API

@@ -1531,7 +1531,8 @@
  *  $RETURNS$
  *
  *  $DESCRIPTION$
- *      Conditional on: not UINT_MAX == ULONG_MAX
+ *      If UINT_MAX is defined as ULONG_MAX then this function is replaced
+ *      by a macro replacement to memcpy()
  *  $EXAMPLES$
  *
  *  $STATUS$
@@ -1568,7 +1569,8 @@
  *  $RETURNS$
  *
  *  $DESCRIPTION$
- *      Conditional on: not UINT_MAX == ULONG_MAX
+ *      If UINT_MAX is defined as ULONG_MAX then this function is replaced
+ *      by a macro replacement to memset()
  *  $EXAMPLES$
  *
  *  $STATUS$
@@ -5922,6 +5924,39 @@
 
 /*  $DOC$
  *  $FUNCNAME$
+ *      hb_idleReset()
+ *  $CATEGORY$
+ *      Extend API
+ *  $ONELINER$
+ *      Services a single idle state
+ *  $SYNTAX$
+ *      C Prototype
+ *
+ *      #include <hbapi.h>
+ *      hb_idleReset( void ) --> void
+ *  $ARGUMENTS$
+ *
+ *  $RETURNS$
+ *
+ *  $DESCRIPTION$
+ *
+ *  $EXAMPLES$
+ *
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is vm
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
  *      hb_idleShutDown()
  *  $CATEGORY$
  *      Extend API
@@ -6914,6 +6949,39 @@
 
 /*  $DOC$
  *  $FUNCNAME$
+ *      ISOBJECT()
+ *  $CATEGORY$
+ *      Extend API
+ *  $ONELINER$
+ *
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *
+ *      #include <hbapi.h>
+ *      ISOBJECT( n ) --> <see ( ISARRAY( n ) && hb_param( n, HB_IT_ARRAY )->asArray.value->uiClass != 0 )>
+ *  $ARGUMENTS$
+ *      <n>
+ *  $RETURNS$
+ *
+ *  $DESCRIPTION$
+ *
+ *  $EXAMPLES$
+ *
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapi.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
  *      ISBLOCK()
  *  $CATEGORY$
  *      Extend API
@@ -7521,72 +7589,6 @@
  *      All
  *  $SEEALSO$
  *
- *  $END$
- */
-
-/*  $DOC$
- *  $FUNCNAME$
- *      hb_xmemcpy()
- *  $CATEGORY$
- *      Extend API
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include <hbapi.h>
- *      hb_xmemcpy --> <see memcpy>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *
- *  $DESCRIPTION$
- *      Conditional on: UINT_MAX == ULONG_MAX
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is hbapi.h
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      memcpy()
- *  $END$
- */
-
-/*  $DOC$
- *  $FUNCNAME$
- *      hb_xmemset()
- *  $CATEGORY$
- *      Extend API
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include <hbapi.h>
- *      hb_xmemset --> <see memset>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *
- *  $DESCRIPTION$
- *      Conditional on: UINT_MAX == ULONG_MAX
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is hbapi.h
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      memset()
  *  $END$
  */
 

@@ -50,16 +50,16 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *      hb_compParse()
+ *      hb_macroYYParse()
  *  $CATEGORY$
  *      Macro API
  *  $ONELINER$
- *      
+ *
  *  $SYNTAX$
  *      C Prototype
  *      
  *      #include <hbmacro.h>
- *      hb_compParse( HB_MACRO_PTR pMacro ) --> ( int )iResult
+ *      hb_macroYYParse( HB_MACRO_PTR pMacro ) --> ( int )iResult
  *  $ARGUMENTS$
  *      <pMacro>
  *  $RETURNS$

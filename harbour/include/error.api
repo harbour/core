@@ -56,7 +56,7 @@ typedef PHB_ITEM  ERRORP;
 #define _errLaunch         hb_errLaunch
 #define _errNew            hb_errNew
 #define _errPutDescription hb_errPutDescription
-#define _errPutFileNaem    hb_errPutFileName
+#define _errPutFileName    hb_errPutFileName
 #define _errPutFlags       hb_errPutFlags
 #define _errPutGenCode     hb_errPutGenCode
 #define _errPutOperation   hb_errPutOperation

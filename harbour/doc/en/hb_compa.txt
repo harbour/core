@@ -4800,7 +4800,7 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *      _errPutFileNaem()
+ *      _errPutFileName()
  *  $CATEGORY$
  *      Error compatability API
  *  $ONELINER$
@@ -4809,7 +4809,7 @@
  *      C Prototype (macro replacement)
  *      
  *      #include <error.api>
- *      _errPutFileNaem --> <see hb_errPutFileName>
+ *      _errPutFileName --> <see hb_errPutFileName>
  *  $ARGUMENTS$
  *      
  *  $RETURNS$

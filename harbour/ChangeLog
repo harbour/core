@@ -1,3 +1,30 @@
+2001-03-11 21:43 UTC+0500 April <awhite@user.rose.com>
+   * doc/en/hb_macro.txt
+     * renamed hb_compParse() to hb_macroYYParse()
+       ; see 2000-11-30 18:25 UTC-0800 Ron Pinkas <ron@profit-master.com>
+
+   * doc/en/hb_api.txt
+     * merged the hb_xmemset() function and macro entries
+     * merged the hb_xmemcpy() function and macro entries
+     + entry for hb_idleReset
+       ; see 2000-11-27 08:25 UTC-0800 Ron Pinkas <ron@profit-master.com>
+     + entry for ISOBJECT()
+       ; see 2001-03-01 GMT+1 Antonio Linares <alinares@fivetech.com>
+
+   * doc/en/hb_apigt.txt
+     + entry for hb_gtColorToN()
+       ; see 2001-02-09 16:44 GMT+1 Antonio Linares <alinares@fivetech.com>
+
+   * doc/en/hb_apird.txt
+     + entry for hb_rddInsertAreaNode()
+
+   * include/error.api
+     * corrected define of _errPutFileNaem to _errPutFileName
+       ; no other detected use of this macro
+
+   * doc/en/hb_apier.txt
+     * entry for _errPutFileName() as above
+
 2001-03-11 14:05 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * include/hbexpra.c
      ! Fixed hb_compExprSetOperand() to allow HB_ET_NONE on Right, if Left is >= HB_EO_PLUSEQ && <= HB_EO_EXPEQ

@@ -15,6 +15,39 @@
 
 /*  $DOC$
  *  $FUNCNAME$
+ *      hb_rddInsertAreaNode()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *
+ *  $SYNTAX$
+ *      C Prototype
+ *
+ *      #include <hbapirdd.h>
+ *      hb_rddInsertAreaNode( char *szDriver ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <*szDriver>
+ *  $RETURNS$
+ *
+ *  $DESCRIPTION$
+ *
+ *  $EXAMPLES$
+ *
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rdd, nulsys, dbfntx, dbfcdx
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
  *      hb_rddGetCurrentWorkAreaNumber()
  *  $CATEGORY$
  *      RDD API
