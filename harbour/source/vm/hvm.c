@@ -93,6 +93,7 @@ void    Less( void );            /* checks if the latest - 1 value is less than 
 void    LessEqual( void );       /* checks if the latest - 1 value is less than or equal the latest, removes both and leaves result */
 void    Message( PHB_SYMB pSymMsg ); /* sends a message to an object */
 void    Minus( void );           /* substracts the latest two values on the stack, removes them and leaves the result */
+void    ModuleName( char * szModuleName ); /* PRG and function name information for the debugger */
 void    Modulus( void );         /* calculates the modulus of latest two values on the stack, removes them and leaves the result */
 void    Mult( void );            /* multiplies the latest two values on the stack, removes them and leaves the result */
 void    Negate( void );          /* negates (-) the latest value on the stack */
@@ -433,6 +434,11 @@ void VirtualMachine( BYTE * pCode, PHB_SYMB pSymbols )
          case HB_P_MINUS:
               Minus();
               w++;
+              break;
+
+         case HB_P_MODULENAME:
+              ModuleName( ( char * ) pCode + w + 1 );
+              while( pCode[ w++ ] );
               break;
 
          case HB_P_MODULUS:
@@ -1369,6 +1375,11 @@ void Minus( void )
       OperatorCall( stack.pPos - 2, stack.pPos - 1, "-" );
    else
       hb_errorRT_BASE(EG_ARG, 1082, NULL, "-");
+
+}
+
+void ModuleName( char * szModuleName ) /* PRG and function name information for the debugger */
+{
 
 }
 
