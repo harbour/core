@@ -87,7 +87,7 @@
 #elif defined(__GNUC__)
    #pragma pack(1)
 #elif defined(__WATCOMC__)
-   #pragma pack(push, 1);
+   #pragma push(pack, 1);
 #elif defined(__cplusplus)
    #pragma pack(1)
 #endif
@@ -154,7 +154,7 @@ typedef SORTSWAPITEM * LPSORTSWAPITEM;
 #elif defined(__GNUC__)
    #pragma pack()
 #elif defined(__WATCOMC__)
-   #pragma pack(pop);
+   #pragma pop(pack);
 #elif defined(__cplusplus)
    #pragma pack()
 #endif

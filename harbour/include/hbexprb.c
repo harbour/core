@@ -171,6 +171,15 @@ static HB_EXPR_FUNC( hb_compExprUseNE );
 static HB_EXPR_FUNC( hb_compExprUseIN );
 static HB_EXPR_FUNC( hb_compExprUseNegate );
 
+/* other helper functions 
+*/
+#if defined( HB_MACRO_SUPPORT )
+    static void hb_compExprCodeblockPush( HB_EXPR_PTR, HB_MACRO_DECL );
+#else
+    static void hb_compExprCodeblockPush( HB_EXPR_PTR );
+    static void hb_compExprCodeblockEarly( HB_EXPR_PTR );
+#endif
+
 HB_EXPR_FUNC_PTR hb_comp_ExprTable[] = {
    hb_compExprUseDummy,
    hb_compExprUseNil,
@@ -337,9 +346,14 @@ static HB_EXPR_FUNC( hb_compExprUseString )
          break;
       case HB_EA_PUSH_PCODE:
          {
+	    char *szDupl;
+	    szDupl = hb_strupr( hb_strdup( pSelf->value.asString.string ) );
             HB_EXPR_PCODE2( hb_compGenPushString, pSelf->value.asString.string, pSelf->ulLength + 1 );
-            if( hb_compExprCheckMacroVar( pSelf->value.asString.string ) )
-               HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROTEXT );
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROTEXT );
+            if( ! hb_compExprIsValidMacro( szDupl ) )
+	        hb_compErrorMacro( pSelf->value.asString.string );
+	    hb_xfree( szDupl );
+
          }
          break;
       case HB_EA_POP_PCODE:
@@ -375,64 +389,17 @@ static HB_EXPR_FUNC( hb_compExprUseCodeblock )
          break;
       case HB_EA_PUSH_PCODE:
          {
-            HB_EXPR_PTR pExpr, pNext;
-            HB_EXPR_PTR * pPrev;
-
-            HB_EXPR_PCODE0( hb_compCodeBlockStart );
-            /* Define requested local variables
-             */
-#if defined( HB_MACRO_SUPPORT )
-            HB_PCODE_DATA->pLocals = ( HB_CBVAR_PTR ) pSelf->value.asList.pIndex;
+#if defined(SIMPLEX) || defined(HB_MACRO_SUPPORT)	 
+	    HB_EXPR_PCODE1( hb_compExprCodeblockPush, pSelf );
 #else
-            {
-               HB_CBVAR_PTR pVar;
-
-               pVar = ( HB_CBVAR_PTR ) pSelf->value.asList.pIndex;
-               while( pVar )
-               {
-                        hb_compVariableAdd( pVar->szName, pVar->bType );
-                        pVar =pVar->pNext;
-               }
-            }
+	    if( !pSelf->value.asCodeblock.isMacro || pSelf->value.asCodeblock.lateEval )
+		hb_compExprCodeblockPush( pSelf );
+	    else
+	    {
+		/* early evaluation of a macro */
+		hb_compExprCodeblockEarly( pSelf );
+	    }
 #endif
-            pExpr = pSelf->value.asList.pExprList;
-            pPrev = &pSelf->value.asList.pExprList;
-            while( pExpr )
-            {
-               if( pExpr->ExprType == HB_ET_MACRO )
-               {
-                  /* Clipper allows for list expressions in a codeblock
-                   * macro := "1,2"
-                   * EVAL( {|| &macro} )
-                  */
-                  pExpr->value.asMacro.SubType |= HB_ET_MACRO_PARE;
-               }
-
-               /* store next expression in case the current  will be reduced
-                * NOTE: During reduction the expression can be replaced by the
-                *    new one - this will break the linked list of expressions.
-                */
-               pNext = pExpr->pNext; /* store next expression in case the current  will be reduced */
-               pExpr = HB_EXPR_USE( pExpr, HB_EA_REDUCE );
-               /* Generate push/pop pcodes for all expresions except the last one
-                * The value of the last expression is used as a return value
-                * of a codeblock evaluation
-                */
-               /* NOTE: This will genereate warnings if constant value is
-                * used as an expression - some operators will generate it too
-                * e.g.
-                * EVAL( {|| 3+5, func()} )
-                */
-               *pPrev = pExpr;   /* store a new expression into the previous one */
-               pExpr->pNext = pNext;  /* restore the link to next expression */
-               if( pNext )
-                  HB_EXPR_USE( pExpr, HB_EA_PUSH_POP );
-               else
-                  HB_EXPR_USE( pExpr, HB_EA_PUSH_PCODE );
-               pPrev  = &pExpr->pNext;
-               pExpr  = pNext;
-            }
-            HB_EXPR_PCODE0( hb_compCodeBlockEnd );
          }
          break;
       case HB_EA_POP_PCODE:
@@ -442,10 +409,10 @@ static HB_EXPR_FUNC( hb_compExprUseCodeblock )
          break;
       case HB_EA_DELETE:
       {
-         HB_EXPR_PTR pExp = pSelf->value.asList.pExprList;
+         HB_EXPR_PTR pExp = pSelf->value.asCodeblock.pExprList;
          HB_EXPR_PTR pNext;
 
-         hb_compExprCBVarDel( ( HB_CBVAR_PTR ) pSelf->value.asList.pIndex );
+         hb_compExprCBVarDel( pSelf->value.asCodeblock.pLocals );
 
          /* Delete all expressions of the block.
          */
@@ -461,6 +428,126 @@ static HB_EXPR_FUNC( hb_compExprUseCodeblock )
    }
    return pSelf;
 }
+
+/* This generates a push pcode for a codeblock (with no macro expression or
+   with late evaluation of a macro)
+*/
+#if defined( HB_MACRO_SUPPORT )
+static void hb_compExprCodeblockPush( HB_EXPR_PTR pSelf, HB_MACRO_DECL )
+#else
+static void hb_compExprCodeblockPush( HB_EXPR_PTR pSelf )
+#endif
+{
+    HB_EXPR_PTR pExpr, pNext;
+    HB_EXPR_PTR * pPrev;
+
+    HB_EXPR_PCODE0( hb_compCodeBlockStart );
+    /* Define requested local variables
+     */
+#if defined( HB_MACRO_SUPPORT )
+    HB_PCODE_DATA->pLocals = pSelf->value.asCodeblock.pLocals;
+#else
+    {
+       HB_CBVAR_PTR pVar;
+
+       pVar = pSelf->value.asCodeblock.pLocals;
+       while( pVar )
+       {
+            hb_compVariableAdd( pVar->szName, pVar->bType );
+            pVar =pVar->pNext;
+       }
+    }
+#endif
+    pExpr = pSelf->value.asCodeblock.pExprList;
+    pPrev = &pSelf->value.asCodeblock.pExprList;
+    while( pExpr )
+    {
+       if( pExpr->ExprType == HB_ET_MACRO )
+       {
+          /* Clipper allows for list expressions in a codeblock
+           * macro := "1,2"
+           * EVAL( {|| &macro} )
+          */
+          pExpr->value.asMacro.SubType |= HB_ET_MACRO_PARE;
+       }
+
+       /* store next expression in case the current  will be reduced
+        * NOTE: During reduction the expression can be replaced by the
+        *    new one - this will break the linked list of expressions.
+        */
+       pNext = pExpr->pNext; /* store next expression in case the current  will be reduced */
+       pExpr = HB_EXPR_USE( pExpr, HB_EA_REDUCE );
+       /* Generate push/pop pcodes for all expresions except the last one
+        * The value of the last expression is used as a return value
+        * of a codeblock evaluation
+        */
+       /* NOTE: This will genereate warnings if constant value is
+        * used as an expression - some operators will generate it too
+        * e.g.
+        * EVAL( {|| 3+5, func()} )
+        */
+       *pPrev = pExpr;   /* store a new expression into the previous one */
+       pExpr->pNext = pNext;  /* restore the link to next expression */
+       if( pNext )
+          HB_EXPR_USE( pExpr, HB_EA_PUSH_POP );
+       else
+          HB_EXPR_USE( pExpr, HB_EA_PUSH_PCODE );
+       pPrev  = &pExpr->pNext;
+       pExpr  = pNext;
+    }
+    HB_EXPR_PCODE0( hb_compCodeBlockEnd );
+}
+
+/* This generates a push pcode for early evaluation of a macro
+*/
+#if !defined(HB_MACRO_SUPPORT)
+static void hb_compExprCodeblockEarly( HB_EXPR_PTR pSelf )
+{
+    HB_EXPR_PTR pExpr;
+    
+    HB_EXPR_PCODE0( hb_compCodeBlockStart );
+
+    /* check first expression */
+    pExpr = pSelf->value.asCodeblock.pExprList;
+    if( pExpr->ExprType == HB_ET_MACRO && pExpr->value.asMacro.cMacroOp )
+    {
+	/* simple macro variable expansion: &variable
+	 * 'szMacro' is a variable name
+	 * {|| &variable} => &( '{||' + variable +'}' )
+	*/
+	HB_EXPR_PTR pVar, pNew;
+
+	pVar = hb_compExprNewVar( pExpr->value.asMacro.szMacro );
+	pNew = hb_compExprNewString( "{||" );
+	pNew = hb_compExprSetOperand( hb_compExprNewPlus( pNew ), pVar );
+	pNew = hb_compExprSetOperand( hb_compExprNewPlus( pNew ), hb_compExprNewString( "}" ) );
+	pNew = hb_compExprNewMacro( pNew, 0, NULL );
+	HB_EXPR_USE( pNew, HB_EA_PUSH_PCODE );
+	hb_compExprDelete( pNew );
+    }
+    else
+    {
+	/* everything else is macro compiled at runtime 
+	 * {|| &variable+1} => &( '{|| &variable+1}' )
+	*/
+	HB_EXPR_PTR pNew;
+	char *szDupl;
+	
+	szDupl = hb_strupr( hb_strdup( pSelf->value.asCodeblock.string ) );
+	if( !hb_compExprIsValidMacro( szDupl ) )
+	{
+	    hb_compErrorCodeblock( pSelf->value.asCodeblock.string );
+	    hb_compErrorMacro( pSelf->value.asCodeblock.string );
+	}    
+	hb_xfree( szDupl );
+	pNew = hb_compExprNewMacro( hb_compExprNewString(pSelf->value.asCodeblock.string), 0, NULL );
+	HB_EXPR_USE( pNew, HB_EA_PUSH_PCODE );
+	hb_compExprDelete( pNew );
+    }
+
+    HB_EXPR_PCODE0( hb_compCodeBlockStop );
+}
+#endif		/*HB_MACRO_SUPPORT*/
 
 /* actions for HB_ET_LOGICAL expression
  */

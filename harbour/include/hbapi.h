@@ -520,6 +520,7 @@ typedef struct HB_CBVAR_  /* This structure holds local variables declared in a 
 {
    char * szName;
    BYTE bType;
+   BOOL bUsed;
    struct HB_CBVAR_ * pNext;
 } HB_CBVAR, * HB_CBVAR_PTR;
 

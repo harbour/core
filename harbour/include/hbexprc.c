@@ -416,20 +416,20 @@ ULONG hb_compExprReduceList( HB_EXPR_PTR pExpr )
    return ulCnt;
 }
 
-BOOL hb_compExprCheckMacroVar( char * szText )
+BOOL hb_compExprIsValidMacro( char * szText )
 {
    char * pTmp = szText;
    BOOL bTextSubst;
-   BOOL bMacroText = FALSE;
+   BOOL bMacroText = TRUE;
 
-   while( ( pTmp = strchr( pTmp, '&' ) ) != NULL )
+   while( (( pTmp = strchr( pTmp, '&' ) ) != NULL) && bMacroText )
    {
       /* Check if macro operator is used inside a string
        * Macro operator is ignored if it is the last char or
        * next char is '(' e.g. "this is &(ignored)"
        *
        * NOTE: This uses _a-zA-Z pattern to check for
-       * variable name beginning
+       * beginning of a variable name
        */
 
       ++pTmp;
@@ -459,12 +459,13 @@ BOOL hb_compExprCheckMacroVar( char * szText )
 
          cSave = *pTmp;
          *pTmp = '\0';
-         hb_compVariableMacroCheck( pStart );
+	
+         bMacroText &= hb_compIsValidMacroVar( pStart );
          *pTmp = cSave;
-         bMacroText = TRUE;
 #endif
       }
    }
+	
    return bMacroText;
 }
 

@@ -1046,7 +1046,7 @@ Get        : _Get_ GetVar ','
 
 		   pIIF         = hb_compExprNewIIF( pIfList );
 
-		   pSetGetBlock = hb_compExprNewCodeBlock();
+		   pSetGetBlock = hb_compExprNewCodeBlock(NULL,0,0);
 		   pSetGetBlock = hb_compExprCBVarAdd( pSetGetBlock, "_1", ' ' );
 
 		   hb_compExprAddListExpr( pSetGetBlock, pIIF );
@@ -1142,9 +1142,9 @@ GetA       : _Get_ GetVarArray { pGetArgList = hb_compExprNewArgList( $2 ); bTra
 	     GetAExt ')'     { $$ = hb_compExprNewFunCall( hb_compExprNewFunName( "__GETA"), pGetArgList ); pGetArgList = NULL; }
 	   ;
 
-GetVarArray : Variable  ArrayIndex  { pGetVarArray = $2; $$ = hb_compExprAddListExpr( hb_compExprNewCodeBlock(), $1 ); }
-            | ObjectData ArrayIndex { pGetVarArray = $2; $$ = hb_compExprAddListExpr( hb_compExprNewCodeBlock(), $1 ); }
-            | AliasVar  ArrayIndex  { pGetVarArray = $2; $$ = hb_compExprAddListExpr( hb_compExprNewCodeBlock(), $1 ); }
+GetVarArray : Variable  ArrayIndex  { pGetVarArray = $2; $$ = hb_compExprAddListExpr( hb_compExprNewCodeBlock(NULL,0,0), $1 ); }
+            | ObjectData ArrayIndex { pGetVarArray = $2; $$ = hb_compExprAddListExpr( hb_compExprNewCodeBlock(NULL,0,0), $1 ); }
+            | AliasVar  ArrayIndex  { pGetVarArray = $2; $$ = hb_compExprAddListExpr( hb_compExprNewCodeBlock(NULL,0,0), $1 ); }
             | MacroVar  ArrayIndex  {
                                       pGetVarArray = $2; $$ = hb_compExprNewNil();
 
@@ -1167,7 +1167,7 @@ GetAExt   : { /* Nothing*/ }
 	  | ',' GetArgList
 	  ;
 
-CodeBlock  : '{' '|' { s_bBlock = TRUE; $<asExpr>$ = hb_compExprNewCodeBlock() } BlockNoVar '|' BlockExpList '}'
+CodeBlock  : '{' '|' { s_bBlock = TRUE; $<asExpr>$ = hb_compExprNewCodeBlock(NULL,0,0) } BlockNoVar '|' BlockExpList '}'
                      {
                        if( s_bBlockMacro )
 		       {
@@ -1199,7 +1199,7 @@ CodeBlock  : '{' '|' { s_bBlock = TRUE; $<asExpr>$ = hb_compExprNewCodeBlock() }
 		       s_bBlock = FALSE; s_bBlockMacro = FALSE; s_bBlockDeclared = FALSE;
 		     }
 
-           | '{' '|' { s_bBlock = TRUE; $<asExpr>$ = hb_compExprNewCodeBlock(); } BlockVarList '|' BlockExpList '}'
+           | '{' '|' { s_bBlock = TRUE; $<asExpr>$ = hb_compExprNewCodeBlock(NULL,0,0); } BlockVarList '|' BlockExpList '}'
                      {
                        if( s_bBlockMacro )
 		       {
@@ -1234,8 +1234,8 @@ CodeBlock  : '{' '|' { s_bBlock = TRUE; $<asExpr>$ = hb_compExprNewCodeBlock() }
 
 /* NOTE: This uses $-2 then don't use BlockExpList in other context
  */
-BlockExpList : Expression                  { pBlockSimple = $1;   $$ = hb_compExprAddListExpr( $<asExpr>-2, $1 ); }
-             | BlockExpList ',' Expression { pBlockSimple = NULL; $$ = hb_compExprAddListExpr( $<asExpr>-2, $3 ); }
+BlockExpList : Expression                  { pBlockSimple = $1;   $$ = hb_compExprAddCodeblockExpr( $<asExpr>-2, $1 ); }
+             | BlockExpList ',' Expression { pBlockSimple = NULL; $$ = hb_compExprAddCodeblockExpr( $<asExpr>-2, $3 ); }
              ;
 
 /* NOTE: This is really not needed however it allows the use of $-2 item

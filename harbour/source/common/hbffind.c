@@ -77,13 +77,33 @@ HB_FILE_VER( "$Id$" )
       #include <sys/stat.h>
    #endif
    #include <dos.h>
+#if !defined(__WATCOMC__)
    #include <dir.h>
+#endif
    #include <time.h>
 
+#if defined(__WATCOMC__)
+   typedef struct
+   {
+      struct find_t    entry;
+   } HB_FFIND_INFO, * PHB_FFIND_INFO;
+
+   #define FA_ARCH      _A_ARCH
+   #define FA_DIREC     _A_SUBDIR
+   #define FA_HIDDEN    _A_HIDDEN
+   #define FA_RDONLY    _A_RDONLY
+   #define FA_LABEL     _A_VOLID
+   #define FA_SYSTEM    _A_SYSTEM
+
+   #define ff_name   name
+   #define ff_fsize  size
+   #define ff_attrib attrib
+#else
    typedef struct
    {
       struct ffblk    entry;
    } HB_FFIND_INFO, * PHB_FFIND_INFO;
+#endif
 
 #elif defined(HB_OS_OS2)
 
@@ -604,7 +624,11 @@ PHB_FFIND hb_fsFindFirst( const char * pszFileName, USHORT uiAttr )
 
       tzset();
 
+#if defined(__WATCOMC__)
+      bFound = ( _dos_findfirst( pszFileName, ( USHORT ) hb_fsAttrToRaw( uiAttr ), &info->entry ) == 0 );
+#else
       bFound = ( findfirst( pszFileName, &info->entry, ( USHORT ) hb_fsAttrToRaw( uiAttr ) ) == 0 );
+#endif
       #if defined(__DJGPP__) || defined(__RSX32__)
          if (errno==22)
             errno=2;
@@ -784,7 +808,11 @@ BOOL hb_fsFindNext( PHB_FFIND ffind )
 
    {
       errno = 0;
+#if defined(__WATCOMC__)
+      bFound = ( _dos_findnext( &info->entry ) == 0 );
+#else
       bFound = ( findnext( &info->entry ) == 0 );
+#endif
       #if defined(__DJGPP__) || defined(__RSX32__)
          if (errno==22)
             errno=2;
@@ -893,7 +921,11 @@ void hb_fsFindClose( PHB_FFIND ffind )
          }
          #else
          {
+#if defined(__WATCOMC__)
+            _dos_findclose( &info->entry );
+#else
             findclose( &info->entry );
+#endif
          }
          #endif
 

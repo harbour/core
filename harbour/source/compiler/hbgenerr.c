@@ -224,3 +224,12 @@ HB_EXPR_PTR hb_compWarnMeaningless( HB_EXPR_PTR pExpr )
    return pExpr;
 }
 
+void hb_compErrorCodeblock( char * szBlock )
+{
+   hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_BLOCK, szBlock, NULL );
+}
+
+void hb_compErrorMacro( char *szText )
+{
+    hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_BAD_MACRO, szText, NULL );
+}

@@ -181,11 +181,11 @@ HB_EXPR_PTR hb_compExprCBVarAdd( HB_EXPR_PTR pCB, char * szVarName, BYTE bType )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_compExprCBVarAdd(%s)", szVarName));
 
-   if( pCB->value.asList.pIndex )
+   if( pCB->value.asCodeblock.pLocals )
    {
       /* add it to the end of the list
       */
-      pVar = ( HB_CBVAR_PTR ) pCB->value.asList.pIndex;
+      pVar = pCB->value.asCodeblock.pLocals;
       while( pVar )
       {
          if( strcmp( szVarName, pVar->szName ) == 0 )
@@ -206,9 +206,9 @@ HB_EXPR_PTR hb_compExprCBVarAdd( HB_EXPR_PTR pCB, char * szVarName, BYTE bType )
    }
    else
 #ifdef HB_MACRO_SUPPORT
-      pCB->value.asList.pIndex = ( HB_EXPR_PTR ) hb_compExprCBVarNew( szVarName, ' ' );
+      pCB->value.asCodeblock.pLocals = hb_compExprCBVarNew( szVarName, ' ' );
 #else
-      pCB->value.asList.pIndex = ( HB_EXPR_PTR ) hb_compExprCBVarNew( szVarName, bType );
+      pCB->value.asCodeblock.pLocals = hb_compExprCBVarNew( szVarName, bType );
 #endif
 
    return pCB;
@@ -903,6 +903,7 @@ static HB_CBVAR_PTR hb_compExprCBVarNew( char * szVarName, BYTE bType )
    pVar->szName = szVarName;
    pVar->bType  = bType;
    pVar->pNext  = NULL;
+   pVar->bUsed  = FALSE;
 
    return pVar;
 }
@@ -980,7 +981,7 @@ HB_EXPR_PTR hb_compExprSetGetBlock( HB_EXPR_PTR pExpr )
    /* create a codeblock
     * NOTE: we can ommit a local variable if HB_PARAM() is used
    */
-   return hb_compExprAddListExpr( hb_compExprNewCodeBlock(), pIIF );
+   return hb_compExprAddCodeblockExpr( hb_compExprNewCodeBlock(NULL,0,0), pIIF );
 }
 
 #endif

@@ -206,6 +206,14 @@ typedef struct HB_EXPR_
       } asList;
       struct
       {
+         BOOL isMacro;			/* TRUE=codeblock contains macro expression */
+	 BOOL lateEval;			/* TRUE=late evaluation of macro */
+    	 char *string;			/* source code of a codeblock */
+         struct HB_EXPR_ *pExprList;    /* list elements */
+         HB_CBVAR_PTR pLocals;      	/* list of local variables */
+      } asCodeblock;
+      struct
+      {
          struct HB_EXPR_ *pAlias;      /* alias expression */
          struct HB_EXPR_ *pVar;        /* aliased variable or macro */
          struct HB_EXPR_ *pExpList;    /* aliased expression list */
@@ -301,7 +309,11 @@ HB_EXPR_PTR hb_compExprNewLong( LONG );
 HB_EXPR_PTR hb_compExprNewString( char * );
 HB_EXPR_PTR hb_compExprNewLogical( int );
 HB_EXPR_PTR hb_compExprNewSelf( void );
+#if defined(SIMPLEX)
 HB_EXPR_PTR hb_compExprNewCodeBlock( void );
+#else
+HB_EXPR_PTR hb_compExprNewCodeBlock( char *, BOOL, BOOL );
+#endif
 HB_EXPR_PTR hb_compExprNewArray( HB_EXPR_PTR );
 HB_EXPR_PTR hb_compExprNewVar( char * );
 HB_EXPR_PTR hb_compExprNewAliasVar( HB_EXPR_PTR, HB_EXPR_PTR );
@@ -348,6 +360,7 @@ HB_EXPR_PTR hb_compExprNewMethodCall( HB_EXPR_PTR, HB_EXPR_PTR );
 HB_EXPR_PTR hb_compExprNewList( HB_EXPR_PTR );
 HB_EXPR_PTR hb_compExprNewArgList( HB_EXPR_PTR );
 HB_EXPR_PTR hb_compExprAddListExpr( HB_EXPR_PTR, HB_EXPR_PTR );
+HB_EXPR_PTR hb_compExprAddCodeblockExpr( HB_EXPR_PTR, HB_EXPR_PTR );
 HB_EXPR_PTR hb_compExprNewIIF( HB_EXPR_PTR );
 HB_EXPR_PTR hb_compExprReduce( HB_EXPR_PTR );
 HB_EXPR_PTR hb_compExprAssign( HB_EXPR_PTR, HB_EXPR_PTR );
@@ -362,7 +375,7 @@ int hb_compExprType( HB_EXPR_PTR );
 void hb_compExprFree( HB_EXPR_PTR, HB_MACRO_DECL );
 void hb_compExprErrorType( HB_EXPR_PTR, HB_MACRO_DECL );
 HB_EXPR_PTR hb_compExprListStrip( HB_EXPR_PTR, HB_MACRO_DECL );
-BOOL hb_compExprCheckMacroVar( char * );
+BOOL hb_compExprIsValidMacro( char * );
 void hb_compExprCBVarDel( HB_CBVAR_PTR );
 HB_EXPR_PTR hb_compExprReducePlusStrings( HB_EXPR_PTR, HB_EXPR_PTR, HB_MACRO_DECL );
 

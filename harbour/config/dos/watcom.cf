@@ -74,7 +74,8 @@ $(AR) $(ARFLAGS) @__lib__.tmp
 endef
 
 AR = wlib
-ARFLAGS = -c $(A_USR)
+ARFLAGS = -p=32 -c $(A_USR)
+
 AR_RULE = $(create_library)
 
 include $(TOP)$(ROOT)config/rules.cf

@@ -756,16 +756,16 @@ void hb_compVariableAdd( char * szVarName, BYTE cValueType )
  * expression.
  * Only MEMVAR or undeclared (memvar will be assumed) variables can be used.
  */
-BOOL hb_compVariableMacroCheck( char * szVarName )
+BOOL hb_compIsValidMacroVar( char * szVarName )
 {
    BOOL bValid = FALSE;
 
-   if( hb_compLocalGetPos( szVarName ) > 0 )
-      hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_BAD_MACRO, szVarName, NULL );
+   if( hb_compLocalGetPos( szVarName ) )
+    ;/*      hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_BAD_MACRO, szVarName, NULL );*/
    else if( hb_compStaticGetPos( szVarName, hb_comp_functions.pLast ) > 0 )
-      hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_BAD_MACRO, szVarName, NULL );
+    ;/*  hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_BAD_MACRO, szVarName, NULL );*/
    else if( hb_compFieldGetPos( szVarName, hb_comp_functions.pLast ) > 0 )
-      hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_BAD_MACRO, szVarName, NULL );
+    ;/*  hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_BAD_MACRO, szVarName, NULL );*/
    else if( ! hb_comp_bStartProc )
    {
       if( hb_compMemvarGetPos( szVarName, hb_comp_functions.pLast ) == 0 )
@@ -773,9 +773,9 @@ BOOL hb_compVariableMacroCheck( char * szVarName )
          /* This is not a local MEMVAR
           */
          if( hb_compFieldGetPos( szVarName, hb_comp_functions.pFirst ) > 0 )
-            hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_BAD_MACRO, szVarName, NULL );
+            ; /*hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_BAD_MACRO, szVarName, NULL );*/
          else if( hb_compStaticGetPos( szVarName, hb_comp_functions.pFirst ) > 0 )
-            hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_BAD_MACRO, szVarName, NULL );
+            ; /*hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_BAD_MACRO, szVarName, NULL );*/
          else
             bValid = TRUE;    /* undeclared variable */
       }
@@ -785,6 +785,36 @@ BOOL hb_compVariableMacroCheck( char * szVarName )
    else
       bValid = TRUE;    /* undeclared variable */
    return bValid;
+}
+
+int hb_compVariableScope( char * szVarName )
+{
+    int iScope = 0;	/* undeclared */
+    int iLocalPos;
+
+    iLocalPos = hb_compLocalGetPos( szVarName );
+    if( iLocalPos > 0 )
+	iScope = HB_VS_LOCAL_VAR;
+    else if( iLocalPos < 0 )
+	iScope = HB_VS_CBLOCAL_VAR;
+    else if( hb_compStaticGetPos( szVarName, hb_comp_functions.pLast ) > 0 )
+	iScope = HB_VS_STATIC_VAR;
+    else if( hb_compFieldGetPos( szVarName, hb_comp_functions.pLast ) > 0 )
+	iScope = HB_VS_LOCAL_FIELD;
+    else if( hb_compMemvarGetPos( szVarName, hb_comp_functions.pLast ) > 0 )
+         iScope = HB_VS_LOCAL_MEMVAR;
+    else if( ! hb_comp_bStartProc )
+    {
+         /* Check file-wide variables 
+          */
+         if( hb_compMemvarGetPos( szVarName, hb_comp_functions.pFirst ) == 0 )
+            iScope = HB_VS_GLOBAL_MEMVAR;
+         else if( hb_compFieldGetPos( szVarName, hb_comp_functions.pFirst ) > 0 )
+            iScope = HB_VS_GLOBAL_FIELD;
+         else if( hb_compStaticGetPos( szVarName, hb_comp_functions.pFirst ) > 0 )
+            iScope = HB_VS_GLOBAL_STATIC;
+    }
+    return iScope;
 }
 
 PCOMCLASS hb_compClassAdd( char * szClassName )
@@ -3793,6 +3823,55 @@ void hb_compCodeBlockEnd( void )
    pCodeblock->iStackFunctions = 0;
    pCodeblock->iStackClasses   = 0;
 
+   hb_xfree( ( void * ) pCodeblock );
+}
+
+void hb_compCodeBlockStop( void )
+{
+   PFUNCTION pCodeblock;   /* pointer to the current codeblock */
+   PFUNCTION pFunc;/* pointer to a function that owns a codeblock */
+   USHORT wLocals = 0;   /* number of referenced local variables */
+   USHORT wUsed;
+   PVAR pVar, pFree;
+
+   pCodeblock = hb_comp_functions.pLast;
+
+   /* return to pcode buffer of function/codeblock in which the current
+    * codeblock was defined
+    */
+   hb_comp_functions.pLast = pCodeblock->pOwner;
+
+   /* find the function that owns the codeblock */
+   pFunc = pCodeblock->pOwner;
+   while( pFunc->pOwner )
+      pFunc = pFunc->pOwner;
+
+   pFunc->bFlags |= ( pCodeblock->bFlags & FUN_USES_STATICS );
+
+   /* Count the number of referenced local variables */
+   pVar = pCodeblock->pStatics;
+   while( pVar )
+   {
+      pVar = pVar->pNext;
+      ++wLocals;
+   }
+
+   wUsed =0;
+   pVar = pCodeblock->pLocals;
+   while( pVar )
+   {
+      if( pVar->iUsed & VU_USED )
+        wUsed = 1;
+
+      /* free used variables */
+      pFree = pVar;
+
+      pVar = pVar->pNext;
+      hb_xfree( ( void * ) pFree );
+   }
+
+   hb_compGenPCodeN( pCodeblock->pCode, pCodeblock->lPCodePos, ( BOOL ) 0 );
+   hb_xfree( ( void * ) pCodeblock->pCode );
    hb_xfree( ( void * ) pCodeblock );
 }
 

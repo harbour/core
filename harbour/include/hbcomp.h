@@ -249,6 +249,20 @@ void hb_compPCodeEval( PFUNCTION, HB_PCODE_FUNC_PTR *, void * );
 #define VS_PUBLIC     128
 #define VS_MEMVAR     ( VS_PUBLIC | VS_PRIVATE )
 
+/* return detailed information about a class of variable  */
+int hb_compVariableScope( char * );
+#define HB_VS_UNDECLARED	0
+/* variables declared in a current codeblock/function/procedure */
+#define HB_VS_CBLOCAL_VAR	1	/* local parameter of a codeblock */
+#define HB_VS_LOCAL_VAR		2
+#define HB_VS_LOCAL_MEMVAR	4
+#define HB_VS_LOCAL_FIELD	8
+#define HB_VS_STATIC_VAR	16
+/* variables declared outside of a current function/procedure */
+#define HB_VS_GLOBAL_MEMVAR	(32 | HB_VS_LOCAL_MEMVAR)
+#define HB_VS_GLOBAL_FIELD	(32 | HB_VS_LOCAL_FIELD)
+#define HB_VS_GLOBAL_STATIC	(32 | HB_VS_STATIC_VAR)
+
 #define VU_NOT_USED    0
 #define VU_INITIALIZED 1
 #define VU_USED        2
@@ -315,10 +329,11 @@ extern void hb_compAutoOpenAdd( char * szName );
 #define hb_compErrorAlias( p )   hb_macroError( EG_NOALIAS, HB_MACRO_PARAM )
 #define hb_compErrorDuplVar( c ) hb_macroError( EG_SYNTAX, HB_MACRO_PARAM )
 #define hb_compWarnMeaningless( p )
+#define hb_compErrorMacro( p )
 
 #else /* HB_MACRO_SUPPORT */
 
-extern BOOL hb_compVariableMacroCheck( char * ); /* checks if passed variable can be used in macro */
+extern BOOL hb_compIsValidMacroVar( char * ); /* checks if passed variable can be used in macro */
 
 extern ULONG hb_compGenJump( LONG );                /* generates the pcode to jump to a specific offset */
 extern ULONG hb_compGenJumpFalse( LONG );           /* generates the pcode to jump if false */
@@ -361,6 +376,7 @@ extern void hb_compSequenceFinish( ULONG, int );
 /* Codeblocks */
 extern void hb_compCodeBlockStart( void );        /* starts a codeblock creation */
 extern void hb_compCodeBlockEnd( void );          /* end of codeblock creation */
+extern void hb_compCodeBlockStop( void );          /* end of fake codeblock */
 
 /* support for FIELD declaration */
 extern void hb_compFieldSetAlias( char *, int );
@@ -379,6 +395,8 @@ extern HB_EXPR_PTR hb_compErrorBound( HB_EXPR_PTR );
 extern HB_EXPR_PTR hb_compErrorAlias( HB_EXPR_PTR );
 extern void hb_compErrorDuplVar( char * );
 extern HB_EXPR_PTR hb_compWarnMeaningless( HB_EXPR_PTR );
+extern void hb_compErrorCodeblock( char * );
+extern void hb_compErrorMacro( char * );
 
 extern void hb_compChkCompilerSwitch( int, char * Args[] );
 extern void hb_compChkEnvironVar( char * );

@@ -157,6 +157,13 @@ static void hb_compDebugStart( void ) { };
       char * szValue;
    } valDouble;
    HB_EXPR_PTR asExpr;
+   struct
+   {
+      char *string;
+      int length;
+      BOOL lateEval; /* Flag for early {|| &macro} (0) or late {|| &(macro)} (1) binding */
+      BOOL isMacro;
+   } asCodeblock;
    void * pVoid;        /* to hold any memory structure we may need */
 };
 
@@ -171,6 +178,7 @@ static void hb_compDebugStart( void ) { };
 %token AS_ARRAY AS_BLOCK AS_CHARACTER AS_CLASS AS_DATE AS_LOGICAL AS_NUMERIC AS_OBJECT AS_VARIANT DECLARE OPTIONAL DECLARE_CLASS DECLARE_MEMBER
 %token AS_ARRAY_ARRAY AS_BLOCK_ARRAY AS_CHARACTER_ARRAY AS_CLASS_ARRAY AS_DATE_ARRAY AS_LOGICAL_ARRAY AS_NUMERIC_ARRAY AS_OBJECT_ARRAY
 %token PROCREQ GET
+%token CBSTART
 
 /*the lowest precedence*/
 /*postincrement and postdecrement*/
@@ -239,6 +247,7 @@ static void hb_compDebugStart( void ) { };
 %type <asExpr>  DimIndex DimList
 %type <asExpr>  FieldAlias FieldVarAlias
 %type <asExpr>  PostOp
+%type <asCodeblock> CBSTART
 
 %%
 
@@ -1012,16 +1021,16 @@ ElemList   : Argument                { $$ = hb_compExprNewList( $1 ); }
            | ElemList ',' Argument   { $$ = hb_compExprAddListExpr( $1, $3 ); }
            ;
 
-CodeBlock  : '{' '|' { $<asExpr>$ = hb_compExprNewCodeBlock(); } BlockNoVar
-             '|' BlockExpList '}'   { $$ = $<asExpr>3; }
-           | '{' '|' { $<asExpr>$ = hb_compExprNewCodeBlock(); } BlockVarList
-             '|' BlockExpList '}'   { $$ = $<asExpr>3; }
+CodeBlock  : CBSTART { $<asExpr>$ = hb_compExprNewCodeBlock($1.string,$1.isMacro,$1.lateEval); } BlockNoVar
+             '|' BlockExpList '}'   { $$ = $<asExpr>2; }
+           | CBSTART { $<asExpr>$ = hb_compExprNewCodeBlock($1.string,$1.isMacro,$1.lateEval); } BlockVarList
+             '|' BlockExpList '}'   { $$ = $<asExpr>2; }
            ;
 
 /* NOTE: This uses $-2 then don't use BlockExpList in other context
  */
-BlockExpList : Expression                { $$ = hb_compExprAddListExpr( $<asExpr>-2, $1 ); }
-           | BlockExpList ',' Expression { $$ = hb_compExprAddListExpr( $<asExpr>-2, $3 ); }
+BlockExpList : Expression                { $$ = hb_compExprAddCodeblockExpr( $<asExpr>-2, $1 ); }
+           | BlockExpList ',' Expression { $$ = hb_compExprAddCodeblockExpr( $<asExpr>-2, $3 ); }
            ;
 
 /* NOTE: This is really not needed however it allows the use of $-2 item

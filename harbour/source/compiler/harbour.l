@@ -44,6 +44,7 @@
 
 /* helper functions */
 static int yy_ConvertNumber( char * szBuffer );
+extern int hb_ppInsideTextBlock;
 
 /* YACC functions */
 void yyerror( char * );
@@ -80,6 +81,10 @@ int yy_lex_input( char *, int );
 #define RARRAY          -64
 static int hb_comp_iState = LOOKUP;
 static int _iOpenBracket = 0;
+
+/* Stores a codeblock picture for late/early evaluation
+*/
+char *hb_lex_codeblock = NULL;
 
 #define DEBUG_STRINGS
 
@@ -165,14 +170,13 @@ Separator     {SpaceTab}
     from direct calls for qout function
     QOUT([some string]) ; QOUT([some more])
     */
-/* TODO: implement hb_ppInsideTextBlock it is PP
     if( hb_ppInsideTextBlock )
     {
         BEGIN STRING4START;
         unput( '(' );
     }
     else
-*/
+
         yyless( 4 );    /* len of QOUT */
 
     yylval.string = hb_compIdentifierNew( "QOUT", TRUE );
@@ -1408,6 +1412,107 @@ Separator     {SpaceTab}
                   return IDENTIFIER;
                 }
               }
+
+%{
+/* ************************************************************************ */
+%}
+"\{"{Separator}*"\|".*/\n	{	/* codeblock scanning */
+		/*
+		  We have to know if the codeblock contains the macro
+		expression &var or &(var)
+		In case of &var we have to store in the pcode the source code
+		of the codeblock - the string with the whole codeblock
+		have to be saved. At runtime, this string is macro
+		expanded and the result string is next macro compiled to 
+		create a codeblock - this is called 'the early macro evaluation'. 
+		  In contrast, the late macro evaluation &(var) creates
+		the codeblock at compile time - the macro is expanded
+		during the codeblock evaluation.
+		 The following code:
+		 //early evaluation
+		 PRIVATE a
+		 FOR i:=1 TO 3
+		   a:=STR(i)
+		   cb[i] := {|| &a} //the same as cb[i] := &( '{||'+a+'}' )
+		 NEXT
+		 ....
+		 FOR i:=1 TO 3
+		   ? EVAL( cb[i] ) //prints '1','2','3'
+		 NEXT
+		 //late evaluation 
+		 FOR i:=1 TO 3
+		   a:=STR(i)
+		   cb[i] := {|| &(a)}
+		 NEXT
+		 ....
+		 FOR i:=1 TO 3
+		   ? EVAL( cb[i] ) //prints '3','3','3'
+		 NEXT
+		*/
+		char *cText;
+		int iLen;
+		int iPos=0;
+		int iCode=1;
+		char cMark='\0';
+		
+		yylval.asCodeblock.isMacro = FALSE;
+		yylval.asCodeblock.lateEval = FALSE;
+		cText = yytext+1;
+		iLen = 1;
+		while( *cText || ((cMark != '\0') && (*cText == '\0')) )
+		{
+		    iLen++;
+		    if( *cText == '\'' )
+		    {
+			if( cMark == '\'' )
+			    cMark = '\0';
+			else if( cMark == '\0' )
+			    cMark = '\'';
+		    }    
+		    else if( *cText == '"' )
+		    {
+			if( cMark == '"' )
+			    cMark = '\0';
+			else if( cMark == '\0' )
+			    cMark = '"';
+		    }
+		    else if( *cText == '[' )
+		    {
+			if( cMark == ']' )
+			    cMark = '\0';
+			else if( cMark == '\0' )
+			    cMark = ']';
+		    }
+		    else if( *cText == '|' && iPos == 0 )
+			iPos = iLen;
+		    else if( *cText == '&' && cMark == '\0' )
+		    {
+			yylval.asCodeblock.isMacro = TRUE;
+			++cText;
+			while( *cText == ' ' || *cText == '\t' )
+			    ++cText;
+			if( *cText == '(' )
+			    yylval.asCodeblock.lateEval = TRUE;
+			--cText;
+		    }
+		    else if( *cText == '{' && cMark == '\0' )
+			iCode++;
+		    else if( *cText == '}' && cMark == '\0' )
+		    {
+			iCode--;
+			if( iCode == 0 )
+			    break;
+		    }
+		    cText++;
+		}
+		cMark = yytext[ iLen ];
+		yylval.asCodeblock.string = hb_xgrab( iLen+1 );
+		memcpy( (void *)yylval.asCodeblock.string, (void *)yytext, iLen );
+		yylval.asCodeblock.string[iLen] = '\0';
+		yylval.asCodeblock.length = iLen;
+		yyless( iPos ); /* restart scanning after '{|' */
+		return CBSTART;
+		}
 
 %{
 /* ************************************************************************ */

@@ -745,11 +745,11 @@ ElemList   : EmptyExpression                 { $$ = hb_compExprNewList( $1 ); }
            ;
 
 CodeBlock  : '{' '|'
-                  { $<asExpr>$ = hb_compExprNewCodeBlock(); } BlockNoVar
+                  { $<asExpr>$ = hb_compExprNewCodeBlock(NULL,FALSE,FALSE); } BlockNoVar
              '|' BlockExpList '}'
                   { $$ = $<asExpr>3; }
            | '{' '|'
-                  { $<asExpr>$ = hb_compExprNewCodeBlock(); }
+                  { $<asExpr>$ = hb_compExprNewCodeBlock(NULL,FALSE,FALSE); }
              BlockVarList
              '|' BlockExpList '}'
                   { $$ = $<asExpr>3; }
@@ -757,8 +757,8 @@ CodeBlock  : '{' '|'
 
 /* NOTE: This uses $-2 then don't use BlockExpList in other context
  */
-BlockExpList : Expression                { $$ = hb_compExprAddListExpr( $<asExpr>-2, $1 ); }
-           | BlockExpList ',' Expression { $$ = hb_compExprAddListExpr( $<asExpr>-2, $3 ); }
+BlockExpList : Expression                { $$ = hb_compExprAddCodeblockExpr( $<asExpr>-2, $1 ); }
+           | BlockExpList ',' Expression { $$ = hb_compExprAddCodeblockExpr( $<asExpr>-2, $3 ); }
            ;
 
 /* NOTE: This is really not needed however it allows the use of $-2 item

@@ -216,19 +216,49 @@ HB_EXPR_PTR hb_compExprNewLong( long lValue )
 }
 
 
+#if defined(SIMPLEX)
 HB_EXPR_PTR hb_compExprNewCodeBlock( void )
+#else
+HB_EXPR_PTR hb_compExprNewCodeBlock( char *string, BOOL isMacro, BOOL lateEval )
+#endif
 {
    HB_EXPR_PTR pExpr;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewCodeBlock()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewCodeBlock(%s,%u,%u)",string,isMacro,lateEval));
 
    pExpr =hb_compExprNew( HB_ET_CODEBLOCK );
 
-   pExpr->value.asList.pExprList = NULL;
-   pExpr->value.asList.pIndex    = NULL;  /* this will hold local variables declarations */
+   pExpr->value.asCodeblock.pExprList = NULL;
+   pExpr->value.asCodeblock.pLocals   = NULL;  /* this will hold local variables declarations */
    pExpr->ValType = HB_EV_CODEBLOCK;
-
+#if defined(SIMPLEX)
+    pExpr->value.asCodeblock.string = NULL;
+    pExpr->value.asCodeblock.isMacro = FALSE;
+    pExpr->value.asCodeblock.lateEval = FALSE;
+#else
+    pExpr->value.asCodeblock.string = string;
+    pExpr->value.asCodeblock.isMacro = isMacro;
+    pExpr->value.asCodeblock.lateEval = lateEval;
+#endif
    return pExpr;
+}
+
+HB_EXPR_PTR hb_compExprAddCodeblockExpr( HB_EXPR_PTR pList, HB_EXPR_PTR pNewItem )
+{
+   if( pList->value.asCodeblock.pExprList )
+   {
+      HB_EXPR_PTR pExpr;
+
+      /* add new item to the end of the list */
+      pExpr = pList->value.asCodeblock.pExprList;
+      while( pExpr->pNext )
+         pExpr = pExpr->pNext;
+      pExpr->pNext = pNewItem;
+   }
+   else
+      pList->value.asCodeblock.pExprList = pNewItem;
+
+   return pList;
 }
 
 HB_EXPR_PTR hb_compExprNewLogical( int iValue )
@@ -372,7 +402,12 @@ HB_EXPR_PTR hb_compExprNewMacro( HB_EXPR_PTR pMacroExpr, unsigned char cMacroOp,
           * ? &var      // this is OK
           * ? &var.ext  // this is invalid
           */
-         hb_compExprCheckMacroVar( szName );
+	  char *szDupl;
+	  szDupl = hb_strupr( hb_strdup( szName ) );
+          if( ! hb_compExprIsValidMacro( szDupl ) )
+	    hb_compErrorMacro( szName );
+	  hb_xfree( szDupl );
+
       }
    }
    else

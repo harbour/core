@@ -8,6 +8,38 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-10-17 18:08 UTC+0100 Ryszard Glab <rglab@przesiew.imid.med.pl>
+
+    * include/hbapi.h
+    * include/hbcomp.h
+    * include/hbexpra.c
+    * include/hbexprb.c
+    * include/hbexprc.c
+    * include/hbexprop.h
+    * source/common/expropt1.c
+    * source/compiler/expropta.c
+    * source/compiler/exproptb.c
+    * source/compiler/exproptc.c
+    * source/compiler/harbour.c
+    * source/compiler/harbour.l
+    * source/compiler/harbour.sly
+    * source/compiler/harbour.y
+    * source/compiler/hbgenerr.c
+    * source/macro/macro.y
+    * source/macro/macroa.c
+    * source/macro/macrob.c
+    * source/macro/macroc.c
+	* Fixed support for late/early evaluation of macro exressions in
+	a codeblock (Flex version) (see tests/tstblock.prg for a sample)
+	Harbour(flex) is now full Clipper compatible here.
+
+    * config/dos/watcom.cf
+    * source/rdd/dbfcdx/dbfcdx1.h
+    * source/common/hbffind.c
+    * include/hbrddcdx.h
+    * include/hbmath.h
+	* Changed to compile correctly with WATCOM compilers
+
 2003-10-16 13:17 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
   * source/rtl/round.c
     ! hb_numRound() completely redesigned
