@@ -39,7 +39,7 @@
 
 HB_FUNC( CT_POSUPPER )
 {
-   BYTE * pbyString = hb_parc( 1 );
+   BYTE * pbyString = ( BYTE * ) hb_parc( 1 );
    ULONG ulLen = hb_parclen( 1 );
    ULONG ulPos;
 

@@ -33,12 +33,13 @@
  *
  */
 
-FUNCTION ReadVar( cNewVarName )
+FUNCTION ReadVar( cVarName )
    STATIC s_cVarName := ""
+
    LOCAL cOldVarName
 
    IF __GetListActive() != NIL
-      RETURN __GetListActive():ReadVar( cNewVarName )
+      RETURN __GetListActive():ReadVar( cVarName )
    ENDIF
 
    cOldVarName := s_cVarName
