@@ -68,6 +68,7 @@
 #include "inkey.ch"
 #include "setcurs.ch"
 #include "button.ch"
+#include "tbrowse.ch"
 
 #define SCORE_ROW       0
 #define SCORE_COL       60
