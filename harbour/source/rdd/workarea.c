@@ -774,7 +774,7 @@ ERRCODE hb_waRelArea( AREAP pArea, USHORT uiRelNo, void * pRelArea )
  */
 ERRCODE hb_waRelEval( AREAP pArea, LPDBRELINFO pRelInfo )
 {
-   int iChildArea, iCurrArea;
+   int iCurrArea;
    PHB_ITEM pResult;
    HB_TRACE(HB_TR_DEBUG, ("hb_waRelEval(%p, %p)", pArea, pRelInfo));
 

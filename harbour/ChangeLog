@@ -1,3 +1,7 @@
+2001-11-05 20:35 GMT+0700 Andi Jahja <andijahja@cbn.net.id>
+  * source/rdd/workarea.c
+    ! function hb_waRelEval(), remove unused local variable int iChildArea
+
 2001-11-05 15:38 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rdd/workarea.c
     * hb_waEval() method fixed ( NEXT n clause implementation )
