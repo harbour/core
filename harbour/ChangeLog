@@ -1,3 +1,11 @@
+20000208-11:48 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * makefile.b32
+     + oemansi.c was missing and it is required from hbdoc
+     * HBDOC_OBJS changed into HBDOC_EXE_OBJS
+       (makefile was not completing its job cause this)
+   * make_b32.bat
+     * del make.err added
+
 20000208-03:15 EST Paul Tucker <ptucker@sympatico.ca>
    * makefile.vc
      + source/tools/dbftools.c
@@ -32,14 +40,14 @@
      make_b32.bat
      make_b40.bat
      * Changed to include all functionality previously implemented using
-       several separate make files. New makefile almost completely based on 
+       several separate make files. New makefile almost completely based on
        the work of Bruno Cantero.
    - ngdoc/ft_helpc.prg
    + ngdoc/hbdoc.prg
-     ngdoc/makewww.bat 
+     ngdoc/makewww.bat
      * FT_HELPC renamed to HBDOC
      * FT_HELPC() main function renamed to MAIN()
-   - ngdoc/bldfthe.bat 
+   - ngdoc/bldfthe.bat
      - Removed since it's now built in the mainstream build process.
    * ngdoc/Makefile
      * Changed to reflect new utility name.

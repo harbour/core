@@ -131,6 +131,7 @@ HARBOUR_LIB_OBJS  = $(OBJ_DIR)\achoice.obj \
                     $(OBJ_DIR)\natmsg.obj \
                     $(OBJ_DIR)\net.obj \
                     $(OBJ_DIR)\objfunc.obj \
+                    $(OBJ_DIR)\oemansi.obj \
                     $(OBJ_DIR)\oldbox.obj \
                     $(OBJ_DIR)\oldclear.obj \
                     $(OBJ_DIR)\pcount.obj \
@@ -240,7 +241,7 @@ REGRESS_EXE_OBJS  = $(REGRESS_DIR)\rt_main.obj \
                     $(REGRESS_DIR)\rt_misc.obj
 
 HBDOC_EXE         = $(HBDOC_DIR)\hbdoc.exe
-HBDOC_OBJS        = $(HBDOC_DIR)\hbdoc.obj
+HBDOC_EXE_OBJS    = $(HBDOC_DIR)\hbdoc.obj
 
 PROJECT: $(COMMON_LIB) \
          $(PP_LIB) \
@@ -681,6 +682,10 @@ $(RTL_DIR)\objfunc.c : $(RTL_DIR)\objfunc.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
 $(OBJ_DIR)\objfunc.obj : $(RTL_DIR)\objfunc.c
+   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   tlib $(HARBOUR_LIB) -+$@,,
+
+$(OBJ_DIR)\oemansi.obj : $(RTL_DIR)\oemansi.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
