@@ -150,14 +150,7 @@ static ULONG GetPCodesSize( void )
 
   while( pFunction )
     {
-      ulTotal += pFunction->lPCodePos; //  + 1; /* HB_P_ENDPROC !!! */
-
-      if( ! ( GetFunctionLocalsCount( pFunction ) || pFunction->wParamCount ) )
-         ulTotal -= 3; /* remove frame 3 bytes pcode */
-
-      if( ! ( pFunction->bFlags & FUN_USES_STATICS ) )
-         ulTotal -= 3; /* remove statics frame */
-
+      ulTotal += pFunction->lPCodePos;
       pFunction = pFunction->pNext;
     }
   return ulTotal;
@@ -476,14 +469,7 @@ static void CodeSegment( FILE * hObjFile, BYTE * prgCode, ULONG ulPrgLen, USHORT
       * ( ULONG * ) &prgCode[ 6 ] = ulPCodeOffset; /* function pcode offset */
       for( ul = 0; ul < ulPrgLen; ul++ )
           putbyte( * ( prgCode + ul ), hObjFile, &bChk );
-      ulPCodeOffset += pFunction->lPCodePos; //  + 1; /* HB_P_ENDPROC !!! */
-
-      if( ! ( GetFunctionLocalsCount( pFunction ) || pFunction->wParamCount ) )
-         ulPCodeOffset -= 3; /* remove frame 3 bytes pcode */
-
-      if( ! ( pFunction->bFlags & FUN_USES_STATICS ) )
-         ulPCodeOffset -= 3; /* remove statics frame */
-
+      ulPCodeOffset += pFunction->lPCodePos;
       pFunction = pFunction->pNext;
     }
 
