@@ -2,6 +2,7 @@
    * source/vm/memvars.c
      % One variable scope adjusted.
    * make_b32.bat
+     make_vc.bat
      + It now cleans the .MAP files, too.
    * source/pp/ppcore.c
      ! Fixed GPF on reinitialization of #undefd macro in hb_pp_Init().

@@ -74,7 +74,7 @@ HARBOUR HB_HB_FTEMPNAME()
 
    hb_fsTempName( szName, NULL, NULL );
   
-   hb_retc( szName );
+   hb_retc( ( char * ) szName );
 }
 
 HARBOUR HB_HB_FTEMPCREATE( void )
