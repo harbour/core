@@ -467,7 +467,7 @@ return oOldGet
 
 METHOD ShowScoreboard() CLASS TGetList
 
-   local nRow, nCol
+   local nRow, nCol, nOldCursor := SetCursor( 0 )
 
    if Set( _SET_SCOREBOARD )
       nRow = Row()
@@ -475,6 +475,7 @@ METHOD ShowScoreboard() CLASS TGetList
       SetPos( SCORE_ROW, SCORE_COL )
       DispOut( If( Set( _SET_INSERT ), "Ins", "   " ) )
       SetPos( nRow, nCol )
+      SetCursor( nOldCursor )
    endif
 
 return nil
