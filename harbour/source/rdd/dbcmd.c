@@ -332,7 +332,7 @@ ERRCODE hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS pSuperTa
       szSuperName = hb_strUpper( szSuperName, uiCount );
       pRddNode = hb_FindRddNode( szSuperName );
       hb_xfree( szSuperName );
-      if( !( pRddNode = hb_FindRddNode( szSuperName ) ) )
+      if( !pRddNode )
          return FAILURE;
       memcpy( pTable, &pRddNode->pTable, sizeof( RDDFUNCS ) );
    }
