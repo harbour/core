@@ -377,7 +377,7 @@ static ERRCODE ntxOrderInfo( NTXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo
 #define ntxEvalBlock             NULL
 #define ntxRawLock               NULL
 static ERRCODE ntxLock( NTXAREAP pArea, LPDBLOCKINFO pLockInfo );
-ERRCODE ntxUnLock( NTXAREAP pArea, ULONG ulRecNo );
+static ERRCODE ntxUnLock( NTXAREAP pArea, ULONG ulRecNo );
 #define ntxCloseMemFile          NULL
 #define ntxCreateMemFile         NULL
 #define ntxGetValueFile          NULL

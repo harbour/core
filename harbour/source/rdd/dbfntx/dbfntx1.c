@@ -407,7 +407,7 @@ static BOOL hb_ntxFindNextKey( LPTAGINFO pTag )
    LPKEYINFO pKey;
    LONG blockNext = 0;
    SHORT keyNext = 0;
-   LPPAGEINFO pPage, pChildPage;
+   LPPAGEINFO pPage;
 
    pKey = hb_ntxKeyNew();
    hb_ntxGetCurrentKey( pTag,pKey );
@@ -697,6 +697,8 @@ static void hb_ntxTagKeyRead( LPTAGINFO pTag, BYTE bTypRead )
       }
    }
    pTag->TagBOF = pTag->TagEOF = FALSE;
+   if( pTag->Owner->Owner->fShared )
+      while( !hb_fsLock( pTag->Owner->DiskFile, 0, 512, FL_LOCK ) );
    switch( bTypRead )
    {
       case TOP_RECORD:
@@ -745,6 +747,12 @@ static void hb_ntxTagKeyRead( LPTAGINFO pTag, BYTE bTypRead )
          }
          break;
 
+   }
+   if( pTag->Owner->Owner->fShared )
+   {
+      hb_ntxPageFree( pTag->RootPage,TRUE );
+      pTag->RootPage = NULL;
+      hb_fsLock( pTag->Owner->DiskFile, 0, 512, FL_UNLOCK );
    }
    if( pTag->TagBOF || pTag->TagEOF )
    {
@@ -860,33 +868,30 @@ static LPPAGEINFO hb_ntxPageLoad( ULONG ulOffset )
    LPNTXINDEX pIndex;
    LPNTXBUFFER itemlist;
    LPNTXITEM item;
-   LPPAGEINFO pPage = NULL;
+   LPPAGEINFO pPage;
    BOOL bReplace = FALSE;
    USHORT uiKeysBefore;
 
    /* printf( "\nntxPageLoad - 0" ); */
    pArea = (NTXAREAP) hb_rddGetCurrentWorkAreaPointer();
    pIndex = pArea->lpCurIndex;
-   if( !pArea->fShared )
+   pPage = hb_ntxPageFind( pIndex, (ulOffset)? ulOffset:pIndex->CompoundTag->RootBlock );
+   if( pPage )
    {
-      pPage = hb_ntxPageFind( pIndex, (ulOffset)? ulOffset:pIndex->CompoundTag->RootBlock );
+      pPage->lBusy = TRUE;
+      return pPage;
+   }
+   if( pIndex->CompoundTag->uiPages > maxPagesPerTag )
+   {
+      pPage = pIndex->CompoundTag->RootPage;
+      while( pPage )
+      {
+         if( !pPage->lBusy )
+           break;
+         pPage = pPage->pNext;
+      }
       if( pPage )
-      {
-         pPage->lBusy = TRUE;
-         return pPage;
-      }
-      if( pIndex->CompoundTag->uiPages > maxPagesPerTag )
-      {
-         pPage = pIndex->CompoundTag->RootPage;
-         while( pPage )
-         {
-            if( !pPage->lBusy )
-              break;
-            pPage = pPage->pNext;
-         }
-         if( pPage )
-            bReplace = TRUE;
-      }
+         bReplace = TRUE;
    }
    if( !ulOffset )
       hb_fsSeek( pIndex->DiskFile, pIndex->CompoundTag->RootBlock, FS_SET );
@@ -905,11 +910,12 @@ static LPPAGEINFO hb_ntxPageLoad( ULONG ulOffset )
       if( !ulOffset )
       {
          /* printf( "\nntxPageLoad - 1 ( %5lx )",pPage ); */
-         pPage->pPrev = NULL;
+         // pPage->pPrev = NULL;
          pPage->Page = pIndex->CompoundTag->RootBlock;
-         pIndex->CompoundTag->RootPage = pPage;
+         // pIndex->CompoundTag->RootPage = pPage;
       }
       else
+         pPage->Page = ulOffset;
       {
             LPPAGEINFO pLastPage;
             /* printf( "\nntxPageLoad - 2 ( %5lx %5lx )",pIndex->CompoundTag->RootPage,pPage ); */
@@ -920,7 +926,6 @@ static LPPAGEINFO hb_ntxPageLoad( ULONG ulOffset )
                pLastPage->pNext = pPage;
             else
                pIndex->CompoundTag->RootPage = pPage;
-            pPage->Page = ulOffset;
       }
       pPage->pKeys = ( LPKEYINFO ) hb_xgrab( sizeof( KEYINFO ) * ( pPage->TagParent->MaxKeys + 1 ) );
       memset( pPage->pKeys, 0, sizeof( KEYINFO ) * ( pPage->TagParent->MaxKeys + 1 ) );
@@ -972,22 +977,13 @@ static LPPAGEINFO hb_ntxPageLoad( ULONG ulOffset )
 static void hb_ntxPageRelease( LPPAGEINFO pPage )
 {
 
-   NTXAREAP pArea = pPage->TagParent->Owner->Owner;
-
-   if( !pArea->fShared )
+   pPage->lBusy = FALSE;
+   if( pPage->Changed )
+      hb_ntxPageSave( pPage );
+   if( pPage->NewRoot )
    {
-      pPage->lBusy = FALSE;
-      if( pPage->Changed )
-         hb_ntxPageSave( pPage );
-      if( pPage->NewRoot )
-      {
-         pPage->TagParent->RootBlock = pPage->Page;
-         hb_ntxHeaderSave( pPage->TagParent->Owner );
-      }
-   }
-   else
-   {
-      hb_ntxPageFree( pPage, FALSE );
+      pPage->TagParent->RootBlock = pPage->Page;
+      hb_ntxHeaderSave( pPage->TagParent->Owner );
    }
 }
 
@@ -1007,8 +1003,6 @@ static void hb_ntxPageFree( LPPAGEINFO pPage, BOOL lFreeChild )
       pPage->TagParent->RootBlock = pPage->Page;
       hb_ntxHeaderSave( pPage->TagParent->Owner );
    }
-   for( i = 0; i< pPage->uiKeys; i++)
-      hb_itemRelease( pPage->pKeys[i].pItem );
    if( lFreeChild )
    {
       if( pPage->pPrev )
@@ -1031,9 +1025,15 @@ static void hb_ntxPageFree( LPPAGEINFO pPage, BOOL lFreeChild )
       }
       pPage->pNext = NULL;
    }
-   pPage->TagParent->uiPages --;
-   hb_xfree( pPage->pKeys );
-   hb_xfree( pPage );
+   if( pPage->pKeys )
+   {
+      for( i = 0; i< pPage->uiKeys; i++)
+         hb_itemRelease( pPage->pKeys[i].pItem );
+      pPage->TagParent->uiPages --;
+      hb_xfree( pPage->pKeys );
+      pPage->pKeys = NULL;
+      hb_xfree( pPage );
+   }
 }
 
 
@@ -1043,6 +1043,14 @@ static LPPAGEINFO hb_ntxPageNew(LPTAGINFO pParentTag )
 
    if( pParentTag->Owner->NextAvail > 0 )
    {
+      /* Handling of a pool of empty pages.
+         Some sources says that this address is in the first 4 bytes of
+         a page ( http://www.e-bachmann.dk/docs/xbase.htm ).
+         But as I understood, studying dumps of Clipper ntx'es, address of the
+         next available page is in the address field of a first key item
+         in the page - it is done here now in such a way.
+         = Alexander Kresin =
+      */
       pPage = hb_ntxPageLoad( pParentTag->Owner->NextAvail );
       pPage->Page = pParentTag->Owner->NextAvail;
       pParentTag->Owner->NextAvail = pPage->pKeys->Tag;
@@ -1441,6 +1449,7 @@ static void hb_ntxIndexFree( LPNTXINDEX pIndex )
    pTag = pIndex->CompoundTag;
    if( pTag->RootPage > 0 )
       hb_ntxPageFree( pTag->RootPage,TRUE );
+   pTag->RootPage = NULL;
    hb_fsClose( pIndex->DiskFile );
    hb_xfree( pTag->TagName );
    if( pTag->KeyExpr != NULL )
@@ -1638,7 +1647,15 @@ static ERRCODE ntxSeek( NTXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
        pKey2->Tag = NTX_IGNORE_REC_NUM;
      pKey2->Xtra = 0;
 
+     if( pArea->fShared )
+        while( !hb_fsLock( pArea->lpCurIndex->DiskFile, 0, 512, FL_LOCK ) );
      lRecno = hb_ntxTagKeyFind( pTag, pKey2 );
+     if( pArea->fShared )
+     {
+        hb_ntxPageFree( pTag->RootPage,TRUE );
+        pTag->RootPage = NULL;
+        hb_fsLock( pArea->lpCurIndex->DiskFile, 0, 512, FL_UNLOCK );
+     }
      pArea->fEof = pTag->TagEOF;
      pArea->fBof = pTag->TagBOF;
      hb_ntxKeyFree( pKey2 );
@@ -1738,7 +1755,15 @@ static ERRCODE ntxAppend( NTXAREAP pArea, BOOL bUnLockAll )
          pArea->lpCurIndex = lpIndex;
          pTag = lpIndex->CompoundTag;
          hb_ntxGetCurrentKey( pTag, pTag->CurKeyInfo );
+         if( pArea->fShared )
+            while( !hb_fsLock( lpIndex->DiskFile, 0, 512, FL_LOCK ) );
          hb_ntxPageKeyAdd( hb_ntxPageLoad( 0 ), pTag->CurKeyInfo->pItem, 0);
+         if( pArea->fShared )
+         {
+            hb_ntxPageFree( pTag->RootPage,TRUE );
+            pTag->RootPage = NULL;
+            hb_fsLock( lpIndex->DiskFile, 0, 512, FL_UNLOCK );
+         }
          lpIndex = lpIndex->pNext;
       }
       pArea->lpCurIndex = lpIndexTmp;
@@ -1788,6 +1813,8 @@ static ERRCODE ntxPutValue( NTXAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          hb_itemCopy( pKeyOld->pItem, pTag->CurKeyInfo->pItem );
          pKeyOld->Xtra = pTag->CurKeyInfo->Xtra;
          pKeyOld->Tag = NTX_IGNORE_REC_NUM;
+         if( pArea->fShared )
+            while( !hb_fsLock( lpIndex->DiskFile, 0, 512, FL_LOCK ) );
          if( hb_ntxTagFindCurrentKey( hb_ntxPageLoad( 0 ), pKeyOld->Tag, pKeyOld, FALSE, NULL, NULL, NULL, NULL ) )
          {
              printf( "\n\rntxPutValue: Cannot find current key:" );
@@ -1798,6 +1825,12 @@ static ERRCODE ntxPutValue( NTXAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          pPage->CurKey =  hb_ntxPageFindCurrentKey( pPage,pTag->CurKeyInfo->Xtra ) - 1;
          hb_ntxPageKeyDel( pPage, pPage->CurKey );
          hb_ntxPageKeyAdd( hb_ntxPageLoad( 0 ), pKey->pItem, 0);
+         if( pArea->fShared )
+         {
+            hb_ntxPageFree( pTag->RootPage,TRUE );
+            pTag->RootPage = NULL;
+            hb_fsLock( lpIndex->DiskFile, 0, 512, FL_UNLOCK );
+         }
       }
       lpIndex = lpIndex->pNext;
    }
@@ -2243,7 +2276,7 @@ static ERRCODE ntxClose( NTXAREAP pArea )
 static ERRCODE ntxLock( NTXAREAP pArea, LPDBLOCKINFO pLockInfo )
 {
    HB_TRACE(HB_TR_DEBUG, ("ntxLock(%p, %p)", pArea, pLockInfo));
-   
+
    if( SUPER_LOCK( ( AREAP ) pArea, pLockInfo ) )
    {
       LPNTXINDEX lpIndex;
@@ -2254,6 +2287,10 @@ static ERRCODE ntxLock( NTXAREAP pArea, LPDBLOCKINFO pLockInfo )
          while( lpIndex )
          {
             pArea->lpCurIndex = lpIndex;
+            /* First 512 bytes of index file are blocked.
+               I don't sure, is it right - should be checked.
+               = Alexander Kresin =
+            */
             if( !hb_fsLock( lpIndex->DiskFile, 0, 512, FL_LOCK ) )
             {
                ntxUnLock( pArea,0 );
@@ -2268,7 +2305,7 @@ static ERRCODE ntxLock( NTXAREAP pArea, LPDBLOCKINFO pLockInfo )
       return FAILURE;
 }
 
-ERRCODE ntxUnLock( NTXAREAP pArea, ULONG ulRecNo )
+static ERRCODE ntxUnLock( NTXAREAP pArea, ULONG ulRecNo )
 {
    BOOL fFLocked;
 
@@ -2405,5 +2442,4 @@ HB_FUNC( DBFNTX_GETFUNCTABLE )
       hb_retni( hb_rddInherit( pTable, &ntxTable, &ntxSuper, ( BYTE * ) "DBF" ) );
    else
       hb_retni( FAILURE );
-
 }
