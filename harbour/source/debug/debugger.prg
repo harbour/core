@@ -355,7 +355,7 @@ METHOD HandleEvent() CLASS TDebugger
 
    while ! ::lEnd
 
-      nKey = InKey( 0 )
+      nKey = InKey( 0, INKEY_ALL )
 
       do case
          case ::oPullDown:IsOpen()
