@@ -1,3 +1,8 @@
+/*
+ * $Id$
+ */
+
+
 #include "common.ch"
 #include "hbclass.ch"
 #include "os2pm.ch"   // Needed to store some OS/2 PM constant values
