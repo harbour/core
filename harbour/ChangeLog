@@ -1,3 +1,22 @@
+20000514-22:25 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+  * source/compiler/harbour.l
+    - Removed: not needed states
+    - Removed "class method" "class data"
+    + Added rules for "declare""
+
+  * source/compiler/harbour.y
+    * Changed rules for DECLARE FUNCTION as per Ryszard suhhestion, New Sysntax is simply:
+        DECLARE FunName([...]) [As ...]
+    * Changed rules for DECLARE CLASS as per Ryszard suhhestion, New Sysntax is simply:
+        DECLARE ClassName MethodName([...]) [As ...] DataVar [As ...]
+
+  * source/compiler/harbour.c
+    ! Minor correction to allow final declaration to override previous declaration of same function.
+
+  * tests/testwarn.prg
+    * Modified code to demonstrate syntax functions, classes and objects of a declared class declarations.
+
 20000514-19:17 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
   * source/compiler/harbour.y

@@ -51,26 +51,26 @@
 
 //DECLARE Function nMyFunc AS NUMERIC
 
-DECLARE Function nMyFunc( cVar AS STRING, @nVar AS NUMERIC ) AS NUMERIC
+DECLARE nMyFunc( cVar AS STRING, @nVar AS NUMERIC ) AS NUMERIC
 
-DECLARE Function cOtherFunc( @cVar as char, optional nVar as num, optional other as variant ) AS CHAR
+DECLARE cOtherFunc( @cVar as char, optional nVar as num, optional other as variant ) AS CHAR
 
-DECLARE Function cOtherFunc( ) AS CHAR
+DECLARE cOtherFunc( ) AS CHAR
 
-DECLARE Function seconds() AS NUM
+DECLARE seconds() AS NUM
 
-DECLARE Function int( n AS NUMERIC ) AS NUMERIC
+DECLARE int( n AS NUMERIC ) AS NUMERIC
 
-DECLARE Function TEST AS NUMERIC
+DECLARE TEST() AS NUMERIC
 
-DECLARE Class MyClass                              ;
-        Has Method nMyFunc( nVal As Num ) As Num ;
-        Has Method nMyFunc( nVal As Num ) As Num ;
-        Has Data cMyData    ;
-        Has Method FinalMethod
+DECLARE MyClass                              ;
+        nMyFunc( nVal As Num ) As Num ;
+        nMyFunc( nVal As Num ) As Num ;
+        cMyData    ;
+        FinalMethod
 
-DECLARE Class MyClass                              ;
-        Has Method nMyFunc( nVal As Num ) As Num
+DECLARE MyClass                              ;
+        nMyFunc( nVal As Num ) As Num
 
 FIELD a AS CHAR
 FIELD b AS CHAR

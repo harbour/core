@@ -920,6 +920,12 @@ PCOMDECLARED hb_compDeclaredAdd( char * szDeclaredName )
    if ( ( pDeclared = hb_compDeclaredFind( szDeclaredName ) ) != NULL )
    {
       hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_DUP_DECLARATION, "Function", szDeclaredName );
+
+      /* Last declaration will take effect. */
+      pDeclared->cType = ' '; /* Not known yet */
+      pDeclared->cParamTypes = NULL;
+      pDeclared->iParamCount = 0;
+
       return pDeclared;
    }
 

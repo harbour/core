@@ -113,7 +113,6 @@ Separator     {SpaceTab}
 %x            FOR_ FUNCTION_ IIF_ IF_ IN_ INIT_ LOCAL_ LOOP_
 %x            MEMVAR_ PARAM_ PRIVATE_ PUBLIC_ STATIC_ RETURN_ RECOVER_
 %x            INVALIDNUM_ OTHERWISE_ PROCEDURE_
-%x            OPTIONAL_
 %s            INDEX
 
 %%
@@ -351,16 +350,32 @@ Separator     {SpaceTab}
 %{
 /* ************************************************************************ */
 %}
-"decl"("are"|"ar"|"a")? { BEGIN PRIVATE_;
-                  yylval.string = hb_strupr( hb_strdup( yytext ) );
-                }
-%{
-/* ************************************************************************ */
-%}
 
-<INITIAL>"optional"                { BEGIN OPTIONAL_; }
+<INITIAL>"declare"{Separator}+"with"{Separator}+[^ .] { unput( yytext[ yyleng-1 ] );
+	     					        unput( ' ' );
+	  					        unput( 'h' );
+						        unput( 't' );
+						        unput( 'i' );
+						        unput( 'w' );
+                                     		        if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
+                                     		        yylval.string = hb_strdup( "declare" );
+                                     		        hb_comp_iState = IDENTIFIER;
+                                     		        return IDENTIFIER;
+                                   		      }
 
-<OPTIONAL_>{Separator}+"with"{Separator}+[^ .] { unput( yytext[ yyleng-1 ] );
+<INITIAL>"declare"{Separator}+"to"{Separator}+[^ .] { unput( yytext[ yyleng-1 ] );
+						      unput( ' ' );
+						      unput( 'o' );
+						      unput( 't' );
+                                     		      if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
+                                     		      yylval.string = hb_strdup( "declare" );
+                                     		      hb_comp_iState = IDENTIFIER;
+                                     		      return IDENTIFIER;
+                                   		    }
+
+<INITIAL>"declare"{Separator}+[_a-zA-Z\&]           { unput( yytext[ yyleng-1 ] ); BEGIN 0; return DECLARE; }
+
+<INITIAL>"optional"{Separator}+"with"{Separator}+[^ .] { unput( yytext[ yyleng-1 ] );
 						       unput( ' ' );
 						       unput( 'h' );
 						       unput( 't' );
@@ -372,7 +387,7 @@ Separator     {SpaceTab}
                                      		       return IDENTIFIER;
                                    		     }
 
-<OPTIONAL_>{Separator}+"to"{Separator}+[^ .] { unput( yytext[ yyleng-1 ] );
+<INITIAL>"optional"{Separator}+"to"{Separator}+[^ .] { unput( yytext[ yyleng-1 ] );
 						       unput( ' ' );
 						       unput( 'o' );
 						       unput( 't' );
@@ -382,15 +397,7 @@ Separator     {SpaceTab}
                                      		       return IDENTIFIER;
                                    		     }
 
-<OPTIONAL_>{Separator}+[_a-zA-Z\&] { unput( yytext[ yyleng-1 ] ); BEGIN 0; return OPTIONAL; }
-
-<OPTIONAL_>{Separator}*(.|\n)      { /* end of line or any operator */
-                                     if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
-                                     unput( yytext[ yyleng-1 ] );
-                                     yylval.string = hb_strdup( "OPTIONAL" );
-                                     hb_comp_iState = IDENTIFIER;
-                                     return IDENTIFIER;
-                                   }
+<INITIAL>"optional"{Separator}+[_a-zA-Z\&] { unput( yytext[ yyleng-1 ] ); BEGIN 0; return OPTIONAL; }
 
 "do"            BEGIN DO_;
 <DO_>{Separator}+"case"         { /* DO CASE statement */
@@ -1363,12 +1370,7 @@ Separator     {SpaceTab}
 "as array of numeric"   { return AS_NUMERIC_ARRAY; }
 "as array of object"    { return AS_OBJECT_ARRAY; }
 
-"declare function"   { return DECLARE_FUN; }
-"declare class"      { return DECLARE_CLASS; }
-"has method"         { return CLASS_METHOD; }
-"has data"           { return CLASS_DATA; }
-
-"from class"         { return FROMCLASS; }
+"from class"            { return FROMCLASS; }
 
 %{
 /* ************************************************************************ */
