@@ -147,14 +147,14 @@ void gtPuts(char x, char y, char attr, char *str, int len)
     DWORD i, dwlen;
     COORD coord;
     LPWORD pwattr;
-    pwattr = (LPWORD) hb_xgrab(strlen(str) * sizeof(*pwattr));
+    pwattr = (LPWORD) hb_xgrab(len * sizeof(*pwattr));
     if (!pwattr)
     {
         return;
     }
     coord.X = (DWORD) (x);
     coord.Y = (DWORD) (y);
-    for (i = 0; i < strlen(str); i++)
+    for (i = 0; i < len; i++)
     {
         *(pwattr + i) = attr;
     }
@@ -170,7 +170,7 @@ void gtGetText(char x1, char y1, char x2, char y2, char *dest)
     LPWORD pwattr;
     char y, *pstr;
     width = (x2 - x1 + 1);
-    pwattr = (LPWORD) hb_xgrab(strlen(str) * sizeof(*pwattr));
+    pwattr = (LPWORD) hb_xgrab(width * sizeof(*pwattr));
     if (!pwattr)
     {
         return;
@@ -206,7 +206,7 @@ void gtPutText(char x1, char y1, char x2, char y2, char *srce)
     LPWORD pwattr;
     char y, *pstr;
     width = (x2 - x1 + 1);
-    pwattr = (LPWORD) hb_xgrab(strlen(str) * sizeof(*pwattr));
+    pwattr = (LPWORD) hb_xgrab(width * sizeof(*pwattr));
     if (!pwattr)
     {
         return;
@@ -237,14 +237,14 @@ void gtPutText(char x1, char y1, char x2, char y2, char *srce)
 
 char gtWhereX(void)
 {
-    COORD dwCursorPosition;
-    GetConsoleCursorPosition(HOutput, &dwCursorPosition);
-    return dwCursorPosition.X;
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    GetConsoleScreenBufferInfo(HOutput, &csbi);
+    return csbi.dwCursorPosition.X;
 }
 
 char gtWhereY(void)
 {
-    COORD dwCursorPosition;
-    GetConsoleCursorPosition(HOutput, &dwCursorPosition);
-    return dwCursorPosition.Y;
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    GetConsoleScreenBufferInfo(HOutput, &csbi);
+    return csbi.dwCursorPosition.Y;
 }

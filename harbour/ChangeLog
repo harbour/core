@@ -1,3 +1,9 @@
+19990624-13:40 EDT David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/gt/gtwin.c
+    - New functions for gtWhereX() and gtWhereY() contributed by Paul Tucker
+    - Removed all occurrences of strlen(), replacing them either with a
+      parameter string length or a calculated string width
+
 19990624-19:17 CET Felipe Coury
    + tests/working/hscript/ugly.hs
      additional test file
