@@ -1,3 +1,9 @@
+20000116-20:30 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/rtl/harbinit.prg
+	* replaced ANNOUNCEd CLIPPER5xx with procedure definition
+	
+	
 20000116-15:35 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *include/hberrors.h
