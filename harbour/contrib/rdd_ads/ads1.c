@@ -185,10 +185,25 @@ static BOOL hb_adsUnLockAllRecords( ADSAREAP pArea )
    return 1;
 }
 
+static ERRCODE hb_adsCheckBofEof( ADSAREAP pArea )
+{
+
+   AdsAtBOF( pArea->hTable, (UNSIGNED16 *)&(pArea->fBof) );
+   AdsAtEOF( pArea->hTable, (UNSIGNED16 *)&(pArea->fEof) );
+   
+  if( pArea->fBof && !pArea->fEof )
+     AdsSkip  ( (pArea->hOrdCurrent)? pArea->hOrdCurrent:pArea->hTable, 1 );
+   return SUPER_SKIPFILTER( (AREAP)pArea, 1 );
+}
+
 /*
  * -- ADS METHODS --
  */
 
+#define  adsBof                    NULL
+#define  adsEof                    NULL
+
+/*
 static ERRCODE adsBof( ADSAREAP pArea, BOOL * pBof )
 {
    HB_TRACE(HB_TR_DEBUG, ("adsBof(%p, %p)", pArea, pBof));
@@ -206,7 +221,7 @@ static ERRCODE adsEof( ADSAREAP pArea, BOOL * pEof )
    * pEof = pArea->fEof;
    return SUCCESS;
 }
-
+*/
 #define  adsFound                  NULL
 
 static ERRCODE adsGoBottom( ADSAREAP pArea )
@@ -214,6 +229,7 @@ static ERRCODE adsGoBottom( ADSAREAP pArea )
    HB_TRACE(HB_TR_DEBUG, ("adsGoBottom(%p)", pArea));
 
    AdsGotoBottom  ( pArea->hTable );
+   hb_adsCheckBofEof( pArea );
    return SUPER_SKIPFILTER( (AREAP)pArea, -1 );
 }
 
@@ -232,6 +248,7 @@ static ERRCODE adsGoTo( ADSAREAP pArea, ULONG ulRecNo )
 
    pArea->lpExtendInfo->fValidBuffer = FALSE;
    AdsGotoRecord( pArea->hTable, ulRecNo );
+   hb_adsCheckBofEof( pArea );
 
    return SUCCESS;
 }
@@ -261,28 +278,29 @@ static ERRCODE adsGoTop( ADSAREAP pArea )
    HB_TRACE(HB_TR_DEBUG, ("adsGoTop(%p)", pArea));
 
    AdsGotoTop  ( (pArea->hOrdCurrent)? pArea->hOrdCurrent:pArea->hTable );
+   hb_adsCheckBofEof( pArea );
    return SUPER_SKIPFILTER( (AREAP)pArea, 1 );
 }
 
 static ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFindLast )
 {
    UNSIGNED16 usSeekType = ( bSoftSeek )? ADS_SOFTSEEK:ADS_HARDSEEK;
-   UNSIGNED32 ulRetVal;
    HB_TRACE(HB_TR_DEBUG, ("adsSeek(%p, %d, %p, %d)", pArea, bSoftSeek, pKey, bFindLast));
 
    if( bFindLast )
    {
-      ulRetVal = AdsSeekLast( pArea->hOrdCurrent, (UNSIGNED8*)pKey->item.asString.value,
+      AdsSeekLast( pArea->hOrdCurrent, (UNSIGNED8*)pKey->item.asString.value,
                     (UNSIGNED16) pKey->item.asString.length, ADS_STRINGKEY,
                     (UNSIGNED16*) &(pArea->fFound) );
    }
    else
    {
-      ulRetVal = AdsSeek( pArea->hOrdCurrent, (UNSIGNED8*)pKey->item.asString.value,
+      AdsSeek( pArea->hOrdCurrent, (UNSIGNED8*)pKey->item.asString.value,
                    (UNSIGNED16) pKey->item.asString.length, ADS_STRINGKEY,
                    usSeekType, (UNSIGNED16*) &(pArea->fFound) );
    }
    AdsIsFound( pArea->hTable, (UNSIGNED16 *)&(pArea->fFound) );
+   hb_adsCheckBofEof( pArea );
 
    return SUCCESS;
 }
@@ -292,10 +310,13 @@ static ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
 
 static ERRCODE adsSkipRaw( ADSAREAP pArea, LONG toSkip )
 {
+   UNSIGNED32 ulRetVal;
 
    HB_TRACE(HB_TR_DEBUG, ("adsSkipRaw(%p)", pArea));
 
-   if ( AdsSkip  ( (pArea->hOrdCurrent)? pArea->hOrdCurrent:pArea->hTable, toSkip ) == AE_SUCCESS )
+   ulRetVal = AdsSkip  ( (pArea->hOrdCurrent)? pArea->hOrdCurrent:pArea->hTable, toSkip );
+   hb_adsCheckBofEof( pArea );
+   if ( ulRetVal == AE_SUCCESS )
       return SUCCESS;
    else
       return FAILURE;
@@ -314,6 +335,7 @@ static ERRCODE adsAddField( ADSAREAP pArea, LPDBFIELDINFO pFieldInfo )
 static ERRCODE adsAppend( ADSAREAP pArea, BOOL bUnLockAll )
 {
 
+   HB_SYMBOL_UNUSED( bUnLockAll );
    HB_TRACE(HB_TR_DEBUG, ("adsAppend(%p, %d)", pArea, (int) bUnLockAll));
 
    AdsAppendRecord  ( pArea->hTable );
@@ -393,27 +415,40 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
    if( uiIndex > pArea->uiFieldCount )
       return FAILURE;
 
-   if( !pArea->lpExtendInfo->fValidBuffer ) adsGetRec( pArea, &pBuffer );
    pField = pArea->lpFields + uiIndex - 1;
-   szText = pBuffer + pField->uiOffset;
+   if( !pArea->fEof )
+   {
+      if( !pArea->lpExtendInfo->fValidBuffer ) adsGetRec( pArea, &pBuffer );
+      szText = pBuffer + pField->uiOffset;
+   }
    switch( pField->uiType )
    {
       case 'C':
-         hb_itemPutCL( pItem, ( char * ) szText,
+         if( pArea->fEof )
+            hb_itemPutC( pItem, "" );
+         else
+            hb_itemPutCL( pItem, ( char * ) szText,
                        pField->uiLen + ( ( USHORT ) pField->uiDec << 8 ) );
          break;
 
       case 'N':
-         szEndChar = * ( szText + pField->uiLen );
-         * ( szText + pField->uiLen ) = '\0';
-         if( pField->uiDec )
-            hb_itemPutNDLen( pItem, atof( ( char * ) szText ), ( int ) pField->uiLen - ( ( int ) pField->uiDec + 1 ), ( int ) pField->uiDec );
+         if( pArea->fEof )
+            hb_itemPutNLLen( pItem, 0, ( int ) pField->uiLen );
          else
-            hb_itemPutNLLen( pItem, atol( ( char * ) szText ), ( int ) pField->uiLen );
-         * ( szText + pField->uiLen ) = szEndChar;
+         {
+            szEndChar = * ( szText + pField->uiLen );
+            * ( szText + pField->uiLen ) = '\0';
+            if( pField->uiDec )
+               hb_itemPutNDLen( pItem, atof( ( char * ) szText ), ( int ) pField->uiLen - ( ( int ) pField->uiDec + 1 ), ( int ) pField->uiDec );
+            else
+               hb_itemPutNLLen( pItem, atol( ( char * ) szText ), ( int ) pField->uiLen );
+            * ( szText + pField->uiLen ) = szEndChar;
+         }
          break;
 
       case 'D':
+         if( pArea->fEof )
+            hb_itemPutDS( pItem, "        " );
          szEndChar = * ( szText + pField->uiLen );
          * ( szText + pField->uiLen ) = '\0';
          hb_itemPutDS( pItem, ( char * ) szText );
@@ -421,10 +456,10 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          break;
 
       case 'L':
-         if( * szText == 'T' )
-            hb_itemPutL( pItem, TRUE );
-         else
+         if( pArea->fEof || *szText == 'F' )
             hb_itemPutL( pItem, FALSE );
+         else
+            hb_itemPutL( pItem, TRUE );
          break;
       case 'M':
          {
@@ -493,7 +528,7 @@ static ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 
    HB_TRACE(HB_TR_DEBUG, ("adsPutValue(%p, %hu, %p)", pArea, uiIndex, pItem));
 
-   if( uiIndex > pArea->uiFieldCount )
+   if( uiIndex > pArea->uiFieldCount || pArea->fEof )
       return FAILURE;
 
    pField = pArea->lpFields + uiIndex - 1;
@@ -783,6 +818,7 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
 
 static ERRCODE adsStructSize( ADSAREAP pArea, USHORT * StructSize )
 {
+   HB_SYMBOL_UNUSED( pArea );
    *StructSize = sizeof( ADSAREA );
    return SUCCESS;
 }
