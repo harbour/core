@@ -1,3 +1,10 @@
+19991018-08:55 GMT+1 Bruno Cantero <bruno@issnet.net>
+  * source/rtl/dummy.prg
+    - __dbSetLocate() and __dbSetFound() functions removed.
+
+  * source/rdd/dbcmd.c
+    + Added support for __dbSetLocate() and __dbSetFound() functions.
+
 19991018-07:36 GMT+1 Victor Szel <info@szelvesz.hu>
    + source/rtl/afields.prg
      source/rtl/Makefile

@@ -98,6 +98,8 @@ HARBOUR HB_DBRUNLOCK( void );
 HARBOUR HB_DBSELECTAREA( void );
 HARBOUR HB_DBSETDRIVER( void );
 HARBOUR HB_DBSETFILTER( void );
+HARBOUR HB___DBSETFOUND( void );
+HARBOUR HB___DBSETLOCATE( void );
 HARBOUR HB_DBSKIP( void );
 HARBOUR HB_DBSTRUCT( void );
 HARBOUR HB_DBTABLEEXT( void );
@@ -1825,6 +1827,25 @@ HARBOUR HB___DBLOCATE()
    }
 }
 
+HARBOUR HB___DBSETLOCATE( void )
+{
+   PHB_ITEM pLocate, pFor;
+   DBSCOPEINFO pScopeInfo;
+
+   if( pCurrArea )
+   {
+      pLocate = hb_param( 1, IT_BLOCK );
+      if( pLocate )
+      {
+         pFor = hb_itemNew( NULL );
+         hb_itemCopy( pFor, pLocate );
+         memset( &pScopeInfo, 0, sizeof( DBSCOPEINFO ) );
+         pScopeInfo.itmCobFor = pFor;
+         SELF_SETLOCATE( ( AREAP ) pCurrArea->pArea, &pScopeInfo );
+      }
+   }
+}
+
 HARBOUR HB_DBRECALL( void )
 {
    if( pCurrArea )
@@ -1928,6 +1949,18 @@ HARBOUR HB_DBSETDRIVER( void )
 
       szDefDriver = ( char * ) hb_xrealloc( szDefDriver, uiLen + 1 );
       strcpy( szDefDriver, szNewDriver );
+   }
+}
+
+HARBOUR HB___DBSETFOUND( void )
+{
+   PHB_ITEM pFound;
+
+   if( pCurrArea )
+   {
+      pFound = hb_param( 1, IT_LOGICAL );
+      if( pFound )
+         ( ( AREAP ) pCurrArea->pArea )->fFound = hb_itemGetL( pFound );
    }
 }
 

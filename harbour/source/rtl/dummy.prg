@@ -85,8 +85,6 @@ FUNCTION __dbZap()         ; RETURN NIL
 FUNCTION __dbArrange()     ; RETURN NIL
 FUNCTION __dbFList()       ; RETURN {}
 FUNCTION __dbOpenSDF()     ; RETURN NIL
-FUNCTION __dbSetFound()    ; RETURN NIL
-FUNCTION __dbSetLocate()   ; RETURN NIL
 FUNCTION __dbTrans()       ; RETURN NIL
 FUNCTION __dbTransRec()    ; RETURN NIL
 FUNCTION __FLEdit          ; RETURN {}
