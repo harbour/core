@@ -287,7 +287,7 @@ extern int      HB_EXPORT hb_parni( int iParam, ... ); /* retrieve a numeric par
 extern long     HB_EXPORT hb_parnl( int iParam, ... ); /* retrieve a numeric parameter as a long */
 extern PHB_ITEM HB_EXPORT hb_param( int iParam, int iMask ); /* retrieve a generic parameter */
 extern PHB_ITEM HB_EXPORT hb_paramError( int iParam ); /* Returns either the generic parameter or a NIL item if param not provided */
-
+extern BOOL     HB_EXPORT hb_extIsArray( int iParam );
 #ifdef HB_API_MACROS
 
 #include "hbapiitm.h"
@@ -340,13 +340,13 @@ extern void  HB_EXPORT  hb_storni( int iValue, int iParam, ... ); /* stores an i
 extern void  HB_EXPORT  hb_stornl( long lValue, int iParam, ... ); /* stores a long on a variable by reference */
 extern void  HB_EXPORT  hb_stornd( double dValue, int iParam, ... ); /* stores a double on a variable by reference */
 
-extern void     hb_xinit( void );                         /* Initialize fixed memory subsystem */
-extern void     hb_xexit( void );                         /* Deinitialize fixed memory subsystem */
-extern void *   hb_xalloc( ULONG ulSize );                /* allocates memory, returns NULL on failure */
-extern void *   hb_xgrab( ULONG ulSize );                 /* allocates memory, exits on failure */
-extern void     hb_xfree( void * pMem );                  /* frees memory */
-extern void *   hb_xrealloc( void * pMem, ULONG ulSize ); /* reallocates memory */
-extern ULONG    hb_xsize( void * pMem );                  /* returns the size of an allocated memory block */
+extern void    HB_EXPORT hb_xinit( void );                         /* Initialize fixed memory subsystem */
+extern void    HB_EXPORT hb_xexit( void );                         /* Deinitialize fixed memory subsystem */
+extern void *  HB_EXPORT hb_xalloc( ULONG ulSize );                /* allocates memory, returns NULL on failure */
+extern void *  HB_EXPORT hb_xgrab( ULONG ulSize );                 /* allocates memory, exits on failure */
+extern void    HB_EXPORT hb_xfree( void * pMem );                  /* frees memory */
+extern void *  HB_EXPORT hb_xrealloc( void * pMem, ULONG ulSize ); /* reallocates memory */
+extern ULONG   HB_EXPORT hb_xsize( void * pMem );                  /* returns the size of an allocated memory block */
 extern ULONG    hb_xquery( USHORT uiMode );               /* Query different types of memory information */
 
 #if UINT_MAX == ULONG_MAX

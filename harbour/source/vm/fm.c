@@ -111,7 +111,7 @@ static PHB_MEMINFO s_pLastBlock = NULL;
 
 #endif
 
-void * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, returns NULL on failure */
+void HB_EXPORT * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, returns NULL on failure */
 {
 #ifdef HB_FM_STATISTICS
 
@@ -190,7 +190,7 @@ void * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, returns NULL
 #endif
 }
 
-void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exits on failure */
+void HB_EXPORT * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exits on failure */
 {
    void * pMem;
 
@@ -272,7 +272,7 @@ void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exits on fail
 #endif
 }
 
-void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
+void HB_EXPORT * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
 {
 #ifdef HB_FM_STATISTICS
 
@@ -339,7 +339,7 @@ void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
 #endif
 }
 
-void hb_xfree( void * pMem )            /* frees fixed memory */
+void HB_EXPORT hb_xfree( void * pMem )            /* frees fixed memory */
 {
 #ifdef HB_FM_STATISTICS
 
@@ -390,7 +390,7 @@ void hb_xfree( void * pMem )            /* frees fixed memory */
 /* NOTE: Debug function, it will always return 0 when HB_FM_STATISTICS is
          not defined, don't use it for final code [vszakats] */
 
-ULONG hb_xsize( void * pMem ) /* returns the size of an allocated memory block */
+ULONG HB_EXPORT  hb_xsize( void * pMem ) /* returns the size of an allocated memory block */
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xsize(%p)", pMem));
 
@@ -403,12 +403,12 @@ ULONG hb_xsize( void * pMem ) /* returns the size of an allocated memory block *
 #endif
 }
 
-void hb_xinit( void ) /* Initialize fixed memory subsystem */
+void HB_EXPORT hb_xinit( void ) /* Initialize fixed memory subsystem */
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xinit()"));
 }
 
-void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
+void HB_EXPORT hb_xexit( void ) /* Deinitialize fixed memory subsystem */
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xexit()"));
 

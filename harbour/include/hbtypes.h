@@ -126,5 +126,13 @@ typedef BOOL     ( * HB_ARRAYSIZE)( PHB_ITEM pArray, ULONG ulLen );
 typedef BOOL     ( * HB_ARRAYLAST)( PHB_ITEM pArray, PHB_ITEM pResult ); 
 typedef BOOL     ( * HB_ARRAYRELEASE)( PHB_ITEM pArray ); 
 typedef BOOL     ( * HB_ARRAYSET)( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ); 
-typedef BOOL     ( * HB_ARRAYGET)( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ); 
+typedef BOOL     ( * HB_ARRAYGET)( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem );
+typedef void     ( * HB_XINIT)( void );                         /* Initialize fixed memory subsystem */
+typedef void     ( * HB_XEXIT)( void );                         /* Deinitialize fixed memory subsystem */
+typedef void *   ( * HB_XALLOC)( ULONG ulSize );                /* allocates memory, returns NULL on failure */
+typedef void *   ( * HB_XGRAB)( ULONG ulSize );                 /* allocates memory, exits on failure */
+typedef void     ( * HB_XFREE)( void * pMem );                  /* frees memory */
+typedef void *   ( * HB_XREALLOC)( void * pMem, ULONG ulSize ); /* reallocates memory */
+typedef ULONG    ( * HB_XSIZE)( void * pMem );                  /* returns the size of an allocated memory block */
+
 #endif
