@@ -4,6 +4,8 @@
      makefile.vc
      + -es2 added as a default Harbour switch.
        WARNING! HBDOC will not compile, since it has warnings.
+   * .cvsignore
+     + Added b32/, b16/ and vc/ dirs
    * contrib/*
      include/*
      doc/*
