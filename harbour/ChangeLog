@@ -1,3 +1,7 @@
+2001-04-26 14:00 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/vm/debug.c
+      ! __VMSTKLCOUNT( <nProcLevel> ) enhanced to accept a nProcLevel.
+
 2001-04-26 14:00 CET Martin Vogel <vogel@inttec.de>
 
   + contrib/libct/asciisum.c
@@ -5,7 +9,7 @@
 
   + contrib/libct/ascpos.c
     + ascpos() and valpos() function
-  
+
   * contrib/libct/Makefile
     + added contrib/libct/asciisum.c
     + added contrib/libct/ascpos.c
@@ -17,14 +21,14 @@
   * contrib/libct/makefile.vc
     + added contrib/libct/asciisum.c
     + added contrib/libct/ascpos.c
- 
+
   * contrib/libct/ctflist.txt
     * changed status of functions mentioned above
 
   + contrib/libct/tests/asciisum.prg
   + contrib/libct/tests/ascpos.prg
   + contrib/libct/tests/valpos.prg
-    ! small test programs for new functions 
+    ! small test programs for new functions
 
   * contrib/libct/tests/Makefile
     + added contrib/libct/tests/asciisum.prg
