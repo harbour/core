@@ -1,6 +1,4 @@
-//NOTEST
-//
-// Matching .C not uploaded
+
 function main()
 
   OutStd( MemoTran( "[HARBOUR]" + chr(141)+chr(10) + ;

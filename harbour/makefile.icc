@@ -29,14 +29,12 @@ $(path_lib)\harbour.lib :       $(path_obj)\arrays.obj \
                 $(path_obj)\errorsys.obj \
                 $(path_obj)\extend.obj \
                 $(path_obj)\gtapi.obj \
+                $(path_obj)\hardcr.obj \
                 $(path_obj)\initsymb.obj \
                 $(path_obj)\itemapi.obj \
                 $(path_obj)\math.obj \
-                $(path_obj)\msgdut.obj \
-                $(path_obj)\msggal.obj \
-                $(path_obj)\msgpor.obj \
-                $(path_obj)\msgspa.obj \
                 $(path_obj)\msguk.obj \
+                $(path_obj)\mtran.obj \
                 $(path_obj)\objfunc.obj \
                 $(path_obj)\set.obj \
                 $(path_obj)\strings.obj \
@@ -91,12 +89,14 @@ $(path_obj)\descend.obj  : {$(path_c)}descend.c  $(path_h)\extend.h $(path_h)\ty
 $(path_obj)\environ.obj  : {$(path_c)}environ.c  $(path_h)\extend.h $(path_h)\types.h
 $(path_obj)\errorapi.obj : {$(path_c)}errorapi.c $(path_h)\extend.h $(path_h)\types.h $(path_h)\ctoharb.h
 $(path_obj)\extend.obj   : {$(path_c)}extend.c   $(path_h)\extend.h $(path_h)\types.h $(path_h)\set.h
-$(path_obj)\files.obj    : {$(path_c)}extend.c   $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\files.obj    : {$(path_c)}files.c    $(path_h)\extend.h $(path_h)\types.h
 $(path_obj)\gtapi.obj    : {$(path_c)}gtapi.c    $(path_h)\extend.h $(path_h)\types.h $(path_h)\gtapi.h
+$(path_obj)\hardcr.obj   : {$(path_c)}hardcr.c   $(path_h)\extend.h $(path_h)\types.h
 $(path_obj)\initsymb.obj : {$(path_c)}initsymb.c $(path_h)\extend.h $(path_h)\types.h
 $(path_obj)\itemapi.obj  : {$(path_c)}itemapi.c  $(path_h)\extend.h $(path_h)\types.h $(path_h)\ctoharb.h $(path_h)\itemapi.h $(path_h)\set.h
 $(path_obj)\math.obj     : {$(path_c)}math.c     $(path_h)\extend.h $(path_h)\types.h
 $(path_obj)\mathx.obj    : {$(path_c)}mathx.c    $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\mtran.obj    : {$(path_c)}mtran.c    $(path_h)\extend.h $(path_h)\types.h
 $(path_obj)\set.obj      : {$(path_c)}set.c      $(path_h)\extend.h $(path_h)\types.h $(path_h)\set.h
 $(path_obj)\strcmp.obj   : {$(path_c)}strcmp.c   $(path_h)\extend.h $(path_h)\types.h $(path_h)\set.h
 $(path_obj)\strings.obj  : {$(path_c)}strings.c  $(path_h)\extend.h $(path_h)\types.h $(path_h)\set.h

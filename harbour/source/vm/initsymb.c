@@ -6,8 +6,10 @@
 #include "extend.h"
 #include "types.h"
 
-extern void Classes__InitSymbols( void ); /* Needed by C++ compilers */
-extern void Descend__InitSymbols( void ); /* Needed by C++ compilers */
+extern void Classes__InitSymbols( void );
+extern void Descend__InitSymbols( void );
+extern void HardCR__InitSymbols( void );
+extern void Memotran__InitSymbols( void );
 
 void ProcessSymbols( SYMBOL *, WORD );
 
@@ -17,7 +19,6 @@ HARBOUR ASC( void );
 HARBOUR AT( void );
 HARBOUR CDOW( void );
 HARBOUR CHR( void );
-HARBOUR COL( void );
 HARBOUR CMONTH( void );
 HARBOUR CTOD( void );
 HARBOUR DATE( void );
@@ -36,11 +37,8 @@ HARBOUR LTRIM( void );
 HARBOUR MAX( void );
 HARBOUR MIN( void );
 HARBOUR MONTH( void );
-HARBOUR PCOL( void );
 HARBOUR PCOUNT( void );
-HARBOUR PROW( void );
 HARBOUR REPLICATE( void );
-HARBOUR ROW( void );
 HARBOUR RTRIM( void );
 HARBOUR SPACE( void );
 HARBOUR SQRT( void );
@@ -65,7 +63,7 @@ static SYMBOL symbols[] = {
     { "CDOW"      , FS_PUBLIC, CDOW         , 0 },
     { "CHR"       , FS_PUBLIC, CHR          , 0 },
     { "CMONTH"    , FS_PUBLIC, CMONTH       , 0 },
-    { "COL"       , FS_PUBLIC, COL          , 0 },
+    { "COL"       , FS_PUBLIC, NULL         , 0 },
     { "CTOD"      , FS_PUBLIC, CTOD         , 0 },
     { "DATE"      , FS_PUBLIC, DATE         , 0 },
     { "DAY"       , FS_PUBLIC, DAY          , 0 },
@@ -94,16 +92,16 @@ static SYMBOL symbols[] = {
     { "MAX"       , FS_PUBLIC, MAX          , 0 },
     { "MIN"       , FS_PUBLIC, MIN          , 0 },
     { "MONTH"     , FS_PUBLIC, MONTH        , 0 },
-    { "PCOL"      , FS_PUBLIC, PCOL         , 0 },
+    { "PCOL"      , FS_PUBLIC, NULL         , 0 },
     { "PCOUNT"    , FS_PUBLIC, PCOUNT       , 0 },
-    { "PROW"      , FS_PUBLIC, PROW         , 0 },
+    { "PROW"      , FS_PUBLIC, NULL         , 0 },
     { "QSELF"     , FS_PUBLIC, NULL         , 0 },
     { "RECCOUNT"  , FS_PUBLIC, NULL         , 0 },
     { "RECNO"     , FS_PUBLIC, NULL         , 0 },
     { "REPLICATE" , FS_PUBLIC, REPLICATE    , 0 },
     { "RLOCK"     , FS_PUBLIC, NULL         , 0 },
     { "ROUND"     , FS_PUBLIC, NULL         , 0 },
-    { "ROW"       , FS_PUBLIC, ROW          , 0 },
+    { "ROW"       , FS_PUBLIC, NULL         , 0 },
     { "RTRIM"     , FS_PUBLIC, RTRIM        , 0 },
     { "SECONDS"   , FS_PUBLIC, NULL         , 0 },
     { "SELECT"    , FS_PUBLIC, NULL         , 0 },
@@ -132,6 +130,8 @@ void InitSymbolTable( void )
    */
   Classes__InitSymbols();
   Descend__InitSymbols();
+  HardCR__InitSymbols();
+  Memotran__InitSymbols();
 
   /*
    * The system symbol table with runtime functions HAVE TO be called last

@@ -1,3 +1,11 @@
+19990606-10:15 CET Jose Lalin (upload Eddie Runia)
+  + source/rtl/hardcr.c; source/rtl/mtran.c
+    new !
+  * source/vm/initsymb.c
+    added initsymbols call
+  * makefile.*
+    files added
+
 19990605-20:05 EST Les. Griffith
   * some fixes to dir.c for gcc and suggestions by Victor Szel
     need replacement for non gcc supported functions ltoa() and strrev()

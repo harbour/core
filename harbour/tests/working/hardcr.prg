@@ -1,6 +1,3 @@
-//NOTEST
-//
-// I haven't uploaded or tested the .Cs
 
 function main()
 

@@ -55,9 +55,11 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\errorapi.obj \
     $(OBJ_DIR)\errorsys.obj \
     $(OBJ_DIR)\extend.obj \
+    $(OBJ_DIR)\hardcr.obj \
     $(OBJ_DIR)\initsymb.obj \
     $(OBJ_DIR)\itemapi.obj \
     $(OBJ_DIR)\math.obj \
+    $(OBJ_DIR)\mtran.obj \
     $(OBJ_DIR)\set.obj \
     $(OBJ_DIR)\strings.obj \
     $(OBJ_DIR)\strcmp.obj \
