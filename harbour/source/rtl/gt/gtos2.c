@@ -34,6 +34,17 @@
  */
 
 /*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 1999 Chen Kedem <niki@actcom.co.il>
+ *    hb_gt_Tone()
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
+
+/*
  *  This module is partially based on VIDMGR by Andrew Clarke and modified
  *  for the Harbour project
  */
@@ -45,7 +56,14 @@
 
 #include <string.h>
 #include <os2.h>
+
 #include "hbapigt.h"
+
+#if defined(HARBOUR_GCC_OS2)
+   ULONG DosBeep( ULONG ulFrequency, ULONG ulDuration );
+#else
+   #include <dos.h>
+#endif
 
 static char hb_gt_GetCellSize( void );
 static void hb_gt_SetCursorSize( char start, char end, int visible );
@@ -424,3 +442,40 @@ void hb_gt_SetBlink( BOOL bBlink )
    vi.fs   = ( bBlink ? 0 : 1 );        /* 0 = blink, 1 = intens      */
    VioSetState( &vi, 0 );
 }
+
+void hb_gt_Tone( double dFrequency, double dDuration )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Tone(%lf, %lf)", dFrequency, dDuration));
+
+   /* The conversion from Clipper timer tick units to
+      milliseconds is * 1000.0 / 18.2. */
+
+   dFrequency = HB_MIN_( HB_MAX_( 0.0, dFrequency ), 32767.0 );
+   dDuration = dDuration * 1000.0 / 18.2; /* milliseconds */
+
+   while( dDuration > 0.0 )
+   {
+#if defined(HB_TONE_OS2_GCC)
+      ULONG temp = ( ULONG ) HB_MIN_( HB_MAX_( 0, dDuration ), ULONG_MAX );
+#else
+      USHORT temp = ( USHORT ) HB_MIN_( HB_MAX_( 0, dDuration ), USHRT_MAX );
+#endif
+
+      dDuration -= temp;
+      if( temp <= 0 )
+      {
+         /* Ensure that the loop gets terminated when
+            only a fraction of the delay time remains. */
+         dDuration = -1.0;
+      }
+      else
+      {
+#if defined(HB_TONE_OS2_GCC)
+         DosBeep( ( ULONG ) dFrequency, temp );
+#else
+         DosBeep( ( USHORT ) dFrequency, temp );
+#endif
+      }
+   }
+}
+

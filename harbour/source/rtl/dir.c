@@ -132,10 +132,6 @@
 
 #endif
 
-#if defined(__CYGWIN__)
-   #include <time.h>
-#endif
-
 #if defined(__WATCOMC__) || defined(_MSC_VER) || defined(__MINGW32__)
    #include <sys/stat.h>
    #include <share.h>
@@ -387,7 +383,7 @@ HARBOUR HB_DIRECTORY( void )
    struct stat statbuf;
    struct tm * ft;
 
-#if defined(_MSC_VER ) || defined(__MINGW32__)
+#if defined(_MSC_VER) || defined(__MINGW32__)
    struct _finddata_t entry;
    long hFile;
 #elif defined(__IBMCPP__)

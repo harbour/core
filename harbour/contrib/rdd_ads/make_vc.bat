@@ -3,6 +3,9 @@ rem
 rem $Id$
 rem 
 
+if "%1" == "clean" goto CLEAN
+if "%1" == "CLEAN" goto CLEAN
+
 :BUILD
 
    nmake /f makefile.vc %1 %2 %3 > make_vc.log
@@ -16,6 +19,10 @@ rem
 :BUILD_ERR
 
    notepad make_vc.log
+   goto EXIT
+
+:CLEAN
+
    goto EXIT
 
 :EXIT

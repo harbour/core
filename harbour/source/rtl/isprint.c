@@ -58,7 +58,7 @@
 #endif
 
 #if defined(__TURBOC__) || defined(__BORLANDC__) || defined(_MSC_VER) || defined(__DJGPP__)
-   #if !defined(_Windows) && !defined(WINNT) && !defined( _WINDOWS_ )
+   #if !(defined(_Windows) || defined(__NT__) || defined(WINNT) || defined(_WINDOWS_))
       #define HB_LOCAL_DOS
    #endif
 #endif

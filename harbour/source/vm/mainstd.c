@@ -36,7 +36,7 @@
 #include "hbapi.h"
 #include "hbvm.h"
 
-#ifdef __MINGW32__
+#if defined(__MINGW32__)
 int _CRT_glob = 0;
 #endif
 
@@ -54,7 +54,7 @@ int main( int argc, char * argv[] )
    return 0;
 }
 
-#ifdef __DJGPP__
+#if defined(__DJGPP__)
 char ** __crt0_glob_function( char * _arg )
 {
    /* This function disables command line wildcard expansion. */

@@ -57,126 +57,12 @@
  *
  */
 
-#if defined(__DJGPP__)
-   #include <pc.h>
-   #include <time.h>
-#elif defined(__CYGWIN__)
-   #include <Windows32/Base.h>
-   #include <Windows32/Defines.h>
-   #include <Windows32/Structures.h>
-   #include <Windows32/CommonFunctions.h>
-   #define HB_DONT_DEFINE_BASIC_TYPES
-#elif defined(_Windows) || defined(_WIN32)
-   #if defined(_MSC_VER)
-      #define HB_OS_WIN_32_USED
-   #endif
-#elif defined(__MINGW32__)
-   #include <stdlib.h>
-#elif defined(__BORLANDC__)
-   #include <dos.h>
-   #include <time.h>
-#elif defined(OS2)
-   #include <dos.h>
-#elif defined( __WATCOMC__ )
-   #include <i86.h>
-   #include <time.h>
-#endif
-
 #include "hbapi.h"
-#include "hbapigt.h" /* For hb_releaseCPU() */
-
-#if defined(HARBOUR_GCC_OS2)
-   ULONG DosBeep( ULONG ulFrequency, ULONG ulDuration );
-#endif
-
-void hb_tone( double dFrequency, double dDuration )
-{
-   /* platform specific code */
-   /*
-      The conversion from Clipper timer tick units to
-      milliseconds is * 1000.0 / 18.2.
-   */
-   /* TODO: add more platform support */
-#if defined(HARBOUR_GCC_OS2)
-   ULONG temp;
-#elif defined(WINNT) || defined(_Windows) || defined(_WIN32) || defined(__CYGWIN__)
-   ULONG temp;
-#elif defined(OS2) || defined(__MINGW32__)
-   USHORT temp;
-#elif defined(__DJGPP__) || defined(__BORLANDC__) || defined(__WATCOMC__)
-   USHORT temp; /* Use USHORT, because this variable gets added to clock()
-                   to form end_clock and we want to minimize overflow risk */
-   clock_t end_clock;
-#else
-   /* Unsupported platform. */
-   ULONG temp;    /* Avoid unreferenced temp */
-   dDuration = -1.0; /* Exit without delay */
-#endif
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_tone(%lf, %lf)", dFrequency, dDuration));
-
-#if defined(HARBOUR_GCC_OS2) || defined(OS2) || defined(WINNT) || defined(_Windows) || defined(_WIN32) || defined(__MINGW32__) || defined(__CYGWIN__)
-   dFrequency = HB_MIN_( HB_MAX_( 0.0, dFrequency ), 32767.0 );
-   dDuration = dDuration * 1000.0 / 18.2; /* milliseconds */
-#elif defined(__DJGPP__) || defined(__BORLANDC__)
-   dFrequency = HB_MIN_( HB_MAX_( 0.0, dFrequency ), 32767.0 );
-   dDuration = dDuration * CLOCKS_PER_SEC / 18.2 ; /* clocks */
-#endif
-#if ( defined(__BORLANDC__) && ! defined(_Windows) && ! defined(WINNT) &&  ! defined(_WIN32) )  || defined(__WATCOMC__)
-   sound( ( unsigned ) dFrequency );
-#elif defined(__DJGPP__)
-   sound( ( int ) dFrequency );
-#endif
-   while( dDuration > 0.0 )
-   {
-#if defined(HARBOUR_GCC_OS2) || defined(_Windows) || defined(_WIN32) || defined(__CYGWIN__) || defined(WINNT)
-      temp = ( ULONG ) HB_MIN_( HB_MAX_( 0, dDuration ), ULONG_MAX );
-#elif defined(OS2) || defined(__BORLANDC__) || defined(__DJGPP__) || defined(__MINGW32__) || defined(__WATCOMC__)
-      temp = ( USHORT ) HB_MIN_( HB_MAX_( 0, dDuration ), USHRT_MAX );
-#else
-      temp = 0;
-#endif
-      dDuration -= temp;
-      if( temp <= 0 )
-      {
-         /* Ensure that the loop gets terminated when
-            only a fraction of the delay time remains. */
-         dDuration = -1.0;
-      }
-      else
-      {
-#if defined(HARBOUR_GCC_OS2)
-         DosBeep( ( ULONG ) dFrequency, temp );
-#elif defined(OS2)
-         DosBeep( ( USHORT ) dFrequency, temp );
-#elif defined(__MINGW32__)
-         beep( dFrequency, temp );
-#elif defined(WINNT) || defined(__CYGWIN__)
-         Beep( ( ULONG ) dFrequency, temp );
-#elif ( defined(_Windows) || defined(_WIN32) ) && ! defined(__BORLANDC__)
-         /* Bad news for non-NT Windows platforms: Beep() ignores
-            both parameters and either generates the default sound
-            event or the standard system beep. */
-         Beep( ( ULONG ) dFrequency, temp );
-#elif defined(__DJGPP__) || ( defined(__BORLANDC__) && ! defined(_Windows) && ! defined(_WIN32) ) || defined(__WATCOMC__)
-         /* Note: delay() in <dos.h> for DJGPP does not work and
-                  delay() in <dos.h> for BORLANDC is not multi-
-                  tasking friendly. */
-         end_clock = clock() + temp;
-         while( clock() < end_clock )
-            hb_releaseCPU();
-#endif
-       }
-   }
-#if ( defined(__BORLANDC__) && ! defined(_Windows) && ! defined(_WIN32) ) || defined(__WATCOMC__)
-   nosound();
-#elif defined(__DJGPP__)
-   sound( 0 );
-#endif
-}
+#include "hbapigt.h"
 
 HARBOUR HB_TONE( void )
 {
    if( ISNUM( 1 ) )
-      hb_tone( hb_parnd( 1 ), ( ISNUM( 2 ) ? hb_parnd( 2 ) : 1.0 ) );
+      hb_gtTone( hb_parnd( 1 ), ( ISNUM( 2 ) ? hb_parnd( 2 ) : 1.0 ) );
 }
+

@@ -191,9 +191,8 @@
 
 #ifndef HB_SYMBOL_NAME_LEN
 /* NOTE: For complete CA-Cl*pper compatibility you can set the maximum
-         symbol name to 10, which makes Harbour 100% compatible in this
-         respect. Sometimes this can be useful for compiling legacy code.
-         [vszakats] */
+         symbol name to 10. Sometimes this can be useful for compiling legacy 
+         code. [vszakats] */
 /*
    #ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
       #define HB_SYMBOL_NAME_LEN   10
@@ -243,28 +242,46 @@
  * Platform detection
  */
 
-#ifndef DOS
-   #if defined(_QC) || defined(__DOS__) || defined(MSDOS) || defined(__MSDOS__)
-      #define DOS
+#ifndef HB_OS_DOS
+   #if defined(DOS) || defined(_QC) || defined(__DOS__) || defined(MSDOS) || defined(__MSDOS__)
+      #define HB_OS_DOS
+      #if defined(__386__)
+         #define HB_OS_DOS_32
+      #else
+         #define HB_OS_DOS_16
+      #endif
    #endif
 #endif
 
-#ifndef OS2
-   #if defined(__OS2__) || defined(OS_2) || defined(HARBOUR_GCC_OS2)
-      #define OS2
+#ifndef HB_OS_OS2
+   #if defined(OS2) || defined(__OS2__) || defined(OS_2) || defined(HARBOUR_GCC_OS2)
+      #define HB_OS_OS2
+      #ifdef (__EMX__)
+         #define HB_OS_OS2_EMX
+      #endif
    #endif
 #endif
 
-#ifndef EMX
-   #if defined(__EMX__)
-      #define EMX
+#ifndef HB_OS_WIN_32
+   #if defined(WINNT) || defined(_Windows) || defined(__NT__) || defined(_WIN32) || defined(__WINDOWS__) || defined(__WINDOWS_386__)
+      #define HB_OS_WIN_32
    #endif
 #endif
 
-#ifndef WINNT
-   #if defined(__NT__)
-      #define WINNT
+#ifndef HB_OS_MAC
+   #if defined(__MPW__)
+      #define HB_OS_MAC
    #endif
+#endif
+
+/* Compatibility */
+
+#if defined(HB_OS_DOS) && !defined(DOS)
+   #define DOS
+#endif
+
+#if defined(HB_OS_OS2) && !defined(OS2)
+   #define OS2
 #endif
 
 #endif /* HB_SETUP_H_ */

@@ -61,10 +61,10 @@ HBDOC_DIR    = utils\hbdoc
 #
 
 AS             = masm
-CFLAGS         = -TP -W3 -nologo -I$(INCLUDE_DIR) -DHB_GT_WIN
-CLIBFLAGS      = $(CFLAGS) -c
-CLIBFLAGSDEBUG = $(CLIBFLAGS) -Zi
-HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0
+CFLAGS         = -I$(INCLUDE_DIR) -TP -W3 -nologo -DHB_GT_WIN $(CFLAGS)
+CLIBFLAGS      = -c $(CFLAGS) $(CLIBFLAGS)
+CLIBFLAGSDEBUG = -Zi $(CLIBFLAGS)
+HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0 $(HARBOURFLAGS)
 
 #
 # Macros to access our library names
@@ -722,11 +722,11 @@ $(OBJ_DIR)\macrol.c : $(OBJ_DIR)\macroy.c $(MACRO_DIR)\macro.l
    flex -i -8 -Phb_comp -o$(OBJ_DIR)\macrol.c $(MACRO_DIR)\macro.l
 
 $(OBJ_DIR)\macroy.obj : $(OBJ_DIR)\macroy.c
-   $(CC) $(CLIBFLAGS) -w -DYY_NEVER_INTERACTIVE -Fo$@ $**
+   $(CC) $(CLIBFLAGS) -w -Fo$@ $**
 
 $(OBJ_DIR)\macrol.obj : $(OBJ_DIR)\macrol.c
    -echo. > $(INCLUDE_DIR)\unistd.h
-   $(CC) $(CLIBFLAGS) -w -DYY_NEVER_INTERACTIVE -Fo$@ $**
+   $(CC) $(CLIBFLAGS) -w -Fo$@ $**
    -del $(INCLUDE_DIR)\unistd.h
 
 

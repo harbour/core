@@ -13,7 +13,7 @@ CC = bcc
 AS = tasm
 
 # Borland C/C++ (DOS 16 bits)
-CFLAGS = $(CFLAGS) -DHB_GT_DOS -mh
+CFLAGS = -DHB_GT_DOS -mh $(CFLAGS)
 
 BIN_DIR = bin\b16
 OBJ_DIR = obj\b16
@@ -25,7 +25,7 @@ CC = bcc32
 AS = tasm32
 
 # Borland C/C++ (Windows 32 bits)
-CFLAGS = $(CFLAGS) -DHB_GT_WIN
+CFLAGS = -DHB_GT_WIN $(CFLAGS)
 
 BIN_DIR = bin\b32
 OBJ_DIR = obj\b32
@@ -34,7 +34,7 @@ LIB_DIR = lib\b32
 !endif
 
 !if !$d(BCC_NOOPTIM)
-CFLAGS = $(CFLAGS) -O2
+CFLAGS = -O2 $(CFLAGS)
 !endif
 
 #
@@ -59,10 +59,10 @@ HBDOC_DIR    = utils\hbdoc
 # C compiler definition and C flags. These should never have to change.
 #
 
-CFLAGS         = $(CFLAGS) -d -I$(INCLUDE_DIR)
-CLIBFLAGS      = $(CFLAGS) -c
-CLIBFLAGSDEBUG = $(CLIBFLAGS) -v
-HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0
+CFLAGS         = -I$(INCLUDE_DIR) -d $(CFLAGS)
+CLIBFLAGS      = -c $(CFLAGS) $(CLIBFLAGS)
+CLIBFLAGSDEBUG = -v $(CLIBFLAGS)
+HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0 $(HARBOURFLAGS)
 
 #
 # Macros to access our library names

@@ -61,7 +61,7 @@
 #include "hbapierr.h"
 #include "hbver.h"
 
-#if defined(_WINDOWS_) || defined(WINNT)
+#if defined(HB_OS_WIN_32)
    #if ! defined(VER_PLATFORM_WIN32_WINDOWS)
       #define VER_PLATFORM_WIN32_WINDOWS 1
    #endif
@@ -139,7 +139,7 @@ HARBOUR HB_OS( void )
 /* TODO: add MSVC support but MSVC cannot detect any OS except Windows! */
 #if defined(__TURBOC__) || defined(__BORLANDC__) || defined(_MSC_VER) || defined(__MINGW32__)
 
-#if defined(_WINDOWS_) || defined(__MINGW32__)
+#if defined(HB_OS_WIN_32)
 
    OSVERSIONINFO osVer; /* for GetVersionEx() */
    char szBuild[ 128 ] = "";
@@ -397,18 +397,18 @@ char * hb_version( USHORT uiMode )
       #elif (__BORLANDC__ >= 1280)
          /* Version 5.x */
          version = __BORLANDC__ >> 8;
-         revision = ( __BORLANDC__ & 0xff ) >> 4;
+         revision = ( __BORLANDC__ & 0xFF ) >> 4;
       #else
          /* Version 4.x */
          version = __BORLANDC__ >> 8;
-         revision = ( __BORLANDC__ - 1 & 0xff) >> 4;
+         revision = ( __BORLANDC__ - 1 & 0xFF ) >> 4;
       #endif
 
    #elif defined(__TURBOC__)
 
       compiler = "Borland Turbo C";
       version = __TURBOC__ >> 8;
-      revision = __TURBOC__ & 0xff;
+      revision = __TURBOC__ & 0xFF;
 
    #elif defined(_MSC_VER)
 

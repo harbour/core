@@ -33,22 +33,11 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://www.harbour-project.org
- *
- * Copyright 1999 Victor Szakats <info@szelvesz.hu>
- *    hb_traceenable()
- *    hb_traceenabled()
- *
- * See doc/license.txt for licensing terms.
- *
- */
-
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include "hbtrace.h"
 
 char * hb_tr_file_ = "";
@@ -56,7 +45,7 @@ int    hb_tr_line_ = 0;
 int    hb_tr_level_ = 0;
 
 static int s_enabled = 1;
-static FILE * s_fp = 0;
+static FILE * s_fp = NULL;
 static char * s_slevel[ HB_TR_LAST ] =
 {
    "HB_TR_ALWAYS",

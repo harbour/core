@@ -25,6 +25,8 @@ if "%1" == "CLEAN" goto CLEAN
 :CLEAN
 
    if exist bin\vc\*.exe del bin\vc\*.exe
+   if exist bin\vc\*.pdb del bin\vc\*.pdb
+   if exist bin\vc\*.ilk del bin\vc\*.ilk
    if exist bin\vc\*.map del bin\vc\*.map
    if exist lib\vc\*.lib del lib\vc\*.lib
    if exist obj\vc\*.obj del obj\vc\*.obj

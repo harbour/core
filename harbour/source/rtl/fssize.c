@@ -34,6 +34,7 @@
  *
  */
 
+#include <errno.h>
 #if defined( OS_UNIX_COMPATIBLE )
    #include <sys/stat.h>
 #else

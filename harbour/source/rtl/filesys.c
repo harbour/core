@@ -81,22 +81,14 @@
 #include "hbapifs.h"
 #include "hbapierr.h"
 
-#if defined(__CYGWIN__)
-   #include <mingw32/share.h>
-   #include <fcntl.h>
-   #include <io.h>
-#endif
-
 #if defined(__GNUC__) && !defined(__MINGW32__)
    #include <sys/types.h>
    #include <sys/stat.h>
    #include <unistd.h>
    #include <fcntl.h>
    #include <errno.h>
+   #include <io.h>
 
-   #if defined(__DJGPP__) || defined(__CYGWIN__) || defined(HARBOUR_GCC_OS2)
-      #include <io.h>
-   #endif
    #if defined(__DJGPP__)
       #include <dir.h>
       #define _getdrive getdisk
@@ -206,7 +198,7 @@ static USHORT s_uiErrorLast = 0;
    #define HB_FS_FILE_IO
 #endif
 
-#if defined( _MSC_VER ) || defined(__MINGW32__) || defined(__IBMCPP__)
+#if defined(_MSC_VER) || defined(__MINGW32__) || defined(__IBMCPP__)
 /* These compilers use sopen() rather than open(), because their
    versions of open() do not support combined O_ and SH_ flags */
    #define HB_FS_SOPEN
@@ -1562,7 +1554,7 @@ HARBOUR HB_DISKSPACE( void )
                     ( ULONG ) disk.sectors_per_cluster *
                     ( ULONG ) disk.bytes_per_sector;
 
-#elif defined(_Windows) || defined(WINNT) || defined(_WIN32)
+#elif defined(_Windows) || defined(__NT__) || defined(WINNT) || defined(_WIN32)
 
    {
       char szPath[ 4 ];

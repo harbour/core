@@ -98,7 +98,7 @@
 #include "inkey.ch"
 #include "hbinit.h"
 
-#if (defined(_WINDOWS_) || defined(WINNT)) && defined(HARBOUR_USE_WIN_GTAPI)
+#if (defined(_WINDOWS_) || defined(__NT__) || defined(WINNT)) && defined(HARBOUR_USE_WIN_GTAPI)
    extern int    hb_mouse_iCol;
    extern int    hb_mouse_iRow;
    extern BOOL   hb_gtBreak;  /* This variable is located in source/rtl/gt/gtwin.c */
@@ -133,7 +133,7 @@
 #if defined(__WATCOMC__)
    #include <conio.h>
    #include <i86.h>
-   #if defined(__386__) && !defined(__WINDOWS__386__)
+   #if defined(__386__) && !defined(__WINDOWS_386__)
       #define INT_86 int386
       #define DOS_REGS REGS
    #else
@@ -333,7 +333,7 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
 #elif defined(OS_UNIX_COMPATIBLE)
       if( ! read( STDIN_FILENO, &ch, 1 ) )
          ch = 0;
-#elif (defined(_WINDOWS_) || defined(WINNT)) && defined(HARBOUR_USE_WIN_GTAPI)
+#elif (defined(_WINDOWS_) || defined(__NT__) || defined(WINNT)) && defined(HARBOUR_USE_WIN_GTAPI)
       /* First check for Ctrl+Break, which is handled by gt/gtwin.c */
       if( hb_gtBreak )
       {
@@ -939,13 +939,6 @@ HARBOUR HB_INKEY( void )
       seconds = hb_parnd( 1 );
       wait = TRUE;
       if( seconds * CLOCKS_PER_SEC < 1 ) forever = TRUE;
-   #ifndef HARBOUR_USE_GTAPI
-      /* When not using the GT API, flush both stdout and stderr,
-         because we are waiting for input and want to ensure that
-         any user prompts are visible. */
-/*    fflush( stdout ); */
-/*    fflush( stderr ); */
-   #endif
    }
 
    if( args > 1 && hb_param( 2, IT_NUMERIC ) )

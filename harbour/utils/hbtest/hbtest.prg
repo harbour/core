@@ -37,6 +37,8 @@
 /* EMPTY() tests written by Eddie Runia <eddie@runia.com> */
 /* :class* tests written by Dave Pearson <davep@hagbard.demon.co.uk> */
 
+/* NOTE: The test suit will not work if the DTOS() function is not included
+         in Harbour (-DHB_COMPAT_XPP). */
 /* NOTE: Always compile with /n switch */
 /* NOTE: It's worth to make tests with and without the /z switch */
 /* NOTE: Guard all Harbour extensions with __HARBOUR__ #ifdefs */

@@ -54,6 +54,18 @@
 
 #include <string.h>
 #include <dos.h>
+
+/* For hb_gt_Tone() support */
+#if defined(__DJGPP__)
+   #include <pc.h>
+   #include <time.h>
+#elif defined(__BORLANDC__)
+   #include <time.h>
+#elif defined(__WATCOMC__)
+   #include <i86.h>
+   #include <time.h>
+#endif
+
 #include "hbapigt.h"
 #include "hbset.h" /* For Ctrl+Break handling */
 #include "hbvm.h" /* For Ctrl+Break handling */
@@ -134,6 +146,10 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Init()"));
 
+   HB_SYMBOL_UNUSED( iFilenoStdin );
+   HB_SYMBOL_UNUSED( iFilenoStdout );
+   HB_SYMBOL_UNUSED( iFilenoStderr );
+
 #if defined(__DJGPP__)
    gppconio_init();
    __djgpp_hwint_flags |= 2;     /* Count Ctrl+Break instead of killing program */
@@ -182,6 +198,9 @@ BOOL hb_gt_AdjustPos( BYTE * pStr, ULONG ulLen )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_AdjustPos(%s, %lu)", pStr, ulLen ));
 
+   HB_SYMBOL_UNUSED( pStr );
+   HB_SYMBOL_UNUSED( ulLen );
+
 #if defined(__TURBOC__)
    {
      _AH = 0x03;
@@ -202,6 +221,7 @@ BOOL hb_gt_AdjustPos( BYTE * pStr, ULONG ulLen )
      hb_gtSetPos( regs.h.dh, regs.h.dl );
    }
 #endif
+
    return TRUE;
 }
 
@@ -824,3 +844,52 @@ void hb_gt_SetBlink( BOOL bBlink )
    }
 #endif
 }
+
+void hb_gt_Tone( double dFrequency, double dDuration )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Tone(%lf, %lf)", dFrequency, dDuration));
+
+   /* The conversion from Clipper timer tick units to
+      milliseconds is * 1000.0 / 18.2. */
+
+   dFrequency = HB_MIN_( HB_MAX_( 0.0, dFrequency ), 32767.0 );
+   dDuration = dDuration * CLOCKS_PER_SEC / 18.2 ; /* clocks */
+
+#if defined(__BORLANDC__) || defined(__WATCOMC__)
+   sound( ( unsigned ) dFrequency );
+#elif defined(__DJGPP__)
+   sound( ( int ) dFrequency );
+#endif
+
+   while( dDuration > 0.0 )
+   {
+      /* Use USHORT, because this variable gets added to clock()    
+         to form end_clock and we want to minimize overflow risk */ 
+      USHORT temp = ( USHORT ) HB_MIN_( HB_MAX_( 0, dDuration ), USHRT_MAX );
+      clock_t end_clock;
+
+      dDuration -= temp;
+      if( temp <= 0 )
+      {
+         /* Ensure that the loop gets terminated when
+            only a fraction of the delay time remains. */
+         dDuration = -1.0;
+      }
+      else
+      {
+         /* Note: delay() in <dos.h> for DJGPP does not work and
+                  delay() in <dos.h> for BORLANDC is not multi-
+                  tasking friendly. */
+         end_clock = clock() + temp;
+         while( clock() < end_clock )
+            hb_releaseCPU();
+      }
+   }
+
+#if defined(__BORLANDC__) || defined(__WATCOMC__)
+   nosound();
+#elif defined(__DJGPP__)
+   sound( 0 );
+#endif
+}
+

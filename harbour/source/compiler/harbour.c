@@ -269,15 +269,17 @@ int main( int argc, char * argv[] )
                   }
                }
 
+/*
                while( hb_comp_pExterns )
                {
-                   PEXTERN pExtern = hb_comp_pExterns;
+                  PEXTERN pExtern = hb_comp_pExterns;
 
-                   hb_comp_pExterns = hb_comp_pExterns->pNext;
+                  hb_comp_pExterns = hb_comp_pExterns->pNext;
 
-                   hb_xfree( pExtern->szName );
-                   hb_xfree( pExtern );
+                  hb_xfree( pExtern->szName );
+                  hb_xfree( pExtern );
                }
+*/
 
                hb_comp_bExternal = FALSE;
             }

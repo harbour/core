@@ -47,7 +47,7 @@
 /* Include windows.h if applicable and requested */
 
 #ifdef HB_OS_WIN_32_USED
-   #if defined(_WINDOWS_) || defined(_Windows) || defined(WINNT) || defined(_WIN32)
+   #if defined(_WINDOWS_) || defined(_Windows) || defined(__NT__) || defined(WINNT) || defined(_WIN32)
       #define WIN32_LEAN_AND_MEAN
       #include <windows.h>
       #if defined(__GNUC__)

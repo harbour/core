@@ -40,6 +40,9 @@
  * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  *    hb_gt_CtrlHandler()
  *
+ * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
+ *    hb_gt_Tone()
+ *
  * See doc/license.txt for licensing terms.
  *
  */
@@ -737,3 +740,35 @@ void hb_gt_DebugScreen( BOOL bActivate )
    }
    SetConsoleActiveScreenBuffer( s_HOutput );
 }
+
+void hb_gt_Tone( double dFrequency, double dDuration )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Tone(%lf, %lf)", dFrequency, dDuration));
+
+   /* The conversion from Clipper timer tick units to
+      milliseconds is * 1000.0 / 18.2. */
+
+   dFrequency = HB_MIN_( HB_MAX_( 0.0, dFrequency ), 32767.0 );
+   dDuration = dDuration * 1000.0 / 18.2; /* milliseconds */
+
+   while( dDuration > 0.0 )
+   {
+      ULONG temp = ( ULONG ) HB_MIN_( HB_MAX_( 0, dDuration ), ULONG_MAX );
+
+      dDuration -= temp;
+      if( temp <= 0 )
+      {
+         /* Ensure that the loop gets terminated when
+            only a fraction of the delay time remains. */
+         dDuration = -1.0;
+      }
+      else
+      {
+         /* Bad news for non-NT Windows platforms: Beep() ignores
+            both parameters and either generates the default sound
+            event or the standard system beep. */
+         Beep( ( ULONG ) dFrequency, temp );
+      }
+   }
+}
+

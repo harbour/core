@@ -3,6 +3,9 @@ rem
 rem $Id$
 rem 
 
+if "%1" == "clean" goto CLEAN
+if "%1" == "CLEAN" goto CLEAN
+
 :BUILD
 
    make -fmakefile.bc %1 %2 %3 > make_b32.log
@@ -16,6 +19,10 @@ rem
 :BUILD_ERR
 
    notepad make_b32.log
+   goto EXIT
+
+:CLEAN
+
    goto EXIT
 
 :EXIT

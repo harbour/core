@@ -1,3 +1,77 @@
+20000318-17:17 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * source/rtl/seconds.c
+     % #include <dos.h> removed.
+   * include/hbsetup.h
+     include/hbdefs.h
+     source/rtl/dateshb.c
+     source/rtl/environ.c
+     source/rtl/filesys.c
+     source/rtl/oemansi.c
+     source/rtl/net.c
+     source/rtl/tone.c
+     source/rtl/isprint.c
+     source/rtl/inkey.c
+     source/rtl/dir.c
+     source/vm/fm.c
+     - EMX macro removed (it was not used).
+     * __NT__ checks added where WINNT is checked.
+     ; Cleanup before adding better platform detection code.
+     + Somewhat more complete platform detection added.
+     * Some W32 related cleanup in the #ifdef mess in environ.c/version().
+   * source/rtl/inkey.c
+     ! __WINDOWS__386__ -> __WINDOWS_386__
+     - Removed non-GTAPI branch (which was commented out anyway).
+   * source/vm/mainstd.c
+     source/rtl/gtapi.c
+     * #ifdef -> #if defined()
+   * source/rtl/fssize.c
+     source/rtl/fstemp.c
+     + Added #include <errno.h>
+     ! Fixed some unused variable warnings.
+   * include/hbapigt.h
+     include/hbapi.h
+     source/rtl/tone.c
+     source/rtl/gtapi.c
+     source/rtl/gt/*.c
+     % The hb_tone() multiplatform spagetti code separated into OS2/W32/DOS
+       platforms, cleanup up the branches for MINGW32 and CYGWIN, renamed
+       hb_tone() to hb_gtTone()+hb_gt_Tone(), and moved the platform specific
+       codes to the proper GT drivers.
+       Please test them on your platform, especially with WATCOM and DOS in
+       general.
+   * source/rtl/console.c
+     source/rtl/dir.c
+     source/rtl/filesys.c
+     source/rtl/gtapi.c
+     source/rtl/gt/gtpca.c
+     % Removed some unused #includes for __CYGWIN__
+     % Removed some (__DJGPP__ || __CYGWIN__ || HARBOUR_GCC_OS2) constructs
+       already guarded with (__GNUC__ && !__MINGW32__). Is there any other
+       special GNUC variant we should be aware of when #including <io.h> ?
+     % Removed __CYGWIN__ branch for isatty() in GTAPI.C. I couldn't find a 
+       reason why it was there since isatty() is defined and works OK (returns 
+       TRUE for 1 and 2) in Cygwin.
+     ; Now there's only four __CYGWIN__ checks in Harbour.
+   * source/rtl/gt/gtdos.c
+     ! Unused variable warnings fixed.
+   * makefile.vc
+     makefile.bc
+     + Honors the default CFLAGS, CLIBFLAGS and HARBOURFLAGS envvar.
+     - Some superluous flex/bison options removed from MSVC make file.
+   * make_vc.bat
+     + CLEAN now removes .ILK and .PDB files.
+   * contrib/rdd_ads/*.bat
+     + Handles CLEAN param silently.
+   * source/common/hbtrace.c
+     - Removed my Copyright.
+   * include/hbpp.h
+     include/hbvmpub.h
+     include/hbsetup.h
+     * Minor changes.
+   * utils/tests/hbtest.prg
+     utils/tests/make_c5x.bat
+     * Minor changes.
+
 20000318-14:36 GMT+3 Alexander Kresin
    * tests/db_brows.prg
      * Cleaned, warnings fixed
@@ -7,7 +81,7 @@
      % One variable scope adjusted.
    * make_b32.bat
      make_vc.bat
-     + It now cleans the .MAP files, too.
+     + They now cleans the .MAP files, too.
    * source/pp/ppcore.c
      ! Fixed GPF on reinitialization of #undefd macro in hb_pp_Init().
    * source/vm/main.c

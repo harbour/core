@@ -42,13 +42,8 @@
 
 #if defined(__GNUC__) && ! defined(__MINGW32__)
    #include <unistd.h>
-   #if defined(__DJGPP__) || defined(__CYGWIN__) || defined(HARBOUR_GCC_OS2)
-      #include <io.h>
-   #endif
-#else
-   #include <io.h>
 #endif
-
+#include <io.h>
 #include <ctype.h>
 #include <string.h>
 
@@ -367,3 +362,14 @@ void hb_gt_SetBlink( BOOL bBlink )
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetBlink(%d)", (int) bBlink));
    /* TODO: */
 }
+
+void hb_gt_Tone( double dFrequency, double dDuration )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Tone(%lf, %lf)", dFrequency, dDuration));
+
+   /* TODO: Implement this */
+
+   HB_SYMBOL_UNUSED( dFrequency );
+   HB_SYMBOL_UNUSED( dDuration );
+}
+

@@ -315,6 +315,15 @@ void hb_gt_SetBlink( BOOL bBlink )
    /* TODO: set the bit if it's supported */
 }
 
+void hb_gt_Tone( double dFrequency, double dDuration )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Tone(%lf, %lf)", dFrequency, dDuration));
+
+   /* TODO: Implement this */
+
+   HB_SYMBOL_UNUSED( dFrequency );
+   HB_SYMBOL_UNUSED( dDuration );
+}
 
 static void gt_GetMaxRC(int* r, int* c)
 {

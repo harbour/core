@@ -57,12 +57,8 @@
 
 #if defined(__GNUC__) && ! defined(__MINGW32__)
    #include <unistd.h>
-   #if defined(__DJGPP__) || defined(__CYGWIN__) || defined(HARBOUR_GCC_OS2)
-      #include <io.h>
-   #endif
-#else
-   #include <io.h>
 #endif
+#include <io.h>
 
 #include <ctype.h>
 
@@ -124,17 +120,12 @@ void hb_gtAdjustPos( int iHandle, char * pStr, ULONG ulLen )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gtAdjustPos()"));
 
-   #ifndef __CYGWIN__
-   /* If the output is going to a file instead of to the console,
-      then there is no need to adjust the cursor position. */
-   if( isatty( iHandle ) )
-   #endif
-      if( hb_gt_AdjustPos( ( BYTE * ) pStr, ulLen ) )
-      {
-         /* Adjust the console cursor position to match the device driver */
-         s_iCurrentRow = hb_gt_Row();
-         s_iCurrentCol = hb_gt_Col();
-      }
+   if( isatty( iHandle ) && hb_gt_AdjustPos( ( BYTE * ) pStr, ulLen ) )
+   {
+      /* Adjust the console cursor position to match the device driver */
+      s_iCurrentRow = hb_gt_Row();
+      s_iCurrentCol = hb_gt_Col();
+   }
 }
 
 USHORT hb_gtBox( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyFrame )
@@ -961,7 +952,13 @@ USHORT hb_gtDrawShadow( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiR
    return 0;
 }
 
+void hb_gtTone( double dFrequency, double dDuration )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtTone(%lf, %lf)", dFrequency, dDuration));
 
+   hb_gt_Tone( dFrequency, dDuration );
+}
+ 
 #ifdef TEST
 void main( void )
 {

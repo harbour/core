@@ -45,7 +45,7 @@
 typedef struct _PATHNAMES
 {
    char * szPath;
-   struct _PATHNAMES *pNext;
+   struct _PATHNAMES * pNext;
 } PATHNAMES;
 
 struct _DEFINES;

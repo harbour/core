@@ -1199,7 +1199,7 @@ static ERRCODE adsReadDBHeader( ADSAREAP pArea )
 #define  adsWriteDBHeader         NULL
 #define  adsWhoCares              NULL
 
-static RDDFUNCS adsTable = {  adsBof,
+static RDDFUNCS adsTable = { adsBof,
                              adsEof,
                              adsFound,
                              ( DBENTRYP_V ) adsGoBottom,

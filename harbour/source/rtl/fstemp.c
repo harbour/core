@@ -34,6 +34,8 @@
  *
  */
 
+#include <errno.h>
+
 #include "hbapi.h"
 #include "hbapifs.h"
 
@@ -57,7 +59,7 @@ FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, USHORT uiA
 {
    BYTE szName[ _POSIX_PATH_MAX + 1 ];
 
-   hb_fsTempName( szName, NULL, NULL );
+   hb_fsTempName( szName, pszDir, pszPrefix );
   
    errno = 0;
   

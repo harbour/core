@@ -343,3 +343,14 @@ void hb_gt_SetBlink( BOOL bBlink )
 
    HB_SYMBOL_UNUSED( bBlink );
 }
+
+void hb_gt_Tone( double dFrequency, double dDuration )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Tone(%lf, %lf)", dFrequency, dDuration));
+
+   /* TODO: Implement this */
+
+   HB_SYMBOL_UNUSED( dFrequency );
+   HB_SYMBOL_UNUSED( dDuration );
+}
+
