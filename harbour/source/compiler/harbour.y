@@ -1522,6 +1522,8 @@ BOOL hb_compInclude( char * szFileName, PATHNAMES * pSearch )
 
    pFile = ( PFILE ) hb_xgrab( sizeof( _FILE ) );
    pFile->handle = yyin;
+   pFile->pBuffer = hb_xgrab( HB_PP_BUFF_SIZE );
+   pFile->iBuffer = pFile->lenBuffer = 10;
    pFile->szFileName = szFileName;
    pFile->pPrev = NULL;
 
@@ -1558,7 +1560,10 @@ int yywrap( void )   /* handles the EOF of the currently processed file */
    void * pLast;
 
    if( hb_comp_files.iFiles == 1 )
+   {
+      hb_xfree( hb_comp_files.pLast->pBuffer );
       return 1;      /* we have reached the main EOF */
+   }
 /*
    else
    {

@@ -1,3 +1,13 @@
+20000217-23:00 GMT+3 Alexander Kresin
+   * source/pp/hbpp.c
+   * source/pp/hbppint.c
+   * source/pp/hbpplib.c
+   * source/pp/stdalone/hbpp.c
+   * source/compiler/harbour.y
+   * include/compiler.h
+     * accepting of statements in include files implemented
+     * pp now generate #line statements
+
 20000217-09:00 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
     *doc/vm.txt
     doc/harbext.txt

@@ -100,7 +100,7 @@ static int    strotrim( char * );
 static int    NextWord( char **, char *, BOOL );
 static int    NextName( char **, char * );
 static int    NextParm( char **, char * );
-static BOOL   OpenInclude( char *, PATHNAMES *, PHB_FNAME, FILE **, BOOL bStandardOnly, char * );
+static BOOL   OpenInclude( char *, PATHNAMES *, PHB_FNAME, BOOL bStandardOnly, char * );
 
 /* These are related to pragma support */
 static int    ParsePragma( char * );
@@ -143,7 +143,7 @@ static int  s_numBrackets;
 static char s_groupchar;
 static char s_prevchar = 'A';
 
-int   hb_pp_lInclude = 0;
+extern int hb_comp_iLine;       /* currently parsed file line number */
 int * hb_pp_aCondCompile;
 int   hb_pp_nCondCompile = 0;
 
@@ -180,7 +180,6 @@ int hb_pp_ParseDirective( char * sLine )
   char sDirective[ MAX_NAME ];
   char szInclude[ _POSIX_PATH_MAX ];
   int i;
-  FILE * handl_i;
 
   HB_TRACE(HB_TR_DEBUG, ("hb_pp_ParseDirective(%s)", sLine));
 
@@ -232,15 +231,8 @@ int hb_pp_ParseDirective( char * sLine )
           *(sLine+i) = '\0';
 
           /*   if((handl_i = fopen(sLine, "r")) == NULL) */
-          if( OpenInclude( sLine, hb_comp_pIncludePath, hb_comp_pFileName, &handl_i, ( cDelimChar == '>' ), szInclude ) )
-          {
-            hb_pp_lInclude++;
-            hb_pp_Parse(handl_i, 0, szInclude );
-            hb_pp_lInclude--;
-            fclose(handl_i);
-          }
-          else
-            hb_compGenError( hb_pp_szErrors, 'F', ERR_CANNOT_OPEN, sLine, NULL );
+          if( !OpenInclude( sLine, hb_comp_pIncludePath, hb_comp_pFileName, ( cDelimChar == '>' ), szInclude ) )
+             hb_compGenError( hb_pp_szErrors, 'F', ERR_CANNOT_OPEN, sLine, NULL );
         }
 
       else if( i >= 4 && i <= 6 && memcmp( sDirective, "DEFINE", i ) == 0 )
@@ -2276,15 +2268,17 @@ static int NextParm( char ** sSource, char * sDest )
   return lenName;
 }
 
-static BOOL OpenInclude( char * szFileName, PATHNAMES * pSearch, PHB_FNAME pMainFileName, FILE ** fptr, BOOL bStandardOnly, char * szInclude )
+static BOOL OpenInclude( char * szFileName, PATHNAMES * pSearch, PHB_FNAME pMainFileName, BOOL bStandardOnly, char * szInclude )
 {
+  FILE * fptr;
   PHB_FNAME pFileName;
+  PFILE pFile;
 
   HB_TRACE(HB_TR_DEBUG, ("OpenInclude(%s, %p, %p, %p, %d)", szFileName, pSearch, pMainFileName, fptr, (int) bStandardOnly));
 
   if( bStandardOnly )
     {
-      *fptr = 0;
+      fptr = 0;
       szInclude[ 0 ] = '\0';
     }
   else
@@ -2293,26 +2287,40 @@ static BOOL OpenInclude( char * szFileName, PATHNAMES * pSearch, PHB_FNAME pMain
       if( pFileName->szPath == NULL || *(pFileName->szPath) == '\0' )
          pFileName->szPath = pMainFileName->szPath;
       hb_fsFNameMerge( szInclude, pFileName );
-      *fptr = fopen( szInclude, "r" );
+      fptr = fopen( szInclude, "r" );
       hb_xfree( pFileName );
     }
 
-  if( !*fptr && pSearch )
+  if( !fptr && pSearch )
     {
       pFileName = hb_fsFNameSplit( szFileName );
       pFileName->szName = szFileName;
       pFileName->szExtension = NULL;
-      while( pSearch && !*fptr )
+      while( pSearch && !fptr )
         {
           pFileName->szPath = pSearch->szPath;
           hb_fsFNameMerge( szInclude, pFileName );
-          *fptr = fopen( szInclude, "r" );
+          fptr = fopen( szInclude, "r" );
           pSearch = pSearch->pNext;
         }
       hb_xfree( pFileName );
     }
 
-  return ( *fptr ? TRUE : FALSE );
+  if( fptr )
+  {
+     pFile = ( PFILE ) hb_xgrab( sizeof( _FILE ) );
+     pFile->handle = fptr;
+     pFile->pBuffer = hb_xgrab( HB_PP_BUFF_SIZE );
+     pFile->iBuffer = pFile->lenBuffer = 10;
+     pFile->szFileName = szFileName;
+     hb_comp_files.pLast->iLine = hb_comp_iLine;
+     hb_comp_iLine = 1;
+     pFile->pPrev = hb_comp_files.pLast;
+     hb_comp_files.pLast  = pFile;
+     hb_comp_files.iFiles++;
+     return TRUE;
+  }
+  return ( FALSE );
 }
 
 /* Size of abreviated pragma commands */

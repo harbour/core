@@ -56,13 +56,14 @@
 static void AddSearchPath( char * szPath, PATHNAMES * * pSearchList );
 static void OutTable( DEFINES * endDefine, COMMANDS * endCommand );
 
-static int  s_iline = 0;
 static char s_szLine[ HB_PP_STR_SIZE ];
 static char s_szOutLine[ HB_PP_STR_SIZE ];
 static int  s_iWarnings = 0;
 
 PATHNAMES * hb_comp_pIncludePath = NULL;
 PHB_FNAME hb_comp_pFileName = NULL;
+FILES       hb_comp_files;
+int hb_comp_iLine = 0;       /* currently parsed file line number */
 
 /* These are need for the PP #pragma support */
 BOOL hb_comp_bPPO = FALSE;                      /* flag indicating, is ppo output needed */
@@ -239,7 +240,7 @@ int hb_pp_Parse( FILE * handl_i, FILE * handl_o, char * szSource )
   while( ( rdlen = hb_pp_RdStr( handl_i, s_szLine + lens, HB_PP_STR_SIZE - lens, lContinue,
                                 sBuffer, &lenBuffer, &iBuffer ) ) >= 0 )
     {
-      if( ! hb_pp_lInclude ) s_iline++;
+      if( hb_comp_files.iFiles == 1 ) hb_comp_iLine++;
       lens += rdlen;
 
       if( s_szLine[ lens - 1 ] == ';' )
@@ -259,7 +260,7 @@ int hb_pp_Parse( FILE * handl_i, FILE * handl_o, char * szSource )
 
       if( *s_szLine != '\0' && !lContinue )
         {
-          printf( "\r  line %i", s_iline );
+          printf( "\r  line %i", hb_comp_iLine );
           ptr = s_szLine;
           HB_SKIPTABSPACES( ptr );
           if( *ptr == '#' )
@@ -276,7 +277,7 @@ int hb_pp_Parse( FILE * handl_i, FILE * handl_o, char * szSource )
             }
         }
 
-      if( ! hb_pp_lInclude )
+      if( hb_comp_files.iFiles == 1 )
         {
           if( lContinue ) hb_pp_WrStr( handl_o, "\n" );
           else hb_pp_WrStr( handl_o, s_szLine );
@@ -470,7 +471,7 @@ void hb_compGenError( char * _szErrors[], char cPrefix, int iError, char * szErr
 {
   HB_TRACE(HB_TR_DEBUG, ("hb_compGenError(%p, %c, %d, %s, %s)", _szErrors, cPrefix, iError, szError1, szError2));
 
-  printf( "\r(%i) ", s_iline );
+  printf( "\r(%i) ", hb_comp_iLine );
   printf( "Error %c%04i  ", cPrefix, iError );
   printf( _szErrors[ iError - 1 ], szError1, szError2 );
   printf( "\n\n" );
@@ -488,7 +489,7 @@ void hb_compGenWarning( char* _szWarnings[], char cPrefix, int iWarning, char * 
 
       if( (szText[ 0 ] - '0') <= s_iWarnings )
         {
-          printf( "\r(%i) ", s_iline );
+          printf( "\r(%i) ", hb_comp_iLine );
           printf( "Warning %c%04i  ", cPrefix, iWarning );
           printf( szText + 1, szWarning1, szWarning2 );
           printf( "\n" );

@@ -55,6 +55,7 @@
 PATHNAMES * hb_comp_pIncludePath = NULL;
 PHB_FNAME hb_comp_pFileName = NULL;
 FILES       hb_comp_files;
+int hb_comp_iLine;       /* currently parsed file line number */
 
 /* These are need for the PP #pragma support */
 BOOL hb_comp_bPPO = FALSE;                      /* flag indicating, is ppo output needed */

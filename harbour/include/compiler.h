@@ -67,7 +67,9 @@ typedef enum
 typedef struct
 {
    FILE * handle;               /* handle of the opened file */
-   void * pBuffer;              /* buffer used by yacc */
+   void * pBuffer;              /* file buffer */
+   int    iBuffer;              /* current position in file buffer */
+   int    lenBuffer;            /* current length of data in file buffer */
    char * szFileName;           /* name of the file */
    void * pPrev;                /* pointer to the previous opened file */
    void * pNext;                /* pointer to the next opened file */
