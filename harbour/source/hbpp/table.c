@@ -26,66 +26,52 @@
  */
 
 #include <stdio.h>
-
-typedef struct
-{
-  char *name;
-  char *pars;
-  int npars;
-  char *value;
-} DEFINES;
-typedef struct
-{
-  int com_or_xcom;
-  char *name;
-  char *mpatt;
-  char *value;
-} COMMANDS, TRANSLATES;
+#include "hbpp.h"
 
 int koldef = 42;
 DEFINES aDefines[] =
 {
- {"__HARBOUR__",NULL,0,"" },
- {"_SET_ALTERNATE",NULL,0,"1"},
- {"_SET_ALTFILE",NULL,0,"2"},
- {"_SET_BELL",NULL,0,"3"},
- {"_SET_CANCEL",NULL,0,"4"},
- {"_SET_COLOR",NULL,0,"5"},
- {"_SET_CONFIRM",NULL,0,"6"},
- {"_SET_CONSOLE",NULL,0,"7"},
- {"_SET_CURSOR",NULL,0,"8"},
- {"_SET_DATEFORMAT",NULL,0,"9"},
- {"_SET_DEBUG",NULL,0,"10"},
- {"_SET_DECIMALS",NULL,0,"11"},
- {"_SET_DEFAULT",NULL,0,"12"},
- {"_SET_DELETED",NULL,0,"13"},
- {"_SET_DELIMCHARS",NULL,0,"14"},
- {"_SET_DELIMITERS",NULL,0,"15"},
- {"_SET_DEVICE",NULL,0,"16"},
- {"_SET_EPOCH",NULL,0,"17"},
- {"_SET_ESCAPE",NULL,0,"18"},
- {"_SET_EVENTMASK",NULL,0,"19"},
- {"_SET_EXACT",NULL,0,"20"},
- {"_SET_EXCLUSIVE",NULL,0,"21"},
- {"_SET_EXIT",NULL,0,"22"},
- {"_SET_EXTRA",NULL,0,"23"},
- {"_SET_EXTRAFILE",NULL,0,"24"},
- {"_SET_FIXED",NULL,0,"25"},
- {"_SET_INSERT",NULL,0,"26"},
- {"_SET_INTENSITY",NULL,0,"27"},
- {"_SET_MARGIN",NULL,0,"28"},
- {"_SET_MCENTER",NULL,0,"29"},
- {"_SET_MESSAGE",NULL,0,"30"},
- {"_SET_PATH",NULL,0,"31"},
- {"_SET_PRINTER",NULL,0,"32"},
- {"_SET_PRINTFILE",NULL,0,"33"},
- {"_SET_SCOREBOARD",NULL,0,"34"},
- {"_SET_SCROLLBREAK",NULL,0,"35"},
- {"_SET_SOFTSEEK",NULL,0,"36"},
- {"_SET_TYPEAHEAD",NULL,0,"37"},
- {"_SET_UNIQUE",NULL,0,"38"},
- {"_SET_WRAP",NULL,0,"39"},
- {"_SET_CH",NULL,0,NULL},
+ {"__HARBOUR__",NULL,-1,"" },
+ {"_SET_ALTERNATE",NULL,-1,"1"},
+ {"_SET_ALTFILE",NULL,-1,"2"},
+ {"_SET_BELL",NULL,-1,"3"},
+ {"_SET_CANCEL",NULL,-1,"4"},
+ {"_SET_COLOR",NULL,-1,"5"},
+ {"_SET_CONFIRM",NULL,-1,"6"},
+ {"_SET_CONSOLE",NULL,-1,"7"},
+ {"_SET_CURSOR",NULL,-1,"8"},
+ {"_SET_DATEFORMAT",NULL,-1,"9"},
+ {"_SET_DEBUG",NULL,-1,"10"},
+ {"_SET_DECIMALS",NULL,-1,"11"},
+ {"_SET_DEFAULT",NULL,-1,"12"},
+ {"_SET_DELETED",NULL,-1,"13"},
+ {"_SET_DELIMCHARS",NULL,-1,"14"},
+ {"_SET_DELIMITERS",NULL,-1,"15"},
+ {"_SET_DEVICE",NULL,-1,"16"},
+ {"_SET_EPOCH",NULL,-1,"17"},
+ {"_SET_ESCAPE",NULL,-1,"18"},
+ {"_SET_EVENTMASK",NULL,-1,"19"},
+ {"_SET_EXACT",NULL,-1,"20"},
+ {"_SET_EXCLUSIVE",NULL,-1,"21"},
+ {"_SET_EXIT",NULL,-1,"22"},
+ {"_SET_EXTRA",NULL,-1,"23"},
+ {"_SET_EXTRAFILE",NULL,-1,"24"},
+ {"_SET_FIXED",NULL,-1,"25"},
+ {"_SET_INSERT",NULL,-1,"26"},
+ {"_SET_INTENSITY",NULL,-1,"27"},
+ {"_SET_MARGIN",NULL,-1,"28"},
+ {"_SET_MCENTER",NULL,-1,"29"},
+ {"_SET_MESSAGE",NULL,-1,"30"},
+ {"_SET_PATH",NULL,-1,"31"},
+ {"_SET_PRINTER",NULL,-1,"32"},
+ {"_SET_PRINTFILE",NULL,-1,"33"},
+ {"_SET_SCOREBOARD",NULL,-1,"34"},
+ {"_SET_SCROLLBREAK",NULL,-1,"35"},
+ {"_SET_SOFTSEEK",NULL,-1,"36"},
+ {"_SET_TYPEAHEAD",NULL,-1,"37"},
+ {"_SET_UNIQUE",NULL,-1,"38"},
+ {"_SET_WRAP",NULL,-1,"39"},
+ {"_SET_CH",NULL,-1,NULL},
  {"_DFSET","x,y",2,"Set( _SET_DATEFORMAT, if(__SetCentury(), x, y) )"}
 };
 

@@ -84,6 +84,7 @@ int strotrim ( char* );
 char* strodup ( char * );
 int NextWord ( char**, char*, int);
 int NextName ( char**, char*, char**);
+int NextParm ( char**, char* );
 int Include( char *, PATHNAMES *, FILE** );
 int OpenInclude( char *, PATHNAMES *, FILE** );
 
@@ -229,19 +230,14 @@ int ParseDirective( char* sLine )
 int ParseDefine( char* sLine)
 {
  char defname[MAX_NAME], pars[MAX_NAME];
- int i = 0, npars = 0;
+ int i = 0, npars = -1;
  DEFINES *lastdef;
-     /* Drag identifier */
- while ( *sLine != '\0' && *sLine != ' ')
- {
-  if ( *sLine == '(' ) break;  /* If pseudofunction */
-  *(defname+i++) = *sLine++;
- }
- *(defname+i) = '\0';
 
+ NextName( &sLine, defname, NULL );
  if ( *sLine == '(' ) /* If pseudofunction was found */
  {
   sLine++; i = 0;
+  npars = 0;
   while ( *sLine != '\0' && *sLine != ')')
   {
    if ( *sLine == ',' ) npars++;
@@ -392,8 +388,8 @@ int ParseCommand( char* sLine, int com_or_xcom, int com_or_tra )
  int mlen,rlen;
  int ipos, rez;
 
-// NextWord( &sLine, cmdname, FALSE );
- NextName( &sLine, cmdname, NULL );
+ NextWord( &sLine, cmdname, FALSE );
+// NextName( &sLine, cmdname, NULL );
  SKIPTABSPACES(sLine);
  stroupper( cmdname );
 
@@ -537,9 +533,9 @@ int ParseExpression( char* sLine, char* sOutLine )
  int kolused = 0, lastused;
  DEFINES *aUsed[100], *stdef;
 
- strotrim ( sLine );
  do
  {
+  strotrim ( sLine );
   ptri = sLine; ptro = sOutLine;
   rezDef = 0; rezCom = 0;
   lastused = kolused;
@@ -552,9 +548,11 @@ int ParseExpression( char* sLine, char* sOutLine )
      {
        if ( i < lastused ) GenError( _szPErrors, 'P', ERR_RECURSE, NULL, NULL );
      }
-     else
+     else if ( WorkDefine ( &ptri, &ptro, stdef, lenToken ) )
+     {
        aUsed[kolused++] = stdef;
-     rezDef += WorkDefine ( &ptri, &ptro, stdef, lenToken );
+       rezDef++;
+     }
    }
   *ptro = '\0';
   memcpy ( sLine, sOutLine, ptro - sOutLine + 1);
@@ -624,7 +622,8 @@ int ParseExpression( char* sLine, char* sOutLine )
 int WorkDefine ( char** ptri, char** ptro, DEFINES *stdef, int lenToken )
 {
  int rezDef = 0, npars, i;
-    if ( stdef->pars == NULL )
+ char *ptr;
+    if ( stdef->npars < 0 )
     {
      rezDef = 1;
      *ptro -= lenToken;
@@ -637,13 +636,14 @@ int WorkDefine ( char** ptri, char** ptro, DEFINES *stdef, int lenToken )
      SKIPTABSPACES( *ptri );
      if ( **ptri == '(' )
      {
-      npars=0; i = 0;
-      while ( *(*ptri+i) != ')' && *(*ptri+i) != '\0' )
+      npars = 0; ptr = *ptri;
+      do
       {
-       if ( *(*ptri+i) == ',' ) npars++;
-       i++;
+        ptr++;
+        if ( NextParm( &ptr, NULL ) > 0 ) npars++;
       }
-      if ( stdef->npars == npars + 1 )
+      while ( *ptr != ')' && *ptr != '\0' );
+      if ( *ptr == ')' && stdef->npars == npars )
       {
        rezDef = 1;
        *ptro -= lenToken;
@@ -657,58 +657,57 @@ int WorkDefine ( char** ptri, char** ptro, DEFINES *stdef, int lenToken )
 
 void WorkPseudoF ( char** ptri, char** ptro, DEFINES *stdef )
 {
- char parfict[MAX_NAME], parreal[MAX_NAME];
- char *ptrb;
- int ipos = 0, ifou, ibeg;
- int lenfict, lenreal, lenres;
+   char parfict[MAX_NAME], parreal[MAX_NAME];
+   char *ptrb;
+   int ipos = 0, ifou, ibeg;
+   int lenfict, lenreal, lenres;
 
- while ( *(stdef->value+ipos) != '\0' ) /* Copying value of macro */
- {                                              /* to destination string  */
-  *(*ptro+ipos) = *(stdef->value+ipos);
-  ipos++;
- }
- *(*ptro+ipos) = '\0';
- lenres = ipos;
-
- ipos = 0; ibeg = 0;
- do                               /* Parsing through parameters */
- {                                /* in macro definition        */
-  if ( *(stdef->pars+ipos)==',' || *(stdef->pars+ipos)=='\0' )
-  {
-   *(parfict+ipos-ibeg) = '\0';
-   lenfict = ipos - ibeg;
-
-   if ( **ptri != ')' )
-   {
-    (*ptri)++; lenreal = 0;           /* Parsing through real parameters */
-    while ( **ptri != ',' && **ptri != ')' )
-    {
-     *(parreal+lenreal++) = **ptri;
-     (*ptri)++;
-    }
-    *(parreal+lenreal) = '\0';
-
-    ptrb = *ptro;
-    while ( (ifou = hb_strAt( parfict, lenfict, ptrb, lenres-(ptrb-*ptro) )) > 0 )
-    {
-     ptrb = ptrb+ifou-1;
-     if ( !isname(*(ptrb-1)) && !isname(*(ptrb+lenfict)) )
-     {
-       Stuff ( parreal, ptrb, lenreal, lenfict, lenres );
-       lenres += lenreal - lenfict;
-     }
-     else ptrb++;
-    }
-    ibeg = ipos+1;
+   while ( *(stdef->value+ipos) != '\0' ) /* Copying value of macro */
+   {                                              /* to destination string  */
+     *(*ptro+ipos) = *(stdef->value+ipos);
+    ipos++;
    }
-  }
-  else *(parfict+ipos-ibeg) = *(stdef->pars+ipos);
-  if ( *(stdef->pars+ipos) == '\0' ) break;
-  ipos++;
- }
- while ( 1 );
- (*ptri)++;
- *ptro += lenres;
+   *(*ptro+ipos) = '\0';
+   lenres = ipos;
+
+   if ( stdef->pars )
+   {
+     ipos = 0; ibeg = 0;
+     do                               /* Parsing through parameters */
+     {                                /* in macro definition        */
+       if ( *(stdef->pars+ipos)==',' || *(stdef->pars+ipos)=='\0' )
+       {
+         *(parfict+ipos-ibeg) = '\0';
+         lenfict = ipos - ibeg;
+
+         if ( **ptri != ')' )
+         {
+           (*ptri)++;                 /* Parsing through real parameters */
+           lenreal = NextParm( ptri, parreal );
+
+           ptrb = *ptro;
+           while ( (ifou = hb_strAt( parfict, lenfict, ptrb, lenres-(ptrb-*ptro) )) > 0 )
+           {
+             ptrb = ptrb+ifou-1;
+             if ( !isname(*(ptrb-1)) && !isname(*(ptrb+lenfict)) )
+             {
+               Stuff ( parreal, ptrb, lenreal, lenfict, lenres );
+               lenres += lenreal - lenfict;
+             }
+             else ptrb++;
+           }
+           ibeg = ipos+1;
+         }
+       }
+       else *(parfict+ipos-ibeg) = *(stdef->pars+ipos);
+       if ( *(stdef->pars+ipos) == '\0' ) break;
+       ipos++;
+     }
+     while ( 1 );
+   }
+   else  while ( **ptri != ')' ) (*ptri)++;
+   (*ptri)++;
+   *ptro += lenres;
 }
 
 int WorkCommand ( char* sToken, char* ptri, char* ptro, int ndef )
@@ -760,6 +759,7 @@ int WorkTranslate ( char* sToken, char** ptri, char* ptro, int ndef )
  {
   while ( rez > 0 && (*(*ptri+rez-1)==' ' || *(*ptri+rez-1)=='\t') ) rez--;
   Stuff( ptro, ptr, lenres, rez + lenToken, strolen(ptr) );
+  *ptri = ptr + lenres;
   return lenres;
  }
  return 0;
@@ -811,6 +811,7 @@ int CommandStuff ( char *ptrmp, char *inputLine, char * ptro, int *lenres, int c
        break;
       case '\0':
        if ( com_or_tra ) return -1; else endTranslation = TRUE;
+       break;
       default:    /*   Key word    */
        ptr = ptrmp;
        if ( *ptri == ',' || strincmp(ptri, &ptrmp ) )
@@ -1139,14 +1140,14 @@ void SearnRep( char *exppatt,char *expreal,int lenreal,char *ptro, int *lenres)
    int lennew, i;
    char lastchar = '0';
    char expnew[MAX_NAME];
-   char *ptr, *ptr2;
+   char *ptr, *ptr2, *ptrOut = ptro;
 
-   while ( (ifou = hb_strAt( exppatt, 2, ptro+isdvig, *lenres-isdvig )) > 0 )
+   while ( (ifou = hb_strAt( exppatt, 2, ptrOut, *lenres-isdvig )) > 0 )
    {
      rezs = 0;
-     ptr = ptro+isdvig+ifou-2;
+     ptr = ptrOut + ifou - 2;
      kolmarkers = 0;
-     while ( ptr >= ptro+isdvig )
+     while ( ptr >= ptrOut )
      {
        if ( *ptr == '[' || *ptr == ']' ) break;
        if  ( *ptr == '\1' ) kolmarkers++;
@@ -1154,10 +1155,10 @@ void SearnRep( char *exppatt,char *expreal,int lenreal,char *ptro, int *lenres)
      }
      if ( *ptr == '[' )
      {
-       ptr2 = ptro+isdvig+ifou+3;
+       ptr2 = ptrOut + ifou + 3;
        while ( *ptr2 != ']' ) { if ( *ptr2 == '\1' ) kolmarkers++; ptr2++; }
        if ( Repeate && lenreal && kolmarkers && lastchar != '0' &&
-                                             *(ptro+isdvig+ifou+2) == '0' )
+                                             *(ptrOut + ifou + 2) == '0' )
        {
          isdvig += ifou;
          rezs = 1;
@@ -1194,22 +1195,26 @@ void SearnRep( char *exppatt,char *expreal,int lenreal,char *ptro, int *lenres)
            *lenres += lennew;
            isdvig = ptr - ptro + (ptr2-ptr-1) + lennew;
            rezs = 1;
- /*           Repeate++;     */
          }
        }
      }
      if ( !rezs )
      {
-       if ( *(ptro+isdvig+ifou+2) != '0' )
+       if ( *(ptrOut + ifou + 2) != '0' )
        {
-         if ( lastchar == '0' ) lastchar = *(ptro+isdvig+ifou+2);
-         if ( lastchar != *(ptro+isdvig+ifou+2) )
-         { isdvig += ifou + 3; continue; }
+         if ( lastchar == '0' ) lastchar = *(ptrOut + ifou + 2);
+         if ( lastchar != *(ptrOut + ifou + 2) )
+         { 
+           isdvig += ifou + 3;
+           ptrOut = ptro + isdvig;
+           continue; 
+         }
        }
        *lenres += ReplacePattern ( exppatt[2], expreal, lenreal,
-                             ptro+isdvig+ifou-1, *lenres-isdvig-ifou+1 );
+                             ptrOut + ifou - 1, *lenres-isdvig-ifou+1 );
        isdvig += ifou;
      }
+     ptrOut = ptro + isdvig;
    }
 }
 
@@ -1547,7 +1552,7 @@ int NextWord ( char** sSource, char* sDest, int lLower )
 {
  int i = 0;
  SKIPTABSPACES( (*sSource) );
- while ( **sSource != '\0' && **sSource != ' ')
+ while ( **sSource != '\0' && **sSource != ' ' && **sSource != '(')
  {
    *sDest++ = (lLower)? tolower(**sSource):**sSource;
    (*sSource)++;
@@ -1581,6 +1586,30 @@ int NextName ( char** sSource, char* sDest, char **sOut )
   }
  *sDest = '\0';
  return lenName;
+}
+
+int NextParm ( char** sSource, char* sDest )
+{
+   int lenName = 0, State = STATE_NORMAL;
+
+   SKIPTABSPACES( (*sSource) );
+   while ( **sSource != '\0' )
+   {
+     if ( State == STATE_QUOTE1 )
+     { if ( **sSource == '\'' ) State = STATE_NORMAL; }
+     else if ( State == STATE_QUOTE2 )
+     { if ( **sSource == '\"' ) State = STATE_NORMAL; }
+     else if ( **sSource == '\"' ) State = STATE_QUOTE2;
+     else if ( **sSource == '\'' ) State = STATE_QUOTE1;
+     else if ( **sSource == ',' || **sSource == ')' ) break;
+
+     if ( sDest != NULL ) *sDest++ = **sSource;
+     (*sSource)++;
+     lenName++;
+   }
+
+   *sDest = '\0';
+   return lenName;
 }
 
 int OpenInclude( char * szFileName, PATHNAMES *pSearch, FILE** fptr )
