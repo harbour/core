@@ -1,4 +1,7 @@
 @echo off
+rem 
+rem $Id$
+rem 
 
 rem Flavour: DOS/Windows batch file
 

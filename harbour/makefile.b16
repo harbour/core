@@ -1,3 +1,7 @@
+# 
+# $Id$
+# 
+
 # makefile for Borland C/C++ 16 bits
 
 .path.c   = source\compiler;source\vm;source\rtl;source\tools

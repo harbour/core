@@ -1,4 +1,7 @@
 #!/bin/bash
+# 
+# $Id$
+# 
 
 # Flavour: Bash script
 
@@ -65,4 +68,3 @@ export L_USR=
 # Start the GNU make system
 
 make $*
-

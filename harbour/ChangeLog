@@ -1,3 +1,21 @@
+19990915-00:30 GMT+1 Victor Szel <info@szelvesz.hu>
+  * (*.* in the root directory)
+    + CVS header added to all files.
+    + @echo off added were missing.
+  * build32.bat
+    build40.bat
+    build31.bat
+    build.bat (renamed)
+    build16.bat (new)
+    buildrdd.bat (removed)
+    bldgt32.bat (removed)
+    bldhbpp.bat (removed)
+    % These three batch files has been incorporated to the main build
+      batch files, since they were simple one-liners.
+    ! hbpplib.b32 build process was executed two times from the build32.bat
+      and build40.bat files.
+    * build.bat renamed to build16.bat
+
 19990914-17:30 GMT+1 Victor Szel <info@szelvesz.hu>
   * config/rules.cf
     * Harbour flag /q changed to /q0 to omit the compiler header.

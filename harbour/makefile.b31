@@ -1,3 +1,7 @@
+# 
+# $Id$
+# 
+
 # makefile for Borland C/C++ 16 bits Harbour libraries
 
 .path.api = include
