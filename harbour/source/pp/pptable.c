@@ -248,8 +248,8 @@ void hb_pp_Table( void )
    static COMMANDS sC___109 = {0,"SET","MESSAGE TO \1A00 [\1B20 CENTER, CENTRE>]",
        "Set( _SET_MESSAGE, \1A00 ) ; Set( _SET_MCENTER, \1B50 )",&sC___108 };
    static COMMANDS sC___110 = {0,"SET","MESSAGE TO","Set( _SET_MESSAGE, 0 ) ; Set( _SET_MCENTER, .f. )",&sC___109 };
-   static COMMANDS sC___111 = {0,"@","\1A00, \1B00 PROMPT \1C00 [MESSAGE \1D00]",
-       "__AtPrompt( \1A00, \1B00, \1C00 , \1D00 )",&sC___110 };
+   static COMMANDS sC___111 = {0,"@","\1A00, \1B00 PROMPT \1C00 [MESSAGE \1D00] [COLOR \1E00]",
+       "__AtPrompt( \1A00, \1B00, \1C00 , \1D00 , \1E00 )",&sC___110 };
    static COMMANDS sC___112 = {0,"MENU","TO \1A00","\1A00 := __MenuTo( {|_1| if(PCount() == 0, \1A00, \1A00 := _1)}, \1A10 )",&sC___111 };
    static COMMANDS sC___113 = {0,"SAVE","SCREEN","__XSaveScreen()",&sC___112 };
    static COMMANDS sC___114 = {0,"RESTORE","SCREEN","__XRestScreen()",&sC___113 };

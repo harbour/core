@@ -8,6 +8,18 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-11-20 21:45 UTC-0300 Luiz Rafael Culik <culikr@uol.com.br>
+  * source/pp/pptable.c
+    + COLOR parameter to @...PROMPT
+  * source/rtl/menuto.prg
+    ! Added code to use the passed Color to the Prompt.This will allow
+    to make Color menus and Was Far Requested since this feature is an Alaska,Flagship and Max compiler
+  * tests/menuto.prg
+    * Changes the Test to Show the ability of menu items in colors
+  * contrib/mysql/tmysql.prg
+    * On method  GetRow(nRow) of TMySQLQuery fixed Handling of Date
+     Retrived(The date is formated on Current SET DATE FORMAT)
+
 2002-11-20 21:56 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/codepage/cdppl852.c
   * source/codepage/cdppliso.c

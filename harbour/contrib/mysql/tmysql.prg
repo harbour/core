@@ -453,6 +453,7 @@ METHOD GetRow(nRow) CLASS TMySQLQuery
 
    local aRow := NIL
    local oRow := NIL
+   local cFormatoDaData := set(4)  //ACRESCENTEI
    local i
 
    default nRow to 0
@@ -490,10 +491,38 @@ METHOD GetRow(nRow) CLASS TMySQLQuery
                case ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_DATE_TYPE
                   if Empty(aRow[i])
                      aRow[i] := CToD("")
-                  else
+                  *else
                      // Date format YYYY-MM-DD
-                     aRow[i] := CToD(SubStr(aRow[i], 6, 2) + "/" + Right(aRow[i], 2) + "/" + Left(aRow[i], 4))
-                  endif
+
+                  * abaixo presume que o se utiliza (set date USA)
+                  *   aRow[i] := CToD(SubStr(aRow[i], 6, 2) + "/" + Right(aRow[i], 2) + "/" + Left(aRow[i], 4))
+
+                   elseif cFormatoDaData = 'mm-dd-yyyy' // USA
+                    aRow[i] := ctod(substr(aRow[i],6,2)+"-"+right(aRow[i],2,0)+ "-" + Left(aRow[i], 4))
+
+                    elseif  cFormatoDaData = 'dd/mm/yyyy' // BRITISH ou FRENCH
+                    aRow[i] :=  ctod(right(aRow[i],2,0)+ "/"+ substr(aRow[i],6,2)+"/"+ Left(aRow[i], 4))
+
+                    elseif cFormatoDaData = 'yyyy.mm.dd' // ANSI
+                    aRow[i] := ctod(Left(aRow[i], 4)+ "."+substr(aRow[i],6,2)+"."+right(aRow[i],2,0)) 
+
+                    elseif cFormatoDaData = 'dd.mm.yyyy' //GERMAN
+                    aRow[i] :=ctod(right(aRow[i],2,0)+ "."+ substr(aRow[i],6,2)+"."+ Left(aRow[i], 4 ))
+
+                    elseif cFormatoDaData = 'dd-mm-yyyy'  //ITALIAN
+                    aRow[i] :=ctod(right(aRow[i],2,0)+ "-"+ substr(aRow[i],6,2)+"-"+ Left(aRow[i], 4))
+
+                    elseif cFormatoDaData = 'yyyy/mm/dd' //JAPAN
+                    aRow[i] :=  ctod(Left(aRow[i], 4)+ "/"+substr(aRow[i],6,2)+"/"+right(aRow[i],2,0)) 
+
+                    elseif cFormatoDaData = 'mm/dd/yyyy' // AMERICAN
+                    aRow[i] :=  ctod(substr(aRow[i],6,2)+"/"+right(aRow[i],2,0)+ "/" + Left(aRow[i], 4))
+                    else
+                      aRow[i] := "''"
+                    endif
+
+
+
 
                case ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_BLOB_TYPE
                   // Memo field
@@ -773,16 +802,33 @@ METHOD Destroy() CLASS TMySQLServer
 return Self
 
 
+*METHOD SelectDB(cDBName) CLASS TMySQLServer
+*
+*   if sqlSelectD(::nSocket, cDBName) == 0
+*      ::cDBName := cDBName
+*      return .T.
+*   else
+*      ::cDBName := ""
+*   endif
+*
+*return .F.
+
+*****************alterado
 METHOD SelectDB(cDBName) CLASS TMySQLServer
 
-   if sqlSelectD(::nSocket, cDBName) == 0
-      ::cDBName := cDBName
+   ::lError := .F.
+
+   if sqlSelectD(::nSocket, cDBName) != 0     && tabela nao existe
+      ::cDBName :="" 
+      ::lError := .T.
+   else                                       && tabela existe
+      ::cDBName :=cDBName 
+      ::lError := .F.
       return .T.
-   else
-      ::cDBName := ""
    endif
 
 return .F.
+
 
 
 METHOD CreateDatabase ( cDataBase ) CLASS TMySQLServer
@@ -1063,7 +1109,7 @@ return aStruct
 static function ClipValue2SQL(Value)
 
    local cValue := ""
-
+    local cFormatoDaData := set(4)
    do case
       case Valtype(Value) == "N"
          cValue := AllTrim(Str(Value))
@@ -1071,7 +1117,27 @@ static function ClipValue2SQL(Value)
       case Valtype(Value) == "D"
          if !Empty(Value)
             // MySQL dates are like YYYY-MM-DD
-            cValue := "'" + Str(Year(Value), 4) + "-" + PadL(Month(Value), 2, "0") + "-" + PadL(Day(Value), 2, "0") + "'"
+            if cFormatoDaData = 'mm-dd-yyyy' // USA
+            cValue := "'"+PadL(Month(Value), 2, "0") + '-'+ PadL(Day(Value), 2, "0") + "-" + Str(Year(Value), 4) + "'"
+
+            elseif  cFormatoDaData = 'dd/mm/yyyy' // BRITISH ou FRENCH
+            cValue := "'"+PadL(Day(Value), 2, "0") + "/" + PadL(Month(Value), 2, "0") + "/" + Str(Year(Value), 4) + "'"
+
+            elseif cFormatoDaData = 'yyyy.mm.dd' // ANSI
+            cValue := "'"+Str(Year(Value), 4)  + "." + PadL(Month(Value), 2, "0") + "." + PadL(Day(Value), 2, "0") + "'"
+
+            elseif cFormatoDaData = 'dd.mm.yyyy' //GERMAN
+            cValue := "'"+PadL(Day(Value), 2, "0") + "." + PadL(Month(Value), 2, "0") + "." + Str(Year(Value), 4) +  "'"
+
+            elseif cFormatoDaData = 'dd-mm-yyyy'  //ITALIAN
+            cValue := "'"+PadL(Day(Value), 2, "0") + "-" + PadL(Month(Value), 2, "0") + "-" + Str(Year(Value), 4)  + "'"
+
+            elseif cFormatoDaData = 'yyyy/mm/dd' //JAPAN
+            cValue := "'"+Str(Year(Value), 4)  + "/" + PadL(Month(Value), 2, "0") + "/" + PadL(Day(Value), 2, "0") + "'"
+
+            elseif cFormatoDaData = 'mm/dd/yyyy' // AMERICAN
+             cValue := "'"+Str(Year(Value), 4)     + "/" + PadL(Month(Value), 2, "0") + "/" + PadL(Day(Value), 2, "0") + "'"
+            endif
          else
             cValue := "''"
          endif

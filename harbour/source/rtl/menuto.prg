@@ -18,11 +18,12 @@
 #include "inkey.ch"
 #include "hbmemvar.ch"
 #include "setcurs.ch"
+#xtranslate COLORARRAY(<x>) => &( '{"' + strtran(<x>, ',', '","') + '"}' )
 
 static s_aLevel   := {}
 static s_nPointer := 1
 
-function __AtPrompt( nRow, nCol, cPrompt, cMsg )
+function __AtPrompt( nRow, nCol, cPrompt, cMsg, cColor )
 
    if s_nPointer < 1
       s_nPointer := 1
@@ -34,10 +35,10 @@ function __AtPrompt( nRow, nCol, cPrompt, cMsg )
    enddo
 
    // add to the static array
-   aadd( s_aLevel[ s_nPointer ], { nRow, nCol, cPrompt, cMsg } )
+   aadd( s_aLevel[ s_nPointer ], { nRow, nCol, cPrompt, cMsg, cColor} )
 
    // put this prompt on the screen right now
-   DispOutAt( nRow, nCol, cPrompt )
+   DispOutAt( nRow, nCol, cPrompt, if( cColor <> NIL , cColor, NIL ) )
 
    return .f.
 
@@ -61,6 +62,7 @@ function __MenuTo( bBlock, cVariable )
    local nMouseClik
 
    local nPointer
+   Local aColor
 
    // Detect if a memvar was passed
 
@@ -138,17 +140,23 @@ function __MenuTo( bBlock, cVariable )
          // save the current row
          q := n
 
+         if s_aLevel[ s_nPointer-1,n,5] <> nil
+             aColor := COLORARRAY( s_aLevel[ s_nPointer-1,n,5] )
+         endif
+
          if Set( _SET_INTENSITY )
-            ColorSelect( CLR_ENHANCED )
+            if( aColor <> Nil , aColor[ 2 ] , ColorSelect( CLR_ENHANCED ) )
          endif
 
          // highlight the prompt
          DispOutAt( s_aLevel[ nPointer - 1, n, 1 ],;
                     s_aLevel[ nPointer - 1, n, 2 ],;
-                    s_aLevel[ nPointer - 1, n, 3 ] )
+                    s_aLevel[ nPointer - 1, n, 3 ],;
+                    if(aColor <> NIL, acolor[ 2 ], NIL ) )
 
          if Set( _SET_INTENSITY )
-            ColorSelect( CLR_STANDARD )
+            //ColorSelect( CLR_STANDARD )
+            if( aColor<> Nil , aColor[ 1 ] , ColorSelect( CLR_STANDARD ) )
          endif
 
          if lExit
@@ -219,7 +227,8 @@ function __MenuTo( bBlock, cVariable )
          if n <> 0
             DispOutAt( s_aLevel[ nPointer - 1, q, 1 ],;
                        s_aLevel[ nPointer - 1, q, 2 ],;
-                       s_aLevel[ nPointer - 1, q, 3 ] )
+                       s_aLevel[ nPointer - 1, q, 3 ],;
+                       if( aColor <> NIL , aColor[ 1 ] , nil ) )
          endif
 
       enddo
