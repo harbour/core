@@ -156,6 +156,7 @@ CLASS Get
 
    DATA cPicMask, cPicFunc, nMaxLen, lEdit, lDecRev, lPicComplex
    DATA nDispLen, nDispPos, nOldPos, lCleanZero, cDelimit, nMaxEdit
+   DATA lMinusPrinted
 
    METHOD DeleteAll()
    METHOD IsEditable( nPos )
@@ -206,6 +207,7 @@ METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) CLASS Get
    ::nOldPos    := 0
    ::lCleanZero := .f.
    ::cDelimit   := if( SET(_SET_DELIMITERS), SET(_SET_DELIMCHARS), NIL )
+   ::lMinusPrinted := .f.
 
    ::Picture    := cPicture
    #ifdef HB_COMPAT_C53
@@ -353,12 +355,12 @@ return Self
 METHOD Display( lForced ) CLASS Get
 
    local nOldCursor := SetCursor( SC_NONE )
-   local xbuffer := ::buffer
+   local xBuffer := ::buffer
 
    DEFAULT lForced TO .t.
 
-   if !Empty(::DecPos ) .and. ::minus .and. !( "-" $ xbuffer )
-      xbuffer := space(::DecPos-2) + "-." + substr(::buffer,::Decpos+1)
+   if !::lMinusPrinted .and. !Empty( ::DecPos ) .and. ::minus .and. substr( xBuffer, ::DecPos-1, 1 ) == "0"
+      xBuffer := substr( xBuffer, 1, ::DecPos-2 ) + "-." + substr( xBuffer, ::DecPos+1 )
    endif
 
    if ::HasScroll() .and. ::Pos != NIL
@@ -411,8 +413,6 @@ METHOD End() CLASS Get
       ::Clear := .f.
       ::Display( .f. )
    endif
-
-   ::minus := NIL
 
 return Self
 
@@ -479,13 +479,12 @@ METHOD SetFocus() CLASS Get
 
    if ::type == "N"
       ::decpos := At( iif( ::lDecRev .or. "E" $ ::cPicFunc, ",", "." ), ::buffer )
-      if !::minus
-         ::minus := ( ::VarGet() < 0 )
-      endif
+      ::minus := ( ::VarGet() < 0 )
    else
       ::decpos := NIL
       ::minus  := .f.
    endif
+   ::lMinusPrinted := ::minus
 
    if ::type == "D"
       ::BadDate := IsBadDate( ::buffer, ::cPicFunc )
@@ -580,9 +579,7 @@ METHOD Untransform( cBuffer ) CLASS Get
 
    case ::type == "N"
 
-      if !::minus
-         ::minus := .f.
-      endif
+*      ::minus := .f.
       if "X" $ ::cPicFunc
          if Right( cBuffer, 2 ) == "DB"
             ::minus := .t.
@@ -1132,6 +1129,12 @@ METHOD PutMask( xValue, lEdit ) CLASS Get
            ( "X" $ cPicFunc .and. xValue >= 0 ) ) .and.;
            !( "X" $ cPicFunc .and. "C" $ cPicFunc )
          cBuffer += "   "
+      endif
+
+      if xValue < 0
+         ::lMinusPrinted := .t.
+      else
+         ::lMinusPrinted := .f.
       endif
    endif
 
