@@ -451,7 +451,7 @@ static void hb_compExprPushPreOp( HB_EXPR_PTR, BYTE );
 static void hb_compExprPushPostOp( HB_EXPR_PTR, BYTE );
 static void hb_compExprUsePreOp( HB_EXPR_PTR, BYTE );
 static void hb_compExprUseAliasMacro( HB_EXPR_PTR, BYTE );
-
+static void hb_compExprCheckStaticInitializers( HB_EXPR_PTR, HB_EXPR_PTR );
 #endif
 
 static BOOL hb_compExprCheckMacroVar( char * );
@@ -1366,7 +1366,15 @@ HB_EXPR_PTR hb_compExprAssignStatic( HB_EXPR_PTR pLeftExpr, HB_EXPR_PTR pRightEx
    pRightExpr = hb_compExprListStrip( HB_EXPR_USE( pRightExpr, HB_EA_REDUCE ) );
    pExpr->value.asOperator.pRight = pRightExpr;
 
-   if( pRightExpr->ExprType > HB_ET_FUNREF )
+   if( pRightExpr->ExprType == HB_ET_ARGLIST )
+   {
+       /* HB_ET_ARGLIST is used in case of STATIC var[dim1, dim2, dimN]
+        * was used - we have to check if all array dimensions are 
+	* constant values
+        */
+	hb_compExprCheckStaticInitializers( pLeftExpr, pRightExpr );
+   }
+   else if( pRightExpr->ExprType > HB_ET_FUNREF )
    {
       /* Illegal initializer for static variable (not a constant value)
        */
@@ -1374,29 +1382,11 @@ HB_EXPR_PTR hb_compExprAssignStatic( HB_EXPR_PTR pLeftExpr, HB_EXPR_PTR pRightEx
    }
    else if( pRightExpr->ExprType == HB_ET_ARRAY )
    {
-      /* Scan an array for illegal initializers.
+      /* { elem1, elem2, elemN } was used as initializer
+       * Scan an array for illegal initializers.
        * An array item have to be a const value too.
        */
-      HB_EXPR_PTR pElem = pRightExpr->value.asList.pExprList;
-      HB_EXPR_PTR pNext;
-      HB_EXPR_PTR * pPrev;
-
-      pPrev = &pRightExpr->value.asList.pExprList;
-      while( pElem )
-      {
-         /* NOTE: During reduction the expression can be replaced by the
-          *    new one - this will break the linked list of expressions.
-          * (classical case of replacing an item in a linked list)
-          */
-         pNext = pElem->pNext; /* store next expression in case the current  will be reduced */
-         pElem = hb_compExprListStrip( HB_EXPR_USE( pElem, HB_EA_REDUCE ) );
-         if( pElem->ExprType > HB_ET_FUNREF )
-            hb_compErrorStatic( pLeftExpr->value.asSymbol, pElem );
-         *pPrev = pElem;   /* store a new expression into the previous one */
-         pElem->pNext = pNext;  /* restore the link to next expression */
-         pPrev  = &pElem->pNext;
-         pElem  = pNext;
-      }
+      hb_compExprCheckStaticInitializers( pLeftExpr, pRightExpr );
    }
 
    return pExpr;
@@ -5868,3 +5858,29 @@ static void hb_compExprCBVarDel( HB_CBVAR_PTR pVars )
       HB_XFREE( pDel );
    }
 }
+
+#ifndef HB_MACRO_SUPPORT
+static void hb_compExprCheckStaticInitializers( HB_EXPR_PTR pLeftExpr, HB_EXPR_PTR pRightExpr )
+{
+   HB_EXPR_PTR pElem = pRightExpr->value.asList.pExprList;
+   HB_EXPR_PTR pNext;
+   HB_EXPR_PTR * pPrev;
+
+   pPrev = &pRightExpr->value.asList.pExprList;
+   while( pElem )
+   {
+      /* NOTE: During reduction the expression can be replaced by the
+       *    new one - this will break the linked list of expressions.
+       * (classical case of replacing an item in a linked list)
+       */
+      pNext = pElem->pNext; /* store next expression in case the current  will be reduced */
+      pElem = hb_compExprListStrip( HB_EXPR_USE( pElem, HB_EA_REDUCE ) );
+      if( pElem->ExprType > HB_ET_FUNREF )
+         hb_compErrorStatic( pLeftExpr->value.asSymbol, pElem );
+      *pPrev = pElem;   /* store a new expression into the previous one */
+      pElem->pNext = pNext;  /* restore the link to next expression */
+      pPrev  = &pElem->pNext;
+      pElem  = pNext;
+   }
+}
+#endif

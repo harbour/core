@@ -1,3 +1,10 @@
+20000109-14:25 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *include/hbexpr.c
+    *source/compiler/expropt.c
+    *source/compiler/harbour.y
+	* fixed STATIC var1[0], var2[3,4] initialization failure
+
 2000-01-07  GMT +3  Luiz Rafael Culik <Culik@sl.conex.net>
      * gt.b32
           ! Added RTF.prg
