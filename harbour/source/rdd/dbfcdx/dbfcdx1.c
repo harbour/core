@@ -713,7 +713,6 @@ ERRCODE hb_cdxOpen( CDXAREAP pArea, LPDBOPENINFO pOpenInfo )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_cdxOpen(%p, %p)", pArea, pOpenInfo));
 
-
    /* Force exclusive mode */
    if( hb_set.HB_SET_AUTOSHARE == 2 )
       pOpenInfo->fShared = FALSE;

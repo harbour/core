@@ -355,8 +355,14 @@ HB_FUNC( SET )
          if( args > 1 ) hb_set.HB_SET_AUTORDER = set_logical( pArg2 );
          break;
       case HB_SET_AUTOSHARE  :
-         hb_retl( hb_set.HB_SET_AUTOSHARE );
-         if( args > 1 ) hb_set.HB_SET_AUTOSHARE = set_logical( pArg2 );
+         hb_retni( hb_set.HB_SET_AUTOSHARE );
+         if( args > 1 )
+         {
+            if( set_number( pArg2, hb_set.HB_SET_AUTOSHARE ) < 0 )
+               hb_errRT_BASE( EG_ARG, 2020, NULL, "SET" );
+            else
+               hb_set.HB_SET_MARGIN = set_number( pArg2, hb_set.HB_SET_AUTOSHARE );
+         }
          break;
       case HB_SET_BELL       :
          hb_retl( hb_set.HB_SET_BELL );
@@ -626,7 +632,7 @@ void hb_setInitialize( void )
    hb_set.hb_set_althan = FS_ERROR;
    hb_set.HB_SET_AUTOPEN = FALSE;
    hb_set.HB_SET_AUTORDER = FALSE;
-   hb_set.HB_SET_AUTOSHARE = FALSE;
+   hb_set.HB_SET_AUTOSHARE = 0;
    hb_set.HB_SET_BELL = FALSE;
    hb_set.HB_SET_CANCEL = TRUE;
    hb_set.hb_set_century = FALSE;

@@ -1,3 +1,12 @@
+2000-09-02 10:19 GMT+1 Bruno Cantero <bruno@issnet.net>
+   * include/hbset.h
+   * source/rtl/set.c
+   * source/rdd/dbfcdx/dbfcdx1.c
+      ! Changed SET_AUTOSHARE, now accept three values:
+        0: AUTOSHARE disabled.
+	1: AUTOSHARE enabled.
+	2: force exclusive mode.
+
 2000-09-02 09:37 GMT+1 Bruno Cantero <bruno@issnet.net>
    * contrib/rdd_ads/rddads.h
    * contrib/rdd_ads/ads1.c

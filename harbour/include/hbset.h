@@ -159,7 +159,7 @@ typedef struct
    BOOL    HB_SET_OPTIMIZE;
    BOOL    HB_SET_AUTOPEN;
    BOOL    HB_SET_AUTORDER;
-   BOOL    HB_SET_AUTOSHARE;
+   int     HB_SET_AUTOSHARE;
    int     HB_SET_VIDEOMODE;
 } HB_SET_STRUCT;
 
