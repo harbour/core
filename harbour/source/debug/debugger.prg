@@ -716,6 +716,7 @@ METHOD EditVar( nVar ) CLASS TDebugger
    local cVarType   := ::aVars[ nVar ][ 3 ]
    local nProcLevel := 1
    local aArray
+   local cVarStr
 
    if ::aVars[ nVar ][ 3 ] == "Local"
       while ProcName( nProcLevel ) != ::aVars[ nVar ][ 4 ]
@@ -728,11 +729,21 @@ METHOD EditVar( nVar ) CLASS TDebugger
       uVarValue := __vmVarSGet( ::aVars[ nVar ][ 2 ] )
    endif
 
-   uVarValue := ::InputBox( cVarName, ValToStr( uVarValue ) )
+   do case
+      case ValType( uVarValue ) == "A"
+           ::InputBox( cVarName, uVarValue,, .f. )
+
+      case ValType( uVarValue ) == "O"
+           ::InputBox( cVarName, uVarValue,, .f. )
+
+      otherwise
+           cVarStr := ::InputBox( cVarName, ValToStr( uVarValue ),;
+       { | u | If( Type( u ) == "UE", ( Alert( "Expression error" ), .f. ), .t. ) } )
+   endcase
 
    if LastKey() != K_ESC
       do case
-         case uVarValue == "{ ... }"
+         case cVarStr == "{ ... }"
                cVarType := ::aVars[ nVar ][ 3 ]
 
                do case
@@ -752,7 +763,7 @@ METHOD EditVar( nVar ) CLASS TDebugger
                   Alert( "Array is empty" )
                endif
 
-         case Upper( SubStr( uVarValue, 1, 5 ) ) == "CLASS"
+         case Upper( SubStr( cVarStr, 1, 5 ) ) == "CLASS"
               do case
                  case cVarType == "Local"
                     __DbgObject( __vmVarLGet( nProcLevel, ::aVars[ nVar ][ 2 ] ), cVarName )
@@ -1499,7 +1510,8 @@ METHOD InputBox( cMsg, uValue, bValid, lEditable ) CLASS TDebugger
       if bValid == nil
          @ nTop + 1, nLeft + 1 GET uTemp COLOR "," + __DbgColors()[ 5 ]
       else
-         @ nTop + 1, nLeft + 1 GET uTemp VALID bValid COLOR "," + __DbgColors()[ 5 ]
+         @ nTop + 1, nLeft + 1 GET uTemp VALID Eval( bValid, uTemp ) ;
+           COLOR "," + __DbgColors()[ 5 ]
       endif
 
       nOldCursor := SetCursor( SC_NORMAL )
@@ -1508,8 +1520,8 @@ METHOD InputBox( cMsg, uValue, bValid, lEditable ) CLASS TDebugger
    else
       @ nTop + 1, nLeft + 1 SAY ValToStr( uValue ) COLOR __DbgColors()[ 5 ]
       SetPos( nTop + 1, nLeft + 1 )
+      nOldCursor := SetCursor( SC_NONE )
 
-      nOldCursor := SetCursor( SC_NORMAL )
       lExit = .f.
 
       while ! lExit
@@ -1521,10 +1533,14 @@ METHOD InputBox( cMsg, uValue, bValid, lEditable ) CLASS TDebugger
 
             case LastKey() == K_ENTER
                if cType == "A"
-                  __DbgArrays( uValue, cMsg, .f. )
+                  if Len( uValue ) == 0
+                     Alert( "Array is empty" )
+                  else
+                     __DbgArrays( uValue, cMsg )
+                  endif
 
                elseif cType == "O"
-                  __DbgObject( uValue, cMsg, .f. )
+                  __DbgObject( uValue, cMsg )
 
                else
                   Alert( "Value cannot be edited" )
