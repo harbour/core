@@ -105,7 +105,7 @@ HB_FUNC( HB_FTEMPCREATE )
    hb_retni( hb_fsCreateTemp( ( BYTE * ) hb_parc( 1 ),
                               ( BYTE * ) hb_parc( 2 ),
                               ISNUM( 2 ) ? hb_parni( 2 ) : FC_NORMAL,
-                              &szName ) );
+                              szName ) );
 }
 
 #endif
