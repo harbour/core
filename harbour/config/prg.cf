@@ -12,4 +12,4 @@ $(PRG_EXES) : %$(EXE_EXT) : %$(OBJ_EXT)
 
 $(PRG_OBJS) : %$(OBJ_EXT) : %.c
 
-$(PRG_C_SOURCES) : %.c : ../../%.prg
+$(PRG_C_SOURCES) : %.c : $(GRANDP)%.prg

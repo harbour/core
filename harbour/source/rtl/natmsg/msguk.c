@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 /* English language module */
 /* Codepage: N/A           */
 

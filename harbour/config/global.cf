@@ -4,13 +4,16 @@
 
 all : first
 
-ARCH_DIR = $(ARCHITECTURE)/$(COMPILER)/
+GRANDP = ../../
+ARCH = $(HB_ARCHITECTURE)/$(HB_COMPILER)
 
-include $(TOP)$(ROOT)config/$(ARCHITECTURE)/$(COMPILER).cf
+ARCH_DIR = $(ARCH)/
+
+include $(TOP)$(ROOT)config/$(ARCH).cf
 
 dirbase::
-	@if [ ! -d $(ARCHITECTURE) ]; then \
-	  $(MD) $(ARCHITECTURE); \
+	@if [ ! -d $(HB_ARCH) ]; then \
+	  $(MD) $(HB_ARCH); \
 	fi; \
 	if [ ! -d $(ARCH_DIR) ]; then \
 	  $(MD) $(ARCH_DIR); \

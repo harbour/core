@@ -1,9 +1,21 @@
+/*
+ * $Id$
+ */
+
 /* Harbour Preprocessor , version 0.8
    author - Alexander Kresin             */
+
+#if defined(__DJGPP__) || defined(__GNUC__)
+ #include <string.h>
+ #include <stdlib.h>
+ #include <unistd.h>
+#else
+ #include <mem.h>
+#endif
+
 #include <stdio.h>
 #include <io.h>
 #include <fcntl.h>
-#include <mem.h>
 #include <ctype.h>
 #include "harb.h"
 
@@ -99,7 +111,7 @@ int kolcommands = 0, maxcommands = INITIAL_ACOM_SIZE;
 
 int main (int argc,char* argv[])
 {
-int handl_i,handl_o,i;
+int handl_i,handl_o;
 char szFileName[ _POSIX_PATH_MAX ];
 FILENAME *pFileName =NULL;
 
@@ -230,7 +242,7 @@ int ParseDirective( char* sLine )
     { printf("\nCan't open %s",sLine); return 1001; }
 
    lInclude++;
-   Hp_Parse(handl_i, NULL);
+   Hp_Parse(handl_i, 0);
    lInclude--;
    close(handl_i);
   }

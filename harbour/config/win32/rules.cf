@@ -12,7 +12,7 @@ LEX_FLAGS = -i
 
 # How to run Harbour.
 HB = harbour$(EXE_EXT)
-HB_FLAGS = -n -q -I$(INC_DIR)
+HB_FLAGS = -n -q -I$(TOP) -I$(INC_DIR)
 
 # The rule to link an executable.
 LD_RULE = $(LD) $(CFLAGS) $(LD_OUT)$@ $^ $(LDFLAGS) $(LINKLIBS)
@@ -26,8 +26,8 @@ LD_RULE = $(LD) $(CFLAGS) $(LD_OUT)$@ $^ $(LDFLAGS) $(LINKLIBS)
 
 
 # Rule to generate an object file from a C source file in the parent.
-%$(OBJ_EXT) : ../../%.c
-	$(CC) $(CPPFLAGS) $(CFLAGS) -c $? $(CC_OUT)$(subst .c,$(OBJ_EXT),$(subst ../../,,$?))
+%$(OBJ_EXT) : $(GRANDP)%.c
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c $? $(CC_OUT)$(subst .c,$(OBJ_EXT),$(subst $(GRANDP),,$?))
 
 # Rule to generate an object file from a C source file.
 %$(OBJ_EXT) : %.c
@@ -38,7 +38,7 @@ LD_RULE = $(LD) $(CFLAGS) $(LD_OUT)$@ $^ $(LDFLAGS) $(LINKLIBS)
 	$(LD_RULE)
 
 # Rule to generate a C file from a PRG file.
-%.c : ../../%.prg
+%.c : $(GRANDP)%.prg
 	$(HB) $? $(HB_FLAGS)
 
 # Generic rule to clean up.

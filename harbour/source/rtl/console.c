@@ -11,7 +11,7 @@
 #include <ctoharb.h>
 #include <dates.h>
 #include <set.h>
-#ifdef __DJGPP__
+#if defined(__DJGPP__) || defined(__GNUC__)
    #include <unistd.h>
 #endif
 #ifdef USE_GTAPI

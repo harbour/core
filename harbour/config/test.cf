@@ -9,5 +9,5 @@ first : dirbase descend
 
 descend :
 	@cd $(ARCH_DIR); \
-	$(MAKE) -f ../../Makefile 'TOP=../../' $(PRG_EXES); \
-	cd ../../
+	$(MAKE) -f $(GRANDP)Makefile 'TOP=$(GRANDP)' $(PRG_EXES); \
+	cd $(GRANDP)

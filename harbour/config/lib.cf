@@ -15,14 +15,14 @@ first : dirbase descend
 
 descend :
 	@cd $(ARCH_DIR); \
-	$(MAKE) -f ../../Makefile 'TOP=../../' $(LIB_NAME); \
-	cd ../../
+	$(MAKE) -f $(GRANDP)Makefile 'TOP=$(GRANDP)' $(LIB_NAME); \
+	cd $(GRANDP)
 
 $(LIB_NAME) : $(ALL_OBJS)
 	$(AR_RULE)
 
 
 INSTALL_OBJS = $(LIB_ARCH)
-INSTALL_DIR = $(LIB_DIR)
+INSTALL_DIR = $(HB_LIB_DIR)
 
 include $(TOP)$(ROOT)config/install.cf

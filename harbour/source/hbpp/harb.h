@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 /*  ---------------------------------------------
    Definitions, copied from Harbour.y and types.h    */
 

@@ -4,6 +4,7 @@
 
 #include <extend.h>
 #include <string.h>
+#include <ctype.h>
 #include <itemapi.h>
 
 #if defined(__GNUC__) || defined(__DJGPP__)
@@ -85,6 +86,10 @@
    #undef DIRECTORY
 #endif
 
+
+static  BOOL  hb_strMatchDOS (char *pszString, char *pszMask);
+
+
 HARBOUR DIRECTORY( void )
 {
 #if defined(HAVE_POSIX_IO)
@@ -106,13 +111,7 @@ HARBOUR DIRECTORY( void )
    char   fname[_POSIX_PATH_MAX+1];
    char   fext[_POSIX_PATH_MAX+1];
    char   filesize[10];
-   char   yyear[5];
-   char   mmonth[3];
-   char   dday[3];
    char   ddate[9];
-   char   hh[3];
-   char   mm[3];
-   char   ss[3];
    char   ttime[9];
    int    attrib;
    char   aatrib[7];
@@ -141,7 +140,7 @@ HARBOUR DIRECTORY( void )
       if( pos )
       {
          strcpy(pattern,(pos+1));
-         string[pos-string+1] = '\0';
+         *(pos+1) = '\0';
          strcpy(dirname,string);
       }
       else
@@ -166,7 +165,7 @@ HARBOUR DIRECTORY( void )
       if( pos )
       {
          strcpy(pfext,(pos+1));
-         string[pos-string] = '\0';
+         *pos = '\0';
          strcpy(pfname,string);
       }
       else
@@ -204,7 +203,7 @@ HARBOUR DIRECTORY( void )
       if( pos )
       {
          strcpy(fext,(pos+1));
-         string[pos-string] = '\0';
+         *pos = '\0';
          strcpy(fname,string);
       }
       else
@@ -224,8 +223,6 @@ HARBOUR DIRECTORY( void )
       if (hb_strMatchDOS( fname,pfname) && hb_strMatchDOS( fext,pfext))
       {
 
-         ddate[0] = '\0';
-         ttime[0] = '\0';
          aatrib[0] = '\0';
          filesize[0] = '\0';
          filename[0] = '\0';
@@ -242,54 +239,23 @@ HARBOUR DIRECTORY( void )
          }
 
          fsize = statbuf.st_size;
-         ltoa(fsize,filesize,10);
+         sprintf(filesize, "%ld", fsize);
          ftime = statbuf.st_mtime;
          ft = localtime(&ftime);
 
-         itoa(ft->tm_year+1900,yyear,10);
-         strcat(ddate,yyear);
-         itoa(ft->tm_mon,mmonth,10);
-         if (strlen(mmonth) < 2)
-         {
-            strcat(mmonth,"0");
-            strrev(mmonth);
-         }
-         strcat(ddate,mmonth);
-         itoa(ft->tm_mday,dday,10);
-         if (strlen(dday) < 2)
-         {
-            strcat(dday,"0");
-            strrev(dday);
-         }
-         strcat(ddate,dday);
-         itoa(ft->tm_hour,hh,10);
-         if (strlen(hh) < 2)
-         {
-            strcat(hh,"0");
-            strrev(hh);
-         }
-         strcat(ttime,hh);
-         strcat(ttime,":");
-         itoa(ft->tm_min,mm,10);
-         if (strlen(mm) < 2)
-         {
-            strcat(mm,"0");
-            strrev(mm);
-         }
-         strcat(ttime,mm);
-         strcat(ttime,":");
-         itoa(ft->tm_sec,ss,10);
-         if (strlen(ss) < 2)
-         {
-            strcat(ss,"0");
-            strrev(ss);
-         }
-         strcat(ttime,ss);
+	 sprintf(ddate, "%04d%02d%02d",
+		 ft->tm_year+1900, ft->tm_mon, ft->tm_mday);
+	 sprintf(ttime, "%02d:%02d:%02d",
+		 ft->tm_hour, ft->tm_min, ft->tm_sec);
 
 /* debug code
          printf("\n name date time    %s %s %s ",entry,ddate,ttime);
          while(0==getchar());
 */
+
+#if defined(__GNUC__) || defined(__DJGPP__)
+	 aatrib[0] = '\0';
+#else
          /* TODO: seems to not clear on root entries ? */
          attrib = _chmod(fullfile,0);
          if (attrib & FA_ARCH)
@@ -304,17 +270,18 @@ HARBOUR DIRECTORY( void )
             strcat(aatrib,"R");
          if (attrib & FA_SYSTEM)
             strcat(aatrib,"S");
+#endif
 
          /* TODO: attribute match rtn */
-         pos = 0;
+         pos = string;
          if( arg2_it && _parclen(2) >= 1)
          {
             strcpy(string, _parc(2));
-            while (string[pos]) string[pos] = toupper(string[pos]);
+            while (*pos != '\0') *pos = toupper(*pos);
             pos = strchr(string,*aatrib);
          }
          else
-            pos = 1;
+            pos = string;
 
          if ( pos )
          {

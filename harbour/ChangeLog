@@ -1,3 +1,62 @@
+Mon Jun 07 12:58:17 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* source/hbpp/Makefile: 
+	* source/hbpp/harb.c: 
+	* source/hbpp/harb.h: 
+	* source/hbpp/hbpp.c: 
+	* source/hbpp/table.c: 
+	Added a GNU-make Makefile to this directory.
+	Solved portability problems under gcc.
+	Got rid of a few warnings and unused variables.
+
+	* source/rtl/msgxxx.c: 
+	This file includes the correct message file based on the value of
+	HB_LANGUAGE, whose default is UK.
+
+	* source/rtl/classes.c: 
+	* source/rtl/console.c: 
+	* source/rtl/dir.c: 
+	* source/rtl/files.c: 
+	* source/rtl/set.c: 
+	Solved portability problems under gcc.
+	Got rid of a few warnings and unused variables.
+
+	* source/rtl/dir.c: 
+	This file had definite bugs, see difference between r1.4 and r1.3
+	for more details.
+	
+	* source/rtl/natmsg/msgdut.c: 
+	* source/rtl/natmsg/msggal.c: 
+	* source/rtl/natmsg/msgger.c: 
+	* source/rtl/natmsg/msghu.c: 
+	* source/rtl/natmsg/msgpor.c: 
+	* source/rtl/natmsg/msgr1251.c: 
+	* source/rtl/natmsg/msgru866.c: 
+	* source/rtl/natmsg/msgspa.c: 
+	* source/rtl/natmsg/msguk.c: 
+	Added Id keywords.
+	
+	* config/bin.cf: 
+	* config/global.cf: 
+	* config/header.cf: 
+	* config/lib.cf: 
+	* config/prg.cf: 
+	* config/test.cf: 
+	* config/win32/rules.cf: 
+	Use GRANDP to refer to ../../ and change environment variables to
+	start with a HB_.
+
+	* config/win32/rules.cf: 
+	Added a -I$(TOP) to the list of paths for included files in the
+	rule to compile a PRG file with Harbour.
+
+	* include/Makefile: 
+	* source/Makefile: 
+	* source/rtl/Makefile: 
+	* source/tools/Makefile: 
+	* tests/working/Makefile: 
+	Updated the file list.
+
 19990607-15:15 CET Matthew Hamilton
   * tests/working/inifiles.prg
 

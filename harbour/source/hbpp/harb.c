@@ -1,8 +1,21 @@
-#include <stdio.h>
-#include <mem.h>
+/*
+ * $Id$
+ */
+
+#if defined(__DJGPP__)
 #ifndef __dj_include_stdio_h_
  #include <alloc.h>
 #endif
+#endif
+
+#if defined(__DJGPP__) || defined(__GNUC__)
+ #include <string.h>
+ #include <stdlib.h>
+#else
+ #include <mem.h>
+#endif
+
+#include <stdio.h>
 #include "harb.h"
 /*
  * Split given filename into path, name and extension

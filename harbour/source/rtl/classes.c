@@ -246,7 +246,6 @@ HARBOUR CLASSCREATE()
 {
    WORD   wSuper = _parni( 3 );                 /* Super class present      */
    WORD   wSize;
-   PHB_ITEM  pItem;
    PCLASS pNewCls;
    PCLASS pSprCls;
 
@@ -939,7 +938,6 @@ HARBOUR __INSTSUPER( void )
 {
    PHB_ITEM   pString = _param( 1, IT_STRING );
    PDYNSYM pDynSym;
-   PHB_ITEM   pSuperCls;
    BYTE    bFound  = FALSE;
    WORD    w;
 

@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * Language support unit for Galician
  *
  */

@@ -14,14 +14,14 @@ first : dirbase descend
 
 descend :
 	@cd $(ARCH_DIR); \
-	$(MAKE) -f ../../Makefile 'TOP=../../' $(EXE_NAME); \
-	cd ../../
+	$(MAKE) -f $(GRANDP)Makefile 'TOP=$(GRANDP)' $(EXE_NAME); \
+	cd $(GRANDP)
 
 $(EXE_NAME) : $(ALL_OBJS)
 	$(LD_RULE)
 
 
 INSTALL_OBJS = $(EXE_ARCH)
-INSTALL_DIR = $(BIN_DIR)
+INSTALL_DIR = $(HB_BIN_DIR)
 
 include $(TOP)$(ROOT)config/install.cf

@@ -1,3 +1,6 @@
+/*
+ * $Id$
+ */
 
 /* Hungarian language module (2 char. ISO language code: HU) */
 /* Codepage: 852 */

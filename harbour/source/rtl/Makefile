@@ -10,17 +10,23 @@ C_SOURCES=\
 	codebloc.c \
 	console.c \
 	dates.c \
+	descend.c \
+	dir.c \
 	environ.c \
 	errorapi.c \
 	extend.c \
 	files.c \
 	gtapi.c \
+	hardcr.c \
 	itemapi.c \
 	math.c \
+	mtran.c \
 	set.c \
 	strcmp.c \
 	strings.c \
 	transfrm.c \
+	\
+	msgxxx.c \
 
 PRG_SOURCES=\
 	asort.prg \

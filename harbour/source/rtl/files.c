@@ -5,6 +5,10 @@
 #include <extend.h>
 #include <string.h>
 
+#if defined(__GNUC__)
+  #include <mingw32/share.h>
+#endif
+
 #if defined(__GNUC__) || defined(__DJGPP__)
   #include <sys/types.h>
   #include <sys/stat.h>
@@ -269,6 +273,7 @@ int _fsLock( int handle, long start, long length, long mode )
 {
         int result=0;
 
+#if !defined(__GNUC__) && !defined(__DJGPP__)
 #if defined(HAVE_POSIX_IO)
         if (mode == FL_LOCK)
         {
@@ -283,6 +288,7 @@ int _fsLock( int handle, long start, long length, long mode )
            last_error = errno;
         }
         result = (last_error=0?1:0);
+#endif
 #endif
 
         return result;
