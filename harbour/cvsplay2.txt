@@ -1,3 +1,4 @@
 changed line is this
-new is this
+old is this
 
+new text
