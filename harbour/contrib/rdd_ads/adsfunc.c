@@ -117,7 +117,7 @@ HARBOUR HB_ADSSETDEFAULT( void )
 HARBOUR HB_ADSSETDELETED( void )
 {
    UNSIGNED16 usShowDeleted = hb_parl( 1 );
-   AdsShowDeleted( usShowDeleted ? 0 : 1 );
+   AdsShowDeleted( usShowDeleted );
 }
 
 HARBOUR HB_ADSBLOB2FILE( void )
@@ -181,18 +181,31 @@ HARBOUR HB_ADSKEYNO( void )
    pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
    if( pArea )
    {
-      if( ISNUM( 1 ) )
-      {
-         ordNum = hb_parni( 1 );
-         AdsGetIndexHandleByOrder( pArea->hTable, ordNum, &hIndex );
+      if( hb_pcount() > 0 )
+      {   
+         if( ISNUM( 1 ) )
+         {
+            ordNum = hb_parni( 1 );
+            AdsGetIndexHandleByOrder( pArea->hTable, ordNum, &hIndex );
+         }
+         else
+         {
+            ordName = hb_parc( 1 );
+            AdsGetIndexHandle( pArea->hTable, ordName, &hIndex );
+         }
+         AdsGetKeyNum  ( hIndex, ADS_IGNOREFILTERS, &pulKey);
       }
       else
       {
-         ordName = hb_parc( 1 );
-         AdsGetIndexHandle( pArea->hTable, ordName, &hIndex );
+         if( pArea->hOrdCurrent != 0)
+         {
+            hIndex = pArea->hOrdCurrent;
+            AdsGetKeyNum  ( hIndex, ADS_IGNOREFILTERS, &pulKey);
+         }
+         else
+            AdsGetRecordNum  ( pArea->hTable, ADS_IGNOREFILTERS, &pulKey);
       }
 
-      AdsGetKeyNum  ( hIndex, ADS_IGNOREFILTERS, &pulKey);
       hb_retnl( pulKey );
    }
    else
@@ -210,18 +223,23 @@ HARBOUR HB_ADSKEYCOUNT( void )
    pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
    if( pArea )
    {
-      if( ISNUM( 1 ) )
+      if( hb_pcount() > 0 )
       {
-         ordNum = hb_parni( 1 );
-         AdsGetIndexHandleByOrder( pArea->hTable, ordNum, &hIndex );
+         if( ISNUM( 1 ) )
+         {
+            ordNum = hb_parni( 1 );
+            AdsGetIndexHandleByOrder( pArea->hTable, ordNum, &hIndex );
+         }
+         else
+         {
+            ordName = hb_parc( 1 );
+            AdsGetIndexHandle( pArea->hTable, ordName, &hIndex );
+         }
       }
       else
-      {
-         ordName = hb_parc( 1 );
-         AdsGetIndexHandle( pArea->hTable, ordName, &hIndex );
-      }
+         hIndex = (pArea->hOrdCurrent == 0)? pArea->hTable:pArea->hOrdCurrent;
 
-      AdsGetKeyCount  ( hIndex, ADS_IGNOREFILTERS, &pulKey);
+      AdsGetRecordCount  ( hIndex, ADS_IGNOREFILTERS, &pulKey);
       hb_retnl( pulKey );
    }
    else

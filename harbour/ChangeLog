@@ -1,3 +1,9 @@
+20000220-23:05 GMT+3 Alexander Kresin
+   * contrib/rdd_ads/ads1.c
+     * memo handling changed - proposal of Brian Hays
+   * contrib/rdd_ads/ads1.c
+     * improvement of AdsKeyNo() and AdsKeyCount()
+
 20000220-19:55 GMT+3 Alexander Kresin
    * source/pp/stdalone/hbpp.c
    * source/pp/hbppint.c

@@ -434,16 +434,22 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
            UNSIGNED32 pulLen;
 
            AdsGetFieldName( pArea->hTable, uiIndex, szName, &pusBufLen );
-           AdsGetMemoLength( pArea->hTable, szName, &pulLen );
-           if( pulLen > 0 )
-           {
-              pucBuf = (UNSIGNED8*) hb_xgrab( pulLen );
-              AdsGetString( pArea->hTable, szName, pucBuf, &pulLen, ADS_NONE );
-              hb_itemPutCL( pItem, ( char * ) pucBuf, pulLen );
-              hb_xfree( pucBuf );
-           }
+           if ( AdsGetMemoLength( pArea->hTable, szName, &pulLen ) ==
+                       AE_NO_CURRENT_RECORD )
+               hb_itemPutC( pItem, "" );
            else
-              hb_itemPutC( pItem, "" );
+           {
+              if( pulLen > 0 )
+              {
+                 pulLen++;                 // make room for NULL
+                 pucBuf = (UNSIGNED8*) hb_xgrab( pulLen );
+                 AdsGetString( pArea->hTable, szName, pucBuf, &pulLen, ADS_NONE );
+                 hb_itemPutCL( pItem, ( char * ) pucBuf, pulLen );
+                 hb_xfree( pucBuf );
+              }
+              else
+                 hb_itemPutC( pItem, "" );
+           }
            break;
          }
 
