@@ -1,3 +1,7 @@
+19991018-03:35 EDT Paul Tucker <ptucker@sympatico.ca>
+   * makefile.vc
+     + source/rdd/rddord.prg
+
 19991018-09:34 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/rtl/rddord.prg moved to
      source/rdd/rddord.prg

@@ -113,7 +113,6 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\objfunc.obj \
     $(OBJ_DIR)\oldbox.obj \
     $(OBJ_DIR)\oldclear.obj \
-    $(OBJ_DIR)\rddord.obj \
     $(OBJ_DIR)\readkey.obj \
     $(OBJ_DIR)\readvar.obj \
     $(OBJ_DIR)\samples.obj \
@@ -194,6 +193,7 @@ RDD_OBJS = \
     $(OBJ_DIR)\sdf1.obj \
     $(OBJ_DIR)\delim0.obj \
     $(OBJ_DIR)\delim1.obj \
+    $(OBJ_DIR)\rddord.obj \
     $(OBJ_DIR)\rddsys.obj
 
 DBFNTX_LIB_OBJS = \
@@ -553,12 +553,6 @@ $(OBJ_DIR)\oldbox.obj : $(RTL_DIR)\oldbox.c
 $(OBJ_DIR)\oldclear.obj : $(RTL_DIR)\oldclear.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
-$(RTL_DIR)\rddord.c : $(RTL_DIR)\rddord.prg
-    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
-
-$(OBJ_DIR)\rddord.obj : $(RTL_DIR)\rddord.c
-    $(CC) $(CLIBFLAGS) -Fo$@ $**
-
 $(RTL_DIR)\readkey.c : $(RTL_DIR)\readkey.prg
     $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
 
@@ -877,4 +871,10 @@ $(OBJ_DIR)\dbfcdx0.obj : $(RDD_DIR)\dbfcdx\dbfcdx0.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\dbfcdx1.obj : $(RDD_DIR)\dbfcdx\dbfcdx1.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(RDD_DIR)\rddord.c : $(RDD_DIR)\rddord.prg
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
+
+$(OBJ_DIR)\rddord.obj : $(RDD_DIR)\rddord.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
