@@ -530,15 +530,19 @@ static void hb_dbfGetMemo( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfGetMemo(%p, %hu, %p)", pArea, uiIndex, pItem));
 
    ulSize = hb_dbfGetMemoLen( pArea, uiIndex );
+
+   pBuffer = ( BYTE * ) hb_xgrab( ulSize + 1 );
    if( ulSize > 0 )
    {
-      pBuffer = ( BYTE * ) hb_xgrab( ulSize + 1 );
       ulBlock = hb_dbfGetMemoBlock( pArea, uiIndex );
       hb_fsSeek( pArea->hMemoFile, ulBlock * DBT_BLOCKSIZE, FS_SET );
       hb_fsReadLarge( pArea->hMemoFile, pBuffer, ulSize );
-      hb_itemPutCPtr( pItem, ( char * ) pBuffer, ulSize );
-      hb_itemSetCMemo( pItem );
    }
+   else
+      *pBuffer = '\0';
+
+   hb_itemPutCPtr( pItem, ( char * ) pBuffer, ulSize );
+   hb_itemSetCMemo( pItem );
 }
 
 /*
