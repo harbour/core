@@ -2342,11 +2342,10 @@ void hb_vmDo( USHORT uiParams )
          if( IS_OBJECT( pSelf ) )               /* Object passed            */
          {
             pSelfBase = pSelf->item.asArray.value;
-            if( pSelfBase->bSuperCast )
+            if( pSelfBase->uiPrevCls ) /* Is is a Super cast ? */
             {
-              pSelfBase->bSuperCast = FALSE;
-              pSelfBase->uiClass    = pSelfBase->uiPrevCls;
-              pSelfBase->uiHolders  = pSelfBase->uiPrevHolders;
+              pSelfBase->uiClass   = pSelfBase->uiPrevCls;
+              pSelfBase->uiPrevCls = NULL;
             }
          }
       }

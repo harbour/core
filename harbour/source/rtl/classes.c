@@ -628,7 +628,8 @@ HARBOUR HB___CLSINST( void )
       PMETHOD pMeth  = pClass->pMethods;                /* Initialize DATA          */
 
       hb_arrayNew( &hb_stack.Return, pClass->uiDatas );
-      hb_stack.Return.item.asArray.value->uiClass = uiClass;
+      hb_stack.Return.item.asArray.value->uiClass   = uiClass;
+      hb_stack.Return.item.asArray.value->uiPrevCls = NULL;
 
       for( uiAt = 0; uiAt < uiLimit; uiAt++, pMeth++ )
       {
@@ -1145,26 +1146,13 @@ static HARBOUR hb___msgGetData( void )
  */
 static HARBOUR hb___msgSuper( void )
 {
-   PHB_ITEM      pObject    = hb_stack.pBase + 1;
-   PHB_ITEM      pSuper     = ( PHB_ITEM ) hb_xgrab( sizeof( HB_ITEM ) );
-   PHB_BASEARRAY pNewBase   = ( PHB_BASEARRAY ) hb_xgrab( sizeof( HB_BASEARRAY ) );
-   USHORT        uiSuperCls = s_pMethod->uiData;     /* Get handle of superclass */
+   PHB_ITEM pObject = hb_stack.pBase + 1;
 
-   memcpy( pSuper,   pObject, sizeof( HB_ITEM ) ); /* Allocate new structures  */
-   memcpy( pNewBase, pObject->item.asArray.value, sizeof( HB_BASEARRAY ) );
+   pObject->item.asArray.value->uiPrevCls = pObject->item.asArray.value->uiClass;
+   pObject->item.asArray.value->uiClass   = s_pMethod->uiData;
 
-   pSuper->item.asArray.value = pNewBase;
-
-   pNewBase->uiPrevCls     = pNewBase->uiClass;
-   pNewBase->uiPrevHolders = pNewBase->uiHolders;
-   pNewBase->uiClass       = uiSuperCls;
-   pNewBase->uiHolders     = 1;                    /* New item is returned     */
-   pNewBase->bSuperCast    = TRUE;                 /* Do not dispose pItems !! */
-                                                   /* A bit dirty, but KISS.   */
-   hb_itemCopy( &hb_stack.Return, pSuper );
-   hb_itemRelease( pSuper );
+   hb_itemCopy( &hb_stack.Return, pObject );
 }
-
 
 /*
  * __msgSetClsData()
@@ -1212,4 +1200,3 @@ static HARBOUR hb___msgVirtual( void )
    /* hb_ret(); */ /* NOTE: It's safe to comment this out */
    ;
 }
-
