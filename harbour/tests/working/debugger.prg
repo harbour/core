@@ -47,6 +47,7 @@ CLASS TDebugger
    DATA   oWndCode, oWndCommand
    DATA   oBar
    DATA   cBackImage, nOldCursor
+   DATA   lEnd
 
    METHOD New()
    METHOD Activate()
@@ -54,14 +55,20 @@ CLASS TDebugger
    METHOD HandleEvent()
    METHOD Hide()
 
+   METHOD Open()
+   METHOD InputBox( cMsg, uValue )
+   METHOD Exit() INLINE ::lEnd := .t.
+
 ENDCLASS
 
 METHOD New() CLASS TDebugger
 
-   ::oPullDown   = BuildMenu()
+   ::oPullDown   = BuildMenu( Self )
    ::oWndCode    = TDbWindow():New( 1, 0, MaxRow() - 6, MaxCol(),, "BG+/B" )
    ::oWndCommand = TDbWindow():New( MaxRow() - 5, 0, MaxRow() - 1, MaxCol(),;
                                     " Command ", "BG+/B" )
+   ::lEnd        = .f.
+
 return Self
 
 METHOD Activate() CLASS TDebugger
@@ -74,9 +81,9 @@ return nil
 
 METHOD HandleEvent() CLASS TDebugger
 
-   local lEnd := .f., nPopup
+   local nPopup
 
-   while ! lEnd
+   while ! ::lEnd
 
       nKey = InKey( 0 )
 
@@ -85,7 +92,7 @@ METHOD HandleEvent() CLASS TDebugger
               ::oPullDown:ProcessKey( nKey )
 
          case nKey == K_ESC
-              lEnd = .t.
+              ::Exit()
 
          otherwise
               if ( nPopup := ::oPullDown:GetHotKeyPos( AltToKey( nKey ) ) ) != 0
@@ -127,6 +134,40 @@ METHOD Show() CLASS TDebugger
    @ MaxRow(), 70 SAY "F10" COLOR "GR+/BG"
 
 return nil
+
+METHOD Open() CLASS TDebugger
+
+   local cFileName := ::InputBox( "Please enter the filename", Space( 30 ) )
+
+   Alert( cFileName )
+
+return nil
+
+METHOD InputBox( cMsg, uValue ) CLASS TDebugger
+
+   local nTop    := ( MaxRow() / 2 ) - 5
+   local nLeft   := ( MaxCol() / 2 ) - 20
+   local nBottom := ( MaxRow() / 2 ) - 3
+   local nRight  := ( MaxCol() / 2 ) + 20
+   local uTemp   := uValue
+   local GetList := {}
+   local nOldCursor
+   local cImage := SaveScreen( nTop, nLeft, nBottom + 1, nRight + 1 )
+   local lScoreBoard := Set( _SET_SCOREBOARD, .f. )
+
+   @ nTop, nLeft, nBottom, nRight BOX B_SINGLE COLOR ::oPullDown:cClrPopup
+   @ nTop, nLeft + ( ( nRight - nLeft ) ) / 2 - Len( cMsg ) / 2 SAY ;
+      cMsg COLOR ::oPullDown:cClrPopup
+   Shadow( nTop, nLeft, nBottom, nRight )
+
+   @ nTop + 1, nLeft + 1 GET uTemp
+   nOldCursor = SetCursor( 1 )
+   READ
+   SetCursor( nOldCursor )
+   RestScreen( nTop, nLeft, nBottom + 1, nRight + 1, cImage )
+   Set( _SET_SCOREBOARD, lScoreBoard )
+
+return If( LastKey() != K_ESC, uTemp, uValue )
 
 CLASS TDbWindow  // Debugger windows
 
@@ -571,18 +612,18 @@ static function AltToKey( nKey )
 
 return cKey
 
-function BuildMenu()   // Builds the debugger pulldown menu
+function BuildMenu( oDebugger )  // Builds the debugger pulldown menu
 
    local oMenu
 
    MENU oMenu
       MENUITEM " &File "
       MENU
-         MENUITEM " &Open..."    ACTION Alert( "Not implemented yet!" )
-         MENUITEM " &Resume"     ACTION Alert( "Not implemented yet!" )
-         MENUITEM " &Shell"      ACTION Alert( "Not implemented yet!" )
+         MENUITEM " &Open..."        ACTION oDebugger:Open()
+         MENUITEM " &Resume"         ACTION Alert( "Not implemented yet!" )
+         MENUITEM " &Shell"          ACTION Alert( "Not implemented yet!" )
          SEPARATOR
-         MENUITEM " &Exit  Alt-X  "  ACTION Alert( "Not implemented yet!" )
+         MENUITEM " &Exit  Alt-X  "  ACTION oDebugger:Exit()
       ENDMENU
 
       MENUITEM " &Locate "
@@ -678,4 +719,5 @@ function BuildMenu()   // Builds the debugger pulldown menu
    ENDMENU
 
 return oMenu
+
 
