@@ -235,7 +235,8 @@ CLASS TDebugger
    METHOD ShowCode( cModuleName )
    METHOD ShowVars()
 
-   METHOD Sort() INLINE ASort( ::aVars, {|x,y| x[1] < y[1] } ),;
+   METHOD Sort() INLINE ASort( ::aVars,,, {|x,y| x[1] < y[1] } ),;
+                        ::lSortVars := .t.,;
                         If( ::oBrwVars != nil, ::oBrwVars:RefreshAll(), nil ),;
           If( ::oWndVars != nil .and. ::oWndVars:lVisible, ::oBrwVars:ForceStable(),)
 
@@ -297,7 +298,6 @@ METHOD New() CLASS TDebugger
    ::aCallStack        := {}
    ::lGo               := .f.
    ::aVars             := {}
-   ::lSortVars         := .f.
    ::lCaseSensitive    := .f.
    ::cSearchString     := ""
    ::cPathForFiles     := ""
@@ -309,6 +309,7 @@ METHOD New() CLASS TDebugger
    ::lShowStatics      := .f.
    ::lShowLocals       := .f.
    ::lAll              := .f.
+   ::lSortVars         := .f.
 
 return Self
 
@@ -964,7 +965,7 @@ METHOD LoadVars() CLASS TDebugger // updates monitored variables
    endif
 
    if ::lSortVars
-      ::SortVars()
+      ::Sort()
    endif
 
 return nil

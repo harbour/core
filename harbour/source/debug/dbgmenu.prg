@@ -122,8 +122,7 @@ function __dbgBuildMenu( oDebugger )  // Builds the debugger pulldown menu
                      oPublic:lChecked := oPrivate:lChecked := oStatic:lChecked := ;
                      oLocal:lChecked := oAll:lChecked )
 
-         MENUITEM oSort PROMPT " s~Ort" ;
-            ACTION ( oDebugger:Sort(), oSort:Toggle() )
+         MENUITEM " s~Ort" ACTION oDebugger:Sort()
       ENDMENU
 
       MENUITEM " ~Options "
