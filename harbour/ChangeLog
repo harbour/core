@@ -7,6 +7,14 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+2002-12-17 12:40 UTC-0300 Walter Negro <anegro@overnet.com.ar>
+  * source/tget.prg
+    ! Fix, UpdateBuffer() should not actualize the variable if the value
+      was not modified.
+
+    Reported by Francisco Gamboa and Horacio Roldan
+
 2002-12-07 21:45 UTC-0300 Luiz Rafael Culik <culikr@uol.com.br>
   * source/rtl/menuto.prg
     ! Fixed Color Parameters when only One color is passed
