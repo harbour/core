@@ -70,7 +70,10 @@ HB_FUNC( MEMOLINE )
          case HB_CHAR_LF:
             ulCurLength = 0;
             ulLastSpace = 0;
-            ulLineEnd   = HB_MAX( ulPos - 2, ulLineBegin );
+            if ( ulPos >= 2 )
+               ulLineEnd = ulPos -2;
+            else
+               ulLineEnd = ulLineBegin;
             ulLines++;
             if( ulLines < ulLineNumber )
             {
@@ -128,7 +131,10 @@ HB_FUNC( MEMOLINE )
    if( ulLineEnd == 0 )
    {
       ulLines++;
-      ulLineEnd = ulPos - 1;
+      if ( ulPos == 0)
+         ulLineEnd = 0;
+      else
+         ulLineEnd = ulPos - 1;
    }
 
    if( ulLineNumber == ulLines && ulLineEnd >= ulLineBegin )
@@ -143,7 +149,7 @@ HB_FUNC( MEMOLINE )
          if( pszString[ ulLineBegin + ulPos ] == HB_CHAR_HT )
             ulSpAdded += ( ( ULONG ) ( ulPos / ulTabLength ) * ulTabLength ) + ulTabLength - ulPos - 1;
          else
-            memcpy( ( pszLine + ulPos + ulSpAdded ), ( pszString + ulLineBegin + ulPos ), 1 );
+            * ( pszLine + ulPos + ulSpAdded ) = * ( pszString + ulLineBegin + ulPos );
       }
 
       hb_retclen( pszLine, ulLineLength );
