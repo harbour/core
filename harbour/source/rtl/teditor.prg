@@ -808,8 +808,10 @@ return lMoveKey
 // Changes lInsert value and insertion / overstrike mode of editor
 METHOD InsertState(lInsState) CLASS HBEditor
 
-   ::lInsert := lInsState
-   SET(_SET_INSERT, lInsState)
+   IF ISLOGICAL( lInsState )
+      ::lInsert := lInsState
+      SET(_SET_INSERT, lInsState)
+   ENDIF
 
 return Self
 
