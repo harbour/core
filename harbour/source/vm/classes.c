@@ -1246,6 +1246,8 @@ HB_FUNC( __CLSINST )
 static PHB_ITEM hb_clsInst( USHORT uiClass, PHB_ITEM * * ppObjects, USHORT * puiSize )
 {
    PHB_ITEM pSelf = NULL;
+   LONG wStackBase;
+   LONG wItemIndex;
 
    if( uiClass <= s_uiClasses )
    {
@@ -1566,28 +1568,31 @@ HB_FUNC( __OBJCLONE )
 HB_FUNC( __OBJSENDMSG )
 {
    PHB_ITEM pObject  = hb_param( 1, HB_IT_OBJECT );
-   PHB_ITEM pMessage = hb_param( 2, HB_IT_STRING );
+   USHORT uiPCount = hb_pcount();
 
-   if( pMessage && pObject )                /* Object & message passed      */
+   if( uiPCount>=2 && pObject )    /* Object & message passed      */
    {
-      PHB_DYNS pMsg = hb_dynsymFindName( pMessage->item.asString.value );
+      USHORT uiParam;
+
+      PHB_DYNS pMsg = hb_dynsymFindName( hb_parc(2) );
 
       if( pMsg )
       {
          USHORT uiParam;
 
-         hb_vmPush( pObject );                      /* Push object                  */
-         hb_vmMessage( pMsg->pSymbol );
-                                            /* Push char symbol as message  */
-         for( uiParam = 3; uiParam <= hb_pcount(); uiParam++ )   /* Push arguments on stack      */
+         hb_vmPush( pObject );               /* Push object                  */
+
+         hb_vmMessage( pMsg->pSymbol );      /* Push char symbol as message  */
+
+         for( uiParam = 3; uiParam <= uiPCount; uiParam++ )   /* Push arguments on stack      */
             hb_vmPush( hb_param( uiParam, HB_IT_ANY ) );
-         hb_vmDo( ( USHORT ) ( hb_pcount() - 2 ) );             /* Execute message              */
+
+         hb_vmDo( ( USHORT ) ( uiPCount - 2 ) );             /* Execute message              */
       }
    }
    else
       hb_errRT_BASE( EG_ARG, 3000, NULL, "__OBJSENDMSG" );
 }
-
 
 /*
  * <hClass> := __clsInstSuper( <cName> )
@@ -1596,15 +1601,13 @@ HB_FUNC( __OBJSENDMSG )
  */
 HB_FUNC( __CLSINSTSUPER )
 {
-   char cString[ HB_SYMBOL_NAME_LEN + 1 ] ;
-   /*PHB_ITEM pString = hb_param( 1, HB_IT_STRING ); */
    BOOL bFound = FALSE;
 
-   strcpy( cString, hb_parc(1) );
-
-   if( /*pString*/ hb_pcount() >= 1 )
+   if( hb_pcount() >= 1 )
    {
-      PHB_DYNS pDynSym = hb_dynsymFind( cString /*pString->item.asString.value*/ );
+
+      char * cString=hb_parc(1);
+      PHB_DYNS pDynSym = hb_dynsymFind( cString );
 
       if( pDynSym )                             /* Find function            */
       {
@@ -1618,7 +1621,7 @@ HB_FUNC( __CLSINSTSUPER )
          {
             for( uiClass = 0; ! bFound && uiClass < s_uiClasses; uiClass++ )
             {                                      /* Locate the entry         */
-               if( hb_stricmp( /*pString->item.asString.value*/ cString , s_pClasses[ uiClass ].szName ) == 0 )
+               if( hb_stricmp( cString , s_pClasses[ uiClass ].szName ) == 0 )
                {
                   hb_retni( uiClass + 1 );               /* Entry + 1 = hb___msgClsH    */
                   bFound = TRUE;
@@ -1815,6 +1818,7 @@ HB_FUNC( __CLASSH )
 HB_FUNC( __EVAL )
 {
    PHB_ITEM pObject = hb_itemParam( 1 );
+   USHORT uiPCount = hb_pcount();
 
    if( HB_IS_BLOCK( pObject ) )
    {
@@ -1822,9 +1826,10 @@ HB_FUNC( __EVAL )
 
       hb_vmPushSymbol( &hb_symEval );
       hb_vmPush( pObject );                     /* Push block               */
-      for( uiParam = 1; uiParam <= hb_pcount(); uiParam++ )
+      for( uiParam = 1; uiParam <= uiPCount; uiParam++ )
          hb_vmPush( hb_param( uiParam, HB_IT_ANY ) );
-      hb_vmDo( ( USHORT ) hb_pcount() );                       /* Self is also an argument */
+
+      hb_vmDo( ( USHORT ) uiPCount );     /* Self is also an argument */
    }
    else
       hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, NULL, "EVAL" );
@@ -1960,15 +1965,17 @@ static HARBOUR hb___msgEvalInline( void )
    HB_ITEM block;
    USHORT uiClass = ( hb_stack.pBase + 1 )->item.asArray.value->uiClass;
    USHORT uiParam;
+   USHORT uiPCount=hb_pcount();
 
    hb_arrayGet( s_pClasses[ uiClass - 1 ].pInlines, s_pMethod->uiData, &block );
 
    hb_vmPushSymbol( &hb_symEval );
    hb_vmPush( &block );
    hb_vmPush( hb_stack.pBase + 1 );                     /* Push self                */
-   for( uiParam = 1; uiParam <= hb_pcount(); uiParam++ )
+   for( uiParam = 1; uiParam <= uiPCount; uiParam++ )
       hb_vmPush( hb_param( uiParam, HB_IT_ANY ) );
-   hb_vmDo( ( USHORT ) (hb_pcount() + 1 ) );     /* Self is also an argument */
+
+   hb_vmDo( ( USHORT ) (uiPCount + 1 ) );     /* Self is also an argument */
 
    hb_itemClear( &block );                       /* Release block            */
 }
@@ -1984,12 +1991,14 @@ static HARBOUR hb___msgEval( void )
    if( HB_IS_BLOCK( hb_stack.pBase + 1 ) )
    {
       USHORT uiParam;
+      USHORT uiPCount=hb_pcount();
 
       hb_vmPushSymbol( &hb_symEval );
       hb_vmPush( hb_stack.pBase + 1 );                     /* Push block               */
-      for( uiParam = 1; uiParam <= hb_pcount(); uiParam++ )
+      for( uiParam = 1; uiParam <= uiPCount; uiParam++ )
          hb_vmPush( hb_param( uiParam, HB_IT_ANY ) );
-      hb_vmDo( ( USHORT ) hb_pcount() );                       /* Self is also an argument */
+
+      hb_vmDo( ( USHORT ) uiPCount );                       /* Self is also an argument */
    }
    else
       hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, NULL, "EVAL" );

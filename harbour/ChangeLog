@@ -1,3 +1,10 @@
+2000-11-06 22:43 UTC+0100 JFL (mafact) <jfl@mafact.com>
+   * source/vm/classes.c
+     Final check on Function directly pushing item on the stack
+     removing every direct use of stacked PHB_ITEM after .VmPush()
+     or accessing them by hb_stack.pBase + n.
+
+
 2000-11-05 14:40 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/pp/ppcore.c
      ! Fixed droped redundant spaces in [] strings, by adding STATE_QUOTE3 to strotrim().
