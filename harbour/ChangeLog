@@ -1,3 +1,15 @@
+19990512-01:15:00 EDT David G. Holm <dholm@jsd-llc.com>
+  * makefile.b31
+    - Added genobj32.c and sybmols.asm
+    - Made more developer friendly (you no longer have to remember
+      which intermediate files to delete when a build fails due to an
+      error in the makefile or an error in an intermediate step).
+    - Added fixflex to split flexyy.c into flexyy.c and flex_tab.c
+  + source/compiler/fixflex.c
+    - New source module to split flexyy.c into smaller flexyy.c with
+      the two largest tables in flex_tab.c.
+      NB! Not needed for 32-bit compilers.
+
 Tue May 11 18:53:43 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* Makefile: 

@@ -1,5 +1,6 @@
 # makefile for Borland C/C++ 16 bits
 
+.path.asm = source\compiler
 .path.c   = source\rtl
 .path.h   = include
 .path.l   = source\compiler
@@ -15,7 +16,7 @@ harbour.lib : arrays.obj asort.obj classes.obj codebloc.obj dates.obj \
               dynsym.obj environ.obj error.obj \
               errorapi.obj errorsys.obj extend.obj files.obj itemapi.obj \
               math.obj objfunc.obj \
-              set.obj strings.obj strcmp.obj tclass.obj transfrm.obj
+              set.obj strings.obj strcmp.obj symbols.obj tclass.obj transfrm.obj
 
 hbtools.lib : datesx.obj debug.obj genobj.obj io.obj mathx.obj \
               stringp.obj stringsx.obj
@@ -55,6 +56,7 @@ strcmp.obj   : strcmp.c   extend.h types.h
 stringp.obj  : source\tools\stringp.prg extend.h types.h init.h harbour.exe
 strings.obj  : strings.c  extend.h types.h
 stringsx.obj : source\tools\stringsx.c extend.h types.h
+symbols.obj : symbols.asm
 tclass.obj   : tclass.prg extend.h types.h init.h harbour.exe
 transfrm.obj : transfrm.c extend.h types.h
 
@@ -71,23 +73,38 @@ transfrm.obj : transfrm.c extend.h types.h
   bcc -c -mh -O2 -I.\include -o$@ $<
   tlib .\libs\b16\hbtools.lib -+$@,,
 
+{source\compiler}.c{obj}.obj:
+  bcc -c -mh -O2 -I.\include;source\compiler -o$@ $<
+
 .c.obj:
   bcc -c -mh -O2 -I.\include -o$@ $<
   tlib .\libs\b16\harbour.lib -+$@,,
 
-harbour.exe : source\compiler\y_tab.c source\compiler\lexyy.c source\compiler\harbour.obj
-   echo -mh -O2 -ebin\harbour.exe  -Iinclude;source\compiler source\compiler\y_tab.c > b31.bc
-   echo source\compiler\lexyy.c source\compiler\harbour.obj >> b31.bc
-   bcc @b31.bc
-   del b31.bc
-   del y_tab.obj
-   del lexyy.obj
+.asm.obj:
+  tasm -I.\include $< $@
+  tlib .\libs\b16\harbour.lib -+$@,,
 
-source\compiler\harbour.obj : source\compiler\harbour.c
-  bcc -c -mh -O2 -I.\include -o$@ $*.c   
+harbour.exe : y_tab.obj lexyy.obj lex_tab.obj harbour.obj genobj32.obj
+   echo -mh -O2 -ebin\harbour.exe  -Iinclude;source\compiler obj\y_tab.obj > b31.bc
+   echo obj\lexyy.obj obj\lex_tab.obj >> b31.bc
+   echo obj\harbour.obj obj\genobj32.obj >> b31.bc
+   bcc @b31.bc
+
+fixflex.obj : source\compiler\fixflex.c
+genobj32.obj : source\compiler\genobj32.c
+harbour.obj : source\compiler\harbour.c
+lexyy.obj : source\compiler\lexyy.c harbour.l
+lex_tab.obj : source\compiler\lex_tab.c harbour.l
+y_tab.obj : source\compiler\y_tab.c harbour.y
 
 source\compiler\y_tab.c : harbour.y
    bison -d -v -y -osource\compiler\y_tab.c source\compiler\harbour.y
 
-source\compiler\lexyy.c : harbour.l
+fixflex.exe : fixflex.obj
+  bcc -mh -O2 -I.\include -ebin\fixflex.exe obj\fixflex.obj
+
+source\compiler\lex_tab.c :: harbour.l fixflex.exe
+source\compiler\lexyy.c :: harbour.l fixflex.exe
    flex -i -8 -osource\compiler\lexyy.c source\compiler\harbour.l
+   if exist source\compiler\lexyy.bak del source\compiler\lexyy.bak
+   fixflex source\compiler\lexyy.c source\compiler\lex_tab.c
