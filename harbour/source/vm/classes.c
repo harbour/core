@@ -1940,7 +1940,8 @@ static HARBOUR hb___msgClsSel( void )
    PHB_ITEM pReturn = hb_itemNew( NULL );
 
 
-   USHORT nParam=0;
+   USHORT nParam=HB_MSGLISTALL;
+
    USHORT uiPCount=hb_pcount();
 
    if( uiPCount>=1 )
@@ -1975,8 +1976,8 @@ static HARBOUR hb___msgClsSel( void )
          {
             s_pMethod = pClass->pMethods + uiAt;
 
-            if (  (! nParam) ||
-                  ( nParam==HB_MSGLISTCLASS &&
+            if (  (  nParam==HB_MSGLISTALL )  ||
+                  ( (nParam==HB_MSGLISTCLASS) &&
                     (
                      (s_pMethod->pFunction == hb___msgSetClsData) ||
                      (s_pMethod->pFunction == hb___msgGetClsData) ||
@@ -1984,12 +1985,12 @@ static HARBOUR hb___msgClsSel( void )
                      (s_pMethod->pFunction == hb___msgGetShrData)
                     )
                   ) ||
-                  ( nParam==HB_MSGLISTPURE &&
+                  ( (nParam==HB_MSGLISTPURE) &&
                     (
-                     ! (s_pMethod->pFunction == hb___msgSetClsData) &&
-                     ! (s_pMethod->pFunction == hb___msgGetClsData) &&
-                     ! (s_pMethod->pFunction == hb___msgSetShrData) &&
-                     ! (s_pMethod->pFunction == hb___msgGetShrData)
+                     (! (s_pMethod->pFunction == hb___msgSetClsData)) &&
+                     (! (s_pMethod->pFunction == hb___msgGetClsData)) &&
+                     (! (s_pMethod->pFunction == hb___msgSetShrData)) &&
+                     (! (s_pMethod->pFunction == hb___msgGetShrData))
                     )
                   )
                )
