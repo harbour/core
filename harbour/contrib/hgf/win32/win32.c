@@ -7,6 +7,7 @@
  * Harbour GUI framework for Win32
  *
  * Copyright 2001 Alexander S.Kresin <alex@belacy.belgorod.su>
+ * Copyright 2001 Antonio Linares <alinares@fivetech.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -53,6 +54,8 @@
 #define _WIN32_WINNT 0x0400
 #include <windows.h>
 #include "hbapi.h"
+#include "hbvm.h"
+#include "hbstack.h"
 
 LRESULT CALLBACK WndProc (HWND, UINT, WPARAM, LPARAM) ;
 
@@ -191,7 +194,7 @@ HB_FUNC( SETMENU )
    hb_retl( SetMenu( ( HWND ) hb_parnl( 1 ), ( HMENU ) hb_parnl( 2 ) ) );
 }
 
-HB_FUNC( WINSENDMSG )
+HB_FUNC( SENDMESSAGE )
 {
    hb_retnl( (LONG) SendMessage(
                        (HWND) hb_parnl( 1 ),	// handle of destination window
@@ -204,12 +207,36 @@ HB_FUNC( WINSENDMSG )
 
 LRESULT CALLBACK WndProc (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+   static PHB_DYNS pDynSym = 0;
 
-   if( message == WM_DESTROY )
-   {
-      PostQuitMessage (0) ;
-      return 0 ;
-   }
+   if( ! pDynSym )
+      pDynSym = hb_dynsymFind( "HB_GUI" );
 
-   return( DefWindowProc( hWnd, message, wParam, lParam ));
+   hb_vmPushSymbol( pDynSym->pSymbol );
+   hb_vmPushNil();
+   hb_vmPushLong( ( LONG ) hWnd );
+   hb_vmPushLong( message );
+   hb_vmPushLong( wParam );
+   hb_vmPushLong( lParam );
+   hb_vmDo( 4 );
+
+   if( hb_arrayGetType( &hb_stack.Return, 1 ) == HB_IT_NIL )
+      return DefWindowProc( ( HANDLE ) hWnd, message, wParam, lParam );
+   else
+      return hb_parnl( -1, 1 );
+}
+
+HB_FUNC( POSTQUITMESSAGE )
+{
+   PostQuitMessage( hb_parnl( 1 ) );
+}
+
+HB_FUNC( NLOWORD )
+{
+   hb_retnl( LOWORD( hb_parnl( 1 ) ) );
+}
+
+HB_FUNC( NHIWORD )
+{
+   hb_retnl( HIWORD( hb_parnl( 1 ) ) );
 }
