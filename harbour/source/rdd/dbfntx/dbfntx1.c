@@ -1664,7 +1664,7 @@ static ERRCODE ntxSeek( NTXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
    ERRCODE retvalue;
    HB_TRACE(HB_TR_DEBUG, ("ntxSeek(%p, %d, %p, %d)", pArea, bSoftSeek, pKey, bFindLast));
 
-   if ( ! pArea->lpNtxIndex )
+   if ( ! pArea->lpCurIndex )
    {
      pError = hb_errNew();
      hb_errPutGenCode( pError, EG_NOORDER );
@@ -2299,7 +2299,7 @@ static ERRCODE ntxOrderListFocus( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
 
    HB_TRACE(HB_TR_DEBUG, ("ntxOrderListFocus(%p, %p)", pArea, pOrderInfo));
 
-   hb_itemPutNI( pOrderInfo->itmResult, pArea->lpCurIndex->TagRoot );
+   hb_itemPutNI( pOrderInfo->itmResult, (pArea->lpCurIndex)? pArea->lpCurIndex->TagRoot:0 );
 
    if( hb_itemType( pOrderInfo->itmOrder ) != HB_IT_STRING &&
                hb_itemGetNI( pOrderInfo->itmOrder ) == 0 )
