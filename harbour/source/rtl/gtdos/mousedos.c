@@ -40,7 +40,7 @@
 
 static BOOL s_bPresent = FALSE;          /* Is there a mouse ? */
 static int  s_iButtons = 0;              /* Mouse buttons */
-static int  s_iCursorVisible = 0;        /* Is mouse cursor visible ? */
+static BOOL s_bCursorVisible = FALSE;    /* Is mouse cursor visible ? */
 static int  s_iInitCol = 0;              /* Init mouse pos */
 static int  s_iInitRow = 0;              /* Init mouse pos */
 
@@ -80,7 +80,7 @@ void hb_mouse_Show( void )
       regs.x.ax = 1;
       HB_DOS_INT86( 0x33, &regs, &regs );
 
-      s_iCursorVisible = TRUE;
+      s_bCursorVisible = TRUE;
    }
 
 }
@@ -94,7 +94,7 @@ void hb_mouse_Hide( void )
       regs.x.ax = 2;
       HB_DOS_INT86( 0x33, &regs, &regs );
 
-      s_iCursorVisible = FALSE;
+      s_bCursorVisible = FALSE;
    }
 }
 
