@@ -103,7 +103,7 @@ char * hb_strncpyUpper( char * pDest, const char * pSource, ULONG ulLen )
 
     pDest[ ulLen ] ='\0';
 
-    /* some compilers impliment toupper as a macro, and this has side effects! */
+    /* some compilers implements toupper as a macro, and this has side effects! */
     /* *pDest++ = toupper( *pSource++ ); */
     while( ulLen && (*pDest++ = toupper( *pSource )))
     {
@@ -111,15 +111,13 @@ char * hb_strncpyUpper( char * pDest, const char * pSource, ULONG ulLen )
        pSource++;
     }
 
-    if( ulLen )
-    {
-       while (--ulLen)
-       {
-          *pDest++ = '\0';
-       }
-    }
+   while( ulLen > 0 )
+   {
+      *pDest++ = '\0';
+      ulLen--;
+   }
 
-    return pBuf;
+   return pBuf;
 }
 
 /* This function copies and converts szText to upper case AND Trims it
@@ -138,7 +136,7 @@ char * hb_strncpyUpperTrim( char * pDest, const char * pSource, ULONG ulLen )
       ulSLen--;
    }
 
-   /* some compilers impliment toupper as a macro, and this has side effects! */
+   /* some compilers implements toupper as a macro, and this has side effects! */
    /* *pDest++ = toupper( *pSource++ ); */
    while( ulLen && ulSLen && (*pDest++ = toupper( *pSource )))
    {
@@ -147,12 +145,10 @@ char * hb_strncpyUpperTrim( char * pDest, const char * pSource, ULONG ulLen )
       pSource++;
    }
 
-   if( ulLen )
+   while( ulLen > 0 )
    {
-      while (--ulLen)
-      {
-         *pDest++ = '\0';
-      }
+      *pDest++ = '\0';
+      ulLen--;
    }
 
    return pBuf;

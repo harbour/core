@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-10-23 10:30 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/rtl/strcase.c
+    ! hb_strncpyUpper() and hb_strncpyUpperTrim() fixed.
+
 2003-10-22 9:49 UTC-0800 Luis Krause Mantilla <lkrausem@shaw.ca>
   * makefile.bc
     * $(OBJ_DIR)\msgsrwin.obj added to LANG.LIB dependencies section.
