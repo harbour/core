@@ -3,6 +3,7 @@
  */
 
 #include <extend.h>
+#include <string.h>
 
 #if defined(__GNUC__) || defined(__DJGPP__)
   #include <sys/types.h>
@@ -10,9 +11,13 @@
   #include <unistd.h>
   #include <fcntl.h>
   #include <errno.h>
+  #include <dirent.h>
+
   #if !defined(HAVE_POSIX_IO)
-  #define HAVE_POSIX_OI
+  #define HAVE_POSIX_IO
   #endif
+
+  #define PATH_SEPARATOR '/'
 #endif
 
 #if defined(__WATCOMC__)
@@ -26,6 +31,8 @@
   #if !defined(HAVE_POSIX_IO)
   #define HAVE_POSIX_IO
   #endif
+
+  #define PATH_SEPARATOR '\\'
 #endif
 
 #if defined(__BORLANDC__)
@@ -33,10 +40,13 @@
   #include <io.h>
   #include <fcntl.h>
   #include <share.h>
+  #include <dirent.h>
   
   #if !defined(HAVE_POSIX_IO)
   #define HAVE_POSIX_IO
   #endif
+
+  #define PATH_SEPARATOR '\\'
 #endif
 
 #define IT_NUMBER       (IT_INTEGER|IT_LONG|IT_DOUBLE)
@@ -166,7 +176,7 @@ int _fsOpen( char * name, int flags )
 #if defined(HAVE_POSIX_IO)
         return open(name,convert_open_flags(flags));
 #else
-        return open(name, flags);
+        return 0;
 #endif
 }
 
@@ -175,18 +185,15 @@ int _fsCreate( char * name, int flags )
 #if defined(HAVE_POSIX_IO)
         return creat(name,convert_create_flags(flags));
 #else
-   /* TO DO create a file with attributes in flags
-      for now create it normal */
-       return creat(name,S_IWRITE);
+       return 0;
 #endif
 }
 
-int _fsClose( int handle )
+void _fsClose( int handle )
 {
 #if defined(HAVE_POSIX_IO)
-    return close(handle);
-#else
-    return close(handle);
+    close(handle);
+    return;
 #endif
 }
 
@@ -195,7 +202,7 @@ long _fsRead( int handle, char * buff, long count )
 #if defined(HAVE_POSIX_IO)
         return read(handle,buff,count);
 #else
-        return read(handle,buff,count);
+        return 0;
 #endif
 }
 
@@ -204,7 +211,7 @@ long _fsWrite( int handle, char * buff, long count )
 #if defined(HAVE_POSIX_IO)
         return write(handle,buff,count);
 #else
-        return write(handle,buff,count);
+        return 0;
 #endif
 }
 
@@ -213,7 +220,7 @@ long _fsSeek( int handle, long offset, int flags )
 #if defined(HAVE_POSIX_IO)
         return lseek(handle,offset,convert_seek_flags(flags));
 #else
-        return lseek(handle,offset,flags);
+        return 0;
 #endif
 }
 
@@ -222,21 +229,19 @@ int _fsError()
         return last_error;
 }
 
-int _fsDelete( char * name )
+void _fsDelete( char * name )
 {
 #if defined(HAVE_POSIX_IO)
         unlink(name);
-#else
-   return unlink(name);
+        return;
 #endif
 }
 
-int _fsRename( char * older, char * newer )
+void _fsRename( char * older, char * newer )
 {
 #if defined(HAVE_POSIX_IO)
-        return rename(older,newer);
-#else
-        return rename(older,newer);
+        rename(older,newer);
+        return;
 #endif
 }
 
@@ -246,11 +251,8 @@ int _fsLock( int handle, long start, long length, long mode )
 
 #if defined(HAVE_POSIX_IO)
 /* TODO: I'm thinking about this :) */
-   return;
-#else
-   /* TODO not in io,h is in stdio.h as fflush(handle)*/
-   return;
 #endif
+        return result;
 }
 
 void _fsCommit( int handle )
@@ -330,12 +332,35 @@ long _fsIsDrv( int driver )
 #endif
 }
 
+struct my_dir_list
+{
+   char               * fname;
+   struct my_dir_list * next;
+};
+
+#if !defined(__FULL_CLIPPER_COMPLIANT__)
+int _fsDirectory( char * dir, struct dirent *** nlist )
+#else
+static int _fsDirectory(char * dirname, struct dirent *** nlist)
+#endif
+{
+   int result=-1;
+#if defined(HAVE_POSIX_IO)
+   #if defined(__BORLANDC__)
+       /* TODO borland does not scandir() in it's dirent.h what
+          needs to be done here??  */
+   #else
+      result = scandir(dir,nlist,0,alphasort);
+   #endif
+#endif
+   return result;
+}
+
 #ifdef NOT_IMPLEMENTED_YET
 
 /* Unknow that it make :( if anyone can say me !! */
 int    _fsExtOpen(PBYTE   filename, PBYTE defExt, ULONG flags,
                    PBYTE   paths, ERRORP error );
-
 
 #endif
 
@@ -369,6 +394,7 @@ HARBOUR FOPEN()
             else
                 open_flags = 0;
 
+            last_error = 0;
             file_handle = _fsOpen(_parc(1),open_flags);
             last_error = errno;
         }
@@ -392,6 +418,7 @@ HARBOUR FCREATE()
             else
                 create_flags = 0;
 
+            last_error = 0;
             file_handle = _fsCreate(_parc(1),create_flags);
             last_error = errno;
         }
@@ -421,6 +448,7 @@ HARBOUR FREAD()
 
         if( arg1_it && arg2_it && arg3_it )
         {
+            last_error = 0;
             bytes = _fsRead(_parni(1),_parc(2),_parnl(3));
             last_error = errno;
         }
@@ -450,6 +478,7 @@ HARBOUR FWRITE()
 
         if( arg1_it && arg2_it )
         {
+            last_error = 0;
             bytes = (arg3_it ? _parnl(3) : arg2_it->wLength );         
             bytes = _fsWrite(_parni(1),_parc(2),bytes);
             last_error = errno;
@@ -468,15 +497,15 @@ HARBOUR FERROR()
 HARBOUR FCLOSE()
 {
         PITEM arg1_it = _param(1,IT_NUMBER);
-        int result=-1;
 
         if( arg1_it )
         {
-            result= _fsClose(_parni(1));
-            /* last_error = errno; */
+            last_error = 0;
+            _fsClose(_parni(1));
+            last_error = errno;
         }
 
-        _retl(result>=0?1:0);
+        _retl(last_error>=0?1:0);
         return;
 }
 
@@ -484,15 +513,14 @@ HARBOUR FERASE()
 {
         PITEM arg1_it = _param(1,IT_STRING);
 
-        int    result = -1;
-
         if( arg1_it )
         {
-                result= _fsDelete(_parc(1));
-                last_error = errno;
+           last_error = 0;
+           _fsDelete(_parc(1));
+           last_error = errno;
         }
 
-        _retni(result);
+        _retni(last_error=0?0:-1);
         return;
 }
 
@@ -501,15 +529,14 @@ HARBOUR FRENAME()
         PITEM arg1_it = _param(1,IT_STRING);
         PITEM arg2_it = _param(2,IT_STRING);
 
-        int result=-1;
-
         if( arg1_it && arg2_it )
         {
-            result = _fsRename(_parc(1),_parc(1));
+            last_error = 0;
+            _fsRename(_parc(1),_parc(2));
             last_error = errno;
         }
 
-        _retni(result);
+        _retni(last_error=0?0:-1);
         return;
 }
 
@@ -524,6 +551,7 @@ HARBOUR FSEEK()
         
         if( arg1_it && arg2_it )
         {
+            last_error = 0;
             pos = (arg3_it ? _parni(3) : FS_SET);      
             bytes = _fsSeek(_parni(1),_parnl(2),pos);
             last_error = errno;
@@ -672,3 +700,87 @@ HARBOUR W2BIN()
 {
         I2BIN();
 }
+
+#define MAX_FNAME 64
+
+static int strcmp_wildcard( const char * pattern, const char * filename )
+{
+   /* TODO: write widcards comparison */
+   return 1;
+}
+
+HARBOUR DIRECTORY()
+{
+#if defined(HAVE_POSIX_IO)
+   PITEM arg1_it = _param(1,IT_STRING);
+
+   struct dirent ** nlist;
+   char * string;
+   char * pos;
+   char   pattern[MAX_FNAME];
+   char   dirname[PATH_MAX];
+   int    have_wildcards = 0;
+   int    i;
+   int    result;
+   int    (*compare_me)(const char *, const char*);
+
+   if( arg1_it )
+   {
+      string = _parc(1);
+      pos = strrchr(string,PATH_SEPARATOR);
+      if( pos )
+      {
+         strcpy(pattern,(pos+1));
+         pos=0;
+         strcpy(dirname,string);
+         *pos = PATH_SEPARATOR;
+      }
+      else
+      {
+         strcpy(pattern,string);
+         strcpy(dirname,".X");
+         dirname[1] = PATH_SEPARATOR;
+      }
+   }
+   else
+   {
+      strcpy(pattern,"*");
+      strcpy(dirname,".X");
+      dirname[1]=PATH_SEPARATOR;
+   }
+
+   /* have we wilcards in pattern ?? */
+   pos = strchr(pattern, '*' );
+   have_wildcards = ( pos ? 1 : 0 );
+   if( !pos )
+   {
+     pos = strchr(pattern, '?' );
+     have_wildcards = ( pos ? 1 : 0 );
+   }
+
+   result = _fsDirectory(dirname,&nlist);
+   if( result < 0 )
+   {
+      /* TODO: return nill or empty array */
+      return;
+   }
+
+   compare_me = have_wildcards ? strcmp_wildcard : strcmp;
+
+   /* TODO: create an harbour array and return it */
+
+   for(i=0; i<result; i++)
+   {
+      /* only can use nlist[i]->d_name */
+      if( compare_me(pattern,nlist[i]->d_name) )
+      {
+         /* TODO: add this entry to returned array */
+      }
+   }
+
+   free(nlist);
+
+#endif
+   return;
+}
+

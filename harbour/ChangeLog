@@ -1,3 +1,7 @@
+19990524-08:10 CET Les Griffiths (upload Eddie Runia)
+  * source/rtl/files.c
+    a step in right the direction
+
 19990523-16:45 CET Eddie Runia
   * tests/working/test_all.prg
     Optional command line option added. If you pass HRB, it will compile
