@@ -179,7 +179,7 @@ HBPP_LIB_OBJS = \
 
 DEBUG_LIB_OBJS = \
     $(OBJ_DIR)\debugger.obj \
-    $(OBJ_DIR)\tbrwtext.obj 
+    $(OBJ_DIR)\tbrwtext.obj
 
 #
 # Our default target
@@ -197,6 +197,11 @@ $(HARBOUR_EXE) : \
     $(COMPILER_DIR)\harboury.c \
     $(COMPILER_DIR)\harbourl.c \
     $(COMPILER_DIR)\genobj32.c \
+    $(COMPILER_DIR)\genc.c \
+    $(COMPILER_DIR)\genhrb.c \
+    $(COMPILER_DIR)\genrc.c \
+    $(COMPILER_DIR)\genjava.c \
+    $(COMPILER_DIR)\genpas.c \
     $(COMPILER_DIR)\harbour.c \
     $(HBPP_DIR)\hbpp.c \
     $(HBPP_DIR)\hbppint.c \

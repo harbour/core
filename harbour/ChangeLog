@@ -1,3 +1,22 @@
+19990911-13:03 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/compiler/harbour.y
+    source/compiler/genc.c
+    source/compiler/genhrb.c
+    source/compiler/genjava.c
+    source/compiler/genpas.c
+    source/compiler/genrc.c
+    source/compiler/Makefile
+    include/compiler.h
+    makefile.b32
+    makefile.b40
+    makefile.vc
+    harbour.b31
+    + Separated the generation code from the main HARBOUR.Y file.
+      (The Borland and MSVC make files have been modified, but I could not test
+       them)
+  * source/rtl/arrays.c
+    + One comment added about hb_itemGetDS( NULL, szDate );
+
 19990911-12:45 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.y
@@ -15,7 +34,6 @@
     *include/rddapi.h
     *source/vm/hvm.c
         * functions called from virtual machine return SUCCESS or FAILURE
-
 
 19990911-11:30 GMT+1 Victor Szel <info@szelvesz.hu>
   * contrib/odbc/odbc.c
@@ -59,7 +77,7 @@
     source/vm/dynsym.c
     source/vm/hvm.c
     * Partial copyright headers formatted, joined where possible, etc.
-    * Copyright header changed to the standard doc/hdr_tpl.txt for 
+    * Copyright header changed to the standard doc/hdr_tpl.txt for
       Antonio Linares.
 
 19990911-01:42 EDT Paul Tucker <ptucker@sympatico.ca>

@@ -36,6 +36,8 @@
 #ifndef HB_COMPILER_H_
 #define HB_COMPILER_H_
 
+#include "hbpp.h"
+
 /* compiler related declarations */
 
 /* locals, static, public variables support */
@@ -106,5 +108,56 @@ extern WORD      GetFunctionPos( char * szSymbolName ); /* returns the index + 1
 extern void *   hb_xgrab( ULONG lSize );   /* allocates memory, exists on failure */
 extern void *   hb_xrealloc( void * pMem, ULONG lSize );   /* reallocates memory */
 extern void     hb_xfree( void * pMem );    /* frees memory */
+
+#ifdef __cplusplus
+typedef struct yy_buffer_state *YY_BUFFER_STATE;
+YY_BUFFER_STATE yy_create_buffer( FILE *, int ); /* yacc functions to manage multiple files */
+void yy_switch_to_buffer( YY_BUFFER_STATE ); /* yacc functions to manage multiple files */
+void yy_delete_buffer( YY_BUFFER_STATE ); /* yacc functions to manage multiple files */
+#else
+void * yy_create_buffer( FILE *, int ); /* yacc functions to manage multiple files */
+void yy_switch_to_buffer( void * ); /* yacc functions to manage multiple files */
+void yy_delete_buffer( void * ); /* yacc functions to manage multiple files */
+#endif
+
+char * yy_strdup( char * p );  /* this will exit if there is not enough memory */
+char * yy_strupr( char * p );
+
+#if 0
+static void __yy_memcpy( char * from, char * to, int count ); /* Bison prototype */
+#endif
+
+extern WORD FixSymbolPos( WORD );    /* converts symbol's compile-time position into generation-time position */
+extern PFUNCTION GetFuncall( char * szFunName ); /* locates a previously defined called function */
+extern PVAR GetVar( PVAR pVars, WORD wOrder ); /* returns a variable if defined or zero */
+extern PCOMSYMBOL GetSymbol( char *, WORD * ); /* returns a symbol pointer from the symbol table */
+extern PCOMSYMBOL GetSymbolOrd( WORD );   /* returns a symbol based on its index on the symbol table */
+extern PFUNCTION KillFunction( PFUNCTION );    /* releases all memory allocated by function and returns the next one */
+extern PCOMSYMBOL KillSymbol( PCOMSYMBOL );    /* releases all memory allocated by symbol and returns the next one */
+
+extern FUNCTIONS functions, funcalls;
+extern PFUNCTION _pInitFunc;
+extern SYMBOLS symbols;
+extern PHB_FNAME _pFileName;
+extern BOOL _bQuiet;
+extern BOOL _bStartProc;
+extern char _szPrefix[ 20 ];         /* holds the prefix added to the generated symbol init function name (in C output currently) */
+
+#define VS_LOCAL      1
+#define VS_STATIC     2
+#define VS_FIELD      4
+#define VS_PARAMETER  8
+#define VS_PRIVATE    64
+#define VS_PUBLIC     128
+#define VS_MEMVAR     ( VS_PUBLIC | VS_PRIVATE )
+
+/*
+ * flags for bFlags member
+*/
+#define FUN_STATEMENTS    1 /* Function have at least one executable statement */
+#define FUN_USES_STATICS  2 /* Function uses static variables */
+#define FUN_PROCEDURE     4 /* This is a procedure that shouldn't return value */
+#define FUN_ILLEGAL_INIT  8 /* Attempt to initialize static variable with a function call */
+#define FUN_USES_LOCAL_PARAMS 16 /* parameters are declared using () */
 
 #endif /* HB_COMPILER_H_ */

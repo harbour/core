@@ -31,16 +31,31 @@ PROJECT: harbour.exe
   tlib .\libs\b16\harbour.lib -+$@,,
 
 harbour.exe : harboury.obj harbourl.obj lex_t1.obj lex_t2.obj lex_t3.obj harbour.obj genobj32.obj \
+              genc.obj \
+              genhrb.obj \
+              genrc.obj \
+              genjava.obj \
+              genpas.obj \
               hbpp.obj hbppint.obj table.obj
    echo -ebin\harbour.exe obj\harboury.obj > b31.bc
    echo obj\harbourl.obj obj\lex_t1.obj >> b31.bc
    echo obj\lex_t2.obj obj\lex_t3.obj >> b31.bc
    echo obj\harbour.obj obj\genobj32.obj >> b31.bc
+   echo obj\genc.obj >> b31.bc
+   echo obj\genhrb.obj >> b31.bc
+   echo obj\genrc.obj >> b31.bc
+   echo obj\genjava.obj >> b31.bc
+   echo obj\genpas.obj >> b31.bc
    echo obj\hbpp.obj obj\hbppint.obj obj\table.obj >> b31.bc
    bcc $(c_opt) -Isource\compiler @b31.bc
 
 fixflex.obj  : source\compiler\fixflex.c
 genobj32.obj : source\compiler\genobj32.c
+genc.obj     : source\compiler\genc.c
+genhrb.obj   : source\compiler\genhrb.c
+genrc.obj    : source\compiler\genrc.c
+genjava.obj  : source\compiler\genjava.c
+genpas.obj   : source\compiler\genpas.c
 harbour.obj  : source\compiler\harbour.c
 harbourl.obj : source\compiler\harbourl.c harbour.l
 harboury.obj : source\compiler\harboury.c harbour.y

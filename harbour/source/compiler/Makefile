@@ -22,7 +22,12 @@ LEX_HEADERS=\
 	hbdefs.h
 
 C_SOURCES=\
-	genobj32.c \
+        genc.c \
+        genhrb.c \
+        genjava.c \
+        genobj32.c \
+        genpas.c \
+        genrc.c \
 
 C_MAIN=harbour.c
 

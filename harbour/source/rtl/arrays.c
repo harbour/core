@@ -272,6 +272,8 @@ char * hb_arrayGetDS( PHB_ITEM pArray, ULONG ulIndex, char * szDate )
    if( IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
       hb_itemGetDS( pArray->item.asArray.value->pItems + ulIndex - 1, szDate );
    else
+      /* NOTE: Intentionally calling it with a bad parameter in order to get
+               the default value from hb_itemGetDS(). */
       hb_itemGetDS( NULL, szDate );
 
    return szDate;

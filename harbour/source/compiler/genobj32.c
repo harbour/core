@@ -59,11 +59,6 @@ static void GenerateCodeSegment( FILE * hObjFile );
 static void GenerateDataSegment( FILE * hObjFile );
 static void GenerateSymbolsSegment( FILE * hObjFile );
 
-extern FUNCTIONS functions, funcalls;
-extern SYMBOLS symbols;
-extern BOOL _bQuiet;
-extern BOOL _bStartProc;
-
 static BYTE prgFunction[] = { 0x68, 0x00, 0x00, 0x00, 0x00, 0x68, 0x00, 0x00, 0x00,
                               0x00, 0xE8, 0x00, 0x00, 0x00, 0x00, 0x83, 0xC4, 0x08, 0xC3 };
 
