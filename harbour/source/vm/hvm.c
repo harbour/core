@@ -367,8 +367,8 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
     * macro evaluation belong to a function/procedure where macro
     * compiler was called.
     */
-   if( pSymbols )
-       ulPrivateBase = hb_memvarGetPrivatesBase();
+   /* NOTE: Initialization with 0 is needed to avoid GCC -O2 warning */
+   ulPrivateBase = pSymbols ? hb_memvarGetPrivatesBase() : 0;
 
    while( ( bCode = pCode[ w ] ) != HB_P_ENDPROC )
    {
@@ -1190,16 +1190,17 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
             break;
          else if( s_uiActionRequest & HB_ENDPROC_REQUESTED )
          {
-             /* request to stop current procedure was issued
-              * (from macro evaluation)
-              */
-             s_uiActionRequest = 0;
-             break;
+            /* request to stop current procedure was issued
+             * (from macro evaluation)
+             */
+            s_uiActionRequest = 0;
+            break;
          }
       }
    }
+
    if( pSymbols )
-       hb_memvarSetPrivatesBase( ulPrivateBase );
+      hb_memvarSetPrivatesBase( ulPrivateBase );
 }
 
 /* ------------------------------- */
@@ -3283,6 +3284,7 @@ static double hb_vmPopNumber( void )
          break;
 
       default:
+         dNumber = 0;  /* To avoid GCC -O2 warning */
          hb_errInternal( IE_VMPOPINVITEM, NULL, "hb_vmPopNumber()", NULL );
          break;
    }
@@ -3322,6 +3324,7 @@ static double hb_vmPopDouble( int * piDec )
          break;
 
       default:
+         dNumber = 0;  /* To avoid GCC -O2 warning */
          hb_errInternal( IE_VMPOPINVITEM, NULL, "hb_vmPopDouble()", NULL );
          break;
    }

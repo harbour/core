@@ -533,7 +533,10 @@ HB_FUNC( TRANSFORM )
          }
       }
       else
+      {
+         szResult = NULL; /* To avoid GCC -O2 warning */
          bError = TRUE;
+      }
 
       if( ! bError )
       {

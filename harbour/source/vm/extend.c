@@ -410,12 +410,7 @@ int hb_parinfo( int iParam )
 
          if( uiType & HB_IT_BYREF )
          {
-            PHB_ITEM pItem;
-
-            if( iParam == -1 )
-               pItem = hb_itemUnRef( &hb_stack.Return );
-            else
-               pItem = hb_itemUnRef( hb_stack.pBase + 1 + iParam );
+            PHB_ITEM pItem = hb_itemUnRef( ( iParam == -1 ) ? &hb_stack.Return : ( hb_stack.pBase + 1 + iParam ) );
 
             if( pItem )
                uiType |= pItem->type;
@@ -465,7 +460,7 @@ void hb_retclen( char * szText, ULONG ulLen )
    hb_itemPutCL( &hb_stack.Return, szText, ulLen );
 }
 
-/* szDate must have yyyymmdd format */
+/* szDate must have YYYYMMDD format */
 
 void hb_retds( char * szDate )
 {
@@ -583,7 +578,7 @@ void hb_storclen( char * szText, ULONG ulLen, int iParam, ... )
    }
 }
 
-/* szDate should have yyyymmdd format */
+/* szDate must have YYYYMMDD format */
 
 void hb_stords( char * szDate, int iParam, ... )
 {

@@ -165,7 +165,7 @@ PHB_ITEM hb_errNew( void )
 
 USHORT hb_errLaunch( PHB_ITEM pError )
 {
-   USHORT uiAction;
+   USHORT uiAction = E_DEFAULT; /* Needed to avoid GCC -O2 warning */
    USHORT usRequest;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_errLaunch(%p)", pError));

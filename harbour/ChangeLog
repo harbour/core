@@ -1,6 +1,49 @@
+20000415-12:38 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/rtl/net.c
+     ! Experimental NETNAME() support for DOS. I currently GPFs with DJGPP.
+
+   * include/hbdefs.h
+     - Removed #include <i86.h> for __WATCOMC__, since it seems that dos.h
+       is including it automatically.
+     + Added HB_DOS_INT86X() macro.
+
+   * include/hbapilng.h
+   * source/rtl/langapi.c
+     * HB_LANG_REQUEST() moved to the header.
+
+   * include/hbextern.ch
+     + HB_LANGNAME() added.
+
+   * source/vm/itemapi.c
+     ! hb_itemDo() fixed rare bug.
+
+   * source/rtl/errorapi.c
+   * source/vm/hvm.c
+   * source/pp/pplib.c
+   * source/pp/stdalone/hbpp.c
+   * source/rtl/set.c
+   * source/rtl/transfrm.c
+   * source/compiler/genc.c
+     ! Fixed GCC -O2 warnings
+     * One TODO changed to TOFIX in __PREPROCESS()
+
+   * source/rtl/gtapi.c
+   * source/vm/extend.c
+     ! Small modifications.
+
+   * source/rtl/langapi.c
+     ! Typo
+
+   * source/vm/classes.c
+     ! __CLSINSTSUPER() fix for error recovery code path.
+     ! The return value of some Harbour functions made consistent on error 
+       cases (return 0 instead of NIL).
+
 20000415-05:12 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * include/error.ch
+   * include/hbapilng.h
    * source/rdd/dbcmd.c
    * source/rtl/errorapi.c
    * source/vm/classes.c

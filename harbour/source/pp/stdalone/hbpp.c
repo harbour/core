@@ -353,7 +353,7 @@ int hb_pp_Parse( FILE * handl_o )
 static void OutTable( DEFINES * endDefine, COMMANDS * endCommand )
 {
   FILE *handl_o;
-  int ipos, len_mpatt, len_value;
+  int ipos, len_mpatt = 0, len_value;
   int num;
   DEFINES * stdef1 = hb_pp_topDefine, * stdef2 = NULL, * stdef3;
   COMMANDS * stcmd1 = hb_pp_topCommand, * stcmd2 = NULL, * stcmd3;

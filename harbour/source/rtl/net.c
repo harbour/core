@@ -41,23 +41,27 @@
 /* NOTE: Clipper will only return a maximum of 15 bytes from this function.
          [vszakats] */
 
-/* NOTE: DOS instructions:
-
-       On entry:      AH         5Eh
-                      AL         00h
-                      DS:DX      Pointer to a memory buffer (16 bytes) where
-                                 computer name will be returned
-
-       Returns:       CH         0        name not defined
-                                 not 0    name is defined
-                      CL         NETBIOS name number (if CH not 0)
-                      DS:DX      Pointer to computer name (ASCIIZ string)
-                      AX         Error code, if CF is set
-*/
-
 HB_FUNC( NETNAME )
 {
-#if defined(HB_OS_WIN_32)
+#if defined(HB_OS_DOS)
+
+   #define LP_SEG( lp ) ( ( unsigned )( ( unsigned )( lp ) >> 16 ) )
+   #define LP_OFF( lp ) ( ( unsigned )( lp ) )
+
+   {
+      char szValue[ 16 ];
+      union REGS regs;
+      struct SREGS sregs;
+
+      regs.x.ax = 0x5E00;
+      regs.x.dx = LP_OFF( szValue );
+      sregs.ds = LP_SEG( szValue );
+
+      HB_DOS_INT86X( 0x21, &regs, &regs, &sregs );
+
+      hb_retc( regs.h.ch == 0 ? "" : szValue );
+   }
+#elif defined(HB_OS_WIN_32)
    {
       DWORD ulLen = MAX_COMPUTERNAME_LENGTH + 1;
       char * pszValue = ( char * ) hb_xgrab( ulLen );

@@ -84,27 +84,23 @@ HB_FUNC( __PREPROCESS )
    {
       char * pText = ( char * ) hb_xgrab( HB_PP_STR_SIZE );
       char * pOut = ( char * ) hb_xgrab( HB_PP_STR_SIZE );
-      char * ptr = pText;
-
-      int slen;
-
-      /*   hb_pp_Init();   */
-
-      slen = HB_MIN( hb_parclen( 1 ), HB_PP_STR_SIZE - 1 );
-      memcpy( pText, hb_parc( 1 ), slen );
-      pText[ slen ] = 0; /* Preprocessor expects null-terminated string */
-      memset( pOut, 0, HB_PP_STR_SIZE );
-
-      HB_SKIPTABSPACES( ptr );
 
       if( setjmp( s_env ) == 0 )
       {
-         int resParse;
+         char * ptr = pText;
+         int slen;
+         
+         /*   hb_pp_Init();   */
+         
+         slen = HB_MIN( hb_parclen( 1 ), HB_PP_STR_SIZE - 1 );
+         memcpy( pText, hb_parc( 1 ), slen );
+         pText[ slen ] = 0; /* Preprocessor expects null-terminated string */
+         memset( pOut, 0, HB_PP_STR_SIZE );
+         
+         HB_SKIPTABSPACES( ptr );
 
-         if( ( resParse = hb_pp_ParseExpression( ptr, pOut ) ) > 0 )
+         if( hb_pp_ParseExpression( ptr, pOut ) > 0 )
          {
-            HB_SYMBOL_UNUSED( resParse );
-
             /* Some error here? */
          }
 
@@ -134,16 +130,15 @@ void hb_compGenError( char * szErrors[], char cPrefix, int iError, char * szErro
 
    HB_TRACE(HB_TR_DEBUG, ("GenError(%p, %c, %d, %s, %s)", szErrors, cPrefix, iError, szError1, szError2));
 
-   /* TODO: The internal buffers allocated by the preprocessor should be
-    * deallocated here
-    */
+   /* TOFIX: The internal buffers allocated by the preprocessor should be
+             deallocated here */
 
    sprintf( buffer, szErrors[ iError - 1 ], szError1, szError2 );
    pError = hb_errRT_New( ES_ERROR, "PP", 9999, ( ULONG ) iError, buffer, NULL, 0, EF_NONE | EF_CANDEFAULT );
    hb_errLaunch( pError );
    hb_errRelease( pError );
 
-   longjmp( s_env, iError );
+   longjmp( s_env, iError == 0 ? -1 : iError );
 }
 
 void hb_compGenWarning( char * szWarnings[], char cPrefix, int iWarning, char * szWarning1, char * szWarning2 )

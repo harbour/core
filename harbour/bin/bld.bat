@@ -108,7 +108,30 @@ rem if "%HB_GT_LIB%" == "" set HB_GT_LIB=
    if "%HB_GT_LIB%" == "" set HB_GT_LIB=gtdos
 
    if "%HB_COMPILER%" == "bcc16"   bcc -O2 -mh -I..\include -L..\lib %1.c tools.lib debug.lib vm.lib rtl.lib %HB_GT_LIB%.lib lang.lib rdd.lib macro.lib pp.lib dbfntx.lib dbfcdx.lib common.lib
-   if "%HB_COMPILER%" == "djgpp"   gcc %1.c -o%1.exe -I..\include -L..\lib -ltools -ldebug -lvm -lrtl -l%HB_GT_LIB% -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfnt -ldbfcd -lcommo
+
+   if not "%HB_COMPILER%" == "djgpp" goto A_DOS_NOTDJGPP
+
+      echo %1.c -o%1.exe -I..\include -L..\lib > build.tmp
+      echo -ltools >> build.tmp
+      echo -ldebug >> build.tmp
+      echo -lvm >> build.tmp
+      echo -lrtl >> build.tmp
+      echo -l%HB_GT_LIB% >> build.tmp
+      echo -llang >> build.tmp
+      echo -lrdd >> build.tmp
+      echo -lrtl >> build.tmp
+      echo -lvm >> build.tmp
+      echo -lmacro >> build.tmp
+      echo -lpp >> build.tmp
+      echo -ldbfnt >> build.tmp
+      echo -ldbfcd >> build.tmp
+      echo -lcommo >> build.tmp
+      gcc @build.tmp
+      del build.tmp
+      goto END
+
+:A_DOS_NOTDJGPP
+
    if "%HB_COMPILER%" == "rsx32"   gcc %1.c -Zrsx32 -I..\include -L..\lib -ltools -ldebug -lvm -lrtl -l%HB_GT_LIB% -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon
    goto END
 

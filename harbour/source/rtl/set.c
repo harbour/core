@@ -321,13 +321,10 @@ HB_FUNC( SET )
 {
    BOOL bFlag;
    int args = hb_pcount();
-   PHB_ITEM pArg2, pArg3;
-   HB_set_enum set_specifier;
 
-   if( args > 0 ) set_specifier = ( HB_set_enum ) hb_parni( 1 );
-   else set_specifier = HB_SET_INVALID_;
-   if( args > 1 ) pArg2 = hb_param( 2, HB_IT_ANY );
-   if( args > 2 ) pArg3 = hb_param( 3, HB_IT_ANY );
+   HB_set_enum set_specifier = ( args > 0 ) ? ( HB_set_enum ) hb_parni( 1 ) : HB_SET_INVALID_;
+   PHB_ITEM pArg2 = ( args > 1 ) ? hb_param( 2, HB_IT_ANY ) : NULL;
+   PHB_ITEM pArg3 = ( args > 2 ) ? hb_param( 3, HB_IT_ANY ) : NULL;
 
    switch ( set_specifier )
    {

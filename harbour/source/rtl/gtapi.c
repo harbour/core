@@ -175,30 +175,36 @@ USHORT hb_gtBox( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, B
 
       USHORT uiRow;
       USHORT uiCol;
-      USHORT height, width, tmp;
+      USHORT uiHeight;
+      USHORT uiWidth;
 
       USHORT uiTopBak = uiTop;
       USHORT uiLeftBak = uiLeft;
    
-      /* For full compatibility, pad box string with last char if too short */
+      /* NOTE: For full compatibility, pad box string with last char if too 
+               short [vszakats] */
       
-      cPadChar = ' ';
-      for( tmp = 0; *pbyFrame && tmp < 9; tmp++ )
-         cPadChar = szBox[ tmp ] = *pbyFrame++;
-      while( tmp < 8 )
-         szBox[ tmp++ ] = cPadChar;
-      szBox[ tmp ] = '\0';
+      {
+         USHORT tmp;
+
+         cPadChar = ' ';
+         for( tmp = 0; *pbyFrame && tmp < 9; tmp++ )
+            cPadChar = szBox[ tmp ] = *pbyFrame++;
+         while( tmp < 8 )
+            szBox[ tmp++ ] = cPadChar;
+         szBox[ tmp ] = '\0';
+      }
       
       /* Ensure that box is drawn from top left to bottom right. */
       if( uiTop > uiBottom )
       {
-         tmp = uiTop;
+         USHORT tmp = uiTop;
          uiTop = uiBottom;
          uiBottom = tmp;
       }
       if( uiLeft > uiRight )
       {
-         tmp = uiLeft;
+         USHORT tmp = uiLeft;
          uiLeft = uiRight;
          uiRight = tmp;
       }
@@ -207,23 +213,23 @@ USHORT hb_gtBox( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, B
       uiCol = uiLeft;
       
       /* Draw the box or line as specified */
-      height = uiBottom - uiTop + 1;
-      width  = uiRight - uiLeft + 1;
+      uiHeight = uiBottom - uiTop + 1;
+      uiWidth  = uiRight - uiLeft + 1;
       
       hb_gtDispBegin();
       
-      if( height > 1 && width > 1 )
+      if( uiHeight > 1 && uiWidth > 1 )
          hb_gtWriteAt( uiRow, uiCol, szBox + 0, sizeof( BYTE ) ); /* Upper left corner */
       
-      uiCol = ( height > 1 ? uiLeft + 1 : uiLeft );
+      uiCol = ( uiHeight > 1 ? uiLeft + 1 : uiLeft );
       
       if( uiCol <= uiRight )
-         hb_gtRepChar( uiRow, uiCol, szBox[ 1 ], uiRight - uiLeft + ( height > 1 ? -1 : 1 ) ); /* Top line */
+         hb_gtRepChar( uiRow, uiCol, szBox[ 1 ], uiRight - uiLeft + ( uiHeight > 1 ? -1 : 1 ) ); /* Top line */
       
-      if( height > 1 && width > 1 )
+      if( uiHeight > 1 && uiWidth > 1 )
          hb_gtWriteAt( uiRow, uiRight, szBox + 2, sizeof( BYTE ) ); /* Upper right corner */
       
-      if( szBox[ 8 ] && height > 2 && width > 2 )
+      if( szBox[ 8 ] && uiHeight > 2 && uiWidth > 2 )
       {
          for( uiRow = uiTop + 1; uiRow < uiBottom; uiRow++ )
          {
@@ -235,22 +241,22 @@ USHORT hb_gtBox( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, B
       }
       else
       {
-         for( uiRow = ( width > 1 ? uiTop + 1 : uiTop ); uiRow < ( width > 1 ? uiBottom : uiBottom + 1 ); uiRow++ )
+         for( uiRow = ( uiWidth > 1 ? uiTop + 1 : uiTop ); uiRow < ( uiWidth > 1 ? uiBottom : uiBottom + 1 ); uiRow++ )
          {
             hb_gtWriteAt( uiRow, uiLeft, szBox + 7, sizeof( BYTE ) ); /* Left side */
-            if( width > 1 )
+            if( uiWidth > 1 )
                hb_gtWriteAt( uiRow, uiRight, szBox + 3, sizeof( BYTE ) ); /* Right side */
          }
       }
       
-      if( height > 1 && width > 1 )
+      if( uiHeight > 1 && uiWidth > 1 )
       {
          hb_gtWriteAt( uiBottom, uiLeft, szBox + 6, sizeof( BYTE ) ); /* Bottom left corner */
       
-         uiCol = ( height > 1 ? uiLeft + 1 : uiLeft );
+         uiCol = ( uiHeight > 1 ? uiLeft + 1 : uiLeft );
       
-         if( uiCol <= uiRight && height > 1 )
-            hb_gtRepChar( uiBottom, uiCol, szBox[ 5 ], uiRight - uiLeft + ( height > 1 ? -1 : 1 ) ); /* Bottom line */
+         if( uiCol <= uiRight && uiHeight > 1 )
+            hb_gtRepChar( uiBottom, uiCol, szBox[ 5 ], uiRight - uiLeft + ( uiHeight > 1 ? -1 : 1 ) ); /* Bottom line */
       
          hb_gtWriteAt( uiBottom, uiRight, szBox + 4, sizeof( BYTE ) ); /* Bottom right corner */
       }
@@ -363,7 +369,7 @@ USHORT hb_gtPostExt( void )
    return 0;
 }
 
-/* NOTE: szColorString must be an at least CLR_STRLEN wide by the NG. It seems 
+/* NOTE: szColorString must be at least CLR_STRLEN wide by the NG. It seems 
          that CA-Cl*pper SETCOLOR() will return string lengths up to 131+EOF. 
          That seems like a 127+1 buffer size, plus lazy overflow checking.
          [vszakats] */
@@ -731,7 +737,6 @@ USHORT hb_gtRepChar( USHORT uiRow, USHORT uiCol, BYTE byChar, USHORT uiCount )
       BYTE buffer[ REPCHAR_BUFFER_SIZE ];
 
       memset( buffer, byChar, uiCount );
-      
       hb_gtWriteAt( uiRow, uiCol, buffer, uiCount );
    }
    else
@@ -739,7 +744,6 @@ USHORT hb_gtRepChar( USHORT uiRow, USHORT uiCol, BYTE byChar, USHORT uiCount )
       BYTE * buffer = ( BYTE * ) hb_xgrab( uiCount );
 
       memset( buffer, byChar, uiCount );
-      
       hb_gtWriteAt( uiRow, uiCol, buffer, uiCount );
 
       hb_xfree( buffer );

@@ -37,15 +37,6 @@
 #include "hbapilng.h"
 
 /* Always link in the default language */
-
-/* This hack is needed to force preprocessing if id is also a macro */
-#define HB_LANG_REQUEST( id )           HB_LANG_REQUEST_( id )
-#define HB_LANG_REQUEST_( id )          extern HB_FUNC( HB_LANG_##id ); \
-                                        void hb_lang_ForceLink( void ) \
-                                        { \
-                                           HB_FUNCNAME( HB_LANG_##id )(); \
-                                        }
-
 HB_LANG_REQUEST( HB_LANG_DEFAULT );
 
 /* NOTE: This is the maximum number of registered languages, later this can be 
@@ -178,7 +169,7 @@ char * hb_langName( void )
          ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ID + HB_LANG_ITEM_ID_NAME ),
          ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ID + HB_LANG_ITEM_ID_NAMENAT ) );
    else
-      strcpy( pszName, "Harbour Language: (not installled)" );
+      strcpy( pszName, "Harbour Language: (not installed)" );
 
    return pszName;
 }

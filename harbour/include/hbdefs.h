@@ -81,16 +81,16 @@
 #elif defined(HB_OS_DOS)
 
    #include <dos.h>
-   #if defined(__WATCOMC__)
-      #include <i86.h>
-   #endif
 
    #if defined(__WATCOMC__) && defined(__386__) && !defined(__WINDOWS_386__)
       #define HB_DOS_INT86 int386
+      #define HB_DOS_INT86X int386x
    #elif defined(__RSX32__)
       #define HB_DOS_INT86 _int86
+      #define HB_DOS_INT86X _int86x
    #else
       #define HB_DOS_INT86 int86
+      #define HB_DOS_INT86X int86x
    #endif
 
 #endif

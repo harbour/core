@@ -44,9 +44,6 @@
 extern "C" {
 #endif
 
-/* Macro to publish a specific language module, for both C and Harbour level */
-#define HB_LANG_ANNOUNCE( id )          HB_FUNC( HB_LANG_##id ) {}
-
 /* Base values for the unified language item table */
 #define HB_LANG_ITEM_BASE_ID            0
 #define HB_LANG_ITEM_BASE_MONTH         6
@@ -56,6 +53,17 @@ extern "C" {
 #define HB_LANG_ITEM_BASE_ERRINTR       89
 #define HB_LANG_ITEM_BASE_TEXT          111
 #define HB_LANG_ITEM_MAX_               114
+
+/* This hack is needed to force preprocessing if id is also a macro */
+#define HB_LANG_REQUEST( id )           HB_LANG_REQUEST_( id )
+#define HB_LANG_REQUEST_( id )          extern HB_FUNC( HB_LANG_##id ); \
+                                        void hb_lang_ForceLink( void ) \
+                                        { \
+                                           HB_FUNCNAME( HB_LANG_##id )(); \
+                                        }
+
+/* Macro to publish a specific language module, for both C and Harbour level */
+#define HB_LANG_ANNOUNCE( id )          HB_FUNC( HB_LANG_##id ) {}
 
 typedef struct _HB_LANG
 {

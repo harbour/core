@@ -215,6 +215,8 @@ PHB_ITEM hb_itemDo( PHB_ITEM pItem, USHORT uiPCount, PHB_ITEM pItemArg1, ... )
             pResult = hb_itemNew( NULL );
             hb_itemCopy( pResult, &hb_stack.Return );
          }
+         else
+            pResult = NULL;
       }
       else if( HB_IS_BLOCK( pItem ) )
       {

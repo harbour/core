@@ -624,11 +624,9 @@ HB_FUNC( __CLSDELMSG )
             PHB_FUNC pFunc = pClass->pMethods[ uiAt ].pFunction;
 
             if( pFunc == hb___msgEvalInline )      /* INLINE method deleted    */
-            {
-               hb_arrayDel( pClass->pInlines, pClass->pMethods[ uiAt ].uiData );
-                                                   /* Delete INLINE block      */
-            }
-                                                /* Move messages            */
+               hb_arrayDel( pClass->pInlines, pClass->pMethods[ uiAt ].uiData ); /* Delete INLINE block */
+
+            /* Move messages */
             while( pClass->pMethods[ uiAt ].pMessage && uiAt != uiLimit )
             {
                memcpy( pClass->pMethods + uiAt,
@@ -745,9 +743,7 @@ HB_FUNC( __CLSMODMSG )
                   hb_arraySet( pClass->pInlines, pClass->pMethods[ uiAt ].uiData, pBlock );
             }
             else if( ( pFunc == hb___msgSetData ) || ( pFunc == hb___msgGetData ) )
-            {                                      /* Not allowed for DATA     */
-               hb_errRT_BASE( EG_ARG, 3004, "Cannot modify a DATA item", "__CLSMODMSG" );
-            }
+               hb_errRT_BASE( EG_ARG, 3004, "Cannot modify a DATA item", "__CLSMODMSG" ); /* Not allowed for DATA */
             else                                   /* Modify METHOD            */
                pClass->pMethods[ uiAt ].pFunction = ( PHB_FUNC ) hb_parnl( 3 );
          }
@@ -875,24 +871,25 @@ HB_FUNC( __CLSINSTSUPER )
          hb_vmPushNil();
          hb_vmFunction( 0 );                         /* Execute super class      */
 
-         if( !HB_IS_OBJECT( &hb_stack.Return ) )
+         if( HB_IS_OBJECT( &hb_stack.Return ) )
          {
-            hb_errRT_BASE( EG_ARG, 3002, "Super class does not return an object", "__CLSINSTSUPER" );
-         }
-
-         for( uiClass = 0; ! bFound && uiClass < s_uiClasses; uiClass++ )
-         {                                      /* Locate the entry         */
-            if( hb_stricmp( pString->item.asString.value, s_pClasses[ uiClass ].szName ) == 0 )
-            {
-               hb_retni( uiClass + 1 );               /* Entry + 1 = hb___msgClsH    */
-               bFound = TRUE;
+            for( uiClass = 0; ! bFound && uiClass < s_uiClasses; uiClass++ )
+            {                                      /* Locate the entry         */
+               if( hb_stricmp( pString->item.asString.value, s_pClasses[ uiClass ].szName ) == 0 )
+               {
+                  hb_retni( uiClass + 1 );               /* Entry + 1 = hb___msgClsH    */
+                  bFound = TRUE;
+               }
             }
          }
+         else
+            hb_errRT_BASE( EG_ARG, 3002, "Super class does not return an object", "__CLSINSTSUPER" );
       }
       else
          hb_errRT_BASE( EG_ARG, 3003, "Cannot find super class", "__CLSINSTSUPER" );
    }
-   if( !bFound )
+
+   if( ! bFound )
       hb_retni( 0 );
 }
 
@@ -911,6 +908,8 @@ HB_FUNC( __CLS_CNTCLSDATA )
       PCLASS pClass = &s_pClasses[ uiClass - 1 ];
       hb_retni( hb_arrayLen( pClass->pClassDatas ) );
    }
+   else
+      hb_retni( 0 );
 }
 
 
@@ -923,8 +922,7 @@ HB_FUNC( __CLS_CNTDATA )
 {
    USHORT uiClass = hb_parni( 1 );
 
-   if( uiClass )
-      hb_retni( s_pClasses[ uiClass - 1 ].uiDatas );
+   hb_retni( uiClass != 0 ? s_pClasses[ uiClass - 1 ].uiDatas : 0 );
 }
 
 
@@ -937,8 +935,7 @@ HB_FUNC( __CLS_DECDATA )
 {
    USHORT uiClass = hb_parni( 1 );
 
-   if( uiClass )
-      hb_retni( s_pClasses[ uiClass - 1 ].uiDatas-- );
+   hb_retni( uiClass != 0 ? s_pClasses[ uiClass - 1 ].uiDatas-- : 0 );
 }
 
 
@@ -951,8 +948,7 @@ HB_FUNC( __CLS_INCDATA )
 {
    USHORT uiClass = hb_parni( 1 );
 
-   if( uiClass )
-      hb_retni( ++s_pClasses[ uiClass - 1 ].uiDatas );
+   hb_retni( uiClass != 0 ? ++s_pClasses[ uiClass - 1 ].uiDatas : 0 );
 }
 
 /* NOTE: Undocumented Clipper function */
