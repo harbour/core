@@ -93,7 +93,7 @@ void hb_conInit( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_conInit()"));
 
-#if defined(OS_UNIX_COMPATIBLE)
+#if defined(OS_UNIX_COMPATIBLE) && !defined(HB_EOL_CRLF)
    s_szCrLf[ 0 ] = HB_CHAR_LF;
    s_szCrLf[ 1 ] = '\0';
 #else
@@ -518,3 +518,5 @@ HB_FUNC( DISPOUTAT ) /* writes a single value to the screen at speficic position
          hb_xfree( pszString );
    }
 }
+
+

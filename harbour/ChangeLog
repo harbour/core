@@ -8,6 +8,15 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
     * Now works properly on linux
+  * utils/hbmake/hbmake.prg
+    utils/hbmake/hbmutils.prg
+    * Some fixes for linux
+  * source/rtl/listbox.prg
+    * Some formatting
+
+2002-01-10 14:30 UTC-0500 David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/spfiles.c
+    ! Fix to remove spurious ISCHAR(1) tests from C routines.
       From Horacio Roldán <harbour_ar@yahoo.com.ar>
 
 2002-01-10 17:20 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
@@ -634,6 +643,7 @@
      * Cleaned up the new Win32 API branches.
 
 2001-12-21 12:54 UTC+0100 Antonio Linares <alinares@fivetech.com>
+
    * source/pp/pragma.c
    * contrib/dot/pp_harb.ch
    * tests/inline_c.prg
