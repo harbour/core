@@ -27,6 +27,7 @@ typedef struct          /* symbol support structure */
 #define FS_MESSAGE     32
 
 void VirtualMachine( PBYTE pCode, PSYMBOL pSymbols );  /* invokes the virtual machine */
+void ProcessSymbols( SYMBOL *, WORD );
 
 /* items types */
 #define IT_NIL       0x0000
