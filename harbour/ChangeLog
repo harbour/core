@@ -7,6 +7,12 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+    * Added two type cast needed by VC++
+
+2002-04-02 21:46 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/rdd/dbcmd.c
+    ! bug fixed in COPY TO db, reported by Mike Romberg
+
 2002-04-02 20:42 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * include/hbrddntx.h
   * source/rdd/dbfntx/dbfntx1.c
