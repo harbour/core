@@ -1,6 +1,6 @@
 2000-11-26 10:10 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/pp/ppcore.c
-     + Added support ',' withing Array Index in NextParm()
+     + Added support for ',' within Array Index in NextParm()
 
 2000-11-24 21:10 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/harbour.y
