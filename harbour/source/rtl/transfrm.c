@@ -293,7 +293,8 @@ char *NumPicture( char *szPic, long lPic, int iPicFlags, double dValue,
    }
    else
    {
-      printf( "\nThis should never happen" );   /* TODO: Serious error      */
+      printf( "\nNUMPICTURE: STR does not return string" );
+      _exit(1);
    }
    return(szRet);
 }
@@ -316,7 +317,8 @@ PITEM NumDefault( double dValue )
    StackPop   ();                               /* Pop return value          */
    if( stack.pPos->wType != IT_STRING )         /* Is it a string            */
    {
-      printf( "\nThis should never happen" );   /* TODO: Serious error       */
+      printf( "\nNUMDEFAULT: STR does not return string" );
+      _exit(1);
    }
    return( stack.pPos );
 }

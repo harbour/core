@@ -938,6 +938,10 @@ void Greater( void )
       PushLogical( iLogical1 > iLogical2 );
    }
 
+   else if( IS_OBJECT( stack.pPos - 2 ) &&
+            hb_isMessage( stack.pPos - 2, ">" ) )
+      OperatorCall( stack.pPos - 2, stack.pPos - 1, ">" );
+
    else if( ( stack.pPos - 2 )->wType != ( stack.pPos - 1 )->wType )
    {
       printf( "types not match on greater operation\n" );
@@ -980,6 +984,10 @@ void GreaterEqual( void )
       iLogical2 = PopLogical();
       PushLogical( iLogical1 >= iLogical2 );
    }
+
+   else if( IS_OBJECT( stack.pPos - 2 ) &&
+            hb_isMessage( stack.pPos - 2, ">=" ) )
+      OperatorCall( stack.pPos - 2, stack.pPos - 1, ">=" );
 
    else if( ( stack.pPos - 2 )->wType != ( stack.pPos - 1 )->wType )
    {
@@ -1099,6 +1107,10 @@ void Less( void )
       PushLogical( iLogical1 < iLogical2 );
    }
 
+   else if( IS_OBJECT( stack.pPos - 2 ) &&
+            hb_isMessage( stack.pPos - 2, "<" ) )
+      OperatorCall( stack.pPos - 2, stack.pPos - 1, "<" );
+
    else if( ( stack.pPos - 2 )->wType != ( stack.pPos - 1 )->wType )
    {
       printf( "types not match on less operation\n" );
@@ -1141,6 +1153,10 @@ void LessEqual( void )
       iLogical2 = PopLogical();
       PushLogical( iLogical1 <= iLogical2 );
    }
+
+   else if( IS_OBJECT( stack.pPos - 2 ) &&
+            hb_isMessage( stack.pPos - 2, "<=" ) )
+      OperatorCall( stack.pPos - 2, stack.pPos - 1, "<=" );
 
    else if( ( stack.pPos - 2 )->wType != ( stack.pPos - 1 )->wType )
    {
@@ -1261,6 +1277,9 @@ void Minus( void )
       lDate1 = PopDate();
       PushDate( lDate1 - dNumber2 );
    }
+   else if( IS_OBJECT( stack.pPos - 2 ) && hb_isMessage( stack.pPos - 2, "-" ) )
+      OperatorCall( stack.pPos - 2, stack.pPos - 1, "-" );
+
    /* TODO: We should substract strings also ? and generate an error it types
       don't match */
 }
@@ -1362,6 +1381,10 @@ void Plus( void )
       lDate1 = PopDate();
       PushDate( lDate1 + dNumber2 );
    }
+
+   else if( IS_OBJECT( pItem1 ) && hb_isMessage( pItem, "+" ) )
+      OperatorCall( pItem1, pItem2, "+" );
+
    /* TODO: Generate an error if types don't match */
    HBDEBUG( "Plus\n" );
 }

@@ -1,3 +1,13 @@
+19990521-21:45 CET Eddie Runia
+  * tests/broken/instr.prg added. Contribution from Les Griffiths.
+    formerly known as strcomp
+  * source/rtl/transfrm.c.
+    Serious error code error
+  * source/rtl/classes.c
+    Error code added
+  * source/vm/hvm.c
+    Additional operator overloads added.
+
 19990520-20:07 EST David G. Holm <dholm@jsd-llc.com>
   Thanks go to "Victor Szel" <info@szelvesz.hu> again!
   * source/rtl/strings.c

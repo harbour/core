@@ -501,7 +501,11 @@ HARBOUR ISMESSAGE()     /* Is the message valid for the class               */
    if( pObject && pString )
       _retl( hb_isMessage( pObject, pString->value.szText ) != 0 );
    else
-   {                            /* TODO: Crash code */
+   {
+      PITEM pError = _errNew();
+      _errPutDescription(pError, "Argument error: ISMESSAGE");
+      _errLaunch(pError);
+      _errRelease(pError);
    }
 }
 
@@ -553,7 +557,11 @@ HARBOUR OSEND()             /* <xRet> = oSend( <oObj>, <cSymbol>, <xArg,..> */
       Do( _pcount()-2 );                    /* Execute message              */
    }
    else
-   {                                        /* TODO: Crash code             */
+   {
+      PITEM pError = _errNew();
+      _errPutDescription(pError, "Argument error: OSEND");
+      _errLaunch(pError);
+      _errRelease(pError);
    }
 }
 
