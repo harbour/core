@@ -184,7 +184,7 @@ function __AtPrompt( nRow, nCol, cPrompt, cMsg )
 
 /*  $DOC$
  *  $FUNCNAME$
- *      __MenuTo() (MENU TO command)
+ *      __MenuTo() 
  *  $CATEGORY$
  *      Data input and output
  *  $ONELINER$
@@ -345,7 +345,7 @@ function __AtPrompt( nRow, nCol, cPrompt, cMsg )
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
- *      comm.ngo:'@...PROMPT' array.ngo:ACHOICE() 'SET MESSAGE' 'SET INTENSITY' 'SET WRAP' datai.ngo:__ATPROMPT()
+ *   comm.ngo:'@...PROMPT'  array.ngo:ACHOICE() 'SET MESSAGE' 'SET INTENSITY' 'SET WRAP' datai.ngo:__ATPROMPT()
  *  $END$
  */
 

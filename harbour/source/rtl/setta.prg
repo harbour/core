@@ -37,7 +37,7 @@
  *  $FUNCNAME$
  *      SETTYPEAHEAD()
  *  $CATEGORY$
- *      Enviroment
+ *      Environment
  *  $ONELINER$
  *      Sets the typeahead buffer to given size.
  *  $SYNTAX$

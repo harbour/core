@@ -1014,7 +1014,7 @@ HARBOUR HB_INKEY( void )
  *  $COMPLIANCE$
  *      __KEYBOARD() is compliant with CA-Clipper 5.3
  *  $SEEALSO$
- *      'CLEAR TYPEAHEAD'  'KEYBOARD'
+     'CLEAR TYPEAHEAD'  comm.ngo:'KEYBOARD'
  *  $END$
  */
 
@@ -1224,3 +1224,41 @@ HARBOUR HB_FKMAX( void )
 {
    hb_retni( 40 ); /* IBM specific */
 }
+/*  $DOC$
+ *  $FUNCNAME$
+ *      KEYBOARD
+ *  $CATEGORY$
+ *      Command
+ *  $ONELINER$
+ *      Stuffs the keyboard with a string
+ *  $SYNTAX$
+ *      KEYBOARD <cString>
+ *  $ARGUMENTS$
+ *      <cString> String to be processed, one character at a time,
+ *      by the Harbour keyboard processor
+ *  $RETURNS$
+ *
+ *  $DESCRIPTION$
+ *      This command stuff the input buffer with <cString>. The
+ *      number of character that can be stuffed into the keyboard
+ *      buffer is controled by SET TYPEAHEAD command and may range
+ *      from 0 to 32,622, with each character appearing in the ASCII
+ *      range of 0 to 255. None of the extended keys may be stuffed
+ *      in the keyboard buffer.
+ *      Issuing a KEYBOARD " " will clear the keyboard buffer.
+ *  $EXAMPLES$
+ *      // Stuff an Enter key into the keyboard buffer
+ *      KEYBOARD CHR(13)
+ *      // Clear the keyboard buffer
+ *      CLEAR TYPEAHEAD
+ *  $TESTS$
+ *      KEYBOARD CHR(13); ? INKEY() ==> 13
+ *      KEYBOARD "HELLO"; CLEAR TYPEAHEAD; ? INKEY() ==> 0
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      __KEYBOARD() is compliant with CA-Clipper 5.3
+ *  $SEEALSO$
+ *      'CLEAR TYPEAHEAD'  consimpu.ngo:__KEYBOARD()
+ *  $END$
+ */

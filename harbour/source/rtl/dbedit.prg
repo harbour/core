@@ -239,7 +239,7 @@
  *  $FILES$
  *      Header files are dbedit.ch, inkey.ch
  *  $SEEALSO$
- *     '@...SAY' BROWSE() 'TBrowse class' TRANSFORM()
+ *     '@...SAY' BROWSE() tbrow.ngo:'TBrowse class' TRANSFORM()
  *  $END$
  */
 

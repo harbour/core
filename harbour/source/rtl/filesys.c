@@ -1437,55 +1437,38 @@ HARBOUR HB_FOPEN( void )
  *  $CATEGORY$
  *     LOW LEVEL
  *  $ONELINER$
- *     Create and/or truncate a binary file to zero-length
+ *     Creates a file
  *  $SYNTAX$
  *     FCREATE(<cFile>, [<nAttribute>]) --> nHandle
  *  $ARGUMENTS$
- *     <cFile> is the name of the file to create.  If the file already
- *   exists, its length is truncated to zero without warning.
+ *     <cFile> is the name of the file to create.  
  *
- *     <nAttribute> is one of the binary file attributes shown in the table
- *   below.  If this argument is omitted, the default value is zero.
+ *     <nAttribute> Numeric code for the DOS file attribute
+ *    
+ *  $RETURNS$
+ *     <nHandle>  Numeric expression
+ *  $DESCRIPTION$
+ *      This function creates a new file with a filename of <cFile>. The
+ *    default value of <nAttribute> is 0 and is used to set the DOS
+ *    attribute byte for the file being created by this function.
+ *    The return value will be DOS file handle that is associated
+ *    with the new file. This number will be between zero to 65,535,
+ *    inclusive. If an error occurs, the return value of this function
+ *    will be -1
+ *      If the file <cFile> already exists, the existing file will be
+ *    truncated to a file lenght of 0 bytes.
+ *      If specified, the folowing table shows the value for <nAttribute>
+ *     and their related meaning to the file <cFile> being created by
+ *     this Function.
  *
- *   Binary File Attributes
- *   컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
- *   Value   Fileio.ch      Attribute Description
- *   컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
- *   0       FC_NORMAL      Normal    Create normal read/write file (default)
- *   1       FC_READONLY    Read-only Create read-only file
- *   2       FC_HIDDEN      Hidden    Create hidden file
- *   4       FC_SYSTEM      System    Create system file
- *   컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
- *     
- *  $RETURNS$     
- *     FCREATE() returns the DOS file handle number of the new binary file in
- *   the range of zero to 65,535.   If an error occurs, FCREATE() returns
- *   -1 and FERROR() is set to indicate an error code.
- *  $DESCRIPTION$     
- *     FCREATE() is a low-level file function that either creates a new file or
- *   opens and truncates an existing file.  If <cFile> does not exist, it is
- *   created and opened for writing.  If it does exist and can be opened for
- *   writing, it is truncated to zero-length.  If it cannot be opened for
- *   writing, FCREATE() returns -1 and FERROR() returns the appropriate error
- *   value.
- *
- *     When FCREATE() successfully creates a new file, the file is left open in
- *   compatibility sharing mode and read/write access mode.  The file
- *   attribute specified by the <nAttribute> argument is applied to the new
- *   file when it is closed, allowing writing to a newly created read-only
- *   file.  For a list of access modes, see FOPEN().
- *
- *     Since a file handle is required in order to identify an open file to
- *   other file functions, always assign the return value from FCREATE() to a
- *   variable for later use.
- *
- *     Like other file functions, FCREATE() does not use either the DEFAULT or
- *   PATH settings for its operation.  Instead, it writes to the current DOS
- *   directory unless a path is explicitly stated.
- *
- *     Warning!  This function allows low-level access to DOS files and
- *   devices.  It should be used with extreme care and requires a thorough
- *   knowledge of the operating system.
+ *      ^bValue of <nAttribute>     File Attribute
+ *          0                       Normal/Default,Read/Write 
+ *          1                       Read-only,Attemptinf to open for
+ *                                  output returns an error
+ *          2                       Hidden,Excluded from normal DIR
+ *                                  search
+ *          4                       Create,Excluded from normal DIR
+ *                                  search
  *  $EXAMPLES$
  *   ^CFE  This example creates a file called Testfile and opens it for
  *      reading and writing:
@@ -1507,7 +1490,7 @@ HARBOUR HB_FOPEN( void )
  *  $COMPLIANCE$
  *     This function is CA-CLIPPER compilant
  *  $SEEALSO$
- *     FOPEN() FCLOSE() FERROR()
+ *     FCLOSE() FOPEN() FWRITE() FREAD() FERROR()
  *  $INCLUDE$
  *     
  *  $END$
@@ -1710,12 +1693,14 @@ HARBOUR HB_FWRITE( void )
  *  $CATEGORY$
  *     Low Level
  *  $ONELINER$
- *      Test for errors after a binary file operation
+ *      Reports the error status of low-level file functions
  *  $SYNTAX$
- *     FERROR() --> nErrorCode
+ *     FERROR() --> <nErrorCode>
  *  $ARGUMENTS$
  *     
- *  $RETURNS$     
+ *  $RETURNS$
+ *     <nErrorCode> Value of the DOS error last encountered by a
+ *     low-level file function.
  *     FERROR() returns the DOS error from the last file operation as an
  *   integer numeric value.  If there is no error, FERROR() returns zero.
  *
@@ -1739,15 +1724,32 @@ HARBOUR HB_FWRITE( void )
  *   32      Sharing violation
  *   33      Lock Violation
  *   컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
- *  $DESCRIPTION$     
- *     FERROR() is a low-level file function that indicates a DOS error after a
- *   file function is used.  These functions include FCLOSE(), FCREATE(),
- *   FERASE(), FOPEN(), FREAD(), FREADSTR(), and FRENAME().  FERROR() retains
- *   its value until the next execution of a file function.
+ *  $DESCRIPTION$
+ *     After every low-level file function,this function will return
+ *     a value that provides additional informationon the status of
+ *     the last low-level file functions's performance.If the FERROR()
+ *     function returns a 0, no error was detected.Below is a table
+ *     of possibles values returned by the FERROR() function.
  *
- *     Warning!  This function allows low-level access to DOS files and
- *   devices.  It should be used with extreme care and requires a thorough
- *   knowledge of the operating system.
+ *   FERROR() Return Values
+ *   Value   Reason 
+ *   컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
+ *   0       Successful
+ *   2       File not found
+ *   3       Path not found
+ *   4       Too many files open
+ *   5       Access denied
+ *   6       Invalid handle
+ *   8       Insufficient memory
+ *   15      Invalid drive specified
+ *   19      Attempted to write to a write-protected disk
+ *   21      Drive not ready
+ *   23      Data CRC error
+ *   29      Write fault
+ *   30      Read fault
+ *   32      Sharing violation
+ *   33      Lock Violation
+ *
  *  $EXAMPLES$
  *   ^CFE  This example tests FERROR() after the creation of a binary
  *      file and displays an error message if the create fails:
@@ -1781,25 +1783,28 @@ HARBOUR HB_FERROR( void )
  *  $CATEGORY$
  *     Low Level
  *  $ONELINER$
- *     
+ *     Closesan open file
  *  $SYNTAX$
- *     
+ *     FCLOSE(<nHandle>) --> <lSuccess>
  *  $ARGUMENTS$
- *     
+ *     <nHandle> DOS file handle
  *  $RETURNS$
- *     
+ *     <lSuccess>  Logical TRUE (.T.) or FALSE (.F.)
  *  $DESCRIPTION$
- *     
+ *     This function closes an open file with a dos file handle
+ *     of <nHandle> and writes the associated DOS buffer to the
+ *     disk. The <nHandle> value is derived from the FCREATE()
+ *     or FOPEN() function.
  *  $EXAMPLES$
  *
  *  $TESTS$
  *
  *  $STATUS$
- *
+ *     R
  *  $COMPLIANCE$
- *
+ *      This function is CA-Clipper compilant
  *  $SEEALSO$
- *     
+ *     FOPEN() FCREATE() FREAD() FWRITE() FERROR()
  *  $INCLUDE$
  *     
  *  $END$
@@ -1823,26 +1828,27 @@ HARBOUR HB_FCLOSE( void )
  *  $CATEGORY$
  *     Low Level
  *  $ONELINER$
- *     Delete a file from disk
+ *     Erase a file from disk
  *  $SYNTAX$
  *     FERASE(<cFile>) --> nSuccess
  *  $ARGUMENTS$
- *     <cFile> is the name of the file to be deleted from disk, including
- *   extension, optionally preceded by a drive and/or path specification.    
+ *     <cFile> Name of file to erase.
  *  $RETURNS$     
- *     FERASE() returns -1 if the operation fails and zero if it succeeds.  In
- *   the case of a failure, FERROR() can be used to determine the nature of
- *   the error.
- *  $DESCRIPTION$     
- *     FERASE() is a file function that deletes a specified file from disk.
- *     FERASE() is the same as the ERASE command but returns a value and can be
- *   specified within an expression.  When FERASE() is called, <cFile> is
- *   deleted from disk only if found in the current DOS directory or in the
- *   directory explicitly specified as part of the filename.  Like the other
- *   file functions and commands, FERASE() does not use either SET DEFAULT or
- *   SET PATH to locate <cFile>.
+ *     <nSuccess> 0 if successful, -1 if not
+ *  $DESCRIPTION$
+ *     This function deletes the file specified in <cFile> from the disk.
+ *     No extensions are assumed. The drive and path my be included in
+ *     <cFile>; neither the SET DEFAULT not the SET PATH command controls
+ *     the performance of this function.If the drive or path is not used,
+ *     the function will look for the file only on the currently selected
+ *     direcytory on the logged drive.
  *
- *     Warning!  Files must be CLOSEd before removing them with FERASE().
+ *     If the function is able to successfully delete the file from the
+ *     disk, the value of the function will be 0; otherwise a -1 will
+ *     be returned.If not successfu, aditional information may be
+ *     obtained by calling the FERROR() function.
+ *     Note: Any file to be removed by FERASE() must still be closed.
+ *
  *  $EXAMPLES$
  *   ^CFE  This example deletes a set of files matching a wildcard
  *      pattern:
@@ -1932,7 +1938,7 @@ HARBOUR HB_FERASE( void )
  *  $COMPLIANCE$
  *     This function is CA-Clipper compilant
  *  $SEEALSO$
- *     'ERASE'  FERASE() FERROR() FILE() 'RENAME'
+ *     Comm.ngo:'ERASE'  FERASE() FERROR() FILE() Comm.ngo:'RENAME'
  *  $INCLUDE$
  *     
  *  $END$
@@ -2090,7 +2096,7 @@ BOOL hb_fsFile( BYTE * pFilename )
  *  $CATEGORY$
  *     Low Level
  *  $ONELINER$
- *     Determine if files exists
+ *     Tests for the existence of file(s)
  *  $SYNTAX$
  *     FILE(<cFilespec>) --> lExists
  *  $ARGUMENTS$     
@@ -2521,7 +2527,7 @@ HARBOUR HB_FSETDEVMOD( void )
  *  $COMPLIANCE$
  *      This command is CA-Clipper compatible
  *  $SEEALSO$
- *     CURDIR() 'ERASE' FILE() FERASE() FRENAME()
+ *     CURDIR() 'ERASE' lowlevel.ngo:FILE() lowlevel.ngo:FERASE() lowlevel.ngo:FRENAME()
  *  $INCLUDE$
  *     
  *  $END$
@@ -2531,7 +2537,7 @@ HARBOUR HB_FSETDEVMOD( void )
  *  $FUNCNAME$
  *     ERASE
  *  $CATEGORY$
- *     Comamnd
+ *     Command
  *  $ONELINER$
  *     Remove a file from disk
  *  $SYNTAX$
@@ -2573,7 +2579,7 @@ HARBOUR HB_FSETDEVMOD( void )
  *  $COMPLIANCE$
  *     This command is CA-Clipper compatible
  *  $SEEALSO$
- *     CURDIR() FILE()
+ *     CURDIR() lowlevel.ngo:FILE()
  *  $INCLUDE$
  *     
  *  $END$

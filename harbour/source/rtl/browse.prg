@@ -108,7 +108,7 @@
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *      DBEDIT()* 'TBrowse class'
+ *      DBEDIT()* tbrow.ngo:'TBrowse class'
  *  $END$
  */
 

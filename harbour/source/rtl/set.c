@@ -395,7 +395,7 @@ HARBOUR HB_SETCANCEL( void )
  *    __SETCENTURY()
  *
  * $CATEGORY$
- *    Enviroment
+ *    Environment
  *  $ONELINER$
  *      Set the Current Century
 
@@ -406,9 +406,11 @@ HARBOUR HB_SETCANCEL( void )
  *              .T. or "ON" to enable the century setting (4-digit years)
  *              .F. or "OFF" to disable the century setting (2-digit years)
  * $RETURNS$
-      Either the current or previous century setting as a logical value
+ *    Either the current or previous century setting as a logical value
  * $END$
  */
+
+
 HARBOUR HB___SETCENTURY( void )
 {
    BOOL old_century_setting = hb_set.hb_set_century;
@@ -495,10 +497,9 @@ HARBOUR HB___SETCENTURY( void )
  * $FUNCNAME$
  *    SET()
  * $CATEGORY$
- *    Enviroment
+ *    Environment
  *  $ONELINER$
  *      Changes or evaluated enviromental settings
-
  * $SYNTAX$
  *    Set<nSet> [, <xNewSetting> [, <xOption> ] ] ) --> xPreviousSetting
  * $ARGUMENTS$
@@ -746,9 +747,12 @@ HARBOUR HB___SETCENTURY( void )
  *                   last position to the first and from the first position
  *                   to the last. When disabled, which is the default, there
  *                   is a hard stop at the first and last positions.
- * $RETURNS$    The current or previous setting
+ * $RETURNS$
+ *   The current or previous setting
  * $END$
  */
+
+
 HARBOUR HB_SET( void )
 {
    BOOL bFlag;

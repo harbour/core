@@ -58,8 +58,7 @@ STATIC s_cOldExtraFile
  *  $CATEGORY$
  *     Internal
  *  $ONELINER$
- *     Redirect console output to printer or file and save old settings
- *      
+ *     Redirect console output to printer or file and save old settings      
  *  $SYNTAX$
  *      __TextSave( <cFile> ) --> NIL
  *  $ARGUMENTS$

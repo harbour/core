@@ -34,6 +34,58 @@
  */
 
 #include "inkey.ch"
+/*  $DOC$
+ *  $FUNCNAME$
+ *      __SetFunction() 
+ *  $CATEGORY$
+ *      Environment
+ *  $ONELINER$
+ *      Assign a character string to a function key
+ *  $SYNTAX$
+ *      __SetFunction( <nFunctionKey>, [<cString>] ) --> NIL
+ *  $ARGUMENTS$
+ *      <nFunctionKey> is a number in the range 1..40 that represent the
+ *      function key to be assigned.
+ *
+ *      <cString> is a character string to set. If <cString> is not
+ *      specified, the function key is going to be set to NIL releasing by
+ *      that any previous __SetFunction() or SETKEY() for that function.
+ *  $RETURNS$
+ *      __SetFunction() always return NIL.
+ *  $DESCRIPTION$
+ *      __SetFunction() assign a character string with a function key, when
+ *      this function key is pressed, the keyboard is stuffed with this
+ *      character string. __SetFunction() has the effect of clearing any
+ *      SETKEY() previously set to the same function number and vice versa.
+ *
+ *      nFunctionKey    Key to be set
+ *      ------------    -------------
+ *         1 .. 12      F1 .. F12
+ *        13 .. 20      Shift-F3 .. Shift-F10
+ *        21 .. 30      Ctrl-F1 .. Ctrl-F10
+ *        31 .. 40      Alt-F1 .. Alt-F10
+ *
+ *      SET FUNCTION command is preprocessed into __SetFunction() function
+ *      during compile time.
+ *  $EXAMPLES$
+ *      // Set F1 with a string
+ *      CLS
+ *      __SetFunction( 1, "I Am Lazy" + CHR( 13 ) )
+ *      cTest := SPACE( 20 )
+ *      @ 10, 0 SAY "type something or F1 for lazy mode " GET cTest
+ *      READ
+ *      ? cTest
+ *  $TESTS$
+ *  $STATUS$
+ *  $COMPLIANCE$
+ *      Harbour use 11 and 12 to represent F11 and F12, while CA-Clipper use
+ *      11 and 12 to represent Shift-F1 and Shift-F2.
+ *  $PLATFORMS$
+ *  $FILES$
+ *  $SEEALSO$
+ *      consimpu.ngo:INKEY()  event.ngo:SETKEY()  consimpu.ngo:__Keyboard()
+ *  $END$
+ */
 
 PROCEDURE __SetFunction( nFunctionKey, cString )
 
@@ -53,3 +105,54 @@ PROCEDURE __SetFunction( nFunctionKey, cString )
    ENDIF
 
    RETURN
+/*  $DOC$
+ *  $FUNCNAME$
+ *     SET FUNCTION 
+ *  $CATEGORY$
+ *     Command
+ *  $ONELINER$
+ *      Assign a character string to a function key
+ *  $SYNTAX$
+ *      SET FUNCTION <nFunctionKey> TO [<cString>]
+ *  $ARGUMENTS$
+ *      <nFunctionKey> is a number in the range 1..40 that represent the
+ *      function key to be assigned.
+ *
+ *      <cString> is a character string to set. If <cString> is not
+ *      specified, the function key is going to be set to NIL releasing by
+ *      that any previous  Set Function or SETKEY() for that function.
+ *  $RETURNS$
+ *  $DESCRIPTION$
+ *        Set Function assign a character string with a function key, when
+ *      this function key is pressed, the keyboard is stuffed with this
+ *      character string. Set Function has the effect of clearing any
+ *      SETKEY() previously set to the same function number and vice versa.
+ *
+ *      nFunctionKey    Key to be set
+ *      ------------    -------------
+ *         1 .. 12      F1 .. F12
+ *        13 .. 20      Shift-F3 .. Shift-F10
+ *        21 .. 30      Ctrl-F1 .. Ctrl-F10
+ *        31 .. 40      Alt-F1 .. Alt-F10
+ *
+ *      SET FUNCTION command is preprocessed into __SetFunction() function
+ *      during compile time.
+ *  $EXAMPLES$
+ *      // Set F1 with a string
+ *      CLS
+ *      Set Function  1 to  "I Am Lazy" + CHR( 13 ) 
+ *      cTest := SPACE( 20 )
+ *      @ 10, 0 SAY "type something or F1 for lazy mode " GET cTest
+ *      READ
+ *      ? cTest
+ *  $TESTS$
+ *  $STATUS$
+ *  $COMPLIANCE$
+ *      Harbour use 11 and 12 to represent F11 and F12, while CA-Clipper use
+ *      11 and 12 to represent Shift-F1 and Shift-F2.
+ *  $PLATFORMS$
+ *  $FILES$
+ *  $SEEALSO$
+ *      consimpu.ngo:INKEY()  event.ngo:SETKEY()  consimpu.ngo:__Keyboard()
+ *  $END$
+ */

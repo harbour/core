@@ -1,3 +1,25 @@
+20000102-17:10:00 GMT+3 Luiz Rafael Culik <culik@sl.conex.net>
+* source/rtl/browdb.prg
+* source/rtl/text.prg
+* source/rtl/browse.prg
+* source/rtl/dbedit.prg
+* source/rtl/devoutp.prg
+* source/rtl/dircmd.prg
+* source/rtl/menuto.prg
+* source/rtl/xsavescr.prg
+* source/rtl/setkey.prg
+* source/rtl/inkey.c
+    +Fixed some see also references for the Norton Guide
+    +Added documentatio to KEYBOARD and SET FUNCTION and SET KEY COMMAND
+* source/rtl/fileysys.c
+* source/rtl/array.c
+   + Updated docs for FCLOSE() FCREATE() FERASE() FERROR() ACLONE()
+   ACOPY() AEVAL()
+* source/rtl/readkey.prg
+* source/rtl/readvar.prg
+* source/rtl/setfunc.prg
+     +Added the documentation to this functions since was accidentaly deleted
+
 20000101-22:50 GMT+3 Luiz Rafael Culik <culik@sl.conex.net>
 * doc/funclist.txt
    +Update some function status  

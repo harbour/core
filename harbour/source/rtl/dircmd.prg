@@ -98,7 +98,7 @@
  *      CA-Clipper use 8.3 file name, with Harbour it would probably cut
  *      long file names to feet this template.
  *  $SEEALSO$
- *      array.ngo:ADIR()  DIRECTORY()  'SET DEFAULT'
+ *      array.ngo:ADIR()  DIRECTORY()  'SET DEFAULT' comm.ngo:'DIR'
  *  $END$
  */
 /*  $DOC$
@@ -117,7 +117,7 @@
  *      OS (like * and ?). If <cFileMask> contain no path, then SET DEFAULT
  *      path is used to display files in the mask.
  *  $RETURNS$
- *      __Dir() always returns NIL.
+ *
  *  $DESCRIPTION$
  *      If no <cFileMask> is given, __Dir() display information about all
  *      *.dbf in the SET DEFAULT path, this information contain: file name,
@@ -132,16 +132,16 @@
  *      __Dir() is a compatibility function, it is superseded by DIRECTORY()
  *      which return all the information in a multidimensional array.
  *  $EXAMPLES$
- *      __Dir()      // information for all DBF files in current directory
+ *      DIR          // information for all DBF files in current directory
  *
- *      __Dir( "*.dbf" )         // list all DBF file in current directory
+ *      dir   "*.dbf"          // list all DBF file in current directory
  *
  *      // list all PRG files in Harbour Run-Time library
  *      // for DOS compatible operating systems
- *      __Dir( "c:\harbour\source\rtl\*.prg" )
+ *        Dir  "c:\harbour\source\rtl\*.prg" 
  *
  *      // list all files in the public section on a Unix like machine
- *      __Dir( "/pub" )
+ *        Dir  "/pub" 
  *  $TESTS$
  *  $STATUS$
  *  $COMPLIANCE$
@@ -153,7 +153,7 @@
  *      CA-Clipper use 8.3 file name, with Harbour it would probably cut
  *      long file names to feet this template.
  *  $SEEALSO$
- *      array.ngo:ADIR()  DIRECTORY()  'SET DEFAULT'
+ *      array.ngo:ADIR()  DIRECTORY()  'SET DEFAULT' filemana.ngo:__DIR()
  *  $END$
  */
 

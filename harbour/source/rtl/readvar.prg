@@ -32,6 +32,52 @@
  * their web site at http://www.gnu.org/).
  *
  */
+/*  $DOC$
+ *  $FUNCNAME$
+ *      READVAR()
+ *  $CATEGORY$
+ *      Data input and output
+ *  $ONELINER$
+ *      Return variable name of current GET or MENU
+ *  $SYNTAX$
+ *      READVAR( [<cVarName>] ) --> cOldVarName
+ *  $ARGUMENTS$
+ *      <cVarName> is a new variable name to set.
+ *  $RETURNS$
+ *      READVAR() return the old variable name. If no variable previously
+ *      was set, READVAR() return "".
+ *  $DESCRIPTION$
+ *      READVAR() is set inside a READ or MENU TO command to hold the
+ *      uppercase name of the GET / MENU TO variable, and re-set back to old
+ *      value when those commands finished. You should not normally set a
+ *      variable name but rather use it to retrieve the name of a GET
+ *      variable when executing a VALID or WHEN clause, or during SET KEY
+ *      execution and you are inside a READ or MENU TO.
+ *  $EXAMPLES$
+ *      // display a menu, press F1 to view the MENU TO variable name
+ *      CLS
+ *      @ 1, 10 PROMPT "blood sucking insect that infect beds   "
+ *      @ 2, 10 PROMPT "germ; virus infection                   "
+ *      @ 3, 10 PROMPT "defect; snag; (source of) malfunctioning"
+ *      @ 4, 10 PROMPT "small hidden microphone                 "
+ *      @ 6, 10 SAY "(Press F1 for a hint)"
+ *      SET KEY 28 TO ShowVar
+ *      MENU TO What_Is_Bug
+ *
+ *      PROCEDURE ShowVar
+ *      ALERT( READVAR() )        // WHAT_IS_BUG in red ALERT() box
+ *  $TESTS$
+ *  $STATUS$
+ *  $COMPLIANCE$
+ *      READVAR() works exactly like CA-Clipper's READKEY(), note however,
+ *      that the <cVarName> parameter is not documented and used internally
+ *      by CA-Clipper.
+ *  $PLATFORMS$
+ *  $FILES$
+ *  $SEEALSO$
+ *      @...GET  comm.ngo:'@...PROMPT'  comm.ngo:'MENU TO'  READ  comm.ngo:'SET KEY'  datai.ngo:__AtPrompt()  datai.ngo:__MenuTo()
+ *  $END$
+ */
 
 #include "common.ch"
 

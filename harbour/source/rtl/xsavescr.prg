@@ -99,7 +99,6 @@ STATIC s_cScrn
  *  $ONELINER$
  *      Save whole screen image and coordinate to an internal buffer
  *  $SYNTAX$
- *
  *      SAVE SCREEN
  *  $ARGUMENTS$
  *      none.
@@ -130,7 +129,7 @@ STATIC s_cScrn
  *      platforms.
  *  $FILES$
  *  $SEEALSO$
- *      comm.ngo:'RESTORE SCREEN' RESTSCREEN()  SAVESCREEN()
+ *      comm.ngo:'RESTORE SCREEN' datai.ngo:__XRESTSCREEN()  datai.ngo:__XSAVESCREEN()
  *  $END$
  */
 
@@ -149,10 +148,6 @@ PROCEDURE __XSAVESCREEN()
  *      Restore screen image and coordinate from an internal buffer
  *  $SYNTAX$
  *      __XRestScreen() --> NIL
- *
- *      or
- *
- *      RESTORE SCREEN
  *  $ARGUMENTS$
  *      none.
  *  $RETURNS$
@@ -184,9 +179,10 @@ PROCEDURE __XSAVESCREEN()
  *      platforms.
  *  $FILES$
  *  $SEEALSO$
- *      RESTSCREEN()  comm.ngo:'SAVE SCREEN'  SAVESCREEN()
+ *      datai.ngo:__XRESTSCREEN()  comm.ngo:'SAVE SCREEN'  datai.ngo:__XSAVESCREEN()
  *  $END$
  */
+
 /*  $DOC$
  *  $FUNCNAME$
  *      RESTORE SCREEN    
@@ -225,7 +221,7 @@ PROCEDURE __XSAVESCREEN()
  *      platforms.
  *  $FILES$
  *  $SEEALSO$
- *      RESTSCREEN()   comm.ngo:'SAVE SCREEN'  SAVESCREEN()
+ *      datai.ngo:__XRESTSCREEN()   comm.ngo:'SAVE SCREEN'  datai.ngo:__XSAVESCREEN()
  *  $END$
  */
 

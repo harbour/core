@@ -1298,98 +1298,93 @@ HARBOUR HB_AFILL( void )
  *  $ONELINER$
  *     Scan an array for a value or until a block returns true (.T.)
  *  $SYNTAX$
-       ASCAN(<aTarget>, <expSearch>,
-        [<nStart>], [<nCount>]) --> nStoppedAt
+ *     ASCAN(<aTarget>, <expSearch>,
+ *      [<nStart>], [<nCount>]) --> nStoppedAt
  *     
  *  $ARGUMENTS$
-       <aTarget> is the array to scan.
-
-       <expSearch> is either a simple value to scan for, or a code block.
-     If <expSearch> is a simple value it can be character, date, logical, or
-     numeric type.
-
-       <nStart> is the starting element of the scan.  If this argument is
-     not specified, the default starting position is one.
-
-       <nCount> is the number of elements to scan from the starting
-     position.  If this argument is not specified, all elements from the
-     starting element to the end of the array are scanned.
- *     
+ *     <aTarget>   Name of array to be scaned.
+ *
+ *     <expSearch> Expression to search for withing <aTarget>
+ *
+ *     <nStart>    Beggining subscript position at witch to start the
+ *     search.
+ *
+ *     <nCount> Number of elements to scan with <aTarget>.
+ *   position.  If this argument is not specified, all elements from the
+ *    
  *  $RETURNS$
-       ASCAN() returns a numeric value representing the array position of the
-     last element scanned.  If <expSearch> is a simple value, ASCAN() returns
-     the position of the first matching element, or zero if a match is not
-     found.  If <expSearch> is a code block, ASCAN() returns the position of
-     the element where the block returned true (.T.).
+ *     <nStoppedAt> A numeric value of subscript position where <expSearch>
+ *     was found.
  *     
  *  $DESCRIPTION$
-       ASCAN() is an array function that scans an array for a specified value
-     and operates like SEEK when searching for a simple value.  The
-     <expSearch> value is compared to the target array element beginning with
-     the leftmost character in the target element and proceeding until there
-     are no more characters left in <expSearch>.  If there is no match,
-     ASCAN() proceeds to the next element in the array.
-
-        Since ASCAN() uses the equal operator (=) for comparisons, it is
-     sensitive to the status of EXACT.  If EXACT is ON, the target array
-     element must be exactly equal to the result of <expSearch> to match.
-
-       If the <expSearch> argument is a code block, ASCAN() scans the <aTarget>
-     array executing the block for each element accessed.  As each element is
-     encountered, ASCAN() passes the element's value as an argument to the
-     code block, and then performs an EVAL() on the block.  The scanning
-     operation stops when the code block returns true (.T.), or ASCAN()
-     reaches the last element in the array.
+ *     ASCAN() is an array function that scans an array for a specified value
+ *   and operates like SEEK when searching for a simple value.  The
+ *   <expSearch> value is compared to the target array element beginning with
+ *   the leftmost character in the target element and proceeding until there
+ *   are no more characters left in <expSearch>.  If there is no match,
+ *   ASCAN() proceeds to the next element in the array.
+ *
+ *      Since ASCAN() uses the equal operator (=) for comparisons, it is
+ *   sensitive to the status of EXACT.  If EXACT is ON, the target array
+ *   element must be exactly equal to the result of <expSearch> to match.
+ *
+ *     If the <expSearch> argument is a code block, ASCAN() scans the <aTarget>
+ *   array executing the block for each element accessed.  As each element is
+ *   encountered, ASCAN() passes the element's value as an argument to the
+ *   code block, and then performs an EVAL() on the block.  The scanning
+ *   operation stops when the code block returns true (.T.), or ASCAN()
+ *   reaches the last element in the array.
  *     
  *  $EXAMPLES$
-     ^CFE  This example demonstrates scanning a three-element array using
-        simple values and a code block as search criteria.  The code block
-        criteria shows how to perform a case-insensitive search:
-
-        aArray := { "Tom", "Mary", "Sue" }
-        ? ASCAN(aArray, "Mary")             // Result: 2
-        ? ASCAN(aArray, "mary")             // Result: 0
-        //
-        ? ASCAN(aArray, { |x| UPPER(x) ;
-              == "MARY" })                  // Result: 2
-
-     ^CFE  This example demonstrates scanning for multiple instances of a
-        search argument after a match is found:
-
-        LOCAL aArray := { "Tom", "Mary", "Sue",;
-                           "Mary" }, nStart := 1
-        //
-        // Get last array element position
-        nAtEnd := LEN(aArray)
-        DO WHILE (nPos := ASCAN(aArray, "Mary", ;
-                     nStart)) > 0
-           ? nPos, aArray[nPos]
-           //
-           // Get new starting position and test
-           // boundary condition
-           IF (nStart := ++nPos) > nAtEnd
-              EXIT
-           ENDIF
-        ENDDO
-
-     ^CFE  This example scans a two dimensional array using a code block.
-        Note that the parameter aVal in the code block is an array:
-
-        LOCAL aArr:={}
-        CLS
-        AADD(aArr,{"one","two"})
-        AADD(aArr,{"three","four"})
-        AADD(aArr,{"five","six"})
-        ? ASCAN(aArr, {|aVal| aVal[2] == "four"})         // Returns 2
+ *   ^CFE  This example demonstrates scanning a three-element array using
+ *      simple values and a code block as search criteria.  The code block
+ *      criteria shows how to perform a case-insensitive search:
+ *
+ *      aArray := { "Tom", "Mary", "Sue" }
+ *      ? ASCAN(aArray, "Mary")             // Result: 2
+ *      ? ASCAN(aArray, "mary")             // Result: 0
+ *      //
+ *      ? ASCAN(aArray, { |x| UPPER(x) ;
+ *            == "MARY" })                  // Result: 2
+ *
+ *   ^CFE  This example demonstrates scanning for multiple instances of a
+ *      search argument after a match is found:
+ *
+ *      LOCAL aArray := { "Tom", "Mary", "Sue",;
+ *                         "Mary" }, nStart := 1
+ *      //
+ *      // Get last array element position
+ *      nAtEnd := LEN(aArray)
+ *      DO WHILE (nPos := ASCAN(aArray, "Mary", ;
+ *                   nStart)) > 0
+ *         ? nPos, aArray[nPos]
+ *         //
+ *         // Get new starting position and test
+ *         // boundary condition
+ *         IF (nStart := ++nPos) > nAtEnd
+ *            EXIT
+ *         ENDIF
+ *      ENDDO
+ *
+ *   ^CFE  This example scans a two dimensional array using a code block.
+ *      Note that the parameter aVal in the code block is an array:
+ *
+ *      LOCAL aArr:={}
+ *      CLS
+ *      AADD(aArr,{"one","two"})
+ *      AADD(aArr,{"three","four"})
+ *      AADD(aArr,{"five","six"})
+ *      ? ASCAN(aArr, {|aVal| aVal[2] == "four"})         // Returns 2
  *
  *  $TESTS$
  *
  *  $STATUS$
  *     R
  *  $COMPLIANCE$
- *
+ *     This functions is not CA-Clipper compatible. Clipper ASCAN() is
+ *     affected by the SET EXACT ON/OFF Condition
  *  $SEEALSO$
- *     EVAL() AEVAL()
+ *     ACOMP() AEVAL()
  *  $INCLUDE$
  *     
  *  $END$
@@ -1419,42 +1414,38 @@ HARBOUR HB_ASCAN( void )
  *  $CATEGORY$
  *     ARRAY
  *  $ONELINER$
- *     Execute a code block for each element in an array
+ *     Evaluated the subscript element of an array
  *  $SYNTAX$
-       AEVAL(<aArray>, <bBlock>,
-        [<nStart>], [<nCount>]) --> aArray
+ *     AEVAL(<aArray>, <bBlock>,
+ *      [<nStart>], [<nCount>]) --> aArray
  *     
  *  $ARGUMENTS$
-       <aArray> is the array to traverse.
-
-       <bBlock> is a code block to execute for each element encountered.
-
-       <nStart> is the starting element.  If not specified, the default is
-     element one.
-
-       <nCount> is the number of elements to process from <nStart>.  If not
-     specified, the default is all elements to the end of the array.
+ *     <aArray> Is the array to be evaluated.
+ *
+ *     <bBlock> Is a code block to evaluate for each element processed.
+ *
+ *     <nStart> The beggining array element to evaluate.
+ *
+ *     <nCount> The number of elements to process. 
  *     
  *  $RETURNS$
-       AEVAL() returns a reference to <aArray>.
+ *     AEVAL() returns an array pointer reference.
  *     
  *  $DESCRIPTION$
-       AEVAL() is an array function that evaluates a code block once for each
-     element of an array, passing the element value and the element index as
-     block parameters.  The return value of the block is ignored.  All
-     elements in <aArray> are processed unless either the <nStart> or the
-     <nCount> argument is specified.
-
-       AEVAL() makes no assumptions about the contents of the array elements it
-     is passing to the block.  It is assumed that the supplied block knows
-     what type of data will be in each element.
-
-       AEVAL() is similar to DBEVAL() which applies a block to each record of a
-     database file.  Like DBEVAL(), AEVAL() can be used as a primitive for
-     the construction of iteration commands for both simple and complex array
-     structures.
-
- *     
+ *     This function will evaluate and process the subscript elements
+ *     in <aArray>. A code block passed as <bBlock> defines the 
+ *     operation to be executed on each element of the array. All
+ *     elements in <aArray> will be evaluated unless specified by a
+ *     beggining subscript position in <nStart> for <nCount> elements.
+ *
+ *     Two parameters are passed to the code block <bBlock>. The
+ *     individual elements in an array are the first parameter and the
+ *     subscript position is the second.
+ *
+ *     AEVAL() does not replace a FOR...NEXT loop for processing arrays.
+ *     If a array is an autonomous unit,AEVAL() is appropriate.If the
+ *     array is to be altered or if elements are to be reevalueted, a
+ *     FOR...NEXT loop is more appropriate.
  *  $EXAMPLES$
  *
  *  $TESTS$
@@ -1464,7 +1455,7 @@ HARBOUR HB_ASCAN( void )
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     
+ *     EVAL() database.ngo:DBEVAL()
  *  $INCLUDE$
  *     
  *  $END$
@@ -1498,49 +1489,53 @@ HARBOUR HB_AEVAL( void )
  *  $ONELINER$
  *     Copy elements from one array to another
  *  $SYNTAX$
-       ACOPY(<aSource>, <aTarget>,
-        [<nStart>], [<nCount>], [<nTargetPos>]) --> aTarget
+ *     ACOPY(<aSource>, <aTarget>,
+ *      [<nStart>], [<nCount>], [<nTargetPos>]) --> aTarget
  *     
  *  $ARGUMENTS$
-       <aSource> is the array to copy elements from.
-
-       <aTarget> is the array to copy elements to.
-
-       <nStart> is the starting element position in the <aSource> array.
-     If not specified, the default value is one.
-
-       <nCount> is the number of elements to copy from the <aSource> array
-     beginning at the <nStart> position.  If <nCount> is not specified, all
-     elements in <aSource> beginning with the starting element are copied.
-
-       <nTargetPos> is the starting element position in the <aTarget> array
-     to receive elements from <aSource>.  If not specified, the default value
-     is one.
+ *     <aSource> is the array to copy elements from.
+ *
+ *     <aTarget> is the array to copy elements to.
+ *
+ *     <nStart>  is the beggining subscript position to copy from <aSource>
+ *
+ *     <nCount>  the number of subscript elements to copy from <aSource>
+ *
+ *     <nTargetPos> the starting subscript position in <aTarget> to copy
+ *  elements to
  *     
  *  $RETURNS$
- *     ACOPY() returns a reference to the target array, <aTarget>.
+ *     ACOPY() returns an array pointer reference 
  *  $DESCRIPTION$
-       ACOPY() is an array function that copies elements from the <aSource>
-     array to the <aTarget> array.  The <aTarget> array must already exist
-     and be large enough to hold the copied elements.  If the <aSource> array
-     has more elements, some elements will not be copied.
-
-       ACOPY() copies values of all data types including NIL and code blocks.
-     If an element of the <aSource> array is a subarray, the corresponding
-     element in the <aTarget> array will contain a reference to the subarray.
-     Thus, ACOPY() will not create a complete duplicate of a multidimensional
-     array.  To do this, use the ACLONE() function.
- *     
+ *     This function copies array elements from <aSource> to <aTarget>.
+ *     <nStart> is the beggining element to be copied from <aSource>;the
+ *   default is 1.
+ *     <nCount> is the number of element to be copied from <aSource>;the
+ *   default is the entire array.
+ *     <nTargetPos> is the subscript number in the target array,<aTarget>,
+ *   to witch array elements are to be copied;the default is 1
+ *     This function will copy all data types in <aSource> to <aTarget>.
+ *   If an array element in <aSource> is a pointer reference to another
+ *   array, that array pointer will be copied to <aTarget>; not all
+ *   subdimensions will be copied from one array to the next. This must
+ *   be accomplished via the ACLONE() function.
+ *
+ *    ^bNote
+ *     If array <aSource> is larger then <aTarget>, array elements will
+ *   start copying at <nTargetPos> and continue copying until the end of
+ *   array <aTarget> is reached. The ACOPY() function doesn't append
+ *   subscript positions to the target array, the size of the target
+ *   array <aTarget> remains constant.
  *  $EXAMPLES$
-     ^CFE  This example creates two arrays, each filled with a value.
-        The first two elements from the source array are then copied into the
-        target array:
-
-        LOCAL nCount := 2, nStart := 1, aOne, aTwo
-        aOne := { 1, 1, 1 }
-        aTwo := { 2, 2, 2 }
-        ACOPY(aOne, aTwo, nStart, nCount)
-        // Result: aTwo is now { 1, 1, 2 }
+ *   ^CFE  This example creates two arrays, each filled with a value.
+ *      The first two elements from the source array are then copied into the
+ *      target array:
+ *
+ *      LOCAL nCount := 2, nStart := 1, aOne, aTwo
+ *      aOne := { 1, 1, 1 }
+ *      aTwo := { 2, 2, 2 }
+ *      ACOPY(aOne, aTwo, nStart, nCount)
+ *      // Result: aTwo is now { 1, 1, 2 }
  *
  *  $TESTS$
  *
@@ -1588,30 +1583,28 @@ HARBOUR HB_ACOPY( void )
  *  $CATEGORY$
  *     ARRAY
  *  $ONELINER$
- *     Duplicate a nested or multidimensional array
+ *     Duplicate a  multidimensional array
  *  $SYNTAX$
  *     ACLONE(<aSource>) --> aDuplicate
  *  $ARGUMENTS$
- *     <aSource> is the array to duplicate.
+ *     <aSource> Name of the array to be cloned.
  *  $RETURNS$
- *     ACLONE() returns a duplicate of <aSource>.
+ *     ACLONE() A new array pointer reference complete with nested array
+ *   values.
  *  $DESCRIPTION$
-       ACLONE() is an array function that creates a complete duplicate of the
-     <aSource> array.  If <aSource> contains subarrays, ACLONE() creates
-     matching subarrays and fills them with copies of the values in the
-     <aSource> subarrays.  ACLONE() is similar to ACOPY(), but ACOPY() does
-     not duplicate nested arrays.
- *     
+ *     This function makes a complete copy of the array expressed as
+ *  <aSource> and return a cloned set of array values.This provides
+ *  a complete 
  *  $EXAMPLES$
-     ^CFE  This example creates an array then duplicates it using
-        ACLONE().  The first array is then altered, but the duplicate copy is
-        unaffected:
-
-        LOCAL aOne, aTwo
-        aOne := { 1, 2, 3 }        // Result: aOne is {1, 2, 3}
-        aTwo := ACLONE(aOne)       // Result: aTwo is {1, 2, 3}
-        aOne[1] := 99              // Result: aOne is {99, 2, 3}
-                                   // aTwo is still {1, 2, 3}
+ *   ^CFE  This example creates an array then duplicates it using
+ *      ACLONE().  The first array is then altered, but the duplicate copy is
+ *      unaffected:
+ *
+ *      LOCAL aOne, aTwo
+ *      aOne := { 1, 2, 3 }        // Result: aOne is {1, 2, 3}
+ *      aTwo := ACLONE(aOne)       // Result: aTwo is {1, 2, 3}
+ *      aOne[1] := 99              // Result: aOne is {99, 2, 3}
+ *                                 // aTwo is still {1, 2, 3}
  *
  *  $TESTS$
  *

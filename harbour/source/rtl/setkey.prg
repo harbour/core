@@ -99,6 +99,7 @@ static s_aSetKeys := {}       // holds array of hot-key id, code-block, activati
  *      HB_SETKEYSAVE()
  *  $END$
  */
+
 Function SetKey( anKey, bBlock, bCondition )
   local nFound, bReturn, aKey
 
@@ -169,6 +170,7 @@ return bReturn
  *      SETKEY()  HB_SETKEYSAVE()  HB_SETKEYCHECK()
  *  $END$
  */
+
 Function HB_SetKeyGet( nKey, bCondition )
   local nFound
 
@@ -222,6 +224,7 @@ return NIL //bReturn
  *     SETKEY()
  *  $END$
  */
+
 Function HB_SetKeySave( OldKeys )
   local aReturn := aClone( s_aSetKeys )
 
@@ -311,3 +314,53 @@ Function HB_SetKeyCheck( nKey, p1, p2, p3 )
   endif
 
 return .f.
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SET KEY
+ *  $CATEGORY$
+ *      Command
+ *  $ONELINER$
+ *      Assign an action block to a key
+ *  $SYNTAX$
+ *      SET KEY   <anKey> to p<bAction>] [when  <bCondition> ]  )
+ *  $ARGUMENTS$
+ *      <anKey> is either a numeric key value, or an array of such values
+ *      <bAction> is an optional code-block to be assigned
+ *      <bCondition> is an optional condition code-block
+ *  $RETURNS$
+ *
+ *  $DESCRIPTION$
+ *      The Set Key Command function is translated to the SetKey() function
+ *      witch returns the current code-block assigned to a
+ *      key when called with only the key value.  If the action block (and
+ *      optionally the condition block) are passed, the current block is
+ *      returned, and the new code block and condition block are stored.
+ *      A group of keys may be assigned the same code block/condition block
+ *      by using an array of key values in place on the first parameter.
+ *  $EXAMPLES$
+ *      local bOldF10 := setKey( K_F10, {|| Yahoo() } )
+ *      ... // some other processing
+ *      Set Key  K_F10 to  bOldF10)
+ *      ... // some other processing
+ *      bBlock := SetKey( K_SPACE )
+ *      if bBlock != NIL ...
+ *
+ *      // make F10 exit current get, but only if in a get - ignores other
+ *      // wait-states such as menus, achoices, etc...
+ *      SetKey( K_F10, {|| GetActive():State := GE_WRITE },;
+ *       {|| GetActive() != NIL } )
+ *  $TESTS$
+ *      None definable
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      SET KEY is mostly CA-Clipper compliant. The only difference is the
+ *      addition of the condition code-block parameter, allowing set-keys to
+ *      be conditionally turned off or on.  This condition-block cannot be
+ *      returned once set - see SetKeyGet()
+ *  $SEEALSO$
+ *      HB_SETKEYSAVE()
+ *  $END$
+ */
+
