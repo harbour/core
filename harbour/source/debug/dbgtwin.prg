@@ -82,8 +82,8 @@ return Self
 
 METHOD Hide() CLASS TDbWindow
 
-   RestScreen( ::nTop, ::nLeft, ::nBottom + If( ::lShadow, 1, 0 ),;
-               ::nRight + If( ::lShadow, 2, 0 ), ::cBackImage )
+   RestScreen( ::nTop, ::nLeft, ::nBottom + iif( ::lShadow, 1, 0 ),;
+               ::nRight + iif( ::lShadow, 2, 0 ), ::cBackImage )
    ::cBackImage := nil
 
 return nil
@@ -104,7 +104,7 @@ return nil
 
 METHOD SetCaption( cCaption ) CLASS TDbWindow
 
-   local nOldLen := If( ::cCaption != nil, Len( ::cCaption ), 0 )
+   local nOldLen := iif( ::cCaption != nil, Len( ::cCaption ), 0 )
 
    ::cCaption := cCaption
 
@@ -126,7 +126,7 @@ METHOD SetFocus( lOnOff ) CLASS TDbWindow
 
    ::lFocused := lOnOff
 
-   @ ::nTop, ::nLeft, ::nBottom, ::nRight BOX If( lOnOff, B_DOUBLE, B_SINGLE ) ;
+   @ ::nTop, ::nLeft, ::nBottom, ::nRight BOX iif( lOnOff, B_DOUBLE, B_SINGLE ) ;
       COLOR ::cColor
 
    DispOutAt( ::nTop, ::nLeft + 1, "[" + Chr( 254 ) + "]", ::cColor )
@@ -151,8 +151,8 @@ METHOD Show( lFocused ) CLASS TDbWindow
 
    DEFAULT lFocused TO .f.
 
-   ::cBackImage := SaveScreen( ::nTop, ::nLeft, ::nBottom + If( ::lShadow, 1, 0 ),;
-                              ::nRight + If( ::lShadow, 2, 0 ) )
+   ::cBackImage := SaveScreen( ::nTop, ::nLeft, ::nBottom + iif( ::lShadow, 1, 0 ),;
+                              ::nRight + iif( ::lShadow, 2, 0 ) )
    SetColor( ::cColor )
    Scroll( ::nTop, ::nLeft, ::nBottom, ::nRight )
    ::SetFocus( lFocused )

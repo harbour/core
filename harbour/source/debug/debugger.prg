@@ -211,7 +211,7 @@ METHOD BuildCommandWindow() CLASS TDebugger
    cCommand := Space( ::oWndCommand:nRight - ::oWndCommand:nLeft - 3 )
    // We don't use the GET command here to avoid the painting of the GET
    AAdd( GetList, TGet():New( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 3,;
-         { | u | If( PCount() > 0, cCommand := u, cCommand ) }, "cCommand" ) )
+         { | u | iif( PCount() > 0, cCommand := u, cCommand ) }, "cCommand" ) )
    ATail( GetList ):ColorSpec := Replicate( ::oWndCommand:cColor + ",", 5 )
    ::oGetListCommand := TGetList():New( GetList )
 
@@ -530,7 +530,7 @@ METHOD ShowCallStack() CLASS TDebugger
       ::oBrwStack:GoTopBlock := { || n := 1 }
       ::oBrwStack:GoBottomBlock := { || n := Len( ::aCallStack ) }
       ::oBrwStack:SkipBlock := { | nSkip, nPos | nPos := n,;
-                             n := If( nSkip > 0, Min( Len( ::aCallStack ), n + nSkip ),;
+                             n := iif( nSkip > 0, Min( Len( ::aCallStack ), n + nSkip ),;
                              Max( 1, n + nSkip ) ), n - nPos }
 
       ::oBrwStack:AddColumn( TBColumnNew( "",  { || PadC( ::aCallStack[ n ], 14 ) } ) )
@@ -572,22 +572,22 @@ METHOD ShowVars() CLASS TDebugger
       ::oBrwText:RefreshAll()
       ::oWndCode:SetFocus( .t. )
       ::oWndVars := TDbWindow():New( 1, 0, 5,;
-         MaxCol() - If( ::oWndStack != nil, ::oWndStack:nWidth(), 0 ),;
+         MaxCol() - iif( ::oWndStack != nil, ::oWndStack:nWidth(), 0 ),;
          "Monitor", "BG+/B" )
       ::oWndVars:Show( .f. )
       AAdd( ::aWindows, ::oWndVars )
-      ::oWndVars:bKeyPressed := { | nKey | If( nKey == K_DOWN, ( ::oBrwVars:Down(),;
-      ::oBrwVars:ForceStable() ), nil ), If( nKey == K_UP, ( ::oBrwVars:Up(),;
-      ::oBrwVars:ForceStable() ), nil ), If( nKey == K_ENTER, ::EditVar( n ), nil ) }
+      ::oWndVars:bKeyPressed := { | nKey | iif( nKey == K_DOWN, ( ::oBrwVars:Down(),;
+      ::oBrwVars:ForceStable() ), nil ), iif( nKey == K_UP, ( ::oBrwVars:Up(),;
+      ::oBrwVars:ForceStable() ), nil ), iif( nKey == K_ENTER, ::EditVar( n ), nil ) }
 
-      ::oBrwVars := TBrowseNew( 2, 1, 4, MaxCol() - If( ::oWndStack != nil,;
+      ::oBrwVars := TBrowseNew( 2, 1, 4, MaxCol() - iif( ::oWndStack != nil,;
                                ::oWndStack:nWidth(), 0 ) - 1 )
       ::oBrwVars:ColorSpec := "BG+/B, N/BG"
       ::LoadVars()
       ::oBrwVars:GoTopBlock := { || n := 1 }
       ::oBrwVars:GoBottomBlock := { || n := Len( ::aVars ) }
       ::oBrwVars:SkipBlock := { | nSkip, nPos | nPos := n,;
-                             n := If( nSkip > 0, Min( Len( ::aVars ), n + nSkip ),;
+                             n := iif( nSkip > 0, Min( Len( ::aVars ), n + nSkip ),;
                              Max( 1, n + nSkip ) ), n - nPos }
 
       nWidth := ::oWndVars:nWidth() - 1
@@ -639,7 +639,7 @@ METHOD ShowCode( cModuleName ) CLASS TDebugger
       ::oBrwText := TBrwText():New( ::oWndCode:nTop + 1, ::oWndCode:nLeft + 1,;
                    ::oWndCode:nBottom - 1, ::oWndCode:nRight - 1, ::cPrgName, "BG+/B, N/BG, W+/R, W+/BG" )
 
-      ::oBrwText:aColumns[ 1 ]:ColorBlock := { || If( AScan( ::aBreakPoints,;
+      ::oBrwText:aColumns[ 1 ]:ColorBlock := { || iif( AScan( ::aBreakPoints,;
          CompareLine( Self ) ) != 0, { 3, 4 }, { 1, 2 } ) }
 
       ::oBrwText:ForceStable()
@@ -682,7 +682,7 @@ METHOD InputBox( cMsg, uValue, bValid ) CLASS TDebugger
    oWndInput:Hide()
    Set( _SET_SCOREBOARD, lScoreBoard )
 
-return If( LastKey() != K_ESC, AllTrim( uTemp ), uValue )
+return iif( LastKey() != K_ESC, AllTrim( uTemp ), uValue )
 
 METHOD IsBreakPoint( nLine ) CLASS TDebugger
 
@@ -769,13 +769,13 @@ METHOD ViewSets() CLASS TDebugger
    oBrwSets:GoTopBlock := { || n := 1 }
    oBrwSets:GoBottomBlock := { || n := Len( aSets ) }
    oBrwSets:SkipBlock := { | nSkip, nPos | nPos := n,;
-                          n := If( nSkip > 0, Min( Len( aSets ), n + nSkip ),;
+                          n := iif( nSkip > 0, Min( Len( aSets ), n + nSkip ),;
                           Max( 1, n + nSkip ) ), n - nPos }
    oBrwSets:AddColumn( TBColumnNew( "", { || PadR( aSets[ n ], 12 ) } ) )
    oBrwSets:AddColumn( oCol := TBColumnNew( "",;
                        { || PadR( ValToStr( Set( n ) ), nWidth - 13 ) } ) )
    oBrwSets:Cargo := 1 // Actual highligthed row
-   oCol:ColorBlock := { || { If( n == oBrwSets:Cargo, 3, 1 ), 3 } }
+   oCol:ColorBlock := { || { iif( n == oBrwSets:Cargo, 3, 1 ), 3 } }
 
    oWndSets:bPainted    := { || oBrwSets:ForceStable() }
    oWndSets:bKeyPressed := { | nKey | SetsKeyPressed( nKey, oBrwSets, Len( aSets ),;
@@ -887,7 +887,7 @@ static function ValToStr( uVal )
            cResult := '"' + uVal + '"'
 
       case cType == "L"
-           cResult := If( uVal, ".T.", ".F." )
+           cResult := iif( uVal, ".T.", ".F." )
 
       case cType == "D"
            cResult := DToC( uVal )

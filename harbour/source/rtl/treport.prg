@@ -194,10 +194,10 @@ METHOD NEW(cFrmName,lPrinter,cAltFile,lNoConsole,bFor,bWhile,nNext,nRecord,;
 
    // Set output devices
 
-   lPrintOn   := IF( lPrinter,   SET( _SET_PRINTER, lPrinter ), ;
+   lPrintOn   := iif( lPrinter,   SET( _SET_PRINTER, lPrinter ), ;
                                        SET( _SET_PRINTER ) )
 
-   lConsoleOn := IF( lNoConsole, SET( _SET_CONSOLE, .F.),       ;
+   lConsoleOn := iif( lNoConsole, SET( _SET_CONSOLE, .F.),       ;
                            SET( _SET_CONSOLE) )
 
    IF lPrinter                   // To the printer
@@ -304,7 +304,7 @@ METHOD NEW(cFrmName,lPrinter,cAltFile,lNoConsole,bFor,bWhile,nNext,nRecord,;
 
          // Print the first line
          ::PrintIt( SPACE(::aReportData[RPT_LMARGIN]) + ;
-               IF(nGroup==1,NationMsg(_RFRM_SUBTOTAL),;
+               iif(nGroup==1,NationMsg(_RFRM_SUBTOTAL),;
                             NationMsg(_RFRM_SUBSUBTOTAL) ) )
 
          // Print the second line
@@ -592,7 +592,7 @@ METHOD ExecuteReport() CLASS TReportForm
          IF lGroupChanged .OR. MakeAStr(EVAL(::aReportData[RPT_GROUPS,nGroup,RGT_EXP]),;
              ::aReportData[RPT_GROUPS,nGroup,RGT_TYPE]) != ::aGroupTotals[nGroup]
 
-            AADD( aRecordHeader, IF(nGroup==1,NationMsg(_RFRM_SUBTOTAL),;
+            AADD( aRecordHeader, iif(nGroup==1,NationMsg(_RFRM_SUBTOTAL),;
                                               NationMsg(_RFRM_SUBSUBTOTAL)) )
             AADD( aRecordHeader, "" )
 
@@ -673,7 +673,7 @@ METHOD ExecuteReport() CLASS TReportForm
          ENDIF
 
 
-         AADD( aRecordHeader, IF(nGroup==1,"** ","* ") +;
+         AADD( aRecordHeader, iif(nGroup==1,"** ","* ") +;
                ::aReportData[RPT_GROUPS,nGroup,RGT_HEADER] + " " +;
                MakeAStr(EVAL(::aReportData[RPT_GROUPS,nGroup,RGT_EXP]), ;
                ::aReportData[RPT_GROUPS,nGroup,RGT_TYPE]) )
@@ -996,11 +996,11 @@ METHOD LoadReportFile(cFrmFile) CLASS TReportForm
 
       // Line spacing
       // Spacing is 1, 2, or 3
-      aReport[ RPT_SPACING ] := IF(SUBSTR(cParamsBuff, ;
+      aReport[ RPT_SPACING ] := iif(SUBSTR(cParamsBuff, ;
        DBL_SPACE_OFFSET, 1) $ "YyTt", 2, 1)
 
       // Summary report flag
-      aReport[ RPT_SUMMARY ] := IF(SUBSTR(cParamsBuff, ;
+      aReport[ RPT_SUMMARY ] := iif(SUBSTR(cParamsBuff, ;
        SUMMARY_RPT_OFFSET, 1) $ "YyTt", .T., .F.)
 
       // Process report eject and plain attributes option byte
@@ -1037,7 +1037,7 @@ METHOD LoadReportFile(cFrmFile) CLASS TReportForm
          nHeaderIndex--
       ENDDO
 
-      aReport[ RPT_HEADER ] := IIF( EMPTY( nHeaderIndex ) , {}, ;
+      aReport[ RPT_HEADER ] := iif( EMPTY( nHeaderIndex ) , {}, ;
                    ASIZE( aHeader, nHeaderIndex ) )
 
       // Process Groups
@@ -1062,7 +1062,7 @@ METHOD LoadReportFile(cFrmFile) CLASS TReportForm
          aReport[ RPT_GROUPS ][1][ RGT_HEADER ] := ::GetExpr( nPointer )
 
          // Page eject after group
-         aReport[ RPT_GROUPS ][1][ RGT_AEJECT ] := IF(SUBSTR(cParamsBuff, ;
+         aReport[ RPT_GROUPS ][1][ RGT_AEJECT ] := iif(SUBSTR(cParamsBuff, ;
          PE_OFFSET, 1) $ "YyTt", .T., .F.)
 
       ENDIF
@@ -1174,9 +1174,9 @@ STATIC FUNCTION Occurs( cSearch, cTarget )
 
 STATIC FUNCTION XMLCOUNT( cString, nLineLength, nTabSize, lWrap )
    // Set defaults if none specified
-   nLineLength := IF( nLineLength == NIL, 79, nLineLength )
-   nTabSize := IF( nTabSize == NIL, 4, nTabSize )
-   lWrap := IF( lWrap == NIL, .T., .F. )
+   nLineLength := iif( nLineLength == NIL, 79, nLineLength )
+   nTabSize := iif( nTabSize == NIL, 4, nTabSize )
+   lWrap := iif( lWrap == NIL, .T., .F. )
 
    IF nTabSize >= nLineLength
       nTabSize := nLineLength - 1
@@ -1192,10 +1192,10 @@ STATIC FUNCTION XMLCOUNT( cString, nLineLength, nTabSize, lWrap )
 STATIC FUNCTION XMEMOLINE( cString, nLineLength, nLineNumber, nTabSize, lWrap )
 
    // Set defaults if none specified
-   nLineLength := IF( nLineLength == NIL, 79, nLineLength )
-   nLineNumber := IF( nLineNumber == NIL, 1, nLineNumber )
-   nTabSize := IF( nTabSize == NIL, 4, nTabSize )
-   lWrap := IF( lWrap == NIL, .T., lWrap )
+   nLineLength := iif( nLineLength == NIL, 79, nLineLength )
+   nLineNumber := iif( nLineNumber == NIL, 1, nLineNumber )
+   nTabSize := iif( nTabSize == NIL, 4, nTabSize )
+   lWrap := iif( lWrap == NIL, .T., lWrap )
 
    IF nTabSize >= nLineLength
       nTabSize := nLineLength - 1
@@ -1259,7 +1259,7 @@ METHOD GetColumn( cFieldsBuffer, nOffset ) CLASS TReportForm
                 FIELD_WIDTH_OFFSET, 2))
 
    // Total column?
-   aColumn[ RCT_TOTAL ] := IF(SUBSTR(cFieldsBuffer, nOffset + ;
+   aColumn[ RCT_TOTAL ] := iif(SUBSTR(cFieldsBuffer, nOffset + ;
     FIELD_TOTALS_OFFSET, 1) $ "YyTt", .T., .F.)
 
    // Decimals width
@@ -1358,7 +1358,7 @@ STATIC FUNCTION MakeAStr( uVar, cType )
       cString := DTOC( uVar )
 
    CASE UPPER(cType) == "L"
-      cString := IF( uVar, "T", "F" )
+      cString := iif( uVar, "T", "F" )
 
    CASE UPPER(cType) == "N"
       cString := STR( uVar )

@@ -1,3 +1,17 @@
+2000-06-25 14:53 UTC+0100 Victor Szakats <info@szelvesz.hu>
+
+   * source/rtl/tget.prg
+     ! Fixed to not depend on SET EXACT.
+
+   * source/rtl/treport.prg
+   * source/rtl/tbrowse.prg
+   * source/debug/dbgtwin.prg
+   * source/debug/debugger.prg
+     * if() -> iif()
+
+   * source/rtl/tclass.prg
+     % Optimized, formatted.
+
 2000-06-25 14:25 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
    * tests/onidle.prg

@@ -162,7 +162,7 @@ STATIC PROCEDURE Create()
       hClass := __clsNew( ::cName, nLenDatas )
    ELSE                                         // Multi inheritance
       FOR n := 1 TO nLen
-          ahSuper[ n ] := __clsInstSuper( Upper( ::acSuper[ n ] ) ) // Super handle available
+         ahSuper[ n ] := __clsInstSuper( Upper( ::acSuper[ n ] ) ) // Super handle available
       NEXT
 
       hClass := __clsNew( ::cName, nLenDatas + nlen, ahSuper )
@@ -171,8 +171,8 @@ STATIC PROCEDURE Create()
       nClassBegin  += __cls_CntClsData( ahSuper[ 1 ] )     // Get offset for new ClassData
 
       FOR n := 2 TO nLen
-          nDataBegin   += __cls_CntData( ahSuper[ n ] )        // Get offset for new DATAs
-          nClassBegin  += __cls_CntClsData( ahSuper[ n ] )     // Get offset for new ClassData
+         nDataBegin   += __cls_CntData( ahSuper[ n ] )        // Get offset for new DATAs
+         nClassBegin  += __cls_CntClsData( ahSuper[ n ] )     // Get offset for new ClassData
       NEXT
 
       __clsAddMsg( hClass, Upper( ::acSuper[ 1 ] ), ++nDataBegin, HB_OO_MSG_SUPER, ahSuper[ 1 ], HB_OO_CLSTP_CLASS + 1 )
@@ -181,7 +181,7 @@ STATIC PROCEDURE Create()
       __clsAddMsg( hClass, "__SUPER"              , nDataBegin, HB_OO_MSG_SUPER, ahSuper[ 1 ], 1 )
 
       FOR n := 2 TO nLen
-          __clsAddMsg( hClass, Upper( ::acSuper[ n ] ), ++nDataBegin, HB_OO_MSG_SUPER, ahSuper[ n ], HB_OO_CLSTP_CLASS + 1 )
+         __clsAddMsg( hClass, Upper( ::acSuper[ n ] ), ++nDataBegin, HB_OO_MSG_SUPER, ahSuper[ n ], HB_OO_CLSTP_CLASS + 1 )
       NEXT
 
    ENDIF
@@ -242,13 +242,13 @@ STATIC PROCEDURE AddData( cData, xInit, cType, nScope )  /* xInit is initializer
    LOCAL Self := QSelf()
 
    // Default Init for Logical and numeric
-   if (cType!=NIL .AND. xInit==NIL)
-    if ( Upper(substr(cType,1,1)) == "L" )
-     xInit := .F.
-    elseif Upper(substr(cType,1,1)) == "N"
-     xInit := 0
-    endif
-   endif
+   IF cType != NIL .AND. xInit == NIL
+      IF Upper( Left( cType, 1 ) ) == "L"
+         xInit := .F.
+      ELSEIF Upper( Left( cType, 1 ) ) == "N"
+         xInit := 0
+      ENDIF
+   ENDIF
 
    AAdd( ::aDatas, { cData, xInit, cType, nScope } )
 
@@ -285,14 +285,13 @@ STATIC PROCEDURE AddClassData( cData, xInit, cType, nScope )
    LOCAL Self := QSelf()
 
    // Default Init for Logical and numeric
-   if (cType!=NIL .AND. xInit==NIL)
-    if ( Upper(Substr(cType,1,1)) == "L" )
-     xInit := .F.
-    elseif Upper(Substr(cType,1,1)) == "N"
-     xInit := 0
-    endif
-
-   endif
+   IF cType != NIL .AND. xInit == NIL
+      IF Upper( Left( cType, 1 ) ) == "L"
+         xInit := .F.
+      ELSEIF Upper( Left( cType, 1 ) ) == "N"
+         xInit := 0
+      ENDIF
+   ENDIF
 
    AAdd( ::aClsDatas, { cData, xInit, cType, nScope } )
 

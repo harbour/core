@@ -373,7 +373,7 @@ METHOD SetFocus() CLASS TGet
    endif
 
    if ::type == "D"
-      ::BadDate := ( Dtoc( Ctod( ::buffer ) ) != ::buffer )
+      ::BadDate := !( Dtoc( Ctod( ::buffer ) ) == ::buffer )
    else
       ::BadDate := .f.
    endif
@@ -501,12 +501,12 @@ METHOD overstrike( cChar ) CLASS TGet
    endif
 
    ::buffer := SubStr( ::buffer, 1, ::Pos - 1 ) + cChar + SubStr( ::buffer, ::Pos + 1 )
-   ::Changed := ( ::unTransform() != ::Original )
+   ::Changed := !( ::unTransform() == ::Original )
    ::Assign()
    ::Right(.f.)
 
    if ::type == "D"
-      ::BadDate := ( Dtoc( Ctod( ::buffer ) ) != ::buffer )
+      ::BadDate := !( Dtoc( Ctod( ::buffer ) ) == ::buffer )
    else
       ::BadDate := .f.
    endif
@@ -568,12 +568,12 @@ METHOD Insert( cChar ) CLASS TGet
       nPos++
    enddo
 
-   ::Changed := ( ::unTransform() != ::Original )
+   ::Changed := !( ::unTransform() == ::Original )
    ::Assign()
    ::Right(.f.)
 
    if ::type == "D"
-      ::BadDate := ( Dtoc( Ctod( ::buffer ) ) != ::buffer )
+      ::BadDate := !( Dtoc( Ctod( ::buffer ) ) == ::buffer )
    else
       ::BadDate := .f.
    endif
@@ -684,7 +684,7 @@ METHOD WordLeft() CLASS TGet
          do while nPos > 0 .and. SubStr( ::buffer, nPos, 1 ) == " "
             nPos--
          Enddo
-         do while nPos > 0 .and. SubStr( ::buffer, nPos, 1 ) != " "
+         do while nPos > 0 .and. !( SubStr( ::buffer, nPos, 1 ) == " " )
             nPos--
          Enddo
          if nPos > 0
@@ -856,7 +856,7 @@ METHOD Input( cChar ) CLASS TGet
             cChar := ""
          endif
       case cPic == "#"
-         if !IsDigit( cChar ) .and. cChar != " " .and.  !( cChar$"+-" )
+         if !IsDigit( cChar ) .and. !( cChar == " " ) .and. !( cChar$"+-" )
             cChar := ""
          endif
       end case
@@ -888,7 +888,7 @@ METHOD PutMask( xValue, lEdit ) CLASS TGet
       nLen := Len( cBuffer )
       for nFor := 1 to nLen
          cChar := SubStr( ::cPicMask, nFor, 1 )
-         if cChar $ ",." .and. SubStr( cBuffer, nFor, 1 ) != cChar
+         if cChar $ ",." .and. !( SubStr( cBuffer, nFor, 1 ) == cChar )
             cBuffer := SubStr( cBuffer, 1, nFor - 1 ) + cChar + SubStr( cBuffer, nFor + 1 )
          endif
       next
@@ -1031,8 +1031,8 @@ METHOD DelWordLeft() CLASS TGet
       return Self
    endif
 
-   if SubStr( ::buffer, ::Pos, 1 ) != " "
-      if  SubStr( ::buffer, ::Pos - 1 , 1 ) == " "
+   if !( SubStr( ::buffer, ::Pos, 1 ) == " " )
+      if SubStr( ::buffer, ::Pos - 1 , 1 ) == " "
          ::BackSpace(.f.)
       else
          ::WordRight()
@@ -1044,7 +1044,7 @@ METHOD DelWordLeft() CLASS TGet
       ::Delete(.f.)
    endif
 
-   do while ::Pos > 1 .and. SubStr( ::buffer, ::Pos - 1, 1 ) != " "
+   do while ::Pos > 1 .and. !( SubStr( ::buffer, ::Pos - 1, 1 ) == " " )
       ::BackSpace(.f.)
    Enddo
 
@@ -1068,7 +1068,7 @@ METHOD DelWordRight() CLASS TGet
       return Self
    endif
 
-   do while ::Pos <= ::nMaxLen .and. SubStr( ::buffer, ::Pos, 1 ) != " "
+   do while ::Pos <= ::nMaxLen .and. !( SubStr( ::buffer, ::Pos, 1 ) == " " )
       ::Delete(.f.)
    Enddo
 
