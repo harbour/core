@@ -1,3 +1,12 @@
+20000512-13:31 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+
+   + source/rtl/stringsx.c
+     + added to rtl since teditor.prg needs StrToken()
+   * source/rtl/Makefile
+     + added stringsx.c to list of needed files
+   * source/rtl/teditor.prg
+     % Text2Array() is twice as fast and uses A LOT less memory.
+
 20000510-22:01 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
 
    * source/vm/fm.c

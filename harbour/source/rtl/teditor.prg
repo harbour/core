@@ -110,23 +110,25 @@ return Self
 // Converts a string to an array of strings splitting input string at EOL boundaries
 STATIC function Text2Array(cString)
 
-   LOCAL cLine, i, nLastEOL, aArray, cEOL, nEOLLen
+   LOCAL cLine, nTokNum, aArray, cEOL, nEOLLen, nRetLen, ncSLen
 
-   nLastEOL := 1
+   nTokNum := 1
    aArray := {}
 
    cEOL := HB_OSNewLine()
    nEOLLen := Len(cEOL)
 
-   while nLastEOL > 0
-      cLine := Left(cString, (nLastEOL := At(cEOL, cString)) - 1)
-      if nLastEOL > 0
-         AAdd(aArray, StrTran(cLine, Chr(9), " "))
-         cString := SubStr(cString, nLastEOL + nEOLLen)
+   nRetLen := 0
+   ncSLen := Len(cString)
+
+   while nRetLen < ncSLen
+      cLine := StrToken(cString, nTokNum++, cEOL)
+      nRetLen += Len(cLine) + iif(nEOLLen > 1, nEOLLen - 1, 1)
+
+      if nEOLLen > 1
+         AAdd(aArray, StrTran(Right(cLine, Len(cLine) - (nEOLLen - 1)), Chr(9), " "))
       else
-         if !Empty(cString)
-            AAdd(aArray, cString)
-         endif
+         AAdd(aArray, StrTran(cLine, Chr(9), " "))
       endif
    enddo
 
@@ -228,7 +230,7 @@ METHOD GetLine(nRow) CLASS TEditor
 return Self
 
 
-// Redraws a screenfull of text (or part of it if nFromRow is not nil)
+// Redraws a screenfull of text
 METHOD RefreshWindow() CLASS TEditor
 
    LOCAL i, nOCol, nORow
