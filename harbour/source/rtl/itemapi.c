@@ -68,12 +68,6 @@
 #include "dates.h"
 #include "set.h"
 
-#if defined( __WATCOMC__ ) && defined( __386__ )
-/* NOTE: memcpy/memset can work with data block larger then 64kB */
-#define  hb_xmemcpy  memcpy
-#define  hb_xmemset  memset
-#endif
-
 BOOL hb_evalNew( PEVALINFO pEvalInfo, PHB_ITEM pItem )
 {
    BOOL bResult;

@@ -286,6 +286,12 @@ extern ULONG    hb_xsize( void * pMem );                  /* returns the size of
 extern void *   hb_xmemcpy( void * pDestArg, void * pSourceArg, ULONG ulLen ); /* copy more than memcpy() can */
 extern void *   hb_xmemset( void * pDestArg, int iFill, ULONG ulLen ); /* set more than memset() can */
 
+#if defined( __WATCOMC__ ) && defined( __386__ )
+/* NOTE: memcpy/memset can work with data block larger then 64kB */
+#define  hb_xmemcpy  memcpy
+#define  hb_xmemset  memset
+#endif
+
 /* array management */
 extern BOOL     hb_arrayError( PHB_ITEM pArray, ULONG ulIndex, BOOL bAssign ); /* Checks if the passed parameters are valid, launches runtim error if needed */
 extern BOOL     hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ); /* creates a new array */

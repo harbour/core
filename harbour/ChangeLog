@@ -1,3 +1,19 @@
+19991002-22:45 GMT+1 Victor Szel <info@szelvesz.hu>
+  * include/extend.h
+    source/rtl/strings.c
+    source/rtl/itemapi.c
+    source/rtl/hvm.c
+    % xmem*() function redefinition for Watcom has been moved in one central
+      place to extend.h.
+  * tests/working/extend2.c
+    ! Now includes caundoc.api explicitly.
+  * source/vm/hvm.c
+    include/ctoharb.h
+    + local functions made static, prototypes moved to HVM.C
+    + grouped opcodes and opcode functions by category.
+    ! Indentation completely fixed.
+    ! Prototype of one non-existing function removed.
+
 19991002-18:10 GMT+3 Alexander Kresin
   * source/hbpp/hbpp.c
     * Fixed some bugs, reported by Victor Szel, Ryszard Glab, Jose Lalin and 
@@ -133,7 +149,7 @@ NOTE: You have to recompile all PRG sources!
 
   * source/rtl/filesys.c
     ! BIN2I(), BIN2L() made Clipper compatible, for strings shorter than
-      the expected length. One test call still fails, probably because of 
+      the expected length. One test call still fails, probably because of
       different int size on 32 bit platforms.
   * include/hbdefs.h
     ! MKINT() casted to long instead of int.
@@ -171,15 +187,15 @@ NOTE: You have to recompile all PRG sources!
       ( Please add these files to the non-GNU make files )
 
   + source/rtl/fieldbl.prg
-    + FIELDBLOCK() and FIELDWBLOCK() functions added. They are not 100% 
-      compatible in error situations, since the method used is different than 
+    + FIELDBLOCK() and FIELDWBLOCK() functions added. They are not 100%
+      compatible in error situations, since the method used is different than
       in Clipper. They are also slower.
 
   + source/rtl/setfunc.prg
     + __SetFunction() added
 
   + source/rtl/text.prg
-    + __TextSave(), __TextRestore() added. Note that the TEXT feature is not 
+    + __TextSave(), __TextRestore() added. Note that the TEXT feature is not
       yet working, since the PP should make some special processing not yet
       implemented.
 
@@ -187,12 +203,12 @@ NOTE: You have to recompile all PRG sources!
   * include/external.ch
     + Added HB_OSNEWLINE
   * source/compiler/genc.c
-    + It's now possible to request the code generator not to put 
+    + It's now possible to request the code generator not to put
       comments in the C code. This and some other small format changes
       can result in about 30% smaller generated source code size.
-      This feature is currently permanently turned off, I will add switch for 
+      This feature is currently permanently turned off, I will add switch for
       it soon.
-    + If an incorrect pcode is encountered it's now put in the 
+    + If an incorrect pcode is encountered it's now put in the
       generated C file, with a proper comment which says that it's a
       invalid opcode. BTW, ideally it should exit on such errors.
     + The Harbour Compiler version is now included in the generated pcode as
@@ -247,10 +263,10 @@ NOTE: You have to recompile all PRG sources!
     ! hb_gtSetMode() now returns an error code if the low-level API call fails.
     ! hb_gt_SetMode() now signals error in Windows, TODO added for DOS.
   * source/rtl/memvarbl.prg
-    + MEMVARBLOCK() - Added a STRICT_COMPATBILITY code branch, where the 
+    + MEMVARBLOCK() - Added a STRICT_COMPATBILITY code branch, where the
       returned codeblock will behave exactly like Clipper, so that it will
-      not assign the passed value to the memvar if it's a NIL. 
-      The NG doesn't suggest this behaviour but that's how it works anyway. 
+      not assign the passed value to the memvar if it's a NIL.
+      The NG doesn't suggest this behaviour but that's how it works anyway.
       Same goes for the FIELD*BLOCK() functions.
   * harbour.b31
     ! Some fixes reported by Jose Lalin.

@@ -59,12 +59,6 @@
 #include "errorapi.h"
 #include "set.h"
 
-#if defined( __WATCOMC__ ) && defined( __386__ )
-/* NOTE: memcpy/memset can work with data block larger then 64kB */
-#define  hb_xmemcpy  memcpy
-#define  hb_xmemset  memset
-#endif
-
 #define HB_ISSPACE( c ) ( ( c ) == HB_CHAR_HT || \
                           ( c ) == HB_CHAR_LF || \
                           ( c ) == HB_CHAR_CR || \
