@@ -23,7 +23,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS for A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -54,9 +54,9 @@
 
 FUNCTION TClass()
 
-   STATIC s_hClass := NIL
+   STATIC s_hClass := nil
 
-   IF s_hClass == NIL
+   if s_hClass == nil
       s_hClass := __clsNew( "TCLASS", 10 )
 
       __clsAddMsg( s_hClass, "New",          @New(),          MET_METHOD )
@@ -90,15 +90,15 @@ FUNCTION TClass()
       __clsAddMsg( s_hClass, "_uInit",     9, MET_DATA )
       __clsAddMsg( s_hClass, "cType",     10, MET_DATA )
       __clsAddMsg( s_hClass, "_cType",    10, MET_DATA )
-   ENDIF
+   endif
 
-   RETURN __clsInst( s_hClass )
+   return __clsInst( s_hClass )
 
 //----------------------------------------------------------------------------//
 
-STATIC FUNCTION New( cClassName, cSuper )
+static function New( cClassName, cSuper )
 
-   LOCAL Self := QSelf()
+   local Self := QSelf()
 
    ::cName     := Upper( cClassName )
    ::aDatas    := {}
@@ -106,30 +106,30 @@ STATIC FUNCTION New( cClassName, cSuper )
    ::aClsDatas := {}
    ::aInlines  := {}
    ::aVirtuals := {}
-   IF ISCHARACTER( cSuper )
+   if ISCHARACTER( cSuper )
       ::cSuper := cSuper
-   ENDIF
+   endif
 
-   RETURN Self
+   return Self
 
 //----------------------------------------------------------------------------//
 
-STATIC FUNCTION Create()
+static function Create()
 
-   LOCAL Self := QSelf()
-   LOCAL n
-   LOCAL nLen
-   LOCAL nLenDatas   := Len( ::aDatas )
-   LOCAL nDataBegin  := 0
-   LOCAL nClassBegin := 0
-   LOCAL hClass
-   LOCAL hSuper
-   LOCAL ahSuper := {}
+   local Self := QSelf()
+   local n
+   local nLen
+   local nLenDatas   := Len( ::aDatas )
+   local nDataBegin  := 0
+   local nClassBegin := 0
+   local hClass
+   local hSuper
+   local ahSuper := {}
 
-   IF ::cSuper == NIL
+   if ::cSuper == nil
       hClass := __clsNew( ::cName, nLenDatas )
 
-   ELSE                                         // Single inheritance
+   else                                         // Single inheritance
       hSuper := __clsInstSuper( Upper( ::cSuper ) )
       hClass := __clsNew( ::cName, nLenDatas, hSuper )
                                                 // Add class casts
@@ -138,121 +138,128 @@ STATIC FUNCTION Create()
 
       nDataBegin := __cls_CntData( hSuper )          // Get offset for new DATAs
       nClassBegin := __cls_CntClsData( hSuper )      // Get offset for new ClassData
-   ENDIF
+   endif
 
    ::hClass := hClass
 
-   FOR n := 1 TO nLenDatas
+   for n := 1 to nLenDatas
       __clsAddMsg( hClass, ::aDatas[ n ][ DATA_SYMBOL ], n + nDataBegin, MET_DATA, ;
                            ::aDatas[ n ][ DATA_VALUE ] )
-      __clsAddMsg( hClass, "_" + ::aDatas[ n ][ DATA_SYMBOL ], n + nDataBegin, MET_DATA )
-   NEXT
+      __clsAddMsg( hClass, "_" + ::aDatas[ n ][ DATA_SYMBOL ], n + nDataBegin,;
+                   MET_DATA )
+   next
 
    nLen := Len( ::aMethods )
-   FOR n := 1 TO nLen
+   for n := 1 to nLen
       __clsAddMsg( hClass, ::aMethods[ n ][ 1 ], ::aMethods[ n ][ 2 ], MET_METHOD )
-   NEXT
+   next
 
    nLen := Len( ::aClsDatas )
-   FOR n := 1 TO nLen
-      __clsAddMsg( hClass, ::aClsDatas[ n ], n + nClassBegin, MET_CLASSDATA )
-      __clsAddMsg( hClass, "_" + ::aClsDatas[ n ], n + nClassBegin, MET_CLASSDATA )
-   NEXT
+   for n := 1 to nLen
+      __clsAddMsg( hClass, ::aClsDatas[ n ][ CLASSDATA_SYMBOL ], n + nClassBegin,;
+                   MET_CLASSDATA, ::aClsDatas[ n ][ CLASSDATA_VALUE ] )
+      __clsAddMsg( hClass, "_" + ::aClsDatas[ n ][ CLASSDATA_SYMBOL ],;
+                   n + nClassBegin, MET_CLASSDATA )
+   next
 
    nLen := Len( ::aInlines )
-   FOR n := 1 TO nLen
+   for n := 1 to nLen
       __clsAddMsg( hClass, ::aInlines[ n ][ 1 ], ::aInlines[ n ][ 2 ],;
                 MET_INLINE )
-   NEXT
+   next
 //    __clsAddMsg( hClass, Upper( ::cName ), {|self|self}, MET_INLINE ) // Useful?
 
    nLen := Len( ::aVirtuals )
-   FOR n := 1 TO nLen
+   for n := 1 to nLen
       __clsAddMsg( hClass, ::aVirtuals[ n ], n, MET_VIRTUAL )
-   NEXT
+   next
 
-   RETURN NIL
-
-//----------------------------------------------------------------------------//
-
-STATIC FUNCTION Instance()
-
-   LOCAL Self := QSelf()
-
-   RETURN __clsInst( ::hClass )
+return nil
 
 //----------------------------------------------------------------------------//
 
-STATIC FUNCTION AddData( cData, xInit )         /* xInit is initializer     */
+static function Instance()
 
-   LOCAL Self := QSelf()
+   local Self := QSelf()
 
-   IF ::uInit != NIL
+return __clsInst( ::hClass )
+
+//----------------------------------------------------------------------------//
+
+static function AddData( cData, xInit )         /* xInit is initializer     */
+
+   local Self := QSelf()
+
+   if ::uInit != nil
       xInit := ::uInit
-   ENDIF
+   endif
 
-   aAdd( ::aDatas, { cData, xInit } )
+   AAdd( ::aDatas, { cData, xInit } )
 
-   RETURN NIL
-
-//----------------------------------------------------------------------------//
-
-STATIC FUNCTION AddClassData( cData )
-
-   LOCAL Self := QSelf()
-
-   aAdd( ::aClsDatas, cData )
-
-   RETURN NIL
+return nil
 
 //----------------------------------------------------------------------------//
 
-STATIC FUNCTION AddInline( cMethod, bCode )
+static function AddClassData( cData, xInit )
 
-   LOCAL Self := QSelf()
+   local Self := QSelf()
 
-   aAdd( ::aInlines, { cMethod, bCode } )
+   if ::uInit != nil
+      xInit := ::uInit
+   endif
 
-   RETURN NIL
+   AAdd( ::aClsDatas, { cData, xInit } )
 
-//----------------------------------------------------------------------------//
-
-STATIC FUNCTION AddMethod( cMethod, nFuncPtr )
-
-   LOCAL Self := QSelf()
-
-   aAdd( ::aMethods, { cMethod, nFuncPtr } )
-
-   RETURN NIL
+return nil
 
 //----------------------------------------------------------------------------//
 
-STATIC FUNCTION AddVirtual( cMethod )
+static function AddInline( cMethod, bCode )
 
-   LOCAL Self := QSelf()
+   local Self := QSelf()
 
-   aAdd( ::aVirtuals, cMethod )
+   AAdd( ::aInlines, { cMethod, bCode } )
 
-   RETURN NIL
+return nil
 
 //----------------------------------------------------------------------------//
 
-STATIC FUNCTION SetInit( uValue )
+static function AddMethod( cMethod, nFuncPtr )
 
-   LOCAL Self := QSelf()
+   local Self := QSelf()
+
+   AAdd( ::aMethods, { cMethod, nFuncPtr } )
+
+return nil
+
+//----------------------------------------------------------------------------//
+
+static function AddVirtual( cMethod )
+
+   local Self := QSelf()
+
+   AAdd( ::aVirtuals, cMethod )
+
+return nil
+
+//----------------------------------------------------------------------------//
+
+static function SetInit( uValue )
+
+   local Self := QSelf()
 
    ::uInit := uValue
 
-   RETURN NIL
+return nil
 
 //----------------------------------------------------------------------------//
 
-STATIC FUNCTION SetType( cType )
+static function SetType( cType )
 
-   LOCAL Self := QSelf()
+   local Self := QSelf()
 
    ::cType := cType
 
-   RETURN NIL
+return nil
 
 //----------------------------------------------------------------------------//

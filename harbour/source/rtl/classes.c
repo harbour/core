@@ -429,11 +429,20 @@ HARBOUR HB___CLSADDMSG( void )
               if( pMessage->pSymbol->szName[ 0 ] == '_' )
                  pNewMeth->pFunction = hb___msgSetClsData;
               else
+              {
+                 PHB_ITEM pInit = hb_param( 5, IT_ANY );
+
                  pNewMeth->pFunction = hb___msgGetClsData;
+
+                 if( pInit && !IS_NIL( pInit )) /* Initializer found        */
+                 {
+                    pNewMeth->pInitValue = hb_itemNew( NULL );
+                    hb_itemCopy( pNewMeth->pInitValue, pInit );
+                 }
+              }
               break;
 
          case MET_INLINE:
-
               pNewMeth->uiData = hb_arrayLen( pClass->pInlines ) + 1;
               hb_arraySize( pClass->pInlines, pNewMeth->uiData );
               hb_arraySet(  pClass->pInlines, pNewMeth->uiData,
@@ -600,7 +609,12 @@ HARBOUR HB___CLSINST( void )
 
       for( uiAt = 0; uiAt < uiLimit; uiAt++, pMeth++ )
          if( pMeth->pInitValue )
-            hb_itemArrayPut( &stack.Return, pMeth->uiData, pMeth->pInitValue );
+         {
+            if( pMeth->pFunction != hb___msgGetClsData ) /* is a DATA */
+               hb_itemArrayPut( &stack.Return, pMeth->uiData, pMeth->pInitValue );
+            else  /* it is a ClassData */
+               hb_arraySet( pClass->pClassDatas, pMeth->uiData, pMeth->pInitValue );
+         }
    }
 }
 

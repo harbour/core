@@ -38,14 +38,17 @@
 #ifndef _HBOO_CH
 #define _HBOO_CH
 
-#define MET_METHOD      0
-#define MET_DATA        1
-#define MET_CLASSDATA   2
-#define MET_INLINE      3
-#define MET_VIRTUAL     4
-#define MET_SUPER       5
+#define MET_METHOD        0
+#define MET_DATA          1
+#define MET_CLASSDATA     2
+#define MET_INLINE        3
+#define MET_VIRTUAL       4
+#define MET_SUPER         5
 
-#define DATA_SYMBOL     1
-#define DATA_VALUE      2
+#define DATA_SYMBOL       1
+#define DATA_VALUE        2
+
+#define CLASSDATA_SYMBOL  1
+#define CLASSDATA_VALUE   2
 
 #endif /* _HBOO_CH */
