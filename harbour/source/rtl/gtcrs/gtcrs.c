@@ -789,7 +789,7 @@ USHORT hb_gt_VertLine( SHORT Col, SHORT Top, SHORT Bottom, BYTE byChar, BYTE byA
       byChar = ACS_VLINE;
 
    mvvline( Row, Col, byChar | A_ALTCHARSET | s_attribmap_table[ byAttr ],
-            Bottom - uRow + 1 );
+            Bottom - Row + 1 );
 
    return 0;
 }
