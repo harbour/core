@@ -93,10 +93,10 @@ METHOD New() CLASS TDbMenu
    ::nBottom      := 0
    ::nRight       := 0
    ::aItems       := {}
-   ::cClrHilite   := "W+/N"
-   ::cClrHotFocus := "GR+/N"
-   ::cClrHotKey   := "GR+/BG"
-   ::cClrPopup    := "N/BG"
+   ::cClrPopup    := __DbgColors()[  8 ]
+   ::cClrHotKey   := __DbgColors()[ 10 ]
+   ::cClrHilite   := __DbgColors()[ 11 ]
+   ::cClrHotFocus := __DbgColors()[ 11 ]
    ::nOpenPopup   := 0
 
    AAdd( ::aMenus, Self )

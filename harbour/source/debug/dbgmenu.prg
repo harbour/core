@@ -119,7 +119,7 @@ function __dbgBuildMenu( oDebugger )  // Builds the debugger pulldown menu
          MENUITEM " code~Block Trace"       ACTION Alert( "Not implemented yet!" )
          MENUITEM " ~Menu Bar"              ACTION Alert( "Not implemented yet!" )
          MENUITEM " mono ~Display"          ACTION Alert( "Not implemented yet!" )
-         MENUITEM " ~Colors..."             ACTION Alert( "Not implemented yet!" )
+         MENUITEM " ~Colors..."             ACTION oDebugger:SelColors()
          MENUITEM " ~Tab Width..."          ACTION Alert( "Not implemented yet!" )
          MENUITEM " path for ~Files..."     ACTION Alert( "Not implemented yet!" )
          SEPARATOR
