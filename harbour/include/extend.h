@@ -282,13 +282,16 @@ extern void *   hb_xgrab( ULONG ulSize );                 /* allocates memory, e
 extern void     hb_xfree( void * pMem );                  /* frees memory */
 extern void *   hb_xrealloc( void * pMem, ULONG ulSize ); /* reallocates memory */
 extern ULONG    hb_xsize( void * pMem );                  /* returns the size of an allocated memory block */
+
+#if UINT_MAX == ULONG_MAX
+   /* NOTE: memcpy/memset can work with ULONG data blocks */
+   #define  hb_xmemcpy  memcpy
+   #define  hb_xmemset  memset
+#else
+   /* NOTE: otherwise, the hb_xmemcpy and hb_xmemset functions
+            will be used to copy and/or set ULONG data blocks */
 extern void *   hb_xmemcpy( void * pDestArg, void * pSourceArg, ULONG ulLen ); /* copy more than memcpy() can */
 extern void *   hb_xmemset( void * pDestArg, int iFill, ULONG ulLen ); /* set more than memset() can */
-
-#if defined( __WATCOMC__ ) && defined( __386__ )
-/* NOTE: memcpy/memset can work with data block larger then 64kB */
-#define  hb_xmemcpy  memcpy
-#define  hb_xmemset  memset
 #endif
 
 /* array management */

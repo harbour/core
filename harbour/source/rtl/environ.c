@@ -285,6 +285,7 @@ HARBOUR HB_OS( void )
 
 #define HB_VERSION_BUFFER_LEN 80
 
+
 char * hb_version( USHORT uiMode )
 {
    char * pszVersion = ( char * ) hb_xgrab( HB_VERSION_BUFFER_LEN );
@@ -297,38 +298,103 @@ char * hb_version( USHORT uiMode )
       /* Optionally include the Compiler name and version, if available. */
       char * compiler = ( char * ) NULL;
       int version = 0;
+      int revision = 0;
 
-   #if defined(__IBMCPP__)
-      compiler = "IBM C++";
-      version = __IBMCPP__;
+   #if defined(__IBMC__) || defined(__IBMCPP__)
+
+      #if defined(__IBMC__)
+         version = __IBMC__;
+      #else
+         version = __IBMCPP__;
+      #endif
+
+      if( version >= 300 )
+          compiler = "IBM Visual Age C++";
+      else
+          compiler = "IBM C++";
+
+      version /= 100;
+      revision = version % 100;
+
    #elif defined(__BORLANDC__)
-      compiler = "Borland C";
-      version = __BORLANDC__;
+
+      compiler = "Borland C++";
+      if( __BORLANDC__ == 1040 )
+      {
+         /* Version 3.1 */
+         version = 3;
+         revision = 1;
+      }
+      else if( __BORLANDC__ >= 1280 )
+      {
+         /* Version 5.x */
+         version = __BORLANDC__ >> 8;
+         revision = ( __BORLANDC__ & 0xff ) >> 4;
+      }
+      else
+      {
+         /* Version 4.x */
+         version = __BORLANDC__ >> 8;
+         revision = ( __BORLANDC__ - 1 & 0xff) >> 4;
+      }
+
    #elif defined(__TURBOC__)
-      compiler = "Turbo C";
-      version = __TURBOC__;
+
+      compiler = "Borland Turbo C";
+      version = __TURBOC__ >> 8;
+      revision = __TURBOC__ & 0xff;
+
    #elif defined(_MSC_VER)
-      compiler = "Microsoft C";
-      version = _MSC_VER;
+
+      compiler = "Microsoft C/C++";
+      version = _MSC_VER / 100;
+      revision = _MSC_VER % 100;
+
    #elif defined(__MPW__)
+
       compiler = "MPW C";
-      version = __MPW__;
-   #elif defined(__WATCOMC_)
-      compiler = "Watcom C";
-      version = __WATCOMC__;
+      version = __MPW__ / 100;
+      revision = __MPW__ % 100;
+
+   #elif defined(__WATCOMC__)
+
+      compiler = "Watcom C/C++";
+      version = __WATCOMC__ / 100;
+      revision = __WATCOMC__ % 100;
+
    #elif defined(__DJGPP__)
+
       compiler = "Delorie GCC";
-      version = __DJGPP__;
-   #elif defined(__CYGWIN__)
-      compiler = "Cygnus GCC (cygwin)";
-      version = __CYGWIN__;
-   #elif defined(__MINGW32__)
-      compiler = "Cygnus GCC (mingw32)";
-      version = __MINGW32__;
-   #elif defined(__GNUC__)
-      compiler = "GNU C";
       version = __GNUC__;
+      revision = __GNUC_MINOR__;
+
+   #elif defined(__CYGWIN__)
+
+      compiler = "Cygnus GCC (Cygwin)";
+      version = __GNUC__;
+      revision = __GNUC_MINOR__;
+
+
+   #elif defined(__MINGW32__)
+
+      compiler = hb_xgrab( 80 );
+      sprintf( compiler, "Cygnus GCC (Mingw32 %g)", __MINGW32__ );
+      version = __GNUC__;
+      revision = __GNUC_MINOR__;
+
+   #elif defined(__GNUC__)
+
+      #ifdef __EMX__
+         compiler = "GNU C/EMX C";
+      #else
+         compiler = "GNU C";
+      #endif
+
+      version = __GNUC__;
+      revision = __GNUC_MINOR__;
+
    #endif
+
       if( compiler )
       {
          strncat( pszVersion, " (", HB_VERSION_BUFFER_LEN );
@@ -336,13 +402,16 @@ char * hb_version( USHORT uiMode )
          if( version )
          {
             char buf[ 40 ];
-            sprintf( buf, "(%d)", version );
+            sprintf( buf, "(%d.%d)", version, revision );
             strncat( pszVersion, " ", HB_VERSION_BUFFER_LEN );
             strncat( pszVersion, buf, HB_VERSION_BUFFER_LEN );
          }
          strncat( pszVersion, ")", HB_VERSION_BUFFER_LEN );
          pszVersion[ HB_VERSION_BUFFER_LEN - 1 ] = '\0';
       }
+   #if defined(__MINGW32__)
+      hb_xfree( compiler );
+   #endif
    }
 
    return pszVersion;

@@ -73,13 +73,9 @@
 
 #include <ctype.h>
 #include <time.h>
+#include <sys\timeb.h>
 #if defined(__TURBOC__) || defined(__BORLANDC__)  || defined(__DJGPP__)
    #include <dos.h>
-#elif defined(_MSC_VER) || defined(__MINGW32__)
-   #include <sys\timeb.h>
-   #if defined(__MINGW32__)
-      #define _timeb timeb
-   #endif
 #endif
 #ifndef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
    #define HB_OPTIMIZE_DTOS
@@ -87,27 +83,19 @@
 
 double hb_secondsToday( void )
 {
-#if defined(__TURBOC__) || defined(__BORLANDC__)  || defined(__DJGPP__)
-   struct time t;
-   gettime( &t );
-   return ( ( t.ti_hour * 3600 ) + ( t.ti_min * 60 ) + t.ti_sec ) + ( double ) t.ti_hund / 100;
-#elif defined(_MSC_VER) || defined(__MINGW32__)
-   struct _timeb tb;
+#if defined(_MSC_VER)
+   #define timeb _timeb
+   #define ftime _ftime
+#endif
+   struct timeb tb;
    struct tm *oTime;
 
-   _ftime( &tb );
+   ftime( &tb );
    oTime = localtime( &tb.time );
    return ( oTime->tm_hour * 3600 ) +
           ( oTime->tm_min * 60 ) +
             oTime->tm_sec +
           ( ( double ) tb.millitm / 1000 );
-#else
-   time_t t;
-   struct tm *oTime;
-   time( &t );
-   oTime = localtime( &t );
-   return ( oTime->tm_hour * 3600 ) + ( oTime->tm_min * 60 ) + oTime->tm_sec;
-#endif
 }
 
 char * hb_cmonth( int iMonth )

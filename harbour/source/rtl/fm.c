@@ -178,6 +178,11 @@ void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
 #endif
 }
 
+#if UINT_MAX != ULONG_MAX
+
+/* hb_xmemcpy and hb_xmemset are only needed when
+   unsigned int and unsigned long differ in length */
+
 void * hb_xmemcpy( void * pDestArg, void * pSourceArg, ULONG ulLen )
 {
    BYTE * pDest = ( BYTE * ) pDestArg;
@@ -229,6 +234,8 @@ void * hb_xmemset( void * pDestArg, int iFill, ULONG ulLen )
    }
    return pDestArg;
 }
+
+#endif
 
 HARBOUR HB_MEMORY( void )
 {

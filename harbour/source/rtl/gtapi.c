@@ -37,6 +37,9 @@
  *  GTAPI.C: Generic Terminal for Harbour
  *
  * Latest mods:
+ * 1.81   19991005   dholm     Made the hb_gtWrite(), hb_gtWriteAt(), and
+ *                             hb_gtWriteCon() functions and the cursor
+ *                             positioning more compatible with Clipper.
  * 1.66   19990830   vszel     Reformatted using Harbour standard. Some
  *                             small cleanups.
  * 1.65   19990830   ptucker   Handle nesting of gtPre/PostExt - corrected
@@ -99,12 +102,13 @@
 #include "set.h"
 #include "gtapi.h"
 
-static USHORT s_uiCurrentRow = 0;
-static USHORT s_uiCurrentCol = 0;
+static short  s_iCurrentRow = 0;
+static short  s_iCurrentCol = 0;
 static USHORT s_uiDispCount  = 0;
 static USHORT s_uiPreCount   = 0;
 static USHORT s_uiPreCNest   = 0;
 static USHORT s_uiColorIndex = 0;
+static USHORT s_uiCursorShape = 0;
 
 static int *  s_Color;  /* masks: 0x0007     Foreground
                                   0x0070     Background
@@ -568,7 +572,7 @@ USHORT hb_gtSetColorStr( char * fpColorString )
 
 USHORT hb_gtGetCursor( USHORT * uipCursorShape )
 {
-   int i = hb_gt_GetCursorStyle();
+   int i = s_uiCursorShape = hb_gt_GetCursorStyle();
    int rc = 0;
 
    if( i <= SC_SPECIAL2 )
@@ -586,29 +590,51 @@ USHORT hb_gtGetCursor( USHORT * uipCursorShape )
 USHORT hb_gtSetCursor( USHORT uiCursorShape )
 {
    hb_gt_SetCursorStyle( uiCursorShape );
+   s_uiCursorShape = uiCursorShape;
 
    return 0;
 }
 
-USHORT hb_gtGetPos( USHORT * uipRow, USHORT * uipCol )
+USHORT hb_gtGetPos( short * ipRow, short * ipCol )
 {
-   *uipRow = s_uiCurrentRow = hb_gt_Row();
-   *uipCol = s_uiCurrentCol = hb_gt_Col();
+   if( s_iCurrentRow >= 0 && s_iCurrentRow <=  hb_gtMaxRow()
+      && s_iCurrentCol >= 0 && s_iCurrentCol <= hb_gtMaxCol() )
+   {
+      /* Only return the actual cursor position if the current
+         cursor position was not previously set out of bounds. */
+      s_iCurrentRow = hb_gt_Row();
+      s_iCurrentCol = hb_gt_Col();
+   }
+   *ipRow = s_iCurrentRow;
+   *ipCol = s_iCurrentCol;
 
    return 0;
 }
 
-USHORT hb_gtSetPos( USHORT uiRow, USHORT uiCol )
+USHORT hb_gtSetPos( short iRow, short iCol )
 {
-   /* TODO: in this situation Clipper just turns off the cursor */
-   /* any further writes would be accounted for by clipping */
-   if( uiRow > hb_gtMaxRow() || uiCol > hb_gtMaxCol() )
-      return 1;
+   BOOL set_cursor = TRUE;
 
-   s_uiCurrentRow = uiRow;
-   s_uiCurrentCol = uiCol;
+   /* Validate the new cursor position */
+   if( iRow < 0 || iCol < 0 || iRow > hb_gtMaxRow() || iCol > hb_gtMaxCol() )
+   {
+      /* Disable cursor if out of bounds */
+      hb_gt_SetCursorStyle( SC_NONE );
+      set_cursor = FALSE;
+   }
 
-   hb_gt_SetPos( uiRow, uiCol );
+   if( set_cursor ) hb_gt_SetPos( iRow, iCol );
+
+   /* Check the old cursor position */
+   if( s_iCurrentRow < 0 || s_iCurrentCol < 0 || s_iCurrentRow > hb_gtMaxRow()
+      || s_iCurrentCol > hb_gtMaxCol() )
+   {
+      /* If back in bounds, enable the cursor */
+      if( set_cursor) hb_gt_SetCursorStyle( s_uiCursorShape );
+   }
+
+   s_iCurrentRow = iRow;
+   s_iCurrentCol = iCol;
 
    return 0;
 }
@@ -708,80 +734,31 @@ USHORT hb_gtSetSnowFlag( BOOL bNoSnow )
 
 USHORT hb_gtWrite( BYTE * fpStr, ULONG length )
 {
-   int iRow, iCol, iMaxCol, iMaxRow;
+   short iMaxCol, iMaxRow;
    ULONG size = length;
    BYTE attr = s_Color[ s_uiColorIndex ] & 0xFF;
-   BYTE * fpPointer = fpStr;
 
-   /* TODO: this is doing more work than needed */
-
-   /* Determine where the cursor is going to end up */
-   iRow = s_uiCurrentRow;
-   iCol = s_uiCurrentCol;
+   /* Optimize access to max row and col positions */
    iMaxRow = hb_gtMaxRow();
    iMaxCol = hb_gtMaxCol();
 
-   length = ( length < iMaxCol - iCol + 1 ) ? length : iMaxCol - iCol + 1;
-
-   size = length;
-
-   if( iCol + size > iMaxCol )
+   /* Display the text if the cursor is on screen */
+   if( s_iCurrentCol >= 0 && s_iCurrentCol <= iMaxCol 
+      && s_iCurrentRow >= 0 && s_iCurrentRow <= iMaxRow )
    {
-      /* Calculate eventual row position and the remainder size for the column adjust */
-      iRow += ( size / ( iMaxCol + 1 ) );
-      size = size % ( iMaxCol + 1 );
+      /* Truncate the text if the cursor will end up off the right edge */
+      if( s_iCurrentCol + size > iMaxCol + 1 ) size = iMaxCol - s_iCurrentCol;
+      hb_gt_Puts( s_iCurrentRow, s_iCurrentCol, attr, fpStr, size );
    }
-   iCol += size;
-   if( iCol > iMaxCol )
-   {
-      /* Column movement overflows onto next row */
-      iRow++;
-      iCol -= ( iMaxCol + 1 );
-   }
-   /* If needed, prescroll the display to the new position and adjust the current row
-      position to account for the prescroll */
-   if( iRow > iMaxRow )
-   {
-      int iTemp;
-
-      hb_gtScroll( 0, 0, iMaxRow, iMaxCol, iRow - iMaxRow, 0 );
-      iTemp = s_uiCurrentRow - ( iRow - iMaxRow );
-      if( iTemp < 0 )
-      {
-         /* The string is too long to fit on the screen. Only display part of it. */
-         fpPointer += iMaxCol * abs( iTemp );
-         iTemp = 0;
-         if( s_uiCurrentCol > 0 )
-         {
-              /* Ensure that the truncated text will fill the screen */
-            fpPointer -= s_uiCurrentCol;
-            s_uiCurrentCol = 0;
-         }
-      }
-      else size = length;
-
-      /* Save the new starting row and the new ending row */
-      s_uiCurrentRow = iTemp;
-      iRow = iMaxRow;
-   }
-   else size = length;
-
-   /* Now the text string can be displayed */
-   hb_gt_Puts( s_uiCurrentRow, s_uiCurrentCol, attr, fpPointer, size );
-
-   /* Finally, save the new cursor position */
-   hb_gtSetPos( iRow, iCol );
+   /* Finally, save the new cursor position, even if off-screen */
+   hb_gtSetPos( s_iCurrentRow, s_iCurrentCol + length );
 
    return 0;
 }
 
 USHORT hb_gtWriteAt( USHORT uiRow, USHORT uiCol, BYTE * fpStr, ULONG length )
 {
-   int rc;
-
-   if( ( rc = hb_gtSetPos( uiRow, uiCol ) ) != 0 )
-      return rc;
-
+   hb_gtSetPos( uiRow, uiCol );
    return hb_gtWrite( fpStr, length );
 }
 
@@ -789,13 +766,21 @@ USHORT hb_gtWriteCon( BYTE * fpStr, ULONG length )
 {
    int rc = 0, nLen = 0;
    BOOL ldisp = FALSE;
-   USHORT uiRow = s_uiCurrentRow, uiCol = s_uiCurrentCol;
-   USHORT uiMaxRow = hb_gtMaxRow();
-   USHORT uiMaxCol = hb_gtMaxCol();
+   BOOL lnewline = FALSE;
+   short iRow = s_iCurrentRow, iCol = s_iCurrentCol;
+   short iMaxRow = hb_gtMaxRow();
+   short iMaxCol = hb_gtMaxCol();
    BYTE ch;
    BYTE * fpPtr = fpStr;
    #define STRNG_SIZE 500
    BYTE strng[ STRNG_SIZE ];
+
+   /* Limit the starting cursor position to maxrow(),maxcol()
+      on the high end, but don't limit it on the low end. */
+   if( iRow > iMaxRow ) iRow = iMaxRow;
+   if( iCol > iMaxCol ) iCol = iMaxCol;
+   if( iRow != s_iCurrentRow || iCol != s_iCurrentCol)
+      hb_gtSetPos( iRow, iCol );
 
    while( length-- )
    {
@@ -806,75 +791,73 @@ USHORT hb_gtWriteCon( BYTE * fpStr, ULONG length )
             break;
 
          case HB_CHAR_BS:
-/*
-            COMMENT: Clipper does not scroll backwards up the screen!
-            if( uiCol > 0 ) uiCol--;
-            else if( uiRow > 0 )
+            if( iCol > 0 )
             {
-               uiRow--;
-               uiCol = uiMaxCol;
-            }
-            else
-            {
-               hb_gtScroll( 0, 0, uiMaxRow, uiMaxCol, -1, 0 );
-               uiCol = uiMaxCol;
-            }
-*/
-
-            if( uiCol > 0 )
-            {
-               --uiCol;
+               --iCol;
                ldisp = TRUE;
             }
-            else if( uiCol == 0 && uiRow > 0 )
+            else if( iCol == 0 && iRow > 0 )
             {
-               uiCol = uiMaxCol;
-               --uiRow;
+               iCol = iMaxCol;
+               --iRow;
                ldisp = TRUE;
             }
 
             break;
 
          case HB_CHAR_LF:
-/*
-            if( uiRow < uiMaxRow ) uiRow++;
-            else
-               hb_gtScroll( 0, 0, uiMaxRow, uiMaxCol, 1, 0 );
-
-            hb_gtSetPos( uiRow, uiCol );
-*/
-            ++uiRow;
+            if( iRow >= 0 ) ++iRow;
             ldisp = TRUE;
+            lnewline = TRUE;
             break;
 
          case HB_CHAR_CR:
-            uiCol = 0;
+            iCol = 0;
             if( *fpPtr != HB_CHAR_LF ) ldisp = TRUE;
             break;
 
          default:
-            if( ++uiCol > uiMaxCol )
+            iCol++;
+            if( iCol > iMaxCol || iCol <= 0 )
             {
-               uiCol = 0;
-               ++uiRow;
+               /* If the cursor position started off the left edge,
+                  don't display the first character of the string */
+               if( iCol > 0 ) strng[ nLen++ ] = ch;
+               /* Always advance to the first column of the next row
+                  when the right edge is reached or when the cursor
+                  started off the left edge, unless the cursor is off
+                  the top edge, in which case only change the column */
+               iCol = 0;
+               if( iRow >= 0 ) ++iRow;
                ldisp = TRUE;
+               lnewline = TRUE;
             }
-            strng[ nLen++ ] = ch;
+            else strng[ nLen++ ] = ch;
+
+            /* Special handling for a really wide screen or device */
             if( nLen >= STRNG_SIZE ) ldisp = TRUE;
       }
       if( ldisp || ! length )
       {
-         if( nLen )
+         if( nLen && s_iCurrentRow >= 0 )
             rc = hb_gtWrite( strng, nLen );
          nLen = 0;
-         if( uiRow > uiMaxRow )
+         if( iRow > iMaxRow )
          {
-            hb_gtScroll( 0, 0, uiMaxRow, uiMaxCol, uiRow - uiMaxRow, 0 );
-            uiRow = uiMaxRow;
-            uiCol = 0;
+            /* Normal scroll */
+            hb_gtScroll( 0, 0, iMaxRow, iMaxCol, iRow - iMaxRow, 0 );
+            iRow = iMaxRow;
+            iCol = 0;
          }
-         hb_gtSetPos( uiRow, uiCol );
+         else if( iRow < 0 && lnewline )
+         {
+            /* Special case scroll when newline
+               and cursor off top edge of display */
+            hb_gtScroll( 0, 0, iMaxRow, iMaxCol, 1, 0 );
+         }
+         hb_gtSetPos( iRow, iCol );
          ldisp = FALSE;
+         lnewline = FALSE;
       }
       if( rc )
          break;

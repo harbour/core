@@ -34,8 +34,21 @@
  */
 
 /*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 1999 Jose Lalin <dezac@corevia.com>
+ *    HB_DEFPATH() and HB___DEFPATH()
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
+
+/*
  * ChangeLog:
  *
+ * V 1.83   David G. Holm               Added DEFPATH() and __DEFPATH()
+ *                                      provided by Jose Lalin.
  * V 1.81   David G. Holm               Corrected _SET_CURSOR to use the GT API
  *                                      when available.
  * V 1.70   David G. Holm               Corrected _SET_COLOR case to only use
@@ -526,7 +539,7 @@ HARBOUR HB___SETCENTURY( void )
  *                   a number. Only the display format is affected.
  *              _SET_DEFAULT     <cDefaultDirectory>
  *                   Sets the default directory in which to open, create and
- *                   check for files. Defaults to the current directory.
+ *                   check for files. Defaults to current directory (blank).
  *              _SET_DELETED     <lFlag> | <cOnOff>
  *                   If enabled, deleted records will be processed. If
  *                   disabled, which is the default, deleted records will
@@ -1003,4 +1016,17 @@ void hb_setRelease( void )
    if( hb_set.HB_SET_PRINTFILE )  hb_xfree( hb_set.HB_SET_PRINTFILE );
 
    hb_set.HB_SET_TYPEAHEAD = -1; hb_inkeyReset( TRUE ); /* Free keyboard typeahead buffer */
+}
+
+HARBOUR HB_DEFPATH( void )
+{
+   if( hb_set.HB_SET_DEFAULT )
+      hb_retc( hb_set.HB_SET_DEFAULT );
+   else
+      hb_retc( "" );
+}
+
+HARBOUR HB___DEFPATH( void )
+{
+   HB_DEFPATH();
 }

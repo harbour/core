@@ -1,3 +1,28 @@
+19991006-01:10 EDT David G. Holm <dholm@jsd-llc.com>
+
+  * source/rtl/dates.c
+    % SECONDS() now uses ftime() and localtime() for all platforms.
+
+  * source/rtl/environ.c
+    + Added HB_VERSION() changes supplied by Jose Lalin with
+      corrections for the compiler version and revision for
+      Borland C 3.1 and 5.x, Cygnus GCC with Cygwin,
+      Cygnus GCC with Mingw32, and Delorie GCC.
+
+  * source/rtl/set.c
+    + Added HB_DEFPATH() and HB___DEFPATH() supplied by Jose Lalin.
+
+  * include/extend.h
+  * source/rtl/fm.c
+    % Only use hb_xmemcopy() and hb_xmemset() when the size of an
+      unsigned int is not the same as the size of an unsigned long.
+
+  * include/gtapi.h
+  * source/rtl/console.c
+  * source/rtl/gtapi.c
+    ! DEVPOS(), SETPOS(), console cursor position, and console display
+      functions modified for improved Clipper compatibility.
+
 19991005-23:20 EDT Paul Tucker <ptucker@sympatico.ca>
   + include/harbour.ch
     * This file is meant as a repository of defines or translations needed

@@ -98,8 +98,8 @@
 #endif
 
 static BOOL   s_bInit = FALSE;
-static USHORT s_uiDevRow;
-static USHORT s_uiDevCol;
+static short  s_iDevRow;
+static short  s_iDevCol;
 static USHORT s_uiPRow;
 static USHORT s_uiPCol;
 static char   s_szCrLf[ CRLF_BUFFER_LEN ];
@@ -143,11 +143,11 @@ void hb_consoleInitialize( void )
 
 #ifdef HARBOUR_USE_GTAPI
    hb_gtInit();
-   hb_gtGetPos( &s_uiDevRow, &s_uiDevCol );
+   hb_gtGetPos( &s_iDevRow, &s_iDevCol );
    hb_gtSetCursor( SC_NORMAL );
 #else
-   s_uiDevRow = 0;
-   s_uiDevCol = 0;
+   s_iDevRow = 0;
+   s_iDevCol = 0;
 #endif
 
    s_bInit = TRUE;
@@ -355,14 +355,14 @@ void hb_outstd( char * pStr, ULONG ulLen )
       if( isatty( s_iFilenoStdout ) )
       #endif
       {
-         s_uiDevRow = hb_gt_Row();
-         s_uiDevCol = hb_gt_Col();
-         hb_gtSetPos( s_uiDevRow, s_uiDevCol );
+         s_iDevRow = hb_gt_Row();
+         s_iDevCol = hb_gt_Col();
+         hb_gtSetPos( s_iDevRow, s_iDevCol );
       }
       hb_gtPostExt();
    }
 #else
-   adjust_pos( pStr, ulLen, &s_uiDevRow, &s_uiDevCol, hb_max_row(), hb_max_col() );
+   adjust_pos( pStr, ulLen, &s_iDevRow, &s_iDevCol, hb_max_row(), hb_max_col() );
 #endif
 }
 
@@ -390,14 +390,14 @@ void hb_outerr( char * pStr, ULONG ulLen )
       if( isatty( s_iFilenoStdout ) )
       #endif
       {
-         s_uiDevRow = hb_gt_Row();
-         s_uiDevCol = hb_gt_Col();
-         hb_gtSetPos( s_uiDevRow, s_uiDevCol );
+         s_iDevRow = hb_gt_Row();
+         s_iDevCol = hb_gt_Col();
+         hb_gtSetPos( s_iDevRow, s_iDevCol );
       }
       hb_gtPostExt();
    }
 #else
-   adjust_pos( pStr, ulLen, &s_uiDevRow, &s_uiDevCol, hb_max_row(), hb_max_col() );
+   adjust_pos( pStr, ulLen, &s_iDevRow, &s_iDevCol, hb_max_row(), hb_max_col() );
 #endif
 }
 
@@ -408,12 +408,12 @@ static void hb_altout( char * pStr, ULONG ulLen )
    {
 #ifdef HARBOUR_USE_GTAPI
       hb_gtWriteCon( ( BYTE * ) pStr, ulLen );
-      hb_gtGetPos( &s_uiDevRow, &s_uiDevCol );
+      hb_gtGetPos( &s_iDevRow, &s_iDevCol );
 #else
       USHORT user_ferror = hb_fsError(); /* Save current user file error code */
       hb_fsWriteLarge( s_iFilenoStdout, ( BYTE * ) pStr, ulLen );
       hb_fsSetError( user_ferror ); /* Restore last user file error code */
-      adjust_pos( pStr, ulLen, &s_uiDevRow, &s_uiDevCol, hb_max_row(), hb_max_col() );
+      adjust_pos( pStr, ulLen, &s_iDevRow, &s_iDevCol, hb_max_row(), hb_max_col() );
 #endif
    }
 
@@ -439,8 +439,7 @@ static void hb_altout( char * pStr, ULONG ulLen )
       USHORT user_ferror = hb_fsError(); /* Save current user file error code */
       hb_fsWriteLarge( hb_set.hb_set_printhan, ( BYTE * ) pStr, ulLen );
       hb_fsSetError( user_ferror ); /* Restore last user file error code */
-      if( ulLen + s_uiPCol > USHRT_MAX ) s_uiPCol = USHRT_MAX;
-      else s_uiPCol += ulLen;
+      s_uiPCol += ulLen;
    }
 }
 
@@ -453,20 +452,19 @@ static void hb_devout( char * pStr, ULONG ulLen )
       USHORT user_ferror = hb_fsError(); /* Save current user file error code */
       hb_fsWriteLarge( hb_set.hb_set_printhan, ( BYTE * ) pStr, ulLen );
       hb_fsSetError( user_ferror ); /* Restore last user file error code */
-      if( ulLen + s_uiPCol > USHRT_MAX ) s_uiPCol = USHRT_MAX;
-      else s_uiPCol += ulLen;
+      s_uiPCol += ulLen;
    }
    else
    {
 #ifdef HARBOUR_USE_GTAPI
       /* Otherwise, display to console */
-      hb_gtWrite( ( BYTE * ) pStr, ulLen );
-      hb_gtGetPos( &s_uiDevRow, &s_uiDevCol );
+      hb_gtWriteAt( s_iDevRow, s_iDevCol, ( BYTE * ) pStr, ulLen );
+      hb_gtGetPos( &s_iDevRow, &s_iDevCol );
 #else
       USHORT user_ferror = hb_fsError(); /* Save current user file error code */
       hb_fsWriteLarge( s_iFilenoStdout, ( BYTE * ) pStr, ulLen );
       hb_fsSetError( user_ferror ); /* Restore last user file error code */
-      adjust_pos( pStr, ulLen, &s_uiDevRow, &s_uiDevCol, hb_max_row(), hb_max_col() );
+      adjust_pos( pStr, ulLen, &s_iDevRow, &s_iDevCol, hb_max_row(), hb_max_col() );
 #endif
    }
 }
@@ -476,66 +474,66 @@ static void hb_dispout( char * pStr, ULONG ulLen )
 {
 #ifdef HARBOUR_USE_GTAPI
    /* Display to console */
-   hb_gtWrite( ( BYTE * ) pStr, ulLen );
-   hb_gtGetPos( &s_uiDevRow, &s_uiDevCol );
+   hb_gtWriteAt( s_iDevRow, s_iDevCol, ( BYTE * ) pStr, ulLen );
+   hb_gtGetPos( &s_iDevRow, &s_iDevCol );
 #else
    USHORT user_ferror = hb_fsError(); /* Save current user file error code */
    hb_fsWriteLarge( s_iFilenoStdout, ( BYTE * ) pStr, ulLen );
    hb_fsSetError( user_ferror ); /* Restore last user file error code */
-   adjust_pos( pStr, ulLen, &s_uiDevRow, &s_uiDevCol, hb_max_row(), hb_max_col() );
+   adjust_pos( pStr, ulLen, &s_iDevRow, &s_iDevCol, hb_max_row(), hb_max_col() );
 #endif
 }
 
-void hb_setpos( USHORT row, USHORT col )
+void hb_setpos( short row, short col )
 {
 #ifdef HARBOUR_USE_GTAPI
    hb_gtSetPos( row, col );
 #else
-   USHORT uiCount;
+   short iCount;
 
-   if( row < s_uiDevRow || col < s_uiDevCol )
+   if( row < s_iDevRow || col < s_iDevCol )
    {
       fputs( s_szCrLf, stdout );
-      s_uiDevCol = 0;
-      s_uiDevRow++;
+      s_iDevCol = 0;
+      s_iDevRow++;
    }
-   else if( row > s_uiDevRow ) s_uiDevCol = 0;
-   for( uiCount = s_uiDevRow; uiCount < row; uiCount++ )
+   else if( row > s_iDevRow ) s_iDevCol = 0;
+   for( iCount = s_iDevRow; iCount < row; iCount++ )
       fputs( s_szCrLf, stdout );
-   for( uiCount = s_uiDevCol; uiCount < col; uiCount++ )
+   for( iCount = s_iDevCol; iCount < col; iCount++ )
       fputc( ' ', stdout );
    fflush( stdout );
 #endif
 
-   s_uiDevRow = row;
-   s_uiDevCol = col;
+   s_iDevRow = row;
+   s_iDevCol = col;
 }
 
-void hb_devpos( USHORT row, USHORT col )
+void hb_devpos( short row, short col )
 {
-   USHORT uiCount;
    /* Position printer if SET DEVICE TO PRINTER and valid printer file
       otherwise position console */
    if( hb_set.hb_set_printhan != FS_ERROR && hb_stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 )
    {
+      USHORT uiCount, uiProw = ( USHORT ) row, uiPcol = ( USHORT ) col;
       USHORT user_ferror = hb_fsError(); /* Save current user file error code */
-      if( row < s_uiPRow )
+      if( uiProw < s_uiPRow )
       {
-         hb_fsWrite( hb_set.hb_set_printhan, ( BYTE * ) "\x0C", 1 );
+         hb_fsWrite( hb_set.hb_set_printhan, ( BYTE * ) "\x0C\x0D", 2 );
          s_uiPRow = s_uiPCol = 0;
       }
 
-      for( uiCount = s_uiPRow; uiCount < row; uiCount++ )
+      for( uiCount = s_uiPRow; uiCount < uiProw; uiCount++ )
          hb_fsWrite( hb_set.hb_set_printhan, ( BYTE * ) s_szCrLf, CRLF_BUFFER_LEN-1 );
 
-      if( row > s_uiPRow ) s_uiPCol = 0;
-      col += hb_set.HB_SET_MARGIN;
+      if( uiProw > s_uiPRow ) s_uiPCol = 0;
+      uiPcol += hb_set.HB_SET_MARGIN;
 
-      for( uiCount = s_uiPCol; uiCount < col; uiCount++ )
+      for( uiCount = s_uiPCol; uiCount < uiPcol; uiCount++ )
          hb_fsWrite( hb_set.hb_set_printhan, ( BYTE * ) " ", 1 );
 
-      s_uiPRow = row;
-      s_uiPCol = col;
+      s_uiPRow = uiProw;
+      s_uiPCol = uiPcol;
       hb_fsSetError( user_ferror ); /* Restore last user file error code */
    }
    else
@@ -604,21 +602,8 @@ HARBOUR HB_SETPOS( void ) /* Sets the screen position */
    {
       if( ISNUM( 1 ) && ISNUM( 2 ) )
       {
-         int i_row = hb_parni( 1 );
-         int i_col = hb_parni( 2 );
-         USHORT row, col;
-
-         /* Limit the new position to the range (0,0) to (MAXROW(),MAXCOL()) */
-         if( i_row < 0 ) row = 0;
-         else if( i_row > hb_max_row() ) row = hb_max_row();
-         else row = i_row;
-
-         if( i_col < 0 ) col = 0;
-         else if( i_col > hb_max_col() ) col = hb_max_col();
-         else col = i_col;
-
          /* Set the new screen position */
-         hb_setpos( row, col );
+         hb_setpos( hb_parni( 1 ), hb_parni( 2 ) );
       }
    }
    else
@@ -631,12 +616,11 @@ HARBOUR HB_SETPOSBS( void )
    if( hb_pcount() == 0 )
    {
 #ifdef HARBOUR_USE_GTAPI
-      USHORT uiRow;
-      USHORT uiCol;
+      short iRow, iCol;
 
       /* NOTE: Clipper does no checks about reaching the border or anything */
-      hb_gtGetPos( &uiRow, &uiCol );
-      hb_gtSetPos( uiRow, uiCol + 1 );
+      hb_gtGetPos( &iRow, &iCol );
+      hb_gtSetPos( iRow, iCol + 1 );
 #endif
    }
    else
@@ -649,21 +633,8 @@ HARBOUR HB_DEVPOS( void ) /* Sets the screen and/or printer position */
    {
       if( ISNUM( 1 ) && ISNUM( 2 ) )
       {
-         long l_row = hb_parnl( 1 );
-         long l_col = hb_parnl( 2 );
-         USHORT row, col;
-
-         /* Limit the new position to the range (0,0) to (65535,65535) */
-         if( l_row < 0 ) row = 0;
-         else if( l_row > USHRT_MAX ) row = USHRT_MAX;
-         else row = l_row;
-
-         if( l_col < 0 ) col = 0;
-         else if( l_col > USHRT_MAX ) col = USHRT_MAX;
-         else col = l_col;
-
          /* Set the new screen position */
-         hb_devpos( row, col );
+         hb_devpos( hb_parni( 1 ), hb_parni( 2 ) );
       }
    }
    else
@@ -778,18 +749,8 @@ HARBOUR HB_SETPRC( void ) /* Sets the current printer row and column positions *
 {
    if( ISNUM( 1 ) && ISNUM( 2 ) )
    {
-      long l_row = hb_parnl( 1 );
-      long l_col = hb_parnl( 2 );
-
-      /* Limit the new position to the range (0,0) to (65535,65535) */
-
-      if( l_row < 0 ) s_uiPRow = 0;
-      else if( l_row > USHRT_MAX ) s_uiPRow = USHRT_MAX;
-      else s_uiPRow = l_row;
-
-      if( l_col < 0 ) s_uiPCol = 0;
-      else if( l_col > USHRT_MAX ) s_uiPCol = USHRT_MAX;
-      else s_uiPCol = l_col;
+      s_uiPRow = ( USHORT ) hb_parni( 1 );
+      s_uiPCol = ( USHORT ) hb_parni( 2 );
    }
 }
 
@@ -829,11 +790,11 @@ HARBOUR HB_SCROLL( void ) /* Scrolls a screen region (requires the GT API) */
    && v_scroll == 0 && h_scroll == 0 )
    {
       USHORT uiCount;
-      s_uiDevRow = iMR;
-      for( uiCount = 0; uiCount < s_uiDevRow ; uiCount++ )
+      s_iDevRow = iMR;
+      for( uiCount = 0; uiCount < s_iDevRow ; uiCount++ )
          fputs( s_szCrLf, stdout );
       fflush( stdout );
-      s_uiDevRow = s_uiDevCol = 0;
+      s_iDevRow = s_iDevCol = 0;
    }
 #endif
 }
@@ -853,9 +814,9 @@ HARBOUR HB_ROW( void ) /* Return the current screen row position (zero origin) *
    if( hb_pcount() == 0 )
    {
 #ifdef HARBOUR_USE_GTAPI
-      hb_gtGetPos( &s_uiDevRow, &s_uiDevCol );
+      hb_gtGetPos( &s_iDevRow, &s_iDevCol );
 #endif
-      hb_retni( s_uiDevRow );
+      hb_retni( s_iDevRow );
    }
    else
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "ROW" ); /* NOTE: Clipper catches this at compile time! */
@@ -866,9 +827,9 @@ HARBOUR HB_COL( void ) /* Return the current screen column position (zero origin
    if( hb_pcount() == 0 )
    {
 #ifdef HARBOUR_USE_GTAPI
-      hb_gtGetPos( &s_uiDevRow, &s_uiDevCol );
+      hb_gtGetPos( &s_iDevRow, &s_iDevCol );
 #endif
-      hb_retni( s_uiDevCol );
+      hb_retni( s_iDevCol );
    }
    else
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "COL" ); /* NOTE: Clipper catches this at compile time! */
