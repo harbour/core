@@ -257,6 +257,7 @@ extern PCOMCLASS hb_compClassAdd( char * );
 extern PCOMCLASS hb_compClassFind( char * );
 extern PCOMDECLARED hb_compMethodAdd( PCOMCLASS pClass, char * );
 extern PCOMDECLARED hb_compMethodFind( PCOMCLASS pClass, char * );
+extern void hb_compDeclaredParameterAdd( char * szVarName, BYTE cValueType );
 
 extern void hb_compGenBreak( void );  /* generate code for BREAK statement */
 

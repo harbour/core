@@ -351,58 +351,46 @@ void hb_compExternAdd( char * szExternName ) /* defines a new extern name */
    hb_comp_bExternal = TRUE;
 }
 
-void hb_compVariableAdd( char * szVarName, BYTE cValueType )
+void hb_compDeclaredParameterAdd( char * szVarName, BYTE cValueType )
 {
-   PVAR pVar, pLastVar;
-   PFUNCTION pFunc = hb_comp_functions.pLast;
+   /* Nothing to do since no warnings requested.*/
+   if ( hb_comp_iWarnings < 3 )
+      return;
 
-   /* Dummy Var - Parameter Declaration of Declared Function. */
-   if ( hb_comp_szDeclaredFun )
+   /* Either a Declared Function Parameter or a Declared Method Parameter. */
+   if( hb_comp_szDeclaredFun )
    {
-      /* Nothing to do since no warnings requested.*/
-      if ( hb_comp_iWarnings < 3 )
-         return;
+      /* Find the Declared Function owner of this parameter. */
+      PCOMDECLARED pDeclared = hb_compDeclaredFind( hb_comp_szDeclaredFun );
 
+      if ( pDeclared )
       {
-         /* Find the Declared Function owner of this parameter. */
-         PCOMDECLARED pDeclared = hb_compDeclaredFind( hb_comp_szDeclaredFun );
+         pDeclared->iParamCount++;
 
-         if ( pDeclared )
+         if ( pDeclared->cParamTypes )
          {
-            pDeclared->iParamCount++;
+            pDeclared->cParamTypes = ( BYTE * ) hb_xrealloc( pDeclared->cParamTypes, pDeclared->iParamCount );
+            pDeclared->pParamClasses = ( PCOMCLASS * ) hb_xrealloc( pDeclared->pParamClasses, pDeclared->iParamCount * sizeof( COMCLASS ) );
+         }
+         else
+         {
+            pDeclared->cParamTypes = ( BYTE * ) hb_xgrab( 1 );
+            pDeclared->pParamClasses = ( PCOMCLASS * ) hb_xgrab( sizeof( COMCLASS ) );
+         }
 
-            if ( pDeclared->cParamTypes )
-            {
-               pDeclared->cParamTypes = ( BYTE * ) hb_xrealloc( pDeclared->cParamTypes, pDeclared->iParamCount );
-               pDeclared->pParamClasses = ( PCOMCLASS * ) hb_xrealloc( pDeclared->pParamClasses, pDeclared->iParamCount * sizeof( COMCLASS ) );
-            }
-            else
-            {
-               pDeclared->cParamTypes = ( BYTE * ) hb_xgrab( 1 );
-               pDeclared->pParamClasses = ( PCOMCLASS * ) hb_xgrab( sizeof( COMCLASS ) );
-            }
+         pDeclared->cParamTypes[ pDeclared->iParamCount - 1 ] = cValueType;
 
-            pDeclared->cParamTypes[ pDeclared->iParamCount - 1 ] = cValueType;
+         if ( toupper( cValueType ) == 'S' )
+         {
+            pDeclared->pParamClasses[ pDeclared->iParamCount - 1 ] = hb_compClassFind( hb_comp_szFromClass );
 
-            if ( toupper( cValueType ) == 'S' )
-            {
-               pDeclared->pParamClasses[ pDeclared->iParamCount - 1 ] = hb_compClassFind( hb_comp_szFromClass );
-
-               /* Resetting */
-               hb_comp_szFromClass = NULL;
-            }
-
-            return;
+            /* Resetting */
+            hb_comp_szFromClass = NULL;
          }
       }
    }
-   /* Dummy Var - Parameter Declaration of Declared Method. */
-   else if ( hb_comp_pLastMethod )
+   else /* Declared Method Parameter */
    {
-      /* Nothing to do since no warnings requested.*/
-      if ( hb_comp_iWarnings < 3 )
-         return;
-
       /*
       printf( "\nAdding parameter: %s Type: %c In Method: %s Class: %s FROM CLASS: %s\n", szVarName, cValueType, hb_comp_pLastMethod->szName, hb_comp_pLastClass->szName, hb_comp_szFromClass );
       */
@@ -433,16 +421,18 @@ void hb_compVariableAdd( char * szVarName, BYTE cValueType )
          /* Resetting */
          hb_comp_szFromClass = NULL;
       }
-
-      return;
    }
+}
+
+void hb_compVariableAdd( char * szVarName, BYTE cValueType )
+{
+   PVAR pVar, pLastVar;
+   PFUNCTION pFunc = hb_comp_functions.pLast;
 
    HB_SYMBOL_UNUSED( cValueType );
 
    if( ! hb_comp_bStartProc && hb_comp_functions.iCount <= 1 && hb_comp_iVarScope == VS_LOCAL )
    {
-      printf( "OOPS %s\n", szVarName );
-
       /* Variable declaration is outside of function/procedure body.
          In this case only STATIC and PARAMETERS variables are allowed. */
       hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_OUTSIDE, NULL, NULL );
@@ -808,12 +798,7 @@ PCOMDECLARED hb_compMethodAdd( PCOMCLASS pClass, char * szMethodName )
    /*printf( "\nDeclaring Method: %s of Class: %s Pointer: %li\n", szMethodName, pClass->szName, pClass );*/
 
    if ( hb_comp_iWarnings < 3 )
-   {
-      /* So hb_compAddVariable() will know this is a fictitious Var. */
-      hb_comp_szDeclaredFun = szMethodName;
-
       return NULL;
-   }
 
    if ( ( pMethod = hb_compMethodFind( pClass, szMethodName ) ) != NULL )
    {

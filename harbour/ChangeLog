@@ -1,3 +1,16 @@
+2000-08-28 15:00 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * include/hbcomp.h
+     + Added: extern void hb_compDeclaredParameterAdd( char * szVarName, BYTE cValueType );
+
+   * source/compiler/harbour.y
+     ! Changed hb_compVariableAdd() to hb_compDeclaredParameterAdd() for Declaration Rules.
+
+   * source/compiler/harbour.c
+     ! Moved logic from hb_compVariableAdd() to new hb_compDeclaredParameterAdd() for "dummy" variables (Declaration Parameters).
+
+   * source/compiler/hbpcode.c
+     ! Minor corrections.
+
 2000-08-28 12:03 UTC+0800 Brian Hays <bhays@abacuslaw.com>
    * contrib/rdd_ads/doc/en/readme.txt
       * small formatting changes
