@@ -201,7 +201,7 @@ extern void hb_compGenPushLogical( int, HB_MACRO_DECL );     /* pushes a logical
 extern void hb_compGenPushLong( long, HB_MACRO_DECL );          /* Pushes a long number on the virtual machine stack */
 extern void hb_compGenPushNil( HB_MACRO_DECL );                   /* Pushes nil on the virtual machine stack */
 extern void hb_compGenPushString( char *, ULONG, HB_MACRO_DECL );       /* Pushes a string on the virtual machine stack */
-extern void hb_compGenPushSymbol( char *, int, HB_MACRO_DECL ); /* Pushes a symbol on to the Virtual machine stack */
+extern void hb_compGenPushSymbol( char *, HB_MACRO_DECL ); /* Pushes a symbol on to the Virtual machine stack */
 extern void hb_compGenPushAliasedVar( char *, BOOL, char *, long, HB_MACRO_DECL );
 extern void hb_compGenPopAliasedVar( char *, BOOL, char *, long, HB_MACRO_DECL );
 extern void hb_compGenPushFunRef( char *, HB_MACRO_DECL );

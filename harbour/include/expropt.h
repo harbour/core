@@ -36,15 +36,7 @@
 #ifndef HB_EXPROPT_H_
 #define HB_EXPROPT_H_
 
-/* This structure holds local variables declared in a codeblock
- */
-typedef struct HB_CBVAR_
-{
-   char * szName;
-   BYTE bType;
-   struct HB_CBVAR_ * pNext;
-} HB_CBVAR, *HB_CBVAR_PTR;
-
+#include "extend.h"
 
 typedef struct HB_EXPR_
 {

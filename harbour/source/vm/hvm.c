@@ -935,6 +935,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_MACROSYMBOL:
             /* compile into a symbol name (used in function calls) */
+            hb_macroPushSymbol( hb_stack.pPos - 1 );
             w++;
             break;
 
@@ -2514,7 +2515,12 @@ void hb_vmDo( USHORT uiParams )
       if( pFunc )
          pFunc();
       else
-         hb_errInternal( 9999, "Invalid function pointer (%s) from hb_vmDo()", pSym->szName, NULL );
+      {
+         /* Attempt to call an undefined function
+          *  - generate unrecoverable runtime error
+          */
+         hb_errRT_BASE( EG_NOFUNC, 1001, NULL, pSym->szName );
+      }
    }
 
    while( hb_stack.pPos > hb_stack.pItems + wItemIndex )

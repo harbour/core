@@ -100,6 +100,8 @@ TrueValue     "."[t|y]"."
 FalseValue    "."[f|n]"."
 
 Array         {Identifier}[ \t]*"["
+MacroVarArray {MacroVar}[ \t]*"["
+MacroTxtArray ({MacroEnd}|{MacroId}|{MacroTxt})[ \t]*"["
 AtArray       "}"[ \t]*"["
 ExpArray      ")"[ \t]*"["
 SubArray      "]"[ \t]*"["
@@ -759,7 +761,7 @@ Separator     {SpaceTab}
 /* ************************************************************************ */
 %}
 "#"{Separator}*"line"  return LINE;
-"loca"|"local"  { 
+"loca"|"local"  {
                   yylval.string = hb_strupr( hb_strdup( yytext ) );
 		  BEGIN LOCAL_;
                 }
@@ -1226,6 +1228,48 @@ Separator     {SpaceTab}
                }
             }
 
+{MacroVarArray} {
+               if( ! i_INDEX_STATE )
+               {
+                  BEGIN INDEX;
+                  i_INDEX_STATE = 1;
+               }
+
+               unput( '[' );
+               yyleng--;
+
+               /* Remove optional white space between Identifier and Index */
+               while( yytext[ yyleng - 1 ] < 48 )
+                  yyleng--;
+
+               yytext[yyleng] = 0;
+               if( yytext[ yyleng-1 ] == '.' )
+                  yytext[ yyleng-1 ] = '\0';
+               yylval.string = hb_strupr( hb_strdup( yytext+1 ) );
+               hb_comp_iState = MACROVAR;
+               return MACROVAR;
+            }
+
+{MacroTxtArray} {
+               if( ! i_INDEX_STATE )
+               {
+                  BEGIN INDEX;
+                  i_INDEX_STATE = 1;
+               }
+
+               unput( '[' );
+               yyleng--;
+
+               /* Remove optional white space between Identifier and Index */
+               while( yytext[ yyleng - 1 ] < 48 )
+                  yyleng--;
+
+               yytext[yyleng] = 0;
+               yylval.string = hb_strupr( hb_strdup( yytext ) );
+               hb_comp_iState = MACROTEXT;
+               return MACROTEXT;
+            }
+
 {ExpArray}  {
                /* Must be recursive */
                if( ! i_INDEX_STATE )
@@ -1269,7 +1313,7 @@ Separator     {SpaceTab}
                return '}';
             }
 
-{MacroVar}     {  
+{MacroVar}     {
                   if( yytext[ yyleng-1 ] == '.' )
                      yytext[ yyleng-1 ] = '\0';
                   yylval.string = hb_strupr( hb_strdup( yytext+1 ) );
@@ -1277,26 +1321,26 @@ Separator     {SpaceTab}
                   return MACROVAR;
                }
 
-{MacroEnd}     {  
+{MacroEnd}     {
                   yylval.string = hb_strupr( hb_strdup( yytext ) );
                   hb_comp_iState = MACROTEXT;
                   return MACROTEXT;
                }
 
-{MacroId}      {  
+{MacroId}      {
                   yylval.string = hb_strupr( hb_strdup( yytext ) );
                   hb_comp_iState = MACROTEXT;
                   return MACROTEXT;
                }
 
-{MacroTxt}     {  
+{MacroTxt}     {
                   yylval.string = hb_strupr( hb_strdup( yytext ) );
                   hb_comp_iState = MACROTEXT;
                   return MACROTEXT;
                }
 
 
-{Identifier}    {  
+{Identifier}    {
                    if( hb_comp_bRestrictSymbolLength && strlen( yytext ) > 10 )
                    {
                       yytext[ 10 ] = 0;

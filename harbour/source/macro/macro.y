@@ -57,6 +57,11 @@
 #define malloc  hb_xgrab
 #undef free
 #define free hb_xfree
+/* This is workaround of yyparse() declaration bug in bison.simple 
+*/
+#ifdef __GNUC__
+#undef __GNUC__
+#endif
 
 /* yacc/lex related definitions
  */

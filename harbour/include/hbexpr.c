@@ -79,7 +79,7 @@
 #define  hb_compGenPushLong( p1 )         hb_compGenPushLong( p1, HB_MACRO_PARAM )
 #define  hb_compGenPushNil( )             hb_compGenPushNil( p1, HB_MACRO_PARAM )
 #define  hb_compGenPushString( p1, p2 )   hb_compGenPushString( p1, p2, HB_MACRO_PARAM )
-#define  hb_compGenPushSymbol( p1, p2 )   hb_compGenPushSymbol( p1, p2, HB_MACRO_PARAM )
+#define  hb_compGenPushSymbol( p1 )   hb_compGenPushSymbol( p1, HB_MACRO_PARAM )
 #define  hb_compGenPushAliasedVar( p1, p2, p3, p4 )   hb_compGenPushAliasedVar( p1, p2, p3, p4, HB_MACRO_PARAM )
 #define  hb_compGenPopAliasedVar( p1, p2 , p3, p4 )   hb_compGenPopAliasedVar( p1, p2, p3, p4, HB_MACRO_PARAM )
 #define  hb_compGenPushFunRef( p1 )                   hb_compGenPushFunRef( p1, HB_MACRO_PARAM )
@@ -2684,7 +2684,11 @@ static HB_EXPR_FUNC( hb_compExprUseAlias )
       case HB_EA_LVALUE:
          break;
       case HB_EA_PUSH_PCODE:
+#ifdef HB_MACRO_SUPPORT
+         hb_compGenPushSymbol( pSelf->value.asSymbol );
+#else
          hb_compGenPushSymbol( pSelf->value.asSymbol, FALSE );
+#endif
          break;
       case HB_EA_POP_PCODE:
       case HB_EA_PUSH_POP:

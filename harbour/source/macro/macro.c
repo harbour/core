@@ -105,7 +105,12 @@ static BOOL hb_macroCheckParam( HB_ITEM_PTR pItem )
    return bValid;
 }
 
-static void hb_macroRun( HB_MACRO_PTR pMacro )
+/* Executes pcode compiled by macro compiler
+ *
+ * pMacro is a pointer to HB_MACRO structure created by macro compiler
+ *
+ */
+void hb_macroRun( HB_MACRO_PTR pMacro )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_macroRun(%p)", pMacro));
 
@@ -127,6 +132,44 @@ static void hb_macroSyntaxError( HB_MACRO_PTR pMacro )
       hb_vmPush( pResult );
       hb_itemRelease( pResult );
    }
+}
+
+/* Check if passed string is a valid function name
+ */
+static BOOL hb_macroIsIdent( char * szString )
+{
+   char * pTmp = szString;
+
+   /* NOTE: This uses _a-zA-Z0-9 pattern to check for a valid name
+    */
+   if( *pTmp == '_' || (*pTmp >= 'A' && *pTmp <= 'Z') || (*pTmp >= 'a' && *pTmp <= 'z') )
+   {
+      ++pTmp;
+      while( *pTmp && (*pTmp == '_' || (*pTmp >= 'A' && *pTmp <= 'Z') || (*pTmp >= 'a' && *pTmp <= 'z') || (*pTmp >= '0' && *pTmp <= '9')) )
+         ++pTmp;
+   }
+
+   /* the name was valid if pTmp is at the end of a string
+    */
+   return (*pTmp ? FALSE : TRUE );
+}
+
+/* Replace all nested macro operators
+ */
+static char * hb_macroTextSubst( char * szString )
+{
+   char * szText;
+   ULONG ulLen;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_macroTextSubst(%s)", szString));
+
+/* TODO: Nested macro or complex macro ( e.g. &macro&macro2.end )
+ */
+   ulLen = strlen( szString ) + 1;
+   szText = (char *) hb_xgrab( ulLen );
+   memcpy( szText, szString, ulLen );
+
+   return szText;
 }
 
 
@@ -214,6 +257,33 @@ HB_MACRO_PTR hb_macroCompile( char * szString )
    return pMacro;
 }
 
+void hb_macroPushSymbol( HB_ITEM_PTR pItem )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_macroGetValue(%p)", pItem));
+
+   if( hb_macroCheckParam( pItem ) )
+   {
+      HB_MACRO struMacro;
+      char * szString;
+
+      szString = hb_macroTextSubst( pItem->item.asString.value );
+
+      hb_stackPop();    /* remove compiled string */
+      if( hb_macroIsIdent( szString ) )
+      {
+         HB_DYNS_PTR pDynSym;
+
+         pDynSym = hb_dynsymGet( szString );
+         /* NOTE: checking for valid function name is done in hb_vmDo()
+          */
+         hb_vmPushSymbol( pDynSym->pSymbol );
+
+         hb_xfree( szString );
+      }
+      else
+         hb_macroSyntaxError( &struMacro );
+   }
+}
 
 /* ************************************************************************* */
 
@@ -312,25 +382,11 @@ void hb_compMemvarGenPCode( BYTE bPCode, char * szVarName, HB_MACRO_DECL )
 }
 
 /* generates the pcode to push a symbol on the virtual machine stack */
-void hb_compGenPushSymbol( char * szSymbolName, int iIsFunction, HB_MACRO_DECL )
+void hb_compGenPushSymbol( char * szSymbolName, HB_MACRO_DECL )
 {
    HB_DYNS_PTR pSym;
 
-   if( iIsFunction )
-   {
-      char * pName = hb_compReservedName( szSymbolName );
-      /* If it is reserved function name then we should truncate
-       * the requested name.
-       * We have to use passed szSymbolName so we can latter deallocate it
-       * (pName points to static data)
-       */
-      if( pName )
-         pSym = hb_dynsymGet( pName );
-      else
-         pSym = hb_dynsymGet( szSymbolName );
-   }
-   else
-      pSym = hb_dynsymGet( szSymbolName );
+   pSym = hb_dynsymGet( szSymbolName );
    hb_compGenPCode1( HB_P_MPUSHSYM, HB_MACRO_PARAM );
    hb_compGenPCodeN( ( BYTE * ) &pSym, sizeof( pSym ), HB_MACRO_PARAM );
 }
@@ -434,7 +490,7 @@ void hb_compGenPopAliasedVar( char * szVarName,
                }
                else
                {  /* database alias */
-                  hb_compGenPushSymbol( hb_strdup( szAlias ), 0, HB_MACRO_PARAM );
+                  hb_compGenPushSymbol( hb_strdup( szAlias ), HB_MACRO_PARAM );
                   hb_compMemvarGenPCode( HB_P_MPOPALIASEDFIELD, szVarName, HB_MACRO_PARAM );
                }
             }
@@ -528,7 +584,7 @@ void hb_compGenPushAliasedVar( char * szVarName,
                }
                else
                {  /* database alias */
-                  hb_compGenPushSymbol( hb_strdup( szAlias ), 0, HB_MACRO_PARAM );
+                  hb_compGenPushSymbol( hb_strdup( szAlias ), HB_MACRO_PARAM );
                   hb_compMemvarGenPCode( HB_P_MPUSHALIASEDFIELD, szVarName, HB_MACRO_PARAM );
                }
             }
@@ -571,10 +627,10 @@ void hb_compGenPushFunCall( char * szFunName, HB_MACRO_DECL )
    {
       /* Abbreviated function name was used - change it for whole name
        */
-      hb_compGenPushSymbol( szFunction, 1, HB_MACRO_PARAM );
+      hb_compGenPushSymbol( szFunction, HB_MACRO_PARAM );
    }
    else
-      hb_compGenPushSymbol( szFunName, 1, HB_MACRO_PARAM );
+      hb_compGenPushSymbol( szFunName, HB_MACRO_PARAM );
 }
 
 /* generates the pcode to push a string on the virtual machine stack */

@@ -419,8 +419,41 @@ extern char *   hb_setColor( char * );
 extern char * hb_compReservedName( char * );
 
 /* macro compiler */
+
+typedef struct HB_CBVAR_  /* This structure holds local variables declared in a codeblock */
+{
+   char * szName;
+   BYTE bType;
+   struct HB_CBVAR_ * pNext;
+} HB_CBVAR, *HB_CBVAR_PTR;
+
+typedef struct HB_PCODE_INFO_   /* compiled pcode container */
+{
+  BYTE * pCode;           /* pointer to a memory block where pcode is stored */
+  ULONG  lPCodeSize;      /* total memory size for pcode */
+  ULONG  lPCodePos;       /* actual pcode offset */
+  struct HB_PCODE_INFO_ *pPrev;
+  HB_CBVAR_PTR pLocals;
+} HB_PCODE_INFO, * HB_PCODE_INFO_PTR;
+
+typedef struct HB_MACRO_    /* a macro compiled pcode container */
+{
+  char * string;          /* compiled string */
+  ULONG length;           /* length of the string */
+  ULONG pos;              /* current position inside of compiled string */
+  int   Flags;            /* some flags we may need */
+  int status;             /* status of compilation */
+  HB_PCODE_INFO_PTR pCodeInfo;  /* pointer to pcode buffer and info */
+  void * pParseInfo;      /* data needed by the parser - it should be 'void *' to allow different implementation of macr compiler */
+  BOOL bName10;           /* are we limiting identifier names to 10 chars ? */
+  BOOL bShortCuts;        /* are we using logical shorcuts (in OR/AND)  */
+  PHB_SYMB pSymbols;      /* local symbol table */
+} HB_MACRO, * HB_MACRO_PTR;
+
 extern void hb_macroGetValue( HB_ITEM_PTR );
 extern void hb_macroSetValue( HB_ITEM_PTR );
+extern void hb_macroPushSymbol( HB_ITEM_PTR );
+extern void hb_macroRun( HB_MACRO_PTR );
 
 /* misc */
 extern char *   hb_version( USHORT uiMode );

@@ -1796,18 +1796,6 @@ void hb_compGenPushSymbol( char * szSymbolName, int iIsFunction )
    USHORT wSym;
    PCOMSYMBOL pSym;
 
-   if( iIsFunction )
-   {
-      char * pName = hb_compReservedName( szSymbolName );
-      /* If it is reserved function name then we should truncate
-       * the requested name.
-       * We have to use passed szSymbolName so we can latter deallocate it
-       * (pName points to static data)
-       */
-      if( pName )
-         szSymbolName[ strlen( pName ) ] ='\0';
-   }
-
    pSym = hb_compSymbolFind( szSymbolName, &wSym );
    if( ! pSym )  /* the symbol was not found on the symbol table */
    {

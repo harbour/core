@@ -1,3 +1,43 @@
+19991212-13:55 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/compiler/harbour.c
+    *source/macro/macro.c
+        * removed duplicated check if a reserved name was used
+
+    *source/macro/macro.c
+    *include/hbexpr.c
+    *include/compiler.h
+        * removed 'IsFunction' parameter of hb_compGenPushSymbol
+        that is no longer needed. 'hb_compGenPushSymbol()' should push any
+        symbol without checking, the check for reserved function name is
+        done in hb_compGenPushFunCall()
+
+    *source/compiler/harbour.l
+    *source/macro/macro.l
+        * removed duplicated check if a reserved name was used
+        * restored support for &macro[ index ] syntax
+
+    *include/extend.h
+        * added missing declaration of hb_macroRun() function
+        * moved here the definition of HB_MACRO structure
+
+    *include/macro.h
+        * the definition of HB_MACRO structure moved to extend.h
+
+    *include/expropt.h
+        * the definition of HB_CBVAR structure moved to extend.h
+
+    *source/vm/hvm.c
+    *source/macro/macro.c
+    *include/extend.h
+        * added partial support for macro function call &var() or DO &var
+        (partial because a simple function name is allowed only -
+         there is no support for nested macros and complex macros)
+
+    *source/macro.y
+	* added #undef __GNUC__ as a workaround of bison.simple bug in
+	yyparse() declaration
+	
 19991211-15:55 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *include/hbexpr.c

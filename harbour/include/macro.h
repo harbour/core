@@ -56,29 +56,6 @@
 #include "errorapi.h"
 #include "expropt.h"
 
-typedef struct HB_PCODE_INFO_
-{
-  BYTE * pCode;           /* pointer to a memory block where pcode is stored */
-  ULONG  lPCodeSize;      /* total memory size for pcode */
-  ULONG  lPCodePos;       /* actual pcode offset */
-  struct HB_PCODE_INFO_ *pPrev;
-  HB_CBVAR_PTR pLocals;
-} HB_PCODE_INFO, * HB_PCODE_INFO_PTR;
-
-typedef struct HB_MACRO_
-{
-  char * string;          /* compiled string */
-  ULONG length;           /* length of the string */
-  ULONG pos;              /* current position inside of compiled string */
-  int   Flags;            /* some flags we may need */
-  int status;             /* status of compilation */
-  HB_PCODE_INFO_PTR pCodeInfo;  /* pointer to pcode buffer and info */
-  void * pParseInfo;      /* data needed by the parser - it should be 'void *' to allow different implementation of macr compiler */
-  BOOL bName10;           /* are we limiting identifier names to 10 chars ? */
-  BOOL bShortCuts;        /* are we using logical shorcuts (in OR/AND)  */
-  PHB_SYMB pSymbols;      /* local symbol table */
-} HB_MACRO, * HB_MACRO_PTR;
-
 #define HB_MACRO_OK           0   /* macro compiled successfully */
 #define HB_MACRO_FAILURE      1   /* syntax error */
 #define HB_MACRO_TOO_COMPLEX  2   /* compiled expression is too complex */
