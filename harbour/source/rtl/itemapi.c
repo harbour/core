@@ -338,9 +338,6 @@ PHB_ITEM hb_itemPutDS( PHB_ITEM pItem, char *szDate )
 
    hb_itemClear( pItem );
    pItem->type = IT_DATE;
-   /* QUESTION: Is this ok ? we are going to use a long to store the date */
-   /* QUESTION: What happens if we use sizeof( LONG ) instead ? */
-   /* QUESTION: Would it break Clipper language code ? */
    pItem->item.asDate.value = hb_dateEncode( lDay, lMonth, lYear );
 
    return pItem;

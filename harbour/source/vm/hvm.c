@@ -874,11 +874,25 @@ void hb_vmAnd( void )
 
 void hb_vmArrayAt( void )
 {
-   double dIndex = hb_vmPopNumber();
-   PHB_ITEM pArray  = stack.pPos - 1;
+   PHB_ITEM pIndex = stack.pPos - 1;
+   PHB_ITEM pArray = stack.pPos - 2;
+   ULONG ulIndex;
    HB_ITEM item;
 
-   hb_arrayGet( pArray, dIndex, &item );
+   if( IS_INTEGER( pIndex ) )
+      ulIndex = pIndex->item.asInteger.value;
+
+   else if( IS_LONG( pIndex ) )
+      ulIndex = pIndex->item.asLong.value;
+
+   else if( IS_DOUBLE( pIndex ) )
+      ulIndex = pIndex->item.asDouble.value;
+
+   else
+      hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ) );
+
+   hb_arrayGet( pArray, ulIndex, &item );
+   hb_stackPop();
    hb_stackPop();
 
    hb_itemCopy( stack.pPos, &item );
@@ -902,8 +916,8 @@ void hb_vmArrayPut( void )
    else if( IS_DOUBLE( pIndex ) )
       ulIndex = pIndex->item.asDouble.value;
 
-   else ;
-      /* QUESTION: Should we raise an error here ? */
+   else
+      hb_errRT_BASE( EG_ARG, 1069, NULL, hb_langDGetErrorDesc( EG_ARRASSIGN ) );
 
    hb_arraySet( pArray, ulIndex, pValue );
    hb_itemCopy( pArray, pValue );  /* places pValue at pArray position */
@@ -953,7 +967,8 @@ void hb_vmDec( void )
       lDate = hb_vmPopDate();
       hb_vmPushDate( --lDate ); /* TOFIX: Dates should decreased other way */
    }
-   /* TODO: Should we check other types here and issue an error ? */
+   else
+      hb_errRT_BASE( EG_ARG, 1087, NULL, "--" );
 }
 
 void hb_vmDimArray( WORD wDimensions ) /* generates a wDimensions Array and initialize those dimensions from the stack values */
@@ -983,16 +998,24 @@ void hb_vmDimArray( WORD wDimensions ) /* generates a wDimensions Array and init
 
 void hb_vmDivide( void )
 {
-   WORD wDec1, wDec2;
-   double d2 = hb_vmPopDouble( &wDec2 );
-   double d1 = hb_vmPopDouble( &wDec1 );
+   PHB_ITEM pItem2 = stack.pPos - 1;
+   PHB_ITEM pItem1 = stack.pPos - 2;
 
-   /* TODO: Remove the if zero, return zero code once the proper
-            error handling for divide by zero has been added. */
-   if( d2 == 0.0 )
-      hb_vmPushInteger( 0 );
+   if( IS_NUMERIC( pItem2 ) && IS_NUMERIC( pItem1 ) )
+   {
+      WORD wDec1, wDec2;
+      double d2 = hb_vmPopDouble( &wDec2 );
+      double d1 = hb_vmPopDouble( &wDec1 );
+
+      /* TODO: Remove the if zero, return zero code once the proper
+               error handling for divide by zero has been added. */
+      if( d2 == 0.0 )
+         hb_vmPushInteger( 0 );
+      else
+         hb_vmPushNumber( d1 / d2, hb_set.HB_SET_DECIMALS );
+   }
    else
-      hb_vmPushNumber( d1 / d2, hb_set.HB_SET_DECIMALS );
+      hb_errRT_BASE( EG_ARG, 1084, NULL, "/" );
 }
 
 void hb_vmDo( WORD wParams )
@@ -1015,13 +1038,14 @@ void hb_vmDo( WORD wParams )
       hb_errInternal( 9999, "Symbol item expected as a base from hb_vmDo()", NULL, NULL );
    }
 
-/*
+#if 0
    if( ! IS_NIL( pSelf ) )
    {
+      /* QUESTION: Is this call needed ? [vszel] */
       hb_stackDispLocal();
       hb_errInternal( 9999, "Invalid symbol type for self from hb_vmDo()", NULL, NULL );
    }
-*/
+#endif
 
    pItem->item.asSymbol.lineno   = 0;
    pItem->item.asSymbol.paramcnt = wParams;
@@ -1619,22 +1643,38 @@ void hb_vmModuleName( char * szModuleName ) /* PRG and function name information
 
 void hb_vmModulus( void )
 {
-   WORD wDec1, wDec2;
-   double d2 = hb_vmPopDouble( &wDec2 );
-   double d1 = hb_vmPopDouble( &wDec1 );
+   PHB_ITEM pItem2 = stack.pPos - 1;
+   PHB_ITEM pItem1 = stack.pPos - 2;
 
-   /* NOTE: Clipper always returns the result of modulus
-            with the SET number of decimal places. */
-   hb_vmPushNumber( fmod( d1, d2 ), hb_set.HB_SET_DECIMALS );
+   if( IS_NUMERIC( pItem2 ) && IS_NUMERIC( pItem1 ) )
+   {
+      WORD wDec1, wDec2;
+      double d2 = hb_vmPopDouble( &wDec2 );
+      double d1 = hb_vmPopDouble( &wDec1 );
+
+      /* NOTE: Clipper always returns the result of modulus
+               with the SET number of decimal places. */
+      hb_vmPushNumber( fmod( d1, d2 ), hb_set.HB_SET_DECIMALS );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 1085, NULL, "%" );
 }
 
 void hb_vmMult( void )
 {
-   WORD wDec2, wDec1;
-   double d2 = hb_vmPopDouble( &wDec2 );
-   double d1 = hb_vmPopDouble( &wDec1 );
+   PHB_ITEM pItem2 = stack.pPos - 1;
+   PHB_ITEM pItem1 = stack.pPos - 2;
 
-   hb_vmPushNumber( d1 * d2, wDec1 + wDec2 );
+   if( IS_NUMERIC( pItem2 ) && IS_NUMERIC( pItem1 ) )
+   {
+      WORD wDec2, wDec1;
+      double d2 = hb_vmPopDouble( &wDec2 );
+      double d1 = hb_vmPopDouble( &wDec1 );
+
+      hb_vmPushNumber( d1 * d2, wDec1 + wDec2 );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 1083, NULL, "*" );
 }
 
 void hb_vmOperatorCall( PHB_ITEM pItem1, PHB_ITEM pItem2, char *szSymbol )
@@ -1926,13 +1966,21 @@ void hb_vmPopStatic( WORD wStatic )
 
 void hb_vmPower( void )
 {
-   WORD wDec1, wDec2;
-   double d2 = hb_vmPopDouble( &wDec2 );
-   double d1 = hb_vmPopDouble( &wDec1 );
+   PHB_ITEM pItem2 = stack.pPos - 1;
+   PHB_ITEM pItem1 = stack.pPos - 2;
 
-   /* NOTE: Clipper always returns the result of power
-            with the SET number of decimal places. */
-    hb_vmPushNumber( pow( d1, d2 ), hb_set.HB_SET_DECIMALS );
+   if( IS_NUMERIC( pItem2 ) && IS_NUMERIC( pItem1 ) )
+   {
+      WORD wDec1, wDec2;
+      double d2 = hb_vmPopDouble( &wDec2 );
+      double d1 = hb_vmPopDouble( &wDec1 );
+
+      /* NOTE: Clipper always returns the result of power
+               with the SET number of decimal places. */
+      hb_vmPushNumber( pow( d1, d2 ), hb_set.HB_SET_DECIMALS );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 1088, NULL, "^" );
 }
 
 static void hb_vmPushAliasedField( PHB_SYMB pSym )

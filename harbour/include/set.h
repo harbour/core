@@ -1,4 +1,4 @@
-/* 
+/*
  * $Id$
  */
 
@@ -99,46 +99,53 @@ typedef enum
 
 typedef enum
 {
-   HB_INVALID_SET     = 0,
-   HB_SET_ALTERNATE   = 1,
-   HB_SET_ALTFILE     = 2,
-   HB_SET_BELL        = 3,
-   HB_SET_CANCEL      = 4,
-   HB_SET_COLOR       = 5,
-   HB_SET_CONFIRM     = 6,
-   HB_SET_CONSOLE     = 7,
-   HB_SET_CURSOR      = 8,
-   HB_SET_DATEFORMAT  = 9,
-   HB_SET_DEBUG       = 10,
-   HB_SET_DECIMALS    = 11,
-   HB_SET_DEFAULT     = 12,
-   HB_SET_DELETED     = 13,
-   HB_SET_DELIMCHARS  = 14,
-   HB_SET_DELIMITERS  = 15,
-   HB_SET_DEVICE      = 16,
-   HB_SET_EPOCH       = 17,
-   HB_SET_ESCAPE      = 18,
-   HB_SET_EVENTMASK   = 19,
-   HB_SET_EXACT       = 20,
-   HB_SET_EXCLUSIVE   = 21,
-   HB_SET_EXIT        = 22,
-   HB_SET_EXTRA       = 23,
-   HB_SET_EXTRAFILE   = 24,
-   HB_SET_FIXED       = 25,
-   HB_SET_INSERT      = 26,
-   HB_SET_INTENSITY   = 27,
-   HB_SET_MARGIN      = 28,
-   HB_SET_MCENTER     = 29,
-   HB_SET_MESSAGE     = 30,
-   HB_SET_PATH        = 31,
-   HB_SET_PRINTER     = 32,
-   HB_SET_PRINTFILE   = 33,
-   HB_SET_SCOREBOARD  = 34,
-   HB_SET_SCROLLBREAK = 35,
-   HB_SET_SOFTSEEK    = 36,
-   HB_SET_TYPEAHEAD   = 37,
-   HB_SET_UNIQUE      = 38,
-   HB_SET_WRAP        = 39
+   HB_SET_INVALID_    = 0,
+
+   HB_SET_EXACT       = 1,
+   HB_SET_FIXED       = 2,
+   HB_SET_DECIMALS    = 3,
+   HB_SET_DATEFORMAT  = 4,
+   HB_SET_EPOCH       = 5,
+   HB_SET_PATH        = 6,
+   HB_SET_DEFAULT     = 7,
+
+   HB_SET_EXCLUSIVE   = 8,
+   HB_SET_SOFTSEEK    = 9,
+   HB_SET_UNIQUE      = 10,
+   HB_SET_DELETED     = 11,
+
+   HB_SET_CANCEL      = 12,
+   HB_SET_DEBUG       = 13,
+   HB_SET_TYPEAHEAD   = 14,
+
+   HB_SET_COLOR       = 15,
+   HB_SET_CURSOR      = 16,
+   HB_SET_CONSOLE     = 17,
+   HB_SET_ALTERNATE   = 18,
+   HB_SET_ALTFILE     = 19,
+   HB_SET_DEVICE      = 20,
+   HB_SET_EXTRA       = 21,
+   HB_SET_EXTRAFILE   = 22,
+   HB_SET_PRINTER     = 23,
+   HB_SET_PRINTFILE   = 24,
+   HB_SET_MARGIN      = 25,
+
+   HB_SET_BELL        = 26,
+   HB_SET_CONFIRM     = 27,
+   HB_SET_ESCAPE      = 28,
+   HB_SET_INSERT      = 29,
+   HB_SET_EXIT        = 30,
+   HB_SET_INTENSITY   = 31,
+   HB_SET_SCOREBOARD  = 32,
+   HB_SET_DELIMITERS  = 33,
+   HB_SET_DELIMCHARS  = 34,
+
+   HB_SET_WRAP        = 35,
+   HB_SET_MESSAGE     = 36,
+   HB_SET_MCENTER     = 37,
+   HB_SET_SCROLLBREAK = 38,
+
+   HB_SET_EVENTMASK   = 39
 } HB_set_enum;
 
 typedef struct

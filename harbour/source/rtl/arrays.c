@@ -49,19 +49,13 @@ char * hb_arrayGetDate( PHB_ITEM pArray, ULONG ulIndex, char * szDate )
             hb_dateStrPut( szDate, lDay, lMonth, lYear );
          }
          else
-         {
             memset( szDate, ' ', 8 );
-         }
       }
       else
-      {
          hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ) );
-      }
    }
    else
-   {
       hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ) );
-   }
 
    return szDate;
 }
@@ -87,14 +81,10 @@ BOOL hb_arrayGetBool( PHB_ITEM pArray, ULONG ulIndex )
             return pItem->item.asDouble.value != 0.0;
       }
       else
-      {
          hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ) );
-      }
    }
    else
-   {
       hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ) );
-   }
 
    return FALSE;
 }
@@ -120,14 +110,10 @@ double hb_arrayGetDouble( PHB_ITEM pArray, ULONG ulIndex )
             return pItem->item.asDate.value;
       }
       else
-      {
          hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ) );
-      }
    }
    else
-   {
       hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ) );
-   }
 
    return 0;
 }
@@ -173,14 +159,10 @@ void hb_arrayGet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem )
       if( ulIndex <= hb_arrayLen( pArray ) )
          hb_itemCopy( pItem, pArray->item.asArray.value->pItems + ( ulIndex - 1 ) );
       else
-      {
          hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ) );
-      }
    }
    else
-   {
       hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ) );
-   }
 }
 
 char * hb_arrayGetString( PHB_ITEM pArray, ULONG ulIndex )
@@ -195,14 +177,10 @@ char * hb_arrayGetString( PHB_ITEM pArray, ULONG ulIndex )
             return pItem->item.asString.value;
       }
       else
-      {
          hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ) );
-      }
    }
    else
-   {
       hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ) );
-   }
 
    return "";
 }
@@ -219,14 +197,10 @@ ULONG hb_arrayGetStringLen( PHB_ITEM pArray, ULONG ulIndex )
             return pItem->item.asString.length;
       }
       else
-      {
          hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ) );
-      }
    }
    else
-   {
       hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ) );
-   }
 
    return 0;
 }
@@ -241,14 +215,10 @@ int hb_arrayGetType( PHB_ITEM pArray, ULONG ulIndex )
          return pItem->type;
       }
       else
-      {
          hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ) );
-      }
    }
    else
-   {
       hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ) );
-   }
 
    return 0;
 }
@@ -267,9 +237,7 @@ ULONG hb_arrayLen( PHB_ITEM pArray )
    if( IS_ARRAY( pArray ) )
       return pArray->item.asArray.value->ulLen;
    else
-   {
       hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ) );
-   }
 
    return 0;
 }
@@ -281,14 +249,10 @@ void hb_arraySet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem )
       if( ulIndex <= hb_arrayLen( pArray ) )
          hb_itemCopy( pArray->item.asArray.value->pItems + ( ulIndex - 1 ), pItem );
       else
-      {
          hb_errRT_BASE( EG_BOUND, 1133, NULL, hb_langDGetErrorDesc( EG_ARRASSIGN ) );
-      }
    }
    else
-   {
       hb_errRT_BASE( EG_ARG, 1069, NULL, hb_langDGetErrorDesc( EG_ARRASSIGN ) );
-   }
 }
 
 void hb_arraySize( PHB_ITEM pArray, ULONG ulLen )
@@ -349,9 +313,7 @@ void hb_arrayFill( PHB_ITEM pArray, PHB_ITEM pValue, ULONG ulStart, ULONG ulCoun
          hb_itemCopy( pBaseArray->pItems + ( ulStart - 1 ), pValue );
    }
    else
-   {
       hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_NOTARRAY ) );
-   }
 }
 
 void hb_arrayDel( PHB_ITEM pArray, ULONG ulIndex )
@@ -373,9 +335,7 @@ void hb_arrayDel( PHB_ITEM pArray, ULONG ulIndex )
       }
    }
    else
-   {
       hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_NOTARRAY ) );
-   }
 }
 
 void hb_arrayIns( PHB_ITEM pArray, ULONG ulIndex )
@@ -397,9 +357,7 @@ void hb_arrayIns( PHB_ITEM pArray, ULONG ulIndex )
       }
    }
    else
-   {
       hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_NOTARRAY ) );
-   }
 }
 
 int hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG ulStart, ULONG ulCount )
@@ -474,9 +432,7 @@ int hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG ulStart, ULONG ulCount
       }
    }
    else
-   {
       hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_NOTARRAY ) );
-   }
 
    return 0;
 }
@@ -511,9 +467,7 @@ void hb_arrayEval( PHB_ITEM pArray, PHB_ITEM bBlock, ULONG ulStart, ULONG ulCoun
       }
    }
    else
-   {
       hb_errRT_BASE( EG_ARG, 2017, NULL, "AEVAL" );
-   }
 }
 
 void hb_arrayRelease( PHB_ITEM pArray )
@@ -537,9 +491,7 @@ void hb_arrayRelease( PHB_ITEM pArray )
       pArray->item.asArray.value = NULL;
    }
    else
-   {
       hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_NOTARRAY ) );
-   }
 }
 
 void hb_arrayCopy( PHB_ITEM pSrcArray, PHB_ITEM pDstArray, ULONG ulStart,
@@ -570,14 +522,10 @@ void hb_arrayCopy( PHB_ITEM pSrcArray, PHB_ITEM pDstArray, ULONG ulStart,
       pDstBaseArray = pDstArray->item.asArray.value;
 
       for( ulTarget --, ulStart --; ulCount > 0; ulCount --, ulStart ++ )
-      {
          hb_itemCopy( pDstBaseArray->pItems + ( ulTarget + ulStart ), pSrcBaseArray->pItems + ulStart );
-      }
    }
    else
-   {
       hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_NOTARRAY ) );
-   }
 }
 
 PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray )
@@ -609,12 +557,9 @@ PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray )
          else
             hb_itemArrayPut( pDstArray, ulCount + 1, pSrcItem );
       }
-      return pDstArray;
    }
    else
-   {
       hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_NOTARRAY ) );
-   }
 
    return pDstArray;
 }
@@ -643,9 +588,7 @@ HARBOUR HB_ARRAY( void )
          }
 
          if( hb_parnl( tmp ) < 0 )
-         {
             hb_errRT_BASE( EG_BOUND, 1131, NULL, hb_langDGetErrorDesc( EG_ARRDIMENSION ) );
-         }
       }
 
       if( ! bError )

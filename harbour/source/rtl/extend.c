@@ -474,9 +474,6 @@ void hb_retds( char * szDate ) /* szDate must have yyyymmdd format */
    hb_itemClear( &stack.Return );
 
    stack.Return.type = IT_DATE;
-   /* QUESTION: Is this ok ? we are going to use a long to store the date */
-   /* QUESTION: What happens if we use sizeof( LONG ) instead ? */
-   /* QUESTION: Would it break Clipper language code ? */
    stack.Return.item.asDate.value = hb_dateEncode( lDay, lMonth, lYear );
 }
 

@@ -22,6 +22,21 @@
    You can contact me at: alinares@fivetech.com
  */
 
+/* Harbour Project source code
+   http://www.Harbour-Project.org/
+   The following functions are Copyright 1999 Victor Szel <info@szelvesz.hu>:
+      hb_errLaunch()
+      hb_errLaunchSubst()
+      hb_errGetFlags()
+      hb_errPutFlags()
+      hb_errRT_New()
+      HB___ERRRT_BASE()
+      hb_errRT_BASE()
+      hb_errRT_BASE_Ext1()
+      hb_errInternal()
+   See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
+*/
+
 #include "extend.h"
 #include "ctoharb.h"
 #include "itemapi.h"

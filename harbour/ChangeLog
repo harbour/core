@@ -1,3 +1,35 @@
+19990829-14:45 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * source/vm/hvm.c (hb_vmArrayPut())
+    ! hb_vmArrayPut() - QUESTION: replaced with the proper runtime error 
+      message. (like Clipper)
+      ( array[ .T. ] := 1 )
+    ! hb_vmArrayAt() - Fixed: Now throws a proper runtime error instead
+      of an internal error. (like Clipper)
+      ( array[ .T. ] )
+    ! hb_vmDec() - Throws a proper runtime error. (like Clipper)
+      ( a := .T. ; a++ )
+    ! hb_vmModulus(), hb_vmMult(), hb_vmDivide(), hb_vmPower() - Throws
+      a proper runtime error, instead of an internal error. (like Clipper)
+      ( "1" / 10, "1" * 10, "1" % 10, "1" ^ 10 )
+  * include/set.ch
+    include/set.h
+    source/rtl/set.c
+    + _SET_COUNT added to be even more Clipper compatible.
+    + _SET_* numeric values made compatible with Clipper.
+    * HB_INVALID_SET changed to HB_SET_INVALID_
+      WARNING ! All source codes should be recompiled.
+  * source/rtl/errorapi.c
+    + Added copyright information.
+  * source/rtl/itemapi.c
+    source/rtl/extend.c
+    + One QUESTION: removed, it was obsolete now.
+  * source/rtl/set.c
+    + One QUESTION: answered. ( _SET_EXIT )
+  * source/rtl/array.c
+    source/rtl/classes.c
+    * Some reformatting.
+
 19990829-11:21 GMT+1 Bruno Cantero <bruno@issnet.net>
    * include/rddapi.h
      source/rdd/dbcmd.c

@@ -536,8 +536,10 @@ HARBOUR HB___SETCENTURY (void)
  *                   EXCLUSIVE and SHARED clauses of the USE command can be
  *                   used to override this setting.
  *              _SET_EXIT        <lFlag> | <cOnOff>
- *                   QUESTION: What is this for? Controlling the exit keys
- *                   during a READ?
+ *                   Toggles the use of Uparrow and Dnarrow as READ exit keys.
+ *                   Specifying true (.T.) enables them as exit keys, and 
+ *                   false (.F.) disables them. Used internally by the 
+ *                   ReadExit() function.
  *              _SET_EXTRA       <lFlag> | <cOnOff>
  *                   QUESTION: What is this for?
  *                   It does not affect _SET_EXTRAFILE in Clipper!
@@ -638,7 +640,7 @@ HARBOUR HB_SET (void)
    HB_set_enum set_specifier;
 
    if (args > 0) set_specifier = (HB_set_enum) hb_parni(1);
-   else set_specifier = HB_INVALID_SET;
+   else set_specifier = HB_SET_INVALID_;
    if (args > 1) pArg2 = hb_param (2, IT_ANY);
    if (args > 2) pArg3 = hb_param (3, IT_ANY);
 

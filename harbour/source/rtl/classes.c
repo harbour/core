@@ -460,15 +460,18 @@ static HARBOUR hb___msgClsName( void )
 HARBOUR HB___OBJGETCLSNAME( void )
 {
    PHB_ITEM pObject = hb_param( 0, IT_OBJECT );
+   WORD wClass;
 
    if( pObject && pObject->item.asArray.value->wClass )
    {
-      WORD wClass = pObject->item.asArray.value->wClass;
+      wClass = pObject->item.asArray.value->wClass;
+
       hb_retc( pClasses[ wClass - 1 ].szName );
    }
    else
    {
-      WORD wClass = hb_parni( 1 );
+      wClass = hb_parni( 1 );
+
       if( wClass <= wClasses )
          hb_retc( pClasses[ wClass - 1 ].szName );
       else
@@ -484,8 +487,8 @@ HARBOUR HB___OBJGETCLSNAME( void )
  */
 static HARBOUR hb___msgClsSel( void )
 {
-   WORD     wClass = IS_ARRAY( stack.pBase + 1 ) ?
-                     ( stack.pBase + 1 )->item.asArray.value->wClass : 0;
+   WORD wClass = IS_ARRAY( stack.pBase + 1 ) ?
+                 ( stack.pBase + 1 )->item.asArray.value->wClass : 0;
                                                 /* Get class word           */
    PHB_ITEM pReturn = hb_itemNew( NULL );
 
@@ -532,9 +535,7 @@ static void hb_clsDictRealloc( PCLASS pClass )
 {
    /* TODO: Implement it for very large classes */
    if( pClass )
-   {
       hb_errInternal( 9999, "classes.c hb_clsDictRealloc() not implemented yet", NULL, NULL );
-   }
 }
 
 
@@ -633,8 +634,7 @@ static HARBOUR hb___msgGetClsData( void )
    WORD wIndex = pMethod->wData;
 
    if( wClass && wClass <= wClasses )
-      hb_arrayGet( pClasses[ wClass - 1 ].pClassDatas, wIndex,
-                   &stack.Return );
+      hb_arrayGet( pClasses[ wClass - 1 ].pClassDatas, wIndex, &stack.Return );
 }
 
 
@@ -651,6 +651,7 @@ static HARBOUR hb___msgGetData( void )
    if( wIndex > ( WORD ) hb_arrayLen ( pObject ) )
                                                 /* Resize needed            */
       hb_arraySize( pObject, wIndex );          /* Make large enough        */
+
    hb_arrayGet( pObject, wIndex, &stack.Return );
 }
 
@@ -743,9 +744,7 @@ HARBOUR HB___OBJHASMSG( void )
    if( pObject && pString )
       hb_retl( hb_objHasMsg( pObject, pString->item.asString.value ) != 0 );
    else
-   {
       hb_errRT_BASE( EG_ARG, 3000, NULL, "__OBJHASMSG" );
-   }
 }
 
 
@@ -766,9 +765,7 @@ HARBOUR HB___OBJCLONE( void )
       hb_itemRelease( pDstObject );
    }
    else
-   {
       hb_errRT_BASE( EG_ARG, 3001, NULL, "__OBJCLONE" );
-   }
 }
 
 
@@ -794,9 +791,7 @@ HARBOUR HB___OBJSENDMSG( void )
       hb_vmDo( hb_pcount()-2 );                  /* Execute message              */
    }
    else
-   {
       hb_errRT_BASE( EG_ARG, 3000, NULL, "__OBJSENDMSG" );
-   }
 }
 
 
@@ -949,9 +944,7 @@ HARBOUR HB___CLSINSTSUPER( void )
          }
       }
       else
-      {
          hb_errRT_BASE( EG_ARG, 3003, "Cannot find super class", "__CLSINSTSUPER" );
-      }
    }
    if( !bFound )
       hb_retni( 0 );
@@ -984,9 +977,7 @@ HARBOUR HB___CLS_CNTDATA( void )
    WORD wClass = hb_parnl( 1 );
 
    if( wClass )
-   {
       hb_retni( pClasses[ wClass - 1 ].wDatas );
-   }
 }
 
 /*
@@ -999,9 +990,7 @@ HARBOUR HB___CLS_DECDATA( void )
    WORD wClass = hb_parnl( 1 );
 
    if( wClass )
-   {
       hb_retni( pClasses[ wClass - 1 ].wDatas-- );
-   }
 }
 
 
@@ -1015,8 +1004,6 @@ HARBOUR HB___CLS_INCDATA( void )
    WORD wClass = hb_parnl( 1 );
 
    if( wClass )
-   {
       hb_retni( ++pClasses[ wClass - 1 ].wDatas );
-   }
 }
 
