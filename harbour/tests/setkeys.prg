@@ -81,7 +81,7 @@
     bF8Action := hb_SetKeyGet( K_F8, @bF8Active )
     SetKey( K_F8, NIL )
 
-    SetKey( { 49, 50, 52, 53 }, {|x| qout( chr( x ) ) } )
+    hb_SetKeyArray( { 49, 50, 52, 53 }, {|x| qout( chr( x ) ) } )
     do while ( n := inkey( 0 ) ) != K_ESC
       if hb_SetKeyCheck( n )
         qqout( " hit hot" )
@@ -91,5 +91,8 @@
       endif
     end
 
-    SetKey( { 49, 50, 52, 53 }, NIL )
+    hb_SetKeyArray( { 49, 50, 52, 53 }, NIL )
     SetKey( K_F8, bF8Action, bF8Active )
+
+    return
+

@@ -1,3 +1,8 @@
+2000-06-04 17:52 UTC+0100 Victor Szakats <info@szelvesz.hu>
+
+   * tests/setkeys.prg
+     ! Changed to reflect setkey function changes.
+
 2000-06-04 13:55 UTC+0100 Antonio Linares <alinares@fivetech.com>
    * include/hbclass.ch
       * Some minor fixes
