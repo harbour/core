@@ -1041,7 +1041,7 @@ void ItemRelease( PITEM pItem )
       }
       pItem->wLength = 0;
    }
-   else if( IS_ARRAY( pItem ) )
+   else if( IS_ARRAY( pItem ) && pItem->value.pBaseArray )
    {
       if( --( ( PBASEARRAY ) pItem->value.pBaseArray )->wHolders == 0 )
          hb_arrayRelease( pItem );
