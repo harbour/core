@@ -1,3 +1,26 @@
+2001-05-27 21:20 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * contrib/dot/pp.prg
+     * Few minor corrections to NextExp()
+     ! Fixed generation of compiled rules results to always have marker place holders, even if no results exist.
+     + Added TraceLog() message about repeatble results for non optional markers.
+     * Updated burned-in rules for FiveWin.ch with newly generated rules.
+     + Added few #ifdef FW to better support compilation with \fwh\samples\buildh.bat
+     + Added #include "fwextern.ch" (#ifdef FW) to force link most FW modules.
+
+   /* PP, if built like this:
+
+         BUILDH pp -dFW
+
+      (note -dFW) will produce PP.exe which will run most \fwh\samples\*.prg
+
+      Test like this:
+
+         PP Tutor01 -R
+
+      etc... :-)
+
+   */
+
 2001-05-27 02:19 UTC-0800 Brian Hays <bhays@abacuslaw.com>
 
    * source/rdd/dbcmd.c

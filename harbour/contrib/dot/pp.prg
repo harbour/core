@@ -27,6 +27,9 @@
 #ifdef __HARBOUR__
    #INCLUDE "hbextern.ch"
    #DEFINE  CRLF HB_OsNewLine()
+   #ifdef FW
+      #INCLUDE "fwextern.ch"
+   #endif
 #else
    #DEFINE __CLIPPER__
 
@@ -190,6 +193,7 @@ STATIC s_acFlowType := {},  s_nFlowId := 0
 #endif
 
 static s_lRunLoaded := .F., s_lClsLoaded := .F., s_lFWLoaded := .F.
+static s_sBlock
 
 //--------------------------------------------------------------//
 
@@ -559,6 +563,11 @@ PROCEDURE RP_Dot()
 
    LOCAL GetList := {}, sLine := Space(256)
 
+   #ifdef FW
+       Alert( "DOT mode (no filename parameter) is Not ready for GUI yet." + CRLF + CRLF + "Please try Interpreter mode, using the -R switch..." )
+       RETURN
+   #endif
+
    bCount := .F.
 
    ProcessFile( "rp_dot.ch" )
@@ -581,8 +590,6 @@ PROCEDURE RP_Dot()
 
       ExecuteLine( ProcessLine( RTrim( sLine ), 1, '' ) )
    ENDDO
-
-   CLEAR SCREEN
 
 RETURN
 
@@ -738,6 +745,7 @@ PROCEDURE CompileLine( sPPed, nLine )
    LOCAL nAt, nPos, cChr
    LOCAL nJumps, nJump
    LOCAL sCounter, sStart, sEnd, sStep
+   LOCAL Dummy
 
    ExtractLeadingWS( @sPPed )
    DropTrailingWS( @sPPed )
@@ -759,18 +767,27 @@ PROCEDURE CompileLine( sPPed, nLine )
          DropTrailingWS( @sBlock )
 
          IF ! ( sBlock == '' )
+            IF sBlock = "#line"
+               LOOP
+            ENDIF
+
             #ifdef __CLIPPER__
                 /* Clipper Macro Compiler can't compile nested blocks! */
                 CompileNestedBlocks( sBlock, @sBlock )
             #endif
 
-            IF sBlock = "PP_PROC" .OR. s_nProcId == 0 .AND. sBlock = "PP_Statics"
+            IF ( s_nProcId == 0 .AND. sBlock = "PP_Statics" )
+               Dummy := &( sBlock )
+               LOOP
+            ENDIF
+
+            IF sBlock = "PP_PROC"
                sSymbol := Upper( LTrim( SubStr( sBlock, At( ' ', sBlock ) ) ) )
                aSize( s_aProcedures, ++s_nProcId )
 
                IF sBlock = "PP_PROC_PRG"
                   sSymbol := s_sModule + sSymbol
-               ELSEIF sBlock = "PP_PROC_INIT" .OR. sBlock = "PP_Statics"
+               ELSEIF sBlock = "PP_PROC_INIT"
                   aAdd( s_aInitExit[1], s_nProcId )
                ELSEIF sBlock = "PP_PROC_EXIT"
                   aAdd( s_aInitExit[2], s_nProcId )
@@ -1037,11 +1054,11 @@ PROCEDURE CompileLine( sPPed, nLine )
                   ENDIF
                ELSE
                   nAt := At( '=', sBlock )
-                  IF nAt > 1
+                  IF nAt > 1 .AND. SubStr( sBlock, nAt - 1, 1 ) != ':'
                      nAt--
                      FOR nPos := 1 TO nAt
                         cChr := SubStr( sBlock, nPos, 1 )
-                        IF ! ( IsAlpha( cChr ) .OR. IsDigit( cChr ) .OR. cChr $ "[]&._ " )
+                        IF ! ( IsAlpha( cChr ) .OR. IsDigit( cChr ) .OR. cChr $ "[]:&._ " )
                            EXIT
                         ENDIF
                      NEXT
@@ -1056,6 +1073,7 @@ PROCEDURE CompileLine( sPPed, nLine )
                ELSE
                   //? nLine, s_nProcId, sBlock
                   //TraceLog( sBlock )
+                  s_sBlock := sBlock
                   aAdd( s_aProcedures[ s_nProcId ][2], { 0, &( "{||" + sBlock + "}" ), nLine } )
                ENDIF
             ENDIF
@@ -1076,13 +1094,18 @@ PROCEDURE CompileLine( sPPed, nLine )
              CompileNestedBlocks( sBlock, @sBlock )
          #endif
 
-         IF sBlock = "PP_PROC" .OR. s_nProcId == 0 .AND. sBlock = "PP_Statics"
+         IF ( s_nProcId == 0 .AND. sBlock = "PP_Statics" )
+            Dummy := &( sBlock )
+            BREAK
+         ENDIF
+
+         IF sBlock = "PP_PROC"
             sSymbol := Upper( LTrim( SubStr( sBlock, At( ' ', sBlock ) ) ) )
             aSize( s_aProcedures, ++s_nProcId )
 
             IF sBlock = "PP_PROC_PRG"
                sSymbol := s_sModule + sSymbol
-            ELSEIF sBlock = "PP_PROC_INIT" .OR. sBlock = "PP_Statics"
+            ELSEIF sBlock = "PP_PROC_INIT"
                aAdd( s_aInitExit[1], s_nProcId )
             ELSEIF sBlock = "PP_PROC_EXIT"
                aAdd( s_aInitExit[2], s_nProcId )
@@ -1348,12 +1371,12 @@ PROCEDURE CompileLine( sPPed, nLine )
 
                ENDIF
             ELSE
-               nAt := At( "=", sBlock )
-               IF nAt > 1
+               nAt := At( '=', sBlock )
+               IF nAt > 1 .AND. SubStr( sBlock, nAt - 1, 1 ) != ':'
                   nAt--
                   FOR nPos := 1 TO nAt
                      cChr := SubStr( sBlock, nPos, 1 )
-                     IF ! ( IsAlpha( cChr ) .OR. IsDigit( cChr ) .OR. cChr $ "[]&._ " )
+                     IF ! ( IsAlpha( cChr ) .OR. IsDigit( cChr ) .OR. cChr $ "[]:&._ " )
                         EXIT
                      ENDIF
                   NEXT
@@ -1368,6 +1391,7 @@ PROCEDURE CompileLine( sPPed, nLine )
             ELSE
                //? nLine, s_nProcId, sBlock
                //TraceLog( sBlock )
+               s_sBlock := sBlock
                aAdd( s_aProcedures[ s_nProcId ][2], { 0, &( "{||" + sBlock + "}" ), nLine } )
             ENDIF
          ENDIF
@@ -1719,6 +1743,8 @@ PROCEDURE RP_Comp_Err( oErr )
 
       sArgs := Left( sArgs, Len( sArgs ) -2 )
    ENDIF
+
+   TraceLog( "Sorry, could not compile: '" + s_sBlock +"' Description: " + oErr:Description + sArgs + " " + ProcName(2) + '[' + Str( ProcLine(2) ) + ']')
 
    Alert( "Sorry, could not compile: " + oErr:Description + sArgs + " " + ProcName(2) + '[' + Str( ProcLine(2) ) + ']')
 
@@ -2428,7 +2454,7 @@ FUNCTION ProcessFile( sSource )
    RECOVER USING cError
       IF ValType( cError ) == 'C'
          TraceLog( "No EOL after: ", cError )
-         Alert( "No EOL after: " + cError )
+         //Alert( "No EOL after: " + cError )
       ENDIF
       nPosition := nMaxPos + 2
       sLine := ""
@@ -2869,12 +2895,14 @@ FUNCTION ProcessLine( sLine, nLine, sSource )
          //? '"' + sLeft +'"', '"' + sPassed + '"'
          //WAIT
 
+         /*
          IF aScan( aCommanded, nRule ) > 0
             Alert( "Cyclic directive: #command " + sToken )
             BREAK
          ELSE
             aAdd( aCommanded, nRule )
          ENDIF
+         */
 
          nPosition := 0
          WHILE ( nNewLineAt := nAtSkipStr( ';', sLine ) ) > 0
@@ -3074,6 +3102,12 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
          cType     := aMP[4]
          aList     := aMP[5]
 
+         /* Might be needed - added 5-27-2001 when debugging oddity in FW CheckBox rule ???
+         IF aMP[2] == 0
+            nOptional := 0
+            aSize( asRevert, 0 )
+         ENDIF
+         */
          /* "Used" non repeatable! */
          IF nMarkerID > 0 .AND. nMarkerID < 1000
             IF aMarkers != NIL .AND. aMarkers[nMarkerID] != NIL
@@ -3309,12 +3343,12 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
                      ? nMarkerId, "Repetable added: ", xMarker, Len( aMarkers[nMarkerId] )
                   ENDIF
                ELSE
-                  IF ValType( aMarkers ) != 'A' .OR. nMarkerId > Len( aMarkers )
-                     TraceLog( "Oops", nRule, sKey, nMarkerId, ValType( aMarkers ), IIF( ValType( aMarkers ) == 'A', Len( aMarkers ) , "No array" ) )
-                     Alert( "Unexpected case [" + Str( Procline() ) + "]" )
-                  ELSE
+                  //IF ValType( aMarkers ) != 'A' .OR. nMarkerId > Len( aMarkers )
+                  //   TraceLog( "Oops", nRule, sKey, nMarkerId, ValType( aMarkers ), IIF( ValType( aMarkers ) == 'A', Len( aMarkers ) , "No array" ) )
+                  //   Alert( "Unexpected case [" + Str( Procline() ) + "]" )
+                  //ELSE
                      aMarkers[nMarkerId] := xMarker
-                  ENDIF
+                  //ENDIF
                ENDIF
             ENDIF
 
@@ -4386,7 +4420,12 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
 
      sJustToken := RTrim( sToken )
      IF sNextAnchor != NIL  .AND. sJustToken == sNextAnchor
-        EXIT
+        // Clipper give preference to ',' in list expression.
+        IF ! ( sNextAnchor $ ',' .AND. cType $ ",A" )
+           //TraceLog( "Anchor: '" + sNextAnchor + "' found!" )
+           sLine := sToken + sLine
+           EXIT
+        ENDIF
      ENDIF
 
      nLen := Len( sJustToken )
@@ -4426,9 +4465,11 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
         WAIT
      ENDIF
 
+     //TraceLog( "Token: '" + sToken + "' Len: " + Str( nLen ) + " Next: '" + sNextToken + "'" )
+
      IF nLen == 1
 
-        IF s1 $ "-+!:"
+        IF s1 $ "-+!:@"
            sExp += sToken
            LOOP
         ELSEIF s1 == "&"
@@ -4477,9 +4518,11 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
               sLine          := sNextLine
               s_bArrayPrefix := .T.
            ELSE
-              sTemp := NextExp( @sLine, ',', NIL, NIL, sNextAnchor ) // Content
+              //TraceLog( "Content from: " + sLine )
+              sTemp := NextExp( @sLine, ',', NIL, NIL, NIL ) // Content - Ignoring sNextAnchor !!!
               IF sTemp == NIL
-                 Alert( "ERROR!(1) Unbalanced '(' at: " + sExp  )
+                 TraceLog( "ERROR!(1) No content at: '" + sLine + "' After: " + sExp  )
+                 Alert( "ERROR!(1) No content at: '" + sLine + "' After: " + sExp  )
                  EXIT
               ELSE
                  sExp +=  sTemp
@@ -4488,12 +4531,14 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
 
               sToken := NextToken( @sLine ) // Close
               IF sToken == NIL
+                 TraceLog( "ERROR!(2) Unbalanced '(' at: " + sExp )
                  Alert( "ERROR!(2) Unbalanced '(' at: " + sExp )
                  EXIT
               ELSEIF Left( sToken, 1 ) == ')'
                  sExp += sToken
               ELSE
                  sLine := sToken + sLine
+                 TraceLog( "ERROR!(3) Unbalanced '(' Found: '" +  sToken + "' at: " + sExp )
                  Alert( "ERROR!(3) Unbalanced '(' Found: '" +  sToken + "' at: " + sExp )
                  EXIT
               ENDIF
@@ -4514,8 +4559,9 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
                  sLine          := sNextLine
                  s_bArrayPrefix := .F.
               ELSE
-                 sTemp := NextExp( @sLine, ',', NIL, NIL, sNextAnchor ) // Content
+                 sTemp := NextExp( @sLine, ',', NIL, NIL, NIL ) // Content - Ignoring sNextAnchor !!!
                  IF sTemp == NIL
+                    TraceLog( "ERROR! Unbalanced '{|...' at: " + sExp )
                     Alert( "ERROR! Unbalanced '{|...' at: " + sExp )
                     EXIT
                  ELSE
@@ -4530,13 +4576,15 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
                     sLine          := sNextLine
                     s_bArrayPrefix := .F.
                  ELSE
+                    TraceLog( "ERROR! Unbalanced '{|...|' at: " + sExp )
                     Alert( "ERROR! Unbalanced '{|...|' at: " + sExp )
                     EXIT
                  ENDIF
               ENDIF
 
-              sTemp := NextExp( @sLine, ',', NIL, NIL, sNextAnchor ) // Content
+              sTemp := NextExp( @sLine, ',', NIL, NIL, NIL ) // Content - Ignoring sNextAnchor !!!
               IF sTemp == NIL
+                 TraceLog( "ERROR! Empty '{||'" )
                  Alert( "ERROR! Empty '{||'" )
                  EXIT
               ELSE
@@ -4545,12 +4593,14 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
 
               sToken := NextToken( @sLine ) // Close
               IF sToken == NIL
+                 TraceLog( "ERROR! Unbalanced '{' at: " + sExp )
                  Alert( "ERROR! Unbalanced '{' at: " + sExp )
                  EXIT
               ELSEIF Left( sToken, 1 ) == '}'
                  sExp += sToken
               ELSE
                  sLine := sToken + sLine
+                 TraceLog( "ERROR! Unbalanced '{' at: " + sExp )
                  Alert( "ERROR! Unbalanced '{' at: " + sExp )
                  EXIT
               ENDIF
@@ -4561,8 +4611,9 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
                  sLine          := sNextLine
                  s_bArrayPrefix := .T.
               ELSE
-                 sTemp := NextExp( @sLine, ',', NIL, NIL, sNextAnchor ) // Content
+                 sTemp := NextExp( @sLine, ',', NIL, NIL, NIL ) // Content - Ignoring sNextAnchor !!!
                  IF sTemp == NIL
+                    TraceLog( "ERROR! Unbalanced '{...'", sLine )
                     Alert( "ERROR! Unbalanced '{...'" )
                     EXIT
                  ELSE
@@ -4571,12 +4622,14 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
 
                  sToken := NextToken( @sLine ) // Close
                  IF sToken == NIL
+                    TraceLog( "ERROR! Unbalanced '{' at: " + sExp )
                     Alert( "ERROR! Unbalanced '{' at: " + sExp )
                     EXIT
                  ELSEIF Left( sToken, 1 ) == '}'
                     sExp += sToken
                  ELSE
                     sLine := sToken + sLine
+                    TraceLog( "ERROR! Unbalanced '{' at: " + sExp )
                     Alert( "ERROR! Unbalanced '{' at: " + sExp )
                     EXIT
                  ENDIF
@@ -4587,7 +4640,7 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
            // Continue  2nd level checks below.
         ELSEIF s1 == "["
            sExp  += sToken
-           sTemp := NextExp( @sLine, ',', NIL, NIL, sNextAnchor ) // Content
+           sTemp := NextExp( @sLine, ',', NIL, NIL, NIL ) // Content - Ignoring sNextAnchor !!!
            IF sTemp == NIL
               Alert( "ERROR! Unbalanced '[' at: " + sExp )
               EXIT
@@ -4821,7 +4874,11 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
      ENDIF
   ELSEIF cType == ','
      IF sExp == ""
-        sExp := NIL
+        IF sList == ""
+           sExp := NIL
+        ELSE
+           sExp := sList
+        ENDIF
      ELSE
         sExp := ( sList + sExp )
      ENDIF
@@ -5210,6 +5267,7 @@ FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
    LOCAL aRP, nAt, sResult, nCloseAt, sMarker, nCloseOptionalAt, sPad, nResults, nMarker, nMP, nMatches, nOffset
    LOCAL nWord, nWords, cChar
    LOCAL nLen, s1, s2, s3
+   LOCAL sRuleCopy := sRule
 
    /*
    nMarkerID
@@ -5586,75 +5644,7 @@ FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
    aLIST
    */
 
-   nMatches := Len( aRule[2] )
-   FOR Counter := 1 TO nMatches
-      aMatch := aRule[2][Counter]
-
-      /* Optional group start (marker), no anchor, and not a restricted pattern - have to build stop words list! */
-      IF aMatch[1] > 0 .AND. aMatch[2] > 0 .AND. aMatch[3] == NIL .AND. aMatch[4] != ':'
-
-         aWords    := {}
-         nOptional := aMatch[2]
-
-         nMP := Counter - 1
-         WHILE nMP > 0
-            aMatch := aRule[2][nMP]
-            IF aMatch[2] >= 0 .AND. aMatch[2] < nOptional
-               EXIT
-            ENDIF
-            IF aMatch[2] > 0 .AND. aMatch[2] == nOptional
-               IF aMatch[3] != NIL
-                  aAdd( aWords, Upper( aMatch[3] ) )
-               ELSEIF aMatch[4] == ':'
-                  nWords := Len( aMatch[5] )
-                  FOR nWord := 1 TO nWords
-                     aAdd( aWords, aMatch[5][nWord] )
-                  NEXT
-               ENDIF
-            ENDIF
-            nMP--
-         ENDDO
-
-         nMP := Counter + 1
-         WHILE nMP <= nMatches
-            aMatch := aRule[2][nMP]
-            IF aMatch[2] >= 0 .AND. aMatch[2] < nOptional
-               IF aMatch[3] != NIL
-                  aAdd( aWords, Upper( aMatch[3] ) )
-               ELSEIF aMatch[4] == ':'
-                  nWords := Len( aMatch[5] )
-                  FOR nWord := 1 TO nWords
-                     aAdd( aWords, aMatch[5][nWord] )
-                  NEXT
-               ENDIF
-               EXIT
-            ENDIF
-            IF aMatch[2] > 0 .AND. aMatch[2] == nOptional
-               IF aMatch[3] != NIL
-                  aAdd( aWords, Upper( aMatch[3] ) )
-               ELSEIF aMatch[4] == ':'
-                  nWords := Len( aMatch[5] )
-                  FOR nWord := 1 TO nWords
-                     aAdd( aWords, aMatch[5][nWord] )
-                  NEXT
-               ENDIF
-            ENDIF
-            nMP++
-         ENDDO
-
-         IF Len( aWords ) > 0
-            aRule[2][Counter][5] := aWords
-         ENDIF
-
-      ENDIF
-
-      IF aMatch[3] != NIL
-         aMatch[3] := StrTran( aMatch[3], '\', '' )
-      ENDIF
-
-      //? aRule[1], aRule[2][Counter][1], aRule[2][Counter][2], aRule[2][Counter][3], aRule[2][Counter][4], aRule[2][Counter][5]
-   NEXT
-   //WAIT
+   // *** Processing STOP Words below, because processing RP may discover repeatable rotted by non optional marker and correct it to optional!
 
    /*
    ? ''
@@ -6057,14 +6047,24 @@ FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
             ELSE
                WHILE aRule[2][nMP][2] < 0
                   IF aRule[2][nMP][1] >= 0
+
+                     IF aRule[2][nMP][2] == 0
+                        TraceLog( "Result #" + Str( Counter ) + " marked REPEATABLE but root #" + Str( nMarker ) + " is not OPTIONAL!", sRuleCopy )
+                        aRule[2][nMP][2] := 1
+                     ENDIF
+
                      IF aRule[2][nMP][1] < 1000
                         aRule[2][nMP][1] += ( 1000 )
+                        //? "Flagged:", nMP, "As:", aRule[2][nMP][1]
                      ENDIF
-                     //? "Marked:", nMP, "As:", aRule[2][nMP][1]
                   ENDIF
 
                   nMP--
                ENDDO
+               IF aRule[2][nMP][2] == 0
+                  TraceLog( "Result #" + Str( Counter ) + " marked REPEATABLE but root #" + Str( nMarker ) + " is not OPTIONAL!", sRuleCopy )
+                  aRule[2][nMP][2] := 1
+               ENDIF
                IF aRule[2][nMP][1] < 1000
                   aRule[2][nMP][1] += ( 1000 )
                   //? "Flagged:", nMP, "As:", aRule[2][nMP][1]
@@ -6084,6 +6084,77 @@ FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
       ENDIF
    NEXT
 
+   //WAIT
+
+   // Processing STOP words for NON Anchored optionals.
+   nMatches := Len( aRule[2] )
+   FOR Counter := 1 TO nMatches
+      aMatch := aRule[2][Counter]
+
+      /* Optional group start (marker), no anchor, and not a restricted pattern - have to build stop words list! */
+      IF aMatch[1] > 0 .AND. aMatch[2] > 0 .AND. aMatch[3] == NIL .AND. aMatch[4] != ':'
+
+         aWords    := {}
+         nOptional := aMatch[2]
+
+         nMP := Counter - 1
+         WHILE nMP > 0
+            aMatch := aRule[2][nMP]
+            IF aMatch[2] >= 0 .AND. aMatch[2] < nOptional
+               EXIT
+            ENDIF
+            IF aMatch[2] > 0 .AND. aMatch[2] == nOptional
+               IF aMatch[3] != NIL
+                  aAdd( aWords, Upper( aMatch[3] ) )
+               ELSEIF aMatch[4] == ':'
+                  nWords := Len( aMatch[5] )
+                  FOR nWord := 1 TO nWords
+                     aAdd( aWords, aMatch[5][nWord] )
+                  NEXT
+               ENDIF
+            ENDIF
+            nMP--
+         ENDDO
+
+         nMP := Counter + 1
+         WHILE nMP <= nMatches
+            aMatch := aRule[2][nMP]
+            IF aMatch[2] >= 0 .AND. aMatch[2] < nOptional
+               IF aMatch[3] != NIL
+                  aAdd( aWords, Upper( aMatch[3] ) )
+               ELSEIF aMatch[4] == ':'
+                  nWords := Len( aMatch[5] )
+                  FOR nWord := 1 TO nWords
+                     aAdd( aWords, aMatch[5][nWord] )
+                  NEXT
+               ENDIF
+               EXIT
+            ENDIF
+            IF aMatch[2] > 0 .AND. aMatch[2] == nOptional
+               IF aMatch[3] != NIL
+                  aAdd( aWords, Upper( aMatch[3] ) )
+               ELSEIF aMatch[4] == ':'
+                  nWords := Len( aMatch[5] )
+                  FOR nWord := 1 TO nWords
+                     aAdd( aWords, aMatch[5][nWord] )
+                  NEXT
+               ENDIF
+            ENDIF
+            nMP++
+         ENDDO
+
+         IF Len( aWords ) > 0
+            aRule[2][Counter][5] := aWords
+         ENDIF
+
+      ENDIF
+
+      IF aMatch[3] != NIL
+         aMatch[3] := StrTran( aMatch[3], '\', '' )
+      ENDIF
+
+      //? aRule[1], aRule[2][Counter][1], aRule[2][Counter][2], aRule[2][Counter][3], aRule[2][Counter][4], aRule[2][Counter][5]
+   NEXT
    //WAIT
 
    aAdd( aResults, { aResult, aModifiers, aValues } )
@@ -6554,7 +6625,6 @@ FUNCTION CompileToCCH( sSource )
 
          IF nRPs == 0
             FWrite( hCCH, ", " )
-            FWrite( hCCH, ", " )
          ELSE
             FWrite( hCCH, ", { " )
             FOR nModifier := 1 TO nRPs
@@ -6564,7 +6634,11 @@ FUNCTION CompileToCCH( sSource )
                ENDIF
             NEXT
             FWrite( hCCH, "} " )
+         ENDIF
 
+         IF nIDs == 0
+            FWrite( hCCH, ", " )
+         ELSE
             FWrite( hCCH, ", { " )
             FOR nID := 1 TO nIDs
                FWrite( hCCH, "NIL" )
@@ -6572,7 +6646,7 @@ FUNCTION CompileToCCH( sSource )
                   FWrite( hCCH, ", " )
                ENDIF
             NEXT
-            FWrite( hCCH, "} " )
+            FWrite( hCCH, " } " )
          ENDIF
          FWrite( hCCH, " } )" + CRLF )
       NEXT
@@ -7177,6 +7251,8 @@ RETURN .T.
 
 FUNCTION InitClsRules()
 
+  #ifdef __HARBOUR__
+
   /* Defines */
   aAdd( aDefRules, { 'HB_CLASS_CH_' ,  , .T. } )
   aAdd( aDefRules, { 'HB_SETUP_CH_' ,  , .T. } )
@@ -7318,11 +7394,15 @@ FUNCTION InitClsRules()
   aAdd( aCommRules, { 'ACCESS' , { {    1,   0, NIL, '<', NIL }, {    2,   0, 'CLASS', '<', NIL } } , .T. } )
   aAdd( aCommRules, { 'ASSIGN' , { {    1,   0, NIL, '<', NIL }, {    2,   0, 'CLASS', '<', NIL } } , .T. } )
 
+  #endif
+
 RETURN .T.
 
 //--------------------------------------------------------------//
 
 FUNCTION InitClsResults()
+
+  #ifdef __HARBOUR__
 
   /* Defines Results*/
   aAdd( aDefResults, { , ,  } )
@@ -7467,6 +7547,8 @@ FUNCTION InitClsResults()
   aAdd( aCommResults, { { {   0, 'static function ' }, {   0,   2 }, {   0, '_' }, {   0,   1 }, {   0, ' ; local Self AS CLASS ' }, {   0,   2 }, {   0, ' := QSelf() AS CLASS ' }, {   0,   2 } }, { -1,  1, -1,  1, -1,  1, -1,  1} , { NIL, NIL}  } )
   aAdd( aCommResults, { { {   0, 'static function ' }, {   0,   2 }, {   0, '__' }, {   0,   1 }, {   0, ' ; local Self AS CLASS ' }, {   0,   2 }, {   0, ' := QSelf() AS CLASS ' }, {   0,   2 } }, { -1,  1, -1,  1, -1,  1, -1,  1} , { NIL, NIL}  } )
 
+  #endif
+
 RETURN .T.
 
 //--------------------------------------------------------------//
@@ -7557,7 +7639,6 @@ FUNCTION xToStr( xExp )
 RETURN ""
 
 //--------------------------------------------------------------//
-
 FUNCTION PP_QSelf( o )
 
    STATIC s_oSelf := NIL
@@ -7826,8 +7907,9 @@ FUNCTION nAtSkipStr( sFind, sLine )
 RETURN 0
 
 //--------------------------------------------------------------//
-
 FUNCTION InitFWRules()
+
+   #ifdef __HARBOUR__
 
    /* Defines */
    aAdd( aDefRules, { '_FIVEWIN_CH' ,  , .T. } )
@@ -8166,14 +8248,12 @@ FUNCTION InitFWRules()
    aAdd( aCommRules, { 'SET' , { {    1,   1, 'SECTION', '<', NIL }, {    2,   1, 'ENTRY', '<', NIL }, {    3,   1, 'TO', '<', NIL }, {    4,   1, NIL, ':', { 'OF', 'INI' } }, {    5,  -1, NIL, '<', NIL } } , .T. } )
    aAdd( aCommRules, { 'ENDINI' ,  , .T. } )
    aAdd( aCommRules, { 'MENU' , { { 1001,   1, NIL, '<', { 'POPUP' } }, {    2,   1, NIL, ':', { 'POPUP' } } } , .T. } )
-   aAdd( aCommRules, { 'MENUITEM' , { { 1001,   1, NIL, '<', { 'MESSAGE', 'CHECK', 'CHECKED', 'MARK', 'ENABLED', 'DISABLED', 'FILE', 'FILENAME', 'DISK', 'RESOURCE', 'RESNAME', 'NAME', 'ACTION', 'BLOCK', 'OF', 'MENU', 'SYSMENU', 'ACCELERATOR', 'HELP', 'HELP ID', 'HELPID', 'WHEN', 'BREAK' } }, {    0,  -1, 'PROMPT', NIL, NIL }, {    2,   1, NIL, '<', { 'MESSAGE', 'CHECK', 'CHECKED', 'MARK', 'ENABLED', 'DISABLED', 'FILE', 'FILENAME', 'DISK', 'RESOURCE', 'RESNAME', 'NAME', 'ACTION', 'BLOCK', 'OF', 'MENU', 'SYSMENU', 'ACCELERATOR', 'HELP', 'HELP ID', 'HELPID', 'WHEN', 'BREAK' } }, {    3,   1, 'MESSAGE', '<', NIL }, {    4,   1, NIL, ':', { 'CHECK', 'CHECKED', 'MARK' } }, { 1005,   1, NIL, ':', { 'ENABLED', 'DISABLED' } }, {    6,   1, NIL, ':', { 'FILE', 'FILENAME', 'DISK' } }, {    7,  -1, NIL, '<', NIL }, {    8,   1, NIL, ':', { 'RESOURCE', 'RESNAME', 'NAME' } }, {    9,  -1, NIL, '<', NIL }, { 1010,   1, 'ACTION', 'A', NIL }, ;
-       {   11,   1, 'BLOCK', '<', NIL }, {   12,   1, NIL, ':', { 'OF', 'MENU', 'SYSMENU' } }, {   13,  -1, NIL, '<', NIL }, {   14,   1, 'ACCELERATOR', '<', NIL }, {   15,  -1, ',', '<', NIL }, {   16,   1, NIL, ':', { 'HELP' } }, {   17,   1, NIL, ':', { 'HELP ID', 'HELPID' } }, {   18,  -1, NIL, '<', NIL }, { 1019,   1, 'WHEN', '<', NIL }, {   20,   1, NIL, ':', { 'BREAK' } } } , .T. } )
+   aAdd( aCommRules, { 'MENUITEM' , { { 1001,   1, NIL, '<', { 'MESSAGE', 'CHECK', 'CHECKED', 'MARK', 'ENABLED', 'DISABLED', 'FILE', 'FILENAME', 'DISK', 'RESOURCE', 'RESNAME', 'NAME', 'ACTION', 'BLOCK', 'OF', 'MENU', 'SYSMENU', 'ACCELERATOR', 'HELP', 'HELP ID', 'HELPID', 'WHEN', 'BREAK' } }, {    0,  -1, 'PROMPT', NIL, NIL }, {    2,   1, NIL, '<', { 'MESSAGE', 'CHECK', 'CHECKED', 'MARK', 'ENABLED', 'DISABLED', 'FILE', 'FILENAME', 'DISK', 'RESOURCE', 'RESNAME', 'NAME', 'ACTION', 'BLOCK', 'OF', 'MENU', 'SYSMENU', 'ACCELERATOR', 'HELP', 'HELP ID', 'HELPID', 'WHEN', 'BREAK' } }, {    3,   1, 'MESSAGE', '<', NIL }, {    4,   1, NIL, ':', { 'CHECK', 'CHECKED', 'MARK' } }, { 1005,   1, NIL, ':', { 'ENABLED', 'DISABLED' } }, {    6,   1, NIL, ':', { 'FILE', 'FILENAME', 'DISK' } }, {    7,  -1, NIL, '<', NIL }, {    8,   1, NIL, ':', { 'RESOURCE', 'RESNAME', 'NAME' } }, {    9,  -1, NIL, '<', NIL }, { 1010,   1, 'ACTION', 'A', NIL }, {   11,   1, 'BLOCK', '<', NIL }, {   12,   1, NIL, ':', { 'OF', 'MENU', 'SYSMENU' } }, {   13,  -1, NIL, '<', NIL }, {   14,   1, 'ACCELERATOR', '<', NIL }, {   15,  -1, ',', '<', NIL }, {   16,   1, NIL, ':', { 'HELP' } }, {   17,   1, NIL, ':', { 'HELP ID', 'HELPID' } }, {   18,  -1, NIL, '<', NIL }, { 1019,   1, 'WHEN', '<', NIL }, {   20,   1, NIL, ':', { 'BREAK' } } } , .T. } )
    aAdd( aCommRules, { 'MRU' , { {    1,   0, NIL, '<', NIL }, {    2,   1, NIL, ':', { 'INI', 'ININAME', 'FILENAME', 'NAME', 'DISK' } }, {    3,  -1, NIL, '<', NIL }, {    4,   1, 'SECTION', '<', NIL }, {    5,   1, NIL, ':', { 'SIZE', 'ITEMS' } }, {    6,  -1, NIL, '<', NIL }, {    7,   1, 'MESSAGE', '<', NIL }, { 1008,   1, 'ACTION', '<', NIL } } , .T. } )
    aAdd( aCommRules, { 'SEPARATOR' , { { 1001,   1, NIL, '<', NIL } } , .T. } )
    aAdd( aCommRules, { 'ENDMENU' ,  , .T. } )
    aAdd( aCommRules, { 'DEFINE' , { {    1,   0, 'MENU', '<', NIL }, {    2,   1, NIL, ':', { 'RESOURCE', 'NAME', 'RESNAME' } }, {    3,  -1, NIL, '<', NIL }, {    4,   1, NIL, ':', { 'POPUP' } } } , .T. } )
-   aAdd( aCommRules, { 'REDEFINE' , { {    0,   0, 'MENUITEM', NIL, NIL }, { 1001,   1, NIL, '<', { 'ID', 'ACTION', 'BLOCK', 'MESSAGE', 'CHECK', 'CHECKED', 'MARK', 'ENABLED', 'DISABLED', 'FILE', 'FILENAME', 'DISK', 'RESOURCE', 'RESNAME', 'NAME', 'ACCELERATOR', 'HELP ID', 'HELPID', 'WHEN' } }, {    0,  -1, 'PROMPT', NIL, NIL }, {    2,   1, NIL, '<', { 'ID', 'ACTION', 'BLOCK', 'MESSAGE', 'CHECK', 'CHECKED', 'MARK', 'ENABLED', 'DISABLED', 'FILE', 'FILENAME', 'DISK', 'RESOURCE', 'RESNAME', 'NAME', 'ACCELERATOR', 'HELP ID', 'HELPID', 'WHEN' } }, {    3,   1, 'ID', '<', NIL }, {    4,  -1, NIL, ':', { 'OF', 'MENU' } }, {    5,  -1, NIL, '<', NIL }, {    6,   1, 'ACTION', '<', NIL }, {    7,   1, 'BLOCK', '<', NIL }, {    8,   1, 'MESSAGE', '<', NIL }, {    9,   1, NIL, ':', { 'CHECK', 'CHECKED', 'MARK' } }, { 1010,   1, NIL, ':', { 'ENABLED', 'DISABLED' } }, ;
-       {   11,   1, NIL, ':', { 'FILE', 'FILENAME', 'DISK' } }, {   12,  -1, NIL, '<', NIL }, {   13,   1, NIL, ':', { 'RESOURCE', 'RESNAME', 'NAME' } }, {   14,  -1, NIL, '<', NIL }, {   15,   1, 'ACCELERATOR', '<', NIL }, {   16,  -1, ',', '<', NIL }, {   17,   1, NIL, ':', { 'HELP ID', 'HELPID' } }, {   18,  -1, NIL, '<', NIL }, { 1019,   1, 'WHEN', '<', NIL } } , .T. } )
+   aAdd( aCommRules, { 'REDEFINE' , { {    0,   0, 'MENUITEM', NIL, NIL }, { 1001,   1, NIL, '<', { 'ID', 'ACTION', 'BLOCK', 'MESSAGE', 'CHECK', 'CHECKED', 'MARK', 'ENABLED', 'DISABLED', 'FILE', 'FILENAME', 'DISK', 'RESOURCE', 'RESNAME', 'NAME', 'ACCELERATOR', 'HELP ID', 'HELPID', 'WHEN' } }, {    0,  -1, 'PROMPT', NIL, NIL }, {    2,   1, NIL, '<', { 'ID', 'ACTION', 'BLOCK', 'MESSAGE', 'CHECK', 'CHECKED', 'MARK', 'ENABLED', 'DISABLED', 'FILE', 'FILENAME', 'DISK', 'RESOURCE', 'RESNAME', 'NAME', 'ACCELERATOR', 'HELP ID', 'HELPID', 'WHEN' } }, {    3,   1, 'ID', '<', NIL }, {    4,  -1, NIL, ':', { 'OF', 'MENU' } }, {    5,  -1, NIL, '<', NIL }, {    6,   1, 'ACTION', '<', NIL }, {    7,   1, 'BLOCK', '<', NIL }, {    8,   1, 'MESSAGE', '<', NIL }, {    9,   1, NIL, ':', { 'CHECK', 'CHECKED', 'MARK' } }, { 1010,   1, NIL, ':', { 'ENABLED', 'DISABLED' } }, {   11,   1, NIL, ':', { 'FILE', 'FILENAME', 'DISK' } }, {   12,  -1, NIL, '<', NIL }, {   13,   1, NIL, ':', { 'RESOURCE', 'RESNAME', 'NAME' } }, {   14,  -1, NIL, '<', NIL }, {   15,   1, 'ACCELERATOR', '<', NIL }, {   16,  -1, ',', '<', NIL }, {   17,   1, NIL, ':', { 'HELP ID', 'HELPID' } }, {   18,  -1, NIL, '<', NIL }, { 1019,   1, 'WHEN', '<', NIL } } , .T. } )
    aAdd( aCommRules, { 'DEFINE' , { {    1,   0, 'MENU', '<', NIL }, {    2,   0, 'OF', '<', NIL } } , .T. } )
    aAdd( aCommRules, { 'SET' , { {    0,   0, 'MENU', NIL, NIL }, {    1,   0, 'OF', '<', NIL }, {    2,   0, 'TO', '<', NIL } } , .T. } )
    aAdd( aCommRules, { 'ACTIVATE' , { {    1,   0, NIL, ':', { 'POPUP', 'MENU' } }, {    2,   0, NIL, '<', NIL }, {    3,   1, 'AT', '<', NIL }, {    4,  -1, ',', '<', NIL }, {    5,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, {    6,  -1, NIL, '<', NIL } } , .T. } )
@@ -8187,8 +8267,7 @@ FUNCTION InitFWRules()
    aAdd( aCommRules, { 'ENDPRINTER' ,  , .T. } )
    aAdd( aCommRules, { 'DLL' , { { 1001,   1, NIL, ':', { 'STATIC' } }, {    2,   0, 'FUNCTION', '<', NIL }, {    0,   0, '(', NIL, NIL }, { 1003,   1, NIL, '<', { ',', ')' } }, { 1004,  -1, 'AS', '<', NIL }, { 1005,   1, ',', '<', NIL }, { 1006,  -1, 'AS', '<', NIL }, {    0,   0, ')', NIL, NIL }, {    7,   0, 'AS', '<', NIL }, { 1008,   1, NIL, ':', { 'PASCAL' } }, { 1009,   1, 'FROM', '<', NIL }, {   10,   0, 'LIB', '*', NIL } } , .T. } )
    aAdd( aCommRules, { 'DLL32' , { { 1001,   1, NIL, ':', { 'STATIC' } }, {    2,   0, 'FUNCTION', '<', NIL }, {    0,   0, '(', NIL, NIL }, { 1003,   1, NIL, '<', { ',', ')' } }, { 1004,  -1, 'AS', '<', NIL }, { 1005,   1, ',', '<', NIL }, { 1006,  -1, 'AS', '<', NIL }, {    0,   0, ')', NIL, NIL }, {    7,   0, 'AS', '<', NIL }, { 1008,   1, NIL, ':', { 'PASCAL' } }, { 1009,   1, 'FROM', '<', NIL }, {   10,   0, 'LIB', '*', NIL } } , .T. } )
-   aAdd( aCommRules, { '@' , { {    1,   0, NIL, '<', NIL }, {    2,   0, ',', '<', NIL }, {    0,   0, 'FOLDER', NIL, NIL }, { 1003,   1, NIL, '<', { 'OF', 'WINDOW', 'DIALOG', 'PROMPT', 'PROMPTS', 'ITEMS', 'DIALOG', 'DIALOGS', 'PAGE', 'PAGES', 'PIXEL', 'DESIGN', 'COLOR', 'COLORS', 'OPTION', 'SIZE', 'MESSAGE', 'ADJUST', 'FONT' } }, {    4,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, {    5,  -1, NIL, '<', NIL }, { 1006,   1, NIL, ':', { 'PROMPT', 'PROMPTS', 'ITEMS' } }, { 1007,  -1, NIL, 'A', NIL }, {    8,   1, NIL, ':', { 'DIALOG', 'DIALOGS', 'PAGE', 'PAGES' } }, {    9,  -1, NIL, '<', NIL }, { 1010,   2, ',', '<', NIL }, {   11,   1, NIL, ':', { 'PIXEL' } }, {   12,   1, NIL, ':', { 'DESIGN' } }, {   13,   1, NIL, ':', { 'COLOR', 'COLORS' } }, {   14,  -1, NIL, '<', NIL }, {   15,   2, ',', '<', NIL }, {   16,   1, 'OPTION', '<', NIL }, {   17,   1, 'SIZE', '<', NIL }, ;
-       {   18,  -1, ',', '<', NIL }, {   19,   1, 'MESSAGE', '<', NIL }, {   20,   1, NIL, ':', { 'ADJUST' } }, {   21,   1, 'FONT', '<', NIL } } , .T. } )
+   aAdd( aCommRules, { '@' , { {    1,   0, NIL, '<', NIL }, {    2,   0, ',', '<', NIL }, {    0,   0, 'FOLDER', NIL, NIL }, { 1003,   1, NIL, '<', { 'OF', 'WINDOW', 'DIALOG', 'PROMPT', 'PROMPTS', 'ITEMS', 'DIALOG', 'DIALOGS', 'PAGE', 'PAGES', 'PIXEL', 'DESIGN', 'COLOR', 'COLORS', 'OPTION', 'SIZE', 'MESSAGE', 'ADJUST', 'FONT' } }, {    4,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, {    5,  -1, NIL, '<', NIL }, { 1006,   1, NIL, ':', { 'PROMPT', 'PROMPTS', 'ITEMS' } }, { 1007,  -1, NIL, 'A', NIL }, {    8,   1, NIL, ':', { 'DIALOG', 'DIALOGS', 'PAGE', 'PAGES' } }, {    9,  -1, NIL, '<', NIL }, { 1010,   2, ',', '<', NIL }, {   11,   1, NIL, ':', { 'PIXEL' } }, {   12,   1, NIL, ':', { 'DESIGN' } }, {   13,   1, NIL, ':', { 'COLOR', 'COLORS' } }, {   14,  -1, NIL, '<', NIL }, {   15,   2, ',', '<', NIL }, {   16,   1, 'OPTION', '<', NIL }, {   17,   1, 'SIZE', '<', NIL }, {   18,  -1, ',', '<', NIL }, {   19,   1, 'MESSAGE', '<', NIL }, {   20,   1, NIL, ':', { 'ADJUST' } }, {   21,   1, 'FONT', '<', NIL } } , .T. } )
    aAdd( aCommRules, { 'REDEFINE' , { {    0,   0, 'FOLDER', NIL, NIL }, { 1001,   1, NIL, '<', { 'ID', 'OF', 'WINDOW', 'DIALOG', 'PROMPT', 'PROMPTS', 'ITEMS', 'DIALOG', 'DIALOGS', 'PAGE', 'PAGES', 'COLOR', 'COLORS', 'OPTION', 'ON', 'ADJUST' } }, {    2,   1, 'ID', '<', NIL }, {    3,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, {    4,  -1, NIL, '<', NIL }, { 1005,   1, NIL, ':', { 'PROMPT', 'PROMPTS', 'ITEMS' } }, { 1006,  -1, NIL, 'A', NIL }, {    7,   1, NIL, ':', { 'DIALOG', 'DIALOGS', 'PAGE', 'PAGES' } }, {    8,  -1, NIL, '<', NIL }, { 1009,   2, ',', '<', NIL }, {   10,   1, NIL, ':', { 'COLOR', 'COLORS' } }, {   11,  -1, NIL, '<', NIL }, {   12,   2, ',', '<', NIL }, {   13,   1, 'OPTION', '<', NIL }, { 1000,   1, 'ON', NIL, NIL }, { 1014,  -1, 'CHANGE', '<', NIL }, {   15,   1, NIL, ':', { 'ADJUST' } } } , .T. } )
    aAdd( aCommRules, { '@' , { {    1,   0, NIL, '<', NIL }, {    2,   0, ',', '<', NIL }, {    0,   0, 'TABS', NIL, NIL }, { 1003,   1, NIL, '<', { 'OF', 'WINDOW', 'DIALOG', 'PROMPT', 'PROMPTS', 'ITEMS', 'ACTION', 'EXECUTE', 'ON CHANGE', 'PIXEL', 'DESIGN', 'COLOR', 'COLORS', 'OPTION', 'SIZE', 'MESSAGE' } }, {    4,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, {    5,  -1, NIL, '<', NIL }, { 1006,   1, NIL, ':', { 'PROMPT', 'PROMPTS', 'ITEMS' } }, { 1007,  -1, NIL, 'A', NIL }, { 1008,   1, NIL, ':', { 'ACTION', 'EXECUTE', 'ON CHANGE' } }, { 1009,  -1, NIL, '<', NIL }, {   10,   1, NIL, ':', { 'PIXEL' } }, {   11,   1, NIL, ':', { 'DESIGN' } }, {   12,   1, NIL, ':', { 'COLOR', 'COLORS' } }, {   13,  -1, NIL, '<', NIL }, {   14,   2, ',', '<', NIL }, {   15,   1, 'OPTION', '<', NIL }, {   16,   1, 'SIZE', '<', NIL }, {   17,  -1, ',', '<', NIL }, {   18,   1, 'MESSAGE', '<', NIL } } , .T. } )
    aAdd( aCommRules, { 'REDEFINE' , { {    0,   0, 'TABS', NIL, NIL }, { 1001,   1, NIL, '<', { 'ID', 'OF', 'WINDOW', 'DIALOG', 'PROMPT', 'PROMPTS', 'ITEMS', 'ACTION', 'EXECUTE', 'COLOR', 'COLORS', 'OPTION' } }, {    2,   1, 'ID', '<', NIL }, {    3,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, {    4,  -1, NIL, '<', NIL }, { 1005,   1, NIL, ':', { 'PROMPT', 'PROMPTS', 'ITEMS' } }, { 1006,  -1, NIL, 'A', NIL }, { 1007,   1, NIL, ':', { 'ACTION', 'EXECUTE' } }, { 1008,  -1, NIL, '<', NIL }, {    9,   1, NIL, ':', { 'COLOR', 'COLORS' } }, {   10,  -1, NIL, '<', NIL }, {   11,   2, ',', '<', NIL }, {   12,   1, 'OPTION', '<', NIL } } , .T. } )
@@ -8218,60 +8297,38 @@ FUNCTION InitFWRules()
    aAdd( aCommRules, { 'ACTIVATE' , { {    1,   0, 'PEN', '<', NIL } } , .T. } )
    aAdd( aCommRules, { 'DEFINE' , { {    0,   0, 'BUTTONBAR', NIL, NIL }, { 1001,   1, NIL, '<', { 'SIZE', 'BUTTONSIZE', 'SIZEBUTTON', '_3D', '3D', '3DLOOK', '_3DLOOK', 'TOP', 'LEFT', 'RIGHT', 'BOTTOM', 'FLOAT', 'OF', 'WINDOW', 'DIALOG', 'CURSOR' } }, {    2,   1, NIL, ':', { 'SIZE', 'BUTTONSIZE', 'SIZEBUTTON' } }, {    3,  -1, NIL, '<', NIL }, {    4,  -1, ',', '<', NIL }, {    5,   1, NIL, ':', { '_3D', '3D', '3DLOOK', '_3DLOOK' } }, { 1006,   1, NIL, ':', { 'TOP', 'LEFT', 'RIGHT', 'BOTTOM', 'FLOAT' } }, {    7,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, {    8,  -1, NIL, '<', NIL }, {    9,   1, 'CURSOR', '<', NIL } } , .T. } )
    aAdd( aCommRules, { '@' , { {    1,   0, NIL, '<', NIL }, {    2,   0, ',', '<', NIL }, {    0,   0, 'BUTTONBAR', NIL, NIL }, { 1003,   1, NIL, '<', { 'SIZE', 'BUTTONSIZE', '3D', '3DLOOK', '_3DLOOK', 'TOP', 'LEFT', 'RIGHT', 'BOTTOM', 'FLOAT', 'OF', 'WINDOW', 'DIALOG', 'CURSOR' } }, {    4,   1, 'SIZE', '<', NIL }, {    5,  -1, ',', '<', NIL }, {    6,   1, 'BUTTONSIZE', '<', NIL }, {    7,  -1, ',', '<', NIL }, {    8,   1, NIL, ':', { '3D', '3DLOOK', '_3DLOOK' } }, { 1009,   1, NIL, ':', { 'TOP', 'LEFT', 'RIGHT', 'BOTTOM', 'FLOAT' } }, {   10,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, {   11,  -1, NIL, '<', NIL }, {   12,   1, 'CURSOR', '<', NIL } } , .T. } )
-   aAdd( aCommRules, { 'DEFINE' , { {    0,   0, 'BUTTON', NIL, NIL }, { 1001,   1, NIL, '<', { 'OF', 'BUTTONBAR', 'NAME', 'RESNAME', 'RESOURCE', 'FILE', 'FILENAME', 'DISK', 'ACTION', 'EXEC', 'GROUP', 'MESSAGE', 'ADJUST', 'WHEN', 'TOOLTIP', 'PRESSED', 'ON', 'AT', 'PROMPT', 'FONT', 'NOBORDER', 'FLAT', 'MENU' } }, {    2,   1, NIL, ':', { 'OF', 'BUTTONBAR' } }, {    3,  -1, NIL, '<', NIL }, {    4,   1, NIL, ':', { 'NAME', 'RESNAME', 'RESOURCE' } }, {    5,  -1, NIL, '<', NIL }, {    6,   2, ',', '<', NIL }, { 1007,   3, ',', '<', NIL }, {    8,   1, NIL, ':', { 'FILE', 'FILENAME', 'DISK' } }, {    9,  -1, NIL, '<', NIL }, {   10,   2, ',', '<', NIL }, { 1011,   3, ',', '<', NIL }, ;
-       { 1012,   1, NIL, ':', { 'ACTION', 'EXEC' } }, { 1013,  -1, NIL, 'A', NIL }, {   14,   1, NIL, ':', { 'GROUP' } }, {   15,   1, 'MESSAGE', '<', NIL }, {   16,   1, NIL, ':', { 'ADJUST' } }, {   17,   1, 'WHEN', '<', NIL }, {   18,   1, 'TOOLTIP', '<', NIL }, {   19,   1, NIL, ':', { 'PRESSED' } }, { 1000,   1, 'ON', NIL, NIL }, { 1020,  -1, 'DROP', '<', NIL }, {   21,   1, 'AT', '<', NIL }, {   22,   1, 'PROMPT', '<', NIL }, {   23,   1, 'FONT', '<', NIL }, { 1024,   1, NIL, ':', { 'NOBORDER', 'FLAT' } }, { 1025,   1, 'MENU', '<', NIL } } , .T. } )
-   aAdd( aCommRules, { 'REDEFINE' , { {    0,   0, 'BTNBMP', NIL, NIL }, { 1001,   1, NIL, '<', { 'ID', 'OF', 'BUTTONBAR', 'NAME', 'RESNAME', 'RESOURCE', 'FILE', 'FILENAME', 'DISK', 'ACTION', 'EXEC', 'ON CLICK', 'MESSAGE', 'ADJUST', 'WHEN', 'UPDATE', 'TOOLTIP', 'PROMPT', 'FONT', 'NOBORDER' } }, {    2,   1, 'ID', '<', NIL }, {    3,   1, NIL, ':', { 'OF', 'BUTTONBAR' } }, {    4,  -1, NIL, '<', NIL }, {    5,   1, NIL, ':', { 'NAME', 'RESNAME', 'RESOURCE' } }, {    6,  -1, NIL, '<', NIL }, {    7,   2, ',', '<', NIL }, { 1008,   3, ',', '<', NIL }, {    9,   1, NIL, ':', { 'FILE', 'FILENAME', 'DISK' } }, {   10,  -1, NIL, '<', NIL }, {   11,   2, ',', '<', NIL }, ;
-       { 1012,   3, ',', '<', NIL }, { 1013,   1, NIL, ':', { 'ACTION', 'EXEC', 'ON CLICK' } }, { 1014,  -1, NIL, 'A', NIL }, {   15,   1, 'MESSAGE', '<', NIL }, {   16,   1, NIL, ':', { 'ADJUST' } }, {   17,   1, 'WHEN', '<', NIL }, {   18,   1, NIL, ':', { 'UPDATE' } }, {   19,   1, 'TOOLTIP', '<', NIL }, {   20,   1, 'PROMPT', '<', NIL }, {   21,   1, 'FONT', '<', NIL }, { 1022,   1, NIL, ':', { 'NOBORDER' } } } , .T. } )
-   aAdd( aCommRules, { '@' , { {    1,   0, NIL, '<', NIL }, {    2,   0, ',', '<', NIL }, {    0,   0, 'BTNBMP', NIL, NIL }, { 1003,   1, NIL, '<', { 'NAME', 'RESNAME', 'RESOURCE', 'FILE', 'FILENAME', 'DISK', 'SIZE', 'ACTION', 'OF', 'WINDOW', 'DIALOG', 'MESSAGE', 'WHEN', 'ADJUST', 'UPDATE', 'PROMPT', 'FONT', 'NOBORDER' } }, {    4,   1, NIL, ':', { 'NAME', 'RESNAME', 'RESOURCE' } }, {    5,  -1, NIL, '<', NIL }, {    6,   2, ',', '<', NIL }, { 1007,   3, ',', '<', NIL }, {    8,   1, NIL, ':', { 'FILE', 'FILENAME', 'DISK' } }, {    9,  -1, NIL, '<', NIL }, {   10,   2, ',', '<', NIL }, { 1011,   3, ',', '<', NIL }, {   12,   1, 'SIZE', '<', NIL }, {   13,  -1, ',', '<', NIL }, ;
-       { 1014,   1, 'ACTION', 'A', NIL }, {   15,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, {   16,  -1, NIL, '<', NIL }, {   17,   1, 'MESSAGE', '<', NIL }, {   18,   1, 'WHEN', '<', NIL }, {   19,   1, NIL, ':', { 'ADJUST' } }, {   20,   1, NIL, ':', { 'UPDATE' } }, {   21,   1, 'PROMPT', '<', NIL }, {   22,   1, 'FONT', '<', NIL }, {   23,   1, NIL, ':', { 'NOBORDER' } } } , .T. } )
-   aAdd( aCommRules, { '@' , { {    1,   0, NIL, '<', NIL }, {    2,   0, ',', '<', NIL }, {    0,   0, 'ICON', NIL, NIL }, { 1003,   1, NIL, '<', { 'NAME', 'RESOURCE', 'RESNAME', 'FILE', 'FILENAME', 'DISK', 'BORDER', 'ON', 'OF', 'WINDOW', 'DIALOG', 'UPDATE', 'WHEN', 'COLOR' } }, {    4,   1, NIL, ':', { 'NAME', 'RESOURCE', 'RESNAME' } }, {    5,  -1, NIL, '<', NIL }, {    6,   1, NIL, ':', { 'FILE', 'FILENAME', 'DISK' } }, {    7,  -1, NIL, '<', NIL }, {    8,   1, NIL, ':', { 'BORDER' } }, {    0,   1, 'ON', NIL, NIL }, {    9,  -1, 'CLICK', '<', NIL }, {   10,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, {   11,  -1, NIL, '<', NIL }, {   12,   1, NIL, ':', { 'UPDATE' } }, ;
-       {   13,   1, 'WHEN', '<', NIL }, {   14,   1, 'COLOR', '<', NIL }, {   15,   2, ',', '<', NIL } } , .T. } )
-   aAdd( aCommRules, { 'REDEFINE' , { { 1001,   0, 'ICON', '<', NIL }, {    2,   1, 'ID', '<', NIL }, {    3,   1, NIL, ':', { 'NAME', 'RESOURCE', 'RESNAME' } }, {    4,  -1, NIL, '<', NIL }, {    5,   1, NIL, ':', { 'FILE', 'FILENAME', 'DISK' } }, {    6,  -1, NIL, '<', NIL }, {    0,   1, 'ON', NIL, NIL }, {    7,  -1, 'CLICK', '<', NIL }, {    8,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, {    9,  -1, NIL, '<', NIL }, {   10,   1, NIL, ':', { 'UPDATE' } }, {   11,   1, 'WHEN', '<', NIL } } , .T. } )
+   aAdd( aCommRules, { 'DEFINE' , { {    0,   0, 'BUTTON', NIL, NIL }, { 1001,   1, NIL, '<', { 'OF', 'BUTTONBAR', 'NAME', 'RESNAME', 'RESOURCE', 'FILE', 'FILENAME', 'DISK', 'ACTION', 'EXEC', 'GROUP', 'MESSAGE', 'ADJUST', 'WHEN', 'TOOLTIP', 'PRESSED', 'ON', 'AT', 'PROMPT', 'FONT', 'NOBORDER', 'FLAT', 'MENU' } }, {    2,   1, NIL, ':', { 'OF', 'BUTTONBAR' } }, {    3,  -1, NIL, '<', NIL }, {    4,   1, NIL, ':', { 'NAME', 'RESNAME', 'RESOURCE' } }, {    5,  -1, NIL, '<', NIL }, {    6,   2, ',', '<', NIL }, { 1007,   3, ',', '<', NIL }, {    8,   1, NIL, ':', { 'FILE', 'FILENAME', 'DISK' } }, {    9,  -1, NIL, '<', NIL }, {   10,   2, ',', '<', NIL }, { 1011,   3, ',', '<', NIL }, { 1012,   1, NIL, ':', { 'ACTION', 'EXEC' } }, { 1013,  -1, NIL, 'A', NIL }, {   14,   1, NIL, ':', { 'GROUP' } }, {   15,   1, 'MESSAGE', '<', NIL }, {   16,   1, NIL, ':', { 'ADJUST' } }, {   17,   1, 'WHEN', '<', NIL }, {   18,   1, 'TOOLTIP', '<', NIL }, {   19,   1, NIL, ':', { 'PRESSED' } }, { 1000,   1, 'ON', NIL, NIL }, { 1020,  -1, 'DROP', '<', NIL }, {   21,   1, 'AT', '<', NIL }, {   22,   1, 'PROMPT', '<', NIL }, {   23,   1, 'FONT', '<', NIL }, { 1024,   1, NIL, ':', { 'NOBORDER', 'FLAT' } }, { 1025,   1, 'MENU', '<', NIL } } , .T. } )
+   aAdd( aCommRules, { 'REDEFINE' , { {    0,   0, 'BTNBMP', NIL, NIL }, { 1001,   1, NIL, '<', { 'ID', 'OF', 'BUTTONBAR', 'NAME', 'RESNAME', 'RESOURCE', 'FILE', 'FILENAME', 'DISK', 'ACTION', 'EXEC', 'ON CLICK', 'MESSAGE', 'ADJUST', 'WHEN', 'UPDATE', 'TOOLTIP', 'PROMPT', 'FONT', 'NOBORDER' } }, {    2,   1, 'ID', '<', NIL }, {    3,   1, NIL, ':', { 'OF', 'BUTTONBAR' } }, {    4,  -1, NIL, '<', NIL }, {    5,   1, NIL, ':', { 'NAME', 'RESNAME', 'RESOURCE' } }, {    6,  -1, NIL, '<', NIL }, {    7,   2, ',', '<', NIL }, { 1008,   3, ',', '<', NIL }, {    9,   1, NIL, ':', { 'FILE', 'FILENAME', 'DISK' } }, {   10,  -1, NIL, '<', NIL }, {   11,   2, ',', '<', NIL }, { 1012,   3, ',', '<', NIL }, { 1013,   1, NIL, ':', { 'ACTION', 'EXEC', 'ON CLICK' } }, { 1014,  -1, NIL, 'A', NIL }, {   15,   1, 'MESSAGE', '<', NIL }, {   16,   1, NIL, ':', { 'ADJUST' } }, {   17,   1, 'WHEN', '<', NIL }, {   18,   1, NIL, ':', { 'UPDATE' } }, {   19,   1, 'TOOLTIP', '<', NIL }, {   20,   1, 'PROMPT', '<', NIL }, {   21,   1, 'FONT', '<', NIL }, { 1022,   1, NIL, ':', { 'NOBORDER' } } } , .T. } )
+   aAdd( aCommRules, { '@' , { {    1,   0, NIL, '<', NIL }, {    2,   0, ',', '<', NIL }, {    0,   0, 'BTNBMP', NIL, NIL }, { 1003,   1, NIL, '<', { 'NAME', 'RESNAME', 'RESOURCE', 'FILE', 'FILENAME', 'DISK', 'SIZE', 'ACTION', 'OF', 'WINDOW', 'DIALOG', 'MESSAGE', 'WHEN', 'ADJUST', 'UPDATE', 'PROMPT', 'FONT', 'NOBORDER' } }, {    4,   1, NIL, ':', { 'NAME', 'RESNAME', 'RESOURCE' } }, {    5,  -1, NIL, '<', NIL }, {    6,   2, ',', '<', NIL }, { 1007,   3, ',', '<', NIL }, {    8,   1, NIL, ':', { 'FILE', 'FILENAME', 'DISK' } }, {    9,  -1, NIL, '<', NIL }, {   10,   2, ',', '<', NIL }, { 1011,   3, ',', '<', NIL }, {   12,   1, 'SIZE', '<', NIL }, {   13,  -1, ',', '<', NIL }, { 1014,   1, 'ACTION', 'A', NIL }, {   15,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, {   16,  -1, NIL, '<', NIL }, {   17,   1, 'MESSAGE', '<', NIL }, {   18,   1, 'WHEN', '<', NIL }, {   19,   1, NIL, ':', { 'ADJUST' } }, {   20,   1, NIL, ':', { 'UPDATE' } }, {   21,   1, 'PROMPT', '<', NIL }, {   22,   1, 'FONT', '<', NIL }, {   23,   1, NIL, ':', { 'NOBORDER' } } } , .T. } )
+   aAdd( aCommRules, { '@' , { {    1,   0, NIL, '<', NIL }, {    2,   0, ',', '<', NIL }, {    0,   0, 'ICON', NIL, NIL }, { 1003,   1, NIL, '<', { 'NAME', 'RESOURCE', 'RESNAME', 'FILE', 'FILENAME', 'DISK', 'BORDER', 'ON', 'OF', 'WINDOW', 'DIALOG', 'UPDATE', 'WHEN', 'COLOR' } }, {    4,   1, NIL, ':', { 'NAME', 'RESOURCE', 'RESNAME' } }, {    5,  -1, NIL, '<', NIL }, {    6,   1, NIL, ':', { 'FILE', 'FILENAME', 'DISK' } }, {    7,  -1, NIL, '<', NIL }, {    8,   1, NIL, ':', { 'BORDER' } }, {    0,   1, 'ON', NIL, NIL }, {    9,  -1, 'CLICK', '<', NIL }, {   10,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, {   11,  -1, NIL, '<', NIL }, {   12,   1, NIL, ':', { 'UPDATE' } }, {   13,   1, 'WHEN', '<', NIL }, {   14,   1, 'COLOR', '<', NIL }, {   15,   2, ',', '<', NIL } } , .T. } )
+   aAdd( aCommRules, { 'REDEFINE' , { { 1001,   1, 'ICON', '<', NIL }, {    2,   1, 'ID', '<', NIL }, {    3,   1, NIL, ':', { 'NAME', 'RESOURCE', 'RESNAME' } }, {    4,  -1, NIL, '<', NIL }, {    5,   1, NIL, ':', { 'FILE', 'FILENAME', 'DISK' } }, {    6,  -1, NIL, '<', NIL }, {    0,   1, 'ON', NIL, NIL }, {    7,  -1, 'CLICK', '<', NIL }, {    8,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, {    9,  -1, NIL, '<', NIL }, {   10,   1, NIL, ':', { 'UPDATE' } }, {   11,   1, 'WHEN', '<', NIL } } , .T. } )
    aAdd( aCommRules, { 'DEFINE' , { {    1,   0, 'ICON', '<', NIL }, {    2,   1, NIL, ':', { 'NAME', 'RESOURCE', 'RESNAME' } }, {    3,  -1, NIL, '<', NIL }, {    4,   1, NIL, ':', { 'FILE', 'FILENAME', 'DISK' } }, {    5,  -1, NIL, '<', NIL }, {    6,   1, 'WHEN', '<', NIL } } , .T. } )
-   aAdd( aCommRules, { '@' , { {    1,   0, NIL, '<', NIL }, {    2,   0, ',', '<', NIL }, {    0,   0, 'BUTTON', NIL, NIL }, { 1003,   1, NIL, '<', NIL }, {    0,  -1, 'PROMPT', NIL, NIL }, {    4,   0, NIL, '<', NIL }, {    5,   1, 'SIZE', '<', NIL }, {    6,  -1, ',', '<', NIL }, {    7,   1, 'ACTION', '<', NIL }, {    8,   1, NIL, ':', { 'DEFAULT' } }, {    9,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, {   10,  -1, NIL, '<', NIL }, {   11,   1, NIL, ':', { 'HELP', 'HELPID', 'HELP ID' } }, {   12,  -1, NIL, '<', NIL }, {   13,   1, 'FONT', '<', NIL }, {   14,   1, NIL, ':', { 'PIXEL' } }, {   15,   1, NIL, ':', { 'DESIGN' } }, {   16,   1, 'MESSAGE', '<', NIL }, ;
-       {   17,   1, NIL, ':', { 'UPDATE' } }, {   18,   1, 'WHEN', '<', NIL }, {   19,   1, 'VALID', '<', NIL }, {   20,   1, NIL, ':', { 'CANCEL' } } } , .T. } )
+   aAdd( aCommRules, { '@' , { {    1,   0, NIL, '<', NIL }, {    2,   0, ',', '<', NIL }, {    0,   0, 'BUTTON', NIL, NIL }, { 1003,   1, NIL, '<', NIL }, {    0,  -1, 'PROMPT', NIL, NIL }, {    4,   0, NIL, '<', NIL }, {    5,   1, 'SIZE', '<', NIL }, {    6,  -1, ',', '<', NIL }, {    7,   1, 'ACTION', '<', NIL }, {    8,   1, NIL, ':', { 'DEFAULT' } }, {    9,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, {   10,  -1, NIL, '<', NIL }, {   11,   1, NIL, ':', { 'HELP', 'HELPID', 'HELP ID' } }, {   12,  -1, NIL, '<', NIL }, {   13,   1, 'FONT', '<', NIL }, {   14,   1, NIL, ':', { 'PIXEL' } }, {   15,   1, NIL, ':', { 'DESIGN' } }, {   16,   1, 'MESSAGE', '<', NIL }, {   17,   1, NIL, ':', { 'UPDATE' } }, {   18,   1, 'WHEN', '<', NIL }, {   19,   1, 'VALID', '<', NIL }, {   20,   1, NIL, ':', { 'CANCEL' } } } , .T. } )
    aAdd( aCommRules, { 'REDEFINE' , { {    0,   0, 'BUTTON', NIL, NIL }, { 1001,   1, NIL, '<', { 'ID', 'ACTION', 'HELP', 'HELPID', 'HELP ID', 'MESSAGE', 'UPDATE', 'WHEN', 'VALID', 'PROMPT', 'CANCEL' } }, {    2,   1, 'ID', '<', NIL }, {    3,   2, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, {    4,  -2, NIL, '<', NIL }, { 1005,   1, 'ACTION', 'A', NIL }, {    6,   1, NIL, ':', { 'HELP', 'HELPID', 'HELP ID' } }, {    7,  -1, NIL, '<', NIL }, {    8,   1, 'MESSAGE', '<', NIL }, {    9,   1, NIL, ':', { 'UPDATE' } }, {   10,   1, 'WHEN', '<', NIL }, {   11,   1, 'VALID', '<', NIL }, {   12,   1, 'PROMPT', '<', NIL }, {   13,   1, NIL, ':', { 'CANCEL' } } } , .T. } )
    aAdd( aCommRules, { 'REDEFINE' , { {    0,   0, 'CHECKBOX', NIL, NIL }, { 1001,   1, NIL, '<', NIL }, {    0,  -1, 'VAR', NIL, NIL }, {    2,   0, NIL, '<', NIL }, {    3,   1, 'ID', '<', NIL }, {    4,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, {    5,  -1, NIL, '<', NIL }, {    6,   1, NIL, ':', { 'HELPID', 'HELP ID' } }, {    7,  -1, NIL, '<', NIL }, { 1008,   1, NIL, ':', { 'ON CLICK', 'ON CHANGE' } }, { 1009,  -1, NIL, '<', NIL }, {   10,   1, 'VALID', '<', NIL }, {   11,   1, NIL, ':', { 'COLOR', 'COLORS' } }, {   12,  -1, NIL, '<', NIL }, {   13,   2, ',', '<', NIL }, {   14,   1, 'MESSAGE', '<', NIL }, {   15,   1, NIL, ':', { 'UPDATE' } }, {   16,   1, 'WHEN', '<', NIL } } , .T. } )
-   aAdd( aCommRules, { '@' , { {    1,   0, NIL, '<', NIL }, {    2,   0, ',', '<', NIL }, {    0,   0, 'CHECKBOX', NIL, NIL }, { 1003,   1, NIL, '<', NIL }, {    0,  -1, 'VAR', NIL, NIL }, { 1004,   0, NIL, '<', NIL }, {    5,   1, 'PROMPT', '<', NIL }, {    6,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, {    7,  -1, NIL, '<', NIL }, {    8,   1, 'SIZE', '<', NIL }, {    9,  -1, ',', '<', NIL }, {   10,   1, NIL, ':', { 'HELPID', 'HELP ID' } }, {   11,  -1, NIL, '<', NIL }, {   12,   1, 'FONT', '<', NIL }, { 1013,   1, NIL, ':', { 'ON CLICK', 'ON CHANGE' } }, { 1014,  -1, NIL, '<', NIL }, {   15,   1, 'VALID', '<', NIL }, {   16,   1, NIL, ':', { 'COLOR', 'COLORS' } }, {   17,  -1, NIL, '<', NIL }, {   18,   2, ',', '<', NIL }, {   19,   1, NIL, ':', { 'DESIGN' } }, {   20,   1, NIL, ':', { 'PIXEL' } }, {   21,   1, 'MESSAGE', '<', NIL }, {   22,   1, NIL, ':', { 'UPDATE' } }, {   23,   1, 'WHEN', '<', NIL } } , .T. } )
-   aAdd( aCommRules, { '@' , { {    1,   0, NIL, '<', NIL }, {    2,   0, ',', '<', NIL }, {    0,   0, 'COMBOBOX', NIL, NIL }, { 1003,   1, NIL, '<', NIL }, {    0,  -1, 'VAR', NIL, NIL }, {    4,   0, NIL, '<', NIL }, {    5,   1, NIL, ':', { 'PROMPTS', 'ITEMS' } }, {    6,  -1, NIL, '<', NIL }, {    7,   1, 'SIZE', '<', NIL }, {    8,  -1, ',', '<', NIL }, {    9,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, {   10,  -1, NIL, '<', NIL }, {   11,   1, NIL, ':', { 'HELPID', 'HELP ID' } }, {   12,  -1, NIL, '<', NIL }, { 1000,   1, 'ON', NIL, NIL }, { 1013,  -1, 'CHANGE', '<', NIL }, {   14,   1, 'VALID', '<', NIL }, {   15,   1, NIL, ':', { 'COLOR', 'COLORS' } }, {   16,  -1, NIL, '<', NIL }, {   17,   2, ',', '<', NIL }, {   18,   1, NIL, ':', { 'PIXEL' } }, {   19,   1, 'FONT', '<', NIL }, {   20,   1, NIL, ':', { 'UPDATE' } }, {   21,   1, 'MESSAGE', '<', NIL }, {   22,   1, 'WHEN', '<', NIL }, {   23,   1, NIL, ':', ;
-       { 'DESIGN' } }, {   24,   1, 'BITMAPS', '<', NIL }, { 1000,   1, 'ON', NIL, NIL }, { 1025,  -1, 'DRAWITEM', '<', NIL }, {   26,   1, 'STYLE', '<', NIL }, {   27,   1, 'PICTURE', '<', NIL }, { 1000,   1, 'ON', NIL, NIL }, { 1000,  -1, 'EDIT', NIL, NIL }, { 1028,  -1, 'CHANGE', '<', NIL } } , .T. } )
-   aAdd( aCommRules, { 'REDEFINE' , { {    0,   0, 'COMBOBOX', NIL, NIL }, { 1001,   1, NIL, '<', NIL }, {    0,  -1, 'VAR', NIL, NIL }, {    2,   0, NIL, '<', NIL }, {    3,   1, NIL, ':', { 'PROMPTS', 'ITEMS' } }, {    4,  -1, NIL, '<', NIL }, {    5,   1, 'ID', '<', NIL }, {    6,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, {    7,  -1, NIL, '<', NIL }, {    8,   1, NIL, ':', { 'HELPID', 'HELP ID' } }, {    9,  -1, NIL, '<', NIL }, { 1000,   1, 'ON', NIL, NIL }, { 1010,  -1, 'CHANGE', '<', NIL }, {   11,   1, 'VALID', '<', NIL }, {   12,   1, NIL, ':', { 'COLOR', 'COLORS' } }, {   13,  -1, NIL, '<', NIL }, {   14,   2, ',', '<', NIL }, {   15,   1, NIL, ':', { 'UPDATE' } }, {   16,   1, 'MESSAGE', '<', NIL }, {   17,   1, 'WHEN', '<', NIL }, {   18,   1, 'BITMAPS', '<', NIL }, { 1000,   1, 'ON', NIL, NIL }, { 1019,  -1, 'DRAWITEM', '<', NIL }, {   20,   1, 'STYLE', '<', NIL }, {   21,   1, 'PICTURE', '<', NIL }, ;
-       { 1000,   1, 'ON', NIL, NIL }, { 1000,  -1, 'EDIT', NIL, NIL }, { 1022,  -1, 'CHANGE', '<', NIL } } , .T. } )
-   aAdd( aCommRules, { 'REDEFINE' , { {    0,   0, 'LISTBOX', NIL, NIL }, { 1001,   1, NIL, '<', NIL }, {    0,  -1, 'VAR', NIL, NIL }, {    2,   0, NIL, '<', NIL }, {    3,   1, NIL, ':', { 'PROMPTS', 'ITEMS' } }, {    4,  -1, NIL, '<', NIL }, {    5,   1, NIL, ':', { 'FILES', 'FILESPEC' } }, {    6,  -1, NIL, '<', NIL }, {    7,   1, 'ID', '<', NIL }, { 1000,   1, 'ON', NIL, NIL }, { 1008,  -1, 'CHANGE', 'A', NIL }, {    0,   1, 'ON', NIL, NIL }, {    0,   2, 'LEFT', NIL, NIL }, {    9,  -1, 'DBLCLICK', '<', NIL }, {   10,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, {   11,  -1, NIL, '<', NIL }, {   12,   1, NIL, ':', { 'HELPID', 'HELP ID' } }, {   13,  -1, NIL, '<', NIL }, {   14,   1, 'VALID', '<', NIL }, {   15,   1, NIL, ':', { 'COLOR', 'COLORS' } }, {   16,  -1, NIL, '<', NIL }, {   17,   2, ',', '<', NIL }, {   18,   1, 'MESSAGE', '<', NIL }, {   19,   1, NIL, ':', { 'UPDATE' } }, {   20,   1, 'WHEN', '<', NIL }, ;
-       {   21,   1, 'BITMAPS', '<', NIL }, { 1000,   1, 'ON', NIL, NIL }, { 1022,  -1, 'DRAWITEM', '<', NIL } } , .T. } )
-   aAdd( aCommRules, { '@' , { {    1,   0, NIL, '<', NIL }, {    2,   0, ',', '<', NIL }, {    0,   0, 'LISTBOX', NIL, NIL }, { 1003,   1, NIL, '<', NIL }, {    0,  -1, 'VAR', NIL, NIL }, {    4,   0, NIL, '<', NIL }, {    5,   1, NIL, ':', { 'PROMPTS', 'ITEMS' } }, {    6,  -1, NIL, '<', NIL }, {    7,   1, 'SIZE', '<', NIL }, {    8,  -1, ',', '<', NIL }, {    0,   1, 'ON', NIL, NIL }, {    9,  -1, 'CHANGE', '<', NIL }, {    0,   1, 'ON', NIL, NIL }, {    0,   2, 'LEFT', NIL, NIL }, {   10,  -1, 'DBLCLICK', '<', NIL }, {   11,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, {   12,  -1, NIL, '<', NIL }, {   13,   1, 'VALID', '<', NIL }, {   14,   1, NIL, ':', { 'COLOR', 'COLORS' } }, {   15,  -1, NIL, '<', NIL }, {   16,   2, ',', '<', NIL }, {   17,   1, NIL, ':', { 'PIXEL' } }, {   18,   1, NIL, ':', { 'DESIGN' } }, {   19,   1, 'FONT', '<', NIL }, {   20,   1, 'MESSAGE', '<', NIL }, ;
-       {   21,   1, NIL, ':', { 'UPDATE' } }, {   22,   1, 'WHEN', '<', NIL }, {   23,   1, 'BITMAPS', '<', NIL }, { 1000,   1, 'ON', NIL, NIL }, { 1024,  -1, 'DRAWITEM', '<', NIL }, {   25,   1, NIL, ':', { 'MULTI', 'MULTIPLE', 'MULTISEL' } }, {   26,   1, NIL, ':', { 'SORT' } } } , .T. } )
-   aAdd( aCommRules, { 'REDEFINE' , { {    0,   0, 'LISTBOX', NIL, NIL }, { 1001,   1, NIL, '<', { 'FIELDS' } }, {    0,   0, 'FIELDS', NIL, NIL }, { 1002,   1, NIL, 'A', { 'ALIAS', 'ID', 'OF', 'DIALOG', 'FIELDSIZES', 'SIZES', 'COLSIZES', 'HEAD', 'HEADER', 'HEADERS', 'TITLE', 'SELECT', 'ON', 'ON', 'ON', 'ON', 'FONT', 'CURSOR', 'COLOR', 'COLORS', 'MESSAGE', 'UPDATE', 'WHEN', 'VALID', 'ACTION' } }, {    3,   1, 'ALIAS', '<', NIL }, {    4,   1, 'ID', '<', NIL }, {    5,   1, NIL, ':', { 'OF', 'DIALOG' } }, {    6,  -1, NIL, '<', NIL }, { 1007,   1, NIL, ':', { 'FIELDSIZES', 'SIZES', 'COLSIZES' } }, { 1008,  -1, NIL, 'A', NIL }, { 1009,   1, NIL, ':', { 'HEAD', 'HEADER', 'HEADERS', 'TITLE' } }, { 1010,  -1, NIL, 'A', NIL }, {   11,   1, 'SELECT', '<', NIL }, {   12,  -1, 'FOR', '<', NIL }, {   13,   2, 'TO', '<', NIL }, { 1000,   1, 'ON', NIL, NIL }, { 1014,  -1, 'CHANGE', '<', NIL }, {    0,   1, 'ON', NIL, NIL }, ;
-       { 1000,   2, 'LEFT', NIL, NIL }, { 1015,  -1, 'CLICK', '<', NIL }, {    0,   1, 'ON', NIL, NIL }, { 1000,   2, 'LEFT', NIL, NIL }, { 1016,  -1, 'DBLCLICK', '<', NIL }, { 1000,   1, 'ON', NIL, NIL }, { 1000,  -1, 'RIGHT', NIL, NIL }, { 1017,  -1, 'CLICK', '<', NIL }, {   18,   1, 'FONT', '<', NIL }, {   19,   1, 'CURSOR', '<', NIL }, {   20,   1, NIL, ':', { 'COLOR', 'COLORS' } }, {   21,  -1, NIL, '<', NIL }, {   22,   2, ',', '<', NIL }, {   23,   1, 'MESSAGE', '<', NIL }, {   24,   1, NIL, ':', { 'UPDATE' } }, {   25,   1, 'WHEN', '<', NIL }, {   26,   1, 'VALID', '<', NIL }, { 1027,   1, 'ACTION', 'A', NIL } } , .T. } )
-   aAdd( aCommRules, { '@' , { {    1,   0, NIL, '<', NIL }, {    2,   0, ',', '<', NIL }, {    0,   0, 'LISTBOX', NIL, NIL }, { 1003,   1, NIL, '<', { 'FIELDS' } }, {    0,   0, 'FIELDS', NIL, NIL }, { 1004,   1, NIL, 'A', { 'ALIAS', 'FIELDSIZES', 'SIZES', 'COLSIZES', 'HEAD', 'HEADER', 'HEADERS', 'TITLE', 'SIZE', 'OF', 'DIALOG', 'SELECT', 'ON', 'ON', 'ON', 'ON', 'FONT', 'CURSOR', 'COLOR', 'COLORS', 'MESSAGE', 'UPDATE', 'PIXEL', 'WHEN', 'DESIGN', 'VALID', 'ACTION' } }, {    5,   1, 'ALIAS', '<', NIL }, { 1006,   1, NIL, ':', { 'FIELDSIZES', 'SIZES', 'COLSIZES' } }, { 1007,  -1, NIL, 'A', NIL }, { 1008,   1, NIL, ':', { 'HEAD', 'HEADER', 'HEADERS', 'TITLE' } }, { 1009,  -1, NIL, 'A', NIL }, {   10,   1, 'SIZE', '<', NIL }, {   11,  -1, ',', '<', NIL }, {   12,   1, NIL, ':', { 'OF', 'DIALOG' } }, {   13,  -1, NIL, '<', NIL }, {   14,   1, 'SELECT', '<', NIL }, {   15,  -1, 'FOR', '<', NIL }, {   16,   2, 'TO', '<', NIL }, ;
-       { 1000,   1, 'ON', NIL, NIL }, { 1017,  -1, 'CHANGE', '<', NIL }, {    0,   1, 'ON', NIL, NIL }, {    0,   2, 'LEFT', NIL, NIL }, {   18,  -1, 'CLICK', '<', NIL }, {    0,   1, 'ON', NIL, NIL }, { 1000,   2, 'LEFT', NIL, NIL }, { 1019,  -1, 'DBLCLICK', '<', NIL }, { 1000,   1, 'ON', NIL, NIL }, { 1000,  -1, 'RIGHT', NIL, NIL }, { 1020,  -1, 'CLICK', '<', NIL }, {   21,   1, 'FONT', '<', NIL }, {   22,   1, 'CURSOR', '<', NIL }, {   23,   1, NIL, ':', { 'COLOR', 'COLORS' } }, {   24,  -1, NIL, '<', NIL }, {   25,   2, ',', '<', NIL }, {   26,   1, 'MESSAGE', '<', NIL }, {   27,   1, NIL, ':', { 'UPDATE' } }, {   28,   1, NIL, ':', { 'PIXEL' } }, {   29,   1, 'WHEN', '<', NIL }, {   30,   1, NIL, ':', { 'DESIGN' } }, {   31,   1, 'VALID', '<', NIL }, { 1032,   1, 'ACTION', 'A', NIL } } , .T. } )
-   aAdd( aCommRules, { '@' , { {    1,   0, NIL, '<', NIL }, {    2,   0, ',', '<', NIL }, {    0,   0, 'RADIO', NIL, NIL }, { 1003,   1, NIL, '<', NIL }, {    0,  -1, 'VAR', NIL, NIL }, { 1004,   0, NIL, '<', NIL }, {    5,   1, NIL, ':', { 'PROMPT', 'ITEMS' } }, {    6,  -1, NIL, 'A', NIL }, {    7,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, {    8,  -1, NIL, '<', NIL }, { 1009,   1, NIL, ':', { 'HELPID', 'HELP ID' } }, { 1010,  -1, NIL, 'A', NIL }, {   11,   1, NIL, ':', { 'ON CLICK', 'ON CHANGE' } }, {   12,  -1, NIL, '<', NIL }, {   13,   1, 'COLOR', '<', NIL }, {   14,   2, ',', '<', NIL }, {   15,   1, 'MESSAGE', '<', NIL }, {   16,   1, NIL, ':', { 'UPDATE' } }, {   17,   1, 'WHEN', '<', NIL }, {   18,   1, 'SIZE', '<', NIL }, {   19,  -1, ',', '<', NIL }, {   20,   1, 'VALID', '<', NIL }, {   21,   1, NIL, ':', { 'DESIGN' } }, {   22,   1, NIL, ':', { '3D', '_3D' } }, {   23,   1, NIL, ':', { 'PIXEL' } } } , .T. } )
-   aAdd( aCommRules, { 'REDEFINE' , { {    0,   0, 'RADIO', NIL, NIL }, { 1001,   1, NIL, '<', NIL }, {    0,  -1, 'VAR', NIL, NIL }, { 1002,   0, NIL, '<', NIL }, {    3,   1, 'ID', 'A', NIL }, {    4,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, {    5,  -1, NIL, '<', NIL }, { 1006,   1, NIL, ':', { 'HELPID', 'HELP ID' } }, { 1007,  -1, NIL, 'A', NIL }, {    8,   1, NIL, ':', { 'ON CHANGE', 'ON CLICK' } }, {    9,  -1, NIL, '<', NIL }, {   10,   1, 'COLOR', '<', NIL }, {   11,   2, ',', '<', NIL }, {   12,   1, 'MESSAGE', '<', NIL }, {   13,   1, NIL, ':', { 'UPDATE' } }, {   14,   1, 'WHEN', '<', NIL }, {   15,   1, 'VALID', '<', NIL } } , .T. } )
-   aAdd( aCommRules, { '@' , { {    1,   0, NIL, '<', NIL }, {    2,   0, ',', '<', NIL }, {    0,   0, 'BITMAP', NIL, NIL }, { 1003,   1, NIL, '<', { 'NAME', 'RESNAME', 'RESOURCE', 'FILENAME', 'FILE', 'DISK', 'NOBORDER', 'NO BORDER', 'SIZE', 'OF', 'WINDOW', 'DIALOG', 'ON CLICK', 'ON LEFT CLICK', 'ON RIGHT CLICK', 'SCROLL', 'ADJUST', 'CURSOR', 'PIXEL', 'MESSAGE', 'UPDATE', 'WHEN', 'VALID', 'DESIGN' } }, {    4,   1, NIL, ':', { 'NAME', 'RESNAME', 'RESOURCE' } }, {    5,  -1, NIL, '<', NIL }, {    6,   1, NIL, ':', { 'FILENAME', 'FILE', 'DISK' } }, {    7,  -1, NIL, '<', NIL }, {    8,   1, NIL, ':', { 'NOBORDER', 'NO BORDER' } }, {    9,   1, 'SIZE', '<', NIL }, {   10,  -1, ',', '<', NIL }, {   11,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, {   12,  -1, NIL, '<', NIL }, { 1013,   1, NIL, ':', { 'ON CLICK', 'ON LEFT CLICK' } }, { 1014,  -1, NIL, '<', NIL }, { 1015,   1, NIL, ':', { 'ON RIGHT CLICK' } }, ;
-       { 1016,  -1, NIL, '<', NIL }, {   17,   1, NIL, ':', { 'SCROLL' } }, {   18,   1, NIL, ':', { 'ADJUST' } }, {   19,   1, 'CURSOR', '<', NIL }, {   20,   1, NIL, ':', { 'PIXEL' } }, {   21,   1, 'MESSAGE', '<', NIL }, {   22,   1, NIL, ':', { 'UPDATE' } }, {   23,   1, 'WHEN', '<', NIL }, {   24,   1, 'VALID', '<', NIL }, {   25,   1, NIL, ':', { 'DESIGN' } } } , .T. } )
-   aAdd( aCommRules, { '@' , { {    1,   0, NIL, '<', NIL }, {    2,   0, ',', '<', NIL }, {    0,   0, 'IMAGE', NIL, NIL }, { 1003,   1, NIL, '<', { 'NAME', 'RESNAME', 'RESOURCE', 'FILENAME', 'FILE', 'DISK', 'NOBORDER', 'NO BORDER', 'SIZE', 'OF', 'WINDOW', 'DIALOG', 'ON CLICK', 'ON LEFT CLICK', 'ON RIGHT CLICK', 'SCROLL', 'ADJUST', 'CURSOR', 'PIXEL', 'MESSAGE', 'UPDATE', 'WHEN', 'VALID', 'DESIGN' } }, {    4,   1, NIL, ':', { 'NAME', 'RESNAME', 'RESOURCE' } }, {    5,  -1, NIL, '<', NIL }, {    6,   1, NIL, ':', { 'FILENAME', 'FILE', 'DISK' } }, {    7,  -1, NIL, '<', NIL }, {    8,   1, NIL, ':', { 'NOBORDER', 'NO BORDER' } }, {    9,   1, 'SIZE', '<', NIL }, {   10,  -1, ',', '<', NIL }, {   11,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, {   12,  -1, NIL, '<', NIL }, { 1013,   1, NIL, ':', { 'ON CLICK', 'ON LEFT CLICK' } }, { 1014,  -1, NIL, '<', NIL }, { 1015,   1, NIL, ':', { 'ON RIGHT CLICK' } }, ;
-       { 1016,  -1, NIL, '<', NIL }, {   17,   1, NIL, ':', { 'SCROLL' } }, {   18,   1, NIL, ':', { 'ADJUST' } }, {   19,   1, 'CURSOR', '<', NIL }, {   20,   1, NIL, ':', { 'PIXEL' } }, {   21,   1, 'MESSAGE', '<', NIL }, {   22,   1, NIL, ':', { 'UPDATE' } }, {   23,   1, 'WHEN', '<', NIL }, {   24,   1, 'VALID', '<', NIL }, {   25,   1, NIL, ':', { 'DESIGN' } } } , .T. } )
-   aAdd( aCommRules, { 'REDEFINE' , { {    0,   0, 'BITMAP', NIL, NIL }, { 1001,   1, NIL, '<', { 'ID', 'OF', 'WINDOW', 'DIALOG', 'NAME', 'RESNAME', 'RESOURCE', 'FILE', 'FILENAME', 'DISK', 'ON CLICK', 'ON LEFT CLICK', 'ON RIGHT CLICK', 'SCROLL', 'ADJUST', 'CURSOR', 'MESSAGE', 'UPDATE', 'WHEN', 'VALID', 'TRANSPAREN' } }, {    2,   1, 'ID', '<', NIL }, {    3,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, {    4,  -1, NIL, '<', NIL }, {    5,   1, NIL, ':', { 'NAME', 'RESNAME', 'RESOURCE' } }, {    6,  -1, NIL, '<', NIL }, {    7,   1, NIL, ':', { 'FILE', 'FILENAME', 'DISK' } }, {    8,  -1, NIL, '<', NIL }, { 1009,   1, NIL, ':', { 'ON CLICK', 'ON LEFT CLICK' } }, { 1010,  -1, NIL, '<', NIL }, { 1011,   1, NIL, ':', { 'ON RIGHT CLICK' } }, { 1012,  -1, NIL, '<', NIL }, {   13,   1, NIL, ':', { 'SCROLL' } }, {   14,   1, NIL, ':', { 'ADJUST' } }, {   15,   1, 'CURSOR', '<', NIL }, {   16,   1, 'MESSAGE', '<', NIL }, ;
-       {   17,   1, NIL, ':', { 'UPDATE' } }, {   18,   1, 'WHEN', '<', NIL }, {   19,   1, 'VALID', '<', NIL }, {   20,   1, NIL, ':', { 'TRANSPAREN' } } } , .T. } )
+   aAdd( aCommRules, { '@' , { {    1,   0, NIL, '<', NIL }, {    2,   0, ',', '<', NIL }, {    0,   0, 'CHECKBOX', NIL, NIL }, { 1003,   1, NIL, '<', { 'PROMPT', 'OF', 'WINDOW', 'DIALOG', 'SIZE', 'HELPID', 'HELP ID', 'FONT', 'ON CLICK', 'ON CHANGE', 'VALID', 'COLOR', 'COLORS', 'DESIGN', 'PIXEL', 'MESSAGE', 'UPDATE', 'WHEN' } }, {    0,  -1, 'VAR', NIL, NIL }, { 1004,   1, NIL, '<', { 'PROMPT', 'OF', 'WINDOW', 'DIALOG', 'SIZE', 'HELPID', 'HELP ID', 'FONT', 'ON CLICK', 'ON CHANGE', 'VALID', 'COLOR', 'COLORS', 'DESIGN', 'PIXEL', 'MESSAGE', 'UPDATE', 'WHEN' } }, {    5,   1, 'PROMPT', '<', NIL }, {    6,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, {    7,  -1, NIL, '<', NIL }, {    8,   1, 'SIZE', '<', NIL }, {    9,  -1, ',', '<', NIL }, {   10,   1, NIL, ':', { 'HELPID', 'HELP ID' } }, {   11,  -1, NIL, '<', NIL }, {   12,   1, 'FONT', '<', NIL }, { 1013,   1, NIL, ':', { 'ON CLICK', 'ON CHANGE' } }, { 1014,  -1, NIL, '<', NIL }, {   15,   1, 'VALID', '<', NIL }, {   16,   1, NIL, ':', { 'COLOR', 'COLORS' } }, {   17,  -1, NIL, '<', NIL }, {   18,   2, ',', '<', NIL }, {   19,   1, NIL, ':', { 'DESIGN' } }, {   20,   1, NIL, ':', { 'PIXEL' } }, {   21,   1, 'MESSAGE', '<', NIL }, {   22,   1, NIL, ':', { 'UPDATE' } }, {   23,   1, 'WHEN', '<', NIL } } , .T. } )
+   aAdd( aCommRules, { '@' , { {    1,   0, NIL, '<', NIL }, {    2,   0, ',', '<', NIL }, {    0,   0, 'COMBOBOX', NIL, NIL }, { 1003,   1, NIL, '<', NIL }, {    0,  -1, 'VAR', NIL, NIL }, {    4,   0, NIL, '<', NIL }, {    5,   1, NIL, ':', { 'PROMPTS', 'ITEMS' } }, {    6,  -1, NIL, '<', NIL }, {    7,   1, 'SIZE', '<', NIL }, {    8,  -1, ',', '<', NIL }, {    9,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, {   10,  -1, NIL, '<', NIL }, {   11,   1, NIL, ':', { 'HELPID', 'HELP ID' } }, {   12,  -1, NIL, '<', NIL }, { 1000,   1, 'ON', NIL, NIL }, { 1013,  -1, 'CHANGE', '<', NIL }, {   14,   1, 'VALID', '<', NIL }, {   15,   1, NIL, ':', { 'COLOR', 'COLORS' } }, {   16,  -1, NIL, '<', NIL }, {   17,   2, ',', '<', NIL }, {   18,   1, NIL, ':', { 'PIXEL' } }, {   19,   1, 'FONT', '<', NIL }, {   20,   1, NIL, ':', { 'UPDATE' } }, {   21,   1, 'MESSAGE', '<', NIL }, {   22,   1, 'WHEN', '<', NIL }, {   23,   1, NIL, ':', { 'DESIGN' } }, {   24,   1, 'BITMAPS', '<', NIL }, { 1000,   1, 'ON', NIL, NIL }, { 1025,  -1, 'DRAWITEM', '<', NIL }, {   26,   1, 'STYLE', '<', NIL }, {   27,   1, 'PICTURE', '<', NIL }, { 1000,   1, 'ON', NIL, NIL }, { 1000,  -1, 'EDIT', NIL, NIL }, { 1028,  -1, 'CHANGE', '<', NIL } } , .T. } )
+   aAdd( aCommRules, { 'REDEFINE' , { {    0,   0, 'COMBOBOX', NIL, NIL }, { 1001,   1, NIL, '<', NIL }, {    0,  -1, 'VAR', NIL, NIL }, {    2,   0, NIL, '<', NIL }, {    3,   1, NIL, ':', { 'PROMPTS', 'ITEMS' } }, {    4,  -1, NIL, '<', NIL }, {    5,   1, 'ID', '<', NIL }, {    6,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, {    7,  -1, NIL, '<', NIL }, {    8,   1, NIL, ':', { 'HELPID', 'HELP ID' } }, {    9,  -1, NIL, '<', NIL }, { 1000,   1, 'ON', NIL, NIL }, { 1010,  -1, 'CHANGE', '<', NIL }, {   11,   1, 'VALID', '<', NIL }, {   12,   1, NIL, ':', { 'COLOR', 'COLORS' } }, {   13,  -1, NIL, '<', NIL }, {   14,   2, ',', '<', NIL }, {   15,   1, NIL, ':', { 'UPDATE' } }, {   16,   1, 'MESSAGE', '<', NIL }, {   17,   1, 'WHEN', '<', NIL }, {   18,   1, 'BITMAPS', '<', NIL }, { 1000,   1, 'ON', NIL, NIL }, { 1019,  -1, 'DRAWITEM', '<', NIL }, {   20,   1, 'STYLE', '<', NIL }, {   21,   1, 'PICTURE', '<', NIL }, { 1000,   1, 'ON', NIL, NIL }, { 1000,  -1, 'EDIT', NIL, NIL }, { 1022,  -1, 'CHANGE', '<', NIL } } , .T. } )
+   aAdd( aCommRules, { 'REDEFINE' , { {    0,   0, 'LISTBOX', NIL, NIL }, { 1001,   1, NIL, '<', NIL }, {    0,  -1, 'VAR', NIL, NIL }, {    2,   0, NIL, '<', NIL }, {    3,   1, NIL, ':', { 'PROMPTS', 'ITEMS' } }, {    4,  -1, NIL, '<', NIL }, {    5,   1, NIL, ':', { 'FILES', 'FILESPEC' } }, {    6,  -1, NIL, '<', NIL }, {    7,   1, 'ID', '<', NIL }, { 1000,   1, 'ON', NIL, NIL }, { 1008,  -1, 'CHANGE', 'A', NIL }, {    0,   1, 'ON', NIL, NIL }, {    0,   2, 'LEFT', NIL, NIL }, {    9,  -1, 'DBLCLICK', '<', NIL }, {   10,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, {   11,  -1, NIL, '<', NIL }, {   12,   1, NIL, ':', { 'HELPID', 'HELP ID' } }, {   13,  -1, NIL, '<', NIL }, {   14,   1, 'VALID', '<', NIL }, {   15,   1, NIL, ':', { 'COLOR', 'COLORS' } }, {   16,  -1, NIL, '<', NIL }, {   17,   2, ',', '<', NIL }, {   18,   1, 'MESSAGE', '<', NIL }, {   19,   1, NIL, ':', { 'UPDATE' } }, {   20,   1, 'WHEN', '<', NIL }, {   21,   1, 'BITMAPS', '<', NIL }, { 1000,   1, 'ON', NIL, NIL }, { 1022,  -1, 'DRAWITEM', '<', NIL } } , .T. } )
+   aAdd( aCommRules, { '@' , { {    1,   0, NIL, '<', NIL }, {    2,   0, ',', '<', NIL }, {    0,   0, 'LISTBOX', NIL, NIL }, { 1003,   1, NIL, '<', NIL }, {    0,  -1, 'VAR', NIL, NIL }, {    4,   0, NIL, '<', NIL }, {    5,   1, NIL, ':', { 'PROMPTS', 'ITEMS' } }, {    6,  -1, NIL, '<', NIL }, {    7,   1, 'SIZE', '<', NIL }, {    8,  -1, ',', '<', NIL }, {    0,   1, 'ON', NIL, NIL }, {    9,  -1, 'CHANGE', '<', NIL }, {    0,   1, 'ON', NIL, NIL }, {    0,   2, 'LEFT', NIL, NIL }, {   10,  -1, 'DBLCLICK', '<', NIL }, {   11,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, {   12,  -1, NIL, '<', NIL }, {   13,   1, 'VALID', '<', NIL }, {   14,   1, NIL, ':', { 'COLOR', 'COLORS' } }, {   15,  -1, NIL, '<', NIL }, {   16,   2, ',', '<', NIL }, {   17,   1, NIL, ':', { 'PIXEL' } }, {   18,   1, NIL, ':', { 'DESIGN' } }, {   19,   1, 'FONT', '<', NIL }, {   20,   1, 'MESSAGE', '<', NIL }, {   21,   1, NIL, ':', { 'UPDATE' } }, {   22,   1, 'WHEN', '<', NIL }, {   23,   1, 'BITMAPS', '<', NIL }, { 1000,   1, 'ON', NIL, NIL }, { 1024,  -1, 'DRAWITEM', '<', NIL }, {   25,   1, NIL, ':', { 'MULTI', 'MULTIPLE', 'MULTISEL' } }, {   26,   1, NIL, ':', { 'SORT' } } } , .T. } )
+   aAdd( aCommRules, { 'REDEFINE' , { {    0,   0, 'LISTBOX', NIL, NIL }, { 1001,   1, NIL, '<', { 'FIELDS' } }, {    0,   0, 'FIELDS', NIL, NIL }, { 1002,   1, NIL, 'A', { 'ALIAS', 'ID', 'OF', 'DIALOG', 'FIELDSIZES', 'SIZES', 'COLSIZES', 'HEAD', 'HEADER', 'HEADERS', 'TITLE', 'SELECT', 'ON', 'ON', 'ON', 'ON', 'FONT', 'CURSOR', 'COLOR', 'COLORS', 'MESSAGE', 'UPDATE', 'WHEN', 'VALID', 'ACTION' } }, {    3,   1, 'ALIAS', '<', NIL }, {    4,   1, 'ID', '<', NIL }, {    5,   1, NIL, ':', { 'OF', 'DIALOG' } }, {    6,  -1, NIL, '<', NIL }, { 1007,   1, NIL, ':', { 'FIELDSIZES', 'SIZES', 'COLSIZES' } }, { 1008,  -1, NIL, 'A', NIL }, { 1009,   1, NIL, ':', { 'HEAD', 'HEADER', 'HEADERS', 'TITLE' } }, { 1010,  -1, NIL, 'A', NIL }, {   11,   1, 'SELECT', '<', NIL }, {   12,  -1, 'FOR', '<', NIL }, {   13,   2, 'TO', '<', NIL }, { 1000,   1, 'ON', NIL, NIL }, { 1014,  -1, 'CHANGE', '<', NIL }, {    0,   1, 'ON', NIL, NIL }, { 1000,   2, 'LEFT', NIL, NIL }, { 1015,  -1, 'CLICK', '<', NIL }, {    0,   1, 'ON', NIL, NIL }, { 1000,   2, 'LEFT', NIL, NIL }, { 1016,  -1, 'DBLCLICK', '<', NIL }, { 1000,   1, 'ON', NIL, NIL }, { 1000,  -1, 'RIGHT', NIL, NIL }, { 1017,  -1, 'CLICK', '<', NIL }, {   18,   1, 'FONT', '<', NIL }, {   19,   1, 'CURSOR', '<', NIL }, {   20,   1, NIL, ':', { 'COLOR', 'COLORS' } }, {   21,  -1, NIL, '<', NIL }, {   22,   2, ',', '<', NIL }, {   23,   1, 'MESSAGE', '<', NIL }, {   24,   1, NIL, ':', { 'UPDATE' } }, {   25,   1, 'WHEN', '<', NIL }, {   26,   1, 'VALID', '<', NIL }, { 1027,   1, 'ACTION', 'A', NIL } } , .T. } )
+   aAdd( aCommRules, { '@' , { {    1,   0, NIL, '<', NIL }, {    2,   0, ',', '<', NIL }, {    0,   0, 'LISTBOX', NIL, NIL }, { 1003,   1, NIL, '<', { 'FIELDS' } }, {    0,   0, 'FIELDS', NIL, NIL }, { 1004,   1, NIL, 'A', { 'ALIAS', 'FIELDSIZES', 'SIZES', 'COLSIZES', 'HEAD', 'HEADER', 'HEADERS', 'TITLE', 'SIZE', 'OF', 'DIALOG', 'SELECT', 'ON', 'ON', 'ON', 'ON', 'FONT', 'CURSOR', 'COLOR', 'COLORS', 'MESSAGE', 'UPDATE', 'PIXEL', 'WHEN', 'DESIGN', 'VALID', 'ACTION' } }, {    5,   1, 'ALIAS', '<', NIL }, { 1006,   1, NIL, ':', { 'FIELDSIZES', 'SIZES', 'COLSIZES' } }, { 1007,  -1, NIL, 'A', NIL }, { 1008,   1, NIL, ':', { 'HEAD', 'HEADER', 'HEADERS', 'TITLE' } }, { 1009,  -1, NIL, 'A', NIL }, {   10,   1, 'SIZE', '<', NIL }, {   11,  -1, ',', '<', NIL }, {   12,   1, NIL, ':', { 'OF', 'DIALOG' } }, {   13,  -1, NIL, '<', NIL }, {   14,   1, 'SELECT', '<', NIL }, {   15,  -1, 'FOR', '<', NIL }, {   16,   2, 'TO', '<', NIL }, { 1000,   1, 'ON', NIL, NIL }, { 1017,  -1, 'CHANGE', '<', NIL }, {    0,   1, 'ON', NIL, NIL }, {    0,   2, 'LEFT', NIL, NIL }, {   18,  -1, 'CLICK', '<', NIL }, {    0,   1, 'ON', NIL, NIL }, { 1000,   2, 'LEFT', NIL, NIL }, { 1019,  -1, 'DBLCLICK', '<', NIL }, { 1000,   1, 'ON', NIL, NIL }, { 1000,  -1, 'RIGHT', NIL, NIL }, { 1020,  -1, 'CLICK', '<', NIL }, {   21,   1, 'FONT', '<', NIL }, {   22,   1, 'CURSOR', '<', NIL }, {   23,   1, NIL, ':', { 'COLOR', 'COLORS' } }, {   24,  -1, NIL, '<', NIL }, {   25,   2, ',', '<', NIL }, {   26,   1, 'MESSAGE', '<', NIL }, {   27,   1, NIL, ':', { 'UPDATE' } }, {   28,   1, NIL, ':', { 'PIXEL' } }, {   29,   1, 'WHEN', '<', NIL }, {   30,   1, NIL, ':', { 'DESIGN' } }, {   31,   1, 'VALID', '<', NIL }, { 1032,   1, 'ACTION', 'A', NIL } } , .T. } )
+   aAdd( aCommRules, { '@' , { {    1,   0, NIL, '<', NIL }, {    2,   0, ',', '<', NIL }, {    0,   0, 'RADIO', NIL, NIL }, { 1003,   1, NIL, '<', { 'PROMPT', 'ITEMS', 'OF', 'WINDOW', 'DIALOG', 'HELPID', 'HELP ID', 'ON CLICK', 'ON CHANGE', 'COLOR', 'MESSAGE', 'UPDATE', 'WHEN', 'SIZE', 'VALID', 'DESIGN', '3D', '_3D', 'PIXEL' } }, {    0,  -1, 'VAR', NIL, NIL }, { 1004,   1, NIL, '<', { 'PROMPT', 'ITEMS', 'OF', 'WINDOW', 'DIALOG', 'HELPID', 'HELP ID', 'ON CLICK', 'ON CHANGE', 'COLOR', 'MESSAGE', 'UPDATE', 'WHEN', 'SIZE', 'VALID', 'DESIGN', '3D', '_3D', 'PIXEL' } }, {    5,   1, NIL, ':', { 'PROMPT', 'ITEMS' } }, {    6,  -1, NIL, 'A', NIL }, {    7,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, {    8,  -1, NIL, '<', NIL }, { 1009,   1, NIL, ':', { 'HELPID', 'HELP ID' } }, { 1010,  -1, NIL, 'A', NIL }, {   11,   1, NIL, ':', { 'ON CLICK', 'ON CHANGE' } }, {   12,  -1, NIL, '<', NIL }, {   13,   1, 'COLOR', '<', NIL }, {   14,   2, ',', '<', NIL }, {   15,   1, 'MESSAGE', '<', NIL }, {   16,   1, NIL, ':', { 'UPDATE' } }, {   17,   1, 'WHEN', '<', NIL }, {   18,   1, 'SIZE', '<', NIL }, {   19,  -1, ',', '<', NIL }, {   20,   1, 'VALID', '<', NIL }, {   21,   1, NIL, ':', { 'DESIGN' } }, {   22,   1, NIL, ':', { '3D', '_3D' } }, {   23,   1, NIL, ':', { 'PIXEL' } } } , .T. } )
+   aAdd( aCommRules, { 'REDEFINE' , { {    0,   0, 'RADIO', NIL, NIL }, { 1001,   1, NIL, '<', { 'ID', 'OF', 'WINDOW', 'DIALOG', 'HELPID', 'HELP ID', 'ON CHANGE', 'ON CLICK', 'COLOR', 'MESSAGE', 'UPDATE', 'WHEN', 'VALID' } }, {    0,  -1, 'VAR', NIL, NIL }, { 1002,   1, NIL, '<', { 'ID', 'OF', 'WINDOW', 'DIALOG', 'HELPID', 'HELP ID', 'ON CHANGE', 'ON CLICK', 'COLOR', 'MESSAGE', 'UPDATE', 'WHEN', 'VALID' } }, {    3,   1, 'ID', 'A', NIL }, {    4,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, {    5,  -1, NIL, '<', NIL }, { 1006,   1, NIL, ':', { 'HELPID', 'HELP ID' } }, { 1007,  -1, NIL, 'A', NIL }, {    8,   1, NIL, ':', { 'ON CHANGE', 'ON CLICK' } }, {    9,  -1, NIL, '<', NIL }, {   10,   1, 'COLOR', '<', NIL }, {   11,   2, ',', '<', NIL }, {   12,   1, 'MESSAGE', '<', NIL }, {   13,   1, NIL, ':', { 'UPDATE' } }, {   14,   1, 'WHEN', '<', NIL }, {   15,   1, 'VALID', '<', NIL } } , .T. } )
+   aAdd( aCommRules, { '@' , { {    1,   0, NIL, '<', NIL }, {    2,   0, ',', '<', NIL }, {    0,   0, 'BITMAP', NIL, NIL }, { 1003,   1, NIL, '<', { 'NAME', 'RESNAME', 'RESOURCE', 'FILENAME', 'FILE', 'DISK', 'NOBORDER', 'NO BORDER', 'SIZE', 'OF', 'WINDOW', 'DIALOG', 'ON CLICK', 'ON LEFT CLICK', 'ON RIGHT CLICK', 'SCROLL', 'ADJUST', 'CURSOR', 'PIXEL', 'MESSAGE', 'UPDATE', 'WHEN', 'VALID', 'DESIGN' } }, {    4,   1, NIL, ':', { 'NAME', 'RESNAME', 'RESOURCE' } }, {    5,  -1, NIL, '<', NIL }, {    6,   1, NIL, ':', { 'FILENAME', 'FILE', 'DISK' } }, {    7,  -1, NIL, '<', NIL }, {    8,   1, NIL, ':', { 'NOBORDER', 'NO BORDER' } }, {    9,   1, 'SIZE', '<', NIL }, {   10,  -1, ',', '<', NIL }, {   11,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, {   12,  -1, NIL, '<', NIL }, { 1013,   1, NIL, ':', { 'ON CLICK', 'ON LEFT CLICK' } }, { 1014,  -1, NIL, '<', NIL }, { 1015,   1, NIL, ':', { 'ON RIGHT CLICK' } }, { 1016,  -1, NIL, '<', NIL }, {   17,   1, NIL, ':', { 'SCROLL' } }, {   18,   1, NIL, ':', { 'ADJUST' } }, {   19,   1, 'CURSOR', '<', NIL }, {   20,   1, NIL, ':', { 'PIXEL' } }, {   21,   1, 'MESSAGE', '<', NIL }, {   22,   1, NIL, ':', { 'UPDATE' } }, {   23,   1, 'WHEN', '<', NIL }, {   24,   1, 'VALID', '<', NIL }, {   25,   1, NIL, ':', { 'DESIGN' } } } , .T. } )
+   aAdd( aCommRules, { '@' , { {    1,   0, NIL, '<', NIL }, {    2,   0, ',', '<', NIL }, {    0,   0, 'IMAGE', NIL, NIL }, { 1003,   1, NIL, '<', { 'NAME', 'RESNAME', 'RESOURCE', 'FILENAME', 'FILE', 'DISK', 'NOBORDER', 'NO BORDER', 'SIZE', 'OF', 'WINDOW', 'DIALOG', 'ON CLICK', 'ON LEFT CLICK', 'ON RIGHT CLICK', 'SCROLL', 'ADJUST', 'CURSOR', 'PIXEL', 'MESSAGE', 'UPDATE', 'WHEN', 'VALID', 'DESIGN' } }, {    4,   1, NIL, ':', { 'NAME', 'RESNAME', 'RESOURCE' } }, {    5,  -1, NIL, '<', NIL }, {    6,   1, NIL, ':', { 'FILENAME', 'FILE', 'DISK' } }, {    7,  -1, NIL, '<', NIL }, {    8,   1, NIL, ':', { 'NOBORDER', 'NO BORDER' } }, {    9,   1, 'SIZE', '<', NIL }, {   10,  -1, ',', '<', NIL }, {   11,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, {   12,  -1, NIL, '<', NIL }, { 1013,   1, NIL, ':', { 'ON CLICK', 'ON LEFT CLICK' } }, { 1014,  -1, NIL, '<', NIL }, { 1015,   1, NIL, ':', { 'ON RIGHT CLICK' } }, { 1016,  -1, NIL, '<', NIL }, {   17,   1, NIL, ':', { 'SCROLL' } }, {   18,   1, NIL, ':', { 'ADJUST' } }, {   19,   1, 'CURSOR', '<', NIL }, {   20,   1, NIL, ':', { 'PIXEL' } }, {   21,   1, 'MESSAGE', '<', NIL }, {   22,   1, NIL, ':', { 'UPDATE' } }, {   23,   1, 'WHEN', '<', NIL }, {   24,   1, 'VALID', '<', NIL }, {   25,   1, NIL, ':', { 'DESIGN' } } } , .T. } )
+   aAdd( aCommRules, { 'REDEFINE' , { {    0,   0, 'BITMAP', NIL, NIL }, { 1001,   1, NIL, '<', { 'ID', 'OF', 'WINDOW', 'DIALOG', 'NAME', 'RESNAME', 'RESOURCE', 'FILE', 'FILENAME', 'DISK', 'ON CLICK', 'ON LEFT CLICK', 'ON RIGHT CLICK', 'SCROLL', 'ADJUST', 'CURSOR', 'MESSAGE', 'UPDATE', 'WHEN', 'VALID', 'TRANSPAREN' } }, {    2,   1, 'ID', '<', NIL }, {    3,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, {    4,  -1, NIL, '<', NIL }, {    5,   1, NIL, ':', { 'NAME', 'RESNAME', 'RESOURCE' } }, {    6,  -1, NIL, '<', NIL }, {    7,   1, NIL, ':', { 'FILE', 'FILENAME', 'DISK' } }, {    8,  -1, NIL, '<', NIL }, { 1009,   1, NIL, ':', { 'ON CLICK', 'ON LEFT CLICK' } }, { 1010,  -1, NIL, '<', NIL }, { 1011,   1, NIL, ':', { 'ON RIGHT CLICK' } }, { 1012,  -1, NIL, '<', NIL }, {   13,   1, NIL, ':', { 'SCROLL' } }, {   14,   1, NIL, ':', { 'ADJUST' } }, {   15,   1, 'CURSOR', '<', NIL }, {   16,   1, 'MESSAGE', '<', NIL }, {   17,   1, NIL, ':', { 'UPDATE' } }, {   18,   1, 'WHEN', '<', NIL }, {   19,   1, 'VALID', '<', NIL }, {   20,   1, NIL, ':', { 'TRANSPAREN' } } } , .T. } )
    aAdd( aCommRules, { 'DEFINE' , { {    0,   0, 'BITMAP', NIL, NIL }, { 1001,   1, NIL, '<', { 'RESOURCE', 'NAME', 'RESNAME', 'FILE', 'FILENAME', 'DISK', 'OF', 'WINDOW', 'DIALOG' } }, {    2,   1, NIL, ':', { 'RESOURCE', 'NAME', 'RESNAME' } }, {    3,  -1, NIL, '<', NIL }, {    4,   1, NIL, ':', { 'FILE', 'FILENAME', 'DISK' } }, {    5,  -1, NIL, '<', NIL }, {    6,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, {    7,  -1, NIL, '<', NIL } } , .T. } )
    aAdd( aCommRules, { 'REDEFINE' , { {    0,   0, 'SAY', NIL, NIL }, { 1001,   1, NIL, '<', { 'PROMPT', 'VAR', 'PICTURE', 'ID', 'OF', 'WINDOW', 'DIALOG', 'COLOR', 'COLORS', 'UPDATE', 'FONT' } }, {    2,   1, NIL, ':', { 'PROMPT', 'VAR' } }, {    3,  -1, NIL, '<', NIL }, {    4,   1, 'PICTURE', '<', NIL }, {    5,   1, 'ID', '<', NIL }, {    6,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, {    7,  -1, NIL, '<', NIL }, {    8,   1, NIL, ':', { 'COLOR', 'COLORS' } }, {    9,  -1, NIL, '<', NIL }, {   10,   2, ',', '<', NIL }, {   11,   1, NIL, ':', { 'UPDATE' } }, {   12,   1, 'FONT', '<', NIL } } , .T. } )
-   aAdd( aCommRules, { '@' , { {    1,   0, NIL, '<', NIL }, {    2,   0, ',', '<', NIL }, {    0,   0, 'SAY', NIL, NIL }, { 1003,   1, NIL, '<', NIL }, {    4,  -1, NIL, ':', { 'PROMPT', 'VAR' } }, {    5,   0, NIL, '<', NIL }, { 1006,   1, 'PICTURE', '<', NIL }, { 1007,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, { 1008,  -1, NIL, '<', NIL }, {    9,   1, 'FONT', '<', NIL }, {   10,   1, NIL, ':', { 'CENTERED', 'CENTER' } }, {   11,   1, NIL, ':', { 'RIGHT' } }, {   12,   1, NIL, ':', { 'BORDER' } }, {   13,   1, NIL, ':', { 'PIXEL', 'PIXELS' } }, {   14,   1, NIL, ':', { 'COLOR', 'COLORS' } }, {   15,  -1, NIL, '<', NIL }, {   16,   2, ',', '<', NIL }, {   17,   1, 'SIZE', '<', NIL }, {   18,  -1, ',', '<', NIL }, {   19,   1, NIL, ':', { 'DESIGN' } }, {   20,   1, NIL, ':', { 'UPDATE' } }, {   21,   1, NIL, ':', { 'SHADED', 'SHADOW' } }, {   22,   1, NIL, ':', { 'BOX' } }, {   23,   1, NIL, ':', ;
-       { 'RAISED' } } } , .T. } )
+   aAdd( aCommRules, { '@' , { {    1,   0, NIL, '<', NIL }, {    2,   0, ',', '<', NIL }, {    0,   0, 'SAY', NIL, NIL }, { 1003,   1, NIL, '<', NIL }, {    4,  -1, NIL, ':', { 'PROMPT', 'VAR' } }, {    5,   0, NIL, '<', NIL }, { 1006,   1, 'PICTURE', '<', NIL }, { 1007,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, { 1008,  -1, NIL, '<', NIL }, {    9,   1, 'FONT', '<', NIL }, {   10,   1, NIL, ':', { 'CENTERED', 'CENTER' } }, {   11,   1, NIL, ':', { 'RIGHT' } }, {   12,   1, NIL, ':', { 'BORDER' } }, {   13,   1, NIL, ':', { 'PIXEL', 'PIXELS' } }, {   14,   1, NIL, ':', { 'COLOR', 'COLORS' } }, {   15,  -1, NIL, '<', NIL }, {   16,   2, ',', '<', NIL }, {   17,   1, 'SIZE', '<', NIL }, {   18,  -1, ',', '<', NIL }, {   19,   1, NIL, ':', { 'DESIGN' } }, {   20,   1, NIL, ':', { 'UPDATE' } }, {   21,   1, NIL, ':', { 'SHADED', 'SHADOW' } }, {   22,   1, NIL, ':', { 'BOX' } }, {   23,   1, NIL, ':', { 'RAISED' } } } , .T. } )
    aAdd( aCommRules, { 'REDEFINE' , { {    0,   0, 'GET', NIL, NIL }, { 1001,   1, NIL, '<', NIL }, {    0,  -1, 'VAR', NIL, NIL }, {    2,   0, NIL, '<', NIL }, {    3,   1, NIL, ':', { 'MULTILINE', 'MEMO', 'TEXT' } }, {    4,   1, 'ID', '<', NIL }, {    5,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, {    6,  -1, NIL, '<', NIL }, {    7,   1, NIL, ':', { 'HELPID', 'HELP ID' } }, {    8,  -1, NIL, '<', NIL }, {    9,   1, NIL, ':', { 'COLOR', 'COLORS' } }, {   10,  -1, NIL, '<', NIL }, {   11,   2, ',', '<', NIL }, {   12,   1, 'FONT', '<', NIL }, {   13,   1, 'CURSOR', '<', NIL }, {   14,   1, 'MESSAGE', '<', NIL }, {   15,   1, NIL, ':', { 'UPDATE' } }, {   16,   1, 'WHEN', '<', NIL }, {   17,   1, NIL, ':', { 'READONLY', 'NO MODIFY' } }, {   18,   1, 'VALID', '<', NIL }, { 1000,   1, 'ON', NIL, NIL }, { 1019,  -1, 'CHANGE', '<', NIL } } , .T. } )
-   aAdd( aCommRules, { 'REDEFINE' , { {    0,   0, 'GET', NIL, NIL }, { 1001,   1, NIL, '<', NIL }, {    0,  -1, 'VAR', NIL, NIL }, {    2,   0, NIL, '<', NIL }, {    3,   1, 'ID', '<', NIL }, {    4,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, {    5,  -1, NIL, '<', NIL }, {    6,   1, NIL, ':', { 'HELPID', 'HELP ID' } }, {    7,  -1, NIL, '<', NIL }, {    8,   1, 'VALID', '<', NIL }, {    9,   1, 'PICTURE', '<', NIL }, {   10,   1, NIL, ':', { 'COLOR', 'COLORS' } }, {   11,  -1, NIL, '<', NIL }, {   12,   2, ',', '<', NIL }, {   13,   1, 'FONT', '<', NIL }, {   14,   1, 'CURSOR', '<', NIL }, {   15,   1, 'MESSAGE', '<', NIL }, {   16,   1, NIL, ':', { 'UPDATE' } }, {   17,   1, 'WHEN', '<', NIL }, { 1000,   1, 'ON', NIL, NIL }, { 1018,  -1, 'CHANGE', '<', NIL }, {   19,   1, NIL, ':', { 'READONLY', 'NO MODIFY' } }, {   20,   1, NIL, ':', { 'SPINNER' } }, {    0,   2, 'ON', NIL, NIL }, ;
-       {   21,  -2, 'UP', '<', NIL }, {    0,   2, 'ON', NIL, NIL }, {   22,  -2, 'DOWN', '<', NIL }, {   23,   2, 'MIN', '<', NIL }, {   24,   2, 'MAX', '<', NIL } } , .T. } )
-   aAdd( aCommRules, { '@' , { {    1,   0, NIL, '<', NIL }, {    2,   0, ',', '<', NIL }, {    0,   0, 'GET', NIL, NIL }, { 1003,   1, NIL, '<', NIL }, {    0,  -1, 'VAR', NIL, NIL }, {    4,   0, NIL, '<', NIL }, { 1005,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, { 1006,  -1, NIL, '<', NIL }, {    7,   1, NIL, ':', { 'MULTILINE', 'MEMO', 'TEXT' } }, {    8,   1, NIL, ':', { 'COLOR', 'COLORS' } }, {    9,  -1, NIL, '<', NIL }, {   10,   2, ',', '<', NIL }, {   11,   1, 'SIZE', '<', NIL }, {   12,  -1, ',', '<', NIL }, {   13,   1, 'FONT', '<', NIL }, {   14,   1, NIL, ':', { 'HSCROLL' } }, {   15,   1, 'CURSOR', '<', NIL }, {   16,   1, NIL, ':', { 'PIXEL' } }, {   17,   1, 'MESSAGE', '<', NIL }, {   18,   1, NIL, ':', { 'UPDATE' } }, {   19,   1, 'WHEN', '<', NIL }, {   20,   1, NIL, ':', { 'CENTER', 'CENTERED' } }, {   21,   1, NIL, ':', { 'RIGHT' } }, {   22,   1, NIL, ':', ;
-       { 'READONLY', 'NO MODIFY' } }, {   23,   1, 'VALID', '<', NIL }, { 1000,   1, 'ON', NIL, NIL }, { 1024,  -1, 'CHANGE', '<', NIL }, {   25,   1, NIL, ':', { 'DESIGN' } }, { 1026,   1, NIL, ':', { 'NO BORDER', 'NOBORDER' } }, { 1027,   1, NIL, ':', { 'NO VSCROLL' } } } , .F. } )
-   aAdd( aCommRules, { '@' , { {    1,   0, NIL, '<', NIL }, {    2,   0, ',', '<', NIL }, {    0,   0, 'GET', NIL, NIL }, { 1003,   1, NIL, '<', NIL }, {    0,  -1, 'VAR', NIL, NIL }, {    4,   0, NIL, '<', NIL }, { 1005,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, { 1006,  -1, NIL, '<', NIL }, {    7,   1, 'PICTURE', '<', NIL }, {    8,   1, 'VALID', '<', NIL }, {    9,   1, NIL, ':', { 'COLOR', 'COLORS' } }, {   10,  -1, NIL, '<', NIL }, {   11,   2, ',', '<', NIL }, {   12,   1, 'SIZE', '<', NIL }, {   13,  -1, ',', '<', NIL }, {   14,   1, 'FONT', '<', NIL }, {   15,   1, NIL, ':', { 'DESIGN' } }, {   16,   1, 'CURSOR', '<', NIL }, {   17,   1, NIL, ':', { 'PIXEL' } }, {   18,   1, 'MESSAGE', '<', NIL }, {   19,   1, NIL, ':', { 'UPDATE' } }, {   20,   1, 'WHEN', '<', NIL }, {   21,   1, NIL, ':', { 'CENTER', 'CENTERED' } }, {   22,   1, NIL, ':', { 'RIGHT' } }, ;
-       { 1000,   1, 'ON', NIL, NIL }, { 1023,  -1, 'CHANGE', '<', NIL }, {   24,   1, NIL, ':', { 'READONLY', 'NO MODIFY' } }, {   25,   1, NIL, ':', { 'PASSWORD' } }, { 1026,   1, NIL, ':', { 'NO BORDER', 'NOBORDER' } }, {   27,   1, NIL, ':', { 'HELPID', 'HELP ID' } }, {   28,  -1, NIL, '<', NIL } } , .F. } )
-   aAdd( aCommRules, { '@' , { {    1,   0, NIL, '<', NIL }, {    2,   0, ',', '<', NIL }, {    0,   0, 'GET', NIL, NIL }, { 1003,   1, NIL, '<', NIL }, {    0,  -1, 'VAR', NIL, NIL }, {    4,   0, NIL, '<', NIL }, { 1005,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, { 1006,  -1, NIL, '<', NIL }, {    7,   1, 'PICTURE', '<', NIL }, {    8,   1, 'VALID', '<', NIL }, {    9,   1, NIL, ':', { 'COLOR', 'COLORS' } }, {   10,  -1, NIL, '<', NIL }, {   11,   2, ',', '<', NIL }, {   12,   1, 'SIZE', '<', NIL }, {   13,  -1, ',', '<', NIL }, {   14,   1, 'FONT', '<', NIL }, {   15,   1, NIL, ':', { 'DESIGN' } }, {   16,   1, 'CURSOR', '<', NIL }, {   17,   1, NIL, ':', { 'PIXEL' } }, {   18,   1, 'MESSAGE', '<', NIL }, {   19,   1, NIL, ':', { 'UPDATE' } }, {   20,   1, 'WHEN', '<', NIL }, {   21,   1, NIL, ':', { 'CENTER', 'CENTERED' } }, {   22,   1, NIL, ':', { 'RIGHT' } }, ;
-       { 1000,   1, 'ON', NIL, NIL }, { 1023,  -1, 'CHANGE', '<', NIL }, {   24,   1, NIL, ':', { 'READONLY', 'NO MODIFY' } }, {   25,   1, NIL, ':', { 'HELPID', 'HELP ID' } }, {   26,  -1, NIL, '<', NIL }, {   27,   1, NIL, ':', { 'SPINNER' } }, {    0,   2, 'ON', NIL, NIL }, {   28,  -2, 'UP', '<', NIL }, {    0,   2, 'ON', NIL, NIL }, {   29,  -2, 'DOWN', '<', NIL }, {   30,   2, 'MIN', '<', NIL }, {   31,   2, 'MAX', '<', NIL } } , .F. } )
-   aAdd( aCommRules, { '@' , { {    1,   0, NIL, '<', NIL }, {    2,   0, ',', '<', NIL }, {    0,   0, 'SCROLLBAR', NIL, NIL }, { 1003,   1, NIL, '<', { 'HORIZONTAL', 'VERTICAL', 'RANGE', 'PAGESTEP', 'SIZE', 'UP', 'ON UP', 'DOWN', 'ON DOWN', 'PAGEUP', 'ON PAGEUP', 'PAGEDOWN', 'ON PAGEDOWN', 'ON THUMBPOS', 'PIXEL', 'COLOR', 'COLORS', 'OF', 'MESSAGE', 'UPDATE', 'WHEN', 'VALID', 'DESIGN' } }, {    4,   1, NIL, ':', { 'HORIZONTAL' } }, { 1005,   1, NIL, ':', { 'VERTICAL' } }, {    6,   1, 'RANGE', '<', NIL }, {    7,  -1, ',', '<', NIL }, {    8,   1, 'PAGESTEP', '<', NIL }, {    9,   1, 'SIZE', '<', NIL }, {   10,  -1, ',', '<', NIL }, { 1011,   1, NIL, ':', { 'UP', 'ON UP' } }, { 1012,  -1, NIL, '<', NIL }, { 1013,   1, NIL, ':', { 'DOWN', 'ON DOWN' } }, { 1014,  -1, NIL, '<', NIL }, { 1015,   1, NIL, ':', { 'PAGEUP', 'ON PAGEUP' } }, { 1016,  -1, NIL, '<', NIL }, ;
-       { 1017,   1, NIL, ':', { 'PAGEDOWN', 'ON PAGEDOWN' } }, { 1018,  -1, NIL, '<', NIL }, { 1019,   1, NIL, ':', { 'ON THUMBPOS' } }, { 1020,  -1, NIL, '<', NIL }, { 1021,   1, NIL, ':', { 'PIXEL' } }, {   22,   1, NIL, ':', { 'COLOR', 'COLORS' } }, {   23,  -1, NIL, '<', NIL }, {   24,   2, ',', '<', NIL }, {   25,   1, 'OF', '<', NIL }, {   26,   1, 'MESSAGE', '<', NIL }, {   27,   1, NIL, ':', { 'UPDATE' } }, {   28,   1, 'WHEN', '<', NIL }, {   29,   1, 'VALID', '<', NIL }, {   30,   1, NIL, ':', { 'DESIGN' } } } , .T. } )
-   aAdd( aCommRules, { 'DEFINE' , { {    0,   0, 'SCROLLBAR', NIL, NIL }, { 1001,   1, NIL, '<', { 'HORIZONTAL', 'VERTICAL', 'RANGE', 'PAGESTEP', 'UP', 'ON UP', 'DOWN', 'ON DOWN', 'PAGEUP', 'ON PAGEUP', 'PAGEDOWN', 'ON PAGEDOWN', 'ON THUMBPOS', 'COLOR', 'COLORS', 'OF', 'WINDOW', 'DIALOG', 'MESSAGE', 'UPDATE', 'WHEN', 'VALID' } }, {    2,   1, NIL, ':', { 'HORIZONTAL' } }, { 1003,   1, NIL, ':', { 'VERTICAL' } }, {    4,   1, 'RANGE', '<', NIL }, {    5,  -1, ',', '<', NIL }, {    6,   1, 'PAGESTEP', '<', NIL }, { 1007,   1, NIL, ':', { 'UP', 'ON UP' } }, { 1008,  -1, NIL, '<', NIL }, { 1009,   1, NIL, ':', { 'DOWN', 'ON DOWN' } }, { 1010,  -1, NIL, '<', NIL }, { 1011,   1, NIL, ':', { 'PAGEUP', 'ON PAGEUP' } }, { 1012,  -1, NIL, '<', NIL }, { 1013,   1, NIL, ':', { 'PAGEDOWN', 'ON PAGEDOWN' } }, { 1014,  -1, NIL, '<', NIL }, { 1015,   1, NIL, ':', { 'ON THUMBPOS' } }, ;
-       { 1016,  -1, NIL, '<', NIL }, {   17,   1, NIL, ':', { 'COLOR', 'COLORS' } }, {   18,  -1, NIL, '<', NIL }, {   19,   2, ',', '<', NIL }, {   20,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, {   21,  -1, NIL, '<', NIL }, {   22,   1, 'MESSAGE', '<', NIL }, {   23,   1, NIL, ':', { 'UPDATE' } }, {   24,   1, 'WHEN', '<', NIL }, {   25,   1, 'VALID', '<', NIL } } , .T. } )
-   aAdd( aCommRules, { 'REDEFINE' , { {    0,   0, 'SCROLLBAR', NIL, NIL }, { 1001,   1, NIL, '<', { 'ID', 'RANGE', 'PAGESTEP', 'UP', 'ON UP', 'ON LEFT', 'DOWN', 'ON DOWN', 'ON RIGHT', 'PAGEUP', 'ON PAGEUP', 'PAGEDOWN', 'ON PAGEDOWN', 'ON THUMBPOS', 'COLOR', 'COLORS', 'OF', 'MESSAGE', 'UPDATE', 'WHEN', 'VALID' } }, {    2,   1, 'ID', '<', NIL }, {    3,   1, 'RANGE', '<', NIL }, {    4,  -1, ',', '<', NIL }, {    5,   1, 'PAGESTEP', '<', NIL }, { 1006,   1, NIL, ':', { 'UP', 'ON UP', 'ON LEFT' } }, { 1007,  -1, NIL, '<', NIL }, { 1008,   1, NIL, ':', { 'DOWN', 'ON DOWN', 'ON RIGHT' } }, { 1009,  -1, NIL, '<', NIL }, { 1010,   1, NIL, ':', { 'PAGEUP', 'ON PAGEUP' } }, { 1011,  -1, NIL, '<', NIL }, { 1012,   1, NIL, ':', { 'PAGEDOWN', 'ON PAGEDOWN' } }, { 1013,  -1, NIL, '<', NIL }, { 1014,   1, NIL, ':', { 'ON THUMBPOS' } }, { 1015,  -1, NIL, '<', NIL }, ;
-       {   16,   1, NIL, ':', { 'COLOR', 'COLORS' } }, {   17,  -1, NIL, '<', NIL }, {   18,   2, ',', '<', NIL }, {   19,   1, 'OF', '<', NIL }, {   20,   1, 'MESSAGE', '<', NIL }, {   21,   1, NIL, ':', { 'UPDATE' } }, {   22,   1, 'WHEN', '<', NIL }, {   23,   1, 'VALID', '<', NIL } } , .T. } )
+   aAdd( aCommRules, { 'REDEFINE' , { {    0,   0, 'GET', NIL, NIL }, { 1001,   1, NIL, '<', NIL }, {    0,  -1, 'VAR', NIL, NIL }, {    2,   0, NIL, '<', NIL }, {    3,   1, 'ID', '<', NIL }, {    4,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, {    5,  -1, NIL, '<', NIL }, {    6,   1, NIL, ':', { 'HELPID', 'HELP ID' } }, {    7,  -1, NIL, '<', NIL }, {    8,   1, 'VALID', '<', NIL }, {    9,   1, 'PICTURE', '<', NIL }, {   10,   1, NIL, ':', { 'COLOR', 'COLORS' } }, {   11,  -1, NIL, '<', NIL }, {   12,   2, ',', '<', NIL }, {   13,   1, 'FONT', '<', NIL }, {   14,   1, 'CURSOR', '<', NIL }, {   15,   1, 'MESSAGE', '<', NIL }, {   16,   1, NIL, ':', { 'UPDATE' } }, {   17,   1, 'WHEN', '<', NIL }, { 1000,   1, 'ON', NIL, NIL }, { 1018,  -1, 'CHANGE', '<', NIL }, {   19,   1, NIL, ':', { 'READONLY', 'NO MODIFY' } }, {   20,   1, NIL, ':', { 'SPINNER' } }, {    0,   2, 'ON', NIL, NIL }, {   21,  -2, 'UP', '<', NIL }, {    0,   2, 'ON', NIL, NIL }, {   22,  -2, 'DOWN', '<', NIL }, {   23,   2, 'MIN', '<', NIL }, {   24,   2, 'MAX', '<', NIL } } , .T. } )
+   aAdd( aCommRules, { '@' , { {    1,   0, NIL, '<', NIL }, {    2,   0, ',', '<', NIL }, {    0,   0, 'GET', NIL, NIL }, { 1003,   1, NIL, '<', NIL }, {    0,  -1, 'VAR', NIL, NIL }, {    4,   0, NIL, '<', NIL }, { 1005,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, { 1006,  -1, NIL, '<', NIL }, {    7,   1, NIL, ':', { 'MULTILINE', 'MEMO', 'TEXT' } }, {    8,   1, NIL, ':', { 'COLOR', 'COLORS' } }, {    9,  -1, NIL, '<', NIL }, {   10,   2, ',', '<', NIL }, {   11,   1, 'SIZE', '<', NIL }, {   12,  -1, ',', '<', NIL }, {   13,   1, 'FONT', '<', NIL }, {   14,   1, NIL, ':', { 'HSCROLL' } }, {   15,   1, 'CURSOR', '<', NIL }, {   16,   1, NIL, ':', { 'PIXEL' } }, {   17,   1, 'MESSAGE', '<', NIL }, {   18,   1, NIL, ':', { 'UPDATE' } }, {   19,   1, 'WHEN', '<', NIL }, {   20,   1, NIL, ':', { 'CENTER', 'CENTERED' } }, {   21,   1, NIL, ':', { 'RIGHT' } }, {   22,   1, NIL, ':', { 'READONLY', 'NO MODIFY' } }, {   23,   1, 'VALID', '<', NIL }, { 1000,   1, 'ON', NIL, NIL }, { 1024,  -1, 'CHANGE', '<', NIL }, {   25,   1, NIL, ':', { 'DESIGN' } }, { 1026,   1, NIL, ':', { 'NO BORDER', 'NOBORDER' } }, { 1027,   1, NIL, ':', { 'NO VSCROLL' } } } , .F. } )
+   aAdd( aCommRules, { '@' , { {    1,   0, NIL, '<', NIL }, {    2,   0, ',', '<', NIL }, {    0,   0, 'GET', NIL, NIL }, { 1003,   1, NIL, '<', NIL }, {    0,  -1, 'VAR', NIL, NIL }, {    4,   0, NIL, '<', NIL }, { 1005,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, { 1006,  -1, NIL, '<', NIL }, {    7,   1, 'PICTURE', '<', NIL }, {    8,   1, 'VALID', '<', NIL }, {    9,   1, NIL, ':', { 'COLOR', 'COLORS' } }, {   10,  -1, NIL, '<', NIL }, {   11,   2, ',', '<', NIL }, {   12,   1, 'SIZE', '<', NIL }, {   13,  -1, ',', '<', NIL }, {   14,   1, 'FONT', '<', NIL }, {   15,   1, NIL, ':', { 'DESIGN' } }, {   16,   1, 'CURSOR', '<', NIL }, {   17,   1, NIL, ':', { 'PIXEL' } }, {   18,   1, 'MESSAGE', '<', NIL }, {   19,   1, NIL, ':', { 'UPDATE' } }, {   20,   1, 'WHEN', '<', NIL }, {   21,   1, NIL, ':', { 'CENTER', 'CENTERED' } }, {   22,   1, NIL, ':', { 'RIGHT' } }, { 1000,   1, 'ON', NIL, NIL }, { 1023,  -1, 'CHANGE', '<', NIL }, {   24,   1, NIL, ':', { 'READONLY', 'NO MODIFY' } }, {   25,   1, NIL, ':', { 'PASSWORD' } }, { 1026,   1, NIL, ':', { 'NO BORDER', 'NOBORDER' } }, {   27,   1, NIL, ':', { 'HELPID', 'HELP ID' } }, {   28,  -1, NIL, '<', NIL } } , .F. } )
+   aAdd( aCommRules, { '@' , { {    1,   0, NIL, '<', NIL }, {    2,   0, ',', '<', NIL }, {    0,   0, 'GET', NIL, NIL }, { 1003,   1, NIL, '<', NIL }, {    0,  -1, 'VAR', NIL, NIL }, {    4,   0, NIL, '<', NIL }, { 1005,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, { 1006,  -1, NIL, '<', NIL }, {    7,   1, 'PICTURE', '<', NIL }, {    8,   1, 'VALID', '<', NIL }, {    9,   1, NIL, ':', { 'COLOR', 'COLORS' } }, {   10,  -1, NIL, '<', NIL }, {   11,   2, ',', '<', NIL }, {   12,   1, 'SIZE', '<', NIL }, {   13,  -1, ',', '<', NIL }, {   14,   1, 'FONT', '<', NIL }, {   15,   1, NIL, ':', { 'DESIGN' } }, {   16,   1, 'CURSOR', '<', NIL }, {   17,   1, NIL, ':', { 'PIXEL' } }, {   18,   1, 'MESSAGE', '<', NIL }, {   19,   1, NIL, ':', { 'UPDATE' } }, {   20,   1, 'WHEN', '<', NIL }, {   21,   1, NIL, ':', { 'CENTER', 'CENTERED' } }, {   22,   1, NIL, ':', { 'RIGHT' } }, { 1000,   1, 'ON', NIL, NIL }, { 1023,  -1, 'CHANGE', '<', NIL }, {   24,   1, NIL, ':', { 'READONLY', 'NO MODIFY' } }, {   25,   1, NIL, ':', { 'HELPID', 'HELP ID' } }, {   26,  -1, NIL, '<', NIL }, {   27,   1, NIL, ':', { 'SPINNER' } }, {    0,   2, 'ON', NIL, NIL }, {   28,  -2, 'UP', '<', NIL }, {    0,   2, 'ON', NIL, NIL }, {   29,  -2, 'DOWN', '<', NIL }, {   30,   2, 'MIN', '<', NIL }, {   31,   2, 'MAX', '<', NIL } } , .F. } )
+   aAdd( aCommRules, { '@' , { {    1,   0, NIL, '<', NIL }, {    2,   0, ',', '<', NIL }, {    0,   0, 'SCROLLBAR', NIL, NIL }, { 1003,   1, NIL, '<', { 'HORIZONTAL', 'VERTICAL', 'RANGE', 'PAGESTEP', 'SIZE', 'UP', 'ON UP', 'DOWN', 'ON DOWN', 'PAGEUP', 'ON PAGEUP', 'PAGEDOWN', 'ON PAGEDOWN', 'ON THUMBPOS', 'PIXEL', 'COLOR', 'COLORS', 'OF', 'MESSAGE', 'UPDATE', 'WHEN', 'VALID', 'DESIGN' } }, {    4,   1, NIL, ':', { 'HORIZONTAL' } }, { 1005,   1, NIL, ':', { 'VERTICAL' } }, {    6,   1, 'RANGE', '<', NIL }, {    7,  -1, ',', '<', NIL }, {    8,   1, 'PAGESTEP', '<', NIL }, {    9,   1, 'SIZE', '<', NIL }, {   10,  -1, ',', '<', NIL }, { 1011,   1, NIL, ':', { 'UP', 'ON UP' } }, { 1012,  -1, NIL, '<', NIL }, { 1013,   1, NIL, ':', { 'DOWN', 'ON DOWN' } }, { 1014,  -1, NIL, '<', NIL }, { 1015,   1, NIL, ':', { 'PAGEUP', 'ON PAGEUP' } }, { 1016,  -1, NIL, '<', NIL }, { 1017,   1, NIL, ':', { 'PAGEDOWN', 'ON PAGEDOWN' } }, { 1018,  -1, NIL, '<', NIL }, { 1019,   1, NIL, ':', { 'ON THUMBPOS' } }, { 1020,  -1, NIL, '<', NIL }, { 1021,   1, NIL, ':', { 'PIXEL' } }, {   22,   1, NIL, ':', { 'COLOR', 'COLORS' } }, {   23,  -1, NIL, '<', NIL }, {   24,   2, ',', '<', NIL }, {   25,   1, 'OF', '<', NIL }, {   26,   1, 'MESSAGE', '<', NIL }, {   27,   1, NIL, ':', { 'UPDATE' } }, {   28,   1, 'WHEN', '<', NIL }, {   29,   1, 'VALID', '<', NIL }, {   30,   1, NIL, ':', { 'DESIGN' } } } , .T. } )
+   aAdd( aCommRules, { 'DEFINE' , { {    0,   0, 'SCROLLBAR', NIL, NIL }, { 1001,   1, NIL, '<', { 'HORIZONTAL', 'VERTICAL', 'RANGE', 'PAGESTEP', 'UP', 'ON UP', 'DOWN', 'ON DOWN', 'PAGEUP', 'ON PAGEUP', 'PAGEDOWN', 'ON PAGEDOWN', 'ON THUMBPOS', 'COLOR', 'COLORS', 'OF', 'WINDOW', 'DIALOG', 'MESSAGE', 'UPDATE', 'WHEN', 'VALID' } }, {    2,   1, NIL, ':', { 'HORIZONTAL' } }, { 1003,   1, NIL, ':', { 'VERTICAL' } }, {    4,   1, 'RANGE', '<', NIL }, {    5,  -1, ',', '<', NIL }, {    6,   1, 'PAGESTEP', '<', NIL }, { 1007,   1, NIL, ':', { 'UP', 'ON UP' } }, { 1008,  -1, NIL, '<', NIL }, { 1009,   1, NIL, ':', { 'DOWN', 'ON DOWN' } }, { 1010,  -1, NIL, '<', NIL }, { 1011,   1, NIL, ':', { 'PAGEUP', 'ON PAGEUP' } }, { 1012,  -1, NIL, '<', NIL }, { 1013,   1, NIL, ':', { 'PAGEDOWN', 'ON PAGEDOWN' } }, { 1014,  -1, NIL, '<', NIL }, { 1015,   1, NIL, ':', { 'ON THUMBPOS' } }, { 1016,  -1, NIL, '<', NIL }, {   17,   1, NIL, ':', { 'COLOR', 'COLORS' } }, {   18,  -1, NIL, '<', NIL }, {   19,   2, ',', '<', NIL }, {   20,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, {   21,  -1, NIL, '<', NIL }, {   22,   1, 'MESSAGE', '<', NIL }, {   23,   1, NIL, ':', { 'UPDATE' } }, {   24,   1, 'WHEN', '<', NIL }, {   25,   1, 'VALID', '<', NIL } } , .T. } )
+   aAdd( aCommRules, { 'REDEFINE' , { {    0,   0, 'SCROLLBAR', NIL, NIL }, { 1001,   1, NIL, '<', { 'ID', 'RANGE', 'PAGESTEP', 'UP', 'ON UP', 'ON LEFT', 'DOWN', 'ON DOWN', 'ON RIGHT', 'PAGEUP', 'ON PAGEUP', 'PAGEDOWN', 'ON PAGEDOWN', 'ON THUMBPOS', 'COLOR', 'COLORS', 'OF', 'MESSAGE', 'UPDATE', 'WHEN', 'VALID' } }, {    2,   1, 'ID', '<', NIL }, {    3,   1, 'RANGE', '<', NIL }, {    4,  -1, ',', '<', NIL }, {    5,   1, 'PAGESTEP', '<', NIL }, { 1006,   1, NIL, ':', { 'UP', 'ON UP', 'ON LEFT' } }, { 1007,  -1, NIL, '<', NIL }, { 1008,   1, NIL, ':', { 'DOWN', 'ON DOWN', 'ON RIGHT' } }, { 1009,  -1, NIL, '<', NIL }, { 1010,   1, NIL, ':', { 'PAGEUP', 'ON PAGEUP' } }, { 1011,  -1, NIL, '<', NIL }, { 1012,   1, NIL, ':', { 'PAGEDOWN', 'ON PAGEDOWN' } }, { 1013,  -1, NIL, '<', NIL }, { 1014,   1, NIL, ':', { 'ON THUMBPOS' } }, { 1015,  -1, NIL, '<', NIL }, {   16,   1, NIL, ':', { 'COLOR', 'COLORS' } }, {   17,  -1, NIL, '<', NIL }, {   18,   2, ',', '<', NIL }, {   19,   1, 'OF', '<', NIL }, {   20,   1, 'MESSAGE', '<', NIL }, {   21,   1, NIL, ':', { 'UPDATE' } }, {   22,   1, 'WHEN', '<', NIL }, {   23,   1, 'VALID', '<', NIL } } , .T. } )
    aAdd( aCommRules, { '@' , { {    1,   0, NIL, '<', NIL }, {    2,   0, ',', '<', NIL }, { 1003,   1, 'GROUP', '<', NIL }, {    4,   0, 'TO', '<', NIL }, {    5,   0, ',', '<', NIL }, {    6,   1, NIL, ':', { 'LABEL', 'PROMPT' } }, {    7,  -1, NIL, '<', NIL }, {    8,   1, 'OF', '<', NIL }, {    9,   1, 'COLOR', '<', NIL }, {   10,   2, ',', '<', NIL }, {   11,   1, NIL, ':', { 'PIXEL' } }, { 1012,   1, NIL, ':', { 'DESIGN' } }, { 1013,   1, 'FONT', '<', NIL } } , .T. } )
    aAdd( aCommRules, { 'REDEFINE' , { {    0,   0, 'GROUP', NIL, NIL }, { 1001,   1, NIL, '<', { 'LABEL', 'PROMPT', 'ID', 'OF', 'WINDOW', 'DIALOG', 'COLOR', 'FONT' } }, {    2,   1, NIL, ':', { 'LABEL', 'PROMPT' } }, {    3,  -1, NIL, '<', NIL }, {    4,   1, 'ID', '<', NIL }, {    5,   1, NIL, ':', { 'OF', 'WINDOW', 'DIALOG' } }, {    6,  -1, NIL, '<', NIL }, {    7,   1, 'COLOR', '<', NIL }, {    8,   2, ',', '<', NIL }, { 1009,   1, 'FONT', '<', NIL } } , .T. } )
    aAdd( aCommRules, { '@' , { {    1,   0, NIL, '<', NIL }, {    2,   0, ',', '<', NIL }, {    0,   0, 'METER', NIL, NIL }, { 1003,   1, NIL, '<', NIL }, {    0,  -1, 'VAR', NIL, NIL }, {    4,   0, NIL, '<', NIL }, {    5,   1, 'TOTAL', '<', NIL }, {    6,   1, 'SIZE', '<', NIL }, {    7,  -1, ',', '<', NIL }, {    8,   1, 'OF', '<', NIL }, {    9,   1, NIL, ':', { 'UPDATE' } }, {   10,   1, NIL, ':', { 'PIXEL' } }, {   11,   1, 'FONT', '<', NIL }, {   12,   1, 'PROMPT', '<', NIL }, {   13,   1, NIL, ':', { 'NOPERCENTAGE' } }, {   14,   1, NIL, ':', { 'COLOR', 'COLORS' } }, {   15,  -1, NIL, '<', NIL }, {   16,  -1, ',', '<', NIL }, {   17,   1, 'BARCOLOR', '<', NIL }, {   18,  -1, ',', '<', NIL }, {   19,   1, NIL, ':', { 'DESIGN' } } } , .T. } )
@@ -8306,78 +8363,78 @@ FUNCTION InitFWRules()
    aAdd( aCommRules, { '@' , { {    1,   0, NIL, '<', NIL }, {    2,   0, ',', '<', NIL }, {    3,   0, 'PROMPT', '*', NIL } } , .T. } )
    aAdd( aCommRules, { 'MENU' , { {    1,   0, 'TO', '<', NIL } } , .T. } )
 
+   #endif
+
 RETURN .T.
 
 //--------------------------------------------------------------//
-
 FUNCTION InitFWResults()
+
+   #ifdef __HARBOUR__
 
    /* Defines Results*/
    aAdd( aDefResults, { , ,  } )
-   aAdd( aDefResults, { { {   0, '"(c) FiveTech, 1993-2001"' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '"FWH Pre-release - April 2001"' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '"FiveWin for Harbour"' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, 'WBrowse' } }, { -1} , { }  } )
+   aAdd( aDefResults, { { {   0, '"(c) FiveTech, 1993-2001"' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '"FWH Pre-release - April 2001"' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '"FiveWin for Harbour"' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, 'WBrowse' } }, { -1} ,  } )
    aAdd( aDefResults, { , ,  } )
    aAdd( aDefResults, { , ,  } )
-   aAdd( aDefResults, { { {   0, '1' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '2' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '3' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '4' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '5' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '6' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '7' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '8' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '9' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '10' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '11' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '12' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '13' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '14' } }, { -1} , { }  } )
-   aAdd( aDefResults, { , ,  } )
-   aAdd( aDefResults, { , ,  } )
-   aAdd( aDefResults, { , ,  } )
-   aAdd( aDefResults, { , ,  } )
-   aAdd( aDefResults, { { {   0, '0' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '8388608' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '32768' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '8421376' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '128' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '8388736' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '32896' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '12632256' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, 'CLR_HGRAY' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '8421504' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '16711680' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '65280' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '16776960' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '255' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '16711935' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '65535' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '16777215' } }, { -1} , { }  } )
-   aAdd( aDefResults, { , ,  } )
-   aAdd( aDefResults, { , ,  } )
-   aAdd( aDefResults, { { {   0, '0' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '1' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '2' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '7' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '7' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '5' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '6' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '7' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '8' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '9' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '10' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '11' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '12' } }, { -1} , { }  } )
+   aAdd( aDefResults, { { {   0, '1' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '2' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '3' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '4' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '5' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '6' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '7' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '8' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '9' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '10' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '11' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '12' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '13' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '14' } }, { -1} ,  } )
    aAdd( aDefResults, { , ,  } )
    aAdd( aDefResults, { , ,  } )
    aAdd( aDefResults, { , ,  } )
    aAdd( aDefResults, { , ,  } )
-   aAdd( aDefResults, { { {   0, '992' } }, { -1} , { }  } )
+   aAdd( aDefResults, { { {   0, '0' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '8388608' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '32768' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '8421376' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '128' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '8388736' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '32896' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '12632256' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, 'CLR_HGRAY' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '8421504' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '16711680' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '65280' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '16776960' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '255' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '16711935' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '65535' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '16777215' } }, { -1} ,  } )
+   aAdd( aDefResults, { , ,  } )
+   aAdd( aDefResults, { , ,  } )
+   aAdd( aDefResults, { { {   0, '0' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '1' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '2' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '7' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '7' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '5' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '6' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '7' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '8' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '9' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '10' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '11' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '12' } }, { -1} ,  } )
    aAdd( aDefResults, { , ,  } )
    aAdd( aDefResults, { , ,  } )
    aAdd( aDefResults, { , ,  } )
+   aAdd( aDefResults, { , ,  } )
+   aAdd( aDefResults, { { {   0, '992' } }, { -1} ,  } )
    aAdd( aDefResults, { , ,  } )
    aAdd( aDefResults, { , ,  } )
    aAdd( aDefResults, { , ,  } )
@@ -8386,391 +8443,392 @@ FUNCTION InitFWResults()
    aAdd( aDefResults, { , ,  } )
    aAdd( aDefResults, { , ,  } )
    aAdd( aDefResults, { , ,  } )
-   aAdd( aDefResults, { { {   0, '1' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '2' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '3' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '4' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '8' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '9' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '12' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '13' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '16' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '17' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '18' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '19' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '20' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '27' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '32' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '33' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '34' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '35' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '36' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '37' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '38' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '39' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '40' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '41' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '42' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '43' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '44' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '45' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '46' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '47' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '96' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '97' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '98' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '99' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '100' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '101' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '102' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '103' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '104' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '105' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '106' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '107' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '108' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '109' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '110' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '111' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '112' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '113' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '114' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '115' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '116' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '117' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '118' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '119' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '120' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '121' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '122' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '123' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '124' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '125' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '126' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '127' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '128' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '129' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '130' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '131' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '132' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '133' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '134' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '135' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '144' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '145' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '1' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '4' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '8' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '16' } }, { -1} , { }  } )
-   aAdd( aDefResults, { , ,  } )
-   aAdd( aDefResults, { , ,  } )
-   aAdd( aDefResults, { { {   0, 'WM_USER+1024' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, 'WM_USER+1025' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, 'WM_USER+1026' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, 'WM_USER+1027' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, 'WM_USER+1028' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, 'WM_USER+1029' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, 'WM_USER+1030' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, 'WM_USER+1031' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, 'WM_USER+1032' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, 'WM_USER+1033' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, 'WM_USER+1034' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, 'WM_USER+1035' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, 'WM_USER+1036' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, 'WM_USER+1037' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, 'WM_USER+1038' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, 'WM_USER+1039' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, 'WM_USER+1040' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, 'WM_USER+1041' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, 'WM_USER+1042' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, 'WM_USER+1043' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '1' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '1' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '2' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '0' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '1' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '2' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '16384' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '32' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '64' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '128' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '4096' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '8192' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '0' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '2147483648' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '1073741824' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '67108864' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '33554432' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '268435456' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '134217728' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '536870912' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '16777216' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '12582912' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '8388608' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '4194304' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '2097152' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '1048576' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '524288' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '262144' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '131072' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '65536' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '131072' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '65536' } }, { -1} , { }  } )
    aAdd( aDefResults, { , ,  } )
    aAdd( aDefResults, { , ,  } )
    aAdd( aDefResults, { , ,  } )
-   aAdd( aDefResults, { { {   0, '0' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '2' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '4' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '128' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '2048' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '4096' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '0' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '2' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '3' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '5' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '7' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '8' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '15' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '16' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '17' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '18' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '21' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '22' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '23' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '26' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '27' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '29' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '30' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '42' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '65' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '135' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '258' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '273' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '512' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '513' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '514' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '516' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '517' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '256' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '257' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '272' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '275' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '276' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '277' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '783' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '784' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '785' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '1024' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '2' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '128' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '1' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '2' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '4' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '128' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '1' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '2' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '16' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '128' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '256' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '1024' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '4096' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '10485763' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '1' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '2' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '3' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '16' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '64' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '128' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '256' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '2048' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '0' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '0' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '1' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '1' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '2' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '2' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '3' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '3' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '4' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '5' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '6' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '6' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '7' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '7' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '8' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '0' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '1' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '0' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '1' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '2' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '3' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '7' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '9' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '0' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '1' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '2' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '3' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '4' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '5' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '6' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '4' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '6' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '9' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '0' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '11' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '240' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '15000' } }, { -1} , { }  } )
+   aAdd( aDefResults, { { {   0, '1' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '2' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '3' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '4' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '8' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '9' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '12' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '13' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '16' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '17' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '18' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '19' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '20' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '27' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '32' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '33' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '34' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '35' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '36' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '37' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '38' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '39' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '40' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '41' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '42' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '43' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '44' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '45' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '46' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '47' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '96' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '97' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '98' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '99' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '100' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '101' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '102' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '103' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '104' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '105' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '106' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '107' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '108' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '109' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '110' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '111' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '112' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '113' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '114' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '115' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '116' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '117' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '118' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '119' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '120' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '121' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '122' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '123' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '124' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '125' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '126' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '127' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '128' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '129' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '130' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '131' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '132' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '133' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '134' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '135' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '144' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '145' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '1' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '4' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '8' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '16' } }, { -1} ,  } )
    aAdd( aDefResults, { , ,  } )
-   aAdd( aDefResults, { { {   0, 'Chr(13)+Chr(10)' } }, { -1} , { }  } )
-   aAdd( aDefResults, { { {   0, '{' }, {   0, '|' }, {   0, 'u' }, {   0, '|' }, {   0, 'If' }, {   0, '(' }, {   0, 'PCount' }, {   0, '(' }, {   0, ')' }, {   0, '==' }, {   0, '0' }, {   0, ',' }, {   0,   1 }, {   0, ',' }, {   0,   1 }, {   0, ':=' }, {   0, 'u' }, {   0, ')' }, {   0, '}' } }, { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,  1, -1,  1, -1, -1, -1, -1} , { NIL}  } )
+   aAdd( aDefResults, { , ,  } )
+   aAdd( aDefResults, { { {   0, 'WM_USER+1024' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, 'WM_USER+1025' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, 'WM_USER+1026' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, 'WM_USER+1027' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, 'WM_USER+1028' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, 'WM_USER+1029' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, 'WM_USER+1030' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, 'WM_USER+1031' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, 'WM_USER+1032' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, 'WM_USER+1033' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, 'WM_USER+1034' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, 'WM_USER+1035' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, 'WM_USER+1036' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, 'WM_USER+1037' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, 'WM_USER+1038' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, 'WM_USER+1039' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, 'WM_USER+1040' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, 'WM_USER+1041' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, 'WM_USER+1042' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, 'WM_USER+1043' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '1' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '1' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '2' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '0' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '1' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '2' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '16384' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '32' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '64' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '128' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '4096' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '8192' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '0' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '2147483648' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '1073741824' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '67108864' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '33554432' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '268435456' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '134217728' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '536870912' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '16777216' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '12582912' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '8388608' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '4194304' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '2097152' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '1048576' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '524288' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '262144' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '131072' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '65536' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '131072' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '65536' } }, { -1} ,  } )
+   aAdd( aDefResults, { , ,  } )
+   aAdd( aDefResults, { , ,  } )
+   aAdd( aDefResults, { , ,  } )
+   aAdd( aDefResults, { { {   0, '0' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '2' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '4' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '128' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '2048' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '4096' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '0' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '2' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '3' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '5' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '7' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '8' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '15' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '16' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '17' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '18' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '21' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '22' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '23' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '26' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '27' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '29' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '30' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '42' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '65' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '135' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '258' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '273' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '512' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '513' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '514' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '516' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '517' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '256' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '257' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '272' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '275' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '276' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '277' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '783' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '784' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '785' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '1024' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '2' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '128' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '1' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '2' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '4' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '128' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '1' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '2' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '16' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '128' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '256' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '1024' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '4096' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '10485763' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '1' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '2' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '3' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '16' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '64' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '128' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '256' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '2048' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '0' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '0' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '1' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '1' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '2' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '2' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '3' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '3' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '4' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '5' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '6' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '6' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '7' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '7' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '8' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '0' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '1' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '0' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '1' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '2' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '3' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '7' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '9' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '0' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '1' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '2' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '3' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '4' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '5' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '6' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '4' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '6' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '9' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '0' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '11' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '240' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '15000' } }, { -1} ,  } )
+   aAdd( aDefResults, { , ,  } )
+   aAdd( aDefResults, { { {   0, 'Chr(13)+Chr(10)' } }, { -1} ,  } )
+   aAdd( aDefResults, { { {   0, '{' }, {   0, '|' }, {   0, 'u' }, {   0, '|' }, {   0, 'If' }, {   0, '(' }, {   0, 'PCount' }, {   0, '(' }, {   0, ')' }, {   0, '==' }, {   0, '0' }, {   0, ',' }, {   0,   1 }, {   0, ',' }, {   0,   1 }, {   0, ':=' }, {   0, 'u' }, {   0, ')' }, {   0, '}' } }, { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,  1, -1,  1, -1, -1, -1, -1} , { NIL }  } )
 
    /* Translates Results*/
-   aAdd( aTransResults, { { {   0, '( ' }, {   0,   1 }, {   0, ' + ( ' }, {   0,   2 }, {   0, ' * 256 ) + ( ' }, {   0,   3 }, {   0, ' * 65536 ) )' } }, { -1,  1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL}  } )
-   aAdd( aTransResults, { { {   0,   1 } }, {  1} , { NIL}  } )
-   aAdd( aTransResults, { { {   0, 'DLL' } }, { -1} , { }  } )
-   aAdd( aTransResults, { { {   0, '{ |bp1,bp2,bp3,bp4,bp5,bp6,bp7,bp8,bp9,bp10| ' }, {   0,   1 }, {   0, ' }' } }, { -1,  1, -1} , { NIL}  } )
+   aAdd( aTransResults, { { {   0, '( ' }, {   0,   1 }, {   0, ' + ( ' }, {   0,   2 }, {   0, ' * 256 ) + ( ' }, {   0,   3 }, {   0, ' * 65536 ) )' } }, { -1,  1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL }  } )
+   aAdd( aTransResults, { { {   0,   1 } }, {  1} , { NIL }  } )
+   aAdd( aTransResults, { { {   0, 'DLL' } }, { -1} ,  } )
+   aAdd( aTransResults, { { {   0, '{ |bp1,bp2,bp3,bp4,bp5,bp6,bp7,bp8,bp9,bp10| ' }, {   0,   1 }, {   0, ' }' } }, { -1,  1, -1} , { NIL }  } )
 
    /* Commands Results*/
+   aAdd( aCommResults, { , , { NIL, NIL }  } )
+   aAdd( aCommResults, { { {   2, 'SetResources( ' }, {   2,   2 }, {   2, ' ); ' }, {   0, ' SetResources( ' }, {   0,   1 }, {   0, ' )' } }, { -1,  1, -1, -1,  1, -1} , { NIL, NIL }  } )
+   aAdd( aCommResults, { { {   0, 'FreeResources()' } }, { -1} ,  } )
+   aAdd( aCommResults, { { {   0, 'SetHelpFile( ' }, {   0,   1 }, {   0, ' )' } }, { -1,  1, -1} , { NIL }  } )
+   aAdd( aCommResults, { { {   0, 'HelpSetTopic( ' }, {   0,   1 }, {   0, ' )' } }, { -1,  1, -1} , { NIL }  } )
+   aAdd( aCommResults, { { {   0,   1 }, {   0, ' := LoadValue( ' }, {   0,   4 }, {   0, ', ' }, {   2, 'Upper(' }, {   2,   2 }, {   2, ')' }, {   0, ', ' }, {   0,   1 }, {   0, ' )' } }, {  1, -1,  1, -1, -1,  4, -1, -1,  1, -1} , { NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   0,   1 }, {   0, ' = TDialog():New( ' }, {   0,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   3 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {   0,  14 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {   0,  17 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {   0,  20 }, {   0, ', ' }, {   0,  21 }, {   0, ', ' }, {   0,  22 }, {   0, ', ' }, {   0,  23 }, {   0, ', ' }, {   0,  25 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,  10 }, {   0, ' )' } }, {  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   0,   1 }, {   0, ':Activate( ' }, {   0,   1 }, {   0, ':bLClicked ' }, {   6, ':= {|nRow,nCol,nFlags|' }, {   6,   6 }, {   6, '}' }, {   0, ', ' }, {   0,   1 }, {   0, ':bMoved    ' }, {   8, ':= ' }, {   8,   8 }, {   0, ', ' }, {   0,   1 }, {   0, ':bPainted  ' }, {   9, ':= {|hDC,cPS|' }, {   9,   9 }, {   9, '}' }, {   0, ', ' }, {   0,   2 }, {   0, ', ' }, {   5, '{|Self|' }, {   5,   5 }, {   5, '}' }, {   0, ', ' }, {   3, '! ' }, {   3,   3 }, {   0, ', ' }, {   7, '{|Self|' }, {   7,   7 }, {   7, '}' }, {   0, ', ' }, {   0,   1 }, {   0, ':bRClicked ' }, {  10, ':= {|nRow,nCol,nFlags|' }, {  10,  10 }, {  10, '}' }, {   0, ', ' }, {   4, '{|Self|' }, {   4,   4 }, {   4, '}' }, {   0, ' )' } }, {  1, -1,  1, -1, -1,  1, -1, -1,  1, -1, -1,  5, -1,  1, -1, -1,  1, -1, -1,  6, -1, -1,  1, -1, -1, -1,  6, -1, -1,  1, -1, -1,  1, -1, -1,  1, -1, -1, -1,  1, -1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   0,   1 }, {   0, ' := TFont():New( ' }, {   0,   2 }, {   0, ', ' }, {   0,   3 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   5,   5 }, {   0, ', ' }, {   6,   6 }, {   0, ',' }, {  11,  11 }, {   0, ',,' }, {   9,   9 }, {   0, ', ' }, {   7,   7 }, {   0, ', ' }, {   8,   8 }, {   0, ',,,,,, ' }, {  10,  10 }, {   0, ' )' } }, {  1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  6, -1,  1, -1,  1, -1,  6, -1,  6, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   0,   1 }, {   0, ':Activate()' } }, {  1, -1} , { NIL }  } )
+   aAdd( aCommResults, { { {   0,   1 }, {   0, ':DeActivate()' } }, {  1, -1} , { NIL }  } )
+   aAdd( aCommResults, { { {   0,   1 }, {   0, ':SetFont( ' }, {   0,   2 }, {   0, ' )' } }, {  1, -1,  1, -1} , { NIL, NIL }  } )
+   aAdd( aCommResults, { { {   0,   1 }, {   0, ' := TIni():New( ' }, {   0,   3 }, {   0, ' )' } }, {  1, -1,  1, -1} , { NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   0,   1 }, {   0, ' := ' }, {   0,   6 }, {   0, ':Get( ' }, {   0,   2 }, {   0, ', ' }, {   0,   3 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   1 }, {   0, ' )' } }, {  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   0,   5 }, {   0, ':Set( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ', ' }, {   0,   3 }, {   0, ' )' } }, {  1, -1,  1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL }  } )
    aAdd( aCommResults, { , ,  } )
-   aAdd( aCommResults, { { {   2, 'SetResources( ' }, {   2,   2 }, {   2, ' ); ' }, {   0, ' SetResources( ' }, {   0,   1 }, {   0, ' )' } }, { -1,  1, -1, -1,  1, -1} , { NIL, NIL}  } )
-   aAdd( aCommResults, { { {   0, 'FreeResources()' } }, { -1} , { }  } )
-   aAdd( aCommResults, { { {   0, 'SetHelpFile( ' }, {   0,   1 }, {   0, ' )' } }, { -1,  1, -1} , { NIL}  } )
-   aAdd( aCommResults, { { {   0, 'HelpSetTopic( ' }, {   0,   1 }, {   0, ' )' } }, { -1,  1, -1} , { NIL}  } )
-   aAdd( aCommResults, { { {   0,   1 }, {   0, ' := LoadValue( ' }, {   0,   4 }, {   0, ', ' }, {   2, 'Upper(' }, {   2,   2 }, {   2, ')' }, {   0, ', ' }, {   0,   1 }, {   0, ' )' } }, {  1, -1,  1, -1, -1,  4, -1, -1,  1, -1} , { NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   0,   1 }, {   0, ' = TDialog():New( ' }, {   0,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   3 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {   0,  14 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {   0,  17 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {   0,  20 }, {   0, ', ' }, {   0,  21 }, {   0, ', ' }, {   0,  22 }, {   0, ', ' }, {   0,  23 }, {   0, ', ' }, {   0,  25 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,  10 }, {   0, ' )' } }, {  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   0,   1 }, {   0, ':Activate( ' }, {   0,   1 }, {   0, ':bLClicked ' }, {   6, ':= {|nRow,nCol,nFlags|' }, {   6,   6 }, {   6, '}' }, {   0, ', ' }, {   0,   1 }, {   0, ':bMoved    ' }, {   8, ':= ' }, {   8,   8 }, {   0, ', ' }, {   0,   1 }, {   0, ':bPainted  ' }, {   9, ':= {|hDC,cPS|' }, {   9,   9 }, {   9, '}' }, {   0, ', ' }, {   0,   2 }, {   0, ', ' }, {   5, '{|Self|' }, {   5,   5 }, {   5, '}' }, {   0, ', ' }, {   3, '! ' }, {   3,   3 }, {   0, ', ' }, {   7, '{|Self|' }, {   7,   7 }, {   7, '}' }, {   0, ', ' }, {   0,   1 }, {   0, ':bRClicked ' }, {  10, ':= {|nRow,nCol,nFlags|' }, {  10,  10 }, {  10, '}' }, {   0, ', ' }, {   4, '{|Self|' }, {   4,   4 }, {   4, '}' }, {   0, ' )' } }, {  1, -1,  1, -1, -1,  1, -1, -1,  1, -1, -1,  5, -1,  1, -1, -1,  1, -1, -1,  6, -1, -1,  1, -1, -1, -1,  6, -1, -1,  1, -1, -1,  1, -1, -1,  1, -1, -1, -1,  1, -1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   0,   1 }, {   0, ' := TFont():New( ' }, {   0,   2 }, {   0, ', ' }, {   0,   3 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   5,   5 }, {   0, ', ' }, {   6,   6 }, {   0, ',' }, {  11,  11 }, {   0, ',,' }, {   9,   9 }, {   0, ', ' }, {   7,   7 }, {   0, ', ' }, {   8,   8 }, {   0, ',,,,,, ' }, {  10,  10 }, {   0, ' )' } }, {  1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  6, -1,  1, -1,  1, -1,  6, -1,  6, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   0,   1 }, {   0, ':Activate()' } }, {  1, -1} , { NIL}  } )
-   aAdd( aCommResults, { { {   0,   1 }, {   0, ':DeActivate()' } }, {  1, -1} , { NIL}  } )
-   aAdd( aCommResults, { { {   0,   1 }, {   0, ':SetFont( ' }, {   0,   2 }, {   0, ' )' } }, {  1, -1,  1, -1} , { NIL, NIL}  } )
-   aAdd( aCommResults, { { {   0,   1 }, {   0, ' := TIni():New( ' }, {   0,   3 }, {   0, ' )' } }, {  1, -1,  1, -1} , { NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   0,   1 }, {   0, ' := ' }, {   0,   6 }, {   0, ':Get( ' }, {   0,   2 }, {   0, ', ' }, {   0,   3 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   1 }, {   0, ' )' } }, {  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   0,   5 }, {   0, ':Set( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ', ' }, {   0,   3 }, {   0, ' )' } }, {  1, -1,  1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL}  } )
+   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' MenuBegin( ' }, {   0,   2 }, {   0, ' )' } }, {  1, -1, -1,  6, -1} , { NIL, NIL }  } )
+   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' MenuAddItem( ' }, {   0,   2 }, {   0, ', ' }, {   0,   3 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   5, 'Upper(' }, {   5,   5 }, {   5, ') == "ENABLED" ' }, {   0, ', ' }, {  10, '{|oMenuItem|' }, {  10,  10 }, {  10, '}' }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,   1 }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {   0,  14 }, {   0, ', ' }, {   0,  15 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {  19,  19 }, {   0, ', ' }, {   0,  20 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  6, -1, -1,  4, -1, -1, -1,  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  1, -1,  5, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   0,   1 }, {   0, ' := TMru():New( ' }, {   0,   3 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   8, '{|cMruItem,oMenuItem|' }, {   8,   8 }, {   8, '}' }, {   0, ' )' } }, {  1, -1,  1, -1,  1, -1,  1, -1,  1, -1, -1,  1, -1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   1,   1 }, {   1, ':=' }, {   0, ' MenuAddItem()' } }, {  1, -1, -1} , { NIL }  } )
+   aAdd( aCommResults, { { {   0, 'MenuEnd()' } }, { -1} ,  } )
+   aAdd( aCommResults, { { {   0,   1 }, {   0, ' := TMenu():ReDefine( ' }, {   0,   3 }, {   0, ', ' }, {   0,   4 }, {   0, ' )' } }, {  1, -1,  1, -1,  6, -1} , { NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TMenuItem():ReDefine( ' }, {   0,   2 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {  10, 'Upper(' }, {  10,  10 }, {  10, ') == "ENABLED" ' }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  14 }, {   0, ', ' }, {   0,   1 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   3 }, {   0, ', ' }, {   0,  15 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {  19,  19 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  6, -1, -1,  4, -1, -1,  5, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  5, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   0,   1 }, {   0, ' := TMenu():New( .f., ' }, {   0,   2 }, {   0, ' )' } }, {  1, -1,  1, -1} , { NIL, NIL }  } )
+   aAdd( aCommResults, { { {   0,   1 }, {   0, ':SetMenu( ' }, {   0,   2 }, {   0, ' )' } }, {  1, -1,  1, -1} , { NIL, NIL }  } )
+   aAdd( aCommResults, { { {   0,   2 }, {   0, ':Activate( ' }, {   0,   3 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   6 }, {   0, ' )' } }, {  1, -1,  1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   1,   1 }, {   1, ' :=' }, {   0, ' MenuBegin( .f., .t., ' }, {   0,   3 }, {   0, ' )' } }, {  1, -1, -1,  1, -1} , { NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   0, 'MenuEnd()' } }, { -1} ,  } )
+   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' PrintBegin( ' }, {   3,   3 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   6 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  6, -1,  6, -1,  1, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' PrintBegin( ' }, {   3,   3 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   6 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  6, -1,  6, -1,  1, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   0, 'PageBegin()' } }, { -1} ,  } )
+   aAdd( aCommResults, { { {   0, 'PageEnd()' } }, { -1} ,  } )
+   aAdd( aCommResults, { { {   0, 'PrintEnd()' } }, { -1} ,  } )
+   aAdd( aCommResults, { { {   0, 'PrintEnd()' } }, { -1} ,  } )
+   aAdd( aCommResults, { { {   1,   1 }, {   0, ' function ' }, {   0,   2 }, {   0, '( ' }, {   3, 'NOREF(' }, {   3,   3 }, {   3, ')' }, {   5, ' ,NOREF(' }, {   5,   5 }, {   5, ')' }, {   0, ' ) ; local hDLL := If( ValType( ' }, {   0,  10 }, {   0, ' ) == "N", ' }, {   0,  10 }, {   0, ', LoadLibrary( ' }, {   0,  10 }, {   0, ' ) ) ; local uResult ; local cFarProc ; if Abs( hDLL ) > 32 ; cFarProc = GetProcAddress( hDLL, If( ' }, {   9, ' Empty( ' }, {   9,   9 }, {   9, ' ) == ' }, {   0, ' .t., ' }, {   0,   2 }, {   0, ', ' }, {   0,   9 }, {   0, ' ), ' }, {   8,   8 }, {   0, ', ' }, {   0,   7 }, {   4, ' ,' }, {   4,   4 }, {   6, ' ,' }, {   6,   6 }, {   0, ' ) ; uResult = CallDLL( cFarProc ' }, {   3, ' ,' }, {   3,   3 }, {   5, ' ,' }, {   5,   5 }, {   0, ' ) ; If( ValType( ' }, {   0,  10 }, {   0, ' ) == "N",, FreeLibrary( hDLL ) ) ; else ; MsgAlert( "Error code: " + LTrim( Str( hDLL ) ) + " loading " + ' }, {   0,  10 }, {   0, ' ) ; end ; return uResult' } }, {  1, -1,  1, -1, -1,  1, -1, -1,  1, -1, -1,  1, -1,  1, -1,  4, -1, -1,  1, -1, -1,  4, -1,  1, -1,  6, -1,  1, -1,  1, -1,  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   1,   1 }, {   0, ' function ' }, {   0,   2 }, {   0, '( ' }, {   3, 'NOREF(' }, {   3,   3 }, {   3, ')' }, {   5, ' ,NOREF(' }, {   5,   5 }, {   5, ')' }, {   0, ' ) ; local hDLL := If( ValType( ' }, {   0,  10 }, {   0, ' ) == "N", ' }, {   0,  10 }, {   0, ', LoadLib32( ' }, {   0,  10 }, {   0, ' ) ) ; local uResult ; local cFarProc ; if Abs( hDLL ) <= 32 ; MsgAlert( "Error code: " + LTrim( Str( hDLL ) ) + " loading " + ' }, {   0,  10 }, {   0, ' ) ; else ; cFarProc = GetProc32( hDLL, If( ' }, {   9, ' Empty( ' }, {   9,   9 }, {   9, ' ) == ' }, {   0, ' .t., ' }, {   0,   2 }, {   0, ', ' }, {   0,   9 }, {   0, ' ), ' }, {   8,   8 }, {   0, ', ' }, {   0,   7 }, {   4, ' ,' }, {   4,   4 }, {   6, ' ,' }, {   6,   6 }, {   0, ' ) ; uResult = CallDLL32( cFarProc ' }, {   3, ' ,' }, {   3,   3 }, {   5, ' ,' }, {   5,   5 }, {   0, ' ) ; If( ValType( ' }, {   0,  10 }, {   0, ' ) == "N",, FreeLib32( hDLL ) ) ; end ; return uResult' } }, {  1, -1,  1, -1, -1,  1, -1, -1,  1, -1, -1,  1, -1,  1, -1,  4, -1,  1, -1, -1,  1, -1, -1,  4, -1,  1, -1,  6, -1,  1, -1,  1, -1,  1, -1, -1,  1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   3,   3 }, {   3, ' := ' }, {   0, ' TFolder():New( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ', ' }, {   7, '{' }, {   7,   7 }, {   7, '}' }, {   0, ', {' }, {   0,   9 }, {  10, ' ,' }, {  10,  10 }, {   0, '}, ' }, {   0,   5 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {   0,  14 }, {   0, ', ' }, {   0,  15 }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  17 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {   0,  19 }, {   0, ', ' }, {   0,  20 }, {   0, ', ' }, {   0,  21 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1, -1,  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  6, -1,  1, -1,  1, -1,  1, -1,  6, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TFolder():ReDefine( ' }, {   0,   2 }, {   0, ', ' }, {   6, '{' }, {   6,   6 }, {   6, '}' }, {   0, ', { ' }, {   0,   8 }, {   9, ' ,' }, {   9,   9 }, {   0, ' }, ' }, {   0,   4 }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {  14, '{|nOption,nOldOption| ' }, {  14,  14 }, {  14, '}' }, {   0, ', ' }, {   0,  15 }, {   0, ' )' } }, {  1, -1, -1,  1, -1, -1,  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1, -1,  1, -1, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   3,   3 }, {   3, ' := ' }, {   0, ' TTabs():New( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ', ' }, {   7, '{' }, {   7,   7 }, {   7, '}' }, {   0, ', ' }, {   9, '{|nOption|' }, {   9,   9 }, {   9, '}' }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,  15 }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {   0,  14 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {   0,  17 }, {   0, ', ' }, {   0,  18 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1, -1,  1, -1, -1, -1,  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  6, -1,  1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TTabs():ReDefine( ' }, {   0,   2 }, {   0, ', ' }, {   6, '{' }, {   6,   6 }, {   6, '}' }, {   0, ', ' }, {   8, '{|nOption|' }, {   8,   8 }, {   8, '}' }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,  11 }, {   0, ' )' } }, {  1, -1, -1,  1, -1, -1,  1, -1, -1, -1,  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   0,   1 }, {   0, ' := TPages():Redefine( ' }, {   0,   2 }, {   0, ', ' }, {   0,   3 }, {   0, ', ' }, {   4, '{' }, {   4,   4 }, {   4, '}' }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   6, 'bSETGET(' }, {   6,   6 }, {   6, ') ' }, {   0, ', ' }, {   0,   7 }, {   0, ' )' } }, {  1, -1,  1, -1,  1, -1, -1,  1, -1, -1,  1, -1, -1,  1, -1, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   0,   1 }, {   0, ' := TOdbc():New( ' }, {   0,   2 }, {   0, ', ' }, {   0,   3 }, {   0, ', ' }, {   0,   4 }, {   0, ' )' } }, {  1, -1,  1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   0,   1 }, {   0, ':Execute( ' }, {   0,   3 }, {   0, ' )' } }, {  1, -1,  1, -1} , { NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   0,   2 }, {   0, ' := TDde():New( ' }, {   0,   3 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   6,   6 }, {   0, ', ' }, {   7,   7 }, {   0, ' )' } }, {  1, -1,  1, -1,  1, -1,  1, -1,  5, -1,  5, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   0,   2 }, {   0, ':Activate()' } }, {  1, -1} , { NIL, NIL }  } )
+   aAdd( aCommResults, { { {   1,   1 }, {   0, ' := TMci():New( "avivideo", ' }, {   0,   3 }, {   0, ', ' }, {   0,   5 }, {   0, ' )' } }, {  1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   0,   1 }, {   0, ':lOpen() ; ' }, {   0,   1 }, {   0, ':Play()' } }, {  1, -1,  1, -1} , { NIL }  } )
+   aAdd( aCommResults, { { {   0,   1 }, {   0, ':lOpen() ; ' }, {   0,   1 }, {   0, ':Play()' } }, {  1, -1,  1, -1} , { NIL }  } )
+   aAdd( aCommResults, { { {   3,   3 }, {   3, ' := ' }, {   0, ' TVideo():New( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,  10 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TVideo():ReDefine( ' }, {   0,   2 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  5, -1,  5, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   1,   1 }, {   1, ':=' }, {   0, ' TreeBegin( ' }, {   0,   2 }, {   0, ', ' }, {   0,   3 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   1,   1 }, {   1, ' :=' }, {   0, ' _TreeItem( ' }, {   0,   2 }, {   0, ', ' }, {   0,   3 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,   7 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   0, 'TreeEnd()' } }, { -1} ,  } )
+   aAdd( aCommResults, { { {   0, 'SetMultiple( Upper(' }, {   0,   1 }, {   0, ') == "ON" )' } }, { -1,  4, -1} , { NIL }  } )
+   aAdd( aCommResults, { { {   0,   1 }, {   0, ' := If( ' }, {   0,   1 }, {   0, ' == nil, ' }, {   0,   2 }, {   0, ', ' }, {   0,   1 }, {   0, ' ) ; ' }, {   3,   3 }, {   3, ' := If( ' }, {   3,   3 }, {   3, ' == nil, ' }, {   3,   4 }, {   3, ', ' }, {   3,   3 }, {   3, ' ); ' } }, {  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   0, 'while .t.' } }, { -1} ,  } )
+   aAdd( aCommResults, { { {   0, 'if ' }, {   0,   1 }, {   0, '; exit; end; end' } }, { -1,  1, -1} , { NIL }  } )
+   aAdd( aCommResults, { { {   0, 'SetIdleAction( ' }, {   0,   1 }, {   0, ' )' } }, { -1,  5, -1} , { NIL }  } )
+   aAdd( aCommResults, { { {   0,   1 }, {   0, ' := TDataBase():New()' } }, {  1, -1} , { NIL }  } )
+   aAdd( aCommResults, { { {   0,   2 }, {   0, ':End() ; ' }, {   0,   2 }, {   0, ' := nil ' }, {   3, ' ; ' }, {   3,   3 }, {   3, ':End() ; ' }, {   3,   3 }, {   3, ' := nil ' } }, {  1, -1,  1, -1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TBrush():New( ' }, {   2, ' Upper(' }, {   2,   2 }, {   2, ') ' }, {   0, ', ' }, {   0,   3 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   7 }, {   0, ' )' } }, {  1, -1, -1, -1,  4, -1, -1,  1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   0,   1 }, {   0, ':SetBrush( ' }, {   0,   2 }, {   0, ' )' } }, {  1, -1,  1, -1} , { NIL, NIL }  } )
+   aAdd( aCommResults, { { {   0,   1 }, {   0, ' := TPen():New( ' }, {   0,   2 }, {   0, ', ' }, {   0,   3 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   6 }, {   0, ' )' } }, {  1, -1,  1, -1,  1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   0,   1 }, {   0, ':Activate()' } }, {  1, -1} , { NIL }  } )
+   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TBar():New( ' }, {   0,   8 }, {   0, ', ' }, {   0,   3 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   6, 'Upper(' }, {   6,   6 }, {   6, ') ' }, {   0, ', ' }, {   0,   9 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  6, -1, -1,  4, -1, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   3,   3 }, {   3, ' := ' }, {   0, ' TBar():NewAt( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   9, 'Upper(' }, {   9,   9 }, {   9, ') ' }, {   0, ', ' }, {   0,  12 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1, -1,  4, -1, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TBtnBmp():NewBar( ' }, {   0,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,  15 }, {   0, ', ' }, {  13, '{|This|' }, {  13,  13 }, {  13, '}' }, {   0, ', ' }, {   0,  14 }, {   0, ', ' }, {   0,   3 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {   0,  17 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {   0,  19 }, {   0, ', ' }, {  20, '{||' }, {  20,  20 }, {  20, '}' }, {   0, ', ' }, {  13, "'" }, {  13,  13 }, {  13, "'" }, {   0, ', ' }, {   0,  21 }, {   0, ', ' }, {   0,  22 }, {   0, ', ' }, {   0,  23 }, {   0, ', ' }, {   7,   7 }, {   0, ', ' }, {  11,  11 }, {   0, ', ' }, {  24, '!' }, {  24,  24 }, {   0, ', ' }, {  25,  25 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1, -1,  1, -1, -1,  6, -1,  1, -1,  6, -1,  5, -1,  1, -1,  6, -1, -1,  1, -1, -1, -1,  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1, -1,  6, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TBtnBmp():ReDefine( ' }, {   0,   2 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {   0,  15 }, {   0, ', ' }, {  14, '{|Self|' }, {  14,  14 }, {  14, '}' }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {   0,  17 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {   0,  19 }, {   0, ', ' }, {   0,  20 }, {   0, ', ' }, {   0,  21 }, {   0, ', ' }, {   8,   8 }, {   0, ', ' }, {  12,  12 }, {   0, ', ' }, {  22, '!' }, {  22,  22 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1, -1,  1, -1, -1,  1, -1,  6, -1,  5, -1,  6, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   3,   3 }, {   3, ' := ' }, {   0, ' TBtnBmp():New( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {  14, '{|Self|' }, {  14,  14 }, {  14, '}' }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {   0,  17 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {   0,  19 }, {   0, ', ' }, {   0,  20 }, {   0, ', ' }, {   0,  21 }, {   0, ', ' }, {   0,  22 }, {   0, ', ' }, {   7,   7 }, {   0, ', ' }, {  11,  11 }, {   0, ', !' }, {   0,  23 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1, -1,  1, -1, -1,  1, -1,  1, -1,  5, -1,  6, -1,  6, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   3,   3 }, {   3, ' := ' }, {   0, ' TIcon():New( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {   0,  14 }, {   0, ', ' }, {   0,  15 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  5, -1,  1, -1,  6, -1,  5, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TIcon():ReDefine( ' }, {   0,   2 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,  11 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  5, -1,  6, -1,  1, -1,  5, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   0,   1 }, {   0, ' := TIcon():New( ,, ' }, {   0,   3 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ' )' } }, {  1, -1,  1, -1,  1, -1,  5, -1} , { NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   3,   3 }, {   3, ' := ' }, {   0, ' TButton():New( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,  14 }, {   0, ', ' }, {   0,  15 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {   0,  17 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {   0,  19 }, {   0, ', ' }, {   0,  20 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  5, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  6, -1,  6, -1,  1, -1,  6, -1,  5, -1,  5, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TButton():ReDefine( ' }, {   0,   2 }, {   0, ', ' }, {   5, '{||' }, {   5,   5 }, {   5, '}' }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  13 }, {   0, ' )' } }, {  1, -1, -1,  1, -1, -1,  1, -1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  5, -1,  5, -1,  1, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TCheckBox():ReDefine( ' }, {   0,   3 }, {   0, ', bSETGET(' }, {   0,   2 }, {   0, '), ' }, {   0,   5 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   9,   9 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {   0,  14 }, {   0, ', ' }, {   0,  15 }, {   0, ', ' }, {   0,  16 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  5, -1,  5, -1,  1, -1,  1, -1,  1, -1,  6, -1,  5, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   3,   3 }, {   3, ' := ' }, {   0, ' TCheckBox():New( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   4, 'bSETGET(' }, {   4,   4 }, {   4, ')' }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {  14,  14 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  15 }, {   0, ', ' }, {   0,  17 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {   0,  19 }, {   0, ', ' }, {   0,  20 }, {   0, ', ' }, {   0,  21 }, {   0, ', ' }, {   0,  22 }, {   0, ', ' }, {   0,  23 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1, -1,  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  5, -1,  1, -1,  5, -1,  1, -1,  1, -1,  6, -1,  6, -1,  1, -1,  6, -1,  5, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   3,   3 }, {   3, ' := ' }, {   0, ' TComboBox():New( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ', bSETGET(' }, {   0,   4 }, {   0, '), ' }, {   0,   6 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {  13, '{|Self|' }, {  13,  13 }, {  13, '}' }, {   0, ', ' }, {   0,  14 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {   0,  17 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {   0,  19 }, {   0, ', ' }, {   0,  21 }, {   0, ', ' }, {   0,  20 }, {   0, ', ' }, {   0,  22 }, {   0, ', ' }, {   0,  23 }, {   0, ', ' }, {   0,  24 }, {   0, ', ' }, {  25, '{|nItem|' }, {  25,  25 }, {  25, '}' }, {   0, ', ' }, {   0,  26 }, {   0, ', ' }, {   0,  27 }, {   0, ', ' }, {  28,  28 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1, -1,  1, -1, -1,  5, -1,  1, -1,  1, -1,  6, -1,  1, -1,  1, -1,  6, -1,  5, -1,  6, -1,  1, -1, -1,  1, -1, -1,  1, -1,  1, -1,  5, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TComboBox():ReDefine( ' }, {   0,   5 }, {   0, ', bSETGET(' }, {   0,   2 }, {   0, '), ' }, {   0,   4 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {  10, '{|Self|' }, {  10,  10 }, {  10, '}' }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {   0,  14 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {   0,  15 }, {   0, ', ' }, {   0,  17 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {  19, '{|nItem|' }, {  19,  19 }, {  19, '}' }, {   0, ', ' }, {   0,  20 }, {   0, ', ' }, {   0,  21 }, {   0, ', ' }, {  22,  22 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  5, -1, -1,  1, -1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  5, -1,  1, -1, -1,  1, -1, -1,  1, -1,  1, -1,  5, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TListBox():ReDefine( ' }, {   0,   7 }, {   0, ', bSETGET(' }, {   0,   2 }, {   0, '), ' }, {   0,   4 }, {   0, ', ' }, {   8, '{||' }, {   8,   8 }, {   8, '}' }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {   0,  21 }, {   0, ', ' }, {   0,  14 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {   0,  17 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {   0,  19 }, {   0, ', ' }, {   0,  20 }, {   0, ', ' }, {  22, '{|nItem|' }, {  22,  22 }, {  22, '}' }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1, -1,  1, -1, -1,  1, -1,  1, -1,  1, -1,  5, -1,  1, -1,  1, -1,  1, -1,  5, -1,  1, -1,  6, -1,  5, -1, -1,  1, -1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   3,   3 }, {   3, ' := ' }, {   0, ' TListBox():New( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ', bSETGET(' }, {   0,   4 }, {   0, '), ' }, {   0,   6 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {   0,  15 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {   0,  17 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,  19 }, {   0, ', ' }, {   0,  20 }, {   0, ', ' }, {   0,  21 }, {   0, ', ' }, {   0,  22 }, {   0, ', ' }, {   0,  23 }, {   0, ', ' }, {  24, '{|nItem|' }, {  24,  24 }, {  24, '}' }, {   0, ', ' }, {   0,  25 }, {   0, ', ' }, {   0,  26 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  5, -1,  1, -1,  5, -1,  1, -1,  1, -1,  6, -1,  6, -1,  5, -1,  1, -1,  1, -1,  6, -1,  5, -1,  1, -1, -1,  1, -1, -1,  6, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TWBrowse():ReDefine( ' }, {   0,   4 }, {   0, ', ' }, {   2, '{|| { ' }, {   2,   2 }, {   2, ' } }' }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {  10, '{' }, {  10,  10 }, {  10, '}' }, {   0, ', ' }, {   8, '{' }, {   8,   8 }, {   8, '}' }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {  14,  14 }, {   0, ', ' }, {  16, '{|nRow,nCol,nFlags|' }, {  16,  16 }, {  16, '}' }, {   0, ', ' }, {  17, '{|nRow,nCol,nFlags|' }, {  17,  17 }, {  17, '}' }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {   0,  19 }, {   0, ', ' }, {   0,  21 }, {   0, ', ' }, {   0,  22 }, {   0, ', ' }, {   0,  23 }, {   0, ', ' }, {   0,  24 }, {   0, ', ' }, {   0,   3 }, {   0, ', ' }, {   0,  25 }, {   0, ', ' }, {   0,  26 }, {   0, ', ' }, {  15, '{|nRow,nCol,nFlags|' }, {  15,  15 }, {  15, '}' }, {   0, ', ' }, {  27, '{' }, {  27,  27 }, {  27, '}' }, {   0, ' )' } }, {  1, -1, -1,  1, -1, -1,  1, -1, -1,  1, -1, -1,  1, -1, -1, -1,  1, -1, -1,  4, -1,  1, -1,  1, -1,  5, -1, -1,  1, -1, -1, -1,  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  1, -1,  5, -1,  5, -1, -1,  1, -1, -1, -1,  5, -1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   3,   3 }, {   3, ' := ' }, {   0, ' TWBrowse():New( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {   4, '{|| {' }, {   4,   4 }, {   4, ' } }' }, {   0, ', ' }, {   9, '{' }, {   9,   9 }, {   9, '}' }, {   0, ', ' }, {   7, '{' }, {   7,   7 }, {   7, '}' }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {   0,  14 }, {   0, ', ' }, {   0,  15 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {  17,  17 }, {   0, ', ' }, {  19, '{|nRow,nCol,nFlags|' }, {  19,  19 }, {  19, '}' }, {   0, ', ' }, {  20, '{|nRow,nCol,nFlags|' }, {  20,  20 }, {  20, '}' }, {   0, ', ' }, {   0,  21 }, {   0, ', ' }, {   0,  22 }, {   0, ', ' }, {   0,  24 }, {   0, ', ' }, {   0,  25 }, {   0, ', ' }, {   0,  26 }, {   0, ', ' }, {   0,  27 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,  28 }, {   0, ', ' }, {   0,  29 }, {   0, ', ' }, {   0,  30 }, {   0, ', ' }, {   0,  31 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {  32, '{' }, {  32,  32 }, {  32, '}' }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1, -1,  1, -1, -1, -1,  1, -1, -1, -1,  1, -1, -1,  1, -1,  4, -1,  1, -1,  1, -1,  5, -1, -1,  1, -1, -1, -1,  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  1, -1,  6, -1,  5, -1,  6, -1,  5, -1,  5, -1, -1,  5, -1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   3,   3 }, {   3, ' := ' }, {   0, ' TRadMenu():New( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ', {' }, {   0,   6 }, {   0, '}, ' }, {   4, 'bSETGET(' }, {   4,   4 }, {   4, ')' }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {  10, '{' }, {  10,  10 }, {  10, '}' }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {   0,  14 }, {   0, ', ' }, {   0,  15 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {   0,  17 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {   0,  19 }, {   0, ', ' }, {   0,  20 }, {   0, ', ' }, {   0,  21 }, {   0, ', ' }, {   0,  22 }, {   0, ', ' }, {   0,  23 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1, -1,  1, -1, -1,  1, -1, -1,  1, -1, -1,  5, -1,  1, -1,  1, -1,  1, -1,  6, -1,  5, -1,  1, -1,  1, -1,  5, -1,  6, -1,  6, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TRadMenu():Redefine( ' }, {   2, ' bSETGET(' }, {   2,   2 }, {   2, ')' }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   7, '{' }, {   7,   7 }, {   7, '}' }, {   0, ', { ' }, {   0,   3 }, {   0, ' }, ' }, {   0,   9 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {   0,  14 }, {   0, ', ' }, {   0,  15 }, {   0, ' )' } }, {  1, -1, -1, -1,  1, -1, -1,  1, -1, -1,  1, -1, -1,  1, -1,  5, -1,  1, -1,  1, -1,  1, -1,  6, -1,  5, -1,  5, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   3,   3 }, {   3, ' := ' }, {   0, ' TBitmap():New( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {  14, '{ |nRow,nCol,nKeyFlags| ' }, {  14,  14 }, {  14, ' } ' }, {   0, ', ' }, {  16, '{ |nRow,nCol,nKeyFlags| ' }, {  16,  16 }, {  16, ' } ' }, {   0, ', ' }, {   0,  17 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {   0,  19 }, {   0, ', ' }, {   0,  21 }, {   0, ', ' }, {   0,  22 }, {   0, ', ' }, {   0,  23 }, {   0, ', ' }, {   0,  20 }, {   0, ', ' }, {   0,  24 }, {   0, ', ' }, {   0,  25 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  1, -1, -1,  1, -1, -1, -1,  1, -1, -1,  6, -1,  6, -1,  1, -1,  1, -1,  6, -1,  5, -1,  6, -1,  5, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   3,   3 }, {   3, ' := ' }, {   0, ' TImage():New( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {  14, '{ |nRow,nCol,nKeyFlags| ' }, {  14,  14 }, {  14, ' } ' }, {   0, ', ' }, {  16, '{ |nRow,nCol,nKeyFlags| ' }, {  16,  16 }, {  16, ' } ' }, {   0, ', ' }, {   0,  17 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {   0,  19 }, {   0, ', ' }, {   0,  21 }, {   0, ', ' }, {   0,  22 }, {   0, ', ' }, {   0,  23 }, {   0, ', ' }, {   0,  20 }, {   0, ', ' }, {   0,  24 }, {   0, ', ' }, {   0,  25 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  1, -1, -1,  1, -1, -1, -1,  1, -1, -1,  6, -1,  6, -1,  1, -1,  1, -1,  6, -1,  5, -1,  6, -1,  5, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TBitmap():ReDefine( ' }, {   0,   2 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {  10, '{ |nRow,nCol,nKeyFlags| ' }, {  10,  10 }, {  10, ' }' }, {   0, ', ' }, {  12, '{ |nRow,nCol,nKeyFlags| ' }, {  12,  12 }, {  12, ' }' }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {   0,  14 }, {   0, ', ' }, {   0,  15 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {   0,  17 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {   0,  19 }, {   0, ', ' }, {   0,  20 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1, -1,  1, -1, -1, -1,  1, -1, -1,  6, -1,  6, -1,  1, -1,  1, -1,  6, -1,  5, -1,  5, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TBitmap():Define( ' }, {   0,   3 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   7 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TSay():ReDefine( ' }, {   0,   5 }, {   0, ', ' }, {   0,   3 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {   0,  12 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  5, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   3,   3 }, {   3, ' := ' }, {   0, ' TSay():New( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   8,   8 }, {   0, ', ' }, {   6,   6 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {   0,  15 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {   0,  17 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {   0,  19 }, {   0, ', ' }, {   0,  20 }, {   0, ', ' }, {   0,  21 }, {   0, ', ' }, {   0,  22 }, {   0, ', ' }, {   0,  23 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  5, -1,  1, -1,  1, -1,  1, -1,  6, -1,  6, -1,  6, -1,  6, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  6, -1,  6, -1,  6, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TMultiGet():ReDefine( ' }, {   0,   4 }, {   0, ', bSETGET(' }, {   0,   2 }, {   0, '), ' }, {   0,   6 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {   0,  14 }, {   0, ', ' }, {   0,  15 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {   0,  17 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {  19, '{|nKey, nFlags, Self| ' }, {  19,  19 }, {  19, '}' }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  5, -1,  6, -1,  5, -1, -1,  1, -1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TGet():ReDefine( ' }, {   0,   3 }, {   0, ', bSETGET(' }, {   0,   2 }, {   0, '), ' }, {   0,   5 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {   0,  14 }, {   0, ', ' }, {   0,  15 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {   0,  17 }, {   0, ', ' }, {  18, '{|nKey,nFlags,Self| ' }, {  18,  18 }, {  18, ' }' }, {   0, ', ' }, {   0,  19 }, {   0, ', ' }, {   0,  20 }, {   0, ', ' }, {   0,  21 }, {   0, ', ' }, {   0,  22 }, {   0, ', ' }, {   0,  23 }, {   0, ', ' }, {   0,  24 }, {   0, ')' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  5, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  5, -1, -1,  1, -1, -1,  6, -1,  6, -1,  5, -1,  5, -1,  5, -1,  5, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   3,   3 }, {   3, ' := ' }, {   0, ' TMultiGet():New( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ', bSETGET(' }, {   0,   4 }, {   0, '), ' }, {   6,   6 }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {   0,  14 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,  15 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {   0,  17 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {   0,  19 }, {   0, ', ' }, {   0,  20 }, {   0, ', ' }, {   0,  21 }, {   0, ', ' }, {   0,  22 }, {   0, ', ' }, {   0,  23 }, {   0, ', ' }, {  24, '{|nKey, nFlags, Self| ' }, {  24,  24 }, {  24, '}' }, {   0, ', ' }, {   0,  25 }, {   0, ', ' }, {  26,  26 }, {   0, ', ' }, {  27,  27 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  1, -1,  1, -1,  1, -1,  6, -1,  1, -1,  6, -1,  5, -1,  6, -1,  6, -1,  6, -1,  5, -1, -1,  1, -1, -1,  6, -1,  6, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   3,   3 }, {   3, ' := ' }, {   0, ' TGet():New( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ', bSETGET(' }, {   0,   4 }, {   0, '), ' }, {   6,   6 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {   0,  14 }, {   0, ', ' }, {   0,  15 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {   0,  17 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {   0,  19 }, {   0, ', ' }, {   0,  20 }, {   0, ', ' }, {   0,  21 }, {   0, ', ' }, {   0,  22 }, {   0, ', ' }, {  23, '{|nKey, nFlags, Self| ' }, {  23,  23 }, {  23, '}' }, {   0, ', ' }, {   0,  24 }, {   0, ', ' }, {   0,  25 }, {   0, ', ' }, {  26,  26 }, {   0, ', ' }, {   0,  28 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  5, -1,  1, -1,  1, -1,  1, -1,  6, -1,  1, -1,  6, -1,  1, -1,  6, -1,  5, -1,  6, -1,  6, -1, -1,  1, -1, -1,  6, -1,  6, -1,  6, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   3,   3 }, {   3, ' := ' }, {   0, ' TGet():New( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ', bSETGET(' }, {   0,   4 }, {   0, '), ' }, {   6,   6 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {   0,  14 }, {   0, ', ' }, {   0,  15 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {   0,  17 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {   0,  19 }, {   0, ', ' }, {   0,  20 }, {   0, ', ' }, {   0,  21 }, {   0, ', ' }, {   0,  22 }, {   0, ', ' }, {  23, '{|nKey, nFlags, Self| ' }, {  23,  23 }, {  23, '}' }, {   0, ', ' }, {   0,  24 }, {   0, ', .f., .f., ' }, {   0,  26 }, {   0, ', ' }, {   0,  27 }, {   0, ', ' }, {   0,  28 }, {   0, ', ' }, {   0,  29 }, {   0, ', ' }, {   0,  30 }, {   0, ', ' }, {   0,  31 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  5, -1,  1, -1,  1, -1,  1, -1,  6, -1,  1, -1,  6, -1,  1, -1,  6, -1,  5, -1,  6, -1,  6, -1, -1,  1, -1, -1,  6, -1,  1, -1,  6, -1,  5, -1,  5, -1,  5, -1,  5, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   3,   3 }, {   3, ' := ' }, {   0, ' TScrollBar():New( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   8 }, {   0, ', (.not.' }, {   0,   4 }, {   0, ') ' }, {   5, '.or. ' }, {   5,   5 }, {   0, ', ' }, {   0,  25 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,  10 }, {   0, ' , ' }, {  12,  12 }, {   0, ', ' }, {  14,  14 }, {   0, ', ' }, {  16,  16 }, {   0, ', ' }, {  18,  18 }, {   0, ', ' }, {  20, '{|nPos| ' }, {  20,  20 }, {  20, ' }' }, {   0, ', ' }, {  21,  21 }, {   0, ', ' }, {   0,  23 }, {   0, ', ' }, {   0,  24 }, {   0, ', ' }, {   0,  26 }, {   0, ', ' }, {   0,  27 }, {   0, ', ' }, {   0,  28 }, {   0, ', ' }, {   0,  29 }, {   0, ', ' }, {   0,  30 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1, -1,  6, -1,  1, -1,  1, -1,  1, -1,  5, -1,  5, -1,  5, -1,  5, -1, -1,  1, -1, -1,  6, -1,  1, -1,  1, -1,  1, -1,  6, -1,  5, -1,  5, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TScrollBar():WinNew( ' }, {   0,   4 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ', (.not.' }, {   0,   2 }, {   0, ') ' }, {   3, '.or. ' }, {   3,   3 }, {   0, ', ' }, {   0,  21 }, {   0, ', ' }, {   8,   8 }, {   0, ', ' }, {  10,  10 }, {   0, ', ' }, {  12,  12 }, {   0, ', ' }, {  14,  14 }, {   0, ', ' }, {  16, '{|nPos| ' }, {  16,  16 }, {  16, ' }' }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {   0,  19 }, {   0, ', ' }, {   0,  22 }, {   0, ', ' }, {   0,  23 }, {   0, ', ' }, {   0,  24 }, {   0, ', ' }, {   0,  25 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  6, -1, -1,  6, -1,  1, -1,  5, -1,  5, -1,  5, -1,  5, -1, -1,  1, -1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  5, -1,  5, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TScrollBar():Redefine( ' }, {   0,   2 }, {   0, ', ' }, {   0,   3 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,  19 }, {   0, ', ' }, {   7,   7 }, {   0, ', ' }, {   9,   9 }, {   0, ', ' }, {  11,  11 }, {   0, ', ' }, {  13,  13 }, {   0, ', ' }, {  15, '{|nPos| ' }, {  15,  15 }, {  15, ' }' }, {   0, ', ' }, {   0,  17 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {   0,  20 }, {   0, ', ' }, {   0,  21 }, {   0, ', ' }, {   0,  22 }, {   0, ', ' }, {   0,  23 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  5, -1,  5, -1,  5, -1,  5, -1, -1,  1, -1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  5, -1,  5, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   3,   3 }, {   3, ' := ' }, {   0, ' TGroup():New( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {  12,  12 }, {   0, ', ' }, {  13,  13 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  6, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TGroup():ReDefine( ' }, {   0,   4 }, {   0, ', ' }, {   0,   3 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   9,   9 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   3,   3 }, {   3, ' := ' }, {   0, ' TMeter():New( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ', bSETGET(' }, {   0,   4 }, {   0, '), ' }, {   0,   5 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {   0,  15 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {   0,  17 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {   0,  19 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  6, -1,  1, -1,  1, -1,  6, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TMeter():ReDefine( ' }, {   0,   4 }, {   0, ', bSETGET(' }, {   0,   2 }, {   0, '), ' }, {   0,   3 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {   0,  14 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  1, -1,  1, -1,  6, -1,  1, -1,  1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   3,   3 }, {   3, ' := ' }, {   0, ' TMetaFile():New( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {   0,  12 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TMetaFile():Redefine( ' }, {   0,   2 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,   9 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   0,   1 }, {   0, ' := TCursor():New( ' }, {   0,   3 }, {   0, ', ' }, {   4, 'Upper(' }, {   4,   4 }, {   4, ') ' }, {   0, ' )' } }, {  1, -1,  1, -1, -1,  4, -1, -1} , { NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TMdiChild():New( ' }, {   0,   2 }, {   0, ', ' }, {   0,   3 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,  19 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {   0,  17 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {   0,  14 }, {   0, ', ' }, {   0,  21 }, {   0, ', ' }, {  22, 'Upper(' }, {  22,  22 }, {  22, ')' }, {   0, ', !' }, {   0,  23 }, {   0, ', !' }, {   0,  24 }, {   0, ', !' }, {   0,  25 }, {   0, ', !' }, {   0,  26 }, {   0, ', ' }, {  10,  10 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  6, -1,  1, -1, -1,  4, -1, -1,  6, -1,  6, -1,  6, -1,  6, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   0,   1 }, {   0, ' := TMdiFrame():New( ' }, {   0,   2 }, {   0, ', ' }, {   0,   3 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {  14,  14 }, {   0, ', ' }, {  15,  15 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {  17, 'Upper(' }, {  17,  17 }, {  17, ')' }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {  19,  19 }, {   0, ' )' } }, {  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  6, -1,  1, -1, -1,  4, -1, -1,  1, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   0,   1 }, {   0, ' := TWindow():New( ' }, {   0,   2 }, {   0, ', ' }, {   0,   3 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {   0,  15 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  14 }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {  22,  22 }, {   0, ', ' }, {  23,  23 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {  17, 'Upper(' }, {  17,  17 }, {  17, ')' }, {   0, ', !' }, {   0,  18 }, {   0, ', !' }, {   0,  19 }, {   0, ', !' }, {   0,  20 }, {   0, ', !' }, {   0,  21 }, {   0, ', ' }, {   0,   6 }, {   0, ' )' } }, {  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  6, -1,  1, -1,  1, -1,  1, -1, -1,  4, -1, -1,  6, -1,  6, -1,  6, -1,  6, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   0,   1 }, {   0, ':Activate( ' }, {   2, 'Upper(' }, {   2,   2 }, {   2, ') ' }, {   0, ', ' }, {   0,   1 }, {   0, ':bLClicked ' }, {   3, ':= { |nRow,nCol,nKeyFlags| ' }, {   3,   3 }, {   3, ' } ' }, {   0, ', ' }, {   0,   1 }, {   0, ':bRClicked ' }, {   5, ':= { |nRow,nCol,nKeyFlags| ' }, {   5,   5 }, {   5, ' } ' }, {   0, ', ' }, {   0,   1 }, {   0, ':bMoved    ' }, {   6, ':= ' }, {   6,   6 }, {   0, ', ' }, {   0,   1 }, {   0, ':bResized  ' }, {   7, ':= ' }, {   7,   7 }, {   0, ', ' }, {   0,   1 }, {   0, ':bPainted  ' }, {   8, ':= { | hDC, cPS | ' }, {   8,   8 }, {   8, ' } ' }, {   0, ', ' }, {   0,   1 }, {   0, ':bKeyDown  ' }, {   9, ':= { | nKey | ' }, {   9,   9 }, {   9, ' } ' }, {   0, ', ' }, {   0,   1 }, {   0, ':bInit     ' }, {  10, ':= { | Self | ' }, {  10,  10 }, {  10, ' } ' }, {   0, ', ' }, {  11,  11 }, {   0, ', ' }, {  12,  12 }, {   0, ', ' }, {  13,  13 }, {   0, ', ' }, {  14,  14 }, {   0, ', ' }, {  15,  15 }, {   0, ', ' }, {  16,  16 }, {   0, ', ' }, {  17,  17 }, {   0, ', ' }, {  18,  18 }, {   0, ', ' }, {  20,  20 }, {   0, ', ' }, {  19, '{|nRow,nCol,aFiles|' }, {  19,  19 }, {  19, '}' }, {   0, ', ' }, {   0,   1 }, {   0, ':bLButtonUp ' }, {   4, ':= ' }, {   4,   4 }, {   0, ' )' } }, {  1, -1, -1,  4, -1, -1,  1, -1, -1,  1, -1, -1,  1, -1, -1,  1, -1, -1,  1, -1, -1,  5, -1,  1, -1, -1,  5, -1,  1, -1, -1,  1, -1, -1,  1, -1, -1,  1, -1, -1,  1, -1, -1,  1, -1, -1,  5, -1,  5, -1,  5, -1,  5, -1,  5, -1,  5, -1,  5, -1,  5, -1,  5, -1, -1,  1, -1, -1,  1, -1, -1,  5, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   0,   1 }, {   0, ':oMsgBar := TMsgBar():New( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ', ' }, {   0,   3 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {  11, '!' }, {  11,  11 }, {   0, ' )' } }, {  1, -1,  1, -1,  1, -1,  6, -1,  6, -1,  6, -1,  6, -1,  1, -1,  1, -1,  1, -1, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   2,   2 }, {   2, ':=' }, {   0,   3 }, {   0, ':oMsgBar := TMsgBar():New( ' }, {   0,   3 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {  14, '!' }, {  14,  14 }, {   0, ' )' } }, {  1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  6, -1,  6, -1,  6, -1,  1, -1,  1, -1,  1, -1, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   1,   1 }, {   1, ':=' }, {   0, ' TMsgItem():New( ' }, {   0,   2 }, {   0, ', ' }, {   0,   3 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   8 }, {   0, ', .t., ' }, {  12,  12 }, {   0, ', ' }, {  10,  10 }, {   0, ', ' }, {  11,  11 }, {   0, ', ' }, {  13,  13 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  5, -1,  1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   0,   1 }, {   0, ' := TClipBoard():New( ' }, {   2, ' Upper(' }, {   2,   2 }, {   2, ')' }, {   0, ', ' }, {   0,   3 }, {   0, ' )' } }, {  1, -1, -1,  4, -1, -1,  1, -1} , { NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   0,   1 }, {   0, ':Open()' } }, {  1, -1} , { NIL }  } )
+   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TTimer():New( ' }, {   0,   2 }, {   0, ', ' }, {   3, '{||' }, {   3,   3 }, {   3, '}' }, {   0, ', ' }, {   0,   5 }, {   0, ' )' } }, {  1, -1, -1,  1, -1, -1,  1, -1, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   0,   1 }, {   0, ':Activate()' } }, {  1, -1} , { NIL }  } )
+   aAdd( aCommResults, { { {   3,   3 }, {   3, ' := ' }, {   0, ' TVbControl():New( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,   9 }, {   0, ', { ' }, {  10,  10 }, {  10, ', _PARM_BLOCK_10_( ' }, {  10,  11 }, {  10, ' ) ' }, {  12, ' ,' }, {  12,  12 }, {  12, ', _PARM_BLOCK_10_( ' }, {  12,  13 }, {  12, ' ) ' }, {   0, ' }, ' }, {  14,  14 }, {   0, ', ' }, {  15,  15 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {   0,  17 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  4, -1,  1, -1, -1,  4, -1,  1, -1, -1,  5, -1,  5, -1,  6, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TVbControl():ReDefine( ' }, {   0,   2 }, {   0, ', ' }, {   0,   3 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   5 }, {   0, ', { ' }, {   6,   6 }, {   6, ', _PARM_BLOCK_10_( ' }, {   6,   7 }, {   6, ' ) ' }, {   8, ' ,' }, {   8,   8 }, {   8, ', _PARM_BLOCK_10_( ' }, {   8,   9 }, {   8, ' ) ' }, {   0, ' } )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  4, -1,  1, -1, -1,  4, -1,  1, -1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   0, 'Self := SetObject( Self, { || ' }, {   0,   2 }, {   0, '():New() } )' } }, { -1,  1, -1} , { NIL, NIL }  } )
+   aAdd( aCommResults, { { {   0, 'Self := EndObject()' } }, { -1} ,  } )
+   aAdd( aCommResults, { { {   0, 'InvalidateRect( GetActiveWindow(), 0, .t. )' } }, { -1} ,  } )
+   aAdd( aCommResults, { { {   0, 'InvalidateRect( GetActiveWindow(), 0, .t. )' } }, { -1} ,  } )
+   aAdd( aCommResults, { { {   0, 'WQout( ' }, {   1, '{ ' }, {   1,   1 }, {   1, ' } ' }, {   0, ' )' } }, { -1, -1,  1, -1, -1} , { NIL }  } )
+   aAdd( aCommResults, { { {   0, 'WQout( ' }, {   1, '{ ' }, {   1,   1 }, {   1, ' } ' }, {   0, ' )' } }, { -1, -1,  1, -1, -1} , { NIL }  } )
    aAdd( aCommResults, { , ,  } )
-   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' MenuBegin( ' }, {   0,   2 }, {   0, ' )' } }, {  1, -1, -1,  6, -1} , { NIL, NIL}  } )
-   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' MenuAddItem( ' }, {   0,   2 }, {   0, ', ' }, {   0,   3 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   5, 'Upper(' }, {   5,   5 }, {   5, ') == "ENABLED" ' }, {   0, ', ' }, {  10, '{|oMenuItem|' }, {  10,  10 }, {  10, '}' }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,   1 }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {   0,  14 }, {   0, ', ' }, {   0,  15 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {  19,  19 }, {   0, ', ' }, {   0,  20 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  6, -1, -1,  4, -1, -1, -1,  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  1, -1,  5, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   0,   1 }, {   0, ' := TMru():New( ' }, {   0,   3 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   8, '{|cMruItem,oMenuItem|' }, {   8,   8 }, {   8, '}' }, {   0, ' )' } }, {  1, -1,  1, -1,  1, -1,  1, -1,  1, -1, -1,  1, -1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   1,   1 }, {   1, ':=' }, {   0, ' MenuAddItem()' } }, {  1, -1, -1} , { NIL}  } )
-   aAdd( aCommResults, { { {   0, 'MenuEnd()' } }, { -1} , { }  } )
-   aAdd( aCommResults, { { {   0,   1 }, {   0, ' := TMenu():ReDefine( ' }, {   0,   3 }, {   0, ', ' }, {   0,   4 }, {   0, ' )' } }, {  1, -1,  1, -1,  6, -1} , { NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TMenuItem():ReDefine( ' }, {   0,   2 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {  10, 'Upper(' }, {  10,  10 }, {  10, ') == "ENABLED" ' }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  14 }, {   0, ', ' }, {   0,   1 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   3 }, {   0, ', ' }, {   0,  15 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {  19,  19 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  6, -1, -1,  4, -1, -1,  5, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  5, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   0,   1 }, {   0, ' := TMenu():New( .f., ' }, {   0,   2 }, {   0, ' )' } }, {  1, -1,  1, -1} , { NIL, NIL}  } )
-   aAdd( aCommResults, { { {   0,   1 }, {   0, ':SetMenu( ' }, {   0,   2 }, {   0, ' )' } }, {  1, -1,  1, -1} , { NIL, NIL}  } )
-   aAdd( aCommResults, { { {   0,   2 }, {   0, ':Activate( ' }, {   0,   3 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   6 }, {   0, ' )' } }, {  1, -1,  1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   1,   1 }, {   1, ' :=' }, {   0, ' MenuBegin( .f., .t., ' }, {   0,   3 }, {   0, ' )' } }, {  1, -1, -1,  1, -1} , { NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   0, 'MenuEnd()' } }, { -1} , { }  } )
-   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' PrintBegin( ' }, {   3,   3 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   6 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  6, -1,  6, -1,  1, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' PrintBegin( ' }, {   3,   3 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   6 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  6, -1,  6, -1,  1, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   0, 'PageBegin()' } }, { -1} , { }  } )
-   aAdd( aCommResults, { { {   0, 'PageEnd()' } }, { -1} , { }  } )
-   aAdd( aCommResults, { { {   0, 'PrintEnd()' } }, { -1} , { }  } )
-   aAdd( aCommResults, { { {   0, 'PrintEnd()' } }, { -1} , { }  } )
-   aAdd( aCommResults, { { {   1,   1 }, {   0, ' function ' }, {   0,   2 }, {   0, '( ' }, {   3, 'NOREF(' }, {   3,   3 }, {   3, ')' }, {   5, ' ,NOREF(' }, {   5,   5 }, {   5, ')' }, {   0, ' ) ; local hDLL := If( ValType( ' }, {   0,  10 }, {   0, ' ) == "N", ' }, {   0,  10 }, {   0, ', LoadLibrary( ' }, {   0,  10 }, {   0, ' ) ) ; local uResult ; local cFarProc ; if Abs( hDLL ) > 32 ; cFarProc = GetProcAddress( hDLL, If( ' }, {   9, ' Empty( ' }, {   9,   9 }, {   9, ' ) == ' }, {   0, ' .t., ' }, {   0,   2 }, {   0, ', ' }, {   0,   9 }, {   0, ' ), ' }, {   8,   8 }, {   0, ', ' }, {   0,   7 }, {   4, ' ,' }, {   4,   4 }, {   6, ' ,' }, {   6,   6 }, {   0, ' ) ; uResult = CallDLL( cFarProc ' }, {   3, ' ,' }, {   3,   3 }, {   5, ' ,' }, {   5,   5 }, {   0, ' ) ; If( ValType( ' }, {   0,  10 }, {   0, ' ) == "N",, FreeLibrary( hDLL ) ) ; else ; MsgAlert( "Error code: " + LTrim( Str( hDLL ) ) + " loading " + ' }, {   0,  10 }, {   0, ' ) ; end ; return uResult' } }, {  1, -1,  1, -1, -1,  1, -1, -1,  1, -1, -1,  1, -1,  1, -1,  4, -1, -1,  1, -1, -1,  4, -1,  1, -1,  6, -1,  1, -1,  1, -1,  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   1,   1 }, {   0, ' function ' }, {   0,   2 }, {   0, '( ' }, {   3, 'NOREF(' }, {   3,   3 }, {   3, ')' }, {   5, ' ,NOREF(' }, {   5,   5 }, {   5, ')' }, {   0, ' ) ; local hDLL := If( ValType( ' }, {   0,  10 }, {   0, ' ) == "N", ' }, {   0,  10 }, {   0, ', LoadLib32( ' }, {   0,  10 }, {   0, ' ) ) ; local uResult ; local cFarProc ; if Abs( hDLL ) <= 32 ; MsgAlert( "Error code: " + LTrim( Str( hDLL ) ) + " loading " + ' }, {   0,  10 }, {   0, ' ) ; else ; cFarProc = GetProc32( hDLL, If( ' }, {   9, ' Empty( ' }, {   9,   9 }, {   9, ' ) == ' }, {   0, ' .t., ' }, {   0,   2 }, {   0, ', ' }, {   0,   9 }, {   0, ' ), ' }, {   8,   8 }, {   0, ', ' }, {   0,   7 }, {   4, ' ,' }, {   4,   4 }, {   6, ' ,' }, {   6,   6 }, {   0, ' ) ; uResult = CallDLL32( cFarProc ' }, {   3, ' ,' }, {   3,   3 }, {   5, ' ,' }, {   5,   5 }, {   0, ' ) ; If( ValType( ' }, {   0,  10 }, {   0, ' ) == "N",, FreeLib32( hDLL ) ) ; end ; return uResult' } }, {  1, -1,  1, -1, -1,  1, -1, -1,  1, -1, -1,  1, -1,  1, -1,  4, -1,  1, -1, -1,  1, -1, -1,  4, -1,  1, -1,  6, -1,  1, -1,  1, -1,  1, -1, -1,  1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   3,   3 }, {   3, ' := ' }, {   0, ' TFolder():New( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ', ' }, {   7, '{' }, {   7,   7 }, {   7, '}' }, {   0, ', {' }, {   0,   9 }, {  10, ' ,' }, {  10,  10 }, {   0, '}, ' }, {   0,   5 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {   0,  14 }, {   0, ', ' }, {   0,  15 }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  17 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {   0,  19 }, {   0, ', ' }, {   0,  20 }, {   0, ', ' }, {   0,  21 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1, -1,  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  6, -1,  1, -1,  1, -1,  1, -1,  6, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TFolder():ReDefine( ' }, {   0,   2 }, {   0, ', ' }, {   6, '{' }, {   6,   6 }, {   6, '}' }, {   0, ', { ' }, {   0,   8 }, {   9, ' ,' }, {   9,   9 }, {   0, ' }, ' }, {   0,   4 }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {  14, '{|nOption,nOldOption| ' }, {  14,  14 }, {  14, '}' }, {   0, ', ' }, {   0,  15 }, {   0, ' )' } }, {  1, -1, -1,  1, -1, -1,  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1, -1,  1, -1, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   3,   3 }, {   3, ' := ' }, {   0, ' TTabs():New( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ', ' }, {   7, '{' }, {   7,   7 }, {   7, '}' }, {   0, ', ' }, {   9, '{|nOption|' }, {   9,   9 }, {   9, '}' }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,  15 }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {   0,  14 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {   0,  17 }, {   0, ', ' }, {   0,  18 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1, -1,  1, -1, -1, -1,  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  6, -1,  1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TTabs():ReDefine( ' }, {   0,   2 }, {   0, ', ' }, {   6, '{' }, {   6,   6 }, {   6, '}' }, {   0, ', ' }, {   8, '{|nOption|' }, {   8,   8 }, {   8, '}' }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,  11 }, {   0, ' )' } }, {  1, -1, -1,  1, -1, -1,  1, -1, -1, -1,  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   0,   1 }, {   0, ' := TPages():Redefine( ' }, {   0,   2 }, {   0, ', ' }, {   0,   3 }, {   0, ', ' }, {   4, '{' }, {   4,   4 }, {   4, '}' }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   6, 'bSETGET(' }, {   6,   6 }, {   6, ') ' }, {   0, ', ' }, {   0,   7 }, {   0, ' )' } }, {  1, -1,  1, -1,  1, -1, -1,  1, -1, -1,  1, -1, -1,  1, -1, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   0,   1 }, {   0, ' := TOdbc():New( ' }, {   0,   2 }, {   0, ', ' }, {   0,   3 }, {   0, ', ' }, {   0,   4 }, {   0, ' )' } }, {  1, -1,  1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   0,   1 }, {   0, ':Execute( ' }, {   0,   3 }, {   0, ' )' } }, {  1, -1,  1, -1} , { NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   0,   2 }, {   0, ' := TDde():New( ' }, {   0,   3 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   6,   6 }, {   0, ', ' }, {   7,   7 }, {   0, ' )' } }, {  1, -1,  1, -1,  1, -1,  1, -1,  5, -1,  5, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   0,   2 }, {   0, ':Activate()' } }, {  1, -1} , { NIL, NIL}  } )
-   aAdd( aCommResults, { { {   1,   1 }, {   0, ' := TMci():New( "avivideo", ' }, {   0,   3 }, {   0, ', ' }, {   0,   5 }, {   0, ' )' } }, {  1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   0,   1 }, {   0, ':lOpen() ; ' }, {   0,   1 }, {   0, ':Play()' } }, {  1, -1,  1, -1} , { NIL}  } )
-   aAdd( aCommResults, { { {   0,   1 }, {   0, ':lOpen() ; ' }, {   0,   1 }, {   0, ':Play()' } }, {  1, -1,  1, -1} , { NIL}  } )
-   aAdd( aCommResults, { { {   3,   3 }, {   3, ' := ' }, {   0, ' TVideo():New( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,  10 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TVideo():ReDefine( ' }, {   0,   2 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  5, -1,  5, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   1,   1 }, {   1, ':=' }, {   0, ' TreeBegin( ' }, {   0,   2 }, {   0, ', ' }, {   0,   3 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   1,   1 }, {   1, ' :=' }, {   0, ' _TreeItem( ' }, {   0,   2 }, {   0, ', ' }, {   0,   3 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,   7 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   0, 'TreeEnd()' } }, { -1} , { }  } )
-   aAdd( aCommResults, { { {   0, 'SetMultiple( Upper(' }, {   0,   1 }, {   0, ') == "ON" )' } }, { -1,  4, -1} , { NIL}  } )
-   aAdd( aCommResults, { { {   0,   1 }, {   0, ' := If( ' }, {   0,   1 }, {   0, ' == nil, ' }, {   0,   2 }, {   0, ', ' }, {   0,   1 }, {   0, ' ) ; ' }, {   3,   3 }, {   3, ' := If( ' }, {   3,   3 }, {   3, ' == nil, ' }, {   3,   4 }, {   3, ', ' }, {   3,   3 }, {   3, ' ); ' } }, {  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   0, 'while .t.' } }, { -1} , { }  } )
-   aAdd( aCommResults, { { {   0, 'if ' }, {   0,   1 }, {   0, '; exit; end; end' } }, { -1,  1, -1} , { NIL}  } )
-   aAdd( aCommResults, { { {   0, 'SetIdleAction( ' }, {   0,   1 }, {   0, ' )' } }, { -1,  5, -1} , { NIL}  } )
-   aAdd( aCommResults, { { {   0,   1 }, {   0, ' := TDataBase():New()' } }, {  1, -1} , { NIL}  } )
-   aAdd( aCommResults, { { {   0,   2 }, {   0, ':End() ; ' }, {   0,   2 }, {   0, ' := nil ' }, {   3, ' ; ' }, {   3,   3 }, {   3, ':End() ; ' }, {   3,   3 }, {   3, ' := nil ' } }, {  1, -1,  1, -1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TBrush():New( ' }, {   2, ' Upper(' }, {   2,   2 }, {   2, ') ' }, {   0, ', ' }, {   0,   3 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   7 }, {   0, ' )' } }, {  1, -1, -1, -1,  4, -1, -1,  1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   0,   1 }, {   0, ':SetBrush( ' }, {   0,   2 }, {   0, ' )' } }, {  1, -1,  1, -1} , { NIL, NIL}  } )
-   aAdd( aCommResults, { { {   0,   1 }, {   0, ' := TPen():New( ' }, {   0,   2 }, {   0, ', ' }, {   0,   3 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   6 }, {   0, ' )' } }, {  1, -1,  1, -1,  1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   0,   1 }, {   0, ':Activate()' } }, {  1, -1} , { NIL}  } )
-   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TBar():New( ' }, {   0,   8 }, {   0, ', ' }, {   0,   3 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   6, 'Upper(' }, {   6,   6 }, {   6, ') ' }, {   0, ', ' }, {   0,   9 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  6, -1, -1,  4, -1, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   3,   3 }, {   3, ' := ' }, {   0, ' TBar():NewAt( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   9, 'Upper(' }, {   9,   9 }, {   9, ') ' }, {   0, ', ' }, {   0,  12 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1, -1,  4, -1, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TBtnBmp():NewBar( ' }, {   0,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,  15 }, {   0, ', ' }, {  13, '{|This|' }, {  13,  13 }, {  13, '}' }, {   0, ', ' }, {   0,  14 }, {   0, ', ' }, {   0,   3 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {   0,  17 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {   0,  19 }, {   0, ', ' }, {  20, '{||' }, {  20,  20 }, {  20, '}' }, {   0, ', ' }, {  13, "'" }, {  13,  13 }, {  13, "'" }, {   0, ', ' }, {   0,  21 }, {   0, ', ' }, {   0,  22 }, {   0, ', ' }, {   0,  23 }, {   0, ', ' }, {   7,   7 }, {   0, ', ' }, {  11,  11 }, {   0, ', ' }, {  24, '!' }, {  24,  24 }, {   0, ', ' }, {  25,  25 }, {   0, ' )' } }, ;
-       {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1, -1,  1, -1, -1,  6, -1,  1, -1,  6, -1,  5, -1,  1, -1,  6, -1, -1,  1, -1, -1, -1,  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1, -1,  6, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TBtnBmp():ReDefine( ' }, {   0,   2 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {   0,  15 }, {   0, ', ' }, {  14, '{|Self|' }, {  14,  14 }, {  14, '}' }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {   0,  17 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {   0,  19 }, {   0, ', ' }, {   0,  20 }, {   0, ', ' }, {   0,  21 }, {   0, ', ' }, {   8,   8 }, {   0, ', ' }, {  12,  12 }, {   0, ', ' }, {  22, '!' }, {  22,  22 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1, -1,  1, -1, -1,  1, -1,  6, -1,  5, -1,  6, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1, -1,  6, -1} , ;
-       { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   3,   3 }, {   3, ' := ' }, {   0, ' TBtnBmp():New( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {  14, '{|Self|' }, {  14,  14 }, {  14, '}' }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {   0,  17 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {   0,  19 }, {   0, ', ' }, {   0,  20 }, {   0, ', ' }, {   0,  21 }, {   0, ', ' }, {   0,  22 }, {   0, ', ' }, {   7,   7 }, {   0, ', ' }, {  11,  11 }, {   0, ', !' }, {   0,  23 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1, -1,  1, -1, -1,  1, -1,  1, -1,  5, -1,  6, -1,  6, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1} , ;
-       { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   3,   3 }, {   3, ' := ' }, {   0, ' TIcon():New( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {   0,  14 }, {   0, ', ' }, {   0,  15 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  5, -1,  1, -1,  6, -1,  5, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TIcon():ReDefine( ' }, {   0,   2 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,  11 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  5, -1,  6, -1,  1, -1,  5, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   0,   1 }, {   0, ' := TIcon():New( ,, ' }, {   0,   3 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ' )' } }, {  1, -1,  1, -1,  1, -1,  5, -1} , { NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   3,   3 }, {   3, ' := ' }, {   0, ' TButton():New( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,  14 }, {   0, ', ' }, {   0,  15 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {   0,  17 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {   0,  19 }, {   0, ', ' }, {   0,  20 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  5, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  6, -1,  6, -1,  1, -1,  6, -1,  5, -1,  5, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TButton():ReDefine( ' }, {   0,   2 }, {   0, ', ' }, {   5, '{||' }, {   5,   5 }, {   5, '}' }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  13 }, {   0, ' )' } }, {  1, -1, -1,  1, -1, -1,  1, -1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  5, -1,  5, -1,  1, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TCheckBox():ReDefine( ' }, {   0,   3 }, {   0, ', bSETGET(' }, {   0,   2 }, {   0, '), ' }, {   0,   5 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   9,   9 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {   0,  14 }, {   0, ', ' }, {   0,  15 }, {   0, ', ' }, {   0,  16 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  5, -1,  5, -1,  1, -1,  1, -1,  1, -1,  6, -1,  5, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   3,   3 }, {   3, ' := ' }, {   0, ' TCheckBox():New( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   4, 'bSETGET(' }, {   4,   4 }, {   4, ')' }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {  14,  14 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  15 }, {   0, ', ' }, {   0,  17 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {   0,  19 }, {   0, ', ' }, {   0,  20 }, {   0, ', ' }, {   0,  21 }, {   0, ', ' }, {   0,  22 }, {   0, ', ' }, {   0,  23 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1, -1,  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  5, -1,  1, -1,  5, -1,  1, -1,  1, -1,  6, -1,  6, -1,  1, -1,  6, -1,  5, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   3,   3 }, {   3, ' := ' }, {   0, ' TComboBox():New( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ', bSETGET(' }, {   0,   4 }, {   0, '), ' }, {   0,   6 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {  13, '{|Self|' }, {  13,  13 }, {  13, '}' }, {   0, ', ' }, {   0,  14 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {   0,  17 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {   0,  19 }, {   0, ', ' }, {   0,  21 }, {   0, ', ' }, {   0,  20 }, {   0, ', ' }, {   0,  22 }, {   0, ', ' }, {   0,  23 }, {   0, ', ' }, {   0,  24 }, {   0, ', ' }, {  25, '{|nItem|' }, {  25,  25 }, {  25, '}' }, {   0, ', ' }, {   0,  26 }, {   0, ', ' }, {   0,  27 }, {   0, ', ' }, {  28,  28 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1, -1,  1, -1, -1,  5, -1,  1, -1,  1, -1,  6, -1,  1, -1,  1, -1,  6, -1,  5, -1,  6, -1,  1, -1, -1,  1, -1, -1,  1, -1,  1, -1,  5, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TComboBox():ReDefine( ' }, {   0,   5 }, {   0, ', bSETGET(' }, {   0,   2 }, {   0, '), ' }, {   0,   4 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {  10, '{|Self|' }, {  10,  10 }, {  10, '}' }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {   0,  14 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {   0,  15 }, {   0, ', ' }, {   0,  17 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {  19, '{|nItem|' }, {  19,  19 }, {  19, '}' }, {   0, ', ' }, {   0,  20 }, {   0, ', ' }, {   0,  21 }, {   0, ', ' }, {  22,  22 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  5, -1, -1,  1, -1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  5, -1,  1, -1, -1,  1, -1, -1,  1, -1,  1, -1,  5, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TListBox():ReDefine( ' }, {   0,   7 }, {   0, ', bSETGET(' }, {   0,   2 }, {   0, '), ' }, {   0,   4 }, {   0, ', ' }, {   8, '{||' }, {   8,   8 }, {   8, '}' }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {   0,  21 }, {   0, ', ' }, {   0,  14 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {   0,  17 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {   0,  19 }, {   0, ', ' }, {   0,  20 }, {   0, ', ' }, {  22, '{|nItem|' }, {  22,  22 }, {  22, '}' }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1, -1,  1, -1, -1,  1, -1,  1, -1,  1, -1,  5, -1,  1, -1,  1, -1,  1, -1,  5, -1,  1, -1,  6, -1,  5, -1, -1,  1, -1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   3,   3 }, {   3, ' := ' }, {   0, ' TListBox():New( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ', bSETGET(' }, {   0,   4 }, {   0, '), ' }, {   0,   6 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {   0,  15 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {   0,  17 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,  19 }, {   0, ', ' }, {   0,  20 }, {   0, ', ' }, {   0,  21 }, {   0, ', ' }, {   0,  22 }, {   0, ', ' }, {   0,  23 }, {   0, ', ' }, {  24, '{|nItem|' }, {  24,  24 }, {  24, '}' }, {   0, ', ' }, {   0,  25 }, {   0, ', ' }, {   0,  26 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  5, -1,  1, -1,  5, -1,  1, -1,  1, -1,  6, -1,  6, -1,  5, -1,  1, -1,  1, -1,  6, -1,  5, -1,  1, -1, -1,  1, -1, -1,  6, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TWBrowse():ReDefine( ' }, {   0,   4 }, {   0, ', ' }, {   2, '{|| { ' }, {   2,   2 }, {   2, ' } }' }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {  10, '{' }, {  10,  10 }, {  10, '}' }, {   0, ', ' }, {   8, '{' }, {   8,   8 }, {   8, '}' }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {  14,  14 }, {   0, ', ' }, {  16, '{|nRow,nCol,nFlags|' }, {  16,  16 }, {  16, '}' }, {   0, ', ' }, {  17, '{|nRow,nCol,nFlags|' }, {  17,  17 }, {  17, '}' }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {   0,  19 }, {   0, ', ' }, {   0,  21 }, {   0, ', ' }, {   0,  22 }, {   0, ', ' }, {   0,  23 }, {   0, ', ' }, {   0,  24 }, {   0, ', ' }, {   0,   3 }, {   0, ', ' }, {   0,  25 }, {   0, ', ' }, {   0,  26 }, {   0, ', ' }, {  15, '{|nRow,nCol,nFlags|' }, {  15,  15 }, {  15, '}' }, {   0, ', ' }, {  27, '{' }, {  27,  27 }, {  27, '}' }, {   0, ' )' } }, {  1, -1, -1,  1, -1, -1,  1, -1, -1,  1, -1, -1,  1, -1, -1, -1,  1, -1, -1,  4, -1,  1, -1,  1, -1,  5, -1, -1,  1, -1, -1, -1,  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  1, -1,  5, -1,  5, -1, -1,  1, -1, -1, -1,  5, -1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   3,   3 }, {   3, ' := ' }, {   0, ' TWBrowse():New( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {   4, '{|| {' }, {   4,   4 }, {   4, ' } }' }, {   0, ', ' }, {   9, '{' }, {   9,   9 }, {   9, '}' }, {   0, ', ' }, {   7, '{' }, {   7,   7 }, {   7, '}' }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {   0,  14 }, {   0, ', ' }, {   0,  15 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {  17,  17 }, {   0, ', ' }, {  19, '{|nRow,nCol,nFlags|' }, {  19,  19 }, {  19, '}' }, {   0, ', ' }, {  20, '{|nRow,nCol,nFlags|' }, {  20,  20 }, {  20, '}' }, {   0, ', ' }, {   0,  21 }, {   0, ', ' }, {   0,  22 }, {   0, ', ' }, {   0,  24 }, {   0, ', ' }, {   0,  25 }, {   0, ', ' }, {   0,  26 }, {   0, ', ' }, {   0,  27 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,  28 }, {   0, ', ' }, {   0,  29 }, {   0, ', ' }, {   0,  30 }, {   0, ', ' }, {   0,  31 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {  32, '{' }, {  32,  32 }, {  32, '}' }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1, -1,  1, -1, -1, -1,  1, -1, -1, -1,  1, -1, -1,  1, -1,  4, -1,  1, -1,  1, -1,  5, -1, -1,  1, -1, -1, -1,  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  1, -1,  6, -1,  5, -1,  6, -1,  5, -1,  5, -1, -1,  5, -1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   3,   3 }, {   3, ' := ' }, {   0, ' TRadMenu():New( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ', {' }, {   0,   6 }, {   0, '}, ' }, {   4, 'bSETGET(' }, {   4,   4 }, {   4, ')' }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {  10, '{' }, {  10,  10 }, {  10, '}' }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {   0,  14 }, {   0, ', ' }, {   0,  15 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {   0,  17 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {   0,  19 }, {   0, ', ' }, {   0,  20 }, {   0, ', ' }, {   0,  21 }, {   0, ', ' }, {   0,  22 }, {   0, ', ' }, {   0,  23 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1, -1,  1, -1, -1,  1, -1, -1,  1, -1, -1,  5, -1,  1, -1,  1, -1,  1, -1,  6, -1,  5, -1,  1, -1,  1, -1,  5, -1,  6, -1,  6, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TRadMenu():Redefine( ' }, {   2, ' bSETGET(' }, {   2,   2 }, {   2, ')' }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   7, '{' }, {   7,   7 }, {   7, '}' }, {   0, ', { ' }, {   0,   3 }, {   0, ' }, ' }, {   0,   9 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {   0,  14 }, {   0, ', ' }, {   0,  15 }, {   0, ' )' } }, {  1, -1, -1, -1,  1, -1, -1,  1, -1, -1,  1, -1, -1,  1, -1,  5, -1,  1, -1,  1, -1,  1, -1,  6, -1,  5, -1,  5, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   3,   3 }, {   3, ' := ' }, {   0, ' TBitmap():New( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {  14, '{ |nRow,nCol,nKeyFlags| ' }, {  14,  14 }, {  14, ' } ' }, {   0, ', ' }, {  16, '{ |nRow,nCol,nKeyFlags| ' }, {  16,  16 }, {  16, ' } ' }, {   0, ', ' }, {   0,  17 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {   0,  19 }, {   0, ', ' }, {   0,  21 }, {   0, ', ' }, {   0,  22 }, {   0, ', ' }, {   0,  23 }, {   0, ', ' }, {   0,  20 }, {   0, ', ' }, {   0,  24 }, {   0, ', ' }, {   0,  25 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  1, -1, -1,  1, -1, -1, -1,  1, -1, -1,  6, -1,  6, -1,  1, -1,  1, -1,  6, -1,  5, -1,  6, -1,  5, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   3,   3 }, {   3, ' := ' }, {   0, ' TImage():New( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {  14, '{ |nRow,nCol,nKeyFlags| ' }, {  14,  14 }, {  14, ' } ' }, {   0, ', ' }, {  16, '{ |nRow,nCol,nKeyFlags| ' }, {  16,  16 }, {  16, ' } ' }, {   0, ', ' }, {   0,  17 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {   0,  19 }, {   0, ', ' }, {   0,  21 }, {   0, ', ' }, {   0,  22 }, {   0, ', ' }, {   0,  23 }, {   0, ', ' }, {   0,  20 }, {   0, ', ' }, {   0,  24 }, {   0, ', ' }, {   0,  25 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  1, -1, -1,  1, -1, -1, -1,  1, -1, -1,  6, -1,  6, -1,  1, -1,  1, -1,  6, -1,  5, -1,  6, -1,  5, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TBitmap():ReDefine( ' }, {   0,   2 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {  10, '{ |nRow,nCol,nKeyFlags| ' }, {  10,  10 }, {  10, ' }' }, {   0, ', ' }, {  12, '{ |nRow,nCol,nKeyFlags| ' }, {  12,  12 }, {  12, ' }' }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {   0,  14 }, {   0, ', ' }, {   0,  15 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {   0,  17 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {   0,  19 }, {   0, ', ' }, {   0,  20 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1, -1,  1, -1, -1, -1,  1, -1, -1,  6, -1,  6, -1,  1, -1,  1, -1,  6, -1,  5, -1,  5, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TBitmap():Define( ' }, {   0,   3 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   7 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TSay():ReDefine( ' }, {   0,   5 }, {   0, ', ' }, {   0,   3 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {   0,  12 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  5, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   3,   3 }, {   3, ' := ' }, {   0, ' TSay():New( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   8,   8 }, {   0, ', ' }, {   6,   6 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {   0,  15 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {   0,  17 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {   0,  19 }, {   0, ', ' }, {   0,  20 }, {   0, ', ' }, {   0,  21 }, {   0, ', ' }, {   0,  22 }, {   0, ', ' }, {   0,  23 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  5, -1,  1, -1,  1, -1,  1, -1,  6, -1,  6, -1,  6, -1,  6, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  6, -1,  6, -1,  6, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TMultiGet():ReDefine( ' }, {   0,   4 }, {   0, ', bSETGET(' }, {   0,   2 }, {   0, '), ' }, {   0,   6 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {   0,  14 }, {   0, ', ' }, {   0,  15 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {   0,  17 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {  19, '{|nKey, nFlags, Self| ' }, {  19,  19 }, {  19, '}' }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  5, -1,  6, -1,  5, -1, -1,  1, -1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TGet():ReDefine( ' }, {   0,   3 }, {   0, ', bSETGET(' }, {   0,   2 }, {   0, '), ' }, {   0,   5 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {   0,  14 }, {   0, ', ' }, {   0,  15 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {   0,  17 }, {   0, ', ' }, {  18, '{|nKey,nFlags,Self| ' }, {  18,  18 }, {  18, ' }' }, {   0, ', ' }, {   0,  19 }, {   0, ', ' }, {   0,  20 }, {   0, ', ' }, {   0,  21 }, {   0, ', ' }, {   0,  22 }, {   0, ', ' }, {   0,  23 }, {   0, ', ' }, {   0,  24 }, {   0, ')' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  5, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  5, -1, -1,  1, -1, -1,  6, -1,  6, -1,  5, -1,  5, -1,  5, -1,  5, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   3,   3 }, {   3, ' := ' }, {   0, ' TMultiGet():New( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ', bSETGET(' }, {   0,   4 }, {   0, '), ' }, {   6,   6 }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {   0,  14 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,  15 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {   0,  17 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {   0,  19 }, {   0, ', ' }, {   0,  20 }, {   0, ', ' }, {   0,  21 }, {   0, ', ' }, {   0,  22 }, {   0, ', ' }, {   0,  23 }, {   0, ', ' }, {  24, '{|nKey, nFlags, Self| ' }, {  24,  24 }, {  24, '}' }, {   0, ', ' }, {   0,  25 }, {   0, ', ' }, {  26,  26 }, {   0, ', ' }, {  27,  27 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  1, -1,  1, -1,  1, -1,  6, -1,  1, -1,  6, -1,  5, -1,  6, -1,  6, -1,  6, -1,  5, -1, -1,  1, -1, -1,  6, -1,  6, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   3,   3 }, {   3, ' := ' }, {   0, ' TGet():New( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ', bSETGET(' }, {   0,   4 }, {   0, '), ' }, {   6,   6 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {   0,  14 }, {   0, ', ' }, {   0,  15 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {   0,  17 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {   0,  19 }, {   0, ', ' }, {   0,  20 }, {   0, ', ' }, {   0,  21 }, {   0, ', ' }, {   0,  22 }, {   0, ', ' }, {  23, '{|nKey, nFlags, Self| ' }, {  23,  23 }, {  23, '}' }, {   0, ', ' }, {   0,  24 }, {   0, ', ' }, {   0,  25 }, {   0, ', ' }, {  26,  26 }, {   0, ', ' }, {   0,  28 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  5, -1,  1, -1,  1, -1,  1, -1,  6, -1,  1, -1,  6, -1,  1, -1,  6, -1,  5, -1,  6, -1,  6, -1, -1,  1, -1, -1,  6, -1,  6, -1,  6, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   3,   3 }, {   3, ' := ' }, {   0, ' TGet():New( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ', bSETGET(' }, {   0,   4 }, {   0, '), ' }, {   6,   6 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {   0,  14 }, {   0, ', ' }, {   0,  15 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {   0,  17 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {   0,  19 }, {   0, ', ' }, {   0,  20 }, {   0, ', ' }, {   0,  21 }, {   0, ', ' }, {   0,  22 }, {   0, ', ' }, {  23, '{|nKey, nFlags, Self| ' }, {  23,  23 }, {  23, '}' }, {   0, ', ' }, {   0,  24 }, {   0, ', .f., .f., ' }, {   0,  26 }, {   0, ', ' }, {   0,  27 }, {   0, ', ' }, {   0,  28 }, {   0, ', ' }, {   0,  29 }, {   0, ', ' }, {   0,  30 }, {   0, ', ' }, {   0,  31 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  5, -1,  1, -1,  1, -1,  1, -1,  6, -1,  1, -1,  6, -1,  1, -1,  6, -1,  5, -1,  6, -1,  6, -1, -1,  1, -1, -1,  6, -1,  1, -1,  6, -1,  5, -1,  5, -1,  5, -1,  5, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   3,   3 }, {   3, ' := ' }, {   0, ' TScrollBar():New( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   8 }, {   0, ', (.not.' }, {   0,   4 }, {   0, ') ' }, {   5, '.or. ' }, {   5,   5 }, {   0, ', ' }, {   0,  25 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,  10 }, {   0, ' , ' }, {  12,  12 }, {   0, ', ' }, {  14,  14 }, {   0, ', ' }, {  16,  16 }, {   0, ', ' }, {  18,  18 }, {   0, ', ' }, {  20, '{|nPos| ' }, {  20,  20 }, {  20, ' }' }, {   0, ', ' }, {  21,  21 }, {   0, ', ' }, {   0,  23 }, {   0, ', ' }, {   0,  24 }, {   0, ', ' }, {   0,  26 }, {   0, ', ' }, {   0,  27 }, {   0, ', ' }, {   0,  28 }, {   0, ', ' }, {   0,  29 }, {   0, ', ' }, {   0,  30 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1, -1,  6, -1,  1, -1,  1, -1,  1, -1,  5, -1,  5, -1,  5, -1,  5, -1, -1,  1, -1, -1,  6, -1,  1, -1,  1, -1,  1, -1,  6, -1,  5, -1,  5, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TScrollBar():WinNew( ' }, {   0,   4 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ', (.not.' }, {   0,   2 }, {   0, ') ' }, {   3, '.or. ' }, {   3,   3 }, {   0, ', ' }, {   0,  21 }, {   0, ', ' }, {   8,   8 }, {   0, ', ' }, {  10,  10 }, {   0, ', ' }, {  12,  12 }, {   0, ', ' }, {  14,  14 }, {   0, ', ' }, {  16, '{|nPos| ' }, {  16,  16 }, {  16, ' }' }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {   0,  19 }, {   0, ', ' }, {   0,  22 }, {   0, ', ' }, {   0,  23 }, {   0, ', ' }, {   0,  24 }, {   0, ', ' }, {   0,  25 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  6, -1, -1,  6, -1,  1, -1,  5, -1,  5, -1,  5, -1,  5, -1, -1,  1, -1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  5, -1,  5, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TScrollBar():Redefine( ' }, {   0,   2 }, {   0, ', ' }, {   0,   3 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,  19 }, {   0, ', ' }, {   7,   7 }, {   0, ', ' }, {   9,   9 }, {   0, ', ' }, {  11,  11 }, {   0, ', ' }, {  13,  13 }, {   0, ', ' }, {  15, '{|nPos| ' }, {  15,  15 }, {  15, ' }' }, {   0, ', ' }, {   0,  17 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {   0,  20 }, {   0, ', ' }, {   0,  21 }, {   0, ', ' }, {   0,  22 }, {   0, ', ' }, {   0,  23 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  5, -1,  5, -1,  5, -1,  5, -1, -1,  1, -1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  5, -1,  5, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   3,   3 }, {   3, ' := ' }, {   0, ' TGroup():New( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {  12,  12 }, {   0, ', ' }, {  13,  13 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  6, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TGroup():ReDefine( ' }, {   0,   4 }, {   0, ', ' }, {   0,   3 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   9,   9 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   3,   3 }, {   3, ' := ' }, {   0, ' TMeter():New( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ', bSETGET(' }, {   0,   4 }, {   0, '), ' }, {   0,   5 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {   0,  15 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {   0,  17 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {   0,  19 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  6, -1,  1, -1,  1, -1,  6, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TMeter():ReDefine( ' }, {   0,   4 }, {   0, ', bSETGET(' }, {   0,   2 }, {   0, '), ' }, {   0,   3 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {   0,  14 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  1, -1,  1, -1,  6, -1,  1, -1,  1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   3,   3 }, {   3, ' := ' }, {   0, ' TMetaFile():New( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {   0,  12 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TMetaFile():Redefine( ' }, {   0,   2 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,   9 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   0,   1 }, {   0, ' := TCursor():New( ' }, {   0,   3 }, {   0, ', ' }, {   4, 'Upper(' }, {   4,   4 }, {   4, ') ' }, {   0, ' )' } }, {  1, -1,  1, -1, -1,  4, -1, -1} , { NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TMdiChild():New( ' }, {   0,   2 }, {   0, ', ' }, {   0,   3 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,  19 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {   0,  17 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {   0,  14 }, {   0, ', ' }, {   0,  21 }, {   0, ', ' }, {  22, 'Upper(' }, {  22,  22 }, {  22, ')' }, {   0, ', !' }, {   0,  23 }, {   0, ', !' }, {   0,  24 }, {   0, ', !' }, {   0,  25 }, {   0, ', !' }, {   0,  26 }, {   0, ', ' }, {  10,  10 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  6, -1,  1, -1, -1,  4, -1, -1,  6, -1,  6, -1,  6, -1,  6, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   0,   1 }, {   0, ' := TMdiFrame():New( ' }, {   0,   2 }, {   0, ', ' }, {   0,   3 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {  14,  14 }, {   0, ', ' }, {  15,  15 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {  17, 'Upper(' }, {  17,  17 }, {  17, ')' }, {   0, ', ' }, {   0,  18 }, {   0, ', ' }, {  19,  19 }, {   0, ' )' } }, {  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  6, -1,  1, -1, -1,  4, -1, -1,  1, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   0,   1 }, {   0, ' := TWindow():New( ' }, {   0,   2 }, {   0, ', ' }, {   0,   3 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {   0,  15 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  14 }, {   0, ', ' }, {   0,  11 }, {   0, ', ' }, {  22,  22 }, {   0, ', ' }, {  23,  23 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {  17, 'Upper(' }, {  17,  17 }, {  17, ')' }, {   0, ', !' }, {   0,  18 }, {   0, ', !' }, {   0,  19 }, {   0, ', !' }, {   0,  20 }, {   0, ', !' }, {   0,  21 }, {   0, ', ' }, {   0,   6 }, {   0, ' )' } }, {  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  6, -1,  1, -1,  1, -1,  1, -1, -1,  4, -1, -1,  6, -1,  6, -1,  6, -1,  6, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   0,   1 }, {   0, ':Activate( ' }, {   2, 'Upper(' }, {   2,   2 }, {   2, ') ' }, {   0, ', ' }, {   0,   1 }, {   0, ':bLClicked ' }, {   3, ':= { |nRow,nCol,nKeyFlags| ' }, {   3,   3 }, {   3, ' } ' }, {   0, ', ' }, {   0,   1 }, {   0, ':bRClicked ' }, {   5, ':= { |nRow,nCol,nKeyFlags| ' }, {   5,   5 }, {   5, ' } ' }, {   0, ', ' }, {   0,   1 }, {   0, ':bMoved    ' }, {   6, ':= ' }, {   6,   6 }, {   0, ', ' }, {   0,   1 }, {   0, ':bResized  ' }, {   7, ':= ' }, {   7,   7 }, {   0, ', ' }, {   0,   1 }, {   0, ':bPainted  ' }, {   8, ':= { | hDC, cPS | ' }, {   8,   8 }, {   8, ' } ' }, {   0, ', ' }, {   0,   1 }, {   0, ':bKeyDown  ' }, {   9, ':= { | nKey | ' }, {   9,   9 }, {   9, ' } ' }, {   0, ', ' }, {   0,   1 }, {   0, ':bInit     ' }, {  10, ':= { | Self | ' }, {  10,  10 }, {  10, ' } ' }, {   0, ', ' }, {  11,  11 }, {   0, ', ' }, {  12,  12 }, {   0, ', ' }, {  13,  13 }, {   0, ', ' }, {  14,  14 }, {   0, ', ' }, {  15,  15 }, {   0, ', ' }, {  16,  16 }, {   0, ', ' }, {  17,  17 }, {   0, ', ' }, {  18,  18 }, {   0, ', ' }, {  20,  20 }, {   0, ', ' }, {  19, '{|nRow,nCol,aFiles|' }, {  19,  19 }, {  19, '}' }, {   0, ', ' }, {   0,   1 }, {   0, ':bLButtonUp ' }, {   4, ':= ' }, {   4,   4 }, {   0, ' )' } }, {  1, -1, -1,  4, -1, -1,  1, -1, -1,  1, -1, -1,  1, -1, -1,  1, -1, -1,  1, -1, -1,  5, -1,  1, -1, -1,  5, -1,  1, -1, -1,  1, -1, -1,  1, -1, -1,  1, -1, -1,  1, -1, -1,  1, -1, -1,  5, -1,  5, -1,  5, -1,  5, -1,  5, -1,  5, -1,  5, -1,  5, -1,  5, -1, -1,  1, -1, -1,  1, -1, -1,  5, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   0,   1 }, {   0, ':oMsgBar := TMsgBar():New( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ', ' }, {   0,   3 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {  11, '!' }, {  11,  11 }, {   0, ' )' } }, {  1, -1,  1, -1,  1, -1,  6, -1,  6, -1,  6, -1,  6, -1,  1, -1,  1, -1,  1, -1, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   2,   2 }, {   2, ':=' }, {   0,   3 }, {   0, ':oMsgBar := TMsgBar():New( ' }, {   0,   3 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,   9 }, {   0, ', ' }, {   0,  12 }, {   0, ', ' }, {   0,  13 }, {   0, ', ' }, {   0,  10 }, {   0, ', ' }, {  14, '!' }, {  14,  14 }, {   0, ' )' } }, {  1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  6, -1,  6, -1,  6, -1,  1, -1,  1, -1,  1, -1, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   1,   1 }, {   1, ':=' }, {   0, ' TMsgItem():New( ' }, {   0,   2 }, {   0, ', ' }, {   0,   3 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   8 }, {   0, ', .t., ' }, {  12,  12 }, {   0, ', ' }, {  10,  10 }, {   0, ', ' }, {  11,  11 }, {   0, ', ' }, {  13,  13 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  5, -1,  1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   0,   1 }, {   0, ' := TClipBoard():New( ' }, {   2, ' Upper(' }, {   2,   2 }, {   2, ')' }, {   0, ', ' }, {   0,   3 }, {   0, ' )' } }, {  1, -1, -1,  4, -1, -1,  1, -1} , { NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   0,   1 }, {   0, ':Open()' } }, {  1, -1} , { NIL}  } )
-   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TTimer():New( ' }, {   0,   2 }, {   0, ', ' }, {   3, '{||' }, {   3,   3 }, {   3, '}' }, {   0, ', ' }, {   0,   5 }, {   0, ' )' } }, {  1, -1, -1,  1, -1, -1,  1, -1, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   0,   1 }, {   0, ':Activate()' } }, {  1, -1} , { NIL}  } )
-   aAdd( aCommResults, { { {   3,   3 }, {   3, ' := ' }, {   0, ' TVbControl():New( ' }, {   0,   1 }, {   0, ', ' }, {   0,   2 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,   9 }, {   0, ', { ' }, {  10,  10 }, {  10, ', _PARM_BLOCK_10_( ' }, {  10,  11 }, {  10, ' ) ' }, {  12, ' ,' }, {  12,  12 }, {  12, ', _PARM_BLOCK_10_( ' }, {  12,  13 }, {  12, ' ) ' }, {   0, ' }, ' }, {  14,  14 }, {   0, ', ' }, {  15,  15 }, {   0, ', ' }, {   0,  16 }, {   0, ', ' }, {   0,  17 }, {   0, ' )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  4, -1,  1, -1, -1,  4, -1,  1, -1, -1,  5, -1,  5, -1,  6, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   1,   1 }, {   1, ' := ' }, {   0, ' TVbControl():ReDefine( ' }, {   0,   2 }, {   0, ', ' }, {   0,   3 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   5 }, {   0, ', { ' }, {   6,   6 }, {   6, ', _PARM_BLOCK_10_( ' }, {   6,   7 }, {   6, ' ) ' }, {   8, ' ,' }, {   8,   8 }, {   8, ', _PARM_BLOCK_10_( ' }, {   8,   9 }, {   8, ' ) ' }, {   0, ' } )' } }, {  1, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1,  4, -1,  1, -1, -1,  4, -1,  1, -1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   0, 'Self := SetObject( Self, { || ' }, {   0,   2 }, {   0, '():New() } )' } }, { -1,  1, -1} , { NIL, NIL}  } )
-   aAdd( aCommResults, { { {   0, 'Self := EndObject()' } }, { -1} , { }  } )
-   aAdd( aCommResults, { { {   0, 'InvalidateRect( GetActiveWindow(), 0, .t. )' } }, { -1} , { }  } )
-   aAdd( aCommResults, { { {   0, 'InvalidateRect( GetActiveWindow(), 0, .t. )' } }, { -1} , { }  } )
-   aAdd( aCommResults, { { {   0, 'WQout( ' }, {   1, '{ ' }, {   1,   1 }, {   1, ' } ' }, {   0, ' )' } }, { -1, -1,  1, -1, -1} , { NIL}  } )
-   aAdd( aCommResults, { { {   0, 'WQout( ' }, {   1, '{ ' }, {   1,   1 }, {   1, ' } ' }, {   0, ' )' } }, { -1, -1,  1, -1, -1} , { NIL}  } )
-   aAdd( aCommResults, { , ,  } )
-   aAdd( aCommResults, { , ,  } )
-   aAdd( aCommResults, { , ,  } )
-   aAdd( aCommResults, { { {   0, 'MsgAlert( OemToAnsi( "SaveScreen() not available in FiveWin" ) )' } }, { -1} , { NIL}  } )
-   aAdd( aCommResults, { { {   0, 'MsgAlert( OemToAnsi( "RestScreen() not available in FiveWin" ) )' } }, { -1} , { NIL}  } )
-   aAdd( aCommResults, { , ,  } )
-   aAdd( aCommResults, { , ,  } )
+   aAdd( aCommResults, { , , { NIL }  } )
+   aAdd( aCommResults, { , , { NIL }  } )
+   aAdd( aCommResults, { { {   0, 'MsgAlert( OemToAnsi( "SaveScreen() not available in FiveWin" ) )' } }, { -1} , { NIL }  } )
+   aAdd( aCommResults, { { {   0, 'MsgAlert( OemToAnsi( "RestScreen() not available in FiveWin" ) )' } }, { -1} , { NIL }  } )
+   aAdd( aCommResults, { , , { NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { , , { NIL }  } )
+
+   #endif
 
 RETURN .T.
 
 //--------------------------------------------------------------//
-
 FUNCTION InitRunRules()
 
    /* Translates */
@@ -8834,60 +8892,59 @@ RETURN .T.
 
 FUNCTION InitRunResults()
 
-   /* Translates Results*/
-   aAdd( aTransResults, { { }, , {NIL} } )
-   aAdd( aTransResults, { { }, , {NIL} } )
-   aAdd( aTransResults, { { }, , {NIL} } )
-   aAdd( aTransResults, { { {   0, ':=' } }, { -1} , { NIL}  } )
-   aAdd( aTransResults, { { {   0, 'PP_Qself()' } }, { -1} , { }  } )
-   aAdd( aTransResults, { { {   0, 'AddInLine( ' }, {   0,   1 }, {   0, ', {|Self,p1,p2,p3,p4,p5,p6,p7,p8,p9| PP_QSelf(Self), ExecuteMethod( ' }, {   0,   2 }, {   0, ', p1,p2,p3,p4,p5,p6,p7,p8,p9 ) }, ' }, {   0,   3 }, {   0, ' )' } }, { -1,  1, -1,  3, -1,  1, -1} , { NIL, NIL, NIL}  } )
-   aAdd( aTransResults, { { {   0, 'Self:' } }, { -1} , { }  } )
-   aAdd( aTransResults, { { {   0, '__GET( MEMVARBLOCK(' }, {   0,   2 }, {   0, '), ' }, {   0,   2 }, {   0, ', ' }, {   0,   3 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   5 }, {   0, ' )' } }, { -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL}  } )
-   aAdd( aTransResults, { { {   0, '__GET(' }, {   0,   1 }, {   0, ')' } }, { -1,  1, -1} , { NIL}  } )
-   aAdd( aTransResults, { { {   0, 'PP_ProcName( ' }, {   0,   1 }, {   0, ' )' } }, { -1,  1, -1} , { NIL}  } )
-   aAdd( aTransResults, { { {   0, 'PP_ProcLine( ' }, {   0,   1 }, {   0, ' )' } }, { -1,  1, -1} , { NIL}  } )
+   aAdd( aTransResults, { , , { NIL }  } )
+   aAdd( aTransResults, { , , { NIL }  } )
+   aAdd( aTransResults, { , , { NIL }  } )
+   aAdd( aTransResults, { { {   0, ':=' } }, { -1} , { NIL }  } )
+   aAdd( aTransResults, { { {   0, 'PP_Qself()' } }, { -1} ,  } )
+   aAdd( aTransResults, { { {   0, 'AddInLine( ' }, {   0,   1 }, {   0, ', {|Self,p1,p2,p3,p4,p5,p6,p7,p8,p9| PP_QSelf(Self), ExecuteMethod( ' }, {   0,   2 }, {   0, ', p1,p2,p3,p4,p5,p6,p7,p8,p9 ) }, ' }, {   0,   3 }, {   0, ' )' } }, { -1,  1, -1,  3, -1,  1, -1} , { NIL, NIL, NIL }  } )
+   aAdd( aTransResults, { { {   0, 'Self:' } }, { -1} ,  } )
+   aAdd( aTransResults, { { {   0, '__GET( MEMVARBLOCK(' }, {   0,   2 }, {   0, '), ' }, {   0,   2 }, {   0, ', ' }, {   0,   3 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   5 }, {   0, ' )' } }, { -1,  1, -1,  1, -1,  1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL }  } )
+   aAdd( aTransResults, { { {   0, '__GET(' }, {   0,   1 }, {   0, ')' } }, { -1,  1, -1} , { NIL }  } )
+   aAdd( aTransResults, { { {   0, 'PP_ProcName( ' }, {   0,   1 }, {   0, ' )' } }, { -1,  1, -1} , { NIL }  } )
+   aAdd( aTransResults, { { {   0, 'PP_ProcLine( ' }, {   0,   1 }, {   0, ' )' } }, { -1,  1, -1} , { NIL }  } )
 
    /* Commands Results*/
-   aAdd( aCommResults, { { }, , {NIL} } )
-   aAdd( aCommResults, { { }, , {NIL} } )
-   aAdd( aCommResults, { { }, , {NIL} } )
-   aAdd( aCommResults, { { }, , {NIL} } )
-   aAdd( aCommResults, { { }, , {NIL} } )
-   aAdd( aCommResults, { { {   0, 'PP__IF ' }, {   0,   1 } }, { -1,  1} , { NIL}  } )
-   aAdd( aCommResults, { { {   0, 'PP__ELSEIF ' }, {   0,   1 } }, { -1,  1} , { NIL}  } )
-   aAdd( aCommResults, { { {   0, 'PP__ELSE' } }, { -1} , { }  } )
-   aAdd( aCommResults, { { {   0, 'PP__ENDIF' } }, { -1} , { NIL}  } )
-   aAdd( aCommResults, { { {   0, 'PP__END' } }, { -1} , { NIL}  } )
-   aAdd( aCommResults, { { {   0, 'PP__DOCASE' } }, { -1} , { }  } )
-   aAdd( aCommResults, { { {   0, 'PP__CASE ' }, {   0,   1 } }, { -1,  1} , { NIL}  } )
-   aAdd( aCommResults, { { {   0, 'PP__OTHERWISE' } }, { -1} , { }  } )
-   aAdd( aCommResults, { { {   0, 'PP__ENDCASE' } }, { -1} , { NIL}  } )
-   aAdd( aCommResults, { { {   0, 'PP__FOR ' }, {   0,   1 }, {   0, ':=' }, {   0,   2 }, {   0, '~TO~' }, {   0,   3 }, {   0, '~STEP~' }, {   0,   4 } }, { -1,  1, -1,  1, -1,  1, -1,  1} , { NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   0, 'PP__FOR ' }, {   0,   1 }, {   0, ':=' }, {   0,   2 }, {   0, '~TO~' }, {   0,   3 }, {   0, '~STEP~' }, {   0,   4 } }, { -1,  1, -1,  1, -1,  1, -1,  1} , { NIL, NIL, NIL, NIL}  } )
-   aAdd( aCommResults, { { {   0, 'PP__LOOP' } }, { -1} , { NIL}  } )
-   aAdd( aCommResults, { { {   0, 'PP__EXIT' } }, { -1} , { NIL}  } )
-   aAdd( aCommResults, { { {   0, 'PP__NEXT' } }, { -1} , { NIL}  } )
-   aAdd( aCommResults, { { {   0, 'PP__WHILE ' }, {   0,   1 } }, { -1,  1} , { NIL}  } )
-   aAdd( aCommResults, { { {   0, 'PP__WHILE ' }, {   0,   1 } }, { -1,  1} , { NIL}  } )
-   aAdd( aCommResults, { { {   0, 'PP__ENDDO' } }, { -1} , { NIL}  } )
-   aAdd( aCommResults, { { {   0, 'PP_Run( ' }, {   0,   1 }, {   0, ' + ".prg" )' } }, { -1,  2, -1} , { NIL}  } )
-   aAdd( aCommResults, { { {   0, 'PP_PROC_INIT ' }, {   0,   1 } }, { -1,  1} , { NIL}  } )
-   aAdd( aCommResults, { { {   0, 'PP_PROC_EXIT ' }, {   0,   1 } }, { -1,  1} , { NIL}  } )
-   aAdd( aCommResults, { { {   0, 'PP_PROC_PRG ' }, {   0,   1 } }, { -1,  1} , { NIL}  } )
-   aAdd( aCommResults, { { {   0, 'PP_PROC_PRG ' }, {   0,   1 } }, { -1,  1} , { NIL}  } )
-   aAdd( aCommResults, { { {   0, 'PP_PROC_PRG ' }, {   0,   1 }, {   0, ' ; PP_LocalParams( { ' }, {   0,   2 }, {   0, ' } )' } }, { -1,  1, -1,  3, -1} , { NIL, NIL}  } )
-   aAdd( aCommResults, { { {   0, 'PP_PROC_PRG ' }, {   0,   1 }, {   0, ' ; PP_LocalParams( { ' }, {   0,   2 }, {   0, ' } )' } }, { -1,  1, -1,  3, -1} , { NIL, NIL}  } )
-   aAdd( aCommResults, { { {   0, 'PP_PROC ' }, {   0,   1 } }, { -1,  1} , { NIL}  } )
-   aAdd( aCommResults, { { {   0, 'PP_PROC ' }, {   0,   1 } }, { -1,  1} , { NIL}  } )
-   aAdd( aCommResults, { { {   0, 'PP_PROC ' }, {   0,   1 }, {   0, ' ; PP_LocalParams( { ' }, {   0,   2 }, {   0, ' } )' } }, { -1,  1, -1,  3, -1} , { NIL, NIL}  } )
-   aAdd( aCommResults, { { {   0, 'PP_PROC ' }, {   0,   1 }, {   0, ' ; PP_LocalParams( { ' }, {   0,   2 }, {   0, ' } )' } }, { -1,  1, -1,  3, -1} , { NIL, NIL}  } )
-   aAdd( aCommResults, { { {   0, 'PP_SetReturn( ' }, {   0,   1 }, {   0, ' )' } }, { -1,  1, -1} , { NIL}  } )
-   aAdd( aCommResults, { { {   0, 'PP_Params( { ' }, {   0,   1 }, {   0, ' } )' } }, { -1,  3, -1} , { NIL}  } )
-   aAdd( aCommResults, { { {   0, 'PP_Privates( { ' }, {   0,   1 }, {   0, ' } )' } }, { -1,  3, -1} , { NIL}  } )
-   aAdd( aCommResults, { { {   0, 'PP_Privates( { ' }, {   0,   1 }, {   0, ' } )' } }, { -1,  3, -1} , { NIL}  } )
-   aAdd( aCommResults, { { {   0, 'PP_Publics( { ' }, {   0,   1 }, {   0, ' } )' } }, { -1,  3, -1} , { NIL}  } )
-   aAdd( aCommResults, { { {   0, 'PP_Locals( { ' }, {   0,   1 }, {   0, ' } )' } }, { -1,  3, -1} , { NIL}  } )
-   aAdd( aCommResults, { { {   0, 'PP_Statics( { ' }, {   0,   1 }, {   0, ' } )' } }, { -1,  3, -1} , { NIL}  } )
+   aAdd( aCommResults, { , , { NIL }  } )
+   aAdd( aCommResults, { , , { NIL }  } )
+   aAdd( aCommResults, { , , { NIL }  } )
+   aAdd( aCommResults, { , , { NIL, NIL }  } )
+   aAdd( aCommResults, { , , { NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   0, 'PP__IF ' }, {   0,   1 } }, { -1,  1} , { NIL }  } )
+   aAdd( aCommResults, { { {   0, 'PP__ELSEIF ' }, {   0,   1 } }, { -1,  1} , { NIL }  } )
+   aAdd( aCommResults, { { {   0, 'PP__ELSE' } }, { -1} ,  } )
+   aAdd( aCommResults, { { {   0, 'PP__ENDIF' } }, { -1} , { NIL }  } )
+   aAdd( aCommResults, { { {   0, 'PP__END' } }, { -1} , { NIL }  } )
+   aAdd( aCommResults, { { {   0, 'PP__DOCASE' } }, { -1} ,  } )
+   aAdd( aCommResults, { { {   0, 'PP__CASE ' }, {   0,   1 } }, { -1,  1} , { NIL }  } )
+   aAdd( aCommResults, { { {   0, 'PP__OTHERWISE' } }, { -1} ,  } )
+   aAdd( aCommResults, { { {   0, 'PP__ENDCASE' } }, { -1} , { NIL }  } )
+   aAdd( aCommResults, { { {   0, 'PP__FOR ' }, {   0,   1 }, {   0, ':=' }, {   0,   2 }, {   0, '~TO~' }, {   0,   3 }, {   0, '~STEP~' }, {   0,   4 } }, { -1,  1, -1,  1, -1,  1, -1,  1} , { NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   0, 'PP__FOR ' }, {   0,   1 }, {   0, ':=' }, {   0,   2 }, {   0, '~TO~' }, {   0,   3 }, {   0, '~STEP~' }, {   0,   4 } }, { -1,  1, -1,  1, -1,  1, -1,  1} , { NIL, NIL, NIL, NIL }  } )
+   aAdd( aCommResults, { { {   0, 'PP__LOOP' } }, { -1} , { NIL }  } )
+   aAdd( aCommResults, { { {   0, 'PP__EXIT' } }, { -1} , { NIL }  } )
+   aAdd( aCommResults, { { {   0, 'PP__NEXT' } }, { -1} , { NIL }  } )
+   aAdd( aCommResults, { { {   0, 'PP__WHILE ' }, {   0,   1 } }, { -1,  1} , { NIL }  } )
+   aAdd( aCommResults, { { {   0, 'PP__WHILE ' }, {   0,   1 } }, { -1,  1} , { NIL }  } )
+   aAdd( aCommResults, { { {   0, 'PP__ENDDO' } }, { -1} , { NIL }  } )
+   aAdd( aCommResults, { { {   0, 'PP_Run( ' }, {   0,   1 }, {   0, ' + ".prg" )' } }, { -1,  2, -1} , { NIL }  } )
+   aAdd( aCommResults, { { {   0, 'PP_PROC_INIT ' }, {   0,   1 } }, { -1,  1} , { NIL }  } )
+   aAdd( aCommResults, { { {   0, 'PP_PROC_EXIT ' }, {   0,   1 } }, { -1,  1} , { NIL }  } )
+   aAdd( aCommResults, { { {   0, 'PP_PROC_PRG ' }, {   0,   1 } }, { -1,  1} , { NIL }  } )
+   aAdd( aCommResults, { { {   0, 'PP_PROC_PRG ' }, {   0,   1 } }, { -1,  1} , { NIL }  } )
+   aAdd( aCommResults, { { {   0, 'PP_PROC_PRG ' }, {   0,   1 }, {   0, ' ; PP_LocalParams( { ' }, {   0,   2 }, {   0, ' } )' } }, { -1,  1, -1,  3, -1} , { NIL, NIL }  } )
+   aAdd( aCommResults, { { {   0, 'PP_PROC_PRG ' }, {   0,   1 }, {   0, ' ; PP_LocalParams( { ' }, {   0,   2 }, {   0, ' } )' } }, { -1,  1, -1,  3, -1} , { NIL, NIL }  } )
+   aAdd( aCommResults, { { {   0, 'PP_PROC ' }, {   0,   1 } }, { -1,  1} , { NIL }  } )
+   aAdd( aCommResults, { { {   0, 'PP_PROC ' }, {   0,   1 } }, { -1,  1} , { NIL }  } )
+   aAdd( aCommResults, { { {   0, 'PP_PROC ' }, {   0,   1 }, {   0, ' ; PP_LocalParams( { ' }, {   0,   2 }, {   0, ' } )' } }, { -1,  1, -1,  3, -1} , { NIL, NIL }  } )
+   aAdd( aCommResults, { { {   0, 'PP_PROC ' }, {   0,   1 }, {   0, ' ; PP_LocalParams( { ' }, {   0,   2 }, {   0, ' } )' } }, { -1,  1, -1,  3, -1} , { NIL, NIL }  } )
+   aAdd( aCommResults, { { {   0, 'PP_SetReturn( ' }, {   0,   1 }, {   0, ' )' } }, { -1,  1, -1} , { NIL }  } )
+   aAdd( aCommResults, { { {   0, 'PP_Params( { ' }, {   0,   1 }, {   0, ' } )' } }, { -1,  3, -1} , { NIL }  } )
+   aAdd( aCommResults, { { {   0, 'PP_Privates( { ' }, {   0,   1 }, {   0, ' } )' } }, { -1,  3, -1} , { NIL }  } )
+   aAdd( aCommResults, { { {   0, 'PP_Privates( { ' }, {   0,   1 }, {   0, ' } )' } }, { -1,  3, -1} , { NIL }  } )
+   aAdd( aCommResults, { { {   0, 'PP_Publics( { ' }, {   0,   1 }, {   0, ' } )' } }, { -1,  3, -1} , { NIL }  } )
+   aAdd( aCommResults, { { {   0, 'PP_Locals( { ' }, {   0,   1 }, {   0, ' } )' } }, { -1,  3, -1} , { NIL }  } )
+   aAdd( aCommResults, { { {   0, 'PP_Statics( { ' }, {   0,   1 }, {   0, ' } )' } }, { -1,  3, -1} , { NIL }  } )
 
 RETURN .T.
 
