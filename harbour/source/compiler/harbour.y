@@ -488,7 +488,8 @@ extern int _iState;     /* current parser state (defined in harbour.l */
    struct
    {
       double dNumber;   /* to hold a double number returned by lex */
-      BYTE   bDec;      /* to hold the number of decimal points in the value */
+      /* NOTE: Intentionally using "unsigned char" instead of "BYTE" */
+      unsigned char bDec; /* to hold the number of decimal points in the value */
    } dNum;
    void * pVoid;        /* to hold any memory structure we may need */
 };

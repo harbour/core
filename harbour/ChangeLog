@@ -1,3 +1,9 @@
+19990814-19:50 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/compiler/harbour.y
+    ! BYTE -> unsigned char
+    Previous change reverted, and replaced with a NOTE: not to
+    change this again.
+
 19990814-19:30 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/vm/dynsym.c
     tests/working/dynsym.prg
