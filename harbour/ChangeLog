@@ -1,3 +1,13 @@
+2000-07-29 15:55 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/compiler/harbour.l
+        * fixed to properly support 'DECLARE var' statement
+        
+    *tests/Makefile
+    *tests/testdecl.prg
+        * added testdecl.prg to Makefile
+        * added some more real life examples :)
+
 2000-07-29 09:45 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *include/hbcomp.h

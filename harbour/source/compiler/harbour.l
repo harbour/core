@@ -113,7 +113,7 @@ Separator     {SpaceTab}
 %x            FOR_ FUNCTION_ IIF_ IF_ IN_ INIT_ LOCAL_ LOOP_
 %x            MEMVAR_ PARAM_ PRIVATE_ PUBLIC_ STATIC_ RETURN_ RECOVER_
 %x            INVALIDNUM_ OTHERWISE_ PROCEDURE_
-%x            DECLARE_ OPTIONAL_
+%x            DECLARE_ DECLARE_ID_ OPTIONAL_
 
 %%
 
@@ -336,60 +336,39 @@ Separator     {SpaceTab}
 
 ^{Separator}*"_procreq_"{Separator}*"(" { return PROCREQ; }
 
-"decl"|"decla"|"declar"|"declare" { BEGIN DECLARE_;
-                                    yylval.string = hb_compIdentifierNew( hb_strupr( yytext ), TRUE );
-                                  }
-<DECLARE_>{Separator}+({Identifier}|{MacroVar}){Separator}*"[" { BEGIN 0;
-
-                             unput( '[' );
-               			     yyleng--;
-
-               			     /* Remove possible white space between the Identifier and the Index. */
-               			     while( yytext[ yyleng - 1 ] < 48 )
-                  		       yyleng--;
-
-               			     /* Pushback the Identifier */
-               			     while( yytext[ yyleng - 1 ] > 32 )
-                  		       unput( yytext[ --yyleng ] );
-				       /* printf( "\nPushing: %c\n", yytext[ --yyleng ] ); */
-
-
-               			     yytext[ yyleng ] = 0;
-
-                 		     if( hb_comp_iState == LOOKUP )
-                 		     { /* it is first item in the line */
-                   	   	        hb_comp_iState = PRIVATE;
-                   		        return PRIVATE;
-                 		     }
-                 		     else
-                 		     { /* there is another item in line already */
-                   		        hb_comp_iState = IDENTIFIER;
-                   		        return IDENTIFIER;
-                 		     }
-				   }
-<DECLARE_>{Separator}+[_a-zA-Z\&] { /* an Identifier after DECLARE */
-                            BEGIN 0;
-                 		    unput( yytext[ yyleng-1 ] );
-
-                 		    if( hb_comp_iState == LOOKUP )
-                 		    { /* it is first item in the line */
-                   		      hb_comp_iState = DECLARE;
-                   		      return DECLARE;
-                 		    }
-                 		    else
-                 		    { /* there is another item in line already */
-                   		      hb_comp_iState = IDENTIFIER;
-                   		      return IDENTIFIER;
-                 		    }
-               	    		  }
-<DECLARE_>{Separator}*[^a-zA-Z]   { /* any character (not identifier) after DECLARE */
-                            BEGIN 0;
-                 		    unput( yytext[ yyleng-1 ] );
-
-                            hb_comp_iState = IDENTIFIER;
-                 		    return IDENTIFIER;
-               			  }
-
+"decl"|"decla"|"declar"|"declare" { 
+    BEGIN DECLARE_;
+    yylval.string = hb_compIdentifierNew( hb_strupr( yytext ), TRUE );
+}
+<DECLARE_>{Separator}+[_a-zA-Z] { /* an Identifier after DECLARE */
+    unput( yytext[ yyleng-1 ] );
+    BEGIN DECLARE_ID_;
+}
+<DECLARE_>{Separator}+[\&] { /* a macro after DECLARE */
+    BEGIN 0;
+    unput( yytext[ yyleng-1 ] );
+    hb_comp_iState = PRIVATE;
+    return PRIVATE;
+}
+<DECLARE_>.   { /* any other character after DECLARE */
+    BEGIN 0;
+    unput( yytext[ yyleng-1 ] );
+    hb_comp_iState = IDENTIFIER;
+    return IDENTIFIER;
+}
+                          
+<DECLARE_ID_>({Identifier}|{MacroTxt}){Separator}*[\n\,\[\:\;] { /* variable declaration */
+    BEGIN 0;
+    yyless(0);
+    hb_comp_iState = PRIVATE;
+    return PRIVATE;
+}                       
+<DECLARE_ID_>.          { 
+    BEGIN 0;
+    unput( yytext[ yyleng-1 ] );
+    hb_comp_iState = DECLARE;
+    return DECLARE;
+}
 %{
 /* ************************************************************************ */
 %}

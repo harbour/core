@@ -117,6 +117,7 @@ PRG_SOURCES=\
 	testcdx.prg \
 	testcgi.prg \
 	testdbf.prg \
+	testdecl.prg \
 	testerro.prg \
 	testfor.prg \
 	testinc.prg \
