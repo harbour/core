@@ -52,12 +52,10 @@ static BOOL s_under_xterm;
 static int s_alternate_char_set;
 static char s_xTermBox[ 10 ] = "lqkxjqmx ";
 
-extern void hb_gt_Initialize_Mouse( void );
-extern void hb_gt_Initialize_Keyboard( void );
-extern void hb_gt_Exit_Mouse( void );
-extern void hb_gt_Exit_Keyboard( void );
+extern void hb_gt_keyboard_Init( void );
+extern void hb_gt_keyboard_Exit( void );
 
-static void hb_gt_Initialize_Terminal( void )
+static void hb_gt_terminal_Init( void )
 {
    initscr();
    if( has_colors() )
@@ -130,7 +128,7 @@ static void hb_gt_Initialize_Terminal( void )
    ripoffline( 0, NULL );
 }
 
-static void hb_gt_Exit_Terminal( void )
+static void hb_gt_terminal_Exit( void )
 {
    noraw();
    refresh();
@@ -143,19 +141,19 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
 
    s_uiDispCount = 0;
 
-   hb_gt_Initialize_Terminal();
+   hb_gt_terminal_Init();
    /* Mouse sub-sytem have to be initialized after ncurses initialization */
-   hb_gt_Initialize_Mouse();
-   hb_gt_Initialize_Keyboard();
+   hb_mouse_Init();
+   hb_gt_keyboard_Init();
 }
 
 void hb_gt_Exit( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Exit()"));
 
-   hb_gt_Exit_Terminal();
-   hb_gt_Exit_Mouse();
-   hb_gt_Exit_Keyboard();
+   hb_gt_keyboard_Exit();
+   hb_mouse_Exit();
+   hb_gt_terminal_Exit();
 }
 
 BOOL hb_gt_AdjustPos( BYTE * pStr, ULONG ulLen )
@@ -514,9 +512,9 @@ BOOL hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
 #if defined(NCURSES_VERSION)
    {
       BOOL success;
-      hb_gt_Exit_Terminal();
+      hb_gt_terminal_Exit();
       success = ( resizeterm( uiRows, uiCols ) == OK );
-      hb_gt_Initialize_Terminal();
+      hb_gt_terminal_Init();
       return success;
    }
 #else
@@ -758,20 +756,34 @@ USHORT hb_gt_VertLine( USHORT uiCol, USHORT uiTop, USHORT uiBottom, BYTE byChar,
    return 0;
 }
 
+BOOL hb_gt_Suspend()
+{
+   /* TODO: save all settings */
+   hb_gt_keyboard_Exit();
+   hb_mouse_Exit();
+   hb_gt_terminal_Exit();
+
+   return TRUE;
+}
+
+BOOL hb_gt_Resume()
+{
+   /* TODO: restore settings */
+   hb_gt_terminal_Init();
+   hb_mouse_Init();
+   hb_gt_keyboard_Init();
+   
+   return TRUE;
+}
+
 BOOL hb_gt_PreExt()
 {
-   hb_gt_Exit_Terminal();
-   hb_gt_Exit_Mouse();
-   hb_gt_Exit_Keyboard();
+   refresh();
 
    return TRUE;
 }
 
 BOOL hb_gt_PostExt()
 {
-   hb_gt_Initialize_Terminal();
-   hb_gt_Initialize_Mouse();
-   hb_gt_Initialize_Keyboard();
-   
    return TRUE;
 }

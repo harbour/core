@@ -1,3 +1,40 @@
+2000-07-25 19:00 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+    *doc/garbage.txt
+    *doc/idle.txt
+        * added documentation for the garbage collector and idle states
+        
+    *include/hbapigt.h
+        * added declaration of hb_gtSuspend(), hb_gtResume()
+        and hb_gt_Suspend(), hb_gt_Resume()
+        
+    *source/vm/classes.c
+    *source/pp/ppcomp.c
+        * removed unused variable warnings reported by GCC
+
+    *source/rtl/run.c
+        * added call for hb_gtSuspend() and hb_gtResume() before
+        calling the shell
+
+    *source/rtl/console.c
+    *source/rtl/gtapi.c
+    *source/rtl/mouseapi.c
+    *source/rtl/gtcrs/gtcrs.c
+    *source/rtl/gtcrs/kbdcrs.c
+    *source/rtl/gtcrs/mousecrs.c
+    *source/rtl/gtdos/gtdos.c
+    *source/rtl/gtos2/gtos2.c
+    *source/rtl/gtpca/gtpca.c
+    *source/rtl/gtsln/gtsln.c
+    *source/rtl/gtstd/gtstd.c
+    *source/rtl/gtwin/gtwin.c
+        * mouse initialization is called directly from low-level GT driver
+        to ommit problems with initialization order using some drivers
+        * added prototypes for hb_gt_Suspend() and hb_gt_Resume() that
+        are called before and after spawning to the shell
+        NOTE: 
+        Please add appopriate code for drivers that require it
+
 2000-07-25 09:30 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * hb_slex.bc
      * Sinchronized with recent changes to makefile.bc

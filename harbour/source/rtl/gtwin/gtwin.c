@@ -228,6 +228,7 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
 
    }
 
+   hb_mouse_Init();
 /*
    SetConsoleActiveScreenBuffer( s_HActive );
 */
@@ -237,6 +238,7 @@ void hb_gt_Exit( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Exit()"));
 
+   hb_mouse_Exit();
    if( s_HOutput != s_HOriginal )
    {
       /* ptucker */
@@ -1370,6 +1372,16 @@ BOOL hb_gt_PreExt()
 }
 
 BOOL hb_gt_PostExt()
+{
+   return TRUE;
+}
+
+BOOL hb_gt_Suspend()
+{
+   return TRUE;
+}
+
+BOOL hb_gt_Resume()
 {
    return TRUE;
 }

@@ -185,6 +185,8 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
       }
    }
 
+   hb_mouse_Init();
+   
    if( ! gt_Inited )
    {
       /* something went wrong - restore default settings */
@@ -198,6 +200,7 @@ void hb_gt_Exit( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Exit()"));
 
+   hb_mouse_Exit();
 /*
    NOTE: This is incompatible with Clipper
    - on exit leave a cursor visible
@@ -795,7 +798,7 @@ USHORT hb_gt_VertLine( USHORT uiCol, USHORT uiTop, USHORT uiBottom, BYTE byChar,
    finish its work. They should be called from run.c.
    They are not re-enrant ???.
 */
-BOOL hb_gt_PreExt()
+BOOL hb_gt_Suspend()
 {
    if( ! s_bSuspended )
    {
@@ -809,7 +812,7 @@ BOOL hb_gt_PreExt()
    return s_bSuspended;
 }
 
-BOOL hb_gt_PostExt()
+BOOL hb_gt_Resume()
 {
    if( s_bSuspended && 
        SLsmg_resume_smg() != -1 &&
@@ -819,6 +822,17 @@ BOOL hb_gt_PostExt()
    }
 
    return s_bSuspended;
+}
+
+BOOL hb_gt_PreExt()
+{
+   SLsmg_refresh();
+   return 1;
+}
+
+BOOL hb_gt_PostExt()
+{
+   return 1;
 }
 
 /* ------------------------------------------------------ */

@@ -45,9 +45,9 @@ HB_FUNC( __RUN )
 #if defined(__TURBOC__) || defined(__BORLANDC__) || defined(_MSC_VER) || defined(__IBMCPP__) || defined(__GNUC__)
    if( ISCHAR( 1 ) )
    {
-      hb_gtPreExt();
+      hb_gtSuspend();
       system( hb_parc( 1 ) );
-      hb_gtPostExt();
+      hb_gtResume();
    }
 #else
    hb_errRT_BASE_Ext1( EG_UNSUPPORTED, 9999, NULL, "__RUN", 0, EF_CANDEFAULT );

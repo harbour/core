@@ -1003,3 +1003,37 @@ char * hb_gtVersion( void )
    return hb_gt_Version();
 }
 
+/* prepare the terminal for system call */
+USHORT hb_gtSuspend( void )
+{
+   USHORT uidc;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtSuspend()"));
+
+   /* based on hb_gtPreExt() */
+
+   uidc = s_uiPreCount = hb_gt_DispCount();
+
+   while( uidc-- )
+      hb_gt_DispEnd();
+
+   /* call platform depend layer to flush all pending outputs and
+    * to prepare screen for outside output
+    */
+   hb_gt_Suspend(); 
+
+   return 0;
+}
+
+USHORT hb_gtResume( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtResume()"));
+
+   /* call platform depend layer to restore all settings */
+   hb_gt_Resume();
+      
+   while( s_uiPreCount-- )
+      hb_gt_DispBegin();
+
+   return 0;
+}

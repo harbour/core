@@ -148,7 +148,7 @@ int hb_mouse_key( void )
    return 0;
 }
 
-void hb_gt_Initialize_Mouse( void )
+void hb_mouse_Init( void )
 {
    mmask_t mm;
    
@@ -160,17 +160,9 @@ void hb_gt_Initialize_Mouse( void )
    s_last_event = -1;
 }
 
-void hb_gt_Exit_Mouse( void )
-{
-}
-
-void hb_mouse_Init( void )
-{
-}
-
 void hb_mouse_Exit( void )
 {
-   hb_mouse_Init();   /* do not leave mouse hidden */
+   hb_mouse_Hide();   /* do not leave mouse hidden */
 }
 
 BOOL hb_mouse_IsPresent( void )

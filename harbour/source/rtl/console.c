@@ -121,7 +121,6 @@ void hb_conInit( void )
 
    s_bInit = TRUE;
 
-   hb_mouseInit();
    hb_gtInit( s_iFilenoStdin, s_iFilenoStdout, s_iFilenoStderr );
 
    hb_setkeyInit();  /* April White, May 6, 2000 */
@@ -142,7 +141,6 @@ void hb_conRelease( void )
    hb_conXSaveRestRelease();
 
    hb_gtExit();
-   hb_mouseExit();
 
    s_bInit = FALSE;
 }

@@ -106,6 +106,8 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
       s_ulLVBptr = (ULONG) NULL;
    }
 
+   hb_mouse_Init();
+   
    /* TODO: Is anything else required to initialize the video subsystem?
             I (Maurilio Longo) think that we should set correct codepage
 
@@ -121,6 +123,7 @@ void hb_gt_Exit( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Exit()"));
 
+   hb_mouse_Exit();
    /* TODO: */
 }
 
@@ -954,6 +957,16 @@ BOOL hb_gt_PreExt()
 }
 
 BOOL hb_gt_PostExt()
+{
+   return TRUE;
+}
+
+BOOL hb_gt_Suspend()
+{
+   return TRUE;
+}
+
+BOOL hb_gt_Resume()
 {
    return TRUE;
 }

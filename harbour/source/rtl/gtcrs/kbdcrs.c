@@ -66,7 +66,7 @@ static BOOL s_under_xterm;
 static char * s_mouse_event_seq;
 static int s_mouse_event_len;
 
-void hb_gt_Initialize_Keyboard( void )
+void hb_gt_keyboard_Init( void )
 {
    int i;
 
@@ -216,7 +216,7 @@ void hb_gt_Initialize_Keyboard( void )
    hb_gt_Add_keymap( K_ALT_EQUALS, "\033=" );
 }
 
-void hb_gt_Exit_Keyboard( void )
+void hb_gt_keyboard_Exit( void )
 {
    int i, k;
    struct key_map_struc *tmp;

@@ -48,35 +48,17 @@
 #include "hbapiitm.h"
 #include "hbapigt.h"
 
-static BOOL   s_bPresent;
-static BOOL   s_bVisible;
-static USHORT s_uiDoubleClickSpeed; /* In milliseconds */
-static int    s_iLeftButton;
-static int    s_iRightButton;
+static BOOL   s_bVisible = FALSE;
+static USHORT s_uiDoubleClickSpeed = 168; /* In milliseconds */
+static int    s_iLeftButton = 1;
+static int    s_iRightButton = 1;
 
+/* NOTE: Mouse initialization is called directly from low level GT driver
+ * because it possible that mouse subsystem can depend on the terminal
+ * (for example, mouse subsystem cannot be initialized before ncurses
+ * driver is initialized).
+*/
 /* C callable interface */
-
-void hb_mouseInit( void )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_mouseInit()"));
-
-   hb_mouse_Init();
-
-   s_bPresent = hb_mouse_IsPresent();
-
-   hb_mouseSetCursor( FALSE );
-
-   s_uiDoubleClickSpeed = 168;
-   s_iLeftButton = 1;                      /* TOFIX: */
-   s_iRightButton = hb_mouseCountButton(); /* TOFIX: */
-}
-
-void hb_mouseExit( void )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_mouseExit()"));
-
-   hb_mouse_Exit();
-}
 
 BOOL hb_mouseIsPresent( void )
 {

@@ -95,12 +95,15 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
    s_bBlink = FALSE;
    s_iFilenoStdout = iFilenoStdout;
    hb_fsSetDevMode( s_iFilenoStdout, FD_BINARY );
+   
+   hb_mouse_Init();
 }
 
 void hb_gt_Exit( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Exit()"));
 
+   hb_mouse_Exit();
 #if defined( OS_UNIX_COMPATIBLE )
    tcsetattr( STDIN_FILENO, TCSANOW, &startup_attributes );
 #endif
@@ -537,6 +540,16 @@ BOOL hb_gt_PreExt()
 }
 
 BOOL hb_gt_PostExt()
+{
+   return TRUE;
+}
+
+BOOL hb_gt_Suspend()
+{
+   return TRUE;
+}
+
+BOOL hb_gt_Resume()
 {
    return TRUE;
 }

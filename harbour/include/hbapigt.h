@@ -132,6 +132,8 @@ extern USHORT hb_gtMaxCol( void );
 extern USHORT hb_gtMaxRow( void );
 extern USHORT hb_gtPostExt( void );
 extern USHORT hb_gtPreExt( void );
+extern USHORT hb_gtSuspend( void ); /* prepare the reminal for shell output */
+extern USHORT hb_gtResume( void ); /* resume the terminal after the shell output */
 extern int    hb_gtReadKey( HB_inkey_enum eventmask );
 extern USHORT hb_gtRectSize( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, USHORT * puiBuffSize );
 extern USHORT hb_gtRepChar( USHORT uiRow, USHORT uiCol, BYTE byChar, USHORT uiCount );
@@ -196,6 +198,8 @@ extern USHORT hb_gt_HorizLine( USHORT uiRow, USHORT uiLeft, USHORT uiRight, BYTE
 extern BOOL   hb_gt_IsColor( void );
 extern BOOL   hb_gt_PreExt( void );
 extern BOOL   hb_gt_PostExt( void );
+extern BOOL   hb_gt_Suspend( void ); /* suspend the terminal before the shell call */
+extern BOOL   hb_gt_Resume( void ); /* resume the terminal after the shell call */
 extern void   hb_gt_Puts( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE * pbyStr, ULONG ulLen );
 extern void   hb_gt_PutText( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbySrc );
 extern int    hb_gt_ReadKey( HB_inkey_enum eventmask );
@@ -231,8 +235,6 @@ extern void   hb_inkeyReset( BOOL allocate ); /* Reset the Harbour keyboard buff
 
 /* Public interface. These should never change, only be added to. */
 
-extern void   hb_mouseInit( void );
-extern void   hb_mouseExit( void );
 extern BOOL   hb_mouseIsPresent( void );
 extern BOOL   hb_mouseGetCursor( void );
 extern void   hb_mouseSetCursor( BOOL bVisible );

@@ -1332,7 +1332,7 @@ static PHB_ITEM hb_clsInst( USHORT uiClass, PHB_ITEM * * ppObjects, USHORT * pui
                      USHORT ui, uiBucket;
                      PHB_DYNS pMsg;
                      PCLASS pSprCls;
-                     PHB_ITEM pDataHrtd, pPtrNum;
+                     PHB_ITEM pDataHrtd;
 
                      pMsg = ( PHB_DYNS ) pMeth->pMessage;
 
