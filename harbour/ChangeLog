@@ -7,6 +7,18 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+     ! fixed bof flag in go bottom with no valid records
+
+2002-04-30 20:49 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>
+   * include/hbrddcdx.h
+   * source/rdd/dbfcdx/dbfcdx1.c
+   * source/rdd/dbfcdx/dbfcdx2.h
+     ! fixed sharing flags in index creation
+     ! fixed tag order after index creation
+     + added function hb_cdxReorderTagList
+     + added dummies handlers for DBOI_KEYADD, DBOI_KEYDELETE.
+
+2002-04-30 14:02 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rdd/dbcmd.c
     * Bug fixed, which caused GPF's while opening of additive index
 
