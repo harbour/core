@@ -234,11 +234,10 @@ int hb_pp_Parse( FILE * handl_o )
   char * ptr;
   int lContinue;
   int lens, rdlen;
-  int lLine = 0, i;
+  int lLine = 0, i, hb_pp_nEmptyStrings = 0;;
 
   HB_TRACE(HB_TR_DEBUG, ("hb_pp_Parse(%p)", handl_o));
 
-  hb_pp_nEmptyStrings = 0;
   while( TRUE )
   {
      pFile = hb_comp_files.pLast;

@@ -233,7 +233,7 @@ void hb_compStrongType( int iSize )
    PCOMDECLARED pDeclared;
    ULONG ulPos = pFunc->lPCodePos - iSize;
    SHORT wVar = 0;
-   BYTE szType1[64], szType2[64], cType = 0, cSubType1 = 0, cSubType2 = 0;
+   BYTE szType1[64], szType2[64], cType, cSubType1 = 0, cSubType2 = 0;
    BYTE bLast1, bLast2;
 
    /* Make sure we have enough stack space. */
@@ -1459,7 +1459,7 @@ void hb_compStrongType( int iSize )
 
           if( pVar )
           {
-             BYTE cType = pVar->cType;
+             cType = pVar->cType;
 
              /*printf( "\nPushed: %s Type: %c SubType: %c\n", pVar->szName, pVar->cType, pVar->cType - 100 );*/
 
@@ -1485,7 +1485,7 @@ void hb_compStrongType( int iSize )
           }
           else
           {
-             BYTE cType = pSym->cType;
+             cType = pSym->cType;
 
              /*printf( "\nPushed Symbol: %s Type: %c SubType: %c\n", pSym->szName, pSym->cType, pSym->cType - 100 );*/
 

@@ -112,6 +112,7 @@ static int    NextWord( char **, char *, BOOL );
 static int    NextName( char **, char * );
 static int    NextParm( char **, char * );
 static BOOL   OpenInclude( char *, PATHNAMES *, PHB_FNAME, BOOL bStandardOnly, char * );
+void          CloseInclude( void );
 
 #define ISNAME( c )  ( isalnum( ( int ) c ) || ( c ) == '_' || ( c ) > 0x7E )
 #define MAX_NAME     255
@@ -149,7 +150,6 @@ static int  s_numBrackets;
 static char s_groupchar;
 static char s_prevchar;
 
-int        hb_pp_nEmptyStrings;
 int *      hb_pp_aCondCompile = NULL;
 int        hb_pp_nCondCompile = 0;
 
@@ -2938,7 +2938,7 @@ static BOOL OpenInclude( char * szFileName, PATHNAMES * pSearch, PHB_FNAME pMain
 
   HB_TRACE(HB_TR_DEBUG, ("OpenInclude(%s, %p, %p, %p, %d)", szFileName, pSearch, pMainFileName, fptr, (int) bStandardOnly));
 
-  if( hb_comp_files.iFiles >= HB_PP_MAX_INCLUDES )
+  if( hb_comp_files.iFiles > HB_PP_MAX_INCLUDES )
      hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_TOO_MANY_INCLUDES, szFileName, NULL );
 
   if( bStandardOnly )
@@ -2996,3 +2996,17 @@ static BOOL OpenInclude( char * szFileName, PATHNAMES * pSearch, PHB_FNAME pMain
   return FALSE;
 }
 
+void CloseInclude( void )
+{
+   PFILE pFile;
+
+   /* we close the currently include file and continue */
+   fclose( hb_comp_files.pLast->handle );
+   hb_xfree( hb_comp_files.pLast->pBuffer );
+   hb_xfree( hb_comp_files.pLast->szFileName );
+   pFile = ( PFILE ) ( ( PFILE ) hb_comp_files.pLast )->pPrev;
+   hb_xfree( hb_comp_files.pLast );
+   hb_comp_files.pLast = pFile;
+   hb_comp_iLine = hb_comp_files.pLast->iLine;
+   hb_comp_files.iFiles--;
+}

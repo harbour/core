@@ -1,3 +1,17 @@
+2000-10-02 13:00 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * source/compiler/hbpcode.c
+     * Corrected 1 compiler warning.
+
+   * source/pp/ppcomp.c
+     * Cleaned-up and corrected bug when rules files had an #include directive.
+     + Added CloseInclude() and moved relevant logic into it.
+
+   * source/pp/ppcore.c
+     - Removed unused s_iIncludes, and hb_pp_nEmptyStrings
+
+   * utils/hbpp/hbpp.c
+     + Added local hb_pp_nEmptyStrings to hb_pp_Parse()
+
 2000-10-02 12:45 UTC-0400 David G. Holm <dholm@jsd-llc.com>
    * source/pp/ppcore.c
      ! The include file limit check now uses hb_comp_files.iFiles
