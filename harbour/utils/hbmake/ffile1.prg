@@ -56,11 +56,11 @@
 
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
-*+    Class FileBase
+*+    Class HBMake_FileBase
 *+
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
-CLASS FileBase FROM FileMan
+CLASS HBMake_FileBase FROM FileMan
 
    DATA nOpenMode   // Holds the value to use when opening the file
    DATA nCreateMode // Holds the value to use when creating the file
@@ -100,7 +100,7 @@ ENDCLASS
    Returns: Self
    Purpose: Constructor
 */
-METHOD new( cName ) CLASS FileBase
+METHOD new( cName ) CLASS HBMake_FileBase
 
    super:new()
    // first thing to do is check to see if there is a valid file
@@ -121,7 +121,7 @@ METHOD new( cName ) CLASS FileBase
             on the value of ::nSkipLength which holds the skipping base.
             This class's purpose is to do one byte movements.
 */
-METHOD fskip( nRecords ) CLASS FileBase
+METHOD fskip( nRecords ) CLASS HBMake_FileBase
 
    DEFAULT nRecords TO 1
 
@@ -148,7 +148,7 @@ METHOD fskip( nRecords ) CLASS FileBase
    Returns: Self
    Purpose: Move the byte pointer to the top of the file
 */
-METHOD fgotop() CLASS FileBase
+METHOD fgotop() CLASS HBMake_FileBase
 
    IF ::noDosError() .AND. ::nDosHandle > 0
       ::nPosition       := FSEEK( ::nDosHandle, 0, 0 )
@@ -164,7 +164,7 @@ METHOD fgotop() CLASS FileBase
    Returns: Self
    Purpose: Move hte byte pointer of the file to tbe bottom.
 */
-METHOD fgoBottom() CLASS FileBase
+METHOD fgoBottom() CLASS HBMake_FileBase
 
    IF ::noDosError() .AND. ::nDosHandle > 0
       ::nPosition       := FSEEK( ::nDosHandle, 0, 2 )
@@ -180,7 +180,7 @@ METHOD fgoBottom() CLASS FileBase
    Returns: Self
    Purpose: To close the file
 */
-METHOD closefile() CLASS FileBase
+METHOD closefile() CLASS HBMake_FileBase
 
    IF ::noDosError() .AND. ::nDosHandle > 0
       FCLOSE( ::nDosHandle )
@@ -198,7 +198,7 @@ METHOD closefile() CLASS FileBase
    Purpose: To return the contents of the file at the current position based
             on the length of ::nSkipLength.
 */
-METHOD retrieve() CLASS FileBase
+METHOD retrieve() CLASS HBMake_FileBase
 
    LOCAL cReturn       // as char
    LOCAL nMoved        // as int
@@ -218,7 +218,7 @@ METHOD retrieve() CLASS FileBase
    Purpose: To write out to the contents of the file the value in the
             parameter <cChar>.
 */
-METHOD FWRITE( cChar ) CLASS FileBase
+METHOD FWRITE( cChar ) CLASS HBMake_FileBase
 
    IF ::noDosError() .AND. ::nDosHandle > 0
       IF cChar IS pCHARACTER
@@ -239,7 +239,7 @@ METHOD FWRITE( cChar ) CLASS FileBase
             within the file.  It is also based on the value stored to the
             ::nSkipLength instance variable
 */
-METHOD fgoto( nValue ) CLASS FileBase
+METHOD fgoto( nValue ) CLASS HBMake_FileBase
 
    IF ::noDosError() .AND. ::nDosHandle > 0
       IF nValue IS pNUMERIC
@@ -269,7 +269,7 @@ METHOD fgoto( nValue ) CLASS FileBase
    Returns: Self
    Purpose: Creates the specified file with the proper access code
 */
-METHOD Create() CLASS FileBase
+METHOD Create() CLASS HBMake_FileBase
 
    LOCAL nFile         // as int
 
@@ -289,7 +289,7 @@ METHOD Create() CLASS FileBase
    Returns: Self
    Purpose: Opens the file with the proper access code
 */
-METHOD FOPEN() CLASS FileBase
+METHOD FOPEN() CLASS HBMake_FileBase
 
    IF ::noDosError()
       ::nDosHandle :=::openfile( ::cName, ::nOpenMode )
@@ -301,7 +301,7 @@ METHOD FOPEN() CLASS FileBase
 
 RETURN ( self )
 
-METHOD fappendByte( cByte ) CLASS FileBase
+METHOD fappendByte( cByte ) CLASS HBMake_FileBase
 
    DEFAULT cByte TO ""
 
@@ -319,7 +319,7 @@ METHOD fappendByte( cByte ) CLASS FileBase
 RETURN ( self )
 
 // End of File: FFile1.prg
-METHOD OPEN() CLASS FileBase
+METHOD OPEN() CLASS HBMake_FileBase
 
    Self:nDosHandle := Self:openfile( ::cName, ::nOpenMode )
    ::nEndOfFile    := FSEEK( Self:nDosHandle, 0, 2 )
@@ -335,7 +335,7 @@ METHOD OPEN() CLASS FileBase
    Returns: Self
    Purpose: Move the byte pointer to the top of the file
 */
-METHOD gotop() CLASS FileBase
+METHOD gotop() CLASS HBMake_FileBase
 
    IF Self:noDosError() .AND. Self:nDosHandle > 0
       ::fgotop()
@@ -349,7 +349,7 @@ METHOD gotop() CLASS FileBase
    Returns: Self
    Purpose: Move hte byte pointer of the file to tbe bottom.
 */
-METHOD goBottom() CLASS FileBase
+METHOD goBottom() CLASS HBMake_FileBase
 
    LOCAL cBuffer       // as char
    LOCAL lWithCRLF := pFALSE               // as logical
@@ -383,7 +383,7 @@ METHOD goBottom() CLASS FileBase
 /* Should not any more exist here ... Not sure so I just keep it remed */
 /* JFL in all case it is not anymore declared from the Class */
 /*
-METHOD FCLOSE() CLASS FileBase
+METHOD FCLOSE() CLASS HBMake_FileBase
 
    IF Self:noDosError() .AND. Self:nDosHandle > 0
       FCLOSE( Self:nDosHandle )
@@ -401,7 +401,7 @@ METHOD FCLOSE() CLASS FileBase
    Purpose: To write out to the contents of the file the value in the
             parameter <cChar>.
 */
-METHOD WRITE( cChar ) CLASS FileBase
+METHOD WRITE( cChar ) CLASS HBMake_FileBase
 
    IF Self:noDosError() .AND. Self:nDosHandle > 0
       IF cChar IS pCHARACTER
@@ -437,7 +437,7 @@ METHOD WRITE( cChar ) CLASS FileBase
 /*
 
 /* 
-METHOD Buffget( lForward ) CLASS FileBase
+METHOD Buffget( lForward ) CLASS HBMake_FileBase
 
    LOCAL cBuffer       // as char
    LOCAL nLocation     // as int
@@ -492,7 +492,7 @@ METHOD Buffget( lForward ) CLASS FileBase
             If <cLine> is not passed or if it an empty line with 0 bytes
             in length, the function will not operate.
 */
-METHOD appendLine( cLine ) CLASS FileBase
+METHOD appendLine( cLine ) CLASS HBMake_FileBase
 
    DEFAULT cLine TO ""
 
@@ -521,7 +521,7 @@ METHOD appendLine( cLine ) CLASS FileBase
             This class's purpose is to do one byte movements.
 */
 
-METHOD SKIP( nRecords ) CLASS FileBase
+METHOD SKIP( nRecords ) CLASS HBMake_FileBase
 
    LOCAL nCount := 0   // as int
 
@@ -557,7 +557,7 @@ METHOD SKIP( nRecords ) CLASS FileBase
             within the file.  It is also based on the value stored to the
             Self:nSkipLength instance variable
 */
-METHOD GOTO( nValue ) CLASS FileBase
+METHOD GOTO( nValue ) CLASS HBMake_FileBase
 
    LOCAL cLine     := ""                   // as char
    LOCAL nCount    := 0                    // as int
@@ -602,7 +602,7 @@ RETURN ( nCount )
 
 // End of File: FFile2.prg
 
-METHOD BufferGet( lForward ) CLASS FileBase
+METHOD BufferGet( lForward ) CLASS HBMake_FileBase
 
    LOCAL cBuffer       // as char
    LOCAL nLocation     // as int

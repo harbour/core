@@ -66,9 +66,9 @@ DECLARE  FT_MKDIR( CDIR AS STRING ) //AS USUAL
 DECLARE  StrPos( cBuffer AS STRING ) AS NUMERIC
 DECLARE  GetNumberofTableItems( cBuffer AS STRING ) AS NUMERIC
 DECLARE  FREADline( nH AS NUMERIC, @cB AS STRING, nMaxLine AS NUMERIC )
-//DECLARE  FILEBASE() AS OBJECT
-DECLARE  FILEBASE ;
-    New( cname AS STRING) AS CLASS FILEBASE;
+//DECLARE  HBMAKE_FILEBASE() AS OBJECT
+DECLARE  HBMAKE_FILEBASE ;
+    New( cname AS STRING) AS CLASS HBMAKE_FILEBASE;
     FOPEN()   AS OBJECT;
     closefile() AS OBJECT;
     fskip( OPTIONAL n  AS NUMERIC)  AS OBJECT;
@@ -110,9 +110,9 @@ FUNCTION FT_FUSE( cFile AS STRING, nMode  AS NUMERIC)
    ENDIF
    IF cFile <> Nil
       IF nMode <> 0
-         theHandle := FileBase():new( cFile ):open()
+         theHandle := HBMake_FileBase():new( cFile ):open()
       ELSE
-         theHandle := FileBase():new( cFile ):open()
+         theHandle := HBMake_FileBase():new( cFile ):open()
       ENDIF
    ENDIF
    nHandle:= theHandle:nHan

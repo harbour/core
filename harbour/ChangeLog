@@ -7,6 +7,15 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+2001-12-28 18:36 UTC+0100 Antonio Linares <alinares@fivetech.com>
+   * source/vm/extend.c
+     + New function hb_extIsArray() added
+       function to be called from pcode DLLs to detect if the extend system
+       is going to use an array item
+
+   * source/vm/maindllp.c
+     + extend system for pcode DLLs implementation started
+
 2001-12-28 23:30 UTC+0700 Andi Jahja <harbour@cbn.net.id>
    * hrbdll.bc
    * hrbdll.vc

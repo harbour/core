@@ -10,7 +10,7 @@ DECLARE GetBccDir() as String
 DECLARE GetVccDir() as String
 DECLARE GetMakeDir() as String
 DECLARE HB_ARGV( n as numeric ) as string
-declare filedate( c as String ) as string
+declare hbmake_filedate( c as String ) as string
 declare listasArray2( cString as String, cSep as String ) as Array
 #endif
 Function GetSourceFiles( lSubdir )
@@ -217,13 +217,13 @@ Function GetSourceDirMacros()
      Next
 Return amacros
 
-Function filedate( cFileName )
+Function hbmake_filedate( cFileName )
 
      Local aFiles := Directory( cFileName )
 
 Return If( Len( aFiles ) == 1, aFiles[ 1, 3 ], Ctod( '' ) )
 
-Function filetime( cFileName )
+Function hbmake_filetime( cFileName )
 
      Local aFiles := Directory( cFileName )
 
