@@ -48,7 +48,7 @@
 #ifndef HB_CLIP_CH_
 #define HB_CLIP_CH_
 
-#xtranslate hb_OSNewLine() => Chr( 13 ) + Chr( 10 )
+#xtranslate hb_OSNewLine() => ( Chr( 13 ) + Chr( 10 ) )
 
 #endif /* HB_CLIP_CH_ */
 

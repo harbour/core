@@ -51,49 +51,49 @@ typedef BOOL    Boolean;
 
 /* New types */
 
-typedef BYTE*   BYTEP;
+typedef BYTE *  BYTEP;
 typedef BYTEP   PBYTE;
 typedef BYTEP   BYTEPP;
 
-typedef SHORT*  SHORTP;
+typedef SHORT * SHORTP;
 typedef SHORTP  PSHORT;
 
-typedef USHORT* USHORTP;
+typedef USHORT * USHORTP;
 typedef USHORTP PUSHORT;
 
 typedef unsigned int WORD;
-typedef WORD*   WORDP;
+typedef WORD *  WORDP;
 typedef WORDP   PWORD;
 
-typedef LONG*   LONGP;
+typedef LONG *  LONGP;
 typedef LONGP   PLONG;
 
-typedef ULONG*  ULONGP;
+typedef ULONG * ULONGP;
 typedef ULONGP  PULONG;
 
 typedef unsigned long DWORD;
-typedef DWORD*  DWORDP;
+typedef DWORD * DWORDP;
 typedef DWORDP  PDWORD;
 
-typedef BOOL*   BOOLP;
+typedef BOOL *  BOOLP;
 typedef BOOLP   PBOOL;
 
-typedef void*   NEARP;
-typedef NEARP*  NEARPP;
+typedef void *  NEARP;
+typedef NEARP * NEARPP;
 
-typedef void*   FARP;
-typedef FARP*   FARPP;
+typedef void *  FARP;
+typedef FARP *  FARPP;
 
 typedef FARP    VOIDP;
 typedef FARP    PVOID;
 
-typedef void*   HANDLE;
+typedef void *  HANDLE;
 typedef ERRCODE IHELP;
 typedef ERRCODE ICODE;
 
 /* default func ptr -- USHORT return, USHORT param */
 typedef USHORT  ( * FUNCP )( USHORT param, ...);
-typedef FUNCP*  FUNCPP;
+typedef FUNCP * FUNCPP;
 
 #define HIDE    static
 #define CLIPPER HARBOUR

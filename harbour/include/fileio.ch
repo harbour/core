@@ -52,35 +52,35 @@
 #define _FILEIO_CH
 
 /* File create flags */
-#define FC_NORMAL     0x0000   /* No file attributes are set      */
-#define FC_READONLY   0x0001   /* Read-only file attribute is set */
-#define FC_HIDDEN     0x0002   /* Hidden file attribute is set    */
-#define FC_SYSTEM     0x0004   /* System file attribute is set    */
+#define FC_NORMAL     0        /* No file attributes are set      */
+#define FC_READONLY   1        /* Read-only file attribute is set */
+#define FC_HIDDEN     2        /* Hidden file attribute is set    */
+#define FC_SYSTEM     4        /* System file attribute is set    */
 
 /* File access flags */
-#define FO_READ       0x0000   /* File is opened for reading             */
-#define FO_WRITE      0x0001   /* File is opened for writing             */
-#define FO_READWRITE  0x0002   /* File is opened for reading and writing */
+#define FO_READ       0        /* File is opened for reading             */
+#define FO_WRITE      1        /* File is opened for writing             */
+#define FO_READWRITE  2        /* File is opened for reading and writing */
 
 /* File sharing flags */
-#define FO_COMPAT     0x0000   /* No sharing specified                               */
-#define FO_EXCLUSIVE  0x0010   /* Deny further attempts to open the file             */
-#define FO_DENYWRITE  0x0020   /* Deny further attempts to open the file for writing */
-#define FO_DENYREAD   0x0030   /* Deny further attempts to open the file for reading */
-#define FO_DENYNONE   0x0040   /* Do not deny any further attempts to open the file  */
+#define FO_COMPAT     0        /* No sharing specified                               */
+#define FO_EXCLUSIVE  16       /* Deny further attempts to open the file             */
+#define FO_DENYWRITE  32       /* Deny further attempts to open the file for writing */
+#define FO_DENYREAD   48       /* Deny further attempts to open the file for reading */
+#define FO_DENYNONE   64       /* Do not deny any further attempts to open the file  */
 #define FO_SHARED     FO_DENYNONE
 
 /* File seek mode flags */
-#define FS_SET        0x0000   /* Seek from beginning of file    */
-#define FS_RELATIVE   0x0001   /* Seek from current file poitner */
-#define FS_END        0x0002   /* Seek from end of file          */
+#define FS_SET        0        /* Seek from beginning of file    */
+#define FS_RELATIVE   1        /* Seek from current file poitner */
+#define FS_END        2        /* Seek from end of file          */
 
 /* File mode flags */
 #define FD_BINARY     1        /* Binary mode (raw)  */
-#define FD_RAW        1
+#define FD_RAW        FD_BINARY
 #define FD_TEXT       2        /* Text mode (cooked) */
-#define FD_COOKED     2
-#define FD_ASCII      2
+#define FD_COOKED     FD_TEXT
+#define FD_ASCII      FD_TEXT
 
 /* File system error codes */
 #define F_ERROR       ( -1 )   /* Unspecified error */

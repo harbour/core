@@ -1328,24 +1328,17 @@ HARBOUR HB_FREAD( void )
    {
       ulRead = hb_parnl( 3 );
 
-#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
-      /* CA-Clipper determines the maximum size by calling _parcsiz() instead */
-      /* of hb_parclen(), this means that the maximum read length will be one */
-      /* more then the length of the passed buffer, because the terminating */
-      /* zero could be used if needed */
+      /* NOTE: CA-Clipper determines the maximum size by calling _parcsiz() */
+      /*       instead of hb_parclen(), this means that the maximum read length */
+      /*       will be one more then the length of the passed buffer, because */
+      /*       the terminating zero could be used if needed. [vszel] */
 
       if( ulRead <= hb_parcsiz( 2 ) )
-#else
-      if( ulRead <= hb_parclen( 2 ) )
-#endif
-      {
          /* NOTE: Warning, the read buffer will be directly modified,
                   this is normal here ! [vszel] */
-
          ulRead = hb_fsReadLarge( hb_parni( 1 ),
                                   ( BYTE * ) hb_parc( 2 ),
                                   ulRead );
-      }
       else
          ulRead = 0;
    }

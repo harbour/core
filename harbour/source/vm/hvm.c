@@ -287,7 +287,7 @@ void hb_vmInit( void )
             hb_errInternal( 9999, "Can\'t locate the starting procedure: \'%s\'", HARBOUR_START_PROCEDURE, NULL );
       }
 #else
-#ifndef HARBOUR_STRICT_CLIPPER_COMPATIBLE
+#ifndef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
       else if( ! s_pSymStart )
          hb_errInternal( 9999, "No starting procedure", NULL, NULL );
 #endif

@@ -84,7 +84,6 @@
 #define EG_APPENDLOCK   40
 #define EG_LOCK         41
 
-#define EG_ARGCOUNT     45	/* Harbour special */
 #define EG_ARRACCESS    46      /* Harbour special */
 #define EG_ARRASSIGN    47      /* Harbour special */
 #define EG_ARRDIMENSION 48      /* Harbour special */

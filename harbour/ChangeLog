@@ -1,3 +1,45 @@
+19991115-17:21 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/transfrm.c
+    ! Direct item access changed to Item API calls.
+    % Optimized variable scopes.
+    % Optimized redundant code.
+    % Extend API calls changed to Item API.
+    ! Error substitution added.
+    ! Direct item access buffer fixed (with picture "@!")
+    ! Fixed to accept picture mask characters in lowercase (like in Clipper)
+    ! Fixed the interpretation of some mask characters for string expressions.
+    ! Fixed handling of "Y" mask for strings.
+    ! Fixed handling of @R for strings.
+    ! Fixed case when the picture template is wider than the string expression.
+    ! Fixed handling of @Z and @B for all types.
+    + Added support for @D, @DE for strings.
+    + Other enhancements.
+  * tests/rtl_test.prg
+    + New TRANSFORM() tests for special and error conditions added. Some of
+      these still fail.
+    ! Fixed one SPACE() test.
+  * include/extend.h
+    ! ISNIL() macro was not working, fixed. It was only used in TRANSFORM().
+  * source/vm/hvm.c
+    ! Mistyped STRICT_CLIPPER_COMP. macro name fixed.
+  * source/rtl/filesys.c
+    ! FREAD() is now always strictly compatible, option removed.
+  * include/simpleio.ch
+    include/assert.ch
+    ! Made platform independent using hb_OSNewLine() instead of the hard-
+      wired Chr(13)+Chr(10) newlines.
+  * include/box.ch
+    * Formatting.
+  * include/error.ch
+    - EG_ARGCOUNT removed.
+  * include/fileio.ch
+    * The hexa numbers changed to decimals for better cross compiler 
+      compatibility, plus some minor cleanups.
+  * include/hbclip.ch
+    include/clipdefs.h 
+    include/compiler.h
+    * Minor changes.
+
 19991113-13:49 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/arrays.c
     source/rtl/console.c

@@ -97,7 +97,7 @@ typedef struct
 } SYMBOLS;
 
 extern PFUNCTION GetFunction( char * szFunName ); /* locates a previously defined function */
-extern USHORT      GetFunctionPos( char * szSymbolName ); /* returns the index + 1 of a function on the functions defined list */
+extern USHORT    GetFunctionPos( char * szSymbolName ); /* returns the index + 1 of a function on the functions defined list */
 
 extern void *   hb_xgrab( ULONG lSize );   /* allocates memory, exists on failure */
 extern void *   hb_xrealloc( void * pMem, ULONG lSize );   /* reallocates memory */
@@ -105,10 +105,6 @@ extern void     hb_xfree( void * pMem );    /* frees memory */
 
 char * yy_strdup( char * p );  /* this will exit if there is not enough memory */
 char * yy_strupr( char * p );
-
-#if 0
-static void __yy_memcpy( char * from, char * to, int count ); /* Bison prototype */
-#endif
 
 extern USHORT FixSymbolPos( USHORT );    /* converts symbol's compile-time position into generation-time position */
 extern PFUNCTION GetFuncall( char * szFunName ); /* locates a previously defined called function */
@@ -126,7 +122,6 @@ extern BOOL _bQuiet;
 extern BOOL _bStartProc;
 extern char _szPrefix[ 20 ];         /* holds the prefix added to the generated symbol init function name (in C output currently) */
 extern BOOL _bGenCVerbose;
-
 extern char * _szCErrors[];
 
 #define VS_LOCAL      1
@@ -137,14 +132,12 @@ extern char * _szCErrors[];
 #define VS_PUBLIC     128
 #define VS_MEMVAR     ( VS_PUBLIC | VS_PRIVATE )
 
-/*
- * flags for bFlags member
-*/
-#define FUN_STATEMENTS    1 /* Function have at least one executable statement */
-#define FUN_USES_STATICS  2 /* Function uses static variables */
-#define FUN_PROCEDURE     4 /* This is a procedure that shouldn't return value */
-#define FUN_ILLEGAL_INIT  8 /* Attempt to initialize static variable with a function call */
-#define FUN_USES_LOCAL_PARAMS 16 /* parameters are declared using () */
-#define FUN_WITH_RETURN   32  /* there was RETURN statement in previous line */
+/* flags for bFlags member */
+#define FUN_STATEMENTS          1  /* Function have at least one executable statement */
+#define FUN_USES_STATICS        2  /* Function uses static variables */
+#define FUN_PROCEDURE           4  /* This is a procedure that shouldn't return value */
+#define FUN_ILLEGAL_INIT        8  /* Attempt to initialize static variable with a function call */
+#define FUN_USES_LOCAL_PARAMS   16 /* parameters are declared using () */
+#define FUN_WITH_RETURN         32 /* there was RETURN statement in previous line */
 
 #endif /* HB_COMPILER_H_ */

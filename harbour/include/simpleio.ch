@@ -37,13 +37,13 @@
 #define _SIMPLEIO_CH
 
 #command ?  [ <xList,...> ]          => ;
-                        ( OutStd( Chr(13) + Chr(10) ) [, OutStd(<xList>)] )
+                        ( OutStd( hb_OSNewLine() ) [, OutStd(<xList>)] )
 
 #command ?? [ <xList,...> ]          => ;
                         OutStd( <xList> )
 
 #command ACCEPT TO <idVar>           => ;
-                        <idVar> := StrTran( FReadStr(0, 256), Chr(13) + Chr(10) )
+                        <idVar> := StrTran( FReadStr( 0, 256 ), hb_OSNewLine() )
 
 #command ACCEPT <cPrompt> TO <idVar> => ;
                         ? <cPrompt> ; ACCEPT TO <idVar>

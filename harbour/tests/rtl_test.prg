@@ -33,7 +33,7 @@
  *
  */
 
-/* TRANSFORM() tests written by Eddie Runia <eddie@runia.com> */
+/* TRANSFORM() tests mostly written by Eddie Runia <eddie@runia.com> */
 /* EMPTY() tests written by Eddie Runia <eddie@runia.com> */
 /* :class* tests written by Dave Pearson <davep@hagbard.demon.co.uk> */
 
@@ -82,6 +82,7 @@ STATIC s_nStartTime
 STATIC s_nEndTime
 
 STATIC scString
+STATIC scStringM
 STATIC scStringE
 STATIC scStringZ
 STATIC scStringW
@@ -889,7 +890,7 @@ STATIC FUNCTION Main_HVM()
    TEST_LINE( Len( "123"+Chr(0)+"456 " )      , 8                                      )
    TEST_LINE( Len( saArray )                  , 1                                      )
 #ifdef __HARBOUR__
-   TEST_LINE( Len( Space( 3000000000 ) )      , 3000000000                             )
+   TEST_LINE( Len( Space( 1000000 ) )         , 1000000                                )
 #else
    TEST_LINE( Len( Space( 40000 ) )           , 40000                                  )
 #endif
@@ -2088,6 +2089,85 @@ STATIC FUNCTION Main_STRINGS()
 
    /* TRANSFORM() */
 
+   TEST_LINE( Transform( NIL       , NIL        )          , "E BASE 1122 Argument error TRANSFORM F:S" )
+   TEST_LINE( Transform( NIL       , ""         )          , "E BASE 1122 Argument error TRANSFORM F:S" )
+   TEST_LINE( Transform( NIL       , "@"        )          , "E BASE 1122 Argument error TRANSFORM F:S" )
+   TEST_LINE( Transform( {}        , NIL        )          , "E BASE 1122 Argument error TRANSFORM F:S" )
+   TEST_LINE( Transform( {}        , ""         )          , "E BASE 1122 Argument error TRANSFORM F:S" )
+   TEST_LINE( Transform( {}        , "@"        )          , "E BASE 1122 Argument error TRANSFORM F:S" )
+   TEST_LINE( Transform( ErrorNew(), NIL        )          , "E BASE 1122 Argument error TRANSFORM F:S" )
+   TEST_LINE( Transform( ErrorNew(), ""         )          , "E BASE 1122 Argument error TRANSFORM F:S" )
+   TEST_LINE( Transform( ErrorNew(), "@"        )          , "E BASE 1122 Argument error TRANSFORM F:S" )
+   TEST_LINE( Transform( {|| NIL } , NIL        )          , "E BASE 1122 Argument error TRANSFORM F:S" )
+   TEST_LINE( Transform( {|| NIL } , ""         )          , "E BASE 1122 Argument error TRANSFORM F:S" )
+   TEST_LINE( Transform( {|| NIL } , "@"        )          , "E BASE 1122 Argument error TRANSFORM F:S" )
+
+   TEST_LINE( Transform( "", "" )                          , ""                                         )
+   TEST_LINE( Transform( "", "@" )                         , ""                                         )
+   TEST_LINE( Transform( "", NIL )                         , ""                                         )
+   TEST_LINE( Transform( "", 100 )                         , "E BASE 1122 Argument error TRANSFORM F:S" )
+   TEST_LINE( Transform( "hello", "" )                     , "hello"                                    )
+   TEST_LINE( Transform( "hello", "@" )                    , "hello"                                    )
+   TEST_LINE( Transform( "hello", NIL )                    , "hello"                                    )
+   TEST_LINE( Transform( "hello", 100 )                    , "E BASE 1122 Argument error TRANSFORM F:S" )
+   TEST_LINE( Transform( 100.2, "" )                       , "       100.2"                             )
+   TEST_LINE( Transform( 100.2, "@" )                      , "       100.2"                             )
+   TEST_LINE( Transform( 100.2, NIL )                      , "       100.2"                             )
+   TEST_LINE( Transform( 100.2, 100 )                      , "E BASE 1122 Argument error TRANSFORM F:S" )
+   TEST_LINE( Transform( 100.20, "" )                      , "       100.20"                            )
+   TEST_LINE( Transform( 100.20, "@" )                     , "       100.20"                            )
+   TEST_LINE( Transform( 100.20, NIL )                     , "       100.20"                            )
+   TEST_LINE( Transform( 100.20, 100 )                     , "E BASE 1122 Argument error TRANSFORM F:S" )
+   TEST_LINE( Transform( Val("100.2"), "" )                , "100.2"                                    )
+   TEST_LINE( Transform( Val("100.2"), "@" )               , "100.2"                                    )
+   TEST_LINE( Transform( Val("100.2"), NIL )               , "100.2"                                    )
+   TEST_LINE( Transform( Val("100.2"), 100 )               , "E BASE 1122 Argument error TRANSFORM F:S" )
+   TEST_LINE( Transform( Val("100.20"), "" )               , "100.20"                                   )
+// TEST_LINE( Transform( Val("100.20"), "@" )              , "100.20"                                   )
+   TEST_LINE( Transform( Val("100.20"), NIL )              , "100.20"                                   )
+   TEST_LINE( Transform( Val("100.20"), 100 )              , "E BASE 1122 Argument error TRANSFORM F:S" )
+   TEST_LINE( Transform( sdDate, "" )                      , "1980.01.01"                               )
+   TEST_LINE( Transform( sdDate, "@" )                     , "1980.01.01"                               )
+   TEST_LINE( Transform( sdDate, NIL )                     , "1980.01.01"                               )
+   TEST_LINE( Transform( sdDate, 100 )                     , "E BASE 1122 Argument error TRANSFORM F:S" )
+   TEST_LINE( Transform( .T., "" )                         , "T"                                        )
+   TEST_LINE( Transform( .T., "@" )                        , "T"                                        )
+   TEST_LINE( Transform( .F., NIL )                        , "F"                                        )
+   TEST_LINE( Transform( .F., 100 )                        , "E BASE 1122 Argument error TRANSFORM F:S" )
+
+   TEST_LINE( Transform( scStringM , "!!!!!"    )          , "HELLO"                       )
+   TEST_LINE( Transform( scStringM , "@!"       )          , "HELLO"                       )
+#ifdef __HARBOUR__
+   TEST_LINE( Transform( @scStringM, "!!!!!"    )          , "HELLO"                       ) /* Bug in CA-Cl*pper, it returns: "E BASE 1122 Argument error TRANSFORM F:S" */
+   TEST_LINE( Transform( @scStringM, "@!"       )          , "HELLO"                       ) /* Bug in CA-Cl*pper, it returns: "E BASE 1122 Argument error TRANSFORM F:S" */
+#endif
+   TEST_LINE( Transform( scStringM , "" )                  , "Hello"                       )
+   TEST_LINE( Transform( scStringM , NIL )                 , "Hello"                       )
+   TEST_LINE( Transform( scStringM , 100 )                 , "E BASE 1122 Argument error TRANSFORM F:S" )
+
+   TEST_LINE( Transform("abcdef", "@! !lkm!")              , "ABkmE"                       )
+   TEST_LINE( Transform("abcdefghijklmnopqrstuvwxyz", "@! 1234567890"), "12345678I0" )
+   TEST_LINE( Transform("abcdefghijklmnopqrstuvwxyzabcdefg", "@! abcdefghijklmnopqrstuvwxyzabcdefg"), "AbcdefghijkLmNopqrstuvwXYzAbcdefg" )
+   TEST_LINE( Transform("abcdefghijklmnopqrstuvwxyz", "@! `~!@#$% ^&*()_+-={}\|;':")  , "`~C@E$% ^&*()_+-={}\|;':" )
+   TEST_LINE( Transform("abcdefghijklmnopqrstuvwxyz", "@! ,./<>?")                    , ",./<>?" )
+   TEST_LINE( Transform("hello", " @!")                    , " @L"   )
+
+   TEST_LINE( Transform("abcdef", "@R! !lkm!")              , "ABkmC"                       )
+   TEST_LINE( Transform("abcdefghijklmnopqrstuvwxyz", "@R! 1234567890"), "12345678A0" )
+   TEST_LINE( Transform("abcdefghijklmnopqrstuvwxyzabcdefg", "@R! abcdefghijklmnopqrstuvwxyzabcdefg"), "AbcdefghijkBmCopqrstuvwDNzFbcdefg" )
+   TEST_LINE( Transform("abcdefghijklmnopqrstuvwxyz", "@R! `~!@#$% ^&*()_+-={}\|;':")  , "`~A@B$% ^&*()_+-={}\|;':"         )
+   TEST_LINE( Transform("abcdefghijklmnopqrstuvwxyz", "@R! ,./<>?")                    , ",./<>?ABCDEFGHIJKLMNOPQRSTUVWXYZ" )
+   TEST_LINE( Transform("hello", " @R!")                   , " @RL"  )
+
+   TEST_LINE( Transform("abc", "@R !!!!")                  , "ABC "  )
+   TEST_LINE( Transform("abc", "@R XXXX")                  , "abc "  )
+   TEST_LINE( Transform("abc", "@R !!")                    , "AB"    )
+   TEST_LINE( Transform("abc", "@R XX")                    , "ab"    )
+   TEST_LINE( Transform("abc", "@!R !!!!")                 , "ABC "  )
+   TEST_LINE( Transform("abc", "@!R XXXX")                 , "ABC "  )
+   TEST_LINE( Transform("abc", "@!R !!")                   , "AB"    )
+   TEST_LINE( Transform("abc", "@!R XX")                   , "AB"    )
+
    TEST_LINE( Transform( "Hallo   ", "!!!!!"    )          , "HALLO"                       )
    TEST_LINE( Transform( "Hallo   ", "!!A!!"    )          , "HAlLO"                       )
    TEST_LINE( Transform( "Hallo   ", "!!A9!"    )          , "HAllO"                       )
@@ -2153,6 +2233,7 @@ STATIC FUNCTION Main_STRINGS()
 
    SET CENTURY ON
 
+   TEST_LINE( Transform( 1         , "@b"          )       , "1         "                  )
    TEST_LINE( Transform( 1         , "@B"          )       , "1         "                  )
    TEST_LINE( Transform( 1.0       , "@B"          )       , "1.0         "                )
    TEST_LINE( Transform( 15        , "9999"        )       , "  15"                        )
@@ -3395,6 +3476,7 @@ STATIC FUNCTION TEST_BEGIN( cParam )
             ( passing by reference, avoid preprocessor bugs, etc. ) */
 
    scString  := "HELLO"
+   scStringM := "Hello"
    scStringE := ""
    scStringZ := "A" + Chr( 0 ) + "B"
    scStringW := Chr(13)+Chr(10)+Chr(141)+Chr(10)+Chr(9)

@@ -45,16 +45,17 @@
 #else
 
 #command ASSERT( <exp> [, <msg>] )      =>                              ;
-         IF ( !(<exp>) )                                                ;
-       ;   OUTSTD(                                                      ;
-                   CHR(13) + CHR(10) + PROCNAME(0) +                    ;
-                   "(" + LTRIM(STR(PROCLINE())) + ")" +                 ;
-                   "  Assertion failed: " +                             ;
-                   IF( <.msg.>, <msg>, <"exp"> )                        ;
-                 )                                                      ;
-       ;   QUIT                                                         ;
+         IF !(<exp>)                                                    ;
+       ;    OutStd(                                                     ;
+                    hb_OSNewLine() + ProcName( 0 ) +                    ;
+                    "(" + LTrim( Str( ProcLine() ) ) + ")" +            ;
+                    "  Assertion failed: " +                            ;
+                    iif( <.msg.>, <msg>, <"exp"> )                      ;
+                  )                                                     ;
+       ;    QUIT                                                        ;
        ; ENDIF
 
 #endif /* NDEBUG */
 
 #endif /* HB_ASSERT_CH_ */
+
