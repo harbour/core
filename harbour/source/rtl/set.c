@@ -391,11 +391,22 @@ HARBOUR HB_SETCANCEL( void )
 }
 
 /* $DOC$
- * $FUNCNAME$   __SETCENTURY( [<lFlag> | <cOnOff> ] ) --> lPreviousValue
- * $ARGUMENTS$  optional <lFlag> or <cOnOff> (not case sensitive)
+ * $FUNCNAME$
+ *    __SETCENTURY()
+ *
+ * $CATEGORY$
+ *    Enviroment
+ *  $ONELINER$
+ *      Set the Current Century
+
+ * $SYNTAX$
+ *    __SETCENTURY([<lFlag> | <cOnOff> ] ) --> lPreviousValue
+ * $ARGUMENTS$
+ *     optional <lFlag> or <cOnOff> (not case sensitive)
  *              .T. or "ON" to enable the century setting (4-digit years)
  *              .F. or "OFF" to disable the century setting (2-digit years)
- * $RETURNS$    Either the current or previous century setting as a logical value
+ * $RETURNS$
+      Either the current or previous century setting as a logical value
  * $END$
  */
 HARBOUR HB___SETCENTURY( void )
@@ -481,8 +492,17 @@ HARBOUR HB___SETCENTURY( void )
 }
 
 /* $DOC$
- * $FUNCNAME$   SET( <nSet> [, <xNewSetting> [, <xOption> ] ] ) --> xPreviousSetting
- * $ARGUMENTS$  <nSet>           <xNewSetting>           <xOption>
+ * $FUNCNAME$
+ *    SET()
+ * $CATEGORY$
+ *    Enviroment
+ *  $ONELINER$
+ *      Changes or evaluated enviromental settings
+
+ * $SYNTAX$
+ *    Set<nSet> [, <xNewSetting> [, <xOption> ] ] ) --> xPreviousSetting
+ * $ARGUMENTS$
+ *               <nSet>           <xNewSetting>           <xOption>
  *              _SET_ALTERNATE   <lFlag> | <cOnOff>
  *                   If enabled, QOUT() and QQOUT() write to the screen and to
  *                   a file, provided that a file has been opened or created

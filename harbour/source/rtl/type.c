@@ -37,9 +37,9 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *      TYPE
+ *      TYPE()
  *  $CATEGORY$
- *
+ *      Misc
  *  $ONELINER$
  *      Retrieves the type of an expression
  *  $SYNTAX$
@@ -59,7 +59,7 @@
  *  $COMPLIANCE$
  *      TYPE() is 
  *  $SEEALSO$
- *      VALTYPE
+ *      VALTYPE()
  *  $END$
  */
 

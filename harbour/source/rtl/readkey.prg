@@ -93,7 +93,7 @@
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
- *      @...GET, INKEY(), LASTKEY(), READ, READEXIT(), UPDATED()
+ *      '@...GET' consimpu.ngo:INKEY() consimpu.ngo:LASTKEY() 'READ' READEXIT() UPDATED()
  *  $END$
  */
 

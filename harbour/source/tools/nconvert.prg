@@ -247,7 +247,7 @@ FUNCTION DecToBin(nNumber)
  *
  *  $INCLUDE$
  *
- *  $EnNumber$
+ *  $END$
  */
 
 FUNCTION DecToOctal(nNumber)
@@ -283,7 +283,7 @@ FUNCTION DecToOctal(nNumber)
  *
  *  $INCLUDE$
  *
- *  $EnNumber$
+ *  $END$
  */
 
 FUNCTION DecToHexa(nNumber)
@@ -319,7 +319,7 @@ FUNCTION DecToHexa(nNumber)
  *
  *  $INCLUDE$
  *
- *  $EnNumber$
+ *  $END$
  */
 
 FUNCTION BinToDec(cString)
@@ -355,7 +355,7 @@ FUNCTION BinToDec(cString)
  *
  *  $INCLUDE$
  *
- *  $EnNumber$
+ *  $END$
  */
 
 FUNCTION OctalToDec(cString)
@@ -391,7 +391,7 @@ FUNCTION OctalToDec(cString)
  *
  *  $INCLUDE$
  *
- *  $EnNumber$
+ *  $END$
  */
 
 FUNCTION HexaToDec(cString)

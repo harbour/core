@@ -49,17 +49,13 @@ STATIC s_cScrn
 
 /*  $DOC$
  *  $FUNCNAME$
- *      __XSaveScreen()  (SAVE SCREEN command)
+ *      __XSaveScreen()  
  *  $CATEGORY$
  *      Data input and output
  *  $ONELINER$
  *      Save whole screen image and coordinate to an internal buffer
  *  $SYNTAX$
  *      __XSaveScreen() --> NIL
- *
- *      or
- *
- *      SAVE SCREEN
  *  $ARGUMENTS$
  *      none.
  *  $RETURNS$
@@ -92,7 +88,49 @@ STATIC s_cScrn
  *      platforms.
  *  $FILES$
  *  $SEEALSO$
- *      RESTORE SCREEN, RESTSCREEN(), SAVESCREEN()
+ *       comm.ngo:'RESTORE SCREEN' RESTSCREEN()  SAVESCREEN()
+ *  $END$
+ */
+/*  $DOC$
+ *  $FUNCNAME$
+ *     SAVE SCREEN
+ *  $CATEGORY$
+ *      Command
+ *  $ONELINER$
+ *      Save whole screen image and coordinate to an internal buffer
+ *  $SYNTAX$
+ *
+ *      SAVE SCREEN
+ *  $ARGUMENTS$
+ *      none.
+ *  $RETURNS$
+ *      SAVE SCREEN always return NIL.
+ *  $DESCRIPTION$
+ *      SAVE SCREEN save the image of the whole screen into an internal
+ *      buffer, it also save current cursor position. The information could
+ *      later be restored by REST SCREEN. Each call to SAVE SCREEN
+ *      overwrite the internal buffer.
+ *
+ *      SAVE SCREEN command is preprocessed into __XSaveScreen() function
+ *      during compile time. Note that SAVE SCREEN TO is preprocessed into
+ *      SAVESCREEN() function.
+ *
+ *  $EXAMPLES$
+ *      // save the screen, display list of files than restore the screen
+ *      SAVE SCREEN
+ *      DIR *.*
+ *      WAIT
+ *      RESTORE SCREEN
+ *  $TESTS$
+ *  $STATUS$
+ *  $COMPLIANCE$
+ *      __XSaveScreen() works exactly like CA-Clipper's __XSaveScreen()
+ *  $PLATFORMS$
+ *      __XSaveScreen() is part of the GT API, and supported only by some
+ *      platforms.
+ *  $FILES$
+ *  $SEEALSO$
+ *      comm.ngo:'RESTORE SCREEN' RESTSCREEN()  SAVESCREEN()
  *  $END$
  */
 
@@ -104,7 +142,7 @@ PROCEDURE __XSAVESCREEN()
 
 /*  $DOC$
  *  $FUNCNAME$
- *      __XRestScreen()  (RESTORE SCREEN command)
+ *      __XRestScreen()  
  *  $CATEGORY$
  *      Data input and output
  *  $ONELINER$
@@ -146,7 +184,48 @@ PROCEDURE __XSAVESCREEN()
  *      platforms.
  *  $FILES$
  *  $SEEALSO$
- *      RESTSCREEN(), SAVE SCREEN, SAVESCREEN()
+ *      RESTSCREEN()  comm.ngo:'SAVE SCREEN'  SAVESCREEN()
+ *  $END$
+ */
+/*  $DOC$
+ *  $FUNCNAME$
+ *      REST SCREEN    
+ *  $CATEGORY$
+ *      Command
+ *  $ONELINER$
+ *      Restore screen image and coordinate from an internal buffer
+ *  $SYNTAX$
+ *      RESTORE SCREEN
+ *  $ARGUMENTS$
+ *      none.
+ *  $RETURNS$
+ *      REST SCREEN always return NIL.
+ *  $DESCRIPTION$
+ *      Rest Screen restore saved image of the whole screen from an
+ *      internal buffer that was saved by Save Screen, it also restore
+ *      cursor position. After a call to Rest Screen the internal buffer
+ *      is cleared.
+ *
+ *      RESTORE SCREEN command is preprocessed into __XRestScreen() function
+ *      during compile time. Note that RESTORE SCREEN FROM is preprocessed
+ *      into RESTSCREEN() function.
+ *
+ *  $EXAMPLES$
+ *      // save the screen, display list of files than restore the screen
+ *      SAVE SCREEN
+ *      DIR *.*
+ *      WAIT
+ *      RESTORE SCREEN
+ *  $TESTS$
+ *  $STATUS$
+ *  $COMPLIANCE$
+ *      Rest Screen() works exactly like CA-Clipper's Rest Screen
+ *  $PLATFORMS$
+ *      Rest Screen is part of the GT API, and supported only by some
+ *      platforms.
+ *  $FILES$
+ *  $SEEALSO$
+ *      RESTSCREEN()   comm.ngo:'SAVE SCREEN'  SAVESCREEN()
  *  $END$
  */
 

@@ -37,9 +37,9 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *      PCOUNT
+ *      PCOUNT()
  *  $CATEGORY$
- *
+ *      Parameter Checks
  *  $ONELINER$
  *      Retrieves the number of arguments passed to a function.
  *  $SYNTAX$
@@ -67,7 +67,7 @@
  *  $COMPLIANCE$
  *      PCOUNT() is fully CA-Clipper compliant.
  *  $SEEALSO$
- *      PVALUE
+ *      HB_PVALUE()
  *  $END$
  */
 

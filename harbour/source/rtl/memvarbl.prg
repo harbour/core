@@ -39,11 +39,11 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *	MEMVARBLOCK
+ *      MEMVARBLOCK()
  *  $CATEGORY$
- *	variables management
+ *      Variable Management
  *  $ONELINER$
- *	Returns a codeblock that sets/gets a value of memvar variable
+ *      Returns a codeblock that sets/gets a value of memvar variable
  *  $SYNTAX$
  *	MEMVARBLOCK( <cMemvarName> )
  *  $ARGUMENTS$
@@ -75,7 +75,7 @@
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *	__MVGET, __MVPUT
+ *      __MVGET()  __MVPUT()
  *  $END$
  */
 

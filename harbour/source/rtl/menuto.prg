@@ -39,7 +39,7 @@ static s_nPointer := 1
 
 /*  $DOC$
  *  $FUNCNAME$
- *      __AtPrompt() (@...PROMPT command)
+ *      __AtPrompt() 
  *  $CATEGORY$
  *      Data input and output
  *  $ONELINER$
@@ -47,9 +47,6 @@ static s_nPointer := 1
  *  $SYNTAX$
  *      __AtPrompt( <nRow>, <nCol>, <cPrompt>, [<xMsg>] ) --> .F.
  *
- *      or
- *
- *      @ <nRow>, <nCol> PROMPT <cPrompt> [MESSAGE <xMsg>]
  *  $ARGUMENTS$
  *      <nRow> is the row number to display the menu <cPrompt>. Value could
  *      range from zero to MAXROW().
@@ -100,7 +97,69 @@ static s_nPointer := 1
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
- *      ACHOICE(), MENU TO, SET MESSAGE, SET INTENSITY, SET WRAP, __MenuTo()
+ *    array.ngo:ACHOICE() comm.ngo:'MENU TO' 'SET MESSAGE' 'SET INTENSITY' 'SET WRAP' __MENUTO()
+ *  $END$
+ */
+/*  $DOC$
+ *  $FUNCNAME$
+ *     @...PROMPT 
+ *  $CATEGORY$
+ *      Command
+ *  $ONELINER$
+ *      Display a menu item on screen and define a message
+ *  $SYNTAX$
+ *      @ <nRow>, <nCol> PROMPT <cPrompt> [MESSAGE <xMsg>]
+ *  $ARGUMENTS$
+ *      <nRow> is the row number to display the menu <cPrompt>. Value could
+ *      range from zero to MAXROW().
+ *
+ *      <nCol> is the column number to display the menu <cPrompt>. Value
+ *      could range from zero to MAXCOL().
+ *
+ *      <cPrompt> is the menu item character string to display.
+ *
+ *      <xMsg> define a message to display each time this menu item is
+ *      highlighted. <xMsg> could be a character string or code block that
+ *      is evaluated to a character string. If <xMsg> is not specified or
+ *      got the wrong type, an empty string ("") would be used.
+ *  $RETURNS$
+ *      @...Prompt always return .F.
+ *  $DESCRIPTION$
+ *      With @...Prompt you define and display a menu item, each call to
+ *      @...Prompt add another item to the menu, to start the menu itself
+ *      you should call the __MenuTo() function (MENU TO command). You can
+ *      define any row and column combination and they will be displayed at
+ *      the order of definition. After each call to @...Prompt, the cursor
+ *      is placed one column to the right of the last text displayed, and
+ *      ROW() and COL() are updated.
+ *
+ *      @...PROMPT command is preprocessed into __AtPrompt() function during
+ *      compile time.
+ *  $EXAMPLES$
+ *      // display a two line menu with status line at the bottom
+ *      // let the user select favorite day
+ *      SET MESSAGE TO 24 CENTER
+ *      @ 10, 2 PROMPT "Sunday" MESSAGE "This is the 1st item"
+ *      @ 11, 2 PROMPT "Monday" MESSAGE "Now we're on the 2nd item"
+ *      MENU TO nChoice
+ *      DO CASE
+ *         CASE nChoice == 0           // user press Esc key
+ *              QUIT
+ *         CASE nChoice == 1           // user select 1st menu item
+ *              ? "Guess you don't like Mondays"
+ *         CASE nChoice == 2           // user select 2nd menu item
+ *              ? "Just another day for some"
+ *      ENDCASE
+ *  $TESTS$
+ *  $STATUS$
+ *  $COMPLIANCE$
+ *      CA-Clipper array is limited to 4096 items, and therefor 4096 menu
+ *      items are the maximum that could be defined per one menu, Harbour
+ *      does not have this limit (not that you'll ever need that).
+ *  $PLATFORMS$
+ *  $FILES$
+ *  $SEEALSO$
+ *    array.ngo:ACHOICE() comm.ngo:'MENU TO' 'SET MESSAGE' 'SET INTENSITY' 'SET WRAP' datai.ngo:__MENUTO()
  *  $END$
  */
 
@@ -132,10 +191,6 @@ function __AtPrompt( nRow, nCol, cPrompt, cMsg )
  *      Invoked a menu defined by set of @...PROMPT
  *  $SYNTAX$
  *      __MenuTo( <bBlock>, <cVariable> ) --> nChoice
- *
- *      or
- *
- *      MENU TO <cVariable>
  *  $ARGUMENTS$
  *      <bBlock> is a set/get code block for variable named <cVariable>.
  *
@@ -208,8 +263,89 @@ function __AtPrompt( nRow, nCol, cPrompt, cMsg )
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
- *      @...PROMPT, ACHOICE(), SET MESSAGE, SET INTENSITY, SET WRAP,
- *      __AtPrompt()
+ *      comm.ngo:'@...PROMPT' array.ngo:ACHOICE() 'SET MESSAGE' 'SET INTENSITY' 'SET WRAP'      __ATPROMPT()
+ *  $END$
+ */
+/*  $DOC$
+ *  $FUNCNAME$
+ *     MENU TO
+ *  $CATEGORY$
+ *      Command
+ *  $ONELINER$
+ *      Invoked a menu defined by set of @...PROMPT
+ *  $SYNTAX$
+ *      MENU TO <cVariable>
+ *  $ARGUMENTS$
+ *      <cVariable> is a character string that contain the name of the
+ *      variable to hold the menu choices, if this variable does not exist
+ *      a PRIVATE variable with the name <cVariable> would be created to
+ *      hold the result.
+ *  $RETURNS$
+ *      Menu To return the number of select menu item, or 0 if there was
+ *      no item to select from or if the user pressed the Esc key.
+ *  $DESCRIPTION$
+ *      Menu To() invoked the menu define by previous __AtPrompt() call
+ *      and display a highlight bar that the user can move to select an
+ *      option from the menu. If <cVariable> does not exist or not visible,
+ *      a PRIVATE variable named <cVariable> is created and hold the current
+ *      menu selection. If there is a variable named <cVariable>, its value
+ *      is used to select the first highlighted item.
+ *
+ *      Menu prompts and messages are displayed in current Standard color,
+ *      highlighted bar is displayed using current Enhanced color.
+ *
+ *      Pressing the arrow keys move the highlighted bar. When a menu item
+ *      is highlighted the message associated with it is displayed on the
+ *      line specified with SET MESSAGE. If SET WRAP is ON and the user
+ *      press UP arrow while on the first selection the last menu item is
+ *      highlighted, if the user press Down arrow while on the last item,
+ *      the first item is highlighted.
+ *
+ *      Following are active keys that handled by Menu To:
+ *      -----------------------------------------------------
+ *
+ *      Up             - Move to previous item
+ *      Down           - Move to next item
+ *      Left           - Move to previous item
+ *      Right          - Move to next item
+ *      Home           - Move to the first item
+ *      End            - Move to the last item
+ *      Page-Up        - Select menu item, return position
+ *      Page-Down      - Select menu item, return position
+ *      Enter          - Select menu item, return position
+ *      Esc            - Abort selection, return 0
+ *      First letter   - Select next menu with the same first letter,
+ *                       return this item position.
+ *
+ *      upon exit the cursor is placed at MAXROW()-1, 0
+ *      Menu To can be nested without loosing the previous prompts.
+ *
+ *      MENU TO command is preprocessed into __MenuTo() function during
+ *      compile time.
+ *  $EXAMPLES$
+ *      // display menu item on each screen corner and let user select one
+ *      CLS
+ *      SET MESSAGE TO MAXROW()/2 CENTER
+ *      SET WRAP ON
+ *      @ 0,         0           PROMPT "1. Upper left"   MESSAGE " One "
+ *      @ 0,         MAXCOL()-16 PROMPT "2. Upper right"  MESSAGE " Two "
+ *      @ MAXROW()-1,MAXCOL()-16 PROMPT "3. Bottom right" MESSAGE "Three"
+ *      @ MAXROW()-1,0           PROMPT "4. Bottom left"  MESSAGE "Four "
+ *      MENU TO nChoice
+ *      SETPOS ( MAXROW()/2, MAXCOL()/2 - 10 )
+ *      if nChoice == 0
+ *         ?? "Esc was pressed"
+ *      else
+ *         ?? "Selected option is", nChoice
+ *      endif
+ *  $TESTS$
+ *  $STATUS$
+ *  $COMPLIANCE$
+ *
+ *  $PLATFORMS$
+ *  $FILES$
+ *  $SEEALSO$
+ *      comm.ngo:'@...PROMPT' array.ngo:ACHOICE() 'SET MESSAGE' 'SET INTENSITY' 'SET WRAP' datai.ngo:__ATPROMPT()
  *  $END$
  */
 

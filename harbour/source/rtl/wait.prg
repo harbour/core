@@ -35,9 +35,9 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *      __WAIT
+ *      __WAIT()
  *  $CATEGORY$
- *
+ *      Events
  *  $ONELINER$
  *      Stops the application until a key is pressed.
  *  $SYNTAX$
@@ -61,7 +61,7 @@
  *  $COMPLIANCE$
  *      __WAIT() is fully CA-Clipper compliant.
  *  $SEEALSO$
- *      __ACCEPT, __INPUT
+ *      __ACCEPT()   datai.ngo:__INPUT()
  *  $END$
  */
 

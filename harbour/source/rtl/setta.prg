@@ -35,9 +35,9 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *      SETTYPEAHEAD
+ *      SETTYPEAHEAD()
  *  $CATEGORY$
- *
+ *      Enviroment
  *  $ONELINER$
  *      Sets the typeahead buffer to given size.
  *  $SYNTAX$
@@ -59,7 +59,7 @@
  *  $COMPLIANCE$
  *      SETTYPEAHEAD() is fully CA-Clipper compliant.
  *  $SEEALSO$
- *      __ACCEPT, __INPUT
+ *      __ACCEPT() datai.ngo:__INPUT()
  *  $END$
  */
 

@@ -49,15 +49,66 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *      __Dir()*  (DIR command)
+ *      __Dir()*  
  *  $CATEGORY$
  *      File management
  *  $ONELINER$
  *      Display listings of files
  *  $SYNTAX$
  *      __Dir( [<cFileMask>] ) --> NIL
+ *  $ARGUMENTS$
+ *      <cFileMask> File mask to include in the function return. It could
+ *      contain path and standard wildcard characters as supported by your
+ *      OS (like * and ?). If <cFileMask> contain no path, then SET DEFAULT
+ *      path is used to display files in the mask.
+ *  $RETURNS$
+ *      __Dir() always returns NIL.
+ *  $DESCRIPTION$
+ *      If no <cFileMask> is given, __Dir() display information about all
+ *      *.dbf in the SET DEFAULT path, this information contain: file name,
+ *      number of records, last update date and the size of each file.
  *
- *      or
+ *      If <cFileMask> is given, __Dir() list all files that match the mask
+ *      with the following details: Name, Extension, Size, Date.
+ *
+ *      DIR command is preprocessed into __Dir() function during compile
+ *      time.
+ *
+ *      __Dir() is a compatibility function, it is superseded by DIRECTORY()
+ *      which return all the information in a multidimensional array.
+ *  $EXAMPLES$
+ *      __Dir()      // information for all DBF files in current directory
+ *
+ *      __Dir( "*.dbf" )         // list all DBF file in current directory
+ *
+ *      // list all PRG files in Harbour Run-Time library
+ *      // for DOS compatible operating systems
+ *      __Dir( "c:\harbour\source\rtl\*.prg" )
+ *
+ *      // list all files in the public section on a Unix like machine
+ *      __Dir( "/pub" )
+ *  $TESTS$
+ *  $STATUS$
+ *  $COMPLIANCE$
+ *      DBF information: CA-Clipper display 8.3 file names, Harbour display
+ *      the first 15 characters of a long file name if available.
+ *
+ *      File listing: To format file names displayed we use something like:
+ *      PadR( Name, 8 ) + " " + PadR( Ext, 3 )
+ *      CA-Clipper use 8.3 file name, with Harbour it would probably cut
+ *      long file names to feet this template.
+ *  $SEEALSO$
+ *      array.ngo:ADIR()  DIRECTORY()  'SET DEFAULT'
+ *  $END$
+ */
+/*  $DOC$
+ *  $FUNCNAME$
+ *      DIR
+ *  $CATEGORY$
+ *      Command
+ *  $ONELINER$
+ *      Display listings of files
+ *  $SYNTAX$
  *
  *      DIR [<cFileMask>]
  *  $ARGUMENTS$
@@ -102,7 +153,7 @@
  *      CA-Clipper use 8.3 file name, with Harbour it would probably cut
  *      long file names to feet this template.
  *  $SEEALSO$
- *      ADIR(), DIRECTORY(), SET DEFAULT
+ *      array.ngo:ADIR()  DIRECTORY()  'SET DEFAULT'
  *  $END$
  */
 

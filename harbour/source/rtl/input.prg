@@ -35,9 +35,9 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *      __INPUT
+ *      __INPUT()
  *  $CATEGORY$
- *
+ *      Data input and output
  *  $ONELINER$
  *      Stops application 
  *  $SYNTAX$
@@ -60,7 +60,7 @@
  *  $COMPLIANCE$
  *      __INPUT() is fully CA-Clipper compliant.
  *  $SEEALSO$
- *      __WAIT, __ACCEPT
+ *      event.ngo:__WAIT() __ACCEPT()
  *  $END$
  */
 

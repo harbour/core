@@ -39,9 +39,9 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *      HB_PVALUE
+ *      HB_PVALUE()
  *  $CATEGORY$
- *
+ *      Parameter Checks
  *  $ONELINER$
  *      Retrieves the value of an argument.
  *  $SYNTAX$
@@ -66,7 +66,7 @@
  *  $COMPLIANCE$
  *      HB_PVALUE() is a new function and hence not CA-Clipper compliant.
  *  $SEEALSO$
- *      PCOUNT
+ *      PCOUNT()
  *  $END$
  */
 

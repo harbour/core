@@ -1197,7 +1197,7 @@ HARBOUR HB_VAL( void )
 
 /*  $DOC$
  *  $FUNCNAME$
- *      STR
+ *      STR()
  *  $CATEGORY$
  *      Run-time Library, Strings
  *  $ONELINER$
@@ -1258,8 +1258,7 @@ HARBOUR HB_VAL( void )
  *  $COMPLIANCE$
  *      CA-Clipper compatible.
  *  $SEEALSO$
- *      STRZERO()
- *      VAL()
+ *      STRZERO()  VAL()
  *  $END$
  */
 
@@ -1317,7 +1316,7 @@ HARBOUR HB_STR( void )
 
 /*  $DOC$
  *  $FUNCNAME$
- *      STRZERO
+ *      STRZERO()
  *  $CATEGORY$
  *      Run-time Library, Strings
  *  $ONELINER$
@@ -1378,8 +1377,7 @@ HARBOUR HB_STR( void )
  *  $COMPLIANCE$
  *      CA-Clipper compatible (it was not mentioned in the docs though).
  *  $SEEALSO$
- *      STR()
- *      VAL()
+ *      runtime.ngo:STR()  VAL()
  *  $END$
  */
 
@@ -1470,7 +1468,7 @@ HARBOUR HB_STRZERO( void )
 
 /*  $DOC$
  *  $FUNCNAME$
- *      HB_VALTOSTR
+ *      HB_VALTOSTR()
  *  $CATEGORY$
  *      Strings
  *  $ONELINER$
@@ -1499,7 +1497,7 @@ HARBOUR HB_STRZERO( void )
  *  $COMPLIANCE$
  *      HB_VALTOSTR() is a Harbour enhancement.
  *  $SEEALSO$
- *      STR(), VAL()
+ *      runtime.ngo:STR()  VAL()
  *  $END$
  */
 

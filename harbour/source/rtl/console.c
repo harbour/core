@@ -182,7 +182,7 @@ char * hb_consoleGetNewLine( void )
 
 /*  $DOC$
  *  $FUNCNAME$
- *      HB_OSNewLine
+ *      HB_OSNEWLINE()
  *  $CATEGORY$
  *      Operating System Specific
  *  $ONELINER$
@@ -215,7 +215,7 @@ char * hb_consoleGetNewLine( void )
  *  $COMPLIANCE$
  *      This is an add-on Operating System Tool function.
  *  $SEEALSO$
- *      OS(), OUTSTD(), OUTERR()
+ *      dos.ngo:OS()  OUTSTD()  OUTERR()
  *  $END$
  */
 
@@ -1158,7 +1158,7 @@ HARBOUR HB___ACCEPTSTR( void )
 
 /*  $DOC$
  *  $FUNCNAME$
- *      hb_ColorIndex
+ *      hb_ColorIndex()
  *  $CATEGORY$
  *      GT
  *  $ONELINER$

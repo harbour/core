@@ -37,9 +37,9 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *      VALTYPE
+ *      VALTYPE()
  *  $CATEGORY$
- *
+ *      Misc
  *  $ONELINER$
  *      Retrieves the data type of an expression
  *  $SYNTAX$
@@ -69,7 +69,7 @@
  *  $COMPLIANCE$
  *      VALTYPE() is fully CA-Clipper compliant.
  *  $SEEALSO$
- *      TYPE
+ *      TYPE()
  *  $END$
  */
 

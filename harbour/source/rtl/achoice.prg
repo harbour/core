@@ -21,6 +21,8 @@
 /*  $DOC$
  *  $FUNCNAME$
  *      ACHOICE()
+ *  $CATEGORY$
+ *      Array
  *
  *  $ONELINER$
  *      Allows selection of an element from an array
@@ -34,11 +36,11 @@
  *         [<nWindowRow>]) --> nPosition
  *
  *  $ARGUMENTS$
- *      nTop              - topmost row used to display array (default 0)
- *      nLeft             - leftmost row used to display array (default 0)
- *      nBottom           - bottommost row used to display array (default MAXROW())
- *      nRight            - rightmost row used to display array (default MAXCOL())
- *      acMenuItems       - the character array of items from which to select
+ *      nTop           - topmost row used to display array (default 0)
+ *      nLeft          - leftmost row used to display array (default 0)
+ *      nBottom        - bottommost row used to display array (default MAXROW())
+ *      nRight         - rightmost row used to display array (default MAXCOL())
+ *      acMenuItems    - the character array of items from which to select
  *      alSelectableItems - an array of items, either logical or character,
  *                          which is used to determine if a particular item
  *                          may be selected.  If the type of a given item is
@@ -57,16 +59,16 @@
  *                          When it is called, it will be supplied with the
  *                          parameters: nMode, nCurElement, and nRowPos.
  *                          Default NIL.
- *      bUserBlock        - a codeblock to be called which may
+ *      bUserBlock     - a codeblock to be called which may
  *                          effect special processing of keystrokes. It
  *                          should be specified in the form
  *                          {|nMode, nCurElemenet, nRowPos| ;
  *                                 MyFunc(nMode, nCurElemenet, nRowPos) }.
  *                          Default NIL.
- *      nInitialItem      - the number of the element to be highlighted as
+ *      nInitialItem   - the number of the element to be highlighted as
  *                          the current item when the array is initally
  *                          displayed.  1 origin.  Default 1.
- *      nWindowRow        - the number of the window row on which the initial
+ *      nWindowRow     - the number of the window row on which the initial
  *                          item is to be displayed. 0 origin.  Default 0.
  *
  *  $RETURNS$
@@ -89,8 +91,7 @@
  *      ENDIF
  *
  *  $SEEALSO$
- *      ACHOICE() - as supplied in Clipper
- *
+ * 
  *  $END$
  */
 

@@ -39,9 +39,9 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *      WORD
+ *      WORD()
  *  $CATEGORY$
- *
+ *      Conversion
  *  $ONELINER$
  *      Converts double to integer values.
  *  $SYNTAX$
@@ -60,7 +60,7 @@
  *  $COMPLIANCE$
  *      WORD() is NOT fully CA-Clipper compliant.
  *  $SEEALSO$
- *      CALL command
+ *      'CALL' 
  *  $END$
  */
 

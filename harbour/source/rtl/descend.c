@@ -35,9 +35,9 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *      DESCEND
+ *      DESCEND()
  *  $CATEGORY$
- *
+ *      Conversion
  *  $ONELINER$
  *      Inverts an expression of string, logical, date or numeric type.
  *  $SYNTAX$
@@ -60,7 +60,7 @@
  *  $COMPLIANCE$
  *      DESCEND() is fully CA-Clipper compliant.
  *  $SEEALSO$
- *      INDEX, SEEK
+ *      'INDEX' 'SEEK'
  *  $END$
  */
 

@@ -39,9 +39,9 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *      LEN
+ *      LEN()
  *  $CATEGORY$
- *
+ *      Strings
  *  $ONELINER$
  *      Returns size of a string or size of an array.
  *  $SYNTAX$
@@ -69,7 +69,7 @@
  *  $COMPLIANCE$
  *      LEN() is fully CA-Clipper compliant.
  *  $SEEALSO$
- *      EMPTY, RTRIM, LTRIM, AADD, ASIZE
+ *      Conv.ngo:EMPTY() RTRIM() LTRIM() array.ngo:AADD() array.ngo:ASIZE()
  *  $END$
  */
 

@@ -38,9 +38,9 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *      EMPTY
+ *      EMPTY()
  *  $CATEGORY$
- *
+ *      Conversion
  *  $ONELINER$
  *      Checks if the passed argument is empty.
  *  $SYNTAX$
@@ -66,7 +66,7 @@
  *  $COMPLIANCE$
  *      EMPTY() is fully CA-Clipper compliant.
  *  $SEEALSO$
- *      LEN
+ *      LEN()
  *  $END$
  */
 

@@ -40,7 +40,7 @@
  *  $FUNCNAME$
  *      __QUIT()
  *  $CATEGORY$
- *
+ *      Events
  *  $ONELINER$
  *      Terminates an application.
  *  $SYNTAX$
@@ -65,7 +65,7 @@
  *  $COMPLIANCE$
  *      __QUIT() is fully CA-Clipper compliant.
  *  $SEEALSO$
- *      QUIT command
+ *      QUIT 
  *  $END$
  */
 

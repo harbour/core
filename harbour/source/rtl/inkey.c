@@ -985,7 +985,7 @@ HARBOUR HB_INKEY( void )
 
 /*  $DOC$
  *  $FUNCNAME$
- *      __KEYBOARD( [<cString>] )
+ *      __KEYBOARD()
  *  $CATEGORY$
  *      Console input
  *  $ONELINER$
@@ -1014,7 +1014,7 @@ HARBOUR HB_INKEY( void )
  *  $COMPLIANCE$
  *      __KEYBOARD() is compliant with CA-Clipper 5.3
  *  $SEEALSO$
- *      CLEAR TYPEAHEAD, KEYBOARD
+ *      'CLEAR TYPEAHEAD'  'KEYBOARD'
  *  $END$
  */
 
@@ -1096,7 +1096,7 @@ void hb_inkeyPut( int ch )
  *  $COMPLIANCE$
  *      Was not part of Clipper
  *  $SEEALSO$
- *      KEYBOARD, CLEAR TYPEAHEAD, INKEY
+ *      'KEYBOARD' 'CLEAR TYPEAHEAD'  INKEY()
  *  $END$
  */
 
@@ -1144,7 +1144,7 @@ HARBOUR HB___KEYPUT( void )
  *  $COMPLIANCE$
  *      NEXTKEY() is compliant with CA-Clipper 5.3
  *  $SEEALSO$
- *      INKEY(), LASTKEY()
+ *      INKEY()  LASTKEY()
  *  $END$
  */
 
@@ -1184,7 +1184,7 @@ HARBOUR HB_NEXTKEY( void )
  *  $COMPLIANCE$
  *      LASTKEY() is compliant with CA-Clipper 5.3
  *  $SEEALSO$
- *      INKEY(), LASTKEY()
+ *      INKEY()  LASTKEY()
  *  $END$
  */
 

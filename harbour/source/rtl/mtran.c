@@ -35,9 +35,9 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *      MEMOTRAN
+ *      MEMOTRAN()
  *  $CATEGORY$
- *
+ *      Strings
  *  $ONELINER$
  *      Converts hard and soft carriages within strings.
  *  $SYNTAX$
@@ -64,7 +64,7 @@
  *  $COMPLIANCE$
  *      MEMOTRAN() is fully CA-Clipper compliant.
  *  $SEEALSO$
- *      HARDCR(), STRTRAN()
+ *      HARDCR() STRTRAN()
  *  $END$
  */
 

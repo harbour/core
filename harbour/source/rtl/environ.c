@@ -63,6 +63,10 @@
    #define VER_PLATFORM_WIN32_WINDOWS 1
 #endif
 
+#if defined(__BORLANDC__) && defined(_WINDOWS_) && ! defined(VER_PLATFORM_WIN32_CE)
+   #define VER_PLATFORM_WIN32_CE 3
+#endif
+
 #include "extend.h"
 #include "errorapi.h"
 #include "hbver.h"
@@ -90,6 +94,30 @@
       #define INT_86 int86
    #endif
 #endif
+/*  $DOC$
+ *  $FUNCNAME$
+ *      OS()
+ * $ONELINER$
+ *      Return the current  operating system
+ *  $SYNTAX$
+ *      OS()   -> <cOperatinSystem>
+ *  $CATEGORY$
+ *      DOS
+ *  $ARGUMENTS$
+ *
+ *  $RETURNS$
+       <cOperatinSystem>  -> The Current operating system
+ *  $DESCRIPTION$
+        This function will return the current operating system
+ *  $EXAMPLES$
+ *      ? OS()
+ *
+ *  $FILES$
+ *      source/rtl/environ.c
+ *      Run an external program
+ *  $SEEALSO$
+ *  $END$
+ */
 
 HARBOUR HB_OS( void )
 {
@@ -136,13 +164,18 @@ HARBOUR HB_OS( void )
 /* TODO: add MSVC support but MSVC cannot detect any OS except Windows! */
 #if defined(__TURBOC__) || defined(__BORLANDC__) || defined(_MSC_VER) || defined(__MINGW32__)
 
-#if defined(_WINDOWS_) || defined(WINNT)
+#if defined(_WINDOWS_) || defined(WINNT) || defined(__BORLANDC__)
 
-/* NOTE: Support for determining the window version by Luiz Rafael Culik
-   Culik@sl.conex.net
+/* NOTE:
+    Support for determining the window version by Luiz Rafael Culik
+    Culik@sl.conex.net
+
+    Support for determining many windows flavours by Jose Lalin
+    dezac@corevia.com
 */
 
    OSVERSIONINFO osVer; /* for GetVersionEx() */
+   LONG lVersion;
 
    osVer.dwOSVersionInfoSize = sizeof( osVer );
 
@@ -153,22 +186,97 @@ HARBOUR HB_OS( void )
          case VER_PLATFORM_WIN32_WINDOWS:
             hb_osmajor = osVer.dwMajorVersion;
             hb_osminor = osVer.dwMinorVersion;
-            hb_osletter = osVer.dwBuildNumber;
-            hb_os = "Windows 95/98";
+            hb_osletter = LOWORD(osVer.dwBuildNumber);
+
+            if( hb_osmajor == 4 && hb_osminor == 0 && hb_osletter == 950 )
+               hb_os = "Windows 95";
+            else if( hb_osmajor == 4 && hb_osminor > 0 &&
+                  hb_osletter > 950 && hb_osletter <= 1080 )
+               hb_os = "Windows 95 SP1";
+            else if( hb_osmajor == 4 && hb_osminor < 10 &&
+                  hb_osletter > 1080 )
+               hb_os = "Windows 95 OSR2"; /* Formerly: "Windows 95 SP2" */
+            else if( hb_osmajor == 4 && hb_osminor == 10 &&
+                  hb_osletter == 1998 )
+               hb_os = "Windows 98";
+            else if( hb_osmajor == 4 && hb_osminor == 10 &&
+                 hb_osletter > 1998 && hb_osletter < 2183 )
+               hb_os = "Windows 98 SP1";
+            else if( hb_osmajor > 4 && hb_osletter >= 2183 )
+               hb_os = "Windows 98 SE";
+            else
+               hb_os = "Windows";
+
+            /* TODO: Can you fix it, please ?
+               strcat( hb_os, osVer.szCSDVersion );
+
+               I don't know why in each call this code returns:
+               - Windows 95 OSR2 B ...
+               - Windows 95 OSR2 B B ...
+               - Windows 95 OSR2 B B B ...
+
+               Add this info in the NT section too.
+            */
             break;
 
          case VER_PLATFORM_WIN32_NT:
             hb_osmajor = osVer.dwMajorVersion;
             hb_osminor = osVer.dwMinorVersion;
-            hb_osletter = osVer.dwBuildNumber;
-            hb_os = "Windows NT";
+            hb_osletter = LOWORD(osVer.dwBuildNumber);
+
+            if( hb_osmajor == 3 && hb_osminor == 10 )
+              hb_os = "Windows NT 3.1";
+            else if( hb_osmajor == 3 && hb_osminor == 50 )
+              hb_os = "Windows NT 3.5";
+            else if( hb_osmajor == 3 && hb_osminor == 51 )
+              hb_os = "Windows NT 3.51";
+            else if( hb_osmajor == 4 )
+              hb_os = "Windows NT 4";
+            else if( hb_osmajor == 5 )
+              hb_os = "Windows 2000";
+            else
+               hb_os = "Windows NT";
+
+            /* TODO: szCSDVersion should contain the service pack installed
+            if( osVer.szCSDVersion )
+            {
+               int i = 0;
+               WORD wServicePack;
+               char szBuffer[ 128 ];
+
+               while( osVer.szCSDVersion[ i ] != '\0' && !isdigit( osVer.szCSDVersion[ i ] ) )
+                  i++;
+               wServicePack = (WORD)( atoi( &osVer.szCSDVersion[ i ] ) );
+
+               sprintf( szBuffer, "%s %i", hb_os, wServicePack );
+               strcopy( hb_os, szBuffer );
+            }
+            */
+            /* TODO: Add support for:
+                      * NT Stand Alone Server
+                      * NT Enterprise Edition
+                      * NT Terminal Server
+                      * NT Primary Domain Controller
+                      * NT Backup Domain Controller
+
+               It can be done with:
+                RegOpenKey( "System\CurrentControlSet\Control\ProductOptions", ... )
+                RegQueryValueEx( "ProductType", ..., szBuffer )
+            */
             break;
 
          case VER_PLATFORM_WIN32s:
             hb_osmajor = osVer.dwMajorVersion;
             hb_osminor = osVer.dwMinorVersion;
-            hb_osletter = osVer.dwBuildNumber;
+            hb_osletter = LOWORD(osVer.dwBuildNumber);
             hb_os = "Windows 32s";
+            break;
+
+         case VER_PLATFORM_WIN32_CE:
+            hb_osmajor = osVer.dwMajorVersion;
+            hb_osminor = osVer.dwMinorVersion;
+            hb_osletter = LOWORD(osVer.dwBuildNumber);
+            hb_os = "Windows CE";
             break;
       }
       cformat = "%s %d.%02d.%04d";
@@ -279,12 +387,15 @@ HARBOUR HB_OS( void )
 
 #define HB_VERSION_BUFFER_LEN 80
 
+/*  Support for determining some compiler version/revision by Jose Lalin
+    dezac@corevia.com
+*/
 
 char * hb_version( USHORT uiMode )
 {
    char * pszVersion;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_version(%hu)", uiMode));
+/*   HB_TRACE(("hb_version(%hu)", uiMode));  */
 
    pszVersion = ( char * ) hb_xgrab( HB_VERSION_BUFFER_LEN );
 
@@ -457,9 +568,12 @@ HARBOUR HB_GETE( void )
 
 /*  $DOC$
  *  $FUNCNAME$
- *      __RUN
+ *      __RUN()
  *  $SYNTAX$
  *      __RUN( <cCommand> )
+ *  $CATEGORY$
+ *      DOS
+ *
  *  $ARGUMENTS$
  *      <cCommand> Command to execute
  *  $DESCRIPTION$
@@ -486,4 +600,3 @@ HARBOUR HB___RUN( void )
    hb_errRT_BASE_Ext1( EG_UNSUPPORTED, 9999, NULL, "__RUN", 0, EF_CANDEFAULT );
 #endif
 }
-

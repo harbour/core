@@ -51,7 +51,7 @@
  *  $FUNCNAME$
  *      FIELDBLOCK()
  *  $CATEGORY$
- *      Code block manipulation / Databases
+ *      Code Block
  *  $ONELINER$
  *      Return a code block that sets/gets a value for a given field
  *  $SYNTAX$
@@ -90,7 +90,7 @@
  *
  *      CA-Clipper would raise BASE/1003 error if the field does not exist.
  *  $SEEALSO$
- *      EVAL(), FIELDWBLOCK(), MEMVARBLOCK()
+ *      EVAL()  FIELDWBLOCK()  mv.ngo:MEMVARBLOCK()
  *  $END$
  */
 
@@ -107,7 +107,7 @@ FUNCTION FIELDBLOCK( cFieldName )
  *  $FUNCNAME$
  *      FIELDWBLOCK()
  *  $CATEGORY$
- *      Code block manipulation / Databases
+ *      Code Block
  *  $ONELINER$
  *      Return a sets/gets code block for field in a given work area
  *  $SYNTAX$
@@ -156,7 +156,7 @@ FUNCTION FIELDBLOCK( cFieldName )
  *
  *      CA-Clipper would raise BASE/1003 error if the field does not exist.
  *  $SEEALSO$
- *      EVAL(), FIELDBLOCK(), MEMVARBLOCK()
+ *      EVAL()  FIELDBLOCK() mv.ngo:MEMVARBLOCK()
  *  $END$
  */
 

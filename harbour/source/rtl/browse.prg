@@ -108,7 +108,7 @@
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *      DBEDIT(), TBrowse class
+ *      DBEDIT()* 'TBrowse class'
  *  $END$
  */
 

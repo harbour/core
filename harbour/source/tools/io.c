@@ -16,6 +16,7 @@
  *  $CATEGORY$
  *     DOS
  *  $ONELINER$
+ *     Change the Current Directory
  *  $SYNTAX$
  *     CD(<NDIR>)
  *  $ARGUMENTS$
@@ -34,7 +35,7 @@
  *     ENDIF
  *
  *  $SEEALSO$
- *
+ *      MD() RD()
  *  $INCLUDE$
  *     extend.h dos.h dir.h bios.h
  *  $END$
@@ -55,7 +56,7 @@ HARBOUR HB_CD( void )
  *  $CATEGORY$
  *     DOS
  *  $ONELINER$
- *
+ *     Creates a Directory
  *  $SYNTAX$
  *     MD(<NDIR>)
  *  $ARGUMENTS$
@@ -74,7 +75,7 @@ HARBOUR HB_CD( void )
  *  ENDIF
  *
  *  $SEEALSO$
- *
+ *     CD() MD()
  *  $INCLUDE$
  *     extend.h dos.h dir.h bios.h
  *  $END$
@@ -95,7 +96,7 @@ HARBOUR HB_MD(void)
  *  $CATEGORY$
  *     DOS
  *  $ONELINER$
- *
+ *     Remove a Directory
  *  $SYNTAX$
  *     RD(<NDIR>)
  *  $ARGUMENTS$
@@ -114,7 +115,7 @@ HARBOUR HB_MD(void)
  *  ENDIF
  *
  *  $SEEALSO$
- *
+ *     CD() MD()
  *  $INCLUDE$
  *     extend.h dos.h dir.h bios.h
  *  $END$

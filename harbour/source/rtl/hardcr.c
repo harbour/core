@@ -35,9 +35,9 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *      HARDCR
+ *      HARDCR()
  *  $CATEGORY$
- *
+ *      STRINGS
  *  $ONELINER$
  *      Converts soft carriage pair chr(141)/chr(10) into hard carriage chr(13)
  *  $SYNTAX$
@@ -60,7 +60,7 @@
  *  $COMPLIANCE$
  *      HARDCR() is fully CA-Clipper compliant.
  *  $SEEALSO$
- *      MEMOTRAN(), STRTRAN()
+ *      MEMOTRAN() STRTRAN()
  *  $END$
  */
 

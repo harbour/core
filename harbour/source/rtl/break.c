@@ -38,9 +38,9 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *      BREAK
+ *      BREAK()
  *  $CATEGORY$
- *
+ *      Error recovery
  *  $ONELINER$
  *      Exits from a BEGIN SEQUENCE block
  *  $SYNTAX$
@@ -61,7 +61,7 @@
  *  $COMPLIANCE$
  *      BREAK() is fully CA-Clipper compliant.
  *  $SEEALSO$
- *      BEGIN SEQUENCE
+ *      'BEGIN SEQUENCE'
  *  $END$
  */
 

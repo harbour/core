@@ -54,9 +54,9 @@ static s_aSetKeys := {}       // holds array of hot-key id, code-block, activati
 
 /*  $DOC$
  *  $FUNCNAME$
- *      SetKey
+ *      SETKEY()
  *  $CATEGORY$
- *      ?
+ *      Events
  *  $ONELINER$
  *      Assign an action block to a key
  *  $SYNTAX$
@@ -84,7 +84,8 @@ static s_aSetKeys := {}       // holds array of hot-key id, code-block, activati
  *
  *      // make F10 exit current get, but only if in a get - ignores other
  *      // wait-states such as menus, achoices, etc...
- *      SetKey( K_F10, {|| GetActive():State := GE_WRITE }, {|| GetActive() != NIL } )
+ *      SetKey( K_F10, {|| GetActive():State := GE_WRITE },;
+ *       {|| GetActive() != NIL } )
  *  $TESTS$
  *      None definable
  *  $STATUS$
@@ -95,7 +96,7 @@ static s_aSetKeys := {}       // holds array of hot-key id, code-block, activati
  *      be conditionally turned off or on.  This condition-block cannot be
  *      returned once set - see SetKeyGet()
  *  $SEEALSO$
- *      SETKEYSAVE()
+ *      HB_SETKEYSAVE()
  *  $END$
  */
 Function SetKey( anKey, bBlock, bCondition )
@@ -137,9 +138,9 @@ return bReturn
 
 /*  $DOC$
  *  $FUNCNAME$
- *      HB_SetKeyGet
+ *      HB_SetKeyGet()
  *  $CATEGORY$
- *      ?
+ *      Events
  *  $ONELINER$
  *      Determine a set-key code block & condition-block
  *  $SYNTAX$
@@ -165,7 +166,7 @@ return bReturn
  *  $COMPLIANCE$
  *      HB_SETKEYGET() is a new function and hence not CA-Clipper compliant.
  *  $SEEALSO$
- *      SETKEY(), HB_SETKEYSAVE(), HB_SETKEYCHECK()
+ *      SETKEY()  HB_SETKEYSAVE()  HB_SETKEYCHECK()
  *  $END$
  */
 Function HB_SetKeyGet( nKey, bCondition )
@@ -188,11 +189,12 @@ return NIL //bReturn
 
 /*  $DOC$
  *  $FUNCNAME$
- *      HB_SetKeySave
+ *      HB_SETKEYSAVE()
  *  $CATEGORY$
- *      ?
+ *      Events
  *  $ONELINER$
- *      Returns a copy of internal set-key list, optionally overwriting
+ *      Returns a copy of internal set-key list,
+ *      optionally overwriting
  *  $SYNTAX$
  *      HB_SETKEYSAVE( [ <OldKeys> ] )
  *  $ARGUMENTS$
@@ -240,9 +242,9 @@ return aReturn
 
 /*  $DOC$
  *  $FUNCNAME$
- *      HB_SetKeyCheck
+ *      HB_SetKeyCheck()
  *  $CATEGORY$
- *      ?
+ *      Events
  *  $ONELINER$
  *      Impliments common hot-key activation code
  *  $SYNTAX$
@@ -255,11 +257,11 @@ return aReturn
  *      True if there is a hot-key associated with <nKey> and it was executed;
  *      otherwise False
  *      If there is a hot-key association (before checking any condition):
- *        - if there is a condition-block, it is passed one parameter - <nKey>
- *        - when the hot-key code-block is called, it is passed 1 to 4 parameters,
- *          depending on the parameters passed to HB_SetKeyCheck().  Any 
- *          parameters so passed are directly passed to the code-block, with an 
- *          additional parameter being <nKey>
+ *      - if there is a condition-block, it is passed one parameter - <nKey>
+ *      - when the hot-key code-block is called, it is passed 1 to 4 parameters,
+ *      depending on the parameters passed to HB_SetKeyCheck().  Any 
+ *      parameters so passed are directly passed to the code-block, with an 
+ *      additional parameter being <nKey>
  *  $DESCRIPTION$
  *      HB_SetKeyCheck() is intended as a common interface to the SetKey()
  *      functionality for such functions as ACHOICE(), DBEDIT(), MEMOEDIT(),
@@ -281,7 +283,7 @@ return aReturn
  *  $COMPLIANCE$
  *      HB_SETKEYCHECK() is new.
  *  $SEEALSO$
- *      SETKEY(), HB_SETKEYSAVE()
+ *      SETKEY()  HB_SETKEYSAVE()
  *  $END$
  */
 Function HB_SetKeyCheck( nKey, p1, p2, p3 )

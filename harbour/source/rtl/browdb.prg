@@ -83,7 +83,7 @@
  *  $COMPLIANCE$
  *      TBrowseDB() works exactly like CA-Clipper's TBrowseDB().
  *  $SEEALSO$
- *      BROWSE(), TBColumn class, TBrowse class, TBrowseNew()
+ *      BROWSE()  'TBColumn class'  'TBrowse class' TBrowseNew()
  *  $END$
  */
 
@@ -105,7 +105,7 @@ FUNCTION TBrowseDB( nTop, nLeft, nBottom, nRight )
  *  $FUNCNAME$
  *      dbSkipper()
  *  $CATEGORY$
- *      Databases
+ *      Data base
  *  $ONELINER$
  *      Helper function to skip a database
  *  $SYNTAX$
@@ -139,7 +139,7 @@ FUNCTION TBrowseDB( nTop, nLeft, nBottom, nRight )
  *      This function is only visible if source/rtl/browdb.prg was compiled
  *      with the HB_COMPAT_XPP flag.
  *  $SEEALSO$
- *      DBSKIP(), SKIP
+ *      DBSKIP()  SKIP
  *  $END$
  */
 

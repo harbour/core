@@ -48,7 +48,7 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *      DEVOUTPICT
+ *      DEVOUTPICT()
  *  $CATEGORY$
  *      Terminal
  *  $ONELINER$
@@ -63,8 +63,8 @@
  *  $RETURNS$
  *      NIL
  *  $DESCRIPTION$
- *      Outputs any expression using a picture transformation instead of using
- *      the default transformation for the type of expression.
+ *      Outputs any expression using a picture transformation instead of
+ *      using the default transformation for the type of expression.
  *  $EXAMPLES$
  *      // Output a negative dollar amount using debit notation.
  *      DEVOUTPICT( -1.25, "@D$ 99,999.99 )
@@ -78,7 +78,7 @@
  *      DEVOUTPICT() is mostly CA-Clipper compliant. Any differences are due
  *      to enhancements in the Harbour TRANSFORM() over CA-Clipper.
  *  $SEEALSO$
- *      DEVOUT(), TRANSFORM().
+ *      DEVOUT() TRANSFORM()
  *  $END$
  */
 

@@ -71,7 +71,7 @@
  *  $COMPLIANCE$
  *      ERRORSYS() works exactly like CA-Clipper's ERRORSYS().
  *  $SEEALSO$
- *      ERRORBLOCK(), Error class
+ *      ERRORBLOCK()  'Error class'
  *  $END$
  */
 

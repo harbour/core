@@ -134,7 +134,7 @@ STATIC s_lNoAlert := NIL
  *
  *      <nDelay> is an Harbour extension.
  *  $SEEALSO$
- *      @...PROMPT, MENU TO, STDOUT(), __NONOALERT()
+ *      'comm.ngo:@...PROMPT'  'comm.ngo:MENU TO'  STDOUT() __NONOALERT()
  *  $END$
  */
 

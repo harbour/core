@@ -90,7 +90,7 @@
  *  $FUNCNAME$
  *      TONE()
  *  $CATEGORY$
- *      Misc.
+ *      Misc
  *  $ONELINER$
  *      Sound a tone with a specifies frequency and duration
  *  $SYNTAX$
@@ -130,7 +130,7 @@
  *  $COMPLIANCE$
  *      TONE() works exactly like CA-Clipper's TONE().
  *  $SEEALSO$
- *      CHR(), SET BELL
+ *      CHR()  'SET BELL'
  *  $END$
  */
 

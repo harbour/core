@@ -49,7 +49,7 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *      ADIR()*
+ *      ADIR()
  *  $CATEGORY$
  *      Array
  *  $ONELINER$
@@ -117,8 +117,9 @@
  *  $COMPLIANCE$
  *      <aName> is going to be fill with long file name and not necessarily
  *      the 8.3 uppercase name.
+ *  
  *  $SEEALSO$
- *      ARRAY(), DIRECTORY(), SET DEFAULT
+ *      ARRAY()  DIRECTORY() 'SET DEFAULT'
  *  $END$
  */
 

@@ -81,7 +81,7 @@ ANNOUNCE CLIPPER530
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
- *      INIT PROCEDURE
+ *      'INIT PROCEDURE'
  *  $END$
  */
 
@@ -123,7 +123,7 @@ INIT PROCEDURE ClipInit
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
- *      __XHelp(), SET KEY, SETKEY()
+ *      __XHelp()  'SET KEY'  Event.ngo:SETKEY()
  *  $END$
  */
 

@@ -88,7 +88,6 @@ static void hb_memvarCreateFromItem( PHB_ITEM, BYTE, PHB_ITEM );
 static void hb_memvarCreateFromDynSymbol( PHB_DYNS, BYTE, PHB_ITEM );
 static void hb_memvarAddPrivate( PHB_DYNS );
 static HB_DYNS_PTR hb_memvarFindSymbol( HB_ITEM_PTR );
-
 void hb_memvarsInit( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_memvarsInit()"));
@@ -514,7 +513,7 @@ void hb_memvarGetRefer( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
       hb_errInternal( 9999, "Invalid symbol item passed as memvar %s", pMemvarSymb->szName, NULL );
 }
 
-/* Create a new variable declared as procedure/function PARAMETER
+/*
  */
 void hb_memvarNewParameter( PHB_SYMB pSymbol, PHB_ITEM pValue )
 {
@@ -523,13 +522,6 @@ void hb_memvarNewParameter( PHB_SYMB pSymbol, PHB_ITEM pValue )
    hb_memvarCreateFromDynSymbol( pSymbol->pDynSym, HB_MV_PRIVATE, pValue );
 }
 
-/* This function returns a string value of memvar variable with passed name.
- * If a requested variable does not exist or contains non-string value
- * then the NULL pointer is returned.
- * NOTE:
- *    This is a helper function for macro text substitution
- *    var1 := "&var2.value"
- */
 char * hb_memvarGetStrValuePtr( char * szVarName, ULONG *pulLen )
 {
    HB_ITEM itName;
@@ -565,7 +557,6 @@ char * hb_memvarGetStrValuePtr( char * szVarName, ULONG *pulLen )
 
    return szValue;
 }
-
 
 /*
  * This function creates a value for memvar variable
@@ -891,19 +882,12 @@ static HB_DYNS_PTR hb_memvarFindSymbol( HB_ITEM_PTR pName )
 
    if( pName )
    {
-      ULONG ulLen;
-
-      /* truncate a passed name to maximal allowed symbol name
-       */
-      if( pName->item.asString.length < HB_SYMBOL_NAME_LEN )
-         ulLen = pName->item.asString.length;
-      else
-         ulLen = HB_SYMBOL_NAME_LEN;
+      ULONG ulLen = pName->item.asString.length;
 
       if( ulLen )
       {
+         char * szName = ( char * ) hb_xgrab( ulLen + 1 );
          char * szArg  = pName->item.asString.value;
-         char szName[ HB_SYMBOL_NAME_LEN + 1 ];
 
          szName[ ulLen ] = '\0';
          do
@@ -913,6 +897,7 @@ static HB_DYNS_PTR hb_memvarFindSymbol( HB_ITEM_PTR pName )
          } while( ulLen );
 
          pDynSym = hb_dynsymFind( szName );
+         hb_xfree( szName );
       }
    }
    return pDynSym;
@@ -926,7 +911,7 @@ static HB_DYNS_PTR hb_memvarFindSymbol( HB_ITEM_PTR pName )
  *  $FUNCNAME$
  *    __MVPUBLIC()
  *  $CATEGORY$
- *    Variable management
+ *    Variable Management
  *  $ONELINER$
  *    This function creates a PUBLIC variable
  *  $SYNTAX$
@@ -1008,7 +993,7 @@ HARBOUR HB___QQPUB( void )
  *  $FUNCNAME$
  *    __MVPRIVATE()
  *  $CATEGORY$
- *    Variable management
+ *    Variable Management
  *  $ONELINER$
  *    This function creates a PRIVATE variable
  *  $SYNTAX$
@@ -1079,7 +1064,7 @@ HARBOUR HB___MVPRIVATE( void )
  *  $FUNCNAME$
  *    __MVXRELEASE()
  *  $CATEGORY$
- *    Variable management
+ *    Variable Management
  *  $ONELINER$
  *    This function releases value stored in PRIVATE or PUBLIC variable
  *  $SYNTAX$
@@ -1175,7 +1160,7 @@ HARBOUR HB___MVXRELEASE( void )
  *  $FUNCNAME$
  *    __MVRELEASE()
  *  $CATEGORY$
- *    Variable management
+ *    Variable Management
  *  $ONELINER$
  * This function releases PRIVATE variables created in current procedure
  *  $SYNTAX$
@@ -1239,7 +1224,7 @@ HARBOUR HB___MVRELEASE( void )
  *  $FUNCNAME$
  *    __MVSCOPE()
  *  $CATEGORY$
- *    Variable management
+ *    Variable Management
  *  $ONELINER$
  *    If variable exists then returns its scope.
  *  $SYNTAX$
@@ -1313,7 +1298,7 @@ HARBOUR HB___MVSCOPE( void )
  *  $FUNCNAME$
  *    __MVCLEAR()
  *  $CATEGORY$
- *    Variable management
+ *    Variable Management
  *  $ONELINER$
  *    This function releases all PRIVATE and PUBLIC variables
  *  $SYNTAX$
@@ -1347,7 +1332,7 @@ HARBOUR HB___MVCLEAR( void )
  *  $FUNCNAME$
  *    __MVDBGINFO()
  *  $CATEGORY$
- *    Variable management
+ *    Variable Management
  *  $ONELINER$
  *    This function returns the information about the variables for debugger
  *  $SYNTAX$
@@ -1514,7 +1499,7 @@ HARBOUR HB___MVDBGINFO( void )
  *  $FUNCNAME$
  *    __MVGET()
  *  $CATEGORY$
- *    Variable management
+ *    Variable Management
  *  $ONELINER$
  *    This function returns value of memory variable
  *  $SYNTAX$
@@ -1535,7 +1520,7 @@ HARBOUR HB___MVDBGINFO( void )
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *    MVPUT()
+ *    __MVPUT()
  *  $END$
  */
 HARBOUR HB___MVGET( void )
@@ -1607,7 +1592,7 @@ HARBOUR HB___MVGET( void )
  *  $FUNCNAME$
  *    __MVPUT()
  *  $CATEGORY$
- *    Variable management
+ *    Variable Management
  *  $ONELINER$
  *    This function set the value of memory variable
  *  $SYNTAX$
@@ -1632,7 +1617,7 @@ HARBOUR HB___MVGET( void )
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *    MVPUT()
+ *    __MVPUT()
  *  $END$
  */
 HARBOUR HB___MVPUT( void )

@@ -94,9 +94,9 @@ char * hb_nationGetMsg( USHORT uiMsg )
 
 /*  $DOC$
  *  $FUNCNAME$
- *      ISAFFIRM
+ *      ISAFFIRM()
  *  $CATEGORY$
- *
+ *      NATION
  *  $ONELINER$
  *      Checks if passed char is an affirmation char
  *  $SYNTAX$
@@ -118,7 +118,7 @@ char * hb_nationGetMsg( USHORT uiMsg )
  *  $COMPLIANCE$
  *      ISAFFIRM() is fully CA-Clipper compliant.
  *  $SEEALSO$
- *      ISNEGATIVE, NATIONMSG
+ *      ISNEGATIVE()  NATIONMSG()
  *  $END$
  */
 
@@ -131,9 +131,9 @@ HARBOUR HB_ISAFFIRM( void )
 
 /*  $DOC$
  *  $FUNCNAME$
- *      ISNEGATIVE
+ *      ISNEGATIVE()
  *  $CATEGORY$
- *
+ *      NATION
  *  $ONELINER$
  *      Checks if passed char is a negation char
  *  $SYNTAX$
@@ -155,7 +155,7 @@ HARBOUR HB_ISAFFIRM( void )
  *  $COMPLIANCE$
  *      ISNEGATIVE() is fully CA-Clipper compliant.
  *  $SEEALSO$
- *      ISAFFIRM, NATIONMSG
+ *      ISAFFIRM() NATIONMSG()
  *  $END$
  */
 
@@ -168,9 +168,9 @@ HARBOUR HB_ISNEGATIVE( void )
 
 /*  $DOC$
  *  $FUNCNAME$
- *      NATIONMSG
+ *      NATIONMSG()
  *  $CATEGORY$
- *
+ *      NATION
  *  $ONELINER$
  *      Returns international strings messages.
  *  $SYNTAX$
@@ -194,7 +194,7 @@ HARBOUR HB_ISNEGATIVE( void )
  *  $COMPLIANCE$
  *      NATIONMSG() is fully CA-Clipper compliant.
  *  $SEEALSO$
- *      ISAFFIRM, ISNEGATIVE
+ *      ISAFFIRM() ISNEGATIVE()
  *  $END$
  */
 

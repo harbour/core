@@ -48,9 +48,9 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *      PROCNAME
+ *      PROCNAME()
  *  $CATEGORY$
- *
+ *      Misc
  *  $ONELINER$
  *      Gets the name of the current function on the stack
  *  $SYNTAX$
@@ -79,7 +79,7 @@
  *  $COMPLIANCE$
  *      PROCNAME() is fully CA-Clipper compliant.
  *  $SEEALSO$
- *      PROCLINE, PROCFILE
+ *      PROCLINE() PROCFILE()
  *  $END$
  */
 
@@ -114,9 +114,9 @@ HARBOUR HB_PROCNAME( void )
 
 /*  $DOC$
  *  $FUNCNAME$
- *      PROCLINE
+ *      PROCLINE()
  *  $CATEGORY$
- *
+ *      Misc
  *  $ONELINER$
  *      Gets the line number of the current function on the stack
  *  $SYNTAX$
@@ -142,7 +142,7 @@ HARBOUR HB_PROCNAME( void )
  *  $COMPLIANCE$
  *      PROCLINE() is fully CA-Clipper compliant.
  *  $SEEALSO$
- *      PROCNAME, PROCFILE
+ *      PROCNAME() PROCFILE()
  *  $END$
  */
 
@@ -162,9 +162,9 @@ HARBOUR HB_PROCLINE( void )
 
 /*  $DOC$
  *  $FUNCNAME$
- *      PROCFILE
+ *      PROCFILE()
  *  $CATEGORY$
- *
+ *      Misc
  *  $ONELINER$
  *      This function allways returns an empty string.
  *  $SYNTAX$
@@ -189,7 +189,7 @@ HARBOUR HB_PROCLINE( void )
  *  $COMPLIANCE$
  *      PROCFILE() is fully CA-Clipper compliant.
  *  $SEEALSO$
- *      PROCNAME, PROCLINE
+ *      PROCNAME() PROCLINE()
  *  $END$
  */
 
