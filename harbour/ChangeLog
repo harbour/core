@@ -1,3 +1,8 @@
+19991021-09:14 GMT+3 Alexander Kresin
+  + contrib/odbc/todbc.prg
+  + contrib/odbc/readme.txt
+    * These files I got from Felipe Coury
+
 19991021-00:50 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/environ.c
      changed defined(_Windows) to defined(_WINDOWS_) since this is
