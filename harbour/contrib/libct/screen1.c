@@ -56,7 +56,7 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *      SCREENATTE()
+ *      SCREENATTR()
  *  $CATEGORY$
  *      CT3 video functions
  *  $ONELINER$
@@ -102,19 +102,19 @@ HB_FUNC( SCREENATTR )
   iCol = hb_parni( 2 );
 
   hb_gtRectSize( iRow, iCol, iRow, iCol, &uiSize );
-  pcPos = (char * ) hb_xalloc( uiSize );
+  pcPos = (char * ) hb_xalloc( uiSize + 1 );
 
   if( pcPos != NULL )
   {
      hb_gtSave( iRow, iCol, iRow, iCol, pcPos );
 
-     pcPos[1] = pcPos[2];
-     pcPos[2] = 0x00;
 
-     hb_retc_buffer( pcPos );
+     hb_retni( ( int ) pcPos[1] );
   }
   else
-     hb_retc( NULL );
+     hb_retni( 0 );
+
+  hb_xfree( pcPos );
 
 }
 
