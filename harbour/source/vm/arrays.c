@@ -52,9 +52,11 @@
 #include "hbapilng.h"
 #include "hbvm.h"
 
+static HB_GARBAGE_FUNC( hb_arrayReleaseGarbage );
+
 BOOL hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ) /* creates a new array */
 {
-   PHB_BASEARRAY pBaseArray = ( PHB_BASEARRAY ) hb_xgrab( sizeof( HB_BASEARRAY ) );
+   PHB_BASEARRAY pBaseArray = ( PHB_BASEARRAY ) hb_gcAlloc( sizeof( HB_BASEARRAY ), hb_arrayReleaseGarbage );
    ULONG ulPos;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_arrayNew(%p, %lu)", pItem, ulLen));
@@ -619,7 +621,7 @@ BOOL hb_arrayRelease( PHB_ITEM pArray )
       if( pBaseArray->pItems )
          hb_xfree( pBaseArray->pItems );
 
-      hb_xfree( pBaseArray );
+      hb_gcFree( (void *)pBaseArray );
 
       pArray->type = HB_IT_NIL;
       pArray->item.asArray.value = NULL;
@@ -733,5 +735,24 @@ PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray )
    }
 
    return pDstArray;
+}
+
+/* This releases array when called from the garbage collector */
+static HB_GARBAGE_FUNC( hb_arrayReleaseGarbage )
+{
+   PHB_BASEARRAY pBaseArray = ( PHB_BASEARRAY ) Cargo;
+
+   if( pBaseArray->pItems )
+   {
+      HB_ITEM_PTR pItem = pBaseArray->pItems;
+      ULONG ulLen = pBaseArray->ulLen;
+      
+      while( ulLen-- )
+      {
+         pBaseArray->uiHolders = 0;    /* to prevent cyclic release of this array */
+         hb_itemClear( pItem++ );
+      }
+      hb_xfree( pBaseArray->pItems );
+   }         
 }
 

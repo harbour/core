@@ -1,3 +1,47 @@
+2000-06-24 20:10 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+    *include/hbapi.h
+        * added declarations of garbage collector functions hb_gc*()
+        * added declarations of idle state tasks functions hb_idle*()
+
+    *source/rtl/idle.c
+        * new module that handles harbour idle states
+            *hb_idleState() gets called from INKEY() function - it releases
+            CPU timeslices, calls the garbage collector and executes
+            user defined background tasks
+            *HB_IAMIDLE() - signals that user code is in idle state
+            *HB_ADDIDLE(), HB_DELIDLE() - handle background tasks
+        
+    *tests/Makefile
+    *tests/onidle.prg
+        * test program that demonstrate background tasks
+        
+    *source/vm/garbage.c
+        * new module with the garbage collector code
+        
+    *source/rtl/Makefile
+        * added a new file idle.c
+        
+    *source/rtl/errorapi.c
+    *source/rtl/inkey.c
+        * fixed to correct support idle states and garbage collector
+       
+NOTICE: static HB_ITEM structures cannot be initialized with hb_itemClear()
+  call because the structure can occupy a memory with random bits set
+   
+    *source/vm/Makefile
+        * added a new file garbage.c
+        
+    *source/vm/arrays.c
+    *source/vm/codebloc.c
+    *source/vm/memvars.c
+    *source/vm/hvm.c
+        * fixed to correct support idle states and the garbage collector
+
+    *makefile.bc
+    *makefile.vc
+        *updated to support idle states and the garbage collector
+        
 2000-06-23 22:45 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
     *contrib/samples/gauge.c
         *Fixed a small bug on Gaugenew()

@@ -40,6 +40,7 @@ C_SOURCES=\
 	gtapiu.c     \
 	gx.c         \
 	hardcr.c     \
+	idle.c       \
 	inkey.c      \
 	is.c         \
 	isprint.c    \

@@ -347,14 +347,16 @@ void hb_vmQuit( void )
 
    hb_itemClear( &hb_stack.Return );
    hb_arrayRelease( &s_aStatics );
+   hb_memvarsRelease();
    hb_rddShutDown();
+   hb_idleShutDown();
    hb_errExit();
    hb_clsReleaseAll();
    hb_vmReleaseLocalSymbols();  /* releases the local modules linked list */
    hb_dynsymRelease();          /* releases the dynamic symbol table */
    hb_conRelease();             /* releases Console */
    hb_setRelease();             /* releases Sets */
-   hb_memvarsRelease();
+   hb_gcCollectAll();    /* release all known garbage */
    hb_stackFree();
 /* hb_dynsymLog(); */
    hb_xexit();
@@ -4364,4 +4366,37 @@ WINBASEAPI LONG WINAPI UnhandledExceptionFilter( struct _EXCEPTION_POINTERS * Ex
 }
 
 #endif
+
+/* ------------------------------------------------------------------------ */
+/* The garbage collector interface */
+/* ------------------------------------------------------------------------ */
+
+/* check if passed pointer is referenced on the eval stack (local variables) 
+   Returns TRUE if is referenced otherwise returns FALSE;
+*/
+BOOL hb_vmIsLocalRef( void *pBlock )
+{
+   if( hb_stack.pPos > hb_stack.pItems )
+   {
+      /* the eval stack is not cleared yet */
+      HB_ITEM_PTR pItem = hb_stack.pPos - 1;
+      while( pItem != hb_stack.pItems )
+      {
+         if( hb_gcItemRef( pItem, pBlock ) )
+            return TRUE;
+         else
+            --pItem;
+      }
+   }
+   return FALSE;
+}
+
+/* check if passed pointer is referenced in static variables
+   Returns TRUE if is referenced otherwise returns FALSE;
+*/
+BOOL hb_vmIsStaticRef( void *pBlock )
+{
+   /* statics are stored as an item of array type */
+   return hb_gcItemRef( &s_aStatics, pBlock );
+}
 

@@ -88,6 +88,7 @@ PRG_SOURCES=\
 	multiarg.prg \
 	nums.prg \
 	objects.prg \
+	onidle.prg \
 	os.prg \
 	output.prg \
 	overload.prg \

@@ -17,6 +17,7 @@ C_SOURCES=\
 	eval.c       \
 	extend.c     \
 	fm.c         \
+	garbage.c    \
 	hvm.c        \
 	initexit.c   \
 	initsymb.c   \

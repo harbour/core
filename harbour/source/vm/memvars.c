@@ -1468,3 +1468,31 @@ HB_FUNC( __MVRESTORE )
       hb_errRT_BASE( EG_ARG, 2007, NULL, "__MRESTORE" );
 }
 
+/* ----------------------------------------------------------------------- */
+/* The garbage collector interface */
+/* ----------------------------------------------------------------------- */
+
+
+/* check if passed pointer is referenced in memvar variable
+   Returns TRUE if it is referenced otherwise returns FALSE;
+*/
+BOOL hb_memvarsIsMemvarRef( void *pBlock )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarsIsMemvarRef(%p)", pBlock));
+
+   if( s_globalTable )
+   {
+      ULONG ulCnt = s_globalLastFree;
+
+      while( ulCnt )
+      {
+         if( s_globalTable[ ulCnt ].counter )
+         {
+            if( hb_gcItemRef( &s_globalTable[ ulCnt ].item, pBlock ) )
+               return TRUE;   /* this item is referenced - stop processing */
+         }
+         --ulCnt;
+      }
+   }
+   return FALSE;
+}

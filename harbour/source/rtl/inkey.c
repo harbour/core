@@ -66,43 +66,6 @@ static BOOL   s_inkeyPoll;       /* Flag to override no polling when TYPEAHEAD i
 static int    s_inkeyForce;      /* Variable to hold keyboard input when TYPEAHEAD is 0 */
 static HB_inkey_enum s_eventmask;
 
-void hb_releaseCPU( void )
-{
-   HB_TRACE(HB_TR_DEBUG, ("releaseCPU()"));
-
-   /* TODO: Add code to release time slices on all platforms */
-
-#if defined(HB_OS_WIN_32)
-   /* according to ms docs, you should not do this in a Win app. dos only */
-#elif defined(HB_OS_OS2)
-   DosSleep( 25 ); /* Duration is in milliseconds */
-#elif defined(HB_OS_DOS)
-
-   /* NOTE: there is a bug under NT 4 and 2000 -  if the app is running
-      in protected mode, time slices will _not_ be released - you must switch
-      to real mode first, execute the following, and switch back.
-
-      It just occurred to me that this is actually by design.  Since MS doesn't
-      want you to do this from a console app, their solution was to not allow
-      the call to work in protected mode - screw the rest of the planet <g>.
-
-      returns zero on failure. (means not supported)
-   */
-
-   {
-      union REGS regs;
-
-      regs.h.ah = 2;
-      regs.HB_XREGS.ax = 0x1680;
-
-      HB_DOS_INT86( 0x2F, &regs, &regs );
-   }
-
-#elif defined(HB_OS_UNIX)
-#else
-#endif
-}
-
 int hb_inkey( BOOL bWait, double dSeconds, HB_inkey_enum event_mask )
 {
    int key;
@@ -121,7 +84,9 @@ int hb_inkey( BOOL bWait, double dSeconds, HB_inkey_enum event_mask )
          if( ( event_mask & ( INKEY_ALL + INKEY_RAW ) ) != 0 )
          {
             while( hb_inkeyNext() == 0 )
-               hb_releaseCPU();
+            {
+               hb_idleState();
+            }
          }
       }
       else
@@ -129,7 +94,9 @@ int hb_inkey( BOOL bWait, double dSeconds, HB_inkey_enum event_mask )
          clock_t end_clock = clock() + ( clock_t ) ( dSeconds * CLOCKS_PER_SEC );
 
          while( hb_inkeyNext() == 0 && clock() < end_clock )
-            hb_releaseCPU();
+         {
+            hb_idleState();
+         }
       }
    }
 

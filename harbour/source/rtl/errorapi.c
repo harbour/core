@@ -98,11 +98,20 @@ HB_FUNC( ERRORBLOCK )
    HB_ITEM oldError;
    PHB_ITEM pNewErrorBlock = hb_param( 1, HB_IT_BLOCK );
 
-   hb_itemClear( &oldError );
+   /* initialize an item 
+    * NOTE: hb_itemClear() cannot be used to initialize an item because 
+    * memory occupied by the item can contain garbage bits
+   */
+   oldError.type = HB_IT_NIL;
    hb_itemCopy( &oldError, &s_errorBlock );
 
    if( pNewErrorBlock )
+   {
+      if( HB_IS_BLOCK( &oldError ) )      
+         hb_gcUnlock( (&oldError)->item.asBlock.value ); /* allow release for garbage collector */
       hb_itemCopy( &s_errorBlock, pNewErrorBlock );
+      hb_gcLock( pNewErrorBlock->item.asBlock.value ); /* lock it in case it is not stored inside of harbour variable */
+   }
 
    hb_itemReturn( &oldError );
    hb_itemClear( &oldError );
@@ -136,7 +145,11 @@ void hb_errInit( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_errInit()"));
 
-   hb_itemClear( &s_errorBlock );
+   /* initialize an item 
+    * NOTE: hb_itemClear() cannot be used to initialize an item because 
+    * memory occupied by the item can contain garbage bits
+   */
+   s_errorBlock.type = HB_IT_NIL;	
 }
 
 void hb_errExit( void )

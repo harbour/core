@@ -200,6 +200,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\gtapiu.obj \
    $(OBJ_DIR)\gx.obj \
    $(OBJ_DIR)\hardcr.obj \
+   $(OBJ_DIR)\idle.obj \
    $(OBJ_DIR)\inkey.obj \
    $(OBJ_DIR)\is.obj \
    $(OBJ_DIR)\isprint.obj \
@@ -435,6 +436,7 @@ VM_LIB_OBJS = \
    $(OBJ_DIR)\eval.obj \
    $(OBJ_DIR)\extend.obj \
    $(OBJ_DIR)\fm.obj \
+   $(OBJ_DIR)\garbage.obj \
    $(OBJ_DIR)\hvm.obj \
    $(OBJ_DIR)\initexit.obj \
    $(OBJ_DIR)\initsymb.obj \
@@ -875,6 +877,10 @@ $(OBJ_DIR)\fm.obj : $(VM_DIR)\fm.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(VM_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\garbage.obj : $(VM_DIR)\garbage.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(VM_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\harbinit.c : $(VM_DIR)\harbinit.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
@@ -1197,6 +1203,10 @@ $(OBJ_DIR)\gx.obj : $(RTL_DIR)\gx.c
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\hardcr.obj : $(RTL_DIR)\hardcr.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\idle.obj : $(RTL_DIR)\idle.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 

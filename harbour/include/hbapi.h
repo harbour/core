@@ -514,6 +514,26 @@ extern void   hb_macroPopAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar ); /
 extern void   hb_macroPushAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar ); /* compiles and evaluates an aliased macro expression */
 extern char * hb_macroGetType( HB_ITEM_PTR pItem ); /* determine the type of an expression */
 
+/* garbage collector */
+#define HB_GARBAGE_FUNC( hbfunc )   void hbfunc( void * Cargo )	/* callback function for cleaning garbage memory pointer */
+typedef HB_GARBAGE_FUNC( HB_GARBAGE_FUNC_ );
+typedef HB_GARBAGE_FUNC_ *HB_GARBAGE_FUNC_PTR;
+
+extern void * hb_gcAlloc( ULONG ulSize, HB_GARBAGE_FUNC_PTR pFunc ); /* allocates a memory controlled by the garbage collector */
+extern void   hb_gcFree( void *pAlloc ); /* deallocates a memory allocated by the garbage collector */
+extern void * hb_gcLock( void *pAlloc ); /* do not release passed memory block */
+extern void * hb_gcUnlock( void *pAlloc ); /* passed block is allowed to be released */
+extern void   hb_gcCollect( void ); /* checks if a single memory block can be released */
+extern void   hb_gcCollectAll( void ); /* checks if all memory blocks can be released */
+extern BOOL   hb_gcItemRef( HB_ITEM_PTR pItem, void *pAlloc ); /* checks if passed item refers passed memory block pointer */
+extern BOOL   hb_vmIsLocalRef( void *pAlloc ); /* hvm.c - checks all local variables if they are refering a memory block */ 
+extern BOOL   hb_vmIsStaticRef( void *pAlloc ); /* hvm.c - checks all static variables if they are refering a memory block */
+extern BOOL   hb_memvarsIsMemvarRef( void *pAlloc ); /* memvars.c - checks all memvar variables if they are refering a memory block */
+
+/* idle states */
+extern void   hb_idleState( void ); /* services a single idle state */
+extern void   hb_idleShutDown( void ); /* closes all background tasks */
+
 /* misc */
 extern char * hb_verPlatform( void ); /* retrieves a newly allocated buffer containing platform version */
 extern char * hb_verCompiler( void ); /* retrieves a newly allocated buffer containing compiler version */
