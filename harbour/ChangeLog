@@ -1,3 +1,7 @@
+2001-08-09 20:45 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * contrib/dot/pp.prg
+     * Corrected logic for closing ppo output file.
+
 2001-08-09 17:45 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/harbour.c
      * Minor correction to handling of HB_FS_FIRST

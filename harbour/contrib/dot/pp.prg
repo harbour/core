@@ -2520,7 +2520,7 @@ FUNCTION PP_PreProFile( sSource, sPPOExt, bBlanks )
       ENDIF
    ENDIF
 
-   IF ProcName(2) == ""
+   IF ProcName(1) == "MAIN"
       FClose( hPP )
 
       IF bCCH
