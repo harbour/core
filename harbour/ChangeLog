@@ -1,3 +1,10 @@
+2000-08-07 16:20 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+   * source/rtl/tbrowse.prg
+     ! lines 671..680: if tbrowse was stable current cell was not hilited again, this breaks dbu.exe which
+       expects that a call to Stabilize() method hilites current cell even if it is already hilited.
+       Look at dbuedit.prg 188..194 to see what I mean; in short: editing of a field value was happening at wrong
+       screen position.
+
 2000-08-06 18:50 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/harbour.slx
      ! Few more memory optimizations.

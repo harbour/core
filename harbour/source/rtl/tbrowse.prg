@@ -673,9 +673,10 @@ METHOD Stabilize() CLASS TBrowse
          Eval( ::SkipBlock, ::RowPos - ::RelativePos )
          ::RelativePos := ::RowPos
          ::HitBottom := .F.
-         ::HiLite()
+         ::stable := .t.
       endif
-      ::stable := .t.
+      // NOTE: DBU relies upon current cell being reHilite()d even if it is already stable
+      ::HiLite()
       return .t.
    else             // redraw a row
       if !::HitBottom
