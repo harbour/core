@@ -215,21 +215,22 @@ PHB_DYNS hb_dynsymFind( char * szName )
 
       while( uiFirst < uiLast )
       {
-         switch( hb_strgreater( s_pDynItems[ uiMiddle ].pDynSym->pSymbol->szName, szName ) )
+         int iCmp = strcmp( s_pDynItems[ uiMiddle ].pDynSym->pSymbol->szName, szName );
+
+         if( iCmp == 0 )
          {
-            case HB_STRGREATER_EQUAL:  /* they are equals */
-               s_uiClosestDynSym = uiMiddle;
-               return s_pDynItems[ uiMiddle ].pDynSym;
-
-            case HB_STRGREATER_LEFT:  /* pMiddle is greater */
-               uiLast = uiMiddle;
-               s_uiClosestDynSym = uiMiddle;
-               break;
-
-            case HB_STRGREATER_RIGHT:  /* szName is greater */
-               uiFirst = uiMiddle + 1;
-               s_uiClosestDynSym = uiFirst;
-               break;
+            s_uiClosestDynSym = uiMiddle;
+            return s_pDynItems[ uiMiddle ].pDynSym;
+         }
+         else if( iCmp < 0 )
+         {
+            uiLast = uiMiddle;
+            s_uiClosestDynSym = uiMiddle;
+         }
+         else /* if( iCmp > 0 ) */
+         {
+            uiFirst = uiMiddle + 1;
+            s_uiClosestDynSym = uiFirst;
          }
 
          uiMiddle = uiFirst + ( ( uiLast - uiFirst ) / 2 );

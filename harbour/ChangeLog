@@ -1,3 +1,17 @@
+19991030-03:24 GMT+1 Victor Szel <info@szelvesz.hu>
+  * tests/rtl_test.prg
+    + Four new Pad*() tests added.
+  * source/rtl/samples.c
+    * Small optimalizations, formatting corrections.
+  * source/rtl/dynsym.c
+    % hb_strgreater() replaced with standard ANSI C function strcmp(), it's
+      now a bit faster.
+  * source/rtl/strings.c
+    include/extend.h
+    ! SUBSTR() bug fix in handling the error when the third parameter was not
+      a string. (reported by Andi Jahja)
+    - hb_strgreater() removed since it was same as strcmp()
+
 19991028-22:30 EDT David G. Holm <dholm@jsd-llc.com>
 
    * source/rtl/inkey.c

@@ -814,9 +814,10 @@ HARBOUR HB_SUBSTR( void )
                   {
                      hb_itemReturn( pResult );
                      hb_itemRelease( pResult );
-                     /* NOTE: Exit from inside */
-                     return;
                   }
+
+                  /* NOTE: Exit from inside */
+                  return;
                }
             }
             else
@@ -1581,29 +1582,6 @@ HARBOUR HB_STRZERO( void )
          }
       }
    }
-}
-
-/* Values returned : HB_STRGREATER_EQUAL, HB_STRGREATER_LEFT, HB_STRGREATER_RIGHT */
-
-int hb_strgreater( const char * szText1, const char * szText2 )
-{
-   HB_TRACE(("hb_strgreater(%s, %s)", szText1, szText2));
-
-   while( *szText1 && *szText2 && *szText1 == *szText2 )
-   {
-      szText1++;
-      szText2++;
-   }
-
-   if( ( *szText1 == '\0' && *szText2 != '\0' ) ||
-       ( *szText1 < *szText2 )                )
-      return HB_STRGREATER_RIGHT;
-
-   if( ( *szText1 != '\0' && *szText2 == '\0' ) ||
-       ( *szText1 > *szText2 )                )
-      return HB_STRGREATER_LEFT;
-
-   return HB_STRGREATER_EQUAL;
 }
 
 /*  $DOC$

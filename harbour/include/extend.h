@@ -328,13 +328,8 @@ extern PHB_ITEM hb_arrayClone( PHB_ITEM pArray );
 
 /* string management */
 
-#define HB_STRGREATER_EQUAL     0
-#define HB_STRGREATER_LEFT      1
-#define HB_STRGREATER_RIGHT     2
-
 extern int      hb_stricmp( const char * s1, const char * s2 );
 extern int      hb_strnicmp( const char * s1, const char * s2, ULONG ulLen );
-extern int      hb_strgreater( const char * szText1, const char * szText2 );
 extern void     hb_strupr( char * szText );
 extern BOOL     hb_strMatchRegExp( const char * szString, const char * szMask );
 extern BOOL     hb_strEmpty( const char * szText, ULONG ulLen );

@@ -68,6 +68,7 @@ static ULONG hb_TimeStrToSec( char * pszTime )
    HB_TRACE(("hb_TimeStrToSec(%s)", pszTime));
 
    ulLen = strlen( pszTime );
+
    if( ulLen >= 1 )
       ulTime += ( ULONG ) hb_strVal( pszTime ) * 3600;
 
@@ -88,7 +89,7 @@ HARBOUR HB_AMPM( void )
    USHORT uiHour = ( USHORT ) hb_strVal( pszTime );
    BOOL   bAM;
 
-   memset( pszResult, 0, 3 );
+   memset( pszResult, '\0', 3 );
    memcpy( pszResult, pszTime, ulTimeLen );
 
    if( uiHour == 0 || uiHour == 24 )
@@ -110,14 +111,12 @@ HARBOUR HB_AMPM( void )
       pszResult[ 1 ] = ( char ) ( uiHour % 10 ) + '0';
 
       if( pszResult[ 0 ] == '0' )
-         pszResult[ 0 ] =  ' ';
+         pszResult[ 0 ] = ' ';
 
       bAM = FALSE;
    }
-   else if( uiHour == 12 )
-      bAM = FALSE;
    else
-      bAM = TRUE;
+      bAM = ( uiHour != 12 );
 
    strcpy( pszResult + ulTimeLen, bAM ? " am" : " pm" );
 

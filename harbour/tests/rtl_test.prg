@@ -1665,6 +1665,7 @@ STATIC FUNCTION Main_STRINGS()
    TEST_LINE( Pad("abcdef", 0)                , ""               )
    TEST_LINE( Pad("abcdef", 5)                , "abcde"          )
    TEST_LINE( Pad("abcdef", 10)               , "abcdef    "     )
+   TEST_LINE( Pad("abcdef", 10, "")           , "abcdef"+Chr(0)+""+Chr(0)+""+Chr(0)+""+Chr(0)+"" )
    TEST_LINE( Pad("abcdef", 10, "1")          , "abcdef1111"     )
    TEST_LINE( Pad("abcdef", 10, "12")         , "abcdef1111"     )
 
@@ -1689,6 +1690,7 @@ STATIC FUNCTION Main_STRINGS()
    TEST_LINE( PadR("abcdef", 0)               , ""               )
    TEST_LINE( PadR("abcdef", 5)               , "abcde"          )
    TEST_LINE( PadR("abcdef", 10)              , "abcdef    "     )
+   TEST_LINE( PadR("abcdef", 10, "")          , "abcdef"+Chr(0)+""+Chr(0)+""+Chr(0)+""+Chr(0)+"" )
    TEST_LINE( PadR("abcdef", 10, "1")         , "abcdef1111"     )
    TEST_LINE( PadR("abcdef", 10, "12")        , "abcdef1111"     )
 
@@ -1713,6 +1715,7 @@ STATIC FUNCTION Main_STRINGS()
    TEST_LINE( PadL("abcdef", 0)               , ""               )
    TEST_LINE( PadL("abcdef", 5)               , "abcde"          ) /* QUESTION: CA-Cl*pper "bug", should return: "bcdef" ? */
    TEST_LINE( PadL("abcdef", 10)              , "    abcdef"     )
+   TEST_LINE( PadL("abcdef", 10, "")          , ""+Chr(0)+""+Chr(0)+""+Chr(0)+""+Chr(0)+"abcdef" )
    TEST_LINE( PadL("abcdef", 10, "1")         , "1111abcdef"     )
    TEST_LINE( PadL("abcdef", 10, "12")        , "1111abcdef"     )
 
@@ -1738,6 +1741,7 @@ STATIC FUNCTION Main_STRINGS()
    TEST_LINE( PadC("abcdef", 2)               , "ab"             ) /* QUESTION: CA-Cl*pper "bug", should return: "cd" ? */
    TEST_LINE( PadC("abcdef", 5)               , "abcde"          )
    TEST_LINE( PadC("abcdef", 10)              , "  abcdef  "     )
+   TEST_LINE( PadC("abcdef", 10, "")          , ""+Chr(0)+""+Chr(0)+"abcdef"+Chr(0)+""+Chr(0)+"" )
    TEST_LINE( PadC("abcdef", 10, "1")         , "11abcdef11"     )
    TEST_LINE( PadC("abcdef", 10, "12")        , "11abcdef11"     )
 
@@ -3232,7 +3236,7 @@ STATIC FUNCTION TEST_BEGIN( cParam )
    /* NOTE: The 0 parameter of Version() will force Harbour to include the
             compiler version in the version string. */
 
-   fWrite( s_nFhnd, "      Version: " + Version( 0 ) + s_cNewLine +;
+   FWrite( s_nFhnd, "      Version: " + Version( 0 ) + s_cNewLine +;
                     "           OS: " + OS() + s_cNewLine +;
                     "   Date, Time: " + DToS( Date() ) + " " + Time() + s_cNewLine +;
                     "       Output: " + s_cFileName + s_cNewLine +;
@@ -3240,7 +3244,7 @@ STATIC FUNCTION TEST_BEGIN( cParam )
                     "     Switches: " + cParam + s_cNewLine +;
                     "===========================================================================" + s_cNewLine )
 
-   fWrite( s_nFhnd, PadR( "R", TEST_RESULT_COL1_WIDTH ) + " " +;
+   FWrite( s_nFhnd, PadR( "R", TEST_RESULT_COL1_WIDTH ) + " " +;
                     PadR( "Line", TEST_RESULT_COL2_WIDTH ) + " " +;
                     PadR( "TestCall()", TEST_RESULT_COL3_WIDTH ) + " -> " +;
                     PadR( "Result", TEST_RESULT_COL4_WIDTH ) + " | " +;
@@ -3371,13 +3375,13 @@ STATIC FUNCTION TEST_CALL( cBlock, bBlock, xResultExpected )
    ENDIF
 
    IF s_lShowAll .OR. lFailed .OR. lSkipped .OR. lPPError
-      fWrite( s_nFhnd, PadR( iif( lFailed, "!", iif( lSkipped, "S", " " ) ), TEST_RESULT_COL1_WIDTH ) + " " +;
+      FWrite( s_nFhnd, PadR( iif( lFailed, "!", iif( lSkipped, "S", " " ) ), TEST_RESULT_COL1_WIDTH ) + " " +;
                        PadR( ProcName( 1 ) + "(" + LTrim( Str( ProcLine( 1 ), 5 ) ) + ")", TEST_RESULT_COL2_WIDTH ) + " " +;
                        PadR( cBlock, TEST_RESULT_COL3_WIDTH ) + " -> " +;
                        PadR( XToStr( xResult ), TEST_RESULT_COL4_WIDTH ) + " | " +;
                        PadR( XToStr( xResultExpected ), TEST_RESULT_COL5_WIDTH ) )
 
-      fWrite( s_nFhnd, s_cNewLine )
+      FWrite( s_nFhnd, s_cNewLine )
 
    ENDIF
 
@@ -3396,7 +3400,7 @@ STATIC FUNCTION TEST_END()
 
    s_nEndTime := Seconds()
 
-   fWrite( s_nFhnd, "===========================================================================" + s_cNewLine +;
+   FWrite( s_nFhnd, "===========================================================================" + s_cNewLine +;
                     "Test calls passed: " + Str( s_nPass ) + s_cNewLine +;
                     "Test calls failed: " + Str( s_nFail ) + s_cNewLine +;
                     "                   ----------" + s_cNewLine +;
@@ -3406,10 +3410,10 @@ STATIC FUNCTION TEST_END()
 
    IF s_nFail != 0
       IF "CLIPPER (R)" $ Upper( Version() )
-         fWrite( s_nFhnd, "WARNING ! Failures detected using CA-Clipper." + s_cNewLine +;
+         FWrite( s_nFhnd, "WARNING ! Failures detected using CA-Clipper." + s_cNewLine +;
                           "Please fix those expected results which are not bugs in CA-Clipper itself." + s_cNewLine )
       ELSE
-         fWrite( s_nFhnd, "WARNING ! Failures detected" + s_cNewLine )
+         FWrite( s_nFhnd, "WARNING ! Failures detected" + s_cNewLine )
       ENDIF
    ENDIF
 
