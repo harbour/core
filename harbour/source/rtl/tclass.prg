@@ -66,7 +66,7 @@ FUNCTION TClass()
    STATIC s_hClass /* NOTE: Automatically default to NIL */
 
    IF s_hClass == NIL
-      s_hClass := __clsNew( "TCLASS", 9 )
+      s_hClass := __clsNew( "TCLASS",  9)
 
       __clsAddMsg( s_hClass, "New"            , @New()            , HB_OO_MSG_METHOD )
       __clsAddMsg( s_hClass, "Create"         , @Create()         , HB_OO_MSG_METHOD )
@@ -80,6 +80,7 @@ FUNCTION TClass()
       __clsAddMsg( s_hClass, "Instance"       , @Instance()       , HB_OO_MSG_METHOD )
       __clsAddMsg( s_hClass, "SetOnError"     , @SetOnError()     , HB_OO_MSG_METHOD )
       __clsAddMsg( s_hClass, "InitClass"      , @InitClass()      , HB_OO_MSG_METHOD )
+      __clsAddMsg( s_hClass, "ClassName"      , @ClassName()      , HB_OO_MSG_METHOD )
       __clsAddMsg( s_hClass, "cSuper"         , {| Self | iif( ::acSuper == NIL .OR. Len( ::acSuper ) == 0, NIL, ::acSuper[ 1 ] ) }, HB_OO_MSG_INLINE )
       __clsAddMsg( s_hClass, "_cSuper"        , {| Self, xVal | iif( ::acSuper == NIL .OR. Len( ::acSuper ) == 0, ( ::acSuper := { xVal } ), ::acSuper[ 1 ] := xVal ), xVal }, HB_OO_MSG_INLINE )
       __clsAddMsg( s_hClass, "hClass"         ,  1, HB_OO_MSG_DATA )
@@ -128,6 +129,7 @@ STATIC FUNCTION New( cClassName, xSuper )
    ENDIF
 
    ::cName     := Upper( cClassName )
+
    ::aDatas    := {}
    ::aMethods  := {}
    ::aClsDatas := {}
@@ -166,7 +168,7 @@ STATIC PROCEDURE Create()
          ahSuper[ n ] := __clsInstSuper( Upper( ::acSuper[ n ] ) ) // Super handle available
       NEXT
 
-      hClass := __clsNew( ::cName, nLenDatas + nlen, ahSuper )
+      hClass := __clsNew( ::cName, nLenDatas + nlen , ahSuper )
 
       nDataBegin   += __cls_CntData( ahSuper[ 1 ] )        // Get offset for new Datas
       nClassBegin  += __cls_CntClsData( ahSuper[ 1 ] )     // Get offset for new ClassData
@@ -188,6 +190,11 @@ STATIC PROCEDURE Create()
    ENDIF
 
    ::hClass := hClass
+
+// __clsAddMsg( hClass, "__class"                                ,   ++nDataBegin, ;
+//              HB_OO_MSG_DATA,                                  , 1                                 )
+// __clsAddMsg( hClass, "___class"                               ,     nDataBegin, ;
+//              HB_OO_MSG_DATA,                                  , 1                                 )
 
    //Local message...
 
@@ -371,3 +378,11 @@ STATIC FUNCTION InitClass()
    LOCAL Self := QSelf()
 
    RETURN Self
+
+//----------------------------------------------------------------------------//
+
+STATIC FUNCTION ClassName()
+
+   LOCAL Self := QSelf()
+
+   RETURN "CLASS"+Self:cName

@@ -60,7 +60,8 @@
 
 FUNCTION TObject()
    STATIC s_oClass
-   LOCAL nScope := 1
+   LOCAL nScope := HB_OO_CLSTP_EXPORTED
+   Local oInstance
 
    IF s_oClass == NIL
 
@@ -82,12 +83,11 @@ FUNCTION TObject()
 
       s_oClass:AddInline( "MSGNOTFOUND" , {| Self, cMsg | ::Error( "Message not found", __OBJGETCLSNAME( Self ), cMsg, iif(substr(cMsg,1,1)=="_",1005,1004) ) }, nScope )
 
+      s_oClass:AddMultiData(,,nScope,{"CLASS"}, .F. )
+
       /*s_oClass:AddInline( "ADDMETHOD" , { | Self, cMeth, pFunc, nScopeMeth                 |  __clsAddMsg( __CLASSH( Self ) , cMeth , pFunc ,HB_OO_MSG_METHOD , NIL, iif(nScopeMeth==NIL,1,nScopeMeth) ) }, nScope )                                */
       /*s_oClass:AddInline( "ADDVAR"    , { | Self, cVAR, nScopeMeth, uiData , hClass  |  __clsAddMsg( hClass:=__CLASSH( Self ) ,     cVar , uidata := __CLS_INCDATA(hClass) , HB_OO_MSG_DATA, NIL  , iif(nScopeMeth==NIL,1,nScopeMeth) )  , ;        */
       /*                                                                               __clsAddMsg( hClass                   , "_"+cVar , uiData                          , HB_OO_MSG_DATA, NIL  , iif(nScopeMeth==NIL,1,nScopeMeth) ) }, nScope )    */
-
-      /*s_oClass:AddInline( "CLASS"   , {| Self | Self }, nScope )*/
-      /*s_oClass:AddInline( "CLASS"   , {|| s_oClass }, nScope ) */
 
       /* Those one exist within Class(y), so we will probably try to implement it               */
 
@@ -123,12 +123,11 @@ FUNCTION TObject()
 
       s_oClass:Create()
 
-      /* For later use */
-      /*s_oClass:InitClass()*/
-
    ENDIF
+   oInstance := s_oClass:Instance()
+   oInstance:class := s_oClass
 
-   RETURN s_oClass:Instance()
+   RETURN oInstance
 
 
 /* Currently limited to 20 param */

@@ -89,6 +89,7 @@ DECLARE TClass ;
 
 /* #define HB_CLS_NOTOBJECT  */ /* Should be included in some compatibility include files as needed */
 /* #define HB_CLS_NOAUTOINIT */ /* Idem */
+/* #define HB_CLS_ALLOWCLASS */ /* Work in progress, don't define it now */
 
 #ifdef HB_CLS_NOTOBJECT
  #define __HB_CLS_PAR  __CLS_PAR00
@@ -131,7 +132,7 @@ DECLARE TClass ;
    _HB_CLASS <ClassName> ;;
    <static> function <ClassName>() ;;
       static s_oClass AS CLASS TClass;;
-      local nScope := HB_OO_CLSTP_EXPORTED ;;
+      local oInstance,nScope := HB_OO_CLSTP_EXPORTED ;;
       if s_oClass == NIL ;;
          s_oClass := TClass():New( <(ClassName)>, __HB_CLS_PAR ([ <(SuperClass1)> ] [ ,<(SuperClassN)> ] ) ) ;;
      #undef _CLASS_NAME_ ;;
@@ -149,7 +150,7 @@ DECLARE TClass ;
    _HB_CLASS <ClassName> ;;
    <static> function <ClassName>() ;;
       static s_oClass AS CLASS TClass;;
-      local nScope := HB_OO_CLSTP_EXPORTED ;;
+      local oInstance,nScope := HB_OO_CLSTP_EXPORTED ;;
       if s_oClass == NIL ;;
          s_oClass := TClass():New( <(ClassName)>, __HB_CLS_PAR ([ <(SuperClass1)> ] [ ,<(SuperClassN)> ] ) ) ;;
      #undef _CLASS_NAME_ ;;
@@ -163,12 +164,14 @@ DECLARE TClass ;
 
 #endif /* HB_SHORTNAMES */
 
-/* CLASSY SYNTAX */
-#IFDEF HB_CLS_CSY
-
-/* Classy compatibility */
+/* Disable the message :Class */
+#ifndef HB_CLS_ALLOWCLASS
 #xtranslate  :CLASS  =>
 #xtranslate  :CLASS: => :
+#endif
+
+/* CLASSY SYNTAX */
+#IFDEF HB_CLS_CSY
 
 #xcommand VAR <DataNames,...> [ TYPE <type> ] [ ASSIGN <uValue> ] [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<ro: READONLY, RO>] => ;
    _HB_MEMBER \{[AS <type>] <DataNames>\} ;;
@@ -441,14 +444,24 @@ DECLARE TClass ;
 
 #xtranslate END CLASS => ENDCLASS
 
+#ifdef HB_CLS_ALLOWCLASS
+#xcommand ENDCLASS => ;;
+                      s_oClass:Create() ;;
+                      endif ;;
+                      oInstance := s_oClass:Instance() ;;
+                      oInstance:class := s_oClass ;;
+                      return  oInstance AS CLASS _CLASS_NAME_
+#else
 #xcommand ENDCLASS => ;;
                       s_oClass:Create() ;;
                       endif ;;
                       return s_oClass:Instance() AS CLASS _CLASS_NAME_
+#endif
 
 #xtranslate :Super( <SuperClass> ) : => :<SuperClass>:
 #xtranslate :Super() : => :Super:
 #xtranslate :Super() => :Super
+
 
 #ifndef HB_SHORTNAMES
 

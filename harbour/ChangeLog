@@ -1,3 +1,10 @@
+2000-11-29 23:30 UTC+0100 jfl (mafact) <jfl@mafact.com>
+   * include/hbclass.ch
+     * some work in progress about :class message
+   * source/rtl/tobject.prg
+   * source/rtl/tclass.prg
+     * some work in progress about :class message
+
 2000-11-29 13:50 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/harbour.c
      * Exported: hb_compFieldGetPos() and hb_compMemvarGetPos()
