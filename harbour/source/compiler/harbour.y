@@ -1880,14 +1880,47 @@ void AddVar( char * szVarName )
             break;
           case (VS_PARAMETER | VS_PRIVATE):
             {
+	        BOOL bNewParameter = FALSE;
+		
                 if( ++functions.pLast->wParamNum > functions.pLast->wParamCount )
+		{
 		   functions.pLast->wParamCount =functions.pLast->wParamNum;
+		   bNewParameter = TRUE;
+		}
+		   
                 pSym =GetSymbol( szVarName, &wPos ); /* check if symbol exists already */
                 if( ! pSym )
                    pSym =AddSymbol( yy_strdup(szVarName), &wPos );
                 pSym->cScope |=VS_MEMVAR;
                 GenPCode3( HB_P_PARAMETER, LOBYTE(wPos), HIBYTE(wPos) );
                 GenPCode1( LOBYTE(functions.pLast->wParamNum) );
+		
+		/* Add this variable to the local variables list - this will
+		 * allow to use the correct positions for real local variables.
+		 * The name of variable have to be hidden because we should
+		 * not find this name on the local variables list.
+		 * We have to use the new structure because it is used in
+		 * memvars list already.
+		 */
+		if( bNewParameter )
+		{
+                   pVar = ( PVAR ) OurMalloc( sizeof( VAR ) );
+                   pVar->szName = yy_strdup( szVarName );
+                   pVar->szAlias = NULL;
+                   pVar->cType = cVarType;
+                   pVar->iUsed = 0;
+                   pVar->pNext = NULL;
+                   pVar->szName[ 0 ] ='!';
+		   if( ! pFunc->pLocals )
+                       pFunc->pLocals = pVar;
+                   else
+                   {
+                       pLastVar = pFunc->pLocals;
+                       while( pLastVar->pNext )
+                          pLastVar = pLastVar->pNext;
+                       pLastVar->pNext = pVar;
+                   }
+                }
             }
             break;
           case VS_PRIVATE:
@@ -2557,11 +2590,9 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
                        bLocals++;
                     }
 
-                    /* pFunc->wParamNum != 0 if PARAMETERS statement was used 
-		    */
                     if( bLocals || pFunc->wParamCount )
                        fprintf( yyc, "                HB_P_FRAME, %i, %i,\t\t/* locals, params */\n",
-                                (pFunc->wParamNum ? bLocals : (bLocals - pFunc->wParamCount)),
+                                bLocals - pFunc->wParamCount,
                                 pFunc->wParamCount );
                     lPCodePos += 3;
 		 }
@@ -5465,17 +5496,30 @@ void GenPortObj( char *szFileName, char *szName )
                  break;
 
             case HB_P_FRAME:
-                 if( pFunc->pCode[ lPCodePos + 1 ] || pFunc->pCode[ lPCodePos + 2 ] )
-                 {
-                    fputc(   pFunc->pCode[ lPCodePos++ ], yyc );
-                    fputc(   pFunc->pCode[ lPCodePos++ ], yyc );
-                    fputc(   pFunc->pCode[ lPCodePos++ ], yyc );
-                 }
-                 else
-                 {
-                    lPad += 3;
-                    lPCodePos += 3;
-                 }
+	         {
+		    /* update the number of local variables */
+                    PVAR pLocal  = pFunc->pLocals;
+                    BYTE bLocals = 0;
+
+                    while( pLocal )
+                    {
+                       pLocal = pLocal->pNext;
+                       bLocals++;
+                    }
+
+                    if( bLocals || pFunc->wParamCount )
+                    {
+                        fputc(   pFunc->pCode[ lPCodePos++ ], yyc );
+                        fputc(   (BYTE)(bLocals - pFunc->wParamCount), yyc );
+                        fputc(   (BYTE)(pFunc->wParamCount), yyc );
+			lPCodePos += 2;
+                    }
+                    else
+                    {
+                       lPad += 3;
+                       lPCodePos += 3;
+                    }
+		 }
                  break;
 
             case HB_P_PUSHSYM:
