@@ -1,3 +1,8 @@
+2000-10-17 21:15 UTC+0200 JFL (mafact) <jfl@mafact.com>
+    * include/hbclass.ch
+      * Minor typo's corrected as John's indication
+
+
 2000-10-17 11:35 UTC+0800 Ron Pinkas <ron@profit-master.com>
     * contrib/dot/pp.prg
       ! Fixed few more associations within NextExp()

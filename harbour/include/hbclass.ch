@@ -288,9 +288,9 @@ DECLARE TClass ;
    _HB_MEMBER <MethodName>([<params>]) [ AS <type> ];;
    s_oClass:AddClsMthds( <(MethodName)>, CLSMETH _CLASS_NAME_ <MethodName>(), HBCLSCHOICE( <.export.>, <.protect.>, <.hidde.> ) + iif( <.share.>, HB_OO_CLSTP_SHARED, 0 ) )
 
-#xcommand CONSTRUCTOR <Name>( [<params,...>] ) => METHOD <Name>( [<params,...>] ) CONSTRUCTOR
+#xcommand CONSTRUCTOR <Name>( [<params,...>] ) => METHOD <Name>( [<params>] ) CONSTRUCTOR
 
-#xcommand CONSTRUCTOR New( [<params,...>] ) => METHOD New( [<params,...>] ) CONSTRUCTOR
+#xcommand CONSTRUCTOR New( [<params,...>] ) => METHOD New( [<params>] ) CONSTRUCTOR
 
 #xcommand METHOD <MethodName> [ <ctor: CONSTRUCTOR> ] [ AS <type> ] [ <export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] => ;
    _HB_MEMBER <MethodName>() [<-ctor-> AS CLASS _CLASS_NAME_] [ AS <type> ];;
