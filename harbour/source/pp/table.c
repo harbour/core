@@ -37,9 +37,9 @@
  * Avoid tracing in preprocessor/compiler.
  */
 #if ! defined(HB_TRACE_UTILS)
-#if defined(HB_TRACE_LEVEL)
-#undef HB_TRACE_LEVEL
-#endif
+   #if defined(HB_TRACE_LEVEL)
+      #undef HB_TRACE_LEVEL
+   #endif
 #endif
 
 #include <stdio.h>
@@ -97,7 +97,7 @@
    static DEFINES sD___50 = {"_SET_AUTORDER",NULL,-1,"46", &sD___49 };
    static DEFINES sD___51 = {"_SET_AUTOSHARE",NULL,-1,"47", &sD___50 };
 
-   DEFINES *topDefine = &sD___51;
+   DEFINES * topDefine = &sD___51;
 
    static COMMANDS sC___1 = {0,"NOTE","\1A30",NULL,NULL };
    static COMMANDS sC___2 = {0,"DO","WHILE \1A00","while \1A00",&sC___1 };
@@ -389,5 +389,6 @@
    static COMMANDS sC___238 = {0,"SET","ORDER TO TAG \1A40 [IN \1B40]","ordSetFocus( \1A30 [, \1B30] )",&sC___237 };
    static COMMANDS sC___239 = {0,"SET","ORDER TO","ordSetFocus(0)",&sC___238 };
    static COMMANDS sC___240 = {0,"ANNOUNCE","\1A10","procedure \1A00 ; return",&sC___239 };
-   COMMANDS *topCommand = &sC___240;
-   COMMANDS *topTranslate = NULL;
+
+   COMMANDS * topCommand = &sC___240;
+   COMMANDS * topTranslate = NULL;

@@ -74,35 +74,43 @@ typedef struct _COMMANDS
 
 /* HBPP.C exported functions */
 
-extern int ParseDirective( char * );
-extern int ParseExpression( char *, char * );
+extern int Hp_Parse( FILE *, FILE *, char * );
+extern int ParseDirective( char * ); /* Parsing preprocessor directives ( #... ) */
+extern int ParseExpression( char *, char * ); /* Parsing a line ( without preprocessor directive ) */
 extern int pp_RdStr( FILE *, char *, int, int, char *, int *, int * );
 extern int pp_WrStr( FILE *, char * );
+extern int pp_strAt( char *, int, char *, int );
+extern void pp_Stuff( char *, char *, int, int, int );
 extern int strolen( char * );
 extern int strocpy( char *, char * );
 extern char * strodup( char * );
-extern DEFINES * AddDefine( char * szDefine, char * szValue ); /* add a new Lex define from the command line */
+extern DEFINES * AddDefine( char *, char * );         /* Add new #define to a linked list */
+
+/* HBPPINT.C exported functions */
+
+extern void Hbpp_init ( void );
+extern int PreProcess( FILE *, FILE *, char * );
 
 /* HBPP.C exported variables */
 
 extern int lInclude;
-extern int * aCondCompile, nCondCompile;
+extern int * aCondCompile;
+extern int nCondCompile;
 extern int nline;
-
 extern char * _szPErrors[];
 extern char * _szPWarnings[];
+
+/* TABLE.C exported variables */
+
+extern DEFINES * topDefine;
+extern COMMANDS * topCommand;
+extern COMMANDS * topTranslate;
 
 /* Needed support modules, but not contained in HBPP.C */
 
 extern void *   hb_xgrab( ULONG lSize );   /* allocates memory, exists on failure */
 extern void *   hb_xrealloc( void * pMem, ULONG lSize );   /* reallocates memory */
 extern void     hb_xfree( void * pMem );    /* frees memory */
-
-/* Needed support variables, but not contained in HBPP.C */
-
-extern DEFINES * topDefine;
-extern COMMANDS * topCommand;
-extern COMMANDS * topTranslate;
 
 #include "compiler.h"
 

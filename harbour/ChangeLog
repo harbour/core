@@ -1,3 +1,16 @@
+19991121-22:38 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/pp/*
+    source/compiler/harbour.c
+    include/hbpp.h
+    ! static variables and functions marked static.
+    * Cleared up declarations, removed redundant declartions.
+    * Some formatting.
+  * source/pp/hbpp.c
+    ! Some corrections made to better handle where the code launcher
+      returns to the caller. This is a theoretical case, but it's more
+      elegant to handle this case, and it would also help to avoid a jmp_buf
+      trick in the library callable version of the PP.
+
 19991121-17:50 GMT+1 Bruno Cantero <bruno@issnet.net>
   * include/rddapi.h
     source/rdd/dbcmd.c

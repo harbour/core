@@ -60,9 +60,6 @@ typedef enum
 extern int harbour_main( char *szName );
 extern BOOL Include( char * szFileName, PATHNAMES * pSearchPath );  /* end #include support */
 
-  /* Following line added for preprocessor */
-extern void Hbpp_init ( void );
-
 /* output related functions */
 extern void GenCCode( PHB_FNAME );      /* generates the C language output */
 extern void GenJava( PHB_FNAME );       /* generates the Java language output */

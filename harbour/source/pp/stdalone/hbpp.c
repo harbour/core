@@ -37,20 +37,20 @@
  * Avoid tracing in preprocessor/compiler.
  */
 #if ! defined(HB_TRACE_UTILS)
-#if defined(HB_TRACE_LEVEL)
-#undef HB_TRACE_LEVEL
-#endif
+   #if defined(HB_TRACE_LEVEL)
+      #undef HB_TRACE_LEVEL
+   #endif
 #endif
 
 #include <stdlib.h>
 #if ( defined(_MSC_VER) || defined(__IBMCPP__) || defined(__MINGW32__) )
-#include <memory.h>
+   #include <memory.h>
 #elif defined(__GNUC__)
-#include <unistd.h>
+   #include <unistd.h>
 #elif ! defined(__MPW__)
-#include <malloc.h>
+   #include <malloc.h>
 #else
-#include <mem.h>
+   #include <mem.h>
 #endif
 #include <string.h>
 #include <stdio.h>
@@ -59,12 +59,9 @@
 #include "hberrors.h"
 #include "hbver.h"
 
-extern int pp_strAt( char *, int, char *, int );
-extern void pp_Stuff( char *, char *, int, int, int );
-
-int Hp_Parse( FILE *, FILE *, char * );
-void OutTable( DEFINES *, COMMANDS * );
-void AddSearchPath( char *, PATHNAMES * * ); /* add pathname to a search list */
+static int Hp_Parse( FILE * handl_i, FILE * handl_o, char * szSource );
+static void AddSearchPath( char * szPath, PATHNAMES * * pSearchList );
+static void OutTable( DEFINES * endDefine, COMMANDS * endCommand );
 
 char sLine[ STR_SIZE ], sOutLine[ STR_SIZE ];
 
@@ -280,7 +277,7 @@ int Hp_Parse( FILE * handl_i, FILE * handl_o, char * szSource )
   return 0;
 }
 
-void OutTable( DEFINES * endDefine, COMMANDS * endCommand )
+static void OutTable( DEFINES * endDefine, COMMANDS * endCommand )
 {
   FILE *handl_o;
   int ipos, len_mpatt, len_value;
@@ -332,7 +329,7 @@ void OutTable( DEFINES * endDefine, COMMANDS * endCommand )
       stdef2 = stdef2->last;
       num++;
     }
-  fprintf( handl_o, "\n   DEFINES *topDefine = " );
+  fprintf( handl_o, "\n   DEFINES * topDefine = " );
   if( num == 1 )
     fprintf( handl_o, "NULL;" );
   else
@@ -375,7 +372,7 @@ void OutTable( DEFINES * endDefine, COMMANDS * endCommand )
       stcmd2 = stcmd2->last;
       num++;
     }
-  fprintf( handl_o, "\n   COMMANDS *topCommand = " );
+  fprintf( handl_o, "\n   COMMANDS * topCommand = " );
   if( num == 1 )
     fprintf( handl_o, "NULL;" );
   else
@@ -427,7 +424,7 @@ void OutTable( DEFINES * endDefine, COMMANDS * endCommand )
       stcmd2 = stcmd2->last;
       num++;
     }
-  fprintf( handl_o, "\n   COMMANDS *topTranslate = " );
+  fprintf( handl_o, "\n   COMMANDS * topTranslate = " );
   if( num == 1 )
     fprintf( handl_o, "NULL;" );
   else
@@ -439,7 +436,7 @@ void OutTable( DEFINES * endDefine, COMMANDS * endCommand )
 /*
  * Function that adds specified path to the list of pathnames to search
  */
-void AddSearchPath( char * szPath, PATHNAMES * * pSearchList )
+static void AddSearchPath( char * szPath, PATHNAMES * * pSearchList )
 {
   PATHNAMES * pPath = *pSearchList;
 

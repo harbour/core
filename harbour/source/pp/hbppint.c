@@ -37,28 +37,24 @@
  * Avoid tracing in preprocessor/compiler.
  */
 #if ! defined(HB_TRACE_UTILS)
-#if defined(HB_TRACE_LEVEL)
-#undef HB_TRACE_LEVEL
-#endif
+   #if defined(HB_TRACE_LEVEL)
+      #undef HB_TRACE_LEVEL
+   #endif
 #endif
 
 #if ( defined(_MSC_VER) || defined(__IBMCPP__) || defined(__MINW32__) )
-#include <memory.h>
-#include <stdlib.h>
+   #include <memory.h>
+   #include <stdlib.h>
 #elif ( defined(__GNUC__) || defined(__WATCOMC__) )
-#include <string.h>
-#include <stdlib.h>
+   #include <string.h>
+   #include <stdlib.h>
 #else
-#include <alloc.h>
-#include <mem.h>
+   #include <alloc.h>
+   #include <mem.h>
 #endif
 #include <stdio.h>
 #include "hbpp.h"
 #include "hberrors.h"
-
-void Hbpp_init ( void );
-int PreProcess( FILE *, FILE *, char * );
-int Hp_Parse( FILE *, FILE *, char * );
 
 int iBuffer, lenBuffer;
 BOOL _bPPO = 0;
