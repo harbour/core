@@ -1,3 +1,7 @@
+2001-11-15 13:55 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * include/hbapi.h
+     Enhanced HB_IS_OBJECT( PHB_ITEM )
+
 2001-11-15 04:00 GMT+7 Walter Nergo <waltern@foeesitra.org.ar>
    ( CVSed by Andi Jahja )
    * contrib/libct/numconv.prg
