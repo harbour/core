@@ -41,6 +41,10 @@
 #include "setcurs.h"
 #include "box.h"
 
+/* NOTE: The declaration of hb_gtSetPos(), hb_gtGetPos(), hb_gtWrite(), 
+         hb_gtWriteAt(), hb_gtRepChar() differs in parameter types from the 
+         original CA-Cl*pper versions. [vszakats] */
+
 /* maximum length of color string */
 #define CLR_STRLEN      64
 

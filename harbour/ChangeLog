@@ -1,3 +1,10 @@
+20000212-02:30 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * include/gtapi.h
+     + NOTE: added about incompatibilities between Harbour and CA-Cl*pper
+       GT interface.
+   * makefile.b32
+     - Removed -v option (debug info) from 4.0 mode.
+
 2000-02-11 19:15 GMT-5 David G. Holm <dholm@ sd-llc.com>
    * source/rtl/inkey.c
      ! First pass at international character support for Windows console mode.

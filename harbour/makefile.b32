@@ -6,7 +6,7 @@
 
 # avoid optimizer bug, when using compiler version 4.0
 !if $d(B40)
-   BCC_OPT = -v -DHARBOUR_USE_WIN_GTAPI
+   BCC_OPT = -DHARBOUR_USE_WIN_GTAPI
 !else
    BCC_OPT = -O2 -DHARBOUR_USE_WIN_GTAPI
 !endif
