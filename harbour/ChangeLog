@@ -1,3 +1,9 @@
+19991025-12:30 EDT Paul Tucker <ptucker@sympatico.ca>
+   * source/tools/ctchksum.c
+     * added a cast
+   * makefile.vc
+     + source/tools/ctchksum.c
+
 19991025-22:05 GMT+1 Bruno Cantero <bruno@issnet.net>
   * source/rtl/dummy.prg
     - Removed __dbZap() function.
