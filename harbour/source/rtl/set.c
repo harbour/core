@@ -1124,12 +1124,10 @@ HARBOUR HB_DEFPATH( void )
    }
    buffer[ size ] = '\0';
    size = strlen( buffer );
-/*
-   Debug code:
 
-printf( "\nHB_DEFPATH: buffer is '%s', size is %d, last char is '%c',", buffer, size, buffer[ size - 1] );
-printf( "              OS_PATH_DELIMITER is '%c', and OS_PATH_LIST_SEPARATOR is '%c'.", OS_PATH_DELIMITER, OS_PATH_LIST_SEPARATOR );
-*/
+   HB_TRACE(("HB_DEFPATH: buffer is |%s|, size is %d, last char is |%c|", buffer, size, buffer[ size - 1]));
+   HB_TRACE(("HB_DEFPATH: OS_PATH_DELIMITER is |%c| and OS_PATH_LIST_SEPARATOR is |%c|", OS_PATH_DELIMITER, OS_PATH_LIST_SEPARATOR));
+
    /* If the path is not empty and it doesn't end with a drive or path
       delimiter, then add the appropriate separator. Use ':' if the size
       of the path is 1 and the list separator is not ':', otherwise use

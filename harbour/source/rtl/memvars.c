@@ -84,10 +84,6 @@ struct mv_PUBLIC_var_info
 };
 
 
-/* Uncomment this to trace memvars activity
-#define MEMVARDEBUG
-*/
-
 static void hb_memvarCreateFromItem( PHB_ITEM, BYTE, PHB_ITEM );
 static void hb_memvarCreateFromDynSymbol( PHB_DYNS, BYTE, PHB_ITEM );
 static void hb_memvarAddPrivate( PHB_DYNS );
@@ -218,9 +214,7 @@ HB_HANDLE hb_memvarValueNew( HB_ITEM_PTR pSource, BOOL bTrueMemvar )
    else
       pValue->item.type = IT_NIL;
 
-   #ifdef MEMVARDEBUG
-      printf( "\n>>>>>Memvar item created with handle =%i", hValue );
-   #endif
+   HB_TRACE(("hb_memvarValueNew: memvar item created with handle %i", hValue));
 
    return hValue;
 }
@@ -291,19 +285,18 @@ void hb_memvarValueIncRef( HB_HANDLE hValue )
 {
    HB_TRACE(("hb_memvarValueIncRef(%p)", hValue));
 
-   #ifdef MEMVARDEBUG
+#if 0
+   /* Debug */
    if( hValue < 1 || hValue > s_globalTableSize )
    {
-      printf( "\nInvalid MEMVAR handle %i (max %li)\n", hValue, s_globalTableSize );
+      HB_TRACE(("Invalid memvar handle %i (max %li)", hValue, s_globalTableSize));
       exit( 1 );
    }
-   #endif
+#endif
 
    s_globalTable[ hValue ].counter++;
 
-   #ifdef MEMVARDEBUG
-      printf( "\n+++Memvar item (%i) increment refCounter=%li", hValue, s_globalTable[ hValue ].counter );
-   #endif
+   HB_TRACE(("Memvar item (%i) increment refCounter=%li", hValue, s_globalTable[ hValue ].counter));
 }
 
 /*
@@ -317,18 +310,18 @@ void hb_memvarValueDecRef( HB_HANDLE hValue )
 
    HB_TRACE(("hb_memvarValueDecRef(%p)", hValue));
 
-   #ifdef MEMVARDEBUG
+#if 0
    if( hValue < 1 || hValue > s_globalTableSize )
    {
-      printf( "\nInvalid MEMVAR handle %i (max %li)\n", hValue, s_globalTableSize );
+      HB_TRACE(("Invalid memvar handle %i (max %li)", hValue, s_globalTableSize));
       exit( 1 );
    }
-   #endif
+#endif
 
    pValue = s_globalTable + hValue;
-   #ifdef MEMVARDEBUG
-      printf( "\n---Memvar item (%i) decrement refCounter=%li", hValue, pValue->counter-1 );
-   #endif
+
+   HB_TRACE(("Memvar item (%i) decrement refCounter=%li", hValue, pValue->counter-1));
+
    if( pValue->counter > 0 )
    {
       if( --pValue->counter == 0 )
@@ -353,19 +346,19 @@ void hb_memvarValueDecRef( HB_HANDLE hValue )
          else
             ++s_globalFreeCnt;
 
-      #ifdef MEMVARDEBUG
-         printf( "\n<<<<<Memvar item (%i) deleted", hValue );
-      #endif
+	 HB_TRACE(("Memvar item (%i) deleted", hValue));
       }
    }
-/* This can happen if for example PUBLIC variable holds a codeblock with
- * detached variable. When hb_memvarsRelease() is called then detached
- * variable can be released before the codeblock. So if the codeblock
- * will be released later then it will try to release again this detached
- * variable.
+   /* This can happen if for example PUBLIC variable holds a codeblock
+    * with detached variable. When hb_memvarsRelease() is called then
+    * detached variable can be released before the codeblock. So if
+    * the codeblock will be released later then it will try to release
+    * again this detached variable.
+    */
+#if 0
    else
-      printf( "\n Attempt to release released item " );
- */
+      HB_TRACE(("Attempt to release released item"));
+#endif
 }
 
 /*
@@ -385,9 +378,8 @@ void hb_memvarSetValue( PHB_SYMB pMemvarSymb, HB_ITEM_PTR pItem )
    pDyn = ( PHB_DYNS ) pMemvarSymb->pDynSym;
    if( pDyn )
    {
-      #ifdef MEMVARDEBUG
-         printf( "\n::::Memvar item (%i)(%s) assigned", pDyn->hMemvar, pMemvarSymb->szName );
-      #endif
+      HB_TRACE(("Memvar item (%i)(%s) assigned", pDyn->hMemvar, pMemvarSymb->szName));
+
       if( pDyn->hMemvar )
       {
          /* value is already created */
@@ -418,9 +410,8 @@ ERRCODE hb_memvarGet( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
    pDyn = ( PHB_DYNS ) pMemvarSymb->pDynSym;
    if( pDyn )
    {
-      #ifdef MEMVARDEBUG
-         printf( "\n????Memvar item (%i)(%s) queried", pDyn->hMemvar, pMemvarSymb->szName );
-      #endif
+      HB_TRACE(("Memvar item (%i)(%s) queried", pDyn->hMemvar, pMemvarSymb->szName));
+
       if( pDyn->hMemvar )
       {
          /* value is already created
@@ -476,9 +467,8 @@ void hb_memvarGetRefer( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
    pDyn = ( PHB_DYNS ) pMemvarSymb->pDynSym;
    if( pDyn )
    {
-      #ifdef MEMVARDEBUG
-         printf( "\n@@@@Memvar item (%i)(%s) referenced", pDyn->hMemvar, pMemvarSymb->szName );
-      #endif
+      HB_TRACE(("Memvar item (%i)(%s) referenced", pDyn->hMemvar, pMemvarSymb->szName));
+
       if( pDyn->hMemvar )
       {
          /* value is already created */

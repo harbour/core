@@ -1,3 +1,26 @@
+Tue Oct 26 17:16:43 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* source/common/hbtrace.c: 
+	Now it is REALLY efficient; no copying, nothing.
+	
+	* source/rtl/codebloc.c: 
+	* source/rtl/dir.c: 
+	* source/rtl/filesys.c: 
+	* source/rtl/inkey.c: 
+	* source/rtl/memvars.c: 
+	* source/rtl/set.c: 
+	* source/vm/hvm.c: 
+	Got rid of other ways of tracing. Hopefully now HB_TRACE() is the
+	only, standard way used in Harbour.
+
+	* source/rtl/gt/gt_tpl.c: 
+	* source/rtl/gt/gtdos.c: 
+	* source/rtl/gt/gtos2.c: 
+	* source/rtl/gt/gtstd.c: 
+	* source/rtl/gt/gtwin.c: 
+	Made sure all the GT implementations (including the template) have
+	proper HB_TRACE() calls.
+
 Tue Oct 26 13:20:46 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* source/runner/runlib.c: 

@@ -575,11 +575,9 @@ HARBOUR HB_DIRECTORY( void )
    if( strlen( pfname ) < 1 )
       strcpy( pfname, "*" );
 
-/* debug code
-   printf( "\n dirname pattern %s %s ", dirname, pattern );
-   printf( "\n pfname pfext %s %s ", pfname, pfext );
-   while( 0 == getchar() );
-*/
+   HB_TRACE(("dirname: |%s|, pattern: |%s|\n", dirname, pattern));
+   HB_TRACE(("pfname: |%s|, pfext: |%s|\n", pfname, pfext));
+
    /* should have drive,directory in dirname and filespec in pattern */
 
    tzset();
@@ -622,10 +620,8 @@ HARBOUR HB_DIRECTORY( void )
 
    if( NULL == dir )
    {
-/*   debug code
-      printf( "\n invalid dirname %s ", dirname );
-      while( 0 == getchar() );
-*/
+      HB_TRACE(("invalid dirname |%s|\n", dirname));
+
       hb_itemReturn( pDir );
       hb_itemRelease( pDir );
       return;
@@ -660,10 +656,8 @@ HARBOUR HB_DIRECTORY( void )
       if( !*fname )
          strcpy( fname, "*" );
 
-/*   debug code
-      printf( "\n fname: %s fext: %s ", fname, fext );
-      while( 0 == getchar() );
-*/
+      HB_TRACE(("fname: |%s|, fext: |%s|\n", fname, fext));
+
       if( hb_strMatchRegExp( fname, pfname ) && hb_strMatchRegExp( fext, pfext ) )
       {
          attrib = 0;
@@ -748,19 +742,13 @@ HARBOUR HB_DIRECTORY( void )
             sprintf( ttime, "%02d:%02d:%02d",
                ft->tm_hour, ft->tm_min, ft->tm_sec );
 
-/* debug code
-            printf( "\n name date time    %s %s %s ", filename, ddate, ttime );
-            while( 0 == getchar() );
-*/
+            HB_TRACE(("name: |%s|, date: |%s|, time: |%s|\n", filename, ddate, ttime));
 
          }
-/* debug code
          else
          {
-            printf( "\n invalid file %s ", fullfile );
-            while( 0 == getchar() );
+            HB_TRACE(("invalid file |%s|\n", fullfile));
          }
-*/
 
          if( !( ( ( ushbMask & FA_HIDDEN ) == 0 && ( attrib & FA_HIDDEN ) > 0 ) ||
                 ( ( ushbMask & FA_SYSTEM ) == 0 && ( attrib & FA_SYSTEM ) > 0 ) ||
@@ -806,10 +794,9 @@ HARBOUR HB_DIRECTORY( void )
 #if defined(_MSC_VER) || defined(__IBMCPP__) || defined(__MINGW32__)
    }
 #endif
-/*   debug code
-      printf( "\n normal return" );
-      while( 0 == getchar() );
-*/
+
+   HB_TRACE(("normal return\n"));
+
    hb_itemReturn( pDir ); /* DIRECTORY() returns an array */
    hb_itemRelease( pDir );
 

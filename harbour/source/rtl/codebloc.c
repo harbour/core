@@ -39,10 +39,6 @@
 #include "ctoharb.h"
 #include "itemapi.h"
 
-/* Uncomment this to trace codeblocks activity
-#define CODEBLOCKDEBUG
-*/
-
 /* Creates the codeblock structure
  *
  * pBuffer -> the buffer with pcodes (without HB_P_PUSHBLOCK)
@@ -167,9 +163,8 @@ HB_CODEBLOCK_PTR hb_codeblockNew( BYTE * pBuffer,
    pCBlock->pSymbols  = pSymbols;
    pCBlock->ulCounter = 1;
 
-#ifdef CODEBLOCKDEBUG
-   printf( "\ncodeblock created (%li) %lx", pCBlock->ulCounter, pCBlock );
-#endif
+   HB_TRACE(("codeblock created (%li) %lx\n", pCBlock->ulCounter, pCBlock));
+
    return pCBlock;
 }
 
@@ -181,9 +176,8 @@ void  hb_codeblockDelete( HB_ITEM_PTR pItem )
 
    HB_TRACE(("hb_codeblockDelete(%p)", pItem));
 
-#ifdef CODEBLOCKDEBUG
-   printf( "\ndelete a codeblock (%li) %lx", pCBlock->ulCounter, pCBlock );
-#endif
+   HB_TRACE(("deleting a codeblock (%li) %lx\n", pCBlock->ulCounter, pCBlock));
+
    if( --pCBlock->ulCounter == 0 )
    {
       /* free space allocated for local variables
@@ -206,9 +200,8 @@ void  hb_codeblockDelete( HB_ITEM_PTR pItem )
       /* free space allocated for a CODEBLOCK structure
       */
       hb_xfree( pCBlock );
-      #ifdef CODEBLOCKDEBUG
-         printf( "\ncodeblock deleted (%li) %lx", pCBlock->ulCounter, pCBlock );
-      #endif
+
+      HB_TRACE(("codeblock deleted (%li) %lx\n", pCBlock->ulCounter, pCBlock));
    }
 }
 
@@ -262,7 +255,6 @@ void  hb_codeblockCopy( PHB_ITEM pDest, PHB_ITEM pSource )
 
    pDest->item.asBlock.value = pSource->item.asBlock.value;
    pDest->item.asBlock.value->ulCounter++;
-   #ifdef CODEBLOCKDEBUG
-      printf( "\ncopy a codeblock (%li) %lx", pSource->item.asBlock.value->ulCounter, pSource->item.asBlock.value );
-   #endif
+
+   HB_TRACE(("copied a codeblock (%li) %lx\n", pSource->item.asBlock.value->ulCounter, pSource->item.asBlock.value));
 }

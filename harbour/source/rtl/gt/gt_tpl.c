@@ -41,34 +41,46 @@
 
 void hb_gt_Init( void )
 {
+   HB_TRACE(("hb_gt_Init()"));
+
    /* TODO: Is anything required to initialize the video subsystem? */
 }
 
 void hb_gt_Done( void )
 {
+   HB_TRACE(("hb_gt_Done()"));
+
    /* TODO: */
 }
 
 BOOL hb_gt_IsColor( void )
 {
+   HB_TRACE(("hb_gt_IsColor()"));
+
    /* TODO: How to detect this? */
    return TRUE;
 }
 
 USHORT hb_gt_GetScreenWidth( void )
 {
+   HB_TRACE(("hb_gt_GetScreenWidth()"));
+
    /* TODO: How many columns on screen? */
    return 0;
 }
 
 USHORT hb_gt_GetScreenHeight( void )
 {
+   HB_TRACE(("hb_gt_GetScreenHeight()"));
+
    /* TODO: How many rows on screen? */
    return 0;
 }
 
 void hb_gt_SetPos( USHORT uiRow, USHORT uiCol )
 {
+   HB_TRACE(("hb_gt_SetPos(%hu, %hu)", uiRow, uiCol));
+
    /* TODO: How to reposition the cursor? */
 
    HB_SYMBOL_UNUSED( uiRow );
@@ -77,12 +89,16 @@ void hb_gt_SetPos( USHORT uiRow, USHORT uiCol )
 
 USHORT hb_gt_Col( void )
 {
+   HB_TRACE(("hb_gt_Col()"));
+
    /* TODO: What Column is the cursor on? */
    return 0;
 }
 
 USHORT hb_gt_Row( void )
 {
+   HB_TRACE(("hb_gt_Row()"));
+
    /* TODO: What Row is the cursor on? */
    return 0;
 }
@@ -91,16 +107,9 @@ USHORT hb_gt_GetCursorStyle( void )
 {
    /* TODO: What shape is the cursor? */
    USHORT uiStyle = 0;
-/*
-   char start, end;
 
-   if( !visible )
-   {
-      uiStyle = SC_NONE;
-   }
-   else
-   {
-*/
+   HB_TRACE(("hb_gt_GetCursorStyle()"));
+
       /* example from the dos driver */
 /*
       hb_gt_GetCursorSize( &start, &end )
@@ -126,6 +135,8 @@ USHORT hb_gt_GetCursorStyle( void )
 
 void hb_gt_SetCursorStyle( USHORT uiStyle )
 {
+   HB_TRACE(("hb_gt_SetCursorStyle(%hu)", uiStyle));
+
    /* TODO: How to set the shape of the cursor? */
    /* see ..\..\..\tests\working\cursrtst.prg for an explanation */
    switch( uiStyle )
@@ -153,6 +164,8 @@ void hb_gt_SetCursorStyle( USHORT uiStyle )
 
 void hb_gt_Puts( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE * pbyStr, ULONG ulLen )
 {
+   HB_TRACE(("hb_gt_Puts(%hu, %hu, %d, %p, %lu)", uiRow, uiCol, (int) byAttr, pbyStr, ulLen));
+
    HB_SYMBOL_UNUSED( uiRow );
    HB_SYMBOL_UNUSED( uiCol );
    HB_SYMBOL_UNUSED( byAttr );
@@ -162,6 +175,8 @@ void hb_gt_Puts( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE * pbyStr, ULONG u
 
 void hb_gt_GetText( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyDst )
 {
+   HB_TRACE(("hb_gt_GetText(%hu, %hu, %hu, %hu, %p)", uiTop, uiLeft, uiBottom, uiRight, pbyDst));
+
    HB_SYMBOL_UNUSED( uiTop );
    HB_SYMBOL_UNUSED( uiLeft );
    HB_SYMBOL_UNUSED( uiBottom );
@@ -171,6 +186,8 @@ void hb_gt_GetText( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight
 
 void hb_gt_PutText( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbySrc )
 {
+   HB_TRACE(("hb_gt_PutText(%hu, %hu, %hu, %hu, %p)", uiTop, uiLeft, uiBottom, uiRight, pbySrc));
+
    HB_SYMBOL_UNUSED( uiTop );
    HB_SYMBOL_UNUSED( uiLeft );
    HB_SYMBOL_UNUSED( uiBottom );
@@ -180,6 +197,8 @@ void hb_gt_PutText( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight
 
 void hb_gt_SetAttribute( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE byAttr )
 {
+   HB_TRACE(("hb_gt_SetAttribute(%hu, %hu, %hu, %hu, %d)", uiTop, uiLeft, uiBottom, uiRight, (int) byAttr));
+
    /* TODO: we want to take a screen that is say bright white on blue,
             and change the attributes only for a section of the screen
             to white on black.
@@ -194,6 +213,8 @@ void hb_gt_SetAttribute( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT ui
 
 void hb_gt_Scroll( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE byAttr, SHORT iRows, SHORT iCols )
 {
+   HB_TRACE(("hb_gt_Scroll(%hu, %hu, %hu, %hu, %d, %hd, %hd)", uiTop, uiLeft, uiBottom, uiRight, (int) byAttr, iRows, iCols));
+
    HB_SYMBOL_UNUSED( uiTop );
    HB_SYMBOL_UNUSED( uiLeft );
    HB_SYMBOL_UNUSED( uiBottom );
@@ -204,6 +225,8 @@ void hb_gt_Scroll( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight,
 
 void hb_gt_DispBegin( void )
 {
+   HB_TRACE(("hb_gt_DispBegin()"));
+
    /* TODO: Is there a way to change screen buffers?
             ie: can we write somewhere without it going to the screen
             and then update the screen from this buffer at a later time?
@@ -213,11 +236,15 @@ void hb_gt_DispBegin( void )
 
 void hb_gt_DispEnd()
 {
+   HB_TRACE(("hb_gt_DispEnd()"));
+
    /* TODO: here we flush the buffer, and restore normal screen writes */
 }
 
 BOOL hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
 {
+   HB_TRACE(("hb_gt_SetMode(%hu, %hu)", uiRows, uiCols));
+
    /* TODO: How to change the size of the screen? */
 
    HB_SYMBOL_UNUSED( uiRows );
@@ -226,6 +253,8 @@ BOOL hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
 
 void hb_gt_Replicate( BYTE byChar, ULONG ulLen )
 {
+   HB_TRACE(("hb_gt_Replicate(%d, %lu)", (int) byChar, ulLen));
+
    /* TODO: this will write character c nlength times to the screen.
             Note that it is not used yet
             If there is no native function that supports this, it is
@@ -238,6 +267,8 @@ void hb_gt_Replicate( BYTE byChar, ULONG ulLen )
 
 BOOL hb_gt_GetBlink()
 {
+   HB_TRACE(("hb_gt_GetBlink()"));
+
    /* TODO: under dos, the background 'intensity' bit can be switched
             from intensity to 'blinking'
             does this work under your platform?
@@ -247,6 +278,8 @@ BOOL hb_gt_GetBlink()
 
 void hb_gt_SetBlink( BOOL bBlink )
 {
+   HB_TRACE(("hb_gt_SetBlink(%d)", (int) bBlink));
+
    /* TODO: set the bit if it's supported */
 
    HB_SYMBOL_UNUSED( bBlink );

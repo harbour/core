@@ -44,8 +44,7 @@ int    hb_tr_line_ = 0;
 
 void hb_tr_trace( char * fmt, ... )
 {
-  char file[256];
-  int i, j;
+  int i;
   va_list ap;
 
   /*
@@ -55,7 +54,7 @@ void hb_tr_trace( char * fmt, ... )
    *
    * we just show
    *
-   *   baz.c
+   *   foo/bar/baz.c
    */
   for (i = 0; hb_tr_file_[i] != '\0'; ++i) {
     if (hb_tr_file_[i] != '.' &&
@@ -63,16 +62,12 @@ void hb_tr_trace( char * fmt, ... )
         hb_tr_file_[i] != '\\')
       break;
   }
-  for (j = 0; hb_tr_file_[i] != '\0'; ++i, ++j) {
-    file[j] = hb_tr_file_[i];
-  }
-  file[j] = '\0';
 
   /*
    * Print file and line.
    */
   fprintf(stderr, "%s:%d: ",
-	  file, hb_tr_line_);
+	  hb_tr_file_ + i, hb_tr_line_);
 
   /*
    * Print the name and arguments for the function.

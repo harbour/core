@@ -379,11 +379,9 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
                         BOOL bCtrl = dwState & ( LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED );
                         BOOL bShift = dwState & SHIFT_PRESSED;
                         BOOL bEnhanced = dwState & ENHANCED_KEY;
-/*
-   Debug code:
 
-printf("\nhb_inkeyPoll: wKey is %d, dwState is %d, ch is %d", wKey, dwState, ch);
-*/
+			HB_TRACE(("hb_inkeyPoll: wKey is %d, dwState is %d, ch is %d", wKey, dwState, ch));
+
                         if( bAlt )
                         {
                            /* Alt key held */
@@ -607,19 +605,20 @@ printf("\nhb_inkeyPoll: wKey is %d, dwState is %d, ch is %d", wKey, dwState, ch)
                      }
                   }
                }
-/*
-   Debug code:
-               else
-               {
 
-WORD wKey;
-if( s_eventmask & INKEY_EXTENDED )
-   wKey = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualKeyCode;
-else
-   wKey = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualScanCode;
-printf("\nhb_inkeyPoll: wKey is %d", wKey);
-               }
-*/
+#if 0
+	       /* Debug code: */
+               else
+		 {
+
+		   WORD wKey;
+		   if( s_eventmask & INKEY_EXTENDED )
+		     wKey = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualKeyCode;
+		   else
+		     wKey = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualScanCode;
+		   HB_TRACE(("hb_inkeyPoll: wKey is %d", wKey));
+		 }
+#endif
             }
          }
          /* Set up to process the next input event (if any) */

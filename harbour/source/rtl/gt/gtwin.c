@@ -107,6 +107,8 @@ static BOOL hb_gt_CtrlHandler( DWORD dwCtrlType )
 {
    BOOL bHandled;
 
+   HB_TRACE(("hb_gt_CtrlHandler(%lu)", (unsigned long) dwCtrlType));
+
    switch( dwCtrlType )
    {
    case CTRL_C_EVENT:

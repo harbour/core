@@ -218,23 +218,21 @@ static int convert_open_flags( USHORT uiFlags )
 
    HB_TRACE(("convert_open_flags(%hu)", uiFlags));
 
-/* DEBUG: printf("\nHarbour open flags: 0x%04x", uiFlags); */
-
    result_flags |= O_BINARY;
-/* DEBUG: printf(", O_BINARY"); */
+   HB_TRACE(("convert_open_flags: added O_BINARY\n"));
 
 #if defined( _MSC_VER ) || defined(__MINGW32__) || defined(__IBMCPP__)
    if( ( uiFlags & ( FO_WRITE | FO_READWRITE ) ) == FO_READ )
    {
       result_flags |= O_RDONLY;
-/* DEBUG: printf(", O_RDONLY"); */
+      HB_TRACE(("convert_open_flags: added O_RDONLY\n"));
    }
 #else
 
    if( ( uiFlags & ( FO_WRITE | FO_READWRITE ) ) == FO_READ )
    {
       result_flags |= ( O_RDONLY | SH_COMPAT );
-/* DEBUG: printf(", O_RDONLY SH_COMPAT"); */
+      HB_TRACE(("convert_open_flags: added O_RDONLY SH_COMPAT\n"));
    }
 #endif
 
@@ -242,13 +240,13 @@ static int convert_open_flags( USHORT uiFlags )
    if( uiFlags & FO_WRITE )
    {
       result_flags |= O_WRONLY;
-/* DEBUG: printf(", O_WRONLY"); */
+      HB_TRACE(("convert_open_flags: added O_WRONLY\n"));
    }
 
    if( uiFlags & FO_READWRITE )
    {
       result_flags |= O_RDWR;
-/* DEBUG: printf(", O_RDWR"); */
+      HB_TRACE(("convert_open_flags: added O_RDWR\n"));
    }
 
 #if ! defined(_MSC_VER) && ! defined(__MINGW32__) && ! defined(__IBMCPP__)
@@ -256,34 +254,35 @@ static int convert_open_flags( USHORT uiFlags )
    if( ( uiFlags & FO_DENYREAD ) == FO_DENYREAD )
    {
       result_flags |= SH_DENYRD;
-/* DEBUG: printf(", SH_DENYRD"); */
+      HB_TRACE(("convert_open_flags: added SH_DENYRD\n"));
    }
 
    else if( uiFlags & FO_EXCLUSIVE )
    {
       result_flags |= SH_DENYRW;
-/* DEBUG: printf(", SH_DENYRW"); */
+      HB_TRACE(("convert_open_flags: added SH_DENYRW\n"));
    }
 
    else if( uiFlags & FO_DENYWRITE )
    {
       result_flags |= SH_DENYWR;
-/* DEBUG: printf(", SH_DENYWR"); */
+      HB_TRACE(("convert_open_flags: added SH_DENYWR\n"));
    }
 
    if( uiFlags & FO_DENYNONE )
    {
       result_flags |= SH_DENYNO;
-/* DEBUG: printf(", SH_DENYNO"); */
+      HB_TRACE(("convert_open_flags: added SH_DENYNO\n"));
    }
 
    if( uiFlags & FO_SHARED )
    {
       result_flags |= SH_DENYNO;
-/* DEBUG: printf(", SH_DENYNO"); */
+      HB_TRACE(("convert_open_flags: added SH_DENYNO\n"));
    }
 #endif
-/* DEBUG: printf(", C/C++ open flags: 0x%04x\n", result_flags); */
+
+   HB_TRACE(("convert_open_flags: result is 0x%04x\n", result_flags));
 
    return result_flags;
 }
@@ -318,7 +317,7 @@ static void convert_create_flags( USHORT uiFlags, int * result_flags, unsigned *
    if( uiFlags & FC_READONLY )
    {
       *result_pmode = S_IRUSR;
-/* DEBUG: printf(" S_IRUSR"); */
+      HB_TRACE(("convert_create_flags: S_IRUSR"));
    }
 
    if( uiFlags & FC_HIDDEN )
@@ -326,7 +325,8 @@ static void convert_create_flags( USHORT uiFlags, int * result_flags, unsigned *
 
    if( uiFlags & FC_SYSTEM )
       *result_flags |= 0;
-/* DEBUG: printf(" 0x%04x, 0x%04x\n", *result_flags, *result_pmode); */
+
+   HB_TRACE(("convert_create_flags: 0x%04x, 0x%04x\n", *result_flags, *result_pmode));
 }
 
 #endif
@@ -1747,12 +1747,10 @@ PHB_FNAME hb_fsFNameSplit( char * szFileName )
       pFileName->szName[ iDotPos - iSlashPos - 1 ] = '\0';
    }
 
-/* DEBUG
-   printf( "\nFilename: %s\n", szFileName );
-   printf( "\n  szPath: %s\n", pFileName->szPath );
-   printf( "\n  szName: %s\n", pFileName->szName );
-   printf( "\n   szExt: %s\n", pFileName->szExtension );
-*/
+   HB_TRACE(("hb_fsFNameSplit: Filename: |%s|\n", szFileName));
+   HB_TRACE(("hb_fsFNameSplit:   szPath: |%s|\n", pFileName->szPath));
+   HB_TRACE(("hb_fsFNameSplit:   szName: |%s|\n", pFileName->szName));
+   HB_TRACE(("hb_fsFNameSplit:    szExt: |%s|\n", pFileName->szExtension));
 
    return pFileName;
 }
@@ -1819,13 +1817,10 @@ char * hb_fsFNameMerge( char * szFileName, PHB_FNAME pFileName )
       }
    }
 
-/* DEBUG
-   printf( "\nMERGE:\n" );
-   printf( "\n  szPath: %s\n", pFileName->szPath );
-   printf( "\n  szName: %s\n", pFileName->szName );
-   printf( "\n   szExt: %s\n", pFileName->szExtension );
-   printf( "\nFilename result: %s\n", szFileName );
-*/
+   HB_TRACE(("hb_fsFNameMerge:   szPath: |%s|\n", pFileName->szPath));
+   HB_TRACE(("hb_fsFNameMerge:   szName: |%s|\n", pFileName->szName));
+   HB_TRACE(("hb_fsFNameMerge:    szExt: |%s|\n", pFileName->szExtension));
+   HB_TRACE(("hb_fsFNameMerge: Filename: |%s|\n", szFileName));
 
    return szFileName;
 }
