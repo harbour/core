@@ -1,3 +1,16 @@
+2001-12-02 23:15 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
+   * contrib/mysql/mysql.c
+     + DatatoSql() and FILETOSQLBINARY() functions.First to format characters to
+       mysql format, Second to read an file and return it content as an mysql
+       character string format
+   * contrib/mysql/tmysql.prg
+     * New Enhacemets
+     + Added support to mediumint and mediumblob type on the follow classes
+     + TMySqlRow:FieldType() will Return an "B" for mediumblob and an "I" Mediumint field
+     + TMySQLServer:CreateTable(cTable, aStruct,cPrimaryKey,cUniqueKey,cAuto) Added tree new parameters
+   * contrib/mysql/readme.txt
+     * Updated file to reflect the changes
+
 2001-12-01 18:10 GMT+1 JFL (mafact) <jfl@mafact.com>
    * harbour/source/vm/arrays.c
      * Last version from RON. No change in logic.
