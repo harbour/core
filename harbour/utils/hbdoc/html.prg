@@ -53,7 +53,8 @@ CLASS THTML
    METHOD WriteTitle( cTitle )
    METHOD WritePar( cPar )
    METHOD WriteParBold( cPar )
-   METHOD WriteLink( cLink )
+   METHOD WriteLink( cLink ,cName)
+   METHOD WriteChmLink( cLink ,cName)
    METHOD WriteText( cText )
    METHOD WriteMetaTag(cTag,cDescription)
    METHOD CLOSE()
@@ -63,12 +64,12 @@ CLASS THTML
    METHOD ADDPARAM(cName,cValue)
    METHOD EndOBJect()
    METHOD NewContent(cFile)
+   METHOD ListItem()
 ENDCLASS
 
 METHOD New( cFile,aMetaContents ) CLASS THTML
     
    Local nCount
-   ? Valtype(aMetaContents)
    IF Nx > 0
       FCLOSE( NX )
    ENDIF
@@ -112,13 +113,13 @@ METHOD WriteParBold( cPar, lEndDl, lPar ) CLASS THTML
    DEFAULT lEnddl TO .T.
    DEFAULT lPar TO .T.
    IF lEndDl .AND. lPar
-      FWRITE( Self:nHandle, "</P></dd>" + CRLF + "</DL>" + CRLF + "<DL>" + CRLF + "<dt><b>" + ALLTRIM( cPar ) + '</b></dt>' + CRLF )
+      FWRITE( Self:nHandle, "</P></dd>" + CRLF + "</DL>" + CRLF + "<DL>" + CRLF + "<dt><b>" + ALLTRIM( cPar ) + '</b></dt><p>' + CRLF )
    ELSEIF !lPar .AND. !lEnddl
-      FWRITE( Self:nHandle, '<DL>' + CRLF + "<dt><b>" + ALLTRIM( cPar ) + '</b></dt>' + CRLF )
+      FWRITE( Self:nHandle, '<DL>' + CRLF + "<dt><b>" + ALLTRIM( cPar ) + '</b></dt><p>' + CRLF )
    ELSEIF !lPar .AND. lEnddl
-      FWRITE( Self:nHandle, "</PRE></dd>" + CRLF + "</DL>" + CRLF + "<DL>" + CRLF + "<dt><b>" + ALLTRIM( cPar ) + '</b></dt>' + CRLF )
+      FWRITE( Self:nHandle, "</PRE></dd>" + CRLF + "</DL>" + CRLF + "<DL>" + CRLF + "<dt><b>" + ALLTRIM( cPar ) + '</b></dt><p>' + CRLF )
    ELSEIF lPar .AND. !lEnddl
-      FWRITE( Self:nHandle, "</P></dd>" + CRLF + "<DL>" + CRLF + "<dt><b>" + ALLTRIM( cPar ) + '</b></dt>' + CRLF )
+      FWRITE( Self:nHandle, "</P></dd>" + CRLF + "<DL>" + CRLF + "<dt><b>" + ALLTRIM( cPar ) + '</b></dt><p>' + CRLF )
 
    ENDIF
 RETURN Self
@@ -166,7 +167,6 @@ return Self
 METHOD NewChm( cFile ,aMetaContents,cFuncName) CLASS THTML
     
    Local nCount
-   ? Valtype(aMetaContents)
    IF Nx > 0
       FCLOSE( NX )
    ENDIF
@@ -191,10 +191,10 @@ METHOD NewChm( cFile ,aMetaContents,cFuncName) CLASS THTML
 RETURN Self
 
 method ADDOBJECT(cType,cClassId) Class THTML
-   IF VALTYPE(cClassId)<>NIL
+   IF VALTYPE(cClassId)<>NIL .and. VALTYPE(cClassId)=="C"
       FWRITE( Self:nHandle,'<OBJECT TYPE="'+cType+'" CLASSID="'+cClassId+'">'+CRLF)
    ELSE
-      FWRITE( Self:nHandle,'<OBJECT TYPE="'+cType+'">'+CRLF)
+      FWRITE( Self:nHandle,'<OBJECT TYPE="'+ cType +'">'+CRLF)
    ENDIF
 RETURN Self
 METHOD  ENDOBJECT() Class THTML
@@ -218,4 +218,33 @@ METHOD NewContent( cFile ) CLASS THTML
    nX := Self:nHandle
    FWRITE( Self:nHandle, "<HTML>" + CRLF )
 RETURN Self
+
+METHOD ListItem() CLASS tHtml
+   FWRITE( Self:nHandle, "<LI>" )
+RETURN SELF
+METHOD WriteChmLink( cLink, cName ) CLASS THTML
+
+   LOCAL nPos
+   LOCAL cTemp := ''
+
+   nPos := AT( "()", cLink )
+   IF nPos > 0
+      if AT(".htm",cLink)=0
+      cTemp := SUBSTR( cLink, 1, nPos - 1 ) + '.htm'
+      else
+      cTemp := SUBSTR( cLink, 1, nPos - 1 )
+      endif
+   ELSE
+         if AT(".htm",cLink)=0
+      cTemp := ALLTRIM( cLink ) + '.htm'
+        else
+     cTemp := ALLTRIM( cLink ) 
+      endif
+   ENDIF
+   IF cName != Nil
+      cLink := cName
+   ENDIF
+   cTemp := STRTRAN( cTemp, " ", "" )
+   FWRITE( Self:nHandle, "<a href=" + LOWER( cTemp ) + ">" + cLink + "</a><br>" + CRLF )
+Return Self
 *+ EOF: HTML.PRG

@@ -535,6 +535,7 @@ end
                                      LONGLINE, aDirList[ i, F_NAME ] )
                      ENDIF
                      lBlankLine := EMPTY( cBuffer )
+                     cBuffer := oOs2:DosToOs2Text(cBuffer)
                      IF AT( "<par>", cBuffer ) > 0
                         STRTRAN( cBuffer, "<par>", '' )
                         STRTRAN( cBuffer, "</par>", '' )
@@ -551,7 +552,7 @@ end
                                      LONGLINE, aDirList[ i, F_NAME ] )
                      ENDIF
                      lBlankLine := EMPTY( cBuffer )
-
+                     oOs2:DosToOs2Text(cBuffer)
                      procos2desc( cbuffer, oOs2, "Arguments" )
 
                   ELSEIF nMode = D_ARG
@@ -560,6 +561,7 @@ end
                                      LONGLINE, aDirList[ i, F_NAME ] )
                      ENDIF
                      lBlankLine := EMPTY( cBuffer )
+                     oOs2:DosToOs2Text(cBuffer)
                      procos2desc( cbuffer, oOs2, "Arguments" )
                   ELSEIF nMode = D_NORMAL
                      IF LEN( cBuffer ) > LONGLINE
@@ -567,6 +569,7 @@ end
                                      LONGLINE, aDirList[ i, F_NAME ] )
                      ENDIF
                      lBlankLine := EMPTY( cBuffer )
+                     oOs2:DosToOs2Text(cBuffer)
                      procos2desc( cBuffer, oOs2 )
                   ELSEIF nMode = D_DATALINK
                      IF LEN( cBuffer ) > LONGLINE
@@ -611,6 +614,7 @@ end
                                      LONGLINE, aDirList[ i, F_NAME ] )
                      ENDIF
                      lBlankLine := EMPTY( cBuffer )
+      oOs2:DosToOs2Text(cBuffer)
                      procos2desc( cBuffer, oOs2, "Compliance" )
 
                   ELSEIF nMode = D_DESCRIPTION
@@ -619,6 +623,7 @@ end
                                      LONGLINE, aDirList[ i, F_NAME ] )
                      ENDIF
                      lBlankLine := EMPTY( cBuffer )
+      oOs2:DosToOs2Text(cBuffer)
                      procos2desc( cBuffer, oOs2, "Description" )
 
                   ELSEIF nMode = D_EXAMPLE
@@ -632,13 +637,14 @@ end
                         oOs2:WritePar( "" )                 //:endpar()
                         lAddBlank := .F.
                      ENDIF
-
+      oOs2:DosToOs2Text(cBuffer)
                      procos2desc( cBuffer, oOs2, "Example" )
 
                   ELSEIF nMode = D_STATUS
                      IF !EMPTY( cBuffer )
                         oOs2:WriteParBold( "Status" )
                      ENDIF
+                           oOs2:DosToOs2Text(cBuffer)
                      ProcStatusOs2( oOs2, cBuffer )
 
                   ELSE
@@ -1011,6 +1017,7 @@ FUNCTION Procos2Desc( cBuffer, oOs2, cStyle )
    ENDIF
 
    IF AT( '<par>', cBuffer ) > 0 .AND. AT( '</par>', cBuffer ) > 0
+
       cBuffer   := STRTRAN( cBuffer, '<par>', '' )
       cBuffer   := STRTRAN( cBuffer, '<b>', ':hp2. ' )
       cBuffer   := STRTRAN( cBuffer, '</b>', ':ehp2. ' )
@@ -1032,7 +1039,7 @@ FUNCTION Procos2Desc( cBuffer, oOs2, cStyle )
          ENDIF
          IF !EMPTY( cBuffer )
             cBuffer := SUBSTR( cBuffer, 2 )
-            oOs2:WritePar( cBuffer )
+            oOs2:Writetext( cBuffer )
          ENDIF
 
       ELSEIF cStyle == "Arguments"

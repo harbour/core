@@ -14,7 +14,6 @@ PRG_SOURCES=\
 	gentrf.prg \
 	genng.prg \
 	genhtm.prg \
-	genchm.prg \
 	genrtf.prg \
 	genhpc.prg \
 	genasc.prg \

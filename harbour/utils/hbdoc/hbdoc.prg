@@ -254,7 +254,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
 
    CLEAR SCREEN
    SET CURSOR OFF
-   ReadLinkFile( cLinkName )
+
    if lNgi
    cCompiler := fill_Link_info( cLinkName )
    endif        
@@ -267,6 +267,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
       IF EMPTY( DIRECTORY( "rtf.*", "D" ) )
          FT_MKDIR( "rtf" )
       ENDIF
+      ReadLinkFile( cLinkName )
    ELSEIF lWww
       IF EMPTY( DIRECTORY( "htm.*", "D" ) )
          FT_MKDIR( "htm" )
@@ -280,6 +281,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
       IF EMPTY( DIRECTORY( "ngi.*", "D" ) )
          FT_MKDIR( "ngi" )
       ENDIF
+         ReadLinkFile( cLinkName )
    ELSEIF lTroff
       IF EMPTY( DIRECTORY( "tr.*", "D" ) )
          FT_MKDIR( "tr" )
@@ -453,14 +455,14 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
           aadd(aMetaContents,{'Keywords',"Harbour project, Clipper, xBase, database, Free Software, GNU, compiler, cross platform, 32-bit, FiveWin,"+cItem})
           ohtm:=THTML():new('htm\hb'+strtran(citem," ","")+'.htm',aMetaContents)
           ohtm:WriteText('<h2>'+adocinfo[1,1]+'</h2><br>')
-          ohtm:WriteText("<ul>")
+          ohtm:WriteText("<pre><ul>")
   
       for ppp:=1 to len(adocinfo)
       
            if citem ==adocinfo[ppp,1] 
-               oHtm:Writelink(adocinfo[ppp,4],UpperLower(adocinfo[ppp,2]))
+               oHtm:Writelink(adocinfo[ppp,4],pad(adocinfo[ppp,2],21)+adocinfo[ppp,3])
            else
-           ohtm:WriteText("</ul>")
+           ohtm:WriteText("</ul></pre>")
            ohtm:close()
            citem:=adocinfo[ppp,1]
            aMetaContents:={}
@@ -471,8 +473,8 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
 
 //                    oHtm:WriteMetaTag('Keywords',"Harbour project, Clipper, xBase, database, Free Software, GNU, compiler, cross platform, 32-bit, FiveWin,"+cItem)
            ohtm:WriteText('<h2>'+adocinfo[ppp,1]+'</h2><br>')
-           ohtm:WriteText("<ul>")
-           oHtm:Writelink(adocinfo[ppp,4],UpperLower(adocinfo[ppp,2]))
+           ohtm:WriteText("<pre><ul>")
+           oHtm:Writelink(adocinfo[ppp,4],pad(adocinfo[ppp,2],21)+adocinfo[ppp,3])
            endif
            next
         if ppp>len(adocinfo)
@@ -518,66 +520,117 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
             
       ohtm1:writetext('</ul>')        
         ohtm1:close()
-/*
-  oHtm := THTML():New( "htm\harbour.htm" )
 
-/*
-      ASORT( awww,,, { | x, y | x[ 1 ] < y[ 1 ] } )
-
-      FOR nPos := 1 TO LEN( aWww )
-         cTemp := aWww[ nPos, 1 ]
-         IF LEFT( cTemp, 1 ) >= "A" .AND. LEFT( cTemp, 1 ) < "N" .AND. AT( "()", cTemp ) > 0
-            oHtm:WriteLink( LOWER( aWww[ nPos, 2 ] ), UpperLower( aWww[ nPos, 1 ] ) )
-         ENDIF
-      NEXT
-      FOR nPos := 1 TO LEN( aWww )
-         cTemp := aWww[ nPos, 1 ]
-         IF LEFT( cTemp, 1 ) >= "N" .AND. LEFT( cTemp, 1 ) < "_" .AND. AT( "()", cTemp ) > 0
-            oHtm:WriteLink( LOWER( aWww[ nPos, 2 ] ), UpperLower( aWww[ nPos, 1 ] ) )
-         ENDIF
-      NEXT
-      oHtm:WriteText( "</ul>" )
-      oHtm:Writetext( "<h2>Commands</h2>" )
-      oHtm:WriteText( "<UL>" )
-      FOR nPos := 1 TO LEN( aWww )
-         cTemp := aWww[ nPos, 1 ]
-         IF AT( "()", cTemp ) == 0 .AND. ctemp <> "LICENSE" .AND. cTemp <> "OVERVIEW" .AND. cTemp <> "Compiler Options" ;
-                .AND. UPPER( LEFT( ctemp, 4 ) ) <> "BASE" .AND. UPPER( LEFT( cTemp, 4 ) ) <> "TERM" .AND. UPPER( LEFT( cTemp, 5 ) ) <> "TOOLS"
-
-            oHtm:WriteLink( LOWER( aWww[ nPos, 2 ] ), UpperLower( aWww[ nPos, 1 ] ) )
-         ENDIF
-      NEXT
-      oHtm:WriteText( "</ul>" )
-      oHtm:WriteText( "<h2>Run Time Error</h2>" )
-      oHtm:WriteText( "<ul>" )
-      FOR nPos := 1 TO LEN( aWww )
-         cTemp := aWww[ nPos, 1 ]
-         IF AT( "()", cTemp ) == 0 .AND. UPPER( LEFT( ctemp, 4 ) ) == "BASE" .OR. UPPER( LEFT( cTemp, 4 ) ) == "TERM" .OR. UPPER( LEFT( cTemp, 5 ) ) == "TOOLS"
-            oHtm:WriteLink( LOWER( aWww[ nPos, 2 ] ), UpperLower( aWww[ nPos, 1 ] ) )
-         ENDIF
-      NEXT
-      oHtm:WriteText( "</ul>" )
-      */
       oHtm:Close()
    ELSEIF lChm
       nHpj := FCREATE( 'chm\'+lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".hhp" )
 
       FWRITE( nHpj, '[OPTIONS]' + CRLF )
       FWRITE( nHpj, 'Compatibility=1.1 or later'+CRLF)
+      FWRITE( nHpj, 'Auto Index=Yes'+CRLF)
       FWRITE( nHpj, 'Language=0x416 Português (brasileiro)' + CRLF )
-      FWRITE( nHpj, 'compiled file=.\'+ lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".chm"+ CRLF )
+      FWRITE( nHpj, 'Contents file=.\'+ lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".hhc"+ CRLF )
+      FWRITE( nHpj, 'Compiled file=.\'+ lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".chm"+ CRLF )
       FWRITE( nHpj, 'Display compile progress=No'+CRLF)
       nPos:=aScan(awww,{|x| Upper(x[1])="OVERVIEW"})
       if nPos > 0
-         FWRITE( nHpj,'Default topic='+awww[npos,2]+CRLF)
+         FWRITE( nHpj,'Default topic='+ lower(awww[npos,2])+".htm"+CRLF)
       Else
-         FWRITE( nHpj,'Default topic='+awww[1,2]+CRLF)
+         FWRITE( nHpj,'Default topic='+lower(awww[1,2]) +".htm"+CRLF)
       Endif
       FWRITE( nHpj, '[FILES]' + CRLF )
       For nPos:=1 to len(aWww)
          FWRITE( nHpj, lower(awww[npos,2])+".htm" + CRLF )
       Next
       FCLOSE( nHpj )
+
+
+
+          ohtm:=THTML():NewContent('chm\'+lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".hhc")
+          ohtm:WriteText('<!--Sitemap 1.0-->')
+          ohtm:Addobject("text/site properties")
+          ohtm:EndObject()
+          ohtm:WriteText("<ul>")
+          oHtm:ListItem()
+          oHtm:AddObject("text/sitemap")
+          oHTm:AddParam('Name','HARBOUR')
+          ohtm:EndObject()
+          ohtm:WriteText("<ul>")
+          oHtm:ListItem()
+          oHtm:AddObject("text/sitemap")
+          oHtm:AddParam("Name","Harbour Read me")
+          oHtm:AddParam("Local","overview.htm")
+          oHtm:EndObject()
+          OHTM:WriteChmLink('overview.htm',"Harbour Read me")
+          oHtm:ListItem()
+          oHtm:AddObject("text/sitemap")
+          oHtm:AddParam("Name","Harbour License")
+          oHtm:AddParam("Local","license.htm")
+          oHtm:EndObject()
+          OHTM:WriteChmLink('license.htm',"Harbour License")
+          oHtm:ListItem()
+          oHtm:AddObject("text/sitemap")
+          oHtm:AddParam("Name","GNU License")
+          oHtm:AddParam("Local","http://www.gnu.org/copyleft/gpl.html")
+          oHtm:EndObject()
+          OHTM:WriteChmLink('http://www.gnu.org/copyleft/gpl.html',"GNU License")
+          oHtm:ListItem()
+          oHtm:AddObject("text/sitemap")
+          oHtm:AddParam("Name","Compiler Options")
+          oHtm:AddParam("Local","compileroptions.htm")
+          oHtm:EndObject()
+          OHTM:WriteChmLink('compileroptions.htm',"Compiler Options")
+          oHtm:ListItem()
+          oHtm:AddObject("text/sitemap")
+          oHtm:AddParam("Name","Harbour Extensions")
+          oHtm:AddParam("Local","harbourextensions.htm")
+          oHtm:EndObject()
+          OHTM:WriteChmLink('harbourextensions.htm',"Harbour Extensions")
+      oHtm:WriteText( "</UL>" )
+        asort(adocinfo,,,{|x,y| x[1]+x[2]<y[1]+y[2]})
+       do while .t.
+          citem:=adocinfo[1,1]
+          oHtm:WriteText( "<UL>" )
+          oHtm:Listitem()
+          oHtm:AddObject("text/sitemap")
+          oHtm:AddParam("Name",adocinfo[1,1])
+          oHtm:EndObject()
+          ohtm:WriteText("<ul>")
+  
+      for ppp:=1 to len(adocinfo)
+      
+           if citem ==adocinfo[ppp,1]
+               oHtm:Listitem()
+               oHtm:AddObject("text/sitemap")
+               oHtm:AddParam("Name",UpperLower(aDocinfo[ppp,2]))
+               oHtm:AddParam("Local",lower(aDocInfo[ppp,4]))
+               oHtm:EndObject()
+               oHtm:WriteChmlink(lower(adocinfo[ppp,4]),adocinfo[ppp,2])
+           else
+              ohtm:WriteText("</ul>")
+
+              citem:=adocinfo[ppp,1]
+             oHtm:Listitem()
+             oHtm:AddObject("text/sitemap")
+             oHtm:AddParam("Name",adocinfo[ppp,1])
+             oHtm:EndObject()
+               ohtm:WriteText("<ul>")
+               oHtm:Listitem()
+               oHtm:AddObject("text/sitemap")
+               oHtm:AddParam("Name",UpperLower(aDocinfo[ppp,2]))
+               oHtm:AddParam("Local",lower(aDocInfo[ppp,4]))
+               oHtm:EndObject()
+               oHtm:WriteChmlink(lower(adocinfo[ppp,4]),adocinfo[ppp,2])
+
+           endif
+       next
+        if ppp>len(adocinfo)
+        exit
+        endif
+      enddo
+        ohtm:WriteText("</ul>")
+    ohtm:close()
+
 
    ELSEIF lNgi
       SET ALTERNATE TO "assembl.bat" ADDITIVE

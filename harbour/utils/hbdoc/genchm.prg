@@ -65,6 +65,7 @@ STATIC atiTable       := {}
 STATIC nNumTableItems := 0
 STATIC aCurDoc        := {}
 STATIC nCurDoc := 1
+STATIC lWasTestExamples := .f.
 
 STATIC aColorTable := { 'aqua', 'black', 'fuchia', 'grey', 'green', 'lime', 'maroon', 'navy', 'olive', 'purple', 'red', 'silver', 'teal', 'white', 'yellow' }
 
@@ -245,7 +246,7 @@ FUNCTION ProcessChm()
                  // WRITE_ERROR( "Blank Function Name",,,, aDirList[ i, F_NAME ] )
                   cFuncName := "Unknown"
                ENDIF
-               AADD( aDocInfo, { cCategory, cFuncName, cOneLine, cFileName } )
+               AADD( aDocInfo, { cCategory, cFuncName, cOneLine, lower(cFileName) } )
                //  Now close down this little piece
                IF .NOT. EMPTY( cSeeAlso )
 
@@ -381,7 +382,7 @@ FUNCTION ProcessChm()
                oChm:WriteText( '<br>' )
                oChm:WriteText( '<br>' )
 
-               oChm:WriteText( "<a NAME=" + '"' + ALLTRIM( UPPERLOWER( cFuncname ) ) + '"' + "></a>" )
+               oChm:WriteText( "<a NAME=" + '"' + ALLTRIM(  cFuncname )  + '"' + "></a>" )
 
                //  2) Category
             ELSEIF AT( cCat, cBuffer ) > 0
@@ -475,11 +476,12 @@ end
                   IF !lBlankLine
                      //                      oChm:WritePar( "" )
                   ENDIF
-                  oChm:WriteParBold( " Examples" )
+                  oChm:WriteText( "</dl><b> Examples</b>" )
                   oChm:WriteText( "<PRE>" )
                   nMode         := D_EXAMPLE
                   lAddBlank     := .T.
                   lAddEndPreTag := .T.
+                  lWasTestExamples:=.t.
                   end
                ELSEIF AT( cTest, cBuffer ) > 0
                      if GetItem( cBuffer, nCurdoc ) 
@@ -490,6 +492,7 @@ end
                   oChm:WriteText( "<DD><P>" )
                   nMode     := D_EXAMPLE
                   lAddBlank := .T.
+                  lWasTestExamples:=.t.
                      end
                ELSEIF AT( cStatus, cBuffer ) > 0
                         if GetItem( cBuffer, nCurdoc ) 
@@ -618,7 +621,7 @@ end
                         lAddBlank := .F.
                      ENDIF
                      cTemp := ALLTRIM( SUBSTR( cBuffer, 1, AT( ":", cBuffer ) - 1 ) )
-                     oChm:WriteText( "<a href=" + cFileName + "#" + UPPERLOWER( cTemp ) + ">" + cBuffer + '</a>' )
+                     oChm:WriteText( "<a href=" + cFileName + "#" +  cTemp  + ">" + cBuffer + '</a>' )
 
                   ELSEIF nMode = D_METHODLINK
                      IF LEN( cBuffer ) > LONGLINE
@@ -630,7 +633,7 @@ end
                         lAddBlank := .F.
                      ENDIF
                      cTemp := ALLTRIM( SUBSTR( cBuffer, 1, AT( "(", cBuffer ) - 1 ) )
-                     oChm:WriteText( "<a href=" + cFileName + "#" + UPPERLOWER( cTemp ) + ">" + cBuffer + '</a>' )
+                     oChm:WriteText( "<a href=" + cFileName + "#" +  cTemp  + ">" + cBuffer + '</a>' )
 
                   ELSEIF nMode = D_COMPLIANCE
                      IF LEN( cBuffer ) > LONGLINE
@@ -642,9 +645,15 @@ end
 
                   ELSEIF nMode = D_STATUS
                      IF !EMPTY( cBuffer )
+                        If lWasTestExamples
+                           oChm:WriteParBold( "Status",.t.,.f. )
+                        Else
                         oChm:WriteParBold( "Status" )
-                        oChm:WriteText( "<DD><P>" )
+                        oChm:WriteText( "<DD>" )
+                        Endif
+                        lWasTestExamples:=.f.
                      ENDIF
+
                      ProcStatusChm( oChm, cBuffer )
 
                   ELSE
@@ -790,15 +799,15 @@ RETURN nil
 FUNCTION ProcStatusChm( nWriteHandle, cBuffer )
 
    IF LEN( ALLTRIM( cBuffer ) ) > 1
-      nWriteHandle:WriteText( cBuffer )
+      nWriteHandle:Writepar( cBuffer )
    ELSEIF SUBSTR( ALLTRIM( cBuffer ), 1 ) == "R"
-      nWriteHandle:WriteText( "   Ready" )
+      nWriteHandle:Writepar( "   Ready" )
    ELSEIF SUBSTR( ALLTRIM( cBuffer ), 1 ) == "S"
-      nWriteHandle:WriteText( "   Started" )
+      nWriteHandle:Writepar( "   Started" )
    ELSEIF SUBSTR( ALLTRIM( cBuffer ), 1 ) == "C"
-      nWriteHandle:WriteText( "   Clipper" )
+      nWriteHandle:Writepar( "   Clipper" )
    ELSE
-      nWriteHandle:WriteText( "   Not Started" )
+      nWriteHandle:Writepar( "   Not Started" )
    ENDIF
 
 RETURN nil
@@ -858,7 +867,7 @@ FUNCTION FormatChmBuff( cBuffer, cStyle, oChm )
       cReturn := STRTRAN( cReturn, "<par>", "" )
       cReturn := STRTRAN( cReturn, "<", "&lt;" )
       cReturn := STRTRAN( cReturn, ">", "&gt;" )
-
+      cReturn := AllTrim(cReturn)
       creturn := '<par><b>' + creturn + ' </b></par>'
    ELSEIF cStyle == 'Arguments'
 
@@ -986,6 +995,7 @@ FUNCTION ProcChmDesc( cBuffer, oChm, cStyle )
    LOCAL creturn       := ''
    LOCAL ncolorend
    LOCAL nIdentLevel
+   LOCAL lHasFixed     := .F.
    LOCAL lEndPar       := .F.
    LOCAL cLine         := ''
    LOCAL lEndFixed     := .F.
@@ -1053,6 +1063,11 @@ FUNCTION ProcChmDesc( cBuffer, oChm, cStyle )
          ENDIF
          IF !EMPTY( cBuffer )
             //             cBuffer:=SUBSTR(cBuffer,2)
+            cBuffer := STRTRAN( cBuffer, "<", "&lt;" )
+            cBuffer := STRTRAN( cBuffer, ">", "&gt;" )
+            cBuffer := STRTRAN( cBuffer, "&lt;b&gt;", "<b>" )
+            cBuffer := STRTRAN( cBuffer, "&lt;/b&gt;", "</b>" )
+
             cBuffeR := ALLTRIM( cBuffer )
             oChm:WritePar( cBuffer )
          ENDIF
@@ -1092,17 +1107,25 @@ FUNCTION ProcChmDesc( cBuffer, oChm, cStyle )
    ENDIF
    IF AT( '<fixed>', cBuffer ) > 0 .OR. cStyle = "Example"
       IF AT( '<fixed>', cBuffer ) = 0 .OR. !EMPTY( cBuffer )
+         if AT( '<fixed>', cBuffer ) > 0
+            lHasFixed:=.T.
+         else
+            lHasFixed:=.F.
+         Endif
+
+
          cBuffer := STRTRAN( cBuffer, "<par>", "" )
          cBuffer := STRTRAN( cBuffer, "<fixed>", "" )
-
-         oChm:WriteText( "<br><pre>" )
+         if !lHasFixed
          oChm:WritePar( cBuffer )
+         Endif
+
       ENDIF
       DO WHILE !lendFixed
          cOldLine := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
          IF AT( "</fixed>", cOldLine ) > 0
             lendfixed := .t.
-            cOldLine  := STRTRAN( cOldLine, "</fixed>", "" )
+            cOldLine  := ALLTRIM(STRTRAN( cOldLine, "</fixed>", "" ))
          ENDIF
          IF AT( DELIM, cOldLine ) = 0
             cReturn += ALLTRIM( cOldLine ) + ' '
@@ -1112,11 +1135,12 @@ FUNCTION ProcChmDesc( cBuffer, oChm, cStyle )
             lEndfixed := .t.
 
          ENDIF
-         IF AT( DELIM, cOldLine ) == 0
-            oChm:WritePar( cOldLine )
+         IF AT( DELIM, cOldLine ) == 0 .and. !lendfixed
+            oChm:WriteText( cOldLine )
          ENDIF
+
       ENDDO
-      oChm:WriteText( "</pre><br>" )
+//      oChm:WriteText( "</pre><br>" )
    END
    IF AT( '<table>', cBuffer ) > 0
       DO WHILE !lendTable

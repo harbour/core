@@ -65,7 +65,7 @@ STATIC atiTable       := {}
 STATIC nNumTableItems := 0
 STATIC aCurDoc        := {}
 STATIC nCurDoc := 1
-
+STATIC lWasTestExamples := .f.
 STATIC aColorTable := { 'aqua', 'black', 'fuchia', 'grey', 'green', 'lime', 'maroon', 'navy', 'olive', 'purple', 'red', 'silver', 'teal', 'white', 'yellow' }
 
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
@@ -381,7 +381,7 @@ FUNCTION ProcessWww()
                ohtm:WriteText( '<br>' )
                ohtm:WriteText( '<br>' )
 
-               oHtm:WriteText( "<a NAME=" + '"' + ALLTRIM( UPPERLOWER( cFuncname ) ) + '"' + "></a>" )
+               oHtm:WriteText( "<a NAME=" + '"' + ALLTRIM( cFuncname )  + '"' + "></a>" )
 
                //  2) Category
             ELSEIF AT( cCat, cBuffer ) > 0
@@ -423,7 +423,7 @@ FUNCTION ProcessWww()
                IF AT( cSyn, cBuffer ) > 0
                 if GetItem( cBuffer, nCurdoc ) 
                   oHtm:WriteParBold( " Syntax", .f., .f. )
-                  ohtm:WriteText( '<DD><P>' )
+                  ohtm:WriteText( '<DD>' )
                   nMode      := D_SYNTAX
                   lAddBlank  := .T.
                   lEndSyntax := .T.
@@ -431,7 +431,7 @@ end
                ELSEIF AT( cConstruct, cBuffer ) > 0
                if GetItem( cBuffer, nCurdoc ) 
                   oHtm:WriteParBold( " Constructor syntax", .F., .f. )
-                  ohtm:WriteText( '<DD><P>' )
+                  ohtm:WriteText( '<DD>' )
                   nMode      := D_SYNTAX
                   lAddBlank  := .T.
                   lEndSyntax := .T.
@@ -439,7 +439,7 @@ end
                ELSEIF AT( cArg, cBuffer ) > 0
                   if GetItem( cBuffer, nCurdoc ) 
                   oHtm:WriteParBold( " Arguments" )
-                  ohtm:WriteText( '<DD><P>' )
+                  ohtm:WriteText( '<DD>' )
 
                   nMode     := D_ARG
                   lAddBlank := .T.
@@ -452,7 +452,7 @@ end
                   ENDIF
 
                   oHtm:WriteParBold( " Returns" )
-                  ohtm:WriteText( '<DD><P>' )
+                  ohtm:WriteText( '<DD>' )
                   nMode       := D_ARG
                   lAddBlank   := .T.
                   lEndReturns := .t.
@@ -464,7 +464,7 @@ end
                   ENDIF
 
                   oHtm:WriteParBold( " Description" )
-                  ohtm:WriteText( '<DD><P>' )
+                  ohtm:WriteText( '<DD>' )
 
                   nMode     := D_DESCRIPTION
                   lAddBlank := .T.
@@ -475,21 +475,23 @@ end
                   IF !lBlankLine
                      //                      oHtm:WritePar( "" )
                   ENDIF
-                  oHtm:WriteParBold( " Examples" )
+                  oHtm:WriteText( "</dl><b> Examples</b>" )
                   oHtm:WriteText( "<PRE>" )
                   nMode         := D_EXAMPLE
                   lAddBlank     := .T.
                   lAddEndPreTag := .T.
+                  lWasTestExamples:=.t.
                   end
                ELSEIF AT( cTest, cBuffer ) > 0
                      if GetItem( cBuffer, nCurdoc ) 
                   IF !lBlankLine
                      //                     oHtm:WritePar( "" )
                   ENDIF
-                  oHtm:WriteParBold( " Tests", .t., .f. )
-                  oHtm:WriteText( "<DD><P>" )
+                  oHtm:WriteText( "</dl><b>Tests</b>" )
+//                  oHtm:WriteText( "<DD>" )
                   nMode     := D_EXAMPLE
                   lAddBlank := .T.
+                  lWasTestExamples:= .t.
                      end
                ELSEIF AT( cStatus, cBuffer ) > 0
                         if GetItem( cBuffer, nCurdoc ) 
@@ -501,7 +503,7 @@ end
                      //                      oHtm:WritePar( "" )
                   ENDIF
                   oHtm:WriteParBold( " Compliance" )
-                  oHtm:WriteText( "<DD><P>" )
+                  oHtm:WriteText( "<DD>" )
                   nMode     := D_COMPLIANCE
                   lAddBlank := .T.
                          end
@@ -511,7 +513,7 @@ end
                      //    oHtm:WritePar( "" )
                   ENDIF
                   oHtm:WriteParBold( " Platforms" )
-                  oHtm:WriteText( "<DD><P>" )
+                  oHtm:WriteText( "<DD>" )
                   nMode     := D_NORMAL
                   lAddBlank := .T.
                   end
@@ -521,7 +523,7 @@ end
                      //    oHtm:WritePar( "" )
                   ENDIF
                   oHtm:WriteParBold( " Files" )
-                  oHtm:WriteText( "<DD><P>" )
+                  oHtm:WriteText( "<DD>" )
                   nMode     := D_NORMAL
                   lAddBlank := .T.
                   end
@@ -531,7 +533,7 @@ end
                      //    oHtm:WritePar( "" )
                   ENDIF
                   oHtm:WriteParBold( " Functions" )
-                  oHtm:WriteText( "<DD><P>" )
+                  oHtm:WriteText( "<DD>" )
                   nMode     := D_NORMAL
                   lAddBlank := .T.
                      end
@@ -618,7 +620,7 @@ end
                         lAddBlank := .F.
                      ENDIF
                      cTemp := ALLTRIM( SUBSTR( cBuffer, 1, AT( ":", cBuffer ) - 1 ) )
-                     ohtm:WriteText( "<a href=" + cFileName + "#" + UPPERLOWER( cTemp ) + ">" + cBuffer + '</a>' )
+                     ohtm:WriteText( "<a href=" + cFileName + "#" +  cTemp  + ">" + cBuffer + '</a>' )
 
                   ELSEIF nMode = D_METHODLINK
                      IF LEN( cBuffer ) > LONGLINE
@@ -630,7 +632,7 @@ end
                         lAddBlank := .F.
                      ENDIF
                      cTemp := ALLTRIM( SUBSTR( cBuffer, 1, AT( "(", cBuffer ) - 1 ) )
-                     ohtm:WriteText( "<a href=" + cFileName + "#" + UPPERLOWER( cTemp ) + ">" + cBuffer + '</a>' )
+                     ohtm:WriteText( "<a href=" + cFileName + "#" +  cTemp  + ">" + cBuffer + '</a>' )
 
                   ELSEIF nMode = D_COMPLIANCE
                      IF LEN( cBuffer ) > LONGLINE
@@ -642,8 +644,13 @@ end
 
                   ELSEIF nMode = D_STATUS
                      IF !EMPTY( cBuffer )
+                        If lWasTestExamples
+                           oHtm:WriteParBold( "Status",.t.,.f. )
+                        Else
                         oHtm:WriteParBold( "Status" )
-                        oHtm:WriteText( "<DD><P>" )
+                        oHtm:WriteText( "<DD>" )
+                        Endif
+                        lWasTestExamples:=.f.
                      ENDIF
                      ProcStatusWww( oHtm, cBuffer )
 
@@ -790,15 +797,15 @@ RETURN nil
 FUNCTION ProcStatusWww( nWriteHandle, cBuffer )
 
    IF LEN( ALLTRIM( cBuffer ) ) > 1
-      nWriteHandle:WriteText( cBuffer )
+      nWriteHandle:Writepar( cBuffer )
    ELSEIF SUBSTR( ALLTRIM( cBuffer ), 1 ) == "R"
-      nWriteHandle:WriteText( "   Ready" )
+      nWriteHandle:Writepar( "   Ready" )
    ELSEIF SUBSTR( ALLTRIM( cBuffer ), 1 ) == "S"
-      nWriteHandle:WriteText( "   Started" )
+      nWriteHandle:Writepar( "   Started" )
    ELSEIF SUBSTR( ALLTRIM( cBuffer ), 1 ) == "C"
-      nWriteHandle:WriteText( "   Clipper" )
+      nWriteHandle:Writepar( "   Clipper" )
    ELSE
-      nWriteHandle:WriteText( "   Not Started" )
+      nWriteHandle:Writepar( "   Not Started" )
    ENDIF
 
 RETURN nil
@@ -858,7 +865,7 @@ FUNCTION FormatHtmBuff( cBuffer, cStyle, oHtm )
       cReturn := STRTRAN( cReturn, "<par>", "" )
       cReturn := STRTRAN( cReturn, "<", "&lt;" )
       cReturn := STRTRAN( cReturn, ">", "&gt;" )
-
+      cReturn := AllTrim(cReturn)
       creturn := '<par><b>' + creturn + ' </b></par>'
    ELSEIF cStyle == 'Arguments'
 
@@ -980,7 +987,8 @@ FUNCTION ProchtmDesc( cBuffer, oHtm, cStyle )
 
    LOCAL cOldLine      := ''
    LOCAL npos
-   LOCAL CurPos        := 0
+   LOCAL lHasFixed     := .F.
+   LOCAL CurPos        :=  0
    LOCAL nColorPos
    LOCAL ccolor        := ''
    LOCAL creturn       := ''
@@ -1053,6 +1061,9 @@ FUNCTION ProchtmDesc( cBuffer, oHtm, cStyle )
          ENDIF
          IF !EMPTY( cBuffer )
             //             cBuffer:=SUBSTR(cBuffer,2)
+            cBuffer := STRTRAN( cBuffer, "<", "&lt;" )
+            cBuffer := STRTRAN( cBuffer, ">", "&gt;" )
+
             cBuffeR := ALLTRIM( cBuffer )
             oHtm:WritePar( cBuffer )
          ENDIF
@@ -1092,17 +1103,26 @@ FUNCTION ProchtmDesc( cBuffer, oHtm, cStyle )
    ENDIF
    IF AT( '<fixed>', cBuffer ) > 0 .OR. cStyle = "Example"
       IF AT( '<fixed>', cBuffer ) = 0 .OR. !EMPTY( cBuffer )
+         if AT( '<fixed>', cBuffer ) > 0
+            lHasFixed:=.T.
+         else
+            lHasFixed:=.F.
+         Endif
+         
          cBuffer := STRTRAN( cBuffer, "<par>", "" )
          cBuffer := STRTRAN( cBuffer, "<fixed>", "" )
 
-         oHtm:WriteText( "<br><pre>" )
-         oHtm:WritePar( cBuffer )
+//         oHtm:WriteText( "<br>" )
+         if !lHasFixed
+         oHtm:WriteText( cBuffer )
+         Endif
       ENDIF
       DO WHILE !lendFixed
          cOldLine := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
          IF AT( "</fixed>", cOldLine ) > 0
             lendfixed := .t.
-            cOldLine  := STRTRAN( cOldLine, "</fixed>", "" )
+            cOldLine  := Alltrim(STRTRAN( cOldLine, "</fixed>", "" ))          
+
          ENDIF
          IF AT( DELIM, cOldLine ) = 0
             cReturn += ALLTRIM( cOldLine ) + ' '
@@ -1112,11 +1132,13 @@ FUNCTION ProchtmDesc( cBuffer, oHtm, cStyle )
             lEndfixed := .t.
 
          ENDIF
-         IF AT( DELIM, cOldLine ) == 0
-            oHtm:WritePar( cOldLine )
+
+         IF AT( DELIM, cOldLine ) == 0  .and. !lendfixed
+            oHtm:WriteText( cOldLine )
          ENDIF
       ENDDO
-      oHtm:WriteText( "</pre><br>" )
+//      oHtm:WriteText( "</pre><br>" )
+   lHasFixed:=.f.
    END
    IF AT( '<table>', cBuffer ) > 0
       DO WHILE !lendTable

@@ -138,7 +138,7 @@ RETURN Self
 
 METHOD WriteParBold( cPar ) CLASS TOs2
 
-   FWRITE( Self:nHandle, ':p.:hp2.' + ALLTRIM( cPar ) + CRLF + ':ehp2.' + CRLF )
+   FWRITE( Self:nHandle, ':p.:hp2.' + ALLTRIM( cPar ) + ':ehp2.' + CRLF )
 
 RETURN Self
 
@@ -148,16 +148,19 @@ METHOD WriteTitle( cTopic, cTitle ) CLASS TOs2
    LOCAL nPos
    LOCAL cWrite
    LOCAL nItem
+   
    cTopic := ALLTRIM( cTopic )
 
    IF Self:Scanlink( cTopic ) == 0
-      nItem := ASCAN( Self:aLinkRef, { | a | a[ 1 ] == cTopic } )
+      nItem := ASCAN( Self:aLinkRef, { | a | upper(a[ 1 ]) == upper(cTopic )} )
    ELSE             // Just in case that nItem>0 so the Link is already referenced
-      nItem := ASCAN( Self:aLinkRef, { | a | a[ 1 ] == cTopic } )
+      nItem := ASCAN( Self:aLinkRef, { | a | upper(a[ 1 ]) == upper(cTopic) } )
    ENDIF
-
    FWRITE( Self:nHandle, ':h1 res=' + ALLTRIM( STR( nItem ) ) + '.' + cTopic + CRLF )
    FWRITE( Self:nHandle, ':i1 id=' + UPPER( cTopic ) + "." + UPPER( cTopic ) + CRLF )
+   cTopic := ::DosToOs2Text(cTopic)
+   cTitle := ::DosToOs2Text(cTitle)
+
    FWRITE( Self:nHandle, ":p." + cTitle + CRLF )
 
 RETURN Self
@@ -175,9 +178,9 @@ METHOD WriteLink( cLink ) CLASS TOs2
    LOCAL nItem
 
    IF Self:Scanlink( cLink ) == 0
-      nItem := ASCAN( Self:aLinkRef, { | a | a[ 1 ] == cLink } )                // Again.
+      nItem := ASCAN( Self:aLinkRef, { | a | upper(a[ 1 ]) == upper(cLink) } )                // Again.
    ELSE
-      nItem := ASCAN( Self:aLinkRef, { | a, b | a[ 1 ] == cLink } )
+      nItem := ASCAN( Self:aLinkRef, { | a, b | upper(a[ 1 ]) == upper(cLink) } )
 
    ENDIF
 
@@ -196,10 +199,10 @@ METHOD ScanLink( cLink ) CLASS TOs2
    LOCAL nItem
    LOCAL nReturn
 
-   nItem := ASCAN( Self:aLinkRef, { | a, b | a[ 1 ] == cLink } )
+   nItem := ASCAN( Self:aLinkRef, { | a, b | Upper(a[ 1 ] )== upper(cLink) } )
 
    IF nItem == 0
-      AADD( Self:aLinkRef, { cLink, Self:nRef } )
+      AADD( Self:aLinkRef, { upper(cLink), Self:nRef } )
       Self:nRef ++
    ENDIF
 
@@ -208,10 +211,23 @@ RETURN nItem
 METHOD DosToOs2Text( cText ) CLASS TOs2
 
    LOCAL cReturn
-
-   cReturn := STRTRAN( cText, '"', "&cdq." )
+   cReturn := STRTRAN( cText, '&', "&amp." )
+   cReturn := STRTRAN( cReturn, '"', "&cdq." )
    cReturn := STRTRAN( cReturn, ':', "&colon." )
    cReturn := STRTRAN( cReturn, ',', "&comma." )
+   cReturn := STRTRAN( cReturn, '_', "&us." )
+   cReturn := STRTRAN( cReturn, '~', "&tilde." )
+   cReturn := STRTRAN( cReturn, '|', "&splitvbar." )
+   cReturn := STRTRAN( cReturn, '/', "&slash." )
+   cReturn := STRTRAN( cReturn, ';', "&semi." )
+   cReturn := STRTRAN( cReturn, ')', "&rpar." )
+   cReturn := STRTRAN( cReturn, ']', "&rbrk.." )
+   cReturn := STRTRAN( cReturn, '}', "&rbrc." )
+   cReturn := STRTRAN( cReturn, '(', "&lpar." )
+   cReturn := STRTRAN( cReturn, '[', "&lbrk." )
+   cReturn := STRTRAN( cReturn, '{', "&lbrc." )
+   cReturn := STRTRAN( cReturn, '=', "&eq." )
+   cReturn := STRTRAN( cReturn, '$', "&dollar." )
 
 RETURN cReturn
 
