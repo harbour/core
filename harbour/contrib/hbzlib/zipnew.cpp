@@ -102,10 +102,10 @@ int  hb_CmpPkSpan(char *szFile,PHB_ITEM pArray,int iCompLevel,PHB_ITEM pBlock,BO
     bReturn=false;
 	}
      catch(...){}
-    if (pZipI.szComment != NULL)
+    if (pZipI.szComment != NULL) {
         szZip.SetGlobalComment(pZipI.szComment);
         hb_xfree(pZipI.szComment);
-
+}
      if (HB_IS_BLOCK(pProgress))
      pProgressInfo=pProgress;
 
@@ -487,9 +487,10 @@ int  hb_CmpPkSpanStd(char *szFile,char *szFiletoCompress,int iCompLevel,PHB_ITEM
     bReturn=false;
 	}
      catch(...){}
-    if (pZipI.szComment != NULL)
+    if (pZipI.szComment != NULL){
         szZip.SetGlobalComment(pZipI.szComment);
         hb_xfree(pZipI.szComment);
+        }
 
      if (HB_IS_BLOCK(pProgress))
      pProgressInfo=pProgress;
@@ -561,12 +562,10 @@ return true;
 }
 bool hb_SetCallBack(DWORD iNumber, int , void* pData)
 {
-/*    PHB_ITEM p=(PHB_ITEM)*pData;*/
     PHB_ITEM pDisk=hb_itemPutNL(NULL,iNumber);
-    int iReturn=1;
-                   hb_vmEvalBlockV( pChangeDiskBlock, 1,pDisk );
-                   hb_itemRelease(pDisk);
-/*                   hb_itemRelease(p);*/
+    bool iReturn=true;
+    hb_vmEvalBlockV( pChangeDiskBlock, 1,pDisk );
+    hb_itemRelease(pDisk);
     return iReturn;    
 
 }

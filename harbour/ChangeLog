@@ -1,3 +1,12 @@
+2001-12-06 22:40 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
+     ! Fixed write and read operations returning -1
+     ! fixed an small bug when using multiple -D switch
+   * doc/hbmake.txt
+     * updated the file
+   * contrib/hbzlib/zipnew.cpp
+     contrib/hbzlib/zipcomp.cpp
+     * Fixed an bug reported by Sid Saylors.
+
 2001-12-06 23:30 GTM+1 Antonio Linares <alinares@fivetech.com>
    * source/vm/eval.c
      ! hb_evalBlock() function added

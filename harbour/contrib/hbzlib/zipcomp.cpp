@@ -100,7 +100,7 @@ int   hb_CompressFile(char *szFile,PHB_ITEM pArray,int iCompLevel,PHB_ITEM pBloc
     if (pZipI.szComment != NULL){
         szZip.SetGlobalComment(pZipI.szComment);
         hb_xfree(pZipI.szComment);
-}
+     }
      if (HB_IS_BLOCK(pProgress))
         pProgressInfo=pProgress;
         for (uiCount=1;(uiCount<= hb_arrayLen(pArray)) ;uiCount++)
