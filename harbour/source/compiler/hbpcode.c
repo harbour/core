@@ -1104,28 +1104,28 @@ void hb_compStrongType( int iSize )
        }
        else if( cSubType1 == ' ' )
        {
-          hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERAND_SUSPECT, ( char * ) szType1, szType2 );
+          hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERAND_SUSPECT, ( char * ) szType1, ( char * ) szType2 );
 
           /* Override the last item with the new result type. */
           pFunc->pStack[ pFunc->iStackIndex - 1 ] = cSubType2;
        }
        else if( cSubType2 == ' ' )
        {
-          hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERAND_SUSPECT, ( char * ) szType2, szType1 );
+          hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERAND_SUSPECT, ( char * ) szType2, ( char * ) szType1 );
 
           /* Override the last item with the new result type. */
           pFunc->pStack[ pFunc->iStackIndex - 1 ] = cSubType1;
        }
        else if( cSubType1 == '-' )
        {
-          hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERAND_TYPE, (char *) szType1, szType2 );
+          hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERAND_TYPE, (char *) szType1, ( char * ) szType2 );
 
           /* Override the last item with the new result type. */
           pFunc->pStack[ pFunc->iStackIndex - 1 ] = 'U';
        }
        else if( cSubType2 == '-' )
        {
-          hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERAND_TYPE, (char *) szType2, szType1 );
+          hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERAND_TYPE, (char *) szType2, ( char * ) szType1 );
 
           /* Override the last item with the new result type. */
           pFunc->pStack[ pFunc->iStackIndex - 1 ] = 'U';

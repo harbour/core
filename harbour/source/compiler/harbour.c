@@ -391,12 +391,12 @@ void hb_compDeclaredParameterAdd( char * szVarName, BYTE cValueType )
          if ( pDeclared->cParamTypes )
          {
             pDeclared->cParamTypes = ( BYTE * ) hb_xrealloc( pDeclared->cParamTypes, pDeclared->iParamCount );
-            pDeclared->pParamClasses = ( PCOMCLASS * ) hb_xrealloc( pDeclared->pParamClasses, pDeclared->iParamCount * sizeof( COMCLASS ) );
+            pDeclared->pParamClasses = ( PCOMCLASS * ) hb_xrealloc( pDeclared->pParamClasses, pDeclared->iParamCount * sizeof( PCOMCLASS ) );
          }
          else
          {
             pDeclared->cParamTypes = ( BYTE * ) hb_xgrab( 1 );
-            pDeclared->pParamClasses = ( PCOMCLASS * ) hb_xgrab( sizeof( COMCLASS ) );
+            pDeclared->pParamClasses = ( PCOMCLASS * ) hb_xgrab( sizeof( PCOMCLASS ) );
          }
 
          pDeclared->cParamTypes[ pDeclared->iParamCount - 1 ] = cValueType;
@@ -898,6 +898,8 @@ PCOMDECLARED hb_compMethodFind( PCOMCLASS pClass, char * szMethodName )
 
 void hb_compDeclaredInit( void )
 {
+  #define _DECL static COMDECLARED
+
   /*
     \x5c -> ByRef    (+60)             '-'  -> NIL
     \x7a -> Optional (+90)             'U'  -> Undefined
@@ -920,43 +922,44 @@ void hb_compDeclaredInit( void )
 
    /* ------------------------------------------------- Standard Functions -------------------------------------------------- */
 
-   /*                           Name        Ret  Param Types              # of Prams  Class  Param Classes  Next
-                                ----------  ---  -----------------------  ----------  -----  -------------  ------ */
-   static COMDECLARED s_001 = { "AADD"    , ' ', "A "                   , 2         , NULL , NULL         , NULL   };
-   static COMDECLARED s_002 = { "ABS"     , 'N', "N"                    , 1         , NULL , NULL         , &s_001 };
-   static COMDECLARED s_003 = { "ACHOICE" , 'N', "NNNNc\x7a\x9d\xa8\xa8", 9         , NULL , NULL         , &s_002 };
+   /*              Name        Ret  # of Prams  Param Types                     Ret Class  Param Classes  Next
+                   ----------  ---  ----------  ------------------------------  ---------  -------------  ------ */
+   _DECL s_001 = { "AADD"    , ' ', 2         , (BYTE*)"A "                   , NULL     , NULL         , NULL   };
+   _DECL s_002 = { "ABS"     , 'N', 1         , (BYTE*)"N"                    , NULL     , NULL         , &s_001 };
+   _DECL s_003 = { "ACHOICE" , 'N', 9         , (BYTE*)"NNNNc\x7a\x9d\xa8\xa8", NULL     , NULL         , &s_002 };
 
    /* TODO: Add all functions. */
 
-   /* ------------------------------------------------- Standard Classes -------------------------------------------------- */
+   /* -------------------------------------------------- Standard Classes --------------------------------------------------- */
 
-   static COMCLASS    s_ERROR    = { "ERROR"   , NULL, NULL, NULL };
-   static COMCLASS    s_GET      = { "GET"     , NULL, NULL, NULL };
-   static COMCLASS    s_TBCOLUMN = { "TBCOLUMN", NULL, NULL, NULL };
-   static COMCLASS    s_TBROWSE  = { "TBROWSE" , NULL, NULL, NULL };
+   static COMCLASS s_ERROR    = { "ERROR"   , NULL, NULL, NULL };
+   static COMCLASS s_GET      = { "GET"     , NULL, NULL, NULL };
+   static COMCLASS s_TBCOLUMN = { "TBCOLUMN", NULL, NULL, NULL };
+   static COMCLASS s_TBROWSE  = { "TBROWSE" , NULL, NULL, NULL };
 
-  /*                                     Name            Ret  Param Types              # of Prams  Class   Param Classes  Next
-                                         --------------  ---  -----------------------  ----------  ------  -------------  ------------   */
-   static COMDECLARED s_ERROR_01    = { "ARGS"         , 'A', NULL                   , 0         , NULL  , NULL         , NULL           };
-   static COMDECLARED s_ERROR_02    = { "CANDEFAULT"   , 'B', NULL                   , 0         , NULL  , NULL         , &s_ERROR_01    };
-   static COMDECLARED s_ERROR_03    = { "CANRETRY"     , 'B', NULL                   , 0         , NULL  , NULL         , &s_ERROR_02    };
-   static COMDECLARED s_ERROR_04    = { "CANSUBSTITUTE", 'B', NULL                   , 0         , NULL  , NULL         , &s_ERROR_03    };
-   static COMDECLARED s_ERROR_05    = { "CARGO"        , ' ', NULL                   , 0         , NULL  , NULL         , &s_ERROR_04    };
-   static COMDECLARED s_ERROR_06    = { "DESCRIPTION"  , 'S', NULL                   , 0         , NULL  , NULL         , &s_ERROR_05    };
-   static COMDECLARED s_ERROR_07    = { "FILENAME"     , 'S', NULL                   , 0         , NULL  , NULL         , &s_ERROR_06    };
-   static COMDECLARED s_ERROR_08    = { "GENCODE"      , 'N', NULL                   , 0         , NULL  , NULL         , &s_ERROR_07    };
-   static COMDECLARED s_ERROR_09    = { "OPERATION"    , 'S', NULL                   , 0         , NULL  , NULL         , &s_ERROR_08    };
-   static COMDECLARED s_ERROR_10    = { "OSCODE"       , 'N', NULL                   , 0         , NULL  , NULL         , &s_ERROR_09    };
-   static COMDECLARED s_ERROR_11    = { "SEVERITY"     , 'N', NULL                   , 0         , NULL  , NULL         , &s_ERROR_10    };
-   static COMDECLARED s_ERROR_12    = { "SUBCODE"      , 'N', NULL                   , 0         , NULL  , NULL         , &s_ERROR_11    };
-   static COMDECLARED s_ERROR_13    = { "SUBSYSTEM"    , 'S', NULL                   , 0         , NULL  , NULL         , &s_ERROR_12    };
-   static COMDECLARED s_ERROR_14    = { "TRIES"        , 'N', NULL                   , 0         , NULL  , NULL         , &s_ERROR_13    };
+  /*                      Name             Ret  # of Prams  Param Types           Ret Class  Param Classes  Next
+                          ---------------  ---  ----------  --------------------  ---------  -------------  --------------- */
+   _DECL s_ERROR_01   = { "ARGS"         , 'A', 0         , (BYTE*)NULL         , NULL     , NULL         , NULL            };
+   _DECL s_ERROR_02   = { "CANDEFAULT"   , 'B', 0         , (BYTE*)NULL         , NULL     , NULL         , &s_ERROR_01     };
+   _DECL s_ERROR_03   = { "CANRETRY"     , 'B', 0         , (BYTE*)NULL         , NULL     , NULL         , &s_ERROR_02     };
+   _DECL s_ERROR_04   = { "CANSUBSTITUTE", 'B', 0         , (BYTE*)NULL         , NULL     , NULL         , &s_ERROR_03     };
+   _DECL s_ERROR_05   = { "CARGO"        , ' ', 0         , (BYTE*)NULL         , NULL     , NULL         , &s_ERROR_04     };
+   _DECL s_ERROR_06   = { "DESCRIPTION"  , 'S', 0         , (BYTE*)NULL         , NULL     , NULL         , &s_ERROR_05     };
+   _DECL s_ERROR_07   = { "FILENAME"     , 'S', 0         , (BYTE*)NULL         , NULL     , NULL         , &s_ERROR_06     };
+   _DECL s_ERROR_08   = { "GENCODE"      , 'N', 0         , (BYTE*)NULL         , NULL     , NULL         , &s_ERROR_07     };
+   _DECL s_ERROR_09   = { "OPERATION"    , 'S', 0         , (BYTE*)NULL         , NULL     , NULL         , &s_ERROR_08     };
+   _DECL s_ERROR_10   = { "OSCODE"       , 'N', 0         , (BYTE*)NULL         , NULL     , NULL         , &s_ERROR_09     };
+   _DECL s_ERROR_11   = { "SEVERITY"     , 'N', 0         , (BYTE*)NULL         , NULL     , NULL         , &s_ERROR_10     };
+   _DECL s_ERROR_12   = { "SUBCODE"      , 'N', 0         , (BYTE*)NULL         , NULL     , NULL         , &s_ERROR_11     };
+   _DECL s_ERROR_13   = { "SUBSYSTEM"    , 'S', 0         , (BYTE*)NULL         , NULL     , NULL         , &s_ERROR_12     };
+   _DECL s_ERROR_14   = { "TRIES"        , 'N', 0         , (BYTE*)NULL         , NULL     , NULL         , &s_ERROR_13     };
 
+  /*                      Name             Ret  # of Prams  Param Types           Ret Class  Param Classes  Next
+                          ---------------  ---  ----------  --------------------  ---------  -------------  --------------- */
+   _DECL s_GET_01     = { "ASSIGN"       , ' ', 0         , (BYTE*)NULL         , NULL     , NULL         , NULL            };
+   _DECL s_GET_02     = { "COLORDISP"    , 'S', 1         , (BYTE*)"\x9d"       , &s_GET   , NULL         , &s_GET_01       };
 
-  /*                                     Name        Ret  Param Types              # of Prams  Class   Param Classes  Next
-                                         ----------  ---  -----------------------  ----------  ------  -------------  --------- */
-   static COMDECLARED s_GET_01      = { "ASSIGN"   , ' ', NULL                   , 0         , NULL  , NULL         , NULL      };
-   static COMDECLARED s_GET_02      = { "COLORDISP", 'S', "\x9d"                 , 1         , &s_GET, NULL         , &s_GET_01 };
+   #undef _DECL
 
    /* ------- */
 

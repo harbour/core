@@ -92,8 +92,8 @@ typedef struct _COMDECLARED
 {
    char                * szName;              /* the name of the symbol */
    BYTE                  cType;
-   BYTE                * cParamTypes;
    USHORT                iParamCount;
+   BYTE                * cParamTypes;
    struct _COMCLASS    * pClass;
    struct _COMCLASS    * ( * pParamClasses );
    struct _COMDECLARED * pNext;               /* pointer to the next declared function */

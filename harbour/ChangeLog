@@ -1,3 +1,11 @@
+2001-04-10 16:20 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * include/hbcomp.h
+     * Changed order of COMDECLARED elements to be more intuitive for static initialization.
+
+   * source/compiler/harbour.c
+   * source/compiler/hbpcode.c
+     ! Added type casting needed for C++ compilers.
+
 2001-04-09 22:40 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/hbgenerr.c
      * Corrected spelling for suspicious.
