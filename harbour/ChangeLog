@@ -1,3 +1,7 @@
+20000405-14:28 GMT+3 Alexander Kresin
+  * source/pp/ppcore.c
+    * bugs fixed, reported by Guy Roussin and Chen Kedem
+
 20000405-10:00 GMT+3 Alexander Kresin
   * contrib/rdd_ads/ads1.c
     * added adsFlush() function

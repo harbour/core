@@ -584,7 +584,7 @@ static void ParseCommand( char * sLine, BOOL com_or_xcom, BOOL com_or_tra )
 
   HB_SKIPTABSPACES( sLine );
   ipos = 0;
-  while( *sLine != '\0' && *sLine != ' ' && *sLine != '\t' && *sLine != '<')
+  while( *sLine != '\0' && *sLine != ' ' && *sLine != '\t' && *sLine != '<' && (*sLine !='(' || ipos==0) )
   {
      *(cmdname+ipos++) = *sLine++;
   }
@@ -1844,7 +1844,7 @@ static int ReplacePattern( char patttype, char * expreal, int lenreal, char * pt
             lenitem = (ifou)? ifou-1:lenreal;
             if( *expreal != '\0' )
               {
-                if( !lenitem || *expreal == '(' || *expreal == '&' ||
+                if( !lenitem || *expreal == '(' || (*expreal=='&' && lenreal>1) ||
                      ( *expreal=='\"' && *(expreal+lenitem-1)=='\"' ) ||
                      ( *expreal == '\'' && *(expreal+lenitem-1)=='\'' ) )
                   {
@@ -1870,7 +1870,7 @@ static int ReplacePattern( char patttype, char * expreal, int lenreal, char * pt
           }
         while( ifou > 0 );
       }
-    else if( !lenreal || *expreal == '(' || *expreal == '&' ||
+    else if( !lenreal || *expreal == '(' || (*expreal=='&' && lenreal>1) ||
              ( *expreal == '\"' && *( expreal + lenreal - 1 ) == '\"' ) ||
              ( *expreal == '\'' && *( expreal + lenreal - 1 ) == '\'' ) )
       {
@@ -2582,7 +2582,7 @@ static void ParsePragma( char * sLine )
       else if( memcmp( sLine, "EXITSEVERITY", PRAGMAS_LEN ) == 0 )
       {
          hb_comp_iExitLevel = StringToInt( sLine, hb_comp_iExitLevel );
-         if( hb_comp_iExitLevel != HB_EXITLEVEL_DEFAULT   && 
+         if( hb_comp_iExitLevel != HB_EXITLEVEL_DEFAULT   &&
              hb_comp_iExitLevel != HB_EXITLEVEL_SETEXIT   &&
              hb_comp_iExitLevel != HB_EXITLEVEL_DELTARGET )
             hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_PRAGMA_BAD_VALUE, NULL, NULL );
