@@ -4,13 +4,14 @@
 /* TODO: Incorporate tests from TEST\WORKING\STRING*.PRG
 /* QUESTION: Can Harbour compile and run this (PadR(), Chr(), fWrite(), StrTran()) ? */
 
-function Main()
+FUNCTION Main()
 
 #define NUL                             Chr(0)
 
 SHOW_TEST('At("", "")'                , Str(At("", ""))             ) // 1
 SHOW_TEST('At("", "ABCDEF")'          , Str(At("", "ABCDEF"))       ) // 1
 SHOW_TEST('At("ABCDEF", "")'          , Str(At("ABCDEF", ""))       ) // 0
+SHOW_TEST('At("AB", "AB")'            , Str(At("AB", "AB"))         ) // 1
 SHOW_TEST('At("AB", "AAB")'           , Str(At("AB", "AAB"))        ) // 2
 SHOW_TEST('At("A", "ABCDEF")'         , Str(At("A", "ABCDEF"))      ) // 1
 SHOW_TEST('At("F", "ABCDEF")'         , Str(At("F", "ABCDEF"))      ) // 6
@@ -103,7 +104,7 @@ SHOW_TEST('SubStr("ab" + NUL + "def", 2, 3)', SubStr("ab" + NUL + "def", 2, 3) )
 SHOW_TEST('Left("ab" + NUL + "def", 5)', Left("ab" + NUL + "def", 5) )
 SHOW_TEST('Right("ab" + NUL + "def", 5)', Right("ab" + NUL + "def", 5) )
 
-return nil
+RETURN NIL
 
 STATIC FUNCTION SHOW_TEST(cExpr, cResult)
      RETURN fWrite(1, PadR(StrTran(cExpr, Chr(0), "."), 40) + " -> " + '"' + StrTran(cResult, Chr(0), ".") + '"' + Chr(13) + Chr(10))
