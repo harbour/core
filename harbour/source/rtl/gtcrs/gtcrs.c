@@ -366,30 +366,15 @@ void hb_gt_SetAttribute( USHORT uiTop,
                          USHORT uiRight,
                          BYTE byAttr )
 {
-
-#if (defined(M_UNIX) || defined(hpux)) && !defined(NCURSES_VERSION)
    int newAttr = s_attribmap_table[ byAttr ];
    int dx;
    chtype c;
-#else
-   attr_t newAttr = (attr_t)s_attribmap_table[ byAttr ];
-   int Count = uiRight - uiLeft + 1;
-   short newColor;
-
-   newColor = PAIR_NUMBER( (newAttr & A_COLOR) );
-#endif
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetAttribute(%hu, %hu, %hu, %hu, %d)", uiTop, uiLeft, uiBottom, uiRight, (int) byAttr));
 
    newAttr &= A_ATTRIBUTES;     /* extract attributes only */
 
    while( uiTop <= uiBottom )
-      /*
-        this is an emulation of the mvchgat() function
-        for those curses which are not compatible with
-        XSI curses (like SCO curses and HPUX curses)
-      */
-   #if (defined(M_UNIX) || defined(hpux)) && !defined(NCURSES_VERSION)
    {
       for ( dx=uiLeft; dx<=uiRight; dx++ )
       {
@@ -398,22 +383,13 @@ void hb_gt_SetAttribute( USHORT uiTop,
           c &= (A_CHARTEXT | A_ALTCHARSET);
           /* set new attribute */
           c |= newAttr;
-          if (addch(c) == ERR)
-             /* QUESTION : should we indicate any error here ? */
+          if (addch(c) == ERR)	/* Stop on error */
              return;
       }
       uiTop++;
    }
-   #else
-      /*
-         we are assuming here that we compile Harbour
-         with XSI compatible curses (like ncurses)
-      */
-      mvchgat( uiTop++, uiLeft, Count, newAttr, newColor, NULL );
-   #endif
 
    if( s_uiDispCount == 0 )
-     /* QUESTION : should we indicate any error here ? */
       refresh();
 }
 
