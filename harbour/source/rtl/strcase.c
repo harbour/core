@@ -69,15 +69,17 @@ char * hb_strUpper( char * szText, ULONG ulLen )
  */
 char * hb_strncpyUpper( char * pDest, const char * pSource, ULONG ulLen )
 {
-   char * pStart = pDest;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_strncpyUpper(%p, %s, %lu)", pDest, pSource, ulLen));
 
    pDest[ ulLen ] ='\0';
    while( ulLen-- )
-      *pDest++ = toupper( *pSource++ );
+   {
+      /* some compilers impliment toupper as a macro, and this has side effects! */
+      /* *pDest++ = toupper( *pSource++ ); */
+      pDest[ulLen] = toupper( pSource[ulLen] );
+   }
 
-   return pStart;
+   return pDest;
 }
 
 /* converts string to lower case */

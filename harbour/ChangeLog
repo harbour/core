@@ -1,3 +1,8 @@
+20000408-14:38 DST Paul Tucker <ptucker@sympatico.ca>
+   * source/rtl/strcase.c
+     * some compilers impliment toupper() as a macro, so toupper( pSrc++ )
+     * does not work properly.
+
 20000408-20:45 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/rtl/gtcrs/gtcrs.c
