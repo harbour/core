@@ -1,3 +1,13 @@
+2000-10-09 2:01 UTC+0800 Brian Hays <bhays@abacuslaw.com>
+   * contrib/rdd_ads/adsfunc.c
+      * fixed ADSGETRELKEYPOS to work without an index
+   * contrib/rdd_ads/ads1.c
+      * fixed errors with GoTo 0 in adsGoTo
+      + added adsSysName() so rddname() works now
+      * maintained ulRecCount in adsOpen, adsPack and adsGoTo
+   * source/rdd/workarea.c
+      * fixed debug trace of changed parameter name
+
 2000-10-07 21:15 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
  *contrib/pdflib/pdfhbdoc.c
    +code to handle Tables

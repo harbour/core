@@ -302,11 +302,16 @@ static ERRCODE adsGoBottom( ADSAREAP pArea )
 
 static ERRCODE adsGoTo( ADSAREAP pArea, ULONG ulRecNo )
 {
+//// TODO: bh: Note  Explicitly moving to a deleted record when using the Advantage proprietary
+////   table format (ADT) is an illegal operation and will return the
+////   error 5022 (AE_INVALID_RECORD_NUMBER), invalid record number.
+
    ULONG ulRecCount;
 
    HB_TRACE(HB_TR_DEBUG, ("adsGoTo(%p, %lu)", pArea, ulRecNo));
 
-   if( ulRecNo > pArea->ulRecCount )
+   /* Update record count if necessary */
+   if( (pArea->fShared && ulRecNo > pArea->ulRecCount) )
    {
       if( adsRecCount( pArea, &ulRecCount ) == FAILURE )
          return FAILURE;
@@ -314,8 +319,25 @@ static ERRCODE adsGoTo( ADSAREAP pArea, ULONG ulRecNo )
    }
 
    pArea->fValidBuffer = FALSE;
-   AdsGotoRecord( pArea->hTable, ulRecNo );
-   hb_adsCheckBofEof( pArea );
+   pArea->fFound = FALSE;
+
+   if( ulRecNo > 0  && ulRecNo <= pArea->ulRecCount )
+   {
+      // bh: do we use ulRecno??
+      pArea->ulRecNo = ulRecNo;
+      pArea->fBof = pArea->fEof = FALSE;
+      AdsGotoRecord( pArea->hTable, ulRecNo );
+      //hb_adsCheckBofEof( pArea );        // bh: GoTo should never do the skipfilter that may happen in hb_adsCheckBofEof
+   }
+   else /* GoTo Phantom record */
+   {
+      ulRecNo = 0;
+      if ( !pArea->fEof )
+         AdsGotoRecord( pArea->hTable, ulRecNo );
+         // don't do a GO 0 if already at EOF because we can't skip -1 off of it if you do
+      pArea->ulRecNo = pArea->ulRecCount + 1;
+      pArea->fBof = pArea->fEof = TRUE;
+   }
 
    return SUCCESS;
 }
@@ -329,8 +351,8 @@ static ERRCODE adsGoToId( ADSAREAP pArea, PHB_ITEM pItem )
    if( HB_IS_NUMERIC( pItem ) )
    {
       ulRecNo = hb_itemGetNL( pItem );
-      if( ulRecNo == 0 )
-         ulRecNo = pArea->ulRecNo;
+//      if( ulRecNo == 0 )              // bh: Go 0 must go to eof!
+//         ulRecNo = pArea->ulRecNo;
       return adsGoTo( pArea, ulRecNo );
    }
    else
@@ -417,11 +439,13 @@ static ERRCODE adsSkip( ADSAREAP pArea, LONG lToSkip )
    pArea->fTop = pArea->fBottom = FALSE;
    AdsSkip  ( (pArea->hOrdCurrent) ? pArea->hOrdCurrent : pArea->hTable, lToSkip );
 
-   hb_adsCheckBofEof( pArea );
    if ( lToSkip==0 )
       return SUCCESS;    /*bh: dbskip(0) created infinite loop; this should never move the record pointer via skipfilter */
    else
+	{
+   	hb_adsCheckBofEof( pArea );
       return SUPER_SKIPFILTER( (AREAP)pArea, lToSkip>0 ? 1:-1 );
+	}
 }
 
 #define  adsSkipFilter            NULL
@@ -783,6 +807,7 @@ static ERRCODE adsRecCount( ADSAREAP pArea, ULONG * pRecCount )
    HB_TRACE(HB_TR_DEBUG, ("adsRecCount(%p, %p)", pArea, pRecCount));
 
    AdsGetRecordCount( pArea->hTable, ADS_IGNOREFILTERS, pRecCount );
+   pArea->ulRecCount = *pRecCount;
    return SUCCESS;
 }
 
@@ -979,7 +1004,7 @@ static ERRCODE adsNewArea( ADSAREAP pArea )
 static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
 {
    ADSHANDLE hTable;
-   UNSIGNED32  ulRetVal, pulLength;
+   UNSIGNED32  ulRetVal, pulLength, ulRecCount;
    USHORT uiFields, uiCount;
    UNSIGNED8 szName[ HARBOUR_MAX_RDD_FIELDNAME_LENGTH + 1 ];
    UNSIGNED16 pusBufLen, pusType;
@@ -1063,6 +1088,9 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
    /* Alloc buffer */
    pArea->pRecord = ( BYTE * ) hb_xgrab( pArea->maxFieldLen + 1 );
    pArea->fValidBuffer = FALSE;
+   if( adsRecCount( pArea, &ulRecCount ) == FAILURE )
+      return FAILURE;
+   pArea->ulRecCount = ulRecCount;
    return SELF_GOTOP( ( AREAP ) pArea );
 }
 
@@ -1076,11 +1104,20 @@ static ERRCODE adsStructSize( ADSAREAP pArea, USHORT * StructSize )
    return SUCCESS;
 }
 
-#define  adsSysName               NULL
+static ERRCODE adsSysName( ADSAREAP pArea, BYTE * pBuffer )
+{
+   HB_TRACE(HB_TR_DEBUG, ("adsSysName(%p, %p)", pArea, pBuffer));
+   HB_SYMBOL_UNUSED( pArea );
+   strcpy(pBuffer, "ADS");
+   return SUCCESS;
+}
+
 #define  adsEval                  NULL
 
 static ERRCODE adsPack( ADSAREAP pArea )
 {
+   ULONG ulRecCount;
+
    HB_TRACE(HB_TR_DEBUG, ("adsPack(%p)", pArea));
 
    if( pArea->fShared )
@@ -1093,6 +1130,9 @@ static ERRCODE adsPack( ADSAREAP pArea )
       return FAILURE;
 
    AdsPackTable  ( pArea->hTable );
+   if( adsRecCount( pArea, &ulRecCount ) == FAILURE )
+      return FAILURE;
+   pArea->ulRecCount = ulRecCount;
    return adsGoTop( pArea );
 }
 

@@ -737,7 +737,7 @@ ERRCODE hb_waSetRel( AREAP pArea, LPDBRELINFO lpdbRelInf )
 {
    LPDBRELINFO lpdbRelations;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_waSetRel(%p, %p)", pArea, pRelInfo));
+   HB_TRACE(HB_TR_DEBUG, ("hb_waSetRel(%p, %p)", pArea, lpdbRelInf));
 
    lpdbRelations = pArea->lpdbRelations;
    if( ! lpdbRelations )

@@ -431,13 +431,32 @@ HB_FUNC( ADSGETRELKEYPOS )
    DOUBLE pdPos;
 
    pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
-   if( pArea && pArea->hOrdCurrent )
+   if( pArea )
    {
+      if ( pArea->hOrdCurrent )
+      {
        AdsGetRelKeyPos  ( pArea->hOrdCurrent, &pdPos);
        hb_retnd( pdPos );
+      }
+      else
+      {
+         ULONG ulRecCount;
+         AdsGetRecordNum( pArea->hTable, ADS_IGNOREFILTERS,
+               (UNSIGNED32 *)&(pArea->ulRecNo) );
+         AdsGetRecordCount( pArea->hTable, ADS_IGNOREFILTERS, &ulRecCount );
+         if ( pArea->ulRecNo == 0 || ulRecCount == 0  )
+            hb_retnd( 0.0 );
+         else
+         {
+            if ( pArea->fEof )
+               hb_retnd( 1.0 );
+            else
+               hb_retnd( (double) pArea->ulRecNo/ ulRecCount  );
+         }
+      }
    }
    else
-      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSREFRESHAOF" );
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSGETRELKEYPOS" );
 }
 
 HB_FUNC( ADSENABLEENCRYPTION )
@@ -773,7 +792,7 @@ HB_FUNC( ADSCONVERTTABLE )
             usTableType = hb_parni( 2 );
             if( usTableType < 1 || usTableType > 3 )
                usTableType = ADS_ADT;
-         }      
+         }
          AdsConvertTable( pArea->hTable, ADS_IGNOREFILTERS, hb_parc( 1 ), usTableType );
       }
       else
