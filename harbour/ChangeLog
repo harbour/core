@@ -3,6 +3,7 @@
    ! Fixed line number bug. (LINE opcode, PROCLINE(), error messages)
  * tests/working/procline.prg
    tests/working/copyfile.prg
+   tests/working/copyfile.txt
    + Added.
 
 19990627-16:30 CET Victor Szel <info@szelvesz.hu>
