@@ -40,7 +40,7 @@ errorsys.obj : errorsys.c extend.h types.h
 extend.obj   : extend.c   extend.h types.h
 files.obj    : files.c    extend.h types.h
 hardcr.obj   : hardcr.c   extend.h types.h
-hb_f.obj     : hb.c       extend.h types.h
+hb_f.obj     : hb_f.c     extend.h types.h
 initsymb.obj : initsymb.c extend.h types.h
 itemapi.obj  : itemapi.c  extend.h types.h
 math.obj     : math.c     extend.h types.h

@@ -1,3 +1,7 @@
+19990607-20:30 CET Eddie Runia
+   * makefile.b32
+     change little bug (hb.c)
+
 Mon Jun 07 12:58:17 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* source/hbpp/Makefile: 
