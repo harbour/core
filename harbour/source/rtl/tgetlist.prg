@@ -659,11 +659,11 @@ function Updated()
 
 return .f.
 
-function GetApplyKey( oGet, nKey )
+procedure GetApplyKey( oGet, nKey )
 
   if s_oGetListActive != nil
      s_oGetListActive:oGet := oGet
      s_oGetListActive:GetApplyKey( nKey )
   endif
 
-return nil
+return

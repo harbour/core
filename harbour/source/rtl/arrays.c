@@ -760,10 +760,6 @@ PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray )
    return pDstArray;
 }
 
-/*
- * HARBOUR
- */
-
 /* This function creates an array item using 'iDimension' as an index
  * to retrieve the number of elements from the parameter list.
  */
@@ -786,6 +782,10 @@ static void hb_arrayNewRagged( PHB_ITEM pArray, int iDimension )
          hb_arrayNewRagged( hb_arrayGetItemPtr( pArray, ulElements-- ), iDimension );
    }
 }
+
+/*
+ * HARBOUR
+ */
 
 HARBOUR HB_ARRAY( void )
 {
@@ -994,6 +994,7 @@ HARBOUR HB_ACLONE( void )
    if( pSrcArray && ! hb_arrayIsObject( pSrcArray ) )
    {
       PHB_ITEM pDstArray = hb_arrayClone( pSrcArray );
+
       hb_itemReturn( pDstArray ); /* AClone() returns the new array */
       hb_itemRelease( pDstArray );
    }

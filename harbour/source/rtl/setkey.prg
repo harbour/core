@@ -36,10 +36,10 @@
 /*
  * ChangeLog:
  *
- * V 1.1  A White                 Fixed wrong parameter aClone() bug in SetKeySave()
- *                                Added SetKeyCheck()
- *                                Added SetKeyGet()
- * V 1.0  A White                 Initial version, submitted to Harbour Projects
+ * V 1.1  A White       Fixed wrong parameter aClone() bug in SetKeySave()
+ *                      Added SetKeyCheck()
+ *                      Added SetKeyGet()
+ * V 1.0  A White       Initial version, submitted to Harbour Projects
  *
  */
 
@@ -50,102 +50,106 @@
 #define BLOCK      2
 #define CONDITION  3
 
-static s_aSetKeys := {}       // holds array of hot-key id, code-block, activation-block
+// holds array of hot-key id, code-block, activation-block
+static s_aSetKeys := {}
 
 Function SetKey( anKey, bBlock, bCondition )
-  local nFound, bReturn, aKey
+   local nFound
+   local bReturn
+   local aKey
+ 
+   if ISARRAY( anKey )
+      aEval( anKey, {|x| setKey( x, bBlock, bCondition ) } )
+ 
+   elseif ISNUMBER( anKey ) .and. anKey <> 0
+      if ( nFound := aScan( s_aSetKeys, {|x| x[ KEY ] == anKey } ) ) == 0
+         if ISBLOCK( bBlock )
+            aAdd( s_aSetKeys, { anKey, bBlock, bCondition } )
+        
+         endif
+        
+      else
+         aKey := s_aSetKeys[ nFound ]
+        
+         if aKey[ CONDITION ] == NIL .or. eval( aKey[ CONDITION ], anKey )
+            bReturn := aKey[ BLOCK ]
 
-  if ISARRAY( anKey )
-    aEval( anKey, {|x| setKey( x, bBlock, bCondition ) } )
-
-  elseif ISNUMBER( anKey ) .and. anKey <> 0
-    if ( nFound := aScan( s_aSetKeys, {|x| x[ KEY ] == anKey } ) ) == 0
-      if ISBLOCK( bBlock )
-        aAdd( s_aSetKeys, { anKey, bBlock, bCondition } )
-
+         endif
+        
+         if ISBLOCK( bBlock )
+            aKey[ BLOCK ]     := bBlock
+            aKey[ CONDITION ] := bCondition
+        
+         elseif pcount() > 1 .and. bBlock == NIL
+            aSize( aDel( s_aSetKeys, nFound ), len( s_aSetKeys ) - 1 )
+        
+         endif
+        
       endif
-
-    else
-      aKey := s_aSetKeys[ nFound ]
-
-      if aKey[ CONDITION ] == NIL .or. eval( aKey[ CONDITION ], anKey )
-        bReturn := aKey[ BLOCK ]
-
-      endif
-
-      if ISBLOCK( bBlock )
-        aKey[ BLOCK ]     := bBlock
-        aKey[ CONDITION ] := bCondition
-
-      elseif pcount() > 1 .and. bBlock == NIL
-        aSize( aDel( s_aSetKeys, nFound ), len( s_aSetKeys ) - 1 )
-
-      endif
-
-    endif
-
-  endif
+     
+   endif
 
 return bReturn
 
-
 Function HB_SetKeyGet( nKey, bCondition )
-  local nFound
+   local nFound
+  
+   if ISNUMBER( nKey ) .and. nKey <> 0
+      if ( nFound := aScan( s_aSetKeys, {|x| x[ KEY ] == nKey } ) ) == 0
+         bCondition := NIL
+     
+      else
+         bCondition := s_aSetKeys[ nFound, CONDITION ]
+         return        s_aSetKeys[ nFound, BLOCK ]
+     
+      endif
+  
+   endif
 
-  if ISNUMBER( nKey ) .and. nKey <> 0
-    if ( nFound := aScan( s_aSetKeys, {|x| x[ KEY ] == nKey } ) ) == 0
-      bCondition := NIL
-
-    else
-      bCondition := s_aSetKeys[ nFound, CONDITION ]
-      return        s_aSetKeys[ nFound, BLOCK ]
-
-    endif
-
-  endif
-
-return NIL //bReturn
+return NIL
 
 Function HB_SetKeySave( OldKeys )
-  local aReturn := aClone( s_aSetKeys )
-
-  if pcount() != 0 .or. ISARRAY( OldKeys )
-    if OldKeys == NIL
-      s_aSetKeys := {}
-
-    else
-      s_aSetKeys := aClone( OldKeys )
-
-    endif
-
-  endif
+   local aReturn := aClone( s_aSetKeys )
+  
+   if pcount() != 0 .or. ISARRAY( OldKeys )
+      if OldKeys == NIL
+         s_aSetKeys := {}
+     
+      else
+         s_aSetKeys := aClone( OldKeys )
+     
+      endif
+  
+   endif
 
 return aReturn
 
 Function HB_SetKeyCheck( nKey, p1, p2, p3 )
-  local nFound, aKey, bBlock
-
-  if ( nFound := aScan( s_aSetKeys, {|x| x[ KEY ] == nKey } ) ) > 0
-    aKey   := s_aSetKeys[ nFound ]
-    bBLock := aKey[ BLOCK ]
-
-    if aKey[ CONDITION ] == NIL .or. eval( aKey[ CONDITION ], nKey )
-
-      // is this overkill?  if a code-block checks its own pcount(),
-      // passing nil parameters would skew the count!
-
-      do case
-      case pcount() == 1  ;  eval( bBlock, nKey )
-      case pcount() == 2  ;  eval( bBlock, p1, nKey )
-      case pcount() == 3  ;  eval( bBlock, p1, p2, nKey )
-      otherwise           ;  eval( bBlock, p1, p2, p3, nKey )
-      end case
-
-      return .t.
-
-    endif
-
-  endif
+   local nFound
+   local aKey
+   local bBlock
+  
+   if ( nFound := aScan( s_aSetKeys, {|x| x[ KEY ] == nKey } ) ) > 0
+      aKey   := s_aSetKeys[ nFound ]
+      bBLock := aKey[ BLOCK ]
+     
+      if aKey[ CONDITION ] == NIL .or. eval( aKey[ CONDITION ], nKey )
+       
+         // is this overkill? if a code-block checks its own pcount(),
+         // passing nil parameters would skew the count!
+       
+         do case
+         case pcount() == 1 ; eval( bBlock, nKey )
+         case pcount() == 2 ; eval( bBlock, p1, nKey )
+         case pcount() == 3 ; eval( bBlock, p1, p2, nKey )
+         otherwise          ; eval( bBlock, p1, p2, p3, nKey )
+         end case
+       
+         return .t.
+     
+      endif
+     
+   endif
 
 return .f.
 

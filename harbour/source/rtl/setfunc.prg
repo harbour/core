@@ -38,7 +38,8 @@
 
 PROCEDURE __SetFunction( nFunctionKey, cString )
 
-   /* NOTE: CA-Cl*pper will not handle F11 and F12 here. */
+   /* NOTE: CA-Cl*pper will not handle F11 and F12 here. 
+            This is a Harbour extension. [vszakats] */
 
    DO CASE
    CASE nFunctionKey == 1  ; nFunctionKey := K_F1

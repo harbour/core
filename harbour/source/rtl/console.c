@@ -42,8 +42,8 @@
  *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  *    adjust_pos(), hb_altout(), hb_devout(), HB_DEVOUT(), hb_devpos(),
- *    HB_DEVPOS(), hb_dispout(), HB___EJECT(), hb_max_col(), HB_MAXCOL(),
- *    hb_max_row(), HB_MAXROW(), hb_out(), hb_outerr(), HB_OUTERR(),
+ *    HB_DEVPOS(), hb_dispout(), HB___EJECT(), HB_MAXCOL(),
+ *    HB_MAXROW(), hb_out(), hb_outerr(), HB_OUTERR(),
  *    hb_outstd(), HB_OUTSTD(), HB_PCOL(), HB_PROW(), hb_setpos(),
  *    HB_SETPOS(), HB_SETPRC(), HB_SCROLL(), and hb_consoleInitialize()
  *
@@ -163,9 +163,7 @@ void hb_consoleRelease( void )
    s_szCrLf[ 0 ] = HB_CHAR_LF;
    s_szCrLf[ 1 ] = '\0';
 
-#ifdef HARBOUR_USE_GTAPI
    hb_gtExit();
-#endif
 
    s_bInit = FALSE;
 }
@@ -182,43 +180,18 @@ HARBOUR HB_HB_OSNEWLINE( void )
    hb_retc( s_szCrLf );
 }
 
-USHORT hb_max_row( void )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_max_row()"));
-
-#ifdef HARBOUR_USE_GTAPI
-   return hb_gtMaxRow();
-#else
-   #if defined(HB_OS_UNIX_COMPATIBLE)
-      return 23;
-   #else
-      return 24;
-   #endif
-#endif
-}
-
-USHORT hb_max_col( void )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_max_col()"));
-
-#ifdef HARBOUR_USE_GTAPI
-   return hb_gtMaxCol();
-#else
-   return 79;
-#endif
-}
-
 #ifndef HARBOUR_USE_GTAPI
-static void adjust_pos( char * pStr, ULONG ulLen, SHORT * row, SHORT * col, USHORT max_row, USHORT max_col )
+static void adjust_pos( char * pStr, ULONG ulLen, SHORT * row, SHORT * col )
 {
+   USHORT max_row = hb_gtMaxRow();
+   USHORT max_col = hb_gtMaxCol();
    ULONG ulCount;
-   char * pPtr = pStr;
 
-   HB_TRACE(HB_TR_DEBUG, ("adjust_pos(%s, %lu, %p, %p, %hu, %hu)", pStr, ulLen, row, col, max_row, max_col));
+   HB_TRACE(HB_TR_DEBUG, ("adjust_pos(%s, %lu, %p, %p)", pStr, ulLen, row, col));
 
    for( ulCount = 0; ulCount < ulLen; ulCount++ )
    {
-      switch( *pPtr++  )
+      switch( *pStr++  )
       {
          case HB_CHAR_BEL:
             break;
@@ -283,18 +256,16 @@ void hb_outstd( char * pStr, ULONG ulLen )
    if( ulLen == 0 )
       ulLen = strlen( pStr );
 
-#ifdef HARBOUR_USE_GTAPI
    if( s_bInit )
       hb_gtPreExt();
-#endif
 
    user_ferror = hb_fsError(); /* Save current user file error code */
    hb_fsWriteLarge( s_iFilenoStdout, ( BYTE * ) pStr, ulLen );
    hb_fsSetError( user_ferror ); /* Restore last user file error code */
 
-#ifdef HARBOUR_USE_GTAPI
    if( s_bInit )
    {
+#ifdef HARBOUR_USE_GTAPI
       #ifndef __CYGWIN__
       if( isatty( s_iFilenoStdout ) )
       #endif
@@ -303,11 +274,11 @@ void hb_outstd( char * pStr, ULONG ulLen )
          s_iDevCol = hb_gt_Col();
          hb_gtSetPos( s_iDevRow, s_iDevCol );
       }
+#else
+      adjust_pos( pStr, ulLen, &s_iDevRow, &s_iDevCol );
+#endif
       hb_gtPostExt();
    }
-#else
-   adjust_pos( pStr, ulLen, &s_iDevRow, &s_iDevCol, hb_max_row(), hb_max_col() );
-#endif
 }
 
 /* Output an item to STDERR */
@@ -320,18 +291,16 @@ void hb_outerr( char * pStr, ULONG ulLen )
    if( ulLen == 0 )
       ulLen = strlen( pStr );
 
-#ifdef HARBOUR_USE_GTAPI
    if( s_bInit )
       hb_gtPreExt();
-#endif
 
    user_ferror = hb_fsError(); /* Save current user file error code */
    hb_fsWriteLarge( s_iFilenoStderr, ( BYTE * ) pStr, ulLen );
    hb_fsSetError( user_ferror ); /* Restore last user file error code */
 
-#ifdef HARBOUR_USE_GTAPI
    if( s_bInit )
    {
+#ifdef HARBOUR_USE_GTAPI
       #ifndef __CYGWIN__
       if( isatty( s_iFilenoStdout ) )
       #endif
@@ -340,11 +309,11 @@ void hb_outerr( char * pStr, ULONG ulLen )
          s_iDevCol = hb_gt_Col();
          hb_gtSetPos( s_iDevRow, s_iDevCol );
       }
+#else
+      adjust_pos( pStr, ulLen, &s_iDevRow, &s_iDevCol );
+#endif
       hb_gtPostExt();
    }
-#else
-   adjust_pos( pStr, ulLen, &s_iDevRow, &s_iDevCol, hb_max_row(), hb_max_col() );
-#endif
 }
 
 /* Output an item to the screen and/or printer and/or alternate */
@@ -361,7 +330,7 @@ static void hb_altout( char * pStr, ULONG ulLen )
       USHORT user_ferror = hb_fsError(); /* Save current user file error code */
       hb_fsWriteLarge( s_iFilenoStdout, ( BYTE * ) pStr, ulLen );
       hb_fsSetError( user_ferror ); /* Restore last user file error code */
-      adjust_pos( pStr, ulLen, &s_iDevRow, &s_iDevCol, hb_max_row(), hb_max_col() );
+      adjust_pos( pStr, ulLen, &s_iDevRow, &s_iDevCol );
 #endif
    }
 
@@ -414,7 +383,7 @@ static void hb_devout( char * pStr, ULONG ulLen )
       USHORT user_ferror = hb_fsError(); /* Save current user file error code */
       hb_fsWriteLarge( s_iFilenoStdout, ( BYTE * ) pStr, ulLen );
       hb_fsSetError( user_ferror ); /* Restore last user file error code */
-      adjust_pos( pStr, ulLen, &s_iDevRow, &s_iDevCol, hb_max_row(), hb_max_col() );
+      adjust_pos( pStr, ulLen, &s_iDevRow, &s_iDevCol );
 #endif
    }
 }
@@ -435,7 +404,7 @@ static void hb_dispout( char * pStr, ULONG ulLen )
    user_ferror = hb_fsError(); /* Save current user file error code */
    hb_fsWriteLarge( s_iFilenoStdout, ( BYTE * ) pStr, ulLen );
    hb_fsSetError( user_ferror ); /* Restore last user file error code */
-   adjust_pos( pStr, ulLen, &s_iDevRow, &s_iDevCol, hb_max_row(), hb_max_col() );
+   adjust_pos( pStr, ulLen, &s_iDevRow, &s_iDevCol );
 #endif
 }
 
@@ -566,14 +535,12 @@ HARBOUR HB_SETPOS( void ) /* Sets the screen position */
 /* Move the screen position to the right by one column */
 HARBOUR HB_SETPOSBS( void )
 {
-#ifdef HARBOUR_USE_GTAPI
    SHORT iRow, iCol;
 
    /* NOTE: Clipper does no checks about reaching the border or anything.
             [vszakats] */
    hb_gtGetPos( &iRow, &iCol );
    hb_gtSetPos( iRow, iCol + 1 );
-#endif
 }
 
 HARBOUR HB_DEVPOS( void ) /* Sets the screen and/or printer position */
@@ -586,7 +553,6 @@ HARBOUR HB_DEVOUT( void ) /* writes a single value to the current device (screen
 {
    if( hb_pcount() >= 1 )
    {
-#ifdef HARBOUR_USE_GTAPI
       if( ISCHAR( 2 ) )
       {
          char szOldColor[ CLR_STRLEN ];
@@ -600,9 +566,6 @@ HARBOUR HB_DEVOUT( void ) /* writes a single value to the current device (screen
       }
       else
          hb_out( 1, hb_devout );
-#else
-      hb_out( 1, hb_devout );
-#endif
    }
 }
 
@@ -610,7 +573,6 @@ HARBOUR HB_DISPOUT( void ) /* writes a single value to the screen, but is not af
 {
    if( hb_pcount() >= 1 )
    {
-#ifdef HARBOUR_USE_GTAPI
       if( ISCHAR( 2 ) )
       {
          char szOldColor[ CLR_STRLEN ];
@@ -624,9 +586,6 @@ HARBOUR HB_DISPOUT( void ) /* writes a single value to the screen, but is not af
       }
       else
          hb_out( 1, hb_dispout );
-#else
-      hb_out( 1, hb_devout );
-#endif
    }
 }
 
@@ -639,7 +598,6 @@ HARBOUR HB_DISPOUTAT( void ) /* writes a single value to the screen at speficic 
       /* NOTE: Clipper does no checks here. [vszakats] */
       hb_setpos( hb_parni( 1 ), hb_parni( 2 ) );
 
-#ifdef HARBOUR_USE_GTAPI
       if( ISCHAR( 4 ) )
       {
          char szOldColor[ CLR_STRLEN ];
@@ -653,9 +611,6 @@ HARBOUR HB_DISPOUTAT( void ) /* writes a single value to the screen at speficic 
       }
       else
          hb_out( 3, hb_dispout );
-#else
-      hb_out( 3, hb_devout );
-#endif
    }
 }
 
@@ -693,8 +648,8 @@ HARBOUR HB_SCROLL( void ) /* Scrolls a screen region (requires the GT API) */
 {
    USHORT top, left, bottom, right;
 
-   int iMR      = hb_max_row();
-   int iMC      = hb_max_col();
+   int iMR      = hb_gtMaxRow();
+   int iMC      = hb_gtMaxCol();
 
    int i_top    = ISNUM( 1 ) ? hb_parni( 1 ) : 0;
    int i_left   = ISNUM( 2 ) ? hb_parni( 2 ) : 0;
@@ -736,12 +691,12 @@ HARBOUR HB_SCROLL( void ) /* Scrolls a screen region (requires the GT API) */
 
 HARBOUR HB_MAXROW( void ) /* Return the maximum screen row number (zero origin) */
 {
-   hb_retni( hb_max_row() );
+   hb_retni( hb_gtMaxRow() );
 }
 
 HARBOUR HB_MAXCOL( void ) /* Return the maximum screen column number (zero origin) */
 {
-   hb_retni( hb_max_col() );
+   hb_retni( hb_gtMaxCol() );
 }
 
 HARBOUR HB_ROW( void ) /* Return the current screen row position (zero origin) */
@@ -800,10 +755,10 @@ HARBOUR HB_DISPBOX( void )
       if( i_left < 0 ) left = 0; else left = ( USHORT ) i_left;
       if( i_bottom < 0 ) bottom = 0; else bottom = ( USHORT ) i_bottom;
       if( i_right < 0 ) right = 0; else right = ( USHORT ) i_right;
-      if( top > hb_max_row() ) top = hb_max_row();
-      if( left > hb_max_col() ) left = hb_max_col();
-      if( bottom > hb_max_row() ) bottom = hb_max_row();
-      if( right > hb_max_col() ) right = hb_max_col();
+      if( top > hb_gtMaxRow() ) top = hb_gtMaxRow();
+      if( left > hb_gtMaxCol() ) left = hb_gtMaxCol();
+      if( bottom > hb_gtMaxRow() ) bottom = hb_gtMaxRow();
+      if( right > hb_gtMaxCol() ) right = hb_gtMaxCol();
 
       /* Force the box to be drawn from top left to bottom right */
       if( top > bottom )

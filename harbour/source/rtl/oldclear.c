@@ -37,20 +37,16 @@
 
 HARBOUR HB___ATCLEAR( void )
 {
-#ifdef HARBOUR_USE_GTAPI
    if( hb_pcount() == 4 )
    {
       hb_gtSetPos( hb_parni( 1 ), hb_parni( 2 ) );
       hb_gtScroll( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), 0, 0 );
    }
-#endif
 }
 
 HARBOUR HB___CLEAR( void )
 {
-#ifdef HARBOUR_USE_GTAPI
    hb_gtScroll( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), 0, 0 );
    hb_gtSetPos( 0, 0 );
-#endif
 }
 

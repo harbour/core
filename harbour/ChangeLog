@@ -1,3 +1,16 @@
+20000301-14:34 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * source/rtl/console.c
+     source/rtl/oldclear.c
+     % Removed more non-GTAPI branches.
+   * source/rtl/tgetlist.prg
+     % One FUNCTION converted to PROCEDURE
+   * source/rtl/setfunc.prg
+     * NOTE made more clear.
+   * source/rtl/setkey.prg
+     * Changed to three chars indentation
+   * source/rtl/arrays.c
+     * Minor change in comment.
+
 20000301-10:15 GMT+2 Chen Kedem <niki@actcom.co.il>
    * doc/en/ARRAY.TXT
    * doc/en/BINNUM.TXT
