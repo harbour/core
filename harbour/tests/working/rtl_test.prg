@@ -1967,6 +1967,10 @@ STATIC FUNCTION Main_OPOVERL()
    TEST_LINE( oString <= "Hello"        , .T.                 )
    TEST_LINE( oString +  "Hello"        , "HelloHello"        )
    TEST_LINE( oString -  "Hello"        , "HelloHello"        )
+   TEST_LINE( oString++                 , "TSTRING Object"    )
+   TEST_LINE( oString:cValue            , "Hello "            )
+   TEST_LINE( oString--                 , "TSTRING Object"    )
+   TEST_LINE( oString:cValue            , "Hello"             )
 
    RETURN NIL
 
@@ -1979,20 +1983,17 @@ STATIC FUNCTION TString()
 
       oClass:AddData( "cValue" )
 
-      oClass:AddInline( "=" , {| self, cTest | ::cValue =  cTest } )
       oClass:AddInline( "==", {| self, cTest | ::cValue == cTest } )
       oClass:AddInline( "!=", {| self, cTest | ::cValue != cTest } )
-      oClass:AddInline( "<>", {| self, cTest | ::cValue <> cTest } )
-      oClass:AddInline( "#" , {| self, cTest | ::cValue #  cTest } )
-      oClass:AddInline( "+=", {| self, cTest | ::cValue += cTest } )
-      oClass:AddInline( "-=", {| self, cTest | ::cValue -= cTest } )
-      oClass:AddInline( "+" , {| self, cTest | ::cValue := ::cValue + cTest } )
-      oClass:AddInline( "-" , {| self, cTest | ::cValue := ::cValue - cTest } )
-      oClass:AddInline( "$" , {| self, cTest | ::cValue $  cTest } )
       oClass:AddInline( "<" , {| self, cTest | ::cValue <  cTest } )
       oClass:AddInline( "<=", {| self, cTest | ::cValue <= cTest } )
       oClass:AddInline( ">" , {| self, cTest | ::cValue >  cTest } )
       oClass:AddInline( ">=", {| self, cTest | ::cValue >= cTest } )
+      oClass:AddInline( "+" , {| self, cTest | ::cValue +  cTest } )
+      oClass:AddInline( "-" , {| self, cTest | ::cValue -  cTest } )
+      oClass:AddInline( "++", {| self        | ::cValue += " ", self } )
+      oClass:AddInline( "--", {| self        | iif( Len( ::cValue ) > 0, ::cValue := Left( ::cValue, Len( ::cValue ) - 1 ), ::cValue ), self } )
+      oClass:AddInline( "$" , {| self, cTest | ::cValue $  cTest } )
 
       oClass:AddInline( "HasMsg", {| self, cMsg | __ObjHasMsg( QSelf(), cMsg ) } )
 

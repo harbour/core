@@ -1,3 +1,20 @@
+19990914-01:00 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/vm/hvm.c
+    include/ctoharb.h
+    + hb_vmEqual() - Added support for alternate equal operator: "="
+      Currently they are exact synonyms.
+    + hb_vmInc()/hb_vmDec() - "++", "--" operator overloading support added.
+    + hb_stackDispLocal() - More values are printed, the format changed.
+  * tests/working/rtl_test.prg
+    tests/working/overload.prg
+    ! The tests fixed again, "+="/"-=" operators removed from the class 
+      declaration.
+    * "+"/"-" implementation changed to not modify the original value, since
+      the expression "oString + 'A'" in itself in one line is not valid anyway.
+    + "++", "--" operator overloading added.
+    - Removed the "<>" and "#" overloading methods since they were not needed
+      in this case.
+
 19990913-23:45 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/vm/hvm.c
     + hb_vmInString() - Added support for overloading the "$" operator.

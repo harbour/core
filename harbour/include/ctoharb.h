@@ -51,8 +51,8 @@ extern WORD    hb_vmRequestQuery( void );
 extern void    hb_vmQuit( void );            /* Immediately quits the virtual machine */
 
 /* Return values of hb_vmRequestQuery() */
-#define HB_QUIT_REQUESTED    	1	     /* immediately quit the application */
-#define HB_BREAK_REQUESTED	2	     /* break to nearest RECOVER/END sequence */
+#define HB_QUIT_REQUESTED       1            /* immediately quit the application */
+#define HB_BREAK_REQUESTED      2            /* break to nearest RECOVER/END sequence */
 
 /* PCode functions */
 
@@ -90,7 +90,8 @@ extern void    hb_vmGenArray( WORD wElements ); /* generates a wElements Array a
 
 /* Object */
 extern void    hb_vmMessage( PHB_SYMB pSymMsg ); /* sends a message to an object */
-extern void    hb_vmOperatorCall( PHB_ITEM, PHB_ITEM, char *); /* call an overloaded operator */
+extern void    hb_vmOperatorCall( PHB_ITEM, PHB_ITEM, char * ); /* call an overloaded operator */
+extern void    hb_vmOperatorCallUnary( PHB_ITEM, char * ); /* call an overloaded unary operator */
 
 /* Execution */
 extern void    hb_vmFrame( BYTE bLocals, BYTE bParams );  /* increases the stack pointer for the amount of locals and params suplied */

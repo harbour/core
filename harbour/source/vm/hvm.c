@@ -903,6 +903,9 @@ void hb_vmDec( void )
    else if( IS_DATE( stack.pPos - 1 ) )
       hb_vmPushDate( hb_vmPopDate() - 1 );
 
+   else if( IS_OBJECT( stack.pPos - 1 ) && hb_objHasMsg( stack.pPos - 1, "--" ) )
+      hb_vmOperatorCallUnary( stack.pPos - 1, "--" );
+
    else
    {
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1087, NULL, "--" );
@@ -1195,6 +1198,9 @@ void hb_vmEqual( BOOL bExact )
    else if( IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem1, "==" ) )
       hb_vmOperatorCall( pItem1, pItem2, "==" );
 
+   else if( IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem1, "=" ) )
+      hb_vmOperatorCall( pItem1, pItem2, "=" );
+
    else if( bExact && IS_ARRAY( pItem1 ) && IS_ARRAY( pItem2 ) )
    {
       BOOL bResult = pItem1->item.asArray.value->pItems && pItem2->item.asArray.value->pItems &&
@@ -1414,6 +1420,9 @@ void hb_vmInc( void )
    }
    else if( IS_DATE( stack.pPos - 1 ) )
       hb_vmPushDate( hb_vmPopDate() + 1 );
+
+   else if( IS_OBJECT( stack.pPos - 1 ) && hb_objHasMsg( stack.pPos - 1, "++" ) )
+      hb_vmOperatorCallUnary( stack.pPos - 1, "++" );
 
    else
    {
@@ -1833,12 +1842,19 @@ void hb_vmMult( void )
    }
 }
 
-void hb_vmOperatorCall( PHB_ITEM pItem1, PHB_ITEM pItem2, char *szSymbol )
+void hb_vmOperatorCall( PHB_ITEM pItem1, PHB_ITEM pItem2, char * szSymbol )
 {
    hb_vmPush( pItem1 );                             /* Push object              */
    hb_vmMessage( hb_dynsymGet( szSymbol )->pSymbol );  /* Push operation           */
    hb_vmPush( pItem2 );                             /* Push argument            */
    hb_vmFunction( 1 );
+}
+
+void hb_vmOperatorCallUnary( PHB_ITEM pItem1, char * szSymbol )
+{
+   hb_vmPush( pItem1 );                             /* Push object              */
+   hb_vmMessage( hb_dynsymGet( szSymbol )->pSymbol );  /* Push operation           */
+   hb_vmFunction( 0 );
 }
 
 void hb_vmOr( void )
@@ -2452,8 +2468,15 @@ void hb_stackDispLocal( void )
 {
    PHB_ITEM pBase;
 
+   printf( hb_consoleGetNewLine() );
+   printf( "Virtual Maching Stack Dump:" );
+   printf( hb_consoleGetNewLine() );
+   printf( "---------------------------" );
+
    for( pBase = stack.pBase; pBase <= stack.pPos; pBase++ )
    {
+      printf( hb_consoleGetNewLine() );
+
       switch( hb_itemType( pBase ) )
       {
          case IT_NIL:
@@ -2461,7 +2484,10 @@ void hb_stackDispLocal( void )
               break;
 
          case IT_ARRAY:
-              printf( hb_arrayIsObject( pBase ) ? "OBJECT " : "ARRAY " );
+              if( hb_arrayIsObject( pBase ) )
+                 printf( "OBJECT = %s ", hb_objGetClsName( pBase ) );
+              else
+                 printf( "ARRAY " );
               break;
 
          case IT_BLOCK:
@@ -2469,40 +2495,38 @@ void hb_stackDispLocal( void )
               break;
 
          case IT_DATE:
-              printf( "DATE " );
+              printf( "DATE = \"%s\" ", hb_itemGetDS( pBase, stack.szDate ) );
               break;
 
          case IT_DOUBLE:
-              printf( "DOUBLE " );
+              printf( "DOUBLE = %f ", hb_itemGetND( pBase ) );
               break;
 
          case IT_LOGICAL:
-              printf( "LOGICAL[%c] ", hb_itemGetL( pBase ) ? 'T' : 'F' );
+              printf( "LOGICAL = %s ", hb_itemGetL( pBase ) ? ".T." : ".F." );
               break;
 
          case IT_LONG:
-              printf( "LONG" );
+              printf( "LONG = %lu ", hb_itemGetNL( pBase ) );
               break;
 
          case IT_INTEGER:
-              printf( "INTEGER[%i] ", hb_itemGetNI( pBase ) );
+              printf( "INTEGER = %i ", hb_itemGetNI( pBase ) );
               break;
 
          case IT_STRING:
-              printf( "STRING " );
+              printf( "STRING = \"%s\" ", hb_itemGetCPtr( pBase ) );
               break;
 
          case IT_SYMBOL:
-              printf( "SYMBOL(%s) ", pBase->item.asSymbol.value->szName );
+              printf( "SYMBOL = %s ", pBase->item.asSymbol.value->szName );
               break;
 
          default:
-              printf( "UNKNOWN[%i] ", hb_itemType( pBase ) );
+              printf( "UNKNOWN = TYPE %i ", hb_itemType( pBase ) );
               break;
       }
    }
-
-   printf( hb_consoleGetNewLine() );
 }
 
 void hb_stackDispCall( void )
