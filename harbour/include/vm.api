@@ -41,8 +41,6 @@
 #include "clipdefs.h"
 #include "extend.h"
 
-typedef void * HANDLE;
-
 /* Standard */
 #define _xvalloc( size, flags )      hb_xalloc( size )
 #define _xvfree( h )                 hb_xfree( h )

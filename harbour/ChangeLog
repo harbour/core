@@ -1,3 +1,9 @@
+19990923-09:16 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * include/vm.api
+    ! Removed HANDLE typedef, since it conflicted with the one in clipdefs.h,
+      it's also more Clipper compatible now.
+
 19990923-03:30 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/rtl/gt/gtwin.c
