@@ -1,3 +1,10 @@
+19990707-19:40:00 Eddie Runia <eddie@runia.com>
+  * source\rtl\asort.prg; source\rtl\objfunc.prg; source\runner\runner.c;
+    tests\working\runner.c; source\tools\debug.c; source\tools\stringp.prg
+     GPL Licensing added
+  * source\rtl\console.c; source\rtl\environ.c; source\rtl\tclass.prg
+     Partial Copyright added
+
 19990707-16:22:20 Bruno Cantero <bruno@issnet.net>
 CVSed by Andi Jahja <andij@aonlippo.co.id>
 

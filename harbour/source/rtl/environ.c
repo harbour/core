@@ -2,6 +2,12 @@
  * $Id$
  */
 
+/*
+ * Partial Copyright (C) 1999 Eddie Runia (eddie@runia.com)
+ *    Partial copyright regarding the following function :
+ *      __RUN()
+ */
+
 /* Note: The following #ifdef block for __IBMCPP__ must
          be ahead of any and all #include statements!
 */

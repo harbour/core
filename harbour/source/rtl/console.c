@@ -2,6 +2,12 @@
  * $Id$
  */
 
+/*
+ * Partial Copyright (C) 1999 Eddie Runia <eddie@runia.com>
+ *    partial copyright regarding the following function :
+ *       __ACCEPT()
+ */
+
 #ifdef WINDOWS
    #include <windows.h>
 #endif

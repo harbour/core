@@ -4,6 +4,13 @@
 
 // Harbour Class TClass to build classes
 
+/*
+ * Partial Copyright (C) 1999 Eddie Runia <eddie@runia.com>
+ *    partial copyright regarding the following additions :
+ *       Support for inheritance
+ *       Support for default DATA values
+ */
+
 #define MET_METHOD    0
 #define MET_DATA      1
 #define MET_CLASSDATA 2
