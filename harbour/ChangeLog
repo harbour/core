@@ -1,3 +1,9 @@
+2000-12-12 17:35 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * source/vm/eval.c
+     + Corrected support for block passed by reference.
+
+     /* Ryszard, is there any reason to use hb_stackItemFromBase(1) instead of pItem? */
+
 2000-12-12 17:10 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * makefile.bc
    * hb_slex.bc

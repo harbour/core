@@ -47,9 +47,15 @@ HB_FUNC( EVAL )
    {
       USHORT uiPCount = hb_pcount();
       USHORT uiParam;
+      PHB_ITEM pBlock = hb_stackItemFromBase( 1 );
+
+      if( HB_IS_BYREF( pBlock ) )
+      {
+         pBlock = hb_itemUnRef( pBlock );
+      }
 
       hb_vmPushSymbol( &hb_symEval );
-      hb_vmPush( hb_stackItemFromBase( 1 ) );
+      hb_vmPush( pBlock );
       /* NOTE: hb_param() function cannot be used for parameter access
        * because we need to pass the references too.
        * hb_param() is dereferencing the passed parameters
