@@ -1,7 +1,7 @@
 /* Test SECONDS() */
 /* Harbour Project source code
    http://www.Harbour-Project.org/
-   Copyright 1999 David G. Holm
+   Copyright 1999 David G. Holm <dholm@jsd-llc.com>
    See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
 */
 

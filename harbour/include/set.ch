@@ -5,7 +5,7 @@
    This module contains the defines needed for Harbour programs to use
    the SET function
 
-   Copyright 1999  David G. Holm
+   Copyright 1999 David G. Holm <dholm@jsd-llc.com>
    www - http://www.harbour-project.org
 
    This program is free software; you can redistribute it and/or modify
@@ -30,6 +30,7 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
    their web site at http://www.gnu.org/).
 
+   V 1.4    David G. Holm               Added my email address.
    V 1.3    David G. Holm               Added copyright and license header,
                                         along with a complete version history.
    V 1.2    Victor Szel                 Change not documented.

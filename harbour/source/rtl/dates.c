@@ -24,7 +24,7 @@
  *
  * You can contact me at: alinares@fivetech.com
  *
- *  The following functions are Copyright 1999 David G. Holm:
+ *  The following functions are Copyright 1999 David G. Holm  <dholm@jsd-llc.com>:
  *     HB_CTOD(), HB_DATE(), hb_dtoc().
  *  See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
 */

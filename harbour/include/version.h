@@ -4,7 +4,7 @@
 
    Defines the version information that can be queried via HB_VERSION()
 
-   Copyright 1999 David G. Holm
+   Copyright 1999 David G. Holm <dholm@jsd-llc.com>
    www - http://www.harbour-project.org
 
    This program is free software; you can redistribute it and/or modify
@@ -29,6 +29,7 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
    their web site at http://www.gnu.org/).
 
+   V 1.10   David G. Holm               Added my email address.
    V 1.9    David G. Holm               Added Copyright and License notice.
                                         Added version history.
                                         Bumped revision code to "d" and

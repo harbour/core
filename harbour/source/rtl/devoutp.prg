@@ -5,7 +5,7 @@
    This file contains the Harbour function that outputs expressions
    using picture transformations
 
-   Copyright 1999  David G. Holm
+   Copyright 1999 David G. Holm <dholm@jsd-llc.com>
    www - http://www.Harbour-Project.org
 
    This program is free software; you can redistribute it and/or modify
@@ -30,6 +30,7 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
    their web site at http://www.gnu.org/).
 
+   V 1.3    David G. Holm               Added my email address.
    V 1.2    David G. Holm               Removed "(C)" from Copyright and
                                         updated previous version comments.
    V 1.1    David G. Holm               Submitted to Harbour Project.

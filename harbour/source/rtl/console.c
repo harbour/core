@@ -29,7 +29,7 @@
      partial copyright regarding the following function :
         __ACCEPT()
 
-   The following functions are Copyright 1999 David G. Holm:
+   The following functions are Copyright 1999 David G. Holm <dholm@jsd-llc.com>:
       adjust_pos(), hb_altout(), hb_devout(), HB_DEVOUT(), hb_devpos(),
       HB_DEVPOS(), hb_dispout(), HB___EJECT(), hb_max_col(), HB_MAXCOL(),
       hb_max_row(), HB_MAXROW(), hb_out(), hb_outerr(), HB_OUTERR(),
