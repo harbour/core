@@ -80,6 +80,8 @@ FUNCTION HEADER TEMPLATE
  *
  *  $COMPLIANCE$
  *
+ *  $PLATFORMS$
+ *
  *  $SEEALSO$
  *
  *  $END$
@@ -126,6 +128,8 @@ FUNCTION HEADER EXAMPLE
  *      IsLeapYr() works exactly like CA-Clipper's IsLeapYr(), if your
  *      CA-Clipper doesn't have such a function you're probably in a
  *      different universe from the author of this function.
+ *  $PLATFORMS$
+ *      All
  *  $SEEALSO$
  *      Date() IsWeekend() IsHarbourFinished() IsApocalypse()
  *  $END$
@@ -136,6 +140,7 @@ FUNCTION HEADER EXAMPLE
 /*
  * ChangeLog:
  *
+ * V 1.10   Victor Szel                 $PLATFORMS$ added.
  * V 1.9    Victor Szel                 Small format changes.
  * V 1.8    Victor Szel                 licence -> license
  * V 1.7    Victor Szel                 History separated from the file header

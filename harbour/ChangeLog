@@ -1,3 +1,15 @@
+19991203-15:18 GMT+1 Jose Lalin <dezac@corevia.com>
+  * source/pp/hbpp.c
+    ! Bug fixed in #error directive.
+      Changed 'F' for 'E' type in hb_compGenError call.
+      Now Harbour continues compilig when this directive is
+      found like CA-Cl*pper.
+    (Uploaded by Victor Szel)
+
+19991203-15:18 GMT+1 Victor Szel <info@szelvesz.hu>
+  * doc/hdr_tpl.txt
+    + $PLATFORMS$ entry added.
+
 19991203-15:11 GMT+1 Victor Szel <info@szelvesz.hu>
   * tests/regress/*
     + Added functionality to test database/field stuff. Alias is w_TEST

@@ -262,7 +262,7 @@ int hb_pp_ParseDirective( char * sLine )
 
       else if( i == 5 && memcmp( sDirective, "ERROR", 5 ) == 0 )
         /* --- #error  --- */
-        hb_compGenError( hb_pp_szErrors, 'F', ERR_EXPLICIT, sLine, NULL );
+        hb_compGenError( hb_pp_szErrors, 'E', ERR_EXPLICIT, sLine, NULL );
 
       else if( i == 4 && memcmp( sDirective, "LINE", 4 ) == 0 )
         return -1;
