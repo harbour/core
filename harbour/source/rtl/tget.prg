@@ -1507,6 +1507,8 @@ METHOD Picture( cPicture ) CLASS Get
       ::cPicture := cPicture
       ::ParsePict( cPicture )
 
+      ::buffer := ::PutMask()
+
       if ::nDispLen == NIL
          ::nDispLen := ::nMaxLen
       endif
