@@ -8,6 +8,16 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-03-24 10:08 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
+   * source/rtl/tbcolumn.prg
+     ! fixed typo in comment
+   * source/rtl/tbrowse.prg
+     ! fixed initialization bug that miscalculated ::RowCount in ::Stabilize()
+     ! fixed ASSIGN freeze to return ::nFrozenCols (Clipper compatibility)
+     ! fixed ::RefreshCurrent() to validate ::aRedraw to avoid r/t error  
+     ! fixed ::rect assignment in ::Configure (3rd param was ::nHeaderHeight
+             instead of ::nFooterHeight)
+
 2004-03-23 14:50 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * source/pp/ppcore.c
       * fixed parsing of nested #defines in command/translate

@@ -68,8 +68,8 @@ CLASS TBColumn
    DATA  HeadSep              // Heading separator character
    DATA  Picture              // Column picture string
 #ifdef HB_COMPAT_C53
-   DATA  PreBlock             // Code block validating values
-   DATA  PostBlock            // Code block determining editing
+   DATA  PreBlock             // Code block determining editing
+   DATA  PostBlock            // Code block validating values
 #endif
 
    ACCESS Width INLINE ::nWidth           // Column display width
