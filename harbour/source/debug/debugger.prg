@@ -305,7 +305,8 @@ METHOD New() CLASS TDebugger
    ::oWndCode:bGotFocus   := { || ::oGetListCommand:SetFocus(), SetCursor( SC_SPECIAL1 ) }
    ::oWndCode:bLostFocus  := { || SetCursor( SC_NONE ) }
    ::oWndCode:bPainted = { || ::oBrwText:SetColor( __DbgColors()[ 2 ] + "," + ;
-                              __DbgColors()[ 5 ] + "," + __DbgColors()[ 3 ] ),;
+                              __DbgColors()[ 5 ] + "," + __DbgColors()[ 3 ] + "," + ;
+                              __DbgColors()[ 6 ] ),;
                               If( ::oBrwText != nil, ::oBrwText:RefreshWindow(), nil ) }
 
    AAdd( ::aWindows, ::oWndCode )
@@ -1174,7 +1175,7 @@ METHOD ShowCode( cModuleName ) CLASS TDebugger
       ::oBrwText := TBrwText():New( ::oWndCode:nTop + 1, ::oWndCode:nLeft + 1,;
                    ::oWndCode:nBottom - 1, ::oWndCode:nRight - 1, ::cPrgName,;
                    __DbgColors()[ 2 ] + "," + __DbgColors()[ 5 ] + "," + ;
-                   __DbgColors()[ 3 ] + "," + __DbgColors()[ 4 ] )
+                   __DbgColors()[ 3 ] + "," + __DbgColors()[ 6 ] )
 
       ::oWndCode:SetCaption( ::cPrgName )
    endif
