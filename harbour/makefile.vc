@@ -352,7 +352,10 @@ LANG_LIB_OBJS = \
    $(OBJ_DIR)\msgpt.obj \
    $(OBJ_DIR)\msgro.obj \
    $(OBJ_DIR)\msgsr852.obj \
-   $(OBJ_DIR)\msgsriso.obj
+   $(OBJ_DIR)\msgsriso.obj \
+   $(OBJ_DIR)\msgcs852.obj \
+   $(OBJ_DIR)\msgcsiso.obj \
+   $(OBJ_DIR)\msgcskam.obj 
 
 #
 # MACRO.LIB rules

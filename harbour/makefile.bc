@@ -319,7 +319,13 @@ LANG_LIB_OBJS = \
    $(OBJ_DIR)\msgpt.obj \
    $(OBJ_DIR)\msgro.obj \
    $(OBJ_DIR)\msgsr852.obj \
-   $(OBJ_DIR)\msgsriso.obj
+   $(OBJ_DIR)\msgsriso.obj \
+   $(OBJ_DIR)\msgcs852.obj \
+   $(OBJ_DIR)\msgcsiso.obj \
+   $(OBJ_DIR)\msgcskam.obj 
+   
+
+
 
 #
 # MACRO.LIB rules
@@ -1638,6 +1644,18 @@ $(OBJ_DIR)\msgsr852.obj : $(LANG_DIR)\msgsr852.c
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\msgsriso.obj : $(LANG_DIR)\msgsriso.c
+   $(CC) $(CLIBFLAGS) -I$(LANG_DIR) -o$@ $**
+   tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\msgcs852.obj : $(LANG_DIR)\msgcs852.c
+   $(CC) $(CLIBFLAGS) -I$(LANG_DIR) -o$@ $**
+   tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\msgcsiso.obj : $(LANG_DIR)\msgcsiso.c
+   $(CC) $(CLIBFLAGS) -I$(LANG_DIR) -o$@ $**
+   tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\msgcskam.obj : $(LANG_DIR)\msgcskam.c
    $(CC) $(CLIBFLAGS) -I$(LANG_DIR) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 

@@ -1,3 +1,14 @@
+20000519-23:50 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
+ *makefile.bc
+  makefile.vc
+  source/lang/makefile
+  +Added new language modules
+  +source/lang/msgcsiso.c
+    *Language module for CZECH
+  *source/lang/msgcs852.c
+   source/lang/msgcskam.c
+     *Updated
+
 20000519-15:40 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
    * source/compiler/hbpcode.c

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (CS852)
+ * Language Support Module (CSISO)
  *
  * Copyright 2000 Victor Szakats <info@szelvesz.hu> (English, from msg_tpl.c)
  * Copyright 2000 Davor Siklic <siki@msoft.cz>
@@ -36,7 +36,7 @@
 
 /* Language name: Czech */
 /* ISO language code (2 chars): CS */
-/* Codepage: 852 */
+/* Codepage: ISO-8859-2 */
 
 #include "hbapilng.h"
 
@@ -45,36 +45,36 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "CS852",                     /* ID */
+      "CSISO",                     /* ID */
       "Czech",                     /* Name (in English) */
-      "¬esky",                     /* Name (in native language) */
+      "Èesky",                     /* Name (in native language) */
       "CS",                        /* RFC ID */
-      "852",                       /* Codepage */
+      "ISO-8859-2",                /* Codepage */
       "$Revision$ $Date$",         /* Version */
 
       /* Month names */
 
       "leden",
-      "£nor",
-      "býezen",
+      "únor",
+      "bøezen",
       "duben",
-      "kvØten",
-      "Yerven",
-      "Yervenec",
+      "kvìten",
+      "èerven",
+      "èervenec",
       "srpen",
-      "z ý¡",
-      "ý¡jen",
+      "záøí",
+      "øíjen",
       "listopad",
       "prosinec",
 
       /* Day names */
 
-      "nedØle",
-      "pondØl¡",
-      "£terì",
-      "stýeda",
-      "Ytvrtek",
-      "p tek",
+      "nedìle",
+      "pondìlí",
+      "úterý",
+      "støeda",
+      "ètvrtek",
+      "pátek",
       "sobota",
 
       /* CA-Cl*pper compatible natmsg items */
@@ -180,11 +180,11 @@ static HB_LANG s_lang =
    }
 };
 
-HB_LANG_ANNOUNCE( CS852 );
+HB_LANG_ANNOUNCE( CSISO );
 
-HB_CALL_ON_STARTUP_BEGIN( hb_lang_Init_CS852 )
+HB_CALL_ON_STARTUP_BEGIN( hb_lang_Init_CSISO )
    hb_langRegister( &s_lang );
-HB_CALL_ON_STARTUP_END( hb_lang_Init_CS852 )
+HB_CALL_ON_STARTUP_END( hb_lang_Init_CSISO )
 #if ! defined(__GNUC__) && ! defined(_MSC_VER)
-   #pragma startup hb_lang_Init_CS852
+   #pragma startup hb_lang_Init_CSISO
 #endif
