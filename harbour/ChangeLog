@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+  * include/hbrddntx.h
+2002-01-16 17:21 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>
+   * source/rdd/dbfcdx1.c
+     * fixed some simple warnings by bcc32 (with -w)
      * fixed 3 bugs with index not updating the tree
 
 2002-01-16 11:10 UTC-0500 David G. Holm <dholm@jsd-llc.com>

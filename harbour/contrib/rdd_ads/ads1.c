@@ -2304,7 +2304,13 @@ BOOL adsExists( PHB_ITEM pItemTable, PHB_ITEM pItemIndex )
 #define  adsPutValueFile          NULL
 #define  adsReadDBHeader          NULL
 #define  adsWriteDBHeader         NULL
-#define  adsExit                  NULL
+
+static ERRCODE adsExit( void )
+{
+   AdsApplicationExit();
+   return SUCCESS;
+}
+
 #define  adsWhoCares              NULL
 
 static RDDFUNCS adsTable = { ( DBENTRYP_BP ) adsBof,
