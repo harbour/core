@@ -350,5 +350,35 @@ HB_FUNC( __DYNSGETINDEX ) /* Gimme index number of symbol: dsIndex = __dynsymGet
       hb_retnl( 0L );
 }
 
-#endif
+HB_FUNC( __DYNSISFUN ) /* returns .t. if a symbol has a function/procedure pointer,
+                          given its symbol index */
+{
+   long lIndex = hb_parnl( 1 ); /* NOTE: This will return zero if the parameter is not numeric */
 
+   if( lIndex >= 1 && lIndex <= s_uiDynSymbols )
+      hb_retl( s_pDynItems[ lIndex - 1 ].pDynSym->pFunPtr != NULL );
+   else
+      hb_retl( FALSE );
+}
+
+HB_FUNC( __DYNSGETPRF ) /* profiler: It returns an array with a function or procedure
+                                     called and consumed times { nTimes, nTime }
+                                     , given the dynamic symbol index */
+{
+   long lIndex = hb_parnl( 1 ); /* NOTE: This will return zero if the parameter is not numeric */
+
+   hb_reta( 2 );
+   hb_stornl( 0, -1, 1 );
+   hb_stornl( 0, -1, 2 );
+
+   if( lIndex >= 1 && lIndex <= s_uiDynSymbols )
+   {
+      if( s_pDynItems[ lIndex - 1 ].pDynSym->pFunPtr ) /* it is a function or procedure */
+      {
+         hb_stornl( s_pDynItems[ lIndex - 1 ].pDynSym->ulCalls, -1, 1 );
+         hb_stornl( s_pDynItems[ lIndex - 1 ].pDynSym->ulTime,  -1, 2 );
+      }
+   }
+}
+
+#endif
