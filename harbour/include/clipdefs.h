@@ -88,7 +88,6 @@ typedef FARP    VOIDP;
 typedef FARP    PVOID;
 
 typedef void*   HANDLE;
-typedef USHORT  ERRCODE;
 typedef ERRCODE IHELP;
 typedef ERRCODE ICODE;
 
