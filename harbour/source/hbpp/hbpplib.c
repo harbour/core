@@ -77,7 +77,7 @@ HARBOUR HB_PREPROCESS(void)
         // Some error here?
     }
 
-    hb_retc(ptr);
+    hb_retc(szOut);
 
     hb_xfree(pText);
     hb_xfree(pOut);

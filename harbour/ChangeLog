@@ -1,3 +1,9 @@
+19990730-20:04 CET Victor Szel <info@szelvesz.hu>
+   ! source/rtl/inkey.c
+     source/rtl/files.c
+     __CYGNUS__ -> __CYGWIN__
+   ! tests/working/testpre.prg - Typo fixed.
+
 19990730-14:00 EDT Paul Tucker <ptucker@sympatico.ca>
    * makefile.vc (reported by Matteo Baccan)
      + source/tools/fileread.prg

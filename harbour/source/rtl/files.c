@@ -8,7 +8,7 @@
 #include <string.h>
 #include "errorapi.h"
 
-#if defined(__CYGNUS__)
+#if defined(__CYGWIN__)
   #include <mingw32/share.h>
 #endif
 

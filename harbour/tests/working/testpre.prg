@@ -34,7 +34,7 @@ FUNCTION Main()
    qOut( Preprocess( cString ) )
    qOut( "" )
 
-   qOut( chr(13)+chr(10)+"Press any key..." )
+   qOut( chr(13)+chr(10)+"Press <Enter>..." )
    __Accept( "" )
 
    CLS
@@ -45,7 +45,7 @@ FUNCTION Main()
                 '', ;
                 '? MYFIELD, YOURFIELD', ;
                 '', ;
-                'WAIT "Press any key..."', ;
+                'WAIT "Press <Enter> key..."', ;
                 '', ;
                 'CLOSE ALL' }
 
@@ -59,7 +59,7 @@ FUNCTION Main()
 
       NEXT
       qOut( "" )
-      qOut( "Press any key..." )
+      qOut( "Press <Enter> key..." )
       __Accept( "" )
       CLS
    NEXT
