@@ -1,3 +1,21 @@
+19991203-15:11 GMT+1 Victor Szel <info@szelvesz.hu>
+  * tests/regress/*
+    + Added functionality to test database/field stuff. Alias is w_TEST
+    + Added Len(), ValType(), Empty(), Str() tests for fields, all of them
+      pass.
+    - Removed NIL:classname tests temporarily.
+  * include/extend.h
+    ! IT_MEMO constand fixed (it was equal with IT_NIL).
+    + IS_MEMO() macro added.
+  * source/rtl/valtype.c
+    source/rtl/len.c
+    source/rtl/empty.c
+    ! Fixed case when no parameter was passed (via hb_vmDo() for example)
+    + Added an $EXAMPLE$ for LEN()
+    + Changed $SYNTAX$ for LEN()
+    + Added some $SEEALSO$ for LEN()
+    * Changed LEN() not to use internal ITEM access.
+
 19991203-02:25 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rdd/dbcmd.c
     + DBEVAL() doc added from dbeval.prg

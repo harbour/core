@@ -265,6 +265,39 @@ STATIC FUNCTION TEST_BEGIN( cParam )
    PUBLIC mbBlockC  := {|| "(string)" }
    PUBLIC maArray   := { 9898 }
 
+   rddSetDefault( "DBFNTX" )
+
+   dbCreate( "!TEMP!.DBF",;
+      { { "TYPE_C"   , "C", 15, 0 } ,;
+        { "TYPE_C_E" , "C", 15, 0 } ,;
+        { "TYPE_D"   , "D",  8, 0 } ,;
+        { "TYPE_D_E" , "D",  8, 0 } ,;
+        { "TYPE_M"   , "M", 10, 0 } ,;
+        { "TYPE_M_E" , "M", 10, 0 } ,;
+        { "TYPE_N_I" , "N", 11, 0 } ,;
+        { "TYPE_N_IE", "N", 11, 0 } ,;
+        { "TYPE_N_D" , "N", 11, 3 } ,;
+        { "TYPE_N_DE", "N", 11, 3 } ,;
+        { "TYPE_L"   , "L",  1, 0 } ,;
+        { "TYPE_L_E" , "L",  1, 0 } } )
+
+   USE ( "!TEMP!.DBF" ) NEW ALIAS w_TEST EXCLUSIVE
+
+   dbAppend()
+
+   w_TEST->TYPE_C    := "<FieldValue>"
+   w_TEST->TYPE_C_E  := ""
+   w_TEST->TYPE_D    := STOD( "19800101" )
+   w_TEST->TYPE_D_E  := STOD( "" )
+   w_TEST->TYPE_M    := "<MemoValue>"
+   w_TEST->TYPE_M_E  := ""
+   w_TEST->TYPE_N_I  := 100
+   w_TEST->TYPE_N_IE := 0
+   w_TEST->TYPE_N_D  := 101.127
+   w_TEST->TYPE_N_DE := 0
+   w_TEST->TYPE_L    := .T.
+   w_TEST->TYPE_L_E  := .F.
+
    RETURN NIL
 
 FUNCTION TEST_CALL( cBlock, bBlock, xResultExpected )
@@ -338,6 +371,11 @@ FUNCTION TEST_OPT_Z()
    RETURN s_lShortCut
 
 STATIC FUNCTION TEST_END()
+
+   dbSelectArea( "w_TEST" )
+   dbCloseArea()
+   fErase( "!TEMP!.DBF" )
+   fErase( "!TEMP!.DBT" )
 
    s_nEndTime := Seconds()
 

@@ -77,43 +77,50 @@ HARBOUR HB_VALTYPE( void )
 {
    PHB_ITEM pItem = hb_param( 1, IT_ANY );
 
-   /* NOTE: pItem cannot be NULL here */
+   /* NOTE: Double safety to ensure that a parameter was really passed,
+            compiler checks this, but a direct hb_vmDo() call
+            may not do so. [vszel] */
 
-   switch( pItem->type & ~IT_BYREF )
+   if( pItem )
    {
-      case IT_ARRAY:
-         hb_retc( hb_arrayIsObject( pItem ) ? "O" : "A" );
-         break;
+      switch( pItem->type & ~IT_BYREF )
+      {
+         case IT_ARRAY:
+            hb_retc( hb_arrayIsObject( pItem ) ? "O" : "A" );
+            break;
 
-      case IT_BLOCK:
-         hb_retc( "B" );
-         break;
+         case IT_BLOCK:
+            hb_retc( "B" );
+            break;
 
-      case IT_DATE:
-         hb_retc( "D" );
-         break;
+         case IT_DATE:
+            hb_retc( "D" );
+            break;
 
-      case IT_LOGICAL:
-         hb_retc( "L" );
-         break;
+         case IT_LOGICAL:
+            hb_retc( "L" );
+            break;
 
-      case IT_INTEGER:
-      case IT_LONG:
-      case IT_DOUBLE:
-         hb_retc( "N" );
-         break;
+         case IT_INTEGER:
+         case IT_LONG:
+         case IT_DOUBLE:
+            hb_retc( "N" );
+            break;
 
-      case IT_STRING:
-         hb_retc( "C" );
-         break;
+         case IT_STRING:
+            hb_retc( "C" );
+            break;
 
-      case IT_MEMOFLAG:
-         hb_retc( "M" );
-         break;
+         case IT_MEMO:
+            hb_retc( "M" );
+            break;
 
-      case IT_NIL:
-      default:
-         hb_retc( "U" );
-         break;
+         default:
+            hb_retc( "U" );
+            break;
+      }
    }
+   else
+      hb_retc( "U" );
 }
+

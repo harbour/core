@@ -171,6 +171,12 @@ FUNCTION Main_HVM()
    TEST_LINE( ValType(  sbBlock   )           , "B"   )
    TEST_LINE( ValType(  saArray   )           , "A"   )
    TEST_LINE( ValType( { 1, 2, 3 } )          , "A"   )
+   TEST_LINE( ValType( w_TEST->TYPE_C )       , "C"   )
+   TEST_LINE( ValType( w_TEST->TYPE_D )       , "D"   )
+   TEST_LINE( ValType( w_TEST->TYPE_M )       , "M"   )
+   TEST_LINE( ValType( w_TEST->TYPE_N_I )     , "N"   )
+   TEST_LINE( ValType( w_TEST->TYPE_N_D )     , "N"   )
+   TEST_LINE( ValType( w_TEST->TYPE_L )       , "L"   )
 #ifdef __HARBOUR__
    TEST_LINE( ValType( @scString  )           , "C"   ) /* Bug in CA-Cl*pper, it will return "U" */
    TEST_LINE( ValType( @scStringE )           , "C"   ) /* Bug in CA-Cl*pper, it will return "U" */
@@ -235,24 +241,33 @@ FUNCTION Main_HVM()
 
    /* Special internal messages */
 
+/* Harbour compiler not yet handles these */
+#ifndef __HARBOUR__
    TEST_LINE( NIL:className                   , "NIL"       )
+#endif                                                      )
    TEST_LINE( "":className                    , "CHARACTER" )
    TEST_LINE( 0:className                     , "NUMERIC"   )
    TEST_LINE( SToD( "" ):className            , "DATE"      )
    TEST_LINE( .F.:className                   , "LOGICAL"   )
-   TEST_LINE( {|| nil }:className             , "BLOCK"     )
+   TEST_LINE( {|| NIL }:className             , "BLOCK"     )
    TEST_LINE( {}:className                    , "ARRAY"     )
    TEST_LINE( ErrorNew():className            , "ERROR"     )
+/* Harbour compiler not yet handles these */
+#ifndef __HARBOUR__
    TEST_LINE( NIL:classH                      , 0           )
+#endif
    TEST_LINE( "":classH                       , 0           )
    TEST_LINE( 0:classH                        , 0           )
    TEST_LINE( SToD( "" ):classH               , 0           )
    TEST_LINE( .F.:classH                      , 0           )
-   TEST_LINE( {|| nil }:classH                , 0           )
+   TEST_LINE( {|| NIL }:classH                , 0           )
    TEST_LINE( {}:classH                       , 0           )
    TEST_LINE( ErrorNew():classH > 0           , .T.         )
 
+/* Harbour compiler not yet handles these */
+#ifndef __HARBOUR__
    TEST_LINE( suNIL:className                 , "NIL"       )
+#endif
    TEST_LINE( scString:className              , "CHARACTER" )
    TEST_LINE( snIntP:className                , "NUMERIC"   )
    TEST_LINE( sdDateE:className               , "DATE"      )
@@ -260,7 +275,10 @@ FUNCTION Main_HVM()
    TEST_LINE( sbBlock:className               , "BLOCK"     )
    TEST_LINE( saArray:className               , "ARRAY"     )
    TEST_LINE( soObject:className              , "ERROR"     )
+/* Harbour compiler not yet handles these */
+#ifndef __HARBOUR__
    TEST_LINE( suNIL:classH                    , 0           )
+#endif
    TEST_LINE( scString:classH                 , 0           )
    TEST_LINE( snIntP:classH                   , 0           )
    TEST_LINE( sdDateE:classH                  , 0           )
@@ -488,6 +506,14 @@ FUNCTION Main_HVM()
    /* == special */
 
    TEST_LINE( NIL == NIL                      , .T.                                               )
+   TEST_LINE( 1 == NIL                        , .F.                                               )
+   TEST_LINE( NIL == 1                        , .F.                                               )
+   TEST_LINE( "" == NIL                       , .F.                                               )
+   TEST_LINE( NIL == ""                       , .F.                                               )
+   TEST_LINE( 1 == suNIL                      , .F.                                               )
+   TEST_LINE( suNIL == 1                      , .F.                                               )
+   TEST_LINE( "" == suNIL                     , .F.                                               )
+   TEST_LINE( suNIL == ""                     , .F.                                               )
    TEST_LINE( scString == NIL                 , .F.                                               )
    TEST_LINE( scString == 1                   , "E BASE 1070 Argument error == F:S"               )
    TEST_LINE( soObject == ""                  , "E BASE 1070 Argument error == F:S"               )
@@ -834,8 +860,8 @@ FUNCTION Main_HVM()
    TEST_LINE( (.T.)->NOFIELD                  , "E BASE 1065 Argument error & F:S"                )
    TEST_LINE( (.F.)->NOFIELD                  , "E BASE 1065 Argument error & F:S"                )
    TEST_LINE( (NIL)->NOFIELD                  , "E BASE 1065 Argument error & F:S"                )
-   TEST_LINE( (1)->NOFIELD                    , "E BASE 1003 Variable does not exist NOFIELD F:R" )
-   TEST_LINE( (1.5)->NOFIELD                  , "E BASE 1003 Variable does not exist NOFIELD F:R" )
+   TEST_LINE( (2)->NOFIELD                    , "E BASE 1003 Variable does not exist NOFIELD F:R" )
+   TEST_LINE( (2.5)->NOFIELD                  , "E BASE 1003 Variable does not exist NOFIELD F:R" )
    TEST_LINE( (SToD(""))->NOFIELD             , "E BASE 1065 Argument error & F:S"                )
    TEST_LINE( (ErrorNew())->NOFIELD           , "E BASE 1065 Argument error & F:S"                )
 
@@ -846,8 +872,8 @@ FUNCTION Main_HVM()
    TEST_LINE( (.T.)->(Eof())                  , .T.                                               )
    TEST_LINE( (.F.)->(Eof())                  , .T.                                               )
    TEST_LINE( (NIL)->(Eof())                  , .T.                                               )
-   TEST_LINE( (1)->(Eof())                    , .T.                                               )
-   TEST_LINE( (1.5)->(Eof())                  , .T.                                               )
+   TEST_LINE( (2)->(Eof())                    , .T.                                               )
+   TEST_LINE( (2.5)->(Eof())                  , .T.                                               )
    TEST_LINE( (SToD(""))->(Eof())             , .T.                                               )
    TEST_LINE( (ErrorNew())->(Eof())           , .T.                                               )
 
@@ -887,10 +913,16 @@ FUNCTION Main_HVM()
    TEST_LINE( Len( "" )                       , 0                                      )
    TEST_LINE( Len( "123" )                    , 3                                      )
    TEST_LINE( Len( "123"+Chr(0)+"456 " )      , 8                                      )
+   TEST_LINE( Len( w_TEST->TYPE_C )           , 15                                     )
+   TEST_LINE( Len( w_TEST->TYPE_C_E )         , 15                                     )
+   TEST_LINE( Len( w_TEST->TYPE_M )           , 11                                     )
+   TEST_LINE( Len( w_TEST->TYPE_M_E )         , 0                                      )
    TEST_LINE( Len( saArray )                  , 1                                      )
 #ifdef __HARBOUR__
+   TEST_LINE( Len( ErrorNew() )               , 14                                     )
    TEST_LINE( Len( Space( 1000000 ) )         , 1000000                                )
 #else
+   TEST_LINE( Len( ErrorNew() )               , 7                                      )
    TEST_LINE( Len( Space( 40000 ) )           , 40000                                  )
 #endif
 
@@ -911,6 +943,18 @@ FUNCTION Main_HVM()
    TEST_LINE( Empty( " x "                  ) , .F.                                    )
    TEST_LINE( Empty( " x"+Chr(0)            ) , .F.                                    )
    TEST_LINE( Empty( " "+Chr(13)+"x"+Chr(9) ) , .F.                                    )
+   TEST_LINE( Empty( w_TEST->TYPE_C         ) , .F.                                    )
+   TEST_LINE( Empty( w_TEST->TYPE_C_E       ) , .T.                                    )
+   TEST_LINE( Empty( w_TEST->TYPE_D         ) , .F.                                    )
+   TEST_LINE( Empty( w_TEST->TYPE_D_E       ) , .T.                                    )
+   TEST_LINE( Empty( w_TEST->TYPE_M         ) , .F.                                    )
+   TEST_LINE( Empty( w_TEST->TYPE_M_E       ) , .T.                                    )
+   TEST_LINE( Empty( w_TEST->TYPE_N_I       ) , .F.                                    )
+   TEST_LINE( Empty( w_TEST->TYPE_N_IE      ) , .T.                                    )
+   TEST_LINE( Empty( w_TEST->TYPE_N_D       ) , .F.                                    )
+   TEST_LINE( Empty( w_TEST->TYPE_N_DE      ) , .T.                                    )
+   TEST_LINE( Empty( w_TEST->TYPE_L         ) , .F.                                    )
+   TEST_LINE( Empty( w_TEST->TYPE_L_E       ) , .T.                                    )
    TEST_LINE( Empty( 0                      ) , .T.                                    )
    TEST_LINE( Empty( -0                     ) , .T.                                    )
    TEST_LINE( Empty( 0.0                    ) , .T.                                    )

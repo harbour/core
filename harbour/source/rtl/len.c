@@ -45,7 +45,7 @@
  *  $ONELINER$
  *      Returns size of a string or size of an array.
  *  $SYNTAX$
- *      LEN( <acString> ) --> <nLength>
+ *      LEN( <cString> | <aArray> ) --> <nLength>
  *  $ARGUMENTS$
  *      <acString> is a character string or the array to check.
  *  $RETURNS$
@@ -53,10 +53,11 @@
  *      an array.
  *  $DESCRIPTION$
  *      This function returns the string length or the size of an array. If
- *      it is used with a multidimensional array it returns the sizee of the
+ *      it is used with a multidimensional array it returns the size of the
  *      first dimension.
  *  $EXAMPLES$
  *      ? Len( "Harbour" ) --> 7
+ *      ? Len( { "One", "Two" } ) --> 2
  *  $TESTS$
  *      function Test()
  *         LOCAL cName := ""
@@ -68,7 +69,7 @@
  *  $COMPLIANCE$
  *      LEN() is fully CA-Clipper compliant.
  *  $SEEALSO$
- *      EMPTY, RTRIM, LTRIM
+ *      EMPTY, RTRIM, LTRIM, AADD, ASIZE
  *  $END$
  */
 
@@ -76,28 +77,31 @@ HARBOUR HB_LEN( void )
 {
    PHB_ITEM pItem = hb_param( 1, IT_ANY );
 
-   /* NOTE: pItem cannot be NULL here */
+   /* NOTE: Double safety to ensure that a parameter was really passed,
+            compiler checks this, but a direct hb_vmDo() call
+            may not do so. [vszel] */
 
-   switch( pItem->type )
+   if( pItem )
    {
-      case IT_ARRAY:
-         hb_retnl( hb_arrayLen( pItem ) );
-         break;
-
-      case IT_STRING:
-      case IT_MEMO:
-         hb_retnl( hb_itemGetCLen( pItem ) );
-         break;
-
-      default:
+      if( IS_STRING( pItem ) )
       {
-         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1111, NULL, "LEN" );
+         hb_retnl( hb_itemGetCLen( pItem ) );
+         return;
+      }
+      else if( IS_ARRAY( pItem ) )
+      {
+         hb_retnl( hb_arrayLen( pItem ) );
+         return;
+      }
+   }
 
-         if( pResult )
-         {
-            hb_itemReturn( pResult );
-            hb_itemRelease( pResult );
-         }
+   {
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1111, NULL, "LEN" );
+
+      if( pResult )
+      {
+         hb_itemReturn( pResult );
+         hb_itemRelease( pResult );
       }
    }
 }

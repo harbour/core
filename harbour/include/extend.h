@@ -50,7 +50,7 @@
 #define IT_ALIAS        ( ( USHORT ) 0x0200 )
 #define IT_STRING       ( ( USHORT ) 0x0400 )
 #define IT_MEMOFLAG     ( ( USHORT ) 0x0800 )
-#define IT_MEMO         ( IT_MEMOFLAG & IT_STRING )
+#define IT_MEMO         ( IT_MEMOFLAG | IT_STRING )
 #define IT_BLOCK        ( ( USHORT ) 0x1000 )
 #define IT_BYREF        ( ( USHORT ) 0x2000 )
 #define IT_MEMVAR       ( ( USHORT ) 0x4000 )
@@ -72,6 +72,7 @@
 #define IS_NUMERIC( p )    ( ( p )->type & IT_NUMERIC )
 #define IS_OBJECT( p )     IS_OF_TYPE( p, IT_OBJECT )
 #define IS_STRING( p )     IS_OF_TYPE( p, IT_STRING )
+#define IS_MEMO( p )       IS_OF_TYPE( p, IT_MEMO )
 #define IS_SYMBOL( p )     IS_OF_TYPE( p, IT_SYMBOL )
 #define IS_MEMVAR( p )     IS_OF_TYPE( p, IT_MEMVAR )
 
