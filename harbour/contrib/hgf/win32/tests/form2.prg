@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 // Inheriting from Class TForm sample
 
 #include "hbclass.ch"

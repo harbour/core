@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 // Testing Harbour GUI framework for Win32
 
 function Main()
