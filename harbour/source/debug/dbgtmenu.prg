@@ -334,7 +334,7 @@ return nil
 
 METHOD ProcessKey( nKey ) CLASS TDbMenu
 
-   local nPopup
+   local nPopup, oPopup
 
    do case
       case nKey == K_LBUTTONDOWN
@@ -344,6 +344,16 @@ METHOD ProcessKey( nKey ) CLASS TDbMenu
                     ::ClosePopup( ::nOpenPopup )
                     ::ShowPopup( nPopup )
                  endif
+              endif
+           else
+              oPopup = ::aItems[ ::nOpenPopup ]:bAction
+              if ( nPopup := oPopup:GetItemOrdByCoors( MRow(), MCol() ) ) == 0
+                 ::Close()
+              else
+                 oPopup:DeHilite()
+                 oPopup:nOpenPopup = nPopup
+                 oPopup:aItems[ nPopup ]:Display( ::cClrHilite, ::cClrHotFocus )
+                 ::EvalAction()
               endif
            endif
 
@@ -391,4 +401,3 @@ function __dbgAltToKey( nKey )
                             K_ALT_Y, K_ALT_Z }, nKey )
 
 return iif( nIndex > 0, SubStr( "ABCDEFGHIJKLMNOPQRSTUVWXYZ", nIndex, 1 ), "" )
-
