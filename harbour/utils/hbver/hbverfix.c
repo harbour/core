@@ -96,7 +96,7 @@ char * szReplaceQuoted( char * szBuffer, const char * new_string )
       char * szClosing = strchr( szOpening + 1, 34 ); /* Locate ending quote */
       if( szClosing )
       {
-         strncpy( szOldBuf, szClosing + 1, MAX_BUF_LEN );
+         strncpy( szOldBuf, szClosing, MAX_BUF_LEN );
          szOldBuf[ MAX_BUF_LEN - 1 ] = '\0';
          strncpy( szOpening + 1, new_string, MAX_BUF_LEN - ( szOpening - szBuffer ) );
          szBuffer[ MAX_BUF_LEN - 1 ] = '\0';
@@ -248,6 +248,7 @@ int main( int argc, char * argv[] )
             bFoundLog = TRUE;
             strncpy( szNewLog, szInputBuffer, sizeof( szNewLog ) );
             szNewLog[ sizeof( szNewLog ) - 1 ] = '\0';
+            szNewLog[ strcspn( szNewLog, "\r\n" ) ] = '\0'; /* Strip newline chars */
             if( iDebugLevel >= 0 ) fprintf( stderr, "\nLOG: %s\n", szInputBuffer );
          }
          else if( iDebugLevel > 0 ) fprintf( stderr, " ===> %c %c %c %c <===", szInputBuffer[ 4 ], szInputBuffer[ 7 ], szInputBuffer[ 10 ], szInputBuffer[ 13 ] );
