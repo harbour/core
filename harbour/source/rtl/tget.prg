@@ -769,7 +769,7 @@ return Self
 METHOD ToDecPos() CLASS Get
 
    if ! ::HasFocus .or. ::DecPos == NIL
-      return .f.
+      return Self
    endif
 
    if ::pos == 1
@@ -782,7 +782,7 @@ METHOD ToDecPos() CLASS Get
 
    ::Display( .t. )
 
-return .t.
+return Self
 
 //---------------------------------------------------------------------------//
 

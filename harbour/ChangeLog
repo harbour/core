@@ -1,3 +1,11 @@
+2001-04-16 14:40 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * source/compiler/harbour.c
+     + Added all GET Methods definitions (still need Exported Vars ) - Thanks to Luiz.
+     + Added TBCOLUMN definitions - Thanks to Luiz.
+
+   * source/rtl/tget.prg
+     ! Correted :ToDecPos to return SELF as in Clipper (after verifying there was NO Low-Level Code conflict).
+
 2001-04-16 11:45 UTC-0800 Brian Hays <bhays@abacuslaw.com>
    * source/rdd/dbcmd.c
       Uploaded Harrier's fix for COPY TO ... FIELDS
