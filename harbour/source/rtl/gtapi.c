@@ -6,6 +6,11 @@
  *  GTAPI.C: Generic Terminal for Harbour
  *
  * Latest mods:
+ * 1.26   19990719   ptucker   Changed call in hb_gtinit() to pass the
+ *                             literal initial color setting in case
+ *                             the GT system is initialised prior to Set
+ *                             Skipped color params in a string now keep
+ *                             their previous value.  ie ",,,r/b"
  * 1.25   19990718   dholm     Moved calls to various gtFunctions out of
  *                             InitializeConsole() in console.c and put
  *                             them in hb_gtInit() in this module. Use
@@ -179,7 +184,7 @@ int hb_gtDispEnd(void)
 int hb_gtSetColorStr(char * fpColorString)
 {
     char c;
-    int npos = 0, nSkip = 0;
+    int nPos = 0, nSkip = 0, nCount=-1;
     int nBack = 0, nColor = 0, nHasX=0;
 
     do
@@ -191,7 +196,7 @@ int hb_gtSetColorStr(char * fpColorString)
             continue;
 
         nSkip = 0;
-
+        ++nCount;
         switch (c) {
             case '/':
                 nBack  |= nColor;
@@ -218,23 +223,26 @@ int hb_gtSetColorStr(char * fpColorString)
                 nBack  |= 128;
                 break;
             case 'I':			/* =N/W */
-                if( npos == _ColorCount )
+                if( nPos == _ColorCount )
                 {
-                   _Color = (int *)hb_xrealloc( _Color, sizeof(int)*(npos +1) );
+                   _Color = (int *)hb_xrealloc( _Color, sizeof(int)*(nPos +1) );
                    ++ _ColorCount;
                 }
-                _Color[npos++] = ( 112 | ( nBack & 136 ));
+                _Color[nPos++] = ( 112 | ( nBack & 136 ));
                 nBack = nColor = 0;
                 nSkip = 1;
                 break;
             case 'X':			/* always sets forground to 'N' */
-                nColor=0;
+                nHasX = 1;
                 break;
             case ',':
+                if(!nCount)
+                   nBack = _Color[nPos];
             case '\0':
-                if( npos == _ColorCount )
+                nCount = -1;
+                if( nPos == _ColorCount )
                 {
-                   _Color = (int *)hb_xrealloc( _Color, sizeof(int)*(npos +1) );
+                   _Color = (int *)hb_xrealloc( _Color, sizeof(int)*(nPos +1) );
                    ++ _ColorCount;
                 }
                 if( nHasX )
@@ -243,9 +251,8 @@ int hb_gtSetColorStr(char * fpColorString)
                    nHasX = 0;
                 }
 
-                _Color[npos++] = ( nColor << 4 ) | nBack;
+                _Color[nPos++] = ( nColor << 4 ) | nBack;
                 nColor=nBack=0;
-                break;
         }
     }
     while( c );

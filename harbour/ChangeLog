@@ -1,3 +1,13 @@
+19990719-11:40 EDT Paul Tucker <ptucker@sympatico.ca>
+    *source/rtl/gtapi.c
+     * Changed call in hb_gtinit() to pass the
+       literal initial color setting in case
+       the GT system is initialised prior to Set
+     * Skipped color params in a string now keep
+       their previous value.  ie ",,,r/b"
+    *source/rtl/set.c
+     * corrected parameter passing in _SET_COLOR case.
+
 19990719-10:40 EDT Paul Tucker <ptucker@sympatico.ca>
     *source/compiler/harbour.y
      * replace CheckArgs() as supplied by Jose Lalin -

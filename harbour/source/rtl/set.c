@@ -29,6 +29,9 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
    their web site at http://www.gnu.org/).
 
+   V 1.49   Paul Tucker                 Changed parameter passing checks
+                                        in call to hb_setColor() to account
+                                        for no or NIL parameters.
    V 1.48   David G. Holm               Simplified SET_COLOR handling.
                                         Made changes to deal with the 
                                         hb_set.HB_SET_COLOR string having
@@ -669,7 +672,7 @@ HARBOUR HB_SET (void)
          if (args > 1) hb_set.HB_SET_CANCEL = set_logical (pArg2);
          break;
       case HB_SET_COLOR      :
-         hb_retc( hb_setColor( args ? pArg2->item.asString.value : (char *)0) );
+         hb_retc( hb_setColor( args > 1 ? IS_NIL(pArg2) ? "" : pArg2->item.asString.value : (char *)0) );
          break;
       case HB_SET_CONFIRM    :
          hb_retl (hb_set.HB_SET_CONFIRM);
