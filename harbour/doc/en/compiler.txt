@@ -114,7 +114,6 @@
  *
  *      /u[<file>]       use command definition set in <file> (or none)   </par>
  *      -----------------   </par>
- *          Not supported yet.   </par>
  *
  *      /v               variables are assumed M->   </par>
  *      -----------------   </par>
