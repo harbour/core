@@ -1,3 +1,20 @@
+19991006-11:20 EDT David G. Holm <dholm@jsd-llc.com>
+
+  * config/os2/icc.cf
+    + Added way to select startup model using HB_MAIN,
+      because ICC won't resolve main() from vm library.
+
+  * tests/Makefile
+    + Added HB_MAIN=std (but only if HB_MAIN not already set).
+    + Added devtest.prg
+    + Added disptest.prg
+
+  + tests/devtest.prg
+    + New module to test Clipper device compatibility.
+
+  + tests/disptest.prg
+    + New module to test Clipper display compatibility.
+
 19991006-14:35 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/rtl/dummy.prg
      source/rtl/Makefile

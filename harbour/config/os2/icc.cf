@@ -18,6 +18,10 @@ CFLAGS = /Gs+ /W2 /Se /Sd+ /Ti+
 LD = icc
 LD_OUT = /Fe
 LDFLAGS = /C-
+ifeq ($(HB_MAIN),)
+else
+LDFLAGS += $(TOP)$(ROOT)source/vm/$(ARCH)/main$(HB_MAIN).obj
+endif
 ifeq ($(HB_LIB_COMPILE),)
 LINKLIBS = $(foreach lib, $(LIBS), $(TOP)$(ROOT)source/$(lib)/$(ARCH)/$(lib)$(LIB_EXT))
 # If LIBS specifies the rdd library, add all DB drivers.
