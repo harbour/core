@@ -382,22 +382,44 @@ METHOD ProcessKey( nKey ) CLASS TDbMenu
            ::GoBottom()
 
       otherwise
-         if ( nPopup := ::GetHotKeyPos( __dbgAltToKey( nKey ) ) ) != 0
+
+         if ::nOpenPopup > 0
+            if IsAlpha( Chr( nKey ) )
+               oPopup := ::aItems[ ::nOpenPopup ]:bAction
+               nPopup := oPopup:GetHotKeyPos( Upper( Chr( nKey ) ) )
+               if nPopup > 0 .and. oPopup:nOpenPopup != nPopup
+                  oPopup:DeHilite()
+                  oPopup:ShowPopup( nPopup )
+                  //oPopup:aItems[ nPopup]:EvalAction()
+               endif
+            endif
+         else
+            nPopup := ::GetHotKeyPos( __dbgAltToKey( nKey ) )
             if nPopup != ::nOpenPopup
                ::Close()
                ::ShowPopup( nPopup )
             endif
          endif
+
    endcase
 
 return nil
 
 function __dbgAltToKey( nKey )
 
-   local nIndex := AScan( { K_ALT_A, K_ALT_B, K_ALT_C, K_ALT_D, K_ALT_E, K_ALT_F,;
+   local nIndex
+   local cChar
+
+   cChar := Chr( nKey )
+
+   if IsAlpha( cChar )
+      return Upper( cChar )
+   else
+      nIndex := AScan( { K_ALT_A, K_ALT_B, K_ALT_C, K_ALT_D, K_ALT_E, K_ALT_F,;
                             K_ALT_G, K_ALT_H, K_ALT_I, K_ALT_J, K_ALT_K, K_ALT_L,;
                             K_ALT_M, K_ALT_N, K_ALT_O, K_ALT_P, K_ALT_Q, K_ALT_R,;
                             K_ALT_S, K_ALT_T, K_ALT_U, K_ALT_V, K_ALT_W, K_ALT_X,;
                             K_ALT_Y, K_ALT_Z }, nKey )
+   endif
 
 return iif( nIndex > 0, SubStr( "ABCDEFGHIJKLMNOPQRSTUVWXYZ", nIndex, 1 ), "" )

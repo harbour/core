@@ -244,7 +244,7 @@ METHOD Search( cString, lCaseSensitive, nMode ) CLASS TBrwText
       nFrom := Min( ::nRow + 1, ::naTextLen )
       nTo   := ::naTextLen
       nStep := 1
-   case nMode == 2 // Forward
+   case nMode == 2 // Backward
       nFrom := Max( ::nRow - 1, 1 )
       nTo   := 1
       nStep := -1

@@ -1,3 +1,10 @@
+2001-02-07 10:30 GMT+1 Ignacio Ortiz <ignacioortiz@fivetech.com>
+   * harbour/source/debug/dbgtmenu.prg
+     + Accelerator keys on popup menus fixed.
+
+   * harbour/source/debug/tbrwtext.prg
+     + Wrong comment on search method.
+
 2001-02-06 23:57 GMT+1 Maurilio Longo <maurilio.longo@libero.it>
    * source/rtl/tbrowse.prg
      + added ::MGotoYX(nRow, nCol) method which hilights cell under screen coordinates nRow, nCol
