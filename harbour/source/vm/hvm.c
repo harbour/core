@@ -49,6 +49,11 @@
  *
  */
 
+/* NOTE: Temporary name [vszakats] */
+#ifdef HB_INCLUDE_WINEXCHANDLER
+   #define HB_OS_WIN_32_USED
+#endif
+
 #ifndef __MPW__
    #include <malloc.h>
 #endif
@@ -3929,10 +3934,7 @@ HB_FUNC( __VMVARSGET )
                   hb_stack.iStatics + hb_parni( 1 ) - 1 );
 }
 
-/* NOTE: Temporary name [vszakats] */
 #ifdef HB_INCLUDE_WINEXCHANDLER
-
-#include <windows.h>
 
 WINBASEAPI LONG WINAPI UnhandledExceptionFilter( struct _EXCEPTION_POINTERS * ExceptionInfo )
 {

@@ -1,7 +1,14 @@
+20000414-03:08 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/vm/hvm.c
+     ! Changed to the standard way of including windows.h
+       (this is also a blind try to make it compile with BCC50/Win32)
+
 20000413-21:38 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
     *utils/hbdoc/hbdoc.prg
      utils/hbdoc/html.prg
         *Small changes
+
 20000413-16:40 GMT+2 Chen Kedem <niki@actcom.co.il>
    * doc/en/dbstrux.txt
      * in __FLTEDIT() HARBOUR_STRICT_CLIPPER_COMPATIBILITY was changed into
