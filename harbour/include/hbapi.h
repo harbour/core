@@ -411,6 +411,7 @@ extern ULONG    hb_strAt( const char * szSub, ULONG ulSubLen, const char * szTex
 extern char *   hb_strUpper( char * szText, ULONG ulLen ); /* convert an existing string buffer to upper case */
 extern char *   hb_strLower( char * szText, ULONG ulLen ); /* convert an existing string buffer to lower case */
 extern char *   hb_strncpyUpper( char * pDest, const char * pSource, ULONG ulLen ); /* copy an existing string buffer to another buffer, as upper case */
+extern char *   hb_strncpyUpperTrim( char * pDest, const char * pSource, ULONG ulLen );
 extern double   hb_strVal( const char * szText, ULONG ulLen ); /* return the numeric value of a character string representation of a number */
 extern char *   hb_strLTrim( const char * szText, ULONG * ulLen ); /* return a pointer to the first non-white space character */
 extern ULONG    hb_strRTrimLen( const char * szText, ULONG ulLen, BOOL bAnySpace ); /* return length of a string, ignoring trailing white space (or true spaces) */

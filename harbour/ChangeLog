@@ -1,3 +1,7 @@
+2001-11-22 19:55 GMT+0700 Andi Jahja <harbour@cbn.net.id>
+   * include/hbapi.h
+     + add declaration char * hb_strncpyUpperTrim()
+
 2001-11-21 17:45 UTC-0800 Brian Hays <bhays@abacuslaw.com>
 
    * source/rtl/strcase.c
