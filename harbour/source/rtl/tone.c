@@ -60,6 +60,12 @@
 #if defined(__DJGPP__)
    #include <pc.h>
    #include <time.h>
+#elif defined(__CYGWIN__)
+   #include <Windows32/Base.h>
+   #include <Windows32/Defines.h>
+   #include <Windows32/Structures.h>
+   #include <Windows32/CommonFunctions.h>
+   #define HB_DONT_DEFINE_BASIC_TYPES
 #elif defined(_Windows) || defined(_WIN32)
    #if defined(_MSC_VER)
       #define HB_OS_WIN_32_USED
@@ -71,12 +77,6 @@
    #include <time.h>
 #elif defined(OS2)
    #include <dos.h>
-#elif defined(__CYGWIN__)
-   #include <Windows32/Base.h>
-   #include <Windows32/Defines.h>
-   #include <Windows32/Structures.h>
-   #include <Windows32/CommonFunctions.h>
-   #define HB_DONT_DEFINE_BASIC_TYPES
 #elif defined( __WATCOMC__ )
    #include <i86.h>
    #include <time.h>
@@ -99,7 +99,7 @@ void hb_tone( double dFrequency, double dDuration )
    /* TODO: add more platform support */
 #if defined(HARBOUR_GCC_OS2)
    ULONG temp;
-#elif defined(WINNT) || defined(_Windows) || defined(_WIN32)
+#elif defined(WINNT) || defined(_Windows) || defined(_WIN32) || defined(__CYGWIN__)
    ULONG temp;
 #elif defined(OS2) || defined(__MINGW32__)
    USHORT temp;
@@ -115,7 +115,7 @@ void hb_tone( double dFrequency, double dDuration )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_tone(%lf, %lf)", dFrequency, dDuration));
 
-#if defined(HARBOUR_GCC_OS2) || defined(OS2) || defined(WINNT) || defined(_Windows) || defined(_WIN32) || defined(__MINGW32__)
+#if defined(HARBOUR_GCC_OS2) || defined(OS2) || defined(WINNT) || defined(_Windows) || defined(_WIN32) || defined(__MINGW32__) || defined(__CYGWIN__)
    dFrequency = HB_MIN_( HB_MAX_( 0.0, dFrequency ), 32767.0 );
    dDuration = dDuration * 1000.0 / 18.2; /* milliseconds */
 #elif defined(__DJGPP__) || defined(__BORLANDC__)
@@ -151,7 +151,7 @@ void hb_tone( double dFrequency, double dDuration )
          DosBeep( ( USHORT ) dFrequency, temp );
 #elif defined(__MINGW32__)
          beep( dFrequency, temp );
-#elif defined(WINNT)
+#elif defined(WINNT) || defined(__CYGWIN__)
          Beep( ( ULONG ) dFrequency, temp );
 #elif ( defined(_Windows) || defined(_WIN32) ) && ! defined(__BORLANDC__)
          /* Bad news for non-NT Windows platforms: Beep() ignores
