@@ -1,3 +1,8 @@
+19991110-20:45 WIB Andi Jahja <andij@aonlippo.co.id>
+  * tests/fsplit.prg
+    * Harbour file splitter
+
+
 19991110-14:11 GMT+1 Victor Szel <info@szelvesz.hu>
   * include/hbsetup.h
     - Removed #defines which were previously moved to hbsetup.ch.
