@@ -633,8 +633,8 @@ typedef struct _RDDFUNCS
    DBENTRYP_V    goCold;
    DBENTRYP_V    goHot;
    DBENTRYP_VP   putRec;
-   DBENTRYP_SI   putValue;
 #endif
+   DBENTRYP_SI   putValue;
    DBENTRYP_V    recall;
    DBENTRYP_LP   reccount;
 #if 0

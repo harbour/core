@@ -79,6 +79,7 @@ static RDDFUNCS sdfTable = { 0,                 /* Super Bof */
                              0,                 /* Super FieldName */
                              0,                 /* Super Flush */
                              0,                 /* Super GetValue */
+                             0,                 /* Super PutValue */
                              0,                 /* Super Recall */
                              0,                 /* Super RecCount */
                              0,                 /* Super RecNo */

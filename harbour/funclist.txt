@@ -114,7 +114,7 @@ FERROR                  ;R;
 FIELDBLOCK              ;N;
 FIELDGET                ;R;
 FIELDNAME               ;R;
-FIELDPOS                ;S;
+FIELDPOS                ;R;
 FIELDPUT                ;S;
 FIELDWBLOCK             ;N;
 FILE                    ;R;

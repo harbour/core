@@ -1,3 +1,13 @@
+19990820-19:42 GMT+1 Bruno Cantero <bruno@issnet.net>
+   * filelist.txt
+     include/rddapi.h
+     source/rdd/dbcmd.c
+     source/rdd/dbf1.c
+     source/rdd/sdf1.c
+     source/rdd/delim1.c
+     source/rdd/dbfntx/dbfntx1.c
+     dbUseArea() and dbCreate() add a default extension to filename if not provided.
+
 19990820-11:50 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/dir.c
      * corrected case of iDirnameLen

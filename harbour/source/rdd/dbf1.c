@@ -29,6 +29,8 @@
 #include "init.h"
 #include "rddapi.h"
 #include "rddsys.ch"
+#include "errorapi.h"
+#include "dates.h"
 
 typedef struct
 {
@@ -257,6 +259,84 @@ static ERRCODE GetValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
    return SUCCESS;
 }
 
+static ERRCODE PutValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
+{
+   LPFIELD pField;
+   USHORT uiCount, uiOffset;
+   BYTE * szText, * szOldChar, szEndChar;
+   BOOL bError;
+   long lDay, lMonth, lYear;
+
+   if( uiIndex > pArea->uiFieldCount )
+      return FAILURE;
+
+   pField = pArea->lpFields;
+   uiOffset = 1;
+   for( uiCount = 1; uiCount < uiIndex; uiCount++ )
+   {
+      if( pField->uiType == 'C' )
+         uiOffset += pField->uiLen + ( ( USHORT ) pField->uiDec << 8 );
+      else
+         uiOffset += pField->uiLen;
+      pField = pField->lpfNext;
+   }
+
+   szText = pArea->lpExtendInfo->bRecord + uiOffset;
+   bError = TRUE;
+   szOldChar = szText + pField->uiLen;
+   switch( pField->uiType )
+   {
+      case 'C':
+         if( pItem->type & IT_STRING )
+         {
+            szOldChar = szText + pField->uiLen + ( ( USHORT ) pField->uiDec << 8 );
+            szEndChar = * szOldChar;
+            sprintf( szText, "%-*s", pField->uiLen, pItem->item.asString.value );
+            bError = FALSE;
+         }
+         break;
+
+      case 'N':
+         if( pItem->type & IT_NUMERIC )
+         {
+            if( pField->uiDec )
+               sprintf( szText, "%*.*f", pField->uiLen, pField->uiDec, pItem->item.asDouble.value );
+            else
+               sprintf( szText, "%*ld", pField->uiLen, pItem->item.asInteger.value );
+            bError = FALSE;
+         }
+         break;
+
+      case 'D':
+         if( pItem->type & IT_DATE )
+         {
+            hb_dateDecode( pItem->item.asDate.value, &lDay, &lMonth, &lYear );
+            hb_dateStrPut( szText, lDay, lMonth, lYear );
+            bError = FALSE;
+         }
+         break;
+
+      case 'L':
+         if( pItem->type & IT_LOGICAL )
+         {
+            if( pItem->item.asLogical.value )
+               *szText = 'T';
+            else
+               *szText = 'F';
+            bError = FALSE;
+         }
+         break;
+   }
+   * szOldChar = szEndChar;
+
+   if( bError )
+   {
+      printf( "Error 1020 EG_DATATYPE\n" );
+      return FAILURE;
+   }
+   return SUCCESS;
+}
+
 static ERRCODE RecCount( AREAP pArea, LONG * pRecCount )
 {
    DBFHEADER pHeader;
@@ -472,6 +552,7 @@ static RDDFUNCS dbfTable = { 0,               /* Super Bof */
                              0,               /* Super FieldName */
                              0,               /* Super Flush */
                              GetValue,
+                             PutValue,
                              0,               /* Super Recall */
                              RecCount,
                              0,               /* Super RecNo */

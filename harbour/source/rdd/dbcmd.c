@@ -83,6 +83,8 @@ HARBOUR HB_EOF( void );
 HARBOUR HB_FCOUNT( void );
 HARBOUR HB_FIELDGET( void );
 HARBOUR HB_FIELDNAME( void );
+HARBOUR HB_FIELDPOS( void );
+HARBOUR HB_FIELDPUT( void );
 HARBOUR HB_FOUND( void );
 HARBOUR HB_LASTREC( void );
 HARBOUR HB_RDDLIST( void );
@@ -117,6 +119,8 @@ HB_INIT_SYMBOLS_BEGIN( dbCmd__InitSymbols )
 { "FCOUNT",        FS_PUBLIC, HB_FCOUNT,        0 },
 { "FIELDGET",      FS_PUBLIC, HB_FIELDGET,      0 },
 { "FIELDNAME",     FS_PUBLIC, HB_FIELDNAME,     0 },
+{ "FIELDPOS",      FS_PUBLIC, HB_FIELDPOS,      0 },
+{ "FIELDPUT",      FS_PUBLIC, HB_FIELDPUT,      0 },
 { "FOUND",         FS_PUBLIC, HB_FOUND,         0 },
 { "LASTREC",       FS_PUBLIC, HB_LASTREC,       0 },
 { "RDDLIST",       FS_PUBLIC, HB_RDDLIST,       0 },
@@ -407,6 +411,15 @@ static ERRCODE GetValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
    return SUCCESS;
 }
 
+static ERRCODE PutValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
+{
+   HB_SYMBOL_UNUSED( pArea );
+   HB_SYMBOL_UNUSED( uiIndex );
+   HB_SYMBOL_UNUSED( pItem );
+   printf( "Calling default: PutValue()\n" );
+   return SUCCESS;
+}
+
 static ERRCODE Recall( AREAP pArea )
 {
    HB_SYMBOL_UNUSED( pArea );
@@ -503,12 +516,16 @@ static ERRCODE Open( AREAP pArea, LPDBOPENINFO pOpenInfo )
    pArea->lpFileInfo->hFile = hb_fsOpen( pOpenInfo->abName, uiFlags );
    
    if( pArea->lpFileInfo->hFile == FS_ERROR )
+   {
+      ( ( PHB_DYNS ) pArea->atomAlias )->hArea = 0;
       return FAILURE;
+   }
 
    if( SELF_READDBHEADER( pArea ) == FAILURE )
    {
       hb_fsClose( pArea->lpFileInfo->hFile );
       pArea->lpFileInfo->hFile = FS_ERROR;
+      ( ( PHB_DYNS ) pArea->atomAlias )->hArea = 0;
       return FAILURE;
    }
 
@@ -588,6 +605,7 @@ static RDDFUNCS defTable = { Bof,
                              FieldName,
                              Flush,
                              GetValue,
+                             PutValue,
                              Recall,
                              RecCount,
                              RecNo,
@@ -753,6 +771,7 @@ HARBOUR HB_DBCREATE( void )
    USHORT uiSize, uiRddID;
    DBOPENINFO pInfo;
    WORD wLen;
+   PHB_FNAME pFileName;
 
    szFileName = hb_parc( 1 );
    pStruct = hb_param( 2 , IT_ARRAY );
@@ -810,13 +829,20 @@ HARBOUR HB_DBCREATE( void )
    SELF_NEW( ( AREAP ) pTempArea );
    SELF_CREATEFIELDS( ( AREAP ) pTempArea, pStruct );
 
-   pInfo.abName = ( BYTE * ) szFileName;
+   pFileName = hb_fsFNameSplit( szFileName );
 
-   /* TODO: append default extension to szFileName if necessary */
-   /* SELF_INFO( ( AREAP ) pTempArea, DBI_TABLEEXT, pItem ) */
+   szFileName = ( char * ) hb_xgrab( _POSIX_PATH_MAX + 3 );
+   strcpy( szFileName, hb_parc( 1 ) );
+   if( !pFileName->szExtension )
+   {
+      HB_DBTABLEEXT();
+      strcat( szFileName, hb_parc( -1 ) );
+   }
+   pInfo.abName = ( BYTE * ) szFileName;
 
    SELF_CREATE( ( AREAP ) pTempArea, &pInfo );
    SELF_RELEASE( ( AREAP ) pTempArea );
+   hb_xfree( szFileName );
    hb_xfree( pTempArea );
 }
 
@@ -992,6 +1018,7 @@ HARBOUR HB_DBUSEAREA( void )
    LPAREANODE pAreaNode;
    USHORT uiSize, uiRddID;
    DBOPENINFO pInfo;
+   PHB_FNAME pFileName;
 
    uiNetError = 0;
 
@@ -1039,10 +1066,10 @@ HARBOUR HB_DBUSEAREA( void )
       return;
    }
 
-   /* TODO: Implement szAlias from szFilename */
+   pFileName = hb_fsFNameSplit( szFileName );
    szAlias = hb_parc( 4 );
    if( strlen( szAlias ) == 0 )
-      szAlias = szFileName;
+      szAlias = pFileName->szName;
 
    /* Create a new WorkArea node */
 
@@ -1075,21 +1102,33 @@ HARBOUR HB_DBUSEAREA( void )
    pCurrArea->pNext = 0;
 
    SELF_NEW( ( AREAP ) pCurrArea->pArea );
+
+   szFileName = ( char * ) hb_xgrab( _POSIX_PATH_MAX + 3 );
+   strcpy( szFileName, hb_parc( 3 ) );
+   if( !pFileName->szExtension )
+   {
+      HB_DBTABLEEXT();
+      strcat( szFileName, hb_parc( -1 ) );
+   }
    pInfo.uiArea = uiCurrArea;
    pInfo.abName = ( BYTE * ) szFileName;
    pInfo.atomAlias = ( BYTE * ) szAlias;
    pInfo.fShared = ISLOG( 5 ) ? hb_parl( 5 ) : !hb_set.HB_SET_EXCLUSIVE;
    pInfo.fReadonly = ISLOG( 6 ) ? hb_parl( 6 ) : FALSE;
-
+  
    if( SELF_OPEN( ( AREAP ) pCurrArea->pArea, &pInfo ) == FAILURE )
    {
       SELF_RELEASE( ( AREAP ) pCurrArea->pArea );
       hb_xfree( pCurrArea->pArea );
       hb_xfree( pCurrArea );
+      hb_xfree( szFileName );
+      hb_xfree( pFileName );
       pCurrArea = 0;
       return;
    }
 
+   hb_xfree( szFileName );
+   hb_xfree( pFileName );
    ( ( AREAP ) pCurrArea->pArea )->uiArea = uiCurrArea;
 
    /* Insert the new WorkArea node */
@@ -1182,6 +1221,50 @@ HARBOUR HB_FIELDNAME( void )
       }
    }
    hb_retc( "" );
+}
+
+HARBOUR HB_FIELDPOS( void )
+{
+   USHORT uiCount;
+   char * szName;
+   LPFIELD pField;
+   
+   if( pCurrArea && ( ( AREAP ) pCurrArea->pArea )->lprfsHost )
+   {
+      szName = hb_parc( 1 );
+      szName = hb_strUpper( szName, strlen( szName ) );
+      uiCount = 0;
+      pField = ( ( AREAP ) pCurrArea->pArea )->lpFields;
+      while( pField )
+      {
+         if( strcmp( szName, ( char * ) pField->sym ) == 0 )
+         {
+            hb_retni( uiCount + 1 );
+            return;
+         }
+         pField = pField->lpfNext;
+         uiCount++;
+      }
+   }
+   hb_retni( 0 );
+}
+
+HARBOUR HB_FIELDPUT( void )
+{
+   USHORT uiIndex;
+   PHB_ITEM pItem;
+   
+   uiIndex = hb_parni( 1 );
+   if( pCurrArea && ( ( AREAP ) pCurrArea->pArea )->lprfsHost && uiIndex )
+   {
+      pItem = hb_param( 2, IT_ANY );
+      if( SELF_PUTVALUE( ( AREAP ) pCurrArea->pArea, uiIndex, pItem ) == SUCCESS )
+      {
+         hb_itemReturn( pItem );
+         return;
+      }
+   }
+   hb_ret();
 }
 
 HARBOUR HB_FOUND( void )
