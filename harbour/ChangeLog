@@ -1,3 +1,8 @@
+2000-03-22 17:25 GMT-5 David G. Holm <dholm@jsd-llc.com>
+   + source/rtl/gtpca/kbdos2.gcc
+     + Added hb_gt_ReadKey() support for os2/gcc platform
+       (I forgot to run CVS ADD on this module earlier)
+
 20000322-22:46 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * include/hbdefs.h
