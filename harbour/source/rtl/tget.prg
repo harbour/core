@@ -75,7 +75,6 @@ CLASS Get
    // Exported
 
    DATA BadDate
-   DATA Block
    DATA Buffer
    DATA Cargo
    DATA Changed
@@ -103,6 +102,7 @@ CLASS Get
 
    DATA cColorSpec   HIDDEN   // Used only for METHOD ColorSpec
    DATA cPicture     HIDDEN   // Used only for METHOD Picture
+   DATA bBlock       HIDDEN   // Used only for METHOD Block
 
    METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec )
 
@@ -111,8 +111,9 @@ CLASS Get
    MESSAGE _Assign METHOD Assign()
 #endif
 
-   METHOD ColorSpec() SETGET  // Replace to DATA ColorSpec
-   METHOD Picture()   SETGET  // Replace to DATA Picture
+   METHOD Block( bBlock )         SETGET  // Replace to DATA Block
+   METHOD ColorSpec( cColorSpec ) SETGET  // Replace to DATA ColorSpec
+   METHOD Picture( cPicture )     SETGET  // Replace to DATA Picture
    METHOD Display()
    METHOD ColorDisp( cColorSpec ) INLINE ::ColorSpec := cColorSpec, ::Display(), Self
    METHOD KillFocus()
@@ -121,7 +122,7 @@ CLASS Get
    METHOD SetFocus()
    METHOD Undo()
    METHOD UnTransform()
-   METHOD UpdateBuffer() INLINE  ::buffer := ::PutMask(), ::Assign(), Self
+   METHOD UpdateBuffer() INLINE  ::buffer := ::PutMask(), ::Assign(), ::Display(), Self
 
    METHOD VarGet()
    METHOD VarPut(xValue, lReFormat)
@@ -173,6 +174,7 @@ METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) CLASS Get
    DEFAULT cPicture   TO ""
    DEFAULT cColorSpec TO hb_ColorIndex( SetColor(), CLR_UNSELECTED ) + "," + hb_ColorIndex( SetColor(), CLR_ENHANCED )
 
+   ::HasFocus   := .f.
    ::BadDate    := .f.
    ::Block      := bVarBlock
    ::Changed    := .f.
@@ -181,7 +183,6 @@ METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) CLASS Get
    ::ColorSpec  := cColorSpec
    ::DecPos     := NIL
    ::ExitState  := 0
-   ::HasFocus   := .f.
    ::Minus      := .f.
    ::Name       := cVarName
    ::Original   := ::VarGet()
@@ -394,6 +395,7 @@ METHOD SetFocus() CLASS Get
    ::rejected   := .f.
    ::typeout    := .f.
 
+   ::Original   := ::VarGet()
    ::buffer     := ::PutMask( ::VarGet(), .f. )
    ::changed    := .f.
    ::clear      := ( "K" $ ::cPicFunc .or. ::type == "N")
@@ -442,10 +444,12 @@ METHOD VarPut( xValue, lReFormat ) CLASS Get
    if ::block != nil
       Eval( ::block, xValue )
       if lReFormat
+         if !::hasfocus
+            ::Original := xValue
+         endif
          ::Type     := ValType( xValue )
          ::nDispLen := NIL
          ::Picture( ::cPicture )
-         ::UpdateBuffer()
       endif
    endif
 
@@ -811,6 +815,7 @@ METHOD ToDecPos() CLASS Get
    ::Clear  := .f.
    ::buffer := ::PutMask( ::UnTransform(), .f. )
    ::pos    := ::DecPos + 1
+   ::lEdit  := .t.
 
    ::Display( .t. )
 
@@ -1139,7 +1144,7 @@ return Self
 
 //---------------------------------------------------------------------------//
 
-/* The METHOD ColorSpec and MESSAGE _ColorSpec allow to replace the
+/* The METHOD ColorSpec and DATA cColorSpec allow to replace the
  * property ColorSpec for a function to control the content and
  * to carry out certain actions to normalize the data.
  * The particular case is that the function receives a single color and
@@ -1168,7 +1173,7 @@ return ::cColorSpec
 
 //---------------------------------------------------------------------------//
 
-/* The METHOD Picture and MESSAGE _Picture allow to replace the
+/* The METHOD Picture and DATA cPicture allow to replace the
  * property Picture for a function to control the content and
  * to carry out certain actions to normalize the data.
  * The particular case is that the Picture is loaded later on
@@ -1193,3 +1198,30 @@ METHOD Picture( cPicture ) CLASS Get
    endif
 
 return ::cPicture
+
+//---------------------------------------------------------------------------//
+
+/* The METHOD Block and DATA bBlock allow to replace the
+ * property Block for a function to control the content and
+ * to carry out certain actions to normalize the data.
+ * The particular case is that the Block is loaded later on
+ * to the creation of the object, being necessary to carry out
+ * several tasks to adjust the internal data of the object
+ * to display correctly.
+ */
+
+METHOD Block( bBlock ) CLASS Get
+
+   if bBlock != NIL .AND. !::HasFocus
+
+      ::bBlock   := bBlock
+      ::Original := ::VarGet()
+      ::Type     := ValType( ::Original )
+
+      ::nDispLen := NIL
+      ::Picture( ::Picture )
+
+   endif
+
+return ::bBlock
+
