@@ -206,6 +206,26 @@ PHB_ITEM hb_itemPutC( PHB_ITEM pItem, char * szText )
    return pItem;
 }
 
+PHB_ITEM hb_itemPutCConst( PHB_ITEM pItem, char * szText )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemPutCConst(%p, %s)", pItem, szText));
+
+   if( pItem )
+      hb_itemClear( pItem );
+   else
+      pItem = hb_itemNew( NULL );
+
+   if( szText == NULL )
+      szText = "";
+
+   pItem->type = HB_IT_STRING;
+   pItem->item.asString.length = strlen( szText );
+   pItem->item.asString.value  = szText;
+   pItem->item.asString.bPcode = TRUE;
+
+   return pItem;
+}
+
 PHB_ITEM hb_itemPutCL( PHB_ITEM pItem, char * szText, ULONG ulLen )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutCL(%p, %s, %lu)", pItem, szText, ulLen));
