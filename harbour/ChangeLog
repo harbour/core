@@ -1,3 +1,13 @@
+2001-02-06 20:30 GMT+1 Ignacio Ortiz <ignacioortiz@fivetech.com>
+   * harbour/source/debug/dbgmenu.prg
+     + Debugger full locate menu support.
+
+   * harbour/source/debug/tbrwtext.prg
+     + New search method
+
+   * harbour/source/debug/debugger.prg
+     + Debugger full locate menu support.
+
 2001-02-06 17:47 GMT+1 Antonio Linares <alinares@fivetech.com>
    * harbour/source/debug/dbgtmenu.prg
      + debugger colors selection support.
