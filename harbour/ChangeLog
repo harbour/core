@@ -97,7 +97,6 @@
    + tests/testdecl.prg
      + Added test program to utilize the DECLARE in its different contexts.
 
->>>>>>> 1.2467
 2000-07-28 15:00 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
    * include/hbapigt.h
