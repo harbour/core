@@ -1,3 +1,8 @@
+2001-11-29 14:45 UTC-0500 David G. Holm <dholm@jsd-llc.com>
+
+  * makefile.vc
+    + Added spfiles.obj
+
 2001-11-29 20:33 GMT+1 Antonio Linares <alinares@fivetech.com>
   * source/rtl/philes.c
      ! msvc required type cast added

@@ -336,6 +336,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\shadow.obj \
    $(OBJ_DIR)\soundex.obj \
    $(OBJ_DIR)\space.obj \
+   $(OBJ_DIR)\spfiles.obj \
    $(OBJ_DIR)\str.obj \
    $(OBJ_DIR)\strcase.obj \
    $(OBJ_DIR)\strings.obj \
