@@ -267,6 +267,10 @@ LANGUAGE_WORDS_ARE {
 
 /* When 2 identifiers are correct syntax like in class declaration, we have to temporarily store the 2nd identifier. */
 #define HB_ID_ON_HOLD     -1050
+#define HB_MACRO_ERR      -1051
+#define HB_CHK_NEXT       -1052
+#define HB_CHK_EXIT       -1053
+#define HB_CHK_LOOP       -1054
 
 /* Intermediate Reductions when still ambigious or need further reductions. */
 #define _WHILE_WITH       3001
@@ -537,8 +541,6 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( RETURN      , '['         , 0      , 0          ) REDUCE_TO( HB_RETURN_ID      , '['           ),
                     IF_SEQUENCE_IS( RETURN      , '='         , 0      , 0          ) REDUCE_TO( HB_RETURN_ID      , '='           ),
                     IF_SEQUENCE_IS( RETURN      , ':'         , 0      , 0          ) REDUCE_TO( HB_RETURN_ID      , ':'           ),
-                    IF_SEQUENCE_IS( RETURN      , '\n'        , 0      , 0          ) PASS_THROUGH(),
-                    IF_SEQUENCE_IS( RETURN      , ';'         , 0      , 0          ) PASS_THROUGH(),
                     IF_SEQUENCE_IS( RETURN      , 0           , 0      , 0          ) PASS_THROUGH(),
 
                     IF_SEQUENCE_IS( _INC_CR     , 0           , 0      , 0          ) REDUCE_TO( INC               , '\n'          ),
@@ -582,12 +584,10 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( NEXT        , '['         , 0      , 0          ) REDUCE_TO( HB_NEXT_ID        , '['           ),
                     IF_SEQUENCE_IS( NEXT        , '='         , 0      , 0          ) REDUCE_TO( HB_NEXT_ID        , '='           ),
                     IF_SEQUENCE_IS( NEXT        , ':'         , 0      , 0          ) REDUCE_TO( HB_NEXT_ID        , ':'           ),
-                    IF_SEQUENCE_IS( NEXT        , '\n'        , 0      , 0          ) PASS_THROUGH(),
-                    IF_SEQUENCE_IS( NEXT        , ';'         , 0      , 0          ) PASS_THROUGH(),
-                    IF_SEQUENCE_IS( NEXT        , 0           , 0      , 0          ) PASS_THROUGH(),
+                    IF_SEQUENCE_IS( NEXT        , 0           , 0      , 0          ) REDUCE_TO( HB_CHK_NEXT       , 0             ),
 
-                    IF_SEQUENCE_IS( EXITLOOP    , '\n'        , 0      , 0          ) PASS_THROUGH(),
-                    IF_SEQUENCE_IS( EXITLOOP    , ';'         , 0      , 0          ) PASS_THROUGH(),
+                    IF_SEQUENCE_IS( EXITLOOP    , '\n'        , 0      , 0          ) REDUCE_TO( HB_CHK_EXIT       , '\n'          ),
+                    IF_SEQUENCE_IS( EXITLOOP    , ';'         , 0      , 0          ) REDUCE_TO( HB_CHK_EXIT       , ';'           ),
 
                     IF_SEQUENCE_IS( INIT        , PROCEDURE   , 0      , 0          ) PASS_THROUGH(),
                     IF_SEQUENCE_IS( INIT        , FUNCTION    , 0      , 0          ) PASS_THROUGH(),
@@ -600,8 +600,8 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( EXITLOOP    ,  0          , 0      , 0          ) REDUCE_TO( HB_EXIT_ID        , 0             ),
 
                     /* LOOP at BOL if followed by anything other the NEW LINE than Identifier else LOOP. */
-                    IF_SEQUENCE_IS( LOOP        , '\n'        , 0      , 0          ) PASS_THROUGH(),
-                    IF_SEQUENCE_IS( LOOP        , ';'         , 0      , 0          ) PASS_THROUGH(),
+                    IF_SEQUENCE_IS( LOOP        , '\n'        , 0      , 0          ) REDUCE_TO( HB_CHK_LOOP       , '\n'          ),
+                    IF_SEQUENCE_IS( LOOP        , ';'         , 0      , 0          ) REDUCE_TO( HB_CHK_LOOP       , ';'           ),
                     IF_SEQUENCE_IS( LOOP        , '['         , 0      , 0          ) REDUCE_TO( HB_LOOP_ID        , '['           ),
                     IF_SEQUENCE_IS( LOOP        , 0           , 0      , 0          ) REDUCE_TO( HB_LOOP_ID        , 0             ),
 
@@ -626,8 +626,6 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( BREAK       , '['         , 0      , 0          ) REDUCE_TO( HB_BREAK_ID       , '['           ),
                     IF_SEQUENCE_IS( BREAK       , '='         , 0      , 0          ) REDUCE_TO( HB_BREAK_ID       , '='           ),
                     IF_SEQUENCE_IS( BREAK       , ':'         , 0      , 0          ) REDUCE_TO( HB_BREAK_ID       , ':'           ),
-                    IF_SEQUENCE_IS( BREAK       , '\n'        , 0      , 0          ) PASS_THROUGH(),
-                    IF_SEQUENCE_IS( BREAK       , ';'         , 0      , 0          ) PASS_THROUGH(),
                     IF_SEQUENCE_IS( BREAK       , 0           , 0      , 0          ) PASS_THROUGH(),
 
                     IF_SEQUENCE_IS( RECOVER     , _USING_     , 0      , 0          ) REDUCE_TO( RECOVERUSING      , 0             ),
@@ -669,8 +667,6 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( WHILE       , '['         , 0      , 0          ) REDUCE_TO( HB_WHILE_ID 	    , '['          ),
                     IF_SEQUENCE_IS( WHILE       , '='         , 0      , 0          ) REDUCE_TO( HB_WHILE_ID 	    , '='          ),
                     IF_SEQUENCE_IS( WHILE       , ':'         , 0      , 0          ) REDUCE_TO( HB_WHILE_ID 	    , ':'          ),
-                    IF_SEQUENCE_IS( WHILE       , INC         , 0      , 0          ) PASS_THROUGH(), /* Assume Pre of next */
-                    IF_SEQUENCE_IS( WHILE       , DEC         , 0      , 0          ) PASS_THROUGH(), /* Assume Pre of next */
                     IF_SEQUENCE_IS( WHILE       , 0           , 0      , 0          ) PASS_THROUGH(),
 
                     IF_SEQUENCE_IS( DO          , _CASE_      , 0      , 0          ) REDUCE_TO( DOCASE      	    , 0            ),
@@ -690,8 +686,6 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( CASE        , '['         , 0      , 0          ) REDUCE_TO( HB_CASE_ID  	    , '['          ),
                     IF_SEQUENCE_IS( CASE        , '='         , 0      , 0          ) REDUCE_TO( HB_CASE_ID  	    , '='          ),
                     IF_SEQUENCE_IS( CASE        , ':'         , 0      , 0          ) REDUCE_TO( HB_CASE_ID  	    , ':'          ),
-                    IF_SEQUENCE_IS( CASE        , INC         , 0      , 0          ) PASS_THROUGH(), /* Assume Pre of next */
-                    IF_SEQUENCE_IS( CASE        , DEC         , 0      , 0          ) PASS_THROUGH(), /* Assume Pre of next */
                     IF_SEQUENCE_IS( CASE        , 0           , 0      , 0          ) PASS_THROUGH(),
 
                     /* This WITH is at BOL always IDENTIFIER. */
@@ -842,6 +836,10 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( IDENTIFIER  , IN          , 0      , 0          ) PASS_THROUGH(),
                     IF_SEQUENCE_IS( IN          , '['         , 0      , 0          ) REDUCE_TO( HB_IN_ID   	    , '['          ),
                     IF_SEQUENCE_IS( IN          , 0           , 0      , 0          ) REDUCE_TO( HB_IN_ID   	    , 0            ),
+
+                    IF_SEQUENCE_IS( '&'         , '\''        , 0      , 0          ) REDUCE_TO( HB_MACRO_ERR       , 0            ),
+                    IF_SEQUENCE_IS( '&'         , '"'         , 0      , 0          ) REDUCE_TO( HB_MACRO_ERR       , 0            ),
+                    IF_SEQUENCE_IS( '&'         , '['         , 0      , 0          ) REDUCE_TO( HB_MACRO_ERR       , 0            )
                    };
 
 /* -------------------------------------------------  End of Language Definitions. ------------------------------------------------ */
@@ -1162,6 +1160,24 @@ int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], char asHold[][TOKEN_
          x = LITERAL;
          break;
 
+      case HB_CHK_NEXT :
+         if( hb_comp_wForCounter == 0 )
+            hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_NEXTFOR, NULL, NULL );
+	 x = NEXT;
+	 break;
+
+      case HB_CHK_EXIT :
+         if( hb_comp_wForCounter == 0 && hb_comp_wWhileCounter == 0 )
+            hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_UNMATCHED_EXIT, "EXIT", NULL );
+	 x = EXITLOOP;
+	 break;
+
+      case HB_CHK_LOOP :
+         if( hb_comp_wForCounter == 0 && hb_comp_wWhileCounter == 0 )
+            hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_UNMATCHED_EXIT, "LOOP", NULL );
+	 x = LOOP;
+	 break;
+
       case HB_EXTERN_ID :
          strncpy( sIdentifier, "EXTERNAL", iWordLen );
 	 sIdentifier[iWordLen] = '\0';
@@ -1442,6 +1458,11 @@ int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], char asHold[][TOKEN_
          strcpy( sIdentifier, "END" );
 	 sIdentifier[3] = '\0';
          x = IDENTIFIER;
+         break;
+
+      case HB_MACRO_ERR :
+	 hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_SYNTAX, "&", NULL );
+         x = 0;
          break;
 
       default:

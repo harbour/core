@@ -1,3 +1,13 @@
+2000-07-31 18:20 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * source/compiler/harbour.slx
+     - Removed few redundant rules.
+     + Added logic to check for orphan LOOP, EXIT, or NEXT, and produce standard errors.
+     + Added check to check for &', &", or &[, and produce standard error.
+
+   * source/macro/macro.slx
+     + Added logic to check for &', &", or &[, and produce standard error.
+     * Minor formating.
+
 2000-08-01 06:30 UTC+0700 Jose Lalin <dezac@corevia.com>
    * source/compiler/hbgenerr.c
      Bug fixes as reported by Andi Jahja
