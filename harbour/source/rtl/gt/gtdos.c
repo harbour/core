@@ -180,7 +180,7 @@ int hb_gt_ReadKey( void )
 
 BOOL hb_gt_AdjustPos( BYTE * pStr, ULONG ulLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_AdjustPos()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_AdjustPos(%s, %lu)", pStr, ulLen ));
 
 #if defined(__TURBOC__)
    {

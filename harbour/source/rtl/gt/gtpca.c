@@ -61,7 +61,7 @@ static int s_iAttribute;
 static BOOL s_bColor;
 static char s_szSpaces[] = "                                                                                    "; /* 84 spaces */
 
-void hb_gt_AnsiGetCurPos( USHORT * row, USHORT * col );
+static void hb_gt_AnsiGetCurPos( USHORT * row, USHORT * col );
 
 void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
 {

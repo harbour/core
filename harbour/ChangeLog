@@ -1,3 +1,14 @@
+20000317-01:09 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * source/rtl/console.c
+     - Removed the non-GT branch from __ACCEPT().
+   * source/vm/cmdarg.c
+     + PC ANSI added.
+     - non-GT mode removed.
+   * source/rtl/gt/gt*.c
+     ! Fixed some trace calls.
+     ! One declaration made static.
+     ! One function call fixed in GTCRS.C.
+
 20000317-00:13 GMT+1 Victor Szakats <info@szelvesz.hu>
    * source/rtl/gt/gtpca.c
      + Some internal functions made static
@@ -8,8 +19,7 @@
    * source/rtl/maindll.c
      ! Fixed to compile with BCC45
    * source/rtl/console.c
-     - Removed the GT branch from __ACCEPT(). In CA-Cl*pper ACCEPT doesn't use
-       the GT system.
+     ! Some fixes later fixed again (see next session).
 
 20000316-04:10 EST Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/gt/gtpca.c

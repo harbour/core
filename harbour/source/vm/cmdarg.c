@@ -326,23 +326,20 @@ void hb_cmdargProcessVM( void )
       hb_outerr( hb_consoleGetNewLine(), 0 );
 
       hb_outerr( "GT API support: ", 0 );
-#if defined( HARBOUR_USE_GTAPI )
-      hb_outerr( "Yes ", 0 );
 #if defined( HARBOUR_USE_STD_GTAPI )
-      hb_outerr( "(Standard)", 0 );
+      hb_outerr( "Standard", 0 );
+#elif defined( HARBOUR_USE_PCA_GTAPI )
+      hb_outerr( "PC ANSI", 0 );
 #elif defined( HARBOUR_USE_DOS_GTAPI )
-      hb_outerr( "(DOS)", 0 );
+      hb_outerr( "DOS", 0 );
 #elif defined( HARBOUR_USE_OS2_GTAPI )
-      hb_outerr( "(OS/2)", 0 );
+      hb_outerr( "OS/2", 0 );
 #elif defined( HARBOUR_USE_WIN_GTAPI )
-      hb_outerr( "(Windows)", 0 );
+      hb_outerr( "Windows", 0 );
 #elif defined( HARBOUR_USE_CRS_GTAPI )
-      hb_outerr( "(Unix Curses)", 0 );
+      hb_outerr( "Unix Curses", 0 );
 #elif defined( HARBOUR_USE_SLN_GTAPI )
-      hb_outerr( "(Unix Slang)", 0 );
-#endif
-#else
-      hb_outerr( "No", 0 );
+      hb_outerr( "Unix Slang", 0 );
 #endif
       hb_outerr( hb_consoleGetNewLine(), 0 );
 

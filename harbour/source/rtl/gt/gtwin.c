@@ -226,10 +226,11 @@ int hb_gt_ReadKey( void )
 BOOL hb_gt_AdjustPos( BYTE * pStr, ULONG ulLen )
 {
    CONSOLE_SCREEN_BUFFER_INFO csbi;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_AdjustPos(%s, %lu)", pStr, ulLen ));
+
    HB_SYMBOL_UNUSED( pStr );
    HB_SYMBOL_UNUSED( ulLen );
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Adjust(): %s, %l", pStr, ulLen));
 
    GetConsoleScreenBufferInfo( s_HActive, &csbi );
 

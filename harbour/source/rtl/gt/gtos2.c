@@ -71,7 +71,10 @@ BOOL hb_gt_AdjustPos( BYTE * pStr, ULONG ulLen )
 {
    USHORT x, y;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_AdjustPos()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_AdjustPos(%s, %lu)", pStr, ulLen ));
+
+   HB_SYMBOL_UNUSED( pStr );
+   HB_SYMBOL_UNUSED( ulLen );
 
    VioGetCurPos( &y, &x, 0 );
    hb_gtSetPos( ( SHORT ) y, ( SHORT ) x );

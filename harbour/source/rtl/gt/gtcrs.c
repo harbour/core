@@ -121,7 +121,7 @@ BOOL hb_gt_AdjustPos( BYTE * pStr, ULONG ulLen )
             }
       }
    }
-   hb_gtSetRC( row, col );
+   gt_SetRC( row, col );
    return TRUE;
 }
 

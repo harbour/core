@@ -41,7 +41,7 @@
  *    HB___ACCEPT()
  *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    adjust_pos(), hb_altout(), hb_devout(), HB_DEVOUT(), hb_devpos(),
+ *    hb_altout(), hb_devout(), HB_DEVOUT(), hb_devpos(),
  *    HB_DEVPOS(), hb_dispout(), HB___EJECT(), HB_MAXCOL(),
  *    HB_MAXROW(), hb_out(), hb_outerr(), HB_OUTERR(),
  *    hb_outstd(), HB_OUTSTD(), HB_PCOL(), HB_PROW(),
@@ -849,13 +849,8 @@ HARBOUR HB___ACCEPT( void )
          case K_LEFT:
             if( ulLen > 0 )
             {
-               /* Erase last character from the screen. */
-               USHORT user_ferror = hb_fsError(); /* Save current user file error code */
-               hb_fsWrite( s_iFilenoStdout, ( BYTE * ) "\x8 \x8", 3 );
-               hb_fsSetError( user_ferror ); /* Restore last user file error code */
-
-               /* Adjust input count to get rid of last character */
-               ulLen--;
+               hb_gtWriteCon( ( BYTE * ) "\x8 \x8", 3 ); /* Erase it from the screen. */
+               ulLen--; /* Adjust input count to get rid of last character */
             }
             break;
 
@@ -863,7 +858,7 @@ HARBOUR HB___ACCEPT( void )
             if( ulLen < ( ACCEPT_BUFFER_LEN - 1 ) && input >= 32 )
             {
                s_szAcceptResult[ ulLen ] = input; /* Accept the input */
-               hb_dispout( &s_szAcceptResult[ ulLen ], sizeof( char ) ); /* Then display it */
+               hb_gtWriteCon( ( BYTE * ) &s_szAcceptResult[ ulLen ], sizeof( char ) ); /* Then display it */
                ulLen++;  /* Then adjust the input count */
             }
       }
