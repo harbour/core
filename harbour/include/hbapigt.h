@@ -75,11 +75,11 @@ extern "C" {
 #define HB_CLR_MAX_             HB_CLR_UNSELECTED
 
 /* strings for borders (same as box.ch, but defined for use by C) */
-#ifdef 0
+
 /* Note. This part will never be used, but is being kept in the source,
          so that if you use code page 437, you can see what the line
-         draw characters are supposed to look like. */
-                              /*01234567*/
+         draw characters are supposed to look like.
+                                01234567
 #define _B_SINGLE              "ÚÄ¿³ÙÄÀ³"
 #define _B_DOUBLE              "ÉÍ»º¼ÍÈº"
 #define _B_SINGLE_DOUBLE       "ÖÄ·º½ÄÓº"
@@ -88,7 +88,7 @@ extern "C" {
 #define HB_B_SINGLE_H          'Ä'
 #define HB_B_DOUBLE_V          'º'
 #define HB_B_DOUBLE_H          'Í'
-#else
+*/
 #define _B_SINGLE              "\xda\xc4\xbf\xb3\xd9\xc4\xc0\xb3"
 #define _B_DOUBLE              "\xc9\xcd\xbb\xba\xbc\xcd\xc8\xba"
 #define _B_SINGLE_DOUBLE       "\xd6\xc4\xb7\xba\xbd\xc4\xd3\xba"
@@ -97,7 +97,6 @@ extern "C" {
 #define HB_B_SINGLE_H          '\xc4'
 #define HB_B_DOUBLE_V          '\xb3'
 #define HB_B_DOUBLE_H          '\xc4'
-#endif
 
 /* Used to tell hb_gt_SetPos() when the cursor position
    is being set. Before or after text is or was displayed.
