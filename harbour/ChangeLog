@@ -1,3 +1,9 @@
+19991016-19:07 GMT+1 Antonio Linares <alinares@fivetech.com>
+   + tests/test.dbf
+     + 500 records with random information added.
+       (SuccessWare's dbcre8.exe 500 used to generate it)
+       (Now tests/testbrdb.prg may be properly tested).
+
 19991016-14:25 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/rtl/gt/gtwin.c
      source/rtl/inkey.c
