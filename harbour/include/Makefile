@@ -22,6 +22,7 @@ C_HEADERS=\
 	init.h \
 	itemapi.h \
 	pcode.h \
+	run_exp.h \
 	set.h \
 	super.h \
 	version.h \

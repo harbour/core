@@ -10,15 +10,33 @@ YACC_FLAGS = -d
 LEX = flex
 LEX_FLAGS = -i -8
 
+#
 # How to run Harbour.
-HB := $(notdir $(HB_BIN_DIR))
-ifeq ($(HB),)
-# there is a slash at the end
-HB := $(HB_BIN_DIR)harbour$(EXE_EXT)
+#
+
+# First, check whether an executable exists in the working repository.
+HB := $(wildcard $(TOP)$(ROOT)source/compiler/$(ARCH)/harbour$(EXE_EXT))
+
+ifneq ($(HB),)
+
+# OK, we work off the working repository.
+HBINC := $(TOP)$(ROOT)source/include
+
 else
-HB := $(HB_BIN_DIR)/harbour$(EXE_EXT)
+
+# Use an executable installed in the BIN directory.
+
+HB := $(notdir $(HB_BIN_DIR))
+ifneq ($(HB),)
+# there is no slash at the end
+HB := $(HB_BIN_DIR)/
 endif
-HB_FLAGS = -n -q -I$(TOP) -I$(HB_INC_DIR)
+HB := $(HB)harbour$(EXE_EXT)
+HBINC := $(HB_INC_DIR)
+
+endif
+
+HB_FLAGS = -n -q -I$(TOP) -I$(HBINC)
 
 # The rule to link an executable.
 ifeq ($(LD_RULE),)

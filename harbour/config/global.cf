@@ -6,3 +6,28 @@ GRANDP = ../../
 ARCH := $(HB_ARCHITECTURE)/$(HB_COMPILER)
 
 include $(TOP)$(ROOT)config/$(ARCH).cf
+
+#
+# How to run Harbour.
+#
+
+ifeq ($(HB_BIN_DIR),)
+HB_BIN_DIR := $(TOP)$(ROOT)source/compiler/$(ARCH)
+endif
+
+ifeq ($(HB_INC_DIR),)
+HB_INC_DIR := $(TOP)$(ROOT)include
+endif
+
+ifeq ($(HB_LIB_DIR),)
+HB_LIB_DIR := 
+endif
+
+HB := $(notdir $(HB_BIN_DIR))
+ifneq ($(HB),)
+# there is no slash at the end
+HB := $(HB_BIN_DIR)/
+endif
+HB := $(HB)harbour$(EXE_EXT)
+
+HB_FLAGS = -n -q -I$(TOP) -I$(HB_INC_DIR)
