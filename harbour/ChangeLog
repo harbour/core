@@ -1,3 +1,7 @@
+2000-07-24 18:25 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   ! tests\test.dbf
+     ! Recovered previous version.
+
 2000-07-25 22:00 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
 -contrib/hbzlib/zipfile1.C
 +contrib/hbzlib/zipfile.c
@@ -71,8 +75,8 @@
        converted to this smaller and faster one:
        hb_itemRelease/Clear( hb_itemReturn( x ) );
 
-       Actually the speed increase and binary size decrease is almost zero, 
-       but the source code is more compact. This snippet is mostly found in 
+       Actually the speed increase and binary size decrease is almost zero,
+       but the source code is more compact. This snippet is mostly found in
        error runtime error branches.
        Some local variables could be eliminated this way.
 
