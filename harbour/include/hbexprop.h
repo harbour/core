@@ -371,9 +371,13 @@ int hb_compExprType( HB_EXPR_PTR );
 void hb_compExprFree( HB_EXPR_PTR, HB_MACRO_DECL );
 void hb_compExprErrorType( HB_EXPR_PTR, HB_MACRO_DECL );
 HB_EXPR_PTR hb_compExprListStrip( HB_EXPR_PTR, HB_MACRO_DECL );
-BOOL hb_compExprIsValidMacro( char *, BOOL * );
 void hb_compExprCBVarDel( HB_CBVAR_PTR );
 HB_EXPR_PTR hb_compExprReducePlusStrings( HB_EXPR_PTR, HB_EXPR_PTR, HB_MACRO_DECL );
+BOOL hb_compExprReduceAT( HB_EXPR_PTR, HB_MACRO_DECL );
+BOOL hb_compExprReduceCHR( HB_EXPR_PTR, HB_MACRO_DECL );
+BOOL hb_compExprReduceLEN( HB_EXPR_PTR, HB_MACRO_DECL );
+BOOL hb_compExprReduceASC( HB_EXPR_PTR, HB_MACRO_DECL );
+BOOL hb_compExprIsValidMacro( char *, BOOL *, HB_MACRO_DECL );
 
 #ifdef HB_MACRO_SUPPORT
 
@@ -385,7 +389,7 @@ HB_EXPR_PTR hb_compExprGenStatement( HB_EXPR_PTR, HB_MACRO_DECL );
 HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR, HB_EXPR_PTR, HB_MACRO_DECL );
 HB_EXPR_PTR hb_compExprCBVarAdd( HB_EXPR_PTR, char *, HB_MACRO_DECL );
 void hb_compExprDelete( HB_EXPR_PTR, HB_MACRO_DECL );
-HB_EXPR_PTR hb_compExprSetGetBlock( HB_EXPR_PTR pExpr, HB_MACRO_DECL  );
+HB_EXPR_PTR hb_compExprSetGetBlock( HB_EXPR_PTR pExpr, HB_MACRO_DECL );
 
 #else
 

@@ -279,56 +279,9 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms )
       hb_compFunCallCheck( pName->value.asSymbol, iCount );
 #endif
 
-      /* TODO: AT() (also done by Clipper, already mentioned)
-               LEN() (also done by Clipper)
-               ASC() (not done by Clipper)
-               EMPTY() (not done by Clipper) */
+      /* TODO: EMPTY() (not done by Clipper) */
 
-      if( ( strcmp( "CHR", pName->value.asSymbol ) == 0 ) && iCount )
-      {
-         /* try to change it into a string */
-         HB_EXPR_PTR pArg = pParms->value.asList.pExprList;
-
-         if( pArg->ExprType == HB_ET_NUMERIC )
-         {
-            /* NOTE: CA-Cl*pper's compiler optimizer will be wrong for those
-                     CHR() cases where the passed parameter is a constant which
-                     can be divided by 256 but it's not zero, in this case it
-                     will return an empty string instead of a Chr(0). [vszakats] */
-
-            pExpr = hb_compExprNew( HB_ET_STRING );
-            pExpr->ValType = HB_EV_STRING;
-            if( pArg->value.asNum.NumType == HB_ET_LONG )
-            {
-               if( ( pArg->value.asNum.lVal % 256 ) == 0 && pArg->value.asNum.lVal != 0 )
-               {
-                  pExpr->value.asString.string = ( char * ) HB_XGRAB( 1 );
-                  pExpr->value.asString.string[ 0 ] = '\0';
-                  pExpr->value.asString.dealloc = TRUE;
-                  pExpr->ulLength = 0;
-               }
-               else
-               {
-                  pExpr->value.asString.string = ( char * ) HB_XGRAB( 2 );
-                  pExpr->value.asString.string[ 0 ] = ( pArg->value.asNum.lVal % 256 );
-                  pExpr->value.asString.string[ 1 ] = '\0';
-                  pExpr->value.asString.dealloc = TRUE;
-                  pExpr->ulLength = 1;
-               }
-            }
-            else
-            {
-               pExpr->value.asString.string = ( char * ) HB_XGRAB( 2 );
-               pExpr->value.asString.string[ 0 ] = ( ( long ) pArg->value.asNum.dVal % 256 );
-               pExpr->value.asString.string[ 1 ] = '\0';
-               pExpr->value.asString.dealloc = TRUE;
-               pExpr->ulLength = 1;
-            }
-            HB_EXPR_PCODE1( hb_compExprDelete, pParms );
-            HB_EXPR_PCODE1( hb_compExprDelete, pName );
-         }
-      }
-      else if( ( strcmp( "EVAL", pName->value.asSymbol ) == 0 ) && iCount )
+		if( ( strcmp( "EVAL", pName->value.asSymbol ) == 0 ) && iCount )
       {
          /* Optimize Eval( bBlock, [ArgList] ) to: bBlock:Eval( [ArgList] ) */
          return hb_compExprNewMethodCall( hb_compExprNewSend( pParms->value.asList.pExprList,

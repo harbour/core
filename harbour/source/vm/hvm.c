@@ -225,7 +225,7 @@ static BOOL     s_bDebuggerIsWorking; /* to know when __DBGENTRY is beeing invok
 
 /* Various compatibility flags 
 */
-static ULONG	s_VMFlags;
+static ULONG	s_VMFlags = HB_VMFLAG_HARBOUR;
 #undef hb_vmFlagEnabled
 #define hb_vmFlagEnabled(flag)	(s_VMFlags & (flag))
 

@@ -8,6 +8,50 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-11-06 11:40 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+   * source/compiler/harbour.l
+      * enabled support for break[] (if not full Clipper 
+      compatibility mode was requested)
+      
+   * include/hbexpra.c
+   * include/hbexprb.c
+   * include/hbexprc.c
+   * include/hbexprop.h
+   * source/common/expropt2.c
+   * source/compiler/expropta.c
+   * source/compiler/exproptb.c
+   * source/compiler/exproptc.c
+   * source/macro/macroa.c
+   * source/macro/macrob.c
+   * source/macro/macroc.c
+      * fixed optimalization of literal strings that contain macro 
+      operator - strings are not joined if the left argument of 
+      '+' operator contains '&'
+      for example:
+      CHR(38)+'text' -> will no longer look for 'text' variable
+      '&var'+'iable' -> will look for 'var' variable instead of
+      'variable'
+      
+      + added optimalization of ASC function
+      for example:
+      ASC('&') will be replaced with 38
+      
+      + added optimalization of LEN function
+      for example:
+      LEN("123") will be replaced with 3
+      LEN( {1,2} ) will be replaced with 2
+      Optimalization od ASC, LEN is disabled if strict Clipper
+      mode is requested (-kc)
+
+   * source/compiler/harbour.c
+      * support for strings as array of bytes is disabled by default now
+        (use -ks to enable it)
+
+   * source/vm/cmdarg.c
+   * source/vm/hvm.c
+      * support for strings as array of bytes is disabled by default now
+        (use //FLAGS:s to enable it)
+
 2003-11-06 11:00 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
    * source/vm/hvm.c
      * RDD initialization added ( made by Przemyslaw Czerpak ) - I forgot to

@@ -348,22 +348,34 @@ static HB_EXPR_FUNC( hb_compExprUseString )
          break;
       case HB_EA_PUSH_PCODE:
          {
-	    char *szDupl;
-	    BOOL bUseTextSubst;
-	    BOOL bValidMacro;
+	         char *szDupl;
+	         BOOL bUseTextSubst;
+	         BOOL bValidMacro;
 	    
-	    szDupl = hb_strupr( hb_strdup( pSelf->value.asString.string ) );
+	         szDupl = hb_strupr( hb_strdup( pSelf->value.asString.string ) );
             HB_EXPR_PCODE2( hb_compGenPushString, pSelf->value.asString.string, pSelf->ulLength + 1 );
 	
-	    bValidMacro = hb_compExprIsValidMacro( szDupl, &bUseTextSubst );
+	         bValidMacro = hb_compExprIsValidMacro( szDupl, &bUseTextSubst, HB_MACRO_PARAM );
             if( bUseTextSubst )
-	    {
-        	if( bValidMacro )
-            	    HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROTEXT );
-		else
-	    	    hb_compErrorMacro( pSelf->value.asString.string );
-	    }
-	    hb_xfree( szDupl );
+	         {
+               if( HB_SUPPORT_HARBOUR ) 
+               {
+        	         if( bValidMacro )
+            	      HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROTEXT );
+		            else
+	    	            hb_compErrorMacro( pSelf->value.asString.string );
+               }
+               else
+               {
+                  /* Clipper always generates macro substitution pcode
+                  * even if it is not a valid expression
+                  */
+           	      HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROTEXT );
+        	         if( !bValidMacro )
+	    	            hb_compErrorMacro( pSelf->value.asString.string );
+               }
+	         }
+	         hb_xfree( szDupl );
          }
          break;
       case HB_EA_POP_PCODE:
@@ -546,7 +558,7 @@ static void hb_compExprCodeblockEarly( HB_EXPR_PTR pSelf )
     	HB_EXPR_PCODE0( hb_compCodeBlockStart );
 
 		szDupl = hb_strupr( hb_strdup( pSelf->value.asCodeblock.string ) );
-		if( !hb_compExprIsValidMacro( szDupl, &bUseTextSubst ) )
+		if( !hb_compExprIsValidMacro( szDupl, &bUseTextSubst, HB_MACRO_PARAM ) )
 		{
 	    	hb_compErrorCodeblock( pSelf->value.asCodeblock.string );
 	    	hb_compErrorMacro( pSelf->value.asCodeblock.string );
@@ -1174,6 +1186,9 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
    switch( iMessage )
    {
       case HB_EA_REDUCE:
+            if( pSelf->value.asMacro.pExprList )
+               pSelf->value.asMacro.pExprList = HB_EXPR_USE( pSelf->value.asMacro.pExprList, HB_EA_REDUCE );
+				break;
       case HB_EA_ARRAY_AT:
       case HB_EA_ARRAY_INDEX:
       case HB_EA_LVALUE:
@@ -1372,12 +1387,11 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
              */
             if( pSelf->value.asFunCall.pParms )
                pSelf->value.asFunCall.pParms = HB_EXPR_USE( pSelf->value.asFunCall.pParms, HB_EA_REDUCE );
-         #ifndef HB_C52_STRICT
+
             if( pSelf->value.asFunCall.pFunName->ExprType == HB_ET_FUNNAME )
             {
                HB_EXPR_PTR pName = pSelf->value.asFunCall.pFunName;
                HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
-               HB_EXPR_PTR pReduced;
                USHORT usCount;
 
                if( pParms )
@@ -1396,29 +1410,23 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
 
                if( ( strcmp( "AT", pName->value.asSymbol ) == 0 ) && usCount == 2 )
                {
-                  HB_EXPR_PTR pSub  = pParms->value.asList.pExprList;
-                  HB_EXPR_PTR pText = pSub->pNext;
-
-                  if( pSub->ExprType == HB_ET_STRING && pText->ExprType == HB_ET_STRING )
-                  {
-                     if( pSub->value.asString.string[0] == '\0' )
-                     {
-                        pReduced = hb_compExprNewLong( 1 );
-                     }
-                     else
-                     {
-                        pReduced = hb_compExprNewLong( hb_strAt( pSub->value.asString.string, pSub->ulLength, pText->value.asString.string, pText->ulLength ) );
-                     }
-
-                     HB_EXPR_PCODE1( hb_compExprDelete, pSelf->value.asFunCall.pFunName );
-                     HB_EXPR_PCODE1( hb_compExprDelete, pSelf->value.asFunCall.pParms );
-
-                     memcpy( pSelf, pReduced, sizeof( HB_EXPR ) );
-                     HB_XFREE( pReduced );
-                  }
+						hb_compExprReduceAT( pSelf, HB_MACRO_PARAM );
                }
+					else if( ( strcmp( "CHR", pName->value.asSymbol ) == 0 ) && usCount )
+					{
+						hb_compExprReduceCHR( pSelf, HB_MACRO_PARAM );
+					}
+					else if( ( strcmp( "LEN", pName->value.asSymbol ) == 0 ) && usCount )
+					{
+						if( HB_COMP_ISSUPPORTED(HB_COMPFLAG_HARBOUR) )
+							hb_compExprReduceLEN( pSelf, HB_MACRO_PARAM );
+					}
+					else if( ( strcmp( "ASC", pName->value.asSymbol ) == 0 ) && usCount )
+					{
+						if( HB_COMP_ISSUPPORTED(HB_COMPFLAG_HARBOUR) )
+							hb_compExprReduceASC( pSelf, HB_MACRO_PARAM );
+					}
            }
-          #endif
          }
          break;
 

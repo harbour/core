@@ -432,21 +432,30 @@ HB_EXPR_PTR hb_compExprReducePlus( HB_EXPR_PTR pSelf, HB_MACRO_DECL )
    }
    else if( pLeft->ExprType == HB_ET_STRING && pRight->ExprType == HB_ET_STRING )
    {
-      pSelf->ExprType = HB_ET_NONE; /* suppress deletion of operator components */
-      hb_compExprFree( pSelf, HB_MACRO_PARAM );
       if( pRight->ulLength == 0 )
       {
+      	pSelf->ExprType = HB_ET_NONE; /* suppress deletion of operator components */
+      	hb_compExprFree( pSelf, HB_MACRO_PARAM );
          pSelf = pLeft;
          hb_compExprFree( pRight, HB_MACRO_PARAM );
       }
       else if( pLeft->ulLength == 0 )
       {
+      	pSelf->ExprType = HB_ET_NONE; /* suppress deletion of operator components */
+      	hb_compExprFree( pSelf, HB_MACRO_PARAM );
          pSelf = pRight;
          hb_compExprFree( pLeft, HB_MACRO_PARAM );
       }
       else
       {
-         pSelf = hb_compExprReducePlusStrings( pLeft, pRight, HB_MACRO_PARAM );
+			/* Do not reduce strings with the macro operator '&'
+			*/
+			if( strchr(pLeft->value.asString.string, '&') == NULL )
+			{
+      		pSelf->ExprType = HB_ET_NONE; /* suppress deletion of operator components */
+      		hb_compExprFree( pSelf, HB_MACRO_PARAM );
+         	pSelf = hb_compExprReducePlusStrings( pLeft, pRight, HB_MACRO_PARAM );
+			}
       }
    }
    else
@@ -1125,3 +1134,123 @@ HB_EXPR_PTR hb_compExprListStrip( HB_EXPR_PTR pSelf, HB_MACRO_DECL )
    return pSelf;
 }
 
+BOOL hb_compExprReduceAT( HB_EXPR_PTR pSelf, HB_MACRO_DECL )
+{
+	HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
+	HB_EXPR_PTR pSub  = pParms->value.asList.pExprList;
+	HB_EXPR_PTR pText = pSub->pNext;
+   HB_EXPR_PTR pReduced;
+
+   if( pSub->ExprType == HB_ET_STRING && pText->ExprType == HB_ET_STRING )
+   {
+   	if( pSub->value.asString.string[0] == '\0' )
+      {
+      	pReduced = hb_compExprNewLong( 1 );
+      }
+      else
+      {
+      	pReduced = hb_compExprNewLong( hb_strAt( pSub->value.asString.string, pSub->ulLength, pText->value.asString.string, pText->ulLength ) );
+      }
+
+		hb_compExprFree( pSelf->value.asFunCall.pFunName, HB_MACRO_PARAM );
+      hb_compExprFree( pSelf->value.asFunCall.pParms, HB_MACRO_PARAM );
+
+      memcpy( pSelf, pReduced, sizeof( HB_EXPR ) );
+      hb_xfree( pReduced );
+		return TRUE;
+   }
+	else
+		return FALSE;
+}
+
+BOOL hb_compExprReduceCHR( HB_EXPR_PTR pSelf, HB_MACRO_DECL )
+{
+	HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
+   HB_EXPR_PTR pArg = pParms->value.asList.pExprList;
+   HB_EXPR_PTR pExpr = NULL;
+   /* try to change it into a string */
+
+   if( pArg->ExprType == HB_ET_NUMERIC )
+   {
+            /* NOTE: CA-Cl*pper's compiler optimizer will be wrong for those
+                     CHR() cases where the passed parameter is a constant which
+                     can be divided by 256 but it's not zero, in this case it
+                     will return an empty string instead of a Chr(0). [vszakats] */
+
+  		pExpr = hb_compExprNew( HB_ET_STRING );
+ 		pExpr->ValType = HB_EV_STRING;
+   	if( pArg->value.asNum.NumType == HB_ET_LONG )
+      {
+			BYTE bVal;
+			bVal = ( pArg->value.asNum.lVal % 256 );
+               
+			if( bVal == 0 && pArg->value.asNum.lVal != 0 )
+         {
+           	pExpr->value.asString.string = ( char * ) hb_xgrab( 1 );
+           	pExpr->value.asString.string[ 0 ] = '\0';
+           	pExpr->value.asString.dealloc = TRUE;
+           	pExpr->ulLength = 0;
+         }
+         else
+         {
+            pExpr->value.asString.string = ( char * ) hb_xgrab( 2 );
+            pExpr->value.asString.string[ 0 ] = bVal;
+            pExpr->value.asString.string[ 1 ] = '\0';
+  	         pExpr->value.asString.dealloc = TRUE;
+     	      pExpr->ulLength = 1;
+         }
+      }
+      else
+      {
+        	pExpr->value.asString.string = ( char * ) hb_xgrab( 2 );
+        	pExpr->value.asString.string[ 0 ] = ( ( long ) pArg->value.asNum.dVal % 256 );
+        	pExpr->value.asString.string[ 1 ] = '\0';
+        	pExpr->value.asString.dealloc = TRUE;
+        	pExpr->ulLength = 1;
+      }
+      
+     	hb_compExprFree( pParms, HB_MACRO_PARAM );
+     	hb_compExprFree( pSelf->value.asFunCall.pFunName, HB_MACRO_PARAM );
+      memcpy( pSelf, pExpr, sizeof( HB_EXPR ) );
+      hb_xfree( pExpr );
+      return TRUE;
+   }
+   
+   return FALSE;
+}
+
+BOOL hb_compExprReduceLEN( HB_EXPR_PTR pSelf, HB_MACRO_DECL )
+{
+	HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
+   HB_EXPR_PTR pArg = pParms->value.asList.pExprList;
+	
+   if( pArg->ExprType == HB_ET_STRING || pArg->ExprType == HB_ET_ARRAY )
+   {
+   	HB_EXPR_PTR pExpr = hb_compExprNewLong( pArg->ulLength );
+
+     	hb_compExprFree( pParms, HB_MACRO_PARAM );
+     	hb_compExprFree( pSelf->value.asFunCall.pFunName, HB_MACRO_PARAM );
+      memcpy( pSelf, pExpr, sizeof( HB_EXPR ) );
+      hb_xfree( pExpr );
+      return TRUE;
+	}
+	return FALSE;
+}
+
+BOOL hb_compExprReduceASC( HB_EXPR_PTR pSelf, HB_MACRO_DECL )
+{
+	HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
+   HB_EXPR_PTR pArg = pParms->value.asList.pExprList;
+	
+   if( pArg->ExprType == HB_ET_STRING )
+   {
+   	HB_EXPR_PTR pExpr = hb_compExprNewLong( pArg->value.asString.string[0] );
+
+     	hb_compExprFree( pParms, HB_MACRO_PARAM );
+     	hb_compExprFree( pSelf->value.asFunCall.pFunName, HB_MACRO_PARAM );
+      memcpy( pSelf, pExpr, sizeof( HB_EXPR ) );
+      hb_xfree( pExpr );
+      return TRUE;
+	}
+	return FALSE;
+}

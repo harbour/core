@@ -396,7 +396,7 @@ HB_EXPR_PTR hb_compExprNewMacro( HB_EXPR_PTR pMacroExpr, unsigned char cMacroOp,
 	  BOOL bUseTextSubst;
 	  
 	  szDupl = hb_strupr( hb_strdup( szName ) );
-          if( ! hb_compExprIsValidMacro( szDupl, &bUseTextSubst ) )
+          if( ! hb_compExprIsValidMacro( szDupl, &bUseTextSubst, NULL ) )
 	    hb_compErrorMacro( szName );
 	  hb_xfree( szDupl );
 

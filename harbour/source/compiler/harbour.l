@@ -389,17 +389,20 @@ Separator     {SpaceTab}
                unput( yytext[ yyleng-1 ] );
                return BREAK;
              }
-%{
+<BREAK_>[\[] {  BEGIN 0;
 /* NOTE: Clipper does not like break[] in any context
  *       There are no resons to limit this use in Harbour.
  */
-/*
-<BREAK_>[\[] {  BEGIN 0;
                unput( yytext[ yyleng-1 ] );
-               hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_SYNTAX, yytext, NULL );
+               if( HB_COMP_ISSUPPORTED( HB_COMPFLAG_HARBOUR ) )
+               {
+                  yylval.string = hb_compIdentifierNew( "BREAK", TRUE );
+                  hb_comp_iState =IDENTIFIER;
+                  return IDENTIFIER;
+               }
+               else
+                  hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_SYNTAX, yytext, NULL );
              }
-*/
-%}
 <BREAK_>(":="|"+="|"-="|"->"|"*="|"/="|"^="|"==") { /* operators */
                BEGIN 0;
                yylval.string = hb_compIdentifierNew( "BREAK", TRUE );

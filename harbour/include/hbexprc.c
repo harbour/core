@@ -416,7 +416,7 @@ ULONG hb_compExprReduceList( HB_EXPR_PTR pExpr )
    return ulCnt;
 }
 
-BOOL hb_compExprIsValidMacro( char * szText, BOOL *pbUseTextSubst )
+BOOL hb_compExprIsValidMacro( char * szText, BOOL *pbUseTextSubst, HB_MACRO_DECL )
 {
    char * pTmp = szText;
    BOOL bTextSubst;
@@ -428,11 +428,15 @@ BOOL hb_compExprIsValidMacro( char * szText, BOOL *pbUseTextSubst )
       /* Check if macro operator is used inside a string
        * Macro operator is ignored if it is the last char or
        * next char is '(' e.g. "this is &(ignored)"
+       * (except if strict Clipper compatibility mode is enabled)
        *
        * NOTE: This uses _a-zA-Z pattern to check for
        * beginning of a variable name
        */
 
+      if( ! HB_COMP_ISSUPPORTED(HB_COMPFLAG_HARBOUR) )
+         *pbUseTextSubst = TRUE;	/* always macro substitution in Clipper */
+         
       ++pTmp;
       bTextSubst = ( *pTmp == '_' || (*pTmp >= 'A' && *pTmp <= 'Z') || (*pTmp >= 'a' && *pTmp <= 'z') );
       /* NOTE: All variables are assumed memvars in macro compiler -
@@ -442,7 +446,7 @@ BOOL hb_compExprIsValidMacro( char * szText, BOOL *pbUseTextSubst )
       {
 #if defined( HB_MACRO_SUPPORT )
          HB_SYMBOL_UNUSED( bMacroText );
-	 *pbUseTextSubst = TRUE;	/* valid macro expression */
+	      *pbUseTextSubst = TRUE;	/* valid macro expression */
          return TRUE;    /*there is no need to check all '&' occurences */
 #else
          /* There is a valid character after '&' that can be used in
