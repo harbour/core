@@ -3831,7 +3831,6 @@ void hb_vmPushString( char * szText, ULONG length )
 
 void hb_vmPushStringPcode( char * szText, ULONG length )
 {
-   char * szTemp;
    PHB_ITEM pStackTopItem = hb_stackTopItem();
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmPushStringPcode(%s, %lu)", szText, length));

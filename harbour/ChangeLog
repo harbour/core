@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
    * source/rtl/saverest.c
+   * include/hbapi.h
+   * source/vm/extend.c
+     * hb_retcconst() and hb_retcbuffer() renamed into
+	
        instructions.
 
 2002-01-29 10:00 UTC+0100 Antonio Linares <alinares@fivetech.com>
