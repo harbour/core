@@ -1576,7 +1576,6 @@ static void hb_vmDivide( void )
 
    if( HB_IS_NUMERIC( hb_stack.pPos - 1 ) && HB_IS_NUMERIC( hb_stack.pPos - 2 ) )
    {
-      BOOL bIntegerOperands = !HB_IS_DOUBLE( hb_stack.pPos - 1 ) && !HB_IS_DOUBLE( hb_stack.pPos - 2 );
       double d2 = hb_vmPopNumber();
       double d1 = hb_vmPopNumber();
 
@@ -1593,11 +1592,16 @@ static void hb_vmDivide( void )
       else
       {
          /* If all both operand was integer and the result is an integer, too,
-            push the number without decimals. Clipper compatible. */
+            push the number without decimals. Clipper compatible. Actually,
+            this is not Clipper compatible. The only time Clipper returns 0
+            decimal places is for compiler optimized integer division with an
+            integer result. Therefore this code is not needed and has been
+            removed - David G. Holm <dholm@jsd-llc.com>
          if( bIntegerOperands && fmod( d1, d2 ) == 0.0 )
             hb_vmPushNumber( d1 / d2, 0 );
          else
-            hb_vmPushNumber( d1 / d2, hb_set.HB_SET_DECIMALS );
+         */
+         hb_vmPushNumber( d1 / d2, hb_set.HB_SET_DECIMALS );
       }
    }
 

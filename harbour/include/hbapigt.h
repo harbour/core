@@ -95,7 +95,7 @@ typedef enum
    INKEY_RUP            = 16,   /* Mouse Right Click Up */
    INKEY_KEYBOARD       = 128,  /* Keyboard Events */
    INKEY_ALL            = 159,  /* All Mouse and Keyboard Events */
-   INKEY_EXTENDED       = 256   /* Extended Keyboard Events */
+   INKEY_RAW            = 256   /* Minimally Decoded Keyboard Events */
 } HB_inkey_enum;
 
 /* Cursor style constants */

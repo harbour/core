@@ -1212,8 +1212,13 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
       if( iWidth > 90 )
          iWidth = 90;
 
+      /* Limit the number of decimal places. */
       if( hb_set.HB_SET_FIXED )
+         /* If fixed mode is enabled, always use the default. */
          iDec = hb_set.HB_SET_DECIMALS;
+      else if( iDec > 9 )
+         /* Otherwise, the maximum is 9. */
+         iDec = 9;
 
       if( pWidth )
       {

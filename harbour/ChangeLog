@@ -1,3 +1,21 @@
+2000-05-02 01:45 GMT-4 David G. Holm <dholm@jsd-llc.com>
+
+  * include/hbapigt.h
+    ! Changed INKEY_EXTENDED to INKEY_RAW to match inkey.ch.
+
+  * source/vm/hvm.c
+    ! Removed integer parameter test for 0 decimal places from division
+      for 100% Clipper compatibility (Clipper only does this for compiler
+      optimized integer division with an integer result).
+
+  * source/vm/itemapi.c
+    ! Default numeric to string conversion must never use more than 9
+      decimal places in order to be Clipper compatible.
+
+  * tests/teststr.c
+    + Added code to make it easier to compare Harbour and Clipper results
+      and to deal with the sometimes wrong results from HB_OSNEWLINE().
+
 20000501-20:50 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
    * source/compiler/harbour.l
      + Added "as char" and "as string" as acceptable alternative to "as character"
