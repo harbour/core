@@ -405,7 +405,7 @@ static ERRCODE defEval( AREAP pArea, LPDBEVALINFO pEvalInfo )
       }
       return SUCCESS;
    }
-      
+
    if( !pEvalInfo->dbsci.fRest || !hb_itemGetL( pEvalInfo->dbsci.fRest ) )
       SELF_GOTOP( pArea );
 
@@ -469,9 +469,9 @@ static ERRCODE defEvalBlock( AREAP pArea, PHB_ITEM pBlock )
       return FAILURE;
    }
 
-   hb_vmPushSymbol( &hb_symEval ); 
+   hb_vmPushSymbol( &hb_symEval );
    hb_vmPush( pBlock );
-   hb_vmDo( 0 ); 
+   hb_vmDo( 0 );
    if( !pArea->valResult )
       pArea->valResult = hb_itemNew( NULL );
    hb_itemCopy( pArea->valResult, &hb_stack.Return );
@@ -741,7 +741,7 @@ static ERRCODE defSkip( AREAP pArea, LONG lToSkip )
             return SUCCESS;
       }
    }
-   
+
    return SELF_SKIPRAW( pArea, lToSkip );
 }
 
@@ -1434,7 +1434,7 @@ void hb_rddShutDown( void )
  *      of a file's structure.The first array will consist of the
  *      names of the fields in the current work area.All other arrays
  *      are optional and will be filled with the corrensponding data.
- *      This function will return zero if no parameters are specified 
+ *      This function will return zero if no parameters are specified
  *      or if no database is avaliable in the current work area.Otherwise,
  *      the number of fields or the lenght of the shortest array argument,
  *      witchever is smaller, will be returned.
@@ -1446,7 +1446,7 @@ void hb_rddShutDown( void )
  *
  *         dbGoTop()
  *         nFields:=aFields(aNames,aTypes,aLens,aDecs)
- *         
+ *
  *         ? "Number of fields", nFields
  *
  *         RETURN NIL
@@ -1550,7 +1550,7 @@ HARBOUR HB_AFIELDS( void )
  *      returned.
  *  $EXAMPLES$
  *      FUNCTION Main()
- *         
+ *
  *      USE Test
  *      select 0
  *      qOut( IF(Alias()=="","No Name",Alias()))
@@ -1721,7 +1721,7 @@ HARBOUR HB_DBEVAL( void )
  *  $SYNTAX$
  *      Dbf() --> <cWorkArea>
  *  $ARGUMENTS$
- *      
+ *
  *  $RETURNS$
  *      <cWorkArea> Name of alias
  *  $DESCRIPTION$
@@ -1729,7 +1729,7 @@ HARBOUR HB_DBEVAL( void )
  *      area.
  *  $EXAMPLES$
  *      FUNCTION Main()
- *         
+ *
  *         USE Test
  *
  *         select 0
@@ -1781,7 +1781,7 @@ HARBOUR HB_DBF( void )
  *  $SYNTAX$
  *      BOF() --> <lBegin>
  *  $ARGUMENTS$
- * 
+ *
  *  $RETURNS$
  *      Logical true (.T.) or false (.F.)
  *  $DESCRIPTION$
@@ -1798,7 +1798,7 @@ HARBOUR HB_DBF( void )
  *        DBGOBOTTOM()
  *        ? "Is Eof()",EOF()
  *        USE
- *     RETURN NIL 
+ *     RETURN NIL
  *  $TESTS$
  *  $STATUS$
  *      R
@@ -1845,13 +1845,13 @@ HARBOUR HB_BOF( void )
  *     if made to LASTREC()+1,NETERR() will return a logical true (.T.)
  *     immediately after the DBAPPEND() function. This function does
  *     not unlock the locked records.
- *        If <lLock> is passed a logical true (.T.) value, it will 
+ *        If <lLock> is passed a logical true (.T.) value, it will
  *     release the record locks, which allows the application to main-
  *     tain multiple record locks during an appending operation. The
  *     default for this parameter is a logical false (.F.).
  *  $EXAMPLES$
  *      FUNCTION Main()
- *         
+ *
  *         USE Test
  *         local cName="HARBOUR",nId=10
  *         Test->(DbAppend())
@@ -1892,7 +1892,7 @@ HARBOUR HB_DBAPPEND( void )
  *  $SYNTAX$
  *      DbClearFilTer() -> NIL
  *  $ARGUMENTS$
- * 
+ *
  *  $RETURNS$
  *
  *  $DESCRIPTION$
@@ -1939,7 +1939,7 @@ HARBOUR HB_DBCLEARFILTER( void )
  *  $SYNTAX$
  *      DbCloseAll() -> NIL
  *  $ARGUMENTS$
- * 
+ *
  *  $RETURNS$
  *      DBCLOSEALL always return NIL
  *  $DESCRIPTION$
@@ -1986,7 +1986,7 @@ HARBOUR HB_DBCLOSEALL( void )
  *  $SYNTAX$
  *      DbCloseArea() -> NIL
  *  $ARGUMENTS$
- * 
+ *
  *  $RETURNS$
  *
  *  $DESCRIPTION$
@@ -2050,7 +2050,7 @@ HARBOUR HB_DBCLOSEAREA( void )
  *  $SYNTAX$
  *     DBCOMMIT() --> NIL
  *  $ARGUMENTS$
- *     
+ *
  *  $RETURNS$
  *      DBCOMMIT() always returns NIL.
  *  $DESCRIPTION$
@@ -2083,7 +2083,7 @@ HARBOUR HB_DBCLOSEAREA( void )
  *  $SEEALSO$
  *     DBCLOSEALL(),DBCOMMITALL(),DBUNLOCK()
  *  $INCLUDE$
- *     
+ *
  *  $END$
  */
 
@@ -2105,7 +2105,7 @@ HARBOUR HB_DBCOMMIT( void )
  *  $SYNTAX$
  *     DBCOMMIT() --> NIL
  *  $ARGUMENTS$
- *     
+ *
  *  $RETURNS$
  *     DBCOMMIT() always returns NIL.
  *  $DESCRIPTION$
@@ -2141,7 +2141,7 @@ HARBOUR HB_DBCOMMIT( void )
  *  $SEEALSO$
  *     DBCLOSEALL(),DBCOMMIT(),DBUNLOCK()
  *  $INCLUDE$
- *     
+ *
  *  $END$
  */
 
@@ -2167,7 +2167,7 @@ HARBOUR HB_DBCOMMITALL( void )
  *  $SYNTAX$
  *     __DbCONTINUE()   -> NIL
  *  $ARGUMENTS$
- *     
+ *
  *  $RETURNS$
  *     __DbCONTINUE()  Always return nil
  *  $DESCRIPTION$
@@ -2190,7 +2190,7 @@ HARBOUR HB_DBCOMMITALL( void )
  *      condition and want to continue the search for a matching record, use
  *      SKIP and then repeat the original LOCATE statement adding REST as the
  *      scope.
- *     
+ *
  *  $EXAMPLES$
  *     This example scans records in Sales.dbf for a particular
  *      salesman and displays a running total sales amounts:
@@ -2228,7 +2228,7 @@ HARBOUR HB_DBCOMMITALL( void )
  *  $SEEALSO$
  *     EOF(),FOUND()
  *  $INCLUDE$
- *     
+ *
  *  $END$
  */
 
@@ -2272,7 +2272,7 @@ HARBOUR HB___DBCONTINUE()
  *  $ONELINER$
  *      Creates an empty database from a array.
  *  $SYNTAX$
- *     DBCREATE(<cDatabase>, <aStruct>,[<cDriver>],[<lOpen>],[<cAlias>]) --> NIL   
+ *     DBCREATE(<cDatabase>, <aStruct>,[<cDriver>],[<lOpen>],[<cAlias>]) --> NIL
  *  $ARGUMENTS$
  *      <cDatabase> Name of database to be create
  *      <aStruct>   Name of a multidimensional array that contains the a database
@@ -2293,13 +2293,13 @@ HARBOUR HB___DBCONTINUE()
  *
  *      - The fourth subscript value in the second dimension - which contains
  *        the decimal value-must he specified. even 1kw nonnumeric fields.
- * 
+ *
  *      - The second subscript value in the second dimension-which contains
  *        the field data type-must contain a proper value: C, D, L, M or N
  *        It is possible to use additional letters (or clarity (e.g., 'Numeric'
  *        for 'N'): however, the first letter of this array element must
  *        be a proper value.
- * 
+ *
  *        The DBCREATE( ) function does not use the decimal field to
  *        calculate the length of a character held longer than 256. Values
  *        up to the maximum length of a character field (which is 65,519 bytes)
@@ -2356,7 +2356,7 @@ HARBOUR HB_DBCREATE( void )
    szFileName = hb_parc( 1 );
    pStruct = hb_param( 2 , IT_ARRAY );
    uiLen = hb_arrayLen( pStruct );
-   
+
    if( ( strlen( szFileName ) == 0 ) || !pStruct || uiLen == 0 )
    {
       hb_errRT_DBCMD( EG_ARG, 1014, NULL, "DBCREATE" );
@@ -2626,7 +2626,7 @@ HARBOUR HB_DBCREATE( void )
  *  $SYNTAX$
  *     DBDELETE() --> NIL
  *  $ARGUMENTS$
- *     
+ *
  *  $RETURNS$
  *     DBDELETE() always returns NIL.
  *  $DESCRIPTION$
@@ -2648,11 +2648,11 @@ HARBOUR HB_DBCREATE( void )
  *  $TESTS$
  *  $STATUS$
  *     R
- *  $COMPLIANCE$     
+ *  $COMPLIANCE$
  *  $SEEALSO$
- *    DBRECALL() 
+ *    DBRECALL()
  *  $INCLUDE$
- *     
+ *
  *  $END$
  */
 
@@ -2674,7 +2674,7 @@ HARBOUR HB_DBDELETE( void )
  *  $SYNTAX$
  *      DBFILTER() --> cFilter
  *  $ARGUMENTS$
- *     
+ *
  *  $RETURNS$
  *      DBFILTER() returns the filter expression.
  *  $DESCRIPTION$
@@ -2688,8 +2688,8 @@ HARBOUR HB_DBDELETE( void )
  *      SET FILTER TO Id = 1
  *      SELECT Test
  *      //
- *      ? DBFILTER()           
- *      ? TestId->(DBFILTER()) 
+ *      ? DBFILTER()
+ *      ? TestId->(DBFILTER())
  *  $TESTS$
  *  $STATUS$
  *     R
@@ -2697,7 +2697,7 @@ HARBOUR HB_DBDELETE( void )
  *  $SEEALSO$
  *      DBRELATION(),DBRSELECT()
  *  $INCLUDE$
- *     
+ *
  *  $END$
  */
 
@@ -2726,7 +2726,7 @@ HARBOUR HB_DBFILTER( void )
  *  $SYNTAX$
  *      DBGOBOTTOM() --> NIL
  *  $ARGUMENTS$
- *     
+ *
  *  $RETURNS$
  *      DBGOBOTTOM() always returns NIL.
  *  $DESCRIPTION$
@@ -2749,7 +2749,7 @@ HARBOUR HB_DBFILTER( void )
  *  $SEEALSO$
  *      BOF(),EOF(),DBSKIP(),DBSEEK(),DBGOTOP()
  *  $INCLUDE$
- *     
+ *
  *  $END$
  */
 
@@ -2807,7 +2807,7 @@ HARBOUR HB_DBGOBOTTOM( void )
  *  $SEEALSO$
  *     BOF(),EOF(),DBGOTOP(),DBGOBOTTOM(),DBSEEK(),DBSKIP()
  *  $INCLUDE$
- *     
+ *
  *  $END$
  */
 
@@ -2838,7 +2838,7 @@ HARBOUR HB_DBGOTO( void )
  *  $SYNTAX$
  *      DBGOTOP() --> NIL
  *  $ARGUMENTS$
- *     
+ *
  *  $RETURNS$
  *      DBGOTOP() always returns NIL.
  *      This function moves the record pointer in the selected or aliased
@@ -2860,7 +2860,7 @@ HARBOUR HB_DBGOTO( void )
  *  $SEEALSO$
  *      BOF(),EOF(),DBSKIP(),DBSEEK(),DBGOBOTTOM()
  *  $INCLUDE$
- *     
+ *
  *  $END$
  */
 
@@ -3118,14 +3118,14 @@ HARBOUR HB___DBPACK( void )
  *  $SYNTAX$
  *      DBRECALL() --> NIL
  *  $ARGUMENTS$
- *      
+ *
  *  $RETURNS$
  *      DBRECALL() always returns NIL.
  *  $DESCRIPTION$
  *      This function unmarks those records marked for deletion nd reactivates
  *      them in the aliased or selected work area.If a record is DELETED and
  *      the DELETED setting is on, the record will still be visible for a
- *      DBRECALL() provided that the database record pointer has not been 
+ *      DBRECALL() provided that the database record pointer has not been
  *      skipped.Once a record marked for deletion with the DELETE setting ON
  *      has been skipped, it no longer canbe brought back with DBRECALL().
  *  $EXAMPLES$
@@ -3143,7 +3143,7 @@ HARBOUR HB___DBPACK( void )
  *  $SEEALSO$
  *      DBDELETE()
  *  $INCLUDE$
- *      
+ *
  *  $END$
  */
 
@@ -3165,7 +3165,7 @@ HARBOUR HB_DBRECALL( void )
  *  $SYNTAX$
  *      DBRLOCK([<xIdentity>]) --> lSuccess
  *  $ARGUMENTS$
- *      <xIdentity> Record indetifier     
+ *      <xIdentity> Record indetifier
  *  $RETURNS$
  *      DBRLOCK() returns a logical true (.T.) if lock was successful
  *  $DESCRIPTION$
@@ -3193,7 +3193,7 @@ HARBOUR HB_DBRECALL( void )
  *  $SEEALSO$
  *      DBUNLOCK(),DBUNLOCKALL(),FLOCK(),RLOCK()
  *  $INCLUDE$
- *      
+ *
  *  $END$
  */
 
@@ -3226,7 +3226,7 @@ HARBOUR HB_DBRLOCK( void )
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *      DBRLOCKLIST() return a array of lock records 
+ *      DBRLOCKLIST() return a array of lock records
  *  $DESCRIPTION$
  *      This function will return an array of locked records in a given
  *      and active work area.If the return array is an empty array
@@ -3256,7 +3256,7 @@ HARBOUR HB_DBRLOCK( void )
  *  $SEEALSO$
  *      RLOCK(),DBRLOCK(),DBRUNLOCK()
  *  $INCLUDE$
- *      
+ *
  *  $END$
  */
 
@@ -3291,7 +3291,7 @@ HARBOUR HB_DBRLOCKLIST( void )
  *      This function will attempt to unlock the record specified as
  *      <xIdentity>,which in a .DBF format is the record number.If not
  *      specified,them the current active record/data item will be
- *      unlocked       
+ *      unlocked
  *  $EXAMPLES$
  *      FUNCTION Main()
  *      USE Tests New
@@ -3311,7 +3311,7 @@ HARBOUR HB_DBRLOCKLIST( void )
  *  $SEEALSO$
  *      RLOCK(),DBRLOCK(),DBRLOCKLIST()
  *  $INCLUDE$
- *      
+ *
  *  $END$
  */
 
@@ -3387,7 +3387,7 @@ HARBOUR HB_DBRUNLOCK( void )
  *  $SEEALSO$
  *      DBGOBOTTOM(),DBGOTOP(),DBSKIP(),EOF(),BOF(),FOUND()
  *  $INCLUDE$
- *      
+ *
  *  $END$
  */
 
@@ -3461,7 +3461,7 @@ HARBOUR HB_DBSEEK( void )
  *  $SEEALSO$
  *      DBUSEAREA(),SELECT()
  *  $INCLUDE$
- *      
+ *
  *  $END$
  */
 
@@ -3543,7 +3543,7 @@ HARBOUR HB_DBSELECTAREA( void )
  *  $SEEALSO$
  *      DBUSEAREA()
  *  $INCLUDE$
- *      
+ *
  *  $END$
  */
 
@@ -3588,9 +3588,9 @@ HARBOUR HB___DBSETFOUND( void )
  *  $CATEGORY$
  *      Data Base
  *  $ONELINER$
- *      Moves the record pointer in the selected work area. 
+ *      Moves the record pointer in the selected work area.
  *  $SYNTAX$
- *      DBSKIP([<nRecords>]) --> NIL     
+ *      DBSKIP([<nRecords>]) --> NIL
  *  $ARGUMENTS$
  *      <nRecords> Numbers of records to move record pointer.
  *  $RETURNS$
@@ -3618,9 +3618,9 @@ HARBOUR HB___DBSETFOUND( void )
  *  $COMPLIANCE$
  *      This function is CA-CLIPPER compatible
  *  $SEEALSO$
- *    BOF(),DBGOBOTTOM(),DBGOTOP(),DBSEEK(),EOF()    
+ *    BOF(),DBGOBOTTOM(),DBGOTOP(),DBSEEK(),EOF()
  *  $INCLUDE$
- *      
+ *
  *  $END$
  */
 
@@ -3674,7 +3674,7 @@ HARBOUR HB_DBSKIP( void )
  *  $SEEALSO$
  *      DBFILTER(),DBCLEARFILTER()
  *  $INCLUDE$
- *      
+ *
  *  $END$
  */
 
@@ -3713,7 +3713,7 @@ HARBOUR HB_DBSETFILTER( void )
  *  $SYNTAX$
  *      DBSTRUCT() --> aStruct
  *  $ARGUMENTS$
- *      
+ *
  *  $RETURNS$
  *      DBSTRUCT() returns an array pointer to database structure
  *  $DESCRIPTION$
@@ -3837,7 +3837,7 @@ HARBOUR HB_DBTABLEEXT( void )
  *  $SYNTAX$
  *      DBUNLOCK() --> NIL
  *  $ARGUMENTS$
- *      
+ *
  *  $RETURNS$
  *      DBUNLOCK() always returns NIL.
  *  $DESCRIPTION$
@@ -3863,7 +3863,7 @@ HARBOUR HB_DBTABLEEXT( void )
  *  $SEEALSO$
  *      DBUNLOCKALL(),FLOCK(),RLOCK()
  *  $INCLUDE$
- *      
+ *
  *  $END$
  */
 
@@ -3885,7 +3885,7 @@ HARBOUR HB_DBUNLOCK( void )
  *  $SYNTAX$
  *      DBUNLOCKALL() --> NIL
  *  $ARGUMENTS$
- *      
+ *
  *  $RETURNS$
  *      DBUNLOCKALL() always returns NIL.
  *  $DESCRIPTION$
@@ -3913,7 +3913,7 @@ HARBOUR HB_DBUNLOCK( void )
  *  $SEEALSO$
  *      DBUNLOCK(),FLOCK(),RLOCK()
  *  $INCLUDE$
- *      
+ *
  *  $END$
  */
 
@@ -3938,12 +3938,12 @@ HARBOUR HB_DBUNLOCKALL( void )
  *      Opens a work area and uses a database file.
  *  $SYNTAX$
  *      DBUSEAREA( [<lNewArea>], [<cDriver>], <cName>, [<xcAlias>],
- *      [<lShared>], [<lReadonly>]) --> NIL     
+ *      [<lShared>], [<lReadonly>]) --> NIL
  *  $ARGUMENTS$
  *     <lNewArea>  A optional logical expression for the new work area
  *     <cDriver>   Database driver name
- *     <cName>     File Name 
- *     <xcAlias>   Alias name 
+ *     <cName>     File Name
+ *     <xcAlias>   Alias name
  *     <lShared>   Shared/exclusive status flag
  *     <lReadonly> Read-write status flag.
  *  $RETURNS$
@@ -3979,7 +3979,7 @@ HARBOUR HB_DBUNLOCKALL( void )
  *  $SEEALSO$
  *      DBCLOSEAREA(),DBSETDRIVER(),SELECT(),SET()
  *  $INCLUDE$
- *      
+ *
  *  $END$
  */
 
@@ -4188,7 +4188,7 @@ HARBOUR HB_DBUSEAREA( void )
  *  $SYNTAX$
  *      __DbZap()  -> NIL
  *  $ARGUMENTS$
- *      
+ *
  *  $RETURNS$
  *      __DbZap()   will always return nil
  *  $DESCRIPTION$
@@ -4200,8 +4200,8 @@ HARBOUR HB_DBUSEAREA( void )
  *   almost  instantaneous.
  *
  *   To ZAP in a network environment, the current database file must be USEd
- *   EXCLUSIVEly. 
- *      
+ *   EXCLUSIVEly.
+ *
  *  $EXAMPLES$
  *      This example demonstrates a typical ZAP operation in a network
  *      environment:
@@ -4222,9 +4222,9 @@ HARBOUR HB_DBUSEAREA( void )
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *      
+ *
  *  $INCLUDE$
- *      
+ *
  *  $END$
  */
 
@@ -4238,9 +4238,9 @@ HARBOUR HB_DBUSEAREA( void )
  *  $SYNTAX$
  *      ZAP
  *  $ARGUMENTS$
- *      
+ *
  *  $RETURNS$
- *    
+ *
  *  $DESCRIPTION$
  *      This command removes all of the records from the database in the
  *      current work area.This operation also updates any index file in
@@ -4251,7 +4251,7 @@ HARBOUR HB_DBUSEAREA( void )
  *  $EXAMPLES$
  *      USE Tests NEW index Tests
  *      ZAP
- *      USE 
+ *      USE
  *  $TESTS$
  *
  *  $STATUS$
@@ -4261,7 +4261,7 @@ HARBOUR HB_DBUSEAREA( void )
  *  $SEEALSO$
  *      DELETE,PACK,USE
  *  $INCLUDE$
- *      
+ *
  *  $END$
  */
 
@@ -4282,7 +4282,7 @@ HARBOUR HB___DBZAP( void )
  *      Tests the record's deletion flag.
  *  $SYNTAX$
  *      DELETED() --> lDeleted
- *  $ARGUMENTS$    
+ *  $ARGUMENTS$
  *  $RETURNS$
  *      DELETED() return a logical true (.T.) or false (.F.).
  *  $DESCRIPTION$
@@ -4306,7 +4306,7 @@ HARBOUR HB___DBZAP( void )
  *  $SEEALSO$
  *      DBDELETE()
  *  $INCLUDE$
- *      
+ *
  *  $END$
  */
 
@@ -4329,7 +4329,7 @@ HARBOUR HB_DELETED( void )
  *  $SYNTAX$
  *      EOF() --> <lEnd>
  *  $ARGUMENTS$
- * 
+ *
  *  $RETURNS$
  *      Logical true (.T.) or false (.F.)
  *  $DESCRIPTION$
@@ -4344,7 +4344,7 @@ HARBOUR HB_DELETED( void )
  *        DBGOBOTTOM()
  *        ? "Is Eof()",EOF()
  *        USE
- *     RETURN NIL 
+ *     RETURN NIL
  *  $TESTS$
  *  $STATUS$
  *      R
@@ -4374,7 +4374,7 @@ HARBOUR HB_EOF( void )
  *  $SYNTAX$
  *      FCOUNT() --> nFields
  *  $ARGUMENTS$
- *      
+ *
  *  $RETURNS$
  *      FCOUNT() Return the number of fields
  *  $DESCRIPTION$
@@ -4395,7 +4395,7 @@ HARBOUR HB_EOF( void )
  *  $SEEALSO$
  *      FIELDNAME(),TYPE()
  *  $INCLUDE$
- *      
+ *
  *  $END$
  */
 
@@ -4440,7 +4440,7 @@ HARBOUR HB_FCOUNT( void )
  *  $SEEALSO$
  *      FIELDPUT()
  *  $INCLUDE$
- *      
+ *
  *  $END$
  */
 
@@ -4476,7 +4476,7 @@ HARBOUR HB_FIELDGET( void )
  *      This function return the name of the field at the <nPosition>th position.
  *      If the numeric value passed to this function does not correspond to an
  *      existing field in the designated or selected work area,this function
- *      will return a NULL byte.  
+ *      will return a NULL byte.
  *  $EXAMPLES$
  *      FUNCTION Main()
  *        LOCAL x
@@ -4485,7 +4485,7 @@ HARBOUR HB_FIELDGET( void )
  *          ? "Field Name",FieldName(x)
  *        NEXT
  *        USE
- *      RETURN Nil         
+ *      RETURN Nil
  *  $TESTS$
  *  $STATUS$
  *      R
@@ -4493,9 +4493,9 @@ HARBOUR HB_FIELDGET( void )
  *      This function is CA-Clipper compatible.
  *  $SEEALSO$
  *    DBSTRUCT(),FCOUNT(),LEN(),VALTYPE()
- *      
+ *
  *  $INCLUDE$
- *      
+ *
  *  $END$
  */
 
@@ -4555,7 +4555,7 @@ HARBOUR HB_FIELDNAME( void )
  *  $SEEALSO$
  *      FIELDGET(),FIELDPUT()
  *  $INCLUDE$
- *      
+ *
  *  $END$
  */
 
@@ -4601,7 +4601,7 @@ HARBOUR HB_FIELDPOS( void )
  *      <expAssign> is the value to assign to the given field.  The data
  *   type of this expression must match the data type of the designated field
  *   variable.
- *  $RETURNS$    
+ *  $RETURNS$
  *      FIELDPUT() returns the value assigned to the designated field.  If
  *   <nField> does not correspond to the position of any field in the current
  *   database file, FIELDPUT() returns NIL.
@@ -4630,7 +4630,7 @@ HARBOUR HB_FIELDPOS( void )
  *  $SEEALSO$
  *      FIELDGET()
  *  $INCLUDE$
- *      
+ *
  *  $END$
  */
 
@@ -4662,13 +4662,13 @@ HARBOUR HB_FIELDPUT( void )
  *  $SYNTAX$
  *      FLOCK() --> lSuccess
  *  $ARGUMENTS$
- *      
+ *
  *  $RETURNS$
  *      FLOCK() returns true (.T.) if an attempt to lock a database file in USE
  *   in the current work area succeeds; otherwise, it returns false (.F.).
  *   For more information on file locking, refer to the Network Programming
  *   chapter in the Programming and Utilities guide.
- *      
+ *
  *  $DESCRIPTION$
  *      FLOCK() is a database function used in network environments to lock an
  *   open and shared database file, preventing other users from updating the
@@ -4743,7 +4743,7 @@ HARBOUR HB_FIELDPUT( void )
  *  $SEEALSO$
  *      RLOCK()
  *  $INCLUDE$
- *      
+ *
  *  $END$
  */
 
@@ -4774,12 +4774,12 @@ HARBOUR HB_FLOCK( void )
  *  $SYNTAX$
  *      FOUND() --> lSuccess
  *  $ARGUMENTS$
- *      
+ *
  *  $RETURNS$
  *      FOUND() returns true (.T.) if the last search command was successful;
  *   otherwise, it returns false (.F.).
- *      
- *  $DESCRIPTION$     
+ *
+ *  $DESCRIPTION$
  *      FOUND() is a database function that determines whether a search
  *   operation (i.e., FIND, LOCATE, CONTINUE, SEEK, or SET RELATION)
  *   succeeded.  When any of these commands are executed, FOUND() is set to
@@ -4849,7 +4849,7 @@ HARBOUR HB_FLOCK( void )
  *  $SEEALSO$
  *      EOF()
  *  $INCLUDE$
- *      
+ *
  *  $END$
  */
 
@@ -4872,12 +4872,12 @@ HARBOUR HB_FOUND( void )
  *  $SYNTAX$
  *      HEADER() --> nBytes
  *  $ARGUMENTS$
- *      
+ *
  *  $RETURNS$
  *     HEADER() returns the number of bytes in the header of the current
  *   database file as an integer numeric value.  If no database file is in
- *   use, HEADER() returns a zero (0).    
- *  $DESCRIPTION$      
+ *   use, HEADER() returns a zero (0).
+ *  $DESCRIPTION$
  *     HEADER() is a database function that is used with LASTREC(), RECSIZE(),
  *   and DISKSPACE() to create procedures for backing up files.
  *
@@ -4912,7 +4912,7 @@ HARBOUR HB_FOUND( void )
  *  $SEEALSO$
  *      DISKSPACE(),LASTREC(),RECSIZE()
  *  $INCLUDE$
- *      
+ *
  *  $END$
  */
 
@@ -4941,14 +4941,14 @@ HARBOUR HB_HEADER( void )
  *  $SYNTAX$
  *      INDEXORD() --> nOrder
  *  $ARGUMENTS$
- *      
+ *
  *  $RETURNS$
  *     INDEXORD() returns an integer numeric value.  The value returned is
  *   equal to the position of the controlling index in the list of open
  *   indexes for the current work area.  A value of zero indicates that there
  *   is no controlling index and records are being accessed in natural order.
  *   If no database file is open, INDEXORD() will also return a zero.
- *  $DESCRIPTION$      
+ *  $DESCRIPTION$
  *     INDEXORD() is a database function that determines the position of the
  *   controlling index in the list of index files opened by the last
  *   USE...INDEX or SET INDEX TO in the current work area.  It is often
@@ -4957,7 +4957,7 @@ HARBOUR HB_HEADER( void )
  *     By default, INDEXORD() operates on the currently selected work area.  It
  *   will operate on an unselected work area if you specify it as part of an
  *   aliased expression (see example below).
- *  $EXAMPLES$ 
+ *  $EXAMPLES$
  *     This example uses INDEXORD() to save the current order.  After
  *      changing to a new order, it uses the saved value to restore the
  *      original order:
@@ -4984,7 +4984,7 @@ HARBOUR HB_HEADER( void )
  *  $SEEALSO$
  *      INDEXKEY()
  *  $INCLUDE$
- *      
+ *
  *  $END$
  */
 
@@ -4995,6 +4995,7 @@ HARBOUR HB_INDEXORD( void )
    if( pCurrArea )
    {
       pInfo.itmResult = hb_itemPutNI( NULL, 0 );
+      pInfo.itmOrder = NULL;
       SELF_ORDINFO( ( AREAP ) pCurrArea->pArea, DBOI_NUMBER, &pInfo );
       hb_retni( hb_itemGetNI( pInfo.itmResult ) );
       hb_itemRelease( pInfo.itmResult );
@@ -5013,13 +5014,13 @@ HARBOUR HB_INDEXORD( void )
  *  $SYNTAX$
  *          LASTREC() | RECCOUNT()* --> nRecords
  *  $ARGUMENTS$
- *      
- *  $RETURNS$     
+ *
+ *  $RETURNS$
  *     LASTREC() returns the number of physical records in the current database
  *   file as an integer numeric value.  Filtering commands such as SET FILTER
  *   or SET DELETED have no effect on the return value.  LASTREC() returns
  *   zero if there is no database file in USE in the current work area.
- *  $DESCRIPTION$     
+ *  $DESCRIPTION$
  *     LASTREC() is a database function that determines the number of physical
  *   records in the current database file.  LASTREC() is identical to
  *   RECCOUNT() which is supplied as a compatibility function.
@@ -5053,7 +5054,7 @@ HARBOUR HB_INDEXORD( void )
  *  $SEEALSO$
  *      EOF()
  *  $INCLUDE$
- *      
+ *
  *  $END$
  */
 
@@ -5089,13 +5090,13 @@ HARBOUR HB_LOCK( void )
  *  $SYNTAX$
  *      LUPDATE() --> dModification
  *  $ARGUMENTS$
- *      
+ *
  *  $RETURNS$
  *     LUPDATE() returns the date of last change to the open database file in
  *   the current work area.  If there is no database file in USE, LUPDATE()
  *   returns a blank date.
- *      
- *  $DESCRIPTION$     
+ *
+ *  $DESCRIPTION$
  *     LUPDATE() is a database function that determines the date the database
  *   file in the current work area was last modified and CLOSEd.  By default,
  *   LUPDATE() operates on the currently selected work area.  It will operate
@@ -5131,7 +5132,7 @@ HARBOUR HB_LOCK( void )
  *  $SEEALSO$
  *  FIELDNAME(),LASTREC(),RECSIZE()
  *  $INCLUDE$
- *      
+ *
  *  $END$
  */
 
@@ -5158,12 +5159,12 @@ HARBOUR HB_LUPDATE( void )
  *   Setting NETERR() to a specified value allows the runtime error handler
  *   to control the way certain file errors are handled.  For more
  *   information, refer to Errorsys.prg.
- *      
- *  $RETURNS$     
+ *
+ *  $RETURNS$
  *     NETERR() returns true (.T.) if a USE or APPEND BLANK fails.  The initial
  *   value of NETERR() is false (.F.).  If the current process is not running
  *   under a network operating system, NETERR() always returns false (.F.).
- *  $DESCRIPTION$   
+ *  $DESCRIPTION$
  *     NETERR() is a network function.  It is a global flag set by USE,
  *   USE...EXCLUSIVE, and APPEND BLANK in a network environment.  It is used
  *   to test whether any of these commands have failed by returning true
@@ -5207,7 +5208,7 @@ HARBOUR HB_LUPDATE( void )
  *  $SEEALSO$
  *      FLOCK(),RLOCK()
  *  $INCLUDE$
- *      
+ *
  *  $END$
  */
 
@@ -5229,7 +5230,7 @@ HARBOUR HB_NETERR( void )
  *  $SYNTAX$
  *      ORDBAGEXT() --> cBagExt
  *  $ARGUMENTS$
- *      
+ *
  *  $RETURNS$
  *      ORDBAGEXT() returns a character expression.
  *  $DESCRIPTION$
@@ -5239,7 +5240,7 @@ HARBOUR HB_NETERR( void )
  *   current work area.
  *
  *     ORDBAGEXT() supersedes the INDEXEXT() and is not recommended.
- *      
+ *
  *  $EXAMPLES$
  *     USE sample VIA "DBFNTX"
  *     ? ORDBAGEXT()      //  Returns .ntx
@@ -5253,7 +5254,7 @@ HARBOUR HB_NETERR( void )
  *  $SEEALSO$
  *      INDEXEXT(),ORDBAGNAME()
  *  $INCLUDE$
- *      
+ *
  *  $END$
  */
 
@@ -5263,7 +5264,7 @@ HARBOUR HB_ORDBAGEXT( void )
    AREAP pTempArea;
    USHORT uiSize, uiRddID;
    DBORDERINFO pInfo;
-
+   pInfo.itmOrder = NULL;
    if( !pCurrArea )
    {
       hb_rddCheck();
@@ -5323,11 +5324,11 @@ HARBOUR HB_ORDBAGEXT( void )
  *
  *     <cOrderName> is a character string that represents the name of the
  *   target Order whose Order Bag name is sought.
- *      
- *  $RETURNS$    
+ *
+ *  $RETURNS$
  *     ORDBAGNAME() returns a character string, the Order Bag name of the
  *   specific Order.
- *  $DESCRIPTION$     
+ *  $DESCRIPTION$
  *     ORDBAGNAME() is an Order management function that lets you access the
  *   name of the Order Bag in which <cOrderName> resides.  You may identify
  *   the Order as a character string or with an integer that represents its
@@ -5361,7 +5362,7 @@ HARBOUR HB_ORDBAGEXT( void )
  *  $SEEALSO$
  *      ORDBAGEXT()
  *  $INCLUDE$
- *      
+ *
  *  $END$
  */
 
@@ -5420,9 +5421,9 @@ HARBOUR HB_ORDBAGNAME( void )
  *   next  record is processed.Duplicate keys values are not added to the
  *   index file when a FOR condition is Used.
  *  $RETURNS$
- *      
+ *
  *  $DESCRIPTION$
- *      
+ *
  *  $EXAMPLES$
  *
  *  $TESTS$
@@ -5432,9 +5433,9 @@ HARBOUR HB_ORDBAGNAME( void )
  *  $COMPLIANCE$
  *      ORDCONDSET() is CA-Clipper compliant
  *  $SEEALSO$
- *      
+ *
  *  $INCLUDE$
- *      
+ *
  *  $END$
  */
 
@@ -5465,7 +5466,7 @@ HARBOUR HB_ORDCONDSET( void )
       }
       else
          pOrderCondInfo->itmCobFor = NULL;
-      if( ISLOG( 3 ) ) 
+      if( ISLOG( 3 ) )
          pOrderCondInfo->fAll = hb_parl( 3 );
       else
          pOrderCondInfo->fAll = TRUE;
@@ -5515,7 +5516,7 @@ HARBOUR HB_ORDCONDSET( void )
  *  $SYNTAX$
  *     ORDCREATE(<cOrderBagName>,[<cOrderName>],    <cExpKey>,
  *      [<bExpKey>], [<lUnique>]) --> NIL
- *  $ARGUMENTS$    
+ *  $ARGUMENTS$
  *     <cOrderBagName> is the name of a disk file containing one or more
  *   Orders.  You may specify <cOrderBagName> as the filename with or without
  *   the pathname or extension.  If you do not include the extension as part
@@ -5541,7 +5542,7 @@ HARBOUR HB_ORDCONDSET( void )
  *   global _SET_UNIQUE setting is used.
  *  $RETURNS$
  *      ORDCREATE() always returns NIL.
- *  $DESCRIPTION$     
+ *  $DESCRIPTION$
  *     ORDCREATE() is an Order management function that creates an Order in the
  *   current work area.  It works like DBCREATEINDEX() except that it lets
  *   you create Orders in RDDs that recognize multiple-Order Bags.
@@ -5608,7 +5609,7 @@ HARBOUR HB_ORDCONDSET( void )
  *  $SEEALSO$
  *      DBCREATEINDEX()
  *  $INCLUDE$
- *      
+ *
  *  $END$
  */
 
@@ -5656,8 +5657,8 @@ HARBOUR HB_ORDCREATE( void )
  *   Orders.  You may specify <cOrderBagName> as the filename with or without
  *   the pathname or appropriate extension.  If you do not include the
  *   extension as part of <cOrderBagName> HARBOUR uses the default
- *   extension of the current RDD.    
- *  $RETURNS$     
+ *   extension of the current RDD.
+ *  $RETURNS$
  *      ORDDESTROY() always returns NIL.
  *  $DESCRIPTION$
  *     ORDDESTROY() is an Order management function that removes a specified
@@ -5687,7 +5688,7 @@ HARBOUR HB_ORDCREATE( void )
  *  $SEEALSO$
  *      ORDCREATE()
  *  $INCLUDE$
- *      
+ *
  *  $END$
  */
 
@@ -5715,8 +5716,8 @@ HARBOUR HB_ORDDESTROY( void )
  *  $SYNTAX$
  *     ORDFOR(<cOrderName> | <nOrder>
  *      [, <cOrderBagName>]) --> cForExp
- *      
- *  $ARGUMENTS$     
+ *
+ *  $ARGUMENTS$
  *     <cOrderName> is the name of the target Order, whose cForExp is
  *   sought.
  *
@@ -5728,14 +5729,14 @@ HARBOUR HB_ORDDESTROY( void )
  *   the pathname or appropriate extension.  If you do not include the
  *   extension as part of <cOrderBagName> HARBOUR uses the default
  *   extension of the current RDD.
- *  $RETURNS$     
+ *  $RETURNS$
  *     ORDFOR() returns a character expression, cForExp, that represents the
  *   FOR condition of the specified Order.  If the Order was not created
  *   using the FOR clause the return value will be an empty string ("").  If
  *   the database driver does not support the FOR condition, it may either
  *   return an empty string ("") or raise an "unsupported function" error,
  *   depending on the driver.
- *  $DESCRIPTION$     
+ *  $DESCRIPTION$
  *     ORDFOR() is an Order management function that returns the character
  *   string, cForExp, that represents the logical FOR condition of the Order,
  *   <cOrderName> or <nOrder>.
@@ -5757,7 +5758,7 @@ HARBOUR HB_ORDDESTROY( void )
  *  $SEEALSO$
  *      ORDKEY(),ORDCREATE(),ORDNAME(),ORDNUMBER()
  *  $INCLUDE$
- *      
+ *
  *  $END$
  */
 
@@ -5792,10 +5793,10 @@ HARBOUR HB_ORDFOR( void )
  *      Data Base
  *  $ONELINER$
  *      Return the key expression of an Order
- *  $SYNTAX$     
+ *  $SYNTAX$
  *     ORDKEY(<cOrderName> | <nOrder>
  *      [, <cOrderBagName>]) --> cExpKey
- *  $ARGUMENTS$     
+ *  $ARGUMENTS$
  *     <cOrderName> is the name of an Order, a logical ordering of a
  *   database.
  *
@@ -5807,7 +5808,7 @@ HARBOUR HB_ORDFOR( void )
  *   the pathname or appropriate extension.  If you do not include the
  *   extension as part of <cOrderBagName> HARBOUR uses the default
  *   extension of the current RDD.
- *  $RETURNS$     
+ *  $RETURNS$
  *      Returns a character string, cExpKey.
  *  $DESCRIPTION$
  *     ORDKEY() is an Order management function that returns a character
@@ -5840,7 +5841,7 @@ HARBOUR HB_ORDFOR( void )
  *  $SEEALSO$
  *      ORDFOR(),ORDNAME(),ORDNUMBER()
  *  $INCLUDE$
- *      
+ *
  *  $END$
  */
 
@@ -5875,10 +5876,10 @@ HARBOUR HB_ORDKEY( void )
  *      Data Base
  *  $ONELINER$
  *      Add Orders to the Order List
- *  $SYNTAX$     
+ *  $SYNTAX$
  *     ORDLISTADD(<cOrderBagName>
  *      [, <cOrderName>]) --> NIL
- *  $ARGUMENTS$     
+ *  $ARGUMENTS$
  *     <cOrderBagName> is the name of a disk file containing one or more
  *   Orders.  You may specify <cOrderBagName> as the filename with or without
  *   the pathname or appropriate extension.  If you do not include the
@@ -5889,14 +5890,14 @@ HARBOUR HB_ORDKEY( void )
  *   added to the Order List of the current work area.  If you do not specify
  *   <cOrderName>, all orders in the Order Bag are added to the Order List of
  *   the current work area.
- *  $RETURNS$     
+ *  $RETURNS$
  *      ORDLISTADD() always returns NIL.
  *  $DESCRIPTION$
  *     ORDLISTADD() is an Order management function that adds the contents of
  *   an Order Bag , or a single Order in an Order Bag, to the Order List.
  *   This function lets you extend the Order List without issuing a SET INDEX
  *   command that, first, clears all the active Orders from the Order List.
- * 
+ *
  *     Any Orders already associated with the work area continue to be active.
  *   If the newly opened Order Bag contains the only Order associated with
  *   the work area, it becomes the controlling Order; otherwise, the
@@ -5934,7 +5935,7 @@ HARBOUR HB_ORDKEY( void )
  *  $SEEALSO$
  *      DBSETINDEX()
  *  $INCLUDE$
- *      
+ *
  *  $END$
  */
 
@@ -5967,7 +5968,7 @@ HARBOUR HB_ORDLISTADD( void )
  *  $SYNTAX$
  *      ORDLISTCLEAR() --> NIL
  *  $ARGUMENTS$
- *      
+ *
  *  $RETURNS$
  *      ORDLISTCLEAR() always returns NIL.
  *  $DESCRIPTION$
@@ -5976,7 +5977,7 @@ HARBOUR HB_ORDLISTADD( void )
  *   done, the Order List is empty.
  *
  *    This function supersedes the function DBCLEARINDEX().
- *      
+ *
  *  $EXAMPLES$
  *   USE Sales NEW
  *   SET INDEX TO SaRegion, SaRep, SaCode
@@ -5993,10 +5994,10 @@ HARBOUR HB_ORDLISTADD( void )
  *  $SEEALSO$
  *    DBCLEARINDEX()
  *  $INCLUDE$
- *      
+ *
  *  $END$
  */
- 
+
 HARBOUR HB_ORDLISTCLEAR( void )
 {
    if( pCurrArea )
@@ -6015,7 +6016,7 @@ HARBOUR HB_ORDLISTCLEAR( void )
  *  $SYNTAX$
  *      ORDLISTREBUILD() --> NIL
  *  $ARGUMENTS$
- *      
+ *
  *  $RETURNS$
  *      ORDLISTREBUILD() always returns NIL.
  *  $DESCRIPTION$
@@ -6026,7 +6027,7 @@ HARBOUR HB_ORDLISTCLEAR( void )
  *
  *     Unlike ORDCREATE(), this function rebuilds all Orders in the Order List.
  *   It is equivalent to REINDEX.
- *      
+ *
  *  $EXAMPLES$
  *   USE Customer NEW
  *   SET INDEX TO CuAcct, CuName, CuZip
@@ -6042,7 +6043,7 @@ HARBOUR HB_ORDLISTCLEAR( void )
  *  $SEEALSO$
  *      ORDCREATE()
  *  $INCLUDE$
- *      
+ *
  *  $END$
  */
 
@@ -6064,7 +6065,7 @@ HARBOUR HB_ORDLISTREBUILD( void )
  *  $SYNTAX$
  *      ORDNAME(<nOrder>[,<cOrderBagName>])
  *      --> cOrderName
- *  $ARGUMENTS$     
+ *  $ARGUMENTS$
  *     <nOrder> is an integer that identifies the position in the Order
  *   List of the target Order whose database name is sought.
  *
@@ -6073,10 +6074,10 @@ HARBOUR HB_ORDLISTREBUILD( void )
  *   the pathname or appropriate extension.  If you do not include the
  *   extension as part of <xcOrderBagName> HARBOUR uses the default
  *   extension of the current RDD.
- *  $RETURNS$     
+ *  $RETURNS$
  *     ORDNAME() returns the name of the specified Order in the current Order
  *   List or the specified Order Bag if opened in the Current Order list.
- *  $DESCRIPTION$     
+ *  $DESCRIPTION$
  *     ORDNAME() is an Order management function that returns the name of the
  *   specified Order in the current Order List.
  *
@@ -6112,7 +6113,7 @@ HARBOUR HB_ORDLISTREBUILD( void )
  *  $SEEALSO$
  *      ORDFOR(),ORDKEY(),ORDNUMBER()
  *  $INCLUDE$
- *      
+ *
  *  $END$
  */
 
@@ -6147,8 +6148,8 @@ HARBOUR HB_ORDNAME( void )
  *      Return the position of an Order in the current Order List
  *  $SYNTAX$
  *     ORDNUMBER(<cOrderName>
- *      [, <cOrderBagName>]) --> nOrderNo     
- *  $ARGUMENTS$     
+ *      [, <cOrderBagName>]) --> nOrderNo
+ *  $ARGUMENTS$
  *     <cOrderName> the name of the specific Order whose position in the
  *   Order List is sought.
  *
@@ -6157,10 +6158,10 @@ HARBOUR HB_ORDNAME( void )
  *   the pathname or appropriate extension.  If you do not include the
  *   extension as part of <cOrderBagName> HARBOUR uses the default
  *   extension of the current RDD.
- *  $RETURNS$     
+ *  $RETURNS$
  *     Returns nOrderNo, an integer that represents the position of the
  *   specified Order in the Order List.
- *  $DESCRIPTION$     
+ *  $DESCRIPTION$
  *     ORDNUMBER() is an Order management function that lets you determine the
  *   position in the current Order List of the specified Order.  ORDNUMBER()
  *   searches the Order List in the current work area and returns the
@@ -6188,7 +6189,7 @@ HARBOUR HB_ORDNAME( void )
  *  $SEEALSO$
  *      INDEXORD()
  *  $INCLUDE$
- *      
+ *
  *  $END$
  */
 
@@ -6224,8 +6225,8 @@ HARBOUR HB_ORDNUMBER( void )
  *  $SYNTAX$
  *     ORDSETFOCUS([<cOrderName> | <nOrder>]
  *      [,<cOrderBagName>]) --> cPrevOrderNameInFocus
- *      
- *  $ARGUMENTS$    
+ *
+ *  $ARGUMENTS$
  *     <cOrderName> is the name of the selected Order, a logical ordering
  *   of a database.  ORDSETFOCUS() ignores any invalid values of
  *   <cOrderName>.
@@ -6240,7 +6241,7 @@ HARBOUR HB_ORDNUMBER( void )
  *   extension of the current RDD.
  *  $RETURNS$
  *      ORDSETFOCUS() returns the Order Name of the previous controlling Order.
- *  $DESCRIPTION$     
+ *  $DESCRIPTION$
  *     ORDSETFOCUS() is an Order management function that returns the Order
  *   Name of the previous controlling Order and optionally sets the focus to
  *   an new Order.
@@ -6271,9 +6272,9 @@ HARBOUR HB_ORDNUMBER( void )
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *      
+ *
  *  $INCLUDE$
- *      
+ *
  *  $END$
  */
 
@@ -6305,7 +6306,7 @@ HARBOUR HB_ORDSETFOCUS( void )
  *      Return an array of the available Replaceable Database Drivers
  *  $SYNTAX$
  *      RDDLIST([<nRDDType>]) --> aRDDList
- *  $ARGUMENTS$    
+ *  $ARGUMENTS$
  *     <nRDDType> is an integer that represents the type of the RDD you
  *   wish to list.  The constants RDT_FULL and RDT_TRANSFER represent the two
  *   types of RDDs currently available.
@@ -6326,10 +6327,10 @@ HARBOUR HB_ORDSETFOCUS( void )
  *   drivers to open a file in a work area.  The SDF and DELIM drivers are
  *   examples of this type of RDD.  They are only used in the implementation
  *   of APPEND FROM and COPY TO with SDF or DELIMITED files.
- *  $RETURNS$    
+ *  $RETURNS$
  *     RDDLIST() returns a one-dimensional array of the RDD names registered
  *   with the application as <nRDDType>.
- *  $DESCRIPTION$     
+ *  $DESCRIPTION$
  *     RDDLIST() is an RDD function that returns a one-dimensional array that
  *   lists the available RDDs.
  *
@@ -6365,7 +6366,7 @@ HARBOUR HB_ORDSETFOCUS( void )
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *      
+ *
  *  $INCLUDE$
  *      RDDSYS.CH
  *  $END$
@@ -6401,11 +6402,11 @@ HARBOUR HB_RDDLIST( void )
  *  $SYNTAX$
  *      RDDNAME() --> cRDDName
  *  $ARGUMENTS$
- *      
- *  $RETURNS$     
+ *
+ *  $RETURNS$
  *      Returns a character string, cRDDName, the registered name of the active
  *   RDD in the current or specified work area.
- *  $DESCRIPTION$     
+ *  $DESCRIPTION$
  *      RDDNAME() is an RDD function that returns a character string, cRDDName,
  *   the name of the active RDD in the current or specified work area.
  *
@@ -6427,7 +6428,7 @@ HARBOUR HB_RDDLIST( void )
  *  $SEEALSO$
  *      RDDLIST()
  *  $INCLUDE$
- *      
+ *
  *  $END$
  */
 
@@ -6483,16 +6484,16 @@ HARBOUR HB_RDDREGISTER( void )
  *  $SYNTAX$
  *      RDDSETDEFAULT([<cNewDefaultRDD>])
  *      --> cPreviousDefaultRDD
- *      
- *  $ARGUMENTS$     
+ *
+ *  $ARGUMENTS$
  *      <cNewDefaultRDD> is a character string, the name of the RDD that is
  *   to be made the new default RDD in the application.
- *  $RETURNS$     
+ *  $RETURNS$
  *      RDDSETDEFAULT() returns a character string, cPreviousDefaultRDD, the
  *   name of the previous default driver.  The default driver is the driver
  *   that HARBOUR uses if you do not explicitly specify an RDD with the
  *   VIA clause of the USE command.
- *  $DESCRIPTION$     
+ *  $DESCRIPTION$
  *      RDDSETDEFAULT() is an RDD function that sets or returns the name of the
  *   previous default RDD driver and, optionally, sets the current driver to
  *   the new RDD driver specified by cNewDefaultRDD.  If <cNewDefaultDriver>
@@ -6515,7 +6516,7 @@ HARBOUR HB_RDDREGISTER( void )
  *  $SEEALSO$
  *      DBSETDRIVER()
  *  $INCLUDE$
- *      
+ *
  *  $END$
  */
 
@@ -6553,15 +6554,15 @@ HARBOUR HB_RDDSETDEFAULT( void )
  *  $SYNTAX$
  *      RECCOUNT()* | LASTREC() --> nRecords
  *  $ARGUMENTS$
- *      
+ *
  *  $RETURNS$
  *     RECCOUNT() returns the number of physical records in the current
  *   database file as an integer numeric value.  Filtering commands such as
  *   SET FILTER or SET DELETED have no effect on the return value.
  *   RECCOUNT() returns zero if there is no database file open in the current
  *   work area.
- *      
- *  $DESCRIPTION$*     
+ *
+ *  $DESCRIPTION$*
  *     RECCOUNT() is a database function that is a synonym for LASTREC().  By
  *   default, RECCOUNT() operates on the currently selected work area.  It
  *   will operate on an unselected work area if you specify it as part of an
@@ -6593,7 +6594,7 @@ HARBOUR HB_RDDSETDEFAULT( void )
  *  $SEEALSO$
  *      EOF(),LASTREC()
  *  $INCLUDE$
- *      
+ *
  *  $END$
  */
 
@@ -6619,11 +6620,11 @@ HARBOUR HB_RECCOUNT( void )
  *  $SYNTAX$
  *      RECNO() --> Identity
  *  $ARGUMENTS$
- *      
- *  $RETURNS$     
+ *
+ *  $RETURNS$
  *     RECNO() returns the identity found at the position of the record
  *   pointer.
- *  $DESCRIPTION$     
+ *  $DESCRIPTION$
  *     RECNO() is a database function that returns the identity found at the
  *   current position of the record pointer.  Identity is a unique value
  *   guaranteed by the structure of the data file to reference a specific
@@ -6652,7 +6653,7 @@ HARBOUR HB_RECCOUNT( void )
  *  $SEEALSO$
  *      DBGOTO()
  *  $INCLUDE$
- *      
+ *
  *  $END$
  */
 
@@ -6677,12 +6678,12 @@ HARBOUR HB_RECNO( void )
  *  $SYNTAX$
  *      RECSIZE() --> nBytes
  *  $ARGUMENTS$
- *      
- *  $RETURNS$     
+ *
+ *  $RETURNS$
  *     RECSIZE() returns, as a numeric value, the record length, in bytes, of
  *   the database file open in the current work area.  RECSIZE() returns zero
  *   if no database file is open.
- *  $DESCRIPTION$    
+ *  $DESCRIPTION$
  *     RECSIZE() is a database function that determines the length of a record
  *   by summing the lengths of each field then adding one for the DELETED()
  *   status flag.  When this value is multiplied by LASTREC(), the product is
@@ -6720,7 +6721,7 @@ HARBOUR HB_RECNO( void )
  *  $SEEALSO$
  *  DISKSPACE(),FIELDNAME(),HEADER(),LASTREC()
  *  $INCLUDE$
- *      
+ *
  *  $END$
  */
 
@@ -6749,11 +6750,11 @@ HARBOUR HB_RECSIZE( void )
  *  $SYNTAX$
  *      RLOCK() --> lSuccess
  *  $ARGUMENTS$
- *      
- *  $RETURNS$     
+ *
+ *  $RETURNS$
  *     RLOCK() returns true (.T.) if the record lock is obtained; otherwise, it
  *   returns false (.F.).
- *  $DESCRIPTION$     
+ *  $DESCRIPTION$
  *     RLOCK() is a network function that locks the current record, preventing
  *      other users from updating the record until the lock is released.
  *      RLOCK() provides a shared lock, allowing other users read-only access to
@@ -6826,7 +6827,7 @@ HARBOUR HB_RECSIZE( void )
  *  $SEEALSO$
  *      FLOCK()
  *  $INCLUDE$
- *      
+ *
  *  $END$
  */
 
@@ -6862,10 +6863,10 @@ HARBOUR HB_RLOCK( void )
  *      SELECT([<cAlias>]) --> nWorkArea
  *  $ARGUMENTS$
  *      <cAlias> is the target work area alias name.
- *  $RETURNS$     
+ *  $RETURNS$
  *      SELECT() returns the work area of the specified alias as a integer
  *      numeric value.
- *  $DESCRIPTION$     
+ *  $DESCRIPTION$
  *      SELECT() is a database function that determines the work area number of
  *      an alias.  The number returned can range from zero to 250.  If <cAlias>
  *      is not specified, the current work area number is returned.  If <cAlias>
@@ -6899,7 +6900,7 @@ HARBOUR HB_RLOCK( void )
  *  $SEEALSO$
  *      ALIAS(),USED()
  *  $INCLUDE$
- *      
+ *
  *  $END$
  */
 
@@ -6929,11 +6930,11 @@ HARBOUR HB_SELECT( void )
  *  $SYNTAX$
  *      USED() --> lDbfOpen
  *  $ARGUMENTS$
- *      
- *  $RETURNS$     
+ *
+ *  $RETURNS$
  *      USED() returns true (.T.) if there is a database file in USE; otherwise,
  *      it returns false (.F.).
- *  $DESCRIPTION$     
+ *  $DESCRIPTION$
  *      USED() is a database function that determines whether there is a
  *      database file in USE in a particular work area.  By default, USED()
  *      operates on the currently selected work area.  It will operate on an
@@ -6955,7 +6956,7 @@ HARBOUR HB_SELECT( void )
  *  $SEEALSO$
  *      ALIAS(),SELECT()
  *  $INCLUDE$
- *      
+ *
  *  $END$
  */
 
@@ -6974,16 +6975,16 @@ HARBOUR HB_USED( void )
  *  $SYNTAX$
  *      __RDDSETDEFAULT([<cNewDefaultRDD>])
  *      --> cPreviousDefaultRDD
- *      
- *  $ARGUMENTS$     
+ *
+ *  $ARGUMENTS$
  *      <cNewDefaultRDD> is a character string, the name of the RDD that is
  *      to be made the new default RDD in the application.
- *  $RETURNS$     
+ *  $RETURNS$
  *      __RDDSETDEFAULT() returns a character string, cPreviousDefaultRDD, the
  *      name of the previous default driver.  The default driver is the driver
  *      that HARBOUR uses if you do not explicitly specify an RDD with the
  *      VIA clause of the USE command.
- *  $DESCRIPTION$     
+ *  $DESCRIPTION$
  *      RDDSETDEFAULT() is an RDD function that sets or returns the name of the
  *      previous default RDD driver and, optionally, sets the current driver to
  *      the new RDD driver specified by cNewDefaultRDD.  If <cNewDefaultDriver>
@@ -7006,7 +7007,7 @@ HARBOUR HB_USED( void )
  *  $SEEALSO$
  *      DBSETDRIVER()
  *  $INCLUDE$
- *      
+ *
  *  $END$
  */
 
