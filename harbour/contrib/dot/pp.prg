@@ -160,7 +160,7 @@ STATIC aCommRules    := {}, aCommResults  := {}
 STATIC nPendingLines := 0, aPendingLines  := {}
 
 STATIC bDbgMatch := .F., bDbgExp := .F., bDbgPPO := .F., bLoadRules := .T., ;
-       bCount := .T., bCCH := .F., bPP := .F., bCompile := .F.
+       bCount := .T., bCCH := .F., bCompile := .F.
 
 STATIC nIfDef := 0, abIfDef := {}, nIf := 0, abIf := {}
 
@@ -186,7 +186,7 @@ STATIC s_sModule, s_aInitExit := { {}, {} }
 
 PROCEDURE Main( sSource, p1, p2, p3, p4, p5, p6, p7, p8, p9 )
 
-   LOCAL sIncludePath, nNext, sPath, nBlock, nBlocks, sSwitch := ""
+   LOCAL sIncludePath, nNext, sPath, sSwitch := ""
 
    IF p1 != NIL
       sSwitch += p1
@@ -236,9 +236,6 @@ PROCEDURE Main( sSource, p1, p2, p3, p4, p5, p6, p7, p8, p9 )
    IF ! Empty( sSwitch )
       sSwitch := Upper( sSwitch )
 
-      IF "-P" $ sSwitch
-         bPP := .T.
-      ENDIF
       IF "-U" $ sSwitch
          bLoadRules := .F.
       ENDIF
@@ -270,7 +267,7 @@ PROCEDURE Main( sSource, p1, p2, p3, p4, p5, p6, p7, p8, p9 )
       Alert( "Not using standard rules." )
    ENDIF
 
-   IF sSource != NIL //bPP
+   IF sSource != NIL
       nRow := Row()
       nCol := Col()
 
@@ -558,7 +555,7 @@ RETURN
 PROCEDURE CompileLine( sPPed, nLine )
 
    LOCAL nNext, sBlock, sTemp
-   LOCAL nLen, sLeft, sSymbol
+   LOCAL sSymbol
    LOCAL nIncrease := 0, nOffset := 0
    LOCAL nAt, nPos, cChr
 
@@ -723,7 +720,7 @@ RETURN ""
 
 PROCEDURE PP_LocalParams( aVars )
 
-   LOCAL nVar, nVars := Len( aVars ), nAt, xInit, nParams
+   LOCAL nVar, nVars := Len( aVars ), xInit, nParams
 
    FOR nVar := 1 TO nVars
       IF ( nParams := Len( s_aParams ) ) > 0
@@ -749,7 +746,7 @@ RETURN
 
 PROCEDURE PP_Params( aVars )
 
-   LOCAL nVar, nVars := Len( aVars ), nAt, xInit, nParams
+   LOCAL nVar, nVars := Len( aVars ), xInit, nParams
 
    FOR nVar := 1 TO nVars
       IF ( nParams := Len( s_aParams ) ) > 0
@@ -2849,12 +2846,11 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
             ENDDO
 
             IF ( aMP[2] == 0 )
-               LOOP
-
                IF bDbgMatch
                   ? "Statement failed, try next rule..."
                   WAIT
                ENDIF
+               LOOP
             ENDIF
          ENDIF
       ENDIF
@@ -3530,7 +3526,7 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
                sGrabber == "<=" .OR. sGrabber == "+=" .OR. sGrabber == "-=" .OR. sGrabber == "*=" .OR. sGrabber == "^=" ) ;
              .AND. ( sNextAnchor == NIL .OR. ( ! ( sNextAnchor == sGrabber ) ) )
 
-         sExp  += sGrabber
+         sExp += sGrabber
 
          IF bDbgExp
             ? "Grabber: '" + sExp + "'"
