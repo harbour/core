@@ -59,7 +59,7 @@ ERRCODE dbfntxGoBottom( AREAP pArea )
    return SUCCESS;
 }
 
-ERRCODE dbfntxGoTo( AREAP pArea, LONG uRecNo )
+ERRCODE dbfntxGoTo( AREAP pArea, LONG lRecNo )
 {
    printf( "Calling dbfntxGoTo()\n" );
    return SUCCESS;
@@ -71,9 +71,21 @@ ERRCODE dbfntxGoTop( AREAP pArea )
    return SUCCESS;
 }
 
+ERRCODE dbfntxSkip( AREAP pArea, LONG lToSkip )
+{
+   printf( "Calling dbfntxSkip()\n" );
+   return SUCCESS;
+}
+
 ERRCODE dbfntxClose( AREAP pArea )
 {
    printf( "Calling dbfntxClose()\n" );
+   return SUCCESS;
+}
+
+ERRCODE dbfntxCreate( AREAP pArea, DBOPENINFOP pCreateInfo )
+{
+   printf( "Calling dbfntxCreate()\n" );
    return SUCCESS;
 }
 
@@ -92,7 +104,9 @@ static RDDFUNCS ntxTable = { dbfntxBof,
 			     dbfntxGoBottom,
 			     dbfntxGoTo,
 			     dbfntxGoTop,
+			     dbfntxSkip,
 			     dbfntxClose,
+			     dbfntxCreate,
 			     dbfntxOpen
 			   };
 
@@ -102,10 +116,11 @@ HARBOUR HB_REQUEST_DBFNTX1( void )
 
 HARBOUR HB_DBFNTX_GETFUNCTABLE( void )
 {
+   USHORT * uiCount;
    RDDFUNCS * pTable;
+   *uiCount = RDDFUNCSCOUNT;
 
-   * ( USHORT * ) hb_parnl( 1 ) = RDDFUNCSCOUNT;
-
+   uiCount = ( USHORT * ) hb_parnl( 1 );
    pTable = ( RDDFUNCS * ) hb_parnl( 2 );
    if( pTable )
       hb_rddInherit( pTable, &ntxTable, &ntxSuper, 0 );

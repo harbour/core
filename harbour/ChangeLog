@@ -1,3 +1,8 @@
+19990726-18:24 GMT+1 Bruno Cantero <bruno@issnet.net>
+   * include/rdd.api, source/rdd/dbcmd.c, source/rdd/dbfntx1.c and tests/working/testrdd.prg
+     Added more RDD functions
+     Implemented dynamic WorkAreas
+
 19990726-18:12 GMT+1 Bruno Cantero <bruno@issnet.net>
    * makefile.dos, source/makefile.dos and source/rdd/makefile.dos
      Added RDD support

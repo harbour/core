@@ -1,11 +1,111 @@
+/*
+ * $Id$
+ */
+
 #ifndef HB_RDD_API
 #define HB_RDD_API
 
-// C¢digos devueltos por los m‚todos RDD
+typedef USHORT ERRCODE;
+
+// Return codes for RDD methods
+
 #define SUCCESS 0
 #define FAILURE 1
 
-typedef USHORT ERRCODE;
+// Flags for DBTRANSINFO
+
+#define DBTF_MATCH   0x0001
+#define DBTF_PUTREC  0x0002
+
+// Codes for Locking methods
+
+#define DBLM_EXCLUSIVE	   1
+#define DBLM_MULTIPLE	   2
+#define DBLM_FILE	   3
+
+// Codes for SELF_ORDINFO()
+
+#define DBOI_CONDITION	   1  // Get the order condition
+#define DBOI_EXPRESSION    2  // Get the order expression
+#define DBOI_POSITION	   3  // Get the order position
+#define DBOI_RECNO	   4  // Get the order record number
+#define DBOI_NAME	   5  // Get the order list name
+#define DBOI_NUMBER	   6  // Get the order list position
+#define DBOI_BAGNAME	   7  // Get the order Bag name
+#define DBOI_BAGEXT	   8  // Get the order Bag Extension
+#define DBOI_INDEXEXT	   DBOI_BAGEXT
+#define DBOI_INDEXNAME	   DBOI_BAGNAME
+#define DBOI_ORDERCOUNT    9  // Get the number of orders in the index file
+#define DBOI_FILEHANDLE   10  // Get the handle of the index file
+#define DBOI_ISCOND	  11  // Get the flag if the order has a for condition
+#define DBOI_ISDESC	  12  // Get the flag if the order is descending
+#define DBOI_UNIQUE	  13  // Get the flag if the order has the unique attribute set
+
+// Codes for SELF_INFO()
+
+#define DBI_ISDBF	   1  // Logical: RDD support DBF file format?
+#define DBI_CANPUTREC	   2  // Logical: RDD support Putting Records?
+#define DBI_GETHEADERSIZE  3  // Numeric: Get header size of the file
+#define DBI_LASTUPDATE	   4  // Date:	  Last date RDD file updated
+#define DBI_GETDELIMITER   5  // String:  Get default delimiter
+#define DBI_SETDELIMITER   6  // String:  Set default delimiter
+#define DBI_GETRECSIZE	   7  // Numeric: Get record size of the file
+#define DBI_GETLOCKARRAY   8  // Array: Get an array of locked records
+#define DBI_TABLEEXT	   9  // String:  Get table file extension
+
+#define DBI_ISFLOCK	  20  // Get file lock status
+
+#define DBI_CHILDCOUNT	  22  // Number of opened relations
+#define DBI_FILEHANDLE	  23  // Handle of opened file
+
+#define DBI_BOF 	  26  // BOF flag - alternate to bof()
+#define DBI_EOF 	  27  // EOF flag - alternate to eof()
+#define DBI_DBFILTER	  28  // Filter expression
+#define DBI_FOUND	  29  // FOUND flag - alternate to found
+#define DBI_FCOUNT	  30  // Number of fields
+#define DBI_LOCKCOUNT	  31  // Get record size of the file
+#define DBI_VALIDBUFFER   32  // Is the current buffer valid
+#define DBI_ALIAS	  33  // Alias name of workarea
+#define DBI_GETSCOPE	  34  // Locate codeblock
+#define DBI_LOCKOFFSET	  35  // New locking offset
+#define DBI_SHARED	  36  // Gets/Sets the shared flag
+
+#define DBI_MEMOEXT	  37  // Gets/Sets the shared flag
+#define DBI_MEMOHANDLE	  38  // Dos handle for memo file
+#define DBI_MEMOBLOCKSIZE 39  // Blocksize in memo files
+
+#define DBI_DB_VERSION	 101  // HOST driver Version
+#define DBI_RDD_VERSION  102  // RDD version (current RDD)
+
+#define DBI_USER	1000  // Start of user definable DBI_ values
+
+// codes for SELF_RECINFO()
+
+#define DBRI_DELETED	  1
+#define DBRI_LOCKED	  2
+#define DBRI_RECSIZE	  3
+#define DBRI_RECNO	  4
+#define DBRI_UPDATED	  5
+
+
+// codes for SELF_FIELDINFO()
+
+#define DBS_NAME	  1
+#define DBS_TYPE	  2
+#define DBS_LEN 	  3
+#define DBS_DEC 	  4
+
+// codes for RawLock types
+
+#define FILE_LOCK	  1
+#define FILE_UNLOCK	  2
+#define REC_LOCK	  3
+#define REC_UNLOCK	  4
+#define HEADER_LOCK	  5
+#define HEADER_UNLOCK	  6
+#define APPEND_LOCK	  7
+#define APPEND_UNLOCK	  8
+
 
 /*
 *  DBFIELDINFO
@@ -251,11 +351,6 @@ typedef struct
 
 //typedef DBTRANSINFO far * LPDBTRANSINFO;
 
-// Flags for DBTRANSINFO
-//#define DBTF_MATCH   0x0001
-//#define DBTF_PUTREC  0x0002
-
-
 
 /*
 *  DBSORTITEM
@@ -365,7 +460,7 @@ typedef struct _AREA
 {
    struct _RDDFUNCS * lprfsHost;
 
-//   USHORT  uiArea;             // El n£mero asignado al  rea de trabajo
+   USHORT  uiArea;             // El n£mero asignado al  rea de trabajo
 //   FARP    atomAlias;          // Puntero al s¡mbolo alias de este  rea
                                // de trabajo
 //   USHORT  uiFieldExtent;      // N£mero total de campos asignados
@@ -442,7 +537,7 @@ typedef struct _RDDFUNCS
 //   DBENTRYP_I   goToId;
    DBENTRYP_V   goTop;
 //   DBENTRYP_SI  seek;
-//   DBENTRYP_L   skip;            /* L   */
+   DBENTRYP_L   skip;
 //   DBENTRYP_L   skipFilter;      /* L   */
 //   DBENTRYP_L   skipRaw;         /* L   */
 
@@ -476,7 +571,7 @@ typedef struct _RDDFUNCS
 
 //   DBENTRYP_VP  alias;           /* VP  */
    DBENTRYP_V   close;
-//   DBENTRYP_VP  create;          /* VP  */
+   DBENTRYP_VP  create;
 //   DBENTRYP_SI  info;            /* SI  */
 //   DBENTRYP_V   newarea;         /* V   */
    DBENTRYP_VP  open;
@@ -570,99 +665,6 @@ typedef struct _RDDFUNCS
 typedef RDDFUNCS * PRDDFUNCS;
 
 #define RDDFUNCSCOUNT   ( sizeof( RDDFUNCS ) / sizeof( DBENTRYP_V ) )
-
-/*--------------------* Defines *---------------------*/
-
-/* C¢digos para m‚todos de bloqueo */
-
-//#define DBLM_EXCLUSIVE     1
-//#define DBLM_MULTIPLE      2
-//#define DBLM_FILE          3
-
-/* C¢digos pora SELF_ORDINFO() */
-
-//#define DBOI_CONDITION     1  /* Get the order condition     */
-//#define DBOI_EXPRESSION    2  /* Get the order expression    */
-//#define DBOI_POSITION      3  /* Get the order position      */
-//#define DBOI_RECNO         4  /* Get the order record number */
-//#define DBOI_NAME          5  /* Get the order list name     */
-//#define DBOI_NUMBER        6  /* Get the order list position */
-//#define DBOI_BAGNAME       7  /* Get the order Bag name      */
-//#define DBOI_BAGEXT        8  /* Get the order Bag Extension */
-//#define DBOI_INDEXEXT      DBOI_BAGEXT
-//#define DBOI_INDEXNAME     DBOI_BAGNAME
-//#define DBOI_ORDERCOUNT    9  /* Get the number of orders in the index file */
-//#define DBOI_FILEHANDLE   10  /* Get the handle of the index file */
-//#define DBOI_ISCOND       11  /* Get the flag if the order has a for condition */
-//#define DBOI_ISDESC       12  /* Get the flag if the order is descending */
-//#define DBOI_UNIQUE       13  /* Get the flag if the order has the unique attribute set */
-
-/* C¢digos para SELF_INFO() */
-
-//#define DBI_ISDBF          1  /* Logical: RDD support DBF file format? */
-//#define DBI_CANPUTREC      2  /* Logical: RDD support Putting Records? */
-//#define DBI_GETHEADERSIZE  3  /* Numeric: Get header size of the file  */
-//#define DBI_LASTUPDATE     4  /* Date:    Last date RDD file updated   */
-//#define DBI_GETDELIMITER   5  /* String:  Get default delimiter        */
-//#define DBI_SETDELIMITER   6  /* String:  Set default delimiter        */
-//#define DBI_GETRECSIZE     7  /* Numeric: Get record size of the file  */
-//#define DBI_GETLOCKARRAY   8  /* Array: Get an array of locked records */
-//#define DBI_TABLEEXT       9  /* String:  Get table file extension     */
-
-//#define DBI_ISFLOCK       20  /* Get file lock status             */
-
-//#define DBI_CHILDCOUNT    22  /* Number of opened relations       */
-//#define DBI_FILEHANDLE    23  /* Handle of opened file            */
-
-//#define DBI_BOF           26  /* BOF flag - alternate to bof()    */
-//#define DBI_EOF           27  /* EOF flag - alternate to eof()    */
-//#define DBI_DBFILTER      28  /* Filter expression                */
-//#define DBI_FOUND         29  /* FOUND flag - alternate to found  */
-//#define DBI_FCOUNT        30  /* Number of fields                 */
-//#define DBI_LOCKCOUNT     31  /* Get record size of the file      */
-//#define DBI_VALIDBUFFER   32  /* Is the current buffer valid      */
-//#define DBI_ALIAS         33  /* Alias name of workarea           */
-//#define DBI_GETSCOPE      34  /* Locate codeblock                 */
-//#define DBI_LOCKOFFSET    35  /* New locking offset               */
-//#define DBI_SHARED        36  /* Gets/Sets the shared flag        */
-
-//#define DBI_MEMOEXT       37  /* Gets/Sets the shared flag        */
-//#define DBI_MEMOHANDLE    38  /* Dos handle for memo file         */
-//#define DBI_MEMOBLOCKSIZE 39  /* Blocksize in memo files          */
-
-//#define DBI_DB_VERSION   101  /* HOST driver Version              */
-//#define DBI_RDD_VERSION  102  /* RDD version (current RDD)        */
-
-//#define DBI_USER        1000  /* Start of user definable DBI_ values   */
-
-
-/* C¢digos para SELF_RECINFO() */
-
-//#define DBRI_DELETED      1
-//#define DBRI_LOCKED       2
-//#define DBRI_RECSIZE      3
-//#define DBRI_RECNO        4
-//#define DBRI_UPDATED      5
-
-
-/* C¢digos para SELF_FIELDINFO() */
-
-//#define DBS_NAME          1
-//#define DBS_TYPE          2
-//#define DBS_LEN           3
-//#define DBS_DEC           4
-
-/* C¢digos para tipos RawLock */
-
-//#define FILE_LOCK         1
-//#define FILE_UNLOCK       2
-//#define REC_LOCK          3
-//#define REC_UNLOCK        4
-//#define HEADER_LOCK       5
-//#define HEADER_UNLOCK     6
-//#define APPEND_LOCK       7
-//#define APPEND_UNLOCK     8
-
 
 /*--------------------* M‚todos SELF *------------------------*/
 
