@@ -15,6 +15,7 @@ function Main()
    QOut()
 
    QOut( "-DEBUG Functions-")
+   QOut( ToChar(oForm:ClassSel, ", ", .T.) )
 
    QOut( "-Statics-" )
    QOut( ToChar ( __aStatic(), ", ", .T. ) )
@@ -141,7 +142,7 @@ function ToChar( xTxt, cSeparator, lDebug )
 
       case cValTxt=="O"                         // Object
          if lDebug
-            cOut := "Class#"+ToChar( xTxt:ClassH() )+"{"
+            cOut := xTxt:ClassName() + "(#"+ToChar( xTxt:ClassH() )+"):{"
             nLen := Len( xTxt )
             for n := 1 to nLen                     // For each item : Recurse !
                cOut += ToChar( xTxt[n], cSeparator, lDebug )
