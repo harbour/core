@@ -138,7 +138,7 @@ typedef struct _PATHNAMES
    struct _PATHNAMES * pNext;
 } PATHNAMES;
 void hb_fsAddSearchPath( char * szPath, PATHNAMES * * pSearchList );
-FHANDLE hb_spFile( BYTE * pFilename );
+BOOL hb_spFile( BYTE * pFilename );
 FHANDLE hb_spOpen( BYTE * pFilename, USHORT uiFlags );
 FHANDLE hb_spCreate( BYTE * pFilename, USHORT uiAttr );
 FHANDLE hb_spCreateEx( BYTE * pFilename, USHORT uiAttr, USHORT uiFlags );
