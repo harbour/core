@@ -1,20 +1,21 @@
-2000-01-02 17:10 UTC-0800 Ron Pinkas <ron@profit-master.com>
+2001-12-03 10:45 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * contrib/dot/pp.prg
+   * source/pp/ppcore.c
+     ! Fixed Array Index support after '.' (Macro Terminator).
 
+2001-01-02 17:10 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/genc.c
      * Minor correction.
 
-2000-01-02 10:00 UTC-0800 Ron Pinkas <ron@profit-master.com>
-
+2001-01-02 10:00 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/harbour.l
      + Added support for inline C code.
 
-2000-01-01 23:35 UTC-0800 Ron Pinkas <ron@profit-master.com>
-
+2001-01-01 23:35 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/harbour.c
      * Minor correction in hb_compInlineAdd()
 
-2000-01-01 22:40 UTC-0800 Ron Pinkas <ron@profit-master.com>
-
+2001-01-01 22:40 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * include/hberrors.h
    * source/compiler/hbgenerr.c
      + Added: "Unterminated inline block in function: \'%s\'" and "Too many inline blocks"

@@ -339,7 +339,7 @@ RETURN NIL
 
 FUNCTION ProcessFile( sSource, sSwitch )
 
-   LOCAL hSource, sBuffer, sLine, nPosition, nNewLineAt, sExt
+   LOCAL hSource, sBuffer, sLine, nPosition, nNewLineAt, sExt, cPrev
    LOCAL nLen, nMaxPos, cChar := '', nClose, nBase, nNext, nLine := 0
    LOCAL sRight, nPath, nPaths := Len( asPaths ), nNewLine, bBlanks := .T.
 
@@ -655,7 +655,7 @@ FUNCTION ProcessFile( sSource, sSwitch )
                 ENDDO
 
              CASE ( cChar == '[' )
-                IF cPrev $ "])}" .OR. ( cPrev == '_' .OR. ( cPrev >= 'A' .AND. cPrev <= 'Z' ) .OR. ( cPrev >= 'a' .AND. cPrev <= 'z' ) .OR. ( cPrev >= '0' .AND. cPrev <= '9' ) )
+                IF cPrev $ "])}." .OR. ( cPrev == '_' .OR. ( cPrev >= 'A' .AND. cPrev <= 'Z' ) .OR. ( cPrev >= 'a' .AND. cPrev <= 'z' ) .OR. ( cPrev >= '0' .AND. cPrev <= '9' ) )
                    sLine += cChar
                    nPosition++
                    LOOP
@@ -2018,7 +2018,7 @@ FUNCTION NextToken( sLine, bCheckRules )
      IF ( s_cLastChar >= 'a' .AND. s_cLastChar <= 'z' ) .OR. ;
         ( s_cLastChar >= 'A' .AND. s_cLastChar <= 'Z' ) .OR. ;
         ( s_cLastChar >= '0' .AND. s_cLastChar <= '9' ) .OR. ;
-        s_cLastChar == '_' .OR. s_cLastChar $ ")}]"
+        s_cLastChar == '_' .OR. s_cLastChar $ ")}]."
 
         sReturn := '['
 
@@ -2406,7 +2406,7 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
             ENDIF
          ENDIF
 
-      ELSEIF Right( sExp, 1 ) $ "}])" .AND. Left( sLine, 1 ) == '[' .AND. ( sNextAnchor != "[" ) /*.AND. At( ']', sLine ) < At( '[', SubStr( sLine, 2 ) ) */
+      ELSEIF Right( sExp, 1 ) $ "}])." .AND. Left( sLine, 1 ) == '[' .AND. ( sNextAnchor != "[" ) /*.AND. At( ']', sLine ) < At( '[', SubStr( sLine, 2 ) ) */
 
             sExp  += Left( sLine, 1 ) // Open
             sLine := SubStr( sLine, 2 )

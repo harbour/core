@@ -1853,7 +1853,7 @@ static int getExpReal( char * expreal, char ** ptri, BOOL prlist, int maxrez, BO
          State = ( StBr1==0 && StBr2==0 && StBr3==0 )? STATE_ID_END: STATE_BRACKET;
          continue;
       }
-      else if( **ptri == '[' && ( State == STATE_EXPRES || ( cLastChar != ')' && cLastChar != ']' && cLastChar != '}' && ! ISNAME( cLastChar ) ) ) )
+      else if( **ptri == '[' && ( State == STATE_EXPRES || ( strchr( ")]}.", cLastChar ) == NULL && ! ISNAME( cLastChar ) ) ) )
       {
          char *pString;
 
@@ -2678,7 +2678,7 @@ int hb_pp_RdStr( FILE * handl_i, char * buffer, int maxlen, BOOL lDropSpaces, ch
               /* Ron Pinkas modified 2000-06-17
               if( ISNAME(s_prevchar) || s_prevchar == ']' )
               */
-              if( ISNAME(s_prevchar) || s_prevchar == ']' || s_prevchar == ')' || s_prevchar == '}' )
+              if( ISNAME(s_prevchar) || strchr( ")]}.", s_prevchar ) )
                  s_ParseState = STATE_BRACKET;
               else
                  s_ParseState = STATE_QUOTE3;
@@ -2831,7 +2831,7 @@ static int md_strAt( char * szSub, int lSubLen, char * szText, BOOL checkword, B
               lPos++;
               continue;
            }
-           else if( bRule == FALSE && *(szText+lPos) == '[' && ( lPos == 0 || *(szText+lPos-1) != '\\' ) && cLastChar != ')' && cLastChar != ']' && cLastChar != '}' && ! ISNAME( cLastChar ) )
+           else if( bRule == FALSE && *(szText+lPos) == '[' && ( lPos == 0 || *(szText+lPos-1) != '\\' ) && strchr( ")]}.", cLastChar ) == NULL && ! ISNAME( cLastChar ) )
            {
               State = STATE_QUOTE3;
               lPos++;
@@ -3095,7 +3095,7 @@ static int strotrim( char * stroka )
            State = STATE_QUOTE2;
         }
         /* Ron Pinkas added 2000-11-05 */
-        else if( curc == '[' && ( cLastChar != ']' && cLastChar != ')' && cLastChar != '}' && ! ISNAME( cLastChar ) ) )
+        else if( curc == '[' && ( strchr( ")]}.", cLastChar ) == NULL && ! ISNAME( cLastChar ) ) )
         {
            State = STATE_QUOTE3;
         }
@@ -3229,7 +3229,7 @@ static int NextName( char ** sSource, char * sDest )
         State = STATE_QUOTE2;
      }
      /* Ron Pinkas added 2000-11-08 */
-     else if( **sSource == '[' && s_bArray == FALSE && cLastChar != ')' && cLastChar != ']' && cLastChar != '}' && ! ISNAME( cLastChar ) )
+     else if( **sSource == '[' && s_bArray == FALSE && strchr( ")]}.", cLastChar ) == NULL && ! ISNAME( cLastChar ) )
      {
         /* Ron Pinkas added 2000-11-08 */
         pString = *sSource;
@@ -3314,7 +3314,7 @@ static int NextParm( char ** sSource, char * sDest )
      {
         State = STATE_QUOTE2;
      }
-     else if( **sSource == '[' && cLastChar != ')' && cLastChar != ']' && cLastChar != '}' && ! ISNAME( cLastChar ) )
+     else if( **sSource == '[' && strchr( ")]}.", cLastChar ) == NULL && ! ISNAME( cLastChar ) )
      {
         State = STATE_QUOTE3;
      }
