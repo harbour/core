@@ -1718,13 +1718,15 @@ static int WorkMarkers( char ** ptrmp, char ** ptri, char * ptro, int * lenres, 
 
   HB_SKIPTABSPACES( *ptrmp );
 
+  /* JFL removed 12/11/2001 to allow param like (,,3) as allowed by clipper */
+  /*
   if( **ptri == ',' )
   {
      if( s_numBrackets )
      {
         return 0;
      }
-  }
+  }*/
 
   ptrtemp = *ptrmp;
 

@@ -7,8 +7,8 @@
 #
 
 # ---------------------------------------------------------------
-# If you need to set additional compiler/linker options use the 
-# environment variables below, but please DON'T MODIFY THIS FILE 
+# If you need to set additional compiler/linker options use the
+# environment variables below, but please DON'T MODIFY THIS FILE
 # for this purpose.
 # ---------------------------------------------------------------
 
@@ -605,9 +605,10 @@ DEBUG_LIB_OBJS = \
    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\  $<
 
 COMMON_LIB_OBJS = \
-   $(OBJ_DIR)\hbhash.obj \
    $(OBJ_DIR)\hbfhnd.obj \
    $(OBJ_DIR)\hbfsapi.obj \
+   $(OBJ_DIR)\hbgete.obj \
+   $(OBJ_DIR)\hbhash.obj \
    $(OBJ_DIR)\hbstr.obj \
    $(OBJ_DIR)\hbtrace.obj \
    $(OBJ_DIR)\hbver.obj \

@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2001-12-11 23:40 UTC+0100 JFL (Mafact) <jfl@mafact.com>
+  * makefile.vc  added missing hbgete.c to LIB
+  * source/pp/ppcore.c
+    * Modif to Workmarkers() so as expression like  test{,,3} are correctly
+      (x)translated to test():new(,,3) as clipper does.
+
 2001-12-11 19:20 UTC-0300 Luiz Rafael Culik <culik@sl.conex.net>
   * contrib/hbzlib/zipnew.cpp
     contrib/hbzlib/zipcomp.cpp
