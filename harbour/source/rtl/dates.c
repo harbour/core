@@ -304,9 +304,10 @@ HARBOUR DAY( void )
    }
    else
    {
-      /* TODO: generate a proper error object and raise an error */
-      printf( "not a valid date item from Day()\n" );
-      exit( 1 );
+      PITEM pError = _errNew();
+      _errPutDescription(pError, "Error BASE/1114  Argument error: DAY");
+      _errLaunch(pError);
+      _errRelease(pError);
    }
 }
 
@@ -322,9 +323,10 @@ HARBOUR MONTH( void )
    }
    else
    {
-      /* TODO: generate a proper error object and raise an error */
-      printf( "not a valid date item from Day()\n" );
-      exit( 1 );
+      PITEM pError = _errNew();
+      _errPutDescription(pError, "Error BASE/1113  Argument error: MONTH");
+      _errLaunch(pError);
+      _errRelease(pError);
    }
 }
 
@@ -340,9 +342,10 @@ HARBOUR YEAR( void )
    }
    else
    {
-      /* TODO: generate a proper error object and raise an error */
-      printf( "not a valid date item from Day()\n" );
-      exit( 1 );
+      PITEM pError = _errNew();
+      _errPutDescription(pError, "Error BASE/1112  Argument error: YEAR");
+      _errLaunch(pError);
+      _errRelease(pError);
    }
 }
 

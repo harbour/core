@@ -1,3 +1,13 @@
+19990507-11:30 EDT David G. Holm <dholm@jsd-llc.com>
+  * makefile.b31
+    - added hbtools.lib
+  * source/rtl/dates.c
+    - added error handling supplied by Matthew Hamilton <MHamilton@bunge.com.au>
+  * source/vm/hvm.c
+    - changed call to hb_init_set() to InitializeSets() to match source/rtl/sets.c
+  * tests/working/buildexe.bat
+    - added hbtools.lib
+
 19990507-09:55 Ryszard Glab <rglab@imid.med.pl>
     * source/rtl/files.c
     * source/rtl/set.c
