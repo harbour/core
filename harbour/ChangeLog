@@ -8,6 +8,18 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-01-24 14:00 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/vm/hvm.c
+    * hb_inkeyPoll() is removed from hb_vmDo(), the code fragment with
+      hb_ReadKey() is added to hb_vmExecute() - borrowed from xHarbour.
+  * source/vm/estack.c
+  * source/vm/extend.c
+  * include/hbapi.h
+  * include/hstack.h
+    * HB_API_MACROS and HB_STACK_MACROS are default options now - borrowed from xHarbour.
+  * source/rtl/version.c
+    ! Memory leak fixed.
+
 2003-01-20 00:20 UTC+0100 Martin Vogel <vogel@inttec.de>
   * contrib/libct/Makefile
   * contrib/libct/Makefile.bc

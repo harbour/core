@@ -54,10 +54,6 @@
    #define HB_OS_WIN_32_USED
 #endif
 
-#ifdef HB_STACK_MACROS
-   #undef HB_STACK_MACROS
-#endif
-
 #include "hbapi.h"
 #include "hbdefs.h"
 #include "hbstack.h"
@@ -199,7 +195,7 @@ void hb_stackOldFrame( HB_STACK_STATE * pStack )
    hb_stack.iStatics = pStack->iStatics;
 }
 
-#if !defined(HB_STACK_MACROS)
+#undef hb_stackItem
 HB_ITEM_PTR hb_stackItem( LONG iItemPos )
 {
    if( iItemPos < 0 )
@@ -208,6 +204,7 @@ HB_ITEM_PTR hb_stackItem( LONG iItemPos )
    return ( * ( hb_stack.pItems + iItemPos ) );
 }
 
+#undef hb_stackItemFromTop
 HB_ITEM_PTR hb_stackItemFromTop( int nFromTop )
 {
    if( nFromTop > 0 )
@@ -216,6 +213,7 @@ HB_ITEM_PTR hb_stackItemFromTop( int nFromTop )
    return ( * ( hb_stack.pPos + nFromTop ) );
 }
 
+#undef hb_stackItemFromBase
 HB_ITEM_PTR hb_stackItemFromBase( int nFromBase )
 {
    if( nFromBase <= 0 )
@@ -224,11 +222,13 @@ HB_ITEM_PTR hb_stackItemFromBase( int nFromBase )
    return ( * ( hb_stack.pBase + nFromBase + 1 ) );
 }
 
+#undef hb_stackTopItem
 HB_ITEM_PTR hb_stackTopItem( void )
 {
     return * hb_stack.pPos;
 }
 
+#undef hb_stackBaseItem
 HB_ITEM_PTR hb_stackBaseItem( void )
 {
    return * hb_stack.pBase;
@@ -236,22 +236,24 @@ HB_ITEM_PTR hb_stackBaseItem( void )
 
 /* Returns SELF object, an evaluated codeblock or NIL for normal func/proc
 */
+#undef hb_stackSelfItem
 HB_ITEM_PTR hb_stackSelfItem( void )
 {
    return * ( hb_stack.pBase + 1 );
 }
 
+#undef hb_stackTopOffset
 LONG hb_stackTopOffset( void )
 {
    return hb_stack.pPos - hb_stack.pItems;
 }
 
+#undef hb_stackBaseOffset
 LONG hb_stackBaseOffset( void )
 {
    return hb_stack.pBase - hb_stack.pItems + 1;
 }
 
-#endif
 
 /* NOTE: DEBUG function */
 void hb_stackDispLocal( void )

@@ -291,6 +291,12 @@ extern PHB_ITEM HB_EXPORT hb_param( int iParam, int iMask ); /* retrieve a gener
 extern PHB_ITEM HB_EXPORT hb_paramError( int iParam ); /* Returns either the generic parameter or a NIL item if param not provided */
 extern BOOL     HB_EXPORT hb_extIsArray( int iParam );
 
+#ifndef HB_NO_DEFAULT_API_MACROS
+   #ifndef HB_API_MACROS
+      #define HB_API_MACROS
+   #endif
+#endif
+
 #ifdef HB_API_MACROS
 
 #include "hbapiitm.h"

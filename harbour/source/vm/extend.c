@@ -68,10 +68,6 @@
  *
  */
 
-#ifdef HB_API_MACROS
-   #undef HB_API_MACROS
-#endif
-
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbset.h"
@@ -476,6 +472,7 @@ int  HB_EXPORT hb_parinfo( int iParam )
    }
 }
 
+#undef hb_pcount
 int  HB_EXPORT hb_pcount( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_pcount()"));
@@ -483,6 +480,7 @@ int  HB_EXPORT hb_pcount( void )
    return ( int ) ( hb_stackBaseItem() )->item.asSymbol.paramcnt;
 }
 
+#undef hb_ret
 void  HB_EXPORT hb_ret( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_ret()"));
@@ -490,6 +488,7 @@ void  HB_EXPORT hb_ret( void )
    hb_itemClear( &hb_stack.Return );
 }
 
+#undef hb_reta
 void  HB_EXPORT hb_reta( ULONG ulLen )  /* undocumented hb_reta() */
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_reta(%lu)", ulLen));
@@ -497,6 +496,7 @@ void  HB_EXPORT hb_reta( ULONG ulLen )  /* undocumented hb_reta() */
    hb_arrayNew( &hb_stack.Return, ulLen );
 }
 
+#undef hb_retc
 void HB_EXPORT hb_retc( char * szText )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_retc(%s)", szText));
@@ -504,6 +504,7 @@ void HB_EXPORT hb_retc( char * szText )
    hb_itemPutC( &hb_stack.Return, szText );
 }
 
+#undef hb_retc_buffer
 void HB_EXPORT hb_retc_buffer( char * szText )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_retc_buffer(%s)", szText));
@@ -511,6 +512,7 @@ void HB_EXPORT hb_retc_buffer( char * szText )
    hb_itemPutCPtr( &hb_stack.Return, szText, strlen( szText ) );
 }
 
+#undef hb_retc_const
 void HB_EXPORT hb_retc_const( char * szText )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_retc_const(%s)", szText));
@@ -518,6 +520,7 @@ void HB_EXPORT hb_retc_const( char * szText )
    hb_itemPutCConst( &hb_stack.Return, szText );
 }
 
+#undef hb_retclen
 void  HB_EXPORT hb_retclen( char * szText, ULONG ulLen )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_retclen(%s, %lu)", szText, ulLen));
@@ -525,6 +528,7 @@ void  HB_EXPORT hb_retclen( char * szText, ULONG ulLen )
    hb_itemPutCL( &hb_stack.Return, szText, ulLen );
 }
 
+#undef hb_retclen_buffer
 void  HB_EXPORT hb_retclen_buffer( char * szText, ULONG ulLen )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_retclen_buffer(%s, %lu)", szText, ulLen));
@@ -534,6 +538,7 @@ void  HB_EXPORT hb_retclen_buffer( char * szText, ULONG ulLen )
 
 /* szDate must have YYYYMMDD format */
 
+#undef hb_retds
 void HB_EXPORT hb_retds( char * szDate )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_retds(%s)", szDate));
@@ -541,6 +546,7 @@ void HB_EXPORT hb_retds( char * szDate )
    hb_itemPutDS( &hb_stack.Return, szDate );
 }
 
+#undef hb_retd
 void HB_EXPORT hb_retd( long lYear, long lMonth, long lDay )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_retd(%04i, %02i, %02i)", lYear, lMonth, lDay));
@@ -548,6 +554,7 @@ void HB_EXPORT hb_retd( long lYear, long lMonth, long lDay )
    hb_itemPutD( &hb_stack.Return, lYear, lMonth, lDay );
 }
 
+#undef hb_retdl
 void HB_EXPORT hb_retdl( long lJulian )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_retdl(%ld)", lJulian));
@@ -555,6 +562,7 @@ void HB_EXPORT hb_retdl( long lJulian )
    hb_itemPutDL( &hb_stack.Return, lJulian );
 }
 
+#undef hb_retl
 void HB_EXPORT hb_retl( int iLogical )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_retl(%d)", iLogical));
@@ -562,6 +570,7 @@ void HB_EXPORT hb_retl( int iLogical )
    hb_itemPutL( &hb_stack.Return, iLogical ? TRUE : FALSE );
 }
 
+#undef hb_retnd
 void HB_EXPORT hb_retnd( double dNumber )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_retnd(%lf)", dNumber));
@@ -569,6 +578,7 @@ void HB_EXPORT hb_retnd( double dNumber )
    hb_itemPutND( &hb_stack.Return, dNumber );
 }
 
+#undef hb_retni
 void HB_EXPORT hb_retni( int iNumber )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_retni(%d)", iNumber));
@@ -576,6 +586,7 @@ void HB_EXPORT hb_retni( int iNumber )
    hb_itemPutNI( &hb_stack.Return, iNumber );
 }
 
+#undef hb_retnl
 void HB_EXPORT hb_retnl( long lNumber )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_retnl(%ld)", lNumber));
@@ -583,6 +594,7 @@ void HB_EXPORT hb_retnl( long lNumber )
    hb_itemPutNL( &hb_stack.Return, lNumber );
 }
 
+#undef hb_retnlen
 void HB_EXPORT hb_retnlen( double dNumber, int iWidth, int iDec )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_retnlen(%lf, %d, %d)", dNumber, iWidth, iDec));
@@ -590,6 +602,7 @@ void HB_EXPORT hb_retnlen( double dNumber, int iWidth, int iDec )
    hb_itemPutNLen( &hb_stack.Return, dNumber, iWidth, iDec );
 }
 
+#undef hb_retndlen
 void HB_EXPORT hb_retndlen( double dNumber, int iWidth, int iDec )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_retndlen(%lf, %d, %d)", dNumber, iWidth, iDec));
@@ -597,6 +610,7 @@ void HB_EXPORT hb_retndlen( double dNumber, int iWidth, int iDec )
    hb_itemPutNDLen( &hb_stack.Return, dNumber, iWidth, iDec );
 }
 
+#undef hb_retnilen
 void HB_EXPORT hb_retnilen( int iNumber, int iWidth )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_retnilen(%d, %d)", iNumber, iWidth));
@@ -604,6 +618,7 @@ void HB_EXPORT hb_retnilen( int iNumber, int iWidth )
    hb_itemPutNILen( &hb_stack.Return, iNumber, iWidth );
 }
 
+#undef hb_retnllen
 void HB_EXPORT hb_retnllen( long lNumber, int iWidth )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_retnllen(%ld, %d)", lNumber, iWidth));

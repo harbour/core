@@ -65,16 +65,22 @@
 
 HB_FUNC( OS )
 {
-   hb_retc_buffer( hb_verPlatform() );
+   char * ptr = hb_verPlatform();
+   hb_retc( ptr );
+   hb_xfree( ptr );
 }
 
 HB_FUNC( HB_COMPILER )
 {
-   hb_retc_buffer( hb_verCompiler() );
+   char * ptr = hb_verCompiler();
+   hb_retc( ptr );
+   hb_xfree( ptr );
 }
 
 HB_FUNC( VERSION )
 {
-   hb_retc_buffer( hb_verHarbour() );
+   char * ptr = hb_verHarbour();
+   hb_retc( ptr );
+   hb_xfree( ptr );
 }
 

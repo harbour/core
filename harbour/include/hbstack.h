@@ -64,6 +64,10 @@
 extern "C" {
 #endif
 
+#ifndef HB_NO_DEFAULT_STACK_MACROS
+    #define HB_STACK_MACROS
+#endif
+
 /* stack managed by the virtual machine */
 typedef struct
 {

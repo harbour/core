@@ -83,6 +83,8 @@
 #include "hbvm.h"
 #include "hbpcode.h"
 #include "hbset.h"
+#include "hbinkey.ch"
+#include "inkey.ch"
 
 #ifdef HB_MACRO_STATEMENTS
    #include "hbpp.h"
@@ -445,6 +447,25 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          ulLastOpcode = pCode[ w ];
          hb_ulOpcodesCalls[ ulLastOpcode ]++;
       }
+
+      #ifndef HB_GUI
+      if( hb_set.HB_SET_CANCEL )
+      {
+         static unsigned short s_iCancel = 0;
+
+         if( ++s_iCancel == 65535 )
+         {
+            int ch = hb_gt_ReadKey( hb_set.HB_SET_EVENTMASK );
+
+            switch( ch )
+            {
+               case HB_K_ALT_C:           /* Check for extended Alt+C */
+               case K_ALT_C:              /* Check for normal Alt+C */
+                  hb_vmRequestCancel();/* Request cancellation */
+            }
+         }
+      }
+      #endif
 
       switch( pCode[ w ] )
       {
@@ -3070,9 +3091,11 @@ void hb_vmDo( USHORT uiParams )
    if( bProfiler )
       ulClock = ( ULONG ) clock();
 
+   /* Poll the console keyboard
    #ifndef HB_GUI
-      hb_inkeyPoll();           /* Poll the console keyboard */
+      hb_inkeyPoll();
    #endif
+   */
 
    pItem = hb_stackNewFrame( &sStackState, uiParams );
    pSym = pItem->item.asSymbol.value;
