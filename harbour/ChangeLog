@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-06-07 13:53 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/rdd/dbf1.c
+    ! Bug fixed in hb_dbfLockRecord(), reported by Richard Chidiak
+
 2002-06-06 23:21 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * contrib/rddads/ads1.c
     ! Fixed bug, related to creating databases with extended data types

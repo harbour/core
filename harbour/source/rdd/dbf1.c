@@ -349,6 +349,17 @@ static ERRCODE hb_dbfLockRecord( DBFAREAP pArea, ULONG ulRecNo, BOOL * pResult,
    if( bExclusive )
       hb_dbfUnlockAllRecords( pArea );
 
+   if( pArea->ulNumLocksPos > 0 )
+   {
+      ULONG ul;
+      for( ul=0; ul< pArea->ulNumLocksPos; ul++ )
+         if( pArea->pLocksPos[ ul ] == ulRecNo )
+         {
+            * pResult = TRUE;
+            return SUCCESS;
+         }
+   }
+
    if( hb_fsLock( pArea->hDataFile, DBF_LOCKPOS + ulRecNo, 1, FL_LOCK ) )
    {
       if( pArea->ulNumLocksPos == 0 )               /* Create the list */
