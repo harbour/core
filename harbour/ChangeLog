@@ -4,6 +4,7 @@
   * hb_slex.vc
   * makefile.bc
   * makefile.vc
+  * doc/funclist.txt
   * source/rtl/Makefile
   * source/rtl/dbdelim.prg
   + source/rtl/dbsdf.prg
