@@ -50,6 +50,8 @@
  *
  */
 
+//------------------------------------------------------------------------------
+
 #ifndef HB_APICDP_H_
 #define HB_APICDP_H_
 
@@ -57,19 +59,26 @@
 #include "hbapi.h"
 #include "hbinit.h"
 
-/* This hack is needed to force preprocessing if id is also a macro */
-#define HB_CODEPAGE_REQUEST( id )           HB_CODEPAGE_REQUEST_( id )
-#define HB_CODEPAGE_REQUEST_( id )          extern HB_FUNC( HB_CODEPAGE_##id ); \
-                                        void hb_codepage_ForceLink( void ) \
-                                        { \
-                                           HB_FUNCNAME( HB_CODEPAGE_##id )(); \
-                                        }
+//------------------------------------------------------------------------------
+
+// 2 steps macro allows preprocessing, if id is also a macro
+#define HB_CODEPAGE_REQUEST( id )      \
+        HB_CODEPAGE_REQUEST_( id )       
+
+#define HB_CODEPAGE_REQUEST_( id )     \
+  extern HB_FUNC( HB_CODEPAGE_##id );  \
+  void hb_codepage_ForceLink( void )   \
+  {                                    \
+    HB_FUNCNAME( HB_CODEPAGE_##id )(); \
+  }
 
 //------------------------------------------------------------------------------
 
 #define HB_CODEPAGE_ANNOUNCE( id )                  \
   HB_FUNC( HB_CODEPAGE_##id ) {}
-	                            
+
+//TD3: abstract further, remove "s_codepage" dependency of macro
+//TD3: check if HB_CODE_PAGE_ANNOUNCE is used, remove
 #define HB_CODEPAGE_INIT( id )                      \
   HB_CODEPAGE_ANNOUNCE( id );                       \
   HB_CALL_ON_STARTUP_BEGIN( hb_codepage_Init_##id ) \
@@ -83,7 +92,9 @@ typedef struct _HB_MULTICHAR
    char  cLast[2];
    char  cFirst[2];
    int   nCode;
-} HB_MULTICHAR, * PHB_MULTICHAR;
+} HB_MULTICHAR, *PHB_MULTICHAR;
+
+//------------------------------------------------------------------------------
 
 typedef struct _HB_CODEPAGE
 {
@@ -103,14 +114,18 @@ typedef struct _HB_CODEPAGE
    PHB_MULTICHAR multi;
 } HB_CODEPAGE, * PHB_CODEPAGE;
 
-extern BOOL hb_cdpRegister( PHB_CODEPAGE );
-extern char * hb_cdpSelectID( char * );
-extern PHB_CODEPAGE hb_cdpSelect( PHB_CODEPAGE );
-extern PHB_CODEPAGE hb_cdpFind( char * );
-extern void hb_cdpTranslate( char*, PHB_CODEPAGE, PHB_CODEPAGE );
-extern void hb_cdpnTranslate( char*, PHB_CODEPAGE, PHB_CODEPAGE, unsigned int );
-extern int hb_cdpcmp( char*, char*, ULONG, PHB_CODEPAGE, ULONG* );
-extern int hb_cdpchrcmp( char cFirst, char cSecond, PHB_CODEPAGE cdpage );
+//------------------------------------------------------------------------------
+
+extern BOOL         hb_cdpRegister   ( PHB_CODEPAGE );
+extern char*        hb_cdpSelectID   ( char* );
+extern PHB_CODEPAGE hb_cdpSelect     ( PHB_CODEPAGE );
+extern PHB_CODEPAGE hb_cdpFind       ( char* );
+extern void         hb_cdpTranslate  ( char*, PHB_CODEPAGE, PHB_CODEPAGE );
+extern void         hb_cdpnTranslate ( char*, PHB_CODEPAGE, PHB_CODEPAGE, unsigned int );
+extern int          hb_cdpcmp        ( char*, char*, ULONG, PHB_CODEPAGE, ULONG* );
+extern int          hb_cdpchrcmp     ( char, char, PHB_CODEPAGE );
+
+//------------------------------------------------------------------------------
 
 #endif /* HB_APICDP_H_ */
 
