@@ -324,7 +324,7 @@ METHOD BuildCommandWindow() CLASS TDebugger
    ::oWndCommand:bLostFocus  := { || SetCursor( SC_NONE ) }
    ::oWndCommand:bKeyPressed := { | nKey | ::CommandWindowProcessKey( nKey ) }
    ::oWndCommand:bPainted    := { || DispOutAt( ::oWndCommand:nBottom - 1,;
-                             ::oWndCommand:nLeft + 1, "> ", ::oWndCommand:cColor ),;
+                             ::oWndCommand:nLeft + 1, "> ", __DbgColors()[ 2 ] ),;
                         oGet:ColorDisp( Replicate( __DbgColors()[ 2 ] + ",", 5 ) ),;
                         hb_ClrArea( ::oWndCommand:nTop + 1, ::oWndCommand:nLeft + 1,;
                         ::oWndCommand:nBottom - 2, ::oWndCommand:nRight - 1,;
@@ -481,12 +481,12 @@ METHOD CommandWindowProcessKey( nKey ) CLASS TDebugger
 
            DispOutAt( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 1,;
               Space( ::oWndCommand:nRight - ::oWndCommand:nLeft - 1 ),;
-              ::oWndCommand:cColor )
+              __DbgColors()[ 2 ] )
            DispOutAt( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 3, cResult,;
-              ::oWndCommand:cColor )
+              __DbgColors()[ 2 ] )
            ::oWndCommand:ScrollUp( 1 )
            DispOutAt( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 1, "> ",;
-              ::oWndCommand:cColor )
+              __DbgColors()[ 2 ] )
            cCommand := Space( ::oWndCommand:nRight - ::oWndCommand:nLeft - 3 )
            ::oGetListCommand:oGet:VarPut( cCommand )
            ::oGetListCommand:oGet:Buffer := cCommand
