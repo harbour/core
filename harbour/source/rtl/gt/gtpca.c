@@ -89,7 +89,7 @@ void hb_gt_Done( void )
    /* TODO: */
 }
 
-void hb_gt_AnsiGetCurPos( USHORT * row, USHORT * col )
+static void hb_gt_AnsiGetCurPos( USHORT * row, USHORT * col )
 {
    if( isatty( s_iFilenoStdin ) && isatty( s_iFilenoStdout ) )
    {
@@ -113,7 +113,7 @@ void hb_gt_AnsiGetCurPos( USHORT * row, USHORT * col )
    }
 }
 
-void hb_gt_AnsiSetAttributes( BYTE attr )
+static void hb_gt_AnsiSetAttributes( BYTE attr )
 {
    static const int color[] = { 0, 4, 2, 6, 1, 5, 3, 7 };
    int bg_color = 40 + color[ ( attr & 0x70 ) >> 4 ];

@@ -9,6 +9,9 @@
 
 !if $d(B16)
 
+CC = bcc
+AS = tasm
+
 # Borland C/C++ (DOS 16 bits)
 CFLAGS = $(CFLAGS) -DHB_GT_DOS -mh
 
@@ -17,6 +20,9 @@ OBJ_DIR = obj\b16
 LIB_DIR = lib\b16
 
 !else
+
+CC = bcc32
+AS = tasm32
 
 # Borland C/C++ (Windows 32 bits)
 CFLAGS = $(CFLAGS) -DHB_GT_WIN

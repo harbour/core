@@ -1,3 +1,11 @@
+20000317-00:13 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * source/rtl/gt/gtpca.c
+     + Some internal functions made static
+   * makefile.bc
+     ! It's not relying on the default CC and AS macros, to make it work
+       on BCC45 without any cludges. BCC45 MAKE.EXE is defaulting to bcc or 
+       bcc32 depending on the WIN32 macro.
+
 20000316-04:10 EST Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/gt/gtpca.c
      * added casts
