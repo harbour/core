@@ -165,7 +165,7 @@ HARBOUR HB_OS( void )
 /* TODO: add MSVC support but MSVC cannot detect any OS except Windows! */
 #if defined(__TURBOC__) || defined(__BORLANDC__) || defined(_MSC_VER) || defined(__MINGW32__)
 
-#if defined(_WINDOWS_) || defined(__MINGW32__)
+#if defined(_WINDOWS_)
 
 /* NOTE:
     Support for determining the window version by Luiz Rafael Culik
@@ -210,7 +210,7 @@ HARBOUR HB_OS( void )
             else
                hb_os = "Windows";
             strncpy( szBuild, osVer.szCSDVersion, sizeof( szBuild ) );
-            szBuild[ sizeof( szBuild ) - 1 ] = '\0';
+            szBuild[ sizeof( szBuild ) ] = '\0';
             break;
 
          case VER_PLATFORM_WIN32_NT:
@@ -363,7 +363,7 @@ HARBOUR HB_OS( void )
    if( ! hb_os ) strcpy( version, "Unknown" );
    else if( hb_osmajor == -1 ) strcpy( version, hb_os );
    else if( hb_osmajor == -2 ) { /* NOP */ }
-#if defined(_WINDOWS_) || defined(__MINGW32__)
+#ifdef _WINDOWS_
    else sprintf( version, cformat, hb_os, szBuild, hb_osmajor, hb_osminor, hb_osletter );
 #else
    else sprintf( version, cformat, hb_os, hb_osmajor, hb_osminor, hb_osletter );
@@ -578,9 +578,10 @@ HARBOUR HB_VERSION( void )
  *  $ONELINER$
  *      Obtains DOS system environmental settings
  *  $SYNTAX$
- *      GETENV(<cEnviroment>)  --> <cReturn>
+ *      GETENV(<cEnviroment>, <cDefaultValue> )  --> <cReturn>
  *  $ARGUMENTS$
  *      <cEnviroment> Enviromental variable to obtain
+ *      <cDefaultValue> Optional value to return if <cEnvironment> is not found
  *  $RETURNS$
  *      <cReturn>     Value of the Variable
  *  $DESCRIPTION$
@@ -591,6 +592,7 @@ HARBOUR HB_VERSION( void )
  *  $EXAMPLES$
  *      ? QOUT(GETENV('PATH'))
         ? QOUT(GETENV('CONFIG'))
+        ? QOUT(GETENV('HARBOURCMD', '-n -l -es2'))
  *  $TESTS$
  *
  *  $STATUS$
@@ -621,8 +623,10 @@ HARBOUR HB_GETENV( void )
       }
       if( lName )
       {
-         char * Value = getenv( szName );
-         hb_retc( Value ? Value : "" );
+         char * szValue = getenv( szName );
+         char * szDefault = hb_parc( 2 ) ? hb_parc( 2 ) : "";
+
+         hb_retc( szValue ? szValue : szDefault );
       }
       else
          hb_retc( "" );
