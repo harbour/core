@@ -1,3 +1,15 @@
+2001-01-08 22:18 GMT+0100 JFL (mafact) <jfl@mafact.com>
+     * harbour/makefile.vc
+       Added estack.obj
+     * harbour/source/compiler/harbour.l
+       Added Type Casting needed by VC++ 
+     * harbour/source/vm/estack.c
+       Added Type Casting needed by VC++ 
+     * harbour/source/vm/hvm.c
+       Added Type Casting needed by VC++ 
+     * harbour/source/vm/classes.c
+       Temporary released the HIDDEN Check on scooping
+
 2001-01-08 12:35 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * contrib/dot/pp.prg
      * Added support for leading and traing WS before/after #.

@@ -201,7 +201,7 @@ Separator     {SpaceTab}
                     }
 
 <STRING2>[^\"\n]*\n  { BEGIN 0;
-		               unput( '\n' );
+                               unput( '\n' );
                        yytext[--yyleng] = '\0';
                        hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_STRING_TERMINATOR, yytext, NULL );
                        hb_comp_iState = LOOKUP;
@@ -314,14 +314,14 @@ Separator     {SpaceTab}
 /* ************************************************************************ */
 %}
 ;            {
-		 #ifdef DEBUG_NEWLINE
-		    printf( "New Line\n" );
-		 #endif
+                 #ifdef DEBUG_NEWLINE
+                    printf( "New Line\n" );
+                 #endif
 
                  yy_set_bol(1);
                  hb_comp_iState = LOOKUP;
                  return ';';
-	     }
+             }
 %{
 /* ************************************************************************ */
 %}
@@ -761,91 +761,91 @@ Separator     {SpaceTab}
 %}
 
 "hb_inline" {
-	    char sBuffer[ YY_BUF_SIZE ], *pBuffer, sInlineSym[] = "HB_INLINE_0";
-	    int iSize, iBraces = 0;
-	    extern BOOL hb_pp_bInline;
+            char sBuffer[ YY_BUF_SIZE ], *pBuffer, sInlineSym[] = "HB_INLINE_0";
+            int iSize, iBraces = 0;
+            extern BOOL hb_pp_bInline;
             PINLINE pInline;
 
             hb_pp_bInline = TRUE;
 
-	    sInlineSym[10] = hb_comp_cInlineID++;
+            sInlineSym[10] = hb_comp_cInlineID++;
 
-	    switch( sInlineSym[10] )
-	    {
-	       case '9' + 1 :
-		  sInlineSym[10] = 'A';
-		  break;
+            switch( sInlineSym[10] )
+            {
+               case '9' + 1 :
+                  sInlineSym[10] = 'A';
+                  break;
 
-	       case 'Z' + 1 :
+               case 'Z' + 1 :
                   hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_TOOMANY_INLINE, NULL, NULL );
-		  break;
-	    }
+                  break;
+            }
 
             pInline = hb_compInlineAdd( hb_compIdentifierNew( sInlineSym, TRUE ) );
 
-	  DigestInline :
+          DigestInline :
 
             YY_INPUT( (char*) sBuffer, iSize, YY_BUF_SIZE );
-	    if( iSize == 0 )
-	    {
+            if( iSize == 0 )
+            {
                hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_INVALID_INLINE, hb_comp_functions.pLast->szName, NULL );
-	       hb_pp_bInline = FALSE;
-	       return '\n';
-	    }
-	    pBuffer = (char*) sBuffer;
+               hb_pp_bInline = FALSE;
+               return '\n';
+            }
+            pBuffer = (char*) sBuffer;
 
-	    while( *pBuffer && ( *pBuffer == ' ' || *pBuffer == '\t' ) )
-	    {
+            while( *pBuffer && ( *pBuffer == ' ' || *pBuffer == '\t' ) )
+            {
                pBuffer++;
-	    }
+            }
 
-	    if( *pBuffer == '\0' )
-	    {
-	       goto DigestInline;
-	    }
-	    else if( *pBuffer == '{' )
-	    {
-	       iBraces++;
-	    }
-	    else if( *pBuffer == '}' && iBraces > 1 )
-	    {
-	       iBraces--;
-	    }
-	    else if( *pBuffer == '}' )
-	    {
-	       if( pInline->pCode == NULL )
-	       {
-	          pInline->pCode = hb_xgrab( ( iSize = strlen( (char*) sBuffer ) ) + 1 );
-	          strcpy( pInline->pCode, (char*) sBuffer );
-	       }
-	       else
-	       {
-	          pInline->pCode = hb_xrealloc( pInline->pCode, pInline->lPCodeSize + ( iSize = strlen( (char*) sBuffer ) ) + 1 );
-	          strcpy( pInline->pCode + pInline->lPCodeSize, (char*) sBuffer );
-	       }
+            if( *pBuffer == '\0' )
+            {
+               goto DigestInline;
+            }
+            else if( *pBuffer == '{' )
+            {
+               iBraces++;
+            }
+            else if( *pBuffer == '}' && iBraces > 1 )
+            {
+               iBraces--;
+            }
+            else if( *pBuffer == '}' )
+            {
+               if( pInline->pCode == NULL )
+               {
+                  pInline->pCode = (unsigned char *) hb_xgrab( ( iSize = strlen( (char*) sBuffer ) ) + 1 );
+                  strcpy( (char *) pInline->pCode, (char *) sBuffer );
+               }
+               else
+               {
+                  pInline->pCode = (unsigned char *) hb_xrealloc( pInline->pCode, pInline->lPCodeSize + ( iSize = strlen( (char*) sBuffer ) ) + 1 );
+                  strcpy( (char *) (pInline->pCode + pInline->lPCodeSize), (char *) sBuffer );
+               }
 
-	       pInline->lPCodeSize += iSize;
+               pInline->lPCodeSize += iSize;
 
-	       hb_pp_bInline = FALSE;
+               hb_pp_bInline = FALSE;
                yylval.string = hb_compIdentifierNew( sInlineSym, TRUE );
                return IDENTIFIER;
-	    }
+            }
 
-	    if( pInline->pCode == NULL )
-	    {
-	       pInline->pCode = hb_xgrab( ( iSize = strlen( (char*) sBuffer ) ) + 1 );
-	       strcpy( pInline->pCode, (char*) sBuffer );
-	    }
-	    else
-	    {
-	       pInline->pCode = hb_xrealloc( pInline->pCode, pInline->lPCodeSize + ( iSize = strlen( (char*) sBuffer ) ) + 1 );
-	       strcpy( pInline->pCode + pInline->lPCodeSize, (char*) sBuffer );
-	    }
+            if( pInline->pCode == NULL )
+            {
+               pInline->pCode = (unsigned char *) hb_xgrab( ( iSize = strlen( (char*) sBuffer ) ) + 1 );
+               strcpy( (char *) pInline->pCode, (char *) sBuffer );
+            }
+            else
+            {
+               pInline->pCode = (unsigned char *) hb_xrealloc( pInline->pCode, pInline->lPCodeSize + ( iSize = strlen( (char*) sBuffer ) ) + 1 );
+               strcpy( (char *) (pInline->pCode + pInline->lPCodeSize), (char *) sBuffer );
+            }
 
-	    pInline->lPCodeSize += iSize;
+            pInline->lPCodeSize += iSize;
 
-	    goto DigestInline;
-	 }
+            goto DigestInline;
+         }
 
 %{
 /* ************************************************************************ */
@@ -1395,15 +1395,15 @@ Separator     {SpaceTab}
 [\(]           ++_iOpenBracket; hb_comp_iState =LSEPARATOR; return yytext[ 0 ];
 [\)]           --_iOpenBracket; hb_comp_iState =RSEPARATOR; return yytext[ 0 ];
 
-[\x00-\x1F]	    return yytext[ 0 ]; /* see below */
+[\x00-\x1F]         return yytext[ 0 ]; /* see below */
 [\~\`\?\_\\]    return yytext[ 0 ]; /* see below */
-[\x7F-\xFF]	{
+[\x7F-\xFF]     {
             /* This have to be the last rule - any nonstandard and not handled
-	         * characters should go to grammar analyser instead of printing it
-	         * on stdout.
- 	         */
+                 * characters should go to grammar analyser instead of printing it
+                 * on stdout.
+                 */
             return yytext[ 0 ];
-	    }
+            }
 
 %{
 /* ************************************************************************ */

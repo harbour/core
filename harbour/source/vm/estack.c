@@ -104,7 +104,7 @@ void hb_stackPush( void )
       hb_stack.pBase = hb_stack.pItems + BaseIndex;
       hb_stack.wItems += STACK_EXPANDHB_ITEMS;
       for( i=CurrIndex; i < hb_stack.wItems; ++i )
-         hb_stack.pItems[ i ] = hb_xgrab( sizeof( HB_ITEM ) );
+         hb_stack.pItems[ i ] = (_HB_ITEM *) hb_xgrab( sizeof( HB_ITEM ) );
       /* hb_stackDispLocal(); */
    }
 
@@ -115,7 +115,7 @@ void hb_stackPush( void )
 
 void hb_stackInit( void )
 {
-   ULONG i;
+   LONG i;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_stackInit()"));
 
@@ -125,7 +125,7 @@ void hb_stackInit( void )
    hb_stack.wItems = STACK_INITHB_ITEMS;
 
    for( i=0; i < hb_stack.wItems; ++i )
-     hb_stack.pItems[ i ] = hb_xgrab( sizeof( HB_ITEM ) );
+     hb_stack.pItems[ i ] = (_HB_ITEM *) hb_xgrab( sizeof( HB_ITEM ) );
 }
 
 void hb_stackRemove( LONG lUntilPos )

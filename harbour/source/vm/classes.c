@@ -70,7 +70,6 @@
  *    Multiple datas declaration fully supported
  *    Super msg correctly respond by a super object
  *    Scoping : working for protected, hidden and readonly
- *    Define of HB_MASKHIDDEN allow subclass to not inherit of hidden message
  *    This implie a message not found error in place of protection error hidden
  *
  *    06/07/2000
@@ -393,8 +392,13 @@ void hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod )
    char * szNameBase;
    char * szNameObject;
 
+/* We have to rethink about hidden, in the meantime, better to do nothing :( */
+/* if ( (( uiScope & HB_OO_CLSTP_PROTECTED ) == HB_OO_CLSTP_PROTECTED ) ||   */
+/*      (( uiScope & HB_OO_CLSTP_HIDDEN ) == HB_OO_CLSTP_HIDDEN ) ||         */
+/*      (( uiScope & HB_OO_CLSTP_READONLY ) == HB_OO_CLSTP_READONLY )        */
+/*    )                                                                      */
+
    if ( (( uiScope & HB_OO_CLSTP_PROTECTED ) == HB_OO_CLSTP_PROTECTED ) ||
-        (( uiScope & HB_OO_CLSTP_HIDDEN ) == HB_OO_CLSTP_HIDDEN ) ||
         (( uiScope & HB_OO_CLSTP_READONLY ) == HB_OO_CLSTP_READONLY )
       )
     {
@@ -428,26 +432,22 @@ void hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod )
                hb_errRT_BASE( EG_NOMETHOD, 1004, "Scope violation (protected)", szName );
             }
          }
-
-         /* if HB_CLS_MASKHIDDEN defined, a call to a hidden msg will result to a msg not found error. */
-
-#ifndef HB_CLS_MASKHIDDEN
-         if( ( uiScope & HB_OO_CLSTP_HIDDEN ) == HB_OO_CLSTP_HIDDEN )
-         {
-            if( ( uiScope & HB_OO_CLSTP_SUPER ) == HB_OO_CLSTP_SUPER )
-               bRetVal = TRUE;
-            else
-               bRetVal = ( strcmp( szNameBase, szNameObject ) != 0 );
-
-            if( bRetVal )
-            {
-               strcpy( szName, szNameObject );
-               strcat( szName, ":" );
-               strcat( szName, pMessage->pSymbol->szName );
-               hb_errRT_BASE( EG_NOMETHOD, 1004, "Scope violation (hidden)", szName );
-            }
-         }
-#endif
+/* We have to rethink about hidden, in the meantime, better to do nothing :(            */
+/*       if( ( uiScope & HB_OO_CLSTP_HIDDEN ) == HB_OO_CLSTP_HIDDEN )                   */
+/*       {                                                                              */
+/*          if( ( uiScope & HB_OO_CLSTP_SUPER ) == HB_OO_CLSTP_SUPER )                  */
+/*             bRetVal = TRUE;                                                          */
+/*          else                                                                        */
+/*             bRetVal = ( strcmp( szNameBase, szNameObject ) != 0 );                   */
+/*                                                                                      */
+/*          if( bRetVal )                                                               */
+/*          {                                                                           */
+/*             strcpy( szName, szNameObject );                                          */
+/*             strcat( szName, ":" );                                                   */
+/*             strcat( szName, pMessage->pSymbol->szName );                             */
+/*             hb_errRT_BASE( EG_NOMETHOD, 1004, "Scope violation (hidden)", szName );  */
+/*          }                                                                           */
+/*       }                                                                              */
       }
       else if( ( uiScope & HB_OO_CLSTP_PROTECTED ) == HB_OO_CLSTP_PROTECTED )
       {
@@ -456,15 +456,14 @@ void hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod )
          strcat( szName, pMessage->pSymbol->szName );
          hb_errRT_BASE( EG_NOMETHOD, 1004, "Scope violation (protected)", szName );
       }
-#ifndef HB_CLS_MASKHIDDEN
-      else if( ( uiScope & HB_OO_CLSTP_HIDDEN ) == HB_OO_CLSTP_HIDDEN )
-      {
-         strcpy( szName, szNameObject );
-         strcat( szName, ":" );
-         strcat( szName, pMessage->pSymbol->szName );
-         hb_errRT_BASE( EG_NOMETHOD, 1004, "Scope violation (hidden)", szName );
-      }
-#endif
+/* We have to rethink about hidden, in the meantime, better to do nothing :(     */
+/*    else if( ( uiScope & HB_OO_CLSTP_HIDDEN ) == HB_OO_CLSTP_HIDDEN )          */
+/*    {                                                                          */
+/*       strcpy( szName, szNameObject );                                         */
+/*       strcat( szName, ":" );                                                  */
+/*       strcat( szName, pMessage->pSymbol->szName );                            */
+/*       hb_errRT_BASE( EG_NOMETHOD, 1004, "Scope violation (hidden)", szName ); */
+/*    }                                                                          */
 
 #ifdef HB_CLS_ENFORCERO  /* Not enabled by default */
       if( ( uiScope & HB_OO_CLSTP_READONLY ) == HB_OO_CLSTP_READONLY )
