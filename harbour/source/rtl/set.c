@@ -780,11 +780,11 @@ HARBOUR HB_SET( void )
          else hb_retc( "" );
          if( args > 1 )
          {
-            /* If the print file is not already open, open it. */
+            /* If the print file is not already open, open it in overwrite mode. */
             hb_set.HB_SET_DEVICE = set_string( pArg2, hb_set.HB_SET_DEVICE );
             if( hb_stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 && hb_set_printhan == FS_ERROR
             && hb_set.HB_SET_PRINTFILE && strlen( hb_set.HB_SET_PRINTFILE ) > 0 )
-               hb_set_printhan = open_handle( hb_set.HB_SET_PRINTFILE, bFlag, ".prn", HB_SET_PRINTFILE );
+               hb_set_printhan = open_handle( hb_set.HB_SET_PRINTFILE, FALSE, ".prn", HB_SET_PRINTFILE );
          }
          break;
       case HB_SET_EPOCH      :

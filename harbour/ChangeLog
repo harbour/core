@@ -1,3 +1,16 @@
+19990921-14:25 EDT David G. Holm <dholm@jsd-llc.com>
+
+  * source/rtl/set.c
+    ! Changed unitialized bflag in call to open_handle() to FALSE
+
+  * source/rtl/strings.c
+    ! Rearranged the logic in hb_itemStr() that determines whether or
+      not to round a floating point number being converted to a string
+
+  * source/rtl/tone.c
+    ! Added ' || defined(WINNT)' to the ULONG #if for calculating the
+      value of 'temp'
+
 19990921-12:25 EDT David G. Holm <dholm@jsd-llc.com>
 
   * source/rtl/console.c

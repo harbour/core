@@ -1279,7 +1279,7 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
             else
 #endif
             {
-               if( iDec < IS_DOUBLE( pNumber ) ? pNumber->item.asDouble.decimal : 0 )
+               if( IS_DOUBLE( pNumber ) && iDec < pNumber->item.asDouble.decimal )
                   dNumber = hb_numRound( dNumber, iDec );
 
                if( iDec == 0 )
