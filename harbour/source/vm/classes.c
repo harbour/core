@@ -2132,23 +2132,11 @@ static HARBOUR hb___msgEval( void )
 static HARBOUR hb___msgSuper( void )
 {
    PHB_ITEM pObject = hb_stackSelfItem();
-   ULONG ulLen = pObject->item.asArray.value->ulLen;
-   PHB_ITEM pCopy = hb_itemArrayNew(ulLen+1);  /* hb_arrayClone(pObject, NULL); */
 
-   /* Now creating a copy wich will share all value with the original */
-   for( ; ulLen > 0 ; ulLen--)
-      hb_itemCopy( pCopy->item.asArray.value->pItems + ulLen, pObject->item.asArray.value->pItems + ulLen  );
+   pObject->item.asArray.value->uiPrevCls  = pObject->item.asArray.value->uiClass; /* backup of actual handel */
+   pObject->item.asArray.value->uiClass    = s_pMethod->uiSprClass;                /* superclass handel casting */
 
-   pCopy->item.asArray.value->uiPrevCls  = pObject->item.asArray.value->uiClass; /* backup of actual handel */
-   pCopy->item.asArray.value->uiClass    = s_pMethod->uiSprClass;                /* superclass handel casting */
-
-   pCopy->item.asArray.value->puiClsTree = ( USHORT * ) hb_xgrab( sizeof( USHORT ) );
-   pCopy->item.asArray.value->puiClsTree[0] = 0 ;
-
-   /* Now save the Self object as the last elem. */
-   hb_itemArrayPut( pCopy, pCopy->item.asArray.value->ulLen , pObject );
-
-   hb_itemRelease(hb_itemReturn( pCopy ));
+   hb_itemReturn( pObject );
 }
 
 /*

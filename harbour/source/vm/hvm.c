@@ -3001,7 +3001,6 @@ void hb_vmDo( USHORT uiParams )
 
       BOOL lPopSuper = FALSE ;
       PHB_BASEARRAY pSelfBase = NULL;
-      PHB_ITEM pRealSelf=NULL;
       USHORT uiClass;
 
       if( pSym == &( hb_symEval ) && HB_IS_BLOCK( pSelf ) )
@@ -3019,13 +3018,9 @@ void hb_vmDo( USHORT uiParams )
               printf( "\n VmDo Method: %s \n", pSym->szName );
               */
               uiClass=pSelfBase->uiClass;
-              /*pSelfBase->uiClass = pSelfBase->uiPrevCls;*/
-              /*pSelfBase->uiPrevCls = 0 ;                */
-              /* take care this is a fake object */
-              /* take back the real Self */
-              pRealSelf = hb_arrayGetItemPtr(pSelf,pSelfBase->ulLen) ;
-              /* and take back the good pSelfBase */
-              pSelfBase = pRealSelf->item.asArray.value;
+
+              pSelfBase->uiClass = pSelfBase->uiPrevCls;
+              pSelfBase->uiPrevCls = 0 ;
 
               /* Push current SuperClass handle */
               lPopSuper = TRUE ;
@@ -3053,6 +3048,7 @@ void hb_vmDo( USHORT uiParams )
            /* POP SuperClass handle */
            pSelfBase->puiClsTree = ( USHORT * ) hb_xrealloc( pSelfBase->puiClsTree, sizeof( USHORT ) * (nPos + 1) );
            pSelfBase->puiClsTree[0]=nPos;
+
          }
 
          if( bProfiler )
@@ -3152,7 +3148,6 @@ void hb_vmSend( USHORT uiParams )
 
       BOOL lPopSuper = FALSE ;
       PHB_BASEARRAY pSelfBase = NULL;
-      PHB_ITEM pRealSelf=NULL;
       USHORT uiClass;
 
       if( ! ( pSym == &( hb_symEval ) && HB_IS_BLOCK( pSelf ) ) )
@@ -3169,13 +3164,10 @@ void hb_vmSend( USHORT uiParams )
               printf( "\n VmSend Method: %s \n", pSym->szName );
               */
               uiClass=pSelfBase->uiClass;
-              /*pSelfBase->uiClass = pSelfBase->uiPrevCls;*/
-              /*pSelfBase->uiPrevCls = 0 ;                */
-              /* take care this is a fake object */
-              /* take back the real Self */
-              pRealSelf = hb_arrayGetItemPtr(pSelf,pSelfBase->ulLen) ;
-              /* and take back the good pSelfBase */
-              pSelfBase = pRealSelf->item.asArray.value;
+
+              pSelfBase->uiClass = pSelfBase->uiPrevCls;
+              pSelfBase->uiPrevCls = 0 ;
+
               /* Push current SuperClass handle */
               lPopSuper = TRUE ;
               nPos=pSelfBase->puiClsTree[0]+1;

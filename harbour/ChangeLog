@@ -1,5 +1,10 @@
-2001-08-20 17:45 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+2001-08-20 22:20 GMT +1 JFL (mafact) <jfl@mafact.com>
+   harbour/source/vm/hvm.c
+    * reversed my previous modif till I have it working :-(
+   harbour/source/vm/classes.c
+    * reversed my previous modif till I have it working :-(
 
+2001-08-20 17:45 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
     *include/hbexprb.c
     *source/compiler/exproptb.c
     *source/compiler/genc.c
