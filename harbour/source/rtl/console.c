@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 #ifdef WINDOWS
    #include <windows.h>
 #endif

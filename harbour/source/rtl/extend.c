@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 #include <malloc.h>
 #include <stdlib.h>
 #include <extend.h>

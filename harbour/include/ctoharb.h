@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 // Calling Harbour from C code
 
 /* executing Harbour code from C */

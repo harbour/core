@@ -1,6 +1,10 @@
 %{
 
 /*
+ * $Id$
+ */
+
+/*
    Harbour compiler (yacc rules and actions)
    Build 21 proposal: spring 1999
    Usage: bison -d -v harbour.y  You may find Bison at www.harbour.project.org

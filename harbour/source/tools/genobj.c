@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 /* Windows/DOS OBJs 32 bits generation support routines */
 
 #include <fcntl.h>

@@ -1,3 +1,41 @@
+Wed May 05 18:36:53 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* include/ctoharb.h: 
+	* include/dates.h: 
+	* include/extend.h: 
+	* include/init.h: 
+	* include/itemapi.h: 
+	* include/pcode.h: 
+	* include/set.h: 
+	* include/setcurs.ch: 
+	* include/types.h: 
+	* source/compiler/harbour.c: 
+	* source/compiler/harbour.l: 
+	* source/compiler/harbour.y: 
+	* source/rtl/arrays.c: 
+	* source/rtl/classes.c: 
+	* source/rtl/codebloc.c: 
+	* source/rtl/console.c: 
+	* source/rtl/dates.c: 
+	* source/rtl/environ.c: 
+	* source/rtl/errorapi.c: 
+	* source/rtl/extend.c: 
+	* source/rtl/files.c: 
+	* source/rtl/itemapi.c: 
+	* source/rtl/math.c: 
+	* source/rtl/set.c: 
+	* source/rtl/strcmp.c: 
+	* source/rtl/strings.c: 
+	* source/rtl/transfrm.c: 
+	* source/tools/datesx.c: 
+	* source/tools/genobj.c: 
+	* source/tools/io.c: 
+	* source/tools/mathx.c: 
+	* source/tools/stringsx.c: 
+	* source/vm/dynsym.c: 
+	* source/vm/hvm.c: 
+	Added a comment with the CVS Id keyword.
+
 Wed May 05 18:28:28 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* makefile.b16: 

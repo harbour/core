@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 /* Harbour dynamic symbol table management */
 
 #include <extend.h>

@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 #include <extend.h>
 #include <set.h>
 #include <ctype.h>

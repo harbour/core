@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 #include <extend.h>
 
 typedef struct

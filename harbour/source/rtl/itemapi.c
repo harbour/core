@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 #include <extend.h>
 #include <itemapi.h>
 #include <ctoharb.h>

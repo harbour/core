@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 /* The Harbour virtual machine */
 
 /* Please note the following comments we may use everywhere

@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 #include <extend.h>
 
 int OurStrCmp( PITEM pFirst, PITEM pSecond ) /* Check whether two strings

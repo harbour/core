@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 #ifndef _DATES_H
 #define _DATES_H
 

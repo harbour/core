@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 #ifndef _EXTEND_H
 #define _EXTEND_H
 

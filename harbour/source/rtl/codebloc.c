@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 /* The Harbour implementation of codeblocks */
 
 #include <extend.h>

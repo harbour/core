@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 /* Harbour local symbols initialization */
 
 void ProcessSymbols( SYMBOL * pSymbols, WORD wSymbols );

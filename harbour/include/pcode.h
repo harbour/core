@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 #ifndef _PCODE_H
 #define _PCODE_H
 
