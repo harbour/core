@@ -8,32 +8,43 @@
 // Date : 30/05/1999
 //
 
-function Main( cFrom, cTo )
+function Main()
 
    local oFrom
    local oTo
    local cOut
 
    set( _SET_EXACT, .T.)
-   cFrom := Default( cFrom, "strip.prg" )
-   cTo   := Default( cTo,   "strip.out" )
 
-   oFrom := TTextFile():New( cFrom, "R" )
+   oFrom := TOnTop()   :New( "hello.prg", "R" )
+   oTo   := TTextFile():New( "hello.out", "W" )
+
+   QOut( "What's in oFrom" )
    HBDebug( { oFrom, aoMethod( oFrom ) } )
-//   oFrom:Super:Run()
-   oFrom:Set( "DoIt !" )
-   QOut( oFrom:Out )
-   oTo   := TTextFile():New( cTo, "W" )
 
+   QOut()
+   QOut( "What's in oFrom:TEmpty" )
+   HBDebug( { oFrom:TEmpty, aoMethod( oFrom:TEmpty ) } )
+
+   QOut()
+   QOut( "Let's call Run() from TEmpty : " )
+   oFrom:TEmpty:Run()
+
+   QOut()
+   QOut( "Let's call a method from TEmpty and one from TOnTop" )
+   oFrom:Set( "Done !" )
+   oFrom:Say( "Out" )
+
+   QOut()
+   QOut( "Basic copy loop using the default Run() from TTextFile" )
    do while !oFrom:lEoF
       cOut := oFrom:Run()
-      if alltrim(cOut) != ""
-         oTo:Run( cOut )
-      endif
+      QOut( cOut )
+      oTo:Run( cOut )
    enddo
-   QOut( "Number of lines", oTo:nLine )
    oFrom:Dispose()
    oTo:Dispose()
+
 return nil
 
 //
@@ -44,16 +55,14 @@ function TEmpty()
    static oEmpty
 
    if oEmpty == NIL
-      QOut( "I am being called indirectly" )
-
       oEmpty := TClass():New( "TEmpty" )             // Create a new class def
 
       oEmpty:AddInline( "New", {|self|self} )
 
-      oEmpty:AddInline( "Run", {||QOut( "Run!" ) } ) // Test command
+      oEmpty:AddInline( "Run", {||QOut( "Run !" )})  // Test command
 //      oEmpty:AddInline( "Set", {|self,xParam|::Out := xParam } )
       oEmpty:AddInline( "Set", {|self,xParam| oSend(self,"_Out",xParam) } )
-      oEmpty:AddData( "Out", 1 )                     // Test command
+      oEmpty:AddData( "Out", "Hi there" )            // Test command
       oEmpty:AddVirtual( "Dispose" )                 // Clean up code
 
       oEmpty:Create()
@@ -61,9 +70,23 @@ function TEmpty()
 return oEmpty:Instance()
 
 
+//
+// Let's add another one on top
+//
+function TOnTop()
+
+   static oOnTop
+
+   if oOnTop == NIL
+      oOnTop := TClass():New( "TOnTop", "TTextFile" )
+      oOnTop:AddInline( "Say", {|self, cArg| QOut( oSend(self, cArg) ) } )
+      oOnTop:Create()
+   endif
+return oOnTop:Instance()
+
 
 //
-// Generic DOS file handler
+// Generic Text file handler
 //
 function TTextFile()
 
@@ -90,7 +113,6 @@ function TTextFile()
       oFile:AddMethod( "Read"   , @Read()    )  // Read line
       oFile:AddMethod( "WriteLn", @WriteLn() )  // Write line
       oFile:AddMethod( "Write"  , @Write()   )  // Write without CR
-//      oFile:AddMethod( "EoF"    , @EoF()     )  // End of file as function
       oFile:AddMethod( "Goto"   , @Goto()    )  // Go to line
 
       oFile:Create()
@@ -105,7 +127,7 @@ return oFile:Instance()
 // <cMode>      mode for opening. Default "R"
 // <nBlockSize> Optional maximum blocksize
 //
-static function New( cFileName, cMode, nBlock )
+function New( cFileName, cMode, nBlock )
 
    local self := QSelf()                        // Get self
 
@@ -133,7 +155,7 @@ static function New( cFileName, cMode, nBlock )
 return self
 
 
-static function Run( xTxt, lCRLF )
+function Run( xTxt, lCRLF )
 
    local self := QSelf()
    local xRet
@@ -149,7 +171,7 @@ return xRet
 //
 // Dispose -> Close the file handle
 //
-static function Dispose()
+function Dispose()
 
    local self := QSelf()
 
@@ -169,7 +191,7 @@ return self
 //
 // Read a single line
 //
-static function Read()
+function Read()
 
    local self := QSelf()
    local cRet  := ""
@@ -195,7 +217,7 @@ static function Read()
       endif
 
       if !::lEoF
-         ::nLine := ::nLine + 1                 // ++ not available
+         ::nLine++
          nCRPos := At(Chr(10), ::cBlock)
          if nCRPos != 0                         // More than one line read
             cRet     := Substr( ::cBlock, 1, nCRPos - 1)
@@ -205,7 +227,7 @@ static function Read()
             ::cBlock := ""
             cRet     += ::Read()                // Read the rest
             if !::lEoF
-               ::nLine := ::nLine - 1           // Adjust erroneous line count
+               ::nLine--                        // Adjust erroneous line count
             endif
          endif
          nEoFPos := At( Chr(26), cRet )
@@ -226,7 +248,7 @@ return cRet
 //         one or more strings
 // <lCRLF> End with Carriage Return/Line Feed (Default == TRUE)
 //
-static function WriteLn( xTxt, lCRLF )
+function WriteLn( xTxt, lCRLF )
 
    local self := QSelf()
    local cBlock
@@ -249,17 +271,11 @@ static function WriteLn( xTxt, lCRLF )
 return self
 
 
-static function Write( xTxt )
+function Write( xTxt )
 
    local self := QSelf()
 
 return ::WriteLn( xTxt, .F. )
-
-
-//function EoF()
-//
-//   local self := QSelf()
-//return ::lEoF
 
 
 //
@@ -281,7 +297,7 @@ static function Goto( nLine )
       fSeek(::hFile, 0)                         // Go top
       do while !::lEoF .and. nWhere < nLine
          nWhere++
-         ::Run()
+         ::Read()
       enddo
    endif
 return !lEoF

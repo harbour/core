@@ -17,6 +17,7 @@ void Function( WORD wParams );
 #define MET_CLASSDATA 2
 #define MET_INLINE    3
 #define MET_VIRTUAL   4
+#define MET_SUPER     5
 
 typedef struct
 {
@@ -217,6 +218,17 @@ static HARBOUR Virtual( void )
    _ret();
 }
 
+static HARBOUR SelectSuper( void )
+{
+   PITEM pObject   = stack.pBase + 1;
+   PITEM pSuper    = hb_arrayClone( pObject );
+   WORD  wSuperCls = pMethod->wData;
+
+   ItemCopy( &stack.Return, pSuper );
+   ( (PBASEARRAY) (stack.Return.value.pBaseArray) )->wClass = wSuperCls;
+   hb_itemRelease( pSuper );
+}
+
 static HARBOUR ClassName( void )
 {
    WORD wClass = IS_ARRAY( stack.pBase + 1 ) ?
@@ -396,6 +408,11 @@ HARBOUR CLASSADD() /* hClass, cMessage, pFunction, nType, xInit */
 
             case MET_VIRTUAL:
                  pClass->pMethods[ wAt ].pFunction = Virtual;
+                 break;
+
+            case MET_SUPER:
+                 pClass->pMethods[ wAt ].wData     = _parnl( 3 );
+                 pClass->pMethods[ wAt ].pFunction = SelectSuper;
                  break;
 
             default:

@@ -5,6 +5,7 @@
 #define MET_CLASSDATA 2
 #define MET_INLINE    3
 #define MET_VIRTUAL   4
+#define MET_SUPER     5
 
 #define DAT_SYMBOL    1
 #define DAT_INITVAL   2
@@ -41,15 +42,15 @@ function TClass()
       ClassAdd( hClass, "_aInlines",  6, MET_DATA )
       ClassAdd( hClass, "aVirtuals",  7, MET_DATA )
       ClassAdd( hClass, "_aVirtuals", 7, MET_DATA )
-      ClassAdd( hClass, "hSuper",     8, MET_DATA )
-      ClassAdd( hClass, "_hSuper",    8, MET_DATA )
+      ClassAdd( hClass, "xSuper",     8, MET_DATA )
+      ClassAdd( hClass, "_xSuper",    8, MET_DATA )
    endif
 
 return ClassInstance( hClass )
 
 //----------------------------------------------------------------------------//
 
-static function New( cClassName, cSuperClass )
+static function New( cClassName, xSuper )
 
    local Self := QSelf()
 
@@ -59,11 +60,8 @@ static function New( cClassName, cSuperClass )
    ::aClsDatas = {}
    ::aInlines  = {}
    ::aVirtuals = {}
-   if ValType( cSuperClass ) != "C"
-      ::hSuper = 0
-   else
-      ::hSuper = __InstSuper( Upper ( cSuperClass ) )
-          // Instance super class and return class handle
+   if ValType( xSuper ) $ "CA"
+      ::xSuper = xSuper
    endif
 
 return Self
@@ -74,12 +72,27 @@ static function Create()
 
    local Self    := QSelf()
    local n, nLen := Len( ::aDatas )
-   local hClass  := ClassCreate( ::cName, nLen, ::hSuper )
-   local nDataBegin := If( !Empty( ::hSuper ), __WDatas( ::hSuper ), 0 )
+   local hClass
+   local nDataBegin := 0
+   local hSuper
+
+   if ::xSuper == NIL
+      hClass := ClassCreate( ::cName, nLen )
+
+   elseif ValType(::xSuper) == "A"              // Multiple inheritance
+      QOut( "Sorry, not supported yet :-)" )
+
+   elseif ValType(::xSuper) == "C"              // Single inheritance
+      hSuper := __InstSuper( Upper( ::xSuper ) )
+      hClass := ClassCreate( ::cName, nLen, hSuper )
+                                                // Add class casts
+      ClassAdd( hClass, Upper( ::xSuper ), hSuper, MET_SUPER )
+      ClassAdd( hClass, "SUPER", hSuper, MET_SUPER )
+
+      nDataBegin := __WDatas( hSuper )          // Get offset for new DATAs
+   endif
 
    ::hClass = hClass
-
-
 
    for n = 1 to nLen
       ClassAdd( hClass, ::aDatas[ n ][ DAT_SYMBOL ], n + nDataBegin, MET_DATA, ;
