@@ -609,7 +609,9 @@ PHB_FFIND hb_fsFindFirst( const char * pszFileName, USHORT uiAttr )
 
             while( FindNextFile( info->hFindFile, &info->pFindFileData ) )
             {
-               if( info->dwAttr == 0 || ( info->dwAttr & info->pFindFileData.dwFileAttributes ) || ( info->pFindFileData.dwFileAttributes == 0 ) )
+               if( info->dwAttr == 0 ||
+                 ( info->pFindFileData.dwFileAttributes == 0x80 ) ||
+                 ( info->dwAttr & info->pFindFileData.dwFileAttributes ) )
                {
                   bFound = TRUE;
                   break;

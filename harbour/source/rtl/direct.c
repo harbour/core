@@ -66,14 +66,8 @@
  * The returned file list will always include (for instance) 'R'eadOnly files
  * unless they also happen to be 'H'idden and that attribute was not requested.
  *
- * The exception is Directory entries - these will always be excluded
- * even if they have the requested bit set. (Unless of course, you request "D"
- * as an attribute as well)
- *
- * The only valid characters that can be passed as an attribute request then,
- * are any of "DHSV". Anything else is already implied, so it is ignored. "V"
- * is a special case - you will get back the entry that describes the volume
- * label for the drive implied by the filemask.
+ * "V" is a special case - you will get back the entry that describes the
+ * volume label for the drive implied by the filemask.
  *
  * Differences from the 'standard':
  * - Where supported, filenames will be returned in the same case as they
