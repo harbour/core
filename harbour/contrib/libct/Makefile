@@ -59,7 +59,7 @@ PRG_SOURCES= \
 	datetime.prg \
 	numconv.prg \
 
-LIBNAME=libct
+LIBNAME=ct
 
 include $(TOP)$(ROOT)config/lib.cf
 

@@ -13,7 +13,7 @@ if "%1" == "CLEAN" goto CLEAN
 
 :BUILD_OK
 
-   copy ..\..\lib\b32\gt.lib ..\..\lib\*.* > nul
+   copy ..\..\lib\b32\libgt.lib ..\..\lib\*.* > nul
    goto EXIT
 
 :BUILD_ERR
