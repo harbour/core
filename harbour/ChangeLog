@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+2002-01-17 21:50 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/rdd/dbfntx/dbfntx1.c
+  * source/rdd/dbcmd.c
+    ! a bug fixed, related to conditional indexing
 
 2002-01-17 15:32 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rdd/dbfntx/dbfntx1.c

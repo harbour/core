@@ -62,7 +62,12 @@ static size_t ssElementPos;  /* TODO: make this thread safe */
 static int siDescend;        /* TODO: make this thread safe */
 
 /* qsort function */
-static int do_charsort (const void *p1, const void *p2)
+#ifdef __IBMCPP__
+int extern _LNK_CONV
+#else
+static int
+#endif
+do_charsort (const void *p1, const void *p2)
 {
 
   char *pc1 = (char *)p1;
