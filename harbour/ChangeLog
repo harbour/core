@@ -1,3 +1,9 @@
+19991006-15:05 EDT Paul Tucker <ptucker@sympatico.ca>
+   * makefile.vc
+     + source/rtl/dummy.prg
+   * source/rtl/memoline.c
+     * added a cast (again) on xgrab call.
+
 19991006-20:11 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/rtl/tgetlist.prg
      ! ReadExit() added back as method.

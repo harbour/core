@@ -134,7 +134,7 @@ HARBOUR HB_MEMOLINE( void )
    if( ulLineNumber == ulLines )
    {
       ULONG ulSpAdded = 0;
-      char * pszLine = hb_xgrab( ulLineLength );
+      char * pszLine = (char *)hb_xgrab( ulLineLength );
 
       memset( pszLine, ' ', ulLineLength );
 

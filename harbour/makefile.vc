@@ -81,6 +81,7 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\dir.obj \
     $(OBJ_DIR)\dircmd.obj \
     $(OBJ_DIR)\do.obj \
+    $(OBJ_DIR)\dummy.obj \
     $(OBJ_DIR)\dynsym.obj \
     $(OBJ_DIR)\environ.obj \
     $(OBJ_DIR)\errorapi.obj \
@@ -420,6 +421,12 @@ $(OBJ_DIR)\dircmd.obj : $(RTL_DIR)\dircmd.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\do.obj : $(RTL_DIR)\do.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(RTL_DIR)\dummy.c : $(RTL_DIR)\dummy.prg
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
+
+$(OBJ_DIR)\dummy.obj : $(RTL_DIR)\dummy.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\environ.obj : $(RTL_DIR)\environ.c
