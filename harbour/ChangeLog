@@ -1,4 +1,9 @@
 19990723-06:39 EDT Paul Tucker <ptucker@sympatico.ca>
+   * source/rtl/gtapi.c
+   * source/rtl/setcolor.c
+     * modified some if statements to specifically test for != 0
+
+19990723-06:39 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/devoutp.prg
      * second param to devout() is color, not picture
 

@@ -6,6 +6,8 @@
  *  GTAPI.C: Generic Terminal for Harbour
  *
  * Latest mods:
+ * 1.35   19990723   ptucker   Modifed some if statments to test for != 0
+ * 1.34   19990721   ptucker   Corrected _Color mask descriptions
  * 1.33   19990721   ptucker   Improved Clipper color compatibility
  * 1.31   19990720   ptucker   Implimented color selection in gtWrite and
  *                             gtScroll
@@ -46,12 +48,12 @@ static USHORT s_uiCurrentCol = 0;
 static USHORT s_uiDispCount  = 0;
 static USHORT s_uiColorIndex = 0;
 
-int *_Color;           /* masks: 0x0007     Foreground
-                                 0x0070     Background
-                                 0x0008     Bright
-                                 0x0080     Blink
-                                 0x0800     Underline foreground
-                                 0x8000     Underline background
+int *_Color;           /* masks: 0x0007     Background
+                                 0x0070     Foreground
+                                 0x0008     Blink
+                                 0x0080     Bright
+                                 0x0800     Underline background
+                                 0x8000     Underline foreground
                         */
 int _ColorCount; 
 
@@ -212,7 +214,8 @@ int hb_gtSetColorStr(char * fpColorString)
 
     do
     {
-        if( ( c=*fpColorString++  ) > 'A' )
+        c = *fpColorString++;
+        if( c > 'A' )
             c &= 0x5f;			/* convert to upper case */
 
         while( c <= '9' && c >= '0' && i < 6 )
@@ -223,7 +226,7 @@ int hb_gtSetColorStr(char * fpColorString)
            buff[i++] = c;
            c = *fpColorString++;
         }
-        if( i )
+        if( i > 0 )
         {
             i--;
             nColor = 0;
@@ -231,11 +234,12 @@ int hb_gtSetColorStr(char * fpColorString)
             /* ie: nColor = atoi(buff); */
             for( y=1; i+1; y *= 10, i-- )
             {
-                if( buff[ i ] )
+                if( buff[ i ] != '\0')
                     nColor += ( ( buff[i] - '0' ) * y );
             }
             nColor &= 0xf;
             i=0;
+            ++nCount;
         }
 
         ++nCount;
@@ -271,19 +275,19 @@ int hb_gtSetColorStr(char * fpColorString)
                 nFore  |= 8;
                 break;
             case '/':
-                if( nHasU )
+                if( nHasU != 0 )
                 {
                    nHasU  = 0;
-                   nFore |= 0x800;
+                   nFore |= 0x800;  /* foreground underline bit */
 //                   if( !nColor & ! (nFore & 0x77 ) )
 //                       nColor = 1;
                 }
-                else if( nHasX )
+                else if( nHasX != 0 )
                 {
                    nColor = 0;
                    nHasX = 0;
                 }
-                else if( nHasI )
+                else if( nHasI != 0 )
                 {
                    nColor = 7;
                    nHasI = 0;
@@ -303,35 +307,41 @@ int hb_gtSetColorStr(char * fpColorString)
                     _Color = (int *)hb_xrealloc( _Color, sizeof(int)*(nPos +1) );
                     ++ _ColorCount;
                 }
-                if( nHasX )
+                if( nHasX != 0 )
                     nFore &= 0x88F8;
 
-                if( nHasU )
-                    nFore |= ( nSlash ? 0x8000 : 0x800 );
+                if( nHasU != 0 ) /* background if slash, else foreground */
+                    nColor |= 0x800;
 
-                if( nHasI )
+                if( nHasI != 0 )
                 {
-                    if( nSlash )
+                    if( nSlash != 0 )
                     {
-                       nColor = 7;
+                       nColor &= 0x88F;
+                       nColor |= 0x007;
                        nFore &= 0x88F8;
                     }
                     else
                     {
-                       nColor = 112;
+                       nColor &= 0x8F8;
+                       nColor |= 0x070;
                        nFore &= 0x888F;
                     }
                 }
                 if( (nFore &0x8800 ) != 0 && ( ( nFore | nColor ) & 0x77 ) == 0)
                     nFore |= 1;
 
-                _Color[nPos++] = ( nColor << (nSlash? 4:0) ) | nFore;
+                if( nSlash != 0 )
+                   _Color[nPos++] = ( nColor << 4 ) | nFore;
+                else
+                   _Color[nPos++] = nColor | nFore;
+
                 nColor=nFore=nSlash=nHasX=nHasU=nHasI=0;
         }
     }
     while( c );
 
-    if( nPos && nPos < 4 )
+    if( nPos > 0 && nPos < 4 )
        _Color[4] = _Color[1];
 
     return(0);
@@ -350,7 +360,7 @@ int hb_gtGetColorStr(char * fpColorString)
         nColor = _Color[i] & 7;
         do
         {
-            if( _Color[i] & (j ? 0x8000 : 0x800) )
+            if( ( _Color[i] & (j ? 0x8000 : 0x800)) != 0 )
                 sColors[k++] = 'U';
             else
             {
@@ -362,30 +372,31 @@ int hb_gtGetColorStr(char * fpColorString)
                         sColors[k++] = 'N';
                     else
                     {
-                        if( nColor & 1 )
+                        if( ( nColor & 1 ) != 0 )
                             sColors[k++] = 'B';
     
-                        if( nColor & 2 )
+                        if( ( nColor & 2 ) != 0 )
                             sColors[k++] = 'G';
     
-                        if( nColor & 4 )
+                        if( ( nColor & 4 ) != 0 )
                             sColors[k++] = 'R';
                     }
                 }
             }
             if( j == 0 )
             {
-                if( _Color[i] & 8 )
+                if( ( _Color[i] & 8 ) != 0 )
                     sColors[k++] = '+';
                 sColors[k++] = '/';
             }
             else
-                if( _Color[i] & 128 )
+                if( ( _Color[i] & 128 ) != 0 )
                     sColors[k++] = '*';
 
             nColor = (_Color[i] >> 4) & 7;
         }
         while( ++j < 2 );
+
         if( i+1 < _ColorCount )
             sColors[k++] = ',';
     }
@@ -753,15 +764,13 @@ void main(void)
     hb_gtSetPos(7, 70);
     hb_gtWrite(test2, strlen(test2));
 
-    /* writing color text (not implemented yet) */
-    /*
+    /* writing color text */
     hb_gtSetColorStr( "W+/B, B/W" );
     hb_gtColorSelect(_CLR_STANDARD);
     hb_gtWrite( "Enhanced color (B/W)", 20 );
     hb_gtSetPos(22, 62);
     hb_gtColorSelect(_CLR_ENHANCED);
     hb_gtWrite( "Standard Color (W+/B)", 21 );
-    */
 
     /* boxes */
     hb_gtBoxS(10, 10, 20, 20);

@@ -43,7 +43,7 @@ char *hb_setColor( char *sColor )
    old_string[ sizeof( hb_set.HB_SET_COLOR ) - 1 ] = 0;
 #endif
 
-   if( sColor )
+   if( sColor != (char *)0 )
    {
    #ifdef HARBOUR_USE_GTAPI  
       hb_gtSetColorStr( sColor );
