@@ -55,9 +55,10 @@ export HB_ARCHITECTURE=linux
 export HB_COMPILER=gcc
 
 # ---------------------------------------------------------------
-# Fine tuning of C compiler parameters for "all" command:
+# Fine tuning the compiler parameters for "all" command:
 
 export C_USR=
+export PRG_USR= 
 
 # ---------------------------------------------------------------
 # Start the GNU make system

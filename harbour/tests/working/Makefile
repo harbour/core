@@ -63,6 +63,7 @@ PRG_SOURCES=\
         filexist.prg \
         fornext.prg \
         fornext2.prg \
+        fortest.prg \
         funcarr.prg \
         guess.prg \
         hardcr.prg \

@@ -313,7 +313,7 @@ char * _szCErrors[] = { "Statement not allowed outside of procedure or function"
                        "Incorrect number of arguments: %s %s",
                        "Invalid lvalue",
                        "Invalid use of \'@\' (pass by reference): \'%s\'",
-		       "PARAMETERS cannot be used with local parameters"
+                       "PARAMETERS cannot be used with local parameters"
                      };
 
 /* Table with parse warnings */
@@ -488,7 +488,7 @@ extern int _iState;     /* current parser state (defined in harbour.l */
    struct
    {
       double dNumber;   /* to hold a double number returned by lex */
-      unsigned char bDec; /* to hold the number of decimal points in the value */
+      BYTE   bDec;      /* to hold the number of decimal points in the value */
    } dNum;
    void * pVoid;        /* to hold any memory structure we may need */
 };
@@ -980,9 +980,9 @@ VarDefs    : LOCAL { iVarScope = VS_LOCAL; Line(); } VarList Crlf { cVarType = '
            | STATIC { StaticDefStart() } VarList Crlf { StaticDefEnd( $<iNumber>3 ); }
            | PARAMETERS { if( functions.pLast->bFlags & FUN_USES_LOCAL_PARAMS )
                              GenError( _szCErrors, 'E', ERR_PARAMETERS_NOT_ALLOWED, NULL, NULL );
-			  else
-			     functions.pLast->wParamNum=0; iVarScope = (VS_PRIVATE | VS_PARAMETER); } 
-			     MemvarList Crlf   
+                          else
+                             functions.pLast->wParamNum=0; iVarScope = (VS_PRIVATE | VS_PARAMETER); }
+                             MemvarList Crlf
            ;
 
 VarList    : VarDef                                  { $$ = 1; }
@@ -1880,30 +1880,30 @@ void AddVar( char * szVarName )
             break;
           case (VS_PARAMETER | VS_PRIVATE):
             {
-	        BOOL bNewParameter = FALSE;
-		
+                BOOL bNewParameter = FALSE;
+
                 if( ++functions.pLast->wParamNum > functions.pLast->wParamCount )
-		{
-		   functions.pLast->wParamCount =functions.pLast->wParamNum;
-		   bNewParameter = TRUE;
-		}
-		   
+                {
+                   functions.pLast->wParamCount =functions.pLast->wParamNum;
+                   bNewParameter = TRUE;
+                }
+
                 pSym =GetSymbol( szVarName, &wPos ); /* check if symbol exists already */
                 if( ! pSym )
                    pSym =AddSymbol( yy_strdup(szVarName), &wPos );
                 pSym->cScope |=VS_MEMVAR;
                 GenPCode3( HB_P_PARAMETER, LOBYTE(wPos), HIBYTE(wPos) );
                 GenPCode1( LOBYTE(functions.pLast->wParamNum) );
-		
-		/* Add this variable to the local variables list - this will
-		 * allow to use the correct positions for real local variables.
-		 * The name of variable have to be hidden because we should
-		 * not find this name on the local variables list.
-		 * We have to use the new structure because it is used in
-		 * memvars list already.
-		 */
-		if( bNewParameter )
-		{
+
+                /* Add this variable to the local variables list - this will
+                 * allow to use the correct positions for real local variables.
+                 * The name of variable have to be hidden because we should
+                 * not find this name on the local variables list.
+                 * We have to use the new structure because it is used in
+                 * memvars list already.
+                 */
+                if( bNewParameter )
+                {
                    pVar = ( PVAR ) OurMalloc( sizeof( VAR ) );
                    pVar->szName = yy_strdup( szVarName );
                    pVar->szAlias = NULL;
@@ -1911,7 +1911,7 @@ void AddVar( char * szVarName )
                    pVar->iUsed = 0;
                    pVar->pNext = NULL;
                    pVar->szName[ 0 ] ='!';
-		   if( ! pFunc->pLocals )
+                   if( ! pFunc->pLocals )
                        pFunc->pLocals = pVar;
                    else
                    {
@@ -1966,10 +1966,10 @@ void AddVar( char * szVarName )
                     pLastVar->pNext = pVar;
                  }
                  if( iVarScope == VS_PARAMETER )
-		 {
+                 {
                     ++functions.pLast->wParamCount;
-		    functions.pLast->bFlags |= FUN_USES_LOCAL_PARAMS;
-		 }
+                    functions.pLast->bFlags |= FUN_USES_LOCAL_PARAMS;
+                 }
                  if( _bDebugInfo )
                  {
                     GenPCode3( HB_P_LOCALNAME, LOBYTE( wLocal ), HIBYTE( wLocal ) );
@@ -2140,7 +2140,7 @@ int Include( char * szFileName, PATHNAMES *pSearch )
     else
       return 0;
   }
-  
+
    if( ! _bQuiet )
       printf( "\nparsing file %s\n", szFileName );
 
@@ -2595,7 +2595,7 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
                                 bLocals - pFunc->wParamCount,
                                 pFunc->wParamCount );
                     lPCodePos += 3;
-		 }
+                 }
                  break;
 
             case HB_P_FUNCPTR:
@@ -5496,8 +5496,8 @@ void GenPortObj( char *szFileName, char *szName )
                  break;
 
             case HB_P_FRAME:
-	         {
-		    /* update the number of local variables */
+                 {
+                    /* update the number of local variables */
                     PVAR pLocal  = pFunc->pLocals;
                     BYTE bLocals = 0;
 
@@ -5512,14 +5512,14 @@ void GenPortObj( char *szFileName, char *szName )
                         fputc(   pFunc->pCode[ lPCodePos++ ], yyc );
                         fputc(   (BYTE)(bLocals - pFunc->wParamCount), yyc );
                         fputc(   (BYTE)(pFunc->wParamCount), yyc );
-			lPCodePos += 2;
+                        lPCodePos += 2;
                     }
                     else
                     {
                        lPad += 3;
                        lPCodePos += 3;
                     }
-		 }
+                 }
                  break;
 
             case HB_P_PUSHSYM:

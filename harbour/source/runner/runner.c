@@ -90,12 +90,12 @@ static FILE     *HRB_FileOpen ( char * );
  */
 #include "run_exp.h"
 
+#if !defined( __GNUC__ )
 static void InitRunnerTable( void )
 {
 #include "initsymc.h"                           /* Include default symbols  */
 }
-#if !defined( __GNUC__ )
-   #pragma startup InitRunnerTable
+#pragma startup InitRunnerTable
 #endif
 
 

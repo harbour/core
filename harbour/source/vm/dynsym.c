@@ -207,17 +207,17 @@ void hb_dynsymRelease( void )
    hb_xfree( pDynItems );
 }
 
-HARBOUR HB___DYNSYMCOUNT( void ) /* How much symbols do we have: dsCount = __dynsymCount() */
+HARBOUR HB___DYNSCOUNT( void ) /* How much symbols do we have: dsCount = __dynsymCount() */
 {
    hb_retnl( wDynSymbols );
 }
 
-HARBOUR HB___DYNSYMGETNAME( void ) /* Get name of symbol: cSymbol = __dynsymGetName( dsIndex ) */
+HARBOUR HB___DYNSGETNAME( void ) /* Get name of symbol: cSymbol = __dynsymGetName( dsIndex ) */
 {
    hb_retc( pDynItems[ hb_parnl( 1 ) - 1 ].pDynSym->pSymbol->szName );
 }
 
-HARBOUR HB___DYNSYMGETINDEX( void ) /* Gimme index number of symbol: dsIndex = __dynsymGetIndex( cSymbol ) */
+HARBOUR HB___DYNSGETINDEX( void ) /* Gimme index number of symbol: dsIndex = __dynsymGetIndex( cSymbol ) */
 {
    hb_retnl( ( LONG ) hb_dynsymGet( hb_parc( 1 ) ) );
 }

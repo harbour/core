@@ -30,7 +30,7 @@
  *  See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
  *
  *  The following functions are Copyright 1999 Jose Lalin <dezac@corevia.com>:
- *     hb__seconds(), HB_SECONDS(), hb_cmonth(), HB_CMONTH(),
+ *     hb_seconds(), HB_SECONDS(), hb_cmonth(), HB_CMONTH(),
  *     hb_cdow(), HB_CDOW(), HB_DAY(), HB_MONTH(), HB_YEAR(),
  *     hb_dow(), HB_DOW()
 */
@@ -77,7 +77,7 @@ HB_INIT_SYMBOLS_END( Dates__InitSymbols );
 
 /* The other functions are pulled in automatically by initsymb.c */
 
-double hb__seconds( void )
+double hb_seconds( void )
 {
 #if defined(__TURBOC__) || defined(__BORLANDC__)  || defined(__DJGPP__) /* || defined(_MSC_VER) */
    struct time t;
@@ -690,7 +690,7 @@ HARBOUR HB_CDOW( void )
 HARBOUR HB_SECONDS( void )
 {
    if( hb_pcount() == 0 )
-      hb_retnd( hb__seconds() );
+      hb_retnd( hb_seconds() );
    else
    {
       /* QUESTION: Clipper catches this at compile time! */

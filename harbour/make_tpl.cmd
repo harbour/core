@@ -55,9 +55,10 @@ rem    - icc
 set HB_COMPILER=gcc
 
 rem ---------------------------------------------------------------
-rem Fine tuning of C compiler parameters for "all" command:
+rem Fine tuning the compiler parameters for "all" command:
 
 set C_USR= 
+set PRG_USR= 
 
 rem ---------------------------------------------------------------
 rem Start the GNU make system

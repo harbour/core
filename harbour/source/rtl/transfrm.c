@@ -416,7 +416,7 @@ HARBOUR HB_TRANSFORM( void )
          case IT_STRING:
          {
             szExp = pExp->item.asString.value;
-            szResult = (char *)hb_xgrab( ( (unsigned long) (lPic-lPicStart) >
+            szResult = (char *)hb_xgrab( ( (ULONG) (lPic-lPicStart) >
                        pExp->item.asString.length) ?
                        (lPic-lPicStart) + 64 : pExp->item.asString.length + 64 );
                                                 /* Grab enough              */
@@ -434,7 +434,7 @@ HARBOUR HB_TRANSFORM( void )
 
             if( lPic )                          /* Template string          */
             {
-               while( lPic && (unsigned long)lExpPos < pExp->item.asString.length )
+               while( lPic && (ULONG)lExpPos < pExp->item.asString.length )
                {                                /* Analyze picture mask     */
                   switch( *szPic )
                   {

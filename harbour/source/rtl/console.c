@@ -140,7 +140,7 @@ HB_INIT_SYMBOLS_END( Console__InitSymbols );
 #pragma startup Console__InitSymbols
 #endif
 
-static unsigned short dev_row, dev_col, p_row, p_col;
+static USHORT dev_row, dev_col, p_row, p_col;
 static char CrLf [ CRLF_BUFFER_LEN ];
 
 void hb_consoleRelease( void )
