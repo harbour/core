@@ -163,10 +163,14 @@ int hb_parl( WORD wParam, ... )
       if( pItem->type & IT_BYREF )
          pItem = stack.pItems + pItem->item.asRefer.value;
 
-      if( IS_ARRAY( pItem ) && wArrayIndex )
-         /* TODO: implement wArrayIndex use when retrieving an array element */
-         return 0;
-
+      if( IS_ARRAY( pItem ) )
+      {
+         if( wArrayIndex )
+            return hb_arrayGetBool( pItem, wArrayIndex );
+         else
+            return 0;
+      }
+      
       else if( IS_LOGICAL( pItem ) )
          return pItem->item.asLogical.value;
 
@@ -192,10 +196,13 @@ double hb_parnd( WORD wParam, ... )
       if( pItem->type & IT_BYREF )
          pItem = stack.pItems + pItem->item.asRefer.value;
 
-      if( IS_ARRAY( pItem ) && wArrayIndex )
-         /* TODO: implement wArrayIndex use when retrieving an array element */
-         return 0;
-
+      if( IS_ARRAY( pItem ) )
+      {
+         if( wArrayIndex )
+            return hb_arrayGetDouble( pItem, wArrayIndex );
+         else
+            return 0;
+      }
       else if( IS_INTEGER( pItem ) )
          return pItem->item.asInteger.value;
 
