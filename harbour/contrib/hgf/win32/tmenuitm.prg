@@ -7,7 +7,6 @@
  * Harbour GUI framework for Win32
  *
  * Copyright 2001 Antonio Linares <alinares@fivetech.com>
- * Copyright 2001 Maurilio Longo <maurilio.longo@libero.it>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -91,6 +90,7 @@ METHOD Add( oMenuItem ) CLASS TMenuItem
    WinAddMenuItem( ::nHandle, oMenuItem:cCaption, Len( ::aItems ),;
                    Nil, oMenuItem:nId, oMenuItem:lEnabled )
 
+   oMenuItem:oParent = Self
    AAdd( ::aItems, oMenuItem )
 
 return nil

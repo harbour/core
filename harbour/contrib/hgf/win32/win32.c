@@ -58,7 +58,6 @@ LRESULT CALLBACK WndProc (HWND, UINT, WPARAM, LPARAM) ;
 
 HB_FUNC( WINREGISTERCLASS )
 {
-
    WNDCLASS     wndclass ;
 
    wndclass.lpszClassName = TEXT( hb_parc( 1 ) );
@@ -69,7 +68,7 @@ HB_FUNC( WINREGISTERCLASS )
    wndclass.hInstance     = GetModuleHandle( NULL );
    wndclass.hIcon         = LoadIcon ( NULL, IDI_APPLICATION );
    wndclass.hCursor       = LoadCursor (NULL, IDC_ARROW);
-   wndclass.hbrBackground = (HBRUSH)( COLOR_WINDOW ) + 1;
+   wndclass.hbrBackground = (HBRUSH)( COLOR_BTNFACE + 1 );
    wndclass.lpszMenuName  = NULL;
 
    hb_retl( RegisterClass (&wndclass) );
@@ -80,7 +79,7 @@ HB_FUNC( WINCREATESTDWINDOW )
    hb_retnl( ( LONG ) CreateWindow( TEXT( hb_parc( 4 ) ),   /* cClassName */
                         TEXT (hb_parc( 5 )),                /* cCaption */
                         WS_OVERLAPPEDWINDOW,   // hb_parnl( 2 ),           /* style */
-                        0,0,
+                        CW_USEDEFAULT, CW_USEDEFAULT,
                         CW_USEDEFAULT, CW_USEDEFAULT,
                         NULL,    /* hWndParent */
                         (HMENU) hb_parnl( 8 ),   /* nId */
@@ -166,7 +165,7 @@ HB_FUNC( WINADDMENUITEM )
       mii.fType = MFT_SEPARATOR;
 
    hb_retl( InsertMenuItem( ( HMENU ) hb_parnl( 1 ),
-     hb_parni( 3 ), 1, &mii	
+     hb_parni( 3 ), 1, &mii
    ) );
 }
 

@@ -76,7 +76,7 @@ METHOD Add( oMenuItem ) CLASS TMenu
    WinAddMenuItem( ::nHandle, oMenuItem:cCaption, Len( ::aItems ),;
                    nil, oMenuItem:nId, oMenuItem:lEnabled )
 
+   oMenuItem:oParent = Self
    AAdd( ::aItems, oMenuItem )
 
 return nil
-

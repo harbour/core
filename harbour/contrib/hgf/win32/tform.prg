@@ -7,7 +7,7 @@
  * Harbour GUI framework for Win32
  *
  * Copyright 2001 Antonio Linares <alinares@fivetech.com>
- * Copyright 2001 Maurilio Longo <maurilio.longo@libero.it>
+ * Copyright 2001 Alexander Kresin <alex@belacy.belgorod.su>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -53,24 +53,25 @@
 
 #include "common.ch"
 #include "hbclass.ch"
-#include "os2pm.ch"   // Needed to store some OS/2 PM constant values
+#include "..\os2pm\os2pm.ch"
 
 CLASS TForm
 
    DATA      hWnd
-   DATA     oMainMenu
+   DATA      oMainMenu
 
    CLASSDATA lRegistered
 
-   METHOD   New()
-   METHOD   ShowModal()
-   METHOD   cCaption() INLINE WinGetText( ::hWnd )
+   METHOD    New()
+   METHOD    ShowModal()
 
-   METHOD   _cCaption( cNewCaption ) INLINE ;
-               WinSetWindowText( ::hWnd, cNewCaption )
+   METHOD    cCaption() INLINE WinGetText( ::hWnd )
 
-   METHOD   oMenu() INLINE ::oMainMenu
-   METHOD   _oMenu( oNewMenu )
+   ASSIGN    cCaption( cNewCaption ) INLINE ;
+                WinSetWindowText( ::hWnd, cNewCaption )
+
+   METHOD    oMenu() INLINE ::oMainMenu
+   ASSIGN    oMenu( oNewMenu )
 
 ENDCLASS
 
@@ -89,7 +90,6 @@ METHOD New() CLASS TForm
       res := WinRegisterClass( "HB_TFORM",;
                         (CS_SIZEREDRAW + 0x2000001), 0 )
       ::lRegistered = .t.
-      Writelog( "Register: "+Iif( res,"Ok","No" ) )
    endif
 
    // Again this code may be moved to a method Create() to hide the
@@ -104,8 +104,6 @@ METHOD New() CLASS TForm
                                 (WS_SYNCPAINT + WS_VISIBLE ),,,;
                                 @hWndClient ) // Not used yet
 
-   Writelog( "Create: "+Str( ::hWnd ) )
-
 return Self
 
 
@@ -116,10 +114,10 @@ METHOD ShowModal() CLASS TForm
 return nil
 
 
-METHOD _oMenu( oNewMenu ) CLASS TForm
+ASSIGN oMenu( oNewMenu ) CLASS TForm
 
    ::oMainMenu = oNewMenu
 
-   res := SetMenu( ::hWnd, oNewMenu:nHandle )
+   SetMenu( ::hWnd, oNewMenu:nHandle )
 
 return nil
