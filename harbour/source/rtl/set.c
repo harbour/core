@@ -146,7 +146,9 @@
    #include <io.h>
  #endif
 #else
- #include <io.h>
+ #ifndef MPW_C
+  #include <io.h>
+ #endif
 #endif
 
 #include <ctype.h>
@@ -154,7 +156,9 @@
 #include <init.h>
 #include <errorapi.h>
 #include <fcntl.h>
-#include <sys/stat.h>
+#ifndef MPW_C
+ #include <sys/stat.h>
+#endif
 #include <set.h>
 #include <errno.h>
 
@@ -250,6 +254,10 @@ static void close_text (int handle)
 
 static int open_handle (char * file_name, BOOL bMode, char * def_ext)
 {
+#ifdef MPW_C
+/* TODO: not implemented yet */
+   return -1;
+#else
    int handle;
    BOOL bExt = FALSE, bSep = FALSE;
    ULONG index;
@@ -297,6 +305,7 @@ static int open_handle (char * file_name, BOOL bMode, char * def_ext)
       hb_errorRT_TERMINAL( EG_CREATE, 2013, "Create error", path );
    }
    return handle;
+#endif
 }
 
 /* $DOC$

@@ -36,7 +36,9 @@
 /* TODO: Add all the TODO comments. */
 
 #include <limits.h>
-#include <malloc.h>
+#ifndef MPW_C
+ #include <malloc.h>
+#endif
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>

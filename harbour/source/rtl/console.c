@@ -55,7 +55,9 @@
     #include <io.h>
   #endif
 #else
-   #include <io.h>
+  #ifndef MPW_C 
+    #include <io.h>
+  #endif
 #endif
 #include <gtapi.h>            /* HARBOUR_USE_GTAPI is checked inside gtapi.h, so that
                                  we can always get the border styles */

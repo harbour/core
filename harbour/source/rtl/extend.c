@@ -22,7 +22,9 @@
    You can contact me at: alinares@fivetech.com
  */
 
-#include <malloc.h>
+#ifndef MPW_C
+ #include <malloc.h>
+#endif
 #include <set.h>
 #include <stdlib.h>
 #include <extend.h>
