@@ -61,6 +61,7 @@
 #define ERR_INCOMPLETE_STMT        20
 #define ERR_CHECKING_ARGS          21
 #define ERR_INVALID_LVALUE         22
+#define ERR_INVALID_REFER          23
 
 #define WARN_AMBIGUOUS_VAR         1
 #define WARN_MEMVAR_ASSUMED        2

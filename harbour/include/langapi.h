@@ -71,8 +71,13 @@ typedef struct _HB_LANGNODE
    struct _HB_LANGNODE * pNext;
 } HB_LANGNODE, * PHB_LANGNODE;
 
+/* TODO: check if it have to be visible outside of langapi.c
+ * It it is required then there is a conflict:
+ * it is declared here as 'extern' and in langapi.c it is declared as
+ * 'static' - Watcom compiler reports error for this conflict
+ */
+/* extern PHB_LANG langDef; */
 extern PHB_LANGNODE langList;
-extern PHB_LANG langDef;
 
 /* Supported language list management */
 

@@ -64,6 +64,7 @@ HARBOUR HB_EVAL( void );         /* Evaluates a codeblock from Harbour */
 HARBOUR HB_LEN( void );          /* Evaluates a codeblock from Harbour */
 HARBOUR HB_EMPTY( void );        /* fixed entry point by now */
 HARBOUR HB_VALTYPE( void );      /* returns a string description of a value */
+
 HARBOUR HB_ERRORBLOCK( void );
 HARBOUR HB_PROCNAME( void );
 HARBOUR HB_PROCLINE( void );
@@ -71,6 +72,14 @@ HARBOUR HB___QUIT( void );
 HARBOUR HB_ERRORLEVEL( void );
 HARBOUR HB_PCOUNT( void );
 HARBOUR HB_PVALUE( void );
+
+static void    AliasPop( void );        /* pops the workarea number form the eval stack */
+static void    AliasPush( void );       /* pushes the current workarea number */
+static void    AliasSwap( void );       /* swaps items on the eval stack and pops the workarea number */
+static void    PopAliasedField( PHB_SYMB );  /* pops an aliased field from the eval stack*/
+static void    PopField( PHB_SYMB );      /* pops an unaliased field from the eval stack */
+static void    PushAliasedField( PHB_SYMB );     /* pushes an aliased field on the eval stack */
+static void    PushField( PHB_SYMB );     /* pushes an unaliased field on the eval stack */
 
 #ifdef HARBOUR_OBJ_GENERATION
 
@@ -412,8 +421,25 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
               break;
 
          case HB_P_POP:
-              hb_stackPop();
+              hb_stackPop();	 
               w++;
+              break;
+
+         case HB_P_POPALIAS:
+              AliasPop();
+              w++;
+              break;
+
+         case HB_P_POPALIASEDFIELD:
+              wParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
+              PopAliasedField( pSymbols + wParams );
+              w += 3;
+              break;
+
+         case HB_P_POPFIELD:
+              wParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
+              PopField( pSymbols + wParams );
+              w += 3;
               break;
 
          case HB_P_POPLOCAL:
@@ -437,6 +463,17 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
               w++;
               break;
 
+         case HB_P_PUSHALIAS:
+              AliasPush();
+              w++;
+              break;
+
+         case HB_P_PUSHALIASEDFIELD:
+              wParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
+              PushAliasedField( pSymbols + wParams );
+              w += 3;
+              break;
+
          case HB_P_PUSHBLOCK:
               /* +0    -> _pushblock
                * +1 +2 -> size of codeblock
@@ -451,6 +488,12 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
          case HB_P_PUSHDOUBLE:
               hb_vmPushDouble( * ( double * ) ( &pCode[ w + 1 ] ), ( WORD ) * ( BYTE * ) &pCode[ w + 1 + sizeof( double ) ] );
               w += 1 + sizeof( double ) + 1;
+              break;
+
+         case HB_P_PUSHFIELD:
+              wParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
+              PushField( pSymbols + wParams );
+              w += 3;
               break;
 
          case HB_P_PUSHINT:
@@ -517,6 +560,11 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
               w += 3;
               break;
 
+         case HB_P_SWAPALIAS:
+              AliasSwap();
+              w++;
+              break;
+
          case HB_P_RETVALUE:
               hb_vmRetValue();
               w++;
@@ -558,6 +606,88 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
    hb_memvarSetPrivatesBase( ulPrivateBase );
    HB_DEBUG( "EndProc\n" );
 }
+
+/* Pops the item from the eval stack and uses it to select the current
+ * workarea
+ */
+static void AliasPop( void )
+{
+   PHB_ITEM pItem;
+
+   hb_stackDec();
+   pItem = stack.pPos;
+   switch( pItem->type & ~IT_BYREF )
+   {
+      case IT_INTEGER:
+         /* Alias was used as integer value, for example: 4->field
+          * or it was saved on the stack using AliasPush()
+          * or was evaluated from an expression, (nWorkArea)->field
+          */
+         /* TODO: synchronize it with RDD API
+         hb_SelectWorkAreaNumber( pItem->item.asInteger.value );
+         */
+         pItem->type = IT_NIL;
+         break;
+
+      case IT_SYMBOL:
+         /* Alias was specified using alias identifier, for example: al->field
+          */
+         /* TODO: synchronize it with RDD API
+         hb_SelectWorkAreaNumber( pItem->item.asSymbol.value->pDynSym.hArea );
+         */
+         pItem->type = IT_NIL;
+         break;
+
+      case IT_STRING:
+         /* Alias was evaluated from an expression, for example: (cVar)->field
+          */
+         /* TODO: synchronize it with RDD API
+         hb_SelectWorkAreaAlias( pItem->item.asString.value );
+         */
+         hb_itemClear( pItem );
+         break;
+
+      default:
+         hb_itemClear( pItem );
+         hb_errorRT_BASE( EG_BADALIAS, 1000, NULL, NULL );
+         break;
+   }
+
+   HB_DEBUG( "AliasPop\n" );
+}
+
+/* pushes current workarea number on the eval stack
+ */
+static void AliasPush( void )
+{
+   stack.pPos->type = IT_INTEGER;
+   /* TODO: synchronize it with RDD API
+    */
+   stack.pPos->item.asInteger.value   = 0; /* hb_GetCurrentWorkAreaNumber(); */
+   stack.pPos->item.asInteger.length  = 10;
+   stack.pPos->item.asInteger.decimal = 0;
+   hb_stackPush();
+   HB_DEBUG( "AliasPush\n" );
+}
+
+/* Swaps two last items on the eval stack - the last item after swaping
+ * is popped as current workarea number
+ */
+static void AliasSwap( void )
+{
+   HB_ITEM_PTR pItem = stack.pPos -1;
+   HB_ITEM_PTR pWorkArea = stack.pPos -2;
+
+   /* TODO: synchronize it with RDD API
+   hb_SelectWorkAreaNumber( pWorkArea->item.asInteger.value );
+   */
+   memcpy( pWorkArea, pItem, sizeof( HB_ITEM ) );
+   pItem->type =IT_NIL;
+   hb_stackDec();
+
+   HB_DEBUG( "AliasSwap\n" );
+}
+
 
 void hb_vmAnd( void )
 {
@@ -1434,6 +1564,15 @@ long hb_vmPopDate( void )
    }
 }
 
+static void PopAliasedField( PHB_SYMB pSym )
+{
+   HB_SYMBOL_UNUSED( pSym );
+   /* TODO: pop the proper value */
+   hb_stackPop();    /* field */
+   hb_stackPop();    /* alias */
+   HB_DEBUG( "PopAliasedField\n" );
+}
+
 double hb_vmPopDouble( WORD *pwDec )
 {
    double d;
@@ -1464,6 +1603,14 @@ double hb_vmPopDouble( WORD *pwDec )
    stack.pPos->type = IT_NIL;
    HB_DEBUG( "hb_vmPopDouble\n" );
    return d;
+}
+
+static void PopField( PHB_SYMB pSym )
+{
+   HB_SYMBOL_UNUSED( pSym );
+   /* TODO: pop the proper value */
+   hb_stackPop();
+   HB_DEBUG( "PopField\n" );
 }
 
 void hb_vmPopLocal( SHORT iLocal )
@@ -1579,12 +1726,36 @@ void hb_vmPower( void )
     hb_vmPushNumber( pow( d1, d2 ), hb_set.HB_SET_DECIMALS );
 }
 
+static void PushAliasedField( PHB_SYMB pSym )
+{
+   HB_SYMBOL_UNUSED( pSym );
+   /* TODO: push the proper value */
+   stack.pPos->type   = IT_INTEGER;
+   stack.pPos->item.asInteger.value = 0;
+   stack.pPos->item.asInteger.length  = 10;
+   stack.pPos->item.asInteger.decimal = 0;
+   hb_stackPush();
+   HB_DEBUG( "PushAliasedField\n" );
+}   
+
 void hb_vmPushLogical( BOOL bValue )
 {
    stack.pPos->type = IT_LOGICAL;
    stack.pPos->item.asLogical.value = bValue;
    hb_stackPush();
    HB_DEBUG( "hb_vmPushLogical\n" );
+}
+
+static void PushField( PHB_SYMB pSym )
+{
+   HB_SYMBOL_UNUSED( pSym );
+   /* TODO: push the proper value */
+   stack.pPos->type   = IT_INTEGER;
+   stack.pPos->item.asInteger.value = 0;
+   stack.pPos->item.asInteger.length  = 10;
+   stack.pPos->item.asInteger.decimal = 0;
+   hb_stackPush();
+   HB_DEBUG( "PushField\n" );
 }
 
 void hb_vmPushLocal( SHORT iLocal )

@@ -33,33 +33,13 @@
 #include <string.h>
 #include "hbdefs.h"
 #include "hbsetup.h"
+#include "hb_vmpub.h"
 
 #ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
    /* Clipper includes these from extend.h */
    #include "extend.api"
    #include "fm.api"
 #endif
-
-struct _HB_DYNS;         /* forward declaration */
-
-/* symbol support structure */
-typedef struct
-{
-   char*       szName;  /* the name of the symbol */
-   SYMBOLSCOPE cScope;  /* the scope of the symbol */
-   PHB_FUNC    pFunPtr; /* function address for function symbol table entries */
-   struct _HB_DYNS * pDynSym;   /* pointer to its dynamic symbol if defined */
-} HB_SYMB, * PHB_SYMB, * HB_SYMB_PTR;
-
-/* Harbour Functions scope (SYMBOLSCOPE) */
-#define FS_PUBLIC       0x00
-#define FS_STATIC       0x02
-#define FS_INIT         0x08
-#define FS_EXIT         0x10
-#define FS_INITEXIT     ( FS_INIT | FS_EXIT )
-#define FS_MESSAGE      0x20
-#define FS_MEMVAR       0x80
-#define FS_ALLOCATED    (-1)
 
 /* items types */
 #define IT_NIL          0x0000
@@ -210,15 +190,6 @@ typedef struct
    int      iStatics;     /* statics base for the current function call */
    char     szDate[ 9 ];  /* last returned date from _pards() yyyymmdd format */
 } STACK;
-
-/* dynamic symbol structure */
-typedef struct _HB_DYNS
-{
-   HB_HANDLE hArea;       /* Workarea number */
-   HB_HANDLE hMemvar;     /* Index number into memvars ( publics & privates ) array */
-   PHB_SYMB  pSymbol;     /* pointer to its relative local symbol */
-   PHB_FUNC  pFunPtr;     /* Pointer to the function address */
-} HB_DYNS, * PHB_DYNS, * HB_DYNS_PTR;
 
 /* internal structure for codeblocks */
 typedef struct _HB_CODEBLOCK

@@ -9,6 +9,7 @@
 #include "hbsetup.h"
 #include "extend.h"
 #include "hbdefs.h"
+#include "init.h"
 #include "ctoharb.h"
 #include "initsymd.h"
 

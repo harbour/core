@@ -38,6 +38,7 @@
 #include "itemapi.h"
 #include "errorapi.h"
 #include "error.ch"
+#include "memvars.ch"
 
 #define VS_PRIVATE     64
 #define VS_PUBLIC     128
@@ -489,7 +490,7 @@ static void hb_memvarCreateFromDynSymbol( PHB_DYNS pDynVar, BYTE bScope, PHB_ITE
  * It also restores the value that was hidden if there is another
  * PRIVATE variable with the same name.
  */
-void hb_memvarRelease( HB_ITEM_PTR pMemvar )
+static void hb_memvarRelease( HB_ITEM_PTR pMemvar )
 {
    ULONG ulBase = _privateStackCnt;
    PHB_DYNS pDynVar;
@@ -526,7 +527,7 @@ void hb_memvarRelease( HB_ITEM_PTR pMemvar )
  * procedure only.
  * The scope of released variables are specified using passed name's mask
  */
-void hb_memvarReleaseWithMask( char *szMask, BOOL bInclude )
+static void hb_memvarReleaseWithMask( char *szMask, BOOL bInclude )
 {
    ULONG ulBase = _privateStackCnt;
    PHB_DYNS pDynVar;
@@ -551,6 +552,48 @@ void hb_memvarReleaseWithMask( char *szMask, BOOL bInclude )
    }
 }
 
+static int hb_memvarScope( char *szVarName, ULONG ulLength )
+{
+   int iMemvar = MV_ERROR;
+   char *szName;
+
+   szName =(char *)hb_xalloc( ulLength );
+   if( szName )
+   {
+      PHB_DYNS pDynVar;
+
+      memcpy( szName, szVarName, ulLength );
+      pDynVar =hb_dynsymFind( hb_strUpper( szName, ulLength-1 ) );
+      if( pDynVar )
+      {
+         if( pDynVar->hMemvar == 0 )
+            iMemvar =MV_UNKNOWN;
+         else
+         {
+            ULONG ulBase = _privateStackCnt;    /* start from the top of the stack */
+
+            iMemvar =MV_PUBLIC;
+            while( ulBase )
+            {
+               --ulBase;
+               if( pDynVar == _privateStack[ ulBase ] )
+               {
+                  if( ulBase >= _privateStackBase )
+                     iMemvar =MV_PRIVATE_LOCAL;
+                  else
+                     iMemvar =MV_PRIVATE_GLOBAL;
+                  ulBase =0;
+               }
+            }
+         }
+      }
+      else
+         iMemvar =MV_NOT_FOUND;
+      hb_xfree( szName );
+   }
+
+   return iMemvar;
+}
 
 /* ************************************************************************** */
 
@@ -709,13 +752,37 @@ HARBOUR HB___MVPRIVATE( void )
  *  $DESCRIPTION$
  *    This function releases values stored in memory variable. It shouldn't
  *    be called directly, rather it should be placed into RELEASE command.
- *    If the released variable is a PRIVATE variable then previously hidden
- *    variable with the same name becomes visible (after exit from the
- *    procedure where released variable was created).
+ *      If the released variable is a PRIVATE variable then previously hidden
+ *    variable with the same name becomes visible after exit from the
+ *    procedure where released variable was created. If you access
+ *    the released variable in the same function/procedure where it
+ *    was created the the NIL value is returned. You can however assign
+ *    a new value to released variable without any side effects.
  *
  *    It releases variable even if this variable was created in different
  *    procedure
  *  $EXAMPLES$
+ *
+ *    PROCEDURE MAIN()
+ *    PRIVATE mPrivate
+ *
+ *       mPrivate :="PRIVATE from MAIN()"
+ *       ? mPrivate     //PRIVATE from MAIN()
+ *       Test()
+ *       ? mPrivate     //PRIVATE from MAIN()
+ *
+ *    RETURN
+ *
+ *    PROCEDURE Test()
+ *    PRIVATE mPrivate
+ *
+ *       mPrivate :="PRIVATE from Test()"
+ *       ? mPrivate           //PRIVATE from TEST()
+ *       RELEASE mPrivate
+ *       ? mPrivate           //NIL
+ *       mPrivate :="Again in Test()"
+ *
+ *    RETURN
  *
  *  $TESTS$
  *
@@ -781,8 +848,13 @@ HARBOUR HB___MVXRELEASE( void )
  *  $DESCRIPTION$
  *    This function releases values stored in memory variables. It shouldn't
  *    be called directly, it should be placed into RELEASE ALL command.
- *    If released variable is a PRIVATE variable then the NIL is assigned.
- *    PUBLIC variables are not changed.
+ *      If the released variable is a PRIVATE variable then previously hidden
+ *    variable with the same name becomes visible after exit from the
+ *    procedure where released variable was created. If you access
+ *    the released variable in the same function/procedure where it
+ *    was created the the NIL value is returned. You can however assign
+ *    a new value to released variable without any side effects.
+ *      PUBLIC variables are not changed by this function.
  *  $EXAMPLES$
  *
  *  $TESTS$
@@ -814,7 +886,82 @@ HARBOUR HB___MVRELEASE( void )
 
          if( pMask->item.asString.value[ 0 ] == '*' )
             bIncludeVar =TRUE;   /* delete all memvar variables */
-         hb_memvarReleaseWithMask( pMask->item.asString.value, bIncludeVar );
+         hb_memvarReleaseWithMask( pMask->item.asString.value, bIncludeVar );	 
       }
    }
+}
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *    __MVSCOPE()
+ *  $CATEGORY$
+ *    Variable management
+ *  $ONELINER$
+ *    If variable exists then returns its scope.
+ *  $SYNTAX$
+ *    __MVSCOPE( <cVarName> )
+ *  $ARGUMENTS$
+ *    <cVarName> = a string with a variable name to check
+ *  $RETURNS$
+ *    The symbolic values are defined in include/memvars.ch
+ *    MV_NOT_FOUND      =variable is not declared (not found in symbol table)
+ *    MV_UNKNOWN        =if variable doesn't exist (but found in symbol table)
+ *    MV_ERROR          =if information cannot be obtained (memory error or argument error)
+ *    MV_PUBLIC         =for public variables
+ *    MV_PRIVATE_GLOBAL =for private variables declared outside of current function/procedure
+ *    MV_PRIVATE_LOCAL  =for private variables declared in current function/procedure
+ *  $DESCRIPTION$
+ *
+ *  $EXAMPLES$
+ *
+ *    PROCEDURE MAIN()
+ *    PUBLIC mPublic
+ *    PRIVATE mPrivateGlobal
+ *
+ *      CallProc()
+ *       ? __mvScope( "mPrivateLocal" )      //MV_UNKNOWN
+ *
+ *    RETURN
+ *
+ *    PROCEDURE CallProc()
+ *    PRIVATE mPrivateLocal
+ *
+ *       ? __mvScope( "mPublic" )            //MV_PUBLIC
+ *       ? __mvScope( "mPrivateGlobal" )     //MV_PRIVATE_GLOBAL
+ *       ? __mvScope( "mPrivateLocal" )      //MV_PRIVATE_LOCAL
+ *       ? __mvScope( "mFindMe" )            //MV_NOT_FOUND
+ *
+ *       IF( __mvScope( "mPublic" ) > MV_ERROR )
+ *          ? "Variable exists"
+ *       ELSE
+ *          ? "Variable not created yet"
+ *       ENDIF
+ *
+ *    RETURN
+ *
+ *  $TESTS$
+ *
+ *  $STATUS$
+ *
+ *  $COMPLIANCE$
+ *
+ *  $SEEALSO$
+ *    include/memvars.ch
+ *  $END$
+ */
+HARBOUR HB___MVSCOPE( void )
+{
+   int iMemvar = MV_ERROR;
+
+   if( hb_pcount() )
+   {
+      PHB_ITEM pVarName;
+
+      pVarName =hb_param( 1, IT_STRING );
+      if( pVarName )
+      {
+         iMemvar =hb_memvarScope( pVarName->item.asString.value, pVarName->item.asString.length+1 );
+      }
+   }
+   hb_retni( iMemvar );
 }

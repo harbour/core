@@ -37,35 +37,10 @@
 #ifndef HB_VMPUB_H_
 #define HB_VMPUB_H_
 
+#include "hbdefs.h"
 #include "pcode.h"
 
-/* Dummy definitions */
-
-typedef void * PHB_DYNS;
-
-/* Parts copied from hbdefs.h */
-
-typedef unsigned char BYTE;   /* 1 byte unsigned */
-typedef unsigned short int WORD;
-
-#ifdef __GNUC__
-   #define pascal __attribute__ ((stdcall))
-#endif
-
-#ifdef _MSC_VER
-   #define HARBOUR void
-#else
-   #ifdef __IBMCPP__
-      #define HARBOUR void
-   #else
-      #define HARBOUR void pascal
-   #endif
-#endif
-typedef void * PHB_FUNC;
-
-typedef char SYMBOLSCOPE;   /* stores symbol's scope */
-
-/* Parts copied from extend.h */
+struct _HB_DYNS;
 
 /* symbol support structure */
 typedef struct
@@ -73,10 +48,17 @@ typedef struct
    char *      szName;  /* the name of the symbol */
    SYMBOLSCOPE cScope;  /* the scope of the symbol */
    PHB_FUNC    pFunPtr; /* function address for function symbol table entries */
-   PHB_DYNS    pDynSym; /* pointer to its dynamic symbol if defined */
+   struct _HB_DYNS    *pDynSym; /* pointer to its dynamic symbol if defined */
 } HB_SYMB, * PHB_SYMB;
 
-extern void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols );  /* invokes the virtual machine */
+/* dynamic symbol structure */
+typedef struct _HB_DYNS
+{
+   HB_HANDLE hArea;       /* Workarea number */
+   HB_HANDLE hMemvar;     /* Index number into memvars ( publics & privates ) array */
+   PHB_SYMB  pSymbol;     /* pointer to its relative local symbol */
+   PHB_FUNC  pFunPtr;     /* Pointer to the function address */
+} HB_DYNS, * PHB_DYNS, * HB_DYNS_PTR;
 
 /* Harbour Functions scope (SYMBOLSCOPE) */
 #define FS_PUBLIC       0x00
@@ -87,8 +69,6 @@ extern void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols );  /* invokes the vir
 #define FS_MESSAGE      0x20
 #define FS_MEMVAR       0x80
 
-/* This should always follow the type declarations */
-
-#include "init.h"
+extern void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols );  /* invokes the virtual machine */
 
 #endif /* HB_VMPUB_H_ */

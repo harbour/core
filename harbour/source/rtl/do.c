@@ -36,6 +36,51 @@
 #include "errorapi.h"
 #include "ctoharb.h"
 
+/*  $DOC$
+ *  $FUNCNAME$
+ *    DO()
+ *  $CATEGORY$
+ *    Utility
+ *  $ONELINER$
+ *    Calls a procedure or a function
+ *  $SYNTAX$
+ *    DO( <xFuncProc> [, <xArguments...>] )
+ *  $ARGUMENTS$
+ *    <xFuncProc> = Either a string with a function/procedure name to be called
+ *          or a codeblock to evaluate
+ *    <xArguments> = arguments passed to a called function/procedure or to
+ *          a codeblock
+ *  $RETURNS$
+ *    A value that was returned from called function
+ *  $DESCRIPTION$
+ *    This function can be called either by the harbour compiler or by user.
+ *    The compiler always passes the item of IT_SYMBOL type that stores the
+ *    name of procedure specified in DO <proc> WITH ... statement.
+ *       If called procedure/function doesn't exist then the runtime error
+ *    is generated.
+ *       This function can be used as replacement of macro operator.
+ *    It is also used internally to implement DO <proc> WITH <args...>
+ *    In this case <xFuncProc> is of type HB_SYMB
+ *  $EXAMPLES$
+ *       cbCode ={|x| MyFunc( x )}
+ *       DO( cbCode, 1 )
+ *
+ *       cFunction := "MyFunc"
+ *       xRetVal :=DO( cFunction, 2 )
+ *
+ *       Old style (slower):
+ *          DO &cFunction WITH 3
+ *
+ *  $TESTS$
+ *
+ *  $STATUS$
+ *
+ *  $COMPLIANCE$
+ *
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
 HARBOUR HB_DO( void )
 {
    PHB_ITEM pItem;

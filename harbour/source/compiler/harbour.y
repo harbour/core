@@ -101,12 +101,6 @@ typedef struct __ELSEIF
    struct __ELSEIF * pNext;
 } _ELSEIF, * PELSEIF;      /* support structure for else if pcode fixups */
 
-typedef struct __RETURN
-{
-   WORD wOffset;
-   struct __RETURN * pNext;
-} _RETURN, * PRETURN;      /* support structure for multiple returns from a function */
-
 typedef struct _LOOPEXIT
 {
   WORD wOffset;
@@ -130,6 +124,31 @@ typedef struct __EXTERN
 
 FILENAME *SplitFilename( char * );  /* splits filename into a path, a name and an extension */
 char *MakeFilename( char *, FILENAME *);  /* joins a path, a name an an extension int filename */
+
+/* Support for aliased expressions
+ */
+typedef struct _ALIASID
+{
+   char type;
+   union {
+      int iAlias;
+      char *szAlias;
+   } alias;
+   struct _ALIASID *pPrev;
+} ALIASID, *ALIASID_PTR;
+
+#define  ALIAS_NUMBER   1
+#define  ALIAS_NAME     2
+#define  ALIAS_EVAL     3
+
+void AliasAddInt( int );
+void AliasAddExp( void );
+void AliasAddStr( char * );
+void AliasPush( void );
+void AliasPop( void );
+void AliasSwap( void );
+void AliasAdd( ALIASID_PTR );
+void AliasRemove( void );
 
 /* lex & yacc related prototypes */
 void yyerror( char * ); /* parsing error management function */
@@ -173,6 +192,7 @@ void DimArray( WORD wDimensions ); /* instructs the virtual machine to build an 
 void Do( BYTE bParams );      /* generates the pcode to execute a Clipper function discarding its result */
 void Duplicate( void ); /* duplicates the virtual machine latest stack latest value and places it on the stack */
 void DupPCode( WORD wStart ); /* duplicates the current generated pcode from an offset */
+void FieldPCode( BYTE , char * );      /* generates the pcode for database field */
 void FixElseIfs( void * pIfElseIfs ); /* implements the ElseIfs pcode fixups */
 void FixReturns( void ); /* fixes all last defined function returns jumps offsets */
 WORD FixSymbolPos( WORD );    /* converts symbol's compile-time position into generation-time position */
@@ -182,9 +202,8 @@ void FunDef( char * szFunName, SYMBOLSCOPE cScope, int iType ); /* starts a new 
 void GenArray( WORD wElements ); /* instructs the virtual machine to build an array and load elemnst from the stack */
 void * GenElseIf( void * pFirstElseIf, WORD wOffset ); /* generates a support structure for elseifs pcode fixups */
 void GenExterns( void ); /* generates the symbols for the EXTERN names */
-void GenReturn( WORD wOffset );  /* generates a return offset to later on fill it with the proper exiting pcode address */
 PFUNCTION GetFuncall( char * szFunName ); /* locates a previously defined called function */
-WORD GetAliasedVarPos( PVAR pVars, char * szAlias, char * szVarName ); /* check for aliased variable */
+int GetFieldVarPos( char *, PFUNCTION *);   /* return if passed name is a field variable */
 PVAR GetVar( PVAR pVars, WORD wOrder ); /* returns a variable if defined or zero */
 WORD GetVarPos( PVAR pVars, char * szVarName ); /* returns the order + 1 of a variable if defined or zero */
 int GetLocalVarPos( char * szVarName ); /* returns the order + 1 of a local variable */
@@ -200,7 +219,7 @@ PFUNCTION KillFunction( PFUNCTION );    /* releases all memory allocated by func
 PCOMSYMBOL KillSymbol( PCOMSYMBOL );    /* releases all memory allocated by symbol and returns the next one */
 void Line( void );                      /* generates the pcode with the currently compiled source code line */
 void LineBody( void );                  /* generates the pcode with the currently compiled source code line */
-void MemvarPCode( BYTE , char * );      /* generates the pcode for memvar variable */
+void VariablePCode( BYTE , char * );    /* generates the pcode for memvar variable */
 void Message( char * szMsgName );       /* sends a message to an object */
 void MessageFix( char * szMsgName );    /* fix a generated message to an object */
 void MessageDupl( char * szMsgName );   /* fix a one generated message to an object and duplicate */
@@ -222,7 +241,7 @@ char * SetData( char * szMsg );     /* generates an underscore-symbol name for a
 void SetFrame( void );              /* generates the proper _FRAME values */
 
 /* support for FIELD declaration */
-void SetAlias( char *, int );
+void FieldsSetAlias( char *, int );
 int FieldsCount( void );
 
 /* Codeblocks */
@@ -292,7 +311,8 @@ char * _szCErrors[] = { "Statement not allowed outside of procedure or function"
                        "Syntax error: \'%s\' in: \'%s\'",
                        "Incomplete statement: %s",
                        "Incorrect number of arguments: %s %s",
-                       "Invalid lvalue"
+                       "Invalid lvalue",
+                       "Invalid use of \'@\' (pass by reference): \'%s\'"
                      };
 
 /* Table with parse warnings */
@@ -421,12 +441,19 @@ BOOL _bShortCuts = TRUE;             /* .and. & .or. expressions shortcuts */
 BOOL _bWarnings = FALSE;             /* enable parse warnings */
 BOOL _bAutoMemvarAssume = FALSE;     /* holds if undeclared variables are automatically assumed MEMVAR */
 BOOL _bForceMemvars = FALSE;         /* holds if memvars are assumed when accesing undeclared variable */
-BOOL _bDebugInfo = FALSE;            /* holds if generate debugger required info */
 
 /* This variable is used to flag if variables have to be passed by reference
  * - it is required in DO <proc> WITH <params> statement
+ * For example:
+ * DO proces WITH aVar, bVar:=cVar
+ *  aVar - have to be passed by reference
+ *  bVar and cBar - have to be passed by value
  */
 BOOL _bForceByRefer = FALSE;
+/* This variable is true if the right value of assignment will be build.
+ * It is used to temporarily cancel the above _bForceByRefer
+ */
+BOOL _bRValue       = FALSE;
 
 WORD _wSeqCounter   = 0;
 WORD _wForCounter   = 0;
@@ -438,11 +465,11 @@ LONG _lMessageFix   = 0;  /* Position of the message which needs to be changed *
 BOOL _bObj32 = FALSE;     /* generate OBJ 32 bits */
 #endif
 WORD _wStatics = 0;       /* number of defined statics variables on the PRG */
-PRETURN pReturns = 0;     /* list of multiple returns from a function */
 PEXTERN pExterns = 0;
 PTR_LOOPEXIT pLoops = 0;
 PATHNAMES *_pIncludePath = NULL;
 FILENAME *_pFileName =NULL;
+ALIASID_PTR pAliasId = NULL;
 
 PSTACK_VAL_TYPE pStackValType = 0; /* compile time stack values linked list */
 char cVarType = ' ';               /* current declared variable type */
@@ -499,9 +526,10 @@ extern int _iState;     /* current parser state (defined in harbour.l */
 %right '\n' ';' ',' '='
 /*the highest precedence*/
 
-%type <string>  IDENTIFIER LITERAL FunStart MethStart IdSend ObjectData
+%type <string>  IDENTIFIER LITERAL FunStart MethStart IdSend ObjectData AliasVar
 %type <dNum>    DOUBLE
-%type <iNumber> ArgList ElemList ExpList FunCall FunScope IncDec Logical Params ParamList
+%type <iNumber> ArgList ElemList PareExpList ExpList FunCall FunScope IncDec
+%type <iNumber> Params ParamList Logical
 %type <iNumber> INTEGER BlockExpList Argument IfBegin VarId VarList MethParams ObjFunCall
 %type <iNumber> MethCall BlockList FieldList DoArgList VarAt
 %type <lNumber> INTLONG WhileBegin BlockBegin
@@ -578,21 +606,21 @@ Statement  : ExecFlow Crlf        {}
            | IfInline Crlf        { GenPCode1( HB_P_POP ); }
            | ObjectMethod Crlf    { GenPCode1( HB_P_POP ); }
            | VarUnary Crlf        { GenPCode1( HB_P_POP ); }
-           | VarAssign Crlf       { GenPCode1( HB_P_POP ); }
+           | VarAssign Crlf       { GenPCode1( HB_P_POP ); _bRValue =FALSE; }
 
            | IDENTIFIER '=' Expression Crlf            { PopId( $1 ); }
-           | AliasVar '=' Expression Crlf              { /* TODO */ GenPCode1( HB_P_POP ); }
+           | AliasVar '=' Expression Crlf              { PopId( $1 ); AliasRemove(); }
            | AliasFunc '=' Expression Crlf             { --iLine; GenError( _szCErrors, 'E', ERR_INVALID_LVALUE, NULL, NULL ); }
            | VarAt '=' Expression Crlf                 { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); }
-           | FunArrayCall '=' Expression Crlf          { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); }
+           | FunCallArray '=' Expression Crlf          { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); }
            | ObjectData '=' { MessageFix( SetData( $1 ) ); } Expression Crlf { Function( 1 ); GenPCode1( HB_P_POP ); }
            | ObjectData ArrayIndex '=' Expression Crlf    { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); }
            | ObjectMethod ArrayIndex '=' Expression Crlf  { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); }
 
            | BREAK Crlf
            | BREAK Expression Crlf
-           | RETURN Crlf              { GenReturn( Jump( 0 ) ); }
-           | RETURN Expression Crlf   { GenPCode1( HB_P_RETVALUE ); GenReturn( Jump ( 0 ) ); }
+           | RETURN Crlf              { GenPCode1( HB_P_ENDPROC ); }
+           | RETURN Expression Crlf   { GenPCode1( HB_P_RETVALUE ); GenPCode1( HB_P_ENDPROC ); }
            | PUBLIC { iVarScope = VS_PUBLIC; } VarList Crlf
            | PRIVATE { iVarScope = VS_PRIVATE; } VarList Crlf
            | PARAMETERS { functions.pLast->wParamCount=0; iVarScope = (VS_PRIVATE | VS_PARAMETER); } MemvarList Crlf
@@ -660,10 +688,10 @@ IdSend     : IDENTIFIER ':'                       { PushId( $1 ); $$ = $1; }
 ObjFunCall : FunCall ':'                      { Function( $1 ); $$ = $1; }
            ;
 
-FunArrayCall : FunCall { Function( $1 ); } ArrayIndex
+FunCallArray : FunCall { Function( $1 ); } ArrayIndex
            ;
 
-ObjFunArray : FunArrayCall ':' { GenPCode1( HB_P_ARRAYAT ); }
+ObjFunArray : FunCallArray ':' { GenPCode1( HB_P_ARRAYAT ); }
            ;
 
 Expression : NIL                              { PushNil(); }
@@ -681,9 +709,9 @@ Expression : NIL                              { PushNil(); }
            | CodeBlock                        {}
            | ObjectMethod                     {}
            | Macro                            {}
-           | AliasExp                         {}
-           | '(' Expression ')'               {}
-           | '(' ExpList ')'                  {}
+           | AliasVar                         { PushId( $1 ); AliasRemove(); }
+           | AliasFunc                        {}
+           | PareExpList                      {}
            | SELF                             { GenPCode1( HB_P_PUSHSELF ); }
            ;
 
@@ -737,30 +765,34 @@ Macro      : '&' Variable
            | '&' '(' Expression ')'
            ;
 
-AliasVar   : IDENTIFIER ALIAS IDENTIFIER                 {}
-           | '(' Expression ')' ALIAS IDENTIFIER         {}
+AliasVar   : INTEGER ALIAS { AliasAddInt( $1 ); } IDENTIFIER  { $$ = $4; }
+           | IDENTIFIER ALIAS { AliasAddStr( $1 ); } IDENTIFIER  { $$ = $4; }
+           | PareExpList ALIAS { AliasAddExp(); } IDENTIFIER  { $$ = $4; }
            ;
 
-AliasExp   : AliasVar                                    {}
-           | AliasFunc                                   {}
-           ;
-
-AliasFunc  : IDENTIFIER ALIAS '(' ExpList ')'            {}
-           | '(' Expression ')' ALIAS '(' ExpList ')'    {}
+/* NOTE: In the case:
+ * alias->( Expression )
+ * alias always selects a workarea even if it is MEMVAR or M
+ */
+AliasFunc  : INTEGER ALIAS { AliasPush(); PushInteger( $1 ); AliasPop(); } PareExpList { AliasSwap(); }
+           | IDENTIFIER ALIAS { AliasPush(); PushSymbol( $1, 0 ); AliasPop(); } PareExpList   { AliasSwap(); }
+           | PareExpList ALIAS { AliasPush(); AliasSwap(); } PareExpList  { AliasSwap(); }
            ;
 
 VarUnary   : IDENTIFIER IncDec %prec POST    { PushId( $1 ); Duplicate(); $2 ? Inc(): Dec(); PopId( $1 ); }
            | IncDec IDENTIFIER %prec PRE     { PushId( $2 ); $1 ? Inc(): Dec(); Duplicate(); PopId( $2 ); }
            | VarAt IncDec %prec POST { DupPCode( $1 ); GenPCode1( HB_P_ARRAYAT ); $2 ? Inc(): Dec(); GenPCode1( HB_P_ARRAYPUT ); $2 ? Dec(): Inc(); }
            | IncDec VarAt %prec PRE  { DupPCode( $2 ); GenPCode1( HB_P_ARRAYAT ); $1 ? Inc(): Dec(); GenPCode1( HB_P_ARRAYPUT ); }
-           | FunArrayCall IncDec %prec POST { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); $2 ? Inc(): Dec(); GenPCode1( HB_P_ARRAYPUT ); $2 ? Dec(): Inc(); }
-           | IncDec FunArrayCall %prec PRE  { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); $1 ? Inc(): Dec(); GenPCode1( HB_P_ARRAYPUT ); }
+           | FunCallArray IncDec %prec POST { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); $2 ? Inc(): Dec(); GenPCode1( HB_P_ARRAYPUT ); $2 ? Dec(): Inc(); }
+           | IncDec FunCallArray %prec PRE  { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); $1 ? Inc(): Dec(); GenPCode1( HB_P_ARRAYPUT ); }
            | ObjectData IncDec %prec POST   { MessageDupl( SetData( $1 ) ); Function( 0 ); $2 ? Inc(): Dec(); Function( 1 ); $2 ? Dec(): Inc(); }
            | IncDec ObjectData %prec PRE    { MessageDupl( SetData( $2 ) ); Function( 0 ); $1 ? Inc(): Dec(); Function( 1 ); }
            | ObjectData ArrayIndex IncDec %prec POST { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); $3 ? Inc(): Dec(); GenPCode1( HB_P_ARRAYPUT ); $3 ? Dec(): Inc(); }
            | IncDec ObjectData ArrayIndex %prec PRE  { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); $1 ? Inc(): Dec(); GenPCode1( HB_P_ARRAYPUT ); }
            | ObjectMethod ArrayIndex IncDec %prec POST { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); $3 ? Inc(): Dec(); GenPCode1( HB_P_ARRAYPUT ); $3 ? Dec(): Inc(); }
            | IncDec ObjectMethod ArrayIndex %prec PRE  { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); $1 ? Inc(): Dec(); GenPCode1( HB_P_ARRAYPUT ); }
+           | AliasVar IncDec %prec POST    { PushId( $1 ); Duplicate(); $2 ? Inc(): Dec(); PopId( $1 ); AliasRemove(); }
+           | IncDec AliasVar %prec PRE     { PushId( $2 ); $1 ? Inc(): Dec(); Duplicate(); PopId( $2 ); AliasRemove(); }
            ;
 
 IncDec     : INC                             { $$ = 1; }
@@ -769,14 +801,14 @@ IncDec     : INC                             { $$ = 1; }
 
 Variable   : VarId                     {}
            | VarAt                     { GenPCode1( HB_P_ARRAYAT ); }
-           | FunArrayCall              { GenPCode1( HB_P_ARRAYAT ); }
+           | FunCallArray              { GenPCode1( HB_P_ARRAYAT ); }
            | ObjectData                {}
            | ObjectData ArrayIndex     { GenPCode1( HB_P_ARRAYAT ); }
            | ObjectMethod ArrayIndex   { GenPCode1( HB_P_ARRAYAT ); }
            ;
 
 VarId      : IDENTIFIER        { $$ = functions.pLast->lPCodePos;
-                                 if( _bForceByRefer && functions.pLast->szName )
+                                 if( _bForceByRefer && functions.pLast->szName && ! _bRValue )
                                     /* DO .. WITH uses reference to a variable
                                      * if not inside a codeblock
                                      */
@@ -797,55 +829,59 @@ IndexList  : Expression
            | IndexList { GenPCode1( HB_P_ARRAYAT ); } ',' Expression
            ;
 
-VarAssign  : IDENTIFIER INASSIGN Expression { PopId( $1 ); PushId( $1 ); }
-           | IDENTIFIER PLUSEQ   { PushId( $1 ); } Expression { GenPCode1( HB_P_PLUS ); PopId( $1 ); PushId( $1 ); }
-           | IDENTIFIER MINUSEQ  { PushId( $1 ); } Expression { GenPCode1( HB_P_MINUS ); PopId( $1 ); PushId( $1 ); }
-           | IDENTIFIER MULTEQ   { PushId( $1 ); } Expression { GenPCode1( HB_P_MULT ); PopId( $1 ); PushId( $1 ); }
-           | IDENTIFIER DIVEQ    { PushId( $1 ); } Expression { GenPCode1( HB_P_DIVIDE ); PopId( $1 ); PushId( $1 ); }
-           | IDENTIFIER EXPEQ    { PushId( $1 ); } Expression { GenPCode1( HB_P_POWER ); PopId( $1 ); PushId( $1 ); }
-           | IDENTIFIER MODEQ    { PushId( $1 ); } Expression { GenPCode1( HB_P_MODULUS ); PopId( $1 ); PushId( $1 ); }
-           | VarAt INASSIGN Expression { GenPCode1( HB_P_ARRAYPUT ); }
-           | VarAt PLUSEQ   { DupPCode( $1 ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_PLUS    ); GenPCode1( HB_P_ARRAYPUT ); }
-           | VarAt MINUSEQ  { DupPCode( $1 ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_MINUS   ); GenPCode1( HB_P_ARRAYPUT ); }
-           | VarAt MULTEQ   { DupPCode( $1 ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_MULT    ); GenPCode1( HB_P_ARRAYPUT ); }
-           | VarAt DIVEQ    { DupPCode( $1 ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_DIVIDE  ); GenPCode1( HB_P_ARRAYPUT ); }
-           | VarAt EXPEQ    { DupPCode( $1 ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_POWER   ); GenPCode1( HB_P_ARRAYPUT ); }
-           | VarAt MODEQ    { DupPCode( $1 ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_MODULUS ); GenPCode1( HB_P_ARRAYPUT ); }
-           | FunArrayCall INASSIGN Expression { GenPCode1( HB_P_ARRAYPUT ); }
-           | FunArrayCall PLUSEQ   { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); }  Expression { GenPCode1( HB_P_PLUS    ); GenPCode1( HB_P_ARRAYPUT ); }
-           | FunArrayCall MINUSEQ  { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); }  Expression { GenPCode1( HB_P_MINUS   ); GenPCode1( HB_P_ARRAYPUT ); }
-           | FunArrayCall MULTEQ   { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); }  Expression { GenPCode1( HB_P_MULT    ); GenPCode1( HB_P_ARRAYPUT ); }
-           | FunArrayCall DIVEQ    { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); }  Expression { GenPCode1( HB_P_DIVIDE  ); GenPCode1( HB_P_ARRAYPUT ); }
-           | FunArrayCall EXPEQ    { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); }  Expression { GenPCode1( HB_P_POWER   ); GenPCode1( HB_P_ARRAYPUT ); }
-           | FunArrayCall MODEQ    { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); }  Expression { GenPCode1( HB_P_MODULUS ); GenPCode1( HB_P_ARRAYPUT ); }
-           | ObjectData INASSIGN { MessageFix ( SetData( $1 ) ); } Expression { Function( 1 ); }
-           | ObjectData PLUSEQ   { MessageDupl( SetData( $1 ) ); Function( 0 ); } Expression { GenPCode1( HB_P_PLUS );    Function( 1 ); }
-           | ObjectData MINUSEQ  { MessageDupl( SetData( $1 ) ); Function( 0 ); } Expression { GenPCode1( HB_P_MINUS );   Function( 1 ); }
-           | ObjectData MULTEQ   { MessageDupl( SetData( $1 ) ); Function( 0 ); } Expression { GenPCode1( HB_P_MULT );    Function( 1 ); }
-           | ObjectData DIVEQ    { MessageDupl( SetData( $1 ) ); Function( 0 ); } Expression { GenPCode1( HB_P_DIVIDE );  Function( 1 ); }
-           | ObjectData EXPEQ    { MessageDupl( SetData( $1 ) ); Function( 0 ); } Expression { GenPCode1( HB_P_POWER );   Function( 1 ); }
-           | ObjectData MODEQ    { MessageDupl( SetData( $1 ) ); Function( 0 ); } Expression { GenPCode1( HB_P_MODULUS ); Function( 1 ); }
-           | ObjectData ArrayIndex INASSIGN Expression      { GenPCode1( HB_P_ARRAYPUT ); }
-           | ObjectData ArrayIndex PLUSEQ   { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_PLUS    ); GenPCode1( HB_P_ARRAYPUT ); }
-           | ObjectData ArrayIndex MINUSEQ  { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_MINUS   ); GenPCode1( HB_P_ARRAYPUT ); }
-           | ObjectData ArrayIndex MULTEQ   { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_MULT    ); GenPCode1( HB_P_ARRAYPUT ); }
-           | ObjectData ArrayIndex DIVEQ    { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_DIVIDE  ); GenPCode1( HB_P_ARRAYPUT ); }
-           | ObjectData ArrayIndex EXPEQ    { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_POWER   ); GenPCode1( HB_P_ARRAYPUT ); }
-           | ObjectData ArrayIndex MODEQ    { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_MODULUS ); GenPCode1( HB_P_ARRAYPUT ); }
-           | ObjectMethod ArrayIndex INASSIGN Expression    { GenPCode1( HB_P_ARRAYPUT ); }
-           | ObjectMethod ArrayIndex PLUSEQ   { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_PLUS    ); GenPCode1( HB_P_ARRAYPUT ); }
-           | ObjectMethod ArrayIndex MINUSEQ  { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_MINUS   ); GenPCode1( HB_P_ARRAYPUT ); }
-           | ObjectMethod ArrayIndex MULTEQ   { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_MULT    ); GenPCode1( HB_P_ARRAYPUT ); }
-           | ObjectMethod ArrayIndex DIVEQ    { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_DIVIDE  ); GenPCode1( HB_P_ARRAYPUT ); }
-           | ObjectMethod ArrayIndex EXPEQ    { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_POWER   ); GenPCode1( HB_P_ARRAYPUT ); }
-           | ObjectMethod ArrayIndex MODEQ    { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_MODULUS ); GenPCode1( HB_P_ARRAYPUT ); }
-           | AliasVar INASSIGN Expression                 {}
-           | AliasVar PLUSEQ   Expression                 {}
-           | AliasVar MINUSEQ  Expression                 {}
-           | AliasVar MULTEQ   Expression                 {}
-           | AliasVar DIVEQ    Expression                 {}
-           | AliasVar EXPEQ    Expression                 {}
-           | AliasVar MODEQ    Expression                 {}
+/*NOTE: If _bRValue is TRUE then the expression is on the right side of assignment
+ * operator (or +=, -= ...) - in this case a variable is not pushed by
+ * a reference it is a part of DO <proc> WITH ... statement
+ */
+VarAssign  : IDENTIFIER INASSIGN { _bRValue = TRUE; } Expression { PopId( $1 ); PushId( $1 ); }
+           | IDENTIFIER PLUSEQ   { PushId( $1 ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_PLUS    ); PopId( $1 ); PushId( $1 ); }
+           | IDENTIFIER MINUSEQ  { PushId( $1 ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_MINUS   ); PopId( $1 ); PushId( $1 ); }
+           | IDENTIFIER MULTEQ   { PushId( $1 ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_MULT    ); PopId( $1 ); PushId( $1 ); }
+           | IDENTIFIER DIVEQ    { PushId( $1 ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_DIVIDE  ); PopId( $1 ); PushId( $1 ); }
+           | IDENTIFIER EXPEQ    { PushId( $1 ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_POWER   ); PopId( $1 ); PushId( $1 ); }
+           | IDENTIFIER MODEQ    { PushId( $1 ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_MODULUS ); PopId( $1 ); PushId( $1 ); }
+           | VarAt INASSIGN { _bRValue = TRUE; } Expression { GenPCode1( HB_P_ARRAYPUT ); }
+           | VarAt PLUSEQ   { DupPCode( $1 ); GenPCode1( HB_P_ARRAYAT ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_PLUS    ); GenPCode1( HB_P_ARRAYPUT ); }
+           | VarAt MINUSEQ  { DupPCode( $1 ); GenPCode1( HB_P_ARRAYAT ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_MINUS   ); GenPCode1( HB_P_ARRAYPUT ); }
+           | VarAt MULTEQ   { DupPCode( $1 ); GenPCode1( HB_P_ARRAYAT ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_MULT    ); GenPCode1( HB_P_ARRAYPUT ); }
+           | VarAt DIVEQ    { DupPCode( $1 ); GenPCode1( HB_P_ARRAYAT ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_DIVIDE  ); GenPCode1( HB_P_ARRAYPUT ); }
+           | VarAt EXPEQ    { DupPCode( $1 ); GenPCode1( HB_P_ARRAYAT ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_POWER   ); GenPCode1( HB_P_ARRAYPUT ); }
+           | VarAt MODEQ    { DupPCode( $1 ); GenPCode1( HB_P_ARRAYAT ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_MODULUS ); GenPCode1( HB_P_ARRAYPUT ); }
+           | FunCallArray INASSIGN { _bRValue = TRUE; } Expression { GenPCode1( HB_P_ARRAYPUT ); }
+           | FunCallArray PLUSEQ   { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); _bRValue = TRUE; }  Expression { GenPCode1( HB_P_PLUS    ); GenPCode1( HB_P_ARRAYPUT ); }
+           | FunCallArray MINUSEQ  { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); _bRValue = TRUE; }  Expression { GenPCode1( HB_P_MINUS   ); GenPCode1( HB_P_ARRAYPUT ); }
+           | FunCallArray MULTEQ   { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); _bRValue = TRUE; }  Expression { GenPCode1( HB_P_MULT    ); GenPCode1( HB_P_ARRAYPUT ); }
+           | FunCallArray DIVEQ    { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); _bRValue = TRUE; }  Expression { GenPCode1( HB_P_DIVIDE  ); GenPCode1( HB_P_ARRAYPUT ); }
+           | FunCallArray EXPEQ    { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); _bRValue = TRUE; }  Expression { GenPCode1( HB_P_POWER   ); GenPCode1( HB_P_ARRAYPUT ); }
+           | FunCallArray MODEQ    { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); _bRValue = TRUE; }  Expression { GenPCode1( HB_P_MODULUS ); GenPCode1( HB_P_ARRAYPUT ); }
+           | ObjectData INASSIGN { MessageFix ( SetData( $1 ) ); _bRValue = TRUE; } Expression { Function( 1 ); }
+           | ObjectData PLUSEQ   { MessageDupl( SetData( $1 ) ); Function( 0 ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_PLUS );    Function( 1 ); }
+           | ObjectData MINUSEQ  { MessageDupl( SetData( $1 ) ); Function( 0 ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_MINUS );   Function( 1 ); }
+           | ObjectData MULTEQ   { MessageDupl( SetData( $1 ) ); Function( 0 ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_MULT );    Function( 1 ); }
+           | ObjectData DIVEQ    { MessageDupl( SetData( $1 ) ); Function( 0 ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_DIVIDE );  Function( 1 ); }
+           | ObjectData EXPEQ    { MessageDupl( SetData( $1 ) ); Function( 0 ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_POWER );   Function( 1 ); }
+           | ObjectData MODEQ    { MessageDupl( SetData( $1 ) ); Function( 0 ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_MODULUS ); Function( 1 ); }
+           | ObjectData ArrayIndex INASSIGN { _bRValue = TRUE; } Expression      { GenPCode1( HB_P_ARRAYPUT ); }
+           | ObjectData ArrayIndex PLUSEQ   { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_PLUS    ); GenPCode1( HB_P_ARRAYPUT ); }
+           | ObjectData ArrayIndex MINUSEQ  { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_MINUS   ); GenPCode1( HB_P_ARRAYPUT ); }
+           | ObjectData ArrayIndex MULTEQ   { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_MULT    ); GenPCode1( HB_P_ARRAYPUT ); }
+           | ObjectData ArrayIndex DIVEQ    { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_DIVIDE  ); GenPCode1( HB_P_ARRAYPUT ); }
+           | ObjectData ArrayIndex EXPEQ    { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_POWER   ); GenPCode1( HB_P_ARRAYPUT ); }
+           | ObjectData ArrayIndex MODEQ    { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_MODULUS ); GenPCode1( HB_P_ARRAYPUT ); }
+           | ObjectMethod ArrayIndex INASSIGN { _bRValue = TRUE; } Expression    { GenPCode1( HB_P_ARRAYPUT ); }
+           | ObjectMethod ArrayIndex PLUSEQ   { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_PLUS    ); GenPCode1( HB_P_ARRAYPUT ); }
+           | ObjectMethod ArrayIndex MINUSEQ  { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_MINUS   ); GenPCode1( HB_P_ARRAYPUT ); }
+           | ObjectMethod ArrayIndex MULTEQ   { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_MULT    ); GenPCode1( HB_P_ARRAYPUT ); }
+           | ObjectMethod ArrayIndex DIVEQ    { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_DIVIDE  ); GenPCode1( HB_P_ARRAYPUT ); }
+           | ObjectMethod ArrayIndex EXPEQ    { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_POWER   ); GenPCode1( HB_P_ARRAYPUT ); }
+           | ObjectMethod ArrayIndex MODEQ    { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_MODULUS ); GenPCode1( HB_P_ARRAYPUT ); }
+           | AliasVar INASSIGN { _bRValue = TRUE; $<pVoid>$=(void*)pAliasId; pAliasId=NULL; } Expression { pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); PushId( $1 ); AliasRemove(); }
+           | AliasVar PLUSEQ   { PushId( $1 ); _bRValue = TRUE; $<pVoid>$=(void*)pAliasId; pAliasId=NULL; } Expression { GenPCode1( HB_P_PLUS    ); pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); PushId( $1 ); AliasRemove(); }
+           | AliasVar MINUSEQ  { PushId( $1 ); _bRValue = TRUE; $<pVoid>$=(void*)pAliasId; pAliasId=NULL; } Expression { GenPCode1( HB_P_MINUS   ); pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); PushId( $1 ); AliasRemove(); }
+           | AliasVar MULTEQ   { PushId( $1 ); _bRValue = TRUE; $<pVoid>$=(void*)pAliasId; pAliasId=NULL; } Expression { GenPCode1( HB_P_MULT    ); pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); PushId( $1 ); AliasRemove(); }
+           | AliasVar DIVEQ    { PushId( $1 ); _bRValue = TRUE; $<pVoid>$=(void*)pAliasId; pAliasId=NULL; } Expression { GenPCode1( HB_P_DIVIDE  ); pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); PushId( $1 ); AliasRemove(); }
+           | AliasVar EXPEQ    { PushId( $1 ); _bRValue = TRUE; $<pVoid>$=(void*)pAliasId; pAliasId=NULL; } Expression { GenPCode1( HB_P_POWER   ); pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); PushId( $1 ); AliasRemove(); }
+           | AliasVar MODEQ    { PushId( $1 ); _bRValue = TRUE; $<pVoid>$=(void*)pAliasId; pAliasId=NULL; } Expression { GenPCode1( HB_P_MODULUS ); pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); PushId( $1 ); AliasRemove(); }
            | AliasFunc INASSIGN Expression { --iLine; GenError( _szCErrors, 'E', ERR_INVALID_LVALUE, NULL, NULL ); }
            | AliasFunc PLUSEQ   Expression { --iLine; GenError( _szCErrors, 'E', ERR_INVALID_LVALUE, NULL, NULL ); }
            | AliasFunc MINUSEQ  Expression { --iLine; GenError( _szCErrors, 'E', ERR_INVALID_LVALUE, NULL, NULL ); }
@@ -878,7 +914,7 @@ Operators  : Expression '='    Expression   { GenPCode1( HB_P_EQUAL ); } /* comp
            | NOT Expression                 { GenPCode1( HB_P_NOT ); }
            | '-' Expression %prec UNARY     { GenPCode1( HB_P_NEGATE ); }
            | '+' Expression %prec UNARY
-           | VarAssign
+           | VarAssign                      { _bRValue = FALSE; }
            ;
 
 Logical    : TRUEVALUE                                   { $$ = 1; }
@@ -931,6 +967,9 @@ BlockList  : IDENTIFIER                            { cVarType = ' '; AddVar( $1 
            | BlockList ',' IDENTIFIER             { AddVar( $3 ); $$++; }
            ;
 
+PareExpList: '(' ExpList ')'        { $$ = $2; }
+           ;
+
 ExpList    : Expression %prec POST                    { $$ = 1; }
            | ExpList { GenPCode1( HB_P_POP ); } ',' Expression %prec POST  { $$++; }
            ;
@@ -975,7 +1014,7 @@ FieldList  : IDENTIFIER                            { cVarType = ' '; $$=FieldsCo
            | IDENTIFIER AS_BLOCK                   { cVarType = 'B'; $$=FieldsCount(); AddVar( $1 ); }
            | IDENTIFIER AS_OBJECT                  { cVarType = 'O'; $$=FieldsCount(); AddVar( $1 ); }
            | FieldList ',' IDENTIFIER                { AddVar( $3 ); }
-           | FieldList IN IDENTIFIER { SetAlias( $3, $<iNumber>1 ); }
+           | FieldList IN IDENTIFIER { FieldsSetAlias( $3, $<iNumber>1 ); }
            ;
 
 MemvarDef  : MEMVAR { iVarScope = VS_MEMVAR; } MemvarList Crlf
@@ -1134,10 +1173,13 @@ DoProc     : DO IDENTIFIER { PushSymbol( $2, 1 ); PushNil(); Do( 0 ); }
            ;
 
 DoArgList  : ','                               { PushNil(); PushNil(); $$ = 2; }
-           | Expression                        { $$ = 1; }
+           | DoExpression                      { $$ = 1; }
            | DoArgList ','                     { PushNil(); $$++; }
-           | DoArgList ',' Expression          { $$++; }
-           | ',' { PushNil(); } Expression     { $$ = 2; }
+           | DoArgList ',' DoExpression        { $$++; }
+           | ',' { PushNil(); } DoExpression   { $$ = 2; }
+           ;
+
+DoExpression: Expression         { _bForceByRefer=TRUE; }
            ;
 
 Crlf       : '\n'
@@ -1232,12 +1274,6 @@ int harbour_main( int argc, char * argv[] )
                case 'a':
                case 'A':
                     _bAutoMemvarAssume = TRUE;
-                    break;
-
-               case 'b':
-               case 'B':
-                    _bDebugInfo = TRUE;
-                    _bLineNumbers = TRUE;
                     break;
 
                case 'd':
@@ -1527,7 +1563,6 @@ void PrintUsage( char * szSelf )
   printf( "Syntax: %s <file.prg> [options]\n"
           "\nOptions: \n"
           "\t/a\t\tautomatic memvar declaration\n"
-          "\t/b\t\tdebug info\n"
           "\t/d<id>[=<val>]\t#define <id>\n"
 #ifdef HARBOUR_OBJ_GENERATION
           "\t/f\t\tgenerated object file\n"
@@ -1785,7 +1820,8 @@ void AddVar( char * szVarName )
       /* variable defined in a function/procedure */
       CheckDuplVars( pFunc->pFields, szVarName, iVarScope );
       CheckDuplVars( pFunc->pStatics, szVarName, iVarScope );
-      CheckDuplVars( pFunc->pMemvars, szVarName, iVarScope );
+      if( !( iVarScope == VS_PRIVATE || iVarScope == VS_PUBLIC ) )
+         CheckDuplVars( pFunc->pMemvars, szVarName, iVarScope );
    }
    else
      /* variable defined in a codeblock */
@@ -1863,29 +1899,17 @@ void AddVar( char * szVarName )
       {
           case VS_LOCAL:
           case VS_PARAMETER:
-              { WORD wLocal = 1;
-
-                 if( ! pFunc->pLocals )
-                    pFunc->pLocals = pVar;
-                 else
-                 {
-                    pLastVar = pFunc->pLocals;
-                    while( pLastVar->pNext )
-                    {
-                       pLastVar = pLastVar->pNext;
-                       wLocal++;
-                    }
-                    pLastVar->pNext = pVar;
-                 }
-                 if( iVarScope == VS_PARAMETER )
-                    ++functions.pLast->wParamCount;
-                 if( _bDebugInfo )
-                 {
-                    GenPCode3( HB_P_LOCALNAME, LOBYTE( wLocal ), HIBYTE( wLocal ) );
-                    GenPCodeN( szVarName, strlen( szVarName ) );
-                    GenPCode1( 0 );
-                 }
+              if( ! pFunc->pLocals )
+                  pFunc->pLocals = pVar;
+              else
+              {
+                  pLastVar = pFunc->pLocals;
+                  while( pLastVar->pNext )
+                    pLastVar = pLastVar->pNext;
+                  pLastVar->pNext = pVar;
               }
+              if( iVarScope == VS_PARAMETER )
+                  ++functions.pLast->wParamCount;
               break;
 
           case VS_STATIC:
@@ -1943,6 +1967,80 @@ PCOMSYMBOL AddSymbol( char * szSymbolName, WORD *pwPos )
    /*if( cVarType != ' ') printf("\nDeclared %s as type %c at symbol %i\n", szSymbolName, cVarType, symbols.iCount );*/
    return pSym;
 }
+
+/* Adds new alias to the alias stack
+ */
+void AliasAdd( ALIASID_PTR pAlias )
+{
+   pAlias->pPrev =pAliasId;
+   pAliasId =pAlias;
+}
+
+/* Restores previously selected alias
+ */
+void AliasRemove( void )
+{
+   ALIASID_PTR pAlias = pAliasId;
+
+   pAliasId = pAliasId->pPrev;
+   OurFree( pAlias );
+}
+
+/* Adds an integer workarea number into alias stack
+ */
+void AliasAddInt( int iWorkarea )
+{
+   ALIASID_PTR pAlias = (ALIASID_PTR) OurMalloc( sizeof( ALIASID ) );
+
+   pAlias->type =ALIAS_NUMBER;
+   pAlias->alias.iAlias =iWorkarea;
+   AliasAdd( pAlias );
+}
+
+/* Adds an expression into alias stack
+ */
+void AliasAddExp( void )
+{
+   ALIASID_PTR pAlias = (ALIASID_PTR) OurMalloc( sizeof( ALIASID ) );
+
+   pAlias->type =ALIAS_EVAL;
+   AliasAdd( pAlias );
+}
+
+/* Adds an alias name into alias stack
+ */
+void AliasAddStr( char * szAlias )
+{
+   ALIASID_PTR pAlias = (ALIASID_PTR) OurMalloc( sizeof( ALIASID ) );
+
+   pAlias->type =ALIAS_NAME;
+   pAlias->alias.szAlias =szAlias;
+   AliasAdd( pAlias );
+}
+
+/* Generates pcodes to store the current workarea number
+ */
+void AliasPush( void )
+{
+   GenPCode1( HB_P_PUSHALIAS );
+}
+
+/* Generates pcodes to select the workarea number using current value
+ * from the eval stack
+ */
+void AliasPop( void )
+{
+   GenPCode1( HB_P_POPALIAS );
+}
+
+/* Generates pcodes to swap two last items from the eval stack.
+ * Last item (after swaping) is next popped as current workarea
+ */
+void AliasSwap( void )
+{
+   GenPCode1( HB_P_SWAPALIAS );
+}
+
 
 int Include( char * szFileName, PATHNAMES *pSearch )
 {
@@ -2063,6 +2161,21 @@ void DupPCode( WORD wStart ) /* duplicates the current generated pcode from an o
 }
 
 /*
+ * Function generates passed pcode for passed database field
+ */
+void FieldPCode( BYTE bPCode, char * szVarName )
+{
+   WORD wVar;
+   PCOMSYMBOL pVar;
+
+   pVar = GetSymbol( szVarName, &wVar );
+   if( ! pVar )
+      pVar =AddSymbol( szVarName, &wVar );
+   pVar->cScope |=VS_MEMVAR;
+   GenPCode3( bPCode, LOBYTE( wVar ), HIBYTE( wVar ) );
+}
+
+/*
  * This function creates and initialises the _FUNC structure
  */
 PFUNCTION FunctionNew( char *szName, SYMBOLSCOPE cScope )
@@ -2147,15 +2260,6 @@ void FunDef( char * szFunName, SYMBOLSCOPE cScope, int iType )
 
    GenPCode3( HB_P_FRAME, 0, 0 );   /* frame for locals and parameters */
    GenPCode3( HB_P_SFRAME, 0, 0 );     /* frame for statics variables */
-
-   if( _bDebugInfo )
-   {
-      GenPCode1( HB_P_MODULENAME );
-      GenPCodeN( files.pLast->szFileName, strlen( files.pLast->szFileName ) );
-      GenPCode1( ':' );
-      GenPCodeN( szFunName, strlen( szFunName ) );
-      GenPCode1( 0 );
-   }
 }
 
 void GenJava( char *szFileName, char *szName )
@@ -2184,6 +2288,8 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
    WORD iNestedCodeblock = 0;
    LONG lPCodePos;
    char chr;
+   BOOL bEndProcRequired;
+
    FILE * yyc;             /* file handle for C output */
 
 #ifdef __WATCOMC__
@@ -2202,7 +2308,8 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
    if( ! _bQuiet )
       printf( "\nGenerating C language output...\n" );
 
-   fprintf( yyc, "#include \"hb_vmpub.h\"\n\n\n" );
+   fprintf( yyc, "#include \"hb_vmpub.h\"\n" );
+   fprintf( yyc, "#include \"init.h\"\n\n\n" );
 
    if( ! _bStartProc )
       pFunc = pFunc->pNext; /* No implicit starting procedure */
@@ -2305,6 +2412,7 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
       else
          fprintf( yyc, "HARBOUR HB_%s( void )\n{\n  static BYTE pcode[] = { \n", pFunc->szName );
 
+      bEndProcRequired =TRUE;
       lPCodePos = 0;
       while( lPCodePos < pFunc->lPCodePos )
       {
@@ -2374,6 +2482,17 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
                  --iNestedCodeblock;
                  fprintf( yyc, "                HB_P_ENDBLOCK,\n" );
                  lPCodePos++;
+                 break;
+
+            case HB_P_ENDPROC:
+                 lPCodePos++;
+                 if( lPCodePos == pFunc->lPCodePos )
+                 {
+                     bEndProcRequired =FALSE;
+                     fprintf( yyc, "                HB_P_ENDPROC\n" );
+                 }
+                 else
+                  fprintf( yyc, "                HB_P_ENDPROC,\n" );
                  break;
 
             case HB_P_FALSE:
@@ -2481,25 +2600,6 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
                  lPCodePos += 3;
                  break;
 
-            case HB_P_LOCALNAME:
-                 fprintf( yyc, "                HB_P_LOCALNAME, %i, %i,\t/* %s */\n",
-                          pFunc->pCode[ lPCodePos + 1 ],
-                          pFunc->pCode[ lPCodePos + 2 ],
-                          ( char * ) pFunc->pCode + lPCodePos + 3 );
-                 lPCodePos += 3;
-                 while( pFunc->pCode[ lPCodePos ] )
-                 {
-                    chr = pFunc->pCode[ lPCodePos++ ];
-                    if( chr == '\'' || chr == '\\')
-                      fprintf( yyc, " \'\\%c\',", chr );
-                    else
-                      fprintf( yyc, " \'%c\',", chr );
-                 }
-                 fprintf( yyc, " 0,\n" );
-                 lPCodePos++;
-                 break;
-                 break;
-
             case HB_P_MESSAGE:
                  {
                   WORD wFixPos;
@@ -2516,21 +2616,6 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
 
             case HB_P_MINUS:
                  fprintf( yyc, "                HB_P_MINUS,\n" );
-                 lPCodePos++;
-                 break;
-
-            case HB_P_MODULENAME:
-                 fprintf( yyc, "                HB_P_MODULENAME, /* %s */\n",
-                          ( char * ) pFunc->pCode + lPCodePos++ + 1 );
-                 while( pFunc->pCode[ lPCodePos ] )
-                 {
-                    chr = pFunc->pCode[ lPCodePos++ ];
-                    if( chr == '\'' || chr == '\\')
-                      fprintf( yyc, " \'\\%c\',", chr );
-                    else
-                      fprintf( yyc, " \'%c\',", chr );
-                 }
-                 fprintf( yyc, " 0,\n" );
                  lPCodePos++;
                  break;
 
@@ -2587,6 +2672,39 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
             case HB_P_POP:
                  fprintf( yyc, "                HB_P_POP,\n" );
                  lPCodePos++;
+                 break;
+
+            case HB_P_POPALIAS:
+                 fprintf( yyc, "                HB_P_POPALIAS,\n" );
+                 lPCodePos++;
+                 break;
+
+            case HB_P_POPALIASEDFIELD:
+                 {
+                  WORD wFixPos;
+
+                  wVar = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
+                  wFixPos =FixSymbolPos( wVar );
+                  fprintf( yyc, "                HB_P_POPALIASEDFIELD, %i, %i,\t/* %s */\n",
+                           LOBYTE( wFixPos ),
+                           HIBYTE( wFixPos ),
+                           GetSymbolOrd( wVar )->szName );
+                  lPCodePos += 3;
+                 }
+                 break;
+
+            case HB_P_POPFIELD:
+                 {
+                  WORD wFixPos;
+
+                  wVar = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
+                  wFixPos =FixSymbolPos( wVar );
+                  fprintf( yyc, "                HB_P_POPFIELD, %i, %i,\t/* %s */\n",
+                           LOBYTE( wFixPos ),
+                           HIBYTE( wFixPos ),
+                           GetSymbolOrd( wVar )->szName );
+                  lPCodePos += 3;
+                 }
                  break;
 
             case HB_P_POPLOCAL:
@@ -2655,6 +2773,26 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
                  lPCodePos++;
                  break;
 
+            case HB_P_PUSHALIAS:
+                 fprintf( yyc, "                HB_P_PUSHALIAS,\n" );
+                 lPCodePos++;
+                 break;
+
+            case HB_P_PUSHALIASEDFIELD:
+                 {
+                  WORD wFixPos;
+
+                  wVar = pFunc->pCode[ lPCodePos + 1 ] +
+                           pFunc->pCode[ lPCodePos + 2 ] * 256;
+                  wFixPos =FixSymbolPos( wVar );
+                  fprintf( yyc, "                HB_P_PUSHALIASEDFIELD, %i, %i,\t/* %s */\n",
+                           LOBYTE( wFixPos ),
+                           HIBYTE( wFixPos ),
+                           GetSymbolOrd( wVar )->szName );
+                  lPCodePos += 3;
+                 }
+                 break;
+
             case HB_P_PUSHBLOCK:
                  ++iNestedCodeblock;
                  fprintf( yyc, "                HB_P_PUSHBLOCK, %i, %i,\t/* %i */\n",
@@ -2695,6 +2833,21 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
                     *( ( double * ) &( pFunc->pCode[ lPCodePos ] ) ),
                     *( ( BYTE * ) &( pFunc->pCode[ lPCodePos + sizeof( double ) ] ) ) );
                     lPCodePos += sizeof( double ) + sizeof( BYTE );
+                 }
+                 break;
+
+            case HB_P_PUSHFIELD:
+                 {
+                  WORD wFixPos;
+
+                  wVar = pFunc->pCode[ lPCodePos + 1 ] +
+                           pFunc->pCode[ lPCodePos + 2 ] * 256;
+                  wFixPos =FixSymbolPos( wVar );
+                  fprintf( yyc, "                HB_P_PUSHFIELD, %i, %i,\t/* %s */\n",
+                           LOBYTE( wFixPos ),
+                           HIBYTE( wFixPos ),
+                           GetSymbolOrd( wVar )->szName );
+                  lPCodePos += 3;
                  }
                  break;
 
@@ -2911,6 +3064,11 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
                  }
                  break;
 
+            case HB_P_SWAPALIAS:
+                 fprintf( yyc, "                HB_P_SWAPALIAS,\n" );
+                 lPCodePos++;
+                 break;
+
             case HB_P_TRUE:
                  fprintf( yyc, "                HB_P_TRUE,\n" );
                  lPCodePos++;
@@ -2929,7 +3087,10 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
       }
 
       fprintf( yyc, "/* %05li */", lPCodePos );
-      fprintf( yyc, "  HB_P_ENDPROC };\n\n" );
+      if( bEndProcRequired )
+         fprintf( yyc, "  HB_P_ENDPROC };\n\n" );
+      else
+         fprintf( yyc, "  };\n\n" );
       fprintf( yyc, "   hb_vmExecute( pcode, symbols );\n}\n\n" );
       pFunc = pFunc->pNext;
    }
@@ -3028,9 +3189,6 @@ void GenExterns( void ) /* generates the symbols for the EXTERN names */
 {
   PEXTERN pDelete;
 
-  if( _bDebugInfo )
-     AddExtern( yy_strdup( "DEBUGGER" ) );
-
   while( pExterns )
   {
     if( GetSymbol( pExterns->szName, NULL ) )
@@ -3047,24 +3205,6 @@ void GenExterns( void ) /* generates the symbols for the EXTERN names */
     pExterns = pExterns->pNext;
     OurFree( (void *) pDelete );
   }
-}
-
-void GenReturn( WORD wOffset ) /* generates a return offset to later on fill it with the proper exiting pcode address */
-{
-   PRETURN pReturn = ( PRETURN ) OurMalloc( sizeof( _RETURN ) ), pLast;
-
-   pReturn->wOffset = wOffset;
-   pReturn->pNext   = 0;
-
-   if( ! pReturns )
-      pReturns = pReturn;
-   else
-   {
-      pLast = pReturns;
-      while( pLast->pNext )
-         pLast = pLast->pNext;
-      pLast->pNext = pReturn;
-   }
 }
 
 PFUNCTION GetFuncall( char * szFunctionName ) /* returns a previously called defined function */
@@ -3268,59 +3408,19 @@ int GetStaticVarPos( char *szVarName )
   return 0;
 }
 
-/* Checks if passed aliased variable is declared in passed variable's list
- * returns the order + 1 of a variable if defined or zero
- */
-WORD GetAliasedVarPos( PVAR pVars, char *szAlias, char *szVarName )
-{
-   WORD wVar = 1;
-
-   /*TODO: add checking for alias */
-   szAlias =szAlias;
-   while( pVars )
-   {
-      if( pVars->szName && ! strcmp( pVars->szName, szVarName ) )
-      {
-         if( _bWarnings )
-         {
-            PSTACK_VAL_TYPE pNewStackType;
-
-            pVars->iUsed = 1;
-
-            pNewStackType = ( STACK_VAL_TYPE * )OurMalloc( sizeof( STACK_VAL_TYPE ) );
-            pNewStackType->cType = pVars->cType;
-            pNewStackType->pPrev = pStackValType;
-
-            pStackValType = pNewStackType;
-            debug_msg( "\n* *GetAliasedVarPos()\n", NULL );
-         }
-         return wVar;
-      }
-      else
-      {
-         if( pVars->pNext )
-         {
-            pVars = pVars->pNext;
-            wVar++;
-         }
-         else
-            return 0;
-      }
-   }
-   return 0;
-}
-
 /* Checks if passed variable name is declared as FIELD
  * Returns 0 if not found in FIELD list or its position in this list if found
+ * It also returns a pointer to the function where this field was declared
  */
-int GetFieldVarPos( char *szVarName )
+int GetFieldVarPos( char *szVarName, PFUNCTION *pOwner )
 {
    int iVar;
    PFUNCTION pFunc =functions.pLast;
 
+   *pOwner =NULL;
    if( pFunc->szName )
       /* we are in a function/procedure -we don't need any tricks */
-      iVar =GetAliasedVarPos( pFunc->pFields, NULL, szVarName );
+      iVar =GetVarPos( pFunc->pFields, szVarName );
    else
    {
       /* we have to check the list of nested codeblock up to a function
@@ -3328,13 +3428,18 @@ int GetFieldVarPos( char *szVarName )
        */
       while( pFunc->pOwner )
          pFunc =pFunc->pOwner;
-      iVar =GetAliasedVarPos( pFunc->pFields, NULL, szVarName );
+      iVar =GetVarPos( pFunc->pFields, szVarName );
    }
    /* If not found on the list declared in current function then check
     * the global list (only if there will be no starting procedure)
     */
    if( ! iVar && ! _bStartProc )
-      iVar =GetAliasedVarPos( functions.pFirst->pFields, NULL, szVarName );
+   {
+      pFunc =functions.pFirst;
+      iVar =GetVarPos( pFunc->pFields, szVarName );
+   }
+   if( iVar )
+      *pOwner =pFunc;
 
    return iVar;
 }
@@ -3349,7 +3454,7 @@ int GetMemvarPos( char *szVarName )
 
    if( pFunc->szName )
       /* we are in a function/procedure -we don't need any tricks */
-      iVar =GetAliasedVarPos( pFunc->pMemvars, NULL, szVarName );
+      iVar =GetVarPos( pFunc->pMemvars, szVarName );
    else
    {
       /* we have to check the list of nested codeblock up to a function
@@ -3357,13 +3462,13 @@ int GetMemvarPos( char *szVarName )
        */
       while( pFunc->pOwner )
          pFunc =pFunc->pOwner;
-      iVar =GetAliasedVarPos( pFunc->pMemvars, NULL, szVarName );
+      iVar =GetVarPos( pFunc->pMemvars, szVarName );
    }
    /* if not found on the list declared in current function then check
     * the global list (only if there will be no starting procedure)
     */
    if( ! iVar && ! _bStartProc )
-      iVar =GetAliasedVarPos( functions.pFirst->pMemvars, NULL, szVarName );
+      iVar =GetVarPos( functions.pFirst->pMemvars, szVarName );
 
    return iVar;
 }
@@ -3592,39 +3697,66 @@ void LineBody( void ) /* generates the pcode with the currently compiled source 
 /**
  * Function generates passed pcode for passed variable name
  */
-void MemvarPCode( BYTE bPCode, char * szVarName )
+void VariablePCode( BYTE bPCode, char * szVarName )
 {
    WORD wVar;
-   PCOMSYMBOL pVar;
+   PCOMSYMBOL pSym;
+   PFUNCTION pOwnerFunc = NULL;
 
    if( _bForceMemvars )
-   {
+   {  /* -v swith was used -> first check the MEMVARs */
       wVar =GetMemvarPos( szVarName );
       if( ! wVar )
       {
-         wVar =GetFieldVarPos( szVarName );
+         wVar =GetFieldVarPos( szVarName, &pOwnerFunc );
          if( ! wVar )
             GenWarning( ((bPCode==HB_P_POPMEMVAR) ? WARN_MEMVAR_ASSUMED : WARN_AMBIGUOUS_VAR),
                   szVarName, NULL );
       }
    }
    else
-   {
-      wVar =GetFieldVarPos( szVarName );
-      if( ! wVar )
+   {  /* -v was not used -> default action is checking FIELDs list */
+      wVar =GetFieldVarPos( szVarName, &pOwnerFunc );
+      if( wVar == 0 )
       {
          wVar =GetMemvarPos( szVarName );
-         if( ! wVar )
+         if( wVar == 0 )
             GenWarning( ((bPCode==HB_P_POPMEMVAR) ? WARN_MEMVAR_ASSUMED : WARN_AMBIGUOUS_VAR),
                   szVarName, NULL );
       }
    }
 
+   if( wVar && pOwnerFunc )
+   {  /* variable is declared using FIELD statement */
+      PVAR pField = GetVar( pOwnerFunc->pFields, wVar );
 
-   pVar = GetSymbol( szVarName, &wVar );
-   if( ! pVar )
-      pVar =AddSymbol( szVarName, &wVar );
-   pVar->cScope |=VS_MEMVAR;
+      if( pField->szAlias )
+      {  /* the alias was specified too */
+         if( bPCode == HB_P_POPMEMVAR )
+            bPCode =HB_P_POPALIASEDFIELD;
+         else if( bPCode == HB_P_PUSHMEMVAR )
+            bPCode =HB_P_PUSHALIASEDFIELD;
+         else
+            /* pushing fields by reference is not allowed */
+            GenError( _szCErrors, 'E', ERR_INVALID_REFER, szVarName, NULL );
+         PushSymbol( yy_strdup(pField->szAlias), 0 );
+      }
+      else
+      {  /* this is unaliased field */
+         if( bPCode == HB_P_POPMEMVAR )
+            bPCode =HB_P_POPFIELD;
+         else if( bPCode == HB_P_PUSHMEMVAR )
+            bPCode =HB_P_PUSHFIELD;
+         else
+            /* pushing fields by reference is not allowed */
+            GenError( _szCErrors, 'E', ERR_INVALID_REFER, szVarName, NULL );
+      }
+   }
+
+   pSym = GetSymbol( szVarName, &wVar );
+   if( ! pSym )
+      pSym =AddSymbol( szVarName, &wVar );
+   pSym->cScope |=VS_MEMVAR;
    GenPCode3( bPCode, LOBYTE( wVar ), HIBYTE( wVar ) );
 }
 
@@ -3699,22 +3831,69 @@ void PopId( char * szVarName ) /* generates the pcode to pop a value from the vi
 {
    int iVar;
 
-   iVar = GetLocalVarPos( szVarName );
-   if( iVar )
-      GenPCode3( HB_P_POPLOCAL, LOBYTE( iVar ), HIBYTE( iVar ) );
-   else
+   if( pAliasId == NULL )
    {
-      iVar = GetStaticVarPos( szVarName );
+      iVar = GetLocalVarPos( szVarName );
       if( iVar )
-      {
-         GenPCode3( HB_P_POPSTATIC, LOBYTE( iVar ), HIBYTE( iVar ) );
-         functions.pLast->bFlags |= FUN_USES_STATICS;
-      }
+         GenPCode3( HB_P_POPLOCAL, LOBYTE( iVar ), HIBYTE( iVar ) );
       else
       {
-         MemvarPCode( HB_P_POPMEMVAR, szVarName );
+         iVar = GetStaticVarPos( szVarName );
+         if( iVar )
+         {
+            GenPCode3( HB_P_POPSTATIC, LOBYTE( iVar ), HIBYTE( iVar ) );
+            functions.pLast->bFlags |= FUN_USES_STATICS;
+         }
+         else
+         {
+            VariablePCode( HB_P_POPMEMVAR, szVarName );
+         }
       }
    }
+   else
+   {
+      if( pAliasId->type == ALIAS_NAME )
+      {
+         if( pAliasId->alias.szAlias[0] == 'M' && pAliasId->alias.szAlias[1] == '\x0' )
+         {  /* M->variable */
+            VariablePCode( HB_P_POPMEMVAR, szVarName );
+         }
+         else
+         {
+            int iCmp = strncmp( pAliasId->alias.szAlias, "MEMVAR", 4 );
+            if( iCmp == 0 )
+                  iCmp = strncmp( pAliasId->alias.szAlias, "MEMVAR", strlen(pAliasId->alias.szAlias) );
+            if( iCmp == 0 )
+            {  /* MEMVAR-> or MEMVA-> or MEMV-> */
+               VariablePCode( HB_P_POPMEMVAR, szVarName );
+            }
+            else
+            {  /* field variable */
+               iCmp = strncmp( pAliasId->alias.szAlias, "FIELD", 4 );
+               if( iCmp == 0 )
+                  iCmp = strncmp( pAliasId->alias.szAlias, "FIELD", strlen(pAliasId->alias.szAlias) );
+               if( iCmp == 0 )
+               {  /* FIELD-> */
+                  FieldPCode( HB_P_POPFIELD, szVarName );
+               }
+               else
+               {  /* database alias */
+                  PushSymbol( yy_strdup(pAliasId->alias.szAlias), 0 );
+                  FieldPCode( HB_P_POPALIASEDFIELD, szVarName );
+               }
+            }
+         }
+      }
+      else if( pAliasId->type == ALIAS_NUMBER )
+      {
+         PushInteger( pAliasId->alias.iAlias );
+         FieldPCode( HB_P_POPALIASEDFIELD, szVarName );
+      }
+      else
+         /* Alias is already placed on stack */
+         FieldPCode( HB_P_POPALIASEDFIELD, szVarName );
+   }
+
 
    if( _bWarnings )
    {
@@ -3772,29 +3951,75 @@ void PushId( char * szVarName ) /* generates the pcode to push a variable value 
 {
    int iVar;
 
-   if( iVarScope == VS_STATIC && functions.pLast->szName )
+   if( pAliasId == NULL )
    {
-     /* Reffering to any variable is not allowed during initialization
-      * of static variable
-      */
-      _pInitFunc->bFlags |= FUN_ILLEGAL_INIT;
-   }
-
-   iVar = GetLocalVarPos( szVarName );
-   if( iVar )
-      GenPCode3( HB_P_PUSHLOCAL, LOBYTE( iVar ), HIBYTE( iVar ) );
-   else
-   {
-      iVar = GetStaticVarPos( szVarName );
-      if( iVar )
+      if( iVarScope == VS_STATIC && functions.pLast->szName )
       {
-         GenPCode3( HB_P_PUSHSTATIC, LOBYTE( iVar ), HIBYTE( iVar ) );
-         functions.pLast->bFlags |= FUN_USES_STATICS;
+      /* Reffering to any variable is not allowed during initialization
+         * of static variable
+         */
+         _pInitFunc->bFlags |= FUN_ILLEGAL_INIT;
       }
+
+      iVar = GetLocalVarPos( szVarName );
+      if( iVar )
+         GenPCode3( HB_P_PUSHLOCAL, LOBYTE( iVar ), HIBYTE( iVar ) );
       else
       {
-         MemvarPCode( HB_P_PUSHMEMVAR, szVarName );
+         iVar = GetStaticVarPos( szVarName );
+         if( iVar )
+         {
+            GenPCode3( HB_P_PUSHSTATIC, LOBYTE( iVar ), HIBYTE( iVar ) );
+            functions.pLast->bFlags |= FUN_USES_STATICS;
+         }
+         else
+         {
+            VariablePCode( HB_P_PUSHMEMVAR, szVarName );
+         }
       }
+   }
+   else
+   {
+      if( pAliasId->type == ALIAS_NAME )
+      {
+         if( pAliasId->alias.szAlias[0] == 'M' && pAliasId->alias.szAlias[1] == '\x0' )
+         {  /* M->variable */
+            VariablePCode( HB_P_PUSHMEMVAR, szVarName );
+         }
+         else
+         {
+            int iCmp = strncmp( pAliasId->alias.szAlias, "MEMVAR", 4 );
+            if( iCmp == 0 )
+                  iCmp = strncmp( pAliasId->alias.szAlias, "MEMVAR", strlen(pAliasId->alias.szAlias) );
+            if( iCmp == 0 )
+            {  /* MEMVAR-> or MEMVA-> or MEMV-> */
+               VariablePCode( HB_P_PUSHMEMVAR, szVarName );
+            }
+            else
+            {  /* field variable */
+               iCmp = strncmp( pAliasId->alias.szAlias, "FIELD", 4 );
+               if( iCmp == 0 )
+                  iCmp = strncmp( pAliasId->alias.szAlias, "FIELD", strlen(pAliasId->alias.szAlias) );
+               if( iCmp == 0 )
+               {  /* FIELD-> */
+                  FieldPCode( HB_P_PUSHFIELD, szVarName );
+               }
+               else
+               {  /* database alias */
+                  PushSymbol( yy_strdup(pAliasId->alias.szAlias), 0 );
+                  FieldPCode( HB_P_PUSHALIASEDFIELD, szVarName );
+               }
+            }
+         }
+      }
+      else if( pAliasId->type == ALIAS_NUMBER )
+      {
+         PushInteger( pAliasId->alias.iAlias );
+         FieldPCode( HB_P_PUSHALIASEDFIELD, szVarName );
+      }
+      else
+         /* Alias is already placed on stack */
+         FieldPCode( HB_P_PUSHALIASEDFIELD, szVarName );
    }
 
   if( _bWarnings )
@@ -3835,7 +4060,7 @@ void PushIdByRef( char * szVarName ) /* generates the pcode to push a variable b
       }
       else
       {
-         MemvarPCode( HB_P_PUSHMEMVARREF, szVarName );
+         VariablePCode( HB_P_PUSHMEMVARREF, szVarName );
       }
    }
 }
@@ -4039,7 +4264,7 @@ void CheckDuplVars( PVAR pVar, char * szVarName, int iVarScope )
    {
       if( ! strcmp( pVar->szName, szVarName ) )
       {
-         if( iVarScope != VS_PARAMETER )
+         if( ! (iVarScope & VS_PARAMETER) )
             --iLine;
          GenError( _szCErrors, 'E', ERR_VAR_DUPL, szVarName, NULL );
       }
@@ -4144,8 +4369,6 @@ void FixElseIfs( void * pFixElseIfs )
 
 void FixReturns( void ) /* fixes all last defined function returns jumps offsets */
 {
-   PRETURN pLast = pReturns, pDelete;
-
    if( _bWarnings && functions.pLast )
    {
       PVAR pVar;
@@ -4181,23 +4404,6 @@ void FixReturns( void ) /* fixes all last defined function returns jumps offsets
       pStackValType = 0;
    }
 
-   if( pReturns )
-   {
-      while( pLast )
-      {
-         JumpHere( pLast->wOffset );
-         pLast = pLast->pNext;
-      }
-      pLast   = pReturns;
-      pDelete = pReturns;
-      while( pLast )
-      {
-         pLast = pLast->pNext;
-         OurFree( (void *) pDelete );
-         pDelete = pLast;
-      }
-      pReturns = 0;
-   }
 /* TODO: check why it triggers this error in keywords.prg
    if( pLoops )
    {
@@ -4715,7 +4921,7 @@ void CodeBlockEnd()
  * szAlias -> name of the alias
  * iField  -> position of the first FIELD name to change
  */
-void SetAlias( char * szAlias, int iField )
+void FieldsSetAlias( char * szAlias, int iField )
 {
   PVAR pVar;
 
@@ -4731,7 +4937,7 @@ void SetAlias( char * szAlias, int iField )
 }
 
 /* This functions counts the number of FIELD declaration in a function
- * We will required this information in SetAlias function
+ * We will required this information in FieldsSetAlias function
  */
 int FieldsCount()
 {
@@ -5007,6 +5213,7 @@ void GenPortObj( char *szFileName, char *szName )
    LONG lPCodePos;
    LONG lPad;
    LONG lSymbols;
+   BOOL bEndProcRequired = TRUE;
    FILE * yyc;             /* file handle for C output */
 
    if( ! szName ) szName = 0; /* compiler warning */
@@ -5144,13 +5351,22 @@ void GenPortObj( char *szFileName, char *szName )
             case HB_P_OR:
             case HB_P_PLUS:
             case HB_P_POP:
+            case HB_P_POPALIAS:
             case HB_P_POWER:
+            case HB_P_PUSHALIAS:
             case HB_P_PUSHNIL:
             case HB_P_PUSHSELF:
             case HB_P_RETVALUE:
+            case HB_P_SWAPALIAS:
             case HB_P_TRUE:
             case HB_P_ZERO:
                  fputc( pFunc->pCode[ lPCodePos++ ], yyc );
+                 break;
+
+            case HB_P_ENDPROC:
+                 fputc( pFunc->pCode[ lPCodePos++ ], yyc );
+                 if( lPCodePos == pFunc->lPCodePos )
+                     bEndProcRequired =FALSE;
                  break;
 
             case HB_P_DIMARRAY:
@@ -5193,6 +5409,10 @@ void GenPortObj( char *szFileName, char *szName )
             case HB_P_POPMEMVAR:
             case HB_P_PUSHMEMVAR:
             case HB_P_PUSHMEMVARREF:
+            case HB_P_POPFIELD:
+            case HB_P_PUSHFIELD:
+            case HB_P_POPALIASEDFIELD:
+            case HB_P_PUSHALIASEDFIELD:
                  fputc( pFunc->pCode[ lPCodePos ], yyc );
                  wVar =FixSymbolPos( pFunc->pCode[ lPCodePos+1 ] + 256 *pFunc->pCode[ lPCodePos+2 ] );
                  fputc( LOBYTE( wVar ), yyc );
@@ -5288,7 +5508,8 @@ void GenPortObj( char *szFileName, char *szName )
          }
       }
 
-      fputc( HB_P_ENDPROC, yyc );
+      if( bEndProcRequired )
+         fputc( HB_P_ENDPROC, yyc );
       for( ; lPad; lPad-- )
          fputc( 0, yyc );                       /* Pad optimalizations */
       pFunc = pFunc->pNext;

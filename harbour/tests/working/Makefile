@@ -150,6 +150,7 @@ PRG_HEADERS=\
 	test.ch \
 
 BAD_PRG_SOURCES=\
+	alias.prg \
 	dupvars.prg \
 	extend1.prg \
 	keywords.prg \

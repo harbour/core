@@ -1,3 +1,84 @@
+19990808-20:55 GMT+2 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/compiler/harbour.y
+        * corrected checking for duplicated variable names when
+         MEMVAR and PRIVATE variable was declared
+        * Arguments used in DO ... WITH ... are pushed correctly now
+         using either a value or a reference
+        * RETURN statement is no longer generating JMP opcodes - it generates
+         HB_P_ENDPROC opcode now
+        * generated C code again includes "init.h"
+        + added support for aliased expressions (it seems that generated
+         C code is correct)
+
+    *source/rtl/do.c
+        + added documentation
+
+    *source/rtl/memvars.c
+        + added __MVSCOPE function to check if variable is created already
+
+    *include/memvars.ch
+        ! new file that defines the values returned from __MVSCOPE
+         function
+
+    *include/hb_vmpub.h
+    *include/extend.h
+        * changed to not duplicate definition of structures and type.
+         Duplicated definitions have caused undefined symbols during
+         linking of C++ compiler (Watcom) output. The C++ compilers
+         can mangle function's name into different names when
+         duplicated definitions of data types are used.
+
+    *source/rtl/initsymb.c
+        + added again '#include "init.h"' - because some definitions
+         were moved into hb_vmpub.h to avoid problems with duplicated
+         definitions of data types.
+
+    *include/langapi.h
+	- removed declaration of extern langDef (Watcom reported error)
+	 see TODO comment in this file
+	
+    *include/pcode.h
+        - removed unused HB_P_PUSHWORD
+        + added opcodes:
+                HB_P_POPALIAS
+                HB_P_PUSHALIAS
+                HB_P_SWAPALIAS
+                HB_P_POPFIELD
+                HB_P_PUSHFIELD
+                HB_P_POPALIASEDFIELD
+                HB_P_PUSHALIASEDFIELD
+	NOTE: 
+	You have to rebuild all harbour libraries and object files !
+
+    *source/vm/hvm.c
+        + added initial support for aliased expressions (fields are not
+         handled yet - we need to synchronize it with RDD development)
+
+    *include/hberrors.h
+        + added ERR_INVALID_REFER reported when field or aliased variable
+         is passed by the reference
+
+    *tests/working/alias.prg
+        + new file to check if aliased expressions are handled correctly
+         (only manual check at this moment - by looking at generated 
+         C code)
+
+    *test/working/Makefile
+        + added alias.prg into BAD_PRG_SOURCES because it cannot be run yet
+	- removed debugger.prg
+
+    *source/rtl/console.c
+	- io.h cannot be included on Linux/GCC (placed inside #ifdef)
+
+    *source/vm/dynsym.c
+	+ restored definition of SYM_ALLOCATED because it is local symbol
+	 NOTE: 
+	 When compared then this symbol _have to_ be type casted
+	 to SYMBOLSCOPE. If it will be not type casted then some
+	 compilers will compare (int)-1 with (char)-1 which is never
+	 true! (I am changing it for the second time :)
+	 
 19990808-11:50 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/runner/runner.c
      source/runner/Makefile

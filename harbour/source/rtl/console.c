@@ -54,10 +54,11 @@
 #include "set.h"
 #include "inkey.h"
 
-#if defined(__GNUC__)
+#if defined(__GNUC__) && ! defined(__DJGPP__)
   #include <unistd.h>
+#else
+  #include <io.h>
 #endif
-#include <io.h>
 #include <fcntl.h>
 #include "gtapi.h"            /* HARBOUR_USE_GTAPI is checked inside gtapi.h, so that
                                  we can always get the border styles */

@@ -28,6 +28,8 @@
 
 #include "extend.h"
 
+#define SYM_ALLOCATED -1
+
 typedef struct
 {
    PHB_DYNS pDynSym;             /* Pointer to dynamic symbol */
@@ -53,7 +55,7 @@ PHB_SYMB hb_symbolNew( char * szName )      /* Create a new symbol */
    PHB_SYMB pSymbol = ( PHB_SYMB ) hb_xgrab( sizeof( HB_SYMB ) );
 
    pSymbol->szName = ( char * ) hb_xgrab( strlen( szName ) + 1 );
-   pSymbol->cScope = FS_ALLOCATED; /* to know what symbols to release when exiting the app */
+   pSymbol->cScope = SYM_ALLOCATED; /* to know what symbols to release when exiting the app */
    strcpy( pSymbol->szName, szName );
    pSymbol->pFunPtr = NULL;
    pSymbol->pDynSym = NULL;
@@ -193,7 +195,7 @@ void hb_dynsymRelease( void )
    for( w = 0; w < wDynSymbols; w++ )
    {
       /* it is a allocated symbol ? */
-      if( ( pDynItems + w )->pDynSym->pSymbol->cScope == FS_ALLOCATED )
+      if( ( pDynItems + w )->pDynSym->pSymbol->cScope == (SYMBOLSCOPE)SYM_ALLOCATED )
       {
          hb_xfree( ( pDynItems + w )->pDynSym->pSymbol->szName );
          hb_xfree( ( pDynItems + w )->pDynSym->pSymbol );
