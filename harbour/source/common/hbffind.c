@@ -86,6 +86,7 @@ HB_FILE_VER( "$Id$" )
 
 #elif defined(HB_OS_OS2)
 
+   #include <sys/types.h>
    #include <sys/stat.h>
    #include <time.h>
 
@@ -576,6 +577,7 @@ PHB_FFIND hb_fsFindFirst( const char * pszFileName, USHORT uiAttr )
       tzset();
 
       info->hFindFile = HDIR_CREATE;
+      info->findCount = 1;
 
       bFound = DosFindFirst( pszFileName,
                              &info->hFindFile,
@@ -673,7 +675,7 @@ PHB_FFIND hb_fsFindFirst( const char * pszFileName, USHORT uiAttr )
             strcpy( info->pfname, string );
          }
          else
-	 {
+    {
             strcpy( info->pfname, string );
             info->pfext[ 0 ] = '\0';
          }
