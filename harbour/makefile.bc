@@ -79,7 +79,7 @@ ARFLAGS = /P32
 !endif
 
 !if !$d(BCC_NOOPTIM)
-CFLAGS = -O2 $(CFLAGS)
+   CFLAGS = -O2 $(CFLAGS)
 !endif
 
 #
@@ -2581,7 +2581,7 @@ $(OBJ_DIR)\pdfhbdoc.obj : $(HBPDF_DIR)\pdfhbdoc.c
 $(HBMAKE_EXE) : $(HBMAKE_EXE_OBJS)
 
    $(ECHO) $(CFLAGS) > make.tmp
-   $(ECHO) -M -e$(HBMAKE_EXE) >> make.tmp
+   $(ECHO) -e$(HBMAKE_EXE) >> make.tmp
    $(ECHO) $(OBJ_DIR)\hbmake.obj >> make.tmp
    $(ECHO) $(OBJ_DIR)\hbmutils.obj >> make.tmp
    $(ECHO) $(OBJ_DIR)\radios.obj >> make.tmp

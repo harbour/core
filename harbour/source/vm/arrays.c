@@ -639,7 +639,7 @@ BOOL hb_arrayRelease( PHB_ITEM pArray )
          hb_xfree( pBaseArray->pItems );
       }
 
-      hb_gcFree( (void *)pBaseArray );
+      hb_gcFree( ( void * ) pBaseArray );
 
       pArray->type = HB_IT_NIL;
       pArray->item.asArray.value = NULL;

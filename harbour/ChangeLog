@@ -1,3 +1,31 @@
+2001-11-05 03:59 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * utils/hbtest/hbtest.prg
+     + Enhanced the display of errors, now the correct and incorrect
+       results are below each other, so it's much easier to spot the 
+       difference.
+
+   * source/common/hbver.c
+     * "Mingw32" -> "MinGW" name of the compiler changed.
+
+   * source/rtl/filesys.c
+     * 0L -> 0, where the former was superfluous.
+
+   * include/hbsetup.h
+     ! Fixed WIN32 platform detection under Cygwin 1.3.3
+
+   * config/w32/mingw32.cf
+     ! Added winspool lib...
+
+   * makefile.bc
+     - Removed -M switch from hbmake. Please use set CFLAGS= to add 
+       optional switches.
+
+   * source/rtl/gtwin/gtwin.c
+   * source/vm/arrays.c
+   * source/vm/pvalue.c
+     * Minor changes in formatting.
+
 2001-11-04 18:34 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * source/compiler/cmdcheck.c 

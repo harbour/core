@@ -1,7 +1,7 @@
 /*
  * $Id$
  */
-/* #define HB_DEBUG_KEYBOARD */
+
 /*
  * Harbour Project source code:
  * Video subsystem for Win32 compilers
@@ -72,6 +72,8 @@
  */
 
 /* NOTE: User programs should never call this layer directly! */
+
+/* #define HB_DEBUG_KEYBOARD */
 
 #include <stdlib.h>
 #include <string.h>

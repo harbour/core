@@ -366,7 +366,7 @@ char * hb_verCompiler( void )
    #elif defined(__CYGWIN__)
       pszName = "Cygnus Cygwin GNU C";
    #elif defined(__MINGW32__)
-      pszName = "Cygnus Mingw32 GNU C";
+      pszName = "Cygnus MinGW GNU C";
    #elif defined(__RSX32__)
       pszName = "EMX/RSXNT/DOS GNU C";
    #elif defined(__RSXNT__)

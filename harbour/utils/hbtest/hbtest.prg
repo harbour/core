@@ -368,13 +368,27 @@ FUNCTION TEST_CALL( cBlock, bBlock, xResultExpected )
 
    IF s_lShowAll .OR. lFailed .OR. lSkipped .OR. lPPError
 
-      FWrite( s_nFhnd, PadR( iif( lFailed, "!", iif( lSkipped, "S", " " ) ), TEST_RESULT_COL1_WIDTH ) + " " +;
-                       PadR( Str( s_nCount, 4 ) + " " + ProcName( 1 ) + "(" + LTrim( Str( ProcLine( 1 ), 5 ) ) + ")", TEST_RESULT_COL2_WIDTH ) + " " +;
-                       PadR( cBlock, TEST_RESULT_COL3_WIDTH ) + " -> " +;
-                       PadR( XToStr( xResult ), TEST_RESULT_COL4_WIDTH ) + " | " +;
-                       PadR( XToStr( xResultExpected ), TEST_RESULT_COL5_WIDTH ) +;
-                       HB_OSNewLine() )
+      IF lFailed
 
+         FWrite( s_nFhnd, PadR( iif( lFailed, "!", iif( lSkipped, "S", " " ) ), TEST_RESULT_COL1_WIDTH ) + " " +;
+                          PadR( Str( s_nCount, 4 ) + " " + ProcName( 1 ) + "(" + LTrim( Str( ProcLine( 1 ), 5 ) ) + ")", TEST_RESULT_COL2_WIDTH ) + " " +;
+                          PadR( cBlock, TEST_RESULT_COL3_WIDTH ) +;
+                          HB_OSNewLine() +;
+                          Space( 5 ) + "  Result: " + XToStr( xResult ) +;
+                          HB_OSNewLine() +;
+                          Space( 5 ) + "Expected: " + XToStr( xResultExpected ) +;
+                          HB_OSNewLine() )
+
+      ELSE
+
+         FWrite( s_nFhnd, PadR( iif( lFailed, "!", iif( lSkipped, "S", " " ) ), TEST_RESULT_COL1_WIDTH ) + " " +;
+                          PadR( Str( s_nCount, 4 ) + " " + ProcName( 1 ) + "(" + LTrim( Str( ProcLine( 1 ), 5 ) ) + ")", TEST_RESULT_COL2_WIDTH ) + " " +;
+                          PadR( cBlock, TEST_RESULT_COL3_WIDTH ) + " -> " +;
+                          PadR( XToStr( xResult ), TEST_RESULT_COL4_WIDTH ) + " | " +;
+                          PadR( XToStr( xResultExpected ), TEST_RESULT_COL5_WIDTH ) +;
+                          HB_OSNewLine() )
+
+      ENDIF
    ENDIF
 
    IF lFailed

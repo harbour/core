@@ -719,7 +719,7 @@ ULONG   hb_fsReadLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
             else
             {
                uiToRead = ( USHORT ) ulLeftToRead;
-               ulLeftToRead = 0L;
+               ulLeftToRead = 0;
             }
             uiRead = read( hFileHandle, pPtr, uiToRead );
             /* -1 on bad hFileHandle
@@ -786,7 +786,7 @@ ULONG   hb_fsWriteLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
                else
                {
                   uiToWrite = ( USHORT ) ulLeftToWrite;
-                  ulLeftToWrite = 0L;
+                  ulLeftToWrite = 0;
                }
                uiWritten = write( hFileHandle, pPtr, uiToWrite );
                /* -1 on bad hFileHandle
