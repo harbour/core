@@ -108,16 +108,9 @@ return aData
 //
 function aOSet( oObject, aData )
 
-   local n
-   local nLen := Len( aData )
+   aEval( aData, ;
+        {|aItem| oSend( oObject, "_"+aItem[DATA_SYMBOL], aItem[DATA_VAL] ) } )
 
-//   aEval( aData, ;                            // Still losing 2 block
-//        {|aItem| oSend( oObject, "_"+aItem[DATA_SYMBOL], aItem[DATA_VAL] ) } )
-
-   for n := 1 to nLen
-      oSend( oObject, "_" + aData[n][DATA_SYMBOL], aData[n][DATA_VAL] )
-                                                // Send the message
-   next n
 return oObject
 
 

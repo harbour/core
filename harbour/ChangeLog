@@ -1,3 +1,7 @@
+19990530-23:05 CET Eddie Runia
+   * source/rtl/objfunc.prg
+     since aEval has been clean for a long time, it was time to use it !
+
 19990530-21:30 CET Eddie Runia
    * source/rtl/classes.c; source/rtl/tclass.prg
      initializer and release ready for inheritance
