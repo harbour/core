@@ -10,17 +10,24 @@
 #include <extend.h>
 #include <ctoharb.h>
 #include <dates.h>
-#include <gtapi.h>
 #include <set.h>
+#ifdef USE_GTAPI
+   #include <gtapi.h>
+#endif
 
 static unsigned short dev_row = 0;
 static unsigned short dev_col = 0;
 
 void InitializeConsole( void )
 {
+#ifdef USE_GTAPI
    dev_row = gtWhereX();
    dev_col = gtWhereY();
    _gtSetPos( dev_row, dev_col );
+#else
+   dev_row = 0;
+   dev_col = 0;
+#endif
 }
 
 HARBOUR __ACCEPT( void ) /* Internal Clipper function used in ACCEPT command  */
@@ -115,9 +122,15 @@ static void hb_altout( char * fpStr, WORD uiLen )
 {
    if( hb_set.HB_SET_CONSOLE )
    {
+   #ifdef USE_GTAPI
       _gtWriteCon( fpStr, uiLen );
       if( stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) || hb_set_printhan < 0 )
          _gtGetPos( &dev_row, &dev_col );
+   #else
+      WORD uiCount;
+      for( uiCount = 0; uiCount < uiLen; uiCount++ )
+         printf( "%c", fpStr[ uiCount ] );
+   #endif
    }
    if( hb_set.HB_SET_ALTERNATE && hb_set_althan >= 0 )
       /* Print to alternate file if SET ALTERNATE ON and valid alternate file */
@@ -138,10 +151,16 @@ static void hb_devout( char * fpStr, WORD uiLen )
    }
    else
    {
+   #ifdef USE_GTAPI
       /* Otherwise, display to console */
       _gtWrite( fpStr, uiLen );
       if( stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) || hb_set_printhan < 0 )
          _gtGetPos( &dev_row, &dev_col );
+   #else
+      WORD uiCount;
+      for( uiCount = 0; uiCount < uiLen; uiCount++ )
+         printf( "%c", fpStr[ uiCount ] );
+   #endif
    }
 }
 
@@ -163,8 +182,10 @@ void hb_devpos( int row, int col )
       dev_row = row;
       dev_col = col;
    }
+   #ifdef USE_GTAPI
    else
       _gtSetPos( row, col );
+   #endif
 }
 
 HARBOUR OUTSTD( void ) /* writes a list of values to the standard output device */
@@ -232,15 +253,19 @@ HARBOUR DEVOUT( void ) /* writes a single values to the current device (screen o
       fpOldColor[ 0 ] = 0;
       if( _pcount() > 1 )
       {
+      #ifdef USE_GTAPI
          PITEM pColor = _param( 2, IT_STRING );
          if( pColor )
          {
             _gtGetColorStr( fpOldColor );
             _gtSetColorStr( pColor->value.szText );
          }
+      #endif
       }
       hb_out( 1, hb_devout );
+      #ifdef USE_GTAPI
       if( fpOldColor[ 0 ] ) _gtSetColorStr( fpOldColor );
+      #endif
    }
 }
 

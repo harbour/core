@@ -1,3 +1,9 @@
+19990527-17:25 EST David G. Holm <dholm@jsd-llc.com>
+  * makefile.b31
+    - Added -DUSE_GTAPI as standard compiler option
+  * source/rtl/console.c
+    - Added #ifdef USE_GTAPI to allow compiling without using the GT API
+
 19990527-14:15 EST David G. Holm <dholm@jsd-llc.com>
   * makefile.b31
     - Added gtdos to terminal library
