@@ -1166,7 +1166,7 @@ int hb_pp_ParseExpression( char * sLine, char * sOutLine )
 
      rezDef = 0; rezTra = 0; rezCom = 0;
      isdvig = 0;
-
+     
      do
      {
         ptro = sOutLine;
@@ -1222,13 +1222,11 @@ int hb_pp_ParseExpression( char * sLine, char * sOutLine )
                     }
 
                     hb_pp_Stuff( ptro, ptrb, i, ptri-ptrb, lens+1 );
-
                     if( ipos > 0 )
                     {
                        ipos += i - (ptri-ptrb);
                        *(sLine + isdvig + ipos - 1) = '\0';
                     }
-
                     ptri += i - (ptri-ptrb);
                  }
               }
@@ -1241,6 +1239,8 @@ int hb_pp_ParseExpression( char * sLine, char * sOutLine )
                   printf( "After #defines: >%s<\n", sLine );
            #endif
 
+           if( rezDef == 0 )
+           {
            /* Look for definitions from #translate    */
            stcmd = hb_pp_topTranslate;
            while( stcmd != NULL )
@@ -1284,7 +1284,8 @@ int hb_pp_ParseExpression( char * sLine, char * sOutLine )
 
               stcmd = stcmd->last;
            }
-
+           }   /* rezDef == 0 */
+           
            #if 0
                if( *sOutLine )
                   printf( "*After #translate: >%s<\n", sOutLine );
@@ -1295,7 +1296,7 @@ int hb_pp_ParseExpression( char * sLine, char * sOutLine )
            /* Look for definitions from #command      */
            /* JFL ! Was 3 but insufficient in most cases */
            /* I know this is a new hardcoded limit ... any better idea's welcome */
-           if( kolpass < 20 )
+           if( rezDef==0 && rezTra==0 && kolpass < 20 )
            {
               ptri = sLine + isdvig;
               HB_SKIPTABSPACES( ptri );

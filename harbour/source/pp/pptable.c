@@ -110,7 +110,7 @@ void hb_pp_Table( void )
    static DEFINES sD___39 = {"_SET_WRAP",NULL,-1,"35", &sD___38 };
    static DEFINES sD___40 = {"_SET_COUNT",NULL,-1,"47", &sD___39 };
    static DEFINES sD___41 = {"_SET_CH",NULL,-1,NULL, &sD___40 };
-   static DEFINES sD___42 = {"_DFSET","x,y",2,"Set( _SET_DATEFORMAT, if(__SetCentury(), x, y) )", &sD___41 };
+   static DEFINES sD___42 = {"_DFSET","\001x,\001y",2,"Set( _SET_DATEFORMAT, if(__SetCentury(), \001x, \001y) )", &sD___41 };
    static DEFINES sD___43 = {"_SET_VIDEOMODE",NULL,-1,"40", &sD___42 };
    static DEFINES sD___44 = {"_SET_MBLOCKSIZE",NULL,-1,"41", &sD___43 };
    static DEFINES sD___45 = {"_SET_MFILEEXT",NULL,-1,"42", &sD___44 };

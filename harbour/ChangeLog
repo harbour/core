@@ -8,6 +8,17 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-03-23 14:50 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+   * source/pp/ppcore.c
+      * fixed parsing of nested #defines in command/translate
+      for example:
+      #define PRE_CHAR  'A'
+      #define IDX_EXPR(x)  PRE_CHAR+x
+      INDEX ON IDX_EXPR(myfield) TO myfile
+            
+   * source/pp/pptable.c
+      * updated for fixes in ppcore.c (_DFSET define)
+
 2004-03-21 21:48 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
    * source/rtl/tbcolumn.prg
       + added PreBlock and PostBlock instance variables for Clipper 5.3x compatibility
