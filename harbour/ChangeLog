@@ -7,7 +7,12 @@
         running in a window (hard to figure out, easy to fix)
    * source/rtl/gtapi.c
       * minor changes
-      
+      * changed SetMode() executed at startup to default to your
+        screen size.
+        (Movie humour: This program has been modified to fit your screen
+                     : How do you know how big my screen is?
+         It's late)
+
 19990803-05:30 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *tests/working/Makefile
