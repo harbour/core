@@ -61,6 +61,50 @@ DECLARE FUNCTION int( n AS NUMERIC ) AS NUMERIC
 
 DECLARE FUNCTION TEST AS NUMERIC
 
+FIELD a AS CHAR
+FIELD b AS CHAR
+
+MEMVAR Var1 AS CHAR
+
+PROCEDURE THEMAIN()
+
+  FIELD b AS NUM
+  USE TEMP
+
+  MEMVAR a AS NUM
+  MEMVAR Var1 AS NUM
+
+  PRIVATE TEST AS CHAR
+
+  M->TEST := "TEST"   //OK - no warnings here
+
+  a := 'A'
+
+  b := 'a'
+
+  Var1 := .f.
+
+RETURN
+
+PROCEDURE SOMEPROC()
+
+  PRIVATE TEST AS NUMERIC
+
+  M->TEST := 1		//incorrect warning is printed here
+
+  FOR M->TEST := 1 TO M->TEST + 10
+    ? "Incorrect warnings for FOR/NEXT"
+  NEXT
+
+  REPLACE a WITH 1
+
+  M->public_var := 0 	//core dumps (GPF) on Linux
+
+  b := 0
+
+  Var1 := 1
+
+RETURN
 PROC MAIN1()
 
   PRIVATE OTHER, TEST AS CHAR

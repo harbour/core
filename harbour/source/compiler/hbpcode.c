@@ -174,6 +174,25 @@ static BYTE s_pcode_len[] = {
 static BYTE * hb_comp_cParamTypes = NULL;
 static int    hb_comp_iParamCount = -1;
 
+static PVAR hb_compPrivateFind( char * szPrivateName )
+{
+   PFUNCTION pFunc = hb_comp_functions.pLast;
+   PVAR pPrivate = NULL;
+
+    if ( pFunc )
+       pPrivate = pFunc->pPrivates;
+
+   while ( pPrivate )
+   {
+      if( ! strcmp( pPrivate->szName, szPrivateName ) )
+         return pPrivate;
+      else
+         pPrivate = pPrivate->pNext;
+
+   }
+   return NULL;
+}
+
 void hb_compPCodeEval( PFUNCTION pFunc, HB_PCODE_FUNC_PTR * pFunctions, void * cargo )
 {
    ULONG ulPos = 0;
@@ -212,8 +231,8 @@ void hb_compPCodeEval( PFUNCTION pFunc, HB_PCODE_FUNC_PTR * pFunctions, void * c
 void hb_compStrongType( int iSize )
 {
    PFUNCTION pFunc = hb_comp_functions.pLast, pTmp;
-   PVAR pVar;
-   PCOMSYMBOL pSym;
+   PVAR pVar = NULL;
+   PCOMSYMBOL pSym = NULL;
    PCOMDECLARED pDeclared;
    ULONG ulPos = pFunc->lPCodePos - iSize;
    SHORT wVar = 0;
@@ -221,7 +240,7 @@ void hb_compStrongType( int iSize )
    BYTE bLast1, bLast2;
 
    /* Make sure we have enough stack space. */
-   if ( pFunc->pStack == NULL )
+   if ( ! pFunc->pStack )
       pFunc->pStack = ( BYTE * ) hb_xgrab( pFunc->iStackSize += 16 );
    else if ( pFunc->iStackSize - pFunc->iStackIndex < 4 )
       pFunc->pStack = ( BYTE * ) hb_xrealloc( pFunc->pStack, pFunc->iStackSize += 16 );
@@ -967,40 +986,71 @@ void hb_compStrongType( int iSize )
        /* Question use type "REFERENCE" or the base type of the var */
        pFunc->pStack[ pFunc->iStackIndex++ ] = 'R';
 
-     case HB_P_PUSHALIASEDFIELDNEAR :
-     case HB_P_PUSHFIELD :
-     case HB_P_PUSHALIASEDFIELD :
-     case HB_P_PUSHALIASEDVAR :
      case HB_P_PUSHVARIABLE :
+       /* Type can not be detrmined at compile time. */
+       pFunc->pStack[ pFunc->iStackIndex++ ] = ' ';
+       break;
+
+     case HB_P_PUSHALIASEDVAR :
+       /* TODO check what is aliased var. */
+       pFunc->pStack[ pFunc->iStackIndex++ ] = ' ';
+       break;
+
+     case HB_P_PUSHALIASEDFIELDNEAR :
+       pSym = hb_compSymbolGetPos( pFunc->pCode[ ulPos + 1 ] );
+       /* Fall through - don't add break */
+
+     case HB_P_PUSHALIASEDFIELD :
+     case HB_P_PUSHFIELD :
+       if ( ! pSym )
+         pSym = hb_compSymbolGetPos( pFunc->pCode[ ulPos + 1 ] + pFunc->pCode[ ulPos + 2 ] * 256 );
+
+       if ( pSym->szName && pFunc->pFields )
+       {
+         wVar = hb_compVariableGetPos( pFunc->pFields, pSym->szName );
+         if ( wVar )
+           pVar = hb_compVariableFind( pFunc->pFields, wVar );
+       }
+
+       /* Fall through - don't add break */
+
      case HB_P_PUSHMEMVAR :
-       if ( pFunc->pCode[ ulPos ] == HB_P_PUSHALIASEDFIELDNEAR )
-          pSym = hb_compSymbolGetPos( pFunc->pCode[ ulPos + 1 ] );
-       else
+       if ( ! pSym )
           pSym = hb_compSymbolGetPos( pFunc->pCode[ ulPos + 1 ] + pFunc->pCode[ ulPos + 2 ] * 256 );
 
        if ( pSym )
        {
          pFunc->pStack[ pFunc->iStackIndex++ ] = pSym->cType;
 
-         if ( pFunc->pCode[ ulPos ] == HB_P_PUSHMEMVAR && pSym->szName && pFunc->pMemvars )
+         if ( pFunc->pCode[ ulPos ] == HB_P_PUSHMEMVAR && pSym->szName )
          {
-            wVar = hb_compVariableGetPos( pFunc->pMemvars, pSym->szName );
+            if ( pFunc->pMemvars )
+               wVar = hb_compVariableGetPos( pFunc->pMemvars, pSym->szName );
+
             if ( wVar )
+              pVar = hb_compVariableFind( pFunc->pMemvars, wVar );
+
+            if ( ! pVar )
+              pVar = hb_compPrivateFind( pSym->szName );
+
+            if ( ( ! pVar ) && hb_comp_functions.pFirst->pMemvars )
             {
-               pVar = hb_compVariableFind( pFunc->pMemvars, wVar );
-
-               if ( pVar )
-               {
-                  pFunc->pStack[ pFunc->iStackIndex - 1 ] = pVar->cType;
-                  //printf( "\nPused: %s Type: %c SubType: %c\n", pVar->szName, pVar->cType, pVar->cType - 100 );
-
-                  if ( ! ( pVar->iUsed & VU_INITIALIZED ) )
-                     hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_NOT_INITIALIZED, pVar->szName, NULL );
-
-                  /* Mark as used */
-                  pVar->iUsed |= VU_USED;
-               }
+              wVar = hb_compVariableGetPos( hb_comp_functions.pFirst->pMemvars, pSym->szName );
+              if ( wVar )
+                pVar = hb_compVariableFind( hb_comp_functions.pFirst->pMemvars, wVar );
             }
+         }
+
+         if ( pVar )
+         {
+            pFunc->pStack[ pFunc->iStackIndex - 1 ] = pVar->cType;
+            //printf( "\nPused: %s Type: %c SubType: %c\n", pVar->szName, pVar->cType, pVar->cType - 100 );
+
+            if ( ! ( pVar->iUsed & VU_INITIALIZED ) )
+              hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_NOT_INITIALIZED, pVar->szName, NULL );
+
+            /* Mark as used */
+            pVar->iUsed |= VU_USED;
          }
        }
        else
@@ -1191,119 +1241,162 @@ void hb_compStrongType( int iSize )
        pFunc->iStackIndex--;
        break;
 
-     case HB_P_POPALIASEDFIELDNEAR :
-     case HB_P_POPFIELD :
-     case HB_P_POPALIASEDFIELD :
-       /* TODO: Add support for FIELD declarations. */
-     case HB_P_POPMEMVAR :
      case HB_P_POPVARIABLE :
+       pFunc->iStackIndex--;
+       break;
+
      case HB_P_POPALIASEDVAR :
+       /* TODO: check what is aliasedvar? */
+       pFunc->iStackIndex--;
+       break;
+
+     case HB_P_POPALIASEDFIELDNEAR :
+       if ( pFunc->pCode[ ulPos ] == HB_P_POPALIASEDFIELDNEAR )
+       {
+          wVar = ( SHORT ) pFunc->pCode[ ulPos + 1 ];
+          pSym = hb_compSymbolGetPos( wVar );
+       }
+
+     case HB_P_POPALIASEDFIELD :
+     case HB_P_POPFIELD :
+       if ( pFunc->pCode[ ulPos ] == HB_P_POPFIELD || pFunc->pCode[ ulPos ] == HB_P_POPALIASEDFIELD )
+       {
+          wVar = pFunc->pCode[ ulPos + 1 ] + pFunc->pCode[ ulPos + 2 ] * 256;
+          pSym = hb_compSymbolGetPos( wVar );
+       }
+
+       //printf( "\nField: %s Pos: %i", pSym->szName, wVar );
+
+       /* For fall through as well */
+       if ( pSym && pSym->szName && pFunc->pFields )
+       {
+          wVar = hb_compVariableGetPos( pFunc->pFields, pSym->szName );
+          if ( wVar )
+             pVar = hb_compVariableFind( pFunc->pFields, wVar );
+       }
+
+       if ( ( ( ! wVar ) || ( ! pVar ) ) && pSym && pSym->szName && hb_comp_functions.pFirst->pFields )
+       {
+          wVar = hb_compVariableGetPos( hb_comp_functions.pFirst->pFields, pSym->szName );
+          pVar = hb_compVariableFind( hb_comp_functions.pFirst->pFields, wVar );
+       }
+
+     case HB_P_POPMEMVAR :
        pFunc->iStackIndex--;
 
        if ( pFunc->iStackIndex < 0 )
           /* TODO Error Message after finalizing all possible pcodes. */
           break;
 
-       if ( pFunc->pCode[ ulPos ] == HB_P_POPALIASEDFIELDNEAR )
-          pSym = hb_compSymbolGetPos( pFunc->pCode[ ulPos + 1 ] );
-       else
-          pSym = hb_compSymbolGetPos( pFunc->pCode[ ulPos + 1 ] + pFunc->pCode[ ulPos + 2 ] * 256 );
+       if ( pFunc->pCode[ ulPos ] == HB_P_POPMEMVAR )
+          wVar = pFunc->pCode[ ulPos + 1 ] + pFunc->pCode[ ulPos + 2 ] * 256;
+
+       if ( ! pSym )
+          pSym = hb_compSymbolGetPos( wVar );
 
        /*
        if ( pFunc->pMemvars )
-          printf( "\nSymbol: %s Function: %s which HAS memvars\n", pSym->szName, pFunc->szName );
-       else
-          printf( "\nSymbol: %s Function: %s which has NO memvars\n", pSym->szName, pFunc->szName );
+          printf( "\nSymbol: %s #%li Function: %s which HAS memvars\n", pSym->szName, wVar, pFunc->szName );
+
+       if ( pFunc->pPrivates )
+          printf( "\nSymbol: %s #%li Function: %s which HAS privates\n", pSym->szName, wVar, pFunc->szName );
        */
 
        if ( pSym )
        {
-          if ( pFunc->pCode[ ulPos ] == HB_P_POPMEMVAR && pSym->szName && pFunc->pMemvars )
+          if ( pFunc->pCode[ ulPos ] == HB_P_POPMEMVAR && pSym->szName )
           {
-             wVar = hb_compVariableGetPos( pFunc->pMemvars, pSym->szName );
+            if ( pFunc->pMemvars )
+               wVar = hb_compVariableGetPos( pFunc->pMemvars, pSym->szName );
 
-             //printf( "\nSymbol: %s Function: %s Variable #%li\n", pSym->szName, pFunc->szName, wVar );
+            if ( wVar )
+              pVar = hb_compVariableFind( pFunc->pMemvars, wVar );
 
-             if ( wVar )
+            if ( ! pVar )
+              pVar = hb_compPrivateFind( pSym->szName );
+
+            if ( ( ! pVar ) && hb_comp_functions.pFirst->pMemvars )
+            {
+              wVar = hb_compVariableGetPos( hb_comp_functions.pFirst->pMemvars, pSym->szName );
+              if ( wVar )
+                pVar = hb_compVariableFind( hb_comp_functions.pFirst->pMemvars, wVar );
+            }
+          }
+
+          if ( pVar )
+          {
+             pVar->iUsed |= VU_INITIALIZED;
+
+             //printf( "\nSymbol: %s Variable: %s Type: %c #%i Function: %s\n", pSym->szName, pVar->szName, pVar->cType, wVar, pFunc->szName );
+
+             /* Allow any type into a Variant, and record the subtype */
+             if ( pVar->cType == ' ' || pVar->cType > 122 )
              {
-                pVar = hb_compVariableFind( pFunc->pMemvars, wVar );
-
-                if ( pVar )
-                {
-                   pVar->iUsed |= VU_INITIALIZED;
-
-                   //printf( "\nSymbol: %s Variable: %s Type: %c #%i Function: %s\n", pSym->szName, pVar->szName, pVar->cType, wVar, pFunc->szName );
-
-                   /* Allow any type into a Variant, and record the subtype */
-                   if ( pVar->cType == ' ' || pVar->cType > 122 )
-                   {
-                      if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
-                         pVar->cType = ' ';
-                      else if ( pFunc->pStack[ pFunc->iStackIndex ] > 122 )
-                         pVar->cType = pFunc->pStack[ pFunc->iStackIndex ];
-                      else
-                         pVar->cType = pFunc->pStack[ pFunc->iStackIndex ] + 100;
-
-                      //printf( "\nSymbol: %s Variable: %s Assigned Type: \'%c\' SubType: %c #%i Stack: %i\n", pSym->szName, pVar->szName, pVar->cType, pVar->cType - 100, wVar, pFunc->iStackIndex );
-                   }
-                   else
-                   {
-                      char szType[2];
-                      sprintf( szType, "%c", pVar->cType );
-
-                      //printf( "Variable: %s Type: \'%c\' SubType: %c Comparing: %c Recorded: %s\n", pSym->szName, pVar->cType, pVar->cType - 100, pFunc->pStack[ pFunc->iStackIndex ], szType );
-
-                      if ( pFunc->pStack[ pFunc->iStackIndex ] > 122 )
-                         pFunc->pStack[ pFunc->iStackIndex ] -= 100;
-
-                      if ( pFunc->pStack[ pFunc->iStackIndex ] == '-' )
-                         ; /* NIL allowed into all types */
-                      else if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
-                         hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_SUSPECT, pVar->szName, szType );
-                      else if ( isupper( pVar->cType ) && pVar->cType != pFunc->pStack[ pFunc->iStackIndex ] )
-                         hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_TYPE, pVar->szName, szType );
-                      else if ( islower( pVar->cType ) && pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
-                         hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ARRAY_ASSIGN_SUSPECT, szType, NULL );
-                      else if ( islower( pVar->cType ) && pFunc->pStack[ pFunc->iStackIndex ] == 'A' )
-                         hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ARRAY_ASSIGN_SUSPECT, szType, NULL );
-                      else if ( toupper( pVar->cType ) != pFunc->pStack[ pFunc->iStackIndex ] )
-                         hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ARRAY_ASSIGN_TYPE, szType, NULL );
-                   }
-                }
+                if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
+                   pVar->cType = ' ';
+                else if ( pFunc->pStack[ pFunc->iStackIndex ] > 122 )
+                   pVar->cType = pFunc->pStack[ pFunc->iStackIndex ];
                 else
-                {
-                   /* Allow any type into a Variant, and record the subtype */
-                   if ( pSym->cType == ' ' || pSym->cType > 122 )
-                   {
-                      if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
-                      pSym->cType = ' ';
-                      else if ( pFunc->pStack[ pFunc->iStackIndex ] > 122 )
-                      pSym->cType = pFunc->pStack[ pFunc->iStackIndex ];
-                      else
-                      pSym->cType = pFunc->pStack[ pFunc->iStackIndex ] + 100;
-                   }
-                   else
-                   {
-                      char szType[2];
-                      sprintf( szType, "%c", pSym->cType );
+                   pVar->cType = pFunc->pStack[ pFunc->iStackIndex ] + 100;
 
-                      if ( pFunc->pStack[ pFunc->iStackIndex ] > 122 )
-                      pFunc->pStack[ pFunc->iStackIndex ] -= 100;
+                //printf( "\nSymbol: %s Variable: %s Assigned Type: \'%c\' SubType: %c #%i Stack: %i\n", pSym->szName, pVar->szName, pVar->cType, pVar->cType - 100, wVar, pFunc->iStackIndex );
+             }
+             else
+             {
+                char szType[2];
+                sprintf( szType, "%c", pVar->cType );
 
-                      if ( pFunc->pStack[ pFunc->iStackIndex ] == '-' )
-                          ; /* NIL allowed into all types */
-                      else if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
-                          hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_SUSPECT, pSym->szName, szType );
-                      else if ( isupper( pSym->cType ) && pSym->cType != pFunc->pStack[ pFunc->iStackIndex ] )
-                          hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_TYPE, pSym->szName, szType );
-                      else if ( islower( pSym->cType ) && pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
-                          hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ARRAY_ASSIGN_SUSPECT, szType, NULL );
-                      else if ( islower( pSym->cType ) && pFunc->pStack[ pFunc->iStackIndex ] == 'A' )
-                          hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ARRAY_ASSIGN_SUSPECT, szType, NULL );
-                      else if ( toupper( pSym->cType ) != pFunc->pStack[ pFunc->iStackIndex ] )
-                          hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ARRAY_ASSIGN_TYPE, szType, NULL );
-                   }
-                }
+                //printf( "Variable: %s Type: \'%c\' SubType: %c Comparing: %c Recorded: %s\n", pSym->szName, pVar->cType, pVar->cType - 100, pFunc->pStack[ pFunc->iStackIndex ], szType );
+
+                if ( pFunc->pStack[ pFunc->iStackIndex ] > 122 )
+                   pFunc->pStack[ pFunc->iStackIndex ] -= 100;
+
+                if ( pFunc->pStack[ pFunc->iStackIndex ] == '-' )
+                   ; /* NIL allowed into all types */
+                else if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
+                   hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_SUSPECT, pVar->szName, szType );
+                else if ( isupper( pVar->cType ) && pVar->cType != pFunc->pStack[ pFunc->iStackIndex ] )
+                   hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_TYPE, pVar->szName, szType );
+                else if ( islower( pVar->cType ) && pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
+                   hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ARRAY_ASSIGN_SUSPECT, szType, NULL );
+                else if ( islower( pVar->cType ) && pFunc->pStack[ pFunc->iStackIndex ] == 'A' )
+                   hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ARRAY_ASSIGN_SUSPECT, szType, NULL );
+                else if ( toupper( pVar->cType ) != pFunc->pStack[ pFunc->iStackIndex ] )
+                   hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ARRAY_ASSIGN_TYPE, szType, NULL );
+             }
+          }
+          else
+          {
+             /* Allow any type into a Variant, and record the subtype */
+             if ( pSym->cType == ' ' || pSym->cType > 122 )
+             {
+                if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
+                   pSym->cType = ' ';
+                else if ( pFunc->pStack[ pFunc->iStackIndex ] > 122 )
+                   pSym->cType = pFunc->pStack[ pFunc->iStackIndex ];
+                else
+                   pSym->cType = pFunc->pStack[ pFunc->iStackIndex ] + 100;
+             }
+             else
+             {
+                char szType[2];
+                sprintf( szType, "%c", pSym->cType );
+
+                if ( pFunc->pStack[ pFunc->iStackIndex ] > 122 )
+                   pFunc->pStack[ pFunc->iStackIndex ] -= 100;
+
+                if ( pFunc->pStack[ pFunc->iStackIndex ] == '-' )
+                   ; /* NIL allowed into all types */
+                else if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
+                   hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_SUSPECT, pSym->szName, szType );
+                else if ( isupper( pSym->cType ) && pSym->cType != pFunc->pStack[ pFunc->iStackIndex ] )
+                   hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_TYPE, pSym->szName, szType );
+                else if ( islower( pSym->cType ) && pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
+                   hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ARRAY_ASSIGN_SUSPECT, szType, NULL );
+                else if ( islower( pSym->cType ) && pFunc->pStack[ pFunc->iStackIndex ] == 'A' )
+                   hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ARRAY_ASSIGN_SUSPECT, szType, NULL );
+                else if ( toupper( pSym->cType ) != pFunc->pStack[ pFunc->iStackIndex ] )
+                   hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ARRAY_ASSIGN_TYPE, szType, NULL );
              }
           }
        }

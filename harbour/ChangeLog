@@ -1,3 +1,21 @@
+20000507-05:20 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+   * include/hbpcomp.c
+     + Added pPrivates to structure FUNCTION.
+
+   * source/compiler/harbour.c
+     + Added logic to maintain linked list pPrivates of pFunc.
+
+   * source/compiler/harbour.y
+     + Added support for MEMVAR AS ... syntax.
+
+   * source/compiler/hbpcode.c
+     + Added support for FIELD AS ... and MEMVAR AS both local and global.
+     ! More refinments
+
+   * tests/testwarn.prg
+     + Added code to demonstrate "Adaptive Type Checking".
+
 20000507-14:05 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
    *include/hbapi.h
@@ -6,7 +24,7 @@
    *source/rtl/memvars.c
       * hb_memvarScope() function has now a global scope
       * fixed the value returned by TYPE() function for variables
-      not visible at runtime (now returns 'U' instead of 'UE') 
+      not visible at runtime (now returns 'U' instead of 'UE')
 
 20000507-09:40 GMT+1 Victor Szakats <info@szelvesz.hu>
 

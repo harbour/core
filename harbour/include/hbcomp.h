@@ -109,6 +109,7 @@ typedef struct __FUNC
    PVAR   pStatics;                 /* pointer to static variables list */
    PVAR   pFields;                  /* pointer to fields variables list */
    PVAR   pMemvars;                 /* pointer to memvar variables list */
+   PVAR   pPrivates;                /* pointer to private variables list */
    BYTE * pCode;                    /* pointer to a memory block where pcode is stored */
    ULONG  lPCodeSize;               /* total memory size for pcode */
    ULONG  lPCodePos;                /* actual pcode offset */

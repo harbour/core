@@ -1135,7 +1135,7 @@ FieldList  : IdentName AsType               { $$=hb_compFieldsCount(); hb_compVa
 MemvarDef  : MEMVAR { hb_comp_iVarScope = VS_MEMVAR; } MemvarList Crlf
            ;
 
-MemvarList : IdentName                            { hb_compVariableAdd( $1, ' ' ); }
+MemvarList : IdentName AsType                     { hb_compVariableAdd( $1, ' ' ); }
            | MemvarList ',' IdentName             { hb_compVariableAdd( $3, ' ' ); }
            ;
 

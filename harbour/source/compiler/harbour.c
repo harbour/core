@@ -537,7 +537,9 @@ void hb_compVariableAdd( char * szVarName, BYTE cValueType )
       PCOMSYMBOL pSym;
       USHORT wPos;
 
-      if( hb_comp_bAutoMemvarAssume || hb_comp_iVarScope & VS_MEMVAR )
+      //printf( "\nAdding: %s in Function: %s\n", pVar->szName, pFunc->szName );
+
+      if( hb_comp_bAutoMemvarAssume || hb_comp_iVarScope == VS_MEMVAR )
       {
          /* add this variable to the list of MEMVAR variables
           */
@@ -557,6 +559,7 @@ void hb_compVariableAdd( char * szVarName, BYTE cValueType )
          case VS_MEMVAR:
             /* variable declared in MEMVAR statement */
             break;
+
          case ( VS_PARAMETER | VS_PRIVATE ):
             {
                if( ++hb_comp_functions.pLast->wParamNum > hb_comp_functions.pLast->wParamCount )
@@ -567,18 +570,87 @@ void hb_compVariableAdd( char * szVarName, BYTE cValueType )
                pSym = hb_compSymbolFind( szVarName, &wPos ); /* check if symbol exists already */
                if( ! pSym )
                   pSym = hb_compSymbolAdd( hb_strdup( szVarName ), &wPos );
+
                pSym->cScope |= VS_MEMVAR;
+
+               //printf( "\nAdded Symbol: %s Pos: %i\n", pSym->szName, wPos );
+
                hb_compGenPCode4( HB_P_PARAMETER, HB_LOBYTE( wPos ), HB_HIBYTE( wPos ), HB_LOBYTE( hb_comp_functions.pLast->wParamNum ), ( BOOL ) 0 );
             }
+
+            if ( hb_comp_iWarnings >= 3 )
+            {
+               PVAR pMemVar = pFunc->pMemvars;
+
+               while( pMemVar )
+                  if( strcmp( pMemVar->szName, pVar->szName ) == 0 )
+                      break;
+                  else
+                     pMemVar = pMemVar->pNext;
+
+               /* Not declared as memvar. */
+               if( pMemVar == NULL )
+               {
+                  /* add this variable to the list of PRIVATE variables. */
+                  if( ! pFunc->pPrivates )
+                     pFunc->pPrivates = pVar;
+                  else
+                  {
+                     pLastVar = pFunc->pPrivates;
+
+                     while( pLastVar->pNext )
+                        pLastVar = pLastVar->pNext;
+
+                     pLastVar->pNext = pVar;
+                  }
+                  //printf( "\nAdded Private: %s Type %c\n", pVar->szName, pVar->cType );
+               }
+            }
+
             break;
+
          case VS_PRIVATE:
             {
                pSym = hb_compSymbolFind( szVarName, &wPos ); /* check if symbol exists already */
                if( ! pSym )
                   pSym = hb_compSymbolAdd( hb_strdup( szVarName ), &wPos );
+
                pSym->cScope |= VS_MEMVAR;
+
+               //printf( "\nAdded Symbol: %s Pos: %i\n", pSym->szName, wPos );
             }
+
+            if ( hb_comp_iWarnings >= 3 )
+            {
+               PVAR pMemVar = pFunc->pMemvars;
+
+               while( pMemVar )
+                  if( strcmp( pMemVar->szName, pVar->szName ) == 0 )
+                     break;
+                  else
+                     pMemVar = pMemVar->pNext;
+
+               /* Not declared as memvar. */
+               if( pMemVar == NULL )
+               {
+                  /* add this variable to the list of PRIVATE variables. */
+                  if( ! pFunc->pPrivates )
+                     pFunc->pPrivates = pVar;
+                  else
+                  {
+                     pLastVar = pFunc->pPrivates;
+
+                     while( pLastVar->pNext )
+                        pLastVar = pLastVar->pNext;
+
+                     pLastVar->pNext = pVar;
+                  }
+                  //printf( "\nAdded Private: %s Type %c\n", pVar->szName, pVar->cType );
+               }
+            }
+
             break;
+
          case VS_PUBLIC:
             {
                pSym = hb_compSymbolFind( szVarName, &wPos ); /* check if symbol exists already */
@@ -586,6 +658,7 @@ void hb_compVariableAdd( char * szVarName, BYTE cValueType )
                   pSym = hb_compSymbolAdd( hb_strdup( szVarName ), &wPos );
                pSym->cScope |= VS_MEMVAR;
             }
+
             break;
       }
    }
@@ -782,6 +855,7 @@ static PFUNCTION hb_compFunctionNew( char * szName, HB_SYMBOLSCOPE cScope )
    pFunc->pStatics       = NULL;
    pFunc->pFields        = NULL;
    pFunc->pMemvars       = NULL;
+   pFunc->pPrivates      = NULL;
    pFunc->pCode          = NULL;
    pFunc->lPCodeSize     = 0;
    pFunc->lPCodePos      = 0;
@@ -971,6 +1045,19 @@ PFUNCTION hb_compFunctionKill( PFUNCTION pFunc )
    {
       pVar = pFunc->pMemvars;
       pFunc->pMemvars = pVar->pNext;
+
+      hb_xfree( ( void * ) pVar->szName );
+      if( pVar->szAlias )
+      {
+         hb_xfree( ( void * ) pVar->szAlias );
+      }
+      hb_xfree( ( void * ) pVar );
+   }
+
+   while( pFunc->pPrivates )
+   {
+      pVar = pFunc->pPrivates;
+      pFunc->pPrivates = pVar->pNext;
 
       hb_xfree( ( void * ) pVar->szName );
       if( pVar->szAlias )
