@@ -7,7 +7,7 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 2002 Alejandro de Gárate <alex_degarate@hotmail.com>
- *   Traducción al Español de harbext.txt 
+ *   Traducción al Español de harbext.txt
  *
  * Vea doc/license.txt por los términos de la licencia.
  *
@@ -15,11 +15,11 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *      Extensiones a Harbour 
+ *      Extensiones a Harbour
  *  $CATEGORY$
  *      Documentación
  *  $ONELINER$
- *      Extensiones a Harbour 
+ *      Extensiones a Harbour
  *  $DESCRIPTION$
  *<b>Extensiones al lenguaje:</b>   </par>
  *---------------------------
@@ -29,64 +29,64 @@
  *        Clipper solamente permite la creación de objetos desde unas pocas
  *        clases estándar.
  *
- *        En Harbour, Ud. puede crear sus propias Clases completas con 
+ *        En Harbour, Ud. puede crear sus propias Clases completas con
  *        Métodos, Variables de Instancia, Variables de Clase y Herencia.
- *        Aplicaciones enteras pueden ser designadas y codificadas en un 
+ *        Aplicaciones enteras pueden ser designadas y codificadas en un
  *        enfoque Orientado a Objetos.
- * 
- * 
+ *
+ *
  ** @<FunctionName>()   </par>
  *
  *        Retorna el puntero (la dirección) a la función.
  *
- *        El valor retornado no es útil a nivel de la programación de la 
- *        aplicación pero es usado a bajo nivel para implementar el código 
- *        Orientado a Objeto (Internamente, el método de una Clase es una 
- *        función estática, no hay un símbolo para ella, entonces esta es 
- *	  accedida mediante su dirección).
- * 
+ *        El valor retornado no es útil a nivel de la programación de la
+ *        aplicación pero es usado a bajo nivel para implementar el código
+ *        Orientado a Objeto (Internamente, el método de una Clase es una
+ *        función estática, no hay un símbolo para ella, entonces esta es
+ *        accedida mediante su dirección).
+ *
  *
  ** Clase TGetList
  *
  *        Soporte Orientado a Objetos para el manejo de GetList.
- * 
+ *
  *
  ** ProcName() soporte para el nombre de Métodos de las Clases.
  *
  *        Los Métodos de Clases pueden ser recuperados de la pila de llamada.
  *
- * 
+ *
  ** Memory() tiene nuevos valores de retorno.
  *
- *        Vea hbmemory.ch   
- * 
+ *        Vea hbmemory.ch
+ *
  *
  ** TRANSFORM()  --> Agregado de nueva función para el formateo de cadenas:
  *
  *        @0      Hace el pad con ceros una cadena numérica.
- * 
+ *
  *
  ** STOD()  --> dDate
  *
- *        Nueva función que convierte una cadena en el formato yyyymmdd a 
- *	  valor de fecha (date).
- * 
+ *        Nueva función que convierte una cadena en el formato yyyymmdd a
+ *        valor de fecha (date).
+ *
  *
  ** Declaración STRONG TYPE Opcional en tiempo de compilación (y advertencias
- *  en tiempo de compilación de TYPE MISMATCH)      
+ *  en tiempo de compilación de TYPE MISMATCH)
  *
- *  Example: LOCAL/STATIC Variable AS ...   
+ *  Example: LOCAL/STATIC Variable AS ...
  *
  *
  ** El depurador de Harbour provee de nuevas clases interesantes:
  *
- *  - La Clase TDbWindow podría ser la fundación de una ventana de 
+ *  - La Clase TDbWindow podría ser la fundación de una ventana de
  *    visualización multiplatforma.
  *
  *  - La Clase TForm
  *
- *  - La Clase TDbMenu implementa ambos menúes desplegables y 
- *    (pulldown & popup) 
+ *  - La Clase TDbMenu implementa ambos menúes desplegables y
+ *    (pulldown & popup)
  *
  *
  *<b>Funcionalidad mejorada de la RTL:</b>   </par>
@@ -94,21 +94,20 @@
  *
  *- DIRECTORY( <cMascara>, <cBandera>, <lOchoPuntoTres> )
  *
- *  El tercer parámetro es un parámetro de Harbour (opcional) e indica que 
- *  en aquellas plataformas que soportan nombres largos de archivo, Ud. 
+ *  El tercer parámetro es un parámetro de Harbour (opcional) e indica que
+ *  en aquellas plataformas que soportan nombres largos de archivo, Ud.
  *  solicita lo que podría considerarse el equivalente al nombre 8.3
- *  Podría afectar ADIR() y DIR si ellas fueron modificadas para tomar 
- *  ventaja de esto. Esta retornará nombres largos si el sistena operativo 
+ *  Podría afectar ADIR() y DIR si ellas fueron modificadas para tomar
+ *  ventaja de esto. Esta retornará nombres largos si el sistena operativo
  *  lo soporta.
  *
  *
  *- HB_DISKSPACE( <nDisco>, <nTipo> )
  *
- *  El segundo parámetro es un parámetro de Harbour (opcional) e indica 
+ *  El segundo parámetro es un parámetro de Harbour (opcional) e indica
  *  el tipo de información del disco que esta siendo requerida.
  *  vea en ../doc/es/diskspac.txt para mayor información.
  *
  *  $END$
  */
-
 

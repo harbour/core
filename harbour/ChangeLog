@@ -8,6 +8,18 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-06-06 09:23 UTC+0300 Chen Kedem <niki@actcom.co.il>
+   * doc/dirstruc.txt
+     + Add notes for the btree directory
+
+   * doc/gmake.txt
+   * doc/transfrm.txt
+   * doc/es/dbstrux.txt
+   * doc/es/harbext.txt
+   * doc/es/idle.txt
+   * doc/es/tracing.txt
+     ! Replace embedded TABs with SPACEs
+
 2002-06-05 20:52 UTC-0800 Ron Pinkas <ron@ronpinkas.com>
   * make_b32.bat
     - Commented SET BISON_SIMPLE line as it causes incompatibility with current version of Bison.

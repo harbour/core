@@ -192,9 +192,9 @@ For GCC on Linux:
         In which case you'll also need to export HB_SCREEN_LIB with
         the name of the appropriate screen library, if it doesn't
         match the default value in config/linux/gcc.cf.
-    2)  If you want to take advantage of compiler cache programs 
-        (such as http://ccaache.samba.org), you may set environment 
-	variable HB_CCACHE with the value containing the name of program.
+    2)  If you want to take advantage of compiler cache programs
+        (such as http://ccaache.samba.org), you may set environment
+        variable HB_CCACHE with the value containing the name of program.
 
 For GCC on OS/2 for VIO mode:
   Note: You must point C_INCLUDE_PATH to the EMX include directory and
@@ -240,8 +240,8 @@ For Watcom C/C++ 10.x (default Makefile creates DOS4G extender executables)
   Note: It is possible that you will have to increase the space reserved for
         DOS environment variables in order to successfuly run make utility
         (Add for example:
-	 SHELL=C:\COMMAND.COM C:\ E=2048 /P
-	 to your CONFIG.SYS )
+         SHELL=C:\COMMAND.COM C:\ E=2048 /P
+         to your CONFIG.SYS )
 
 If you issue a "make install", it will try to install your header,
 executable and library files into directories given by
@@ -292,5 +292,4 @@ can also be used for modules that aren't in the Makefile. You can also
 pass parameters to the program. For example, 'build readfile harbour.ini'
 will rebuild the readfile.prg program and run it with 'harbour.ini' as a
 command line parameter.
-
 

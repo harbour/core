@@ -46,6 +46,12 @@ in order to remove empty directories)
 |   |   |
 |   |   +---test       - Test programs.
 |   |
+|   +---btree          - BTree library.
+|   |   |
+|   |   +---doc        - HB_BTree C and Harbour API documentation.
+|   |   |
+|   |   +---test       - HB_BTree api test programs.
+|   |
 |   +---delphi         - Integration with Borland Delphi.
 |   |   |
 |   |   +---hbdll      - Accessing Harbour DLL from Delphi.
