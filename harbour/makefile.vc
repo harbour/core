@@ -66,7 +66,6 @@ RUNNER_DLL=$(BIN_DIR)\runjava.dll
 HBTEST_EXE=$(BIN_DIR)\hbtest.exe
 HBDOC_EXE=$(BIN_DIR)\hbdoc.exe
 HARBOURFLAGS=-iinclude -n -q0 -w -es2 -gc0
-UNISTD=include\unistd.h
 
 LIBLIST = \
     $(RTL_LIB) \
@@ -91,7 +90,7 @@ LIBS = \
     $(MACRO_LIB)
 
 #
-# OBJ list for harbour.lib. Add new ones as needed
+# OBJ list for rtl.lib. Add new ones as needed
 #
 
 RTL_LIB_OBJS = \
@@ -177,7 +176,7 @@ RTL_LIB_OBJS = \
 #
 # OBJ list for tools.lib. Add new ones as needed
 #
-#$(OBJ_DIR)\genobj.obj \ PatrickMast
+
 TOOLS_LIB_OBJS = \
     $(OBJ_DIR)\asciisum.obj \
     $(OBJ_DIR)\ascpos.obj \
@@ -229,7 +228,7 @@ MACRO_LIB_OBJS = \
     $(OBJ_DIR)\macro.obj
 
 #
-# OBJ list for rdds. Add new ones as needed
+# OBJ list for rdd.lib. Add new ones as needed
 #
 
 RDD_LIB_OBJS = \
@@ -324,17 +323,13 @@ VM_LIB_OBJS = \
 # Our default target
 #
 
-all: $(UNISTD) \
-     $(HARBOUR_EXE) \
+all: $(HARBOUR_EXE) \
      $(LIBLIST) \
      $(PP_EXE) \
      $(RUNNER_EXE) \
      $(HBTEST_EXE) \
      $(HBDOC_EXE) \
 #    $(RUNNER_DLL)
-
-$(UNISTD):
-   command /c echo. >include\unistd.h
 
 $(PP_EXE) : \
     $(PP_DIR)\stdalone\hbpp.c \
@@ -439,7 +434,9 @@ $(HARBOUR_EXE) : \
     $(PP_DIR)\ppcore.c \
     $(PP_DIR)\ppcomp.c \
     $(PP_DIR)\pptable.c
+    command /c echo. > include\unistd.h
     $(CC) $(CFLAGS) -w $** -o $(HARBOUR_EXE)
+    command /c del include\unistd.h
     -del harbour.obj
     -del harboury.obj
     -del harbourl.obj
@@ -526,7 +523,9 @@ $(OBJ_DIR)\macroy.obj : $(OBJ_DIR)\macroy.c
     $(CC) $(CLIBFLAGS) -w -DYY_NEVER_INTERACTIVE -Fo$@ $**
 
 $(OBJ_DIR)\macrol.obj : $(OBJ_DIR)\macrol.c
+    command /c echo. > include\unistd.h
     $(CC) $(CLIBFLAGS) -w -DYY_NEVER_INTERACTIVE -Fo$@ $**
+    command /c del include\unistd.h
 
 $(OBJ_DIR)\macro.obj : $(MACRO_DIR)\macro.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**

@@ -1,3 +1,9 @@
+20000307-23:26 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * makefile.vc
+     ! UNISTD.H problem solved with another method, now it doesn't leave
+       the temporary UNISTD.H in the INCLUDE dir, so that it will not conflict
+       with the GCC make process.
+
 20000307-21:06 GMT+1 Victor Szakats <info@szelvesz.hu>
    * doc/whatsnew.txt
      + Build 31c things added.
