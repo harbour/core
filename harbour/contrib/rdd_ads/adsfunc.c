@@ -815,6 +815,8 @@ HB_FUNC( ADSEXECUTESQLDIRECT )
             pArea->hTable = hCursor;
             SELF_OPEN( ( AREAP ) pArea, &pInfo );
          }
+         else
+            adsCloseCursor( pArea );
          hb_retl( 1 );
       }
       else
@@ -867,6 +869,8 @@ HB_FUNC( ADSEXECUTESQL )
             pArea->hTable = hCursor;
             SELF_OPEN( ( AREAP ) pArea, &pInfo );
          }
+         else
+            adsCloseCursor( pArea );
          hb_retl( 1 );
       }
       else

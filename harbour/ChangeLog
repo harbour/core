@@ -1,3 +1,8 @@
+2001-07-11 13:30 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   * contrib/rdd_ads/adsfunc.c
+     * adsExecuteSqlDirect() and adsExecuteSql() are fixed for the occasions,
+       when query doesn't returns cursor.
+
 2001-07-10 12:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * doc/en/gtslang.txt
