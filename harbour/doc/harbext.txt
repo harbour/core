@@ -7,24 +7,29 @@ Language extensions:
 
 * Class generation and management.
 
-		  Clipper only allowed creation of objects from a few standard
-		  classes.
-		  In Harbour, you can create your own classes--complete with
-		  Methods, Instance Variables, Class Variables and Inheritance.
-		  Entire applications can be designed and coded in Object Oriented
-		  style.
+        Clipper only allowed creation of objects from a few standard
+        classes.
+        In Harbour, you can create your own classes--complete with
+        Methods, Instance Variables, Class Variables and Inheritance.
+        Entire applications can be designed and coded in Object Oriented
+        style.
 
 * @<FunctionName>()
-		  Returns the pointer (address) to a function.
+        Returns the pointer (address) to a function.
+
+        The returned value is not useful to application-level programming, but
+        is used at a low level to implement object oriented coding.
+        (Internally, a class method is a static function and there is no
+        symbol for it, so it is accessed via its address).
 
 * Class TGetList
-		  Object oriented support for GetLists management.
+        Object oriented support for GetLists management.
 
 * ProcName() support for class Method names.
-		  Class Methods can be retrieved from the call stack.
+        Class Methods can be retrieved from the call stack.
 
 * Memory() has new return values.
-		  See hbmemory.ch
+        See hbmemory.ch
 
 * Transform()  --> new function in format string
         @0      Make a zero padded string out of the number.
