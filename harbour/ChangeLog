@@ -10,7 +10,8 @@
 
 2001-12-15 14:08 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
-   ! Fixed missing #define for Cygwin (for setmode() prototype)
+   * source/rtl/filesys.c
+      ! Fixed missing #define for Cygwin (for setmode() prototype)
 
 2001-12-15 13:58 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
