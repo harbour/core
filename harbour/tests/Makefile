@@ -84,6 +84,7 @@ PRG_SOURCES=\
 	inline.prg \
 	iotest.prg \
 	iotest2.prg \
+        langapi.prg \
 	longdev.prg \
 	longstr.prg \
 	longstr2.prg \
