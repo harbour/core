@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-04-22 18:00 UTC-0500 David G. Holm <dholm@jsd-llc.com>
+  * source/vm/itemapi.c
+    ! #if check for for RSXNT and EMX must be ahead of GNUC test
+      in the infinity test block, because RSXNT and EMX both use
+      the GNUC compiler, but use isfinite() instead of finite().
+
 2004-04-22 17:30 UTC-0500 David G. Holm <dholm@jsd-llc.com>
   * contrib/libct/files.c
   * contrib/libnf/color2n.c

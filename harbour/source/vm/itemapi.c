@@ -1172,10 +1172,10 @@ BOOL HB_EXPORT hb_itemStrBuf( char *szResult, PHB_ITEM pNumber, int iSize, int i
          || !_finite( dNumber )
       #elif defined(_MSC_VER) || (__BORLANDC__ > 1040) /* Use this only above Borland C++ 3.1 */
          || !_finite(dNumber)
+      #elif defined(__RSXNT__) || defined(__EMX__) /* Must be ahead of __GNUC__ check! */
+         || !isfinite( dNumber )
       #elif defined(__DJGPP__) || defined(__MINGW32__) || defined(__GNUC__)
          || !finite( dNumber )
-      #elif defined(__RSXNT__) || defined(__EMX__)
-         || !isfinite( dNumber )
       #elif defined(__IBMCPP__)
          || strcmp(szResult, s_dInfinity) || strcmp(szResult, s_dmInfinity) || strcmp(szResult, s_dNan) || strcmp(szResult, s_dmNan)
       #else
