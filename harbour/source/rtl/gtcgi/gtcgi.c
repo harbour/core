@@ -94,6 +94,10 @@ static void out_newline( void )
    out_stdout( s_szCrLf, s_ulCrLf );
 }
 
+int hb_gt_ExtendedKeySupport()
+{
+   return 0;
+}
 int hb_gt_ReadKey( HB_inkey_enum eventmask )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_ReadKey(%d)", (int) eventmask));

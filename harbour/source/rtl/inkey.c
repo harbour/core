@@ -71,6 +71,7 @@
 #include "hbapigt.h"
 #include "hbvm.h"
 #include "hbset.h"
+#include "hbinkey.ch"
 #include "inkey.ch"
 
 #include <time.h>
@@ -85,6 +86,32 @@ static int    s_inkeyLast;       /* Last key extracted from Harbour keyboard buf
 static BOOL   s_inkeyPoll;       /* Flag to override no polling when TYPEAHEAD is 0     */
 static int    s_inkeyForce;      /* Variable to hold keyboard input when TYPEAHEAD is 0 */
 static HB_inkey_enum s_eventmask;
+
+static int hb_inkeyFetch( void ) /* Extract the next key from the keyboard buffer */
+{
+   int key;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_inkeyFetch()"));
+
+   hb_inkeyPoll();
+   if( hb_set.HB_SET_TYPEAHEAD )
+   {
+      /* Proper typeahead support is set */
+      if( s_inkeyHead == s_inkeyTail ) key = 0;    /* Keyboard buffer is empty */
+      else
+      {                                            /* Keyboard buffer is not empty */
+         s_inkeyLast = s_inkeyBuffer[ s_inkeyTail++ ];
+         if( s_inkeyTail >= hb_set.HB_SET_TYPEAHEAD )
+            s_inkeyTail = 0;
+         key = s_inkeyLast;
+      }
+   }
+   else
+      key = s_inkeyLast = s_inkeyForce;           /* Typeahead support is disabled */
+   s_inkeyForce = 0;
+   
+   return key;
+}
 
 int hb_inkey( BOOL bWait, double dSeconds, HB_inkey_enum event_mask )
 {
@@ -103,7 +130,7 @@ int hb_inkey( BOOL bWait, double dSeconds, HB_inkey_enum event_mask )
          /* There is no point in waiting forever for no input events! */
          if( ( event_mask & ( INKEY_ALL + INKEY_RAW ) ) != 0 )
          {
-            while( hb_inkeyNext() == 0 )
+            while( hb_inkeyNext( event_mask ) == 0 )
             {
                hb_idleState();
             }
@@ -120,12 +147,12 @@ int hb_inkey( BOOL bWait, double dSeconds, HB_inkey_enum event_mask )
          struct tms tm;
          
          end_clock = times( &tm ) + ( clock_t ) ( dSeconds * 100 );
-         while( hb_inkeyNext() == 0 && (times( &tm ) < end_clock) )
+         while( hb_inkeyNext( event_mask ) == 0 && (times( &tm ) < end_clock) )
 #else
          clock_t end_clock = clock() + ( clock_t ) ( dSeconds * CLOCKS_PER_SEC );
          
-         while( hb_inkeyNext() == 0 && clock() < end_clock )
-#endif         
+         while( hb_inkeyNext( event_mask ) == 0 && clock() < end_clock )
+#endif
          {
             hb_idleState();
          }
@@ -133,52 +160,27 @@ int hb_inkey( BOOL bWait, double dSeconds, HB_inkey_enum event_mask )
       }
    }
 
-   key = hb_inkeyGet();                        /* Get the current input event or 0 */
+   key = hb_inkeyFetch();            /* Get the current input event or 0 */
 
    s_inkeyPoll = FALSE;                        /* Stop forced polling */
    s_eventmask = hb_set.HB_SET_EVENTMASK;      /* Restore original input event mask */
 
-   return key;
+   return hb_inkeyTranslate( key, event_mask );
 }
 
-int hb_inkeyGet( void )       /* Extract the next key from the keyboard buffer */
-{
-   int key;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_inkeyGet()"));
-
-   hb_inkeyPoll();
-   if( hb_set.HB_SET_TYPEAHEAD )
-   {
-      /* Proper typeahead support is set */
-      if( s_inkeyHead == s_inkeyTail ) key = 0;    /* Keyboard buffer is empty */
-      else
-      {                                            /* Keyboard buffer is not empty */
-         s_inkeyLast = s_inkeyBuffer[ s_inkeyTail++ ];
-         if( s_inkeyTail >= hb_set.HB_SET_TYPEAHEAD )
-            s_inkeyTail = 0;
-         key = s_inkeyLast;
-      }
-   }
-   else
-      key = s_inkeyLast = s_inkeyForce; /* Typeahead support is disabled */
-
-   s_inkeyForce = 0;
-
-   return key;
-}
-
-int hb_inkeyLast( void )      /* Return the value of the last key that was extracted */
+int hb_inkeyLast( HB_inkey_enum event_mask )      /* Return the value of the last key that was extracted */
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_inkeyLast()"));
 
    hb_inkeyPoll();
 
-   return s_inkeyLast;
+   return hb_inkeyTranslate( s_inkeyLast, event_mask );
 }
 
-int hb_inkeyNext( void )      /* Return the next key without extracting it */
+int hb_inkeyNext( HB_inkey_enum event_mask )      /* Return the next key without extracting it */
 {
+   int key = s_inkeyForce;    /* Assume that typeahead support is disabled */
+
    HB_TRACE(HB_TR_DEBUG, ("hb_inkeyNext()"));
 
    hb_inkeyPoll();
@@ -187,12 +189,12 @@ int hb_inkeyNext( void )      /* Return the next key without extracting it */
    {
       /* Proper typeahead support is enabled */
       if( s_inkeyHead == s_inkeyTail )
-         return 0;                               /* No key */
+         key = 0;
       else
-         return s_inkeyBuffer[ s_inkeyTail ];    /* Next key */
+         key = s_inkeyBuffer[ s_inkeyTail ];    /* Next key */
    }
 
-   return s_inkeyForce; /* Typeahead support is disabled */
+   return hb_inkeyTranslate( key, event_mask );
 }
 
 void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour buffer */
@@ -327,11 +329,761 @@ HB_FUNC( HB_KEYPUT )
 
 HB_FUNC( NEXTKEY )
 {
-   hb_retni( hb_inkeyNext() );
+   hb_retni( hb_inkeyNext( ISNUM( 1 ) ? ( HB_inkey_enum ) hb_parni( 1 ) : hb_set.HB_SET_EVENTMASK ) );
 }
 
 HB_FUNC( LASTKEY )
 {
-   hb_retni( s_inkeyLast );
+   hb_retni( hb_inkeyTranslate( s_inkeyLast, hb_inkeyNext( ISNUM( 1 ) ? ( HB_inkey_enum ) hb_parni( 1 ) : hb_set.HB_SET_EVENTMASK ) ) );
 }
 
+int hb_inkeyTranslate( int key, HB_inkey_enum event_mask )
+{
+   if( key && hb_gtExtendedKeySupport() && ! ( event_mask & HB_INKEY_EXTENDED ) )
+   {
+      /* Translate the Harbour extended key codes to
+         Clipper-compatible key codes */
+      switch( key ) {
+      case HB_K_ALT_A:
+         key = K_ALT_A;
+         break;
+      case HB_K_ALT_B:
+         key = K_ALT_B;
+         break;
+      case HB_K_ALT_C:
+         key = K_ALT_C;
+         break;
+      case HB_K_ALT_D:
+         key = K_ALT_D;
+         break;
+      case HB_K_ALT_E:
+         key = K_ALT_E;
+         break;
+      case HB_K_ALT_F:
+         key = K_ALT_F;
+         break;
+      case HB_K_ALT_G:
+         key = K_ALT_G;
+         break;
+      case HB_K_ALT_H:
+         key = K_ALT_H;
+         break;
+      case HB_K_ALT_I:
+         key = K_ALT_I;
+         break;
+      case HB_K_ALT_J:
+         key = K_ALT_J;
+         break;
+      case HB_K_ALT_K:
+         key = K_ALT_K;
+         break;
+      case HB_K_ALT_L:
+         key = K_ALT_L;
+         break;
+      case HB_K_ALT_M:
+         key = K_ALT_M;
+         break;
+      case HB_K_ALT_N:
+         key = K_ALT_N;
+         break;
+      case HB_K_ALT_O:
+         key = K_ALT_O;
+         break;
+      case HB_K_ALT_P:
+         key = K_ALT_P;
+         break;
+      case HB_K_ALT_Q:
+         key = K_ALT_Q;
+         break;
+      case HB_K_ALT_R:
+         key = K_ALT_R;
+         break;
+      case HB_K_ALT_S:
+         key = K_ALT_S;
+         break;
+      case HB_K_ALT_T:
+         key = K_ALT_T;
+         break;
+      case HB_K_ALT_U:
+         key = K_ALT_U;
+         break;
+      case HB_K_ALT_V:
+         key = K_ALT_V;
+         break;
+      case HB_K_ALT_W:
+         key = K_ALT_W;
+         break;
+      case HB_K_ALT_X:
+         key = K_ALT_X;
+         break;
+      case HB_K_ALT_Y:
+         key = K_ALT_Y;
+         break;
+      case HB_K_ALT_Z:
+         key = K_ALT_Z;
+         break;
+      case HB_K_CTRL_A:
+         key = K_CTRL_A;
+         break;
+      case HB_K_CTRL_B:
+         key = K_CTRL_B;
+         break;
+      case HB_K_CTRL_C:
+         key = K_CTRL_C;
+         break;
+      case HB_K_CTRL_D:
+         key = K_CTRL_D;
+         break;
+      case HB_K_CTRL_E:
+         key = K_CTRL_E;
+         break;
+      case HB_K_CTRL_F:
+         key = K_CTRL_F;
+         break;
+      case HB_K_CTRL_G:
+         key = K_CTRL_G;
+         break;
+      case HB_K_CTRL_H:
+         key = K_CTRL_H;
+         break;
+      case HB_K_CTRL_I:
+         key = K_CTRL_I;
+         break;
+      case HB_K_CTRL_J:
+         key = K_CTRL_J;
+         break;
+      case HB_K_CTRL_K:
+         key = K_CTRL_K;
+         break;
+      case HB_K_CTRL_L:
+         key = K_CTRL_L;
+         break;
+      case HB_K_CTRL_M:
+         key = K_CTRL_M;
+         break;
+      case HB_K_CTRL_N:
+         key = K_CTRL_N;
+         break;
+      case HB_K_CTRL_O:
+         key = K_CTRL_O;
+         break;
+      case HB_K_CTRL_P:
+         key = K_CTRL_P;
+         break;
+      case HB_K_CTRL_Q:
+         key = K_CTRL_Q;
+         break;
+      case HB_K_CTRL_R:
+         key = K_CTRL_R;
+         break;
+      case HB_K_CTRL_S:
+         key = K_CTRL_S;
+         break;
+      case HB_K_CTRL_T:
+         key = K_CTRL_T;
+         break;
+      case HB_K_CTRL_U:
+         key = K_CTRL_U;
+         break;
+      case HB_K_CTRL_V:
+         key = K_CTRL_V;
+         break;
+      case HB_K_CTRL_W:
+         key = K_CTRL_W;
+         break;
+      case HB_K_CTRL_X:
+         key = K_CTRL_X;
+         break;
+      case HB_K_CTRL_Y:
+         key = K_CTRL_Y;
+         break;
+      case HB_K_CTRL_Z:
+         key = K_CTRL_Z;
+         break;
+      case HB_K_CTRL_LEFT_SQUARE:
+         key = K_ESC;
+         break;
+      case HB_K_CTRL_BACK_SLASH:
+         key = K_F1;
+         break;
+      case HB_K_CTRL_RIGHT_SQUARE:
+         key = K_CTRL_HOME;
+         break;
+      case HB_K_CTRL_HAT:
+         key = K_CTRL_PGDN;
+         break;
+      case HB_K_CTRL_UNDERSCORE:
+         key = K_CTRL_PGUP;
+         break;
+      case HB_K_SPACE:
+         key = K_SPACE;
+         break;
+      case HB_K_ALT_1:
+         key = K_ALT_1;
+         break;
+      case HB_K_ALT_2:
+         key = K_ALT_2;
+         break;
+      case HB_K_ALT_3:
+         key = K_ALT_3;
+         break;
+      case HB_K_ALT_4:
+         key = K_ALT_4;
+         break;
+      case HB_K_ALT_5:
+         key = K_ALT_5;
+         break;
+      case HB_K_ALT_6:
+         key = K_ALT_6;
+         break;
+      case HB_K_ALT_7:
+         key = K_ALT_7;
+         break;
+      case HB_K_ALT_8:
+         key = K_ALT_8;
+         break;
+      case HB_K_ALT_9:
+         key = K_ALT_9;
+         break;
+      case HB_K_ALT_0:
+         key = K_ALT_0;
+         break;
+      case HB_K_ALT_EQUAL:
+         key = 269;
+         break;
+      case HB_K_CTRL_1:
+         key = -99;
+         break;
+      case HB_K_CTRL_2:
+         key = 259;
+         break;
+      case HB_K_CTRL_3:
+         key = -99;
+         break;
+      case HB_K_CTRL_4:
+         key = -99;
+         break;
+      case HB_K_CTRL_5:
+         key = -99;
+         break;
+      case HB_K_CTRL_6:
+         key = K_CTRL_PGDN;
+         break;
+      case HB_K_CTRL_7:
+         key = -99;
+         break;
+      case HB_K_CTRL_8:
+         key = -99;
+         break;
+      case HB_K_CTRL_9:
+         key = -99;
+         break;
+      case HB_K_CTRL_0:
+         key = -99;
+         break;
+      case HB_K_CTRL_SEMI_COLON:
+         key = -99;
+         break;
+      case HB_K_CTRL_COMMA:
+         key = -99;
+         break;
+      case HB_K_CTRL_PERIOD:
+         key = -99;
+         break;
+      case HB_K_CTRL_SLASH:
+         key = -99;
+         break;
+      case HB_K_CTRL_MINUS:
+         key = K_CTRL_PGUP;
+         break;
+      case HB_K_CTRL_PLUS:
+         key = -99;
+         break;
+      case HB_K_CTRL_LEFT_CURLY:
+         key = K_ESC;
+         break;
+      case HB_K_CTRL_RIGHT_CURLY:
+         key = K_CTRL_HOME;
+         break;
+      case HB_K_ALT_BACKSPACE:
+         key = 270;
+         break;
+      case HB_K_CTRL_BACKSPACE:
+         key = 127;
+         break;
+      case HB_K_ALT_ENTER:
+         key = K_ALT_ENTER;
+         break;
+      case HB_K_SHIFT_ENTER:
+         key = K_ENTER;
+         break;
+      case HB_K_ALT_ESC:
+         key = K_ALT_ESC;
+         break;
+      case HB_K_CTRL_ESC:
+         key = K_ESC;
+         break;
+      case HB_K_SHIFT_TAB:
+         key = K_SH_TAB;
+         break;
+      case HB_K_ALT_TAB:
+         key = K_ALT_TAB;
+         break;
+      case HB_K_CTRL_TAB:
+         key = K_CTRL_TAB;
+         break;
+      case HB_K_F1:
+         key = K_F1;
+         break;
+      case HB_K_F2:
+         key = K_F2;
+         break;
+      case HB_K_F3:
+         key = K_F3;
+         break;
+      case HB_K_F4:
+         key = K_F4;
+         break;
+      case HB_K_F5:
+         key = K_F5;
+         break;
+      case HB_K_F6:
+         key = K_F6;
+         break;
+      case HB_K_F7:
+         key = K_F7;
+         break;
+      case HB_K_F8:
+         key = K_F8;
+         break;
+      case HB_K_F9:
+         key = K_F9;
+         break;
+      case HB_K_F10:
+         key = K_F10;
+         break;
+      case HB_K_F11:
+         key = K_F11;
+         break;
+      case HB_K_F12:
+         key = K_F12;
+         break;
+      case HB_K_ALT_F1:
+         key = K_ALT_F1;
+         break;
+      case HB_K_ALT_F2:
+         key = K_ALT_F2;
+         break;
+      case HB_K_ALT_F3:
+         key = K_ALT_F3;
+         break;
+      case HB_K_ALT_F4:
+         key = K_ALT_F4;
+         break;
+      case HB_K_ALT_F5:
+         key = K_ALT_F5;
+         break;
+      case HB_K_ALT_F6:
+         key = K_ALT_F6;
+         break;
+      case HB_K_ALT_F7:
+         key = K_ALT_F7;
+         break;
+      case HB_K_ALT_F8:
+         key = K_ALT_F8;
+         break;
+      case HB_K_ALT_F9:
+         key = K_ALT_F9;
+         break;
+      case HB_K_ALT_F10:
+         key = K_ALT_F10;
+         break;
+      case HB_K_ALT_F11:
+         key = K_ALT_F11;
+         break;
+      case HB_K_ALT_F12:
+         key = K_ALT_F12;
+         break;
+      case HB_K_CTRL_F1:
+         key = K_CTRL_F1;
+         break;
+      case HB_K_CTRL_F2:
+         key = K_CTRL_F2;
+         break;
+      case HB_K_CTRL_F3:
+         key = K_CTRL_F3;
+         break;
+      case HB_K_CTRL_F4:
+         key = K_CTRL_F4;
+         break;
+      case HB_K_CTRL_F5:
+         key = K_CTRL_F5;
+         break;
+      case HB_K_CTRL_F6:
+         key = K_CTRL_F6;
+         break;
+      case HB_K_CTRL_F7:
+         key = K_CTRL_F7;
+         break;
+      case HB_K_CTRL_F8:
+         key = K_CTRL_F8;
+         break;
+      case HB_K_CTRL_F9:
+         key = K_CTRL_F9;
+         break;
+      case HB_K_CTRL_F10:
+         key = K_CTRL_F10;
+         break;
+      case HB_K_CTRL_F11:
+         key = K_CTRL_F11;
+         break;
+      case HB_K_CTRL_F12:
+         key = K_CTRL_F12;
+         break;
+      case HB_K_SHIFT_F1:
+         key = K_SH_F1;
+         break;
+      case HB_K_SHIFT_F2:
+         key = K_SH_F2;
+         break;
+      case HB_K_SHIFT_F3:
+         key = K_SH_F3;
+         break;
+      case HB_K_SHIFT_F4:
+         key = K_SH_F4;
+         break;
+      case HB_K_SHIFT_F5:
+         key = K_SH_F5;
+         break;
+      case HB_K_SHIFT_F6:
+         key = K_SH_F6;
+         break;
+      case HB_K_SHIFT_F7:
+         key = K_SH_F7;
+         break;
+      case HB_K_SHIFT_F8:
+         key = K_SH_F8;
+         break;
+      case HB_K_SHIFT_F9:
+         key = K_SH_F9;
+         break;
+      case HB_K_SHIFT_F10:
+         key = K_SH_F10;
+         break;
+      case HB_K_SHIFT_F11:
+         key = K_SH_F11;
+         break;
+      case HB_K_SHIFT_F12:
+         key = K_SH_F12;
+         break;
+      case HB_KP_MINUS:
+         key = '-';
+         break;
+      case HB_KP_ALT_MINUS:
+         key = KP_ALT_MINUS;
+         break;
+      case HB_KP_CTRL_MINUS:
+         key = KP_CTRL_MINUS;
+         break;
+      case HB_KP_SHIFT_MINUS:
+         key = '-';
+         break;
+      case HB_KP_PLUS:
+         key = '+';
+         break;
+      case HB_KP_ALT_PLUS:
+         key = KP_ALT_PLUS;
+         break;
+      case HB_KP_CTRL_PLUS:
+         key = KP_CTRL_PLUS;
+         break;
+      case HB_KP_SHIFT_PLUS:
+         key = '+';
+         break;
+      case HB_KP_SLASH:
+         key = '/';
+         break;
+      case HB_KP_ALT_SLASH:
+         key = KP_ALT_SLASH;
+         break;
+      case HB_KP_CTRL_SLASH:
+         key = KP_CTRL_SLASH;
+         break;
+      case HB_KP_SHIFT_SLASH:
+         key = '/';
+         break;
+      case HB_KP_STAR:
+         key = '*';
+         break;
+      case HB_KP_ALT_STAR:
+         key = KP_ALT_ASTERISK;
+         break;
+      case HB_KP_CTRL_STAR:
+         key = KP_CTRL_ASTERISK;
+         break;
+      case HB_KP_SHIFT_STAR:
+         key = '*';
+         break;
+      case HB_KP_ENTER:
+         key = K_ENTER;
+         break;
+      case HB_KP_CTRL_ENTER:
+         key = K_CTRL_ENTER;
+         break;
+      case HB_K_HOME:
+         key = K_HOME;
+         break;
+      case HB_K_UP:
+         key = K_UP;
+         break;
+      case HB_K_PG_UP:
+         key = K_PGUP;
+         break;
+      case HB_K_LEFT:
+         key = K_LEFT;
+         break;
+      case HB_K_RIGHT:
+         key = K_RIGHT;
+         break;
+      case HB_K_END:
+         key = K_END;
+         break;
+      case HB_K_DOWN:
+         key = K_DOWN;
+         break;
+      case HB_K_PG_DN:
+         key = K_PGDN;
+         break;
+      case HB_K_INS:
+         key = K_INS;
+         break;
+      case HB_K_DEL:
+         key = K_DEL;
+         break;
+      case HB_K_ALT_HOME:
+         key = K_ALT_HOME;
+         break;
+      case HB_K_ALT_UP:
+         key = K_ALT_UP;
+         break;
+      case HB_K_ALT_PG_UP:
+         key = K_ALT_PGUP;
+         break;
+      case HB_K_ALT_LEFT:
+         key = K_ALT_LEFT;
+         break;
+      case HB_K_ALT_RIGHT:
+         key = K_ALT_RIGHT;
+         break;
+      case HB_K_ALT_END:
+         key = K_ALT_END;
+         break;
+      case HB_K_ALT_PG_DN:
+         key = K_ALT_PGDN;
+         break;
+      case HB_K_ALT_INS:
+         key = K_ALT_INS;
+         break;
+      case HB_K_ALT_DEL:
+         key = K_ALT_DEL;
+         break;
+      case HB_K_CTRL_HOME:
+         key = K_CTRL_HOME;
+         break;
+      case HB_K_CTRL_UP:
+         key = K_CTRL_UP;
+         break;
+      case HB_K_CTRL_PG_UP:
+         key = K_CTRL_PGUP;
+         break;
+      case HB_K_CTRL_LEFT:
+         key = K_CTRL_LEFT;
+         break;
+      case HB_K_CTRL_RIGHT:
+         key = K_CTRL_RIGHT;
+         break;
+      case HB_K_CTRL_END:
+         key = K_CTRL_END;
+         break;
+      case HB_K_CTRL_DOWN:
+         key = K_CTRL_DOWN;
+         break;
+      case HB_K_CTRL_PG_DN:
+         key = K_CTRL_PGDN;
+         break;
+      case HB_K_CTRL_INS:
+         key = K_CTRL_INS;
+         break;
+      case HB_K_CTRL_DEL:
+         key = K_CTRL_DEL;
+         break;
+      case HB_K_SHIFT_HOME:
+         key = K_HOME;
+         break;
+      case HB_K_SHIFT_UP:
+         key = K_UP;
+         break;
+      case HB_K_SHIFT_PG_UP:
+         key = K_PGUP;
+         break;
+      case HB_K_SHIFT_LEFT:
+         key = K_LEFT;
+         break;
+      case HB_K_SHIFT_RIGHT:
+         key = K_RIGHT;
+         break;
+      case HB_K_SHIFT_END:
+         key = K_END;
+         break;
+      case HB_K_SHIFT_DOWN:
+         key = K_DOWN;
+         break;
+      case HB_K_SHIFT_PG_DN:
+         key = K_PGDN;
+         break;
+      case HB_K_SHIFT_INS:
+         key = K_INS;
+         break;
+      case HB_K_SHIFT_DEL:
+         key = K_DEL;
+         break;
+      case HB_KP_HOME:
+         key = K_HOME;
+         break;
+      case HB_KP_UP:
+         key = K_UP;
+         break;
+      case HB_KP_PG_UP:
+         key = K_PGUP;
+         break;
+      case HB_KP_LEFT:
+         key = K_LEFT;
+         break;
+      case HB_KP_5:
+         key = K_UP;
+         break;
+      case HB_KP_RIGHT:
+         key = K_RIGHT;
+         break;
+      case HB_KP_END:
+         key = K_END;
+         break;
+      case HB_KP_DOWN:
+         key = K_DOWN;
+         break;
+      case HB_KP_PG_DN:
+         key = K_PGDN;
+         break;
+      case HB_KP_INS:
+         key = K_INS;
+         break;
+      case HB_KP_DEL:
+         key = K_DEL;
+         break;
+      case HB_KP_ALT_HOME:
+         key = K_ALT_HOME;
+         break;
+      case HB_KP_ALT_UP:
+         key = K_ALT_UP;
+         break;
+      case HB_KP_ALT_PG_UP:
+         key = K_ALT_PGUP;
+         break;
+      case HB_KP_ALT_LEFT:
+         key = K_ALT_LEFT;
+         break;
+      case HB_KP_ALT_5:
+         key = K_ALT_5;
+         break;
+      case HB_KP_ALT_RIGHT:
+         key = K_ALT_RIGHT;
+         break;
+      case HB_KP_ALT_END:
+         key = K_ALT_END;
+         break;
+      case HB_KP_ALT_PG_DN:
+         key = K_ALT_PGDN;
+         break;
+      case HB_KP_ALT_INS:
+         key = K_ALT_INS;
+         break;
+      case HB_KP_ALT_DEL:
+         key = K_ALT_DEL;
+         break;
+      case HB_KP_CTRL_HOME:
+         key = K_CTRL_HOME;
+         break;
+      case HB_KP_CTRL_UP:
+         key = K_CTRL_UP;
+         break;
+      case HB_KP_CTRL_PG_UP:
+         key = K_CTRL_PGUP;
+         break;
+      case HB_KP_CTRL_LEFT:
+         key = K_CTRL_LEFT;
+         break;
+      case HB_KP_CTRL_5:
+         key = KP_CTRL_5;
+         break;
+      case HB_KP_CTRL_RIGHT:
+         key = K_CTRL_RIGHT;
+         break;
+      case HB_KP_CTRL_END:
+         key = K_CTRL_END;
+         break;
+      case HB_KP_CTRL_DOWN:
+         key = K_CTRL_DOWN;
+         break;
+      case HB_KP_CTRL_PG_DN:
+         key = K_CTRL_PGDN;
+         break;
+      case HB_KP_CTRL_INS:
+         key = K_CTRL_INS;
+         break;
+      case HB_KP_CTRL_DEL:
+         key = K_CTRL_DEL;
+         break;
+      case HB_KP_SHIFT_HOME:
+         key = K_HOME;
+         break;
+      case HB_KP_SHIFT_UP:
+         key = K_UP;
+         break;
+      case HB_KP_SHIFT_PG_UP:
+         key = K_PGUP;
+         break;
+      case HB_KP_SHIFT_LEFT:
+         key = K_LEFT;
+         break;
+      case HB_KP_SHIFT_5:
+         key = '5';
+         break;
+      case HB_KP_SHIFT_RIGHT:
+         key = K_RIGHT;
+         break;
+      case HB_KP_SHIFT_END:
+         key = K_END;
+         break;
+      case HB_KP_SHIFT_DOWN:
+         key = K_DOWN;
+         break;
+      case HB_KP_SHIFT_PG_DN:
+         key = K_PGDN;
+         break;
+      case HB_KP_SHIFT_INS:
+         key = K_INS;
+         break;
+      case HB_KP_SHIFT_DEL:
+         key = K_DEL;
+         break;
+      }
+   }
+   if( key == -99 )
+   {
+      /* Ignore this key code by extracting it from the input buffer
+         and discarding it. */
+      hb_inkeyFetch();
+      key = 0;
+   }
+   return key;
+}

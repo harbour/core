@@ -40,27 +40,49 @@
  *      type of input event, simply add the various mask names together.
  *
  *        <table>
- *        inkey.ch         Meaning
+ *        inkey.ch           Meaning
  *
- *        INKEY_MOVE       Mouse motion events are allowed
- *        INKEY_LDOWN      The mouse left click down event is allowed
- *        INKEY_LUP        The mouse left click up event is allowed
- *        INKEY_RDOWN      The mouse right click down event is allowed
- *        INKEY_RUP        The mouse right click up event is allowed
- *        INKEY_KEYBOARD   All keyboard events are allowed
- *        INKEY_ALL        All mouse and keyboard events are allowed
+ *        INKEY_MOVE         Mouse motion events are allowed
+ *        INKEY_LDOWN        The mouse left click down event is allowed
+ *        INKEY_LUP          The mouse left click up event is allowed
+ *        INKEY_RDOWN        The mouse right click down event is allowed
+ *        INKEY_RUP          The mouse right click up event is allowed
+ *        INKEY_KEYBOARD     All keyboard events are allowed
+ *        INKEY_ALL          All mouse and keyboard events are allowed
+ *        HB_INKEY_EXTENDED  Extended keyboard codes are used.
  *        </table>
  *      If the parameter is not numeric, it will be treated as if it were set
  *      to hb_set.HB_SET_EVENTMASK.
  *  $RETURNS$
  *      0 in case of timeout with no input event, otherwise returns a value
- *      in the range -39 to 386 for keyboard events or the range 1001 to 1007
+ *      in the range -47 to 386 for keyboard events or the range 1001 to 1007
  *      for mouse events. Mouse events and non-printable keyboard events are
  *      represented by the K_<event> values listed in inkey.ch. Keyboard
  *      event return codes in the range 32 through 127 are equivalent to the
  *      printable ASCII character set. Keyboard event return codes in the
  *      range 128 through 255 are assumed to be printable, but results may
- *      vary based on hardware and nationality.
+ *      vary based on hardware and nationality. If HB_INKEY_EXTENDED mode is
+ *      used, then the return value for keyboard events ranges from 1 through
+ *      767 and 1077 through 1491, although not all codes are used.
+ *
+ *      Extended key codes consist of the PC keyboard scan code and one
+ *      or more offset values. If no keyboard modifier was used, then
+ *      HB_INKEY_NONE is added. The Alt key adds HB_INKEY_ALT, the Ctrl
+ *      key adds HB_INKEY_CTRL, the Shift key adds HB_INKEY_SHIFT, and
+ *      enhanced keys (KeyPad+/ and CursorPad keys) add HB_INKEY_ENHANCED.
+ *      For example, F1 is scan code 59, so if you just press F1, you get
+ *      key code 315, but Alt+F1 gives 443, Ctrl+F1 gives 571, and Shift+
+ *      F1 gives 699. And NumPad+/ gives 1077, 1205, 1333, and 1461. At
+ *      this time, the only value that can combine with other values is
+ *      HB_INKEY_ENHANCED (i.e., there are no Alt+Ctl combinations, etc.)
+ *
+ *      Note: The extended key code set is larger than the normal key code
+ *      set. As a result, if you switch between the normal and extended
+ *      modes, you need to be aware that some codes get translated into a
+ *      zero in normal mode (because there is no corresponding code in
+ *      normal mode) and that these codes get removed from the keyboard
+ *      input buffer in normal mode and you won't be able to go back and
+ *      fetch them later in extended mode.
  *  $DESCRIPTION$
  *      INKEY() can be used to detect input events, such as keypress, mouse
  *      movement, or mouse key clicks (up and/or down).
@@ -178,9 +200,12 @@
  *  $ONELINER$
  *      Get the next key code in the buffer without extracting it.
  *  $SYNTAX$
- *      NEXTKEY() --> nKey
+ *      NEXTKEY( [<nInputMask>] ) --> nKey
  *  $ARGUMENTS$
- *      None
+ *      nInputMask is an optional integer value composed of one or more
+ *      INKEY_ or HB_INKEY_ constants. The sole purpose of this argument
+ *      is to allow switching between using HB_INKEY_EXTENDED key codes
+ *      and using the normal Clipper-compatible key codes
  *  $RETURNS$
  *      <nKey>  The value of the next key in the Harbour keyboard buffer.
  *  $DESCRIPTION$
@@ -208,7 +233,8 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      NEXTKEY() is compliant with CA-Clipper 5.3
+ *      NEXTKEY() is compliant with CA-Clipper 5.3, but has been extended
+ *      for Harbour.
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -224,9 +250,12 @@
  *  $ONELINER$
  *      Get the last key extracted from the keyboard buffer.
  *  $SYNTAX$
- *      LASTKEY() --> nKey
+ *      LASTKEY( [<nInputMask>] ) --> nKey
  *  $ARGUMENTS$
- *      None
+ *      nInputMask is an optional integer value composed of one or more
+ *      INKEY_ or HB_INKEY_ constants. The sole purpose of this argument
+ *      is to allow switching between using HB_INKEY_EXTENDED key codes
+ *      and using the normal Clipper-compatible key codes
  *  $RETURNS$
  *      <nKey>  The last key extracted from the keyboard buffer.
  *  $DESCRIPTION$
@@ -247,7 +276,8 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      LASTKEY() is compliant with CA-Clipper 5.3
+ *      LASTKEY() is compliant with CA-Clipper 5.3, but has been extended
+ *      for Harbour.
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$

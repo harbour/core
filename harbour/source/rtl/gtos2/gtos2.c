@@ -207,6 +207,10 @@ BOOL hb_gt_AdjustPos( BYTE * pStr, ULONG ulLen )
    return TRUE;
 }
 
+int hb_gt_ExtendedKeySupport()
+{
+   return 0;
+}
 
 int hb_gt_ReadKey( HB_inkey_enum eventmask )
 {

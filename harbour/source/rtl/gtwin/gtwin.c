@@ -62,10 +62,11 @@
 
 #define HB_OS_WIN_32_USED
 
-#include "hbapigt.h"
-#include "hbset.h" /* For Ctrl+Break handling */
-#include "hbvm.h" /* For Ctrl+Break handling */
-#include "inkey.ch"
+#include <hbapigt.h>
+#include <hbset.h> /* For Ctrl+Break handling */
+#include <hbvm.h> /* For Ctrl+Break handling */
+#include <hbinkey.ch>
+#include <inkey.ch>
 
 #if defined(__IBMCPP__)
    #undef WORD                            /* 2 bytes unsigned */
@@ -277,69 +278,7 @@ static int StdFnKeys( WORD wKey, BOOL bEnhanced )
 {
    int ch;
    /* Normal function key */
-   if( wKey == 53 && bEnhanced ) ch = '/'; /* Num Pad / */
-   else switch( wKey )
-   {
-      case 1: /* Esc */
-         ch = K_ESC;
-         break;
-      case 28: /* Num Pad Enter */
-         ch = K_ENTER;
-         break;
-      case 59: /* F1 */
-         ch = K_F1;
-         break;
-      case 60: /* F2 */
-      case 61: /* F3 */
-      case 62: /* F4 */
-      case 63: /* F5 */
-      case 64: /* F6 */
-      case 65: /* F7 */
-      case 66: /* F8 */
-      case 67: /* F9 */
-      case 68: /* F10 */
-         ch = 59 - wKey;
-         break;
-      case 71: /* Home */
-         ch = K_HOME;
-         break;
-      case 79: /* End */
-         ch = K_END;
-         break;
-      case 73: /* Page Up */
-         ch = K_PGUP;
-         break;
-      case 81: /* Page Down */
-         ch = K_PGDN;
-         break;
-      case 72: /* Up */
-         ch = K_UP;
-         break;
-      case 75: /* Left */
-         ch = K_LEFT;
-         break;
-      case 77: /* Right */
-         ch = K_RIGHT;
-         break;
-      case 76: /* Num Pad 5 */
-         ch = 332;
-         break;
-      case 80: /* Down */
-         ch = K_DOWN;
-         break;
-      case 82: /* Ins */
-         ch = K_INS;
-         break;
-      case 83: /* Del */
-         ch = K_DEL;
-         break;
-      case 87: /* F11 */
-      case 88: /* F12 */
-         ch = 47 - wKey;
-         break;
-      default:
-         ch = wKey;
-   }
+   ch = wKey + HB_INKEY_NONE;
    return ch;
 }
 
@@ -362,6 +301,11 @@ static int IgnoreKeyCodes( int wKey )
          ignore = -1;
    }
    return ignore;
+}
+
+int hb_gt_ExtendedKeySupport()
+{
+   return 1;
 }
 
 int hb_gt_ReadKey( HB_inkey_enum eventmask )
@@ -449,8 +393,7 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
                   fprintf( stdout, "0" );
                #endif
                if( ( ( ch == 0 || ch == -32 || ch == -16 ) && ( dwState & ( SHIFT_PRESSED | LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED ) ) )
-               || ( ( dwState & ( ENHANCED_KEY | LEFT_ALT_PRESSED | RIGHT_ALT_PRESSED ) )
-               && ! ( ( dwState & ( RIGHT_ALT_PRESSED | LEFT_CTRL_PRESSED ) ) == ( RIGHT_ALT_PRESSED | LEFT_CTRL_PRESSED ) ) ) )
+               || ( ( dwState & ( ENHANCED_KEY | LEFT_ALT_PRESSED | RIGHT_ALT_PRESSED ) ) ) )
                {
                   extended = 1;
                   #ifdef HB_DEBUG_KEYBOARD
@@ -524,6 +467,7 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
                      BOOL bAlt = dwState & ( LEFT_ALT_PRESSED | RIGHT_ALT_PRESSED );
                      BOOL bCtrl = dwState & ( LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED );
                      BOOL bShift = dwState & SHIFT_PRESSED;
+                     BOOL bAltGr = ( dwState & ( LEFT_CTRL_PRESSED | RIGHT_ALT_PRESSED ) ) == ( LEFT_CTRL_PRESSED | RIGHT_ALT_PRESSED );
                      BOOL bEnhanced = dwState & ENHANCED_KEY;
                      #ifdef HB_DEBUG_KEYBOARD
                         fprintf( stdout, "8" );
@@ -537,27 +481,14 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
                            fprintf( stdout, "9" );
                         #endif
                         /* Alt key held */
-                        if( ch == 0 || ch == wChar || tolower( ch ) == tolower( wChar ) )
+                        if( bAltGr && ch ) { /* It's actually Alt+Gr */ }
+                        else
                         {
                            #ifdef HB_DEBUG_KEYBOARD
                               fprintf( stdout, "a" );
                            #endif
-                           /* Only translate if not AltGr */
-                           if( wKey == 1 ) ch = K_ALT_ESC; /* Esc */
-                           else if( wKey == 15 ) ch = K_ALT_TAB; /* Tab */
-                           else if( wKey <= 12 ) ch = wKey + 374; /* Numeric row */
-                           else if( wKey == 28 ) ch = KP_ALT_ENTER; /* Num Pad Enter */
-                           else if( wKey <= 52 ) ch = wKey + 256; /* Alpha rows */
-                           else if( wKey == 53 && bEnhanced ) ch = KP_ALT_SLASH; /* Num Pad / */
-                           else if( wKey == 55 ) ch = KP_ALT_ASTERISK; /* Num Pad * */
-                           else if( wKey <= 58 ) ch = wKey + 367; /* ? */
-                           else if( wKey <= 68 ) ch = 29 - wKey; /* F1 - F10 */
-                           else if( wKey == 74 ) ch = KP_ALT_MINUS; /* Num Pad - */
-                           else if( wKey == 76 ) ch = KP_ALT_5; /* Num Pad 5 */
-                           else if( wKey == 78 ) ch = KP_ALT_PLUS; /* Num Pad + */
-                           else if( wKey <= 86 ) ch = wKey + 336; /* Cursor */
-                           else if( wKey <= 88 ) ch = 41 - wKey; /* F11, F12 */
-                           else ch = wKey + 384;
+                           ch = wKey + HB_INKEY_ALT;
+                           if( bEnhanced ) ch += HB_INKEY_ENHANCED;
                         }
                      }
                      else if( bCtrl )
@@ -566,103 +497,8 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
                            fprintf( stdout, "b" );
                         #endif
                         /* Ctrl key held */
-                        if( wKey == 53 && bEnhanced ) ch = KP_CTRL_SLASH; /* Num Pad / */
-                        else switch( wKey )
-                        {
-                           case 1: /* Esc */
-                              ch = K_ESC;
-                              break;
-                           case 3: /* 2 */
-                              ch = 259;
-                              break;
-                           case 7: /* 6 */
-                              ch = K_CTRL_PGDN;
-                              break;
-                           case 12: /* - */
-                              ch = K_CTRL_PGUP;
-                              break;
-                           case 14: /* Backspace */
-                              ch = K_CTRL_BS;
-                              break;
-                           case 15: /* Tab */
-                              ch = K_CTRL_TAB;
-                              break;
-                           case 26: /* [ */
-                              ch = K_ESC;
-                              break;
-                           case 27: /* ] */
-                              ch = K_CTRL_HOME;
-                              break;
-                           case 28: /* Num Pad Enter */
-                              ch = K_CTRL_ENTER;
-                              break;
-                           case 43: /* \ */
-                              ch = K_F1;
-                              break;
-                           case 55: /* Num Pad * */
-                              ch = KP_CTRL_ASTERISK;
-                              break;
-                           case 59: /* F1 */
-                           case 60: /* F2 */
-                           case 61: /* F3 */
-                           case 62: /* F4 */
-                           case 63: /* F5 */
-                           case 64: /* F6 */
-                           case 65: /* F7 */
-                           case 66: /* F8 */
-                           case 67: /* F9 */
-                           case 68: /* F10 */
-                              ch = 39 - wKey;
-                              break;
-                           case 71: /* Home */
-                              ch = K_CTRL_HOME;
-                              break;
-                           case 72: /* Up */
-                              ch = K_CTRL_UP;
-                              break;
-                           case 73: /* PgUp */
-                              ch = K_CTRL_PGUP;
-                              break;
-                           case 74: /* Num Pad - */
-                              ch = KP_CTRL_MINUS;
-                              break;
-                           case 75: /* Left */
-                              ch = K_CTRL_LEFT;
-                              break;
-                           case 76: /* Num Pad 5 */
-                              ch = KP_CTRL_5;
-                              break;
-                           case 77: /* Right */
-                              ch = K_CTRL_RIGHT;
-                              break;
-                           case 78: /* Num Pad + */
-                              ch = KP_CTRL_PLUS;
-                              break;
-                           case 79: /* End */
-                              ch = K_CTRL_END;
-                              break;
-                           case 80: /* Down */
-                              ch = K_CTRL_DOWN;
-                              break;
-                           case 81: /* PgDn */
-                              ch = K_CTRL_PGDN;
-                              break;
-                           case 82: /* Ins */
-                              ch = K_CTRL_INS;
-                              break;
-                           case 83: /* Del */
-                              ch = K_CTRL_DEL;
-                              break;
-                           case 87: /* F11 */
-                           case 88: /* F12 */
-                              ch = 43 - wKey;
-                              break;
-                           default:
-                              /* Keep Ctrl+Alpha, but scrap everything
-                                 else that hasn't been translated yet. */
-                              if( ch < 1 || ch > 26 )
-                                 ch = 0;
-                        }
+                        if( ch == 0 || bEnhanced ) ch = wKey + HB_INKEY_CTRL;
+                        if( bEnhanced ) ch += HB_INKEY_ENHANCED;
                      }
                      else if( bShift )
                      {
@@ -670,73 +506,8 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
                            fprintf( stdout, "c" );
                         #endif
                         /* Shift key held */
-                        if( wKey == 53 && bEnhanced ) ch = '/'; /* Num Pad / */
-                        else switch( wKey )
-                        {
-                           case 1: /* Esc */
-                              ch = K_ESC;
-                              break;
-                           case 15: /* Tab */
-                              ch = K_SH_TAB;
-                              break;
-                           case 28: /* Num Pad Enter */
-                              ch = K_ENTER;
-                              break;
-                           case 59: /* F1 */
-                           case 60: /* F2 */
-                           case 61: /* F3 */
-                           case 62: /* F4 */
-                           case 63: /* F5 */
-                           case 64: /* F6 */
-                           case 65: /* F7 */
-                           case 66: /* F8 */
-                           case 67: /* F9 */
-                           case 68: /* F10 */
-                              ch = 49 - wKey;
-                              break;
-                           case 71: /* Home */
-                              ch = K_HOME;
-                              break;
-                           case 72: /* Up */
-                              ch = K_UP;
-                              break;
-                           case 73: /* Page Up */
-                              ch = K_PGUP;
-                              break;
-                           case 75: /* Left */
-                              ch = K_LEFT;
-                              break;
-                           case 76: /* Num Pad 5 */
-                              ch = '5';
-                              break;
-                           case 77: /* Right */
-                              ch = K_RIGHT;
-                              break;
-                           case 79: /* End */
-                              ch = K_END;
-                              break;
-                           case 80: /* Down */
-                              ch = K_DOWN;
-                              break;
-                           case 81: /* Page Down */
-                              ch = K_PGDN;
-                              break;
-                           case 82: /* Ins */
-                              ch = K_INS;
-                              break;
-                           case 83: /* Del */
-                              ch = K_DEL;
-                              break;
-                           case 87: /* F11 */
-                           case 88: /* F12 */
-                              ch = 45 - wKey;
-                              break;
-                           default:
-                              /* Only provide a translation for those key
-                                 codes that don't have a character code. */
-                              if( ch == 0 )
-                                 ch = wKey + 128;
-                        }
+                        if( ch == 0 || bEnhanced ) ch = wKey + HB_INKEY_SHIFT;
+                        if( bEnhanced ) ch += HB_INKEY_ENHANCED;
                      }
                      else
                      {
@@ -744,6 +515,7 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
                            fprintf( stdout, "d" );
                         #endif
                         ch = StdFnKeys( wKey, bEnhanced );
+                        if( bEnhanced ) ch += HB_INKEY_ENHANCED;
                      }
                   }
                }

@@ -202,6 +202,11 @@ BOOL hb_gt_AdjustPos( BYTE * pStr, ULONG ulLen )
    return TRUE;
 }
 
+int hb_gt_ExtendedKeySupport()
+{
+   return 0;
+}
+
 #ifdef HARBOUR_GCC_OS2
    #include "..\..\kbdos2.gcc"
 #else

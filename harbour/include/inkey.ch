@@ -67,7 +67,9 @@
 #define INKEY_RUP               16
 #define INKEY_KEYBOARD          128
 #define INKEY_ALL               159
-#define INKEY_RAW               256 /* Harbour extension */
+
+#define HB_INKEY_RAW            256 /* Harbour extension */
+#define HB_INKEY_EXTENDED       512 /* Harbour extension */
 
 /* Mouse events */
 

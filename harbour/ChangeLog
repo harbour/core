@@ -1,3 +1,66 @@
+2001-04-27 22:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+  * doc/en/input.txt
+  * include/hbapigt.h
+  + include/hbinkey.ch
+  * include/inkey.ch
+  * source/rtl/gtapi.c
+  * source/rtl/inkey.c
+  * source/rtl/gt_tpl/gt_tpl.c
+  * source/rtl/gtcgi/gtcgi.c
+  * source/rtl/gtcrs/kbdcrs.c
+  * source/rtl/gtdos/gtdos.c
+  * source/rtl/gtos2/gtos2.c
+  * source/rtl/gtpca/gtpca.c
+  * source/rtl/gtsln/kbsln.c
+  * source/rtl/gtstd/gtstd.c
+  * source/rtl/gtwin/gtwin.c
+  * tests/inkeytst.prg
+    + Added a new HB_INKEY_EXTENDED mode that extends the number of
+      unique keys that Harbour can distinguish between. The first
+      implementation is for gtwin only, so the gtapi has a new API
+      function that the inkey.c module uses to determine if the GT
+      module supports the new HB_INKEY_EXTENDED mode. This way, it
+      is not necessary to convert all GT drivers to support the new
+      input mode at the same time. The new GT API function is named
+      hb_gtExtendedKeySupport() and returns zero if the new mode is
+      not supported or non-zero if the new extended mode is supported.
+    * The INKEY() family of functions defaults to the normal Clipper-
+      compatible key code mode. In order to use the extended code mode,
+      you either need to set the global input mask to include the new
+      HB_INKEY_EXTENDED value or include it in the second parameter for
+      INKEY() and the new optional NEXTKEY() and LASTKEY() parameter.
+    + A GT driver that supports extended key code mode must *always* use
+      extended key codes. A new translation function in inkey.c is used
+      to translate between extended and normal key codes when the new
+      HB_INKEY_EXTENDED mode is not in use.
+    + The new hbinkey.ch module defines and documents the new extended
+      mode key codes, which are not compatible with the normal codes
+      (with the obvious exception of character codes 0 through 255).
+      These manifest constants use the HB_ prefix and are also defined
+      for many duplicate codes (such as HB_K_CTRL_A, HB_ENTER, etc.)
+    + Extended key codes consist of the PC keyboard scan code and one
+      or more offset values. If no keyboard modifier was used, then
+      HB_INKEY_NONE is added. The Alt key adds HB_INKEY_ALT, the Ctrl
+      key adds HB_INKEY_CTRL, the Shift key adds HB_INKEY_SHIFT, and
+      enhanced keys (KeyPad+/ and CursorPad keys) add HB_INKEY_ENHANCED.
+      For example, F1 is scan code 59, so if you just press F1, you get
+      key code 315, but Alt+F1 gives 443, Ctrl+F1 gives 571, and Shift+
+      F1 gives 699. And NumPad+/ gives 1077, 1205, 1333, and 1461. At
+      this time, the only value that can combine with other values is
+      HB_INKEY_ENHANCED (i.e., there are no Alt+Ctl combinations, etc.)
+    + Note: The extended key code set is larger than the normal key code
+      set. As a result, if you switch between the normal and extended
+      modes, you need to be aware that some codes get translated into a
+      zero in normal mode (because there is no corresponding code in
+      normal mode) and that these codes get removed from the keyboard
+      input buffer in normal mode and you won't be able to go back and
+      fetch them later in extended mode.
+    + In order to allow testing the new extended mode, the inkeytst.prg
+      module has been extended to interpret the second parameter. If it
+      is not present, then normal mode is used. If it starts with an "R"
+      (or "r"), then raw mode is used. Otherwise, extended mode is used.
+
 2001-04-27 15:00 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * include/achoice.ch

@@ -57,6 +57,13 @@ void hb_gt_Exit( void )
    /* TODO: */
 }
 
+int hb_gt_ExtendedKeySupport()
+{
+   /* TODO: If this GTAPI supports the Harbour extended key
+            codes, then change the return value from 0 to 1. */
+   return 0;
+}
+
 int hb_gt_ReadKey( HB_inkey_enum eventmask )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_ReadKey(%d)", (int) eventmask));

@@ -171,6 +171,7 @@ extern USHORT hb_gtPostExt( void );
 extern USHORT hb_gtPreExt( void );
 extern USHORT hb_gtSuspend( void ); /* prepare the reminal for shell output */
 extern USHORT hb_gtResume( void ); /* resume the terminal after the shell output */
+extern int    hb_gtExtendedKeySupport( void );
 extern int    hb_gtReadKey( HB_inkey_enum eventmask );
 extern USHORT hb_gtRectSize( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, USHORT * puiBuffSize );
 extern USHORT hb_gtRepChar( USHORT uiRow, USHORT uiCol, BYTE byChar, USHORT uiCount );
@@ -240,6 +241,7 @@ extern BOOL   hb_gt_Suspend( void ); /* suspend the terminal before the shell ca
 extern BOOL   hb_gt_Resume( void ); /* resume the terminal after the shell call */
 extern void   hb_gt_Puts( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE * pbyStr, ULONG ulLen );
 extern void   hb_gt_PutText( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbySrc );
+extern int    hb_gt_ExtendedKeySupport();
 extern int    hb_gt_ReadKey( HB_inkey_enum eventmask );
 extern int    hb_gt_RectSize( USHORT rows, USHORT cols );
 extern void   hb_gt_Replicate( USHORT uiTop, USHORT uiLeft, BYTE byAttr, BYTE byChar, ULONG ulLen );
@@ -262,12 +264,13 @@ extern USHORT hb_gt_VertLine( USHORT uiCol, USHORT uiTop, USHORT uiBottom, BYTE 
 
 /* Harbour keyboard support functions */
 extern int    hb_inkey( BOOL bWait, double dSeconds, HB_inkey_enum event_mask ); /* Wait for keyboard input */
-extern int    hb_inkeyGet( void );            /* Extract the next key from the Harbour keyboard buffer */
+extern int    hb_inkeyGet( HB_inkey_enum event_mask );            /* Extract the next key from the Harbour keyboard buffer */
 extern void   hb_inkeyPut( int ch );          /* Inserts an inkey code into the keyboard buffer */
-extern int    hb_inkeyLast( void );           /* Return the value of the last key that was extracted */
-extern int    hb_inkeyNext( void );           /* Return the next key without extracting it */
+extern int    hb_inkeyLast( HB_inkey_enum event_mask );           /* Return the value of the last key that was extracted */
+extern int    hb_inkeyNext( HB_inkey_enum event_mask );           /* Return the next key without extracting it */
 extern void   hb_inkeyPoll( void );           /* Poll the console keyboard to stuff the Harbour buffer */
 extern void   hb_inkeyReset( BOOL allocate ); /* Reset the Harbour keyboard buffer */
+extern int    hb_inkeyTranslate( int key, HB_inkey_enum event_make ); /* Translation extended codes to normal codes, if needed */
 
 /* Mouse related declarations */
 

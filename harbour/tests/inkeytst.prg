@@ -202,7 +202,11 @@ LOCAL nKey, nMask, cText
    nMask := INKEY_ALL
 
    IF ! EMPTY( cRaw )
-       nMask += INKEY_RAW
+       IF UPPER( LEFT( cRaw, 1 ) ) == "R"
+          nMask += HB_INKEY_RAW
+       ELSE
+          nMask += HB_INKEY_EXTENDED
+       END IF
    END IF
 
    SET(_SET_EVENTMASK, nMask)

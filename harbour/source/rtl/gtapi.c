@@ -125,6 +125,11 @@ void hb_gtExit( void )
    hb_xfree( s_pColor );
 }
 
+int hb_gtExtendedKeySupport()
+{
+    return hb_gt_ExtendedKeySupport();
+}
+
 int hb_gtReadKey( HB_inkey_enum eventmask )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gtReadKey(%d)", (int) eventmask));
