@@ -1,3 +1,7 @@
+2000-02-02 15:40 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/compiler/harbour.c
+     * HB_P_LOCALNAME local index fixed.
+
 2000-02-02 14:39 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/vm/hvm.c
      * function hb_vmLocalName() properly implemented.
