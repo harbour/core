@@ -1,3 +1,27 @@
+2000-09-17 23:45 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * source/compiler/harbour.l
+     ! Corrected definition of _PROCREQ_()
+
+   * tests/testdecl.prg
+     - Removed 1 line of unspported syntax.
+
+   * source/macro/macro.slx
+   * source/compiler/harbour.slx
+     % Greatly optimized, much simplified, smaller, and faster.
+     ! Converted all "non conventional" macros to functions.
+
+   * source/compiler/simplex.c
+     % Greatly optimized, now as fast as Flex based lexer.
+     ! Converted all "non conventional" macros to functions.
+     + Added support for predefind match pattern, {WS} (White Space), in KEYWORDS and WORDS.
+
+   + source/compiler/harbour.sly
+     * Same as harbour.y, exclusing un-needed support for reserved words used as identifiers.
+     /* Harbour.slx works with either harbour.y or harbour.sly, but harbour.sly creates smaller harbour.exe. */
+
+   * hb_slex.bc
+     * Modified to use harbour.sly
+
 2000-09-15 17:45 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
    * include/hbver.h

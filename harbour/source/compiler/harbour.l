@@ -456,7 +456,7 @@ Separator     {SpaceTab}
 %{
 /* ************************************************************************ */
 %}
-"_procreq_"    {
+"_procreq_("    {
                    yylval.string = hb_compIdentifierNew( "_PROCREQ_", TRUE );
                    hb_comp_iState =IDENTIFIER;
                    return PROCREQ;

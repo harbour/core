@@ -730,7 +730,7 @@ $(HARBOUR_EXE) : $(HARBOUR_EXE_OBJS)
 $(OBJ_DIR)\harbour.obj : $(COMPILER_DIR)\harbour.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
-$(OBJ_DIR)\harboury.c : $(COMPILER_DIR)\harbour.y
+$(OBJ_DIR)\harboury.c : $(COMPILER_DIR)\harbour.sly
    bison -d $** -o$@
 
 #$(OBJ_DIR)\harbourl.c : $(COMPILER_DIR)\harbour.l

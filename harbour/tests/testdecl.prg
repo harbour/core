@@ -37,7 +37,7 @@ INIT Function Main()
     DECLARE aVar[2]
     DECLARE Var3 := 'Var9', Var4, aVar5[1]
     DECLARE Var6, Var7:=7, aVar8[8]
-    DECLARE Var9 AS STRING
+    DECLARE Var9
     DECLARE &var3
     DECLARE &Var3.
     DECLARE &Var3. ; DECLARE &Var3.&Var3
