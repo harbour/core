@@ -82,6 +82,10 @@ typedef struct _LEX_PAIR
    int   iToken;
 } LEX_PAIR;                    /* support structure for KEYS and WORDS */
 
+#ifdef __cplusplus
+   typedef struct yy_buffer_state *YY_BUFFER_STATE;
+#endif
+
 /* Above are NOT overidable !!! Need to precede the Language Definitions. */
 
 /* --------------------------------------------------------------------------------- */
@@ -113,16 +117,6 @@ typedef struct _LEX_PAIR
 
 FILE *yyin;      /* currently yacc parsed file */
 
-#ifdef __cplusplus
-   typedef struct yy_buffer_state *YY_BUFFER_STATE;
-   YY_BUFFER_STATE yy_create_buffer( FILE *, int ); /* yacc functions to manage multiple files */
-   void yy_switch_to_buffer( YY_BUFFER_STATE ); /* yacc functions to manage multiple files */
-   void yy_delete_buffer( YY_BUFFER_STATE ); /* yacc functions to manage multiple files */
-#else
-   void * yy_create_buffer( FILE *, int ); /* yacc functions to manage multiple files */
-   void yy_switch_to_buffer( void * ); /* yacc functions to manage multiple files */
-   void yy_delete_buffer( void * ); /* yacc functions to manage multiple files */
-#endif
 
 extern void yyerror( char * ); /* parsing error management function */
 
@@ -421,7 +415,7 @@ int Reduce( int iToken, BOOL bReal );
             iRet = aiHold[iHold]; \
             if( asHold[iHold] ) \
             { \
-               strcpy( sToken, asHold[iHold] );\
+               strcpy( (char*) sToken, asHold[iHold] );\
             } \
             \
             DEBUG_INFO( printf(  "Released %i Now Holding %i Tokens: %i %i %i %i\n", iRet, iHold, aiHold[0], aiHold[1], aiHold[2], aiHold[3] ) ); \
@@ -806,7 +800,7 @@ int Reduce( int iToken, BOOL bReal );
    }\
 }
 
-int yylex( void /*YYSTYPE * yylval*/ )
+int yylex( void )
 {
  register char * szBuffer = s_szBuffer;
 
@@ -1135,7 +1129,7 @@ int yylex( void /*YYSTYPE * yylval*/ )
     CheckToken:
         {
             #ifdef LEX_ABBREVIATE_KEYS
-               iWordLen = strlen( sToken );
+               iWordLen = strlen( (char*) sToken );
 
                if( iWordLen < LEX_ABBREVIATE_KEYS )
                {
@@ -1149,17 +1143,17 @@ int yylex( void /*YYSTYPE * yylval*/ )
                 //DEBUG_INFO( printf(  "Comparing: \"%s\" and \"%s\"\n", sToken, aTokens[iKey] ) );
 
                 #ifdef LEX_ABBREVIATE_KEYS
-                   if( strncmp( sToken, aKeys[ iKey++ ].sWord, iWordLen ) == 0 )
+                   if( strncmp( (char*) sToken, (char*)( aKeys[ iKey++ ].sWord ), iWordLen ) == 0 )
                 #else
-                   if( strcmp( sToken, aKeys[ iKey++ ].sWord ) == 0 )
+                   if( strcmp( (char*) sToken, (char*) ( aKeys[ iKey++ ].sWord ) ) == 0 )
                 #endif
                 {
-                    DEBUG_INFO( printf(  "Reducing Key Word: %s\n", sToken ) );
+                    DEBUG_INFO( printf(  "Reducing Key Word: %s\n", (char*) sToken ) );
 
                     bNewLine = FALSE;
                     NEW_LINE_ACTION();
 
-                    RETURN_TOKEN( REDUCE( aKeys[ iKey - 1 ].iToken ), sToken );
+                    RETURN_TOKEN( REDUCE( aKeys[ iKey - 1 ].iToken ), (char*) sToken );
                 }
             }
 
@@ -1170,7 +1164,7 @@ int yylex( void /*YYSTYPE * yylval*/ )
             }
 
             #ifdef LEX_ABBREVIATE_WORDS
-               iWordLen = strlen( sToken );
+               iWordLen = strlen( (char*) sToken );
 
                if( iWordLen < LEX_ABBREVIATE_WORDS )
                {
@@ -1182,18 +1176,18 @@ int yylex( void /*YYSTYPE * yylval*/ )
             while ( iWord < iWords )
             {
                 #ifdef LEX_ABBREVIATE_WORDS
-                   if( strncmp( sToken, aWords[ iWord++ ].sWord, iWordLen ) == 0 )
+                   if( strncmp( (char*) sToken, (char*) ( aWords[ iWord++ ].sWord ), iWordLen ) == 0 )
                 #else
-                   if( strcmp( sToken, aWords[ iWord++ ].sWord ) == 0 )
+                   if( strcmp( (char*) sToken, (char*) ( aWords[ iWord++ ].sWord ) ) == 0 )
                 #endif
                 {
-                    DEBUG_INFO( printf(  "Reducing Word: %s\n", sToken ) );
+                    DEBUG_INFO( printf(  "Reducing Word: %s\n", (char*) sToken ) );
 
-                    RETURN_TOKEN( REDUCE( aWords[ iWord - 1 ].iToken ), sToken );
+                    RETURN_TOKEN( REDUCE( aWords[ iWord - 1 ].iToken ), (char*) sToken );
                 }
             }
 
-            DEBUG_INFO( printf(  "Reducing Element: \"%s\"\n", sToken ) );
+            DEBUG_INFO( printf(  "Reducing Element: \"%s\"\n", (char*) sToken ) );
 
             /* "Returns" the Token as iRet. */
             ELEMENT_TOKEN( sToken )
@@ -1293,22 +1287,39 @@ int Reduce( int iToken, BOOL bReal )
    }
 }
 
-void * yy_create_buffer( FILE * pFile, int iBufSize )
+#ifdef __cplusplus
+   YY_BUFFER_STATE yy_create_buffer( FILE * pFile, int iBufSize )
+#else
+   void * yy_create_buffer( FILE * pFile, int iBufSize )
+#endif
 {
    HB_SYMBOL_UNUSED( pFile );
    HB_SYMBOL_UNUSED( iBufSize );
    iSize = 0;
-   return szLexBuffer;
+
+   #ifdef __cplusplus
+      return (YY_BUFFER_STATE) szLexBuffer;
+   #else
+      return (void*) szLexBuffer;
+   #endif
 }
 
-void yy_switch_to_buffer( void * pBuffer )
+#ifdef __cplusplus
+   void yy_switch_to_buffer( YY_BUFFER_STATE pBuffer )
+#else
+   void yy_switch_to_buffer( void * pBuffer )
+#endif
 {
    HB_SYMBOL_UNUSED( pBuffer );
    FORCE_REDUCE();
    iSize = 0;
 }
 
-void yy_delete_buffer( void * pBuffer )
+#ifdef __cplusplus
+   void yy_delete_buffer( YY_BUFFER_STATE pBuffer )
+#else
+   void yy_delete_buffer( void * pBuffer )
+#endif
 {
    HB_SYMBOL_UNUSED( pBuffer );
    FORCE_REDUCE();

@@ -36,15 +36,21 @@
       #define DEBUG_INFO(x) x
 #endif
 
-#define LEX_ABBREVIATE_KEYS 4
-#define LEX_ABBREVIATE_WORDS 4
+#undef LEX_ABBREVIATE_KEYS
+   #define LEX_ABBREVIATE_KEYS 4
+
+#undef LEX_ABBREVIATE_WORDS
+   #define LEX_ABBREVIATE_WORDS 4
 
 #undef YY_INPUT      /* to implement our own YY_INPUT function to manage PRGs without \n at the end */
    extern FILE * yyin;  /* currently yacc parsed file */
    int yy_lex_input( char *, int );
-#define YY_INPUT( buf, result, max_size ) result = yy_lex_input( buf, max_size );
+   #define YY_INPUT( buf, result, max_size ) result = yy_lex_input( buf, max_size );
 
-static int iTexts = 0, iStrings = 0, iString;
+#undef YY_BUF_SIZE HB_PP_STR_SIZE
+   #define YY_BUF_SIZE HB_PP_STR_SIZE
+
+static int iTexts = 0;
 static char * aTexts[64];
 
 /* -----------------------------------------------------  Language Definitions. ---------------------------------------------------- */
@@ -373,6 +379,15 @@ LANGUAGE_RULES_ARE {
                      IF_SEQUENCE_IS( END          	, _SEQUENCE_   , 0            , 0          ) REDUCE_TO( END              , 0           ),
                      IF_SEQUENCE_IS( END          	, 0            , 0            , 0          ) PASS_THROUGH(),
 
+                     IF_SEQUENCE_IS( DECLARE        	, IDENTIFIER   , '['          , 0          ) REDUCE_TO( PRIVATE             , _ID_ARRAY   ),
+                     IF_SEQUENCE_IS( _ID_ARRAY      	, 0            , 0            , 0          ) REDUCE_TO( IDENTIFIER          , '['         ),
+                     IF_SEQUENCE_IS( DECLARE        	, MACROVAR     , '['          , 0          ) REDUCE_TO( PRIVATE             , _MACRO_ARRAY),
+                     IF_SEQUENCE_IS( _MACRO_ARRAY   	, 0            , 0            , 0          ) REDUCE_TO( MACROVAR            , '['         ),
+                     IF_SEQUENCE_IS( DECLARE        	, MACROTEXT    , '['          , 0          ) REDUCE_TO( PRIVATE             , _TEXT_ARRAY ),
+                     IF_SEQUENCE_IS( _TEXT_ARRAY    	, 0            , 0            , 0          ) REDUCE_TO( MACROTEXT           , '['         ),
+                     IF_SEQUENCE_IS( DECLARE        	, IDENTIFIER   , 0            , 0          ) PASS_THROUGH(),
+                     IF_SEQUENCE_IS( DECLARE        	, 0            , 0            , 0          ) REDUCE_TO( HB_DECLARE_ID       , 0           ),
+
                      IF_SEQUENCE_IS( PUBLIC            	, INASSIGN     , 0            , 0          ) REDUCE_TO( HB_PUBLIC_ID        , INASSIGN    ),
                      IF_SEQUENCE_IS( PUBLIC            	, INC          , 0            , 0          ) REDUCE_TO( HB_PUBLIC_ID        , INC         ),
                      IF_SEQUENCE_IS( PUBLIC            	, DEC          , 0            , 0          ) REDUCE_TO( HB_PUBLIC_ID        , DEC         ),
@@ -408,15 +423,6 @@ LANGUAGE_RULES_ARE {
                      IF_SEQUENCE_IS( PRIVATE        	, '\n'         , 0            , 0          ) REDUCE_TO( HB_PRIVATE_ID        , '\n'        ),
                      IF_SEQUENCE_IS( PRIVATE        	, ';'          , 0            , 0          ) REDUCE_TO( HB_PRIVATE_ID        , ';'         ),
                      IF_SEQUENCE_IS( PRIVATE        	, 0            , 0            , 0          ) PASS_THROUGH(),
-
-                     IF_SEQUENCE_IS( DECLARE        	, IDENTIFIER   , '['          , 0          ) REDUCE_TO( PRIVATE             , _ID_ARRAY   ),
-                     IF_SEQUENCE_IS( _ID_ARRAY      	, 0            , 0            , 0          ) REDUCE_TO( IDENTIFIER          , '['         ),
-                     IF_SEQUENCE_IS( DECLARE        	, MACROVAR     , '['          , 0          ) REDUCE_TO( PRIVATE             , _MACRO_ARRAY),
-                     IF_SEQUENCE_IS( _MACRO_ARRAY   	, 0            , 0            , 0          ) REDUCE_TO( MACROVAR            , '['         ),
-                     IF_SEQUENCE_IS( DECLARE        	, MACROTEXT    , '['          , 0          ) REDUCE_TO( PRIVATE             , _TEXT_ARRAY ),
-                     IF_SEQUENCE_IS( _TEXT_ARRAY    	, 0            , 0            , 0          ) REDUCE_TO( MACROTEXT           , '['         ),
-                     IF_SEQUENCE_IS( DECLARE        	, IDENTIFIER   , 0            , 0          ) PASS_THROUGH(),
-                     IF_SEQUENCE_IS( DECLARE        	, 0            , 0            , 0          ) REDUCE_TO( HB_DECLARE_ID       , 0           ),
 
                      IF_SEQUENCE_IS( LOCAL          	, INASSIGN     , 0            , 0          ) REDUCE_TO( HB_LOCAL_ID        , INASSIGN    ),
                      IF_SEQUENCE_IS( LOCAL          	, INC          , 0            , 0          ) REDUCE_TO( HB_LOCAL_ID        , INC         ),
@@ -491,6 +497,24 @@ LANGUAGE_RULES_ARE {
                      IF_SEQUENCE_IS( FIELD         	, _WITH_       , 0            , 0          ) REDUCE_TO( FIELD              , HB_WITH_ID  ),
                      IF_SEQUENCE_IS( FIELD         	, 0            , 0            , 0          ) PASS_THROUGH(),
 
+                     IF_SEQUENCE_IS( PARAMETERS         , INASSIGN     , 0            , 0          ) REDUCE_TO( HB_PARAMETERS_ID        , INASSIGN    ),
+                     IF_SEQUENCE_IS( PARAMETERS         , INC          , 0            , 0          ) REDUCE_TO( HB_PARAMETERS_ID        , INC         ),
+                     IF_SEQUENCE_IS( PARAMETERS         , DEC          , 0            , 0          ) REDUCE_TO( HB_PARAMETERS_ID        , DEC         ),
+                     IF_SEQUENCE_IS( PARAMETERS         , ALIASOP      , 0            , 0          ) REDUCE_TO( HB_PARAMETERS_ID        , ALIASOP     ),
+                     IF_SEQUENCE_IS( PARAMETERS         , PLUSEQ       , 0            , 0          ) REDUCE_TO( HB_PARAMETERS_ID        , PLUSEQ      ),
+                     IF_SEQUENCE_IS( PARAMETERS         , MINUSEQ      , 0            , 0          ) REDUCE_TO( HB_PARAMETERS_ID        , MINUSEQ     ),
+                     IF_SEQUENCE_IS( PARAMETERS         , MULTEQ       , 0            , 0          ) REDUCE_TO( HB_PARAMETERS_ID        , MULTEQ      ),
+                     IF_SEQUENCE_IS( PARAMETERS         , DIVEQ        , 0            , 0          ) REDUCE_TO( HB_PARAMETERS_ID        , DIVEQ       ),
+                     IF_SEQUENCE_IS( PARAMETERS         , EXPEQ        , 0            , 0          ) REDUCE_TO( HB_PARAMETERS_ID       ,  EXPEQ       ),
+                     IF_SEQUENCE_IS( PARAMETERS         , MODEQ        , 0            , 0          ) REDUCE_TO( HB_PARAMETERS_ID       ,  MODEQ       ),
+                     IF_SEQUENCE_IS( PARAMETERS         , '('          , 0            , 0          ) REDUCE_TO( HB_PARAMETERS_ID        , '('         ),
+                     IF_SEQUENCE_IS( PARAMETERS         , '['          , 0            , 0          ) REDUCE_TO( HB_PARAMETERS_ID        , '['         ),
+                     IF_SEQUENCE_IS( PARAMETERS         , '='          , 0            , 0          ) REDUCE_TO( HB_PARAMETERS_ID        , '='         ),
+                     IF_SEQUENCE_IS( PARAMETERS         , ':'          , 0            , 0          ) REDUCE_TO( HB_PARAMETERS_ID        , ':'         ),
+                     IF_SEQUENCE_IS( PARAMETERS         , '\n'         , 0            , 0          ) REDUCE_TO( HB_PARAMETERS_ID        , '\n'        ),
+                     IF_SEQUENCE_IS( PARAMETERS         , ';'          , 0            , 0          ) REDUCE_TO( HB_PARAMETERS_ID        , ';'         ),
+                     IF_SEQUENCE_IS( PARAMETERS         , 0            , 0            , 0          ) PASS_THROUGH(),
+
 		     /* This _FIELD_ is FIELD NOT at BOL wants only ->. */
                      IF_SEQUENCE_IS( _FIELD_        	, ALIASOP      , 0            , 0          ) REDUCE_TO( FIELD               , ALIASOP     ),
                      IF_SEQUENCE_IS( _FIELD_         	, '['          , 0            , 0          ) REDUCE_TO( HB_FIELD_ID        , '['          ),
@@ -500,10 +524,6 @@ LANGUAGE_RULES_ARE {
                      IF_SEQUENCE_IS( _FIELD         	, ALIASOP      , 0            , 0          ) REDUCE_TO( FIELD               , ALIASOP     ),
                      IF_SEQUENCE_IS( _FIELD         	, '['          , 0            , 0          ) REDUCE_TO( HB__FIELD_ID        , '['         ),
                      IF_SEQUENCE_IS( _FIELD         	, 0            , 0            , 0          ) REDUCE_TO( HB__FIELD_ID        , 0           ),
-
-                     IF_SEQUENCE_IS( PARAMETERS     	, IDENTIFIER   , 0            , 0          ) PASS_THROUGH(),
-                     IF_SEQUENCE_IS( PARAMETERS     	, '['          , 0            , 0          ) REDUCE_TO( HB_PARAMETERS_ID    , '['         ),
-                     IF_SEQUENCE_IS( PARAMETERS     	, 0            , 0            , 0          ) REDUCE_TO( HB_PARAMETERS_ID    , 0           ),
 
                      IF_SEQUENCE_IS( OTHERWISE      	, '\n'         , 0            , 0          ) PASS_THROUGH(),
                      IF_SEQUENCE_IS( OTHERWISE      	, ';'          , 0            , 0          ) PASS_THROUGH(),
@@ -955,7 +975,7 @@ LANGUAGE_RULES_ARE {
          DEBUG_INFO( printf(  "Passing Element \"%s\" to CONVERT_NUMBER()\n", sToken ) );\
 \
          /* "Returns" Token in iRet. (yylval.string already allocated). */\
-	 yylval.string = hb_xgrab( TOKEN_SIZE );\
+	 yylval.string = (char*) hb_xgrab( TOKEN_SIZE );\
 	 yylval.string[0] = 0;\
 	 aTexts[iTexts++] = yylval.string;\
 	 /* printf( "Text %i At: %i for Converted %s\n", iTexts, aTexts[iTexts - 1], sToken ); */\
@@ -1019,7 +1039,7 @@ LANGUAGE_RULES_ARE {
    DEBUG_INFO( printf( "Custom Action for %i\n", x ) );\
 \
    /* Resetting (prepairing). */\
-   yytext = hb_xgrab( iWordLen + 1 );\
+   yytext = (char*) hb_xgrab( iWordLen + 1 );\
    yytext[0] = '\0';\
 \
    DEBUG_INFO( printf( "Prepared Text: %i Pointer: %i\n", iTexts, yytext ) );\
