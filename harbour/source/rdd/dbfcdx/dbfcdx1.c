@@ -1282,7 +1282,8 @@ static LPKEYINFO hb_cdxKeyPutItem( LPKEYINFO pKey, PHB_ITEM pItem )
            pKey->fString = TRUE;
 
            while( pKey->length > 0 &&
-                  pKey->Value[ pItem->item.asString.length - 1 ] == ' ' )
+                  pKey->Value[ pKey->length - 1 ] == ' ' )
+                  /*pKey->Value[ pItem->item.asString.length - 1 ] == ' ' )*/
               pKey->length--;
            pKey->Value[ pKey->length ] = 0;
 
@@ -1573,10 +1574,26 @@ static void hb_cdxTagDoIndex( LPCDXTAG pTag )
          hb_fsRead( pTag->pIndex->pArea->hDataFile,
                     pTag->pIndex->pArea->pRecord,
                     pTag->pIndex->pArea->uiRecordLen );
-         if( pTag->pForItem != NULL )
+         if( pTag->pForItem != NULL ) {
             /* TODO: test for expression */
-            bWhileOk = TRUE;
-         else
+            /* now is working but not tested */
+            //bWhileOk = TRUE;
+            if( hb_itemType( pTag->pForItem ) == HB_IT_BLOCK )
+            {
+               hb_vmPushSymbol( &hb_symEval );
+               hb_vmPush( pTag->pForItem );
+               hb_vmDo( 0 );
+               hb_itemCopy( pItem, &hb_stack.Return );
+            }
+            else
+            {
+               pMacro = ( HB_MACRO_PTR ) hb_itemGetPtr( pTag->pForItem );
+               hb_macroRun( pMacro );
+               hb_itemCopy( pItem, hb_stackItemFromTop( - 1 ) );
+               hb_stackPop();
+            }
+            bWhileOk = hb_itemGetL( pItem );
+         } else
             bWhileOk = TRUE;
          if( bWhileOk )
          {
@@ -1775,12 +1792,21 @@ static void hb_cdxTagKeyRead( LPCDXTAG pTag, BYTE bTypRead )
    {
       case TOP_RECORD:
          hb_cdxTagTagOpen( pTag, 2 );
+         /* -----------------10/10/2001 19:04-----------------
+           Disable this test for now.
+          --------------------------------------------------
          if( pTag->pForItem != NULL )
             printf( "hb_cdxTagKeyRead()" );
          else
             pTag->TagBOF = !hb_cdxPageReadTopKey( pTag->RootPage );
+          */
+         pTag->TagBOF = !hb_cdxPageReadTopKey( pTag->RootPage );
+         /* -----------------10/10/2001 19:04-----------------
+           Disable this test for now.
+          --------------------------------------------------
          if( pTag->pForItem != NULL )
             printf( "hb_cdxTagTestRange()" );
+          */
          if( pTag->TagEOF )
             pTag->TagBOF = TRUE;
          pTag->TagEOF = pTag->TagBOF;
@@ -1788,20 +1814,32 @@ static void hb_cdxTagKeyRead( LPCDXTAG pTag, BYTE bTypRead )
 
       case BTTM_RECORD:
          hb_cdxTagTagOpen( pTag, 2 );
+         /* -----------------10/10/2001 19:04-----------------
+           Disable this test for now.
+          --------------------------------------------------
          if( pTag->pForItem != NULL )
             printf( "hb_cdxTagKeyRead()" );
          else
             pTag->TagEOF = !hb_cdxPageReadBottomKey( pTag->RootPage );
+         */
+         pTag->TagEOF = !hb_cdxPageReadBottomKey( pTag->RootPage );
+         /* -----------------10/10/2001 19:04-----------------
+           Disable this test for now.
+          --------------------------------------------------
          if( pTag->pForItem != NULL )
          {
             printf( "hb_cdxTagTestRange()" );
          }
+          */
          if( pTag->TagBOF )
             pTag->TagEOF = TRUE;
          pTag->TagBOF = pTag->TagEOF;
          break;
 
       case NEXT_RECORD:
+         /* -----------------10/10/2001 19:04-----------------
+           Disable this test for now.
+          --------------------------------------------------
          while( TRUE )
          {
             pTag->TagEOF = !hb_cdxPageReadNextKey( pTag->RootPage );
@@ -1810,9 +1848,14 @@ static void hb_cdxTagKeyRead( LPCDXTAG pTag, BYTE bTypRead )
             else
                break;
          }
+         */
+         pTag->TagEOF = !hb_cdxPageReadNextKey( pTag->RootPage );
          break;
 
       case PREV_RECORD:
+         /* -----------------10/10/2001 19:04-----------------
+           Disable this test for now.
+          --------------------------------------------------
          while( TRUE )
          {
             pTag->TagBOF = !hb_cdxPageReadPrevKey( pTag->RootPage );
@@ -1822,6 +1865,8 @@ static void hb_cdxTagKeyRead( LPCDXTAG pTag, BYTE bTypRead )
                break;
          }
          break;
+         */
+         pTag->TagBOF = !hb_cdxPageReadPrevKey( pTag->RootPage );
 
    }
    if( pTag->TagBOF || pTag->TagEOF )
@@ -3831,6 +3876,7 @@ ERRCODE hb_cdxOrderCreate( CDXAREAP pAreaCdx, LPDBORDERCREATEINFO pOrderInfo )
             return FAILURE;
          }
          pResult = pArea->valResult;
+         pArea->valResult = NULL;
       }
       else
       {
@@ -4467,6 +4513,7 @@ ERRCODE hb_cdxGoCold( CDXAREAP pArea )
    HB_MACRO_PTR pMacro;
    USHORT       dav;
    USHORT       uiTag;
+   BOOL         bForOk;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_cdxGoCold(%p)", pArea));
 
@@ -4479,6 +4526,24 @@ ERRCODE hb_cdxGoCold( CDXAREAP pArea )
         uiTag = 1;
         while( pTag )
         {
+          /* test for expresion, working but not tested */
+          if( pTag->pForItem != NULL ) {
+            if( hb_itemType( pTag->pForItem ) == HB_IT_BLOCK )
+            {
+               hb_vmPushSymbol( &hb_symEval );
+               hb_vmPush( pTag->pForItem );
+               hb_vmDo( 0 );
+               bForOk = hb_itemGetL( &hb_stack.Return );
+            }
+            else
+            {
+               pMacro = ( HB_MACRO_PTR ) hb_itemGetPtr( pTag->pForItem );
+               hb_macroRun( pMacro );
+               bForOk = hb_itemGetL( hb_stackItemFromTop( - 1 ) );
+               hb_stackPop();
+            }
+          } else
+            bForOk = TRUE;
           pKey = hb_cdxKeyNew();
           if( hb_itemType( pTag->pKeyItem ) == HB_IT_BLOCK )
           {
@@ -4498,24 +4563,25 @@ ERRCODE hb_cdxGoCold( CDXAREAP pArea )
 
           if( pArea->fAppend )
           {
-             hb_cdxTagKeyAdd( pTag, pKey );
-             pTag->RootPage->Changed = TRUE;
-             if( uiTag == pArea->lpIndexes->uiTag)
-                hb_cdxTagTagStore( pTag );
-             else
-                hb_cdxTagTagClose( pTag );
-
+             if ( bForOk )
+             {
+                hb_cdxTagKeyAdd( pTag, pKey );
+                pTag->RootPage->Changed = TRUE;
+                if( uiTag == pArea->lpIndexes->uiTag)
+                   hb_cdxTagTagStore( pTag );
+                else
+                   hb_cdxTagTagClose( pTag );
+             }
           }
           else
           {
-
              if( hb_cdxKeyCompare( pKey, pTag->HotKey, &dav, TRUE ) )
              {
                 if( uiTag == pArea->lpIndexes->uiTag ||
                            hb_cdxTagKeyFind( pTag, pTag->HotKey ) > 0 )
                    hb_cdxPageDeleteKey( pTag->RootPage );
-
-                hb_cdxTagKeyAdd( pTag, pKey );
+                if ( bForOk )
+                  hb_cdxTagKeyAdd( pTag, pKey );
                 pTag->RootPage->Changed = TRUE;
 
                 if( uiTag == pArea->lpIndexes->uiTag)
@@ -4523,7 +4589,6 @@ ERRCODE hb_cdxGoCold( CDXAREAP pArea )
                 else
                    hb_cdxTagTagClose( pTag );
              }
-
           }
 
           hb_cdxKeyFree( pKey );
