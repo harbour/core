@@ -696,7 +696,15 @@ static void ParseCommand( char * sLine, BOOL com_or_xcom, BOOL com_or_tra )
 
   HB_SKIPTABSPACES( sLine );
   ipos = 0;
-  while( *sLine != '\0' && *sLine != ' ' && *sLine != '\t' && *sLine != '<' && *sLine != '=' && ( *sLine != '(' || ipos == 0 ) )
+
+
+  /* JFL 2000-09-19 */
+  /* This was the original line as Alexander wrote it */
+  /* while( *sLine != '\0' && *sLine != ' ' && *sLine != '\t' && *sLine != '<' && *sLine != '=' && ( *sLine != '(' || ipos == 0 ) ) */
+  /* Now the line #xtranslate = name(.. => will be allowed
+
+  /* I changed it to the following to allow < and = to be the first char within a translate or xtranslate */
+  while( *sLine != '\0' && *sLine != ' ' && *sLine != '\t' && ( *sLine != '<' || ipos == 0 ) && ( *sLine != '=' || ipos == 0 ) && ( *sLine != '(' || ipos == 0 ) )
   {
      *(cmdname+ipos++) = *sLine++;
   }
@@ -728,9 +736,11 @@ static void ParseCommand( char * sLine, BOOL com_or_xcom, BOOL com_or_tra )
     stcmd->mpatt = hb_strdup( mpatt );
     stcmd->value = ( rlen > 0 ) ? hb_strdup( rpatt ) : NULL;
 
+    /* JFL */
     /*
-    printf( "Name: %s Pat: %s Val: %s\n", stcmd->name, stcmd->mpatt, stcmd->value );
+    printf( "Parsecommand Name: %s Pat: %s Val: %s\n", stcmd->name, stcmd->mpatt, stcmd->value );
     */
+
   }
   else
     hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_COMMAND_DEFINITION, NULL, NULL );
@@ -2518,7 +2528,11 @@ int hb_pp_RdStr( FILE * handl_i, char * buffer, int maxlen, BOOL lDropSpaces, ch
             case ';':
                bNewLine = TRUE;
                break;
-            case '@':
+
+            /* JFL 2000-09-19 */
+            /* Supressed this code wich avoid the use of #command @@ => ...
+            /* I'm not sure what it was intended for ... so I let it here commented */
+/*          case '@':
               if( bNewLine && sBuffer[ *iBuffer ] != ' ' && sBuffer[ *iBuffer ] != '\t' )
               {
                  buffer[readed++] = cha;
@@ -2526,6 +2540,8 @@ int hb_pp_RdStr( FILE * handl_i, char * buffer, int maxlen, BOOL lDropSpaces, ch
                  cha = ' ';
               }
               break;
+*/
+
             /* Ron Pinkas end 2000-06-01 */
             }
             if( cha != ' ' && cha != ';' ) s_prevchar = cha;

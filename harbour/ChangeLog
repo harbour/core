@@ -1,3 +1,11 @@
+2000-09-20 00:52 UTC+0200 JFL (mafact) <jfl@mafact.com>
+   * source/pp/ppcore.c
+     corrected #command @@ => ...
+               #xtranslate = name{ ...
+   * include/hbclass.ch
+     supresses the (now) unneeded #xtranslate := name{ ...
+     as = name{... is working for the two case
+
 2000-09-19 10:40 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * config/dos/djgpp.cf
      + Added support for $(L_USR)

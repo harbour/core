@@ -49,14 +49,14 @@
  */
 
 DECLARE TClass ;
-	New( cName AS STRING, OPTIONAL SuperParams ) AS CLASS TClass ;
-	Create() AS OBJECT;
-	Instance() AS OBJECT ;
-	AddClsMthds( cName AS STRING, @MethodName(), nScope AS NUMERIC, n2 AS NUMERIC, n3 AS NUMERIC );
-	AddMultiClsData( cType AS STRING, uVal, nScope AS NUMERIC, aDatas AS ARRAY OF STRING );
-	AddMultiData( cType AS STRING, uVal, nScope AS NUMERIC, aDatas AS ARRAY OF STRING );
-	AddMethod( cName AS STRING, @MethodName(), nScope AS NUMERIC );
-	AddInLine( cName AS STRING, bBlock AS CODEBLOCK, nScope AS NUMERIC );
+        New( cName AS STRING, OPTIONAL SuperParams ) AS CLASS TClass ;
+        Create() AS OBJECT;
+        Instance() AS OBJECT ;
+        AddClsMthds( cName AS STRING, @MethodName(), nScope AS NUMERIC, n2 AS NUMERIC, n3 AS NUMERIC );
+        AddMultiClsData( cType AS STRING, uVal, nScope AS NUMERIC, aDatas AS ARRAY OF STRING );
+        AddMultiData( cType AS STRING, uVal, nScope AS NUMERIC, aDatas AS ARRAY OF STRING );
+        AddMethod( cName AS STRING, @MethodName(), nScope AS NUMERIC );
+        AddInLine( cName AS STRING, bBlock AS CODEBLOCK, nScope AS NUMERIC );
         AddVirtual( cName AS STRING )
 
 #ifndef HB_CLASS_CH_
@@ -197,7 +197,6 @@ DECLARE TClass ;
 #ifdef HB_CLS_VO
 
 #xtranslate  ( <name>{ [<p,...>] }        =>  ( <name>():New( <p> )
-#xtranslate  := <name>{ [<p,...>] }       => := <name>():New( <p> )
 #xtranslate  = <name>{ [<p,...>] }        =>  = <name>():New( <p> )
 #xtranslate  , <name>{ [<p,...>] }        =>  , <name>():New( <p> )
 
