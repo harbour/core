@@ -2,16 +2,11 @@
  * $Id$
  */
 
-#if defined(__DJGPP__)
-#ifndef __dj_include_stdio_h_
- #include <alloc.h>
-#endif
-#endif
-
 #if defined(__DJGPP__) || defined(__GNUC__)
  #include <string.h>
  #include <stdlib.h>
 #else
+ #include <alloc.h>
  #include <mem.h>
 #endif
 
