@@ -22,6 +22,7 @@ C_SOURCES=\
 	classes.c    \
 	cmdarg.c     \
 	debug.c      \
+	dynlibhb.c   \
 	dynsym.c     \
 	codebloc.c   \
 	estack.c     \

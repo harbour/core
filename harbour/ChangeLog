@@ -7,6 +7,13 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+  * config/w32/msvc.cf
+  * config/w32/rsxnt.cf
+    * Fix for the contrib library renames that broke the GNU Make
+      System's usage of CONTRIBS= for some contrib libraries.
+      Note: If a contrib lib directory name includes the lib prefix,
+            then you have to include it (e.g. CONTRIBS=libmisc), but
+	
             must not (e.g., LIBNAME=misc).
 
   * contrib/libmisc/Makefile
