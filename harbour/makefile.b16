@@ -72,23 +72,23 @@ tclass.c     : tclass.prg    harbour.exe
   bcc -c -ml -O2 -I.\include -o$@ $<
   tlib .\libs\b16\harbour.lib -+$@,,
 
-harbour.exe : y_tab.c lexyy.c harbour.obj
+harbour.exe : harboury.c harbourl.c harbour.obj
    echo -ml -O2 > bld.31
    echo -ebin\harbour.exe >> bld.31
    echo -Iinclude;source\compiler >> bld.31
-   echo source\compiler\y_tab.c >> bld.31
-   echo source\compiler\lexyy.c >> bld.31
+   echo source\compiler\harboury.c >> bld.31
+   echo source\compiler\harbourl.c >> bld.31
    echo source\compiler\harbour.obj >> bld.31
    bcc @bld.31
    del bld.31
-   del y_tab.obj
-   del lexyy.obj
+   del harboury.obj
+   del harbourl.obj
 
-y_tab.c : harbour.y
-   bison -d -v -y -osource\compiler\y_tab.c source\compiler\harbour.y
+harboury.c : harbour.y
+   bison -d -v -y -osource\compiler\harboury.c source\compiler\harbour.y
 
-lexyy.c : harbour.l
-   flex -i -8 -osource\compiler\lexyy.c source\compiler\harbour.l
+harbourl.c : harbour.l
+   flex -i -8 -osource\compiler\harbourl.c source\compiler\harbour.l
 
 harbour.obj : harbour.c
    bcc -c -ml -O2 -I.\include -osource\compiler\harbour.obj \

@@ -28,7 +28,6 @@ $(YACC_OBJ) : $(YACC_C)
 
 $(YACC_C) : ../../$(YACC_SOURCE)
 	$(YACC) $(YACC_FLAGS) -o$@ $?
-	$(MV) $(YACC_H_TMP) $(YACC_H)
 
 
 $(LEX_OBJ) : $(LEX_C)

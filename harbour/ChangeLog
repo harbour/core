@@ -1,3 +1,30 @@
+19990610-18:05 EDT David G. Holm <dholm@jsd-llc.com>
+  * makefile.b16
+    - Changed all 'y_tab' to 'harboury'
+    - Changed all 'lexyy' to 'harbourl'
+  * makefile.b31
+    - Changed all 'y_tab' to 'harboury'
+    - Changed all 'lexyy' to 'harbourl'
+  * makefile.b32
+    - Changed all 'y_tab' to 'harboury'
+    - Changed all 'lexyy' to 'harbourl'
+  * makefile.icc
+    - Changed all 'y_tab' to 'harboury'
+    - Changed all 'lexyy' to 'harbourl'
+  * makefile.vc
+    - Changed all 'y_tab' to 'harboury'
+    - Changed all 'lexyy' to 'harbourl'
+  * config/c.cf
+    - Remove $(MV) command following $(YACC) command
+  * source/compiler/harbour.l
+    - Changed '#include "y_tab.h"' to '#include "harboury.h"'
+  * source/compiler/makefile.dos
+    - Changed all 'y_tab' to 'harboury'
+    - Changed all 'lexyy' to 'harbourl'
+  * source/compiler/makefile.wat
+    - Changed all 'y_tab' to 'harboury'
+    - Changed all 'lexyy' to 'harbourl'
+
 19990610-11:40 EDT David G. Holm <dholm@jsd-llc.com>
   + tests/working/makerunr.dos
     - New make file to build RUNNER.EXE using DJGPP

@@ -12,7 +12,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <limits.h>
-#include "y_tab.h"
+#include "harboury.h"
 #include "hbsetup.h"    /* main configuration file */
 #include "hberrors.h"
 #include "types.h"

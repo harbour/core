@@ -91,13 +91,13 @@ TERMINAL_LIB_OBJS = \
 all: $(HARBOUR_EXE) $(HARBOUR_LIB) $(TOOLS_LIB) $(TERMINAL_LIB)
 
 $(HARBOUR_EXE) : \
-    $(COMPILER_DIR)\y_tab.c \
-    $(COMPILER_DIR)\lexyy.c \
+    $(COMPILER_DIR)\harboury.c \
+    $(COMPILER_DIR)\harbourl.c \
     $(COMPILER_DIR)\genobj32.c \
     $(COMPILER_DIR)\harbour.c
-    $(CC) $(CFLAGS) $(COMPILER_DIR)\y_tab.c $(COMPILER_DIR)\lexyy.c $(COMPILER_DIR)\harbour.obj -o $(BIN_DIR)\harbour
-    -del y_tab.obj
-    -del lexyy.obj
+    $(CC) $(CFLAGS) $(COMPILER_DIR)\harboury.c $(COMPILER_DIR)\harbourl.c $(COMPILER_DIR)\harbour.obj -o $(BIN_DIR)\harbour
+    -del harboury.obj
+    -del harbourl.obj
 
 #
 # Library depencies and build rules
@@ -116,11 +116,11 @@ $(TERMINAL_LIB) : $(TERMINAL_LIB_OBJS)
 # Compiler source depencies and build rules
 #
 
-$(COMPILER_DIR)\y_tab.c : $(COMPILER_DIR)\harbour.y
-    bison -d -v $(COMPILER_DIR)\harbour.y -o$(COMPILER_DIR)\y_tab.c
+$(COMPILER_DIR)\harboury.c : $(COMPILER_DIR)\harbour.y
+    bison -d -v $(COMPILER_DIR)\harbour.y -o$(COMPILER_DIR)\harboury.c
 
-$(COMPILER_DIR)\lexyy.c : $(COMPILER_DIR)\harbour.l
-    flex -i -o$(COMPILER_DIR)\lexyy.c $(COMPILER_DIR)\harbour.l
+$(COMPILER_DIR)\harbourl.c : $(COMPILER_DIR)\harbour.l
+    flex -i -o$(COMPILER_DIR)\harbourl.c $(COMPILER_DIR)\harbour.l
 
 #
 # RTL source depencies below. Add as needed

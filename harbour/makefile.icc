@@ -180,15 +180,15 @@ $(path_obj)\stringp.obj   : {$(path_prg)}\stringp.prg $(path_h)\pcode.h $(path_h
   icc /C+ $(c_opt) /Fo$@ /Tp$<
   ilib .\libs\icc\hbtools.lib -+$@,,
 
-$(path_exe)\harbour.exe : {$(path_c)}y_tab.c {$(path_c)}lexyy.c {$(path_c)}genobj32.c {$(path_c)}harbour.c
+$(path_exe)\harbour.exe : {$(path_c)}harboury.c {$(path_c)}harbourl.c {$(path_c)}genobj32.c {$(path_c)}harbour.c
  icc /C- $(c_opt) /Fe$(path_exe)\harbour.exe /Isource\compiler \
-    /Fo$(path_obj)\y_tab.obj /Tpsource\compiler\y_tab.c \
-    /Fo$(path_obj)\lexyy.obj /Tpsource\compiler\lexyy.c \
+    /Fo$(path_obj)\harboury.obj /Tpsource\compiler\harboury.c \
+    /Fo$(path_obj)\harbourl.obj /Tpsource\compiler\harbourl.c \
     /Fo$(path_obj)\genobj32.obj /Tpsource\compiler\genobj32.c \
     /Fo$(path_obj)\harbour.obj /Tpsource\compiler\harbour.c
 
-y_tab.c : {$(path_y)}harbour.y
-#  bison -d -v -y -osource\compiler\y_tab.c source\compiler\harbour.y
+harboury.c : {$(path_y)}harbour.y
+#  bison -d -v -y -osource\compiler\harboury.c source\compiler\harbour.y
 
-lexyy.c : {$(path_l)}harbour.l
-#  flex -i -8 -osource\compiler\lexyy.c -Sd:\bin\emx\lib\flexskel.cc -Hd:\bin\emx\include\flexskel.h source\compiler\harbour.l
+harbourl.c : {$(path_l)}harbour.l
+#  flex -i -8 -osource\compiler\harbourl.c -Sd:\bin\emx\lib\flexskel.cc -Hd:\bin\emx\include\flexskel.h source\compiler\harbour.l

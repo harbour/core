@@ -7,37 +7,37 @@ TARGET=$(HARBOURDIR)\bin\harbour.exe
 
 all : $(TARGET)
 
-$(TARGET) : y_tab.obj lexyy.obj harbour.obj
+$(TARGET) : harboury.obj harbourl.obj harbour.obj
   %create link.tmp
   %append link.tmp $(WLDEBUG)
-  %append link.tmp FI y_tab
-  %append link.tmp FI lexyy
+  %append link.tmp FI harboury
+  %append link.tmp FI harbourl
   %append link.tmp FI harbour
   %append link.tmp NAME $(TARGET)
   %append link.tmp $(WLOPTIONS)
   %append link.tmp $(WLSTACK)
   wlink @link.tmp
 
-y_tab.obj : y_tab.c
+harboury.obj : harboury.c
     *$(WC) $(WCOPTIONS) $(WCINCLUDE) $(WCDEBUG) $(WCDEFINE) $(WCEXTRA) $<
 
-lexyy.obj : lexyy.c
+harbourl.obj : harbourl.c
     *$(WC) $(WCOPTIONS) $(WCINCLUDE) $(WCDEBUG) $(WCDEFINE) $(WCEXTRA) $<
 
 harbour.obj : harbour.c
     *$(WC) $(WCOPTIONS) $(WCINCLUDE) $(WCDEBUG) $(WCDEFINE) $(WCEXTRA) $<
 
-y_tab.c : harbour.y
-   bison -d -v -o y_tab.c harbour.y
+harboury.c : harbour.y
+   bison -d -v -o harboury.c harbour.y
 
-lexyy.c : harbour.l
-   flex -i -8 -olexyy.c harbour.l
+harbourl.c : harbour.l
+   flex -i -8 -oharbourl.c harbour.l
 
 clean : .SYMBOLIC
   del *.out
   del *.obj
-  del y_tab.*
-  del lexyy.*
+  del harboury.*
+  del harbourl.*
   del *.h
   del *.err
   del *.tmp

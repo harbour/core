@@ -9,17 +9,17 @@ TARGET=$(HARBOURDIR)/bin/harbour.exe
 
 all: $(TARGET)
 
-$(TARGET): y_tab.c harbour.c lexyy.c
-	$(CC) $(CFLAGS) y_tab.c harbour.c lexyy.c -o $(TARGET)
+$(TARGET): harboury.c harbour.c harbourl.c
+	$(CC) $(CFLAGS) harboury.c harbour.c harbourl.c -o $(TARGET)
 
-y_tab.c : harbour.y
-	bison -d -v -y harbour.y -o y_tab.c
+harboury.c : harbour.y
+	bison -d -v -y harbour.y -o harboury.c
 
-lexyy.c : harbour.l
-	flex -i -8 -olexyy.c harbour.l
+harbourl.c : harbour.l
+	flex -i -8 -oharbourl.c harbour.l
 
 clean:
 	-del *.o 
-	-del y_tab.*
-	-del lexyy.c
+	-del harboury.*
+	-del harbourl.c
 	-del *.out
