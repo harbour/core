@@ -1,3 +1,14 @@
+19991020-21:30 GMT+1 Victor Szel <info@szelvesz.hu>
+   * source/rtl/achoice.prg
+     % FUNCTION -> PROCEDURE for speed.
+     % Two small functions converted to macros for speed.
+     * Formatted. (if() -> iif(), <> -> !=, some variable names standardized, 
+       S87 style comments * -> //, indent errors, etc.)
+   * source/rtl/asort.prg
+     % FUNCTION -> PROCEDURE for speed.
+   * include/rddsys.h
+     * Small aligning.
+
 19991020-22:58 GMT+3 Alexander Kresin
   * source/pp/hbpp.c
     * Fixed bugs, reported by Antonio Linares, Victor Szel and Guy Roussin
@@ -9,7 +20,6 @@
   * contrib/odbc/odbc.c
   * contrib/odbc/harbour.mdb
     * These files I got from Felipe Coury
-
 
 19991020-20:23 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/rtl/alert.prg

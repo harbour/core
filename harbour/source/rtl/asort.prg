@@ -90,7 +90,7 @@ FUNCTION ASort( aArray, nStart, nCount, bBlock )
  * For instructions :
  * http://monty.cnri.reston.va.us/grail/demo/quicksort/quicksort.htm
  */
-STATIC FUNCTION QuickSort( aArray, nLeft, nRight, bBlock )
+STATIC PROCEDURE QuickSort( aArray, nLeft, nRight, bBlock )
 
    LOCAL nUp     := nLeft
    LOCAL nDown   := nRight
@@ -131,5 +131,5 @@ STATIC FUNCTION QuickSort( aArray, nLeft, nRight, bBlock )
       QuickSort( aArray, nUp  , nRight, bBlock )
    ENDIF
 
-   RETURN NIL
+   RETURN
 

@@ -40,7 +40,7 @@
 
 /* RDD virtual machine integration functions */
 
-extern int  hb_rddGetCurrentWorkAreaNumber( void );
+extern int     hb_rddGetCurrentWorkAreaNumber( void );
 extern ERRCODE hb_rddSelectWorkAreaAlias( char * szAlias );
 extern ERRCODE hb_rddSelectWorkAreaNumber( int iArea );
 extern ERRCODE hb_rddSelectWorkAreaSymbol( PHB_SYMB pSymAlias );
@@ -48,7 +48,7 @@ extern ERRCODE hb_rddGetFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol );
 extern ERRCODE hb_rddPutFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol );
 extern ERRCODE hb_rddFieldGet( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol );
 extern ERRCODE hb_rddFieldPut( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol );
-extern void hb_rddShutDown( void );
+extern void    hb_rddShutDown( void );
 
 
 /* Flags for DBTRANSINFO */
