@@ -34,7 +34,7 @@ char * _parc( WORD wParam, ... )
 {
    PITEM pItem;
    va_list va;
-   WORD wArrayIndex = 0;
+   WORD wArrayIndex;
 
    va_start( va, wParam );
    wArrayIndex = va_arg( va, int );
@@ -64,7 +64,7 @@ ULONG _parclen( WORD wParam, ... )
 {
    PITEM pItem;
    va_list va;
-   WORD wArrayIndex = 0;
+   WORD wArrayIndex;
 
    va_start( va, wParam );
    wArrayIndex = va_arg( va, int );
@@ -94,7 +94,7 @@ char * _pards( WORD wParam, ... )
 {
    PITEM pItem;
    va_list va;
-   WORD wArrayIndex = 0;
+   WORD wArrayIndex;
    long lDay, lMonth, lYear;
 
    va_start( va, wParam );
@@ -137,7 +137,7 @@ int _parl( WORD wParam, ... )
 {
    PITEM pItem;
    va_list va;
-   WORD wArrayIndex = 0;
+   WORD wArrayIndex;
 
    va_start( va, wParam );
    wArrayIndex = va_arg( va, int );
@@ -164,7 +164,7 @@ double _parnd( WORD wParam, ... )
 {
    PITEM pItem;
    va_list va;
-   WORD wArrayIndex = 0;
+   WORD wArrayIndex;
 
    va_start( va, wParam );
    wArrayIndex = va_arg( va, int );
@@ -197,7 +197,7 @@ int _parni( WORD wParam, ... )
 {
    PITEM pItem;
    va_list va;
-   WORD wArrayIndex = 0;
+   WORD wArrayIndex;
 
    va_start( va, wParam );
    wArrayIndex = va_arg( va, int );
@@ -230,7 +230,7 @@ long _parnl( WORD wParam, ... )
 {
    PITEM pItem;
    va_list va;
-   WORD wArrayIndex = 0;
+   WORD wArrayIndex;
 
    va_start( va, wParam );
    wArrayIndex = va_arg( va, int );
@@ -388,7 +388,7 @@ void _storc( char * szText, WORD wParam, ... )
 {
    PITEM pItem, pItemRef;
    va_list va;
-   WORD wArrayIndex = 0;
+   WORD wArrayIndex;
    ULONG ulLen;
 
    va_start( va, wParam );
@@ -420,7 +420,7 @@ void _storclen( char * fixText, WORD wLength, WORD wParam, ... )
 {
    PITEM pItem, pItemRef;
    va_list va;
-   WORD wArrayIndex = 0;
+   WORD wArrayIndex;
 
    va_start( va, wParam );
    wArrayIndex = va_arg( va, long );
@@ -451,7 +451,7 @@ void _stords( char * szDate, WORD wParam, ... ) /* szDate must have yyyymmdd for
 {
    PITEM pItem, pItemRef;
    va_list va;
-   WORD wArrayIndex = 0;
+   WORD wArrayIndex;
    long lDay, lMonth, lYear;
 
    if( szDate && strlen( szDate ) == 8 )
@@ -492,7 +492,7 @@ void _storl( int iLogical, WORD wParam, ... )
 {
    PITEM pItem, pItemRef;
    va_list va;
-   WORD wArrayIndex = 0;
+   WORD wArrayIndex;
 
    va_start( va, wParam );
    wArrayIndex = va_arg( va, int );
@@ -521,7 +521,7 @@ void _storni( int iValue, WORD wParam, ... )
 {
    PITEM pItem, pItemRef;
    va_list va;
-   WORD wArrayIndex = 0;
+   WORD wArrayIndex;
 
    va_start( va, wParam );
    wArrayIndex = va_arg( va, int );
@@ -551,7 +551,7 @@ void _stornl( long lValue, WORD wParam, ... )
 {
    PITEM pItem, pItemRef;
    va_list va;
-   WORD wArrayIndex = 0;
+   WORD wArrayIndex;
 
    va_start( va, wParam );
    wArrayIndex = va_arg( va, long );
@@ -581,7 +581,7 @@ void _stornd( double dValue, WORD wParam, ... )
 {
    PITEM pItem, pItemRef;
    va_list va;
-   WORD wArrayIndex = 0;
+   WORD wArrayIndex;
 
    va_start( va, wParam );
    wArrayIndex = va_arg( va, long );

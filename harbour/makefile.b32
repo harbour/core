@@ -7,10 +7,10 @@
 .path.y   = source\compiler
 .path.exe = bin
 .path.lib = libs\b32
-.path.obj = obj
+.path.obj = obj;source\compiler
 .path.prg = source\rtl;source\tools
 
-PROJECT: harbour.lib libs\b32\terminal.lib libs\win32\terminal.lib harbour.exe
+PROJECT: harbour.exe harbour.lib libs\b32\terminal.lib libs\win32\terminal.lib
 
 harbour.lib : arrays.obj asort.obj classes.obj codebloc.obj dates.obj datesx.obj \
               debug.obj dynsym.obj environ.obj error.obj \

@@ -41,7 +41,8 @@
   #include <fcntl.h>
   #include <share.h>
   #include <dirent.h>
-  
+  #include <dir.h>
+
   #if !defined(HAVE_POSIX_IO)
   #define HAVE_POSIX_IO
   #endif
@@ -224,7 +225,7 @@ long _fsSeek( int handle, long offset, int flags )
 #endif
 }
 
-int _fsError()
+int _fsError( void )
 {
         return last_error;
 }
@@ -266,7 +267,7 @@ void _fsCommit( int handle )
 int _fsMkDir( char * name )
 {
 #if defined(HAVE_POSIX_IO)
-  #ifndef __WATCOMC__
+  #if ! defined( __WATCOMC__ ) && ! defined( __BORLANDC__ )
         return mkdir(name,S_IWUSR|S_IRUSR);
   #else
 	return mkdir( name );
@@ -479,7 +480,7 @@ HARBOUR FWRITE()
         if( arg1_it && arg2_it )
         {
             last_error = 0;
-            bytes = (arg3_it ? _parnl(3) : arg2_it->wLength );         
+            bytes = (arg3_it ? _parnl(3) : arg2_it->wLength );
             bytes = _fsWrite(_parni(1),_parc(2),bytes);
             last_error = errno;
         }
@@ -548,11 +549,11 @@ HARBOUR FSEEK()
 
         long bytes=0;
         int  pos;
-        
+
         if( arg1_it && arg2_it )
         {
             last_error = 0;
-            pos = (arg3_it ? _parni(3) : FS_SET);      
+            pos = (arg3_it ? _parni(3) : FS_SET);
             bytes = _fsSeek(_parni(1),_parnl(2),pos);
             last_error = errno;
         }
@@ -561,7 +562,7 @@ HARBOUR FSEEK()
         return;
 }
 
-HARBOUR _FILE()
+HARBOUR FILE()
 {
         PITEM arg1_it = _param( 1, IT_STRING );
 
@@ -611,7 +612,7 @@ HARBOUR FREADSTR()
         return;
 }
 
-HARBOUR BIN2I()
+HARBOUR BIN2I( void )
 {
         PITEM arg1_it = _param( 1, IT_STRING );
         char * s;
@@ -654,7 +655,7 @@ HARBOUR BIN2W()
         BIN2I();
 }
 
-HARBOUR I2BIN()
+HARBOUR I2BIN( void )
 {
         PITEM arg1_it = _param( 1, IT_INTEGER );
         int n;
@@ -709,7 +710,11 @@ static int strcmp_wildcard( const char * pattern, const char * filename )
    return 1;
 }
 
-HARBOUR DIRECTORY()
+#ifdef __BORLANDC__
+   #undef DIRECTORY
+#endif
+
+HARBOUR DIRECTORY( void )
 {
 #if defined(HAVE_POSIX_IO)
    PITEM arg1_it = _param(1,IT_STRING);

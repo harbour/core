@@ -1,3 +1,23 @@
+19990525-09:13 CET Antonio Linares <alinares@fivetech.com>
+  * makefile.b32
+    - project dependencies list order changed to properly build everything in one pass
+
+19990525-09:01 CET Antonio Linares <alinares@fivetech.com>
+  * source/rtl/extend.c
+    - wArrayIndex Borland C warnings fixed.
+
+19990525-08:45 CET Antonio Linares <alinares@fivetech.com>
+  * include/extend.h
+    - workaround to avoid conflicts between FILE struct and harbour FILE()
+  * source/rtl/files.c
+    - _FILE() renamed to FILE()  /* tests/working/test_all.prg now builds fine */
+
+19990525-08:21 CET Antonio Linares <alinares@fivetech.com>
+  * makefile.b32
+    - enhanced .path.obj so the compiler gets not built always
+  * source/rtl/files.c
+    - enhanced support for Borland C 5.2 compiler
+
 19990524-19:20 EST David G. Holm <dholm@jsd-llc.com>
   * source/rtl/dates.c
     - Added HARBOUR DATE() function.
@@ -178,24 +198,24 @@
 
 Thu May 20 16:03:24 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* source/rtl/dates.c: 
+	* source/rtl/dates.c:
 	Nasty bug: using '&' instead of '&&'.
-	
-	* config/header.cf: 
-	* include/Makefile: 
-	* Makefile: 
+
+	* config/header.cf:
+	* include/Makefile:
+	* Makefile:
 	Added rules to deal with include files (they are just installed
 	into INC_DIR). Now the top level Makefile traverses include before
 	source.
-	
-	* config/win32/gcc.cf: 
-	* config/win32/msvc.cf: 
-	* config/win32/global.cf: 
+
+	* config/win32/gcc.cf:
+	* config/win32/msvc.cf:
+	* config/win32/global.cf:
 	The include directory is now given by INC_DIR.
-	
-	* config/win32/rules.cf: 
+
+	* config/win32/rules.cf:
 	Harbour now uses -I to find include files.
-	
+
 	* include/hbsetup.h: 
 	Moved OS_PATH_DELIMITER back to harbour.y, as PATH_DELIMITER; it
 	is now a string that contains "/\\".
