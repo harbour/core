@@ -59,7 +59,9 @@ int         hb_comp_iLine;       /* currently parsed file line number */
 BOOL hb_comp_bPPO = FALSE;                      /* flag indicating, is ppo output needed */
 BOOL hb_comp_bStartProc = TRUE;                 /* holds if we need to create the starting procedure */
 BOOL hb_comp_bLineNumbers = TRUE;               /* holds if we need pcodes with line numbers */
+#if 0
 BOOL hb_comp_bShortCuts = TRUE;                 /* .and. & .or. expressions shortcuts */
+#endif
 int  hb_comp_iWarnings = 0;                     /* enable parse warnings */
 BOOL hb_comp_bAutoMemvarAssume = FALSE;         /* holds if undeclared variables are automatically assumed MEMVAR (-a)*/
 BOOL hb_comp_bForceMemvars = FALSE;             /* holds if memvars are assumed when accesing undeclared variable (-v)*/

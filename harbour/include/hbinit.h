@@ -36,6 +36,8 @@
 #ifndef HB_INIT_H_
 #define HB_INIT_H_
 
+#include "hbsetup.h"
+
 #if defined(HB_EXTERN_C)
 extern "C" {
 #endif

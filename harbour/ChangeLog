@@ -1,3 +1,19 @@
+20000331-01:02 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * include/hbapilng.h
+   * include/hbdate.h
+   * include/hberrors.h
+   * include/hbinit.h
+   * include/hbtrace.h
+     ! Added #include "hbsetup.h" before using HB_EXTERN_C.
+
+   * doc/howtomak.txt
+     ! Typo
+
+   * source/pp/pplib.c
+     ! One global compiler variable declaraion removed, because the same
+       variable was also declared in macro.lib.
+
 20000330-23:04 GMT+1 Maurilio Longo <maurilio.longo@libero.it>
 
 	* include/hbvmpub.h
@@ -57,7 +73,7 @@
        switch: -DHB_FUNC_CALLCONV=pascal
        Note that you can use any other preferred calling conventions supported
        by your compiler.
-     * HARBOUR_START_PROCEDURE moved to hbdefs.h since this is should not
+     * HARBOUR_START_PROCEDURE moved to hbdefs.h since this should not
        be a user configurable parameter, it's "MAIN" or nothing.
 
    * source/vm/cmdarg.c
