@@ -3,11 +3,14 @@
         *Added ngdoc dir to the normal build
     +ngdoc/makefile
         +gnu make file for ft_helpc
+    *ngdoc/ft_helpc.pg
+        *small changes
     *source/rdd/dbcmd.c
          * Change some functions docs
     *source/rtl/mouse/mousedos.c
         * Added support for djgpp compiler
-
+    *source/tools/html.prg
+        *small changes
 20000206-16:55 GMT+1 Victor Szakats <info@szelvesz.hu>
    * source/vm/cmdarg.c
      ! Mistyped #ifdef fixed in //BUILD functionality (mentioned by Jose)
