@@ -43,8 +43,8 @@
 #include "inkey.ch"
 
 /* TODO: :posInBuffer( <nRow>, <nCol> ) --> nPos
-         Determines a position within the edit buffer based on screen 
-         coordinates. 
+         Determines a position within the edit buffer based on screen
+         coordinates.
          Xbase++ compatible method */
 
 #define GET_CLR_UNSELECTED      0
@@ -151,7 +151,7 @@ METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) CLASS TGet
    DEFAULT bVarBlock  TO MemvarBlock( cVarName )
    DEFAULT cPicture   TO ""
    DEFAULT cColorSpec TO hb_ColorIndex( SetColor(), CLR_UNSELECTED ) + "," + hb_ColorIndex( SetColor(), CLR_ENHANCED )
-   
+
    ::BadDate    := .f.
    ::Block      := bVarBlock
    ::Changed    := .f.
@@ -335,7 +335,7 @@ return Self
 METHOD Reset() CLASS TGet
 
    if ::hasfocus
-      ::buffer := ::PutMask( ::VarGet() )
+      ::buffer := ::PutMask( ::VarGet(), .f. )
       ::pos    := 1
    endif
 
@@ -367,7 +367,7 @@ METHOD SetFocus() CLASS TGet
    ::lEdit      := .f.
 
    if ::type == "N"
-      ::decpos := At( iif( ::lDecRev, ",", "." ), ::buffer )
+      ::decpos := At( iif( ::lDecRev .or. "E"$::cPicFunc, ",", "." ), ::buffer )
       ::minus  := ( "-" $ ::buffer .or. "(" $ ::buffer )
    else
       ::decpos := NIL
@@ -658,7 +658,6 @@ METHOD _Left( lDisplay ) CLASS TGet
       ::Display( .f. )
    endif
 
-
 return Self
 
 //---------------------------------------------------------------------------//
@@ -759,11 +758,15 @@ METHOD ToDecPos() CLASS TGet
       return .f.
    endif
 
+   if ::pos == 1
+      ::DeleteAll()
+   endif
+
    ::Clear  := .f.
-   ::buffer := ::PutMask( ::UnTransform(), .t. )
+   ::buffer := ::PutMask( ::UnTransform(), .f. )
    ::pos    := ::DecPos + 1
 
-   ::Display( .f. )
+   ::Display( .t. )
 
 return .t.
 
@@ -812,7 +815,7 @@ METHOD Input( cChar ) CLASS TGet
          endif
          ::minus := .t.
 
-      case cChar == "."
+      case cChar $ ".,"
          ::toDecPos()
          return ""
 
@@ -838,7 +841,6 @@ METHOD Input( cChar ) CLASS TGet
    if ! Empty( ::cPicFunc )
       cChar := Transform( cChar, ::cPicFunc )
    endif
-
 
    if ! Empty( ::cPicMask )
       cPic  := Substr( ::cPicMask, ::pos, 1 )
@@ -870,7 +872,7 @@ return cChar
 
 METHOD PutMask( xValue, lEdit ) CLASS TGet
 
-   local cChar
+   local cChar, cMask
    local cBuffer
 
    local nFor
@@ -887,15 +889,22 @@ METHOD PutMask( xValue, lEdit ) CLASS TGet
    cBuffer := Transform( xValue, AllTrim( ::cPicFunc + " " + ::cPicMask ) )
 
    if lEdit .and. ::type == "N" .and. ! Empty( ::cPicMask )
-      nLen := Len( cBuffer )
+      nLen  := Len( cBuffer )
+      if "E" $ ::cPicFunc
+         cMask := StrTran(::cPicMask, ",", Chr(1))
+         cMask := StrTran(cMask, ".", ",")
+         cMask := StrTran(cMask, Chr(1), ".")
+      else
+         cMask := ::cPicFunc
+      endif
       for nFor := 1 to nLen
-         cChar := SubStr( ::cPicMask, nFor, 1 )
+         cChar := SubStr( cMask, nFor, 1 )
          if cChar $ ",." .and. !( SubStr( cBuffer, nFor, 1 ) == cChar )
             cBuffer := SubStr( cBuffer, 1, nFor - 1 ) + cChar + SubStr( cBuffer, nFor + 1 )
          endif
       next
-      if cBuffer ==  Space( Len( cBuffer ) - 1 ) + "0"
-         cBuffer := Space( Len( cBuffer ) )
+      if Empty(xValue)
+         cBuffer := StrTran(cBuffer, "0", " ")
       endif
       if ::lDecRev
          cBuffer := StrTran( cBuffer, ",", Chr( 1 ) )
@@ -1112,5 +1121,4 @@ FUNCTION _GET_( uVar, cVarName, cPicture, bValid, bWhen, bSetGet )
    oGet:PreBlock := bWhen
    oGet:PostBlock := bValid
 
-   RETURN oGet
-
+RETURN oGet
