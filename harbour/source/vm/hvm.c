@@ -1546,6 +1546,15 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
          }
 
+         case HB_P_MPUSHSTR:
+         {
+            USHORT uiSize = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
+
+            hb_vmPushString( ( char * ) ( pCode ) + w + 3, ( ULONG )( uiSize - 1 ) );
+            w += ( 3 + uiSize );
+            break;
+         }
+
          /* misc */
 
          case HB_P_NOOP:
