@@ -1049,6 +1049,7 @@ void hb_vmDo( USHORT uiParams )
    {
       /* QUESTION: Is this call needed ? [vszel] */
       hb_stackDispLocal();
+      printf( "In %s(%i)", stack.pBase->item.asSymbol.value->szName, stack.pBase->item.asSymbol.lineno );
       hb_errInternal( 9999, "Symbol item expected as a base from hb_vmDo()", NULL, NULL );
    }
 
@@ -1853,49 +1854,56 @@ void hb_vmMult( void )
    }
 }
 
-void hb_vmOperatorCall( PHB_ITEM pItem1, PHB_ITEM pItem2, char * szSymbol )
+void hb_vmOperatorCall( PHB_ITEM pObjItem, PHB_ITEM pMsgItem, char * szSymbol )
 {
-   PHB_DYNS pMsg = hb_dynsymFindName( szSymbol );
-   if( pMsg )
-   {
-      hb_vmPush( pItem1 );                             /* Push object              */
-      hb_vmMessage( pMsg->pSymbol );           /* Push operation           */
-      hb_vmPush( pItem2 );                             /* Push argument            */
-      hb_vmFunction( 1 );
-   }
-   else
-   {
-      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_NOMETHOD, 1004, NULL, szSymbol );
-      if( pResult )
-      {
-         hb_itemClear( &stack.Return );
-         hb_itemCopy( stack.pPos, pResult );
-         hb_stackPush();
-         hb_itemClear( pResult );
-      }
-   }
+   /* NOTE: There is no need to test if specified symbol exists. It is checked
+    * by the caller (if IS_OBJECT() && HAS_METHOD() )
+    */
+   HB_ITEM ItemMsg;
+   
+   ItemMsg.type = IT_SYMBOL;
+   ItemMsg.item.asSymbol.value = hb_dynsymFind( szSymbol )->pSymbol;
+   ItemMsg.item.asSymbol.stackbase = stack.pPos - stack.pItems;
+
+   hb_itemClear( &stack.Return );	/* clear return value */
+   hb_vmPush( &ItemMsg );
+   hb_vmPush( pObjItem );                             /* Push object              */
+   hb_vmPush( pMsgItem );                             /* Push argument            */
+   hb_vmDo( 1 );
+      
+   /* pop passed arguments - only one here */
+   hb_stackPop();		/* pMsgItem */
+      
+   /* Push return value on the stack 
+    * NOTE: for performance reason we don't pop the second argument.
+    * We can replace the second argument with the return value.
+    */
+   hb_itemClear( pObjItem );
+   hb_itemCopy( pObjItem, &stack.Return );
 }
 
-void hb_vmOperatorCallUnary( PHB_ITEM pItem1, char * szSymbol )
+void hb_vmOperatorCallUnary( PHB_ITEM pObjItem, char * szSymbol )
 {
-   PHB_DYNS pMsg = hb_dynsymFindName( szSymbol );
-   if( pMsg )
-   {
-      hb_vmPush( pItem1 );                             /* Push object              */
-      hb_vmMessage( pMsg->pSymbol );  /* Push operation           */
-      hb_vmFunction( 0 );
-   }
-   else
-   {
-      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_NOMETHOD, 1004, NULL, szSymbol );
-      if( pResult )
-      {
-         hb_itemClear( &stack.Return );
-         hb_itemCopy( stack.pPos, pResult );
-         hb_stackPush();
-         hb_itemClear( pResult );
-      }
-   }
+   /* NOTE: There is no need to test if specified symbol exists. It is checked
+    * by the caller (if IS_OBJECT() && HAS_METHOD() )
+    */
+   HB_ITEM ItemMsg;
+   
+   ItemMsg.type = IT_SYMBOL;
+   ItemMsg.item.asSymbol.value = hb_dynsymFind( szSymbol )->pSymbol;
+   ItemMsg.item.asSymbol.stackbase = stack.pPos - stack.pItems;
+
+   hb_itemClear( &stack.Return );	/* clear return value */
+   hb_vmPush( &ItemMsg );
+   hb_vmPush( pObjItem );                             /* Push object */
+   hb_vmDo( 0 );
+    
+   /* Pop passed argument.
+    * NOTE: for performance reason we don't pop it and we don't push the
+    * return value. We can replace the last element with the new value.
+    */
+   hb_itemClear( pObjItem );
+   hb_itemCopy( pObjItem, &stack.Return );
 }
 
 void hb_vmOr( void )

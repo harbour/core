@@ -1,3 +1,9 @@
+19990918-14:05 GMT+2 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/vm/hvm.c
+	* corrected operators overloading
+	(tests/working/overload.prg works correctly now)
+	
 19990918-13:07 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * tests/working/rtl_test.prg
