@@ -1,6 +1,6 @@
 19990620-21:40 CET Victor Szel <info@szelvesz.hu>
   * CGI.CH moved to /tests/working/
-  * source/rtl/gtapi.c missed those hb_ prefixes...
+  * source/rtl/console.c missed those hb_ prefixes...
 
 19990620-21:00 CET Victor Szel <info@szelvesz.hu>
   * CGI.CH moved to /tests/working/
