@@ -1,5 +1,6 @@
 19990912-20:30 GMT+1 Victor Szel <info@szelvesz.hu>
 
+  * source/rtl/memvars.c
     + __MVSAVE()/__MVRESTORE() .MEM file saving and restoring support added, 
       Clipper compatible, with extensions to __MVRESTORE() to only restore
       varnames with a specified mask.
