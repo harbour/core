@@ -57,7 +57,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
    DEFAULT nLeft      TO 0                 // The leftmost column of the window
    DEFAULT nBottom    TO MaxRow()          // The bottommost row of the window
    DEFAULT nRight     TO MaxCol()          // The rightmost column of the window
-                      
+
    DEFAULT acItems    TO {}                // The items from which to choose
    DEFAULT xSelect    TO .T.               // Array or logical, what is selectable
    DEFAULT nPos       TO 1                 // The number of the selected item
@@ -69,7 +69,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
    ENDIF
 
    IF nBottom > MaxRow()
-      nBorrom := MaxRow()
+      nBottom := MaxRow()
    ENDIF
 
    nNumRows := nBottom - nTop + 1
