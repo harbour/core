@@ -1,3 +1,7 @@
+20000209-22:10 EST Paul Tucker <ptucker@sympatico.ca>
+   * makefile.vc
+     * move hbdoc.exe to bin
+
 20000210-03:44 GMT+1 Victor Szakats <info@szelvesz.hu>
    * makefile.vc
      * HBTOOLS.LIB renamed to TOOLS.LIB to better resemble to the other

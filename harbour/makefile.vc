@@ -59,7 +59,7 @@ PP_EXE=$(BIN_DIR)\hbpp.exe
 RUNNER_EXE=$(BIN_DIR)\hbrun.exe
 RUNNER_DLL=$(BIN_DIR)\runjava.dll
 MACRO_LIB=$(LIB_DIR)\macro.lib
-HBDOC_EXE=($HBDOC_DIR)\hbdoc.exe
+HBDOC_EXE=$(BIN_DIR)\hbdoc.exe
 HARBOURFLAGS=-iinclude -n -q
 
 LIBS=$(HARBOUR_LIB) $(MACRO_LIB) $(TERMINAL_LIB) $(TOOLS_LIB) $(DEBUG_LIB) $(PP_LIB) $(DBFNTX_LIB) $(DBFCDX_LIB) $(RUNNER_LIB) $(MACRO_LIB)
