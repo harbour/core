@@ -48,51 +48,51 @@ PDYNSYM msgClassName = 0, msgClassH = 0, msgEval = 0, msgClassSel = 0;
 
 /* All functions contained in classes.c */
 
-       HARBOUR     CLASSADD();
-       HARBOUR     CLASSCREATE();
-       HARBOUR     CLASSDEL();
-static HARBOUR     ClassH();
-       HARBOUR     CLASSINSTANCE();
-       HARBOUR     CLASSMOD();
-static HARBOUR     ClassName();
-       HARBOUR     CLASSNAME();
-static HARBOUR     ClassSel();
+       HARBOUR     CLASSADD( void );
+       HARBOUR     CLASSCREATE( void );
+       HARBOUR     CLASSDEL( void );
+static HARBOUR     ClassH( void );
+       HARBOUR     CLASSINSTANCE( void );
+       HARBOUR     CLASSMOD( void );
+static HARBOUR     ClassName( void );
+       HARBOUR     CLASSNAME( void );
+static HARBOUR     ClassSel( void );
 static void        DictRealloc( PCLASS );
-static HARBOUR     EvalInline();
-static HARBOUR     GetClassData();
-static HARBOUR     GetData();
+static HARBOUR     EvalInline( void );
+static HARBOUR     GetClassData( void );
+static HARBOUR     GetData( void );
        HARBOURFUNC GetMethod( PHB_ITEM, PSYMBOL );
        ULONG       hb_isMessage( PHB_ITEM, char *);
-       HARBOUR     ISMESSAGE();
-       HARBOUR     OCLONE();
-       HARBOUR     OSEND();
+       HARBOUR     ISMESSAGE( void );
+       HARBOUR     OCLONE( void );
+       HARBOUR     OSEND( void );
        void        ReleaseClass( PCLASS );
-       void        ReleaseClasses();
-static HARBOUR     SelectSuper();
-static HARBOUR     SetClassData();
-static HARBOUR     SetData();
-static HARBOUR     Virtual();
-       HARBOUR     __INSTSUPER();
-       HARBOUR     __WDATAS();
-       HARBOUR     __WDATADEC();
-       HARBOUR     __WDATAINC();
+       void        ReleaseClasses( void );
+static HARBOUR     SelectSuper( void );
+static HARBOUR     SetClassData( void );
+static HARBOUR     SetData( void );
+static HARBOUR     Virtual( void );
+       HARBOUR     __INSTSUPER( void );
+       HARBOUR     __WDATAS( void );
+       HARBOUR     __WDATADEC( void );
+       HARBOUR     __WDATAINC( void );
 
 /* All function contained in matching objfunc.prg */
 
-HARBOUR AODATA();
-HARBOUR AOGET();
-HARBOUR AOMETHOD();
-HARBOUR AOSET();
-HARBOUR ISDATA();
-HARBOUR ISMETHOD();
-HARBOUR OADDDATA();
-HARBOUR OADDINLINE();
-HARBOUR OADDMETHOD();
-HARBOUR ODELDATA();
-HARBOUR ODELINLINE();
-HARBOUR ODELMETHOD();
-HARBOUR OMODINLINE();
-HARBOUR OMODMETHOD();
+HARBOUR AODATA( void );
+HARBOUR AOGET( void );
+HARBOUR AOMETHOD( void );
+HARBOUR AOSET( void );
+HARBOUR ISDATA( void );
+HARBOUR ISMETHOD( void );
+HARBOUR OADDDATA( void );
+HARBOUR OADDINLINE( void );
+HARBOUR OADDMETHOD( void );
+HARBOUR ODELDATA( void );
+HARBOUR ODELINLINE( void );
+HARBOUR ODELMETHOD( void );
+HARBOUR OMODINLINE( void );
+HARBOUR OMODMETHOD( void );
 
 /* Exported symbols of both classes.c and objfunc.prg */
 
@@ -143,7 +143,7 @@ void Classes__InitSymbols( void )
  * <nType>     see MET_*
  * <xInit>     Optional initializer for DATA
  */
-HARBOUR CLASSADD() 
+HARBOUR CLASSADD()
 {
    WORD    wClass = _parnl( 1 );
    WORD    wType  = _parni( 4 );
@@ -242,7 +242,7 @@ HARBOUR CLASSADD()
  * <nDatas>     Number of DATAs in the class
  * <hSuper>     Optional handle of superclass
  */
-HARBOUR CLASSCREATE() 
+HARBOUR CLASSCREATE()
 {
    WORD   wSuper = _parni( 3 );                 /* Super class present      */
    WORD   wSize;
@@ -302,7 +302,7 @@ HARBOUR CLASSCREATE()
  * <oObj>     Object
  * <cMessage> Message
  */
-HARBOUR CLASSDEL()      
+HARBOUR CLASSDEL()
 {
    PHB_ITEM   pString  = _param( 2, IT_STRING );
    PSYMBOL pMessage = GetDynSym( pString->value.szText )->pSymbol;
@@ -369,7 +369,7 @@ static HARBOUR ClassH( void )
  *
  * Create a new object from class definition <hClass>
  */
-HARBOUR CLASSINSTANCE() 
+HARBOUR CLASSINSTANCE()
 {
    WORD    wClass = _parni( 1 );
    WORD    wAt, wLimit;
@@ -397,7 +397,7 @@ HARBOUR CLASSINSTANCE()
  *
  * Modify message (only for INLINE and METHOD)
  */
-HARBOUR CLASSMOD()      
+HARBOUR CLASSMOD()
 {
    PHB_ITEM   pString  = _param( 2, IT_STRING );
    PSYMBOL pMessage = GetDynSym( pString->value.szText )->pSymbol;
@@ -435,7 +435,7 @@ HARBOUR CLASSMOD()
             _errPutDescription(pError, "CLASSMOD: Cannot modify a DATA item");
             _errLaunch(pError);
             _errRelease(pError);
-         }                                      
+         }
          else                                   /* Modify METHOD            */
             pClass->pMethods[ wAt ].pFunction = ( HARBOURFUNC ) _parnl( 3 );
       }
@@ -451,7 +451,7 @@ HARBOUR CLASSMOD()
 static HARBOUR ClassName( void )
 {
    PHB_ITEM pItemRef;
-                                                
+
    if( IS_BYREF( stack.pBase + 1 ) )            /* Variables by reference   */
       pItemRef = stack.pItems + ( stack.pBase + 1 )->value.wItem;
    else
@@ -466,7 +466,7 @@ static HARBOUR ClassName( void )
  *
  * Returns class name of <hClass>
  */
-HARBOUR CLASSNAME() 
+HARBOUR CLASSNAME()
 {
    PHB_ITEM pObject = _param( 0, IT_OBJECT );
    WORD wClass;
@@ -744,7 +744,7 @@ ULONG hb_isMessage( PHB_ITEM pObject, char *szString )
  *
  * Is <cSymbol> a valid message for the <oObj>
  */
-HARBOUR ISMESSAGE()     
+HARBOUR ISMESSAGE()
 {
    PHB_ITEM   pObject  = _param( 1, IT_OBJECT );
    PHB_ITEM   pString  = _param( 2, IT_STRING );
@@ -792,8 +792,8 @@ HARBOUR OCLONE( void )
  *
  * Send a message to an object
  */
-HARBOUR OSEND()             
-{                           
+HARBOUR OSEND()
+{
    PHB_ITEM pObject  = _param( 1, IT_OBJECT );
    PHB_ITEM pMessage = _param( 2, IT_STRING );
    WORD  w;
@@ -929,8 +929,8 @@ static HARBOUR Virtual( void )
  *
  * Instance super class and return class handle
  */
-HARBOUR __INSTSUPER( void )             
-{                                       
+HARBOUR __INSTSUPER( void )
+{
    PHB_ITEM   pString = _param( 1, IT_STRING );
    PDYNSYM pDynSym;
    PHB_ITEM   pSuperCls;
@@ -981,7 +981,7 @@ HARBOUR __INSTSUPER( void )
  *
  * Return number of datas and decrease
  */
-HARBOUR __WDATADEC()         
+HARBOUR __WDATADEC()
 {
    WORD wClass = _parnl( 1 );
 
@@ -1009,12 +1009,12 @@ HARBOUR __WDATAINC()
  *
  * Return number of datas
  */
-HARBOUR __WDATAS()           
+HARBOUR __WDATAS()
 {
    WORD wClass = _parnl( 1 );
 
    if( wClass )
-      _retni( pClasses[ wClass - 1 ].wDatas );  
+      _retni( pClasses[ wClass - 1 ].wDatas );
 }
 
 

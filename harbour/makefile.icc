@@ -2,20 +2,21 @@
 
 .SUFFIXES : .prg .c
 
-path_c   = source\compiler;source\vm;source\rtl;source\rtl\gt;source\tools
+path_c   = source\compiler;source\vm;source\rtl;source\rtl\gt;source\rtl\natmsg;source\tools
 path_h   = include
 path_l   = source\compiler
 path_y   = source\compiler
 path_exe = bin
 path_lib = libs\icc
 path_obj = obj
-path_prg = source\rtl
+path_prg = source\rtl;source\tools
 
 c_opt = /DUSE_GTAPI /W2 /Se /Sd+ /I.\include /Ti+
 
 all: $(path_exe)\harbour.exe $(path_lib)\harbour.lib $(path_lib)\hbtools.lib $(path_lib)\terminal.lib
 
 $(path_lib)\harbour.lib :       $(path_obj)\arrays.obj \
+                $(path_obj)\asort.obj \
                 $(path_obj)\classes.obj \
                 $(path_obj)\codebloc.obj \
                 $(path_obj)\console.obj \
@@ -31,6 +32,12 @@ $(path_lib)\harbour.lib :       $(path_obj)\arrays.obj \
                 $(path_obj)\initsymb.obj \
                 $(path_obj)\itemapi.obj \
                 $(path_obj)\math.obj \
+                $(path_obj)\msgdut.obj \
+                $(path_obj)\msggal.obj \
+                $(path_obj)\msgpor.obj \
+                $(path_obj)\msgspa.obj \
+                $(path_obj)\msguk.obj \
+                $(path_obj)\objfunc.obj \
                 $(path_obj)\set.obj \
                 $(path_obj)\strings.obj \
                 $(path_obj)\strcmp.obj \
@@ -57,6 +64,7 @@ $(path_lib)\hbtools.lib: \
                 $(path_obj)\strcspn.obj \
                 $(path_obj)\strdiff.obj \
                 $(path_obj)\strexpan.obj \
+                $(path_obj)\stringp.obj \
                 $(path_obj)\strleft.obj \
                 $(path_obj)\strpbrk.obj \
                 $(path_obj)\strright.obj
@@ -113,28 +121,56 @@ $(path_obj)\strleft.obj  : {$(path_c)}strleft.c   $(path_h)\extend.h $(path_h)\t
 $(path_obj)\strpbrk.obj  : {$(path_c)}strpbrk.c   $(path_h)\extend.h $(path_h)\types.h
 $(path_obj)\strright.obj : {$(path_c)}strright.c  $(path_h)\extend.h $(path_h)\types.h
 
+$(path_obj)\msgdut.obj : {$(path_c)}msgdut.c  $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\msggal.obj : {$(path_c)}msggal.c  $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\msgpor.obj : {$(path_c)}msgpor.c  $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\msgspa.obj : {$(path_c)}msgspa.c  $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\msguk.obj  : {$(path_c)}msguk.c   $(path_h)\extend.h $(path_h)\types.h
+
 $(path_obj)\dynsym.obj   : source\vm\dynsym.c   $(path_h)\extend.h $(path_h)\types.h
  icc /C+ $(c_opt) /Fo$@ /Tpsource\vm\dynsym.c
   ilib .\libs\icc\harbour.lib -+$@,,
 
-$(path_obj)\error.obj    : $(path_prg)\error.prg $(path_h)\pcode.h $(path_h)\init.h $(path_h)\extend.h $(path_h)\types.h {$(path_exe)}harbour.exe
- $(path_exe)\harbour $(path_prg)\error /n /osource\rtl
- icc /C+ $(c_opt) /Fo$@ /Tp$(path_prg)\error.c
+$(path_obj)\asort.obj    : {$(path_prg)}\asort.prg $(path_h)\pcode.h $(path_h)\init.h $(path_h)\extend.h $(path_h)\types.h {$(path_exe)}harbour.exe
+ $(path_exe)\harbour source\rtl\asort /n /osource\rtl
+ icc /C+ $(c_opt) /Fo$@ /Tpsource\rtl\asort.c
  ilib .\libs\icc\harbour.lib -+$@,,
 
-$(path_obj)\errorsys.obj : $(path_prg)\errorsys.prg $(path_h)\pcode.h $(path_h)\init.h  $(path_h)\extend.h $(path_h)\types.h {$(path_exe)}harbour.exe
- $(path_exe)\harbour $(path_prg)\errorsys /n /osource\rtl
- icc /C+ $(c_opt) /Fo$@ /Tp$(path_prg)\errorsys.c
+$(path_obj)\error.obj    : {$(path_prg)}\error.prg $(path_h)\pcode.h $(path_h)\init.h $(path_h)\extend.h $(path_h)\types.h {$(path_exe)}harbour.exe
+ $(path_exe)\harbour source\rtl\error /n /osource\rtl
+ icc /C+ $(c_opt) /Fo$@ /Tpsource\rtl\error.c
  ilib .\libs\icc\harbour.lib -+$@,,
 
-$(path_obj)\tclass.obj   : $(path_prg)\tclass.prg $(path_h)\pcode.h $(path_h)\init.h $(path_h)\extend.h $(path_h)\types.h {$(path_exe)}harbour.exe
- $(path_exe)\harbour $(path_prg)\tclass /n /osource\rtl
- icc /C+ $(c_opt) /Fo$@ /Tp$(path_prg)\tclass.c
+$(path_obj)\errorsys.obj : {$(path_prg)}\errorsys.prg $(path_h)\pcode.h $(path_h)\init.h  $(path_h)\extend.h $(path_h)\types.h {$(path_exe)}harbour.exe
+ $(path_exe)\harbour source\rtl\errorsys /n /osource\rtl
+ icc /C+ $(c_opt) /Fo$@ /Tp$source\rtl\errorsys.c
  ilib .\libs\icc\harbour.lib -+$@,,
+
+$(path_obj)\objfunc.obj : {$(path_prg)}\objfunc.prg $(path_h)\pcode.h $(path_h)\init.h  $(path_h)\extend.h $(path_h)\types.h {$(path_exe)}harbour.exe
+ $(path_exe)\harbour source\rtl\objfunc /n /osource\rtl
+ icc /C+ $(c_opt) /Fo$@ /Tpsource\rtl\objfunc.c
+ ilib .\libs\icc\harbour.lib -+$@,,
+
+$(path_obj)\tclass.obj   : {$(path_prg)}\tclass.prg $(path_h)\pcode.h $(path_h)\init.h $(path_h)\extend.h $(path_h)\types.h {$(path_exe)}harbour.exe
+ $(path_exe)\harbour source\rtl\tclass /n /osource\rtl
+ icc /C+ $(c_opt) /Fo$@ /Tpsource\rtl\tclass.c
+ ilib .\libs\icc\harbour.lib -+$@,,
+
+$(path_obj)\msguk.obj  : {$(path_c)}msguk.c  $(path_h)\extend.h $(path_h)\types.h
+  icc /C+ $(c_opt) /Fo$@ /Tpsource\rtl\natmsg\msguk.c
+  ilib .\libs\icc\harbour.lib -+$@,,
+
+$(path_obj)\stringp.obj   : {$(path_prg)}\stringp.prg $(path_h)\pcode.h $(path_h)\init.h $(path_h)\extend.h $(path_h)\types.h {$(path_exe)}harbour.exe
+ $(path_exe)\harbour source\tools\stringp /n /osource\tools
+ icc /C+ $(c_opt) /Fo$@ /Tpsource\tools\stringp.c
+ ilib .\libs\icc\hbtools.lib -+$@,,
 
 {source\rtl}.c{$(path_obj)}.obj:
   icc /C+ $(c_opt) /Fo$@ /Tp$<
   ilib .\libs\icc\harbour.lib -+$@,,
+
+{source\rtl\natmsg}.c{$(path_obj)}.obj:
+  icc /C+ $(c_opt) /Fo$@ /Tp$<
 
 {source\vm}.c{$(path_obj)}.obj:
   icc /C+ $(c_opt) /Fo$@ /Tp$<

@@ -22,7 +22,7 @@ extern STACK stack;
 extern char *hb_monthsname[];
 extern char *hb_daysname[];
 
-char *hb_cmonth( month )
+char *hb_cmonth( int month )
 {
    if( month >= 1 && month <= 12 )
       return hb_monthsname[ month - 1 ];
@@ -30,7 +30,7 @@ char *hb_cmonth( month )
    return "";
 }
 
-char *hb_cdow( day )
+char *hb_cdow( int day )
 {
    if( day >= 1 && day <= 7 )
       return hb_daysname[ day - 1 ];
@@ -47,7 +47,7 @@ long hb_dateEncode( long lDay, long lMonth, long lYear )
    if (lMonth >= 1 && lMonth <= 12 && lDay >= 1
    && lYear >= 1 && lYear <= 2999)
    {
-      /* Month, year, and lower day limits are simple, 
+      /* Month, year, and lower day limits are simple,
          but upper day limit is dependent upon month and leap year */
       BOOL bLeapYear = FALSE;
       int aiDayLimit [12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
@@ -60,7 +60,7 @@ long hb_dateEncode( long lDay, long lMonth, long lYear )
             if( lYear % 400 == 0) bLeapYear = TRUE; /* Leap century */
          }
          else bLeapYear = TRUE; /* Leap year */
-         
+
          if( bLeapYear ) aiDayLimit[ 1 ] = 29;
       }
       if( lDay <= (long)aiDayLimit[ (int)lMonth - 1 ] ) bValid = TRUE;
@@ -223,7 +223,7 @@ char * hb_dtoc (char * szDate, char * szDateFormat)
                         digit_count--;
                      }
                   default:
-                     if (!used_d && format_count < size) 
+                     if (!used_d && format_count < size)
                      {
                         szDateFormat [format_count++] = szDate [7];
                         digit_count--;
@@ -236,25 +236,25 @@ char * hb_dtoc (char * szDate, char * szDateFormat)
                switch (digit_count)
                {
                   case 4:
-                     if (!used_m && format_count < size) 
+                     if (!used_m && format_count < size)
                      {
                         szDateFormat [format_count++] = '0';
                         digit_count--;
                      }
                   case 3:
-                     if (!used_m && format_count < size) 
+                     if (!used_m && format_count < size)
                      {
                         szDateFormat [format_count++] = '0';
                         digit_count--;
                      }
                   case 2:
-                     if (!used_m && format_count < size) 
+                     if (!used_m && format_count < size)
                      {
                         szDateFormat [format_count++] = szDate [4];
                         digit_count--;
                      }
                   default:
-                     if (!used_m && format_count < size) 
+                     if (!used_m && format_count < size)
                      {
                         szDateFormat [format_count++] = szDate [5];
                         digit_count--;
@@ -267,25 +267,25 @@ char * hb_dtoc (char * szDate, char * szDateFormat)
                switch (digit_count)
                {
                   case 4:
-                     if (!used_y && format_count < size) 
+                     if (!used_y && format_count < size)
                      {
                         szDateFormat [format_count++] = szDate [0];
                         digit_count--;
                      }
                   case 3:
-                     if (!used_y && format_count < size) 
+                     if (!used_y && format_count < size)
                      {
                         szDateFormat [format_count++] = szDate [1];
                         digit_count--;
                      }
                   case 2:
-                     if (!used_y && format_count < size) 
+                     if (!used_y && format_count < size)
                      {
                         szDateFormat [format_count++] = szDate [2];
                         digit_count--;
                      }
                   default:
-                     if (!used_y && format_count < size) 
+                     if (!used_y && format_count < size)
                      {
                         szDateFormat [format_count++] = szDate [3];
                         digit_count--;
@@ -299,7 +299,7 @@ char * hb_dtoc (char * szDate, char * szDateFormat)
          }
       }
    }
-   else 
+   else
    {
       /* Not a valid date string, so return a blank date with separators */
       format_count = size; /* size is either 8 or 10 */

@@ -6,6 +6,9 @@
 #include "extend.h"
 #include "types.h"
 
+extern void Classes__InitSymbols( void ); /* Needed by C++ compilers */
+extern void Descend__InitSymbols( void ); /* Needed by C++ compilers */
+
 void ProcessSymbols( SYMBOL *, WORD );
 
 HARBOUR AADD( void );

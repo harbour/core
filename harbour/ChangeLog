@@ -1,3 +1,13 @@
+19990604-21:50 EDT David G. Holm <dholm@jsd-llc.com>
+  * makefile.icc
+    - Added new Harbour modules
+  * source/rtl/classes.c
+    - C++ requires functions with no arguments to be protyped as void
+  * source/rtl/dates.c
+    - C++ requires that arguments be prototyped (hb_cmonth and hb_cdow)
+  * source/vm/initsymb.c
+    - C++ needs prototypes for external initialization functions
+
 19990604-20:20 EDT David G. Holm <dholm@jsd-llc.com>
   Thanks go to Jose Lalin <dezac@corevia.com> for CDOW() and CMONTH() (and
   their support functions), msggal.c, msgspa.c, and msguk.c and cdow.prg,
@@ -22,7 +32,7 @@
     - National language message file for ?
   + source/rtl/natmsg/msgpor.c
     - National language message file for Portugese
-  + source/rtl/natmsg/msgsp.c
+  + source/rtl/natmsg/msgspa.c
     - National language message file for Spanish
   + source/rtl/natmsg/msguk.c
     - National language message file for English
