@@ -17,6 +17,7 @@
 #include "set.ch"
 #include "achoice.ch"
 #include "common.ch"
+#include "color.ch"
 
 /*  $DOC$
  *  $FUNCNAME$
@@ -58,8 +59,8 @@
  *                          parameters: nMode, nCurElement, and nRowPos.
  *                          Default NIL.
  *      bUserBlock        - a codeblock to be called which may
- *                          effect special processing of keystrokes. It 
- *                          should be specified in the form 
+ *                          effect special processing of keystrokes. It
+ *                          should be specified in the form
  *                          {|nMode, nCurElemenet, nRowPos| ;
  *                                 MyFunc(nMode, nCurElemenet, nRowPos) }.
  *                          Default NIL.
@@ -91,13 +92,6 @@
  *  $SEEALSO$
  *      ACHOICE() - as supplied in Clipper
  *
- *  $INCLUDE$
- *      common.ch
- *      inkey.ch
- *      set.ch
- *      setcurs.ch
- *      achoice.ch
- *
  *  $END$
  */
 
@@ -126,9 +120,9 @@ local nGap      := 0                    // The number of lines between top and c
 local bScan := { | cX | if( left( cX, 1 ) == upper( chr( nKey ) ), .T., .F. ) }
 local lUserFunc                         // Is a user function to be used?
 local nUserFunc := 0                    // Return value from user function
-local cLoClr    := Before( ",", setcolor() )
-local cHiClr    := Before( ",", After( ",", setcolor() ) )
-local cUnClr    := After( ",", After( ",", After( ",", After( ",", setcolor() ) ) ) )
+local cLoClr    := __COLORINDEX( setcolor(), CLR_STANDARD )
+local cHiClr    := __COLORINDEX( setcolor(), CLR_ENHANCED )
+local cUnClr    := __COLORINDEX( setcolor(), CLR_UNSELECTED )
 local nSaveCsr  := setcursor( SC_NONE )
 local nFrstItem := 0
 local nLastItem := 0

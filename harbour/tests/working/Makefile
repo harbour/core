@@ -16,6 +16,7 @@ ifeq ($(PM),)
 endif
 ifeq ($(PM),)	# PM not defined = build all files
 PRG_SOURCES=\
+        ac_test.prg \
         colorind.prg \
 	comments.prg \
 	copyfile.prg \

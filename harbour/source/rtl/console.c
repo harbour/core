@@ -42,6 +42,7 @@
    http://www.Harbour-Project.org/
    The following function is Copyright 1999 Victor Szel <info@szelvesz.hu>:
       HB___COLORINDEX().
+      HB___COLORINVERT().
    See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
 */
 
@@ -1150,7 +1151,7 @@ HARBOUR HB___COLORINDEX( void )
          /* Skip the trailing spaces */
 
          while ( ulColorSpecLen &&
-                 szColorSpec[ ulColorSpecPos + ulColorSpecLen ] == ' ' ) ulColorSpecLen--;
+                 szColorSpec[ ulColorSpecPos + ulColorSpecLen - 1 ] == ' ' ) ulColorSpecLen--;
 
          /* Return the string */
 

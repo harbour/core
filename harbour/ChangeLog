@@ -1,3 +1,11 @@
+19990804-20:30 GMT+1 Victor Szel <info@szelvesz.hu>
+   * source/rtl/achoice.prg
+     + Uses __COLORINDEX()
+   * source/rtl/console.c
+     tests/working/colorind.prg
+     ! __COLORINDEX() small bug fixed related to trimming trailing spaces.
+     ! expected test results updated.
+
 19990804-20:00 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/rtl/console.c
      tests/working/colorind.prg
