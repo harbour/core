@@ -1,3 +1,15 @@
+2001-05-25 12:20 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * contrib/dot/pp.prg
+     * Few corrections to NextToken() and CompileRule() to match Clipper behaviour regrding decimal point, and decimal numbers.
+
+   * source/pp/ppcore.c
+     - Removed unused variable as per compiler warning.
+
+   * source/vm/hvm.c
+     ! Fixed HB_P_POPFIELD and HB_P_POPVARIABLE to NOT pop top stack element pre-maturely.
+       Item is now pop only after assignment took place. This fixes problem where the FieldPut rutine had to use the stack,
+       thus overriding the assigned item.
+
 2001-05-24 01:09 UTC-0800 Brian Hays <bhays@abacuslaw.com>
 
    * source/rdd/dbcmd.c

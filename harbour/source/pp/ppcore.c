@@ -1030,8 +1030,6 @@ int hb_pp_ParseExpression( char * sLine, char * sOutLine )
 
         if( *ptri == '#' )
         {
-           char *pTmp = sLine;
-
            hb_pp_ParseDirective( ptri+1 );
 
            if( ipos > 0 )

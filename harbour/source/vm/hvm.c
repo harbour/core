@@ -1138,8 +1138,8 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             /* Pops a value from the eval stack and uses it to set
              * a new value of the given field
              */
+            hb_rddPutFieldValue( ( hb_stackItemFromTop(-1) ), pSymbols + ( USHORT ) ( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) ) );
             hb_stackDec();
-            hb_rddPutFieldValue( ( hb_stackTopItem() ), pSymbols + ( USHORT ) ( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) ) );
             hb_itemClear( ( hb_stackTopItem() ) );
             HB_TRACE(HB_TR_INFO, ("(hb_vmPopField)"));
             w += 3;
@@ -1181,9 +1181,9 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
              * then try the memvar variable (it will create PRIVATE
              * variable if this variable doesn't exist)
              */
+            if( hb_rddFieldPut( ( hb_stackItemFromTop(-1) ), pSymbols + uiParams ) == FAILURE )
+               hb_memvarSetValue( pSymbols + uiParams, ( hb_stackItemFromTop(-1) ) );
             hb_stackDec();
-            if( hb_rddFieldPut( ( hb_stackTopItem() ), pSymbols + uiParams ) == FAILURE )
-               hb_memvarSetValue( pSymbols + uiParams, ( hb_stackTopItem() ) );
             hb_itemClear( ( hb_stackTopItem() ) );
             HB_TRACE(HB_TR_INFO, ("(hb_vmPopVariable)"));
             w += 3;
