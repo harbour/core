@@ -1,3 +1,7 @@
+19990806-10:48 GMT+1 Victor Szel <info@szelvesz.hu>
+   * source/rtl/classes.c
+     ! One cast added back.
+
 19990806-10:45 GMT+1 Antonio Linares <alinares@fivetech.com>
    * makefile.b32
      * updated with latest modules
