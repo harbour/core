@@ -56,9 +56,7 @@
          [vszakats] */
 #define HB_FM_STATISTICS
 
-/* NOTE: The following #include "hbwinapi.h" must
-         be ahead of any other #include statements! */
-#include "hbwinapi.h"
+#define HB_OS_WIN_32_USED
 
 #ifndef __MPW__
    #include <malloc.h>

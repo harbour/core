@@ -42,9 +42,7 @@
 #include <limits.h>
 #include <ctype.h>
 
-#include "hbsetup.h"
 #include "hbapi.h"
-#include "hbpcode.h"      /* pcode values */
 #include "hberrors.h"
 #include "hbpp.h"
 #include "hbver.h"
@@ -314,7 +312,6 @@ extern FILE *      hb_comp_yyppo;
 extern BOOL        hb_comp_bStartProc;
 extern BOOL        hb_comp_bLineNumbers;
 extern BOOL        hb_comp_bQuiet;
-extern BOOL        hb_comp_bRestrictSymbolLength;
 extern BOOL        hb_comp_bShortCuts;
 extern int         hb_comp_iWarnings;
 extern BOOL        hb_comp_bAnyWarning;

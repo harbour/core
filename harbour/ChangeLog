@@ -1,3 +1,72 @@
+20000312-16:24 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * makefile.bc
+     ! "echo" commands changed to "echo.", to avoid conflict with an ECHO.EXE
+       in the path. Tested OK with DOS/BCC16/31 and WIN32/BCC32/55
+   * source/vm/hvm.c
+     ! #include "windows.h" -> <windows.h>
+   * source/rtl/gt/gtwin.c
+     source/rtl/mouse/mousewin.c
+     source/rtl/dates.c
+     source/rtl/dir.c
+     source/rtl/environ.c
+     source/rtl/filesys.c
+     source/rtl/inkey.c
+     source/rtl/isprint.c
+     source/rtl/net.c
+     source/rtl/oemansi.c
+     source/vm/fm.c
+     include/hbdefs.h
+   - include/hbwinapi.h
+     include/Makefile
+     * hbwinapi.h functionality moved to hbdefs.h (which is always included
+       first)
+     * All #include "hbwinapi.h" and #include <windows.h> changed to 
+       #define HB_OS_WIN_32_USED
+     ! Now the inclusion of windows.h doesn't depent on the requested GT mode.
+       So it's possible to link for the Win32 platform a non-GT mode Harbour.
+       !!WARNING!! Since this change involves many platform/compiler 
+       combinations, please test it on yours and report any possible errors.
+       WIN32/MINGW32, WIN32/GCC, WIN32/BCC32/55, DOS/BCC16/31, WIN32/MSVC has 
+       been tested.
+   * source/rtl/inkey.c
+     source/rtl/environ.c
+     ! Fixed to use WINNT macro after the #include section.
+     ! Code dependent of the GT API fixed.
+   * include/hbcomp.h
+     source/compiler/cmdcheck.c
+     source/compiler/hbusage.c
+     source/compiler/harbour.l
+     source/compiler/harbour.c
+     - Removed the Harbour /10 option, instead now HB_SYMBOL_NAME_LEN should
+       be used at build time to set the maximum symbol length.
+       If you build Harbour with /DHB_SYMBOL_NAME_LEN=10, it will be 100%
+       CA-Cl*pper compatible in this respect.
+   * include/hbapi.h
+     source/macro/macro.c
+     source/macro/macro.l
+     * bName10 structure member replaced with uiNameLen in HB_MACRO. Now
+       the HB_SYMBOL_NAME_LEN is the one and only setting which control the
+       maximum symbol name length in Harbour.
+   * include/hbsetup.h
+     - Removed some duplicated platform detection code.
+     + Added 10 character symbol name compatibility mode when STRICT_COMPAT
+       is requested. It's commented out.
+   * include/hb*.h
+     % Cleaned up and flattened the header file inclusion tree.
+   * include/hbsetup.h
+     makefile.vc
+     makefile.bc
+     + Shorter GTAPI selection macros added, to reduce scrolling/line wrapping 
+       while building, and HB_ is the standard prefix anyway. Currently both 
+       the short and the old long #defines will work. The new ones:
+       HB_GT_STD
+       HB_GT_DOS
+       HB_GT_OS2
+       HB_GT_WIN
+       HB_GT_CRS
+       HB_GT_SLN
+     % Makefiles changed to use the new format.
+
 20000312-13:58 GMT+1 Victor Szakats <info@szelvesz.hu>
    * source/tools/io.c
      ! __DOS__ -> DOS

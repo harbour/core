@@ -43,6 +43,12 @@
  * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  *    HB_GETE()
  *
+ * Copyright 1999 Luiz Rafael Culik <culik@sl.conex.net>
+ *    Support for determining the window version by
+ *
+ * Copyright 1999 Jose Lalin <dezac@corevia.com>
+ *    Support for determining many windows flavours by 
+ *
  * See doc/license.txt for licensing terms.
  *
  */
@@ -55,22 +61,20 @@
    #define INCL_DOSMISC
 #endif
 
-/* NOTE: The following #include "hbwinapi.h" must
-         be ahead of any other #include statements! */
-#include "hbwinapi.h"
-
-#if defined(HARBOUR_USE_WIN_GTAPI) || defined(WINNT)
-#if ! defined(VER_PLATFORM_WIN32_WINDOWS)
-   #define VER_PLATFORM_WIN32_WINDOWS 1
-#endif
-#if ! defined(VER_PLATFORM_WIN32_CE)
-   #define VER_PLATFORM_WIN32_CE 3
-#endif
-#endif
+#define HB_OS_WIN_32_USED
 
 #include "hbapi.h"
 #include "hbapierr.h"
 #include "hbver.h"
+
+#if defined(_WINDOWS_) || defined(WINNT)
+   #if ! defined(VER_PLATFORM_WIN32_WINDOWS)
+      #define VER_PLATFORM_WIN32_WINDOWS 1
+   #endif
+   #if ! defined(VER_PLATFORM_WIN32_CE)
+      #define VER_PLATFORM_WIN32_CE 3
+   #endif
+#endif
 
 #if defined(__TURBOC__) || defined(__BORLANDC__) || defined(_MSC_VER) || defined(__DJGPP__) || defined(__MINGW32__)
    #include <dos.h>
@@ -142,14 +146,6 @@ HARBOUR HB_OS( void )
 #if defined(__TURBOC__) || defined(__BORLANDC__) || defined(_MSC_VER) || defined(__MINGW32__)
 
 #if defined(_WINDOWS_) || defined(__MINGW32__)
-
-/* NOTE:
-    Support for determining the window version by
-    Luiz Rafael Culik <culik@sl.conex.net>
-
-    Support for determining many windows flavours by 
-    Jose Lalin <dezac@corevia.com>
-*/
 
    OSVERSIONINFO osVer; /* for GetVersionEx() */
    char szBuild[ 128 ] = "";

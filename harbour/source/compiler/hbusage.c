@@ -75,7 +75,6 @@ void hb_compPrintUsage( char * szSelf )
            "\n          %cy               trace lex & yacc activity",
 #endif
            "\n          %cz               suppress shortcutting (.and. & .or.)",
-           "\n          %c10              restrict symbol length to 10 significant characters",
 /* TODO:   "\n           @<file>         compile list of modules in <file>", */
            "\n"
    };

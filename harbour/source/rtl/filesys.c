@@ -75,9 +75,7 @@
    This has been corrected by ptucker
  */
 
-/* NOTE: The following #include "hbwinapi.h" must
-         be ahead of any other #include statements! */
-#include "hbwinapi.h"
+#define HB_OS_WIN_32_USED
 
 #include <ctype.h>
 #include "hbapi.h"

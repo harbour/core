@@ -40,8 +40,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include "hbsetup.h"
 #include "hbtrace.h"
+
+/* Include windows.h if applicable and requested */
+
+#ifdef HB_OS_WIN_32_USED
+   #if defined(_WINDOWS_) || defined(_Windows) || defined(WINNT)
+      #define WIN32_LEAN_AND_MEAN
+      #include <windows.h>
+      #if defined(__GNUC__)
+         #define HB_DONT_DEFINE_BASIC_TYPES
+      #endif
+   #endif
+#endif
 
 #if defined(__IBMCPP__)
    /* With the exception of WORD, the IBM Visual Age C++ compiler has

@@ -52,7 +52,6 @@
 #define HB_APIGT_H_
 
 #include "hbapi.h"
-
 #include "color.ch"
 
 /* NOTE: The declaration of hb_gtSetPos(), hb_gtGetPos(), hb_gtWrite(), 

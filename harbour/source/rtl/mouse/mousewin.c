@@ -33,13 +33,8 @@
  *
  */
 
-#define WIN32_LEAN_AND_MEAN
+#define HB_OS_WIN_32_USED
 
-#if defined(__GNUC__)
-#define HB_DONT_DEFINE_BASIC_TYPES
-#endif /* __GNUC__ */
-
-#include <windows.h>
 #include "hbapigt.h"
 
 #if defined(__IBMCPP__)

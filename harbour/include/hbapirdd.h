@@ -36,6 +36,7 @@
 #ifndef HB_APIRDD_H_
 #define HB_APIRDD_H_
 
+#include "hbapi.h"
 #include "hbapifs.h"
 
 /* RDD virtual machine integration functions */

@@ -36,9 +36,7 @@
 /* NOTE: These are Win32 specific, for other platforms it will return the
          passed parameter unchanged. */
 
-/* NOTE: The following #include "hbwinapi.h" must
-         be ahead of any other #include statements! */
-#include "hbwinapi.h"
+#define HB_OS_WIN_32_USED
 
 #include "hbapi.h"
 #include "hbapiitm.h"

@@ -82,7 +82,7 @@
 #ifndef HB_SET_H_
 #define HB_SET_H_
 
-#include "hbdefs.h"
+#include "hbapi.h"
 #include "hbapifs.h"
 #include "hbapigt.h"
 

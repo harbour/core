@@ -33,9 +33,7 @@
  *
  */
 
-/* NOTE: The following #include "hbwinapi.h" must
-         be ahead of any other #include statements! */
-#include "hbwinapi.h"
+#define HB_OS_WIN_32_USED
 
 #include "hbapi.h"
 

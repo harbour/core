@@ -29,7 +29,6 @@ C_HEADERS=\
         hbver.h      \
         hbvm.h       \
         hbvmpub.h    \
-        hbwinapi.h   \
 
 PRG_HEADERS=\
         achoice.ch   \

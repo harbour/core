@@ -13,7 +13,7 @@ HARBOUR_OPT = $(HARBOUR_OPT) -q0 -w -es2 -gc0
 
 # Borland C/C++ (DOS 16 bits)
 BCC_EXE = bcc
-BCC_OPT = $(BCC_OPT) -DHARBOUR_USE_DOS_GTAPI -mh
+BCC_OPT = $(BCC_OPT) -DHB_GT_DOS -mh
 TASM_EXE = tasm
 BIN_DIR = bin\b16
 OBJ_DIR = obj\b16
@@ -24,7 +24,7 @@ BCC_OPT = $(BCC_OPT) -O2
 
 # Borland C/C++ (Windows 32 bits)
 BCC_EXE = bcc32
-BCC_OPT = $(BCC_OPT) -DHARBOUR_USE_WIN_GTAPI
+BCC_OPT = $(BCC_OPT) -DHB_GT_WIN
 TASM_EXE = tasm32
 BIN_DIR = bin\b32
 OBJ_DIR = obj\b32
@@ -348,25 +348,25 @@ $(OBJ_DIR)\pptable.obj : $(PP_DIR)\pptable.c
 #
 $(HARBOUR_EXE) : $(HARBOUR_EXE_OBJS)
 
-   echo $(BCC_OPT) > make.tmp
-   echo -e$(HARBOUR_EXE) >> make.tmp
-   echo -I$(INCLUDE_DIR) >> make.tmp
-   echo $(OBJ_DIR)\harbour.obj >> make.tmp
-   echo $(OBJ_DIR)\harboury.obj >> make.tmp
-   echo $(OBJ_DIR)\harbourl.obj >> make.tmp
-   echo $(OBJ_DIR)\cmdcheck.obj >> make.tmp
-   echo $(OBJ_DIR)\hbusage.obj >> make.tmp
-   echo $(OBJ_DIR)\hbgenerr.obj >> make.tmp
-   echo $(OBJ_DIR)\hbpcode.obj >> make.tmp
-   echo $(OBJ_DIR)\genc.obj >> make.tmp
-   echo $(OBJ_DIR)\genobj32.obj >> make.tmp
-   echo $(OBJ_DIR)\genjava.obj >> make.tmp
-   echo $(OBJ_DIR)\genpas.obj >> make.tmp
-   echo $(OBJ_DIR)\genrc.obj >> make.tmp
-   echo $(OBJ_DIR)\genhrb.obj >> make.tmp
-   echo $(OBJ_DIR)\expropt.obj >> make.tmp
-   echo $(OBJ_DIR)\hbfunchk.obj >> make.tmp
-   echo $(COMMON_LIB) $(PP_LIB) >> make.tmp
+   echo. $(BCC_OPT) > make.tmp
+   echo. -e$(HARBOUR_EXE) >> make.tmp
+   echo. -I$(INCLUDE_DIR) >> make.tmp
+   echo. $(OBJ_DIR)\harbour.obj >> make.tmp
+   echo. $(OBJ_DIR)\harboury.obj >> make.tmp
+   echo. $(OBJ_DIR)\harbourl.obj >> make.tmp
+   echo. $(OBJ_DIR)\cmdcheck.obj >> make.tmp
+   echo. $(OBJ_DIR)\hbusage.obj >> make.tmp
+   echo. $(OBJ_DIR)\hbgenerr.obj >> make.tmp
+   echo. $(OBJ_DIR)\hbpcode.obj >> make.tmp
+   echo. $(OBJ_DIR)\genc.obj >> make.tmp
+   echo. $(OBJ_DIR)\genobj32.obj >> make.tmp
+   echo. $(OBJ_DIR)\genjava.obj >> make.tmp
+   echo. $(OBJ_DIR)\genpas.obj >> make.tmp
+   echo. $(OBJ_DIR)\genrc.obj >> make.tmp
+   echo. $(OBJ_DIR)\genhrb.obj >> make.tmp
+   echo. $(OBJ_DIR)\expropt.obj >> make.tmp
+   echo. $(OBJ_DIR)\hbfunchk.obj >> make.tmp
+   echo. $(COMMON_LIB) $(PP_LIB) >> make.tmp
    $(BCC_EXE) @make.tmp
    del make.tmp
 
@@ -427,11 +427,11 @@ $(OBJ_DIR)\hbfunchk.obj : $(COMPILER_DIR)\hbfunchk.c
 $(PP_EXE) : $(PP_LIB_OBJS) $(COMMON_LIB_OBJS)
 
    $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$(OBJ_DIR)\hbpp.obj $(PP_DIR)\stdalone\hbpp.c
-   echo $(BCC_OPT) > make.tmp
-   echo -e$(PP_EXE) >> make.tmp
-   echo -I$(INCLUDE_DIR) >> make.tmp
-   echo $(OBJ_DIR)\hbpp.obj >> make.tmp
-   echo $(COMMON_LIB) $(PP_LIB) >> make.tmp
+   echo. $(BCC_OPT) > make.tmp
+   echo. -e$(PP_EXE) >> make.tmp
+   echo. -I$(INCLUDE_DIR) >> make.tmp
+   echo. $(OBJ_DIR)\hbpp.obj >> make.tmp
+   echo. $(COMMON_LIB) $(PP_LIB) >> make.tmp
    $(BCC_EXE) @make.tmp
    del make.tmp
 
@@ -1274,20 +1274,20 @@ $(RUNNER_EXE) : $(RUNNER_DIR)\stdalone\hbrun.prg
    $(HARBOUR_EXE) -i$(INCLUDE_DIR) -i$(RUNNER_DIR)\stdalone -n $(HARBOUR_OPT) -o$(OBJ_DIR)\ $(RUNNER_DIR)\stdalone\hbrun.prg
    $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$(OBJ_DIR)\hbrun.obj $(OBJ_DIR)\hbrun.c
 
-   echo $(BCC_OPT) > make.tmp
-   echo -e$(RUNNER_EXE) >> make.tmp
-   echo -I$(INCLUDE_DIR) >> make.tmp
-   echo $(OBJ_DIR)\hbrun.obj >> make.tmp
-   echo $(PP_LIB) >> make.tmp
-   echo $(COMMON_LIB) >> make.tmp
-   echo $(VM_LIB) >> make.tmp
-   echo $(RTL_LIB) >> make.tmp
-   echo $(RDD_LIB) >> make.tmp
-   echo $(MACRO_LIB) >> make.tmp
-   echo $(TOOLS_LIB) >> make.tmp
-   echo $(RUNNER_LIB) >> make.tmp
-   echo $(DBFNTX_LIB) >> make.tmp
-   echo $(DBFCDX_LIB) >> make.tmp
+   echo. $(BCC_OPT) > make.tmp
+   echo. -e$(RUNNER_EXE) >> make.tmp
+   echo. -I$(INCLUDE_DIR) >> make.tmp
+   echo. $(OBJ_DIR)\hbrun.obj >> make.tmp
+   echo. $(PP_LIB) >> make.tmp
+   echo. $(COMMON_LIB) >> make.tmp
+   echo. $(VM_LIB) >> make.tmp
+   echo. $(RTL_LIB) >> make.tmp
+   echo. $(RDD_LIB) >> make.tmp
+   echo. $(MACRO_LIB) >> make.tmp
+   echo. $(TOOLS_LIB) >> make.tmp
+   echo. $(RUNNER_LIB) >> make.tmp
+   echo. $(DBFNTX_LIB) >> make.tmp
+   echo. $(DBFCDX_LIB) >> make.tmp
    $(BCC_EXE) @make.tmp
    del make.tmp
 
@@ -1322,27 +1322,27 @@ $(OBJ_DIR)\tbrwtext.obj : $(OBJ_DIR)\tbrwtext.c
 #
 $(HBTEST_EXE) : $(HBTEST_EXE_OBJS)
 
-   echo $(BCC_OPT) > make.tmp
-   echo -e$(BIN_DIR)\hbtest.exe >> make.tmp
-   echo -I$(INCLUDE_DIR) >> make.tmp
-   echo $(OBJ_DIR)\hbtest.obj >> make.tmp
-   echo $(OBJ_DIR)\rt_hvm.obj >> make.tmp
-   echo $(OBJ_DIR)\rt_math.obj >> make.tmp
-   echo $(OBJ_DIR)\rt_date.obj >> make.tmp
-   echo $(OBJ_DIR)\rt_str.obj >> make.tmp
-   echo $(OBJ_DIR)\rt_trans.obj >> make.tmp
-   echo $(OBJ_DIR)\rt_array.obj >> make.tmp
-   echo $(OBJ_DIR)\rt_file.obj >> make.tmp
-   echo $(OBJ_DIR)\rt_misc.obj >> make.tmp
-   echo $(PP_LIB) >> make.tmp
-   echo $(COMMON_LIB) >> make.tmp
-   echo $(VM_LIB) >> make.tmp
-   echo $(RTL_LIB) >> make.tmp
-   echo $(RDD_LIB) >> make.tmp
-   echo $(MACRO_LIB) >> make.tmp
-   echo $(RUNNER_LIB) >> make.tmp
-   echo $(DBFNTX_LIB) >> make.tmp
-   echo $(DBFCDX_LIB) >> make.tmp
+   echo. $(BCC_OPT) > make.tmp
+   echo. -e$(BIN_DIR)\hbtest.exe >> make.tmp
+   echo. -I$(INCLUDE_DIR) >> make.tmp
+   echo. $(OBJ_DIR)\hbtest.obj >> make.tmp
+   echo. $(OBJ_DIR)\rt_hvm.obj >> make.tmp
+   echo. $(OBJ_DIR)\rt_math.obj >> make.tmp
+   echo. $(OBJ_DIR)\rt_date.obj >> make.tmp
+   echo. $(OBJ_DIR)\rt_str.obj >> make.tmp
+   echo. $(OBJ_DIR)\rt_trans.obj >> make.tmp
+   echo. $(OBJ_DIR)\rt_array.obj >> make.tmp
+   echo. $(OBJ_DIR)\rt_file.obj >> make.tmp
+   echo. $(OBJ_DIR)\rt_misc.obj >> make.tmp
+   echo. $(PP_LIB) >> make.tmp
+   echo. $(COMMON_LIB) >> make.tmp
+   echo. $(VM_LIB) >> make.tmp
+   echo. $(RTL_LIB) >> make.tmp
+   echo. $(RDD_LIB) >> make.tmp
+   echo. $(MACRO_LIB) >> make.tmp
+   echo. $(RUNNER_LIB) >> make.tmp
+   echo. $(DBFNTX_LIB) >> make.tmp
+   echo. $(DBFCDX_LIB) >> make.tmp
    $(BCC_EXE) @make.tmp
    del make.tmp
 
@@ -1405,27 +1405,27 @@ $(OBJ_DIR)\rt_misc.obj : $(OBJ_DIR)\rt_misc.c
 #
 $(HBDOC_EXE) : $(HBDOC_EXE_OBJS)
 
-   echo $(BCC_OPT) > make.tmp
-   echo -e$(BIN_DIR)\hbdoc.exe >> make.tmp
-   echo -I$(INCLUDE_DIR) >> make.tmp
-   echo $(OBJ_DIR)\hbdoc.obj >> make.tmp
-   echo $(OBJ_DIR)\genasc.obj >> make.tmp
-   echo $(OBJ_DIR)\genhpc.obj >> make.tmp
-   echo $(OBJ_DIR)\genhtm.obj >> make.tmp
-   echo $(OBJ_DIR)\genng.obj >> make.tmp
-   echo $(OBJ_DIR)\genos2.obj >> make.tmp
-   echo $(OBJ_DIR)\genrtf.obj >> make.tmp
-   echo $(OBJ_DIR)\gentrf.obj >> make.tmp
-   echo $(PP_LIB) >> make.tmp
-   echo $(COMMON_LIB) >> make.tmp
-   echo $(VM_LIB) >> make.tmp
-   echo $(RTL_LIB) >> make.tmp
-   echo $(RDD_LIB) >> make.tmp
-   echo $(MACRO_LIB) >> make.tmp
-   echo $(TOOLS_LIB) >> make.tmp
-   echo $(RUNNER_LIB) >> make.tmp
-   echo $(DBFNTX_LIB) >> make.tmp
-   echo $(DBFCDX_LIB) >> make.tmp
+   echo. $(BCC_OPT) > make.tmp
+   echo. -e$(BIN_DIR)\hbdoc.exe >> make.tmp
+   echo. -I$(INCLUDE_DIR) >> make.tmp
+   echo. $(OBJ_DIR)\hbdoc.obj >> make.tmp
+   echo. $(OBJ_DIR)\genasc.obj >> make.tmp
+   echo. $(OBJ_DIR)\genhpc.obj >> make.tmp
+   echo. $(OBJ_DIR)\genhtm.obj >> make.tmp
+   echo. $(OBJ_DIR)\genng.obj >> make.tmp
+   echo. $(OBJ_DIR)\genos2.obj >> make.tmp
+   echo. $(OBJ_DIR)\genrtf.obj >> make.tmp
+   echo. $(OBJ_DIR)\gentrf.obj >> make.tmp
+   echo. $(PP_LIB) >> make.tmp
+   echo. $(COMMON_LIB) >> make.tmp
+   echo. $(VM_LIB) >> make.tmp
+   echo. $(RTL_LIB) >> make.tmp
+   echo. $(RDD_LIB) >> make.tmp
+   echo. $(MACRO_LIB) >> make.tmp
+   echo. $(TOOLS_LIB) >> make.tmp
+   echo. $(RUNNER_LIB) >> make.tmp
+   echo. $(DBFNTX_LIB) >> make.tmp
+   echo. $(DBFCDX_LIB) >> make.tmp
    $(BCC_EXE) @make.tmp
    del make.tmp
 

@@ -1391,10 +1391,10 @@ Separator     {SpaceTab}
                yytext[yyleng] = 0;
 
                {
-                  if( hb_comp_bRestrictSymbolLength && strlen( yytext ) > 10 )
+                  if( strlen( yytext ) > HB_SYMBOL_NAME_LEN )
                   {
-                     yytext[ 10 ] = 0;
-                     yyleng = 10;
+                     yytext[ HB_SYMBOL_NAME_LEN ] = '\0';
+                     yyleng = HB_SYMBOL_NAME_LEN;
                   }
                   yylval.string = hb_strupr( hb_strdup( yytext ) );
                   /*printf( "\nIdentifier = '%s'\n", hb_strupr( hb_strdup( yytext ) ) );*/
@@ -1516,10 +1516,10 @@ Separator     {SpaceTab}
 
 
 {Identifier}    {
-                   if( hb_comp_bRestrictSymbolLength && strlen( yytext ) > 10 )
+                   if( strlen( yytext ) > HB_SYMBOL_NAME_LEN )
                    {
-                      yytext[ 10 ] = 0;
-                      yyleng = 10;
+                      yytext[ HB_SYMBOL_NAME_LEN ] = '\0';
+                      yyleng = HB_SYMBOL_NAME_LEN;
                    }
                    yylval.string = hb_strupr( hb_strdup( yytext ) );
                    hb_comp_iState = IDENTIFIER;

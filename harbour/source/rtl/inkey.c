@@ -87,26 +87,8 @@
    #define INCL_NOPMAPI
 #endif
 
-/* NOTE: The following #include "hbwinapi.h" must
-         be ahead of any other #include statements! */
-#include "hbwinapi.h"
+#define HB_OS_WIN_32_USED
 
-#if defined(_WINDOWS_) || defined(WINNT)
-#if ! defined(HARBOUR_USE_CRS_GTAPI) && ! defined(HARBOUR_USE_SLN_GTAPI)
-   #define INPUT_BUFFER_LEN 128
-   extern BOOL   hb_gtBreak;  /* This variable is located in source/rtl/gt/gtwin.c */
-   extern HANDLE hb_gtHInput; /* This variable is located in source/rtl/gt/gtwin.c */
-   static DWORD s_cNumRead = 0;   /* Ok to use DWORD here, because this is specific... */
-   static DWORD s_cNumIndex = 0;  /* ...to the Windows API, which defines DWORD, etc.  */
-   static INPUT_RECORD s_irInBuf[ INPUT_BUFFER_LEN ];
-   extern int hb_mouse_iCol;
-   extern int hb_mouse_iRow;
-#endif
-#endif
-
-#define HB_BREAK_FLAG 256 /* 256, because that's what DJGPP returns Ctrl+Break as.
-                             Clipper has no key code 256, so it may as well be
-                             used for all the Harbour builds that need it */
 #include "hbapi.h"
 #include "hbvm.h"
 #include "hbapierr.h"
@@ -115,6 +97,23 @@
 #include "hbset.h"
 #include "inkey.ch"
 #include "hbinit.h"
+
+#if defined(_WINDOWS_) || defined(WINNT)
+   #if ! defined(HARBOUR_USE_CRS_GTAPI) && ! defined(HARBOUR_USE_SLN_GTAPI)
+      #define INPUT_BUFFER_LEN 128
+      extern BOOL   hb_gtBreak;  /* This variable is located in source/rtl/gt/gtwin.c */
+      extern HANDLE hb_gtHInput; /* This variable is located in source/rtl/gt/gtwin.c */
+      static DWORD s_cNumRead = 0;   /* Ok to use DWORD here, because this is specific... */
+      static DWORD s_cNumIndex = 0;  /* ...to the Windows API, which defines DWORD, etc.  */
+      static INPUT_RECORD s_irInBuf[ INPUT_BUFFER_LEN ];
+      extern int hb_mouse_iCol;
+      extern int hb_mouse_iRow;
+   #endif
+#endif
+
+#define HB_BREAK_FLAG 256 /* 256, because that's what DJGPP returns Ctrl+Break as.
+                             Clipper has no key code 256, so it may as well be
+                             used for all the Harbour builds that need it */
 
 #if defined(__TURBOC__) || defined(__BORLANDC__) || defined(_MSC_VER) || defined(__MINGW32__)
    #include <conio.h>

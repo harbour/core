@@ -90,7 +90,6 @@ FILE *      hb_comp_yyppo = NULL;                      /* output .ppo file */
 BOOL        hb_comp_bStartProc = TRUE;                 /* holds if we need to create the starting procedure */
 BOOL        hb_comp_bLineNumbers = TRUE;               /* holds if we need pcodes with line numbers */
 BOOL        hb_comp_bQuiet = FALSE;                    /* quiet mode */
-BOOL        hb_comp_bRestrictSymbolLength = FALSE;     /* generate 10 chars max symbols length */
 BOOL        hb_comp_bShortCuts = TRUE;                 /* .and. & .or. expressions shortcuts */
 int         hb_comp_iWarnings = 0;                     /* enable parse warnings */
 BOOL        hb_comp_bAnyWarning = FALSE;               /* holds if there was any warning during the compilation process */

@@ -186,11 +186,6 @@ void hb_compChkEnvironVar( char * szSwitch )
          s++;
          switch( *s )
          {
-             case '1':
-                if( *( s + 1 ) == '0' )
-                   hb_comp_bRestrictSymbolLength = TRUE;
-                break;
-
              case 'a':
              case 'A':
                 hb_comp_bAutoMemvarAssume = TRUE;

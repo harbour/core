@@ -362,10 +362,10 @@ Separator     {SpaceTab}
                yytext[yyleng] = 0;
 
                {
-                  if( YYLEX_PARAM->bName10 && strlen( yytext ) > 10 )
+                  if( strlen( yytext ) > YYLEX_PARAM->uiNameLen )
                   {
-                     yytext[ 10 ] = 0;
-                     yyleng = 10;
+                     yytext[ YYLEX_PARAM->uiNameLen ] = '\0';
+                     yyleng = YYLEX_PARAM->uiNameLen;
                   }
                   yylval_ptr->string = hb_strupr( hb_strdup( yytext ) );
                   return IDENTIFIER;
@@ -480,10 +480,10 @@ Separator     {SpaceTab}
 
 {Identifier}    {
                    HB_TRACE(HB_TR_DEBUG, ("{Identifier}(%s)", yytext));
-                   if( YYLEX_PARAM->bName10 && strlen( yytext ) > 10 )
+                   if( strlen( yytext ) > YYLEX_PARAM->uiNameLen )
                    {
-                        yytext[ 10 ] = 0;
-                        yyleng = 10;
+                        yytext[ YYLEX_PARAM->uiNameLen ] = '\0';
+                        yyleng = YYLEX_PARAM->uiNameLen;
                    }
                    yylval_ptr->string = hb_strupr( hb_strdup( yytext ) );
                    return IDENTIFIER;

@@ -117,7 +117,7 @@
 /*#define HARBOUR_OBJ_GENERATION*/
 
 /* ***********************************************************************
- * You can select here, what type of main entry will be used in the 
+ * You can select here, what type of main entry will be used in the
  * application (main() or WinMain()).
  *
  * By default the standard C main() function will be used.
@@ -126,7 +126,7 @@
 /*#define HARBOUR_MAIN_WIN*/
 
 /* ***********************************************************************
- * You can select here, what type of main entry will be used in the 
+ * You can select here, what type of main entry will be used in the
  * application (main() or WinMain()).
  *
  * By default the standard C main() function will be used.
@@ -147,6 +147,27 @@
 /*#define HARBOUR_USE_CRS_GTAPI*/
 /*#define HARBOUR_USE_SLN_GTAPI*/
 
+/* Short version are also good */
+
+#ifdef HB_GT_STD
+   #define HARBOUR_USE_STD_GTAPI
+#endif
+#ifdef HB_GT_DOS
+   #define HARBOUR_USE_DOS_GTAPI
+#endif
+#ifdef HB_GT_OS2
+   #define HARBOUR_USE_OS2_GTAPI
+#endif
+#ifdef HB_GT_WIN
+   #define HARBOUR_USE_WIN_GTAPI
+#endif
+#ifdef HB_GT_CRS
+   #define HARBOUR_USE_CRS_GTAPI
+#endif
+#ifdef HB_GT_SLN
+   #define HARBOUR_USE_SLN_GTAPI
+#endif
+
 /* Indicate that one of the GTAPIs is defined */
 #if defined(HARBOUR_USE_STD_GTAPI) || \
     defined(HARBOUR_USE_DOS_GTAPI) || \
@@ -158,14 +179,26 @@
 #endif
 
 /* ***********************************************************************
- * You can set here the maximum symbol name length handled by Harbour 
+ * You can set here the maximum symbol name length handled by Harbour
  * compiler and runtime. You can override this setting in the make process.
  *
  * By default this value is 63
 */
 
 #ifndef HB_SYMBOL_NAME_LEN
-   #define HB_SYMBOL_NAME_LEN   63
+/* NOTE: For complete CA-Cl*pper compatibility you can set the maximum
+         symbol name to 10, which makes Harbour 100% compatible in this
+         respect. Sometimes this can be useful for compiling legacy code.
+         [vszakats] */
+/*
+   #ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+      #define HB_SYMBOL_NAME_LEN   10
+   #else
+*/
+      #define HB_SYMBOL_NAME_LEN   63
+/*
+   #endif
+*/
 #endif
 
 /* ***********************************************************************
@@ -205,34 +238,6 @@
 /* ***********************************************************************
  * Platform detection
  */
-
-/* New style (under testing) */
-
-#ifndef DOS
-   #if defined(_QC) || defined(__DOS__) || defined(MSDOS) || defined(__MSDOS__)
-      #define DOS
-   #endif
-#endif
-
-#ifndef OS2
-   #if defined(__OS2__) || defined(OS_2) || defined(HARBOUR_GCC_OS2)
-      #define OS2
-   #endif
-#endif
-
-#ifndef EMX
-   #if defined(__EMX__)
-      #define EMX
-   #endif
-#endif
-
-#ifndef WINNT
-   #if defined(__NT__)
-      #define WINNT
-   #endif
-#endif
-
-/* Old style */
 
 #ifndef DOS
    #if defined(_QC) || defined(__DOS__) || defined(MSDOS) || defined(__MSDOS__)

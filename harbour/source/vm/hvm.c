@@ -3839,7 +3839,7 @@ HARBOUR HB___VMVARSGET( void )
 /* NOTE: Temporary name [vszakats] */
 #ifdef HB_INCLUDE_WINEXCHANDLER
 
-#include "windows.h"
+#include <windows.h>
 
 WINBASEAPI LONG WINAPI UnhandledExceptionFilter( struct _EXCEPTION_POINTERS * ExceptionInfo )
 {

@@ -48,12 +48,10 @@
 #define HB_MACRO_DECL   void * pMacro
 #define HB_MACRO_PARAM  pMacro
 
-#include "hbsetup.h"
 #include "hbapi.h"
-#include "hbvm.h"
-#include "hbpcode.h"      /* pcode values */
 #include "hbapiitm.h"
 #include "hbapierr.h"
+#include "hbvm.h"
 #include "hbexprop.h"
 
 /* flags for compilation process
