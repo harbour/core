@@ -144,25 +144,27 @@ STATIC FUNCTION DefError( oError )
       cMessage += " " + cDOSError+Chr(13)
    ENDIF
 
-   // QOut() /// dgh - Temporary to keep DOS prompt from overwriting message.
-   // QOut( cMessage )
-
    n := 2
    WHILE ! Empty( ProcName( n ) )
       /* CHANGED */
       cMessage += "Called from " + ProcName( n ) + ;
-               "(" + AllTrim( Str( ProcLine( n++ ) ) ) + ")"+Chr(13)
+               "(" + AllTrim( Str( ProcLine( n ) ) ) + ")"+Chr(13)
 
-      // QOut("Called from " + ProcName( n ) + ;
-      //         "(" + AllTrim( Str( ProcLine( n++ ) ) ) + ")")
+      // QUESTION: from a DLL point of view, there is not main procedure,
+      //           instead of that, something that is not a valid string is
+      //           given, causing this errorsys routine to be re-entrant.
+      //           This next line is a temporal workaround to this problem,
+      //           and a specific code to this Harbour to Delphi integration.
+      If Upper(ProcName(n)) = 'MACROCALL'
+         Exit
+      EndIf
+      n++
    ENDDO
 
    MSGBOX( cMessage ) // Windows MessageBox
 
-/// For some strange reason, the DOS prompt gets written on the first line
-/// *of* the message instead of on the first line *after* the message after
-/// the program quits, unless the screen has scrolled. - dgh
-   QUIT
+   D('QUIT')  // NOTE: A QUIT in a DLL is something not very smart, better to
+   //  QUIT   //       let Delphi to end properly.
 
    RETURN .F.
 

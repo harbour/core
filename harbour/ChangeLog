@@ -7,6 +7,23 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+    * bug fixed, reported by Lorenzo Fiorini
+2002-02-21 18:10 UTC+0500 Jorge A. Giraldo <jorgeagiraldo@emtelsa.multi.net.co>
+   * source/debug/debugger.prg
+     * Fixed bug when browsing vars
+       reported by Jorge A. Giraldo
+
+2002-02-24 09:34 UTC+0200 Chen Kedem <niki@actcom.co.il>
+
+   * doc/dirstruc.txt
+     + Add two lines about the Delphi directory
+
+2002-02-23 15:48 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/rdd/dbfntx/dbfntx1.c
+    ! bug fixed in unique indexes creating, reported by Mikhail Malyh
+
+2002-02-23 09:55 UTC+0100 Antonio Linares <alinares@fivetech.com>
+   * source/debug/debugger.prg
      * Fixed bug when browsing vars
        reported by Jorge A. Giraldo
 

@@ -60,6 +60,9 @@ MEMVAR CallBackResult
 FUNCTION MakeIndex( cFileName, cField )
 PUBLIC CallBackResult := ''
 
+?
+? 'Please click the Delphi App to see the status'
+?
 Use (cFileName) Alias FIL
 Index on &(cField) to (cFileName) EVAL IndexStatus() EVERY LastRec()/10
 Close FIL
@@ -67,7 +70,7 @@ RETURN 'The file '+cFileName+' has been indexed'
 
 FUNCTION IndexStatus
 LOCAL cCompleted := LTrim( Str(Int((RecNo()/LastRec()) * 100)) ), nSeconds
-D(cCompleted)
+D('ProgressBar1'+','+cCompleted)
 
 nSeconds := Seconds()          // Let's make this thing to go slowly
 WHILE nSeconds+1 >= Seconds()

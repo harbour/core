@@ -1,5 +1,5 @@
 {*
- * $id$
+ * $Id$
  *}
 
 {*
@@ -84,6 +84,8 @@ function MacroCall( pParam : pchar ) : pchar; stdcall;
        external 'MyProg' name 'MacroCall';
 
 function h( sParam : String ) : variant;
+function ExtParam( sString : String; iPos : Integer; sSepar : String ) : String;
+function AllTrim(sString: string): string;
 
 implementation
 
@@ -107,7 +109,7 @@ begin
   sResult := Copy(sRtnVal,2,Length(sRtnVal)-1);
 
   // Changes string result to the expected type
-  if sType = 'C' then // is character or string
+  if sType = 'C' then // is character
     result := sResult
   else
   if sType = 'I' then  // integer
@@ -123,22 +125,91 @@ begin
     if sResult = 'True' then
       result := true
     else
-      result := false;
+      result := false
+  else
+    result := unassigned;
 
 end;
 
 function ReceiveCallBack(mesg: PChar): integer; stdcall;
-const
-  nCallsMade : integer = 0;
+var
+   s, sCommand : String;
 begin
-  Main_FRM.ProgressBar1.Position := StrToInt(String(mesg));
+  s := String(mesg);
+  sCommand := ExtParam(s,1,',');
+
+  if sCommand = 'QUIT' then
+    begin
+      ShowMessage(ExtParam(s,2,','));
+      oApplication.Terminate;
+      Halt(0);
+    end
+  else
+  if sCommand = 'ProgressBar1' then
+    Main_FRM.ProgressBar1.Position := StrToInt(ExtParam(s, 2, ','));
+
   oApplication.ProcessMessages;
-  Inc(nCallsMade);
+
   // The answer our Harbour program expects.
   // Callbackresult is a Harbour Public variable
   // that is requested when expecting some answer.
   // h(' CallBackResult := "NOANSWER"  ');
+
   result := 0;
+end;
+
+function ExtParam( sString : String; iPos : Integer; sSepar : String ) : String;
+var
+  sStrT, sPara : String;
+  iX, iPosiT : Integer;
+
+begin
+  sStrT := AllTrim(sString)+sSepar;
+  iX := 0;
+  sPara := '';  // tiene que haber al menos un parametro
+  While true do
+  begin
+    Inc(iX);
+    iPosiT := Pos(sSepar, sStrT);
+    if iPosiT = 0 then
+      Break;
+    sPara := Copy(sStrT, 1, iPosiT-1);
+    if iX = iPos then
+      break;
+    sStrT := Copy(sStrT, iPosiT+1, Length(sStrT)-iPosiT+1);
+    sPara := '';
+  end;
+  result := AllTrim(sPara);
+end;
+
+function AllTrim(sString: string): string;
+var
+   n,
+   nBeginPos,
+   nEndPos     : Integer;
+begin
+  nBeginPos := 0;
+  for n := 1 to Length(sString) do
+    if sString[n] <> ' ' then
+      begin
+        nBeginPos := n;
+        break;
+      end;
+
+
+  nEndPos := Length(sString);
+  If nBeginPos <> 0 then
+    begin
+      for n := Length(sString) downto 1 do
+        if sString[n] <> ' ' then
+          begin
+            nEndPos := n;
+            break;
+          end;
+    end;
+
+  Result := Copy(sString, nBeginPos, nEndPos-nBeginPos+1);
+
 end;
 
 Initialization

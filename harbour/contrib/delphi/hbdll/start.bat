@@ -1,4 +1,4 @@
-rem Makes our PRG to be a DLL, from an Antonio's idea an research
+rem Makes our PRG to be a DLL, from an Antonio's idea and research
 rem
 rem $Id$
 rem
