@@ -25,9 +25,9 @@ by Viktor Szakats <viktor.szakats@syenar.hu>
     (http://www.harbour-project.org/faq/harbour-4.html), consult with the
     developers, make contributions. This way your chances are high to get a
     RW access to the CVS.
- 2) Before uploading anything you'll need Developer (RW) status for the 
-    Harbour CVS server. To get this please make a request on the list, 
-    or contact the Harbour Administrators. Note that getting Developer 
+ 2) Before uploading anything you'll need Developer (RW) status for the
+    Harbour CVS server. To get this please make a request on the list,
+    or contact the Harbour Administrators. Note that getting Developer
     status is not an automatic process.
  3) You'll need a CVS client for your platform.
  4) You'll need an SSH client for your platform.
@@ -47,7 +47,7 @@ by Viktor Szakats <viktor.szakats@syenar.hu>
  6) Copy the last ChangeLog entry to the clipboard
  7) CVS COMMIT (starts another task on my system)
  8) New email message, paste the new ChangeLog entry
- 9) Copy and paste the ChangeLog entry header to the subject after 
+ 9) Copy and paste the ChangeLog entry header to the subject after
     "CHANGELOG: "
 10) The CVS pops up a window with the changed filenames
 11) Check if all the changed filenames are referred in the ChangeLog entry,
@@ -62,16 +62,16 @@ by Viktor Szakats <viktor.szakats@syenar.hu>
 Important notes:
 
  1) *Always* add a ChangeLog entry when committing to the CVS.
- 2) When adding a new file to the CVS, always use lower case 8.3 
-    filenames (*), add a CVS ID header to the file, don't use tabs 
+ 2) When adding a new file to the CVS, always use lower case 8.3
+    filenames (*), add a CVS ID header to the file, don't use tabs
     in the file, end the file with a newline char.
     Possibly consult other Developers about the new filename and file
     placement.
     Add the new filename to the related makefiles.
     (*) There are some exceptions: ChangeLog.*, Makefile, COPYING,
         ERRATA and TODO for example.
- 3) When adding a new directory, always consult the Developers about 
-    the name and placing of it. On the CVS, there's no way to completely 
+ 3) When adding a new directory, always consult the Developers about
+    the name and placing of it. On the CVS, there's no way to completely
     remove a directory, that's why this is important.
 
 1.3 Here's how to format your ChangeLog entries
@@ -87,12 +87,12 @@ by Viktor Szakats <viktor.szakats@syenar.hu>
 
 - Add a entry body which lists all filenames changed, all of
   them with full path spec. Mention the name of the changed function or
-  macro. Describe what you've changed, the reasons, and other comments 
+  macro. Describe what you've changed, the reasons, and other comments
   and explanations you find useful. If the change needs some related work
-  to be done by someone else (documentation, makefile), make a clear note 
+  to be done by someone else (documentation, makefile), make a clear note
   about this.
   Group the related changes into logical sections separated by empty lines.
-  
+
   Sample:
 
    * dir/filenam1.txt
@@ -105,7 +105,7 @@ by Viktor Szakats <viktor.szakats@syenar.hu>
      - Removed
      ; Comment
 
-  Note that using these specific marks is preferred although not a 
+  Note that using these specific marks is preferred although not a
   requirement.
 
 - Leave an empty line between the header and body and one after the body.
@@ -120,9 +120,9 @@ by Viktor Szakats <viktor.szakats@syenar.hu>
 by David G. Holm <Harbour@SpaceMoose.com>
 
 1) Change your CVSROOT variable from
-      :pserver:anonymous@cvs.Harbour-project.sourceforge.net:/cvsroot/harbour-project
+      :pserver:anonymous@cvs.sourceforge.net:/cvsroot/harbour-project
    to
-      :ext:your_source_forge_ID_in_lower_case@cvs.Harbour-project.sourceforge.net:/cvsroot/harbour-project
+      :ext:your_source_forge_ID_in_lower_case@cvs.sourceforge.net:/cvsroot/harbour-project
 
 2) Set up CVS to use SSH (see section 1.7 for details).
 
@@ -188,7 +188,7 @@ First I set up SSH, using the following steps:
    the following commands in it:
       @echo off
       SET HOME=D:\hb-dev\
-      ssh -l dholm cvs.Harbour-project.sourceforge.net
+      ssh -l dholm cvs.sourceforge.net
       ssh -l dholm Harbour-project.sourceforge.net
 6) I ran the LOGIN batch file, which automatically created a .ssh
    directory under D:\hb-dev\, automatically added SourceForge to
@@ -213,7 +213,7 @@ Next I set up CVS, using the following steps:
       SET HOMEDRIVE=D:
       SET HOMEPATH=/hb-dev/
       SET HOME=D:\hb-dev\
-      SET CVSROOT=:ext:dholm@cvs.Harbour-project.sourceforge.net:/cvsroot/harbour-project
+      SET CVSROOT=:ext:dholm@cvs.sourceforge.net:/cvsroot/harbour-project
       SET CVS_RSH=ssh
       cvs co harbour
 6) I ran the CHECKOUT batch file and was prompted for my SourceForge
