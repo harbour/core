@@ -273,17 +273,9 @@ char * _szErrors[] = { "Statement not allowed outside of procedure or function",
 
 /* Table with parse warnings */
 char * _szWarnings[] = { "Ambiguous reference, assuming memvar: \'%s\'",
-                         "Variable \'%s\' declared but not used in function: %s" };
-
-typedef struct _DECLARED_VAR
-{
-  char *                 szVarName;
-  char                   cVarType;
-  int                    iVarUsed;
-  struct _DECLARED_VAR   *pNextVar;
-} DECLARED_VAR, * PDECLARED_VAR;
-
-DECLARED_VAR FunVars = { "", 'U', 0, 0 };
+                         "Variable \'%s\' declared but not used in function: %s",
+                         "CodeBlock Parameter \'%s\' declared but not used in function: %s"
+                       };
 
 /* Table with reserved functions names
  * NOTE: THIS TABLE MUST BE SORTED ALPHABETICALLY
@@ -468,38 +460,7 @@ PATHNAMES *_pIncludePath = NULL;
 
 %%
 
-Main       : { Line(); } Source       {
-                                        PDECLARED_VAR pVarDef, pRelease;
-
-                                        if ( _iWarnings )
-                                        {
-                                            pVarDef = &FunVars;
-                                            if ( *(pVarDef->szVarName) && ! pVarDef->iVarUsed )
-                                               GenWarning( WARN_VAR_NOT_USED, pVarDef->szVarName, functions.pLast->szName );
-
-                                            pVarDef = pVarDef->pNextVar;
-
-                                            FunVars.szVarName = "";
-                                            FunVars.cVarType = 'U';
-                                            FunVars.iVarUsed = 0;
-                                            FunVars.pNextVar = 0;
-
-                                            while ( pVarDef )
-                                            {
-
-                                               if ( *(pVarDef->szVarName) && ! pVarDef->iVarUsed )
-                                                  GenWarning( WARN_VAR_NOT_USED, pVarDef->szVarName, functions.pLast->szName );
-
-                                               pRelease = pVarDef;
-
-                                               pVarDef = pVarDef->pNextVar;
-
-                                               OurFree( pRelease );
-                                            }
-                                        }
-
-                                        if( ! _iQuiet ) printf( "\nsyntax ok\n" );
-                                      };
+Main       : { Line(); } Source       { if( ! _iQuiet ) printf( "\nsyntax ok\n" ); }
 
 Source     : Crlf
            | Extern
@@ -1047,7 +1008,7 @@ void GenError( int iError, char * szError1, char * szError2 )
 
 void GenWarning( int iWarning, char * szWarning1, char * szWarning2 )
 {
-    if ( _iWarnings )
+    if( _iWarnings )
     {
         char * szLine = ( char * ) OurMalloc( 160 );      /*2 lines of text */
         printf( "\r%s(%i) ", files.pLast->szFileName, iLine );
@@ -1271,9 +1232,9 @@ int harbour_main( int argc, char * argv[] )
           pPath = szInclude = strdup( szInclude );
           while( (pDelim = strchr( pPath, OS_PATH_LIST_SEPARATOR )) != NULL )
           {
-            *pDelim ='\0';
+            *pDelim = '\0';
             AddSearchPath( pPath, &_pIncludePath );
-            pPath =pDelim + 1;
+            pPath = pDelim + 1;
           }
           AddSearchPath( pPath, &_pIncludePath );
          }
@@ -1282,7 +1243,7 @@ int harbour_main( int argc, char * argv[] )
          FixReturns();       /* fix all previous function returns offsets */
          GenExterns();       /* generates EXTERN symbols names */
          fclose( yyin );
-         files.pLast =NULL;
+         files.pLast = NULL;
 
 #ifdef HARBOUR_OBJ_GENERATION
          if( ! _iSyntaxCheckOnly && ! _iObj32 )
@@ -1581,7 +1542,6 @@ void AddVar( char * szVarName )
 {
    PVAR pVar, pLastVar;
    PFUNCTION pFunc =functions.pLast;
-   PDECLARED_VAR pVarDef;
 
    if( ! _iStartProc && functions.iCount <= 1 && iVarScope == VS_LOCAL )
    {
@@ -1600,24 +1560,6 @@ void AddVar( char * szVarName )
       --iLine;
       GenError( ERR_FOLLOWS_EXEC, (iVarScope==VS_LOCAL?"LOCAL":"STATIC"), NULL );
    }
-
-   pVarDef = &FunVars;
-   while ( pVarDef->pNextVar )
-   {
-      pVarDef = pVarDef->pNextVar;
-   }
-
-   pVarDef->szVarName = strdup( szVarName );
-   pVarDef->cVarType = 'U';
-   pVarDef->iVarUsed = 0;
-   pVarDef->pNextVar = ( PDECLARED_VAR  ) OurMalloc( sizeof( DECLARED_VAR ) );
-
-   pVarDef = pVarDef->pNextVar;
-
-   pVarDef->szVarName = "";
-   pVarDef->cVarType = 'U';
-   pVarDef->iVarUsed = 0;
-   pVarDef->pNextVar = 0;
 
    /* When static variable is added then functions.pLast points to function
     * that will initialise variables. The function where variable is being
@@ -1646,9 +1588,11 @@ void AddVar( char * szVarName )
    CheckDuplVars( pFunc->pLocals, szVarName, iVarScope );
 
    pVar = ( PVAR ) OurMalloc( sizeof( VAR ) );
-   pVar->szName  = szVarName;
+   pVar->szName = szVarName;
    pVar->szAlias = NULL;
-   pVar->pNext   = NULL;
+   //pVar->cType = 'U';
+   pVar->iUsed = 0;
+   pVar->pNext = NULL;
 
    switch( iVarScope )
    {
@@ -1852,34 +1796,6 @@ void FunDef( char * szFunName, char cScope, int iType )
    PCOMSYMBOL   pSym;
    PFUNCTION pFunc;
    char * *pFunction;
-   PDECLARED_VAR pVarDef, pRelease;
-
-   if ( _iWarnings )
-   {
-       pVarDef = &FunVars;
-       if ( *(pVarDef->szVarName) && ! pVarDef->iVarUsed )
-          GenWarning( WARN_VAR_NOT_USED, pVarDef->szVarName, functions.pLast->szName );
-
-       pVarDef = pVarDef->pNextVar;
-
-       FunVars.szVarName = "";
-       FunVars.cVarType = 'U';
-       FunVars.iVarUsed = 0;
-       FunVars.pNextVar = 0;
-
-       while ( pVarDef )
-       {
-
-          if ( *(pVarDef->szVarName) && ! pVarDef->iVarUsed )
-             GenWarning( WARN_VAR_NOT_USED, pVarDef->szVarName, functions.pLast->szName );
-
-          pRelease = pVarDef;
-
-          pVarDef = pVarDef->pNextVar;
-
-          OurFree( pRelease );
-       }
-   }
 
    if( ( pFunc = GetFunction( szFunName ) ) )
    {
@@ -1975,8 +1891,7 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
    /* write functions prototypes for PRG defined functions */
    while( pFunc )
    {
-      if ( pFunc->cScope & FS_STATIC || pFunc->cScope & FS_INIT ||
-           pFunc->cScope & FS_EXIT )
+      if( pFunc->cScope & FS_STATIC || pFunc->cScope & FS_INIT || pFunc->cScope & FS_EXIT )
          fprintf( yyc, "static " );
 
       fprintf( yyc, "HARBOUR HB_%s( void );\n", pFunc->szName );
@@ -2713,7 +2628,12 @@ WORD GetVarPos( PVAR pVars, char * szVarName ) /* returns the order + 1 of a var
    while( pVars )
    {
       if( ! strcmp( pVars->szName, szVarName ) )
+      {
+         if( _iWarnings )
+            pVars->iUsed = 1;
+
          return wVar;
+      }
       else
       {
          if( pVars->pNext )
@@ -2776,10 +2696,12 @@ int GetLocalVarPos( char * szVarName ) /* returns the order + 1 of a variable if
               /* this variable was not referenced yet - add it to the list */
               PVAR pVar;
 
-              pVar =(PVAR) OurMalloc( sizeof(PVAR) );
-              pVar->szName =szVarName;
-              pVar->pNext  =NULL;
-              iVar =1;  /* first variable */
+              pVar = (PVAR) OurMalloc( sizeof(PVAR) );
+              pVar->szName = szVarName;
+              //pVar->cType = 'U';
+              pVar->iUsed = 0;
+              pVar->pNext  = NULL;
+              iVar = 1;  /* first variable */
               if( ! pFunc->pStatics )
                 pFunc->pStatics = pVar;
               else
@@ -3034,51 +2956,11 @@ void MessageFix( char * szMsgName )  /* fix a generated message to an object */
 void PopId( char * szVarName ) /* generates the pcode to pop a value from the virtual machine stack onto a variable */
 {
    WORD wVar;
-   PDECLARED_VAR pVarDef;
-   int iFound = 0;
 
    if( ( wVar = GetLocalVarPos( szVarName ) ) )
-   {
       GenPCode3( _POPLOCAL, LOBYTE( wVar ), HIBYTE( wVar ) );
-
-      if ( _iWarnings )
-      {
-          pVarDef = &FunVars;
-          do
-          {
-             if ( ( iFound = ! strcmp( pVarDef->szVarName, szVarName ) ) )
-                break;
-
-             pVarDef = pVarDef->pNextVar;
-          } while ( pVarDef->pNextVar );
-
-          if ( iFound )
-             pVarDef->iVarUsed++;
-          else
-             GenError( 0, "Compiler Error, Declared variable \'%s\' not found in linked list", szVarName );
-      }
-   }
    else if( ( wVar = GetStaticVarPos( szVarName ) ) )
-        {
-            GenPCode3( _POPSTATIC, LOBYTE( wVar ), HIBYTE( wVar ) );
-
-            if ( _iWarnings )
-            {
-                pVarDef = &FunVars;
-                do
-                {
-                   if ( ( iFound = ! strcmp( pVarDef->szVarName, szVarName ) ) )
-                      break;
-
-                   pVarDef = pVarDef->pNextVar;
-                } while ( pVarDef->pNextVar );
-
-                if ( iFound )
-                   pVarDef->iVarUsed++;
-                else
-                   GenError( 0, "Compiler Error, Declared variable \'%s\' not found in linked list", szVarName );
-            }
-        }
+      GenPCode3( _POPSTATIC, LOBYTE( wVar ), HIBYTE( wVar ) );
    else
    {
       GenWarning( WARN_AMBIGUOUS_VAR, szVarName, NULL );
@@ -3098,8 +2980,6 @@ void PopId( char * szVarName ) /* generates the pcode to pop a value from the vi
 void PushId( char * szVarName ) /* generates the pcode to push a variable value to the virtual machine stack */
 {
    WORD wVar;
-   PDECLARED_VAR pVarDef;
-   int iFound = 0;
 
    if( iVarScope == VS_STATIC )
    {
@@ -3110,48 +2990,9 @@ void PushId( char * szVarName ) /* generates the pcode to push a variable value 
    }
 
    if( ( wVar = GetLocalVarPos( szVarName ) ) )
-   {
       GenPCode3( _PUSHLOCAL, LOBYTE( wVar ), HIBYTE( wVar ) );
-
-      if ( _iWarnings )
-      {
-          pVarDef = &FunVars;
-          do
-          {
-             if ( ( iFound = ! strcmp( pVarDef->szVarName, szVarName ) ) )
-                break;
-
-             pVarDef = pVarDef->pNextVar;
-          } while ( pVarDef->pNextVar );
-
-          if ( iFound )
-             pVarDef->iVarUsed++;
-          else
-             GenError( 0, "Compiler Error, Declared variable \'%s\' not found in linked list", szVarName );
-      }
-   }
    else if( ( wVar = GetStaticVarPos( szVarName ) ) )
-        {
-            GenPCode3( _PUSHSTATIC, LOBYTE( wVar ), HIBYTE( wVar ) );
-
-            if ( _iWarnings )
-            {
-                pVarDef = &FunVars;
-                do
-                {
-                   if ( ( iFound = ! strcmp( pVarDef->szVarName, szVarName ) ) )
-                      break;
-
-                   pVarDef = pVarDef->pNextVar;
-                } while ( pVarDef->pNextVar );
-
-                if ( iFound )
-                   pVarDef->iVarUsed++;
-                else
-                   GenError( 0, "Compiler Error, Declared variable \'%s\' not found in linked list", szVarName );
-            }
-        }
-
+      GenPCode3( _PUSHSTATIC, LOBYTE( wVar ), HIBYTE( wVar ) );
    else
    {
       GenWarning( WARN_AMBIGUOUS_VAR, szVarName, NULL );
@@ -3304,7 +3145,7 @@ void CheckDuplVars( PVAR pVar, char * szVarName, int iVarScope )
          GenError( ERR_VAR_DUPL, szVarName, NULL );
       }
       else
-         pVar =pVar->pNext;
+         pVar = pVar->pNext;
    }
 }
 
@@ -3337,6 +3178,29 @@ void FixElseIfs( void * pFixElseIfs )
 void FixReturns( void ) /* fixes all last defined function returns jumps offsets */
 {
    PRETURN pLast = pReturns, pDelete;
+
+   if( _iWarnings && functions.pLast )
+   {
+      PVAR pVar;
+
+      pVar = functions.pLast->pLocals;
+      while ( pVar )
+      {
+         if( pVar->szName && ! pVar->iUsed )
+            GenWarning( WARN_VAR_NOT_USED, pVar->szName, functions.pLast->szName );
+
+         pVar = pVar->pNext;
+      }
+
+      pVar = functions.pLast->pStatics;
+      while ( pVar )
+      {
+         if( pVar->szName && ! pVar->iUsed )
+            GenWarning( WARN_VAR_NOT_USED, pVar->szName, functions.pLast->szName );
+
+         pVar = pVar->pNext;
+      }
+   }
 
    if( pReturns )
    {
@@ -3485,17 +3349,17 @@ void CodeBlockEnd()
   WORD wPos;
   PVAR pVar, pFree;
 
-  pCodeblock =functions.pLast;
+  pCodeblock = functions.pLast;
 
   /* return to pcode buffer of function/codeblock in which the current
    * codeblock was defined
    */
-  functions.pLast =pCodeblock->pOwner;
+  functions.pLast = pCodeblock->pOwner;
 
   /* find the function that owns the codeblock */
-  pFunc =pCodeblock->pOwner;
+  pFunc = pCodeblock->pOwner;
   while( pFunc->pOwner )
-    pFunc =pFunc->pOwner;
+    pFunc = pFunc->pOwner;
 
   /* generate a proper codeblock frame with a codeblock size and with
    * a number of expected parameters
@@ -3505,10 +3369,10 @@ void CodeBlockEnd()
    */
 
   /* Count the number of referenced local variables */
-  pVar =pCodeblock->pStatics;
+  pVar = pCodeblock->pStatics;
   while( pVar )
   {
-    pVar =pVar->pNext;
+    pVar = pVar->pNext;
     ++wLocals;
   }
 
@@ -3521,15 +3385,16 @@ void CodeBlockEnd()
   GenPCode1( HIBYTE(wLocals) );
 
   /* generate the table of referenced local variables */
-  pVar =pCodeblock->pStatics;
+  pVar = pCodeblock->pStatics;
   while( wLocals-- )
   {
-    wPos =GetVarPos( pFunc->pLocals, pVar->szName );
+    wPos = GetVarPos( pFunc->pLocals, pVar->szName );
     GenPCode1( LOBYTE(wPos) );
     GenPCode1( HIBYTE(wPos) );
-    pFree =pVar;
+
+    pFree = pVar;
     pFree->szName = NULL;
-    pVar =pVar->pNext;
+    pVar = pVar->pNext;
     OurFree( pFree );
   }
 
@@ -3538,13 +3403,16 @@ void CodeBlockEnd()
 
   /* this fake-function is no longer needed */
   OurFree( pCodeblock->pCode )
-  pVar =pCodeblock->pLocals;
+  pVar = pCodeblock->pLocals;
   while( pVar )
   {
+    if( _iWarnings && pFunc->szName && pVar->szName && ! pVar->iUsed )
+       GenWarning( WARN_BLOCKVAR_NOT_USED, pVar->szName, pFunc->szName );
+
     /* free used variables */
-    pFree =pVar;
+    pFree = pVar;
     pFree->szName = NULL;
-    pVar =pVar->pNext;
+    pVar = pVar->pNext;
     OurFree( pFree );
   }
   OurFree( pCodeblock );
@@ -3565,8 +3433,8 @@ void SetAlias( char * szAlias, int iField )
 
   while( pVar )
   {
-    pVar->szAlias =szAlias;
-    pVar =pVar->pNext;
+    pVar->szAlias = szAlias;
+    pVar = pVar->pNext;
   }
 }
 
@@ -3581,7 +3449,7 @@ int FieldsCount()
   while( pVar )
   {
     ++iFields;
-    pVar =pVar->pNext;
+    pVar = pVar->pNext;
   }
 
   return iFields;

@@ -5,6 +5,7 @@ typedef struct _VAR        /* locals, static, public variables support */
    char *szName;           /* variable name */
    char *szAlias;          /* variable alias namespace */
    struct _VAR * pNext;    /* pointer to next defined variable */
+   int  iUsed;             /* number of times used */
 } VAR, * PVAR;
 
 typedef struct __FUNC      /* functions definition support */
