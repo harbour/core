@@ -440,7 +440,10 @@ HB_FUNC( TRANSFORM )
          if( bFound )                                 /* Did we find a dot        */
          {
             iDec = 0;
-            iWidth++;                                 /* Also adjust iWidth       */
+            if( i < ulPicLen )
+            {  /* if not 9999. */
+               iWidth++;                                 /* Also adjust iWidth       */
+            }
             for( ; i < ulPicLen; i++ )
             {
                if( szPic[ i ] == '9' ||

@@ -8,6 +8,20 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-05-13 11:00 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+   * source/rtl/transform.c
+      * TRANSFORM(1.23,"999.") correctly returns "  1." now
+      instead of empty string
+
+   * source/rtl/tget.prg
+      * fixed to correctly display buffer when negative value
+      and '0' was pressed in the position next to decimal
+      point
+      e.g. -1230. was displayed as -123-.
+      * fixed support for '9999.' picture
+      
+      
 2004-05-11 15:10 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
    * CVSROOT/avail

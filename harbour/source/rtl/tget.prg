@@ -366,12 +366,16 @@ METHOD Display( lForced ) CLASS Get
    DEFAULT lForced TO .t.
 
    if ::buffer == nil
-      ::picture := ::cPicture
+      ::picture := ::cPicture    //this sets also ::buffer
    endif
 
    xBuffer := ::buffer     //::PutMask( ::VarGet(), .f. )
 
-   if ! ::lMinusPrinted .and. ! Empty( ::DecPos ) .and. ::minus .and. substr( xBuffer, ::DecPos-1, 1 ) == "0"
+   if ::Type == 'N' .AND. ::hasFocus .AND. ! ::lMinusPrinted .and. ;
+         ! Empty( ::DecPos ) .and. ::minus .AND. ;
+         ::Pos > ::DecPos .and. VAL(LEFT(xBuffer,::DecPos-1)) == 0
+         //display '-.' only in case when value on the left side of
+         //the decimal point is equal 0
       xBuffer := substr( xBuffer, 1, ::DecPos - 2 ) + "-." + substr( xBuffer, ::DecPos + 1 )
    endif
 
@@ -593,7 +597,7 @@ METHOD Untransform( cBuffer ) CLASS Get
 
    case ::type == "N"
 
-*      ::minus := .f.
+      //::minus := .f.
       if "X" $ ::cPicFunc
          if Right( cBuffer, 2 ) == "DB"
             ::minus := .t.
@@ -640,7 +644,6 @@ METHOD Untransform( cBuffer ) CLASS Get
       cBuffer := StrTran( cBuffer, "-", " " )
       cBuffer := StrTran( cBuffer, "(", " " )
       cBuffer := StrTran( cBuffer, ")", " " )
-
 
       cBuffer := PadL( StrTran( cBuffer, " ", "" ), Len( cBuffer ) )
                  // It replace left, right and medium spaces.
@@ -724,7 +727,6 @@ METHOD overstrike( cChar ) CLASS Get
    if ::pos > ::nMaxEdit
       ::pos := ::FirstEditable( )
    endif
-
    ::buffer := SubStr( ::buffer, 1, ::Pos - 1 ) + cChar + SubStr( ::buffer, ::Pos + 1 )
 
 // To conform UPDATED() behaviour with that of Clipper
@@ -1014,7 +1016,11 @@ METHOD ToDecPos() CLASS Get
    ::buffer := ::PutMask( ::UnTransform(), .f. )
 
    if ::DecPos != 0
-      ::pos := ::DecPos + 1
+      IF( ::DecPos == LEN(::cPicMask) )
+         ::pos := ::DecPos - 1   //9999.
+      ELSE
+         ::pos := ::DecPos + 1   //9999.9
+      ENDIF
    else
       ::pos := ::nDispLen
    endif
@@ -1184,7 +1190,11 @@ METHOD PutMask( xValue, lEdit ) CLASS Get
       endif
    endif
 
-   cBuffer := Transform( xValue, if( Empty( cPicFunc ), if( ::lCleanZero .and. !::HasFocus, "@Z ", "" ), cPicFunc + if( ::lCleanZero .and. !::HasFocus, "Z", "" ) + " " ) + cMask )
+   cBuffer := Transform( xValue, ;
+               if( Empty( cPicFunc ), ;
+                  if( ::lCleanZero .and. !::HasFocus, "@Z ", "" ), ;
+                  cPicFunc + if( ::lCleanZero .and. !::HasFocus, "Z", "" ) + " " ) ;
+               + cMask )
 
    if ::type == "N"
       if ( "(" $ cPicFunc .or. ")" $ cPicFunc ) .and. xValue >= 0
