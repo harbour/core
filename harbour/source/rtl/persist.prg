@@ -71,7 +71,7 @@ ENDCLASS
 
 METHOD LoadFromText( cObjectText ) CLASS HBPersistent
 
-   local nLines := MLCount( cObjectText )
+   local nLines := MLCount( cObjectText, 254 )
    local nLine  := 1, cLine, cToken
    local lStart := .t., aArray
    private oSelf
@@ -83,7 +83,6 @@ METHOD LoadFromText( cObjectText ) CLASS HBPersistent
    while Empty( MemoLine( cObjectText,, nLine ) ) // We skip the first empty lines
       nLine++
    end
-
    while nLine <= nLines
       cLine  := MemoLine( cObjectText, 254, nLine )
 

@@ -169,7 +169,7 @@ USHORT hb_fsAttrFromRaw( ULONG raw_attr )
    if( raw_attr & FILE_ATTRIBUTE_NORMAL )    uiAttr |= HB_FA_NORMAL;
 
 #ifdef HB_EXTENSION
-   /* Note that FILE_ATTRIBUTE_NORMAL is not needed 
+   /* Note that FILE_ATTRIBUTE_NORMAL is not needed
       HB_FA_DEVICE not supported
       HB_FA_VOLCOMP needs to be checked */
    if( raw_attr & FILE_ATTRIBUTE_ENCRYPTED )     uiAttr |= HB_FA_ENCRYPTED;
@@ -241,7 +241,7 @@ ULONG hb_fsAttrToRaw( USHORT uiAttr )
    if( uiAttr & HB_FA_NORMAL )    raw_attr |= FILE_ATTRIBUTE_NORMAL;
 
 #ifdef HB_EXTENSION
-   /* Note that FILE_ATTRIBUTE_NORMAL is not needed 
+   /* Note that FILE_ATTRIBUTE_NORMAL is not needed
       HB_FA_DEVICE not supported
       HB_FA_VOLCOMP needs to be checked */
    if( uiAttr & HB_FA_ENCRYPTED )  raw_attr |= FILE_ATTRIBUTE_ENCRYPTED;
@@ -367,7 +367,7 @@ static void hb_fsFindFill( PHB_FFIND ffind )
 
    /* Set the default values in case some platforms don't
       support some of these, or they may fail on them. */
-   
+
    ffind->szName[ 0 ] = '\0';
 //   printf(" filename: %s",info->entry->d_name);
    ffind->size = 0;
@@ -378,7 +378,7 @@ static void hb_fsFindFill( PHB_FFIND ffind )
 #if defined(HB_OS_DOS)
 
    {
-      
+
       strncpy( ffind->szName, info->entry.ff_name, _POSIX_PATH_MAX );
       ffind->size = info->entry.ff_fsize;
 
@@ -605,6 +605,7 @@ PHB_FFIND hb_fsFindFirst( const char * pszFileName, USHORT uiAttr )
       if( info->hFindFile != INVALID_HANDLE_VALUE )
       {
          if( info->dwAttr == 0 ||
+           ( info->pFindFileData.dwFileAttributes == 0 ) ||
            ( info->pFindFileData.dwFileAttributes == FILE_ATTRIBUTE_NORMAL ) ||
            ( info->dwAttr & info->pFindFileData.dwFileAttributes ))
          {
@@ -617,6 +618,7 @@ PHB_FFIND hb_fsFindFirst( const char * pszFileName, USHORT uiAttr )
             while( FindNextFile( info->hFindFile, &info->pFindFileData ) )
             {
                if( info->dwAttr == 0 ||
+                 ( info->pFindFileData.dwFileAttributes == 0 ) ||
                  ( info->pFindFileData.dwFileAttributes == FILE_ATTRIBUTE_NORMAL ) ||
                  ( info->dwAttr & info->pFindFileData.dwFileAttributes ) )
                {
@@ -638,7 +640,7 @@ PHB_FFIND hb_fsFindFirst( const char * pszFileName, USHORT uiAttr )
 
       char     dirname[ _POSIX_PATH_MAX + 1 ];
 
-    
+
       char *   pos;
       ffind->info = ( void * ) hb_xgrab( sizeof( HB_FFIND_INFO ) );
       info = ( PHB_FFIND_INFO ) ffind->info;
@@ -745,6 +747,7 @@ BOOL hb_fsFindNext( PHB_FFIND ffind )
       while( FindNextFile( info->hFindFile, &info->pFindFileData ) )
       {
          if( info->dwAttr == 0 ||
+             ( info->pFindFileData.dwFileAttributes == 0 ) ||
              ( info->pFindFileData.dwFileAttributes == FILE_ATTRIBUTE_NORMAL ) ||
              ( info->dwAttr & info->pFindFileData.dwFileAttributes ))
          {
