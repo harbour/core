@@ -1149,19 +1149,12 @@ HB_FUNC( __MVDBGINFO )
    }
 }
 
-HB_FUNC( __ISMV )
+HB_FUNC( __MVEXIST )
 {
    HB_ITEM_PTR pName = hb_param( 1, HB_IT_STRING );
-   PHB_DYNS pDyn = NULL ;
+   PHB_DYNS pDyn = NULL;
 
-   if( pName )
-   {
-      hb_retl( ( ( pDyn = hb_memvarFindSymbol( pName ) ) && pDyn->hMemvar ) ? 1 : 0 );
-   }
-   else
-   {
-      hb_retl( 0 );
-   }
+   hb_retl( pName && ( pDyn = hb_memvarFindSymbol( pName ) ) && pDyn->hMemvar );
 }
 
 HB_FUNC( __MVGET )

@@ -8,6 +8,15 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2001-12-15 23:05 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * source/rtl/memvars.c
+   * source/rtl/tgetint.prg
+   * include/hbextern.ch
+     * __ISMV() renamed to __MVEXIST()
+     ! Fix applied to __MVEXIST()
+     + __MVEXIST() added to hbextern.ch
+
 2001-12-16 02:15 GMT+0700 Andi Jahja <harbour@cbn.net.id>
 
    Revision by Ron Pinkas <Ron@Profit-Master.com>
@@ -690,7 +699,6 @@ e.vc
        but this does not work if you have a source file on a different disk (at least on those
        systems which use a letter and a colon to name volumes).
 
->>>>>>> 1.3588
 2001-11-20 21:02 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * source/lang/Makefile

@@ -60,12 +60,10 @@
 #include "hbclass.ch"
 #include "hbsetup.ch"
 
-
 //---------------------------------------------------------------------------//
 
-Function GetNew( nRow, nCol, bVarBlock, cVarName, cPicture, cColor )
-
-return Get():New( nRow, nCol, bVarBlock, cVarName, cPicture, cColor )
+FUNCTION GetNew( nRow, nCol, bVarBlock, cVarName, cPicture, cColor )
+   RETURN Get():New( nRow, nCol, bVarBlock, cVarName, cPicture, cColor )
 
 //---------------------------------------------------------------------------//
 
@@ -73,12 +71,12 @@ FUNCTION __GET( bSetGet, cVarName, cPicture, bValid, bWhen )
 
    LOCAL oGet
 
-   IF( bSetGet == NIL )
-      IF __ISMV( cVarName )
-         bSetGet := {|_1| IIF( _1 == NIL,  __MVGET( cVarName ), __MVPUT( cVarName, _1 ) ) }
+   IF bSetGet == NIL
+      IF __MVEXIST( cVarName )
+         bSetGet := {|_1| iif( _1 == NIL,  __MVGET( cVarName ), __MVPUT( cVarName, _1 ) ) }
       ELSE
          // "{|_1| IIF( _1 == NIL, &cVarName, &cVarName := _1 )"
-         bSetGet := &( "{|_1| IIF( _1 == NIL, " + cVarName + ", " + cVarName + " := _1 ) }" )
+         bSetGet := &( "{|_1| iif( _1 == NIL, " + cVarName + ", " + cVarName + " := _1 ) }" )
       ENDIF
    ENDIF
 
@@ -89,13 +87,16 @@ FUNCTION __GET( bSetGet, cVarName, cPicture, bValid, bWhen )
 
    RETURN oGet
 
-
 FUNCTION __GETA( bGetArray, cVarName, cPicture, bValid, bWhen, aIndex )
 
-   LOCAL oGet, nDim := Len( aIndex ), bSetGet, aGetVar, Counter
+   LOCAL oGet
+   LOCAL nDim := Len( aIndex )
+   LOCAL bSetGet
+   LOCAL aGetVar
+   LOCAL nCounter
 
-   IF( bGetArray == NIL )
-      IF __ISMV( cVarName )
+   IF bGetArray == NIL
+      IF __MVEXIST( cVarName )
          aGetVar := __MVGET( cVarName )
       ELSE
          aGetVar := &cVarName
@@ -104,15 +105,15 @@ FUNCTION __GETA( bGetArray, cVarName, cPicture, bValid, bWhen, aIndex )
       aGetVar := Eval( bGetArray )
    ENDIF
 
-   FOR Counter := 1 TO nDim - 1
-      aGetVar := aGetVar[aIndex[Counter]]
+   FOR nCounter := 1 TO nDim - 1
+      aGetVar := aGetVar[ aIndex[ nCounter ] ]
    NEXT
-   bSetGet := {|_1| IIF( _1 == NIL, aGetVar[aIndex[Counter]], aGetVar[aIndex[Counter]] := _1 ) }
+   bSetGet := {|_1| iif( _1 == NIL, aGetVar[ aIndex[ nCounter ] ], aGetVar[ aIndex[ nCounter ] ] := _1 ) }
 
-   oGet := Get():New( , ,bSetGet, cVarName, cPicture )
+   oGet := Get():New(,, bSetGet, cVarName, cPicture )
    oGet:SubScript := aIndex
 
    oGet:PreBlock := bWhen
    oGet:PostBlock := bValid
 
-RETURN oGet
+   RETURN oGet
