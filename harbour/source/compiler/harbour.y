@@ -1513,7 +1513,7 @@ ForAssign  : '='
            ;
 
 StepExpr   : /* default step expression */       { $<asExpr>$ = NULL; }
-           | STEP Expression                     { $<asExpr>$ = $2; }
+           | STEP Expression                     { $<asExpr>$ = hb_compExprReduce( $2 ); }
            ;
 
 ForStatements : EmptyStats NEXT                     { --hb_comp_wForCounter; }
@@ -2053,4 +2053,3 @@ static void hb_compVariableDim( char * szName, HB_EXPR_PTR pInitValue )
      hb_compExprDelete( hb_compExprGenPop( hb_compExprNewVar( szName ) ) );
   }
 }
-

@@ -785,3 +785,9 @@ void hb_compExprCBVarDel( HB_CBVAR_PTR pVars )
    }
 }
 
+#ifndef HB_MACRO_SUPPORT
+HB_EXPR_PTR hb_compExprReduce( HB_EXPR_PTR pExpr )
+{
+  return hb_compExprListStrip( HB_EXPR_USE( pExpr, HB_EA_REDUCE ), NULL );
+}
+#endif

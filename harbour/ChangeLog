@@ -1,3 +1,12 @@
+2000-11-13 20:25 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+    *include/hbexpra.c
+    *source/compiler/expropta.c
+    *source/compiler/harbour.y
+    *source/compiler/harbour.sly
+        *fixed bug when FOR/TO/STEP (expr) is used
+
+
 2000-11-12 15:20 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *include/hbapirdd.h
