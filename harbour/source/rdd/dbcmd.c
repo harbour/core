@@ -1288,7 +1288,6 @@ HB_FUNC( DBCREATE )
 
    if( !bOpen )
    {
-      hb_xfree( szFileName );
       hb_rddReleaseCurrentArea();
       hb_rddSelectWorkAreaNumber( uiPrevArea );
    }
@@ -1313,10 +1312,15 @@ HB_FUNC( DBCREATE )
       pInfo.fShared = !hb_set.HB_SET_EXCLUSIVE;
       ( ( AREAP ) s_pCurrArea->pArea )->uiArea = s_uiCurrArea;
       if( SELF_OPEN( ( AREAP ) s_pCurrArea->pArea, &pInfo ) == FAILURE )
+      {
+         s_bNetError = TRUE;           /* Temp fix! What about other types of errors? */
          hb_rddReleaseCurrentArea();
+      }
       else
          hb_retl( TRUE );
+      hb_xfree( pInfo.abName );
    }
+   hb_xfree( szFileName );
 }
 
 HB_FUNC( DBDELETE )

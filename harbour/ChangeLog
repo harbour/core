@@ -1,3 +1,7 @@
+2001-06-16 20:40 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   * source/rdd/dbcmd.c
+     ! Bug fixed in dbCreate(), which caused unreleased memory blocks.
+
 2001-06-15 23:35 UTC+1 JFL (mafact) <jfl@mafact.com>
    * harbour/source/vm/Classe.c
      * Hb_ClsScope finally working :-(
