@@ -37,28 +37,28 @@
          otherwise it will not be CA-Cl*pper compatible. [vszakats] */
 
 /* TODO: :firstScrCol() --> nScreenCol
-         Determines screen column where the first table column is displayed. 
+         Determines screen column where the first table column is displayed.
          Xbase++ compatible method */
 
 /* TODO: :viewArea() --> aViewArea
          Determines the coordinates for the data area of a TBrowse object.
          Xbase++ compatible method */
 
-/* TOFIX: Clipper will determine the column width when the TBROWSE is displayed 
+/* TOFIX: Clipper will determine the column width when the TBROWSE is displayed
           at the first time. (while Harbour does that when adding the column)
-          Clipper will leave NIL in the :width variable until determined. Also 
-          Clipper will not allow the user to assign a NIL to the :width 
-          variable. Clipper will determine the width even when the caller 
+          Clipper will leave NIL in the :width variable until determined. Also
+          Clipper will not allow the user to assign a NIL to the :width
+          variable. Clipper will determine the width even when the caller
           explicitly set the :width after adding the column. [vszakats] */
 
 /* TOFIX: Multiline headers and footer are not supported. [vszakats] */
 
 /* TOFIX: The cursor is not left at the same position as in Clipper, this is
-          very important, since several apps relies on it. Check CA-Cl*pper 
+          very important, since several apps relies on it. Check CA-Cl*pper
           5.2e for the right implementation since 5.3 broke it. [vszakats] */
 
-/* TOFIX: Clipper will refresh the current row even when a Down() is issued in 
-          the last row, or an Up() in the first one, this is important for 
+/* TOFIX: Clipper will refresh the current row even when a Down() is issued in
+          the last row, or an Up() in the first one, this is important for
           cursor positioning. Yes, Harbour is smarter, but it's not compatible.
           [vszakats] */
 
@@ -172,10 +172,10 @@ METHOD New() CLASS TBrowse
    ::RowPos      := 1
    ::stable      := .f.
    ::RelativePos := 1
-   ::aRedraw     := nil
+   ::aRedraw     := {}
    ::lHeaders    := .f.
-   ::aRect       := nil
-   ::aRectColor  := nil
+   ::aRect       := {}
+   ::aRectColor  := {}
 
 return Self
 
@@ -273,6 +273,7 @@ METHOD Invalidate() CLASS TBrowse
                If( Empty( ::FootSep ), 0, 1 )
 
    AFill( ::aRedraw, .f. )
+
    ::Stable := .f.
 
 return Self
@@ -505,7 +506,7 @@ METHOD Stabilize() CLASS TBrowse
    local oCol, oCol2
    local nToAdd
 
-   if ::aRedraw == Nil .or. !::aRedraw[ 1 ]
+   if Empty(::aRedraw) .or. !::aRedraw[ 1 ]
       // Are there any column header to paint ?
       for n := 1 to Len( ::aColumns )
          if ! Empty( ::aColumns[ n ]:Heading )
@@ -572,7 +573,8 @@ METHOD Stabilize() CLASS TBrowse
       enddo
 
       ::rightVisible := nColsVisible
-      if ::aRedraw == nil
+
+      if Empty(::aRedraw)
          ::RowCount := ::nBottom - ::nTop + 1 - If( ::lHeaders, 1, 0 ) - ;
                If( lFooters, 1, 0 ) - If( Empty( ::HeadSep ), 0, 1 ) - If( Empty( ::FootSep ), 0, 1 )
          ::aRedraw := Array( ::RowCount )

@@ -1,8 +1,15 @@
+20000408-15:28 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+
+   * source/rtl/tbrowse.prg
+     ! ::New() was initializing a few instance variables to nil instead of {}
+       (aRedraw, aRect, aRectColor) and DBU.EXE compiled with debugger died
+       in ::Invalidate(275).
+
 20000408-11:05 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
 
-	* source/rtl/filesys.c
-	  + Added file locking to OS/2 (both GCC and icc)
-	  ! fixed file committing under OS/2 (no need to duplicate a file handle)
+   * source/rtl/filesys.c
+     + Added file locking to OS/2 (both GCC and icc)
+     ! fixed file committing under OS/2 (no need to duplicate a file handle)
 
 20000407-15:25 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
 
