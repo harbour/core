@@ -1,3 +1,17 @@
+19990902-21:15 EDT David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/filesys.c
+    ! Added missing semi-colon for line 1842.
+    * Replaced all calls to getdisk() and setdisk(), which are not very
+      likely to be POSIX-compliant (they don't exist in the Cygwin or OS/2
+      implementations of GCC), with _getdrive() and _chdrive(), which are
+      not POSIX-compliant either, but at least they exist for OS/2 GCC,
+      IBM Visual Age C++, Borland C, and Microsoft C. They also exist in
+      mingw32/direct.h for Cygwin, but that includes dir.h instead of
+      mingw32/dir.h, so it won't compile with a default Cygwin install,
+      so I left in the Cygwin exclusion. I also set things up so that only
+      OS2, DOS, and _Windows compilers will attempt to use these functions,
+      seeing as how they are unlikely to exist on Unix and Linux.
+
 19990902-17:30 GMT+1 Victor Szel <info@szelvesz.hu>
   * tests/working/rtl_test.prg
     + <=, >=, >, < operator tests added.

@@ -770,19 +770,19 @@ USHORT  hb_fsChDrv( BYTE nDrive )
 {
    USHORT uiResult;
 
-#if defined(HAVE_POSIX_IO) && ! defined(__CYGWIN__)
+#if defined(HAVE_POSIX_IO) && ( defined(OS2) || defined(DOS) || defined(_Windows) ) && ! defined(__CYGWIN__)
 
-   USHORT uiSave = getdisk();
+   USHORT uiSave = _getdrive();
 
    errno = 0;
-   uiResult = setdisk( nDrive );
-   if( nDrive == getdisk() )
+   uiResult = _chdrive( nDrive );
+   if( nDrive == _getdrive() )
    {
       s_uiErrorLast = errno;
    }
    else
    {
-      setdisk( uiSave );
+      _chdrive( uiSave );
       s_uiErrorLast = FS_ERROR;
    }
 
@@ -800,10 +800,10 @@ BYTE    hb_fsCurDrv( void )
 {
    USHORT uiResult;
 
-#if defined(HAVE_POSIX_IO) && ! defined(__CYGWIN__)
+#if defined(HAVE_POSIX_IO) && ( defined(OS2) || defined(DOS) || defined(_Windows) ) && ! defined(__CYGWIN__)
 
    errno = 0;
-   uiResult = getdisk();
+   uiResult = _getdrive();
    s_uiErrorLast = errno;
 
 #else
@@ -820,13 +820,13 @@ USHORT  hb_fsIsDrv( BYTE nDrive )
 {
    USHORT uiResult;
 
-#if defined(HAVE_POSIX_IO) && ! defined(__CYGWIN__)
+#if defined(HAVE_POSIX_IO) && ( defined(OS2) || defined(DOS) || defined(_Windows) ) && ! defined(__CYGWIN__)
 
-   USHORT uiSave = getdisk();
+   USHORT uiSave = _getdrive();
 
    errno = 0;
-   setdisk( nDrive );
-   if( nDrive == getdisk() )
+   _chdrive( nDrive );
+   if( nDrive == _getdrive() )
    {
       uiResult = 1;
       s_uiErrorLast = errno;
@@ -834,7 +834,7 @@ USHORT  hb_fsIsDrv( BYTE nDrive )
    else
    {
       uiResult = 0;
-      setdisk( uiSave );
+      _chdrive( uiSave );
       s_uiErrorLast = FS_ERROR;
    }
 
@@ -1159,7 +1159,7 @@ HARBOUR HB_DISKSPACE( void )
 
    while( ( uiResult = _dos_getdiskfree( uiDrive, &disk ) ) != 0 )
    {
-      WORD wResult = hb_errRT_BASE_Ext1( EG_OPEN, 2018, NULL, NULL, 0, EF_CANDEFAULT )
+      WORD wResult = hb_errRT_BASE_Ext1( EG_OPEN, 2018, NULL, NULL, 0, EF_CANDEFAULT );
 
       if( wResult == E_DEFAULT || wResult == E_BREAK )
          break;
