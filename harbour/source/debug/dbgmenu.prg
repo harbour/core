@@ -67,6 +67,7 @@ function __dbgBuildMenu( oDebugger )  // Builds the debugger pulldown menu
    local oCaseSensitive
    local oMonoDisplay
    local oPublic, oPrivate, oStatic, oLocal, oAll, oSort
+   local oCallStack
 
    MENU oMenu
       MENUITEM " ~File "
@@ -95,12 +96,14 @@ function __dbgBuildMenu( oDebugger )  // Builds the debugger pulldown menu
          MENUITEM " ~WorkAreas   F6"  ACTION oDebugger:ShowWorkAreas()
          MENUITEM " ~App Screen  F4 " ACTION oDebugger:ShowAppScreen()
          SEPARATOR
-         MENUITEM " ~CallStack"       ACTION oDebugger:ShowCallStack()
+         MENUITEM oCallStack PROMPT " ~CallStack" ;
+            ACTION ( oDebugger:Stack(), oCallStack:Toggle() )
       ENDMENU
 
       MENUITEM " ~Run "
       MENU
-         MENUITEM " ~Animate"               ACTION oDebugger:Animate()
+         MENUITEM " ~Animate" ;
+            ACTION ( oDebugger:ToggleAnimate(), oDebugger:Animate() )
          MENUITEM " ~Step              F8 " ACTION oDebugger:Step()
          MENUITEM " ~Trace            F10"  ACTION oDebugger:Trace()
          MENUITEM " ~Go                F5"  ACTION oDebugger:Go()
