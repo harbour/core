@@ -134,19 +134,19 @@ HB_FUNC(HB_UNZIPFILE)
         char szFile[_POSIX_PATH_MAX];
         strcpy(szFile,hb_parc(1));
 
-        hb_retl(hb_UnzipOne(hb___CheckFile(szFile),hb_param( 2, HB_IT_BLOCK),ISLOG(3) ? hb_parl(3) : 0 ,hb_parc(4),hb_parc(5),hb_parc(6),hb_itemParam(7)));
+        hb_retl(hb_UnzipOne(hb___CheckFile(szFile),hb_param( 2, HB_IT_BLOCK),ISLOG(3) ? hb_parl(3) : 0 ,hb_parc(4),ISCHAR(5) ? hb_parc(5) : NULL,hb_parc(6),hb_itemParam(7)));
             }
     if( ISCHAR(1) && ISARRAY(6) ){
         char szFile[_POSIX_PATH_MAX];
         strcpy(szFile,hb_parc(1));
 
-        hb_retl(hb_UnzipSel(hb___CheckFile(szFile),hb_param( 2, HB_IT_BLOCK),ISLOG(3) ? hb_parl(3) : 0 ,hb_parc(4),hb_parc(5),hb_param(6,HB_IT_ARRAY),hb_itemParam(7)));
+        hb_retl(hb_UnzipSel(hb___CheckFile(szFile),hb_param( 2, HB_IT_BLOCK),ISLOG(3) ? hb_parl(3) : 0 ,hb_parc(4),ISCHAR(5) ? hb_parc(5) : NULL ,hb_param(6,HB_IT_ARRAY),hb_itemParam(7)));
        }
 
     if ( ! ISCHAR(6) && ! ISARRAY(6) ) { 
         char szFile[_POSIX_PATH_MAX];
         strcpy(szFile,hb_parc(1));
-        hb_retl(hb_UnzipAll(hb___CheckFile(szFile),hb_param( 2, HB_IT_BLOCK),ISLOG(3) ? hb_parl(3) : 0 ,hb_parc(4),hb_parc(5),hb_param( 6, HB_IT_BLOCK),hb_itemParam(7)));
+        hb_retl(hb_UnzipAll(hb___CheckFile(szFile),hb_param( 2, HB_IT_BLOCK),ISLOG(3) ? hb_parl(3) : 0 ,hb_parc(4),ISCHAR(5) ? hb_parc(5) : NULL,hb_param( 6, HB_IT_BLOCK),hb_itemParam(7)));
         }
 }
 HB_FUNC(HB_SETDISKZIP)

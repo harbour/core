@@ -49,6 +49,27 @@
 #     See additional notes under RTL.LIB below.
 #
 
+# ---------------------------------------------------------------
+# "echo." intentionally used instead of "echo", to avoid conflicts
+# with external commands named echo.
+# using macros for ECHO and DEL to allow overiding such as:
+#
+#    set ECHO=cmd /c echo
+#    set DEL=cmd /c del
+#
+# The above might be needed on Windows 2000 and XP.
+# The macros are referenced in makefile.bc
+# ---------------------------------------------------------------
+
+!ifndef ECHO
+# don't indent definitions
+ECHO = echo.
+!endif
+!ifndef DEL
+# You might need to set 'ECHO=echo.' - but don't set 'DEL=del.' !!!
+DEL = del
+!endif
+
 MK_FILE      = hb_slex.vc
 MK_FLAGS     = $(MAKEFLAGS: =)
 
@@ -75,6 +96,7 @@ HBTEST_DIR   = utils\hbtest
 HBDOC_DIR    = utils\hbdoc
 HBPP_DIR     = utils\hbpp
 HBMAKE_DIR   = utils\hbmake
+
 !ifdef PDF
 HBPDF_DIR   = contrib\pdflib
 !endif
@@ -87,12 +109,12 @@ AS             = ML
 CFLAGS         = -I$(INCLUDE_DIR) -TP -W3 -nologo $(C_USR) $(CFLAGS)
 CLIBFLAGS      = -c $(CFLAGS) $(CLIBFLAGS) -DSIMPLEX
 CLIBFLAGSDEBUG = -Zi $(CLIBFLAGS)
-!ifdef PDF
-HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS) -dPDF
-!else
 HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS)
-!endif
 LDFLAGS        = $(LDFLAGS)
+
+!ifdef PDF
+HARBOURFLAGS   = $(HARBOURFLAGS) -dPDF
+!endif
 
 #
 # Macros to access our library names
@@ -186,7 +208,7 @@ LIBS = \
 LIBS2 = \
    $(LIBS) \
    user32.lib \
-   winspool.lib 
+   winspool.lib
 
 #
 # RTL.LIB rules
@@ -339,10 +361,12 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\getlist.obj \
    $(OBJ_DIR)\getsys.obj \
    $(OBJ_DIR)\input.obj \
+   $(OBJ_DIR)\listbox.obj \
    $(OBJ_DIR)\memoedit.obj \
    $(OBJ_DIR)\memvarbl.obj \
    $(OBJ_DIR)\menuto.obj \
    $(OBJ_DIR)\objfunc.obj \
+   $(OBJ_DIR)\perfuncs.obj \
    $(OBJ_DIR)\persist.obj \
    $(OBJ_DIR)\profiler.obj \
    $(OBJ_DIR)\pushbtn.obj \
@@ -350,6 +374,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\radiogrp.obj \
    $(OBJ_DIR)\readkey.obj \
    $(OBJ_DIR)\readvar.obj \
+   $(OBJ_DIR)\scrollbr.obj \
    $(OBJ_DIR)\setfunc.obj \
    $(OBJ_DIR)\setta.obj \
    $(OBJ_DIR)\tbcolumn.obj \
@@ -560,7 +585,7 @@ COMMON_LIB_OBJS = \
 {$(VM_DIR)}.asm{$(OBJ_DIR)}.obj:
    rem lib /extract:$(OBJ_DIR)\symbols.obj /out:$(OBJ_DIR)\symbols.obj \harb35\lib\vm.lib
    rem $(AS) $< $@ nul nul
-   $(AS) /c /Fo$@ $<
+   $(AS) /c /omf /Fo$@ $<
 
 {$(VM_DIR)}.c{$(OBJ_DIR)}.obj:
    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\  $<
@@ -695,11 +720,11 @@ all: zot \
 MK_FLAGS = $(MK_FLAGS:A=)
 
 zot:
-   -@if exist $(OBJ_DIR)\*.obj del $(OBJ_DIR)\*.obj > nul
-   -@if exist $(OBJ_DIR)\*.c del $(OBJ_DIR)\*.c > nul
-   -@if exist $(OBJ_DIR)\*.h del $(OBJ_DIR)\*.h > nul
-   -@if exist $(BIN_DIR)\*.exe del $(BIN_DIR)\*.exe > nul
-   -@if exist $(BIN_DIR)\*.map del $(BIN_DIR)\*.map > nul
+   -@if exist $(OBJ_DIR)\*.obj $(DEL) $(OBJ_DIR)\*.obj > nul
+   -@if exist $(OBJ_DIR)\*.c $(DEL) $(OBJ_DIR)\*.c > nul
+   -@if exist $(OBJ_DIR)\*.h $(DEL) $(OBJ_DIR)\*.h > nul
+   -@if exist $(BIN_DIR)\*.exe $(DEL) $(BIN_DIR)\*.exe > nul
+   -@if exist $(BIN_DIR)\*.map $(DEL) $(BIN_DIR)\*.map > nul
 
 !else
 
@@ -828,6 +853,7 @@ $(HBMAKE_EXE) : \
    $(HBMAKE_DIR)\prb_stak.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $**
    $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\  $(OBJ_DIR)\hbmake.c \
+                                   $(OBJ_DIR)\hbmutils.c \
                                    $(OBJ_DIR)\radios.c \
                                    $(OBJ_DIR)\checks.c \
                                    $(OBJ_DIR)\fclass1.c \
@@ -883,17 +909,17 @@ $(HARBOUR_EXE) : \
    $(COMPILER_DIR)\expropta.c \
    $(COMPILER_DIR)\exproptb.c \
    $(COMPILER_DIR)\exproptc.c
-   -echo. > $(OBJ_DIR)\unistd.h
+   -$(ECHO) > $(OBJ_DIR)\unistd.h
    $(CC) $(CFLAGS) -DSIMPLEX -I$(OBJ_DIR) -Fo$(OBJ_DIR)\ -w $** -o $(HARBOUR_EXE) /link $(LDFLAGS) $(PP_LIB) $(COMMON_LIB)
-   -del $(OBJ_DIR)\unistd.h
+   -$(DEL) $(OBJ_DIR)\unistd.h
 
 
-#  for %i in ($**) do $(CC) -c $(CFLAGS) -I$(OBJ_DIR) -Fo$(OBJ_DIR)\ -w  %i
-#  rem for %i in ($(**:.c=.obj)) do echo %i
-#  $(CC) -I$(OBJ_DIR) -Fo$(OBJ_DIR)\ -w $(HARBOUR_EXE_OBJ) -o $(HARBOUR_EXE) /link $(LDFLAGS) $(PP_LIB) $(COMMON_LIB)
-#  -del $(OBJ_DIR)\unistd.h
 
-#  $(CC) $(CFLAGS) -I$(OBJ_DIR) -Fo$(OBJ_DIR)\ -w $(HARBOUR_EXE_OBJ) -o $(HARBOUR_EXE) /link $(LDFLAGS) $(PP_LIB) $(COMMON_LIB)
+
+
+
+
+
 
 #
 # Library dependencies and build rules
@@ -972,9 +998,9 @@ $(OBJ_DIR)\macroy.obj : $(OBJ_DIR)\macroy.c
    $(CC) $(CLIBFLAGS) -w -Fo$@  $**
 
 $(OBJ_DIR)\macroslx.obj : $(MACRO_DIR)\macroslx.c
-   -echo. > $(OBJ_DIR)\unistd.h
+   -$(ECHO) > $(OBJ_DIR)\unistd.h
    $(CC) $(CLIBFLAGS) -I$(OBJ_DIR) -w -Fo$@  $**
-   -del $(OBJ_DIR)\unistd.h
+   -$(DEL) $(OBJ_DIR)\unistd.h
 
 
 # dummy targets used for prg to c creation

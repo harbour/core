@@ -587,6 +587,7 @@ uLong uiCount=0;
 int iCause=0;
 int iMode=true;
 CZipArchive szZip;
+BOOL bChange=FALSE;
 iTotal=0;
 if (pDiskBlock){
     pChangeDiskBlock=pDiskBlock;
@@ -623,14 +624,23 @@ iMode=hb_CheckSpamMode(szFile);
 
  if (iReturn) {
 
-    for (uiCount=0;uiCount<=szZip.GetNoEntries();uiCount++){
+    for (uiCount=0;uiCount<szZip.GetNoEntries();uiCount++){
 		CZipFileHeader fh;
         const char *  szFileNameInZip;
         CZipString szTempString;        
 
         szZip.GetFileInfo(fh, (WORD)uiCount);
-                    szTempString =(LPCTSTR)fh.GetFileName();                  
-                    szFileNameInZip=(const char *)szTempString;
+            PHB_FNAME pOut;
+              szTempString =(LPCTSTR)fh.GetFileName();                  
+              szFileNameInZip=(const char *)szTempString;
+              pOut=hb_fsFNameSplit( ( char * ) szFileNameInZip );
+              if (szPath==NULL){
+                  szPath=(char*)pOut->szDrive;
+                  pOut->szDrive="";
+                  hb_fsFNameMerge( (char*)szFileNameInZip, pOut );
+                  bChange=TRUE;
+                  }
+
                iTotal=fh.m_uUncomprSize        ;
                 if(pBlock !=NULL){
 
@@ -659,6 +669,10 @@ iMode=hb_CheckSpamMode(szFile);
 	{
       iCause=e.m_iCause       ;
 	}
+        if(bChange) {
+        bChange=FALSE;
+        szPath=NULL;
+        }
 
     }
 
@@ -728,11 +742,20 @@ iMode=hb_CheckSpamMode(szFile) ;
         if (uiCount >=0){
 		CZipFileHeader fh;
         const char *  szFileNameInZip;
+        PHB_FNAME pOut;
         CZipString szTempString;        
         szZip.GetFileInfo(fh, (WORD)uiCount);
         szTempString =(LPCTSTR)fh.GetFileName();
+
         iTotal=fh.m_uUncomprSize;
         szFileNameInZip=(const char *)szTempString;
+               pOut=hb_fsFNameSplit( ( char * ) szFileNameInZip );
+              if (szPath==NULL){
+                  szPath=(char*)pOut->szDrive;
+                  pOut->szDrive="";
+                  hb_fsFNameMerge( (char*)szFileNameInZip, pOut );
+                  }
+
                 if(pBlock !=NULL){
 
                    PHB_ITEM pFileName=hb_itemPutC(NULL,(char *)szFileNameInZip);
@@ -859,6 +882,7 @@ int iCause=0;
 CZipArchive szZip;
 int iMode=0;
 iTotal=0;
+BOOL bChange=FALSE;
 iMode=hb_CheckSpamMode(szFile);
     if (szPassWord != NULL){
         szZip.SetPassword(szPassWord);
@@ -897,10 +921,19 @@ iMode=hb_CheckSpamMode(szFile);
         if (uiCount >=0){
 		CZipFileHeader fh;
         const char *  szFileNameInZip;
-        CZipString szTempString;        
+        CZipString szTempString;
+        PHB_FNAME pOut;
         szZip.GetFileInfo(fh, (WORD)uiCount);
         szTempString =(LPCTSTR)fh.GetFileName();                  
         szFileNameInZip=(const char *)szTempString;
+               pOut=hb_fsFNameSplit( ( char * ) szFileNameInZip );
+              if (szPath==NULL){
+                  szPath=(char*)pOut->szDrive;
+                  pOut->szDrive="";
+                  hb_fsFNameMerge( (char*)szFileNameInZip, pOut );
+                  bChange=TRUE;
+                  }
+
          iTotal=fh.m_uUncomprSize   ;
                 if(pBlock !=NULL){
 
@@ -925,7 +958,10 @@ iMode=hb_CheckSpamMode(szFile);
 	{
       iCause=e->m_iCause       ;
 	}
-
+      if (bChange) {
+      bChange=FALSE;
+      szPath="";
+      }
         }
 }
     }
