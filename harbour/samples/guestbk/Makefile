@@ -12,7 +12,6 @@ PRG_SOURCES=\
 PRG_MAIN=guestbk.prg
 
 LIBS=\
-        tools \
         debug \
         vm \
         rtl \

@@ -84,7 +84,9 @@
    typedef WORD far * LPWORD;
 #endif
 
+#if 0
 static HANDLE s_HOsave;
+#endif
 static HANDLE s_HDOutput;
 static HANDLE s_HOriginal;
 static HANDLE s_HOutput;

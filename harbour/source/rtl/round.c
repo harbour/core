@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * ROUND(), INT() functions
  *
- * Copyright 1999 {list of individual authors and e-mail addresses}
+ * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -37,8 +37,8 @@
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
  *
- * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    ROUND()
+ * Copyright 1999 Matthew Hamilton <mhamilton@bunge.com.au>
+ *    INT()
  *
  * See doc/license.txt for licensing terms.
  *

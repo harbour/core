@@ -37,7 +37,7 @@
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
  *
- * Copyright 1999 {list of individual authors and e-mail addresses}
+ * Copyright 1999 Paul Tucker <ptucker@sympatico.ca>
  *    SETMODE()
  *
  * See doc/license.txt for licensing terms.

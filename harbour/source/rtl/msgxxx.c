@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Localization module includer for GNU compilers
  *
- * Copyright 1999 {list of individual authors and e-mail addresses}
+ * Copyright 1999 Gonzalo Diethelm <gonzalo.diethelm@iname.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * The FileSys API (Harbour level)
  *
- * Copyright 1999 {list of individual authors and e-mail addresses}
+ * Copyright 1999 Manuel Ruiz <mrt@joca.es>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

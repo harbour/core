@@ -10,7 +10,6 @@ rem
 echo -O2 -I..\..\include -L..\..\lib > build.tmp
 echo -eguestbk.exe >> build.tmp
 echo guestbk.c inifiles.c testcgi.c >> build.tmp
-echo tools.lib >> build.tmp
 echo debug.lib >> build.tmp
 echo vm.lib >> build.tmp
 echo rtl.lib >> build.tmp

@@ -13,7 +13,6 @@ C_SOURCES=\
 PRG_MAIN=pe.prg
 
 LIBS=\
-        tools \
         debug \
         vm \
         rtl \

@@ -3,10 +3,10 @@
  */
 
 /*
- * Harbour Project source code:
- * VALTYPE() function
+ * Harbour Compatibility Library for CA-Cl*pper source code:
+ * Header file to help compile C file for both Harbour and Clipper
  *
- * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * Copyright 2000 Victor Szakats <info@szelvesz.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -33,42 +33,16 @@
  *
  */
 
-#include "hbapi.h"
-#include "hbapiitm.h"
+#ifndef HB_CLIP_H_
+#define HB_CLIP_H_
 
-char * hb_valtypeGet( HB_ITEM_PTR pItem )
-{
-   switch( hb_itemType( pItem ) & ~IT_BYREF )
-   {
-      case IT_ARRAY:
-         return ( hb_arrayIsObject( pItem ) ? "O" : "A" );
+#ifdef __HARBOUR__
+   #include "hbdefs.h"
+   #define HB_FUNCL( funcname, funcshort )  HB_FUNC( funcname )
+#else
+   #define HB_FUNC( funcname )              CLIPPER funcname ( void )
+   #define HB_FUNCL( funcname, funcshort )  CLIPPER funcshort ( void )
+#endif
 
-      case IT_BLOCK:
-         return "B";
-
-      case IT_DATE:
-         return "D";
-
-      case IT_LOGICAL:
-         return "L";
-
-      case IT_INTEGER:
-      case IT_LONG:
-      case IT_DOUBLE:
-         return "N";
-
-      case IT_STRING:
-         return "C";
-
-      case IT_MEMO:
-         return "M";
-   }
-
-   return "U";
-}
-
-HB_FUNC( VALTYPE )
-{
-   hb_retc( hb_valtypeGet( hb_param( 1, IT_ANY ) ) );
-}
+#endif /* HB_CLIP_H_ */
 

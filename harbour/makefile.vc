@@ -359,15 +359,10 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\strright.obj \
    \
    $(OBJ_DIR)\fileread.obj \
-   $(OBJ_DIR)\html.obj \
    $(OBJ_DIR)\nconvert.obj \
-   $(OBJ_DIR)\ng.obj \
    $(OBJ_DIR)\numtxten.obj \
    $(OBJ_DIR)\numtxthu.obj \
-   $(OBJ_DIR)\os2.obj \
-   $(OBJ_DIR)\rtf.obj \
-   $(OBJ_DIR)\stringp.obj \
-   $(OBJ_DIR)\troff.obj
+   $(OBJ_DIR)\stringp.obj
 
 #
 # MACRO.LIB rules
@@ -701,9 +696,15 @@ $(HBDOC_EXE) : \
    $(HBDOC_DIR)\genhtm.prg \
    $(HBDOC_DIR)\genrtf.prg \
    $(HBDOC_DIR)\genhpc.prg \
-   $(HBDOC_DIR)\genasc.prg
+   $(HBDOC_DIR)\genasc.prg \
+   $(HBDOC_DIR)\html.prg \
+   $(HBDOC_DIR)\ng.prg \
+   $(HBDOC_DIR)\os2.prg \
+   $(HBDOC_DIR)\rtf.prg \
+   $(HBDOC_DIR)\troff.prg \
+   $(HBDOC_DIR)\fileread.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $**
-   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\hbdoc.c $(OBJ_DIR)\genos2.c $(OBJ_DIR)\gentrf.c $(OBJ_DIR)\genng.c $(OBJ_DIR)\genhtm.c $(OBJ_DIR)\genrtf.c $(OBJ_DIR)\genhpc.c $(OBJ_DIR)\genasc.c -o $(HBDOC_EXE) /link $(LIBS2)
+   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\hbdoc.c $(OBJ_DIR)\genos2.c $(OBJ_DIR)\gentrf.c $(OBJ_DIR)\genng.c $(OBJ_DIR)\genhtm.c $(OBJ_DIR)\genrtf.c $(OBJ_DIR)\genhpc.c $(OBJ_DIR)\genasc.c $(OBJ_DIR)\html.c $(OBJ_DIR)\ng.c $(OBJ_DIR)\os2.c $(OBJ_DIR)\rtf.c $(OBJ_DIR)\troff.c $(OBJ_DIR)\fileread.c -o $(HBDOC_EXE) /link $(LIBS2)
 
 #
 # HARBOUR.EXE rules

@@ -10,7 +10,6 @@ PRG_SOURCES=\
 PRG_MAIN=hscript.prg
 
 LIBS=\
-        tools \
         debug \
         vm \
         rtl \

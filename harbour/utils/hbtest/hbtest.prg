@@ -37,7 +37,7 @@
 /* EMPTY() tests written by Eddie Runia <eddie@runia.com> */
 /* :class* tests written by Dave Pearson <davep@hagbard.demon.co.uk> */
 
-/* NOTE: The test suit will not work if the DTOS() function is not included
+/* NOTE: The test suite will not work if the DTOS() function is not included
          in Harbour (-DHB_COMPAT_XPP). */
 /* NOTE: Always compile with /n switch */
 /* NOTE: It's worth to make tests with and without the /z switch */
@@ -75,7 +75,7 @@ STATIC s_nEndTime
 
 FUNCTION Main( cPar1, cPar2 )
 
-   OutStd( "Harbour Regression Test Suit" + HB_OSNewLine() +;
+   OutStd( "Harbour Regression Test Suite" + HB_OSNewLine() +;
            "Copyright 1999-2000, http://www.harbour-project.org" + HB_OSNewLine() )
 
    IF cPar1 == NIL

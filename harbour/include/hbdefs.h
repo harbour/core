@@ -120,13 +120,7 @@
 
 #define HB_SYMBOL_UNUSED( symbol ) ( void ) symbol
 
-#if defined(__GNUC__)
-   #define HARBOUR void __attribute__ ((stdcall))
-#elif defined(_MSC_VER) || defined(__IBMCPP__)
-   #define HARBOUR void
-#else
-   #define HARBOUR void pascal
-#endif
+#define HARBOUR void
 
 #define __HARBOUR__
 

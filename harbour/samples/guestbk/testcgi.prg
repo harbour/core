@@ -26,7 +26,10 @@
 **/
 
 #include "cgi.ch"
-#include "hbclip.ch"
+
+#ifndef __HARBOUR__
+   #include "hbclip.ch"
+#endif
 
 #define IF_BUFFER 65535
 

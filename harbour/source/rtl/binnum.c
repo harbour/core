@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * BIN2W(), BIN2I(), BIN2L(), I2BIN(), L2BIN() functions
  *
- * Copyright 1999 {list of individual authors and e-mail addresses}
+ * Copyright 1999 Manuel Ruiz <mrt@joca.es>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

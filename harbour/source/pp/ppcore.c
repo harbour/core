@@ -42,7 +42,7 @@
  *    See doc/pragma.txt
  *
  * Copyright 2000 Victor Szakats <info@szelvesz.hu>
- *    __DATE__, __TIME__ support
+ *    __DATE__, __TIME__, __HB_MAIN__ support
  *
  * See doc/license.txt for licensing terms.
  *
@@ -261,6 +261,10 @@ void hb_pp_Init( void )
       sprintf( szResult, "\"%02d:%02d:%02d\"", oTime->tm_hour, oTime->tm_min, oTime->tm_sec );
       hb_pp_AddDefine( "__TIME__", szResult );
    }
+
+#ifdef HARBOUR_START_PROCEDURE
+   hb_pp_AddDefine( "__HB_MAIN__", HARBOUR_START_PROCEDURE );
+#endif
 }
 
 /* Table with parse warnings */

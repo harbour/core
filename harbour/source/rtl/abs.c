@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * ABS() function
  *
- * Copyright 1999 {list of individual authors and e-mail addresses}
+ * Copyright 1999 Matthew Hamilton <mhamilton@bunge.com.au>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * DIRECTORY() function
  *
- * Copyright 1999 {list of individual authors and e-mail addresses}
+ * Copyright 1999 Leslee Griffith <les.griffith@vantagesystems.ca>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -623,7 +623,7 @@ HB_FUNC( DIRECTORY )
                       strcpy( filename, ++pos );
                }
 
-            #elif defined(__BORLANDC__) || (__BORLANDC__ >= 1280)
+            #elif defined(__BORLANDC__) && (__BORLANDC__ >= 1280)
                /* NOTE: _chmod( f, 0 ) => Get attribs
                         _chmod( f, 1, n ) => Set attribs
                         chmod() though, _will_ change the attributes */

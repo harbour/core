@@ -155,7 +155,7 @@ For MSVC on Win95/WinNT:
          If you have MAKE_MODE in your dos environment, make sure it is
          not set to unix
 
-         For best results, in your copy of make_tpl.bat, also set:
+         For best results, in your copy of make_gnu.bat, also set:
   C_USR=-TP
   HB_ARCHITECTURE   w32
   HB_COMPILER       msvc

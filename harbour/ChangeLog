@@ -1,3 +1,91 @@
+20000326-08:06 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * include/hbdefs.h
+   * include/clipdefs.h
+     * Now the HARBOUR keyword requires the function name to be in uppercase.
+       The compatibility CLIPPER keyword still allows for mixed case function
+       names on some platforms. The reason is that "pascal" keyword is 
+       non-portable, and the above requiremenet was already there for some
+       platforms, now it's a generic rule.
+     - Removed the __attribute__ ((stdcall)) for the __GNUC__ branch. Setting
+       any specific calling convention is not needed, since we don't need to 
+       deal with compatibility with precompiled legacy libs, there's no 
+       such thing, CA-Cl*pper never supported GNU C.
+     ; Now the HARBOUR macro is quite simple, it's plain "void".
+
+   * source/pp/ppcore.c
+     + Added predefined macro __HB_MAIN__. The macro is undefined or holds the 
+       value of HARBOUR_START_PROCEDURE depending on the compiler.
+       Use this code to make your Harbour startup procedure platform
+       independent:
+       #ifndef __HB_MAIN__
+          #define __HB_MAIN__ AppMain /* Or whatever you wish to call it */
+       #endif
+       FUNCTION __HB_MAIN__()
+
+   + contrib/hbclip/hbclip.h
+     + Added header file which can be used to maintain common C source code
+       for CA-Cl*pper and Harbour. The legacy code need a one-time conversion
+       to make this work.
+
+   * source/rtl/dir.c
+     ! Fixed #elif guard (BCC31 was not working). (|| -> &&)
+
+   * source/rtl/gete.c
+   * source/rtl/math.c
+   * source/rtl/abs.c
+   * source/rtl/minmax.c
+   * source/rtl/mod.c
+   * source/rtl/round.c
+   * source/rtl/dir.c
+   * source/rtl/binnum.c
+   * source/rtl/philes.c
+   * source/rtl/empty.c
+   * source/rtl/setpos.c
+   * source/rtl/saverest.c
+   * source/rtl/setcurs.c
+   * source/rtl/gx.c
+   * source/rtl/len.c
+   * source/rtl/valtype.c
+   * source/rtl/msgxxx.c
+   * source/vm/pcount.c
+   * source/vm/proc.c
+   * source/vm/break.c
+   * source/vm/initexit.c
+     + Added copyrights for some files which didn't have any. The source is
+       the Harbour mailing list archive.
+
+   * source/tools/html.prg     -> utils/hbdoc/
+   * source/tools/ng.prg       -> utils/hbdoc/
+   * source/tools/os2.prg      -> utils/hbdoc/
+   * source/tools/rtf.prg      -> utils/hbdoc/
+   * source/tools/troff.prg    -> utils/hbdoc/
+   * source/tools/fileread.prg -> utils/hbdoc/ (copied)
+   * source/tools/Makefile
+   * utils/hbdoc/Makefile
+   * makefile.vc
+   * makefile.bc
+     * Some HBDOC specific source files moved to their local directory.
+     * One tools file copied to hbdoc for local usage.
+     - Removed tools lib.
+
+   * samples/guestbk/testcgi.prg
+   * samples/guestbk/Makefile
+   * samples/guestbk/bld_b32.bat
+     ! #include hbclip.ch guarded
+     - Removed tools lib.
+
+   * samples/misc/Makefile
+   * samples/pe/Makefile
+     - Removed tools lib.
+
+   * utils/hbtest/hbtest.prg
+     ! Typo (suit -> suite)
+   * source/rtl/gtwin/gtwin.c
+     ! Unused variable warning fixed.
+   * doc/gmake.txt
+     ! make_tpl -> make_gnu
+
 20000326-03:37 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    - make_tpl.*

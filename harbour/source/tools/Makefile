@@ -34,15 +34,10 @@ C_SOURCES=\
 
 PRG_SOURCES=\
         fileread.prg \
-        html.prg \
         nconvert.prg \
-        ng.prg \
         numtxthu.prg \
         numtxten.prg \
-        os2.prg \
-        rtf.prg \
         stringp.prg \
-        troff.prg \
 
 LIBNAME=tools
 

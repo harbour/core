@@ -6,7 +6,8 @@
  * Harbour Project source code:
  * SETPOS(), SETPOSBS() functions
  *
- * Copyright 1999 {list of individual authors and e-mail addresses}
+ * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
+ * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

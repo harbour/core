@@ -96,7 +96,11 @@ typedef USHORT  ( * FUNCP )( USHORT param, ...);
 typedef FUNCP * FUNCPP;
 
 #define HIDE    static
-#define CLIPPER HARBOUR
+#if defined(_MSC_VER) || defined(__IBMCPP__)
+   #define CLIPPER HARBOUR
+#else
+   #define CLIPPER HARBOUR pascal
+#endif
 
 #ifndef NIL
    #define NIL     '\0'

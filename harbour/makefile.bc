@@ -312,15 +312,10 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\strright.obj \
    \
    $(OBJ_DIR)\fileread.obj \
-   $(OBJ_DIR)\html.obj \
    $(OBJ_DIR)\nconvert.obj \
-   $(OBJ_DIR)\ng.obj \
    $(OBJ_DIR)\numtxten.obj \
    $(OBJ_DIR)\numtxthu.obj \
-   $(OBJ_DIR)\os2.obj \
-   $(OBJ_DIR)\rtf.obj \
-   $(OBJ_DIR)\stringp.obj \
-   $(OBJ_DIR)\troff.obj
+   $(OBJ_DIR)\stringp.obj
 
 #
 # MACRO.LIB rules
@@ -518,7 +513,13 @@ HBDOC_EXE_OBJS = \
    $(OBJ_DIR)\genng.obj \
    $(OBJ_DIR)\genos2.obj \
    $(OBJ_DIR)\genrtf.obj \
-   $(OBJ_DIR)\gentrf.obj
+   $(OBJ_DIR)\gentrf.obj \
+   $(OBJ_DIR)\html.obj \
+   $(OBJ_DIR)\ng.obj \
+   $(OBJ_DIR)\os2.obj \
+   $(OBJ_DIR)\rtf.obj \
+   $(OBJ_DIR)\troff.obj \
+   $(OBJ_DIR)\fileread.obj
 
 #
 # Our default target
@@ -1564,13 +1565,6 @@ $(OBJ_DIR)\hb_f.obj : $(TOOLS_DIR)\hb_f.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
-$(OBJ_DIR)\html.c : $(TOOLS_DIR)\html.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
-
-$(OBJ_DIR)\html.obj : $(OBJ_DIR)\html.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) -+$@,,
-
 $(OBJ_DIR)\mathx.obj : $(TOOLS_DIR)\mathx.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
@@ -1579,13 +1573,6 @@ $(OBJ_DIR)\nconvert.c : $(TOOLS_DIR)\nconvert.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
 $(OBJ_DIR)\nconvert.obj : $(OBJ_DIR)\nconvert.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) -+$@,,
-
-$(OBJ_DIR)\ng.c : $(TOOLS_DIR)\ng.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
-
-$(OBJ_DIR)\ng.obj : $(OBJ_DIR)\ng.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
@@ -1600,20 +1587,6 @@ $(OBJ_DIR)\numtxthu.c : $(TOOLS_DIR)\numtxthu.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
 $(OBJ_DIR)\numtxthu.obj : $(OBJ_DIR)\numtxthu.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) -+$@,,
-
-$(OBJ_DIR)\os2.c : $(TOOLS_DIR)\os2.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
-
-$(OBJ_DIR)\os2.obj : $(OBJ_DIR)\os2.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) -+$@,,
-
-$(OBJ_DIR)\rtf.c : $(TOOLS_DIR)\rtf.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
-
-$(OBJ_DIR)\rtf.obj : $(OBJ_DIR)\rtf.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
@@ -1661,13 +1634,6 @@ $(OBJ_DIR)\strpbrk.obj : $(TOOLS_DIR)\strpbrk.c
    tlib $(TOOLS_LIB) -+$@,,
 
 $(OBJ_DIR)\strright.obj : $(TOOLS_DIR)\strright.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) -+$@,,
-
-$(OBJ_DIR)\troff.c : $(TOOLS_DIR)\troff.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
-
-$(OBJ_DIR)\troff.obj : $(OBJ_DIR)\troff.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
@@ -1970,6 +1936,12 @@ $(HBDOC_EXE) : $(HBDOC_EXE_OBJS)
    echo. $(OBJ_DIR)\genos2.obj >> make.tmp
    echo. $(OBJ_DIR)\genrtf.obj >> make.tmp
    echo. $(OBJ_DIR)\gentrf.obj >> make.tmp
+   echo. $(OBJ_DIR)\html.obj >> make.tmp
+   echo. $(OBJ_DIR)\ng.obj >> make.tmp
+   echo. $(OBJ_DIR)\os2.obj >> make.tmp
+   echo. $(OBJ_DIR)\rtf.obj >> make.tmp
+   echo. $(OBJ_DIR)\troff.obj >> make.tmp
+   echo. $(OBJ_DIR)\fileread.obj >> make.tmp
    echo. $(PP_LIB) >> make.tmp
    echo. $(COMMON_LIB) >> make.tmp
    echo. $(VM_LIB) >> make.tmp
@@ -2031,3 +2003,38 @@ $(OBJ_DIR)\gentrf.c : $(HBDOC_DIR)\gentrf.prg
 $(OBJ_DIR)\gentrf.obj : $(OBJ_DIR)\gentrf.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
+$(OBJ_DIR)\html.c : $(HBDOC_DIR)\html.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\html.obj : $(OBJ_DIR)\html.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\ng.c : $(HBDOC_DIR)\ng.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\ng.obj : $(OBJ_DIR)\ng.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\os2.c : $(HBDOC_DIR)\os2.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\os2.obj : $(OBJ_DIR)\os2.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\rtf.c : $(HBDOC_DIR)\rtf.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\rtf.obj : $(OBJ_DIR)\rtf.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\troff.c : $(HBDOC_DIR)\troff.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\troff.obj : $(OBJ_DIR)\troff.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\fileread.c : $(HBDOC_DIR)\fileread.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\fileread.obj : $(OBJ_DIR)\fileread.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
