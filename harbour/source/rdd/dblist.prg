@@ -52,7 +52,7 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 2000 RonPinkas <Ron@Profit-Master.com>
- * HB_aTokens()
+ * HB_aExpressions()
  *
 */
 
@@ -77,9 +77,9 @@ FUNCTION __dbList( lOff, abEval, lAll, bFor, bWhile, nNext, nRecord, lRest, lToP
    // Scan for strings instead of blocks - These are macros that need to be compiled into blocks.
    FOR nIndex := 1 TO nLen
      IF ValType( abEval[ nIndex ] ) == 'C'
-        ? abEval[ nIndex ]
+        //? abEval[ nIndex ]
         // Macro may be a comma seperated list.
-        asMacros := HB_aTokens( abEval[ nIndex ], ',' )
+        asMacros := HB_aExpressions( abEval[ nIndex ] )
         nMacros  := Len( asMacros )
 
         // Array has to be sized to allow dor the extra blocks
@@ -160,58 +160,91 @@ FUNCTION __dbList( lOff, abEval, lAll, bFor, bWhile, nNext, nRecord, lRest, lToP
 
 RETURN NIL
 
-FUNCTION HB_aTokens( cLine, cDelimiter )
+FUNCTION HB_aExpressions( cLine )
 
-   LOCAL aTokens := {}
+   LOCAL aExpressions := {}
 
-   #ifdef __HARBOUR__
+   HB_INLINE( aExpressions, cLine )
+   {
+      PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
+      PHB_ITEM pLine  = hb_param( 2, HB_IT_STRING );
+      size_t i, iOffset = 0, iIndex = 1;
+      int iParans = 0, iArrays = 0, iIndexs = 0;
+      BOOL bArray = FALSE;
 
-      IF cDelimiter == NIL
-         cDelimiter := ' '
-      ENDIF
-
-      HB_INLINE( aTokens, cLine, Asc( cDelimiter ) )
+      for( i = 0; i < pLine->item.asString.length; i++ )
       {
-         PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
-         PHB_ITEM pLine  = hb_param( 2, HB_IT_STRING );
-         char cDelimiter = (char) hb_parni(3);
-         size_t i, iOffset = 0, iIndex = 1;
+         switch( pLine->item.asString.value[i] )
+         {
+            case '(' :
+               iParans++;
+               bArray = FALSE;
+               break;
 
-         for( i = 0; i < pLine->item.asString.length; i++ )
-         {
-            if( pLine->item.asString.value[i] == cDelimiter )
-            {
-               hb_arraySize( pArray, iIndex );
-               hb_storclen( pLine->item.asString.value + iOffset, i - iOffset, 1, iIndex );
-               iOffset = i + 1;
-               iIndex++;
-            }
-         }
-         if( iOffset < pLine->item.asString.length - 1 )
-         {
-            hb_arraySize( pArray, iIndex );
-            hb_storclen( pLine->item.asString.value + iOffset, pLine->item.asString.length - iOffset, 1, iIndex );
+            case ')' :
+               iParans--;
+               bArray = TRUE;
+               break;
+
+            case '{' :
+               iArrays++;
+               bArray = FALSE;
+               break;
+
+            case '}' :
+               iArrays--;
+               bArray = TRUE;
+               break;
+
+            case '[' :
+               if( bArray || ( i && isalnum( pLine->item.asString.value[i - 1] ) ) )
+               {
+                  iIndexs++;
+               }
+               else
+               {
+                  while( ++i < pLine->item.asString.length  && pLine->item.asString.value[i] != ']'  );
+               }
+               bArray = FALSE;
+               break;
+
+            case ']' :
+               iIndexs--;
+               bArray = TRUE;
+               break;
+
+            case '"' :
+               while( ++i < pLine->item.asString.length && pLine->item.asString.value[i] != '"'  );
+               bArray = FALSE;
+               break;
+
+            case '\'' :
+               while( ++i < pLine->item.asString.length && pLine->item.asString.value[i] != '\''  );
+               bArray = FALSE;
+               break;
+
+            case ',' :
+               if( iParans == 0 && iArrays == 0 && iIndexs == 0 )
+               {
+                  hb_arraySize( pArray, iIndex );
+                  hb_storclen( pLine->item.asString.value + iOffset, i - iOffset, 1, iIndex );
+                  iOffset = i + 1;
+                  iIndex++;
+               }
+               bArray = FALSE;
+               break;
+
+            default :
+               bArray = FALSE;
+               break;
          }
       }
 
-   #else
+      if( iOffset < pLine->item.asString.length - 1 )
+      {
+         hb_arraySize( pArray, iIndex );
+         hb_storclen( pLine->item.asString.value + iOffset, pLine->item.asString.length - iOffset, 1, iIndex );
+      }
+   }
 
-      LOCAL nLen := Len( cLine ), i, nOffset := 1
-
-      IF cDelimiter == NIL
-         cDelimiter := ' '
-      ENDIF
-
-      FOR i := 1 to nLen
-         IF SubStr( cLine, i, 1 ) == cDelimiter
-            aAdd( aTokens, SubStr( cLine, nOffset, i - nOffset ) )
-            nOffset := i + 1
-         ENDIF
-      NEXT
-      IF nOffset < nLen - 1
-         aAdd( aTokens, SubStr( cLine, nOffset ) )
-      ENDIF
-
-   #endif
-
-RETURN aTokens
+RETURN aExpressions
