@@ -58,7 +58,7 @@
 %define hb_pref  hb
 %define hb_arch  export HB_ARCHITECTURE=linux
 %define hb_cc    export HB_COMPILER=gcc
-%define hb_cflag export C_USR="-DHB_FM_STATISTICS_OFF -O2"
+%define hb_cflag export C_USR="-DHB_FM_STATISTICS_OFF -O3"
 %define hb_lflag export L_USR=%{?_with_static:-static}
 %define hb_mt    export HB_MT=no
 %define hb_mgt   export HB_MULTI_GT=no
