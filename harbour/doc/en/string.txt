@@ -18,11 +18,11 @@
  *    ISLOWER()   Documentation
  *    LTRIM()     Documentation
  *    AT()        Documentation
- *    RAT()       Documentation  
+ *    RAT()       Documentation
  *    LEFT()      Documentation
  *    RIGHT()     Documentation
- *    SUBSTR()    Documentation  
- *    UPPER()     Documentation  
+ *    SUBSTR()    Documentation
+ *    UPPER()     Documentation
  *    LOWER()     Documentation
  *    ASC()       Documentation
  *    CHR()       Documentation
@@ -51,23 +51,23 @@
  *  $SYNTAX$
  *      ISALPHA(<cString>) --> lAlpha
  *  $ARGUMENTS$
- *      <cString> Any character string   
+ *      <cString> Any character string
  *  $RETURNS$
- *      lAlpha Logical true (.T.) or false (.F.).   
+ *      lAlpha Logical true (.T.) or false (.F.).
  *  $DESCRIPTION$
  *      This function return a logical true (.T.) if the first character
  *      in <cString> is an alphabetic character.If not, the function will
- *      return a logical false (.F.).   
+ *      return a logical false (.F.).
  *  $EXAMPLES$
- *      QOUT( "isalpha( 'hello' ) = ", isalpha( 'hello' ) ) 
- *      QOUT( "isalpha( '12345' ) = ", isalpha( '12345' ) ) 
+ *      QOUT( "isalpha( 'hello' ) = ", isalpha( 'hello' ) )
+ *      QOUT( "isalpha( '12345' ) = ", isalpha( '12345' ) )
  *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compliant   
+ *      This function is CA-Clipper compliant
  *  $PLATFORMS$
- *      All      
+ *      All
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -85,24 +85,24 @@
  *  $SYNTAX$
  *      ISDIGIT(<cString>) --> lDigit
  *  $ARGUMENTS$
- *      <cString> Any character string   
+ *      <cString> Any character string
  *  $RETURNS$
- *      lDigit Logical true (.T.) or false (.F.).   
+ *      lDigit Logical true (.T.) or false (.F.).
  *  $DESCRIPTION$
  *      This function takes the caracter string <cString> and checks to
  *      see if the leftmost character is a digit,from 1 to 9.If so, the
  *      function will return a logical true (.T.);otherwise, it will
- *      return a logical false (.F.).   
+ *      return a logical false (.F.).
  *  $EXAMPLES$
- *      QOUT( "isdigit( '12345' ) = ", isdigit( '12345' ) ) 
- *      QOUT( "isdigit( 'abcde' ) = ", isdigit( 'abcde' ) ) 
+ *      QOUT( "isdigit( '12345' ) = ", isdigit( '12345' ) )
+ *      QOUT( "isdigit( 'abcde' ) = ", isdigit( 'abcde' ) )
  *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compliant   
+ *      This function is CA-Clipper compliant
  *  $PLATFORMS$
- *      All   
+ *      All
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -120,24 +120,24 @@
  *  $SYNTAX$
  *      ISUPPER(<cString>) --> lUpper
  *  $ARGUMENTS$
- *      <cString> Any character string   
+ *      <cString> Any character string
  *  $RETURNS$
- *      lUpper Logical true (.T.) or false (.F.).   
+ *      lUpper Logical true (.T.) or false (.F.).
  *  $DESCRIPTION$
  *      This function takes the caracter string <cString> and checks to
  *      see if the leftmost character is a uppercased letter.If so, the
  *      function will return a logical true (.T.);otherwise, it will
- *      return a logical false (.F.).   
+ *      return a logical false (.F.).
  *  $EXAMPLES$
- *      QOUT( "isupper( 'Abcde' ) = ", isupper( 'Abcde' ) ) 
- *      QOUT( "isupper( 'abcde' ) = ", isupper( 'abcde' ) ) 
+ *      QOUT( "isupper( 'Abcde' ) = ", isupper( 'Abcde' ) )
+ *      QOUT( "isupper( 'abcde' ) = ", isupper( 'abcde' ) )
  *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compliant   
+ *      This function is CA-Clipper compliant
  *  $PLATFORMS$
- *      All    
+ *      All
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -155,24 +155,24 @@
  *  $SYNTAX$
  *      ISLOWER(<cString>) --> lLower
  *  $ARGUMENTS$
- *      <cString> Any character string   
+ *      <cString> Any character string
  *  $RETURNS$
- *      lLower Logical true (.T.) or false (.F.).   
+ *      lLower Logical true (.T.) or false (.F.).
  *  $DESCRIPTION$
  *      This function takes the caracter string <cString> and checks to
  *      see if the leftmost character is a lowercased letter.If so, the
  *      function will return a logical true (.T.);otherwise, it will
- *      return a logical false (.F.).   
+ *      return a logical false (.F.).
  *  $EXAMPLES$
- *      QOUT( "islower( 'Abcde' ) = ", islower( 'Abcde' ) ) 
- *      QOUT( "islower( 'abcde' ) = ", islower( 'abcde' ) ) 
+ *      QOUT( "islower( 'Abcde' ) = ", islower( 'Abcde' ) )
+ *      QOUT( "islower( 'abcde' ) = ", islower( 'abcde' ) )
  *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compliant   
+ *      This function is CA-Clipper compliant
  *  $PLATFORMS$
- *      All   
+ *      All
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -184,26 +184,26 @@
  *  $FUNCNAME$
  *      LTRIM()
  *  $CATEGORY$
- *      Strings   
+ *      Strings
  *  $ONELINER$
- *      Removes leading spaces from a string 
+ *      Removes leading spaces from a string
  *  $SYNTAX$
  *      LTRIM(<cString>)   --> <cReturn>
  *  $ARGUMENTS$
- *      <cString>  Character expression with leading spaces   
+ *      <cString>  Character expression with leading spaces
  *  $RETURNS$
- *      <cReturn>  The same character expression with leading spaces removed   
+ *      <cReturn>  The same character expression with leading spaces removed
  *  $DESCRIPTION$
- *      This function trims the leading space blank   
+ *      This function trims the leading space blank
  *  $EXAMPLES$
  *      ? QOUT( LTRIM("HELLO     "))
  *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This functions is CA-CLIPPER compatible   
+ *      This functions is CA-CLIPPER compatible
  *  $PLATFORMS$
- *      All  
+ *      All
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -219,18 +219,23 @@
  *  $ONELINER$
  *      Locates the position of a substring in a main string.
  *  $SYNTAX$
- *      AT(<cSearch>,<cString>) --> nPos
+ *      AT(<cSearch>,<cString>, [<nStart>], [<nEnd>]) --> nPos
  *  $ARGUMENTS$
- *      <cSearch>  Substring to search for   
+ *      <cSearch>  Substring to search for
  *
- *      <cString>  Main string   
+ *      <cString>  Main string
+ *
+ *      <nStart>   First position to search in cString, by default 1
+ *
+ *      <nEnd>     End posistion to search, by default cString length
  *  $RETURNS$
  *      AT() return the starting position of the first occurrence of the
- *      substring in the main string   
+ *      substring in the main string
  *  $DESCRIPTION$
  *      This function searches the string <cString> for the characters in
  *      the first string <cSearch>. If the substring is not contained within
- *      the second expression,the function will return 0.   
+ *      the second expression,the function will return 0. The third and fourth
+ *      parameters lets you indicate a starting and end offset to search in.
  *  $EXAMPLES$
  *      QOUT( "at( 'cde', 'abcdefgfedcba' ) = '" +;
  *      at( 'cde', 'abcsefgfedcba' ) + "'" )
@@ -238,9 +243,9 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compatible.   
+ *      This function is CA-Clipper compatible.
  *  $PLATFORMS$
- *      All   
+ *      All
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -256,18 +261,18 @@
  *  $ONELINER$
  *      Searches for a substring from the right side of a string.
  *  $SYNTAX$
- *      RAT(<cSearch>,<cString>) --> nPos    
+ *      RAT(<cSearch>,<cString>) --> nPos
  *  $ARGUMENTS$
- *      <cSearch>  Substring to search for   
+ *      <cSearch>  Substring to search for
  *
- *      <cString>  Main string   
+ *      <cString>  Main string
  *  $RETURNS$
- *      RAT() return the location of beginnig position.   
+ *      RAT() return the location of beginnig position.
  *  $DESCRIPTION$
  *      This function searches througt <cString> for the first existence
  *      of <cSearch>.The search operation is performed from the right side
  *      of <cString> to the left. If the function is unable to find any
- *      occurence of <cSearch> in <cString>,the value of the function will be 0.    
+ *      occurence of <cSearch> in <cString>,the value of the function will be 0.
  *  $EXAMPLES$
  *      QOUT( "rat( 'cde', 'abcdefgfedcba' ) = '" +;
  *      rat( 'cde', 'abcsefgfedcba' ) + "'" )
@@ -275,9 +280,9 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Will not work with a search string > 64 KB on some platforms   
+ *      Will not work with a search string > 64 KB on some platforms
  *  $PLATFORMS$
- *      All   
+ *      All
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -295,24 +300,24 @@
  *  $SYNTAX$
  *      LEFT(<cString>,<nPos>) --> <cReturn>
  *  $ARGUMENTS$
- *      <cString> Main character to be parsed   
+ *      <cString> Main character to be parsed
  *
- *      <nPos>    Number of bytes to return beggining at the leftmost position   
+ *      <nPos>    Number of bytes to return beggining at the leftmost position
  *  $RETURNS$
- *      <cReturn>  Substring of evaluation   
+ *      <cReturn>  Substring of evaluation
  *  $DESCRIPTION$
- *      This functions returns the leftmost <nPos> characters of <cString>.   
+ *      This functions returns the leftmost <nPos> characters of <cString>.
  *      It is equivalent to the following programing expression:
- *          SUBSTR(<cString>,1,<nPos>   
+ *          SUBSTR(<cString>,1,<nPos>
  *  $EXAMPLES$
  *      ? QOUT(LEFT('HELLO HARBOUR',5))
  *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This functions is CA CLIPPER compatible   
+ *      This functions is CA CLIPPER compatible
  *  $PLATFORMS$
- *      All   
+ *      All
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -330,22 +335,22 @@
  *  $SYNTAX$
  *      SUBSTR(<cString>,<nPos>) --> <cReturn>
  *  $ARGUMENTS$
- *      <cString> Character expression to be parsed   
+ *      <cString> Character expression to be parsed
  *
- *      <nPos>    Number of bytes to return beggining at the rightmost position   
+ *      <nPos>    Number of bytes to return beggining at the rightmost position
  *  $RETURNS$
- *      <cReturn>  Substring of evaluation   
+ *      <cReturn>  Substring of evaluation
  *  $DESCRIPTION$
- *      This functions returns the rightmost <nPos> characters of <cString>.   
+ *      This functions returns the rightmost <nPos> characters of <cString>.
  *  $EXAMPLES$
  *      ? QOUT(RIGHT('HELLO HARBOUR',5))
  *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This functions is CA CLIPPER compatible   
+ *      This functions is CA CLIPPER compatible
  *  $PLATFORMS$
- *      All   
+ *      All
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -363,22 +368,22 @@
  *  $SYNTAX$
  *      SUBSTR(<cString>,<nStart>[,<nLen>)] --> <cReturn>
  *  $ARGUMENTS$
- *      <cString> Character expression to be parsed   
+ *      <cString> Character expression to be parsed
  *
- *      <nStart>  Start position   
+ *      <nStart>  Start position
  *
- *      <nLen>    Number of characters to return    
+ *      <nLen>    Number of characters to return
  *  $RETURNS$
- *      <cReturn>  Substring of evaluation   
+ *      <cReturn>  Substring of evaluation
  *  $DESCRIPTION$
  *      This functions returns a character string formed from <cString>,
  *      starting at the position of <nStart> and continuing on for a
  *      lenght of <nLen> characters. If <nLen> is not specified, the value
- *      will be all remaining characters from the position of <nStart>.   
+ *      will be all remaining characters from the position of <nStart>.
 
  *      The value of <nStart> may be negative. If it is, the direction of
  *      operation is reversed from a default of left-to-right to right-to-left
- *      for the number of characters specified in <nStart>.   
+ *      for the number of characters specified in <nStart>.
  *  $EXAMPLES$
  *      FUNCTION MAIN()
  *      LOCAL X:=REPLICATE('ABCD',70000)
@@ -395,9 +400,9 @@
  *  $COMPLIANCE$
  *      This functions is CA CLIPPER compatible with the execption that
  *      CA CLIPPER will generate an error if the passed string is >65519 bytes
- *      and Harbour depends of plataform.   
+ *      and Harbour depends of plataform.
  *  $PLATFORMS$
- *      All    
+ *      All
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -416,51 +421,51 @@
  *      STR(<nNumber>, [<nLength>], [<nDecimals>]) --> cNumber
  *  $ARGUMENTS$
  *      <nNumber> is the numeric expression to be converted to a character
- *      string.   
+ *      string.
  *
  *      <nLength> is the length of the character string to return, including
- *      decimal digits, decimal point, and sign.   
+ *      decimal digits, decimal point, and sign.
  *
- *      <nDecimals> is the number of decimal places to return.   
+ *      <nDecimals> is the number of decimal places to return.
  *  $RETURNS$
  *      STR() returns <nNumber> formatted as a character string.  If the
  *      optional length and decimal arguments are not specified, STR()
- *      returns the character string according to the following rules:   
+ *      returns the character string according to the following rules:
  *
- *      Results of STR() with No Optional Arguments   
+ *      Results of STR() with No Optional Arguments
 
  *  <table>
- *      Expression               Return Value Length   
+ *      Expression               Return Value Length
  *
- *      Field Variable           Field length plus decimals   
- *      Expressions/constants    Minimum of 10 digits plus decimals   
- *      VAL()                    Minimum of 3 digits   
- *      MONTH()/DAY()            3 digits   
- *      YEAR()                   5 digits   
- *      RECNO()                  7 digits   
+ *      Field Variable           Field length plus decimals
+ *      Expressions/constants    Minimum of 10 digits plus decimals
+ *      VAL()                    Minimum of 3 digits
+ *      MONTH()/DAY()            3 digits
+ *      YEAR()                   5 digits
+ *      RECNO()                  7 digits
  *      </table>
  *  $DESCRIPTION$
  *      STR() is a numeric conversion function that converts numeric values
  *      to character strings. It is commonly used to concatenate numeric values
  *      to character strings. STR() has applications displaying numbers,
  *      creating codes such as part numbers from numeric values, and creating
- *      index keys that combine numeric and character data.   
+ *      index keys that combine numeric and character data.
  *
  *      STR() is like TRANSFORM(), which formats numeric values as character
- *      strings using a mask instead of length and decimal specifications.   
+ *      strings using a mask instead of length and decimal specifications.
  *
  *      The inverse of STR() is VAL(), which converts character numbers to
- *      numerics.   
+ *      numerics.
  *
  *      *  If <nLength> is less than the number of whole number digits in
- *         <nNumber>, STR() returns asterisks instead of the number.   
+ *         <nNumber>, STR() returns asterisks instead of the number.
  *
  *      *  If <nLength> is less than the number of decimal digits
  *         required for the decimal portion of the returned string, Harbour
- *         rounds the number to the available number of decimal places.   
+ *         rounds the number to the available number of decimal places.
  *
  *      *  If <nLength> is specified but <nDecimals> is omitted (no
- *         decimal places), the return value is rounded to an integer.   
+ *         decimal places), the return value is rounded to an integer.
  *  $EXAMPLES$
  *      ? STR( 10, 6, 2 ) // " 10.00"
  *      ? STR( -10, 8, 2 ) // "  -10.00"
@@ -471,7 +476,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      CA-Clipper compatible.   
+ *      CA-Clipper compatible.
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -490,51 +495,51 @@
  *      STRZERO(<nNumber>, [<nLength>], [<nDecimals>]) --> cNumber
  *  $ARGUMENTS$
  *      <nNumber> is the numeric expression to be converted to a character
- *      string.   
+ *      string.
  *
  *      <nLength> is the length of the character string to return, including
- *      decimal digits, decimal point, and sign.   
+ *      decimal digits, decimal point, and sign.
  *
- *      <nDecimals> is the number of decimal places to return.   
+ *      <nDecimals> is the number of decimal places to return.
  *  $RETURNS$
  *      STRZERO() returns <nNumber> formatted as a character string.  If the
  *      optional length and decimal arguments are not specified, STRZERO()
- *      returns the character string according to the following rules:   
+ *      returns the character string according to the following rules:
  *
- *      Results of STRZERO() with No Optional Arguments   
+ *      Results of STRZERO() with No Optional Arguments
  *
  *      <table>
- *      Expression               Return Value Length   
- * 
- *      Field Variable           Field length plus decimals   
- *      Expressions/constants    Minimum of 10 digits plus decimals   
- *      VAL()                    Minimum of 3 digits   
- *      MONTH()/DAY()            3 digits   
- *      YEAR()                   5 digits   
- *      RECNO()                  7 digits   
+ *      Expression               Return Value Length
+ *
+ *      Field Variable           Field length plus decimals
+ *      Expressions/constants    Minimum of 10 digits plus decimals
+ *      VAL()                    Minimum of 3 digits
+ *      MONTH()/DAY()            3 digits
+ *      YEAR()                   5 digits
+ *      RECNO()                  7 digits
  *      </table>
  *  $DESCRIPTION$
  *      STRZERO() is a numeric conversion function that converts numeric values
  *      to character strings. It is commonly used to concatenate numeric values
  *      to character strings. STRZERO() has applications displaying numbers,
  *      creating codes such as part numbers from numeric values, and creating
- *      index keys that combine numeric and character data.   
+ *      index keys that combine numeric and character data.
  *
  *      STRZERO() is like TRANSFORM(), which formats numeric values as character
- *      strings using a mask instead of length and decimal specifications.   
+ *      strings using a mask instead of length and decimal specifications.
  *
  *      The inverse of STRZERO() is VAL(), which converts character numbers to
- *      numerics.   
+ *      numerics.
  *
  *      *  If <nLength> is less than the number of whole number digits in
- *         <nNumber>, STR() returns asterisks instead of the number.   
+ *         <nNumber>, STR() returns asterisks instead of the number.
  *
  *      *  If <nLength> is less than the number of decimal digits
  *         required for the decimal portion of the returned string, Harbour
- *         rounds the number to the available number of decimal places.   
+ *         rounds the number to the available number of decimal places.
  *
  *      *  If <nLength> is specified but <nDecimals> is omitted (no
- *         decimal places), the return value is rounded to an integer.   
+ *         decimal places), the return value is rounded to an integer.
  *  $EXAMPLES$
  *      ? STRZERO( 10, 6, 2 ) // "010.00"
  *      ? STRZERO( -10, 8, 2 ) // "-0010.00"
@@ -545,7 +550,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      CA-Clipper compatible (it was not mentioned in the docs though).   
+ *      CA-Clipper compatible (it was not mentioned in the docs though).
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -563,11 +568,11 @@
  *  $SYNTAX$
  *      HB_VALTOSTR( <xValue> ) --> cString
  *  $ARGUMENTS$
- *      <xValue> is any scalar argument.   
+ *      <xValue> is any scalar argument.
  *  $RETURNS$
- *      <cString>  A string representation of <xValue> using default conversions.   
+ *      <cString>  A string representation of <xValue> using default conversions.
  *  $DESCRIPTION$
- *      HB_VALTOSTR can be used to convert any scalar value to a string.   
+ *      HB_VALTOSTR can be used to convert any scalar value to a string.
  *  $EXAMPLES$
  *      ? HB_VALTOSTR( 4 )
  *      ? HB_VALTOSTR( "String" )
@@ -584,7 +589,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      HB_VALTOSTR() is a Harbour enhancement.   
+ *      HB_VALTOSTR() is a Harbour enhancement.
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -602,14 +607,14 @@
  *  $SYNTAX$
  *      LEN( <cString> | <aArray> ) --> <nLength>
  *  $ARGUMENTS$
- *      <acString> is a character string or the array to check.   
+ *      <acString> is a character string or the array to check.
  *  $RETURNS$
  *      The length of the string or the number of elements that contains
- *      an array.   
+ *      an array.
  *  $DESCRIPTION$
  *      This function returns the string length or the size of an array. If
  *      it is used with a multidimensional array it returns the size of the
- *      first dimension.   
+ *      first dimension.
  *  $EXAMPLES$
  *      ? Len( "Harbour" ) --> 7
  *      ? Len( { "One", "Two" } ) --> 2
@@ -624,7 +629,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      LEN() is fully CA-Clipper compliant.   
+ *      LEN() is fully CA-Clipper compliant.
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -642,13 +647,13 @@
  *  $SYNTAX$
  *      EMPTY( <xExp> ) --> <lIsEmpty>
  *  $ARGUMENTS$
- *      <xExp> is any valid expression.   
+ *      <xExp> is any valid expression.
  *  $RETURNS$
  *      A logical value. It is true (.T.) if the passed argument is empty
- *      otherwise it is false (.F.).   
+ *      otherwise it is false (.F.).
  *  $DESCRIPTION$
  *      This function checks if an expression has empty value and returns a
- *      logical indicating whether it the expression is empty or not.   
+ *      logical indicating whether it the expression is empty or not.
  *  $EXAMPLES$
  *      ? Empty( "I'm not empty" )
  *  </fixed>
@@ -662,7 +667,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      EMPTY() is fully CA-Clipper compliant.   
+ *      EMPTY() is fully CA-Clipper compliant.
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -680,12 +685,12 @@
  *  $SYNTAX$
  *      DESCEND( <xExp> ) --> <xExpInverted>
  *  $ARGUMENTS$
- *      <xExp> is any valid expression.   
+ *      <xExp> is any valid expression.
  *  $RETURNS$
- *      Inverted value of the same type as passed.   
+ *      Inverted value of the same type as passed.
  *  $DESCRIPTION$
  *      This function converts an expression in his inverted form. It is
- *      useful to build descending indexes.   
+ *      useful to build descending indexes.
  *  $EXAMPLES$
  *      // Seek for Smith in a descending index
  *      SEEK DESCEND( "SMITH" )
@@ -697,7 +702,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      DESCEND() is fully CA-Clipper compliant.   
+ *      DESCEND() is fully CA-Clipper compliant.
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -715,24 +720,24 @@
  *  $SYNTAX$
  *      HB_ANSITOOEM(<cString>)  -> cDosString
  *  $ARGUMENTS$
- *      <cString>  Windows ansi string to convert to DOS oem String   
+ *      <cString>  Windows ansi string to convert to DOS oem String
  *  $RETURNS$
- *      <cDosString> Dos based  string   
+ *      <cDosString> Dos based  string
  *  $DESCRIPTION$
  *      This function converts each character in <cString> to the corresponding
  *      character in the MS-DOS (OEM) character set.The character expression
  *      <cString> should contain characters from the ANSI character set.
  *      If a character in <cString> doesn't have a MS-DOS equivalent, the
- *      character is converted to a similar MS-DOS character.   
+ *      character is converted to a similar MS-DOS character.
  *  $EXAMPLES$
  *      ? HB_OEMTOANSI("Harbour")
  *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is a Harbour extension   
+ *      This function is a Harbour extension
  *  $PLATFORMS$
- *      This functions work only on Windows Plataform   
+ *      This functions work only on Windows Plataform
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -750,24 +755,24 @@
  *  $SYNTAX$
  *      HB_OEMTOANSI(<cString>)  -> cDosString
  *  $ARGUMENTS$
- *      <cString>  DOS (OEM)  string to convert to WINDOWS (ANSI) String   
+ *      <cString>  DOS (OEM)  string to convert to WINDOWS (ANSI) String
  *  $RETURNS$
- *      <cDosString> WINDOWS based  string   
+ *      <cDosString> WINDOWS based  string
  *  $DESCRIPTION$
  *      This function converts each character in <cString> to the corresponding
  *      character in the Windows (ANSI) character set.The character expression
  *      <cString> should contain characters from the OEM character set.
  *      If a character in <cString> doesn't have a ANSI equivalent, the
- *      character is remais the same.   
+ *      character is remais the same.
  *  $EXAMPLES$
  *      ? HB_OEMTOANSI("Harbour")
  *      </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is a Harbour extension   
+ *      This function is a Harbour extension
  *  $PLATFORMS$
- *      This functions work only on Windows Plataform   
+ *      This functions work only on Windows Plataform
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -786,13 +791,13 @@
  *  $SYNTAX$
  *      LOWER( <cString> ) --> cLowerString
  *  $ARGUMENTS$
- *      <cString> Any character expression.     
+ *      <cString> Any character expression.
  *  $RETURNS$
- *      <cLowerString> Lowercased value of <cString>   
+ *      <cLowerString> Lowercased value of <cString>
  *  $DESCRIPTION$
  *      This function converts any character expression passes as <cString>
  *      to its lowercased representation.Any nonalphabetic character withing
- *      <cString> will remain unchanged.   
+ *      <cString> will remain unchanged.
  *  $EXAMPLES$
  *      ? Lower("HARBOUR")
  *      ? Lower("Hello All")
@@ -800,9 +805,9 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compatible   
+ *      This function is CA-Clipper compatible
  *  $PLATFORMS$
- *      ALL   
+ *      ALL
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -820,12 +825,12 @@
  *  $SYNTAX$
  *      UPPER( <cString> ) --> cUpperString
  *  $ARGUMENTS$
- *      <cString> Any character expression.     
+ *      <cString> Any character expression.
  *  $RETURNS$
- *      <cUpperString> Uppercased value of <cString>   
+ *      <cUpperString> Uppercased value of <cString>
  *  $DESCRIPTION$
  *      This function converts all alpha characters in <cString> to upper
- *      case values and returns that formatted character expression.   
+ *      case values and returns that formatted character expression.
  *  $EXAMPLES$
  *      ? UPPER("harbour")
  *      ? UPPER("Harbour")
@@ -833,9 +838,9 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compatible   
+ *      This function is CA-Clipper compatible
  *  $PLATFORMS$
- *      All   
+ *      All
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -875,7 +880,7 @@
  *      All
  *  $FILES$
  *      Library is rtl
- *  $SEEALSO$   
+ *  $SEEALSO$
  *      ASC(),INKEY()
  *  $END$
  */
@@ -944,7 +949,7 @@
  *      ? PADC(34.5142,20)
  *      ? PADC(Date(),35)
  *  $TESTS$
- *      See Examples        
+ *      See Examples
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -1059,14 +1064,14 @@
  *      Removes leading and trailing blank spaces from a string
  *  $SYNTAX$
  *      ALLTRIM( <cString> ) --> cExpression
- *  $ARGUMENTS$ 
+ *  $ARGUMENTS$
  *      <cString>   Any character string
  *  $RETURNS$
  *      <cExpression> An string will all blank spaces removed from <cString>
  *  $DESCRIPTION$
  *      This function returns the string <cExpression> will all leading and
  *      trailing blank spaces removed.
- *  $EXAMPLES$  
+ *  $EXAMPLES$
  *      ? ALLTRIM("HELLO HARBOUR")
  *      ? ALLTRIM("     HELLO HARBOUR")
  *      ? ALLTRIM("HELLO HARBOUR     ")
@@ -1104,13 +1109,13 @@
  *      removed.
  *
  *      This function is indentical to RTRIM() and the opposite of LTRIM().
- *      Together with LTRIM(),this function equated to the ALLTRIM() 
+ *      Together with LTRIM(),this function equated to the ALLTRIM()
  *      function.
  *  $EXAMPLES$
- *      ? RTrim("HELLO")     //               "HELLO"                   
- *      ? RTrim( "" )       //                ""                        
- *      ? RTrim( "UA   " )  //                "UA"                      
- *      ? RTrim( "   UA" )  //                "   UA"                   
+ *      ? RTrim("HELLO")     //               "HELLO"
+ *      ? RTrim( "" )       //                ""
+ *      ? RTrim( "UA   " )  //                "UA"
+ *      ? RTrim( "   UA" )  //                "   UA"
  *  $TESTS$
  *      See Examples
  *  $STATUS$
@@ -1144,13 +1149,13 @@
  *      removed.
  *
  *      This function is indentical to RTRIM() and the opposite of LTRIM().
- *      Together with LTRIM(),this function equated to the ALLTRIM() 
+ *      Together with LTRIM(),this function equated to the ALLTRIM()
  *      function.
  *  $EXAMPLES$
- *      ? Trim("HELLO")     //               "HELLO"                   
- *      ? Trim( "" )       //                ""                        
- *      ? Trim( "UA   " )  //                "UA"                      
- *      ? Trim( "   UA" )  //                "   UA"                   
+ *      ? Trim("HELLO")     //               "HELLO"
+ *      ? Trim( "" )       //                ""
+ *      ? Trim( "UA   " )  //                "UA"
+ *      ? Trim( "   UA" )  //                "   UA"
  *  $TESTS$
  *      See Examples
  *  $STATUS$
@@ -1211,7 +1216,7 @@
  *  $FUNCNAME$
  *      SPACE()
  *  $CATEGORY$
- *      Strings 
+ *      Strings
  *  $ONELINER$
  *      Returns a string of blank spaces
  *  $SYNTAX$
@@ -1234,7 +1239,7 @@
  *                                   // with lenght 20
  *      ? len(cString)      // 20
  *      cBigString:=space(100000)    // create a memory variable with 100000
- *                                   // blank spaces   
+ *                                   // blank spaces
  *      ?  len(cBigString)
  *      Use Tests New
  *      cFirst:= makeempty(1)
@@ -1261,7 +1266,7 @@
  *          endif
  *          dbgoto(nrecord)
  *      endif
- *      return( xRetvalue) 
+ *      return( xRetvalue)
  *  $TESTS$
  *      See examples
  *  $STATUS$
@@ -1289,7 +1294,7 @@
  *      VAL( <cNumber> ) --> nNumber
  *  $ARGUMENTS$
  *      <cNumber>   Any valid character string of numbers.
- *  $RETURNS$   
+ *  $RETURNS$
  *      <nNumber>   The numeric value of <cNumber>
  *  $DESCRIPTION$
  *      This function converts any number previosly defined as an character
@@ -1324,13 +1329,13 @@
  *      STRTRAN(  <cString>, <cLocString>, <cRepString>, <nPos>, <nOccurences> ) --> cReturn
  *  $ARGUMENTS$
  *      <cString>     The main string to search
- *      
+ *
  *      <cLocString>  The string to locate in the main string
- *      
+ *
  *      <cRepString>  The string to replace the <cLocString>
- *      
+ *
  *      <nPos>        The first occurence to be replaced
- *      
+ *
  *      <nOccurences> Number of occurence to replace
  *  $RETURNS$
  *      <cReturn>  Formated string
@@ -1352,7 +1357,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Will not work with a search string of > 64 KB on some platforms 
+ *      Will not work with a search string of > 64 KB on some platforms
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -1427,7 +1432,7 @@
  *      *           Asterisks in place of leading spaces in numeric expression
  *      ,           Commas position
  *      .           Decimal point position
- *      </table>       
+ *      </table>
  *  $EXAMPLES$
  *      local cString := 'This is harbour'
  *      local nNumber := 9923.34
@@ -1439,8 +1444,8 @@
  *      ? "All uppercased",transform(cString,"@!")
  *      ? "Date is",ddate
  *      ? "Date is ",transform(ddate,"@D")
- *      ? Transform( nNumber        , "@L 99999999"     )  //     , "009923.34" 
- *      ? Transform( 0         , "@L 9999"     )       //  "0000"               
+ *      ? Transform( nNumber        , "@L 99999999"     )  //     , "009923.34"
+ *      ? Transform( 0         , "@L 9999"     )       //  "0000"
  *
  *  $TESTS$
  *      See regression Test

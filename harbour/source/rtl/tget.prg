@@ -445,7 +445,7 @@ METHOD VarPut( xValue, lReFormat ) CLASS Get
          ::Type     := ValType( xValue )
          ::nDispLen := NIL
          ::Picture( ::cPicture )
-         ::BufferUpdate()
+         ::UpdateBuffer()
       endif
    endif
 

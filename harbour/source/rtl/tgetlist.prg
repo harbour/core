@@ -326,7 +326,9 @@ METHOD GetPostValidate() CLASS HBGetList
    endif
 
    if oGet:Changed
-      oGet:Assign()
+//      oGet:Assign()
+      oGet:UpdateBuffer()
+      oGet:Display()
       ::lUpdated := .t.
    endif
 
