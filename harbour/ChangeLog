@@ -1,3 +1,6 @@
+19990530-11:18 EST Les. Griffith
+   * added logic for _fscommit in files.c
+
 19990530-14:00 CET Eddie Runia
   * source/rtl/classes.c; source/rtl/tclass.prg
     first step to inheritage
