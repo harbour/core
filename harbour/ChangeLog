@@ -7,6 +7,12 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+   * source/vm/fm.c
+     * Checking of allocating zero bytes for hb_xalloc(), hb_xgrab()
+       and hb_xrealloc(), no matter how HB_FM_STATISTICS state may be
+
+   * include/error.ch
    * source/lang/*.c
      + Added one new internal error: HB_EI_XALLOCNULLSIZE
        NOTE to translators or language file maintainers:

@@ -324,7 +324,7 @@ static BOOL GetJobs(HANDLE hPrinter,        /* Handle to the printer. */
     return TRUE;
 }
 
-BOOL DPGetDefaultPrinter(LPTSTR pPrinterName, LPDWORD pdwBufferSize)
+static BOOL DPGetDefaultPrinter(LPTSTR pPrinterName, LPDWORD pdwBufferSize)
 {
   BOOL bFlag;
   OSVERSIONINFO osv;

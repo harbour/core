@@ -864,7 +864,7 @@ Function PrintMacros()
 
 Local nPos
 
-Outstd( "HBMAKE Version ", Version(), "CopyRight (c) 2000-2001 The Harbour Project" + CRLF )
+Outstd( "HBMAKE Version ", Version(), "CopyRight (c) 2000-2002 The Harbour Project" + CRLF )
 Outstd( "" + CRLF )
 Outstd( "Macros:" + CRLF )
 aeval(aMacros,{|xItem| Outstd( "     " + xItem[ 1 ] + " = " + xItem[ 2 ] + CRLF )})
@@ -2421,7 +2421,7 @@ return cParam
 Function ShowHelp()
    Local cOs:=OS()
    ?? "Harbour Make Utility"
-   ? "Copyright 2000,2001 Luiz Rafael Culik <culik@sl.conex.net>"
+   ? "Copyright 2000,2001,2002 Luiz Rafael Culik <culik@sl.conex.net>"
    ? ""
    ? "Syntax:  hbmake cFile [options]"
    ? ""
