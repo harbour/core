@@ -449,20 +449,14 @@ METHOD SetFocus() CLASS Get
 
    if ::type == "N"
       ::decpos := At( iif( ::lDecRev .or. "E" $ ::cPicFunc, ",", "." ), ::buffer )
-
-      for nFor := 1 to ::nMaxLen
-         if ::IsEditable( nFor )
-            ::minus := ( Substr( ::buffer, nFor, 1 ) $ "-(" )
-         endif
-      next
-//      ::minus  := ( "-" $ ::buffer .or. "(" $ ::buffer )
+      ::minus := ( ::VarGet() < 0 )
    else
       ::decpos := NIL
       ::minus  := .f.
    endif
 
    if ::type == "D"
-      ::BadDate := !( DToC( CToD( ::buffer ) ) == ::buffer )
+      ::BadDate := IsBadDate( ::buffer )
    else
       ::BadDate := .f.
    endif
@@ -564,7 +558,7 @@ METHOD Untransform( cBuffer ) CLASS Get
       cBuffer := StrTran( cBuffer, "(", "" )
       cBuffer := StrTran( cBuffer, ")", "" )
 
-      cBuffer := StrTran( cBuffer, " ", "" ) // It replace left, right 
+      cBuffer := StrTran( cBuffer, " ", "" ) // It replace left, right
                                              // and medium spaces.
                                              // Don't replace for Alltrim()
 
@@ -606,7 +600,6 @@ METHOD overstrike( cChar ) CLASS Get
       ::buffer := ::PutMask( ::VarGet(), .t. )
    endif
 
-
    do while ! ::IsEditable( ::pos ) .and. ::pos <= ::nMaxLen
       ::pos++
    enddo
@@ -629,7 +622,7 @@ METHOD overstrike( cChar ) CLASS Get
    ::Right( .f. )
 
    if ::type == "D"
-      ::BadDate := !( DToC( CToD( ::buffer ) ) == ::buffer )
+      ::BadDate := IsBadDate( ::buffer )
    else
       ::BadDate := .f.
    endif
@@ -698,7 +691,7 @@ METHOD Insert( cChar ) CLASS Get
    ::Right( .f. )
 
    if ::type == "D"
-      ::BadDate := !( DToC( CToD( ::buffer ) ) == ::buffer )
+      ::BadDate := IsBadDate( ::buffer )
    else
       ::BadDate := .f.
    endif
@@ -1037,6 +1030,10 @@ METHOD PutMask( xValue, lEdit ) CLASS Get
       endif
    endif
 
+   If ::type == "D" .and. ::BadDate
+      cBuffer := ::Buffer
+   Endif
+
 return cBuffer
 
 //---------------------------------------------------------------------------//
@@ -1081,7 +1078,7 @@ METHOD _Delete( lDisplay ) CLASS Get
                SubStr( ::buffer, nMaxLen + 1 ), ::nMaxLen )
 
    if ::type == "D"
-      ::BadDate := !( DToC( CToD( ::buffer ) ) == ::buffer )
+      ::BadDate := IsBadDate( ::buffer )
    else
       ::BadDate := .f.
    endif
@@ -1308,4 +1305,26 @@ METHOD HitTest(mrow,mcol) CLASS GET
            return HTCLIENT
         endif
 return HTNOWHERE
+
+//---------------------------------------------------------------------------//
+
+STATIC FUNCTION IsBadDate( cBuffer )
+
+   local nFor, nLen
+
+   If !Empty( Ctod( cBuffer ) )
+      return .f.
+   Endif
+
+   nLen := len( cBuffer )
+
+   For nFor := 1 to nLen
+      If IsDigit( Substr( cBuffer, nFor, 1 ) )
+         return .t.
+      Endif
+   Next
+
+ return .f.
+
+
 
