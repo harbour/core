@@ -32,6 +32,7 @@ C_SOURCES=\
 	hbpcode.c \
 	hbusage.c \
 	hbfix.c \
+	hbident.c \
 	expropta.c \
 	exproptb.c \
 	exproptc.c \

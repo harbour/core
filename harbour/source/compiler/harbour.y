@@ -418,8 +418,8 @@ ExtList    : IdentName                      { hb_compExternAdd( $1 ); }
            ;
 
 IdentName  : IDENTIFIER       { $$ = $1; }
-           | STEP             { $$ = hb_strdup( "STEP" ); }
-           | TO               { $$ = hb_strdup( "TO" ); }
+           | STEP             { $$ = hb_compIdentifierNew( "STEP", TRUE ); }
+           | TO               { $$ = hb_compIdentifierNew( "TO", TRUE ); }
            ;
 
 /* Numeric values
@@ -1549,7 +1549,7 @@ DoProc     : DO DoName
            | DO DoName WITH DoArgList
                { $$ = hb_compExprNewFunCall( $2, $4 ); }
            | WHILE WITH DoArgList
-               { hb_compAutoOpenAdd( "WHILE" ); $$ = hb_compExprNewFunCall( hb_compExprNewFunName( hb_strdup("WHILE") ), $3 ); }
+               { hb_compAutoOpenAdd( "WHILE" ); $$ = hb_compExprNewFunCall( hb_compExprNewFunName( hb_compIdentifierNew("WHILE", TRUE) ), $3 ); }
            ;
 
 DoArgList  : ','                       { $$ = hb_compExprAddListExpr( hb_compExprNewArgList( hb_compExprNewNil() ), hb_compExprNewNil() ); }

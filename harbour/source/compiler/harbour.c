@@ -49,6 +49,7 @@
 #include <malloc.h>     /* required for allocating and freeing memory */
 
 #include "hbcomp.h"
+#include "hbhash.h"
 
 #if defined(HB_OS_DOS) && defined(__BORLANDC__)
    #include <limits.h>
@@ -224,6 +225,9 @@ int main( int argc, char * argv[] )
    /* Set standard rules */
    hb_pp_SetRules( hb_compInclude, hb_comp_bQuiet );
 
+   /* Prepare the table of identifiers */
+   hb_compIdentifierOpen();
+
    /* Process all files passed via the command line. */
 
    bAnyFiles = FALSE;
@@ -241,6 +245,8 @@ int main( int argc, char * argv[] )
             break;
       }
    }
+   
+   hb_compIdentifierClose();
 
    if( ! bAnyFiles )
    {
@@ -1120,6 +1126,7 @@ void hb_compAnnounce( char * szFunName )
    }
 }
 
+/* NOTE: Names of variables and functions are released in hbident.c on exit */
 PFUNCTION hb_compFunctionKill( PFUNCTION pFunc )
 {
    PFUNCTION pNext = pFunc->pNext;
@@ -1130,9 +1137,6 @@ PFUNCTION hb_compFunctionKill( PFUNCTION pFunc )
       pVar = pFunc->pLocals;
       pFunc->pLocals = pVar->pNext;
 
-      if( ! hb_comp_bSimpLex )
-         hb_xfree( ( void * ) pVar->szName );
-
       hb_xfree( ( void * ) pVar );
    }
 
@@ -1140,9 +1144,6 @@ PFUNCTION hb_compFunctionKill( PFUNCTION pFunc )
    {
       pVar = pFunc->pStatics;
       pFunc->pStatics = pVar->pNext;
-
-      if( ! hb_comp_bSimpLex )
-         hb_xfree( ( void * ) pVar->szName );
 
       hb_xfree( ( void * ) pVar );
    }
@@ -1152,15 +1153,6 @@ PFUNCTION hb_compFunctionKill( PFUNCTION pFunc )
       pVar = pFunc->pFields;
       pFunc->pFields = pVar->pNext;
 
-      if( ! hb_comp_bSimpLex )
-         hb_xfree( ( void * ) pVar->szName );
-
-      if( pVar->szAlias )
-      {
-         if( ! hb_comp_bSimpLex )
-            hb_xfree( ( void * ) pVar->szAlias );
-      }
-
       hb_xfree( ( void * ) pVar );
    }
 
@@ -1169,15 +1161,6 @@ PFUNCTION hb_compFunctionKill( PFUNCTION pFunc )
       pVar = pFunc->pMemvars;
       pFunc->pMemvars = pVar->pNext;
 
-      if( ! hb_comp_bSimpLex )
-         hb_xfree( ( void * ) pVar->szName );
-
-      if( pVar->szAlias )
-      {
-         if( ! hb_comp_bSimpLex )
-            hb_xfree( ( void * ) pVar->szAlias );
-      }
-
       hb_xfree( ( void * ) pVar );
    }
 
@@ -1185,15 +1168,6 @@ PFUNCTION hb_compFunctionKill( PFUNCTION pFunc )
    {
       pVar = pFunc->pPrivates;
       pFunc->pPrivates = pVar->pNext;
-
-      if( ! hb_comp_bSimpLex )
-         hb_xfree( ( void * ) pVar->szName );
-
-      if( pVar->szAlias )
-      {
-         if( ! hb_comp_bSimpLex )
-            hb_xfree( ( void * ) pVar->szAlias );
-      }
 
       hb_xfree( ( void * ) pVar );
    }
@@ -1213,12 +1187,10 @@ PFUNCTION hb_compFunctionKill( PFUNCTION pFunc )
    return pNext;
 }
 
+/* NOTE: Name of symbols are released in hbident.c  on exit */
 PCOMSYMBOL hb_compSymbolKill( PCOMSYMBOL pSym )
 {
    PCOMSYMBOL pNext = pSym->pNext;
-
-   if( ! hb_comp_bSimpLex )
-      hb_xfree( ( void * ) pSym->szName );
 
    hb_xfree( ( void * ) pSym );
 
@@ -3270,9 +3242,6 @@ void hb_compCodeBlockEnd( void )
 
       pFree = pVar;
 
-      if( ! hb_comp_bSimpLex )
-         hb_xfree( ( void * ) pFree->szName );
-
       pVar = pVar->pNext;
       hb_xfree( ( void * ) pFree );
    }
@@ -3290,9 +3259,6 @@ void hb_compCodeBlockEnd( void )
 
       /* free used variables */
       pFree = pVar;
-
-      if( ! hb_comp_bSimpLex )
-         hb_xfree( ( void * ) pFree->szName );
 
       pVar = pVar->pNext;
       hb_xfree( ( void * ) pFree );

@@ -9,6 +9,7 @@ C_SOURCES=\
 	hbstr.c \
 	hbtrace.c \
 	hbver.c \
+	hash.c \
 	reserved.c \
 	expropt1.c \
 	expropt2.c \
