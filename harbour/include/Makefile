@@ -27,7 +27,7 @@ C_HEADERS=\
 	run_exp.h \
 	set.h \
 	super.h \
-	version.h \
+	hbver.h \
 
 PRG_HEADERS=\
 	box.ch \

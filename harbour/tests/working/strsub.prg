@@ -33,7 +33,7 @@ function main()
   QOut( ">" + "   " - "B " + "<" ) // "B    "
 
   QOut()
-  __Accept( "Press a key to raise an error!" )
+  __Accept( "Press <Enter> to raise an error!" )
   QOut( a - i )
 
 return nil

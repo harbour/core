@@ -29,6 +29,7 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
    their web site at http://www.gnu.org/).
 
+   V 1.19   Victor Szel                 #include <x> changed to #include "x".
    V 1.18   David G. Holm               Added INKEY_EXTENDED to allow some
                                         platforms to select between normal
                                         and extended key codes.
@@ -70,7 +71,7 @@
 #ifndef HB_SET_H_
 #define HB_SET_H_
 
-#include <hbdefs.h>
+#include "hbdefs.h"
 
 HARBOUR HB_SET( void );
 HARBOUR HB_SETCENTURY( void );

@@ -42,11 +42,11 @@
  *      __WDATAINC
  */
 
-#include <extend.h>
-#include <errorapi.h>
-#include <itemapi.h>
-#include <ctoharb.h>
-#include <init.h>
+#include "extend.h"
+#include "errorapi.h"
+#include "itemapi.h"
+#include "ctoharb.h"
+#include "init.h"
 
 #define MET_METHOD    0
 #define MET_DATA      1
@@ -108,7 +108,7 @@ static void        DictRealloc( PCLASS );
 static HARBOUR     EvalInline( void );
 static HARBOUR     GetClassData( void );
 static HARBOUR     GetData( void );
-       HARBOURFUNC GetMethod( PHB_ITEM, PSYMBOL );
+       HARBOURFUNC hb_GetMethod( PHB_ITEM, PSYMBOL );
        ULONG       hb_isMessage( PHB_ITEM, char *);
        HARBOUR     HB_ISMESSAGE( void );
        HARBOUR     HB_OCLONE( void );
@@ -237,7 +237,7 @@ HARBOUR HB_CLASSADD(void)
                  if( pInit && !IS_NIL( pInit )) /* Initializer found        */
                  {
                     pNewMeth->pInitValue = hb_itemNew( NULL );
-                    ItemCopy( pNewMeth->pInitValue, pInit );
+                    hb_itemCopy( pNewMeth->pInitValue, pInit );
                  }
               }
               break;
@@ -506,7 +506,7 @@ static HARBOUR ClassName( void )
    PHB_ITEM pItemRef;
 
    if( IS_BYREF( stack.pBase + 1 ) )            /* Variables by reference   */
-      pItemRef = ItemUnRef( stack.pBase + 1 );
+      pItemRef = hb_itemUnRef( stack.pBase + 1 );
    else
       pItemRef = stack.pBase + 1;
 
@@ -561,7 +561,7 @@ static HARBOUR ClassSel(void)
 
    if( ( ! wClass ) && IS_BYREF( stack.pBase + 1 ) )
    {                                            /* Variables by reference   */
-      pItemRef = ItemUnRef( stack.pBase + 1 );
+      pItemRef = hb_itemUnRef( stack.pBase + 1 );
       if( IS_ARRAY( pItemRef ) )
          wClass = pItemRef->item.asArray.value->wClass;
    }
@@ -626,7 +626,7 @@ static HARBOUR EvalInline( void )
       Push( hb_param( w, IT_ANY ) );
    Do( hb_pcount() + 1 );                       /* Self is also an argument */
 
-   ItemRelease( &block );                       /* Release block            */
+   hb_itemClear( &block );                       /* Release block            */
 }
 
 
@@ -724,11 +724,11 @@ static HARBOUR GetData( void )
 
 
 /*
- * <pFunc> = GetMethod( <pObject>, <pMessage> )
+ * <pFunc> = hb_GetMethod( <pObject>, <pMessage> )
  *
  * Internal function to the function pointer of a message of an object
  */
-HARBOURFUNC GetMethod( PHB_ITEM pObject, PSYMBOL pMessage )
+HARBOURFUNC hb_GetMethod( PHB_ITEM pObject, PSYMBOL pMessage )
 {
    WORD    wAt, wLimit, wMask;
    WORD    wClass;
@@ -795,7 +795,7 @@ HARBOURFUNC GetMethod( PHB_ITEM pObject, PSYMBOL pMessage )
 ULONG hb_isMessage( PHB_ITEM pObject, char *szString )
 {
    PSYMBOL pMessage = hb_GetDynSym( szString )->pSymbol;
-   return( (ULONG) GetMethod( pObject, pMessage ) );
+   return( (ULONG) hb_GetMethod( pObject, pMessage ) );
 }                                                /* Get funcptr of message   */
 
 
@@ -831,7 +831,7 @@ HARBOUR HB_OCLONE( void )
    {
       PHB_ITEM pDstObject = hb_arrayClone( pSrcObject );
 
-      ItemCopy( &stack.Return, pDstObject );
+      hb_itemCopy( &stack.Return, pDstObject );
       hb_itemRelease( pDstObject );
    }
    else
@@ -932,7 +932,7 @@ static HARBOUR SelectSuper( void )
    pNewBase->wHolders   = 1;                    /* New item is returned     */
    pNewBase->wSuperCast = TRUE;                 /* Do not dispose pItems !! */
                                                 /* A bit dirty, but KISS.   */
-   ItemCopy( &stack.Return, pSuper );
+   hb_itemCopy( &stack.Return, pSuper );
    hb_itemRelease( pSuper );
 }
 
@@ -951,7 +951,7 @@ static HARBOUR SetClassData( void )
    {
       hb_arraySet( pClasses[ wClass - 1 ].pClassDatas,
                    pMethod->wData, pReturn );
-      ItemCopy( &stack.Return, pReturn );
+      hb_itemCopy( &stack.Return, pReturn );
    }
 }
 
@@ -969,9 +969,9 @@ static HARBOUR SetData( void )
 
    if( wIndex > ( WORD ) hb_arrayLen( pObject ) )
                                                 /* Resize needed            */
-      hb_arraySize( pObject, wIndex );          /* Make large enough        */
+   hb_arraySize( pObject, wIndex );             /* Make large enough        */
    hb_arraySet( pObject, wIndex, pReturn );
-   ItemCopy( &stack.Return, pReturn );
+   hb_itemCopy( &stack.Return, pReturn );
 }
 
 

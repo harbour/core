@@ -23,10 +23,10 @@
 */
 
 #include "pcode.h"
-#include <init.h>
-#include <set.h>
+#include "init.h"
+#include "set.h"
 #ifdef HARBOUR_USE_GTAPI
- #include <gtapi.h>
+ #include "gtapi.h"
 #else
  static char old_string[ sizeof( hb_set.HB_SET_COLOR ) ];
 #endif
@@ -45,7 +45,7 @@ char *hb_setColor( char *sColor )
 
    if( sColor != (char *)0 )
    {
-   #ifdef HARBOUR_USE_GTAPI  
+   #ifdef HARBOUR_USE_GTAPI
       hb_gtSetColorStr( sColor );
    #else
       strncpy (hb_set.HB_SET_COLOR, sColor, sizeof( hb_set.HB_SET_COLOR ) );
@@ -53,7 +53,7 @@ char *hb_setColor( char *sColor )
       hb_strUpper( hb_set.HB_SET_COLOR, strlen( hb_set.HB_SET_COLOR ) );
    #endif
   }
-#ifdef HARBOUR_USE_GTAPI  
+#ifdef HARBOUR_USE_GTAPI
    return hb_set.HB_SET_COLOR;
 #else
    return old_string;

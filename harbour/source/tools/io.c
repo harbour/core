@@ -2,7 +2,7 @@
  * $Id$
  */
 
-#include <extend.h>
+#include "extend.h"
 #include  <stdio.h>
 #include  <stdlib.h>
 #include  <string.h>
@@ -41,7 +41,7 @@ HARBOUR HB_RENFILE(void)
  *  $CATEGORY$
  *     DOS
  *  $ONELINER$
- *     
+ *
  *  $SYNTAX$
  *     CD(<NDIR>)
  *  $ARGUMENTS$
@@ -49,7 +49,7 @@ HARBOUR HB_RENFILE(void)
  *  $RETURNS$
  *    .T. IF SUCEFUL
  *    .F. IF NOT
- *    
+ *
  *  $DESCRIPTION$
  *    CHANGE THE CURRENT DIRECTORY
  *  $EXAMPLES$
@@ -58,9 +58,9 @@ HARBOUR HB_RENFILE(void)
  *  ELSE
  *      RETURN(.F.)
  *  ENDIF
- *  
+ *
  *  $SEEALSO$
- *     
+ *
  *  $INCLUDE$
  * extend.h dos.h dir.h bios.h internal.h
  *  $END$
@@ -74,7 +74,7 @@ HARBOUR HB_RENFILE(void)
  *  $CATEGORY$
  *     DOS
  *  $ONELINER$
- *     
+ *
  *  $SYNTAX$
  *     MD(<NDIR>)
  *  $ARGUMENTS$
@@ -82,7 +82,7 @@ HARBOUR HB_RENFILE(void)
  *  $RETURNS$
  *    .T. IF SUCEFUL
  *    .F. IF NOT
- *    
+ *
  *  $DESCRIPTION$
  *    CREATE A  DIRECTORY
  *  $EXAMPLES$
@@ -91,9 +91,9 @@ HARBOUR HB_RENFILE(void)
  *  ELSE
  *      RETURN(.F.)
  *  ENDIF
- *  
+ *
  *  $SEEALSO$
- *     
+ *
  *  $INCLUDE$
  * extend.h dos.h dir.h bios.h internal.h
  *  $END$
@@ -105,7 +105,7 @@ HARBOUR HB_RENFILE(void)
  *  $CATEGORY$
  *     DOS
  *  $ONELINER$
- *     
+ *
  *  $SYNTAX$
  *     RD(<NDIR>)
  *  $ARGUMENTS$
@@ -113,7 +113,7 @@ HARBOUR HB_RENFILE(void)
  *  $RETURNS$
  *    .T. IF SUCEFUL
  *    .F. IF NOT
- *    
+ *
  *  $DESCRIPTION$
  *    REMOVE A  DIRECTORY
  *  $EXAMPLES$
@@ -122,9 +122,9 @@ HARBOUR HB_RENFILE(void)
  *  ELSE
  *      RETURN(.F.)
  *  ENDIF
- *  
+ *
  *  $SEEALSO$
- *     
+ *
  *  $INCLUDE$
  * extend.h dos.h dir.h bios.h internal.h
  *  $END$
@@ -168,7 +168,7 @@ HARBOUR HB_RD(void)
  *  $CATEGORY$
  *     DOS
  *  $ONELINER$
- *     
+ *
  *  $SYNTAX$
  *     RD(<NDIR>)
  *  $ARGUMENTS$
@@ -176,7 +176,7 @@ HARBOUR HB_RD(void)
  *  $RETURNS$
  *    .T. IF SUCEFUL
  *    .F. IF NOT
- *    
+ *
  *  $DESCRIPTION$
  *    VERIFY IF A FILE EXISTS
  *  $EXAMPLES$
@@ -185,9 +185,9 @@ HARBOUR HB_RD(void)
  *  ELSE
  *      RETURN(.F.)
  *  ENDIF
- *  
+ *
  *  $SEEALSO$
- *     
+ *
  *  $INCLUDE$
  * extend.h dos.h dir.h bios.h internal.h
  *  $END$
@@ -207,7 +207,7 @@ HARBOUR HB_FILE(void)
 	_retl(TRUE);
       }
     else
-      {              
+      {
 	_retl(FALSE);
       }
   }

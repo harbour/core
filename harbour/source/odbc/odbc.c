@@ -37,10 +37,10 @@
 #include <malloc.h>
 #include <math.h>
 #include <stdlib.h>
-#include <extend.h>
-#include <itemapi.h>
 #include <ctype.h>
-#include <init.h>
+#include "extend.h"
+#include "itemapi.h"
+#include "init.h"
 #include "harb.h"
 #include <sql.h>
 #include <sqlext.h>

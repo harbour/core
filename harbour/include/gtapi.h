@@ -5,9 +5,10 @@
 #ifndef HB_GTAPI_H_
 #define HB_GTAPI_H_
 
-#include <color.ch>
-#include <setcurs.ch>
-#include <box.h>
+#include "extend.h"
+#include "color.ch"
+#include "setcurs.ch"
+#include "box.h"
 
 /* maximum length of color string */
 #define CLR_STRLEN      64
@@ -43,8 +44,6 @@
  *    - Symantec C/C++ (16-bit) for DOS 7.0
  *    - Zortech C/C++ (16-bit) for DOS 3.0r4
 */
-
-#include <extend.h>
 
 /* Public interface. These should never change, only be added to. */
 

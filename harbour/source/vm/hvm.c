@@ -81,8 +81,6 @@ void Greater( void );         /* checks if the latest - 1 value is greater than 
 void GreaterEqual( void );    /* checks if the latest - 1 value is greater than or equal the latest, removes both and leaves result */
 void Inc( void );             /* increment the latest numeric value on the stack */
 void Instring( void );        /* check whether string 1 is contained in string 2 */
-void ItemCopy( PHB_ITEM pDest, PHB_ITEM pSource ); /* copies an item to one place to another respecting its containts */
-PHB_ITEM ItemUnRef( PHB_ITEM pItem ); /* de-references passed variable */
 void Less( void );            /* checks if the latest - 1 value is less than the latest, removes both and leaves result */
 void LessEqual( void );       /* checks if the latest - 1 value is less than or equal the latest, removes both and leaves result */
 void Line( WORD wLine );      /* keeps track of the currently processed PRG line */
@@ -150,32 +148,9 @@ void StackPush( void );       /* pushes an item on to the stack */
 void StackInit( void );       /* initializes the stack */
 void StackShow( void );       /* show the types of the items on the stack for debugging purposes */
 
-HB_CODEBLOCK_PTR hb_CodeblockNew( BYTE *, WORD, WORD *, PSYMBOL );
-void hb_CodeblockDelete( PHB_ITEM );
-PHB_ITEM hb_CodeblockGetVar( PHB_ITEM, LONG );
-PHB_ITEM hb_CodeblockGetRef( PHB_ITEM, PHB_ITEM );
-void hb_CodeblockEvaluate( PHB_ITEM );
-void hb_CodeblockCopy( PHB_ITEM, PHB_ITEM );
-
-/* Initialisation and closing memvars subsystem */
-void hb_MemvarsInit( void );
-void hb_MemvarsRelease( void );
-void hb_MemvarValueIncRef( HB_HANDLE );
-void hb_MemvarValueDecRef( HB_HANDLE );
-void hb_MemvarSetValue( PSYMBOL, HB_ITEM_PTR );
-void hb_MemvarGetValue( HB_ITEM_PTR, PSYMBOL );
-void hb_MemvarGetRefer( HB_ITEM_PTR, PSYMBOL );
-void hb_MemvarNewSymbol( PSYMBOL );
-ULONG hb_MemvarGetPrivatesBase( void );
-void hb_MemvarSetPrivatesBase( ULONG );
-
 void InitSymbolTable( void );   /* initialization of runtime support symbols */
 
 static void ForceLink( void );
-
-ULONG hb_isMessage( PHB_ITEM, char * );
-ULONG hb_strAt( char *, long, char *, long );
-PHB_ITEM hb_itemReturn( PHB_ITEM );
 
 #define STACK_INITHB_ITEMS   100
 #define STACK_EXPANDHB_ITEMS  20
@@ -281,9 +256,9 @@ BYTE bErrorLevel = 0;  /* application exit errorlevel */
    DoExitFunctions();       /* process defined EXIT functions */
 
    hb_rddRelease();         /* release RDD */
-   ItemRelease( &stack.Return );
+   hb_itemClear( &stack.Return );
    hb_arrayRelease( &aStatics );
-   ItemRelease( &errorBlock );
+   hb_itemClear( &errorBlock );
    ReleaseClasses();
    ReleaseLocalSymbols();       /* releases the local modules linked list */
    hb_ReleaseDynamicSymbols();  /* releases the dynamic symbol table */
@@ -688,8 +663,8 @@ void ArrayAt( void )
    hb_arrayGet( pArray, dIndex, &item );
    StackPop();
 
-   ItemCopy( stack.pPos, &item );
-   ItemRelease( &item );
+   hb_itemCopy( stack.pPos, &item );
+   hb_itemClear( &item );
    StackPush();
 }
 
@@ -713,7 +688,7 @@ void ArrayPut( void )
       /* QUESTION: Should we raise an error here ? */
 
    hb_arraySet( pArray, ulIndex, pValue );
-   ItemCopy( pArray, pValue );  /* places pValue at pArray position */
+   hb_itemCopy( pArray, pValue );  /* places pValue at pArray position */
    StackPop();
    StackPop();
 }
@@ -783,7 +758,7 @@ void Do( WORD wParams )
       if( pSym == &( symEval ) && IS_BLOCK( pSelf ) )
          pFunc = pSym->pFunPtr;                 /* __EVAL method = function */
       else
-         pFunc = GetMethod( pSelf, pSym );
+         pFunc = hb_GetMethod( pSelf, pSym );
 
       if( ! pFunc )
       {
@@ -845,15 +820,15 @@ HARBOUR DoBlock( void )
 
 void Duplicate( void )
 {
-   ItemCopy( stack.pPos, stack.pPos - 1 );
+   hb_itemCopy( stack.pPos, stack.pPos - 1 );
    StackPush();
 }
 
 void DuplTwo( void )
 {
-   ItemCopy( stack.pPos, stack.pPos - 2 );
+   hb_itemCopy( stack.pPos, stack.pPos - 2 );
    StackPush();
-   ItemCopy( stack.pPos, stack.pPos - 2 );
+   hb_itemCopy( stack.pPos, stack.pPos - 2 );
    StackPush();
 }
 
@@ -883,7 +858,7 @@ HARBOUR HB_EVAL( void )
 void EndBlock( void )
 {
    StackPop();
-   ItemCopy( &stack.Return, stack.pPos );
+   hb_itemCopy( &stack.Return, stack.pPos );
    HB_DEBUG( "EndBlock\n" );
 }
 
@@ -996,7 +971,7 @@ void FuncPtr( void )  /* pushes a function address pointer. Removes the symbol f
 void Function( WORD wParams )
 {
    Do( wParams );
-   ItemCopy( stack.pPos, &stack.Return );
+   hb_itemCopy( stack.pPos, &stack.Return );
    StackPush();
 }
 
@@ -1008,14 +983,14 @@ void GenArray( WORD wElements ) /* generates a wElements Array and fills it from
    itArray.type = IT_NIL;
    hb_arrayNew( &itArray, wElements );
    for( w = 0; w < wElements; w++ )
-      ItemCopy( itArray.item.asArray.value->pItems + w,
+      hb_itemCopy( itArray.item.asArray.value->pItems + w,
                 stack.pPos - wElements + w );
 
    for( w = 0; w < wElements; w++ )
       StackPop();
 
-   ItemCopy( stack.pPos, &itArray );
-   ItemRelease( &itArray );
+   hb_itemCopy( stack.pPos, &itArray );
+   hb_itemClear( &itArray );
    StackPush();
 }
 
@@ -1133,32 +1108,6 @@ void Inc( void )
    }
 }
 
-void ItemRelease( PHB_ITEM pItem )
-{
-   if( IS_STRING( pItem ) )
-   {
-      if( pItem->item.asString.value )
-      {
-         hb_xfree( pItem->item.asString.value );
-         pItem->item.asString.value = NULL;
-      }
-      pItem->item.asString.length = 0;
-   }
-   else if( IS_ARRAY( pItem ) && pItem->item.asArray.value )
-   {
-      if( --( pItem->item.asArray.value )->wHolders == 0 )
-         hb_arrayRelease( pItem );
-   }
-   else if( IS_BLOCK( pItem ) )
-   {
-      hb_CodeblockDelete( pItem );
-   }
-   else if( IS_MEMVAR( pItem ) )
-      hb_MemvarValueDecRef( pItem->item.asMemvar.value );
-
-   pItem->type = IT_NIL;
-}
-
 void Instring( void )
 {
    PHB_ITEM pItem1 = stack.pPos - 2;
@@ -1178,72 +1127,6 @@ void Instring( void )
       hb_errorRT_BASE(EG_ARG, 1109, NULL, "$");
    }
 }
-
-void ItemCopy( PHB_ITEM pDest, PHB_ITEM pSource )
-{
-   ItemRelease( pDest );
-
-   if( pDest == pSource )
-   {
-      printf( "an item was going to be copied to itself from ItemCopy()\n" );
-      exit( 1 );
-   }
-
-   memcpy( pDest, pSource, sizeof( HB_ITEM ) );
-
-   if( IS_STRING( pSource ) )
-   {
-      pDest->item.asString.value = ( char * ) hb_xgrab( pSource->item.asString.length + 1 );
-      memcpy( pDest->item.asString.value, pSource->item.asString.value, pSource->item.asString.length );
-      pDest->item.asString.value[ pSource->item.asString.length ] = 0;
-   }
-
-   else if( IS_ARRAY( pSource ) )
-      ( pSource->item.asArray.value )->wHolders++;
-
-   else if( IS_BLOCK( pSource ) )
-   {
-      hb_CodeblockCopy( pDest, pSource );
-   }
-   else if( IS_MEMVAR( pSource ) )
-   {
-      hb_MemvarValueIncRef( pSource->item.asMemvar.value );
-   }
-}
-
-/* De-references item passed by the reference
- *
- */
-PHB_ITEM ItemUnRef( PHB_ITEM pItem )
-{
-   while( IS_BYREF( pItem ) )
-   {
-      if( IS_MEMVAR( pItem ) )
-      {
-         HB_VALUE_PTR pValue;
-
-         pValue =*(pItem->item.asMemvar.itemsbase) + pItem->item.asMemvar.offset +
-                  pItem->item.asMemvar.value;
-         pItem =&pValue->item;
-      }
-      else
-      {
-         if( pItem->item.asRefer.value >= 0 )
-            pItem =*(pItem->item.asRefer.itemsbase) + pItem->item.asRefer.offset +
-                     pItem->item.asRefer.value;
-         else
-         {
-            /* local variable referenced in a codeblock
-            */
-            pItem =hb_CodeblockGetRef( *(pItem->item.asRefer.itemsbase) + pItem->item.asRefer.offset,
-                     pItem );
-         }
-      }
-   }
-
-   return pItem;
-}
-
 
 void Less( void )
 {
@@ -1339,8 +1222,8 @@ void LessEqual( void )
 
 void Message( PSYMBOL pSymMsg ) /* sends a message to an object */
 {
-   ItemCopy( stack.pPos, stack.pPos - 1 ); /* moves the object forward */
-   ItemRelease( stack.pPos - 1 );
+   hb_itemCopy( stack.pPos, stack.pPos - 1 ); /* moves the object forward */
+   hb_itemClear( stack.pPos - 1 );
    ( stack.pPos - 1 )->type = IT_SYMBOL;
    ( stack.pPos - 1 )->item.asSymbol.value = pSymMsg;
    ( stack.pPos - 1 )->item.asSymbol.stackbase = ( stack.pPos - 1 ) - stack.pItems;
@@ -1640,17 +1523,17 @@ void PopLocal( SHORT iLocal )
       /* local variable or local parameter */
       pLocal = stack.pBase + 1 + iLocal;
       if( IS_BYREF( pLocal ) )
-         ItemCopy( ItemUnRef( pLocal ), stack.pPos );
+         hb_itemCopy( hb_itemUnRef( pLocal ), stack.pPos );
       else
-         ItemCopy( pLocal, stack.pPos );
+         hb_itemCopy( pLocal, stack.pPos );
     }
    else
       /* local variable referenced in a codeblock
        * stack.pBase+1 points to a codeblock that is currently evaluated
        */
-      ItemCopy( hb_CodeblockGetVar( stack.pBase + 1, iLocal ), stack.pPos );
+      hb_itemCopy( hb_CodeblockGetVar( stack.pBase + 1, iLocal ), stack.pPos );
 
-   ItemRelease( stack.pPos );
+   hb_itemClear( stack.pPos );
    HB_DEBUG( "PopLocal\n" );
 }
 
@@ -1671,7 +1554,7 @@ void PopMemvar( PSYMBOL pSym )
 {
    StackPop();
    hb_MemvarSetValue( pSym, stack.pPos );
-   ItemRelease( stack.pPos );
+   hb_itemClear( stack.pPos );
    HB_DEBUG( "PopMemvar\n" );
 }
 
@@ -1718,11 +1601,11 @@ void PopStatic( WORD wStatic )
    pStatic = aStatics.item.asArray.value->pItems + stack.iStatics + wStatic - 1;
 
    if( IS_BYREF( pStatic ) )
-      ItemCopy( ItemUnRef( pStatic ), stack.pPos );
+      hb_itemCopy( hb_itemUnRef( pStatic ), stack.pPos );
    else
-      ItemCopy( pStatic, stack.pPos );
+      hb_itemCopy( pStatic, stack.pPos );
 
-   ItemRelease( stack.pPos );
+   hb_itemClear( stack.pPos );
    HB_DEBUG( "PopStatic\n" );
 }
 
@@ -1737,7 +1620,7 @@ void Power( void )
 
 void PushLogical( int iTrueFalse )
 {
-   ItemRelease( stack.pPos );
+   hb_itemClear( stack.pPos );
    stack.pPos->type    = IT_LOGICAL;
    stack.pPos->item.asLogical.value = iTrueFalse;
    StackPush();
@@ -1753,15 +1636,15 @@ void PushLocal( SHORT iLocal )
       /* local variable or local parameter */
       pLocal = stack.pBase + 1 + iLocal;
       if( IS_BYREF( pLocal ) )
-         ItemCopy( stack.pPos, ItemUnRef( pLocal ) );
+         hb_itemCopy( stack.pPos, hb_itemUnRef( pLocal ) );
       else
-         ItemCopy( stack.pPos, pLocal );
+         hb_itemCopy( stack.pPos, pLocal );
    }
    else
       /* local variable referenced in a codeblock
        * stack.pBase+1 points to a codeblock that is currently evaluated
        */
-     ItemCopy( stack.pPos, hb_CodeblockGetVar( stack.pBase + 1, (LONG)iLocal ) );
+     hb_itemCopy( stack.pPos, hb_CodeblockGetVar( stack.pBase + 1, (LONG)iLocal ) );
 
    StackPush();
    HB_DEBUG2( "PushLocal %i\n", iLocal );
@@ -1769,7 +1652,7 @@ void PushLocal( SHORT iLocal )
 
 void PushLocalByRef( SHORT iLocal )
 {
-   ItemRelease( stack.pPos );
+   hb_itemClear( stack.pPos );
    stack.pPos->type = IT_BYREF;
    /* we store its stack offset instead of a pointer to support a dynamic stack */
    stack.pPos->item.asRefer.value = iLocal;
@@ -1782,7 +1665,7 @@ void PushLocalByRef( SHORT iLocal )
 
 void PushMemvar( PSYMBOL pSym )
 {
-   ItemRelease( stack.pPos );
+   hb_itemClear( stack.pPos );
    hb_MemvarGetValue( stack.pPos, pSym );
    StackPush();
    HB_DEBUG( "PushMemvar\n" );
@@ -1790,7 +1673,7 @@ void PushMemvar( PSYMBOL pSym )
 
 void PushMemvarByRef( PSYMBOL pSym )
 {
-   ItemRelease( stack.pPos );
+   hb_itemClear( stack.pPos );
    hb_MemvarGetRefer( stack.pPos, pSym );
    StackPush();
    HB_DEBUG( "PushMemvar\n" );
@@ -1798,7 +1681,7 @@ void PushMemvarByRef( PSYMBOL pSym )
 
 void PushNil( void )
 {
-   ItemRelease( stack.pPos );
+   hb_itemClear( stack.pPos );
    StackPush();
    HB_DEBUG( "PushNil\n" );
 }
@@ -1824,16 +1707,16 @@ void PushStatic( WORD wStatic )
 
    pStatic = aStatics.item.asArray.value->pItems + stack.iStatics + wStatic - 1;
    if( IS_BYREF(pStatic) )
-      ItemCopy( stack.pPos, ItemUnRef(pStatic) );
+      hb_itemCopy( stack.pPos, hb_itemUnRef(pStatic) );
    else
-      ItemCopy( stack.pPos, pStatic );
+      hb_itemCopy( stack.pPos, pStatic );
    StackPush();
    HB_DEBUG2( "PushStatic %i\n", wStatic );
 }
 
 void PushStaticByRef( WORD wStatic )
 {
-   ItemRelease( stack.pPos );
+   hb_itemClear( stack.pPos );
    stack.pPos->type = IT_BYREF;
    /* we store the offset instead of a pointer to support a dynamic stack */
    stack.pPos->item.asRefer.value = wStatic -1;
@@ -1851,7 +1734,7 @@ void PushString( char * szText, ULONG length )
    memcpy (szTemp, szText, length);
    szTemp[ length ] = 0;
 
-   ItemRelease( stack.pPos );
+   hb_itemClear( stack.pPos );
    stack.pPos->type                 = IT_STRING;
    stack.pPos->item.asString.length = length;
    stack.pPos->item.asString.value  = szTemp;
@@ -1861,7 +1744,7 @@ void PushString( char * szText, ULONG length )
 
 void PushSymbol( PSYMBOL pSym )
 {
-   ItemRelease( stack.pPos );
+   hb_itemClear( stack.pPos );
    stack.pPos->type   = IT_SYMBOL;
    stack.pPos->item.asSymbol.value = pSym;
    stack.pPos->item.asSymbol.stackbase   = stack.pPos - stack.pItems;
@@ -1871,7 +1754,7 @@ void PushSymbol( PSYMBOL pSym )
 
 void Push( PHB_ITEM pItem )
 {
-   ItemCopy( stack.pPos, pItem );
+   hb_itemCopy( stack.pPos, pItem );
    StackPush();
    HB_DEBUG( "Push\n" );
 }
@@ -1886,7 +1769,7 @@ void PushBlock( BYTE * pCode, PSYMBOL pSymbols )
 {
    WORD wLocals;
 
-   ItemRelease( stack.pPos );
+   hb_itemClear( stack.pPos );
    stack.pPos->type   = IT_BLOCK;
 
    wLocals =pCode[ 5 ] + ( pCode[ 6 ] * 256 );
@@ -1911,7 +1794,7 @@ void PushBlock( BYTE * pCode, PSYMBOL pSymbols )
 
 void PushDate( LONG lDate )
 {
-   ItemRelease( stack.pPos );
+   hb_itemClear( stack.pPos );
    stack.pPos->type   = IT_DATE;
    stack.pPos->item.asDate.value = lDate;
    StackPush();
@@ -1920,7 +1803,7 @@ void PushDate( LONG lDate )
 
 void PushDouble( double dNumber, WORD wDec )
 {
-   ItemRelease( stack.pPos );
+   hb_itemClear( stack.pPos );
    stack.pPos->type   = IT_DOUBLE;
    stack.pPos->item.asDouble.value = dNumber;
    if( dNumber >= 10000000000.0 ) stack.pPos->item.asDouble.length = 20;
@@ -1932,7 +1815,7 @@ void PushDouble( double dNumber, WORD wDec )
 
 void PushInteger( int iNumber )
 {
-   ItemRelease( stack.pPos );
+   hb_itemClear( stack.pPos );
    stack.pPos->type = IT_INTEGER;
    stack.pPos->item.asInteger.value   = iNumber;
    stack.pPos->item.asInteger.length  = 10;
@@ -1943,7 +1826,7 @@ void PushInteger( int iNumber )
 
 void PushLong( long lNumber )
 {
-   ItemRelease( stack.pPos );
+   hb_itemClear( stack.pPos );
    stack.pPos->type   = IT_LONG;
    stack.pPos->item.asLong.value   = lNumber;
    stack.pPos->item.asLong.length  = 10;
@@ -1955,13 +1838,13 @@ void PushLong( long lNumber )
 void RetValue( void )
 {
    StackPop();
-   ItemCopy( &stack.Return, stack.pPos );
+   hb_itemCopy( &stack.Return, stack.pPos );
    HB_DEBUG( "RetValue\n" );
 }
 
 void StackPop( void )
 {
-   ItemRelease( stack.pPos );
+   hb_itemClear( stack.pPos );
 
    if( --stack.pPos < stack.pItems )
    {
@@ -2018,7 +1901,7 @@ void StackInit( void )
    HB_DEBUG( "StackInit\n" );
 }
 
- void StackShow( void )
+void StackShow( void )
 {
    PHB_ITEM p;
 
@@ -2247,6 +2130,9 @@ void DoInitFunctions( int argc, char * argv[] )
    } while( pLastSymbols );
 }
 
+/* ----------------------------- */
+/* TODO: Put these to /source/rtl/?.c */
+
 HARBOUR HB_LEN( void )
 {
    PHB_ITEM pItem;
@@ -2323,7 +2209,6 @@ HARBOUR HB_EMPTY(void)
       hb_retl( TRUE );
 }
 
-
 HARBOUR HB_VALTYPE( void )
 {
    PHB_ITEM pItem;
@@ -2379,13 +2264,13 @@ HARBOUR HB_ERRORBLOCK(void)
    PHB_ITEM pNewErrorBlock = hb_param( 1, IT_BLOCK );
 
    oldError.type = IT_NIL;
-   ItemCopy( &oldError, &errorBlock );
+   hb_itemCopy( &oldError, &errorBlock );
 
    if( pNewErrorBlock )
-      ItemCopy( &errorBlock, pNewErrorBlock );
+      hb_itemCopy( &errorBlock, pNewErrorBlock );
 
-   ItemCopy( &stack.Return, &oldError );
-   ItemRelease( &oldError );
+   hb_itemCopy( &stack.Return, &oldError );
+   hb_itemClear( &oldError );
 }
 
 HARBOUR HB_PROCNAME(void)

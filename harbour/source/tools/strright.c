@@ -49,7 +49,7 @@
  */
 
 
-#include <extend.h>
+#include "extend.h"
 
 
 HARBOUR HB_GT_STRRIGHT( void )

@@ -31,10 +31,10 @@
    You can contact me at: dezac@corevia.com
  */
 
-#include <extend.h>
-#include <itemapi.h>
+#include "extend.h"
+#include "itemapi.h"
 #include <ctype.h>
-#include <init.h>
+#include "init.h"
 
 extern STACK stack;
 
@@ -46,7 +46,7 @@ HB_INIT_SYMBOLS_END( Descend__InitSymbols );
 #if ! defined(__GNUC__)
 #pragma Descend__InitSymbols
 #endif
-                            
+
 char *hb_strdescend( char *string )
 {
    char *s;

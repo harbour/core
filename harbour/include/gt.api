@@ -5,7 +5,7 @@
 #ifndef HB_GT_API_
 #define HB_GT_API_
 
-#include <gtapi.h>
+#include "gtapi.h"
 
 #define _gtInit         hb_gtInit
 #define _gtBox          hb_gtBox

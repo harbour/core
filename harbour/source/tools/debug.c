@@ -37,10 +37,10 @@
  * $Date$         1999/05/06
  * $End$ */
 
-#include <extend.h>
-#include <ctoharb.h>
 #include <ctype.h>
-#include <itemapi.h>
+#include "extend.h"
+#include "ctoharb.h"
+#include "itemapi.h"
 
 extern STACK stack;                             /* External data used       */
 extern HB_ITEM aStatics;
@@ -57,7 +57,7 @@ HARBOUR HB___ASTATIC(void)
 {
    PHB_ITEM pStatics = hb_arrayClone( &aStatics );
 
-   ItemCopy( &stack.Return, pStatics );
+   hb_itemCopy( &stack.Return, pStatics );
    hb_itemRelease( pStatics );
 }
 
@@ -96,7 +96,7 @@ void AddToArray( PHB_ITEM pItem, PHB_ITEM pReturn, WORD wPos )
       sprintf( pTemp->item.asString.value, "[%s]", pItem->item.asSymbol.value->szName );
 
       hb_itemArrayPut( pReturn, wPos, pTemp );
-      ItemRelease( pTemp );                     /* Get rid of temporary str.*/
+      hb_itemClear( pTemp );                     /* Get rid of temporary str.*/
       hb_xfree( pTemp );
    }
    else                                         /* Normal types             */
@@ -138,7 +138,7 @@ HARBOUR HB___AGLOBALSTACK(void)
    for( pItem = stack.pItems; pItem <= stack.pPos; pItem++ )
       AddToArray( pItem, pReturn, wPos++ );
    hb_itemReturn( pReturn );
-   ItemRelease( pReturn );
+   hb_itemClear( pReturn );
    hb_xfree( pReturn );
 }
 
@@ -187,7 +187,7 @@ HARBOUR HB___ASTACK(void)
    for( pItem = pBase; pItem < stack.pBase; pItem++ )
       AddToArray( pItem, pReturn, wPos++ );
    hb_itemReturn( pReturn );
-   ItemRelease( pReturn );
+   hb_itemClear( pReturn );
    hb_xfree( pReturn );
 }
 
@@ -212,7 +212,7 @@ HARBOUR HB___APARAM(void)
    for( pItem = pBase+2; wLen--; pItem++ )
       AddToArray( pItem, pReturn, wPos++ );
    hb_itemReturn( pReturn );
-   ItemRelease( pReturn );
+   hb_itemClear( pReturn );
    hb_xfree( pReturn );
 }
 

@@ -22,10 +22,10 @@
    You can contact me at: alinares@fivetech.com
  */
 
-#include <extend.h>
-#include <ctoharb.h>
-#include <itemapi.h>
-#include <errorapi.h>
+#include "extend.h"
+#include "ctoharb.h"
+#include "itemapi.h"
+#include "errorapi.h"
 
 extern HB_ITEM errorBlock;
 extern STACK stack;
@@ -39,7 +39,7 @@ PHB_ITEM hb_errNew( void )
    PushNil();
    Do( 0 );
 
-   ItemCopy( pReturn, &stack.Return );
+   hb_itemCopy( pReturn, &stack.Return );
 
    return pReturn;
 }

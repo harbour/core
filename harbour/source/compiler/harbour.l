@@ -65,8 +65,8 @@ int yy_lex_input( char *, int );
 #define YY_INPUT( buf, result, max_size ) result = yy_lex_input( buf, max_size );
 
 /* variables defined in harbour.y */
-extern int _iQuiet;
-extern int _iRestrictSymbolLength;
+extern int _bQuiet;
+extern int _bRestrictSymbolLength;
 extern WORD _wSeqCounter;
 extern WORD _wForCounter;
 extern WORD _wIfCounter;
@@ -213,7 +213,7 @@ Separator     {SpaceTab}
 
 {SpaceTab}     ;
 
-\n.*           _iState=LOOKUP; yyless( 1 ); ++iLine; if( ! _iQuiet ) printf( "\rline: %i", iLine ); return '\n';
+\n.*           _iState=LOOKUP; yyless( 1 ); ++iLine; if( ! _bQuiet ) printf( "\rline: %i", iLine ); return '\n';
 %{
 /* ************************************************************************ */
 %}
@@ -1176,7 +1176,7 @@ Separator     {SpaceTab}
                yytext[yyleng] = 0;
 
                {
-                  if( _iRestrictSymbolLength && strlen( yytext ) > 10 )
+                  if( _bRestrictSymbolLength && strlen( yytext ) > 10 )
                   {
                      yytext[ 10 ] = 0;
                      yyleng = 10;
@@ -1218,7 +1218,7 @@ Separator     {SpaceTab}
             }
 
 {Identifier}               {
-                              if( _iRestrictSymbolLength && strlen( yytext ) > 10 )
+                              if( _bRestrictSymbolLength && strlen( yytext ) > 10 )
                               {
                                  yytext[ 10 ] = 0;
                                  yyleng = 10;

@@ -29,6 +29,7 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
    their web site at http://www.gnu.org/).
 
+   V 1.7    Victor Szel                 #include <x> changed to #include "x".
    V 1.6    David G. Holm               Added my email address.
    V 1.5    David G. Holm               Added copyright and license header,
                                         along with a complete version history.
@@ -43,8 +44,8 @@
 #ifndef HB_FILESYS_H_
 #define HB_FILESYS_H_
 
-#include <extend.h>
-#include <fileio.ch>
+#include "extend.h"
+#include "fileio.ch"
 
 typedef void * ERRORP;
 typedef int    FHANDLE;

@@ -5,7 +5,7 @@
 #ifndef HB_FM_API_
 #define HB_FM_API_
 
-#include <extend.h>
+#include "extend.h"
 
 #define _xgrab    hb_xgrab
 #define _xrealloc hb_xrealloc

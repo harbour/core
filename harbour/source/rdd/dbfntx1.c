@@ -22,9 +22,9 @@
    You can contact me at: bruno@issnet.net
  */
 
-#include <extend.h>
-#include <init.h>
-#include <rdd.api>
+#include "extend.h"
+#include "init.h"
+#include "rdd.api"
 
 HARBOUR HB_REQUEST_DBFNTX1( void );
 HARBOUR HB_DBFNTX_GETFUNCTABLE( void );

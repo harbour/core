@@ -4,7 +4,7 @@
 
 /* Korea language module */
 
-#include <hbdefs.h>
+#include "hbdefs.h"
 
 char *hb_monthsname[ 12 ] = {
    "1¿ù", "2¿ù", "3¿ù",

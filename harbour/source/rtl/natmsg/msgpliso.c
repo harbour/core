@@ -5,7 +5,7 @@
 /* Polish language module - Polskojêzyczny modu³ dla Harbour  */
 /* Codepage: ISO-8859-2 */
 
-#include <hbdefs.h>
+#include "hbdefs.h"
 
 char *hb_monthsname[ 12 ] = {
    "Styczeñ", "Luty", "Marzec",

@@ -25,7 +25,7 @@
 #ifndef HB_ITEMAPI_H_
 #define HB_ITEMAPI_H_
 
-#include <extend.h>
+#include "extend.h"
 
 typedef struct
 {

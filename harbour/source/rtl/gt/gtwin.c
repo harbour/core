@@ -19,7 +19,7 @@
 #endif /* __GNUC__ */
 
 #include <windows.h>
-#include <gtapi.h>
+#include "gtapi.h"
 
 #if ! defined(__GNUC__)
 #ifdef __CYGWIN32__

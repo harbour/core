@@ -34,13 +34,13 @@
  *     hb_dow(), HB_DOW()
 */
 
-#include <hbsetup.h>
-#include <extend.h>
-#include <init.h>
-#include <errorapi.h>
-#include <itemapi.h>
-#include <set.h>
-#include <dates.h>
+#include "hbsetup.h"
+#include "extend.h"
+#include "init.h"
+#include "errorapi.h"
+#include "itemapi.h"
+#include "set.h"
+#include "dates.h"
 #include <ctype.h>
 #include <time.h>
 #if defined(__TURBOC__) || defined(__BORLANDC__)  || defined(__DJGPP__)
@@ -94,11 +94,11 @@ double hb__seconds( void )
 
    _ftime( &tb );
    oTime = localtime(&tb.time);
-   return( ( oTime->tm_hour * 3600 ) + 
-           ( oTime->tm_min * 60 ) + 
-             oTime->tm_sec + 
+   return( ( oTime->tm_hour * 3600 ) +
+           ( oTime->tm_min * 60 ) +
+             oTime->tm_sec +
            ( (double) tb.millitm /1000 ) );
-#else   
+#else
    time_t t;
    struct tm *oTime;
    time(&t);

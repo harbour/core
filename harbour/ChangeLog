@@ -1,3 +1,54 @@
+19990728-20:35 CET Victor Szel <info@szelvesz.hu>
+  * Changed all #include <x> to #include "x", where
+    x is a Harbour header file.
+    Many source and header files involved.
+  * include/extend.h - Small cleanups.
+  * include/extend.h - Some functions renamed to be more
+    consistent.
+    source/rtl/arrays.c
+    source/rtl/classes.c
+    source/rtl/codebloc.c
+    source/rtl/dir.c
+    source/rtl/errorapi.c
+    source/rtl/extend.c
+    source/rtl/itemapi.c
+    source/rtl/memvars.c
+    source/rtl/transfrm.c
+    source/tools/debug.c 
+    source/vm/hvm.c
+    ItemCopy()      -> hb_itemCopy()
+    ItemRelease()   -> hb_itemClear()
+    ItemUnRef()     -> hb_itemUnRef()
+    GetMethod()     -> hb_GetMethod()
+  * include/version.h renamed to hb_ver.h
+    source/rtl/environ.c
+    source/compiler/harbour.y
+    include/Makefile
+  * source/vm/hvm.c - hb_item*() functions moved to source/rtl/itemapi.c
+  * source/vm/hvm.c - Codeblock and memvar management function
+    declarations moved to include/extend.h
+  * source/rtl/strcmp.c/hb_stricmp() moved to source/rtl/strings.c
+  * source/rtl/strcmp.c/hb_itemStrCmp() moved to source/rtl/itemapi.c
+  - source/rtl/strcmp.c removed.
+    source/rtl/makefile
+    makefile.b16
+    makefile.b31
+    makefile.b32
+    makefile.b40
+    makefile.vc
+  - makefile.icc removed (superseded by GNU Make System)
+  + tests/working/rtl_test.prg - Further improved, it's
+    now fully automatic.
+  ! source/rtl/strings.c - LEFT(),RIGHT(),SUBSTR() bugs fixed with 
+    some LONG casts for asstring.length.
+    UPPER(),LOWER() LONG -> ULONG
+  * source/compiler/harbour.y
+    source/compiler/harbour.l
+    source/compiler/genobj32.c
+    Some ints changed to BOOL.
+  ! tests/working/strsub.prg - "Press a key" changed
+    to "press Enter".
+
 19990728-19:45 GMT+1 Antonio Linares <alinares@fivetech.com>
    * include/classes.ch
      Added support for 'Super' keyword

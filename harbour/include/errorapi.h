@@ -24,14 +24,15 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-   V 1.0    1999-04-25 - Initial posting.
+   V 1.11   Victor Szel                 #include <x> changed to #include "x".
+   V 1.0    ?                           Initial posting.
 */
 
 #ifndef HB_ERRORAPI_H_
 #define HB_ERRORAPI_H_
 
-#include <extend.h>
-#include <error.ch>
+#include "extend.h"
+#include "error.ch"
 
 /* Error codes (returned from hb_errLaunch()) */
 

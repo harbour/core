@@ -5,8 +5,8 @@
 #ifndef HB_HARB_H_
 #define HB_HARB_H_
 
-#include <hbsetup.h>
-#include <hbdefs.h>
+#include "hbsetup.h"
+#include "hbdefs.h"
 #include "hbpp.h" /* includes common definitions shared by preprocessor and harbour.y */
 
 #define PATH_DELIMITER  "/\\"

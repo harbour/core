@@ -2,7 +2,7 @@
  * $Id$
  */
 
-#include <extend.h>
+#include "extend.h"
 #include <ctype.h>
 
 /* TODO: search this file for TODO and find 'em! */

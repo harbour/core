@@ -26,7 +26,6 @@ C_SOURCES=\
         mtran.c \
         set.c \
         setcolor.c \
-        strcmp.c \
         strings.c \
         transfrm.c \
         \

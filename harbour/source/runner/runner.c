@@ -24,10 +24,9 @@
  */
 
 #include "pcode.h"
-
-#include <errorapi.h>
+#include "errorapi.h"
+#include "init.h"
 #include <stdio.h>
-#include <init.h>
 
 /* #if INTEL32 */
 static BYTE prgFunction[] = { 0x68, 0x00, 0x00, 0x00, 0x00,

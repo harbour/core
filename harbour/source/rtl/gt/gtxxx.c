@@ -11,7 +11,7 @@
 
 /* TODO: include any standard headers here */
 
-#include <gtapi.h>
+#include "gtapi.h"
 
 void gtInit(void)
 {

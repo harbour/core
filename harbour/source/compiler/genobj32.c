@@ -27,10 +27,10 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <hbdefs.h>
-#include <compiler.h>
-#include <extend.h>
-#include <pcode.h>
+#include "hbdefs.h"
+#include "compiler.h"
+#include "extend.h"
+#include "pcode.h"
 
 static void CompiledFileName( FILE * hObjFile, char * szFileName );
 static void CompilerVersion( FILE * hObjFile, char * szVersion );
@@ -56,7 +56,7 @@ static void GenerateSymbolsSegment( FILE * hObjFile );
 
 extern FUNCTIONS functions, funcalls;
 extern SYMBOLS symbols;
-extern int _iQuiet, _iStartProc;
+extern int _bQuiet, _bStartProc;
 
 static BYTE prgFunction[] = { 0x68, 0x00, 0x00, 0x00, 0x00, 0x68, 0x00, 0x00, 0x00,
 			      0x00, 0xE8, 0x00, 0x00, 0x00, 0x00, 0x83, 0xC4, 0x08, 0xC3 };
@@ -74,7 +74,7 @@ void GenObj32( char * szObjFileName, char * szFileName )
       return;
     }
 
-  if( ! _iQuiet )
+  if( ! _bQuiet )
     printf( "\ngenerating Windows/Dos OBJ 32 bits..." );
 
   CompiledFileName( hObjFile, szFileName );
@@ -88,20 +88,20 @@ void GenObj32( char * szObjFileName, char * szFileName )
 
   fclose( hObjFile );
 
-  if( ! _iQuiet )
+  if( ! _bQuiet )
     printf( "\n%s -> done!\n", szObjFileName );
 }
 
 static ULONG GetSymbolsSize( void )
 {
-  return ( symbols.iCount - ( _iStartProc ? 0: 1 ) ) * sizeof( SYMBOL );
+  return ( symbols.iCount - ( _bStartProc ? 0: 1 ) ) * sizeof( SYMBOL );
 }
 
 static PCOMSYMBOL GetFirstSymbol( void )
 {
   PCOMSYMBOL pSymbol = symbols.pFirst;
 
-  if( ! _iStartProc )
+  if( ! _bStartProc )
     pSymbol = pSymbol->pNext;
 
   return pSymbol;
@@ -123,7 +123,7 @@ static ULONG GetPCodesSize( void )
   ULONG ulTotal = 0;
   PFUNCTION pFunction = functions.pFirst;
 
-  if( ! _iStartProc )
+  if( ! _bStartProc )
     pFunction = pFunction->pNext;
 
   while( pFunction )
@@ -245,9 +245,9 @@ static void GenerateDataSegment( FILE * hObjFile )
 
 static void GenerateCodeSegment( FILE * hObjFile )
 {
-  WORD wFunctions = functions.iCount - ( _iStartProc ? 0: 1 );
+  WORD wFunctions = functions.iCount - ( _bStartProc ? 0: 1 );
   ULONG ulSize    = wFunctions * sizeof( prgFunction );
-  PFUNCTION pFunc = ( _iStartProc ? functions.pFirst: functions.pFirst->pNext );
+  PFUNCTION pFunc = ( _bStartProc ? functions.pFirst: functions.pFirst->pNext );
   WORD w = 0;
 
   DefineSegment( hObjFile, 2, /* "_TEXT" position + 1 into localNames */
@@ -449,9 +449,9 @@ static void CodeSegment( FILE * hObjFile, BYTE * prgCode, ULONG ulPrgLen, WORD w
   WORD wTotalLen = ( ulPrgLen * wFunctions ) + 4;
   ULONG ul;
   PFUNCTION pFunction = functions.pFirst;
-  ULONG ulPCodeOffset = ( symbols.iCount - ( _iStartProc ? 0: 1 ) ) * sizeof( SYMBOL );
+  ULONG ulPCodeOffset = ( symbols.iCount - ( _bStartProc ? 0: 1 ) ) * sizeof( SYMBOL );
 
-  if( ! _iStartProc )
+  if( ! _bStartProc )
     pFunction = pFunction->pNext;
 
   putbyte( 0xA0, hObjFile );
@@ -492,7 +492,7 @@ static void DataSegment( FILE * hObjFile, BYTE * symbol, WORD wSymLen, WORD wSym
   ULONG ulSymbolNameOffset = GetSymbolsSize() + GetPCodesSize();
   ULONG ulFunctionOffset;
 
-  if( ! _iStartProc )
+  if( ! _bStartProc )
     pFunction = pFunction->pNext;
 
   putbyte( 0xA0, hObjFile );

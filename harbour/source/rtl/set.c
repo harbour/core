@@ -29,6 +29,7 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
    their web site at http://www.gnu.org/).
 
+   V 1.51   Victor Szel                 #include <x> changed to #include "x".
    V 1.49   Paul Tucker                 Changed parameter passing checks
                                         in call to hb_setColor() to account
                                         for no or NIL parameters.
@@ -160,15 +161,15 @@
 #endif
 
 #include <ctype.h>
-#include <extend.h>
-#include <init.h>
-#include <errorapi.h>
+#include "extend.h"
+#include "init.h"
+#include "errorapi.h"
 #include <fcntl.h>
 #ifndef __MPW__
  #include <sys/stat.h>
 #endif
-#include <set.h>
-#include <inkey.h>
+#include "set.h"
+#include "inkey.h"
 #include <errno.h>
 
 #ifndef O_BINARY

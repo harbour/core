@@ -34,13 +34,13 @@
  *    partial copyright with regards to string handling
  */
 
-#include <extend.h>
-#include <init.h>
-#include <errorapi.h>
-#include <ctoharb.h>
+#include "extend.h"
+#include "init.h"
+#include "errorapi.h"
+#include "ctoharb.h"
 #include <ctype.h>
-#include <dates.h>
-#include <set.h>
+#include "dates.h"
+#include "set.h"
 
 /*                                                                          */
 /*  Transform( xValue, cPicture )                                           */
@@ -621,21 +621,21 @@ HARBOUR HB_TRANSFORM( void )
          {
             pItem = NumDefault( (double) pExp->item.asInteger.value );
             hb_retclen( pItem->item.asString.value, pItem->item.asInteger.length );
-            ItemRelease( pItem );
+            hb_itemClear( pItem );
             break;
          }
          case IT_LONG:
          {
             pItem = NumDefault( (double) pExp->item.asLong.value );
             hb_retclen( pItem->item.asString.value, pItem->item.asLong.length );
-            ItemRelease( pItem );
+            hb_itemClear( pItem );
             break;
          }
          case IT_DOUBLE:
          {
             pItem = NumDefault( (double) pExp->item.asDouble.value );
             hb_retclen( pItem->item.asString.value, pItem->item.asDouble.length );
-            ItemRelease( pItem );
+            hb_itemClear( pItem );
             break;
          }
          case IT_DATE:

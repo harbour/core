@@ -31,9 +31,9 @@
    You can contact me at: dezac@corevia.com
  */
 
-#include <extend.h>
+#include "extend.h"
 #include <ctype.h>
-#include <init.h>
+#include "init.h"
 
 #define CHR_HARD1   (char)141
 #define CHR_HARD2   (char)10

@@ -42,8 +42,8 @@
  *                             changed to allow unlimited color pairs.
  */
 
-#include <set.h>
-#include <gtapi.h>
+#include "set.h"
+#include "gtapi.h"
 
 /* TODO: functions not implemented yet
 int hb_gtPostExt(void);
@@ -64,7 +64,7 @@ int *_Color;           /* masks: 0x0007     Background
                                  0x0800     Underline background
                                  0x8000     Underline foreground
                         */
-int _ColorCount; 
+int _ColorCount;
 
 /* gt API functions */
 
@@ -114,7 +114,7 @@ int hb_gtBox (USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char
     for (tmp = 0; *pbyFrame && tmp < 9; tmp++) cPadChar = pszBox[tmp] = *pbyFrame++;
     while (tmp < 8) pszBox[tmp++] = cPadChar;
     pszBox[tmp] = '\0';
-    
+
     /* Ensure that box is drawn from top left to bottom right. */
     if( uiTop > uiBottom )
     {
@@ -397,10 +397,10 @@ int hb_gtGetColorStr(char * fpColorString)
                     {
                         if( ( nColor & 1 ) != 0 )
                             sColors[k++] = 'B';
-    
+
                         if( ( nColor & 2 ) != 0 )
                             sColors[k++] = 'G';
-    
+
                         if( ( nColor & 4 ) != 0 )
                             sColors[k++] = 'R';
                     }

@@ -18,12 +18,12 @@
    #define INCL_DOSERRORS
 #endif
 
-#include <hbsetup.h>
-#include <extend.h>
+#include "hbsetup.h"
+#include "extend.h"
 #include <string.h>
 #include <ctype.h>
-#include <itemapi.h>
-#include <init.h>
+#include "itemapi.h"
+#include "init.h"
 
 #if defined(__GNUC__)
   #include <sys/types.h>
@@ -234,7 +234,7 @@ HARBOUR HB_DIRECTORY( void )
       }
    }
 
-/* redundant 
+/* redundant
    if (strlen(pfext) < 1)
       pfext[0] = '\0';
 */
@@ -341,11 +341,11 @@ HARBOUR HB_DIRECTORY( void )
 
             ftime = statbuf.st_mtime;
             ft = localtime(&ftime);
-	    sprintf(ddate, "%04d%02d%02d",
+            sprintf(ddate, "%04d%02d%02d",
                     ft->tm_year+1900, ft->tm_mon + 1, ft->tm_mday);
 
             sprintf(ttime, "%02d:%02d:%02d",
-		    ft->tm_hour, ft->tm_min, ft->tm_sec);
+                    ft->tm_hour, ft->tm_min, ft->tm_sec);
 
 /* debug code
 
@@ -357,21 +357,21 @@ HARBOUR HB_DIRECTORY( void )
 
 #if defined(OS_UNIX_COMPATIBLE)
 /* GNU C on Linux or on other UNIX */
-	 aatrib[ 0 ] = '\0';
-	 if( S_ISREG(statbuf.st_mode) )
-	   strcat( aatrib, "A" );
-	 if( S_ISDIR(statbuf.st_mode) )
-	   strcat( aatrib, "D" );
-	 if( S_ISLNK(statbuf.st_mode) )
-	   strcat( aatrib, "L" );
-	 if( S_ISCHR(statbuf.st_mode) )
-	   strcat( aatrib, "C" );
-	 if( S_ISBLK(statbuf.st_mode) )
-	   strcat( aatrib, "B" );
-	 if( S_ISFIFO(statbuf.st_mode) )
-	   strcat( aatrib, "F" );
-	 if( S_ISSOCK(statbuf.st_mode) )
-	   strcat( aatrib, "K" );
+         aatrib[ 0 ] = '\0';
+         if( S_ISREG(statbuf.st_mode) )
+           strcat( aatrib, "A" );
+         if( S_ISDIR(statbuf.st_mode) )
+           strcat( aatrib, "D" );
+         if( S_ISLNK(statbuf.st_mode) )
+           strcat( aatrib, "L" );
+         if( S_ISCHR(statbuf.st_mode) )
+           strcat( aatrib, "C" );
+         if( S_ISBLK(statbuf.st_mode) )
+           strcat( aatrib, "B" );
+         if( S_ISFIFO(statbuf.st_mode) )
+           strcat( aatrib, "F" );
+         if( S_ISSOCK(statbuf.st_mode) )
+           strcat( aatrib, "K" );
 #else
    #if defined(__IBMCPP__)
          attrib = entry.attrFile;
@@ -478,7 +478,7 @@ HARBOUR HB_DIRECTORY( void )
    closedir( dir );
 #endif
 
-   ItemCopy( &stack.Return, pdir ); /* DIRECTORY() returns an array */
+   hb_itemCopy( &stack.Return, pdir ); /* DIRECTORY() returns an array */
 
    hb_itemRelease(pdir);
 

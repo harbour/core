@@ -34,11 +34,11 @@
 
 */
 
-#include <hbsetup.h>
-#include <extend.h>
-#include <itemapi.h>
 #include <ctype.h>
-#include <init.h>
+#include "hbsetup.h"
+#include "extend.h"
+#include "itemapi.h"
+#include "init.h"
 #include "harb.h"
 
 #define SKIPTABSPACES(sptr) while ( *sptr == ' ' || *sptr == '\t' ) (sptr)++

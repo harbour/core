@@ -2,7 +2,7 @@
  * $Id$
  */
 
-#include <extend.h>
+#include "extend.h"
 #include <time.h>
 
 HARBOUR HB_DATETIME( void )

@@ -29,6 +29,8 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
    their web site at http://www.gnu.org/).
 
+   V 1.3    Victor Szel                 #include <x> changed to #include "x".
+   V 1.2    Gonzalo Diethelm            ?
    V 1.1    David G. Holm               Committed to CVS.
    V 1.0    David G. Holm               Initial version.
 */

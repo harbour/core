@@ -5,7 +5,7 @@
 #ifndef HB_ITEM_API_
 #define HB_ITEM_API_
 
-#include <itemapi.h>
+#include "itemapi.h"
 
 #define _arrayNew       hb_arrayNew
 #define _arrayLen       hb_arrayLen

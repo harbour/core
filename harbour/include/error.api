@@ -5,7 +5,7 @@
 #ifndef HB_ERROR_API_
 #define HB_ERROR_API_
 
-#include <errorapi.h>
+#include "errorapi.h"
 
 #define _errNew            hb_errNew
 #define _errLaunch         hb_errLaunch

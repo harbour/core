@@ -36,110 +36,144 @@
 
 /* TODO: Add checks for string parameters with embedded NUL character */
 /* TODO: Add test cases for other string functions */
-/* TODO: Incorporate tests from TEST\WORKING\STRING*.PRG */
+/* TODO: Incorporate tests from test/working/string*.prg */
 
-#translate SHOW_TEST(<x>) => fWrite(1, PadR(StrTran(<(x)>, Chr(0), "."), 40) + " -> " + '"' + StrTran(<x>, Chr(0), ".") + '"' + Chr(13) + Chr(10))
-#translate SHOW_LINE()    => fWrite(1, Chr(13) + Chr(10))
+#translate TEST_LINE(<x>, <result>) => TEST_CALL(<(x)>, {|| <x> }, <result>)
 
-#define NUL                             Chr(0)
+STATIC snPass := 0
+STATIC snFail := 0
 
 FUNCTION Main()
 
-     SHOW_TEST( Str(At("", ""))              ) // 1
-     SHOW_TEST( Str(At("", "ABCDEF"))        ) // 1
-     SHOW_TEST( Str(At("ABCDEF", ""))        ) // 0
-     SHOW_TEST( Str(At("AB", "AB"))          ) // 1
-     SHOW_TEST( Str(At("AB", "AAB"))         ) // 2
-     SHOW_TEST( Str(At("A", "ABCDEF"))       ) // 1
-     SHOW_TEST( Str(At("F", "ABCDEF"))       ) // 6
-     SHOW_TEST( Str(At("D", "ABCDEF"))       ) // 4
-     SHOW_TEST( Str(At("X", "ABCDEF"))       ) // 0
-     SHOW_TEST( Str(At("AB", "ABCDEF"))      ) // 1
-     SHOW_TEST( Str(At("AA", "ABCDEF"))      ) // 0
-     SHOW_TEST( Str(At("ABCDEF", "ABCDEF"))  ) // 1
-     SHOW_TEST( Str(At("BCDEF", "ABCDEF"))   ) // 2
-     SHOW_TEST( Str(At("BCDEFG", "ABCDEF"))  ) // 0
-     SHOW_TEST( Str(At("ABCDEFG", "ABCDEF")) ) // 0
-     SHOW_TEST( Str(At("FI", "ABCDEF"))      ) // 0
+     TEST_LINE( At("", "")                    , 1                )
+     TEST_LINE( At("", "ABCDEF")              , 1                )
+     TEST_LINE( At("ABCDEF", "")              , 0                )
+     TEST_LINE( At("AB", "AB")                , 1                )
+     TEST_LINE( At("AB", "AAB")               , 2                )
+     TEST_LINE( At("A", "ABCDEF")             , 1                )
+     TEST_LINE( At("F", "ABCDEF")             , 6                )
+     TEST_LINE( At("D", "ABCDEF")             , 4                )
+     TEST_LINE( At("X", "ABCDEF")             , 0                )
+     TEST_LINE( At("AB", "ABCDEF")            , 1                )
+     TEST_LINE( At("AA", "ABCDEF")            , 0                )
+     TEST_LINE( At("ABCDEF", "ABCDEF")        , 1                )
+     TEST_LINE( At("BCDEF", "ABCDEF")         , 2                )
+     TEST_LINE( At("BCDEFG", "ABCDEF")        , 0                )
+     TEST_LINE( At("ABCDEFG", "ABCDEF")       , 0                )
+     TEST_LINE( At("FI", "ABCDEF")            , 0                )
 
-     SHOW_TEST( SubStr("abcdef", 0, -1)      ) // ""
-     SHOW_TEST( SubStr("abcdef", 0, 0)       ) // ""
-     SHOW_TEST( SubStr("abcdef", 0, 1)       ) // "a"
-     SHOW_TEST( SubStr("abcdef", 0, 7)       ) // "abcdef"
-     SHOW_TEST( SubStr("abcdef", 0)          ) // "abcdef"
-     SHOW_TEST( SubStr("abcdef", 2, -1)      ) // ""
-     SHOW_TEST( SubStr("abcdef", 2, 0)       ) // ""
-     SHOW_TEST( SubStr("abcdef", 2, 1)       ) // "b"
-     SHOW_TEST( SubStr("abcdef", 2, 7)       ) // "bcdef"
-     SHOW_TEST( SubStr("abcdef", 2)          ) // "bcdef"
-     SHOW_TEST( SubStr("abcdef", -2, -1)     ) // ""
-     SHOW_TEST( SubStr("abcdef", -2, 0)      ) // ""
-     SHOW_TEST( SubStr("abcdef", -2, 1)      ) // "e"
-     SHOW_TEST( SubStr("abcdef", -2, 7)      ) // "ef"
-     SHOW_TEST( SubStr("abcdef", -2)         ) // "ef"
-     SHOW_TEST( SubStr("abcdef", 10, -1)     ) // ""
-     SHOW_TEST( SubStr("abcdef", 10, 0)      ) // ""
-     SHOW_TEST( SubStr("abcdef", 10, 1)      ) // ""
-     SHOW_TEST( SubStr("abcdef", 10, 7)      ) // ""
-     SHOW_TEST( SubStr("abcdef", 10)         ) // ""
-     SHOW_TEST( SubStr("abcdef", -10, -1)    ) // ""
-     SHOW_TEST( SubStr("abcdef", -10, 0)     ) // ""
-     SHOW_TEST( SubStr("abcdef", -10, 1)     ) // "a"
-     SHOW_TEST( SubStr("abcdef", -10, 7)     ) // "abcdef"
-     SHOW_TEST( SubStr("abcdef", -10, 15)    ) // "abcdef"
-     SHOW_TEST( SubStr("abcdef", -10)        ) // "abcdef"
+     TEST_LINE( SubStr("abcdef", 0, -1)       , ""               )
+     TEST_LINE( SubStr("abcdef", 0, 0)        , ""               )
+     TEST_LINE( SubStr("abcdef", 0, 1)        , "a"              )
+     TEST_LINE( SubStr("abcdef", 0, 7)        , "abcdef"         )
+     TEST_LINE( SubStr("abcdef", 0)           , "abcdef"         )
+     TEST_LINE( SubStr("abcdef", 2, -1)       , ""               )
+     TEST_LINE( SubStr("abcdef", 2, 0)        , ""               )
+     TEST_LINE( SubStr("abcdef", 2, 1)        , "b"              )
+     TEST_LINE( SubStr("abcdef", 2, 7)        , "bcdef"          )
+     TEST_LINE( SubStr("abcdef", 2)           , "bcdef"          )
+     TEST_LINE( SubStr("abcdef", -2, -1)      , ""               )
+     TEST_LINE( SubStr("abcdef", -2, 0)       , ""               )
+     TEST_LINE( SubStr("abcdef", -2, 1)       , "e"              )
+     TEST_LINE( SubStr("abcdef", -2, 7)       , "ef"             )
+     TEST_LINE( SubStr("abcdef", -2)          , "ef"             )
+     TEST_LINE( SubStr("abcdef", 10, -1)      , ""               )
+     TEST_LINE( SubStr("abcdef", 10, 0)       , ""               )
+     TEST_LINE( SubStr("abcdef", 10, 1)       , ""               )
+     TEST_LINE( SubStr("abcdef", 10, 7)       , ""               )
+     TEST_LINE( SubStr("abcdef", 10)          , ""               )
+     TEST_LINE( SubStr("abcdef", -10, -1)     , ""               )
+     TEST_LINE( SubStr("abcdef", -10, 0)      , ""               )
+     TEST_LINE( SubStr("abcdef", -10, 1)      , "a"              )
+     TEST_LINE( SubStr("abcdef", -10, 7)      , "abcdef"         )
+     TEST_LINE( SubStr("abcdef", -10, 15)     , "abcdef"         )
+     TEST_LINE( SubStr("abcdef", -10)         , "abcdef"         )
 
-     SHOW_LINE()
+     TEST_LINE( Left("abcdef", -10)           , ""               )
+     TEST_LINE( Left("abcdef", -2)            , ""               )
+     TEST_LINE( Left("abcdef", 0)             , ""               )
+     TEST_LINE( Left("abcdef", 2)             , "ab"             )
+     TEST_LINE( Left("abcdef", 10)            , "abcdef"         )
 
-     SHOW_TEST( Left("abcdef", -10)          ) // ""
-     SHOW_TEST( Left("abcdef", -2)           ) // ""
-     SHOW_TEST( Left("abcdef", 0)            ) // ""
-     SHOW_TEST( Left("abcdef", 2)            ) // "ab"
-     SHOW_TEST( Left("abcdef", 10)           ) // "abcdef"
+     TEST_LINE( Right("abcdef", -10)          , ""               )
+     TEST_LINE( Right("abcdef", -2)           , ""               )
+     TEST_LINE( Right("abcdef", 0)            , ""               )
+     TEST_LINE( Right("abcdef", 2)            , "ef"             )
+     TEST_LINE( Right("abcdef", 10)           , "abcdef"         )
 
-     SHOW_LINE()
+     TEST_LINE( PadR("abcdef", -5)            , ""               )
+     TEST_LINE( PadR("abcdef", 0)             , ""               )
+     TEST_LINE( PadR("abcdef", 5)             , "abcde"          )
+     TEST_LINE( PadR("abcdef", 10)            , "abcdef    "     )
+     TEST_LINE( PadR("abcdef", 10, "1")       , "abcdef1111"     )
+     TEST_LINE( PadR("abcdef", 10, "12")      , "abcdef1111"     )
 
-     SHOW_TEST( Right("abcdef", -10)         ) // ""
-     SHOW_TEST( Right("abcdef", -2)          ) // ""
-     SHOW_TEST( Right("abcdef", 0)           ) // ""
-     SHOW_TEST( Right("abcdef", 2)           ) // "ef"
-     SHOW_TEST( Right("abcdef", 10)          ) // "abcdef"
+     TEST_LINE( PadL("abcdef", -5)            , ""               )
+     TEST_LINE( PadL("abcdef", 0)             , ""               )
+     TEST_LINE( PadL("abcdef", 5)             , "abcde"          ) /* QUESTION: CA-Clipper "bug", should return: "bcdef" ? */
+     TEST_LINE( PadL("abcdef", 10)            , "    abcdef"     )
+     TEST_LINE( PadL("abcdef", 10, "1")       , "1111abcdef"     )
+     TEST_LINE( PadL("abcdef", 10, "12")      , "1111abcdef"     )
 
-     SHOW_LINE()
-
-     SHOW_TEST( PadR("abcdef", -5)           ) // ""
-     SHOW_TEST( PadR("abcdef", 0)            ) // ""
-     SHOW_TEST( PadR("abcdef", 5)            ) // "abcde"
-     SHOW_TEST( PadR("abcdef", 10)           ) // "abcdef    "
-     SHOW_TEST( PadR("abcdef", 10, "1")      ) // "abcdef1111"
-     SHOW_TEST( PadR("abcdef", 10, "12")     ) // "abcdef1111"
-
-     SHOW_LINE()
-
-     SHOW_TEST( PadL("abcdef", -5)           ) // ""
-     SHOW_TEST( PadL("abcdef", 0)            ) // ""
-     SHOW_TEST( PadL("abcdef", 5)            ) // "abcde" /* QUESTION: CA-Clipper "bug", should return: "bcdef" ? */
-     SHOW_TEST( PadL("abcdef", 10)           ) // "    abcdef"
-     SHOW_TEST( PadL("abcdef", 10, "1")      ) // "1111abcdef"
-     SHOW_TEST( PadL("abcdef", 10, "12")     ) // "1111abcdef"
-
-     SHOW_LINE()
-
-     SHOW_TEST( PadC("abcdef", -5)           ) // ""
-     SHOW_TEST( PadC("abcdef", 0)            ) // ""
-     SHOW_TEST( PadC("abcdef", 2)            ) // "ab" /* QUESTION: CA-Clipper "bug", should return: "cd" ? */
-     SHOW_TEST( PadC("abcdef", 5)            ) // "abcde"
-     SHOW_TEST( PadC("abcdef", 10)           ) // "  abcdef  "
-     SHOW_TEST( PadC("abcdef", 10, "1")      ) // "11abcdef11"
-     SHOW_TEST( PadC("abcdef", 10, "12")     ) // "11abcdef11"
-
-     SHOW_LINE()
+     TEST_LINE( PadC("abcdef", -5)            , ""               )
+     TEST_LINE( PadC("abcdef", 0)             , ""               )
+     TEST_LINE( PadC("abcdef", 2)             , "ab"             ) /* QUESTION: CA-Clipper "bug", should return: "cd" ? */
+     TEST_LINE( PadC("abcdef", 5)             , "abcde"          )
+     TEST_LINE( PadC("abcdef", 10)            , "  abcdef  "     )
+     TEST_LINE( PadC("abcdef", 10, "1")       , "11abcdef11"     )
+     TEST_LINE( PadC("abcdef", 10, "12")      , "11abcdef11"     )
 
      /* TODO: These could be more complete */
 
-     SHOW_TEST( SubStr("ab" + NUL + "def", 2, 3) )
-     SHOW_TEST( Left("ab" + NUL + "def", 5)      )
-     SHOW_TEST( Right("ab" + NUL + "def", 5)     )
+     TEST_LINE( SubStr("ab" + Chr(0) + "def", 2, 3) , "b" + Chr(0) + "d" )
+     TEST_LINE( Left("ab" + Chr(0) + "def", 5)      , "ab" + Chr(0) + "de")
+     TEST_LINE( Right("ab" + Chr(0) + "def", 5)     , "b" + Chr(0) + "def")
+
+     /* Show results */
+
+     TEST_STAT()
 
      RETURN NIL
 
+STATIC FUNCTION TEST_CALL(cBlock, bBlock, xResultExpected)
+     LOCAL xResult := Eval(bBlock)
+
+     fWrite(1, PadR(StrTran(cBlock, Chr(0), "."), 40) + " -> " +;
+               PadR('"' + StrTran(XToStr(xResult), Chr(0), ".") + '"', 15) + " " +;
+               PadR('"' + StrTran(XToStr(xResultExpected), Chr(0), ".") + '"', 15))
+
+     IF xResult == xResultExpected
+          snPass++
+     ELSE
+          fWrite(1, "! *FAIL* !")
+          snFail++
+     ENDIF
+
+     fWrite(1, Chr(13) + Chr(10))
+
+     RETURN NIL
+
+STATIC FUNCTION TEST_STAT()
+
+     fWrite(1, Chr(13) + Chr(10) +;
+               "Test calls passed: " + Str(snPass) + Chr(13) + Chr(10) +;
+               "Test calls failed: " + Str(snFail) + Chr(13) + Chr(10))
+
+     RETURN NIL
+
+STATIC FUNCTION XToStr(xValue)
+     LOCAL cType := ValType(xValue)
+
+     DO CASE
+     CASE cType == "C" ; RETURN xValue
+     CASE cType == "N" ; RETURN LTrim(Str(xValue))
+     CASE cType == "D" ; RETURN DToC(xValue)
+     CASE cType == "L" ; RETURN iif(xValue, ".T.", ".F.")
+     CASE cType == "O" ; RETURN xValue:className + " Object"
+     CASE cType == "U" ; RETURN "NIL"
+     CASE cType == "B" ; RETURN "{||...}"
+     CASE cType == "A" ; RETURN "{...}"
+     CASE cType == "M" ; RETURN xValue
+     ENDCASE
+
+     RETURN ""

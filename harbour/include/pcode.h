@@ -25,7 +25,7 @@
 #ifndef HB_PCODE_H_
 #define HB_PCODE_H_
 
-#include <extend.h>
+#include "extend.h"
 
 typedef enum
 {

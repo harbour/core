@@ -3,7 +3,7 @@
  * Codepage: N/A
  */
 
-#include <hbdefs.h>
+#include "hbdefs.h"
 
 char *hb_monthsname[ 12 ] = {
    "Jaunaro", "Februaro", "Marto",

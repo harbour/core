@@ -15,10 +15,10 @@
   #define INCL_DOSMISC
 #endif
 
-#include <extend.h>
-#include <init.h>
-#include <errorapi.h>
-#include <version.h>
+#include "extend.h"
+#include "init.h"
+#include "errorapi.h"
+#include "hbver.h"
 
 #if defined(__TURBOC__) || defined(__BORLANDC__) || defined(__MSC__) || defined(_MSC_VER) || defined(__DJGPP__)
   #include <dos.h>

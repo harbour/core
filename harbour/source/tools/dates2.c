@@ -36,13 +36,13 @@
       HB_EOM(), HB_BOM(), HB_WOM(), HB_DOY(), HB_WOY(), HB_EOY(), HB_BOY()
  */
 
-#include <extend.h>
-#include <errorapi.h>
-#include <init.h>
-#include <itemapi.h>
 #include <ctype.h>
 #include <time.h>
-#include <dates.h>
+#include "extend.h"
+#include "errorapi.h"
+#include "init.h"
+#include "itemapi.h"
+#include "dates.h"
 
 HARBOUR HB_ADAYS(void);
 HARBOUR HB_AMONTHS(void);

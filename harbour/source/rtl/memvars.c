@@ -33,10 +33,10 @@
 
 */
 
-#include <extend.h>
 #include <string.h>
-#include <errorapi.h>
-#include <error.ch>
+#include "extend.h"
+#include "errorapi.h"
+#include "error.ch"
 
 #define VS_PRIVATE     64
 #define VS_PUBLIC     128
@@ -88,7 +88,7 @@ void hb_MemvarsRelease( void )
       {
          if( _globalTable[ ulCnt ].counter )
          {
-            ItemRelease( &_globalTable[ ulCnt ].item );
+            hb_itemClear( &_globalTable[ ulCnt ].item );
             _globalTable[ ulCnt ].counter =0;
          }
          --ulCnt;
@@ -178,7 +178,7 @@ HB_HANDLE hb_MemvarValueNew( HB_ITEM_PTR pSource, int iTrueMemvar )
    if( pSource )
    {
       if( iTrueMemvar )
-         ItemCopy( &pValue->item, pSource );
+         hb_itemCopy( &pValue->item, pSource );
       else
          memcpy( &pValue->item, pSource, sizeof(HB_ITEM) );
    }
@@ -297,7 +297,7 @@ void hb_MemvarValueDecRef( HB_HANDLE hValue )
    {
       if( --pValue->counter == 0 )
       {
-         ItemRelease( &pValue->item );
+         hb_itemClear( &pValue->item );
          if( _globalFirstFree > hValue )
          {
             if( (_globalLastFree - hValue) == 1 )
@@ -356,9 +356,9 @@ void hb_MemvarSetValue( PSYMBOL pMemvarSymb, HB_ITEM_PTR pItem )
          /* value is already created */
          HB_ITEM_PTR pSetItem = &_globalTable[ pDyn->hMemvar ].item;
          if( IS_BYREF(pSetItem) )
-            ItemCopy( ItemUnRef(pSetItem), pItem );
+            hb_itemCopy( hb_itemUnRef(pSetItem), pItem );
          else
-            ItemCopy( pSetItem, pItem );
+            hb_itemCopy( pSetItem, pItem );
       }
       else
       {
@@ -388,9 +388,9 @@ void hb_MemvarGetValue( HB_ITEM_PTR pItem, PSYMBOL pMemvarSymb )
           */
          HB_ITEM_PTR pGetItem = &_globalTable[ pDyn->hMemvar ].item;
          if( IS_BYREF(pGetItem) )
-            ItemCopy( pItem, ItemUnRef(pGetItem) );
+            hb_itemCopy( pItem, hb_itemUnRef(pGetItem) );
          else
-            ItemCopy( pItem, pGetItem );
+            hb_itemCopy( pItem, pGetItem );
       }
       else /* variable is not initialized */
          hb_errorRT_BASE( EG_NOVAR, 1003, NULL, pMemvarSymb->szName );
@@ -582,7 +582,7 @@ HARBOUR HB___MVPUBLIC( void )
                {
                   hb_arrayGet( pMemvar, j, &VarItem );
                   hb_MemvarCreateFromItem( &VarItem, VS_PUBLIC, NULL );
-                  ItemRelease( &VarItem );
+                  hb_itemClear( &VarItem );
                }
             }
             else
@@ -655,7 +655,7 @@ HARBOUR HB___MVPRIVATE( void )
                {
                   hb_arrayGet( pMemvar, j, &VarItem );
                   hb_MemvarCreateFromItem( &VarItem, VS_PRIVATE, NULL );
-                  ItemRelease( &VarItem );
+                  hb_itemClear( &VarItem );
                }
             }
             else
@@ -718,7 +718,7 @@ HARBOUR HB___MVXRELEASE( void )
                {
                   hb_arrayGet( pMemvar, j, &VarItem );
                   hb_MemvarRelease( &VarItem );
-                  ItemRelease( &VarItem );
+                  hb_itemClear( &VarItem );
                }
             }
             else

@@ -11,7 +11,7 @@
 
 #include <string.h>
 #include <dos.h>
-#include <gtapi.h>
+#include "gtapi.h"
 
 #if defined(__POWERC) || (defined(__TURBOC__) && !defined(__BORLANDC__)) || \
   (defined(__ZTC__) && !defined(__SC__))

@@ -42,12 +42,12 @@
    #include <windows.h>
 #endif
 
-#include <hbsetup.h>
-#include <extend.h>
-#include <ctoharb.h>
-#include <init.h>
-#include <dates.h>
-#include <set.h>
+#include "hbsetup.h"
+#include "extend.h"
+#include "ctoharb.h"
+#include "init.h"
+#include "dates.h"
+#include "set.h"
 
 #if defined(__GNUC__)
   #include <unistd.h>
@@ -61,7 +61,7 @@
     #include <fcntl.h>
   #endif
 #endif
-#include <gtapi.h>            /* HARBOUR_USE_GTAPI is checked inside gtapi.h, so that
+#include "gtapi.h"            /* HARBOUR_USE_GTAPI is checked inside gtapi.h, so that
                                  we can always get the border styles */
 
 #define ACCEPT_BUFFER_LEN 256 /*length of input buffer for ACCEPT command */

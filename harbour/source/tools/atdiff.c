@@ -48,7 +48,7 @@
  */
 
 
-#include <extend.h>
+#include "extend.h"
 
 HARBOUR HB_GT_ATDIFF( void )
 {

@@ -22,14 +22,14 @@
    You can contact me at: bruno@issnet.net
  */
 
-#include <extend.h>
-#include <init.h>
-#include <itemapi.h>
-#include <errorapi.h>
-#include <set.h>
-#include <rdd.api>
-#include <ctoharb.h>
-#include <set.ch>
+#include "extend.h"
+#include "init.h"
+#include "itemapi.h"
+#include "errorapi.h"
+#include "set.h"
+#include "rdd.api"
+#include "ctoharb.h"
+#include "set.ch"
 
 #define HARBOUR_MAX_RDD_DRIVERNAME_LENGTH       32
 

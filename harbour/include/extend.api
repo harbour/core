@@ -5,7 +5,7 @@
 #ifndef HB_EXTEND_API_
 #define HB_EXTEND_API_
 
-#include <extend.h>
+#include "extend.h"
 
 #define _parc     hb_parc
 #define _parclen  hb_parclen

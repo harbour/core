@@ -22,15 +22,15 @@
    You can contact me at: alinares@fivetech.com
  */
 
-#include <hbsetup.h>
-#include <dates.h>
-#include <extend.h>
-#include <init.h>
-#include <itemapi.h>
-#include <errorapi.h>
+#include "hbsetup.h"
+#include "dates.h"
+#include "extend.h"
+#include "init.h"
+#include "itemapi.h"
+#include "errorapi.h"
 #include <ctype.h>
 #include <math.h>
-#include <set.h>
+#include "set.h"
 
 extern STACK stack;
 
@@ -117,6 +117,36 @@ BOOL hb_strempty( char * szText, ULONG ulLen )
    }
 
    return bRetVal;
+}
+
+/* Harbour Project source code
+   http://www.Harbour-Project.org/
+   The following function is Copyright 1999 David G. Holm <dholm@jsd-llc.com>:
+      hb_stricmp().
+   See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
+*/
+
+int hb_stricmp( const char *s1, const char *s2 )
+{
+   int rc = 0, c1, c2;
+   USHORT l1, l2, count;
+   l1 = strlen( s1 );
+   l2 = strlen( s2 );
+   if( l1 < l2 ) count = l1;
+   else count = l2;
+   while( rc == 0 && count > 0 )
+   {
+      count--;
+      c1 = toupper( *s1++ );
+      c2 = toupper( *s2++ );
+      if( c1 != c2 ) rc = ( c1 < c2 ? -1 : 1 );
+   }
+   if( rc == 0 && l1 != l2 )
+   {
+      if( l1 < l2 ) rc = -1;
+      else rc = 1;
+   }
+   return rc;
 }
 
 /* determines if first char of string is letter */
@@ -607,10 +637,10 @@ HARBOUR HB_LEFT( void )
 
          if( pLen )
          {
-            long lLen = hb_parnl(2);
+            LONG lLen = hb_parnl(2);
 
-            if( lLen > pText->item.asString.length )
-               lLen = pText->item.asString.length;
+            if( lLen > (LONG)pText->item.asString.length )
+               lLen = (LONG)pText->item.asString.length;
 
             else if( lLen < 0 )
                lLen = 0;
@@ -647,10 +677,10 @@ HARBOUR HB_RIGHT( void )
 
          if( pLen )
          {
-            long lLen = hb_parnl(2);
+            LONG lLen = hb_parnl(2);
 
-            if( lLen > pText->item.asString.length )
-               lLen = pText->item.asString.length;
+            if( lLen > (LONG)pText->item.asString.length )
+               lLen = (LONG)pText->item.asString.length;
 
             else if( lLen < 0 )
                lLen = 0;
@@ -687,11 +717,11 @@ HARBOUR HB_SUBSTR( void )
 
       if( pText && pPos )
       {
-         long lPos = hb_parnl(2);
+         LONG lPos = hb_parnl(2);
 
          if( lPos < 0 )
          {
-            lPos += pText->item.asString.length;
+            lPos += (LONG)pText->item.asString.length;
             if( lPos < 0 )
                lPos = 0;
          }
@@ -700,20 +730,20 @@ HARBOUR HB_SUBSTR( void )
             lPos--;
          }
 
-         if( lPos < pText->item.asString.length )
+         if( lPos < (LONG)pText->item.asString.length )
          {
             PHB_ITEM pLen = hb_param(3, IT_NUMERIC);
-            long lLen;
+            LONG lLen;
 
             if( pLen )
             {
                lLen = hb_parnl(3);
 
-               if( lLen > pText->item.asString.length - lPos )
-                  lLen = pText->item.asString.length - lPos;
+               if( lLen > (LONG)pText->item.asString.length - lPos )
+                  lLen = (LONG)pText->item.asString.length - lPos;
             }
             else
-               lLen = pText->item.asString.length - lPos;
+               lLen = (LONG)pText->item.asString.length - lPos;
 
             if( lLen > 0 )
                hb_retclen(pText->item.asString.value + lPos, lLen);
@@ -753,9 +783,9 @@ HARBOUR HB_LOWER( void )
 
       if( pText )
       {
-         long lLen = pText->item.asString.length;
+         ULONG ulLen = pText->item.asString.length;
 
-         hb_retclen(hb_strLower(pText->item.asString.value, lLen), lLen);
+         hb_retclen(hb_strLower(pText->item.asString.value, ulLen), ulLen);
       }
       else
       {
@@ -787,9 +817,9 @@ HARBOUR HB_UPPER( void )
 
       if( pText )
       {
-         long lLen = pText->item.asString.length;
+         ULONG ulLen = pText->item.asString.length;
 
-         hb_retclen(hb_strUpper(pText->item.asString.value, lLen), lLen);
+         hb_retclen(hb_strUpper(pText->item.asString.value, ulLen), ulLen);
       }
       else
       {

@@ -22,12 +22,12 @@
    You can contact me at: alinares@fivetech.com
 */
 
-#include <itemapi.h>
-#include <extend.h>
-#include <errorapi.h>
-#include <ctoharb.h>
-#include <init.h>
-#include <dates.h>
+#include "itemapi.h"
+#include "extend.h"
+#include "errorapi.h"
+#include "ctoharb.h"
+#include "init.h"
+#include "dates.h"
 
 HARBOUR HB_AADD(void);
 HARBOUR HB_ACLONE(void);
@@ -179,7 +179,7 @@ void hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ) /* creates a new array */
    PBASEARRAY pBaseArray = ( PBASEARRAY ) hb_xgrab( sizeof( BASEARRAY ) );
    ULONG ul;
 
-   ItemRelease( pItem );
+   hb_itemClear( pItem );
 
    pItem->type = IT_ARRAY;
 
@@ -204,7 +204,7 @@ void hb_arrayAdd( PHB_ITEM pArray, PHB_ITEM pValue )
    PBASEARRAY pBaseArray = ( PBASEARRAY ) pArray->item.asArray.value;
    hb_arraySize( pArray, pBaseArray->ulLen + 1 );
    pBaseArray = ( PBASEARRAY ) pArray->item.asArray.value;
-   ItemCopy( pBaseArray->pItems + ( pBaseArray->ulLen - 1 ), pValue );
+   hb_itemCopy( pBaseArray->pItems + ( pBaseArray->ulLen - 1 ), pValue );
 }
 
 void hb_arrayGet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem )
@@ -212,7 +212,7 @@ void hb_arrayGet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem )
   if( IS_ARRAY( pArray ) )
     {
       if( ulIndex <= ( unsigned )hb_arrayLen( pArray ) )
-        ItemCopy( pItem, pArray->item.asArray.value->pItems + ( ulIndex - 1 ) );
+        hb_itemCopy( pItem, pArray->item.asArray.value->pItems + ( ulIndex - 1 ) );
       else
         {
           hb_errorRT_BASE(EG_BOUND, 1132, NULL, hb_ErrorNatDescription(EG_ARRACCESS));
@@ -298,10 +298,10 @@ int hb_arrayGetType( PHB_ITEM pArray, ULONG ulIndex )
 void hb_arrayLast( PHB_ITEM pArray, PHB_ITEM pResult )
 {
   if ( pArray->item.asArray.value->ulLen )
-    ItemCopy( pResult, pArray->item.asArray.value->pItems +
+    hb_itemCopy( pResult, pArray->item.asArray.value->pItems +
                           ( pArray->item.asArray.value->ulLen - 1 ) );
   else
-    ItemRelease( pResult );
+    hb_itemClear( pResult );
 }
 
 ULONG hb_arrayLen( PHB_ITEM pArray )
@@ -320,7 +320,7 @@ void hb_arraySet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem )
   if( IS_ARRAY( pArray ) )
     {
       if( ulIndex <= ( unsigned )hb_arrayLen( pArray ) )
-        ItemCopy( pArray->item.asArray.value->pItems + ( ulIndex - 1 ), pItem );
+        hb_itemCopy( pArray->item.asArray.value->pItems + ( ulIndex - 1 ), pItem );
       else
         {
           hb_errorRT_BASE(EG_BOUND, 1133, NULL, hb_ErrorNatDescription(EG_ARRASSIGN));
@@ -359,7 +359,7 @@ void hb_arraySize( PHB_ITEM pArray, ULONG ulLen )
             {
               /* release old items */
               for( ul = ulLen; ul < pBaseArray->ulLen; ul++ )
-                ItemRelease( pBaseArray->pItems + ul );
+                hb_itemClear( pBaseArray->pItems + ul );
 
               pBaseArray->pItems = ( PHB_ITEM )hb_xrealloc( pBaseArray->pItems, sizeof( HB_ITEM ) * ulLen );
             }
@@ -387,7 +387,7 @@ void hb_arrayFill( PHB_ITEM pArray, PHB_ITEM pValue, ULONG ulStart, ULONG ulCoun
       pBaseArray = pArray->item.asArray.value;
 
       for ( ; ulCount > 0; ulCount --, ulStart ++ )     /* set value items */
-        ItemCopy( pBaseArray->pItems + ( ulStart - 1 ), pValue );
+        hb_itemCopy( pBaseArray->pItems + ( ulStart - 1 ), pValue );
     }
   else
     {
@@ -405,12 +405,12 @@ void hb_arrayDel( PHB_ITEM pArray, ULONG ulIndex )
         {
           PBASEARRAY pBaseArray = pArray->item.asArray.value;
 
-          ItemRelease( pBaseArray->pItems + ( ulIndex - 1 ) );
+          hb_itemClear( pBaseArray->pItems + ( ulIndex - 1 ) );
 
           for ( ulIndex --; ulIndex < ulLen; ulIndex ++ )       /* move items */
-            ItemCopy( pBaseArray->pItems + ulIndex, pBaseArray->pItems + ( ulIndex + 1 ) );
+            hb_itemCopy( pBaseArray->pItems + ulIndex, pBaseArray->pItems + ( ulIndex + 1 ) );
 
-          ItemRelease( pBaseArray->pItems + ( ulLen - 1 ) );
+          hb_itemClear( pBaseArray->pItems + ( ulLen - 1 ) );
         }
       else
         {
@@ -433,12 +433,12 @@ void hb_arrayIns( PHB_ITEM pArray, ULONG ulIndex )
         {
           PBASEARRAY pBaseArray = pArray->item.asArray.value;
 
-          ItemRelease( pBaseArray->pItems + ( ulLen - 1 ) );
+          hb_itemClear( pBaseArray->pItems + ( ulLen - 1 ) );
 
           for ( ulLen --; ulLen >= ulIndex; ulLen -- )          /* move items */
-            ItemCopy( pBaseArray->pItems + ulLen, pBaseArray->pItems + ( ulLen - 1 ) );
+            hb_itemCopy( pBaseArray->pItems + ulLen, pBaseArray->pItems + ( ulLen - 1 ) );
 
-          ItemRelease( pBaseArray->pItems + ulLen );
+          hb_itemClear( pBaseArray->pItems + ulLen );
         }
       else
         {
@@ -570,7 +570,7 @@ void hb_arrayRelease( PHB_ITEM pArray )
       if( !pBaseArray->wSuperCast )
       {
          for ( ul = 0; ul < ulLen; ul ++ )
-            ItemRelease( pBaseArray->pItems + ul );
+            hb_itemClear( pBaseArray->pItems + ul );
 
          if( pBaseArray->pItems )
             hb_xfree( pBaseArray->pItems );
@@ -615,7 +615,7 @@ void hb_arrayCopy( PHB_ITEM pSrcArray, PHB_ITEM pDstArray, ULONG ulStart,
 
       for ( ulTarget --, ulStart --; ulCount > 0; ulCount --, ulStart ++ )
         {
-          ItemCopy( pDstBaseArray->pItems + ( ulTarget + ulStart ), pSrcBaseArray->pItems + ulStart );
+          hb_itemCopy( pDstBaseArray->pItems + ( ulTarget + ulStart ), pSrcBaseArray->pItems + ulStart );
         }
     }
   else
@@ -678,7 +678,7 @@ HARBOUR HB_AADD( void )
   if ( pArray )
     hb_arrayAdd( pArray, pValue );
 
-  ItemCopy( &stack.Return, pValue );
+  hb_itemCopy( &stack.Return, pValue );
 }
 
 HARBOUR HB_ASIZE( void )
@@ -688,7 +688,7 @@ HARBOUR HB_ASIZE( void )
   if ( pArray )
     {
       hb_arraySize( pArray, hb_parnl( 2 ) );
-      ItemCopy( &stack.Return, pArray );  /* ASize() returns the array itself */
+      hb_itemCopy( &stack.Return, pArray );  /* ASize() returns the array itself */
     }
   else
     hb_ret();    /* QUESTION: Should we raise an error here ? */
@@ -711,7 +711,7 @@ HARBOUR HB_AINS( void )
   if ( pArray )
     {
       hb_arrayIns( pArray, hb_parnl( 2 ) );
-      ItemCopy( &stack.Return, pArray );  /* AIns() returns the array itself */
+      hb_itemCopy( &stack.Return, pArray );  /* AIns() returns the array itself */
     }
   else
     hb_ret();
@@ -724,7 +724,7 @@ HARBOUR HB_ADEL( void )
   if ( pArray )
     {
       hb_arrayDel( pArray, hb_parnl( 2 ) );
-      ItemCopy( &stack.Return, pArray ); /* ADel() returns the array itself */
+      hb_itemCopy( &stack.Return, pArray ); /* ADel() returns the array itself */
     }
   else
     hb_ret();
@@ -737,7 +737,7 @@ HARBOUR HB_AFILL( void )
   if ( pArray )
     {
       hb_arrayFill( pArray, hb_param( 2, IT_ANY ), hb_parnl( 3 ), hb_parnl( 4 ) );
-      ItemCopy( &stack.Return, pArray ); /* AFill() returns the array itself */
+      hb_itemCopy( &stack.Return, pArray ); /* AFill() returns the array itself */
     }
   else
     hb_ret();
@@ -761,7 +761,7 @@ HARBOUR HB_AEVAL( void )
   if ( pArray )
     {
       hb_arrayEval( pArray, bBlock, hb_parnl( 3 ), hb_parnl( 4 ) );
-      ItemCopy( &stack.Return, pArray ); /* AEval() returns the array itself */
+      hb_itemCopy( &stack.Return, pArray ); /* AEval() returns the array itself */
     }
   else
     hb_ret();
@@ -775,7 +775,7 @@ HARBOUR HB_ACOPY( void )
   if ( pSrcArray && pDstArray )
     {
       hb_arrayCopy( pSrcArray, pDstArray, hb_parnl( 3 ), hb_parnl( 4 ), hb_parnl( 5 ) );
-      ItemCopy( &stack.Return, pDstArray ); /* ACopy() returns the target array */
+      hb_itemCopy( &stack.Return, pDstArray ); /* ACopy() returns the target array */
     }
   else
     hb_ret();
@@ -788,8 +788,8 @@ HARBOUR HB_ACLONE( void )
   if ( pSrcArray )
     {
       PHB_ITEM pDstArray = hb_arrayClone( pSrcArray );
-      ItemCopy( &stack.Return, pDstArray ); /* AClone() returns the new array */
-      ItemRelease( pDstArray );
+      hb_itemCopy( &stack.Return, pDstArray ); /* AClone() returns the new array */
+      hb_itemClear( pDstArray );
       hb_xfree( pDstArray );
     }
   else

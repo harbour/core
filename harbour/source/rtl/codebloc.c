@@ -35,7 +35,7 @@
 
 /* The Harbour implementation of codeblocks */
 
-#include <extend.h>
+#include "extend.h"
 #include <string.h>
 
 extern STACK stack;
@@ -205,7 +205,7 @@ PHB_ITEM  hb_CodeblockGetVar( PHB_ITEM pItem, LONG iItemPos )
 {
    HB_CODEBLOCK_PTR pCBlock = pItem->item.asBlock.value;
    /* local variables accessed in a codeblock are always stored as reference */
-   return ItemUnRef( pCBlock->pLocals -iItemPos -1 );
+   return hb_itemUnRef( pCBlock->pLocals -iItemPos -1 );
 }
 
 /* Get local variable passed by reference

@@ -15,7 +15,7 @@
 
 #include <string.h>
 #include <os2.h>
-#include <gtapi.h>
+#include "gtapi.h"
 
 #ifndef KBDTRF_FINAL_CHAR_IN
 #define KBDTRF_FINAL_CHAR_IN  FINAL_CHAR_IN

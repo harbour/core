@@ -2,11 +2,11 @@
  * $Id$
  */
 
-#include <extend.h>
-#include <init.h>
-#include <filesys.h>
+#include "extend.h"
+#include "init.h"
+#include "filesys.h"
 #include <string.h>
-#include <errorapi.h>
+#include "errorapi.h"
 
 #if defined(__CYGNUS__)
   #include <mingw32/share.h>

@@ -8,10 +8,10 @@
    See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
 */
 
-#include <extend.h>
-#include <init.h>
-#include <set.h>
-#include <errorapi.h>
+#include "extend.h"
+#include "init.h"
+#include "set.h"
+#include "errorapi.h"
 #include <math.h>
 
 extern STACK stack;

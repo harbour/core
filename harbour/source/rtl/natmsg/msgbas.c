@@ -6,7 +6,7 @@
  * Language support unit for Basque
  */
 
-#include <hbdefs.h>
+#include "hbdefs.h"
 
 char *hb_monthsname[ 12 ] = {
    "Urtarrila", "Otsaila", "Martxoa",

@@ -22,11 +22,11 @@
    You can contact me at: alinares@fivetech.com
  */
 
-#include <extend.h>
-#include <itemapi.h>
-#include <ctoharb.h>
-#include <dates.h>
-#include <set.h>
+#include "extend.h"
+#include "itemapi.h"
+#include "ctoharb.h"
+#include "dates.h"
+#include "set.h"
 
 extern STACK stack;
 extern SYMBOL symEval;
@@ -39,7 +39,7 @@ BOOL hb_evalNew( PEVALINFO pEvalInfo, PHB_ITEM pItem )
    {
       memset( pEvalInfo, 0, sizeof( EVALINFO ) );
       pEvalInfo->pItems[ 0 ] = hb_itemNew( 0 );
-      ItemCopy( pEvalInfo->pItems[ 0 ], pItem );
+      hb_itemCopy( pEvalInfo->pItems[ 0 ], pItem );
       bResult = TRUE;
    }
    return bResult;
@@ -57,7 +57,7 @@ BOOL hb_evalPutParam( PEVALINFO pEvalInfo, PHB_ITEM pItem )
          if( ! pEvalInfo->pItems[ w ] )
          {
             pEvalInfo->pItems[ w ] = hb_itemNew( 0 );
-            ItemCopy( pEvalInfo->pItems[ w ], pItem );
+            hb_itemCopy( pEvalInfo->pItems[ w ], pItem );
             bResult = TRUE;
             break;
          }
@@ -95,7 +95,7 @@ PHB_ITEM hb_evalLaunch( PEVALINFO pEvalInfo )
             Push( pEvalInfo->pItems[ w++ ] );
          Do( w - 1 );
          pResult = hb_itemNew( 0 );
-         ItemCopy( pResult, &stack.Return );
+         hb_itemCopy( pResult, &stack.Return );
       }
       else if( IS_BLOCK( pEvalInfo->pItems[ 0 ] ) )
       {
@@ -105,7 +105,7 @@ PHB_ITEM hb_evalLaunch( PEVALINFO pEvalInfo )
             Push( pEvalInfo->pItems[ w++ ] );
          Do( w - 1 );
          pResult = hb_itemNew( 0 );
-         ItemCopy( pResult, &stack.Return );
+         hb_itemCopy( pResult, &stack.Return );
       }
    }
    return pResult;
@@ -129,7 +129,7 @@ PHB_ITEM hb_itemParam( WORD wParam )
    PHB_ITEM pNew = hb_itemNew( 0 );
 
    if( hb_param( wParam, IT_ANY ) )
-      ItemCopy(pNew, hb_param( wParam, IT_ANY ));
+      hb_itemCopy(pNew, hb_param( wParam, IT_ANY ));
 
    return pNew;
 }
@@ -140,7 +140,7 @@ BOOL hb_itemRelease( PHB_ITEM pItem )
 
    if( pItem )
    {
-      ItemRelease(pItem);
+      hb_itemClear(pItem);
       hb_xfree( pItem );
       bResult = TRUE;
    }
@@ -174,7 +174,7 @@ PHB_ITEM hb_itemArrayPut( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem )
 PHB_ITEM hb_itemPutC( PHB_ITEM pItem, char * szText )
 {
    if( pItem )
-      ItemRelease( pItem );  /* warning: this is hvm.c one not this one */
+      hb_itemClear( pItem );  /* warning: this is hvm.c one not this one */
    else
       pItem = hb_itemNew(0);
 
@@ -188,7 +188,7 @@ PHB_ITEM hb_itemPutC( PHB_ITEM pItem, char * szText )
 PHB_ITEM hb_itemPutCL( PHB_ITEM pItem, char * nszText, ULONG ulLen )
 {
    if( pItem )
-      ItemRelease( pItem );  /* warning: this is hvm.c one not this one */
+      hb_itemClear( pItem );  /* warning: this is hvm.c one not this one */
    else
       pItem = hb_itemNew(0);
 
@@ -311,7 +311,7 @@ long hb_itemGetNL( PHB_ITEM pItem )
 PHB_ITEM hb_itemReturn( PHB_ITEM pItem )
 {
    if( pItem )
-      ItemCopy(&stack.Return, pItem);
+      hb_itemCopy(&stack.Return, pItem);
 
    return pItem;
 }
@@ -321,7 +321,7 @@ PHB_ITEM hb_itemPutDS( PHB_ITEM pItem, char *szDate )
    long lDay, lMonth, lYear;
 
    if( pItem )
-      ItemRelease( pItem );  /* warning: this is hvm.c one not this one */
+      hb_itemClear( pItem );  /* warning: this is hvm.c one not this one */
    else
       pItem = hb_itemNew(0);
 
@@ -330,7 +330,7 @@ PHB_ITEM hb_itemPutDS( PHB_ITEM pItem, char *szDate )
    lYear  = ((szDate[ 0 ] - '0') * 1000) + ((szDate[ 1 ] - '0') * 100)
       + ((szDate[ 2 ] - '0') * 10) + (szDate[ 3 ] - '0');
 
-   ItemRelease( pItem );
+   hb_itemClear( pItem );
    pItem->type   = IT_DATE;
    pItem->item.asDate.length = 8;
    /* QUESTION: Is this ok ? we are going to use a long to store the date */
@@ -344,7 +344,7 @@ PHB_ITEM hb_itemPutDS( PHB_ITEM pItem, char *szDate )
 PHB_ITEM hb_itemPutL( PHB_ITEM pItem, BOOL bValue )
 {
    if( pItem )
-      ItemRelease( pItem );  /* warning: this is hvm.c one not this one */
+      hb_itemClear( pItem );  /* warning: this is hvm.c one not this one */
    else
       pItem = hb_itemNew(0);
 
@@ -357,7 +357,7 @@ PHB_ITEM hb_itemPutL( PHB_ITEM pItem, BOOL bValue )
 PHB_ITEM hb_itemPutND( PHB_ITEM pItem, double dNumber )
 {
    if( pItem )
-      ItemRelease( pItem );  /* warning: this is hvm.c one not this one */
+      hb_itemClear( pItem );  /* warning: this is hvm.c one not this one */
    else
       pItem = hb_itemNew(0);
 
@@ -372,7 +372,7 @@ PHB_ITEM hb_itemPutND( PHB_ITEM pItem, double dNumber )
 PHB_ITEM hb_itemPutNL( PHB_ITEM pItem, long lNumber )
 {
    if( pItem )
-      ItemRelease( pItem );  /* warning: this is hvm.c one not this one */
+      hb_itemClear( pItem );  /* warning: this is hvm.c one not this one */
    else
       pItem = hb_itemNew(0);
 
@@ -398,4 +398,159 @@ ULONG hb_itemSize( PHB_ITEM pItem )
 WORD hb_itemType( PHB_ITEM pItem )
 {
    return pItem->type;
+}
+
+/* Internal API, not standard Clipper */
+
+void hb_itemClear( PHB_ITEM pItem )
+{
+   if( IS_STRING( pItem ) )
+   {
+      if( pItem->item.asString.value )
+      {
+         hb_xfree( pItem->item.asString.value );
+         pItem->item.asString.value = NULL;
+      }
+      pItem->item.asString.length = 0;
+   }
+   else if( IS_ARRAY( pItem ) && pItem->item.asArray.value )
+   {
+      if( --( pItem->item.asArray.value )->wHolders == 0 )
+         hb_arrayRelease( pItem );
+   }
+   else if( IS_BLOCK( pItem ) )
+   {
+      hb_CodeblockDelete( pItem );
+   }
+   else if( IS_MEMVAR( pItem ) )
+      hb_MemvarValueDecRef( pItem->item.asMemvar.value );
+
+   pItem->type = IT_NIL;
+}
+
+/* Internal API, not standard Clipper */
+
+void hb_itemCopy( PHB_ITEM pDest, PHB_ITEM pSource )
+{
+   hb_itemClear( pDest );
+
+   if( pDest == pSource )
+   {
+      printf( "an item was going to be copied to itself from hb_itemCopy()\n" );
+      exit( 1 );
+   }
+
+   memcpy( pDest, pSource, sizeof( HB_ITEM ) );
+
+   if( IS_STRING( pSource ) )
+   {
+      pDest->item.asString.value = ( char * ) hb_xgrab( pSource->item.asString.length + 1 );
+      memcpy( pDest->item.asString.value, pSource->item.asString.value, pSource->item.asString.length );
+      pDest->item.asString.value[ pSource->item.asString.length ] = 0;
+   }
+
+   else if( IS_ARRAY( pSource ) )
+      ( pSource->item.asArray.value )->wHolders++;
+
+   else if( IS_BLOCK( pSource ) )
+   {
+      hb_CodeblockCopy( pDest, pSource );
+   }
+   else if( IS_MEMVAR( pSource ) )
+   {
+      hb_MemvarValueIncRef( pSource->item.asMemvar.value );
+   }
+}
+
+/* Internal API, not standard Clipper */
+/* De-references item passed by the reference */
+
+PHB_ITEM hb_itemUnRef( PHB_ITEM pItem )
+{
+   while( IS_BYREF( pItem ) )
+   {
+      if( IS_MEMVAR( pItem ) )
+      {
+         HB_VALUE_PTR pValue;
+
+         pValue =*(pItem->item.asMemvar.itemsbase) + pItem->item.asMemvar.offset +
+                  pItem->item.asMemvar.value;
+         pItem =&pValue->item;
+      }
+      else
+      {
+         if( pItem->item.asRefer.value >= 0 )
+            pItem =*(pItem->item.asRefer.itemsbase) + pItem->item.asRefer.offset +
+                     pItem->item.asRefer.value;
+         else
+         {
+            /* local variable referenced in a codeblock
+            */
+            pItem =hb_CodeblockGetRef( *(pItem->item.asRefer.itemsbase) + pItem->item.asRefer.offset,
+                     pItem );
+         }
+      }
+   }
+
+   return pItem;
+}
+
+/* Internal API, not standard Clipper */
+
+/*
+ * StrCmp. String comparision functions
+ *
+ * hb_itemStrCmp : Copyright (C) 1999 Eddie Runia (eddie@runia.com)
+ */
+
+/* Check whether two strings are equal (0), smaller (-1), or greater (1) */
+int hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact )
+{
+   char *szFirst   = pFirst->item.asString.value;
+   char *szSecond  = pSecond->item.asString.value;
+   ULONG lLenFirst  = pFirst->item.asString.length;
+   ULONG lLenSecond = pSecond->item.asString.length;
+   long lMinLen;
+   long lCounter;
+   int  iRet = 0;                       /* Current status               */
+
+   if (hb_set.HB_SET_EXACT && !bForceExact)
+   {					/* SET EXACT ON and not using == */
+                                        /* Don't include trailing spaces */
+      while( lLenFirst > 0 && szFirst[ lLenFirst - 1 ] == ' ') lLenFirst--;
+      while( lLenSecond > 0 && szSecond[ lLenSecond - 1 ] == ' ') lLenSecond--;
+   }
+   lMinLen = lLenFirst < lLenSecond ? lLenFirst : lLenSecond;
+   if( lMinLen )                        /* One of the strings is empty  */
+   {
+      for( lCounter = 0; lCounter < lMinLen && !iRet; lCounter++ )
+      {
+         if( *szFirst != *szSecond )    /* Difference found             */
+            iRet = (*szFirst < *szSecond) ? -1 : 1;
+         else                           /* TODO : #define some constants*/
+         {
+           szFirst++;
+           szSecond++;
+         }
+      }
+      if( hb_set.HB_SET_EXACT || bForceExact || lLenSecond > lCounter )
+      {  /* Force an exact comparison */
+         if( !iRet && lLenFirst != lLenSecond )
+                                        /* If length is different !     */
+               iRet = (lLenFirst < lLenSecond) ? -1 : 1;
+      }
+   }
+   else
+   {
+      if( lLenFirst != lLenSecond )     /* Both empty ?                 */
+      {
+         if( hb_set.HB_SET_EXACT || bForceExact )
+            iRet = (lLenFirst < lLenSecond) ? -1 : 1;
+         else
+            iRet = (lLenSecond == 0) ? 0 : -1;
+      }
+      else
+         iRet = 0;                      /* Both empty => Equal !        */
+   }
+   return(iRet);
 }

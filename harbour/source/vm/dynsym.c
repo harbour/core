@@ -26,7 +26,7 @@
  *
  */
 
-#include <extend.h>
+#include "extend.h"
 #include <ctype.h>
 
 typedef struct
@@ -75,6 +75,14 @@ static WORD hb_strgreater( char * sz1, char * sz2 )
         ( *( sz1 ) > *( sz2 ) )               )
       return LEFT_GREATER;
    return SYM_EQUAL;
+}
+
+static void hb_strupr( char * szText )
+{
+   char *p;
+
+   for( p = szText; *p; p++ )
+      *p = toupper( *p );
 }
 
 PSYMBOL hb_NewSymbol( char * szName )      /* Create a new symbol */
@@ -136,14 +144,6 @@ PDYNSYM hb_NewDynSym( PSYMBOL pSymbol )    /* creates a new dynamic symbol */
    pSymbol->pDynSym = pDynSym;                /* place a pointer to DynSym */
 
    return pDynSym;
-}
-
-static void hb_strupr( char * szText )
-{
-   char *p;
-
-   for( p = szText; *p; p++ )
-      *p = toupper( *p );
 }
 
 PDYNSYM hb_GetDynSym( char * szName )  /* finds and creates a symbol if not found */

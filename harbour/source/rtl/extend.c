@@ -25,11 +25,11 @@
 #ifndef __MPW__
  #include <malloc.h>
 #endif
-#include <set.h>
+#include "set.h"
 #include <stdlib.h>
-#include <extend.h>
-#include <dates.h>
-#include <item.api>
+#include "extend.h"
+#include "dates.h"
+#include "item.api"
 
 extern STACK stack;
 
@@ -62,7 +62,7 @@ PHB_ITEM hb_param( int iParam, WORD wMask )
             pLocal = stack.pBase + 1 + iParam;
 
          if( wType & IT_BYREF )
-            return ItemUnRef( pLocal );
+            return hb_itemUnRef( pLocal );
          else
             return pLocal;
       }
@@ -92,7 +92,7 @@ char * hb_parc( int iParam, ... )
          pItem = stack.pBase + 1 + iParam;
 
       if( IS_BYREF( pItem ) )
-         pItem = ItemUnRef( pItem );
+         pItem = hb_itemUnRef( pItem );
 
       if( IS_ARRAY( pItem ) )
       {
@@ -123,21 +123,21 @@ ULONG hb_parclen( int iParam, ... )
    if( ( iParam <= hb_pcount() ) || ( iParam == -1 ) )
    {
       if( iParam == -1 )
-	 pItem = &stack.Return;
+         pItem = &stack.Return;
       else if( iParam < -1 )
-	 return 0;
+         return 0;
       else
-	 pItem = stack.pBase + 1 + iParam;
+         pItem = stack.pBase + 1 + iParam;
 
       if( IS_BYREF( pItem ) )
-         pItem = ItemUnRef( pItem );
+         pItem = hb_itemUnRef( pItem );
 
       if( IS_ARRAY( pItem ) )
       {
          if( wArrayIndex )
-	    return hb_arrayGetStringLen( pItem, wArrayIndex );
+            return hb_arrayGetStringLen( pItem, wArrayIndex );
          else
-	    return 0;
+            return 0;
       }
       else if( IS_STRING( pItem ) )
          return pItem->item.asString.length;
@@ -162,14 +162,14 @@ char * hb_pards( int iParam, ... )
    if( ( iParam <= hb_pcount() ) || ( iParam == -1 ) )
    {
       if( iParam == -1 )
-	 pItem = &stack.Return;
+         pItem = &stack.Return;
       else if( iParam < -1 )
-	 return "        ";
+         return "        ";
       else
-	 pItem = stack.pBase + 1 + iParam;
+         pItem = stack.pBase + 1 + iParam;
 
       if( IS_BYREF( pItem ) )
-         pItem = ItemUnRef( pItem );
+         pItem = hb_itemUnRef( pItem );
 
       if( IS_ARRAY( pItem ) )
       {
@@ -192,7 +192,7 @@ char * hb_pards( int iParam, ... )
          stack.szDate[ 5 ] = ( lMonth % 10 ) + '0';
 
          stack.szDate[ 6 ] = ( lDay / 10 ) + '0';
-	 stack.szDate[ 7 ] = ( lDay % 10 ) + '0';
+         stack.szDate[ 7 ] = ( lDay % 10 ) + '0';
          stack.szDate[ 8 ] = 0;
 
          return stack.szDate; /* this guaranties good behavior when multithreading */
@@ -216,14 +216,14 @@ int hb_parl( int iParam, ... )
    if( ( iParam <= hb_pcount() ) || ( iParam == -1 ) )
    {
       if( iParam == -1 )
-	 pItem = &stack.Return;
+         pItem = &stack.Return;
       else if( iParam < -1 )
-	 return 0;
+         return 0;
       else
-	 pItem = stack.pBase + 1 + iParam;
+         pItem = stack.pBase + 1 + iParam;
 
       if( IS_BYREF( pItem ) )
-         pItem = ItemUnRef( pItem );
+         pItem = hb_itemUnRef( pItem );
 
       if( IS_ARRAY( pItem ) )
       {
@@ -255,14 +255,14 @@ double hb_parnd( int iParam, ... )
    if( ( iParam <= hb_pcount() ) || ( iParam == -1 ) )
    {
       if( iParam == -1 )
-	 pItem = &stack.Return;
+         pItem = &stack.Return;
       else if( iParam < -1 )
-	 return 0;
+         return 0;
       else
-	 pItem = stack.pBase + 1 + iParam;
+         pItem = stack.pBase + 1 + iParam;
 
       if( IS_BYREF( pItem ) )
-         pItem = ItemUnRef( pItem );
+         pItem = hb_itemUnRef( pItem );
 
       if( IS_ARRAY( pItem ) )
       {
@@ -281,7 +281,7 @@ double hb_parnd( int iParam, ... )
          return pItem->item.asDouble.value;
 
       else
-	 return 0;
+         return 0;
    }
    return 0;
 }
@@ -299,21 +299,21 @@ int hb_parni( int iParam, ... )
    if( ( iParam <= hb_pcount() ) || ( iParam == -1 ) )
    {
       if( iParam == -1 )
-	 pItem = &stack.Return;
+         pItem = &stack.Return;
       else if( iParam < -1 )
-	 return 0;
+         return 0;
       else
-	 pItem = stack.pBase + 1 + iParam;
+         pItem = stack.pBase + 1 + iParam;
 
       if( IS_BYREF( pItem ) )
-         pItem = ItemUnRef( pItem );
+         pItem = hb_itemUnRef( pItem );
 
       if( IS_ARRAY( pItem ) )
       {
-	 if( wArrayIndex )
-	    return (long) hb_arrayGetDouble( pItem, wArrayIndex );
-	 else
-	    return 0;
+         if( wArrayIndex )
+            return (long) hb_arrayGetDouble( pItem, wArrayIndex );
+         else
+            return 0;
       }
 
       else if( IS_INTEGER( pItem ) )
@@ -344,21 +344,21 @@ long hb_parnl( int iParam, ... )
    if( ( iParam <= hb_pcount() ) || ( iParam == -1 ) )
    {
       if( iParam == -1 )
-	 pItem = &stack.Return;
+         pItem = &stack.Return;
       else if( iParam < -1 )
-	 return 0;
+         return 0;
       else
-	 pItem = stack.pBase + 1 + iParam;
+         pItem = stack.pBase + 1 + iParam;
 
       if( IS_BYREF( pItem ) )
-         pItem = ItemUnRef( pItem );
+         pItem = hb_itemUnRef( pItem );
 
       if( IS_ARRAY( pItem ) )
       {
-	 if( wArrayIndex )
-	    return (long) hb_arrayGetDouble( pItem, wArrayIndex );
-	 else
-	    return 0;
+         if( wArrayIndex )
+            return (long) hb_arrayGetDouble( pItem, wArrayIndex );
+         else
+            return 0;
       }
 
       else if( IS_INTEGER( pItem ) )
@@ -384,9 +384,9 @@ ULONG hb_parinfa( int iParamNum, ULONG uiArrayIndex )
    if( pArray )
    {
       if( ! uiArrayIndex )
-	 return hb_arrayLen( pArray );
+         return hb_arrayLen( pArray );
       else
-	 return (long) hb_arrayGetType( pArray, uiArrayIndex );
+         return (long) hb_arrayGetType( pArray, uiArrayIndex );
    }
    else
       return 0; /* QUESTION: should we raise an error here ? */
@@ -400,12 +400,12 @@ WORD hb_parinfo( int iParam )
    {
       if( ( iParam <= hb_pcount() ) || ( iParam == -1 ) )
       {
-	 if( iParam == -1 )
-	    return stack.Return.type;
-	 else if( iParam < -1 )
-	    return 0;
-	 else
-	    return ( stack.pBase + 1 + iParam )->type;
+         if( iParam == -1 )
+            return stack.Return.type;
+         else if( iParam < -1 )
+            return 0;
+         else
+            return ( stack.pBase + 1 + iParam )->type;
       }
       else
          return 0;
@@ -421,7 +421,7 @@ WORD hb_pcount( void )
 
 void hb_ret( void )
 {
-   ItemRelease( &stack.Return );
+   hb_itemClear( &stack.Return );
 }
 
 void hb_reta( ULONG ulLen )  /* undocumented hb_reta() */
@@ -433,7 +433,7 @@ void hb_retc( char * szText )
 {
    ULONG ulLen = strlen( szText );
 
-   ItemRelease( &stack.Return );
+   hb_itemClear( &stack.Return );
    stack.Return.type   = IT_STRING;
    stack.Return.item.asString.length = ulLen;
    stack.Return.item.asString.value = ( char * ) hb_xgrab( ulLen + 1 );
@@ -442,7 +442,7 @@ void hb_retc( char * szText )
 
 void hb_retclen( char * szText, ULONG ulLen )
 {
-   ItemRelease( &stack.Return );
+   hb_itemClear( &stack.Return );
    stack.Return.type   = IT_STRING;
    stack.Return.item.asString.length = ulLen;
    stack.Return.item.asString.value = ( char * ) hb_xgrab( ulLen + 1 );
@@ -465,7 +465,7 @@ void hb_retds( char * szDate ) /* szDate must have yyyymmdd format */
    else lDay = lMonth = lYear = 0; /* Date string missing or bad length,
                                       so force an empty date */
 
-   ItemRelease( &stack.Return );
+   hb_itemClear( &stack.Return );
 
    stack.Return.type   = IT_DATE;
    stack.Return.item.asDate.length = 8;
@@ -477,7 +477,7 @@ void hb_retds( char * szDate ) /* szDate must have yyyymmdd format */
 
 void hb_retnd( double dNumber )
 {
-   ItemRelease( &stack.Return );
+   hb_itemClear( &stack.Return );
    stack.Return.type   = IT_DOUBLE;
    if( dNumber > 10000000000.0 )
       stack.Return.item.asDouble.length = 20;
@@ -489,7 +489,7 @@ void hb_retnd( double dNumber )
 
 void hb_retni( int iNumber )
 {
-   ItemRelease( &stack.Return );
+   hb_itemClear( &stack.Return );
    stack.Return.type                   = IT_INTEGER;
    stack.Return.item.asInteger.length  = 10;
    stack.Return.item.asInteger.decimal = 0;
@@ -498,7 +498,7 @@ void hb_retni( int iNumber )
 
 void hb_retl( int iTrueFalse )
 {
-   ItemRelease( &stack.Return );
+   hb_itemClear( &stack.Return );
    stack.Return.type                  = IT_LOGICAL;
    stack.Return.item.asLogical.length = 3;
    stack.Return.item.asLogical.value  = iTrueFalse;
@@ -506,7 +506,7 @@ void hb_retl( int iTrueFalse )
 
 void hb_retnl( long lNumber )
 {
-   ItemRelease( &stack.Return );
+   hb_itemClear( &stack.Return );
    stack.Return.type                = IT_LONG;
    stack.Return.item.asLong.length  = 10;
    stack.Return.item.asLong.decimal = 0;
@@ -530,7 +530,7 @@ void hb_storc( char * szText, int iParam, ... )
       {
          pItem = &stack.Return;
          ulLen = strlen( szText );
-         ItemRelease( pItem );
+         hb_itemClear( pItem );
          pItem->type = IT_STRING;
          pItem->item.asString.length = ulLen;
          pItem->item.asString.value = ( char * ) hb_xgrab( ulLen + 1 );
@@ -555,8 +555,8 @@ void hb_storc( char * szText, int iParam, ... )
       else if( IS_BYREF( pItem ) )
       {
          ulLen = strlen( szText );
-         pItemRef = ItemUnRef( pItem );
-         ItemRelease( pItemRef );
+         pItemRef = hb_itemUnRef( pItem );
+         hb_itemClear( pItemRef );
          pItemRef->type = IT_STRING;
          pItemRef->item.asString.length = ulLen;
          pItemRef->item.asString.value = ( char * ) hb_xgrab( ulLen + 1 );
@@ -580,7 +580,7 @@ void hb_storclen( char * fixText, WORD wLength, int iParam, ... )
       if( iParam == -1 )
       {
          pItem = &stack.Return;
-         ItemRelease( pItem );
+         hb_itemClear( pItem );
          pItem->type = IT_STRING;
          pItem->item.asString.length = wLength;
          pItem->item.asString.value = ( char * ) hb_xgrab( wLength + 1 );
@@ -605,8 +605,8 @@ void hb_storclen( char * fixText, WORD wLength, int iParam, ... )
       }
       else if( IS_BYREF( pItem ) )
       {
-         pItemRef = ItemUnRef( pItem );
-         ItemRelease( pItemRef );
+         pItemRef = hb_itemUnRef( pItem );
+         hb_itemClear( pItemRef );
          pItemRef->type = IT_STRING;
          pItemRef->item.asString.length = wLength;
          pItemRef->item.asString.value = ( char * ) hb_xgrab( wLength + 1 );
@@ -643,7 +643,7 @@ void hb_stords( char * szDate, int iParam, ... ) /* szDate must have yyyymmdd fo
       if( iParam == -1 )
       {
          pItem = &stack.Return;
-         ItemRelease( pItem );
+         hb_itemClear( pItem );
          pItem->type               = IT_DATE;
          pItem->item.asDate.length = 8;
          pItem->item.asDate.value  = hb_dateEncode( lDay, lMonth, lYear );
@@ -664,8 +664,8 @@ void hb_stords( char * szDate, int iParam, ... ) /* szDate must have yyyymmdd fo
       }
       else if( IS_BYREF( pItem ) )
       {
-         pItemRef = ItemUnRef( pItem );
-         ItemRelease( pItemRef );
+         pItemRef = hb_itemUnRef( pItem );
+         hb_itemClear( pItemRef );
          pItemRef->type               = IT_DATE;
          pItemRef->item.asDate.length = 8;
          pItemRef->item.asDate.value  = hb_dateEncode( lDay, lMonth, lYear );
@@ -687,16 +687,16 @@ void hb_storl( int iLogical, int iParam, ... )
    {
       if( iParam == -1 )
       {
-	 pItem = &stack.Return;
-	 ItemRelease( pItem );
-	 pItem->type                  = IT_LOGICAL;
-	 pItem->item.asLogical.length = 3;
-	 pItem->item.asLogical.value  = iLogical;
+         pItem = &stack.Return;
+         hb_itemClear( pItem );
+         pItem->type                  = IT_LOGICAL;
+         pItem->item.asLogical.length = 3;
+         pItem->item.asLogical.value  = iLogical;
       }
       else if( iParam < -1 )
-	 return;
+         return;
       else
-	 pItem = stack.pBase + 1 + iParam;
+         pItem = stack.pBase + 1 + iParam;
 
       if( IS_ARRAY( pItem ) && wArrayIndex )
       {
@@ -709,8 +709,8 @@ void hb_storl( int iLogical, int iParam, ... )
       }
       else if( IS_BYREF( pItem ) )
       {
-         pItemRef = ItemUnRef( pItem );
-         ItemRelease( pItemRef );
+         pItemRef = hb_itemUnRef( pItem );
+         hb_itemClear( pItemRef );
          pItemRef->type                  = IT_LOGICAL;
          pItemRef->item.asLogical.length = 3;
          pItemRef->item.asLogical.value  = iLogical;
@@ -733,7 +733,7 @@ void hb_storni( int iValue, int iParam, ... )
       if( iParam == -1 )
       {
          pItem = &stack.Return;
-         ItemRelease( pItem );
+         hb_itemClear( pItem );
          pItem->type                   = IT_INTEGER;
          pItem->item.asInteger.length  = 10;
          pItem->item.asInteger.decimal = 0;
@@ -756,8 +756,8 @@ void hb_storni( int iValue, int iParam, ... )
       }
       else if( IS_BYREF( pItem ) )
       {
-         pItemRef = ItemUnRef( pItem );
-         ItemRelease( pItemRef );
+         pItemRef = hb_itemUnRef( pItem );
+         hb_itemClear( pItemRef );
          pItemRef->type                   = IT_INTEGER;
          pItemRef->item.asInteger.length  = 10;
          pItemRef->item.asInteger.decimal = 0;
@@ -781,7 +781,7 @@ void hb_stornl( long lValue, int iParam, ... )
       if( iParam == -1 )
       {
          pItem = &stack.Return;
-         ItemRelease( pItem );
+         hb_itemClear( pItem );
          pItem->type                = IT_LONG;
          pItem->item.asLong.length  = 10;
          pItem->item.asLong.decimal = 0;
@@ -804,8 +804,8 @@ void hb_stornl( long lValue, int iParam, ... )
       }
       else if( IS_BYREF( pItem ) )
       {
-         pItemRef = ItemUnRef( pItem );
-         ItemRelease( pItemRef );
+         pItemRef = hb_itemUnRef( pItem );
+         hb_itemClear( pItemRef );
          pItemRef->type                = IT_LONG;
          pItemRef->item.asLong.length  = 10;
          pItemRef->item.asLong.decimal = 0;
@@ -829,7 +829,7 @@ void hb_stornd( double dValue, int iParam, ... )
       if( iParam == -1 )
       {
          pItem = &stack.Return;
-         ItemRelease( pItem );
+         hb_itemClear( pItem );
          pItem->type   = IT_DOUBLE;
          if( dValue > 10000000000.0 )
             pItem->item.asDouble.length = 20;
@@ -858,8 +858,8 @@ void hb_stornd( double dValue, int iParam, ... )
       }
       else if( IS_BYREF( pItem ) )
       {
-         pItemRef = ItemUnRef( pItem );
-         ItemRelease( pItemRef );
+         pItemRef = hb_itemUnRef( pItem );
+         hb_itemClear( pItemRef );
          pItemRef->type   = IT_DOUBLE;
          if( dValue > 10000000000.0 )
             pItemRef->item.asDouble.length = 20;

@@ -29,14 +29,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <hbdefs.h>
-#include <hbsetup.h>
+#include "hbdefs.h"
+#include "hbsetup.h"
 
 struct _DYNSYM;         /* forward declaration */
 
 typedef struct          /* symbol support structure */
 {
-   char * szName;       /* the name of the symbol */
+   char*       szName;  /* the name of the symbol */
    SYMBOLSCOPE cScope;  /* the scope of the symbol */
    HARBOURFUNC pFunPtr; /* function address for function symbol table entries */
    struct _DYNSYM * pDynSym;   /* pointer to its dynamic symbol if defined */
@@ -47,7 +47,7 @@ typedef struct          /* symbol support structure */
 #define FS_STATIC       2
 #define FS_INIT         8
 #define FS_EXIT        16
-#define FS_INITEXIT    24
+#define FS_INITEXIT    ( FS_INIT | FS_EXIT )
 #define FS_MESSAGE     32
 #define FS_MEMVAR     128
 
@@ -81,8 +81,7 @@ struct _HB_BASEARRAY;
 struct _HB_ITEM;
 struct _HB_VALUE;
 
-/* Internal structures that holds data
-*/
+/* Internal structures that holds data */
 struct hb_struArray
 {
   struct _HB_BASEARRAY * value;
@@ -186,50 +185,49 @@ typedef PHB_ITEM HB_ITEM_PTR;
 
 typedef struct _HB_BASEARRAY
 {
-   PHB_ITEM pItems;               /* pointer to the array items */
-   ULONG ulLen;                /* number of items in the array */
-   WORD  wHolders;             /* number of holders of this array */
-   WORD  wClass;               /* offset to the classes base if it is an object */
-   WORD  wSuperCast;           /* is it a super cast ? */
+   PHB_ITEM pItems;       /* pointer to the array items */
+   ULONG    ulLen;        /* number of items in the array */
+   WORD     wHolders;     /* number of holders of this array */
+   WORD     wClass;       /* offset to the classes base if it is an object */
+   WORD     wSuperCast;   /* is it a super cast ? */
 } BASEARRAY, * PBASEARRAY;
 
 typedef struct     /* stack managed by the virtual machine */
 {
-   PHB_ITEM pItems;   /* pointer to the stack items */
-   PHB_ITEM pPos;     /* pointer to the latest used item */
-   LONG  wItems;      /* total items that may be holded on the stack */
-   HB_ITEM  Return;   /* latest returned value */
-   PHB_ITEM pBase;    /* stack frame position for the current function call */
-   PHB_ITEM pEvalBase;/* stack frame position for the evaluated codeblock */
-   int  iStatics;  /* statics base for the current function call */
-   char szDate[ 9 ]; /* last returned date from _pards() yyyymmdd format */
+   PHB_ITEM pItems;       /* pointer to the stack items */
+   PHB_ITEM pPos;         /* pointer to the latest used item */
+   LONG     wItems;       /* total items that may be holded on the stack */
+   HB_ITEM  Return;       /* latest returned value */
+   PHB_ITEM pBase;        /* stack frame position for the current function call */
+   PHB_ITEM pEvalBase;    /* stack frame position for the evaluated codeblock */
+   int      iStatics;     /* statics base for the current function call */
+   char     szDate[ 9 ];  /* last returned date from _pards() yyyymmdd format */
 } STACK;
 
 typedef struct _DYNSYM
 {
-   HB_HANDLE hArea;      /* Workarea number */
-   HB_HANDLE hMemvar;    /* Index number into memvars ( publics & privates ) array */
-   PSYMBOL  pSymbol;     /* pointer to its relative local symbol */
-   HARBOURFUNC pFunPtr;  /* Pointer to the function address */
-} DYNSYM, * PDYNSYM;     /* dynamic symbol structure */
+   HB_HANDLE hArea;       /* Workarea number */
+   HB_HANDLE hMemvar;     /* Index number into memvars ( publics & privates ) array */
+   PSYMBOL   pSymbol;     /* pointer to its relative local symbol */
+   HARBOURFUNC pFunPtr;   /* Pointer to the function address */
+} DYNSYM, * PDYNSYM;      /* dynamic symbol structure */
 
 /* internal structure for codeblocks */
 typedef struct _HB_CODEBLOCK
 {
-  BYTE * pCode;       /* codeblock pcode */
-  PHB_ITEM pLocals;   /* table with referenced local variables */
-  WORD wLocals;       /* number of referenced local variables */
-  PSYMBOL pSymbols;   /* codeblocks symbols */
-  ULONG lCounter;     /* numer of references to this codeblock */
+   BYTE*    pCode;        /* codeblock pcode */
+   PHB_ITEM pLocals;      /* table with referenced local variables */
+   WORD     wLocals;      /* number of referenced local variables */
+   PSYMBOL  pSymbols;     /* codeblocks symbols */
+   ULONG    lCounter;     /* numer of references to this codeblock */
 } HB_CODEBLOCK, * HB_CODEBLOCK_PTR;
 
 typedef struct _HB_VALUE
 {
-  HB_ITEM item;
-  ULONG counter;
-  HB_HANDLE hPrevMemvar;
+   HB_ITEM   item;
+   ULONG     counter;
+   HB_HANDLE hPrevMemvar;
 } HB_VALUE, * HB_VALUE_PTR;
-
 
 PHB_ITEM hb_param( int iParam, WORD wType ); /* retrieve a generic parameter */
 char *   hb_parc( int iParam, ... );  /* retrieve a string parameter */
@@ -240,6 +238,7 @@ double   hb_parnd( int iParam, ... ); /* retrieve a numeric parameter as a doubl
 int      hb_parni( int iParam, ... ); /* retrieve a numeric parameter as a integer */
 long     hb_parnl( int iParam, ... ); /* retrieve a numeric parameter as a long */
 WORD     hb_parinfo( int iParam ); /* Determine the param count or data type */
+ULONG    hb_parinfa( int iParamNum, ULONG uiArrayIndex );
 void     hb_storc( char * szText, int iParam, ... ); /* stores a szString on a variable by reference */
 void     hb_storclen( char * fixText, WORD wLength, int iParam, ... ); /* stores a fixed length string on a variable by reference */
 void     hb_stords( char * szDate, int iParam, ... );   /* szDate must have yyyymmdd format */
@@ -263,10 +262,6 @@ void *   hb_xrealloc( void * pMem, ULONG lSize );   /* reallocates memory */
 void     hb_xfree( void * pMem );    /* frees memory */
 ULONG    hb_xsize( void * pMem ); /* returns the size of an allocated memory block */
 
-void     ItemCopy( PHB_ITEM pDest, PHB_ITEM pSource );
-void     ItemRelease( PHB_ITEM pItem );
-PHB_ITEM ItemUnRef( PHB_ITEM pItem ); /* de-references passed variable */
-
 void     hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ); /* creates a new array */
 void     hb_arrayGet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ); /* retrieves an item */
 ULONG    hb_arrayLen( PHB_ITEM pArray ); /* retrives the array len */
@@ -282,19 +277,43 @@ void     hb_arrayDel( PHB_ITEM pArray, ULONG ulIndex );
 PHB_ITEM hb_arrayClone( PHB_ITEM pArray );
 void     hb_arrayAdd( PHB_ITEM pArray, PHB_ITEM pItemValue );
 char *   hb_arrayGetDate( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the date value contained on an array element */
-ULONG    hb_parinfa( int iParamNum, ULONG uiArrayIndex );
+
 int      hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact ); /* our string compare */
+void     hb_itemCopy( PHB_ITEM pDest, PHB_ITEM pSource ); /* copies an item to one place to another respecting its containts */
+void     hb_itemClear( PHB_ITEM pItem );
+PHB_ITEM hb_itemUnRef( PHB_ITEM pItem ); /* de-references passed variable */
+
 char *   hb_str( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec ); /* convert number to string */
 int      hb_stricmp( const char *s1, const char *s2 );
 BOOL     hb_strempty( char * szText, ULONG ulLen );
+ULONG    hb_strAt( char *, long, char *, long );
 
-HARBOURFUNC GetMethod( PHB_ITEM pObject, PSYMBOL pSymMsg ); /* returns the method pointer of a object class */
+HARBOURFUNC hb_GetMethod( PHB_ITEM pObject, PSYMBOL pSymMsg ); /* returns the method pointer of a object class */
 char *   hb_GetClassName( PHB_ITEM pObject ); /* retrieves an object class name */
+ULONG    hb_isMessage( PHB_ITEM, char * );
 
 /* dynamic symbol table management */
 PDYNSYM  hb_GetDynSym( char * szName );   /* finds and creates a dynamic symbol if not found */
 PDYNSYM  hb_NewDynSym( PSYMBOL pSymbol ); /* creates a new dynamic symbol based on a local one */
 PDYNSYM  hb_FindDynSym( char * szName );  /* finds a dynamic symbol */
 
+HB_CODEBLOCK_PTR hb_CodeblockNew( BYTE *, WORD, WORD *, PSYMBOL );
+void     hb_CodeblockDelete( PHB_ITEM );
+PHB_ITEM hb_CodeblockGetVar( PHB_ITEM, LONG );
+PHB_ITEM hb_CodeblockGetRef( PHB_ITEM, PHB_ITEM );
+void     hb_CodeblockEvaluate( PHB_ITEM );
+void     hb_CodeblockCopy( PHB_ITEM, PHB_ITEM );
+
+/* Initialisation and closing memvars subsystem */
+void     hb_MemvarsInit( void );
+void     hb_MemvarsRelease( void );
+void     hb_MemvarValueIncRef( HB_HANDLE );
+void     hb_MemvarValueDecRef( HB_HANDLE );
+void     hb_MemvarSetValue( PSYMBOL, HB_ITEM_PTR );
+void     hb_MemvarGetValue( HB_ITEM_PTR, PSYMBOL );
+void     hb_MemvarGetRefer( HB_ITEM_PTR, PSYMBOL );
+void     hb_MemvarNewSymbol( PSYMBOL );
+ULONG    hb_MemvarGetPrivatesBase( void );
+void     hb_MemvarSetPrivatesBase( ULONG );
 
 #endif /* HB_EXTEND_H_ */
