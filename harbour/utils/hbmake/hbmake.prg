@@ -52,9 +52,10 @@
 #include "common.ch"
 #include "radios.ch"
 //#include "checks.ch"
-#include "hbgetcmt.ch"
+
 
 #ifdef __HARBOUR__
+#include "hbgetcmt.ch"
 #define EOL hb_osnewline()
 #define CRLF hb_osnewline()
 #else
@@ -114,7 +115,8 @@ Local aDef := {}
 Local cOs:=OS()
 Local allParam
 //__traceprgcalls(.t.)
-Local oProfile := HBProfile():new()
+//Local oProfile := HBProfile():new()
+//   __setProfiler( .T. )
 Default p1 To ""
 Default p2 To ""
 Default p3 To ""
@@ -246,15 +248,15 @@ While !leof
               Endif
            Endif
         Endif
-        if aTemp[ 1 ] = "PROJECT"
+        if aTemp[ 1 ] == "PROJECT"
                 if at('.lib',atemp[2])>0 .or. at('.a',atemp[2])>0
                         lLibrary:=.t.
                 endif
         endif
-        If aTemp[ 1 ] = "OBJFILES"
+        If aTemp[ 1 ] == "OBJFILES"
            aObjs := listasArray2( replacemacros(atemp[ 2 ]), " " )
         Endif
-        If aTemp[ 1 ] = "OBJCFILES"
+        If aTemp[ 1 ] == "OBJCFILES"
             aTemp1 := listasArray2( replacemacros(atemp[ 2 ]), " " )
             if len(atemp1) ==1
                if !empty(atemp[1])
@@ -264,16 +266,16 @@ While !leof
              aObjsC := listasArray2( replacemacros(atemp[ 2 ]), " " )
             endif
         Endif
-        if aTemp[ 1 ] = "PRGFILES"
+        if aTemp[ 1 ] == "PRGFILES"
            aPrgs := listasArray2( replacemacros(atemp[ 2 ]), " " )
            lExtended := .T.
            lCfgFound := findHarbourcfg(@cCfg)
         Endif
-        if aTemp[ 1 ] = "PRGFILE"
+        if aTemp[ 1 ] == "PRGFILE"
            aPrgs := listasArray2( replacemacros(atemp[ 2 ]), " " )
         Endif
 
-        If atemp[ 1 ] = "CFILES"
+        If atemp[ 1 ] == "CFILES"
            if lExtended
                aTempCFiles := listasArray2( replacemacros(atemp[ 2 ]), " " )
                if (len(aTempCFiles) ==1 )
@@ -287,7 +289,7 @@ While !leof
                aCs := listasArray2( replacemacros(atemp[ 2 ]), " " )
            endif
         Endif
-        If atemp[ 1 ] = "RESFILES"
+        If atemp[ 1 ] == "RESFILES"
            aRes := listasArray2( replacemacros(atemp[ 2 ]), " " )
 
         Endif
@@ -1254,7 +1256,7 @@ if lBcc
  Fwrite( nLinkHandle, "CFLAG2 =  -I$(BHC)\include;$(BCB)\include" +CRLF)
 
  Fwrite( nLinkHandle, "RFLAGS = "+CRLF)
- Fwrite( nLinkHandle, "LFLAGS = -L$(BCB)\lib\obj;$(BCB)\lib;$(BHC)\lib;$(FWH)\lib -Gn -M -m -s" + if(lFwh,"-Tpe","")+CRLF)
+ Fwrite( nLinkHandle, "LFLAGS = -L$(BCB)\lib\obj;$(BCB)\lib;$(BHC)\lib;$(FWH)\lib -Gn -M -m -s -aa" + if(lFwh,"-Tpe","")+CRLF)
  Fwrite( nLinkHandle, "IFLAGS = " +CRLF)
  Fwrite( nLinkHandle, "LINKER = ilink32"+CRLF)
  Fwrite( nLinkHandle, " "+CRLF)

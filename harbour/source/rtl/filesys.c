@@ -1010,7 +1010,13 @@ int     hb_fsDelete( BYTE * pFilename )
 #if defined(HAVE_POSIX_IO)
 
    errno = 0;
-   iResult = unlink( ( char * ) pFilename );
+   #if defined(__WIN32__)
+       iResult=DeleteFile( ( char * ) pFilename );
+       if (!iResult)
+          errno=GetLastError();
+   #else  
+       iResult = unlink( ( char * ) pFilename );
+   #endif 
    s_uiErrorLast = errno;
 
 #elif defined(_MSC_VER) || defined(__MINGW32__)
@@ -1038,7 +1044,16 @@ int hb_fsRename( BYTE * pOldName, BYTE * pNewName )
 #if defined(HB_FS_FILE_IO)
 
    errno = 0;
+   #if defined(__WIN32__)
+   {
+     BOOL bSuccess;
+     bSuccess=MoveFile(( char * ) pOldName, ( char * ) pNewName );
+     if (!bSuccess)
+        errno=GetLastError();
+   } 
+   #elif
    iResult = rename( ( char * ) pOldName, ( char * ) pNewName );
+   #endif 
    s_uiErrorLast = errno;
 
 #else
@@ -1289,6 +1304,11 @@ BOOL    hb_fsMkDir( BYTE * pDirname )
 
    #if !defined(__WATCOMC__) && !defined(__BORLANDC__) && !defined(__IBMCPP__) && !defined(__MINGW32__)
       iResult = mkdir( ( char * ) pDirname, S_IWUSR | S_IRUSR | S_IXUSR );
+   #elif defined(__WIN32__)
+    
+      iResult=CreateDirectory((char  *)pDirname,NULL);
+        if (!iResult)
+          errno = GetLastError();    
    #else
       iResult = mkdir( ( char * ) pDirname );
    #endif
@@ -1314,9 +1334,14 @@ BOOL    hb_fsChDir( BYTE * pDirname )
 #if defined(HAVE_POSIX_IO) || defined(__MINGW32__)
 
    errno = 0;
-   iResult = chdir( ( char * ) pDirname );
-   s_uiErrorLast = errno;
-
+   #if defined(__WIN32__)
+       iResult=SetCurrentDirectory((char  *)pDirname);
+       if (!iResult)
+           errno = GetLastError();
+   #else
+       iResult = chdir( ( char * ) pDirname );
+   #endif
+         s_uiErrorLast = errno;                           
 #else
 
    iResult = 1;
@@ -1336,9 +1361,14 @@ BOOL    hb_fsRmDir( BYTE * pDirname )
 #if defined(HAVE_POSIX_IO) || defined(__MINGW32__)
 
    errno = 0;
-   iResult = rmdir( ( char * ) pDirname );
+   #if defined(__WIN32__)
+       iResult =RemoveDirectory((char  *)pDirname);
+       if (!iResult)
+          errno = GetLastError();
+   #else 
+       iResult = rmdir( ( char * ) pDirname );
+   #endif 
    s_uiErrorLast = errno;
-
 #else
 
    iResult = 1;
@@ -1377,9 +1407,18 @@ USHORT  hb_fsCurDirBuff( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen )
 #if defined(HAVE_POSIX_IO)
 
    errno = 0;
-   getcwd( ( char * ) pbyBuffer, ulLen );
+   #if defined(__WIN32__)
+   {
+   BOOL bResult;
+        bResult=GetCurrentDirectory( ulLen ,( char * ) pbyBuffer);
+        if (!bResult)
+            errno=GetLastError();
+       }
+   #else
+       getcwd( ( char * ) pbyBuffer, ulLen );
+   #endif 
    s_uiErrorLast = errno;
-
+    
 #elif defined(__MINGW32__)
 
    errno = 0;
