@@ -40,6 +40,7 @@ debug.obj    : debug.c    extend.h hbdefs.h
 debugger.obj : debugger.c extend.h hbdefs.h
 descend.obj  : descend.c  extend.h hbdefs.h
 devout.obj   : devout.c   extend.h hbdefs.h
+devoutp.obj  : devoutp.c  extend.h hbdefs.h
 dir.obj      : dir.c      extend.h hbdefs.h
 do.obj       : do.c       extend.h hbdefs.h
 dynsym.obj   : dynsym.c   extend.h hbdefs.h
@@ -89,6 +90,7 @@ errorsys.c   : errorsys.prg  harbour.exe
 fileread.c   : fileread.prg  harbour.exe
 menuto.c     : menuto.prg    harbour.exe
 objfunc.c    : objfunc.prg   harbour.exe
+setkey.c     : setkey.prg    harbour.exe
 stringp.c    : stringp.prg   harbour.exe
 tbcolumn.c   : tbcolumn.prg  harbour.exe
 tbrowse.c    : tbrowse.prg   harbour.exe
