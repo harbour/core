@@ -1,3 +1,17 @@
+2001-02-08 17:30 GMT+1 Ignacio Ortiz <ignacioortiz@fivetech.com>
+   * harbour/source/debug/dbgtmenu.prg
+     + Minor fix
+
+   * harbour/source/debug/debugger.prg
+     + New method ShowWorkAreas()
+
+   * harbour/source/debug/dbgwa.prg
+     + New debugger Show work areas (completally finished)
+
+   * harbour/makefile.bc
+     + Added harbour/source/debug/dbgwa.prg
+     ! Please update other make files
+
 2001-02-08 16:04 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/debug/debugger.prg
      ! minor fix on METHOD OSShell().
