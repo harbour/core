@@ -132,6 +132,7 @@ METHOD HandleEvent() CLASS TDebugger
               RestScreen( 0, 0, MaxRow(), MaxCol(), ::cAppImage )
               SetPos( ::nAppRow, ::nAppCol )
               SetColor( ::cAppColors )
+              SetCursor( ::nAppCursor )
               oDebugger := nil
               lExit := .T.
               ::Exit()
