@@ -1,6 +1,6 @@
 20000322-19:35 EST Paul Tucker <ptucker@sympatico.ca>
    * include/fileio.ch
-   * source/rtl/dskspac.c
+   * source/rtl/diskspac.c
      * Changed and reordered HB_DISK_ defines to be in the range 0-3
    * source/rtl/dskspac.c
      * cap uiType to HB_DISK_TOTAL for out of range types.
