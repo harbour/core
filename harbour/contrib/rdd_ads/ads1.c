@@ -193,7 +193,7 @@ static ERRCODE adsBof( ADSAREAP pArea, BOOL * pBof )
 {
    HB_TRACE(HB_TR_DEBUG, ("adsBof(%p, %p)", pArea, pBof));
 
-   AdsAtBOF  ( pArea->hTable, &(pArea->fBof) );
+   AdsAtBOF  ( pArea->hTable, (UNSIGNED16 *)&(pArea->fBof) );
    * pBof = pArea->fBof;
    return SUCCESS;
 }
@@ -202,7 +202,7 @@ static ERRCODE adsEof( ADSAREAP pArea, BOOL * pEof )
 {
    HB_TRACE(HB_TR_DEBUG, ("adsEof(%p, %p)", pArea, pEof));
 
-   AdsAtEOF( pArea->hTable, &(pArea->fEof) );
+   AdsAtEOF( pArea->hTable, (UNSIGNED16 *)&(pArea->fEof) );
    * pEof = pArea->fEof;
    return SUCCESS;
 }
@@ -211,7 +211,7 @@ static ERRCODE adsFound( ADSAREAP pArea, BOOL * pFound )
 {
    HB_TRACE(HB_TR_DEBUG, ("adsFound(%p, %p)", pArea, pFound));
 
-   AdsIsFound( pArea->hTable, &(pArea->fFound) );
+   AdsIsFound( pArea->hTable, (UNSIGNED16 *)&(pArea->fFound) );
    * pFound = pArea->fFound;
    return SUCCESS;
 }
@@ -427,6 +427,26 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          else
             hb_itemPutL( pItem, FALSE );
          break;
+      case 'M':
+         {
+           UNSIGNED8 szName[HARBOUR_MAX_RDD_FIELDNAME_LENGTH+1];
+           UNSIGNED16 pusBufLen = HARBOUR_MAX_RDD_FIELDNAME_LENGTH;
+           UNSIGNED8 *pucBuf;
+           UNSIGNED32 pulLen;
+
+           AdsGetFieldName( pArea->hTable, uiIndex, szName, &pusBufLen );
+           AdsGetMemoLength( pArea->hTable, szName, &pulLen );
+           if( pulLen > 0 )
+           {
+              pucBuf = (UNSIGNED8*) hb_xgrab( pulLen );
+              AdsGetString( pArea->hTable, szName, pucBuf, &pulLen, ADS_NONE );
+              hb_itemPutCL( pItem, ( char * ) pucBuf, pulLen );
+              hb_xfree( pucBuf );
+           }
+           else
+              hb_itemPutC( pItem, "" );
+           break;
+         }
 
    }
    return SUCCESS;
@@ -485,8 +505,7 @@ static ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
                uiCount = pField->uiLen;
             memcpy( szText, pItem->item.asString.value, uiCount );
             memset( szText + uiCount, ' ', pField->uiLen - uiCount );
-            res = AdsSetString  ( pArea->hTable, szName,
-                 pItem->item.asString.value, uiCount );
+            AdsSetString  ( pArea->hTable, szName, pItem->item.asString.value, uiCount );
             bError = FALSE;
          }
          break;
@@ -536,6 +555,16 @@ static ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
             bError = FALSE;
             AdsSetLogical( pArea->hTable, szName,
                pItem->item.asLogical.value );
+         }
+         break;
+
+      case 'M':
+         if( pItem->type & IT_STRING )
+         {
+            uiCount = pItem->item.asString.length;
+            AdsSetString  ( pArea->hTable, szName,
+                 pItem->item.asString.value, uiCount );
+            bError = FALSE;
          }
          break;
 
@@ -865,7 +894,9 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
 #define  adsFilterText            NULL
 #define  adsSetFilter             NULL
 #define  adsSetLocate             NULL
+#define  adsCompile               NULL
 #define  adsError                 NULL
+#define  adsEvalBlock             NULL
 
 static ERRCODE adsRawLock( ADSAREAP pArea, USHORT uiAction, ULONG lRecNo )
 {
@@ -887,15 +918,25 @@ static ERRCODE adsRawLock( ADSAREAP pArea, USHORT uiAction, ULONG lRecNo )
          break;
 
       case FILE_LOCK:
+         if( pArea->lpExtendInfo->fExclusive || pArea->lpDataInfo->fFileLocked )
+            return SUCCESS;
          ulRetVal = AdsLockTable  ( pArea->hTable );
          if ( ulRetVal != AE_SUCCESS )
             return FAILURE;
+         pArea->lpDataInfo->fFileLocked = TRUE;
          break;
 
       case FILE_UNLOCK:
-         ulRetVal = AdsUnlockTable  ( pArea->hTable );
-         if ( ulRetVal != AE_SUCCESS )
-            return FAILURE;
+         if( pArea->lpExtendInfo->fExclusive )
+            return TRUE;
+         hb_adsUnLockAllRecords( pArea );
+         if( pArea->lpDataInfo->fFileLocked )
+         {
+            ulRetVal = AdsUnlockTable  ( pArea->hTable );
+            if ( ulRetVal != AE_SUCCESS )
+               return FAILURE;
+            pArea->lpDataInfo->fFileLocked = FALSE;
+         }
          break;
    }
    return SUCCESS;
@@ -910,6 +951,8 @@ static ERRCODE adsLock( ADSAREAP pArea, LPDBLOCKINFO pLockInfo )
       hb_adsUnLockAllRecords( pArea );
 
       /* Get current record */
+      AdsGetRecordNum( pArea->hTable, ADS_IGNOREFILTERS,
+         (UNSIGNED32 *)&(pArea->lpExtendInfo->ulRecNo) );
       pLockInfo->itmRecID = pArea->lpExtendInfo->ulRecNo;
    }
    if( adsRawLock( pArea, pLockInfo->uiMethod, pLockInfo->itmRecID ) == SUCCESS )
@@ -972,7 +1015,7 @@ static ERRCODE adsReadDBHeader( ADSAREAP pArea )
             break;
          case ADS_NUMERIC:
             pFieldInfo.uiType = 'N';
-            AdsGetFieldDecimals( pArea->hTable, szName, &pulLength );
+            AdsGetFieldDecimals( pArea->hTable, szName, (UNSIGNED16 *)&pulLength );
             pFieldInfo.uiDec = ( USHORT ) pulLength;
             break;
          case ADS_LOGICAL:
@@ -1054,7 +1097,9 @@ static RDDFUNCS adsTable = {  adsBof,
                              adsFilterText,
                              adsSetFilter,
                              adsSetLocate,
+                             adsCompile,
                              adsError,
+                             adsEvalBlock,
                              adsRawLock,
                              adsLock,
                              adsUnLock,

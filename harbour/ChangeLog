@@ -1,6 +1,15 @@
+20000204-22:12 GMT+3 Alexander Kresin
+   * source/rdd/dbcmd.c
+     + added hb_rddGetCurrentWorkAreaPointer() function
+   + source/rtl/tools/dbftools.c
+     Some Clipper Tools compatible functions
+   * contrib/rdd_ads/ads1.c
+     * Bugs fixed related to lock/unlock
+     * Memo support added
+
 20000204-14:47 GMT+1 Victor Szakats <info@szelvesz.hu>
    * source/rtl/itemapi.c
-     ! hb_itemNew() fixed to set the item type *after* filling the item 
+     ! hb_itemNew() fixed to set the item type *after* filling the item
        structure with zeros. It won't set the type at all when a param other
        than NULL was passed.
    * makewww.bat
