@@ -1,7 +1,7 @@
 # makefile for Borland C/C++ 32 bits
 
 .path.asm = source\compiler
-.path.c   = source\compiler;source\vm;source\rtl;source\tools;source\rtl\gt;source\rtl\natmsg;source\hbpp
+.path.c   = source\compiler;source\vm;source\rtl;source\tools;source\rtl\gt;source\rtl\natmsg;source\hbpp;source\rdd
 .path.h   = include
 .path.l   = source\compiler
 .path.y   = source\compiler
@@ -17,8 +17,8 @@ harbour.lib : arrays.obj asort.obj classes.obj codebloc.obj \
               dir.obj dynsym.obj environ.obj error.obj \
               errorapi.obj errorsys.obj extend.obj files.obj \
               hardcr.obj hb_f.obj initsymb.obj itemapi.obj memvars.obj \
-              math.obj mathx.obj msguk.obj mtran.obj objfunc.obj set.obj \
-              setcolor.obj symbols.obj strings.obj stringp.obj \
+              math.obj mathx.obj msguk.obj mtran.obj objfunc.obj \
+              set.obj setcolor.obj symbols.obj strings.obj stringp.obj \
               stringsx.obj strcmp.obj tclass.obj transfrm.obj copyfile.obj
 
 symbols.obj  : symbols.asm

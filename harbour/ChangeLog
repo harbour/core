@@ -1,3 +1,7 @@
+19990723-12:07 Antonio Linares <alinares@fivetech.com>
+   * terminal.b32
+     * Fixed for Win32 console mode Harbour apps
+
 19990723-12:00 CET Eddie Runia <eddie@runia.com>
   * source/rtl/transfrm.c
     Decimals and width from parameter used if no template specification
@@ -37,7 +41,7 @@
 
         *include/extend.h
          * changed to support new SYMBOLSCOPE typedef
-         * replaced void *pDynSym with struct _DYNSYM *pDynSym 
+         * replaced void *pDynSym with struct _DYNSYM *pDynSym
 
         *tests/working/memvars.c
          + added noew code to test memvars
@@ -52,14 +56,14 @@
     *source/compiler/harbour.y
 	* symbol names are no longer released for the second time
 	 (it caused that DJGPP hanged in 'free' function)
-	 
+
     *source/hbpp/makefile
 	+ added preproc.c
-	
+
     *source/hbpp/harb.h
-	- changed to definie LONG and ULONG typedefs if there is no 
+	- changed to definie LONG and ULONG typedefs if there is no
 	 HB_DEFS_H_ defined (these typedefs are defined in hbdefs.h)
-	 
+
     *source/hbpp/preproc.c
 	- removed nested /* */
 
@@ -71,7 +75,7 @@
 	 cannot be linked because of duplicated symbol 'hb_strAt' defined
 	 in rtl library also) -the changes in source/hbpp/*.c was an attempt
 	 to get it working.
-	 
+
 19990722-14:30 CET Matthew Hamilton
   * tests/working/inifiles.prg
     cFile -> @cFile in fRead statement
@@ -113,7 +117,7 @@
 
     *config/dos/watcom.cf
 	* changed to not link and lib in no case exact mode
-	
+
     *include/pcode.h
         - removed unused opcode HB_P_DEFSTATIC
         + added HB_P_PARAMETER to create memvar variables that store
@@ -148,7 +152,7 @@
 
 Wed Jul 21 17:39:35 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* include/hbsetup.h: 
+	* include/hbsetup.h:
 	Added Win32 as a case when CR/LF must be output for a new line to
 	appear on the screen.
 
@@ -161,23 +165,23 @@ Wed Jul 21 17:39:35 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 Wed Jul 21 15:36:04 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* source/compiler/harbour.y: 
+	* source/compiler/harbour.y:
 	Moved printing the "build..." message after the command line
 	arguments have been checked, so that if the user specifies -q, it
 	is not shown.
-	
-	* source/vm/hvm.c: 
+
+	* source/vm/hvm.c:
 	Got rid of a couple of warnings.
 
-	* include/Makefile: 
-	* tests/working/Makefile: 
+	* include/Makefile:
+	* tests/working/Makefile:
 	Updates list of files.
-	
-	* include/init.h: 
-	* include/initsymb.h: 
-	* source/hbpp/preproc.c: 
+
+	* include/init.h:
+	* include/initsymb.h:
+	* source/hbpp/preproc.c:
 	Updated use of RCS Id keyword.
-	
+
 19990721-18:39 GMT+1 Paul Tucker / Bruno Cantero <bruno@issnet.net>
   * source/compiler/harbour.y
     Added support for empty arguments in functions.

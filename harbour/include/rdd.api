@@ -5,6 +5,8 @@
 #ifndef HB_RDD_API_
 #define HB_RDD_API_
 
+#include <extend.h>
+
 //+
 //	Harbour project 	The free Clipper(tm) compatible xbase compiler
 //
@@ -132,9 +134,6 @@
 #ifndef _RDDSYS_CH
 
 #define _DBRELINFO	struct __DBRELINFO
-#define _AREA		struct __AREA
-typedef _AREA		 AREA;
-typedef AREA *		 AREAP;
 
 
 //
@@ -150,7 +149,7 @@ typedef AREA *		 AREAP;
 
 typedef struct
 {
-   PBYTE		atomName;		// FIELD (symbol) name	note for non dbf files > 10 chars!
+   PDYNSYM              atomName;               // FIELD (symbol) name  note for non dbf files > 10 chars!
    ULONG		uiType; 		// FIELD type		note non dbf file types allowed
    ULONG		typeExtended;		// FIELD type extended
    ULONG		uiLen;			// Overall FIELD length
@@ -173,7 +172,7 @@ typedef struct
    PBYTE		atomAlias;		// The logical name of the data store
    BOOL 		fShared;		// Share mode of the data store
    BOOL 		fReadonly;		// Readonly mode of the data store
-   FARP 		lpdbHeader;		// Pointer to a header of the data store
+   void *               lpdbHeader;             // Pointer to a header of the data store
 } DBOPENINFO;
 typedef DBOPENINFO *	 LPDBOPENINFO;
 
@@ -186,9 +185,9 @@ typedef struct _DBORDERCONDINFO
 {
    BOOL 		fActive;		//
    PBYTE		abFor;
-   ITEM 		itmCobFor;
-   ITEM 		itmCobWhile;
-   ITEM 		itmCobEval;
+   HB_ITEM              itmCobFor;
+   HB_ITEM              itmCobWhile;
+   HB_ITEM              itmCobEval;
    LONG 		lStep;
    LONG 		lStartRecno;
    LONG 		lNextCount;
@@ -201,7 +200,7 @@ typedef struct _DBORDERCONDINFO
    BOOL 		fUseCurrent;
    BOOL 		fCustom;
    BOOL 		fNoOptimize;
-   FARP 		lpvCargo;
+   void *               lpvCargo;
 } DBORDERCONDINFO;
 typedef DBORDERCONDINFO *     LPDBORDERCONDINFO;
 
@@ -216,10 +215,10 @@ typedef struct
    LPDBORDERCONDINFO	lpdbOrdCondInfo;	// conditional information
    PBYTE		abBagName;		// Name of the Order bag
    PBYTE		atomBagName;		//
-   ITEM 		itmOrder;		//
+   HB_ITEM              itmOrder;               //
    BOOL 		fUnique;		// Flag to deterimine if all keys are unique
-   ITEM 		itmCobExpr;		// Code block containing the KEY expression
-   ITEM 		abExpr; 		// String containing the KEY expression
+   HB_ITEM              itmCobExpr;             // Code block containing the KEY expression
+   HB_ITEM              abExpr;                 // String containing the KEY expression
 } DBORDERCREATEINFO;
 typedef DBORDERCREATEINFO *	LPDBORDERCREATEINFO;
 
@@ -230,10 +229,10 @@ typedef DBORDERCREATEINFO *	LPDBORDERCREATEINFO;
 //
 typedef struct
 {
-   ITEM 		atomBagName;		// Name of the Order Bag
-   ITEM 		itmOrder;		// Name or Number of the Order
-   ITEM 		itmCobExpr;		// Code block containing the KEY expression
-   ITEM 		itmResult;		// Operation result
+   HB_ITEM              atomBagName;            // Name of the Order Bag
+   HB_ITEM              itmOrder;               // Name or Number of the Order
+   HB_ITEM              itmCobExpr;             // Code block containing the KEY expression
+   HB_ITEM              itmResult;              // Operation result
    BOOL 		fAllTags;		// Flag for all tags to be opened
 
 } DBORDERINFO;
@@ -247,13 +246,13 @@ typedef DBORDERINFO *	  LPDBORDERINFO;
 //
 typedef struct
 {
-   ITEM 		itmCobFor;		// Code Block representation of a FOR clause
-   ITEM 		lpstrFor;		// String representation of a FOR clause
-   ITEM 		itmCobWhile;		// Code Block representation of a WHILE clause
-   ITEM 		lpstrWhile;		// String representation of a WHILE clause
-   ITEM 		lNext;
-   ITEM 		itmRecID;
-   ITEM 		fRest;			// TRUE if start from the current record
+   HB_ITEM              itmCobFor;              // Code Block representation of a FOR clause
+   HB_ITEM              lpstrFor;               // String representation of a FOR clause
+   HB_ITEM              itmCobWhile;            // Code Block representation of a WHILE clause
+   HB_ITEM              lpstrWhile;             // String representation of a WHILE clause
+   HB_ITEM              lNext;
+   HB_ITEM              itmRecID;
+   HB_ITEM              fRest;                  // TRUE if start from the current record
    BOOL 		fIgnoreFilter;
    BOOL 		fIncludeDeleted;
    BOOL 		fLast;
@@ -268,12 +267,67 @@ typedef DBSCOPEINFO *	  LPDBSCOPEINFO;
 
 typedef struct
 {
-  ITEM			itmCobExpr;		// Block representation of the FILTER expression
-  ITEM			abFilterText;		// String representation of FILTER expression
-  BOOL			fFilter;
+  HB_ITEM               itmCobExpr;             // Block representation of the FILTER expression
+  HB_ITEM               abFilterText;           // String representation of FILTER expression
+  BOOL                  fFilter;
 } DBFILTERINFO;
 typedef DBFILTERINFO *	   LPDBFILTERINFO;
 
+//      differences (vs. CA Clipper 5.3 spec)
+//
+//	AREA:
+//
+//      uiSize          the struct carries a uiSize HB_ITEM which must be filled with a correct value
+//	RDDMETHODS	equals the previous struct RDDFUNCS far *
+//	uiArea		now a ULONG
+//	uiFieldExtent	now a ULONG
+//	uiFieldCount	now a ULONG
+//	uiParents	now a ULONG
+//
+//
+
+typedef struct RDDFUNCS;
+
+typedef struct _AREA
+{
+   ULONG		uiSize; 		// size of this struct
+   ULONG		uiSizeRDDmethods;	// size of the RDD methods
+   RDDFUNCS		lprfsHost;		// Virtual method table for this workarea
+   ULONG		uiArea; 		// The number assigned to this workarea
+   void *               atomAlias;              // Pointer to the alias symbol for this workarea
+   ULONG		uiFieldExtent;		// Total number of fields allocated
+   ULONG		uiFieldCount;		// Total number of fields used
+   LPFIELD		lpFields;		// Pointer to an array of fields
+   void *               lpFieldExtents;         // Void ptr for additional field properties
+   HB_ITEM              valResult;              // All purpose result holder
+   BOOL 		fTop;			// TRUE if "top"
+   BOOL 		fBottom;		// TRUE if "bottom"
+   BOOL 		fBof;			// TRUE if "bof"
+   BOOL 		fEof;			// TRUE if "eof"
+   BOOL 		fFound; 		// TRUE if "found"
+
+   DBSCOPEINFO		dbsi;			// Info regarding last LOCATE
+   DBFILTERINFO 	dbfi;			// Filter in effect
+
+   LPDBORDERCONDINFO	lpdbOrdCondInfo;
+
+   LPDBRELINFO		lpdbRelations;		// Parent/Child relationships used
+   ULONG		uiParents;		// Number of parents for this area
+
+   HANDLE		heap;
+   ULONG		heapSize;
+
+   ULONG		rddID;			// the area number
+
+//HARBOUR defined new variables. for internal use only
+   struct _AREA *       next;
+   struct _AREA *       prev;
+   BOOL 		inUse;
+   FHANDLE		fileHandle;
+   ULONG		uiFlags;
+   UCHAR *		abName;
+   struct _AREA *       superArea;              // from which this one inherits
+} AREA, * AREAP;
 
 
 //
@@ -282,8 +336,8 @@ typedef DBFILTERINFO *	   LPDBFILTERINFO;
 
 typedef _DBRELINFO
 {
-   ITEM 		itmCobExpr;		// Block representation of the relational SEEK key
-   ITEM 		abKey;			// String representation of the relational SEEK key
+   HB_ITEM              itmCobExpr;             // Block representation of the relational SEEK key
+   HB_ITEM              abKey;                  // String representation of the relational SEEK key
    AREAP		lpaParent;		// The parent of this relation
    AREAP		lpaChild;		// The parents children
    _DBRELINFO	       *lpdbriNext;		// Next child or parent
@@ -301,16 +355,16 @@ typedef DBRELINFO *	LPDBRELINFO;
 
 typedef struct
 {
-  ITEM			itmBlock;		// The block to be evaluated
+  HB_ITEM                  itmBlock;               // The block to be evaluated
   DBSCOPEINFO		dbsci;			// Scope info that limits the evaluation
 } DBEVALINFO;
 typedef DBEVALINFO *	 LPDBEVALINFO;
 
 
 //
-// DBTRANSITEM		the transfer item structure
+// DBTRANSITEM          the transfer HB_ITEM structure
 //
-// Defines a single transfer item (usually a field) from
+// Defines a single transfer HB_ITEM (usually a field) from
 // one database to another; used by DBTRANSINFO
 //
 
@@ -325,7 +379,7 @@ typedef DBTRANSITEM *	  LPDBTRANSITEM;
 //
 // DBTRANSINFO		the transfer info structure
 //
-// Defines a global transfer of data items from on workarea
+// Defines a global transfer of data HB_ITEMs from on workarea
 // to another
 //
 
@@ -335,15 +389,15 @@ typedef struct
    AREAP	       *lpaDest;		// Pointer to dest work area
    DBSCOPEINFO		dbsci;			// Scope to limit transfer
    ULONG		uiFlags;		// Transfer attributes
-   ULONG		uiItemCount;		// Number of items below
-   LPDBTRANSITEM	lpTransItems;		// Array of items.
+   ULONG                uiItemCount;            // Number of HB_ITEMs below
+   LPDBTRANSITEM        lpTransItems;           // Array of HB_ITEMs.
 } DBTRANSINFO;
 typedef DBTRANSINFO *	  LPDBTRANSINFO;
 
 //
-// DBSORTITEM		the sort item structure
+// DBSORTITEM           the sort HB_ITEM structure
 //
-// An array of items that, together, indicate the key value to
+// An array of HB_ITEMs that, together, indicate the key value to
 // use while sorting data. The order of the array determines the
 // order of the sorting.
 //
@@ -416,7 +470,7 @@ typedef _FIELD
   ULONG 		uiLen;			// Field length
   ULONG 		uiDec;			// Decimal length
   ULONG 		uiArea; 		// Area this field resides in
-  FARP			sym;			// Symbol that represents the field
+  void *                  sym;                    // Symbol that represents the field
   _FIELD	       *lpfNext;		// The next field in the list
 } FIELD;
 typedef FIELD * 	LPFIELD;
@@ -439,14 +493,14 @@ typedef struct _RDDFUNCS
      void      *FunctionPointer[1];
    } u;
 
-   ERRCODE ( * bof	       )  ( AREAP, BOOL * );
-   ERRCODE ( * eof	       )  ( AREAP, BOOL * );
+   ERRCODE ( * bof             )  ( AREAP, BOOL * );
+   ERRCODE ( * eof             )  ( AREAP, BOOL * );
    ERRCODE ( * found	       )  ( AREAP, BOOL * );
    ERRCODE ( * goBottom        )  ( AREAP );
    ERRCODE ( * go	       )  ( AREAP, ULONG );
-   ERRCODE ( * goToId	       )  ( AREAP, ITEM );
+   ERRCODE ( * goToId          )  ( AREAP, HB_ITEM );
    ERRCODE ( * goTop	       )  ( AREAP );
-   ERRCODE ( * seek	       )  ( AREAP, BOOL, ITEM );
+   ERRCODE ( * seek            )  ( AREAP, BOOL, HB_ITEM );
    ERRCODE ( * skip	       )  ( AREAP, LONG );
    ERRCODE ( * skipFilter      )  ( AREAP, LONG );
    ERRCODE ( * skipRaw	       )  ( AREAP, LONG );
@@ -460,20 +514,20 @@ typedef struct _RDDFUNCS
    ERRCODE ( * deleted	       )  ( AREAP, BOOL * );
    ERRCODE ( * fieldCount      )  ( AREAP, ULONG * );
    ERRCODE ( * fieldDisplay    )  ( AREAP, void * );
-   ERRCODE ( * fieldInfo       )  ( AREAP, ULONG, ULONG, ITEM );
+   ERRCODE ( * fieldInfo       )  ( AREAP, ULONG, ULONG, HB_ITEM );
    ERRCODE ( * fieldName       )  ( AREAP, ULONG, PBYTE );
    ERRCODE ( * flush	       )  ( AREAP );
    ERRCODE ( * getRec	       )  ( AREAP, PBYTE * );
-   ERRCODE ( * getValue        )  ( AREAP, ULONG, ITEM );
+   ERRCODE ( * getValue        )  ( AREAP, ULONG, HB_ITEM );
    ERRCODE ( * getVarLen       )  ( AREAP, ULONG, FIELD * );
    ERRCODE ( * goCold	       )  ( AREAP );
    ERRCODE ( * goHot	       )  ( AREAP );
    ERRCODE ( * putRec	       )  ( AREAP, PBYTE );
-   ERRCODE ( * putValue        )  ( AREAP, ULONG, ITEM );
+   ERRCODE ( * putValue        )  ( AREAP, ULONG, HB_ITEM );
    ERRCODE ( * recall	       )  ( AREAP );
    ERRCODE ( * reccount        )  ( AREAP, ULONG * );
-   ERRCODE ( * recInfo	       )  ( AREAP, ITEM, ULONG, ITEM );
-   ERRCODE ( * recno	       )  ( AREAP, ITEM );
+   ERRCODE ( * recInfo         )  ( AREAP, HB_ITEM, ULONG, HB_ITEM );
+   ERRCODE ( * recno           )  ( AREAP, HB_ITEM );
    ERRCODE ( * setFieldExtent  )  ( AREAP, ULONG );
 
    /* WorkArea/Database management */
@@ -481,7 +535,7 @@ typedef struct _RDDFUNCS
    ERRCODE ( * alias	       )  ( AREAP, PBYTE );
    ERRCODE ( * close	       )  ( AREAP );
    ERRCODE ( * create	       )  ( AREAP, LPDBOPENINFO );
-   ERRCODE ( * info	       )  ( AREAP, ULONG, ITEM );
+   ERRCODE ( * info            )  ( AREAP, ULONG, HB_ITEM );
    ERRCODE ( * newarea	       )  ( AREAP );
    ERRCODE ( * open	       )  ( AREAP, LPDBOPENINFO );
    ERRCODE ( * release	       )  ( AREAP );
@@ -528,7 +582,7 @@ typedef struct _RDDFUNCS
    ERRCODE ( * clearScope      )  ( AREAP, void * );
    ERRCODE ( * countScope      )  ( AREAP, void *, LONG * );
    ERRCODE ( * filterText      )  ( AREAP, PBYTE );
-   ERRCODE ( * scopeInfo       )  ( AREAP, ULONG, ITEM );
+   ERRCODE ( * scopeInfo       )  ( AREAP, ULONG, HB_ITEM );
    ERRCODE ( * setFilter       )  ( AREAP, LPDBFILTERINFO );
    ERRCODE ( * setLocate       )  ( AREAP, LPDBFILTERINFO );
    ERRCODE ( * setScope        )  ( AREAP, LPDBSCOPEINFO, void ** );
@@ -538,13 +592,13 @@ typedef struct _RDDFUNCS
 
    ERRCODE ( * compile	       )  ( AREAP, PBYTE );
    ERRCODE ( * error	       )  ( AREAP, ERRORP );
-   ERRCODE ( * evalBlock       )  ( AREAP, ITEM );
+   ERRCODE ( * evalBlock       )  ( AREAP, HB_ITEM );
 
    /* Network operations */
 
    ERRCODE ( * rawLock	       )  ( AREAP, ULONG, LONG );
    ERRCODE ( * lock	       )  ( AREAP, LPDBLOCKINFO );
-   ERRCODE ( * unlock	       )  ( AREAP, ITEM );
+   ERRCODE ( * unlock          )  ( AREAP, HB_ITEM );
 
    /* Memofile functions */
 
@@ -558,7 +612,7 @@ typedef struct _RDDFUNCS
 
    ERRCODE ( * readDBHeader    )  ( AREAP );
    ERRCODE ( * writeDBHeader   )  ( AREAP );
-   ERRCODE ( * dbstruct        )  ( AREAP, ITEM );
+   ERRCODE ( * dbstruct        )  ( AREAP, HB_ITEM );
 
    /* Special and reserved methods */
 
@@ -880,68 +934,9 @@ typedef RDDFUNCS       * LPRDDFUNCS;
 #define SUPER_GETDELIM(w, fp)	  ((*(SUPERTABLE)->info)(w, DBI_GETDELIMITER, fp))
 #define SUPER_TABLEEXT(w, fp)	  ((*(SUPERTABLE)->info)(w, DBI_TABLEEXT, fp))
 
-
-
-//	differences (vs. CA Clipper 5.3 spec)
-//
-//	AREA:
-//
-//	uiSize		the struct carries a uiSize item which must be filled with a correct value
-//	RDDMETHODS	equals the previous struct RDDFUNCS far *
-//	uiArea		now a ULONG
-//	uiFieldExtent	now a ULONG
-//	uiFieldCount	now a ULONG
-//	uiParents	now a ULONG
-//
-//
-
-
-
-_AREA
-{
-   ULONG		uiSize; 		// size of this struct
-   ULONG		uiSizeRDDmethods;	// size of the RDD methods
-   RDDFUNCS		lprfsHost;		// Virtual method table for this workarea
-   ULONG		uiArea; 		// The number assigned to this workarea
-   FARP 		atomAlias;		// Pointer to the alias symbol for this workarea
-   ULONG		uiFieldExtent;		// Total number of fields allocated
-   ULONG		uiFieldCount;		// Total number of fields used
-   LPFIELD		lpFields;		// Pointer to an array of fields
-   FARP 		lpFieldExtents; 	// Void ptr for additional field properties
-   ITEM 		valResult;		// All purpose result holder
-   BOOL 		fTop;			// TRUE if "top"
-   BOOL 		fBottom;		// TRUE if "bottom"
-   BOOL 		fBof;			// TRUE if "bof"
-   BOOL 		fEof;			// TRUE if "eof"
-   BOOL 		fFound; 		// TRUE if "found"
-
-   DBSCOPEINFO		dbsi;			// Info regarding last LOCATE
-   DBFILTERINFO 	dbfi;			// Filter in effect
-
-   LPDBORDERCONDINFO	lpdbOrdCondInfo;
-
-   LPDBRELINFO		lpdbRelations;		// Parent/Child relationships used
-   ULONG		uiParents;		// Number of parents for this area
-
-   HANDLE		heap;
-   ULONG		heapSize;
-
-   ULONG		rddID;			// the area number
-
-//HARBOUR defined new variables. for internal use only
-   AREAP		next;
-   AREAP		prev;
-   BOOL 		inUse;
-   FHANDLE		fileHandle;
-   ULONG		uiFlags;
-   UCHAR *		abName;
-   AREAP		superArea;		// from which this one inherits
-};
-
 typedef void (*RDDENTRY)( ULONG *nCount, RDDFUNCS *p);
 
 typedef void (*WORKAREA_FUNCTION)( AREAP workarea );
-
 
 #define RDD_REGISTER	struct _rddRegister
 RDD_REGISTER
