@@ -128,10 +128,10 @@ Separator     {SpaceTab}
 
 %%
 
-"&"("'"|\"|\[) { hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_SYNTAX, yytext, NULL ); }
+"&"(\x27|\x22|\[) { hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_SYNTAX, yytext, NULL ); }
 
-'              BEGIN STRING1;
-\"             BEGIN STRING2;
+\x27             BEGIN STRING1;
+\x22             BEGIN STRING2;
 
 \[             {
                     if( (hb_comp_iState == OPERATOR) ||
@@ -165,7 +165,7 @@ Separator     {SpaceTab}
     or
     QOUT([...])<EndOfLine>
     [] is used if text contains any string delimiters "'[]
-    NOTE: Clipper allows for [[nested]] only if it is preprocessed from
+    NOTE: Clipper allows for \[\[nested\]\] only if it is preprocessed from
     TEXT/ENDTEXT block - in normal code the preprocesor uses the first
     closing ] as a string terminator.
     However we have to get some information from the preprocessor about
@@ -190,7 +190,7 @@ Separator     {SpaceTab}
     return IDENTIFIER;
 }
 
-<STRING1>[^'\n]*\n  { BEGIN 0;
+<STRING1>[^\x27\n]*\n  { BEGIN 0;
                       unput( '\n' );
                       yytext[--yyleng] = '\0';
                       hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_STRING_TERMINATOR, yytext, NULL );
@@ -199,7 +199,7 @@ Separator     {SpaceTab}
                       return NIL;
                     }
 
-<STRING1>[^'\n]*'   { BEGIN 0;
+<STRING1>[^\x27\n]*\x27   { BEGIN 0;
                       yytext[--yyleng] = '\0';
                       yylval.string = hb_compIdentifierNew( yytext, TRUE );
                       hb_comp_iState = LITERAL;
@@ -207,7 +207,7 @@ Separator     {SpaceTab}
                       return LITERAL;
                     }
 
-<STRING2>[^\"\n]*\"  { BEGIN 0;
+<STRING2>[^\x22\n]*\x22  { BEGIN 0;
                       yytext[--yyleng] = '\0';
                       yylval.string = hb_compIdentifierNew( yytext, TRUE );
                       hb_comp_iState = LITERAL;
@@ -215,8 +215,8 @@ Separator     {SpaceTab}
                       return LITERAL;
                     }
 
-<STRING2>[^\"\n]*\n  { BEGIN 0;
-                               unput( '\n' );
+<STRING2>[^\x22\n]*\n  { BEGIN 0;
+                       unput( '\n' );
                        yytext[--yyleng] = '\0';
                        hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_STRING_TERMINATOR, yytext, NULL );
                        hb_comp_iState = LOOKUP;
@@ -229,8 +229,8 @@ Separator     {SpaceTab}
     #translate TEST_STRING( <x> ) => #<x>
     ? TEST_STRING( "['']" ) is preprocessed into ["['']"] so the string
     terminator is "] pair
-    ? TEST_STRING( ['""'] ) is preprocessed into [['""']] so the string
-    terminator is ]] pair
+    ? TEST_STRING( ['""'] ) is preprocessed into \[\['""'\]\] so the string
+    terminator is \]\] pair
     There is however a single problem: any string with nested []
     created by the preprocessor is compiled correctly in Clipper but
     the same string passed directly in the code is compiled until
@@ -334,6 +334,10 @@ Separator     {SpaceTab}
                       return LITERAL;
                     }
 <STRING4>.        { BEGIN STRING3; unput( yytext[ yyleng-1 ] ); }
+
+%{
+/* ************************************************************************ */
+%}
 
 {SpaceTab}     ;
 
