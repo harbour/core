@@ -1,3 +1,6 @@
+19990727-13:08 CET Victor Szel <info@szelvesz.hu>
+   + tests/broken/vec2.prg - Added
+
 19990727-14:21 Alexander Kresin
   * source\hbpp\hbpp.c
     * ParseExpression() rewritten for supporting new classes functionality

@@ -1,0 +1,3 @@
+
+STATIC bBlock := {|| Hello() }
+
