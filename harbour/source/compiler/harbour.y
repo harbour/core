@@ -80,6 +80,8 @@ typedef struct __FUNC      /* functions definition support */
 */
 #define FUN_STATEMENTS    1 /* Function have at least one executable statement */
 #define FUN_USES_STATICS  2 /* Function uses static variables */
+#define FUN_PROCEDURE     4 /* This is a procedure that shouldn't return value */
+#define FUN_ILLEGAL_INIT  8 /* Attempt to initialize static variable with a function call */
 
 typedef struct
 {
@@ -172,7 +174,7 @@ void FixElseIfs( void * pIfElseIfs ); /* implements the ElseIfs pcode fixups */
 void FixReturns( void ); /* fixes all last defined function returns jumps offsets */
 void Function( BYTE bParams ); /* generates the pcode to execute a Clipper function pushing its result */
 PFUNCTION FunctionNew( char *, char );  /* creates and initialises the _FUNC structure */
-void FunDef( char * szFunName, char cScope ); /* starts a new Clipper language function definition */
+void FunDef( char * szFunName, char cScope, int iType ); /* starts a new Clipper language function definition */
 void GenArray( WORD wElements ); /* instructs the virtual machine to build an array and load elemnst from the stack */
 void * GenElseIf( void * pFirstElseIf, WORD wOffset ); /* generates a support structure for elseifs pcode fixups */
 void GenError( int, char*, char * );      /* generic parsing error management function */
@@ -222,6 +224,7 @@ void CodeBlockEnd( void );          /* end of codeblock creation */
 /* Static variables */
 void StaticDefStart( void );
 void StaticDefEnd( WORD );
+void StaticAssign( void ); /* checks if static variable is initialized with function call */
 
 void * OurMalloc( LONG lSize ); /* our malloc with error control */
 void * OurRealloc( void * p, LONG lSize ); /* our malloc with error control */
@@ -262,6 +265,7 @@ int iVarScope = 0;          /* holds the scope for next variables to be defined 
 #define ERR_NUMERIC_FORMAT      6
 #define ERR_STRING_TERMINATOR   7
 #define ERR_FUNC_RESERVED       8
+#define ERR_ILLEGAL_INIT        9
 
 /* Table with parse errors */
 char * _szErrors[] = { "Statement not allowed outside of procedure or function",
@@ -271,7 +275,8 @@ char * _szErrors[] = { "Statement not allowed outside of procedure or function",
                        "Outer codeblock variable is out of reach: \'%s\'",
                        "Invalid numeric format '.'",
                        "Unterminated string: \'%s\'",
-                       "Redefinition of predefined function %s: \'%s\'"
+                       "Redefinition of predefined function %s: \'%s\'",
+                       "Illegal initializer: \'%s\'"
                      };
 
 /* Table with reserved functions names
@@ -468,8 +473,8 @@ ExtList    : IDENTIFIER                               { AddExtern( $1 ); }
            | ExtList ',' IDENTIFIER                   { AddExtern( $3 ); }
            ;
 
-Function   : FunScope FUNCTION  IDENTIFIER { FunDef( $3, $1 ); } Params Crlf { SetFrame(); }
-           | FunScope PROCEDURE IDENTIFIER { FunDef( $3, $1 ); } Params Crlf { SetFrame(); }
+Function   : FunScope FUNCTION  IDENTIFIER { FunDef( $3, $1, 0 ); } Params Crlf { SetFrame(); }
+           | FunScope PROCEDURE IDENTIFIER { FunDef( $3, $1, FUN_PROCEDURE ); } Params Crlf { SetFrame(); }
            ;
 
 FunScope   :                  { $$ = FS_PUBLIC; }
@@ -523,14 +528,14 @@ FunCall    : FunStart ')'                { $$ = 0; }
            | FunStart ArgList ')'        { $$ = $2; }
            ;
 
-FunStart   : IDENTIFIER '('              { PushSymbol( $1, 1 ); PushNil(); $$ = $1; }
+FunStart   : IDENTIFIER '('              { StaticAssign(); PushSymbol( $1, 1 ); PushNil(); $$ = $1; }
            ;
 
 MethCall   : MethStart ')'               { $$ = 0; }
            | MethStart ArgList ')'       { $$ = $2; }
            ;
 
-MethStart  : IDENTIFIER '('              { Message( $1 ); $$ = $1; }
+MethStart  : IDENTIFIER '('              { StaticAssign(); Message( $1 ); $$ = $1; }
            ;
 
 ArgList    : ','                               { PushNil(); PushNil(); $$ = 2; }
@@ -1127,7 +1132,7 @@ int harbour_main( int argc, char * argv[] )
 
       if( Include( szFileName ) )
       {
-         FunDef( strupr( strdup( pFileName->name ) ), FS_PUBLIC );
+         FunDef( strupr( strdup( pFileName->name ) ), FS_PUBLIC, FUN_PROCEDURE );
          yyparse();
          FixReturns();       /* fix all previous function returns offsets */
          fclose( yyin );
@@ -1397,7 +1402,14 @@ void AddVar( char * szVarName )
     * defined is stored in pOwner member.
     */
    if( iVarScope == VS_STATIC )
+   {
       pFunc =pFunc->pOwner;
+      /* Check if an illegal action was invoked during a static variable
+       * value initialization
+       */
+      if( _pInitFunc->bFlags & FUN_ILLEGAL_INIT )
+        GenError( ERR_ILLEGAL_INIT, szVarName, pFunc->szName );
+   }
 
    /* Check if a declaration of duplicated variable name is requested */
    if( pFunc->szName )
@@ -1583,7 +1595,13 @@ PFUNCTION FunctionNew( char *szName, char cScope )
    return pFunc;
 }
 
-void FunDef( char * szFunName, char cScope )  /* stores a Clipper defined function */
+/*
+ * Stores a Clipper defined function/procedure
+ * szFunName - name of a function
+ * cScope    - scope of a function
+ * iType     - FUN_PROCEDURE if a procedure or 0
+ */
+void FunDef( char * szFunName, char cScope, int iType )
 {
    PCOMSYMBOL   pSym;
    PFUNCTION pFunc;
@@ -1620,6 +1638,7 @@ void FunDef( char * szFunName, char cScope )  /* stores a Clipper defined functi
       pSym->cScope |= cScope; /* we may have a non public function and a object message */
 
    pFunc =FunctionNew( szFunName, cScope );
+   pFunc->bFlags |= iType;
 
    if( functions.iCount == 0 )
    {
@@ -2677,6 +2696,14 @@ void PushId( char * szVarName ) /* generates the pcode to push a variable value 
 {
    WORD wVar;
 
+   if( iVarScope == VS_STATIC )
+   {
+     /* Reffering to any variable is not allowed during initialization
+      * of static variable
+      */
+      _pInitFunc->bFlags |= FUN_ILLEGAL_INIT;
+   }
+
    if( ( wVar = GetLocalVarPos( szVarName ) ) )
       GenPCode3( _PUSHLOCAL, LOBYTE( wVar ), HIBYTE( wVar ) );
 
@@ -2697,6 +2724,14 @@ void PushId( char * szVarName ) /* generates the pcode to push a variable value 
 void PushIdByRef( char * szVarName ) /* generates the pcode to push a variable by reference to the virtual machine stack */
 {
    WORD wVar;
+
+   if( iVarScope == VS_STATIC )
+   {
+     /* Reffering to any variable is not allowed during initialization
+      * of static variable
+      */
+      _pInitFunc->bFlags |= FUN_ILLEGAL_INIT;
+   }
 
    if( ( wVar = GetLocalVarPos( szVarName ) ) )
       GenPCode3( _PUSHLOCALREF, LOBYTE( wVar ), HIBYTE( wVar ) );
@@ -3110,7 +3145,7 @@ void StaticDefStart( void )
   {
       _pInitFunc =FunctionNew( "_INITSTATICS", FS_INIT );
       _pInitFunc->pOwner =functions.pLast;
-      _pInitFunc->bFlags =FUN_USES_STATICS;
+      _pInitFunc->bFlags =FUN_USES_STATICS | FUN_PROCEDURE;
       functions.pLast =_pInitFunc;
       PushInteger( 1 );   /* the number of static variables is unknown now */
       GenPCode3( _STATICS, 0, 0 );
@@ -3133,6 +3168,18 @@ void StaticDefEnd( WORD wCount )
   functions.pLast =_pInitFunc->pOwner;
   _pInitFunc->pOwner =NULL;
   _wStatics += wCount;
+  iVarScope =0;
+}
+
+/*
+ * This function checks if we are initializing a static variable.
+ * It should be called only in case when the parser have recognized any
+ * function or method invocation.
+ */
+void StaticAssign( void )
+{
+  if( iVarScope == VS_STATIC )
+    _pInitFunc->bFlags |= FUN_ILLEGAL_INIT;
 }
 
 void * OurMalloc( LONG lSize )

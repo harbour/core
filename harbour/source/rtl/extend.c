@@ -44,11 +44,12 @@ char * _parc( WORD wParam, ... )
       pItem = stack.pBase + 1 + wParam;
 
       if( IS_ARRAY( pItem ) )
+      {
          if( wArrayIndex )
             return ArrayGetString( pItem, wArrayIndex );
          else
             return "";
-
+      }
       else if( IS_STRING( pItem ) )
          return pItem->value.szText;
 
@@ -73,11 +74,12 @@ ULONG _parclen( WORD wParam, ... )
       pItem = stack.pBase + 1 + wParam;
 
       if( IS_ARRAY( pItem ) )
+      {
          if( wArrayIndex )
             return ArrayGetStringLen( pItem, wArrayIndex );
          else
             return 0;
-
+      }
       else if( IS_STRING( pItem ) )
          return pItem->wLength;
 

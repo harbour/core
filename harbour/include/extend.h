@@ -64,7 +64,6 @@ typedef struct     /* items hold at the virtual machine stack */
       void * pBaseArray; /* array base */
    } value;
    WORD wBase;     /* stack frame number of items position for a function call */
-   PSYMBOL pSymbols; /* codeblocks symbols */
    WORD wLine;     /* currently processed PRG line number */
    WORD wParams;   /* number of received parameters for a function call */
 } ITEM, * PITEM;
@@ -106,6 +105,7 @@ typedef struct
   WORD wDetached;     /* holds if pItems table variables values */
   PSYMBOL pSymbols;   /* codeblocks symbols */
   WORD wRefBase;      /* stack frame position for referenced local variables */
+  int iStatBase;      /* static base for function where CB was created */
   long lCounter;      /* numer of references to this codeblock */
 } CODEBLOCK, * PCODEBLOCK;
 

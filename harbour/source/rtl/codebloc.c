@@ -23,7 +23,8 @@ extern STACK stack;
  * +2 bytes -> table of referenced local variables
  * +2 + 2 *(number of referenced variables) -> codeblock pcode
  */
-PCODEBLOCK CodeblockNew( BYTE * pBuffer, WORD wSize, PSYMBOL pSymbols )
+PCODEBLOCK CodeblockNew( BYTE * pBuffer, WORD wSize, PSYMBOL pSymbols,
+            int iStaticsBase, WORD wStackBase )
 {
   PCODEBLOCK pCBlock;
   WORD wVars;
@@ -61,18 +62,26 @@ PCODEBLOCK CodeblockNew( BYTE * pBuffer, WORD wSize, PSYMBOL pSymbols )
   /* the codeblock initally contains references to local variables
    */
   pCBlock->wDetached =FALSE;
-  /* since the only allowed operation on a codeblock is evaluating it then
-   * there is no need to duplicate its pcode -just store the poiter to it
+  /*
+   * pcode is stored in static segment now.
+   * The only allowed operation on a codeblock is evaluating it then
+   * there is no need to duplicate its pcode -just store the pointer to it
    */
-  pCBlock->pCode = (BYTE *) _xgrab( wSize  );
-  memcpy( pCBlock->pCode, pBuffer, wSize );
+  pCBlock->pCode = pBuffer;
 
   pCBlock->pSymbols  =pSymbols;
   pCBlock->wDetached =FALSE;
   pCBlock->lCounter  =1;
+  pCBlock->iStatBase =iStaticsBase;
+  /*
+   * wStackBase is stack base of function where the codeblock was defined
+   * We need it because stack.pBase points to a stack base of EVAL function
+   * at the time of codeblock evaluation.
+   */
+  pCBlock->wRefBase  =wStackBase;
 
 #ifdef CODEBLOCKDEBUG
-  printf( "codeblock created (%li)\n", pCBlock->lCounter );
+  printf( "codeblock created (%li) %lx\n", pCBlock->lCounter, pCBlock );
 #endif
   return pCBlock;
 }
@@ -82,7 +91,7 @@ PCODEBLOCK CodeblockNew( BYTE * pBuffer, WORD wSize, PSYMBOL pSymbols )
 void  CodeblockDelete( PCODEBLOCK pCBlock )
 {
 #ifdef CODEBLOCKDEBUG
-  printf( "delete a codeblock (%li)\n", pCBlock->lCounter );
+  printf( "delete a codeblock (%li) %lx\n", pCBlock->lCounter, pCBlock );
 #endif
   if( --pCBlock->lCounter == 0 )
   {
@@ -92,14 +101,11 @@ void  CodeblockDelete( PCODEBLOCK pCBlock )
     */
     while( w < pCBlock->wLocals )
       ItemRelease( &pCBlock->pItems[ w++ ] );
-    /* free space allocated for a codeblock pcodes
-    */
-    _xfree( pCBlock->pCode );
     /* free space allocated for a CODEBLOCK structure
     */
     _xfree( pCBlock );
     #ifdef CODEBLOCKDEBUG
-      printf( "codeblock deleted (%li)\n", pCBlock->lCounter );
+      printf( "codeblock deleted (%li) %lx\n", pCBlock->lCounter, pCBlock );
     #endif
   }
 }
@@ -132,7 +138,7 @@ void CodeblockDetach( PCODEBLOCK pCBlock )
     pCBlock->wDetached =TRUE;
   }
     #ifdef CODEBLOCKDEBUG
-      printf( "codeblock detached(%li)\n", pCBlock->lCounter );
+      printf( "codeblock detached(%li) %lx\n", pCBlock->lCounter, pCBlock );
     #endif
 }
 
@@ -140,10 +146,13 @@ void CodeblockDetach( PCODEBLOCK pCBlock )
  * wStackBase is stack base of function where the codeblock was defined
  * We need it because stack.pBase points to a stack base of EVAL function
  */
-void CodeblockEvaluate( PCODEBLOCK pCBlock, WORD wStackBase )
+void CodeblockEvaluate( PCODEBLOCK pCBlock )
 {
-  pCBlock->wRefBase =wStackBase;
+  int iStatics = stack.iStatics;
+
+  stack.iStatics = pCBlock->iStatBase;
   VirtualMachine( pCBlock->pCode, pCBlock->pSymbols );
+  stack.iStatics = iStatics;
 }
 
 /* Get local variable referenced in a codeblock
@@ -175,6 +184,6 @@ void  CodeblockCopy( PITEM pDest, PITEM pSource )
   pDest->value.pCodeblock =pSource->value.pCodeblock;
   ((PCODEBLOCK) pDest->value.pCodeblock)->lCounter++;
   #ifdef CODEBLOCKDEBUG
-    printf( "copy a codeblock (%li)\n", ((PCODEBLOCK) pDest->value.pCodeblock)->lCounter);
+    printf( "copy a codeblock (%li) %lx\n", ((PCODEBLOCK) pDest->value.pCodeblock)->lCounter, pDest->value.pCodeblock);
   #endif
 }

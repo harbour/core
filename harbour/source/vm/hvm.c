@@ -112,10 +112,10 @@ void StackPush( void );       /* pushes an item on to the stack */
 void StackInit( void );       /* initializes the stack */
 void StackShow( void );       /* show the types of the items on the stack for HBDEBUGging purposes */
 
-PCODEBLOCK CodeblockNew( BYTE *, WORD, PSYMBOL );
+PCODEBLOCK CodeblockNew( BYTE *, WORD, PSYMBOL, int, WORD );
 void CodeblockDelete( PCODEBLOCK );
 PITEM CodeblockGetVar( PITEM, SHORT );
-void CodeblockEvaluate( PCODEBLOCK, WORD );
+void CodeblockEvaluate( PCODEBLOCK );
 void CodeblockCopy( PITEM, PITEM );
 void CodeblockDetach( PCODEBLOCK );
 
@@ -608,7 +608,7 @@ void Do( WORD wParams )
    WORD wItemIndex = pItem - stack.pItems;
    PITEM pSelf = stack.pPos - wParams - 1;
    HARBOURFUNC pFunc;
-   WORD iStatics = stack.iStatics;              /* Return iStatics position */
+   int iStatics = stack.iStatics;              /* Return iStatics position */
 
    if( ! IS_SYMBOL( pItem ) )
    {
@@ -683,7 +683,7 @@ HARBOUR DoBlock( void )
     */
    stack.pBase->wLine =pBlock->wLine;
 
-   CodeblockEvaluate( (PCODEBLOCK)pBlock->value.pCodeblock, pBlock->wBase );
+   CodeblockEvaluate( (PCODEBLOCK)pBlock->value.pCodeblock );
 
    /* restore stack pointers */
    stack.pBase = stack.pItems + wStackBase;
@@ -1526,7 +1526,8 @@ void PushBlock( BYTE * pCode, WORD wSize, WORD wParam, PSYMBOL pSymbols )
 {
    ItemRelease( stack.pPos );
    stack.pPos->wType   = IT_BLOCK;
-   stack.pPos->value.pCodeblock = (BYTE *)CodeblockNew( pCode, wSize, pSymbols );
+   stack.pPos->value.pCodeblock = (BYTE *)CodeblockNew( pCode, wSize, pSymbols,
+      stack.iStatics, stack.pBase - stack.pItems );
    /* store the stack base of function where the codeblock was defined */
    stack.pPos->wBase   = stack.pBase - stack.pItems;
    /* store the number of expected parameters */

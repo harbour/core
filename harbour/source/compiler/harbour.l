@@ -55,7 +55,15 @@ long lNumber = 0;
 #define LOOKUP  0
 int _iState = LOOKUP;
 
-//Comment1      "/*"((.*)|(\n))"*/"
+void yy_lex_count_lf( void )
+{
+  char * pTmp = yytext;
+  while( (pTmp = strchr(pTmp, '\n')) )
+  {
+    ++iLine;
+    ++pTmp;
+  }
+}
 
 %}
 
@@ -67,7 +75,7 @@ Identifier    (([a-zA-Z])|([_a-zA-Z][_a-zA-Z0-9]+))
 String        (\"(([^\"]*)|([\!]*))\")|(\'(([^\']*)|([\!]*))\')
 PseudoFunc    {Identifier}"("+.*")"+
 
-Comment1      "/*"([^\*]|("*"[^\/]))*"*/"
+Comment1      "/*"(.*|[\n])"*/"
 Comment2      [\/][\/].*
 Comment       ({Comment1}|{Comment2})
 LineCont      (;.*\n)
@@ -75,7 +83,7 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
 
 %x            COMMENT3 DEFINE DEFINE_PARAMS DEFINE_EXPR
 %x            IFDEF IFNDEF STRING1 STRING2
-%x            NEXT_ BREAK_
+%x            NEXT_ BREAK_ CASE_
 
 %%
 
@@ -96,8 +104,9 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
                     yylval.string[ yyleng - 2 ] = 0; return LITERAL; }
 
 "/*"           BEGIN COMMENT3;
-<COMMENT3>"*/" BEGIN 0;
+<COMMENT3>"*"["*"]*"/" BEGIN 0;
 <COMMENT3>[^"*/"\n]* ;
+<COMMENT3>"*"     ;
 <COMMENT3>[\/\"]+ ;
 <COMMENT3>\n   ++iLine; if( ! _iQuiet ) printf( "\rline: %i", iLine );
 
@@ -154,28 +163,64 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
                }
                else
                { /* there is another item in line already */
-                 yylval.string = "BrEaK";
+                 yylval.string = strdup("BrEaK");
                  return IDENTIFIER;
                }
              }
 <BREAK_>{Separator}*[^_a-zA-Z] { /* there is no identifier after "break" */
+               yy_lex_count_lf();
                BEGIN 0;
-               yylval.string = ((yytext[ yyleng-1 ] =='(')?"BREAK":"BrEaK");
+               yylval.string = strdup( ((yytext[ yyleng-1 ] =='(')?"BREAK":"BrEaK") );
                _iState =IDENTIFIER;
                unput( yytext[ yyleng-1 ] );
                return IDENTIFIER;
              }
 <BREAK_>{Separator}*. { /* an identifier follows BREAK statement */
+               yy_lex_count_lf();
                BEGIN 0;
                unput( yytext[ yyleng-1 ] );
                _iState =BREAK;
                return BREAK;
              }
 <BREAK_>.    { BEGIN 0; unput( yytext[ yyleng-1 ] ); }
-"case"         return CASE;
+"case"       { BEGIN CASE_; }
+<CASE_>{Separator}*[\:\=\|\$\%\*\,\/\[\]\)\}] { /* there is an operator after "case" */
+               yy_lex_count_lf();
+               BEGIN 0;
+               yylval.string = strdup( "CASE" );
+               _iState =IDENTIFIER;
+               unput( yytext[ yyleng-1 ] );
+               return IDENTIFIER;
+             }
+<CASE_>{Separator}*("+="|"-=") { /* operators */
+               yy_lex_count_lf();
+               BEGIN 0;
+               yylval.string = strdup( "CASE" );
+               _iState =IDENTIFIER;
+               unput( yytext[ yyleng-2 ] );
+               unput( yytext[ yyleng-1 ] );
+               return IDENTIFIER;
+             }
+<CASE_>{Separator}*(\n|.) { /* not operator */
+               yy_lex_count_lf();
+               BEGIN 0;
+               if( yytext[ yyleng-1 ] == '\n' )
+                 --iLine;
+               unput( yytext[ yyleng-1 ] );
+               if( _iState == LOOKUP )
+               { /* it is first item in the line */
+                 _iState =CASE;
+                 return CASE;
+               }
+               else
+               { /* there is another item in line already */
+                 yylval.string = strdup( "CASE" );
+                 return IDENTIFIER;
+               }
+             }
 "do"           return DO;
-"do"{SpaceTab}+"case" return DOCASE;
-("do"{SpaceTab}+"while")|"while" return WHILE;
+"do"{Separator}+"case"             { _iState =DOCASE; return DOCASE; }
+("do"{SpaceTab}+"while")|"while"  { _iState =WHILE; return WHILE; }
 "else"         return ELSE;
 "elseif"       _iState =ELSEIF; return ELSEIF;
 "end"/[^(]     return END;
@@ -208,18 +253,20 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
                else
                { /* there is another item in line already */
                  unput( yytext[ yyleng-1 ] );
-                 yylval.string = "nExT";
+                 yylval.string = strdup( "nExT" );
                  return IDENTIFIER;
                }
              }
-<NEXT_>{Separator}*[^_a-zA-Z\n\;] { /* there is no identifier after "next" */
+<NEXT_>{Separator}*[^_a-zA-Z] { /* there is no identifier after "next" */
+               yy_lex_count_lf();
                BEGIN 0;
-               yylval.string = ((yytext[ yyleng-1 ] =='(')?"NEXT":"nExT");
+               yylval.string = strdup( ((yytext[ yyleng-1 ] =='(')?"NEXT":"nExT") );
                unput( yytext[ yyleng-1 ] );
                _iState =IDENTIFIER;
                return IDENTIFIER;
              }
 <NEXT_>{Separator}*. { /* an identifier follows NEXT statement */
+               yy_lex_count_lf();
                BEGIN 0;
                unput( yytext[ yyleng-1 ] );
                _iState =NEXT;
@@ -311,7 +358,7 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
 
 {String}      yylval.string = strdup( yytext + 1 ); yylval.string[ yyleng - 2 ] = 0; return LITERAL;
 
-{LineCont}     { ++iLine; }
+{LineCont}    ++iLine;
 
 {Identifier}               {
                               PDEFINE pDef = FindDef( yytext );

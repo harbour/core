@@ -1,3 +1,30 @@
+Sat May  8 03:02:04 1999 Ryszard Glab <rglab@imid.med.pl>
+
+    * source/compiler/harbour.y, source/compiler/harbour.l
+	-static variables can be accessed in a codeblock even if this 
+	 codeblock is a return value (detached static variables)
+	-Harbour finds now illegal initializations of static variables
+	 (static variables can be initialized using literals only)
+	-there is no 'redefinition of predefined function' error when the name
+	 of compiled source code is the same as reserved function
+	-corrected support for /*******/ comments
+	-Harbour distinguish now 'CASE' variable, 'CASE()' function and
+	 CASE statement (see tests/working/keywords.prg)
+
+    * tests/working/keywords.prg
+	-added many more wild statements to test Harbour compiler
+
+    * test/working/statics.prg
+	-added code to test access of static variables from a codeblock
+
+    * source/rtl/extend.c
+	-added brackets to avoid ambiguous if/else
+
+    * source/include/extend.h
+    * source/rtl/codebloc.c
+	- added support for static variables in a codeblock
+
+
 19990507-20:15 EDT David G. Holm <dholm@jsd-llc.com>
   * source/compiler/harbour.l
   * source/compiler/harbour.y
@@ -37,9 +64,10 @@ Thu May 07 17:00:00 1999  Victor Szel <info@szelvesz.hu>
 19990507-07:25 Ryszard Glab <rglab@imid.med.pl>
 
     * source/compiler/harbour.y, source/compiler/harbour.l
-        -improoved support for BEGIN SEGEUENCE
-        -added distinction between BEGIN comannd and begin variable
-        -added distinction between BREAK command and break variable
+	-improoved support for BEGIN SEGEUENCE
+	-added distinction between BEGIN command and begin variable
+	-added distinction between BREAK command and break variable
+	
     * tests/working/keywords.prg
         -new file to test if we are 100% compatible with Clipper
 
