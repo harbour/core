@@ -1,3 +1,9 @@
+19990624-21:10 EDT David G. Holm <dholm@jsd-llc.com>
+  * source/compiler/harbour.l
+    - Corrected logic in if block that prints spurious error message when
+      using END with a DO or WHILE to actually check the while counter
+    - Changed from printf() error message to GenError( ERR_ENDIF )
+
 19990625-01:05 CET Victor Szel <info@szelvesz.hu>
   * include/extend.h
     include/dates.h

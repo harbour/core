@@ -414,7 +414,7 @@ Separator     {SpaceTab}
                }
 "end"          { /* END can be used in one context only */
                  if( _wIfCounter == 0 && _wCaseCounter == 0 && _wCaseCounter == 0 )
-                   printf( "END without an IF / CASE /or WHILE" );
+                   GenError( ERR_ENDIF, NULL, NULL );
                  return END;
                }
 %{
