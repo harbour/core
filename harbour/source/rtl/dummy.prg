@@ -35,7 +35,6 @@
 
 /* TODO: Dummy functions, should be removed when implemented. */
 
-FUNCTION ordBagExt()       ; RETURN ".ntx"
 FUNCTION ordBagName()      ; RETURN ""
 FUNCTION ordCond()         ; RETURN NIL /* 5.3 */
 FUNCTION ordDescend()      ; RETURN .F. /* 5.3 */
@@ -48,7 +47,6 @@ FUNCTION ordKeyDel()       ; RETURN .F. /* 5.3 */
 FUNCTION ordKeyGoto()      ; RETURN .F. /* 5.3 */
 FUNCTION ordKeyNo()        ; RETURN 0   /* 5.3 */
 FUNCTION ordKeyVal()       ; RETURN NIL /* 5.3 */
-FUNCTION ordListAdd()      ; RETURN NIL
 FUNCTION ordName()         ; RETURN ""
 FUNCTION ordNumber()       ; RETURN 0
 FUNCTION ordScope()        ; RETURN NIL /* 5.3 */

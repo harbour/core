@@ -123,9 +123,11 @@ HARBOUR HB_LASTREC( void );
 HARBOUR HB_LOCK( void );
 HARBOUR HB_LUPDATE( void );
 HARBOUR HB_NETERR( void );
+HARBOUR HB_ORDBAGEXT( void );
 HARBOUR HB_ORDCONDSET( void );
 HARBOUR HB_ORDCREATE( void );
 HARBOUR HB_ORDDESTROY( void );
+HARBOUR HB_ORDLISTADD( void );
 HARBOUR HB_ORDLISTCLEAR( void );
 HARBOUR HB_ORDLISTREBUILD( void );
 HARBOUR HB_RDDLIST( void );
@@ -847,11 +849,13 @@ static RDDFUNCS defTable = { defBof,
                              defEval,
                              defUnSupported,
                              defUnSupported,
+                             ( DBENTRYP_OI ) defUnSupported,
                              defUnSupported,
                              defUnSupported,
                              defOrderCondition,
                              ( DBENTRYP_VOC ) defUnSupported,
                              ( DBENTRYP_OI ) defUnSupported,
+                             ( DBENTRYP_OII ) defUnSupported,
                              defClearFilter,
                              defClearLocate,
                              defFilterText,
@@ -2905,6 +2909,57 @@ HARBOUR HB_NETERR( void )
    hb_retl( bNetError );
 }
 
+HARBOUR HB_ORDBAGEXT( void )
+{
+   LPRDDNODE pRddNode;
+   AREAP pTempArea;
+   USHORT uiSize, uiRddID;
+   DBORDERINFO pInfo;
+
+   if( !pCurrArea )
+   {
+      hb_rddCheck();
+      uiRddID = 0;
+      pRddNode = hb_rddFindNode( szDefDriver, &uiRddID );
+      if( !pRddNode )
+      {
+         hb_retc( "" );
+         return;
+      }
+      uiSize = sizeof( AREA );    /* Default Size Area */
+      pTempArea = ( AREAP ) hb_xgrab( uiSize );
+      memset( pTempArea, 0, uiSize );
+      pTempArea->lprfsHost = &pRddNode->pTable;
+
+      /* Need more space? */
+      SELF_STRUCTSIZE( ( AREAP ) pTempArea, &uiSize );
+      if( uiSize > sizeof( AREA ) )   /* Size of Area changed */
+         pTempArea = ( AREAP ) hb_xrealloc( pTempArea, uiSize );
+
+      pRddNode->uiAreaSize = uiSize; /* Update the size of WorkArea */
+      pTempArea->rddID = uiRddID;
+
+      if( SELF_NEW( ( AREAP ) pTempArea ) == FAILURE )
+         hb_retc( "" );
+      else
+      {
+         pInfo.itmResult = hb_itemPutC( NULL, "" );
+         SELF_ORDINFO( ( AREAP ) pCurrArea->pArea, DBOI_BAGEXT, &pInfo );
+         hb_retc( pInfo.itmResult->item.asString.value );
+         hb_itemRelease( pInfo.itmResult );
+         SELF_RELEASE( ( AREAP ) pTempArea );
+      }
+      hb_xfree( pTempArea );
+   }
+   else
+   {
+      pInfo.itmResult = hb_itemPutC( NULL, "" );
+      SELF_ORDINFO( ( AREAP ) pCurrArea->pArea, DBOI_BAGEXT, &pInfo );
+      hb_retc( pInfo.itmResult->item.asString.value );
+      hb_itemRelease( pInfo.itmResult );
+   }
+}
+
 HARBOUR HB_ORDCONDSET( void )
 {
    LPDBORDERCONDINFO pOrderCondInfo;
@@ -3012,6 +3067,28 @@ HARBOUR HB_ORDDESTROY( void )
       pOrderInfo.atomBagName = hb_param( 2, IT_STRING );
       SELF_ORDDESTROY( ( AREAP ) pCurrArea->pArea, &pOrderInfo );
    }
+}
+
+HARBOUR HB_ORDLISTADD( void )
+{
+   DBORDERINFO pOrderInfo;
+   char * szKeyExpr;
+
+   if( pCurrArea )
+   {
+      pOrderInfo.atomBagName = hb_param( 1, IT_STRING );
+      pOrderInfo.itmOrder = hb_param( 2, IT_STRING );
+      if( !pOrderInfo.itmOrder )
+         pOrderInfo.itmOrder = hb_param( 2, IT_NUMERIC );
+      if( !pOrderInfo.atomBagName && !pOrderInfo.itmOrder )
+      {
+         hb_errRT_DBCMD( EG_ARG, 1006, NULL, "ORDLISTADD" );
+         return;
+      }
+      SELF_ORDLSTADD( ( AREAP ) pCurrArea->pArea, &pOrderInfo );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ORDLISTADD" );
 }
 
 HARBOUR HB_ORDLISTCLEAR( void )

@@ -653,11 +653,13 @@ static RDDFUNCS dbfSuper = { 0 };
 #define dbfStructSize                           NULL
 #define dbfSysName                              NULL
 #define dbfEval                                 NULL
+#define dbfOrderListAdd                         NULL
 #define dbfOrderListClear                       NULL
 #define dbfOrderListRebuild                     NULL
 #define dbfOrderCondition                       NULL
 #define dbfOrderCreate                          NULL
 #define dbfOrderDestroy                         NULL
+#define dbfOrderInfo                            NULL
 #define dbfClearFilter                          NULL
 #define dbfClearLocate                          NULL
 #define dbfFilterText                           NULL
@@ -2047,11 +2049,13 @@ static RDDFUNCS dbfTable = { dbfBof,
                              dbfEval,
                              dbfPack,
                              dbfZap,
+                             dbfOrderListAdd,
                              dbfOrderListClear,
                              dbfOrderListRebuild,
                              dbfOrderCondition,
                              dbfOrderCreate,
                              dbfOrderDestroy,
+                             dbfOrderInfo,
                              dbfClearFilter,
                              dbfClearLocate,
                              dbfFilterText,

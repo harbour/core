@@ -1,3 +1,12 @@
+19991204-17:22 GMT+1 Bruno Cantero <bruno@issnet.net>
+  * include/rddapi.h
+    source/rdd/dbcmd.c
+    source/rdd/dbf1.c
+    source/rdd/dbfcdx/dbfcdx1.c
+    + Added ordBagExt(), ordListAdd() functions.
+  * source/rtl/dummy.prg
+    - Removed ordBagExt(), ordListAdd() functions.
+
 19991204-13:15 GMT+1 Bruno Cantero <bruno@issnet.net>
   * include/rddapi.h
     source/rdd/dbcmd.c

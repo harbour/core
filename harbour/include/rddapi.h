@@ -588,6 +588,7 @@ typedef USHORT ( * DBENTRYP_VLO  )( AREAP area, LPDBSCOPEINFO param );
 typedef USHORT ( * DBENTRYP_VOC  )( AREAP area, LPDBORDERCREATEINFO param );
 typedef USHORT ( * DBENTRYP_VOI  )( AREAP area, LPDBORDERCONDINFO param );
 typedef USHORT ( * DBENTRYP_OI   )( AREAP area, LPDBORDERINFO param );
+typedef USHORT ( * DBENTRYP_OII  )( AREAP area, USHORT index, LPDBORDERINFO param );
 typedef USHORT ( * DBENTRYP_SP   )( AREAP area, USHORT * param );
 typedef USHORT ( * DBENTRYP_P    )( AREAP area, BYTE * param );
 typedef USHORT ( * DBENTRYP_PP   )( AREAP area, BYTE ** param );
@@ -690,25 +691,22 @@ typedef struct _RDDFUNCS
    DBENTRYP_VP   relEval;
    DBENTRYP_SVP  relText;
    DBENTRYP_VP   setRel;
+#endif
 
 
    /* Order Management */
 
-   DBENTRYP_VP   orderListAdd;
-#endif
+   DBENTRYP_OI   orderListAdd;
    DBENTRYP_V    orderListClear;
 #if 0
    DBENTRYP_VP   orderListDelete;
    DBENTRYP_VP   orderListFocus;
 #endif
    DBENTRYP_V    orderListRebuild;
-
    DBENTRYP_VOI  orderCondition;
    DBENTRYP_VOC  orderCreate;
    DBENTRYP_OI   orderDestroy;
-#if 0
-   DBENTRYP_SVP  orderInfo;
-#endif
+   DBENTRYP_OII  orderInfo;
 
 
    /* Filters and Scope Settings */

@@ -462,9 +462,39 @@ static ERRCODE cdxOpenMemFile( AREAP pArea, LPDBOPENINFO pOpenInfo )
    return SUCCESS;
 }
 
+static ERRCODE cdxOrderCreate( AREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
+{
+   HB_TRACE(HB_TR_DEBUG, ("cdxOrderCreate(%p, %p)", pArea, pOrderInfo));
+
+   if( SELF_GOCOLD( pArea ) == FAILURE )
+      return FAILURE;
+
+   return SELF_GOTOP( pArea );
+}
+
 static ERRCODE cdxOrderDestroy( AREAP pArea, LPDBORDERINFO pOrderInfo )
 {
    HB_TRACE(HB_TR_DEBUG, ("cdxOrderDestroy(%p, %p)", pArea, pOrderInfo));
+
+   return SUCCESS;
+}
+
+static ERRCODE cdxOrderInfo( AREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo )
+{
+   HB_TRACE(HB_TR_DEBUG, ("cdxOrderInfo(%p, %hu, %p)", pArea, uiIndex, pInfo));
+
+   switch( uiIndex )
+   {
+      case DBOI_BAGEXT:
+         hb_itemPutC( pInfo->itmResult, ".cdx" );
+         break;
+   }
+   return SUCCESS;
+}
+
+static ERRCODE cdxOrderListAdd( AREAP pArea, LPDBORDERINFO pOrderInfo )
+{
+   HB_TRACE(HB_TR_DEBUG, ("cdxOrderListAdd(%p, %p)", pArea, pOrderInfo));
 
    return SUCCESS;
 }
@@ -481,16 +511,6 @@ static ERRCODE cdxOrderListRebuild( AREAP pArea )
    HB_TRACE(HB_TR_DEBUG, ("cdxOrderListRebuild(%p)", pArea));
 
    return SUCCESS;
-}
-
-static ERRCODE cdxOrderCreate( AREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
-{
-   HB_TRACE(HB_TR_DEBUG, ("cdxOrderCreate(%p, %p)", pArea, pOrderInfo));
-
-   if( SELF_GOCOLD( pArea ) == FAILURE )
-      return FAILURE;
-
-   return SELF_GOTOP( pArea );
 }
 
 static ERRCODE cdxPutValueFile( AREAP pArea, USHORT uiIndex, void * pFile )
@@ -663,11 +683,13 @@ static RDDFUNCS cdxTable = { cdxBof,
                              cdxEval,
                              cdxPack,
                              cdxZap,
+                             cdxOrderListAdd,
                              cdxOrderListClear,
                              cdxOrderListRebuild,
                              cdxOrderCondition,
                              cdxOrderCreate,
                              cdxOrderDestroy,
+                             cdxOrderInfo,
                              cdxClearFilter,
                              cdxClearLocate,
                              cdxFilterText,
