@@ -7,6 +7,7 @@ ROOT = ../../
 C_SOURCES=\
 	dbcmd.c \
         dbf1.c \
+        dbnubs.c \
         sdf1.c \
         delim1.c \
 

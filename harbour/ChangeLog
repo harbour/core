@@ -1,3 +1,24 @@
+19991017-14:36 GMT+1 Victor Szel <info@szelvesz.hu>
+   * source/rdd/dbnubs.c
+     source/rdd/Makefile
+     include/hbextern.ch
+     source/runner/stdalone/external.prg
+     * Added internal versions of database commands. All undocumented.
+       WARNING ! Please add dbnubs.c to non-GNU make systems.
+   * source/rtl/dummy.prg
+     include/hbextern.ch
+     source/runner/stdalone/external.prg
+     + __dbArrange()
+     + __dbFList()
+     + __dbOpenSDF()
+     + __dbSetFound()
+     + __dbSetLocate()
+     + __dbTrans()
+     + __dbTransRec()
+       Some more undocumented, internal Clipper functions added.
+       With these, to my knowledge *all* Clipper level, internal and
+       undocumented functions are defined in Harbour.
+
 19991017-13:34 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/rtl/dummy.prg
      + Some more undocumented and internal functions added.

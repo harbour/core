@@ -75,6 +75,15 @@ FUNCTION __dbTotal()       ; RETURN NIL
 FUNCTION __dbUpdate()      ; RETURN NIL
 FUNCTION __dbZap()         ; RETURN NIL
 
+/* NOTE: Internal functions */
+FUNCTION __dbArrange()     ; RETURN NIL
+FUNCTION __dbFList()       ; RETURN {}
+FUNCTION __dbOpenSDF()     ; RETURN NIL
+FUNCTION __dbSetFound()    ; RETURN NIL
+FUNCTION __dbSetLocate()   ; RETURN NIL
+FUNCTION __dbTrans()       ; RETURN NIL
+FUNCTION __dbTransRec()    ; RETURN NIL
+
 FUNCTION dbEdit()          ; RETURN NIL
 FUNCTION IsPrinter()       ; RETURN .T.
 FUNCTION NetName()         ; RETURN ""
