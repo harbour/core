@@ -1,6 +1,6 @@
 2001-11-17 15:40 GMT+0700 Andi Jahja <harbour@cbn.net.id>
-   - source/lang/msgzhbib.c
-     ! remove msgzhbic.c as it was replaced by msgzhb5.c
+   * source/lang/msgzhbig.c
+     - remove msgzhbig.c as it was replaced by msgzhb5.c
 
 2001-11-17 08:20 GMT+0700 Andi Jahja <harbour@cbn.net.id>
    Non-ANSI comments fixed.
