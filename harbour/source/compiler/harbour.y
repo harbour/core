@@ -507,11 +507,6 @@ Main       : { Line(); } Source       {
 
 Source     : Crlf
            | Extern
-<<<<<<< harbour.y
-           | Include
-           | Line
-=======
->>>>>>> 1.83
            | VarDefs
            | FieldsDef
            | MemvarDef
@@ -519,29 +514,12 @@ Source     : Crlf
            | Statement
            | Source Crlf
            | Source Extern
-<<<<<<< harbour.y
-           | Source Include
-           | Source Line
-=======
->>>>>>> 1.83
            | Source Function
            | Source { LineBody(); } Statement
            | Source VarDefs
            | Source FieldsDef
            | Source MemvarDef
            ;
-
-<<<<<<< harbour.y
-Include    : NE1 INCLUDE LITERAL { if( ! Include( $3, _pIncludePath ) )
-                                      GenError( ERR_CANT_OPEN_INCLUDE, $3, NULL );
-                                   _iState =LOOKUP;
-                                 } Crlf
-           ;
-
-Line       : NE1 LINE INTLONG LITERAL Crlf
-           ;
-=======
->>>>>>> 1.83
 
 Extern     : EXTERN ExtList { _iState =LOOKUP; } Crlf
            ;
