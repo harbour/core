@@ -8,6 +8,30 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-10-03 0:40 UTC-0800 Brian Hays <bhays@abacuslaw.com>
+   * contrib/rdd_ads/ace.h
+      + added (void) to AdsApplicationExit( void );
+        This removes a compiler warning about missing the prototype.
+        Let me know if this creates a problem with any other compilers.
+
+   * contrib/rdd_ads/adsfunc.c
+      + added AdsGetLastError() contrib. by Randy Portnoff (Thanks!)
+
+   * contrib/rdd_ads/ads1.c
+      * Cleaned up adsPutValue and adsGetValue formatting,
+      * Fixed fieldname length references
+      * Removed errant setting of uiLen in adsGetValue since these
+            are set in adsOpen now.
+      * adsOrderInfo(DBOI_KEYVAL): fixed ntx handling of numerics
+               Added special decoding for keys of Negative values.
+      * adsCreate: fixed fielddefs buffer sizing
+      * adsOpen: fixed fieldname length references
+                 set uiLen of extended types
+
+      * adsInfo: reformatted, prepared for fleshing out the rest
+               of the options.
+               Added support for dbinfo(DBI_ISFLOCK)
+
 2002-10-01 08:25 UTC+0300 Chen Kedem <niki@actcom.co.il>
   * doc/es/browse.txt
   * doc/es/cmdline.txt
@@ -120,7 +144,7 @@
   * include/hbrddntx.h
     * Improved algorithm of record append in shared mode - that should result
       in better speed.
-    * Maximum number of keys in the index page is now Clipper compatible - 
+    * Maximum number of keys in the index page is now Clipper compatible -
       as I just discovered for myself, in Clipper it is already ( hm... I forgot
       appropriate English word - is divided by 2 ).
 

@@ -65,8 +65,6 @@
 #include "hbset.h"
 #include <ctype.h>
 
-#undef  HARBOUR_MAX_RDD_FIELDNAME_LENGTH
-#define HARBOUR_MAX_RDD_FIELDNAME_LENGTH        150
 
 static ERRCODE adsRecCount(  ADSAREAP pArea, ULONG * pRecCount );
 static ERRCODE adsScopeInfo( ADSAREAP pArea, USHORT nScope, PHB_ITEM pItem );
@@ -758,6 +756,7 @@ static ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
                pFieldInfo.uiType = HB_IT_LONG;
                pFieldInfo.uiTypeExtended = ADS_CURDOUBLE;
                pFieldInfo.uiLen = 8;
+               pFieldInfo.uiDec = uiDec;
             }
             else
                return FAILURE;
@@ -995,7 +994,7 @@ ERRCODE adsFieldInfo( AREAP pArea, USHORT uiIndex, USHORT uiType, PHB_ITEM pItem
 
 static ERRCODE adsFieldName( ADSAREAP pArea, USHORT uiIndex, void * szName )
 {
-   UNSIGNED16 pusBufLen = HARBOUR_MAX_RDD_FIELDNAME_LENGTH;
+   UNSIGNED16 pusBufLen = pArea->uiMaxFieldNameLength + 1;
 
    HB_TRACE(HB_TR_DEBUG, ("adsFieldName(%p, %hu, %p)", pArea, uiIndex, szName));
 
@@ -1033,8 +1032,13 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 {
    LPFIELD    pField;
    BYTE *     pBuffer = pArea->pRecord;
-   UNSIGNED8  szName[ HARBOUR_MAX_RDD_FIELDNAME_LENGTH + 1 ];
-   UNSIGNED16 pusBufLen = HARBOUR_MAX_RDD_FIELDNAME_LENGTH;
+   UNSIGNED8  szName[ ADS_MAX_FIELD_NAME ];
+      /* For fast stack allocations, we use the largest possible
+       sized buffer. Even though 128 bytes is overkill for 10 byte
+       ADSCDX access, the speed over hb_xgrab(pArea->uiMaxFieldNameLength+1)
+       seems worth it.  */
+
+   UNSIGNED16 pusBufLen = ADS_MAX_FIELD_NAME + 1;
    UNSIGNED32 pulLength;
    DOUBLE     dVal;
 
@@ -1061,38 +1065,36 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          break;
 
       case HB_IT_LONG:
-            pulLength = pArea->maxFieldLen;
-            if (AdsGetField( pArea->hTable, szName, pBuffer, &pulLength, ADS_NONE ) == AE_NO_CURRENT_RECORD  )
-            {
-               memset( pBuffer, ' ', pField->uiLen );
-               pArea->fEof = TRUE;
-            }
-         AdsGetDouble(pArea->hTable, szName,&dVal);
+         pulLength = pArea->maxFieldLen;
+         if (AdsGetField( pArea->hTable, szName, pBuffer, &pulLength, ADS_NONE ) == AE_NO_CURRENT_RECORD  )
+         {
+            memset( pBuffer, ' ', pField->uiLen );
+            pArea->fEof = TRUE;
+         }
+         AdsGetDouble(pArea->hTable, szName, &dVal);
          if( pField->uiDec ) {
-               hb_itemPutNDLen( pItem, dVal,
-                             ( int ) pField->uiLen - ( ( int ) pField->uiDec + 1 ),
-                             ( int ) pField->uiDec );
-               }
-         else            {
-         switch ( pField->uiTypeExtended) {
-         case  ADS_CURDOUBLE :
-         case  ADS_DOUBLE : {
-               int iNewLen =( int ) pField->uiLen +(( int ) hb_set.HB_SET_DECIMALS*2) ;
-               hb_itemPutNDLen( pItem, dVal,
-                             ( int ) iNewLen ,
-                             ( int ) hb_set.HB_SET_DECIMALS );
-               }
-               break;
-         case  ADS_AUTOINC:
-               hb_itemPutNLen( pItem, dVal, ( int ) 10 , (int) 0 );
-               break;
+            hb_itemPutNDLen( pItem, dVal,
+                           ( int ) pField->uiLen - ( ( int ) pField->uiDec + 1 ),
+                           ( int ) pField->uiDec );
+         }
+         else
+         {
+            switch ( pField->uiTypeExtended) {
+            case  ADS_CURDOUBLE :
+            case  ADS_DOUBLE :
+                  hb_itemPutNDLen( pItem, dVal,
+                              ( int ) pField->uiLen,
+                              ( int ) pField->uiDec  /*hb_set.HB_SET_DECIMALS*/ );
 
-        default:
+                  break;
+            /*case  ADS_AUTOINC:
+                  hb_itemPutNLen( pItem, dVal, ( int ) 10 , (int) 0 );
+                  break; */
 
-               hb_itemPutNLen( pItem, dVal, ( int ) pField->uiLen , (int) 0 );
+            default:
+               hb_itemPutNLen( pItem, dVal, ( int ) pField->uiLen, (int) 0 );
             }
-           }
-         break;
+         }
          break;
 
       case HB_IT_DATE:
@@ -1181,8 +1183,10 @@ static ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
    BYTE * szText;
    BOOL bError;
    long lDay, lMonth, lYear;
-   UNSIGNED8 szName[ HARBOUR_MAX_RDD_FIELDNAME_LENGTH + 1 ];
-   UNSIGNED16 pusBufLen = HARBOUR_MAX_RDD_FIELDNAME_LENGTH;
+   UNSIGNED8 szName[ ADS_MAX_FIELD_NAME + 1 ];
+      /* See adsGetValue() for why we don't use pArea->uiMaxFieldNameLength here */
+
+   UNSIGNED16 pusBufLen = ADS_MAX_FIELD_NAME + 1;
    UNSIGNED8 pucFormat[ 11 ];
    UNSIGNED16 pusLen = 10;
    UNSIGNED32 ulRetVal;
@@ -1218,26 +1222,7 @@ static ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
       case HB_IT_LONG:
          if( HB_IS_NUMERIC( pItem ) )
          {
-         /*
-            if( pField->uiDec )
-               bError = !hb_ndtoa( hb_itemGetND( pItem ), ( char * ) szText,
-                                   pField->uiLen, pField->uiDec );
-            else
-               bError = !hb_nltoa( hb_itemGetNL( pItem ), ( char * ) szText,
-                                   pField->uiLen );
-            if( bError )
-            {
-               commonError( pArea, EG_DATAWIDTH, 1021, NULL );
-            }
-            else
-               AdsSetField  ( pArea->hTable, szName,
-                 szText, pField->uiLen );
-            bError = FALSE;
-         */
-            if( pField->uiDec )
-               ulRetVal = AdsSetDouble( pArea->hTable, szName, hb_itemGetND( pItem ) );
-            else
-               ulRetVal = AdsSetDouble( pArea->hTable, szName, hb_itemGetND( pItem ) );
+            ulRetVal = AdsSetDouble( pArea->hTable, szName, hb_itemGetND( pItem ) );
             if( ulRetVal != AE_DATA_TOO_LONG )
                bError = FALSE;
          }
@@ -1352,7 +1337,7 @@ static ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo)
    ADSHANDLE hTable;
    UNSIGNED32 uRetVal;
    UNSIGNED8 *ucfieldDefs;
-   UNSIGNED8 ucBuffer[MAX_STR_LEN+1], ucField[HARBOUR_MAX_RDD_FIELDNAME_LENGTH+1];
+   UNSIGNED8 ucBuffer[MAX_STR_LEN+1], ucField[ADS_MAX_FIELD_NAME+1];
    USHORT uiCount, uiLen;
    LPFIELD pField;
    char cType[8];
@@ -1361,7 +1346,15 @@ static ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo)
 
    pArea->szDataFileName = (char *) hb_xgrab( strlen( (char *) pCreateInfo->abName ) + 1 );
    strcpy( pArea->szDataFileName, ( char * ) pCreateInfo->abName );
-   uiLen = (pArea->uiFieldCount * HARBOUR_MAX_RDD_FIELDNAME_LENGTH) + 1;
+
+   /* uiLen = length of buffer for all field definition info times number of fields.
+      For extended types cType may be up to 6 chars, and
+      there are up to 4 punctuation symbols ( ,; ),
+      field length (8) and number of decimals (2).
+      So, per field it should be  ( 6 + 4 + 8 + 2 = 20 ):
+         uiMaxFieldNameLength + 20        */
+   uiLen = (pArea->uiFieldCount * (pArea->uiMaxFieldNameLength + 20)) + 1;
+
    ucfieldDefs = (UNSIGNED8 *) hb_xgrab( uiLen );
    ucfieldDefs[0]='\0';
    pField = pArea->lpFields;
@@ -1422,11 +1415,11 @@ static ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo)
         case HB_IT_MEMO:
             if( pField->uiTypeExtended != ADS_VARCHAR )
             {
-               if(strlen((( PHB_DYNS ) pField->sym )->pSymbol->szName) > HARBOUR_MAX_RDD_FIELDNAME_LENGTH )
+               if(strlen((( PHB_DYNS ) pField->sym )->pSymbol->szName) > (unsigned int) pArea->uiMaxFieldNameLength )
                {
                    ucField[0]='\0';
                    strncat((char*)ucField, (( PHB_DYNS ) pField->sym )->pSymbol->szName,
-                                       HARBOUR_MAX_RDD_FIELDNAME_LENGTH);
+                                       pArea->uiMaxFieldNameLength);
                    sprintf((char*)ucBuffer,"%s,%s;", ucField, cType );
                }
                else
@@ -1435,11 +1428,11 @@ static ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo)
                break;
             }
         default :
-            if(strlen((( PHB_DYNS ) pField->sym )->pSymbol->szName) > HARBOUR_MAX_RDD_FIELDNAME_LENGTH )
+            if(strlen((( PHB_DYNS ) pField->sym )->pSymbol->szName) > (unsigned int) pArea->uiMaxFieldNameLength )
             {
                 ucField[0]='\0';
                 strncat((char*)ucField, (( PHB_DYNS ) pField->sym )->pSymbol->szName,
-                                    HARBOUR_MAX_RDD_FIELDNAME_LENGTH);
+                                    pArea->uiMaxFieldNameLength);
                 sprintf((char*)ucBuffer,"%s,%s,%d,%d;", ucField, cType, pField->uiLen, pField->uiDec );
             }
             else
@@ -1472,35 +1465,23 @@ static ERRCODE adsInfo( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 
    switch( uiIndex )
    {
-      case DBI_DBFILTER:
-/*  XXX must have locally unless server can't handle it...   adsFilterText( pArea, pItem ); */
-         break;
-
       case DBI_ISDBF:
       case DBI_CANPUTREC:
          hb_itemPutL( pItem, TRUE );
          break;
 
-      case DBI_SHARED:
-         hb_itemPutL( pItem, pArea->fShared );
+      case DBI_GETHEADERSIZE:
+         hb_itemPutNL( pItem, pArea->uiHeaderLen );
          break;
 
-      case DBI_FULLPATH :
-         {
-            UNSIGNED8  aucBuffer[MAX_STR_LEN + 1];
-            UNSIGNED16 pusLen   = MAX_STR_LEN;
-            AdsGetTableFilename  (pArea->hTable,
-                        ADS_FULLPATHNAME, aucBuffer, &pusLen);
-            hb_itemPutCL( pItem, (char*)aucBuffer, pusLen );
-            break;
-         }
-      case DBI_TABLEEXT:
-         hb_itemPutC( pItem, ((adsFileType==ADS_ADT) ? ".adt" : ".dbf") );
+      case DBI_LASTUPDATE:
+         hb_itemPutDL( pItem, hb_dateEncode( pArea->bYear,
+                                             pArea->bMonth,
+                                             pArea->bDay ) );
          break;
 
-      case DBI_MEMOEXT:
-         hb_itemPutC( pItem, ((adsFileType==ADS_ADT) ? ".adm" :
-                                (adsFileType==ADS_CDX) ? ".fpt" : ".dbt") );
+      case DBI_GETRECSIZE:
+         hb_itemPutNL( pItem, pArea->uiRecordLen );
          break;
 
       case DBI_GETLOCKARRAY:
@@ -1526,18 +1507,55 @@ static ERRCODE adsInfo( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          break;
       }
 
-      case DBI_LASTUPDATE:
-         hb_itemPutDL( pItem, hb_dateEncode( pArea->bYear,
-                                             pArea->bMonth,
-                                             pArea->bDay ) );
+      case DBI_TABLEEXT:
+         hb_itemPutC( pItem, ((adsFileType==ADS_ADT) ? ".adt" : ".dbf") );
          break;
 
-      case DBI_GETRECSIZE:
-         hb_itemPutNL( pItem, pArea->uiRecordLen );
+      case DBI_FULLPATH :
+         {
+            UNSIGNED8  aucBuffer[MAX_STR_LEN + 1];
+            UNSIGNED16 pusLen   = MAX_STR_LEN;
+            AdsGetTableFilename  (pArea->hTable,
+                        ADS_FULLPATHNAME, aucBuffer, &pusLen);
+            hb_itemPutCL( pItem, (char*)aucBuffer, pusLen );
+            break;
+         }
+
+      case DBI_ISFLOCK:
+         hb_itemPutL( pItem, pArea->fFLocked );
          break;
 
-      case DBI_GETHEADERSIZE:
-         hb_itemPutNL( pItem, pArea->uiHeaderLen );
+
+      case DBI_SHARED:
+         hb_itemPutL( pItem, pArea->fShared );
+         break;
+
+      case DBI_MEMOEXT:
+         hb_itemPutC( pItem, ((adsFileType==ADS_ADT) ? ".adm" :
+                                (adsFileType==ADS_CDX) ? ".fpt" : ".dbt") );
+         break;
+
+/* TODO ... */
+      //case DBI_DBFILTER:
+      /*  XXX must have locally unless server can't handle it...   adsFilterText( pArea, pItem ); */
+      //   break;
+
+      case DBI_CHILDCOUNT     :   /* Number of opened relations */
+      case DBI_FILEHANDLE     :   /* Handle of opened file */
+      case DBI_BOF            :   /* BOF flag - alternate to bof() */
+      case DBI_EOF            :   /* EOF flag - alternate to eof() */
+      case DBI_DBFILTER       :   /* Filter expression */
+      case DBI_FOUND          :   /* FOUND flag - alternate to found */
+      case DBI_FCOUNT         :   /* Number of fields */
+      case DBI_LOCKCOUNT      :   /* Locked records */
+      case DBI_VALIDBUFFER    :   /* Is the current buffer valid */
+      case DBI_ALIAS          :   /* Alias name of workarea */
+      case DBI_GETSCOPE       :   /* Locate codeblock */
+      case DBI_LOCKOFFSET     :   /* New locking offset */
+      case DBI_MEMOHANDLE     :   /* Dos handle for memo file */
+      case DBI_MEMOBLOCKSIZE  :   /* Blocksize in memo files */
+      case DBI_DB_VERSION     :   /* HOST driver Version */
+      case DBI_RDD_VERSION    :   /* RDD version (current RDD) */
          break;
    }
    return SUCCESS;
@@ -1552,7 +1570,8 @@ static ERRCODE adsNewArea( ADSAREAP pArea )
 
    /* Size for deleted records flag */
    pArea->uiRecordLen = 1;
-   pArea->uiMaxFieldNameLength = 150;   /* this is temporarily, must be changed */
+
+   pArea->uiMaxFieldNameLength = (adsFileType == ADS_ADT) ? ADS_MAX_FIELD_NAME : ADS_MAX_DBF_FIELD_NAME;
    return SUCCESS;
 }
 
@@ -1561,7 +1580,8 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
    ADSHANDLE hTable;
    UNSIGNED32  ulRetVal, pulLength, ulRecCount;
    USHORT uiFields, uiCount;
-   UNSIGNED8 szName[ HARBOUR_MAX_RDD_FIELDNAME_LENGTH + 1 ];
+   UNSIGNED8 szName[ ADS_MAX_FIELD_NAME + 1 ];
+      /* See adsGettValue() for why we don't use pArea->uiMaxFieldNameLength here */
    UNSIGNED16 pusBufLen, pusType;
    DBFIELDINFO dbFieldInfo;
 
@@ -1608,7 +1628,7 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
 
    for( uiCount = 1; uiCount <= uiFields; uiCount++ )
    {
-      pusBufLen = HARBOUR_MAX_RDD_FIELDNAME_LENGTH;
+      pusBufLen = pArea->uiMaxFieldNameLength + 1;
       AdsGetFieldName( pArea->hTable, uiCount, szName, &pusBufLen );
       dbFieldInfo.atomName = szName;
       * ( dbFieldInfo.atomName + pusBufLen ) = '\0';
@@ -1629,12 +1649,12 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
 
          case ADS_NUMERIC:
             dbFieldInfo.uiTypeExtended = 0;
-         case ADS_DOUBLE:
+         case ADS_DOUBLE:               /* uiLen of extended types is set in following switch */
+         case ADS_CURDOUBLE:
          case ADS_INTEGER:
          case ADS_SHORTINT:
          case ADS_TIME:
          case ADS_TIMESTAMP:
-         case ADS_CURDOUBLE:
          case ADS_AUTOINC:
             dbFieldInfo.uiType = HB_IT_LONG;
             AdsGetFieldDecimals( pArea->hTable, szName, ( UNSIGNED16 * ) &pulLength );
@@ -1660,6 +1680,29 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
             dbFieldInfo.uiType = HB_IT_MEMO;
             break;
       }
+
+      if ( dbFieldInfo.uiTypeExtended )
+      {
+         switch( pusType )                 /* set any special display lengths */
+         {
+            case ADS_DOUBLE:
+            case ADS_CURDOUBLE:
+               dbFieldInfo.uiLen = ( USHORT ) 20;
+               break;
+            case ADS_SHORTINT:
+               dbFieldInfo.uiLen = ( USHORT )  6;
+               break;
+            case ADS_AUTOINC:
+            case ADS_INTEGER:
+            case ADS_TIME:
+               dbFieldInfo.uiLen = ( USHORT ) 11;
+               break;
+            case ADS_TIMESTAMP:
+               dbFieldInfo.uiLen = ( USHORT ) 20;
+               break;
+         }
+      }
+
       SELF_ADDFIELD( ( AREAP ) pArea, &dbFieldInfo );
    }
 
@@ -2098,27 +2141,52 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
          if ( !pArea->fEof && phIndex )
          {
             AdsExtractKey( phIndex, aucBuffer, &pusLen);
+            /* ----------------------------------
+             From ads docs: It is important to note that the key generated
+             by this function is built on the client, and the key may not
+             exist in the index.
+             -----------------------------------*/
             AdsGetKeyType( phIndex, &pus16);
             switch( pus16 )
             {
                case ADS_STRING:
                   hb_itemPutCL( pOrderInfo->itmResult, (char*)aucBuffer, pusLen);
                   break;
+
                case ADS_NUMERIC:
+                  if ( adsFileType == ADS_NTX )  /* TODO: This should be a table-specific switch */
                   {
+                     if ( aucBuffer[0] == '-' || aucBuffer[0] == ',')      /* negative number encoding */
+                     {
+                        pus16 = 0;
+                        while ( pus16 < pusLen && aucBuffer[pus16] == ',') /* leading zeros were set as commas for sorting */
+                           aucBuffer[pus16++] = '0';
+                        if ( aucBuffer[pus16] == '-' ) pus16++;            /* skip past the minus */
+                        while ( pus16 < pusLen )
+                           aucBuffer[pus16] = (SIGNED8) 0x5C - aucBuffer[pus16++];
+
+                     }
+                     hb_itemPutND( pOrderInfo->itmResult, hb_strVal((char*)aucBuffer, pusLen));
+
+                  }else
+                  {         /* ADS_CDX, ADS_ADT */
                      double nValue;
                      FoxToDbl(aucBuffer, &nValue);
                      hb_itemPutND( pOrderInfo->itmResult, nValue );
-                     break;
                   }
+                  break;
+
                case ADS_DATE:
                   hb_itemPutDS( pOrderInfo->itmResult, (char*)aucBuffer );
                   break;
+
                case ADS_LOGICAL:
                   hb_itemPutL( pOrderInfo->itmResult, (int) *aucBuffer );
                   break;
+
                case ADS_RAW:
                   /* TODO: convert correctly from raw data in the buffer for other types (what's below is wrong or untested at best) */
+
                default:
                   hb_itemPutC( pOrderInfo->itmResult, "" );
             }

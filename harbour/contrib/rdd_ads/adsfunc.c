@@ -1233,3 +1233,19 @@ HB_FUNC( ADSGETCONNECTIONHANDLE )
    hb_retni( adsConnectHandle );
 }
 
+HB_FUNC( ADSGETLASTERROR )
+{
+   /*  nLastErr := AdsGetLastError( [ @cLastErr ] )  */
+
+   UNSIGNED32 ulLastErr;
+   UNSIGNED16 usLength = ADS_MAX_ERROR_LEN + 1;
+   UNSIGNED8  aucError[ ADS_MAX_ERROR_LEN + 1 ];
+
+   AdsGetLastError( &ulLastErr, aucError, &usLength );
+
+   if ( hb_pcount() > 0 )
+      hb_storclen( ( char far * ) aucError, usLength, 1 );
+
+   hb_retnl( ulLastErr );
+}
+

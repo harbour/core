@@ -935,7 +935,7 @@ UNSIGNED32 ENTRYPOINT AdsAddCustomKey( ADSHANDLE hIndex );
 
 UNSIGNED32 ENTRYPOINT AdsAppendRecord( ADSHANDLE hTable );
 
-UNSIGNED32 ENTRYPOINT AdsApplicationExit();
+UNSIGNED32 ENTRYPOINT AdsApplicationExit( void );
 
 UNSIGNED32 ENTRYPOINT AdsAtBOF( ADSHANDLE    hTable,
                                 UNSIGNED16   *pbBof );
