@@ -139,6 +139,7 @@ static function EnableCommand( oWndCommand )
    local lExit := .f.
    local cCommand, cResult
 
+   Set( _SET_SCOREBOARD, .f. )
    SetKey( K_TAB, { || lExit := .t., SetKey( K_TAB, nil ),;
                     __Keyboard( Chr( K_ESC ) + Chr( K_TAB ) ) } )
 
@@ -614,7 +615,7 @@ return nil
 METHOD ViewSets() CLASS TDebugger
 
    local oWndSets := TDbWindow():New( 1, 8, MaxRow() - 2, MaxCol() - 8,;
-                                      "System Settings[1..20]", ::cClrDialog )
+                                      "System Settings[1..47]", ::cClrDialog )
    local aSets := { "Exact", "Fixed", "Decimals", "DateFormat", "Epoch", "Path",;
                     "Default", "Exclusive", "SoftSeek", "Unique", "Deleted",;
                     "Cancel", "Debug", "TypeAhead", "Color", "Cursor", "Console",;
@@ -644,14 +645,17 @@ METHOD ViewSets() CLASS TDebugger
    oCol:ColorBlock = { || { If( n == oBrwSets:Cargo, 3, 1 ), 3 } }
 
    oWndSets:bPainted    = { || oBrwSets:ForceStable() }
-   oWndSets:bKeyPressed = { | nKey | SetsKeyPressed( nKey, oBrwSets, Len( aSets ) ) }
+   oWndSets:bKeyPressed = { | nKey | SetsKeyPressed( nKey, oBrwSets, Len( aSets ),;
+                            oWndSets ) }
 
    SetCursor( 0 )
    oWndSets:ShowModal()
 
 return nil
 
-static function SetsKeyPressed( nKey, oBrwSets, nSets )
+static function SetsKeyPressed( nKey, oBrwSets, nSets, oWnd )
+
+   local nSet := oBrwSets:Cargo
 
    do case
       case nKey == K_UP
@@ -667,19 +671,31 @@ static function SetsKeyPressed( nKey, oBrwSets, nSets )
            SetsDown( oBrwSets )
    endcase
 
+   if nSet != oBrwSets:Cargo
+      oWnd:SetCaption( "System Settings[" + AllTrim( Str( oBrwSets:Cargo ) ) + ;
+                       "..47]" )
+   endif
+
 return nil
 
 static function SetsUp( oBrw )
 
    local nRow := oBrw:RowPos
+   local nSetPos
 
+   if oBrw:RowPos = 1
+      nSetPos = oBrw:Cargo
+      oBrw:Cargo = 0
+      oBrw:RefreshCurrent()
+      oBrw:ForceStable()
+      oBrw:Cargo = nSetPos
+   endif
    oBrw:Up()
    oBrw:RefreshCurrent()
 
    if nRow != oBrw:Cargo
       oBrw:aReDraw[ nRow ] = .f.
    endif
-
    oBrw:ForceStable()
 
 return nil
@@ -687,14 +703,21 @@ return nil
 static function SetsDown( oBrw )
 
    local nRow := oBrw:RowPos
+   local nSetPos
 
+   if oBrw:RowPos = oBrw:RowCount
+      nSetPos = oBrw:Cargo
+      oBrw:Cargo = 0
+      oBrw:RefreshCurrent()
+      oBrw:ForceStable()
+      oBrw:Cargo = nSetPos
+   endif
    oBrw:Down()
    oBrw:RefreshCurrent()
 
    if nRow != oBrw:Cargo
       oBrw:aReDraw[ nRow ] = .f.
    endif
-
    oBrw:ForceStable()
 
 return nil
@@ -753,11 +776,14 @@ return nil
 
 METHOD SetCaption( cCaption ) CLASS TDbWindow
 
+   local nOldLen := If( ::cCaption != nil, Len( ::cCaption ), 0 )
+
    ::cCaption = cCaption
 
    if ! Empty( cCaption )
-      DispOutAt( ::nTop, ( ( ::nRight - ::nLeft ) / 2 ) - ;
-         ( Len( cCaption ) + 2 ) / 2, " " + cCaption + " ", ::cColor )
+      DispOutAt( ::nTop, ::nLeft + ( ( ::nRight - ::nLeft ) / 2 ) - ;
+         ( ( Len( cCaption ) + 2 ) / 2 ),;
+         " " + cCaption + " ", ::cColor )
    endif
 
 return nil
@@ -775,9 +801,10 @@ METHOD SetFocus( lOnOff ) CLASS TDbWindow
    @ ::nTop, ::nLeft, ::nBottom, ::nRight BOX If( lOnOff, B_DOUBLE, B_SINGLE ) ;
       COLOR ::cColor
 
+   @ ::nTop, ::nLeft + 1 SAY "[" + Chr( 254 ) + "]" COLOR ::cColor
+
    if ! Empty( ::cCaption )
-      DispOutAt( ::nTop, ::nLeft + ( ::nRight - ::nLeft ) / 2 - Len( ::cCaption ) / 2 ,;
-         " " + ::cCaption + " ", ::cColor )
+      ::SetCaption( ::cCaption )
    endif
 
    if ::bPainted != nil
