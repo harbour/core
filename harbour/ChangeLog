@@ -1,3 +1,9 @@
+20000417-15:27 GMT+3 Chen Kedem <niki@actcom.co.il>
+   * source/lang/msghe862.c
+   * source/lang/msghewin.c
+     * update Hebrew language support to the new API
+     ! PLEASE update source/lang/Makefile !
+
 20000417-11:05 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *include/hbsetup.h
