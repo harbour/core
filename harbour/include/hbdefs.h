@@ -8,6 +8,20 @@
 #include <limits.h>
 
 #ifdef __IBMCPP__
+  /* With the exception of WORD, the IBM Visual Age C++ compiler has
+     its own definitions of the Harbour types defined in the #else
+     section of this #ifdef block, most of which conflict with the
+     Harbour #undefs, due to typedef being the prevalent method of
+     defining the types in IBMCPP, whereas Harbour assumes that the
+     definitions that it is replacing have been defined using
+     #define. Therefore, it is necessary to skip the Harbour
+     definition section when using the IBMCPP compiiler, include
+     the IBMCPP type definitions, and then add the definition for WORD
+     
+     NOTE: This only applies to the common types that most C compilers
+           define. Any new types, particulary those that start with
+           HB_, must be placed AFTER the #endif __IBMCPP__ line!
+  */
   #define INCL_TYPES
   #include <os2.h>
   typedef unsigned short int WORD;
@@ -43,8 +57,6 @@ typedef int BOOL;
 #undef PVOID
 typedef void * PVOID;
 
-typedef USHORT HB_HANDLE;
-
 #define LOBYTE(w)           ((BYTE)(w))
 #define HIBYTE(w)           ((BYTE)(((WORD)(w) >> 8) & 0xFF))
 #define LOWORD(l)           ((WORD)(l))
@@ -72,6 +84,8 @@ typedef HARBOUR ( * HARBOURFUNC )( void );
 #ifndef _POSIX_PATH_MAX
    #define _POSIX_PATH_MAX    255
 #endif
+
+typedef USHORT HB_HANDLE;
 
 #define HB_SYMBOL_UNUSED(symbol) (void)symbol
 

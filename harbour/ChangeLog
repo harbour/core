@@ -1,3 +1,8 @@
+19990712-23:40 EDT David G. Holm <dholm@jsd-llc.com>
+  * include/hbdefs.h
+    ! The HB_HANDLE type was being defined in the #else section of a #ifdef
+      __IBMCPP__ section instead of being defined for all compilers
+
 19990712-19:30 EDT David G. Holm <dholm@jsd-llc.com>
   * tests/working/inifiles.prg
     ! new() no longer returns nil and now checks to see if the file was
