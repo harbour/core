@@ -73,21 +73,26 @@ return
 
 procedure __dbgEntry( uParam1, uParam2, uParam3 )  // debugger entry point
 
-   local nStaticsBase, nStaticIndex, cStaticName, nAt
+   local cModuleName
+   local nStaticsBase, nStaticIndex, cStaticName
+   local cLocalName, nLocalIndex
+   local nAt
 
    do case
       case ValType( uParam1 ) == "C"   // called from hvm.c hb_vmModuleName()
+           cModuleName = uParam1
            if ! s_lExit
               if s_oDebugger == nil
                  s_oDebugger := TDebugger():New()
-                 s_oDebugger:Activate( uParam1 )
+                 s_oDebugger:Activate( cModuleName )
               else
-                 s_oDebugger:ShowCode( uParam1 )
+                 s_oDebugger:ShowCode( cModuleName )
+                 s_oDebugger:LoadVars()
               endif
            endif
 
-      case ValType( uParam1 ) == "N"   // called from hvm.c hb_vmDebuggerShowLines()
-           public __DbgStatics
+      case ValType( uParam1 ) == "N"   // called from hvm.c both hb_vmDebuggerShowLines()
+           public __DbgStatics         // hb_vmStaticName() and hb_vmLocalName()
            if Type( "__DbgStatics" ) == "L"
               __DbgStatics := {}
            endif
@@ -100,15 +105,29 @@ procedure __dbgEntry( uParam1, uParam2, uParam3 )  // debugger entry point
               else
                  AAdd( ATail( __DbgStatics )[ 2 ], cStaticName )
               endif
-              return nil
+              return nil  // We can not use s_oDebugger yet, so we return
            endif
 
            if s_oDebugger != nil
               if PCount() == 3 // called from hvm.c hb_vmLocalName() and hb_vmStaticName()
-                 if uParam3 == 1 // static variable
-                    AAdd( s_oDebugger:aVars, { uParam2, uParam1, "Static", ProcName( 1 ) } )
+                 if uParam3 == 1 // in-function static variable
+                    cStaticName  = uParam2
+                    nStaticIndex = uParam1
+                    if ( nAt := AScan( s_oDebugger:aVars,; // Is there another var with this name ?
+                         { | aVar | aVar[ 1 ] == cStaticName } ) ) != 0
+                       s_oDebugger:aVars[ nAt ] = { cStaticName, nStaticIndex, "Static" }
+                    else
+                       AAdd( s_oDebugger:aVars, { cStaticName, nStaticIndex, "Static" } )
+                    endif
                  else            // local variable
-                    AAdd( s_oDebugger:aVars, { uParam2, uParam1, "Local", ProcName( 1 ) } )
+                    cLocalName  = uParam2
+                    nLocalIndex = uParam1
+                    if ( nAt := AScan( s_oDebugger:aVars,; // Is there another var with this name ?
+                         { | aVar | aVar[ 1 ] == cLocalName } ) ) != 0
+                       s_oDebugger:aVars[ nAt ] = { cLocalName, nLocalIndex, "Local", ProcName( 1 ) }
+                    else
+                       AAdd( s_oDebugger:aVars, { cLocalName, nLocalIndex, "Local", ProcName( 1 ) } )
+                    endif
                  endif
                  if s_oDebugger:oBrwVars != nil
                     s_oDebugger:oBrwVars:RefreshAll()
@@ -138,6 +157,7 @@ procedure __dbgEntry( uParam1, uParam2, uParam3 )  // debugger entry point
          endif
          if s_oDebugger != nil
             s_oDebugger:EndProc()
+            s_oDebugger:LoadVars()
          endif
    endcase
 
@@ -177,6 +197,7 @@ CLASS TDebugger
    METHOD LoadVars()
    METHOD NextWindow()
    METHOD Open()
+   METHOD OSShell()
    METHOD PrevWindow()
    METHOD RestoreAppStatus()
    METHOD SaveAppStatus()
@@ -197,6 +218,7 @@ CLASS TDebugger
    METHOD ToggleCaseSensitive() INLINE ::lCaseSensitive := !::lCaseSensitive
 
 ENDCLASS
+
 
 METHOD New() CLASS TDebugger
 
@@ -371,6 +393,7 @@ METHOD EditVar( nVar ) CLASS TDebugger
 
    local cVarName   := ::aVars[ nVar ][ 1 ]
    local uVarValue  := ::aVars[ nVar ][ 2 ]
+   local cVarType   := ::aVars[ nVar ][ 3 ]
    local nProcLevel := 1
    local aArray
 
@@ -381,40 +404,57 @@ METHOD EditVar( nVar ) CLASS TDebugger
       uVarValue = __vmVarLGet( nProcLevel, ::aVars[ nVar ][ 2 ] )
    endif
 
+   if ::aVars[ nVar ][ 3 ] == "Static"
+      uVarValue = __vmVarSGet( ::aVars[ nVar ][ 2 ] )
+   endif
+
    uVarValue := ::InputBox( cVarName, ValToStr( uVarValue ) )
 
    do case
       case uVarValue == "{ ... }"
-            if ::aVars[ nVar ][ 3 ] == "Local"
-               aArray = __vmVarLGet( nProcLevel, ::aVars[ nVar ][ 2 ] )
-               if Len( aArray ) > 0
-                  __DbgArrays( aArray, cVarName )
-               else
-                  Alert( "Array is empty" )
-               endif
+            cVarType = ::aVars[ nVar ][ 3 ]
+
+            do case
+               case cVarType == "Local"
+                  aArray = __vmVarLGet( nProcLevel, ::aVars[ nVar ][ 2 ] )
+
+               case cVarType == "Static"
+                  aArray = __vmVarSGet( ::aVars[ nVar ][ 2 ] )
+
+               otherwise
+                  aArray = ::aVars[ nVar ][ 2 ]
+            endcase
+
+            if Len( aArray ) > 0
+               __DbgArrays( aArray, cVarName )
             else
-               aArray = ::aVars[ nVar ][ 2 ]
-               if Len( aArray ) > 0
-                  __DbgArrays( aArray, cVarName )
-               else
-                  Alert("Array is empty")
-               endif
+               Alert( "Array is empty" )
             endif
 
       case Upper( SubStr( uVarValue, 1, 5 ) ) == "CLASS"
-            if ::aVars[ nVar ][ 3 ] == "Local"
-               __DbgObject( __vmVarLGet( nProcLevel, ::aVars[ nVar ][ 2 ] ), cVarName )
-            else
-               __DbgObject( ::aVars[ nVar ][ 2 ], cVarName )
-            endif
+            do case
+               case cVarType == "Local"
+                  __DbgObject( __vmVarLGet( nProcLevel, ::aVars[ nVar ][ 2 ] ), cVarName )
+
+               case cVarType == "Static"
+                  __DbgObject( __vmVarSGet( ::aVars[ nVar ][ 2 ] ), cVarName )
+
+               otherwise
+                  __DbgObject( ::aVars[ nVar ][ 2 ], cVarName )
+            endcase
 
       otherwise
-         if ::aVars[ nVar ][ 3 ] == "Local"
-            __vmVarLSet( nProcLevel, ::aVars[ nVar ][ 2 ], &uVarValue )
-         else
-            ::aVars[ nVar ][ 2 ] := &uVarValue
-            &( ::aVars[ nVar ][ 1 ] ) := ::aVars[ nVar ][ 2 ]
-         endif
+         do case
+            case cVarType == "Local"
+               __vmVarLSet( nProcLevel, ::aVars[ nVar ][ 2 ], &uVarValue )
+
+            case cVarType == "Static"
+               __vmVarSSet( ::aVars[ nVar ][ 2 ], &uVarValue )
+
+            otherwise
+               ::aVars[ nVar ][ 2 ] := &uVarValue
+               &( ::aVars[ nVar ][ 1 ] ) := ::aVars[ nVar ][ 2 ]
+         endcase
    endcase
 
    ::oBrwVars:RefreshCurrent()
@@ -691,24 +731,38 @@ return nil
 
 METHOD LoadVars() CLASS TDebugger // updates monitored variables
 
-   local nCount, n, xValue, cName
+   local nCount, n, m, xValue, cName
+   local cStaticName, nStaticIndex, nStaticsBase
 
    ::aVars := {}
 
    nCount := __mvDbgInfo( HB_MV_PUBLIC )
    for n := nCount to 1 step -1
       xValue := __mvDbgInfo( HB_MV_PUBLIC, n, @cName )
-      AAdd( ::aVars, { cName, xValue, "Public" } )
+      if cName != "__DBGSTATICS"  // reserved public used by the debugger
+         AAdd( ::aVars, { cName, xValue, "Public" } )
+      endif
    next
+
    nCount := __mvDbgInfo( HB_MV_PRIVATE )
    for n := nCount to 1 step -1
       xValue := __mvDbgInfo( HB_MV_PRIVATE, n, @cName )
       AAdd( ::aVars, { cName, xValue, "Private" } )
    next
 
+   if Type( "__DbgStatics" ) != "L"
+      for n = 1 to Len( __DbgStatics )
+         for m = 1 to Len( __DbgStatics[ n ][ 2 ] )
+            cStaticName  = __DbgStatics[ n ][ 2 ][ m ]
+            nStaticIndex = __DbgStatics[ n ][ 1 ] + m
+            AAdd( ::aVars, { cStaticName, nStaticIndex, "Static" } )
+         next
+      next
+   endif
+
 return nil
 
-METHOD ShowVars(bSort,nType) CLASS TDebugger
+METHOD ShowVars( bSort, nType ) CLASS TDebugger
 
    local n
    local nWidth
@@ -717,23 +771,24 @@ METHOD ShowVars(bSort,nType) CLASS TDebugger
 
       n := 1
 
-      ::oWndCode:nTop += 5
-      ::oBrwText:Resize(::oBrwText:nTop + 5)
+      ::oWndCode:nTop += 7
+      ::oBrwText:Resize( ::oBrwText:nTop + 7 )
       ::oBrwText:RefreshAll()
       ::oWndCode:SetFocus( .t. )
-      ::oWndVars := TDbWindow():New( 1, 0, 5,;
+      ::oWndVars := TDbWindow():New( 1, 0, 7,;
          MaxCol() - iif( ::oWndStack != nil, ::oWndStack:nWidth(), 0 ),;
          "Monitor" )
       ::oWndVars:Show( .f. )
       AAdd( ::aWindows, ::oWndVars )
-      ::oWndVars:bKeyPressed := { | nKey | iif( nKey == K_DOWN, ( ::oBrwVars:Down(),;
-      ::oBrwVars:ForceStable() ), nil ), iif( nKey == K_UP, ( ::oBrwVars:Up(),;
-      ::oBrwVars:ForceStable() ), nil ), iif( nKey == K_ENTER, ::EditVar( n ), nil ) }
+      ::oWndVars:bKeyPressed := { | nKey | iif( nKey == K_DOWN .and. ;
+      n < Len( ::aVars ), ( ::oBrwVars:Down(), ::oBrwVars:ForceStable() ), nil ),;
+      iif( nKey == K_UP .and. n > 1, ( ::oBrwVars:Up(), ::oBrwVars:ForceStable() ),;
+      nil ), iif( nKey == K_ENTER, ::EditVar( n ), nil ) }
 
       ::oWndVars:bLButtonDown = { | nMRow, nMCol | ::WndVarsLButtonDown( nMRow, nMCol ) }
       ::oWndVars:bLDblClick = { | nMRow, nMCol | ::EditVar( n ) }
 
-      ::oBrwVars := TBrowseNew( 2, 1, 4, MaxCol() - iif( ::oWndStack != nil,;
+      ::oBrwVars := TBrowseNew( 2, 1, 6, MaxCol() - iif( ::oWndStack != nil,;
                                ::oWndStack:nWidth(), 0 ) - 1 )
       ::oBrwVars:ColorSpec := ::aColors[ 3 ] + "," + ::aColors[ 4 ] + "," + ::aColors[ 5 ]
       ::LoadVars()
@@ -744,7 +799,7 @@ METHOD ShowVars(bSort,nType) CLASS TDebugger
                              Max( 1, n + nSkip ) ), n - nPos }
 
       nWidth := ::oWndVars:nWidth() - 1
-      ::oBrwVars:AddColumn( TBColumnNew( "",  { || AllTrim( Str( n ) ) + ") " + ;
+      ::oBrwVars:AddColumn( TBColumnNew( "",  { || AllTrim( Str( n - 1 ) ) + ") " + ;
          PadR( GetVarInfo( ::aVars[ n ] ), ::oWndVars:nWidth() - 5 ) } ) )
       ::oBrwVars:ForceStable()
    endif
@@ -760,7 +815,7 @@ static function GetVarInfo( aVar )
            while ProcName( nProcLevel ) != aVar[ 4 ]
               nProcLevel++
            end
-           return aVar[ 1 ] + " <" + aVar[ 3 ] + ", " + ;
+           return aVar[ 1 ] + " <Local, " + ;
                   ValType( __vmVarLGet( nProcLevel, aVar[ 2 ] ) ) + ;
                   ">: " + ValToStr( __vmVarLGet( nProcLevel, aVar[ 2 ] ) )
 
@@ -769,7 +824,7 @@ static function GetVarInfo( aVar )
                   ">: " + ValToStr( aVar[ 2 ] )
 
       case aVar[ 3 ] == "Static"
-           return aVar[ 1 ] + " <" + aVar[ 3 ] + ", " + ;
+           return aVar[ 1 ] + " <Static, " + ;
                   ValType( __vmVarSGet( aVar[ 2 ] ) ) + ;
                   ">: " + ValToStr( __vmVarSGet( aVar[ 2 ] ) )
    endcase
@@ -802,9 +857,6 @@ METHOD ShowCode( cModuleName ) CLASS TDebugger
       ::oBrwText := TBrwText():New( ::oWndCode:nTop + 1, ::oWndCode:nLeft + 1,;
                    ::oWndCode:nBottom - 1, ::oWndCode:nRight - 1, ::cPrgName, "BG+/B, N/BG", "W+/R, W+/BG" )
 
-      //::oBrwText:aColumns[ 1 ]:ColorBlock := { || iif( AScan( ::aBreakPoints,;
-      //   CompareLine( Self ) ) != 0, { 3, 4 }, { 1, 2 } ) }
-
       ::oWndCode:SetCaption( ::cPrgName )
    endif
 
@@ -813,6 +865,21 @@ return nil
 METHOD Open() CLASS TDebugger
 
    local cFileName := ::InputBox( "Please enter the filename", Space( 30 ) )
+
+return nil
+
+METHOD OSShell() CLASS TDebugger
+
+   local cImage := SaveScreen()
+   local cColors := SetColor()
+
+   SET COLOR TO "W/N"
+   CLS
+   SetCursor( SC_NORMAL )
+   RUN "Command.com"
+   SetCursor( SC_NONE )
+   RestScreen( ,,,, cImage )
+   SetColor( cColors )
 
 return nil
 
