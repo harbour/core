@@ -1884,6 +1884,7 @@ static void hb_ntxTagKeyAdd( LPTAGINFO pTag, LPKEYINFO pKey )
       pPage->uiKeys = 1;
       KEYITEM( pPage, 0 )->rec_no = pKey->Xtra;
       memcpy( KEYITEM( pPage, 0 )->key, pKey->key,pTag->KeyLength );
+      KEYITEM( pPage, 1 )->page = 0;
       pPage->Changed = TRUE;
    }
    else
