@@ -1,4 +1,10 @@
-19990520-18:30 CET Eddie Runia
+19990523-08:00 CET Les Griffith (upload by Eddie Runia)
+  * source/rtl/files.c
+    Yes, revision 1.2 !
+  * tests/working/passref.prg, tests/working/iotest.prg
+    test files added. (Not functioning correctly yet)
+
+19990522-18:30 CET Eddie Runia
   * tests/working/runner.c
     command-line arguments passed to both init function and running program
   * tests/working/spawn.prg

@@ -32,6 +32,7 @@
 #endif
 
 #if defined(__BORLANDC__)
+  #include <sys\stat.h>
   #include <io.h>
 #endif
 
@@ -162,7 +163,7 @@ int _fsOpen( char * name, int flags )
 #if defined(HAVE_POSIX_IO)
         return open(name,convert_open_flags(flags));
 #else
-	return 0;
+        return open(name, flags);
 #endif
 }
 
@@ -171,15 +172,18 @@ int _fsCreate( char * name, int flags )
 #if defined(HAVE_POSIX_IO)
         return creat(name,convert_create_flags(flags));
 #else
-	return 0;
+   /* TO DO create a file with attributes in flags
+      for now create it normal */
+       return creat(name,S_IWRITE);
 #endif
 }
 
-void _fsClose( int handle )
+int _fsClose( int handle )
 {
 #if defined(HAVE_POSIX_IO)
-        close(handle);
-        return;
+    return close(handle);
+#else
+    return close(handle);
 #endif
 }
 
@@ -188,7 +192,7 @@ long _fsRead( int handle, char * buff, long count )
 #if defined(HAVE_POSIX_IO)
         return read(handle,buff,count);
 #else
-	return 0;
+        return read(handle,buff,count);
 #endif
 }
 
@@ -197,7 +201,7 @@ long _fsWrite( int handle, char * buff, long count )
 #if defined(HAVE_POSIX_IO)
         return write(handle,buff,count);
 #else
-	return 0;
+        return write(handle,buff,count);
 #endif
 }
 
@@ -206,7 +210,7 @@ long _fsSeek( int handle, long offset, int flags )
 #if defined(HAVE_POSIX_IO)
         return lseek(handle,offset,convert_seek_flags(flags));
 #else
-	return 0;
+        return lseek(handle,offset,flags);
 #endif
 }
 
@@ -215,18 +219,21 @@ int _fsError()
         return last_error;
 }
 
-void _fsDelete( char * name )
+int _fsDelete( char * name )
 {
 #if defined(HAVE_POSIX_IO)
         unlink(name);
+#else
+   return unlink(name);
 #endif
 }
 
-void _fsRename( char * older, char * newer )
+int _fsRename( char * older, char * newer )
 {
 #if defined(HAVE_POSIX_IO)
-        rename(older,newer);
-        return;
+        return rename(older,newer);
+#else
+        return rename(older,newer);
 #endif
 }
 
@@ -236,9 +243,11 @@ int _fsLock( int handle, long start, long length, long mode )
 
 #if defined(HAVE_POSIX_IO)
 /* TODO: I'm thinking about this :) */
+   return;
+#else
+   /* TODO not in io,h is in stdio.h as fflush(handle)*/
+   return;
 #endif
-
-        return result;
 }
 
 void _fsCommit( int handle )
@@ -323,6 +332,7 @@ long _fsIsDrv( int driver )
 /* Unknow that it make :( if anyone can say me !! */
 int    _fsExtOpen(PBYTE   filename, PBYTE defExt, ULONG flags,
                    PBYTE   paths, ERRORP error );
+
 
 #endif
 
@@ -459,7 +469,7 @@ HARBOUR FCLOSE()
 
         if( arg1_it )
         {
-            result=close(_parni(1));
+            result= _fsClose(_parni(1));
             /* last_error = errno; */
         }
 
@@ -475,7 +485,7 @@ HARBOUR FERASE()
 
         if( arg1_it )
         {
-                result=unlink(_parc(1));
+                result= _fsDelete(_parc(1));
                 last_error = errno;
         }
 
@@ -492,7 +502,7 @@ HARBOUR FRENAME()
 
         if( arg1_it && arg2_it )
         {
-            result = rename(_parc(1),_parc(1));
+            result = _fsRename(_parc(1),_parc(1));
             last_error = errno;
         }
 
