@@ -1,4 +1,8 @@
 2001-08-30 09:31 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+   * contrib/hgf/os2pm/Makefile
+     * Corrected because now subdir is one level deeper than it was before
+
+2001-08-30 09:31 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
    * contrib/os2pm/*.*
      - removed all files
    + contrib/hgf/os2pm
