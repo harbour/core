@@ -344,13 +344,13 @@ HB_FUNC(SQLSRVINFO)
 }
 
 #ifdef __GNUC__
-int filelength( int handle )
+long filelength( int handle )
 {
     int nEnd = hb_fsSeek( handle, 0 , 2 );
     int nStart = hb_fsSeek( handle , 0 , 0 );
     return nEnd - nStart;
 }
-#endif    
+#endif
 
 char *filetoBuff(char *f,char *s)
 {
@@ -369,11 +369,11 @@ HB_FUNC(DATATOSQL)
    int iSize;
    char *buffer;
    from=hb_parc(1);
-   iSize= hb_parclen(1) ; 
+   iSize= hb_parclen(1) ;
 
    buffer=(char*)hb_xgrab((iSize*2)+1);
-   iSize = mysql_escape_string(buffer,from,iSize); 
-   hb_retclen((char*)buffer,iSize) ;               
+   iSize = mysql_escape_string(buffer,from,iSize);
+   hb_retclen((char*)buffer,iSize) ;
    hb_xfree(buffer);
 }
 
@@ -393,8 +393,8 @@ HB_FUNC(FILETOSQLBINARY)
    hb_fsClose(fh);
    from=(char*)filetoBuff(FromBuffer,szFile);
    buffer=(char*)hb_xgrab(iLen+1);
-   iSize = mysql_escape_string(buffer,from,iSize);  
-   hb_retclen((char*)buffer, iSize);                
+   iSize = mysql_escape_string(buffer,from,iSize);
+   hb_retclen((char*)buffer, iSize);
    hb_xfree(buffer);
    hb_xfree(FromBuffer);
 }

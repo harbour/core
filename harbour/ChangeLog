@@ -8,6 +8,15 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-02-20 8:55 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
+   * contrib/mysql/mysql.c
+     ! Fixed declaration for filelength() from int to long to match io.h
+   * source/rtl/memofile.c
+     ! Changed return values for empty or failed calles to MemoRead() to return an
+       empty string instead of a NULL
+     ! Close file when MemoRead() was successful, but file was empty (was being left open)
+   Above solutions reported and provided by David Arturo Macías Corona.  Thanks!
+
 2004-02-19 12:48 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
    * contrib/rdd_ads/adsfunc.c
      ! fixed casting in adsShowError()

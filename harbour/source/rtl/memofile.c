@@ -98,13 +98,16 @@ HB_FUNC( MEMOREAD )
             hb_retclen_buffer( ( char * ) pbyBuffer, ulSize );
          }
          else
-            hb_retc( NULL );
+         {
+            hb_fsClose( fhnd );
+            hb_retc( "" );
+         }
       }
       else
-         hb_retc( NULL );
+         hb_retc( "" );
    }
    else
-      hb_retc( NULL );
+      hb_retc( "" );
 }
 
 HB_FUNC( MEMOWRIT )
