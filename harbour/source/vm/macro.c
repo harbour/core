@@ -834,9 +834,12 @@ static void hb_compMemvarCheck( char * szVarName, HB_MACRO_DECL )
          */
          if( hb_memvarScope( szVarName, strlen( szVarName ) + 1 ) <= HB_MV_ERROR )
          {
-            /* there is no memvar variable visible at this moment */
-            HB_MACRO_DATA->status |= HB_MACRO_UNKN_VAR;
-            HB_MACRO_DATA->status &= ~HB_MACRO_CONT;  /* don't run this pcode */
+            if( ! hb_dynsymFind( szVarName ) )
+            {
+               /* there is no memvar or field variable visible at this moment */
+                HB_MACRO_DATA->status |= HB_MACRO_UNKN_VAR;
+                HB_MACRO_DATA->status &= ~HB_MACRO_CONT;  /* don't run this pcode */
+            }
          }
       }
    }

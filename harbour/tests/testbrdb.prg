@@ -10,7 +10,7 @@ function Main()
    cColor := SETCOLOR("W+/B")
    CLS
 
-   USE Test
+   USE test
    Browse()
 
    SETCOLOR(cColor)

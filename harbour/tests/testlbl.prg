@@ -4,7 +4,7 @@
 
 FUNCTION MAIN()
     
-    USE Test New
+    USE test New
 
     LABEL FORM TEST
 

@@ -4,7 +4,7 @@
 
 FUNCTION() MAIN
 
-    USE Test New
+    USE test New
 
     Report FORM TEST
 

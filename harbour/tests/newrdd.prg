@@ -12,7 +12,7 @@ function Main()
    SET EXCLUSIVE OFF
    CLS
 
-   dbUseArea( .T., "DBF", "Test", "TESTDBF", .T., .F. )
+   dbUseArea( .T., "DBF", "test", "TESTDBF", .T., .F. )
    ? "RecCount:", TESTDBF->( RecCount() )
    ? "Used:", TESTDBF->( Used() )
    ? "Select:", TESTDBF->( Select() )
@@ -209,19 +209,19 @@ function Main()
    InKey( 0 )
    CLS
 
-   ? 'dbCreate( "NewRdd", { { "First_Name", "C", 20, 0 }, ;'
+   ? 'dbCreate( "newrdd", { { "First_Name", "C", 20, 0 }, ;'
    ? '                      { "Age",        "N",  3, 0 }, ;'
    ? '                      { "Date",       "D",  8, 0 }, ;'
    ? '                      { "Rate",       "N",  6, 2 }, ;'
    ? '                      { "Memo",       "M", 10, 0 }, ;'
-   ? '                      { "Student",    "L",  1, 0 } },, .T., "NEWRDD" )'
+   ? '                      { "Student",    "L",  1, 0 } },, .T., "newrdd" )'
    ? 'SET CENTURY ON'
-   dbCreate( "NewRdd", { { "First_Name", "C", 20, 0 }, ;
+   dbCreate( "newrdd", { { "First_Name", "C", 20, 0 }, ;
                          { "Age",        "N",  3, 0 }, ;
                          { "Date",       "D",  8, 0 }, ;
                          { "Rate",       "N",  6, 2 }, ;
                          { "Memo",       "M", 10, 0 }, ;
-                         { "Student",    "L",  1, 0 } },, .T., "NEWRDD" )
+                         { "Student",    "L",  1, 0 } },, .T., "newrdd" )
    SET CENTURY ON
    ? "lUpdate:", NEWRDD->( lUpdate() )
 
@@ -301,13 +301,13 @@ function Main()
    CLS
 
    ? 'NEWRDD->( dbCloseArea() )'
-   ? 'dbUseArea( .T., "DBF", "NewRdd", "NEWRDD", .F., .F. )'
+   ? 'dbUseArea( .T., "DBF", "newrdd", "NEWRDD", .F., .F. )'
    ? 'nI := 1'
    ? 'NEWRDD->( __dbPack( { || QOut( nI ), nI++ } ) )'
    ? '? "RecCount:", NEWRDD->( RecCount() )'
    ? ""
    NEWRDD->( dbCloseArea() )
-   dbUseArea( .T., "DBF", "NewRdd", "NEWRDD", .F., .F. )
+   dbUseArea( .T., "DBF", "newrdd", "NEWRDD", .F., .F. )
 
    ? "Press any key to continue..."
    InKey( 0 )
@@ -335,7 +335,7 @@ function Main()
 
    ? 'NEWRDD->( dbCloseArea() )'
    ? 'SORT ON FIRST /DC, AGE /D TO NEWRDD'
-   ? 'dbUseArea( .T., "DBF", "NewRdd", "NEWRDD", .F., .F. )'
+   ? 'dbUseArea( .T., "DBF", "newrdd", "NEWRDD", .F., .F. )'
    ? '? "RecCount:", NEWRDD->( RecCount() )'
    ? 'for nI := 1 to 8'
    ? '   ? NEWRDD->FIRST, NEWRDD->AGE'
@@ -357,7 +357,7 @@ function Main()
    Select( "TESTDBF" )
    SORT ON FIRST /DC, AGE /D TO NEWRDD
 
-   dbUseArea( .T., "DBF", "NewRdd", "NEWRDD", .F., .F. )
+   dbUseArea( .T., "DBF", "newrdd", "NEWRDD", .F., .F. )
    ? "RecCount:", NEWRDD->( RecCount() )
    for nI := 1 to 8
       ? NEWRDD->FIRST, NEWRDD->AGE

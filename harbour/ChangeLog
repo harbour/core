@@ -1,3 +1,19 @@
+2000-11-08 18:25 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/vm/macro.c
+        *fixed support for field variables in TYPE() function
+        
+    *tests/dbevalts.prg
+    *tests/newrdd.prg
+    *tests/testbrdb.prg
+    *tests/testlbl.prg
+    *tests/testrpt.prg
+    *tests/tstalias.prg
+    *tests/tstdbi.prg
+        *All file names should be written in lower case
+        NOTE: newrdd.prg still creates file in upper case since it is
+        hardcode somwhere in the RDD code
+
 2000-11-08 15:40 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *include/hbapi.h

@@ -13,7 +13,7 @@ funct main()
   local i
   local cStr := ""
 
-  USE "TEST" NEW
+  USE "test" NEW
 
   for i := 1 to 100
     cStr += Str( i ) + " " + xToStr( DbInfo( i ) ) + CRLF

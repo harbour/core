@@ -4,7 +4,7 @@
 
 FUNCTION Main()
 
-   USE TEST
+   USE test
 
    REPLACE Age WITH 1
    ? FIELD->Age

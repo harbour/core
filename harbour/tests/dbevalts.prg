@@ -5,7 +5,7 @@
 FUNCTION Main()
    LOCAL nCount
 
-   USE Test
+   USE test
 
    dbGoto( 4 )
    ? RecNo()
