@@ -2,29 +2,72 @@
 // $Id$
 //
 
-// Testing Harbour rounding.
+// Testing Harbour keyboard input.
 /* Harbour Project source code
    http://www.Harbour-Project.org/
    Copyright 1999 David G. Holm <dholm@jsd-llc.com>
    See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
+   
+   Modularization and display improvements by
+   Alejandro de Garate <alex_degarate@hotmail.com>
 */
 
 #include "inkey.ch"
 
 PROCEDURE main( cSkip, cExtended )
-LOCAL nKey, nMask, cText
- IF EMPTY( cSkip )
-   /* NOTE: When non-blocking Unix-style keyboard input is implemented
-            for Cygnus (cygwin) remove the next few lines. */
-   IF "CYGWIN" $ UPPER( VERSION(.T.) )
-      ?
-      ? "Note: You are using a Cygnus CYGWIN build of Harbour, so some of the"
-      ? "      keyboard tests will not give the correct results, you will have"
-      ? "      to press a key even when the prompt indicates a timeout, and you"
-      ? "      may have to press extra keys in order to get the test results."
-   END IF
-   /* NOTE: End of code to remove when non-blocking Unix-style keyboard input
-            is implemented for Cygnus (cygwin) */
+
+IF EMPTY( cSkip )
+
+   TEST1()
+   NextTest()
+
+   TEST2()
+   NextTest()
+
+
+   TEST3()
+   NextTest()
+
+   TEST4()
+   NextTest()
+
+   TEST5()
+   NextTest()
+
+   TEST6()
+   NextTest()
+ENDIF
+
+   TEST7( cSkip, cExtended )
+   ?
+QUIT
+
+
+PROCEDURE Results()
+   ? "Wait 2 seconds or press most any key to see the results of this test."
+   INKEY( 2 )
+RETURN
+
+
+PROCEDURE NextTest()
+   ? "Press any key to continue on to the next test."
+   INKEY( 0 )
+RETURN
+
+
+FUNCTION TEST( cText )
+LOCAL cResult := ""
+   INKEY( 2 )
+   KEYBOARD cText
+   WHILE NEXTKEY() <> 0
+      cResult += CHR( INKEY () )
+   END WHILE
+RETURN "'" + cResult + "'"
+
+
+
+PROCEDURE TEST1
+   CLS
    ?
    ? "Testing the KEYBOARD and CLEAR TYPEAHEAD commands and the"
    ? "INKEY(), NEXTKEY(), and LASTKEY() functions."
@@ -39,7 +82,11 @@ LOCAL nKey, nMask, cText
    KEYBOARD "AB"
    ? INKEY(), INKEY()
    ?
-   NextTest()
+RETURN
+
+
+PROCEDURE TEST2
+   CLS
    ?
    ? "For the second test, the keyboard will be stuffed with the"
    ? "text 'HELLO', then the typeahead will be cleared, and then"
@@ -53,7 +100,11 @@ LOCAL nKey, nMask, cText
    CLEAR TYPEAHEAD
    ? INKEY()
    ?
-   NextTest()
+RETURN
+
+
+PROCEDURE TEST3
+   CLS
    ?
    ? "For the third test, the keyboard will be stuffed with the"
    ? "text 'AB', then NEXTKEY() will be called twice and finally"
@@ -66,7 +117,12 @@ LOCAL nKey, nMask, cText
    KEYBOARD "AB"
    ? NEXTKEY(), NEXTKEY(), INKEY(), INKEY()
    ?
-   NextTest()
+RETURN
+
+
+
+PROCEDURE TEST4
+   CLS
    ?
    ? "For the fourth test, the keyboard will be stuffed with the"
    ? "Text 'AB', then INKEY() will be called once, LASTKEY() will"
@@ -80,10 +136,15 @@ LOCAL nKey, nMask, cText
    KEYBOARD "AB"
    ? INKEY(), LASTKEY(), LASTKEY(), NEXTKEY(), INKEY()
    ?
-   NextTest()
-   ?
+RETURN
+
+
+
+PROCEDURE TEST5
+LOCAL cText
+   CLS
    cText := "THIS IS A TEST. THIS IS ONLY A TEST. DO NOT PANIC!"
-   ? "For the fifth test, the keyboard will be stuffed with the"
+   ?? "For the fifth test, the keyboard will be stuffed with the"
    ? "Text '" + cText + "'"
    ? "with the typeahead buffer set to the default size, then 25"
    ? "then 16, then 0. After each attempt to stuff the buffer,"
@@ -96,61 +157,66 @@ LOCAL nKey, nMask, cText
    ? "while size 0 should display ''."
    ?
    ? "Default TYPEAHEAD (50)"
-   ?
-   Results()
-   ?
    ? TEST( cText )
    ?
+
    ? "SET TYPEAHEAD TO 25"
-   ?
-   Results()
-   ?
    SET TYPEAHEAD TO 25
    ? TEST( cText )
    ?
+
    ? "SET TYPEAHEAD TO 16"
-   ?
-   Results()
-   ?
    SET TYPEAHEAD TO 16
    ? TEST( cText )
    ?
+
    ? "SET TYPEAHEAD TO 0"
-   ?
-   Results()
-   ?
    SET TYPEAHEAD TO 0
    ? TEST( cText )
-   ?
-   NextTest()
-   ?
+RETURN
+
+
+
+PROCEDURE TEST6
+CLS
+   ? "For the sixth test"
    ? "The typeahead is now being set to a value greater than the maximum,"
    ? "which is 4096 and is the value that will both be used and reported."
+   ? "SET TYPEAHEAD TO 5000"
    ?
    SET TYPEAHEAD TO 5000
    ? SET(_SET_TYPEAHEAD)
    ?
-   NextTest()
-   ?
- END IF
+RETURN
+
+
+
+PROCEDURE TEST7( cSkip, cExtended )
+LOCAL nKey, nMask, cText
+   CLS
    ? "For the last test, a loop is started and all keyboard and mouse"
    ? "events are allowed. Each event will be displayed. Press the TAB"
    ? "key to exit. Try moving the mouse, holding and releasing the mouse"
    ? "buttons as well as double-clicking the mouse buttons."
    ?
-   ? "TODO: Mouse support needs to be added to Harbour."
-   ?
    ? "Press any key."
    nMask := INKEY_ALL
-   IF !EMPTY( cExtended )
-      nMask += INKEY_EXTENDED
+
+   IF ! EMPTY( cExtended )
+       nMask += INKEY_EXTENDED
    END IF
+
    SET(_SET_EVENTMASK, nMask)
-   IF UPPER( cSkip ) == "BREAK"
-      SETCANCEL( .T. )
-   ELSE
-      SETCANCEL( .F. )
+
+   IF ! EMPTY( cSkip )
+      IF UPPER( cSkip ) == "BREAK"
+         SETCANCEL( .T. )
+      ELSE
+         SETCANCEL( .F. )
+      END IF
    END IF
+
+
    WHILE (nKey := INKEY( 0, nMask )) != K_TAB
       DO CASE
          CASE nKey == K_MOUSEMOVE
@@ -168,27 +234,11 @@ LOCAL nKey, nMask, cText
          CASE nKey == K_RDBLCLK
             ? "The right mouse button was double-clicked."
          OTHERWISE
-            ? "A keyboard key was pressed: ", nKey, IF( nKey >= 32 .AND. nKey <= 255, CHR( nKey ), "" )
+            ? "A keyboard key was pressed: ", nKey,;
+            IF( nKey >= 32 .AND. nKey <= 255, CHR( nKey ), "" )
       END CASE
+
    END WHILE
    ? "The TAB key ("+LTRIM(STR(nKey))+") was pressed. Exiting..."
-QUIT
 
-PROCEDURE Results()
-   ? "Wait 2 seconds or press most any key to see the results of this test."
-   INKEY( 2 )
 RETURN
-
-PROCEDURE NextTest()
-   ? "Press any key to continue on to the next test."
-   INKEY( 0 )
-RETURN
-
-FUNCTION TEST( cText )
-LOCAL cResult := ""
-   INKEY( 2 )
-   KEYBOARD cText
-   WHILE NEXTKEY() <> 0
-      cResult += CHR( INKEY () )
-   END WHILE
-RETURN "'" + cResult + "'"

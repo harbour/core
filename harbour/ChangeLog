@@ -1,3 +1,14 @@
+2000-04-11 14:30 GMT-4 David G. Holm <dholm@jsd-llc.com>
+
+  * config/w32/gcc.cf
+  + Added LNK_USR_PATH and LNK_USR_LIB environment variables to specify
+    non-Harbour libraries. Put one or more paths in LNK_USR_PATH and one
+    or more base library names in LNK_USR_LIB, using spaces to separate.
+
+  * tests/inkeytst.prg
+    % Modularization and display improvements by
+      Alejandro de Garate <alex_degarate@hotmail.com>
+
 20000411-16:32 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/rtl/inkey.c
