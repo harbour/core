@@ -80,6 +80,7 @@ CLASS TEditor
    METHOD GetLine(nRow)                                     // Return line n of text
    METHOD LineLen(nRow) INLINE Len(::aText[nRow]:cText)     // Return text length of line n
    METHOD SplitLine(nRow)                                   // If a line of text is longer than nWordWrapCol divides it into multiple lines
+   METHOD GotoLine(nRow)                                    // Put line nRow at cursor position
 
    METHOD GetText()                                         // Returns aText as a string (for MemoEdit())
 
@@ -93,6 +94,32 @@ CLASS TEditor
 
 ENDCLASS
 
+
+// Returns EOL char (be it either CR or LF or both)
+STATIC function WhichEOL(cString)
+
+   local nCRPos, nLFPos
+
+   nCRPos := At(Chr(13), cString)
+   nLFPos := At(Chr(10), cString)
+
+   if nCRPos > 0 .AND. nLFPos == 0
+      return Chr(13)
+
+   elseif nCRPos == 0 .AND. nLFPos >  0
+      return Chr(10)
+
+   elseif nCRPos > 0 .AND. nLFPos == nCRPos + 1
+      return Chr(13) + Chr(10)
+
+   else
+      return HB_OSNewLine()
+
+   endif
+
+return nil
+
+
 // Converts a string to an array of strings splitting input string at EOL boundaries
 STATIC function Text2Array(cString, nWordWrapCol)
 
@@ -102,7 +129,7 @@ STATIC function Text2Array(cString, nWordWrapCol)
    nTokNum := 1
    aArray := {}
 
-   cEOL := HB_OSNewLine()
+   cEOL := WhichEOL(@cString)
    nEOLLen := Len(cEOL)
 
    nRetLen := 0
@@ -112,9 +139,9 @@ STATIC function Text2Array(cString, nWordWrapCol)
       /* TOFIX: Note that __StrToken is not able to cope with delimiters longer than one char */
       // Dos - OS/2 - Windows have CRLF as EOL
       if nEOLLen > 1
-         cLine := StrTran(__StrTkPtr(cString, @nTokPos, cEOL), SubStr(cEOL, 2), "")
+         cLine := StrTran(__StrTkPtr(@cString, @nTokPos, cEOL), SubStr(cEOL, 2), "")
       else
-         cLine := __StrTkPtr(cString, @nTokPos, cEOL)
+         cLine := __StrTkPtr(@cString, @nTokPos, cEOL)
       endif
       nRetLen += Len(cLine) + nEOLLen
 
@@ -149,7 +176,6 @@ STATIC function Text2Array(cString, nWordWrapCol)
          enddo
 
       else
-
          AAdd(aArray, TTextLine():New(cLine, .F.))
 
       endif
@@ -176,8 +202,13 @@ return cString
 
 METHOD New(cString, nTop, nLeft, nBottom, nRight, lEditMode, cUdF, nLineLength, nTabSize) CLASS TEditor
 
-   ::aText := Text2Array(cString, nLineLength)
+   ::aText := Text2Array(@cString, nLineLength)
    ::naTextLen := Len(::aText)
+
+   if ::naTextLen == 0
+      AAdd(::aText, TTextLine():New())
+      ::naTextLen++
+   endif
 
    // editor window boundaries
    ::nTop := nTop
@@ -257,6 +288,24 @@ METHOD GetLine(nRow) CLASS TEditor
 
 return Self
 
+
+METHOD GotoLine(nRow) CLASS TEditor
+
+   if nRow <= ::naTextLen .AND. nRow > 0
+
+      // I need to move cursor if is past requested line number and if requested line is
+      // inside first screen of text otherwise ::nFirstRow would be wrong
+      if nRow < ::nNumRows .AND. (::nTop + nRow) < Row()
+         SetPos(::nTop + nRow, Col())
+      endif
+
+      ::nRow := nRow
+      ::nFirstRow := Max(1, nRow - (Row() - ::nTop))
+
+      ::RefreshWindow()
+   endif
+
+return Self
 
 // Rebuild a long line from multiple short ones (wrapped at soft CR)
 STATIC function GetParagraph(oSelf, nRow)

@@ -1,3 +1,8 @@
+20000612-23:10 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+
+   * source/rtl/tedior.prg
+     + Added GotoLine(nRow) method and a couple fixes.
+
 2000-06-12 21:47 UTC+0200 JfL&RaC <jfl@mafact.com> <rac@mafact.com>
    *source\rtl\tclass.prg
     * Correct bug with default initialiser for Logical and Numeric
