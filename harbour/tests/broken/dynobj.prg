@@ -65,6 +65,8 @@ function Main()
    QOut( "Data items after" )
    HBDebug( oForm )
 
+   Pause()
+
    QOut( "Let's attach a bigger smile" )
 
    ClassMod( oForm:ClassH, "Smile", @BigSmile() )
@@ -98,6 +100,22 @@ function Main()
 
    QOut( "What methods are in the class :" )
    HBDebug( aoMethod( oForm ) )
+
+   Pause()
+
+   QOut( "Data items before" )
+   HBDebug( oForm )
+
+   QOut( "Let's delete cHelp" )
+
+   ClassDel( oForm:ClassH, "cHelp"  )
+   ClassDel( oForm:ClassH, "_cHelp" )
+   __wDataDec( oForm:ClassH )
+   
+   QOut( "Data items after" )
+   HBDebug( oForm )
+
+/*   oForm:cHelp := "Please crash" */
 
 return nil
 

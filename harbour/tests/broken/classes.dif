@@ -1,5 +1,5 @@
 --- \source\tcpp\cvstest\harbour\source\rtl\classes.c	Tue May 11 20:23:38 1999
-+++ \source\tcpp\harb21-2\source\rtl\classes.c	Thu May 13 12:34:32 1999
++++ \source\tcpp\harb21-2\source\rtl\classes.c	Thu May 13 14:04:46 1999
 @@ -10,6 +10,7 @@
  void PushSymbol( PSYMBOL );
  void Message( PSYMBOL );
@@ -33,7 +33,7 @@
  }
  
  static HARBOUR GetClassData( void )
-@@ -503,6 +514,114 @@
+@@ -503,6 +514,116 @@
     else
     {                                        /* TODO: Crash code             */
     }
@@ -45,6 +45,14 @@
 +
 +   if( wClass )
 +      _retni( ++pClasses[ wClass - 1 ].wDatas ); /* Return and increase     */
++}                                                /* number of DATAs         */
++
++HARBOUR __WDATADEC()         /* <nSeq> = __wDataDec( <hClass> )*/
++{
++   WORD  wClass   = _parnl( 1 );
++
++   if( wClass )
++      _retni( ++pClasses[ wClass - 1 ].wDatas ); /* Return and decrease     */
 +}                                                /* number of DATAs         */
 +
 +HARBOUR CLASSMOD()      /* Modify message (only for INLINE and METHOD)      */
@@ -125,13 +133,7 @@
 +         {
 +            ArrayDel(  &pClass->aInlines, pClass->pMethods[ wAt ].wData );
 +                                                /* Delete INLINE block      */
-+         }
-+         else if( ( pFunc == SetData ) || ( pFunc == GetData ) )
-+         {                                      /* Not allowed for DATA     */
-+            printf( "\nCannot delete a DATA item yet" );
-+            exit(1);                            /* TODO : Real error        */
-+         }
-+                                                /* Move messages            */
++         }                                      /* Move messages            */
 +         for( ; pClass->pMethods[ wAt ].pMessage && wAt < wLimit; wAt ++ )
 +            memcpy( &( pClass->pMethods[ wAt ]     ),
 +                    &( pClass->pMethods[ wAt + 1 ] ), sizeof( METHOD ) );
