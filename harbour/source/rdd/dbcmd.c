@@ -1227,7 +1227,7 @@ HB_FUNC( DBCREATE )
    BOOL bOpen;
    BYTE * codePageId = (BYTE*) hb_parc(6);
 
-   hb_retl( FALSE );
+   hb_ret();
 
    if( ISCHAR(1) )
       szFileName = hb_parc( 1 );
@@ -1400,7 +1400,7 @@ HB_FUNC( DBCREATE )
          hb_rddReleaseCurrentArea();
       }
       else
-         hb_retl( TRUE );
+         hb_ret();
       //hb_xfree( pInfo.abName );
       hb_xfree( szFileName );
    }
