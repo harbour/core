@@ -13,14 +13,14 @@ ECHO Compiling...
 set hdir=c:\hb-dev\harbour
 set bcdir=c:\borland\bcc55\bin
 
-%bcdir%\bcc32 -c -D__EXPORT__ -I..\..\..\include -L..\lib ..\..\..\source\vm\maindll.c
+%bcdir%\bcc32 -c -D__EXPORT__ -I%hdir%\include -L%bcdir%\..\lib %hdir%\source\vm\maindll.c
 
 rem Files to integrate harbour DLL to Delphi
-%bcdir%\bcc32 -c -D__EXPORT__ -I..\..\..\include -L..\lib macrcall.c
+%bcdir%\bcc32 -c -D__EXPORT__ -I%hdir%\include -L%bcdir%\..\lib macrcall.c
 %hdir%\bin\harbour -n -w errorsys
-%bcdir%\bcc32 -c -D__EXPORT__ -I..\..\..\include -L..\lib errorsys.c
+%bcdir%\bcc32 -c -D__EXPORT__ -I%hdir%\include errorsys.c
 
-%hdir%\bin\harbour %1 /b /n /i..\include;%hdir%\include /w /p %2 %3 > clip.log
+%hdir%\bin\harbour %1 /n /i%hdir%\include /w /p %2 %3 > clip.log
 @type clip.log
 IF ERRORLEVEL 1 PAUSE
 IF ERRORLEVEL 1 GOTO EXIT
@@ -56,7 +56,7 @@ echo %bcdir%\lib\import32.lib + >> b32.bc
 echo %bcdir%\lib\cw32.lib + >> b32.bc
 echo %bcdir%\lib\psdk\odbc32.lib, >> b32.bc
 IF EXIST %1.res echo %1.res >> b32.bc
-%bcdir%\ilink32 -Tpd -aa -L\borland\bcc55\lib -L\borland\bcc55\lib\PSDK @b32.bc
+%bcdir%\ilink32 -Tpd -aa -L%bcdir%\..\lib -L%bcdir%\..\lib\PSDK @b32.bc
 
 rem delete temporary files
 @del %1.c
