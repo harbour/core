@@ -1,3 +1,18 @@
+2000-07-24 13:59 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+    * include/hbapirdd.h
+      * uncommented relational methods in functions table
+    * source/rdd/dbcmd.c
+    * source/rdd/dbf1.c
+    * source/rdd/dbfcdx/dbfcdx1.c
+    * source/rdd/dbfntx/dbfntx1.c
+      * added relational methods definitions to func table
+    * contrib/rdd_ads/ads1.c
+      * added relational methods definitions to func table
+      * fixed adsOrderCreate - now
+      * INDEX ON expression TAG tag TO indexFileName
+      * creates a compound CDX index, if indexFileName is the same, as
+      * current dbf name
+
 2000-07-04 04:05 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
    * contrib/odbc/bld_b32.bat

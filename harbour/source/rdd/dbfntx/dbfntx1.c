@@ -1190,6 +1190,16 @@ static ERRCODE ntxClose( AREAP pArea )
 #define ntxEval                  NULL
 #define ntxPack                  NULL
 #define ntxZap                   NULL
+#define ntxchildEnd              NULL
+#define ntxchildStart            NULL
+#define ntxchildSync             NULL
+#define ntxsyncChildren          NULL
+#define ntxclearRel              NULL
+#define ntxforceRel              NULL
+#define ntxrelArea               NULL
+#define ntxrelEval               NULL
+#define ntxrelText               NULL
+#define ntxsetRel                NULL
 #define ntxOrderListFocus        NULL
 #define ntxOrderListRebuild      NULL
 #define ntxOrderCondition        NULL
@@ -1265,6 +1275,16 @@ static RDDFUNCS ntxTable = { ntxBof,
                              ntxEval,
                              ntxPack,
                              ntxZap,
+                             ntxchildEnd,
+                             ntxchildStart,
+                             ntxchildSync,
+                             ntxsyncChildren,
+                             ntxclearRel,
+                             ntxforceRel,
+                             ntxrelArea,
+                             ntxrelEval,
+                             ntxrelText,
+                             ntxsetRel,
                              ntxOrderListAdd,
                              ntxOrderListClear,
                              ntxOrderListFocus,

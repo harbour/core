@@ -785,7 +785,6 @@ typedef struct _RDDFUNCS
 
    /* Relational Methods */
 
-#if 0
    DBENTRYP_VP   childEnd;
    DBENTRYP_VP   childStart;
    DBENTRYP_VP   childSync;
@@ -796,7 +795,6 @@ typedef struct _RDDFUNCS
    DBENTRYP_VP   relEval;
    DBENTRYP_SVP  relText;
    DBENTRYP_VP   setRel;
-#endif
 
 
    /* Order Management */

@@ -662,6 +662,16 @@ static RDDFUNCS dbfSuper = { 0 };
 #define dbfStructSize                           NULL
 #define dbfSysName                              NULL
 #define dbfEval                                 NULL
+#define dbfchildEnd                             NULL
+#define dbfchildStart                           NULL
+#define dbfchildSync                            NULL
+#define dbfsyncChildren                         NULL
+#define dbfclearRel                             NULL
+#define dbfforceRel                             NULL
+#define dbfrelArea                              NULL
+#define dbfrelEval                              NULL
+#define dbfrelText                              NULL
+#define dbfsetRel                               NULL
 #define dbfOrderListAdd                         NULL
 #define dbfOrderListClear                       NULL
 #define dbfOrderListFocus                       NULL
@@ -2070,6 +2080,16 @@ static RDDFUNCS dbfTable = { dbfBof,
                              dbfEval,
                              dbfPack,
                              dbfZap,
+                             dbfchildEnd,
+                             dbfchildStart,
+                             dbfchildSync,
+                             dbfsyncChildren,
+                             dbfclearRel,
+                             dbfforceRel,
+                             dbfrelArea,
+                             dbfrelEval,
+                             dbfrelText,
+                             dbfsetRel,
                              dbfOrderListAdd,
                              dbfOrderListClear,
                              dbfOrderListFocus,

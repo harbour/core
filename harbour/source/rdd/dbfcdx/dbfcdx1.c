@@ -2546,6 +2546,16 @@ static void hb_cdxSortAddInternal( LPSORTINFO pSort, USHORT Lvl, LONG Tag, LONG 
 #define cdxEval                                 NULL
 #define cdxPack                                 NULL
 #define cdxZap                                  NULL
+#define cdxchildEnd                             NULL
+#define cdxchildStart                           NULL
+#define cdxchildSync                            NULL
+#define cdxsyncChildren                         NULL
+#define cdxclearRel                             NULL
+#define cdxforceRel                             NULL
+#define cdxrelArea                              NULL
+#define cdxrelEval                              NULL
+#define cdxrelText                              NULL
+#define cdxsetRel                               NULL
 #define cdxOrderCondition                       NULL
 #define cdxClearFilter                          NULL
 #define cdxClearLocate                          NULL
@@ -3269,6 +3279,16 @@ static RDDFUNCS cdxTable = { cdxBof,
                              cdxEval,
                              cdxPack,
                              cdxZap,
+                             cdxchildEnd,
+                             cdxchildStart,
+                             cdxchildSync,
+                             cdxsyncChildren,
+                             cdxclearRel,
+                             cdxforceRel,
+                             cdxrelArea,
+                             cdxrelEval,
+                             cdxrelText,
+                             cdxsetRel,
                              cdxOrderListAdd,
                              cdxOrderListClear,
                              cdxOrderListFocus,

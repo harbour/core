@@ -205,6 +205,20 @@ static ERRCODE hb_adsCheckBofEof( ADSAREAP pArea )
    return SUPER_SKIPFILTER( (AREAP)pArea, 1 );
 }
 
+static BOOL strcmpNoCase( char* s1, char* s2, int n )
+{
+   int i = 0;
+   while( *s1 && *s2 && ( !n || i++ < n ) )
+   {
+      if( tolower( *s1 ) != tolower( *s2 ) )
+         return 0;
+      s1++;
+      s2++;
+   }
+   return ( !*s1 && !*s2 ) || ( n && i == n );
+     
+}
+
 /*
  * -- ADS METHODS --
  */
@@ -858,6 +872,17 @@ static ERRCODE adsZap( ADSAREAP pArea )
    return adsGoTop( pArea );
 }
 
+#define adschildEnd                             NULL
+#define adschildStart                           NULL
+#define adschildSync                            NULL
+#define adssyncChildren                         NULL
+#define adsclearRel                             NULL
+#define adsforceRel                             NULL
+#define adsrelArea                              NULL
+#define adsrelEval                              NULL
+#define adsrelText                              NULL
+#define adssetRel                               NULL
+
 static ERRCODE adsOrderListAdd( ADSAREAP pArea, LPDBORDERINFO pOrderInfo )
 {
    ADSHANDLE ahIndex[50];
@@ -944,7 +969,17 @@ static ERRCODE adsOrderCreate( ADSAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
    PHB_ITEM pItem = pOrderInfo->abExpr;
    HB_TRACE(HB_TR_DEBUG, ("adsOrderCreate(%p, %p)", pArea, pOrderInfo));
 
-   if( !pOrderInfo->abBagName || *(pOrderInfo->abBagName) == '\0' ) ulOptions = ADS_COMPOUND;
+   if( !pOrderInfo->abBagName || *(pOrderInfo->abBagName) == '\0' )
+      ulOptions = ADS_COMPOUND;
+   else
+   {
+      int slen = strlen( pArea->lpDataInfo->szFileName );
+      char *ptr = pArea->lpDataInfo->szFileName + slen - 4;
+      if( strcmpNoCase( pOrderInfo->abBagName, pArea->lpDataInfo->szFileName,
+            ( slen >= 4 && strcmpNoCase( ".dbf",ptr,0 ) )? slen-4:0 ) )
+         ulOptions = ADS_COMPOUND;
+   }
+
    ulRetVal = AdsCreateIndex( pArea->hTable, pOrderInfo->abBagName,
            pOrderInfo->atomBagName, (UCHAR*)hb_itemGetCPtr( pItem ), (UCHAR*)"", (UCHAR*)"",
            ulOptions, &phIndex);
@@ -1296,6 +1331,16 @@ static RDDFUNCS adsTable = { adsBof,
                              adsEval,
                              ( DBENTRYP_V ) adsPack,
                              ( DBENTRYP_V ) adsZap,
+                             ( DBENTRYP_VP ) adschildEnd,
+                             ( DBENTRYP_VP ) adschildStart,
+                             ( DBENTRYP_VP ) adschildSync,
+                             ( DBENTRYP_V ) adssyncChildren,
+                             ( DBENTRYP_V ) adsclearRel,
+                             ( DBENTRYP_V ) adsforceRel,
+                             ( DBENTRYP_SVP ) adsrelArea,
+                             ( DBENTRYP_VP ) adsrelEval,
+                             ( DBENTRYP_SVP ) adsrelText,
+                             ( DBENTRYP_VP ) adssetRel,
                              ( DBENTRYP_OI ) adsOrderListAdd,
                              ( DBENTRYP_V ) adsOrderListClear,
                              ( DBENTRYP_OI ) adsOrderListFocus,
