@@ -8,6 +8,33 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-06-30 18:33 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+  * source/compiler/gencli.c
+    + Added support for multidimensional arrays for Harbour.NET
+    ! .NET IL implementation for HB_ARRAYGEN, HB_P_FUNCTIONSHORT, HB_P_ARRAYPUSH
+    ! Enhanced HB_DOSHORT
+    + Added ObjArrayGen(), ObjArrayPush() and LEN() (Len() support just for arrays).
+
+    Notice: I want to publically thank Microsoft tech support forums for .NET. There
+    are great guys there providing superb tech support.
+
+    This code is already working ok with Harbour.NET:
+
+    function Main()
+
+       local a := { 123, "hello", { "nested", "array", { 5, "more" } }, .t., "another" }
+
+       ? a[ 1 ]
+       ? a[ 3 ][ 2 ]
+       ? a[ 3 ][ 3 ][ 2 ]
+       ? a[ 5 ]
+
+       ? "done!"
+
+    return nil
+
+    Warning: Arrays elements assignment is not implemented yet.
+
 2003-06-28 22:52 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
   * source/compiler/gencli.c
     + Added support for logical values management
