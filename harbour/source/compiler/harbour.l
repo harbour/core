@@ -111,16 +111,37 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
 \"             BEGIN STRING2;
 <INITIAL>\[    BEGIN STRING3;
 
-<STRING1>[^'^\n]*   GenError( ERR_STRING_TERMINATOR, yytext, NULL ); BEGIN 0;
-<STRING2>[^\"^\n]*  GenError( ERR_STRING_TERMINATOR, yytext, NULL ); BEGIN 0;
-<STRING3>[^\]]*\n   GenError( ERR_STRING_TERMINATOR, yytext, NULL ); BEGIN 0;
+<STRING1>[^'^\n]*   { GenError( ERR_STRING_TERMINATOR, yytext, NULL ); BEGIN 0; }
+<STRING2>[^\"^\n]*  { GenError( ERR_STRING_TERMINATOR, yytext, NULL ); BEGIN 0; }
+<STRING3>[^\]]*\n   { GenError( ERR_STRING_TERMINATOR, yytext, NULL ); BEGIN 0; }
 
-<STRING1>[^']*'   { BEGIN 0; yylval.string = strdup( yytext );
-                    yylval.string[ yyleng - 1 ] = 0; return LITERAL; }
-<STRING2>[^\"]*\" { BEGIN 0; yylval.string = strdup( yytext );
-                    yylval.string[ yyleng - 1 ] = 0; return LITERAL; }
-<STRING3>[^\]]*\] { BEGIN 0; yylval.string = strdup( yytext );
-                    yylval.string[ yyleng - 1 ] = 0; return LITERAL; }
+<STRING1>[^']*'   { if( i_INDEX_STATE )
+                       BEGIN INDEX;
+                    else
+                       BEGIN 0;
+
+                    yylval.string = strdup( yytext );
+                    yylval.string[ yyleng - 1 ] = 0; return LITERAL;
+                  }
+
+<STRING2>[^\"]*\" { if( i_INDEX_STATE )
+                       BEGIN INDEX;
+                    else
+                       BEGIN 0;
+
+                    yylval.string = strdup( yytext );
+                    yylval.string[ yyleng - 1 ] = 0;
+                    return LITERAL;
+                  }
+
+<STRING3>[^\]]*\] { if( i_INDEX_STATE )
+                       BEGIN INDEX;
+                    else
+                       BEGIN 0;
+
+                    yylval.string = strdup( yytext );
+                    yylval.string[ yyleng - 1 ] = 0; return LITERAL;
+                  }
 
 <INDEX>\n    { yyerror( "Unterminated Array Index" ); exit(1); }
 
@@ -130,7 +151,7 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
                 iIndexSets-- ;
                 if( iIndexSets == 0 )
                 {
-                   /* printf( "\nIndex End\n" ); */
+                   /*printf( "\nIndex End\n" );*/
 
                    /* No longer in this state. */
                    i_INDEX_STATE = 0;
@@ -140,7 +161,15 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
              }
 
 "/*"           BEGIN COMMENT3;
-<COMMENT3>"*"["*"]*"/" { if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0; }
+<COMMENT3>"*"["*"]*"/" { if( i_INDEX_STATE )
+                         {
+                            BEGIN INDEX;
+                            /*printf( "\nRESUMING INDEX STATE\n" );*/
+                         }
+                         else
+                            BEGIN 0;
+                       }
+
 <COMMENT3>[^"*/"\n]* ;
 <COMMENT3>"*"     ;
 <COMMENT3>[\/\"]+ ;
@@ -196,7 +225,7 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
 <BREAK_>{Separator}*\n { /* at the end of line */
                yy_lex_count_lf();
                --iLine;
-               BEGIN 0;
+               if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                unput( yytext[ yyleng-1 ] );
                if( _iState == LOOKUP )
                { /* it is first item in the line */
@@ -210,13 +239,13 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
              }
 <BREAK_>{Separator}*[\[] { /* array */
                yy_lex_count_lf();
-               BEGIN 0;
+               if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                /* Clipper does not like break[] at all */
                GenError( ERR_SYNTAX, yytext, NULL );
              }
 <BREAK_>{Separator}*[^_a-zA-Z\[] { /* there is no identifier after "break" */
                yy_lex_count_lf();
-               BEGIN 0;
+               if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                yylval.string = strdup( "BREAK" );
                _iState =IDENTIFIER;
                unput( yytext[ yyleng-1 ] );
@@ -224,19 +253,19 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
              }
 <BREAK_>{Separator}*. { /* an identifier follows BREAK statement */
                yy_lex_count_lf();
-               BEGIN 0;
+               if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                unput( yytext[ yyleng-1 ] );
                _iState =BREAK;
                return BREAK;
              }
-<BREAK_>.    { BEGIN 0; unput( yytext[ yyleng-1 ] ); }
+<BREAK_>.    { if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0; unput( yytext[ yyleng-1 ] ); }
 %{
 /* ************************************************************************ */
 %}
 "case"       { BEGIN CASE_; }
 <CASE_>{Separator}*[\:\=\|\$\%\*\,\/\]\)\}\^] { /* there is an operator after "case" */
                yy_lex_count_lf();
-               BEGIN 0;
+               if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                yylval.string = strdup( "CASE" );
                _iState =IDENTIFIER;
                unput( yytext[ yyleng-1 ] );
@@ -244,13 +273,13 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
              }
 <CASE_>{Separator}*[\[] { /* array */
                yy_lex_count_lf();
-               BEGIN 0;
+               if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                /* Clipper does not like case[] at all */
                GenError( ERR_SYNTAX, yytext, NULL );
              }
 <CASE_>{Separator}*("+="|"-="|"->") { /* operators */
                yy_lex_count_lf();
-               BEGIN 0;
+               if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                yylval.string = strdup( "CASE" );
                _iState =IDENTIFIER;
                unput( yytext[ yyleng-1 ] );
@@ -259,7 +288,7 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
              }
 <CASE_>{Separator}*(\n|.) { /* not operator */
                yy_lex_count_lf();
-               BEGIN 0;
+               if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                if( yytext[ yyleng-1 ] == '\n' )
                  --iLine;
                unput( yytext[ yyleng-1 ] );
@@ -279,7 +308,7 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
 %}
 "do"            BEGIN DO_;
 <DO_>{Separator}+"case"         { /* DO CASE statement */
-                BEGIN 0;
+                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                 yy_lex_count_lf();
                 _iState =DOCASE;
                 return DOCASE;
@@ -289,13 +318,13 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
                  * or DO while [WITH <args>]
                  */
                 yy_lex_count_lf();
-                BEGIN 0;
+                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                 _iState =DO;
                 yyless( yyleng-5 );
               }
 <DO_>{Separator}+[_a-zA-Z]   { /* an identifier DO id WITH */
                 yy_lex_count_lf();
-                BEGIN 0;
+                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                 unput( yytext[ yyleng-1 ] );
                 if( _iState == LOOKUP )
                 { /* it is first item in the line */
@@ -311,7 +340,7 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
               }
 <DO_>{Separator}*(.|\n)         { /* end of line or any operator */
                 yy_lex_count_lf();
-                BEGIN 0;
+                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                 if( yytext[ yyleng-1 ] == '\n' )
                   --iLine;
                 unput( yytext[ yyleng-1 ] );
@@ -345,7 +374,7 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
 "end"          { BEGIN END_; }
 <END_>{Separator}*[\[\(] { /* array, function call */
                yy_lex_count_lf();
-               BEGIN 0;
+               if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                if( _iState == LOOKUP )
                { /* Clipper does not like end[] & end() at the begining of line */
                  GenError( ERR_ENDIF, NULL, NULL );
@@ -357,7 +386,7 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
              }
 <END_>{Separator}*("->"|"++"|"--") { /* operators */
                yy_lex_count_lf();
-               BEGIN 0;
+               if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                if( _iState == LOOKUP )
                { /* Clipper does not like end-> & end++ at the begining of line */
                  GenError( ERR_ENDIF, NULL, NULL );
@@ -370,7 +399,7 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
              }
 <END_>{Separator}*[\+\-\:\=\|\$\%\*\,\/\[\]\)\}\^] { /* there is an operator after "end" */
                yy_lex_count_lf();
-               BEGIN 0;
+               if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                yylval.string = strdup( "END" );
                _iState =IDENTIFIER;
                unput( yytext[ yyleng-1 ] );
@@ -378,7 +407,7 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
              }
 <END_>{Separator}*(\n|.) { /* not operator */
                yy_lex_count_lf();
-               BEGIN 0;
+               if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                if( yytext[ yyleng-1 ] == '\n' )
                  --iLine;
                unput( yytext[ yyleng-1 ] );
@@ -478,7 +507,7 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
 %}
 "next"         BEGIN NEXT_;
 <NEXT_>{Separator}*[\n\;] { /* at the end of line */
-               BEGIN 0;
+               if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                if( _iState == LOOKUP )
                { /* it is first item in the line */
                  ++iLine;
@@ -496,7 +525,7 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
              }
 <NEXT_>{Separator}*[\[\(] { /* array, function call */
                yy_lex_count_lf();
-               BEGIN 0;
+               if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                if( _iState == LOOKUP )
                { /* Clipper does not like NEXT[] & NEXT() at the begining of line */
                  GenError( ERR_NEXTFOR, NULL, NULL );
@@ -508,7 +537,7 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
              }
 <NEXT_>{Separator}*("->"|"++"|"--") { /* operators */
                yy_lex_count_lf();
-               BEGIN 0;
+               if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                if( _iState == LOOKUP )
                { /* Clipper does not like next-> & next++ at the begining of line */
                  GenError( ERR_NEXTFOR, NULL, NULL );
@@ -521,14 +550,14 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
              }
 <NEXT_>{Separator}*[^_a-zA-Z] { /* there is no identifier after "next" */
                yy_lex_count_lf();
-               BEGIN 0;
+               if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                yylval.string = strdup( "NEXT" );
                unput( yytext[ yyleng-1 ] );
                return IDENTIFIER;
              }
 <NEXT_>{Separator}*. { /* an identifier follows NEXT statement */
                yy_lex_count_lf();
-               BEGIN 0;
+               if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                if( _wForCounter == 0 )
                  GenError( ERR_NEXTFOR, NULL, NULL );
                unput( yytext[ yyleng-1 ] );
@@ -558,7 +587,7 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
 <WHILE_>{Separator}*\n      { /* end of line */
                 yy_lex_count_lf();
                 --iLine;
-                BEGIN 0;
+                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                 unput( '\n' );
                 if( _iState == DO )
                 { /* we have DO while - replace it with while() */
@@ -569,20 +598,20 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
               }
 <WHILE_>{Separator}*[\[] { /* array */
                yy_lex_count_lf();
-               BEGIN 0;
+               if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                /* Clipper does not like while[] at all */
                GenError( ERR_SYNTAX, yytext, NULL );
              }
 <WHILE_>{Separator}*[\:\=\|\$\%\*\,\/\]\)\}\^] { /* there is an operator after "case" */
                yy_lex_count_lf();
-               BEGIN 0;
+               if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                yylval.string = strdup( "WHILE" );
                unput( yytext[ yyleng-1 ] );
                return IDENTIFIER;
              }
 <WHILE_>{Separator}*("+="|"-="|"->") { /* operators */
                yy_lex_count_lf();
-               BEGIN 0;
+               if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                yylval.string = strdup( "WHILE" );
                unput( yytext[ yyleng-1 ] );
                unput( yytext[ yyleng-2 ] );
@@ -590,7 +619,7 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
              }
 <WHILE_>{Separator}*.      { /* identifiers and literals */
                 yy_lex_count_lf();
-                BEGIN 0;
+                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                 if( _iState == LOOKUP || _iState == DO )
                 { /* it is first item in the line or after DO */
                   unput( yytext[ yyleng-1 ] );
@@ -611,14 +640,14 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
 <WITH_>{Separator}*\n           { /* at the end of line */
                 yy_lex_count_lf();
                 --iLine;
-                BEGIN 0;
+                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                 unput( '\n' );
                 yylval.string = strdup( "WITH" );
                 return IDENTIFIER;
               }
 <WITH_>{Separator}*"with"       {
                 yy_lex_count_lf();
-                BEGIN 0;
+                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                 yyless( yyleng-4 );
                 if( _iState == DO )
                 { /* DO with */
@@ -639,7 +668,7 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
              }
 <WITH_>{Separator}*.            {
                 yy_lex_count_lf();
-                BEGIN 0;
+                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                 unput( yytext[ yyleng-1 ] );
                 if( _iState == WHILE || _iState == DO || _iState == IDENTIFIER )
                 { /* DO <ident> WITH <arg> */
@@ -764,7 +793,7 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
 
                yyleng = iIdentifierLength;
                yytext[yyleng] = 0;
-               /* printf( "\nIdentifier = %s Length = %i IndexSets = %i\n", strupr( strdup( yytext ) ), iIdentifierLength, iIndexSets ); */
+               /*printf( "\nINDEX BEGIN Identifier = %s Length = %i IndexSets = %i\n", strupr( strdup( yytext ) ), iIdentifierLength, iIndexSets );*/
               }
 
               {
