@@ -1,3 +1,7 @@
+2000-07-28 00:10 UTC+0200 JfL <jfl@mafact.com> & RaC <Rac@mafact.com>
+   * source/rtl/tclass.prg
+     * Some minor modifs I forget to identify before
+
 2000-07-28 00:05 UTC+0200 JfL <jfl@mafact.com> & RaC <Rac@mafact.com>
    * source/vm/classes.c
      * No more internal message :Class
