@@ -53,8 +53,9 @@ static char * aTexts[ NUMERALS_PER_LINE ];
 static unsigned char iIdentifier = 0;
 static char* sIdOnHold;
 
-long        hb_comp_SLX_Hex2L( char* sHex );
-static int  hb_compElementToken( char* szToken, unsigned int iTokenLen );
+long       hb_comp_SLX_Hex2L( char* sHex );
+static int hb_compElementToken( char* szToken, unsigned int iTokenLen );
+static int hb_comp_SLX_InterceptAction( int iRet, char *sToken );
 
 /* -----------------------------------------------------  Language Definitions. ---------------------------------------------------- */
 
@@ -427,7 +428,7 @@ LANGUAGE_RULES_ARE {
                 }
 
 #undef INTERCEPT_ACTION
-   #define INTERCEPT_ACTION(x) hb_comp_SLX_InterceptAction()
+   #define INTERCEPT_ACTION(x) x = hb_comp_SLX_InterceptAction( x, (char*) sToken )
 
 #undef ELEMENT_TOKEN
   #define ELEMENT_TOKEN(x,y) hb_compElementToken(x,y)
@@ -477,10 +478,9 @@ LANGUAGE_RULES_ARE {
    #define IF_BELONG_LEFT(chr) if( iLastToken == IDENTIFIER || iLastToken == ']' || iLastToken == MACROVAR || iLastToken == MACROTEXT || iLastToken == ')' || iLastToken == '}' || iLastToken == WANTS_EOL || iLastToken == WANTS_ID || iLastToken == WANTS_VAR || iLastToken == DECLARE || iLastToken == FIELD || iLastToken == SELF || iLastToken == QSELF || iLastToken == IIF || iLastToken == PROCREQ )
 
 /* Support Functions. */
-void hb_comp_SLX_InterceptAction(void)
+int hb_comp_SLX_InterceptAction( int iRet, char *sToken )
 {
-   extern char *yytext, sToken[TOKEN_SIZE];
-   extern int iRet;
+   extern char *yytext;
 
    if( iRet < 256 )
    {
@@ -489,7 +489,7 @@ void hb_comp_SLX_InterceptAction(void)
    }
    else if( iRet < 512 )
    {
-      yytext = (char*) sToken;
+      yytext = sToken;
 
       if( iRet == IDENTIFIER )
       {
@@ -501,7 +501,7 @@ void hb_comp_SLX_InterceptAction(void)
    }
    else
    {
-      yytext = (char*) sToken;
+      yytext = sToken;
 
       if( iRet == WANTS_EXP )
          { iRet = iWantsEXP; }
@@ -542,6 +542,8 @@ void hb_comp_SLX_InterceptAction(void)
      else
    	printf( "   TOKEN = %i\n", iRet  );
    #endif
+
+   return iRet;
 }
 
 static int hb_compElementToken( char* szToken, unsigned int iTokenLen )

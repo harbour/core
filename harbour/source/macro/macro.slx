@@ -67,9 +67,9 @@
 static HB_MACRO_PTR pMacro;
 static YYSTYPE *pYYLVAL;
 
-static int  hb_macro_SLX_CustomAction( int x, int aiHold[], int *ptr_iHold, char *sToken );
-static int  hb_macro_SLX_ElementToken( char* szToken, unsigned int iTokenLen );
-long        hb_macro_SLX_Hex2L( char* sHex );
+static int hb_macro_SLX_CustomAction( int x, int aiHold[], int *ptr_iHold, char *sToken );
+static int hb_macro_SLX_ElementToken( char* szToken, unsigned int iTokenLen );
+long hb_macro_SLX_Hex2L( char* sHex );
 
 void * yy_bytes_buffer( char * pBuffer, int iBufSize );
 
