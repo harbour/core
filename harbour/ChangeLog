@@ -1,3 +1,10 @@
+2001-06-21 14:55 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * source/pp/ppcore.c
+     * Commented out test for continuation token at the end of an Expression in isExpress()
+       /* Clipper does not validate extracted expression like that. This solves problem with:
+          SAVE ALL LIKE Patt* TO File
+        */
+
 2001-06-21 14:05 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * contrib/dot/pp.prg
      + Revised explicit support for Extended expression match marker, in NextExp() to use normal logic for () expresiions.

@@ -2318,7 +2318,7 @@ static BOOL isExpres( char * stroka )
   return ( l1 <= l2 );
   */
 
-  return ( l1 <= l2 && ! IsInStr( ( stroka - l2 )[l1-1], ":/+*-%^=(<>[{" ) );
+  return ( l1 <= l2 /*&& ! IsInStr( ( stroka - l2 )[l1-1], ":/+*-%^=(<>[{" ) */ );
 }
 
 static BOOL TestOptional( char *ptr1, char *ptr2 )
