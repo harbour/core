@@ -1,14 +1,40 @@
+2001-05-10 14:40 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * include/hbclass.ch
+     - Removed 1 #translate that caused conflicts with FWH.
+     + Refined logic detecting undeclared method and improved messages.
+     + Added logic for STRICT (#ifdef STRICT_OO) validation (all paramaters must match too)
+     + Added logic for normal (default) validation (paramaters are ignored).
+
+   * source/compiler/harbour.sly
+   * source/compiler/harbour.y
+     + Added support for dummy parameters to function pointer ( @SomeFun( DummyParam ) )
+
+   * source/vm/hvm.c
+   * source/compiler/hbpcode.c
+     ! Corrected 1 compiler warning.
+
+   * source/pp/ppcore.c
+     + Added support for #defines in #error messages.
+
+   * source/debug/debugger.prg
+     - Removed orphan method (discovered by new compiler error) CaseSensitive() which is apparantly superceded by ToggleCaseSensitive().
+   * utils/hbdoc/ffile1.prg
+     - Removed orphan method (discovered by new compiler error) GetBuff() which is routed to GetBuffer() in class declaration
+     - Removed orphan method (discovered by new compiler error) fClose() which is not declared and default to Super in class declaration.
+
+   /* These were discovered with the default LOOSE mode. When using /dSTRICT_OO many more inconsistencies are discovered! */
+
 2001-05-10 14:30 GMT+0200 (MET DST) Martin Vogel <vogel@inttec.de>
 
   + contrib/libct/charmirr.c
     + CHARMIRR() function
-  
+
   + contrib/libct/charrepl.c
     + CHARREPL() function
 
   + contrib/libct/wordrepl.c
     + WORDREPL() function
-  
+
   * contrib/libct/Makefile
   * contrib/libct/makefile.bc
   * contrib/libct/makefile.vc
@@ -17,7 +43,7 @@
   + contrib/libct/tests/charmirr.prg
   + contrib/libct/tests/charrepl.prg
   + contrib/libct/tests/wordrepl.prg
-    ! small test programs for new functions 
+    ! small test programs for new functions
 
   * contrib/libct/tests/Makefile
     + added charmirr.prg, charrepl.prg, wordrepl.prg
@@ -34,7 +60,7 @@
   + contrib/libct/tests/tokenlow.prg
   + contrib/libct/tests/tokenupp.prg
   + contrib/libct/tests/tokensep.prg
-    ! small test programs for new functions 
+    ! small test programs for new functions
 
 2001-05-10 09:46 UTC+0300 Chen Kedem <niki@actcom.co.il>
    * doc/en/objfunc.txt
@@ -55,7 +81,7 @@
       to the top of the database instead of record number 1.
 
 2001-05-09 00:02 UTC+1 JFL (mafact) <jfl@mafact.com>
-   * source/vm/classes.c            
+   * source/vm/classes.c
     * modified hb_msgclssel() to accept one logical param
       so as it return only ClassMsg
    * source/rtl/objfunc.prg

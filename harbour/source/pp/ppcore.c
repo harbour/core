@@ -194,7 +194,7 @@ char * hb_pp_szErrors[] =
    "Error in pattern definition",
    "Cycled #define",
    "Invalid name follows #: \'%s\'",
-   "#error: \'%s\'",
+   "\'%s\'",
    "Memory allocation error",
    "Memory reallocation error",
    "Freeing a NULL memory pointer",
@@ -497,8 +497,31 @@ int hb_pp_ParseDirective( char * sLine )
 
       else if( i >= 4 && i <= 5 && memcmp( sDirective, "ERROR", i ) == 0 )
         /* --- #error  --- */
+      {
+        DEFINES * stdef;
+        int lenToken, i;
+        char *ptri, *sToken, *ptrb, ptro[MAX_NAME];
+
+        ptri = sLine;
+
+        while( ( lenToken = NextName( &ptri, sToken ) ) > 0 )
+        {
+           /* Only simple define here. */
+           if( (stdef = DefSearch(sToken,NULL)) != NULL && stdef->npars < 0 )
+           {
+              ptrb = ptri - lenToken;
+
+              if( ( i = WorkDefine( &ptri, (char*) ptro, stdef ) ) >= 0 )
+              {
+                 hb_pp_Stuff( (char*) ptro, ptrb, i - 1, lenToken, strlen( ptrb ) );
+                 ptri += i - ( ptri - ptrb );
+              }
+           }
+        }
+
         hb_compGenError( hb_pp_szErrors, 'E', HB_PP_ERR_EXPLICIT, sLine, NULL );
 
+      }
       else if( i == 4 && memcmp( sDirective, "LINE", 4 ) == 0 )
         return -1;
 
@@ -1030,6 +1053,8 @@ int hb_pp_ParseExpression( char * sLine, char * sOutLine )
 
         if( *ptri == '#' )
         {
+           char *pTmp = sLine;
+
            hb_pp_ParseDirective( ptri+1 );
 
            if( ipos > 0 )

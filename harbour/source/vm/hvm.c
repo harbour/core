@@ -4311,7 +4311,7 @@ void hb_vmRequestCancel( void )
             ulLine = 0;
 
          i2 = strlen( (char *) buffer );
-         sprintf( buffer + i2, " (%i)", ulLine );
+         sprintf( buffer + i2, " (%lu)", ulLine );
 
          hb_conOutErr( buffer, 0 );
          hb_conOutErr( hb_conNewLine(), 0 );

@@ -379,7 +379,10 @@ METHOD goBottom() CLASS FileBase
    Returns: Self
    Purpose: To close the file
 */
-METHOD FCLOSE() CLASS FileBase
+
+/* Not declared in class creation, which means the super version is used. */
+#ifdef BUG
+  METHOD FCLOSE() CLASS FileBase
 
    IF Self:noDosError() .AND. Self:nDosHandle > 0
       FCLOSE( Self:nDosHandle )
@@ -390,6 +393,7 @@ METHOD FCLOSE() CLASS FileBase
    ENDIF
 
    RETURN ( self )
+#endif
 
    /* Method:  write(<cChar>)
    Params:  <cChar>
@@ -426,7 +430,10 @@ METHOD WRITE( cChar ) CLASS FileBase
             in a forward direction.  The default value is a logical true
             (.T.) value.
 */
-METHOD Buffget( lForward ) CLASS FileBase
+
+/* Class declaration send message BuffGet to BufferGet. */
+#ifdef BUG
+  METHOD Buffget( lForward ) CLASS FileBase
 
    LOCAL cBuffer       // as char
    LOCAL nLocation     // as int
@@ -473,6 +480,7 @@ METHOD Buffget( lForward ) CLASS FileBase
    ENDIF
 
    RETURN ( nLocation )
+#endif
 
    /* Method:  appendLine( <cLine )
    Params:  <cLine>         Character line to append

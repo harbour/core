@@ -327,7 +327,7 @@ ParamList  : IdentName AsType                { hb_compVariableAdd( $1, hb_comp_c
            | ParamList ',' IdentName AsType  { hb_compVariableAdd( $3, hb_comp_cVarType ); $$++; }
            ;
 
-/* NOTE: This alllows the use of Expression as a statement.
+/* NOTE: This allows the use of Expression as a statement.
  *    The Expression is validated later in reduction phase of
  *    hb_compExprGenStatement(). With this solution we don't have to
  *    stop compilation if invalid syntax will be used.
@@ -641,10 +641,19 @@ ArgList    : Argument                     { $$ = hb_compExprNewArgList( $1 ); }
            | ArgList ',' Argument         { $$ = hb_compExprAddListExpr( $1, $3 ); }
            ;
 
-Argument   : EmptyExpression                  { $$ = $1; }
-           | '@' IdentName                    { $$ = hb_compExprNewVarRef( $2 ); }
-           | '@' IdentName '(' ')'            { $$ = hb_compExprNewFunRef( $2 ); }
+Argument   : EmptyExpression                    { $$ = $1; }
+           | '@' IdentName                      { $$ = hb_compExprNewVarRef( $2 ); }
+           | '@' IdentName '(' DummyArgList ')' { $$ = hb_compExprNewFunRef( $2 ); }
            ;
+
+DummyArgList : DummyArgument                  {}
+             | DummyArgList ',' DummyArgument {}
+             ;
+
+DummyArgument : EmptyExpression                    {}
+              | '@' IdentName                      {}
+              | '@' IdentName '(' DummyArgList ')' {}
+              ;
 
 FunCallAlias : FunCall ALIASOP        { $$ = $1; }
 ;
@@ -1476,20 +1485,20 @@ DecList    : /* Nothing */ {}
            | FormalList ',' OptList
            ;
 
-FormalList : IdentName AsType                    { hb_compDeclaredParameterAdd( $1, hb_comp_cVarType ); }
-           | '@' IdentName AsType                { hb_compDeclaredParameterAdd( $2, hb_comp_cVarType + VT_OFFSET_BYREF ); }
-           | '@' IdentName '(' ')'               { hb_compDeclaredParameterAdd( $2, 'F' ); }
-           | FormalList ',' IdentName AsType     { hb_compDeclaredParameterAdd( $3, hb_comp_cVarType ); }
-           | FormalList ',' '@' IdentName AsType { hb_compDeclaredParameterAdd( $4, hb_comp_cVarType + VT_OFFSET_BYREF ); }
-           | FormalList ',' '@' IdentName '(' ')'{ hb_compDeclaredParameterAdd( $4, 'F' ); }
+FormalList : IdentName AsType                                  { hb_compDeclaredParameterAdd( $1, hb_comp_cVarType ); }
+           | '@' IdentName AsType                              { hb_compDeclaredParameterAdd( $2, hb_comp_cVarType + VT_OFFSET_BYREF ); }
+           | '@' IdentName '(' DummyArgList ')'                { hb_compDeclaredParameterAdd( $2, 'F' ); }
+           | FormalList ',' IdentName AsType                   { hb_compDeclaredParameterAdd( $3, hb_comp_cVarType ); }
+           | FormalList ',' '@' IdentName AsType               { hb_compDeclaredParameterAdd( $4, hb_comp_cVarType + VT_OFFSET_BYREF ); }
+           | FormalList ',' '@' IdentName '(' DummyArgList ')' { hb_compDeclaredParameterAdd( $4, 'F' ); }
            ;
 
-OptList    : OPTIONAL IdentName AsType                 { hb_compDeclaredParameterAdd( $2, hb_comp_cVarType + VT_OFFSET_OPTIONAL ); }
-           | OPTIONAL '@' IdentName AsType             { hb_compDeclaredParameterAdd( $3, hb_comp_cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ); }
-           | OPTIONAL '@' IdentName '(' ')'            { hb_compDeclaredParameterAdd( $3, hb_comp_cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ); }
-           | OptList ',' OPTIONAL IdentName AsType     { hb_compDeclaredParameterAdd( $4, hb_comp_cVarType + VT_OFFSET_OPTIONAL ); }
-           | OptList ',' OPTIONAL '@' IdentName AsType { hb_compDeclaredParameterAdd( $5, hb_comp_cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ); }
-           | OptList ',' OPTIONAL '@' IdentName '(' ')'{ hb_compDeclaredParameterAdd( $5, hb_comp_cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ); }
+OptList    : OPTIONAL IdentName AsType                               { hb_compDeclaredParameterAdd( $2, hb_comp_cVarType + VT_OFFSET_OPTIONAL ); }
+           | OPTIONAL '@' IdentName AsType                           { hb_compDeclaredParameterAdd( $3, hb_comp_cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ); }
+           | OPTIONAL '@' IdentName '(' DummyArgList ')'             { hb_compDeclaredParameterAdd( $3, hb_comp_cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ); }
+           | OptList ',' OPTIONAL IdentName AsType                   { hb_compDeclaredParameterAdd( $4, hb_comp_cVarType + VT_OFFSET_OPTIONAL ); }
+           | OptList ',' OPTIONAL '@' IdentName AsType               { hb_compDeclaredParameterAdd( $5, hb_comp_cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ); }
+           | OptList ',' OPTIONAL '@' IdentName '(' DummyArgList ')' { hb_compDeclaredParameterAdd( $5, hb_comp_cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ); }
 	   ;
 
 ExecFlow   : IfEndif
@@ -1797,10 +1806,10 @@ DoArgList  : ','                       { $$ = hb_compExprAddListExpr( hb_compExp
            | DoArgList ',' DoArgument  { $$ = hb_compExprAddListExpr( $1, $3 ); }
            ;
 
-DoArgument : IdentName                { $$ = hb_compExprNewVarRef( $1 ); }
-           | '@' IdentName '(' ')'    { $$ = hb_compExprNewFunRef( $2 ); }
-           | SimpleExpression          { $$ = $1; }
-           | PareExpList               { $$ = $1; }
+DoArgument : IdentName                            { $$ = hb_compExprNewVarRef( $1 ); }
+           | '@' IdentName '(' DummyArgList ')' { $$ = hb_compExprNewFunRef( $2 ); }
+           | SimpleExpression                     { $$ = $1; }
+           | PareExpList                          { $$ = $1; }
            ;
 
 Crlf       : '\n'          { hb_comp_bError = FALSE; }

@@ -1701,12 +1701,13 @@ METHOD SearchLine() CLASS TDebugger
 
 return nil
 
+/* Not declared - it seems ToggleCaseSensitive() replaced this!!!
 METHOD CaseSensitive() CLASS TDebugger
 
    ::lCaseSensitive := !::lCaseSensitive
 
 return nil
-
+*/
 
 function __DbgColors()
 

@@ -512,7 +512,7 @@ void hb_compStrongType( int iSize )
                    {
                       hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_PARAM_SUSPECT, ( char * ) szType1, ( char * ) szType2 );
                    }
-                   else if( bByRef && cParamType == ( ' ' + VT_OFFSET_BYREF ) || cParamType >= ( 'A' + VT_OFFSET_BYREF ) )
+                   else if( bByRef && ( cParamType == ( ' ' + VT_OFFSET_BYREF ) || cParamType >= ( 'A' + VT_OFFSET_BYREF )  ) )
                    {
                       hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_PARAM_SUSPECT, ( char * ) szType1, ( char * ) szType2 );
                    }
