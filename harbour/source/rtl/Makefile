@@ -46,6 +46,7 @@ PRG_SOURCES=\
         browdb.prg \
         devoutp.prg \
         errorsys.prg \
+	memvarbl.prg \
 	menuto.prg \
         objfunc.prg \
         readvar.prg \

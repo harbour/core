@@ -1355,7 +1355,6 @@ HARBOUR HB___MVDBGINFO( void )
  */
 HARBOUR HB___MVGET( void )
 {
-   BOOL bInvalidArg =TRUE;
    HB_ITEM_PTR pName = hb_param( 1, IT_STRING );
 
    if( pName )
@@ -1434,7 +1433,6 @@ HARBOUR HB___MVGET( void )
  */
 HARBOUR HB___MVPUT( void )
 {
-   BOOL bInvalidArg =TRUE;
    HB_ITEM_PTR pName = hb_param( 1, IT_STRING );
    HB_ITEM nil;
    HB_ITEM_PTR pValue = &nil;
