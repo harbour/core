@@ -55,20 +55,20 @@ function __dbgEntry( uParam )  // debugger entry point
 
       case ValType( uParam ) == "N"   // called from hvm.c hb_vmDebuggerShowLines()
            if oDebugger != nil
-              oDebugger:SaveAppStatus()
               if oDebugger:lGo
                  oDebugger:lGo = ! oDebugger:IsBreakPoint( uParam )
               endif
-              if ! oDebugger:lGo
+              if oDebugger:lGo
+                 DispBegin()
+                 DispBegin()
+                 oDebugger:SaveAppStatus()
+                 oDebugger:RestoreAppStatus()
+                 DispEnd()
+                 DispEnd()
+              else
+                 oDebugger:SaveAppStatus()
                  oDebugger:GoToLine( uParam )
                  oDebugger:HandleEvent()
-              else
-                 oDebugger:cImage = SaveScreen()
-                 DispBegin()
-                 RestScreen( 0, 0, MaxRow(), MaxCol(), oDebugger:cAppImage )
-                 SetPos( oDebugger:nAppRow, oDebugger:nAppCol )
-                 SetColor( oDebugger:cAppColors )
-                 SetCursor( oDebugger:nAppCursor )
               endif
            endif
 
@@ -96,7 +96,7 @@ CLASS TDebugger
    METHOD Activate( cModuleName )
    METHOD EndProc()
    METHOD Exit() INLINE ::lEnd := .t.
-   METHOD Go() INLINE ::RestoreAppStatus(), ::lGo := .t., ::Exit()
+   METHOD Go() INLINE ::RestoreAppStatus(), ::lGo := .t., DispEnd(), ::Exit()
    METHOD GoToLine( nLine )
    METHOD HandleEvent()
    METHOD Hide()
@@ -138,12 +138,7 @@ METHOD Activate( cModuleName ) CLASS TDebugger
    ::Show()
    ::ShowCode( cModuleName )
    ::ShowCallStack()
-   ::cImage := SaveScreen()
-   DispBegin()
-   RestScreen( 0, 0, MaxRow(), MaxCol(), ::cAppImage )
-   SetPos( ::nAppRow, ::nAppCol )
-   SetColor( ::cAppColors )
-   SetCursor( ::nAppCursor )
+   ::RestoreAppStatus()
 
 return nil
 
@@ -177,6 +172,7 @@ METHOD HandleEvent() CLASS TDebugger
               ::RestoreAppStatus()
               oDebugger := nil
               lExit := .T.
+              DispEnd()
               ::Exit()
 
          case nKey == K_UP

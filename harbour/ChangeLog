@@ -1,3 +1,13 @@
+19990829-01:20 EDT Paul Tucker <ptucker@sympatico.ca>
+   * source/debug/debugger.prg
+     * ::Activate  - call restoreAppStatus() since code was the same.
+     * ::Go added a DispEnd()
+     * __dbgEntry() Modified so that the app Screen is visible when
+       you select 'go' (F5)
+       The dispbegins/Ends here seem a bit weird, but this is temporary
+       as I'm working on a more permanent solution for the debugger to
+       do screen handling.
+
 19990828-22:20 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/filesys.c
      * modified FO_ flags handling slightly to correctly reflect their state.
