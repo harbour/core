@@ -788,7 +788,7 @@ static void hb_compChkDefineSwitch( char * pszSwitch )
             szDefText[ pAssign - szDefText ] = '\0';
 
             //hb_pp_AddDefine( szDefText,  pAssign + 1 );
-            sDefLine = hb_xgrab( strlen( szDefText ) + 1 + strlen( pAssign + 1 ) + 1 );
+            sDefLine = (char*) hb_xgrab( strlen( szDefText ) + 1 + strlen( pAssign + 1 ) + 1 );
             sprintf( sDefLine, "%s %s", szDefText, pAssign + 1 );
             hb_pp_ParseDefine( sDefLine );
             hb_xfree( sDefLine );

@@ -1347,7 +1347,7 @@ void SimpLex_CheckWords( void )
 
    if( s_szBuffer != szBaseBuffer )
    {
-      s_szBuffer = szBaseBuffer; iSize = iBaseSize; iHold = 0; iReturn = 0;
+      s_szBuffer = szBaseBuffer; iSize = iBaseSize; iHold = 0; iReturn = 0; iPairToken = 0;
       DEBUG_INFO( printf( "Partial Match - Restored position: %i at: [%s]\n", iSize, s_szBuffer ) );
    }
 

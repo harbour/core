@@ -1,3 +1,11 @@
+2000-11-08 24:10 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * source/compiler/cmdcheck.c
+   * utils/hbpp/hbpp.c
+     + Added missing type case for C++ compilers.
+
+   * source/compiler/simplex.c
+     * Added 1 missing var reset.
+
 2000-11-08 11:28 UTC+0800 Brian Hays <bhays@abacuslaw.com>
    * source\vm\arrays.c
       * added Victor's fix for passing the second parameter to ascan's codeblock.
