@@ -1,8 +1,8 @@
+//NOTEST
 //
 // $Id$
 //
 
-//NOTEST
 //
 // Spawn()
 //

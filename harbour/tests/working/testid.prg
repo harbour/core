@@ -1,8 +1,8 @@
+//NOTEST
 //
 // $Id$
 //
 
-//NOTEST
 // Warning: This sample must be tested using /dTEST compiler flag
 
 //TODO: Check why there is core dump om Linux if this file is compiled

@@ -1,8 +1,8 @@
+//NOTEST
 //
 // $Id$
 //
 
-//NOTEST
 // Testing Harbour duplicate variable definition detection
 
 function Main()

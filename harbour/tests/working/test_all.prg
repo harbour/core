@@ -1,8 +1,8 @@
+//NOTEST
 //
 // $Id$
 //
 
-//NOTEST
 // AutoMatic Test Bank
 // Patrick Mast and David G. Holm
 // Compiler independent, but not platform independent (creates a DOS style batch file).

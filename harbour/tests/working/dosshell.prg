@@ -1,8 +1,8 @@
+//NOTEST             // It is very frustrating if this one is auto-tested
 //
 // $Id$
 //
 
-//NOTEST             // It is very frustrating if this one is auto-tested
 //
 // DosShell
 //

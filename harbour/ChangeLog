@@ -1,3 +1,27 @@
+19990715-23:40 CET Eddie Runia <eddie@runia.com>
+   * tests/working/arrays.prg;
+     tests/working/dosshell.prg;
+     tests/working/dupvars.prg;
+     tests/working/keywords.prg;
+     tests/working/linecont.prg;
+     tests/working/linecont.prg;
+     tests/working/longstr2.prg;
+     tests/working/spawn.prg;
+     tests/working/spawn2.prg;
+     tests/working/test10.prg;
+     tests/working/testid.prg;
+     tests/working/test_all.prg
+     //NOTEST should be the first line
+
+19990715-23:14 CET Patrick Mast <harbour@PatrickMast.com>
+   All files for the Preprocessor lib from Felipe Coury <fcoury@flexsys-ci.com>
+   + source/hbpp/preproc.c
+   + doc/hbpplib.txt
+   + tests/working/testpre.prg
+   + Hbpplib.b32
+   + Bldhbpp.bat
+   * changed tests/working/bld32exe.bat (to include hbpp.lib)
+
 Thu Jul 15 17:32:29 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* config/rules.cf: 
@@ -12,15 +36,6 @@ Thu Jul 15 17:32:29 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 	* source/rtl/gt/gtwin.c: 
 	Modified these files to be able to compile gtwin.c with gcc. It
 	compiles and links, but it dumps core on execution...
-
-19990715-23:14 CET Patrick Mast <harbour@PatrickMast.com>
-   All files for the Preprocessor lib from Felipe Coury <fcoury@flexsys-ci.com>
-   + source/hbpp/preproc.c
-   + doc/hbpplib.txt
-   + tests/working/testpre.prg
-   + Hbpplib.b32
-   + Bldhbpp.bat
-   * changed tests/working/bld32exe.bat (to include hbpp.lib)
 
 19990715-16:30 Ryszard Glab <rglab@imid.med.pl>
 

@@ -1,8 +1,8 @@
+//NOTEST
 //
 // $Id$
 //
 
-//NOTEST
 // compile this using Harbour /10 flag
 
 Function Main()
