@@ -5,11 +5,15 @@
 // Testing Browse()
 
 function Main()
+   LOCAL cColor
 
-   SET COLOR TO "W+/B"
+   cColor := SETCOLOR("W+/B")
    CLS
 
    USE Test
    Browse()
+
+   SETCOLOR(cColor)
+   CLS
 
 return nil

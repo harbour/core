@@ -1,3 +1,13 @@
+Wed Nov 03 18:38:03 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* tests/testbrdb.prg: 
+	The test now restores the color setting and does a CLS before
+	exiting.
+	
+	* tests/testbrw.prg: 
+	The test now remembers its device position, cursor setting and
+	color and restores everything before exiting.
+
 19991103-07:28 GMT+1 Antonio Linares
    * source/rtl/classes.c
      * hb___msgSuper() simplied, faster and less memory consume.

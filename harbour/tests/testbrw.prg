@@ -13,6 +13,9 @@ function Main()
    local n       := 1
    local nKey
    local lEnd    := .f.
+   local nCursor
+   local cColor
+   local nRow, nCol
 
    oBrowse:colorSpec     = "W+/B, N/BG"
    oBrowse:ColSep        = "³"
@@ -39,9 +42,10 @@ function Main()
    Alert( oBrowse:GetColumn( 1 ):ClassName() )
 
    oBrowse:Freeze = 1
-   SetCursor( 0 )
-
-   set color to "W+/B"
+   nCursor := SetCursor( 0 )
+   cColor := SetColor( "W+/B" )
+   nRow := Row()
+   nCol := Col()
    @ 4,4,17,31 BOX "ÚÄ¿³ÙÄÀ³ "
 
    while ! lEnd
@@ -99,5 +103,9 @@ function Main()
 
       endcase
    end
+
+   DevPos( nRow, nCol )
+   SetColor( cColor )
+   SetCursor( nCursor )
 
 return nil
