@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-07-10 17:43 UTC-0300 Antonio Carlos Pantaglione <toninho@fwi.com.br>
+  * source/rtl/memoline.c
+    ! Fixed bug with soft returns. Clipper compatible.
+
 2003-07-09 07:20 UTC-0300 Antonio Carlos Pantaglione <toninho@fwi.com.br>
   * source/rtl/transfrm.c
     ! Fix with numeric values and pictures with spaces and pictures with
