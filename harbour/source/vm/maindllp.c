@@ -65,6 +65,10 @@ typedef void ( * VM_PROCESS_DLL_SYMBOLS ) ( PHB_SYMB pModuleSymbols,
 
 typedef void ( * VM_DLL_EXECUTE ) ( const BYTE * pCode, PHB_SYMB pSymbols );
 
+typedef BOOL ( * EXT_IS_ARRAY ) ( int iParam );
+typedef char * ( * EXT_PARC1 )  ( int iParam );
+typedef char * ( * EXT_PARC2 )  ( int iParam, ULONG ulArrayIndex );
+
 
 #if defined(HB_OS_WIN_32)
 
@@ -114,6 +118,33 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 
    /* else
     *    may we issue an error ? */
+}
+
+/* extend API implementation for pcode DLLs */
+
+char * hb_parc( int iParam, ... )
+{
+   FARPROC pExtIsArray = GetProcAddress( GetModuleHandle( NULL ), "_hb_extIsArray" );
+   FARPROC pParC = GetProcAddress( GetModuleHandle( NULL ), "_hb_parc" );
+
+   if( pExtIsArray && pParC )
+   {
+      if( ( ( EXT_IS_ARRAY ) pExtIsArray ) ( iParam ) )
+      {
+         va_list va;
+         ULONG ulArrayIndex;
+
+         va_start( va, iParam );
+         ulArrayIndex = va_arg( va, ULONG );
+         va_end( va );
+
+         return ( ( EXT_PARC2 ) pParC )( iParam, ulArrayIndex );
+      }
+      else
+         return ( ( EXT_PARC1 ) pParC )( iParam );
+   }
+   else
+      return "";
 }
 
 #endif
