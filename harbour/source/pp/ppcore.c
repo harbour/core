@@ -198,10 +198,6 @@ char * hb_pp_szWarnings[] =
 
 void hb_pp_SetRules( BOOL (*hb_compInclude)(char *, PATHNAMES * ) )
 {
-   /*
-   COMMANDS * stcmd;
-   */
-
    if( hb_pp_STD_CH )
    {
       if( *hb_pp_STD_CH > ' ' )
@@ -210,29 +206,72 @@ void hb_pp_SetRules( BOOL (*hb_compInclude)(char *, PATHNAMES * ) )
 
          if( hb_comp_pFileName->szName )
          {
-            char szFileName[ _POSIX_PATH_MAX ];
+            BOOL bOpened = FALSE;
 
-            if( !hb_comp_pFileName->szExtension )
-               hb_comp_pFileName->szExtension = ".ch";
-
-            hb_fsFNameMerge( szFileName, hb_comp_pFileName );
-
-            if( (* hb_compInclude)( szFileName, hb_comp_pIncludePath ) )
+            if( (* hb_compInclude)( hb_pp_STD_CH, hb_comp_pIncludePath ) )
             {
-                printf( "Loading standard defs from: \'%s\'\n", szFileName );
+               bOpened = TRUE;
+            }
+            else if( ! hb_comp_pFileName->szExtension )
+            {
+               char szFileName[ _POSIX_PATH_MAX ];
+
+               hb_comp_pFileName->szExtension = ".ch";
+               hb_fsFNameMerge( szFileName, hb_comp_pFileName );
+
+               if( (* hb_compInclude)( szFileName, hb_comp_pIncludePath ) )
+               {
+                  bOpened = TRUE;
+               }
+            }
+
+            if( bOpened )
+            {
+                /*
+                printf( "Loading Standard Rules from: \'%s%s\'\n", hb_comp_pFileName->szName, ( hb_comp_pFileName->szExtension ? hb_comp_pFileName->szExtension : "." ) );
+                */
 
                 hb_pp_Init();
 
                 hb_pp_ReadRules();
 
                 /*
-                stcmd = hb_pp_topCommand;
-                while ( stcmd )
                 {
-                    printf( "Command: %s Pattern: %s\n", stcmd->name, stcmd->mpatt );
-                    stcmd = stcmd->last;
+                   COMMANDS * stcmd;
+                   DEFINES * stdef;
+
+                   stcmd = hb_pp_topCommand;
+                   while ( stcmd )
+                   {
+                       printf( "Command: %s Pattern: %s\n", stcmd->name, stcmd->mpatt );
+                       stcmd = stcmd->last;
+                   }
+
+                   stcmd = hb_pp_topTranslate;
+                   while ( stcmd )
+                   {
+                       printf( "Translate: %s \nPattern: %s\n", stcmd->name, stcmd->mpatt );
+                       stcmd = stcmd->last;
+                   }
+
+                   stdef = hb_pp_topDefine;
+                   while ( stdef && s_kolAddDefs > 3 )
+                   {
+                       printf( "Define: %s Value: %s\n", stdef->name, stdef->value );
+                       stdef = stdef->last;
+                       s_kolAddDefs--;
+                   }
                 }
                 */
+
+                if ( s_kolAddComs || s_kolAddTras || s_kolAddDefs > 3 )
+                {
+                   printf( "Loaded: %i Commands, %i Translates, %i Defines from: %s%s\n", s_kolAddComs, s_kolAddTras, s_kolAddDefs - 3, hb_comp_pFileName->szName, ( hb_comp_pFileName->szExtension ? hb_comp_pFileName->szExtension : "." ) );
+                }
+                else
+                {
+                   printf( "No Directives found in: %s%s\n", hb_comp_pFileName->szName, ( hb_comp_pFileName->szExtension ? hb_comp_pFileName->szExtension : "." ) );
+                }
 
                 fclose( hb_comp_files.pLast->handle );
                 hb_xfree( hb_comp_files.pLast->pBuffer );
@@ -243,15 +282,23 @@ void hb_pp_SetRules( BOOL (*hb_compInclude)(char *, PATHNAMES * ) )
                 hb_xfree( ( void * ) hb_comp_pFileName );
                 hb_comp_pFileName = NULL;
 
-                s_kolAddDefs = 0;
                 s_kolAddComs = 0;
                 s_kolAddTras = 0;
+                s_kolAddDefs = 0;
             }
             else
             {
-                printf( "Can\'t open standard rule file: \'%s\'\n", szFileName );
+                printf( "Can\'t open Standard Rules file: \'%s\'\n", hb_pp_STD_CH );
             }
          }
+         else
+         {
+            printf( "Invalid Standard Rules file name: \'%s\'\n", hb_pp_STD_CH );
+         }
+      }
+      else
+      {
+         printf( "Standard Rules excluded!\n" );
       }
    }
    else

@@ -1,3 +1,9 @@
+2000-06-05 19:50 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
+
+   * source/pp/ppcore.c
+     * Changed hb_pp_SetRules() to only default to .CH extension, if file name as supplied without extension was not found.
+     ! Improved Messages to report various possible conditions.
+
 2000-06-05 14:54 UTC+0100 Antonio Linares <alinares@fivetech.com>
    * source/vm/classes.c
       * workaround for inheritance bug as per JF. Lefebvre indications
