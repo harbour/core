@@ -1,3 +1,7 @@
+19990603-00:00 PST Ron Pinkas
+  * hvm.c
+    - Changed VitualMachine() to use direct dynamic call for processing pcodes rather tha the switch loop.
+
 19990603-00:30 EDT David G. Holm <dholm@jsd-llc.com>
   * makedos.env
     - Removed HARBOURDIR definition to a batch file
@@ -25,7 +29,7 @@
 
 19990602-16:00 EDT David G. Holm <dholm@jsd-llc.com>
   + tests/broken/codebloc.prg
-    - Output doesn't match Clipper. Clipper outputs NIL and 42, 
+    - Output doesn't match Clipper. Clipper outputs NIL and 42,
       (both 5.2e and 5.3b), but Harbour outputs NIL and NIL (as
       tested with Harbour built using Borland C++ 3.1 using the
       build31.bat and makefile.b31 files)

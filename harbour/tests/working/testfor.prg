@@ -6,7 +6,7 @@ FUNCTION MAIN
 
       qout( i )
 
-      IF i = 4
+      IF i = 4 .AND. .T.
          __Accept("")
          qout(i)
          i := 9
