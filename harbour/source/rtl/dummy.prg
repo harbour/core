@@ -82,14 +82,6 @@ FUNCTION __TypeFile()      ; RETURN NIL
 FUNCTION __LabelForm()     ; RETURN NIL
 FUNCTION __ReportForm()    ; RETURN NIL
 
-FUNCTION GetActive()       ; RETURN NIL
 FUNCTION GetApplyKey()     ; RETURN NIL
-FUNCTION GetDoSetKey()     ; RETURN NIL
-FUNCTION GetPostValidate() ; RETURN .T.
-FUNCTION GetPreValidate()  ; RETURN .T.
 FUNCTION GetReader()       ; RETURN NIL
-FUNCTION ReadFormat()      ; RETURN .F.
-FUNCTION ReadKill()        ; RETURN .F.
-FUNCTION ReadUpdated()     ; RETURN .T.
-FUNCTION Updated()         ; RETURN .T.
 FUNCTION __SetFormat()     ; RETURN NIL

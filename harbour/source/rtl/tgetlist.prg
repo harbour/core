@@ -45,6 +45,8 @@
 
 #define K_UNDO   K_CTRL_U
 
+static oGetListActive
+
 function ReadModal( GetList, nPos )
 
    local oGetList
@@ -102,13 +104,18 @@ CLASS TGetList
    METHOD PostActiveGet()
    METHOD GetReadVar()
    METHOD SetFormat( bFormat )
-   METHOD KillRead()
+   METHOD KillRead( lKill )
    METHOD GetActive( oGet )
    METHOD DateMsg()
    METHOD ShowScoreBoard()
+   METHOD ReadUpdated( lUpdated )
    METHOD ReadVar( cNewVarName )
    METHOD ReadExit( lNew ) INLINE Set( _SET_EXIT, lNew )
-   METHOD SetFocus() INLINE ::aGetList[ ::nPos ]:SetFocus()
+
+   METHOD SetFocus() INLINE oGetListActive := ::oGetList,;
+                            ::aGetList[ ::nPos ]:SetFocus()
+
+   METHOD Updated() INLINE ::lUpdated
 
 ENDCLASS
 
@@ -294,6 +301,14 @@ METHOD GetPreValidate() CLASS TGetList
 
 return lWhen
 
+function GetPreValidate( oGet )
+
+   if oGet != nil
+      oGetListActive:oGet = oGet
+   endif
+
+return oGetListActive:GetPreValidate()
+
 METHOD GetPostValidate() CLASS TGetList
 
    local oGet := ::oGet
@@ -335,6 +350,14 @@ METHOD GetPostValidate() CLASS TGetList
 
 return lValid
 
+function GetPostValidate( oGet )
+
+   if oGet != nil
+      oGetListActive:oGet = oGet
+   endif
+
+return oGetListActive:GetPostValidate()
+
 METHOD GetDoSetKey( bKeyBlock ) CLASS TGetList
 
    local oGet := ::oGet, lUpdated
@@ -358,6 +381,18 @@ METHOD GetDoSetKey( bKeyBlock ) CLASS TGetList
    endif
 
 return nil
+
+PROCEDURE GetDoSetKey( keyBlock, oGet )
+
+   if oGet != nil .and. oGetListActive != nil
+      oGetListActive:oGet = oGet
+   endif
+
+   if oGetListActive != nil
+      oGetListActive:GetDoSetKey( keyBlock )
+   endif
+
+return
 
 METHOD Settle( nPos ) CLASS TGetList
 
@@ -453,15 +488,43 @@ METHOD GetReadVar() CLASS TGetList
 
 return cName
 
-METHOD SetFormat( bFormat ) CLASS TGetList
+function ReadFormat( bFormat )
 
-   ::bFormat = If( ISBLOCK( bFormat ), bFormat, nil )
+   if PCount() > 0
+      return oGetListActive:SetFormat( bFormat )
+   else
+      return oGetListActive:SetFormat()
+   endif
 
 return nil
 
-METHOD KillRead() CLASS TGetList
+METHOD SetFormat( bFormat ) CLASS TGetList
 
-   ::lKillRead := .t.
+   local bSavFormat := ::bFormat
+
+   if PCount() > 0
+      ::bFormat = bFormat
+   endif
+
+return bSavFormat
+
+METHOD KillRead( lKill ) CLASS TGetList
+
+   local lSavKill := ::lKillRead
+
+   if PCount() > 0
+      ::lKillRead = lKill
+   endif
+
+return lSavKill
+
+function ReadKill( lKill )
+
+   if PCount() > 0
+      return oGetListActive:KillRead( lKill )
+   else
+      return oGetListActive:KillRead()
+   endif
 
 return nil
 
@@ -474,6 +537,18 @@ METHOD GetActive( oGet ) CLASS TGetList
    endif
 
 return oOldGet
+
+function GetActive( oGet )
+
+   if oGetListActive != nil
+      if PCount() > 0
+         return oGetListActive:GetActive( oGet )
+      else
+         return oGetListActive:GetActive()
+      endif
+   endif
+
+return nil
 
 METHOD ShowScoreboard() CLASS TGetList
 
@@ -528,3 +603,31 @@ FUNCTION ReadExit( lExit )
 
 FUNCTION ReadInsert( lInsert )
    RETURN Set( _SET_INSERT, lInsert )
+
+METHOD ReadUpdated( lUpdated ) CLASS TGetList
+
+   local lSavUpdated := ::lUpdated
+
+   if PCount() > 0
+      ::lUpdated = lUpdated
+   endif
+
+return lSavUpdated
+
+function ReadUpdated( lUpdated )
+
+   if PCount() > 0
+      return oGetListActive:ReadUpdated( lUpdated )
+   else
+      return oGetListActive:ReadUpdate()
+   endif
+
+return nil
+
+function Updated()
+
+   if oGetListActive != nil
+      return oGetListActive:lUpdated
+   endif
+
+return .f.

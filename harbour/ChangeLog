@@ -1,3 +1,20 @@
+20000131-10:00 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/debug/debugger.prg
+     + added _AltD(). Waiting for a Harbour fix to accept it as AltD()
+
+   * source/rtl/tgetlist.prg
+     + added functions: GetPreValidate(), GetPostValidate(), GetActive()
+     + added functions: ReadFormat(), ReadKill(), ReadUpdated(), Updated()
+     + added functions: GetDoSetKey()
+
+   * source/rtl/dummy.prg
+     - removed functions: GetPreValidate(), GetPostValidate(), GetActive()
+     - removed functions: ReadFormat(), ReadKill(), ReadUpdated(), Updated()
+     - removed functions: GetDoSetKey()
+
+   * doc/funclist.txt
+     * Updated
+
 20000131-01:29 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/harbinit.prg
     ! CLIPPER530 is declared only when HB_COMPAT_53 is defined.
@@ -43,7 +60,7 @@
 
     *source/compiler/harbour.l
 	* fixed support for macro variables used in FOR statement
-	
+
     *source/vm/hvm.c
 	* private variables created during a macro evaluation are not
 	released after a macro evaluation. They have the function/procedure
@@ -62,7 +79,7 @@
 
 20000129-14:30  GMT+3 Luiz Rafael Culik <culik@sl.conex.net>
     *source/rtl/oemansi.c
-        *Added documentation to HB_oemtoansi() and Hb_ansitooem() 
+        *Added documentation to HB_oemtoansi() and Hb_ansitooem()
     *source/rtl/strings.c
          *Added documentation to AT(),RAT(),ISDIGIT(),ISALPHA(),ISLOWER(),ISUPPER()
 
@@ -87,9 +104,9 @@
 
     *source/macro/macro.l
     *source/compiler/harbour.l
-	* any nonstandard characters (ASCII < 32 and ASCII > 127) are 
+	* any nonstandard characters (ASCII < 32 and ASCII > 127) are
 	passed to grammar analyser instead of printing on stdout
-	
+
     *include/hbexpr.c
     *source/macro/macro.c
     *source/compiler/expropt.c

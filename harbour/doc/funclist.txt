@@ -319,15 +319,16 @@ __Wait                  ;R;
 __XRestScreen           ;R;
 __XSaveScreen           ;R;
 ; GET SYSTEM
-GETACTIVE               ;N;
+GETACTIVE               ;R;
 GETAPPLYKEY             ;N;
-GETDOSETKEY             ;N;
-GETPOSTVALIDATE         ;N;
-GETPREVALIDATE          ;N;
+GETDOSETKEY             ;R;
+GETPOSTVALIDATE         ;R;
+GETPREVALIDATE          ;R;
 GETREADER               ;N;
-READFORMAT              ;N;
-READKILL                ;N;
-READUPDATED             ;N;
+READFORMAT              ;R;
+READKILL                ;R;
+READUPDATED             ;R;
+UPDATED                 ;R;
 ; ERROR OBJECT
 ErrorNew                ;R;
 :Args                   ;R;
