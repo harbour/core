@@ -66,7 +66,7 @@ FUNCTION TClass()
    STATIC s_hClass /* NOTE: Automatically default to NIL */
 
    IF s_hClass == NIL
-      s_hClass := __clsNew( "TCLASS",  9)
+      s_hClass := __clsNew( "TCLASS", 11)
 
       __clsAddMsg( s_hClass, "New"            , @New()            , HB_OO_MSG_METHOD )
       __clsAddMsg( s_hClass, "Create"         , @Create()         , HB_OO_MSG_METHOD )
@@ -76,6 +76,7 @@ FUNCTION TClass()
       __clsAddMsg( s_hClass, "AddMultiClsData", @AddMultiClsData(), HB_OO_MSG_METHOD )
       __clsAddMsg( s_hClass, "AddInline"      , @AddInline()      , HB_OO_MSG_METHOD )
       __clsAddMsg( s_hClass, "AddMethod"      , @AddMethod()      , HB_OO_MSG_METHOD )
+      __clsAddMsg( s_hClass, "AddClsMethod"   , @AddClsMethod()   , HB_OO_MSG_METHOD )
       __clsAddMsg( s_hClass, "AddVirtual"     , @AddVirtual()     , HB_OO_MSG_METHOD )
       __clsAddMsg( s_hClass, "Instance"       , @Instance()       , HB_OO_MSG_METHOD )
       __clsAddMsg( s_hClass, "SetOnError"     , @SetOnError()     , HB_OO_MSG_METHOD )
@@ -93,14 +94,18 @@ FUNCTION TClass()
       __clsAddMsg( s_hClass, "_aMethods"      ,  4, HB_OO_MSG_DATA )
       __clsAddMsg( s_hClass, "aClsDatas"      ,  5, HB_OO_MSG_DATA )
       __clsAddMsg( s_hClass, "_aClsDatas"     ,  5, HB_OO_MSG_DATA )
-      __clsAddMsg( s_hClass, "aInlines"       ,  6, HB_OO_MSG_DATA )
-      __clsAddMsg( s_hClass, "_aInlines"      ,  6, HB_OO_MSG_DATA )
-      __clsAddMsg( s_hClass, "aVirtuals"      ,  7, HB_OO_MSG_DATA )
-      __clsAddMsg( s_hClass, "_aVirtuals"     ,  7, HB_OO_MSG_DATA )
-      __clsAddMsg( s_hClass, "acSuper"        ,  8, HB_OO_MSG_DATA )
-      __clsAddMsg( s_hClass, "_acSuper"       ,  8, HB_OO_MSG_DATA )
-      __clsAddMsg( s_hClass, "nOnError"       ,  9, HB_OO_MSG_DATA )
-      __clsAddMsg( s_hClass, "_nOnError"      ,  9, HB_OO_MSG_DATA )
+      __clsAddMsg( s_hClass, "aClsMethods"    ,  6, HB_OO_MSG_DATA )
+      __clsAddMsg( s_hClass, "_aClsMethods"   ,  6, HB_OO_MSG_DATA )
+      __clsAddMsg( s_hClass, "aInlines"       ,  7, HB_OO_MSG_DATA )
+      __clsAddMsg( s_hClass, "_aInlines"      ,  7, HB_OO_MSG_DATA )
+      __clsAddMsg( s_hClass, "aVirtuals"      ,  8, HB_OO_MSG_DATA )
+      __clsAddMsg( s_hClass, "_aVirtuals"     ,  8, HB_OO_MSG_DATA )
+      __clsAddMsg( s_hClass, "acSuper"        ,  9, HB_OO_MSG_DATA )
+      __clsAddMsg( s_hClass, "_acSuper"       ,  9, HB_OO_MSG_DATA )
+      __clsAddMsg( s_hClass, "nOnError"       , 10, HB_OO_MSG_DATA )
+      __clsAddMsg( s_hClass, "_nOnError"      , 10, HB_OO_MSG_DATA )
+      __clsAddMsg( s_hClass, "class"          , 11, HB_OO_MSG_DATA )
+      __clsAddMsg( s_hClass, "_class"         , 11, HB_OO_MSG_DATA )
    ENDIF
 
    RETURN __clsInst( s_hClass )
@@ -128,13 +133,14 @@ STATIC FUNCTION New( cClassName, xSuper )
       nSuper := 0
    ENDIF
 
-   ::cName     := Upper( cClassName )
+   ::cName       := Upper( cClassName )
 
-   ::aDatas    := {}
-   ::aMethods  := {}
-   ::aClsDatas := {}
-   ::aInlines  := {}
-   ::aVirtuals := {}
+   ::aDatas      := {}
+   ::aMethods    := {}
+   ::aClsDatas   := {}
+   ::aClsMethods := {}
+   ::aInlines    := {}
+   ::aVirtuals   := {}
 
    FOR i := 1 TO nSuper
       IF ! ISCHARACTER( ::acSuper[ i ] )
@@ -150,7 +156,7 @@ STATIC FUNCTION New( cClassName, xSuper )
 
 //----------------------------------------------------------------------------//
 
-STATIC PROCEDURE Create()
+STATIC PROCEDURE Create(MetaClass)
 
    LOCAL Self := QSelf()
    LOCAL n
@@ -160,6 +166,8 @@ STATIC PROCEDURE Create()
    LOCAL nClassBegin := 0
    LOCAL hClass
    LOCAL ahSuper := Array( nLen )
+
+   Self:Class := MetaClass
 
    IF nLen == 0
       hClass := __clsNew( ::cName, nLenDatas )
@@ -191,10 +199,14 @@ STATIC PROCEDURE Create()
 
    ::hClass := hClass
 
-// __clsAddMsg( hClass, "__class"                                ,   ++nDataBegin, ;
-//              HB_OO_MSG_DATA,                                  , 1                                 )
-// __clsAddMsg( hClass, "___class"                               ,     nDataBegin, ;
-//              HB_OO_MSG_DATA,                                  , 1                                 )
+   // We will work here on the MetaClass object to add the Class Method
+   // as needed
+   nLen := Len( ::aClsMethods )
+   FOR n := 1 TO nLen
+    // do it
+   NEXT
+   //
+
 
    //Local message...
 
@@ -239,7 +251,9 @@ STATIC PROCEDURE Create()
 
 STATIC FUNCTION Instance()
  LOCAL Self := QSelf()
-RETURN __clsInst( ::hClass )
+ Local oInstance := __clsInst( ::hClass )
+ oInstance:Class := Self:Class
+RETURN oInstance
 
 //----------------------------------------------------------------------------//
 
@@ -353,6 +367,15 @@ STATIC PROCEDURE AddMethod( cMethod, nFuncPtr, nScope )
 
 //----------------------------------------------------------------------------//
 
+STATIC PROCEDURE AddClsMethod( cMethod, nFuncPtr, nScope )
+
+   LOCAL Self := QSelf()
+
+   AAdd( ::aClsMethods, { cMethod, nFuncPtr, nScope } )
+
+   RETURN
+
+//----------------------------------------------------------------------------//
 STATIC PROCEDURE AddVirtual( cMethod )
 
    LOCAL Self := QSelf()
@@ -385,4 +408,4 @@ STATIC FUNCTION ClassName()
 
    LOCAL Self := QSelf()
 
-   RETURN "CLASS"+Self:cName
+   RETURN Self:cName

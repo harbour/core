@@ -1,3 +1,12 @@
+2000-12-02 01:13 UTC+0100 jfl (mafact) <jfl@mafact.com>
+   * include/hbclass.ch
+     * more work in progress about :class message
+     * added the metaclass concept
+   * source/rtl/tclass.prg
+     * more work in progress about :class message + metaclass
+     * :Create now accept the metaclass object
+     * :instance() return an object with it's :class initiated
+
 2000-12-01 01:50 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/harbour.sly
      ! Minor optimization.

@@ -128,13 +128,16 @@ DECLARE TClass ;
 
 #ifndef HB_SHORTNAMES
 
-#xcommand CLASS <ClassName> [ <frm: FROM, INHERIT> <SuperClass1> [,<SuperClassN>] ] [<static: STATIC>] => ;
+#xcommand CLASS <ClassName> [METACLASS <metaClass>] [ <frm: FROM, INHERIT> <SuperClass1> [,<SuperClassN>] ] [<static: STATIC>] => ;
    _HB_CLASS <ClassName> ;;
    <static> function <ClassName>() ;;
-      static s_oClass AS CLASS TClass;;
-      local oInstance,nScope := HB_OO_CLSTP_EXPORTED ;;
+      static s_oClass ;;
+      local MetaClass,nScope := HB_OO_CLSTP_EXPORTED ;;
       if s_oClass == NIL ;;
-         s_oClass := TClass():New( <(ClassName)>, __HB_CLS_PAR ([ <(SuperClass1)> ] [ ,<(SuperClassN)> ] ) ) ;;
+         s_oClass := IIF(<.metaClass.>, <(metaClass)> ,TClass():new( <(ClassName)> , __HB_CLS_PAR ( [ <(SuperClass1)> ] [ ,<(SuperClassN)> ] ) ) ) ;;
+         if (!<.metaClass.>)                                           ;;
+           metaClass := TClass():new( <(ClassName)> + " class", __HB_CLS_PAR ( [ <SuperClass1>():class ] [, <SuperClassN>():class] ) ) ;;
+         endif                                                       ;;
      #undef _CLASS_NAME_ ;;
      #define _CLASS_NAME_ <ClassName> ;;
      #translate CLSMETH <ClassName> <MethodName>() => @<ClassName>_<MethodName>() ;
@@ -146,13 +149,16 @@ DECLARE TClass ;
 
 #else
 
-#xcommand CLASS <ClassName> [ <frm: FROM, INHERIT> <SuperClass1> [,<SuperClassN>] ] [<static: STATIC>] => ;
+#xcommand CLASS <ClassName> [METACLASS <metaClass>] [ <frm: FROM, INHERIT> <SuperClass1> [,<SuperClassN>] ] [<static: STATIC>] => ;
    _HB_CLASS <ClassName> ;;
    <static> function <ClassName>() ;;
-      static s_oClass AS CLASS TClass;;
-      local oInstance,nScope := HB_OO_CLSTP_EXPORTED ;;
+      static s_oClass  ;;
+      local MetaClass,nScope := HB_OO_CLSTP_EXPORTED ;;
       if s_oClass == NIL ;;
-         s_oClass := TClass():New( <(ClassName)>, __HB_CLS_PAR ([ <(SuperClass1)> ] [ ,<(SuperClassN)> ] ) ) ;;
+         s_oClass := IIF(<.metaClass.>,<(metaClass)>,TClass():new(<(ClassName)>, __HB_CLS_PAR ( [ <(SuperClass1)> ] [ ,<(SuperClassN)> ] ) ) ) ;;
+         if (!<.metaClass.>)                                           ;;
+           metaClass := TClass():new(<(ClassName)> + " class", __HB_CLS_PAR ( [ <SuperClass1>():class ] [, <SuperClassN>():class] ) ) ;;
+         endif                                                       ;;
      #undef _CLASS_NAME_ ;;
      #define _CLASS_NAME_ <ClassName> ;;
      #translate CLSMETH <ClassName> <MethodName>() => @<MethodName>() ;
@@ -446,11 +452,10 @@ DECLARE TClass ;
 
 #ifdef HB_CLS_ALLOWCLASS
 #xcommand ENDCLASS => ;;
-                      s_oClass:Create() ;;
+                       s_oClass:Create(MetaClass) ;;
+                       MetaClass:InitClass();;
                       endif ;;
-                      oInstance := s_oClass:Instance() ;;
-                      oInstance:class := s_oClass ;;
-                      return  oInstance AS CLASS _CLASS_NAME_
+                      return s_oClass:Instance() AS CLASS _CLASS_NAME_
 #else
 #xcommand ENDCLASS => ;;
                       s_oClass:Create() ;;
