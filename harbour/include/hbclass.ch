@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Header file for Class commands
  *
- * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * Copyright 1999 Antonio Linares <alinares@fivetechsoft.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -158,9 +158,13 @@ DECLARE HBClass ;
 
 #xtranslate DECLMETH <ClassName> <MethodName> => <ClassName>_<MethodName>
 
-#xcommand CLASS <ClassName> [METACLASS <metaClass>] [ <frm: FROM, INHERIT> <SuperClass1> [,<SuperClassN>] ] [<static: STATIC>] => ;
+#xcommand CLASS <ClassName> [METACLASS <metaClass>] ;
+             [ <frm: FROM, INHERIT> <SuperClass1> [,<SuperClassN>] ] ;
+             [ <static: STATIC> ] [ FUNCTION <FuncName> ] => ;
+   #define _HB_CLS_FUNCNAME <ClassName> ;;
+   [ #undef _HB_CLS_FUNCNAME ; #define _HB_CLS_FUNCNAME <FuncName> ] ;;
    _HB_CLASS <ClassName> ;;
-   <static> function <ClassName>() ;;
+   <static> function _HB_CLS_FUNCNAME() ;;
       static s_oClass ;;
       local MetaClass,nScope ;;
       nScope := HB_OO_CLSTP_EXPORTED ;;
@@ -184,9 +188,13 @@ DECLARE HBClass ;
 
 #else
 
-#xcommand CLASS <ClassName> [METACLASS <metaClass>] [ <frm: FROM, INHERIT> <SuperClass1> [,<SuperClassN>] ] [<static: STATIC>] => ;
+#xcommand CLASS <ClassName> [METACLASS <metaClass>] ;
+             [ <frm: FROM, INHERIT> <SuperClass1> [,<SuperClassN>] ] ;
+             [ <static: STATIC> ] [ FUNCTION <FuncName> ] => ;
+   #define _HB_CLS_FUNCNAME <ClassName> ;;
+   [ #undef _HB_CLS_FUNCNAME ; #define _HB_CLS_FUNCNAME <FuncName> ] ;;
    _HB_CLASS <ClassName> ;;
-   <static> function <ClassName>() ;;
+   <static> function _HB_CLS_FUNCNAME() ;;
       static s_oClass  ;;
       local MetaClass,nScope ;;
       nScope := HB_OO_CLSTP_EXPORTED ;;
@@ -215,9 +223,13 @@ DECLARE HBClass ;
 
 #xtranslate DECLMETH <ClassName> <MethodName> => <ClassName>_<MethodName>
 
-#xcommand CLASS <ClassName> [METACLASS <metaClass>] [ <frm: FROM, INHERIT> <SuperClass1> [,<SuperClassN>] ] [<static: STATIC>] => ;
+#xcommand CLASS <ClassName> [METACLASS <metaClass>] ;
+             [ <frm: FROM, INHERIT> <SuperClass1> [,<SuperClassN>] ] ;
+             [ <static: STATIC> ] [ FUNCTION <FuncName> ] => ;
+   #define _HB_CLS_FUNCNAME <ClassName> ;;
+   [ #undef _HB_CLS_FUNCNAME ; #define _HB_CLS_FUNCNAME <FuncName> ] ;;
    _HB_CLASS <ClassName> ;;
-   <static> function <ClassName>() ;;
+   <static> function _HB_CLS_FUNCNAME() ;;
       static s_oClass ;;
       local nScope ;;
       nScope := HB_OO_CLSTP_EXPORTED ;;
@@ -238,9 +250,13 @@ DECLARE HBClass ;
 
 #else
 
-#xcommand CLASS <ClassName> [METACLASS <metaClass>] [ <frm: FROM, INHERIT> <SuperClass1> [,<SuperClassN>] ] [<static: STATIC>] => ;
+#xcommand CLASS <ClassName> [METACLASS <metaClass>] ;
+             [ <frm: FROM, INHERIT> <SuperClass1> [,<SuperClassN>] ] ;
+             [<static: STATIC>] [ FUNCTION <FuncName> ] => ;
+   #define _HB_CLS_FUNCNAME <ClassName> ;;
+   [ #undef _HB_CLS_FUNCNAME ; #define _HB_CLS_FUNCNAME <FuncName> ] ;;
    _HB_CLASS <ClassName> ;;
-   <static> function <ClassName>() ;;
+   <static> function _HB_CLS_FUNCNAME() ;;
       static s_oClass  ;;
       local nScope ;;
       nScope := HB_OO_CLSTP_EXPORTED ;;
