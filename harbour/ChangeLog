@@ -1,3 +1,27 @@
+19991118-07:25 GMT+1 Victor Szel <info@szelvesz.hu>
+  + source/common/hbfsapi.c
+  + include/hbfsapi.h
+    include/Makefile
+    include/compiler.h
+    include/hbpp.h
+    include/filesys.h
+    source/common/Makefile
+    source/rtl/filesys.c
+    source/compiler/harbour.c
+    source/compiler/harbour.y
+    source/pp/stdalone/hbpp.c
+    + Rewritten the filename splitting/merging functions, now they also support
+      drive letter (split only).
+    + hb_fsFName*() functions moved to the common directory, so that only one
+      copy of the functions exist (instead of three).
+      ! WARNING ! Non-GNU Make systems have to be updated.
+      ! WARNING ! All sources must be rebuilt.
+    ; Now ~100 more RTL_TESTs pass.
+  * tests/rtl_test.prg
+    + Some more filename split/merge tests added.
+  * include/hbundoc.api
+    ! Zero bytes removed from the text file.
+
 19991118-05:29 GMT+1 Victor Szel <info@szelvesz.hu>
   - bin\buildexe*.*
   + bin\bld_tpl.bat

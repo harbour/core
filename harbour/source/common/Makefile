@@ -5,6 +5,7 @@
 ROOT = ../../
 
 C_SOURCES=\
+        hbfsapi.c \
         hbtrace.c \
 
 PRG_SOURCES=\

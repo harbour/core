@@ -50,6 +50,7 @@
 #include "hberrors.h"
 #include "hbpp.h"
 #include "hbver.h"
+#include "hbfsapi.h"
 
 /* compiler related declarations */
 

@@ -16,6 +16,7 @@ C_HEADERS=\
         gtapi.h      \
         hbdefs.h     \
         hberrors.h   \
+        hbfsapi.h    \
         hbpp.h       \
         hbsetup.h    \
         hbtrace.h    \

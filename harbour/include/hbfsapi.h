@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Compatibility header file for undocumented C API functions
+ * Header file for the common Filesys API
  *
  * Copyright 1999 Victor Szel <info@szelvesz.hu>
  * www - http://www.harbour-project.org
@@ -33,48 +33,23 @@
  *
  */
 
-/* DON'T USE THIS FILE FOR NEW HARBOUR C CODE */
+#ifndef HB_FSAPI_H_
+#define HB_FSAPI_H_
 
-#ifndef HB_UNDOC_API_
-#define HB_UNDOC_API_
+#include "extend.h"
 
-#include "clipdefs.h"
-#include "filesys.h"
+/* Filename support */
+typedef struct
+{
+   char   szBuffer[ _POSIX_PATH_MAX + 3 + 10 ]; /* TOFIX: +10 is for the drive letter support, and should be changed to some manifest constant */
+   char * szPath;
+   char * szName;
+   char * szExtension;
+   char * szDrive;
+} HB_FNAME, * PHB_FNAME, * HB_FNAME_PTR;
 
-/* Undocumented CA-Cl*pper Extend API */
+extern PHB_FNAME hb_fsFNameSplit( char * pszFileName ); /* Split given filename into path, name and extension */
+extern char *    hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName ); /* This function joins path, name and extension into a string with a filename */
 
-#define _reta           hb_reta
-#define _pcount         hb_pcount
+#endif /* HB_FSAPI_H_ */
 
-/* Undocumented CA-Cl*pper TSupport API */
-
-#define _tchdir         hb_fsChDir
-#define _tchdrv         hb_fsChDrv
-#define _tclose         hb_fsClose
-#define _tcommit        hb_fsCommit
-#define _tcreat         hb_fsCreate
-#define _tcurdir        hb_fsCurDir
-#define _tcurdrv        hb_fsCurDrv
-#define _tdevraw        hb_fsSetDevRaw
-#define _terror         hb_fsError
-#define _tisdevice      hb_fsIsDevice
-#define _tisdrv         hb_fsIsDrv
-#define _tlock          hb_fsLock
-#define _tlseek         hb_fsSeek
-#define _tmkdir         hb_fsMkDir
-#define _topen          hb_fsOpen
-#define _tread          hb_fsRead
-#define _trename        hb_fsRename
-#define _trmdir         hb_fsRmDir
-#define _tunlink        hb_fsDelete
-#define _twrite         hb_fsWrite
-
-/* Undocumented CA-Cl*pper support functions */
-
-#define _bset           memset
-#define _bmove          memmove
-#define _bcopy          memcpy
-#define _bcmp           memcmp
-#define _bscan(p,cnt,c) memchr( p, c, cnt )
-
-#endif /* HB_UNDOC_API_ */

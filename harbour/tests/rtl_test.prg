@@ -3221,6 +3221,11 @@ STATIC FUNCTION Main_MISC()
 
    /* HB_FNAMESPLIT(), HB_FNAMEMERGE() */
 
+   TEST_LINE( TESTFNAME( ""                            ) , ";;;;"                                                                    )
+   TEST_LINE( TESTFNAME( "                           " ) , ";;;;"                                                                    )
+   TEST_LINE( TESTFNAME( ":                          " ) , ":;:;;;"                                                                  )
+   TEST_LINE( TESTFNAME( "C:/WORK\HELLO              " ) , "C:/WORK\HELLO;C:/WORK\;HELLO;;"                                          )
+   TEST_LINE( TESTFNAME( "C:\WORK/HELLO              " ) , "C:\WORK/HELLO;C:\WORK/;HELLO;;"                                          )
    TEST_LINE( TESTFNAME( "C:\WORK\HELLO              " ) , "C:\WORK\HELLO;C:\WORK\;HELLO;;"                                          )
    TEST_LINE( TESTFNAME( "C:\WORK\HELLO.             " ) , "C:\WORK\HELLO.;C:\WORK\;HELLO;.;"                                        )
    TEST_LINE( TESTFNAME( "C:\WORK\HELLO.PRG          " ) , "C:\WORK\HELLO.PRG;C:\WORK\;HELLO;.PRG;"                                  )
@@ -3865,6 +3870,8 @@ STATIC FUNCTION TFORNEXTXF( xFrom, xTo, xStep )
 
 #ifdef __HARBOUR__
 
+/* NOTE: cDrive is not tested because it's platform dependent. */
+
 STATIC FUNCTION TESTFNAME( cFull )
    LOCAL cPath, cName, cExt, cDrive
 
@@ -3874,7 +3881,7 @@ STATIC FUNCTION TESTFNAME( cFull )
           cPath + ";" +;
           cName + ";" +;
           cExt + ";" +;
-          cDrive
+          ""
 
 #endif
 

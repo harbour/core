@@ -55,6 +55,7 @@
 #define HB_FILESYS_H_
 
 #include "extend.h"
+#include "hbfsapi.h"
 #include "fileio.ch"
 
 #define FS_ERROR F_ERROR
@@ -75,15 +76,6 @@ typedef int    FHANDLE;
 #define FXO_FORCEEXT  0x0800   /* Force default extension     */
 #define FXO_DEFAULTS  0x1000   /* Use SET command defaults    */
 #define FXO_DEVICERAW 0x2000   /* Open devices in raw mode    */
-
-/* Filename support */
-typedef struct
-{
-   char   szBuffer[ _POSIX_PATH_MAX + 3 ];
-   char * szPath;
-   char * szName;
-   char * szExtension;
-} HB_FNAME, * PHB_FNAME, * HB_FNAME_PTR;
 
 extern BOOL     hb_fsChDir      ( BYTE * pDirName );
 extern USHORT   hb_fsChDrv      ( BYTE nDrive );
@@ -116,8 +108,5 @@ extern void     hb_fsSetDevText ( FHANDLE hFileHandle );
 extern void     hb_fsSetError   ( USHORT uiError );
 extern USHORT   hb_fsWrite      ( FHANDLE hFileHandle, BYTE * pBuff, USHORT ulCount );
 extern ULONG    hb_fsWriteLarge ( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount );
-
-extern PHB_FNAME hb_fsFNameSplit ( char * szFilename ); /* Split given filename into path, name and extension */
-extern char *    hb_fsFNameMerge ( char * szFileName, PHB_FNAME pFileName ); /* This function joins path, name and extension into a string with a filename */
 
 #endif /* HB_FILESYS_H_ */

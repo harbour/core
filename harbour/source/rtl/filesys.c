@@ -1665,174 +1665,6 @@ HARBOUR HB_CURDRIVE( void )
 
 #endif
 
-#define IS_PATH_SEP( c ) ( strchr( OS_PATH_DELIMITER_LIST, ( c ) ) != NULL )
-
-/* Split given filename into path, name and extension */
-PHB_FNAME hb_fsFNameSplit( char * szFileName )
-{
-   PHB_FNAME pFileName;
-   int iLen;
-   int iSlashPos;
-   int iDotPos;
-   int iPos;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsFNameSplit(%s)", szFileName));
-
-   pFileName = ( PHB_FNAME ) hb_xgrab( sizeof( HB_FNAME ) );
-   iLen = strlen( szFileName );
-   pFileName->szPath =
-   pFileName->szName =
-   pFileName->szExtension = NULL;
-
-   iSlashPos = iLen - 1;
-   iPos = 0;
-
-   while( iSlashPos >= 0 && !IS_PATH_SEP( szFileName[ iSlashPos ] ) )
-      --iSlashPos;
-
-   if( iSlashPos == 0 )
-   {
-      /* root path -> \filename */
-      pFileName->szBuffer[ 0 ] = OS_PATH_DELIMITER;
-      pFileName->szBuffer[ 1 ] = '\0';
-      pFileName->szPath = pFileName->szBuffer;
-      iPos = 2; /* first free position after the slash */
-   }
-   else if( iSlashPos > 0 )
-   {
-      /* If we are after a drive letter let's keep the following backslash */
-      if( IS_PATH_SEP( ':' ) &&
-         ( szFileName[ iSlashPos ] == ':' || szFileName[ iSlashPos - 1 ] == ':' ) )
-      {
-         /* path with separator -> d:\path\filename or d:path\filename */
-         memcpy( pFileName->szBuffer, szFileName, iSlashPos + 1 );
-         pFileName->szBuffer[ iSlashPos + 1 ] = '\0';
-         iPos = iSlashPos + 2; /* first free position after the slash */
-      }
-      else
-      {
-         /* path with separator -> path\filename */
-         memcpy( pFileName->szBuffer, szFileName, iSlashPos );
-         pFileName->szBuffer[ iSlashPos ] = '\0';
-         iPos = iSlashPos + 1; /* first free position after the slash */
-      }
-
-      pFileName->szPath = pFileName->szBuffer;
-   }
-
-   iDotPos = iLen - 1;
-   while( iDotPos > iSlashPos && szFileName[ iDotPos ] != '.' )
-      --iDotPos;
-
-   if( ( iDotPos - iSlashPos ) > 1 )
-   {
-      /* the dot was found
-       * and there is at least one character between a slash and a dot
-       */
-      if( iDotPos == iLen - 1 )
-      {
-         /* the dot is the last character - use it as extension name */
-         pFileName->szExtension = pFileName->szBuffer + iPos;
-         pFileName->szBuffer[ iPos++ ] = '.';
-         pFileName->szBuffer[ iPos++ ] = '\0';
-      }
-      else
-      {
-         pFileName->szExtension = pFileName->szBuffer + iPos;
-         /* copy rest of the string with terminating ZERO character */
-         memcpy( pFileName->szExtension, szFileName + iDotPos + 1, iLen - iDotPos );
-         iPos += iLen - iDotPos;
-      }
-   }
-   else
-      /* there is no dot in the filename or it is  '.filename' */
-      iDotPos = iLen;
-
-   if( ( iDotPos - iSlashPos - 1 ) > 0 )
-   {
-      pFileName->szName = pFileName->szBuffer + iPos;
-      memcpy( pFileName->szName, szFileName + iSlashPos + 1, iDotPos - iSlashPos - 1 );
-      pFileName->szName[ iDotPos - iSlashPos - 1 ] = '\0';
-   }
-
-   HB_TRACE(HB_TR_INFO, ("hb_fsFNameSplit: Filename: |%s|\n", szFileName));
-   HB_TRACE(HB_TR_INFO, ("hb_fsFNameSplit:   szPath: |%s|\n", pFileName->szPath));
-   HB_TRACE(HB_TR_INFO, ("hb_fsFNameSplit:   szName: |%s|\n", pFileName->szName));
-   HB_TRACE(HB_TR_INFO, ("hb_fsFNameSplit:    szExt: |%s|\n", pFileName->szExtension));
-
-   return pFileName;
-}
-
-/* NOTE: szFileName buffer must be at least _POSIX_PATH_MAX long */
-
-/* This function joins path, name and extension into a string with a filename */
-char * hb_fsFNameMerge( char * szFileName, PHB_FNAME pFileName )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsFNameMerge(%s, %p)", szFileName, pFileName));
-
-   if( pFileName->szPath && pFileName->szPath[ 0 ] )
-   {
-      /* we have not empty path specified */
-      int iLen = strlen( pFileName->szPath );
-
-      strncpy( szFileName, pFileName->szPath, _POSIX_PATH_MAX );
-      szFileName[ _POSIX_PATH_MAX - 1 ] = '\0';
-
-      /* if the path is a root directory then we don't need to add path separator */
-      if( !( IS_PATH_SEP( pFileName->szPath[ 0 ] ) && pFileName->szPath[ 0 ] == '\0' ) )
-      {
-         /* add the path separator only in cases:
-          *  when a name doesn't start with it
-          *  when the path doesn't end with it
-          */
-         if( iLen < _POSIX_PATH_MAX && !( IS_PATH_SEP( pFileName->szName[ 0 ] ) || IS_PATH_SEP( pFileName->szPath[ iLen - 1 ] ) ) )
-         {
-            szFileName[ iLen++ ] = OS_PATH_DELIMITER;
-            szFileName[ iLen ] = '\0';
-         }
-      }
-
-      if( pFileName->szName && iLen < _POSIX_PATH_MAX )
-      {
-         strncpy( szFileName + iLen, pFileName->szName, _POSIX_PATH_MAX - iLen );
-         szFileName[ _POSIX_PATH_MAX - 1 ] = '\0';
-      }
-   }
-   else
-   {
-      if( pFileName->szName )
-      {
-         strncpy( szFileName, pFileName->szName, _POSIX_PATH_MAX );
-         szFileName[ _POSIX_PATH_MAX - 1 ] = '\0';
-      }
-   }
-
-   if( pFileName->szExtension )
-   {
-      int iLen = strlen( szFileName );
-
-      if( iLen < _POSIX_PATH_MAX && !( pFileName->szExtension[ 0 ] == '.' || szFileName[ iLen - 1 ] == '.') )
-      {
-         /* add extension separator only when extansion doesn't contain it */
-         szFileName[ iLen++ ] = '.';
-         szFileName[ iLen ] = '\0';
-      }
-
-      if( iLen < _POSIX_PATH_MAX )
-      {
-         strncpy( szFileName + iLen, pFileName->szExtension, _POSIX_PATH_MAX - iLen );
-         szFileName[ _POSIX_PATH_MAX - 1 ] = '\0';
-      }
-   }
-
-   HB_TRACE(HB_TR_INFO, ("hb_fsFNameMerge:   szPath: |%s|\n", pFileName->szPath));
-   HB_TRACE(HB_TR_INFO, ("hb_fsFNameMerge:   szName: |%s|\n", pFileName->szName));
-   HB_TRACE(HB_TR_INFO, ("hb_fsFNameMerge:    szExt: |%s|\n", pFileName->szExtension));
-   HB_TRACE(HB_TR_INFO, ("hb_fsFNameMerge: Filename: |%s|\n", szFileName));
-
-   return szFileName;
-}
-
 HARBOUR HB_HB_FNAMESPLIT( void )
 {
    if( ISCHAR( 1 ) )
@@ -1842,7 +1674,7 @@ HARBOUR HB_HB_FNAMESPLIT( void )
       hb_storc( pFileName->szPath, 2 );
       hb_storc( pFileName->szName, 3 );
       hb_storc( pFileName->szExtension, 4 );
-      hb_storc( "", 5 ); /* TODO: Drive support for related platforms */
+      hb_storc( pFileName->szDrive, 5 );
 
       hb_xfree( pFileName );
    }
@@ -1856,7 +1688,7 @@ HARBOUR HB_HB_FNAMEMERGE( void )
    pFileName.szPath = ISCHAR( 1 ) ? hb_parc( 1 ) : NULL;
    pFileName.szName = ISCHAR( 2 ) ? hb_parc( 2 ) : NULL;
    pFileName.szExtension = ISCHAR( 3 ) ? hb_parc( 3 ) : NULL;
-/* pFileName.szDrive = ISCHAR( 4 ) ? hb_parc( 4 ) : NULL; */
+   pFileName.szDrive = ISCHAR( 4 ) ? hb_parc( 4 ) : NULL;
 
    hb_retc( hb_fsFNameMerge( szFileName, &pFileName ) );
 }
