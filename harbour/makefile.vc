@@ -1,6 +1,18 @@
 #
-# Makefile for Harbour project for Microsoft Visual C
+# Makefile for Harbour project for Microsoft Visual C (32 bits)
 #
+# To add new files to this makefile:
+#
+# 1. Add obj name to one of the OBJ list for the appropriate
+#    library (if adding RTL functions)
+# 2. Add file dependency and compile rule to end of this file
+#    (see current one as an example)
+#
+
+#
+# Directory macros. These should never have to change.
+#
+
 COMPILER_DIR=source\compiler
 RTL_DIR=source\rtl
 VM_DIR=source\vm
@@ -8,34 +20,110 @@ INCLUDE_DIR=include
 BIN_DIR=bin
 LIB_DIR=libs\vc
 OBJ_DIR=obj
+
+#
+# C compiler definition and C flags. These should never have to change.
+#
+
 CC=cl
 CFLAGS=-w -I$(INCLUDE_DIR)
 CLIBFLAGS=$(CFLAGS) -c
 
+#
+# Macros to access our library names
+#
+
 HARBOUR_LIB=$(LIB_DIR)\harbour.lib
+TERMINAL_LIB=$(LIB_DIR)\terminal.lib
+TOOLS_LIB=$(LIB_DIR)\hbtools.lib
 HARBOUR_EXE=$(BIN_DIR)\harbour.exe
 
-LIB_OBJS = $(OBJ_DIR)\arrays.obj $(OBJ_DIR)\classes.obj $(OBJ_DIR)\console.obj \
-    $(OBJ_DIR)\dates.obj $(OBJ_DIR)\dynsym.obj $(OBJ_DIR)\extend.obj \
-    $(OBJ_DIR)\files.obj $(OBJ_DIR)\strings.obj
+#
+# OBJ list for harbour.lib. Add new ones as needed
+#
 
-all: $(HARBOUR_LIB) $(HARBOUR_EXE)
+HARBOUR_LIB_OBJS = \
+    $(OBJ_DIR)\arrays.obj
+    $(OBJ_DIR)\classes.obj \
+    $(OBJ_DIR)\codebloc.obj \
+    $(OBJ_DIR)\console.obj \
+    $(OBJ_DIR)\dates.obj \
+    $(OBJ_DIR)\dynsym.obj \
+    $(OBJ_DIR)\environ.obj \
+    $(OBJ_DIR)\error.obj \
+    $(OBJ_DIR)\errorapi.obj \
+    $(OBJ_DIR)\errorsys.obj \
+    $(OBJ_DIR)\extend.obj \
+    $(OBJ_DIR)\initsymb.obj \
+    $(OBJ_DIR)\itemapi.obj \
+    $(OBJ_DIR)\math.obj \
+    $(OBJ_DIR)\set.obj \
+    $(OBJ_DIR)\strings.obj \
+    $(OBJ_DIR)\strcmp.obj \
+    $(OBJ_DIR)\tclass.obj \
+    $(OBJ_DIR)\transform.obj
 
-$(HARBOUR_LIB) : $(LIB_OBJS)
-    lib /OUT:$(HARBOUR_LIB) $(LIB_OBJS)
+#
+# OBJ list for hbtools.lib. Add new ones as needed
+#
 
-$(HARBOUR_EXE) : $(COMPILER_DIR)\y_tab.c $(COMPILER_DIR)\lexyy.c $(COMPILER_DIR)\harbour.obj
+TOOLS_LIB_OBJS = \
+    $(OBJ_DIR)\debug.obj \
+    $(OBJ_DIR)\genobj.obj \
+    $(OBJ_DIR)\mathx.obj \
+    $(OBJ_DIR)\stringsx.obj \
+    $(OBJ_DIR)\datesx.obj
+
+#
+# OBJ list for terminal.lib. Add new ones as needed
+#
+
+TERMINAL_LIB_OBJS = \
+    $(OBJ_DIR)\console.obj
+
+#
+# Our default target
+#
+
+all: $(HARBOUR_EXE) $(HARBOUR_LIB) $(TOOLS_LIB) $(TERMINAL_LIB)
+
+$(HARBOUR_EXE) : \
+    $(COMPILER_DIR)\y_tab.c \
+    $(COMPILER_DIR)\lexyy.c \
+    $(COMPILER_DIR)\genobj32.c \
+    $(COMPILER_DIR)\harbour.c
     $(CC) $(CFLAGS) $(COMPILER_DIR)\y_tab.c $(COMPILER_DIR)\lexyy.c $(COMPILER_DIR)\harbour.obj -o $(BIN_DIR)\harbour
     -del y_tab.obj
     -del lexyy.obj
 
+#
+# Library depencies and build rules
+#
+
+$(HARBOUR_LIB) : $(HARBOUR_LIB_OBJS)
+    lib /OUT:$(HARBOUR_LIB) $(HARBOUR_LIB_OBJS)
+
+$(TOOLS_LIB) : $(TOOLS_LIB_OBJS)
+    lib /OUT:$(TOOLS_LIB) $(TOOLS_LIB_OBJS)
+
+$(TERMINAL_LIB) : $(TERMINAL_LIB_OBJS)
+    lib /OUT:$(TERMINAL_LIB) $(TERMINAL_LIB_OBJS)
+
+#
+# Compiler source depencies and build rules
+#
+
 $(COMPILER_DIR)\y_tab.c : $(COMPILER_DIR)\harbour.y
-    bison -d -v $(COMPILER_DIR)\harbour.y -o $(COMPILER_DIR)\y_tab.c
+    bison -d -v $(COMPILER_DIR)\harbour.y -o$(COMPILER_DIR)\y_tab.c
 
 $(COMPILER_DIR)\lexyy.c : $(COMPILER_DIR)\harbour.l
     flex -i -o$(COMPILER_DIR)\lexyy.c $(COMPILER_DIR)\harbour.l
 
-$(COMPILER_DIR)\harbour.obj : $(COMPILER_DIR)\harbour.c
+#
+# RTL source depencies below. Add as needed
+#
+
+$(OBJ_DIR)\arrays.obj : $(RTL_DIR)\arrays.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\arrays.obj : $(RTL_DIR)\arrays.c
@@ -44,20 +132,71 @@ $(OBJ_DIR)\arrays.obj : $(RTL_DIR)\arrays.c
 $(OBJ_DIR)\classes.obj : $(RTL_DIR)\classes.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
+$(OBJ_DIR)\codebloc.obj : $(RTL_DIR)\codebloc.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
 $(OBJ_DIR)\console.obj : $(RTL_DIR)\console.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\dates.obj : $(RTL_DIR)\dates.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
-$(OBJ_DIR)\dynsym.obj : $(VM_DIR)\dynsym.c
+$(OBJ_DIR)\dynsym.obj : $(RTL_DIR)\dynsym.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\environ.obj : $(RTL_DIR)\environ.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\error.obj : $(RTL_DIR)\error.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\errorapi.obj : $(RTL_DIR)\errorapi.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\errorsys.obj : $(RTL_DIR)\errorsys.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\extend.obj : $(RTL_DIR)\extend.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
-$(OBJ_DIR)\files.obj : $(RTL_DIR)\files.c
+$(OBJ_DIR)\initsymb.obj : $(RTL_DIR)\initsymb.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\itemapi.obj : $(RTL_DIR)\itemapi.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\math.obj : $(RTL_DIR)\math.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\set.obj : $(RTL_DIR)\set.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\strings.obj : $(RTL_DIR)\strings.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\strcmp.obj : $(RTL_DIR)\strcmp.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\tclass.obj : $(RTL_DIR)\tclass.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\transform.obj : $(RTL_DIR)\transform.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\debug.obj : $(RTL_DIR)\debug.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\genobj.obj : $(RTL_DIR)\genobj.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\mathx.obj : $(RTL_DIR)\mathx.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\stringsx.obj : $(RTL_DIR)\stringsx.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\datesx.obj : $(RTL_DIR)\datesx.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\console.obj : $(RTL_DIR)\console.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
