@@ -1,3 +1,9 @@
+20000418-00:42 DST Paul Tucker <ptucker@sympatico.ca>
+  * makefile.vc
+    + source/lang/msghe862.c
+    + source/lang/msghewin.c
+    + source/lang/msgis850.c
+
 20000418-12:30 GMT-3 Luiz Rafael Culik <culik@sl.conex.net)
   *doc/en/diskspac.txt
     *Updated doc to reflect the function change

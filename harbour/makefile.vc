@@ -341,9 +341,12 @@ LANG_LIB_OBJS = \
    $(OBJ_DIR)\msgeu.obj \
    $(OBJ_DIR)\msgfr.obj \
    $(OBJ_DIR)\msggl.obj \
+   $(OBJ_DIR)\msghe862.obj \
+   $(OBJ_DIR)\msghewin.obj \
    $(OBJ_DIR)\msghu852.obj \
    $(OBJ_DIR)\msghucwi.obj \
    $(OBJ_DIR)\msghuwin.obj \
+   $(OBJ_DIR)\msgis850.obj \
    $(OBJ_DIR)\msgpt.obj \
    $(OBJ_DIR)\msgro.obj 
 
