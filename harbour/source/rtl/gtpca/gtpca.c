@@ -348,6 +348,62 @@ static void hb_gt_xPutch( USHORT usRow, USHORT usCol, BYTE attr, BYTE byChar )
    if( s_usCol > s_usMaxCol ) s_usCol = s_usMaxCol;
 }
 
+void hb_gt_PutCharAttr( USHORT uiRow, USHORT uiCol, BYTE byChar, BYTE byAttr )
+{
+    HB_TRACE(HB_TR_DEBUG, ("hb_gt_PutCharAttr(%hu, %hu, %i, %d)", uiRow, uiCol, byChar, (int) byAttr));
+
+    /* TODO */
+
+    HB_SYMBOL_UNUSED( uiRow );
+    HB_SYMBOL_UNUSED( uiCol );
+    HB_SYMBOL_UNUSED( byChar );
+    HB_SYMBOL_UNUSED( byAttr );
+}
+
+void hb_gt_PutChar( USHORT uiRow, USHORT uiCol, BYTE byChar )
+{
+    HB_TRACE(HB_TR_DEBUG, ("hb_gt_PutChar(%hu, %hu, %i)", uiRow, uiCol, byChar));
+
+    /* TODO */
+
+    HB_SYMBOL_UNUSED( uiRow );
+    HB_SYMBOL_UNUSED( uiCol );
+    HB_SYMBOL_UNUSED( byChar );
+}
+
+void hb_gt_PutAttr( USHORT uiRow, USHORT uiCol, BYTE byAttr )
+{
+    HB_TRACE(HB_TR_DEBUG, ("hb_gt_PutAttr(%hu, %hu, %d)", uiRow, uiCol, (int) byAttr));
+
+    /* TODO */
+
+    HB_SYMBOL_UNUSED( uiRow );
+    HB_SYMBOL_UNUSED( uiCol );
+    HB_SYMBOL_UNUSED( byAttr );
+}
+
+void hb_gt_GetChar( USHORT uiRow, USHORT uiCol, BYTE * pbyChar )
+{
+    HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetChar(%hu, %hu, %p)", uiRow, uiCol, pbyChar));
+
+    /* TODO */
+
+    HB_SYMBOL_UNUSED( uiRow );
+    HB_SYMBOL_UNUSED( uiCol );
+    HB_SYMBOL_UNUSED( pbyChar );
+}
+
+void hb_gt_GetAttr( USHORT uiRow, USHORT uiCol, BYTE * pbyAttr )
+{
+    HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetAttr(%hu, %hu, %p)", uiRow, uiCol, pbyAttr));
+
+    /* TODO */
+
+    HB_SYMBOL_UNUSED( uiRow );
+    HB_SYMBOL_UNUSED( uiCol );
+    HB_SYMBOL_UNUSED( pbyAttr );
+}
+
 void hb_gt_Puts( USHORT usRow, USHORT usCol, BYTE attr, BYTE * str, ULONG len )
 {
    /* Because Clipper strings don't have to be null terminated, add a null

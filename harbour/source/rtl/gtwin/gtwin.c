@@ -571,6 +571,60 @@ USHORT hb_gt_DispCount()
 
 /* *********************************************************************** */
 
+void hb_gt_PutCharAttr( USHORT uiRow, USHORT uiCol, BYTE byChar, BYTE byAttr )
+{
+    ULONG  i;
+
+    HB_TRACE(HB_TR_DEBUG, ("hb_gt_PutCharAttr(%hu, %hu, %i, %d)", uiRow, uiCol, byChar, (int) byAttr));
+
+    if ( s_pCharInfoScreen != NULL )
+    {
+        i = (uiRow * s_csbi.dwSize.X) + uiCol;
+        s_pCharInfoScreen[i].Char.AsciiChar = ( CHAR ) byChar;
+        s_pCharInfoScreen[i].Attributes = ( WORD ) byAttr;
+        hb_gt_xUpdtSet( uiRow, uiCol, uiRow, uiCol );
+        MK_SCREEN_UPDATE();
+    }
+}
+
+void hb_gt_PutChar( USHORT uiRow, USHORT uiCol, BYTE byChar )
+{
+    HB_TRACE(HB_TR_DEBUG, ("hb_gt_PutChar(%hu, %hu, %i)", uiRow, uiCol, byChar));
+
+    if ( s_pCharInfoScreen != NULL )
+    {
+        s_pCharInfoScreen[(uiRow * s_csbi.dwSize.X) + uiCol].Char.AsciiChar = ( CHAR ) byChar;
+        hb_gt_xUpdtSet( uiRow, uiCol, uiRow, uiCol );
+        MK_SCREEN_UPDATE();
+    }
+}
+
+void hb_gt_PutAttr( USHORT uiRow, USHORT uiCol, BYTE byAttr )
+{
+    HB_TRACE(HB_TR_DEBUG, ("hb_gt_PutAttr(%hu, %hu, %d)", uiRow, uiCol, (int) byAttr));
+
+    if ( s_pCharInfoScreen != NULL )
+    {
+        s_pCharInfoScreen[(uiRow * s_csbi.dwSize.X) + uiCol].Attributes = ( WORD ) byAttr;
+        hb_gt_xUpdtSet( uiRow, uiCol, uiRow, uiCol );
+        MK_SCREEN_UPDATE();
+    }
+}
+
+void hb_gt_GetChar( USHORT uiRow, USHORT uiCol, BYTE * pbyChar )
+{
+    HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetChar(%hu, %hu, %p)", uiRow, uiCol, pbyChar));
+
+    *pbyChar = ( BYTE ) s_pCharInfoScreen[(uiRow * s_csbi.dwSize.X) + uiCol].Char.AsciiChar;
+}
+
+void hb_gt_GetAttr( USHORT uiRow, USHORT uiCol, BYTE * pbyAttr )
+{
+    HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetAttr(%hu, %hu, %p)", uiRow, uiCol, pbyAttr));
+
+    *pbyAttr = ( BYTE ) ( s_pCharInfoScreen[(uiRow * s_csbi.dwSize.X) + uiCol].Attributes & 0xFF );
+}
+
 void hb_gt_Puts( USHORT usRow, USHORT usCol, BYTE byAttr, BYTE *pbyStr, ULONG ulLen )
 {
     int i, j; USHORT l, r, u;

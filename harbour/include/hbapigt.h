@@ -243,6 +243,11 @@ extern BOOL   hb_gt_PreExt( void );
 extern BOOL   hb_gt_PostExt( void );
 extern BOOL   hb_gt_Suspend( void ); /* suspend the terminal before the shell call */
 extern BOOL   hb_gt_Resume( void ); /* resume the terminal after the shell call */
+extern void   hb_gt_PutCharAttr( USHORT uiRow, USHORT uiCol, BYTE byChar, BYTE byAttr );
+extern void   hb_gt_PutChar( USHORT uiRow, USHORT uiCol, BYTE byChar );
+extern void   hb_gt_PutAttr( USHORT uiRow, USHORT uiCol, BYTE byAttr );
+extern void   hb_gt_GetChar( USHORT uiRow, USHORT uiCol, BYTE * pbyChar );
+extern void   hb_gt_GetAttr( USHORT uiRow, USHORT uiCol, BYTE * pbyAttr );
 extern void   hb_gt_Puts( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE * pbyStr, ULONG ulLen );
 extern void   hb_gt_PutText( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbySrc );
 extern int    hb_gt_ExtendedKeySupport( void );
