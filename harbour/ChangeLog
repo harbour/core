@@ -57,6 +57,11 @@
    * makefile.vc
      ! Updated for TOBJECT and DBLIST
 
+   * bin/bld.cmd
+   * bin/bld.bat
+     + Small modification to ease the addition of multiple source files 
+       locally.
+
 2000-06-16 01:42 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
    * makefile.bc
      - Removed redundant -I from echo into make.tmp (Harbour.exe)
