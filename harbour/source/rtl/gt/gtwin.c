@@ -31,9 +31,9 @@ typedef WORD far *LPWORD;
 
 static HANDLE HInput = INVALID_HANDLE_VALUE;
 static HANDLE HOutput = INVALID_HANDLE_VALUE;
-static HANDLE HCursor;  /* When Dispbegin is in effect, all cursor related
-                           functions must refer to the original handle
-                           otherwise turds are left on the screen when
+static HANDLE HCursor;  /* When DispBegin is in effect, all cursor related
+                           functions must refer to the original handle!
+                           Otherwise turds are left on the screen when
                            running in a window
                          */
 #define HB_LOG 0
@@ -118,27 +118,29 @@ void hb_gt_SetCursorStyle(int style)
       cci.bVisible = 0;
       break;
 
-    case SC_NORMAL:
-      cci.dwSize = 12;
-      break;
-
     case SC_INSERT:
-      cci.dwSize = 99;
+      cci.dwSize = 50;
       break;
 
     case SC_SPECIAL1:
-      cci.dwSize = 49;  /* supposed to be upper half, but this will do */
+      cci.dwSize = 99; 
       break;
 
     case SC_SPECIAL2:
-      /* TODO: Why wasn't this implemented ? */
-      /* because in their infinite wisdom, MS doesn't support cursors that
+      cci.dwSize = 66;
+      /* In their infinite wisdom, MS doesn't support cursors that
          don't start at the bottom of the cell */
       break;
-
-    default:
+    case SC_NORMAL:
+    default:           /* traps for invalid values */
+      cci.dwSize = 25; /* this was 12, but when used in full screen dos window
+                          cursor state is erratic  - doesn't turn off, etc. */
       break;
+
+
     }
+   SetConsoleCursorInfo(HCursor, &cci);
+
 }
 
 int hb_gt_GetCursorStyle(void)
@@ -157,22 +159,23 @@ int hb_gt_GetCursorStyle(void)
     {
       switch(cci.dwSize)
         {
-        case 12:
-          rc=SC_NORMAL;
+        case 50:
+          rc=SC_INSERT;   /* half block in clipper */
           break;
 
         case 99:
-          rc=SC_INSERT;
+          rc=SC_SPECIAL1; /* full block in clipper */
           break;
 
-        case 49:
-          rc=SC_SPECIAL1;
+        case 66:
+          rc=SC_SPECIAL2; /* upper half block in clipper */
           break;
-
           /* TODO: cannot tell if the block is upper or lower for cursor */
           /* Answer: Supposed to be upper third, but ms don't support it. */
+
         default:
-          rc=SC_SPECIAL2;
+          rc=SC_NORMAL;  /* anything else, we'll call it normal */
+          break;
         }
     }
 
@@ -205,14 +208,12 @@ void hb_gt_GetText(char cTop, char cLeft, char cBottom, char cRight, char *dest)
     {
       return;
     }
-  memset(pwattr,0,width*sizeof(*pwattr));
   pstr = (char *)hb_xgrab(width);
   if (!pstr)
     {
       hb_xfree(pwattr);
       return;
     }
-  memset(pstr,0,width);
   for (y = cTop; y <= cBottom; y++)
     {
       coord.X = (DWORD) (cLeft);
@@ -258,6 +259,7 @@ void hb_gt_PutText(char cTop, char cLeft, char cBottom, char cRight, char *srce)
           *(pstr + i) = *srce;
           srce++;
           *(pwattr + i) = (WORD)((unsigned char)*srce)&0xff;
+          *pwattr |= 0x8000;
           srce++;
         }
       coord.X = (DWORD) (cLeft);
@@ -365,18 +367,7 @@ void hb_gt_DispBegin(void)
   COORD coBuf;                        /* the size of the buffer to read into */
   CHAR_INFO *pCharInfo;       /* buffer to store info from ReadConsoleOutput */
   SMALL_RECT srWin;                         /* source rectangle to read from */
-/*
-  CONSOLE_CURSOR_INFO cci;
-  DWORD dsize;
-  int vis;
 
-  GetConsoleCursorInfo(HOutput, &cci);
-  vis = cci.bVisible;
-  dsize = cci.dwSize;
-  cci.bVisible = 0;
-  cci.dwSize = 0;
-  SetConsoleCursorInfo(HCursor, &cci);
-*/
   srWin.Top    = srWin.Left = 0;
   srWin.Right  = (coBuf.X = hb_gt_GetScreenWidth()) -1;
   srWin.Bottom = (coBuf.Y = hb_gt_GetScreenHeight()) -1;
@@ -384,12 +375,12 @@ void hb_gt_DispBegin(void)
   /* allocate a buffer for the screen rectangle */
   pCharInfo = (CHAR_INFO *)hb_xgrab(coBuf.X * coBuf.Y * sizeof(CHAR_INFO));
 
-  hb_gt_ScreenBuffer( (ULONG)HOutput );         /* store current handle      */
+  hb_gt_ScreenBuffer( (ULONG)HOutput );            /* store current handle   */
 
   /* read the screen rectangle into the buffer */
   ReadConsoleOutput(HOutput,                       /* current screen handle  */
                pCharInfo,                          /* transfer area          */
-               coBuf,                  /* col/row size of destination buffer */
+               coBuf,                          /* size of destination buffer */
                coDest,                 /* upper-left cell to write data to   */
                &srWin);              /* screen buffer rectangle to read from */
 
@@ -405,11 +396,7 @@ void hb_gt_DispBegin(void)
                coBuf,                       /* col/row size of source buffer */
                coDest,          /* upper-left cell to write data from in src */
                &srWin);               /* screen buffer rect to write data to */
-/*
-  cci.bVisible = vis;
-  cci.dwSize = dsize;
-  SetConsoleCursorInfo(HCursor, &cci);
-*/
+
   hb_xfree(pCharInfo);
 }
 

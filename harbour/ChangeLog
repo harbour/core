@@ -1,3 +1,7 @@
+19990803-21:20 EDT Paul Tucker <ptucker@sympatico.ca>
+  * source/rtl/gt/gtwin.c
+    * SetCursor fixed
+
 19990803-22:30 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/gtapi.c
     include/gtapi.h
