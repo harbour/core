@@ -1,3 +1,8 @@
+19990718-17:33 CET Patrick Mast <harbour@PatrickMast.com>
+  * /source/rtl/errorsys.prg
+    changed #include "include\error.ch" back into #include "error.ch"
+    changed makefile.b32 to compile PRG's with switch iinclude
+
 19990718-15:44 CET Patrick Mast <harbour@PatrickMast.com>
   * /test/working/buildvc.bat For PRG -> EXE with MSVC++
   * buildvc.bat Includes MASM'ing Symbols.obj now
@@ -13,8 +18,6 @@
 19990718-14:22 CET Eddie Runia <eddie@runia.com>
   * tests/working/run_all.bat
     Harbour compile added
-
-
 
 19990718-14:00 CET Eddie Runia <eddie@runia.com>
   * build32.bat

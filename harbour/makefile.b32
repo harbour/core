@@ -73,7 +73,7 @@ tclass.c     : tclass.prg    harbour.exe
   tlib .\libs\b32\harbour.lib -+$@,,
 
 .prg.c:
-  bin\harbour $< /n /osource\rtl
+  bin\harbour $< /n /osource\rtl /iinclude
 
 .c.obj:
   bcc32 -c -O2 -I.\include -o$@ $<
