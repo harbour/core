@@ -368,6 +368,7 @@ void hb_xfree( void * pMem )            /* frees fixed memory */
 /**                          ACTIONS                                        **/
 /* ------------------------------------------------------------------------- */
 
+
 /*
  * This function adds the name of called function into the list
  * as they have to be placed on the symbol table later than the first
@@ -421,6 +422,7 @@ void hb_compVariableAdd( char * szVarName, char cValueType )
    PVAR pVar, pLastVar;
    PFUNCTION pFunc = hb_comp_functions.pLast;
 
+   HB_SYMBOL_UNUSED( cValueType );
    if( ! hb_comp_bStartProc && hb_comp_functions.iCount <= 1 && hb_comp_iVarScope == VS_LOCAL )
    {
       /* Variable declaration is outside of function/procedure body.
@@ -488,12 +490,9 @@ void hb_compVariableAdd( char * szVarName, char cValueType )
             break;
          case ( VS_PARAMETER | VS_PRIVATE ):
             {
-               BOOL bNewParameter = FALSE;
-
                if( ++hb_comp_functions.pLast->wParamNum > hb_comp_functions.pLast->wParamCount )
                {
                   hb_comp_functions.pLast->wParamCount = hb_comp_functions.pLast->wParamNum;
-                  bNewParameter = TRUE;
                }
 
                pSym = hb_compSymbolFind( szVarName, &wPos ); /* check if symbol exists already */
@@ -502,33 +501,6 @@ void hb_compVariableAdd( char * szVarName, char cValueType )
                pSym->cScope |= VS_MEMVAR;
                hb_compGenPCode3( HB_P_PARAMETER, HB_LOBYTE( wPos ), HB_HIBYTE( wPos ) );
                hb_compGenPCode1( HB_LOBYTE( hb_comp_functions.pLast->wParamNum ) );
-
-               /* Add this variable to the local variables list - this will
-                * allow to use the correct positions for real local variables.
-                * The name of variable have to be hidden because we should
-                * not find this name on the local variables list.
-                * We have to use the new structure because it is used in
-                * memvars list already.
-                */
-               if( bNewParameter )
-               {
-                  pVar = ( PVAR ) hb_xgrab( sizeof( VAR ) );
-                  pVar->szName = hb_strdup( szVarName );
-                  pVar->szAlias = NULL;
-                  pVar->cType = cValueType;
-                  pVar->iUsed = 0;
-                  pVar->pNext = NULL;
-                  pVar->szName[ 0 ] ='!';
-                  if( ! pFunc->pLocals )
-                     pFunc->pLocals = pVar;
-                  else
-                  {
-                     pLastVar = pFunc->pLocals;
-                     while( pLastVar->pNext )
-                        pLastVar = pLastVar->pNext;
-                     pLastVar->pNext = pVar;
-                  }
-               }
             }
             break;
          case VS_PRIVATE:
@@ -1843,7 +1815,7 @@ void hb_compGenPopVar( char * szVarName ) /* generates the pcode to pop a value 
       /* local variable
        */
       if( iVar >= -128 && iVar <= 127 )
-         hb_compGenPCode2( HB_P_POPLOCALNEAR, ( BYTE ) iVar );
+         hb_compGenPCode3( HB_P_POPLOCALNEAR, ( BYTE ) iVar, 0 );
       else
          hb_compGenPCode3( HB_P_POPLOCAL, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ) );
    }
@@ -1999,7 +1971,7 @@ void hb_compGenPushVar( char * szVarName )
       /* local variable
        */
       if( iVar >= -128 && iVar <= 127 )
-         hb_compGenPCode2( HB_P_PUSHLOCALNEAR, ( BYTE ) iVar );
+         hb_compGenPCode3( HB_P_PUSHLOCALNEAR, ( BYTE ) iVar, 0 );
       else
          hb_compGenPCode3( HB_P_PUSHLOCAL, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ) );
    }
@@ -2350,47 +2322,67 @@ static void hb_compCheckDuplVars( PVAR pVar, char * szVarName, int iVarScope )
 
 void hb_compFinalizeFunction( void ) /* fixes all last defined function returns jumps offsets */
 {
-   if( hb_comp_functions.pLast && (hb_comp_functions.pLast->bFlags & FUN_WITH_RETURN) == 0 )
+   PFUNCTION pFunc = hb_comp_functions.pLast;
+
+   if( pFunc )
    {
-      /* The last statement in a function/procedure was not a RETURN
-       * Generate end-of-procedure pcode
-       */
-      hb_compGenPCode1( HB_P_ENDPROC );
-   }
-
-   if( hb_comp_iJumpOptimize &&
-       hb_comp_functions.pLast &&
-       hb_comp_functions.pLast->iNOOPs )
-      hb_compOptimizeJumps();
-
-   if( hb_comp_iWarnings && hb_comp_functions.pLast )
-   {
-      PVAR pVar;
-
-      pVar = hb_comp_functions.pLast->pLocals;
-      while( pVar )
+      if( (pFunc->bFlags & FUN_WITH_RETURN) == 0 )
       {
-         if( pVar->szName && hb_comp_functions.pLast->szName && hb_comp_functions.pLast->szName[0] && ! pVar->iUsed )
-            hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_VAR_NOT_USED, pVar->szName, hb_comp_functions.pLast->szName );
-
-         pVar = pVar->pNext;
+         /* The last statement in a function/procedure was not a RETURN
+         * Generate end-of-procedure pcode
+         */
+         hb_compGenPCode1( HB_P_ENDPROC );
       }
 
-      pVar = hb_comp_functions.pLast->pStatics;
-      while( pVar )
-      {
-         if( pVar->szName && hb_comp_functions.pLast->szName && hb_comp_functions.pLast->szName[0] && ! pVar->iUsed )
-            hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_VAR_NOT_USED, pVar->szName, hb_comp_functions.pLast->szName );
+      if( hb_comp_iJumpOptimize && pFunc->iNOOPs )
+         hb_compOptimizeJumps();
 
-         pVar = pVar->pNext;
+      if( hb_comp_iWarnings )
+      {
+         PVAR pVar;
+
+         pVar = pFunc->pLocals;
+         while( pVar )
+         {
+            if( pVar->szName && pFunc->szName && pFunc->szName[0] && ! pVar->iUsed )
+               hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_VAR_NOT_USED, pVar->szName, pFunc->szName );
+
+            pVar = pVar->pNext;
+         }
+
+         pVar = pFunc->pStatics;
+         while( pVar )
+         {
+            if( pVar->szName && pFunc->szName && pFunc->szName[0] && ! pVar->iUsed )
+               hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_VAR_NOT_USED, pVar->szName, pFunc->szName );
+
+            pVar = pVar->pNext;
+         }
+
+         /* Check if the function returned some value
+         */
+         if( (pFunc->bFlags & FUN_WITH_RETURN) == 0 &&
+            (pFunc->bFlags & FUN_PROCEDURE) == 0 )
+            hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_FUN_WITH_NO_RETURN,
+                        pFunc->szName, NULL );
       }
 
-      /* Check if the function returned some value
-       */
-      if( (hb_comp_functions.pLast->bFlags & FUN_WITH_RETURN) == 0 &&
-          (hb_comp_functions.pLast->bFlags & FUN_PROCEDURE) == 0 )
-         hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_FUN_WITH_NO_RETURN,
-                     hb_comp_functions.pLast->szName, NULL );
+      if( pFunc->wParamCount && !(pFunc->bFlags & FUN_USES_LOCAL_PARAMS) )
+      {
+         /* There was a PARAMETERS statement used.
+         * NOTE: This fixes local variables references in a case when
+         * there is PARAMETERS statement after a LOCAL variable declarations.
+         * All local variables are numbered from 1 - which means use first
+         * item from the eval stack. However if PARAMETERS statement is used
+         * then there are additional items on the eval stack - the
+         * function arguments. Then first local variable is at the position
+         * (1 + <number of arguments>). We cannot fix this nnumbering
+         * because the PARAMETERS statement can be used even at the end
+         * of function body when all local variables are already created.
+         */
+
+         hb_compFixFuncPCode( pFunc );
+      }
    }
 }
 
@@ -2442,7 +2434,7 @@ static void hb_compOptimizeFrames( PFUNCTION pFunc )
 
       if( bLocals || pFunc->wParamCount )
       {
-         pFunc->pCode[ 1 ] = ( BYTE )( bLocals - pFunc->wParamCount );
+         pFunc->pCode[ 1 ] = ( BYTE )( bLocals );
          pFunc->pCode[ 2 ] = ( BYTE )( pFunc->wParamCount );
          bSkipFRAME = FALSE;
       }

@@ -146,6 +146,14 @@ typedef struct
    int        iCount;           /* number of defined symbols */
 } SYMBOLS;
 
+/* definitions for hb_compPCodeEval() support */
+typedef void *HB_VOID_PTR;
+#define HB_PCODE_FUNC( func, type ) USHORT func( PFUNCTION pFunc, ULONG lPCodePos, type cargo )
+typedef  HB_PCODE_FUNC( HB_PCODE_FUNC_, HB_VOID_PTR );
+typedef  HB_PCODE_FUNC_ *HB_PCODE_FUNC_PTR;
+
+void hb_compPCodeEval( PFUNCTION, HB_PCODE_FUNC_PTR *, void * );
+
 #define VS_LOCAL      1
 #define VS_STATIC     2
 #define VS_FIELD      4
@@ -305,6 +313,9 @@ extern void hb_compPrintLogo( void );
 
 /* Misc functions defined in harbour.c */
 extern void hb_compFinalizeFunction( void ); /* fixes all last defined function returns jumps offsets */
+
+/* Misc functions defined in hbfix.c */
+extern void hb_compFixFuncPCode( PFUNCTION );
 
 /* Misc functions defined in harbour.y */
 extern int hb_compYACCMain( char * szName );

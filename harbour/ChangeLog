@@ -1,3 +1,57 @@
+20000424-19:15 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/compiler/hbfix.c
+        * new file to handle final pcode fixing - it fixes
+          local variable's positions (position on the
+          eval stack) when PARAMETER statement is used
+
+    *source/compiler/genc.c
+    *source/compiler/harbour.c
+    *source/compiler/hbpcode.c
+        * added the table with opcode parameters length
+        * added hb_compPCodeEval() to evaluate pcodes
+        * added assertion code to keep some tables in sync
+          with available opcodes
+        * fixed bug when PARAMETER statement was used after 
+          LOCAL variables declaration
+        * HB_P_PUSHLOCALNEAR/HB_P_POPLOCALNEAR occupies
+          3 bytes in the pcode buffer athough it uses 
+          the first two bytes only to store a value (these
+          opcodes can be replaced with HB_P_(PUSH/POP)LOCAL
+          after final fixing)
+
+    NOTE: When the PARAMETER statement is used then the 
+          position of local variable is increased after the
+          whole function/procedure is compiled (PARAMETERS
+          is an usual executable statement that can be used
+          after local variables are created)
+
+    *source/vm/hvm.c
+        * changed ( char ) type-casting into ( signed char )
+          to correctly support compilers that assume
+          unsigned chars
+        * updated to handle 3-bytes for PUSH/POP-LOCALNEAR
+
+    *include/hbpcode.h
+        * added HB_P_LAST_PCODE as a marker of the highest
+          possible opcode value (it is used in some
+          assertion code)
+
+    *include/hbcomp.h
+        * added declaration of hb_compPCodeEval() and some helper
+          definitions
+        * added declaration of hb_compFixFuncPCode()
+
+    *source/compiler/Makefile
+    *makefile.bc
+    *makefile.vc
+        * added hbfix.c
+
+    *source/vm/itemapi.c
+	* reverted a change (items unreferencing) because it caused
+	  GPFs when an inlined method of an object was called
+	  (it requires more testing)  
+
 20000424-03:44 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/compiler/hbusage.c

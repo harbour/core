@@ -691,6 +691,7 @@ $(HARBOUR_EXE) : \
    $(OBJ_DIR)\harbourl.c \
    $(COMPILER_DIR)\hbusage.c \
    $(COMPILER_DIR)\hbpcode.c \
+   $(COMPILER_DIR)\hbfix.c \
    $(COMPILER_DIR)\hbfunchk.c \
    $(COMPILER_DIR)\cmdcheck.c \
    $(COMPILER_DIR)\hbgenerr.c \

@@ -982,8 +982,8 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_PUSHLOCALNEAR:
-            hb_vmPushLocal( ( char ) pCode[ w + 1 ] );
-            w += 2;
+            hb_vmPushLocal( ( signed char ) pCode[ w + 1 ] );
+            w += 3;  /* only first two bytes are used */
             break;
 
          case HB_P_PUSHLOCALREF:
@@ -1071,8 +1071,8 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_POPLOCALNEAR:
-            hb_vmPopLocal( ( char ) pCode[ w + 1 ] );
-            w += 2;
+            hb_vmPopLocal( ( signed char ) pCode[ w + 1 ] );
+            w += 3;  /* only first two bytes are used */
             break;
 
          case HB_P_POPSTATIC:

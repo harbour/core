@@ -36,6 +36,12 @@
 #ifndef HB_PCODE_H_
 #define HB_PCODE_H_
 
+/* NOTE:
+ * Please update any opcode lookup tables present in
+ *  genc.c
+ *  harbour.c
+ * when new opcode is added
+ */
 typedef enum
 {
    HB_P_AND,               /* peforms the logical AND of two latest stack values, removes them and places result */
@@ -152,7 +158,9 @@ typedef enum
    HB_P_SWAPALIAS,         /* restores the current workarea number from the eval stack */
    HB_P_TRUE,              /* pushes true on the virtual machine stack */
    HB_P_ZERO,              /* places a ZERO on the virtual machine stack */
-   HB_P_ONE                /* places a ONE on the virtual machine stack */
+   HB_P_ONE,               /* places a ONE on the virtual machine stack */
+/*NOTE: * This have to be the last definition */
+   HB_P_LAST_PCODE    /* this defines the number of defined pcodes */
 } HB_PCODE;
 
 #endif /* HB_PCODE_H_ */
