@@ -189,7 +189,9 @@ HB_FUNC(HB_SETZIPCOMMENT)
 }
 HB_FUNC(HB_GETZIPCOMMENT)
     {
-    hb_retc(hb_GetZipComment(hb_parc(1)));
+    char *szComment=(char*)hb_GetZipComment(hb_parc(1));
+    hb_retc(szComment);
+    hb_xfree(szComment);
 }
 HB_FUNC(HB_UNZIPFILEINDEX)
 

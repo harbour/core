@@ -102,6 +102,10 @@ int  hb_CmpPkSpan(char *szFile,PHB_ITEM pArray,int iCompLevel,PHB_ITEM pBlock,BO
     bReturn=false;
 	}
      catch(...){}
+    if (pZipI.szComment != NULL)
+        szZip.SetGlobalComment(pZipI.szComment);
+        hb_xfree(pZipI.szComment);
+
      if (HB_IS_BLOCK(pProgress))
      pProgressInfo=pProgress;
 
@@ -110,6 +114,14 @@ int  hb_CmpPkSpan(char *szFile,PHB_ITEM pArray,int iCompLevel,PHB_ITEM pBlock,BO
                 const char *szDummy = (char *)hb_arrayGetCPtr(pArray,uiCount) ;
                 dwSize=GetCurrentFileSize(szDummy);
                 uiPos=uiCount;
+                if(pBlock !=NULL){
+
+                   PHB_ITEM pFileName=hb_itemPutC(NULL,hb_arrayGetCPtr(pArray,uiCount));
+                   PHB_ITEM pFilePos=hb_itemPutNI(NULL,uiCount);
+                   hb_vmEvalBlockV( pBlock, 2, pFileName, pFilePos );
+                   hb_itemRelease(pFileName);
+                   hb_itemRelease(pFilePos);
+                }
                 
                 try {
                     if (szPassWord != NULL){
@@ -150,14 +162,6 @@ int  hb_CmpPkSpan(char *szFile,PHB_ITEM pArray,int iCompLevel,PHB_ITEM pBlock,BO
                      }
     
                 catch(...){}
-                if(pBlock !=NULL){
-
-                   PHB_ITEM pFileName=hb_itemPutC(NULL,hb_arrayGetCPtr(pArray,uiCount));
-                   PHB_ITEM pFilePos=hb_itemPutNI(NULL,uiCount);
-                   hb_vmEvalBlockV( pBlock, 2, pFileName, pFilePos );
-                   hb_itemRelease(pFileName);
-                   hb_itemRelease(pFilePos);
-                }
               
       }
     try {
@@ -483,11 +487,22 @@ int  hb_CmpPkSpanStd(char *szFile,char *szFiletoCompress,int iCompLevel,PHB_ITEM
     bReturn=false;
 	}
      catch(...){}
+    if (pZipI.szComment != NULL)
+        szZip.SetGlobalComment(pZipI.szComment);
+        hb_xfree(pZipI.szComment);
+
      if (HB_IS_BLOCK(pProgress))
      pProgressInfo=pProgress;
 
                 try {
                      dwSize=GetCurrentFileSize(szFiletoCompress);
+                if(pBlock !=NULL){
+                   PHB_ITEM pFileName=hb_itemPutC(NULL,szFiletoCompress );
+                   hb_vmEvalBlockV( pBlock, 1, pFileName );
+                   hb_itemRelease(pFileName);
+
+                }
+
                     if (szPassWord != NULL){
                         szZip.SetPassword(szPassWord);
                      }
@@ -519,12 +534,6 @@ int  hb_CmpPkSpanStd(char *szFile,char *szFiletoCompress,int iCompLevel,PHB_ITEM
                      }
     
                 catch(...){}
-                if(pBlock !=NULL){
-                   PHB_ITEM pFileName=hb_itemPutC(NULL,szFiletoCompress );
-                   hb_vmEvalBlockV( pBlock, 1, pFileName );
-                   hb_itemRelease(pFileName);
-
-                }
               
       
     try {
@@ -623,6 +632,15 @@ iMode=hb_CheckSpamMode(szFile);
                     szTempString =(LPCTSTR)fh.GetFileName();                  
                     szFileNameInZip=(const char *)szTempString;
                iTotal=fh.m_uUncomprSize        ;
+                if(pBlock !=NULL){
+
+                   PHB_ITEM pFileName=hb_itemPutC(NULL,(char *)szFileNameInZip);
+                   PHB_ITEM pFilePos=hb_itemPutNI(NULL,uiCount);
+                   hb_vmEvalBlockV( pBlock, 2, pFileName, pFilePos );
+                   hb_itemRelease(pFileName);
+                   hb_itemRelease(pFilePos);
+                }
+
         try {
                      if (!HB_IS_BLOCK(pProgress))
                      {
@@ -641,14 +659,6 @@ iMode=hb_CheckSpamMode(szFile);
 	{
       iCause=e.m_iCause       ;
 	}
-                if(pBlock !=NULL){
-
-                   PHB_ITEM pFileName=hb_itemPutC(NULL,(char *)szFileNameInZip);
-                   PHB_ITEM pFilePos=hb_itemPutNI(NULL,uiCount);
-                   hb_vmEvalBlockV( pBlock, 2, pFileName, pFilePos );
-                   hb_itemRelease(pFileName);
-                   hb_itemRelease(pFilePos);
-                }
 
     }
 
@@ -723,6 +733,12 @@ iMode=hb_CheckSpamMode(szFile) ;
         szTempString =(LPCTSTR)fh.GetFileName();
         iTotal=fh.m_uUncomprSize;
         szFileNameInZip=(const char *)szTempString;
+                if(pBlock !=NULL){
+
+                   PHB_ITEM pFileName=hb_itemPutC(NULL,(char *)szFileNameInZip);
+                   hb_vmEvalBlockV( pBlock, 1, pFileName );
+                   hb_itemRelease(pFileName);
+                }
    
         try {
                      if (!HB_IS_BLOCK(pProgress))
@@ -741,12 +757,6 @@ iMode=hb_CheckSpamMode(szFile) ;
 	{
       iCause=e.m_iCause       ;
 	}
-                if(pBlock !=NULL){
-
-                   PHB_ITEM pFileName=hb_itemPutC(NULL,(char *)szFileNameInZip);
-                   hb_vmEvalBlockV( pBlock, 1, pFileName );
-                   hb_itemRelease(pFileName);
-                }
 
     }
     szZip.Close();
@@ -892,6 +902,13 @@ iMode=hb_CheckSpamMode(szFile);
         szTempString =(LPCTSTR)fh.GetFileName();                  
         szFileNameInZip=(const char *)szTempString;
          iTotal=fh.m_uUncomprSize   ;
+                if(pBlock !=NULL){
+
+                   PHB_ITEM pFileName=hb_itemPutC(NULL,(char *)szFileNameInZip);
+                   hb_vmEvalBlockV( pBlock, 1, pFileName );
+                   hb_itemRelease(pFileName);
+                }
+
         try {
                      if (!HB_IS_BLOCK(pProgress))
                      {
@@ -908,12 +925,6 @@ iMode=hb_CheckSpamMode(szFile);
 	{
       iCause=e->m_iCause       ;
 	}
-                if(pBlock !=NULL){
-
-                   PHB_ITEM pFileName=hb_itemPutC(NULL,(char *)szFileNameInZip);
-                   hb_vmEvalBlockV( pBlock, 1, pFileName );
-                   hb_itemRelease(pFileName);
-                }
 
         }
 }
@@ -939,11 +950,15 @@ if (a && b && c){
 }
 void hb_SetZipComment(char *szComment)
 {
-pZipI.szComment=szComment;
+int iLen=strlen((const char *)szComment)+1;
+pZipI.szComment=(char*)hb_xgrab(iLen);
+strcpy(pZipI.szComment,szComment);
+/*pZipI.szComment=hb_itemGetC(pComment);*/
 }
-char * hb_GetZipComment(char *szFile)
+const char * hb_GetZipComment(char *szFile)
 {
 const char *szReturn;
+char *szTempR;
 bool iReturn=true;
 CZipString szTemp;
 int iCause=0;
@@ -976,12 +991,14 @@ if (iReturn) {
     szTemp=szZip.GetGlobalComment();
     szReturn=(const char *) szTemp;
 }
-     if (pChangeDiskBlock){
-    hb_itemRelease(pChangeDiskBlock);
-    }
+szTempR=(char*)hb_xgrab(strlen((const char*)szReturn)+1);
+   strcpy(szTempR,(char*)szReturn);
+    if (pChangeDiskBlock)
+      hb_itemRelease(pChangeDiskBlock);
+    
 
 szZip.Close();
-return (char*)szReturn;
+return  szTempR;
 
 }
 
@@ -1042,6 +1059,12 @@ iMode=hb_CheckSpamMode(szFile) ;
         szTempString =(LPCTSTR)fh.GetFileName();
         iTotal=fh.m_uUncomprSize;
         szFileNameInZip=(const char *)szTempString;
+                if(pBlock !=NULL){
+
+                   PHB_ITEM pFileName=hb_itemPutC(NULL,(char *)szFileNameInZip);
+                   hb_vmEvalBlockV( pBlock, 1, pFileName );
+                   hb_itemRelease(pFileName);
+                }
    
         try {
                      if (!HB_IS_BLOCK(pProgress))
@@ -1060,12 +1083,6 @@ iMode=hb_CheckSpamMode(szFile) ;
 	{
       iCause=e.m_iCause       ;
 	}
-                if(pBlock !=NULL){
-
-                   PHB_ITEM pFileName=hb_itemPutC(NULL,(char *)szFileNameInZip);
-                   hb_vmEvalBlockV( pBlock, 1, pFileName );
-                   hb_itemRelease(pFileName);
-                }
 
     }
     szZip.Close();
@@ -1123,6 +1140,13 @@ iMode=hb_CheckSpamMode(szFile);
         szTempString =(LPCTSTR)fh.GetFileName();                  
         szFileNameInZip=(const char *)szTempString;
          iTotal=fh.m_uUncomprSize   ;
+                if(pBlock !=NULL){
+
+                   PHB_ITEM pFileName=hb_itemPutC(NULL,(char *)szFileNameInZip);
+                   hb_vmEvalBlockV( pBlock, 1, pFileName );
+                   hb_itemRelease(pFileName);
+                }
+
         try {
                      if (!HB_IS_BLOCK(pProgress))
                      {
@@ -1139,12 +1163,6 @@ iMode=hb_CheckSpamMode(szFile);
 	{
       iCause=e->m_iCause       ;
 	}
-                if(pBlock !=NULL){
-
-                   PHB_ITEM pFileName=hb_itemPutC(NULL,(char *)szFileNameInZip);
-                   hb_vmEvalBlockV( pBlock, 1, pFileName );
-                   hb_itemRelease(pFileName);
-                }
 
         }
 }

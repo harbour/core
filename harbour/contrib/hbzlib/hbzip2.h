@@ -116,7 +116,7 @@ extern int      hb_DeleteOneIndex(char *szFile,int uiCount);
 extern int      hb_TestForPKS(char *szFile);
 extern void     hb_SetZipBuff(int a,int b,int c);
 extern void     hb_SetZipComment(char *szComment);
-extern char     *hb_GetZipComment(char *szFile);
+extern const char *hb_GetZipComment(char *szFile);
 extern BOOL     hb_IsPassWord(char *szName);
 extern unsigned long    GetCurrentFileSize(   LPCTSTR szFile);
 extern BOOL     hb_SaveZipFileFromMemory(char *szFile);
