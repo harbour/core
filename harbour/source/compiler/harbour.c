@@ -272,25 +272,20 @@ int main( int argc, char * argv[] )
 
                      {
                         PCOMSYMBOL pSym = hb_comp_symbols.pFirst;
+                        char * szFirstFunction ;
+
+                        if( hb_comp_bStartProc )
+                          szFirstFunction = hb_comp_functions.pFirst->szName ;
+                        else if( hb_comp_functions.pFirst->pNext )
+                          szFirstFunction = hb_comp_functions.pFirst->pNext->szName ;
+
                         while( pSym )
                         {
-                           if( hb_comp_bStartProc )
+                           if( strcmp( pSym->szName, szFirstFunction ) == 0 )
                            {
-                              if( strcmp( pSym->szName, hb_comp_functions.pFirst->szName ) == 0 )
-                              {
-                                 pSym->cScope |= HB_FS_FIRST;
-                                 break;
-                              }
+                              pSym->cScope |= HB_FS_FIRST;
+                              break;
                            }
-                           else if( hb_comp_functions.pFirst->pNext )
-                           {
-                              if( strcmp( pSym->szName, hb_comp_functions.pFirst->pNext->szName ) == 0 )
-                              {
-                                 pSym->cScope |= HB_FS_FIRST;
-                                 break;
-                              }
-                           }
-
                            pSym = pSym->pNext;
                         }
                      }

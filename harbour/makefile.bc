@@ -276,6 +276,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\fieldbl.obj \
    $(OBJ_DIR)\getlist.obj \
    $(OBJ_DIR)\getsys.obj \
+   $(OBJ_DIR)\hbstruc.obj \
    $(OBJ_DIR)\input.obj \
    $(OBJ_DIR)\memoedit.obj \
    $(OBJ_DIR)\memvarbl.obj \
@@ -1150,6 +1151,13 @@ $(OBJ_DIR)\gx.obj : $(RTL_DIR)\gx.c
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\hardcr.obj : $(RTL_DIR)\hardcr.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\hbstruc.c : $(RTL_DIR)\hbstruc.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\hbstruc.obj : $(OBJ_DIR)\hbstruc.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 

@@ -75,11 +75,11 @@ typedef HB_DYNS_FUNC( PHB_DYNS_FUNC );
 /* Harbour Functions scope ( HB_SYMBOLSCOPE ) */
 #define HB_FS_PUBLIC   ( ( HB_SYMBOLSCOPE ) 0x00 )
 #define HB_FS_STATIC   ( ( HB_SYMBOLSCOPE ) 0x02 )
+#define HB_FS_FIRST    ( ( HB_SYMBOLSCOPE ) 0x04 )
 #define HB_FS_INIT     ( ( HB_SYMBOLSCOPE ) 0x08 )
 #define HB_FS_EXIT     ( ( HB_SYMBOLSCOPE ) 0x10 )
 #define HB_FS_INITEXIT ( HB_FS_INIT | HB_FS_EXIT )
 #define HB_FS_MESSAGE  ( ( HB_SYMBOLSCOPE ) 0x20 )
-#define HB_FS_FIRST    ( ( HB_SYMBOLSCOPE ) 0x40 )
 #define HB_FS_MEMVAR   ( ( HB_SYMBOLSCOPE ) 0x80 )
 
 extern void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols );  /* invokes the virtual machine */

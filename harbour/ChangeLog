@@ -1,3 +1,33 @@
+2000-05-22 10:40 UTC-800 Ron Pinkas <Ron@Profit-Master.com>
+
+   * include/hbvmpub.h
+     * Modified HB_FS_FIRST to  ( ( HB_SYMBOLSCOPE ) 0x04 )
+
+   * source/compiler/harbour.c
+     * Minor optimization when storing HB_FS_FIRST
+
+   * source/pp/pptable.c
+     - Removed built-in rule, for STRUCTURE support
+
+   * source/vm/runner.c
+     ! Fixed bug when there is no startup procedure
+
+   * source/rtl/tclass.prg
+     - Removed HB_Structure()
+
+   * include/hbextern.ch
+     * Moved EXTERNAL HB_STRUCTURE to separate section
+
+   * tests/teststru.prg
+     + added #INCLUDE "..\Include\HBSTRUC.CH"
+
+   + include/hbstruc.ch
+
+   + source/rtl/hbstruc.prg
+
+   * makefile.bc
+     + Added rules for hbstruc.prg
+
 2000-05-25 12:45 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
    * source/rtl/tgetlist.prg

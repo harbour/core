@@ -1,3 +1,5 @@
+#INCLUDE "..\Include\HBSTRUC.CH"
+
 STRUCTURE MyStruct Var1 As Char, Var2 As Num, sNext AS Stru MyStruct
 
 STRUCTURE OtherStruct sNested As Stru MyStruct, sNext AS Structure OtherStruct

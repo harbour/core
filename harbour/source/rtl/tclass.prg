@@ -41,10 +41,6 @@
  *    Support for inheritance
  *    Support for default DATA values
  *
- * Copyright 2000 Ron Pinkas <Ron@Profit-Master.com>
- *
- *            HB_Structure()
- *
  * See doc/license.txt for licensing terms.
  *
  */
@@ -288,68 +284,5 @@ STATIC FUNCTION SetType( cType )
    endif
 
    RETURN NIL
-
-//----------------------------------------------------------------------------//
-
-Function HB_Structure( cStructureName AS Char, aMembers AS Array OF Char )
-
-  STRUCTURE HB_Structure cName AS Char, hId As Num
-
-  DECLARE __ClsNew( ClassName AS Char, N As Num ) AS Num
-  DECLARE __ClsAddMsg( H AS Num, Data AS Char, ID As Num, Type As Num ) AS Num
-  DECLARE __ClsInst( H AS Num ) AS Structure HB_Structure
-
-  LOCAL hStructure AS Num, nCounter AS Num, nMembers AS Num
-
-  STATIC asStructures AS Array OF Structure HB_Structure := {}
-
-  STATIC sStructure AS Stru HB_Structure
-
-  LOCAL hSelf As Num
-
-  cStructureName := Upper( cStructureName )
-
-  hStructure := aScan( asStructures, { |aStructure| aStructure:cName == cStructureName } )
-
-  IF aMembers == NIL
-     IF hStructure == 0
-        //hb_Structure( cStructureName, {} )
-        RETURN NIL //hb_Structure( cStructureName )
-     ELSE
-        RETURN __ClsInst( asStructures[ hStructure ]:hId )
-     ENDIF
-  ELSE
-     IF hStructure > 0
-        // Duplicate declaration
-        RETURN NIL
-     ENDIF
-  ENDIF
-
-  nMembers := Len( aMembers )
-
-  hStructure := __ClsNew( cStructureName, nMembers )
-
-  FOR nCounter := 1 TO nMembers
-     __clsAddMsg( hStructure, aMembers[nCounter], nCounter, 1 )
-     __clsAddMsg( hStructure, '_' + aMembers[nCounter], nCounter, 1 )
-  NEXT
-
-  IF sStructure == NIL
-     hSelf := __ClsNew( "HB_Structure", 2 )
-
-     __clsAddMsg( hSelf, "cName", 1, 1 )
-     __clsAddMsg( hSelf, "_cName", 1, 1 )
-     __clsAddMsg( hSelf, "hID", 2, 1 )
-     __clsAddMsg( hSelf, "_hID", 2, 1 )
-
-     sStructure := __ClsInst( hSelf )
-  ENDIF
-
-  sStructure:cName := cStructureName
-  sStructure:hId   := hStructure
-
-  aAdd( asStructures, sStructure )
-
-RETURN NIL //__clsInst( hStructure )
 
 //----------------------------------------------------------------------------//

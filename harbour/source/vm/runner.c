@@ -166,7 +166,7 @@ HB_FUNC( __HRBRUN )
          PHB_DYNF pDynFunc;                           /* Functions read           */
          PHB_DYNS pDynSym;
 
-         ULONG ulSymStart;                            /* Startup Symbol           */
+         LONG ulSymStart = -1;                        /* Startup Symbol           */
 
          int i;
 
@@ -180,7 +180,7 @@ HB_FUNC( __HRBRUN )
             pSymRead[ ul ].pFunPtr = ( PHB_FUNC ) ( ULONG ) hb_hrbFileReadByte( file, szFileName );
             pSymRead[ ul ].pDynSym = NULL;
 
-            if ( pSymRead[ ul ].cScope & HB_FS_FIRST && ! ( pSymRead[ ul ].cScope & HB_FS_INITEXIT ) )
+            if ( ulSymStart == -1 && pSymRead[ ul ].cScope & HB_FS_FIRST && ! ( pSymRead[ ul ].cScope & HB_FS_INITEXIT ) )
                 ulSymStart = ul;
          }
 
@@ -238,7 +238,7 @@ HB_FUNC( __HRBRUN )
 
          if( ! bError )
          {
-            PHB_ITEM pRetVal;
+            PHB_ITEM pRetVal = NULL;
 
             hb_vmProcessSymbols( pSymRead, ( USHORT ) ulSymbols );
 
@@ -270,7 +270,7 @@ HB_FUNC( __HRBRUN )
             }
 
             /* May not have a startup symbol, if first symbol was an INIT Symbol (was executed already).*/
-            if ( ulSymStart )
+            if ( ulSymStart >= 0 )
             {
                 hb_vmPushSymbol( &( pSymRead[ ulSymStart ] ) );
                 hb_vmPushNil();
@@ -295,8 +295,11 @@ HB_FUNC( __HRBRUN )
                }
             }
 
-            hb_itemReturn( pRetVal );
-            hb_itemRelease( pRetVal );
+            if ( pRetVal )
+            {
+               hb_itemReturn( pRetVal );
+               hb_itemRelease( pRetVal );
+            }
          }
 
          for( ul = 0; ul < ulFuncs; ul++ )
