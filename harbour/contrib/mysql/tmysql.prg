@@ -123,9 +123,16 @@ return nil
 METHOD FieldPut(nNum, Value) CLASS TMySQLRow
 
    if nNum > 0 .AND. nNum <= Len(::aRow)
+
       if Valtype(Value) == Valtype(::aRow[nNum]) .OR. Empty(::aRow[nNum])
+         // Save starting value for this field
+         if !::aDirty[nNum]
+            ::aOldValue[nNum] := ::aRow[nNum]
+            ::aDirty[nNum] := .T.
+         endif
+
          ::aRow[nNum] := Value
-         ::aDirty[nNum] := .T.
+
          return Value
       endif
    endif
@@ -172,7 +179,8 @@ METHOD MakePrimaryKeyWhere() CLASS TMySQLRow
    for nI := 1 to Len(::aFieldStruct)
 
       // search for fields part of a primary key
-      if sqlAND(::aFieldStruct[nI][MYSQL_FS_FLAGS], PRI_KEY_FLAG) == PRI_KEY_FLAG
+      if (sqlAND(::aFieldStruct[nI][MYSQL_FS_FLAGS], PRI_KEY_FLAG) == PRI_KEY_FLAG) .OR.;
+         (sqlAND(::aFieldStruct[nI][MYSQL_FS_FLAGS], MULTIPLE_KEY_FLAG) == MULTIPLE_KEY_FLAG)
 
          cWhere += ::aFieldStruct[nI][MYSQL_FS_NAME] + "="
 
@@ -213,6 +221,7 @@ CLASS TMySQLQuery
 
    METHOD   New(nSocket, cQuery)       // New query object
    METHOD   Destroy()
+   METHOD   Refresh()                  // ReExecutes the query (cQuery) so that changes to table are visible
 
    METHOD   GetRow(nRow)               // return Row n of answer
 
@@ -264,6 +273,41 @@ METHOD New(nSocket, cQuery) CLASS TMySQLQuery
    endif
 
 return Self
+
+
+METHOD Refresh() CLASS TMySQLQuery
+
+   local rc
+
+   // free present result handle
+   sqlFreeR(::nResultHandle)
+
+   ::lError := .F.
+
+   if (rc := sqlQuery(::nSocket, ::cQuery)) == 0
+
+      // save result set
+      ::nResultHandle := sqlStoreR(::nSocket)
+      ::nNumRows := sqlNRows(::nResultHandle)
+
+      // NOTE: I presume that number of fields doesn't change (that is nobody alters this table) between
+      // successive refreshes of the same
+
+      // But row number could very well change
+      if ::nCurRow > ::nNumRows
+         ::nCurRow := ::nNumRows
+      endif
+
+   else
+      ::aFieldStruct := {}
+      ::nResultHandle := nil
+      ::nNumFields := 0
+      ::nNumRows := 0
+      ::lError := .T.
+
+   endif
+
+return !::lError
 
 
 METHOD Skip(nRows) CLASS TMySQLQuery
@@ -425,6 +469,8 @@ METHOD Update(oRow) CLASS TMySQLTable
    local cUpdateQuery := "UPDATE " + ::cTable + " SET "
    local i, cField
 
+   ::lError := .F.
+
    // is this a row of this table ?
    if oRow:cTable == ::cTable
 
@@ -441,9 +487,10 @@ METHOD Update(oRow) CLASS TMySQLTable
       cUpdateQuery += oRow:MakePrimaryKeyWhere()
 
       if sqlQuery(::nSocket, cUpdateQuery) == 0
+
          // All values are commited
          Afill(oRow:aDirty, .F.)
-         return .T.
+         Afill(oRow:aOldValue, nil)
 
       else
          ::lError := .T.
@@ -452,7 +499,7 @@ METHOD Update(oRow) CLASS TMySQLTable
 
    endif
 
-return .F.
+return !::lError
 
 
 METHOD Delete(oRow) CLASS TMySQLTable
@@ -725,13 +772,20 @@ METHOD Query(cQuery) CLASS TMySQLServer
 
    cUpperQuery := Upper(AllTrim(cQuery))
    i := 1
-   nNumTables := 0
+   nNumTables := 1
 
    while __StrToken(cUpperQuery, i++, " ") <> "FROM"
    enddo
-   while (cToken := __StrToken(cUpperQuery, i++, " ")) <> "WHERE" .AND. cToken <> "LIMIT" .AND. !Empty(cToken)
-      cTableName := __StrToken(cQuery, i - 1, " ")
-      nNumTables++
+
+   // first token after "FROM" is a table name
+   // NOTE: SubSelects ?
+   cTableName := __StrToken(cQuery, i++, " ")
+
+   while (cToken := __StrToken(cUpperQuery, i++, " ")) <> "WHERE" .AND. !Empty(cToken)
+      // do we have more than one table referenced ?
+      if cToken == "," .OR. cToken == "JOIN"
+         nNumTables++
+      endif
    enddo
 
    if nNumTables == 1

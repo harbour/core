@@ -36,6 +36,7 @@
 
 #include "hbclass.ch"
 #include "common.ch"
+#include "inkey.ch"
 #include "dbstruct.ch"
 #include "mysql.ch"
 
@@ -44,8 +45,13 @@ CLASS TBColumnSQL from TBColumn
 
    DATA  oBrw                 // pointer to Browser containing this column, needed to be able to
                               // retreive field values from Browse instance variable oCurRow
+   DATA  Picture              // From clipper 5.3
+   DATA  nFieldNum            // This column maps field num from query
 
-   MESSAGE  Block METHOD Block()          // When evaluating code block to get data from source this method gets called
+   MESSAGE  Block METHOD Block()          // When evaluating code block to get data from source this method
+                                          // gets called. I need this since inside TBColumn Block I cannot
+                                          // reference Column or Browser instance variables
+
    METHOD   New(cHeading, bBlock, oBrw)   // Saves inside column a copy of container browser
 
 ENDCLASS
@@ -62,14 +68,21 @@ return Self
 
 METHOD Block() CLASS TBColumnSQL
 
-   local xValue := ::oBrw:oCurRow:FieldGet(::Cargo)
+   local xValue := ::oBrw:oCurRow:FieldGet(::nFieldNum)
    local bBlock := "{|| '"
 
-   if ISNUMBER(xValue)
+   do case
+   case ValType(xValue) == "N"
       xValue := Str(xValue)
-   elseif ISDATE(xValue)
+
+   case ValType(xValue) == "D"
       xValue := DToC(xValue)
-   endif
+
+   case ValType(xValue) == "L"
+      xValue := iif(xValue, "T", "F")
+
+   otherwise
+   endcase
 
    bBlock += xValue + " '}"
 
@@ -89,7 +102,10 @@ CLASS TBrowseSQL from TBrowse
    DATA     oQuery                        // Query / table object which we are browsing
 
    METHOD   New(nTop, nLeft, nBottom, nRight, oServer, oQuery, cTable)
-
+   METHOD   EditField()                   // Editing of hilighted field, after editing does an update of
+                                          // corresponding row inside table
+   METHOD   BrowseTable(nKey, lCanEdit)   // Handles standard moving inside table and if lCanEdit == .T.
+                                          // allows editing of field. It is the stock ApplyKey() moved inside a table
 ENDCLASS
 
 
@@ -129,9 +145,24 @@ METHOD New(nTop, nLeft, nBottom, nRight, oServer, oQuery, cTable) CLASS TBrowseS
    // Add a column for each field
    for i := 1 to ::oQuery:FCount()
       // No bBlock now since New() would use it to find column length, but column is not ready yet at this point
-      oCol := TBColumnSQL():New(::oCurRow:FieldName(i), nil, Self)
+      oCol := TBColumnSQL():New(::oCurRow:FieldName(i), {|val| iif(val <> nil, alert(val),)}, Self)
+
       oCol:Width := Max(::oCurRow:aFieldStruct[i][MYSQL_FS_LENGTH], Len(oCol:Heading))
-      oCol:Cargo := i
+
+      // which field does this column display
+      oCol:nFieldNum := i
+
+      // Add a picture
+      do case
+      case ISNUMBER(::oCurRow:FieldGet(i))
+          oCol:picture    := "999,999"
+
+      case ISCHARACTER(::oCurRow:FieldGet(i))
+         // For non-numeric, just use colors 3 and 4 ("B/W" and "B/BG")
+         oCol:picture  := replicate("!", ::oCurRow:aFieldStruct[i][MYSQL_FS_LENGTH])
+
+      endcase
+
       ::AddColumn(oCol)
    next
 
@@ -140,21 +171,17 @@ return Self
 
 static function Skipper(nSkip, oQuery)
 
-   //LOCAL lAppend := APP_MODE_ACTIVE( oBrowse )
-   LOCAL i       := 0
+   local    i := 0
 
    do case
-   case ( nSkip == 0 .or. oQuery:lastrec() == 0 )
-      // Skip 0 (significant on a network)
+   case (nSkip == 0 .or. oQuery:LastRec() == 0)
       oQuery:Skip( 0 )
 
-   case ( nSkip > 0 .and. !oQuery:eof() )
+   case (nSkip > 0 .and. !oQuery:eof())
       while ( i < nSkip )           // Skip Foward
 
          if oQuery:eof()
-            //iif( lAppend, i++, dbskip( -1 ) )
             exit
-
          endif
 
          oQuery:Skip( 1 )
@@ -167,20 +194,176 @@ static function Skipper(nSkip, oQuery)
 
          if oQuery:bof()
             exit
-
          endif
 
          oQuery:Skip( -1 )
          i--
 
       enddo
-
    endcase
 
    nSkip := i
 
-   //Alert(Str(oQuery:RecNo()) +  " : " + str(i))
-
 return oQuery:GetRow(oQuery:RecNo())
 
+
+METHOD EditField() CLASS TBrowseSQL
+
+   LOCAL lFlag := TRUE
+   LOCAL oCol
+   LOCAL aGetList
+   LOCAL nKey
+   LOCAL nLen
+   LOCAL lAppend
+   LOCAL bSavIns
+   LOCAL nSavRecNo := recno()
+   LOCAL xNewKey
+   LOCAL xSavKey
+
+   LOCAL xGetValue
+
+   // If we're at EOF we're adding the first record, so turn on append mode
+   //if EOF()
+   //   lAppend := APP_MODE_ON( oBrowse )
+   //else
+   //   lAppend := APP_MODE_ACTIVE( oBrowse )
+   //endif
+
+   // Make sure screen is fully updated, dbf position is correct, etc.
+   //oBrowse:forceStable()
+
+   //if ( lAppend .and. ( recno() == lastrec() + 1 ) )
+   //   dbAppend()
+
+   //endif
+
+   // Save the current record's key value (or NIL)
+   //xSavKey := iif( empty( indexkey() ), NIL, &( indexkey() ) )
+
+   // Get the current column object from the browse
+   oCol := ::getColumn(::colPos)
+
+   // Get picture len to force scrolling if var is larger than window
+   //nLen := ::colWidth(::colPos)
+
+   //Alert(Str(::colWidth(::colPos)))
+
+   // Create a corresponding GET
+   aGetList := { getnew( row(), col(),    ;
+                        {|xValue| iif(xValue == nil, ::oCurRow:FieldGet(oCol:nFieldNum), ::oCurRow:FieldPut(oCol:nFieldNum, xValue))} ,;
+                        oCol:heading,     ;
+                        oCol:picture,     ;
+                        ::colorSpec ) }
+
+   // Set insert key to toggle insert mode and cursor shape
+   //bSavIns := setkey( K_INS, { || InsToggle() } )
+
+   // Set initial cursor shape
+   //setcursor( iif( ReadInsert(), SC_INSERT, SC_NORMAL ) )
+   ReadModal(aGetList)
+   //setcursor( SC_NONE )
+   //setkey( K_INS, bSavIns )
+
+   // For this demo, we turn append mode off after each new record
+   //APP_MODE_OFF( oBrowse )
+
+   // Get the record's key value (or NIL) after the GET
+   //xNewKey := if( empty( indexkey() ), NIL, &( indexkey() ) )
+
+   if !::oQuery:Update(::oCurRow)
+      Alert(::oQuery:Error())
+   endif
+
+   if !::oQuery:Refresh()
+      Alert(::oQuery:Error())
+   endif
+
+   ::inValidate()
+   ::refreshAll():forceStable()
+
+   // if the key has changed (or if this is a new record)
+   /*if !( xNewKey == xSavKey ) .or. ( lAppend .and. xNewKey != NIL )
+
+      // do a complete refresh
+      oBrowse:refreshAll():forceStable()
+
+      // Make sure we're still on the right record after stabilizing
+      while &( indexkey() ) > xNewKey .and. !oBrowse:hitTop()
+         oBrowse:up():forceStable()
+
+      enddo
+
+   endif*/
+
+   // Check exit key from get
+   nKey := lastkey()
+   if nKey == K_UP   .or. nKey == K_DOWN .or. ;
+      nKey == K_PGUP .or. nKey == K_PGDN
+
+      // Ugh
+      keyboard( chr( nKey ) )
+
+   endif
+
+RETURN Self
+
+
+METHOD BrowseTable(nKey, lCanEdit) CLASS TBrowseSQL
+
+   do case
+   case nKey == K_DOWN
+      ::down()
+
+   case nKey == K_PGDN
+      ::pageDown()
+
+   case nKey == K_CTRL_PGDN
+      ::goBottom()
+
+   case nKey == K_UP
+      ::up()
+
+   case nKey == K_PGUP
+      ::pageUp()
+
+   case nKey == K_CTRL_PGUP
+      ::goTop()
+
+   case nKey == K_RIGHT
+      ::right()
+
+   case nKey == K_LEFT
+      ::left()
+
+   case nKey == K_HOME
+      ::home()
+
+   case nKey == K_END
+      ::end()
+
+   case nKey == K_CTRL_LEFT
+      ::panLeft()
+
+   case nKey == K_CTRL_RIGHT
+      ::panRight()
+
+   case nKey == K_CTRL_HOME
+      ::panHome()
+
+   case nKey == K_CTRL_END
+      ::panEnd()
+
+   case nKey == K_RETURN
+      if lCanEdit
+         ::EditField()
+      endif
+
+   /*otherwise
+      KEYBOARD chr( nKey )
+      DoGet( oBrowse )*/
+   otherwise
+
+   endcase
+
+return Self
 
