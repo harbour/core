@@ -1,3 +1,7 @@
+19991013-17:45 EDT Paul Tucker <ptucker@sympatico.ca>
+   * source/rtl/oldbox.c
+     * Add parens so cast applies to entire expression
+
 19991013-22:37 GMT+1 Victor Szel <info@szelvesz.hu>
    * tests/rtl_test.prg
      * Column width adjusted.

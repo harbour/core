@@ -42,7 +42,7 @@ HARBOUR HB___BOX( void )
    if( ISNUM( 1 ) && ISNUM( 2 ) && ISNUM( 3 ) && ISNUM( 4 ) && ISCHAR( 5 ) )
       hb_gtBox( hb_parni( 1 ), hb_parni( 2 ),
                 hb_parni( 3 ), hb_parni( 4 ),
-                ( BYTE * ) frame ? frame : " " );
+                ( BYTE * ) ( frame ? frame : " " ) );
 }
 
 HARBOUR HB___BOXD( void )
