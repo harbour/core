@@ -8,6 +8,20 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-02-13 21:56 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * souce/rtl/gtapi.c
+     ! hb_gtSetColorStr() removed one suspicious assigment which 
+       showed incompatible with CA-Cl*pper, whete CLR_UNSELECTED 
+       was made equal to CLR_ENHANCED if missing from the color string.
+     * Using CLR_ constants instead of literals.
+
+   * source/rtl/tget.prg
+     ! :ColorSpec() method unselected color defaulting fixed.
+
+   * source/compiler/hbusage.c
+     * Bumped year to 2004.
+
 2004-02-12 13:42 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
    * hrbdll.bc
       + added missing references

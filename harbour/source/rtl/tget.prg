@@ -121,9 +121,9 @@ CLASS Get
    MESSAGE _Assign METHOD Assign()
 #endif
    METHOD HitTest(mrow,mcol)
-   METHOD Block( bBlock )         SETGET  // Replace to DATA Block
-   METHOD ColorSpec( cColorSpec ) SETGET  // Replace to DATA ColorSpec
-   METHOD Picture( cPicture )     SETGET  // Replace to DATA Picture
+   METHOD Block( bBlock )         SETGET  // Replace to DATA bBlock
+   METHOD ColorSpec( cColorSpec ) SETGET  // Replace to DATA cColorSpec
+   METHOD Picture( cPicture )     SETGET  // Replace to DATA cPicture
    METHOD Display( lForced )
    METHOD ColorDisp( cColorSpec ) INLINE ::ColorSpec := cColorSpec, ::Display(), Self
    METHOD KillFocus()
@@ -387,10 +387,10 @@ METHOD Display( lForced ) CLASS Get
    if xBuffer != NIL .and. ( lForced .or. ( ::nDispPos != ::nOldPos ) )
       DispOutAt( ::Row, ::Col + if( ::cDelimit == NIL, 0, 1 ),;
                  Substr( xBuffer, ::nDispPos, ::nDispLen ), ;
-                 hb_ColorIndex( ::ColorSpec, iif( ::HasFocus, GET_CLR_ENHANCED, GET_CLR_UNSELECTED ) ) )
+                 hb_ColorIndex( ::cColorSpec, iif( ::HasFocus, GET_CLR_ENHANCED, GET_CLR_UNSELECTED ) ) )
       if ! ( ::cDelimit == NIL )
-         DispOutAt( ::Row, ::Col, Substr( ::cDelimit, 1, 1), hb_ColorIndex( ::ColorSpec, iif( ::HasFocus, GET_CLR_ENHANCED, GET_CLR_UNSELECTED ) ) )
-         DispOutAt( ::Row, ::Col + ::nDispLen + 1, Substr( ::cDelimit, 2, 1), hb_ColorIndex( ::ColorSpec, iif( ::HasFocus, GET_CLR_ENHANCED, GET_CLR_UNSELECTED ) ) )
+         DispOutAt( ::Row, ::Col, Left( ::cDelimit, 1 ), hb_ColorIndex( ::cColorSpec, iif( ::HasFocus, GET_CLR_ENHANCED, GET_CLR_UNSELECTED ) ) )
+         DispOutAt( ::Row, ::Col + ::nDispLen + 1, Substr( ::cDelimit, 2, 1 ), hb_ColorIndex( ::cColorSpec, iif( ::HasFocus, GET_CLR_ENHANCED, GET_CLR_UNSELECTED ) ) )
       endif
    endif
 
@@ -1480,13 +1480,13 @@ METHOD ColorSpec( cColorSpec ) CLASS Get
 
       cClrUnSel := iif( !Empty( hb_ColorIndex( cColorSpec, GET_CLR_UNSELECTED ) ),;
                                 hb_ColorIndex( cColorSpec, GET_CLR_UNSELECTED ),;
-                                hb_ColorIndex( SetColor(), GET_CLR_UNSELECTED ) )
+                                hb_ColorIndex( SetColor(), CLR_UNSELECTED ) )
 
       cClrEnh   := iif( !Empty( hb_ColorIndex( cColorSpec, GET_CLR_ENHANCED ) ),;
                                 hb_ColorIndex( cColorSpec, GET_CLR_ENHANCED ),;
                                 cClrUnSel )
 
-      ::cColorSpec := cClrUnSel + " , " + cClrEnh
+      ::cColorSpec := cClrUnSel + ", " + cClrEnh
 
    endif
 
@@ -1549,13 +1549,16 @@ return ::bBlock
 //---------------------------------------------------------------------------//
 
 METHOD HitTest(mrow,mcol) CLASS GET
-        if ::row != mrow
-           return HTNOWHERE
-        endif
-        if mcol >= ::col .and. mcol <= ::col+::ndispLen+if( ::cDelimit == NIL, 0, 2 )
-           return HTCLIENT
-        endif
-return HTNOWHERE
+
+   if ::row != mrow
+      return HTNOWHERE
+   endif
+
+   if mcol >= ::col .and. mcol <= ::col+::ndispLen+if( ::cDelimit == NIL, 0, 2 )
+      return HTCLIENT
+   endif
+
+   return HTNOWHERE
 
 //---------------------------------------------------------------------------//
 
@@ -1579,7 +1582,7 @@ METHOD FirstEditable( ) CLASS GET
 
    ::TypeOut := .t.
 
- Return 0
+   Return 0
 
 //---------------------------------------------------------------------------//
 
@@ -1599,7 +1602,7 @@ METHOD LastEditable( ) CLASS GET
 
    ::TypeOut := .t.
 
- Return 0
+   Return 0
 
 //---------------------------------------------------------------------------//
 
@@ -1623,6 +1626,6 @@ STATIC FUNCTION IsBadDate( cBuffer, cPicFunc )
       Endif
    Next
 
- return .f.
+   return .f.
 
 //---------------------------------------------------------------------------//

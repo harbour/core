@@ -179,13 +179,15 @@ USHORT hb_gtBox( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right, BYTE * pbyFra
             short [vszakats] */
 
    cPadChar = ' ';
-	if( pbyFrame )
-	{
-   	for( tmp = 0; *pbyFrame && tmp < 9; tmp++ )
-      	cPadChar = szBox[ tmp ] = *pbyFrame++;
-	}
-	else
-		tmp = 0;
+
+   if( pbyFrame )
+   {
+      for( tmp = 0; *pbyFrame && tmp < 9; tmp++ )
+      cPadChar = szBox[ tmp ] = *pbyFrame++;
+   }
+   else
+      tmp = 0;
+
    while( tmp < 8 )
       szBox[ tmp++ ] = cPadChar;
    szBox[ tmp ] = '\0';
@@ -506,11 +508,11 @@ USHORT hb_gtSetColorStr( char * szColorString )
 
    if( *szColorString == '\0' )
    {
-      s_pColor[ 0 ] = 0x07;
-      s_pColor[ 1 ] = 0x70;
-      s_pColor[ 2 ] = 0;
-      s_pColor[ 3 ] = 0;
-      s_pColor[ 4 ] = 0x07;
+      s_pColor[ HB_CLR_STANDARD   ] = 0x07;
+      s_pColor[ HB_CLR_ENHANCED   ] = 0x70;
+      s_pColor[ HB_CLR_BORDER     ] = 0;
+      s_pColor[ HB_CLR_BACKGROUND ] = 0;
+      s_pColor[ HB_CLR_UNSELECTED ] = 0x07;
    }
 
    do
@@ -600,14 +602,18 @@ USHORT hb_gtSetColorStr( char * szColorString )
             break;
          case ',':
          case '\0':
-            if( ! nCount )
+
+            if( nCount == 0 )
                nFore = s_pColor[ nPos ];
+
             nCount = -1;
+
             if( nPos == s_uiColorCount )
             {
                s_pColor = ( int * ) hb_xrealloc( s_pColor, sizeof( int ) * ( nPos + 1 ) );
                ++s_uiColorCount;
             }
+
             if( bHasX )
                nFore &= 0x88F8;
 
@@ -643,8 +649,18 @@ USHORT hb_gtSetColorStr( char * szColorString )
    }
    while( c );
 
-   if( nPos > 0 && nPos < 4 )
-      s_pColor[ 4 ] = s_pColor[ 1 ];
+   /* NOTE: Commented out because no test could reveal that 
+            CA-Clipper is actually doing such assignment.
+            Moreover this feature sometimes caused 
+            incompatibilies in color usage (discovered when 
+            using incompletely specified color strings with 
+            GETs. [vszakats]
+            Originally added by ptucker at version 1.31 */
+
+   /*
+   if( nPos >= 1 && nPos <= 3 )
+      s_pColor[ HB_CLR_UNSELECTED ] = s_pColor[ HB_CLR_ENHANCED ];
+   */
 
    s_uiColorIndex = HB_CLR_STANDARD; /* hb_gtColorSelect( HB_CLR_STANDARD ); */
 
