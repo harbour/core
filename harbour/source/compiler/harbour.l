@@ -769,10 +769,12 @@ Separator     {SpaceTab}
 
 	 /* NOTE: hb_compiLineINLINE is being RESET in ppcomp.c - hb_pp_Internal() */
 
+     if( ! HB_COMP_ISSUPPORTED( HB_COMPFLAG_HB_INLINE ) )
+	    return IDENTIFIER;
+        
 	 if( hb_comp_iLineINLINE )
 	 {
             hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_TOOMANY_INLINE, "on the same line", NULL );
-	    return IDENTIFIER;
 	 }
 	 else
 	 {

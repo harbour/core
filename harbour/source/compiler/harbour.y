@@ -320,7 +320,7 @@ ParamList  : IdentName AsType                { hb_compVariableAdd( $1, hb_comp_c
  *    hb_compExprGenStatement(). With this solution we don't have to
  *    stop compilation if invalid syntax will be used.
  */
-Statement  : ExecFlow   CrlfStmnt   { }
+Statement  : ExecFlow { hb_comp_bDontGenLineNum = TRUE; } CrlfStmnt     { }
            | IfInline CrlfStmnt     { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
            | FunCall CrlfStmnt      { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
            | AliasExpr CrlfStmnt    { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
@@ -416,8 +416,8 @@ LineStat   : Crlf          { $<lNumber>$ = 0; hb_comp_bDontGenLineNum = TRUE; }
            | Declaration   { $<lNumber>$ = 1; }
            ;
 
-Statements : LineStat                  { $<lNumber>$ = $<lNumber>1; hb_compLinePush(); }
-           | Statements LineStat       { $<lNumber>$ += $<lNumber>2; hb_compLinePush();  }
+Statements : LineStat                  { $<lNumber>$ = $<lNumber>1; }
+           | Statements LineStat       { $<lNumber>$ += $<lNumber>2; }
            ;
 
 ExtList    : IdentName                      { hb_compExternAdd( $1 ); }
@@ -1334,11 +1334,11 @@ IfEndif    : IfBegin EndIf                    { hb_compGenJumpHere( $1 ); }
            | IfBegin IfElseIf IfElse EndIf    { hb_compGenJumpHere( $1 ); hb_compElseIfFix( $2 ); }
            ;
 
-EmptyStatements : LineStat                                    { $<lNumber>$ = $<lNumber>1; }
-           | EmptyStatements { hb_compLinePush(); } LineStat  { $<lNumber>$ += $<lNumber>3; }
+EmptyStatements : LineStat             { $<lNumber>$ = $<lNumber>1; }
+           | EmptyStatements LineStat  { $<lNumber>$ += $<lNumber>2; }
            ;
 
-EmptyStats : /* empty */           { hb_comp_bDontGenLineNum = TRUE; $<lNumber>$ = 0; }
+EmptyStats : /* empty */           { $<lNumber>$ = 0; }
            | EmptyStatements       { $<lNumber>$ = $<lNumber>1; }
            ;
 
@@ -1537,10 +1537,10 @@ StepExpr   : /* default step expression */       { $<asExpr>$ = NULL; }
            | STEP Expression                     { $<asExpr>$ = hb_compExprReduce( $2 ); }
            ;
 
-ForStatements : EmptyStats NEXT                     { --hb_comp_wForCounter; }
-           | EmptyStats NEXT IdentName              { --hb_comp_wForCounter; }
-           | EmptyStats END                         { --hb_comp_wForCounter; }
-           | EmptyStats END IdentName               { --hb_comp_wForCounter; }
+ForStatements : EmptyStats NEXT                     { hb_compLinePush(); --hb_comp_wForCounter; }
+           | EmptyStats NEXT IdentName              { hb_compLinePush(); --hb_comp_wForCounter; }
+           | EmptyStats END                         { hb_compLinePush(); --hb_comp_wForCounter; }
+           | EmptyStats END IdentName               { hb_compLinePush(); --hb_comp_wForCounter; }
            ;
 
 BeginSeq   : BEGINSEQ { ++hb_comp_wSeqCounter; $<lNumber>$ = hb_compSequenceBegin(); } Crlf

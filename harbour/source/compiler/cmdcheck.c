@@ -634,19 +634,21 @@ void hb_compChkEnvironVar( char * szSwitch )
                             break;
                        
                          case 'h':
-                         case 'H':
                             /* default Harbour mode */
                             hb_comp_Supported |= HB_COMPFLAG_HARBOUR;
                             break;
                             
                          case 'c':
-                         case 'C':
-                            hb_comp_Supported &= ~HB_COMPFLAG_HARBOUR;
+			    /* clear all flags - minimal set of features */
+                            hb_comp_Supported = 0;
                             break;
 
                          case 'x':
-                         case 'X':
                             hb_comp_Supported |= HB_COMPFLAG_XBASE;
+                            break;
+
+                         case 'i':
+                            hb_comp_Supported |= HB_COMPFLAG_HB_INLINE;
                             break;
 
                          default:

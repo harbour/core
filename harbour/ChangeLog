@@ -1,3 +1,23 @@
+2001-08-05 14:20 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+    *include/hbcomp.h
+    *source/compiler/cmdcheck.c
+    *source/compiler/hbusage.c
+        * added new command line switch: -ki
+        * added new flag: HB_COMPFLAG_HB_INLINE
+        This switch enables support for HB_INLINE syntax
+        (by default it is disabled)
+        * all options used with -k switch are letter case sensitive
+        * -kc (Clipper compatibility) clears all other switches (minimal
+          set of features)
+        
+    *source/compiler/harbour.l
+        * added support for -ki command line switch
+        
+    *source/compiler/harbour.sly
+    *source/compiler/harbour.y
+        * fixed line numer issues in generated pcode
+
 2001-08-04 18:40 GMT -3  Luiz Rafael Culik<culik@sl.conex.net>
    *utils/hbmake/hbmake.prg
      * Small fix to the library edit mode of hbmake

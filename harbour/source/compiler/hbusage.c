@@ -112,13 +112,14 @@ void hb_compPrintModes( void )
    {
            "\nOptions:  c               strict Clipper mode",
            "\n          h               Harbour mode (default)",
+           "\n          i               enable support for HB_INLINE",
            "\n          x               extended xbase mode",
            "\n          ?               this info",
            "\n"
    };
    int iLine;
 
-   printf( "\nCompatybility flags: -k[options]\n" );
+   printf( "\nCompatybility flags (lowercase/uppercase significant): -k[options]\n" );
 
    for( iLine = 0; iLine < ( sizeof( szOptions ) / sizeof( char * ) ); iLine++ )
       printf( szOptions[ iLine ] );
