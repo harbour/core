@@ -254,13 +254,19 @@ return aData
 
 
 //
-// <aSorted> aSort( <aUnsorted> )
+// <aSorted> aSort( <aUnsorted>, [nStart], [nCount], [bBlock] )
 //
 // Sort an array
 //
-function aSort( aIn )                           /* Was not implemented yet  */
-   QuickSort( 1, Len(aIn), aIn )
+function aSort( aIn, nStart, nCount, bBlock )
+
+   nStart := Default( nStart, 1 )
+   QuickSort( aIn,                                      ;
+              nStart,                                   ;
+              Default( nCount, Len(aIn) - nStart + 1 ), ;
+              Default( bBlock, {| x, y | x < y } ) )
 return aIn
+
 
 //
 // QuickSort( <aSort>, <nLeft>, <nRight> )
@@ -272,7 +278,7 @@ return aIn
 // For instructions :
 // http://monty.cnri.reston.va.us/grail/demo/quicksort/quicksort.htm
 //
-function QuickSort( nLeft, nRight, aSort )
+function QuickSort( aSort, nLeft, nRight, bOrder )
 
    local nI := nLeft
    local nJ := nRight
@@ -281,10 +287,10 @@ function QuickSort( nLeft, nRight, aSort )
    local xTemp
 
    do while lOk
-      do while aSort[ nI ] < nX
+      do while Eval( bOrder, aSort[ nI ], nX )
          nI++
       enddo
-      do while nX < aSort[ nJ ]
+      do while Eval( bOrder, nX, aSort[ nJ ] )
          nJ--
       enddo
       if nI <= nJ
@@ -297,10 +303,10 @@ function QuickSort( nLeft, nRight, aSort )
       lOk := nI <= nJ
    enddo
    if nLeft < nJ
-      QuickSort( nLeft, nJ, aSort )
+      QuickSort( aSort, nLeft, nJ,  bOrder )
    endif
    if nI < nRight
-      QuickSort( nI, nRight, aSort )
+      QuickSort( aSort, nI, nRight, bOrder )
    endif
 return nil
 
