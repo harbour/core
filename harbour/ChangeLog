@@ -8,6 +8,25 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-07-14 13:50 UTC-0300 Walter Negro <anegro@overnet.com.ar>
+  * doc/transfrm.txt
+    + Add information about new functionalities.
+
+  * doc/tracing.txt
+    + Add information about work with DOS/WIN9x.
+
+  * doc/en/var.txt
+    + Add information about HB_ISBYREF().
+
+  * source/rtl/tget.prg
+    ! Fix and more compliant in Untransform(), PutMask() and KillFocus()
+      methods.
+    Reported by Andrew Wos
+
+  * include/hbmath.h
+  * source/rtl/math.c
+    + Extend functionalities of math error handling for DJGPP compiler.
+
 2002-07-14 14:14 UTC+0500 April White <awhite@mail.rosecom.ca>
   * contrib/btree/hb_btree.api
     + extern "C"
