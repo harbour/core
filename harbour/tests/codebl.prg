@@ -36,6 +36,8 @@ LOCAL cb
    mqout( 300, EVAL( cbStatic, 200 ) )
    mqout( 4, EVAL( cb, 3 ) )
 
+   ReferParam()
+	
 Return( NIL )
 
 Static Function TestBlocks()
@@ -102,3 +104,65 @@ FUNCTION DetachToStatic( n )
   cbStatic ={|x| n+x}
 
 RETURN NIL
+
+// ------------------------------------------------------------
+
+Function ReferParam()
+
+Local bResult
+
+
+? "Test for 
+codeblock parameter passed by reference"
+
+Whatever( {|lEnd| ;
+
+   bResult := SomeStuff( @lEnd ), ;  // SomeStuff( @lEnd ) isn't allowed 
+in Harbour!
+
+   SomethingElse( @lEnd ) } )
+
+
+
+?
+? "Printed value should be .F.:", Eval( bResult )            // Clipper & xHarbour it's .F.; in Harbour 
+it is NIL
+
+? "Printed value should be 'L':", ValType( Eval( bResult ) ) 
+?
+/* Clipper & xHarbour it is "L"; in Harbour 
+
+it's "U" or worst: Unrecoverable error 9020: An item was going to be 
+
+copied to itself from hb_itemCopy()
+
+
+*/
+Return Nil
+
+
+
+Static Function Whatever( bBlock )
+
+Local lSomeVar := .T.
+
+Eval( bBlock, lSomeVar )
+
+Return .T.
+
+
+
+Static Function SomethingElse( lVar )
+
+lVar := .F.
+
+Return Nil
+
+
+
+Static Function SomeStuff( lVar )
+
+Return {|| lVar }
+
+// ------------------------------------------------------------
+

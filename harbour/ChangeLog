@@ -8,6 +8,30 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-10-25 14:45 UTC+0100 Ryszard Glab <rglab@przesiew.imid.med.pl>
+	* include/hbexprb.c
+	* source/compiler/exproptb.c
+		* fixed to stop 'function defined but not used' warning with SIMPLEX
+		
+	* source/compiler/harbour.l
+		* enhanced to support nested '[]' strings created with dumb stingify
+		  match marker (full Clipper compatibility with Flex)
+		  
+	* source/pp/ppcomp.c
+	* source/pp/ppcore.c
+		* fixed support for stingify match markers - full Clipper 
+		  compatibility
+
+	* tests/Makefile
+		* testpp.prg was added into BAD_PRG_SOURCES
+		
+	* tests/codebl.prg
+		* test for references of codeblock parameters was added
+		
+	+ tests/testpp.prg
+		* new file to test stringify match markers (this file will
+		  not run - compile it only)
+
 2003-10-24 11:50 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
     * source/rdd/dbfntx/dbfntx1.c
       ! Minor fix for calculating the maximum keys number in index page.

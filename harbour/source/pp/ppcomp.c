@@ -69,6 +69,7 @@
 static int strncmp_nocase( char* s1, char* s2, int n );
 
 extern BOOL hb_ppInsideTextBlock;
+extern BOOL hb_ppNestedLiteralString;
 
 BOOL hb_pp_bInline = FALSE;
 
@@ -92,6 +93,7 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
 
   HB_TRACE(HB_TR_DEBUG, ("hb_pp_Internal(%p, %s)", handl_o, sOut));
 
+	hb_ppNestedLiteralString = FALSE;
   while( TRUE )
   {
      pFile = hb_comp_files.pLast;

@@ -180,6 +180,7 @@ BAD_PRG_SOURCES=\
 	test10.prg \
 	testgt.prg \
 	testhbf.prg \
+	testpp.prg \
 	testtok.prg \
 	tstprag.prg \
 	twirl.prg \

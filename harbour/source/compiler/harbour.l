@@ -45,6 +45,7 @@
 /* helper functions */
 static int yy_ConvertNumber( char * szBuffer );
 extern int hb_ppInsideTextBlock;
+extern BOOL hb_ppNestedLiteralString;
 
 /* YACC functions */
 void yyerror( char * );
@@ -118,7 +119,7 @@ FalseValue    "."[f|n]"."
 
 Separator     {SpaceTab}
 
-%x            STRING1 STRING2 STRING3 STRING4START STRING4
+%x            STRING1 STRING2 STRING3 STRING4START STRING4 STRING5
 %x            NEXT_ BREAK_ CASE_ DO_ WHILE_ WITH_ END_ FIELD_
 %x            FOR_ FUNCTION_ IIF_ IF_ IN_ INIT_
 %x            RETURN_ RECOVER_
@@ -144,7 +145,12 @@ Separator     {SpaceTab}
                         (hb_comp_iState == WITH) ||
                         (hb_comp_iState == WHILE)
                       )
-                        BEGIN STRING3;
+							 {
+							 	if( hb_ppNestedLiteralString )
+                        	BEGIN STRING5;
+								else
+                        	BEGIN STRING3;
+							 }
                     else
                     {
                         hb_comp_iState = LINDEX;
@@ -290,6 +296,28 @@ Separator     {SpaceTab}
     hb_comp_iState = LOOKUP;
 
     return LITERAL;
+}
+
+<STRING5>.*\n  {
+    /* Preprocessed strings can contain embeded ] chars - look for the last
+	 	closing ']'
+	 */
+    int i;
+	 
+    BEGIN 0;
+	 for( i = yyleng-1; i; --i )
+    {
+       if( yytext[ i ] == ']' )
+       {
+          /* ] terminator was found */
+          yyless( i+1 );
+          yytext[ i ] = '\0';
+          yylval.string = hb_compIdentifierNew( yytext, TRUE );
+          hb_comp_iState = LITERAL;
+
+          return LITERAL;
+       }
+    }
 }
 
 <STRING4START>\(   { BEGIN STRING4; return( '(' ); }

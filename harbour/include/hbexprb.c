@@ -510,7 +510,8 @@ static void hb_compExprCodeblockPush( HB_EXPR_PTR pSelf )
 
 /* This generates a push pcode for early evaluation of a macro
 */
-#if !defined(HB_MACRO_SUPPORT)
+#if !defined(SIMPLEX)
+#if !defined(HB_MACRO_SUPPORT) 
 static void hb_compExprCodeblockEarly( HB_EXPR_PTR pSelf )
 {
     HB_EXPR_PTR pExpr;
@@ -559,6 +560,7 @@ static void hb_compExprCodeblockEarly( HB_EXPR_PTR pSelf )
     HB_EXPR_PCODE0( hb_compCodeBlockStop );
 }
 #endif		/*HB_MACRO_SUPPORT*/
+#endif		/*SIMPLEX*/
 
 /* actions for HB_ET_LOGICAL expression
  */

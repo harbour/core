@@ -185,6 +185,7 @@ static char s_prevchar;
 int *      hb_pp_aCondCompile = NULL;
 int        hb_pp_nCondCompile = 0;
 BOOL       hb_ppInsideTextBlock = FALSE;
+BOOL		  hb_ppNestedLiteralString = FALSE;
 
 char *     hb_pp_STD_CH = NULL;
 
@@ -2722,6 +2723,72 @@ static void SearnRep( char * exppatt, char * expreal, int lenreal, char * ptro, 
     if( !bFound && s_Repeate ) s_aIsRepeate[ s_Repeate - 1 ]++;
 }
 
+static BOOL ScanMacro( char * expreal, int lenitem, int * pNewLen )
+{
+	BOOL bSmartMacro;
+	int i, lennew;
+
+   HB_TRACE(HB_TR_DEBUG, ("ScanMacro(%s, %d, %p)", expreal, lenreal, pNewLen));
+
+	lennew = lenitem - 1;	
+	bSmartMacro = TRUE;
+	i = 1;
+	do {
+		if( expreal[ i ] == '.' )
+		{
+			/* '&var'   =>  'var'
+				'&var.'  =>  'var'
+			   '&var.x' =>  '"&var.x"'
+				'&var. x' => '&var. x' ->invalid syntax
+				'&var. [1] => '"&var. [1]"'  -> OK syntax
+			*/
+			int iDotPos = i;
+			
+			i++;
+			if( expreal[i] == '\0' || expreal[i] == ',' )
+			{
+				lennew = iDotPos - 1;
+				break;
+			}
+			else if( expreal[i] == ' ' || expreal[i] == '\t' )
+			{
+				while( (i < lenitem) && (expreal[i] == ' ' || expreal[i] == '\t') )
+					i++;
+				if( expreal[i] == '\0' || expreal[i] == ',' )
+					lennew = iDotPos - 1;
+				else if( expreal[i] == '[' )
+					bSmartMacro = FALSE;
+			}
+			else
+				bSmartMacro = FALSE;
+			break;
+		}
+		else if( expreal[ i ] == '[' )
+		{
+			/* &var[x] => "&var[x]"
+				&var.[x] => "&var.[x]"
+			*/
+			bSmartMacro = FALSE;
+			lennew = lenitem-1;
+			break;
+		}
+		else if( expreal[ i ] == '&' )
+		{
+			/* &var&var  => "&var&var" */
+			bSmartMacro = FALSE;
+			lennew = lenitem-1;
+			break;
+		}
+	} while( i++ < lenitem );
+
+	if( bSmartMacro )
+		*pNewLen = lennew;
+	else
+		*pNewLen = lenitem;
+		
+	return bSmartMacro;
+}
+
 static int ReplacePattern( char patttype, char * expreal, int lenreal, char * ptro, int lenres )
 {
   int rmlen = lenreal, ifou, lenitem, i;
@@ -2733,13 +2800,17 @@ static int ReplacePattern( char patttype, char * expreal, int lenreal, char * pt
   case '0':  /* Regular result marker  */
     hb_pp_Stuff( expreal, ptro, lenreal, 4, lenres );
     break;
+
   case '1':  /* Dumb stringify result marker  */
     pp_rQuotes( expreal, sQuotes );
     hb_pp_Stuff( sQuotes, ptro, 2, 4, lenres );
     if( lenreal )
       hb_pp_Stuff( expreal, ptro+1, lenreal, 0, lenres );
     rmlen = lenreal + 2;
+	 if( *sQuotes == '[' )
+	 	hb_ppNestedLiteralString = TRUE;
     break;
+
   case '2':  /* Normal stringify result marker  */
     if( !lenreal )
       hb_pp_Stuff( "", ptro, 0, 4, lenres );
@@ -2749,73 +2820,64 @@ static int ReplacePattern( char patttype, char * expreal, int lenreal, char * pt
         lenres -= 4;
         rmlen = 0;
         do
-          {
+        {
             ifou = md_strAt( ",", 1, expreal, FALSE, TRUE, FALSE );
             lenitem = (ifou)? ifou-1:lenreal;
             if( *expreal != '\0' )
-              {
-#if defined(SIMPLEX)        
-                /* Ron Pinkas added 2000-01-21 */
+				{
+					 BOOL bSmartMacro = FALSE;
+					 int lennew;
+
+					 lennew = lenitem;
                 if( *expreal == '&' )
-                {
-                  i = 0;
-                  if( ! ifou )
-                  {
-                    lenitem--;
-                    if( expreal[lenitem - 1] == '.' )
-                    {
-                       lenitem--;
-                    }
-                  }
-                  hb_pp_Stuff( expreal + 1, ptro, lenitem, 0, lenres );
-                }
-                else /* END Ron Pinkas 2000-01-21 */
-#endif
+					   bSmartMacro = ScanMacro( expreal, lenitem, &lennew );
+					 if( bSmartMacro )
+					 {
+					 	if( ifou )
+						{
+                  	hb_pp_Stuff( ",", ptro, 1, 0, lenres );
+							i = 1;
+						}
+                  hb_pp_Stuff( expreal + 1, ptro, lennew, 0, lenres );
+					 }
+                else
                 {
                   i = (ifou)? 3:2;
                   pp_rQuotes( expreal, sQuotes );
                   hb_pp_Stuff( sQuotes, ptro, i, 0, lenres );
                   hb_pp_Stuff( expreal, ptro+1, lenitem, 0, lenres+i );
                 }
-                ptro += i + lenitem;
-                rmlen += i + lenitem;
-              }
+                ptro += i + lennew;
+                rmlen += i + lennew;
+            }
             expreal += ifou;
             lenreal -= ifou;
-          }
+        }
         while( ifou > 0 );
       }
     else
       {
-#if defined(SIMPLEX)        
-	/* rglab 2003-10-19
-	 * SIMPLEX specific solution guarded with #ifdef
-	 * because this creates incorrect syntax:
-	 * @ 0,0 GET &var.1   =>   _GET_( &var.1, var.1, )
-	 * in FLEX we need a correct Clipper syntax:
-	 * @ 0,0 GET &var.1   =>   _GET_( &var.1, "&var.1", ) 
-	 */
-        /* Ron Pinkas added 2000-01-21 */
-        if( *expreal == '&' )
-        {
-          rmlen--;
-          if( expreal[lenreal - 1] == '.' )
-          {
-            rmlen--;
-            lenreal--;
-          }
-          hb_pp_Stuff( expreal + 1, ptro, lenreal - 1, 4, lenres );
-        }
-        else /* END Ron Pinkas 2000-01-21 */
-#endif	
-        {
-          pp_rQuotes( expreal, sQuotes );
-          hb_pp_Stuff( sQuotes, ptro, 2, 4, lenres );
-          hb_pp_Stuff( expreal, ptro+1, lenreal, 0, lenres );
-          rmlen = lenreal + 2;
-        }
+			BOOL bSmartMacro = FALSE;
+			int lennew;
+
+			lennew = lenreal;
+			if( *expreal == '&' )
+			   bSmartMacro = ScanMacro( expreal, lenreal, &lennew );
+		 	if( bSmartMacro )
+			{
+				hb_pp_Stuff( expreal + 1, ptro, lennew, 4, lenres );
+				rmlen = lennew;
+			}
+         else
+         {
+          	pp_rQuotes( expreal, sQuotes );
+          	hb_pp_Stuff( sQuotes, ptro, 2, 4, lenres );
+          	hb_pp_Stuff( expreal, ptro+1, lenreal, 0, lenres );
+          	rmlen = lenreal + 2;
+         }
       }
     break;
+
   case '3':  /* Smart stringify result marker  */
     if( patttype == '1' )          /* list match marker */
       {
@@ -2823,86 +2885,105 @@ static int ReplacePattern( char patttype, char * expreal, int lenreal, char * pt
         lenres -= 4;
         rmlen = 0;
         do
+        {
+          ifou = md_strAt( ",", 1, expreal, FALSE, TRUE, FALSE );
+          lenitem = (ifou)? ifou-1:lenreal;
+          if( *expreal != '\0' )
           {
-            ifou = md_strAt( ",", 1, expreal, FALSE, TRUE, FALSE );
-            lenitem = (ifou)? ifou-1:lenreal;
-            if( *expreal != '\0' )
-              {
-#if defined(SIMPLEX)        
-                if( !lenitem || *expreal == '(' || (*expreal=='&' && lenreal>1) ||
-                     ( *expreal=='\"' && *(expreal+lenitem-1)=='\"' ) ||
-                     ( *expreal == '\'' && *(expreal+lenitem-1)=='\'' ) )
-                  {
-                    if( ifou ) lenitem++;
-                    if( *expreal == '&' )
-                    {
-                       lenitem--;
-                       if( expreal[lenitem - 1] == '.' )
-                       {
-                          lenitem--;
-                       }
-                    }
-                    hb_pp_Stuff( ( *expreal=='&' ) ? expreal + 1 : expreal, ptro,
-                              lenitem, 0, lenres );
-#else
-                if( !lenitem || *expreal == '(' || 
-                     ( *expreal=='\"' && *(expreal+lenitem-1)=='\"' ) ||
-                     ( *expreal == '\'' && *(expreal+lenitem-1)=='\'' ) )
-                  {
-                    if( ifou ) lenitem++;
-                    hb_pp_Stuff( expreal, ptro, lenitem, 0, lenres );
-#endif
-                  }
-                else
-                  {
-                    i = (ifou)? 3:2;
-                    pp_rQuotes( expreal, sQuotes );
-                    hb_pp_Stuff( sQuotes, ptro, i, 0, lenres );
-                    hb_pp_Stuff( expreal, ptro+1, lenitem, 0, lenres+i );
-                    ptro += i;
-                    rmlen += i;
-                  }
-                ptro += lenitem;
-                rmlen += lenitem;
-              }
-            expreal += ifou;
-            lenreal -= ifou;
+            if( !lenitem || *expreal == '(' || (*expreal=='&' && lenreal>1) ||
+                ( *expreal=='\"' && *(expreal+lenitem-1)=='\"' ) ||
+                ( *expreal=='[' && *(expreal+lenitem-1)==']' ) ||
+                ( *expreal == '\'' && *(expreal+lenitem-1)=='\'' ) )
+            {
+
+     				if( *expreal == '&' )
+     				{
+					 	BOOL bSmartMacro;
+					 	int lennew;
+
+						i = 0;
+					 	lennew = lenitem;
+				   	bSmartMacro = ScanMacro( expreal, lenitem, &lennew );
+           			if( bSmartMacro )
+						{
+						 	if( ifou )
+							{
+ 	         	        	hb_pp_Stuff( ",", ptro, 1, 0, lenres );
+   	           			i = 1;
+							}
+							hb_pp_Stuff( expreal+1, ptro, lennew, 0, lenres );
+							lenitem = lennew;
+						}
+						else
+						{
+              			i = (ifou)? 3:2;
+              			pp_rQuotes( expreal, sQuotes );
+              			hb_pp_Stuff( sQuotes, ptro, i, 0, lenres );
+              			hb_pp_Stuff( expreal, ptro+1, lenitem, 0, lenres+i );
+						}
+           			ptro += i;
+           			rmlen += i;
+     				}
+					else
+					{
+						if( ifou ) lenitem++;
+              		hb_pp_Stuff( expreal, ptro, lenitem, 0, lenres );
+					}
+            }
+				else
+            {
+              	i = (ifou)? 3:2;
+              	pp_rQuotes( expreal, sQuotes );
+              	hb_pp_Stuff( sQuotes, ptro, i, 0, lenres );
+              	hb_pp_Stuff( expreal, ptro+1, lenitem, 0, lenres+i );
+              	ptro += i;
+              	rmlen += i;
+            }
+            ptro += lenitem;
+            rmlen += lenitem;
           }
+          expreal += ifou;
+          lenreal -= ifou;
+        }
         while( ifou > 0 );
       }
-#if defined(SIMPLEX)        
     else if( !lenreal || *expreal == '(' || (*expreal=='&' && lenreal>1) ||
              ( *expreal == '\"' && *( expreal + lenreal - 1 ) == '\"' ) ||
+             ( *expreal == '['  && *( expreal + lenreal - 1 ) == ']' ) ||
              ( *expreal == '\'' && *( expreal + lenreal - 1 ) == '\'' ) )
-      {
-        if( *expreal == '&' )
-        {
-          rmlen--;
-          if( expreal[lenreal - 1] == '.' )
-          {
-            rmlen--;
-            lenreal--;
-          }
-        }
-        hb_pp_Stuff( ( *expreal == '&' ) ? expreal + 1 : expreal, ptro,
-                ( *expreal == '&' ) ? lenreal - 1 : lenreal, 4, lenres );
-      }
-#else
-    else if( !lenreal || *expreal == '(' ||
-             ( *expreal == '\"' && *( expreal + lenreal - 1 ) == '\"' ) ||
-             ( *expreal == '\'' && *( expreal + lenreal - 1 ) == '\'' ) )
-      {
-        hb_pp_Stuff( expreal, ptro, lenreal, 4, lenres );
-      }
-#endif
+    {
+		if( *expreal == '&' )
+		{
+			BOOL bSmartMacro;
+			int lennew;
+
+			lennew = lenreal;
+		   bSmartMacro = ScanMacro( expreal, lenreal, &lennew );
+      	if( bSmartMacro )
+			{
+				hb_pp_Stuff( expreal+1, ptro, lennew, 4, lenres );
+				rmlen += lennew;
+			}
+			else
+			{
+        		pp_rQuotes( expreal, sQuotes );
+        		hb_pp_Stuff( sQuotes, ptro, 2, 4, lenres );
+        		hb_pp_Stuff( expreal, ptro + 1, lenreal, 0, lenres );
+        		rmlen = lenreal + 2;
+			}
+     	}
+		else
+     		hb_pp_Stuff( expreal, ptro, lenreal, 4, lenres );
+    }
     else
-      {
+    {
         pp_rQuotes( expreal, sQuotes );
         hb_pp_Stuff( sQuotes, ptro, 2, 4, lenres );
         hb_pp_Stuff( expreal, ptro + 1, lenreal, 0, lenres );
         rmlen = lenreal + 2;
-      }
+    }
     break;
+
   case '4':  /* Blockify result marker  */
     if( !lenreal )
       hb_pp_Stuff( expreal, ptro, lenreal, 4, lenres );
@@ -3450,6 +3531,12 @@ static int IsInStr( char symb, char * s )
   return 0;
 }
 
+/* ptri = string for inserting
+	ptro = output string
+	len1 = length of ptri string
+	len2 = length of ptro string that will be replaced
+	lenres = length of ptro string
+*/
 void hb_pp_Stuff(char *ptri, char * ptro, int len1, int len2, int lenres )
 {
   char *ptr1, *ptr2;
@@ -3461,6 +3548,10 @@ void hb_pp_Stuff(char *ptri, char * ptro, int len1, int len2, int lenres )
     {
       ptr1 = ptro + lenres;
       ptr2 = ptro + lenres + len1 - len2;
+		/* This is a static buffer - current inserting can erase the null char
+			than we need set it again.
+		*/
+		ptr2[1] = '\0'; 
       for( i=0; i<=lenres; ptr1--,ptr2--,i++ ) *ptr2 = *ptr1;
     }
   else
