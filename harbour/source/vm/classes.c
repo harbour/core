@@ -1736,7 +1736,7 @@ HB_FUNC( __OBJCLONE )
     {
       pDstObject= hb_arrayClone( pSrcObject, NULL ) ;
 
-      pDstObject->item.asArray.value->puiClsTree = NULL;
+      /* pDstObject->item.asArray.value->puiClsTree = NULL; */
       /* pDstObject->item.asArray.value->puiClsTree = ( USHORT * ) hb_xgrab( sizeof( USHORT ) ); */
       /* pDstObject->item.asArray.value->puiClsTree[0]=0; */
 
