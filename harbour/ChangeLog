@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-05-01 21:19 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+  + source/codepage/cdpesdos.c
+  + source/codepage/cdpeswin.c
+    ! Added missing char
+
 2003-05-01 13:55 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
   + source/rdd/dbcmd.c
     ! DbCreate() always returns nil.
