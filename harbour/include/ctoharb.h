@@ -107,6 +107,7 @@ extern void    hb_stackFree( void );       /* releases all memory used by the st
 extern void    hb_stackPush( void );       /* pushes an item on to the stack */
 extern void    hb_stackInit( void );       /* initializes the stack */
 extern void    hb_stackShow( void );       /* show the types of the items on the stack for debugging purposes */
+extern void    hb_callStackShow( void );   /* show the procedure names of the call stack for internal errors use */
 
 #define STACK_INITHB_ITEMS   100
 #define STACK_EXPANDHB_ITEMS  20
