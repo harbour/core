@@ -11,8 +11,14 @@
 /* Note: The following #ifdef block for __IBMCPP__ must
          be ahead of any and all #include statements!
 */
+
 #ifdef __IBMCPP__
    #define INCL_DOSMISC
+#endif
+
+#if defined(_MSC_VER) && (defined(_Windows) || defined(_WIN32))
+   #define WIN32_LEAN_AND_MEAN
+   #include "windows.h"
 #endif
 
 #include "extend.h"
@@ -45,6 +51,8 @@
 
 HARBOUR HB_OS( void )
 {
+   char *cformat = "%s %d.%02d%c";
+
 #ifdef __MPW__
 /* TODO: not implemented yet */
    hb_retc( "MacOS" );
@@ -108,7 +116,6 @@ HARBOUR HB_OS( void )
              break;
 
          case VER_PLATFORM_WIN32_NT:
-
             hb_osmajor = osVer.dwMajorVersion;
             hb_osminor = osVer.dwMinorVersion;
             hb_osletter = osVer.dwBuildNumber;
@@ -122,6 +129,7 @@ HARBOUR HB_OS( void )
             hb_os = "Windows 32s";
             break;
       }
+      cformat = "%s %d.%02d.%04d";
    }
 #else
 #if defined(__MSC__) || defined(_MSC_VER)
@@ -212,11 +220,11 @@ HARBOUR HB_OS( void )
 
 #endif /* __GNUC__ */
 #endif /* __IBMCPP__ */
-
+   
    if( ! hb_os ) strcpy( version, "Unknown" );
    else if( hb_osmajor == -1 ) strcpy( version, hb_os );
    else if( hb_osmajor == -2 ) { /* NOP */ }
-   else sprintf( version, "%s %d.%02d%c", hb_os, hb_osmajor, hb_osminor, hb_osletter );
+   else sprintf( version, cformat, hb_os, hb_osmajor, hb_osminor, hb_osletter );
    hb_retc( version );
 #ifdef __DJGPP__
    hb_xfree( hb_os );

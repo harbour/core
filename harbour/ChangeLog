@@ -1,3 +1,10 @@
+19990908-01:33 EDT Paul Tucker <ptucker@sympatico.ca>
+  * source/rtl/environ.c
+    corrected to work with msvc.
+    The format passed to sprintf is now a variable.  Under Windows,
+    the hb_osletter is actually the build number, and the default
+    format was not printing it correctly.
+
 19990908-00:05 EDT David G. Holm <dholm@jsd-llc.com>
   * source/rtl/environ.c
     ! Version 1.43 added Windows code to detect the Windows version, but
