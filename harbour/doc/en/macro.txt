@@ -14,11 +14,11 @@
  *      <b>Invoking the macro compiler:  </b> </par>
  *      ==============================   </par>
  *
- *         &variable   </par>
- *      or                                  </par>
- *         &( expression ) <file[.prg]>   </par>
- *      or   </par>
- *         &variable.text   </par>
+ *         &variable                     </par>
+ *      or                               </par>
+ *         &( expression )               </par>
+ *      or                               </par>
+ *         &variable.text                </par>
  *
  *  $END$
  */
@@ -31,20 +31,21 @@
  *  $ONELINER$
  *      Enable/disable the macro compiler runtime features.
  *  $SYNTAX$
- *      HB_SETMACRO(<nOption> [, <lOnOff>]) --> <lOldSetting>
+ *      HB_SETMACRO( <nOption>, [<lOnOff>] ) --> <lOldSetting>
  *  $ARGUMENTS$
- *      <nOption> A constant defined in set.ch.
-        <lOnOff> .T. to enable or .F. to disable a feature
+ *      <nOption> One of the HB_SM_* constants defined in set.ch.
+ *
+ *      <lOnOff> .T. to enable or .F. to disable a feature
  *  $RETURNS$
- *      <lOldSetting> The old state of requested feature.
+ *      HB_SETMACRO() return the old state of requested feature.
  *  $DESCRIPTION$
- *      This function enables or disables some features of the macro 
+ *      This function enables or disables some features of the macro
  *      compiler. The Harbour is extending the macro features compared
  *      to an original set available in Clipper. Enabling/disabling
  *      some of them allows to keep strict Clipper compatibility.
  *
  *      Available features are:
- *      <b>HB_SM_HARBOUR</b> - enables harbour extensions: 
+ *      <b>HB_SM_HARBOUR</b> - enables harbour extensions:
  *            operators: ++, --, +=, -=, *=, /=, ^=
  *            objects: assigments to an instance variable
  *      <b>HB_SM_XBASE</b> - enables other xbase dialects extensions:
@@ -69,9 +70,10 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
+ *      Header file is set.ch
  *      Library is macro
  *  $SEEALSO$
- *      
+ *
  *  $END$
  */
 

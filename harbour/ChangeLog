@@ -1,3 +1,14 @@
+2001-08-06 10:33 UTC+0300 Chen Kedem <niki@actcom.co.il>
+   * doc/funclist.txt
+     ! Fix excessive use of global replace forcing 'n' or 'N' into 'S'
+
+   * doc/en/macro.txt
+     - Remove "<file[.prg]>" from line #19 (Copy & Paste mistake)
+     * Small formating
+
+   * doc/en/var.txt
+     + doc for __ISMV()
+
 2001-08-05 18:00 GMT -3 Luiz RafaelCulik<culik@sl.conex.net>
    * doc/en/compiler.txt
      * Updated provided by Fergus McDonald
