@@ -1,3 +1,20 @@
+2000-10-19 11:00 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * contrib/dot/pp.prg
+     ! Corrected bug with #else
+
+2000-10-19 10:35 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * contrib/dot/pp.prg
+     ! Corrected bug with nested #if...
+     ! Corrected handling of EOF.
+       /* 2 minor bugs in PP of fwh/samples/fwbrow found, and still pending. */
+
+2000-10-19 01:10 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * contrib/dot/pp.prg
+     * Corrected few errors in matching logic, and 1 error in compilation logic.
+
+   /* Tested to correctly pre-process FiveWin code, sample used: FWBrow.prg
+      which uses many of the FiveWin classes. */
+
 2000-10-18 01:30 UTC+0800 Ron Pinkas <ron@profit-master.com>
     * contrib/dot/pp.prg
       ! More corrections and refinments in pre-processing
