@@ -77,7 +77,7 @@ Static szProject:=""
 *+
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
-Function main( cFile, p1, p2, p3 )
+Function main( cFile, p1, p2, p3, p4, p5, p6 )
 
 Local nPos
 Local aDef := {}
@@ -85,8 +85,18 @@ Local allParam
 Default p1 To ""
 Default p2 To ""
 Default p3 To ""
-allParam:=Upper(p1) + Upper(p2) +p3
+Default p4 To ""
+Default p5 To ""
+Default p6 To ""
+allParam:=p1 + p2 +p3+p4 + p5 +p6
+
 allparam:=strtran(allparam,"/","-")
+allparam:=strtran(allparam,"-e","-E")
+allparam:=strtran(allparam,"-p","-P")
+allparam:=strtran(allparam,"-b","-B")
+allparam:=strtran(allparam,"-g","-G")
+allparam:=strtran(allparam,"-v","-V")
+allparam:=strtran(allparam,"-f","-F")
 If Pcount() == 0
    ?? "Harbour Make Utility"
    ? "Copyright 1999-2000, http://www.harbour-project.org"
@@ -94,14 +104,16 @@ If Pcount() == 0
    ? "Syntax:  hbmake cFile [options]"
    ? ""
    ? "Options:  /e  Create an New Makefile"
-   ? "          /d  Define an macro"
+   ? "          /D  Define an macro"
    ? "          /p  Print all command and depencies"
    ? "          /b+ Use BCC as C compiler"
    ? "          /g  Use GCC as C compiler"
    ? "          /v  Use MSVC as C compiler"
    ? "          /f  Force Recompiltion of all files"
-   ? "          Note: /p and /d can be used together"
+   ? "          Note: /p and /D can be used together"
    ? "          Options with + are the default Value"
+   ? "          -D switch can accept multiple macros in the same line"
+   ? "          or use one macro per -D switch"
    Return NIL
 Endif
 If cFile == NIL
@@ -151,6 +163,9 @@ if at("-E",allparam)>0
 
    Endif
     if at("-D",allparam)>0
+      allparam:="-D"+strtran(allparam,"-D",";")
+         allparam=strtran(allparam,"-D;","-D")
+
       adef := listasarray2( alltrim(Substr( allparam, 3 )), ";" )
       For nPos := 1 To Len( aDef )
          If At( "=", adef[ nPos ] ) > 0
@@ -204,7 +219,10 @@ if at("-E",allparam)>0
 
 
    Endif
-    if at("-D",allparam)>0 
+    if at("-D",allparam)>0
+      allparam:="-D"+strtran(allparam,"-D",";")
+         allparam=strtran(allparam,"-D;","-D")
+
       adef := listasarray2( alltrim(Substr( allparam, 3 )), ";" )
       For nPos := 1 To Len( aDef )
          If At( "=", adef[ nPos ] ) > 0
@@ -318,6 +336,9 @@ While !leof
                   acs[nPos]:=replacemacros(acs[nPos])
                endif
             next*/
+            for nPos:=1 to len(acs)
+               ? acs[nPos]
+            next
         Endif
         If atemp[ 1 ] = "RESFILES"
            aRes := listasArray2( replacemacros(atemp[ 2 ]), " " )
