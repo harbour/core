@@ -933,9 +933,9 @@ void hb_compDeclaredInit( void )
    /* -------------------------------------------------- Standard Classes --------------------------------------------------- */
 
    static COMCLASS s_ERROR    = { "ERROR"   , NULL, NULL, NULL };
-   static COMCLASS s_GET      = { "GET"     , NULL, NULL, NULL };
-   static COMCLASS s_TBCOLUMN = { "TBCOLUMN", NULL, NULL, NULL };
-   static COMCLASS s_TBROWSE  = { "TBROWSE" , NULL, NULL, NULL };
+   static COMCLASS s_GET      = { "GET"     , NULL, NULL, &s_ERROR };
+   static COMCLASS s_TBCOLUMN = { "TBCOLUMN", NULL, NULL, &s_GET };
+   static COMCLASS s_TBROWSE  = { "TBROWSE" , NULL, NULL, &s_TBCOLUMN };
 
   /*                       Name             Ret  # of Prams  Param Types           Ret Class  Param Classes  Next
                            ---------------  ---  ----------  --------------------  ---------  -------------  --------------- */

@@ -103,7 +103,7 @@ DECLARE TClass ;
         Instance() AS Object ;
         AddClsMthds( cName AS String, @MethodName(), nScope AS Numeric, n2 AS Numeric, n3 AS Numeric );
         AddMultiClsData( cType AS String, uVal, nScope AS Numeric, aDatas AS Array OF String );
-        AddMultiData( cType AS String, uVal, nScope AS Numeric, aDatas AS Array OF String );
+        AddMultiData( cType AS String, uVal, nScope AS Numeric, aDatas AS Array OF String, x AS LOGICAL );
         AddMethod( cName AS String, @MethodName(), nScope AS Numeric );
         AddInLine( cName AS String, bBlock AS CodeBlock, nScope AS Numeric );
         AddVirtual( cName AS String )

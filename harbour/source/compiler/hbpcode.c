@@ -726,11 +726,13 @@ void hb_compStrongType( int iSize )
                    cFormalType = '@';
 
                  if( cFormalType == ' ' )
-                   ; /* Declared is Variant, accept anything. */
+                   ; /* Formal is Variant, accept anything. */
                  else if( pFunc->pStack[ iParamBase + iOffset ] == '-' )
                    ; /* Parameter is NIL, always accepted. */
                  else if( cFormalType == '@' && pFunc->pStack[ iParamBase + iOffset ] >= ( 'A' + VT_OFFSET_BYREF ) )
-                   ; /* Prameter is ANY REFERENCE, and Parameter is SOME REFERENCE. */
+                   ; /* Formal is ANY REFERENCE, and Parameter is SOME REFERENCE. */
+                 else if( cFormalType == pFunc->pStack[ iParamBase + iOffset ] - VT_OFFSET_VARIANT )
+                   ; /* Prameter is VARIANT.SubType of same as Formal. */
                  else if( cFormalType == 'S' && pFunc->pStack[ iParamBase + iOffset ] == 'S' && pFunc->iStackClasses )
                  {
                     PCOMCLASS hb_comp_pFormalClass = pFunc->pStackFunctions[ pFunc->iStackFunctions ]->pParamClasses[ iOffset ];
@@ -755,6 +757,50 @@ void hb_compStrongType( int iSize )
                        hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_PARAM_TYPE, ( char * ) szType1, ( char * ) szType2 );
                     }
                  }
+                 else if( islower( cFormalType ) && pFunc->pStack[ iParamBase + iOffset ] == 'A' )
+                 {
+                    if( cFormalType == 'S' )
+                    {
+                       PCOMCLASS hb_comp_pFormalClass = pFunc->pStackFunctions[ pFunc->iStackFunctions ]->pParamClasses[ iOffset ];
+                       sprintf( ( char * ) szType2, "%s", hb_comp_pFormalClass->szName );
+                    }
+                    else if( cFormalType == 's' )
+                    {
+                       PCOMCLASS hb_comp_pFormalClass = pFunc->pStackFunctions[ pFunc->iStackFunctions ]->pParamClasses[ iOffset ];
+                       sprintf( ( char * ) szType2, "ARRAY OF %s", hb_comp_pFormalClass->szName );
+                    }
+                    else
+                    {
+                       if( cFormalType == ( '-' + VT_OFFSET_BYREF ) || cFormalType >= ( 'A' + VT_OFFSET_BYREF ) )
+                          sprintf( ( char * ) szType2, "@%c", cFormalType - VT_OFFSET_BYREF );
+                       else if( islower( cFormalType ) )
+                          sprintf( ( char * ) szType2, "ARRAY OF %c", toupper( cFormalType ) );
+                       else
+                          sprintf( ( char * ) szType2, "%c", cFormalType );
+                    }
+
+                    if( pFunc->pStack[ iParamBase + iOffset ] == 'S' )
+                    {
+                       PCOMCLASS hb_comp_pParamClass = pFunc->pStackClasses[ --pFunc->iStackClasses ];
+                       sprintf( ( char * ) szType1, "(%i) %s", iOffset + 1, hb_comp_pParamClass->szName );
+                    }
+                    else if( pFunc->pStack[ iParamBase + iOffset ] == 's' )
+                    {
+                       PCOMCLASS hb_comp_pParamClass = pFunc->pStackClasses[ --pFunc->iStackClasses ];
+                       sprintf( ( char * ) szType1, "(%i) ARRAY OF %s", iOffset + 1, hb_comp_pParamClass->szName );
+                    }
+                    else
+                    {
+                       if( pFunc->pStack[ iParamBase + iOffset ] == ( '-' + VT_OFFSET_VARIANT ) || pFunc->pStack[ iParamBase + iOffset ] >= ( 'A' + VT_OFFSET_VARIANT ) )
+                          sprintf( ( char * ) szType1, "(%i) AnyType.SubType[%c]", iOffset + 1, pFunc->pStack[ iParamBase + iOffset ] - VT_OFFSET_VARIANT );
+                       else if( islower( pFunc->pStack[ iParamBase + iOffset ] ) )
+                          sprintf( ( char * ) szType1, "(%i) ARRAY OF %c", iOffset + 1, toupper( pFunc->pStack[ iParamBase + iOffset ] ) );
+                       else
+                          sprintf( ( char * ) szType1, "(%i) %c", iOffset + 1, pFunc->pStack[ iParamBase + iOffset ] );
+                    }
+
+                    hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_PARAM_SUSPECT, ( char * ) szType1, ( char * ) szType2 );
+                 }
                  else if( cFormalType != pFunc->pStack[ iParamBase + iOffset ] )
                  {
                     if( cFormalType == 'S' )
@@ -769,15 +815,33 @@ void hb_compStrongType( int iSize )
                     }
                     else
                     {
-                       if( toupper( pFunc->pStack[ iParamBase + iOffset ] ) == 'S' && pFunc->iStackClasses )
-                          --pFunc->iStackClasses ;
-                       else if( cFormalType > ( 'A' + VT_OFFSET_BYREF ) )
+                       if( cFormalType == ( '-' + VT_OFFSET_BYREF ) || cFormalType >= ( 'A' + VT_OFFSET_BYREF ) )
                           sprintf( ( char * ) szType2, "@%c", cFormalType - VT_OFFSET_BYREF );
+                       else if( islower( cFormalType ) )
+                          sprintf( ( char * ) szType2, "ARRAY OF %c", toupper( cFormalType ) );
                        else
                           sprintf( ( char * ) szType2, "%c", cFormalType );
                     }
 
-                    sprintf( ( char * ) szType1, "%i", iOffset + 1 );
+                    if( pFunc->pStack[ iParamBase + iOffset ] == 'S' )
+                    {
+                       PCOMCLASS hb_comp_pParamClass = pFunc->pStackClasses[ --pFunc->iStackClasses ];
+                       sprintf( ( char * ) szType1, "(%i) %s", iOffset + 1, hb_comp_pParamClass->szName );
+                    }
+                    else if( pFunc->pStack[ iParamBase + iOffset ] == 's' )
+                    {
+                       PCOMCLASS hb_comp_pParamClass = pFunc->pStackClasses[ --pFunc->iStackClasses ];
+                       sprintf( ( char * ) szType1, "(%i) ARRAY OF %s", iOffset + 1, hb_comp_pParamClass->szName );
+                    }
+                    else
+                    {
+                       if( pFunc->pStack[ iParamBase + iOffset ] == ( '-' + VT_OFFSET_VARIANT ) || pFunc->pStack[ iParamBase + iOffset ] >= ( 'A' + VT_OFFSET_VARIANT ) )
+                          sprintf( ( char * ) szType1, "(%i) AnyType.SubType[%c]", iOffset + 1, pFunc->pStack[ iParamBase + iOffset ] - VT_OFFSET_VARIANT );
+                       else if( islower( pFunc->pStack[ iParamBase + iOffset ] ) )
+                          sprintf( ( char * ) szType1, "(%i) ARRAY OF %c", iOffset + 1, toupper( pFunc->pStack[ iParamBase + iOffset ] ) );
+                       else
+                          sprintf( ( char * ) szType1, "(%i) %c", iOffset + 1, pFunc->pStack[ iParamBase + iOffset ] );
+                    }
 
                     hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_PARAM_TYPE, ( char * ) szType1, ( char * ) szType2 );
                  }

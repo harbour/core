@@ -1,11 +1,25 @@
+2001-05-07 11:40 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * include/hbclass.ch
+     ! Added missing parameter to declaration of AddMultiData()
+
+   * source/compiler/harbour.c
+     ! Corrected broken Linked-List links in hb_compDeclaredInit()
+
+   * source/compiler/hbpcode.c
+     * Minor correction declared parameters checking.
+
+   * source/vm/hvm.c
+     + Added complete call stack display to hb_vmRequestCancel()
+       /* Cancelling will now show the complete call stack, rather than the not very helpful just current procedure. */
+
 2001-05-06 20:30 CET Martin Vogel <vogel@inttec.de>
 
    + contrib/libct/token1.c
      ! ATTOKEN() function
        ! New 4th parameter <nSkipWidth> !
-     ! TOKEN() function 
+     ! TOKEN() function
        ! New 5th and 6th parameter <cPreTokenizer> and <cPostTokenizer>!
-     ! NUMTOKEN() function 
+     ! NUMTOKEN() function
      ! TOKENLOWER() function
      ! TOKENUPPER() function
      ! TOKENSEP() function

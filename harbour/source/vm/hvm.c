@@ -2880,7 +2880,7 @@ void hb_vmDo( USHORT uiParams )
           *  - generate unrecoverable runtime error
           */
          PHB_ITEM pArgsArray = hb_arrayFromStack( uiParams );
-         hb_errRT_BASE( EG_NOFUNC, 1001, NULL, pSym->szName, 1, pArgsArray );
+         hb_errRT_BASE_SubstR( EG_NOFUNC, 1001, NULL, pSym->szName, 1, pArgsArray );
          hb_itemRelease( pArgsArray );
       }
    }
@@ -4283,12 +4283,39 @@ void hb_vmRequestCancel( void )
 
    if( hb_set.HB_SET_CANCEL )
    {
-      char buffer[ HB_SYMBOL_NAME_LEN + 32 ];
+      char buffer[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 2 ];
+      int i = 1, i2;
+      unsigned long ulLine;
+      PHB_ITEM * pBase;
 
       hb_conOutErr( hb_conNewLine(), 0 );
       sprintf( buffer, "Cancelled at: %s (%i)", ( hb_stackBaseItem() )->item.asSymbol.value->szName, ( hb_stackBaseItem() )->item.asSymbol.lineno );
       hb_conOutErr( buffer, 0 );
       hb_conOutErr( hb_conNewLine(), 0 );
+
+      while ( buffer[0] )
+      {
+         i2 = i;
+         hb_procname( i++, buffer );
+
+         if( buffer[0] == 0 )
+            break;
+
+         pBase = hb_stack.pBase;
+         while( ( i2-- > 0 ) && pBase != hb_stack.pItems )
+            pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackbase;
+
+         if( i2 == -1 )
+            ulLine = ( *pBase )->item.asSymbol.lineno;
+         else
+            ulLine = 0;
+
+         i2 = strlen( (char *) buffer );
+         sprintf( buffer + i2, " (%i)", ulLine );
+
+         hb_conOutErr( buffer, 0 );
+         hb_conOutErr( hb_conNewLine(), 0 );
+      }
 
       s_uiActionRequest = HB_QUIT_REQUESTED;
    }

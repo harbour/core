@@ -61,6 +61,8 @@
  *
  * Copyright 2001 Ron Pinkas <ron@profit-master.com>
  *    hb_arrayClone()
+ *    hb_arrayFromStack()
+ *    hb_arrayfromParams()
  *
  * See doc/license.txt for licensing terms.
  *
