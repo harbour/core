@@ -1,3 +1,12 @@
+2001-04-12 10:56 UTC-0800 Brian Hays <bhays@abacuslaw.com>
+   * contrib/rdd_ads/ads1.c
+      * Fixed ordName/dbOrderInfo: it returned blank for any
+         order if in natural order when called
+
+   * contrib/rdd_ads/adsmgmnt.c
+   * contrib/rdd_ads/testmg.prg
+      * changed licensing comment at top
+
 2001-04-12 15:15 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * include/fileio.ch

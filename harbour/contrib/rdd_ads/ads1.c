@@ -585,6 +585,7 @@ static ERRCODE adsAppend( ADSAREAP pArea, BOOL bUnLockAll )
    HB_TRACE(HB_TR_DEBUG, ("adsAppend(%p, %d)", pArea, (int) bUnLockAll));
 
    AdsAppendRecord  ( pArea->hTable );
+   pArea->ulRecCount++;
    hb_adsCheckBofEof( pArea );
    return SUCCESS;
 }
@@ -1501,7 +1502,7 @@ static ERRCODE adsOrderDestroy( ADSAREAP pArea, LPDBORDERINFO pOrderInfo )
 
 static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrderInfo )
 {
-   ADSHANDLE phIndex;
+   ADSHANDLE  phIndex;
    UNSIGNED32 ulRetVal = AE_SUCCESS;
    UNSIGNED8  aucBuffer[MAX_STR_LEN + 1];
    UNSIGNED16 pusLen   = MAX_STR_LEN;
@@ -1652,7 +1653,7 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
          break;
 
       case DBOI_NAME:
-         if ( pArea->hOrdCurrent )
+         if( phIndex )
             AdsGetIndexName( phIndex, aucBuffer, &pusLen);
          hb_itemPutCL( pOrderInfo->itmResult, (char*)aucBuffer, pusLen);
          break;
@@ -2258,7 +2259,7 @@ HB_FUNC( ADSCUSTOMIZEAOF )
       if ( ulNumRecs )
       {
          pulRecords = (UNSIGNED32 *) hb_xgrab( ulNumRecs * sizeof( UNSIGNED32 ) );
-         if ( ulNumRecs > 1 )           /* convert array of recnos to C array */
+         if ( ISARRAY( 1 ) )           /* convert array of recnos to C array */
          {
             for ( ulRecord = 0; ulRecord < ulNumRecs; ulRecord++)
                pulRecords[ulRecord] = hb_parnl( 1, ulRecord + 1);
