@@ -8,12 +8,24 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
      * Fix bug in PICTURE '@S'
+   * source/rtl/tgetlist.prg
+   * source/rtl/listbox.prg
+   * source/rtl/checkbox.prg
+
+     * Fix some bugs and formatting indentation from last changelog
+
+2002-03-20 14:38 UTC-0300 Walter Negro <anegro@overnet.com.ar>
+   * source/rtl/tget.prg
+     * Fix bug in PICTURE '@S'
+   * source/rtl/tgetlist.prg
+   * source/rtl/listbox.prg
+   * source/rtl/checkbox.prg
 
      * Fix some bugs and formatting indentation from last changelog
 
 2002-03-19 20:59 UTC+0100 Tomaz Zupan <tomaz.zupan@orpo.si>
    * contrib/odbc/odbc.c
-	
+     * Fix for compile error under Win32
 
 2002-03-19 13:07 UTC+0100 Antonio Linares <alinares@fivetech.com>
    * source/vm/memvars.c
