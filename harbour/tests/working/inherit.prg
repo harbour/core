@@ -53,7 +53,8 @@ function TEmpty()
 
       oEmpty:AddInline( "New", {|self|self} )        // Constructor
       oEmpty:AddInline( "Run", {||QOut( "Run!" ) } ) // Test command
-      oEmpty:AddInline( "Set", {|self,xParam|::Out := xParam } )
+//      oEmpty:AddInline( "Set", {|self,xParam|::Out := xParam } )
+      oEmpty:AddInline( "Set", {|self,xParam| oSend(self,"_Out",xParam) } )
       oEmpty:AddData( "Out" )
                                                      // Test command
       oEmpty:AddVirtual( "Dispose" )                 // Clean up code
