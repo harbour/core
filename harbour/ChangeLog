@@ -1,3 +1,8 @@
+2000-10-23 14:00 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+   * include/hbver.h
+     * Bumped revision code to "i" and date to 2000-10-23 in
+       preparation for another interim release.
+
 2000-10-23 18:15 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
    * source/rtl/teditor.prg
       + added KeyboardHook() and IdleHook() methods.
