@@ -1,3 +1,10 @@
+20000209-13:30 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/debug/debugger.prg
+     + Added INKEY_ALL second parameter to Inkey() call.
+
+   * source/rtl/alert.prg
+     + Added INKEY_ALL second parameter to Inkey() call.
+
 20000209-12:08 GMT+1 Victor Szakats <info@szelvesz.hu>
    * source/rtl/mouse/mousedos.c
      ! hb_mouse_GetBounds() bug fixed (there was an '-' instead of '=')
