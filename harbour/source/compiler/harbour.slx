@@ -52,10 +52,8 @@
 
 #define NUMERALS_PER_LINE 3000
 
-/*
-#define SHOW_LEX_TOKENS
-#define DEBUG_LEX
-*/
+//#define SHOW_LEX_TOKENS
+//#define DEBUG_LEX
 
 #ifdef DEBUG_LEX
    #undef DEBUG_INFO
@@ -487,16 +485,18 @@ LANGUAGE_RULES_ARE {
 
 #undef STREAM_APPEND
    #define STREAM_APPEND(x) \
-      if( iPairLen == 0 && sStart[1] ) { sPair[ iPairLen++ ] = sStart[1]; } \
+      if( iPairLen == 0 && sStart[1] == '[' ) { sPair[ iPairLen++ ] = sStart[1]; } \
       if( x == ']' && iCloseSquare == 0 ) { iCloseSquare = iPairLen + 1; } sPair[ iPairLen++ ] = x;
 
 #undef STREAM_OPEN
    #define STREAM_OPEN( sStarter ) \
       { \
+         extern BOOL hb_ppInsideTextBlock; \
+         \
          iCloseSquare = 0; \
 	 \
          if( sStarter[0] == 'Q' ) \
-           bTmp = FALSE /* TODO: hb_pp_bInsideTextBlock */; \
+           bTmp = hb_ppInsideTextBlock; \
          else \
            bTmp = TRUE; \
       } \
@@ -1000,9 +1000,9 @@ int hb_comp_SLX_CustomAction( int x, int aiHold[], int *ptr_iHold, BOOL *ptr_bIg
 	 iIdentifier++;
 	 DEBUG_INFO( printf( "HB_QOUT_ACT, Primary Identifier %s Increased to: %i\n", "QOUT", iIdentifier ) );
          yylval.string = hb_compIdentifierNew( "QOUT", TRUE );
+         aiHold[ (*ptr_iHold)++ ] = _QOUT_LIT;
          aiHold[ (*ptr_iHold)++ ] = '(' + DONT_REDUCE;
-         aiHold[ (*ptr_iHold)++ ] = IDENTIFIER + DONT_REDUCE;
-         return _QOUT_LIT;
+         return IDENTIFIER + DONT_REDUCE;
 
       case HB_RET_QOUT_LIT :
          yylval.string = hb_compIdentifierNew( sPair, TRUE );

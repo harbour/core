@@ -117,7 +117,8 @@ char * hb_comp_buffer; /* yacc input buffer */
 static PTR_LOOPEXIT hb_comp_pLoops = NULL;
 static HB_RTVAR_PTR hb_comp_rtvars = NULL;
 
-static HB_EXPR_PTR pArrayIndexAsList = NULL, pGetArgList = NULL, pBaseArrayName = NULL;
+static HB_EXPR_PTR pArrayIndexAsList = NULL;
+static HB_EXPR_PTR pGetArgList = NULL, pBaseArrayName = NULL;
 
 static BOOL bTrancuateBaseArray = FALSE, s_bBlock = FALSE, s_bBlockMacro = FALSE, s_bBlockDeclared = FALSE, s_bSetGet;
 static HB_EXPR_PTR pBlockSimple;
@@ -1013,16 +1014,16 @@ ArrayIndex : IndexList ']'                   { $$ = $1; }
 /* NOTE: $0 represents the expression before ArrayIndex
  *    Don't use ArrayIndex in other context than as an array index!
  */
-IndexList  : '[' Expression               { $$ = hb_compExprNewArrayAt( $<asExpr>0, $2 ); pArrayIndexAsList = hb_compExprNewList( $2 ); }
-           | IndexList ',' Expression     { $$ = hb_compExprNewArrayAt( $1, $3 )        ; pArrayIndexAsList = hb_compExprAddListExpr( pArrayIndexAsList, $3 ); }
-           | IndexList ']' '[' Expression { $$ = hb_compExprNewArrayAt( $1, $4 )        ; pArrayIndexAsList = hb_compExprAddListExpr( pArrayIndexAsList, $4 ); }
+IndexList  : '[' Expression               { $$ = hb_compExprNewArrayAt( $<asExpr>0, $2 ); if( pArrayIndexAsList == NULL ){ pArrayIndexAsList = hb_compExprNewList( $2 ); } }
+           | IndexList ',' Expression     { $$ = hb_compExprNewArrayAt( $1, $3 )        ; if( pArrayIndexAsList == NULL ){ pArrayIndexAsList = hb_compExprAddListExpr( pArrayIndexAsList, $3 ); } }
+           | IndexList ']' '[' Expression { $$ = hb_compExprNewArrayAt( $1, $4 )        ; if( pArrayIndexAsList == NULL ){ pArrayIndexAsList = hb_compExprAddListExpr( pArrayIndexAsList, $4 ); } }
            ;
 
 ElemList   : Argument                { $$ = hb_compExprNewList( $1 ); }
            | ElemList ',' Argument   { $$ = hb_compExprAddListExpr( $1, $3 ); }
            ;
 
-Get        : GET GetVar ','
+Get        : _Get_ GetVar ','
 	     {
 		if( s_bSetGet )
 		{
@@ -1055,7 +1056,7 @@ Get        : GET GetVar ','
 	     GetAExt ')'
              { $$ = hb_compExprNewFunCall( hb_compExprNewFunName( "__GET"), pGetArgList ); pGetArgList = NULL; }
 
-           | GET MACROVAR ',' { pGetArgList = hb_compExprNewArgList( hb_compExprNewNil() ); }
+           | _Get_ MACROVAR ',' { pGetArgList = hb_compExprNewArgList( hb_compExprNewNil() ); }
              EmptyExpression { hb_compExprAddListExpr( pGetArgList, hb_compExprNewVar( $2 ) ) ; /* Var Name   */ } ','
              EmptyExpression { hb_compExprAddListExpr( pGetArgList, $8 ) ; /* Picture    */ } ','
              EmptyExpression { hb_compExprAddListExpr( pGetArgList, $11 ); /* ValidBlock */ } ','
@@ -1063,7 +1064,7 @@ Get        : GET GetVar ','
 	     GetAExt ')'
              { $$ = hb_compExprNewFunCall( hb_compExprNewFunName( "__GET"), pGetArgList ); pGetArgList = NULL; }
 
-           | GET MACROTEXT ',' { pGetArgList = hb_compExprNewArgList( hb_compExprNewNil() ); }
+           | _Get_ MACROTEXT ',' { pGetArgList = hb_compExprNewArgList( hb_compExprNewNil() ); }
              EmptyExpression { hb_compExprAddListExpr( pGetArgList, hb_compExprNewString( $2 ) ) ; /* Var Name   */ } ','
              EmptyExpression { hb_compExprAddListExpr( pGetArgList, $8 ) ; /* Picture    */ } ','
              EmptyExpression { hb_compExprAddListExpr( pGetArgList, $11 ); /* ValidBlock */ } ','
@@ -1071,7 +1072,7 @@ Get        : GET GetVar ','
 	     GetAExt ')'
              { $$ = hb_compExprNewFunCall( hb_compExprNewFunName( "__GET"), pGetArgList ); pGetArgList = NULL; }
 
-           | GET MacroExpr ',' { pGetArgList = hb_compExprNewArgList( hb_compExprNewNil() ); }
+           | _Get_ MacroExpr ',' { pGetArgList = hb_compExprNewArgList( hb_compExprNewNil() ); }
              EmptyExpression { hb_compExprAddListExpr( pGetArgList, $5 ) ; /* Var Name   */ } ','
              EmptyExpression { hb_compExprAddListExpr( pGetArgList, $8 ) ; /* Picture    */ } ','
              EmptyExpression { hb_compExprAddListExpr( pGetArgList, $11 ); /* ValidBlock */ } ','
@@ -1102,7 +1103,10 @@ GetArgList : Argument                     { $$ = hb_compExprAddListExpr( pGetArg
            | GetArgList ',' Argument      { $$ = hb_compExprAddListExpr( pGetArgList, $3 ); }
            ;
 
-GetA       : GET GetVarArray { pGetArgList = hb_compExprNewArgList( $2 ); bTrancuateBaseArray = TRUE; } ','
+_Get_      : GET { pArrayIndexAsList = NULL; }
+           ;
+
+GetA       : _Get_ GetVarArray { pGetArgList = hb_compExprNewArgList( $2 ); bTrancuateBaseArray = TRUE; } ','
              EmptyExpression { hb_compExprAddListExpr( pGetArgList, ( pBaseArrayName ? pBaseArrayName : $5 ) ); pBaseArrayName = NULL; /* Var Name */ } ','
              EmptyExpression { hb_compExprAddListExpr( pGetArgList, $8 ) ; /* Picture    */ } ','
              EmptyExpression { hb_compExprAddListExpr( pGetArgList, $11 ); /* ValidBlock */ } ','

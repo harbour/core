@@ -7,6 +7,13 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+  * contrib\dot\pp.prg
+  * contrib\dot\pp_harb.ch
+  * contrib\dot\prgscrpt.prg
+    > Synched with latest PP from xHarbour.
+
+2002-03-15 10:42 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/pp/pplib.c
     * removed ( commented ) setjmp/longjmp logic, because it caused GPF
       when "DEFAULT" was pressed after getting an error.
       It seems to me that __PreProcess() works right without setjmp/longjmp
