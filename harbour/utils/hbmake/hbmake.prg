@@ -110,7 +110,7 @@ Static aDir
 *+
 Function main( cFile, p1, p2, p3, p4, p5, p6 )
 
-Local nPos
+Local nPos, aFile := {}
 Local aDef := {}
 Local cOs:=OS()
 Local allParam
@@ -131,20 +131,30 @@ if at("OS/2",cOs)>0
     lLinux:=.t.
     lBcc:=.f.
 endif
-allParam:=p1 + p2 +p3+p4 + p5 +p6
-Allparam:=ConvertParams(AllParam) 
 If Pcount() == 0
    ShowHelp()
    Return NIL
 Endif
-If cFile == NIL .and. !lEditMode
+Allparam:=ConvertParams(@cFile, aFile, p1, p2, p3, p4, p5, p6)
+
+if len( aFile ) > 1
+   ? "File defined more than once"
+   Return NIL
+endif
+if len( aFile ) > 0
+   cFile := aFile[1]
+else
+   cFile := ""
+endif
+
+If empty(cFile) .and. !lEditMode
    ? "File not Found"
    Return Nil
 Endif
-If Pcount() >= 1
-   ProcessParameters(AllParam)
-Endif
-//if !file(cfile) 
+
+ProcessParameters(AllParam)
+
+//if !file(cfile)
 //   return nil
 //endif
 if lEditMode
@@ -309,7 +319,7 @@ While !leof
         elseif at('!iffile',cTemp)>0
             checkiffile(cTemp)
         elseif at('!stdout',cTemp)>0
-            checkstdout(cTemp)            
+            checkstdout(cTemp)
         endif
         //   endif
      Endif
@@ -704,7 +714,7 @@ else /****** Extended mode *****/
                            outstd(hb_osnewline())
                ! ( cComm )
                   cErrText := memoread( 'test.out' )
-                  lEnd := 'Error' $ cErrText 
+                  lEnd := 'Error' $ cErrText
                /*   if file('test.out'  )
                     ferase('test.out'  )
                   endif*/
@@ -1600,8 +1610,8 @@ function fileisnewer(cFile,as)
 local nCount := 0
 IF !lextended
 For nCount:=1 to len(aPrgs)
-         adir := { cFile,, filedate( cFile ), filetime( cFile ), ;
-                   as[nCount], filedate( as[nCount] ), filetime( as[nCount] )}
+         adir := { cFile,, hbmake_filedate( cFile ), hbmake_filetime( cFile ), ;
+                   as[nCount], hbmake_filedate( as[nCount] ), hbmake_filetime( as[nCount] )}
          if empty( adir[ 7 ] )
             adir[ 2 ] := .t.
          else
@@ -1609,8 +1619,8 @@ For nCount:=1 to len(aPrgs)
          endif
 next
 else
-         adir := { cFile,, filedate( cFile ), filetime( cFile ), ;
-                   as, filedate( as ), filetime( as )}
+         adir := { cFile,, hbmake_filedate( cFile ), hbmake_filetime( cFile ), ;
+                   as, hbmake_filedate( as ), hbmake_filetime( as )}
          if empty( adir[ 7 ] )
             adir[ 2 ] := .t.
          else
@@ -2279,7 +2289,7 @@ Local cPath AS STRING := ''
 Local cEnv  AS STRING 
 Local aEnv  AS Array of string
 Local nPos as Numeric
-if lLinux 
+if lLinux
     cpath:="."
 else
     cEnv  := Gete( "PATH" )
@@ -2294,7 +2304,75 @@ else
     Next
 endif
 Return cPath
-Function ConvertParams(cParam) 
+
+// Function ConvertParams(cParam)
+Function ConvertParams(cFile, aFile, p1, p2, p3, p4, p5, p6)
+
+   LOCAL cParam := ""
+
+   if !empty( cFile )
+     if left( cFile, 1) $ "- /"
+       cParam += cFile
+     else
+       cFile := cFile
+       aadd( aFile, cFile )
+     endif
+   endif
+
+   if !empty( p1 )
+     if left( p1, 1) $ "- /"
+       cParam += p1
+     else
+       cFile := p1
+       aadd( aFile, cFile )
+     endif
+   endif
+
+   if !empty( p2 )
+     if left( p2, 1) $ "- /"
+       cParam += p2
+     else
+       cFile := p2
+       aadd( aFile, cFile )
+     endif
+   endif
+
+   if !empty( p3 )
+     if left( p3, 1) $ "- /"
+       cParam += p3
+     else
+       cFile := p3
+       aadd( aFile, cFile )
+     endif
+   endif
+
+   if !empty( p4 )
+     if left( p4, 1) $ "- /"
+       cParam += p4
+     else
+       cFile := p4
+       aadd( aFile, cFile )
+     endif
+   endif
+
+   if !empty( p5 )
+     if left( p5, 1) $ "- /"
+       cParam += p5
+     else
+       cFile := p5
+       aadd( aFile, cFile )
+     endif
+   endif
+
+   if !empty( p6 )
+     if left( p6, 1) $ "- /"
+       cParam += p6
+     else
+       cFile := p6
+       aadd( aFile, cFile )
+     endif
+   endif
+
    cParam:=strtran(cParam,"/","-")
    cParam:=strtran(cParam,"-elx","-ELX")
    cParam:=strtran(cParam,"-el","-ELX")
@@ -2309,6 +2387,7 @@ Function ConvertParams(cParam)
    cParam:=strtran(cParam,"-f","-F")
    cParam:=strtran(cParam,"-r","-R")
 return cParam
+
 Function ShowHelp()
    Local cOs:=OS()
    ?? "Harbour Make Utility"
