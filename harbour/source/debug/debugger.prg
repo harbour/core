@@ -104,20 +104,24 @@ CLASS TDebugger
    DATA   cImage
    DATA   lEnd
    DATA   cAppImage, nAppRow, nAppCol, cAppColors, nAppCursor
-   DATA   aBreakPoints, aCallStack, aLastCommands, nCommand
+   DATA   aBreakPoints, aCallStack
+   DATA   aLastCommands, nCommand, oGetListCommand
    DATA   lGo
    DATA   cClrDialog
 
    METHOD New()
    METHOD Activate( cModuleName )
-   METHOD EnableCommand()
+   METHOD BuildCommandWindow()
+   METHOD CodeWindowProcessKey( nKey )
+   METHOD CommandWindowProcessKey( nKey )
+   METHOD EditVar( nVar )
    METHOD EndProc()
    METHOD Exit() INLINE ::lEnd := .t.
    METHOD Go() INLINE ::RestoreAppStatus(), ::lGo := .t., DispEnd(), ::Exit()
    METHOD GoToLine( nLine )
    METHOD HandleEvent()
    METHOD Hide()
-   METHOD InputBox( cMsg, uValue )
+   METHOD InputBox( cMsg, uValue, bValid )
    METHOD IsBreakPoint( nLine )
    METHOD LoadVars()
    METHOD NextWindow()
@@ -141,26 +145,18 @@ METHOD New() CLASS TDebugger
    ::nCurrentWindow = 1
    ::cClrDialog     = "N/W"
    ::oPullDown      = BuildMenu( Self )
+
    ::oWndCode       = TDbWindow():New( 1, 0, MaxRow() - 6, MaxCol(),, "BG+/B" )
-   ::oWndCommand    = TDbWindow():New( MaxRow() - 5, 0, MaxRow() - 1, MaxCol(),;
-                                       "Command", "BG+/B" )
-   ::oWndCommand:bGotFocus  = { || ::EnableCommand() }
-   ::oWndCommand:bLostFocus = { || SetCursor( 0 ) }
-   ::aLastCommands = {}
-   ::nCommand = 0
+   ::oWndCode:bKeyPressed = { | nKey | ::CodeWindowProcessKey( nKey ) }
+   AAdd( ::aWindows, ::oWndCode )
+
+   ::BuildCommandWindow()
 
    ::lEnd           = .f.
    ::aBreakPoints   = {}
    ::aCallStack     = {}
    ::lGo            = .f.
    ::aVars          = {}
-
-   AAdd( ::aWindows, ::oWndCode )
-   AAdd( ::aWindows, ::oWndCommand )
-
-   ::oWndCode:bKeyPressed = { | nKey | If( nKey == K_DOWN, ( ::oBrwText:Down(),;
-      ::oBrwText:ForceStable() ), nil ), If( nKey == K_UP, ( ::oBrwText:Up(),;
-      ::oBrwText:ForceStable() ), nil ) }
 
 return Self
 
@@ -174,55 +170,138 @@ METHOD Activate( cModuleName ) CLASS TDebugger
 
 return nil
 
-METHOD EnableCommand() CLASS TDebugger
+METHOD BuildCommandWindow() CLASS TDebugger
 
-   local lExit := .f.
+   local GetList := {}
+   local cCommand
+
+   ::oWndCommand = TDbWindow():New( MaxRow() - 5, 0, MaxRow() - 1, MaxCol(),;
+                                    "Command", "BG+/B" )
+   ::oWndCommand:bGotFocus   = { || ::oGetListCommand:SetFocus(), SetCursor( 1 ) }
+   ::oWndCommand:bLostFocus  = { || SetCursor( 0 ) }
+   ::oWndCommand:bKeyPressed = { | nKey | ::CommandWindowProcessKey( nKey ) }
+   ::oWndCommand:bPainted    = { || DispOutAt( ::oWndCommand:nBottom - 1,;
+                             ::oWndCommand:nLeft + 1, "> ", ::oWndCommand:cColor ) }
+   AAdd( ::aWindows, ::oWndCommand )
+
+   ::aLastCommands = {}
+   ::nCommand = 0
+
+   cCommand = Space( ::oWndCommand:nRight - ::oWndCommand:nLeft - 3 )
+   @ ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 3 GET cCommand ;
+      COLOR Replicate( ::oWndCommand:cColor + ",", 5 )
+   ::oGetListCommand = TGetList():New( GetList )
+
+return nil
+
+METHOD CodeWindowProcessKey( nKey ) CLASS TDebugger
+
+   do case
+      case nKey == K_HOME
+           ::oBrwText:GoTop()
+           ::oBrwText:ForceStable()
+
+      case nKey == K_END
+           ::oBrwText:GoBottom()
+           ::oBrwText:ForceStable()
+
+      case nKey == K_UP
+           ::oBrwText:Up()
+           ::oBrwText:ForceStable()
+
+      case nKey == K_DOWN
+           ::oBrwText:Down()
+           ::oBrwText:ForceStable()
+
+      case nKey == K_PGUP
+           ::oBrwText:PageUp()
+           ::oBrwText:ForceStable()
+
+      case nKey == K_PGDN
+           ::oBrwText:PageDown()
+           ::oBrwText:ForceStable()
+   endcase
+
+return nil
+
+METHOD CommandWindowProcessKey( nKey ) CLASS TDebugger
+
    local cCommand, cResult
-   local bRestoreKeys := { || SetKey( K_SH_TAB, nil ), SetKey( K_TAB, nil ),;
-                              SetKey( K_UP, nil ), SetKey( K_DOWN, nil ) }
 
-   Set( _SET_SCOREBOARD, .f. )
-   SetKey( K_SH_TAB, { || lExit := .t., Eval( bRestoreKeys ),;
-                  __Keyboard( Chr( K_ESC ) + Chr( K_SH_TAB ) ) } )
-   SetKey( K_TAB, { || lExit := .t., Eval( bRestoreKeys ),;
-                    __Keyboard( Chr( K_ESC ) + Chr( K_TAB ) ) } )
-   SetKey( K_UP, { || If( ::nCommand > 0, ( GetList[ 1 ]:Buffer := ::aLastCommands[ ;
-                   ::nCommand ], GetList[ 1 ]:Pos := 1, GetList[ 1 ]:Display(),;
-                   If( ::nCommand > 1, ::nCommand--, nil ) ), nil ) } )
-   SetKey( K_DOWN, { || If( ::nCommand <= Len( ::aLastCommands ),;
-                   ( GetList[ 1 ]:Buffer := ::aLastCommands[ ;
-                   ::nCommand ], GetList[ 1 ]:Pos := 1, GetList[ 1 ]:Display(),;
-                   If( ::nCommand < Len( ::aLastCommands ), ::nCommand++, nil ) ), nil ) } )
+   do case
+      case nKey == K_UP
+           if ::nCommand > 0
+              ::oGetListCommand:oGet:VarPut( ::aLastCommands[ ::nCommand ] )
+              ::oGetListCommand:oGet:Buffer = ::aLastCommands[ ::nCommand ]
+              ::oGetListCommand:oGet:Pos = 1
+              ::oGetListCommand:oGet:Display()
+              if ::nCommand > 1
+                 ::nCommand--
+              endif
+           endif
 
-   while ! lExit
-      @ ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 1 SAY "> " ;
-         COLOR ::oWndCommand:cColor
-      cCommand = Space( ::oWndCommand:nRight - ::oWndCommand:nLeft - 3 )
-      cResult = ""
-      @ ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 3 GET cCommand ;
-         COLOR Replicate( ::oWndCommand:cColor + ",", 5 )
-      SetCursor( 1 )
-      READ
-      SetCursor( 0 )
+      case nKey == K_DOWN
+           if ::nCommand <= Len( ::aLastCommands )
+              ::oGetListCommand:oGet:VarPut( ::aLastCommands[ ::nCommand ] )
+              ::oGetListCommand:oGet:Buffer = ::aLastCommands[ ::nCommand ]
+              ::oGetListCommand:oGet:Pos = 1
+              ::oGetListCommand:oGet:Display()
+              if ::nCommand < Len( ::aLastCommands )
+                 ::nCommand++
+              endif
+           endif
 
-      if LastKey() == K_ENTER
-         AAdd( ::aLastCommands, cCommand )
-         ::nCommand++
-         ::oWndCommand:ScrollUp( 1 )
-         if SubStr( LTrim( cCommand ), 1, 2 ) == "? "
-            cResult = ValToStr( &( AllTrim( SubStr( LTrim( cCommand ), 3 ) ) ) )
-         else
-            cResult = "Command error"
-         endif
-         @ ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 1 SAY ;
-            Space( ::oWndCommand:nRight - ::oWndCommand:nLeft - 1 ) ;
-            COLOR ::oWndCommand:cColor
-         @ ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 3 SAY cResult ;
-            COLOR ::oWndCommand:cColor
-         ::oWndCommand:ScrollUp( 1 )
+      case nKey == K_ENTER
+           cCommand = ::oGetListCommand:oGet:VarGet()
+           AAdd( ::aLastCommands, cCommand )
+           ::nCommand++
+           ::oWndCommand:ScrollUp( 1 )
+           if SubStr( LTrim( cCommand ), 1, 2 ) == "? "
+              cResult = ValToStr( &( AllTrim( SubStr( LTrim( cCommand ), 3 ) ) ) )
+           else
+              cResult = "Command error"
+           endif
+           @ ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 1 SAY ;
+              Space( ::oWndCommand:nRight - ::oWndCommand:nLeft - 1 ) ;
+              COLOR ::oWndCommand:cColor
+           @ ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 3 SAY cResult ;
+              COLOR ::oWndCommand:cColor
+           ::oWndCommand:ScrollUp( 1 )
+           @ ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 1 SAY "> " ;
+              COLOR ::oWndCommand:cColor
+           cCommand = Space( ::oWndCommand:nRight - ::oWndCommand:nLeft - 3 )
+           ::oGetListCommand:oGet:VarPut( cCommand )
+           ::oGetListCommand:oGet:Buffer = cCommand
+           ::oGetListCommand:oGet:Pos = 1
+           ::oGetListCommand:oGet:Display()
 
-      endif
-   end
+      otherwise
+          ::oGetListCommand:GetApplyKey( nKey )
+   endcase
+
+return nil
+
+METHOD EditVar( nVar ) CLASS TDebugger
+
+   local cVarName  := ::aVars[ nVar ][ 1 ]
+   local uVarValue := ::aVars[ nVar ][ 2 ]
+
+   uVarValue := ::InputBox( cVarName, ValToStr( uVarValue ) )
+
+   do case
+      case uVarValue == "{ ... }"
+           // It is an array, don't do anything
+
+      case Upper( SubStr( uVarValue, 1, 5 ) ) == "CLASS"
+           // It is an object, don't do anything
+
+      otherwise
+         ::aVars[ nVar ][ 2 ] = &uVarValue
+         &( ::aVars[ nVar ][ 1 ] ) = ::aVars[ nVar ][ 2 ]
+   endcase
+
+   ::oBrwVars:RefreshCurrent()
+   ::oBrwVars:ForceStable()
 
 return nil
 
@@ -252,6 +331,9 @@ METHOD HandleEvent() CLASS TDebugger
       do case
          case ::oPullDown:IsOpen()
               ::oPullDown:ProcessKey( nKey )
+              if ::oPullDown:nOpenPopup == 0 // Closed
+                 ::aWindows[ ::nCurrentWindow ]:SetFocus( .t. )
+              endif
 
          case nKey == K_ESC
               ::RestoreAppStatus()
@@ -260,21 +342,10 @@ METHOD HandleEvent() CLASS TDebugger
               DispEnd()
               ::Exit()
 
-         case nKey == K_UP
+         case nKey == K_UP .or. nKey == K_DOWN .or. nKey == K_HOME .or. ;
+              nKey == K_END .or. nKey == K_ENTER
               oWnd = ::aWindows[ ::nCurrentWindow ]
-              oWnd:KeyPressed( K_UP )
-
-         case nKey == K_DOWN
-              oWnd = ::aWindows[ ::nCurrentWindow ]
-              oWnd:KeyPressed( K_DOWN )
-
-         case nKey == K_HOME
-              ::oBrwText:GoTop()
-              ::oBrwText:ForceStable()
-
-         case nKey == K_END
-              ::oBrwText:GoBottom()
-              ::oBrwText:ForceStable()
+              oWnd:KeyPressed( nKey )
 
          case nKey == K_F4
               ::ShowAppScreen()
@@ -295,8 +366,12 @@ METHOD HandleEvent() CLASS TDebugger
          case nKey == K_SH_TAB
               ::PrevWindow()
 
+         case ::oWndCommand:lFocused .and. nKey < 272 // Alt
+              ::oWndCommand:KeyPressed( nKey )
+
          otherwise
               if ( nPopup := ::oPullDown:GetHotKeyPos( AltToKey( nKey ) ) ) != 0
+                 SetCursor( 0 )
                  ::oPullDown:ShowPopup( nPopup )
               endif
       endcase
@@ -448,7 +523,7 @@ METHOD ShowVars() CLASS TDebugger
       AAdd( ::aWindows, ::oWndVars )
       ::oWndVars:bKeyPressed = { | nKey | If( nKey == K_DOWN, ( ::oBrwVars:Down(),;
       ::oBrwVars:ForceStable() ), nil ), If( nKey == K_UP, ( ::oBrwVars:Up(),;
-      ::oBrwVars:ForceStable() ), nil ) }
+      ::oBrwVars:ForceStable() ), nil ), If( nKey == K_ENTER, ::EditVar( n ), nil ) }
 
       ::oBrwVars = TBrowseNew( 2, 1, 4, MaxCol() - If( ::oWndStack != nil,;
                                ::oWndStack:nWidth(), 0 ) - 1 )
@@ -473,33 +548,15 @@ static function GetVarInfo( aVar )
    do case
       case aVar[ 3 ] == "Public" .or. aVar[ 3 ] == "Private"
            return aVar[ 1 ] + " <" + aVar[ 3 ] + ", " + ValType( aVar[ 2 ] ) + ;
-                  ">: " + GetVarValue( aVar[ 2 ] )
+                  ">: " + ValToStr( aVar[ 2 ] )
 
       case aVar[ 3 ] == "Local"
            return aVar[ 1 ] + " <" + aVar[ 2 ] + ", " + ;
                   ValType( __vmVarLGet( 7, aVar[ 3 ] ) ) + ;
-                  ">: " + GetVarValue( __vmVarLGet( 7, aVar[ 3 ] ) )
+                  ">: " + ValToStr( __vmVarLGet( 7, aVar[ 3 ] ) )
    endcase
 
 return ""
-
-static function GetVarValue( u )
-
-   local cType := ValType( u )
-   local cResult := ""
-
-   do case
-      case cType == "A"
-           cResult = "{ ... }"
-
-      case cType == "C"
-           cResult = '"' + u + '"'
-
-      case cType == "N"
-           cResult = AllTrim( Str( u ) )
-   endcase
-
-return cResult
 
 static function CompareLine( Self )
 
@@ -542,31 +599,35 @@ METHOD Open() CLASS TDebugger
 
 return nil
 
-METHOD InputBox( cMsg, uValue ) CLASS TDebugger
+METHOD InputBox( cMsg, uValue, bValid ) CLASS TDebugger
 
    local nTop    := ( MaxRow() / 2 ) - 5
    local nLeft   := ( MaxCol() / 2 ) - 20
    local nBottom := ( MaxRow() / 2 ) - 3
    local nRight  := ( MaxCol() / 2 ) + 20
-   local uTemp   := uValue
+   local uTemp   := PadR( uValue, nRight - nLeft - 1 )
    local GetList := {}
    local nOldCursor
-   local cImage := SaveScreen( nTop, nLeft, nBottom + 1, nRight + 2 )
    local lScoreBoard := Set( _SET_SCOREBOARD, .f. )
+   local oWndInput := TDbWindow():New( nTop, nLeft, nBottom, nRight, cMsg,;
+                                       ::oPullDown:cClrPopup )
 
-   @ nTop, nLeft, nBottom, nRight BOX B_SINGLE COLOR ::oPullDown:cClrPopup
-   DispOutAt( nTop, nLeft + ( ( nRight - nLeft ) ) / 2 - Len( cMsg ) / 2,;
-      cMsg, ::oPullDown:cClrPopup )
-   __Shadow( nTop, nLeft, nBottom, nRight )
+   oWndInput:lShadow = .t.
+   oWndInput:Show()
 
-   @ nTop + 1, nLeft + 1 GET uTemp
+   if bValid == nil
+      @ nTop + 1, nLeft + 1 GET uTemp
+   else
+      @ nTop + 1, nLeft + 1 GET uTemp VALID bValid
+   endif
+
    nOldCursor = SetCursor( 1 )
    READ
    SetCursor( nOldCursor )
-   RestScreen( nTop, nLeft, nBottom + 1, nRight + 2, cImage )
+   oWndInput:Hide()
    Set( _SET_SCOREBOARD, lScoreBoard )
 
-return If( LastKey() != K_ESC, uTemp, uValue )
+return If( LastKey() != K_ESC, AllTrim( uTemp ), uValue )
 
 METHOD IsBreakPoint( nLine ) CLASS TDebugger
 
