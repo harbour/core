@@ -1,3 +1,11 @@
+2000-07-13 23:24 UTC+0200 JfL <jfl@mafact.com> & RaC <Rac@mafact.com>
+   * source/rtl/tClass.prg
+     * Prepared for InitClass (Not working )
+   * source/rtl/tObject.prg
+     * Now Default :New and :Init method 'a la Class(y)'
+     * New(x,y,z) automatically call Init(x,y,z)
+       { Very simple implementation limited to 20 params, will be changed asap }
+
 2000-07-13 07:45 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/harbour.slx
      * Corrected premature release of MACROTEXT
@@ -308,10 +316,10 @@
      the proposed new Harbour Lexer. It is about half the size of the Flex Lexer and Harbour.exe is about 60K smaller.
      This might help with 16bit mode and or memory limited situations. It belive it offers few benefits over Flex:
         Simplicity, Readability, and Consitency of the rules.
-	More elegant look ahead/parsing capabilities.
-	Does not require a 3rd party tool (the Tokens & Rules table, is inserted into the Lexer by means of an #include directive.
-	it doesn't need to be "compiled" like the Flex.exe produces harbourl.c from harbour.l.
-	It is much smaller than the Flex generated Lexer.
+        More elegant look ahead/parsing capabilities.
+        Does not require a 3rd party tool (the Tokens & Rules table, is inserted into the Lexer by means of an #include directive.
+        it doesn't need to be "compiled" like the Flex.exe produces harbourl.c from harbour.l.
+        It is much smaller than the Flex generated Lexer.
      Please note it is not yet optimized for speed, I would love to get your input/suggestion (Ryszard, Victor, Paul, ...).
      In the process of resaerching the Lex phase I found many "problems" and tried to address them all. It now compiles
      the full build including keywords.prg (3 compiler (yacc) errors), our previous lexer didn't fully parse keywords.prg

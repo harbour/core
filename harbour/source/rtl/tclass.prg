@@ -44,7 +44,7 @@
  *    Use of __cls_param function to allow multiple superclass declaration
  *    Suppress of SetType and SetInit not more nedded
  *    Delegation and forwarding
- *    Reworking of hashing  as dicRealloc
+ *    Preparing the InitClass class method (not working !! )
  *
  * Copyright 1999 Eddie Runia <eddie@runia.com>
  *    Support for inheritance
@@ -79,6 +79,7 @@ FUNCTION TClass()
       __clsAddMsg( s_hClass, "AddVirtual"     , @AddVirtual()     , HB_OO_MSG_METHOD )
       __clsAddMsg( s_hClass, "Instance"       , @Instance()       , HB_OO_MSG_METHOD )
       __clsAddMsg( s_hClass, "SetOnError"     , @SetOnError()     , HB_OO_MSG_METHOD )
+      __clsAddMsg( s_hClass, "InitClass"      , @InitClass()      , HB_OO_MSG_METHOD )
       __clsAddMsg( s_hClass, "cSuper"         , {| Self | iif( ::acSuper == NIL .OR. Len( ::acSuper ) == 0, NIL, ::acSuper[ 1 ] ) }, HB_OO_MSG_INLINE )
       __clsAddMsg( s_hClass, "_cSuper"        , {| Self, xVal | iif( ::acSuper == NIL .OR. Len( ::acSuper ) == 0, ( ::acSuper := { xVal } ), ::acSuper[ 1 ] := xVal ), xVal }, HB_OO_MSG_INLINE )
       __clsAddMsg( s_hClass, "hClass"         ,  1, HB_OO_MSG_DATA )
@@ -361,3 +362,10 @@ STATIC PROCEDURE SetOnError( nFuncPtr )
 
    RETURN
 
+//----------------------------------------------------------------------------//
+
+STATIC FUNCTION InitClass()
+
+   LOCAL Self := QSelf()
+
+   RETURN Self
