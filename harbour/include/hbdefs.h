@@ -100,13 +100,13 @@ typedef unsigned long ULONG;
 #endif
 
 #ifndef LOBYTE
-#define LOBYTE( w )             ( ( BYTE )( w ) )
+#define LOBYTE( w )             ( ( BYTE ) ( w ) )
 #endif
 #ifndef HIBYTE
-#define HIBYTE( w )             ( ( BYTE )( ( ( USHORT )( w ) >> 8 ) & 0xFF ) )
+#define HIBYTE( w )             ( ( BYTE ) ( ( ( USHORT ) ( w ) >> 8 ) & 0xFF ) )
 #endif
 #ifndef MKINT
-#define MKINT( b1, b2 )         ( ( ( long ) b2 ) <<  8 ) | b1
+#define MKINT( b1, b2 )         ( ( int ) ( ( ( int ) b2 ) <<  8 ) | b1 )
 #endif
 #ifndef MKLONG
 #define MKLONG( b1, b2, b3, b4 ) ( ( ( long ) b4 ) << 24 ) | \

@@ -1,3 +1,21 @@
+19991001-05:30 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * source/rtl/filesys.c
+    ! BIN2I(), BIN2L() made Clipper compatible, for strings shorter than
+      the expected length. One test call still fails, probable because of 
+      different int size.
+  * include/hbdefs.h
+    ! MKINT() casted to long instead of int.
+  * include/external.ch
+    source/runner/stdalone/external.prg
+    + W2BIN removed.
+  + tests/working/rtl_test.prg
+    + BIN2W(), BIN2I(), BIN2L(), L2BIN(), I2BIN() regression tests added.
+  - doc/*.nfo (removed)
+  + doc/depend.txt (added)
+    + The long filename files converted to one file with short name, the
+      contents has been concatenated. The extension is standard now.
+
 19990930-22:10 EDT Paul Tucker <ptucker@sympatico.ca>
   * makefile.vc
     updated to add missing files and to create runner.exe and hbpp.exe
@@ -122,6 +140,9 @@
   + tests/working/db_browse.prg
     * A sample added, demonstrating dbf file browse
     * While running db_browse.exe, sign a filename as a parameter
+
+19990930-18:00 GMT+1 Victor Szel <info@szelvesz.hu>
+  ; Harbour Build 30 released
 
 19990929-16:42 GMT+1 Victor Szel <info@szelvesz.hu>
   * include/hbver.h

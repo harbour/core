@@ -72,6 +72,7 @@
 
 #include <ctype.h>
 #include "extend.h"
+#include "itemapi.h"
 #include "filesys.h"
 #include "errorapi.h"
 
@@ -1332,32 +1333,46 @@ HARBOUR HB_DISKNAME( void )
 
 HARBOUR HB_BIN2I( void )
 {
-   int iResult = 0;
+   PHB_ITEM pItem = hb_param( 1, IT_STRING );
 
-   if( ISCHAR( 1 ) )
+   if( pItem )
    {
-      char * szString = hb_parc( 1 );
+      char * pszString = hb_itemGetCPtr( pItem );
+      ULONG ulLen = hb_itemGetCLen( pItem );
+      BYTE byBuffer[ 2 ];
 
-      if( hb_parclen( 1 ) >= 2 )
-         iResult = MKINT( szString[ 0 ], szString[ 1 ] );
+      byBuffer[ 0 ] = ( ulLen >= 1 ) ? ( BYTE ) pszString[ 0 ] : 0;
+      byBuffer[ 1 ] = ( ulLen >= 2 ) ? ( BYTE ) pszString[ 1 ] : 0;
+
+      hb_retni( MKINT( byBuffer[ 0 ],
+                       byBuffer[ 1 ] ) );
    }
-
-   hb_retni( iResult );
+   else
+      hb_retni( 0 );
 }
 
 HARBOUR HB_BIN2L( void )
 {
-   long lResult = 0;
+   PHB_ITEM pItem = hb_param( 1, IT_STRING );
 
-   if( ISCHAR( 1 ) )
+   if( pItem )
    {
-      char * szString = hb_parc( 1 );
+      char * pszString = hb_itemGetCPtr( pItem );
+      ULONG ulLen = hb_itemGetCLen( pItem );
+      BYTE byBuffer[ 4 ];
 
-      if( hb_parclen( 1 ) >= 4 )
-         lResult = MKLONG( szString[ 0 ], szString[ 1 ], szString[ 2 ], szString[ 3 ] );
+      byBuffer[ 0 ] = ( ulLen >= 1 ) ? ( BYTE ) pszString[ 0 ] : 0;
+      byBuffer[ 1 ] = ( ulLen >= 2 ) ? ( BYTE ) pszString[ 1 ] : 0;
+      byBuffer[ 2 ] = ( ulLen >= 3 ) ? ( BYTE ) pszString[ 2 ] : 0;
+      byBuffer[ 3 ] = ( ulLen >= 4 ) ? ( BYTE ) pszString[ 3 ] : 0;
+
+      hb_retnl( MKLONG( byBuffer[ 0 ],
+                        byBuffer[ 1 ],
+                        byBuffer[ 2 ],
+                        byBuffer[ 3 ] ) );
    }
-
-   hb_retnl( lResult );
+   else
+      hb_retnl( 0 );
 }
 
 HARBOUR HB_BIN2W( void )
@@ -1407,11 +1422,6 @@ HARBOUR HB_L2BIN( void )
    }
 
    hb_retclen( szString, 4 );
-}
-
-HARBOUR HB_W2BIN( void )
-{
-   HB_I2BIN();
 }
 
 #define IS_PATH_SEP( c ) ( strchr( OS_PATH_DELIMITER_LIST, ( c ) ) != NULL )

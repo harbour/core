@@ -52,6 +52,16 @@
 
 #translate TEST_LINE( <x>, <result> ) => TEST_CALL( #<x>, {|| <x> }, <result> )
 
+#ifndef __HARBOUR__
+   #ifndef __XPP__
+      #ifndef __FLAGSHIP__
+         #ifndef __VO__
+            #define __CLIPPER__
+         #endif
+      #endif
+   #endif
+#endif
+
 #define TEST_RESULT_COL1_WIDTH  1
 #define TEST_RESULT_COL2_WIDTH  20
 #define TEST_RESULT_COL3_WIDTH  40
@@ -1681,6 +1691,84 @@ STATIC FUNCTION Main_MISC()
    TEST_LINE( FKLabel( 40 )                   , "F40"            )
    TEST_LINE( FKLabel( 41 )                   , ""               )
 
+   /* BIN2I() */
+
+#ifndef __CLIPPER__
+   TEST_LINE( BIN2I()                         , 0                ) /* Bug in CA-Cl*pper, this causes a GPF */
+   TEST_LINE( BIN2I(100)                      , 0                ) /* Bug in CA-Cl*pper, this causes a GPF */
+#endif
+   TEST_LINE( BIN2I("")                       , 0                )
+   TEST_LINE( BIN2I("AB")                     , 16961            )
+   TEST_LINE( BIN2I("BA")                     , 16706            )
+   TEST_LINE( BIN2I(Chr(255))                 , 255              )
+   TEST_LINE( BIN2I(Chr(255)+Chr(255))        , -1               )
+   TEST_LINE( BIN2I(Chr(0))                   , 0                )
+   TEST_LINE( BIN2I(Chr(0)+Chr(0))            , 0                )
+   TEST_LINE( BIN2I("A")                      , 65               )
+   TEST_LINE( BIN2I("ABC")                    , 16961            )
+
+   /* BIN2W() */
+
+#ifndef __CLIPPER__
+   TEST_LINE( BIN2W()                         , 0                )
+   TEST_LINE( BIN2W(100)                      , 0                )
+#endif
+   TEST_LINE( BIN2W("")                       , 0                )
+   TEST_LINE( BIN2W("AB")                     , 16961            )
+   TEST_LINE( BIN2W("BA")                     , 16706            )
+   TEST_LINE( BIN2W(Chr(255))                 , 255              )
+   TEST_LINE( BIN2W(Chr(255)+Chr(255))        , 65535            )
+   TEST_LINE( BIN2W(Chr(0))                   , 0                )
+   TEST_LINE( BIN2W(Chr(0)+Chr(0))            , 0                )
+   TEST_LINE( BIN2W("A")                      , 65               )
+   TEST_LINE( BIN2W("ABC")                    , 16961            )
+
+   /* BIN2L() */
+
+#ifndef __CLIPPER__
+   TEST_LINE( BIN2L()                                    , 0                )
+   TEST_LINE( BIN2L(100)                                 , 0                )
+#endif
+   TEST_LINE( BIN2L("")                                  , 0                )
+   TEST_LINE( BIN2L("ABCD")                              , 1145258561       )
+   TEST_LINE( BIN2L("DCBA")                              , 1094861636       )
+   TEST_LINE( BIN2L(Chr(255))                            , 255              )
+   TEST_LINE( BIN2L(Chr(255)+Chr(255)+Chr(255))          , 16777215         )
+   TEST_LINE( BIN2L(Chr(255)+Chr(255)+Chr(255)+Chr(255)) , -1               )
+   TEST_LINE( BIN2L(Chr(0)+Chr(0)+Chr(0))                , 0                )
+   TEST_LINE( BIN2L(Chr(0)+Chr(0)+Chr(0)+Chr(0))         , 0                )
+   TEST_LINE( BIN2L("ABC")                               , 4407873          )
+   TEST_LINE( BIN2L("ABCDE")                             , 1145258561       )
+
+   /* I2BIN() */
+
+   TEST_LINE( I2BIN()                         , ""+Chr(0)+""+Chr(0)+"" )
+   TEST_LINE( I2BIN(""     )                  , ""+Chr(0)+""+Chr(0)+"" )
+   TEST_LINE( I2BIN(0      )                  , ""+Chr(0)+""+Chr(0)+"" )
+   TEST_LINE( I2BIN(16961  )                  , "AB"                   )
+   TEST_LINE( I2BIN(16706  )                  , "BA"                   )
+   TEST_LINE( I2BIN(255    )                  , "ÿ"+Chr(0)+""          )
+   TEST_LINE( I2BIN(-1     )                  , "ÿÿ"                   )
+   TEST_LINE( I2BIN(0      )                  , ""+Chr(0)+""+Chr(0)+"" )
+   TEST_LINE( I2BIN(0      )                  , ""+Chr(0)+""+Chr(0)+"" )
+   TEST_LINE( I2BIN(65     )                  , "A"+Chr(0)+""          )
+   TEST_LINE( I2BIN(16961  )                  , "AB"                   )
+
+   /* L2BIN() */
+
+   TEST_LINE( L2BIN()                         , ""+Chr(0)+""+Chr(0)+""+Chr(0)+""+Chr(0)+""  )
+   TEST_LINE( L2BIN("")                       , ""+Chr(0)+""+Chr(0)+""+Chr(0)+""+Chr(0)+""  )
+   TEST_LINE( L2BIN(0          )              , ""+Chr(0)+""+Chr(0)+""+Chr(0)+""+Chr(0)+""  )
+   TEST_LINE( L2BIN(1145258561 )              , "ABCD"                                      )
+   TEST_LINE( L2BIN(1094861636 )              , "DCBA"                                      )
+   TEST_LINE( L2BIN(255        )              , "ÿ"+Chr(0)+""+Chr(0)+""+Chr(0)+""           )
+   TEST_LINE( L2BIN(16777215   )              , "ÿÿÿ"+Chr(0)+""                             )
+   TEST_LINE( L2BIN(-1         )              , Chr(255)+Chr(255)+Chr(255)+Chr(255)         )
+   TEST_LINE( L2BIN(0          )              , ""+Chr(0)+""+Chr(0)+""+Chr(0)+""+Chr(0)+""  )
+   TEST_LINE( L2BIN(0          )              , Chr(0)+Chr(0)+Chr(0)+Chr(0)                 )
+   TEST_LINE( L2BIN(4407873    )              , "ABC"+Chr(0)+""                             )
+   TEST_LINE( L2BIN(1145258561 )              , "ABCD"                                      )
+
    /* __COPYFILE() */
 
    FClose(FCreate("$$COPYFR.TMP"))
@@ -1987,7 +2075,7 @@ STATIC FUNCTION Main_MISC()
 
    FErase("$$MEMOFI.TMP")
 
-#ifdef __HARBOUR__TEMP_COMMENTED_OUT_
+#ifdef __HARBOUR__
 
    /* HB_FNAMESPLIT(), HB_FNAMEMERGE() */
 
@@ -2562,6 +2650,8 @@ STATIC FUNCTION TAStr( aArray )
 
    RETURN cString
 
+#ifdef __HARBOUR__
+
 STATIC FUNCTION TESTFNAME( cFull )
    LOCAL cPath, cName, cExt, cDrive
 
@@ -2572,6 +2662,8 @@ STATIC FUNCTION TESTFNAME( cFull )
           cName + ";" +;
           cExt + ";" +;
           cDrive
+
+#endif
 
 STATIC FUNCTION CMDLGetValue( cCommandLine, cName, cRetVal )
    LOCAL tmp, tmp1
