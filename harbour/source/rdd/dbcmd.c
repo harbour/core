@@ -449,6 +449,7 @@ ERRCODE hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS pSuperTa
  */
 void hb_rddReleaseCurrentArea( void )
 {
+   HB_TRACE(HB_TR_DEBUG, ("hb_rddReleaseCurrentArea()"));
    SELF_CLOSE( ( AREAP ) s_pCurrArea->pArea );
    SELF_RELEASE( ( AREAP ) s_pCurrArea->pArea );
 
@@ -478,6 +479,7 @@ LPAREANODE hb_rddNewAreaNode( LPRDDNODE pRddNode, USHORT uiRddID )
    LPAREANODE pCurrArea;
    USHORT uiSize;
 
+   HB_TRACE(HB_TR_DEBUG, ("hb_rddNewAreaNode(%p %d)", pRddNode,uiRddID));
    pCurrArea = ( LPAREANODE ) hb_xgrab( sizeof( AREANODE ) );
    if( pRddNode->uiAreaSize == 0 ) /* Calculate the size of WorkArea */
    {
@@ -521,6 +523,7 @@ USHORT hb_rddInsertAreaNode( char *szDriver )
    LPRDDNODE pRddNode;
    LPAREANODE pAreaNode;
 
+   HB_TRACE(HB_TR_DEBUG, ("hb_rddInsertAreaNode(%s)", szDriver));
    pRddNode = hb_rddFindNode( szDriver, &uiRddID );
    if( !pRddNode )
       return FALSE;
@@ -567,6 +570,7 @@ static USHORT hb_rddFieldIndex( AREAP pArea, char * szName )
    USHORT uiCount;
    LPFIELD pField;
 
+   HB_TRACE(HB_TR_DEBUG, ("hb_rddFieldIndex(%s)", szName));
    uiCount = 0;
    pField = pArea->lpFields;
    while( pField )
