@@ -386,6 +386,30 @@ PHB_ITEM hb_itemPutNL( PHB_ITEM pItem, long lNumber )
    return pItem;
 }
 
+void hb_itemSetNLen( PHB_ITEM pItem, WORD wWidth, WORD wDecimal )
+{
+   if( pItem 
+    && wWidth > 0 && wWidth <= 99 
+    && ( wDecimal == 0 || wDecimal < ( wWidth - 1 ) ) )
+   {
+      switch( pItem->type )
+      {
+         case IT_DOUBLE:
+            pItem->item.asDouble.length = wWidth;
+            pItem->item.asDouble.decimal = wDecimal;
+            break;
+
+         case IT_LONG:
+            pItem->item.asLong.length = wWidth;
+            break;
+
+         case IT_INTEGER:
+            pItem->item.asInteger.length = wWidth;
+            break;
+      }
+   }
+}
+
 ULONG hb_itemSize( PHB_ITEM pItem )
 {
    if( pItem )

@@ -51,6 +51,7 @@ extern char *   hb_itemGetDS    ( PHB_ITEM pItem, char *szDate );
 extern BOOL     hb_itemGetL     ( PHB_ITEM pItem );
 extern double   hb_itemGetND    ( PHB_ITEM pItem );
 extern long     hb_itemGetNL    ( PHB_ITEM pItem );
+extern void     hb_itemSetNLen  ( PHB_ITEM pItem, WORD wWidth, WORD wDecimal );
 extern PHB_ITEM hb_itemNew      ( PHB_ITEM pNull );
 extern PHB_ITEM hb_itemParam    ( WORD wParam );
 extern PHB_ITEM hb_itemPutC     ( PHB_ITEM pItem, char *szText );

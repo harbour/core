@@ -1,3 +1,10 @@
+19990831-23:10 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/itemapi.c
+    include/itemapi.h
+    + hb_itemSetNLen() added to set the numeric values length and number 
+      of decimal places. This way we have a standard way to set these without
+      fiddling with the internals. Cool.
+
 19990831-22:20 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/hvm.c
     ! hb_vmFunction() now resets the return value to NIL, since previously
