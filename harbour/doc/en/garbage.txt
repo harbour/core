@@ -19,7 +19,7 @@
  *      or circual references (a[1]:=b; b[1]:=c; c[1]:=a) that cannot be 
  *      properly deallocated by simple reference counting.
  *      
- *        Since all variables in harbour are stored inside some available tables
+ *      Since all variables in harbour are stored inside some available tables
  *      (the eval stack, memvars table and array of static variables) then checking
  *      if the reference is still alive is quite easy and don't require any
  *      special treatment during memory allocation. Additionaly the garbage 
@@ -28,7 +28,7 @@
  *      references. These data are used to initialize class instance variables 
  *      and are stored in class shared variables.
  *      
- *        In special cases when the value of harbour variable is stored internally
+ *      In special cases when the value of harbour variable is stored internally
  *      in some static area (at C or assembler level), for example SETKEY()
  *      stores codeblocks that will be evaluated when a key is pressed, 
  *      the garbage collector will be not able to scan such values since it
@@ -39,7 +39,8 @@
  *      harbour item structure is used or hb_gcLock() function if direct memory 
  *      pointer is used. The memory block can be unlocked by hb_gcUnlockItem() or 
  *      hb_gcUnlock() functions.
- *        Notice however that all variables passed to a low level function are 
+ *
+ *      Notice however that all variables passed to a low level function are 
  *      passed via the eval stack then they don't require locking during the 
  *      function call. The locking will be required if passed value is copied 
  *      into some static area to make it available for other low-level functions
@@ -47,7 +48,7 @@
  *      because the value is removed from the eval stack after function call and 
  *      it can be no longer referenced by other variables.
  *      
- *        However scanning of all variables can be a time consuming operation. It
+ *      However scanning of all variables can be a time consuming operation. It
  *      requires that all allocated arrays have to be traversed through all its 
  *      elements to find more arrays. Also all codeblocks are scanned for detached
  *      local variables they are reffering. For this reason looking for unreferenced 
@@ -121,15 +122,18 @@
  *  $ONELINER$
  *      Allocates memory that will be collected by the garbage collector.
  *  $SYNTAX$
- *      void *hb_gcAlloc( ULONG ulSize, HB_GARBAGE_FUNC_PTR pCleanupFunc );
+ *      #include <hbapi.h>
+ *      void *hb_gcAlloc( ULONG ulSize,
+ *      HB_GARBAGE_FUNC_PTR pCleanupFunc );
  *  $ARGUMENTS$
- *  ulSize = requested size of memory block
- *  pCleanupFunc = pointer to HB_GARBAGE_FUNC function that will be called
- *    directly before releasing the garbage memory block or NULL. This 
- *    function should release all other memory allocated and stored inside
- *    the memory block. For example, it releases all items stored inside
- *    the array. The functions receives a single parameter: the pointer
- *    to memory allocated by hb_gcAlloc().
+ *      <ulSize> Requested size of memory block
+ *
+ *      <pCleanupFunc> Pointer to HB_GARBAGE_FUNC function that will be called
+ *      directly before releasing the garbage memory block or NULL. This 
+ *      function should release all other memory allocated and stored inside
+ *      the memory block. For example, it releases all items stored inside
+ *      the array. The functions receives a single parameter: the pointer
+ *      to memory allocated by hb_gcAlloc().
  *  $RETURNS$
  *      The pointer to allocated memory or it generates an internal
  *      unrecoverable error.
@@ -167,7 +171,7 @@
  *  $SYNTAX$
  *      void hb_gcFree( void *pMemoryPtr );
  *  $ARGUMENTS$
- *      pMemoryPtr = the pointer to memory for release. This memory 
+ *      <pMemoryPtr> The pointer to memory for release. This memory 
  *        pointer have to be allocated with hb_gcAlloc() function.
  *  $RETURNS$
  *      Nothing.

@@ -873,3 +873,36 @@
  *      ALIAS(),SELECT()
  *  $END$
  */
+
+/*  $DOC$
+ *  $COMMANDNAME$
+ *      PACK
+ *  $CATEGORY$
+ *      Command
+ *  $ONELINER$
+ *      Remove records marked for deletion from a database
+ *  $SYNTAX$
+ *      PACK
+ *  $DESCRIPTION$
+ *      This command removes records that were marked for deletion from the
+ *      currently selected database.This command does not pack the contents
+ *      of a memo field;those files must be packed via low-level fuctions.
+ *
+ *      All open index files will be automatically reindexed once PACK command
+ *      has completed its operation.On completion,the record pointer is placed
+ *      on the first record in the database.
+ *  $EXAMPLES$
+ *      USE Tests NEW index Tests
+ *      DBGOTO(10)
+ *      DELETE NEXT 10
+ *      PACK
+ *      USE
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This command is CA Clipper compliant
+ *  $SEEALSO$
+ *      DBEVAL(),DELETE,DELETED(),ZAP,RECALL
+ *  $END$
+ */
+

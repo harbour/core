@@ -20,6 +20,9 @@
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  *    Documentation for: DEVOUTPICT()
  *
+ * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
+ *    Documentation for: EJECT
+ *
  * See doc/license.txt for licensing terms.
  *
  */
@@ -672,3 +675,53 @@
  *      ?,??,DEVOUT(),DEVOUTPICT(),DISPOUT(),DISPOUTAT(),OUTSTD(),QOUT(),QQOUT(),STR()
  *  $END$
  */
+
+/*  $DOC$
+ *  $COMMANDNAME$
+ *      EJECT
+ *  $CATEGORY$
+ *      Command
+ *  $ONELINER$
+ *      Issue an command to advance the printer to the top of the form
+ *  $SYNTAX$
+ *      EJECT
+ *  $ARGUMENTS$
+ *      None
+ *  $DESCRIPTION$
+ *      This command issue an form-feed command to the printer.If the printer
+ *      is not properly hooked up to the computer,an error will not be 
+ *      generated and the command will be ignored.
+ *
+ *      Once completed,the values of PROW() and PCOL(),the row and column
+ *      indicators to the printer,will be set to 0.Their values,however,may
+ *      be manipulated before or after ussuing an EJECT by using the DEVPOS()
+ *      function.
+ *
+ *      On compile time this command is translated into __EJECT() function.
+ *  $EXAMPLES$
+ *      Use Clientes New
+ *      Set Device to Printer
+ *      CurPos:=0
+ *      While !Eof()
+ *      ? Clientes->nome,Clientes->endereco
+ *      Curpos++     
+ *      if Curpos >59
+ *          Curpos:=0
+ *          Eject
+ *      Endif
+ *      Enddo
+ *      Set Device to Screen
+ *      Use
+ *  $TESTS$
+ *      See examples
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This command is Ca-Clipper compliant
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      DEVPOS(),SET PRINTER,PROW(),PCOL()
+ *  $END$
+ */
+

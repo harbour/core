@@ -37,6 +37,6 @@
  *  their web site at http://www.gnu.org/).   </par>
  *
  *  $SEEALSO$
- *     OverView
+ *     Overview
  *  $END$
  */
