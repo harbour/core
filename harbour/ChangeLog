@@ -1,3 +1,6 @@
+20000402-19:00 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
+   *utils/hbdoc/genhtm.prg
+     *Fixed a small bug
 20000402-22:32 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * utils/hbtest/rt_hvm.prg

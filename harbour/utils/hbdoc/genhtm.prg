@@ -159,7 +159,7 @@ FUNCTION ProcessWww()
 
       //  Open file for input
 
-      nCommentLen := IIF( AT( ".ASM", UPPER( aDirList[ i, F_NAME ] ) ) > 0, 2, 3 )
+      nCommentLen := IIF( AT( ".ASM", UPPER( aDirList[ i, F_NAME ] ) ) > 0, 2, 4 )
       nReadHandle := FT_FUSE( aDirList[ i, F_NAME ] )
       @ INFILELINE, 33 CLEAR TO INFILELINE, MAXCOL()
       @ INFILELINE, 33 SAY PAD( aDirList[ i, F_NAME ], 47 )
@@ -184,6 +184,7 @@ FUNCTION ProcessWww()
          //  Read a line
 
          cBuffer := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
+         cBuffer := STRTRAN( cBuffer,chr(10),'')
          nLineCnt ++
          IF nLineCnt % 10 = 0
             @ LINELINE, 33 SAY STR( nLineCnt, 5, 0 )
@@ -366,7 +367,7 @@ FUNCTION ProcessWww()
                ohtm:Writetext('<hr>')
                ohtm:WriteText('<br>')
                ohtm:WriteText('<br>')
-        ? cBuffer
+
               oHtm:WriteText("<a NAME="+'"'+alltrim(UPPERLOWER(cFuncname))+'"'+"></a>")
   
                //  2) Category
@@ -389,7 +390,7 @@ FUNCTION ProcessWww()
 
                nMode := D_ONELINE
                //  Now start writing out what we know
-        ? cBuffer
+        
                  if lData
                     oHtm:WriteText("<H1>DATA "+ alltrim(PAD( cFuncName, 21 )) + "</H1>")
                     oHtm:WriteText("<p>"+cOneline+"</p>"+ hb_osnewline())
@@ -405,7 +406,7 @@ FUNCTION ProcessWww()
                //  4) all other stuff
 
             ELSE
-        ? cBuffer
+        
                IF AT( cSyn, cBuffer ) > 0
                   oHtm:WriteParBold( " Syntax" ,.f.,.f.)
                   ohtm:WriteText('<DD><P>')
@@ -451,7 +452,7 @@ FUNCTION ProcessWww()
                   nMode     := D_DESCRIPTION
                   lAddBlank := .T.
                   lEndDesc:=.t.
-               ? cbuffer
+               
                ELSEIF AT( cExam, cBuffer ) > 0
 
                   IF !lBlankLine
@@ -463,7 +464,7 @@ FUNCTION ProcessWww()
                   lAddBlank := .T.
                   lAddEndPreTag:=.T.                     
                   
-               ? cbuffer
+               
                ELSEIF AT( cTest, cBuffer ) > 0
 
                   IF !lBlankLine
@@ -487,7 +488,7 @@ FUNCTION ProcessWww()
                   oHtm:WriteText("<DD><P>")
                   nMode     := D_COMPLIANCE
                   lAddBlank := .T.
-                                 ? cbuffer
+                                 
                ELSEIF AT( cPlat, cBuffer ) > 0
 
                   IF !lBlankLine
@@ -775,9 +776,11 @@ RETURN nil
 function FormatHtmBuff(cBuffer,cStyle,oHtm)
 
 Local creturn:=''
-local cline:='',coline:=''
+local cline:=''
+LOCAL cOldLine:=''
 local cBuffend:=''
-local lendbuff:=.f.
+local lEndBuffer:=.f.
+LOCAL lArgBold:= .f.
 local npos,nposend
       creturn :=cBuffer+' '
       if at('</par>',creturn)>0 .or. empty(cBuffer)
@@ -787,42 +790,87 @@ local npos,nposend
          return creturn
       endif
    if cStyle != "Syntax" .AND. cStyle !="Arguments"
-       do while !lendBuff
-                cLine :=  TRIM(SUBSTR( ReadLN( @lEof ), nCommentLen ) )
-      if at('</par>',cLine)>0 .or. empty(cline)
-         lendBuff:=.t.
-      endif
-      cReturn+=alltrim(cLine)+ ' '
-    enddo                      
-    cReturn:='<par>'+creturn+' </par>'
+      DO WHILE !lEndBuffer
+         cLine := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
+         IF AT( '</par>', cLine ) > 0
+            lEndBuffer := .t.
+         ENDIF
+
+         IF EMPTY( cLine )
+            lEndBuffer := .t.
+//            TheBlank   := .t.
+            FT_FSKIP( - 1 )
+         ENDIF
+         IF AT( DELIM, cLine ) > 0
+
+            FT_FSKIP( - 1 )
+            lEndBuffer := .t.
+         ENDIF
+         IF AT( DELIM, cLine ) = 0
+            cReturn += ' ' + ALLTRIM( cLine ) + ' '
+         ENDIF
+      ENDDO
+      cReturn := STRTRAN( cReturn, "<par>", "" )
+      cReturn := STRTRAN( cReturn, "</par>", "" )
+
+      cReturn := '<par>' + cReturn + '    </par>'
+
   elseif cStyle=='Syntax'
+            cReturn := STRTRAN( cReturn, "<par>","")
             cReturn := STRTRAN( cReturn, "<", "&lt;" )                     
             cReturn := STRTRAN( cReturn, ">", "&gt;" )
-
+        
          creturn:='<par><b>'+creturn+' </b></par>'
   ELSEIF cStyle=='Arguments'
-  nPos:=0
-    if at("<par>",cReturn)>0
-            cReturn:=STRTRAN(cReturn,"<par>","")
-            cReturn:=STRTRAN(cReturn,"</par>","")
-            cReturn:=alltrim(cReturn)
-            nPos:=AT(" ",cReturn)
-            cOLine:=left(cReturn,nPos-1)
-            cReturn:=STRTRAN(cReturn,coLine,"")
-            cReturn := STRTRAN( cReturn, "<", "&lt;" )                     
-            cReturn := STRTRAN( cReturn, ">", "&gt;" )
-            cReturn:=STRTRAN(cReturn,"&gt;","&gt;</b>  ")         
-            cReturn:=STRTRAN(cReturn," &lt;","<b> &lt;")
 
-    endif
-       DO WHILE !lEndBuff
-                cLine :=  TRIM(SUBSTR( ReadLN( @lEof ), nCommentLen ) )
-      IF AT('</par>',cLine)>0 .OR. EMPTY(cLine)
-         lEndBuff:=.t.
+      nPos    := 0
+      IF AT( "<par>", cReturn ) > 0
+         cReturn  := STRTRAN( cReturn, "<par>", "" )
+         cReturn  := STRTRAN( cReturn, "</par>", "" )
+         cReturn  := ALLTRIM( cReturn )
+         nPos     := AT( " ", cReturn )
+         cOldLine := LEFT( cReturn, nPos - 1 )
+         cReturn  := STRTRAN( cReturn, cOldLine, "" )
+         IF AT( "@", cOldLine ) > 0 .OR. AT( "()", cOldLine ) > 0 .OR. AT( "<", cOldLine ) > 0 .OR. AT( "_", cOldLine ) > 0
+            lArgBold := .T.
+         ENDIF
       ENDIF
-      cReturn+=alltrim(cLine)+ ' '
-    enddo
-      cReturn:='       <par><b>'+cOLine+'</b> '+cReturn+'</par>'
+      DO WHILE !lEndBuffer
+
+         cLine := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
+         IF AT( "</par>", cLine ) > 0
+            lEndBuffer := .t.
+         ENDIF
+         IF EMPTY( cLine )
+            lEndBuffer := .t.
+//            TheBlank   := .t.
+            FT_FSKIP( - 1 )
+
+         ENDIF
+         IF AT( DELIM, cLine ) > 0
+            FT_FSKIP( - 1 )
+            lEndBuffer := .t.
+         ENDIF
+         IF AT( DELIM, cLine ) = 0
+            cReturn += ' ' + ALLTRIM( cLine ) + ' '
+         ENDIF
+      ENDDO
+      cReturn := STRTRAN( cReturn, "<par>", "" )
+      cReturn := STRTRAN( cReturn, "</par>", "" )
+      
+       cReturn:=STRTRAN(cReturn,"<","&lt;")
+       cReturn:=STRTRAN(cReturn,">","&gt;")
+       cOldLine:=STRTRAN(cOldLine,"<","&lt;")
+       cOldLine:=STRTRAN(cOldLine,">","&gt;")
+
+      IF lArgBold
+         cReturn := '       <par><b>' + cOldLine + '</b> ' + cReturn + '    </par>'
+      ELSE
+         cReturn := '       <par>' + cOldLine + ' ' + cReturn + '    </par>'
+      ENDIF
+//   ENDIF
+    lArgBold:=.F.
+
    ENDIF
 
 //   endif
@@ -850,13 +898,15 @@ enddo
 return cbuffer
 
 FUNCTION  ProchtmDesc(cBuffer,oHtm,cStyle)
-local cLine:=''
+local cOldLine:=''
 Local npos,CurPos:=0
-LOCAL nColorPos,ccolor:='',creturn:='',ncolorend,nIdentLevel,cOline
+LOCAL nColorPos,ccolor:='',creturn:='',ncolorend,nIdentLevel
 LOCAL lEndPar:= .F.
 
 LOCAL lEndFixed:=.F.
+LOCAL lArgBold:=.f.
 LOCAL lEndTable:=.F.
+LOCAL lEndBuffer :=.f.
 Default cStyle to "Default"
 
 if at('<par>',cBuffer)==0 .and. !empty(cBuffer) .and. cstyle<>"Example"
@@ -879,13 +929,17 @@ if cStyle<>"Example" .and. at("<table>",cBuffer)==0 .and. AT("<fixed>",cBuffer)=
 
             cReturn:=alltrim(cReturn)
             nPos:=AT(" ",cReturn)
-            cOLine:=left(cReturn,nPos-1)
-            cReturn:=STRTRAN(cReturn,coLine,"")
-            cReturn:=STRTRAN(cReturn,">","></b>  ")         
-            cReturn:=STRTRAN(cReturn," <","<b> <")
+            cOldLine:=left(cReturn,nPos-1)
+            cReturn:=STRTRAN(cReturn,cOldLine,"")
+             IF AT( "@", cOldLine ) > 0 .OR. AT( "()", cOldLine ) > 0 .OR. AT( "<", cOldLine ) > 0 .OR. AT( "_", cOldLine ) > 0
+                lArgBold := .T.
+             ENDIF
+    if lArgBold
+        cReturn:='       <par><b>'+cOldLine+'</b> '+cReturn+'    </par>'
+      else
+            cReturn:='       <par>'+cOldLine+' '+cReturn+'    </par>'
+      endif
 
-        //            cBuffer:= strtran(cBuffer,"<par>","<par><b>")
-      creturn:='       <par><b>'+cOLine+'</b> '+creturn+'    </par>'
       cbuffer:=cReturn
       endif
       else
@@ -950,18 +1004,31 @@ Elseif cStyle=="Default"
 endif
 endif
 If AT('<fixed>',cBuffer)>0 .or. cStyle="Example"
-         if at('<fixed>',cBuffer)=0
-            oHtm:WritePar(cBuffer)
-         endif                
-    do while !lendFixed
-                cBuffer :=  TRIM(SUBSTR( ReadLN( @lEof ), nCommentLen ) )
-        if at("</fixed>",cBuffer)>0
-          lendfixed:=.t.
-        else
+      IF AT( '<fixed>', cBuffer ) = 0 .OR. !EMPTY( cBuffer )
+         cBuffer := STRTRAN( cBuffer, "<par>", "" )
+         cBuffer := STRTRAN( cBuffer, "<fixed>", "" )
 
-        oHtm:WritePar(cBuffer)
-    endif
-    enddo
+         oHtm:WritePar( cBuffer )
+      ENDIF
+      DO WHILE !lendFixed
+         cOldLine := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
+         IF AT( "</fixed>", cOldLine ) > 0
+            lendfixed := .t.
+            cOldLine     := STRTRAN( cOldLine, "</fixed>", "" )
+         ENDIF
+         IF AT( DELIM, cOldLine ) = 0
+            cReturn += ALLTRIM( cOldLine ) + ' '
+         ENDIF
+         IF AT( DELIM, cOldLine ) > 0
+            FT_FSKIP( - 1 )
+            lEndfixed := .t.
+
+         ENDIF
+         IF AT( DELIM, cOldLine ) == 0
+            oHtm:WritePar( cOldLine )
+         ENDIF
+      ENDDO
+
 end
 if AT('<table>',cBuffer)>0
     do while !lendTable
@@ -1017,7 +1084,6 @@ LOCAL y,nLen2,x,nMax,nSpace,lCar:=.f.,nMax2,nSpace2,nPos1,nPos2,LColor,npos
 FOR x:=1 to len(asitable)
         oHtm:WriteText('<tr><td><pre>'+afitable[x]+'</td><td><pre>' +asitable[x]+'</td></tr> ')
 Next
-
 
   oHtm:Writetext("</table>")
 
