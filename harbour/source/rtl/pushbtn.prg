@@ -57,8 +57,9 @@
 #ifdef HB_COMPAT_C53
 CLASS HBPushButton
 
-export:
-   DATA CLASSNAME init "PUSHBUTTON"
+   EXPORT:
+
+   DATA ClassName INIT "PUSHBUTTON"
    DATA Buffer
    DATA Caption
    DATA Cargo
@@ -68,250 +69,311 @@ export:
    DATA Message
    DATA Row
    DATA sBlock
+   DATA TypeOut INIT .F.
 
-   DATA TypeOut  init .F.
-   METHOD Display()
-   METHOD HitTest(nRow,nCol)
+   METHOD DISPLAY()
+   METHOD HitTest( nRow, nCol )
    METHOD KillFocus()
-  
-   MESSAGE Select()  METHOD _Select()
-  
-
+   MESSAGE SELECT() METHOD _Select()
    METHOD SetFocus()
-   METHOD New(nRow,nCol,cCaption)
-   ACCESS Colorspec inline ::GetColor()
-   ASSIGN Colorspec(xColor) inline if(xColor!=Nil,::GetColor(xColor),)
-   ACCESS Style inline ::GetStyle()
-   ASSIGN Style(cStyle) inline if(cStyle!=Nil,::GetStyle(cStyle),)
+   METHOD New( nRow, nCol, cCaption )
+   ACCESS ColorSpec INLINE ::GetColor()
+   ASSIGN ColorSpec( xColor ) INLINE IIF( xColor != Nil, ::GetColor( xColor ), )
+   ACCESS Style INLINE ::GetStyle()
+   ASSIGN Style( cStyle ) INLINE IIF( cStyle != Nil, ::GetStyle( cStyle ), )
 
-Hidden:
+   Hidden:
 
    DATA CurStyle
-   DATA Color
+   DATA COLOR
    DATA lCursor
-   METHOD Getcolor(xColor)
-   METHOD GetStyle(xStyle)
+   METHOD Getcolor( xColor )
+   METHOD GetStyle( xStyle )
+
 ENDCLASS
 
-METHOD GetColor(xColor)  CLASS HBPushButton
-   if ( !( ISNIL( xColor ) ) )
-      ::Color := iif( Valtype(xColor)=="C" .and. !Empty(__guicolor(xColor, 4)) .AND. ;
-      Empty(__guicolor(xColor, 6)),xColor,)
+METHOD GetColor( xColor ) CLASS HBPushButton
 
-   endif
-   return ::Color
+   IF ( !( ISNIL( xColor ) ) )
+      ::Color := IIF( Valtype( xColor ) == "C" .and. !Empty( __GuiColor( xColor, 4 ) ) .and. ;
+                      Empty( __GuiColor( xColor, 6 ) ), xColor, )
 
-METHOD GetStyle(cStyle)  CLASS HBPushButton
-   if ( !( ISNIL( cStyle ) ) )
-      ::curStyle := iif( Valtype(cStyle)=="C" .and. LTrim(Str(Len(cStyle))) $ "0�2�8",cStyle,)
+   ENDIF
 
-   endif
-   return ::curStyle
+RETURN ::Color
 
-METHOD New(nRow,nCol,cCaption) CLASS HBPushButton
-   Local cColor
-   Default cCaption to ""
-   ::Buffer := .F.
-   ::Caption := cCaption
-   ::Cargo := Nil
-   ::Col := nCol
-   ::fBlock := Nil
-   ::sBlock := Nil
-   ::hasfocus := .F.
-   ::message := ""
-   ::Row := nRow
-   ::lCursor := Nil
-   ::style := "<>"
-   if ( isdefcolor() )
-      ::Colorspec := "W/N,N/W,W+/N,W+/N"
-   else
-      cColor := SetColor()
-      ::Colorspec := __guicolor(cColor, 5) + "," + ;
-      __guicolor(cColor, 2) + "," + __guicolor(cColor, 1) + ;
-      "," + __guicolor(cColor, 4)
-   endif
+METHOD GetStyle( cStyle ) CLASS HBPushButton
 
-Return Self
+   IF ( !( ISNIL( cStyle ) ) )
+      ::curStyle := IIF( Valtype( cStyle ) == "C" .and. Ltrim( Str( Len( cStyle ) ) ) $ "0�2�8", cStyle, )
+
+   ENDIF
+
+RETURN ::curStyle
+
+METHOD New( nRow, nCol, cCaption ) CLASS HBPushButton
+
+   LOCAL cColor
+   DEFAULT cCaption TO ""
+   ::Buffer   := .F.
+   ::Caption  := cCaption
+   ::Cargo    := Nil
+   ::Col      := nCol
+   ::fBlock   := Nil
+   ::sBlock   := Nil
+   ::HasFocus := .F.
+   ::Message  := ""
+   ::Row      := nRow
+   ::lCursor  := Nil
+   ::Style    := "<>"
+
+   IF ( Isdefcolor() )
+      ::ColorSpec := "W/N,N/W,W+/N,W+/N"
+   ELSE
+      cColor      := Setcolor()
+      ::ColorSpec := __GuiColor( cColor, 5 ) + "," + ;
+                                 __GuiColor( cColor, 2 ) + "," + __GuiColor( cColor, 1 ) + ;
+                                 "," + __GuiColor( cColor, 4 )
+   ENDIF
+
+RETURN Self
 
 METHOD SetFocus() CLASS HBPushButton
 
-   if ( !::hasfocus .AND. ISBLOCK( ( ::lCursor := setcursor(0), ;
-         ::hasfocus := .T., ::display(), ::fBlock ) ) )
-      eval(::fBlock)
-   endif
+   IF ( !::HasFocus .and. ISBLOCK( ( ::lCursor := Setcursor( 0 ), ;
+        ::HasFocus := .T., ::display(), ::fBlock ) ) )
+      Eval( ::fBlock )
+   ENDIF
+
 RETURN Self
 
-METHOD  _Select( nPos ) CLASS HBPushButton
-   local  nCurPos := nPos
-   if ( ::hasfocus )
+METHOD _Select( nPos ) CLASS HBPushButton
+
+   LOCAL nCurPos := nPos
+
+   IF ( ::HasFocus )
       ::Buffer := .T.
       ::display()
-      if ( ISNUMBER( nPos ) )
-         if ( nPos == 32 )
-            InKey(0.4)
-            do while ( nCurPos == 32 )
-               nCurPos := InKey(0.1)
-            enddo
-         else
-            do while ( nPos == InKey(0) )
-            enddo
-         endif
-      endif
-      if ( ISBLOCK( ::sBlock ) )
-         eval(::sBlock)
-      endif
+
+      IF ( Isnumber( nPos ) )
+
+         IF ( nPos == 32 )
+            Inkey( 0.4 )
+
+            DO WHILE ( nCurPos == 32 )
+               nCurPos := Inkey( 0.1 )
+            ENDDO
+
+         ELSE
+
+            DO WHILE ( nPos == Inkey( 0 ) )
+            ENDDO
+
+         ENDIF
+
+      ENDIF
+
+      IF ( ISBLOCK( ::sBlock ) )
+         Eval( ::sBlock )
+      ENDIF
+
       ::Buffer := .F.
       ::display()
-   endif
+   ENDIF
+
 RETURN Self
 
 METHOD KillFocus() CLASS HBPushButton
 
-   if ( ::hasfocus )
-      ::hasfocus := .F.
-      if ( ISBLOCK( ::fBlock ) )
-         eval(::fBlock)
-      endif
+   IF ( ::HasFocus )
+
+      ::HasFocus := .F.
+
+      IF ( ISBLOCK( ::fBlock ) )
+         Eval( ::fBlock )
+      ENDIF
+
       ::display()
-      setcursor(::lCursor)
-   endif
-   RETURN Self
+      Setcursor( ::lCursor )
+   ENDIF
+
+RETURN Self
 
 METHOD HitTest( nRow, nCol ) CLASS HBPushButton
 
-   local nCurrentPos := 1, nLen:= Len(::Caption), cStyle, nAmpPos
+   LOCAL nCurrentPos := 1
+   LOCAL nLen        := Len( ::Caption )
+   LOCAL cStyle
+   LOCAL nAmpPos
 
-   if ( ( nAmpPos := At("&", ::Caption) ) == 0 )
-   elseif ( nAmpPos < nLen )
-      nLen--
-   endif
-   if ( ( cStyle := Len(::Style) ) == 2 )
-      nLen := nLen + 2
-   elseif ( cStyle == 8 )
+   IF ( ( nAmpPos := At( "&", ::Caption ) ) == 0 )
+   ELSEIF ( nAmpPos < nLen )
+      nLen --
+   ENDIF
+
+   IF ( ( cStyle := Len( ::Style ) ) == 2 )
+      nLen += 2
+   ELSEIF ( cStyle == 8 )
       nCurrentPos := 3
-      nLen := nLen + 2
-   endif
-   do case
-   case nRow < ::Row
-   case nCol < ::Col
-   case nRow >= ::Row + nCurrentPos
-   case nCol < ::Col + nLen
-      return -2049
-   endcase
-   return 0
+      nLen        += 2
+   ENDIF
 
-METHOD Display() CLASS HBPushButton
+   DO CASE
+      CASE nRow < ::Row
+      CASE nCol < ::Col
+      CASE nRow >= ::Row + nCurrentPos
+      CASE nCol < ::Col + nLen
+         RETURN - 2049
+   ENDCASE
 
-   local cOldColor := SetColor(), cStyle, nCurCol, ;
-      cCaption, nRow := Row(), nCol:= Col(), nCurRow, nAmpPos, ;
-      cColor4, nColorNum, nBuffer
+RETURN 0
+
+METHOD DISPLAY() CLASS HBPushButton
+
+   LOCAL cOldColor := Setcolor()
+   LOCAL cStyle
+   LOCAL nCurCol
+   LOCAL cCaption
+   LOCAL nRow      := Row()
+   LOCAL nCol      := Col()
+   LOCAL nCurRow
+   LOCAL nAmpPos
+   LOCAL cColor4
+   LOCAL nColorNum
+   LOCAL nBuffer
 
    cStyle := ::Style
 
-   dispbegin()
-   if ( ::Buffer )
-      set color to (__guicolor(::Colorspec, 3))
-      cColor4 := __guicolor(::Colorspec, 4)
-      if ( Len(cColor4) == 0 )
+   Dispbegin()
+
+   IF ( ::Buffer )
+      SET COLOR TO (__GuiColor(::ColorSpec, 3))
+      cColor4 := __GuiColor( ::ColorSpec, 4 )
+
+      IF ( Len( cColor4 ) == 0 )
          nColorNum := 0
-      else
-         nColorNum := _getnumcol(cColor4)
-      endif
-   elseif ( ::hasfocus )
-      set color to (__guicolor(::Colorspec, 2))
-      cColor4 := __guicolor(::Colorspec, 4)
-      if ( Len(cColor4) == 0 )
+      ELSE
+         nColorNum := _getnumcol( cColor4 )
+      ENDIF
+
+   ELSEIF ( ::HasFocus )
+      SET COLOR TO (__GuiColor(::ColorSpec, 2))
+      cColor4 := __GuiColor( ::ColorSpec, 4 )
+
+      IF ( Len( cColor4 ) == 0 )
          nColorNum := 0
-      else
-         nColorNum := _getnumcol(cColor4)
-      endif
-   else
-      set color to (__guicolor(::Colorspec, 1))
-      cColor4 := __guicolor(::Colorspec, 4)
-      if ( Len(cColor4) == 0 )
+      ELSE
+         nColorNum := _getnumcol( cColor4 )
+      ENDIF
+
+   ELSE
+      SET COLOR TO (__GuiColor(::ColorSpec, 1))
+      cColor4 := __GuiColor( ::ColorSpec, 4 )
+
+      IF ( Len( cColor4 ) == 0 )
          nColorNum := 0
-      else
-         nColorNum := _getnumcol(cColor4)
-      endif
-   endif
-   nCurRow := ::Row
-   nCurCol := ::Col
+      ELSE
+         nColorNum := _getnumcol( cColor4 )
+      ENDIF
+
+   ENDIF
+
+   nCurRow  := ::Row
+   nCurCol  := ::Col
    cCaption := ::Caption
-   if ( ( nAmpPos := At("&", cCaption) ) == 0 )
-   elseif ( nAmpPos == Len(cCaption) )
+
+   IF ( ( nAmpPos := At( "&", cCaption ) ) == 0 )
+   ELSEIF ( nAmpPos == Len( cCaption ) )
       nAmpPos := 0
-   else
-      cCaption := stuff(cCaption, nAmpPos, 1, "")
-   endif
-   if ( !Empty(cStyle) )
-      nCurCol++
-         if ( Len(cStyle) == 2 )
-            SetPos(::Row, ::Col)
-            ?? SubStr(cStyle, 1, 1)
-            SetPos(::Row, ::Col + Len(cCaption) + 1)
-            ?? SubStr(cStyle, 2, 1)
-         else
-            nCurRow++
-               dispbox(::Row, ::Col, ::Row + 2, ::Col + Len(cCaption) + 1 , cStyle)
-         endif
-   endif
-   if ( ::Buffer )
+   ELSE
+      cCaption := Stuff( cCaption, nAmpPos, 1, "" )
+   ENDIF
+
+   IF ( !Empty( cStyle ) )
+      nCurCol ++
+
+      IF ( Len( cStyle ) == 2 )
+         Setpos( ::Row, ::Col )
+         ?? Substr( cStyle, 1, 1 )
+         Setpos( ::Row, ::Col + Len( cCaption ) + 1 )
+         ?? Substr( cStyle, 2, 1 )
+      ELSE
+         nCurRow ++
+         Dispbox( ::Row, ::Col, ::Row + 2, ::Col + Len( cCaption ) + 1, cStyle )
+      ENDIF
+
+   ENDIF
+
+   IF ( ::Buffer )
       nBuffer := 1
-   else
+   ELSE
       nBuffer := 0
-   endif
-   if ( !Empty(cCaption) )
+   ENDIF
 
-         SetPos(nCurRow, nCurCol)
-         ?? cCaption
-         if ( nAmpPos != 0 )
-            set color to (cColor4)
-            SetPos(nCurRow, nCurCol + nAmpPos - 1)
-            ?? SubStr(cCaption, nAmpPos, 1)
-         endif
+   IF ( !Empty( cCaption ) )
 
-   endif
-   dispend()
+      Setpos( nCurRow, nCurCol )
+      ?? cCaption
 
-   set color to (cOldColor)
-   SetPos(nRow, nCol)
-   Return Self
-Function PushButton(nRow,nCol,cCaption)
-      if ( ( ISNUMBER( nRow ) ) ) .and. ( ( ISNUMBER( nCol ) ) )
-         Default cCaption to ""
-         Return HBPushButton():New(nRow,nCol,cCaption)
-      endif
-return Nil
+      IF ( nAmpPos != 0 )
+         Set COLOR TO (cColor4)
+         Setpos( nCurRow, nCurCol + nAmpPos - 1 )
+         ?? Substr( cCaption, nAmpPos, 1 )
+      ENDIF
 
-function _PUSHBUTT_( cCaption, cMessage, cColor, bFBlock, bSBlock, cStyle)
+   ENDIF
 
-   local oPushButton
-   default cCaption to ""
-   oPushButton := pushbutton(Row(), Col(), cCaption)
-   if ( !( ISNIL( oPushButton ) ) )
-      oPushButton:caption := if(cCaption !=Nil,cCaption,)
-      oPushButton:colorspec := if(cColor !=Nil,cColor,)
-      oPushButton:message := if(cMessage !=Nil,cMessage,)
-      oPushButton:style := if(cStyle !=Nil,cStyle,)
-      oPushButton:fblock := if(bFBlock !=Nil,bFBlock,)
-      oPushButton:sblock := if(bSBlock !=Nil,bSBlock,)
-   endif
-   return oPushButton
+   Dispend()
+
+   SET COLOR TO (cOldColor)
+   Setpos( nRow, nCol )
+RETURN Self
+
+FUNCTION PushButton( nRow, nCol, cCaption )
+
+   IF ( ( Isnumber( nRow ) ) ) .and. ( ( Isnumber( nCol ) ) )
+      DEFAULT cCaption TO ""
+      RETURN HBPushButton():New( nRow, nCol, cCaption )
+   ENDIF
+
+RETURN Nil
+
+FUNCTION _PUSHBUTT_( cCaption, cMessage, cColor, bFBlock, bSBlock, cStyle )
+
+   LOCAL oPushButton
+   DEFAULT cCaption TO ""
+   oPushButton := Pushbutton( Row(), Col(), cCaption )
+
+   IF ( !( ISNIL( oPushButton ) ) )
+      oPushButton:Caption   := IIF( cCaption != Nil, cCaption, )
+      oPushButton:ColorSpec := IIF( cColor != Nil, cColor, )
+      oPushButton:Message   := IIF( cMessage != Nil, cMessage, )
+      oPushButton:Style     := IIF( cStyle != Nil, cStyle, )
+      oPushButton:fBlock    := IIF( bFBlock != Nil, bFBlock, )
+      oPushButton:sBlock    := IIF( bSBlock != Nil, bSBlock, )
+   ENDIF
+
+RETURN oPushButton
 
 FUNCTION _GETNUMCOL( Arg1 )
-   Local aColors:={{"N+",8},{"B+",9},{"G+",10},{"BG+",11},;
-   {"R+",12},{"RB+",13},{"GR+",14},{"W+",15},{"BG",3},{"RB",5},;
-   {"GR",6},{"B",1},{"G",2},{"R",4},{"W",7}}
-   Local  nPos := At("/", Arg1)
-   Local nReturn
-   if ( nPos > 1 )
-      Arg1 := SubStr(Arg1, 1, nPos - 1)
-   elseif ( nPos == 1 )
+
+   LOCAL aColors := { { "N+", 8 }, { "B+", 9 }, { "G+", 10 }, { "BG+", 11 }, ;
+                      { "R+", 12 }, { "RB+", 13 }, { "GR+", 14 }, { "W+", 15 }, { "BG", 3 }, { "RB", 5 }, ;
+                      { "GR", 6 }, { "B", 1 }, { "G", 2 }, { "R", 4 }, { "W", 7 } }
+   LOCAL nPos    := At( "/", Arg1 )
+   LOCAL nReturn
+
+   IF ( nPos > 1 )
+      Arg1 := Substr( Arg1, 1, nPos - 1 )
+   ELSEIF ( nPos == 1 )
       Arg1 := ""
-   endif
-   nReturn:=ascan(aColors,{|a,b| a[1]==arg1})      
-   if nReturn>0
-      return aColors[nReturn,2]
-   endif
-   return 0
+   ENDIF
+
+   nReturn := Ascan( aColors, { | a, b | a[ 1 ] == arg1 } )
+
+   IF nReturn > 0
+      RETURN aColors[ nReturn, 2 ]
+   ENDIF
+
+RETURN 0
 #endif
