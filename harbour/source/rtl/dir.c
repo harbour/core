@@ -6,16 +6,30 @@
 #include <string.h>
 #include <itemapi.h>
 
+#define HB_CHARUPPER(c)    ((c)>='a'&&(c)<='z'?(c)-32:(c))
+
 #if defined(__GNUC__) || defined(__DJGPP__)
   #include <sys/types.h>
   #include <sys/stat.h>
-  #include <unistd.h>
   #include <fcntl.h>
   #include <errno.h>
   #include <dirent.h>
+  #include <io.h>
+  #include <time.h>
+
+  #include <unistd.h>
 
   #if !defined(HAVE_POSIX_IO)
   #define HAVE_POSIX_IO
+  #endif
+
+  #if !defined(FA_RDONLY)
+    #define FA_RDONLY       1
+    #define FA_HIDDEN       2
+    #define FA_SYSTEM       4
+    #define FA_LABEL        8
+    #define FA_DIREC        16
+    #define FA_ARCH         32
   #endif
 
   #define PATH_SEPARATOR '/'
@@ -106,9 +120,7 @@ HARBOUR DIRECTORY( void )
    char   aatrib[7];
    char   string[_POSIX_PATH_MAX+1];
    char * pos;
-   long   nsize;
    long   fsize;
-   int    i;
    DIR  * dir;
    time_t ftime;
 
@@ -211,7 +223,7 @@ HARBOUR DIRECTORY( void )
       printf("\n fname fext %s %s ",fname,fext);
       while(0==getchar());
 */
-      if (StrMatchDos( fname,pfname) && StrMatchDos( fext,pfext))
+      if (hb_strMatchDOS( fname,pfname) && hb_strMatchDOS( fext,pfext))
       {
 
          ddate[0] = '\0';
@@ -300,7 +312,7 @@ HARBOUR DIRECTORY( void )
          if( arg2_it )
          {
             strcpy(string, _parc(2));
-            pos = strchr(strupr(string),*aatrib);
+            pos = strchr(HB_CHARUPPER(string),*aatrib);
          }
          else
             pos = 1;
@@ -341,7 +353,7 @@ HARBOUR DIRECTORY( void )
    return;
 }
 
-static  BOOL  StrMatchDos (char *pszString, char *pszMask)
+static  BOOL  hb_strMatchDOS (char *pszString, char *pszMask)
 {
    while (*pszMask && *pszString)
    {
@@ -356,12 +368,12 @@ static  BOOL  StrMatchDos (char *pszString, char *pszMask)
                pszString++;
             else
             {
-               while (strupr(pszString) != strupr(pszMask))
+               while (HB_CHARUPPER(pszString) != HB_CHARUPPER(pszMask))
                {
                   if (!(*(++pszString)))
                      return (FALSE);
                }
-               while (strupr(pszString) == strupr(pszMask))
+               while (HB_CHARUPPER(pszString) == HB_CHARUPPER(pszMask))
                {
                   if (!(*(++pszString)))
                      break;
@@ -370,7 +382,7 @@ static  BOOL  StrMatchDos (char *pszString, char *pszMask)
             }
       }
       else
-         if (strupr(pszMask) != strupr(pszString) && *pszMask != '?')
+         if (HB_CHARUPPER(pszMask) != HB_CHARUPPER(pszString) && *pszMask != '?')
             return (FALSE);
          else
          {
