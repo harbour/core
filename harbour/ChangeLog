@@ -8,7 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
      * cBuffer not initialized, fixed.
-2002-01-14 31:32 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
+
+2002-01-16 00:44 UTC+0100 Maurilio Longo <maurilio.longo@libero.it>
+  * common/hbffind.c
+    ! DosFindFirst() call on OS/2 section of file was wrong (parameter findcount was not
+      set to any correct value)
+      NOTE: OS/2 builds of Alpha 38 _are broken_ because of this bug
 
 2002-01-15 22:30 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * contrib/rdd_ads/ads1.c

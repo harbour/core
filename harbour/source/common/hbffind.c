@@ -600,7 +600,7 @@ PHB_FFIND hb_fsFindFirst( const char * pszFileName, USHORT uiAttr )
       if( info->hFindFile != INVALID_HANDLE_VALUE )
       {
          if( info->dwAttr == 0 ||
-             ( info->pFindFileData.dwFileAttributes == 0x80 ) ||
+             ( info->pFindFileData.dwFileAttributes == FILE_ATTRIBUTE_NORMAL ) ||
              ( info->dwAttr & info->pFindFileData.dwFileAttributes ))
          {
             bFound = TRUE;
@@ -612,7 +612,7 @@ PHB_FFIND hb_fsFindFirst( const char * pszFileName, USHORT uiAttr )
             while( FindNextFile( info->hFindFile, &info->pFindFileData ) )
             {
                if( info->dwAttr == 0 ||
-                 ( info->pFindFileData.dwFileAttributes == 0x80 ) ||
+                 ( info->pFindFileData.dwFileAttributes == FILE_ATTRIBUTE_NORMAL ) ||
                  ( info->dwAttr & info->pFindFileData.dwFileAttributes ) )
                {
                   bFound = TRUE;
@@ -663,56 +663,57 @@ PHB_FFIND hb_fsFindFirst( const char * pszFileName, USHORT uiAttr )
          strcpy( pattern, "*.*" );
 
       if( strlen( pattern ) > 0 )
-       {
-	  strcpy( string, pattern );
-          pos = strrchr( string, '.' );
-          if( pos )
-          {
-             strcpy( info->pfext, pos + 1 );
-             *pos = '\0';
-             strcpy( info->pfname, string );
-          }
-          else
-	  {
-             strcpy( info->pfname, string );
-             info->pfext[ 0 ] = '\0';
-          }
-       }
+      {
+         strcpy( string, pattern );
+         pos = strrchr( string, '.' );
+         if( pos )
+         {
+            strcpy( info->pfext, pos + 1 );
+            *pos = '\0';
+            strcpy( info->pfname, string );
+         }
+         else
+	 {
+            strcpy( info->pfname, string );
+            info->pfext[ 0 ] = '\0';
+         }
+      }
 
-       if( strlen( info->pfname ) < 1 )
-	  strcpy( info->pfname, "*" );
+      if( strlen( info->pfname ) < 1 )
+         strcpy( info->pfname, "*" );
       tzset();
 
       info->dir = opendir( dirname );
 
       if( info->dir != NULL)
+         while( ( info->entry = readdir( info->dir ) ) != NULL )
+         {
+            strcpy( string, info->entry->d_name );
+            pos = strrchr( string, OS_PATH_DELIMITER );
+            pos = strrchr( pos ? ( pos + 1 ) : string, '.' );
 
-          while( ( info->entry = readdir( info->dir ) ) != NULL ){
-               strcpy( string, info->entry->d_name );
-               pos = strrchr( string, OS_PATH_DELIMITER );
-               pos = strrchr( pos ? ( pos + 1 ) : string, '.' );
+            if( pos && ! ( pos == &string[ 0 ] ) )
+            {
+               strcpy( fext, pos + 1 );
+               *pos = '\0';
+            }
+            else
+               fext[ 0 ] = '\0';
 
-               if( pos && ! ( pos == &string[ 0 ] ) )
-               {
-                  strcpy( fext, pos + 1 );
-                  *pos = '\0';
-               }
-               else
-                  fext[ 0 ] = '\0';
+            pos = strrchr( string, OS_PATH_DELIMITER );
+            strcpy( fname, pos ? ( pos + 1 ) : string );
 
-               pos = strrchr( string, OS_PATH_DELIMITER );
-               strcpy( fname, pos ? ( pos + 1 ) : string );
+            if( !*fname )
+               strcpy( fname, "*" );
 
-               if( !*fname )
-                  strcpy( fname, "*" );
-
-         /* TOFIX: uiAttr check */
-                if( hb_strMatchRegExp( fname, info->pfname ) && hb_strMatchRegExp( fext, info->pfext ) ) {
-                  bFound=TRUE;
-                  break;
+            /* TOFIX: uiAttr check */
+            if( hb_strMatchRegExp( fname, info->pfname ) && hb_strMatchRegExp( fext, info->pfext ) )
+            {
+               bFound=TRUE;
+               break;
             }
 
-      }
+         }
       else
          bFound = FALSE;
    }
@@ -777,7 +778,7 @@ BOOL hb_fsFindNext( PHB_FFIND ffind )
       while( FindNextFile( info->hFindFile, &info->pFindFileData ) )
       {
          if( info->dwAttr == 0 ||
-             ( info->pFindFileData.dwFileAttributes == 0x80 ) ||
+             ( info->pFindFileData.dwFileAttributes == FILE_ATTRIBUTE_NORMAL ) ||
              ( info->dwAttr & info->pFindFileData.dwFileAttributes ))
          {
             bFound = TRUE;
@@ -797,36 +798,36 @@ BOOL hb_fsFindNext( PHB_FFIND ffind )
 
       bFound=FALSE;
 
-       while( ( info->entry = readdir( info->dir ) ) != NULL )
-        {
+      while( ( info->entry = readdir( info->dir ) ) != NULL )
+      {
 
-           strcpy( string, info->entry->d_name );
-           pos = strrchr( string, OS_PATH_DELIMITER );
-           pos = strrchr( pos ? ( pos + 1 ) : string, '.' );
+         strcpy( string, info->entry->d_name );
+         pos = strrchr( string, OS_PATH_DELIMITER );
+         pos = strrchr( pos ? ( pos + 1 ) : string, '.' );
 
-           if( pos && ! ( pos == &string[ 0 ] ) )
-           {
-              strcpy( fext, pos + 1 );
-              *pos = '\0';
-           }
-           else
-              fext[ 0 ] = '\0';
-
-           pos = strrchr( string, OS_PATH_DELIMITER );
-           strcpy( fname, pos ? ( pos + 1 ) : string );
-           if( !*fname )
-              strcpy( fname, "*" );
-
-           /* TOFIX: uiAttr check */
-           bTest=hb_strMatchRegExp( fname, info->pfname ) && hb_strMatchRegExp( fext, info->pfext ) ;
-
-           if 	(bTest)
-	    {
-              bFound=TRUE;
-              break;
-	    }
-
+         if( pos && ! ( pos == &string[ 0 ] ) )
+         {
+            strcpy( fext, pos + 1 );
+            *pos = '\0';
          }
+         else
+            fext[ 0 ] = '\0';
+
+         pos = strrchr( string, OS_PATH_DELIMITER );
+         strcpy( fname, pos ? ( pos + 1 ) : string );
+         if( !*fname )
+            strcpy( fname, "*" );
+
+         /* TOFIX: uiAttr check */
+         bTest=hb_strMatchRegExp( fname, info->pfname ) && hb_strMatchRegExp( fext, info->pfext ) ;
+
+         if( bTest )
+         {
+            bFound=TRUE;
+            break;
+         }
+
+      }
 
    }
 
