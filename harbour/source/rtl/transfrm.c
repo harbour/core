@@ -197,7 +197,7 @@ HB_FUNC( TRANSFORM )
 
          /* Grab enough */
 
-         szResult = ( char * ) hb_xgrab( ulExpLen + ulPicLen + 1);
+         szResult = ( char * ) hb_xgrab( ulExpLen + ulPicLen + 1 );
          ulResultPos = 0;
 
          /* Support date function for strings */

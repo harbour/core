@@ -8,6 +8,41 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+     * change definition of INIT/EXIT PROCEDURE from HB_FUNC_STATIC()
+     to HB_FUNC_INIT()/HB_FUNC_EXIT() to avoid ambiguity
+   * include/hbdefs.h
+     + Added checking of ulSize == 0, only when 
+
+2002-01-06 09:55 UTC-0300 Luiz Rafael Culik <culik@sl.conex.net>
+   * source/rtl/isprint.c
+     * Fixed an small typo
+   * utils/hbmake/hbmake.prg
+     * Updated the date
+       NOTE to translators or language file maintainers: 
+       The two new strings should be translated to the proper 
+   * source/lang/msgpt.c
+     * Updated copyright headers to the new one in some language 
+   * source/rtl/isprint.c
+     * Change IsPrinter() logic for Win32;If no Printer is passed, it check the
+       default instaled printer.If an Printer name is passed, the name should match
+     ! Made more multiplatform by passing the complete printer 
+
+2002-01-06 10:00 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+     + Added a C callable interface hb_printerIsReady() (not 
+     + Added checking of ulSize == 0, only when
+     + Win32 version reworked so that it checks for the printer 
+       name passed to the function. This also made the program 
+   * include/error.ch
+   * include/hbapilng.h
+   * source/lang/*.c
+     + Added two new internal errors.
+       NOTE to translators or language file maintainers:
+       The two new strings should be translated to the proper
+       languages from English.
+     * Updated copyright headers to the new one in some language
+       files, where I either hold copyright, or the holder is unknown.
+
    * source/rtl/isprint.c
      ! Made more multiplatform by passing the complete printer
        name to the fsOpen() function.

@@ -75,10 +75,16 @@ HB_FUNC( DESCEND )
       if( HB_IS_STRING( pItem ) )
       {
          ULONG ulLen = hb_itemGetCLen( pItem );
-         char * szBuffer = ( char * ) hb_xgrab( ulLen + 1);
-         hb_strDescend( szBuffer, hb_itemGetCPtr( pItem ), ulLen );
-         hb_retclen( szBuffer, ulLen );
-         hb_xfree( szBuffer );
+
+         if( ulLen > 0 )
+         {
+            char * szBuffer = ( char * ) hb_xgrab( ulLen );
+            hb_strDescend( szBuffer, hb_itemGetCPtr( pItem ), ulLen );
+            hb_retclen( szBuffer, ulLen );
+            hb_xfree( szBuffer );
+         }
+         else
+            hb_retc( "" );
       }
       else if( HB_IS_DATE( pItem ) )
          hb_retnl( 5231808 - hb_itemGetDL( pItem ) );

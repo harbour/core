@@ -188,6 +188,8 @@ static HB_LANG s_lang =
       "An item was going to be copied to itself from %s", 
       "Invalid symbol item passed as memvar %s",
       "Memory buffer overflow",
+      "hb_xgrab requested to allocate zero byte",
+      "hb_xrealloc requested to resize to zero byte",
    
       /* Texts */
    

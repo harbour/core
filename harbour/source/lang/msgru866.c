@@ -188,6 +188,8 @@ static HB_LANG s_lang =
       "%s: попытка копировать элемент на себя",
       "%s: неверное имя переменной",
       "Переполнение буфера памяти",
+      "hb_xgrab requested to allocate zero byte",
+      "hb_xrealloc requested to resize to zero byte",
 
       /* Texts */
 
