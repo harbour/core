@@ -6,6 +6,9 @@
    * source/pp/pptable.c
      ! .FMT -> .fmt (to be multiplatform friendly)
 
+   * source/rtl/dummy.prg
+     - DBSETRELATION(), DBCLEARRELATION() removed.
+
    * makefile.bc
      ! Fixed PP dependency for HARBOUR.EXE
 
