@@ -3128,7 +3128,6 @@ static int NextName( char ** sSource, char * sDest )
            **sSource = '\0';
            if( strchr( pString, '"' ) == NULL )
            {
-              printf( "OOps!\n" );
               *pString = '"';
               **sSource = '"';
            }
