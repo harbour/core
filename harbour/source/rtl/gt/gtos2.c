@@ -118,9 +118,6 @@ void hb_gt_Scroll( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight,
 /* Chen Kedem <niki@actcom.co.il> */
 
    BYTE bCell[ 2 ];                            /* character/attribute pair */
-
-   if( sVert > 128 ) sVert = sVert - 256;
-   if( sHoriz > 128 ) sHoriz = sHoriz - 256;
    bCell [ 0 ] = ' ';
    bCell [ 1 ] = attr;
    if( ( sVert | sHoriz ) == 0 )               /* both zero, clear region */

@@ -143,6 +143,7 @@ HB_CALL_ON_STARTUP_BEGIN( init_input_mode )
 
   tcgetattr( STDIN_FILENO, &ta );
   ta.c_lflag &= ~( ICANON | ECHO );
+  ta.c_iflag &= ~ICRNL;
   ta.c_cc[ VMIN ] = 0;
   ta.c_cc[ VTIME ] = 0;
   tcsetattr( STDIN_FILENO, TCSAFLUSH, &ta );
@@ -428,7 +429,7 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
 #elif defined(OS_UNIX_COMPATIBLE)
       /* TODO: */
       if( ! read( STDIN_FILENO, &ch, 1 ) )
-         return;
+         ch = 0;
 #elif defined(__CYGWIN__)
       /* TODO: */
       /* NOTE: Cygwin needs the Unix support, but for some reason it
@@ -439,7 +440,7 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
          /* Only read keyboard input here if not called
             from the HVM and the typeahead buffer is empty. */
          read( STDIN_FILENO, &ch, 1 );            /* Read a key */
-         if( ch == '\n' ) ch = '\r';              /* Convert LF to CR */
+///         if( ch == '\n' ) ch = '\r';              /* Convert LF to CR */
       }
 #else
       /* TODO: Support for other platforms, such as Mac */

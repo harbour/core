@@ -82,7 +82,7 @@
    #include <io.h>
 #endif
 
-#if defined(OS_UNIX_COMPATIBLE) || defined(__CYGWIN__)
+#if defined(__CYGWIN__)
    #include <unistd.h>
    #include <termios.h>
 #endif
@@ -1094,31 +1094,6 @@ HARBOUR HB___ACCEPT( void ) /* Internal Clipper function used in ACCEPT command 
    if( hb_pcount() >= 1 )          /* cPrompt passed                         */
       HB_QOUT();
 
-#if defined (OS_UNIX_COMPATIBLE) || defined(__CYGWIN__)
-   /* Read the data using fgets(), because hb_inkeyPoll() doesn't support
-       Unix compatible operating systems yet. */
-   {
-      /* Set up for echoed canonical input */
-      struct termios ta;
-      tcgetattr( STDIN_FILENO, &ta );
-      ta.c_lflag |= ( ICANON | ECHO );
-      tcsetattr( STDIN_FILENO, TCSAFLUSH, &ta );
-
-      /* Avoid an undefined variable warning */
-      input = 0;
-
-      /* Get a line of user input */
-      s_szAcceptResult[ 0 ] = '\0';          /* start with something defined */
-      if( fgets( s_szAcceptResult, ACCEPT_BUFFER_LEN, stdin ) )
-         strtok( s_szAcceptResult, "\n" ); /* strip off the trailing newline if it exists */
-
-      /* Restore unechoed non-canonical input */
-      ta.c_lflag &= ~( ICANON | ECHO );
-      tcsetattr( STDIN_FILENO, TCSAFLUSH, &ta );
-
-      ulLen = strlen( s_szAcceptResult );
-   }
-#else
    ulLen = 0;
    input = 0;
    while( input != K_ENTER )
@@ -1152,7 +1127,6 @@ HARBOUR HB___ACCEPT( void ) /* Internal Clipper function used in ACCEPT command 
       }
    }
    s_szAcceptResult[ ulLen ] = '\0';
-#endif
    hb_retc( s_szAcceptResult );
 }
 

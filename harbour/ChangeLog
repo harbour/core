@@ -1,3 +1,23 @@
+19990921-12:25 EDT David G. Holm <dholm@jsd-llc.com>
+
+  * source/rtl/console.c
+    - Removed special handling for Unix and Cygwin in HB___ACCEPT(),
+      per Georg Lehner
+
+  * source/rtl/filesys.c
+    ! Corrected convert_open_flags() check for FO_READONLY to
+      mask out the share-mode flags before doing the check
+    ! Switched OS/2 from open() to sopen() in hb_fsOpen()
+
+  * source/rtl/inkey.c
+    % Made two changes to Unix support, per Georg Lehner:
+      1) Added 'ta.c_iflag &= ~ICRNL;'
+      2) Changed 'return;' in hb_inkeyPoll() to 'ch = 0;'
+
+  * source/rtl/gt/gtos2.c
+    ! Removed the unsigned to signed conversions for sVert and sHoriz,
+      now that the conversions are no longer needed
+
 19990921-15:33 GMT+3 Alexander Kresin
   * source/hbpp/hbpp.c
     * Yet another bug fixed with restrivted match markers consisting of more

@@ -206,21 +206,23 @@ static int convert_open_flags( USHORT uiFlags )
    /* by default FO_READ + FO_COMPAT is set */
    int result_flags = 0;
 
-   result_flags |= O_BINARY;
-/* DEBUG: printf("\nconvert_open_flags: O_BINARY"); */
+/* DEBUG: printf("\nHarbour open flags: 0x%04x", uiFlags); */
 
-#if defined( _MSC_VER ) || defined(__MINGW32__)
-   if( uiFlags == 0 )
+   result_flags |= O_BINARY;
+/* DEBUG: printf(", O_BINARY"); */
+
+#if defined( _MSC_VER ) || defined(__MINGW32__) || defined(__IBMCPP__)
+   if( ( uiFlags & ( FO_WRITE | FO_READWRITE ) ) == FO_READ )
    {
       result_flags |= O_RDONLY;
-/* DEBUG: printf(" O_RDONLY"); */
+/* DEBUG: printf(", O_RDONLY"); */
    }
 #else
 
-   if( uiFlags == 0 )
+   if( ( uiFlags & ( FO_WRITE | FO_READWRITE ) ) == FO_READ )
    {
       result_flags |= ( O_RDONLY | SH_COMPAT );
-/* DEBUG: printf(" O_RDONLY SH_COMPAT"); */
+/* DEBUG: printf(", O_RDONLY SH_COMPAT"); */
    }
 #endif
 
@@ -228,48 +230,48 @@ static int convert_open_flags( USHORT uiFlags )
    if( uiFlags & FO_WRITE )
    {
       result_flags |= O_WRONLY;
-/* DEBUG: printf(" O_WRONLY"); */
+/* DEBUG: printf(", O_WRONLY"); */
    }
 
    if( uiFlags & FO_READWRITE )
    {
       result_flags |= O_RDWR;
-/* DEBUG: printf(" O_RDWR"); */
+/* DEBUG: printf(", O_RDWR"); */
    }
 
-#if ! defined(_MSC_VER) && ! defined(__MINGW32__)
+#if ! defined(_MSC_VER) && ! defined(__MINGW32__) && ! defined(__IBMCPP__)
    /* shared flags */
    if( ( uiFlags & FO_DENYREAD ) == FO_DENYREAD )
    {
       result_flags |= SH_DENYRD;
-/* DEBUG: printf(" SH_DENYRD"); */
+/* DEBUG: printf(", SH_DENYRD"); */
    }
 
    else if( uiFlags & FO_EXCLUSIVE )
    {
       result_flags |= SH_DENYRW;
-/* DEBUG: printf(" SH_DENYRW"); */
+/* DEBUG: printf(", SH_DENYRW"); */
    }
 
    else if( uiFlags & FO_DENYWRITE )
    {
       result_flags |= SH_DENYWR;
-/* DEBUG: printf(" SH_DENYWR"); */
+/* DEBUG: printf(", SH_DENYWR"); */
    }
 
    if( uiFlags & FO_DENYNONE )
    {
       result_flags |= SH_DENYNO;
-/* DEBUG: printf(" SH_DENYNO"); */
+/* DEBUG: printf(", SH_DENYNO"); */
    }
 
    if( uiFlags & FO_SHARED )
    {
       result_flags |= SH_DENYNO;
-/* DEBUG: printf(" SH_DENYNO"); */
+/* DEBUG: printf(", SH_DENYNO"); */
    }
-/* DEBUG: printf(" 0x%04x\n", result_flags); */
 #endif
+/* DEBUG: printf(", C/C++ open flags: 0x%04x\n", result_flags); */
 
    return result_flags;
 }
@@ -322,7 +324,7 @@ FHANDLE hb_fsOpen( BYTE * pFilename, USHORT uiFlags )
 {
    FHANDLE hFileHandle;
 
-#if defined(HAVE_POSIX_IO)
+#if defined(HAVE_POSIX_IO) && ! defined(__IBMCPP__)
 
    errno = 0;
    hFileHandle = open( ( char * ) pFilename, convert_open_flags( uiFlags ) );
@@ -348,7 +350,7 @@ FHANDLE hb_fsOpen( BYTE * pFilename, USHORT uiFlags )
          hFileHandle = _open( ( char * ) pFilename, convert_open_flags( uiFlags ) );
       s_uiErrorLast = errno;
 
-#elif defined(__MINGW32__)
+#elif defined(__MINGW32__) || defined(__IBMCPP__)
 
       int iShare = SH_DENYNO;
 
@@ -585,7 +587,7 @@ ULONG   hb_fsWriteLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
        */
       if( uiWritten == ( USHORT )-1 || uiWritten == 0 )
          break;
-      
+
       ulWritten += ( ULONG ) uiWritten;
       pPtr += uiWritten;
    }
