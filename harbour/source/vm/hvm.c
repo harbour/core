@@ -719,8 +719,10 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_ENDBLOCK:
-            hb_vmEndBlock();
             HB_TRACE(HB_TR_INFO, ("(EndBlock)"));
+            hb_vmEndBlock();
+            if( pSymbols )
+               hb_memvarSetPrivatesBase( ulPrivateBase );
             return;   /* end of a codeblock - stop evaluation */
 
          /* BEGIN SEQUENCE/RECOVER/END SEQUENCE */
