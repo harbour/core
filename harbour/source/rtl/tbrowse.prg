@@ -1488,11 +1488,11 @@ function TBMOUSE( oBrowse, nMouseRow, nMouseCol )
 
    local Local1
    if ( oBrowse:hittest(nMouseRow, nMouseCol) == -5121 )
-   tracelog('mouse row ',oBrowse:mrowpos)
-   tracelog('mouse col ',oBrowse:mcolpos)
+// tracelog('mouse row ',oBrowse:mrowpos)
+// tracelog('mouse col ',oBrowse:mcolpos)
 
       Local1 := oBrowse:mrowpos - oBrowse:rowpos
-      tracelog('local1 ',local1)
+//    tracelog('local1 ',local1)
       do while ( Local1 < 0 )
          Local1++
          oBrowse:up()
@@ -1517,11 +1517,11 @@ function TBMOUSE( oBrowse, nMouseRow, nMouseCol )
 
 Method hitTest(mrow,mcol) CLASS TBROWSE
 	local i
-        tracelog('mrow',mrow)
-        tracelog('mcol',mrow)
+//      tracelog('mrow',mrow)
+//      tracelog('mcol',mrow)
         ::mRowPos := ::rowPos
         ::mColPos := ::colPos
-        tracelog(::mrowPos)
+//      tracelog(::mrowPos)
         if mRow< ::rect[1] .or. mRow > ::rect[3]
 		return HTNOWHERE
         endif

@@ -1031,7 +1031,7 @@ method TBReader( oGet,oGetsys,  aMsg ) Class HBGETLIST
 
       IF oGet:exitState == GE_NOEXIT  // Added.
      IF ( ::nHitcode == HTCELL )
-     tracelog('hitcode ',::nHitcode )
+//   tracelog('hitcode ',::nHitcode )
 	    // Replaces call to TBMouse( oTB, mROW(), mCOL() ):
 	    oTB:RowPos := oTb:mRowPos
 	    oTB:ColPos := oTb:mColPos

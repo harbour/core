@@ -9,6 +9,12 @@
 */
      * Fix bug in PICTURE '@S'
 
+     * Fix some bugs and formatting indentation from last changelog
+
+2002-03-19 20:59 UTC+0100 Tomaz Zupan <tomaz.zupan@orpo.si>
+   * contrib/odbc/odbc.c
+	
+
 2002-03-19 13:07 UTC+0100 Antonio Linares <alinares@fivetech.com>
    * source/vm/memvars.c
      * __MVSAVE() saves all variables (publics and privates)
