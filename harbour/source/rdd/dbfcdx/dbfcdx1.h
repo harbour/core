@@ -76,6 +76,8 @@ typedef struct _KEYINFO
 } KEYINFO;
 typedef KEYINFO * LPKEYINFO;
 
+struct _CDXTAG;    /* forward declaration */
+
 typedef struct HB_PAGEINFO_STRU
 {
    LONG      Page;
@@ -142,7 +144,6 @@ typedef struct
 } SORTDATA;
 
 typedef SORTDATA * LPSORTDATA;
-
 
 typedef struct
 {

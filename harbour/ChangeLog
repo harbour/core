@@ -1,3 +1,9 @@
+2000-11-23 19:50 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/rdd/dbfcdx/dbfcdx1.h
+        *added forward declaration of _CDXTAG structure to compile
+        in some C++ compilers (Watcom C++)
+
 2000-11-23 10:00 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/rtl/idle.c
    * source/rtl/inkey.c
