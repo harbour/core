@@ -243,7 +243,7 @@ Local cDep      := "#DEPENDS"
 Local cOpt      := "#OPTS"
 Local cCom      := "#COMMANDS"
 Local cBuild    := "#BUILD"
-Local cTemp     := ""
+Local cTemp     := "" 
 Local cTemp1    := ''
 Local aTemp     := {}
 Local lMacrosec := .f.
@@ -303,13 +303,30 @@ While !leof
            Endif
         Endif
         If aTemp[ 1 ] = "OBJFILES"
-           aObjs := listasArray2( atemp[ 2 ], " " )
+           aObjs := listasArray2( replacemacros(atemp[ 2 ]), " " )
+/*            for nPos:=1 to len(aObjs)
+               if at('$(CF)',aObjs[nPos])>0
+                  aObjs[nPos]:=replacemacros(aObjs[nPos])
+               endif
+            next
+  */
         Endif
         If atemp[ 1 ] = "CFILES"
-           aCs := listasArray2( atemp[ 2 ], " " )
+           aCs := listasArray2( replacemacros(atemp[ 2 ]), " " )
+   /*         for nPos:=1 to len(acs)
+               if at('$(CF)',acs[nPos])>0
+                  acs[nPos]:=replacemacros(acs[nPos])
+               endif
+            next*/
         Endif
         If atemp[ 1 ] = "RESFILES"
-           aRes := listasArray2( atemp[ 2 ], " " )
+           aRes := listasArray2( replacemacros(atemp[ 2 ]), " " )
+/*            for nPos:=1 to len(aRes)
+               if at('$(CF)',aRes[nPos])>0
+                  aRes[nPos]:=replacemacros(aRes[nPos])
+               endif
+            next*/
+
         Endif
 
      Else
@@ -716,6 +733,7 @@ For nCount := 1 To Len( aOrder )
          cOld  := cComm
       Endif
       For nFiles := 1 To Len( aPrgs )
+         
          nPos := Ascan( aCs, { | x | Left( x, At( ".", x ) ) == Left( aPrgs[ nFiles ], At( ".", aPrgs[ nFiles ] ) ) } )
          If nPos > 0
             cComm := Strtran( cComm, "o$*", "o" + aCs[ nPos ] )
@@ -737,7 +755,15 @@ For nCount := 1 To Len( aOrder )
          cOld  := ccomm
       Endif
       For nFiles := 1 To Len( aCs )
-         nPos := Ascan( aObjs, { | x | Left( x, At( ".", x ) ) == Left( acs[ nFiles ], At( ".", acs[ nFiles ] ) ) } )
+/*         if at("$",acs[nFiles])>0
+            replacemacros(acs[nfiles])
+         endif
+         if at("$",aobjs[nFiles])>0
+            replacemacros(aobjs[nfiles])
+         endif
+ */
+        nPos := Ascan( aObjs, { | x | Left( x, At( ".", x ) ) == Left( acs[ nFiles ], At( ".", acs[ nFiles ] ) ) } )
+         
          If nPos > 0
             cComm := Strtran( cComm, "o$*", "o" + aObjs[ nPos ] )
             cComm := Strtran( cComm, "$**", acs[ nFiles ] )
@@ -1034,18 +1060,18 @@ Elseif lCw
 Endif
 if lGcc
    if at("linux",Getenv("HB_ARCHITECTURE"))>0 .or.  cOs=="Linux"
-        Fwrite( nLinkHandle, "PROJECT = " + if(isupper(cTopfile),Strtran( cTopfile, ".PRG", "" ),Strtran( cTopfile, ".prg", "" )) + CRLF )
+        Fwrite( nLinkHandle, "PROJECT = " + if(isupper(cTopfile),Strtran( cTopfile, ".PRG", "" ),Strtran( cTopfile, ".prg", "" )) + " $(PR) "+CRLF )
    else
 
-        Fwrite( nLinkHandle, "PROJECT = " + if(isupper(cTopfile),Strtran( cTopfile, ".PRG", ".EXE" ),Strtran( cTopfile, ".prg", ".exe" )) + CRLF )
+        Fwrite( nLinkHandle, "PROJECT = " + if(isupper(cTopfile),Strtran( cTopfile, ".PRG", ".EXE" ),Strtran( cTopfile, ".prg", ".exe" )) +" $(PR) "+ CRLF )
    endif     
 else
 
-Fwrite( nLinkHandle, "PROJECT = " + if(isupper(cTopfile),Strtran( cTopfile, ".PRG", ".EXE" ),Strtran( cTopfile, ".prg", ".exe" )) + CRLF )
+Fwrite( nLinkHandle, "PROJECT = " + if(isupper(cTopfile),Strtran( cTopfile, ".PRG", ".EXE" ),Strtran( cTopfile, ".prg", ".exe" )) + " $(PR) "+CRLF )
 endif
 if len(aObjs)<2
 
-Fwrite( nLinkHandle, "OBJFILES =  " + if(isupper(cTopfile),Strtran( cTopfile, ".PRG", ".OBJ" ),Strtran( cTopfile, ".prg", ".obj" )) + CRLF )
+Fwrite( nLinkHandle, "OBJFILES =  " + if(isupper(cTopfile),Strtran( cTopfile, ".PRG", ".OBJ" ),Strtran( cTopfile, ".prg", ".obj" )) +" $(OB) "+ CRLF )
 else
 
 Fwrite( nLinkHandle, "OBJFILES = " + if(isupper(cTopfile),Strtran( cTopfile, ".PRG", ".OBJ" ),Strtran( cTopfile, ".prg", ".obj" )))
@@ -1055,13 +1081,13 @@ For x := 1 To Len( aobjs )
 
       Fwrite( nLinkHandle, " " + aobjs[ x ] )
    Else
-      Fwrite( nLinkHandle, " " + aobjs[ x ] + CRLF )
+      Fwrite( nLinkHandle, " " + aobjs[ x ] +" $(OB) "+ CRLF )
    Endif
 Next
 endif
 if len(aCs)<2
 
-Fwrite( nLinkHandle, "CFILES = " + if(isupper(cTopfile),Strtran( cTopfile, ".PRG", ".C" ),Strtran( cTopfile, ".prg", ".c" ))+CRLF)
+Fwrite( nLinkHandle, "CFILES = " + if(isupper(cTopfile),Strtran( cTopfile, ".PRG", ".C" ),Strtran( cTopfile, ".prg", ".c" ))+" $(CF) "+CRLF)
 else
 
 Fwrite( nLinkHandle, "CFILES = " + if(isupper(cTopfile),Strtran( cTopfile, ".PRG", ".C" ),Strtran( cTopfile, ".prg", ".c" )))
@@ -1069,7 +1095,7 @@ For x := 1 To Len( acs )
    If x <> Len( acs ) .and. aCs[x]<>cTopfile
       Fwrite( nLinkHandle, " " + aCs[ x ] )
    Else
-      Fwrite( nLinkHandle, " " + aCs[ x ] + CRLF )
+      Fwrite( nLinkHandle, " " + aCs[ x ] +" $(CF) "+ CRLF )
    Endif
 Next
 endif
@@ -1081,7 +1107,7 @@ if lRddads
 endif
 if lBcc .or. lVcc
     If lFwh 
-        Fwrite( nLinkHandle, "LIBFILES = $(FWH)\lib\fiveh.lib $(FWH)\lib\fivec.lib " + cDefBccLibs + CRLF )
+        Fwrite( nLinkHandle, "LIBFILES = $(FWH)\lib\fiveh.lib $(FWH)\lib\fivehc.lib " + cDefBccLibs + CRLF )
    elseif lCw
         Fwrite( nLinkHandle, "LIBFILES = $(C4W)\c4wclass.lib $(C4W)\wbrowset.lib $(C4W)\otabt.lib $(C4W)\clip4win.lib" + cDefBccLibs + CRLF )
    else
