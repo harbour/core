@@ -227,6 +227,8 @@ extern POBJSYMBOLS hb_firstsymbol, hb_lastsymbol;
 extern void * hb_mthRequested( void ); /* profiler from classes.c */
 extern void hb_mthAddTime( void *, ULONG ); /* profiler from classes.c */
 
+BOOL hb_bProfiler = FALSE; /* profiler status is off */
+
 /* virtual machine state */
 
 HB_SYMB  hb_symEval = { "__EVAL", HB_FS_PUBLIC, hb_vmDoBlock, NULL }; /* symbol to evaluate codeblocks */
@@ -2952,10 +2954,14 @@ void hb_vmDo( USHORT uiParams )
    PHB_ITEM pSelf;
    PHB_FUNC pFunc;
    BOOL bDebugPrevState;
-   ULONG ulClock = ( ULONG ) clock();
+   ULONG ulClock;
    void * pMethod;
+   BOOL bProfiler = hb_bProfiler; /* because profiler state may change */
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmDo(%hu)", uiParams));
+
+   if( bProfiler )
+      ulClock = ( ULONG ) clock();
 
    hb_inkeyPoll();           /* Poll the console keyboard */
 
@@ -2998,8 +3004,11 @@ void hb_vmDo( USHORT uiParams )
 
       if( pFunc )
       {
-         pMethod = hb_mthRequested();
+         if( bProfiler )
+            pMethod = hb_mthRequested();
+
          pFunc();
+
          if (lPopSuper)
          {
            /* POP SuperClass handle */
@@ -3011,7 +3020,9 @@ void hb_vmDo( USHORT uiParams )
              pSelfBase->puiClsTree = 0;
             }
          }
-         hb_mthAddTime( pMethod, clock() - ulClock );
+
+         if( bProfiler )
+            hb_mthAddTime( pMethod, clock() - ulClock );
       }
       else if( pSym->szName[ 0 ] == '_' )
       {
@@ -3034,7 +3045,7 @@ void hb_vmDo( USHORT uiParams )
       {
          pFunc();
 
-         if( pSym->pDynSym )
+         if( bProfiler && pSym->pDynSym )
          {
             pSym->pDynSym->ulCalls++;                   /* profiler support */
             pSym->pDynSym->ulTime += clock() - ulClock; /* profiler support */
@@ -3066,10 +3077,14 @@ void hb_vmSend( USHORT uiParams )
    PHB_ITEM pSelf;
    PHB_FUNC pFunc;
    BOOL bDebugPrevState;
-   ULONG ulClock = ( ULONG ) clock();
+   ULONG ulClock;
    void * pMethod;
+   BOOL bProfiler = hb_bProfiler; /* because profiler state may change */
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmSend(%hu)", uiParams));
+
+   if( bProfiler )
+      ulClock = ( ULONG ) clock();
 
    pItem = hb_stackNewFrame( &sStackState, uiParams );   /* procedure name */
    pSym = pItem->item.asSymbol.value;
@@ -3107,7 +3122,9 @@ void hb_vmSend( USHORT uiParams )
 
             if( pFunc )
             {
-               pMethod = hb_mthRequested();
+               if( bProfiler )
+                  pMethod = hb_mthRequested();
+
                pFunc();
 
                if (lPopSuper)
@@ -3121,7 +3138,9 @@ void hb_vmSend( USHORT uiParams )
                    pSelfBase->puiClsTree = 0;
                   }
                }
-               hb_mthAddTime( pMethod, clock() - ulClock );
+
+               if( bProfiler )
+                  hb_mthAddTime( pMethod, clock() - ulClock );
             }
             else if( pSym->szName[ 0 ] == '_' )
             {
@@ -3194,7 +3213,7 @@ void hb_vmSend( USHORT uiParams )
       {
          pFunc();
 
-         if( pSym->pDynSym )
+         if( bProfiler && pSym->pDynSym )
          {
             pSym->pDynSym->ulCalls++;                   /* profiler support */
             pSym->pDynSym->ulTime += clock() - ulClock; /* profiler support */
@@ -4583,4 +4602,17 @@ void hb_vmIsStaticRef( void )
 
    /* statics are stored as an item of array type */
    hb_gcItemRef( &s_aStatics );
+}
+
+/* $Doc$
+ * $FuncName$     __SETPROFILER( <lOnOff> ) --> <lOldValue>
+ * $Description$  Turns on | off the profiler activity
+ * $End$ */
+HB_FUNC( __SETPROFILER )
+{
+   BOOL bOldValue = hb_bProfiler;
+
+   hb_bProfiler = hb_parl( 1 );
+
+   hb_retl( bOldValue );
 }
