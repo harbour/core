@@ -1,3 +1,10 @@
+2001-07-02 23:42 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * source/rtl/tget.prg
+     ! Fixed method Reset() of TGet class, so that it sets the :TypeOut
+       variable to .F.
+       Fix provided by Istvan Foldi <foldii@terrasoft.hu>
+
 2001-06-30 10:30 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/vm/dynsym.c
      + New profiler support functions added

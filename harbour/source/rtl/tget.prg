@@ -363,7 +363,8 @@ METHOD Reset() CLASS Get
 
    if ::hasfocus
       ::buffer := ::PutMask( ::VarGet(), .f. )
-      ::pos    := 1
+      ::pos := 1
+      ::TypeOut := .f.
    endif
 
 return Self
