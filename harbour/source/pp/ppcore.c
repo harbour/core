@@ -115,7 +115,9 @@ static void   SkipOptional( char ** );
 static void   SearnRep( char *, char *, int, char *, int * );
 static int    ReplacePattern( char, char *, int, char *, int );
 static void   pp_rQuotes( char *, char * );
-static int    md_strAt( char *, int, char *, BOOL, BOOL, BOOL );
+static int    md_strAt( char *, int, char *, BOOL, BOOL, BOOL, int );
+#define MD_STR_AT_IGNORECASE  0  /* search ignoring case */
+#define MD_STR_AT_USESUBCASE  1  /* use case specified in search string (old) */ 
 static char * PrevSquare( char * , char *, int * );
 static int    IsInStr( char, char * );
 static int    stroncpy( char *, char *, int );
@@ -695,7 +697,7 @@ int hb_pp_ParseDefine( char * sLine )
             memcpy( pars, tmp, iPar );
             pars[ iPar ] = '\0';
             iOldPos = 0;
-            while( (iPos = md_strAt( pars+1, iPar-1, sLine+iOldPos, TRUE, FALSE, FALSE )) )
+            while( (iPos = md_strAt( pars+1, iPar-1, sLine+iOldPos, TRUE, FALSE, FALSE, MD_STR_AT_IGNORECASE )) )
             {
                if( sLine[iOldPos+iPos] != '\001' )
                {
@@ -1236,7 +1238,7 @@ int hb_pp_ParseExpression( char * sLine, char * sOutLine )
      {
         ptro = sOutLine;
         ptri = sLine + isdvig;
-        ipos = md_strAt( ";", 1, ptri, TRUE, FALSE, FALSE );
+        ipos = md_strAt( ";", 1, ptri, TRUE, FALSE, FALSE, MD_STR_AT_IGNORECASE );
 
         if( ipos > 0 )
         {
@@ -1313,7 +1315,7 @@ int hb_pp_ParseExpression( char * sLine, char * sOutLine )
               ptri = sLine + isdvig;
               lenToken = strlen(stcmd->name);
 
-              while( ( ifou = md_strAt( stcmd->name, lenToken, ptri, TRUE, FALSE, FALSE )) > 0 )
+              while( ( ifou = md_strAt( stcmd->name, lenToken, ptri, TRUE, FALSE, FALSE, MD_STR_AT_USESUBCASE )) > 0 )
               {
                  ptri += ifou -1;
 
@@ -1707,7 +1709,7 @@ static int CommandStuff( char * ptrmp, char * inputLine, char * ptro, int * lenr
             ptrmp = strtopti;
             ptr = ptri;
             ipos = NextName( &ptr, tmpname );
-            ipos = md_strAt( tmpname, ipos, strtopti, TRUE, TRUE, TRUE );
+            ipos = md_strAt( tmpname, ipos, strtopti, TRUE, TRUE, TRUE, MD_STR_AT_USESUBCASE );
             if( ipos && TestOptional( strtopti, strtopti+ipos-2 ) )
               {
                 ptr = strtopti+ipos-2;
@@ -1740,7 +1742,7 @@ static int CommandStuff( char * ptrmp, char * inputLine, char * ptro, int * lenr
                   {
                       ptr = ptri;
                       ipos = NextName( &ptr, tmpname );
-                      ipos = md_strAt( tmpname, ipos, ptrmp, TRUE, TRUE, TRUE );
+                      ipos = md_strAt( tmpname, ipos, ptrmp, TRUE, TRUE, TRUE, MD_STR_AT_USESUBCASE );
                       if( ipos && TestOptional( ptrmp+1, ptrmp+ipos-2 ) )
                       {
                          ptr = PrevSquare( ptrmp+ipos-2, ptrmp+1, NULL );
@@ -1972,7 +1974,7 @@ static int WorkMarkers( char ** ptrmp, char ** ptri, char * ptro, int * lenres, 
   {
      lenreal = strincpy( expreal, ptrtemp );
 
-     if( (ipos = md_strAt( expreal, lenreal, *ptri, TRUE, TRUE, FALSE )) > 0 )
+     if( (ipos = md_strAt( expreal, lenreal, *ptri, TRUE, TRUE, FALSE, MD_STR_AT_USESUBCASE )) > 0 )
      {
         if( ptrtemp > *ptrmp )
         {
@@ -2870,7 +2872,7 @@ static void SearnRep( char * exppatt, char * expreal, int lenreal, char * ptro, 
   HB_TRACE(HB_TR_DEBUG, ("SearnRep(%s, %s, %d, %s, %p)", exppatt, expreal, lenreal, ptro, lenres));
 
   if( *(exppatt+1) == '\0' ) *( ptro + *lenres ) = '\0';
-  while( (ifou = md_strAt( exppatt, (*(exppatt+1))? 2:1, ptrOut, FALSE, FALSE, TRUE )) > 0 )
+  while( (ifou = md_strAt( exppatt, (*(exppatt+1))? 2:1, ptrOut, FALSE, FALSE, TRUE, MD_STR_AT_USESUBCASE )) > 0 )
     {
 
       bFound = TRUE;
@@ -3031,7 +3033,7 @@ static int ReplacePattern( char patttype, char * expreal, int lenreal, char * pt
         rmlen = 0;
         do
         {
-            ifou = md_strAt( ",", 1, expreal, FALSE, TRUE, FALSE );
+            ifou = md_strAt( ",", 1, expreal, FALSE, TRUE, FALSE, MD_STR_AT_IGNORECASE );
             lenitem = (ifou)? ifou-1:lenreal;
             if( *expreal != '\0' )
 				{
@@ -3096,7 +3098,7 @@ static int ReplacePattern( char patttype, char * expreal, int lenreal, char * pt
         rmlen = 0;
         do
         {
-          ifou = md_strAt( ",", 1, expreal, FALSE, TRUE, FALSE );
+          ifou = md_strAt( ",", 1, expreal, FALSE, TRUE, FALSE, MD_STR_AT_IGNORECASE );
           lenitem = (ifou)? ifou-1:lenreal;
           if( *expreal != '\0' )
           {
@@ -3204,7 +3206,7 @@ static int ReplacePattern( char patttype, char * expreal, int lenreal, char * pt
         rmlen = 0;
         do
           {
-            ifou = md_strAt( ",", 1, expreal, FALSE, TRUE, FALSE );
+            ifou = md_strAt( ",", 1, expreal, FALSE, TRUE, FALSE, MD_STR_AT_IGNORECASE );
             lenitem = (ifou)? ifou-1:lenreal;
             if( *expreal != '\0' )
               {
@@ -3510,15 +3512,24 @@ int hb_pp_WrStr( FILE * handl_o, char * buffer )
   return 0;
 }
 
-static int md_strAt( char * szSub, int lSubLen, char * szText, BOOL checkword, BOOL checkPrth, BOOL bRule )
+static int md_strAt( char * szSub, int lSubLen, char * szText, BOOL checkword, BOOL checkPrth, BOOL bRule, int iCaseOption )
 {
   int State = STATE_NORMAL;
   long lPos = 0, lSubPos = 0;
   int kolPrth = 0, kolSquare = 0, kolFig = 0;
-  int lCase = ( *szSub == '\1' )? 0:1;
+  int lCase;
   char cLastChar = '\0';
 
-  HB_TRACE(HB_TR_DEBUG, ("md_strAt(%s, %d, %s, %d, %d)", szSub, lSubLen, szText, checkword, checkPrth));
+  HB_TRACE(HB_TR_DEBUG, ("md_strAt(%s, %d, %s, %d, %d, %d)", szSub, lSubLen, szText, checkword, checkPrth, iCaseOption));
+
+  if( iCaseOption == MD_STR_AT_IGNORECASE )
+  {
+      lCase =0;
+  }
+  else
+  {
+      lCase = ( *szSub == '\1' )? 0:1;
+  }
 
   while( *(szText+lPos) != '\0' && lSubPos < lSubLen )
   {

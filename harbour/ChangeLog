@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-01-06 12:15 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+   * source/pp/ppcore.c
+      * defined pseudo-functions' parameters are case sensitive now
+      (this fixes bug #define F( n )  FF( n, N ) )
+      
+
 2005-01-03 14:15 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * include/hbexprb.c
    * source/compiler/exproptb.c
