@@ -1,3 +1,7 @@
+19991027-16:57 GMT+1 Antonio Linares
+   * source/vm/mainwin.c
+     * added missing #includes.
+
 19991027-13:55 GMT+3 Alexander Kresin
   * source/pp/hbpp.c
     * Fixed bugs, reported by Antonio Linares and Victor Szel
@@ -16,30 +20,30 @@
 
 Tue Oct 26 17:16:43 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* source/common/hbtrace.c: 
+	* source/common/hbtrace.c:
 	Now it is REALLY efficient; no copying, nothing.
-	
-	* source/rtl/codebloc.c: 
-	* source/rtl/dir.c: 
-	* source/rtl/filesys.c: 
-	* source/rtl/inkey.c: 
-	* source/rtl/memvars.c: 
-	* source/rtl/set.c: 
-	* source/vm/hvm.c: 
+
+	* source/rtl/codebloc.c:
+	* source/rtl/dir.c:
+	* source/rtl/filesys.c:
+	* source/rtl/inkey.c:
+	* source/rtl/memvars.c:
+	* source/rtl/set.c:
+	* source/vm/hvm.c:
 	Got rid of other ways of tracing. Hopefully now HB_TRACE() is the
 	only, standard way used in Harbour.
 
-	* source/rtl/gt/gt_tpl.c: 
-	* source/rtl/gt/gtdos.c: 
-	* source/rtl/gt/gtos2.c: 
-	* source/rtl/gt/gtstd.c: 
-	* source/rtl/gt/gtwin.c: 
+	* source/rtl/gt/gt_tpl.c:
+	* source/rtl/gt/gtdos.c:
+	* source/rtl/gt/gtos2.c:
+	* source/rtl/gt/gtstd.c:
+	* source/rtl/gt/gtwin.c:
 	Made sure all the GT implementations (including the template) have
 	proper HB_TRACE() calls.
 
 Tue Oct 26 13:20:46 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* source/runner/runlib.c: 
+	* source/runner/runlib.c:
 	Added HB_TRACE() calls to the RUNNER library.
 
 19991026-18:10 GMT+1 Victor Szel <info@szelvesz.hu>
@@ -58,28 +62,28 @@ Tue Oct 26 13:20:46 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 Tue Oct 26 13:11:19 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* source/tools/dates2.c: 
-	* source/tools/hb_f.c: 
-	* source/tools/strasint.c: 
-	* source/tools/stringsx.c: 
+	* source/tools/dates2.c:
+	* source/tools/hb_f.c:
+	* source/tools/strasint.c:
+	* source/tools/stringsx.c:
 	Added HB_TRACE() calls to the TOOLS library.
 
 Tue Oct 26 12:55:49 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* source/rdd/dbcmd.c: 
-	* source/rdd/dbf1.c: 
-	* source/rdd/dbfcdx/dbfcdx1.c: 
+	* source/rdd/dbcmd.c:
+	* source/rdd/dbf1.c:
+	* source/rdd/dbfcdx/dbfcdx1.c:
 	Added HB_TRACE() calls to the RDD library.
 
 Tue Oct 26 12:15:01 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* source/vm/cmdarg.c: 
-	* source/vm/debug.c: 
-	* source/vm/dynsym.c: 
-	* source/vm/hvm.c: 
-	* source/vm/initsymb.c: 
-	* source/vm/mainstd.c: 
-	* source/vm/mainwin.c: 
+	* source/vm/cmdarg.c:
+	* source/vm/debug.c:
+	* source/vm/dynsym.c:
+	* source/vm/hvm.c:
+	* source/vm/initsymb.c:
+	* source/vm/mainstd.c:
+	* source/vm/mainwin.c:
 	Added HB_TRACE() calls to the VM.
 
 19991026-14:07 GMT+1 Victor Szel <info@szelvesz.hu>
@@ -94,7 +98,7 @@ Tue Oct 26 12:15:01 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
   * source/vm/hvm.c
     + HB_TRACE() call added to the HB_P_LINE opcode.
   * source/rtl/strings.c
-    ! hb_strncpyUpper() and hb_itemPadConv() HB_TRACE() calls now print the 
+    ! hb_strncpyUpper() and hb_itemPadConv() HB_TRACE() calls now print the
       address of a buffer instead of the (uninitialized) content.
   * source/rtl/memvars.c
     ! bScope is now showed as a number instead of a char in HB_TRACE() call.
@@ -107,7 +111,7 @@ Tue Oct 26 12:15:01 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 19991026-11:35 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/tget.prg
     % New() will evaluate the setget only once instead of three times.
-    ! New() fixed the picture generation for numeric values, decimals are 
+    ! New() fixed the picture generation for numeric values, decimals are
       detected for example.
     ! ::ColorSpec now defaults to the proper color.
     + ColorDisp() inline method added.
