@@ -1,13 +1,17 @@
 //
 // Testing Empty() function
 //
-// Date : 29/04/1999
-// Time : 14:30
+// Date : 16/05/1999
+// Time : 21:00
 //
+
+#include "set.ch"
 
 function Main()
 
-   QOut( "PLEASE SET DATE TO BRITISH / CENTURY ON" )
+   HB_SETCENTURY ("ON")                      // SET CENTURY ON
+   SET (_SET_DATEFORMAT, "DD/MM/YYYY")       // SET DATE BRITISH
+   QOut( "British date format with century on" )
    QOut( "C 'Hallo'      ", empty( "Hallo"                ) )
    QOut( "C ''           ", empty( ""                     ) )
    QOut( "C '  '         ", empty( "  "                   ) )
@@ -31,11 +35,11 @@ function Main()
 
    Pause()
 
-   QOut( "D 10/10/1824   ", empty( ctod("10/10/1824")     ) )
-   QOut( "D 31/02/1825   ", empty( ctod("31/02/1825")     ), " CTOD needs fixing" )
-   QOut( "D 99/99/9999   ", empty( ctod("99/99/9999")     ) )
-   QOut( "D   /  /       ", empty( ctod("  /  /    ")     ) )
-   QOut( "D              ", empty( ctod("")               ), "  Another CTOD fix !" )
+   QOut( "D 10/10/1824   ", ctod("10/10/1824"), empty( ctod("10/10/1824")     ) )
+   QOut( "D 31/02/1825   ", ctod("31/02/1825"), empty( ctod("31/02/1825")     ) )
+   QOut( "D 99/99/9999   ", ctod("99/99/9999"), empty( ctod("99/99/9999")     ) )
+   QOut( "D   /  /       ", ctod("  /  /    "), empty( ctod("  /  /    ")     ) )
+   QOut( "D              ", ctod(""),           empty( ctod("")               ) )
    QOut( "L .T.          ", empty( .T.                    ) )
    QOut( "L .F.          ", empty( .F.                    ) )
    QOut( "U NIL          ", empty( NIL                    ) )

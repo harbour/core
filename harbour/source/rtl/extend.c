@@ -108,7 +108,7 @@ char * _pards( WORD wParam, ... )
          /* TODO: implement wArrayIndex use when retrieving an array element */
          return "";
 
-      else if( IS_DATE( pItem ) )
+      else if( IS_DATE( pItem ) && pItem->value.lDate > 0 )
       {
          hb_dateDecode( pItem->value.lDate, &lDay, &lMonth, &lYear );
 
@@ -127,9 +127,9 @@ char * _pards( WORD wParam, ... )
          return stack.szDate; /* this guaranties good behavior when multithreading */
       }
       else
-         return "00000000";
+         return "";
    }
-   return "00000000";
+   return "";
 }
 
 int _parl( WORD wParam, ... )
@@ -338,7 +338,10 @@ void _retds( char * szDate ) /* szDate must have yyyymmdd format */
    /* QUESTION: Is this ok ? we are going to use a long to store the date */
    /* QUESTION: What happens if we use sizeof( LONG ) instead ? */
    /* QUESTION: Would it break Clipper language code ? */
-   stack.Return.value.lDate = hb_dateEncode( lDay, lMonth, lYear );
+   if( szDate && strlen( szDate ) == 8 )
+      stack.Return.value.lDate = hb_dateEncode( lDay, lMonth, lYear );
+   else
+      stack.Return.value.lDate = 0;
 }
 
 void _retnd( double dNumber )

@@ -39,79 +39,109 @@ void hb_dateDecode( long julian, long * plDay, long * plMonth, long * plYear )
 
 HARBOUR CTOD( void )
 {
+   BOOL bValid = FALSE;
    char * szDate = _parc( 1 );
    int d_value = 0, m_value = 0, y_value = 0;
    int d_pos = 0, m_pos = 0, y_pos = 0;
    int count, digit, size = strlen (hb_set.HB_SET_DATEFORMAT);
    char szDateFormat[ 9 ];
 
-   for( count = 0; count < size; count++)
+   if( szDate )
    {
-      switch (hb_set.HB_SET_DATEFORMAT [count])
+      for( count = 0; count < size; count++)
       {
-         case 'D':
-         case 'd':
-            if (d_pos == 0)
-            {
-               if (m_pos == 0 && y_pos == 0) d_pos = 1;
-               else if (m_pos == 0 || y_pos == 0) d_pos = 2;
-               else d_pos = 3;
-            }
-            break;
-         case 'M':
-         case 'm':
-            if (m_pos == 0)
-            {
-               if (d_pos == 0 && y_pos == 0) m_pos = 1;
-               else if (d_pos == 0 || y_pos == 0) m_pos = 2;
-               else m_pos = 3;
-            }
-            break;
-         case 'Y':
-         case 'y':
-            if (y_pos == 0)
-            {
-               if (m_pos == 0 && d_pos == 0) y_pos = 1;
-               else if (m_pos == 0 || d_pos == 0) y_pos = 2;
-               else y_pos = 3;
-            }
-      }
-   }
-   size = strlen (szDate);
-   for( count = 0; count < size; count++)
-   {
-      digit = szDate [count];
-      if (isdigit (digit))
-      {
-         if (d_pos == 1)
+         switch (hb_set.HB_SET_DATEFORMAT [count])
          {
-            d_value = (d_value * 10) + digit - '0';
-         }
-         else if (m_pos == 1)
-         {
-            m_value = (m_value * 10) + digit - '0';
-         }
-         else if (y_pos == 1)
-         {
-            y_value = (y_value * 10) + digit - '0';
+            case 'D':
+            case 'd':
+               if (d_pos == 0)
+               {
+                  if (m_pos == 0 && y_pos == 0) d_pos = 1;
+                  else if (m_pos == 0 || y_pos == 0) d_pos = 2;
+                  else d_pos = 3;
+               }
+               break;
+            case 'M':
+            case 'm':
+               if (m_pos == 0)
+               {
+                  if (d_pos == 0 && y_pos == 0) m_pos = 1;
+                  else if (d_pos == 0 || y_pos == 0) m_pos = 2;
+                  else m_pos = 3;
+               }
+               break;
+            case 'Y':
+            case 'y':
+               if (y_pos == 0)
+               {
+                  if (m_pos == 0 && d_pos == 0) y_pos = 1;
+                  else if (m_pos == 0 || d_pos == 0) y_pos = 2;
+                  else y_pos = 3;
+               }
          }
       }
-      else
+      size = strlen (szDate);
+      for( count = 0; count < size; count++)
       {
-         d_pos--;
-         m_pos--;
-         y_pos--;
+         digit = szDate [count];
+         if (isdigit (digit))
+         {
+            if (d_pos == 1)
+            {
+               d_value = (d_value * 10) + digit - '0';
+            }
+            else if (m_pos == 1)
+            {
+               m_value = (m_value * 10) + digit - '0';
+            }
+            else if (y_pos == 1)
+            {
+               y_value = (y_value * 10) + digit - '0';
+            }
+         }
+         else
+         {
+            d_pos--;
+            m_pos--;
+            y_pos--;
+         }
+      }
+      if (y_value < 100)
+      {
+         count = hb_set.HB_SET_EPOCH % 100;
+         digit = hb_set.HB_SET_EPOCH / 100;
+         if (y_value >= count) y_value += (digit * 100);
+         else y_value += ((digit * 100) + 100);
       }
    }
-   if (y_value < 100)
+   /* Perform date validation before converting to date */
+   if (szDate && m_value >= 1 && m_value <= 12 && d_value >= 1
+   && y_value >= 0 & y_value <= 2999)
    {
-      count = hb_set.HB_SET_EPOCH % 100;
-      digit = hb_set.HB_SET_EPOCH / 100;
-      if (y_value >= count) y_value += (digit * 100);
-      else y_value += ((digit * 100) + 100);
+      /* Month, year, and lower day limits are easy, 
+         but upper day limit is dependent upon month and leap year */
+      BOOL bLeapYear = FALSE;
+      int d_limit [12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+      if( y_value % 4 == 0 )
+      {
+         /* Check for leap year (every year that is evenly divisible by 4,
+            except for centuries, which must be evenly divisible by 400 */
+         if( y_value % 100 == 0 )
+         {
+            if( y_value % 400 == 0) bLeapYear = TRUE; /* Leap century */
+         }
+         else bLeapYear = TRUE; /* Leap year */
+         
+         if( bLeapYear ) d_limit[ 1 ] = 29;
+      }
+      if( d_value <= d_limit[ m_value - 1 ] ) bValid = TRUE;
    }
-   sprintf (szDateFormat, "%04i%02i%02i", y_value, m_value, d_value);
-   _retds( szDateFormat );
+   if( bValid )
+   {
+      sprintf (szDateFormat, "%04i%02i%02i", y_value, m_value, d_value);
+      _retds( szDateFormat );
+   }
+   else _retds( "" );
 }
 
 char * hb_dtoc (char * szDate, char * szDateFormat)
@@ -127,120 +157,128 @@ char * hb_dtoc (char * szDate, char * szDateFormat)
      * Determine the maximum size of the formatted date string
      */
    size = strlen (hb_set.HB_SET_DATEFORMAT);
-   if (size > 10)
-     size = 10;
+   if (size > 10) size = 10;
 
-   format_count = 0;
-   used_d = used_m = used_y = FALSE;
-   szPtr = hb_set.HB_SET_DATEFORMAT;
-   while (format_count < size)
+   if( szDate && szDateFormat && strlen( szDate ) == 8 ) /* A valid date is always 8 characters */
    {
-      digit = toupper (*szPtr);
-      szPtr++;
-      digit_count = 1;
-      while (toupper (*szPtr) == digit && format_count < size)
+      format_count = 0;
+      used_d = used_m = used_y = FALSE;
+      szPtr = hb_set.HB_SET_DATEFORMAT;
+      while (format_count < size)
       {
+         digit = toupper (*szPtr);
          szPtr++;
-         if (format_count + digit_count < size) digit_count++;
+         digit_count = 1;
+         while (toupper (*szPtr) == digit && format_count < size)
+         {
+            szPtr++;
+            if (format_count + digit_count < size) digit_count++;
+         }
+         switch (digit)
+         {
+            case 'D':
+               switch (digit_count)
+               {
+                  case 4:
+                     if (!used_d && format_count < size)
+                     {
+                        szDateFormat [format_count++] = '0';
+                        digit_count--;
+                     }
+                  case 3:
+                     if (!used_d && format_count < size)
+                     {
+                        szDateFormat [format_count++] = '0';
+                        digit_count--;
+                     }
+                  case 2:
+                     if (!used_d && format_count < size)
+                     {
+                        szDateFormat [format_count++] = szDate [6];
+                        digit_count--;
+                     }
+                  default:
+                     if (!used_d && format_count < size) 
+                     {
+                        szDateFormat [format_count++] = szDate [7];
+                        digit_count--;
+                     }
+                     while (digit_count-- > 0 && format_count < size) szDateFormat [format_count++] = digit;
+               }
+               used_d = TRUE;
+               break;
+            case 'M':
+               switch (digit_count)
+               {
+                  case 4:
+                     if (!used_m && format_count < size) 
+                     {
+                        szDateFormat [format_count++] = '0';
+                        digit_count--;
+                     }
+                  case 3:
+                     if (!used_m && format_count < size) 
+                     {
+                        szDateFormat [format_count++] = '0';
+                        digit_count--;
+                     }
+                  case 2:
+                     if (!used_m && format_count < size) 
+                     {
+                        szDateFormat [format_count++] = szDate [4];
+                        digit_count--;
+                     }
+                  default:
+                     if (!used_m && format_count < size) 
+                     {
+                        szDateFormat [format_count++] = szDate [5];
+                        digit_count--;
+                     }
+                     while (digit_count-- > 0 && format_count < size) szDateFormat [format_count++] = digit;
+               }
+               used_m = TRUE;
+               break;
+            case 'Y':
+               switch (digit_count)
+               {
+                  case 4:
+                     if (!used_y && format_count < size) 
+                     {
+                        szDateFormat [format_count++] = szDate [0];
+                        digit_count--;
+                     }
+                  case 3:
+                     if (!used_y && format_count < size) 
+                     {
+                        szDateFormat [format_count++] = szDate [1];
+                        digit_count--;
+                     }
+                  case 2:
+                     if (!used_y && format_count < size) 
+                     {
+                        szDateFormat [format_count++] = szDate [2];
+                        digit_count--;
+                     }
+                  default:
+                     if (!used_y && format_count < size) 
+                     {
+                        szDateFormat [format_count++] = szDate [3];
+                        digit_count--;
+                     }
+                     while (digit_count-- > 0 && format_count < size) szDateFormat [format_count++] = digit;
+               }
+               used_y = TRUE;
+               break;
+            default:
+               while (digit_count-- > 0 && format_count < size) szDateFormat [format_count++] = digit;
+         }
       }
-      switch (digit)
-      {
-         case 'D':
-            switch (digit_count)
-            {
-               case 4:
-                  if (!used_d && format_count < size)
-                  {
-                     szDateFormat [format_count++] = '0';
-                     digit_count--;
-                  }
-               case 3:
-                  if (!used_d && format_count < size)
-                  {
-                     szDateFormat [format_count++] = '0';
-                     digit_count--;
-                  }
-               case 2:
-                  if (!used_d && format_count < size)
-                  {
-                     szDateFormat [format_count++] = szDate [6];
-                     digit_count--;
-                  }
-               default:
-                  if (!used_d && format_count < size) 
-                  {
-                     szDateFormat [format_count++] = szDate [7];
-                     digit_count--;
-                  }
-                  while (digit_count-- > 0 && format_count < size) szDateFormat [format_count++] = digit;
-            }
-            used_d = TRUE;
-            break;
-         case 'M':
-            switch (digit_count)
-            {
-               case 4:
-                  if (!used_m && format_count < size) 
-                  {
-                     szDateFormat [format_count++] = '0';
-                     digit_count--;
-                  }
-               case 3:
-                  if (!used_m && format_count < size) 
-                  {
-                     szDateFormat [format_count++] = '0';
-                     digit_count--;
-                  }
-               case 2:
-                  if (!used_m && format_count < size) 
-                  {
-                     szDateFormat [format_count++] = szDate [4];
-                     digit_count--;
-                  }
-               default:
-                  if (!used_m && format_count < size) 
-                  {
-                     szDateFormat [format_count++] = szDate [5];
-                     digit_count--;
-                  }
-                  while (digit_count-- > 0 && format_count < size) szDateFormat [format_count++] = digit;
-            }
-            used_m = TRUE;
-            break;
-         case 'Y':
-            switch (digit_count)
-            {
-               case 4:
-                  if (!used_y && format_count < size) 
-                  {
-                     szDateFormat [format_count++] = szDate [0];
-                     digit_count--;
-                  }
-               case 3:
-                  if (!used_y && format_count < size) 
-                  {
-                     szDateFormat [format_count++] = szDate [1];
-                     digit_count--;
-                  }
-               case 2:
-                  if (!used_y && format_count < size) 
-                  {
-                     szDateFormat [format_count++] = szDate [2];
-                     digit_count--;
-                  }
-               default:
-                  if (!used_y && format_count < size) 
-                  {
-                     szDateFormat [format_count++] = szDate [3];
-                     digit_count--;
-                  }
-                  while (digit_count-- > 0 && format_count < size) szDateFormat [format_count++] = digit;
-            }
-            used_y = TRUE;
-            break;
-         default:
-            while (digit_count-- > 0 && format_count < size) szDateFormat [format_count++] = digit;
-      }
+   }
+   else 
+   {
+      /* Not a valid date string, so return a blank date */
+      format_count = size;
+      strncpy( szDateFormat, "          ", format_count );
    }
    szDateFormat [format_count] = 0;
    return (szDateFormat);

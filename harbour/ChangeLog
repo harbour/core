@@ -1,3 +1,20 @@
+19990516-20:20 EDT David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/dates.c
+    - Modified CTOD to perform date validation to only allow dates in the
+      range allowed by Clipper: January 1, 0 through December 21, 2999.
+    - Added parameter checking to hb_dtoc.
+  * source/rtl/extend.c
+    - Modified _pards to return an empty string ("") for invalid dates.
+    - Modified _retds to set the Harbour date to 0 if the parameter is missing
+      or if the parameter is not an 8-character null-terminated string.
+  * source/vm/hvm.c
+    - Changed EMPTY case for IT_NUMERIC to IT_INTEGER, because IT_NUMERIC is a
+      composite of IT_INTEGER, IT_LONG, and IT_DOUBLE, which caused all integer
+      values to return .T.
+  * tests/working/empty.prg
+    - Added SET CENTURY ON and SET DATE BRITISH, and removed text regarding DTOC
+      needing to be fixed.
+
 19990516-21:33 CET Eddie Runia
     * tests/working/set.ch removed
 

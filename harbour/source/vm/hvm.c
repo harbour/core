@@ -1967,7 +1967,7 @@ HARBOUR EMPTY()
               _retl( hb_strempty( _parc( 1 ), _parclen( 1 ) ) );
               break;
 
-         case IT_NUMERIC:
+         case IT_INTEGER:
               _retl( ! _parni( 1 ) );
               break;
 
