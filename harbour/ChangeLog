@@ -1,3 +1,11 @@
+2001-02-05 21:10 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   * harbour/include/hbrddntx.h
+   * harbour/source/rdd/dbfntx/dbfntx1.c
+   + harbour/tests/testntx.prg
+     * Implemented SKIP for ntx.
+     * Indexkey(), etc. returns now info about current index.
+     * Implemented buffering of index pages ( exclusive mode ).
+
 2001-02-05 10:23 GMT+1 Antonio Linares <alinares@fivetech.com>
    * harbour/include/hbpcode.h
      + HB_P_STATICNAME opcode added.
@@ -797,7 +805,7 @@ NOTE! some modules still use a direct access to the eval stack
 
      /* Ryszard, if you want to re-introduce PCount() and HB_PVALUE(), I'll ask (since I wrote this original code)
         that you protect it with #ifdef FLEX etc. If you do I would suggest you further protect it with #ifdef STRICT...
-	becuase this will defintly break strict compatability. */
+        becuase this will defintly break strict compatability. */
 
 2000-11-30 15:30 UTC-0500 David G. Holm <dholm@jsd-llc.com>
    * include/hbver.h
@@ -1048,8 +1056,8 @@ NOTE! some modules still use a direct access to the eval stack
    * source/rtl/inkey.c
      ! Improved granularity of Idle Processing:
          - GC is called only once per Wait Session.
-	 - Single Idle Task is performed for each itteration of hb_idleState() but never more than once per Wait Session.
-	 - ReleaseCPU() is guaranteed to be the only code executing for the remainder of every Wait Session.
+         - Single Idle Task is performed for each itteration of hb_idleState() but never more than once per Wait Session.
+         - ReleaseCPU() is guaranteed to be the only code executing for the remainder of every Wait Session.
 
    /* Maurilio, Ryszard, Victor, could you please review and comment... */
 

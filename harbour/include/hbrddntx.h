@@ -65,12 +65,17 @@ extern "C" {
 #define NTX_INDEXEXT                              ".ntx"
 
 /* DBFNTX constants declarations */
+
 #define TOP_RECORD                                                      1
 #define BTTM_RECORD                                                     2
 #define PREV_RECORD                                                     3
 #define NEXT_RECORD                                                     4
+
 #define NTX_MAX_REC_NUM                                       0x7FFFFFFFL
 #define NTX_IGNORE_REC_NUM                                             -1
+
+#define NTX_MAX_KEY  250      /* Max len of key */
+#define NTXBLOCKSIZE 1024     /* Size of block in NTX file */
 
 /* forward declarations
  */
@@ -84,7 +89,7 @@ typedef struct _KEYINFO
    PHB_ITEM pItem;
    LONG     Tag;
    LONG     Xtra;
-   struct  _KEYINFO * pNext;
+   // struct  _KEYINFO * pNext;
 } KEYINFO;
 
 typedef KEYINFO * LPKEYINFO;
@@ -93,20 +98,15 @@ typedef KEYINFO * LPKEYINFO;
 typedef struct HB_PAGEINFO_STRU
 {
    LONG      Page;
-   LONG      Left;
-   LONG      Right;
    BOOL      Changed;
    BOOL      NewRoot;
-   BOOL      LastEntry;
-   BOOL      Reload;
-   BOOL      ChkBOF;
-   BOOL      ChkEOF;
+   BOOL      lBusy;
    BYTE      PageType;
    LPKEYINFO pKeys;
    USHORT    uiKeys;
    SHORT     CurKey;
-   struct   HB_PAGEINFO_STRU * Owner;
-   struct   HB_PAGEINFO_STRU * Child;
+   struct   HB_PAGEINFO_STRU * pPrev;
+   struct   HB_PAGEINFO_STRU * pNext;
    struct   _TAGINFO * TagParent;
 } HB_PAGEINFO;
 
@@ -129,6 +129,7 @@ typedef struct _TAGINFO
    BYTE       OptFlags;
    LONG       TagBlock;
    LONG       RootBlock;
+   USHORT     uiPages;
    USHORT     KeyLength;
    USHORT     MaxKeys;
    LPKEYINFO  CurKeyInfo;
@@ -154,7 +155,42 @@ typedef struct _NTXINDEX
 
 typedef NTXINDEX * LPNTXINDEX;
 
+/* Internal structures used by saving file */
 
+typedef struct _NTXHEADER    /* Header of NTX file */
+{
+   USHORT   type;
+   USHORT   version;
+   ULONG    root;
+   ULONG    next_page;
+   USHORT   item_size;
+   USHORT   key_size;
+   USHORT   key_dec;
+   USHORT   max_item;
+   USHORT   half_page;
+   char     key_expr[ NTX_MAX_KEY ];
+   char     unique;
+} NTXHEADER;
+
+typedef NTXHEADER * LPNTXHEADER;
+
+typedef struct _NTXBUFFER    /* Header of each block in NTX file (only block
+                                with header has other format */
+{
+   USHORT   item_count;
+   USHORT   item_offset[ 1 ];
+} NTXBUFFER;
+
+typedef NTXBUFFER * LPNTXBUFFER;
+
+typedef struct _NTXITEM      /* each item in NTX block has following format */
+{
+   ULONG    page;     /* subpage (each key in subpage has < value like this key */
+   ULONG    rec_no;   /* RecNo of record with this key */
+   char     key[ 1 ]; /* value of key */
+} NTXITEM;
+
+typedef NTXITEM * LPNTXITEM;
 
 struct _NTXAREA;
 
@@ -233,7 +269,7 @@ typedef struct _NTXAREA
    *  example.
    */
 
-   USHORT uiOrder;                /* Number of current order */
+   LPNTXINDEX lpCurIndex;         /* Pointer to current index */
    LPNTXINDEX lpNtxIndex;         /* Pointer to indexes array */
 
 
@@ -256,13 +292,13 @@ typedef NTXAREA * LPNTXAREA;
 #define ntxEof                   NULL
 #define ntxFound                 NULL
 static ERRCODE ntxGoBottom( NTXAREAP pArea );
-#define ntxGoTo                  NULL
+static ERRCODE ntxGoTo( NTXAREAP pArea, ULONG ulRecNo );
 #define ntxGoToId                NULL
 static ERRCODE ntxGoTop( NTXAREAP pArea );
 static ERRCODE ntxSeek( NTXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFindLast );
 #define ntxSkip                  NULL
 #define ntxSkipFilter            NULL
-#define ntxSkipRaw               NULL
+static ERRCODE ntxSkipRaw( NTXAREAP pArea, LONG lToSkip );
 #define ntxAddField              NULL
 #define ntxAppend                NULL
 #define ntxCreateFields          NULL
