@@ -58,7 +58,10 @@
 #include "hbcomp.h"
 #include "hbstack.h"
 #include "hbmemvar.ch"   /* for values returned by hb_memvarScope() */
-#include "hbpp.h"
+
+#ifdef HB_MACRO_STATEMENTS
+  #include "hbpp.h"
+#endif
 
 /* TODO:
  * include this variable in SET subsystem ?
@@ -434,10 +437,12 @@ void hb_macroGetValue( HB_ITEM_PTR pItem )
       int iStatus;
       char * szString = pItem->item.asString.value;
 
-      char * pText = ( char * ) hb_xgrab( HB_PP_STR_SIZE );
-      char * pOut = ( char * ) hb_xgrab( HB_PP_STR_SIZE );
-      char * ptr = pText;
-      int slen;
+      #ifdef HB_MACRO_STATEMENTS
+         char * pText = ( char * ) hb_xgrab( HB_PP_STR_SIZE );
+         char * pOut = ( char * ) hb_xgrab( HB_PP_STR_SIZE );
+         char * ptr = pText;
+         int slen;
+      #endif
 
       struMacro.Flags         = HB_MACRO_GEN_PUSH;
       struMacro.bShortCuts    = hb_comp_bShortCuts;
@@ -445,25 +450,29 @@ void hb_macroGetValue( HB_ITEM_PTR pItem )
       struMacro.status        = HB_MACRO_CONT;
       struMacro.iListElements = 0;
 
-      slen = HB_MIN( strlen( szString ), HB_PP_STR_SIZE - 1 );
-      memcpy( pText, szString, slen );
-      pText[ slen ] = 0;
-      memset( pOut, 0, HB_PP_STR_SIZE );
+      #ifdef HB_MACRO_STATEMENTS
+         slen = HB_MIN( strlen( szString ), HB_PP_STR_SIZE - 1 );
+         memcpy( pText, szString, slen );
+         pText[ slen ] = 0;
+         memset( pOut, 0, HB_PP_STR_SIZE );
 
-      HB_SKIPTABSPACES( ptr );
+         HB_SKIPTABSPACES( ptr );
 
-      if( !hb_pp_topDefine )
-      {
-         hb_pp_Table();
-      }
+         if( !hb_pp_topDefine )
+         {
+            hb_pp_Table();
+         }
 
-      hb_pp_ParseExpression( ptr, pOut );
-      szString = pText;
+         hb_pp_ParseExpression( ptr, pOut );
+         szString = pText;
+      #endif
 
       iStatus = hb_macroParse( &struMacro, szString );
 
-      hb_xfree( pText );
-      hb_xfree( pOut );
+      #ifdef HB_MACRO_STATEMENTS
+        hb_xfree( pText );
+        hb_xfree( pOut );
+      #endif
 
       if( hb_vm_iFunCalls )
       {

@@ -87,7 +87,10 @@
 #include "hbvm.h"
 #include "hbpcode.h"
 #include "hbset.h"
-#include "hbpp.h"
+
+#ifdef HB_MACRO_STATEMENTS
+  #include "hbpp.h"
+#endif
 
 typedef struct _SYMBOLS
 {
@@ -388,11 +391,14 @@ void hb_vmQuit( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmQuit()"));
 
+   #ifdef HB_MACRO_STATEMENTS
+     hb_pp_Free();
+   #endif
+
    if( hb_vm_aiMacroListParameters )
    {
       hb_xfree( (void*) hb_vm_aiMacroListParameters );
    }
-   hb_pp_Free();
 
    s_uiActionRequest = 0;         /* EXIT procedures should be processed */
    hb_vmDoExitFunctions();       /* process defined EXIT functions */

@@ -1,3 +1,8 @@
+2001-07-16 09:45 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * source/vm/hvm.c
+   * source/vm/macro.c
+     + Wrapped macro statement support within #ifdef HB_MACRO_STATEMENTS (which is NOT defined).
+
 2001-07-16 15:19 GMT+1 Patrick Mast <harbour@PatrickMast.com>
    * source/rtl/profiler.prg
      * Renamed function from Profiler() to HB_Profiler()
