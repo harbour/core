@@ -21,7 +21,7 @@
  * their web site at http://www.gnu.org/).
  */
 
-#DEFINE MAX_TOKENS 1024
+#DEFINE MAX_CICLES 64
 #DEFINE PP_BUFFER_SIZE 8192 //16384
 
 #ifdef __HARBOUR__
@@ -185,6 +185,10 @@ STATIC s_sModule, s_aInitExit := { {}, {} }
 STATIC s_nCompIf := 0,  s_nCompLoop := 0, s_aIfJumps := {}, s_aLoopJumps := {}
 STATIC s_acFlowType := {},  s_nFlowId := 0
 
+#ifdef PP_RECURSIVE
+   STATIC s_bMatching := .F.
+#endif
+
 //--------------------------------------------------------------//
 
 PROCEDURE Main( sSource, p1, p2, p3, p4, p5, p6, p7, p8, p9 )
@@ -239,6 +243,29 @@ PROCEDURE Main( sSource, p1, p2, p3, p4, p5, p6, p7, p8, p9 )
 
    IF ! Empty( sSwitch )
       sSwitch := Upper( sSwitch )
+
+      IF ( nAt := At( "-I", sSwitch ) ) > 0
+         nNext := At( "-", SubStr( sSwitch, nAt + 2 ) )
+         IF nNext == 0
+            nNext := 256
+         ENDIF
+         sIncludePath := SubStr( sSwitch, nAt + 2, nNext )
+
+         WHILE ( nNext := At( ';', sIncludePath ) ) > 0
+            sPath := Left( sIncludePath, nNext - 1 )
+            IF ! ( Right( sPath, 1 ) $ '\/' )
+               sPath += '\'
+            ENDIF
+            aAdd( s_asPaths, sPath )
+            sIncludePath := SubStr( sIncludePath, nNext + 1 )
+         ENDDO
+         IF ! ( sIncludePath == '' )
+            IF ! ( Right( sIncludePath, 1 ) $ '\/' )
+               sIncludePath += '\'
+            ENDIF
+            aAdd( s_asPaths, sIncludePath )
+         ENDIF
+      ENDIF
 
       IF "-U" $ sSwitch
          bLoadRules := .F.
@@ -307,11 +334,96 @@ PROCEDURE Main( sSource, p1, p2, p3, p4, p5, p6, p7, p8, p9 )
 
 RETURN
 
-//------------------------------- *** RP DOT Functions *** -------------------------------//
+//------------------------------- *** RP DOT and Interpreter Functions *** -------------------------------//
 
-PROCEDURE ExecuteProcedure( aProc )
+Function ExecuteMethod( sProcName, p1, p2, p3, p4, p5, p6, p7, p8, p9 )
 
-   LOCAL nBlock, nBlocks := Len( aProc[2] ), oErr
+    LOCAL sProc, nProc, nParams
+
+      sProcName := Upper( sProcName )
+
+      sProc := s_sModule + sProcName
+      nProc := aScan( s_aProcedures, {|aProc| aProc[1] == sProc } )
+      IF nProc == 0
+         sProc := sProcName
+         nProc := aScan( s_aProcedures, {|aProc| aProc[1] == sProc } )
+      ENDIF
+
+      IF nProc > 0
+         s_xRet := NIL
+
+         nParams := PCount()
+         s_aParams := {}
+         DO CASE
+            CASE nParams == 0
+            CASE nParams == 1
+               aAdd( s_aParams, p1 )
+            CASE nParams == 2
+               aAdd( s_aParams, p1 )
+               aAdd( s_aParams, p2 )
+            CASE nParams == 3
+               aAdd( s_aParams, p1 )
+               aAdd( s_aParams, p2 )
+               aAdd( s_aParams, p3 )
+            CASE nParams == 4
+               aAdd( s_aParams, p1 )
+               aAdd( s_aParams, p2 )
+               aAdd( s_aParams, p3 )
+               aAdd( s_aParams, p4 )
+            CASE nParams == 5
+               aAdd( s_aParams, p1 )
+               aAdd( s_aParams, p2 )
+               aAdd( s_aParams, p3 )
+               aAdd( s_aParams, p4 )
+               aAdd( s_aParams, p5 )
+            CASE nParams == 6
+               aAdd( s_aParams, p1 )
+               aAdd( s_aParams, p2 )
+               aAdd( s_aParams, p3 )
+               aAdd( s_aParams, p4 )
+               aAdd( s_aParams, p5 )
+               aAdd( s_aParams, p6 )
+            CASE nParams == 7
+               aAdd( s_aParams, p1 )
+               aAdd( s_aParams, p2 )
+               aAdd( s_aParams, p3 )
+               aAdd( s_aParams, p4 )
+               aAdd( s_aParams, p5 )
+               aAdd( s_aParams, p6 )
+               aAdd( s_aParams, p7 )
+            CASE nParams == 8
+               aAdd( s_aParams, p1 )
+               aAdd( s_aParams, p2 )
+               aAdd( s_aParams, p3 )
+               aAdd( s_aParams, p4 )
+               aAdd( s_aParams, p5 )
+               aAdd( s_aParams, p6 )
+               aAdd( s_aParams, p7 )
+               aAdd( s_aParams, p8 )
+            CASE nParams == 9
+               aAdd( s_aParams, p1 )
+               aAdd( s_aParams, p2 )
+               aAdd( s_aParams, p3 )
+               aAdd( s_aParams, p4 )
+               aAdd( s_aParams, p5 )
+               aAdd( s_aParams, p6 )
+               aAdd( s_aParams, p7 )
+               aAdd( s_aParams, p8 )
+               aAdd( s_aParams, p9 )
+         ENDCASE
+
+         ExecuteProcedure( s_aProcedures[nProc] )
+      ELSE
+         Alert( "Missing Method: " + sProcName )
+      ENDIF
+
+RETURN s_xRet
+
+//--------------------------------------------------------------//
+
+PROCEDURE ExecuteProcedure( aProc, sProcName )
+
+   LOCAL nBlock, nBlocks := Len( aProc[2] ), xErr
    LOCAL nVar, nVars
 
    IF s_nProcStack > 0
@@ -320,7 +432,11 @@ PROCEDURE ExecuteProcedure( aProc )
       aAdd( s_aProcStack[s_nProcStack], Array( nVars, 2 ) )
       FOR nVar := 1 TO nVars
          s_aProcStack[s_nProcStack][3][nVar][1] := s_asPrivates[nVar]
-         s_aProcStack[s_nProcStack][3][nVar][2] := &( s_asPrivates[nVar] )
+         #ifdef __HARBOUR__
+            s_aProcStack[s_nProcStack][3][nVar][2] := __MVGET( s_asPrivates[nVar] )
+         #else
+            s_aProcStack[s_nProcStack][3][nVar][2] := &( s_asPrivates[nVar] )
+         #endif
          //Alert( "Saved upper Private: " + s_asPrivates[nVar] + " in " + s_aProcStack[s_nProcStack][1] )
       NEXT
       aSize( s_asPrivates, 0 )
@@ -330,9 +446,14 @@ PROCEDURE ExecuteProcedure( aProc )
       aAdd( s_aProcStack[s_nProcStack], Array( nVars, 2 ) )
       FOR nVar := 1 TO nVars
          s_aProcStack[s_nProcStack][4][nVar][1] := s_asLocals[nVar]
-         s_aProcStack[s_nProcStack][4][nVar][2] := &( s_asLocals[nVar] )
+         #ifdef __HARBOUR__
+            s_aProcStack[s_nProcStack][4][nVar][2] := __MVGET( s_asLocals[nVar] )
+            __MVPUT( s_asLocals[nVar], NIL ) // *** Harbour __MXRelease() not working !!!
+         #else
+            s_aProcStack[s_nProcStack][4][nVar][2] := &( s_asLocals[nVar] )
+            __MXRelease( s_asLocals[nVar] )
+         #endif
          //Alert( "Released upper local: " + s_asLocals[nVar] + " in " + s_aProcStack[s_nProcStack][1] )
-         __MXRelease( s_asLocals[nVar] )
       NEXT
       aSize( s_asLocals, 0 )
    ENDIF
@@ -359,8 +480,10 @@ PROCEDURE ExecuteProcedure( aProc )
                ENDIF
             ENDIF
 
-         RECOVER USING oErr
-
+         RECOVER USING xErr
+            //IF ValType( xErr ) == 'N'
+            //   ExecuteProcedure( s_aProcedures[xErr] )
+            //ENDIF
          END SEQUENCE
       ENDIF
    NEXT
@@ -368,16 +491,24 @@ PROCEDURE ExecuteProcedure( aProc )
    /* Releasing Privates created by the Procedure */
    nVars := Len( s_asPrivates )
    FOR nVar := 1 TO nVars
+      #ifdef __HARBOUR__
+         __MVPUT( s_asPrivates[nVar], NIL )
+      #else
+         __MXRelease( s_asPrivates[nVar] )
+      #endif
       //Alert( "Released private: " + s_asPrivates[nVar] + " in " + s_aProcStack[s_nProcStack][1] )
-      __MXRelease( s_asPrivates[nVar] )
    NEXT
    aSize( s_asPrivates, 0 )
 
    /* Releasing Locals created by the Procedure */
    nVars := Len( s_asLocals )
    FOR nVar := 1 TO nVars
+      #ifdef __HARBOUR__
+         __MVPUT( s_asLocals[nVar], NIL )
+      #else
+         __MXRelease( s_asLocals[nVar] )
+      #endif
       //Alert( "Released local: " + s_asLocals[nVar] + " in " + s_aProcStack[s_nProcStack][1] )
-      __MXRelease( s_asLocals[nVar] )
    NEXT
    aSize( s_asLocals, 0 )
 
@@ -397,14 +528,21 @@ PROCEDURE ExecuteProcedure( aProc )
       nVars := Len( s_aProcStack[s_nProcStack][4] )
       FOR nVar := 1 TO nVars
          aAdd( s_asLocals, s_aProcStack[s_nProcStack][4][nVar][1] )
-         __QQPub( s_aProcStack[s_nProcStack][4][nVar][1] )
-         &( s_aProcStack[s_nProcStack][4][nVar][1] ) := s_aProcStack[s_nProcStack][4][nVar][2]
+         #ifdef __HARBOUR__
+            //__QQPub( s_aProcStack[s_nProcStack][4][nVar][1] ) // *** Harbour Var was never released because of bug in __MXRelease() !!!
+            __MVPUT( s_aProcStack[s_nProcStack][4][nVar][1], s_aProcStack[s_nProcStack][4][nVar][2] )
+         #else
+            __QQPub( s_aProcStack[s_nProcStack][4][nVar][1] )
+            &( s_aProcStack[s_nProcStack][4][nVar][1] ) := s_aProcStack[s_nProcStack][4][nVar][2]
+         #endif
       NEXT
+
+      aSize( s_aProcStack[s_nProcStack], 2 )
    ENDIF
 
 RETURN
 
-//------------------------------- *** RP DOT Functions *** -------------------------------//
+//--------------------------------------------------------------//
 
 PROCEDURE RP_Dot()
 
@@ -609,258 +747,58 @@ PROCEDURE CompileLine( sPPed, nLine )
          ExtractLeadingWS( @sBlock )
          DropTrailingWS( @sBlock )
 
-         #ifdef __CLIPPER__
-            /* Clipper Macro Compiler can't compile nested blocks! */
-            CompileNestedBlocks( sBlock, @sBlock )
-         #endif
+         IF ! ( sBlock == '' )
+            #ifdef __CLIPPER__
+                /* Clipper Macro Compiler can't compile nested blocks! */
+                CompileNestedBlocks( sBlock, @sBlock )
+            #endif
 
-         IF sBlock = "#line"
-            LOOP
-         ENDIF
+            IF sBlock = "PP_PROC" .OR. s_nProcId == 0 .AND. sBlock = "PP_Statics"
+               sSymbol := Upper( LTrim( SubStr( sBlock, At( ' ', sBlock ) ) ) )
+               aSize( s_aProcedures, ++s_nProcId )
 
-         IF sBlock = "PP_PROC"
-            sSymbol := Upper( LTrim( SubStr( sBlock, At( ' ', sBlock ) ) ) )
-            aSize( s_aProcedures, ++s_nProcId )
+               IF sBlock = "PP_PROC_PRG"
+                  sSymbol := s_sModule + sSymbol
+               ELSEIF sBlock = "PP_PROC_INIT" .OR. sBlock = "PP_Statics"
+                  aAdd( s_aInitExit[1], s_nProcId )
+               ELSEIF sBlock = "PP_PROC_EXIT"
+                  aAdd( s_aInitExit[2], s_nProcId )
+               ENDIF
 
-            IF sBlock = "PP_PROC_PRG"
-               sSymbol := s_sModule + sSymbol
-            ELSEIF sBlock = "PP_PROC_INIT"
-               aAdd( s_aInitExit[1], s_nProcId )
-            ELSEIF sBlock = "PP_PROC_EXIT"
-               aAdd( s_aInitExit[2], s_nProcId )
-            ENDIF
+               s_aProcedures[s_nProcId] := { sSymbol, {} }
+            ELSE
+               IF sBlock = "PP__"
+                  IF sBlock = "PP__FOR"
+                     s_nFlowId++
+                     aSize( s_acFlowType, s_nFlowId )
+                     s_acFlowType[ s_nFlowId ] := "F"
 
-            s_aProcedures[s_nProcId] := { sSymbol, {} }
-         ELSE
-            IF sBlock = "PP__"
-               IF sBlock = "PP__FOR"
-                  s_nFlowId++
-                  aSize( s_acFlowType, s_nFlowId )
-                  s_acFlowType[ s_nFlowId ] := "F"
+                     sBlock := SubStr( sBlock, 9 )
+                     sCounter := Left( sBlock, ( nAt := AT( ":=", sBlock ) ) - 1 )
+                     sBlock   := SubStr( sBlock, nAt + 2 )
+                     sStart   := Left( sBlock, ( nAt := At( "~TO~", sBlock ) ) - 1 )
+                     sBlock   := SubStr( sBlock, nAt + 4 )
+                     sEnd     := Left( sBlock, ( nAt := At( "~STEP~", sBlock ) ) - 1 )
+                     sStep    := SubStr( sBlock, nAt + 6 )
+                     IF sStep == ""
+                        sStep := "1"
+                     ENDIF
 
-                  sBlock := SubStr( sBlock, 9 )
-                  sCounter := Left( sBlock, ( nAt := AT( ":=", sBlock ) ) - 1 )
-                  sBlock   := SubStr( sBlock, nAt + 2 )
-                  sStart   := Left( sBlock, ( nAt := At( "~TO~", sBlock ) ) - 1 )
-                  sBlock   := SubStr( sBlock, nAt + 4 )
-                  sEnd     := Left( sBlock, ( nAt := At( "~STEP~", sBlock ) ) - 1 )
-                  sStep    := SubStr( sBlock, nAt + 6 )
-                  IF sStep == ""
-                     sStep := "1"
-                  ENDIF
+                     aAdd( s_aProcedures[ s_nProcId ][2], { 0, &( "{||" + sCounter + ":=" + sStart + "}" ), nLine } ) // Loop back
 
-                  aAdd( s_aProcedures[ s_nProcId ][2], { 0, &( "{||" + sCounter + ":=" + sStart + "}" ), nLine } ) // Loop back
+                     sBlock := sCounter + "<=" + sEnd
 
-                  sBlock := sCounter + "<=" + sEnd
+                     s_nCompLoop++
+                     aSize( s_aLoopJumps, s_nCompLoop )
+                     s_aLoopJumps[ s_nCompLoop ] := { Len( s_aProcedures[ s_nProcId ][2] ) + 1, {}, "F", &( "{||" + sCounter + ":=" + sCounter + "+" + sStep + "}" ) } // Address of line to later place conditional Jump instruction into.
 
-                  s_nCompLoop++
-                  aSize( s_aLoopJumps, s_nCompLoop )
-                  s_aLoopJumps[ s_nCompLoop ] := { Len( s_aProcedures[ s_nProcId ][2] ) + 1, {}, "F", &( "{||" + sCounter + ":=" + sCounter + "+" + sStep + "}" ) } // Address of line to later place conditional Jump instruction into.
+                  ELSEIF sBlock = "PP__NEXT"
 
-               ELSEIF sBlock = "PP__NEXT"
-
-                  IF s_nCompLoop == 0 .OR. s_aLoopJumps[ s_nCompLoop ][3] != "F"
-                     Alert( "NEXT does not match FOR" )
-                  ELSE
-                     aAdd( s_aProcedures[ s_nProcId ][2], { 0, s_aLoopJumps[ s_nCompLoop ][4], nLine } ) // STEP
-                     aAdd( s_aProcedures[ s_nProcId ][2], { s_aLoopJumps[ s_nCompLoop ][1] - 1, NIL, nLine } ) // Loop back
-                     s_aProcedures[ s_nProcId ][2][ s_aLoopJumps[s_nCompLoop][1] ][1] := Len( s_aProcedures[ s_nProcId ][2] ) // Patching the previous conditional Jump Instruction
-
-                     nJumps := Len( s_aLoopJumps[s_nCompLoop][2] )
-                     FOR nJump := 1 TO nJumps
-                        s_aProcedures[ s_nProcId ][2][ s_aLoopJumps[s_nCompLoop][2][nJump] ][1] := Len( s_aProcedures[ s_nProcId ][2] ) // Patching the unconditional Jump Instruction
-                     NEXT
-
-                     s_nCompLoop--
-                     //aSize( s_aIfJumps, s_nCompIf )
-                  ENDIF
-
-                  BREAK
-
-               ELSEIF sBlock = "PP__WHILE"
-                  s_nFlowId++
-                  aSize( s_acFlowType, s_nFlowId )
-                  s_acFlowType[ s_nFlowId ] := "W"
-
-                  sBlock := SubStr( sBlock, 11 )
-                  s_nCompLoop++
-                  aSize( s_aLoopJumps, s_nCompLoop )
-                  s_aLoopJumps[ s_nCompLoop ] := { Len( s_aProcedures[ s_nProcId ][2] ) + 1, {}, "W" } // Address of line to later place conditional Jump instruction into.
-
-               ELSEIF sBlock = "PP__LOOP"
-
-                  IF s_nCompLoop == 0
-                     Alert( "LOOP with no loop in sight!" )
-                  ELSE
-                     IF s_aLoopJumps[ s_nCompLoop ][3] == "F"
+                     IF s_nCompLoop == 0 .OR. s_aLoopJumps[ s_nCompLoop ][3] != "F"
+                        Alert( "NEXT does not match FOR" )
+                     ELSE
                         aAdd( s_aProcedures[ s_nProcId ][2], { 0, s_aLoopJumps[ s_nCompLoop ][4], nLine } ) // STEP
-                     ENDIF
-
-                     aAdd( s_aProcedures[ s_nProcId ][2], { s_aLoopJumps[ s_nCompLoop ][1] - 1, NIL, nLine } ) // Loop back
-                  ENDIF
-
-                  BREAK
-
-               ELSEIF sBlock = "PP__EXIT"
-
-                  sBlock := ""
-                  IF s_nCompLoop == 0
-                     Alert( "EXIT with no loop in sight!" )
-                  ELSE
-                     aAdd( s_aLoopJumps[ s_nCompLoop ][2], Len( s_aProcedures[ s_nProcId ][2] ) + 1 ) // Address of line to later place unconditional Jump instruction into.
-                  ENDIF
-
-               ELSEIF sBlock = "PP__ENDDO"
-                  s_nFlowId--
-                  //aSize( s_acFlowType, s_nFlowId )
-
-                  IF s_nCompLoop == 0
-                     Alert( "ENDDO does not match WHILE" )
-                  ELSE
-                     aAdd( s_aProcedures[ s_nProcId ][2], { s_aLoopJumps[ s_nCompLoop ][1] - 1, NIL, nLine } ) // Loop back
-                     s_aProcedures[ s_nProcId ][2][ s_aLoopJumps[s_nCompLoop][1] ][1] := Len( s_aProcedures[ s_nProcId ][2] ) // Patching the previous conditional Jump Instruction
-
-                     nJumps := Len( s_aLoopJumps[s_nCompLoop][2] )
-                     FOR nJump := 1 TO nJumps
-                        s_aProcedures[ s_nProcId ][2][ s_aLoopJumps[s_nCompLoop][2][nJump] ][1] := Len( s_aProcedures[ s_nProcId ][2] ) // Patching the unconditional Jump Instruction
-                     NEXT
-
-                     s_nCompLoop--
-                     //aSize( s_aIfJumps, s_nCompIf )
-                  ENDIF
-
-                  BREAK
-
-               ELSEIF sBlock = "PP__DOCASE"
-                  s_nFlowId++
-                  aSize( s_acFlowType, s_nFlowId )
-                  s_acFlowType[ s_nFlowId ] := "C"
-
-                  sBlock := "" //SubStr( sBlock, 12 )
-                  s_nCompIf++
-                  aSize( s_aIfJumps, s_nCompIf )
-                  s_aIfJumps[ s_nCompIf ] := { 0, {}, "C", .F. } // Address of line to later place conditional Jump instruction into.
-
-               ELSEIF sBlock = "PP__CASE"
-
-                  IF s_nCompIf == 0 .OR. s_aIfJumps[ s_nCompIf ][3] != "C" .OR. s_aIfJumps[ s_nCompIf ][4]
-                     sBlock := ""
-                     Alert( "CASE does not match DO CASE" )
-                  ELSE
-                     IF s_aIfJumps[ s_nCompIf ][1] > 0
-                        aAdd( s_aProcedures[ s_nProcId ][2], { 0, NIL, nLine } ) // Place holder for unconditional Jump to END.
-                        aAdd( s_aIfJumps[ s_nCompIf ][2], Len( s_aProcedures[ s_nProcId ][2] ) ) // Address of line to later place unconditional Jump instruction into.
-                        s_aProcedures[ s_nProcId ][2][ s_aIfJumps[s_nCompIf][1] ][1] := Len( s_aProcedures[ s_nProcId ][2] ) // Patching the previous conditional Jump Instruction
-                     ENDIF
-
-                     sBlock := SubStr( sBlock, 10 )
-                     s_aIfJumps[ s_nCompIf ][1] := Len( s_aProcedures[ s_nProcId ][2] ) + 1 // Address of line to later place conditional Jump instruction into.
-                  ENDIF
-
-               ELSEIF sBlock = "PP__OTHERWISE"
-
-                  sBlock := ""
-                  IF s_nCompIf == 0 .OR. s_aIfJumps[ s_nCompIf ][3] != "C" .OR. s_aIfJumps[ s_nCompIf ][4]
-                     Alert( "OTHERWISE does not match DO CASE" )
-                  ELSE
-                     s_aIfJumps[ s_nCompIf ][4] := .T.
-                     IF s_aIfJumps[ s_nCompIf ][1] > 0
-                        s_aProcedures[ s_nProcId ][2][ s_aIfJumps[s_nCompIf][1] ][1] := Len( s_aProcedures[ s_nProcId ][2] ) + 1 // Patching the previous conditional Jump Instruction
-                        s_aIfJumps[ s_nCompIf ][1] := Len( s_aProcedures[ s_nProcId ][2] ) + 1 // Address of line to later place Jump instruction into.
-                     ENDIF
-                  ENDIF
-
-               ELSEIF sBlock = "PP__ENDCASE"
-                  s_nFlowId--
-                  //aSize( s_acFlowType, s_nFlowId )
-
-                  IF s_nCompIf == 0
-                     Alert( "ENDCASE with no DO CASE in sight!" )
-                  ELSE
-                     IF s_aIfJumps[ s_nCompIf ][1] > 0
-                        s_aProcedures[ s_nProcId ][2][ s_aIfJumps[s_nCompIf][1] ][1] := Len( s_aProcedures[ s_nProcId ][2] ) // Patching the previous conditional Jump Instruction
-
-                        nJumps := Len( s_aIfJumps[s_nCompIf][2] )
-                        FOR nJump := 1 TO nJumps
-                           s_aProcedures[ s_nProcId ][2][ s_aIfJumps[s_nCompIf][2][nJump] ][1] := Len( s_aProcedures[ s_nProcId ][2] ) // Patching the unconditional Jump Instruction
-                        NEXT
-                     ENDIF
-
-                     s_nCompIf--
-                     //aSize( s_aIfJumps, s_nCompIf )
-                  ENDIF
-
-                  BREAK
-
-               ELSEIF sBlock = "PP__IF"
-                  s_nFlowId++
-                  aSize( s_acFlowType, s_nFlowId )
-                  s_acFlowType[ s_nFlowId ] := "I"
-
-                  sBlock := SubStr( sBlock, 8 )
-                  s_nCompIf++
-                  aSize( s_aIfJumps, s_nCompIf )
-                  s_aIfJumps[ s_nCompIf ] := { Len( s_aProcedures[ s_nProcId ][2] ) + 1, {}, "I", .F. } // Address of line to later place conditional Jump instruction into.
-
-               ELSEIF sBlock = "PP__ELSEIF"
-
-                  IF s_nCompIf == 0 .OR. s_aIfJumps[ s_nCompIf ][3] != "I" .OR. s_aIfJumps[ s_nCompIf ][4]
-                     Alert( "ELSEIF does not match IF" )
-                     BREAK
-                  ELSE
-                     IF s_aIfJumps[ s_nCompIf ][1] > 0
-                        aAdd( s_aProcedures[ s_nProcId ][2], { 0, NIL, nLine } ) // Place holder for unconditional Jump to END.
-                        aAdd( s_aIfJumps[ s_nCompIf ][2], Len( s_aProcedures[ s_nProcId ][2] ) ) // Address of line to later place unconditional Jump instruction into.
-                        s_aProcedures[ s_nProcId ][2][ s_aIfJumps[s_nCompIf][1] ][1] := Len( s_aProcedures[ s_nProcId ][2] ) // Patching the previous conditional Jump Instruction
-                     ENDIF
-
-                     sBlock := SubStr( sBlock, 12 )
-                     s_aIfJumps[ s_nCompIf ][1] := Len( s_aProcedures[ s_nProcId ][2] ) + 1 // Address of line to later place Jump instruction into.
-                  ENDIF
-
-               ELSEIF sBlock = "PP__ELSE"
-
-                  sBlock := ""
-                  IF s_nCompIf == 0 .OR. s_aIfJumps[ s_nCompIf ][3] != "I" .OR. s_aIfJumps[ s_nCompIf ][4]
-                     Alert( "ELSE does not match IF" )
-                     BREAK
-                  ELSE
-                     s_aIfJumps[ s_nCompIf ][4] := .T.
-                     s_aProcedures[ s_nProcId ][2][ s_aIfJumps[s_nCompIf][1] ][1] := Len( s_aProcedures[ s_nProcId ][2] ) + 1 // Patching the prebvious conditional Jump Instruction
-                     s_aIfJumps[ s_nCompIf ][1] := Len( s_aProcedures[ s_nProcId ][2] ) + 1 // Address of line to later place Jump instruction into.
-                  ENDIF
-
-               ELSEIF sBlock = "PP__ENDIF"
-                  s_nFlowId--
-                  //aSize( s_acFlowType, s_nFlowId )
-
-                  IF s_nCompIf == 0
-                     Alert( "ENDIF does not match IF" )
-                  ELSE
-                     s_aProcedures[ s_nProcId ][2][ s_aIfJumps[s_nCompIf][1] ][1] := Len( s_aProcedures[ s_nProcId ][2] ) // Patching the previous conditional Jump Instruction
-
-                     nJumps := Len( s_aIfJumps[s_nCompIf][2] )
-                     FOR nJump := 1 TO nJumps
-                        s_aProcedures[ s_nProcId ][2][ s_aIfJumps[s_nCompIf][2][nJump] ][1] := Len( s_aProcedures[ s_nProcId ][2] ) // Patching the unconditional Jump Instruction
-                     NEXT
-
-                     s_nCompIf--
-                     //aSize( s_aIfJumps, s_nCompIf )
-                  ENDIF
-
-                  BREAK
-
-               ELSEIF sBlock = "PP__END"
-
-                  IF s_nCompIf == 0 .AND. s_nCompLoop == 0
-                     Alert( "END with no Flow-Control structure in sight!" )
-                  ELSE
-                     IF s_acFlowType[ s_nFlowId ] $ "FW"
-                        IF s_acFlowType[ s_nFlowId ] $ "F"
-                           aAdd( s_aProcedures[ s_nProcId ][2], { 0, s_aLoopJumps[ s_nCompLoop ][4], nLine } ) // STEP
-                        ENDIF
                         aAdd( s_aProcedures[ s_nProcId ][2], { s_aLoopJumps[ s_nCompLoop ][1] - 1, NIL, nLine } ) // Loop back
-
                         s_aProcedures[ s_nProcId ][2][ s_aLoopJumps[s_nCompLoop][1] ][1] := Len( s_aProcedures[ s_nProcId ][2] ) // Patching the previous conditional Jump Instruction
 
                         nJumps := Len( s_aLoopJumps[s_nCompLoop][2] )
@@ -869,7 +807,170 @@ PROCEDURE CompileLine( sPPed, nLine )
                         NEXT
 
                         s_nCompLoop--
-                        //aSize( s_aLoopJumps, s_nCompLoop )
+                        //aSize( s_aIfJumps, s_nCompIf )
+                     ENDIF
+
+                     LOOP
+
+                  ELSEIF sBlock = "PP__WHILE"
+                     s_nFlowId++
+                     aSize( s_acFlowType, s_nFlowId )
+                     s_acFlowType[ s_nFlowId ] := "W"
+
+                     sBlock := SubStr( sBlock, 11 )
+                     s_nCompLoop++
+                     aSize( s_aLoopJumps, s_nCompLoop )
+                     s_aLoopJumps[ s_nCompLoop ] := { Len( s_aProcedures[ s_nProcId ][2] ) + 1, {}, "W" } // Address of line to later place conditional Jump instruction into.
+
+                  ELSEIF sBlock = "PP__LOOP"
+
+                     IF s_nCompLoop == 0
+                        Alert( "LOOP with no loop in sight!" )
+                     ELSE
+                        IF s_aLoopJumps[ s_nCompLoop ][3] == "F"
+                           aAdd( s_aProcedures[ s_nProcId ][2], { 0, s_aLoopJumps[ s_nCompLoop ][4], nLine } ) // STEP
+                        ENDIF
+
+                        aAdd( s_aProcedures[ s_nProcId ][2], { s_aLoopJumps[ s_nCompLoop ][1] - 1, NIL, nLine } ) // Loop back
+                     ENDIF
+
+                     LOOP
+
+                  ELSEIF sBlock = "PP__EXIT"
+
+                     sBlock := ""
+                     IF s_nCompLoop == 0
+                        Alert( "EXIT with no loop in sight!" )
+                     ELSE
+                        aAdd( s_aLoopJumps[ s_nCompLoop ][2], Len( s_aProcedures[ s_nProcId ][2] ) + 1 ) // Address of line to later place unconditional Jump instruction into.
+                     ENDIF
+
+                  ELSEIF sBlock = "PP__ENDDO"
+                     s_nFlowId--
+                     //aSize( s_acFlowType, s_nFlowId )
+
+                     IF s_nCompLoop == 0
+                        Alert( "ENDDO does not match WHILE" )
+                     ELSE
+                        aAdd( s_aProcedures[ s_nProcId ][2], { s_aLoopJumps[ s_nCompLoop ][1] - 1, NIL, nLine } ) // Loop back
+                        s_aProcedures[ s_nProcId ][2][ s_aLoopJumps[s_nCompLoop][1] ][1] := Len( s_aProcedures[ s_nProcId ][2] ) // Patching the previous conditional Jump Instruction
+
+                        nJumps := Len( s_aLoopJumps[s_nCompLoop][2] )
+                        FOR nJump := 1 TO nJumps
+                           s_aProcedures[ s_nProcId ][2][ s_aLoopJumps[s_nCompLoop][2][nJump] ][1] := Len( s_aProcedures[ s_nProcId ][2] ) // Patching the unconditional Jump Instruction
+                        NEXT
+
+                        s_nCompLoop--
+                        //aSize( s_aIfJumps, s_nCompIf )
+                     ENDIF
+
+                     LOOP
+
+                  ELSEIF sBlock = "PP__DOCASE"
+                     s_nFlowId++
+                     aSize( s_acFlowType, s_nFlowId )
+                     s_acFlowType[ s_nFlowId ] := "C"
+
+                     sBlock := ""//SubStr( sBlock, 12 )
+                     s_nCompIf++
+                     aSize( s_aIfJumps, s_nCompIf )
+                     s_aIfJumps[ s_nCompIf ] := { 0, {}, "C", .F. } // Address of line to later place conditional Jump instruction into.
+
+                  ELSEIF sBlock = "PP__CASE"
+
+                     IF s_nCompIf == 0 .OR. s_aIfJumps[ s_nCompIf ][3] != "C" .OR. s_aIfJumps[ s_nCompIf ][4]
+                        sBlock := ""
+                        Alert( "CASE does not match DO CASE" )
+                     ELSE
+                        IF s_aIfJumps[ s_nCompIf ][1] > 0
+                           aAdd( s_aProcedures[ s_nProcId ][2], { 0, NIL, nLine } ) // Place holder for unconditional Jump to END.
+                           aAdd( s_aIfJumps[ s_nCompIf ][2], Len( s_aProcedures[ s_nProcId ][2] ) ) // Address of line to later place unconditional Jump instruction into.
+                           s_aProcedures[ s_nProcId ][2][ s_aIfJumps[s_nCompIf][1] ][1] := Len( s_aProcedures[ s_nProcId ][2] ) // Patching the previous conditional Jump Instruction
+                        ENDIF
+
+                        sBlock := SubStr( sBlock, 10 )
+                        s_aIfJumps[ s_nCompIf ][1] := Len( s_aProcedures[ s_nProcId ][2] ) + 1 // Address of line to later place conditional Jump instruction into.
+                     ENDIF
+
+                  ELSEIF sBlock = "PP__OTHERWISE"
+
+                     sBlock := ""
+                     IF s_nCompIf == 0 .OR. s_aIfJumps[ s_nCompIf ][3] != "C" .OR. s_aIfJumps[ s_nCompIf ][4]
+                        Alert( "OTHERWISE does not match DO CASE" )
+                     ELSE
+                        s_aIfJumps[ s_nCompIf ][4] := .T.
+                        IF s_aIfJumps[ s_nCompIf ][1] > 0
+                           s_aProcedures[ s_nProcId ][2][ s_aIfJumps[s_nCompIf][1] ][1] := Len( s_aProcedures[ s_nProcId ][2] ) + 1 // Patching the previous conditional Jump Instruction
+                           s_aIfJumps[ s_nCompIf ][1] := Len( s_aProcedures[ s_nProcId ][2] ) + 1 // Address of line to later place Jump instruction into.
+                        ENDIF
+                     ENDIF
+
+                  ELSEIF sBlock = "PP__ENDCASE"
+                     s_nFlowId--
+                     //aSize( s_acFlowType, s_nFlowId )
+
+                     IF s_nCompIf == 0
+                        Alert( "ENDCASE with no DO CASE in sight!" )
+                     ELSE
+                        IF s_aIfJumps[ s_nCompIf ][1] > 0
+                           s_aProcedures[ s_nProcId ][2][ s_aIfJumps[s_nCompIf][1] ][1] := Len( s_aProcedures[ s_nProcId ][2] ) // Patching the previous conditional Jump Instruction
+
+                           nJumps := Len( s_aIfJumps[s_nCompIf][2] )
+                           FOR nJump := 1 TO nJumps
+                              s_aProcedures[ s_nProcId ][2][ s_aIfJumps[s_nCompIf][2][nJump] ][1] := Len( s_aProcedures[ s_nProcId ][2] ) // Patching the unconditional Jump Instruction
+                           NEXT
+                        ENDIF
+
+                        s_nCompIf--
+                        //aSize( s_aIfJumps, s_nCompIf )
+                     ENDIF
+
+                     LOOP
+
+                  ELSEIF sBlock = "PP__IF"
+                     s_nFlowId++
+                     aSize( s_acFlowType, s_nFlowId )
+                     s_acFlowType[ s_nFlowId ] := "I"
+
+                     sBlock := SubStr( sBlock, 8 )
+                     s_nCompIf++
+                     aSize( s_aIfJumps, s_nCompIf )
+                     s_aIfJumps[ s_nCompIf ] := { Len( s_aProcedures[ s_nProcId ][2] ) + 1, {}, "I", .F. } // Address of line to later place conditional Jump instruction into.
+
+                  ELSEIF sBlock = "PP__ELSEIF"
+
+                     IF s_nCompIf == 0 .OR. s_aIfJumps[ s_nCompIf ][3] != "I" .OR. s_aIfJumps[ s_nCompIf ][4]
+                        Alert( "ELSEIF does not match IF" )
+                        LOOP
+                     ELSE
+                        IF s_aIfJumps[ s_nCompIf ][1] > 0
+                           aAdd( s_aProcedures[ s_nProcId ][2], { 0, NIL, nLine } ) // Place holder for unconditional Jump to END.
+                           aAdd( s_aIfJumps[ s_nCompIf ][2], Len( s_aProcedures[ s_nProcId ][2] ) ) // Address of line to later place unconditional Jump instruction into.
+                           s_aProcedures[ s_nProcId ][2][ s_aIfJumps[s_nCompIf][1] ][1] := Len( s_aProcedures[ s_nProcId ][2] ) // Patching the previous conditional Jump Instruction
+                        ENDIF
+
+                        sBlock := SubStr( sBlock, 12 )
+                        s_aIfJumps[ s_nCompIf ][1] := Len( s_aProcedures[ s_nProcId ][2] ) + 1 // Address of line to later place Jump instruction into.
+                     ENDIF
+
+                  ELSEIF sBlock = "PP__ELSE"
+
+                     sBlock := ""
+                     IF s_nCompIf == 0 .OR. s_aIfJumps[ s_nCompIf ][3] != "I" .OR. s_aIfJumps[ s_nCompIf ][4]
+                        Alert( "ELSE does not match IF" )
+                        LOOP
+                     ELSE
+                        s_aIfJumps[ s_nCompIf ][4] := .T.
+                        s_aProcedures[ s_nProcId ][2][ s_aIfJumps[s_nCompIf][1] ][1] := Len( s_aProcedures[ s_nProcId ][2] ) + 1 // Patching the prebvious conditional Jump Instruction
+                        s_aIfJumps[ s_nCompIf ][1] := Len( s_aProcedures[ s_nProcId ][2] ) + 1 // Address of line to later place Jump instruction into.
+                     ENDIF
+
+                  ELSEIF sBlock = "PP__ENDIF"
+                     s_nFlowId--
+                     //aSize( s_acFlowType, s_nFlowId )
+
+                     IF s_nCompIf == 0
+                        Alert( "ENDIF does not match IF" )
                      ELSE
                         s_aProcedures[ s_nProcId ][2][ s_aIfJumps[s_nCompIf][1] ][1] := Len( s_aProcedures[ s_nProcId ][2] ) // Patching the previous conditional Jump Instruction
 
@@ -881,37 +982,74 @@ PROCEDURE CompileLine( sPPed, nLine )
                         s_nCompIf--
                         //aSize( s_aIfJumps, s_nCompIf )
                      ENDIF
-                  ENDIF
 
-                  s_nFlowId--
-                  //aSize( s_acFlowType, s_nFlowId )
+                     LOOP
 
-                  BREAK
+                  ELSEIF sBlock = "PP__END"
 
-               ENDIF
-            ELSE
-               nAt := At( "=", sBlock )
-               IF nAt > 1
-                  nAt--
-                  FOR nPos := 1 TO nAt
-                     cChr := SubStr( sBlock, nPos, 1 )
-                     IF ! ( IsAlpha( cChr ) .OR. IsDigit( cChr ) .OR. cChr == '_' .OR. cChr == ' ' )
-                        EXIT
+                     IF s_nCompIf == 0 .AND. s_nCompLoop == 0
+                        Alert( "END with no Flow-Control structure in sight!" )
+                     ELSE
+                        IF s_acFlowType[ s_nFlowId ] $ "FW"
+                           IF s_acFlowType[ s_nFlowId ] $ "F"
+                              aAdd( s_aProcedures[ s_nProcId ][2], { 0, s_aLoopJumps[ s_nCompLoop ][4], nLine } ) // STEP
+                           ENDIF
+                           aAdd( s_aProcedures[ s_nProcId ][2], { s_aLoopJumps[ s_nCompLoop ][1] - 1, NIL, nLine } ) // Loop back
+
+                           s_aProcedures[ s_nProcId ][2][ s_aLoopJumps[s_nCompLoop][1] ][1] := Len( s_aProcedures[ s_nProcId ][2] ) // Patching the previous conditional Jump Instruction
+
+                           nJumps := Len( s_aLoopJumps[s_nCompLoop][2] )
+                           FOR nJump := 1 TO nJumps
+                              s_aProcedures[ s_nProcId ][2][ s_aLoopJumps[s_nCompLoop][2][nJump] ][1] := Len( s_aProcedures[ s_nProcId ][2] ) // Patching the unconditional Jump Instruction
+                           NEXT
+
+                           s_nCompLoop--
+                           //aSize( s_aLoopJumps, s_nCompLoop )
+                        ELSE
+                           s_aProcedures[ s_nProcId ][2][ s_aIfJumps[s_nCompIf][1] ][1] := Len( s_aProcedures[ s_nProcId ][2] ) // Patching the previous conditional Jump Instruction
+
+                           nJumps := Len( s_aIfJumps[s_nCompIf][2] )
+                           FOR nJump := 1 TO nJumps
+                              s_aProcedures[ s_nProcId ][2][ s_aIfJumps[s_nCompIf][2][nJump] ][1] := Len( s_aProcedures[ s_nProcId ][2] ) // Patching the unconditional Jump Instruction
+                           NEXT
+
+                           s_nCompIf--
+                           //aSize( s_aIfJumps, s_nCompIf )
+                        ENDIF
                      ENDIF
-                  NEXT
-                  IF nPos > nAt
-                     sBlock := Left( sBlock, nAt ) + ":" + SubStr( sBlock, nPos )
+
+                     s_nFlowId--
+                     //aSize( s_acFlowType, s_nFlowId )
+
+                     LOOP
+
+                  ENDIF
+               ELSE
+                  nAt := At( "=", sBlock )
+                  IF nAt > 1
+                     nAt--
+                     FOR nPos := 1 TO nAt
+                        cChr := SubStr( sBlock, nPos, 1 )
+                        IF ! ( IsAlpha( cChr ) .OR. IsDigit( cChr ) .OR. cChr == '_' .OR. cChr == ' ' )
+                           EXIT
+                        ENDIF
+                     NEXT
+                     IF nPos > nAt
+                        sBlock := Left( sBlock, nAt ) + ":" + SubStr( sBlock, nPos )
+                     ENDIF
                   ENDIF
                ENDIF
-            ENDIF
 
-            IF sBlock == ""
-               aAdd( s_aProcedures[ s_nProcId ][2], { 0, NIL, nLine } )
-            ELSE
-               //? nLine, s_nProcId, sBlock
-               aAdd( s_aProcedures[ s_nProcId ][2], { 0, &( "{|| " + sBlock + " }" ), nLine } )
+               IF sBlock == ""
+                  aAdd( s_aProcedures[ s_nProcId ][2], { 0, NIL, nLine } )
+               ELSE
+                  //? nLine, s_nProcId, sBlock
+                  //TraceLog( sBlock )
+                  aAdd( s_aProcedures[ s_nProcId ][2], { 0, &( "{||" + sBlock + "}" ), nLine } )
+               ENDIF
             ENDIF
          ENDIF
+
       ENDDO
 
       sBlock := sTemp
@@ -1218,6 +1356,7 @@ PROCEDURE CompileLine( sPPed, nLine )
                aAdd( s_aProcedures[ s_nProcId ][2], { 0, NIL, nLine } )
             ELSE
                //? nLine, s_nProcId, sBlock
+               //TraceLog( sBlock )
                aAdd( s_aProcedures[ s_nProcId ][2], { 0, &( "{||" + sBlock + "}" ), nLine } )
             ENDIF
          ENDIF
@@ -1253,7 +1392,7 @@ FUNCTION PP_ProcLine( nLevel )
       RETURN s_aProcStack[ s_nProcStack - nLevel ][2]
    ENDIF
 
-RETURN ""
+RETURN 0
 
 //--------------------------------------------------------------//
 
@@ -1400,7 +1539,7 @@ PROCEDURE PP_Statics( aVars )
          &( aVars[nVar] ) := &( cInit )
          aAdd( s_asStatics, aVars[nVar] )
       ELSE
-         Alert( "Static redeclaration: '" + aVars[nVar] )
+         Alert( "Type: " + Type( aVars[nVar] ) + "Static redeclaration: '" + aVars[nVar] )
       ENDIF
    NEXT
 
@@ -1622,10 +1761,19 @@ FUNCTION RP_Run_Err( oErr )
          ENDIF
 
          ExecuteProcedure( s_aProcedures[nProc] )
-         RETURN ( s_xRet )
+         IF oErr:CanSubstitute
+            RETURN ( s_xRet )
+         ELSEIF oErr:CanDefault
+            Alert( "Must Default: '" + oErr:Operation + "' " + oErr:Description + sArgs + " " + PP_ProcName() + '(' + LTrim( Str( PP_ProcLine() ) ) + ") " + ProcName(2)  + "(" + LTrim( Str( ProcLine(2) ) ) + ")" )
+            RETURN  ( .F. )
+         ELSE
+            Alert( "No Recovery for: '" + oErr:Operation + "' " + oErr:Description + sArgs + " " + PP_ProcName() + '(' + LTrim( Str( PP_ProcLine() ) ) + ") " + ProcName(2)  + "(" + LTrim( Str( ProcLine(2) ) ) + ")" )
+            BREAK nProc
+         ENDIF
       ENDIF
    ENDIF
 
+   TraceLog( "Sorry, R/T Error: '" + oErr:Operation + "' " + oErr:Description + sArgs + " " + PP_ProcName() + '(' + LTrim( Str( PP_ProcLine() ) ) + ") " + ProcName(2)  + "(" + LTrim( Str( ProcLine(2) ) ) + ")" )
    Alert( "Sorry, R/T Error: '" + oErr:Operation + "' " + oErr:Description + sArgs + " " + PP_ProcName() + '(' + LTrim( Str( PP_ProcLine() ) ) + ") " + ProcName(2)  + "(" + LTrim( Str( ProcLine(2) ) ) + ")" )
 
    BREAK oErr
@@ -1843,6 +1991,7 @@ FUNCTION ProcessFile( sSource )
    LOCAL nLen, nMaxPos, cChar := '', nClose, nBase, nNext, nLine := 0
    LOCAL sRight, nPath := 0, nPaths := Len( s_asPaths ), nNewLine, bBlanks := .T.
    LOCAL sPath := "", cError, sPrevFile := s_sFile
+   LOCAL sTmp
 
    IF At( '.', sSource ) == 0
      sSource += ".prg"
@@ -1925,7 +2074,7 @@ FUNCTION ProcessFile( sSource )
                       FSeek( hSource, -1, 1 )
                       nLen := FRead( hSource, @sBuffer, PP_BUFFER_SIZE )
                       IF nLen < 2
-                         Alert( "ERROR! Unterminated '/**/'" )
+                         Alert( "ERROR! Unterminated '/**/' [" + Str( ProcLine() ) + "]" )
                       ENDIF
                       nMaxPos   := nLen - 1
                       nPosition := 0
@@ -2082,7 +2231,7 @@ FUNCTION ProcessFile( sSource )
 
                    IF nNewLine > 0 .AND. ( nClose > nNewLine )
                       //? nNewLine, nClose, SubStr( sBuffer, nPosition + 1, 78 )
-                      Alert( [ERROR! Unterminated '"'] )
+                      Alert( [ERROR! Unterminated '"' [] + Str( ProcLine() ) + "]" )
                       sLine     += SubStr( sBuffer, nPosition, nNewLine - 1 )
                       nPosition += ( nNewLine - 1 )
                       cChar     := ''
@@ -2150,32 +2299,29 @@ FUNCTION ProcessFile( sSource )
                    nClose   := At( ']', SubStr( sBuffer, nPosition + 1 ) )
                    nNewLine := At( Chr(10), SubStr( sBuffer, nPosition + 1 ) )
 
-                   IF nNewLine > 0 .AND. ( nClose > nNewLine )
-                      //? nNewLine, nClose, SubStr( sBuffer, nPosition + 1, 78 )
-                      Alert( "ERROR! Unterminated '['" )
-                      sLine     += SubStr( sBuffer, nPosition, nNewLine - 1 )
-                      nPosition += ( nNewLine - 1 )
-                      cChar     := ''
+                   IF nNewLine > 0 .AND. ( nClose == 0 .OR. nClose > nNewLine )
                       EXIT
                    ENDIF
-
-                   IF nClose == 0
-                      sLine += SubStr( sBuffer, nPosition )
+                   IF nNewLine == 0
+                      sTmp := SubStr( sBuffer, nPosition )
                       FSeek( hSource, -1, 1 )
                       nLen := FRead( hSource, @sBuffer, PP_BUFFER_SIZE )
+                      sBuffer := sTmp + sBuffer
                       IF nLen < 2
-                         BREAK [ERROR! Unterminated "["]
+                         EXIT
                       ENDIF
-                      nMaxPos   := nLen - 1
+                      nMaxPos   := ( nLen - 1 ) + Len( sTmp )
                       nPosition := 1
                       LOOP
-                   ELSE
-                      sLine     += SubStr( sBuffer, nPosition, nClose )
-                      nPosition += ( nClose )
-                      EXIT
                    ENDIF
+
+                   sLine     += SubStr( sBuffer, nPosition, nClose )
+                   nPosition += ( nClose )
+                   EXIT
                 ENDDO
-                cChar := ']'
+                IF nClose < nNewLine
+                   cChar := ']'
+                ENDIF
 
              CASE cChar == Chr(9)
                 sLine += "    "
@@ -2253,7 +2399,10 @@ FUNCTION ProcessFile( sSource )
    ENDDO
 
    RECOVER USING cError
-      Alert( "No EOL after: " + cError )
+      IF ValType( cError ) == 'C'
+         TraceLog( "No EOL after: ", cError )
+         Alert( "No EOL after: " + cError )
+      ENDIF
       nPosition := nMaxPos + 2
       sLine := ""
    END SEQUENCE
@@ -2320,19 +2469,25 @@ FUNCTION ProcessLine( sLine, nLine, sSource )
 
    LOCAL sDirective, bX, sToken, nRule
    LOCAL nNewLineAt, nLines, Counter
-   LOCAL sLeft, sPassed := '', asOutLines := {}, sOut := '', cChar
-   LOCAL nLen, iCycles, aDefined := {}, aTranslated := {}, aCommanded := {}
+   LOCAL sLeft, sPassed, asOutLines := {}, sOut := '', cChar
+   LOCAL nLen, nCycles := 0, aDefined := {}, aTranslated := {}, aCommanded := {}
    LOCAL nPosition
+   //LOCAL nIdAt, sRight
+   LOCAL sError
+   LOCAL sBackupLine
+   LOCAL sSkipped
 
    WHILE .T.
-
-      //? "Raw Processing: '" + sLine + "'"
+      //? "Processing: '" + sLine + "'"
       //? nPendingLines, nIfDef, IIF( nIfDef > 0, abIfDef[nIfDef] , )
       //WAIT
 
-      IF ! ( sPassed == '' )
-         aAdd( asOutLines, ( sLeft + RTrim( sPassed ) ) )
-         sPassed := ''
+      IF nCycles < MAX_CICLES
+         nCycles++
+      ELSE
+         Alert( "ERROR! Circularity detected [" + sSource + "(" + LTrim( Str( nLine ) ) + ")]" )
+         ? sLine
+         BREAK
       ENDIF
 
       IF sLine == NIL
@@ -2365,7 +2520,7 @@ FUNCTION ProcessLine( sLine, nLine, sSource )
       IF Left( sLine, 1 ) == '#'
 
          sLine := LTrim( SubStr( sLine, 2 ) )
-         sDirective := RTrim( Upper( NextToken( @sLine, .F. ) ) )
+         sDirective := RTrim( Upper( NextToken( @sLine ) ) )
 
          IF ( nLen := Len( sDirective ) ) < 4
             Alert( "ERROR! Unknown directive: '" + sDirective + "' " + sSource )
@@ -2427,6 +2582,12 @@ FUNCTION ProcessLine( sLine, nLine, sSource )
             sLine := ''
             LOOP
 
+         ELSEIF sDirective == Left( "ERROR", nLen )
+
+            ? "#error " + sLine
+            sLine := ''
+            LOOP
+
          ELSEIF sDirective == Left( "UNDEF", nLen )
 
             RemoveDefine( sLine )
@@ -2454,10 +2615,15 @@ FUNCTION ProcessLine( sLine, nLine, sSource )
             // Strip the ""
             sLine := SubStr( sLine, 2, Len( sLine ) - 2 )
 
-            ProcessFile( sLine ) // Intentionally not using s_sIncludeFile
+            IF Upper( sLine ) = "HBCLASS"
+               InitClsRules()
+               InitClsResults()
+            ELSE
+               ProcessFile( sLine ) // Intentionally not using s_sIncludeFile
 
-            /* Recursion safety - don't use the Static might be modified. */
-            s_sIncludeFile := sLine
+               /* Recursion safety - don't use the Static might be modified. */
+               s_sIncludeFile := sLine
+            ENDIF
 
             sLine := ''
             LOOP
@@ -2496,45 +2662,91 @@ FUNCTION ProcessLine( sLine, nLine, sSource )
 
       ENDIF
 
-      iCycles := 0
+      #ifdef PP_RECURSIVE
+         s_bMatching := .T.
+      #endif
 
-      WHILE .T.
+    BEGIN SEQUENCE
 
-         IF iCycles < MAX_TOKENS
-            iCycles++
-         ELSE
-            Alert( "ERROR! Circularity detected [" + sSource + "(" + LTrim( Str( nLine ) ) + ")]" )
-            ? sPassed
-            ? sLine
-            BREAK
-         ENDIF
+      IF nIfDef > 0 .AND. ! abIfDef[nIfDef]
+         //? "Ignored: " + sLine
+         sLine := ''
+         BREAK
+      ENDIF
 
-         IF nIfDef > 0 .AND. ! abIfDef[nIfDef]
-            //? "Ignored: " + sLine
-            sLine := ''
-            EXIT
-         ENDIF
+      //TraceLog( sLine )
 
-         IF ( sToken := NextToken( @sLine, .F. ) /* bCheckRules */  ) == NIL
-            /* EOL */
-            EXIT
-         ENDIF
+    #ifdef PP_RIGHT
+      nIdAt := nRightIdentifier( sLine )
+      DO WHILE ( nIdAt > 0 )
+         sRight := SubStr( sLine, nIdAt )
+         sToken := NextToken( @sRight )
 
          //? "Token = '"  + sToken + "'"
          //WAIT
 
-         cChar := Left( sToken , 1 )
+         IF ( nRule := MatchRule( sToken, @sRight, aDefRules, aDefResults, .F., .F. ) ) > 0
+            //? "DEFINED: " + sRight
+            //WAIT
 
-         IF ( cChar = '_' .OR. IsAlpha( cChar ) ) .AND. ( nRule := MatchRule( sToken, @sLine, aDefRules, aDefResults, .F., .F. ) ) > 0
+            aAdd( aDefined, nRule )
+
+            nPosition := 0
+            WHILE ( nNewLineAt := At( ';', sRight ) ) > 0
+               nPendingLines++
+               IF nPendingLines > Len( aPendingLines )
+                  aSize( aPendingLines, nPendingLines )
+               ENDIF
+
+               nPosition++
+               aIns( aPendingLines, nPosition )
+               aPendingLines[ nPosition ] := Left( sRight, nNewLineAt - 1 )
+
+               //? "Pending #", nPendingLines,  Left( sRight, nNewLineAt - 1 ), aPendingLines[nPendingLines]
+               sRight := LTrim( SubStr( sRight, nNewLineAt + 1 ) )
+            ENDDO
+
+            IF nPosition == 0
+               sLine := sLeft + Left( sLine, nIdAt - 1 ) + sRight
+            ELSE
+               IF ! Empty( sRight )
+                   nPendingLines++
+                   IF nPendingLines > Len( aPendingLines )
+                      aSize( aPendingLines, nPendingLines )
+                   ENDIF
+
+                   nPosition++
+                   aIns( aPendingLines, nPosition )
+                   aPendingLines[ nPosition ] := sRight
+               ENDIF
+
+               //? "Pending #", nPendingLines, sLine, aPendingLines[nPendingLines]
+               sLine := sLeft + Left( sLine, nIdAt - 1 ) + aPendingLines[1]
+               aDel( aPendingLines, 1 )
+               nPendingLines--
+            ENDIF
+
+            // Re-Reprocess the line ...
+            BREAK
+         ENDIF
+
+         nIdAt := nRightIdentifier( Left( sLine, nIdAt - 1 ) )
+      ENDDO
+    #endif
+
+      sBackupLine := sLine
+      sPassed     := ""
+      DO WHILE ( sToken := NextIdentifier( @sLine, @sSkipped ) ) != NIL
+         //? "Token = '"  + sToken + "'"
+         //WAIT
+
+         sPassed += sSkipped
+
+         IF ( nRule := MatchRule( sToken, @sLine, aDefRules, aDefResults, .F., .F. ) ) > 0
             //? "DEFINED: " + sLine
             //WAIT
 
-            IF sPassed == '' .AND. aScan( aDefined, nRule ) > 0
-               Alert( "Cyclic directive: #define " + sToken )
-               BREAK
-            ELSE
-               aAdd( aDefined, nRule )
-            ENDIF
+            aAdd( aDefined, nRule )
 
             nPosition := 0
             WHILE ( nNewLineAt := At( ';', sLine ) ) > 0
@@ -2551,38 +2763,48 @@ FUNCTION ProcessLine( sLine, nLine, sSource )
                sLine := LTrim( SubStr( sLine, nNewLineAt + 1 ) )
             ENDDO
 
-            IF ( sLine == '' )
-               EXIT
+            IF nPosition == 0
+               sLine := sLeft + sPassed + sLine
             ELSE
-               IF nPosition > 0
-                  nPendingLines++
-                  IF nPendingLines > Len( aPendingLines )
-                     aSize( aPendingLines, nPendingLines )
-                  ENDIF
+               IF ! Empty( sLine )
+                   nPendingLines++
+                   IF nPendingLines > Len( aPendingLines )
+                      aSize( aPendingLines, nPendingLines )
+                   ENDIF
 
-                  nPosition++
-
-                  aIns( aPendingLines, nPosition )
-                  aPendingLines[ nPosition ] := sLine
-
-                  //? "Pending #", nPendingLines, sLine, aPendingLines[nPendingLines]
-                  sLine := aPendingLines[1]
-                  aDel( aPendingLines, 1 )
-                  nPendingLines--
+                   nPosition++
+                   aIns( aPendingLines, nPosition )
+                   aPendingLines[ nPosition ] := sLine
                ENDIF
 
-               LOOP
+               //? "Pending #", nPendingLines, sLine, aPendingLines[nPendingLines]
+               sLine := sLeft + sPassed + aPendingLines[1]
+               aDel( aPendingLines, 1 )
+               nPendingLines--
             ENDIF
+
+            // Re-Reprocess the line ...
+            BREAK
          ENDIF
 
-         IF ( nRule := MatchRule( sToken, @sLine, aTransRules, aTransResults, .F., .T. ) ) > 0
+         sPassed += sToken
+      ENDDO
 
+      // Now process Translates...
+      //? "After Defines:", sLine
+
+      sLine := sBackupLine
+
+      sPassed := ""
+      DO WHILE ( sToken := NextToken( @sLine ) ) != NIL
+         //? "Token = '"  + sToken + "'"
+         //WAIT
+         IF ( nRule := MatchRule( sToken, @sLine, aTransRules, aTransResults, .F., .T. ) ) > 0
             //? "TRANSLATED: " + sLine
             //WAIT
 
-            IF sPassed == '' .AND. aScan( aTranslated, nRule ) > 0
-               Alert( "Cyclic directive: #translate " + sToken )
-               BREAK
+            IF sPassed == "" .AND. aScan( aTranslated, nRule ) > 0
+               BREAK( "Cyclic directive: #translate " + sToken )
             ELSE
                aAdd( aTranslated, nRule )
             ENDIF
@@ -2599,13 +2821,13 @@ FUNCTION ProcessLine( sLine, nLine, sSource )
                aPendingLines[ nPosition ] := Left( sLine, nNewLineAt - 1 )
 
                //? "Pending #", nPendingLines,  Left( sLine, nNewLineAt - 1 ), aPendingLines[nPendingLines]
-               sLine := LTrim( SubStr( sLine, nNewLineAt + 1 ) )
+               sLine := SubStr( sLine, nNewLineAt + 1 )
             ENDDO
 
-            IF ( sLine == '' )
-               EXIT
+            IF nPosition == 0
+               sLine := sLeft + sPassed + sLine
             ELSE
-               IF nPosition > 0
+               IF ! Empty( sLine )
                   nPendingLines++
                   IF nPendingLines > Len( aPendingLines )
                      aSize( aPendingLines, nPendingLines )
@@ -2614,78 +2836,96 @@ FUNCTION ProcessLine( sLine, nLine, sSource )
                   nPosition++
                   aIns( aPendingLines, nPosition )
                   aPendingLines[ nPosition ] := sLine
-
-                  //? "Pending #", nPendingLines,  sLine, aPendingLines[nPendingLines]
-                  sLine := aPendingLines[1]
-                  aDel( aPendingLines, 1 )
-                  nPendingLines--
                ENDIF
-
-               LOOP
+               //? "Pending #", nPendingLines, sLine, aPendingLines[nPendingLines]
+               sLine := sLeft + sPassed + aPendingLines[1]
+               aDel( aPendingLines, 1 )
+               nPendingLines--
             ENDIF
+
+            BREAK
          ENDIF
 
-         IF sPassed == '' .AND. ( nRule := MatchRule( sToken, @sLine, aCommRules, aCommResults, .T., .T. ) ) > 0
+         sPassed += sToken
+      ENDDO
 
-            //? "COMMANDED: " + sLine
-            //? '"' + sLeft +'"', '"' + sPassed + '"'
-            //WAIT
+      //TraceLog( sBackupLine )
 
-            IF sPassed == '' .AND. aScan( aCommanded, nRule ) > 0
-               Alert( "Cyclic directive: #command " + sToken )
-               BREAK
-            ELSE
-               aAdd( aCommanded, nRule )
+      sLine := sBackupLine
+      sToken := NextToken( @sLine )
+
+      IF sToken != NIL .AND. ( nRule := MatchRule( sToken, @sLine, aCommRules, aCommResults, .T., .T. ) ) > 0
+         //? "COMMANDED: " + sLine
+         //? '"' + sLeft +'"', '"' + sPassed + '"'
+         //WAIT
+
+         IF aScan( aCommanded, nRule ) > 0
+            Alert( "Cyclic directive: #command " + sToken )
+            BREAK
+         ELSE
+            aAdd( aCommanded, nRule )
+         ENDIF
+
+         nPosition := 0
+         WHILE ( nNewLineAt := At( ';', sLine ) ) > 0
+            nPendingLines++
+            IF nPendingLines > Len( aPendingLines )
+               aSize( aPendingLines, nPendingLines )
             ENDIF
 
-            nPosition := 0
-            WHILE ( nNewLineAt := At( ';', sLine ) ) > 0
+            nPosition++
+            aIns( aPendingLines, nPosition )
+            aPendingLines[ nPosition ] := Left( sLine, nNewLineAt - 1 )
+
+            //? "Pending #", nPendingLines,  Left( sLine, nNewLineAt - 1 ), aPendingLines[nPosition]
+            sLine := LTrim( SubStr( sLine, nNewLineAt + 1 ) )
+         ENDDO
+
+         IF nPosition == 0
+            sLine := sLeft + sLine
+         ELSE
+            IF ! Empty( sLine )
                nPendingLines++
+
                IF nPendingLines > Len( aPendingLines )
                   aSize( aPendingLines, nPendingLines )
                ENDIF
 
                nPosition++
                aIns( aPendingLines, nPosition )
-               aPendingLines[ nPosition ] := Left( sLine, nNewLineAt - 1 )
-
-               //? "Pending #", nPendingLines,  Left( sLine, nNewLineAt - 1 ), aPendingLines[nPosition]
-               sLine := LTrim( SubStr( sLine, nNewLineAt + 1 ) )
-            ENDDO
-
-            IF ( sLine == '' )
-               EXIT
-            ELSE
-               IF nPosition > 0
-                  nPendingLines++
-
-                  IF nPendingLines > Len( aPendingLines )
-                     aSize( aPendingLines, nPendingLines )
-                  ENDIF
-
-                  nPosition++
-                  aIns( aPendingLines, nPosition )
-                  aPendingLines[ nPosition ] := sLine
-
-                  //? "Pending #", nPendingLines,  sLine, aPendingLines[nPosition]
-
-                  sLine := aPendingLines[1]
-                  aDel( aPendingLines, 1 )
-                  nPendingLines--
-               ENDIF
-
-               LOOP
+               aPendingLines[ nPosition ] := sLine
             ENDIF
 
+            //? "Pending #", nPendingLines,  sLine, aPendingLines[nPosition]
+            sLine := sLeft + aPendingLines[1]
+            aDel( aPendingLines, 1 )
+            nPendingLines--
          ENDIF
 
-         sPassed += sToken
+         BREAK
+      ENDIF
 
-      ENDDO
+      aAdd( asOutLines, sLeft + sBackupLine )
+      sLine := ""
+
+    RECOVER USING sError
+
+      IF sError != NIL
+         Alert( sError )
+         BREAK
+      ENDIF
+
+      LOOP
+
+    END SEQUENCE
 
    ENDDO
 
-   sOut := ""
+   #ifdef PP_RECURSIVE
+      s_bMatching := .F.
+   #endif
+
+   sOut   := ""
    nLines := Len( asOutLines )
 
    //? nLines
@@ -2695,14 +2935,10 @@ FUNCTION ProcessLine( sLine, nLine, sSource )
       //? Counter, asOutLines[Counter]
       //WAIT
        sOut += asOutLines[Counter]
-       IF Counter < nLines .OR. ! ( sPassed == '' )
+       IF Counter < nLines
           sOut += ' ;'
        ENDIF
    NEXT
-
-   IF ! ( sPassed == '' )
-      sOut += ( sLeft + sPassed )
-   ENDIF
 
    IF ! Empty( sOut )
       //? "Returning: " + sOut
@@ -2725,10 +2961,11 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
    LOCAL sPad, asRevert := {}, bNext, sPreMatch, nLen, nBookMark
    LOCAL sPrimaryStopper, sPreStoppers, sStopper, sMultiStopper, nStopper, nStoppers
    LOCAL nSpaceAt, sStopLine, sNextStopper, nTemp
+   LOCAL bRepeatableMatched
 
    nRules   := Len( aRules )
 
-   IF nRules == 0 .OR. sKey == NIL
+   IF nRules == 0 .OR. sKey == NIL .OR. sKey == ""
       RETURN 0
    ENDIF
 
@@ -2788,17 +3025,23 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
       ENDIF
 
       IF nMatches == 0
-         IF bStatement .AND. ! Empty( NextToken( sWorkLine, .T. ) )
+         IF bStatement .AND. ! Empty( sWorkLine )
             IF bDbgMatch
-               ? "*** Unmatched remainder: >", sWorkLine, "<"
+               ? "***1 Unmatched remainder: >", sWorkLine, "<"
                ? "Statement failed"
                WAIT
             ENDIF
 
             LOOP
+         ELSEIF bStatement
+            sWorkLine := ""
          ENDIF
 
          sLine := ( PPOut( aResults[nRule], aMarkers ) + sPad + sWorkLine )
+         IF bDbgMatch
+            ? "TRANSLATED to:", sLine
+            WAIT
+         ENDIF
          RETURN nRule
       ENDIF
 
@@ -2879,7 +3122,7 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
                nOptional := aMP[2]
 
                sPreStoppers := sWorkLine
-               sPrimaryStopper := NextToken( @sWorkLine, .F. )
+               sPrimaryStopper := NextToken( @sWorkLine )
 
                IF sPrimaryStopper == NIL
 
@@ -2916,7 +3159,7 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
                            sMultiStopper += sNextStopper
                            sStopper      := SubStr( sStopper, nSpaceAt )
                            sMultiStopper += ExtractLeadingWS( @sStopper )
-                           sToken        := NextToken( @sStopLine, .F. )
+                           sToken        := NextToken( @sStopLine )
                            sToken        := Upper( RTrim( sToken ) )
                         ELSE
                            EXIT
@@ -3021,7 +3264,7 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
          sPreMatch := sWorkLine
 
          IF ( sAnchor == NIL .OR. sMultiStopper != NIL .OR. ;
-              ( ( ( sToken := NextToken( @sWorkLine, .T. ) ) != NIL  .AND. ( DropTrailingWS( @sToken, @sPad ), nLen := Max( 4, Len( sToken ) ), Upper( sToken ) == Left( sAnchor, nLen ) ) ) ) ) ;
+              ( ( ( sToken := NextToken( @sWorkLine ) ) != NIL  .AND. ( DropTrailingWS( @sToken, @sPad ), nLen := Max( 4, Len( sToken ) ), Upper( sToken ) == Left( sAnchor, nLen ) ) ) ) ) ;
             .AND. ( nMarkerId == 0 .OR. ( sAnchor == NIL .AND. sMultiStopper != NIL ) .OR. ( ( xMarker := NextExp( @sWorkLine, cType, aList, NIL, sNextAnchor ) ) != NIL ) )
 
             IF sMultiStopper != NIL
@@ -3134,19 +3377,26 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
             ENDIF
 
             IF nMatch == nMatches
-               IF bStatement .AND. ! Empty( NextToken( sWorkLine, .T. ) )
+               IF bStatement .AND. ! Empty( sWorkLine )
                   bNext := .T.
 
                   IF bDbgMatch
-                     ? "*** Unmatched remainder: >", sWorkLine, "<"
+                     ? "Key: >", sKey, "< ***2 Unmatched remainder: >", sWorkLine, "<"
                      ? "Statement failed, try next rule...'"
                      WAIT
                   ENDIF
 
+                  sWorkLine := ""
                   EXIT
+               ELSEIF bStatement
+                  sWorkLine := ""
                ENDIF
 
                sLine := ( PPOut( aResults[nRule], aMarkers ) + sPad + sWorkLine )
+               IF bDbgMatch
+                  ? "TRANSLATED to:", sLine
+                  WAIT
+               ENDIF
                RETURN nRule
             ELSE
                IF bDbgMatch
@@ -3212,19 +3462,25 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
 
                /* Optional (last) didn't match - Rule can still match. */
                IF nMatch == nMatches
-                  IF bStatement .AND. ! Empty( NextToken( sWorkLine, .T. ) )
+                  IF bStatement .AND. ! Empty( sWorkLine )
                      bNext := .T.
 
                      IF bDbgMatch
-                        ? "*** Unmatched remainder: >", sWorkLine, "<"
+                        ? "***3 Unmatched remainder: >", sWorkLine, "<"
                         ? "Statement failed, try next rule..."
                         WAIT
                      ENDIF
 
                      EXIT
+                  ELSEIF bStatement
+                     sWorkLine := ""
                   ENDIF
 
                   sLine := ( PPOut( aResults[nRule], aMarkers ) + sWorkLine )
+                  IF bDbgMatch
+                     ? "TRANSLATED to:", sLine
+                     WAIT
+                  ENDIF
                   RETURN nRule
                ELSE
                   /* Nested optional, maybe last in its group. */
@@ -3263,20 +3519,32 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
                   ENDIF
 
                   /* Skip all same level optionals to next group. */
-                  nOptional := aMP[2]
+                  nOptional         := aMP[2]
+                  bRepeatableMatched := aMP[1] > 1000 .AND. aMarkers[ aMP[1] - 1000 ] != NIL //.AND. Len( aMarkers[ aMP[1] - 1000 ] ) > 0
                   WHILE nMatch < nMatches
                      nMatch++
                      aMP := aRules[nRule][2][nMatch]
                      IF ( aMP[2] < 0 ) .AND. ( Abs( aMP[2] ) < Abs( nOptional ) )
-                        IF bDbgMatch
-                           ? "Partial not allowed"
-                        ENDIF
                         EXIT
                      ENDIF
                      IF ( aMP[2] >= 0 ) .AND. ( aMP[2] <= Abs( nOptional ) )
                         EXIT
                      ENDIF
                   ENDDO
+
+                  // We should NOT consider this a failure, continue matching...
+                  IF bRepeatableMatched
+                     IF bDbgMatch
+                        ? "Skipped to", nMatch, "of", nMatches, aMP[2], aMP[3], nOptional
+                     ENDIF
+
+                     nOptional := aMP[2]
+                     LOOP
+                  ELSE
+                     IF bDbgMatch
+                        ? "Partial not allowed"
+                     ENDIF
+                  ENDIF
 
                   IF nMatch == nMatches
 
@@ -3317,9 +3585,9 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
 
          LOOP
       ELSE
-         IF bStatement .AND. ! Empty( NextToken( sWorkLine, .T. ) )
+         IF bStatement .AND. ! Empty( sWorkLine )
             IF bDbgMatch
-               ? "*** Unmatched remainder: >", sWorkLine, "<"
+               ? "***4 Unmatched remainder: >", sWorkLine, "<"
                ? "Statement failed, try next rule..."
                WAIT
             ENDIF
@@ -3410,7 +3678,11 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
          ENDIF
       ENDIF
 
-      sLine := ( PPOut( aResults[nRule], aMarkers ) + sWorkLine )
+      sLine := ( PPOut( aResults[nRule], aMarkers ) )
+      IF bDbgMatch
+         ? "TRANSLATED to:", sLine
+         WAIT
+      ENDIF
       RETURN nRule
 
    ENDDO
@@ -3421,218 +3693,146 @@ RETURN 0
 
 //--------------------------------------------------------------//
 
-FUNCTION NextToken( sLine, bCheckRules )
+FUNCTION NextToken( sLine )
 
-  LOCAL  sReturn := NIL, cChar, Counter, nLen, nClose, sLeft2Chars := Left( sLine, 2 )
-
-  //? bCheckRules, "Called from: " + ProcName(1) + " Line: " + Str( ProcLine(1) ) + " Scaning: " + sLine
+  LOCAL sReturn := NIL, cChar, Counter, nLen, nClose
+  LOCAL s1, s2, s3
 
   IF Empty( sLine )
      RETURN NIL
   ENDIF
 
-  IF sLeft2Chars == "=="
+  IF Left( sLine, 1 ) == ' '
+     TraceLog( "!!!Left Pad: " + sLine )
+     sLine := LTrim( sLine )
+  ENDIF
 
-     sReturn := sLeft2Chars
+  nLen := Len( sLine )
 
-  ELSEIF sLeft2Chars == "<="
+  s1 := Left( sLine, 1 )
+  IF nLen >= 2
+     s2 := Left( sLine, 2 )
+  ENDIF
+  IF nLen >= 3
+     s3 := Upper( Left( sLine, 3 ) )
+  ENDIF
 
-     sReturn := sLeft2Chars
+  DO WHILE .T.//nLen > 0 // Fake loop
 
-  ELSEIF sLeft2Chars == ">="
-
-     sReturn := sLeft2Chars
-
-  ELSEIF sLeft2Chars == "<>"
-
-     sReturn := sLeft2Chars
-
-  ELSEIF sLeft2Chars == "->"
-
-     sReturn := sLeft2Chars
-
-  ELSEIF sLeft2Chars == ":="
-
-     sReturn := sLeft2Chars
-
-  ELSEIF sLeft2Chars == "^="
-
-     sReturn := sLeft2Chars
-
-  ELSEIF sLeft2Chars == "*="
-
-     sReturn := sLeft2Chars
-
-  ELSEIF sLeft2Chars == "/="
-
-     sReturn := sLeft2Chars
-
-  ELSEIF sLeft2Chars == "+="
-
-     sReturn := sLeft2Chars
-
-  ELSEIF sLeft2Chars == "-="
-
-     sReturn := sLeft2Chars
-
-  ELSEIF sLeft2Chars == "++"
-
-     sReturn := sLeft2Chars
-
-  ELSEIF sLeft2Chars == "--"
-
-     sReturn := sLeft2Chars
-
-  ELSEIF sLeft2Chars == "**"
-
-     sReturn := sLeft2Chars
-
-  ELSEIF Upper( Left( sLine, 3 ) ) == ".T."
-
-     sReturn := ".T."
-
-  ELSEIF Upper( Left( sLine, 3 ) ) == ".F."
-
-     sReturn := ".F."
-
-  ELSEIF Left( sLine, 2 ) == "[["
-
-     nClose := AT( ']]', sLine )
-     IF nClose == 0
-        Alert( "ERROR! [NextToken()] Unterminated '[[' at: " + sLine )
-        sReturn := "[["
-     ELSE
-        sReturn := Left( sLine, nClose + 2 )
-     ENDIF
-
-  ELSEIF Left( sLine, 1 ) == '"'
-
-     nClose := AT( '"', SubStr( sLine, 2 ) )
-     IF nClose == 0
-        Alert( 'ERROR! [NextToken()] Unterminated ["] at: ' + sLine )
-        sReturn := '"'
-     ELSE
-        sReturn := Left( sLine, nClose + 1 )
-     ENDIF
-
-  ELSEIF Left( sLine, 1 ) == "'"
-
-     nClose := AT( "'", SubStr( sLine, 2 ) )
-     IF nClose == 0
-        Alert( "ERROR! [NextToken()] Unterminated ['] at: " + sLine )
-        sReturn := "'"
-     ELSE
-        sReturn := SubStr( sLine, 2, nClose - 1 )
-
-        IF ! ( '"' $ sReturn )
-           sReturn := '"' + sReturn + '"'
-        ELSE
-           sReturn := "'" + sReturn + "'"
+     IF nLen >= 5
+        IF s1 == '.' .AND. Upper( SubStr( sLine, 2, 3 ) ) == 'AND' .AND. SubStr( sLine, 5, 1 ) == '.'
+           sReturn := ".AND."
+           EXIT
+        ELSEIF s1 = '.' .AND. Upper( SubStr( sLine, 2, 3 ) ) == 'NOT' .AND. SubStr( sLine, 5, 1 ) == '.'
+           sReturn := "!"
+           /* Skip the unaccounted letters ( .NOT. <-> ! ) */
+           sLine := SubStr( sLine, 5 )
+           EXIT
         ENDIF
      ENDIF
 
-  ELSEIF Left( sLine, 1 ) == '['
+     IF nLen >= 4 .AND. s1 == '.' .AND. Upper( SubStr( sLine, 2, 2 ) ) == 'OR' .AND. SubStr( sLine, 4, 1 ) == '.'
+        sReturn := ".OR."
+        EXIT
+     ENDIF
 
-     IF IsAlpha( s_cLastChar ) .OR. IsDigit( s_cLastChar ) .OR. s_cLastChar == '_' .OR. s_cLastChar $ ")}]."
+     IF nLen >= 3 .AND. s3 $ ".T.\.F."
+        sReturn := s3
+        EXIT
+     ENDIF
 
-        sReturn := '['
-
-     ELSE
-
-        nClose := AT( ']', sLine )
-        IF nClose == 0
-           Alert( "ERROR! [NextToken()] Unterminated ']' at: " + sLine )
-           sReturn := '['
-        ELSE
-           sReturn := SubStr( sLine, 2, nClose - 2 )
-
-           IF ! ( '"' $ sReturn )
-              sReturn := '"' + sReturn + '"'
-           ELSEIF ! ( "'" $ sReturn )
-              sReturn := "'" + sReturn + "'"
+     IF nLen >= 2
+        IF s2 $ "++\--\->\:=\==\!=\<>\>=\<=\+=\-=\*=\^=\**\/=\%=\??"
+           sReturn := s2
+           EXIT
+        ELSEIF s2 == "[["
+           nClose := AT( ']]', sLine )
+           IF nClose == 0
+              Alert( "ERROR! [NextToken()] Unterminated '[[' at: " + sLine + "[" + Str( ProcLine() ) + "]"  )
+              sReturn := "[["
            ELSE
-              sReturn := '[' + sReturn + ']'
+              sReturn := Left( sLine, nClose + 2 )
            ENDIF
+           EXIT
         ENDIF
-
      ENDIF
 
-  ELSEIF Left( sLine, 1 ) $ "?+-*/:=^!&()[]&{}@,|"
-
-     sReturn := Left( sLine, 1 )
-
-  ELSEIF Left( sLine, 1 ) == '.' .AND. Upper( SubStr( sLine, 2, 3 ) ) == 'AND' .AND. SubStr( sLine, 5, 1 ) == '.'
-
-     sReturn := ".AND."
-
-  ELSEIF Left( sLine, 1 ) == '.' .AND. Upper( SubStr( sLine, 2, 2 ) ) == 'OR' .AND. SubStr( sLine, 4, 1 ) == '.'
-
-     sReturn := ".OR."
-
-  ELSEIF Left( sLine, 1 ) = '.' .AND. Upper( SubStr( sLine, 2, 3 ) ) == 'NOT' .AND. SubStr( sLine, 5, 1 ) == '.'
-
-     sReturn := "!"
-
-     /* Skip the unaccounted letters ( .NOT. <-> ! ) */
-     sLine := SubStr( sLine, 5 )
-
-  ELSE
-
-     nLen := Len( sLine )
+     IF nLen >= 1
+        IF s1 == '"'
+           nClose := AT( '"', SubStr( sLine, 2 ) )
+           IF nClose == 0
+              Alert( 'ERROR! [NextToken()] Unterminated ["] at: ' + sLine )
+              sReturn := '"'
+           ELSE
+              sReturn := Left( sLine, nClose + 1 )
+           ENDIF
+           EXIT
+        ELSEIF s1 == "'"
+           nClose := AT( "'", SubStr( sLine, 2 ) )
+           IF nClose == 0
+              Alert( "ERROR! [NextToken()] Unterminated ['] at: " + sLine )
+              sReturn := "'"
+           ELSE
+              sReturn := SubStr( sLine, 2, nClose - 1 )
+              IF ! ( '"' $ sReturn )
+                 sReturn := '"' + sReturn + '"'
+              ELSE
+                 sReturn := "'" + sReturn + "'"
+              ENDIF
+           ENDIF
+           EXIT
+        ELSEIF s1 == '['
+           IF IsAlpha( s_cLastChar ) .OR. IsDigit( s_cLastChar ) .OR. s_cLastChar == '_' .OR. s_cLastChar $ ")}]."
+              sReturn := '['
+           ELSE
+              nClose := AT( ']', sLine )
+              IF nClose == 0
+                 //Alert( "ERROR! [NextToken()] Unterminated '[' at: " + sLine + "[" + Str( ProcLine() ) + "]" )
+                 sReturn := '['
+              ELSE
+                 sReturn := SubStr( sLine, 2, nClose - 2 )
+                 IF ! ( '"' $ sReturn )
+                    sReturn := '"' + sReturn + '"'
+                 ELSEIF ! ( "'" $ sReturn )
+                    sReturn := "'" + sReturn + "'"
+                 ELSE
+                    sReturn := '[' + sReturn + ']'
+                 ENDIF
+              ENDIF
+           ENDIF
+           EXIT
+        ELSEIF s1 == "\"
+           sReturn := s2
+           EXIT
+        ELSEIF s1 $ ".+-*/:=^!&()[]{}@,|<>#%?"
+           sReturn := s1
+           EXIT
+        ENDIF
+     ENDIF
 
      FOR Counter := 1 TO nLen
         cChar := SubStr( sLine, Counter, 1 )
-
-        IF cChar $ "+-*/:=^!&()[]{}@,|"
-
+        IF cChar == "\"
+           sReturn := Left( sLine, 2 )
+           EXIT
+        ELSEIF cChar $ " .+-*/:=^!&()[]{}@,|<>#%?"
            sReturn := Left( sLine, Counter - 1 )
            EXIT
-
-        ELSEIF cChar == '.'
-
-           IF Upper( SubStr( sLine, Counter + 1, 4 ) ) == 'AND.'
-
-              sReturn := Left( sLine, Counter - 1 )
-              EXIT
-
-           ELSEIF Upper( SubStr( sLine, Counter + 1, 3 ) ) == 'OR.'
-
-              sReturn := Left( sLine, Counter - 1 )
-              EXIT
-
-           ELSEIF Upper( SubStr( sLine, Counter + 1, 4 ) ) == 'NOT.'
-
-              sReturn := Left( sLine, Counter - 1 )
-              EXIT
-
-           ELSEIF IsAlpha( Left( sLine, 1 ) ) .AND. ! ( '&' $ Left( sLine, Counter ) )
-
-              sReturn := Left( sLine, Counter - 1 )
-              EXIT
-
-           ENDIF
-
-        ELSEIF cChar == ' '// .OR. cChar == Chr(9) // Tabs converted to spaces
-
-           sReturn := Left( sLine, Counter - 1 )
-           EXIT
-
         ENDIF
-
      NEXT
 
-     IF sReturn == NIL .AND. ! (sLine == '' )
-        sReturn := sLine
-        sLine := ''
-     ENDIF
+     EXIT
+  ENDDO
 
+  IF sReturn == NIL .AND. ! ( sLine == '' )
+     sReturn := sLine
+     sLine := ""
   ENDIF
 
   IF ( sReturn == NIL )
-     //? "TOKEN = 'NIL' AT: ", sLine
+     //TraceLog( "TOKEN = 'NIL'", sLine )
   ELSE
-     //? "TOKEN = '" + sReturn + "' Len: ", Len( sReturn ), "AT: ", sLine
-     sLine       := SubStr( sLine, Len( sReturn ) + 1 )
+     sLine := SubStr( sLine, Len( sReturn ) + 1 )
 
      IF Left( sReturn, 1 ) == '.' .AND. Len( sReturn ) > 1 .AND. Right( sReturn, 1 ) == '.'
         s_cLastChar := ' '
@@ -3640,30 +3840,30 @@ FUNCTION NextToken( sLine, bCheckRules )
         s_cLastChar := Right( sReturn, 1 )
      ENDIF
 
-     sReturn     += ExtractLeadingWS( @sLine )
-  ENDIF
+     sReturn += ExtractLeadingWS( @sLine )
 
-  IF bCheckRules
-
-     IF sReturn != NIL
-
+    #ifdef PP_RECURSIVE
+     IF s_bMatching
         cChar := Left( sReturn, 1 )
-
         IF ( cChar = '_' .OR. IsAlpha( cChar ) ) .AND. MatchRule( sReturn, @sLine, aDefRules, aDefResults, .F., .F. ) > 0
            RETURN NextToken( @sLine, .T. )
         ENDIF
 
+        /*
         IF MatchRule( sReturn, @sLine, aTransRules, aTransResults, .F., .T. ) > 0
            //? '>', sLine, '<'
            RETURN NextToken( @sLine, .T. )
         ENDIF
+        */
 
         //? sReturn, "not defined/translated."
         //WAIT
-
      ENDIF
+    #endif
 
   ENDIF
+
+  //TraceLog( "TOKEN = '" + sReturn, sLine )
 
 RETURN sReturn
 
@@ -3671,25 +3871,38 @@ RETURN sReturn
 
 FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
 
-  LOCAL sExp, cChar, sTemp, Counter, sWorkLine, sPad, sToken, sGrabber
-
-  //? ProcName(1), ProcLine(1), cType, sLine
+  LOCAL  sExp, sTemp, Counter, sWorkLine, sPad, sToken, sList
+  LOCAL  sNextLine, sNextToken, sLastToken, sJustToken, sJustNext, cLastChar
+  LOCAL  s1, s2, s4, s5, sNext1, sNext2, sNext4, sNext5, nLen, nNextLen
 
   IF Empty( sLine )
      RETURN NIL
   ENDIF
 
+  //TraceLog( "*** Start", cType, sLine, sNextAnchor )
+
   DO CASE
+     CASE cType == '<'
+        /* No prep needed */
+
+     CASE cType == 'A'
+        IF aExp == NIL
+           aExp := {}
+        ENDIF
+
+     CASE cType == ','
+        sList := ""
+
      CASE cType == '*'
         sExp  := sLine
 
-        sLine := ''
+        sLine := ""
         //? "EXP (*): " + sExp
         RETURN sExp
 
      CASE cType == ':'
         sWorkLine := sLine
-        sExp := NextToken( @sLine, .T. ) /* bCheckRules */
+        sExp := NextToken( @sLine )
 
         IF( sExp == NIL )
            RETURN NIL
@@ -3701,503 +3914,408 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
         IF aScan( aWords, sExp ) > 0
            //? "EXP = " + sExp
            RETURN sExp + sPad
-        ELSE
+        ENDIF
+        // Else
            sLine := sWorkLine
            RETURN NIL
-        ENDIF
-
-     CASE cType == 'A'
-        IF aExp == NIL
-           aExp := {}
-        ENDIF
 
      CASE cType == NIL
         RETURN "-"
-
   ENDCASE
 
-  sToken := NextToken( @sLine, .T. )
+  sExp := ""
+  DO WHILE .T.
+     sToken := NextToken( @sLine )
 
-  IF sToken == NIL
-     RETURN NIL
-  ENDIF
-
-  IF Left( sToken, 2 ) == '->'
-
-     sLine := sToken + sLine
-     sExp := NIL
-
-  ELSEIF Left( sToken, 2 ) == ':='
-
-     sLine := sToken + sLine
-     sExp := NIL
-
-  ELSEIF Left( sToken, 2 ) == '++'
-
-     sExp  := sToken
-
-     IF sNextAnchor != '++'
-        sTemp := NextExp( @sLine, '<', NIL, NIL, sNextAnchor )
-        IF sTemp == NIL
-           Alert( "ERROR! orphan '++'" )
-        ELSE
-           sExp +=  sTemp
-        ENDIF
+     IF sToken == NIL
+        EXIT
      ENDIF
 
-  ELSEIF Left( sToken, 2 ) == '--'
-
-     sExp  := sToken
-
-     IF sNextAnchor != '--'
-        sTemp := NextExp( @sLine, '<', NIL, NIL, sNextAnchor )
-        IF sTemp == NIL
-           Alert( "ERROR! orphan '--'" )
-        ELSE
-           sExp +=  sTemp
-        ENDIF
+     sJustToken := RTrim( sToken )
+     IF sNextAnchor != NIL  .AND. sJustToken == sNextAnchor
+        EXIT
      ENDIF
 
-  ELSEIF Left( sToken, 1 ) == '+'
-
-     sExp  := sToken
-
-     IF sNextAnchor != '+'
-        sTemp := NextExp( @sLine, '<', NIL, NIL, sNextAnchor )
-        IF sTemp == NIL
-           Alert( "ERROR! orphan '+'" )
-        ELSE
-           sExp +=  sTemp
-        ENDIF
+     nLen := Len( sJustToken )
+     s1 := Left( sJustToken, 1 )
+     s2 := s4 := s5 := ""
+     IF nLen == 2
+        s2 := sJustToken
+     ELSEIF nLen == 4
+        s4 := Upper( sJustToken )
+     ELSEIF nLen == 5
+        s5 := Upper( sJustToken )
      ENDIF
 
-  ELSEIF Left( sToken, 1 ) == '-'
-
-     sExp  := sToken
-
-     IF sNextAnchor != '-'
-        sTemp := NextExp( @sLine, '<', NIL, NIL, sNextAnchor )
-        IF sTemp == NIL
-           Alert( "ERROR! orphan '-'" )
+     IF ! Empty( sLine )
+        sNextLine := sLine
+        sNextToken := NextToken( @sNextLine )
+        IF sNextToken == NIL
+           sNextToken := ""
+           sJustNext  := ""
+           sNext1     := ""
         ELSE
-           sExp +=  sTemp
+           sJustNext := RTrim( sNextToken )
+           sNext1    := Left( sJustNext, 1 )
         ENDIF
+     ELSE
+        sNextToken := ""
+        sJustNext  := ""
+        sNext1     := ""
      ENDIF
 
-  ELSEIF Left( sToken, 1 ) == '!'
+     // ------------------
+     // 1st. Level.
+     // ------------------
 
-     sExp  := sToken
-
-     IF sNextAnchor != '!'
-        sTemp := NextExp( @sLine, '<', NIL, NIL, sNextAnchor )
-        IF sTemp == NIL
-           Alert( "ERROR! orphan '!'" )
-        ELSE
-           sExp +=  sTemp
-        ENDIF
+     IF bDbgExp
+        ? "1st. Level - Token: '" + sToken + "' Next: '" + sNextToken + "'"
+        WAIT
      ENDIF
 
-  ELSEIF Left( sToken, 1 ) == ')'
+     IF nLen == 1
 
-     sLine := sToken + sLine
-     sExp := NIL
-
-  ELSEIF Left( sToken, 1 ) == '('
-
-     sExp  := sToken
-
-     IF sNextAnchor != '('
-        sTemp := NextExp( @sLine, ',', NIL, NIL, sNextAnchor ) // Content
-        IF sTemp == NIL
-           Alert( "ERROR! Unbalanced '(...'" )
-        ELSE
-           sExp +=  sTemp
-        ENDIF
-
-        sToken := NextToken( @sLine, .T. ) /* bCheckRules */ // Close
-        IF sToken == NIL
-           Alert( "ERROR! Unbalanced '('" )
-        ELSE
+        IF s1 $ "-+!:"
            sExp += sToken
-        ENDIF
-     ENDIF
+           LOOP
+        ELSEIF s1 == "&"
+           sExp += sToken
+           IF sNext1 == '('
+              LOOP
+           ELSE
+              IF IsAlpha( sNext1 ) .OR. sNext1 == '_'
+                 sExp       += sNextToken
+                 sLastToken := sJustNext
+                 sLine      := sNextLine
+                 sNextToken := NextToken( @sNextLine )
+                 IF sNextToken != NIL .AND. Left( sNextToken, 1 ) == '.'
+                    // Get the macro terminator.
+                    sExp       += sNextToken
+                    sLastToken := "."
+                    sLine      := sNextLine
+                    IF sNextToken == '.' //(Last Token) No space after Macro terminator, so get the suffix.
+                       sNextToken := NextToken( @sNextLine )
+                       IF sNextToken != NIL
+                          sNext1 := Left( sNextToken, 1 )
+                          IF IsAlpha( sNext1 ) .OR. sNext1 $ '0123456789_'
+                             // Get the macro sufix.
+                             sExp       += sNextToken
+                             sLastToken := sNextToken
+                             sLine      := sNextLine
+                          ENDIF
+                       ENDIF
+                    ENDIF
+                 ENDIF
+              ELSE
+                 Alert( "ERROR! Invalid '&' at: " + sExp + sNextToken )
+                 EXIT
+              ENDIF
+           ENDIF
 
-  ELSEIF Left( sToken, 1 ) == '}'
-
-     sLine := sToken + sLine
-     sExp := NIL
-
-  ELSEIF Left( sToken, 1 ) == '{'
-
-     sExp  := sToken
-
-     IF sNextAnchor != '{'
-
-        IF Left( sLine, 1 ) == '|'
-
-           /* Literal block */
-           sExp += '|'
-           sLine := SubStr( sLine, 2 )
-           sExp  += ExtractLeadingWS( @sLine )
-
-           IF Left( sLine, 1 ) == '|'
-              sExp += '|'
-              sLine := SubStr( sLine, 2 )
-              sExp  += ExtractLeadingWS( @sLine )
+            sLastToken := RTrim( sLastToken )
+           // Continue  2nd level checks below.
+        ELSEIF s1 == '('
+           sExp += sToken
+           IF Left( sNext1, 1 ) == ')'
+              sExp  += sNextToken
+              sLine := sNextLine
            ELSE
               sTemp := NextExp( @sLine, ',', NIL, NIL, sNextAnchor ) // Content
               IF sTemp == NIL
-                 Alert( "ERROR! Unbalanced '{|...'" )
+                 Alert( "ERROR!(1) Unbalanced '(' at: " + sExp  )
               ELSE
                  sExp +=  sTemp
               ENDIF
-              IF Left( sLine, 1 ) == '|'
-                 sExp += '|'
-                 sLine := SubStr( sLine, 2 )
-                 sExp  += ExtractLeadingWS( @sLine )
+
+              sToken := NextToken( @sLine ) // Close
+              IF sToken == NIL
+                 Alert( "ERROR!(2) Unbalanced '(' at: " + sExp )
+              ELSEIF Left( sToken, 1 ) == ')'
+                 sExp += sToken
               ELSE
-                 Alert( "ERROR! Unbalanced '{|...|'" )
+                 sLine := sToken + sLine
+                 Alert( "ERROR!(3) Unbalanced '(' Found: '" +  sToken + "' at: " + sExp )
               ENDIF
            ENDIF
 
-           sTemp := NextExp( @sLine, ',', NIL, NIL, sNextAnchor ) // Content
-           IF sTemp == NIL
-              Alert( "ERROR! Empty '{||'" )
-           ELSE
-              sExp +=  sTemp
-           ENDIF
+           sLastToken := ")"
+           // Continue  2nd level checks below.
+        ELSEIF s1 == '{'
+           sExp  += sToken
+           IF sNext1 == '|'
+              /* Literal block */
+              sExp  += sNextToken
+              sLine := sNextLine
 
-           IF Left( sLine, 1 ) == '}'
-              sExp += '}'
-              sLine := SubStr( sLine, 2 )
-              sExp  += ExtractLeadingWS( @sLine )
-           ELSE
-              Alert( "ERROR! Unbalanced '{||'" )
-           ENDIF
+              sNextToken := NextToken( @sNextLine )
+              IF sNextToken != NIL .AND. Left( sNextToken, 1 ) == '|'
+                 sExp  += sNextToken
+                 sLine := sNextLine
+              ELSE
+                 sTemp := NextExp( @sLine, ',', NIL, NIL, sNextAnchor ) // Content
+                 IF sTemp == NIL
+                    Alert( "ERROR! Unbalanced '{|...' at: " + sExp )
+                 ELSE
+                    sExp += sTemp
+                 ENDIF
 
-        ELSE
+                 /* sLine was changed by NextExp()! */
+                 sNextLine  := sLine
+                 sNextToken := NextToken( @sNextLine )
+                 IF sNextToken != NIL .AND. Left( sNextToken, 1 ) == '|'
+                    sExp  += sNextToken
+                    sLine := sNextLine
+                 ELSE
+                    Alert( "ERROR! Unbalanced '{|...|' at: " + sExp )
+                 ENDIF
+              ENDIF
 
-           /* Literal array */
-           IF Left( sLine, 1 ) != '}'
               sTemp := NextExp( @sLine, ',', NIL, NIL, sNextAnchor ) // Content
               IF sTemp == NIL
-                 Alert( "ERROR! Unbalanced '{...'" )
+                 Alert( "ERROR! Empty '{||'" )
               ELSE
                  sExp +=  sTemp
               ENDIF
-           ENDIF
 
-           sToken := NextToken( @sLine, .T. ) /* bCheckRules */ // Close
-           IF sToken == NIL
-              Alert( "ERROR! Unbalanced '{'" )
+              sToken := NextToken( @sLine ) // Close
+              IF sToken == NIL
+                 Alert( "ERROR! Unbalanced '{' at: " + sExp )
+              ELSEIF Left( sToken, 1 ) == '}'
+                 sExp += sToken
+              ELSE
+                 sLine := sToken + sLine
+                 Alert( "ERROR! Unbalanced '{' at: " + sExp )
+              ENDIF
            ELSE
-              sExp += sToken
+              /* Literal array */
+              IF sNext1 == '}'
+                 sExp       += sNextToken
+                 sLine      := sNextLine
+              ELSE
+                 sTemp := NextExp( @sLine, ',', NIL, NIL, sNextAnchor ) // Content
+                 IF sTemp == NIL
+                    Alert( "ERROR! Unbalanced '{...'" )
+                 ELSE
+                    sExp +=  sTemp
+                 ENDIF
+
+                 sToken := NextToken( @sLine ) // Close
+                 IF sToken == NIL
+                    Alert( "ERROR! Unbalanced '{' at: " + sExp )
+                 ELSEIF Left( sToken, 1 ) == '}'
+                    sExp += sToken
+                 ELSE
+                    sLine := sToken + sLine
+                    Alert( "ERROR! Unbalanced '{' at: " + sExp )
+                 ENDIF
+              ENDIF
            ENDIF
-        ENDIF
 
-     ENDIF
-
-  ELSEIF Left( sToken, 1 ) == ',' .AND. ! cType $ ",A"
-
-     sLine := sToken + sLine
-     sExp := NIL
-
-  ELSE
-
-     sExp := sToken
-
-  ENDIF
-
-  IF sExp == NIL
-     RETURN NIL
-  ENDIF
-
-  /*
-  IF ( ! ( sNextAnchor == NIL ) ) .AND. NextToken( @sLine, .F.. ) == sNextAnchor
-     RETURN IIF( cType == 'A', aExp, sExp )
-  ENDIF
-  */
-
-  cChar := Left( sExp, 1 )
-
-  /* Is Identifier */
-  IF cChar == '_' .OR. IsAlpha( cChar )
-
-     IF Left( sLine, 1 ) $ "([" .AND. ( sNextAnchor == NIL  .OR. ( ! ( sNextAnchor $ "([" ) ) )
-
-        IF bDbgExp
-           ? 'Start Function/Array: ' + sExp
-        ENDIF
-
-        sExp  += Left( sLine, 1 ) // Open
-        sLine := SubStr( sLine, 2 )
-        sExp  += ExtractLeadingWS( @sLine )
-
-        IF bDbgExp
-           ? 'Opened: ' + sExp + ' AT: ' + sLine
-        ENDIF
-
-        IF Left( sLine, 1 ) == ')'
-           sExp  += Left( sLine, 1 ) // Close
-           sLine := SubStr( sLine, 2 )
-           sExp  += ExtractLeadingWS( @sLine )
-        ELSE
+           sLastToken := "}"
+           // Continue  2nd level checks below.
+        ELSEIF s1 == "["
+           sExp  += sToken
            sTemp := NextExp( @sLine, ',', NIL, NIL, sNextAnchor ) // Content
            IF sTemp == NIL
-              Alert( "ERROR! Unbalanced '('" )
+              Alert( "ERROR! Unbalanced '[' at: " + sExp )
+              EXIT
            ELSE
               sExp += sTemp
            ENDIF
 
-           IF bDbgExp
-              ? 'Catptured: ' + sExp + ' AT: ' + sLine
+           sToken := NextToken( @sLine ) // Close
+           IF sToken == NIL
+              Alert( "ERROR! Unbalanced '[' at: " + sExp )
+           ELSEIF Left( sToken, 1 ) == ']'
+              sExp += sToken
+           ELSE
+              sLine := sToken + sLine
+              Alert( "ERROR! Unbalanced '[' at: " + sExp )
            ENDIF
 
-           sToken := NextToken( @sLine, .T. ) /* bCheckRules */ // Close
-           IF sToken == NIL
-              Alert( "ERROR! Unbalanced ')'" )
+           // Continue  2nd level checks below.
+        ELSEIF s1 $ ".*/=^><!$%#)}]?"
+           sLine := sToken + sLine
+           EXIT
+        ELSEIF s1 == ","
+           IF cType == ","
+              sList += ( sExp + sToken )
+              sExp  := ""
+              LOOP
+           ELSEIF cType == "A"
+              aAdd( aExp, sExp )
+              sExp  := ""
+              LOOP
            ELSE
-              sExp += sToken
+              //? "DONT CONTINUE: " + sLine
+              sLine := sToken + sLine
+              EXIT
            ENDIF
+        ELSE
+           sExp       += sToken
+           sLastToken := sJustToken
         ENDIF
 
-        IF bDbgExp
-           ? 'Closed Function: ' + sExp + ' AT: ' + sLine
+     ELSEIF nLen == 2
+
+        IF s2 $ '++\--'
+           sExp += sToken
+           LOOP
+        ELSEIF s2 $ "->\:=\==\!=\<>\>=\<=\+=\-=\*=\^=\**\/=\%=\??"
+           sLine := sToken + sLine
+           EXIT
+        ELSE
+           sExp       += sToken
+           sLastToken := sJustToken
+        ENDIF
+
+     ELSEIF nLen == 4
+
+        IF s4 == '.OR.'
+           sLine := sToken + sLine
+           EXIT
+        ELSE
+           sExp       += sToken
+           sLastToken := sJustToken
+        ENDIF
+
+     ELSEIF nLen == 5
+
+        IF s5 == '.AND.'
+           sLine := sToken + sLine
+           EXIT
+        /* .NOT. is being translated to ! at NextToken() !!!
+        ELSEIF s5 == ".NOT."
+           sExp       += sToken
+           LOOP
+        */
+        ELSE
+           sExp       += sToken
+           sLastToken := sJustToken
+        ENDIF
+
+     ELSE
+
+        sExp       += sToken
+        sLastToken := sJustToken
+
+     ENDIF
+
+     // ------------------
+     // 2nd. Level.
+     // ------------------
+
+     IF sLastToken == NIL .OR. Right( sLastToken, 1 ) == ' '
+        TraceLog( sExp, sLastToken, sLine, nLen, sToken, sNextToken )
+        Alert( "??? " + sExp )
+     ENDIF
+
+     nLen := Len( sLastToken )
+     cLastChar := Right( sLastToken, 1 )
+
+     IF ( ! Empty( sLine ) ) //.AND. sLine == sNextLine
+        sNextLine  := sLine
+        sNextToken := NextToken( @sNextLine )
+        IF sNextToken == NIL
+           sNextToken := ""
+        ENDIF
+     ENDIF
+
+     sJustNext := RTrim( sNextToken )
+     nNextLen := Len( sJustNext )
+     sNext1 := Left( sJustNext, 1 )
+     sNext2 := sNext4 := sNext5 := ""
+     IF nNextLen == 2
+        sNext2 := sJustNext
+     ELSEIF nNextLen == 4
+        sNext4 := Upper( sJustNext )
+     ELSEIF nNextLen == 5
+        sNext5 := sJustNext
+     ENDIF
+
+     IF bDbgExp
+        ? "2nd. Level - Token: '" + sToken + "' Next: '" + sNextToken + "'"
+        WAIT
+     ENDIF
+
+     IF sNextAnchor != NIL  .AND. sJustNext == sNextAnchor
+        EXIT
+     ENDIF
+
+     //TraceLog( sExp, sToken, sJustToken, nLen, sNextToken, sJustNext, nNextLen, sLastToken, cLastChar, sNextAnchor )
+
+     IF nNextLen == 1
+
+        IF sNext1 == '(' .AND. ( IsAlpha( cLastChar ) .OR. cLastChar $ "0123456789_."  )
+           LOOP
+        ELSEIF sNext1 == '[' .AND. cLastChar $ "}])."
+           LOOP
+        ELSEIF sNext1 $ "+-*/:=^!><!$%#"
+           sExp  += sNextToken
+           sLine := sNextLine
+           LOOP
+        ENDIF
+
+     ELSEIF nNextLen == 2
+
+        IF sNext2 $ "--\++"
+           IF IsAlpha( cLastChar  ) .OR. cLastChar $ "0123456789_."
+              sExp += sNextToken
+              sLine := sNextLine
+           ENDIF
+        ELSEIF sNext2 $ "->\:=\==\!=\<>\>=\<=\+=\-=\*=\/=\^=\**\%="
+           sExp  += sNextToken
+           sLine := sNextLine
+           LOOP
+        ENDIF
+
+     ELSEIF nNextLen == 4
+
+        IF sNext4 == ".OR."
+           sExp  += sNextToken
+           sLine := sNextLine
+           LOOP
+        ENDIF
+
+     ELSEIF nNextLen == 5
+
+        IF sNext5 == ".AND."
+           sExp  += sNextToken
+           sLine := sNextLine
+           LOOP
         ENDIF
 
      ENDIF
 
-  ENDIF
+     // ------------------
+     // 3rd. Level.
+     // ------------------
 
-  IF bDbgExp
-     ? "sExp: '" + sExp + "'"
-     WAIT
-  ENDIF
-
-  DO WHILE .T.
-
-      IF Right( sExp, 1 ) == "&"
-
-         IF cType == 'A'
-            sExp  += NextExp( @sLine, '<', NIL, NIL, sNextAnchor )
-         ELSE
-            sTemp := NextExp( @sLine, cType, NIL, NIL, sNextAnchor ) // Content
-            IF sTemp == NIL
-               Alert( "ERROR! Invalid '&'" )
-            ELSE
-               sExp +=  sTemp
-            ENDIF
-         ENDIF
-
-         IF Left( sLine, 1 ) == '.'
-
-            /* Macro terminator without suffix */
-            IF SubStr( sLine, 2, 1 ) == ' '
-               sExp += '.'
-               sLine := SubStr( sLine, 2 )
-               sExp += ExtractLeadingWS( @sLine )
-               LOOP
-            ENDIF
-
-            // Get the macro terminator.
-            IF cType == 'A'
-               sExp  += NextExp( @sLine, '<', NIL, NIL, sNextAnchor )
-            ELSE
-               sTemp := NextExp( @sLine, cType, NIL, NIL, sNextAnchor ) // Content
-               IF sTemp == NIL
-                  Alert( "ERROR! Invalid '&'" )
-               ELSE
-                  sExp +=  sTemp
-               ENDIF
-            ENDIF
-
-            IF ( IsAlpha( SubStr( sLine, 2, 1 ) ) .OR. IsDigit( SubStr( sLine, 2, 1 ) ) )
-               // Get the macro sufix.
-               IF cType == 'A'
-                  sExp  += NextExp( @sLine, '<', NIL, NIL, sNextAnchor )
-               ELSE
-                  sTemp := NextExp( @sLine, cType, NIL, NIL, sNextAnchor ) // Content
-                  IF sTemp == NIL
-                     Alert( "ERROR! Invalid '&'" )
-                  ELSE
-                     sExp +=  sTemp
-                  ENDIF
-               ENDIF
-            ENDIF
-         ENDIF
-
-         LOOP // Might need other checks, like cType ',' or 'A'
-
-      ELSEIF Right( sExp, 1 ) $ "}])." .AND. Left( sLine, 1 ) == '[' .AND. ( sNextAnchor != "[" ) /*.AND. At( ']', sLine ) < At( '[', SubStr( sLine, 2 ) ) */
-
-         sExp  += Left( sLine, 1 ) // Open
-         sLine := SubStr( sLine, 2 )
-         sExp  += ExtractLeadingWS( @sLine )
-
-         IF cType == 'A'
-            sExp  += NextExp( @sLine, '<', NIL, NIL, sNextAnchor )
-         ELSE
-            sTemp := NextExp( @sLine, cType, NIL, NIL, sNextAnchor ) // Content
-            IF sTemp == NIL
-               Alert( "ERROR! Unbalanced '['" )
-            ELSE
-               sExp +=  sTemp
-            ENDIF
-         ENDIF
-
-         sToken := NextToken( @sLine, .T. ) /* bCheckRules */ // Close
-         IF sToken == NIL .OR. Left( sToken, 1 ) != ']'
-            Alert( "ERROR! Unbalanced '['" )
-         ELSE
-            sExp += sToken
-         ENDIF
-
-         LOOP // Might need other checks, like cType ',' or 'A'
-
-      ELSEIF cType == 'A' .AND. Left( sLine, 1 ) == ',' //.AND. ( sNextAnchor != "," )
-
-         aAdd( aExp, sExp )
-
-         //sExp  += ','
-         sLine   := SubStr( sLine, 2 )
-         ExtractLeadingWS( @sLine, @sPad )
-         //sExp  += sPad
-
-         IF ! Left( sLine, 1 ) == ')'
-            NextExp( @sLine, 'A', NIL, aExp, sNextAnchor )
-         ENDIF
-         /* aExp already done. */
-
-         sExp := NIL
-
-         EXIT
-
-      ELSEIF cType == ',' .AND. Left( sLine, 1 ) == ',' //.AND. ( sNextAnchor != "," )
-
-         sExp  += ','
-         sLine := SubStr( sLine, 2 )
-         sExp  += ExtractLeadingWS( @sLine )
-
-         IF ! Left( sLine, 1 ) == ')'
-            sTemp := NextExp( @sLine, ',', NIL, NIL, sNextAnchor )
-            IF sTemp == NIL
-               //? "???"
-               //sExp += "NIL"
-            ELSE
-               sExp += sTemp
-            ENDIF
-         ENDIF
-
-         EXIT
-
-      ELSEIF ( ( sGrabber := Left( sLine, 2 ) ) == "->"  .OR. ;
-               sGrabber == ":=" .OR. sGrabber == "==" .OR. sGrabber == "!=" .OR. sGrabber == "<>" .OR. sGrabber == ">=" .OR. ;
-               sGrabber == "<=" .OR. sGrabber == "+=" .OR. sGrabber == "-=" .OR. sGrabber == "*=" .OR. sGrabber == "^=" ) ;
-             .AND. ( sNextAnchor == NIL .OR. ( ! ( sNextAnchor == sGrabber ) ) )
-
-         sExp += sGrabber
-
-         IF bDbgExp
-            ? "Grabber: '" + sExp + "'"
-         ENDIF
-
-         sLine := SubStr( sLine, 3 )
-         sExp  += ExtractLeadingWS( @sLine )
-
-         IF bDbgExp
-            ? "Next : '" + sLine + "'"
-            WAIT
-         ENDIF
-
-         IF cType == 'A'
-            sExp  += NextExp( @sLine, '<', NIL, NIL, sNextAnchor )
-         ELSE
-            sTemp := NextExp( @sLine, cType, NIL, NIL, sNextAnchor )
-            IF sTemp == NIL
-               Alert( "ERROR! Unbalanced '" + sGrabber + "'" + "at: '" + sExp + "'" )
-            ELSE
-               sExp +=  sTemp
-            ENDIF
-         ENDIF
-
-         LOOP
-
-      ELSEIF Left( sLine, 1 ) $ "+-*/:=^!><!$" .AND. ( sNextAnchor == NIL .OR. ( ! ( sNextAnchor $ "+-*/:=^!<>" ) ) )
-
-         sExp  += Left( sLine, 1 )
-
-         IF bDbgExp
-            ? "Grabber: '" + sExp + "'"
-         ENDIF
-
-         sLine := SubStr( sLine, 2 )
-         sExp  += ExtractLeadingWS( @sLine )
-
-         IF bDbgExp
-            ? "Next : '" + sLine + "'"
-            WAIT
-         ENDIF
-
-         IF cType == 'A'
-            sExp  += NextExp( @sLine, '<', NIL, NIL, sNextAnchor )
-         ELSE
-            sTemp := NextExp( @sLine, cType, NIL, NIL, sNextAnchor ) // Content
-            IF sTemp == NIL
-               //Alert( "ERROR! Unbalanced: '" + Left( sLine, 1 ) + "'" )
-            ELSE
-               sExp +=  sTemp
-            ENDIF
-         ENDIF
-
-         LOOP
-
-      ELSEIF Upper( Left( sLine, 5 ) ) == ".AND."
-
-         sExp  += ".AND."
-         sLine := SubStr( sLine, 6 )
-         sExp  += ExtractLeadingWS( @sLine )
-         IF cType == 'A'
-            sExp  += NextExp( @sLine, '<', NIL, NIL, sNextAnchor )
-         ELSE
-            sExp  += NextExp( @sLine, cType, NIL, NIL, sNextAnchor )
-         ENDIF
-
-         LOOP
-
-      ELSEIF Upper( Left( sLine, 4 ) ) == ".OR."
-
-         sExp  += ".OR."
-         sLine := SubStr( sLine, 5 )
-         sExp  += ExtractLeadingWS( @sLine )
-         IF cType == 'A'
-            sExp  += NextExp( @sLine, '<', NIL, NIL, sNextAnchor )
-         ELSE
-            sExp  += NextExp( @sLine, cType, NIL, NIL, sNextAnchor )
-         ENDIF
-
-         LOOP
-
-      ELSEIF Upper( Left( sLine, 5 ) ) == ".NOT."
-
-         sExp  += "!"
-         sLine := SubStr( sLine, 6 )
-         sExp  += ExtractLeadingWS( @sLine )
-         IF cType == 'A'
-            sExp  += NextExp( @sLine, '<', NIL, NIL, sNextAnchor )
-         ELSE
-            sExp  += NextExp( @sLine, cType, NIL, NIL, sNextAnchor )
-         ENDIF
-
-         LOOP
-
-      ELSE
-         //? "DONT CONTINUE: " + sLine
-         EXIT
-      ENDIF
+     IF sNext1 == ','
+        IF cType == ","
+           sList += ( sExp + sNextToken )
+           sLine := sNextLine
+           sExp  := ""
+        ELSEIF cType == "A"
+           aAdd( aExp, sExp )
+           sLine := sNextLine
+           sExp  := ""
+        ELSE
+           //? "DONT CONTINUE: " + sLine
+           EXIT
+        ENDIF
+     ELSE
+        //? "DONT CONTINUE: " + sLine
+        EXIT
+     ENDIF
   ENDDO
 
   IF cType == 'A'
-     IF sExp != NIL
+     IF sExp == ""
+        IF Len( aExp ) == 0
+           aExp := NIL
+        ENDIF
+     ELSE
         aAdd( aExp, sExp )
      ENDIF
 
@@ -4213,15 +4331,32 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
            ?? '}'
         ENDIF
      ENDIF
-  ELSE
+  ELSEIF cType == ','
+     IF sExp == ""
+        IF sExp == ""
+           sExp := NIL
+        ENDIF
+     ELSE
+        sExp := ( sList + sExp )
+     ENDIF
+
      IF bDbgExp
-        ? "EXP = " + sExp, " Next: " + sLine
+        ? "List =", sExp, " Next:", sLine
+     ENDIF
+  ELSE
+     IF sExp == ""
+        sExp := NIL
+     ENDIF
+     IF bDbgExp
+        ? "Exp =", sExp, " Next:", sLine
      ENDIF
   ENDIF
 
   IF bDbgExp
      WAIT
   ENDIF
+
+  //TraceLog( "*** Finish", cType, aExp, sExp, sLine, sNextAnchor )
 
 RETURN IIF( cType == 'A', aExp, sExp )
 
@@ -4230,7 +4365,7 @@ RETURN IIF( cType == 'A', aExp, sExp )
 FUNCTION PPOut( aResults, aMarkers )
 
   LOCAL Counter, nResults, sResult := "", nMarker, nMatches, nMatch//, aMarkers := aResults[3]
-  LOCAL xValue, nRepeats := 0, nDependee, nGroupStart, sDumb
+  LOCAL xValue, nRepeats := 0, nDependee, nGroupStart, sDumb, aBackUp
 
   IF aResults[1] == NIL
      nResults := 0
@@ -4266,7 +4401,8 @@ FUNCTION PPOut( aResults, aMarkers )
 
            IF nRepeats > 0
               IF ValType( aResults[1][Counter][2] ) == 'N'
-                 sResult += ' '
+                 //sResult += ' '
+                 aBackUp := aClone( aMarkers[ nDependee ] )
                  xValue := aMarkers[ nDependee ][1] // For group head nDependee and nMaker _must_ be identical.
                  aDel( aMarkers[ nDependee ], 1 )
                  aSize( aMarkers[ nDependee ], nRepeats - 1 )
@@ -4304,10 +4440,36 @@ FUNCTION PPOut( aResults, aMarkers )
 
         /* Still in repeat group? */
         IF aResults[1][Counter][1] == nDependee
+
            IF ValType( aResults[1][Counter][2] ) == 'N'
+              /*
               IF Right( sResult, 1 ) != ' '
                  sResult += ' '
               ENDIF
+              */
+
+              /* Same repeatable result marker is used just following current repeat group. */
+              IF Len( aMarkers[ aResults[1][Counter][2] ] ) < nRepeats
+                 nRepeats--
+                 IF nRepeats == 0
+                    aMarkers[ nDependee ] := aBackup
+                    Counter--
+                 ELSE
+                    Counter := nGroupStart - 1 // LOOP will increase
+                 ENDIF
+                 LOOP
+              ENDIF
+
+              /*
+              IF Len( aMarkers[ aResults[1][Counter][2] ] ) == 0
+                 // Same repeatable marker was used again (after being consumed)!!!
+                 aMarkers[ nDependee ] := aBackup
+                 nRepeats := 0
+                 Counter--
+                 LOOP
+              ENDIF
+              */
+
               xValue := aMarkers[ aResults[1][Counter][2] ][1]
               aDel( aMarkers[ aResults[1][Counter][2] ], 1 )
               aSize( aMarkers[ aResults[1][Counter][2] ], nRepeats - 1 )
@@ -4327,6 +4489,9 @@ FUNCTION PPOut( aResults, aMarkers )
               Counter := nGroupStart - 1 // LOOP will increase
               LOOP
            ELSE
+              // Incase the same repeatable marker will be used again (after being consumed)!!!
+              aMarkers[ nDependee ] := aBackup
+
               IF bDbgPPO
                  ? "Repeats Finished: "
                  WAIT
@@ -4570,9 +4735,15 @@ FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
 
    //? "=>" + sRule + "<="
 
+   //TraceLog( sRule )
+
    ExtractLeadingWS( @sRule )
 
-   sKey := NextToken( @sRule, .F. ) /* bCheckRules */
+   sKey := NextToken( @sRule )
+   IF Left( sKey, 1 ) == '\'
+      sKey := SubStr( sKey, 2, 1 )
+   ENDIF
+
    DropTrailingWS( @sKey )
 
    IF bUpper
@@ -4597,7 +4768,27 @@ FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
 
       //? "Scaning: " + sRule
 
-      IF Left( sRule, 1 ) == '<'
+      IF Left( sRule, 1 ) == '\'
+
+         IF ! ( sAnchor == NIL )
+            //? "ORPHAN ANCHOR: " + sAnchor
+
+            aMatch := { 0, nOptional, sAnchor, NIL, NIL }
+            //? aMatch[1], aMatch[2], aMatch[3], aMatch[4], aMatch[5]
+
+            aAdd( aRule[2], aMatch )
+
+            //sAnchor := NIL
+            aWords  := NIL
+            cType   := NIL
+         ENDIF
+
+         sAnchor := SubStr( sRule, 2, 1 )
+         sRule   := SubStr( sRule, 3 )
+         ExtractLeadingWS( @sRule )
+         LOOP
+
+      ELSEIF Left( sRule, 1 ) == '<'
          nId++
 
          DO CASE
@@ -4774,7 +4965,6 @@ FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
 
          nOptional := Abs( nOptional )
          nOptional++
-
          //? "Optional:", nOptional
 
          sRule := SubStr( sRule, 2 )
@@ -4796,11 +4986,15 @@ FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
             cType   := NIL
          ENDIF
 
-         IF nOptional > 0
-            nOptional--
-            nOptional := (-nOptional)
+         IF nOptional == 0
+            sAnchor := ']'
          ELSE
-            nOptional++
+           IF nOptional > 0
+              nOptional--
+              nOptional := (-nOptional)
+           ELSE
+              nOptional++
+           ENDIF
          ENDIF
 
          sRule := SubStr( sRule, 2 )
@@ -4862,7 +5056,7 @@ FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
             cType   := NIL
          ENDIF
 
-         sAnchor := Upper( RTrim( NextToken( @sRule, .F. ) ) )
+         sAnchor := Upper( RTrim( NextToken( @sRule ) ) )
          LOOP
 
       ELSE
@@ -5090,6 +5284,7 @@ FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
    ENDIF
 
    IF nOptional <> 0
+      TraceLog( aMatch[1], aMatch[2], aMatch[3], aMatch[4], aMatch[5] )
       Alert( "ERROR! Internal logic failure, nOptional = " + Str( nOptional, 3 ) + " [" + Str( ProcLine(0), 4 ) + "]" )
       BREAK
    ENDIF
@@ -5194,6 +5389,8 @@ FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
 
    //? [RP: "] + sResult + '"'
 
+   //TraceLog( sResult )
+
    nOptional  := 0
    aModifiers := {}//Array( nId )
    //aFill( aModifiers, 0 )
@@ -5205,7 +5402,7 @@ FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
       nOffset := 0
       nOptionalAt := At( '[', sResult )
       WHILE nOPtionalAt > 1 .AND. SubStr( sResult, nOffset + nOptionalAt - 1, 1 ) == '\'
-         nOffset += nOptional
+         nOffset += nOptionalAt
          nOptionalAt := At( '[', SubStr( sResult, nOffset + 1 ) )
       ENDDO
       IF nOptionalAt > 0
@@ -5257,41 +5454,39 @@ FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
 
       nAt := IIF( nOptionalAt == 0, nMarkerAt, nOptionalAt )
 
-      nOffset := 0
-      IF nAt == 0
-         nCloseOptionalAt := At( ']', sResult )
-         WHILE nCloseOptionalAt > 1 .AND. SubStr( sResult, nOffset + nCloseOptionalAt - 1, 1 ) == '\'
-            nOffset += nCloseOptionalAt
-            nCloseOptionalAt := At( ']', SubStr( sResult, nOffset + 1 ) )
-         ENDDO
-         IF nCloseOptionalAt > 0
-            nCloseOptionalAt += nOffset
-         ENDIF
+      IF nOptional == 0
+         nCloseOptionalAt := 0
       ELSE
-         nCloseOptionalAt := At( ']', sResult )
-         WHILE nCloseOptionalAt > 1 .AND. nOffset + nCloseOptionalAt <= nAt .AND. SubStr( sResult, nOffset + nCloseOptionalAt - 1, 1 ) == '\'
-            nOffset += nCloseOptionalAt
-            nCloseOptionalAt := At( ']', SubStr( sResult, nOffset + 1 ) )
-         ENDDO
-         IF nCloseOptionalAt > 0
-            nCloseOptionalAt += nOffset
-         ENDIF
+         nOffset := 0
+         IF nAt == 0
+            nCloseOptionalAt := At( ']', sResult )
+            WHILE nCloseOptionalAt > 1 .AND. SubStr( sResult, nOffset + nCloseOptionalAt - 1, 1 ) == '\'
+               nOffset += nCloseOptionalAt
+               nCloseOptionalAt := At( ']', SubStr( sResult, nOffset + 1 ) )
+            ENDDO
+            IF nCloseOptionalAt > 0
+               nCloseOptionalAt += nOffset
+            ENDIF
+         ELSE
+            nCloseOptionalAt := At( ']', sResult )
+            WHILE nCloseOptionalAt > 1 .AND. nOffset + nCloseOptionalAt <= nAt .AND. SubStr( sResult, nOffset + nCloseOptionalAt - 1, 1 ) == '\'
+               nOffset += nCloseOptionalAt
+               nCloseOptionalAt := At( ']', SubStr( sResult, nOffset + 1 ) )
+            ENDDO
+            IF nCloseOptionalAt > 0
+               nCloseOptionalAt += nOffset
+            ENDIF
 
-         IF nCloseOptionalAt > 0
-            IF nCloseOptionalAt > nAt
-               nCloseOptionalAt := 0
-            ELSE
-               nAt         := 0
-               nOptionalAt := 0
-               nMarkerAt   := 0
+            IF nCloseOptionalAt > 0
+               IF nCloseOptionalAt > nAt
+                  nCloseOptionalAt := 0
+               ELSE
+                  nAt         := 0
+                  nOptionalAt := 0
+                  nMarkerAt   := 0
+               ENDIF
             ENDIF
          ENDIF
-      ENDIF
-
-      IF nOptionalAt > 0
-         nOPtionalAt := nAt
-      ELSEIF nMarkerAt > 0
-         nMarkerAt := nAt
       ENDIF
 
       //? "RP Scan:", nAt, nMarkerAt, nOptionalAt, nCloseOptionalAt, sResult
@@ -5336,6 +5531,14 @@ FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
 
          /* Resetting. */
          nType := 0
+
+         IF nMarkerAt == 1 .OR. ( nMarkerAt == 2 .AND. Left( sResult, 1 ) == '#' )
+            IF Len( aResult ) > 0 .AND. ValType( aTail( aResult )[2] ) == 'N' .AND. Len( sPad ) > 0
+               aRP := { nOptional, sPad }
+               aAdd( aResult, aRP )
+               aAdd( aModifiers, -1 )
+            ENDIF
+         ENDIF
 
          IF nMarkerAt > 1
             IF SubStr( sResult, nMarkerAt - 1, 1 ) == '#'
@@ -5517,7 +5720,8 @@ FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
                sResult := SubStr( sResult, nNext + 1 )
                ExtractLeadingWS( @sResult, @sPad )
                IF nId == 0
-                  Alert( "ERROR! Unrecognized RP: '<' : " + sTemp )
+                  aEval( aMarkers, {|sMarker| TraceLog( sMarker ) } )
+                  Alert( "ERROR! Unrecognized RP: '<' : '" + sTemp + "'" )
                ELSE
                   aRP := { nOptional, nId }
                   aAdd( aResult, aRP )
@@ -5544,6 +5748,7 @@ FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
    ENDDO
 
    IF nOptional <> 0
+      TraceLog( "ERROR! Internal logic failure, nOptional = " + Str( nOptional, 3 ) + " [" + Str( ProcLine(0), 4 ) + "]", aRP[1], aRP[2] )
       Alert( "ERROR! Internal logic failure, nOptional = " + Str( nOptional, 3 ) + " [" + Str( ProcLine(0), 4 ) + "]" )
       BREAK
    ENDIF
@@ -5551,7 +5756,7 @@ FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
    nResults := Len( aResult )
    FOR Counter := nResults TO 1 STEP -1
 
-      /* Correcting the ID of the Marker this result relyes upon. */
+      /* Correcting the ID of the Marker this result depends upon. */
       IF aResult[Counter][1] > 0
          nOptional := aResult[Counter][1]
          nMarker   := aResult[Counter][2]
@@ -5596,19 +5801,23 @@ FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
 
    aAdd( aResults, { aResult, aModifiers, aValues } )
 
+   //TraceLog( "Finished" )
+
 RETURN NIL
 
 //--------------------------------------------------------------//
 
 FUNCTION RemoveDefine( sDefine )
 
-   LOCAL nId
+   LOCAL nId, nLen
+
+   sDefine := AllTrim( sDefine )
 
    IF ( nId := aScan( aDefRules, {|aDefine| aDefine[1] == sDefine } ) ) > 0
       aDel( aDefRules, nId )
-      aSize( aDefRules, Len( aDefRules ) - 1 )
+      aSize( aDefRules, ( nLen := Len( aDefRules ) - 1 ) )
       aDel( aDefResults, nId )
-      aSize( aDefResults, Len( aDefRules ) - 1 )
+      aSize( aDefResults, nLen )
    ENDIF
 
 RETURN nId
@@ -5622,7 +5831,7 @@ FUNCTION CompileDefine( sRule )
 
    ExtractLeadingWS( @sRule )
 
-   sKey := NextToken( @sRule, .F. ) /* bCheckRules */
+   sKey := NextToken( @sRule )
    DropTrailingWS( @sKey )
 
 //? "KEY: '" + sKey + "'"
@@ -5644,15 +5853,9 @@ FUNCTION CompileDefine( sRule )
       aAdd( aDefResults, aResult )
    ENDIF
 
-   IF Left( sRule, 1 ) == '('
+   IF Left( sRule, 1 ) == '(' .AND. ( nCloseAt := At( ')', sRule ) ) > 0
 
       /*Pseudo Function. */
-      nCloseAt := At( ')', sRule )
-      IF nCloseAt == 0
-         Alert( "ERROR! Invalid #DEFINE efine format" )
-         RETURN .F.
-      ENDIF
-
       sResult := SubStr( sRule, nCloseAt + 1 )
       sRule   := SubStr( sRule, 2, nCloseAt - 2 )
       ExtractLeadingWS( @sRule )
@@ -5716,7 +5919,7 @@ FUNCTION CompileDefine( sRule )
 
          ELSE
 
-            WHILE ( sToken := NextToken( @sResult, .F. ) ) != NIL //bCheckRules
+            WHILE ( sToken := NextToken( @sResult ) ) != NIL
 
                DropTrailingWS( @sToken )
 
@@ -6689,10 +6892,536 @@ RETURN .T.
 
 //--------------------------------------------------------------//
 
+FUNCTION InitClsRules()
+
+  /* Defines */
+  aAdd( aDefRules, { 'HB_CLASS_CH_' ,  , .T. } )
+  aAdd( aDefRules, { 'HB_SETUP_CH_' ,  , .T. } )
+  aAdd( aDefRules, { 'HB_EXTENSION' ,  , .T. } )
+  aAdd( aDefRules, { 'HB_C52_UNDOC' ,  , .T. } )
+  aAdd( aDefRules, { 'HB_COMPAT_C53' ,  , .T. } )
+  aAdd( aDefRules, { 'HB_COMPAT_XPP' ,  , .T. } )
+  aAdd( aDefRules, { 'HB_CLS_MASKHIDDEN' ,  , .T. } )
+  aAdd( aDefRules, { 'HB_OO_CH_' ,  , .T. } )
+  aAdd( aDefRules, { 'HB_MSGLISTALL' ,  , .T. } )
+  aAdd( aDefRules, { 'HB_MSGLISTCLASS' ,  , .T. } )
+  aAdd( aDefRules, { 'HB_MSGLISTPURE' ,  , .T. } )
+  aAdd( aDefRules, { 'HB_OO_CLSTP_EXPORTED' ,  , .T. } )
+  aAdd( aDefRules, { 'HB_OO_CLSTP_PROTECTED' ,  , .T. } )
+  aAdd( aDefRules, { 'HB_OO_CLSTP_HIDDEN' ,  , .T. } )
+  aAdd( aDefRules, { 'HB_OO_CLSTP_CTOR' ,  , .T. } )
+  aAdd( aDefRules, { 'HB_OO_CLSTP_READONLY' ,  , .T. } )
+  aAdd( aDefRules, { 'HB_OO_CLSTP_SHARED' ,  , .T. } )
+  aAdd( aDefRules, { 'HB_OO_CLSTP_CLASS' ,  , .T. } )
+  aAdd( aDefRules, { 'HB_OO_CLSTP_SUPER' ,  , .T. } )
+  aAdd( aDefRules, { 'HB_OO_MSG_METHOD' ,  , .T. } )
+  aAdd( aDefRules, { 'HB_OO_MSG_DATA' ,  , .T. } )
+  aAdd( aDefRules, { 'HB_OO_MSG_CLASSDATA' ,  , .T. } )
+  aAdd( aDefRules, { 'HB_OO_MSG_INLINE' ,  , .T. } )
+  aAdd( aDefRules, { 'HB_OO_MSG_VIRTUAL' ,  , .T. } )
+  aAdd( aDefRules, { 'HB_OO_MSG_SUPER' ,  , .T. } )
+  aAdd( aDefRules, { 'HB_OO_MSG_ONERROR' ,  , .T. } )
+  aAdd( aDefRules, { 'HB_OO_MSG_CLSMTHD' ,  , .T. } )
+  aAdd( aDefRules, { 'HB_OO_DATA_SYMBOL' ,  , .T. } )
+  aAdd( aDefRules, { 'HB_OO_DATA_VALUE' ,  , .T. } )
+  aAdd( aDefRules, { 'HB_OO_DATA_TYPE' ,  , .T. } )
+  aAdd( aDefRules, { 'HB_OO_DATA_SCOPE' ,  , .T. } )
+  aAdd( aDefRules, { 'HB_OO_CLSD_SYMBOL' ,  , .T. } )
+  aAdd( aDefRules, { 'HB_OO_CLSD_VALUE' ,  , .T. } )
+  aAdd( aDefRules, { 'HB_OO_CLSD_TYPE' ,  , .T. } )
+  aAdd( aDefRules, { 'HB_OO_CLSD_SCOPE' ,  , .T. } )
+  aAdd( aDefRules, { 'HB_OO_MTHD_SYMBOL' ,  , .T. } )
+  aAdd( aDefRules, { 'HB_OO_MTHD_PFUNCTION' ,  , .T. } )
+  aAdd( aDefRules, { 'HB_OO_MTHD_SCOPE' ,  , .T. } )
+  aAdd( aDefRules, { 'HB_OO_CLSM_SYMBOL' ,  , .T. } )
+  aAdd( aDefRules, { 'HB_OO_CLSM_PFUNCTION' ,  , .T. } )
+  aAdd( aDefRules, { 'HB_OO_CLSM_SCOPE' ,  , .T. } )
+  aAdd( aDefRules, { '__HB_CLS_PAR' ,  , .T. } )
+  aAdd( aDefRules, { '__HB_CLS_NOINI' ,  , .T. } )
+  aAdd( aDefRules, { 'HB_CLS_FWO' ,  , .T. } )
+  aAdd( aDefRules, { 'HB_CLS_CSY' ,  , .T. } )
+  aAdd( aDefRules, { 'HB_CLS_VO' ,  , .T. } )
+  aAdd( aDefRules, { 'HB_CLS_TOP' ,  , .T. } )
+
+  /* Translates */
+  aAdd( aTransRules, { '__ERR' , { {    0,   0, '(', NIL, NIL }, { 1001,   1, NIL, 'A', { ')' } }, {    0,   0, ')', NIL, NIL } } , .T. } )
+  aAdd( aTransRules, { ')' , { {    0,   0, '(', NIL, NIL }, {    0,   0, ')', NIL, NIL } } , .T. } )
+  aAdd( aTransRules, { 'HBCLSCHOICE' , { {    1,   0, '(', '<', NIL }, {    2,   0, ',', '<', NIL }, {    3,   0, ',', '<', NIL }, {    0,   0, ')', NIL, NIL } } , .T. } )
+  aAdd( aTransRules, { 'CREATE' , { {    0,   0, 'CLASS', NIL, NIL } } , .T. } )
+  aAdd( aTransRules, { 'DECLMETH' , { {    1,   0, NIL, '<', NIL }, {    2,   0, NIL, '<', NIL } } , .T. } )
+  aAdd( aTransRules, { ':' , { {    0,   0, 'CLASS', NIL, NIL } } , .T. } )
+  aAdd( aTransRules, { ':' , { {    0,   0, 'CLASS', NIL, NIL }, {    0,   0, ':', NIL, NIL } } , .T. } )
+  aAdd( aTransRules, { 'EXPORTED' , { {    0,   0, ':', NIL, NIL } } , .T. } )
+  aAdd( aTransRules, { 'EXPORT' , { {    0,   0, ':', NIL, NIL } } , .T. } )
+  aAdd( aTransRules, { 'VISIBLE' , { {    0,   0, ':', NIL, NIL } } , .T. } )
+  aAdd( aTransRules, { 'HIDDEN' , { {    0,   0, ':', NIL, NIL } } , .T. } )
+  aAdd( aTransRules, { 'PROTECTED' , { {    0,   0, ':', NIL, NIL } } , .T. } )
+  aAdd( aTransRules, { 'CLASS' , { {    0,   0, 'VAR', NIL, NIL } } , .T. } )
+  aAdd( aTransRules, { 'CLASS' , { {    0,   0, 'METHOD', NIL, NIL } } , .T. } )
+  aAdd( aTransRules, { '(' , { {    1,   0, NIL, '<', NIL }, {    0,   0, '{', NIL, NIL }, {    2,   1, NIL, 'A', { '}' } }, {    0,   0, '}', NIL, NIL } } , .T. } )
+  aAdd( aTransRules, { '=' , { {    1,   0, NIL, '<', NIL }, {    0,   0, '{', NIL, NIL }, {    2,   1, NIL, 'A', { '}' } }, {    0,   0, '}', NIL, NIL } } , .T. } )
+  aAdd( aTransRules, { ',' , { {    1,   0, NIL, '<', NIL }, {    0,   0, '{', NIL, NIL }, {    2,   1, NIL, 'A', { '}' } }, {    0,   0, '}', NIL, NIL } } , .T. } )
+  aAdd( aTransRules, { 'END' , { {    0,   0, 'CLASS', NIL, NIL } } , .T. } )
+  aAdd( aTransRules, { ':' , { {    0,   0, 'SUPER', NIL, NIL }, {    1,   0, '(', '<', NIL }, {    0,   0, ')', NIL, NIL }, {    0,   0, ':', NIL, NIL } } , .T. } )
+  aAdd( aTransRules, { ':' , { {    0,   0, 'SUPER', NIL, NIL }, {    0,   0, '(', NIL, NIL }, {    0,   0, ')', NIL, NIL }, {    0,   0, ':', NIL, NIL } } , .T. } )
+  aAdd( aTransRules, { ':' , { {    0,   0, 'SUPER', NIL, NIL }, {    0,   0, '(', NIL, NIL }, {    0,   0, ')', NIL, NIL } } , .T. } )
+
+  /* Commands */
+  aAdd( aCommRules, { 'CLASS' , { {    1,   0, NIL, '<', NIL }, {    2,   1, 'METACLASS', '<', NIL }, { 1003,   1, NIL, ':', { 'FROM', 'INHERIT' } }, { 1004,  -1, NIL, '<', NIL }, { 1005,   2, ',', '<', NIL }, {    6,   1, NIL, ':', { 'STATIC' } } } , .T. } )
+  aAdd( aCommRules, { 'VAR' , { {    1,   0, NIL, 'A', NIL }, { 1002,   1, 'TYPE', '<', NIL }, {    3,   1, 'ASSIGN', '<', NIL }, {    4,   1, NIL, ':', { 'EXPORTED', 'VISIBLE' } }, {    5,   1, NIL, ':', { 'PROTECTED' } }, {    6,   1, NIL, ':', { 'HIDDEN' } }, {    7,   1, NIL, ':', { 'READONLY', 'RO' } } } , .T. } )
+  aAdd( aCommRules, { 'VAR' , { {    1,   0, NIL, 'A', NIL }, { 1002,   1, 'AS', '<', NIL }, {    3,   1, 'INIT', '<', NIL }, {    4,   1, NIL, ':', { 'EXPORTED', 'VISIBLE' } }, {    5,   1, NIL, ':', { 'PROTECTED' } }, {    6,   1, NIL, ':', { 'HIDDEN' } }, {    7,   1, NIL, ':', { 'READONLY', 'RO' } } } , .T. } )
+  aAdd( aCommRules, { 'VAR' , { {    1,   0, NIL, '<', NIL }, { 1002,   1, 'AS', '<', NIL }, {    3,   0, 'IN', '<', NIL } } , .T. } )
+  aAdd( aCommRules, { 'VAR' , { {    1,   0, NIL, '<', NIL }, { 1002,   1, 'AS', '<', NIL }, {    3,   0, 'IS', '<', NIL }, {    4,   0, 'IN', '<', NIL } } , .T. } )
+  aAdd( aCommRules, { 'VAR' , { {    1,   0, NIL, '<', NIL }, { 1002,   1, 'AS', '<', NIL }, {    3,   0, 'IS', '<', NIL } } , .T. } )
+  aAdd( aCommRules, { 'VAR' , { {    1,   0, NIL, '<', NIL }, {    2,   0, 'IS', '<', NIL }, {    3,   0, 'TO', '<', NIL } } , .T. } )
+  aAdd( aCommRules, { 'METHOD' , { {    1,   0, NIL, '<', NIL }, { 1002,   1, 'AS', '<', NIL }, {    0,   0, 'DEFERRED', NIL, NIL } } , .T. } )
+  aAdd( aCommRules, { 'EXPORT' , { {    1,   0, NIL, 'A', NIL }, { 1002,   1, 'AS', '<', NIL }, {    3,   1, 'INIT', '<', NIL }, {    4,   1, NIL, ':', { 'READONLY', 'RO' } } } , .T. } )
+  aAdd( aCommRules, { 'EXPORT' , { {    1,   0, NIL, 'A', NIL }, { 1002,   1, 'TYPE', '<', NIL }, {    3,   1, 'ASSIGN', '<', NIL }, {    4,   1, NIL, ':', { 'READONLY', 'RO' } } } , .T. } )
+  aAdd( aCommRules, { 'PROTECT' , { {    1,   0, NIL, 'A', NIL }, { 1002,   1, 'AS', '<', NIL }, {    3,   1, 'INIT', '<', NIL }, {    4,   1, NIL, ':', { 'READONLY', 'RO' } } } , .T. } )
+  aAdd( aCommRules, { 'PROTECT' , { {    1,   0, NIL, 'A', NIL }, { 1002,   1, 'TYPE', '<', NIL }, {    3,   1, 'ASSIGN', '<', NIL }, {    4,   1, NIL, ':', { 'READONLY', 'RO' } } } , .T. } )
+  aAdd( aCommRules, { 'HIDDE' , { {    1,   0, NIL, 'A', NIL }, { 1002,   1, 'AS', '<', NIL }, {    3,   1, 'INIT', '<', NIL }, {    4,   1, NIL, ':', { 'READONLY', 'RO' } } } , .T. } )
+  aAdd( aCommRules, { 'HIDDE' , { {    1,   0, NIL, 'A', NIL }, { 1002,   1, 'TYPE', '<', NIL }, {    3,   1, 'ASSIGN', '<', NIL }, {    4,   1, NIL, ':', { 'READONLY', 'RO' } } } , .T. } )
+  aAdd( aCommRules, { 'CLASSVAR' , { {    1,   0, NIL, 'A', NIL }, { 1002,   1, 'TYPE', '<', NIL }, {    3,   1, 'ASSIGN', '<', NIL }, {    4,   1, NIL, ':', { 'EXPORTED', 'VISIBLE' } }, {    5,   1, NIL, ':', { 'PROTECTED' } }, {    6,   1, NIL, ':', { 'HIDDEN' } }, {    7,   1, NIL, ':', { 'READONLY', 'RO' } }, {    8,   1, NIL, ':', { 'SHARED' } } } , .T. } )
+  aAdd( aCommRules, { 'CLASSVAR' , { {    1,   0, NIL, 'A', NIL }, { 1002,   1, 'AS', '<', NIL }, {    3,   1, 'INIT', '<', NIL }, {    4,   1, NIL, ':', { 'EXPORTED', 'VISIBLE' } }, {    5,   1, NIL, ':', { 'PROTECTED' } }, {    6,   1, NIL, ':', { 'HIDDEN' } }, {    7,   1, NIL, ':', { 'READONLY', 'RO' } }, {    8,   1, NIL, ':', { 'SHARED' } } } , .T. } )
+  aAdd( aCommRules, { 'DATA' , { {    1,   0, NIL, 'A', NIL }, { 1002,   1, 'AS', '<', NIL }, {    3,   1, 'INIT', '<', NIL }, {    4,   1, NIL, ':', { 'EXPORTED', 'VISIBLE' } }, {    5,   1, NIL, ':', { 'PROTECTED' } }, {    6,   1, NIL, ':', { 'HIDDEN' } }, {    7,   1, NIL, ':', { 'READONLY', 'RO' } } } , .T. } )
+  aAdd( aCommRules, { 'CLASSDATA' , { {    1,   0, NIL, 'A', NIL }, { 1002,   1, 'AS', '<', NIL }, {    3,   1, 'INIT', '<', NIL }, {    4,   1, NIL, ':', { 'EXPORTED', 'VISIBLE' } }, {    5,   1, NIL, ':', { 'PROTECTED' } }, {    6,   1, NIL, ':', { 'HIDDEN' } }, {    7,   1, NIL, ':', { 'READONLY', 'RO' } }, {    8,   1, NIL, ':', { 'SHARED' } } } , .T. } )
+  aAdd( aCommRules, { 'CLASSMETHOD' , { {    1,   0, NIL, '<', NIL }, { 1002,   1, 'AS', '<', NIL }, {    3,   1, NIL, ':', { 'EXPORTED', 'VISIBLE' } }, {    4,   1, NIL, ':', { 'PROTECTED' } }, {    5,   1, NIL, ':', { 'HIDDEN' } }, {    6,   1, NIL, ':', { 'SHARED' } } } , .T. } )
+  aAdd( aCommRules, { 'CONSTRUCTOR' , { {    1,   0, NIL, '<', NIL } } , .T. } )
+  aAdd( aCommRules, { 'METHOD' , { {    1,   0, NIL, '<', NIL }, { 1002,   1, NIL, ':', { 'CONSTRUCTOR' } }, { 1003,   1, 'AS', '<', NIL }, {    4,   1, NIL, ':', { 'EXPORTED', 'VISIBLE' } }, {    5,   1, NIL, ':', { 'PROTECTED' } }, {    6,   1, NIL, ':', { 'HIDDEN' } }, {    0,   1, '_CLASS_DECLARATION_', NIL, NIL } } , .T. } )
+  aAdd( aCommRules, { 'METHOD' , { {    1,   0, NIL, '<', NIL }, {    0,   0, '(', NIL, NIL }, { 1002,   1, NIL, 'A', { ')' } }, {    0,   0, ')', NIL, NIL }, { 1003,   1, NIL, ':', { 'CONSTRUCTOR' } }, { 1004,   1, 'AS', '<', NIL }, {    5,   1, NIL, ':', { 'EXPORTED', 'VISIBLE' } }, {    6,   1, NIL, ':', { 'PROTECTED' } }, {    7,   1, NIL, ':', { 'HIDDEN' } }, {    0,   1, '_CLASS_DECLARATION_', NIL, NIL } } , .T. } )
+  aAdd( aCommRules, { 'METHOD' , { {    1,   0, NIL, '<', NIL }, { 1002,   1, 'AS', '<', NIL }, {    3,   0, 'BLOCK', '<', NIL }, { 1004,   1, NIL, ':', { 'CONSTRUCTOR' } }, {    5,   1, NIL, ':', { 'EXPORTED', 'VISIBLE' } }, {    6,   1, NIL, ':', { 'PROTECTED' } }, {    7,   1, NIL, ':', { 'HIDDEN' } } } , .T. } )
+  aAdd( aCommRules, { 'METHOD' , { {    1,   0, NIL, '<', NIL }, { 1002,   1, 'AS', '<', NIL }, {    3,   0, 'EXTERN', '<', NIL }, { 1004,   1, NIL, ':', { 'CONSTRUCTOR' } }, {    5,   1, NIL, ':', { 'EXPORTED', 'VISIBLE' } }, {    6,   1, NIL, ':', { 'PROTECTED' } }, {    7,   1, NIL, ':', { 'HIDDEN' } } } , .T. } )
+  aAdd( aCommRules, { 'METHOD' , { {    1,   0, NIL, '<', NIL }, { 1002,   1, 'AS', '<', NIL }, {    3,   0, 'INLINE', 'A', NIL }, { 1004,   1, NIL, ':', { 'CONSTRUCTOR' } }, {    5,   1, NIL, ':', { 'EXPORTED', 'VISIBLE' } }, {    6,   1, NIL, ':', { 'PROTECTED' } }, {    7,   1, NIL, ':', { 'HIDDEN' } } } , .T. } )
+  aAdd( aCommRules, { 'METHOD' , { {    1,   0, NIL, '<', NIL }, {    0,   0, '(', NIL, NIL }, { 1002,   1, NIL, 'A', { ')' } }, {    0,   0, ')', NIL, NIL }, { 1003,   1, 'AS', '<', NIL }, {    4,   0, 'INLINE', 'A', NIL }, { 1005,   1, NIL, ':', { 'CONSTRUCTOR' } }, {    6,   1, NIL, ':', { 'EXPORTED', 'VISIBLE' } }, {    7,   1, NIL, ':', { 'PROTECTED' } }, {    8,   1, NIL, ':', { 'HIDDEN' } } } , .T. } )
+  aAdd( aCommRules, { 'METHOD' , { {    1,   0, NIL, '<', NIL }, { 1002,   1, 'AS', '<', NIL }, {    0,   0, 'INLINE', NIL, NIL }, { 1003,   1, 'LOCAL', '<', NIL }, {    0,  -1, ',', NIL, NIL }, {    4,   0, NIL, 'A', NIL }, { 1005,   1, NIL, '<', NIL } } , .T. } )
+  aAdd( aCommRules, { 'METHOD' , { {    1,   0, NIL, '<', NIL }, {    0,   0, '(', NIL, NIL }, { 1002,   1, NIL, 'A', { ')' } }, {    0,   0, ')', NIL, NIL }, { 1003,   1, 'AS', '<', NIL }, {    0,   0, 'INLINE', NIL, NIL }, { 1004,   1, 'LOCAL', '<', NIL }, {    0,  -1, ',', NIL, NIL }, {    5,   0, NIL, 'A', NIL }, { 1006,   1, NIL, '<', NIL } } , .T. } )
+  aAdd( aCommRules, { 'METHOD' , { {    1,   0, NIL, '<', NIL }, { 1002,   1, 'AS', '<', NIL }, {    0,   0, 'VIRTUAL', NIL, NIL } } , .T. } )
+  aAdd( aCommRules, { 'METHOD' , { {    1,   0, NIL, '<', NIL }, { 1002,   1, 'AS', '<', NIL }, {    3,   0, 'OPERATOR', '<', NIL }, {    4,   1, NIL, ':', { 'EXPORTED', 'VISIBLE' } }, {    5,   1, NIL, ':', { 'PROTECTED' } }, {    6,   1, NIL, ':', { 'HIDDEN' } } } , .T. } )
+  aAdd( aCommRules, { 'METHOD' , { {    1,   0, NIL, '<', NIL }, {    0,   0, '(', NIL, NIL }, { 1002,   1, NIL, 'A', { ')' } }, {    0,   0, ')', NIL, NIL }, { 1003,   1, 'AS', '<', NIL }, {    4,   0, 'OPERATOR', '<', NIL }, {    5,   1, NIL, ':', { 'EXPORTED', 'VISIBLE' } }, {    6,   1, NIL, ':', { 'PROTECTED' } }, {    7,   1, NIL, ':', { 'HIDDEN' } } } , .T. } )
+  aAdd( aCommRules, { 'MESSAGE' , { {    1,   0, NIL, '<', NIL }, { 1002,   1, 'AS', '<', NIL }, {    3,   0, 'METHOD', '<', NIL }, { 1004,   1, NIL, ':', { 'CONSTRUCTOR' } }, {    5,   1, NIL, ':', { 'EXPORTED', 'VISIBLE' } }, {    6,   1, NIL, ':', { 'PROTECTED' } }, {    7,   1, NIL, ':', { 'HIDDEN' } } } , .T. } )
+  aAdd( aCommRules, { 'MESSAGE' , { {    1,   0, NIL, '<', NIL }, {    0,   0, '(', NIL, NIL }, { 1002,   1, NIL, 'A', { ')' } }, {    0,   0, ')', NIL, NIL }, { 1003,   1, 'AS', '<', NIL }, {    4,   0, 'METHOD', '<', NIL }, { 1005,   1, NIL, ':', { 'CONSTRUCTOR' } }, {    6,   1, NIL, ':', { 'EXPORTED', 'VISIBLE' } }, {    7,   1, NIL, ':', { 'PROTECTED' } }, {    8,   1, NIL, ':', { 'HIDDEN' } } } , .T. } )
+  aAdd( aCommRules, { 'MESSAGE' , { {    1,   0, NIL, '<', NIL }, { 1002,   1, 'AS', '<', NIL }, {    3,   0, 'METHOD', '<', NIL }, {    0,   0, '(', NIL, NIL }, { 1004,   1, NIL, 'A', { ')' } }, {    0,   0, ')', NIL, NIL }, { 1005,   1, NIL, ':', { 'CONSTRUCTOR' } }, {    6,   1, NIL, ':', { 'EXPORTED', 'VISIBLE' } }, {    7,   1, NIL, ':', { 'PROTECTED' } }, {    8,   1, NIL, ':', { 'HIDDEN' } } } , .T. } )
+  aAdd( aCommRules, { 'MESSAGE' , { {    1,   0, NIL, '<', NIL }, {    0,   0, '(', NIL, NIL }, { 1002,   1, NIL, 'A', { ')' } }, {    0,   0, ')', NIL, NIL }, { 1003,   1, 'AS', '<', NIL }, {    4,   0, 'METHOD', '<', NIL }, {    0,   0, '(', NIL, NIL }, { 1005,   1, NIL, 'A', { ')' } }, {    0,   0, ')', NIL, NIL }, { 1006,   1, NIL, ':', { 'CONSTRUCTOR' } }, {    7,   1, NIL, ':', { 'EXPORTED', 'VISIBLE' } }, {    8,   1, NIL, ':', { 'PROTECTED' } }, {    9,   1, NIL, ':', { 'HIDDEN' } } } , .T. } )
+  aAdd( aCommRules, { 'MESSAGE' , { {    1,   0, NIL, '<', NIL }, { 1002,   1, 'AS', '<', NIL }, {    3,   0, 'IN', '<', NIL } } , .T. } )
+  aAdd( aCommRules, { 'MESSAGE' , { {    1,   0, NIL, '<', NIL }, {    0,   0, '(', NIL, NIL }, { 1002,   1, NIL, 'A', { ')' } }, {    0,   0, ')', NIL, NIL }, { 1003,   1, 'AS', '<', NIL }, {    4,   0, 'IN', '<', NIL } } , .T. } )
+  aAdd( aCommRules, { 'MESSAGE' , { {    1,   0, NIL, '<', NIL }, { 1002,   1, 'AS', '<', NIL }, {    3,   0, 'IS', '<', NIL }, {    4,   0, 'IN', '<', NIL } } , .T. } )
+  aAdd( aCommRules, { 'MESSAGE' , { {    1,   0, NIL, '<', NIL }, { 1002,   1, 'AS', '<', NIL }, {    3,   0, 'IS', '<', NIL }, {    0,   0, '(', NIL, NIL }, { 1004,   1, NIL, 'A', { ')' } }, {    0,   0, ')', NIL, NIL }, {    5,   0, 'IN', '<', NIL } } , .T. } )
+  aAdd( aCommRules, { 'MESSAGE' , { {    1,   0, NIL, '<', NIL }, {    0,   0, '(', NIL, NIL }, { 1002,   1, NIL, 'A', { ')' } }, {    0,   0, ')', NIL, NIL }, { 1003,   1, 'AS', '<', NIL }, {    4,   0, 'IS', '<', NIL }, {    5,   0, 'IN', '<', NIL } } , .T. } )
+  aAdd( aCommRules, { 'MESSAGE' , { {    1,   0, NIL, '<', NIL }, {    0,   0, '(', NIL, NIL }, { 1002,   1, NIL, 'A', { ')' } }, {    0,   0, ')', NIL, NIL }, { 1003,   1, 'AS', '<', NIL }, {    4,   0, 'IS', '<', NIL }, {    0,   0, '(', NIL, NIL }, {    5,   1, NIL, 'A', { ')' } }, {    0,   0, ')', NIL, NIL }, {    6,   0, 'IN', '<', NIL } } , .T. } )
+  aAdd( aCommRules, { 'MESSAGE' , { {    1,   0, NIL, '<', NIL }, { 1002,   1, 'AS', '<', NIL }, {    3,   0, 'IS', '<', NIL }, { 1004,   1, NIL, 'A', NIL } } , .T. } )
+  aAdd( aCommRules, { 'MESSAGE' , { {    1,   0, NIL, '<', NIL }, { 1002,   1, 'AS', '<', NIL }, {    3,   0, 'TO', '<', NIL } } , .T. } )
+  aAdd( aCommRules, { 'MESSAGE' , { {    1,   0, NIL, '<', NIL }, {    0,   0, '(', NIL, NIL }, { 1002,   1, NIL, 'A', { ')' } }, {    0,   0, ')', NIL, NIL }, { 1003,   1, 'AS', '<', NIL }, {    4,   0, 'TO', '<', NIL } } , .T. } )
+  aAdd( aCommRules, { 'DELEGATE' , { {    1,   0, NIL, '<', NIL }, { 1002,   1, 'AS', '<', NIL }, {    3,   0, 'TO', '<', NIL } } , .T. } )
+  aAdd( aCommRules, { 'DELEGATE' , { {    1,   0, NIL, '<', NIL }, {    0,   0, '(', NIL, NIL }, { 1002,   1, NIL, 'A', { ')' } }, {    0,   0, ')', NIL, NIL }, { 1003,   1, 'AS', '<', NIL }, {    4,   0, 'TO', '<', NIL } } , .T. } )
+  aAdd( aCommRules, { 'METHOD' , { {    1,   0, NIL, '<', NIL }, { 1002,   1, 'AS', '<', NIL }, {    0,   0, 'SETGET', NIL, NIL } } , .T. } )
+  aAdd( aCommRules, { 'METHOD' , { {    1,   0, NIL, '<', NIL }, {    0,   0, '(', NIL, NIL }, { 1002,   1, NIL, 'A', { ')' } }, {    0,   0, ')', NIL, NIL }, { 1003,   1, 'AS', '<', NIL }, {    0,   0, 'SETGET', NIL, NIL } } , .T. } )
+  aAdd( aCommRules, { 'ACCESS' , { {    1,   0, NIL, '<', NIL }, { 1002,   1, 'AS', '<', NIL } } , .T. } )
+  aAdd( aCommRules, { 'ACCESS' , { {    1,   0, NIL, '<', NIL }, {    0,   0, '(', NIL, NIL }, { 1002,   1, NIL, 'A', { ')' } }, {    0,   0, ')', NIL, NIL }, { 1003,   1, 'AS', '<', NIL } } , .T. } )
+  aAdd( aCommRules, { 'ACCESS' , { {    1,   0, NIL, '<', NIL }, { 1002,   1, 'AS', '<', NIL }, {    0,   0, 'INLINE', NIL, NIL }, { 1003,   1, 'LOCAL', '<', NIL }, {    0,  -1, ',', NIL, NIL }, {    4,   0, NIL, 'A', NIL } } , .T. } )
+  aAdd( aCommRules, { 'ACCESS' , { {    1,   0, NIL, '<', NIL }, { 1002,   1, 'AS', '<', NIL }, {    0,   0, 'DEFERRED', NIL, NIL } } , .T. } )
+  aAdd( aCommRules, { 'ASSIGN' , { {    1,   0, NIL, '<', NIL }, { 1002,   1, 'AS', '<', NIL } } , .T. } )
+  aAdd( aCommRules, { 'ASSIGN' , { {    1,   0, NIL, '<', NIL }, {    0,   0, '(', NIL, NIL }, { 1002,   1, NIL, 'A', { ')' } }, {    0,   0, ')', NIL, NIL }, { 1003,   1, 'AS', '<', NIL } } , .T. } )
+  aAdd( aCommRules, { 'ASSIGN' , { {    1,   0, NIL, '<', NIL }, {    0,   0, '(', NIL, NIL }, { 1002,   1, NIL, 'A', { ')' } }, {    0,   0, ')', NIL, NIL }, { 1003,   1, 'AS', '<', NIL }, {    0,   0, 'INLINE', NIL, NIL }, { 1004,   1, 'LOCAL', '<', NIL }, {    0,  -1, ',', NIL, NIL }, {    5,   0, NIL, 'A', NIL } } , .T. } )
+  aAdd( aCommRules, { 'ON' , { {    1,   0, 'ERROR', '<', NIL } } , .T. } )
+  aAdd( aCommRules, { 'ERROR' , { {    1,   0, 'HANDLER', '<', NIL } } , .T. } )
+  aAdd( aCommRules, { 'ERROR' , { {    1,   0, 'HANDLER', '<', NIL }, {    0,   0, '(', NIL, NIL }, { 1002,   1, NIL, 'A', { ')' } }, {    0,   0, ')', NIL, NIL } } , .T. } )
+  aAdd( aCommRules, { 'ENDCLASS' ,  , .T. } )
+  aAdd( aCommRules, { 'METHOD' , { {    1,   0, NIL, '<', NIL } } , .T. } )
+  aAdd( aCommRules, { 'METHOD' , { {    1,   0, NIL, '<', NIL }, {    2,   0, 'CLASS', '<', NIL } } , .T. } )
+  aAdd( aCommRules, { 'METHOD' , { {    1,   0, NIL, '<', NIL }, {    0,   0, '_CLASS_IMPLEMENTATION_', NIL, NIL } } , .T. } )
+  aAdd( aCommRules, { 'METHOD' , { {    1,   0, NIL, '<', NIL }, {    2,   0, 'CLASS', '<', NIL }, {    0,   0, '_CLASS_IMPLEMENTATION_', NIL, NIL } } , .T. } )
+  aAdd( aCommRules, { 'METHOD' , { {    1,   0, NIL, '<', NIL }, {    2,   0, 'DECLCLASS', '<', NIL }, {    0,   0, '_CLASS_IMPLEMENTATION_', NIL, NIL } } , .T. } )
+  aAdd( aCommRules, { 'DECLARED' , { {    1,   0, 'METHOD', '<', NIL }, {    2,   0, NIL, '<', NIL } } , .T. } )
+  aAdd( aCommRules, { 'ACCESS' , { {    1,   0, NIL, '<', NIL }, {    2,   0, 'CLASS', '<', NIL } } , .T. } )
+  aAdd( aCommRules, { 'ASSIGN' , { {    1,   0, NIL, '<', NIL }, {    2,   0, 'CLASS', '<', NIL } } , .T. } )
+
+RETURN .T.
+
+//--------------------------------------------------------------//
+
+FUNCTION InitClsResults()
+
+  /* Defines Results*/
+  aAdd( aDefResults, { , ,  } )
+  aAdd( aDefResults, { , ,  } )
+  aAdd( aDefResults, { , ,  } )
+  aAdd( aDefResults, { , ,  } )
+  aAdd( aDefResults, { , ,  } )
+  aAdd( aDefResults, { , ,  } )
+  aAdd( aDefResults, { , ,  } )
+  aAdd( aDefResults, { , ,  } )
+  aAdd( aDefResults, { { {   0, '0' } }, { -1} , { }  } )
+  aAdd( aDefResults, { { {   0, '1' } }, { -1} , { }  } )
+  aAdd( aDefResults, { { {   0, '2' } }, { -1} , { }  } )
+  aAdd( aDefResults, { { {   0, '1' } }, { -1} , { }  } )
+  aAdd( aDefResults, { { {   0, '2' } }, { -1} , { }  } )
+  aAdd( aDefResults, { { {   0, '4' } }, { -1} , { }  } )
+  aAdd( aDefResults, { { {   0, '8' } }, { -1} , { }  } )
+  aAdd( aDefResults, { { {   0, '16' } }, { -1} , { }  } )
+  aAdd( aDefResults, { { {   0, '32' } }, { -1} , { }  } )
+  aAdd( aDefResults, { { {   0, '64' } }, { -1} , { }  } )
+  aAdd( aDefResults, { { {   0, '128' } }, { -1} , { }  } )
+  aAdd( aDefResults, { { {   0, '0' } }, { -1} , { }  } )
+  aAdd( aDefResults, { { {   0, '1' } }, { -1} , { }  } )
+  aAdd( aDefResults, { { {   0, '2' } }, { -1} , { }  } )
+  aAdd( aDefResults, { { {   0, '3' } }, { -1} , { }  } )
+  aAdd( aDefResults, { { {   0, '4' } }, { -1} , { }  } )
+  aAdd( aDefResults, { { {   0, '5' } }, { -1} , { }  } )
+  aAdd( aDefResults, { { {   0, '6' } }, { -1} , { }  } )
+  aAdd( aDefResults, { { {   0, '7' } }, { -1} , { }  } )
+  aAdd( aDefResults, { { {   0, '1' } }, { -1} , { }  } )
+  aAdd( aDefResults, { { {   0, '2' } }, { -1} , { }  } )
+  aAdd( aDefResults, { { {   0, '3' } }, { -1} , { }  } )
+  aAdd( aDefResults, { { {   0, '4' } }, { -1} , { }  } )
+  aAdd( aDefResults, { { {   0, '1' } }, { -1} , { }  } )
+  aAdd( aDefResults, { { {   0, '2' } }, { -1} , { }  } )
+  aAdd( aDefResults, { { {   0, '3' } }, { -1} , { }  } )
+  aAdd( aDefResults, { { {   0, '4' } }, { -1} , { }  } )
+  aAdd( aDefResults, { { {   0, '1' } }, { -1} , { }  } )
+  aAdd( aDefResults, { { {   0, '2' } }, { -1} , { }  } )
+  aAdd( aDefResults, { { {   0, '3' } }, { -1} , { }  } )
+  aAdd( aDefResults, { { {   0, '1' } }, { -1} , { }  } )
+  aAdd( aDefResults, { { {   0, '2' } }, { -1} , { }  } )
+  aAdd( aDefResults, { { {   0, '3' } }, { -1} , { }  } )
+  aAdd( aDefResults, { { {   0, '__CLS_PARAM' } }, { -1} , { }  } )
+  aAdd( aDefResults, { { {   0, '.F.' } }, { -1} , { }  } )
+  aAdd( aDefResults, { , ,  } )
+  aAdd( aDefResults, { , ,  } )
+  aAdd( aDefResults, { , ,  } )
+  aAdd( aDefResults, { , ,  } )
+
+  /* Translates Results*/
+  aAdd( aTransResults, { { {   0, '#error ' }, {   1,   1 } }, { -1,  1} , { NIL}  } )
+  aAdd( aTransResults, { { {   0, ')' } }, { -1} , { }  } )
+  aAdd( aTransResults, { { {   0, 'iif( ' }, {   0,   1 }, {   0, ', HB_OO_CLSTP_EXPORTED , iif( ' }, {   0,   2 }, {   0, ', HB_OO_CLSTP_PROTECTED, iif( ' }, {   0,   3 }, {   0, ', HB_OO_CLSTP_HIDDEN, nScope) ) )' } }, { -1,  1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL}  } )
+  aAdd( aTransResults, { { {   0, 'CLASS' } }, { -1} , { }  } )
+  aAdd( aTransResults, { { {   0,   1 }, {   0, '_' }, {   0,   2 } }, {  1, -1,  1} , { NIL, NIL}  } )
+  aAdd( aTransResults, { , ,  } )
+  aAdd( aTransResults, { { {   0, ':' } }, { -1} , { }  } )
+  aAdd( aTransResults, { { {   0, 'nScope := HB_OO_CLSTP_EXPORTED' } }, { -1} , { }  } )
+  aAdd( aTransResults, { { {   0, 'nScope := HB_OO_CLSTP_EXPORTED' } }, { -1} , { }  } )
+  aAdd( aTransResults, { { {   0, 'nScope := HB_OO_CLSTP_EXPORTED' } }, { -1} , { }  } )
+  aAdd( aTransResults, { { {   0, 'nScope := HB_OO_CLSTP_HIDDEN' } }, { -1} , { }  } )
+  aAdd( aTransResults, { { {   0, 'nScope := HB_OO_CLSTP_PROTECTED' } }, { -1} , { }  } )
+  aAdd( aTransResults, { { {   0, 'CLASSVAR' } }, { -1} , { }  } )
+  aAdd( aTransResults, { { {   0, 'CLASSMETHOD' } }, { -1} , { }  } )
+  aAdd( aTransResults, { { {   0, '( ' }, {   0,   1 }, {   0, '():New( ' }, {   0,   2 }, {   0, ' )' } }, { -1,  1, -1,  1, -1} , { NIL, NIL}  } )
+  aAdd( aTransResults, { { {   0, '= ' }, {   0,   1 }, {   0, '():New( ' }, {   0,   2 }, {   0, ' )' } }, { -1,  1, -1,  1, -1} , { NIL, NIL}  } )
+  aAdd( aTransResults, { { {   0, ', ' }, {   0,   1 }, {   0, '():New( ' }, {   0,   2 }, {   0, ' )' } }, { -1,  1, -1,  1, -1} , { NIL, NIL}  } )
+  aAdd( aTransResults, { { {   0, 'ENDCLASS' } }, { -1} , { }  } )
+  aAdd( aTransResults, { { {   0, ':' }, {   0,   1 }, {   0, ':' } }, { -1,  1, -1} , { NIL}  } )
+  aAdd( aTransResults, { { {   0, ':Super:' } }, { -1} , { }  } )
+  aAdd( aTransResults, { { {   0, ':Super' } }, { -1} , { }  } )
+
+  /* Commands Results*/
+  aAdd( aCommResults, { { {   0, '_HB_CLASS ' }, {   0,   1 }, {   0, ' ; ' }, {   0,   6 }, {   0, ' function ' }, {   0,   1 }, {   0, '() ; static s_oClass ; local MetaClass,nScope := HB_OO_CLSTP_EXPORTED ; if s_oClass == NIL ; s_oClass := IIF(' }, {   0,   2 }, {   0, ', ' }, {   0,   2 }, {   0, ' ,TClass():new( ' }, {   0,   1 }, {   0, ' , __HB_CLS_PAR ( ' }, {   4,   4 }, {   5, ' ,' }, {   5,   5 }, {   0, ' ) ) ) ; #undef  _CLASS_NAME_ ; #define _CLASS_NAME_ ' }, {   0,   1 }, {   0, ' ; #undef  _CLASS_MODE_ ; #define _CLASS_MODE_ _CLASS_DECLARATION_ ; #xtranslate CLSMETH ' }, {   0,   1 }, {   0, ' <MethodName> => @' }, {   0,   1 }, {   0, '_<MethodName> ; #xtranslate  DECLCLASS ' }, {   0,   1 }, {   0, ' => ; ' }, ;
+      {   5, ' ; #translate Super( ' }, {   5,   5 }, {   5, ' ) : => ::' }, {   5,   5 }, {   5, ': ' }, {   4, ' ; #translate Super( ' }, {   4,   4 }, {   4, ' ) : => ::' }, {   4,   4 }, {   4, ': ' }, {   4, ' ; #translate Super() : => ::' }, {   4,   4 }, {   4, ': ' }, {   4, ' ; #translate Super : => ::' }, {   4,   4 }, {   4, ': ' }, {   4, ' ; REQUEST ' }, {   4,   4 }, {   5, ' ,' }, {   5,   5 } }, { -1,  1, -1,  1, -1,  1, -1,  6, -1,  4, -1,  4, -1,  4, -1,  4, -1,  1, -1,  1, -1,  1, -1,  1, -1, -1,  1, -1,  1, -1, -1,  1, -1,  1, -1, -1,  1, -1, -1,  1, -1, -1,  1, -1,  1} , { NIL, NIL, NIL, NIL, NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER {' }, {   2, 'AS ' }, {   2,   2 }, {   0, ' ' }, {   0,   1 }, {   0, '} ; s_oClass:AddMultiData( ' }, {   0,   2 }, {   0, ', ' }, {   0,   3 }, {   0, ', HBCLSCHOICE( ' }, {   0,   4 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ' ) + iif( ' }, {   0,   7 }, {   0, ', HB_OO_CLSTP_READONLY, 0 ), {' }, {   0,   1 }, {   0, '}, __HB_CLS_NOINI )' } }, { -1, -1,  1, -1,  1, -1,  4, -1,  1, -1,  6, -1,  6, -1,  6, -1,  6, -1,  4, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER {' }, {   2, 'AS ' }, {   2,   2 }, {   0, ' ' }, {   0,   1 }, {   0, '} ; s_oClass:AddMultiData( ' }, {   0,   2 }, {   0, ', ' }, {   0,   3 }, {   0, ', HBCLSCHOICE( ' }, {   0,   4 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ' ) + iif( ' }, {   0,   7 }, {   0, ', HB_OO_CLSTP_READONLY, 0 ), {' }, {   0,   1 }, {   0, '}, __HB_CLS_NOINI )' } }, { -1, -1,  1, -1,  1, -1,  4, -1,  1, -1,  6, -1,  6, -1,  6, -1,  6, -1,  4, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER {' }, {   2, 'AS ' }, {   2,   2 }, {   0, ' ' }, {   0,   1 }, {   0, '} ; s_oClass:AddInline( ' }, {   0,   1 }, {   0, ', {|Self| Self:' }, {   0,   3 }, {   0, ':' }, {   0,   1 }, {   0, ' }, HB_OO_CLSTP_EXPORTED + HB_OO_CLSTP_READONLY ) ; s_oClass:AddInline( "_" + ' }, {   0,   1 }, {   0, ', {|Self, param| Self:' }, {   0,   3 }, {   0, ':' }, {   0,   1 }, {   0, ' := param }, HB_OO_CLSTP_EXPORTED )' } }, { -1, -1,  1, -1,  1, -1,  4, -1,  1, -1,  1, -1,  4, -1,  1, -1,  1, -1} , { NIL, NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER {' }, {   2, 'AS ' }, {   2,   2 }, {   0, ' ' }, {   0,   1 }, {   0, '} ; s_oClass:AddInline( ' }, {   0,   1 }, {   0, ', {|Self| Self:' }, {   0,   4 }, {   0, ':' }, {   0,   3 }, {   0, ' }, HB_OO_CLSTP_EXPORTED + HB_OO_CLSTP_READONLY ) ; s_oClass:AddInline( "_" + ' }, {   0,   1 }, {   0, ', {|Self, param| Self:' }, {   0,   4 }, {   0, ':' }, {   0,   3 }, {   0, ' := param }, HB_OO_CLSTP_EXPORTED )' } }, { -1, -1,  1, -1,  1, -1,  4, -1,  1, -1,  1, -1,  4, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER {' }, {   2, 'AS ' }, {   2,   2 }, {   0, ' ' }, {   0,   1 }, {   0, '} ; s_oClass:AddInline( ' }, {   0,   1 }, {   0, ', {|Self| Self:' }, {   0,   3 }, {   0, ' }, HB_OO_CLSTP_EXPORTED + HB_OO_CLSTP_READONLY ) ; s_oClass:AddInline( "_" + ' }, {   0,   1 }, {   0, ', {|Self, param| Self:' }, {   0,   3 }, {   0, ' := param }, HB_OO_CLSTP_EXPORTED )' } }, { -1, -1,  1, -1,  1, -1,  4, -1,  1, -1,  4, -1,  1, -1} , { NIL, NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, 's_oClass:AddInline( ' }, {   0,   1 }, {   0, ', {|Self| Self:' }, {   0,   3 }, {   0, ':' }, {   0,   2 }, {   0, ' }, HB_OO_CLSTP_EXPORTED + HB_OO_CLSTP_READONLY ) ; s_oClass:AddInline( "_" + ' }, {   0,   1 }, {   0, ', {|Self, param| Self:' }, {   0,   3 }, {   0, ':' }, {   0,   2 }, {   0, ' := param }, HB_OO_CLSTP_EXPORTED )' } }, { -1,  4, -1,  1, -1,  1, -1,  4, -1,  1, -1,  1, -1} , { NIL, NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER ' }, {   0,   1 }, {   0, '() ' }, {   2, 'AS ' }, {   2,   2 }, {   0, '; s_oClass:AddVirtual( ' }, {   0,   1 }, {   0, ' )' } }, { -1,  1, -1, -1,  1, -1,  4, -1} , { NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER {' }, {   2, 'AS ' }, {   2,   2 }, {   0, ' ' }, {   0,   1 }, {   0, '} ; s_oClass:AddMultiData( ' }, {   0,   2 }, {   0, ', ' }, {   0,   3 }, {   0, ', HB_OO_CLSTP_EXPORTED + iif( ' }, {   0,   4 }, {   0, ', HB_OO_CLSTP_READONLY, 0 ), {' }, {   0,   1 }, {   0, '}, __HB_CLS_NOINI )' } }, { -1, -1,  1, -1,  1, -1,  4, -1,  1, -1,  6, -1,  4, -1} , { NIL, NIL, NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER {' }, {   2, 'AS ' }, {   2,   2 }, {   0, ' ' }, {   0,   1 }, {   0, '} ; s_oClass:AddMultiData( ' }, {   0,   2 }, {   0, ', ' }, {   0,   3 }, {   0, ', HB_OO_CLSTP_EXPORTED + iif( ' }, {   0,   4 }, {   0, ', HB_OO_CLSTP_READONLY, 0 ), {' }, {   0,   1 }, {   0, '}, __HB_CLS_NOINI )' } }, { -1, -1,  1, -1,  1, -1,  4, -1,  1, -1,  6, -1,  4, -1} , { NIL, NIL, NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER {' }, {   2, 'AS ' }, {   2,   2 }, {   0, ' ' }, {   0,   1 }, {   0, '} ; s_oClass:AddMultiData( ' }, {   0,   2 }, {   0, ', ' }, {   0,   3 }, {   0, ', HB_OO_CLSTP_PROTECTED + iif( ' }, {   0,   4 }, {   0, ', HB_OO_CLSTP_READONLY, 0 ), {' }, {   0,   1 }, {   0, '}, __HB_CLS_NOINI )' } }, { -1, -1,  1, -1,  1, -1,  4, -1,  1, -1,  6, -1,  4, -1} , { NIL, NIL, NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER {' }, {   2, 'AS ' }, {   2,   2 }, {   0, ' ' }, {   0,   1 }, {   0, '} ; s_oClass:AddMultiData( ' }, {   0,   2 }, {   0, ', ' }, {   0,   3 }, {   0, ', HB_OO_CLSTP_PROTECTED + iif( ' }, {   0,   4 }, {   0, ', HB_OO_CLSTP_READONLY, 0 ), {' }, {   0,   1 }, {   0, '}, __HB_CLS_NOINI )' } }, { -1, -1,  1, -1,  1, -1,  4, -1,  1, -1,  6, -1,  4, -1} , { NIL, NIL, NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER {' }, {   2, 'AS ' }, {   2,   2 }, {   0, ' ' }, {   0,   1 }, {   0, '} ; s_oClass:AddMultiData( ' }, {   0,   2 }, {   0, ', ' }, {   0,   3 }, {   0, ', HB_OO_CLSTP_HIDDEN + iif( ' }, {   0,   4 }, {   0, ', HB_OO_CLSTP_READONLY, 0 ), {' }, {   0,   1 }, {   0, '}, __HB_CLS_NOINI )' } }, { -1, -1,  1, -1,  1, -1,  4, -1,  1, -1,  6, -1,  4, -1} , { NIL, NIL, NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER {' }, {   2, 'AS ' }, {   2,   2 }, {   0, ' ' }, {   0,   1 }, {   0, '} ; s_oClass:AddMultiData( ' }, {   0,   2 }, {   0, ', ' }, {   0,   3 }, {   0, ', HB_OO_CLSTP_HIDDEN + iif( ' }, {   0,   4 }, {   0, ', HB_OO_CLSTP_READONLY, 0 ), {' }, {   0,   1 }, {   0, '}, __HB_CLS_NOINI )' } }, { -1, -1,  1, -1,  1, -1,  4, -1,  1, -1,  6, -1,  4, -1} , { NIL, NIL, NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER {' }, {   2, 'AS ' }, {   2,   2 }, {   0, ' ' }, {   0,   1 }, {   0, '} ; s_oClass:AddMultiClsData(' }, {   0,   2 }, {   0, ', ' }, {   0,   3 }, {   0, ', HBCLSCHOICE( ' }, {   0,   4 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ' ) + iif( ' }, {   0,   7 }, {   0, ', HB_OO_CLSTP_READONLY, 0 ) + iif( ' }, {   0,   8 }, {   0, ', HB_OO_CLSTP_SHARED, 0 ), {' }, {   0,   1 }, {   0, '}, __HB_CLS_NOINI )' } }, { -1, -1,  1, -1,  1, -1,  4, -1,  1, -1,  6, -1,  6, -1,  6, -1,  6, -1,  6, -1,  4, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER {' }, {   2, 'AS ' }, {   2,   2 }, {   0, ' ' }, {   0,   1 }, {   0, '} ; s_oClass:AddMultiClsData(' }, {   0,   2 }, {   0, ', ' }, {   0,   3 }, {   0, ', HBCLSCHOICE( ' }, {   0,   4 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ' ) + iif( ' }, {   0,   7 }, {   0, ', HB_OO_CLSTP_READONLY, 0 ) + iif( ' }, {   0,   8 }, {   0, ', HB_OO_CLSTP_SHARED, 0 ), {' }, {   0,   1 }, {   0, '}, __HB_CLS_NOINI )' } }, { -1, -1,  1, -1,  1, -1,  4, -1,  1, -1,  6, -1,  6, -1,  6, -1,  6, -1,  6, -1,  4, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER {' }, {   2, 'AS ' }, {   2,   2 }, {   0, ' ' }, {   0,   1 }, {   0, '} ; s_oClass:AddMultiData( ' }, {   0,   2 }, {   0, ', ' }, {   0,   3 }, {   0, ', HBCLSCHOICE( ' }, {   0,   4 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ' ) + iif( ' }, {   0,   7 }, {   0, ', HB_OO_CLSTP_READONLY, 0 ), {' }, {   0,   1 }, {   0, '}, __HB_CLS_NOINI )' } }, { -1, -1,  1, -1,  1, -1,  4, -1,  1, -1,  6, -1,  6, -1,  6, -1,  6, -1,  4, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER {' }, {   2, 'AS ' }, {   2,   2 }, {   0, ' ' }, {   0,   1 }, {   0, '} ; s_oClass:AddMultiClsData(' }, {   0,   2 }, {   0, ', ' }, {   0,   3 }, {   0, ', HBCLSCHOICE( ' }, {   0,   4 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ' ) + iif( ' }, {   0,   7 }, {   0, ', HB_OO_CLSTP_READONLY, 0 ) + HB_OO_CLSTP_SHARED, {' }, {   0,   1 }, {   0, '}, __HB_CLS_NOINI )' } }, { -1, -1,  1, -1,  1, -1,  4, -1,  1, -1,  6, -1,  6, -1,  6, -1,  6, -1,  4, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER ' }, {   0,   1 }, {   0, '() ' }, {   2, 'AS ' }, {   2,   2 }, {   0, '; s_oClass:AddClsMthds( ' }, {   0,   1 }, {   0, ', CLSMETH _CLASS_NAME_ ' }, {   0,   1 }, {   0, '(), HBCLSCHOICE( ' }, {   0,   3 }, {   0, ', ' }, {   0,   4 }, {   0, ', ' }, {   0,   5 }, {   0, ' ) + iif( ' }, {   0,   6 }, {   0, ', HB_OO_CLSTP_SHARED, 0 ) )' } }, { -1,  1, -1, -1,  1, -1,  4, -1,  1, -1,  6, -1,  6, -1,  6, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, 'METHOD ' }, {   0,   1 }, {   0, ' CONSTRUCTOR' } }, { -1,  1, -1} , { NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER ' }, {   0,   1 }, {   0, '() ' }, {   2,   2 }, {   2, ' AS CLASS _CLASS_NAME_' }, {   3, ' AS ' }, {   3,   3 }, {   0, '; #xcommand METHOD ' }, {   0,   1 }, {   0, ' [([<anyParams,...>])] [DECLCLASS _CLASS_NAME_] _CLASS_IMPLEMENTATION_ => DECLARED METHOD _CLASS_NAME_ ' }, {   0,   1 }, {   0, '([<anyParams>]); s_oClass:AddMethod( ' }, {   0,   1 }, {   0, ', CLSMETH _CLASS_NAME_ ' }, {   0,   1 }, {   0, '(), HBCLSCHOICE( ' }, {   0,   4 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ' ) + iif( ' }, {   0,   2 }, {   0, ', HB_OO_CLSTP_CTOR, 0 ) )' } }, { -1,  1, -1,  0, -1, -1,  1, -1,  1, -1,  1, -1,  4, -1,  1, -1,  6, -1,  6, -1,  6, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER ' }, {   0,   1 }, {   0, '(' }, {   2,   2 }, {   0, ') ' }, {   3,   3 }, {   3, ' AS CLASS _CLASS_NAME_' }, {   4, ' AS ' }, {   4,   4 }, {   0, '; #xcommand METHOD ' }, {   0,   1 }, {   0, ' [([<anyParams,...>])] [DECLCLASS _CLASS_NAME_] _CLASS_IMPLEMENTATION_ => DECLARED METHOD _CLASS_NAME_ ' }, {   0,   1 }, {   0, '(' }, {   0, '<anyParams>' }, {   0, '); s_oClass:AddMethod( ' }, {   0,   1 }, {   0, ', CLSMETH _CLASS_NAME_ ' }, {   0,   1 }, {   0, '(), HBCLSCHOICE( ' }, {   0,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,   7 }, {   0, ' ) + iif( ' }, {   0,   3 }, {   0, ', HB_OO_CLSTP_CTOR, 0 ) )' } }, { -1,  1, -1,  1, -1,  0, -1, -1,  1, -1,  1, -1,  1, -1, -1, -1,  4, -1,  1, -1,  6, -1,  6, -1,  6, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER ' }, {   0,   1 }, {   0, '() ' }, {   4,   4 }, {   4, ' AS CLASS _CLASS_NAME_' }, {   2, ' AS ' }, {   2,   2 }, {   0, '; s_oClass:AddInline( ' }, {   0,   1 }, {   0, ', ' }, {   0,   3 }, {   0, ', HBCLSCHOICE( ' }, {   0,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,   7 }, {   0, ' ) + iif( ' }, {   0,   4 }, {   0, ', HB_OO_CLSTP_CTOR, 0 ) )' } }, { -1,  1, -1,  0, -1, -1,  1, -1,  4, -1,  1, -1,  6, -1,  6, -1,  6, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER ' }, {   0,   1 }, {   0, '() ' }, {   4,   4 }, {   4, ' AS CLASS _CLASS_NAME_' }, {   2, ' AS ' }, {   2,   2 }, {   0, '; s_oClass:AddMethod( ' }, {   0,   1 }, {   0, ', @' }, {   0,   3 }, {   0, '(), HBCLSCHOICE( ' }, {   0,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,   7 }, {   0, ' ) + iif( ' }, {   0,   4 }, {   0, ', HB_OO_CLSTP_CTOR, 0 ) )' } }, { -1,  1, -1,  0, -1, -1,  1, -1,  4, -1,  1, -1,  6, -1,  6, -1,  6, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER ' }, {   0,   1 }, {   0, '() ' }, {   4,   4 }, {   4, ' AS CLASS _CLASS_NAME_' }, {   2, ' AS ' }, {   2,   2 }, {   0, '; s_oClass:AddInline( ' }, {   0,   1 }, {   0, ', {|Self | ' }, {   0,   3 }, {   0, ' }, HBCLSCHOICE( ' }, {   0,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,   7 }, {   0, ' ) + iif( ' }, {   0,   4 }, {   0, ', HB_OO_CLSTP_CTOR, 0 ) )' } }, { -1,  1, -1,  0, -1, -1,  1, -1,  4, -1,  1, -1,  6, -1,  6, -1,  6, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER ' }, {   0,   1 }, {   0, '(' }, {   2,   2 }, {   0, ') ' }, {   5,   5 }, {   5, ' AS CLASS _CLASS_NAME_' }, {   3, ' AS ' }, {   3,   3 }, {   0, '; s_oClass:AddInline( ' }, {   0,   1 }, {   0, ', {|Self ' }, {   2, ',' }, {   2,   2 }, {   0, ' | ' }, {   0,   4 }, {   0, ' }, HBCLSCHOICE( ' }, {   0,   6 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   8 }, {   0, ' ) + iif( ' }, {   0,   5 }, {   0, ', HB_OO_CLSTP_CTOR, 0 ) )' } }, { -1,  1, -1,  1, -1,  0, -1, -1,  1, -1,  4, -1, -1,  1, -1,  1, -1,  6, -1,  6, -1,  6, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, 'METHOD ' }, {   0,   1 }, {   2, ' AS ' }, {   2,   2 }, {   0, ' BLOCK {|Self ' }, {   3, ' ,' }, {   3,   3 }, {   0, ' | ' }, {   0,   4 }, {   0, ' } ' }, {   5,   5 } }, { -1,  1, -1,  1, -1, -1,  1, -1,  1, -1,  1} , { NIL, NIL, NIL, NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, 'METHOD ' }, {   0,   1 }, {   3, ' AS ' }, {   3,   3 }, {   0, ' BLOCK {|Self ' }, {   2, ' ,' }, {   2,   2 }, {   4, ' ,' }, {   4,   4 }, {   0, ' | ' }, {   0,   5 }, {   0, ' } ' }, {   6,   6 } }, { -1,  1, -1,  1, -1, -1,  1, -1,  1, -1,  1, -1,  1} , { NIL, NIL, NIL, NIL, NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER ' }, {   0,   1 }, {   0, '() ' }, {   2, 'AS ' }, {   2,   2 }, {   0, '; s_oClass:AddVirtual( ' }, {   0,   1 }, {   0, ' )' } }, { -1,  1, -1, -1,  1, -1,  4, -1} , { NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER ' }, {   0,   1 }, {   0, '()  ' }, {   2, 'AS ' }, {   2,   2 }, {   0, '; #xcommand METHOD ' }, {   0,   1 }, {   0, ' [([<anyParams,...>])] [DECLCLASS _CLASS_NAME_] _CLASS_IMPLEMENTATION_ => DECLARED METHOD _CLASS_NAME_ ' }, {   0,   1 }, {   0, '(' }, {   0, '<anyParams>' }, {   0, '); s_oClass:AddMethod( ' }, {   0,   1 }, {   0, ', CLSMETH _CLASS_NAME_ ' }, {   0,   1 }, {   0, '(), HBCLSCHOICE( ' }, {   0,   4 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ' ) ) ; s_oClass:AddInline( ' }, {   0,   3 }, {   0, ', {|Self| Self:' }, {   0,   1 }, {   0, '() }, HBCLSCHOICE( ' }, {   0,   4 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ' ) )' } }, { -1,  1, -1, -1,  1, -1,  1, -1,  1, -1, -1, -1,  4, -1,  1, -1,  6, -1,  6, -1,  6, -1,  4, -1,  1, -1,  6, -1,  6, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER ' }, {   0,   1 }, {   0, '(' }, {   2,   2 }, {   0, ')  ' }, {   3, 'AS ' }, {   3,   3 }, {   0, '; #xcommand METHOD ' }, {   0,   1 }, {   0, ' [([<anyParams,...>])] [DECLCLASS _CLASS_NAME_] _CLASS_IMPLEMENTATION_ => DECLARED METHOD _CLASS_NAME_ ' }, {   0,   1 }, {   0, '(' }, {   2, '<anyParams>' }, {   0, '); s_oClass:AddMethod( ' }, {   0,   1 }, {   0, ', CLSMETH _CLASS_NAME_ ' }, {   0,   1 }, {   0, '(), HBCLSCHOICE( ' }, {   0,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,   7 }, {   0, ' ) ) ; s_oClass:AddInline( ' }, {   0,   4 }, {   0, ', {|Self ' }, {   2, ',' }, {   2,   2 }, {   0, ' | Self:' }, {   0,   1 }, {   0, '( ' }, {   2,   2 }, {   0, ' ) }, HBCLSCHOICE( ' }, {   0,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,   7 }, {   0, ' ) )' } }, ;
+      { -1,  1, -1,  1, -1, -1,  1, -1,  1, -1,  1, -1, -1, -1,  4, -1,  1, -1,  6, -1,  6, -1,  6, -1,  4, -1, -1,  1, -1,  1, -1,  1, -1,  6, -1,  6, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER ' }, {   0,   1 }, {   0, '() ' }, {   4,   4 }, {   4, ' AS CLASS _CLASS_NAME_' }, {   2, ' AS ' }, {   2,   2 }, {   0, '; #xcommand METHOD ' }, {   0,   3 }, {   0, ' [([<anyParams,...>])] [DECLCLASS _CLASS_NAME_] _CLASS_IMPLEMENTATION_ => DECLARED METHOD _CLASS_NAME_ ' }, {   0,   3 }, {   0, '(' }, {   0, '<anyParams>' }, {   0, '); s_oClass:AddMethod( ' }, {   0,   1 }, {   0, ', CLSMETH _CLASS_NAME_ ' }, {   0,   3 }, {   0, '(), HBCLSCHOICE( ' }, {   0,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ', ' }, {   0,   7 }, {   0, ' ) + iif( ' }, {   0,   4 }, {   0, ', HB_OO_CLSTP_CTOR, 0 ) )' } }, { -1,  1, -1,  0, -1, -1,  1, -1,  1, -1,  1, -1, -1, -1,  4, -1,  1, -1,  6, -1,  6, -1,  6, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER ' }, {   0,   1 }, {   0, '(' }, {   2,   2 }, {   0, ') ' }, {   5,   5 }, {   5, ' AS CLASS _CLASS_NAME_' }, {   3, ' AS ' }, {   3,   3 }, {   0, '; #xcommand METHOD ' }, {   0,   4 }, {   0, ' [([<anyParams,...>])] [DECLCLASS _CLASS_NAME_] _CLASS_IMPLEMENTATION_ => DECLARED METHOD _CLASS_NAME_ ' }, {   0,   4 }, {   0, '(' }, {   0, '<anyParams>' }, {   0, '); s_oClass:AddMethod( ' }, {   0,   1 }, {   0, ', CLSMETH _CLASS_NAME_ ' }, {   0,   4 }, {   0, '(), HBCLSCHOICE( ' }, {   0,   6 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   8 }, {   0, ' ) + iif( ' }, {   0,   5 }, {   0, ', HB_OO_CLSTP_CTOR, 0 ) )' } }, { -1,  1, -1,  1, -1,  0, -1, -1,  1, -1,  1, -1,  1, -1, -1, -1,  4, -1,  1, -1,  6, -1,  6, -1,  6, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER ' }, {   0,   1 }, {   0, '(' }, {   4,   4 }, {   0, ') ' }, {   5,   5 }, {   5, ' AS CLASS _CLASS_NAME_' }, {   2, ' AS ' }, {   2,   2 }, {   0, '; #xcommand METHOD ' }, {   0,   3 }, {   0, ' [([<anyParams,...>])] [DECLCLASS _CLASS_NAME_] _CLASS_IMPLEMENTATION_ => DECLARED METHOD _CLASS_NAME_ ' }, {   0,   3 }, {   0, '(' }, {   0, '<anyParams>' }, {   0, '); s_oClass:AddMethod( ' }, {   0,   1 }, {   0, ', CLSMETH _CLASS_NAME_ ' }, {   0,   3 }, {   0, '(), HBCLSCHOICE( ' }, {   0,   6 }, {   0, ', ' }, {   0,   7 }, {   0, ', ' }, {   0,   8 }, {   0, ' ) + iif( ' }, {   0,   5 }, {   0, ', HB_OO_CLSTP_CTOR, 0 ) )' } }, { -1,  1, -1,  1, -1,  0, -1, -1,  1, -1,  1, -1,  1, -1, -1, -1,  4, -1,  1, -1,  6, -1,  6, -1,  6, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER ' }, {   0,   1 }, {   0, '(' }, {   5,   5 }, {   0, ') ' }, {   2,   2 }, {   6, ' ' }, {   6,   6 }, {   6, ' AS CLASS _CLASS_NAME_' }, {   3, ' AS ' }, {   3,   3 }, {   0, '; #xcommand METHOD ' }, {   0,   4 }, {   0, ' [([<anyParams,...>])] [DECLCLASS _CLASS_NAME_] _CLASS_IMPLEMENTATION_ => DECLARED METHOD _CLASS_NAME_ ' }, {   0,   4 }, {   0, '(' }, {   0, '<anyParams>' }, {   0, '); s_oClass:AddMethod( ' }, {   0,   1 }, {   0, ', CLSMETH _CLASS_NAME_ ' }, {   0,   4 }, {   0, '(), HBCLSCHOICE( ' }, {   0,   7 }, {   0, ', ' }, {   0,   8 }, {   0, ', ' }, {   0,   9 }, {   0, ' ) + iif( ' }, {   0,   6 }, {   0, ', HB_OO_CLSTP_CTOR, 0 ) )' } }, { -1,  1, -1,  1, -1,  0, -1,  0, -1, -1,  1, -1,  1, -1,  1, -1, -1, -1,  4, -1,  1, -1,  6, -1,  6, -1,  6, -1,  6, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER ' }, {   0,   1 }, {   0, '() ' }, {   2, 'AS ' }, {   2,   2 }, {   0, '; s_oClass:AddInline( ' }, {   0,   1 }, {   0, ', {|Self| Self:' }, {   0,   3 }, {   0, ':' }, {   0,   1 }, {   0, '() } )' } }, { -1,  1, -1, -1,  1, -1,  4, -1,  1, -1,  1, -1} , { NIL, NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER ' }, {   0,   1 }, {   0, '(' }, {   2,   2 }, {   0, ') ' }, {   3, 'AS ' }, {   3,   3 }, {   0, '; s_oClass:AddInline( ' }, {   0,   1 }, {   0, ', {|Self ' }, {   2, ',' }, {   2,   2 }, {   0, '| Self:' }, {   0,   4 }, {   0, ':' }, {   0,   1 }, {   0, '( ' }, {   2,   2 }, {   0, ' ) } )' } }, { -1,  1, -1,  1, -1, -1,  1, -1,  4, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER ' }, {   0,   1 }, {   0, '() ' }, {   2, 'AS ' }, {   2,   2 }, {   0, '; s_oClass:AddInline( ' }, {   0,   1 }, {   0, ', {|Self| Self:' }, {   0,   4 }, {   0, ':' }, {   0,   3 }, {   0, '() } )' } }, { -1,  1, -1, -1,  1, -1,  4, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER ' }, {   0,   1 }, {   0, '() ' }, {   2, 'AS ' }, {   2,   2 }, {   0, '; s_oClass:AddInline( ' }, {   0,   1 }, {   0, ', {|Self ' }, {   4, ',' }, {   4,   4 }, {   0, '| Self:' }, {   0,   5 }, {   0, ':' }, {   0,   3 }, {   0, '( ' }, {   4,   4 }, {   0, ' ) } )' } }, { -1,  1, -1, -1,  1, -1,  4, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER ' }, {   0,   1 }, {   0, '(' }, {   2,   2 }, {   0, ') ' }, {   3, 'AS ' }, {   3,   3 }, {   0, '; s_oClass:AddInline( ' }, {   0,   1 }, {   0, ', {|Self ' }, {   2, ',' }, {   2,   2 }, {   0, '| Self:' }, {   0,   5 }, {   0, ':' }, {   0,   4 }, {   0, '( ' }, {   2,   2 }, {   0, ' ) } )' } }, { -1,  1, -1,  1, -1, -1,  1, -1,  4, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER ' }, {   0,   1 }, {   0, '(' }, {   2,   2 }, {   0, ') ' }, {   3, 'AS ' }, {   3,   3 }, {   0, '; s_oClass:AddInline( ' }, {   0,   1 }, {   0, ', {|Self ' }, {   2, ',' }, {   2,   2 }, {   0, '| Self:' }, {   0,   6 }, {   0, ':' }, {   0,   4 }, {   0, '( ' }, {   2,   2 }, {   0, ' ) } )' } }, { -1,  1, -1,  1, -1, -1,  1, -1,  4, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, 'MESSAGE ' }, {   0,   1 }, {   2, ' AS ' }, {   2,   2 }, {   0, ' METHOD ' }, {   0,   3 }, {   4, ' ' }, {   4,   4 } }, { -1,  1, -1,  1, -1,  1, -1,  1} , { NIL, NIL, NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER ' }, {   0,   1 }, {   0, '() ' }, {   2, 'AS ' }, {   2,   2 }, {   0, '; s_oClass:AddInline( ' }, {   0,   1 }, {   0, ', {|Self| Self:' }, {   0,   3 }, {   0, ':' }, {   0,   1 }, {   0, ' } )' } }, { -1,  1, -1, -1,  1, -1,  4, -1,  1, -1,  1, -1} , { NIL, NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER ' }, {   0,   1 }, {   0, '(' }, {   2,   2 }, {   0, ') ' }, {   3, 'AS ' }, {   3,   3 }, {   0, '; s_oClass:AddInline( ' }, {   0,   1 }, {   0, ', {|Self ' }, {   2, ',' }, {   2,   2 }, {   0, '| Self:' }, {   0,   4 }, {   0, ':' }, {   0,   1 }, {   0, '( ' }, {   2,   2 }, {   0, ' ) } )' } }, { -1,  1, -1,  1, -1, -1,  1, -1,  4, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER ' }, {   0,   1 }, {   0, '() ' }, {   2, 'AS ' }, {   2,   2 }, {   0, '; s_oClass:AddInline( ' }, {   0,   1 }, {   0, ', {|Self| Self:' }, {   0,   3 }, {   0, ':' }, {   0,   1 }, {   0, ' } )' } }, { -1,  1, -1, -1,  1, -1,  4, -1,  1, -1,  1, -1} , { NIL, NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER ' }, {   0,   1 }, {   0, '(' }, {   2,   2 }, {   0, ') ' }, {   3, 'AS ' }, {   3,   3 }, {   0, '; s_oClass:AddInline( ' }, {   0,   1 }, {   0, ', {|Self ' }, {   2, ',' }, {   2,   2 }, {   0, '| Self:' }, {   0,   4 }, {   0, ':' }, {   0,   1 }, {   0, '( ' }, {   2,   2 }, {   0, ' ) } )' } }, { -1,  1, -1,  1, -1, -1,  1, -1,  4, -1, -1,  1, -1,  1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER ' }, {   0,   1 }, {   0, '() ' }, {   2, 'AS ' }, {   2,   2 }, {   0, '; _HB_MEMBER _' }, {   0,   1 }, {   0, '() ' }, {   2, 'AS ' }, {   2,   2 }, {   0, '; #xcommand METHOD ' }, {   0,   1 }, {   0, ' [([<anyParams,...>])] [DECLCLASS _CLASS_NAME_] _CLASS_IMPLEMENTATION_ => DECLARED METHOD _CLASS_NAME_ ' }, {   0,   1 }, {   0, '(' }, {   0, '<anyParams>' }, {   0, '); s_oClass:AddMethod( ' }, {   0,   1 }, {   0, ', CLSMETH _CLASS_NAME_ ' }, {   0,   1 }, {   0, '(), HB_OO_CLSTP_EXPORTED + HB_OO_CLSTP_READONLY ) ; s_oClass:AddMethod( "_" + ' }, {   0,   1 }, {   0, ', CLSMETH _CLASS_NAME_ ' }, {   0,   1 }, {   0, '() )' } }, { -1,  1, -1, -1,  1, -1,  1, -1, -1,  1, -1,  1, -1,  1, -1, -1, -1,  4, -1,  1, -1,  4, -1,  1, -1} , { NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER ' }, {   0,   1 }, {   0, '(' }, {   2,   2 }, {   0, ') ' }, {   3, 'AS ' }, {   3,   3 }, {   0, '; _HB_MEMBER _' }, {   0,   1 }, {   0, '(' }, {   2,   2 }, {   0, ') ' }, {   3, 'AS ' }, {   3,   3 }, {   0, '; #xcommand METHOD ' }, {   0,   1 }, {   0, ' [([<anyParams,...>])] [DECLCLASS _CLASS_NAME_] _CLASS_IMPLEMENTATION_ => DECLARED METHOD _CLASS_NAME_ ' }, {   0,   1 }, {   0, '(' }, {   0, '<anyParams>' }, {   0, '); s_oClass:AddMethod( ' }, {   0,   1 }, {   0, ', CLSMETH _CLASS_NAME_ ' }, {   0,   1 }, {   0, '(), HB_OO_CLSTP_EXPORTED + HB_OO_CLSTP_READONLY ) ; s_oClass:AddMethod( "_" + ' }, {   0,   1 }, {   0, ', CLSMETH _CLASS_NAME_ ' }, {   0,   1 }, {   0, '() )' } }, { -1,  1, -1,  1, -1, -1,  1, -1,  1, -1,  1, -1, -1,  1, -1,  1, -1,  1, -1, -1, -1,  4, -1,  1, -1,  4, -1,  1, -1} , { NIL, NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER ' }, {   0,   1 }, {   0, '() ' }, {   2, 'AS ' }, {   2,   2 }, {   0, '; #xcommand METHOD ' }, {   0,   1 }, {   0, ' [([<anyParams,...>])] [DECLCLASS _CLASS_NAME_] _CLASS_IMPLEMENTATION_ => DECLARED METHOD _CLASS_NAME_ ' }, {   0,   1 }, {   0, '(' }, {   0, '<anyParams>' }, {   0, '); s_oClass:AddMethod( ' }, {   0,   1 }, {   0, ', CLSMETH _CLASS_NAME_ ' }, {   0,   1 }, {   0, '(), HB_OO_CLSTP_EXPORTED + HB_OO_CLSTP_READONLY )' } }, { -1,  1, -1, -1,  1, -1,  1, -1,  1, -1, -1, -1,  4, -1,  1, -1} , { NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER ' }, {   0,   1 }, {   0, '(' }, {   2,   2 }, {   0, ') ' }, {   3, 'AS ' }, {   3,   3 }, {   0, '; #xcommand METHOD ' }, {   0,   1 }, {   0, ' [([<anyParams,...>])] [DECLCLASS _CLASS_NAME_] _CLASS_IMPLEMENTATION_ => DECLARED METHOD _CLASS_NAME_ ' }, {   0,   1 }, {   0, '(' }, {   0, '<anyParams>' }, {   0, '); s_oClass:AddMethod( ' }, {   0,   1 }, {   0, ', CLSMETH _CLASS_NAME_ ' }, {   0,   1 }, {   0, '(), HB_OO_CLSTP_EXPORTED + HB_OO_CLSTP_READONLY )' } }, { -1,  1, -1,  1, -1, -1,  1, -1,  1, -1,  1, -1, -1, -1,  4, -1,  1, -1} , { NIL, NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER ' }, {   0,   1 }, {   0, '() ' }, {   2, 'AS ' }, {   2,   2 }, {   0, '; s_oClass:AddInline( ' }, {   0,   1 }, {   0, ', {|Self ' }, {   3, ',' }, {   3,   3 }, {   0, ' | ' }, {   0,   4 }, {   0, ' }, HB_OO_CLSTP_EXPORTED + HB_OO_CLSTP_READONLY )' } }, { -1,  1, -1, -1,  1, -1,  4, -1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER ' }, {   0,   1 }, {   0, '() ' }, {   2, 'AS ' }, {   2,   2 }, {   0, '; s_oClass:AddVirtual( ' }, {   0,   1 }, {   0, ' )' } }, { -1,  1, -1, -1,  1, -1,  4, -1} , { NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER _' }, {   0,   1 }, {   0, '() ' }, {   2, 'AS ' }, {   2,   2 }, {   0, '; #xcommand METHOD ' }, {   0,   1 }, {   0, ' [([<anyParams,...>])] [DECLCLASS _CLASS_NAME_] _CLASS_IMPLEMENTATION_ => DECLARED METHOD _CLASS_NAME_ ' }, {   0,   1 }, {   0, '(' }, {   0, '<anyParams>' }, {   0, '); s_oClass:AddMethod( "_" + ' }, {   0,   1 }, {   0, ', CLSMETH _CLASS_NAME_ _' }, {   0,   1 }, {   0, '(), HB_OO_CLSTP_EXPORTED )' } }, { -1,  1, -1, -1,  1, -1,  1, -1,  1, -1, -1, -1,  4, -1,  1, -1} , { NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER _' }, {   0,   1 }, {   0, '(' }, {   2,   2 }, {   0, ') ' }, {   3, 'AS ' }, {   3,   3 }, {   0, '; #xcommand METHOD ' }, {   0,   1 }, {   0, ' [([<anyParams,...>])] [DECLCLASS _CLASS_NAME_] _CLASS_IMPLEMENTATION_ => DECLARED METHOD _CLASS_NAME_ ' }, {   0,   1 }, {   0, '(' }, {   0, '<anyParams>' }, {   0, '); s_oClass:AddMethod( "_" + ' }, {   0,   1 }, {   0, ', CLSMETH _CLASS_NAME_ _' }, {   0,   1 }, {   0, '(), HB_OO_CLSTP_EXPORTED )' } }, { -1,  1, -1,  1, -1, -1,  1, -1,  1, -1,  1, -1, -1, -1,  4, -1,  1, -1} , { NIL, NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER _' }, {   0,   1 }, {   0, '(' }, {   2,   2 }, {   0, ') ' }, {   3, 'AS ' }, {   3,   3 }, {   0, '; s_oClass:AddInline( "_" + ' }, {   0,   1 }, {   0, ', {|Self ' }, {   2, ',' }, {   2,   2 }, {   4, ' ,' }, {   4,   4 }, {   0, ' | ' }, {   0,   5 }, {   0, ' }, HB_OO_CLSTP_EXPORTED )' } }, { -1,  1, -1,  1, -1, -1,  1, -1,  4, -1, -1,  1, -1,  1, -1,  1, -1} , { NIL, NIL, NIL, NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, 'ERROR HANDLER ' }, {   0,   1 } }, { -1,  1} , { NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER ' }, {   0,   1 }, {   0, '(); #xcommand METHOD ' }, {   0,   1 }, {   0, ' [([<anyParams,...>])] [DECLCLASS _CLASS_NAME_] _CLASS_IMPLEMENTATION_ => DECLARED METHOD _CLASS_NAME_ ' }, {   0,   1 }, {   0, '(' }, {   0, '<anyParams>' }, {   0, '); s_oClass:SetOnError( CLSMETH _CLASS_NAME_ ' }, {   0,   1 }, {   0, '() )' } }, { -1,  1, -1,  1, -1,  1, -1, -1, -1,  1, -1} , { NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_MEMBER ' }, {   0,   1 }, {   0, '(' }, {   2,   2 }, {   0, '); #xcommand METHOD ' }, {   0,   1 }, {   0, ' [([<anyParams,...>])] [DECLCLASS _CLASS_NAME_] _CLASS_IMPLEMENTATION_ => DECLARED METHOD _CLASS_NAME_ ' }, {   0,   1 }, {   0, '(' }, {   0, '<anyParams>' }, {   0, '); s_oClass:SetOnError( CLSMETH _CLASS_NAME_ ' }, {   0,   1 }, {   0, '() )' } }, { -1,  1, -1,  1, -1,  1, -1,  1, -1, -1, -1,  1, -1} , { NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '; s_oClass:Create() ; endif ; return s_oClass:Instance() AS CLASS _CLASS_NAME_ ; #undef  _CLASS_MODE_ ; #define _CLASS_MODE_ _CLASS_IMPLEMENTATION_' } }, { -1} , { }  } )
+  aAdd( aCommResults, { { {   0, 'METHOD ' }, {   0,   1 }, {   0, '                       _CLASS_MODE_' } }, { -1,  1, -1} , { NIL}  } )
+  aAdd( aCommResults, { { {   0, 'METHOD ' }, {   0,   1 }, {   0, ' DECLCLASS ' }, {   0,   2 }, {   0, ' _CLASS_IMPLEMENTATION_' } }, { -1,  1, -1,  1, -1} , { NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '__ERR(Method ' }, {   0,   1 }, {   0, ' not declared in class: _CLASS_NAME_) ; function ' }, {   0,   1 }, {   0, ' ; local self := QSelf()' } }, { -1,  3, -1,  1, -1} , { NIL}  } )
+  aAdd( aCommResults, { { {   0, '#error Method ' }, {   0,   1 }, {   0, ' not declared in class: ' }, {   0,   2 }, {   0, ' ; function ' }, {   0,   1 }, {   0, ' ; local self := QSelf()' } }, { -1,  3, -1,  1, -1,  1, -1} , { NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '#error Class ' }, {   0,   2 }, {   0, ' not declared for method: ' }, {   0,   1 }, {   0, ' ; function ' }, {   0,   1 }, {   0, ' ; local self := QSelf()' } }, { -1,  3, -1,  1, -1,  1, -1} , { NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, 'static function DECLMETH ' }, {   0,   1 }, {   0, ' ' }, {   0,   2 }, {   0, ' ; local Self AS CLASS ' }, {   0,   1 }, {   0, ' := QSelf() AS CLASS ' }, {   0,   1 } }, { -1,  1, -1,  1, -1,  1, -1,  1} , { NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, 'static function ' }, {   0,   2 }, {   0, '_' }, {   0,   1 }, {   0, ' ; local Self AS CLASS ' }, {   0,   2 }, {   0, ' := QSelf() AS CLASS ' }, {   0,   2 } }, { -1,  1, -1,  1, -1,  1, -1,  1} , { NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, 'static function ' }, {   0,   2 }, {   0, '__' }, {   0,   1 }, {   0, ' ; local Self AS CLASS ' }, {   0,   2 }, {   0, ' := QSelf() AS CLASS ' }, {   0,   2 } }, { -1,  1, -1,  1, -1,  1, -1,  1} , { NIL, NIL}  } )
+
+RETURN .T.
+
+//--------------------------------------------------------------//
+INIT PROCEDURE PPInit
+
+   local FileHandle
+
+   FileHandle := FCreate('Trace.Log')
+   FClose(FileHandle)
+
+RETURN
+
+//--------------------------------------------------------------//
+FUNCTION TraceLog(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15 )
+
+   LOCAL FileHandle, ProcName, Counter := 1, aEntries
+
+   aEntries := {p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15}
+
+   FileHandle := FOpen( 'Trace.Log', 1 )
+
+   FSeek(FileHandle, 0, 2)
+
+   FWrite( FileHandle, '[' + ProcName(1) + '] (' + Str( Procline(1), 5 ) + ') Called from: '  + CRLF )
+
+   DO WHILE ! ( ( ProcName := ProcName( ++Counter ) ) == '' )
+      FWrite( FileHandle, space(30) + ProcName + '(' + Str( Procline( Counter), 5 ) + ')' + CRLF )
+   ENDDO
+
+   IF ! ( PP_ProcName(0) == "" )
+      FWrite( FileHandle, "Interpreter:"  + CRLF )
+      Counter := -1
+      DO WHILE ! ( ( ProcName := PP_ProcName( ++Counter ) ) == "" )
+         FWrite( FileHandle, space(30) + ProcName + '(' + Str( PP_Procline( Counter), 5 ) + ')' + CRLF )
+      ENDDO
+   ENDIF
+
+   FOR Counter := 1 to PCount()
+      FWrite( FileHandle, '>>>' + xToStr( aEntries[Counter] ) + '<<<' + CRLF )
+   NEXT
+
+   FWrite( FileHandle, CRLF )
+
+   FClose(FileHandle)
+
+RETURN .T.
+
+//--------------------------------------------------------------//
+FUNCTION xToStr( xExp )
+
+   LOCAL cType
+
+   IF xExp == NIL
+      RETURN 'NIL'
+   ENDIF
+
+   cType := ValType( xExp )
+
+   DO CASE
+      CASE cType = 'C'
+         RETURN xExp
+
+      CASE cType = 'D'
+         RETURN dToc( xExp )
+
+      CASE cType = 'L'
+         RETURN IIF( xExp, '.T.', '.F.' )
+
+      CASE cType = 'N'
+         RETURN Str( xExp )
+
+      CASE cType = 'M'
+         RETURN xExp
+
+      CASE cType = 'A'
+         RETURN "{ Array of " +  LTrim( Str( Len( xExp ) ) ) + " Items }"
+
+      CASE cType = 'B'
+         RETURN '{|| Block }'
+
+      CASE cType = 'O'
+         RETURN "{ Object }"
+
+      OTHERWISE
+         RETURN "Type: " + cType
+   ENDCASE
+
+RETURN ""
+
+//--------------------------------------------------------------//
+
+FUNCTION PP_QSelf( o )
+
+   STATIC s_oSelf := NIL
+   LOCAL oPreset := s_oSelf
+
+   IF ValType( o ) == 'O'
+      s_oSelf := o
+      RETURN oPreset
+   ENDIF
+
+RETURN s_oSelf
+
+//--------------------------------------------------------------//
+
+FUNCTION NextIdentifier( sLine, sSkipped )
+
+   LOCAL nAt, nLen := Len( sLine ), cChar, cLastChar, nStart, sIdentifier, sTmp
+
+   FOR nAt := 1 TO nLen
+       cChar := SubStr( sLine, nAt, 1 )
+
+       IF cChar $ ' ,([{|^*/+-=!#<>:&'
+          IF nStart != NIL
+             EXIT
+          ENDIF
+          LOOP // No need to record cLastChar
+       ELSEIF cChar $ ')]}'
+          IF nStart != NIL
+             EXIT
+          ENDIF
+       ELSEIF cChar $ ["']
+          DO WHILE ( nAt < nLen ) .AND. SubStr( sLine, ++nAt, 1 ) != cChar
+          ENDDO
+          LOOP // No need to record cLastChar
+       ELSEIF cChar == '['
+          IF ! ( cLastChar $ "0123456789]})." )
+             DO WHILE ( nAt < nLen ) .AND. SubStr( sLine, ++nAt, 1 ) != ']'
+             ENDDO
+          ENDIF
+          cLastChar := ']'
+          LOOP // Recorded cLastChar
+       ELSEIF cChar == '.'
+          IF cLastChar == '_' .OR. IsAlpha( cLastChar )
+             EXIT
+          ENDIF
+
+          sTmp := Upper( SubStr( sLine, nAt + 1, 4 ) )
+          IF sTmp = "T."
+             nAt += 2
+             LOOP
+          ELSEIF sTmp = "F."
+             nAt += 2
+             LOOP
+          ELSEIF sTmp = "OR."
+             nAt += 3
+             LOOP
+          ELSEIF sTmp = "AND."
+             nAt += 4
+             LOOP
+          ELSEIF sTmp = "NOT."
+             nAt += 4
+             LOOP
+          ENDIF
+       ELSEIF nStart == NIL .AND. ( IsAlpha( cChar ) .OR. cChar == '_' )
+          nStart := nAt
+       ENDIF
+
+       cLastChar := cChar
+    NEXT
+
+    IF nStart != NIL
+       sIdentifier := SubStr( sLine, nStart, nAt - nStart )
+       sSkipped    := Left( sLine, nStart - 1 )
+       sLine       := SubStr( sLine, nAt )
+    ENDIF
+
+    //TraceLog( sIdentifier, sLine, sSkipped, cChar, cLastChar, nStart, nAt, nLen )
+
+RETURN sIdentifier
+
+//--------------------------------------------------------------//
+#ifdef PP_RIGHT
+
+FUNCTION nRightIdentifier( sLine )
+
+   LOCAL nAt, nLen := Len( sLine ), cChar, cLastChar := ' ', nTmp
+
+   FOR nAt := nLen TO 1 STEP -1
+       cChar := SubStr( sLine, nAt, 1 )
+
+       IF cChar $ ' ,()[]{}|^*/+-=!#<>:&'
+          IF cLastChar == '_' .OR. IsAlpha( cLastChar )
+             EXIT
+          ENDIF
+          LOOP
+       ELSEIF cChar $ ["']
+          DO WHILE ( nAt > 1 ) .AND. SubStr( sLine, --nAt, 1 ) != cChar
+          ENDDO
+          LOOP
+       ELSEIF cChar == ']'
+          nTmp := nAt
+          DO WHILE nAt > 1 .AND. SubStr( sLine, --nAt, 1 ) != '['
+          ENDDO
+          DO WHILE nAt > 1 .AND. SubStr( sLine, --nAt, 1 ) == ' '
+          ENDDO
+          IF nAt > 0
+             cChar := SubStr( sLine, nAt, 1 )
+             IF IsAlpha( cChar ) .OR. cChar $ "_0123456789]})."
+                nAt := nTmp
+             ELSE
+                cLastChar := cChar
+             ENDIF
+             LOOP
+          ENDIF
+       ELSE
+          cLastChar := cChar
+       ENDIF
+   NEXT
+
+   IF nAt == 0
+      IF cLastChar == '_' .OR. IsAlpha( cLastChar )
+         nAt := 1
+      ENDIF
+   ELSE
+      nAt++
+   ENDIF
+
+
+   IF nAt >= 1
+      IF SubStr( sLine, nAt, 1 ) !=  '_' .AND. ! IsAlpha( SubStr( sLine, nAt, 1 ) )
+         TraceLog( "After: " + cLastChar + "At: " + Str( nAt, 2 ) + " sLine: >" + sLine + "<" )
+         Alert( "After: " + cLastChar + "At: " + Str( nAt, 2 ) + " sLine: >" + sLine + "<" )
+      ELSE
+         //TraceLog( "Identifier: " + SubStr( sLine, nAt ), "After: " + cChar )
+      ENDIF
+   ENDIF
+
+RETURN nAt
+
+#endif
+
+//--------------------------------------------------------------//
 /*
 Function Alert( cMsg )
 
-   ? ProcName(1), ProcLine(1), cMsg
+   //? ProcName(1), ProcLine(1), cMsg
+   TraceLog( cMsg )
 
 return NIL
 */

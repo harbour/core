@@ -80,7 +80,7 @@
            hb_macroError( EG_SYNTAX, YYLEX_PARAM );
 
 #undef IF_BELONG_LEFT
-   #define IF_BELONG_LEFT(chr) if( iLastToken == IDENTIFIER || iLastToken == ']' || iLastToken == MACROVAR || iLastToken == MACROTEXT || iLastToken == ')' || iLastToken == '}' || iLastToken == FIELD || iLastToken == SELF || iLastToken == QSELF || iLastToken == IIF )
+   #define IF_BELONG_LEFT(chr) if( iLastToken == IDENTIFIER || iLastToken == ']' || iLastToken == MACROVAR || iLastToken == MACROTEXT || iLastToken == ')' || iLastToken == '}' || iLastToken == FIELD || /*iLastToken == SELF ||*/ iLastToken == QSELF || iLastToken == IIF )
 
 static HB_MACRO_PTR pMacro;
 static YYSTYPE *pYYLVAL;
@@ -172,7 +172,7 @@ LANGUAGE_WORDS_ARE {
                      LEX_WORD( "IIF"       ) AS_TOKEN( IIF         ),
                      LEX_WORD( "NIL"       ) AS_TOKEN( NIL        + DONT_REDUCE  ),
                      LEX_WORD( "QSELF"     ) AS_TOKEN( QSELF       ),
-                     LEX_WORD( "SELF"      ) AS_TOKEN( SELF        ),
+                  /* LEX_WORD( "SELF"      ) AS_TOKEN( SELF        ), */
                      LEX_WORD( "_FIELD"    ) AS_TOKEN( FIELD       )
                    };
 
@@ -185,8 +185,8 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( FIELD       , ALIASOP     , 0      , 0          ) PASS_THROUGH(),
                     IF_SEQUENCE_IS( FIELD       , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0             ),
 
-                    IF_SEQUENCE_IS( SELF        , ':'         , 0      , 0          ) PASS_THROUGH(),
-                    IF_SEQUENCE_IS( SELF        , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0             ),
+                 /* IF_SEQUENCE_IS( SELF        , ':'         , 0      , 0          ) PASS_THROUGH(),
+                    IF_SEQUENCE_IS( SELF        , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0             ), */
 
                     IF_SEQUENCE_IS( QSELF       , '('         , ')'    , 0          ) REDUCE_TO( SELF + DONT_REDUCE, 0             ),
                     IF_SEQUENCE_IS( QSELF       , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0             ),

@@ -130,6 +130,7 @@ DEFINE_STREAM_AS_ONE_OF_THESE {
 
 START_NEW_LINE_IF_ONE_OF_THESE( "\n;" );
 
+
 #define HB_SELF         LEX_CUSTOM_ACTION - 6
 
 SELF_CONTAINED_WORDS_ARE {
@@ -501,7 +502,7 @@ LANGUAGE_RULES_ARE {
       if( bTmp )
 
 #undef IF_BELONG_LEFT
-   #define IF_BELONG_LEFT(chr) if( iLastToken == IDENTIFIER || iLastToken == ']' || iLastToken == MACROVAR || iLastToken == MACROTEXT || iLastToken == ')' || iLastToken == '}' || iLastToken == WANTS_EOL || iLastToken == WANTS_ID || iLastToken == WANTS_VAR || iLastToken == DECLARE || iLastToken == FIELD || iLastToken == SELF || iLastToken == QSELF || iLastToken == IIF || iLastToken == PROCREQ )
+   #define IF_BELONG_LEFT(chr) if( iLastToken == IDENTIFIER || iLastToken == ']' || iLastToken == MACROVAR || iLastToken == MACROTEXT || iLastToken == ')' || iLastToken == '}' || iLastToken == WANTS_EOL || iLastToken == WANTS_ID || iLastToken == WANTS_VAR || iLastToken == DECLARE || iLastToken == FIELD || /*iLastToken == SELF ||*/ iLastToken == QSELF || iLastToken == IIF || iLastToken == PROCREQ )
 
 /* Support Functions. */
 int hb_comp_SLX_InterceptAction( int iRet, char *sToken )

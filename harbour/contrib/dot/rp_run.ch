@@ -6,16 +6,20 @@
 #TRANSLATE AS <type: ANYTYPE, ARRAY, CHARACTER, CODEBLOCK, DATE, LOGICAL, NUMERIC, OBJECT, STRING, USUAL> =>
 #TRANSLATE AS ARRAY OF <x> =>
 #TRANSLATE AS CLASS <x> =>
-#COMMAND _HB_CLASS <*x*> => Alert( "Declaration" )
+#TRANSLATE AS CLASS <x> := => :=
+#COMMAND _HB_CLASS <*x*> =>
 #COMMAND _HB_MEMBER <*x*> =>
 
+#XTRANSLATE QSelf() => PP_Qself()
+#XTRANSLATE AddMethod( <MethodName>, @<FunName>(), <n> ) => AddInLine( <MethodName>, {|Self,p1,p2,p3,p4,p5,p6,p7,p8,p9| PP_QSelf(Self), ExecuteMethod( <"FunName">, p1,p2,p3,p4,p5,p6,p7,p8,p9 ) }, <n> )
+#TRANSLATE :: => Self:
 
 #COMMAND MEMVAR <*x*> =>
 
 //#COMMAND BROWSE => Browse( 1, 0, MaxRow() - 1, MaxCol() )
 
-#TRANSLATE _GET_( <var>, <varname>, <pic>, <valid>, <when> ) => __GET( MEMVARBLOCK(<varname>), <varname>, <pic>, <valid>, <when> )
-//#TRANSLATE __GET( <parlist,...>):Display() => __GET(<parlist>)
+#TRANSLATE _GET_( <var>, <varname>, [<pic>], [<valid>], [<when>] ) => __GET( MEMVARBLOCK(<varname>), <varname>, <pic>, <valid>, <when> )
+#TRANSLATE __GET( <parlist,...>):Display() => __GET(<parlist>)
 
 //#COMMAND EXTERNAL <file1> [, <fileN> ] => PP_ProcessFile( <file1> ) [; PP_ProcessFile( <fileN> ) ]
 #COMMAND EXTERNAL <file1> [, <fileN> ] =>

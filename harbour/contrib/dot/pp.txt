@@ -16,6 +16,7 @@ PP has 3 personalities which are tied tightly together.
 2. DOT prompt, which suppose to allow most of Harbour syntax. Please
    report any syntax you expect to work, but is not supported.
 
+   It does support IF [ELSE] [ELSEIF] ENDIF in DOT environment.
 
    Executing PP with no source filename will start the DOT prompt mode. In
    this mode you can execute a single line at a time, by typing the line
@@ -35,26 +36,42 @@ PP has 3 personalities which are tied tightly together.
        - LOCALS have scoping of locals but are implemented as privates
          so you can't have a LOCAL and a PRIVATE with the same name.
 
-     b. Non declared variable are not auto-created on assignment (yet).
+     b. Non declared variable are auto-created on assignment in Harbour
+        but NOT in Clipper (yet).
 
      c. It does support definition and execution of prg defined
         FUNCTIONs/PROCEDUREs.
 
-     d. It does not (yet) support WHILE and FOR loops.
+     d. It does support ALL control flow structures *except* BEGIN
+        SEQUENCE [BREAK] [RECOVER] END SEQUENCE.
 
      e. The executed module is compiled with -n option (for now).
 
   This will create rp_dot.pp$ compilation tace file.
-
 
 3. Finally, PP is a limited Harbour Interpreter. Subject to those same few
    limitations it can execute most of Harbour syntax. Executing PP followed
    by a source file name and the -R switch, will "RUN" that source (it will
    also create the rp_run.pp$ compilation trace file).
 
-   This final syntax is:
+   This syntax is:
 
      PP filename[.ext] -R
 
-I intend to add support for, LOOPs, and Parameter passing soon, so that the
-Interpreter will be as complete as possible.
+     a. It does support LOCAL/STATIC/PRIVATE/PUBLIC, but:
+
+       - STATICs are actually implemented as publics.
+
+       - LOCALS have scoping of locals but are implemented as privates
+         so you can't have a LOCAL and a PRIVATE with the same name.
+
+     b. Non declared variable are auto-created on assignment in Harbour
+        but NOT in Clipper (yet).
+
+     c. It does support definition and execution of prg defined
+        FUNCTIONs/PROCEDUREs as well as parameter passing and return values.
+
+     d. It does support ALL control flow structures *except* BEGIN
+        SEQUENCE [BREAK] [RECOVER] END SEQUENCE.
+
+     e. The executed module is compiled with -n option (for now).
