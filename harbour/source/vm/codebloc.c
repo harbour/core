@@ -110,11 +110,6 @@ HB_CODEBLOCK_PTR hb_codeblockNew( BYTE * pBuffer,
           */
          pLocal = hb_stackItemFromBase( *pLocalPosTable++ );
 
-         if( HB_IS_BYREF( pLocal ) )
-         {
-            pLocal = hb_itemUnRef( pLocal );
-         }
-
          if( ! HB_IS_MEMVAR( pLocal ) )
          {
             /* Change the value only if this variable is not referenced
@@ -122,6 +117,11 @@ HB_CODEBLOCK_PTR hb_codeblockNew( BYTE * pBuffer,
              * In this case we have to copy the current value to a global memory
              * pool so it can be shared by codeblocks
              */
+
+         if( HB_IS_BYREF( pLocal ) )
+         {
+            pLocal = hb_itemUnRef( pLocal );
+         }
 
             hMemvar = hb_memvarValueNew( pLocal, FALSE );
 

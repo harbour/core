@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-12-13 17:05 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+   * source/vm/codebloc.c
+      * fixed initialization of detached variables
+
+
 2003-12-12 11:45 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
   * source/rdd/dbcmd.c
     ! Fixed dbSelectArea() bug reported by Giovi Verrua
