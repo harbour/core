@@ -1,3 +1,7 @@
+19990808-10:05 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * makefile.b32
+     * setkey and devoutp were not properly referenced
+
 19990808-09:34 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/rtl/tbrowse.prg
      * improved
