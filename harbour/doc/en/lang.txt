@@ -37,6 +37,7 @@
  *      EN           English      437
  *      FR           French       850
  *      GL           Galician     850
+ *      DE           German       850   
  *      HE862        Hebrew       862
  *      HEWIN        Hebrew       1255
  *      HU852        Hungarian    852

@@ -26,7 +26,7 @@
  *      <ClassName>  Name of the class to define. By tradition, Harbour
  *                   classes start with "T" to avoid collisions with user-
  *                   created classes.  
-
+ *
  *      <SuperClass> The Parent class to use for inheritance   
  *  $DESCRIPTION$
  *      CLASS creates a class from which you can create objects.
@@ -83,13 +83,24 @@
  *      Define a DATA instance variable for the objects of a class
  *  $SYNTAX$
  *      DATA <DataName1> [,<DataNameN>] [ AS <type> ] [ INIT <uValue> ]
+ *      [ EXPORTED] [PROTECTED] [HIDDEN] [ READONLY]
  *  $ARGUMENTS$
  *      <DataName1>  Name of the DATA  
 
  *      <type>       Optional data type specification from the following:
  *                   Character, Numeric, Date, Logical, Codeblock, Nil  
 
- *      <uValue>     Optional initial value when creating a new object  
+ *      <uValue>     Optional initial value when creating a new object
+ *
+ *      EXPORTED     This clause tell that this data is visible in where
+ *                   was defined and all subclasses.
+ *
+ *      PROTECTED    This clause tell that the data is visible only where is
+ *                   defined
+ *
+ *      HIDDEN       This clause say that the data is only visible on the
+ *                   class that was defined,and is not inherit by the
+ *                   subclasses.
  *  $DESCRIPTION$
  *      DATA elements can also be thought of as the "properties" of an
  *      object. They can be of any data type, including codeblock.
@@ -122,7 +133,6 @@
  *         METHOD New()    // Constructor
  *
  *      ENDCLASS
-    </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$

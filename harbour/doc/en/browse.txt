@@ -105,8 +105,8 @@
  *      database record.   
 
  *      Following are active keys that handled by DBEDIT():       </par>
- *      ---------------------------------------------------  
-
+ *      ---------------------------------------------------      
+ *
  *     <table>
  *       Key              Meaning
  *
@@ -134,14 +134,15 @@
  *       Esc              Terminate BROWSE()
  *       Enter            Terminate BROWSE()
  *     </table>
+ *
  *      When DBEDIT() execute <xUserFunc> it pass the following arguments:
  *      nMode and the index of current record in <acColumns>. If <acColumns>
  *      is omitted, the index number is the FIELD() number of the open
  *      database structure.   
-
+ *
  *      DBEDIT() nMode could be one of the following:    </par>
  *      ---------------------------------------------   
-
+ *
  *      <table>
  *       Dbedit.ch      Meaning
  *
@@ -151,12 +152,13 @@
  *       DE_EMPTY       No records in work area, database is empty.
  *       DE_EXCEPT      Key exception.
  *      </table>
+ *
  *      The user define function or code block must return a value that tell
- *      DBEDIT() what to do next.     
-
+ *      DBEDIT() what to do next.
+ *
  *      User function return codes:    </par>
- *      ---------------------------   
-
+ *      ---------------------------   </par>
+ *
  *      <table>
  *       Dbedit.ch    Value   Meaning
  *
@@ -164,6 +166,7 @@
  *       DE_CONT      1       Continue DBEDIT() as is.
  *       DE_REFRESH   2       Force reread/redisplay of all data rows.
  *      </table>
+ *
  *      The user function is called once in each of the following cases:   
  *      - The database is empty.   
  *      - The user try to move past top of file or past bottom file.   

@@ -15,7 +15,7 @@
  *
  * <b>************************************************************************</b>   </par>
  * <b>*  This file contains information on obtaining, installing, and using  *</b>   </par>
- * <b>*  Harbour.  Please read it *completely* before asking for help.       *</b>   </par>
+ * <b>*  Harbour. Please read it *completely* before asking for help.        *</b>   </par>
  * <b>************************************************************************</b>   </par>
 
  * Harbour is a free implementation of an xBase language compiler. It is

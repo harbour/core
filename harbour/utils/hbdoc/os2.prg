@@ -250,6 +250,7 @@ METHOD WriteTitle( cTopic, cTitle ,cCategory) CLASS TOs2
    LOCAL nPos
    LOCAL cWrite
    LOCAL nItem
+   Local lHead:=.F.
    LOCAL nrItem,nIItem
    LOCAL cRefCateg
    LOCAL cIndCateg   
@@ -266,12 +267,16 @@ METHOD WriteTitle( cTopic, cTitle ,cCategory) CLASS TOs2
    If Self:ScanInd(cIndCateg)==0
       niItem := ASCAN( Self:aIndRef, { | a | upper(a) == upper(cIndCateg )} )
       FWRITE( Self:nHandle, ':h1 ' + ::aIndRef[niItem] + "."+ UPPER( cCategory ) + CRLF)
+      lHead := .T.  
    ELSE             // Just in case that nItem>0 so the Link is already referenced
       niItem := ASCAN( Self:aIndRef, { | a | upper(a) == upper(cIndCateg) } )
    ENDIF
-   IF niItem>0
-      FWRITE( Self:nHandle, ':h2 '+ 'id=' + ::aIndRef[niItem] +' res=' + ALLTRIM( STR( nItem ) ) + '.' + cTopic  + CRLF  )
-   Endif 
+   IF niItem>0 .AND.       lHead 
+      FWRITE( Self:nHandle, ':h2 '+ ' res=' + ALLTRIM( STR( nItem ) ) + '.' + cTopic  + CRLF  )
+   elseIF     niItem>0 .AND.       !lHead
+      FWRITE( Self:nHandle, ':h2 id='+ ::aIndRef[niItem] + ' res=' + ALLTRIM( STR( nItem ) ) + '.' + cTopic  + CRLF  )
+   Endif
+         lHead:=.F.
    If Self:ScanRef(cRefCateg)==0
       nrItem := ASCAN( Self:aHeadRef, { | a | upper(a) == upper(cRefCateg )} )
       FWRITE( Self:nHandle, ':i1 id=' + ::aHeadRef[nrItem] + "."+ UPPER( cCategory ) + CRLF)

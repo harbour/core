@@ -19,7 +19,7 @@
  *  $FUNCNAME$
  *      ISAFFIRM()
  *  $CATEGORY$
- *      NATION
+ *      Nation
  *  $ONELINER$
  *      Checks if passed char is an affirmation char
  *  $SYNTAX$
@@ -53,7 +53,7 @@
  *  $FUNCNAME$
  *      ISNEGATIVE()
  *  $CATEGORY$
- *      NATION
+ *      Nation
  *  $ONELINER$
  *      Checks if passed char is a negation char.
  *  $SYNTAX$
@@ -87,7 +87,7 @@
  *  $FUNCNAME$
  *      NATIONMSG()
  *  $CATEGORY$
- *      NATION
+ *      Nation
  *  $ONELINER$
  *      Returns international strings messages.
  *  $SYNTAX$

@@ -156,6 +156,7 @@ METHOD WriteLink( cLink, cName ) CLASS THTML
    IF cName != Nil
       cLink := cName
    ENDIF
+   cTemp := STRTRAN( cTemp, "@...", "" )
    cTemp := STRTRAN( cTemp, " ", "" )
 
    FWRITE( Self:nHandle, "<LI><a href=" + LOWER( cTemp ) + ">" + cLink + "</a></LI>" + CRLF )
@@ -274,6 +275,7 @@ METHOD WriteChmLink( cLink, cName ) CLASS THTML
    IF cName != Nil
       cLink := cName
    ENDIF
+   cTemp := STRTRAN( cTemp, "@...", "" )
    cTemp := STRTRAN( cTemp, " ", "" )
    FWRITE( Self:nHandle, "<a href=" + LOWER( cTemp ) + ">" + cLink + "</a><br>" + CRLF )
 Return Self

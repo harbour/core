@@ -1208,7 +1208,7 @@ FUNCTION ProchtmTable( cBuffer, nNum )
       cBuffer := STRTRAN( cBuffer, ">", "&gt;" )
 
       cItem   := SUBSTR( cBuffer, 1, AT( SPACE( 3 ), cBuffer ) - 1 )
-      cBuffer := ALLTRIM( STRTRAN( cBuffer, cItem, "" ) )
+      cBuffer := ALLTRIM( STRTRAN( cBuffer, cItem, "" ,,1) )
       IF nNum == 2
          cItem2 := SUBSTR( cBuffer, 1 )
       ELSE

@@ -21,7 +21,7 @@
  *  $FUNCNAME$
  *      ARRAY()
  *  $CATEGORY$
- *      ARRAY
+ *      Array
  *  $ONELINER$
  *      Create an uninitialized array of specified length
  *  $SYNTAX$
@@ -63,7 +63,7 @@
  *  $FUNCNAME$
  *      AADD()
  *  $CATEGORY$
- *      ARRAY
+ *      Array
  *  $ONELINER$
  *      Dynamically add an element to an array
  *  $SYNTAX$
@@ -101,7 +101,7 @@
  *  $FUNCNAME$
  *      ASIZE()
  *  $CATEGORY$
- *      ARRAY
+ *      Array
  *  $ONELINER$
  *      Adjust the size of an array
  *  $SYNTAX$
@@ -140,7 +140,7 @@
  *  $FUNCNAME$
  *      ATAIL()
  *  $CATEGORY$
- *      ARRAY
+ *      Array
  *  $ONELINER$
  *      Returns the rightmost element of an array
  *  $SYNTAX$
@@ -171,7 +171,7 @@
  *  $FUNCNAME$
  *      AINS()
  *  $CATEGORY$
- *      ARRAY
+ *      Array
  *  $ONELINER$
  *      Insert a NIL value at an array subscript position.
  *  $SYNTAX$
@@ -211,7 +211,7 @@
  *  $FUNCNAME$
  *      ADEL()
  *  $CATEGORY$
- *      ARRAY
+ *      Array
  *  $ONELINER$
  *      Delete an element form an array.
  *  $SYNTAX$
@@ -250,7 +250,7 @@
  *  $FUNCNAME$
  *      AFILL()
  *  $CATEGORY$
- *      ARRAY
+ *      Array
  *  $ONELINER$
  *      Fill an array with a specified value
  *  $SYNTAX$
@@ -296,7 +296,7 @@
  *  $FUNCNAME$
  *      ASCAN()
  *  $CATEGORY$
- *      ARRAY
+ *      Array
  *  $ONELINER$
  *      Scan array elements for a specified condition
  *  $SYNTAX$
@@ -349,7 +349,7 @@
  *  $FUNCNAME$
  *      AEVAL()
  *  $CATEGORY$
- *      ARRAY
+ *      Array
  *  $ONELINER$
  *      Evaluated the subscript element of an array
  *  $SYNTAX$
@@ -394,7 +394,7 @@
  *  $FUNCNAME$
  *      ACOPY()
  *  $CATEGORY$
- *      ARRAY
+ *      Array
  *  $ONELINER$
  *      Copy elements from one array to another
  *  $SYNTAX$
@@ -457,7 +457,7 @@
  *  $FUNCNAME$
  *      ACLONE()
  *  $CATEGORY$
- *      ARRAY
+ *      Array
  *  $ONELINER$
  *      Duplicate a  multidimensional array
  *  $SYNTAX$

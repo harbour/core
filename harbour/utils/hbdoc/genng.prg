@@ -1009,7 +1009,7 @@ FUNCTION GenNgTable( oNgi )
    nPos  := maxelem( asitable )
    nPos1 := ASCAN( aLenssItem, { | x | x == nPos } )
 
-   oNgi:WritePar( "" )
+/*   oNgi:WritePar( "" )*/
    //  nMax2:=checkcar(aTable,1)+1
    nMax2 := alensfitem[ 1 ]
    nPos  := maxelem( afitable )
@@ -1112,7 +1112,7 @@ FUNCTION GenNgTable( oNgi )
       ENDIF
    ENDIF
 
-   oNgi:WritePar( "" )
+/*   oNgi:WritePar( "" )*/
    afiTable  := {}
    asitable  := {}
    atitable  := {}
@@ -1157,7 +1157,7 @@ FUNCTION ProcNgTable( cBuffer, nNum )
    /*
    If !empty(cBuffer)
        cItem   := SUBSTR( cBuffer, 1, AT( SPACE( 3 ), cBuffer ) - 1 )
-       cBuffer := ALLTRIM( STRTRAN( cBuffer, cItem, "" ) )
+       cBuffer := ALLTRIM( STRTRAN( cBuffer, cItem, "" ,,1) )
    else
        citem:=''
    endif

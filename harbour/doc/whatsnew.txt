@@ -11,7 +11,7 @@ Version 0.34 Build 34 (2000-06-02)
 - MEMOEDIT support started
 - CONTRIBs better separated from core Harbour (TOOLS moved there)
 - Simplified and enhanced base for multiplatform coding
-- Language API (link/compile time language module selection)
+- Language API (link/compile time language modul selection)
 - Several small optimizations, enhancements and fixes (compiler, macro, GT, 
   inkey, make and build systems, more strict compiler warnings)
 - Compiler pcode size optimizations (new compact pcode versions added and 
