@@ -130,6 +130,7 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\natmsg.obj \
     $(OBJ_DIR)\net.obj \
     $(OBJ_DIR)\objfunc.obj \
+    $(OBJ_DIR)\oemansi.obj \
     $(OBJ_DIR)\oldbox.obj \
     $(OBJ_DIR)\oldclear.obj \
     $(OBJ_DIR)\pcount.obj \
@@ -665,6 +666,9 @@ $(RTL_DIR)\objfunc.c : $(RTL_DIR)\objfunc.prg
     $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
 
 $(OBJ_DIR)\objfunc.obj : $(RTL_DIR)\objfunc.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\oemansi.obj : $(RTL_DIR)\oemansi.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\oldbox.obj : $(RTL_DIR)\oldbox.c
