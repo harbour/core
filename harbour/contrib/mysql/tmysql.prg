@@ -98,14 +98,13 @@ METHOD New(aRow, aFStruct, cTableName) CLASS TMySQLRow
    default cTableName to ""
    default aFStruct to {}
 
-   ::cTable := cTableName
-   ::aFieldStruct := aFStruct
-
    ::aRow := aRow
    ::aFieldStruct := aFStruct
+   ::cTable := cTableName
 
    ::aDirty := Array(Len(::aRow))
    ::aOldValue := Array(Len(::aRow))
+
    AFill(::aDirty, .F.)
 
 return Self
@@ -114,7 +113,14 @@ return Self
 METHOD FieldGet(nNum) CLASS TMySQLRow
 
    if nNum > 0 .AND. nNum <= Len(::aRow)
-      return ::aRow[nNum]
+
+      // Char fields are padded with spaces since a real .dbf field would be
+      if ValType(::aRow[nNum]) == "C"
+         return PadR(::aRow[nNum], ::aFieldStruct[nNum][MYSQL_FS_LENGTH])
+      else
+         return ::aRow[nNum]
+      endif
+
    endif
 
 return nil
@@ -125,6 +131,12 @@ METHOD FieldPut(nNum, Value) CLASS TMySQLRow
    if nNum > 0 .AND. nNum <= Len(::aRow)
 
       if Valtype(Value) == Valtype(::aRow[nNum]) .OR. Empty(::aRow[nNum])
+
+         // if it is a char field remove trailing spaces
+         if ValType(Value) == "C"
+            Value := RTrim(Value)
+         endif
+
          // Save starting value for this field
          if !::aDirty[nNum]
             ::aOldValue[nNum] := ::aRow[nNum]
@@ -511,8 +523,8 @@ METHOD Delete(oRow) CLASS TMySQLTable
 
       cDeleteQuery += oRow:MakePrimaryKeyWhere()
 
-      if sqlQuery(::nSocket, cDeleteQuery) == 1
-         return .T.
+      if sqlQuery(::nSocket, cDeleteQuery) == 0
+         ::lError := .F.
 
       else
          ::lError := .T.
@@ -521,7 +533,7 @@ METHOD Delete(oRow) CLASS TMySQLTable
 
   endif
 
-return .F.
+return !::lError
 
 
 // Adds a row with values passed into oRow
@@ -683,9 +695,9 @@ METHOD CreateTable(cTable, aStruct) CLASS TMySQLServer
 
       case aStruct[i][DBS_TYPE] == "N"
          if aStruct[i][DBS_DEC] == 0
-            cCreateQuery += aStruct[i][DBS_NAME] + " int " + Eval(cNN, aStruct[i]) + ","
+            cCreateQuery += aStruct[i][DBS_NAME] + " int(" + AllTrim(Str(aStruct[i][DBS_LEN])) + ")" + Eval(cNN, aStruct[i]) + ","
          else
-            cCreateQuery += aStruct[i][DBS_NAME] + " real " + Eval(cNN, aStruct[i]) + ","
+            cCreateQuery += aStruct[i][DBS_NAME] + " real(" + AllTrim(Str(aStruct[i][DBS_LEN])) + "," + AllTrim(Str(aStruct[i][DBS_DEC])) + ")" + Eval(cNN, aStruct[i]) + ","
          endif
 
       case aStruct[i][DBS_TYPE] == "D"

@@ -97,7 +97,11 @@ METHOD Block() CLASS TBColumnSQL
       xValue := iif(xValue, ".T.", ".F.")
 
    case ValType(xValue) $ "CM"
-      xValue := "'" + xValue + "'"
+      // Chr(34) is a double quote
+      // That is: if there is a double quote inside text substitute it with a string
+      // which gets converted back to a double quote by macro operator. If not it would
+      // give an error because of unbalanced double quotes.
+      xValue := Chr(34) + StrTran(xValue, Chr(34), Chr(34) + "+Chr(34)+" + Chr(34)) + Chr(34)
 
    otherwise
    endcase
@@ -122,6 +126,7 @@ CLASS TBrowseSQL from TBrowse
                                           // corresponding row inside table
    METHOD   BrowseTable(nKey, lCanEdit)   // Handles standard moving inside table and if lCanEdit == .T.
                                           // allows editing of field. It is the stock ApplyKey() moved inside a table
+                                          // if lCanEdit K_DEL deletes current row
 ENDCLASS
 
 
@@ -160,24 +165,26 @@ METHOD New(nTop, nLeft, nBottom, nRight, oServer, oQuery, cTable) CLASS TBrowseS
 
    // Add a column for each field
    for i := 1 to ::oQuery:FCount()
+
       // No bBlock now since New() would use it to find column length, but column is not ready yet at this point
       oCol := TBColumnSQL():New(::oCurRow:FieldName(i),, Self)
 
       oCol:Width := Max(::oCurRow:aFieldStruct[i][MYSQL_FS_LENGTH], Len(oCol:Heading))
 
+      //Alert(Str(oCol:Width))
+
       // which field does this column display
       oCol:nFieldNum := i
 
       // Add a picture
-      /*do case
+      do case
       case ISNUMBER(::oCurRow:FieldGet(i))
-          oCol:picture    := "@N999,999"
+          oCol:picture := replicate("9", ::oCurRow:aFieldStruct[i][MYSQL_FS_LENGTH])
 
       case ISCHARACTER(::oCurRow:FieldGet(i))
-         // For non-numeric, just use colors 3 and 4 ("B/W" and "B/BG")
-         oCol:picture  := replicate("!", ::oCurRow:aFieldStruct[i][MYSQL_FS_LENGTH])
+         oCol:picture := replicate("!", ::oCurRow:aFieldStruct[i][MYSQL_FS_LENGTH])
 
-      endcase*/
+      endcase
 
       ::AddColumn(oCol)
    next
@@ -268,7 +275,7 @@ METHOD EditField() CLASS TBrowseSQL
    aGetList := { getnew( row(), col(),    ;
                         {|xValue| iif(xValue == nil, ::oCurRow:FieldGet(oCol:nFieldNum), ::oCurRow:FieldPut(oCol:nFieldNum, xValue))} ,;
                         oCol:heading,     ;
-                        nil,     ;
+                        oCol:picture,     ;
                         ::colorSpec ) }
 
    // Set insert key to toggle insert mode and cursor shape
@@ -378,11 +385,20 @@ METHOD BrowseTable(nKey, lCanEdit) CLASS TBrowseSQL
          ::EditField()
       endif
 
-   /*otherwise
-      KEYBOARD chr( nKey )
-      DoGet( oBrowse )*/
-   otherwise
+   /*case nKey == K_DEL
+      if lCanEdit
+         if ! ::oQuery:Delete(::oCurRow)
+            Alert("not deleted " + ::oQuery:Error())
+         endif
+         if !::oQuery:Refresh()
+            Alert(::oQuery:Error())
+         endif
 
+         ::inValidate()
+         ::refreshAll():forceStable()
+      endif*/
+
+   otherwise
    endcase
 
 return Self

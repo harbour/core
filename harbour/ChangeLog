@@ -1,3 +1,9 @@
+2000-09-30 22:22 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+   *contrib/mysql/tmysql.prg
+      ! fixes / changes to work with tsqlbrw.prg
+   +contrib/mysql/tsqlbrw.prg
+      * fixes / changes - work in progress.
+
 2000-09-30 09:50 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * contrib/mysql/mysql.c
      * minor change for support of Win32
