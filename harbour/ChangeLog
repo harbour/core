@@ -1,3 +1,9 @@
+2000-08-15 21:15 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
+
+   *utils/hbdoc/hbdoc.prg
+    utils/hbdoc/genhtm.prg
+     * A small fix that i forget to upload on previus CVS session
+
 2000-08-15 20:40 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *include/hbexprc.c
