@@ -1,3 +1,8 @@
+20000504-04:05 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+   * source/compiler/hbpcode.c
+     ! Fixed GPF when Array of 0 elements created.
+
 20000504-03:10 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
    * source/compiler/harbour.l

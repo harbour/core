@@ -61,11 +61,35 @@ DECLARE FUNCTION int( n AS NUMERIC ) AS NUMERIC
 
 DECLARE FUNCTION TEST AS NUMERIC
 
-PROCEDURE MAIN( Param1 )
+
+PROCEDURE MAINA( )
+   LOCAL GetList := {}
+
+   Getlist[ 1 ]:postBlock := LI_VALID[ fipos ]
+
+RETURN
+
+PROCEDURE MAIN( )
 
    LOCAL cVar as char, a[2,3,4] AS BOOL ARRAY
 
    LOCAL RPT, APARAMS
+
+   LOCAL rezproc, xkey, rez, fipos, wndbuf, oldcolors, ym, xm, i
+   LOCAL prview, prsohr, predit, predxx
+   LOCAL fbar1, fbar2, vartmp, varbuf
+   //LOCAL GetList := {}
+
+#ifdef VER_MOUSE
+   PARAMETERS x1,y1,x2,y2,title,maskey,ctrl_ar
+#else
+   //PARAMETERS x1,y1,x2,y2,title,maskey
+#endif
+
+    IF ( ym <= y1 )//.OR. ym >= y2 .OR. xm <= x1 .OR. xm >= x2 )
+      IF xm <= x2 .AND. xm >= x1 .AND. ( ym = y1 .OR. ym = y2 )
+       ENDIF
+    ENDIF
 
    a[1] = 2
 

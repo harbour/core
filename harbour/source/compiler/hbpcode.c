@@ -772,8 +772,12 @@ void hb_compStrongType( int iSize )
           /* TODO Error Message after finalizing all possible pcodes. */
           break;
 
-       cType = pFunc->pStack[ pFunc->iStackIndex - 1 ];
-       while ( --wVar )
+       if ( wVar )
+          cType = pFunc->pStack[ pFunc->iStackIndex - 1 ];
+       else
+          cType = 'A';
+
+       while ( --wVar > 0 )
        {
           pFunc->iStackIndex--;
 
@@ -799,8 +803,12 @@ void hb_compStrongType( int iSize )
           /* TODO Error Message after finalizing all possible pcodes. */
           break;
 
-       cType = pFunc->pStack[ pFunc->iStackIndex - 1 ];
-       while ( --wVar )
+       if ( wVar )
+          cType = pFunc->pStack[ pFunc->iStackIndex - 1 ];
+       else
+          cType = 'A';
+
+       while ( --wVar > 0 )
        {
           pFunc->iStackIndex--;
 
