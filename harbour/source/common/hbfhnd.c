@@ -50,15 +50,15 @@
  *
  */
 
-#if defined(HB_OS_WIN_32) && defined(__BORLANDC__)
+#if defined(__WIN32__) && defined(__BORLANDC__)
 
    #define ___NFILE_H
-   
+
    #ifdef _NFILE_
       #undef _NFILE_
    #endif
    #define _NFILE_ 600
-   
+
    #include <stdio.h>
    #include <io.h>
    #include <fcntl.h>
@@ -67,7 +67,7 @@
       extern "C" {
    #endif
 
-   unsigned _RTLENTRY _EXPDATA _nfile = _NFILE_;   
+   unsigned _RTLENTRY _EXPDATA _nfile = _NFILE_;
 
    void hb_files_setup( void );
 
@@ -81,10 +81,10 @@
    #pragma startup hb_files_setup
    #pragma startup _init_handles 4
    #pragma startup _init_streams 5
-   
+
 #endif
 
-/* NOTE: This symbol must be requested for the inclusion of this 
+/* NOTE: This symbol must be requested for the inclusion of this
          module. [vszakats] */
 
 void hb_fhnd_ForceLink( void )
@@ -92,7 +92,7 @@ void hb_fhnd_ForceLink( void )
    /* Intentionally do nothing */
 };
 
-#if defined(HB_OS_WIN_32) && defined(__BORLANDC__)
+#if defined(__WIN32__) && defined(__BORLANDC__)
 
 #define _F_STDIN        (_F_READ | _F_TERM | _F_LBUF)
 #define _F_STDOUT       (_F_WRIT | _F_TERM | _F_LBUF)
