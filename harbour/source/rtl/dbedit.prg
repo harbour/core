@@ -180,7 +180,11 @@ FUNCTION dbEdit(;
          cHeading := FieldName( nPos )
       ENDIF
 
-      bBlock := &( "{||" + acColumns[ nPos ] + "}" )
+      IF ISARRAY( acColumns )
+         bBlock := &( "{||" + acColumns[ nPos ] + "}" )
+      ELSE
+         bBlock := FieldBlock( FieldName( nPos ) )
+      ENDIF
 
       IF ValType(Eval(bBlock)) == "M"
          bBlock := {|| "  <Memo>  " }
@@ -374,4 +378,3 @@ STATIC FUNCTION dbEditSkipped( nRecs )
    ENDIF
 
    RETURN nSkipped
-
