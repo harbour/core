@@ -433,15 +433,45 @@ void hb_macroGetValue( HB_ITEM_PTR pItem )
       int iStatus;
       char * szString = pItem->item.asString.value;
 
+      char * pText = ( char * ) hb_xgrab( HB_PP_STR_SIZE );
+      char * pOut = ( char * ) hb_xgrab( HB_PP_STR_SIZE );
+      char * ptr = pText;
+      int slen;
+
       struMacro.Flags         = HB_MACRO_GEN_PUSH;
       struMacro.bShortCuts    = hb_comp_bShortCuts;
       struMacro.uiNameLen     = HB_SYMBOL_NAME_LEN;
       struMacro.status        = HB_MACRO_CONT;
       struMacro.iListElements = 0;
 
+      slen = HB_MIN( szString, HB_PP_STR_SIZE - 1 );
+      memcpy( pText, szString, slen );
+      pText[ slen ] = 0;
+      memset( pOut, 0, HB_PP_STR_SIZE );
+
+      HB_SKIPTABSPACES( ptr );
+
+      if( !hb_pp_topDefine )
+      {
+         hb_pp_Table();
+      }
+
+      hb_pp_ParseExpression( ptr, pOut );
+      szString = pText;
+
       iStatus = hb_macroParse( &struMacro, szString );
 
-      hb_vm_aiMacroListParameters[ hb_vm_iFunCalls - 1 ] = struMacro.iListElements;
+      hb_xfree( pText );
+      hb_xfree( pOut );
+
+      if( hb_vm_iFunCalls )
+      {
+         hb_vm_aiMacroListParameters[ hb_vm_iFunCalls - 1 ] = struMacro.iListElements;
+      }
+      else
+      {
+         //printf( "Oops\n" );
+      }
 
       hb_stackPop();    /* remove compiled string */
       if( iStatus == HB_MACRO_OK && ( struMacro.status & HB_MACRO_CONT ) )

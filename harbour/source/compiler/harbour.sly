@@ -337,6 +337,8 @@ Statement  : ExecFlow   CrlfStmnt   { }
            | FunCall CrlfStmnt      { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
            | AliasExpr CrlfStmnt    { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
            | ObjectMethod CrlfStmnt { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
+           | MacroVar CrlfStmnt     { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
+           | MacroExpr CrlfStmnt    { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
            | PareExpList CrlfStmnt  { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
            | ExprPreOp CrlfStmnt    { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
            | ExprPostOp CrlfStmnt   { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }

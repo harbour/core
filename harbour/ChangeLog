@@ -1,3 +1,14 @@
+2001-07-16 02:45 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * source/vm/hvm.c
+     * Few improvements to recent support for lists in macro expansion
+
+   * source/vm/macro.c
+     + Added preprocessing support to hb_macroGetValue()
+
+   * source/compiler/harbour.sly
+   * source/compiler/harbour.y
+     + Added rules to support MacroVar and MacroExpr as a standalone Statement.
+
 2001-07-15 20:45 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * include/hbapi.h
      + Added member iListElements to HB_MACRO structure.
