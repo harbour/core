@@ -55,7 +55,10 @@
 #ifndef _EXTEND_API
 #define _EXTEND_API
 
-#include "clipdefs.h"
+#ifndef __HARBOUR__
+   #include "clipdefs.h"
+#endif
+
 #include "hbapi.h"
 
 typedef PHB_ITEM  ITEM;
@@ -69,16 +72,16 @@ typedef PHB_ITEM  ITEM;
 #define CHARACTER       HB_IT_STRING
 #define NUMERIC         HB_IT_NUMERIC
 #define LOGICAL         HB_IT_LOGICAL
-#define DATE            HB_IT_DATE
+// #define DATE            HB_IT_DATE
 #define ALIAS           HB_IT_ALIAS
 #define MPTR            HB_IT_BYREF        /* or'ed with type when passed by reference */
 #define MEMO            HB_IT_MEMO
 /* NOTE: CA-Cl*pper bug: WORD will conflict with the typedef with the same
          name in clipdefs.h [vszakats] */
-#define WORD            ( HB_IT_INTEGER | HB_IT_LONG )
+// #define WORD            ( HB_IT_INTEGER | HB_IT_LONG )
 #define ARRAY           HB_IT_ARRAY
 #define BLOCK           HB_IT_BLOCK
-#define DOUBLE          HB_IT_DOUBLE
+// #define DOUBLE          HB_IT_DOUBLE
 
 /* Macros */
 
@@ -116,5 +119,3 @@ typedef PHB_ITEM  ITEM;
 #define _stornl         hb_stornl
 
 #endif /* _EXTEND_API */
-
-

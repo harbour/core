@@ -78,9 +78,11 @@ typedef SHORTP  PSHORT;
 typedef USHORT * USHORTP;
 typedef USHORTP PUSHORT;
 
-typedef unsigned int WORD;
-typedef WORD *  WORDP;
-typedef WORDP   PWORD;
+#ifndef __HARBOUR__
+   typedef unsigned int WORD;
+   typedef WORD *  WORDP;
+   typedef WORDP   PWORD;
+#endif
 
 typedef LONG *  LONGP;
 typedef LONGP   PLONG;
@@ -98,11 +100,12 @@ typedef BOOLP   PBOOL;
 typedef void *  NEARP;
 typedef NEARP * NEARPP;
 
-typedef void *  FARP;
-typedef FARP *  FARPP;
-
-typedef FARP    VOIDP;
-typedef FARP    PVOID;
+#ifndef __HARBOUR__
+   typedef void *  FARP;
+   typedef FARP *  FARPP;
+   typedef FARP    VOIDP;
+   typedef FARP    PVOID;
+#endif
 
 typedef void *  HANDLE;
 typedef ERRCODE IHELP;
