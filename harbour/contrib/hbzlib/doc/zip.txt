@@ -62,7 +62,7 @@
  * $COMPLIANCE$
  *      This function is a Harbour extension
  * $PLATFORMS$
- *      Win32
+ *      All
  * $FILES$
  *      Library is zlib.lib and zlib_bor.lib For Borland Compilers
  *      Library is zlib.lib zlib_ms.lib for MSVC compilers
@@ -106,11 +106,59 @@
  *
  *      Return Nil
  * $STATUS$
- *      S
+ *      R
  * $COMPLIANCE$
  *      This function is a Harbour extension
  * $PLATFORMS$
- *      Win32
+ *      All
+ * $FILES$
+ *      Library is zlib.lib and zlib_bor.lib For Borland Compilers
+ *      Library is zlib.lib zlib_ms.lib for MSVC compilers
+ * $END$
+ */ 
+
+/*
+ * $DOC$
+ * $FUNCNAME$
+ *      HB_GETUNZIPFILE()
+ * $CATEGORY$
+ *      ZIP FUNCTION
+ * $ONELINER$
+ *      Gets the number of files 
+ * $SYNTAX$
+ *      HB_GETUNZIPFILE( <cFile>) ---> nNumber
+ * $ARGUMENTS$
+ *      <cFile>   Name of the zip file
+ * $RETURNS$
+ *      <nNumber>  The number of files contained inside the zipfile
+ * $DESCRIPTION$
+ *      This function returns the number of files that is stored in the zipfile.
+ *      The propurse for this function is to use in conjuntion with the
+ *      HB_UNZIPFILE() function, so you can use returned result in the code
+ *      block. See example below.
+ * $EXAMPLES$
+ *      FUNCTION MAIN()
+ *      Local nFiles :=HB_GETUNZIPFILE('test.zip')
+ *      if nFiles >0
+ *         ? "This files Contains ",nfiles
+ *      endif
+ *      Return Nil
+ *
+ *      Here is an example of How to use HB_GETUNZIPFILE() in conjunction
+ *      with HB_UNZIPFILE()
+ *      Function Main()
+ *      Local aGauge,nLen
+ *      aGauge := GaugeNew( 5, 5, 7,40 , "W/B", "W+/B" ,'²')
+ *      GaugeDisplay( aGauge )
+ *      nlen:=HB_GETUNZIPFILE('test22')
+ *      hb_UNZIPFILE('test22',{|cFile,nPos| GaugeUpdate(aGauge,nPos/nLen),qout(cFile)},.T.)
+ *      return Nil      
+ * $STATUS$
+ *      R
+ * $COMPLIANCE$
+ *      This function is a Harbour extension
+ * $PLATFORMS$
+ *      All
  * $FILES$
  *      Library is zlib.lib and zlib_bor.lib For Borland Compilers
  *      Library is zlib.lib zlib_ms.lib for MSVC compilers

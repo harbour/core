@@ -48,8 +48,8 @@ ARFLAGS = /P32
 INCLUDE_DIR  = ..\..\include
 ZLIB_DIR     = .
 WINSYS_DIR   = \WINDOWS\SYSTEM
-CFLAGS         = -I$(INCLUDE_DIR) -d $(C_USR) $(CFLAGS)  -y 
-CLIBFLAGS  =$(CFLAGS)
+CFLAGS         = -I$(INCLUDE_DIR) -d $(C_USR) $(CFLAGS)  
+CLIBFLAGS  =$(CFLAGS) -v -y
 HARBOUR_EXE  = $(BIN_DIR)\harbour.exe
 HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS)
 LDFLAGS        = $(LDFLAGS)
@@ -65,12 +65,13 @@ ZLIB_BOR_DLL = $(ZLIB_DIR)\hbzlib.dll
 ZLIB_BOR_DEF = $(LIB_DIR)\zlib.def
 ZLIB_BOR_LIB = $(LIB_DIR)\zlib_bor.lib
 ZLIB_LIB_OBJS =  \
-    $(OBJ_DIR)\zipfile1.obj   \
+    $(OBJ_DIR)\zipfile.obj   \
     $(OBJ_DIR)\zipfile2.obj   \
-    $(OBJ_DIR)\zlibapi.obj    \
+    $(OBJ_DIR)\zlibapi1.obj    \
     $(OBJ_DIR)\tzipfile.obj
 ZLIB_EXE_OBJS =  \
     $(OBJ_DIR)\test.obj
+
 ZLIB_EXE2_OBJS =  \
     $(OBJ_DIR)\test2.obj
 
@@ -84,7 +85,9 @@ all: \
    $(ZLIB_EXE_OBJS) \
    $(ZLIB_EXE2_OBJS) \
    $(ZLIB_EXE) \
-   $(ZLIB_EXE2) 
+   $(ZLIB_EXE2)
+     
+
 $(ZLIB_LIB) = $(ZLIB_LIB_OBJS)
 
 $(ZLIB_EXE) = $(ZLIB_EXE_OBJS)
@@ -95,7 +98,7 @@ $(ZLIB_BOR_LIB) = $(ZLIB_BOR_LIB_OBJ)
 
 $(ZLIB_LIB) : $(ZLIB_LIB_OBJS)
 
-$(OBJ_DIR)\zipfile1.obj : $(ZLIB_DIR)\zipfile1.c
+$(OBJ_DIR)\zipfile.obj : $(ZLIB_DIR)\zipfile.c
    $(CC) -v -c $(CLIBFLAGS) -o$@ $**
    tlib $(ZLIB_LIB) $(ARFLAGS) -+$@,,
 
@@ -103,8 +106,8 @@ $(OBJ_DIR)\zipfile2.obj : $(ZLIB_DIR)\zipfile2.c
    $(CC) -v -c $(CLIBFLAGS) -o$@ $**
    tlib $(ZLIB_LIB) $(ARFLAGS) -+$@,,
 
-$(OBJ_DIR)\zlibapi.obj : $(ZLIB_DIR)\zlibapi.c
-   $(CC) -c -v $(CLIBFLAGS) -o$@ $**
+$(OBJ_DIR)\zlibapi1.obj : $(ZLIB_DIR)\zlibapi1.c
+   $(CC) -c -v $(CLIBFLAGS)  -o$@ $**
    tlib $(ZLIB_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\tzipfile.c : $(ZLIB_DIR)\tzipfile.prg
@@ -121,7 +124,7 @@ $(ZLIB_BOR_LIB) : $(ZLIB_BOR_LIB_OBJ)
 
 $(ZLIB_EXE) : $(ZLIB_EXE_OBJS)
 
-   echo. $(CFLAGS) > make.tmp
+   echo. $(CFLAGS) -v -y > make.tmp
    echo. -M -e$(ZLIB_EXE) >> make.tmp
    echo. -I$(INCLUDE_DIR) >> make.tmp
    echo. $(OBJ_DIR)\test.obj >> make.tmp 
@@ -150,8 +153,8 @@ $(OBJ_DIR)\test.obj : $(OBJ_DIR)\test.c
 
 $(ZLIB_EXE2) : $(ZLIB_EXE2_OBJS)
 
-   echo. $(CFLAGS) > make.tmp
-   echo. -M -e$(ZLIB_EXE) >> make.tmp
+   echo. $(CFLAGS) -y -v> make.tmp
+   echo. -M -e$(ZLIB_EXE2) >> make.tmp
    echo. -I$(INCLUDE_DIR) >> make.tmp
    echo. $(OBJ_DIR)\test2.obj >> make.tmp 
    echo. $(SAMPLES_LIB) >> make.tmp

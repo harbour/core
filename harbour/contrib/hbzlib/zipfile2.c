@@ -55,8 +55,9 @@
 extern int err;
 extern int Size_Buf;
 uLong uiCounter;
+char  szTempTime[80];
 unzFile szUnzipFile=NULL;
-
+void  hb_____GetTime(unz_file_info file_info) ;
 void hb____ChangeFileDate(char *filename,uLong dosdate,tm_unz tmu_date)
 {
 #if defined(HB_OS_WIN_32)
@@ -108,9 +109,12 @@ int hb___MakeDir(char *szNewDirectory)
   if (szBuffer[uiLen-1] == '/') {
     szBuffer[uiLen-1] = '\0';
   }
+
   if (hb_fsMkDir(szBuffer))
     {
-      hb_xfree((void*) szBuffer);
+
+  hb_xfree((void*) szBuffer);
+
       return 1;
     }
 
@@ -123,17 +127,23 @@ int hb___MakeDir(char *szNewDirectory)
         szTemp++;
       szHold = *szTemp;
       *szTemp = 0;
+
       iResult=hb_fsMkDir(szBuffer);
       if (( iResult== -1) && (errno == ENOENT))
         {
-          hb_xfree((void*) szBuffer);
+
+  hb_xfree((void*) szBuffer);
+
+
           return 0;
         }
       if (szHold == 0)
         break;
       *szTemp++ = szHold;
     }
+
   hb_xfree((void*) szBuffer);
+
   return 1;
 }
 
@@ -189,7 +199,7 @@ BOOL hb___unZipFiles(char *szFile,PHB_ITEM pBlock,BOOL bExtractPath)
 {
         const char *szZipFileName=NULL;
         const char *szFilename_to_Extract=NULL;
-	int i;
+
         BOOL opt_do_extract=1;
 
 	int opt_overwrite=0;
@@ -252,6 +262,7 @@ int hb___ExtractCurrentFile(unzFile szUnzipFile,BOOL popt_extract_without_path,B
 	}
 
     Size_Buf = WRITEBUFFERSIZE;
+
     szBuffer = (void*) hb_xalloc(Size_Buf);
     if (szBuffer==NULL)
     {
@@ -269,7 +280,8 @@ int hb___ExtractCurrentFile(unzFile szUnzipFile,BOOL popt_extract_without_path,B
 	if ((*filename_withoutpath)=='\0')
 	{
                 if (popt_extract_without_path)
-		{
+        {
+
                         hb_fsMkDir(filename_inzip);
 		}
 	}
@@ -290,6 +302,7 @@ int hb___ExtractCurrentFile(unzFile szUnzipFile,BOOL popt_extract_without_path,B
                         
                         }
                 if(pBlock !=NULL){
+
                    PHB_ITEM pFileName=hb_itemPutC(NULL, (char *)write_filename);
                    PHB_ITEM pFilePos=hb_itemPutNI(NULL,uiCounter);
                    hb_vmEvalBlockV( pBlock, 2, pFileName, pFilePos );
@@ -306,6 +319,7 @@ int hb___ExtractCurrentFile(unzFile szUnzipFile,BOOL popt_extract_without_path,B
 
 		if ((skip==0) && (err==UNZ_OK))
 		{
+
                         nFileHandle=hb_fsCreate((char *) write_filename,FC_NORMAL);
 
 
@@ -335,6 +349,7 @@ int hb___ExtractCurrentFile(unzFile szUnzipFile,BOOL popt_extract_without_path,B
 					break;
 				}
 				if (err>0)
+
                                         if (hb_fsWrite(nFileHandle,szBuffer,err)==0)
 					{
 
@@ -343,6 +358,7 @@ int hb___ExtractCurrentFile(unzFile szUnzipFile,BOOL popt_extract_without_path,B
 					}
 			}
 			while (err>0);
+
                         hb_fsClose(nFileHandle);
 			if (err==0) 
                                 hb____ChangeFileDate(write_filename,file_info.dosDate,
@@ -361,7 +377,7 @@ int hb___ExtractCurrentFile(unzFile szUnzipFile,BOOL popt_extract_without_path,B
             unzCloseCurrentFile(szUnzipFile); /* don't lose the error */       
 	}
 
-    hb_xfree((void*)szBuffer);    
+    hb_xfree((void*)szBuffer);
     return err;
 }
 
@@ -404,14 +420,18 @@ int hb___GetNumbersofFilestoUnzip(char *szFile)
 /*        return iNumbersOfFiles;   to avoid warning */
         return szGlobalUnzipInfo.number_entry;
 }
-PHB_ITEM hb___GetFilesNamesFromZip(char *szFile)
+
+
+PHB_ITEM hb___GetFilesNamesFromZip(char *szFile,BOOL iMode)
 {
         const char *szZipFileName=NULL;
         char szFilename_Try[512];
         char szFileNameinZip[256];
         int iNumbersOfFiles;
+
         PHB_ITEM pItem=NULL;
         PHB_ITEM pArray=NULL;
+
         uLong uiCount;
         unz_global_info szGlobalUnzipInfo;
                 if (szZipFileName == NULL)
@@ -429,7 +449,7 @@ PHB_ITEM hb___GetFilesNamesFromZip(char *szFile)
                         szUnzipFile = unzOpen(szFilename_Try);
 		}
 	}
-
+                                
         if (szUnzipFile==NULL)
 	{
                 exit(1);
@@ -446,9 +466,86 @@ PHB_ITEM hb___GetFilesNamesFromZip(char *szFile)
 		{
 			break;
 		}
+                if (iMode)
+                {
+
+                    PHB_ITEM pTempArray=hb_itemArrayNew(8);
+                    char szTime[8];
+                    char  *szMethod;
+                    char szCRC[8];
+                  int iLen;
+                  int iCount=0;
+                  int iiCount=0;
+
+                    pItem=hb_itemPutC(NULL,szFileNameinZip);
+                    hb_itemArrayPut(pTempArray,filePos,pItem);
+                    hb_itemRelease(pItem);
+                      if (file_info.uncompressed_size>0) {
+
+                        pItem=hb_itemPutNL(NULL,file_info.uncompressed_size);
+                        hb_itemArrayPut(pTempArray,Lenght,pItem);
+                        hb_itemRelease(pItem);
+                        pItem=hb_itemPutNL(NULL,file_info.compressed_size);
+                        hb_itemArrayPut(pTempArray,Size,pItem);
+                        hb_itemRelease(pItem);
+
+                        pItem=hb_itemPutNL(NULL,100-((file_info.compressed_size*100)/file_info.uncompressed_size));
+                        hb_itemArrayPut(pTempArray,Ratio,pItem);
+                        hb_itemRelease(pItem);
+                                              }
+        if (file_info.compression_method==0) {
+                  szMethod="Stored";
+       }
+
+		if (file_info.compression_method==Z_DEFLATED)		{
+			uInt iLevel=(uInt)((file_info.flag & 0x6)/2);
+            if (iLevel==0)                           {
+                    szMethod="Defl:N";
+                    }
+            else if (iLevel==1) {
+                    szMethod="Defl:X";
+                    }
+            else if ((iLevel==2) || (iLevel==3)) {
+                                    szMethod="Defl:F";
+                    }
+           else {
+                  szMethod="Unknow";
+                  }
+
+                    pItem=hb_itemPutC(NULL,szMethod);
+                    hb_itemArrayPut(pTempArray,Method,pItem);
+                    hb_itemRelease(pItem);
+                     }
+                        sprintf(szCRC,"%8.8lx\n",(uLong)file_info.crc);
+
+                        pItem=hb_itemPutCL(NULL,szCRC,8);
+                        hb_itemArrayPut(pTempArray,Crc32,pItem);
+                        hb_itemRelease(pItem);
+                        pItem=hb_itemPutD(NULL, (long)file_info.tmu_date.tm_year  ,(long)file_info.tmu_date.tm_mon + 1,(long)file_info.tmu_date.tm_mday);
+                        hb_itemArrayPut(pTempArray,Date,pItem);                       
+                        hb_itemRelease(pItem);
+                        hb_____GetTime(file_info);
+                      iLen=strlen(szTempTime);
+
+                      for(iCount=10;iCount<19;iCount++) {
+                         if( (iCount>10) && (iCount<19)) {
+                                szTime[iiCount]=szTempTime[iCount];
+                                iiCount++;
+                            }
+                        }
+                    pItem=hb_itemPutCL(NULL,szTime,8);
+                    hb_itemArrayPut(pTempArray,Time,pItem);
+                    hb_itemRelease(pItem);
+                    hb_itemArrayPut(pArray,uiCount+1,pTempArray);
+                    hb_itemRelease(pTempArray);
+                }
+                else  {
+
                 pItem=hb_itemPutC(NULL,szFileNameinZip);
                 hb_itemArrayPut(pArray,uiCount+1,pItem);
                 hb_itemRelease(pItem);
+
+                }
                 if ((uiCount+1)<iNumbersOfFiles)
 		{
                         err = unzGoToNextFile(szUnzipFile);
@@ -461,7 +558,23 @@ PHB_ITEM hb___GetFilesNamesFromZip(char *szFile)
 
 }
         unzCloseCurrentFile(szUnzipFile);
+
         hb_itemReturn(pArray);
 
 }
+void   hb_____GetTime(unz_file_info file_info)
+{
 
+  struct tm t;
+
+  t.tm_sec    = file_info.tmu_date.tm_sec;     
+  t.tm_min    = file_info.tmu_date.tm_min;    
+  t.tm_hour   = file_info.tmu_date.tm_hour;  
+  t.tm_mday   = file_info.tmu_date.tm_mday; 
+  t.tm_mon    = file_info.tmu_date.tm_mon;  
+  t.tm_year   = file_info.tmu_date.tm_year; 
+  t.tm_wday   = 4; 
+  t.tm_yday   = 0; 
+  t.tm_isdst  = 0;  
+  strcpy(szTempTime, asctime(&t));
+}
