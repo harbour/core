@@ -198,7 +198,7 @@ void hb_tone( double dFrequency, double dDuration )
          beep( dFrequency, temp );
 #elif defined(WINNT)
          Beep( ( ULONG ) dFrequency, temp );
-#elif defined(_Windows)
+#elif defined(_Windows) && ! defined(__BORLANDC__)
          /* Bad news for non-NT Windows platforms: Beep() ignores
             both parameters and either generates the default sound
             event or the standard system beep. */
