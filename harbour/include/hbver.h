@@ -37,11 +37,11 @@
 #define HB_VER_H_
 
 #define HB_VER_MAJOR    0       /* Major version number */
-#define HB_VER_MINOR    34      /* Minor version number */
+#define HB_VER_MINOR    35      /* Minor version number */
 #define HB_VER_REVISION ""      /* Revision letter */
-#define HB_VER_BUILD    34      /* Build number */
+#define HB_VER_BUILD    35      /* Build number */
 #define HB_VER_YEAR     2000    /* Build year */
-#define HB_VER_MONTH    06      /* Build month */
-#define HB_VER_DAY      02      /* Build day */
+#define HB_VER_MONTH    8       /* Build month */
+#define HB_VER_DAY      17      /* Build day */
 
 #endif /* HB_VER_H_ */

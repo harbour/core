@@ -1022,7 +1022,7 @@ LANGUAGE_RULES_ARE {
    #define CUSTOM_ACTION(x) x = hb_lex_CustomAction(x, iWordLen, aiHold, &iHold, &bIgnoreWords, iLastToken, aiReturn, &iReturn )
 
 #undef INIT_ACTION
-   #define INIT_ACTION() hb_comp_bSimpLex = TRUE;
+   #define INIT_ACTION() ;
 
 int yy_lex_input( char *buffer, int iBufferSize )
 {

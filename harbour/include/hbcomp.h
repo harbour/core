@@ -440,7 +440,6 @@ extern char *        hb_comp_szWarnings[];
 extern char *        hb_pp_STD_CH;
 extern BOOL          hb_comp_bAutoOpen;
 extern BOOL          hb_comp_bError;
-extern BOOL          hb_comp_bSimpLex;
 
 /* /GC command line setting types */
 #define HB_COMPGENC_COMPACT     0

@@ -23,8 +23,8 @@ C_SOURCES=\
 	msghu852.c   \
 	msghucwi.c   \
 	msghuwin.c   \
-	msgis850.c   \
 	msgid.c      \
+	msgis850.c   \
 	msgit.c      \
 	msgko.c      \
 	msgpt.c      \

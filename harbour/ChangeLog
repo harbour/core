@@ -1,5 +1,25 @@
+2000-08-17 12:18 UTC+0100 Victor Szakats <info@szelvesz.hu>
+
+   * include/hbver.h
+     + Version bumped
+
+   * include/hbcomp.h
+   * source/compiler/harbour.c
+   * source/compiler/harbour.slx
+     % Removed hb_comp_bSimplex variable, which was practically unused.
+
+   * source/lang/msgid.c
+   * source/lang/Makefile
+   * makefile.bc
+   * makefile.vc
+     * Minor correction (alphabetical order).
+
+   * source/compiler/harbour.l
+     + AS USUAL added. I could not make this HB_COMPAT_VO dependent, so this 
+       is left as a TODO.
+
 2000-08-16 18:40 UTC+0800 Brian Hays <bhays@abacuslaw.com>
-   * doc/en/rdd_ads\readme.txt
+   * contrib/rdd_ads/doc/en/readme.txt
      * added small fixes and a note about default ADSLOC32.DLL limit of 5 users
        (an unlimited version is available for free)
    * doc/en/garbage.txt

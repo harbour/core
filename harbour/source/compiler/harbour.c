@@ -128,7 +128,6 @@ char *        hb_comp_szDeclaredFun = NULL;
 
 BOOL          hb_comp_bAutoOpen = TRUE;
 BOOL          hb_comp_bError = FALSE;
-BOOL          hb_comp_bSimpLex = FALSE;
 
 /* EXTERNAL statement can be placed into any place in a function - this flag is
  * used to suppress error report generation

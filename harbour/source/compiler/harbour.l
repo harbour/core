@@ -1256,8 +1256,10 @@ Separator     {SpaceTab}
 "as logical"         { return AS_LOGICAL; }
 "as numeric"         { return AS_NUMERIC; }
 "as object"          { return AS_OBJECT; }
+"as usual"           { return AS_VARIANT; }
 "as anytype"         { return AS_VARIANT; }
 
+"as array of usual"     { return AS_ARRAY; }
 "as array of anytype"   { return AS_ARRAY; }
 "as array of array"     { return AS_ARRAY_ARRAY; }
 "as array of codeblock" { return AS_BLOCK_ARRAY; }

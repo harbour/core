@@ -363,8 +363,8 @@ LANG_LIB_OBJS = \
    $(OBJ_DIR)\msghu852.obj \
    $(OBJ_DIR)\msghucwi.obj \
    $(OBJ_DIR)\msghuwin.obj \
-   $(OBJ_DIR)\msgis850.obj \
    $(OBJ_DIR)\msgid.obj \
+   $(OBJ_DIR)\msgis850.obj \
    $(OBJ_DIR)\msgit.obj \
    $(OBJ_DIR)\msgko.obj \
    $(OBJ_DIR)\msgpl852.obj \
