@@ -8,114 +8,118 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-10-30 10:45 UTC+0100 Tomaz Zupan <tomaz.zupan@orpo.si>
+   * source/rtl/alert.prg
+     ! Reverted changes from 2003-09-07
+
 2003-10-29 20:15 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
-	* include/hbexprb.c
-	* source/compiler/exproptb.c
-	* source/macro/macrob.c
-		*fixed generation of pcode for {|| &var}
-		*see below
+    * include/hbexprb.c
+    * source/compiler/exproptb.c
+    * source/macro/macrob.c
+        *fixed generation of pcode for {|| &var}
+        *see below
 
-	* include/hbcomp.h
-	* source/compiler/cmdcheck.c
-	* source/compiler/harbour.c
-	* source/compiler/harbour.y
-	* source/compiler/hbusage.c
-	* doc/en/compiler.txt
-		*added support for DO <proc> WITH @variable 
-		*a new compatibility flag -ks was added to enable support for
-		strings as array of bytes (it is enabled by default). The support
-		for strings as bytes array is disabled if you use -kc switch
-		(Clipper compatibility mode)
-		*when xbase mode is not used (-kc or -kch) then compiler doesn't
-		generate the pcode for these xbase extended features 
-		For example:
-		memv:="2,3"
-		a:={1, &memv, 4}
-		will generate a runtime 'syntax error' without -kx switch
-		or will create an array with four elements if -kx was used.
-		The above rule will apply also for:
-		var[&index]
-		func( &argument )
-		(expr1, &macro ) 
-		Notice that the xbase mode is enabled by default.
+    * include/hbcomp.h
+    * source/compiler/cmdcheck.c
+    * source/compiler/harbour.c
+    * source/compiler/harbour.y
+    * source/compiler/hbusage.c
+    * doc/en/compiler.txt
+        *added support for DO <proc> WITH @variable
+        *a new compatibility flag -ks was added to enable support for
+        strings as array of bytes (it is enabled by default). The support
+        for strings as bytes array is disabled if you use -kc switch
+        (Clipper compatibility mode)
+        *when xbase mode is not used (-kc or -kch) then compiler doesn't
+        generate the pcode for these xbase extended features
+        For example:
+        memv:="2,3"
+        a:={1, &memv, 4}
+        will generate a runtime 'syntax error' without -kx switch
+        or will create an array with four elements if -kx was used.
+        The above rule will apply also for:
+        var[&index]
+        func( &argument )
+        (expr1, &macro )
+        Notice that the xbase mode is enabled by default.
 
-	* source/rtl/gtapi.c
-		*fixed GPF in hb_gtBox() when no string was passed
+    * source/rtl/gtapi.c
+        *fixed GPF in hb_gtBox() when no string was passed
 
-	* source/rtl/gtcrs/gtcrs.c
-		*improved recognition of xterm compatible terminals
-		
-	* source/rtl/gtcrs/Makefile
-	* source/rtl/gtcrs/kbdcrs.c
-	+ source/rtl/gtcrs/keymap.prg
-	+ source/rtl/gtcrs/eterm.map
-	+ source/rtl/gtcrs/linux.map
-		*the support for runtime definition of keycodes mapping was added
-		(translation from terminal key sequences into INKEY() codes)
-		+eterm.map and linux.map are example files with keycode mapping
-		+HB_GT_KEYMAP() function was added
+    * source/rtl/gtcrs/gtcrs.c
+        *improved recognition of xterm compatible terminals
 
-	* include/hbapi.h
-		*Changed declaration of hb_cmdargProcessVM()
+    * source/rtl/gtcrs/Makefile
+    * source/rtl/gtcrs/kbdcrs.c
+    + source/rtl/gtcrs/keymap.prg
+    + source/rtl/gtcrs/eterm.map
+    + source/rtl/gtcrs/linux.map
+        *the support for runtime definition of keycodes mapping was added
+        (translation from terminal key sequences into INKEY() codes)
+        +eterm.map and linux.map are example files with keycode mapping
+        +HB_GT_KEYMAP() function was added
 
-	* include/hbapigt.h
-	* include/hbvm.h
-	* source/rtl/inkey.c
-	* source/vm/cmdarg.c
-	* source/vm/hvm.c
-		*new function hb_vmFlagEnabled() to query compatibility
-		at runtime
-		*new internal command line arguments were added to control
-		application at runtime:
-		//FLAGS:switches
-			this flag controls compatibility issues of the virtual 
-			machine
-			Available switches:
-			c - Clipper compatibility
-			h - Harbour extensions (enabled by default)
-			s - enable support for strings as array of bytes (enabled 
-				by default)
-			For example:
-			myapp //FLAGS:ch
-			will disable support for strings as array of bytes
-					
-		//CANCEL:key
-		//CANCELEX:keyex
-			this flag allows change the keycode of application cancel
-			request (usually Alt-C) - using normal INKEY() keycodes
-			or extended keycodes (CANCELEX) 
-			For example:
-			myapp //CANCEL:304
-			will change Alt-c into Alt-b for cancelling (Alt-c is used
-			to insert polish diactric letter)
-		
-	* tests/keywords.prg
-		*fixed to suppress warnings for FIELD and IN keywords if passed
-		by reference
-		
+    * include/hbapi.h
+        *Changed declaration of hb_cmdargProcessVM()
+
+    * include/hbapigt.h
+    * include/hbvm.h
+    * source/rtl/inkey.c
+    * source/vm/cmdarg.c
+    * source/vm/hvm.c
+        *new function hb_vmFlagEnabled() to query compatibility
+        at runtime
+        *new internal command line arguments were added to control
+        application at runtime:
+        //FLAGS:switches
+            this flag controls compatibility issues of the virtual
+            machine
+            Available switches:
+            c - Clipper compatibility
+            h - Harbour extensions (enabled by default)
+            s - enable support for strings as array of bytes (enabled
+                by default)
+            For example:
+            myapp //FLAGS:ch
+            will disable support for strings as array of bytes
+
+        //CANCEL:key
+        //CANCELEX:keyex
+            this flag allows change the keycode of application cancel
+            request (usually Alt-C) - using normal INKEY() keycodes
+            or extended keycodes (CANCELEX)
+            For example:
+            myapp //CANCEL:304
+            will change Alt-c into Alt-b for cancelling (Alt-c is used
+            to insert polish diactric letter)
+
+    * tests/keywords.prg
+        *fixed to suppress warnings for FIELD and IN keywords if passed
+        by reference
+
 2003-10-25 14:45 UTC+0100 Ryszard Glab <rglab@przesiew.imid.med.pl>
-	* include/hbexprb.c
-	* source/compiler/exproptb.c
-		* fixed to stop 'function defined but not used' warning with SIMPLEX
-		
-	* source/compiler/harbour.l
-		* enhanced to support nested '[]' strings created with dumb stingify
-		  match marker (full Clipper compatibility with Flex)
-		  
-	* source/pp/ppcomp.c
-	* source/pp/ppcore.c
-		* fixed support for stingify match markers - full Clipper 
-		  compatibility
+    * include/hbexprb.c
+    * source/compiler/exproptb.c
+        * fixed to stop 'function defined but not used' warning with SIMPLEX
 
-	* tests/Makefile
-		* testpp.prg was added into BAD_PRG_SOURCES
-		
-	* tests/codebl.prg
-		* test for references of codeblock parameters was added
-		
-	+ tests/testpp.prg
-		* new file to test stringify match markers (this file will
-		  not run - compile it only)
+    * source/compiler/harbour.l
+        * enhanced to support nested '[]' strings created with dumb stingify
+          match marker (full Clipper compatibility with Flex)
+
+    * source/pp/ppcomp.c
+    * source/pp/ppcore.c
+        * fixed support for stingify match markers - full Clipper
+          compatibility
+
+    * tests/Makefile
+        * testpp.prg was added into BAD_PRG_SOURCES
+
+    * tests/codebl.prg
+        * test for references of codeblock parameters was added
+
+    + tests/testpp.prg
+        * new file to test stringify match markers (this file will
+          not run - compile it only)
 
 2003-10-24 11:50 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
     * source/rdd/dbfntx/dbfntx1.c
@@ -125,26 +129,26 @@
 
 2003-10-23 15:40 UTC+0100 Ryszard Glab <rglab@przesiew.imid.med.pl>
     * source/compiler/harbour.l
-	* fixed codeblock scanning - this should cure random GPFs
+    * fixed codeblock scanning - this should cure random GPFs
 
 2003-10-23 11:00 UTC+0100 Ryszard Glab <rglab@przesiew.imid.med.pl>
     * include/hbexprc.c
     * source/compiler/exproptc.c
-	* a variable pbUseTextSubst is initialized correctly when
-	compiled with macro support 
-	    
+    * a variable pbUseTextSubst is initialized correctly when
+    compiled with macro support
+
     * source/compiler/harbour.l
-	* (char *) cast was added
-	
+    * (char *) cast was added
+
     * source/vm/itemapi.c
-	* check for a loop in variable de-referencing was added
-	The following code:
-	var := IIF( .T., @var, var )
-	is causing that the variable is referencing itself
-	(valid syntax in Clipper)
-	
+    * check for a loop in variable de-referencing was added
+    The following code:
+    var := IIF( .T., @var, var )
+    is causing that the variable is referencing itself
+    (valid syntax in Clipper)
+
     * source/vm/macro.c
-	* fixed to link correctly with WATCOM linker
+    * fixed to link correctly with WATCOM linker
 
 
 2003-10-23 10:30 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
@@ -171,7 +175,7 @@
 
 2003-10-20 13:45 UTC+0100 Ryszard Glab <rglab@przesiew.imid.med.pl>
     * .cvsignore
-	* Restored previous version
+    * Restored previous version
 
     * include/hbexpra.c
     * include/hbexprb.c
@@ -181,20 +185,20 @@
     * source/compiler/exproptb.c
     * source/compiler/exproptc.c
     * source/compiler/harbour.sly
-	* fixed declaration mismatch in Simplex version
-	* fixed generation of string's pcode
-	  (introduced with my previous changes)
+    * fixed declaration mismatch in Simplex version
+    * fixed generation of string's pcode
+      (introduced with my previous changes)
 
     * source/pp/ppcore.c
-	* fixed support for stringify match markers <""> and <()> in Flex
-	  version (for example &var.1 have to be expanded into "&var.1"
-	  instead of var.1 since this is not a valid Clipper expression)
-	  NOTICE! In Simplex version this is not fixed because it is
-	  used as a hack to correctly support macro variables in GET
-	  command.
+    * fixed support for stringify match markers <""> and <()> in Flex
+      version (for example &var.1 have to be expanded into "&var.1"
+      instead of var.1 since this is not a valid Clipper expression)
+      NOTICE! In Simplex version this is not fixed because it is
+      used as a hack to correctly support macro variables in GET
+      command.
 
     * tests/testget.prg
-	* MEMVAR declaration was added
+    * MEMVAR declaration was added
 
 2003-10-20 11:37 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
     * include/hbapi.h
@@ -223,16 +227,16 @@
     * source/macro/macroa.c
     * source/macro/macrob.c
     * source/macro/macroc.c
-	* Fixed support for late/early evaluation of macro exressions in
-	a codeblock (Flex version) (see tests/tstblock.prg for a sample)
-	Harbour(flex) is now full Clipper compatible here.
+    * Fixed support for late/early evaluation of macro exressions in
+    a codeblock (Flex version) (see tests/tstblock.prg for a sample)
+    Harbour(flex) is now full Clipper compatible here.
 
     * config/dos/watcom.cf
     * source/rdd/dbfcdx/dbfcdx1.h
     * source/common/hbffind.c
     * include/hbrddcdx.h
     * include/hbmath.h
-	* Changed to compile correctly with WATCOM compilers
+    * Changed to compile correctly with WATCOM compilers
 
 2003-10-16 13:17 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
   * source/rtl/round.c

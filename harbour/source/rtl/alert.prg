@@ -33,8 +33,8 @@
 /* TOFIX: Clipper defines a clipped window for Alert() [vszakats] */
 
 /* NOTE: Clipper will return NIL if the first parameter is not a string, but
-         this is not documented. This implementation converts the first 
-         parameter to a string if another type was passed. You can switch back 
+         this is not documented. This implementation converts the first
+         parameter to a string if another type was passed. You can switch back
          to Clipper compatible mode by defining constant
          HB_C52_STRICT. [vszakats] */
 
@@ -61,7 +61,7 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
    LOCAL nOldDispCount
    LOCAL nCount
    Local cNew,cOld,cTemp
-    
+
 #ifdef HB_COMPAT_C53
    LOCAL nMRow, nMCol
 #endif
@@ -120,7 +120,7 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
       OTHERWISE                       ; xMessage := "NIL"
       ENDCASE
       cOld:= xMessage
-    
+
      if Len(cOld) >60
       WHILE LEN(cOld) > 0
 
@@ -278,8 +278,7 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
       cOldScreen := SaveScreen( nInitRow, nInitCol, nInitRow + Len( aSay ) + 3, nInitCol + nWidth + 1 )
 
       /* draw box */
-      /* 5th parameter should be NIL, because it defaults to single box - important for xterm */
-      DispBox( nInitRow, nInitCol, nInitRow + Len( aSay ) + 3, nInitCol + nWidth + 1, NIL, cColorNorm )
+      DispBox( nInitRow, nInitCol, nInitRow + Len( aSay ) + 3, nInitCol + nWidth + 1, B_SINGLE + ' ', cColorNorm )
 
       FOR nEval := 1 TO Len( aSay )
          DispOutAt( nInitRow + nEval, nInitCol + 1 + Int( ( ( nWidth - Len( aSay[ nEval ] ) ) / 2 ) + .5 ), aSay[ nEval ], cColorNorm )
