@@ -38,7 +38,7 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 1999 Victor Szakats <info@szelvesz.hu>
- *    HB_PROCFILE()
+ *    PROCFILE()
  *
  * See doc/license.txt for licensing terms.
  *

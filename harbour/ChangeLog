@@ -1,3 +1,13 @@
+20000502-19:12 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/vm/proc.c
+     ! Typo.
+
+   * make_gnu.cmd
+     + Error output redirection readded to be in sync with the other make 
+       files. If you need to customize this for your own taste, please make 
+       a local copy of it before.
+
 20000502-17:15 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *makefile.bc
