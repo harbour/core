@@ -115,44 +115,84 @@ Local bResult
 ? "Test for 
 codeblock parameter passed by reference"
 
-Whatever( {|lEnd| ;
+PassByValue( {|lEnd| ;
 
-   bResult := SomeStuff( @lEnd ), ;  // SomeStuff( @lEnd ) isn't allowed 
-in Harbour!
+   bResult := GetBlock( @lEnd ), ;  
 
-   SomethingElse( @lEnd ) } )
+   SetByRef( @lEnd ) } )
 
+// Clipper & xHarbour it's .T.
+//In Harbour it is .F. 
 
-
+? "Printed value in Clipper  .T. =", Eval( bResult )           
 ?
-? "Printed value should be .F.:", Eval( bResult )            // Clipper & xHarbour it's .F.; in Harbour 
-it is NIL
+// Notice the Clipper bug: GetBlock is receiving the reference to
+// the codeblock parameter than the value of EVAL(bResult) shouldn't
+// depend on the order of block creation/value changing (GetBlock/SetRef).
 
-? "Printed value should be 'L':", ValType( Eval( bResult ) ) 
+PassByRef( {|lEnd| ;
+
+   bResult := GetBlock( @lEnd ), ;  
+
+   SetByRef( @lEnd ) } )
+
+// Clipper & xHarbour it's .T.
+//In Harbour it is .F. 
+
+? "Printed value in Clipper  .T. =", Eval( bResult )           
 ?
-/* Clipper & xHarbour it is "L"; in Harbour 
 
-it's "U" or worst: Unrecoverable error 9020: An item was going to be 
+? "2nd test for 
+codeblock parameter passed by reference"
 
-copied to itself from hb_itemCopy()
+PassByValue( {|lEnd| ;
+   SetByRef( @lEnd )
+, ;
+   bResult := GetBlock( @lEnd ) } )
 
+// Clipper & xHarbour it's .T.
+//In Harbour it is .F. 
 
-*/
+? "Printed value in Clipper  .F. =", Eval( bResult )           
+?
+
+PassByRef( {|lEnd| ;
+
+   SetByRef( @lEnd ), ;
+   bResult := GetBlock( @lEnd ) } )
+
+// Clipper & xHarbour it's .T.
+//In Harbour it is .F. 
+
+? "Printed value in Clipper  .F. =", Eval( bResult )           
+?
+
 Return Nil
 
 
 
-Static Function Whatever( bBlock )
+Static Function PassByValue( bBlock )
 
 Local lSomeVar := .T.
 
 Eval( bBlock, lSomeVar )
 
+? "lSomeVar value in Clipper .T. =", lSomeVar
+Return .T.
+
+
+Static Function PassByRef( bBlock )
+
+Local lSomeVar := .T.
+
+Eval( bBlock, @lSomeVar )
+
+? "lSomeVar value in Clipper .F. =", lSomeVar
 Return .T.
 
 
 
-Static Function SomethingElse( lVar )
+Static Function SetByRef( lVar )
 
 lVar := .F.
 
@@ -160,7 +200,7 @@ Return Nil
 
 
 
-Static Function SomeStuff( lVar )
+Static Function GetBlock( lVar )
 
 Return {|| lVar }
 

@@ -56,6 +56,12 @@
 #include "hbapigt.h"
 #include "hbinit.h"
 
+/*
+#define hb_gt_xPutch( uiRow, uiCol, byAttr, byChar ) \
+   move( (uiRow), (uiCol) ); \
+   addch( s_charmap_table[ (byChar) ] | s_alternate_char_set | s_color_table[ (byAttr) ] );
+*/
+
 /* static data
  */
 static USHORT s_uiDispCount;
@@ -64,7 +70,8 @@ static void gt_GetMaxRC( int * r, int * c );
 static void gt_GetRC( int * r, int * c );
 static void gt_SetRC( int r, int c );
 
-static unsigned s_attribmap_table[ 256 ]; /* mapping from DOS style attributes */
+static unsigned s_color_table[ 256 ]; /* mapping from DOS style attributes */
+static unsigned s_charmap_table[ 256 ]; /* mapping of screen characters */
 static BOOL s_under_xterm;
 static int s_alternate_char_set;
 static char s_xTermBox[ 10 ] = "lqkxjqmx ";
@@ -74,10 +81,11 @@ extern void hb_gt_keyboard_Exit( void );
 
 static void hb_gt_terminal_Init( void )
 {
+   int i;
+
    initscr();
    if( has_colors() )
    {
-      int i;
       int backg, foreg;
       /* NOTE: color order=
           DOS style    -> ncurses style
@@ -110,13 +118,14 @@ static void hb_gt_terminal_Init( void )
 
       for( i = 0; i < 256; i++  )
       {
+         /* initialize colors' table */
          backg = ( i >> 4 ) & 0x07;    /* bits 4-6, bit 7 is blinking attribute */
          foreg = ( i & 0x07 );
-         s_attribmap_table[ i ] = COLOR_PAIR( backg * COLORS + foreg );
+         s_color_table[ i ] = COLOR_PAIR( backg * COLORS + foreg );
          if( i & 0x08 )
-            s_attribmap_table[ i ] |= A_BOLD;  /* 4-th bit is an intensity bit */
+            s_color_table[ i ] |= A_BOLD;  /* 4-th bit is an intensity bit */
          if( i & 0x80 )
-            s_attribmap_table[ i ] |= A_BLINK;  /* 7-th bit is blinking bit */
+            s_color_table[ i ] |= A_BLINK;  /* 7-th bit is blinking bit */
       }
    }
 
@@ -134,20 +143,16 @@ static void hb_gt_terminal_Init( void )
          hb_xfree( ( void * ) tmp );
    }
 
-   if( s_under_xterm )
+   /* initialize default character map */
+   for( i = 0; i < 256; i++  )
+      s_charmap_table[ i ] = i;
+   s_charmap_table[ 127 ] |= A_ALTCHARSET;
+   if( ! s_under_xterm )
    {
-     /* Alternate characters set will be enabled only by request because
-      * it changes character mapping under xterm
-      */
-      s_alternate_char_set = 0;
+      for( i = 16; i < 32; i++  )
+         s_charmap_table[ i ] |= A_ALTCHARSET;
    }
-   else
-   {
-     /* If running under Linux console enable alternate character set
-      * by default
-      */
-      s_alternate_char_set = A_ALTCHARSET;
-   }
+   s_alternate_char_set = 0;
    bkgdset( ' ' );
    ripoffline( 0, NULL );
 }
@@ -315,12 +320,9 @@ static void hb_gt_xPutch( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE byChar )
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_xPutch(%hu, %hu, %d, %i)", uiRow, uiCol, (int) byAttr, byChar));
 
    move( uiRow, uiCol );
-
-   addch( byChar | s_alternate_char_set | s_attribmap_table[ byAttr ] );
-
-   if( s_uiDispCount == 0 )
-      refresh();
+   addch( s_charmap_table[ byChar ] | s_alternate_char_set | s_color_table[ byAttr ] );
 }
+
 
 void hb_gt_Puts( USHORT uiRow,
                  USHORT uiCol,
@@ -329,15 +331,11 @@ void hb_gt_Puts( USHORT uiRow,
                  ULONG ulLen )
 {
    ULONG i;
-   int attr;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Puts(%hu, %hu, %d, %p, %lu)", uiRow, uiCol, (int) byAttr, pbyStr, ulLen));
 
-   attr = s_alternate_char_set | s_attribmap_table[ byAttr ];
-   move( uiRow, uiCol );
-
    for( i = 0; i < ulLen; ++i )
-      addch( pbyStr[ i ] | attr );
+      hb_gt_xPutch( uiRow, uiCol+i, byAttr, pbyStr[ i ] );
 
    if( s_uiDispCount == 0 )
       refresh();
@@ -399,7 +397,7 @@ void hb_gt_SetAttribute( USHORT uiTop,
                          USHORT uiRight,
                          BYTE byAttr )
 {
-   int newAttr = s_attribmap_table[ byAttr ];
+   int newAttr = s_color_table[ byAttr ];
    int dx;
    chtype c;
 
@@ -442,7 +440,7 @@ void hb_gt_Scroll( USHORT uiTop,
       WINDOW * subw;
 
       subw = subwin( stdscr, uiBottom - uiTop + 1, uiRight - uiLeft + 1, uiTop, uiLeft );
-      wbkgdset( subw, ' ' | s_attribmap_table[ byAttr ] );
+      wbkgdset( subw, ' ' | s_color_table[ byAttr ] );
       wclear( subw );
       touchwin( stdscr );
       wrefresh( subw );
@@ -455,7 +453,7 @@ void hb_gt_Scroll( USHORT uiTop,
          WINDOW * subw;
 
          subw = subwin( stdscr, uiBottom - uiTop + 1, uiRight - uiLeft + 1, uiTop, uiLeft );
-         wbkgdset( subw, ' ' | s_attribmap_table[ byAttr ] );
+         wbkgdset( subw, ' ' | s_color_table[ byAttr ] );
          scrollok( subw, TRUE );
          wscrl( subw, iRows );
          delwin( subw );
@@ -473,7 +471,7 @@ void hb_gt_Scroll( USHORT uiTop,
 
          RowCount = uiBottom - uiTop + 1;
          ColCount = uiRight - uiLeft + 1;
-         newAttr  = ' ' | s_attribmap_table[ byAttr ];
+         newAttr  = ' ' | s_color_table[ byAttr ];
 
          memsize = hb_gt_RectSize( RowCount, ColCount );
          pScreen = ( chtype * ) hb_xgrab( memsize );
@@ -631,6 +629,7 @@ USHORT hb_gt_Box( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right,
    SHORT Width;
    
    int l_alternate_char_set = s_alternate_char_set;
+   s_alternate_char_set = A_ALTCHARSET;
 
    if( Left >= 0 || Left < hb_gt_GetScreenWidth()
    || Right >= 0 || Right < hb_gt_GetScreenWidth()
@@ -749,17 +748,16 @@ USHORT hb_gt_Box( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right,
 USHORT hb_gt_BoxD( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right, BYTE * pbyFrame, BYTE byAttr )
 {
    USHORT ret;
+   int iAlt = s_alternate_char_set;
    if( s_under_xterm )
    {
       /* Under xterm use hard-coded box drawing characters */
       pbyFrame = s_xTermBox;
-      s_alternate_char_set = A_ALTCHARSET;
    }
 
+   s_alternate_char_set = A_ALTCHARSET;
    ret = hb_gt_Box( Top, Left, Bottom, Right, pbyFrame, byAttr );
-
-   if( s_under_xterm )
-      s_alternate_char_set = 0;   /* restore default setting */
+   s_alternate_char_set = iAlt;
 
    return ret;
 }
@@ -767,17 +765,17 @@ USHORT hb_gt_BoxD( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right, BYTE * pbyF
 USHORT hb_gt_BoxS( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right, BYTE * pbyFrame, BYTE byAttr )
 {
    USHORT ret;
+   int iAlt = s_alternate_char_set;
+   
    if( s_under_xterm )
    {
       /* Under xterm use hard-coded box drawing characters */
       pbyFrame = s_xTermBox;
-      s_alternate_char_set = A_ALTCHARSET;
    }
 
+   s_alternate_char_set = A_ALTCHARSET;
    ret = hb_gt_Box( Top, Left, Bottom, Right, pbyFrame, byAttr );
-
-   if( s_under_xterm )
-      s_alternate_char_set = 0;   /* restore default setting */
+   s_alternate_char_set = iAlt;
 
    return ret;
 }
@@ -788,10 +786,10 @@ USHORT hb_gt_HorizLine( SHORT Row, SHORT Left, SHORT Right, BYTE byChar, BYTE by
       byChar = ACS_HLINE;
 
    if( Left < Right )
-      mvhline( Row, Left, byChar | A_ALTCHARSET | s_attribmap_table[ byAttr ],
+      mvhline( Row, Left, byChar | A_ALTCHARSET | s_color_table[ byAttr ],
                Right - Left + 1 );
    else
-      mvhline( Row, Right, byChar | A_ALTCHARSET | s_attribmap_table[ byAttr ],
+      mvhline( Row, Right, byChar | A_ALTCHARSET | s_color_table[ byAttr ],
                Left - Right + 1 );
 
    return 0;
@@ -812,7 +810,7 @@ USHORT hb_gt_VertLine( SHORT Col, SHORT Top, SHORT Bottom, BYTE byChar, BYTE byA
    if( s_under_xterm )
       byChar = ACS_VLINE;
 
-   mvvline( Row, Col, byChar | A_ALTCHARSET | s_attribmap_table[ byAttr ],
+   mvvline( Row, Col, byChar | A_ALTCHARSET | s_color_table[ byAttr ],
             Bottom - Row + 1 );
 
    return 0;

@@ -8,6 +8,15 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-12-05 16:05 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+   * source/rtl/gtcrs/gtcrs.c
+      * characters with code > 128 are displayed correctly now
+      
+   * tests/codebl.prg
+      * updated test for detached codeblock parameters
+      (Notice that we are not compatible with Clipper here - there 
+      is no need do duplicate Clipper bug, IMHO)
+
 2003-12-03 17:28 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
   * source/rdd/dbcmd.c
     ! Fixed OrdKeyNo() bug that set RecNo() to LastRec() + 1
