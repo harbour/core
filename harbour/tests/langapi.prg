@@ -8,22 +8,22 @@ REQUEST HB_LANG_HU852
 
 func main()
 
-// hb_langselect( "EN" )
-
+? "Prev:", hb_langselect()
+? hb_langName()
 ? NationMsg( 1 )
 ? CMonth( Date() )
 ? CDOW( Date() )
 ? "---------"
 
-hb_langSelect( "HU852" )
-
+? "Prev:", hb_langSelect( "HU852" )
+? hb_langName()
 ? NationMsg( 1 )
 ? CMonth( Date() )
 ? CDOW( Date() )
 ? "---------"
 
-hb_langSelect( "NOTHERE" )
-
+? "Prev:", hb_langSelect( "NOTHERE" )
+? hb_langName()
 ? NationMsg( 1 )
 ? CMonth( Date() )
 ? CDOW( Date() )

@@ -249,7 +249,7 @@ USHORT hb_errLaunch( PHB_ITEM pError )
             hb_errPutTries( pError, hb_errGetTries( pError ) + 1 );
       }
       else
-        hb_errInternal( 9999, "Error recovery failure", NULL, NULL );
+         hb_errInternal( 9999, "Error recovery failure", NULL, NULL );
    }
    else
       uiAction = E_RETRY; /* Clipper does this, undocumented */
@@ -795,7 +795,7 @@ void hb_errInternal( ULONG ulIntCode, char * szText, char * szPar1, char * szPar
    hb_conOutErr( hb_conNewLine(), 0 );
    sprintf( buffer, "Unrecoverable error %lu: ", ulIntCode );
    hb_conOutErr( buffer, 0 );
-   sprintf( buffer, szText != NULL ? szText : ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ERRINTR + ulIntCode ), szPar1, szPar2 );
+   sprintf( buffer, szText != NULL ? szText : ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ERRINTR + ulIntCode - 9000 ), szPar1, szPar2 );
    hb_conOutErr( buffer, 0 );
    hb_conOutErr( hb_conNewLine(), 0 );
 

@@ -78,18 +78,18 @@ static HB_LANG s_lang =
    
       /* CA-Cl*pper compatible natmsg items */
    
-      "Database Files    # Records    Last Update     Size",
-      "Do you want more samples?",
-      "Page No.",
-      "** Subtotal **",
-      "* Subsubtotal *",
-      "*** Total ***",
+      "Adatb zisok       T‚telsz m    Utols¢ m¢d.     M‚ret",
+      "K‚ri a tov bbi r‚szeket?",
+      "lapsz m",
+      "** ™sszesen **",
+      "* R‚sz”sszesen *",
+      "*** Mind”sszesen ***",
       "Ins",
       "   ",
-      "Invalid date",
-      "Range: ",
+      "Rossz d tum",
+      " Hat rok ",
       " - ",
-      "Y/N",
+      "I/N",
       "INVALID EXPRESSION",
    
       /* Error description names */
@@ -148,12 +148,29 @@ static HB_LANG s_lang =
    
       /* Internal error names */
    
-      "Can't locate starting procedure",
-      "Can't allocate memory (%s)",
-      "Can't reallocate memory (%s)",
-      "Free called with null pointer", /* DEBUG */
-      "Not implemented opcode (%s)",
-      "Not implemented (%s)",
+      "Unrecoverable error %lu: ",
+      "Error recovery failure",
+      "No ERRORBLOCK() for error", 
+      "Too many recursive error handler calls", 
+      "RDD invalid of failed to load",
+      "Invalid method type from __clsAddMsg", 
+      "hb_xgrab can't allocate memory", 
+      "hb_xrealloc called with a NULL pointer", 
+      "hb_xrealloc called with an invalid pointer", 
+      "hb_xrealloc can't reallocate memory", 
+      "hb_xfree called with an invalid pointer", 
+      "hb_xfree called with a NULL pointer", 
+      "Can\'t locate the starting procedure: \'%s\'",
+      "No starting procedure", 
+      "Unsupported VM opcode", 
+      "Symbol item expected from %s",
+      "Invalid symbol type for self from hb_vmDo()", 
+      "Codeblock expected from hb_vmDoBlock()", 
+      "Incorrect item type on the stack trying to pop a number", 
+      "Incorrect item type on the stack trying to pop a double", 
+      "Stack underflow", 
+      "An item was going to be copied to itself from hb_itemCopy()", 
+      "Invalid symbol item passed as memvar %s",
    
       /* Texts */
    

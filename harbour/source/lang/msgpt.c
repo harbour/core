@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (Template)
+ * Language Support Module (PT)
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
  * www - http://www.harbour-project.org
@@ -33,7 +33,7 @@
  *
  */
 
-/* Language name: Portuguese> */
+/* Language name: Portuguese */
 /* ISO language code (2 chars): PT */
 /* Codepage: 850 */
 
@@ -45,38 +45,36 @@ static HB_LANG s_lang =
       /* Identification */
    
       "PT",                        /* ID */
-      "Portuguese",                   /* Name (in English) */
-      "Portuguese",                   /* Name (in native language) */
+      "Portuguese",                /* Name (in English) */
+      "Portuguese",                /* Name (in native language) */
       "PT",                        /* RFC ID */
-      "437",                       /* Codepage */
+      "850",                       /* Codepage */
       "$Revision$ $Date$",         /* Version */
    
       /* Month names */
 
-   "Janeiro",
-   "Fevereiro",
-   "Maráo",
-   "Abril",
-   "Maio",
-   "Junho",
-   "Julho",
-   "Agosto",
-   "Setembro",
-   "Outubro",
-   "Novembro",
-   "Dezembro",
-
+      "Janeiro",
+      "Fevereiro",
+      "Maráo",
+      "Abril",
+      "Maio",
+      "Junho",
+      "Julho",
+      "Agosto",
+      "Setembro",
+      "Outubro",
+      "Novembro",
+      "Dezembro",
    
       /* Day names */
 
-   "Domingo",
-   "Segunda-feira",
-   "Teráa-feira",
-   "Quarta-feira",
-   "Quinta-feira",
-   "Sexta-feira",
-   "S†bado",
-
+      "Domingo",
+      "Segunda-feira",
+      "Teráa-feira",
+      "Quarta-feira",
+      "Quinta-feira",
+      "Sexta-feira",
+      "S†bado",
    
       /* CA-Cl*pper compatible natmsg items */
    
@@ -96,65 +94,83 @@ static HB_LANG s_lang =
    
       /* Error description names */
    
-   "Erro desconhecido",
-   "Erro nos parÉmetros",
-   "Erro de limite",
-   "Overflow de string",
-   "Overflow numÈrico",
-   "Divis∆o por zero",
-   "Erro numÇrico",
-   "Erro de sintaxe",
-   "Operaá∆o muito complexa",
-   "",
-   "",
-   "Mem¢ria insuficiente",
-   "Funá∆o indefinida",
-   "MÇtodo n∆o exportado",
-   "Vari†vel n∆o existe",
-   "Alias n∆o existe",
-   "Nenhuma vari†vel exportada",
-   "Nome de alias incorreto",
-   "Nome de alias duplicado",
-   "",
-   "Erro de criaá∆o",
-   "Erro de abertura",
-   "Erro ao fechar",
-   "Erro de leitura",
-   "Erro de escrita",
-   "Erro de impress∆o",
-   "",
-   "",
-   "",
-   "",
-   "Operaá∆o n∆o suportada",
-   "Limite excedido",
-   "Detectado °ndice corrompido",
-   "Tipo incorreto de dado",
-   "Tamanho do dato muito longo",
-   "Workarea n∆o est† em uso",
-   "Workarea n∆o indexada",
-   "Uso exclusivo requerido",
-   "Travamento requerido",
-   "Escrita n∆o permitida",
-   "Falha no travamento do Append",
-   "Falha no travamento",
-   "",
-   "",
-   "",
-   "Numero de parÉmetros incorretos",
-   "acesso de array",
-   "array assign",
-   "n∆o Ç um array",
-   "condicional",
+      "Erro desconhecido",
+      "Erro nos parÉmetros",
+      "Erro de limite",
+      "Overflow de string",
+      "Overflow numÈrico",
+      "Divis∆o por zero",
+      "Erro numÇrico",
+      "Erro de sintaxe",
+      "Operaá∆o muito complexa",
+      "",
+      "",
+      "Mem¢ria insuficiente",
+      "Funá∆o indefinida",
+      "MÇtodo n∆o exportado",
+      "Vari†vel n∆o existe",
+      "Alias n∆o existe",
+      "Nenhuma vari†vel exportada",
+      "Nome de alias incorreto",
+      "Nome de alias duplicado",
+      "",
+      "Erro de criaá∆o",
+      "Erro de abertura",
+      "Erro ao fechar",
+      "Erro de leitura",
+      "Erro de escrita",
+      "Erro de impress∆o",
+      "",
+      "",
+      "",
+      "",
+      "Operaá∆o n∆o suportada",
+      "Limite excedido",
+      "Detectado °ndice corrompido",
+      "Tipo incorreto de dado",
+      "Tamanho do dato muito longo",
+      "Workarea n∆o est† em uso",
+      "Workarea n∆o indexada",
+      "Uso exclusivo requerido",
+      "Travamento requerido",
+      "Escrita n∆o permitida",
+      "Falha no travamento do Append",
+      "Falha no travamento",
+      "",
+      "",
+      "",
+      "",
+      "acesso de array",
+      "array assign",
+      ""
+      "n∆o Ç um array",
+      "condicional",
 
       /* Internal error names */
  
-      "N∆o pode localizar procedure inicial",
-      "N∆o pode alocar mem¢ria (%s)",
-      "N∆o pode realocar mem¢ria (%s)",
-      "Livre chamada usado ponteino NULL", /* DEBUG */
-      "Opcode n∆o implementado (%s)",
-      "N∆o implementado (%s)",
+      "Unrecoverable error %lu: ",
+      "Error recovery failure",
+      "No ERRORBLOCK() for error", 
+      "Too many recursive error handler calls", 
+      "RDD invalid or failed to load",
+      "Invalid method type from %s", 
+      "hb_xgrab can't allocate memory", 
+      "hb_xrealloc called with a NULL pointer", 
+      "hb_xrealloc called with an invalid pointer", 
+      "hb_xrealloc can't reallocate memory", 
+      "hb_xfree called with an invalid pointer", 
+      "hb_xfree called with a NULL pointer", 
+      "Can\'t locate the starting procedure: \'%s\'",
+      "No starting procedure", 
+      "Unsupported VM opcode", 
+      "Symbol item expected from %s",
+      "Invalid symbol type for self from hb_vmDo()", 
+      "Codeblock expected from hb_vmDoBlock()", 
+      "Incorrect item type on the stack trying to pop a number", 
+      "Incorrect item type on the stack trying to pop a double", 
+      "Stack underflow", 
+      "An item was going to be copied to itself from hb_itemCopy()", 
+      "Invalid symbol item passed as memvar %s",
 
       /* Texts */
    

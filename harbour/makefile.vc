@@ -339,7 +339,8 @@ LANG_LIB_OBJS = \
    $(OBJ_DIR)\msgen.obj \
    $(OBJ_DIR)\msghu852.obj \
    $(OBJ_DIR)\msghucwi.obj \
-   $(OBJ_DIR)\msghuwin.obj 
+   $(OBJ_DIR)\msghuwin.obj \
+   $(OBJ_DIR)\msgpt.obj 
 
 #
 # TOOLS.LIB rules

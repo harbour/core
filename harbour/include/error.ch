@@ -91,7 +91,28 @@
 #define EG_CONDITION    50      /* Harbour special */
 
 /* Internal errors */
-#define EI_NOERRORBLOCK 1
-#define EI_RECOVERY     2
+#define IE_ERRUNRECOV           9000
+#define IE_ERRRECFAILURE        9001
+#define IE_ERRNOBLOCK           9002
+#define IE_ERRTOOMANY           9003
+#define IE_RDDINVALID           9004
+#define IE_CLSINVMETHOD         9005
+#define IE_XGRABALLOC           9006
+#define IE_XREALLOCNULL         9007
+#define IE_XREALLOCINV          9008
+#define IE_XREALLOC             9009
+#define IE_XFREEINV             9010
+#define IE_XFREENULL            9011
+#define IE_VMBADSTARTUP         9012
+#define IE_VMNOSTARTUP          9013
+#define IE_VMBADOPCODE          9014
+#define IE_VMNOTSYMBOL          9015
+#define IE_VMINVSYMBOL          9016
+#define IE_VMNOTCBLOCK          9017
+#define IE_VMNOTNUMBER          9018
+#define IE_VMNOTDOUBLE          9019
+#define IE_STACKUFLOW           9020
+#define IE_ITEMBADCOPY          9021
+#define IE_MVBADSYMBOL          9022
 
 #endif /* _ERROR_CH */

@@ -38,7 +38,7 @@
 
 /* Always link in the default language */
 
-/* This hack is needed */
+/* This hack is needed to force preprocessing if id is also a macro */
 #define HB_LANG_REQUEST( id )           HB_LANG_REQUEST_( id )
 #define HB_LANG_REQUEST_( id )          extern HB_FUNC( HB_LANG_##id ); \
                                         void hb_lang_ForceLink( void ) \
@@ -52,6 +52,12 @@ HB_LANG_REQUEST( HB_LANG_DEFAULT );
          made dynamic. */
 #define HB_LANG_MAX_ 64
 
+#define HB_LANG_ITEM_ID_ID         0
+#define HB_LANG_ITEM_ID_NAME       1
+#define HB_LANG_ITEM_ID_NAMENAT    2
+#define HB_LANG_ITEM_ID_RFCID      3
+#define HB_LANG_ITEM_ID_CODEPAGE   4
+
 static PHB_LANG s_langList[ HB_LANG_MAX_ ];
 static PHB_LANG s_lang = NULL;
 
@@ -63,7 +69,7 @@ static int hb_langFindPos( char * pszID )
    {
       for( iPos = 0; iPos < HB_LANG_MAX_; iPos++ )
       {
-         if( s_langList[ iPos ] != NULL && strcmp( ( char * ) s_langList[ iPos ]->pItemList[ 0 ], pszID ) == 0 )
+         if( s_langList[ iPos ] != NULL && strcmp( ( char * ) s_langList[ iPos ]->pItemList[ HB_LANG_ITEM_BASE_ID + HB_LANG_ITEM_ID_ID ], pszID ) == 0 )
             return iPos;
       }
    }
@@ -77,7 +83,7 @@ BOOL hb_langRegister( PHB_LANG lang )
 
    if( lang )
    {
-      int iPos = hb_langFindPos( ( char * ) lang->pItemList[ HB_LANG_ITEM_BASE_ID + 0 ] );
+      int iPos = hb_langFindPos( ( char * ) lang->pItemList[ HB_LANG_ITEM_BASE_ID + HB_LANG_ITEM_ID_ID ] );
 
       if( iPos == -1 )
       {
@@ -125,7 +131,7 @@ PHB_LANG hb_langFind( char * pszID )
 
    iPos = hb_langFindPos( pszID );
 
-   return iPos != -1 ? s_langList[ iPos ] : NULL;
+   return ( iPos != -1 ) ? s_langList[ iPos ] : NULL;
 }
 
 PHB_LANG hb_langSelect( PHB_LANG lang )
@@ -150,27 +156,56 @@ void * hb_langDGetItem( int iIndex )
       return NULL;
 }
 
-HB_FUNC( HB_LANGSELECT )
+char * hb_langID( void )
 {
-   hb_retc( ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ID + 0 ) );
+   HB_TRACE(HB_TR_DEBUG, ("hb_langID()"));
 
-   if( ISCHAR( 1 ) )
-      hb_langSelect( hb_langFind( hb_parc( 1 ) ) );
+   if( s_lang )
+      return ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ID + HB_LANG_ITEM_ID_ID );
+   else
+      return NULL;
+}
+
+/* NOTE: Caller must free the pointer. */
+
+char * hb_langName( void )
+{
+   char * pszName = ( char * ) hb_xgrab( 128 );
+
+   if( s_lang )
+      sprintf( pszName, "Harbour Language: %s %s (%s)", 
+         ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ID + HB_LANG_ITEM_ID_ID ),
+         ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ID + HB_LANG_ITEM_ID_NAME ),
+         ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ID + HB_LANG_ITEM_ID_NAMENAT ) );
+   else
+      strcpy( pszName, "Harbour Language: (not installled)" );
+
+   return pszName;
 }
 
 /* Compatibility interface */
 
-char *   hb_langDGetErrorDesc    ( ULONG ulIndex )
+char * hb_langDGetErrorDesc( ULONG ulIndex )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_langDGetErrorDesc(%lu)", ulIndex));
 
    return ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ERRDESC + ulIndex );
 }
 
-char *   hb_langDGetErrorIntr    ( ULONG ulIndex )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_langDGetErrorIntr(%lu)", ulIndex));
+/* Harbour interface */
 
-   return ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ERRINTR + ulIndex - 1 );
+HB_FUNC( HB_LANGSELECT )
+{
+   hb_retc( hb_langID() );
+
+   if( ISCHAR( 1 ) )
+      hb_langSelect( hb_langFind( hb_parc( 1 ) ) );
+}
+
+HB_FUNC( HB_LANGNAME )
+{
+   char * pszName = hb_langName();
+   hb_retc( pszName );
+   hb_xfree( pszName );
 }
 

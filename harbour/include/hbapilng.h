@@ -54,8 +54,8 @@ extern "C" {
 #define HB_LANG_ITEM_BASE_NATMSG        25
 #define HB_LANG_ITEM_BASE_ERRDESC       38
 #define HB_LANG_ITEM_BASE_ERRINTR       89
-#define HB_LANG_ITEM_BASE_TEXT          95
-#define HB_LANG_ITEM_MAX_               98
+#define HB_LANG_ITEM_BASE_TEXT          112
+#define HB_LANG_ITEM_MAX_               115
 
 typedef struct _HB_LANG
 {
@@ -72,11 +72,12 @@ extern PHB_LANG hb_langFind             ( char * pszID );
 
 extern PHB_LANG hb_langSelect           ( PHB_LANG lang );
 extern void *   hb_langDGetItem         ( int iIndex );
+extern char *   hb_langID               ( void );
+extern char *   hb_langName             ( void );
 
 /* Compatibility interface */
 
 extern char *   hb_langDGetErrorDesc    ( ULONG ulIndex );
-extern char *   hb_langDGetErrorIntr    ( ULONG ulIndex );
 
 #if defined(HB_EXTERN_C)
 }
