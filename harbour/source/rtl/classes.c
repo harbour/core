@@ -502,7 +502,9 @@ HARBOUR HB___CLSNEW( void )
       pNewCls->uiDatas      = pSprCls->uiDatas + hb_parni( 2 );
       pNewCls->uiMethods    = pSprCls->uiMethods;
 
-      pNewCls->pClassDatas = hb_arrayClone( pSprCls->pClassDatas );
+      /* pNewCls->pClassDatas = hb_arrayClone( pSprCls->pClassDatas ); */
+      pNewCls->pClassDatas = hb_itemNew( NULL );
+      hb_itemCopy( pNewCls->pClassDatas, pSprCls->pClassDatas );
 
       pNewCls->pInlines    = hb_arrayClone( pSprCls->pInlines );
 
@@ -1068,16 +1070,17 @@ static HARBOUR hb___msgSuper( void )
    PBASEARRAY pNewBase   = ( PBASEARRAY ) hb_xgrab( sizeof( BASEARRAY ) );
    USHORT     uiSuperCls = s_pMethod->uiData;     /* Get handle of superclass */
 
-   memcpy( pSuper,   pObject, sizeof( HB_ITEM ) );
-                                                /* Allocate new structures  */
+   memcpy( pSuper,   pObject, sizeof( HB_ITEM ) ); /* Allocate new structures  */
    memcpy( pNewBase, pObject->item.asArray.value, sizeof( BASEARRAY ) );
 
    pSuper->item.asArray.value = pNewBase;
 
-   pNewBase->uiClass    = uiSuperCls;
-   pNewBase->uiHolders  = 1;                    /* New item is returned     */
-   pNewBase->bSuperCast = TRUE;                 /* Do not dispose pItems !! */
-                                                /* A bit dirty, but KISS.   */
+   pNewBase->uiPrevCls     = pNewBase->uiClass;
+   pNewBase->uiPrevHolders = pNewBase->uiHolders;
+   pNewBase->uiClass       = uiSuperCls;
+   pNewBase->uiHolders     = 1;                    /* New item is returned     */
+   pNewBase->bSuperCast    = TRUE;                 /* Do not dispose pItems !! */
+                                                   /* A bit dirty, but KISS.   */
    hb_itemCopy( &hb_stack.Return, pSuper );
    hb_itemRelease( pSuper );
 }

@@ -197,7 +197,9 @@ typedef struct _HB_BASEARRAY
    PHB_ITEM pItems;       /* pointer to the array items */
    ULONG    ulLen;        /* number of items in the array */
    USHORT   uiHolders;    /* number of holders of this array */
+   USHORT   uiPrevHolders; /* for fixing after access super */
    USHORT   uiClass;      /* offset to the classes base if it is an object */
+   USHORT   uiPrevCls;    /* for fixing after access super */
    BOOL     bSuperCast;   /* is it a super cast ? */
 } BASEARRAY, * PBASEARRAY, * BASEARRAY_PTR;
 
