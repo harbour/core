@@ -1103,7 +1103,7 @@ USHORT hb_setCursor( BOOL bSetCursor, USHORT usNewCursor )
 #else
    usPreviousCursor = hb_set.HB_SET_CURSOR;
    if( bSetCursor )
-      hb_set.HB_SET_CURSOR = ( hb_cursor_enum ) usNewCursor;
+      hb_set.HB_SET_CURSOR = ( HB_cursor_enum ) usNewCursor;
 #endif
    return usPreviousCursor;
 }

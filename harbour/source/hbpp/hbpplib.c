@@ -34,6 +34,8 @@
  */
 
 #include <stdio.h>
+#include <setjmp.h>
+
 #include "hbpp.h"
 #include "extend.h"
 #include "itemapi.h"
@@ -41,10 +43,15 @@
 
 PATHNAMES * _pIncludePath = NULL;
 PHB_FNAME _pFileName = NULL;
-BOOL _bWarnings = FALSE;
+
+jmp_buf s_env;
 
 /* TODO: Extend the function to allow directives
          and external include files              */
+
+/* TODO: This function should return an error code. The preprocessed sting
+ * should be returned  by a reference.
+ */
 HARBOUR HB___PREPROCESS( void )
 {
    if( ISCHAR( 1 ) )
@@ -62,12 +69,23 @@ HARBOUR HB___PREPROCESS( void )
 
       SKIPTABSPACES( ptr );
 
-      if( ParseExpression( ptr, pOut ) > 0 )
+      if( setjmp( s_env ) == 0 )
       {
-         /* Some error here? */
+         int resParse;
+	 
+         if( ( resParse = ParseExpression( ptr, pOut ) ) > 0 )
+         {
+            /* Some error here? */
+         }
+         hb_retc( pText ); /* Preprocessor returns parsed line in input buffer */
       }
-
-      hb_retc( pText ); /* Preprocessor returns parsed line in input buffer */
+      else
+      {
+         /* an error occured during parsing.
+          * The longjmp was used in GenError()
+          */
+         hb_retc( "ERROR" );
+      }
 
       hb_xfree( pText );
       hb_xfree( pOut );
@@ -78,20 +96,25 @@ HARBOUR HB___PREPROCESS( void )
 
 void GenError( char * _szErrors[], char cPrefix, int iError, char * szError1, char * szError2 )
 {
+   /* TODO: The internal buffers allocated by the preprocessor should be
+    * deallocated here
+    */
    printf( "Error %c%i  ", cPrefix, iError );
    printf( _szErrors[ iError - 1 ], szError1, szError2 );
    printf( hb_consoleGetNewLine() );
    printf( hb_consoleGetNewLine() );
 
-   exit( EXIT_FAILURE );
+   longjmp( s_env, iError );
 }
 
-void GenWarning( char * _szWarnings[], char cPrefix, int iWarning, char * szWarning1, char * szWarning2 )
+void GenWarning( char* _szWarnings[], char cPrefix, int iWarning, char * szWarning1, char * szWarning2)
 {
-   if( _bWarnings && iWarning < WARN_ASSIGN_SUSPECT ) /* TODO: add switch to set level */
-   {
-      printf( "Warning %c%i  ", cPrefix, iWarning );
-      printf( _szWarnings[ iWarning - 1 ], szWarning1, szWarning2 );
-      printf( hb_consoleGetNewLine() );
-   }
+   /* NOTE:
+    *    All warnings are simply ignored
+    */
+   HB_SYMBOL_UNUSED( _szWarnings );
+   HB_SYMBOL_UNUSED( cPrefix );
+   HB_SYMBOL_UNUSED( iWarning );
+   HB_SYMBOL_UNUSED( szWarning1 );
+   HB_SYMBOL_UNUSED( szWarning2 );
 }

@@ -146,9 +146,12 @@ char * _szPErrors[] =
 };
 
 /* Table with parse warnings */
+/* NOTE: The first character stores the warning's level that triggers this
+ * warning. The warning's level is set by -w<n> command line option.
+ */
 char * _szPWarnings[] =
 {
-   "Non directive in include file"
+   "1Non directive in include file"
 };
 
 int ParseDirective( char* sLine )

@@ -129,9 +129,6 @@ static USHORT uiCurrArea = 1;       /* Selectd area */
 static LPRDDNODE pRddList = 0;      /* Registered RDD's */
 static BOOL bNetError = FALSE;      /* Error on Networked environments */
 
-static ERRCODE hb_rddFieldPut( HB_ITEM_PTR, PHB_SYMB );
-static ERRCODE hb_rddFieldGet( HB_ITEM_PTR, PHB_SYMB );
-
 static LPAREANODE pWorkAreas = 0;   /* WorkAreas */
 static LPAREANODE pCurrArea = 0;    /* Pointer to a selectd and valid area */
 
@@ -809,7 +806,7 @@ ERRCODE hb_rddPutFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
    return bSuccess;
 }
 
-static ERRCODE hb_rddFieldPut( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
+ERRCODE hb_rddFieldPut( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
 {
    LPFIELD pField;
    USHORT uiField;
@@ -832,7 +829,7 @@ static ERRCODE hb_rddFieldPut( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
    return FAILURE;
 }
 
-static ERRCODE hb_rddFieldGet( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
+ERRCODE hb_rddFieldGet( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
 {
    LPFIELD pField;
    USHORT uiField;

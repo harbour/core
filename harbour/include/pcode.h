@@ -87,6 +87,7 @@ typedef enum
    HB_P_POPLOCAL,          /* pops the contains of the virtual machine stack onto a local variable */
    HB_P_POPMEMVAR,         /* pops the contains of a memvar variable to the virtual machine stack */
    HB_P_POPSTATIC,         /* pops the contains of the virtual machine stack onto a static variable */
+   HB_P_POPVARIABLE,       /* pops the contains of an undeclared variable from the virtual machine stack */
    HB_P_POWER,             /* calculates the power of the two values on the stack, removing them and leaving there the result */
    HB_P_PUSHALIAS,         /* saves the current workarea number on the eval stack */
    HB_P_PUSHALIASEDFIELD,  /* pushes aliased field */
@@ -105,6 +106,7 @@ typedef enum
    HB_P_PUSHSTATICREF,     /* pushes the a static variable by reference to the virtual machine stack */
    HB_P_PUSHSTR,           /* places a string on the virtual machine stack */
    HB_P_PUSHSYM,           /* places a symbol on the virtual machine stack */
+   HB_P_PUSHVARIABLE,      /* pushes the contains of an undeclared variable to the virtual machine stack */
    HB_P_RETVALUE,          /* instructs the virtual machine to return the latest stack value */
    HB_P_SEQBEGIN,          /* BEGIN SEQUENCE */
    HB_P_SEQEND,            /* END SEQUENCE */

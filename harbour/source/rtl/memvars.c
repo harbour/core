@@ -387,12 +387,13 @@ void hb_memvarSetValue( PHB_SYMB pMemvarSymb, HB_ITEM_PTR pItem )
       }
    }
    else
-      hb_errRT_BASE( EG_NOVAR, 1003, NULL, pMemvarSymb->szName );
+      hb_errInternal( 9999, "Invalid symbol item passed as memvar %s", pMemvarSymb->szName, NULL );
 }
 
-void hb_memvarGetValue( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
+ERRCODE hb_memvarGet( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
 {
    PHB_DYNS pDyn = ( PHB_DYNS ) pMemvarSymb->pDynSym;
+   ERRCODE bSuccess = FAILURE;
 
    if( pDyn )
    {
@@ -408,41 +409,39 @@ void hb_memvarGetValue( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
             hb_itemCopy( pItem, hb_itemUnRef( pGetItem ) );
          else
             hb_itemCopy( pItem, pGetItem );
-      }
-      else /* variable is not initialized */
-      {
-         /* Generate an error with retry possibility
-          * (user created error handler can create this variable)
-          */
-         USHORT uiAction = E_RETRY;
-         HB_ITEM_PTR pError;
-
-         pError = hb_errRT_New( ES_ERROR, NULL, EG_NOVAR, 1003,
-                                 NULL, pMemvarSymb->szName, 0, EF_CANRETRY );
-
-         while( uiAction == E_RETRY )
-         {
-            uiAction = hb_errLaunch( pError );
-            if( uiAction == E_RETRY )
-            {
-               if( pDyn->hMemvar )
-               {
-                  /* value is already created
-                  */
-                  HB_ITEM_PTR pGetItem = &s_globalTable[ pDyn->hMemvar ].item;
-                  if( IS_BYREF( pGetItem ) )
-                     hb_itemCopy( pItem, hb_itemUnRef( pGetItem ) );
-                  else
-                     hb_itemCopy( pItem, pGetItem );
-                  uiAction = E_DEFAULT;
-               }
-            }
-         }
-         hb_errRelease( pError );
+         bSuccess = SUCCESS;
       }
    }
    else
-      hb_errRT_BASE( EG_NOVAR, 1003, NULL, pMemvarSymb->szName );
+      hb_errInternal( 9999, "Invalid symbol item passed as memvar %s", pMemvarSymb->szName, NULL );
+
+   return bSuccess;
+}
+
+void hb_memvarGetValue( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
+{
+   if( hb_memvarGet( pItem, pMemvarSymb ) == FAILURE )
+   {
+      /* Generate an error with retry possibility
+       * (user created error handler can create this variable)
+       */
+      USHORT uiAction = E_RETRY;
+      HB_ITEM_PTR pError;
+
+      pError = hb_errRT_New( ES_ERROR, NULL, EG_NOVAR, 1003,
+                              NULL, pMemvarSymb->szName, 0, EF_CANRETRY );
+
+      while( uiAction == E_RETRY )
+      {
+         uiAction = hb_errLaunch( pError );
+         if( uiAction == E_RETRY )
+         {
+            if( hb_memvarGet( pItem, pMemvarSymb ) == SUCCESS )
+               uiAction = E_DEFAULT;
+         }
+      }
+      hb_errRelease( pError );
+   }
 }
 
 void hb_memvarGetRefer( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
@@ -495,8 +494,9 @@ void hb_memvarGetRefer( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
       }
    }
    else
-      hb_errRT_BASE( EG_NOVAR, 1003, NULL, pMemvarSymb->szName );
+      hb_errInternal( 9999, "Invalid symbol item passed as memvar %s", pMemvarSymb->szName, NULL );
 }
+
 
 /*
  * This function creates a value for memvar variable

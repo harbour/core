@@ -38,20 +38,6 @@
 
 #include "hbpp.h"
 
-/* TODO: Remove these (WORD/DWORD) when the compiler is cleaned up from them. */
-#if defined(__IBMCPP__)
-   #undef WORD                            /* 2 bytes unsigned */
-   typedef unsigned short int WORD;
-#else
-   #if ! defined(HB_DONT_DEFINE_BASIC_TYPES)
-      #undef WORD                            /* 2 bytes unsigned */
-      typedef unsigned short int WORD;
-
-      #undef DWORD                           /* 4 bytes unsigned */
-      typedef unsigned long DWORD;
-   #endif
-#endif
-
 /* compiler related declarations */
 
 /* locals, static, public variables support */
@@ -70,8 +56,8 @@ typedef struct __FUNC      /* functions definition support */
    char * szName;          /* name of a defined Clipper function */
    char   cScope;          /* scope of a defined Clipper function */
    BYTE   bFlags;          /* some flags we may need */
-   WORD   wParamCount;     /* number of declared parameters */
-   WORD   wParamNum;       /* current parameter number */
+   USHORT wParamCount;     /* number of declared parameters */
+   USHORT wParamNum;       /* current parameter number */
    PVAR   pLocals;         /* pointer to local variables list */
    PVAR   pStatics;        /* pointer to static variables list */
    PVAR   pFields;         /* pointer to fields variables list */
@@ -117,7 +103,7 @@ typedef struct _STACK_VAL_TYPE
 } STACK_VAL_TYPE, * PSTACK_VAL_TYPE;
 
 extern PFUNCTION GetFunction( char * szFunName ); /* locates a previously defined function */
-extern WORD      GetFunctionPos( char * szSymbolName ); /* returns the index + 1 of a function on the functions defined list */
+extern USHORT      GetFunctionPos( char * szSymbolName ); /* returns the index + 1 of a function on the functions defined list */
 
 extern void *   hb_xgrab( ULONG lSize );   /* allocates memory, exists on failure */
 extern void *   hb_xrealloc( void * pMem, ULONG lSize );   /* reallocates memory */
@@ -130,11 +116,11 @@ char * yy_strupr( char * p );
 static void __yy_memcpy( char * from, char * to, int count ); /* Bison prototype */
 #endif
 
-extern WORD FixSymbolPos( WORD );    /* converts symbol's compile-time position into generation-time position */
+extern USHORT FixSymbolPos( USHORT );    /* converts symbol's compile-time position into generation-time position */
 extern PFUNCTION GetFuncall( char * szFunName ); /* locates a previously defined called function */
-extern PVAR GetVar( PVAR pVars, WORD wOrder ); /* returns a variable if defined or zero */
-extern PCOMSYMBOL GetSymbol( char *, WORD * ); /* returns a symbol pointer from the symbol table */
-extern PCOMSYMBOL GetSymbolOrd( WORD );   /* returns a symbol based on its index on the symbol table */
+extern PVAR GetVar( PVAR pVars, USHORT wOrder ); /* returns a variable if defined or zero */
+extern PCOMSYMBOL GetSymbol( char *, USHORT * ); /* returns a symbol pointer from the symbol table */
+extern PCOMSYMBOL GetSymbolOrd( USHORT );   /* returns a symbol based on its index on the symbol table */
 extern PFUNCTION KillFunction( PFUNCTION );    /* releases all memory allocated by function and returns the next one */
 extern PCOMSYMBOL KillSymbol( PCOMSYMBOL );    /* releases all memory allocated by symbol and returns the next one */
 
@@ -164,5 +150,6 @@ extern char * _szCErrors[];
 #define FUN_PROCEDURE     4 /* This is a procedure that shouldn't return value */
 #define FUN_ILLEGAL_INIT  8 /* Attempt to initialize static variable with a function call */
 #define FUN_USES_LOCAL_PARAMS 16 /* parameters are declared using () */
+#define FUN_WITH_RETURN   32  /* there was RETURN statement in previous line */
 
 #endif /* HB_COMPILER_H_ */

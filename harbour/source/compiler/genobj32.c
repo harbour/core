@@ -44,24 +44,24 @@ static char * GetSymbolName( ULONG ulPos );
 static ULONG GetPCodesSize( void );
 static ULONG GetSymbolsAmount( void );
 static BOOL IsExternal( ULONG ulSymbol );
-static WORD GetExternalPos( char * szExternal );
+static USHORT GetExternalPos( char * szExternal );
 static void GenerateLocalNames( FILE * hObjFile );
 static void GenerateSymbolsSegment( FILE * hObjFile );
 static void GenerateDataSegment( FILE * hObjFile );
 static void GenerateCodeSegment( FILE * hObjFile );
 static void GenerateExternals( FILE * hObjFile );
 static void putbyte( BYTE b, FILE * hObjFile );
-static void putword( WORD w, FILE * hObjFile );
+static void putword( USHORT w, FILE * hObjFile );
 static void CompiledFileName( FILE * hObjFile, char * szFileName );
 static void CompilerVersion( FILE * hObjFile, char * szVersion );
 static void LocalNames( FILE * hObjFile, char * szNames[] );
 static void ExternalNames( FILE * hObjFile, char * szNames[] );
-static void CodeSegment( FILE * hObjFile, BYTE * prgCode, ULONG ulPrgLen, WORD wFunctions );
-static void DataSegment( FILE * hObjFile, BYTE * symbol, WORD wSymLen, WORD wSymbols, ULONG ulTotalSize );
-static void DefineSegment( FILE * hObjFile, BYTE bName, BYTE bClass, WORD wLen );
-static void PubDef( FILE * hObjFile, char * szName, WORD wSegment, WORD wOffset );
-static void Fixup( FILE * hObjFile, BYTE bType, WORD wOffset, BYTE bFlags, BYTE bSymbol );
-static void EnumeratedData( FILE * hObjFile, BYTE bSegment, BYTE * pData, WORD wLen, WORD wOffset );
+static void CodeSegment( FILE * hObjFile, BYTE * prgCode, ULONG ulPrgLen, USHORT wFunctions );
+static void DataSegment( FILE * hObjFile, BYTE * symbol, USHORT wSymLen, USHORT wSymbols, ULONG ulTotalSize );
+static void DefineSegment( FILE * hObjFile, BYTE bName, BYTE bClass, USHORT wLen );
+static void PubDef( FILE * hObjFile, char * szName, USHORT wSegment, USHORT wOffset );
+static void Fixup( FILE * hObjFile, BYTE bType, USHORT wOffset, BYTE bFlags, BYTE bSymbol );
+static void EnumeratedData( FILE * hObjFile, BYTE bSegment, BYTE * pData, USHORT wLen, USHORT wOffset );
 static void End( FILE * hObjFile );
 static void GroupDef( FILE * hObjFile, BYTE bName, BYTE * aSegs );
 
@@ -69,7 +69,7 @@ static BYTE prgFunction[] = { 0x68, 0x00, 0x00, 0x00, 0x00, 0x68, 0x00, 0x00, 0x
                               0x00, 0xE8, 0x00, 0x00, 0x00, 0x00, 0x83, 0xC4, 0x08, 0xC3 };
 
 static char * * externNames = 0;
-static WORD wExternals = 1; /* _hb_vmExecute is always added */
+static USHORT wExternals = 1; /* _hb_vmExecute is always added */
 
 void GenObj32( PHB_FNAME pFileName )
 {
@@ -173,9 +173,9 @@ static BOOL IsExternal( ULONG ulSymbol )
   return ! GetFunction( pSymbol->szName );
 }
 
-static WORD GetExternalPos( char * szExternal )
+static USHORT GetExternalPos( char * szExternal )
 {
-  WORD w = 0;
+  USHORT w = 0;
 
   while( w < wExternals )
     {
@@ -208,7 +208,7 @@ static void GenerateSymbolsSegment( FILE * hObjFile )
 
   GroupDef( hObjFile, 8, groupSegments ); /* 8 = "SYMGROUP" localNames position */
 
-  * ( WORD * ) symbolsData = GetSymbolsAmount();
+  * ( USHORT * ) symbolsData = GetSymbolsAmount();
 
   EnumeratedData( hObjFile, 4, symbolsData, sizeof( symbolsData ), 0 ); /* 4 = HB_SYMBOLS defined segment */
 
@@ -260,10 +260,10 @@ static void GenerateDataSegment( FILE * hObjFile )
 
 static void GenerateCodeSegment( FILE * hObjFile )
 {
-  WORD wFunctions = functions.iCount - ( _bStartProc ? 0: 1 );
+  USHORT wFunctions = functions.iCount - ( _bStartProc ? 0: 1 );
   ULONG ulSize    = wFunctions * sizeof( prgFunction );
   PFUNCTION pFunc = ( _bStartProc ? functions.pFirst: functions.pFirst->pNext );
-  WORD w = 0;
+  USHORT w = 0;
 
   DefineSegment( hObjFile, 2, /* "_TEXT" position + 1 into localNames */
                  3, /* "CODE" position + 1 into localNames */
@@ -295,7 +295,7 @@ static void GenerateCodeSegment( FILE * hObjFile )
 
 static void GenerateExternals( FILE * hObjFile )
 {
-  WORD w;
+  USHORT w;
   PFUNCTION pFunc, pFTemp;
 
   /* calculate amount of externals */
@@ -329,7 +329,7 @@ static void putbyte( BYTE b, FILE * hObjFile )
   fputc( b, hObjFile );
 }
 
-static void putword( WORD w, FILE * hObjFile )
+static void putword( USHORT w, FILE * hObjFile )
 {
   putbyte( LOBYTE( w ), hObjFile );
   putbyte( HIBYTE( w ), hObjFile );
@@ -337,7 +337,7 @@ static void putword( WORD w, FILE * hObjFile )
 
 static void CompiledFileName( FILE * hObjFile, char * szFileName )
 {
-  WORD wLen = strlen( szFileName );
+  USHORT wLen = strlen( szFileName );
   BYTE bChk = 0; /* this is a checksum the linker will check to asure OBJ integrity */
   BYTE bChar;
 
@@ -362,7 +362,7 @@ static void CompiledFileName( FILE * hObjFile, char * szFileName )
 
 static void CompilerVersion( FILE * hObjFile, char * szVersion )
 {
-  WORD wLen = strlen( szVersion );
+  USHORT wLen = strlen( szVersion );
   BYTE bChk = 0; /* this is a checksum the linker will check to asure OBJ integrity */
   BYTE bChar;
 
@@ -387,7 +387,7 @@ static void CompilerVersion( FILE * hObjFile, char * szVersion )
 static void LocalNames( FILE * hObjFile, char * szNames[] )
 {
   BYTE b = 0, c;
-  WORD wTotalLen = 0;
+  USHORT wTotalLen = 0;
   BYTE bChk = 0;
 
   while( szNames[ b ] )
@@ -424,7 +424,7 @@ static void LocalNames( FILE * hObjFile, char * szNames[] )
 static void ExternalNames( FILE * hObjFile, char * szNames[] )
 {
   BYTE b = 0, c;
-  WORD wTotalLen = 0;
+  USHORT wTotalLen = 0;
   BYTE bChk = 0;
 
   while( szNames[ b ] )
@@ -457,11 +457,11 @@ static void ExternalNames( FILE * hObjFile, char * szNames[] )
   putbyte( 256 - bChk, hObjFile );
 }
 
-static void CodeSegment( FILE * hObjFile, BYTE * prgCode, ULONG ulPrgLen, WORD wFunctions )
+static void CodeSegment( FILE * hObjFile, BYTE * prgCode, ULONG ulPrgLen, USHORT wFunctions )
 {
   BYTE bCheckSum = 0;
-  WORD y;
-  WORD wTotalLen = ( ulPrgLen * wFunctions ) + 4;
+  USHORT y;
+  USHORT wTotalLen = ( ulPrgLen * wFunctions ) + 4;
   ULONG ul;
   PFUNCTION pFunction = functions.pFirst;
   ULONG ulPCodeOffset = ( symbols.iCount - ( _bStartProc ? 0: 1 ) ) * sizeof( HB_SYMB );
@@ -496,12 +496,12 @@ static void CodeSegment( FILE * hObjFile, BYTE * prgCode, ULONG ulPrgLen, WORD w
   putbyte( 256 - bCheckSum, hObjFile );
 }
 
-static void DataSegment( FILE * hObjFile, BYTE * symbol, WORD wSymLen, WORD wSymbols,
+static void DataSegment( FILE * hObjFile, BYTE * symbol, USHORT wSymLen, USHORT wSymbols,
                          ULONG ulSize )
 {
   BYTE bCheckSum = 0;
-  WORD w, y;
-  WORD wTotalLen = 4 + ulSize;
+  USHORT w, y;
+  USHORT wTotalLen = 4 + ulSize;
   PCOMSYMBOL pSymbol = GetFirstSymbol();
   PFUNCTION pFunction = functions.pFirst;
   ULONG ulSymbolNameOffset = GetSymbolsSize() + GetPCodesSize();
@@ -566,7 +566,7 @@ static void DataSegment( FILE * hObjFile, BYTE * symbol, WORD wSymLen, WORD wSym
 
   while( pSymbol )
     {
-      for( w = 0; w < ( WORD ) strlen( pSymbol->szName ); w++ )
+      for( w = 0; w < ( USHORT ) strlen( pSymbol->szName ); w++ )
         {
           putbyte( pSymbol->szName[ w ], hObjFile );
           bCheckSum += pSymbol->szName[ w ];
@@ -578,7 +578,7 @@ static void DataSegment( FILE * hObjFile, BYTE * symbol, WORD wSymLen, WORD wSym
   putbyte( 256 - bCheckSum, hObjFile );
 }
 
-static void DefineSegment( FILE * hObjFile, BYTE bName, BYTE bClass, WORD wLen )
+static void DefineSegment( FILE * hObjFile, BYTE bName, BYTE bClass, USHORT wLen )
 {
   BYTE bCheckSum = 0;
 
@@ -604,11 +604,11 @@ static void DefineSegment( FILE * hObjFile, BYTE bName, BYTE bClass, WORD wLen )
   putbyte( 256 - bCheckSum, hObjFile );
 }
 
-static void PubDef( FILE * hObjFile, char * szName, WORD wSegment, WORD wOffset )
+static void PubDef( FILE * hObjFile, char * szName, USHORT wSegment, USHORT wOffset )
 {
   BYTE bChk = 0;
   BYTE bChar;
-  WORD wLen = 2 + 2 + strlen( szName ) + 2 + 1;
+  USHORT wLen = 2 + 2 + strlen( szName ) + 2 + 1;
 
   putbyte( 0x90, hObjFile );
   bChk += 0x90;
@@ -638,7 +638,7 @@ static void PubDef( FILE * hObjFile, char * szName, WORD wSegment, WORD wOffset 
   putbyte( 256 - bChk, hObjFile );
 }
 
-static void Fixup( FILE * hObjFile, BYTE bType, WORD wOffset, BYTE bFlags, BYTE bSymbol )
+static void Fixup( FILE * hObjFile, BYTE bType, USHORT wOffset, BYTE bFlags, BYTE bSymbol )
 {
   BYTE bCheckSum = 0;
 
@@ -658,15 +658,15 @@ static void Fixup( FILE * hObjFile, BYTE bType, WORD wOffset, BYTE bFlags, BYTE 
   putbyte( 256 - bCheckSum, hObjFile );
 }
 
-static void EnumeratedData( FILE * hObjFile, BYTE bSegment, BYTE * pData, WORD wLen, WORD wOffset )
+static void EnumeratedData( FILE * hObjFile, BYTE bSegment, BYTE * pData, USHORT wLen, USHORT wOffset )
 {
   BYTE bCheckSum = 0;
-  WORD w;
+  USHORT w;
 
   putbyte( 0xA0, hObjFile );
   bCheckSum += 0xA0;
 
-  putword( ( WORD ) ( wLen + 4 ), hObjFile );
+  putword( ( USHORT ) ( wLen + 4 ), hObjFile );
   bCheckSum += LOBYTE( wLen + 4 );
   bCheckSum += HIBYTE( wLen + 4 );
 
@@ -702,8 +702,8 @@ static void End( FILE * hObjFile )
 static void GroupDef( FILE * hObjFile, BYTE bName, BYTE * aSegs )
 {
   BYTE bCheckSum = 0;
-  WORD wRecLen   = 2;
-  WORD w         = 0;
+  USHORT wRecLen   = 2;
+  USHORT w         = 0;
 
   while( aSegs[ w++ ] )
     wRecLen += 2;

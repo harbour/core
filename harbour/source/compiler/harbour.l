@@ -75,11 +75,11 @@ int yy_lex_input( char *, int );
 
 /* variables defined in harbour.y */
 extern int _bRestrictSymbolLength;
-extern WORD _wSeqCounter;
-extern WORD _wForCounter;
-extern WORD _wIfCounter;
-extern WORD _wWhileCounter;
-extern WORD _wCaseCounter;
+extern USHORT _wSeqCounter;
+extern USHORT _wForCounter;
+extern USHORT _wIfCounter;
+extern USHORT _wWhileCounter;
+extern USHORT _wCaseCounter;
 
 int iLine = 1;
 long lNumber = 0;
@@ -224,7 +224,7 @@ Separator     {SpaceTab}
 \n.*         {
                 _iState = LOOKUP;
                 yyless( 1 );
-                ++iLine;
+                /*++iLine;*/
 #if 0
                 if( ! _bQuiet )
                 {
@@ -1134,7 +1134,7 @@ Separator     {SpaceTab}
 "=="           _iState =OPERATOR; return EQ;
 "++"           _iState =OPERATOR; return INC;
 "--"           _iState =OPERATOR; return DEC;
-"->"           _iState =OPERATOR; return ALIAS;
+"->"           _iState =OPERATOR; return ALIASOP;
 "<="           _iState =OPERATOR; return LE;
 ">="           _iState =OPERATOR; return GE;
 "+="           _iState =OPERATOR; return PLUSEQ;
@@ -1175,19 +1175,19 @@ Separator     {SpaceTab}
                         lNumber <= ( double )SHRT_MAX )
                  {
                     yylval.iNumber = lNumber;
-                    return INTEGER;
+                    return NUM_INTEGER;
                  }
                  else if( ( double )LONG_MIN <= lNumber &&
                           lNumber <= ( double )LONG_MAX )
                  {
                     yylval.lNumber = lNumber;
-                    return INTLONG;
+                    return NUM_LONG;
                  }
                  else
                  {
                     yylval.dNum.dNumber = lNumber;
                     yylval.dNum.bDec = 0;
-                    return DOUBLE;
+                    return NUM_DOUBLE;
                  }
               }
 
@@ -1285,7 +1285,7 @@ static int yy_ConvertNumber( char * szBuffer )
    if( ptr )
    {
       yylval.dNum.bDec = strlen( ptr + 1 );
-      return DOUBLE;
+      return NUM_DOUBLE;
    }
    else
    {
@@ -1293,18 +1293,18 @@ static int yy_ConvertNumber( char * szBuffer )
             yylval.dNum.dNumber <= ( double )SHRT_MAX )
       {
          yylval.iNumber = ( int ) yylval.dNum.dNumber;
-         return INTEGER;
+         return NUM_INTEGER;
       }
       else if( ( double )LONG_MIN <= yylval.dNum.dNumber &&
                  yylval.dNum.dNumber <= ( double )LONG_MAX )
       {
          yylval.lNumber = ( long ) yylval.dNum.dNumber;
-         return INTLONG;
+         return NUM_LONG;
       }
       else
       {
          yylval.dNum.bDec = 0;
-         return DOUBLE;
+         return NUM_DOUBLE;
       }
    }
 }

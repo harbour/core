@@ -106,7 +106,7 @@ typedef struct _LOOPEXIT
 {
    ULONG ulOffset;
    int iLine;
-   WORD wSeqCounter;
+   USHORT wSeqCounter;
    struct _LOOPEXIT * pLoopList;
    struct _LOOPEXIT * pExitList;
    struct _LOOPEXIT * pNext;
@@ -195,7 +195,7 @@ PFUNCTION AddFunCall( char * szFuntionName );
 void AddExtern( char * szExternName ); /* defines a new extern name */
 void AddSearchPath( char *, PATHNAMES * * ); /* add pathname to a search list */
 void AddVar( char * szVarName ); /* add a new param, local, static variable to a function definition or a public or private */
-PCOMSYMBOL AddSymbol( char *, WORD * );
+PCOMSYMBOL AddSymbol( char *, USHORT * );
 void CheckDuplVars( PVAR pVars, char * szVarName, int iVarScope ); /*checks for duplicate variables definitions */
 void Dec( void );                  /* generates the pcode to decrement the latest value on the virtual machine stack */
 void DimArray( int iDimensions ); /* instructs the virtual machine to build an array with wDimensions */
@@ -213,8 +213,9 @@ void GenBreak( void );  /* generate code for BREAK statement */
 void * GenElseIf( void * pFirstElseIf, ULONG ulOffset ); /* generates a support structure for elseifs pcode fixups */
 void GenExterns( void ); /* generates the symbols for the EXTERN names */
 void GenIfInline( void ); /* generates pcodes for IIF( expr1, expr2, expr3 ) */
-int GetFieldVarPos( char *, PFUNCTION * );   /* return if passed name is a field variable */
-WORD GetVarPos( PVAR pVars, char * szVarName ); /* returns the order + 1 of a variable if defined or zero */
+int GetFieldVarPos( char *, PFUNCTION );   /* return if passed name is a field variable */
+int GetMemvarPos( char *, PFUNCTION );   /* return if passed name is a memvar variable */
+USHORT GetVarPos( PVAR pVars, char * szVarName ); /* returns the order + 1 of a variable if defined or zero */
 int GetLocalVarPos( char * szVarName ); /* returns the order + 1 of a local variable */
 void Inc( void );                       /* generates the pcode to increment the latest value on the virtual machine stack */
 ULONG Jump( LONG lOffset );                /* generates the pcode to jump to a specific offset */
@@ -225,7 +226,8 @@ ULONG JumpTrue( LONG lOffset );            /* generates the pcode to jump if tru
 void Line( void );                      /* generates the pcode with the currently compiled source code line */
 void LineDebug( void );                 /* generates the pcode with the currently compiled source code line */
 void LineBody( void );                  /* generates the pcode with the currently compiled source code line */
-void VariablePCode( BYTE , char * );    /* generates the pcode for memvar variable */
+void VariablePCode( BYTE , char * );    /* generates the pcode for undeclared variable */
+void MemvarPCode( BYTE , char * );      /* generates the pcode for memvar variable */
 void Message( char * szMsgName );       /* sends a message to an object */
 void MessageFix( char * szMsgName );    /* fix a generated message to an object */
 void MessageDupl( char * szMsgName );   /* fix a one generated message to an object and duplicate */
@@ -338,20 +340,26 @@ char * _szCErrors[] =
 };
 
 /* Table with parse warnings */
+/* NOTE: The first character stores the warning's level that triggers this
+ * warning. The warning's level is set by -w<n> command line option.
+ */
 char * _szCWarnings[] =
 {
-   "Ambiguous reference: \'%s\'",
-   "Ambiguous reference, assuming memvar: \'%s\'",
-   "Variable: \'%s\' declared but not used in function: \'%s\'",
-   "CodeBlock Parameter: \'%s\' declared but not used in function: \'%s\'",
-   "Incompatible type in assignment to: \'%s\' expected: \'%s\'",
-   "Incompatible operand type: \'%s\' expected: \'Logical\'",
-   "Incompatible operand type: \'%s\' expected: \'Numeric\'",
-   "Incompatible operand types: \'%s\' and: \'%s\'",
-   "Suspicious type in assignment to: \'%s\' expected: \'%s\'",
-   "Suspicious operand type: \'UnKnown\' expected: \'%s\'",
-   "Suspicious operand type: \'UnKnown\' expected: \'Logical\'",
-   "Suspicious operand type: \'UnKnown\' expected: \'Numeric\'"
+   "1Ambiguous reference: \'%s\'",
+   "1Ambiguous reference, assuming memvar: \'%s\'",
+   "2Variable: \'%s\' declared but not used in function: \'%s\'",
+   "2CodeBlock Parameter: \'%s\' declared but not used in function: \'%s\'",
+   "1RETURN statement with no return value in function",
+   "1Procedure returns value",
+   "1Function \'%s\' does not end with RETURN statement",
+   "3Incompatible type in assignment to: \'%s\' expected: \'%s\'",
+   "3Incompatible operand type: \'%s\' expected: \'Logical\'",
+   "3Incompatible operand type: \'%s\' expected: \'Numeric\'",
+   "3Incompatible operand types: \'%s\' and: \'%s\'",
+   "3Suspicious type in assignment to: \'%s\' expected: \'%s\'",
+   "3Suspicious operand type: \'UnKnown\' expected: \'%s\'",
+   "3Suspicious operand type: \'UnKnown\' expected: \'Logical\'",
+   "3Suspicious operand type: \'UnKnown\' expected: \'Numeric\'"
 };
 
 /* Table with reserved functions names
@@ -450,32 +458,19 @@ BOOL _bSyntaxCheckOnly = FALSE;          /* syntax check only */
 int  _iLanguage = LANG_C;                /* default Harbour generated output language */
 BOOL _bRestrictSymbolLength = FALSE;     /* generate 10 chars max symbols length */
 BOOL _bShortCuts = TRUE;                 /* .and. & .or. expressions shortcuts */
-BOOL _bWarnings = FALSE;                 /* enable parse warnings */
+int  _iWarnings = 0;                     /* enable parse warnings */
 BOOL _bAnyWarning = FALSE;               /* holds if there was any warning during the compilation process */
-BOOL _bAutoMemvarAssume = FALSE;         /* holds if undeclared variables are automatically assumed MEMVAR */
-BOOL _bForceMemvars = FALSE;             /* holds if memvars are assumed when accesing undeclared variable */
+BOOL _bAutoMemvarAssume = FALSE;         /* holds if undeclared variables are automatically assumed MEMVAR (-a)*/
+BOOL _bForceMemvars = FALSE;             /* holds if memvars are assumed when accesing undeclared variable (-v)*/
 BOOL _bDebugInfo = FALSE;                /* holds if generate debugger required info */
 char _szPrefix[ 20 ] = { '\0' };         /* holds the prefix added to the generated symbol init function name (in C output currently) */
 int  _iExitLevel = HB_EXITLEVEL_DEFAULT; /* holds if there was any warning during the compilation process */
 
-/* This variable is used to flag if variables have to be passed by reference
- * - it is required in DO <proc> WITH <params> statement
- * For example:
- * DO proces WITH aVar, bVar:=cVar
- *  aVar - have to be passed by reference
- *  bVar and cBar - have to be passed by value
- */
-BOOL _bForceByRefer = FALSE;
-/* This variable is true if the right value of assignment will be build.
- * It is used to temporarily cancel the above _bForceByRefer
- */
-BOOL _bRValue       = FALSE;
-
-WORD _wSeqCounter   = 0;
-WORD _wForCounter   = 0;
-WORD _wIfCounter    = 0;
-WORD _wWhileCounter = 0;
-WORD _wCaseCounter  = 0;
+USHORT _wSeqCounter   = 0;
+USHORT _wForCounter   = 0;
+USHORT _wIfCounter    = 0;
+USHORT _wWhileCounter = 0;
+USHORT _wCaseCounter  = 0;
 ULONG _ulMessageFix = 0;  /* Position of the message which needs to be changed */
 int _iStatics = 0;       /* number of defined statics variables on the PRG */
 PEXTERN pExterns = NULL;
@@ -510,10 +505,10 @@ extern int _iState;     /* current parser state (defined in harbour.l */
    void * pVoid;        /* to hold any memory structure we may need */
 };
 
-%token FUNCTION PROCEDURE IDENTIFIER RETURN NIL DOUBLE INASSIGN INTEGER INTLONG
+%token FUNCTION PROCEDURE IDENTIFIER RETURN NIL NUM_DOUBLE INASSIGN NUM_INTEGER NUM_LONG
 %token LOCAL STATIC IIF IF ELSE ELSEIF END ENDIF LITERAL TRUEVALUE FALSEVALUE
 %token EXTERN INIT EXIT AND OR NOT PUBLIC EQ NE1 NE2
-%token INC DEC ALIAS DOCASE CASE OTHERWISE ENDCASE ENDDO MEMVAR
+%token INC DEC ALIASOP DOCASE CASE OTHERWISE ENDCASE ENDDO MEMVAR
 %token WHILE EXIT LOOP END FOR NEXT TO STEP LE GE FIELD IN PARAMETERS
 %token PLUSEQ MINUSEQ MULTEQ DIVEQ POWER EXPEQ MODEQ EXITLOOP
 %token PRIVATE BEGINSEQ BREAK RECOVER USING DO WITH SELF LINE
@@ -532,7 +527,7 @@ extern int _iState;     /* current parser state (defined in harbour.l */
 %left  AND
 %left  NOT
 /*relational operators*/
-%left  '<' '>' EQ NE1 NE2 LE GE '$'
+%left  '=' '<' '>' EQ NE1 NE2 LE GE '$'
 /*mathematical operators*/
 %left  '+' '-'
 %left  '*' '/' '%'
@@ -541,17 +536,17 @@ extern int _iState;     /* current parser state (defined in harbour.l */
 /*preincrement and predecrement*/
 %left  PRE
 /*special operators*/
-%left  ALIAS '&' '@' ')'
-%right '\n' ';' ',' '='
+%left  ALIASOP '&' '@' ')'
+%right '\n' ';' ','
 /*the highest precedence*/
 
 %type <string>  IDENTIFIER LITERAL FunStart MethStart IdSend ObjectData AliasVar
-%type <dNum>    DOUBLE
+%type <dNum>    NUM_DOUBLE
 %type <iNumber> ArgList ElemList PareExpList ExpList FunCall FunScope IncDec
 %type <iNumber> Params ParamList Logical ArrExpList
-%type <iNumber> INTEGER BlockExpList Argument IfBegin VarId VarList MethParams ObjFunCall
+%type <iNumber> NUM_INTEGER BlockExpList Argument IfBegin VarList MethParams ObjFunCall
 %type <iNumber> MethCall BlockList FieldList DoArgList VarAt
-%type <lNumber> INTLONG WhileBegin BlockBegin
+%type <lNumber> NUM_LONG WhileBegin BlockBegin
 %type <pVoid>   IfElseIf Cases
 
 %%
@@ -559,7 +554,11 @@ extern int _iState;     /* current parser state (defined in harbour.l */
 Main       : { Line(); } Source       {
                                          FixReturns();       /* fix all previous function returns offsets */
                                          if( ! _bQuiet )
+                                         {
+                                            if( ! _bStartProc )
+                                                --iFunctions;
                                             printf( "\rLines %i, Functions/Procedures %i\n", iLine, iFunctions );
+                                         }
                                       }
 
 Source     : Crlf
@@ -578,8 +577,8 @@ Source     : Crlf
            | Source Line
            ;
 
-Line       : LINE INTEGER LITERAL Crlf
-           | LINE INTEGER LITERAL '@' LITERAL Crlf   /* XBase++ style */
+Line       : LINE NUM_INTEGER LITERAL Crlf
+           | LINE NUM_INTEGER LITERAL '@' LITERAL Crlf   /* XBase++ style */
            ;
 
 Function   : FunScope FUNCTION  IDENTIFIER { cVarType = ' '; FunDef( $3, ( SYMBOLSCOPE ) $1, 0 ); } Params Crlf {}
@@ -616,50 +615,64 @@ ParamList  : IDENTIFIER                    { cVarType = ' '; AddVar( $1 ); $$ = 
            | ParamList ',' IDENTIFIER      { AddVar( $3 ); $$++; }
            ;
 
-Statements : Statement
-           | Statements { Line(); } Statement
-           ;
-
 Statement  : ExecFlow Crlf        {}
            | FunCall Crlf         { Do( $1 ); }
            | AliasFunc Crlf       {}
            | IfInline Crlf        { GenPCode1( HB_P_POP ); }
            | ObjectMethod Crlf    { GenPCode1( HB_P_POP ); }
            | VarUnary Crlf        { GenPCode1( HB_P_POP ); }
-           | VarAssign Crlf       { GenPCode1( HB_P_POP ); _bRValue = FALSE; }
+           | VarAssign Crlf       { GenPCode1( HB_P_POP ); }
 
-           | IDENTIFIER '=' Expression Crlf            { PopId( $1 ); }
-           | AliasVar '=' { $<pVoid>$=( void * )pAliasId; pAliasId = NULL; } Expression Crlf  { pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); AliasRemove(); }
-           | AliasFunc '=' Expression Crlf             { --iLine; GenError( _szCErrors, 'E', ERR_INVALID_LVALUE, NULL, NULL ); }
-           | VarAt '=' Expression Crlf                 { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); }
-           | FunCallArray '=' Expression Crlf          { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); }
-           | ObjectData '=' { MessageFix( SetData( $1 ) ); } Expression Crlf { Function( 1 ); GenPCode1( HB_P_POP ); }
-           | ObjectData ArrayIndex '=' Expression Crlf    { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); }
-           | ObjectMethod ArrayIndex '=' Expression Crlf  { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); }
+           | IDENTIFIER '=' Expression { PopId( $1 ); } Crlf
+           | AliasVar '=' { $<pVoid>$=( void * )pAliasId; pAliasId = NULL; } Expression { pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); AliasRemove(); } Crlf
+           | AliasFunc '=' Expression             { --iLine; GenError( _szCErrors, 'E', ERR_INVALID_LVALUE, NULL, NULL ); } Crlf
+           | VarAt '=' Expression                 { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); } Crlf
+           | FunCallArray '=' Expression          { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); } Crlf
+           | ObjectData '=' { MessageFix( SetData( $1 ) ); } Expression { Function( 1 ); GenPCode1( HB_P_POP ); } Crlf
+           | ObjectData ArrayIndex '=' Expression    { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); } Crlf
+           | ObjectMethod ArrayIndex '=' Expression  { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); } Crlf
 
            | BREAK { GenBreak(); } Crlf               { Do( 0 ); }
            | BREAK { GenBreak(); } Expression Crlf    { Do( 1 ); }
-           | RETURN Crlf   {
-                             if( _wSeqCounter )
-                               { --iLine;
-                                 GenError( _szCErrors, 'E', ERR_EXIT_IN_SEQUENCE, "RETURN", NULL );
-                               }
-                               GenPCode1( HB_P_ENDPROC );
-                           }
-           | RETURN Expression Crlf   {
-                           if( _wSeqCounter )
-                           {  --iLine;
-                              GenError( _szCErrors, 'E', ERR_EXIT_IN_SEQUENCE, "RETURN", NULL );
-                           }
-                           GenPCode1( HB_P_RETVALUE ); GenPCode1( HB_P_ENDPROC );
+           | RETURN {
+                     if( _wSeqCounter )
+                        {
+                           GenError( _szCErrors, 'E', ERR_EXIT_IN_SEQUENCE, "RETURN", NULL );
                         }
+                        GenPCode1( HB_P_ENDPROC );
+                        if( (functions.pLast->bFlags & FUN_PROCEDURE) == 0 )
+                        { /* return from a function without a return value */
+                           GenWarning( _szCWarnings, 'W', WARN_NO_RETURN_VALUE, NULL, NULL );
+                        }
+                        functions.pLast->bFlags |= FUN_WITH_RETURN;
+                     } Crlf
+           | RETURN Expression {
+                        if( _wSeqCounter )
+                        {
+                           GenError( _szCErrors, 'E', ERR_EXIT_IN_SEQUENCE, "RETURN", NULL );
+                        }
+                        GenPCode1( HB_P_RETVALUE ); GenPCode1( HB_P_ENDPROC );
+                        if( functions.pLast->bFlags & FUN_PROCEDURE )
+                        { /* procedure returns a value */
+                           GenWarning( _szCWarnings, 'W', WARN_PROC_RETURN_VALUE, NULL, NULL );
+                        }
+                        functions.pLast->bFlags |= FUN_WITH_RETURN;
+                     } Crlf
            | PUBLIC { iVarScope = VS_PUBLIC; } VarList Crlf
            | PRIVATE { iVarScope = VS_PRIVATE; } VarList Crlf
 
-           | EXITLOOP Crlf            { LoopExit(); }
-           | LOOP Crlf                { LoopLoop(); }
+           | EXITLOOP  Crlf            { LoopExit(); }
+           | LOOP  Crlf                { LoopLoop(); }
            | DoProc Crlf
            | EXTERN ExtList Crlf
+           ;
+
+LineStat   : Crlf          { $<lNumber>$ = 0; }
+           | Statement     { $<lNumber>$ = 1; }
+           ;
+
+Statements : LineStat                        { $<lNumber>$ = $<lNumber>1; }
+           | Statements { Line(); } LineStat { $<lNumber>$ += $<lNumber>3; }
            ;
 
 ExtList    : IDENTIFIER                               { AddExtern( $1 ); }
@@ -726,15 +739,16 @@ FunCallArray : FunCall { Function( $1 ); } ArrayIndex
 ObjFunArray : FunCallArray ':' { GenPCode1( HB_P_ARRAYAT ); }
            ;
 
-NumExpression : DOUBLE                        { PushDouble( $1.dNumber,$1.bDec ); }
-           | INTEGER                          { PushInteger( $1 ); }
-           | INTLONG                          { PushLong( $1 ); }
+NumExpression : NUM_DOUBLE                    { PushDouble( $1.dNumber,$1.bDec ); }
+           | NUM_INTEGER                      { PushInteger( $1 ); }
+           | NUM_LONG                         { PushLong( $1 ); }
            ;
 
 ConExpression : NIL                           { PushNil(); }
            | LITERAL                          { PushString( $1 ); }
            | CodeBlock                        {}
            | Logical                          { PushLogical( $1 ); }
+           | SELF                             { GenPCode1( HB_P_PUSHSELF ); }
            ;
 
 DynExpression : Variable
@@ -747,10 +761,14 @@ DynExpression : Variable
            | Macro                            {}
            | AliasVar                         { PushId( $1 ); AliasRemove(); }
            | AliasFunc                        {}
-           | SELF                             { GenPCode1( HB_P_PUSHSELF ); }
            ;
 
-SimpleExpression : NumExpression
+/* NOTE: We have to distinguish IDENTIFIER here because it is repeated
+ * in DoExpression (a part of DO <proc> WITH .. statement)
+ * where it generates different action. 
+ */
+SimpleExpression : IDENTIFIER  { PushId( $1 ); }
+           | NumExpression
            | ConExpression
            | DynExpression
            ;
@@ -771,18 +789,18 @@ Macro      : '&' Variable
            | '&' '(' Expression ')'
            ;
 
-AliasVar   : INTEGER ALIAS { AliasAddInt( $1 ); } IDENTIFIER  { $$ = $4; }
-           | IDENTIFIER ALIAS { AliasAddStr( $1 ); } IDENTIFIER  { $$ = $4; }
-           | PareExpList ALIAS { AliasAddExp(); } IDENTIFIER  { $$ = $4; }
+AliasVar   : NUM_INTEGER ALIASOP { AliasAddInt( $1 ); } IDENTIFIER  { $$ = $4; }
+           | IDENTIFIER ALIASOP { AliasAddStr( $1 ); } IDENTIFIER  { $$ = $4; }
+           | PareExpList ALIASOP { AliasAddExp(); } IDENTIFIER  { $$ = $4; }
            ;
 
 /* NOTE: In the case:
  * alias->( Expression )
  * alias always selects a workarea even if it is MEMVAR or M
  */
-AliasFunc  : INTEGER ALIAS { AliasPush(); PushInteger( $1 ); AliasPop(); } PareExpList { AliasSwap(); }
-           | IDENTIFIER ALIAS { AliasPush(); PushSymbol( $1, 0 ); AliasPop(); } PareExpList   { AliasSwap(); }
-           | PareExpList ALIAS { AliasPush(); AliasSwap(); } PareExpList  { AliasSwap(); }
+AliasFunc  : NUM_INTEGER ALIASOP { AliasPush(); PushInteger( $1 ); AliasPop(); } PareExpList { AliasSwap(); }
+           | IDENTIFIER ALIASOP { AliasPush(); PushSymbol( $1, 0 ); AliasPop(); } PareExpList   { AliasSwap(); }
+           | PareExpList ALIASOP { AliasPush(); AliasSwap(); } PareExpList  { AliasSwap(); }
            ;
 
 VarUnary   : IDENTIFIER IncDec %prec POST    { PushId( $1 ); Duplicate(); $2 ? Inc(): Dec(); PopId( $1 ); }
@@ -805,8 +823,7 @@ IncDec     : INC                             { $$ = 1; }
            | DEC                             { $$ = 0; }
            ;
 
-Variable   : VarId                     {}
-           | VarAt                     { GenPCode1( HB_P_ARRAYAT ); }
+Variable   : VarAt                     { GenPCode1( HB_P_ARRAYAT ); }
            | Array ArrayIndex          { GenPCode1( HB_P_ARRAYAT ); }
            | FunCallArray              { GenPCode1( HB_P_ARRAYAT ); }
            | ObjectData                {}
@@ -814,16 +831,6 @@ Variable   : VarId                     {}
            | ObjectMethod ArrayIndex   { GenPCode1( HB_P_ARRAYAT ); }
            ;
 
-VarId      : IDENTIFIER        { $$ = functions.pLast->lPCodePos;
-                                 if( _bForceByRefer && functions.pLast->szName && ! _bRValue )
-                                    /* DO .. WITH uses reference to a variable
-                                     * if not inside a codeblock
-                                     */
-                                    PushIdByRef( $1 );
-                                 else
-                                    PushId( $1 );
-                               }
-           ;
 
 VarAt      : IDENTIFIER { $<iNumber>$ = functions.pLast->lPCodePos; PushId( $1 ); } ArrayIndex { $$ =$<iNumber>2;  }
            ;
@@ -836,59 +843,55 @@ IndexList  : Expression
            | IndexList { GenPCode1( HB_P_ARRAYAT ); } ',' Expression
            ;
 
-/*NOTE: If _bRValue is TRUE then the expression is on the right side of assignment
- * operator (or +=, -= ...) - in this case a variable is not pushed by
- * a reference if it is a part of DO <proc> WITH ... statement
- */
-VarAssign  : IDENTIFIER INASSIGN { _bRValue = TRUE; } Expression { PopId( $1 ); PushId( $1 ); }
-           | IDENTIFIER PLUSEQ   { PushId( $1 ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_PLUS    ); PopId( $1 ); PushId( $1 ); }
-           | IDENTIFIER MINUSEQ  { PushId( $1 ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_MINUS   ); PopId( $1 ); PushId( $1 ); }
-           | IDENTIFIER MULTEQ   { PushId( $1 ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_MULT    ); PopId( $1 ); PushId( $1 ); }
-           | IDENTIFIER DIVEQ    { PushId( $1 ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_DIVIDE  ); PopId( $1 ); PushId( $1 ); }
-           | IDENTIFIER EXPEQ    { PushId( $1 ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_POWER   ); PopId( $1 ); PushId( $1 ); }
-           | IDENTIFIER MODEQ    { PushId( $1 ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_MODULUS ); PopId( $1 ); PushId( $1 ); }
-           | VarAt INASSIGN { _bRValue = TRUE; } Expression { GenPCode1( HB_P_ARRAYPUT ); }
-           | VarAt PLUSEQ   { DupPCode( $1 ); GenPCode1( HB_P_ARRAYAT ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_PLUS    ); GenPCode1( HB_P_ARRAYPUT ); }
-           | VarAt MINUSEQ  { DupPCode( $1 ); GenPCode1( HB_P_ARRAYAT ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_MINUS   ); GenPCode1( HB_P_ARRAYPUT ); }
-           | VarAt MULTEQ   { DupPCode( $1 ); GenPCode1( HB_P_ARRAYAT ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_MULT    ); GenPCode1( HB_P_ARRAYPUT ); }
-           | VarAt DIVEQ    { DupPCode( $1 ); GenPCode1( HB_P_ARRAYAT ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_DIVIDE  ); GenPCode1( HB_P_ARRAYPUT ); }
-           | VarAt EXPEQ    { DupPCode( $1 ); GenPCode1( HB_P_ARRAYAT ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_POWER   ); GenPCode1( HB_P_ARRAYPUT ); }
-           | VarAt MODEQ    { DupPCode( $1 ); GenPCode1( HB_P_ARRAYAT ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_MODULUS ); GenPCode1( HB_P_ARRAYPUT ); }
-           | FunCallArray INASSIGN { _bRValue = TRUE; } Expression { GenPCode1( HB_P_ARRAYPUT ); }
-           | FunCallArray PLUSEQ   { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); _bRValue = TRUE; }  Expression { GenPCode1( HB_P_PLUS    ); GenPCode1( HB_P_ARRAYPUT ); }
-           | FunCallArray MINUSEQ  { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); _bRValue = TRUE; }  Expression { GenPCode1( HB_P_MINUS   ); GenPCode1( HB_P_ARRAYPUT ); }
-           | FunCallArray MULTEQ   { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); _bRValue = TRUE; }  Expression { GenPCode1( HB_P_MULT    ); GenPCode1( HB_P_ARRAYPUT ); }
-           | FunCallArray DIVEQ    { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); _bRValue = TRUE; }  Expression { GenPCode1( HB_P_DIVIDE  ); GenPCode1( HB_P_ARRAYPUT ); }
-           | FunCallArray EXPEQ    { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); _bRValue = TRUE; }  Expression { GenPCode1( HB_P_POWER   ); GenPCode1( HB_P_ARRAYPUT ); }
-           | FunCallArray MODEQ    { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); _bRValue = TRUE; }  Expression { GenPCode1( HB_P_MODULUS ); GenPCode1( HB_P_ARRAYPUT ); }
-           | ObjectData INASSIGN { MessageFix ( SetData( $1 ) ); _bRValue = TRUE; } Expression { Function( 1 ); }
-           | ObjectData PLUSEQ   { MessageDupl( SetData( $1 ) ); Function( 0 ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_PLUS );    Function( 1 ); }
-           | ObjectData MINUSEQ  { MessageDupl( SetData( $1 ) ); Function( 0 ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_MINUS );   Function( 1 ); }
-           | ObjectData MULTEQ   { MessageDupl( SetData( $1 ) ); Function( 0 ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_MULT );    Function( 1 ); }
-           | ObjectData DIVEQ    { MessageDupl( SetData( $1 ) ); Function( 0 ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_DIVIDE );  Function( 1 ); }
-           | ObjectData EXPEQ    { MessageDupl( SetData( $1 ) ); Function( 0 ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_POWER );   Function( 1 ); }
-           | ObjectData MODEQ    { MessageDupl( SetData( $1 ) ); Function( 0 ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_MODULUS ); Function( 1 ); }
-           | ObjectData ArrayIndex INASSIGN { _bRValue = TRUE; } Expression      { GenPCode1( HB_P_ARRAYPUT ); }
-           | ObjectData ArrayIndex PLUSEQ   { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_PLUS    ); GenPCode1( HB_P_ARRAYPUT ); }
-           | ObjectData ArrayIndex MINUSEQ  { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_MINUS   ); GenPCode1( HB_P_ARRAYPUT ); }
-           | ObjectData ArrayIndex MULTEQ   { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_MULT    ); GenPCode1( HB_P_ARRAYPUT ); }
-           | ObjectData ArrayIndex DIVEQ    { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_DIVIDE  ); GenPCode1( HB_P_ARRAYPUT ); }
-           | ObjectData ArrayIndex EXPEQ    { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_POWER   ); GenPCode1( HB_P_ARRAYPUT ); }
-           | ObjectData ArrayIndex MODEQ    { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_MODULUS ); GenPCode1( HB_P_ARRAYPUT ); }
-           | ObjectMethod ArrayIndex INASSIGN { _bRValue = TRUE; } Expression    { GenPCode1( HB_P_ARRAYPUT ); }
-           | ObjectMethod ArrayIndex PLUSEQ   { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_PLUS    ); GenPCode1( HB_P_ARRAYPUT ); }
-           | ObjectMethod ArrayIndex MINUSEQ  { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_MINUS   ); GenPCode1( HB_P_ARRAYPUT ); }
-           | ObjectMethod ArrayIndex MULTEQ   { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_MULT    ); GenPCode1( HB_P_ARRAYPUT ); }
-           | ObjectMethod ArrayIndex DIVEQ    { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_DIVIDE  ); GenPCode1( HB_P_ARRAYPUT ); }
-           | ObjectMethod ArrayIndex EXPEQ    { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_POWER   ); GenPCode1( HB_P_ARRAYPUT ); }
-           | ObjectMethod ArrayIndex MODEQ    { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); _bRValue = TRUE; } Expression { GenPCode1( HB_P_MODULUS ); GenPCode1( HB_P_ARRAYPUT ); }
-           | AliasVar INASSIGN { _bRValue = TRUE; $<pVoid>$=( void * ) pAliasId; pAliasId = NULL; } Expression { pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); PushId( $1 ); AliasRemove(); }
-           | AliasVar PLUSEQ   { PushId( $1 ); _bRValue = TRUE; $<pVoid>$=(void*)pAliasId; pAliasId = NULL; } Expression { GenPCode1( HB_P_PLUS    ); pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); PushId( $1 ); AliasRemove(); }
-           | AliasVar MINUSEQ  { PushId( $1 ); _bRValue = TRUE; $<pVoid>$=(void*)pAliasId; pAliasId = NULL; } Expression { GenPCode1( HB_P_MINUS   ); pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); PushId( $1 ); AliasRemove(); }
-           | AliasVar MULTEQ   { PushId( $1 ); _bRValue = TRUE; $<pVoid>$=(void*)pAliasId; pAliasId = NULL; } Expression { GenPCode1( HB_P_MULT    ); pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); PushId( $1 ); AliasRemove(); }
-           | AliasVar DIVEQ    { PushId( $1 ); _bRValue = TRUE; $<pVoid>$=(void*)pAliasId; pAliasId = NULL; } Expression { GenPCode1( HB_P_DIVIDE  ); pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); PushId( $1 ); AliasRemove(); }
-           | AliasVar EXPEQ    { PushId( $1 ); _bRValue = TRUE; $<pVoid>$=(void*)pAliasId; pAliasId = NULL; } Expression { GenPCode1( HB_P_POWER   ); pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); PushId( $1 ); AliasRemove(); }
-           | AliasVar MODEQ    { PushId( $1 ); _bRValue = TRUE; $<pVoid>$=(void*)pAliasId; pAliasId = NULL; } Expression { GenPCode1( HB_P_MODULUS ); pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); PushId( $1 ); AliasRemove(); }
+VarAssign  : IDENTIFIER INASSIGN Expression { PopId( $1 ); PushId( $1 ); }
+           | IDENTIFIER PLUSEQ   { PushId( $1 ); } Expression { GenPCode1( HB_P_PLUS    ); PopId( $1 ); PushId( $1 ); }
+           | IDENTIFIER MINUSEQ  { PushId( $1 ); } Expression { GenPCode1( HB_P_MINUS   ); PopId( $1 ); PushId( $1 ); }
+           | IDENTIFIER MULTEQ   { PushId( $1 ); } Expression { GenPCode1( HB_P_MULT    ); PopId( $1 ); PushId( $1 ); }
+           | IDENTIFIER DIVEQ    { PushId( $1 ); } Expression { GenPCode1( HB_P_DIVIDE  ); PopId( $1 ); PushId( $1 ); }
+           | IDENTIFIER EXPEQ    { PushId( $1 ); } Expression { GenPCode1( HB_P_POWER   ); PopId( $1 ); PushId( $1 ); }
+           | IDENTIFIER MODEQ    { PushId( $1 ); } Expression { GenPCode1( HB_P_MODULUS ); PopId( $1 ); PushId( $1 ); }
+           | VarAt INASSIGN Expression { GenPCode1( HB_P_ARRAYPUT ); }
+           | VarAt PLUSEQ   { DupPCode( $1 ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_PLUS    ); GenPCode1( HB_P_ARRAYPUT ); }
+           | VarAt MINUSEQ  { DupPCode( $1 ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_MINUS   ); GenPCode1( HB_P_ARRAYPUT ); }
+           | VarAt MULTEQ   { DupPCode( $1 ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_MULT    ); GenPCode1( HB_P_ARRAYPUT ); }
+           | VarAt DIVEQ    { DupPCode( $1 ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_DIVIDE  ); GenPCode1( HB_P_ARRAYPUT ); }
+           | VarAt EXPEQ    { DupPCode( $1 ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_POWER   ); GenPCode1( HB_P_ARRAYPUT ); }
+           | VarAt MODEQ    { DupPCode( $1 ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_MODULUS ); GenPCode1( HB_P_ARRAYPUT ); }
+           | FunCallArray INASSIGN Expression { GenPCode1( HB_P_ARRAYPUT ); }
+           | FunCallArray PLUSEQ   { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); }  Expression { GenPCode1( HB_P_PLUS    ); GenPCode1( HB_P_ARRAYPUT ); }
+           | FunCallArray MINUSEQ  { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); }  Expression { GenPCode1( HB_P_MINUS   ); GenPCode1( HB_P_ARRAYPUT ); }
+           | FunCallArray MULTEQ   { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); }  Expression { GenPCode1( HB_P_MULT    ); GenPCode1( HB_P_ARRAYPUT ); }
+           | FunCallArray DIVEQ    { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); }  Expression { GenPCode1( HB_P_DIVIDE  ); GenPCode1( HB_P_ARRAYPUT ); }
+           | FunCallArray EXPEQ    { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); }  Expression { GenPCode1( HB_P_POWER   ); GenPCode1( HB_P_ARRAYPUT ); }
+           | FunCallArray MODEQ    { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); }  Expression { GenPCode1( HB_P_MODULUS ); GenPCode1( HB_P_ARRAYPUT ); }
+           | ObjectData INASSIGN { MessageFix ( SetData( $1 ) ); } Expression { Function( 1 ); }
+           | ObjectData PLUSEQ   { MessageDupl( SetData( $1 ) ); Function( 0 ); } Expression { GenPCode1( HB_P_PLUS );    Function( 1 ); }
+           | ObjectData MINUSEQ  { MessageDupl( SetData( $1 ) ); Function( 0 ); } Expression { GenPCode1( HB_P_MINUS );   Function( 1 ); }
+           | ObjectData MULTEQ   { MessageDupl( SetData( $1 ) ); Function( 0 ); } Expression { GenPCode1( HB_P_MULT );    Function( 1 ); }
+           | ObjectData DIVEQ    { MessageDupl( SetData( $1 ) ); Function( 0 ); } Expression { GenPCode1( HB_P_DIVIDE );  Function( 1 ); }
+           | ObjectData EXPEQ    { MessageDupl( SetData( $1 ) ); Function( 0 ); } Expression { GenPCode1( HB_P_POWER );   Function( 1 ); }
+           | ObjectData MODEQ    { MessageDupl( SetData( $1 ) ); Function( 0 ); } Expression { GenPCode1( HB_P_MODULUS ); Function( 1 ); }
+           | ObjectData ArrayIndex INASSIGN Expression      { GenPCode1( HB_P_ARRAYPUT ); }
+           | ObjectData ArrayIndex PLUSEQ   { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_PLUS    ); GenPCode1( HB_P_ARRAYPUT ); }
+           | ObjectData ArrayIndex MINUSEQ  { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_MINUS   ); GenPCode1( HB_P_ARRAYPUT ); }
+           | ObjectData ArrayIndex MULTEQ   { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_MULT    ); GenPCode1( HB_P_ARRAYPUT ); }
+           | ObjectData ArrayIndex DIVEQ    { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_DIVIDE  ); GenPCode1( HB_P_ARRAYPUT ); }
+           | ObjectData ArrayIndex EXPEQ    { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_POWER   ); GenPCode1( HB_P_ARRAYPUT ); }
+           | ObjectData ArrayIndex MODEQ    { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_MODULUS ); GenPCode1( HB_P_ARRAYPUT ); }
+           | ObjectMethod ArrayIndex INASSIGN Expression    { GenPCode1( HB_P_ARRAYPUT ); }
+           | ObjectMethod ArrayIndex PLUSEQ   { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_PLUS    ); GenPCode1( HB_P_ARRAYPUT ); }
+           | ObjectMethod ArrayIndex MINUSEQ  { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_MINUS   ); GenPCode1( HB_P_ARRAYPUT ); }
+           | ObjectMethod ArrayIndex MULTEQ   { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_MULT    ); GenPCode1( HB_P_ARRAYPUT ); }
+           | ObjectMethod ArrayIndex DIVEQ    { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_DIVIDE  ); GenPCode1( HB_P_ARRAYPUT ); }
+           | ObjectMethod ArrayIndex EXPEQ    { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_POWER   ); GenPCode1( HB_P_ARRAYPUT ); }
+           | ObjectMethod ArrayIndex MODEQ    { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_MODULUS ); GenPCode1( HB_P_ARRAYPUT ); }
+           | AliasVar INASSIGN { $<pVoid>$=( void * ) pAliasId; pAliasId = NULL; } Expression { pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); PushId( $1 ); AliasRemove(); }
+           | AliasVar PLUSEQ   { PushId( $1 ); $<pVoid>$=(void*)pAliasId; pAliasId = NULL; } Expression { GenPCode1( HB_P_PLUS    ); pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); PushId( $1 ); AliasRemove(); }
+           | AliasVar MINUSEQ  { PushId( $1 ); $<pVoid>$=(void*)pAliasId; pAliasId = NULL; } Expression { GenPCode1( HB_P_MINUS   ); pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); PushId( $1 ); AliasRemove(); }
+           | AliasVar MULTEQ   { PushId( $1 ); $<pVoid>$=(void*)pAliasId; pAliasId = NULL; } Expression { GenPCode1( HB_P_MULT    ); pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); PushId( $1 ); AliasRemove(); }
+           | AliasVar DIVEQ    { PushId( $1 ); $<pVoid>$=(void*)pAliasId; pAliasId = NULL; } Expression { GenPCode1( HB_P_DIVIDE  ); pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); PushId( $1 ); AliasRemove(); }
+           | AliasVar EXPEQ    { PushId( $1 ); $<pVoid>$=(void*)pAliasId; pAliasId = NULL; } Expression { GenPCode1( HB_P_POWER   ); pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); PushId( $1 ); AliasRemove(); }
+           | AliasVar MODEQ    { PushId( $1 ); $<pVoid>$=(void*)pAliasId; pAliasId = NULL; } Expression { GenPCode1( HB_P_MODULUS ); pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); PushId( $1 ); AliasRemove(); }
            | AliasFunc INASSIGN Expression { --iLine; GenError( _szCErrors, 'E', ERR_INVALID_LVALUE, NULL, NULL ); }
            | AliasFunc PLUSEQ   Expression { --iLine; GenError( _szCErrors, 'E', ERR_INVALID_LVALUE, NULL, NULL ); }
            | AliasFunc MINUSEQ  Expression { --iLine; GenError( _szCErrors, 'E', ERR_INVALID_LVALUE, NULL, NULL ); }
@@ -921,7 +924,7 @@ Operators  : Expression '='    Expression   { GenPCode1( HB_P_EQUAL ); } /* comp
            | NOT Expression                 { GenPCode1( HB_P_NOT ); }
            | '-' Expression %prec UNARY     { GenPCode1( HB_P_NEGATE ); }
            | '+' Expression %prec UNARY
-           | VarAssign                      { _bRValue = FALSE; }
+           | VarAssign                      { }
            ;
 
 Logical    : TRUEVALUE                                   { $$ = 1; }
@@ -1045,8 +1048,9 @@ VarDef     : IDENTIFIER                                   { cVarType = ' '; AddV
            | IDENTIFIER ArrExpList ']' AS_ARRAY       { cVarType = 'A'; AddVar( $1 ); DimArray( $2 ); PopId( $1 ); }
            ;
 
-ArrExpList : '[' Expression              { $$ = 1; }
-           | ArrExpList ',' Expression   { $$++; }
+ArrExpList : '[' Expression                { $$ = 1; }
+           | ArrExpList ',' Expression     { $$++; }
+           | ArrExpList ']' '[' Expression { $$++; }
            ;
 
 FieldsDef  : FIELD { iVarScope = VS_FIELD; } FieldList Crlf
@@ -1084,39 +1088,39 @@ IfEndif    : IfBegin EndIf                    { JumpHere( $1 ); }
            | IfBegin IfElseIf IfElse EndIf    { JumpHere( $1 ); FixElseIfs( $2 ); }
            ;
 
+EmptyStats : /* empty */
+           | Statements
+           ;
+
 IfBegin    : IF SimpleExpression { ++_wIfCounter; } Crlf { $$ = JumpFalse( 0 ); Line(); }
-                IfStats
+                EmptyStats
                 { $$ = Jump( 0 ); JumpHere( $<iNumber>5 ); }
 
            | IF PareExpList1 { ++_wIfCounter; } Crlf { $$ = JumpFalse( 0 ); Line(); }
-                IfStats
+                EmptyStats
                 { $$ = Jump( 0 ); JumpHere( $<iNumber>5 ); }
 
            | IF PareExpList2 { ++_wIfCounter; } Crlf { $$ = JumpFalse( 0 ); Line(); }
-                IfStats
+                EmptyStats
                 { $$ = Jump( 0 ); JumpHere( $<iNumber>5 ); }
 
            | IF PareExpListN { ++_wIfCounter; } Crlf { $$ = JumpFalse( 0 ); Line(); }
-                IfStats
+                EmptyStats
                 { $$ = Jump( 0 ); JumpHere( $<iNumber>5 ); }
            ;
 
-IfElse     : ELSE Crlf { Line(); } IfStats
+IfElse     : ELSE Crlf { Line(); } EmptyStats
            ;
 
 IfElseIf   : ELSEIF Expression Crlf { $<iNumber>$ = JumpFalse( 0 ); Line(); }
-                IfStats { $$ = GenElseIf( 0, Jump( 0 ) ); JumpHere( $<iNumber>4 ); }
+                EmptyStats { $$ = GenElseIf( 0, Jump( 0 ) ); JumpHere( $<iNumber>4 ); }
 
            | IfElseIf ELSEIF Expression Crlf { $<iNumber>$ = JumpFalse( 0 ); Line(); }
-                IfStats { $$ = GenElseIf( $1, Jump( 0 ) ); JumpHere( $<iNumber>5 ); }
+                EmptyStats { $$ = GenElseIf( $1, Jump( 0 ) ); JumpHere( $<iNumber>5 ); }
            ;
 
-EndIf      : ENDIF                 { --_wIfCounter; }
-           | END                   { --_wIfCounter; }
-           ;
-
-IfStats    : /* no statements */
-           | Statements
+EndIf      : ENDIF                 { --_wIfCounter; functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
+           | END                   { --_wIfCounter; functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
            ;
 
 DoCase     : DoCaseBegin
@@ -1136,42 +1140,73 @@ DoCase     : DoCaseBegin
              EndCase                   { FixElseIfs( $2 ); }
            ;
 
-EndCase    : ENDCASE              { --_wCaseCounter; }
-           | END                  { --_wCaseCounter; }
+EndCase    : ENDCASE              { --_wCaseCounter; functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
+           | END                  { --_wCaseCounter; functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
            ;
 
 DoCaseStart : DOCASE { ++_wCaseCounter; } Crlf { Line(); }
             ;
 
 DoCaseBegin : DoCaseStart            { }
-            | DoCaseStart Statements { --iLine; GenError( _szCErrors, 'E', ERR_MAYHEM_IN_CASE, NULL, NULL ); }
+            | DoCaseStart Statements {
+                        if( $<lNumber>2 > 0 )
+                        {
+                           --iLine;
+                           GenError( _szCErrors, 'E', ERR_MAYHEM_IN_CASE, NULL, NULL );
+                        }
+                     }
            ;
 
-Cases      : CASE Expression Crlf { $<iNumber>$ = JumpFalse( 0 ); Line(); } CaseStmts { $$ = GenElseIf( 0, Jump( 0 ) ); JumpHere( $<iNumber>4 ); Line(); }
-           | Cases CASE Expression Crlf { $<iNumber>$ = JumpFalse( 0 ); Line(); } CaseStmts { $$ = GenElseIf( $1, Jump( 0 ) ); JumpHere( $<iNumber>5 ); Line(); }
+Cases      : CASE Expression Crlf {
+                        $<iNumber>$ = JumpFalse( 0 );
+                        Line();
+                        }
+               EmptyStats {
+                        $$ = GenElseIf( 0, Jump( 0 ) );
+                        JumpHere( $<iNumber>4 );
+                        Line();
+                        }
+
+           | Cases CASE Expression Crlf {
+                        $<iNumber>$ = JumpFalse( 0 );
+                        Line();
+                        }
+               EmptyStats {
+                        $$ = GenElseIf( $1, Jump( 0 ) );
+                        JumpHere( $<iNumber>5 );
+                        Line();
+                        }
            ;
 
-Otherwise  : OTHERWISE Crlf { Line(); } CaseStmts
+Otherwise  : OTHERWISE Crlf { Line(); } EmptyStats
            ;
 
-CaseStmts  : /* no statements */
-           | Statements
-           ;
-
+/*
 DoWhile    : WhileBegin Expression Crlf { $<lNumber>$ = JumpFalse( 0 ); Line(); }
                 { Jump( $1 - functions.pLast->lPCodePos ); }
-             EndWhile { JumpHere( $<lNumber>4 ); --_wWhileCounter; }
+             EndWhile { JumpHere( $<lNumber>4 ); --_wWhileCounter; functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
 
            | WhileBegin Expression Crlf { $<lNumber>$ = JumpFalse( 0 ); Line(); }
-                WhileStatements { LoopHere(); Jump( $1 - functions.pLast->lPCodePos ); }
-             EndWhile  { JumpHere( $<lNumber>4 ); --_wWhileCounter; LoopEnd(); }
+                Statements { LoopHere(); Jump( $1 - functions.pLast->lPCodePos ); }
+             EndWhile  { JumpHere( $<lNumber>4 ); --_wWhileCounter; LoopEnd(); functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
+           ;
+*/
+DoWhile    : WhileBegin Expression Crlf {
+                              $<lNumber>$ = JumpFalse( 0 );
+                              Line();
+                              }
+                EmptyStats {
+                     LoopHere();
+                     Jump( $1 - functions.pLast->lPCodePos );
+                     }
+             EndWhile {
+                  JumpHere( $<lNumber>4 ); --_wWhileCounter;
+                  LoopEnd();
+                  functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
+                  }
            ;
 
 WhileBegin : WHILE    { $$ = functions.pLast->lPCodePos; ++_wWhileCounter; LoopStart(); }
-           ;
-
-WhileStatements : Statement
-           | WhileStatements { Line(); } Statement
            ;
 
 EndWhile   : END
@@ -1199,6 +1234,7 @@ ForNext    : FOR IDENTIFIER ForAssign Expression { PopId( $2 ); $<iNumber>$ = fu
                                                    LoopEnd();
                                                    if( $<lNumber>9 )
                                                       GenPCode1( HB_P_POP );
+                                                   functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
                                                  }
            ;
 
@@ -1210,17 +1246,12 @@ StepExpr   : /* default step expression */       { $<lNumber>$ =0; }
            | STEP Expression                     { $<lNumber>$ =1; }
            ;
 
-ForStatements : ForStat NEXT                     { --_wForCounter; }
-           | ForStat NEXT IDENTIFIER             { --_wForCounter; }
-           | NEXT                                { --_wForCounter; }
-           | NEXT IDENTIFIER                     { --_wForCounter; }
-           ;
-
-ForStat    : Statements                          { Line(); }
+ForStatements : EmptyStats NEXT                     { --_wForCounter; }
+           | EmptyStats NEXT IDENTIFIER             { --_wForCounter; }
            ;
 
 BeginSeq   : BEGINSEQ { ++_wSeqCounter; $<lNumber>$ = SequenceBegin(); } Crlf { Line(); }
-                SeqStatms
+                EmptyStats
                 {
                   /* Set jump address for HB_P_SEQBEGIN opcode - this address
                    * will be used in BREAK code if there is no RECOVER clause
@@ -1249,18 +1280,13 @@ BeginSeq   : BEGINSEQ { ++_wSeqCounter; $<lNumber>$ = SequenceBegin(); } Crlf { 
                 else
                    --_wSeqCounter;  /* RECOVER is also considered as end of sequence */
                 SequenceFinish( $<lNumber>2, $<iNumber>5 );
+                functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
              }
            ;
 
-SeqStatms  : /* empty */      { $<iNumber>$ = 0; }
-           | Statements       { $<iNumber>$ = 1; }
-           ;
-
 RecoverSeq : /* no recover */  { $<lNumber>$ = 0; }
-           | RecoverEmpty Crlf { $<lNumber>$ = $<lNumber>1; }
-           | RecoverEmpty Crlf { $<lNumber>$ = $<lNumber>1; Line(); } Statements
-           | RecoverUsing Crlf { $<lNumber>$ = $<lNumber>1; }
-           | RecoverUsing Crlf { $<lNumber>$ = $<lNumber>1; Line(); } Statements
+           | RecoverEmpty Crlf { $<lNumber>$ = $<lNumber>1; Line(); } EmptyStats
+           | RecoverUsing Crlf { $<lNumber>$ = $<lNumber>1; Line(); } EmptyStats
            ;
 
 RecoverEmpty : RECOVER
@@ -1288,8 +1314,8 @@ RecoverUsing : RECOVER USING IDENTIFIER
  * will pass the value of variable not a reference
  */
 DoProc     : DO IDENTIFIER { PushSymbol( $2, 1 ); PushNil(); Do( 0 ); }
-           | DO IDENTIFIER { PushSymbol( $2, 1 ); PushNil(); _bForceByRefer = TRUE; } WITH DoArgList { Do( $5 ); _bForceByRefer=FALSE; }
-           | WHILE { PushSymbol( yy_strdup("WHILE"), 1 ); PushNil(); _bForceByRefer = TRUE; } WITH DoArgList { Do( $4 ); _bForceByRefer=FALSE; }
+           | DO IDENTIFIER { PushSymbol( $2, 1 ); PushNil(); } WITH DoArgList { Do( $5 ); }
+           | WHILE { PushSymbol( yy_strdup("WHILE"), 1 ); PushNil(); } WITH DoArgList { Do( $4 ); }
            ;
 
 DoArgList  : ','                               { PushNil(); PushNil(); $$ = 2; }
@@ -1299,13 +1325,15 @@ DoArgList  : ','                               { PushNil(); PushNil(); $$ = 2; }
            | ',' { PushNil(); } DoExpression   { $$ = 2; }
            ;
 
-DoExpression: Expression         { _bForceByRefer = TRUE; }
+DoExpression: IDENTIFIER       { PushIdByRef( $1 ); }
+           | NumExpression     { }
+           | ConExpression     { }
+           | DynExpression     { }
+           | PareExpList       { }
            ;
 
-Crlf       : '\n'
+Crlf       : '\n'          { ++iLine; }
            | ';'           { _bDontGenLineNum = TRUE; }
-           | '\n' Crlf
-           | ';' Crlf      { _bDontGenLineNum = TRUE; }
            ;
 
 %%
@@ -1348,14 +1376,19 @@ void GenError( char* _szErrors[], char cPrefix, int iError, char * szError1, cha
 
 void GenWarning( char* _szWarnings[], char cPrefix, int iWarning, char * szWarning1, char * szWarning2)
 {
-   if( _bWarnings && iWarning < WARN_ASSIGN_SUSPECT ) /* TODO: add switch to set level */
+   if( _iWarnings )
    {
-      printf( "\r%s(%i) ", files.pLast->szFileName, iLine );
-      printf( "Warning %c%04i  ", cPrefix, iWarning );
-      printf( _szWarnings[ iWarning - 1 ], szWarning1, szWarning2 );
-      printf( "\n" );
+      char *szText = _szWarnings[ iWarning - 1 ];
 
-      _bAnyWarning = TRUE;
+      if( (szText[ 0 ] - '0') <= _iWarnings )
+      {
+         printf( "\r%s(%i) ", files.pLast->szFileName, iLine );
+         printf( "Warning %c%04i  ", cPrefix, iWarning );
+         printf( szText + 1, szWarning1, szWarning2 );
+         printf( "\n" );
+
+         _bAnyWarning = TRUE;    /* report warnings at exit */
+      }
    }
 }
 
@@ -1429,6 +1462,9 @@ int harbour_main( int argc, char * argv[] )
 
                case 'a':
                case 'A':
+                  /* variables declared by PRIVATE and PUBLIC statement are
+                   * automatically assumed as MEMVAR
+                   */
                   _bAutoMemvarAssume = TRUE;
                   break;
 
@@ -1600,12 +1636,20 @@ int harbour_main( int argc, char * argv[] )
 
                case 'v':
                case 'V':
+                  /* All undeclared variables are assumed MEMVAR variables
+                   */
                   _bForceMemvars = TRUE;
                   break;
 
                case 'w':
                case 'W':
-                  _bWarnings = TRUE;
+                  _iWarnings = 1;
+                  if( argv[ iArg ][ 2 ] )
+                  {  /*there is -w<0,1,2,3> probably */
+                     _iWarnings = argv[ iArg ][ 2 ] - '0';
+                     if( _iWarnings < 0 || _iWarnings > 3 )
+                        GenError( _szCErrors, 'E', ERR_BADOPTION, argv[ iArg ], NULL );
+                  }
                   break;
 
                case 'x':
@@ -1860,7 +1904,7 @@ void PrintUsage( char * szSelf )
 /* TODO:   "\n          /t<path>         path for temp file creation" */
 /* TODO:   "\n          /u[<file>]       use command def set in <file> (or none)" */
            "\n          /v               variables are assumed M->"
-           "\n          /w               enable warnings"
+           "\n          /w[<level>]      set warning level number (0..3, default 1)"
            "\n          /x[<prefix>]     set symbol init function name prefix (for .c only)"
 #ifdef YYDEBUG
            "\n          /y               trace lex & yacc activity"
@@ -2011,7 +2055,7 @@ void AddVar( char * szVarName )
    if( iVarScope & VS_MEMVAR )
    {
       PCOMSYMBOL pSym;
-      WORD wPos;
+      USHORT wPos;
 
       if( _bAutoMemvarAssume || iVarScope == VS_MEMVAR )
       {
@@ -2107,7 +2151,7 @@ void AddVar( char * szVarName )
          case VS_LOCAL:
          case VS_PARAMETER:
             {
-               WORD wLocal = 1;
+               USHORT wLocal = 1;
 
                if( ! pFunc->pLocals )
                   pFunc->pLocals = pVar;
@@ -2163,7 +2207,7 @@ void AddVar( char * szVarName )
    }
 }
 
-PCOMSYMBOL AddSymbol( char * szSymbolName, WORD * pwPos )
+PCOMSYMBOL AddSymbol( char * szSymbolName, USHORT * pwPos )
 {
    PCOMSYMBOL pSym = ( PCOMSYMBOL ) hb_xgrab( sizeof( COMSYMBOL ) );
 
@@ -2357,7 +2401,7 @@ void Duplicate( void )
 {
    GenPCode1( HB_P_DUPLICATE );
 
-   if( _bWarnings )
+   if( _iWarnings )
    {
       PSTACK_VAL_TYPE pNewStackType;
 
@@ -2475,7 +2519,7 @@ void ExpListPop( int iExpCount )
  */
 void FieldPCode( BYTE bPCode, char * szVarName )
 {
-   WORD wVar;
+   USHORT wVar;
    PCOMSYMBOL pVar;
 
    pVar = GetSymbol( szVarName, &wVar );
@@ -2524,6 +2568,8 @@ void FunDef( char * szFunName, SYMBOLSCOPE cScope, int iType )
    PFUNCTION pFunc;
    char * szFunction;
 
+   FixReturns();    /* fix all previous function returns offsets */
+
    pFunc = GetFunction( szFunName );
    if( pFunc )
    {
@@ -2544,7 +2590,6 @@ void FunDef( char * szFunName, SYMBOLSCOPE cScope, int iType )
 
    iFunctions++;
 
-   FixReturns();    /* fix all previous function returns offsets */
 
    pSym = GetSymbol( szFunName, NULL );
    if( ! pSym )
@@ -2794,7 +2839,7 @@ void GenIfInline( void )
       hb_xfree( pExp );
    }
 
-   if( _bWarnings )
+   if( _iWarnings )
    {
       PSTACK_VAL_TYPE pFree;
 
@@ -2850,9 +2895,9 @@ PFUNCTION GetFunction( char * szFunctionName ) /* returns a previously defined f
    return NULL;
 }
 
-PVAR GetVar( PVAR pVars, WORD wOrder ) /* returns variable if defined or zero */
+PVAR GetVar( PVAR pVars, USHORT wOrder ) /* returns variable if defined or zero */
 {
-   WORD w = 1;
+   USHORT w = 1;
 
    while( pVars->pNext && w++ < wOrder )
       pVars = pVars->pNext;
@@ -2860,15 +2905,15 @@ PVAR GetVar( PVAR pVars, WORD wOrder ) /* returns variable if defined or zero */
    return pVars;
 }
 
-WORD GetVarPos( PVAR pVars, char * szVarName ) /* returns the order + 1 of a variable if defined or zero */
+USHORT GetVarPos( PVAR pVars, char * szVarName ) /* returns the order + 1 of a variable if defined or zero */
 {
-   WORD wVar = 1;
+   USHORT wVar = 1;
 
    while( pVars )
    {
       if( pVars->szName && ! strcmp( pVars->szName, szVarName ) )
       {
-         if( _bWarnings )
+         if( _iWarnings )
          {
             PSTACK_VAL_TYPE pNewStackType;
 
@@ -3024,14 +3069,11 @@ int GetStaticVarPos( char * szVarName )
 
 /* Checks if passed variable name is declared as FIELD
  * Returns 0 if not found in FIELD list or its position in this list if found
- * It also returns a pointer to the function where this field was declared
  */
-int GetFieldVarPos( char * szVarName, PFUNCTION * pOwner )
+int GetFieldVarPos( char * szVarName, PFUNCTION pFunc )
 {
    int iVar;
-   PFUNCTION pFunc = functions.pLast;
 
-   *pOwner = NULL;
    if( pFunc->szName )
       /* we are in a function/procedure -we don't need any tricks */
       iVar = GetVarPos( pFunc->pFields, szVarName );
@@ -3047,24 +3089,22 @@ int GetFieldVarPos( char * szVarName, PFUNCTION * pOwner )
    /* If not found on the list declared in current function then check
     * the global list (only if there will be no starting procedure)
     */
+/*
    if( ! iVar && ! _bStartProc )
    {
       pFunc = functions.pFirst;
       iVar = GetVarPos( pFunc->pFields, szVarName );
    }
-   if( iVar )
-      *pOwner = pFunc;
-
+*/
    return iVar;
 }
 
-/** Checks if passed variable name is declared as FIELD
- * Returns 0 if not found in FIELD list or its position in this list if found
+/** Checks if passed variable name is declared as MEMVAR
+ * Returns 0 if not found in MEMVAR list or its position in this list if found
  */
-int GetMemvarPos( char * szVarName )
+int GetMemvarPos( char * szVarName, PFUNCTION pFunc )
 {
    int iVar;
-   PFUNCTION pFunc = functions.pLast;
 
    if( pFunc->szName )
       /* we are in a function/procedure -we don't need any tricks */
@@ -3081,13 +3121,14 @@ int GetMemvarPos( char * szVarName )
    /* if not found on the list declared in current function then check
     * the global list (only if there will be no starting procedure)
     */
+/*
    if( ! iVar && ! _bStartProc )
       iVar = GetVarPos( functions.pFirst->pMemvars, szVarName );
-
+*/
    return iVar;
 }
 
-WORD FixSymbolPos( WORD wCompilePos )
+USHORT FixSymbolPos( USHORT wCompilePos )
 {
    return ( _bStartProc ? wCompilePos - 1 : wCompilePos - 2 );
 }
@@ -3096,10 +3137,10 @@ WORD FixSymbolPos( WORD wCompilePos )
 /* returns a symbol pointer from the symbol table
  * and sets its position in the symbol table
  */
-PCOMSYMBOL GetSymbol( char * szSymbolName, WORD * pwPos )
+PCOMSYMBOL GetSymbol( char * szSymbolName, USHORT * pwPos )
 {
    PCOMSYMBOL pSym = symbols.pFirst;
-   WORD wCnt = 1;
+   USHORT wCnt = 1;
 
    if( pwPos )
       *pwPos = 0;
@@ -3125,10 +3166,10 @@ PCOMSYMBOL GetSymbol( char * szSymbolName, WORD * pwPos )
    return NULL;
 }
 
-PCOMSYMBOL GetSymbolOrd( WORD wSymbol )   /* returns a symbol based on its index on the symbol table */
+PCOMSYMBOL GetSymbolOrd( USHORT wSymbol )   /* returns a symbol based on its index on the symbol table */
 {
    PCOMSYMBOL pSym = symbols.pFirst;
-   WORD w = 1;
+   USHORT w = 1;
 
    while( w++ < wSymbol && pSym->pNext )
       pSym = pSym->pNext;
@@ -3136,10 +3177,10 @@ PCOMSYMBOL GetSymbolOrd( WORD wSymbol )   /* returns a symbol based on its index
    return pSym;
 }
 
-WORD GetFunctionPos( char * szFunctionName ) /* return 0 if not found or order + 1 */
+USHORT GetFunctionPos( char * szFunctionName ) /* return 0 if not found or order + 1 */
 {
    PFUNCTION pFunc = functions.pFirst;
-   WORD wFunction = _bStartProc;
+   USHORT wFunction = _bStartProc;
 
    while( pFunc )
    {
@@ -3163,7 +3204,7 @@ void Inc( void )
 {
    GenPCode1( HB_P_INC );
 
-   if( _bWarnings )
+   if( _iWarnings )
    {
       if( pStackValType )
       {
@@ -3205,7 +3246,7 @@ ULONG JumpFalse( LONG lOffset )
 
    GenPCode3( HB_P_JUMPFALSE, LOBYTE( lOffset ), HIBYTE( lOffset ) );
 
-   if( _bWarnings )
+   if( _iWarnings )
    {
       PSTACK_VAL_TYPE pFree;
       char sType[ 2 ];
@@ -3269,7 +3310,7 @@ ULONG JumpTrue( LONG lOffset )
       GenError( _szCErrors, 'E', ERR_JUMP_TOO_LONG, NULL, NULL );
    GenPCode3( HB_P_JUMPTRUE, LOBYTE( lOffset ), HIBYTE( lOffset ) );
 
-   if( _bWarnings )
+   if( _iWarnings )
    {
       PSTACK_VAL_TYPE pFree;
       char sType[ 2 ];
@@ -3322,6 +3363,7 @@ void Line( void ) /* generates the pcode with the currently compiled source code
       }
    }
    _bDontGenLineNum = FALSE;
+   functions.pLast->bFlags &= ~ FUN_WITH_RETURN;   /* clear RETURN flag */
 }
 
 /* Generates the pcode with the currently compiled source code line
@@ -3331,6 +3373,8 @@ void LineDebug( void )
 {
    if( _bDebugInfo )
       Line();
+   else
+      functions.pLast->bFlags &= ~ FUN_WITH_RETURN;  /* clear RETURN flag */
 }
 
 void LineBody( void ) /* generates the pcode with the currently compiled source code line */
@@ -3354,60 +3398,128 @@ void LineBody( void ) /* generates the pcode with the currently compiled source 
  */
 void VariablePCode( BYTE bPCode, char * szVarName )
 {
-   WORD wVar;
+   USHORT wVar;
    PCOMSYMBOL pSym;
    PFUNCTION pOwnerFunc = NULL;
+   int iType = VS_LOCAL; /* not really */
 
-   if( _bForceMemvars )
-   {  /* -v swith was used -> first check the MEMVARs */
-      wVar = GetMemvarPos( szVarName );
-      if( ! wVar )
-      {
-         wVar = GetFieldVarPos( szVarName, &pOwnerFunc );
-         if( ! wVar )
-            GenWarning( _szCWarnings, 'W', ( ( bPCode == HB_P_POPMEMVAR ) ? WARN_MEMVAR_ASSUMED : WARN_AMBIGUOUS_VAR ),
-                  szVarName, NULL );
-      }
+   /* Check if it is a FIELD declared in current function
+    */
+   wVar = GetFieldVarPos( szVarName, functions.pLast );
+   if( wVar == 0 )
+   {
+      /* Check if it is a MEMVAR declared in current function
+       */
+      wVar = GetMemvarPos( szVarName, functions.pLast );
+      if( wVar )
+         iType = VS_MEMVAR;
    }
    else
-   {  /* -v was not used -> default action is checking FIELDs list */
-      wVar = GetFieldVarPos( szVarName, &pOwnerFunc );
+   {
+      iType = VS_FIELD;
+      pOwnerFunc = functions.pLast;
+   }
+
+   /* if it is not declared in current function then check if it is
+    * a symbol with file wide scope
+    */
+   if( wVar == 0 && ! _bStartProc )
+   {
+      wVar = GetFieldVarPos( szVarName, functions.pFirst );
       if( wVar == 0 )
       {
-         wVar = GetMemvarPos( szVarName );
-         if( wVar == 0 )
-            GenWarning( _szCWarnings, 'W', ( ( bPCode == HB_P_POPMEMVAR ) ? WARN_MEMVAR_ASSUMED : WARN_AMBIGUOUS_VAR ),
-                  szVarName, NULL );
+         wVar = GetMemvarPos( szVarName, functions.pFirst );
+         if( wVar )
+            iType = VS_MEMVAR;
+      }
+      else
+      {
+         iType = VS_FIELD;
+         pOwnerFunc = functions.pFirst;
       }
    }
 
-   if( wVar && pOwnerFunc )
+   if( wVar == 0 )
+   {
+      /* This is undeclared variable  */
+      /*
+       * NOTE:
+       * Clipper always assumes a memvar variable if undeclared variable
+       * is popped (a value is asssigned to a variable).
+       *
+       */
+#if defined( HARBOUR_STRICT_CLIPPER_COMPATIBILITY )
+      if( _bForceMemvars || bPCode == HB_P_POPVARIABLE )
+#else
+      if( _bForceMemvars )
+#endif
+      {
+         /* -v switch was used -> assume it is a memvar variable
+          */
+         iType = VS_MEMVAR;
+         GenWarning( _szCWarnings, 'W', WARN_MEMVAR_ASSUMED, szVarName, NULL );
+      }
+      else
+         GenWarning( _szCWarnings, 'W', WARN_AMBIGUOUS_VAR, szVarName, NULL );
+   }
+
+   if( iType == VS_FIELD )
    {  /* variable is declared using FIELD statement */
       PVAR pField = GetVar( pOwnerFunc->pFields, wVar );
 
       if( pField->szAlias )
-      {  /* the alias was specified too */
-         if( bPCode == HB_P_POPMEMVAR )
+      {  /* the alias was specified in FIELD declaration */
+         if( bPCode == HB_P_POPVARIABLE )
             bPCode = HB_P_POPALIASEDFIELD;
-         else if( bPCode == HB_P_PUSHMEMVAR )
+         else if( bPCode == HB_P_PUSHVARIABLE )
             bPCode = HB_P_PUSHALIASEDFIELD;
          else
             /* pushing fields by reference is not allowed */
             GenError( _szCErrors, 'E', ERR_INVALID_REFER, szVarName, NULL );
+         /*
+          * Push alias symbol before the field symbol
+          */
          PushSymbol( yy_strdup( pField->szAlias ), 0 );
       }
       else
       {  /* this is unaliased field */
-         if( bPCode == HB_P_POPMEMVAR )
+         if( bPCode == HB_P_POPVARIABLE )
             bPCode = HB_P_POPFIELD;
-         else if( bPCode == HB_P_PUSHMEMVAR )
+         else if( bPCode == HB_P_PUSHVARIABLE )
             bPCode = HB_P_PUSHFIELD;
-         else
+         else if( bPCode == HB_P_PUSHMEMVARREF )
             /* pushing fields by reference is not allowed */
             GenError( _szCErrors, 'E', ERR_INVALID_REFER, szVarName, NULL );
       }
    }
+   else if( iType == VS_MEMVAR )
+   {
+      /* variable is declared or assumed MEMVAR */
+      if( bPCode == HB_P_POPVARIABLE )
+         bPCode = HB_P_POPMEMVAR;
+      else if( bPCode == HB_P_PUSHVARIABLE )
+         bPCode = HB_P_PUSHMEMVAR;
+   }
 
+   /* Check if this variable name is placed into the symbol table
+    */
+   pSym = GetSymbol( szVarName, &wVar );
+   if( ! pSym )
+      pSym = AddSymbol( szVarName, &wVar );
+   pSym->cScope |= VS_MEMVAR;
+   GenPCode3( bPCode, LOBYTE( wVar ), HIBYTE( wVar ) );
+}
+
+/**
+ * Function generates passed pcode for passed memvar name
+ */
+void MemvarPCode( BYTE bPCode, char * szVarName )
+{
+   USHORT wVar;
+   PCOMSYMBOL pSym;
+
+   /* Check if this variable name is placed into the symbol table
+    */
    pSym = GetSymbol( szVarName, &wVar );
    if( ! pSym )
       pSym = AddSymbol( szVarName, &wVar );
@@ -3417,7 +3529,7 @@ void VariablePCode( BYTE bPCode, char * szVarName )
 
 void Message( char * szMsgName )       /* sends a message to an object */
 {
-   WORD wSym;
+   USHORT wSym;
    PCOMSYMBOL pSym = GetSymbol( szMsgName, &wSym );
 
    if( ! pSym )  /* the symbol was not found on the symbol table */
@@ -3425,7 +3537,7 @@ void Message( char * szMsgName )       /* sends a message to an object */
    pSym->cScope |= FS_MESSAGE;
    GenPCode3( HB_P_MESSAGE, LOBYTE( wSym ), HIBYTE( wSym ) );
 
-   if( _bWarnings )
+   if( _iWarnings )
    {
       PSTACK_VAL_TYPE pNewStackType;
       char cType;
@@ -3444,7 +3556,7 @@ void Message( char * szMsgName )       /* sends a message to an object */
 
 void MessageDupl( char * szMsgName )  /* fix a generated message and duplicate to an object */
 {
-   WORD wSetSym;
+   USHORT wSetSym;
    PCOMSYMBOL pSym;
    BYTE bLoGetSym, bHiGetSym;           /* get symbol */
    PFUNCTION pFunc = functions.pLast;   /* get the currently defined Clipper function */
@@ -3468,7 +3580,7 @@ void MessageDupl( char * szMsgName )  /* fix a generated message and duplicate t
 
 void MessageFix( char * szMsgName )  /* fix a generated message to an object */
 {
-   WORD wSym;
+   USHORT wSym;
    PCOMSYMBOL pSym;
    PFUNCTION pFunc = functions.pLast;   /* get the currently defined Clipper function */
 
@@ -3501,7 +3613,7 @@ void PopId( char * szVarName ) /* generates the pcode to pop a value from the vi
          }
          else
          {
-            VariablePCode( HB_P_POPMEMVAR, szVarName );
+            VariablePCode( HB_P_POPVARIABLE, szVarName );
          }
       }
    }
@@ -3511,7 +3623,7 @@ void PopId( char * szVarName ) /* generates the pcode to pop a value from the vi
       {
          if( pAliasId->alias.szAlias[ 0 ] == 'M' && pAliasId->alias.szAlias[ 1 ] == '\0' )
          {  /* M->variable */
-            VariablePCode( HB_P_POPMEMVAR, szVarName );
+            MemvarPCode( HB_P_POPMEMVAR, szVarName );
          }
          else
          {
@@ -3520,7 +3632,7 @@ void PopId( char * szVarName ) /* generates the pcode to pop a value from the vi
                   iCmp = strncmp( pAliasId->alias.szAlias, "MEMVAR", strlen( pAliasId->alias.szAlias ) );
             if( iCmp == 0 )
             {  /* MEMVAR-> or MEMVA-> or MEMV-> */
-               VariablePCode( HB_P_POPMEMVAR, szVarName );
+               MemvarPCode( HB_P_POPMEMVAR, szVarName );
             }
             else
             {  /* field variable */
@@ -3550,7 +3662,7 @@ void PopId( char * szVarName ) /* generates the pcode to pop a value from the vi
    }
 
 
-   if( _bWarnings )
+   if( _iWarnings )
    {
       PSTACK_VAL_TYPE pVarType, pFree;
       char sType[ 2 ];
@@ -3629,7 +3741,7 @@ void PushId( char * szVarName ) /* generates the pcode to push a variable value 
          }
          else
          {
-            VariablePCode( HB_P_PUSHMEMVAR, szVarName );
+            VariablePCode( HB_P_PUSHVARIABLE, szVarName );
          }
       }
    }
@@ -3639,7 +3751,7 @@ void PushId( char * szVarName ) /* generates the pcode to push a variable value 
       {
          if( pAliasId->alias.szAlias[ 0 ] == 'M' && pAliasId->alias.szAlias[ 1 ] == '\0' )
          {  /* M->variable */
-            VariablePCode( HB_P_PUSHMEMVAR, szVarName );
+            MemvarPCode( HB_P_PUSHMEMVAR, szVarName );
          }
          else
          {
@@ -3648,7 +3760,7 @@ void PushId( char * szVarName ) /* generates the pcode to push a variable value 
                   iCmp = strncmp( pAliasId->alias.szAlias, "MEMVAR", strlen( pAliasId->alias.szAlias ) );
             if( iCmp == 0 )
             {  /* MEMVAR-> or MEMVA-> or MEMV-> */
-               VariablePCode( HB_P_PUSHMEMVAR, szVarName );
+               MemvarPCode( HB_P_PUSHMEMVAR, szVarName );
             }
             else
             {  /* field variable */
@@ -3677,7 +3789,7 @@ void PushId( char * szVarName ) /* generates the pcode to push a variable value 
          FieldPCode( HB_P_PUSHALIASEDFIELD, szVarName );
    }
 
-   if( _bWarnings )
+   if( _iWarnings )
    {
       PSTACK_VAL_TYPE pNewStackType;
 
@@ -3692,7 +3804,7 @@ void PushId( char * szVarName ) /* generates the pcode to push a variable value 
 
 void PushIdByRef( char * szVarName ) /* generates the pcode to push a variable by reference to the virtual machine stack */
 {
-   WORD iVar;
+   USHORT iVar;
 
    if( iVarScope == VS_STATIC && functions.pLast->szName )
    {
@@ -3715,6 +3827,10 @@ void PushIdByRef( char * szVarName ) /* generates the pcode to push a variable b
       }
       else
       {
+         /* if undeclared variable is passed by reference then a memvar
+          * variable is assumed because fields cannot be passed by
+          * a reference
+          */
          VariablePCode( HB_P_PUSHMEMVARREF, szVarName );
       }
    }
@@ -3727,7 +3843,7 @@ void PushLogical( int iTrueFalse ) /* pushes a logical value on the virtual mach
    else
       GenPCode1( HB_P_FALSE );
 
-   if( _bWarnings )
+   if( _iWarnings )
    {
       PSTACK_VAL_TYPE pNewStackType;
 
@@ -3744,7 +3860,7 @@ void PushNil( void )
 {
    GenPCode1( HB_P_PUSHNIL );
 
-   if( _bWarnings )
+   if( _iWarnings )
    {
       PSTACK_VAL_TYPE pNewStackType;
 
@@ -3764,7 +3880,7 @@ void PushDouble( double dNumber, BYTE bDec )
    GenPCodeN( ( BYTE * ) &dNumber, sizeof( double ) );
    GenPCode1( bDec );
 
-   if( _bWarnings )
+   if( _iWarnings )
    {
       PSTACK_VAL_TYPE pNewStackType;
 
@@ -3797,11 +3913,11 @@ void PushFunCall( char * szFunName )
 void PushInteger( int iNumber )
 {
    if( iNumber )
-      GenPCode3( HB_P_PUSHINT, LOBYTE( ( WORD ) iNumber ), HIBYTE( ( WORD ) iNumber ) );
+      GenPCode3( HB_P_PUSHINT, LOBYTE( ( USHORT ) iNumber ), HIBYTE( ( USHORT ) iNumber ) );
    else
       GenPCode1( HB_P_ZERO );
 
-   if( _bWarnings )
+   if( _iWarnings )
    {
       PSTACK_VAL_TYPE pNewStackType;
 
@@ -3828,7 +3944,7 @@ void PushLong( long lNumber )
    else
       GenPCode1( HB_P_ZERO );
 
-   if( _bWarnings )
+   if( _iWarnings )
    {
       PSTACK_VAL_TYPE pNewStackType;
 
@@ -3849,7 +3965,7 @@ void PushString( char * szText )
    GenPCode3( HB_P_PUSHSTR, LOBYTE( iStrLen ), HIBYTE( iStrLen ) );
    GenPCodeN( ( BYTE * ) szText, iStrLen );
 
-   if( _bWarnings )
+   if( _iWarnings )
    {
       PSTACK_VAL_TYPE pNewStackType;
 
@@ -3865,7 +3981,7 @@ void PushString( char * szText )
 /* generates the pcode to push a symbol on the virtual machine stack */
 void PushSymbol( char * szSymbolName, int iIsFunction )
 {
-   WORD wSym;
+   USHORT wSym;
    PCOMSYMBOL pSym;
 
    if( iIsFunction )
@@ -3894,7 +4010,7 @@ void PushSymbol( char * szSymbolName, int iIsFunction )
    }
    GenPCode3( HB_P_PUSHSYM, LOBYTE( wSym ), HIBYTE( wSym ) );
 
-   if( _bWarnings )
+   if( _iWarnings )
    {
       PSTACK_VAL_TYPE pNewStackType;
       char cType;
@@ -3932,7 +4048,7 @@ void Dec( void )
 {
    GenPCode1( HB_P_DEC );
 
-   if( _bWarnings )
+   if( _iWarnings )
    {
       if( pStackValType )
       {
@@ -3962,7 +4078,7 @@ void Do( BYTE bParams )
 {
    GenPCode3( HB_P_DO, bParams, 0 );
 
-   if( _bWarnings )
+   if( _iWarnings )
    {
       PSTACK_VAL_TYPE pFree;
       int i;
@@ -4026,7 +4142,7 @@ void FixElseIfs( void * pFixElseIfs )
 
 void FixReturns( void ) /* fixes all last defined function returns jumps offsets */
 {
-   if( _bWarnings && functions.pLast )
+   if( _iWarnings && functions.pLast )
    {
       PVAR pVar;
 
@@ -4059,6 +4175,14 @@ void FixReturns( void ) /* fixes all last defined function returns jumps offsets
          hb_xfree( ( void * ) pFree );
       }
       pStackValType = NULL;
+
+
+      /* Check if the function returned some value
+       */
+      if( (functions.pLast->bFlags & FUN_WITH_RETURN) == 0 &&
+          (functions.pLast->bFlags & FUN_PROCEDURE) == 0 )
+         GenWarning( _szCWarnings, 'W', WARN_FUN_WITH_NO_RETURN,
+                     functions.pLast->szName, NULL );
    }
 
 /* TODO: check why it triggers this error in keywords.prg
@@ -4080,7 +4204,7 @@ void Function( BYTE bParams )
 {
    GenPCode3( HB_P_FUNCTION, bParams, 0 );
 
-   if( _bWarnings )
+   if( _iWarnings )
    {
       PSTACK_VAL_TYPE pFree;
       int i;
@@ -4122,7 +4246,7 @@ void GenArray( int iElements )
 {
    GenPCode3( HB_P_GENARRAY, LOBYTE( iElements ), HIBYTE( iElements ) );
 
-   if( _bWarnings )
+   if( _iWarnings )
    {
       PSTACK_VAL_TYPE pFree;
       int iIndex;
@@ -4169,7 +4293,7 @@ void GenPCode1( BYTE byte )
    PFUNCTION pFunc = functions.pLast;   /* get the currently defined Clipper function */
 
    /* Releasing value consumed by HB_P_ARRAYPUT */
-   if( _bWarnings )
+   if( _iWarnings )
    {
       if( byte == HB_P_PUSHSELF )
       {
@@ -4516,9 +4640,9 @@ void CodeBlockEnd()
 {
    PFUNCTION pCodeblock;   /* pointer to the current codeblock */
    PFUNCTION pFunc;        /* pointer to a function that owns a codeblock */
-   WORD wSize;
-   WORD wLocals = 0;   /* number of referenced local variables */
-   WORD wPos;
+   USHORT wSize;
+   USHORT wLocals = 0;   /* number of referenced local variables */
+   USHORT wPos;
    PVAR pVar, pFree;
 
    pCodeblock = functions.pLast;
@@ -4538,7 +4662,7 @@ void CodeBlockEnd()
     * a number of expected parameters
     */
    /*QUESTION: would be 64kB enough for a codeblock size?
-    * we are assuming now a WORD for a size of codeblock
+    * we are assuming now a USHORT for a size of codeblock
     */
 
    /* Count the number of referenced local variables */
@@ -4549,8 +4673,8 @@ void CodeBlockEnd()
       ++wLocals;
    }
 
-   /*NOTE:  8 = HB_P_PUSHBLOCK + WORD( size ) + WORD( wParams ) + WORD( wLocals ) + _ENDBLOCK */
-   wSize = ( WORD ) pCodeblock->lPCodePos + 8 + wLocals * 2;
+   /*NOTE:  8 = HB_P_PUSHBLOCK + USHORT( size ) + USHORT( wParams ) + USHORT( wLocals ) + _ENDBLOCK */
+   wSize = ( USHORT ) pCodeblock->lPCodePos + 8 + wLocals * 2;
 
    GenPCode3( HB_P_PUSHBLOCK, LOBYTE( wSize ), HIBYTE( wSize ) );
    GenPCode1( LOBYTE( pCodeblock->wParamCount ) );
@@ -4580,7 +4704,7 @@ void CodeBlockEnd()
    pVar = pCodeblock->pLocals;
    while( pVar )
    {
-      if( _bWarnings && pFunc->szName && pVar->szName && ! pVar->iUsed )
+      if( _iWarnings && pFunc->szName && pVar->szName && ! pVar->iUsed )
          GenWarning( _szCWarnings, 'W', WARN_BLOCKVAR_NOT_USED, pVar->szName, pFunc->szName );
 
       /* free used variables */
@@ -4591,7 +4715,7 @@ void CodeBlockEnd()
    }
    hb_xfree( ( void * ) pCodeblock );
 
-   if( _bWarnings )
+   if( _iWarnings )
    {
       if( pStackValType )
          /* reusing the place holder of the result value */
@@ -4681,7 +4805,7 @@ void StaticDefEnd( int iCount )
    _iStatics += iCount;
    iVarScope = VS_LOCAL;
 
-   if( _bWarnings )
+   if( _iWarnings )
    {
       PSTACK_VAL_TYPE pFree;
 
@@ -4760,7 +4884,6 @@ static void LoopLoop( void )
        * Current SEQUENCE counter is different then at the beginning of loop
        * Notice that LOOP is allowed in RECOVER code.
        */
-      --iLine;    /* this is called after CR is processed */
       GenError( _szCErrors, 'E', ERR_EXIT_IN_SEQUENCE, "LOOP", NULL );
    }
 
@@ -4794,7 +4917,6 @@ static void LoopExit( void )
        * Current SEQUENCE counter is different then at the beginning of loop
        * Notice that LOOP is allowed in RECOVER code.
        */
-      --iLine;    /* this is called after CR is processed */
       GenError( _szCErrors, 'E', ERR_EXIT_IN_SEQUENCE, "EXIT", NULL );
    }
 
@@ -5061,7 +5183,7 @@ char * yy_strdup( char * p )
  */
 static char * reserved_name( char * szName )
 {
-   WORD wNum = 0;
+   USHORT wNum = 0;
    int iFound = 1;
 
    while( wNum < RESERVED_FUNCTIONS && iFound )

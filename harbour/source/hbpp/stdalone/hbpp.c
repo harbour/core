@@ -61,7 +61,7 @@ char sLine[ STR_SIZE ], sOutLine[ STR_SIZE ];
 
 PATHNAMES *_pIncludePath = NULL;
 PHB_FNAME _pFileName = NULL;
-BOOL _bWarnings = FALSE;
+int _iWarnings = 0;
 
 int main( int argc, char * argv[] )
 {
@@ -116,7 +116,13 @@ int main( int argc, char * argv[] )
                break;
             case 'w':
             case 'W':
-               _bWarnings = TRUE;
+               _iWarnings = 1;
+               if( argv[ iArg ][ 2 ] )
+               {  /*there is -w<0,1,2,3> probably */
+                  _iWarnings = argv[ iArg ][ 2 ] - '0';
+                  if( _iWarnings < 0 || _iWarnings > 3 )
+                     printf( "\nInvalid command line option: %s\n", argv[ iArg ] );
+               }
                break;
             default:
                printf( "\nInvalid command line option: %s\n", &argv[ iArg ][ 1 ] );
@@ -446,14 +452,19 @@ void GenError( char * _szErrors[], char cPrefix, int iError, char * szError1, ch
    exit( EXIT_FAILURE );
 }
 
-void GenWarning( char * _szWarnings[], char cPrefix, int iWarning, char * szWarning1, char * szWarning2)
+void GenWarning( char* _szWarnings[], char cPrefix, int iWarning, char * szWarning1, char * szWarning2)
 {
-   if( _bWarnings && iWarning < WARN_ASSIGN_SUSPECT ) /* TODO: add switch to set level */
+   if( _iWarnings )
    {
-      printf( "\r(%i) ", nline );
-      printf( "Warning %c%04i  ", cPrefix, iWarning );
-      printf( _szWarnings[ iWarning - 1 ], szWarning1, szWarning2 );
-      printf( "\n" );
+      char *szText = _szWarnings[ iWarning - 1 ];
+
+      if( (szText[ 0 ] - '0') <= _iWarnings )
+      {
+         printf( "\r(%i) ", nline );
+         printf( "Warning %c%04i  ", cPrefix, iWarning );
+         printf( szText + 1, szWarning1, szWarning2 );
+         printf( "\n" );
+      }
    }
 }
 

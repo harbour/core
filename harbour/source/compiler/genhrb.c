@@ -47,7 +47,7 @@ void GenPortObj( PHB_FNAME pFileName )
    char szFileName[ _POSIX_PATH_MAX ];
    PFUNCTION pFunc /*= functions.pFirst */;
    PCOMSYMBOL pSym = symbols.pFirst;
-   WORD w, wLen, wVar;
+   USHORT w, wLen, wVar;
    LONG lPCodePos;
    LONG lPad;
    LONG lSymbols;
@@ -266,6 +266,8 @@ void GenPortObj( PHB_FNAME pFileName )
             case HB_P_POPMEMVAR:
             case HB_P_PUSHMEMVAR:
             case HB_P_PUSHMEMVARREF:
+            case HB_P_POPVARIABLE:
+            case HB_P_PUSHVARIABLE:
             case HB_P_POPFIELD:
             case HB_P_PUSHFIELD:
             case HB_P_POPALIASEDFIELD:
@@ -287,7 +289,7 @@ void GenPortObj( PHB_FNAME pFileName )
                break;
 
             case HB_P_PUSHBLOCK:
-               wVar = * ( ( WORD * ) &( pFunc->pCode [ lPCodePos + 5 ] ) );
+               wVar = * ( ( USHORT * ) &( pFunc->pCode [ lPCodePos + 5 ] ) );
                fputc(   pFunc->pCode[ lPCodePos++ ], yyc );
                fputc(   pFunc->pCode[ lPCodePos++ ], yyc );
                fputc(   pFunc->pCode[ lPCodePos++ ], yyc );

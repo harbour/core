@@ -60,6 +60,12 @@
 #include "set.h"
 #include "inkey.h"
 
+#if defined( __WATCOMC__ ) && defined( __386__ )
+/* NOTE: memcpy/memset can work with data block larger then 64kB */
+#define  hb_xmemcpy  memcpy
+#define  hb_xmemset  memset
+#endif
+
 typedef struct _SYMBOLS
 {
    PHB_SYMB pModuleSymbols; /* pointer to a one module own symbol table */
@@ -72,10 +78,8 @@ extern HARBOUR HB_SYSINIT( void );
 
 static void    hb_vmPopAlias( void );        /* pops the workarea number form the eval stack */
 static void    hb_vmPopAliasedField( PHB_SYMB );  /* pops an aliased field from the eval stack*/
-static void    hb_vmPopField( PHB_SYMB );      /* pops an unaliased field from the eval stack */
 static void    hb_vmPushAlias( void );       /* pushes the current workarea number */
 static void    hb_vmPushAliasedField( PHB_SYMB );     /* pushes an aliased field on the eval stack */
-static void    hb_vmPushField( PHB_SYMB );     /* pushes an unaliased field on the eval stack */
 static void    hb_vmSwapAlias( void );       /* swaps items on the eval stack and pops the workarea number */
 static ERRCODE hb_vmSelectWorkarea( PHB_ITEM ); /* select the workarea using a given item or a substituted value */
 
@@ -523,8 +527,14 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
               break;
 
          case HB_P_POPFIELD:
+              /* Pops a value from the eval stack and uses it to set
+               * a new value of the given field
+               */
               uiParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
-              hb_vmPopField( pSymbols + uiParams );
+              hb_stackDec();
+              hb_rddPutFieldValue( stack.pPos, pSymbols + uiParams );
+              hb_itemClear( stack.pPos );
+              HB_DEBUG( "hb_vmPopField\n" );
               w += 3;
               break;
 
@@ -539,6 +549,24 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
               hb_memvarSetValue( pSymbols + uiParams, stack.pPos );
               hb_itemClear( stack.pPos );
               HB_DEBUG( "(hb_vmPopMemvar)\n" );
+              w += 3;
+              break;
+
+         case HB_P_POPVARIABLE:
+              /* Pops a value from the eval stack and uses it to set
+               * a new value of a variable of unknown type.
+               */
+              uiParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
+              /* First try if passed symbol is a name of field
+               * in a current workarea - if it is not a field (FAILURE)
+               * then try the memvar variable (it will create PRIVATE
+               * variable if this variable doesn't exist)
+               */
+              hb_stackDec();
+              if( hb_rddFieldPut( stack.pPos, pSymbols + uiParams ) == FAILURE )
+                  hb_memvarSetValue( pSymbols + uiParams, stack.pPos );
+              hb_itemClear( stack.pPos );
+              HB_DEBUG( "(hb_vmPopVariable)\n" );
               w += 3;
               break;
 
@@ -580,8 +608,12 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
               break;
 
          case HB_P_PUSHFIELD:
+              /* It pushes the current value of the given field onto the eval stack
+               */
               uiParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
-              hb_vmPushField( pSymbols + uiParams );
+              hb_rddGetFieldValue( stack.pPos, pSymbols + uiParams );
+              hb_stackPush();
+              HB_DEBUG( "hb_vmPushField\n" );
               w += 3;
               break;
 
@@ -654,6 +686,44 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
               uiParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
               hb_vmPushSymbol( pSymbols + uiParams );
               w += 3;
+              break;
+
+         case HB_P_PUSHVARIABLE:
+              /* Push a value of variable of unknown type onto the eval stack
+               */
+              {
+               USHORT uiAction = E_DEFAULT;
+               PHB_SYMB pVarSymb = pSymbols + pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
+
+               do
+               {
+                  /* First try if passed symbol is a name of field
+                   * in a current workarea - if it is not a field (FAILURE)
+                   * then try the memvar variable
+                   */
+                  if( hb_rddFieldGet( stack.pPos, pVarSymb ) == SUCCESS )
+                     hb_stackPush();
+                  else
+                  {
+                     if( hb_memvarGet( stack.pPos, pVarSymb ) == SUCCESS )
+                        hb_stackPush();
+                     else
+                     {
+                        HB_ITEM_PTR pError;
+
+                        pError = hb_errRT_New( ES_ERROR, NULL, EG_NOVAR, 1003,
+                                                NULL, pVarSymb->szName,
+                                                0, EF_CANRETRY );
+
+                        uiAction = hb_errLaunch( pError );
+                        hb_errRelease( pError );
+                     }
+                  }
+               }
+               while( uiAction == E_RETRY );
+               HB_DEBUG( "(hb_vmPushVariable)\n" );
+               w += 3;
+              }
               break;
 
          case HB_P_SWAPALIAS:
@@ -2125,17 +2195,6 @@ double hb_vmPopDouble( int * piDec )
    return dNumber;
 }
 
-/* Pops a value from the eval stack and uses it to set a new value
- * of the given field
- */
-static void hb_vmPopField( PHB_SYMB pSym )
-{
-   hb_rddPutFieldValue( stack.pPos - 1, pSym );
-   hb_stackPop();
-
-   HB_DEBUG( "hb_vmPopField\n" );
-}
-
 void hb_vmPopLocal( SHORT iLocal )
 {
    hb_stackDec();
@@ -2291,16 +2350,6 @@ void hb_vmPushLogical( BOOL bValue )
    hb_stackPush();
 
    HB_DEBUG( "hb_vmPushLogical\n" );
-}
-
-/* It pushes the current value of the given field onto the eval stack
- */
-static void hb_vmPushField( PHB_SYMB pSym )
-{
-   hb_rddGetFieldValue( stack.pPos, pSym );
-   hb_stackPush();
-
-   HB_DEBUG( "hb_vmPushField\n" );
 }
 
 void hb_vmPushLocal( SHORT iLocal )

@@ -68,6 +68,12 @@
 #include "dates.h"
 #include "set.h"
 
+#if defined( __WATCOMC__ ) && defined( __386__ )
+/* NOTE: memcpy/memset can work with data block larger then 64kB */
+#define  hb_xmemcpy  memcpy
+#define  hb_xmemset  memset
+#endif
+
 BOOL hb_evalNew( PEVALINFO pEvalInfo, PHB_ITEM pItem )
 {
    BOOL bResult;
@@ -389,7 +395,7 @@ PHB_ITEM hb_itemPutCL( PHB_ITEM pItem, char * szText, ULONG ulLen )
    else
       pItem = hb_itemNew( NULL );
 
-   /* CA-Clipper seems to be buggy here, it will return ulLen bytes of 
+   /* CA-Clipper seems to be buggy here, it will return ulLen bytes of
       trash if the szText buffer is NULL, at least with hb_retclen(). */
 
    if( szText == NULL )

@@ -44,8 +44,8 @@ void GenCCode( PHB_FNAME pFileName )       /* generates the C language output */
    char szFileName[ _POSIX_PATH_MAX ];
    PFUNCTION pFunc = functions.pFirst, pFTemp;
    PCOMSYMBOL pSym = symbols.pFirst;
-   WORD w, wLen, wSym, wVar;
-   WORD iNestedCodeblock = 0;
+   USHORT w, wLen, wSym, wVar;
+   USHORT iNestedCodeblock = 0;
    ULONG lPCodePos;
    char chr;
    BOOL bEndProcRequired;
@@ -421,7 +421,7 @@ void GenCCode( PHB_FNAME pFileName )       /* generates the C language output */
 
             case HB_P_MESSAGE:
                {
-                  WORD wFixPos;
+                  USHORT wFixPos;
 
                   wSym = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
                   wFixPos = FixSymbolPos( wSym );
@@ -487,7 +487,7 @@ void GenCCode( PHB_FNAME pFileName )       /* generates the C language output */
 
             case HB_P_PARAMETER:
                {
-                  WORD wFixPos;
+                  USHORT wFixPos;
 
                   wVar = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
                   wFixPos = FixSymbolPos( wVar );
@@ -518,7 +518,7 @@ void GenCCode( PHB_FNAME pFileName )       /* generates the C language output */
 
             case HB_P_POPALIASEDFIELD:
                {
-                  WORD wFixPos;
+                  USHORT wFixPos;
 
                   wVar = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
                   wFixPos = FixSymbolPos( wVar );
@@ -533,7 +533,7 @@ void GenCCode( PHB_FNAME pFileName )       /* generates the C language output */
 
             case HB_P_POPFIELD:
                {
-                  WORD wFixPos;
+                  USHORT wFixPos;
 
                   wVar = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
                   wFixPos = FixSymbolPos( wVar );
@@ -587,7 +587,7 @@ void GenCCode( PHB_FNAME pFileName )       /* generates the C language output */
 
             case HB_P_POPMEMVAR:
                {
-                  WORD wFixPos;
+                  USHORT wFixPos;
 
                   wVar = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
                   wFixPos = FixSymbolPos( wVar );
@@ -618,6 +618,21 @@ void GenCCode( PHB_FNAME pFileName )       /* generates the C language output */
                }
                break;
 
+            case HB_P_POPVARIABLE:
+               {
+                  USHORT wFixPos;
+
+                  wVar = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
+                  wFixPos = FixSymbolPos( wVar );
+                  fprintf( yyc, "\t\tHB_P_POPVARIABLE, %i, %i,",
+                           LOBYTE( wFixPos ),
+                           HIBYTE( wFixPos ) );
+                  if( _bComments ) fprintf( yyc, "\t/* %s */", GetSymbolOrd( wVar )->szName  );
+                  fprintf( yyc, "\n" );
+                  lPCodePos += 3;
+               }
+               break;
+
             case HB_P_POWER:
                fprintf( yyc, "\tHB_P_POWER,\n" );
                lPCodePos++;
@@ -630,7 +645,7 @@ void GenCCode( PHB_FNAME pFileName )       /* generates the C language output */
 
             case HB_P_PUSHALIASEDFIELD:
                {
-                  WORD wFixPos;
+                  USHORT wFixPos;
 
                   wVar = pFunc->pCode[ lPCodePos + 1 ] +
                          pFunc->pCode[ lPCodePos + 2 ] * 256;
@@ -655,14 +670,14 @@ void GenCCode( PHB_FNAME pFileName )       /* generates the C language output */
                         pFunc->pCode[ lPCodePos + 2 ] * 256 );
                fprintf( yyc, "\n" );
 
-               w = * ( ( WORD * ) &( pFunc->pCode [ lPCodePos + 3 ] ) );
+               w = * ( ( USHORT * ) &( pFunc->pCode [ lPCodePos + 3 ] ) );
                fprintf( yyc, "\t%i, %i,",
                         pFunc->pCode[ lPCodePos + 3 ],
                         pFunc->pCode[ lPCodePos + 4 ] );
                if( _bComments ) fprintf( yyc, "\t/* number of local parameters (%i) */", w );
                fprintf( yyc, "\n" );
 
-               wVar = * ( ( WORD * ) &( pFunc->pCode [ lPCodePos + 5 ] ) );
+               wVar = * ( ( USHORT * ) &( pFunc->pCode [ lPCodePos + 5 ] ) );
                fprintf( yyc, "\t%i, %i,",
                         pFunc->pCode[ lPCodePos + 5 ],
                         pFunc->pCode[ lPCodePos + 6 ] );
@@ -673,7 +688,7 @@ void GenCCode( PHB_FNAME pFileName )       /* generates the C language output */
                /* create the table of referenced local variables */
                while( wVar-- )
                {
-                  w = * ( ( WORD * ) &( pFunc->pCode [ lPCodePos ] ) );
+                  w = * ( ( USHORT * ) &( pFunc->pCode [ lPCodePos ] ) );
                   fprintf( yyc, "\t%i, %i,",
                            pFunc->pCode[ lPCodePos ],
                            pFunc->pCode[ lPCodePos + 1 ] );
@@ -701,7 +716,7 @@ void GenCCode( PHB_FNAME pFileName )       /* generates the C language output */
 
             case HB_P_PUSHFIELD:
                {
-                  WORD wFixPos;
+                  USHORT wFixPos;
 
                   wVar = pFunc->pCode[ lPCodePos + 1 ] +
                           pFunc->pCode[ lPCodePos + 2 ] * 256;
@@ -817,7 +832,7 @@ void GenCCode( PHB_FNAME pFileName )       /* generates the C language output */
 
             case HB_P_PUSHMEMVAR:
                {
-                  WORD wFixPos;
+                  USHORT wFixPos;
 
                   wVar = pFunc->pCode[ lPCodePos + 1 ] +
                          pFunc->pCode[ lPCodePos + 2 ] * 256;
@@ -833,7 +848,7 @@ void GenCCode( PHB_FNAME pFileName )       /* generates the C language output */
 
             case HB_P_PUSHMEMVARREF:
                {
-                  WORD wFixPos;
+                  USHORT wFixPos;
 
                   wVar = pFunc->pCode[ lPCodePos + 1 ] +
                          pFunc->pCode[ lPCodePos + 2 ] * 256;
@@ -918,15 +933,31 @@ void GenCCode( PHB_FNAME pFileName )       /* generates the C language output */
 
             case HB_P_PUSHSYM:
                {
-                  WORD wFixPos;
+                  USHORT wFixPos;
 
                   wSym = pFunc->pCode[ lPCodePos + 1 ] +
                           pFunc->pCode[ lPCodePos + 2 ] * 256;
                   wFixPos = FixSymbolPos( wSym );
-                  fprintf( yyc, "\tHB_P_PUSHSYM, %i, %i,",
+                  fprintf( yyc, "\t\tHB_P_PUSHSYM, %i, %i,",
                            LOBYTE( wFixPos ),
                            HIBYTE( wFixPos ) );
                   if( _bComments ) fprintf( yyc, "\t/* %s */", GetSymbolOrd( wSym )->szName );
+                  fprintf( yyc, "\n" );
+                  lPCodePos += 3;
+               }
+               break;
+
+            case HB_P_PUSHVARIABLE:
+               {
+                  USHORT wFixPos;
+
+                  wVar = pFunc->pCode[ lPCodePos + 1 ] +
+                         pFunc->pCode[ lPCodePos + 2 ] * 256;
+                  wFixPos = FixSymbolPos( wVar );
+                  fprintf( yyc, "\t\tHB_P_PUSHVARIABLE, %i, %i,",
+                           LOBYTE( wFixPos ),
+                           HIBYTE( wFixPos ) );
+                  if( _bComments ) fprintf( yyc, "\t/* %s */", GetSymbolOrd( wVar )->szName );
                   fprintf( yyc, "\n" );
                   lPCodePos += 3;
                }

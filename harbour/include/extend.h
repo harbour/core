@@ -231,6 +231,11 @@ typedef struct _HB_VALUE
    HB_HANDLE hPrevMemvar;
 } HB_VALUE, * PHB_VALUE, * HB_VALUE_PTR;
 
+/* RDD method return codes */
+typedef USHORT ERRCODE;
+#define SUCCESS            0
+#define FAILURE            1
+
 extern STACK stack;
 extern HB_SYMB symEval;
 extern HB_ITEM aStatics;
@@ -376,6 +381,7 @@ extern void     hb_memvarsRelease( void );
 extern void     hb_memvarValueIncRef( HB_HANDLE );
 extern void     hb_memvarValueDecRef( HB_HANDLE );
 extern void     hb_memvarSetValue( PHB_SYMB, HB_ITEM_PTR );
+extern ERRCODE  hb_memvarGet( HB_ITEM_PTR, PHB_SYMB );
 extern void     hb_memvarGetValue( HB_ITEM_PTR, PHB_SYMB );
 extern void     hb_memvarGetRefer( HB_ITEM_PTR, PHB_SYMB );
 extern ULONG    hb_memvarGetPrivatesBase( void );

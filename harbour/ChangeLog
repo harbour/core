@@ -1,3 +1,103 @@
+19991001-17:10 GMT+2 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/vm/hvm.c
+    *source/rtl/strings.c
+    *source/rtl/itemapi.c
+        * added redefinition of
+        hb_xmemcpy -> memcpy
+        hb_xmemset -> memset
+        because these functions can work with buffers larger then 64kB
+        (size_t is typedefined as 'unsigned') - for WATCOM compiler only
+
+    *include/pcode.h
+    *source/compiler/harbour.y
+    *source/compiler/genc.c
+    *source/compiler/genhrb.c
+    *source/vm/hvm.c
+        + added support for new opcodes used to handle undeclared variables
+        (the type of a variable is determined at runtime)
+                HB_P_POPVARIABLE
+                HB_P_PUSHVARIABLE
+        * the generated pcodes depends on yhe use of
+        HARBOUR_STRICT_CLIPPER_COMPATIBILITY option
+        (see doc\compatib.txt for details)
+
+NOTE: You have to recompile all PRG sources!
+
+    *source/rtl/memvars.c
+    *include/extend.h
+        * new function hb_memvarGet that retrieves the value of memvar
+        variable without error generation in case when the variable
+        does not exist
+
+    *source/rdd/dbcmd.c
+    *include/rddapi.h
+        * new functions hb_rddFieldGet/hb_rddFieldPut used to
+        retrieve/set the value of database field with no error generation
+        in case when the field does not exist
+
+    *include/extend.h
+        * moved definition of ERRCODE, SUCCESS and FAILURE from rddapi.h
+        to make them available for other modules
+
+    *source/compiler/harbour.y
+    *source/compiler/harbour.l
+        * the line number is incremented in harbour.y now (Crlf rule)
+        Incrementing in harbour.l caused incorrect line number reporting
+        in error/warning messages. The look ahead FLEX feature caused
+        incrementation in the middle of the parsed rule.
+
+    *source/compiler/harbour.y
+        * added warnings when a procedure returns a value or a function
+        with no return value
+        * replaced the WORD type with USHORT
+        * corrected (and simplified) handling of parameters of 
+        DO <proc> WITH <parms> statements (passing by reference
+        works correctly now)
+        * corrected the rule for declaration of multidimensioned arrays
+        ( LOCAL arr[ 1 ][ 2 ] )
+
+    *source/compiler/harbour.y
+    *source/hbpp/hbpp.c
+    *source/hbpp/stdalone/hbpp.c
+        * the '-w' command line option can set the maximal level of reported
+        warnings. The following levels are supported currently:
+        '-w0'         - no warnings
+        '-w' or '-w1' - Clipper compatible warnings
+        '-w2'         - some useful warnings missed in Clipper
+        '-w3'         - warnings generated for Harbour language extensions
+        * the first character of warning messages defines the level of
+        warnings that triggers this message
+
+    *source/hbpp/hbpplib.c
+        * added setjmp/longjmp error handling - the error handling should
+        be expanded later to made __PREPROCESS function useful in real
+        applications
+
+    *include/hberrors.h
+        * new warnings
+
+    *include/compiler.h
+        * new flag FUN_WITH_RETURN
+        * replaced the WORD type with USHORT
+
+    *source/compiler/genobj32.c
+    *source/compiler/genc.c
+    *source/compiler/genhrb.c
+        * replaced the WORD type with USHORT
+
+    *include/clipdefs.h
+        * removed #include "caundoc.api" because it contains undocumented
+        materials that should be included on request only. It also caused
+        redefinition errors (HB_FNAME defined in filesys.h) when harbour.y
+        was compiled with HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+
+    *doc/compiler.txt
+        * the basic documentation for harbour compiler
+
+    *source/rtl/console.c
+	* hb_cursor_enum -> HB_cursor_enum
+	
 19991001-00:25 EDT Paul Tucker <ptucker@sympatico.ca>
   * makefile.vc
     + source/rtl/dircmd.prg
