@@ -52,7 +52,7 @@ extern void hb_vmProcessSymbols( PHB_SYMB pSymbols, WORD wSymbols ); /* statics 
    static HB_SYMB symbols[] = {
 
 #define HB_INIT_SYMBOLS_END( func )  }; \
-   void __attribute__ ((constructor)) func( void ) \
+   static void __attribute__ ((constructor)) func( void ) \
    { \
       hb_vmProcessSymbols( symbols, sizeof( symbols ) / sizeof( HB_SYMB ) ); \
    }
@@ -70,7 +70,7 @@ extern void hb_vmProcessSymbols( PHB_SYMB pSymbols, WORD wSymbols ); /* statics 
    static HB_SYMB symbols[] = {
 
 #define HB_INIT_SYMBOLS_END( func )  }; \
-   void func( void ) \
+   static void func( void ) \
    { \
       hb_vmProcessSymbols( symbols, sizeof( symbols ) / sizeof( HB_SYMB ) ); \
    }
@@ -86,7 +86,7 @@ extern void hb_vmProcessSymbols( PHB_SYMB pSymbols, WORD wSymbols ); /* statics 
    static HB_SYMB symbols[] = {
 
 #define HB_INIT_SYMBOLS_END( func ) }; \
-   int func( void ) \
+   static int func( void ) \
    { \
       hb_vmProcessSymbols( symbols, sizeof( symbols ) / sizeof( HB_SYMB ) ); \
       return 1; \
