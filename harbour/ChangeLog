@@ -8,6 +8,17 @@
    * contrib/msql/dbf2msql.prg
      ! fixed memory leak due to resources not released
 
+2000-06-08-07:50 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
+*utils/hbdoc/html.prg
+ utils/hbdoc/genhtm.prg
+ utils/hbdoc/genchm.prg
+   *small changes
+*utils/hbdoc/os2.prg
+ utils/hbdoc/genos2.prg
+   *Some small enhacements
+*utils/hbdoc/hbdoc.prg
+   *Small changes when generating harbour.htm
+
 2000-06-07 22:50 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
 
    * source/compiler/harbour.c
