@@ -1,3 +1,8 @@
+20000505-00:27 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+
+   * source/rtl/teditor.prg
+     ! fixed a few bugs
+
 2000-05-04 18:00 GMT-4 David G. Holm <dholm@jsd-llc.com>
 
   * contrib/rdd_ads/ads1.c
@@ -11,16 +16,16 @@
    *source/vm/hvm.c
       * added hb_vmPushPointer( void * pPointer ) function to push
       an item of type HB_IT_POINTER onto the eval stack
-      
+
    *source/rdd/dbcmd.c
    *source/rdd/dbf1.c
    *source/rdd/delim1.c
    *source/rdd/sdf1.c
    *source/rdd/dbfcdx/dbfcdx1.c
    *source/rdd/dbfntx/dbfntx1.c
-      * changed to access pointers via hb_vmPushPointer/hb_itemGetPtr 
+      * changed to access pointers via hb_vmPushPointer/hb_itemGetPtr
       instead of passing them using values of long type
- 
+
 
 20000504-04:05 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
@@ -31,24 +36,24 @@
 
    * source/compiler/harbour.l
      + Added:
-	"as bool array"      { return AS_LOGICAL_ARRAY; }
-	"as boolean array"   { return AS_LOGICAL_ARRAY; }
-	"as var"             { return AS_VARIANT; }
-	"as variant"         { return AS_VARIANT; }
-	"as num array"       { return AS_NUMERIC_ARRAY; }
-	"as numeric array"   { return AS_NUMERIC_ARRAY; }
-	"as char array"      { return AS_CHARACTER_ARRAY; }
-	"as character array" { return AS_CHARACTER_ARRAY; }
-	"as string array"    { return AS_CHARACTER_ARRAY; }
-	"as logical array"   { return AS_LOGICAL_ARRAY; }
-	"as bool array"      { return AS_LOGICAL_ARRAY; }
-	"as boolean array"   { return AS_LOGICAL_ARRAY; }
-	"as date array"      { return AS_DATE_ARRAY; }
-	"as array array"     { return AS_ARRAY_ARRAY; }
-	"as block array"     { return AS_BLOCK_ARRAY; }
-	"as object array"    { return AS_OBJECT_ARRAY; }
-	"as var array"       { return AS_VARIANT; }
-	"as variant array"   { return AS_VARIANT; }
+   "as bool array"      { return AS_LOGICAL_ARRAY; }
+   "as boolean array"   { return AS_LOGICAL_ARRAY; }
+   "as var"             { return AS_VARIANT; }
+   "as variant"         { return AS_VARIANT; }
+   "as num array"       { return AS_NUMERIC_ARRAY; }
+   "as numeric array"   { return AS_NUMERIC_ARRAY; }
+   "as char array"      { return AS_CHARACTER_ARRAY; }
+   "as character array" { return AS_CHARACTER_ARRAY; }
+   "as string array"    { return AS_CHARACTER_ARRAY; }
+   "as logical array"   { return AS_LOGICAL_ARRAY; }
+   "as bool array"      { return AS_LOGICAL_ARRAY; }
+   "as boolean array"   { return AS_LOGICAL_ARRAY; }
+   "as date array"      { return AS_DATE_ARRAY; }
+   "as array array"     { return AS_ARRAY_ARRAY; }
+   "as block array"     { return AS_BLOCK_ARRAY; }
+   "as object array"    { return AS_OBJECT_ARRAY; }
+   "as var array"       { return AS_VARIANT; }
+   "as variant array"   { return AS_VARIANT; }
 
    * source/compiler/harbour.y
      + Added AsArray
@@ -94,9 +99,9 @@
 
    * include/hbcomp.h
      + Added:
-	#define VU_NOT_USED    0
-	#define VU_INITIALIZED 1
-	#define VU_USED        2
+   #define VU_NOT_USED    0
+   #define VU_INITIALIZED 1
+   #define VU_USED        2
 
    * source/compiler/harbour.c
       * Modified refrences to pVar->iUsed to use new VU_* constants.
