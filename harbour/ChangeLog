@@ -1,3 +1,11 @@
+19990524-14:30 CET Eddie Runia
+  * source/vm/hvm.c
+    <xArg> := PValue(<nArg>) added
+  * tests/working/run_exp.h
+    added to function list
+  * tests/working/multiarg.prg
+    test program used
+
 19990524-10:25 CET Alexander Kressin (upload Eddie Runia)
   * source/hbpp
     added preprocessor

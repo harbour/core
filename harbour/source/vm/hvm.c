@@ -127,6 +127,7 @@ static void ForceLink( void );
 
 ULONG hb_isMessage( PITEM, char * );
 ULONG hb_strAt( char *, long, char *, long );
+PITEM hb_itemReturn( PITEM );
 
 #define STACK_INITITEMS   100
 #define STACK_EXPANDITEMS  20
@@ -2204,6 +2205,25 @@ HARBOUR PCOUNT()
    WORD  wRet  = pBase->wParams;                /* Skip current function     */
 
    _retni( wRet );
+}
+
+HARBOUR PVALUE()                                /* PValue( <nArg> )         */
+{
+   WORD  wParam = _parni( 1 );                  /* Get parameter            */
+   PITEM pBase = stack.pItems + stack.pBase->wBase;
+                                                /* Skip function + self     */
+
+   if( wParam && wParam <= pBase->wParams )     /* Valid number             */
+      hb_itemReturn( pBase + 1 + wParam );
+   else
+   {
+      PITEM pError = _errNew();
+
+      _errPutDescription(pError, "Argument error: PVALUE");
+      _errLaunch(pError);
+      _errRelease(pError);
+      _ret();
+   }
 }
 
 

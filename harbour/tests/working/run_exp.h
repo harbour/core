@@ -116,6 +116,7 @@ HARBOUR TANH();
 HARBOUR STRDUMP();
 HARBOUR STRTOKEN();
 HARBOUR ROT13();
+HARBOUR PVALUE();
 
 /* Same story.
 
@@ -233,5 +234,6 @@ static SYMBOL symbols[] = {
 { "TANH",           FS_PUBLIC, TANH          , 0 },
 { "STRDUMP",        FS_PUBLIC, STRDUMP       , 0 },
 { "STRTOKEN",       FS_PUBLIC, STRTOKEN      , 0 },
-{ "ROT13",          FS_PUBLIC, ROT13         , 0 }
+{ "ROT13",          FS_PUBLIC, ROT13         , 0 },
+{ "PVALUE",         FS_PUBLIC, PVALUE        , 0 }
 };
