@@ -1353,7 +1353,7 @@ Separator     {SpaceTab}
 {Number}       { return yy_ConvertNumber( yytext ); }
 
 {HexNumber}   {
-                long lNumber = 0;
+                 long lNumber = 0;
 
                  sscanf( yytext, "%lxI", &lNumber );
 
@@ -1373,6 +1373,7 @@ Separator     {SpaceTab}
                  }
                  else
                  {
+                    /* NOTE: This will never happen */
                     yylval.valDouble.dNumber = lNumber;
                     yylval.valDouble.bWidth = HB_DEFAULT_WIDTH;
                     yylval.valDouble.bDec = 0;
@@ -1560,8 +1561,10 @@ static int yy_ConvertNumber( char * szBuffer )
    ptr = strchr( szBuffer, '.' );
    if( ptr )
    {
-      yylval.valDouble.bWidth = HB_DEFAULT_WIDTH;
       yylval.valDouble.bDec = strlen( ptr + 1 );
+      yylval.valDouble.bWidth = strlen( szBuffer ) - yylval.valDouble.bDec;
+      if( yylval.valDouble.bDec )
+         yylval.valDouble.bWidth--;
       yylval.valDouble.szValue = szBuffer;
       return NUM_DOUBLE;
    }
@@ -1583,7 +1586,7 @@ static int yy_ConvertNumber( char * szBuffer )
       }
       else
       {
-         yylval.valDouble.bWidth = HB_DEFAULT_WIDTH;
+         yylval.valDouble.bWidth = strlen( szBuffer ) + 1;
          yylval.valDouble.bDec = 0;
          yylval.valDouble.szValue = szBuffer;
          return NUM_DOUBLE;

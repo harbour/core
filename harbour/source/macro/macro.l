@@ -305,8 +305,10 @@ Separator     {SpaceTab}
    ptr = strchr( yytext, '.' );
    if( ptr )
    {
-      yylval_ptr->valDouble.bWidth = HB_DEFAULT_WIDTH;
       yylval_ptr->valDouble.bDec = strlen( ptr + 1 );
+      yylval_ptr->valDouble.bWidth = strlen( yytext ) - yylval_ptr->valDouble.bDec;
+      if( yylval_ptr->valDouble.bDec )
+         yylval_ptr->valDouble.bWidth--;
       yylval_ptr->valDouble.szValue = yytext ;
       return NUM_DOUBLE;
    }
@@ -321,7 +323,7 @@ Separator     {SpaceTab}
       }
       else
       {
-         yylval_ptr->valDouble.bWidth = HB_DEFAULT_WIDTH;
+         yylval_ptr->valDouble.bWidth = strlen( yytext ) + 1;
          yylval_ptr->valDouble.bDec = 0;
          yylval_ptr->valDouble.szValue = yytext;
          return NUM_DOUBLE;

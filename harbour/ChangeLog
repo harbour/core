@@ -1,3 +1,16 @@
+20000502-02:13 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/compiler/harbour.l
+   * source/macro/macro.l
+     + The widths of the double values are calculated at compile time.
+       The widths of the doubles generated in the expression 
+       optimizer are still forced to be calculated at runtime.
+       Please test this!
+
+   * source/vm/hvm.c
+     % Width calculation moved to a separate function to lower the required
+       stack space.
+
 20000502-01:43 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * include/hbapi.h

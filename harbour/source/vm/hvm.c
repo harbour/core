@@ -2832,7 +2832,7 @@ static HARBOUR hb_vmDoBlock( void )
 HB_ITEM_PTR hb_vmEvalBlock( HB_ITEM_PTR pBlock )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmEvalBlock(%p)", pBlock));
-  
+
    hb_vmPushSymbol( &hb_symEval );
    hb_vmPush( pBlock );
    hb_vmDo( 0 );
@@ -2861,7 +2861,7 @@ HB_ITEM_PTR hb_vmEvalBlockV( HB_ITEM_PTR pBlock, USHORT uiArgCount, ... )
    for( i=1; i<= uiArgCount; i++ )
       hb_vmPush( va_arg( va, PHB_ITEM ) );
    va_end( va );
-   
+
    hb_vmDo( uiArgCount );
 
    return &hb_stack.Return;
@@ -3090,6 +3090,21 @@ void hb_vmPushDouble( double dNumber, int iDec )
    hb_stackPush();
 }
 
+static int hb_vmCalcDoubleWidth( double dNumber, int iDec )
+{
+   char buffer[ 360 ];
+   int iLength;
+
+   sprintf( buffer, "%.*f", 0, dNumber );
+
+   iLength = strlen( buffer );
+
+   if( iDec == 0 )
+      iLength++;
+
+   return iLength;
+}
+
 static void hb_vmPushDoubleConst( double dNumber, int iWidth, int iDec )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmPushDoubleConst(%lf, %d, %d)", dNumber, iWidth, iDec));
@@ -3102,23 +3117,19 @@ static void hb_vmPushDoubleConst( double dNumber, int iWidth, int iDec )
    else
       hb_stack.pPos->item.asDouble.decimal = iDec;
 
+   /* NOTE: Part of these width calculations could be moved to the compiler for
+            maximum speed. */
+
    if( dNumber >= 1000000000.0 )
    {
-      /* NOTE: If the width info is not provided by the pcode stream, 
+      /* NOTE: If the width info is not provided by the pcode stream,
                it will be determined at runtime with a relatively slow
                method. [vszakats] */
 
       if( iWidth == HB_DEFAULT_WIDTH )
-      {
-         char buffer[ 360 ];
-         sprintf( buffer, "%.*f", 0, dNumber );
-         hb_stack.pPos->item.asDouble.length = strlen( buffer ) + 1;
-      }
+         hb_stack.pPos->item.asDouble.length = hb_vmCalcDoubleWidth( dNumber, iDec );
       else
          hb_stack.pPos->item.asDouble.length = iWidth;
-
-      if( iDec )
-         hb_stack.pPos->item.asDouble.length--;
    }
    else if( dNumber <= -1000000000.0 )
       hb_stack.pPos->item.asDouble.length = 20;
