@@ -1,3 +1,7 @@
+20000211-23:05 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * make*.bat
+     * The different make systems generate log files with different names.
+
 20000211-22:31 GMT+1 Victor Szakats <info@szelvesz.hu>
    * makefile.vc
      ! Modified to generate all the intermediate .c/.y/.l files in the obj dir

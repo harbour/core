@@ -3,5 +3,5 @@ rem
 rem $Id$
 rem 
 
-make -fmakefile.b16 > make.err
-edit make.err
+make -fmakefile.b16 > make_b16.err
+edit make_b16.err
