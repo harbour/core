@@ -1,3 +1,17 @@
+2001-06-30 10:30 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/vm/dynsym.c
+     + New profiler support functions added
+       __DYNSISFUN( nDynSIndex ) --> .t. | .f.
+          returns .t. if a dynamic symbol has a function/procedure pointer,
+          given its dynamic symbol index.
+
+       __DYNSGETPRF( nDynSIndex ) --> { nTimes, nTime }
+          returns an array with a function or procedure
+          called and consumed times, given its dynamic symbol index.
+
+   * source/rtl/profiler.prg
+     + Added support for functions and procedures.
+
 2001-06-30 09:40 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/vm/hvm.c
      + Added profiler support for functions and procedures
