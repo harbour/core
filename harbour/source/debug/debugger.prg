@@ -58,7 +58,9 @@
 /* NOTE: Don't use SAY/DevOut()/DevPos() for screen output, otherwise
          the debugger output may interfere with the applications output
          redirection, and is also slower. [vszakats] */
+
 #pragma -es0
+
 #include "hbclass.ch"
 #include "hbmemvar.ch"
 #include "box.ch"
@@ -525,7 +527,7 @@ return nil
 METHOD CommandWindowProcessKey( nKey ) CLASS TDebugger
 
    local cCommand, cResult, oE
-   local bLastHandler
+   local bLastHandler, lDisplay
 
    do case
       case nKey == K_UP
@@ -552,34 +554,61 @@ METHOD CommandWindowProcessKey( nKey ) CLASS TDebugger
 
       case nKey == K_ENTER
            cCommand := ::oGetListCommand:oGet:VarGet()
-           AAdd( ::aLastCommands, cCommand )
-           ::nCommand++
-           ::oWndCommand:ScrollUp( 1 )
 
-           bLastHandler := ErrorBlock({ |objErr| BREAK (objErr) })
-
-           if SubStr( LTrim( cCommand ), 1, 2 ) == "? "
-              begin sequence
-                  cResult := ValToStr( &( AllTrim( SubStr( LTrim( cCommand ), 3 ) ) ) )
-
-              recover using oE
-                  cResult := "Command error: " + oE:description
-
-              end sequence
-
-           else
-              cResult := "Command error"
-
+           if ! Empty( cCommand )
+              AAdd( ::aLastCommands, cCommand )
+              ::nCommand++
+              ::oWndCommand:ScrollUp( 1 )
            endif
 
-           ErrorBlock(bLastHandler)
+           bLastHandler = ErrorBlock( { | objErr | Break( objErr ) } )
+
+           do case
+              case Empty( cCommand )
+                 lDisplay = .f.
+
+              case SubStr( LTrim( cCommand ), 1, 2 ) == "? "
+                 begin sequence
+                    cResult = ValToStr( &( AllTrim( SubStr( LTrim( cCommand ), 3 ) ) ) )
+
+                 recover using oE
+                    cResult = "Command error: " + oE:description
+
+                 end sequence
+                 lDisplay = .t.
+
+              case Upper( SubStr( LTrim( cCommand ), 1, 3 ) ) == "DOS"
+                 ::OsShell()
+                 SetCursor( SC_NORMAL )
+                 lDisplay = .f.
+
+              case Upper( SubStr( LTrim( cCommand ), 1, 4 ) ) == "QUIT"
+                 ::Exit()
+                 ::Hide()
+                 __Quit()
+
+              case Upper( SubStr( LTrim( cCommand ), 1, 6 ) ) == "OUTPUT"
+                 SetCursor( SC_NONE )
+                 ::ShowAppScreen()
+                 SetCursor( SC_NORMAL )
+                 lDisplay = .f.
+
+              otherwise
+                 cResult = "Command error"
+                 lDisplay = .t.
+
+           endcase
+
+           ErrorBlock( bLastHandler )
 
            DispOutAt( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 1,;
               Space( ::oWndCommand:nRight - ::oWndCommand:nLeft - 1 ),;
               __DbgColors()[ 2 ] )
-           DispOutAt( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 3, cResult,;
-              __DbgColors()[ 2 ] )
-           ::oWndCommand:ScrollUp( 1 )
+           if lDisplay
+              DispOutAt( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 3,;
+                         cResult, __DbgColors()[ 2 ] )
+              ::oWndCommand:ScrollUp( 1 )
+           endif
            DispOutAt( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 1, "> ",;
               __DbgColors()[ 2 ] )
            cCommand := Space( ::oWndCommand:nRight - ::oWndCommand:nLeft - 3 )
@@ -1296,6 +1325,8 @@ METHOD OSShell() CLASS TDebugger
 
    SET COLOR TO "W/N"
    CLS
+   ? "Type 'exit' to return to the Debugger"
+
    SetCursor( SC_NORMAL )
 
    begin sequence
@@ -1669,6 +1700,7 @@ static procedure SetsKeyPressed( nKey, oBrwSets, nSets, oWnd, cCaption, bEdit )
                        ".." + AllTrim( Str( nSets ) ) + "]" )
 
 return
+
 static procedure SetsKeyVarPressed( nKey, oBrwSets, nSets, oWnd, bEdit )
    Local nRectoMove
    local nSet := oBrwSets:Cargo[1]
@@ -1700,7 +1732,6 @@ static procedure SetsKeyVarPressed( nKey, oBrwSets, nSets, oWnd, bEdit )
    endcase
 
 return
-
 
 static function ValToStr( uVal )
 
@@ -1734,7 +1765,6 @@ static function ValToStr( uVal )
    endcase
 
 return cResult
-
 
 METHOD LineNumbers() CLASS TDebugger
 
@@ -1795,14 +1825,6 @@ METHOD SearchLine() CLASS TDebugger
 
 return nil
 
-/* Not declared - it seems ToggleCaseSensitive() replaced this!!!
-METHOD CaseSensitive() CLASS TDebugger
-
-   ::lCaseSensitive := !::lCaseSensitive
-
-return nil
-*/
-
 function __DbgColors()
 
 return iif( ! s_oDebugger:lMonoDisplay, s_oDebugger:aColors,;
@@ -1823,7 +1845,8 @@ static function myColors( oBrowse, aColColors )
    next
 
    oBrowse:colpos := nColPos
-return Nil
+
+return nil
 
 static procedure RefreshVarsS( oBrowse )
 
@@ -1837,10 +1860,11 @@ static procedure RefreshVarsS( oBrowse )
       oBrowse:hilite():colpos:=1
    endif
    oBrowse:hilite()
-   return
+
+return
 
 static function ArrayBrowseSkip( nPos, oBrwSets, n )
 
-   return iif( oBrwSets:cargo[ 1 ] + nPos < 1, 0 - oBrwSets:cargo[ 1 ] + 1 , ;
-      iif( oBrwSets:cargo[ 1 ] + nPos > Len(oBrwSets:cargo[ 2 ][ 1 ]), ;
-      Len(oBrwSets:cargo[ 2 ][ 1 ]) - oBrwSets:cargo[ 1 ], nPos ) )
+return iif( oBrwSets:cargo[ 1 ] + nPos < 1, 0 - oBrwSets:cargo[ 1 ] + 1 , ;
+       iif( oBrwSets:cargo[ 1 ] + nPos > Len(oBrwSets:cargo[ 2 ][ 1 ]), ;
+       Len(oBrwSets:cargo[ 2 ][ 1 ]) - oBrwSets:cargo[ 1 ], nPos ) )
