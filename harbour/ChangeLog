@@ -1,3 +1,9 @@
+20000408-11:05 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+
+	* source/rtl/filesys.c
+	  + Added file locking to OS/2 (both GCC and icc)
+	  ! fixed file committing under OS/2 (no need to duplicate a file handle)
+
 20000407-15:25 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
 
    * source/rtl/diskspac.c

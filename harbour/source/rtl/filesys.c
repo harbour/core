@@ -75,7 +75,7 @@
    #include <fcntl.h>
    #include <errno.h>
 
-   #if !defined(OS_UNIX_COMPATIBLE) 
+   #if !defined(OS_UNIX_COMPATIBLE)
       #include <io.h>
    #endif
    #if defined(__DJGPP__)
@@ -833,7 +833,7 @@ BOOL    hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsLock(%p, %lu, %lu, %hu)", hFileHandle, ulStart, ulLength, uiMode));
 
-#if defined(HAVE_POSIX_IO) && !defined(__GNUC__) && !defined(__IBMCPP__)
+#if defined(HAVE_POSIX_IO) && !defined(__GNUC__) && !defined(__IBMCPP__) && !defined(HB_OS_OS2)
 
    errno = 0;
    switch( uiMode )
@@ -850,6 +850,43 @@ BOOL    hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
          iResult = 0;
    }
    s_uiErrorLast = errno;
+
+#elif defined(HB_OS_OS2)
+	
+	{
+		/* 08/04/2000 - maurilio.longo@libero.it */
+		struct _FILELOCK fl, ful;
+
+      errno = 0;
+
+   	switch(uiMode)	{
+      	case FL_LOCK:
+      	
+      		fl.lOffset = ulStart;
+	      	fl.lRange = ulLength;
+	      	ful.lOffset = 0;
+	      	ful.lRange = 0;
+	      	
+	      	/* lock region, 2 seconds timeout, exclusive access - no atomic */
+         	iResult = (int) DosSetFileLocks(hFileHandle, &ful, &fl, 2000L, 0L);
+         	break;
+
+      	case FL_UNLOCK:
+      	
+      		fl.lOffset = 0;
+	      	fl.lRange = 0;
+	      	ful.lOffset = ulStart;
+	      	ful.lRange = ulLength;
+	      	
+	      	/* unlock region, 2 seconds timeout, exclusive access - no atomic */
+         	iResult = (int) DosSetFileLocks(hFileHandle, &ful, &fl, 2000L, 0L);
+         	break;
+
+      	default:
+         	iResult = 0;
+   	}
+      s_uiErrorLast = errno;
+   }
 
 #elif defined(_MSC_VER)
 
@@ -913,7 +950,7 @@ void    hb_fsCommit( FHANDLE hFileHandle )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_fsCommit(%p)", hFileHandle));
 
-#if defined(HB_FS_FILE_IO)
+#if defined(HB_FS_FILE_IO) && !defined(HB_OS_OS2)
 
    {
       int dup_handle;
@@ -923,6 +960,18 @@ void    hb_fsCommit( FHANDLE hFileHandle )
       dup_handle = dup( hFileHandle );
       if( dup_handle != -1 )
          close( dup_handle );
+
+      s_uiErrorLast = errno;
+   }
+
+#elif defined(HB_OS_OS2)
+	
+	{
+      errno = 0;
+
+		/* 08/04/2000 - maurilio.longo@libero.it
+			TODO: what about error code from DosResetBuffer() call? */
+      DosResetBuffer(hFileHandle);
 
       s_uiErrorLast = errno;
    }
