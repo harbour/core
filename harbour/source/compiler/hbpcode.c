@@ -134,7 +134,7 @@ static BYTE s_pcode_len[] = {
    3,        /* HB_P_PUSHMEMVAR,           */
    3,        /* HB_P_PUSHMEMVARREF,        */
    1,        /* HB_P_PUSHNIL,              */
-   1+sizeof(double),        /* HB_P_PUSHDOUBLE,           */
+   2+sizeof(double),        /* HB_P_PUSHDOUBLE,           */
    1,        /* HB_P_PUSHSELF,             */
    3,        /* HB_P_PUSHSTATIC,           */
    3,        /* HB_P_PUSHSTATICREF,        */
