@@ -498,6 +498,13 @@ void hb_memvarGetRefer( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
       hb_errInternal( 9999, "Invalid symbol item passed as memvar %s", pMemvarSymb->szName, NULL );
 }
 
+/*
+ */
+void hb_memvarNewParameter( PHB_SYMB pSymbol, PHB_ITEM pValue )
+{
+   hb_memvarCreateFromDynSymbol( pSymbol->pDynSym, MV_PRIVATE, pValue );
+}
+
 
 /*
  * This function creates a value for memvar variable

@@ -1,3 +1,12 @@
+19991021-15:35 GMT+2 Ryszard Glab <rglab@imid.med.pl>
+
+    *include/extend.h
+    *source/rtl/memvars.c
+    *source/vm/hvm.c
+	* new function hb_memvarNewParameter() used to create a variable
+	listed on PARAMETER statement (corrected bug - private variables
+	are created instead of reusing existing ones)
+	
 19991021-16:02 GMT+3 Alexander Kresin
   * contrib/odbc/todbc.prg
     * there was an infinite loop in TOdbc():New(),

@@ -540,7 +540,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_PARAMETER:
             uiParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
-            hb_memvarSetValue( pSymbols + uiParams, hb_stack.pBase + 1 + pCode[ w + 3 ] );
+            hb_memvarNewParameter( pSymbols + uiParams, hb_stack.pBase + 1 + pCode[ w + 3 ] );
             HB_DEBUG( "(hb_vmPopParameter)\n" );
             w += 4;
             break;

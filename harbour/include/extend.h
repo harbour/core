@@ -397,6 +397,7 @@ extern void     hb_memvarGetValue( HB_ITEM_PTR, PHB_SYMB );
 extern void     hb_memvarGetRefer( HB_ITEM_PTR, PHB_SYMB );
 extern ULONG    hb_memvarGetPrivatesBase( void );
 extern void     hb_memvarSetPrivatesBase( ULONG );
+extern void     hb_memvarNewParameter( PHB_SYMB, HB_ITEM_PTR );
 
 /* console I/O subsystem */
 extern void     hb_consoleInitialize( void );
