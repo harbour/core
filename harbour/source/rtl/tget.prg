@@ -91,6 +91,7 @@ CLASS Get
    METHOD Display()
    METHOD ColorDisp( cColorSpec ) INLINE ::ColorSpec := cColorSpec, ::Display(), Self
    METHOD KillFocus()
+   METHOD ParsePict( cPicture )
    METHOD Reset()
    METHOD SetFocus()
    METHOD Undo()
@@ -139,13 +140,6 @@ ENDCLASS
 
 METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) CLASS Get
 
-   local cChar
-   local nAt
-   local nFor
-   local cNum
-
-   cNum := ""
-
    DEFAULT nRow       TO Row()
    DEFAULT nCol       TO Col()
    DEFAULT cVarName   TO ""
@@ -179,6 +173,28 @@ METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) CLASS Get
    ::nOldPos    := 0
 
    // Existe function en picture
+
+   ::ParsePict( cPicture )
+
+   ::buffer  := ::PutMask( ::Original, .f. )
+   ::nMaxLen := Len( ::buffer )
+
+   if ::nDispLen == NIL
+      ::nDispLen := ::nMaxLen
+   endif
+
+return Self
+
+//---------------------------------------------------------------------------//
+
+METHOD ParsePict( cPicture ) CLASS Get
+
+   local cChar
+   local nAt
+   local nFor
+   local cNum
+
+   cNum := ""
 
    if Left( cPicture, 1 ) == "@"
       nAt := At( " ", cPicture )
@@ -255,14 +271,7 @@ METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) CLASS Get
       Next
    endif
 
-   ::buffer  := ::PutMask( ::Original, .f. )
-   ::nMaxLen := Len( ::buffer )
-
-   if ::nDispLen == NIL
-      ::nDispLen := ::nMaxLen
-   endif
-
-return Self
+return ::cPicFunc + ' ' + ::cPicMask
 
 //---------------------------------------------------------------------------//
 
@@ -361,6 +370,7 @@ METHOD SetFocus() CLASS Get
    ::hasfocus   := .t.
    ::rejected   := .f.
    ::typeout    := .f.
+   ::ParsePict( :: Picture )
    ::buffer     := ::PutMask( ::VarGet(), .f. )
    ::changed    := .f.
    ::clear      := ( "K" $ ::cPicFunc .or. ::type == "N")

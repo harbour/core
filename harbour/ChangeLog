@@ -1,3 +1,14 @@
+2000-11-01 17:25 UTC+0800 Ron Pinkas <ron@profit-master.com>
+
+   * source/compiler/harbour.sly
+     ! Optimized _GET_ support.
+     + Added support for GET of ObjectData and ObjectData ArrayIndex.
+
+   * source/rtl/tget.prg
+     + Added method ParsePict() and logic to support dynamic modification of the picture by altering :Picture as in Clipper.
+
+   * tests/testread.prg
+     + Added line to demonstrate GET of ObjectData and dynamic modification of a PICTURE clause.
 
 2000-11-01 15:00 UTC+0800 Brian Hays <bhays@abacuslaw.com>
    * contrib/rdd_ads/ads1.c

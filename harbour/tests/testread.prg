@@ -18,9 +18,10 @@ function Main()
 
    SET KEY -1 TO ShowVar()
 
-   @ 2, 2 SAY "  Enter your name:" GET cName
-   @ 4, 2 SAY "  Enter your wish:" GET cWish
+   @ 2, 2 SAY "Enter your name  :" GET cName PICTURE "@K!"
+   @ 4, 2 SAY "Enter your wish  :" GET cWish
    @ 6, 2 SAY "Enter your effort:" GET cEffort
+   @ 8, 2 SAY "Object Data      :" GET GetList[1]:Picture
 
    FOR Counter := 1 TO Len( acVars )
       @ Row() + 2, 2 SAY "Array Element [" + Str( Counter, 1 ) + "]: " GET acVars[ Counter ]
