@@ -244,9 +244,7 @@ FUNCTION MemoEdit(cString,;
    DEFAULT cString         TO ""
 
    // Original MemoEdit() converts Tabs into spaces;
-   // TOFIX: I need to add an EOL char to fix the case where I call MemoEdit() with a string of one line without EOL.
-   // If I don't add an EOL I lose last char of string
-   oEd := TMemoEditor():New(StrTran(cString, Chr(K_TAB), Space(1)) + HB_OSNewLine(), nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabSize)
+   oEd := TMemoEditor():New(StrTran(cString, Chr(K_TAB), Space(1)), nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabSize)
    oEd:MemoInit(cUserFunction)
    oEd:RefreshWindow()
 

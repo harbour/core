@@ -176,8 +176,21 @@ STATIC function Text2Array(cString, nWordWrapCol)
    cEOL := WhichEOL(cString)
    nEOLLen := Len(cEOL)
 
+   // __StrTkPtr() needs that string to be tokenized be terminated with a token delimiter
+   if Rat(cEOL, cString) <> Len(cString) - nEOLLen + 1
+      cString += cEOL
+   endif
+
    nRetLen := 0
    ncSLen := Len(cString)
+
+   // If cString starts with an EOL delimiter I have to add an empty line since __StrTkPtr
+   // gives back _next_ token and would skip this first EOL delimiter
+   if Left(cString, nEOLLen) == cEOL
+      AAdd(aArray, TTextLine():New(cLine, .F.))
+      nTokPos += nEOLLen
+      nRetLen += nEOLLen
+   endif
 
    while nRetLen < ncSLen
       /* TOFIX: Note that __StrToken is not able to cope with delimiters longer than one char */
@@ -236,10 +249,13 @@ METHOD GetText() CLASS TEditor
    LOCAL cEOL := HB_OSNewLine()
 
    if ::lWordWrap
-      AEval(::aText, {|cItem| cString += cItem:cText + iif(cItem:lSoftCR, "", cEOL)})
+      AEval(::aText, {|cItem| cString += cItem:cText + iif(cItem:lSoftCR, "", cEOL)},, ::naTextLen - 1)
    else
-      AEval(::aText, {|cItem| cString += cItem:cText + cEOL})
+      AEval(::aText, {|cItem| cString += cItem:cText + cEOL},, ::naTextLen - 1)
    endif
+
+   // Last line does not need a cEOL delimiter
+   cString += ::aText[::naTextLen]:cText
 
 return cString
 
