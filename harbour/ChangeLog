@@ -1,3 +1,9 @@
+19990514-20:30 CET Eddie Runia
+  * include/set.ch
+    added
+  * source/rtl/classes.c
+    Unreleased memory block in inline resolved
+
 19990514-20:15 CET Eddie Runia
   * source/rtl/gtapi.c
     A lot of #ifdef #endif added or else it couldn't build out of the box.
