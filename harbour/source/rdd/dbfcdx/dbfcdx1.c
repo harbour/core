@@ -1389,10 +1389,20 @@ static int hb_cdxKeyCompare( LPKEYINFO pKey1, LPKEYINFO pKey2, USHORT * EndPos, 
    int iLimit, iResult;
 
    * EndPos = 0;
+   if ( pKey1 == NULL )
+      return ( pKey2 == NULL ) ? 0 : -1;
+   if ( pKey2 == NULL )
+      return 1;
+   if ( pKey1->length == 0 )
+      return ( pKey2->length == 0 ) ? 0: -1;
+   if ( pKey2->length == 0 )
+      return 1;
+   /*
    if( pKey2 == NULL || pKey2->length == 0 )
       return 1;
    if( pKey1 == NULL || pKey1->length == 0 )
       return ( pKey2->length == 0 ) ? 0: -1;
+   */
 
    iLimit = (pKey1->length > pKey2->length) ? pKey2->length : pKey1->length;
 
@@ -1772,7 +1782,7 @@ static void hb_cdxTagDoIndex( LPCDXTAG pTag )
             {
                hb_vmPushSymbol( &hb_symEval );
                hb_vmPush( pTag->pForItem );
-               hb_vmDo( 0 );
+               hb_vmSend( 0 );
                hb_itemCopy( pItem, &hb_stack.Return );
             }
             else
@@ -1794,7 +1804,7 @@ static void hb_cdxTagDoIndex( LPCDXTAG pTag )
 
                hb_vmPushSymbol( &hb_symEval );
                hb_vmPush( pTag->pKeyItem );
-               hb_vmDo( 0 );
+               hb_vmSend( 0 );
                hb_itemCopy( pItem, &hb_stack.Return );
             }
             else
@@ -4757,7 +4767,7 @@ ERRCODE hb_cdxGoTo( CDXAREAP pArea, ULONG ulRecNo )
       {
           hb_vmPushSymbol( &hb_symEval );
           hb_vmPush( pTag->pKeyItem );
-          hb_vmDo( 0 );
+          hb_vmSend( 0 );
           hb_cdxKeyPutItem( pKey, &hb_stack.Return );
       }
       else
@@ -4854,7 +4864,7 @@ ERRCODE hb_cdxGoHot( CDXAREAP pArea )
          {
             hb_vmPushSymbol( &hb_symEval );
             hb_vmPush( pTag->pKeyItem );
-            hb_vmDo( 0 );
+            hb_vmSend( 0 );
             hb_cdxKeyPutItem( pKey, &hb_stack.Return );
          }
          else
@@ -4904,7 +4914,7 @@ ERRCODE hb_cdxGoCold( CDXAREAP pArea )
                {
                   hb_vmPushSymbol( &hb_symEval );
                   hb_vmPush( pTag->pForItem );
-                  hb_vmDo( 0 );
+                  hb_vmSend( 0 );
                   bForOk = hb_itemGetL( &hb_stack.Return );
                }
                else
@@ -4924,7 +4934,7 @@ ERRCODE hb_cdxGoCold( CDXAREAP pArea )
             {
                 hb_vmPushSymbol( &hb_symEval );
                 hb_vmPush( pTag->pKeyItem );
-                hb_vmDo( 0 );
+                hb_vmSend( 0 );
                 hb_cdxKeyPutItem( pKey, &hb_stack.Return );
             }
             else
