@@ -445,7 +445,7 @@ BYTEP   hb_fsCurDir ( USHORT uiDrive )
         last_error = FS_ERROR;
 #endif
 #if defined(_MSC_VER)
-        BYTEP dmm = cwd_buff;
+   BYTEP dmm = (BYTEP)cwd_buff;      
 #endif
         return (BYTEP)cwd_buff;
 }
