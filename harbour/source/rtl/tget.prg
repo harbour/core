@@ -367,10 +367,9 @@ METHOD Display( lForced ) CLASS Get
 
    if ::buffer == nil
       ::picture := ::cPicture
-      xBuffer   := ::PutMask( ::VarGet(), .f. )
-   else
-      xBuffer   := ::buffer
    endif
+
+   xBuffer := ::PutMask( ::VarGet(), .f. )
 
    if ! ::lMinusPrinted .and. ! Empty( ::DecPos ) .and. ::minus .and. substr( xBuffer, ::DecPos-1, 1 ) == "0"
       xBuffer := substr( xBuffer, 1, ::DecPos - 2 ) + "-." + substr( xBuffer, ::DecPos + 1 )
@@ -541,7 +540,7 @@ METHOD VarPut( xValue, lReFormat ) CLASS Get
 
    DEFAULT lReFormat TO .t.
 
-   if ::block != nil
+   if ValType( ::Block ) == 'B'
       Eval( ::block, xValue )
       if lReFormat
          if !::hasfocus

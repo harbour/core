@@ -8,6 +8,15 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-02-15 04:20 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * source/rtl/tget.prg
+     ! :display() fixed to always evaluate the get block before 
+       displaying like in C52.
+
+   * include/hbapifs.h
+     + HB_FFIND structure extended for future changes.
+
 2004-02-15 03:42 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * source/rdd/dbcmd.c

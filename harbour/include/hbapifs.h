@@ -174,14 +174,20 @@ extern FHANDLE hb_spCreateEx( BYTE * pFilename, USHORT uiAttr, USHORT uiFlags );
 /* File Find API structure */
 typedef struct
 {
-   char      szName[ _POSIX_PATH_MAX + 1 ];
-   LONG      lDate;
-   char      szDate[ 9 ]; /* in YYYYMMDD format */
-   char      szTime[ 9 ]; /* in HH:MM:SS format */
-   USHORT    attr;
-   ULONG     size; /* TOFIX: Use LONGLONG or double instead */
+   char   szName[ _POSIX_PATH_MAX + 1 ];
+   LONG   lDate;
+   char   szDate[ 9 ]; /* in YYYYMMDD format */
+   char   szTime[ 9 ]; /* in HH:MM:SS format */
+   USHORT attr;
+   ULONG  size; /* TOFIX: Use LONGLONG or double instead */
 
-   void *    info; /* Pointer to the platform specific find info */
+   /* Private */
+
+   const char * pszFileMask;
+   USHORT attrmask;
+   BOOL   bFirst;
+
+   void * info; /* Pointer to the platform specific find info */
 
 } HB_FFIND, * PHB_FFIND;
 
