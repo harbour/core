@@ -1679,7 +1679,7 @@ STATIC FUNCTION Long_STRINGS()
 
 STATIC FUNCTION Main_MISC()
 
-   /* AMPM() */
+   /* "Samples" function tests (AMPM(), DAYS(), ELAPTIME(), ... ) */
 
    TEST_LINE( AMPM( "" )                      , "12 am"                                   )
    TEST_LINE( AMPM( "HELLO" )                 , "12LLO am"                                )
@@ -1694,6 +1694,20 @@ STATIC FUNCTION Main_MISC()
    TEST_LINE( AMPM( "2" )                     , "2 am"                                    )
    TEST_LINE( AMPM( "02:23" )                 , "02:23 am"                                )
    TEST_LINE( AMPM( "02:23:45.10" )           , "02:23:45.10 am"                          )
+
+   TEST_LINE( DAYS( 100000 )                  , 1 )
+
+   TEST_LINE( ELAPTIME("24:12:34","12:34:57") , "12:22:23" )
+   TEST_LINE( ELAPTIME("12:34:57","24:12:34") , "11:37:37" )
+
+   TEST_LINE( LENNUM( 10 )                    , 2 )
+   TEST_LINE( LENNUM( 10.9 )                  , 4 )
+   TEST_LINE( LENNUM( 10.90 )                 , 5 )
+
+   TEST_LINE( SECS("24:12:34")                , 87154 )
+   TEST_LINE( SECS("12:34:57")                , 45297 )
+
+   TEST_LINE( TSTRING(1000)                   , "00:16:40" )
 
    /* FOR/NEXT */
 
@@ -2379,7 +2393,7 @@ STATIC FUNCTION Main_MISC()
 #ifdef __HARBOUR__
 
 STATIC FUNCTION Main_OPOVERL()
-   LOCAL oString := TString()
+   LOCAL oString := HB_TString()
 
    oString:cValue := "Hello"
 
@@ -2395,19 +2409,19 @@ STATIC FUNCTION Main_OPOVERL()
    TEST_LINE( oString <= "Hello"        , .T.                 )
    TEST_LINE( oString +  "Hello"        , "HelloHello"        )
    TEST_LINE( oString -  "Hello"        , "HelloHello"        )
-   TEST_LINE( oString++                 , "TSTRING Object"    )
+   TEST_LINE( oString++                 , "HB_TSTRING Object" )
    TEST_LINE( oString:cValue            , "Hello "            )
-   TEST_LINE( oString--                 , "TSTRING Object"    )
+   TEST_LINE( oString--                 , "HB_TSTRING Object" )
    TEST_LINE( oString:cValue            , "Hello"             )
 
    RETURN NIL
 
-STATIC FUNCTION TString()
+STATIC FUNCTION HB_TString()
 
    STATIC oClass
 
    IF oClass == NIL
-      oClass = TClass():New( "TSTRING" )
+      oClass = TClass():New( "HB_TSTRING" )
 
       oClass:AddData( "cValue" )
 

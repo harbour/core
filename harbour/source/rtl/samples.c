@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * AMPM() function
+ * Compatibility functions from the SAMPLES directory of Clipper.
  *
  * Copyright 1999 Victor Szel <info@szelvesz.hu>
  * www - http://www.harbour-project.org
@@ -46,7 +46,7 @@ static char * hb_SecToTimeStr( char * pszTime, ULONG ulTime )
    pszTime[ 0 ] = ( char ) ( uiValue / 10 ) + '0';
    pszTime[ 1 ] = ( char ) ( uiValue % 10 ) + '0';
    pszTime[ 2 ] = ':';
-   uiValue = ( ulTime / 60 ) % 64;
+   uiValue = ( ulTime / 60 ) % 60;
    pszTime[ 3 ] = ( char ) ( uiValue / 10 ) + '0';
    pszTime[ 4 ] = ( char ) ( uiValue % 10 ) + '0';
    pszTime[ 5 ] = ':';
@@ -54,7 +54,7 @@ static char * hb_SecToTimeStr( char * pszTime, ULONG ulTime )
    pszTime[ 6 ] = ( char ) ( uiValue / 10 ) + '0';
    pszTime[ 7 ] = ( char ) ( uiValue % 10 ) + '0';
    pszTime[ 8 ] = '\0';
-   
+
    return pszTime;
 }
 
@@ -71,7 +71,7 @@ static ULONG hb_TimeStrToSec( char * pszTime )
 
    if( ulLen >= 7 )
       ulTime += ( ULONG ) hb_strVal( pszTime + 6 );
-   
+
    return ulTime;
 }
 
@@ -130,7 +130,7 @@ HARBOUR HB_ELAPTIME( void )
    ULONG ulStart = hb_TimeStrToSec( hb_parc( 1 ) );
    ULONG ulEnd = hb_TimeStrToSec( hb_parc( 2 ) );
    char szTime[ 9 ];
-   
+
    hb_retc( hb_SecToTimeStr( szTime, ( ulEnd < ulStart ? 86400 : 0 ) + ulEnd - ulStart ) );
 }
 
@@ -150,7 +150,7 @@ HARBOUR HB_LENNUM( void )
          hb_xfree( pszString );
       }
    }
-   
+
    hb_retnl( ulLen );
 }
 
@@ -162,6 +162,6 @@ HARBOUR HB_SECS( void )
 HARBOUR HB_TSTRING( void )
 {
    char szTime[ 9 ];
-   
+
    hb_retc( hb_SecToTimeStr( szTime, hb_parnl( 1 ) ) );
 }

@@ -1,3 +1,9 @@
+19991017-21:24 GMT+1 Victor Szel <info@szelvesz.hu>
+   * source/rtl/samples.c
+     ! hb_SecToTimeStr() bug (typo) fixed.
+   * tests/rtl_test.prg
+     + Tests added for new Samples functions.
+
 19991017-20:46 GMT+1 Victor Szel <info@szelvesz.hu>
    + source/rtl/samples.c
      source/rtl/Makefile
