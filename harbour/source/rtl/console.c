@@ -108,8 +108,8 @@ void hb_consoleInitialize( void )
    /* Some compilers open stdout and stderr in text mode, but
       Harbour needs them to be open in binary mode. */
 
-//   hb_fsSetDevMode( fileno( stdout ), FM_BINARY );
-//   hb_fsSetDevMode( fileno( stderr ), FM_BINARY );
+   hb_fsSetDevMode( fileno( stdout ), FM_BINARY );
+   hb_fsSetDevMode( fileno( stderr ), FM_BINARY );
 
 #ifdef HARBOUR_USE_GTAPI
    hb_gtInit();

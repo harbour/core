@@ -1,3 +1,10 @@
+19990910-14:20 EDT David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/console.c
+    ! Uncommented two calls to hb_fsSetDevMode() in hb_consoleInitialize()
+      which force the stdout and stderr handles to binary mode for Clipper
+      compatibility. There was no explanation in the ChangeLog as to why
+      the two calls had been commented out.
+
 19990910-14:15 EDT David G. Holm <dholm@jsd-llc.com>
   * tests/working/Makefile
     ! Moved statinit.prg to BAD_PRG_SOURCES, because it won't link.
