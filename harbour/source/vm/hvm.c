@@ -1491,11 +1491,9 @@ void PushStatic( WORD wStatic )
 void PushString( char * szText, WORD wLength )
 {
    char * szTemp = ( char * ) _xgrab( wLength + 1 );
-   WORD w = 0;
 
-   while( w < wLength )
-      szTemp[ w++ ] = szText[ w ];
-   szTemp[ w ] = 0;
+   memcpy (szTemp, szText, wLength);
+   szTemp[ wLength ] = 0;
 
    ItemRelease( stack.pPos );
    stack.pPos->wType   = IT_STRING;
