@@ -1,5 +1,13 @@
-2000-05-28 22:16 UTC+0200   Jfl&RaC <jfl@mafact.com>
+2000-05-28 22:57 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
+   * source/compiler/harbour.l
+     ! Fixed the compiler to not generate reference to the "Self"
+       variable but use the native "QSelf()" instead in the "::" operator.
+       Note that HBCLASS.CH still declared Self, but this is no more 
+       a requirement. This way :: operator is a bit faster. If the "Self"
+       variable would be removed from HBCLASS.CH, it would be even faster.
+
+2000-05-28 22:16 UTC+0200   Jfl&RaC <jfl@mafact.com>
 
 *harbour/include/hboo.ch
 *harbour/include/hbclass.ch
@@ -27,8 +35,7 @@
  Added function Sender() used by delegating to allow full polymorphism
  Added function __CLS_PARAM used by the preprocessor
 
-
-2000-05-27 23:12 UTC+0100 Victor Szakats <info@szelvesz.hu>
+2000-05-28 21:57 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
    * source/rtl/gtdos/gtdos.c
    * source/compiler/hbusage.c
