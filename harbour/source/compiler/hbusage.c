@@ -57,6 +57,7 @@ void hb_compPrintUsage( char * szSelf )
            "\n          %cgp              output type: Pascal source (.pas)",
            "\n          %cgr              output type: Windows resource (.rc)",
            "\n          %ci<path>         add #include file search path",
+           "\n          %cj[0|1]          Jump Optimizer 0=Disabled 1=Enabled (default)",
            "\n          %cl               suppress line number information",
 /* TODO:   "\n          %cm               compile module only", */
            "\n          %cn               no implicit starting procedure",

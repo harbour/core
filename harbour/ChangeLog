@@ -1,3 +1,11 @@
+20000420-11:15 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+   * source/compiler/hausage.c
+     * Added "\n          %cj[0|1]          Jump Optimizer 0=Disabled 1=Enabled (default)",
+
+   * Changelog
+     * Corrected JAMP to JUMP in previous change entries.
+
 20000420-17:35 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/rtl/gtdos/gtdos.c
@@ -9,10 +17,10 @@
      * Some little fixes after Antonio changes :)
      NOTE:
      JUMPSHORT uses 1 byte for jump offset
-     JUMP      uses 2 bytes 
+     JUMP      uses 2 bytes
      JUMPFAR   uses 3 bytes
      plus 1 byte for the opcode itself
-   
+
 20000420-13:10 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/compiler/genobj32.c
      * Some little fixes after Ryszard changes
@@ -133,7 +141,7 @@ NOTE:
 20000418-05:30 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
    * source/compiler/hvm.c
-     + Added PCodes HB_P_JAMPSHORT, HB_P_JAMPSHORTFALSE and HB_P_JAMPSHORTTRUE
+     + Added PCodes HB_P_JUMPSHORT, HB_P_JUMPSHORTFALSE and HB_P_JUMPSHORTTRUE
 
    * source/compiler/harbour.c
      + Added hb_compOptimizeJumps() - Jumps Optimizer.
@@ -145,7 +153,7 @@ NOTE:
      * Reverted handling of .OR. .AND. and IIF() to use default (FAR) JUMPs - note the use of (0) when calling hb_compGenJump*().
 
    * source/compiler/genc.c
-     + Added support for HB_P_JAMPSHORT, HB_P_JAMPSHORTFALSE and HB_P_JAMPSHORTTRUE
+     + Added support for HB_P_JUMPSHORT, HB_P_JUMPSHORTFALSE and HB_P_JUMPSHORTTRUE
 
    * source/compiler/cmdcheck.c
      + Added support for new switch -J[0|1] default is J1 which enables the Jump Optimizer - Use -J0 to disable.
@@ -172,7 +180,7 @@ NOTE:
    	int    iJumps;                   /* Jumps Counter */
 
    * source/include/hbpcode.h
-     + Added HB_P_JAMPSHORT, HB_P_JAMPSHORTFALSE and HB_P_JAMPSHORTTRUE
+     + Added HB_P_JUMPSHORT, HB_P_JUMPSHORTFALSE and HB_P_JUMPSHORTTRUE
 
 20000418-13:30 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
