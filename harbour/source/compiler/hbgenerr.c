@@ -124,7 +124,7 @@ char * hb_comp_szWarnings[] =
 
 void hb_compGenError( char * szErrors[], char cPrefix, int iError, char * szError1, char * szError2 )
 {
-   int iLine = hb_comp_files.pLast->iLine - 1;
+   int iLine = hb_comp_iLine - 1;
 
    if( cPrefix != 'F' && hb_comp_bError )
       return;
@@ -137,7 +137,7 @@ void hb_compGenError( char * szErrors[], char cPrefix, int iError, char * szErro
 
    hb_comp_iErrorCount++;
    hb_comp_bError = TRUE;
-   hb_comp_iCompiled = hb_comp_files.pLast->iLine - 1;
+   hb_comp_iCompiled = hb_comp_iLine - 1;
 
    /* fatal error - exit immediately */
    if( cPrefix == 'F' )
@@ -149,8 +149,7 @@ void hb_compGenWarning( char * szWarnings[], char cPrefix, int iWarning, char * 
    char * szText = szWarnings[ iWarning - 1 ];
    int iLine = 0;
 
-   if( hb_comp_files.pLast && hb_comp_files.pLast->iLine )
-      iLine = hb_comp_files.pLast->iLine - 1;
+   iLine = hb_comp_iLine - 1;
 
    if( ( szText[ 0 ] - '0' ) <= hb_comp_iWarnings )
    {

@@ -51,6 +51,7 @@
 
 static char s_szLine[ HB_PP_STR_SIZE ];
 static char s_szOutLine[ HB_PP_STR_SIZE ];
+static int hb_pp_LastOutLine = 1;
 
 /*
 BOOL bDebug = FALSE;
@@ -78,10 +79,7 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
                   &( pFile->iBuffer ) ) ) >= 0 )
      {
         lens += rdlen;
-
-        #if 0
-          printf( "Len: %i Last: %i >%s<\n", rdlen, s_szLine[ lens - 1 ], s_szLine );
-        #endif
+        hb_comp_iLine ++;
 
         if( s_szLine[ lens - 1 ] == ';' )
         {
@@ -91,8 +89,6 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
            while( s_szLine[ lens ] == ' ' || s_szLine[ lens ] == '\t' ) lens--;
            s_szLine[ ++lens ] = ' ';
            s_szLine[ ++lens ] = '\0';
-
-           hb_pp_nEmptyStrings++;
         }
         else
         {
@@ -102,14 +98,9 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
 
         if( !lContinue )
         {
-           if( *s_szLine == '\0' )
-           {
-              hb_pp_nEmptyStrings++;
-           }
-           else
+           if( *s_szLine != '\0' )
            {
               ptr = s_szLine;
-
               HB_SKIPTABSPACES( ptr );
 
               if( *ptr == '#' )
@@ -121,70 +112,37 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
                     pFile = ( PFILE ) ( ( PFILE ) hb_comp_files.pLast )->pPrev;
 
                     if( lLine )
-                    {
-                       sprintf( s_szLine, "#line %d \"%s\"\n", pFile->iLine + hb_pp_nEmptyStrings, pFile->szFileName );
-                    }
+                       sprintf( s_szLine, "#line %d \"%s\"\n", pFile->iLine, pFile->szFileName );
                     else
-                    {
                        *s_szLine = '\0';
-                    }
 
                     lLine = 0;
-
-                    /* Ron Pinkas added 2000-06-23 */
-                       /* Produce empty lines, only if previous file is the main prg. */
-                    if( hb_comp_files.iFiles == 2 )
-                    {
-                       tmpPtr = s_szLine + strlen(s_szLine);
-
-                       for( i=0; i < hb_pp_nEmptyStrings; i++ )
-                          *tmpPtr++ = '\n';
-
-                       *tmpPtr = '\0';
-                    }
-                    /* Ron Pinkas end 2000-06-23 */
-
                     sprintf( s_szLine + strlen(s_szLine), "#line 1 \"%s\"", hb_comp_files.pLast->szFileName );
-
-                    /* Ron Pinkas added 2000-06-23 */
-                    pFile->iLine += ( 1 + hb_pp_nEmptyStrings );
-                    hb_pp_nEmptyStrings = 0;
-                    /* Ron Pinkas end 2000-06-23 */
                  }
                  else
-                 {
-                    hb_pp_nEmptyStrings++;
                     *s_szLine = '\0';
-                 }
               }
               else
               {
                  if( *ptr == '\0' )
                  {
                     if( hb_comp_files.iFiles == 1 )
-                    {
-                       hb_pp_nEmptyStrings++;
                        *s_szLine = '\0';
-                    }
                     else
-                    {
-                       hb_comp_files.pLast->iLine++;
                        continue;
-                    }
                  }
                  else
                  {
-
                     if( hb_pp_nCondCompile == 0 || hb_pp_aCondCompile[ hb_pp_nCondCompile - 1 ] )
                     {
+                       if( ( hb_pp_LastOutLine < hb_comp_iLine - 1 ) && hb_comp_files.iFiles == 1 && handl_o )
+                          for( ; hb_pp_LastOutLine < hb_comp_iLine-1; hb_pp_LastOutLine++ )
+                             hb_pp_WrStr( handl_o, "\n" );
+                       hb_pp_LastOutLine = hb_comp_iLine;
                        hb_pp_ParseExpression( ptr, s_szOutLine );
-                       hb_comp_files.pLast->iLine++;
                     }
                     else
-                    {
                        *s_szLine = '\0';
-                       hb_pp_nEmptyStrings++;
-                    }
                  }
               }
            }
@@ -199,12 +157,6 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
            return 0;      /* we have reached the main EOF */
         else
         {
-           /* Ron Pinkas added 2000-06-23 */
-              /* Resumming Main PRG */
-           if( hb_comp_files.iFiles == 2 )
-           {
-           }
-
            /* we close the currently include file and continue */
            fclose( hb_comp_files.pLast->handle );
            hb_xfree( hb_comp_files.pLast->pBuffer );
@@ -213,14 +165,7 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
            hb_xfree( hb_comp_files.pLast );
            hb_comp_files.pLast = pFile;
 
-           /* Ron Pinkas commented
            hb_comp_iLine = hb_comp_files.pLast->iLine;
-           */
-
-           /* Ron Pinkas added 2000-06-26 */
-           hb_pp_nEmptyStrings = 0;
-           /* Ron Pinkas end 2000-06-26 */
-
            hb_comp_files.iFiles--;
            lLine = 1;
         }
@@ -236,13 +181,10 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
 
   if( lLine )
   {
+     if( hb_comp_files.iFiles == 1 )
+        hb_pp_LastOutLine = hb_comp_iLine;
      sprintf( ptrOut, "#line %d \"%s\"", ( hb_comp_files.pLast->iLine ) , hb_comp_files.pLast->szFileName );
      while( *ptrOut ) ptrOut++;
-
-     /* Ron Pinkas added 2000-06-14 */
-        /* Ignore empty lines immediatley after resuming after #include  */
-     hb_pp_nEmptyStrings = 0;
-     /* Ron Pinkas end 2000-06-14 */
 
      /* Ron Pinkas added 2000-06-14 */
      tmpPtr = s_szLine;
@@ -253,7 +195,6 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
      {
         *ptrOut++ = '\n';
         *ptrOut = '\0';
-        hb_comp_files.pLast->iLine++;
      }
      /* Ron Pinkas end 2000-06-14 */
   }
@@ -261,10 +202,10 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
   {
      /* Ron Pinkas added 2000-06-13 */
         /* Ignore empty lines in #included files. */
-     if( hb_pp_nEmptyStrings && hb_comp_files.iFiles == 1 )
+     if( ( hb_pp_LastOutLine != hb_comp_iLine ) && hb_comp_files.iFiles == 1 && handl_o )
      /* Ron Pinkas end 2000-06-13 */
-        for( i=0; i < hb_pp_nEmptyStrings; i++ )
-           *ptrOut++ = '\n';
+        for( ; hb_pp_LastOutLine < hb_comp_iLine; hb_pp_LastOutLine++ )
+            hb_pp_WrStr( handl_o, "\n" );
   }
 
   lens = hb_pp_strocpy( ptrOut, s_szLine ) + ( ptrOut - sOut );
@@ -272,15 +213,10 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
   *( sOut + lens++ ) = '\n';
   *( sOut + lens ) = '\0';
 
-  hb_comp_files.pLast->iLine += hb_pp_nEmptyStrings;
-
-  #if 0
-     printf( "Line: %i >%s<\n", hb_comp_files.pLast->iLine, sOut );
-  #endif
-
   if( handl_o )
      hb_pp_WrStr( handl_o, sOut );
 
+//  printf( "%d : %s\n",hb_comp_iLine,sOut );
   return lens;
 }
 

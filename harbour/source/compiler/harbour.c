@@ -1908,7 +1908,7 @@ void hb_compLinePush( void ) /* generates the pcode with the currently compiled 
    if( hb_comp_bLineNumbers && ! hb_comp_bDontGenLineNum )
    {
       /*
-      int iLine = hb_comp_files.pLast->iLine - 1;
+      int iLine = hb_comp_iLine - 1;
 
       if( hb_pp_nEmptyStrings )
          iLine -= hb_pp_nEmptyStrings - 2;

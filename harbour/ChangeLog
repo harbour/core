@@ -1,3 +1,11 @@
+2000-07-22 23:08 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   * source/compiler/harbour.c
+   * source/compiler/harbour.y
+   * source/compiler/hbgenerr.c
+   * source/pp/ppcomp.c
+   * source/pp/ppcore.c
+     * Line numbering cleanups and fixes
+
 2000-07-18 10:25 UTC+0200 JfL <jfl@mafact.com> & RaC <Rac@mafact.com>
    * source/vm/classes.c
      * Improvement within hb_clsinst (no more static var)

@@ -251,13 +251,13 @@ Source     : Crlf         { hb_comp_EOL = FALSE; }
            | ProcReq      { hb_comp_EOL = FALSE; }
            | error  Crlf  { hb_comp_EOL = FALSE; yyclearin; }
            | Source Crlf        { hb_comp_EOL = FALSE; }
-           | Source VarDefs     { hb_comp_EOL = FALSE; hb_comp_iCompiled = hb_comp_files.pLast->iLine - 1; }
-           | Source FieldsDef   { hb_comp_EOL = FALSE; hb_comp_iCompiled = hb_comp_files.pLast->iLine - 1; }
-           | Source MemvarDef   { hb_comp_EOL = FALSE; hb_comp_iCompiled = hb_comp_files.pLast->iLine - 1; }
-           | Source Declaration { hb_comp_EOL = FALSE; hb_comp_iCompiled = hb_comp_files.pLast->iLine - 1; }
-           | Source Function    { hb_comp_EOL = FALSE; hb_comp_iCompiled = hb_comp_files.pLast->iLine - 1; }
-           | Source Statement   { hb_comp_EOL = FALSE; hb_comp_iCompiled = hb_comp_files.pLast->iLine - 1; }
-           | Source Line        { hb_comp_EOL = FALSE; hb_comp_iCompiled = hb_comp_files.pLast->iLine - 1; }
+           | Source VarDefs     { hb_comp_EOL = FALSE; hb_comp_iCompiled = hb_comp_iLine - 1; }
+           | Source FieldsDef   { hb_comp_EOL = FALSE; hb_comp_iCompiled = hb_comp_iLine - 1; }
+           | Source MemvarDef   { hb_comp_EOL = FALSE; hb_comp_iCompiled = hb_comp_iLine - 1; }
+           | Source Declaration { hb_comp_EOL = FALSE; hb_comp_iCompiled = hb_comp_iLine - 1; }
+           | Source Function    { hb_comp_EOL = FALSE; hb_comp_iCompiled = hb_comp_iLine - 1; }
+           | Source Statement   { hb_comp_EOL = FALSE; hb_comp_iCompiled = hb_comp_iLine - 1; }
+           | Source Line        { hb_comp_EOL = FALSE; hb_comp_iCompiled = hb_comp_iLine - 1; }
            | Source ProcReq     { hb_comp_EOL = FALSE; }
            | Source error Crlf  { hb_comp_EOL = FALSE; yyclearin; }
            ;
@@ -406,7 +406,7 @@ CrlfStmnt  : { hb_compLinePushIfInside(); } Crlf
            ;
 
 LineStat   : Crlf          { $<lNumber>$ = 0; hb_comp_bDontGenLineNum = TRUE; }
-           | Statement     { $<lNumber>$ = 1; hb_comp_iCompiled = hb_comp_files.pLast->iLine - 1; }
+           | Statement     { $<lNumber>$ = 1; hb_comp_iCompiled = hb_comp_iLine - 1; }
            ;
 
 Statements : LineStat                  { $<lNumber>$ = $<lNumber>1; hb_compLinePush(); }
@@ -1275,19 +1275,19 @@ EmptyStats : /* empty */           { hb_comp_bDontGenLineNum = TRUE; hb_comp_EOL
            | EmptyStatements       { hb_comp_EOL = FALSE; $<lNumber>$ = $<lNumber>1; }
            ;
 
-IfBegin    : IF SimpleExpression { ++hb_comp_wIfCounter; hb_compLinePush(); } Crlf { hb_compExprDelete( hb_compExprGenPush( $2 ) ); $$ = hb_compGenJumpFalse( 0 ); hb_compLinePush(); hb_comp_iCompiled = hb_comp_files.pLast->iLine - 1; }
+IfBegin    : IF SimpleExpression { ++hb_comp_wIfCounter; hb_compLinePush(); } Crlf { hb_compExprDelete( hb_compExprGenPush( $2 ) ); $$ = hb_compGenJumpFalse( 0 ); hb_compLinePush(); hb_comp_iCompiled = hb_comp_iLine - 1; }
                 EmptyStats
                 { $$ = hb_compGenJump( 0 ); hb_compGenJumpHere( $<iNumber>5 ); }
 
-           | IF Variable { ++hb_comp_wIfCounter; hb_compLinePush(); } Crlf { hb_compExprDelete( hb_compExprGenPush( $2 ) ); $$ = hb_compGenJumpFalse( 0 ); hb_compLinePush(); hb_comp_iCompiled = hb_comp_files.pLast->iLine - 1; }
+           | IF Variable { ++hb_comp_wIfCounter; hb_compLinePush(); } Crlf { hb_compExprDelete( hb_compExprGenPush( $2 ) ); $$ = hb_compGenJumpFalse( 0 ); hb_compLinePush(); hb_comp_iCompiled = hb_comp_iLine - 1; }
                 EmptyStats
                 { $$ = hb_compGenJump( 0 ); hb_compGenJumpHere( $<iNumber>5 ); }
 
-           | IF PareExpList1 { ++hb_comp_wIfCounter; hb_compLinePush(); } Crlf { hb_compExprDelete( hb_compExprGenPush( $2 ) ); $$ = hb_compGenJumpFalse( 0 ); hb_compLinePush(); hb_comp_iCompiled = hb_comp_files.pLast->iLine - 1; }
+           | IF PareExpList1 { ++hb_comp_wIfCounter; hb_compLinePush(); } Crlf { hb_compExprDelete( hb_compExprGenPush( $2 ) ); $$ = hb_compGenJumpFalse( 0 ); hb_compLinePush(); hb_comp_iCompiled = hb_comp_iLine - 1; }
                 EmptyStats
                 { $$ = hb_compGenJump( 0 ); hb_compGenJumpHere( $<iNumber>5 ); }
 
-           | IF PareExpList2 { ++hb_comp_wIfCounter; hb_compLinePush(); } Crlf { hb_compExprDelete( hb_compExprGenPush( $2 ) ); $$ = hb_compGenJumpFalse( 0 ); hb_compLinePush(); hb_comp_iCompiled = hb_comp_files.pLast->iLine - 1; }
+           | IF PareExpList2 { ++hb_comp_wIfCounter; hb_compLinePush(); } Crlf { hb_compExprDelete( hb_compExprGenPush( $2 ) ); $$ = hb_compGenJumpFalse( 0 ); hb_compLinePush(); hb_comp_iCompiled = hb_comp_iLine - 1; }
                 EmptyStats
                 { $$ = hb_compGenJump( 0 ); hb_compGenJumpHere( $<iNumber>5 ); }
 
@@ -1296,14 +1296,14 @@ IfBegin    : IF SimpleExpression { ++hb_comp_wIfCounter; hb_compLinePush(); } Cr
                 { $$ = hb_compGenJump( 0 ); hb_compGenJumpHere( $<iNumber>5 ); }
            ;
 
-IfElse     : ELSE Crlf { hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE; hb_compLinePush(); hb_comp_iCompiled = hb_comp_files.pLast->iLine - 1; }
+IfElse     : ELSE Crlf { hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE; hb_compLinePush(); hb_comp_iCompiled = hb_comp_iLine - 1; }
                 EmptyStats
            ;
 
-IfElseIf   : ELSEIF Expression Crlf { hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE; hb_compExprDelete( hb_compExprGenPush( $2 ) ); $<iNumber>$ = hb_compGenJumpFalse( 0 ); hb_compLinePush(); hb_comp_iCompiled = hb_comp_files.pLast->iLine - 1; }
+IfElseIf   : ELSEIF Expression Crlf { hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE; hb_compExprDelete( hb_compExprGenPush( $2 ) ); $<iNumber>$ = hb_compGenJumpFalse( 0 ); hb_compLinePush(); hb_comp_iCompiled = hb_comp_iLine - 1; }
                 EmptyStats { $$ = hb_compElseIfGen( NULL, hb_compGenJump( 0 ) ); hb_compGenJumpHere( $<iNumber>4 ); }
 
-           | IfElseIf ELSEIF Expression Crlf { hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE; hb_compExprDelete( hb_compExprGenPush( $3 ) ); $<iNumber>$ = hb_compGenJumpFalse( 0 ); hb_compLinePush(); hb_comp_iCompiled = hb_comp_files.pLast->iLine - 1; }
+           | IfElseIf ELSEIF Expression Crlf { hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE; hb_compExprDelete( hb_compExprGenPush( $3 ) ); $<iNumber>$ = hb_compGenJumpFalse( 0 ); hb_compLinePush(); hb_comp_iCompiled = hb_comp_iLine - 1; }
                 EmptyStats { $$ = hb_compElseIfGen( $1, hb_compGenJump( 0 ) ); hb_compGenJumpHere( $<iNumber>5 ); }
            ;
 
@@ -1338,7 +1338,7 @@ EndCase    : ENDCASE
                }
            ;
 
-DoCaseStart : DOCASE { ++hb_comp_wCaseCounter; } Crlf { hb_compLinePush(); hb_comp_iCompiled = hb_comp_files.pLast->iLine - 1; }
+DoCaseStart : DOCASE { ++hb_comp_wCaseCounter; } Crlf { hb_compLinePush(); hb_comp_iCompiled = hb_comp_iLine - 1; }
             ;
 
 DoCaseBegin : DoCaseStart            { }
@@ -1355,7 +1355,7 @@ Cases      : CASE Expression Crlf
                   hb_compExprDelete( hb_compExprGenPush( $2 ) );
                   $<iNumber>$ = hb_compGenJumpFalse( 0 );
                   hb_compLinePush();
-		  hb_comp_iCompiled = hb_comp_files.pLast->iLine - 1;
+		  hb_comp_iCompiled = hb_comp_iLine - 1;
                }
              EmptyStats
                {
@@ -1363,7 +1363,7 @@ Cases      : CASE Expression Crlf
                   $$ = hb_compElseIfGen( 0, hb_compGenJump( 0 ) );
                   hb_compGenJumpHere( $<iNumber>4 );
                   hb_compLinePush();
-		  hb_comp_iCompiled = hb_comp_files.pLast->iLine - 1;
+		  hb_comp_iCompiled = hb_comp_iLine - 1;
                }
 
            | Cases CASE Expression Crlf
@@ -1371,7 +1371,7 @@ Cases      : CASE Expression Crlf
                   hb_compExprDelete( hb_compExprGenPush( $3 ) );
                   $<iNumber>$ = hb_compGenJumpFalse( 0 );
                   hb_compLinePush();
-		  hb_comp_iCompiled = hb_comp_files.pLast->iLine - 1;
+		  hb_comp_iCompiled = hb_comp_iLine - 1;
                }
              EmptyStats
                {
@@ -1379,11 +1379,11 @@ Cases      : CASE Expression Crlf
                   $$ = hb_compElseIfGen( $1, hb_compGenJump( 0 ) );
                   hb_compGenJumpHere( $<iNumber>5 );
                   hb_compLinePush();
-		  hb_comp_iCompiled = hb_comp_files.pLast->iLine - 1;
+		  hb_comp_iCompiled = hb_comp_iLine - 1;
                }
            ;
 
-Otherwise  : OTHERWISE Crlf { hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE; hb_compLinePush(); hb_comp_iCompiled = hb_comp_files.pLast->iLine - 1; }
+Otherwise  : OTHERWISE Crlf { hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE; hb_compLinePush(); hb_comp_iCompiled = hb_comp_iLine - 1; }
                 EmptyStats
            | Otherwise OTHERWISE { hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_MAYHEM_IN_CASE, NULL, NULL ); } Crlf
                 EmptyStats
@@ -1394,20 +1394,20 @@ DoWhile    : WhileBegin Expression Crlf
                   hb_compExprDelete( hb_compExprGenPush( $2 ) );
                   $<lNumber>$ = hb_compGenJumpFalse( 0 );
                   hb_compLinePush();
-		  hb_comp_iCompiled = hb_comp_files.pLast->iLine - 1;
+		  hb_comp_iCompiled = hb_comp_iLine - 1;
                 }
              EmptyStats
                {
                   hb_compLoopHere();
                   hb_compGenJump( $1 - hb_comp_functions.pLast->lPCodePos );
-		  hb_comp_iCompiled = hb_comp_files.pLast->iLine - 1;
+		  hb_comp_iCompiled = hb_comp_iLine - 1;
                }
              EndWhile
                {
                   hb_compGenJumpHere( $<lNumber>4 ); --hb_comp_wWhileCounter;
                   hb_compLoopEnd();
                   hb_comp_functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
-		  hb_comp_iCompiled = hb_comp_files.pLast->iLine - 1;
+		  hb_comp_iCompiled = hb_comp_iLine - 1;
                 }
            ;
 
@@ -1441,7 +1441,7 @@ ForNext    : FOR LValue ForAssign Expression          /* 1  2  3  4 */
                      hb_compGenPCode1( HB_P_LESSEQUAL );
                   $<lNumber>$ = hb_compGenJumpFalse( 0 );   /* 11 */
                   hb_compLinePush();
-		  hb_comp_iCompiled = hb_comp_files.pLast->iLine - 1;
+		  hb_comp_iCompiled = hb_comp_iLine - 1;
                }
              ForStatements                            /* 12 */
                {
@@ -1565,7 +1565,7 @@ DoArgument : IdentName                { $$ = hb_compExprNewVarRef( $1 ); }
            | PareExpList               { $$ = $1; }
            ;
 
-Crlf       : '\n'          { ++hb_comp_iLine; hb_comp_EOL = TRUE; hb_comp_bError = FALSE; }
+Crlf       : '\n'          {  hb_comp_EOL = TRUE; hb_comp_bError = FALSE; }
            | ';'           { hb_comp_bDontGenLineNum = TRUE; }
            ;
 
@@ -1674,25 +1674,8 @@ BOOL hb_compInclude( char * szFileName, PATHNAMES * pSearch )
    pFile->pBuffer = hb_xgrab( HB_PP_BUFF_SIZE );
    pFile->iBuffer = pFile->lenBuffer = 10;
    pFile->szFileName = szFileName;
-   pFile->iLine = 1;
+   pFile->iLine = 0;
    pFile->pPrev = NULL;
-
-/*
-   if( ! hb_comp_files.iFiles )
-      hb_comp_files.pLast = pFile;
-   else
-   {
-      hb_comp_files.pLast->iLine = hb_comp_iLine;
-      hb_comp_iLine = 1;
-      pFile->pPrev = hb_comp_files.pLast;
-      hb_comp_files.pLast  = pFile;
-   }
-#ifdef __cplusplus
-   yy_switch_to_buffer( ( YY_BUFFER_STATE ) ( pFile->pBuffer = yy_create_buffer( yyin, 8192 * 2 ) ) );
-#else
-   yy_switch_to_buffer( pFile->pBuffer = yy_create_buffer( yyin, 8192 * 2 ) );
-#endif
-*/
 
    hb_comp_files.pLast = pFile;
 #ifdef __cplusplus
@@ -1712,32 +1695,6 @@ int yywrap( void )   /* handles the EOF of the currently processed file */
       hb_xfree( hb_comp_files.pLast->pBuffer );
       return 1;      /* we have reached the main EOF */
    }
-
-/*
-   else
-   {
-      void * pLast;
-
-      pLast = hb_comp_files.pLast;
-      fclose( hb_comp_files.pLast->handle );
-      hb_comp_files.pLast = ( PFILE ) ( ( PFILE ) hb_comp_files.pLast )->pPrev;
-      hb_comp_iLine = hb_comp_files.pLast->iLine;
-#ifdef __cplusplus
-      yy_delete_buffer( ( YY_BUFFER_STATE ) ( ( PFILE ) pLast )->pBuffer );
-#else
-      yy_delete_buffer( ( ( PFILE ) pLast )->pBuffer );
-#endif
-      free( pLast );
-      hb_comp_files.iFiles--;
-      yyin = hb_comp_files.pLast->handle;
-#ifdef __cplusplus
-      yy_switch_to_buffer( ( YY_BUFFER_STATE ) hb_comp_files.pLast->pBuffer );
-#else
-      yy_switch_to_buffer( hb_comp_files.pLast->pBuffer );
-#endif
-      return 0;
-   }
-*/ /* we close the currently include file and continue */
 
    return 0;
 }
