@@ -3094,3 +3094,5 @@ HB_FUNC( DBFILEPUT )
    hb_retl( FALSE );
 }
 #endif
+
+#include "rddcpy.c"
