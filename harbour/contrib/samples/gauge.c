@@ -44,8 +44,8 @@
 #define B_RIGHT         4
 #define B_BACKCOLOR     5
 #define B_BARCOLOR      6
-#define B_DISPLAYNUM    7
-#define B_BARCHAR       8
+#define B_DISPLAYNUM    8
+#define B_BARCHAR       7
 #define B_PERCENT       9
 #define B_LEN           B_PERCENT
 
