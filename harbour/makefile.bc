@@ -243,6 +243,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\str.obj \
    $(OBJ_DIR)\strcase.obj \
    $(OBJ_DIR)\strings.obj \
+   $(OBJ_DIR)\stringsx.obj \
    $(OBJ_DIR)\strmatch.obj \
    $(OBJ_DIR)\strtran.obj \
    $(OBJ_DIR)\strzero.obj \
@@ -1414,6 +1415,10 @@ $(OBJ_DIR)\strcase.obj : $(RTL_DIR)\strcase.c
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\strings.obj : $(RTL_DIR)\strings.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\stringsx.obj : $(RTL_DIR)\stringsx.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 

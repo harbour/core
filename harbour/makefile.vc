@@ -10,9 +10,9 @@
 # NOTE: You can use these envvars to configure the make process:
 #       (note that these are all optional)
 #
-#       CFLAGS       - Extra C compiler options for libraries and for 
+#       CFLAGS       - Extra C compiler options for libraries and for
 #                      executables
-#       C_USR        - Extra C compiler options for libraries and for 
+#       C_USR        - Extra C compiler options for libraries and for
 #                      executables (GNU make compatible envvar)
 #       CLIBFLAGS    - Extra C compiler options for the libraries
 #       HARBOURFLAGS - Extra Harbour compiler options
@@ -273,6 +273,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\str.obj \
    $(OBJ_DIR)\strcase.obj \
    $(OBJ_DIR)\strings.obj \
+   $(OBJ_DIR)\stringsx.obj \
    $(OBJ_DIR)\strmatch.obj \
    $(OBJ_DIR)\strtran.obj \
    $(OBJ_DIR)\strzero.obj \
@@ -349,7 +350,7 @@ LANG_LIB_OBJS = \
    $(OBJ_DIR)\msghuwin.obj \
    $(OBJ_DIR)\msgis850.obj \
    $(OBJ_DIR)\msgpt.obj \
-   $(OBJ_DIR)\msgro.obj 
+   $(OBJ_DIR)\msgro.obj
 
 #
 # MACRO.LIB rules
@@ -540,7 +541,7 @@ VM_LIB_OBJS = \
 
 GTPCA_LIB_OBJS = \
    $(OBJ_DIR)\gtpca.obj \
-   $(OBJ_DIR)\mousepca.obj 
+   $(OBJ_DIR)\mousepca.obj
 
 #
 # GTSTD.LIB rules
@@ -551,7 +552,7 @@ GTPCA_LIB_OBJS = \
 
 GTSTD_LIB_OBJS = \
    $(OBJ_DIR)\gtstd.obj \
-   $(OBJ_DIR)\mousestd.obj 
+   $(OBJ_DIR)\mousestd.obj
 
 #
 # GTWIN.LIB rules
@@ -562,7 +563,7 @@ GTSTD_LIB_OBJS = \
 
 GTWIN_LIB_OBJS = \
    $(OBJ_DIR)\gtwin.obj \
-   $(OBJ_DIR)\mousewin.obj 
+   $(OBJ_DIR)\mousewin.obj
 
 #
 # Our default target

@@ -1,3 +1,12 @@
+20000513-00:51 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+
+   * Makefile.bc
+     + added stringsx.c
+   * Makefile.vc
+     + added stringsx.c
+   * source/rtl/Makefile
+     ! fixed tab chars in file (I hope)
+
 20000513-00:19 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
 
    * source/rtl/stringsx.c
