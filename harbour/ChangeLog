@@ -1,3 +1,11 @@
+2000-09-30 13:28 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+   *source/rtl/tbrowse.prg
+      * moved browse init to New() method. TBrowseNew() function is now empty and simply returns
+        TBrowse():New(...)
+      ! Browser wasn't able to handle columns wider than available display area. Now columns
+        are resized (oCol:Width) if it is necessary to do so.
+      ! PanLeft() wasn't working.
+
 2000-09-29 00:07 UTC+0800 Brian Hays <bhays@abacuslaw.com>
    * contrib/rdd_ads/ads1.c
    * source/rdd/dbcmd.c

@@ -62,6 +62,7 @@
           cursor positioning. Yes, Harbour is smarter, but it's not compatible.
           [vszakats] */
 
+#include "common.ch"
 #include "hbclass.ch"
 #include "color.ch"
 
@@ -97,7 +98,7 @@ CLASS TBrowse
    DATA aRect         // The rectangle specified with ColorRect()
    DATA aRectColor    // The color positions to use in the rectangle specified with ColorRect()
 
-   METHOD New()       // Constructor
+   METHOD New(nTop, nLeft, nBottom, nRight)  // Constructor
    METHOD Down()      // Moves the cursor down one row
    METHOD End()       // Moves the cursor to the rightmost visible data column
    METHOD GoBottom()  // Repositions the data source to the bottom of file
@@ -113,9 +114,7 @@ CLASS TBrowse
    MESSAGE Right() METHOD _Right() // Moves the cursor right one column
    METHOD Up()        // Moves the cursor up one row
 
-   METHOD AddColumn( oCol ) INLINE ;
-      AAdd( ::aColumns, oCol ), ::Configure( 2 ), Self // Adds a TBColumn object to the TBrowse object
-
+   METHOD AddColumn( oCol )
    METHOD ColCount() INLINE Len( ::aColumns )
    METHOD ColorRect()              // Alters the color of a rectangular group of cells
                                    // Returns the display width of a particular column
@@ -153,13 +152,14 @@ CLASS TBrowse
 
 ENDCLASS
 
-METHOD New() CLASS TBrowse
+METHOD New(nTop, nLeft, nBottom, nRight) CLASS TBrowse
+
+   default  nTop    to 0
+   default  nLeft   to 0
+   default  nBottom to MaxRow()
+   default  nRight  to MaxCol()
 
    ::aColumns    := {}
-   ::nTop        := 0
-   ::nLeft       := 0
-   ::nBottom     := MaxRow()
-   ::nRight      := MaxCol()
    ::AutoLite    := .t.
    ::leftVisible := 1
    ::ColPos      := 1
@@ -178,7 +178,29 @@ METHOD New() CLASS TBrowse
    ::aRect       := {}
    ::aRectColor  := {}
 
+   ::nTop := nTop
+   ::nLeft := nLeft
+   ::nBottom := nBottom
+   ::nRight := nRight
+
 return Self
+
+
+// Adds a TBColumn object to the TBrowse object
+METHOD AddColumn( oCol ) CLASS TBrowse
+
+   local nWidthMax := ::nRight - ::nLeft + 1  // Visible width of the browse
+
+   if oCol:Width > nWidthMax
+      // with values lower than -4 it SIGSEVs here and there :-(
+      oCol:Width := nWidthMax - 4
+   endif
+
+   AAdd( ::aColumns, oCol )
+   ::Configure( 2 )
+
+return Self
+
 
 METHOD DelColumn( nPos ) CLASS TBrowse
 
@@ -279,7 +301,49 @@ METHOD Invalidate() CLASS TBrowse
 
 return Self
 
+METHOD _Right() CLASS TBrowse
+
+   if ::ColPos < ::rightVisible
+      ::DeHilite()
+      ::ColPos++
+      ::Hilite()
+   else
+      if ::ColPos < Len( ::aColumns )
+         ::rightVisible++
+         ::leftVisible := ::LeftDetermine()
+         ::ColPos++
+         ::RefreshAll()
+      endif
+   endif
+
+return Self
+
+
 METHOD _Left() CLASS TBrowse
+
+   local leftVis := ::leftVisible
+
+   if ::ColPos > ::leftVisible
+      ::DeHilite()
+      ::ColPos--
+      ::Hilite()
+   else
+      if ::ColPos <= Max(::leftVisible, ::Freeze) .AND. ::ColPos > 1
+         while leftVis == ::leftVisible
+            ::rightVisible--
+            ::leftVisible := ::LeftDetermine()
+         end
+         ::ColPos--
+         ::RefreshAll()
+      endif
+   endif
+
+return Self
+
+// 30/09/00 - maurilio.longo@libero.it
+//NOTE: I've changed this method but I don't completely understand first if inside it, so
+//      I leave it here.
+/*METHOD _Left() CLASS TBrowse
 
    local leftVis := ::leftVisible
 
@@ -301,7 +365,7 @@ METHOD _Left() CLASS TBrowse
       endif
    endif
 
-return Self
+return Self*/
 
 METHOD LeftDetermine() CLASS TBrowse
 
@@ -327,7 +391,7 @@ METHOD LeftDetermine() CLASS TBrowse
             Len( ::aColumns[ nCol ]:ColSep ),;
             Len( ::ColSep ) )
 
-      if nWidth >= nWidthMax
+      if nWidth > nWidthMax
          exit
       endif
 
@@ -411,10 +475,13 @@ return Self
 METHOD PanLeft() CLASS TBrowse
 
    local n := ::ColPos - ::leftVisible
+   local leftVis := ::leftVisible
 
    if ::leftVisible > ::Freeze + 1
-      ::rightVisible--
-      ::leftVisible := ::LeftDetermine()
+      while leftVis == ::leftVisible
+         ::rightVisible--
+         ::leftVisible := ::LeftDetermine()
+      end
       ::ColPos := Min( ::leftVisible + n, ::rightVisible )
       ::RefreshAll()
    endif
@@ -430,23 +497,6 @@ METHOD PanRight() CLASS TBrowse
       ::leftVisible := ::LeftDetermine()
       ::ColPos := Min( ::leftVisible + n, ::rightVisible )
       ::RefreshAll()
-   endif
-
-return Self
-
-METHOD _Right() CLASS TBrowse
-
-   if ::ColPos < ::rightVisible
-      ::DeHilite()
-      ::ColPos++
-      ::Hilite()
-   else
-      if ::ColPos < Len( ::aColumns )
-         ::rightVisible++
-         ::leftVisible := ::LeftDetermine()
-         ::ColPos++
-         ::RefreshAll()
-      endif
    endif
 
 return Self
@@ -507,6 +557,7 @@ METHOD Hilite() CLASS TBrowse
    endif
 
 return Self
+
 
 METHOD Stabilize() CLASS TBrowse
 
@@ -605,7 +656,7 @@ METHOD Stabilize() CLASS TBrowse
    if !::aRedraw[ 1 ]
       if ::lHeaders          // Drawing headers
          DispOutAt( ::nTop, ::nLeft, Space( ( nWidth - nColsWidth ) / 2 ), ::ColorSpec )
-         for n := iif( ::Freeze>0, 1, ::leftVisible ) to ::rightVisible
+         for n := iif(::Freeze > 0, 1, ::leftVisible) to ::rightVisible
             if ::Freeze > 0 .and. n == ::Freeze + 1
                n := ::leftVisible
             endif
@@ -804,25 +855,7 @@ METHOD DispCell( nColumn, cColor ) CLASS TBrowse
 return Self
 
 
-function TBrowseNew( nTop, nLeft, nBottom, nRight )
+function TBrowseNew(nTop, nLeft, nBottom, nRight)
 
-   local oBrw := TBrowse():New()
-
-   if nTop != NIL
-      oBrw:nTop := nTop
-   endif
-
-   if nLeft != NIL
-      oBrw:nLeft := nLeft
-   endif
-
-   if nBottom != NIL
-      oBrw:nBottom := nBottom
-   endif
-
-   if nRight != NIL
-      oBrw:nRight := nRight
-   endif
-
-return oBrw
+return TBrowse():New(nTop, nLeft, nBottom, nRight)
 
