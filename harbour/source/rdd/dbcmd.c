@@ -2326,8 +2326,7 @@ HB_FUNC( ORDCONDSET )
    {
       lpdbOrdCondInfo = ( LPDBORDERCONDINFO ) hb_xgrab( sizeof( DBORDERCONDINFO ) );
       szFor = hb_parc( 1 );
-      ulLen = strlen( szFor );
-      if( ulLen )
+      if( szFor && ( ulLen = strlen( szFor ) ) != 0 )
       {
          lpdbOrdCondInfo->abFor = ( BYTE * ) hb_xgrab( ulLen + 1 );
          strcpy( ( char * ) lpdbOrdCondInfo->abFor, szFor );

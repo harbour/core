@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-10-20 22:40 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/rdd/dbcmd.c
+    ! Yet another fix related to the hb_parc() changes
+
 2002-10-20 21:12 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rdd/dbcmd.c
     ! Few fixes related to the latest hb_parc() changes
