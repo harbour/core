@@ -1093,14 +1093,39 @@ void hb_setRelease( void )
    hb_set.HB_SET_TYPEAHEAD = -1; hb_inkeyReset( TRUE ); /* Free keyboard typeahead buffer */
 }
 
-/* TOFIX: Clipper appends a slash after the path in this function */
-
 HARBOUR HB_DEFPATH( void )
 {
+   char buffer[ _POSIX_PATH_MAX ];
+   char delimiter[ 2 ] = ":";
+   int size = 0;
+
    if( hb_set.HB_SET_DEFAULT )
-      hb_retc( hb_set.HB_SET_DEFAULT );
-   else
-      hb_retc( "" );
+   {
+      /* Leave enough space to append a path delimiter */
+      strncpy( buffer, hb_set.HB_SET_DEFAULT, sizeof( buffer ) - 1 );
+      size = sizeof( buffer ) - 2;
+   }
+   buffer[ size ] = '\0';
+   size = strlen( buffer );
+/*
+   Debug code:
+
+printf( "\nHB_DEFPATH: buffer is '%s', size is %d, last char is '%c',", buffer, size, buffer[ size - 1] );
+printf( "              OS_PATH_DELIMITER is '%c', and OS_PATH_LIST_SEPARATOR is '%c'.", OS_PATH_DELIMITER, OS_PATH_LIST_SEPARATOR );
+*/
+   /* If the path is not empty and it doesn't end with a drive or path
+      delimiter, then add the appropriate separator. Use ':' if the size
+      of the path is 1 and the list separator is not ':', otherwise use
+      the path delimiter. This allows the use of a drive letter delimiter
+      for DOS compatible operating systems while preventing it from being
+      with a Unix compatible OS. */
+   if( size && buffer[ size - 1 ] != ':' && buffer[ size - 1 ] != OS_PATH_DELIMITER )
+   {
+      if( size > 1 || OS_PATH_LIST_SEPARATOR == ':' )
+         delimiter[ 0 ] = OS_PATH_DELIMITER;
+      strcat( buffer, delimiter );
+   }
+   hb_retc( buffer );
 }
 
 HARBOUR HB___DEFPATH( void )

@@ -1,3 +1,9 @@
+19991016-00:00 EDT David G. Holm <dholm@jsd-llc.com>
+
+   * source/rtl/set.c
+     ! HB_DEFPATH() (and consequently HB___DEFPATH()) now append a drive
+       or path delimiter if the default path does not have one at the end.
+
 19991015-23:25 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/compiler/harbour.c
      + || defined(_MSC_VER) around isatty()
