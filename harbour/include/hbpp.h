@@ -77,10 +77,11 @@ extern char * _szPWarnings[];
 
 extern FILENAME *SplitFilename( char * );  /* splits filename into a path, a name and an extension */
 extern char *MakeFilename( char *, FILENAME *);  /* joins a path, a name an an extension int filename */
-extern void * OurMalloc( LONG lSize ); /* our malloc with error control */
-extern void * _xgrab( ULONG );         /* allocates fixed memory */
-extern void * _xrealloc( void *, ULONG );       /* reallocates memory */
-extern void _xfree( void * );            /* frees fixed memory */
+
+extern void *   hb_xalloc( ULONG lSize );   /* allocates memory, returns NULL on failure */
+extern void *   hb_xgrab( ULONG lSize );   /* allocates memory, exists on failure */
+extern void     hb_xfree( void * pMem );    /* frees memory */
+extern void *   hb_xrealloc( void * pMem, ULONG lSize );   /* reallocates memory */
 
 /* Needed support variables, but not contained in HBPP.C */
 

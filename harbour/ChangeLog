@@ -1,3 +1,29 @@
+19990819-05:26 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * source/compiler/harbour.l
+    source/compiler/harbour.y
+    source/compiler/genobj32.c
+    source/hbpp/hbpp.c
+    source/hbpp/hbppint.c
+    source/hbpp/hbpplib.c
+    source/hbpp/stdalone/hbpp.c
+    include/compiler.h
+    include/hbpp.h
+
+    + Standardized the names of the memory handling functions.
+      OurMalloc()  -> hb_xalloc()
+      OurRealloc() -> hb_xrealloc()
+      OurFree()    -> hb_xfree()
+      _xgrab()     -> hb_xgrab()
+      _xrealloc()  -> hb_xrealloc()
+      _xfree()     -> hb_xfree()
+      So that from now on, the Harbour API form can be used everywhere.
+      Some duplicate code eliminated.
+
+  * source/rtl/arrays.c - hb_arrayScan()
+
+    ! Checks the return value of the comparer block whether it's logical.
+
 19990819-04:44 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/memvars.c
     include/extend.h

@@ -60,7 +60,7 @@ FILE *yyppo;
 void Hbpp_init ( void )
 {
   lenBuffer = 10; iBuffer = 10;
-  aCondCompile = (int*) _xgrab( sizeof(int) * 5 );
+  aCondCompile = (int*) hb_xgrab( sizeof(int) * 5 );
 }
 
 int PreProcess( FILE* handl_i, FILE* handl_o, char *sOut )
@@ -128,7 +128,7 @@ int PreProcess( FILE* handl_i, FILE* handl_o, char *sOut )
 
 int Hp_Parse( FILE* handl_i, FILE* handl_o )
 {
- char *sBuffer = (char *)_xgrab( BUFF_SIZE );           /* File read buffer */
+ char *sBuffer = (char *)hb_xgrab( BUFF_SIZE );           /* File read buffer */
  char *ptr;
  int lContinue = 0;
  int iBuffer = 10, lenBuffer = 10;
@@ -163,38 +163,6 @@ int Hp_Parse( FILE* handl_i, FILE* handl_o )
    }
   }
  }
- _xfree( sBuffer );
+ hb_xfree( sBuffer );
  return 0;
-}
-
-void * _xgrab( ULONG ulSize )         /* allocates fixed memory */
-{
-   void * pMem = malloc( ulSize );
-
-   if( ! pMem )
-   {
-      printf( "\n_xgrab error: can't allocate memory!\n" );
-      exit( 1 );
-   }
-
-   return pMem;
-}
-
-void * _xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
-{
-   void * pResult = realloc( pMem, ulSize );
-
-   if( ! pResult )
-   {
-      printf( "\n_xrealloc error: can't reallocate memory!\n" );
-      exit( 1 );
-   }
-
-   return pResult;
-}
-
-void _xfree( void * pMem )            /* frees fixed memory */
-{
-   if( pMem )
-      free( pMem );
 }

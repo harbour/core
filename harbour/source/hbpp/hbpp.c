@@ -273,7 +273,7 @@ DEFINES* AddDefine ( char* defname, char* value )
      stdef->pars = NULL;
    else
    {
-     stdef = ( DEFINES * ) _xgrab( sizeof( DEFINES ) );
+     stdef = ( DEFINES * ) hb_xgrab( sizeof( DEFINES ) );
      stdef->last = topDefine;
      topDefine = stdef;
      stdef->name = strodup ( defname );
@@ -310,7 +310,7 @@ int ParseIfdef( char* sLine, int usl)
    if ( nCondCompile == maxCondCompile )
    {
      maxCondCompile += 5;
-     aCondCompile = (int*)_xrealloc( aCondCompile, sizeof( int ) * maxCondCompile );
+     aCondCompile = (int*)hb_xrealloc( aCondCompile, sizeof( int ) * maxCondCompile );
    }
    if ( nCondCompile==0 || aCondCompile[nCondCompile-1])
    {
@@ -504,7 +504,7 @@ COMMANDS* AddCommand ( char *cmdname )
 {
    COMMANDS *stcmd;
 
-   stcmd = ( COMMANDS * ) _xgrab( sizeof( COMMANDS ) );
+   stcmd = ( COMMANDS * ) hb_xgrab( sizeof( COMMANDS ) );
    stcmd->last = topCommand;
    topCommand = stcmd;
    stcmd->name = strodup ( cmdname );
@@ -515,7 +515,7 @@ COMMANDS* AddTranslate ( char *traname )
 {
    COMMANDS *sttra;
 
-   sttra = ( COMMANDS * ) _xgrab( sizeof( COMMANDS ) );
+   sttra = ( COMMANDS * ) hb_xgrab( sizeof( COMMANDS ) );
    sttra->last = topTranslate;
    topTranslate = sttra;
    sttra->name = strodup ( traname );
@@ -1741,7 +1741,7 @@ char* strodup ( char *stroka )
  char *ptr;
  int lens = 0;
   while ( *(stroka+lens) != '\0' ) lens++;
-  ptr = ( char * ) _xgrab( lens + 1 );
+  ptr = ( char * ) hb_xgrab( lens + 1 );
   memcpy( ptr,  stroka, lens+1 );
   *(ptr+lens) = '\0';
   return ptr;
@@ -1880,7 +1880,7 @@ BOOL OpenInclude( char * szFileName, PATHNAMES *pSearch, FILE** fptr, BOOL bStan
     pFileName->path = _pFileName->path;
     MakeFilename( szFName, pFileName );
     *fptr = fopen( szFName, "r" );
-    _xfree( pFileName );
+    hb_xfree( pFileName );
   }
 
   if ( !*fptr && pSearch )
@@ -1895,7 +1895,7 @@ BOOL OpenInclude( char * szFileName, PATHNAMES *pSearch, FILE** fptr, BOOL bStan
       *fptr = fopen( szFName, "r" );
       pSearch = pSearch->pNext;
     }
-    _xfree( pFileName );
+    hb_xfree( pFileName );
   }
 
   return ( *fptr ? TRUE : FALSE );

@@ -433,7 +433,7 @@ int hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG ulStart, ULONG ulCount
 {
   if ( IS_ARRAY( pArray ) && pValue->type != IT_NIL )
     {
-      int        iRet = 0;
+      BOOL       bFound = FALSE;
       PBASEARRAY pBaseArray;
       ULONG      ulLen = hb_arrayLen( pArray );
 
@@ -458,8 +458,10 @@ int hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG ulStart, ULONG ulCount
               hb_vmPush( pValue );
               hb_vmPush( pItem );
               hb_vmDo( 1 );
-              if ( stack.Return.item.asLogical.value )
-                iRet = 1;
+
+              if ( IS_LOGICAL( &stack.Return ) &&
+                   stack.Return.item.asLogical.value )
+                bFound = TRUE;
             }
           else
             {
@@ -468,32 +470,32 @@ int hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG ulStart, ULONG ulCount
                   switch( pItem->type )
                     {
                     case IT_INTEGER :
-                      iRet = ( pValue->item.asInteger.value == pItem->item.asInteger.value);
+                      bFound = ( pValue->item.asInteger.value == pItem->item.asInteger.value);
                       break;
 
                     case IT_LONG :
-                      iRet = ( pValue->item.asLong.value == pItem->item.asLong.value );
+                      bFound = ( pValue->item.asLong.value == pItem->item.asLong.value );
                       break;
 
                     case IT_DOUBLE :
-                      iRet = ( pValue->item.asDouble.value == pItem->item.asDouble.value );
+                      bFound = ( pValue->item.asDouble.value == pItem->item.asDouble.value );
                       break;
 
                     case IT_DATE :
-                      iRet = ( pValue->item.asDate.value == pItem->item.asDouble.value );
+                      bFound = ( pValue->item.asDate.value == pItem->item.asDouble.value );
                       break;
 
                     case IT_LOGICAL :
-                      iRet = ( pValue->item.asLogical.value == pItem->item.asLogical.value );
+                      bFound = ( pValue->item.asLogical.value == pItem->item.asLogical.value );
                       break;
 
                     case IT_STRING :
-                      iRet = ( hb_itemStrCmp( pValue, pItem, FALSE ) == 0 );
+                      bFound = ( hb_itemStrCmp( pValue, pItem, FALSE ) == 0 );
                       break;
                     }
                 }
             }
-          if ( iRet )
+          if ( bFound )
             return ulStart + 1;                  /* arrays start from 1 */
         }
     }

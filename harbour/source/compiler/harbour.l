@@ -43,7 +43,7 @@
 /* Functions defined in harbour.y */
 char *yy_strupr( char * );
 char * yy_strdup( char *p );
-void OurFree( void * );
+extern void     hb_xfree( void * pMem );    /* frees memory */
 
 /* YACC functions */
 void yyerror( char * );
@@ -500,7 +500,7 @@ Separator     {SpaceTab}
                  if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                  if( _iState == LOOKUP )
                  {
-                   OurFree( (void *) yylval.string );
+                   hb_xfree( (void *) yylval.string );
                    _iState =EXTERN;
                    return EXTERN;
                  }
@@ -528,7 +528,7 @@ Separator     {SpaceTab}
                  if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                  if( _iState == LOOKUP )
                  {
-                   OurFree( (void *) yylval.string );
+                   hb_xfree( (void *) yylval.string );
                    _iState =FIELD;
                    return FIELD;
                  }
@@ -726,7 +726,7 @@ Separator     {SpaceTab}
                  if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                  if( _iState == LOOKUP )
                  { /* it is first item in the line */
-                   OurFree( (void *) yylval.string );
+                   hb_xfree( (void *) yylval.string );
                    _iState =LOCAL;
                    return LOCAL;
                  }
@@ -781,7 +781,7 @@ Separator     {SpaceTab}
                  if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                  if( _iState == LOOKUP )
                  { /* it is the first item in the line */
-                   OurFree( (void *) yylval.string );
+                   hb_xfree( (void *) yylval.string );
                    _iState =MEMVAR;
                    return MEMVAR;
                  }
@@ -881,7 +881,7 @@ Separator     {SpaceTab}
                  if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                  if( _iState == LOOKUP )
                  { /* it is the first item in the line */
-                   OurFree( (void *) yylval.string );
+                   hb_xfree( (void *) yylval.string );
                    _iState =PARAMETERS;
                    return PARAMETERS;
                  }
@@ -908,7 +908,7 @@ Separator     {SpaceTab}
                  if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                  if( _iState == LOOKUP )
                  { /* it is first item in the line */
-                   OurFree( (void *) yylval.string );
+                   hb_xfree( (void *) yylval.string );
                    _iState =PRIVATE;
                    return PRIVATE;
                  }
@@ -940,7 +940,7 @@ Separator     {SpaceTab}
                  if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                  if( _iState == LOOKUP )
                  { /* it is first item in the line */
-                   OurFree( (void *) yylval.string );
+                   hb_xfree( (void *) yylval.string );
                    _iState =PUBLIC;
                    return PUBLIC;
                  }
