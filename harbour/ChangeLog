@@ -33,7 +33,7 @@
 
    * harbour/include/hbapi.h
      + Two new members added to struct hb_struString
-     * hb_itemPutC(), hb_itemPutCL(), hb_itemPutCPtr(), hb_itemClear()
+
    * harbour/include/hbexprb.c
      * Compiler expressions optimizer modified to return a final zero
        for pcode strings.
