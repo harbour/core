@@ -1,3 +1,7 @@
+19991016-20:46 GMT+1 Victor Szel <info@szelvesz.hu>
+   * tests/test.dbf
+     ! Readded in binary mode
+
 19991016-19:07 GMT+1 Antonio Linares <alinares@fivetech.com>
    + tests/test.dbf
      + 500 records with random information added.
