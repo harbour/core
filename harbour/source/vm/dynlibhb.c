@@ -58,13 +58,15 @@
 #define HB_OS_WIN_32_USED
 
 #include "hbapi.h"
+#include "hbstack.h"
+#include "hbvm.h"
 
 HB_FUNC( LIBLOAD )
 {
 
 #if defined(HB_OS_WIN_32)
    {
-      hb_retnl( LoadLibrary( hb_parc( 1 ) ) );
+      hb_retnl( ( long ) LoadLibrary( hb_parc( 1 ) ) );
    }
 #endif
 
