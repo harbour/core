@@ -1,3 +1,13 @@
+2001-07-09 22:00 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * contrib/dot/pp.prg
+     * Changed PP_Main() to STATIC Main() to have a Main procedure for build that require a MAIN yet avoid conflict if linked with a prg including a MAIN.
+   * contrib/dot/pp_harb.ch
+     * Wrapped a Windows specific code within #ifdef WIN.
+   /* Thanks to input from Tomaž Zupan. */
+
+   * source/pp/ppcore.c
+     ! Added a BOOL 2nd parameter to isExpres() to flag a LIST MP. This fixes problem with matching a list exp with an empty component.
+
 2001-07-10 01:15 UTC+1 JFL (mafact) <jfl@mafact.com>
    * harbour/source/vm/Classe.c
      - Hb_ClsScope() Remed :-((((((((((
@@ -9,9 +19,9 @@
      - Hb_ClsScope() Corrected and re-added
      - hb_getRrealclsName() enhanced to keep a better trace of Class tree
      - __ClsInst simplified
-     - List of modifs simplified 
+     - List of modifs simplified
    * harbour/include/Hbclass.ch
-     - List of modifs simplified 
+     - List of modifs simplified
      - Added a line of explanation for HB_CLS_ENFORCERO
    * harbour/utils/hbmake/hbmake.prg
      - added #ifndef __HARBOUR__ around Function HB_OSNEWLINE()

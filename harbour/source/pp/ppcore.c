@@ -111,7 +111,7 @@ static int    CommandStuff( char *, char *, char *, int *, BOOL, BOOL );
 static int    RemoveSlash( char * );
 static int    WorkMarkers( char **, char **, char *, int *, BOOL );
 static int    getExpReal( char *, char **, BOOL, int, BOOL );
-static BOOL   isExpres( char * );
+static BOOL   isExpres( char *, BOOL );
 static BOOL   TestOptional( char *, char * );
 static BOOL   CheckOptional( char *, char *, char *, int *, BOOL, BOOL );
 static void   SkipOptional( char ** );
@@ -1805,7 +1805,7 @@ static int WorkMarkers( char ** ptrmp, char ** ptri, char * ptro, int * lenres, 
                      *ptri += lenreal;
                   }
                }
-               else if( isExpres( expreal ) )
+               else if( isExpres( expreal, *(exppatt+2) == '1' ) )
                {
                   /*
                   printf( "Accepted: >%s<\n", expreal );
@@ -2385,7 +2385,7 @@ static int getExpReal( char * expreal, char ** ptri, BOOL prlist, int maxrez, BO
    return lens;
 }
 
-static BOOL isExpres( char * stroka )
+static BOOL isExpres( char * stroka, BOOL prlist )
 {
   int l1,l2;
 
@@ -2396,7 +2396,7 @@ static BOOL isExpres( char * stroka )
   #endif
 
   l1 = strlen( stroka );
-  l2 = getExpReal( NULL, &stroka, FALSE, HB_PP_STR_SIZE, TRUE );
+  l2 = getExpReal( NULL, &stroka, prlist, HB_PP_STR_SIZE, TRUE );
 
   #if 0
      printf( "Len1: %i Len2: %i RealExp: >%s< Last: %c\n", l1, l2, stroka - l2, ( stroka - l2 )[l1-1] );

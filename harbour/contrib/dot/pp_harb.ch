@@ -1,9 +1,31 @@
-//--------------------------------------------------------------//
+/*
+ * Harbour Project source code:
+ * Pre-Processor/Dot prompt environment
+ *
+ * Copyright 2000 Ron Pinkas <ronpinkas@profit-master.com>
+ * www - http://www.harbour-project.org
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
+ * their web site at http://www.gnu.org/).
+ */
 
 #ifdef __HARBOUR__
 
 #include "hbclass.ch"
 
+//----------------------------------------------------------------------------//
 CLASS  TInterpreter
 
    DATA cText
@@ -29,6 +51,7 @@ CLASS  TInterpreter
    METHOD LoadFiveWin()      INLINE PP_LoadFw()
 ENDCLASS
 
+//----------------------------------------------------------------------------//
 METHOD Run( p1, p2, p3, p4, p5, p6, p7, p8, p9 )
 
    LOCAL aParams := HB_aParams(), xRet
@@ -43,6 +66,7 @@ METHOD Run( p1, p2, p3, p4, p5, p6, p7, p8, p9 )
 
 RETURN xRet
 
+//----------------------------------------------------------------------------//
 METHOD Compile()
 
    LOCAL nLine, nLines, nProcId := 0
@@ -68,6 +92,7 @@ METHOD Compile()
 
 RETURN nProcId > 0
 
+//----------------------------------------------------------------------------//
 #pragma BEGINDUMP
 
 #include <ctype.h>
@@ -81,6 +106,7 @@ RETURN nProcId > 0
 
 static BOOL s_bArrayPrefix = FALSE;
 
+//----------------------------------------------------------------------------//
 static HB_FUNC( SETARRAYPREFIX )
 {
    PHB_ITEM pbArrayPrefix = hb_param( 1, HB_IT_LOGICAL );
@@ -91,6 +117,7 @@ static HB_FUNC( SETARRAYPREFIX )
    }
 }
 
+//----------------------------------------------------------------------------//
 static HB_FUNC( NEXTTOKEN )
 {
    PHB_ITEM pLine       = hb_param( 1, HB_IT_STRING );
@@ -425,6 +452,7 @@ static HB_FUNC( NEXTTOKEN )
    hb_retclen( sReturn, nLen );
 }
 
+//----------------------------------------------------------------------------//
 static HB_FUNC( NEXTIDENTIFIER )
 {
    PHB_ITEM pLine    = hb_param( 1, HB_IT_STRING );
@@ -567,16 +595,25 @@ static HB_FUNC( NEXTIDENTIFIER )
     }
 }
 
-//----------------------------------------------------------------------------//
-#include <Windows.h>
-
-HB_FUNC( MESSAGEBOX )
-{
-    hb_retni( MessageBox( ( HWND ) hb_parnl( 1 ), hb_parc( 2 ), hb_parc( 3 ), hb_parni( 4 ) ) );
-}
-
 #pragma STOPDUMP
 
+//----------------------------------------------------------------------------//
+#ifdef WIN
+
+   #pragma BEGINDUMP
+
+   #include <Windows.h>
+
+   HB_FUNC( MESSAGEBOX )
+   {
+       hb_retni( MessageBox( ( HWND ) hb_parnl( 1 ), hb_parc( 2 ), hb_parc( 3 ), hb_parni( 4 ) ) );
+   }
+
+   #pragma STOPDUMP
+
+#endif
+
+//----------------------------------------------------------------------------//
 STATIC FUNCTION InitFWRules()
 
    /* Defines */

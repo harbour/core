@@ -199,7 +199,7 @@ static s_lRunLoaded := .F., s_lClsLoaded := .F., s_lFWLoaded := .F.
 
 //--------------------------------------------------------------//
 
-PROCEDURE PP_Main( sSource, p1, p2, p3, p4, p5, p6, p7, p8, p9 )
+STATIC PROCEDURE Main( sSource, p1, p2, p3, p4, p5, p6, p7, p8, p9 )
 
    LOCAL sIncludePath, nNext, sPath, sSwitch := ""
    LOCAL nAt, sParams, sPPOExt, aParams
