@@ -130,6 +130,7 @@ METHOD New() CLASS TBrowse
    ::stable    = .f.
    ::RelativePos = 1
    ::aRedraw = nil
+   ::lHeaders = .f.
 
 return Self
 
