@@ -112,10 +112,10 @@ double hb_numRound( double dResult, int iDec )
       {
          double dAdjust = pow( 10, iDec );
 
-         if( dResult < 0.0 )
-            dResult = ceil( ( dResult * dAdjust ) - 0.5 );
+         if( dResult > 0.0 )
+            dResult = ceil( ( dResult * dAdjust ) + 0.5 );
          else
-            dResult = floor( ( dResult * dAdjust ) + 0.5 );
+            dResult = floor( ( dResult * dAdjust ) - 0.5 );
 
          dResult /= dAdjust;
       }
