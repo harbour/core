@@ -1,3 +1,9 @@
+19991025-15:20 GMT+1 Victor Szel <info@szelvesz.hu>
+   * tests/memory.prg
+     + Using hbmemory.ch
+   * source/rtl/net.c
+     + cast added for MSVC
+
 19991025-14:58 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/rtl/net.c
      + Name buffer length corrected.

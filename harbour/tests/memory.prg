@@ -4,21 +4,23 @@
 
 /* ; Donated to the public domain by Victor Szel <info@szelvesz.hu> */
 
+#include "hbmemory.ch"
+
 FUNCTION Main()
 
-   ?    0, MEMORY(    0 )
-   ?    1, MEMORY(    1 )
-   ?    2, MEMORY(    2 )
-   ?    3, MEMORY(    3 )
-   ?    4, MEMORY(    4 )
-   ?  101, MEMORY(  101 )
-   ?  102, MEMORY(  102 )
-   ?  103, MEMORY(  103 )
-   ?  104, MEMORY(  104 )
-   ?  105, MEMORY(  105 )
-   ? 1001, MEMORY( 1001 )
-   ? 1002, MEMORY( 1002 )
-   ? 1003, MEMORY( 1003 )
-   ? 1004, MEMORY( 1004 )
+   ? "HB_MEM_CHAR      " , MEMORY( HB_MEM_CHAR       )
+   ? "HB_MEM_BLOCK     " , MEMORY( HB_MEM_BLOCK      )
+   ? "HB_MEM_RUN       " , MEMORY( HB_MEM_RUN        )
+   ? "HB_MEM_VM        " , MEMORY( HB_MEM_VM         )
+   ? "HB_MEM_EMS       " , MEMORY( HB_MEM_EMS        )
+   ? "HB_MEM_FM        " , MEMORY( HB_MEM_FM         )
+   ? "HB_MEM_FMSEGS    " , MEMORY( HB_MEM_FMSEGS     )
+   ? "HB_MEM_SWAP      " , MEMORY( HB_MEM_SWAP       )
+   ? "HB_MEM_CONV      " , MEMORY( HB_MEM_CONV       )
+   ? "HB_MEM_EMSUSED   " , MEMORY( HB_MEM_EMSUSED    )
+   ? "HB_MEM_USED      " , MEMORY( HB_MEM_USED       )
+   ? "HB_MEM_USEDMAX   " , MEMORY( HB_MEM_USEDMAX    )
+   ? "HB_MEM_STACKITEMS" , MEMORY( HB_MEM_STACKITEMS )
+   ? "HB_MEM_STACK     " , MEMORY( HB_MEM_STACK      )
 
    RETURN NIL

@@ -61,7 +61,7 @@ HARBOUR HB_NETNAME( void )
 #if defined(_Windows) || defined(WINNT)
    {
       DWORD ulLen = MAX_COMPUTERNAME_LENGTH + 1;
-      char * pszValue = hb_xgrab( ulLen );
+      char * pszValue = ( char * ) hb_xgrab( ulLen );
 
       pszValue[ 0 ] = '\0';
 
