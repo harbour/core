@@ -1,4 +1,11 @@
+2001-07-23 18:24 GMT Dave Pearson <davep@davep.org>
+
+   * source/rtl/profiler.prg
+     * Access method `nSeconds' in class HB_ProfileEntity now used
+       HB_CLOCKS2SECS to calculate seconds.
+	
 2001-07-23 18:15 GMT Dave Pearson <davep@davep.org>
+	
    * source/rtl/seconds.c
       * Renamed CLOCKS2SECS() to HB_CLOCKS2SECS().
 	

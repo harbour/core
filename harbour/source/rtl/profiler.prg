@@ -236,7 +236,7 @@ Return( self )
 /////
 
 Access nSeconds Class HB_ProfileEntity
-Return( ::nTicks / 1000 )
+Return( HB_Clocks2Secs( ::nTicks ) )
 
 /////
 
