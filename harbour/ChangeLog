@@ -1,3 +1,8 @@
+2000-10-02 12:45 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+   * source/pp/ppcore.c
+     ! The include file limit check now uses hb_comp_files.iFiles
+       instead of the static variable that never got decremented.
+
 2000-10-01 18:25 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
    *source/rtl/tbrowse.prg
       ! PageDown() and GoBottom() methods weren't working when number of available record was lower than
