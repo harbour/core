@@ -1,3 +1,8 @@
+2000-06-12 16:00 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/compiler/harbour.y
+	*fixed bug when 'DO &macrovar' was used
+
 2000-06-12 15:40 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.c

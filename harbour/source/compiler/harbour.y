@@ -1518,15 +1518,15 @@ RecoverUsing : RECOVERUSING IdentName
  * DO .. WITH ++variable
  * will pass the value of variable not a reference
  */
-DoName     : IdentName       { $$ = hb_compExprNewFunName( $1 ); }
+DoName     : IdentName       { $$ = hb_compExprNewFunName( $1 ); hb_compAutoOpenAdd( $1 ); }
            | MacroVar         { $$ = $1; }
            | MacroExpr    { $$ = $1; }
            ;
 
 DoProc     : DO DoName
-               { hb_compAutoOpenAdd( $2->value.asSymbol ); $$ = hb_compExprNewFunCall( $2, NULL ); }
+               { $$ = hb_compExprNewFunCall( $2, NULL ); }
            | DO DoName WITH DoArgList
-               { hb_compAutoOpenAdd( $2->value.asSymbol ); $$ = hb_compExprNewFunCall( $2, $4 ); }
+               { $$ = hb_compExprNewFunCall( $2, $4 ); }
            | WHILE WITH DoArgList
                { hb_compAutoOpenAdd( "WHILE" ); $$ = hb_compExprNewFunCall( hb_compExprNewFunName( hb_strdup("WHILE") ), $3 ); }
            ;
