@@ -1,4 +1,4 @@
-2001-11-19 16:00 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+2001-11-19 16:00 UTC-0500 David G. Holm <dholm@jsd-llc.com>
 
   * source/rdd/dbfcdx/dbfcdx1.c
   	! Removed spurious (BYTE) overrides on dual assignments.
@@ -255,7 +255,7 @@
      utils/hbmake/hbmake.prg
       * Fix some small problem with hbmake under linux
 
-2001-11-07 11:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+2001-11-07 11:30 UTC-0500 David G. Holm <dholm@jsd-llc.com>
 
   * contrib/libct/files.c
   	! Exclude Cygwin from the WIN32 build paths.
@@ -405,7 +405,7 @@
       * added "trimming" to new symbols, should fix bugs
         related to dbUseArea called with space-padded alias
 
-2001-11-05 19:25 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+2001-11-05 19:25 UTC-0500 David G. Holm <dholm@jsd-llc.com>
 
   * config/w32/gcc.cf
   * source/rtl/isprint.c
