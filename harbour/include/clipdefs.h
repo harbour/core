@@ -78,7 +78,7 @@ typedef SHORTP  PSHORT;
 typedef USHORT * USHORTP;
 typedef USHORTP PUSHORT;
 
-#ifndef __HARBOUR__
+#ifndef HB_OS_WIN_32
    typedef unsigned int WORD;
    typedef WORD *  WORDP;
    typedef WORDP   PWORD;
@@ -100,7 +100,7 @@ typedef BOOLP   PBOOL;
 typedef void *  NEARP;
 typedef NEARP * NEARPP;
 
-#ifndef __HARBOUR__
+#ifndef HB_OS_WIN_32
    typedef void *  FARP;
    typedef FARP *  FARPP;
    typedef FARP    VOIDP;
