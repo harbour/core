@@ -82,8 +82,8 @@
  *  $END$
  */
 
-FUNCTION DevOutPict( xValue, cPicture, cColor )
+PROCEDURE DevOutPict( xValue, cPicture, cColor )
 
    DevOut( Transform( xValue, cPicture ), cColor )
 
-   RETURN NIL
+   RETURN

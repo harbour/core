@@ -72,11 +72,11 @@ STATIC PROCEDURE PutDBF( aDirEntry )
    LOCAL nRecCount := 0
    LOCAL dLastUpdate := hb_SToD( "" )
 
-   IF ( fhnd := fOpen( aDirEntry[ F_NAME ] ) ) != F_ERROR
+   IF ( fhnd := FOpen( aDirEntry[ F_NAME ] ) ) != F_ERROR
 
       buffer := Replicate( Chr( 0 ), 8 )
 
-      IF fRead( fhnd, @buffer, 8 ) == 8 .AND. ;
+      IF FRead( fhnd, @buffer, 8 ) == 8 .AND. ;
          ( Bin2W( Left( buffer, 1 ) ) == 3 .OR. ;
            Bin2W( Left( buffer, 1 ) ) == 131 )
 
@@ -87,7 +87,7 @@ STATIC PROCEDURE PutDBF( aDirEntry )
 
       ENDIF
 
-      fClose( fhnd )
+      FClose( fhnd )
 
    ENDIF
 

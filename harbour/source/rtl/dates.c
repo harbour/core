@@ -95,7 +95,7 @@ double hb_secondsToday( void )
    #define ftime _ftime
 #endif
    struct timeb tb;
-   struct tm *oTime;
+   struct tm * oTime;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_secondsToday()"));
 
@@ -152,23 +152,23 @@ long hb_dateEncode( long lDay, long lMonth, long lYear )
    return 0;
 }
 
-void hb_dateDecode( long julian, long * plDay, long * plMonth, long * plYear )
+void hb_dateDecode( long lJulian, long * plDay, long * plMonth, long * plYear )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_dateDecode(%ld, %p, %p, %p)", julian, plDay, plMonth, plYear));
+   HB_TRACE(HB_TR_DEBUG, ("hb_dateDecode(%ld, %p, %p, %p)", lJulian, plDay, plMonth, plYear));
 
-   if( julian > 0 )
+   if( lJulian > 0 )
    {
       long U, V, W, X;
 
-      julian += 68569;
-      W = ( julian * 4 ) / 146097;
-      julian -= ( ( 146097 * W ) + 3 ) / 4;
-      X = 4000 * ( julian + 1 ) / 1461001;
-      julian -= ( ( 1461 * X ) / 4 ) - 31;
-      V = 80 * julian / 2447;
+      lJulian += 68569;
+      W = ( lJulian * 4 ) / 146097;
+      lJulian -= ( ( 146097 * W ) + 3 ) / 4;
+      X = 4000 * ( lJulian + 1 ) / 1461001;
+      lJulian -= ( ( 1461 * X ) / 4 ) - 31;
+      V = 80 * lJulian / 2447;
       U = V / 11;
 
-      *plDay   = julian - ( 2447 * V / 80 );
+      *plDay   = lJulian - ( 2447 * V / 80 );
       *plMonth = V + 2 - ( U * 12 );
       *plYear  = X + U + ( W - 49 ) * 100;
    }
@@ -182,7 +182,7 @@ void hb_dateDecode( long julian, long * plDay, long * plMonth, long * plYear )
 
 void hb_dateStrPut( char * szDate, long lDay, long lMonth, long lYear )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_dateStrPut(%s, %ld, %ld, %ld)", szDate, lDay, lMonth, lYear));
+   HB_TRACE(HB_TR_DEBUG, ("hb_dateStrPut(%p, %ld, %ld, %ld)", szDate, lDay, lMonth, lYear));
 
    if( lDay && lMonth && lYear )
    {
@@ -205,7 +205,7 @@ void hb_dateStrGet( const char * szDate, long * plDay, long * plMonth, long * pl
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dateStrGet(%s, %p, %p, %p)", szDate, plDay, plMonth, plYear));
 
-   if( szDate && strlen( szDate ) == 8 )
+   if( szDate && szDate[ 8 ] == '\0' )
    {
       /* Date string has correct length, so attempt to convert */
       *plDay   = ( ( szDate[ 6 ] - '0' ) * 10 ) + ( szDate[ 7 ] - '0' );
@@ -229,7 +229,7 @@ char * hb_dateDecStr( char * szDate, long lJulian )
 {
    long lDay, lMonth, lYear;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_dateDecStr(%s, %ld)", szDate, lJulian));
+   HB_TRACE(HB_TR_DEBUG, ("hb_dateDecStr(%p, %ld)", szDate, lJulian));
 
    hb_dateDecode( lJulian, &lDay, &lMonth, &lYear );
    hb_dateStrPut( szDate, lDay, lMonth, lYear );
@@ -355,7 +355,7 @@ char * hb_dtoc( const char * szDate, char * szFormattedDate, const char * szDate
     */
    int format_count, digit_count, size;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_dtoc(%s, %s, %s)", szDate, szFormattedDate, szDateFormat));
+   HB_TRACE(HB_TR_DEBUG, ("hb_dtoc(%s, %p, %s)", szDate, szFormattedDate, szDateFormat));
 
    /*
     * Determine the maximum size of the formatted date string
@@ -691,19 +691,20 @@ HARBOUR HB_DATE( void )
    hb_retds( szResult );
 }
 
-long hb_dow( long d, long m, long y )
+long hb_dow( long lDay, long lMonth, long lYear )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_dow(%ld, %ld, %ld)", d, m, y));
+   HB_TRACE(HB_TR_DEBUG, ("hb_dow(%ld, %ld, %ld)", lDay, lMonth, lYear));
 
-   if( m < 3 )
+   if( lMonth < 3 )
    {
-      m += 13;
-      y--;
+      lMonth += 13;
+      lYear--;
    }
    else
-      m++;
+      lMonth++;
 
-   return ( d + 26 * m / 10 + y + y / 4 - y / 100 + y / 400 + 6 ) % 7 + 1;
+   return ( lDay + 26 * lMonth / 10 + 
+            lYear + lYear / 4 - lYear / 100 + lYear / 400 + 6 ) % 7 + 1;
 }
 
 HARBOUR HB_DOW( void )

@@ -47,9 +47,7 @@
 static BOOL hb_fsCopy( char * szSource, char * szDest )
 {
    BOOL bRetVal = FALSE;
-
    FHANDLE fhndSource;
-   FHANDLE fhndDest;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsCopy(%s, %s)", szSource, szDest));
 
@@ -63,6 +61,8 @@ static BOOL hb_fsCopy( char * szSource, char * szDest )
 
    if( fhndSource != FS_ERROR )
    {
+      FHANDLE fhndDest;
+
       while( ( fhndDest = hb_fsCreate( ( BYTE * ) szDest, FC_NORMAL ) ) == FS_ERROR )
       {
          USHORT uiAction = hb_errRT_BASE_Ext1( EG_CREATE, 2012, NULL, szDest, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY );

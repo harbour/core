@@ -1,3 +1,31 @@
+19991116-15:05 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/memvars.c
+    ! __MSAVE() Modified to save MEMVARs with names longer than 10 chars, the
+      this way it's more Clipper compatible. But since only the first 10 chars
+      of the name can be stored in the .MEM file, the complete name cannot
+      be retrieved on RESTORE. One more issue: if you have multiple long name 
+      which have the same first 10 chars, all these variables will be saved to 
+      the .MEM file, with the same name.
+      So to be 100% Clipper compatible you should compile Harbour with 
+      -DHB_SYMBOL_NAME_LEN=10. 
+  * source/rtl/dates.c
+    ! Some HB_TRACE() types fixed.
+    % hb_dateStrGet() - strlen() call eliminated for speed.
+    * Some variable names standardized.
+  * source/rtl/devoutp.prg
+    source/rtl/text.prg
+    source/rtl/harbinit.prg
+    source/rtl/browse.prg
+    % Optimzalization. (FUNCTION/RETURN NIL->PROCEDURE)
+  * tests/memfile.prg
+    + Added tests for long variable names.
+    ! Make it possible to compile with CA-Cl*pper.
+  * tests/rtl_test.prg
+    + Long names variable added for future use.
+  * source/rtl/copyfile.c
+    source/rtl/dircmd.prg
+    * Minor cleanups (variable scopes, formatting)
+
 19991116-13:26 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/math.c
     % MIN()/MAX()/SQRT()/hb_numRound() minor optimalizations, cleanups.

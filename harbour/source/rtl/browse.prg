@@ -151,7 +151,7 @@ function Browse( nTop, nLeft, nBottom, nRight )
 
 return .t.
 
-static function Statline( oBrw )
+static procedure Statline( oBrw )
 
    local nTop   := oBrw:nTop - 1
    local nRight := oBrw:nRight
@@ -170,5 +170,5 @@ static function Statline( oBrw )
                               iif( oBrw:hitTop, "<bof>", "     " )
    endif
 
-return nil
+return
 

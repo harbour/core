@@ -4,6 +4,10 @@
 
 /* ; Donated to the public domain by Victor Szel <info@szelvesz.hu> */
 
+MEMVAR mcLongerNameThen10Chars
+#ifdef __HARBOUR__
+MEMVAR mcLongerNa
+#endif
 MEMVAR mcString
 MEMVAR mnDouble
 MEMVAR mnDoubleH
@@ -15,6 +19,7 @@ MEMVAR mlLogicalF
 MEMVAR mxStayHere
 
 FUNCTION Main()
+   PRIVATE mcLongerNameThen10Chars := "Long String Name!"
    PRIVATE mcString   := "This is a" + Chr(0) + "string to save."
    PRIVATE mnDouble   := 100.0000
    PRIVATE mnDoubleH  := 5000000000
@@ -36,6 +41,7 @@ FUNCTION Main()
    RESTORE FROM memfile ADDITIVE
 
    ? mxStayHere
+   ? mcLongerNa /* Can't restore the part of the name beyond the tenth char */
    ? mcString
    ? mnDouble
    ? mnDoubleH
@@ -48,6 +54,7 @@ FUNCTION Main()
    RESTORE FROM memfile
 
 // ? mxStayHere
+   ? mcLongerNa /* Can't restore the part of the name beyond the tenth char */
    ? mcString
    ? mnDouble
    ? mnDoubleH
@@ -63,3 +70,8 @@ FUNCTION Main()
    ? __mvScope("mnInt")
 
    RETURN NIL
+
+#ifndef __HARBOUR__
+FUNCTION __mvScope()
+   RETURN -1
+#endif

@@ -40,7 +40,7 @@ STATIC s_lOldPrinter
 STATIC s_lOldExtra
 STATIC s_cOldExtraFile
 
-FUNCTION __TextSave( cFile )
+PROCEDURE __TextSave( cFile )
 
    s_cFile := cFile
 
@@ -51,9 +51,9 @@ FUNCTION __TextSave( cFile )
       s_cOldExtraFile := Set( _SET_EXTRAFILE, cFile )
    ENDIF
 
-   RETURN NIL
+   RETURN
 
-FUNCTION __TextRestore()
+PROCEDURE __TextRestore()
 
    IF s_cFile == "PRINTER"
       Set( _SET_PRINTER, s_lOldPrinter )
@@ -62,5 +62,5 @@ FUNCTION __TextRestore()
       Set( _SET_EXTRA, s_lOldExtra )
    ENDIF
 
-   RETURN NIL
+   RETURN
 

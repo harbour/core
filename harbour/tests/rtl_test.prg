@@ -108,6 +108,7 @@ STATIC saArray
 STATIC saAllTypes
 
 MEMVAR mxNotHere /* Please don't declare this variable, since it's used to test undeclared MEMVAR situations. */
+MEMVAR mcLongerNameThen10Chars
 MEMVAR mcString
 MEMVAR mcStringE
 MEMVAR mcStringZ
@@ -3523,6 +3524,7 @@ STATIC FUNCTION TEST_BEGIN( cParam )
       saArray   }
 
    /* NOTE: mxNotHere intentionally not declared */
+   PUBLIC mcLongerNameThen10Chars := "Long String Name!"
    PUBLIC mcString  := "HELLO"
    PUBLIC mcStringE := ""
    PUBLIC mcStringZ := "A" + Chr( 0 ) + "B"

@@ -1681,12 +1681,9 @@ HARBOUR HB___MVSAVE( void )
             --ulBase;
             pDynVar = s_privateStack[ ulBase ];
 
-            /* Save memvars with a maximum name length of 10 characters */
             /* NOTE: Harbour name lengths are not limited, but the .MEM file
-                     structure is not flexible enough to allow for it.
-                     So we are ignoring any variables with more then 10 chars
-                     long name. */
-            if( pDynVar->hMemvar && strlen( pDynVar->pSymbol->szName ) <= 10 )
+                     structure is not flexible enough to allow for it. */
+            if( pDynVar->hMemvar )
             {
                BOOL bMatch = ( pszMask[ 0 ] == '*' || hb_strMatchRegExp( pDynVar->pSymbol->szName, pszMask ) );
 
@@ -1695,8 +1692,13 @@ HARBOUR HB___MVSAVE( void )
                {
                   PHB_ITEM pItem = &s_globalTable[ pDynVar->hMemvar ].item;
 
+                  /* NOTE: Clipper will not initialize the record buffer with
+                           zeros, so they will look trashed. [vszel] */
                   memset( buffer, 0, HB_MEM_REC_LEN );
-                  strcpy( ( char * ) buffer, pDynVar->pSymbol->szName );
+
+                  /* NOTE: Save only the first 10 characters of the name */
+                  strncpy( ( char * ) buffer, pDynVar->pSymbol->szName, 10 );
+                  buffer[ 10 ] = '\0';
 
                   if( IS_STRING( pItem ) && ( hb_itemGetCLen( pItem ) + 1 ) <= SHRT_MAX )
                   {
