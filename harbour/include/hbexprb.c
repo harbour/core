@@ -337,7 +337,7 @@ static HB_EXPR_FUNC( hb_compExprUseString )
          break;
       case HB_EA_PUSH_PCODE:
          {
-            HB_EXPR_PCODE2( hb_compGenPushString, pSelf->value.asString.string, pSelf->ulLength );
+            HB_EXPR_PCODE2( hb_compGenPushString, pSelf->value.asString.string, pSelf->ulLength + 1 );
             if( hb_compExprCheckMacroVar( pSelf->value.asString.string ) )
                HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROTEXT );
          }
