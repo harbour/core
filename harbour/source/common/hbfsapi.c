@@ -49,9 +49,26 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-
 #include "hbapi.h"
 #include "hbapifs.h"
+
+
+#if defined(__BORLANDC__)
+#define ___NFILE_H
+#define _NFILE_ 600
+
+#include <fcntl.h>
+#include <stdio.h>
+void _hbfilessetup(void);
+#pragma startup _hbfilessetup 
+extern void _RTLENTRY _init_handles(void);
+#pragma startup       _init_handles 4
+
+extern void _RTLENTRY _init_streams(void);
+#pragma startup       _init_streams 5
+#endif
+
+
 
 /* Split given filename into path, name and extension, plus determine drive */
 PHB_FNAME hb_fsFNameSplit( char * pszFileName )
@@ -213,3 +230,43 @@ char * hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName )
    return pszFileName;
 }
 
+#if defined(__BORLANDC__)
+
+/*----------------------------------------------------------------------
+ * The following external reference forces _init_handles (in handles.c)
+ * to be called at startup.
+ */
+
+
+unsigned int _RTLENTRY _openfd[_NFILE_] =
+{
+        O_RDONLY | O_TEXT | O_DEVICE,
+        O_WRONLY | O_TEXT | O_DEVICE,
+        O_WRONLY | O_TEXT | O_DEVICE
+};
+
+
+unsigned int _RTLENTRY _pidtab[_NFILE_];
+
+
+#ifdef __WIN32__
+unsigned long _RTLENTRY _handles[_NFILE_];
+#endif
+
+
+#define _F_STDIN        (_F_READ | _F_TERM | _F_LBUF)
+#define _F_STDOUT       (_F_WRIT | _F_TERM | _F_LBUF)
+#define _F_STDERR       (_F_WRIT | _F_TERM)
+
+FILE    _RTLENTRY _EXPDATA _streams [_NFILE_] =
+{
+        { NULL, NULL, 0, 0, 0, _F_STDIN,  0, 0, 0 },
+        { NULL, NULL, 0, 0, 0, _F_STDOUT, 0, 1, 0 },
+        { NULL, NULL, 0, 0, 0, _F_STDERR, 0, 2, 0 }
+};
+
+void _hbfilessetup(void)
+{
+_nfile = _NFILE_;
+}
+#endif

@@ -1,3 +1,4 @@
+
 /*
  * $Id$
  */
@@ -71,7 +72,7 @@
 
 static s_oDebugger
 static s_lExit := .F.
-
+Static nDump
 memvar __DbgStatics
 
 procedure AltD( nAction )
@@ -275,10 +276,14 @@ CLASS TDebugger
    METHOD ShowCode( cModuleName )
    METHOD ShowVars()
 
+/*   METHOD Sort() INLINE ASort( ::aVars,,, {|x,y| x[1] < y[1] } ),;
+                        ::lSortVars := .t.,;
+                        If( ::oBrwVars != nil, ::oBrwVars:RefreshAll(), nil ),;
+          If( ::oWndVars != nil .and. ::oWndVars:lVisible, ::oBrwVars:ForceStable(),)*/
    METHOD Sort() INLINE ASort( ::aVars,,, {|x,y| x[1] < y[1] } ),;
                         ::lSortVars := .t.,;
                         If( ::oBrwVars != nil, ::oBrwVars:RefreshAll(), nil ),;
-          If( ::oWndVars != nil .and. ::oWndVars:lVisible, ::oBrwVars:ForceStable(),)
+          If( ::oWndVars != nil .and. ::oWndVars:lVisible, iif(!::lGo,::oBrwVars:ForceStable(),),)
 
    METHOD Speed() INLINE ;
           ::nSpeed := ::InputBox( "Step delay (in tenths of a second)",;
@@ -360,7 +365,6 @@ METHOD New() CLASS TDebugger
    ::lShowLocals       := .f.
    ::lAll              := .f.
    ::lSortVars         := .f.
-
 return Self
 
 METHOD Activate( cModuleName ) CLASS TDebugger
@@ -487,28 +491,28 @@ METHOD Colors() CLASS TDebugger
       Alert( "Monochrome display" )
       return nil
    endif
-
+   oBrwColors:Cargo :={ 1,{}} // Actual highligthed row
    oBrwColors:ColorSpec := ::ClrModal()
-   oBrwColors:GoTopBlock := { || n := 1 }
-   oBrwColors:GoBottomBlock := { || n := Len( aColors ) }
-   oBrwColors:SkipBlock := { | nSkip, nPos | nPos := n,;
-                          n := iif( nSkip > 0, Min( Len( aColors ), n + nSkip ),;
-                          Max( 1, n + nSkip ) ), n - nPos }
-   oBrwColors:AddColumn( ocol := TBColumnNew( "", { || PadR( aColors[ n ], 14 ) } ) )
-   oCol:colorblock :=   { || { iif( n == oBrwColors:Cargo, 2, 1 ), 2 } }
+   oBrwColors:GOTOPBLOCK := { || oBrwColors:cargo[ 1 ]:= 1 } 
+   oBrwColors:GoBottomBlock := { || oBrwColors:cargo[ 1 ]:= Len(oBrwColors:cargo[ 2 ][ 1 ])} 
+   oBrwColors:SKIPBLOCK := { |nPos| ( nPos:= ArrayBrowseSkip(nPos, oBrwColors), oBrwColors:cargo[ 1 ]:= ;
+   oBrwColors:cargo[ 1 ] + nPos,nPos ) } 
+
+   oBrwColors:AddColumn( ocol := TBColumnNew( "", { || PadR( aColors[ oBrwColors:Cargo[1] ], 14 ) } ) )
+   oCol:DefColor:={1,2}
+   aadd(oBrwColors:Cargo[2],acolors)
    oBrwColors:AddColumn( oCol := TBColumnNew( "",;
-                       { || PadR( '"' + ::aColors[ n ] + '"', nWidth - 15 ) } ) )
-   oBrwColors:Cargo := 1 // Actual highligthed row
-   oBrwColors:colPos:=2
-   oBrwColors:Freeze:=1
-   oCol:ColorBlock := { || { iif( n == oBrwColors:Cargo, 3, 1 ), 3 } }
+                       { || PadR( '"' + ::aColors[ oBrwColors:Cargo[1] ] + '"', nWidth - 15 ) } ) )
+   aadd(oBrwColors:Cargo[2],acolors)
+   oCol:DefColor:={1,3}
+   ocol:width:=50
+   oBrwColors:autolite:=.f.   
 
-
-   oWndColors:bPainted    := { || oBrwColors:ForceStable() }
+   oWndColors:bPainted    := { || RefreshVarsS(oBrwColors)}
 
    oWndColors:bKeyPressed := { | nKey | SetsKeyPressed( nKey, oBrwColors,;
                                Len( aColors ), oWndColors, "Debugger Colors",;
-                               { || ::EditColor( n, oBrwColors ) } ) }
+                               { || ::EditColor( oBrwColors:Cargo[1], oBrwColors ) } ) }
    oWndColors:ShowModal()
 
    ::oPullDown:LoadColors()
@@ -827,6 +831,7 @@ METHOD HandleEvent() CLASS TDebugger
               oWnd := ::aWindows[ ::nCurrentWindow ]
               oWnd:KeyPressed( nKey )
 
+
          case nKey == K_F4
               ::ShowAppScreen()
 
@@ -976,6 +981,7 @@ return nil
 METHOD ShowCallStack() CLASS TDebugger
 
    local n := 1
+   local oCol
 
    if ::oWndStack == nil
       ::oWndCode:nRight -= 16
@@ -984,7 +990,7 @@ METHOD ShowCallStack() CLASS TDebugger
       ::oWndStack := TDbWindow():New( 1, MaxCol() - 15, MaxRow() - 6, MaxCol(),;
                                      "Calls" )
       AAdd( ::aWindows, ::oWndStack )
-      ::oBrwStack := TBrowseNew( 2, MaxCol() - 14, MaxRow() - 7, MaxCol() - 1 )
+      ::oBrwStack := TBrowseNew( 2, MaxCol() - 14, MaxRow() - 7, MaxCol() - 1 )//2
       ::oBrwStack:ColorSpec := ::aColors[ 3 ] + "," + ::aColors[ 4 ] + "," + ::aColors[ 5 ]
       ::oBrwStack:GoTopBlock := { || n := 1 }
       ::oBrwStack:GoBottomBlock := { || n := Len( ::aCallStack ) }
@@ -992,11 +998,19 @@ METHOD ShowCallStack() CLASS TDebugger
                              n := iif( nSkip > 0, Min( Len( ::aCallStack ), n + nSkip ),;
                              Max( 1, n + nSkip ) ), n - nPos }
 
-      ::oBrwStack:AddColumn( TBColumnNew( "",  { || PadC( ::aCallStack[ n ][ 1 ], 14 ) } ) )
-      ::oBrwStack:ForceStable()
+      ::oBrwStack:Cargo := 1 // Actual highligthed row
+      ::oBrwStack:autolite := .F.
+      ::oBrwStack:colPos:=1
+      ::oBrwStack:freeze:=1
+
+      ::oBrwStack:AddColumn( oCol:=TBColumnNew( "",  { || PadC( ::aCallStack[ n ][ 1 ], 14 ) } ) )
+      ocol:ColorBlock := { || { iif( n == ::oBrwStack:Cargo, 2, 1 ), 3 } }
+      ocol:Defcolor :=    { 2,1 } 
+
       ::oWndStack:bPainted = { || ::oBrwStack:ColorSpec := __DbgColors()[ 2 ] + "," + ;
                                  __DbgColors()[ 5 ] + "," + __DbgColors()[ 4 ],;
                                  ::oBrwStack:RefreshAll(), ::oBrwStack:ForceStable() }
+      ::oBrwStack:ForceStable()
       ::oWndStack:Show( .f. )
    endif
 
@@ -1082,7 +1096,12 @@ METHOD ShowVars() CLASS TDebugger
 
    local n
    local nWidth
+   Local oCol
    local lRepaint := .f.
+
+   if ::lGo
+      return nil
+   endif
 
    if ::oWndVars == nil
 
@@ -1102,33 +1121,33 @@ METHOD ShowVars() CLASS TDebugger
 
       ::oWndVars:Show( .f. )
       AAdd( ::aWindows, ::oWndVars )
+      ::oWndVars:bLButtonDown = { | nMRow, nMCol | ::WndVarsLButtonDown( nMRow, nMCol ) }
+      ::oWndVars:bLDblClick = { | nMRow, nMCol | ::EditVar( n ) }
+      ::oWndVars:bPainted    := { || if(Len( ::aVars ) > 0, ( RefreshVarsS(::oBrwVars) ),) }
+
+      ::oBrwVars := TBrowseNew( 2, 1, ::oWndVars:nBottom - 1, MaxCol() - iif( ::oWndStack != nil,;
+                               ::oWndStack:nWidth(), 0 ) - 1 )
+      ::oBrwVars:Cargo :={ 1,{}} // Actual highligthed row
+      ::oBrwVars:ColorSpec := ::aColors[ 2 ] + "," + ::aColors[ 5 ] + "," + ::aColors[ 3 ]
+      ::oBrwVars:GOTOPBLOCK := { || ::oBrwVars:cargo[ 1 ]:= 1 } 
+      ::oBrwVars:GoBottomBlock := { || ::oBrwVars:cargo[ 1 ]:= Len(::oBrwVars:cargo[ 2 ][ 1 ])} 
+      ::oBrwVars:SKIPBLOCK := { |nPos| ( nPos:= ArrayBrowseSkip(nPos, ::oBrwVars), ::oBrwVars:cargo[ 1 ]:= ;
+      ::oBrwVars:cargo[ 1 ] + nPos,nPos ) } 
+
       ::oWndVars:bKeyPressed := { | nKey | ( iif( nKey == K_DOWN ;
       , ::oBrwVars:Down(), nil ), iif( nKey == K_UP, ::oBrwVars:Up(), nil ) ;
       , iif( nKey == K_PGDN, ::oBrwVars:PageDown(), nil ) ;
       , iif( nKey == K_PGUP, ::oBrwVars:PageUp(), nil ) ;
       , iif( nKey == K_HOME, ::oBrwVars:GoTop(), nil ) ;
       , iif( nKey == K_END, ::oBrwVars:GoBottom(), nil ) ;
-      , iif( nKey == K_ENTER, ::EditVar( n ), nil ), ::oBrwVars:ForceStable() ) }
-
-      ::oWndVars:bLButtonDown = { | nMRow, nMCol | ::WndVarsLButtonDown( nMRow, nMCol ) }
-      ::oWndVars:bLDblClick = { | nMRow, nMCol | ::EditVar( n ) }
-      ::oWndVars:bPainted = { || ::oBrwVars:ColorSpec := __DbgColors()[ 2 ] + "," + ;
-                                 __DbgColors()[ 5 ] + "," + __DbgColors()[ 4 ],;
-      If( Len( ::aVars ) > 0, ( ::oBrwVars:RefreshAll(), ::oBrwVars:ForceStable() ),) }
-
-      ::oBrwVars := TBrowseNew( 2, 1, ::oWndVars:nBottom - 1, MaxCol() - iif( ::oWndStack != nil,;
-                               ::oWndStack:nWidth(), 0 ) - 1 )
-      ::oBrwVars:ColorSpec := ::aColors[ 2 ] + "," + ::aColors[ 5 ] + "," + ::aColors[ 4 ]
-      ::oBrwVars:GoTopBlock := { || n := 1 }
-      ::oBrwVars:GoBottomBlock := { || n := Len( ::aVars ) }
-      ::oBrwVars:SkipBlock := { | nSkip, nPos | nPos := n,;
-                             n := iif( nSkip > 0, Min( Len( ::aVars ), n + nSkip ),;
-                             Max( 1, n + nSkip ) ), n - nPos }
+      , iif( nKey == K_ENTER, ::EditVar( ::oBrwVars:Cargo[1] ), nil ), ::oBrwVars:ForceStable() ) }
 
       nWidth := ::oWndVars:nWidth() - 1
-      ::oBrwVars:AddColumn( TBColumnNew( "",  { || AllTrim( Str( n - 1 ) ) + ") " + ;
-         If( Len( ::aVars ) > 0, PadR( GetVarInfo( ::aVars[ n ] ),;
+      ::oBrwVars:AddColumn( oCol:=TBColumnNew( "",  { || AllTrim( Str( ::oBrwVars:Cargo[1] -1 ) ) + ") " + ;
+         If( Len( ::aVars ) > 0, PadR( GetVarInfo( ::aVars[ ::oBrwVars:Cargo[1] ] ),;
          ::oWndVars:nWidth() - 5 ), "" ) } ) )
+   aadd(::oBrwVars:Cargo[2],::avars)
+   oCol:DefColor:={2,1}
       if Len( ::aVars ) > 0
          ::oBrwVars:ForceStable()
       endif
@@ -1208,7 +1227,7 @@ METHOD ShowCode( cModuleName ) CLASS TDebugger
    ASize( ::aCallStack, Len( ::aCallStack ) + 1 )
    AIns( ::aCallStack, 1 )
    ::aCallStack[ 1 ] = { cFunction, {} } // function name and locals array
-
+if !::lGo
    if ::oWndStack != nil
       ::oBrwStack:RefreshAll()
    endif
@@ -1222,7 +1241,7 @@ METHOD ShowCode( cModuleName ) CLASS TDebugger
 
       ::oWndCode:SetCaption( ::cPrgName )
    endif
-
+endif
 return nil
 
 METHOD Open() CLASS TDebugger
@@ -1516,24 +1535,21 @@ METHOD ViewSets() CLASS TDebugger
    local n := 1
    local nWidth := oWndSets:nRight - oWndSets:nLeft - 1
    local oCol
-
+   oBrwSets:Cargo :={ 1,{}} // Actual highligthed row
+   oBrwSets:autolite:=.f.
    oBrwSets:ColorSpec := ::ClrModal()
-   oBrwSets:GoTopBlock := { || n := 1 }
-   oBrwSets:GoBottomBlock := { || n := Len( aSets ) }
-   oBrwSets:SkipBlock := { | nSkip, nPos | nPos := n,;
-                          n := iif( nSkip > 0, Min( Len( aSets ), n + nSkip ),;
-                          Max( 1, n + nSkip ) ), n - nPos }
-   oBrwSets:AddColumn( ocol := TBColumnNew( "", { || PadR( aSets[ n ], 12 ) } ) )
-   ocol:colorblock :=   { || { iif( n == oBrwSets:Cargo, 2, 1 ), 2 } }
+   oBrwSets:GOTOPBLOCK := { || oBrwSets:cargo[ 1 ]:= 1 } 
+   oBrwSets:GoBottomBlock := { || oBrwSets:cargo[ 1 ]:= Len(oBrwSets:cargo[ 2 ][ 1 ])} 
+   oBrwSets:SKIPBLOCK := { |nPos| ( nPos:= ArrayBrowseSkip(nPos, oBrwSets), oBrwSets:cargo[ 1 ]:= ;
+   oBrwSets:cargo[ 1 ] + nPos,nPos ) } 
+   oBrwSets:AddColumn( ocol := TBColumnNew( "", { || PadR( aSets[ oBrwSets:cargo[ 1 ] ], 12 ) } ) )
+   aadd(oBrwSets:Cargo[2],asets)
+   ocol:defcolor:={1,2}
    oBrwSets:AddColumn( oCol := TBColumnNew( "",;
-                       { || PadR( ValToStr( Set( n ) ), nWidth - 13 ) } ) )
-   oBrwSets:Cargo := 1 // Actual highligthed row
-   oBrwSets:colPos:=2
-   oBrwSets:Freeze:=1
-   ocol:ColorBlock := { || { iif( n == oBrwSets:Cargo, 3, 1 ), 3 } }
-
-
-   oWndSets:bPainted    := { || oBrwSets:ForceStable() }
+                       { || PadR( ValToStr( Set( oBrwSets:cargo[ 1 ]  ) ), nWidth - 13 ) } ) )
+   ocol:defcolor:={1,3}
+   ocol:width:=40
+   oWndSets:bPainted    := { || RefreshVarsS(oBrwSets)}
    oWndSets:bKeyPressed := { | nKey | SetsKeyPressed( nKey, oBrwSets, Len( aSets ),;
                             oWndSets, "System Settings",;
                             { || ::EditSet( n, oBrwSets ) } ) }
@@ -1566,38 +1582,59 @@ return nil
 
 static procedure SetsKeyPressed( nKey, oBrwSets, nSets, oWnd, cCaption, bEdit )
 
-   local nSet := oBrwSets:Cargo
 
+   local nSet := oBrwSets:cargo[1]
+   local cTemp:=str(nSet,4)
+
+   Local nRectoMove
    do case
       case nKey == K_UP
-           if oBrwSets:Cargo > 1
-              oBrwSets:Cargo--
-              oBrwSets:RefreshCurrent()
               oBrwSets:Up()
-              oBrwSets:ForceStable()
+      case nKey == K_DOWN
+              oBrwSets:Down()
+      case nKey == K_HOME .or. (nKey == K_CTRL_PGUP) .or. (nKey == K_CTRL_HOME)
+              oBrwSets:GoTop()
+      case nKey == K_END .or. (nkey == K_CTRL_PGDN) .or. (nkey == K_CTRL_END )
+              oBrwSets:GoBottom()
+      Case nKey == K_PGDN
+              oBrwSets:pageDown()
+      Case nKey == K_PGUP
+              OBrwSets:PageUp()
+
+      case nKey == K_ENTER
+           if bEdit != nil
+              Eval( bEdit )
            endif
+           if LastKey() == K_ENTER
+              KEYBOARD Chr( K_DOWN )
+           endif
+
+   endcase
+      RefreshVarsS(oBrwSets)
+
+      oWnd:SetCaption( cCaption + "[" + AllTrim( Str( oBrwSets:Cargo[1] ) ) + ;
+                       ".." + AllTrim( Str( nSets ) ) + "]" )
+   
+return
+static procedure SetsKeyVarPressed( nKey, oBrwSets, nSets, oWnd, bEdit )
+   Local nRectoMove
+   local nSet := oBrwSets:Cargo[1]
+   do case
+      case nKey == K_UP
+              oBrwSets:Up()
 
       case nKey == K_DOWN
-           if oBrwSets:Cargo < nSets
-              oBrwSets:Cargo++
-              oBrwSets:RefreshCurrent()
               oBrwSets:Down()
-              oBrwSets:ForceStable()
-           endif
 
-      case nKey == K_HOME
-           if oBrwSets:Cargo > 1
-              oBrwSets:Cargo := 1
+      case nKey == K_HOME .or. (nKey == K_CTRL_PGUP) .or. (nKey == K_CTRL_HOME)
               oBrwSets:GoTop()
-              oBrwSets:ForceStable()
-           endif
-
-      case nKey == K_END
-           if oBrwSets:Cargo < nSets
-              oBrwSets:Cargo := nSets
+      case nKey == K_END .or. (nkey == K_CTRL_PGDN) .or. (nkey == K_CTRL_END )
               oBrwSets:GoBottom()
-              oBrwSets:ForceStable()
-           endif
+
+      Case nKey == K_PGDN
+              oBrwSets:pageDown()
+      Case nKey == K_PGUP
+              OBrwSets:PageUp()
 
       case nKey == K_ENTER
            if bEdit != nil
@@ -1609,12 +1646,8 @@ static procedure SetsKeyPressed( nKey, oBrwSets, nSets, oWnd, cCaption, bEdit )
 
    endcase
 
-   if nSet != oBrwSets:Cargo
-      oWnd:SetCaption( cCaption + "[" + AllTrim( Str( oBrwSets:Cargo ) ) + ;
-                       ".." + AllTrim( Str( nSets ) ) + "]" )
-   endif
-
 return
+
 
 static function ValToStr( uVal )
 
@@ -1726,3 +1759,34 @@ return If( ! s_oDebugger:lMonoDisplay, s_oDebugger:aColors,;
 function __Dbg()
 
 return s_oDebugger
+
+static function myColors( oBrowse, aColColors )
+   local i
+   local nColPos := oBrowse:colpos
+
+   for i := 1 to len( aColColors )
+      oBrowse:colpos := aColColors[i]
+      oBrowse:hilite()
+   next
+
+   oBrowse:colpos := nColPos
+return Nil
+
+static procedure RefreshVarsS( oBrowse )
+
+   local nLen := Len(oBrowse:aColumns)
+
+   if ( nLen == 2 )
+      oBrowse:dehilite():colpos:=2
+   endif
+   oBrowse:dehilite():forcestable()
+   if ( nLen == 2 )
+      oBrowse:hilite():colpos:=1
+   endif
+   oBrowse:hilite()  
+   return
+static function ArrayBrowseSkip( nPos, oBrwSets,n )
+
+   return iif( oBrwSets:cargo[ 1 ] + nPos < 1, 0 - oBrwSets:cargo[ 1 ] + 1 , ;
+      iif( oBrwSets:cargo[ 1 ] + nPos > Len(oBrwSets:cargo[ 2 ][ 1 ]), ;
+      Len(oBrwSets:cargo[ 2 ][ 1 ]) - oBrwSets:cargo[ 1 ], nPos ) )

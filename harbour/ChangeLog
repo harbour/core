@@ -1,3 +1,11 @@
+2001-11-21 06:35 GMT -3 Luiz Rafael Culik<culik@sl.conex.net>
+   * source/debug/debugger.prg
+      * Some enhacements, now you can use the Pgup/pgdown keys.
+   * source/common/hbfspai.c
+      * Added code to make harbour apps compiler with borland compiler open mode then 50 files
+   * source/rtl/tbrowse.prg
+      * reverted back to version 1.69 of maurilio
+
 2001-11-20 22:45 UTC-0500 David G. Holm <dholm@jsd-llc.com>
 
   * source/compiler/harbour.y
