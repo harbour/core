@@ -159,7 +159,7 @@ FUNCTION __dbStructFilter( aStruct, aFieldList )
    aStructFiltered := {}
    bFindName := {| aField | aField[ DBS_NAME ] == RTrim( Upper(cName ) ) }
 
-   aEval( aFieldList, {| cFieldName, nIndex | cName := cFieldName,nIndex := aScan( aStruct, bFindName ),;
+   aEval( aFieldList, {| cFieldName, nIndex | cName := cFieldName, nIndex := aScan( aStruct, bFindName ),;
       iif( nIndex == 0, NIL, aAdd( aStructFiltered, aStruct[ nIndex] ) ) } )
 
    RETURN aStructFiltered

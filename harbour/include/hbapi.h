@@ -271,6 +271,8 @@ extern PHB_ITEM hb_param( int iParam, int iMask ); /* retrieve a generic paramet
 
 #ifdef HB_EXTEND_API_MACROS
 
+#include "hbapiitm.h"
+
 #define hb_pcount()                          ( ( int ) hb_stack.pBase->item.asSymbol.paramcnt )
 
 #define hb_ret()                             hb_itemClear( &hb_stack.Return )

@@ -1,3 +1,14 @@
+20000413-12:14 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * include/hbver.h
+     * Date bumped to indicate new pcode revision.
+
+   * include/hbapi.h
+     ! Fix for HB_EXTEND_API_MACROS
+
+   * source/rdd/dbstrux.prg
+     ! Small formatting.
+
 20000413-01:30 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
    * source/include/hbpcode.h
