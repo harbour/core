@@ -24,11 +24,11 @@
 
 #include "rddsys.ch"
 
-ANNOUNCE DBF
+ANNOUNCE _DBF
 
 init procedure DBFInit
 
-   REQUEST _DBF
+   REQUEST _DBFC
 
    rddRegister( "DBF", RDT_FULL )
 

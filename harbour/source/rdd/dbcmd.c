@@ -57,9 +57,9 @@ typedef struct _AREANODE
 
 typedef AREANODE * LPAREANODE;
 
-extern HARBOUR HB_DBF( void );
-extern HARBOUR HB_SDF( void );
-extern HARBOUR HB_DELIM( void );
+extern HARBOUR HB__DBF( void );
+extern HARBOUR HB__SDF( void );
+extern HARBOUR HB__DELIM( void );
 extern HARBOUR HB_RDDSYS( void );
 
 HARBOUR HB_AFIELDS( void );
@@ -72,6 +72,7 @@ HARBOUR HB_DBCOMMIT( void );
 HARBOUR HB_DBCOMMITALL( void );
 HARBOUR HB_DBCREATE( void );
 HARBOUR HB_DBDELETE( void );
+HARBOUR HB_DBF( void );
 HARBOUR HB_DBGOBOTTOM( void );
 HARBOUR HB_DBGOTO( void );
 HARBOUR HB_DBGOTOP( void );
@@ -105,7 +106,6 @@ HARBOUR HB_RDDLIST( void );
 HARBOUR HB_RDDNAME( void );
 HARBOUR HB_RDDREGISTER( void );
 HARBOUR HB_RDDSETDEFAULT( void );
-HARBOUR HB_RDDSHUTDOWN( void );
 HARBOUR HB_RECCOUNT( void );
 HARBOUR HB_RECNO( void );
 HARBOUR HB_RECSIZE( void );
@@ -175,10 +175,10 @@ static ERRCODE CreateFields( AREAP pArea, PHB_ITEM pStruct )
    for( uiCount = 0; uiCount < pStruct->item.asArray.value->ulLen; uiCount++ )
    {
       pFieldDesc = pStruct->item.asArray.value->pItems + uiCount;
-      pFieldInfo.uiType = toupper( hb_arrayGetString( pFieldDesc, 2 )[ 0 ] );
-      pFieldInfo.atomName = ( BYTE * ) hb_arrayGetString( pFieldDesc, 1 );
-      pFieldInfo.uiLen = ( USHORT ) hb_arrayGetDouble( pFieldDesc, 3 );
-      pFieldInfo.uiDec = ( USHORT ) hb_arrayGetDouble( pFieldDesc, 4 );
+      pFieldInfo.uiType = toupper( hb_arrayGetCPtr( pFieldDesc, 2 )[ 0 ] );
+      pFieldInfo.atomName = ( BYTE * ) hb_arrayGetCPtr( pFieldDesc, 1 );
+      pFieldInfo.uiLen = ( USHORT ) hb_arrayGetND( pFieldDesc, 3 );
+      pFieldInfo.uiDec = ( USHORT ) hb_arrayGetND( pFieldDesc, 4 );
 
       SELF_ADDFIELD( pArea, &pFieldInfo );
    }
@@ -325,7 +325,7 @@ static ERRCODE Open( AREAP pArea, LPDBOPENINFO pOpenInfo )
    ( ( PHB_DYNS ) pArea->atomAlias )->hArea = pOpenInfo->uiArea;
    pArea->lpExtendInfo->fExclusive = !pOpenInfo->fShared;
    pArea->lpExtendInfo->fReadOnly = pOpenInfo->fReadonly;
-   
+
    return SUCCESS;
 }
 
@@ -465,9 +465,9 @@ static void hb_rddCheck( void )
       szDefDriver[ 0 ] = '\0';
 
       /* Force link the built-in RDD's */
-      HB_DBF();
-      HB_SDF();
-      HB_DELIM();
+      HB__DBF();
+      HB__SDF();
+      HB__DELIM();
       HB_RDDSYS();
    }
 }
@@ -565,7 +565,7 @@ static int hb_rddRegister( char * szDriver, USHORT uiType )
 static USHORT hb_rddSelect( char * szAlias )
 {
    PHB_DYNS pSymAlias;
-   
+
    pSymAlias = hb_dynsymFind( szAlias );
    if( pSymAlias && pSymAlias->hArea )
       return pSymAlias->hArea;
@@ -671,7 +671,7 @@ void hb_rddSelectWorkAreaAlias( char * szName )
    PHB_DYNS pSymArea;
    char * szAlias;
    WORD wLen;
-   
+
    wLen = strlen( szName );
    szAlias = ( char * ) hb_xgrab( wLen + 1 );
    strcpy( szAlias, szName );
@@ -812,7 +812,7 @@ HARBOUR HB_ALIAS( void )
    USHORT uiArea;
    LPAREANODE pAreaNode;
    char * szAlias;
-   
+
    uiArea = hb_parni( 1 );
    uiArea = uiArea ? uiArea : uiCurrArea;
    pAreaNode = pWorkAreas;
@@ -824,6 +824,30 @@ HARBOUR HB_ALIAS( void )
              ( ( PHB_DYNS ) ( ( AREAP ) pAreaNode->pArea )->atomAlias )->hArea )
          {
             szAlias = ( char * ) hb_xgrab( HARBOUR_MAX_RDD_ALIAS_LENGTH + 1 );
+            SELF_ALIAS( ( AREAP ) pAreaNode->pArea, ( BYTE * ) szAlias );
+            hb_retc( szAlias );
+            hb_xfree( szAlias );
+            return;
+         }
+         break;
+      }
+      pAreaNode = pAreaNode->pNext;
+   }
+   hb_retc( "" );
+}
+
+HARBOUR HB_DBF( void )
+{
+   LPAREANODE pAreaNode = pWorkAreas;
+
+   while( pAreaNode )
+   {
+      if( ( ( AREAP ) pAreaNode->pArea )->uiArea == uiCurrArea )
+      {
+         if( ( ( AREAP ) pAreaNode->pArea )->atomAlias &&
+             ( ( PHB_DYNS ) ( ( AREAP ) pAreaNode->pArea )->atomAlias )->hArea )
+         {
+            char * szAlias = ( char * ) hb_xgrab( HARBOUR_MAX_RDD_ALIAS_LENGTH + 1 );
             SELF_ALIAS( ( AREAP ) pAreaNode->pArea, ( BYTE * ) szAlias );
             hb_retc( szAlias );
             hb_xfree( szAlias );
@@ -938,7 +962,7 @@ HARBOUR HB_DBCREATE( void )
          return;
       }
 
-      if( strlen( hb_arrayGetString( pFieldDesc, 1 ) ) == 0 )
+      if( strlen( hb_arrayGetCPtr( pFieldDesc, 1 ) ) == 0 )
       {
          hb_errRT_DBCMD( EG_ARG, 1014, 0, "DBCREATE" );
          return;
@@ -1003,7 +1027,7 @@ HARBOUR HB_DBCREATE( void )
       SELF_CREATEMEMFILE( ( AREAP ) pTempArea, &pInfo );
       hb_itemRelease( pFileExt );
    }
-   
+
    SELF_RELEASE( ( AREAP ) pTempArea );
    hb_xfree( szFileName );
    hb_xfree( pFileName );
@@ -1029,7 +1053,7 @@ HARBOUR HB_DBGOBOTTOM( void )
 HARBOUR HB_DBGOTO( void )
 {
    PHB_ITEM pItem;
-   
+
    if( !pCurrArea )
    {
       hb_errRT_DBCMD( EG_NOTABLE, 2001, 0, "DBGOTOP" );
@@ -1108,7 +1132,7 @@ HARBOUR HB_DBSELECTAREA( void )
    {
       szAlias = hb_parc( 1 );
       hb_strUpper( szAlias, strlen( szAlias ) );
-     
+
       if( ( uiNewArea = hb_rddSelect( szAlias ) ) == 0 )
       {
          hb_errRT_BASE( EG_NOALIAS, 1002, 0, szAlias );
@@ -1365,7 +1389,7 @@ HARBOUR HB_DBUSEAREA( void )
    pInfo.atomAlias = ( BYTE * ) szAlias;
    pInfo.fShared = ISLOG( 5 ) ? hb_parl( 5 ) : !hb_set.HB_SET_EXCLUSIVE;
    pInfo.fReadonly = ISLOG( 6 ) ? hb_parl( 6 ) : FALSE;
-  
+
    if( SELF_OPEN( ( AREAP ) pCurrArea->pArea, &pInfo ) == FAILURE )
    {
       SELF_RELEASE( ( AREAP ) pCurrArea->pArea );
@@ -1434,7 +1458,7 @@ HARBOUR HB_DBUSEAREA( void )
 HARBOUR HB_DELETED( void )
 {
    BOOL bDeleted = FALSE;
-   
+
    if( pCurrArea )
       SELF_DELETED( ( AREAP ) pCurrArea->pArea, &bDeleted );
    hb_retl( bDeleted );
@@ -1452,7 +1476,7 @@ HARBOUR HB_EOF( void )
 HARBOUR HB_FCOUNT( void )
 {
    USHORT uiFields = 0;
-   
+
    if( pCurrArea )
       SELF_FIELDCOUNT( ( AREAP ) pCurrArea->pArea, &uiFields );
    hb_retni( uiFields );
@@ -1462,7 +1486,7 @@ HARBOUR HB_FIELDGET( void )
 {
    PHB_ITEM pItem;
    USHORT uiField;
-   
+
    pItem = hb_itemNew( 0 );
    uiField = hb_parni( 1 );
 
@@ -1477,7 +1501,7 @@ HARBOUR HB_FIELDNAME( void )
 {
    USHORT uiFields, uiIndex;
    char * szName;
-   
+
    if( pCurrArea )
    {
       uiIndex = hb_parni( 1 );
@@ -1502,7 +1526,7 @@ HARBOUR HB_FIELDPOS( void )
    USHORT uiCount;
    char * szName;
    LPFIELD pField;
-   
+
    if( pCurrArea )
    {
       szName = hb_parc( 1 );
@@ -1527,7 +1551,7 @@ HARBOUR HB_FIELDPUT( void )
 {
    USHORT uiIndex;
    PHB_ITEM pItem;
-   
+
    uiIndex = hb_parni( 1 );
    if( pCurrArea && uiIndex )
    {
@@ -1698,12 +1722,13 @@ HARBOUR HB_RDDSETDEFAULT( void )
    }
 }
 
-HARBOUR HB_RDDSHUTDOWN( void )
+void hb_rddShutDown( void )
 {
    LPRDDNODE pRddNode;
 
    hb_rddCloseAll();
-   hb_xfree( szDefDriver );
+   if( szDefDriver )
+      hb_xfree( szDefDriver );
    while( pRddList )
    {
       pRddNode = pRddList;
@@ -1724,7 +1749,7 @@ HARBOUR HB_RECCOUNT( void )
 HARBOUR HB_RECNO( void )
 {
    PHB_ITEM pRecNo;
-   
+
    pRecNo = hb_itemPutNL( NULL, 0 );
    if( pCurrArea )
       SELF_RECNO( ( AREAP ) pCurrArea->pArea, pRecNo );
@@ -1771,7 +1796,7 @@ HARBOUR HB_RLOCK( void )
 HARBOUR HB_SELECT( void )
 {
    char * szAlias;
-   
+
    szAlias = hb_parc( 1 );
    if( strlen( szAlias ) > 0 )
       hb_retni( hb_rddSelect( szAlias ) );

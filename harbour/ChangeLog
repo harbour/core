@@ -1,3 +1,60 @@
+19990907-02:30 GMT+1 Victor Szel <info@szelvesz.hu>
+  * include/external.ch
+    source/runner/stdalone/external.prg
+    + Updated to reflect the recent changes.
+  * source/rtl/itemapi.c
+    ! hb_itemGetCPtr() will now return an empty string ("") on error and not
+      a NULL pointer.
+    ! Leak fixed in hb_evalLaunch() when the function to evaluate was passed
+      as a string. (hb_itemGetC() changed to hb_itemGetCPtr())
+  * source/rtl/arrays.c
+    source/rtl/extend.c
+    source/rdd/dbcmd.c
+    include/extend.h
+    * Some array functions renamed to be consistent with the similar Item API
+      function names.
+      hb_arrayGetString    -> hb_arrayGetCPtr
+      hb_arrayGetStringLen -> hb_arrayGetCLen
+      hb_arrayGetBool      -> hb_arrayGetL
+      hb_arrayGetDouble    -> hb_arrayGetND
+      hb_arrayGetDate      -> hb_arrayGetDS
+    * hb_arrayGetCPtr() now calls hb_itemGetCPtr() instead of using redundant
+      code.
+    + hb_arrayGetC() added keep it in sync with the Item API.
+    % Further simplified the hb_arrayGet*()/hb_arraySet()/+some more functions.
+  * source/rdd/dbcmd.c
+    funclist.txt
+    + DBF() function added. (not tested yet)
+  * source/rdd/dbf1.c
+    source/rdd/delim1.c
+    source/rdd/sdf1.c
+    source/rdd/dbf0.prg
+    source/rdd/delim0.prg
+    source/rdd/sdf0.prg
+    * The forcelink function names changed. The C functions got a "C" appended
+      at the end, the Harbour ones got an underscore at the beginning, this
+      way it's more Clipper like, but it was also inevitable, since previously
+      the forcelink function HB_DBF() was colliding with the standard Clipper
+      function named DBF() (HB_DBF() from C).
+  * source/rdd/dbcmd.c
+    source/rdd/rddsys.prg
+    source/vm/hvm.c
+    include/rddapi.h
+    * Instead of calling rddShutDown() from a Harbour EXIT function, now
+      the same functions C version is called by the Virtual Machine on exit.
+      This way it's more Clipper compatible, since in CA-Cl*pper the RDDSYS
+      doesn't need to clean-up on exit. RDDSYS.PRG is now exchangeable with
+      the Clipper one.
+    ! hb_rddShutDown() fixed a possible GPF if there was no rddSetDefault() 
+      calls at all (when RDDSYS was overridden by a dummy one).
+  * source/rtl/setkey.prg
+    * Not CA-Clipper compatible functions (extensions) renamed to avoid
+      possible collision with existing code:
+      SETKEYGET()   -> HB_SETKEYGET()
+      SETKEYSAVE()  -> HB_SETKEYSAVE()
+      SETKEYCHECK() -> HB_SETKEYCHECK()
+      The function names are valid even if compiled with /10 switch.
+
 19990907-01:00 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/arrays.c
     ! hb_arrayScan() fixed, so that it can also search for a NIL value. Like
@@ -23,7 +80,7 @@
   * tests/working/rtl_test.prg
     + Some PAD?() tests added with new types, byref. Some new MIN()/MAX() tests
       added. ASCAN() tests added.
-    + /SKIP: switch added, to make it possible to temporarly skip specific 
+    + /SKIP: switch added, to make it possible to temporarly skip specific
       tests. (RTL_TEST /SKIP:100,102)
     + EVAL(), :EVAL() tests added. Some are commented out, due to bugs.
   * source/rtl/itemapi.c
@@ -261,33 +318,33 @@
 19990903-14:35 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *source/rtl/codebloc.c
-	* corrected bug if nested codeblocks without local variables
-	references were created
-	
+        * corrected bug if nested codeblocks without local variables
+        references were created
+
 19990903-14:00 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *include/hb_vmpub.h
-        * added a second parameter for HB_DYNS_FUNC 
+        * added a second parameter for HB_DYNS_FUNC
 
     *source/vm/dynsym.c
     *include/extend.h
         * added a second parameter for hb_dynsymEval() function
 
     *source/rtl/memvars.c
-	* new function __mvDBGINFO() for memvars debugging
-	(documentation included in memvars.c)
+        * new function __mvDBGINFO() for memvars debugging
+        (documentation included in memvars.c)
 
     *include/memvars.ch
-	* new MV_PRIVATE definition
+        * new MV_PRIVATE definition
 
     *source/rtl/mouseapi.c
-	* added (char*) type cast to make C++ compilers happy
-	
+        * added (char*) type cast to make C++ compilers happy
+
 19990903-08:00 GMT+1 Victor Szel <info@szelvesz.hu>
   * include/hbdefs.h
     include/extend.h
     ! IT_OBJECT() checked for IT_ARRAY type, correct to IT_OBJECT, which
-      is equal to IT_ARRAY, so there was no bug, but it's not a good practice 
+      is equal to IT_ARRAY, so there was no bug, but it's not a good practice
       to take shortcuts like this.
     * Type checking macros moved to extend.h from hbdefs.h
   * source/vm/hvm.c
@@ -322,7 +379,7 @@
       formatting errors corrected.
     + Error value substitution support added to:
       hb_vmNot(), hb_vmNegate(), hb_vmInString(), hb_vmInc(), hb_vmDec().
-    ! hb_vmEqual(), hb_vmNotEqual() fixed for those where it returned 
+    ! hb_vmEqual(), hb_vmNotEqual() fixed for those where it returned
       a constant FALSE, blocks, arrays, etc. It confused the stack.
     ! Fixed all hb_vmOperatorCall() calls since they were not popping the
       values from the stack. ( did not test this )
@@ -399,7 +456,7 @@
     ! hb_err*() caller now expect E_BREAK, too.
     ! hb_setRelease() called close_binary() instead of close_text() for
       hb_set_extrahan. Fixed.
-    - Removed a bunch of (now) unneeded include files and OS branched. 
+    - Removed a bunch of (now) unneeded include files and OS branched.
       Source looks kind of clean now.
   * config/rules.cf
     make_tpl.*
@@ -463,9 +520,9 @@
      * hb_fsExtOpen
        + some HB_SYMBOL_UNUSED added.
 
-       NOTE [vszel]: 
-        1.) I've #ifdef-ed out the new stuff for __CYGWIN__ since 
-          setdisk()/getdisk() were neither declared nor present in any 
+       NOTE [vszel]:
+        1.) I've #ifdef-ed out the new stuff for __CYGWIN__ since
+          setdisk()/getdisk() were neither declared nor present in any
           libraries.
         2.) I've added some new header files to FILESYS.C. Please check them
             on your system, whether they are correct.
@@ -513,7 +570,7 @@
       Like CLIPPER.EXE.
     * Indentation more or less fixed.
     * Zeros changed to NULL and '\0'.
-    % Inc()/Dec() logic cleaned-up. Note that there are many more places where 
+    % Inc()/Dec() logic cleaned-up. Note that there are many more places where
       such logic cleaning and variable scoping optim. could be done.
       I'm also not sure if the debug_msg() calls should only be made when
       warnings are turned on, IMHO they should always appear when DEBUG is on.
@@ -554,8 +611,8 @@
         * corrected generation of line number opcodes
         * corrected the support for local variables when nested
         codeblocks are used
-	* the step value is popped correctly at the end of FOR/NEXT loop
-	 (the nested loops are working correctly now)
+        * the step value is popped correctly at the end of FOR/NEXT loop
+         (the nested loops are working correctly now)
 
     *source/rtl/codebloc.c
         * corrected the support for local variables when nested

@@ -84,11 +84,11 @@ typedef struct _DBFMEMO
 typedef DBFMEMO * LPDBFMEMO;
 
 
-HARBOUR HB__DBF( void );
+HARBOUR HB__DBFC( void );
 HARBOUR HB_DBF_GETFUNCTABLE( void );
 
 HB_INIT_SYMBOLS_BEGIN( dbf1__InitSymbols )
-{ "_DBF",             FS_PUBLIC, HB__DBF,             0 },
+{ "_DBFC",            FS_PUBLIC, HB__DBFC,            0 },
 { "DBF_GETFUNCTABLE", FS_PUBLIC, HB_DBF_GETFUNCTABLE, 0 }
 HB_INIT_SYMBOLS_END( dbf1__InitSymbols )
 #if ! defined(__GNUC__)
@@ -1591,7 +1591,7 @@ static RDDFUNCS dbfTable = { 0,               /* Super Bof */
                              0                /* Super WhoCares */
                            };
 
-HARBOUR HB__DBF( void )
+HARBOUR HB__DBFC( void )
 {
 }
 

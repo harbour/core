@@ -24,11 +24,11 @@
 
 #include "rddsys.ch"
 
-ANNOUNCE DELIM
+ANNOUNCE _DELIM
 
 init procedure DELIMInit
 
-   REQUEST _DELIM
+   REQUEST _DELIMC
 
    rddRegister( "DELIM", RDT_TRANSFER )
 

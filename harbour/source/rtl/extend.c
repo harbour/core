@@ -97,7 +97,7 @@ char * hb_parc( int iParam, ... )
          ulArrayIndex = va_arg( va, ULONG );
          va_end( va );
 
-         return hb_arrayGetString( pItem, ulArrayIndex );
+         return hb_arrayGetCPtr( pItem, ulArrayIndex );
       }
    }
 
@@ -130,7 +130,7 @@ ULONG hb_parclen( int iParam, ... )
          ulArrayIndex = va_arg( va, ULONG );
          va_end( va );
 
-         return hb_arrayGetStringLen( pItem, ulArrayIndex );
+         return hb_arrayGetCLen( pItem, ulArrayIndex );
       }
    }
 
@@ -166,7 +166,7 @@ ULONG hb_parcsiz( int iParam, ... )
          ulArrayIndex = va_arg( va, ULONG );
          va_end( va );
 
-         return hb_arrayGetStringLen( pItem, ulArrayIndex ) + 1;
+         return hb_arrayGetCLen( pItem, ulArrayIndex ) + 1;
       }
    }
 
@@ -206,7 +206,7 @@ char * hb_pards( int iParam, ... )
          ulArrayIndex = va_arg( va, ULONG );
          va_end( va );
 
-         hb_arrayGetDate( pItem, ulArrayIndex, stack.szDate );
+         hb_arrayGetDS( pItem, ulArrayIndex, stack.szDate );
 
          return stack.szDate; /* this guaranties good behavior when multithreading */
       }
@@ -250,7 +250,7 @@ int hb_parl( int iParam, ... )
          ulArrayIndex = va_arg( va, ULONG );
          va_end( va );
 
-         return hb_arrayGetBool( pItem, ulArrayIndex ) ? 1 : 0;
+         return hb_arrayGetL( pItem, ulArrayIndex ) ? 1 : 0;
       }
    }
 
@@ -289,7 +289,7 @@ double hb_parnd( int iParam, ... )
          ulArrayIndex = va_arg( va, ULONG );
          va_end( va );
 
-         return hb_arrayGetDouble( pItem, ulArrayIndex );
+         return hb_arrayGetND( pItem, ulArrayIndex );
       }
    }
 

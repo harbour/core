@@ -24,11 +24,11 @@
 
 #include "rddsys.ch"
 
-ANNOUNCE SDF
+ANNOUNCE _SDF
 
 init procedure SDFInit
 
-   REQUEST _SDF
+   REQUEST _SDFC
 
    rddRegister( "SDF", RDT_TRANSFER )
 

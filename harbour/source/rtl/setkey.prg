@@ -128,24 +128,25 @@ return bReturn
 
 /*  $DOC$
  *  $FUNCNAME$
- *      SetKeyGet
+ *      HB_SetKeyGet
  *  $CATEGORY$
  *      ?
  *  $ONELINER$
  *      Determine a set-key code block & condition-block
  *  $SYNTAX$
- *      SETKEYGET( <nKey> [, <bConditionByRef> ] )
+ *      HB_SETKEYGET( <nKey> [, <bConditionByRef> ] )
  *  $ARGUMENTS$
  *      <anKey> is an numeric key value
  *      <bConditionByRef> is an optional return-parameter
  *  $RETURNS$
  *      Current assigned action-block
  *  $DESCRIPTION$
- *      The SetKeyGet() function returns the current code-block assigned to a
- *      key, and optionally assignes the condition-block to the return-parameter
+ *      The HB_SetKeyGet() function returns the current code-block assigned to 
+ *      a key, and optionally assignes the condition-block to the 
+ *      return-parameter
  *  $EXAMPLES$
  *      local bOldF10, bOldF10Cond
- *      bOldF10 := SetKeyGet( K_F10, @bOldF10Cond )
+ *      bOldF10 := HB_SetKeyGet( K_F10, @bOldF10Cond )
  *      ... // some other processing
  *      SetKey( K_F10, bOldF10, bOldF10Cond )
  *  $TESTS$
@@ -153,12 +154,12 @@ return bReturn
  *  $STATUS$
  *      C
  *  $COMPLIANCE$
- *      SETKEYGET() is a new function and hence not CA-Clipper compliant.
+ *      HB_SETKEYGET() is a new function and hence not CA-Clipper compliant.
  *  $SEEALSO$
- *      SETKEY(), SETKEYSAVE(), SETKEYCHECK()
+ *      SETKEY(), HB_SETKEYSAVE(), HB_SETKEYCHECK()
  *  $END$
  */
-Function SetKeyGet( nKey, bCondition )
+Function HB_SetKeyGet( nKey, bCondition )
   local nFound
 
   if valType( nKey ) = "N" .and. nKey <> 0
@@ -178,40 +179,40 @@ return NIL //bReturn
 
 /*  $DOC$
  *  $FUNCNAME$
- *      SetKeySave
+ *      HB_SetKeySave
  *  $CATEGORY$
  *      ?
  *  $ONELINER$
  *      Returns a copy of internal set-key list, optionally overwriting
  *  $SYNTAX$
- *      SETKEYSAVE( [ <OldKeys> ] )
+ *      HB_SETKEYSAVE( [ <OldKeys> ] )
  *  $ARGUMENTS$
  *      <OldKeys> is an optional set-key list from a previous call to
- *      SetKeySave(), or NIL to clear current set-key list
+ *      HB_SetKeySave(), or NIL to clear current set-key list
  *  $RETURNS$
  *      Current set-key list
  *  $DESCRIPTION$
- *      SetKeySave() is designed to act like the set() function which returns
- *      the current state of an environment setting, and optionally assigning
- *      a new value.  In this case, the "environment setting" is the internal
- *      set-key list, and the optional new value is either a value returned
- *      from a previous call to SetKeySave() - to restore that list, or the
- *      value of NIL to clear the current list.
+ *      HB_SetKeySave() is designed to act like the set() function which 
+ *      returns the current state of an environment setting, and optionally 
+ *      assigning a new value.  In this case, the "environment setting" is the 
+ *      internal set-key list, and the optional new value is either a value 
+ *      returned from a previous call to SetKeySave() - to restore that list, 
+ *      or the value of NIL to clear the current list.
  *  $EXAMPLES$
- *      local aKeys := SetKeySave( NIL )  // removes all current set=keys
+ *      local aKeys := HB_SetKeySave( NIL )  // removes all current set=keys
  *      ... // some other processing
- *      SetKeySave( aKeys )
+ *      HB_SetKeySave( aKeys )
  *  $TESTS$
  *      None definable
  *  $STATUS$
  *      C
  *  $COMPLIANCE$
- *      SETKEYSAVE() is new.
+ *      HB_SETKEYSAVE() is new.
  *  $SEEALSO$
  *      SETKEY()
  *  $END$
  */
-Function SetKeySave( OldKeys )
+Function HB_SetKeySave( OldKeys )
   local aReturn := aClone( aSetKeys )
 
   if pcount() != 0 .or. valtype( OldKeys ) = "A"
@@ -230,13 +231,13 @@ return aReturn
 
 /*  $DOC$
  *  $FUNCNAME$
- *      SetKeyCheck
+ *      HB_SetKeyCheck
  *  $CATEGORY$
  *      ?
  *  $ONELINER$
  *      Impliments common hot-key activation code
  *  $SYNTAX$
- *      SetKeyCheck( <nKey> [, <p1> ][, <p2> ][, <p3> ] )
+ *      HB_SetKeyCheck( <nKey> [, <p1> ][, <p2> ][, <p3> ] )
  *  $ARGUMENTS$
  *      <nKey> is a numeric key value to be tested
  *      code-block, if executed
@@ -247,20 +248,20 @@ return aReturn
  *      If there is a hot-key association (before checking any condition):
  *        - if there is a condition-block, it is passed one parameter - <nKey>
  *        - when the hot-key code-block is called, it is passed 1 to 4 parameters,
- *          depending on the parameters passed to SetKeyCheck().  Any parameters
- *          so passed are directly passed to the code-block, with an additional
- *          parameter being <nKey>
+ *          depending on the parameters passed to HB_SetKeyCheck().  Any 
+ *          parameters so passed are directly passed to the code-block, with an 
+ *          additional parameter being <nKey>
  *  $DESCRIPTION$
- *      SetKeyCheck() is intended as a common interface to the SetKey()
+ *      HB_SetKeyCheck() is intended as a common interface to the SetKey()
  *      functionality for such functions as ACHOICE(), DBEDIT(), MEMOEDIT(),
  *      ACCEPT, INPUT, READ, and WAIT
  *  $EXAMPLES$
  *      // within ReadModal()
- *      if SetKeyCheck( K_ALT_X, GetActive() )
+ *      if HB_SetKeyCheck( K_ALT_X, GetActive() )
  *      ... // some other processing
  *      endif
  *      // within TBrowse handler
- *      case SetKeyCheck( nInkey, oTBrowse )
+ *      case HB_SetKeyCheck( nInkey, oTBrowse )
  *        return
  *      case nInKey == K_ESC
  *      ... // some other processing
@@ -269,12 +270,12 @@ return aReturn
  *  $STATUS$
  *      C
  *  $COMPLIANCE$
- *      SetKeyCheck() is new.
+ *      HB_SetKeyCheck() is new.
  *  $SEEALSO$
- *      SETKEY(), SETKEYSAVE()
+ *      SETKEY(), HB_SETKEYSAVE()
  *  $END$
  */
-Function SetKeyCheck( nKey, p1, p2, p3 )
+Function HB_SetKeyCheck( nKey, p1, p2, p3 )
   local nFound, aKey, bBlock
 
   if ( nFound := aScan( aSetKeys, {|x| x[ KEY ] = nKey } ) ) > 0

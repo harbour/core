@@ -29,11 +29,11 @@
 #include "rddapi.h"
 #include "rddsys.ch"
 
-HARBOUR HB__DELIM( void );
+HARBOUR HB__DELIMC( void );
 HARBOUR HB_DELIM_GETFUNCTABLE( void );
 
 HB_INIT_SYMBOLS_BEGIN( delim1__InitSymbols )
-{ "_DELIM",             FS_PUBLIC, HB__DELIM,             0 },
+{ "_DELIMC",            FS_PUBLIC, HB__DELIMC,            0 },
 { "DELIM_GETFUNCTABLE", FS_PUBLIC, HB_DELIM_GETFUNCTABLE, 0 }
 HB_INIT_SYMBOLS_END( delim1__InitSymbols )
 #if ! defined(__GNUC__)
@@ -48,7 +48,7 @@ static RDDFUNCS delimSuper = { 0 };
 
 static RDDFUNCS delimTable = { 0 };
 
-HARBOUR HB__DELIM( void )
+HARBOUR HB__DELIMC( void )
 {
 }
 

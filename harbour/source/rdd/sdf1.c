@@ -29,11 +29,11 @@
 #include "rddapi.h"
 #include "rddsys.ch"
 
-HARBOUR HB__SDF( void );
+HARBOUR HB__SDFC( void );
 HARBOUR HB_SDF_GETFUNCTABLE( void );
 
 HB_INIT_SYMBOLS_BEGIN( sdf1__InitSymbols )
-{ "_SDF",             FS_PUBLIC, HB__SDF,             0 },
+{ "_SDFC",            FS_PUBLIC, HB__SDFC,            0 },
 { "SDF_GETFUNCTABLE", FS_PUBLIC, HB_SDF_GETFUNCTABLE, 0 }
 HB_INIT_SYMBOLS_END( sdf1__InitSymbols )
 #if ! defined(__GNUC__)
@@ -48,7 +48,7 @@ static RDDFUNCS sdfSuper = { 0 };
 
 static RDDFUNCS sdfTable = { 0 };
 
-HARBOUR HB__SDF( void )
+HARBOUR HB__SDFC( void )
 {
 }
 

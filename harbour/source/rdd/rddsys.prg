@@ -34,9 +34,3 @@ init procedure RddInit
 
 return
 
-exit procedure RddExit
-
-   rddShutdown()
-
-return
-

@@ -185,6 +185,7 @@ void hb_vmQuit( void )
 
    hb_itemClear( &stack.Return );
    hb_arrayRelease( &aStatics );
+   hb_rddShutDown();
    hb_errExit();
    hb_clsReleaseAll();
    hb_vmReleaseLocalSymbols();  /* releases the local modules linked list */

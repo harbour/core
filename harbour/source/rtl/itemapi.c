@@ -90,7 +90,7 @@ PHB_ITEM hb_evalLaunch( PEVALINFO pEvalInfo )
 
       if( IS_STRING( pEvalInfo->pItems[ 0 ] ) )
       {
-         hb_vmPushSymbol( hb_dynsymGet( hb_itemGetC( pEvalInfo->pItems[ 0 ] ) )->pSymbol );
+         hb_vmPushSymbol( hb_dynsymGet( hb_itemGetCPtr( pEvalInfo->pItems[ 0 ] ) )->pSymbol );
          hb_vmPushNil();
          while( w <= pEvalInfo->paramCount )
             hb_vmPush( pEvalInfo->pItems[ w++ ] );
@@ -367,7 +367,7 @@ char * hb_itemGetCPtr( PHB_ITEM pItem )
    if( pItem && IS_STRING( pItem ) )
       return pItem->item.asString.value;
    else
-      return NULL;
+      return "";
 }
 
 ULONG hb_itemGetCLen( PHB_ITEM pItem )

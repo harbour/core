@@ -222,40 +222,34 @@ BOOL hb_arrayError( PHB_ITEM pArray, ULONG ulIndex, BOOL bAssign )
 
 BOOL hb_arraySet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem )
 {
-   if( IS_ARRAY( pArray ) )
+   if( IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
    {
-      if( ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
-      {
-         hb_itemCopy( pArray->item.asArray.value->pItems + ( ulIndex - 1 ), pItem );
-         return TRUE;
-      }
+      hb_itemCopy( pArray->item.asArray.value->pItems + ( ulIndex - 1 ), pItem );
+      return TRUE;
    }
-
-   return FALSE;
+   else
+      return FALSE;
 }
 
 BOOL hb_arrayGet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem )
 {
-   if( IS_ARRAY( pArray ) )
+   if( IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
    {
-      if( ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
-      {
-         hb_itemCopy( pItem, pArray->item.asArray.value->pItems + ( ulIndex - 1 ) );
-         return TRUE;
-      }
+      hb_itemCopy( pItem, pArray->item.asArray.value->pItems + ( ulIndex - 1 ) );
+      return TRUE;
    }
-
-   hb_itemClear( pItem );
-
-   return FALSE;
+   else
+   {
+      hb_itemClear( pItem );
+      return FALSE;
+   }
 }
 
-char * hb_arrayGetDate( PHB_ITEM pArray, ULONG ulIndex, char * szDate )
+char * hb_arrayGetDS( PHB_ITEM pArray, ULONG ulIndex, char * szDate )
 {
-   if( IS_ARRAY( pArray ) )
+   if( IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
    {
-      if( ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
-         hb_itemGetDS( pArray->item.asArray.value->pItems + ulIndex - 1, szDate );
+      hb_itemGetDS( pArray->item.asArray.value->pItems + ulIndex - 1, szDate );
    }
    else
    {
@@ -266,86 +260,76 @@ char * hb_arrayGetDate( PHB_ITEM pArray, ULONG ulIndex, char * szDate )
    return szDate;
 }
 
-BOOL hb_arrayGetBool( PHB_ITEM pArray, ULONG ulIndex )
+BOOL hb_arrayGetL( PHB_ITEM pArray, ULONG ulIndex )
 {
-   if( IS_ARRAY( pArray ) )
-   {
-      if( ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
-         return hb_itemGetL( pArray->item.asArray.value->pItems + ulIndex - 1 );
-   }
-
-   return FALSE;
+   if( IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+      return hb_itemGetL( pArray->item.asArray.value->pItems + ulIndex - 1 );
+   else
+      return FALSE;
 }
 
 int hb_arrayGetNI( PHB_ITEM pArray, ULONG ulIndex )
 {
-   if( IS_ARRAY( pArray ) )
-   {
-      if( ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
-         return hb_itemGetNI( pArray->item.asArray.value->pItems + ulIndex - 1 );
-   }
-
-   return 0;
+   if( IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+      return hb_itemGetNI( pArray->item.asArray.value->pItems + ulIndex - 1 );
+   else
+      return 0;
 }
 
 long hb_arrayGetNL( PHB_ITEM pArray, ULONG ulIndex )
 {
-   if( IS_ARRAY( pArray ) )
-   {
-      if( ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
-         return hb_itemGetNL( pArray->item.asArray.value->pItems + ulIndex - 1 );
-   }
-
-   return 0;
+   if( IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+      return hb_itemGetNL( pArray->item.asArray.value->pItems + ulIndex - 1 );
+   else
+      return 0;
 }
 
-double hb_arrayGetDouble( PHB_ITEM pArray, ULONG ulIndex )
+double hb_arrayGetND( PHB_ITEM pArray, ULONG ulIndex )
 {
-   if( IS_ARRAY( pArray ) )
-   {
-      if( ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
-         return hb_itemGetND( pArray->item.asArray.value->pItems + ulIndex - 1 );
-   }
-
-   return 0;
+   if( IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+      return hb_itemGetND( pArray->item.asArray.value->pItems + ulIndex - 1 );
+   else
+      return 0;
 }
 
-char * hb_arrayGetString( PHB_ITEM pArray, ULONG ulIndex )
+ULONG hb_arrayCopyC( PHB_ITEM pArray, ULONG ulIndex, char * szBuffer, ULONG ulLen )
 {
-   if( IS_ARRAY( pArray ) )
-   {
-      if( ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
-      {
-         PHB_ITEM pItem = pArray->item.asArray.value->pItems + ulIndex - 1;
-
-         if( IS_STRING( pItem ) )
-            return pItem->item.asString.value;
-      }
-   }
-
-   return "";
+   if( IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+      return hb_itemCopyC( pArray->item.asArray.value->pItems + ulIndex - 1, szBuffer, ulLen );
+   else
+      return 0;
 }
 
-ULONG hb_arrayGetStringLen( PHB_ITEM pArray, ULONG ulIndex )
+char * hb_arrayGetC( PHB_ITEM pArray, ULONG ulIndex )
 {
-   if( IS_ARRAY( pArray ) )
-   {
-      if( ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
-         return hb_itemGetCLen( pArray->item.asArray.value->pItems + ulIndex - 1 );
-   }
+   if( IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+      return hb_itemGetC( pArray->item.asArray.value->pItems + ulIndex - 1 );
+   else
+      return NULL;
+}
 
-   return 0;
+char * hb_arrayGetCPtr( PHB_ITEM pArray, ULONG ulIndex )
+{
+   if( IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+      return hb_itemGetCPtr( pArray->item.asArray.value->pItems + ulIndex - 1 );
+   else
+      return "";
+}
+
+ULONG hb_arrayGetCLen( PHB_ITEM pArray, ULONG ulIndex )
+{
+   if( IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+      return hb_itemGetCLen( pArray->item.asArray.value->pItems + ulIndex - 1 );
+   else
+      return 0;
 }
 
 WORD hb_arrayGetType( PHB_ITEM pArray, ULONG ulIndex )
 {
-   if( IS_ARRAY( pArray ) )
-   {
-      if( ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
-         return hb_itemType( pArray->item.asArray.value->pItems + ulIndex - 1 );
-   }
-
-   return 0;
+   if( IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+      return hb_itemType( pArray->item.asArray.value->pItems + ulIndex - 1 );
+   else
+      return 0;
 }
 
 BOOL hb_arrayLast( PHB_ITEM pArray, PHB_ITEM pResult )
