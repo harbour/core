@@ -39,7 +39,7 @@ HARBOUR HB___COPYFILE(void);
 
 HB_INIT_SYMBOLS_BEGIN( CopyFile__InitSymbols )
 { "__COPYFILE", FS_PUBLIC, HB___COPYFILE, 0 }
-HB_INIT_SYMBOLS_END( CopyFile__InitSymbols );
+HB_INIT_SYMBOLS_END( CopyFile__InitSymbols )
 #if ! defined(__GNUC__)
    #pragma CopyFile__InitSymbols
 #endif

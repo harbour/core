@@ -83,7 +83,7 @@ HB_INIT_SYMBOLS_BEGIN( Strings__InitSymbols )
 { "RIGHT"        , FS_PUBLIC, HB_RIGHT  , 0 },
 { "STRTRAN"      , FS_PUBLIC, HB_STRTRAN, 0 },
 { "STUFF"        , FS_PUBLIC, HB_STUFF  , 0 }
-HB_INIT_SYMBOLS_END( Strings__InitSymbols );
+HB_INIT_SYMBOLS_END( Strings__InitSymbols )
 #if ! defined(__GNUC__)
 #pragma startup Strings__InitSymbols
 #endif
@@ -93,7 +93,7 @@ HB_INIT_SYMBOLS_END( Strings__InitSymbols );
 #ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
 HB_CALL_ON_STARTUP_BEGIN( Strings_InitInfinity )
    infinity = -log( 0 );
-HB_CALL_ON_STARTUP_END( Strings_InitInfinity );
+HB_CALL_ON_STARTUP_END( Strings_InitInfinity )
 #if ! defined(__GNUC__)
 #pragma startup Strings_InitInfinity
 #endif

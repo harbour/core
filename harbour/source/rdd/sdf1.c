@@ -33,7 +33,7 @@ HARBOUR HB_SDF_GETFUNCTABLE( void );
 HB_INIT_SYMBOLS_BEGIN( sdf1__InitSymbols )
 { "_SDF",             FS_PUBLIC, HB__SDF,             0 },
 { "SDF_GETFUNCTABLE", FS_PUBLIC, HB_SDF_GETFUNCTABLE, 0 }
-HB_INIT_SYMBOLS_END( sdf1__InitSymbols );
+HB_INIT_SYMBOLS_END( sdf1__InitSymbols )
 #if ! defined(__GNUC__)
 #pragma startup sdf1__InitSymbols
 #endif

@@ -70,7 +70,7 @@ HB_INIT_SYMBOLS_BEGIN( odbc__InitSymbols )
 { "SQLEXECDIR",     FS_PUBLIC, HB_SQLEXECDIR    , 0 },
 { "SQLFETCH",       FS_PUBLIC, HB_SQLFETCH      , 0 },
 { "SQLGETDATA",     FS_PUBLIC, HB_SQLGETDATA    , 0 }
-HB_INIT_SYMBOLS_END( odbc__InitSymbols );
+HB_INIT_SYMBOLS_END( odbc__InitSymbols )
 #pragma odbc__InitSymbols
 
 HARBOUR HB_SQLALLOCEN( void ) /* HB_SQLALLOCENV( @hEnv ) --> nRetCode */

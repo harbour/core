@@ -494,32 +494,36 @@ typedef struct _AREA
    struct _RDDFUNCS * lprfsHost; /* Virtual method table for this workarea */
 
    USHORT   uiArea;              /* The number assigned to this workarea */
-// void *   atomAlias;           /* Pointer to the alias symbol for this workarea */
+#if 0
+   void *   atomAlias;           /* Pointer to the alias symbol for this workarea */
+#endif
 
    USHORT   uiFieldExtent;       /* Total number of fields allocated */
    USHORT   uiFieldCount;        /* Total number of fields used */
    LPFIELD  lpFields;            /* Pointer to an array of fields */
 
-// void *   lpFieldExtents;      /* Void ptr for additional field properties */
+#if 0
+   void *   lpFieldExtents;      /* Void ptr for additional field properties */
 
-// PHB_ITEM valResult;           /* All purpose result holder */
+   PHB_ITEM valResult;           /* All purpose result holder */
 
-// BOOL fTop;                    /* TRUE if "top" */
-// BOOL fBottom;                 /* TRUE if "bottom" */
-// BOOL fBof;                    /* TRUE if "bof" */
-// BOOL fEof;                    /* TRUE if "eof" */
-// BOOL fFound;                  /* TRUE if "found" */
+   BOOL fTop;                    /* TRUE if "top" */
+   BOOL fBottom;                 /* TRUE if "bottom" */
+   BOOL fBof;                    /* TRUE if "bof" */
+   BOOL fEof;                    /* TRUE if "eof" */
+   BOOL fFound;                  /* TRUE if "found" */
 
-// DBSCOPEINFO  dbsi;            /* Info regarding last LOCATE */
-// DBFILTERINFO dbfi;            /* Filter in effect */
+   DBSCOPEINFO  dbsi;            /* Info regarding last LOCATE */
+   DBFILTERINFO dbfi;            /* Filter in effect */
 
-// LPDBORDERCONDINFO lpdbOrdCondInfo;
+   LPDBORDERCONDINFO lpdbOrdCondInfo;
 
-// LPDBRELINFO  lpdbRelations;   /* Parent/Child relationships used */
-// USHORT       uiParents;       /* Number of parents for this area */
+   LPDBRELINFO  lpdbRelations;   /* Parent/Child relationships used */
+   USHORT       uiParents;       /* Number of parents for this area */
 
-// HANDLE   heap;
-// USHORT   heapSize;
+   HANDLE   heap;
+   USHORT   heapSize;
+#endif
 
    USHORT   rddID;
 
@@ -572,42 +576,54 @@ typedef struct _RDDFUNCS
    DBENTRYP_BP   found;
    DBENTRYP_V    goBottom;
    DBENTRYP_L    go;
-// DBENTRYP_I    goToId;
+#if 0
+   DBENTRYP_I    goToId;
+#endif
    DBENTRYP_V    goTop;
-// DBENTRYP_SI   seek;
+#if 0
+   DBENTRYP_SI   seek;
+#endif
    DBENTRYP_L    skip;
-// DBENTRYP_L    skipFilter;
-// DBENTRYP_L    skipRaw;
+#if 0
+   DBENTRYP_L    skipFilter;
+   DBENTRYP_L    skipRaw;
+#endif
 
 
    /* Data management */
 
    DBENTRYP_VF   addField;
-// DBENTRYP_S    append;
+#if 0
+   DBENTRYP_S    append;
+#endif
    DBENTRYP_I    createFields;
-// DBENTRYP_V    deleterec;
-// DBENTRYP_SP   deleted;
-// DBENTRYP_SP   fieldCount;
-// DBENTRYP_VP   fieldDisplay;
-// DBENTRYP_SSI  fieldInfo;
-// DBENTRYP_SVP  fieldName;
-// DBENTRYP_V    flush;
-// DBENTRYP_PP   getRec;
-// DBENTRYP_SI   getValue;
-// DBENTRYP_SVP  getVarLen;
-// DBENTRYP_V    goCold;
-// DBENTRYP_V    goHot;
-// DBENTRYP_VP   putRec;
-// DBENTRYP_SI   putValue;
-// DBENTRYP_V    recall;
-// DBENTRYP_LP   reccount;
-// DBENTRYP_ISI  recInfo;
-// DBENTRYP_I    recno;
+#if 0
+   DBENTRYP_V    deleterec;
+   DBENTRYP_SP   deleted;
+   DBENTRYP_SP   fieldCount;
+   DBENTRYP_VP   fieldDisplay;
+   DBENTRYP_SSI  fieldInfo;
+   DBENTRYP_SVP  fieldName;
+   DBENTRYP_V    flush;
+   DBENTRYP_PP   getRec;
+   DBENTRYP_SI   getValue;
+   DBENTRYP_SVP  getVarLen;
+   DBENTRYP_V    goCold;
+   DBENTRYP_V    goHot;
+   DBENTRYP_VP   putRec;
+   DBENTRYP_SI   putValue;
+   DBENTRYP_V    recall;
+   DBENTRYP_LP   reccount;
+   DBENTRYP_ISI  recInfo;
+   DBENTRYP_I    recno;
+#endif
    DBENTRYP_S    setFieldExtent;
 
    /* WorkArea/Database management */
 
-// DBENTRYP_VP   alias;
+#if 0
+   DBENTRYP_VP   alias;
+#endif
    DBENTRYP_V    close;
    DBENTRYP_VP   create;
    DBENTRYP_SI   info;
@@ -616,87 +632,91 @@ typedef struct _RDDFUNCS
    DBENTRYP_V    release;
    DBENTRYP_SP   structSize;
    DBENTRYP_P    sysName;
-// DBENTRYP_VP   dbEval;
-// DBENTRYP_V    pack;
-// DBENTRYP_LSP  packRec;
-// DBENTRYP_VP   sort;
-// DBENTRYP_VP   trans;
-// DBENTRYP_VP   transRec;
-// DBENTRYP_V    zap;
+#if 0
+   DBENTRYP_VP   dbEval;
+   DBENTRYP_V    pack;
+   DBENTRYP_LSP  packRec;
+   DBENTRYP_VP   sort;
+   DBENTRYP_VP   trans;
+   DBENTRYP_VP   transRec;
+   DBENTRYP_V    zap;
 
 
    /* Relational Methods */
 
-// DBENTRYP_VP   childEnd;
-// DBENTRYP_VP   childStart;
-// DBENTRYP_VP   childSync;
-// DBENTRYP_V    syncChildren;
-// DBENTRYP_V    clearRel;
-// DBENTRYP_V    forceRel;
-// DBENTRYP_SVP  relArea;
-// DBENTRYP_VP   relEval;
-// DBENTRYP_SVP  relText;
-// DBENTRYP_VP   setRel;
+   DBENTRYP_VP   childEnd;
+   DBENTRYP_VP   childStart;
+   DBENTRYP_VP   childSync;
+   DBENTRYP_V    syncChildren;
+   DBENTRYP_V    clearRel;
+   DBENTRYP_V    forceRel;
+   DBENTRYP_SVP  relArea;
+   DBENTRYP_VP   relEval;
+   DBENTRYP_SVP  relText;
+   DBENTRYP_VP   setRel;
 
 
    /* Order Management */
 
-// DBENTRYP_VP   orderListAdd;
-// DBENTRYP_V    orderListClear;
-// DBENTRYP_VP   orderListDelete;
-// DBENTRYP_VP   orderListFocus;
-// DBENTRYP_V    orderListRebuild;
+   DBENTRYP_VP   orderListAdd;
+   DBENTRYP_V    orderListClear;
+   DBENTRYP_VP   orderListDelete;
+   DBENTRYP_VP   orderListFocus;
+   DBENTRYP_V    orderListRebuild;
 
-// DBENTRYP_VP   orderCondition;
-// DBENTRYP_VP   orderCreate;
-// DBENTRYP_VP   orderDestroy;
-// DBENTRYP_SVP  orderInfo;
+   DBENTRYP_VP   orderCondition;
+   DBENTRYP_VP   orderCreate;
+   DBENTRYP_VP   orderDestroy;
+   DBENTRYP_SVP  orderInfo;
 
    /* Filters and Scope Settings */
 
-// DBENTRYP_V    clearFilter;
-// DBENTRYP_V    clearLocate;
-// DBENTRYP_V    clearScope;
-// DBENTRYP_VPLP countScope;
-// DBENTRYP_VP   filterText;
-// DBENTRYP_SI   scopeInfo;
-// DBENTRYP_VP   setFilter;
-// DBENTRYP_VP   setLocate;
-// DBENTRYP_VP   setScope;
-// DBENTRYP_VPL  skipScope;
+   DBENTRYP_V    clearFilter;
+   DBENTRYP_V    clearLocate;
+   DBENTRYP_V    clearScope;
+   DBENTRYP_VPLP countScope;
+   DBENTRYP_VP   filterText;
+   DBENTRYP_SI   scopeInfo;
+   DBENTRYP_VP   setFilter;
+   DBENTRYP_VP   setLocate;
+   DBENTRYP_VP   setScope;
+   DBENTRYP_VPL  skipScope;
 
    /* Miscellaneous */
 
-// DBENTRYP_VP   compile;
-// DBENTRYP_VP   error;
-// DBENTRYP_I    evalBlock;
+   DBENTRYP_VP   compile;
+   DBENTRYP_VP   error;
+   DBENTRYP_I    evalBlock;
 
 
    /* Network operations */
 
-// DBENTRYP_VSP  rawlock;
-// DBENTRYP_VP   lock;
-// DBENTRYP_L    unlock;
+   DBENTRYP_VSP  rawlock;
+   DBENTRYP_VP   lock;
+   DBENTRYP_L    unlock;
 
 
    /* Memofile functions */
 
-// DBENTRYP_V    closeMemFile;
-// DBENTRYP_VP   createMemFile;
-// DBENTRYP_SVPB getValueFile;
-// DBENTRYP_VP   openMemFile;
-// DBENTRYP_SVP  putValueFile;
+   DBENTRYP_V    closeMemFile;
+   DBENTRYP_VP   createMemFile;
+   DBENTRYP_SVPB getValueFile;
+   DBENTRYP_VP   openMemFile;
+   DBENTRYP_SVP  putValueFile;
 
 
    /* Database file header handling */
 
-// DBENTRYP_V    readDBHeader;
+   DBENTRYP_V    readDBHeader;
+#endif
    DBENTRYP_V    writeDBHeader;
 
 
    /* Special and reserved methods */
 
-// DBENTRYP_SVP  whoCares;
+#if 0
+   DBENTRYP_SVP  whoCares;
+#endif
 
 } RDDFUNCS;
 

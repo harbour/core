@@ -1197,15 +1197,15 @@ void SkipOptional( char** ptri, char *ptro, int* lenres )
       case '[':  nbr++; break;
       case ']':  nbr--; break;
       case '\1':
-//         if ( numBrackets < 2 )
-//         {
+/*         if ( numBrackets < 2 ) */
+/*         { */
             for ( lenpatt=0; lenpatt<4; lenpatt++ )
                *(exppatt+lenpatt) = *((*ptri)++);
             (*ptri)--;
             if ( exppatt[2] == '2' )
             while ( **ptri != '>' ) (*ptri)++;
             SearnRep( exppatt,"",0,ptro,lenres);
-//         }
+/*         } */
          break;
       }
       (*ptri)++;

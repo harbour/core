@@ -164,7 +164,7 @@ HB_INIT_SYMBOLS_BEGIN( Classes__InitSymbols )
 { "OMODINLINE"    , FS_PUBLIC, HB_OMODINLINE     , 0 },
 { "OMODMETHOD"    , FS_PUBLIC, HB_OMODMETHOD     , 0 },
 { "OSEND"         , FS_PUBLIC, HB_OSEND          , 0 }
-HB_INIT_SYMBOLS_END( Classes__InitSymbols );
+HB_INIT_SYMBOLS_END( Classes__InitSymbols )
 #if ! defined(__GNUC__)
 #pragma startup Classes__InitSymbols
 #endif

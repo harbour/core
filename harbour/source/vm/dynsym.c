@@ -28,7 +28,7 @@
 
 #include "extend.h"
 
-#define SYM_ALLOCATED -1
+#define SYM_ALLOCATED ((SYMBOLSCOPE)-1)
 
 typedef struct
 {

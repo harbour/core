@@ -37,7 +37,7 @@ HARBOUR HB_COLORSELECT( void );
 HB_INIT_SYMBOLS_BEGIN( SETCOLOR__InitSymbols )
 { "SETCOLOR"    , FS_PUBLIC, HB_SETCOLOR   , 0 },
 { "COLORSELECT" , FS_PUBLIC, HB_COLORSELECT, 0 }
-HB_INIT_SYMBOLS_END( SETCOLOR__InitSymbols );
+HB_INIT_SYMBOLS_END( SETCOLOR__InitSymbols )
 #if ! defined(__GNUC__)
 #pragma startup SETCOLOR__InitSymbols
 #endif

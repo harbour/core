@@ -91,13 +91,13 @@ extern void hb_vmProcessSymbols( PHB_SYMB pSymbols, WORD wSymbols ); /* statics 
      hb_vmProcessSymbols( symbols, sizeof( symbols ) / sizeof( HB_SYMB ) ); \
      return 1; \
   }; \
-  static int static_int_##func = func()
+  static int static_int_##func = func();
 
 #define HB_CALL_ON_STARTUP_BEGIN( func ) \
   static int func( void ) {
 
 #define HB_CALL_ON_STARTUP_END( func ) return 1; } \
-  static int static_int_##func = func()
+  static int static_int_##func = func();
 #endif
 
 #ifdef __WATCOMC__
@@ -110,15 +110,15 @@ extern void hb_vmProcessSymbols( PHB_SYMB pSymbols, WORD wSymbols ); /* statics 
      hb_vmProcessSymbols( symbols, sizeof( symbols ) / sizeof( HB_SYMB ) ); \
      return 1; \
   }; \
-  static int static_int_##func = func()
+  static int static_int_##func = func();
 
 #define HB_CALL_ON_STARTUP_BEGIN( func ) \
   static int func( void ) {
 
 #define HB_CALL_ON_STARTUP_END( func ) return 1; }; \
-  static int static_int_##func = func()
+  static int static_int_##func = func();
 #endif
 
-#endif /*HARBOUR_STRICT_ANSI_C */
+#endif /* HARBOUR_STRICT_ANSI_C */
 
 #endif /* HB_INIT_H_ */

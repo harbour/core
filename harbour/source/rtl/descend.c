@@ -70,7 +70,7 @@ HARBOUR HB_DESCEND(void);
 
 HB_INIT_SYMBOLS_BEGIN( Descend__InitSymbols )
 { "DESCEND", FS_PUBLIC, HB_DESCEND, 0 }
-HB_INIT_SYMBOLS_END( Descend__InitSymbols );
+HB_INIT_SYMBOLS_END( Descend__InitSymbols )
 #if ! defined(__GNUC__)
 #pragma Descend__InitSymbols
 #endif

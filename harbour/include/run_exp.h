@@ -135,7 +135,7 @@ HB_INIT_SYMBOLS_BEGIN( RUNNER )
 { "VALTYPE",          FS_PUBLIC, HB_VALTYPE         , 0 },
 { "__MVPUBLIC",       FS_PUBLIC, HB___MVPUBLIC      , 0 },
 { "__MVPRIVATE",      FS_PUBLIC, HB___MVPRIVATE     , 0 }
-HB_INIT_SYMBOLS_END( RUNNER );
+HB_INIT_SYMBOLS_END( RUNNER )
 #if ! defined(__GNUC__)
 #pragma startup RUNNER
 #endif

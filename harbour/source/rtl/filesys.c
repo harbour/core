@@ -159,7 +159,7 @@ HB_INIT_SYMBOLS_BEGIN( Files__InitSymbols )
 { "I2BIN"   , FS_PUBLIC, HB_I2BIN   , 0 },
 { "L2BIN"   , FS_PUBLIC, HB_L2BIN   , 0 },
 { "W2BIN"   , FS_PUBLIC, HB_W2BIN   , 0 }
-HB_INIT_SYMBOLS_END( Files__InitSymbols );
+HB_INIT_SYMBOLS_END( Files__InitSymbols )
 #if ! defined(__GNUC__)
 #pragma startup Files__InitSymbols
 #endif

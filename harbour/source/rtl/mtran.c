@@ -78,7 +78,7 @@ HARBOUR HB_MEMOTRAN(void);
 
 HB_INIT_SYMBOLS_BEGIN( Memotran__InitSymbols )
 { "MEMOTRAN", FS_PUBLIC, HB_MEMOTRAN, 0 }
-HB_INIT_SYMBOLS_END( Memotran__InitSymbols );
+HB_INIT_SYMBOLS_END( Memotran__InitSymbols )
 #if ! defined(__GNUC__)
 #pragma startup Memotran__InitSymbols
 #endif

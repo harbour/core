@@ -33,7 +33,7 @@ HARBOUR HB_DELIM_GETFUNCTABLE( void );
 HB_INIT_SYMBOLS_BEGIN( delim1__InitSymbols )
 { "_DELIM",             FS_PUBLIC, HB__DELIM,             0 },
 { "DELIM_GETFUNCTABLE", FS_PUBLIC, HB_DELIM_GETFUNCTABLE, 0 }
-HB_INIT_SYMBOLS_END( delim1__InitSymbols );
+HB_INIT_SYMBOLS_END( delim1__InitSymbols )
 #if ! defined(__GNUC__)
 #pragma startup delim1__InitSymbols
 #endif

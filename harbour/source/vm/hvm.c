@@ -421,7 +421,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
               break;
 
          case HB_P_POP:
-              hb_stackPop();	 
+              hb_stackPop();
               w++;
               break;
 
@@ -770,7 +770,7 @@ void hb_vmDec( void )
 void hb_vmDimArray( WORD wDimensions ) /* generates a wDimensions Array and initialize those dimensions from the stack values */
 {
    HB_ITEM itArray;
-   WORD w; // , wElements;
+   WORD w; /* , wElements; */
 
    itArray.type = IT_NIL;
    hb_arrayNew( &itArray, ( stack.pPos - wDimensions )->item.asLong.value );
@@ -781,9 +781,11 @@ void hb_vmDimArray( WORD wDimensions ) /* generates a wDimensions Array and init
       exit( 1 );
    }
 
-   // for( w = 0; w < wElements; w++ )
-   //   hb_itemCopy( itArray.item.asArray.value->pItems + w,
-   //             stack.pPos - wElements + w );
+/*
+   for( w = 0; w < wElements; w++ )
+     hb_itemCopy( itArray.item.asArray.value->pItems + w,
+               stack.pPos - wElements + w );
+*/
 
    for( w = 0; w < wDimensions; w++ )
       hb_stackPop();
@@ -1736,7 +1738,7 @@ static void PushAliasedField( PHB_SYMB pSym )
    stack.pPos->item.asInteger.decimal = 0;
    hb_stackPush();
    HB_DEBUG( "PushAliasedField\n" );
-}   
+}
 
 void hb_vmPushLogical( BOOL bValue )
 {

@@ -106,7 +106,7 @@ HB_INIT_SYMBOLS_BEGIN( dbCmd__InitSymbols )
 { "RDDREGISTER",   FS_PUBLIC, HB_RDDREGISTER,   0 },
 { "RDDSETDEFAULT", FS_PUBLIC, HB_RDDSETDEFAULT, 0 },
 { "RDDSHUTDOWN",   FS_PUBLIC, HB_RDDSHUTDOWN,   0 }
-HB_INIT_SYMBOLS_END( dbCmd__InitSymbols );
+HB_INIT_SYMBOLS_END( dbCmd__InitSymbols )
 #if ! defined(__GNUC__)
 #pragma startup dbCmd__InitSymbols
 #endif

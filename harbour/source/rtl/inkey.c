@@ -90,7 +90,7 @@ HB_INIT_SYMBOLS_BEGIN( INKEY__InitSymbols )
 { "INKEY"     , FS_PUBLIC, HB_INKEY     , 0 },
 { "LASTKEY"   , FS_PUBLIC, HB_LASTKEY   , 0 },
 { "NEXTKEY"   , FS_PUBLIC, HB_NEXTKEY   , 0 },
-HB_INIT_SYMBOLS_END( INKEY__InitSymbols );
+HB_INIT_SYMBOLS_END( INKEY__InitSymbols )
 #if ! defined(__GNUC__)
 #pragma startup INKEY__InitSymbols
 #endif

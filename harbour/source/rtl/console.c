@@ -135,7 +135,7 @@ HB_INIT_SYMBOLS_BEGIN( Console__InitSymbols )
 { "QOUT"        , FS_PUBLIC, HB_QOUT        , 0 },
 { "QQOUT"       , FS_PUBLIC, HB_QQOUT       , 0 },
 { "__COLORINDEX", FS_PUBLIC, HB___COLORINDEX, 0 }
-HB_INIT_SYMBOLS_END( Console__InitSymbols );
+HB_INIT_SYMBOLS_END( Console__InitSymbols )
 #if ! defined(__GNUC__)
 #pragma startup Console__InitSymbols
 #endif

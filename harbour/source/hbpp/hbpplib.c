@@ -49,7 +49,7 @@ HARBOUR HB_PREPROCESS(void);
 
 HB_INIT_SYMBOLS_BEGIN( Preprocess__InitSymbols )
 { "PREPROCESS",     FS_PUBLIC, HB_PREPROCESS    , 0 }
-HB_INIT_SYMBOLS_END( Preprocess__InitSymbols );
+HB_INIT_SYMBOLS_END( Preprocess__InitSymbols )
 #if ! defined(__GNUC__)
 #pragma Preprocess__InitSymbols
 #endif

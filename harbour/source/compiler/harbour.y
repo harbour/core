@@ -2468,7 +2468,7 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
 
       pSym = pSym->pNext;
    }
-   fprintf( yyc, "\nHB_INIT_SYMBOLS_END( %s__InitSymbols );\n", _pFileName->name );
+   fprintf( yyc, "\nHB_INIT_SYMBOLS_END( %s__InitSymbols )\n", _pFileName->name );
    fprintf( yyc, "#if ! defined(__GNUC__)\n#pragma startup %s__InitSymbols\n#endif\n\n\n", _pFileName->name );
 
    /* Generate functions data

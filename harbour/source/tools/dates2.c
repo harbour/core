@@ -68,7 +68,7 @@ HB_INIT_SYMBOLS_BEGIN( Dates2__InitSymbols )
 { "ISLEAPYEAR",    FS_PUBLIC, HB_ISLEAPYEAR    , 0 },
 { "WOM",           FS_PUBLIC, HB_WOM           , 0 },
 { "WOY",           FS_PUBLIC, HB_WOY           , 0 }
-HB_INIT_SYMBOLS_END( Dates2__InitSymbols );
+HB_INIT_SYMBOLS_END( Dates2__InitSymbols )
 #if ! defined(__GNUC__)
 #pragma startup Dates2__InitSymbols
 #endif

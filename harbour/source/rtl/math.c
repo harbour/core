@@ -27,7 +27,7 @@ HARBOUR HB_SQRT( void );
 
 HB_INIT_SYMBOLS_BEGIN( Math__InitSymbols )
 { "MOD"  , FS_PUBLIC, HB_MOD  , 0 }
-HB_INIT_SYMBOLS_END( Math__InitSymbols );
+HB_INIT_SYMBOLS_END( Math__InitSymbols )
 #if ! defined(__GNUC__)
 #pragma startup Math__InitSymbols
 #endif

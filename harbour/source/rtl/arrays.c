@@ -55,7 +55,7 @@ HB_INIT_SYMBOLS_BEGIN( Arrays__InitSymbols )
 { "ASIZE",          FS_PUBLIC, HB_ASIZE         , 0 },
 { "ASORT",          FS_PUBLIC, HB_ASORT         , 0 },
 { "ATAIL",          FS_PUBLIC, HB_ATAIL         , 0 },
-HB_INIT_SYMBOLS_END( Arrays__InitSymbols );
+HB_INIT_SYMBOLS_END( Arrays__InitSymbols )
 #if ! defined(__GNUC__)
 #pragma startup Arrays__InitSymbols
 #endif
