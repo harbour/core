@@ -760,7 +760,7 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
                  }
               }
 
-{Array}      { BEGIN INDEX;
+<INITIAL>{Array}      { BEGIN INDEX;
               {
                int i = 0, iIdentifierLength = 0;
                char chr;
