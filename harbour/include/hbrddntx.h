@@ -123,7 +123,6 @@ typedef struct HB_PAGEINFO_STRU
    BOOL      NewRoot;
    BOOL      lBusy;
    BYTE      PageType;
-   // LPKEYINFO pKeys;
    USHORT    uiKeys;
    SHORT     CurKey;
    char*     buffer;
@@ -157,10 +156,6 @@ typedef struct _TAGINFO
    USHORT     KeyLength;
    USHORT     KeyDec;
    USHORT     MaxKeys;
-   // LONG       blockPrev;
-   // LONG       blockNext;
-   // USHORT     keyPrev;
-   // USHORT     keyNext;
    LPTREESTACK stack;
    USHORT     stackDepth;
    USHORT     stackLevel;

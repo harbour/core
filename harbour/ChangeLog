@@ -7,6 +7,13 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+    + Add function: IS_VARBYREF().
+      This function allows in PRGs to know if a parameter has been passed
+      by value or by reference.
+
+2002-04-10 15:48 UTC+0100 Tomaz Zupan <tomaz.zupan@orpo.si>
+  * config/linux/gcc.cf
+    + Added support for compiler cache in linux. If you  want to
     use compiler cache, set HB_CCACHE environment variable.
     (export HB_CCACHE=ccache)
 
