@@ -317,6 +317,7 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
             WORD wChar = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualKeyCode;
             WORD wKey = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualScanCode;
             ch = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.uChar.AsciiChar;
+            /* fprintf( stdout, "\n\nhb_gt_ReadKey(): dwState is %ld, wChar is %d, wKey is %d, ch is %d", dwState, wChar, wKey, ch ); */
             if( ch == 224 )
             {
                /* Strip extended key lead-in codes */
@@ -330,7 +331,7 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
                ch += 256;
             }
             /* && ch == -32 added for international keyboard support ( Alexander Kresin ) */
-            else if( ch == 0 || ch == -32 || ( dwState & ( ENHANCED_KEY | LEFT_ALT_PRESSED | LEFT_CTRL_PRESSED | RIGHT_ALT_PRESSED | RIGHT_CTRL_PRESSED | SHIFT_PRESSED ) ) )
+            else if( ( ch == 0 || ch == -32 ) && ( dwState & ( ENHANCED_KEY | LEFT_ALT_PRESSED | LEFT_CTRL_PRESSED | RIGHT_ALT_PRESSED | RIGHT_CTRL_PRESSED | SHIFT_PRESSED ) ) )
             {
                /* Process non-ASCII key codes */
                if( eventmask & INKEY_RAW ) wKey = wChar;

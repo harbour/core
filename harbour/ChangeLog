@@ -1,3 +1,7 @@
+2000-10-19 16:25 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+   * source/rtl/gtwin.gtwin.c
+     ! Fixed bug in if test for discarding accent key strokes.
+
 2000-10-19 11:00 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * contrib/dot/pp.prg
      ! Corrected bug with #else
