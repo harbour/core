@@ -1,6 +1,7 @@
 //
 // $Id$
 //
+
 #include "hbmemory.ch"
 
 FUNCTION MAIN
@@ -15,16 +16,16 @@ LOCAL nPrev:=SECONDS()
   ? "Can you see it ??? :) Press ESC or wait 5 seconds"
   ?
   ?
-  nH1 = HB_ADDIDLE( {|| DEVPOS(0,01), DEVOUT( TIME() )} )
-  nH2 = HB_ADDIDLE( {|| DEVPOS(0,21), TEST(), DEVOUT( MEMORY(HB_MEM_USED) )} )
-  nH3 = HB_ADDIDLE( {|| DEVPOS(0,41), IIF(n=4,n:=1,n++),DEVOUT(aSign[n]) } )
-  nH4 = HB_ADDIDLE( {|| DEVPOS(0,61), DEVOUT( 1000*(SECONDS()-nPrev) ), nPrev:=SECONDS()} )
+  nH1 = HB_IDLEADD( {|| DEVPOS(0,01), DEVOUT( TIME() )} )
+  nH2 = HB_IDLEADD( {|| DEVPOS(0,21), TEST(), DEVOUT( MEMORY(HB_MEM_USED) )} )
+  nH3 = HB_IDLEADD( {|| DEVPOS(0,41), IIF(n=4,n:=1,n++),DEVOUT(aSign[n]) } )
+  nH4 = HB_IDLEADD( {|| DEVPOS(0,61), DEVOUT( 1000*(SECONDS()-nPrev) ), nPrev:=SECONDS()} )
   
   INKEY( 10 )
-  HB_DELIDLE( nH3 )
-  HB_DELIDLE( nH2 )
-  HB_DELIDLE( nH1 )
-  HB_DELIDLE( nH4 )
+  HB_IDLEDEL( nH3 )
+  HB_IDLEDEL( nH2 )
+  HB_IDLEDEL( nH1 )
+  HB_IDLEDEL( nH4 )
   
 RETURN 1
 
@@ -44,3 +45,4 @@ LOCAL cb
 //  INKEY( .5 )
   
 RETURN
+

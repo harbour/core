@@ -82,22 +82,22 @@
 #define _SET_MCENTER      37
 #define _SET_SCROLLBREAK  38
 
-#define _SET_EVENTMASK    39
+#define _SET_EVENTMASK    39  /* CA-Cl*pper 5.3 compatible */
 
-#define _SET_VIDEOMODE    40
+#define _SET_VIDEOMODE    40  /* CA-Cl*pper 5.3 compatible */
 
-#define _SET_MBLOCKSIZE   41
-#define _SET_MFILEEXT     42
+#define _SET_MBLOCKSIZE   41  /* CA-Cl*pper 5.3 compatible */
+#define _SET_MFILEEXT     42  /* CA-Cl*pper 5.3 compatible */
 
-#define _SET_STRICTREAD   43
-#define _SET_OPTIMIZE     44
-#define _SET_AUTOPEN      45
-#define _SET_AUTORDER     46
-#define _SET_AUTOSHARE    47
+#define _SET_STRICTREAD   43  /* CA-Cl*pper 5.3 compatible */
+#define _SET_OPTIMIZE     44  /* CA-Cl*pper 5.3 compatible */
+#define _SET_AUTOPEN      45  /* CA-Cl*pper 5.3 compatible */
+#define _SET_AUTORDER     46  /* CA-Cl*pper 5.3 compatible */
+#define _SET_AUTOSHARE    47  /* CA-Cl*pper 5.3 compatible */
 
 #define _SET_COUNT        47
 
-#define _SET_LANGUAGE     100
+#define _SET_LANGUAGE     100 /* Harbour extension */
 
 #define HB_SET_BASE       100
 #define HB_SET_COUNT      1

@@ -102,7 +102,7 @@ HB_FUNC( ERRORBLOCK )
     * NOTE: hb_itemClear() cannot be used to initialize an item because 
     * memory occupied by the item can contain garbage bits
    */
-   oldError.type = HB_IT_NIL;
+   hb_itemInit( &oldError );
    hb_itemCopy( &oldError, &s_errorBlock );
 
    if( pNewErrorBlock )
@@ -149,7 +149,7 @@ void hb_errInit( void )
     * NOTE: hb_itemClear() cannot be used to initialize an item because 
     * memory occupied by the item can contain garbage bits
    */
-   s_errorBlock.type = HB_IT_NIL;	
+   hb_itemInit( &s_errorBlock.type );	
 }
 
 void hb_errExit( void )

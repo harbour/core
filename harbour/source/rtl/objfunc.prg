@@ -74,35 +74,36 @@ FUNCTION __objGetMsgList( oObject, lDataMethod )
    LOCAL aData
    LOCAL n
    LOCAL nLen
-   LOCAL lFoundDM                               // Found DATA ?
 
    IF !ISOBJECT( oObject )
       __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
    ENDIF
 
    IF !ISLOGICAL( lDataMethod )
-        lDataMethod := .T.
+      lDataMethod := .T.
    ENDIF
 
-   aInfo  := aSort( oObject:ClassSel() )
-   aData  := {}
-   n      := 1
-   nLen   := Len( aInfo )
+   aInfo := ASort( oObject:ClassSel() )
+   aData := {}
+   n     := 1
+   nLen  := Len( aInfo )
 
-   DO WHILE n <= nLen .AND. Substr( aInfo[ n ], 1, 1 ) != "_"
+   DO WHILE n <= nLen .AND. !( Substr( aInfo[ n ], 1, 1 ) == "_" )
 
       /* If in range and no set function found yet ( set functions */
       /* begin with a leading underscore ).                        */
 
-      lFoundDM := !Empty( AScan( aInfo, "_" + aInfo[ n ], n + 1 ) )
+      // If found -> DATA    
+      //     else    METHOD  
 
       /* Find position of matching set function in array with all symbols */
 
-      IF lFoundDM == lDataMethod                // If found -> DATA
-                                                //     else    METHOD
+      IF ( AScan( aInfo, {| tmp | tmp == ( "_" + aInfo[ n ] ) }, n + 1 ) != 0 ) == lDataMethod
          AAdd( aData, aInfo[ n ] )
       ENDIF
+
       n++
+
    ENDDO
 
    RETURN aData
@@ -127,7 +128,7 @@ FUNCTION __objGetValueList( oObject, aExcept )
    ENDIF
 
    IF !ISARRAY( aExcept )
-        aExcept := {}
+      aExcept := {}
    ENDIF
 
    aDataSymbol := __objGetMsgList( oObject )
@@ -136,7 +137,7 @@ FUNCTION __objGetValueList( oObject, aExcept )
 
    FOR n := 1 to nLen
       cSymbol := aDataSymbol[ n ]
-      IF Empty( AScan( aExcept, cSymbol ) )
+      IF AScan( aExcept, {| tmp | tmp == cSymbol } ) == 0
          AAdd( aData, { cSymbol, __objSendMsg( oObject, cSymbol ) } )
       ENDIF
    NEXT
@@ -178,11 +179,9 @@ FUNCTION __objAddData( oObject, cSymbol )
 
    IF !ISOBJECT( oObject ) .OR. !ISCHARACTER( cSymbol )
       __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
-   ELSEIF !__objHasMsg( oObject, cSymbol ) .AND. ;
-      !__objHasMsg( oObject, "_" + cSymbol )
-
+   ELSEIF !__objHasMsg( oObject, cSymbol ) .AND. !__objHasMsg( oObject, "_" + cSymbol )
       nSeq := __cls_IncData( oObject:ClassH )         // Allocate new Seq#
-      __clsAddMsg( oObject:ClassH, cSymbol,       nSeq, HB_OO_MSG_DATA )
+      __clsAddMsg( oObject:ClassH, cSymbol, nSeq, HB_OO_MSG_DATA )
       __clsAddMsg( oObject:ClassH, "_" + cSymbol, nSeq, HB_OO_MSG_DATA )
    ENDIF
 

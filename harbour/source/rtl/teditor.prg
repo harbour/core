@@ -101,10 +101,8 @@ ENDCLASS
 // Returns EOL char (be it either CR or LF or both)
 STATIC function WhichEOL(cString)
 
-   local nCRPos, nLFPos
-
-   nCRPos := At(Chr(13), cString)
-   nLFPos := At(Chr(10), cString)
+   local nCRPos := At(Chr(13), cString)
+   local nLFPos := At(Chr(10), cString)
 
    if nCRPos > 0 .AND. nLFPos == 0
       return Chr(13)
@@ -115,12 +113,9 @@ STATIC function WhichEOL(cString)
    elseif nCRPos > 0 .AND. nLFPos == nCRPos + 1
       return Chr(13) + Chr(10)
 
-   else
-      return HB_OSNewLine()
-
    endif
 
-return nil
+return HB_OSNewLine()
 
 
 // Converts a string to an array of strings splitting input string at EOL boundaries

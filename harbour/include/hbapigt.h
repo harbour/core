@@ -227,9 +227,6 @@ extern int    hb_inkeyNext( void );           /* Return the next key without ext
 extern void   hb_inkeyPoll( void );           /* Poll the console keyboard to stuff the Harbour buffer */
 extern void   hb_inkeyReset( BOOL allocate ); /* Reset the Harbour keyboard buffer */
 
-/* TOFIX: This should go somewhere else. */
-extern void   hb_releaseCPU( void );          /* Attempt to release a CPU time slice */
-
 /* Mouse related declarations */
 
 /* Public interface. These should never change, only be added to. */

@@ -130,13 +130,13 @@ void hb_idleShutDown( void )
 }
 
 /* signal that the user code is in idle state */
-HB_FUNC( HB_IAMIDLE )
+HB_FUNC( HB_IDLESTATE )
 {
    hb_idleState();
 }
 
 /* add a new background task and return its handle */
-HB_FUNC( HB_ADDIDLE )
+HB_FUNC( HB_IDLEADD )
 {
    HB_ITEM_PTR pBlock = hb_param( 1, HB_IT_BLOCK );
    
@@ -164,11 +164,11 @@ HB_FUNC( HB_ADDIDLE )
 }
 
 /* Delete a task with given handle and return a codeblock with this task */
-HB_FUNC( HB_DELIDLE )
+HB_FUNC( HB_IDLEDEL )
 {
    BOOL bFound = FALSE;
    
-   if( s_pIdleTasks && ( hb_parinfo(1) & HB_IT_NUMERIC ) )
+   if( s_pIdleTasks && ( hb_parinfo( 1 ) & HB_IT_NUMERIC ) )
    {
       SHORT iTask;
       ULONG ulID = hb_parnl( 1 );   /* TODO: access to pointers from harbour code */
@@ -177,7 +177,7 @@ HB_FUNC( HB_DELIDLE )
       iTask = 0;
       while( iTask < s_uiIdleMaxTask && !bFound )
       {
-         if( ulID == ( ULONG )pItem->item.asBlock.value )
+         if( ulID == ( ULONG ) pItem->item.asBlock.value )
          {
              hb_gcUnlock( pItem->item.asBlock.value );
              hb_itemReturn( pItem );    /* return a codeblock */
@@ -202,6 +202,7 @@ HB_FUNC( HB_DELIDLE )
          ++iTask;
       }
    }
+
    if( !bFound )
       hb_ret();    /* return NIL */
 }

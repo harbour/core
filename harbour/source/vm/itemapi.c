@@ -1003,6 +1003,14 @@ char * hb_itemTypeStr( PHB_ITEM pItem )
 
 /* Internal API, not standard Clipper */
 
+void hb_itemInit( PHB_ITEM pItem )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemInit(%p)", pItem));
+
+   if( pItem )
+      pItem->type = HB_IT_NIL;
+}
+
 void hb_itemClear( PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemClear(%p)", pItem));

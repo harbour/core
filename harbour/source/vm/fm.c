@@ -51,15 +51,14 @@
 
 #define HB_OS_WIN_32_USED
 
+/* NOTE: For OS/2. Must be ahead of any and all #include statements */
+#define INCL_BASE
+#define INCL_DOSMISC
+#define INCL_DOSERRORS
+#define INCL_DOSPROCESS
+
 #ifndef __MPW__
    #include <malloc.h>
-#endif
-
-#if (defined(__EMX__) && ! defined(__RSXNT__)) || defined(OS2) || defined(__OS2__) || defined(OS_2)
-   #define INCL_BASE
-   #define INCL_DOSMISC
-   #define INCL_DOSERRORS
-   #define INCL_DOSPROCESS
 #endif
 
 #include "hbapi.h"
@@ -226,7 +225,7 @@ void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exits on fail
       }
    }
 
-   s_lMemoryConsumed    += ulSize;
+   s_lMemoryConsumed += ulSize;
    if( s_lMemoryMaxConsumed < s_lMemoryConsumed )
       s_lMemoryMaxConsumed = s_lMemoryConsumed;
    s_lMemoryBlocks++;
@@ -440,6 +439,7 @@ void * hb_xmemcpy( void * pDestArg, void * pSourceArg, ULONG ulLen )
       pDest += iCopySize;
       pSource += iCopySize;
    }
+
    return pDestArg;
 }
 
@@ -470,6 +470,7 @@ void * hb_xmemset( void * pDestArg, int iFill, ULONG ulLen )
       memset( pDest, iFill, iSetSize );
       pDest += iSetSize;
    }
+
    return pDestArg;
 }
 
@@ -495,14 +496,11 @@ ULONG hb_xquery( USHORT uiMode )
       #elif defined(HB_OS_OS2)
       {
          ULONG ulSysInfo = 0;
-         APIRET rc;
 
-         rc = DosQuerySysInfo(QSV_TOTAVAILMEM, QSV_TOTAVAILMEM, &ulSysInfo, sizeof(ULONG));
-         if (rc != NO_ERROR) {
+         if( DosQuerySysInfo( QSV_TOTAVAILMEM, QSV_TOTAVAILMEM, &ulSysInfo, sizeof( ULONG ) ) != NO_ERROR )
             ulResult = 0;
-         } else {
+         else
             ulResult = ulSysInfo / 1024;
-         }
       }
       #else
          ulResult = 9999;
@@ -519,14 +517,11 @@ ULONG hb_xquery( USHORT uiMode )
       #elif defined(HB_OS_OS2)
       {
          ULONG ulSysInfo = 0;
-         APIRET rc;
 
-         rc = DosQuerySysInfo(QSV_TOTAVAILMEM, QSV_TOTAVAILMEM, &ulSysInfo, sizeof(ULONG));
-         if (rc != NO_ERROR) {
+         if( DosQuerySysInfo( QSV_TOTAVAILMEM, QSV_TOTAVAILMEM, &ulSysInfo, sizeof( ULONG ) ) != NO_ERROR )
             ulResult = 0;
-         } else {
-            ulResult = HB_MIN(ulSysInfo, ULONG_MAX) / 1024;
-         }
+         else
+            ulResult = HB_MIN( ulSysInfo, ULONG_MAX ) / 1024;
       }
       #else
          ulResult = 9999;
@@ -543,14 +538,11 @@ ULONG hb_xquery( USHORT uiMode )
       #elif defined(HB_OS_OS2)
       {
          ULONG ulSysInfo = 0;
-         APIRET rc;
 
-         rc = DosQuerySysInfo(QSV_TOTAVAILMEM, QSV_TOTAVAILMEM, &ulSysInfo, sizeof(ULONG));
-         if (rc != NO_ERROR) {
+         if( DosQuerySysInfo( QSV_TOTAVAILMEM, QSV_TOTAVAILMEM, &ulSysInfo, sizeof( ULONG ) ) != NO_ERROR )
             ulResult = 0;
-         } else {
+         else
             ulResult = ulSysInfo / 1024;
-         }
       }
       #else
          ulResult = 9999;
@@ -567,14 +559,11 @@ ULONG hb_xquery( USHORT uiMode )
       #elif defined(HB_OS_OS2)
       {
          ULONG ulSysInfo = 0;
-         APIRET rc;
 
-         rc = DosQuerySysInfo(QSV_TOTAVAILMEM, QSV_TOTAVAILMEM, &ulSysInfo, sizeof(ULONG));
-         if (rc != NO_ERROR) {
+         if( DosQuerySysInfo( QSV_TOTAVAILMEM, QSV_TOTAVAILMEM, &ulSysInfo, sizeof( ULONG ) ) != NO_ERROR )
             ulResult = 0;
-         } else {
+         else
             ulResult = ulSysInfo / 1024;
-         }
       }
       #else
          ulResult = 9999;
@@ -599,14 +588,11 @@ ULONG hb_xquery( USHORT uiMode )
       #elif defined(HB_OS_OS2)
       {
          ULONG ulSysInfo = 0;
-         APIRET rc;
 
-         rc = DosQuerySysInfo(QSV_MAXPRMEM, QSV_MAXPRMEM, &ulSysInfo, sizeof(ULONG));
-         if (rc != NO_ERROR) {
+         if( DosQuerySysInfo( QSV_MAXPRMEM, QSV_MAXPRMEM, &ulSysInfo, sizeof( ULONG ) ) != NO_ERROR )
             ulResult = 0;
-         } else {
+         else
             ulResult = ulSysInfo / 1024;
-         }
       }
       #else
          ulResult = 9999;
@@ -630,11 +616,10 @@ ULONG hb_xquery( USHORT uiMode )
       }
       #elif defined(HB_OS_OS2)
       {
-         /* 10/05/2000 - maurilio.longo@libero.it
-            There is no way to know how much a swap file can grow on an OS/2 system.
-            I think we should return free space on DASD media which contains swap
-            file */
-            ulResult = 0;
+         /* NOTE: There is no way to know how much a swap file can grow on an 
+                  OS/2 system. I think we should return free space on DASD 
+                  media which contains swap file [maurilio.longo] */
+         ulResult = 9999;
       }
       #else
          ulResult = 9999;

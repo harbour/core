@@ -1,3 +1,37 @@
+2000-06-25 14:25 UTC+0100 Victor Szakats <info@szelvesz.hu>
+
+   * tests/onidle.prg
+   * source/rtl/idle.c
+     * Renamed some idle related Harbour level functions:
+       HB_ADDIDLE() -> HB_IDLEADD()
+       HB_DELIDLE() -> HB_IDLEDEL()
+       HB_IAMIDLE() -> HB_IDLESTATE()
+
+   * source/rtl/objfunc.prg
+   * source/rtl/teditor.prg
+     % Small optimizations.
+
+   * source/vm/fm.c
+     % Some optimizations on the hb_xquery() OS/2 branch, some other cleanups
+       and formattings made.
+
+   * include/hbapigt.h
+     - Removed hb_releaseCPU() prototype.
+
+   * source/vm/itemapi.c
+   * include/hbapiitm.h
+   * source/rtl/errorapi.c
+     + hb_itemInit() function added, to initialize a new HB_ITEM structure.
+     * errorapi.c now uses hb_itemInit() instead of the low-level item access.
+
+   * include/inkey.ch
+   * include/set.ch
+     + Some comments added related to Harbour or C53 extensions.
+
+   * source/vm/hvm.c
+   * include/simpleio.ch
+     * Minor changes.
+
 2000-06-25 03:35 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
    * source/compiler/hbgenerr.c
      ! Fixed line number when in <eol> was 1 too short.

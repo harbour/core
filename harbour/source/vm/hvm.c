@@ -191,10 +191,9 @@ static void    hb_vmReleaseLocalSymbols( void );  /* releases the memory of the 
    #endif
 #endif
 
-static void    hb_vmProcessObjSymbols ( void ); /* process Harbour generated OBJ symbols */
-void hb_vmProcessBorlandInitSegment( void ); /* process Borland _INIT_ segment functions
-                                                when not using Borland startup */
-void hb_startup( void );  /* Harbour startup when not using a C compiler startup */
+static void hb_vmProcessObjSymbols( void ); /* process Harbour generated OBJ symbols */
+extern void hb_vmProcessBorlandInitSegment( void ); /* process Borland _INIT_ segment functions when not using Borland startup */
+extern void hb_startup( void );  /* Harbour startup when not using a C compiler startup */
 
 typedef struct
 {
@@ -2750,15 +2749,6 @@ void hb_vmDo( USHORT uiParams )
       hb_errInternal( IE_VMNOTSYMBOL, NULL, "hb_vmDo()", NULL );
    }
 
-#if 0
-   if( ! HB_IS_NIL( pSelf ) )
-   {
-      /* QUESTION: Is this call needed ? [vszakats] */
-      hb_stackDispLocal();
-      hb_errInternal( IE_VMINVSYMBOL, NULL, "hb_vmDo()", NULL );
-   }
-#endif
-
    pItem->item.asSymbol.lineno = 0;
    pItem->item.asSymbol.paramcnt = uiParams;
    hb_stack.pBase = hb_stack.pItems + pItem->item.asSymbol.stackbase;
@@ -2856,15 +2846,6 @@ void hb_vmSend( USHORT uiParams )
       hb_stackDispLocal();
       hb_errInternal( IE_VMNOTSYMBOL, NULL, "hb_vmSend()", NULL );
    }
-
-#if 0
-   if( ! HB_IS_NIL( pSelf ) )
-   {
-      /* QUESTION: Is this call needed ? [vszakats] */
-      hb_stackDispLocal();
-      hb_errInternal( IE_VMINVSYMBOL, NULL, "hb_vmSend()", NULL );
-   }
-#endif
 
    pItem->item.asSymbol.lineno = 0;
    pItem->item.asSymbol.paramcnt = uiParams;
@@ -2998,7 +2979,7 @@ HB_ITEM_PTR hb_vmEvalBlockV( HB_ITEM_PTR pBlock, USHORT uiArgCount, ... )
    hb_vmPush( pBlock );
 
    va_start( va, uiArgCount );
-   for( i=1; i<= uiArgCount; i++ )
+   for( i = 1; i <= uiArgCount; i++ )
       hb_vmPush( va_arg( va, PHB_ITEM ) );
    va_end( va );
 

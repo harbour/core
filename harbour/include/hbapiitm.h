@@ -75,6 +75,7 @@ extern long     hb_itemGetNL    ( PHB_ITEM pItem );
 extern void     hb_itemGetNLen  ( PHB_ITEM pItem, int * piWidth, int * piDec );
 extern void *   hb_itemGetPtr   ( PHB_ITEM pItem );
 extern PHB_ITEM hb_itemNew      ( PHB_ITEM pNull );
+extern void     hb_itemInit     ( PHB_ITEM pItem );
 extern USHORT   hb_itemPCount   ( void );
 extern PHB_ITEM hb_itemParam    ( USHORT uiParam );
 extern PHB_ITEM hb_itemPutC     ( PHB_ITEM pItem, char * szText );
