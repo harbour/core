@@ -1222,7 +1222,10 @@ HB_FUNC( DBCREATE )
    BOOL bOpen;
 
    hb_retl( FALSE );
-   szFileName = hb_parc( 1 );
+
+   if( ( szFileName = hb_parc( 1 ) ) == ( char * ) 0 )
+      szFileName = "";
+
    pStruct = hb_param( 2 , HB_IT_ARRAY );
    if( pStruct )
       uiLen = ( USHORT ) hb_arrayLen( pStruct );
@@ -1277,14 +1280,16 @@ HB_FUNC( DBCREATE )
       if( uiLen > HARBOUR_MAX_RDD_DRIVERNAME_LENGTH )
          uiLen = HARBOUR_MAX_RDD_DRIVERNAME_LENGTH;
 
-      hb_strncpyUpper( cDriverBuffer, hb_parc( 3 ), uiLen );
+      hb_strncpyUpper( cDriverBuffer,
+                       hb_parc( 3 ) != ( char * ) 0 ? hb_parc( 3 ) : "", uiLen );
       szDriver = cDriverBuffer;
    }
    else
       szDriver = s_szDefDriver;
 
    pFileName = hb_fsFNameSplit( szFileName );
-   strncpy( szAlias, hb_parc( 5 ), HARBOUR_MAX_RDD_ALIAS_LENGTH );
+   strncpy( szAlias, hb_parc( 5 ) != ( char * ) 0 ? hb_parc( 5 ) : "",
+            HARBOUR_MAX_RDD_ALIAS_LENGTH );
    uiLen = strlen( szAlias );
    if( uiLen == 0 )
       strncpy( szAlias, pFileName->szName, HARBOUR_MAX_RDD_ALIAS_LENGTH );
