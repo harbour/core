@@ -791,7 +791,7 @@ HARBOUR HB_FREADSTR( void )
 
 HARBOUR HB_CURDIR( void )
 {
-   hb_retc( hb_fsCurDir( ( ISCHAR( 1 ) && hb_parclen( 1 ) ) ? (USHORT)( toupper( *hb_parc( 1 ) ) - 'A' + 1 ) : 0 ) );
+   hb_retc( (char *)hb_fsCurDir( ( ISCHAR( 1 ) && hb_parclen( 1 ) ) ? (USHORT)( toupper( *hb_parc( 1 ) ) - 'A' + 1 ) : 0 ) );
 }
 
 HARBOUR HB_BIN2I( void )

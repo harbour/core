@@ -1,3 +1,7 @@
+19990804-14:30 EDT Paul Tucker <ptucker@sympatico.ca>
+   * source/rtl/filesys.c
+     * added a cast (reported by Matteo)
+
 19990804-20:30 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/rtl/achoice.prg
      + Uses __COLORINDEX()
