@@ -2137,7 +2137,7 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
          fprintf( yyc, "static " );
 
       if( pFunc == _pInitFunc )
-         fprintf( yyc, "HARBOUR hb_INITSTATICS( void );\n" );
+         fprintf( yyc, "HARBOUR HB_INITSTATICS( void );\n" );
       else
          fprintf( yyc, "HARBOUR HB_%s( void );\n", pFunc->szName );
       pFunc = pFunc->pNext;
@@ -2170,7 +2170,7 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
          * we are using these two bits to mark the special function used to
          * initialize static variables
          */
-         fprintf( yyc, "{ \"(_INITSTATICS)\", FS_INIT | FS_EXIT, hb_INITSTATICS, 0}" );
+         fprintf( yyc, "{ \"(_INITSTATICS)\", FS_INIT | FS_EXIT, HB_INITSTATICS, 0}" );
       }
       else
       {
@@ -2224,7 +2224,7 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
          fprintf( yyc, "static " );
 
       if( pFunc == _pInitFunc )        /* Is it (_INITSTATICS) */
-         fprintf( yyc, "HARBOUR hb_INITSTATICS( void )\n{\n  static BYTE pcode[] = { \n" );
+         fprintf( yyc, "HARBOUR HB_INITSTATICS( void )\n{\n  static BYTE pcode[] = { \n" );
       else
          fprintf( yyc, "HARBOUR HB_%s( void )\n{\n  static BYTE pcode[] = { \n", pFunc->szName );
 

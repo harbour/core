@@ -24,9 +24,7 @@
 
 // Harbour without RDD
 
-procedure RddSys
-
-return
+ANNOUNCE RDDSYS
 
 init procedure RDDInit
 

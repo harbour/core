@@ -1,3 +1,22 @@
+19990801-18:14 CET Victor Szel <info@szelvesz.hu>
+   ! source/compiler/harbour.y - 
+     hb_INITSTATICS() -> HB_INITSTATICS() (case adjusted)
+   + source/rdd/nulsys/nulsys.prg - Using ANNOUNCE
+   ! source/rtl/mtran.c - Fixed, now 100% Clipper compatible.
+     - HARD and SOFT characters swapped.
+     - HARD and SOFT characters pairs are changed to only one
+       character, like in Clipper.
+     - unnecessary include ctype.h removed. 
+   ! source/rtl/hardcr.c 
+     - unnecessary include ctype.h removed. 
+     - "HARD_" -> "SOFT_" #define names corrected.
+   + tests/working/mtran.prg - More extensive tests added.
+   ! source/rtl/msgxxx.c - Previous changes undone, to make it work in GCC.
+   + source/tools/numtxten.prg
+     source/tools/Makefile
+     NumToTxtEN() - English language number to text conversion added.
+     Author: "Michael Mozina" <et@snowcrest.net> Donated to the Public Domain.
+
 199908.01-16:30 GMT+3 Alexander Kresin
   * source/hbpp/hbppint.c
     * Bug fixed ( related to line continuation )
@@ -210,11 +229,11 @@
      (only wrappers as of now).
      Original idea by Bruno Cantero <bruno@issnet.net>.
    * include/rdd.api most of the content moved to include/rddapi.h
-     source\rdd\dbfntx\dbfntx1.c
-     source\rdd\dbcmd.c
-     source\rdd\dbf1.c
-     source\rdd\delim1.c
-     source\rdd\sdf1.c
+     source/rdd/dbfntx/dbfntx1.c
+     source/rdd/dbcmd.c
+     source/rdd/dbf1.c
+     source/rdd/delim1.c
+     source/rdd/sdf1.c
      *.api files are for compatibility only, not for
      new harbour code.
    + doc/hdr_tpl.txt - Small modification RCS ID and licenc part

@@ -34,6 +34,7 @@ C_SOURCES=\
 PRG_SOURCES=\
 	fileread.prg \
         numtxthu.prg \
+        numtxten.prg \
 	stringp.prg \
 
 LIB=tools

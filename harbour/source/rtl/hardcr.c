@@ -35,7 +35,7 @@
  *  $FUNCNAME$
  *      HARDCR
  *  $CATEGORY$
- *      
+ *
  *  $ONELINER$
  *      Converts soft carriage pair chr(141)/chr(10) into hard carriage chr(13)
  *  $SYNTAX$
@@ -62,12 +62,11 @@
  *  $END$
  */
 
-#include <ctype.h>
 #include "extend.h"
 #include "init.h"
 
-#define CHR_HARD1   (char)141
-#define CHR_HARD2   (char)10
+#define CHR_SOFT1   ((char)141)
+#define CHR_SOFT2   ((char)10)
 
 HARBOUR HB_HARDCR(void);
 
@@ -85,7 +84,7 @@ char *hb_hardcr( char *string )
    if( string )
    {
       for( s = string; *s; ++s )
-         if( *s == CHR_HARD1 && *(s+1) == CHR_HARD2 )
+         if( *s == CHR_SOFT1 && *(s+1) == CHR_SOFT2 )
             *s++ = '\n';
       *s = '\0';
    }

@@ -34,7 +34,7 @@
  *  $FUNCNAME$
  *      MEMOTRAN
  *  $CATEGORY$
- *      
+ *
  *  $ONELINER$
  *      Converts hard and soft carriages within strings.
  *  $SYNTAX$
@@ -65,18 +65,16 @@
  *  $END$
  */
 
-#include <ctype.h>
 #include "extend.h"
 #include "init.h"
 
-#define CHR_HARD1   (char)141
-#define CHR_HARD2   (char)10
+#define CHR_HARD1   ((char)13)
+#define CHR_HARD2   ((char)10)
 
-#define CHR_SOFT1   (char)13
-#define CHR_SOFT2   (char)10
+#define CHR_SOFT1   ((char)141)
+#define CHR_SOFT2   ((char)10)
 
 HARBOUR HB_MEMOTRAN(void);
-
 
 HB_INIT_SYMBOLS_BEGIN( Memotran__InitSymbols )
 { "MEMOTRAN", FS_PUBLIC, HB_MEMOTRAN, 0 }
@@ -85,34 +83,54 @@ HB_INIT_SYMBOLS_END( Memotran__InitSymbols );
 #pragma startup Memotran__InitSymbols
 #endif
 
-char *hb_memotran( char *string, char *hardcr, char *softcr )
+/* Note: pszResult must have an allocated buffer of at least */
+/*       ulStringLen */
+
+void hb_memotran( char *pszResult, ULONG *ulResultLen, char *pszString, ULONG ulStringLen, char cHardcr, char cSoftcr )
 {
-   char *s;
+   ULONG ulStringPos = 0;
+   ULONG ulResultPos = 0;
 
-   if( string )
+   while (ulStringPos < ulStringLen)
    {
-      for( s = string; *s; ++s )
+      if      ( pszString[ ulStringPos     ] == CHR_HARD1 &&
+                pszString[ ulStringPos + 1 ] == CHR_HARD2 )
       {
-         if( *s == CHR_HARD1 && *(s+1) == CHR_HARD2 )
-            *s++ = *hardcr;
-         if( *s == CHR_SOFT1 && *(s+1) == CHR_SOFT2 )
-            *s++ = *softcr;
+         pszResult[ ulResultPos++ ] = cHardcr;
+         ulStringPos += 2;
       }
-
-      *s = '\0';
+      else if ( pszString[ ulStringPos     ] == CHR_SOFT1 &&
+                pszString[ ulStringPos + 1 ] == CHR_SOFT2 )
+      {
+         pszResult[ ulResultPos++ ] = cSoftcr;
+         ulStringPos += 2;
+      }
+      else
+      {
+         pszResult[ ulResultPos++ ] = pszString[ ulStringPos++ ];
+      }
    }
-   return string;
+
+   pszResult[ ulResultPos ] = '\0';
+
+   *ulResultLen = ulResultPos;
 }
 
 HARBOUR HB_MEMOTRAN( void )
 {
    if( ISCHAR( 1 ) )
    {
-      char *hardcr  = ISCHAR( 2 ) ? hb_parc( 2 ):";";
-      char *softcr  = ISCHAR( 3 ) ? hb_parc( 3 ):" ";
+      char *pszResult = (char *) hb_xgrab ( hb_parclen( 1 ) + 1 );
+      char cHardcr = ISCHAR( 2 ) ? *hb_parc( 2 ) : ';';
+      char cSoftcr = ISCHAR( 3 ) ? *hb_parc( 3 ) : ' ';
+      ULONG ulResultLen;
 
-      hb_retc( hb_memotran( hb_parc( 1 ), hardcr, softcr ) );
+      hb_memotran( pszResult, &ulResultLen, hb_parc( 1 ), hb_parclen( 1 ), cHardcr, cSoftcr );
+      hb_retclen( pszResult, ulResultLen );
+
+      hb_xfree( pszResult );
    }
    else
-     hb_retc( "" );
+      hb_retc( "" );
 }
+
