@@ -1,3 +1,10 @@
+2001-09-13 06:02 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * source/vm/arrays.c
+     ! hb_arraySize() fixed. Now it will do nothing if the passed size 
+       equals with the size of passed array. Caused mem. alloc. error 
+       with empty arrays. Reported by Brian Hays.
+
 2001-09-11 10:37 GMT Dave Pearson <davep@davep.org>
    * source/rtl/profiler.prg
      * Renamed classes from HB_* to HB*.

@@ -152,42 +152,46 @@ BOOL hb_arraySize( PHB_ITEM pArray, ULONG ulLen )
    if( HB_IS_ARRAY( pArray ) )
    {
       PHB_BASEARRAY pBaseArray = pArray->item.asArray.value;
-      ULONG ulPos;
 
-      if( ! pBaseArray->ulLen )
+      if( ulLen != pBaseArray->ulLen )
       {
-         pBaseArray->pItems = ( PHB_ITEM ) hb_xgrab( ulLen * sizeof( HB_ITEM ) );
+         ULONG ulPos;
 
-         for( ulPos = 0; ulPos < ulLen; ulPos++ )
-            ( pBaseArray->pItems + ulPos )->type = HB_IT_NIL;
-      }
-      else
-      {
-         if( pBaseArray->ulLen < ulLen )
+         if( pBaseArray->ulLen == 0 )
          {
-            pBaseArray->pItems = ( PHB_ITEM ) hb_xrealloc( pBaseArray->pItems, sizeof( HB_ITEM ) * ulLen );
-
-            /* set value for new items */
-            for( ulPos = pBaseArray->ulLen; ulPos < ulLen; ulPos++ )
+            pBaseArray->pItems = ( PHB_ITEM ) hb_xgrab( ulLen * sizeof( HB_ITEM ) );
+         
+            for( ulPos = 0; ulPos < ulLen; ulPos++ )
                ( pBaseArray->pItems + ulPos )->type = HB_IT_NIL;
          }
-         else if( pBaseArray->ulLen > ulLen )
+         else
          {
-            /* release old items */
-            for( ulPos = ulLen; ulPos < pBaseArray->ulLen; ulPos++ )
-               hb_itemClear( pBaseArray->pItems + ulPos );
-
-            if( ulLen == 0 )
+            if( pBaseArray->ulLen < ulLen )
             {
-               hb_xfree( pBaseArray->pItems );
-               pBaseArray->pItems = NULL;
-            }
-            else
                pBaseArray->pItems = ( PHB_ITEM ) hb_xrealloc( pBaseArray->pItems, sizeof( HB_ITEM ) * ulLen );
+         
+               /* set value for new items */
+               for( ulPos = pBaseArray->ulLen; ulPos < ulLen; ulPos++ )
+                  ( pBaseArray->pItems + ulPos )->type = HB_IT_NIL;
+            }
+            else if( pBaseArray->ulLen > ulLen )
+            {
+               /* release old items */
+               for( ulPos = ulLen; ulPos < pBaseArray->ulLen; ulPos++ )
+                  hb_itemClear( pBaseArray->pItems + ulPos );
+         
+               if( ulLen == 0 )
+               {
+                  hb_xfree( pBaseArray->pItems );
+                  pBaseArray->pItems = NULL;
+               }
+               else
+                  pBaseArray->pItems = ( PHB_ITEM ) hb_xrealloc( pBaseArray->pItems, sizeof( HB_ITEM ) * ulLen );
+            }
          }
+         
+         pBaseArray->ulLen = ulLen;
       }
-
-      pBaseArray->ulLen = ulLen;
 
       return TRUE;
    }
