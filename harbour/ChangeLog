@@ -1,3 +1,9 @@
+19990517-16:05 CET Eddie Runia
+  * source/rtl/classes.c, source/rtl/tclass.prg, include/extend.h
+    Initializers for DATA items added
+  * tests/working/clasinit.prg
+    Test program added
+
 19990516-20:20 EDT David G. Holm <dholm@jsd-llc.com>
   * source/rtl/dates.c
     - Modified CTOD to perform date validation to only allow dates in the

@@ -151,6 +151,8 @@ char *hb_arrayGetString( PITEM pArray, ULONG ulIndex ); /* retrieves the string 
 ULONG hb_arrayGetStringLen( PITEM pArray, ULONG ulIndex ); /* retrieves the string length contained on an array element */
 int  hb_arrayGetType( PITEM pArray, ULONG ulIndex );
 void hb_arrayDel( PITEM pArray, ULONG ulIndex );
+PITEM hb_arrayClone( PITEM pArray );
+void hb_arrayAdd( PITEM pArray, PITEM pItemValue );
 
 int  hb_itemStrCmp( PITEM pFirst, PITEM pSecond, BOOL bForceExact ); /* our string compare */
 BOOL hb_strempty( char * szText, ULONG ulLen );

@@ -6,6 +6,9 @@
 #define MET_INLINE    3
 #define MET_VIRTUAL   4
 
+#define DAT_SYMBOL    1
+#define DAT_INITVAL   2
+
 //----------------------------------------------------------------------------//
 
 function TClass()
@@ -68,8 +71,9 @@ static function Create()
    ::hClass = hClass
 
    for n = 1 to nLen
-      ClassAdd( hClass, ::aDatas[ n ], n, MET_DATA )
-      ClassAdd( hClass, "_" + ::aDatas[ n ], n, MET_DATA )
+      ClassAdd( hClass, ::aDatas[ n ][ DAT_SYMBOL ], n, MET_DATA, ;
+                        ::aDatas[ n ][ DAT_INITVAL ] )
+      ClassAdd( hClass, "_" + ::aDatas[ n ][ DAT_SYMBOL ], n, MET_DATA )
    next
 
    nLen = Len( ::aMethods )
@@ -106,11 +110,11 @@ return ClassInstance( ::hClass )
 
 //----------------------------------------------------------------------------//
 
-static function AddData( cData )
+static function AddData( cData, xInit )         /* xInit is initializer     */
 
    local Self := QSelf()
 
-   AAdd( ::aDatas, cData )
+   AAdd( ::aDatas, { cData, xInit } )
 
 return nil
 

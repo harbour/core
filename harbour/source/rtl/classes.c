@@ -10,8 +10,6 @@ void PushNil( void );
 void PushSymbol( PSYMBOL );
 void Message( PSYMBOL );
 void Do( WORD wParams );
-void hb_arrayDel( PITEM, ULONG );
-PITEM hb_arrayClone( PITEM );
 
 #define MET_METHOD    0
 #define MET_DATA      1
@@ -25,7 +23,7 @@ typedef struct
    HARBOURFUNC pFunction;
    WORD    wData;
    WORD    wScope;
-   WORD    wInitValue;
+   PITEM   pInitValue;
 } METHOD, * PMETHOD;
 
 typedef struct
@@ -37,7 +35,7 @@ typedef struct
    WORD    wHashKey;
    ITEM    aClassDatas;  /* Array for ClassDatas */
    ITEM    aInlines;     /* Array for inline codeblocks */
-   ITEM    aInitValues;  /* Array for Datas init values */
+/*   ITEM    aInitValues;  */ /* Array for Datas init values */
 } CLASS, * PCLASS;
 
 #define BUCKET 4
@@ -67,7 +65,7 @@ HARBOUR CLASSCREATE() /* cClassName, nDatas --> hClass */
 
    pClasses[ wClasses ].aClassDatas.wType = IT_NIL;
    pClasses[ wClasses ].aInlines.wType = IT_NIL;
-   pClasses[ wClasses ].aInitValues.wType = IT_NIL;
+/*   pClasses[ wClasses ].aInitValues.wType = IT_NIL; */
 
    hb_arrayNew( &pClasses[ wClasses ].aClassDatas, 0 );
    hb_arrayNew( &pClasses[ wClasses ].aInlines,    0 );
@@ -141,7 +139,8 @@ static HARBOUR GetData( void )
    PITEM pObject = stack.pBase + 1;
    WORD  wIndex  = pMethod->wData;
 
-   if( wIndex > hb_arrayLen ( pObject ) )       /* Resize needed            */
+   if( wIndex > ( WORD ) hb_arrayLen ( pObject ) )
+                                                /* Resize needed            */
       hb_arraySize( pObject, wIndex );          /* Make large enough        */
    hb_arrayGet( pObject, wIndex, &stack.Return );
 }
@@ -151,7 +150,8 @@ static HARBOUR SetData( void )
    PITEM pObject = stack.pBase + 1;
    WORD  wIndex  = pMethod->wData;
 
-   if( wIndex > hb_arrayLen( pObject ) )        /* Resize needed            */
+   if( wIndex > ( WORD ) hb_arrayLen( pObject ) )
+                                                /* Resize needed            */
       hb_arraySize( pObject, wIndex );          /* Make large enough        */
    hb_arraySet( pObject, wIndex, stack.pBase + 2 );
 }
@@ -306,10 +306,12 @@ static HARBOUR ClassSel()
    _xfree( pReturn );
 }
 
-HARBOUR CLASSADD() /* hClass, cMessage, pFunction, nType */
+HARBOUR CLASSADD() /* hClass, cMessage, pFunction, nType, xInit */
 {
    WORD wClass = _parnl( 1 );
    WORD wType  = _parni( 4 );
+   WORD    wAt, wLimit;
+   PITEM   pInit  = _param( 5, IT_ANY );
    PCLASS pClass;
    PDYNSYM pMessage;
    WORD wAt, wLimit;
@@ -343,12 +345,19 @@ HARBOUR CLASSADD() /* hClass, cMessage, pFunction, nType */
                  if( pMessage->pSymbol->szName[ 0 ] == '_' )
                     pClass->pMethods[ wAt ].pFunction = SetData;
                  else
-                    pClass->pMethods[ wAt ].pFunction = GetData;
+                 {
+                    pClass->pMethods[ wAt ].pFunction  = GetData;
+                    if( pInit && !IS_NIL( pInit ) )
+                    {                           /* Initializer found        */
+                       pClass->pMethods[ wAt ].pInitValue = hb_itemNew( NULL );
+                       ItemCopy( pClass->pMethods[ wAt ].pInitValue, pInit );
+                    }
+                 }
                  break;
 
             case MET_CLASSDATA:
                  pClass->pMethods[ wAt ].wData = _parnl( 3 );
-                 if( hb_arrayLen( &pClass->aClassDatas ) < _parnl( 3 ) )
+                 if( ( WORD ) hb_arrayLen( &pClass->aClassDatas ) < _parnl( 3 ) )
                     hb_arraySize( &pClass->aClassDatas, _parnl( 3 ) );
 
                  if( pMessage->pSymbol->szName[ 0 ] == '_' )
@@ -402,12 +411,26 @@ HARBOUR CLASSNAME() /* hClass --> cClassName */
 
 HARBOUR CLASSINSTANCE() /* hClass --> oNewObject */
 {
-   WORD wClass = _parni( 1 );
+   WORD   wClass = _parni( 1 );
+   WORD   wAt, wLimit;
+   PCLASS pClass;
 
    if( wClass <= wClasses )
    {
-      hb_arrayNew( &stack.Return, pClasses[ wClass - 1 ].wDatas );
+      pClass = pClasses + ( wClass - 1 );
+      hb_arrayNew( &stack.Return, pClass->wDatas );
       ( ( PBASEARRAY ) stack.Return.value.pBaseArray )->wClass = wClass;
+                                                /* Initialize DATA          */
+      wLimit = pClass->wHashKey * BUCKET;
+      for( wAt = 0; wAt < wLimit; wAt++ )
+      {
+         if( pClass->pMethods[ wAt ].pInitValue )
+         {
+            hb_itemArrayPut( &stack.Return,
+                             pClass->pMethods[ wAt ].wData,
+                             pClass->pMethods[ wAt ].pInitValue );
+         }
+      }
    }
    else
       _ret();
@@ -485,6 +508,14 @@ HARBOUR ISMESSAGE()     /* Is the message valid for the class               */
 
 void ReleaseClass( PCLASS pClass )
 {
+   WORD wAt;
+   WORD wLimit;
+
+   wLimit   = pClass->wHashKey * BUCKET;
+   for( wAt = 0; wAt < wLimit; wAt++ )          /* Release initializers     */
+      if( pClass->pMethods[ wAt ].pInitValue )
+         hb_itemRelease( pClass->pMethods[ wAt ].pInitValue );
+
    _xfree( pClass->szName );
    _xfree( pClass->pMethods );
 
@@ -631,7 +662,7 @@ HARBOUR CLASSDEL()      /* Delete message (only for INLINE and METHOD)      */
          pClass->pMethods[ wAt ].pMessage   = NULL;
          pClass->pMethods[ wAt ].wData      = NULL;
          pClass->pMethods[ wAt ].wScope     = NULL;
-         pClass->pMethods[ wAt ].wInitValue = NULL;
+         pClass->pMethods[ wAt ].pInitValue = NULL;
 
          pClass->wMethods--;                    /* Decrease number messages */
       }
