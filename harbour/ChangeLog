@@ -8,6 +8,18 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-06-21 17:00 UTC-0300 Walter Negro <anegro@overnet.com.ar>
+  * source\rtl\tbrowse.prg
+    + Initial support for SetStyle method, compatible with
+      Clipper 5.3.
+      See tbrowse.ch for support values.
+  * source\rtl\tbcolumn.prg
+    + Initial support for SetStyle method, compatible with
+      Clipper 5.3.
+      See tbrowse.ch for support values.
+  * include\tbrowse.ch
+    + Defines for TBrowse and TBColumn Classes
+
 2002-06-21 15:50 UTC-0300 Walter Negro <anegro@overnet.com.ar>
   * source\rtl\getsys.prg
     ! Fix call to SET() without setting values.
