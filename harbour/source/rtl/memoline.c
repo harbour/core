@@ -171,8 +171,6 @@ HB_FUNC( MEMOLINE )
 
       }
 
-      pszLine[ ulLineLength ] = '\0';
-
       hb_retclen_buffer( pszLine, ulLineLength );
    }
    else

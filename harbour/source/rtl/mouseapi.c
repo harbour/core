@@ -235,7 +235,7 @@ HB_FUNC( MSAVESTATE )
                   sizeof( int ) +
                   sizeof( int );
 
-   BYTE * pBuffer = ( BYTE * ) hb_xgrab( uiLen );
+   BYTE * pBuffer = ( BYTE * ) hb_xgrab( uiLen + 1 );
 
    hb_mouseGetBounds( &iTop, &iLeft, &iBottom, &iRight );
 
@@ -307,4 +307,3 @@ HB_FUNC( MSETBOUNDS )
 }
 
 #endif
-

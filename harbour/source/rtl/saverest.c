@@ -64,7 +64,7 @@ HB_FUNC( SAVESCREEN )
    void * pBuffer;
 
    hb_gtRectSize( uiTop, uiLeft, uiBottom, uiRight, &uiSize );
-   pBuffer = hb_xgrab( uiSize );
+   pBuffer = hb_xgrab( uiSize + 1 );
 
    hb_gtSave( uiTop, uiLeft, uiBottom, uiRight, pBuffer );
    hb_retclen_buffer( ( char * ) pBuffer, uiSize );
@@ -79,4 +79,3 @@ HB_FUNC( RESTSCREEN )
                  ISNUM( 4 ) ? hb_parni( 4 ) : hb_gtMaxCol(),
                  ( void * ) hb_parc( 5 ) );
 }
-
