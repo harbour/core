@@ -15,6 +15,7 @@
 #include "y_tab.h"
 #include "hbsetup.h"    /* main configuration file */
 #include "hberrors.h"
+#include "types.h"
 
 void yyerror( char * );
 static void yyunput( int, char * );
@@ -43,8 +44,14 @@ void DefineKey( char * szKey );     /* add a new key to a #define expression */
 void AddDefine( char * szDefine, char * szValue ); /* add a new define from the command line */
 PDEFINE FindDef( char * szText );   /* finds a #define */
 
+/* variables defined in harbour.y */
 extern int _iQuiet;
 extern int _iRestrictSymbolLength;
+extern WORD _wSeqCounter;
+extern WORD _wForCounter;
+extern WORD _wIfCounter;
+extern WORD _wWhileCounter;
+extern WORD _wCaseCounter;
 
 PDEFINE pDefs = 0;                  /* support for #defines */
 int iLine = 1;
@@ -285,9 +292,23 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
 %{
 /* ************************************************************************ */
 %}
-"else"         _iState =ELSE; return ELSE; /* ELSE can be used in one contex only */
-"elseif"       _iState =ELSEIF; return ELSEIF; /* ELSEIF can be used in one context only */
-"end"{Separator}+"sequ"("ence"|"enc"|"en"|"e")?        return END;
+"else"         { /* ELSE can be used in one context only */
+                 if( _wIfCounter == 0 )
+                   GenError( ERR_UNMATCHED_ELSE, NULL, NULL );
+                 _iState =ELSE;
+                 return ELSE;
+               }
+"elseif"       { /* ELSEIF can be used in one context only */
+                 if( _wIfCounter == 0 )
+                   GenError( ERR_UNMATCHED_ELSEIF, NULL, NULL );
+                 _iState =ELSEIF;
+                 return ELSEIF;
+               }
+"end"{Separator}+"sequ"("ence"|"enc"|"en"|"e")?  {
+                 if( _wSeqCounter == 0 )
+                   GenError( ERR_ENDIF, NULL, NULL );
+                 return END;
+               }
 "end"          { BEGIN END_; }
 <END_>{Separator}*[\[\(] { /* array, function call */
                yy_lex_count_lf();
@@ -342,9 +363,21 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
 %{
 /* ************************************************************************ */
 %}
-"endif"        return ENDIF;
-"endcase"      return ENDCASE;
-"enddo"        return ENDDO;
+"endif"|"endi" { /* ENDIF can be used in one context only */
+                 if( _wIfCounter == 0 )
+                   GenError( ERR_ENDIF, NULL, NULL );
+                 return ENDIF;
+               }
+"endc"("ase"|"as"|"a")? { /* ENDCASE can be used in one context only */
+                 if( _wWhileCounter == 0 )
+                   GenError( ERR_ENDCASE, NULL, NULL );
+                 return ENDCASE;
+               }
+"enddo"|"endd" { /* ENDDO can be used in one context only */
+                 if( _wWhileCounter == 0 )
+                   GenError( ERR_ENDDO, NULL, NULL );
+                 return ENDDO;
+               }
 "exit"/[\n\;]  return EXITLOOP;
 "exit"         return EXIT;
 "extern"|"external" _iState =EXTERN; return EXTERN;
@@ -368,6 +401,8 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
                if( _iState == LOOKUP )
                { /* it is first item in the line */
                  ++iLine;
+                 if( _wForCounter == 0 )
+                   GenError( ERR_NEXTFOR, NULL, NULL );
                  _iState =NEXT;
                  return NEXT;
                }
@@ -413,6 +448,8 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
 <NEXT_>{Separator}*. { /* an identifier follows NEXT statement */
                yy_lex_count_lf();
                BEGIN 0;
+               if( _wForCounter == 0 )
+                 GenError( ERR_NEXTFOR, NULL, NULL );
                unput( yytext[ yyleng-1 ] );
                _iState =NEXT;
                return NEXT;
@@ -560,8 +597,8 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
 "^="           _iState =EXPEQ; return EXPEQ;
 "%="           _iState =MODEQ; return MODEQ;
 "**"|"^"       _iState =POWER; return POWER;
-"."[t|y]"."    return TRUE;
-"."[f|n]"."    return FALSE;
+"."[t|y]"."    return TRUEVALUE;
+"."[f|n]"."    return FALSEVALUE;
 ".and."        return AND;
 ".or."         return OR;
 "!"|".not."    return NOT;

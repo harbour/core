@@ -55,7 +55,12 @@ typedef struct
    int   iFiles;        /* number of files currently opened */
 } FILES;                /* structure to control several opened PRGs and CHs */
 
-int Include( char * szFileName );  /* end #include support */
+typedef struct _PATHNAMES { /* the list of pathnames to search with #include */
+  char *szPath;
+  struct _PATHNAMES *pNext;
+} PATHNAMES;
+
+int Include( char * szFileName, PATHNAMES *pSearchPath );  /* end #include support */
 
 /*
  * flags for bFlags member
@@ -233,7 +238,10 @@ char * _szErrors[] = { "Statement not allowed outside of procedure or function",
                        "ENDDO does not match WHILE",
                        "ENDCASE does not match DO CASE",
                        "NEXT does not match FOR",
-                       "Syntax error: \'%s\'"
+                       "ELSE does not match IF",
+                       "ELSEIF does not match IF",
+                       "Syntax error: \'%s\'",
+                       "Unclosed control structures"
                      };
 
 /* Table with reserved functions names
@@ -330,6 +338,7 @@ int EXTERNAL_LINKAGE sz_compare4( const void *pLookup, const void *pReserved )
 #define RESERVED_FUNC(szName) \
  bsearch( (szName), _szReservedFun, RESERVED_FUNCTIONS, sizeof(char*), sz_compare4 )
 
+
 FILES files;
 FUNCTIONS functions, funcalls;
 PFUNCTION _pInitFunc;
@@ -341,12 +350,18 @@ int _iSyntaxCheckOnly = 0; /* syntax check only */
 int _iLanguage = LANG_C;   /* default Harbour generated output language */
 int _iRestrictSymbolLength = 0; /* generate 10 chars max symbols length */
 int _iShortCuts = 1;       /* .and. & .or. expressions shortcuts */
+WORD _wSeqCounter   = 0;
+WORD _wForCounter   = 0;
+WORD _wIfCounter    = 0;
+WORD _wWhileCounter = 0;
+WORD _wCaseCounter  = 0;
 #ifdef OBJ_GENERATION
 int _iObj32 = 0;           /* generate OBJ 32 bits */
 #endif
 WORD _wStatics = 0;        /* number of defined statics variables on the PRG */
 PRETURN pReturns = 0;      /* list of multiple returns from a function */
 PEXTERN pExterns = 0;
+PATHNAMES *_pIncludePath = NULL;
 
 %}
 
@@ -360,7 +375,7 @@ PEXTERN pExterns = 0;
 };
 
 %token FUNCTION PROCEDURE IDENTIFIER RETURN NIL DOUBLE INASSIGN INTEGER INTLONG
-%token LOCAL STATIC IF ELSE ELSEIF END ENDIF LITERAL TRUE FALSE
+%token LOCAL STATIC IF ELSE ELSEIF END ENDIF LITERAL TRUEVALUE FALSEVALUE
 %token INCLUDE EXTERN INIT EXIT AND OR NOT PUBLIC EQ NE1 NE2
 %token INC DEC ALIAS DOCASE CASE OTHERWISE ENDCASE ENDDO MEMVAR
 %token WHILE EXIT LOOP END FOR NEXT TO STEP LE GE FIELD IN PARAMETERS
@@ -424,7 +439,7 @@ Source     : Crlf
            | Source MEMVAR IdentList
            ;
 
-Include    : NE1 INCLUDE LITERAL { if( ! Include( $3 ) )
+Include    : NE1 INCLUDE LITERAL { if( ! Include( $3, _pIncludePath ) )
                                       GenError( ERR_CANT_OPEN_INCLUDE, $3, NULL );
                                  } Crlf
            ;
@@ -689,8 +704,8 @@ Operators  : Expression '='    Expression   { GenPCode1( _EQUAL ); } /* compare 
            | VarAssign
            ;
 
-Logical    : TRUE                                   { $$ = 1; }
-           | FALSE                                  { $$ = 0; }
+Logical    : TRUEVALUE                                   { $$ = 1; }
+           | FALSEVALUE                                  { $$ = 0; }
            ;
 
 Array      : '{' ElemList '}'                       { GenArray( $2 ); }
@@ -774,7 +789,7 @@ IfEndif    : IfBegin EndIf                    { JumpHere( $1 ); }
            | IfBegin IfElseIf IfElse EndIf    { JumpHere( $1 ); FixElseIfs( $2 ); }
            ;
 
-IfBegin    : IF Expression Crlf { $$ = JumpFalse( 0 ); } IfStats
+IfBegin    : IF Expression Crlf { $$ = JumpFalse( 0 ); ++_wIfCounter; } IfStats
                 { $$ = Jump( 0 ); JumpHere( $<iNumber>4 ); }
            ;
 
@@ -788,8 +803,8 @@ IfElseIf   : ELSEIF Expression Crlf { $<iNumber>$ = JumpFalse( 0 ); }
                 IfStats { $$ = GenElseIf( $1, Jump( 0 ) ); JumpHere( $<iNumber>5 ); }
            ;
 
-EndIf      : ENDIF
-           | END
+EndIf      : ENDIF                 { --_wIfCounter; }
+           | END                   { --_wIfCounter; }
            ;
 
 IfStats    : /* no statements */
@@ -813,11 +828,11 @@ DoCase     : DoCaseBegin
              EndCase                   { FixElseIfs( $2 ); }
            ;
 
-EndCase    : ENDCASE
-           | END
+EndCase    : ENDCASE              { --_wCaseCounter; }
+           | END                  { --_wCaseCounter; }
            ;
 
-DoCaseBegin : DOCASE Crlf
+DoCaseBegin : DOCASE Crlf         { ++_wCaseCounter; }
            ;
 
 Cases      : CASE Expression Crlf { $<iNumber>$ = JumpFalse( 0 ); Line(); } CaseStmts { $$ = GenElseIf( 0, Jump( 0 ) ); JumpHere( $<iNumber>4 ); Line(); }
@@ -833,14 +848,14 @@ CaseStmts  : /* no statements */
 
 DoWhile    : WhileBegin Expression Crlf { $<lNumber>$ = JumpFalse( 0 ); }
                 { Jump( $1 - functions.pLast->lPCodePos ); }
-             EndWhile { JumpHere( $<lNumber>4 ); }
+             EndWhile { JumpHere( $<lNumber>4 ); --_wWhileCounter; }
 
            | WhileBegin Expression Crlf { $<lNumber>$ = JumpFalse( 0 ); Line(); }
                 WhileStatements { Jump( $1 - functions.pLast->lPCodePos ); }
-             EndWhile  { JumpHere( $<lNumber>4 ); }
+             EndWhile  { JumpHere( $<lNumber>4 ); --_wWhileCounter; }
            ;
 
-WhileBegin : WHILE    { $$ = functions.pLast->lPCodePos; }
+WhileBegin : WHILE    { $$ = functions.pLast->lPCodePos; ++_wWhileCounter; }
            ;
 
 WhileStatements : Statement
@@ -851,7 +866,7 @@ EndWhile   : END
            | ENDDO
            ;
 
-ForNext    : FOR IDENTIFIER ForAssign Expression { PopId( $2 ); $<iNumber>$ = functions.pLast->lPCodePos; }
+ForNext    : FOR IDENTIFIER ForAssign Expression { PopId( $2 ); $<iNumber>$ = functions.pLast->lPCodePos; ++_wForCounter;}
              TO Expression                       { PushId( $2 ); }
              StepExpr Crlf                       { GenPCode1( _FORTEST ); $<iNumber>$ = JumpTrue( 0 ); PushId( $2 ) }
              ForStatements                       { GenPCode1( _PLUS ); PopId( $2 ); Jump( $<iNumber>5 - functions.pLast->lPCodePos ); JumpHere( $<iNumber>11 ); }
@@ -865,23 +880,23 @@ StepExpr   : /* default step expression */       { PushInteger( 1 ); }
            | STEP Expression
            ;
 
-ForStatements : ForStat NEXT
-           | ForStat NEXT IDENTIFIER
-           | NEXT
-           | NEXT IDENTIFIER
+ForStatements : ForStat NEXT                     { --_wForCounter; }
+           | ForStat NEXT IDENTIFIER             { --_wForCounter; }
+           | NEXT                                { --_wForCounter; }
+           | NEXT IDENTIFIER                     { --_wForCounter; }
            ;
 
 ForStat    : Statements                          { Line(); }
            ;
 
-BeginSeq   : BEGINSEQ Crlf
+BeginSeq   : BEGINSEQ Crlf { ++_wSeqCounter; }
                 RecoverSeq
-             END
+             END           { --_wSeqCounter; }
 
-           | BEGINSEQ Crlf
+           | BEGINSEQ Crlf { ++_wSeqCounter; }
                 Statements
                 RecoverSeq
-             END
+             END           { --_wSeqCounter; }
            ;
 
 RecoverSeq : /* no recover */
@@ -955,7 +970,7 @@ int harbour_main( int argc, char * argv[] )
 {
    int iStatus = 0, iArg = 1;
    char szFileName[ _POSIX_PATH_MAX ];    /* filename to parse */
-   char *szPath ="";
+   char *szOutPath ="";
    FILENAME *pFileName =NULL;
 
    if( argc > 1 )
@@ -1030,6 +1045,27 @@ int harbour_main( int argc, char * argv[] )
                     }
                     break;
 
+               case 'i':
+               case 'I':
+                    {
+                      PATHNAMES *pPath = _pIncludePath;
+
+                      if( pPath )
+                      {
+                        while( pPath->pNext )
+                          pPath =pPath->pNext;
+                        pPath->pNext =(PATHNAMES *)OurMalloc( sizeof(PATHNAMES) );
+                        pPath =pPath->pNext;
+                      }
+                      else
+                      {
+                        _pIncludePath = pPath =(PATHNAMES *)OurMalloc( sizeof(PATHNAMES) );
+                      }
+                      pPath->pNext  = NULL;
+                      pPath->szPath = argv[ iArg ]+2;
+                    }
+                    break;
+
                case 'l':
                case 'L':
                     _iLineNumbers = 0;
@@ -1042,7 +1078,7 @@ int harbour_main( int argc, char * argv[] )
 
                case 'o':
                case 'O':
-                    szPath = argv[ iArg ]+2;
+                    szOutPath = argv[ iArg ]+2;
                     break;
 
                case 'q':
@@ -1107,7 +1143,7 @@ int harbour_main( int argc, char * argv[] )
 
       atexit( close_on_exit );
 
-      if( Include( szFileName ) )
+      if( Include( szFileName, NULL ) )
       {
          FunDef( strupr( strdup( pFileName->name ) ), FS_PUBLIC, FUN_PROCEDURE );
          yyparse();
@@ -1120,7 +1156,7 @@ int harbour_main( int argc, char * argv[] )
          if( ! _iSyntaxCheckOnly && ! _iObj32 )
 #else
          if( ! _iSyntaxCheckOnly )
-#endif	 
+#endif
          {
             if( _pInitFunc )
             {
@@ -1138,7 +1174,7 @@ int harbour_main( int argc, char * argv[] )
             }
 
             /* we create a the output file */
-            pFileName->path = szPath;
+            pFileName->path = szOutPath;
             switch( _iLanguage )
             {
                case LANG_C:
@@ -1205,6 +1241,7 @@ void PrintUsage( char * szSelf )
           "\t\t\t /gj (Java)      --> <file.java>\n"
           "\t\t\t /gp (Pascal)    --> <file.pas>\n"
           "\t\t\t /gr (Resources) --> <file.rc>\n"
+          "\t/i<path>\tadd #include file search path\n"
           "\t/l\t\tsuppress line number information\n"
           "\t/n\t\tno implicit starting procedure\n"
           "\t/o<path>\tobject file drive and/or path\n"
@@ -1495,12 +1532,35 @@ PCOMSYMBOL AddSymbol( char * szSymbolName )
    return pSym;
 }
 
-int Include( char * szFileName )
+int Include( char * szFileName, PATHNAMES *pSearch )
 {
    PFILE pFile;
 
-   if( ! ( yyin = fopen( szFileName, "r" ) ) )
+  if( ! ( yyin = fopen( szFileName, "r" ) ) )
+  {
+    if( pSearch )
+    {
+      FILENAME *pFileName =SplitFilename( szFileName );
+      char szFName[ _POSIX_PATH_MAX ];    /* filename to parse */
+
+      pFileName->name =szFileName;
+      pFileName->extension =NULL;
+      while( pSearch && !yyin )
+      {
+        pFileName->path =pSearch->szPath;
+        MakeFilename( szFName, pFileName );
+        if( ! ( yyin = fopen( szFName, "r" ) ) )
+        {
+            pSearch = pSearch->pNext;
+            if( ! pSearch )
+              return 0;
+        }
+      }
+      OurFree( pFileName );
+    }
+    else
       return 0;
+  }
 
    if( ! _iQuiet )
       printf( "\nparsing file %s\n", szFileName );
@@ -2934,6 +2994,9 @@ void FixReturns( void ) /* fixes all last defined function returns jumps offsets
       }
       pReturns = 0;
    }
+
+   if( (_wSeqCounter + _wWhileCounter + _wIfCounter + _wCaseCounter + _wForCounter) > 0 )
+     GenError( ERR_UNCLOSED_STRU, NULL, NULL );
 }
 
 void Function( BYTE bParams )

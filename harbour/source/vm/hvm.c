@@ -138,7 +138,11 @@ typedef struct
    PSYMBOL pSymbols;              /* module local symbol table address */
 } OBJSYMBOLS, * POBJSYMBOLS;      /* structure used from Harbour generated OBJs */
 
+#ifdef __cplusplus
+extern "C" POBJSYMBOLS HB_FIRSTSYMBOL, HB_LASTSYMBOL;
+#else
 extern POBJSYMBOLS HB_FIRSTSYMBOL, HB_LASTSYMBOL;
+#endif
 #endif
 
 STACK stack;
@@ -1610,7 +1614,7 @@ void PushBlock( BYTE * pCode, WORD wSize, WORD wParam, PSYMBOL pSymbols )
 {
    ItemRelease( stack.pPos );
    stack.pPos->wType   = IT_BLOCK;
-   stack.pPos->value.pCodeblock = (BYTE *)CodeblockNew( pCode, wSize, pSymbols,
+   stack.pPos->value.pCodeblock = CodeblockNew( pCode, wSize, pSymbols,
       stack.iStatics, stack.pBase - stack.pItems );
    /* store the stack base of function where the codeblock was defined */
    stack.pPos->wBase   = stack.pBase - stack.pItems;

@@ -46,6 +46,8 @@ void VirtualMachine( PBYTE pCode, PSYMBOL pSymbols );  /* invokes the virtual ma
 #define IT_NUMERIC  ( IT_INTEGER | IT_LONG | IT_DOUBLE )
 #define IT_ANY       0xFFFF
 
+struct _CODEBLOCK;	/* forward declaration */
+
 typedef struct     /* items hold at the virtual machine stack */
 {
    WORD wType;     /* type of the item */
@@ -59,7 +61,7 @@ typedef struct     /* items hold at the virtual machine stack */
 	  int iLogical;    /* logical values */
 	  long lDate;      /* date values */
 	  PSYMBOL pSymbol; /* functions call symbol */
-	  BYTE * pCodeblock;/* pointer to a codeblock structure */
+	  struct _CODEBLOCK * pCodeblock;/* pointer to a codeblock structure */
 	  WORD wItem;      /* variable by reference, stack offset */
 	  void * pBaseArray; /* array base */
    } value;
@@ -97,7 +99,7 @@ typedef struct
 } DYNSYM, * PDYNSYM;    /* dynamic symbol structure */
 
 /* internal structure for codeblocks */
-typedef struct
+typedef struct _CODEBLOCK
 {
   BYTE * pCode;       /* codeblock pcode */
   PITEM pItems;       /* table with referenced local variables */

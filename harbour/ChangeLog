@@ -1,3 +1,19 @@
+19990518-01:45 Ryszard Glab <rglab@imid.med.pl>
+
+	* source/compiler/harbour.l, source/compiler/harbour.y
+	-added support for '-i' option (#include file search path)
+	however it doesn't use SET INCLUDE environment variable yet
+	-added error messages if unmatched ENDDO, ENDCASE, ENDIF, NEXT
+	is found
+
+	* include/extend.h
+	-added forward declaration of CODEBLOCK structure and added
+	the proper type for pCodeblock member of ITEM structure
+
+	* source/vm/hvm.c
+	-corrected pCodeblock type casting
+	-added C++ style declaration of HB_FIRSTSYMBOL and HB_LASTSYMBOL
+
 19990517-16:05 CET Eddie Runia
   * source/rtl/classes.c, source/rtl/tclass.prg, include/extend.h
     Initializers for DATA items added
