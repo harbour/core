@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-07-18 19:50 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * contrib/mysql/mysql.c
+    * Some fixes and formatting.
+
 2004-07-18 13:05 UTC+0300 Chen Kedem <niki@actcom.co.il>
   * doc/whatsnew.txt
     + Add information about the upcoming alpha build 44
