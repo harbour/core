@@ -1,3 +1,9 @@
+19990526-13:30 EST David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/dates.c
+    - Added hb_dow and HARBOUR DOW() supplied by Jose Lalin <dezac@corevia.com>
+  + tests/working/dates3.prg
+    - New file to test DOW() supplied by Jose Lalin <dezac@corevia.com>
+
 19990526-17:25 Eddie Runia
   * tests/working/strip.prg
     delete broken one and moved working one in

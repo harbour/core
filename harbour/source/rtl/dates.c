@@ -11,6 +11,11 @@
    #define _OPTIMIZE_DTOS
 #endif
 
+/*
+ADJ is 7 for ISO, 6 for no ISO
+*/
+#define ADJ 7
+
 extern STACK stack;
 
 long hb_dateEncode( long lDay, long lMonth, long lYear )
@@ -444,6 +449,39 @@ oTime->tm_mday);
       /* QUESTION: Clipper catches this at compile time! */
       PITEM pError = _errNew();
       _errPutDescription(pError, "Incorrect number of arguments: DATE");
+      _errLaunch(pError);
+      _errRelease(pError);
+   }
+}
+long hb_dow( long d, long m, long y )
+{
+
+   if( m < 3 )
+      {
+         m += 13;
+         y--;
+      }
+   else
+      m++;
+
+   return ( d + 26 * m / 10 + y + y / 4 - y / 100 + y / 400 + ADJ ) % 7;
+}
+
+HARBOUR DOW( void )
+{
+   PITEM pDate = _param( 1, IT_DATE );
+   long lDay, lMonth, lYear;
+
+   if( pDate )
+   {
+      hb_dateDecode( pDate->value.lDate, &lDay, &lMonth, &lYear );
+      _retnl( hb_dow( lDay, lMonth, lYear ) );
+      stack.Return.wLength = 3;
+   }
+   else
+   {
+      PITEM pError = _errNew();
+      _errPutDescription(pError, "Error BASE/1115  Argument error: DOW");
       _errLaunch(pError);
       _errRelease(pError);
    }
