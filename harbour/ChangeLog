@@ -1,3 +1,7 @@
+20000731-09:18 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+   * source/macro/macroslx.c
+     + added missing id tag
+
 20000731-09:00 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
    * source/macro/Makefile
      + added macroslx.c compilation instead of flex lexer if HB_LEX is set to SIMPLEX

@@ -1,3 +1,8 @@
+/*
+ * $Id$
+ */
+
+
 #define HB_MACRO_SUPPORT
 
 #include <stdio.h>
