@@ -1,3 +1,9 @@
+20000427-20:40 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/compiler/harbour.c
+	* changed hb_xgrab/hb_xrealloc to use sprintf in case
+	  unsuccessfull allocation only
+
 20000426 23:30 Luiz Rafael Culik <culik@sl.conex.net>
 !ChangeLog
     *Renamed ChangeLog to ChangeLog.007 and started a new one

@@ -339,12 +339,14 @@ int isatty( int handle )
 void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exits on failure */
 {
    void * pMem = malloc( ulSize );
-   char szSize [10];
-
-   sprintf( szSize, "%li", ulSize );
 
    if( ! pMem )
+   {
+      char szSize[ 32 ];
+
+      sprintf( szSize, "%li", ulSize );
       hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_MEMALLOC, szSize, NULL );
+   }
 
    return pMem;
 }
@@ -352,13 +354,14 @@ void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exits on fail
 void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
 {
    void * pResult = realloc( pMem, ulSize );
-   char szSize [10];
-
-   sprintf( szSize, "%li", ulSize );
-
    if( ! pResult )
-      hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_MEMREALLOC, szSize, NULL );
+   {
+      char szSize[ 32 ];
 
+      sprintf( szSize, "%li", ulSize );
+      hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_MEMREALLOC, szSize, NULL );
+   }
+   
    return pResult;
 }
 
