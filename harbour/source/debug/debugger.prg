@@ -243,7 +243,7 @@ ENDCLASS
 
 METHOD New() CLASS TDebugger
 
-   ::aColors := { "BG+/B", "BG+/B", "BG+/B", "N/BG", "N/W", "N/BG", "GR+/B",;
+   ::aColors := { "BG+/B", "BG+/B", "N/BG", "N/BG", "N/W", "N/BG", "GR+/B",;
                   "N/BG", "GR+/BG", "W+/N", "GR+/N" }
    ::lMonoDisplay   := .f.
    s_oDebugger := Self
@@ -256,8 +256,8 @@ METHOD New() CLASS TDebugger
    ::oWndCode:bKeyPressed := { | nKey | ::CodeWindowProcessKey( nKey ) }
    ::oWndCode:bGotFocus   := { || ::oGetListCommand:SetFocus(), SetCursor( SC_SPECIAL1 ) }
    ::oWndCode:bLostFocus  := { || SetCursor( SC_NONE ) }
-   ::oWndCode:bPainted = { || ::oBrwText:SetColor( __DbgColors()[ 3 ] + "," + ;
-                              __DbgColors()[ 4 ] + "," + __DbgColors()[ 5 ] ),;
+   ::oWndCode:bPainted = { || ::oBrwText:SetColor( __DbgColors()[ 2 ] + "," + ;
+                              __DbgColors()[ 3 ] + "," + __DbgColors()[ 4 ] ),;
                               If( ::oBrwText != nil, ::oBrwText:RefreshWindow(), nil ) }
 
    AAdd( ::aWindows, ::oWndCode )
@@ -700,6 +700,7 @@ METHOD HandleEvent() CLASS TDebugger
          case nKey == K_F5
               ::Go()
 
+
          case nKey == K_F8
               ::Step()
 
@@ -833,8 +834,8 @@ METHOD ShowCallStack() CLASS TDebugger
 
       ::oBrwStack:AddColumn( TBColumnNew( "",  { || PadC( ::aCallStack[ n ], 14 ) } ) )
       ::oBrwStack:ForceStable()
-      ::oWndStack:bPainted = { || ::oBrwStack:ColorSpec := __DbgColors()[ 3 ] + "," + ;
-                                 __DbgColors()[ 4 ] + "," + __DbgColors()[ 5 ],;
+      ::oWndStack:bPainted = { || ::oBrwStack:ColorSpec := __DbgColors()[ 2 ] + "," + ;
+                                 __DbgColors()[ 3 ] + "," + __DbgColors()[ 4 ],;
                                  ::oBrwStack:RefreshAll(), ::oBrwStack:ForceStable() }
       ::oWndStack:Show( .f. )
    endif
@@ -899,13 +900,13 @@ METHOD ShowVars( bSort, nType ) CLASS TDebugger
 
       ::oWndVars:bLButtonDown = { | nMRow, nMCol | ::WndVarsLButtonDown( nMRow, nMCol ) }
       ::oWndVars:bLDblClick = { | nMRow, nMCol | ::EditVar( n ) }
-      ::oWndVars:bPainted = { || ::oBrwVars:ColorSpec := __DbgColors()[ 3 ] + "," + ;
-                                 __DbgColors()[ 4 ] + "," + __DbgColors()[ 5 ],;
+      ::oWndVars:bPainted = { || ::oBrwVars:ColorSpec := __DbgColors()[ 2 ] + "," + ;
+                                 __DbgColors()[ 3 ] + "," + __DbgColors()[ 4 ],;
                                  ::oBrwVars:RefreshAll(), ::oBrwVars:ForceStable() }
 
       ::oBrwVars := TBrowseNew( 2, 1, 6, MaxCol() - iif( ::oWndStack != nil,;
                                ::oWndStack:nWidth(), 0 ) - 1 )
-      ::oBrwVars:ColorSpec := ::aColors[ 3 ] + "," + ::aColors[ 4 ] + "," + ::aColors[ 5 ]
+      ::oBrwVars:ColorSpec := ::aColors[ 2 ] + "," + ::aColors[ 3 ] + "," + ::aColors[ 4 ]
       ::LoadVars()
       ::oBrwVars:GoTopBlock := { || n := 1 }
       ::oBrwVars:GoBottomBlock := { || n := Len( ::aVars ) }
