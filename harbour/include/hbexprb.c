@@ -1265,6 +1265,53 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
              */
             if( pSelf->value.asFunCall.pParms )
                pSelf->value.asFunCall.pParms = HB_EXPR_USE( pSelf->value.asFunCall.pParms, HB_EA_REDUCE );
+         #ifndef HB_C52_STRICT
+            if( pSelf->value.asFunCall.pFunName->ExprType == HB_ET_FUNNAME )
+            {
+               HB_EXPR_PTR pName = pSelf->value.asFunCall.pFunName;
+               HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
+               HB_EXPR_PTR pReduced;
+               USHORT usCount;
+
+               if( pParms )
+               {
+                  usCount = ( USHORT ) hb_compExprListLen( pSelf->value.asFunCall.pParms );
+
+                  if( usCount == 1 && pParms->value.asList.pExprList->ExprType == HB_ET_NONE )
+                  {
+                     --usCount;
+                  }
+               }
+
+               #ifndef HB_MACRO_SUPPORT
+                  hb_compFunCallCheck( pName->value.asSymbol, usCount );
+               #endif
+
+               if( ( strcmp( "AT", pName->value.asSymbol ) == 0 ) && usCount == 2 )
+               {
+                  HB_EXPR_PTR pSub  = pParms->value.asList.pExprList;
+                  HB_EXPR_PTR pText = pSub->pNext;
+
+                  if( pSub->ExprType == HB_ET_STRING && pText->ExprType == HB_ET_STRING )
+                  {
+                     if( pSub->value.asString.string[0] == '\0' )
+                     {
+                        pReduced = hb_compExprNewLong( 1 );
+                     }
+                     else
+                     {
+                        pReduced = hb_compExprNewLong( hb_strAt( pSub->value.asString.string, pSub->ulLength, pText->value.asString.string, pText->ulLength ) );
+                     }
+
+                     HB_EXPR_PCODE1( hb_compExprDelete, pSelf->value.asFunCall.pFunName );
+                     HB_EXPR_PCODE1( hb_compExprDelete, pSelf->value.asFunCall.pParms );
+
+                     memcpy( pSelf, pReduced, sizeof( HB_EXPR ) );
+                     HB_XFREE( pReduced );
+                  }
+               }
+           }
+          #endif
          }
          break;
 

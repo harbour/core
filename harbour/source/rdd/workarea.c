@@ -843,16 +843,44 @@ ERRCODE hb_waRelEval( AREAP pArea, LPDBRELINFO pRelInfo )
 {
    int iCurrArea;
    PHB_ITEM pResult;
+   DBORDERINFO pInfo;
+   int iOrder;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_waRelEval(%p, %p)", pArea, pRelInfo));
 
    iCurrArea = hb_rddGetCurrentWorkAreaNumber();
    hb_rddSelectWorkAreaNumber( pRelInfo->lpaParent->uiArea );
    pResult = hb_vmEvalBlock( pRelInfo->itmCobExpr );
    hb_rddSelectWorkAreaNumber( iCurrArea );
-   if( SELF_SEEK( pArea, 0, pResult, 0 ) == SUCCESS )
-      return SUCCESS;
+
+   /*
+   *  Check the current order
+   */
+
+   pInfo.itmResult = hb_itemPutNI( NULL, 0 );
+   pInfo.itmOrder = NULL;
+   SELF_ORDINFO( pArea, DBOI_NUMBER, &pInfo );
+   iOrder = hb_itemGetNI( pInfo.itmResult );
+   hb_itemRelease( pInfo.itmResult );
+
+   if( iOrder != 0 )
+   {
+      if( SELF_SEEK( pArea, 0, pResult, 0 ) == SUCCESS )
+         return SUCCESS;
+      else
+         return FAILURE;
+   }
    else
-      return FAILURE;
+   {
+      /*
+      *  If current order equals to zero, use GOTO instead of SEEK
+      */
+
+      if( SELF_GOTO( pArea, hb_itemGetNI( pResult ) ) == SUCCESS )
+         return SUCCESS;
+      else
+         return FAILURE;
+   }
 }
 
 /*

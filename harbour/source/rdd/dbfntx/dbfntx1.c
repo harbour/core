@@ -2364,7 +2364,7 @@ static void hb_ntxBufferSave( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo )
 
 static BOOL hb_ntxReadBuf( NTXAREAP pArea, BYTE* readBuffer, USHORT* numRecinBuf, LPDBORDERCONDINFO lpdbOrdCondInfo )
 {
-   if( !lpdbOrdCondInfo || lpdbOrdCondInfo->fAll )
+   if( ( !lpdbOrdCondInfo || lpdbOrdCondInfo->fAll ) && !pArea->lpdbRelations )
    {
       if( *numRecinBuf == 10 )
          *numRecinBuf = 0;
@@ -2376,7 +2376,7 @@ static BOOL hb_ntxReadBuf( NTXAREAP pArea, BYTE* readBuffer, USHORT* numRecinBuf
       (*numRecinBuf) ++;
       return TRUE;
    }
-   else
+   else if( lpdbOrdCondInfo )
    {
       if( lpdbOrdCondInfo->lNextCount < 0 )
          return FALSE;
@@ -2400,6 +2400,7 @@ static BOOL hb_ntxReadBuf( NTXAREAP pArea, BYTE* readBuffer, USHORT* numRecinBuf
 
       return TRUE;
    }
+   return TRUE;
 }
 
 /* DJGPP can sprintf a float that is almost 320 digits long */
@@ -2472,14 +2473,14 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
    else
       sortInfo.sortBuffer = NULL;
 
-   if( !pArea->lpdbOrdCondInfo || pArea->lpdbOrdCondInfo->fAll )
+   if( ( !pArea->lpdbOrdCondInfo || pArea->lpdbOrdCondInfo->fAll ) && !pArea->lpdbRelations )
    {
       pRecordTmp = pArea->pRecord;
       fValidBuffer = pArea->fValidBuffer;
       pArea->fValidBuffer = TRUE;
       hb_fsSeek( pArea->hDataFile, pArea->uiHeaderLen, FS_SET );
    }
-   else if( pArea->lpdbOrdCondInfo->fUseCurrent )
+   else if( pArea->lpdbRelations || pArea->lpdbOrdCondInfo->fUseCurrent )
       SELF_GOTOP( ( AREAP ) pArea );
    for( ulRecNo = 1; ulRecNo <= ulRecCount; ulRecNo++)
    {
@@ -2587,9 +2588,11 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
             hb_vmSend( 0 );
          }
       }
+      else if( pArea->lpdbRelations )
+         SELF_SKIP( ( AREAP ) pArea, 1 );
    }
    hb_ntxSortKeyEnd( pTag, &sortInfo );
-   if( !pArea->lpdbOrdCondInfo || pArea->lpdbOrdCondInfo->fAll )
+   if( ( !pArea->lpdbOrdCondInfo || pArea->lpdbOrdCondInfo->fAll ) && !pArea->lpdbRelations )
    {
       pArea->pRecord = pRecordTmp;
       pArea->fValidBuffer = fValidBuffer;
