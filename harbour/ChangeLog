@@ -8,6 +8,17 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-10-20 07:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbdefs.h
+    + added macros HB_{PUT|GET}_{LONG|PTR}
+    * changed HB_CAST_BYTE_NUMBERS_OFF to HB_STRICT_ALIGNMENT
+
+  * harbour/source/vm/fm.c
+  * harbour/source/vm/hvm.c
+  * harbour/source/vm/macro.c
+    * replaced code which made pointer casting without respecting
+      machine alignment with proper macros
+
 2004-10-19 22:25 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/bin/hb-func.sh
     * changed 'sed' and 'tr' expresions to be compatible with SunOS

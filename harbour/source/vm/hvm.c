@@ -1358,9 +1358,9 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
                }
                else if( pCode[w] == HB_P_MPUSHSYM )
                {
-                  HB_DYNS_PTR *pDynSym = ( HB_DYNS_PTR * ) ( pCode + w + 1 );
+                  HB_DYNS_PTR pDynSym = ( HB_DYNS_PTR ) HB_GET_PTR( pCode + w + 1 );
 
-                  hb_vm_apExtraParamsSymbol[hb_vm_iExtraParamsIndex - 1] = ( *pDynSym )->pSymbol;
+                  hb_vm_apExtraParamsSymbol[hb_vm_iExtraParamsIndex - 1] = pDynSym->pSymbol;
                   w += sizeof( HB_DYNS_PTR ) + 1;
                }
                else
@@ -1492,35 +1492,35 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_MMESSAGE:
          {
-            HB_DYNS_PTR * pDynSym = ( HB_DYNS_PTR * ) ( pCode + w + 1 );
-            hb_vmPushSymbol( ( *pDynSym )->pSymbol );
+            HB_DYNS_PTR pDynSym = ( HB_DYNS_PTR) HB_GET_PTR( pCode + w + 1 );
+            hb_vmPushSymbol( pDynSym->pSymbol );
             w += sizeof( HB_DYNS_PTR ) + 1;
             break;
          }
 
          case HB_P_MPOPALIASEDFIELD:
          {
-            HB_DYNS_PTR * pDynSym = ( HB_DYNS_PTR * ) ( pCode + w + 1 );
-            hb_vmPopAliasedField( ( *pDynSym )->pSymbol );
+            HB_DYNS_PTR pDynSym = ( HB_DYNS_PTR ) HB_GET_PTR( pCode + w + 1 );
+            hb_vmPopAliasedField( pDynSym->pSymbol );
             w += sizeof( HB_DYNS_PTR ) + 1;
             break;
          }
 
          case HB_P_MPOPALIASEDVAR:
          {
-            HB_DYNS_PTR * pDynSym = ( HB_DYNS_PTR * ) ( pCode + w + 1 );
-            hb_vmPopAliasedVar( ( *pDynSym )->pSymbol );
+            HB_DYNS_PTR pDynSym = ( HB_DYNS_PTR ) HB_GET_PTR( pCode + w + 1 );
+            hb_vmPopAliasedVar( pDynSym->pSymbol );
             w += sizeof( HB_DYNS_PTR ) + 1;
             break;
          }
 
          case HB_P_MPOPFIELD:
          {
-            HB_DYNS_PTR * pDynSym = ( HB_DYNS_PTR * ) ( pCode + w + 1 );
+            HB_DYNS_PTR pDynSym = ( HB_DYNS_PTR ) HB_GET_PTR( pCode + w + 1 );
             /* Pops a value from the eval stack and uses it to set
             * a new value of the given field
             */
-            hb_rddPutFieldValue( ( hb_stackItemFromTop(-1) ), ( *pDynSym )->pSymbol );
+            hb_rddPutFieldValue( ( hb_stackItemFromTop(-1) ), pDynSym->pSymbol );
             hb_stackDec();
             hb_itemClear( ( hb_stackTopItem() ) );
             HB_TRACE(HB_TR_INFO, ("(hb_vmMPopField)"));
@@ -1530,9 +1530,9 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_MPOPMEMVAR:
          {
-            HB_DYNS_PTR * pDynSym = ( HB_DYNS_PTR * ) ( pCode + w + 1 );
+            HB_DYNS_PTR pDynSym = ( HB_DYNS_PTR ) HB_GET_PTR( pCode + w + 1 );
             hb_stackDec();
-            hb_memvarSetValue( ( *pDynSym )->pSymbol, ( hb_stackTopItem() ) );
+            hb_memvarSetValue( pDynSym->pSymbol, ( hb_stackTopItem() ) );
             hb_itemClear( ( hb_stackTopItem() ) );
             HB_TRACE(HB_TR_INFO, ("(hb_vmMPopMemvar)"));
             w += sizeof( HB_DYNS_PTR ) + 1;
@@ -1541,16 +1541,16 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_MPUSHALIASEDFIELD:
          {
-            HB_DYNS_PTR * pDynSym = ( HB_DYNS_PTR * ) ( pCode + w + 1 );
-            hb_vmPushAliasedField( ( *pDynSym )->pSymbol );
+            HB_DYNS_PTR pDynSym = ( HB_DYNS_PTR ) HB_GET_PTR( pCode + w + 1 );
+            hb_vmPushAliasedField( pDynSym->pSymbol );
             w += sizeof( HB_DYNS_PTR ) + 1;
             break;
          }
 
          case HB_P_MPUSHALIASEDVAR:
          {
-            HB_DYNS_PTR * pDynSym = ( HB_DYNS_PTR * ) ( pCode + w + 1 );
-            hb_vmPushAliasedVar( ( *pDynSym )->pSymbol );
+            HB_DYNS_PTR pDynSym = ( HB_DYNS_PTR ) HB_GET_PTR( pCode + w + 1 );
+            hb_vmPushAliasedVar( pDynSym->pSymbol );
             w += sizeof( HB_DYNS_PTR ) + 1;
             break;
          }
@@ -1573,10 +1573,10 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_MPUSHFIELD:
          {
-            HB_DYNS_PTR * pDynSym = ( HB_DYNS_PTR * ) ( pCode + w + 1 );
+            HB_DYNS_PTR pDynSym = ( HB_DYNS_PTR ) HB_GET_PTR( pCode + w + 1 );
             /* It pushes the current value of the given field onto the eval stack
             */
-            hb_rddGetFieldValue( ( hb_stackTopItem() ), ( *pDynSym )->pSymbol );
+            hb_rddGetFieldValue( ( hb_stackTopItem() ), pDynSym->pSymbol );
             hb_stackPush();
             HB_TRACE(HB_TR_INFO, ("(hb_vmMPushField)"));
             w += sizeof( HB_DYNS_PTR ) + 1;
@@ -1585,8 +1585,8 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_MPUSHMEMVAR:
          {
-            HB_DYNS_PTR * pDynSym = ( HB_DYNS_PTR * ) ( pCode + w + 1 );
-            hb_memvarGetValue( ( hb_stackTopItem() ), ( *pDynSym )->pSymbol );
+            HB_DYNS_PTR pDynSym = ( HB_DYNS_PTR ) HB_GET_PTR( pCode + w + 1 );
+            hb_memvarGetValue( ( hb_stackTopItem() ), pDynSym->pSymbol );
             hb_stackPush();
             HB_TRACE(HB_TR_INFO, ("(hb_vmMPushMemvar)"));
             w += sizeof( HB_DYNS_PTR ) + 1;
@@ -1595,8 +1595,8 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_MPUSHMEMVARREF:
          {
-            HB_DYNS_PTR * pDynSym = ( HB_DYNS_PTR * ) ( pCode + w + 1 );
-            hb_memvarGetRefer( ( hb_stackTopItem() ), ( *pDynSym )->pSymbol );
+            HB_DYNS_PTR pDynSym = ( HB_DYNS_PTR ) HB_GET_PTR( pCode + w + 1 );
+            hb_memvarGetRefer( ( hb_stackTopItem() ), pDynSym->pSymbol );
             hb_stackPush();
             HB_TRACE(HB_TR_INFO, ("(hb_vmMPushMemvarRef)"));
             w += sizeof( HB_DYNS_PTR ) + 1;
@@ -1605,16 +1605,16 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_MPUSHSYM:
          {
-            HB_DYNS_PTR * pDynSym = ( HB_DYNS_PTR * ) ( pCode + w + 1 );
-            hb_vmPushMacroSymbol( ( *pDynSym )->pSymbol );
+            HB_DYNS_PTR pDynSym = ( HB_DYNS_PTR ) HB_GET_PTR( pCode + w + 1 );
+            hb_vmPushMacroSymbol( pDynSym->pSymbol );
             w += sizeof( HB_DYNS_PTR ) + 1;
             break;
          }
 
          case HB_P_MPUSHVARIABLE:
          {
-            HB_DYNS_PTR * pDynSym = ( HB_DYNS_PTR * ) ( pCode + w + 1 );
-            hb_vmPushVariable( ( *pDynSym )->pSymbol );
+            HB_DYNS_PTR pDynSym = ( HB_DYNS_PTR ) HB_GET_PTR( pCode + w + 1 );
+            hb_vmPushVariable( pDynSym->pSymbol );
             w += sizeof( HB_DYNS_PTR ) + 1;
             break;
          }
@@ -1623,7 +1623,7 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          {
             USHORT uiSize = HB_PCODE_MKUSHORT( &( pCode[ w + 1 ] ) );
 
-            hb_vmPushString( ( char * ) ( pCode ) + w + 3, ( ULONG )( uiSize - 1 ) );
+            hb_vmPushString( ( char * ) ( pCode + w + 3 ), ( ULONG )( uiSize - 1 ) );
             w += ( 3 + uiSize );
             break;
          }

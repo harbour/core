@@ -533,13 +533,53 @@ typedef long HB_PTRDIFF;
                                                 ( ( ( UINT64 ) ( w ) & HB_LL( 0x0000FF0000000000 ) ) >> 24 ) | \
                                                 ( ( ( UINT64 ) ( w ) & HB_LL( 0x00FF000000000000 ) ) >> 40 ) | \
                                                 ( ( ( UINT64 ) ( w ) & HB_LL( 0xFF00000000000000 ) ) >> 56 ) ) )
+
 /* 
- * on some machines it's not safe to take numbers from BYTE buffer
- * directly by C casting because they have to be stored at odd addresses
- * Now this hack is only for integer numbers, if you will need it for
- * double too on your machine please define proper macros/function
+ * on some machines it's not safe to directly access pointers stored
+ * at byte buffer they have to be stored at odd (or other alignment)
+ * addresses.
+ * For example SPARC which needs 4 byte alignment for pointers
+ * and 8 byte alignment for doubles and structures (when GCC is used)
+ * IMHO need HB_ARCH_<arch> macro yet - the same OS can be used with
+ * different architectures - SPARC + LINUX, ALPHA + LINUX
  */
-#if defined( HB_CAST_BYTE_NUMBERS_OFF ) || !defined( HB_LITTLE_ENDIAN )
+#if defined( HB_OS_SUNOS )
+#  define HB_STRICT_ALIGNMENT
+#endif
+
+/*
+ * These macros are necessary for architectures which need
+ * strict alignment for pointers.
+ */
+#if defined( HB_BIG_ENDIAN )
+#  if defined( HB_ARCH_64BIT )
+#     define   HB_PUT_LONG( p, v )  HB_PUT_BE_UINT64( p, ( UINT64 ) ( v ) )
+#     define   HB_GET_LONG( p )     HB_GET_BE_UINT64( p )
+#  else
+#     define   HB_PUT_LONG( p, v )  HB_PUT_BE_UINT32( p, ( UINT32 ) ( v ) )
+#     define   HB_GET_LONG( p )     HB_GET_BE_UINT32( p )
+#  endif
+#else
+#  if defined( HB_ARCH_64BIT )
+#     define   HB_PUT_LONG( p, v )  HB_PUT_LE_UINT64( p, ( UINT64 ) ( v ) )
+#     define   HB_GET_LONG( p )     HB_GET_LE_UINT64( p )
+#  else
+#     define   HB_PUT_LONG( p, v )  HB_PUT_LE_UINT32( p, ( UINT32 ) ( v ) )
+#     define   HB_GET_LONG( p )     HB_GET_LE_UINT32( p )
+#  endif
+#endif
+
+#if !defined( HB_STRICT_ALIGNMENT )
+#  define   HB_PUT_PTR( p, v )      { *( void ** ) ( p ) = ( void * ) ( v ); }
+#  define   HB_GET_PTR( p )         ( *( void ** ) ( p ) )
+#else
+#  define   HB_PUT_PTR( p, v )      HB_PUT_LONG( p, v )
+#  define   HB_GET_PTR( p )         ( ( void * ) HB_GET_LONG( p ) )
+#endif
+
+
+/* Now the rest of endian macros */
+#if defined( HB_STRICT_ALIGNMENT ) || !defined( HB_LITTLE_ENDIAN )
 
    #define HB_GET_LE_UINT16( p )    ( ( UINT16 ) \
                                       ( ( UINT16 ) (( BYTE * )( p ))[0] | \
@@ -581,7 +621,7 @@ typedef long HB_PTRDIFF;
                                        }
 #endif
 
-#if defined( HB_CAST_BYTE_NUMBERS_OFF ) || !defined( HB_BIG_ENDIAN )
+#if defined( HB_STRICT_ALIGNMENT ) || !defined( HB_BIG_ENDIAN )
 
    #define HB_GET_BE_UINT16( p )    ( ( UINT16 ) \
                                       ( ( UINT16 ) (( BYTE * )( p ))[0] << 8 | \
@@ -648,7 +688,7 @@ typedef long HB_PTRDIFF;
 #elif defined( HB_BIG_ENDIAN )
    /* We use Big-Endian here */
 
-#  ifndef HB_CAST_BYTE_NUMBERS_OFF
+#  ifndef HB_STRICT_ALIGNMENT
 
    #define HB_GET_BE_UINT16( p )    ( *( UINT16 * )( p ) )
    #define HB_PUT_BE_UINT16( p, w ) ( *( UINT16 * )( p ) = ( UINT16 ) ( w ) )
@@ -769,7 +809,7 @@ typedef long HB_PTRDIFF;
 #else /* HB_LITTLE_ENDIAN */
       /* We use Little-Endian here */
 
-#  ifndef HB_CAST_BYTE_NUMBERS_OFF
+#  ifndef HB_STRICT_ALIGNMENT
 
    #define HB_GET_LE_UINT16( p )    ( *( UINT16 * )( p ) )
    #define HB_PUT_LE_UINT16( p, w ) ( *( UINT16 * )( p ) = ( UINT16 ) ( w ) )

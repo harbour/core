@@ -1195,7 +1195,13 @@ void hb_compMemvarGenPCode( BYTE bPCode, char * szVarName, HB_MACRO_DECL )
    */
    pSym = hb_dynsymGet( szVarName );
    hb_compGenPCode1( bPCode, HB_MACRO_PARAM );
-   hb_compGenPCodeN( ( BYTE * )( &pSym ), sizeof( pSym ), HB_MACRO_PARAM );
+   {
+      BYTE byBuf[ sizeof( HB_DYNS_PTR ) ];
+
+      HB_PUT_PTR( byBuf, pSym );
+      hb_compGenPCodeN( byBuf, sizeof( pSym ), HB_MACRO_PARAM );
+   }
+   /* hb_compGenPCodeN( ( BYTE * )( &pSym ), sizeof( pSym ), HB_MACRO_PARAM ); */
 }
 
 /* generates the pcode to push a symbol on the virtual machine stack */
@@ -1232,9 +1238,14 @@ void hb_compGenPushSymbol( char * szSymbolName, BOOL bFunction, BOOL bAlias, HB_
    else
       pSym = hb_dynsymGet( szSymbolName );     
 
-
    hb_compGenPCode1( HB_P_MPUSHSYM, HB_MACRO_PARAM );
-   hb_compGenPCodeN( ( BYTE * ) &pSym, sizeof( pSym ), HB_MACRO_PARAM );
+   {
+      BYTE byBuf[ sizeof( HB_DYNS_PTR ) ];
+
+      HB_PUT_PTR( byBuf, pSym );
+      hb_compGenPCodeN( byBuf, sizeof( pSym ), HB_MACRO_PARAM );
+   }
+   /* hb_compGenPCodeN( ( BYTE * ) &pSym, sizeof( pSym ), HB_MACRO_PARAM ); */
 }
 
 /* generates the pcode to push a long number on the virtual machine stack */
@@ -1281,7 +1292,13 @@ void hb_compGenMessage( char * szMsgName, HB_MACRO_DECL )
    HB_DYNS_PTR pSym = hb_dynsymGet( szMsgName );
 
    hb_compGenPCode1( HB_P_MMESSAGE, HB_MACRO_PARAM );
-   hb_compGenPCodeN( ( BYTE * ) &pSym, sizeof( pSym ), HB_MACRO_PARAM );
+   {
+      BYTE byBuf[ sizeof( HB_DYNS_PTR ) ];
+
+      HB_PUT_PTR( byBuf, pSym );
+      hb_compGenPCodeN( byBuf, sizeof( pSym ), HB_MACRO_PARAM );
+   }
+   /* hb_compGenPCodeN( ( BYTE * ) &pSym, sizeof( pSym ), HB_MACRO_PARAM ); */
 }
 
 /* generates an underscore-symbol name for a data assignment */
