@@ -100,6 +100,53 @@ static jmp_buf s_env;
 /* TODO: This function should return an error code. The preprocessed sting
  * should be returned  by a reference.
  */
+HB_FUNC( __PP_INIT )
+{
+   hb_pp_Table();
+   hb_pp_Init();
+   hb_comp_files.iFiles = 0;
+}
+
+HB_FUNC( __PP_FREE )
+{
+   hb_pp_Free();
+   if( hb_pp_aCondCompile )
+      hb_xfree( hb_pp_aCondCompile );
+}
+
+HB_FUNC( __PPADDRULE )
+{
+   if( ISCHAR( 1 ) )
+   {
+      char * ptr = hb_parc( 1 );
+      char * hb_buffer;
+
+      HB_SKIPTABSPACES( ptr );
+      if( *ptr == '#' )
+      {
+         if( !hb_pp_aCondCompile )
+         {
+            hb_pp_Table();
+            hb_pp_Init();
+            hb_comp_files.iFiles = 0;
+         }
+         hb_pp_ParseDirective( ptr + 1 );
+         if( hb_comp_files.pLast )
+         {
+            hb_buffer = ( char* ) hb_xgrab( HB_PP_STR_SIZE );
+            while( hb_pp_Internal( NULL,hb_buffer ) > 0 );
+            CloseInclude();
+            hb_xfree( hb_buffer );
+         }
+         hb_retl( 1 );
+      }
+      else
+         hb_retl( 0 );
+   }
+   else
+      hb_retl( 0 );
+}
+
 HB_FUNC( __PREPROCESS )
 {
    if( ISCHAR( 1 ) )

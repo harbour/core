@@ -33,12 +33,20 @@ FUNCTION Main()
    qOut( __Preprocess( cString ) )
    qOut( "" )
 
-   cString := 'CLOSE ALL'
+   cString := "#xcommand DEFAULT <v1> := <x1> => IF <v1> == NIL ; <v1> := <x1> ; END"
+   qOut( cString )
+   IF __ppAddRule( cString )
+      qOut( "Rule added successfully !" )
+   ELSE
+      qOut( "Rule addition failed ..." )
+   ENDIF
+
+   cString := 'DEFAULT x := 100'
    qOut( cString )
    qOut( __Preprocess( cString ) )
    qOut( "" )
 
-   qOut( chr(13)+chr(10)+"Press <Enter>..." )
+   qOut( "Press <Enter>..." )
    __Accept( "" )
 
    CLS
@@ -69,3 +77,7 @@ FUNCTION Main()
    NEXT
 
    RETURN( NIL )
+
+Exit PROCEDURE ExitTest
+   __PP_Free()
+Return

@@ -103,6 +103,8 @@ typedef HB_INCLUDE_FUNC * HB_INCLUDE_FUNC_PTR;
 extern void   hb_pp_SetRules( HB_INCLUDE_FUNC_PTR hb_compInclude, BOOL hb_comp_bQuiet );
 extern int    hb_pp_ReadRules( void );
 extern void   hb_pp_Init( void );
+extern void   hb_pp_Free( void );
+extern void   CloseInclude( void );
 extern int    hb_pp_ParseDirective( char * ); /* Parsing preprocessor directives ( #... ) */
 extern int    hb_pp_ParseExpression( char *, char * ); /* Parsing a line ( without preprocessor directive ) */
 extern int    hb_pp_WrStr( FILE *, char * );

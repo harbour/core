@@ -131,7 +131,6 @@ static int    NextWord( char **, char *, BOOL );
 static int    NextName( char **, char * );
 static int    NextParm( char **, char * );
 static BOOL   OpenInclude( char *, PATHNAMES *, PHB_FNAME, BOOL bStandardOnly, char * );
-void          CloseInclude( void );
 
 #define ISNAME( c )  ( isalnum( ( int ) c ) || ( c ) == '_' || ( c ) > 0x7E )
 #define MAX_NAME     255
@@ -335,12 +334,12 @@ void hb_pp_SetRules( HB_INCLUDE_FUNC_PTR hb_compInclude, BOOL hb_comp_bQuiet )
    }
 }
 
-void hb_pp_Init( void )
+void hb_pp_Free( void )
 {
    DEFINES * stdef;
    COMMANDS * stcmd;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_pp_Init()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_pp_Free()"));
 
    while( s_kolAddDefs )
    {
@@ -372,6 +371,13 @@ void hb_pp_Init( void )
       hb_xfree( stcmd );
       s_kolAddTras--;
    }
+}
+
+void hb_pp_Init( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_pp_Init()"));
+
+   hb_pp_Free();
 
    s_ParseState = 0;
    s_maxCondCompile = 5;
@@ -3765,6 +3771,7 @@ static BOOL OpenInclude( char * szFileName, PATHNAMES * pSearch, PHB_FNAME pMain
 
   return FALSE;
 }
+
 
 void CloseInclude( void )
 {

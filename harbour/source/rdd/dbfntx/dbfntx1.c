@@ -2620,6 +2620,9 @@ static ERRCODE ntxOrderListAdd( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
 
    HB_TRACE(HB_TR_DEBUG, ("ntxOrderListAdd(%p, %p)", pArea, pOrderInfo));
 
+   if( SELF_GOCOLD( ( AREAP ) pArea ) == FAILURE )
+      return FAILURE;
+
    szFileName = ( char * ) hb_xgrab( _POSIX_PATH_MAX + 3 );
    szFileName[ 0 ] = '\0';
    strcpy( szFileName, hb_itemGetCPtr( pOrderInfo->atomBagName ) );

@@ -1,3 +1,20 @@
+2001-06-07 10:15 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   * include/hbpp.h
+   * source/pp/ppcore.c
+     + hb_pp_Free() added ( separated from hb_pp_Init() )
+   * source/pp/pplib.c
+     + __PP_INIT() added
+     + __PP_FREE() added
+     + __PPADDRULE() added
+       * __PPADDRULE( cString ) can be called to preprocess a directive 
+         ( #include, #command, etc. )
+         __PP_FREE() should be called if __PPADDRULE() or __PP_INIT() was used
+         to free memory, allocated for pp tables.
+   * tests/testpre.prg
+     * modified to demonstrate __ppAddRule() and __pp_Free() using
+   * source/rdd/dbfntx/dbfntx1.c
+     * bug fixed in ntxOrderListAdd()
+
 2001-06-06 16:00 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * contrib/libct/charmix.c
