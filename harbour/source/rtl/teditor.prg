@@ -818,13 +818,15 @@ METHOD Edit(nPassedKey) CLASS TEditor
    LOCAL nKey
    LOCAL lOldInsert
    LOCAL lDelAppend
+   LOCAL lSingleKeyProcess := .F.         // .T. if I have to process passed key and then exit
 
    if ! ::lEditAllow
       BrowseText(Self)
 
    else
 
-      while ! ::lExitEdit
+      // If user pressed an exiting key (K_ESC or K_ALT_W) or I've received a key to handle and then exit
+      while ! ::lExitEdit .AND. ! lSingleKeyProcess
 
          // If I haven't been called with a key already preset, evaluate this key and then exit
          if nPassedKey == NIL
@@ -833,7 +835,7 @@ METHOD Edit(nPassedKey) CLASS TEditor
             endif
             nKey := InKey(0)
          else
-            ::lExitEdit := .T.
+            lSingleKeyProcess := .T.
             nKey := nPassedKey
          endif
 

@@ -1,3 +1,7 @@
+2001-04-19 15:07 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+   * source/rtl/teditor.prg
+     ! regression from previous fix
+
 2001-04-19 14:43 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
    * source/rtl/teditor.prg
      ! fixed handling of K_ESC and K_ALT_W
