@@ -76,7 +76,7 @@ LDFLAGS        = $(LDFLAGS)
 # Macros to access our library names
 #
 
-TOOLS_LIB    = $(LIB_DIR)\ct3.lib
+TOOLS_LIB    = $(LIB_DIR)\libct.lib
 
 HARBOUR_EXE  = $(BIN_DIR)\harbour.exe
 
@@ -110,6 +110,8 @@ LIBLIST = \
    $(MAKE) -nologo /$(MK_FLAGS) /f$(MK_FILE) $(TOOLS_LIB)2
 
 TOOLS_LIB_OBJS = \
+   $(OBJ_DIR)\ctset.obj \
+   $(OBJ_DIR)\ctstr.obj \
    $(OBJ_DIR)\ctchksum.obj \
    $(OBJ_DIR)\ctchrevn.obj \
    $(OBJ_DIR)\ctchrmix.obj \
@@ -130,6 +132,8 @@ all: \
    $(TOOLS_LIB)
 
 CLEAN:
+   -@if exist $(OBJ_DIR)\ctchksum.* del $(OBJ_DIR)\ctset.*
+   -@if exist $(OBJ_DIR)\ctchksum.* del $(OBJ_DIR)\ctstr.*
    -@if exist $(OBJ_DIR)\ctchksum.* del $(OBJ_DIR)\ctchksum.*
    -@if exist $(OBJ_DIR)\ctchrevn.* del $(OBJ_DIR)\ctchrevn.*
    -@if exist $(OBJ_DIR)\ctchrmix.* del $(OBJ_DIR)\ctchrmix.*

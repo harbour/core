@@ -5,6 +5,8 @@
 ROOT = ../../
 
 C_SOURCES=\
+	ctset.c \
+	ctstr.c \
 	ctchksum.c \
 	ctchrevn.c \
 	ctchrmix.c \
@@ -17,6 +19,6 @@ PRG_SOURCES=\
 	ctmisc.prg \
 	cttoken.prg \
 
-LIBNAME=ct3
+LIBNAME=libct
 
 include $(TOP)$(ROOT)config/lib.cf

@@ -1,3 +1,20 @@
+2001-04-17 17:55 CET Martin Vogel <vogel@inttec.de>
+   + contrib/libct/ct.ch
+   + contrib/libct/ct.h
+   + contrib/libct/ctset.c
+   + contrib/libct/ctset.h
+   + contrib/libct/ctstr.c
+   + contrib/libct/ctstr.h
+   * contrib/libct/Makefile
+     + added ctset.c
+     + added ctstr.c
+   * contrib/libct/makefile.vc
+     + added ctset.c
+     + added ctstr.c
+   * contrib/libct/makefile.bc
+     + added ctset.c
+     + added ctstr.c
+
 2001-04-17 02:50 GMT-3 Horacio Roldan <horacioroldan@usa.net>
    *source/rdd/dbfcdx/dbfcdx1.c
      * fixed some warnings
