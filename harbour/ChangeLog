@@ -1,6 +1,8 @@
 2001-08-11 08:40 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
   *tests/testbrw.prg
     * updated to show the use of pictures with tbrowse
+  *include/hbextern.ch
+    * added some missing extern declaration
 
 2001-08-10 13:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
