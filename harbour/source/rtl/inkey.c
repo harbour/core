@@ -96,6 +96,31 @@ HB_INIT_SYMBOLS_END( INKEY__InitSymbols )
 #pragma startup INKEY__InitSymbols
 #endif
 
+#if defined( OS_UNIX_COMPATIBLE )
+#include <unistd.h>
+#include <termios.h>
+
+static struct termios startup_attributes;
+
+static void restore_input_mode( void )
+{
+   tcsetattr( STDIN_FILENO, TCSANOW, &startup_attributes );
+}
+
+HB_CALL_ON_STARTUP_BEGIN( init_input_mode )
+  struct termios ta;
+
+  tcgetattr( STDIN_FILENO, &startup_attributes );
+  atexit( restore_input_mode );
+  
+  tcgetattr( STDIN_FILENO, &ta );
+  ta.c_lflag &= ~(ICANON | ECHO);
+  ta.c_cc[ VMIN ] =0;
+  ta.c_cc[ VTIME ] =0;
+  tcsetattr( STDIN_FILENO, TCSAFLUSH, &ta );
+HB_CALL_ON_STARTUP_END( init_input_mode )
+#endif
+
 static int *s_inkeyBuffer=0;  /* Harbour keyboard buffer (empty if head == tail)     */
 static int  s_inkeyHead;      /* Harbour keyboard buffer head pointer (next insert)  */
 static int  s_inkeyTail;      /* Harbour keyboard buffer tail pointer (next extract) */
@@ -374,11 +399,8 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
       }
 #elif defined(OS_UNIX_COMPATIBLE)
       /* TODO: */
-      /* Note: If GCC for Linux on PCs uses the same keyboard codes as the
-               other PC platforms in the previous #if section, then it should
-               be possible to add a user-defined HARBOUR_GCC_PC #define and
-               include it in the previous #if section, with the appropriate
-               #elif or || defined(HARBOUR_GCC_PC) to get the keyboard input */
+      if( ! read( STDIN_FILENO, &ch, 1 ) )
+         ch =0;
 #else
       /* TODO: Support for other platforms, such as Mac */
 #endif
@@ -510,8 +532,8 @@ HARBOUR HB_INKEY( void )
       /* When not using the GT API, flush both stdout and stderr,
          because we are waiting for input and want to ensure that
          any user prompts are visible. */
-      fflush( stdout );
-      fflush( stderr );
+//      fflush( stdout );
+//      fflush( stderr );
    #endif
    }
 

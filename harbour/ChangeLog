@@ -1,3 +1,10 @@
+19990821-14:20 GMT+2 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/rtl/inkey.c
+	* added test code for OS_UNIX_COMPATIBLE based on noncanonical
+	low-level terminal functions - we need however to extend this
+	code to support different terminals
+	
 19990821-00:05 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/debug/debugger.prg
      * improved debugger functionality.
