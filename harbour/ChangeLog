@@ -1,3 +1,41 @@
+19990909-21:30 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/arrays.c
+    ! hb_arrayCopy() fixed. Now it has two methods, one strictly compatible,
+      and one which fixes buggy behaviour on extreme parameters. Clipper will
+      copy one item, even it an out-of-range start, or target position is
+      passed, I've considered that buggy. You can choose with the
+      HARBOUR_STRICT_CLIPPER_COMPATIBILITY switch anyway.
+  * tests/working/rtl_test.prg
+    + ACOPY() tests added.
+  * source/rtl/tgetlist.prg
+    + Using getexit.ch include file, instead of repeating its content.
+  * source/debug/tbrwtext.prg
+    + CVS header added.
+  * include/extend.h
+    ! Some Clipper compatibility include files moved to the bottom, it's
+      better now, but it still doesn't work when 
+      HARBOUR_STRICT_CLIPPER_COMPATIBILITY is defined.
+  * source/rtl/tget.prg
+    source/debug/debugger.prg
+    + Using common.ch include file, instead of repeating its content.
+      DEFAULT := form changed to the standard DEFAULT TO form, which is a
+      bit more efficient anyway, since it only assigns when needed.
+  * source/tools/fileread.prg
+    source/tools/dates2.c
+    source/tools/hb_f.c
+    source/vm/dynsym.c
+    source/hbpp/table.c
+    source/hbpp/hbppint.c
+    source/hbpp/hbpp.c
+    source/compiler/fixflex.c
+    source/rtl/*.c
+    * Standardization in header format. Note that we should also standardize
+      the *text* of the copyright message.
+  * source/vm/hvm.c
+    * Small formatting correction.
+  * source/rtl/xsavescr.prg
+    + Reformatted.
+
 19990909-18:22 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/arrays.c
     ! ARRAY() fixed to parse the dimension list in the right order.
@@ -6,7 +44,7 @@
   * tests/working/rtl_test.prg
     + Some new ARRAY() tests added.
   * tests/working/extend2.c
-    ; Compiled/linked successfully with Cygwin. There's still incompatibility 
+    ; Compiled/linked successfully with Cygwin. There's still incompatibility
       since Harbour needs all the C functions to be prefixed with "HB_".
     * Changed HARBOUR function types to CLIPPER.
   * include/clipdefs.h
@@ -28,8 +66,8 @@
   * source/rtl/arrays.c
     include/extend.h
     ! hb_arraySize() - Fixed a memory related bug. Now when an array is
-      resized to zero length, it will free (and not reallocate) the memory 
-      allocated for the item pointer table. ASIZE({ "A", "B" }, 0) could 
+      resized to zero length, it will free (and not reallocate) the memory
+      allocated for the item pointer table. ASIZE({ "A", "B" }, 0) could
       show the problem.
     + ARRAY() now supprt multiple dimensions. Code based on hb_vmArrayNew().
     ! Array functions error handling behaviour made completely CA-Clipper
@@ -47,12 +85,12 @@
     ! __RUN() now checks for the parameter type, not the number,
     + __RUN() funtionality enabled for __CYGWIN__
     + __RUN() will now throw an "operation not supported" runtime error on
-      platforms where it's not supported, this is IMO better than silently 
-      doing nothing. The error has a Default case, so the use can continue 
+      platforms where it's not supported, this is IMO better than silently
+      doing nothing. The error has a Default case, so the use can continue
       running the program.
     ! __RUN() Standardized the doc header.
   * source/rtl/copyfile.c
-    + Made completely compatible in order to pass the tests. A small file 
+    + Made completely compatible in order to pass the tests. A small file
       name forming difference is still there.
   * tests/working/rtl_test.prg
     + __COPYFILE() tests added.
@@ -73,37 +111,37 @@
 19990909-16:05 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *source/rtl/memvarbl.prg
-	+ corrected to allow setings of NIL value
-	
+        + corrected to allow setings of NIL value
+
 19990909-13:00 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *source/runner/stdalone/external.prg
-	+ added __MVGET, __MVPUT, MEMVARBLOCK
-	
+        + added __MVGET, __MVPUT, MEMVARBLOCK
+
     *include/init.h
-	+ added 'static' declaration for functions used to initialize
-	symbols table
-	
+        + added 'static' declaration for functions used to initialize
+        symbols table
+
 19990909-12:45 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *source/rtl/memvars.c
-	* removed unused variables
-	
+        * removed unused variables
+
     *source/rtl/memvarbl.prg
-	+ added new file with MEMVARBLOCK() function
-	
+        + added new file with MEMVARBLOCK() function
+
     *source/trl/Makefile
-	+ added memvarbl.prg to PRG_SOURCES
-	
+        + added memvarbl.prg to PRG_SOURCES
+
 19990909-12:00 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *source/rtl/memvars.c
-	+ added __mvGET and __mvPUT functions to set/get the value of
-	private and public variables
-	
+        + added __mvGET and __mvPUT functions to set/get the value of
+        private and public variables
+
     *doc/subcodes.txt
-	* updated info for 3009 and 3010 subcodes used in __mvGET/__mvPUT
-	
+        * updated info for 3009 and 3010 subcodes used in __mvGET/__mvPUT
+
 19990908-21:35 EDT David G. Holm <dholm@jsd-llc.com>
   * include/extend.h
   * include/hbdefs.h

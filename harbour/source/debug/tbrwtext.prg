@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 // Browses a text file
 
 #include "classes.ch"

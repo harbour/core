@@ -1,6 +1,7 @@
 /*
  * $Id$
  */
+
 /* Harbour Project source code
    http://www.Harbour-Project.org/
    The following function is Copyright 1999 David G. Holm:

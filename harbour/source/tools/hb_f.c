@@ -1,6 +1,8 @@
 /*
  * $Id$
+ */
 
+/*
    Copyright(C) 1999 by Andi Jahja
 
    This program is free software; you can redistribute it and/or modify

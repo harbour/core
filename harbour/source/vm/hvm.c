@@ -67,7 +67,7 @@ static void    hb_vmReleaseLocalSymbols( void );  /* releases the memory of the 
 static void    hb_vmDebuggerShowLine( WORD wLine ); /* makes the debugger shows a specific source code line */
 static void    hb_vmDebuggerEndProc( void ); /* notifies the debugger for an endproc */
 
-static void hb_vmArrayNew( HB_ITEM_PTR, WORD ); /* creates array */
+static void    hb_vmArrayNew( HB_ITEM_PTR, WORD ); /* creates array */
 
 #ifdef HARBOUR_OBJ_GENERATION
 static void    hb_vmProcessObjSymbols ( void ); /* process Harbour generated OBJ symbols */

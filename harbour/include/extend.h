@@ -30,12 +30,6 @@
 #include "hbdefs.h"
 #include "hb_vmpub.h"
 
-#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
-   /* Clipper includes these from extend.h */
-   #include "extend.api"
-   #include "fm.api"
-#endif
-
 /* items types and type checking macros */
 #define IT_NIL          ( ( WORD ) 0x0000 )
 #define IT_INTEGER      ( ( WORD ) 0x0002 )
@@ -368,6 +362,14 @@ extern void     hb_consoleRelease( void );
 extern char *   hb_consoleGetNewLine( void );
 
 extern char *   hb_setColor( char * );
+
+/* Please leave these at the bottom of this file */
+
+#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+   /* Clipper includes these from extend.h */
+   #include "extend.api"
+   #include "fm.api"
+#endif
 
 #endif /* HB_EXTEND_H_ */
 

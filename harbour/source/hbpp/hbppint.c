@@ -1,6 +1,8 @@
 /*
  * $Id$
+ */
 
+/*
    Harbour Project source code
 
    This file contains some functions of preprocessor, which provides

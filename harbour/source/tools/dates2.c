@@ -1,6 +1,8 @@
 /*
  * $Id$
- *
+ */
+
+/*
    Harbour Project source code
 
    Copyright(C) 1999 by Jose Lalin.

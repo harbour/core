@@ -1,6 +1,8 @@
 /*
  * $Id$
+ */
 
+/*
    Harbour Project source code - http://www.Harbour-Project.org
 
    By: A White - awhite@user.rose.com

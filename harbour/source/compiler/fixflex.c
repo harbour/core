@@ -1,5 +1,8 @@
-/* $Id$
+/* 
+ * $Id$
+ */
 
+/*
    Harbour Project source code
 
    This file contains an external program that splits the Harbour Flex and

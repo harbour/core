@@ -26,11 +26,7 @@
 
 #include "classes.ch"
 #include "color.ch"
-
-#xcommand DEFAULT <uVar1> := <uVal1> ;
-               [, <uVarN> := <uValN> ] => ;
-                  <uVar1> := If( <uVar1> == nil, <uVal1>, <uVar1> ) ;;
-                [ <uVarN> := If( <uVarN> == nil, <uValN>, <uVarN> ); ]
+#include "common.ch"
 
 //----------------------------------------------------------------------------//
 
@@ -93,11 +89,11 @@ METHOD New(nRow, nCol, bVarBlock, cVarName, cPicture, cColor) CLASS TGet
    local cChar
    local nAt, nFor
 
-   DEFAULT nRow     := Row()     ,;
-           nCol     := Col()     ,;
-           cVarName := ""        ,;
-           cPicture := ""        ,;
-           cColor   := ""
+   DEFAULT nRow     TO Row()
+   DEFAULT nCol     TO Col()
+   DEFAULT cVarName TO ""
+   DEFAULT cPicture TO ""
+   DEFAULT cColor   TO ""
 
    ::badDate    := .f.
    ::block      := bVarBlock
@@ -313,7 +309,7 @@ METHOD Untransform(cBuffer) CLASS TGet
    local cChar
    local nFor
 
-   DEFAULT cBuffer := ::buffer
+   DEFAULT cBuffer TO ::buffer
 
    do case
    case ::type == "C"
@@ -671,8 +667,8 @@ METHOD PutMask(xValue, lEdit) CLASS TGet
    local cChar, cBuffer
    local nFor, nLen, nAt
 
-   DEFAULT xValue := ::VarGet() ,;
-           lEdit  := ::hasfocus
+   DEFAULT xValue TO ::VarGet()
+   DEFAULT lEdit  TO ::hasfocus
 
    cBuffer := Transform(xValue, Alltrim(::cPicFunc+" "+::cPicMask))
 

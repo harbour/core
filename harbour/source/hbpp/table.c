@@ -1,6 +1,8 @@
 /*
  * $Id$
+ */
 
+/*
    Harbour Project source code
 
    This file contains the tables of predefined #define and #command

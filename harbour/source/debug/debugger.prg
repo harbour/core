@@ -26,11 +26,7 @@
 #include "classes.ch"
 #include "inkey.ch"
 #include "memvars.ch"
-
-#xcommand DEFAULT <uVar1> := <uVal1> ;
-               [, <uVarN> := <uValN> ] => ;
-                  <uVar1> := If( <uVar1> == nil, <uVal1>, <uVar1> ) ;;
-                [ <uVarN> := If( <uVarN> == nil, <uValN>, <uVarN> ); ]
+#include "common.ch"
 
 #xcommand MENU [<oMenu>] => [ <oMenu> := ] TDbMenu():New()
 #xcommand MENUITEM <cPrompt> [ ACTION <uAction,...> ] => ;
@@ -583,7 +579,7 @@ return nil
 
 METHOD Show( lFocused ) CLASS TDbWindow
 
-   DEFAULT lFocused := .f.
+   DEFAULT lFocused TO .f.
 
    ::cBackImage = SaveScreen( ::nTop, ::nLeft, ::nBottom, ::nRight )
    SetColor( ::cColor )

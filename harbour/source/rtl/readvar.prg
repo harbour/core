@@ -34,12 +34,12 @@
 */
 
 FUNCTION ReadVar( cVarName )
-   STATIC scVarName := ""
+   STATIC s_cVarName := ""
 
-   LOCAL cOldVarName := scVarName
+   LOCAL cOldVarName := s_cVarName
 
    IF ValType( cVarName ) == "C"
-      scVarName := cVarName
+      s_cVarName := cVarName
    ENDIF
 
    RETURN cOldVarName

@@ -1,6 +1,8 @@
 /*
  * $Id$
- *
+ */
+
+/*
    Harbour Project source code
 
    This file is a part of Harbour Runtime Library and it contains code

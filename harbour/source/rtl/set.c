@@ -1,5 +1,8 @@
-/* $Id$
+/* 
+ * $Id$
+ */
 
+/*
    Harbour Project source code
 
    This module contains the Harbour functions for SET management.

@@ -2,8 +2,8 @@
  * $Id$
  */
 
-/* Harbour dynamic symbol table management
- *
+/* 
+ * Harbour dynamic symbol table management
  * Copyright(C) 1999 by Antonio Linares.
  *
  * This program is free software; you can redistribute it and/or modify

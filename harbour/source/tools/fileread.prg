@@ -1,5 +1,8 @@
-/* $Id$
+/* 
+ * $Id$
+ */
 
+/*
    Harbour Project source code
 
    A class that reads a file one line at a time

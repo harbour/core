@@ -2,8 +2,6 @@
  * $Id$
  */
 
-// Harbour Class TClass to build classes
-
 /*
    Copyright(C) 1999 by Antonio Linares.
 
@@ -30,6 +28,8 @@
  *       Support for inheritance
  *       Support for default DATA values
  */
+
+// Harbour Class TClass to build classes
 
 #include "hboo.ch"
 

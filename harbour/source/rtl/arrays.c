@@ -1,6 +1,8 @@
 /*
  * $Id$
+ */
 
+/*
    Copyright(C) 1999 by Antonio Linares.
 
    This program is free software; you can redistribute it and/or modify
@@ -114,6 +116,7 @@ BOOL hb_arraySize( PHB_ITEM pArray, ULONG ulLen )
       if( ! pBaseArray->ulLen )
       {
          pBaseArray->pItems = ( PHB_ITEM ) hb_xgrab( ulLen * sizeof( HB_ITEM ) );
+
          for( ulPos = 0; ulPos < ulLen; ulPos++ )
             ( pBaseArray->pItems + ulPos )->type = IT_NIL;
       }
@@ -142,6 +145,7 @@ BOOL hb_arraySize( PHB_ITEM pArray, ULONG ulLen )
                pBaseArray->pItems = ( PHB_ITEM ) hb_xrealloc( pBaseArray->pItems, sizeof( HB_ITEM ) * ulLen );
          }
       }
+
       pBaseArray->ulLen = ulLen;
 
       return TRUE;
@@ -610,20 +614,36 @@ BOOL hb_arrayCopy( PHB_ITEM pSrcArray, PHB_ITEM pDstArray, ULONG * pulStart,
       else
          ulTarget = 1;
 
+#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+      if( ulSrcLen > 0 )
+#else
       if( ulStart <= ulSrcLen )
+#endif
       {
+#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+         if( ulStart > ulSrcLen )
+            ulStart = ulSrcLen;
+#endif
          if( pulCount && ( *pulCount <= ulSrcLen - ulStart ) )
             ulCount = *pulCount;
          else
             ulCount = ulSrcLen - ulStart + 1;
 
+#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+         if( ulDstLen > 0 )
+#else
          if( ulTarget <= ulDstLen )
+#endif
          {
+#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+            if( ulTarget > ulDstLen )
+               ulTarget = ulDstLen;
+#endif
             if( ulCount > ulDstLen - ulTarget )
-               ulCount = ulDstLen - ulTarget;
+               ulCount = ulDstLen - ulTarget + 1;
 
-            for( ulTarget--, ulStart--; ulCount > 0; ulCount--, ulStart++ )
-               hb_itemCopy( pDstBaseArray->pItems + ( ulTarget + ulStart ), pSrcBaseArray->pItems + ulStart );
+            for( ulTarget--, ulStart--; ulCount > 0; ulCount--, ulStart++, ulTarget++ )
+               hb_itemCopy( pDstBaseArray->pItems + ulTarget, pSrcBaseArray->pItems + ulStart );
          }
       }
 

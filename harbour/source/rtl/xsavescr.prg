@@ -1,15 +1,21 @@
-/* $Id$
- *
+/* 
+ * $Id$
  */
 
-STATIC cScrn
+STATIC s_cScrn
 
-Procedure __XSAVESCREEN()
-cScrn := {Row(), Col(), SaveScreen()}
+PROCEDURE __XSAVESCREEN()
 
-procedure __XRESTSCREEN()
-IF cScrn <> NIL
-   RestScreen( ,,,,cScrn[3] )
-   SetPos( cScrn[1], cScrn[2] )
-ENDIF
-cScrn := NIL
+   s_cScrn := { Row(), Col(), SaveScreen() }
+
+   RETURN
+
+PROCEDURE __XRESTSCREEN()
+
+   IF s_cScrn != NIL
+      RestScreen( , , , , s_cScrn[ 3 ] )
+      SetPos( s_cScrn[ 1 ], s_cScrn[ 2 ] )
+      s_cScrn := NIL
+   ENDIF
+
+   RETURN

@@ -52,6 +52,12 @@
 
 #translate TEST_LINE( <x>, <result> ) => TEST_CALL( <(x)>, {|| <x> }, <result> )
 
+#define TEST_RESULT_COL1_WIDTH  1
+#define TEST_RESULT_COL2_WIDTH  4
+#define TEST_RESULT_COL3_WIDTH  40
+#define TEST_RESULT_COL4_WIDTH  55
+#define TEST_RESULT_COL5_WIDTH  40
+
 STATIC s_nPass
 STATIC s_nFail
 STATIC s_cFileName
@@ -1653,6 +1659,7 @@ STATIC FUNCTION Main_MISC()
    TEST_LINE( aSize( NIL, -1 )                , NIL                                        )
    TEST_LINE( aSize( {}, -1 )                 , "{.[0].}"                                  )
    TEST_LINE( aSize( { 1 }, -1 )              , "{.[0].}"                                  )
+   TEST_LINE( aSize( { 1 }, 5000 )            , "{.[1].}"                                  )
    TEST_LINE( aSize( ErrorNew(), -1 )         , "ERROR Object"                             )
    TEST_LINE( aSize( ErrorNew(), 100 )        , "ERROR Object"                             )
    TEST_LINE( aAdd( NIL, NIL )                , "E BASE 1123 Argument error AADD F:S"      )
@@ -1708,6 +1715,42 @@ STATIC FUNCTION Main_MISC()
    TEST_LINE( TAStr(aFill(TANew(),"X", 21, 3)) , ".........."     )
    TEST_LINE( TAStr(aFill(TANew(),"X", 21,20)) , ".........."     )
 
+   /* ACOPY() */
+
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(),  1        )) , "ABCDEFGHIJ"     )
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(),  1,  0    )) , ".........."     )
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(),  1,  3    )) , "ABC......."     )
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(),  1, 20    )) , "ABCDEFGHIJ"     )
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(),  3        )) , "CDEFGHIJ.."     )
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(),  3,  0    )) , ".........."     )
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(),  3,  3    )) , "CDE......."     )
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(),  3, 20    )) , "CDEFGHIJ.."     )
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21        )) , ".........."     ) /* Bug in CA-Cl*pper, it returns: "J........." */
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21,  0    )) , ".........."     )
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21,  3    )) , ".........."     ) /* Bug in CA-Cl*pper, it returns: "J........." */
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21, 20    )) , ".........."     ) /* Bug in CA-Cl*pper, it returns: "J........." */
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(),  1,NIL,  1)) , "ABCDEFGHIJ"     )
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(),  1,  0,  1)) , ".........."     )
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(),  1,  3,  0)) , "ABC......."     )
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(),  1,  3,  2)) , ".ABC......"     )
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(),  1,  3,  8)) , ".......ABC"     )
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(),  1,  3, 20)) , ".........."     ) /* Bug in CA-Cl*pper, it returns: ".........A" */
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(),  1, 20,  1)) , "ABCDEFGHIJ"     )
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(),  3,NIL,  3)) , "..CDEFGHIJ"     )
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(),  3,  0,  3)) , ".........."     )
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(),  3,  3,  0)) , "CDE......."     )
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(),  3,  3,  2)) , ".CDE......"     )
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(),  3,  3,  8)) , ".......CDE"     )
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(),  3,  3, 20)) , ".........."     ) /* Bug in CA-Cl*pper, it returns: ".........C" */
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(),  3, 20,  3)) , "..CDEFGHIJ"     )
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21,NIL, 21)) , ".........."     ) /* Bug in CA-Cl*pper, it returns: ".........J" */
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21,  0, 21)) , ".........."     )
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21,  3,  0)) , ".........."     ) /* Bug in CA-Cl*pper, it returns: "J........." */
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21,  3,  2)) , ".........."     ) /* Bug in CA-Cl*pper, it returns: ".J........" */
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21,  3,  8)) , ".........."     ) /* Bug in CA-Cl*pper, it returns: ".......J.." */
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21,  3, 20)) , ".........."     ) /* Bug in CA-Cl*pper, it returns: ".........J" */
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21, 20, 21)) , ".........."     ) /* Bug in CA-Cl*pper, it returns: ".........J" */
+
    /* ASCAN() */
 
    TEST_LINE( aScan()                         , 0           )
@@ -1755,12 +1798,6 @@ STATIC FUNCTION Main_MISC()
    TEST_LINE( MEMVARBLOCK( "mcString" )       , "{||...}"       )
 
    RETURN NIL
-
-#define TEST_RESULT_COL1_WIDTH  1
-#define TEST_RESULT_COL2_WIDTH  4
-#define TEST_RESULT_COL3_WIDTH  30
-#define TEST_RESULT_COL4_WIDTH  55
-#define TEST_RESULT_COL5_WIDTH  40
 
 STATIC FUNCTION TEST_BEGIN( cParam )
    LOCAL cOs
@@ -2070,7 +2107,7 @@ STATIC FUNCTION ListToNArray( cString )
 
    RETURN aArray
 
-STATIC FUNCTION TANew( nLen, cChar )
+STATIC FUNCTION TANew( cChar, nLen )
    LOCAL aArray
    LOCAL tmp
 
@@ -2087,7 +2124,23 @@ STATIC FUNCTION TANew( nLen, cChar )
    /* Intentionally not using aFill() here, since this function is
       involved in testing aFill() itself. */
    FOR tmp := 1 TO nLen
-      aArray[ tmp ] := "."
+      aArray[ tmp ] := cChar
+   NEXT
+
+   RETURN aArray
+
+STATIC FUNCTION TARng( nLen )
+   LOCAL aArray
+   LOCAL tmp
+
+   IF nLen == NIL
+      nLen := 10
+   ENDIF
+
+   aArray := Array( nLen )
+
+   FOR tmp := 1 TO nLen
+      aArray[ tmp ] := Chr( Asc( "A" ) + tmp - 1 )
    NEXT
 
    RETURN aArray

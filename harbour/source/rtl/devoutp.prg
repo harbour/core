@@ -1,5 +1,8 @@
-/* $Id$
+/* 
+ * $Id$
+ */
 
+/*
    Harbour Project source code
 
    This file contains the Harbour function that outputs expressions
@@ -75,6 +78,8 @@
  *  $END$
  */
 
-FUNCTION DEVOUTPICT( xValue, cPicture, cColor )
-   DEVOUT( TRANSFORM( xValue, cPicture ), cColor )
-RETURN NIL
+FUNCTION DevOutPict( xValue, cPicture, cColor )
+
+   DevOut( Transform( xValue, cPicture ), cColor )
+
+   RETURN NIL

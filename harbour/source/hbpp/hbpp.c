@@ -1,6 +1,8 @@
 /*
  * $Id$
+ */
 
+/*
    Harbour Project source code
 
    This file contains the main part of preprocessor implementation.
