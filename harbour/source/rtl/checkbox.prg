@@ -238,13 +238,13 @@ METHOD Display()   CLASS HBCHECKBOX
 
 
 
-static function __GUICOLOR( cPair, nPos )
+function __GUICOLOR( cPair, nPos )
    Local cColor := cPair, nPosition:=0, nCommaPos:=0
 
    cColor := hb_ColorIndex( cPair, nPos-1 )
    return cColor
 
-static function _CHECKBOX_( lState, cCaption, cMessage, cColor, FBlock, SBlock, cStyle)
+function _CHECKBOX_( lState, cCaption, cMessage, cColor, FBlock, SBlock, cStyle)
    Local oCheck
 
    oCheck := HBCHECKBOX():New(Row(), Col(), cCaption)
@@ -270,7 +270,7 @@ static function _CHECKBOX_( lState, cCaption, cMessage, cColor, FBlock, SBlock, 
    endif
    return oCheck
 
-static function IsDefColor()
+function IsDefColor()
    Local cColor:=SETCOLOR()
 
    Return ( cColor == "W/N,N/W,N/N,N/N,N/W" )
