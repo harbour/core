@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Class TPersistent
+ * Class HBPersistent
  *
  * Copyright 2001 Antonio Linares <alinares@fivetech.com>
  * www - http://www.harbour-project.org
@@ -53,7 +53,7 @@
 #include "hbclass.ch"
 #include "common.ch"
 
-CLASS TPersistent
+CLASS HBPersistent
 
    METHOD SaveToText( cObjectName )
 
@@ -61,7 +61,7 @@ CLASS TPersistent
 
 ENDCLASS
 
-METHOD SaveToText( cObjectName ) CLASS TPersistent
+METHOD SaveToText( cObjectName ) CLASS HBPersistent
 
    local oNew := &( ::ClassName() + "()" ):New()
    local aProperties, n, uValue, cObject, cType
