@@ -151,4 +151,5 @@ static USHORT hb_cdxIndexUnLockRead( LPCDXINDEX pIndex, LPCDXTAG pTag );
 static USHORT hb_cdxIndexLockRead( LPCDXINDEX pIndex, LPCDXTAG pTag );
 static USHORT hb_cdxIndexLockWrite ( LPCDXINDEX pIndex, LPCDXTAG pTag );
 static USHORT hb_cdxIndexUnLockWrite ( LPCDXINDEX pIndex, LPCDXTAG pTag );
+static void hb_cdxIndexDelTag( LPCDXINDEX pIndex, char * szTagName );
 

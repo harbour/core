@@ -2703,6 +2703,41 @@ static void hb_cdxIndexAddTag( LPCDXINDEX pIndex, char * szTagName, char * szKey
    hb_cdxTagTagClose( pIndex->pCompound );
 }
 
+
+static void hb_cdxIndexDelTag( LPCDXINDEX pIndex, char * szTagName )
+{
+   LPCDXTAG pTag, pLastTag;
+   LPKEYINFO pKey;
+
+   hb_cdxTagTagOpen( pIndex->pCompound, 0 );
+   pKey = hb_cdxKeyNew();
+   pKey = hb_cdxKeyPutC( pKey, szTagName );
+   pTag = pIndex->TagList;
+   pLastTag = NULL;
+   while( pTag != NULL )
+   {
+      if( hb_stricmp( pTag->szName, szTagName ) == 0 )
+      {
+         pKey->Tag = pTag->TagBlock;
+         if( hb_cdxTagKeyFind( pIndex->pCompound, pKey ) > 0 )
+            hb_cdxPageDeleteKey( pIndex->pCompound->RootPage );
+         if( pLastTag == NULL )
+            pIndex->TagList = pTag->pNext;
+         else
+            pLastTag->pNext = pTag->pNext;
+         hb_cdxTagFree( pTag );
+         break;
+      }
+      pLastTag = pTag;
+      pTag = pTag->pNext;
+   }
+
+   hb_cdxKeyFree( pKey );
+   pIndex->pCompound->RootPage->Changed = TRUE;
+   hb_cdxTagTagClose( pIndex->pCompound );
+}
+
+
 static USHORT hb_cdxIndexCheckVersion( LPCDXINDEX pIndex )
 {
    USHORT ret = 0;
@@ -5477,6 +5512,69 @@ ERRCODE hb_cdxOrderCreate( CDXAREAP pAreaCdx, LPDBORDERCREATEINFO pOrderInfo )
 
 
 // ( DBENTRYP_OI )    hb_cdxOrderDestroy    : NULL
+ERRCODE hb_cdxOrderDestroy( CDXAREAP pArea, LPDBORDERINFO pOrderInfo )
+{
+   LPCDXINDEX pIndex, pIndexTmp;
+   LPCDXTAG pTag;
+   USHORT uiTag;
+   char * szFileName;
+
+   HB_TRACE(HB_TR_DEBUG, ("cdxOrderDestroy(%p, %p)", pArea, pOrderInfo));
+
+   if( SELF_GOCOLD( ( AREAP ) pArea ) == FAILURE )
+      return FAILURE;
+
+   if( ! pArea->lpIndexes )
+      return SUCCESS;
+
+   if( pOrderInfo->itmOrder )
+   {
+      /* pArea->lpIndexes->uiTag = hb_cdxFindTag( pArea, pOrderInfo ); */
+      uiTag = hb_cdxFindTag( pArea, pOrderInfo );
+      if ( uiTag ) {
+         pTag = hb_cdxGetTagByNumber(pArea,  uiTag );
+         /* if( pArea->lpIndexes->uiTag ) */
+         pIndex = pTag->pIndex;
+         if ( !pIndex->fShared && !pIndex->fReadonly )
+         {
+            hb_cdxIndexDelTag( pIndex, pTag->szName );
+            if ( !pIndex->TagList ) {
+               szFileName = ( char * ) hb_xgrab( strlen( pIndex->szFileName ) + 1 );
+               strcpy( szFileName, pIndex->szFileName);
+               if ( pArea->lpIndexes == pIndex )
+               {
+                  pArea->lpIndexes = pIndex->pNext;
+                  if ( pArea->fHasTags ) {
+                     pArea->fHasTags = 0;
+                     SELF_WRITEDBHEADER( ( AREAP ) pArea );
+                  }
+               }
+               else
+               {
+                  pIndexTmp = pArea->lpIndexes;
+                  while( pIndexTmp->pNext && ( pIndexTmp->pNext != pIndex ) )
+                  {
+                     pIndexTmp = pIndexTmp->pNext;
+                  }
+                  if ( pIndexTmp->pNext == pIndex ) {
+                     pIndexTmp->pNext = pIndex->pNext;
+                  }
+               }
+               hb_cdxIndexFree( pIndex );
+               hb_fsDelete( (BYTE *) szFileName );
+               hb_xfree( szFileName );
+
+            }
+         }
+         else
+         {
+            hb_errInternal( 1023, "hb_cdxOrderDestroy: exclusive required.", "", "" );
+         }
+      }
+   }
+   return SUCCESS;
+
+}
 
 // ( DBENTRYP_OII )   hb_cdxOrderInfo
 /*

@@ -454,7 +454,7 @@ extern ERRCODE hb_cdxOrderListFocus( CDXAREAP pArea, LPDBORDERINFO pOrderInfo );
 #define hb_cdxOrderListRebuild                     NULL
 #define hb_cdxOrderCondition                       NULL
 extern ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo );
-#define hb_cdxOrderDestroy                         NULL
+extern ERRCODE hb_cdxOrderDestroy( CDXAREAP pArea, LPDBORDERINFO pOrderInfo );
 extern ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrderInfo );
 #define hb_cdxClearFilter                          NULL
 #define hb_cdxClearLocate                          NULL
