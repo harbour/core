@@ -118,7 +118,7 @@ char * hb_nationGetMsg( USHORT uiMsg )
  *  $COMPLIANCE$
  *      ISAFFIRM() is fully CA-Clipper compliant.
  *  $SEEALSO$
- *      ISNEGATIVE()  NATIONMSG()
+ *      ISNEGATIVE(),NATIONMSG()
  *  $END$
  */
 
@@ -155,7 +155,7 @@ HARBOUR HB_ISAFFIRM( void )
  *  $COMPLIANCE$
  *      ISNEGATIVE() is fully CA-Clipper compliant.
  *  $SEEALSO$
- *      ISAFFIRM() NATIONMSG()
+ *      ISAFFIRM(),NATIONMSG()
  *  $END$
  */
 
@@ -194,7 +194,7 @@ HARBOUR HB_ISNEGATIVE( void )
  *  $COMPLIANCE$
  *      NATIONMSG() is fully CA-Clipper compliant.
  *  $SEEALSO$
- *      ISAFFIRM() ISNEGATIVE()
+ *      ISAFFIRM(),ISNEGATIVE()
  *  $END$
  */
 

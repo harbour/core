@@ -60,7 +60,7 @@
  *  $COMPLIANCE$
  *      DESCEND() is fully CA-Clipper compliant.
  *  $SEEALSO$
- *      'INDEX' 'SEEK'
+ *       INDEX,SEEK
  *  $END$
  */
 

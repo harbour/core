@@ -1413,7 +1413,7 @@ FHANDLE hb_fsExtOpen( BYTE * pFilename, BYTE * pDefExt,
  *  $COMPLIANCE$
  *     FOPEN() is CA-CLIPPER compilant
  *  $SEEALSO$
- *     FCREATE() FERROR() FCLOSE()
+ *     FCREATE(),FERROR(),FCLOSE()
  *  $INCLUDE$
  *     Fileio.ch
  *  $END$
@@ -1486,7 +1486,7 @@ HARBOUR HB_FOPEN( void )
  *  $COMPLIANCE$
  *     This function is CA-CLIPPER compilant
  *  $SEEALSO$
- *     FCLOSE() FOPEN() FWRITE() FREAD() FERROR()
+ *     FCLOSE(),FOPEN(),FWRITE(),FREAD(),FERROR()
  *  $INCLUDE$
  *     
  *  $END$
@@ -1567,7 +1567,7 @@ HARBOUR HB_FCREATE( void )
  *  $COMPLIANCE$
  *     This function is CA-Clipper compilant
  *  $SEEALSO$
- *     BIN2I() BIN2L() BIN2W() FERROR() FWRITE()
+ *     BIN2I(),BIN2L(),BIN2W(),FERROR(),FWRITE()
  *  $INCLUDE$
  *     
  *  $END$
@@ -1668,7 +1668,7 @@ HARBOUR HB_FREAD( void )
  *     This function is not CA-Clipper compatile since
  *   it can writes strings greather the 64K
  *  $SEEALSO$
- *     FCLOSE() FCREATE() FERROR() FOPEN() I2BIN() L2BIN()
+ *     FCLOSE(),FCREATE(),FERROR(),FOPEN(),I2BIN(),L2BIN()
  *  $INCLUDE$
  *     
  *  $END$
@@ -1763,7 +1763,7 @@ HARBOUR HB_FWRITE( void )
  *  $COMPLIANCE$
  *     This function is CA-Clipper compatible
  *  $SEEALSO$
- *     FCLOSE() FERASE() FOPEN() FWRITE()
+ *     FCLOSE(),FERASE(),FOPEN(),FWRITE()
  *  $INCLUDE$
  *     
  *  $END$
@@ -1800,7 +1800,7 @@ HARBOUR HB_FERROR( void )
  *  $COMPLIANCE$
  *      This function is CA-Clipper compilant
  *  $SEEALSO$
- *     FOPEN() FCREATE() FREAD() FWRITE() FERROR()
+ *     FOPEN(),FCREATE(),FREAD(),FWRITE(),FERROR()
  *  $INCLUDE$
  *     
  *  $END$
@@ -1867,7 +1867,7 @@ HARBOUR HB_FCLOSE( void )
  *  $COMPLIANCE$
  *     This function is CA-Clipper Compatible
  *  $SEEALSO$
- *     FERROR() FRENAME()
+ *     FERROR(),FRENAME()
  *  $INCLUDE$
  *     
  *  $END$
@@ -1934,7 +1934,7 @@ HARBOUR HB_FERASE( void )
  *  $COMPLIANCE$
  *     This function is CA-Clipper compilant
  *  $SEEALSO$
- *     Comm.ngo:'ERASE'  FERASE() FERROR() FILE() Comm.ngo:'RENAME'
+ *     ERASE,FERASE(),FERROR(),FILE(),RENAME
  *  $INCLUDE$
  *     
  *  $END$
@@ -2039,7 +2039,7 @@ HARBOUR HB_FRENAME( void )
  *  $COMPLIANCE$
  *     This function is CA-Clipper compilant
  *  $SEEALSO$
- *     FCREATE() FERROR() FOPEN() FREAD() FREADSTR() FWRITE()
+ *     FCREATE(),FERROR(),FOPEN(),FREAD(),FREADSTR(),FWRITE()
  *  $INCLUDE$
  *     Fileio.ch
  *  $END$
@@ -2523,7 +2523,7 @@ HARBOUR HB_FSETDEVMOD( void )
  *  $COMPLIANCE$
  *      This command is CA-Clipper compatible
  *  $SEEALSO$
- *     CURDIR() 'ERASE' lowlevel.ngo:FILE() lowlevel.ngo:FERASE() lowlevel.ngo:FRENAME()
+ *     CURDIR(),ERASE,FILE(),FERASE(),FRENAME()
  *  $INCLUDE$
  *     
  *  $END$
@@ -2575,7 +2575,7 @@ HARBOUR HB_FSETDEVMOD( void )
  *  $COMPLIANCE$
  *     This command is CA-Clipper compatible
  *  $SEEALSO$
- *     CURDIR() lowlevel.ngo:FILE()
+ *     CURDIR(),FILE()
  *  $INCLUDE$
  *     
  *  $END$

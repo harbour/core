@@ -97,7 +97,7 @@ static s_nPointer := 1
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
- *    array.ngo:ACHOICE() comm.ngo:'MENU TO' 'SET MESSAGE' 'SET INTENSITY' 'SET WRAP' __MENUTO()
+ *    ACHOICE(),MENU TO,SET MESSAGE,SET INTENSITY,SET WRAP,__MENUTO()
  *  $END$
  */
 /*  $DOC$
@@ -159,7 +159,7 @@ static s_nPointer := 1
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
- *    array.ngo:ACHOICE() comm.ngo:'MENU TO' 'SET MESSAGE' 'SET INTENSITY' 'SET WRAP' datai.ngo:__MENUTO()
+ *    ACHOICE(),MENU TO,SET MESSAGE,SET INTENSITY,SET WRAP,__MENUTO()
  *  $END$
  */
 
@@ -263,7 +263,7 @@ function __AtPrompt( nRow, nCol, cPrompt, cMsg )
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
- *      comm.ngo:'@...PROMPT' array.ngo:ACHOICE() 'SET MESSAGE' 'SET INTENSITY' 'SET WRAP'      __ATPROMPT()
+ *      @...PROMPT,ACHOICE(),SET MESSAGE,SET INTENSITY,SET WRAP,__ATPROMPT()
  *  $END$
  */
 /*  $DOC$
@@ -345,7 +345,7 @@ function __AtPrompt( nRow, nCol, cPrompt, cMsg )
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
- *   comm.ngo:'@...PROMPT'  array.ngo:ACHOICE() 'SET MESSAGE' 'SET INTENSITY' 'SET WRAP' datai.ngo:__ATPROMPT()
+ *   @...PROMPT,ACHOICE(),SET MESSAGE,SET INTENSITY,SET WRAP,__ATPROMPT()
  *  $END$
  */
 

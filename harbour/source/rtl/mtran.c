@@ -64,7 +64,7 @@
  *  $COMPLIANCE$
  *      MEMOTRAN() is fully CA-Clipper compliant.
  *  $SEEALSO$
- *      HARDCR() STRTRAN()
+ *      HARDCR(),STRTRAN()
  *  $END$
  */
 

@@ -90,7 +90,7 @@
  *
  *      CA-Clipper would raise BASE/1003 error if the field does not exist.
  *  $SEEALSO$
- *      EVAL()  FIELDWBLOCK()  mv.ngo:MEMVARBLOCK()
+ *      EVAL(),FIELDWBLOCK(),MEMVARBLOCK()
  *  $END$
  */
 
@@ -156,7 +156,7 @@ FUNCTION FIELDBLOCK( cFieldName )
  *
  *      CA-Clipper would raise BASE/1003 error if the field does not exist.
  *  $SEEALSO$
- *      EVAL()  FIELDBLOCK() mv.ngo:MEMVARBLOCK()
+ *      EVAL(),FIELDBLOCK(),MEMVARBLOCK()
  *  $END$
  */
 

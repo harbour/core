@@ -69,7 +69,7 @@
  *  $COMPLIANCE$
  *      LEN() is fully CA-Clipper compliant.
  *  $SEEALSO$
- *      Conv.ngo:EMPTY() RTRIM() LTRIM() array.ngo:AADD() array.ngo:ASIZE()
+ *      EMPTY(),RTRIM(),LTRIM(),AADD(),ASIZE()
  *  $END$
  */
 

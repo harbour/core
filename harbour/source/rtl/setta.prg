@@ -59,7 +59,7 @@
  *  $COMPLIANCE$
  *      SETTYPEAHEAD() is fully CA-Clipper compliant.
  *  $SEEALSO$
- *      __ACCEPT() datai.ngo:__INPUT()
+ *      __ACCEPT(),__INPUT()
  *  $END$
  */
 

@@ -119,7 +119,7 @@
  *      the 8.3 uppercase name.
  *  
  *  $SEEALSO$
- *      ARRAY()  DIRECTORY() 'SET DEFAULT'
+ *      ARRAY(),DIRECTORY(),SET DEFAULT
  *  $END$
  */
 

@@ -82,7 +82,7 @@
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
- *      __ObjGetMethodLis  __objGetMsgList()  __objHasMethod()
+ *      __ObjGetMethodLis,__objGetMsgList(),__objHasMethod()
  *  $END$
  */
 
@@ -127,7 +127,7 @@ return __objHasMsg( oObject, cSymbol ) .and. ;
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
- *      __ObjGetMethodLis  __objGetMsgList()  __objHasData()
+ *      __ObjGetMethodLis,__objGetMsgList(),__objHasData()
  *  $END$
  */
 
@@ -184,7 +184,7 @@ return __objHasMsg( oObject, cSymbol ) .and. ;
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
- *      __ObjGetMethodLis  __ObjGetValueList  __objHasData()  __objHasMethod()
+ *      __ObjGetMethodLis,__ObjGetValueList,__objHasData(),__objHasMethod()
  *  $END$
  */
 
@@ -260,7 +260,7 @@ return aData
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
- *      __objGetMsgList()  __ObjGetValueList  __objHasData()    __objHasMethod()
+ *      __objGetMsgList(),__ObjGetValueList,__objHasData(),__objHasMethod()
  *  $END$
  */
 
@@ -312,7 +312,7 @@ return __objGetMsgList( oObject, .F. )
  *  $FILES$
  *      Header file is hboo.ch
  *  $SEEALSO$
- *      __ObjGetMethodLis  __objGetMsgList()  __objHasData()    __objHasMethod()  __ObjSetValueList
+ *      __ObjGetMethodLis,__objGetMsgList(),__objHasData(),__objHasMethod(),__ObjSetValueList
  *  $END$
  */
 
@@ -457,7 +457,7 @@ return oObject
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
- *      __objAddInline()  __objAddData()  __objDelMethod()   __ObjGetMethodLis  __objGetMsgList()  __objHasMethod()   __objModMethod()
+ *      __objAddInline(),__objAddData(),__objDelMethod(),__ObjGetMethodLis,__objGetMsgList(),__objHasMethod(),__objModMethod()
  *  $END$
  */
 
@@ -514,7 +514,7 @@ return oObject
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
- *      __objAddData()  __objAddMethod()  __objDelInline()  __ObjGetMethodLis  __objGetMsgList()  __objHasMethod()   __objModInline()
+ *      __objAddData(),__objAddMethod(),__objDelInline(),__ObjGetMethodLis,__objGetMsgList(),__objHasMethod() ,__objModInline()
  *  $END$
  */
 
@@ -569,7 +569,7 @@ return oObject
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
- *      __objAddInline()  __objAddMethod()  __objDelData()  __objGetMsgList()  __ObjGetValueList  __objHasData()     __ObjSetValueList
+ *      __objAddInline(),__objAddMethod(),__objDelData(),__objGetMsgList(),__ObjGetValueList,__objHasData()   ,__ObjSetValueList
  *  $END$
  */
 
@@ -658,7 +658,7 @@ return oObject
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
- *      __objAddMethod()  __objDelMethod()  __ObjGetMethodLis  __objGetMsgList()  __objHasMethod()
+ *      __objAddMethod(),__objDelMethod(),__ObjGetMethodLis,__objGetMsgList(),__objHasMethod()
  *  $END$
  */
 
@@ -720,7 +720,7 @@ return oObject
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
- *      __objAddInline()  __objDelInline()  __ObjGetMethodLis  __objGetMsgList()  __objHasMethod()
+ *      __objAddInline(),__objDelInline(),__ObjGetMethodLis,__objGetMsgList(),__objHasMethod()
  *  $END$
  */
 
@@ -742,17 +742,14 @@ return oObject
 
 /*  $DOC$
  *  $FUNCNAME$
- *      __objDelMethod() | __objDelInline()
+ *      __objDelMethod() 
  *  $CATEGORY$
  *      Object manipulation
  *  $ONELINER$
- *      Delete a METHOD or INLINE method from class
+ *      Delete a METHOD  from class
  *  $SYNTAX$
  *      __objDelMethod( <oObject>, <cSymbol> ) --> oObject
  *
- *      or
- *
- *      __objDelInline( <oObject>, <cSymbol> ) --> oObject
  *  $ARGUMENTS$
  *      <oObject> is the object to work on.
  *
@@ -816,12 +813,8 @@ return oObject
  *  $CATEGORY$
  *      Object manipulation
  *  $ONELINER$
- *      Delete a METHOD or INLINE method from class
+ *      Delete a METHOD INLINE from class
  *  $SYNTAX$
- *      __objDelMethod( <oObject>, <cSymbol> ) --> oObject
- *
- *      or
- *
  *      __objDelInline( <oObject>, <cSymbol> ) --> oObject
  *  $ARGUMENTS$
  *      <oObject> is the object to work on.
@@ -829,21 +822,20 @@ return oObject
  *      <cSymbol> is the symbol name of METHOD or INLINE method to be
  *      deleted (removed) from the object.
  *  $RETURNS$
- *      __objDelMethod() return a reference to <oObject>.
+ *      __objDelInMethod() return a reference to <oObject>.
  *  $DESCRIPTION$
- *      __objDelMethod() is a low level class support function that delete
+ *      __objDelInMethod() is a low level class support function that delete
  *      (remove) a METHOD or an INLINE method from an object. If a symbol
  *      with the name <cSymbol> does not exist in <oObject> a run time error
  *      will occur.
  *
- *      __objDelInline() is exactly the same as __objDelMethod().
  *  $EXAMPLES$
  *      // create a new THappy class and add a Smile method
  *      oHappy := TClass():New( "THappy" )
  *      __objAddMethod( oHappy, "Smile", @MySmile() )
  *      ? __objHasMethod( oHappy, "Smile" )    // .T.
  *      // remove Smile method
- *      __objDelMethod( oHappy, "Smile" )
+ *      __objDelInMethod( oHappy, "Smile" )
  *      ? __objHasMethod( oHappy, "Smile" )    // .F.
  *
  *      STATIC FUNCTION MySmile( nType )
@@ -862,7 +854,7 @@ return oObject
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
- *      __objAddInline()  __objAddMethod()  __ObjGetMethodLis  __objGetMsgList()  __objHasMethod()  __objModInline() __objModMethod()
+ *      __objAddInline(),__objAddMethod(),__ObjGetMethodLis,__objGetMsgList(),__objHasMethod(),__objModInline() __objModMethod()
  *  $END$
  */
 
@@ -904,8 +896,7 @@ return __objDelMethod( oObject, cSymbol )              // Same story
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
- *      __objAddData()  __objGetMsgList()  __ObjGetValueList 
- *      __objHasData()  __ObjSetValueList
+ *    __objAddData(),__objGetMsgList(),__ObjGetValueList,__objHasData(),__ObjSetValueList
  *  $END$
  */
 

@@ -61,7 +61,7 @@
  *  $COMPLIANCE$
  *      BREAK() is fully CA-Clipper compliant.
  *  $SEEALSO$
- *      'BEGIN SEQUENCE'
+ *       BEGIN SEQUENCE 
  *  $END$
  */
 

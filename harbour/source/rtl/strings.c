@@ -1258,7 +1258,7 @@ HARBOUR HB_VAL( void )
  *  $COMPLIANCE$
  *      CA-Clipper compatible.
  *  $SEEALSO$
- *      STRZERO()  VAL()
+ *      STRZERO(),VAL()
  *  $END$
  */
 
@@ -1377,7 +1377,7 @@ HARBOUR HB_STR( void )
  *  $COMPLIANCE$
  *      CA-Clipper compatible (it was not mentioned in the docs though).
  *  $SEEALSO$
- *      runtime.ngo:STR()  VAL()
+ *      STR(),VAL()
  *  $END$
  */
 
@@ -1497,7 +1497,7 @@ HARBOUR HB_STRZERO( void )
  *  $COMPLIANCE$
  *      HB_VALTOSTR() is a Harbour enhancement.
  *  $SEEALSO$
- *      runtime.ngo:STR()  VAL()
+ *      STR(),VAL()
  *  $END$
  */
 

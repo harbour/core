@@ -60,7 +60,7 @@
  *  $COMPLIANCE$
  *     HARDCR() is fully CA-Clipper compliant.
  *  $SEEALSO$
- *     MEMOTRAN() STRTRAN()
+ *     MEMOTRAN(),STRTRAN()
  *  $END$
  */
 

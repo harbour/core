@@ -1013,7 +1013,7 @@ HARBOUR HB_INKEY( void )
  *  $COMPLIANCE$
  *      __KEYBOARD() is compliant with CA-Clipper 5.3
  *  $SEEALSO$
-     'CLEAR TYPEAHEAD'  comm.ngo:'KEYBOARD'
+     CLEAR TYPEAHEAD,KEYBOARD
  *  $END$
  */
 
@@ -1095,7 +1095,7 @@ void hb_inkeyPut( int ch )
  *  $COMPLIANCE$
  *      Was not part of Clipper
  *  $SEEALSO$
- *      'KEYBOARD' 'CLEAR TYPEAHEAD'  INKEY()
+ *      KEYBOARD,CLEAR TYPEAHEAD,INKEY()
  *  $END$
  */
 
@@ -1143,7 +1143,7 @@ HARBOUR HB___KEYPUT( void )
  *  $COMPLIANCE$
  *      NEXTKEY() is compliant with CA-Clipper 5.3
  *  $SEEALSO$
- *      INKEY()  LASTKEY()
+ *      INKEY(),LASTKEY()
  *  $END$
  */
 
@@ -1183,7 +1183,7 @@ HARBOUR HB_NEXTKEY( void )
  *  $COMPLIANCE$
  *      LASTKEY() is compliant with CA-Clipper 5.3
  *  $SEEALSO$
- *      INKEY()  LASTKEY()
+ *      INKEY(),LASTKEY()
  *  $END$
  */
 
@@ -1258,6 +1258,6 @@ HARBOUR HB_FKMAX( void )
  *  $COMPLIANCE$
  *      __KEYBOARD() is compliant with CA-Clipper 5.3
  *  $SEEALSO$
- *      'CLEAR TYPEAHEAD'  consimpu.ngo:__KEYBOARD()
+ *       CLEAR TYPEAHEAD,__KEYBOARD()
  *  $END$
  */

@@ -60,7 +60,7 @@
  *  $COMPLIANCE$
  *      WORD() is NOT fully CA-Clipper compliant.
  *  $SEEALSO$
- *      'CALL' 
+ *       CALL  
  *  $END$
  */
 

@@ -83,7 +83,7 @@
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
- *      consimpu.ngo:INKEY()  event.ngo:SETKEY()  consimpu.ngo:__Keyboard()
+ *      INKEY(),SETKEY(),__Keyboard(),SET KEY
  *  $END$
  */
 
@@ -153,6 +153,6 @@ PROCEDURE __SetFunction( nFunctionKey, cString )
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
- *      consimpu.ngo:INKEY()  event.ngo:SETKEY()  consimpu.ngo:__Keyboard()
+ *      INKEY(),SETKEY(),__Keyboard()
  *  $END$
  */

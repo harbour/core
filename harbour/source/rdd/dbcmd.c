@@ -1804,7 +1804,7 @@ HARBOUR HB_DBF( void )
  *  $COMPLIANCE$
  *      BOF() is fully CA-Clipper compliant.
  *  $SEEALSO$
- *    EOF()  FOUND()  LASTREC()
+ *    EOF(),FOUND(),LASTREC()
  *  $END$
  */
 
@@ -2059,12 +2059,12 @@ HARBOUR HB_DBCLOSEAREA( void )
  * 
  *  Notes
  *
- *    ^CFE  Network environment: DBCOMMIT() makes database updates visible
+ *      Network environment: DBCOMMIT() makes database updates visible
  *      to other processes.  To insure data integrity, issue DBCOMMIT()
  *      before an UNLOCK operation.  For more information, refer to the
  *      Network Programming chapter in the Programming and Utilities guide.
  *
- *   ^CFE  DBCOMMIT() uses DOS interrupt 21h function 68h to perform the
+ *     DBCOMMIT() uses DOS interrupt 21h function 68h to perform the
  *      solid-disk write.  It is up to the network operating system to
  *      properly implement this request.  Check with the network vendor to
  *      see if this is supported.
@@ -2096,7 +2096,7 @@ HARBOUR HB_DBCLOSEAREA( void )
  *
  *
  *  $SEEALSO$
- *     DBCLOSEALL()       DBCOMMITALL()       DBUNLOCK()
+ *     DBCLOSEALL(),DBCOMMITALL(),DBUNLOCK()
  *  $INCLUDE$
  *     
  *  $END$
@@ -2123,47 +2123,45 @@ HARBOUR HB_DBCOMMIT( void )
  *  $RETURNS$
  *     DBCOMMIT() always returns NIL.
  *  $DESCRIPTION$
-     DBCOMMITALL() causes all pending updates to all work areas to be written
-     to disk.  It is equivalent to calling DBCOMMIT() for every occupied work
-     area.
-
-     For more information, refer to DBCOMMIT().
-
- Notes
-     ^CFE  DBCOMMITALL() uses DOS interrupt 21h function 68h to perform
-        the solid-disk write.  It is up to the network operating system to
-        properly implement this request.  Check with the network vendor to
-        see if this is supported.
+ *   DBCOMMITALL() causes all pending updates to all work areas to be written
+ *   to disk.  It is equivalent to calling DBCOMMIT() for every occupied work
+ *   area.
+ *   For more information, refer to DBCOMMIT().
+ * Notes
+ *     DBCOMMITALL() uses DOS interrupt 21h function 68h to perform
+ *      the solid-disk write.  It is up to the network operating system to
+ *      properly implement this request.  Check with the network vendor to
+ *      see if this is supported.
  *     
  *  $EXAMPLES$
 
-     ^CFE  The following example writes all pending updates to disk:
+ *     The following example writes all pending updates to disk:
 
-        cLast := "Winston"
-        //
-        DBUSEAREA( .T., "DBFNTX", "Sales", "Sales", .T. )
-        DBSETINDEX( "SALEFNAM" )
-        DBSETINDEX( "SALELNAM" )
-        //
-        DBUSEAREA( .T., "DBFNTX", "Colls", "Colls", .T. )
-        DBSETINDEX( "COLLFNAM" )
-        DBSETINDEX( "COLLLNAM" )
+ *      cLast := "Winston"
+ *      //
+ *      DBUSEAREA( .T., "DBFNTX", "Sales", "Sales", .T. )
+ *      DBSETINDEX( "SALEFNAM" )
+ *      DBSETINDEX( "SALELNAM" )
+ *      //
+ *      DBUSEAREA( .T., "DBFNTX", "Colls", "Colls", .T. )
+ *      DBSETINDEX( "COLLFNAM" )
+ *      DBSETINDEX( "COLLLNAM" )
 
-        DBSELECTAREA( "Sales" )      // select "Sales" work area
+ *      DBSELECTAREA( "Sales" )      // select "Sales" work area
 
-        IF ( Sales->(DBSEEK(cLast)) )
-           IF Sales->( DELETED() ) .AND. Sales( RLOCK() )
-              Sales->( DBRECALL() )
-              ? "Deleted record has been recalled."
-           ENDIF
-        ELSE
-           ? "Not found"
-        ENDIF
-        //
-        // processing done, write updates to disk and close
-        DBCOMMITALL()
-        DBCLOSEALL()
-        QUIT
+ *      IF ( Sales->(DBSEEK(cLast)) )
+ *         IF Sales->( DELETED() ) .AND. Sales( RLOCK() )
+ *            Sales->( DBRECALL() )
+ *            ? "Deleted record has been recalled."
+ *         ENDIF
+ *      ELSE
+ *         ? "Not found"
+ *      ENDIF
+ *      //
+ *      // processing done, write updates to disk and close
+ *      DBCOMMITALL()
+ *      DBCLOSEALL()
+ *      QUIT
  *
  *  $TESTS$
  *
@@ -2173,7 +2171,7 @@ HARBOUR HB_DBCOMMIT( void )
  *
 
  *  $SEEALSO$
- *     DBCLOSEALL()       DBCOMMIT()       DBUNLOCK()
+ *     DBCLOSEALL(),DBCOMMIT(),DBUNLOCK()
  *  $INCLUDE$
  *     
  *  $END$
@@ -2205,52 +2203,52 @@ HARBOUR HB_DBCOMMITALL( void )
  *  $RETURNS$
  *     __DbCONTINUE()  Always return nil
  *  $DESCRIPTION$
-     __DBCONTINUE is a database command that searches from the current record
-     position for the next record meeting the most recent LOCATE condition
-     executed in the current work area.  It terminates when a match is found
-     or end of file is encountered.  If __DBCONTINUE is successful, the matching
-     record becomes the current record and FOUND() returns true (.T.); if
-     unsuccessful, FOUND() returns false (.F.).
+ *   __DBCONTINUE is a database command that searches from the current record
+ *   position for the next record meeting the most recent LOCATE condition
+ *   executed in the current work area.  It terminates when a match is found
+ *   or end of file is encountered.  If __DBCONTINUE is successful, the matching
+ *   record becomes the current record and FOUND() returns true (.T.); if
+ *   unsuccessful, FOUND() returns false (.F.).
 
-     Each work area may have an active LOCATE condition.  In CA-Clipper, a
-     LOCATE condition remains pending until a new LOCATE condition is
-     specified.  No other commands release the condition.
+ *   Each work area may have an active LOCATE condition.  In CA-Clipper, a
+ *   LOCATE condition remains pending until a new LOCATE condition is
+ *   specified.  No other commands release the condition.
 
  Notes
 
-     ^CFE  Scope and WHILE condition: Note that the scope and WHILE
-        condition of the initial LOCATE are ignored; only the FOR condition
-        is used with CONTINUE.  If you are using a LOCATE with a WHILE
-        condition and want to continue the search for a matching record, use
-        SKIP and then repeat the original LOCATE statement adding REST as the
-        scope.
+ *     Scope and WHILE condition: Note that the scope and WHILE
+ *      condition of the initial LOCATE are ignored; only the FOR condition
+ *      is used with CONTINUE.  If you are using a LOCATE with a WHILE
+ *      condition and want to continue the search for a matching record, use
+ *      SKIP and then repeat the original LOCATE statement adding REST as the
+ *      scope.
  *     
  *  $EXAMPLES$
-     ^CFE  This example scans records in Sales.dbf for a particular
-        salesman and displays a running total sales amounts:
+ *     This example scans records in Sales.dbf for a particular
+ *      salesman and displays a running total sales amounts:
 
-        LOCAL nRunTotal := 0
-        USE Sales NEW
-        LOCATE FOR Sales->Salesman = "1002"
-        DO WHILE FOUND()
-           ? Sales->Salesname, nRunTotal += Sales->Amount
-           __DBCONTINUE()
-        ENDDO
+ *      LOCAL nRunTotal := 0
+ *      USE Sales NEW
+ *      LOCATE FOR Sales->Salesman = "1002"
+ *      DO WHILE FOUND()
+ *         ? Sales->Salesname, nRunTotal += Sales->Amount
+ *         __DBCONTINUE()
+ *      ENDDO
 
-     ^CFE  This example demonstrates how to continue if the pending
-        LOCATE scope contains a WHILE condition:
+ *     This example demonstrates how to continue if the pending
+ *      LOCATE scope contains a WHILE condition:
 
-        LOCAL nRunTotal := 0
-        USE Sales INDEX Salesman NEW
-        SEEK "1002"
-        LOCATE REST WHILE Sales->Salesman = "1002";
-              FOR Sales->Amount > 5000
-        DO WHILE FOUND()
-           ? Sales->Salesname, nRunTotal += Sales->Amount
-           SKIP
-           LOCATE REST WHILE Sales->Salesman = "1002";
-              FOR Sales->Amount > 5000
-        ENDDO
+ *      LOCAL nRunTotal := 0
+ *      USE Sales INDEX Salesman NEW
+ *      SEEK "1002"
+ *      LOCATE REST WHILE Sales->Salesman = "1002";
+ *            FOR Sales->Amount > 5000
+ *      DO WHILE FOUND()
+ *         ? Sales->Salesname, nRunTotal += Sales->Amount
+ *         SKIP
+ *         LOCATE REST WHILE Sales->Salesman = "1002";
+ *            FOR Sales->Amount > 5000
+ *      ENDDO
  *
  *  $TESTS$
  *
@@ -2260,7 +2258,7 @@ HARBOUR HB_DBCOMMITALL( void )
  *
 
  *  $SEEALSO$
- *     EOF()     FOUND()
+ *     EOF(),FOUND()
  *  $INCLUDE$
  *     
  *  $END$
@@ -2310,102 +2308,100 @@ HARBOUR HB___DBCONTINUE()
  *     DBCREATE(<cDatabase>, <aStruct>,[<cDriver>]) --> NIL
  *     
  *  $ARGUMENTS$
-       <cDatabase> is the name of the new database file, with an optional
-       drive and directory, specified as a character string.  If specified
-       without an extension (.dbf) is assumed.
+ *     <cDatabase> is the name of the new database file, with an optional
+ *     drive and directory, specified as a character string.  If specified
+ *     without an extension (.dbf) is assumed.
 
-       <aStruct> is an array that contains the structure of <cDatabase> as
-       a series of subarrays, one per field.  Each subarray contains the
-       definition of each field's attributes and has the following structure:
+ *     <aStruct> is an array that contains the structure of <cDatabase> as
+ *     a series of subarrays, one per field.  Each subarray contains the
+ *     definition of each field's attributes and has the following structure:
 
-       Field Definition Subarray
-       ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
-       Position     Metasymbol     Dbstruct.ch
-       ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
-       1            cName          DBS_NAME
-       2            cType          DBS_TYPE
-       3            nLength        DBS_LEN
-       4            nDecimals      DBS_DEC
-       ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+ *     Field Definition Subarray
+ *     ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+ *     Position     Metasymbol     Dbstruct.ch
+ *     ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+ *     1            cName          DBS_NAME
+ *     2            cType          DBS_TYPE
+ *     3            nLength        DBS_LEN
+ *     4            nDecimals      DBS_DEC
+ *     ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
 
-       <cDriver> specifies the replaceable database driver (RDD) to use to
-       process the current work area.  <cDriver> is name of the RDD specified
-       as a character expression.  If you specify <cDriver> as a literal value,
-       you must enclose it in quotes.
+ *     <cDriver> specifies the replaceable database driver (RDD) to use to
+ *     process the current work area.  <cDriver> is name of the RDD specified
+ *     as a character expression.  If you specify <cDriver> as a literal value,
+ *     you must enclose it in quotes.
  *     
  *  $RETURNS$
  *     DBCREATE() always returns NIL.
  *  $DESCRIPTION$
        DBCREATE() is a database function that creates a database file from an
-     array containing the structure of the file.  You may create the array
-     programmatically or by using DBSTRUCT().  DBCREATE() is similar to the
-     CREATE FROM command which creates a new database file structure from a
-     structure extended file.  Use CREATE or COPY STRUCTURE EXTENDED commands
-     to create a structure extended file.
+ *   array containing the structure of the file.  You may create the array
+ *   programmatically or by using DBSTRUCT().  DBCREATE() is similar to the
+ *   CREATE FROM command which creates a new database file structure from a
+ *   structure extended file.  Use CREATE or COPY STRUCTURE EXTENDED commands
+ *   to create a structure extended file.
 
-     Before using DBCREATE(), you must first create the <aStruct> array and
-     fill it with the field definition arrays according to the structure in
-     Field Definition Subarray table (above).  There are some specific rules
-     for creating a field definition array, including:
+ *   Before using DBCREATE(), you must first create the <aStruct> array and
+ *   fill it with the field definition arrays according to the structure in
+ *   Field Definition Subarray table (above).  There are some specific rules
+ *   for creating a field definition array, including:
 
-     ^CFE  Specify all field attributes with a value of the proper data
-        type for the attribute.  The decimals attribute must be
-        specified--even for non-numeric fields.  If the field does not have a
-        decimals attribute, specify zero.
+ *     Specify all field attributes with a value of the proper data
+ *      type for the attribute.  The decimals attribute must be
+ *      specified--even for non-numeric fields.  If the field does not have a
+ *      decimals attribute, specify zero.
 
-     ^CFE  Specify the type attribute using the first letter of the data
-        type as a minimum.  Use longer and more descriptive terms for
-        readability.  For example, both "C" and "Character" can be specified
-        as the type attribute for character fields.
+ *     Specify the type attribute using the first letter of the data
+ *      type as a minimum.  Use longer and more descriptive terms for
+ *      readability.  For example, both "C" and "Character" can be specified
+ *      as the type attribute for character fields.
 
-     ^CFE  In CA-Clipper, character fields contain up to 64,000
-        characters.  Unlike the CREATE FROM command, DBCREATE() does not use
-        the decimals attribute to specify the high-order part of the field
-        length.  Specify the field length directly, regardless of its
-        magnitude.
+ *     In CA-Clipper, character fields contain up to 64,000
+ *      characters.  Unlike the CREATE FROM command, DBCREATE() does not use
+ *      the decimals attribute to specify the high-order part of the field
+ *      length.  Specify the field length directly, regardless of its
+ *      magnitude.
 
-     To make references to the various elements of the field definition
-     subarray more readable, the header file called Dbstruct.ch is supplied
-     which contains the #defines to assign a name to the array position for
-     each field attribute.  It is located in \CLIPPER5\INCLUDE.
+ *   To make references to the various elements of the field definition
+ *   subarray more readable, the header file called Dbstruct.ch is supplied
+ *   which contains the #defines to assign a name to the array position for
+ *   each field attribute.  It is located in \CLIPPER5\INCLUDE.
  *     
  *  $EXAMPLES$
-       This example creates an empty array and then adds field
-        definition subarrays using the AADD() function before creating
-        People.dbf.  You might use this technique to add field definitions to
-        your structure array dynamically:
+ *     This example creates an empty array and then adds field
+ *      definition subarrays using the AADD() function before creating
+ *      People.dbf.  You might use this technique to add field definitions to
+ *      your structure array dynamically:
 
-        aDbf := {}
-        AADD(aDbf, { "Name", "C", 25, 0 })
-        AADD(aDbf, { "Address", "C", 1024, 0 })
-        AADD(aDbf, { "Phone", "N", 13, 0 })
-        //
-        DBCREATE("People", aDbf)
+ *      aDbf := {}
+ *      AADD(aDbf, { "Name", "C", 25, 0 })
+ *      AADD(aDbf, { "Address", "C", 1024, 0 })
+ *      AADD(aDbf, { "Phone", "N", 13, 0 })
+ *      //
+ *      DBCREATE("People", aDbf)
 
-     ^CFE  This example performs the same types of actions but declares
-        the structure array as a two-dimensional array, and then uses
-        subscript addressing to specify the field definitions.  It will be
-        created using the DBFMDX RDD:
+ *     This example performs the same types of actions but declares
+ *      the structure array as a two-dimensional array, and then uses
+ *      subscript addressing to specify the field definitions.  It will be
+ *      created using the DBFMDX RDD:
 
-        #include "Dbstruct.ch"
-        //
-        LOCAL aDbf[1][4]
-        aDbf[1][ DBS_NAME ] := "Name"
-        aDbf[1][ DBS_TYPE ] := "Character"
-        aDbf[1][ DBS_LEN ]  := 25
-        aDbf[1][ DBS_DEC ]  := 0
-        //
-        DBCREATE("Name", aDbf, "DBFMDX")
+ *      #include "Dbstruct.ch"
+ *      //
+ *      LOCAL aDbf[1][4]
+ *      aDbf[1][ DBS_NAME ] := "Name"
+ *      aDbf[1][ DBS_TYPE ] := "Character"
+ *      aDbf[1][ DBS_LEN ]  := 25
+ *      aDbf[1][ DBS_DEC ]  := 0
+ *      //
+ *      DBCREATE("Name", aDbf, "DBFMDX")
  *  $TESTS$
  *
  *  $STATUS$
  *     R
  *  $COMPLIANCE$
- *
-
  *     
  *  $SEEALSO$
- *     AFIELDS()      DBSTRUCT()
+ *     AFIELDS(),DBSTRUCT()
  *  $INCLUDE$
  *     "Dbstruct.ch"
  *  $END$
@@ -2710,20 +2706,20 @@ HARBOUR HB_DBCREATE( void )
 
  Notes
 
-     ^CFE  Logical records: If the global _SET_DELETED status is true
+       Logical records: If the global _SET_DELETED status is true
         (.T.), deleted records are not logically visible.  That is, database
         operations which operate on logical records will not consider records
         marked for deletion.  Note, however, that if _SET_DELETED is true
         (.T.) when the current record is marked for deletion, the record
         remains visible until it is no longer the current record.
 
-     ^CFE  Network environment: For a shared database on a network,
+       Network environment: For a shared database on a network,
         DBDELETE() requires the current record to be locked.  For more
         information, refer to the Network Programming chapter of the
         Programming and Utilities guide.
  *     
  *  $EXAMPLES$
-     ^CFE  The following example deletes a record after a successful
+       The following example deletes a record after a successful
         record lock:
 
         cLast := "Winston"
@@ -2790,14 +2786,14 @@ HARBOUR HB_DBDELETE( void )
  *
  *   Notes
  *
- *   ^CFE  Declared variables: A character string returned by DBFILTER()
+ *     Declared variables: A character string returned by DBFILTER()
  *      may not operate correctly when recompiled and executed using the
  *      macro operator (&) if the original filter expression contained
  *      references to local or static variables, or otherwise depended on
  *      compile-time declarations.
  *     
  *  $EXAMPLES$
- *   ^CFE  This example opens two database files, sets two filters, then
+ *     This example opens two database files, sets two filters, then
  *      displays the filter expressions for both work areas:
  *
  *      USE Customer INDEX Customer NEW
@@ -2809,7 +2805,7 @@ HARBOUR HB_DBDELETE( void )
  *      ? DBFILTER()                  // Result: Last = "Smith"
  *      ? Invoices->(DBFILTER())      // Result: Custid = "Smi001"
  *
- *   ^CFE  This user-defined function, CreateQry(), uses DBFILTER() to
+ *     This user-defined function, CreateQry(), uses DBFILTER() to
  *      create a memory file containing the current filter expression in the
  *      private variable cFilter:
  *
@@ -2819,7 +2815,7 @@ HARBOUR HB_DBDELETE( void )
  *         SAVE ALL LIKE cFilter TO (cQryName + ".qwy")
  *         RETURN NIL
  *
- *   ^CFE  You can later RESTORE a query file with this user-defined
+ *     You can later RESTORE a query file with this user-defined
  *      function, SetFilter():
  *
  *      FUNCTION SetFilter()
@@ -2835,7 +2831,7 @@ HARBOUR HB_DBDELETE( void )
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *      DBRELATION() DBRSELECT()
+ *      DBRELATION(),DBRSELECT()
  *  $INCLUDE$
  *     
  *  $END$
@@ -2876,22 +2872,22 @@ HARBOUR HB_DBFILTER( void )
  *
  *  Notes
  *
- *   ^CFE  Logical records: DBGOBOTTOM() operates on logical records.  If
+ *     Logical records: DBGOBOTTOM() operates on logical records.  If
  *      there is an active index, DBGOBOTTOM() moves to the last record in
  *      indexed order.  If a filter is set, only records which meet the
  *      filter condition are considered.
  *
- *   ^CFE  Controlling order: If more than one index is active in the
+ *     Controlling order: If more than one index is active in the
  *      work area, the operation is performed using the controlling order as
  *      set by DBSETORDER() or the SET ORDER command.  For more information,
  *      refer to the SET ORDER command.
  *
- *   ^CFE  Network environment: For a shared file on a network, moving to
+ *     Network environment: For a shared file on a network, moving to
  *      a different record may cause updates to the current record to become
  *      visible to other processes. 
  *    
  *  $EXAMPLES$
- *   ^CFE  The following example uses DBGOBOTTOM() to position the record
+ *     The following example uses DBGOBOTTOM() to position the record
  *      pointer on the last logical record:
  *
  *      cLast := "Winston"
@@ -2915,7 +2911,7 @@ HARBOUR HB_DBFILTER( void )
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     BOF() EOF() DBSKIP() DBSEEK() DBGOTOP()
+ *     BOF(),EOF(),DBSKIP(),DBSEEK(),DBGOTOP()
  *  $INCLUDE$
  *     
  *  $END$
@@ -2953,17 +2949,17 @@ HARBOUR HB_DBGOBOTTOM( void )
  *
  *   Notes
  *
- *   ^CFE  Logical records: DBGOTO() does not respect logical visibility.
+ *     Logical records: DBGOTO() does not respect logical visibility.
  *      That is, if the specified record exists, it will become the current
  *      record regardless of any index or filter condition.
  *
- *   ^CFE  Network environment: For a shared file on a network, moving to
+ *     Network environment: For a shared file on a network, moving to
  *      a different record may cause updates to the current record to become
  *      visible to other processes. 
  *     
  *  $EXAMPLES$
  *
- *   ^CFE  The following example uses DBGOTO() to iteratively process
+ *     The following example uses DBGOTO() to iteratively process
  *      every fourth record:
  *
  *      DBUSEAREA( .T., "DBFNTX", "Sales", "Sales", .T. )
@@ -2981,7 +2977,7 @@ HARBOUR HB_DBGOBOTTOM( void )
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     BOF() EOF() DBGOTOP() DBGOBOTTOM() DBSEEK() DBSKIP()
+ *     BOF(),EOF(),DBGOTOP(),DBGOBOTTOM(),DBSEEK(),DBSKIP()
  *  $INCLUDE$
  *     
  *  $END$
@@ -3024,23 +3020,23 @@ HARBOUR HB_DBGOTO( void )
  *
  *  Notes
  *
- *   ^CFE  Logical records: DBGOTOP() operates on logical records.  If
+ *     Logical records: DBGOTOP() operates on logical records.  If
  *      there is an active index, DBGOTOP() moves to the last record in
  *      indexed order.  If a filter is set, only records which meet the
  *      filter condition are considered.
  *
- *   ^CFE  Controlling order: If more than one index is active in the
+ *     Controlling order: If more than one index is active in the
  *      work area, the operation is performed using the controlling order as
  *      set by DBSETORDER() or the SET ORDER command.  For more information,
  *      refer to the SET ORDER command.
  *
- *   ^CFE  Network environment: For a shared file on a network, moving to
+ *     Network environment: For a shared file on a network, moving to
  *      a different record may cause updates to the current record to become
  *      visible to other processes. 
  *    
  *  $EXAMPLES$
  *
- *   ^CFE  This example demonstrates the typical use of DBGOTOP():
+ *     This example demonstrates the typical use of DBGOTOP():
  *
  *      DBGOTOP()
  *      WHILE ( !EOF() )
@@ -3056,7 +3052,7 @@ HARBOUR HB_DBGOTO( void )
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     BOF() EOF() DBSKIP() DBSEEK() DBGOBOTTOM()
+ *     BOF(),EOF(),DBSKIP(),DBSEEK(),DBGOBOTTOM()
  *  $INCLUDE$
  *     
  *  $END$
@@ -3327,17 +3323,17 @@ HARBOUR HB___DBPACK( void )
  *
  *     Notes
  *
- *   ^CFE  Logical records: Reinstating a deleted record affects the
+ *     Logical records: Reinstating a deleted record affects the
  *      record's logical visibility if the global _SET_DELETED status is true
  *      (.T.).  For more information, refer to the DBDELETE() function and
  *      the DELETE and RECALL commands.
  *
- *   ^CFE  Network environment: For a shared database on a network,
+ *     Network environment: For a shared database on a network,
  *      DBRECALL() requires the current record to be locked. 
  *     
  *  $EXAMPLES$
  *
- *   ^CFE  The following example recalls a record if it is deleted and
+ *     The following example recalls a record if it is deleted and
  *      attempts to lock the record if successful:
  *
  *      cLast := "Winston"
@@ -3408,7 +3404,7 @@ HARBOUR HB_DBRECALL( void )
  *   list.
  *     
  *  $EXAMPLES$
- *   ^CFE  This example shows two different methods for locking multiple
+ *     This example shows two different methods for locking multiple
  *      records:
  *
  *      FUNCTION dbRLockRange( nLo, nHi )
@@ -3441,7 +3437,7 @@ HARBOUR HB_DBRECALL( void )
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     DBUNLOCK()  DBUNLOCKALL()  FLOCK()  RLOCK()
+ *     DBUNLOCK(),DBUNLOCKALL(),FLOCK(),RLOCK()
  *  $INCLUDE$
  *     
  *  $END$
@@ -3508,7 +3504,7 @@ HARBOUR HB_DBRLOCK( void )
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     RLOCK()  DBRLOCK()  DBRUNLOCK()
+ *     RLOCK(),DBRLOCK(),DBRUNLOCK()
  *  $INCLUDE$
  *     
  *  $END$
@@ -3567,7 +3563,7 @@ HARBOUR HB_DBRLOCKLIST( void )
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *      RLOCK()  DBRLOCK()  DBRLOCKLIST()
+ *      RLOCK(),DBRLOCK(),DBRLOCKLIST()
  *  $INCLUDE$
  *     
  *  $END$
@@ -3621,22 +3617,22 @@ HARBOUR HB_DBRUNLOCK( void )
  *
  *    Notes
  *
- *   ^CFE  Logical records: DBSEEK() operates on logical records.
+ *     Logical records: DBSEEK() operates on logical records.
  *      Records are considered in indexed order.  If a filter is set, only
  *      records which meet the filter condition are considered.
  *
- *   ^CFE  Controlling order: If the work area has more than one active
+ *     Controlling order: If the work area has more than one active
  *      index, the operation is performed using the controlling order as set
  *      by DBSETORDER() or the SET ORDER command.  For more information,
  *      refer to the SET ORDER command.
  *
- *   ^CFE  Network environment: For a shared file on a network, moving to
+ *     Network environment: For a shared file on a network, moving to
  *      a different record may cause updates to the current record to become
  *      visible to other processes.
  *
  *     
  *  $EXAMPLES$
- *   ^CFE  In this example, DBSEEK() moves the pointer to the record in
+ *     In this example, DBSEEK() moves the pointer to the record in
  *      the database, Employee, in which the value in FIELD “cName” matches
  *      the entered value of cName:
  *
@@ -3652,9 +3648,9 @@ HARBOUR HB_DBRUNLOCK( void )
  *  $STATUS$
  *     S
  *  $COMPLIANCE$
- *     DBSEEK() is not fully Compatible with CA-Clipper
+ *     DBSEEK() is  Compatible with CA-Clipper 5.3
  *  $SEEALSO$
- *     DBGOBOTTOM() DBGOTOP() DBSKIP() EOF() BOF() FOUND()
+ *     DBGOBOTTOM(),DBGOTOP(),DBSKIP(),EOF(),BOF(),FOUND()
  *  $INCLUDE$
  *     
  *  $END$
@@ -3713,16 +3709,16 @@ HARBOUR HB_DBSEEK( void )
  *
  *   Notes
  *
- *   ^CFE  Selecting zero: Selecting work area zero causes the lowest
+ *     Selecting zero: Selecting work area zero causes the lowest
  *      numbered unoccupied work area to become the current work area.
  *
- *   ^CFE  Aliased expressions: The alias operator (->) can temporarily
+ *     Aliased expressions: The alias operator (->) can temporarily
  *      select a work area while an expression is evaluated and automatically
  *      restore the previously selected work area afterward.  For more
  *      information, refer to the alias operator (->).
  *
  *  $EXAMPLES$
- *   ^CFE  The following example selects a work area via the alias name:
+ *     The following example selects a work area via the alias name:
  *
  *      cLast := "Winston"
  *      DBUSEAREA( .T., "DBFNTX", "Sales", "Sales", .T. )
@@ -3751,7 +3747,7 @@ HARBOUR HB_DBSEEK( void )
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     DBUSEAREA()    SELECT()
+ *     DBUSEAREA(),SELECT()
  *  $INCLUDE$
  *     
  *  $END$
@@ -3826,7 +3822,7 @@ HARBOUR HB_DBSELECTAREA( void )
  *   returns the name of the current default driver, if any.
  *     
  *  $EXAMPLES$
- *   ^CFE  This example makes the "DBFNDX" driver the default driver.  If
+ *     This example makes the "DBFNDX" driver the default driver.  If
  *      the driver is unavailable, a message is issued:
  *      DBSETDRIVER("DBFNDX")
  *      IF ( DBSETDRIVER() <> "DBFNDX" )
@@ -3907,22 +3903,22 @@ HARBOUR HB___DBSETFOUND( void )
  *
  *    Notes
  *
- *   ^CFE  Logical records: DBSKIP() operates on logical records.  If
+ *     Logical records: DBSKIP() operates on logical records.  If
  *      there is an active index, records are considered in indexed order.
  *      If a filter is set, only records which meet the filter condition are
  *      considered.
  *
- *   ^CFE  Controlling order: If the work area has more than one active
+ *     Controlling order: If the work area has more than one active
  *      index, the skip operation is performed using the controlling order as
  *      set by DBSETORDER() or the SET ORDER command.  For more information,
  *      refer to the SET ORDER command.
  *
- *   ^CFE  Network environment: For a shared file on a network, moving to
+ *     Network environment: For a shared file on a network, moving to
  *      a different record may cause updates to the current record to become
  *      visible to other processes.
  *
  *  $EXAMPLES$
- *   ^CFE  This example demonstrates a typical use of the DBSKIP()
+ *     This example demonstrates a typical use of the DBSKIP()
  *      function:
  *
  *      DBGOTOP()
@@ -3938,7 +3934,7 @@ HARBOUR HB___DBSETFOUND( void )
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *    BOF()  DBGOBOTTOM()  DBGOTOP()  DBSEEK()  EOF()    
+ *    BOF(),DBGOBOTTOM(),DBGOTOP(),DBSEEK(),EOF()    
  *  $INCLUDE$
  *     
  *  $END$
@@ -3996,10 +3992,10 @@ HARBOUR HB_DBSKIP( void )
  *
  *     Notes
  *
- *   ^CFE  Logical records: DBSETFILTER() affects the logical visibility
+ *     Logical records: DBSETFILTER() affects the logical visibility
  *      of records (see above).
  *
- *   ^CFE  Side effects: Setting a filter condition is only guaranteed to
+ *     Side effects: Setting a filter condition is only guaranteed to
  *      restrict visibility of certain records as described above.  The
  *      filter expression is not necessarily evaluated at any particular
  *      time, by any particular means, or on any particular record or series
@@ -4009,13 +4005,13 @@ HARBOUR HB_DBSKIP( void )
  *      moving to a different record or changing the contents of a record),
  *      the effect is unpredictable.
  *
- *   ^CFE  Evaluation context: When the filter expression is evaluated,
+ *     Evaluation context: When the filter expression is evaluated,
  *      the associated work area is automatically selected as the current
  *      work area before the evaluation; the previously selected work area is
  *      automatically restored afterward.
 
  *  $EXAMPLES$
- *   ^CFE  This example limits data access to records in which the Age
+ *     This example limits data access to records in which the Age
  *      field value is less than 40:
  *
  *      USE Employee NEW
@@ -4029,7 +4025,7 @@ HARBOUR HB_DBSKIP( void )
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     DBFILTER() DBCLEARFILTER()
+ *     DBFILTER(),DBCLEARFILTER()
  *  $INCLUDE$
  *     
  *  $END$
@@ -4103,7 +4099,7 @@ HARBOUR HB_DBSETFILTER( void )
  *   a series of manifest constants for each field attribute.
  *     
  *  $EXAMPLES$
- *   ^CFE  This example opens two database files then creates an array
+ *     This example opens two database files then creates an array
  *      containing the database structure using DBSTRUCT() within an aliased
  *      expression.  The field names are then listed using AEVAL():
 
@@ -4232,11 +4228,11 @@ HARBOUR HB_DBTABLEEXT( void )
 
  *   Notes
 
- *   ^CFE  Network environment: Releasing locks may cause updates to the
+ *     Network environment: Releasing locks may cause updates to the
  *      database to become visible to other processes.  
  *     
  *  $EXAMPLES$
- *   ^CFE  The following example illustrates a basic use of the
+ *     The following example illustrates a basic use of the
  *      DBUNLOCK() function:
 
  *      cLast := "Winston"
@@ -4262,7 +4258,7 @@ HARBOUR HB_DBTABLEEXT( void )
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *      DBUNLOCKALL() FLOCK() RLOCK()
+ *      DBUNLOCKALL(),FLOCK(),RLOCK()
  *  $INCLUDE$
  *     
  *  $END$
@@ -4298,7 +4294,7 @@ HARBOUR HB_DBUNLOCK( void )
  *   more information, refer to the UNLOCK ALL command.
  *     
  *  $EXAMPLES$
- *   ^CFE  The following example marks a record for deletion if an
+ *     The following example marks a record for deletion if an
  *      RLOCK() attempt is successful, then clears all locks in all work
  *      areas:
 
@@ -4333,7 +4329,7 @@ HARBOUR HB_DBUNLOCK( void )
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     DBUNLOCK() FLOCK() RLOCK()
+ *     DBUNLOCK(),FLOCK(),RLOCK()
  *  $INCLUDE$
  *     
  *  $END$
@@ -4408,14 +4404,14 @@ HARBOUR HB_DBUNLOCKALL( void )
 
  *     Notes
 
- *   ^CFE  Current driver: If no driver is specified in the call to
+ *     Current driver: If no driver is specified in the call to
  *      DBUSEAREA() the default driver is used.  If more than one driver is
  *      available to the application, the default driver is the driver
  *      specified in the most recent call to DBSETDRIVER().  If DBSETDRIVER()
  *      has not been called, the name of the default driver is undetermined.
  *     
  *  $EXAMPLES$
- *   ^CFE  This example is a typical use of the DBUSEAREA() function:
+ *     This example is a typical use of the DBUSEAREA() function:
 
  *      DBUSEAREA(.T., "DBFNDX", "Employees")
  *
@@ -4426,7 +4422,7 @@ HARBOUR HB_DBUNLOCKALL( void )
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- * DBCLOSEAREA()  DBSETDRIVER()  SELECT()  envirom.ngo:SET()
+ * DBCLOSEAREA(),DBSETDRIVER(),SELECT(),SET()
  *     
  *  $INCLUDE$
  *     
@@ -4652,7 +4648,7 @@ HARBOUR HB_DBUSEAREA( void )
  *   EXCLUSIVEly. 
  *     
  *  $EXAMPLES$
- *   ^CFE  This example demonstrates a typical ZAP operation in a network
+ *     This example demonstrates a typical ZAP operation in a network
  *      environment:
  *
  *      USE Sales EXCLUSIVE NEW
@@ -4701,7 +4697,7 @@ HARBOUR HB_DBUSEAREA( void )
  *   EXCLUSIVEly. 
  *     
  *  $EXAMPLES$
- *   ^CFE  This example demonstrates a typical ZAP operation in a network
+ *     This example demonstrates a typical ZAP operation in a network
  *      environment:
  *
  *      USE Sales EXCLUSIVE NEW
@@ -4764,7 +4760,7 @@ HARBOUR HB___DBZAP( void )
  *   status as a part of screens and reports.
      
  *  $EXAMPLES$
- *   ^CFE  This example uses DELETED() in the current and in an
+ *     This example uses DELETED() in the current and in an
  *      unselected work area:
 
  *      USE Customer NEW
@@ -4775,7 +4771,7 @@ HARBOUR HB___DBZAP( void )
  *      ? DELETED()  // Result: .T.
  *      ? Customer->(DELETED())       // Result: .F.
 
- *   ^CFE  This example uses DELETED() to display a record's deleted
+ *     This example uses DELETED() to display a record's deleted
  *      status in screens and reports:
 
  *      @ 1, 65 SAY IF(DELETED(), "Inactive", "Active")
@@ -4848,7 +4844,7 @@ HARBOUR HB_DELETED( void )
  *   aliased expression (see example below).
 
  *  $EXAMPLES$
- *   ^CFE  This example demonstrates EOF() by deliberately moving the
+ *     This example demonstrates EOF() by deliberately moving the
  *      record pointer beyond the last record:
 
  *      USE Sales
@@ -4857,7 +4853,7 @@ HARBOUR HB_DELETED( void )
  *      SKIP
  *      ? EOF()            // Result: .T.
 
- *   ^CFE  This example uses aliased expressions to query the value of
+ *     This example uses aliased expressions to query the value of
  *      EOF() in unselected work areas:
 
  *      USE Sales NEW
@@ -4865,7 +4861,7 @@ HARBOUR HB_DELETED( void )
  *      ? Sales->(EOF())
  *      ? Customer->(EOF())
 
- *   ^CFE  This example illustrates how EOF() can be used as part of a
+ *     This example illustrates how EOF() can be used as part of a
  *      condition for sequential database file operations:
 
  *      USE Sales INDEX CustNum NEW
@@ -4886,7 +4882,7 @@ HARBOUR HB_DELETED( void )
  *  $COMPLIANCE$
  *      EOF() is fully CA-Clipper compliant.
  *  $SEEALSO$
- *    BOF()  FOUND()  LASTREC()
+ *    BOF(),FOUND(),LASTREC()
  *  $END$
  */
 
@@ -4922,7 +4918,7 @@ HARBOUR HB_EOF( void )
 
  *     By default, FCOUNT() operates on the currently selected work area.     
  *  $EXAMPLES$
- *   ^CFE  This example illustrates FCOUNT(), returning the number of
+ *     This example illustrates FCOUNT(), returning the number of
  *      fields in the current and an unselected work area:
 
  *      USE Sales NEW
@@ -4930,13 +4926,13 @@ HARBOUR HB_EOF( void )
  *      ? FCOUNT()                     // Result: 5
  *      ? Sales->(FCOUNT())            // Result: 8
 
- *   ^CFE  This example uses FCOUNT() to DECLARE an array with field
+ *     This example uses FCOUNT() to DECLARE an array with field
  *      information:
 
  *      LOCAL aFields := ARRAY(FCOUNT())
  *      AFIELDS(aFields)
 
- *   ^CFE  This example uses FCOUNT() as the upper boundary of a FOR loop
+ *     This example uses FCOUNT() as the upper boundary of a FOR loop
  *      that processes the list of current work area fields:
 
  *      LOCAL nField
@@ -4952,7 +4948,7 @@ HARBOUR HB_EOF( void )
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *      FIELDNAME() misc.ngo:TYPE()
+ *      FIELDNAME(),TYPE()
  *  $INCLUDE$
  *     
  *  $END$
@@ -4989,7 +4985,7 @@ HARBOUR HB_FCOUNT( void )
  *   among other things, the retrieval of field values without use of the
  *   macro operator.     
  *  $EXAMPLES$
- *   ^CFE  This example compares FIELDGET() to functionally equivalent
+ *     This example compares FIELDGET() to functionally equivalent
  *      code that uses the macro operator to retrieve the value of a field:
 
  *      LOCAL nField := 1, FName, FVal
@@ -5063,7 +5059,7 @@ HARBOUR HB_FIELDGET( void )
  *   shown in the example below.
  *     
  *  $EXAMPLES$
- *   ^CFE  These examples illustrate FIELDNAME() used with several other
+ *     These examples illustrate FIELDNAME() used with several other
  *      functions:
 
  *      USE Sales
@@ -5072,7 +5068,7 @@ HARBOUR HB_FIELDGET( void )
  *      ? LEN(FIELDNAME(0))        // Result: 0
  *      ? LEN(FIELDNAME(40))       // Result: 0
 
- *   ^CFE  This example uses FIELDNAME() to list the name and type of
+ *     This example uses FIELDNAME() to list the name and type of
  *      each field in Customer.dbf:
 
  *      USE Customer NEW
@@ -5081,7 +5077,7 @@ HARBOUR HB_FIELDGET( void )
  *          VALTYPE(&(FIELDNAME(nField)))
  *      NEXT
 
- *   ^CFE  This example accesses fields in unselected work areas using
+ *     This example accesses fields in unselected work areas using
  *      aliased expressions:
 
  *      USE Sales NEW
@@ -5154,14 +5150,14 @@ HARBOUR HB_FIELDNAME( void )
  *   referring to the function using an aliased expression.  See the example
  *   below.
  *  $EXAMPLES$
- *   ^CFE  This example demonstrates a typical specification of the
+ *     This example demonstrates a typical specification of the
  *      FIELDPOS() function:
 
  *      USE Customer NEW
  *      ? FIELDPOS("Name") *    *    *    *    // Result: 1
  *      ? FIELDGET(FIELDPOS("Name")) *    *    // Result: Kate
 
- *   ^CFE  This example uses FIELDPOS() to return the position of a
+ *     This example uses FIELDPOS() to return the position of a
  *      specified field in a unselected work area:
 
  *      USE Customer NEW
@@ -5175,7 +5171,7 @@ HARBOUR HB_FIELDNAME( void )
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     FIELDGET() FIELDPUT()
+ *     FIELDGET(),FIELDPUT()
  *  $INCLUDE$
  *     
  *  $END$
@@ -5234,7 +5230,7 @@ HARBOUR HB_FIELDPOS( void )
  *   database service functions this allows, among other things, the setting
  *   of field values without use of the macro operator.
  *  $EXAMPLES$
- *   ^CFE  This example compares FIELDPUT() to functionally equivalent
+ *     This example compares FIELDPUT() to functionally equivalent
  *      code that uses the macro operator to set the value of a field:
 
  *      // Using macro operator
@@ -5330,11 +5326,11 @@ HARBOUR HB_FIELDPUT( void )
  *
  *     Notes
  *
- *   ^CFE  SET RELATION: HARBOUR does not automatically lock all work
+ *     SET RELATION: HARBOUR does not automatically lock all work
  *      areas in the relation chain when you lock the current work area, and
  *      an UNLOCK has no effect on related work areas.
  *  $EXAMPLES$
- *   ^CFE  This example uses FLOCK() for a batch update of prices in
+ *     This example uses FLOCK() for a batch update of prices in
  *      Inventory.dbf:
  *
  *      USE Inventory NEW
@@ -5345,7 +5341,7 @@ HARBOUR HB_FIELDPUT( void )
  *         ? "File not available"
  *      ENDIF
  *
- *   ^CFE  This example uses an aliased expression to attempt a file lock
+ *     This example uses an aliased expression to attempt a file lock
  *      in an unselected work area:
  *
  *      USE Sales NEW
@@ -5425,7 +5421,7 @@ HARBOUR HB_FLOCK( void )
  *    FOUND() will return false (.F.) if there is no database open in the
  *   current work area.
  *  $EXAMPLES$
- *   ^CFE  This example illustrates the behavior of FOUND() after a
+ *     This example illustrates the behavior of FOUND() after a
  *      record movement command:
  *
  *      USE Sales INDEX Sales
@@ -5437,7 +5433,7 @@ HARBOUR HB_FLOCK( void )
  *      SKIP
  *      ? FOUND()                // Result: .F.
  *
- *   ^CFE  This example tests a FOUND() value in an unselected work area
+ *     This example tests a FOUND() value in an unselected work area
  *      using an aliased expression:
  *
  *      USE Sales INDEX Sales NEW
@@ -5447,7 +5443,7 @@ HARBOUR HB_FLOCK( void )
  *      SEEK "Smith"
  *      ? FOUND(), Sales->(FOUND())
  *
- *   ^CFE  This code fragment processes all Customer records with the key
+ *     This code fragment processes all Customer records with the key
  *      value "Smith" using FOUND() to determine when the key value changes:
  *
  *      USE Customer INDEX Customer NEW
@@ -5503,12 +5499,12 @@ HARBOUR HB_FOUND( void )
      will operate on an unselected work area if you specify it as part of an
      aliased expression (see example below).
  *  $EXAMPLES$
-     ^CFE  This example determines the header size of the Sales.dbf:
+       This example determines the header size of the Sales.dbf:
 
         USE Sales NEW
         ? HEADER()            // Result: 258
 
-     ^CFE  This example defines a pseudofunction, DbfSize(), that uses
+       This example defines a pseudofunction, DbfSize(), that uses
         HEADER() with RECSIZE() and LASTREC() to calculate the size of the
         current database file in bytes:
 
@@ -5528,7 +5524,7 @@ HARBOUR HB_FOUND( void )
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     DISKSPACE() LASTREC() RECSIZE()
+ *     DISKSPACE(),LASTREC(),RECSIZE()
  *  $INCLUDE$
  *     
  *  $END$
@@ -5575,7 +5571,7 @@ HARBOUR HB_HEADER( void )
      will operate on an unselected work area if you specify it as part of an
      aliased expression (see example below).
  *  $EXAMPLES$ 
-     ^CFE  This example uses INDEXORD() to save the current order.  After
+       This example uses INDEXORD() to save the current order.  After
         changing to a new order, it uses the saved value to restore the
         original order:
 
@@ -5586,7 +5582,7 @@ HARBOUR HB_HEADER( void )
         SET ORDER TO nOrder
         ? INDEXORD()                          // Result: 1
 
-     ^CFE  This example uses an aliased expression to determine the order
+       This example uses an aliased expression to determine the order
         number of the controlling index in an unselected work area:
 
         USE Sales INDEX Salesman, CustNum NEW
@@ -5644,7 +5640,7 @@ HARBOUR HB_INDEXORD( void )
      will operate on an unselected work area if you specify it as part of an
      aliased expression (see example below).
  *  $EXAMPLES$
-     ^CFE  This example illustrates the relationship between LASTREC(),
+       This example illustrates the relationship between LASTREC(),
         RECCOUNT(), and COUNT:
 
         USE Sales NEW
@@ -5654,7 +5650,7 @@ HARBOUR HB_INDEXORD( void )
         COUNT TO nRecords
         ? nRecords, LASTREC()            // Result: 14 84
 
-     ^CFE  This example uses an aliased expression to access the number
+       This example uses an aliased expression to access the number
         of records in a open database file in an unselected work area:
 
         USE Sales NEW
@@ -5717,7 +5713,7 @@ HARBOUR HB_LOCK( void )
      on an unselected work area if you specify it as part of an aliased
      expression as shown in the example below.
  *  $EXAMPLES$
-     ^CFE  This example demonstrates that the modification date of
+       This example demonstrates that the modification date of
         database file is not changed until the database file is closed:
 
         ? DATE()                  // Result: 09/01/90
@@ -5731,7 +5727,7 @@ HARBOUR HB_LOCK( void )
         USE Sales NEW
         ? LUPDATE()               // Result: 09/01/90
 
-     ^CFE  This example uses an aliased expression to access LUPDATE()
+       This example uses an aliased expression to access LUPDATE()
         for a database file open in an unselected work area:
 
         USE Sales NEW
@@ -5744,7 +5740,7 @@ HARBOUR HB_LOCK( void )
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *  FIELDNAME()  LASTREC()  RECSIZE()
+ *  FIELDNAME(),LASTREC(),RECSIZE()
  *  $INCLUDE$
  *     
  *  $END$
@@ -5800,7 +5796,7 @@ HARBOUR HB_LUPDATE( void )
      retrying the USE or APPEND BLANK, or terminating the current operation
      with a BREAK or RETURN.
  *  $EXAMPLES$
-     ^CFE  This example demonstrates typical usage of NETERR().  If the
+       This example demonstrates typical usage of NETERR().  If the
         USE succeeds, the index files are opened and processing continues.
         If the USE fails, a message displays and control returns to the
         nearest BEGIN SEQUENCE construct:
@@ -5864,7 +5860,7 @@ HARBOUR HB_NETERR( void )
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *      INDEXEXT()  ORDBAGNAME()
+ *      INDEXEXT(),ORDBAGNAME()
  *  $INCLUDE$
  *     
  *  $END$
@@ -5946,7 +5942,7 @@ HARBOUR HB_ORDBAGEXT( void )
      position in the Order List.  In case of duplicate names, ORDBAGNAME()
      only recognizes the first matching name.
  *  $EXAMPLES$
-     ^CFE  The following example uses ORDBAGNAME() with the default
+       The following example uses ORDBAGNAME() with the default
         DBFNTX driver:
 
         USE Customer VIA "DBFNTX" NEW
@@ -5956,7 +5952,7 @@ HARBOUR HB_ORDBAGEXT( void )
         ORDBAGNAME( 3 )               // Returns: CuZip
 
 
-     ^CFE  In this example, Customer.cdx contains three orders named
+       In this example, Customer.cdx contains three orders named
         CuAcct, CuName, CuZip:
 
         USE Customer VIA "DBFCDX" NEW
@@ -6183,27 +6179,27 @@ HARBOUR HB_ORDCONDSET( void )
      exist, otherwise <cOrderName> is replaced in <cOrderBagName> and the
      Order is added to the Order List in the current or specified work area.
  *  $EXAMPLES$
-     ^CFE  The following example demonstrates ORDCREATE() with the DBFNDX
+       The following example demonstrates ORDCREATE() with the DBFNDX
         driver:
 
         USE Customer VIA "DBFNDX" NEW
         ORDCREATE( "CuAcct",, "Customer->Acct" )
 
 
-     ^CFE  The following example demonstrates ORDCREATE() with the
+       The following example demonstrates ORDCREATE() with the
         default DBFNTX driver:
 
         USE Customer VIA "DBFNTX" NEW
         ORDCREATE( "CuAcct", "CuAcct", "Customer->Acct", ;
               {|| Customer->Acct } )
 
-     ^CFE  The following example demonstrates ORDCREATE() with the FoxPro
+       The following example demonstrates ORDCREATE() with the FoxPro
         driver, DBFCDX:
 
         USE Customer VIA "DBFCDX" NEW
         ORDCREATE( "Customer", "CuAcct", "Customer->Acct" )
 
-     ^CFE  This example creates the Order "CuAcct" and adds it to the
+       This example creates the Order "CuAcct" and adds it to the
         production index (Order Bag) "Customer".  The production index , will
         be created if it doesn't exist:
 
@@ -6281,7 +6277,7 @@ HARBOUR HB_ORDCREATE( void )
 
        Warning!  ORDDESTROY() is not supported for DBFNDX and DBFNTX.
  *  $EXAMPLES$
-     ^CFE  This example demonstrates ORDDESTROY() with the FoxPro driver,
+       This example demonstrates ORDDESTROY() with the FoxPro driver,
         DBFCDX:
 
         USE Customer VIA "DBFCDX" NEW
@@ -6348,7 +6344,7 @@ HARBOUR HB_ORDDESTROY( void )
      string, cForExp, that represents the logical FOR condition of the Order,
      <cOrderName> or <nOrder>.
  *  $EXAMPLES$
-     ^CFE  This example retrieves the FOR condition from an Order:
+       This example retrieves the FOR condition from an Order:
 
         USE Customer NEW
         INDEX ON  Customer->Acct ;
@@ -6363,7 +6359,7 @@ HARBOUR HB_ORDDESTROY( void )
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     ORDKEY()  ORDCREATE()  ORDNAME()  ORDNUMBER()
+ *     ORDKEY(),ORDCREATE(),ORDNAME(),ORDNUMBER()
  *  $INCLUDE$
  *     
  *  $END$
@@ -6430,7 +6426,7 @@ HARBOUR HB_ORDFOR( void )
      while other RDDs may support multiple-Order Bags (e.g., the DBFCDX and
      DBFMDX drivers).
  *  $EXAMPLES$
-     ^CFE  This example retrieves the index expression from an Order:
+       This example retrieves the index expression from an Order:
 
         USE Customer NEW
         INDEX ON  Customer->Acct  ;
@@ -6445,7 +6441,7 @@ HARBOUR HB_ORDFOR( void )
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     ORDFOR()  ORDNAME()  ORDNUMBER()
+ *     ORDFOR(),ORDNAME(),ORDNUMBER()
  *  $INCLUDE$
  *     
  *  $END$
@@ -6525,7 +6521,7 @@ HARBOUR HB_ORDKEY( void )
      Order.  If you do not specify a controlling Order, the data file will be
      viewed in natural Order.
  *  $EXAMPLES$
-     ^CFE  In this example Customer.cdx contains three orders, CuAcct,
+       In this example Customer.cdx contains three orders, CuAcct,
         CuName, and CuZip.  ORDLISTADD() opens Customer.cdx but only uses the
         order named CuAcct:
 
@@ -6692,14 +6688,14 @@ HARBOUR HB_ORDLISTREBUILD( void )
      while other RDDs may support multiple-Order Bags (e.g., the DBFCDX and
      DBPX drivers).
  *  $EXAMPLES$
-     ^CFE  This example retrieves the name of an Order using its position
+       This example retrieves the name of an Order using its position
         in the order list:
 
         USE Customer NEW
         SET INDEX TO CuAcct, CuName, CuZip
         ORDNAME( 2 )                        // Returns: CuName
 
-     ^CFE  This example retrieves the name of an Order given its position
+       This example retrieves the name of an Order given its position
         within a specific Order Bag in the Order List:
 
         USE Customer NEW
@@ -6713,7 +6709,7 @@ HARBOUR HB_ORDLISTREBUILD( void )
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     ORDFOR() ORDKEY() ORDNUMBER()
+ *     ORDFOR(),ORDKEY(),ORDNUMBER()
  *  $INCLUDE$
  *     
  *  $END$
@@ -6936,7 +6932,7 @@ HARBOUR HB_ORDSETFOCUS( void )
        If you do not supply <nRDDType>, all available RDDs, regardless of type,
      are returned.
  *  $EXAMPLES$
-     ^CFE  In this example RDDLIST() returns an array containing the
+       In this example RDDLIST() returns an array containing the
         character strings, "DBF", "SDF", "DELIM", "DBFCDX", and "DBFNTX":
 
         REQUEST DBFCDX
@@ -6949,7 +6945,7 @@ HARBOUR HB_ORDSETFOCUS( void )
 
               // Returns {"DBF", SDF", "DELIM", "DBFCDX", "DBFNTX" }
 
-     ^CFE  In this example, RDDLIST() returns an array containing the
+       In this example, RDDLIST() returns an array containing the
         character strings, "SDF" and "DELIM":
 
         #include "rddsys.ch"
@@ -7164,7 +7160,7 @@ HARBOUR HB_RDDSETDEFAULT( void )
      will operate on an unselected work area if you specify it as part of an
      aliased expression (see example below).
  *  $EXAMPLES$
-     ^CFE  This example illustrates the relationship between COUNT and
+       This example illustrates the relationship between COUNT and
         RECCOUNT():
 
         USE Sales NEW
@@ -7175,7 +7171,7 @@ HARBOUR HB_RDDSETDEFAULT( void )
         ? nRecords                        // Result: 14
         ? RECCOUNT()                      // Result: 84
 
-     ^CFE  This example uses an aliased expression to access the number
+       This example uses an aliased expression to access the number
         of records in an unselected work area:
 
         USE Sales NEW
@@ -7188,7 +7184,7 @@ HARBOUR HB_RDDSETDEFAULT( void )
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     EOF() LASTREC()
+ *     EOF(),LASTREC()
  *  $INCLUDE$
  *     
  *  $END$
@@ -7292,13 +7288,13 @@ HARBOUR HB_RECNO( void )
      will operate on an unselected work area if you specify it as part of an
      aliased expression (see example below).
  *  $EXAMPLES$
-     ^CFE  The following user-defined function, DbfSize(), uses RECSIZE()
+       The following user-defined function, DbfSize(), uses RECSIZE()
         to calculate the size of the current database file:
 
         FUNCTION DbfSize
            RETURN ((RECSIZE() * LASTREC()) + HEADER() + 1)
 
-     ^CFE  This example illustrates the use of RECSIZE() to determine the
+       This example illustrates the use of RECSIZE() to determine the
         record length of database files open in unselected work areas:
 
         USE Customer NEW
@@ -7313,7 +7309,7 @@ HARBOUR HB_RECNO( void )
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *  DISKSPACE()  FIELDNAME()  HEADER()  LASTREC()
+ *  DISKSPACE(),FIELDNAME(),HEADER(),LASTREC()
  *  $INCLUDE$
  *     
  *  $END$
@@ -7370,24 +7366,24 @@ HARBOUR HB_RECSIZE( void )
        As a general rule, RLOCK() operates solely on the current record.  This
      includes the following commands:
 
-     ^CFE  @...GET
+       @...GET
 
-     ^CFE  DELETE (single record)
+       DELETE (single record)
 
-     ^CFE  RECALL (single record)
+       RECALL (single record)
 
-     ^CFE  REPLACE (single record)
+       REPLACE (single record)
 
      Refer to the Network Programming chapter in the Programming and
      Utilities guide for more information.
 
     Notes
 
-     ^CFE  SET RELATION: HARBOUR does not automatically lock all
+       SET RELATION: HARBOUR does not automatically lock all
         records in the relation chain when you lock the current work area
         record.  Also, an UNLOCK has no effect on related work areas.
  *  $EXAMPLES$
-     ^CFE  This example deletes a record in a network environment, using
+       This example deletes a record in a network environment, using
         RLOCK():
 
         USE Customer INDEX CustName SHARED NEW
@@ -7404,7 +7400,7 @@ HARBOUR HB_RECSIZE( void )
         ENDIF
         CLOSE
 
-     ^CFE  This example specifies RLOCK() as an aliased expression to
+       This example specifies RLOCK() as an aliased expression to
         lock a record in an unselected work area:
 
         USE Sales SHARED NEW
@@ -7471,14 +7467,14 @@ HARBOUR HB_RLOCK( void )
      problem since the SELECT() function is not very useful on a line by
      itself
  *  $EXAMPLES$
-     ^CFE  This example uses SELECT() to determine which work area
+       This example uses SELECT() to determine which work area
         USE...NEW selected:
 
         USE Sales NEW
         SELECT 1
         ? SELECT("Sales")            // Result: 4
 
-     ^CFE  To reselect the value returned from the SELECT() function, use
+       To reselect the value returned from the SELECT() function, use
         the SELECT command with the syntax, SELECT (<idMemvar>), like this:
 
         USE Sales NEW
@@ -7492,7 +7488,7 @@ HARBOUR HB_RLOCK( void )
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *      ALIAS() USED()
+ *      ALIAS(),USED()
  *  $INCLUDE$
  *     
  *  $END$
@@ -7533,7 +7529,7 @@ HARBOUR HB_SELECT( void )
      operates on the currently selected work area.  It will operate on an
      unselected work area if you specify it as part of an aliased expression.
  *  $EXAMPLES$
-     ^CFE  This example determines whether a database file is in USE in
+       This example determines whether a database file is in USE in
         the current work area:
 
         USE Customer NEW
@@ -7547,7 +7543,7 @@ HARBOUR HB_SELECT( void )
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     ALIAS() SELECT()
+ *     ALIAS(),SELECT()
  *  $INCLUDE$
  *     
  *  $END$

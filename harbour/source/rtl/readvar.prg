@@ -75,7 +75,7 @@
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
- *      @...GET  comm.ngo:'@...PROMPT'  comm.ngo:'MENU TO'  READ  comm.ngo:'SET KEY'  datai.ngo:__AtPrompt()  datai.ngo:__MenuTo()
+ *      @...GET,@...PROMPT,MENU TO,READ,SET KEY,__AtPrompt(),__MenuTo()
  *  $END$
  */
 

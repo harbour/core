@@ -838,7 +838,7 @@ static void hb_arrayNewRagged( PHB_ITEM pArray, int iDimension )
         aArray := ARRAY(3, {NIL,NIL})
 
  *  $SEEALSO$
- *     AADD()      ADEL()      AFILL()      AINS()
+ *     AADD(),     ADEL(),     AFILL(),     AINS()
  *  $INCLUDE$
  *     
  *  $END$
@@ -926,8 +926,7 @@ HARBOUR HB_ARRAY( void )
                                    // { 5, 10, { 12, 10 } }
  *     
  *  $SEEALSO$
- *     AINS()
- *     ASIZE()
+ *     AINS(),     ASIZE()
  *  $INCLUDE$
  *     
  *  $END$
@@ -1003,7 +1002,7 @@ HARBOUR HB_AADD( void )
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     AADD() ADEL() AFILL() AINS()
+ *     AADD(),ADEL(),AFILL(),AINS()
  *  $INCLUDE$
  *     
  *  $END$
@@ -1123,7 +1122,7 @@ HARBOUR HB_ATAIL( void )
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     AADD() ACOPY() ADEL() AEVAL() AFILL() ASIZE()
+ *     AADD(),ACOPY(),ADEL(),AEVAL(),AFILL(),ASIZE()
  *  $INCLUDE$
  *     
  *  $END$
@@ -1187,7 +1186,7 @@ HARBOUR HB_AINS( void )
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     ACOPY() AINS() AFILL() 
+ *     ACOPY(),AINS(),AFILL() 
  *  $INCLUDE$
  *     
  *  $END$
@@ -1262,7 +1261,7 @@ HARBOUR HB_ADEL( void )
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     AADD() AEVAL() DBSTRUCT() DIRECTORY()
+ *     AADD(),AEVAL(),DBSTRUCT(),DIRECTORY()
  *  $INCLUDE$
  *     
  *  $END$
@@ -1384,7 +1383,7 @@ HARBOUR HB_AFILL( void )
  *     This functions is not CA-Clipper compatible. Clipper ASCAN() is
  *     affected by the SET EXACT ON/OFF Condition
  *  $SEEALSO$
- *     ACOMP() AEVAL()
+ *     ACOMP(),AEVAL()
  *  $INCLUDE$
  *     
  *  $END$
@@ -1455,7 +1454,7 @@ HARBOUR HB_ASCAN( void )
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     EVAL() database.ngo:DBEVAL()
+ *     EVAL(),DBEVAL()
  *  $INCLUDE$
  *     
  *  $END$
@@ -1544,7 +1543,7 @@ HARBOUR HB_AEVAL( void )
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     ACLONE() ADEL() AEVAL() AFILL() AINS() ASORT()
+ *     ACLONE(),ADEL(),AEVAL(),AFILL(),AINS(),ASORT()
  *  $INCLUDE$
  *     
  *  $END$
@@ -1613,7 +1612,7 @@ HARBOUR HB_ACOPY( void )
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     ACOPY() ADEL() AINS() ASIZE()
+ *     ACOPY() ADEL(),AINS(),ASIZE()
  *  $INCLUDE$
  *     
  *  $END$

@@ -130,7 +130,7 @@
  *  $COMPLIANCE$
  *      TONE() works exactly like CA-Clipper's TONE().
  *  $SEEALSO$
- *      CHR()  'SET BELL'
+ *      CHR(),SET BELL
  *  $END$
  */
 

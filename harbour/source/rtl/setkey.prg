@@ -167,7 +167,7 @@ return bReturn
  *  $COMPLIANCE$
  *      HB_SETKEYGET() is a new function and hence not CA-Clipper compliant.
  *  $SEEALSO$
- *      SETKEY()  HB_SETKEYSAVE()  HB_SETKEYCHECK()
+ *      SETKEY(),HB_SETKEYSAVE(),HB_SETKEYCHECK()
  *  $END$
  */
 

@@ -1,3 +1,56 @@
+2000-01-07  GMT +3  Luiz Rafael Culik <Culik@sl.conex.net>
+     * gt.b32
+          ! Added RTF.prg
+     * source/rdd/dbcmd.c
+     * source/rtl/achoice.prg  
+     * source/rtl/adir.prg      
+     * source/rtl/alert.prg     
+     * source/rtl/asort.prg     
+     * source/rtl/browdb.prg    
+     * source/rtl/browse.prg    
+     * source/rtl/dbstrux.prg   
+     * source/rtl/debugger.prg  
+     * source/rtl/devoutp.prg   
+     * source/rtl/dircmd.prg    
+     * source/rtl/errorsys.prg  
+     * source/rtl/fieldbl.prg   
+     * source/rtl/fileread.prg  
+     * source/rtl/harbinit.prg  
+     * source/rtl/input.prg     
+     * source/rtl/memvarbl.prg  
+     * source/rtl/menuto.prg    
+     * source/rtl/objfunc.prg   
+     * source/rtl/readvar.prg   
+     * source/rtl/readkey.prg   
+     * source/rtl/setkey.prg    
+     * source/rtl/setta.prg     
+     * source/rtl/stringp.prg   
+     * source/rtl/wait.prg      
+     * source/rtl/xsavescr.prg  
+     * source/rtl/arrays.c
+     * source/rtl/word.c
+     * source/rtl/type.c
+     * source/rtl/valtype.c
+     * source/rtl/tone.c
+     * source/rtl/strings.c
+     * source/rtl/proc.c
+     * source/rtl/mtran.c
+     * source/rtl/memvars.c
+     * source/rtl/len.c
+     * source/rtl/inkey.c
+     * source/rtl/hardcr.c
+     * source/rtl/Filesys.c
+     * source/rtl/empty.c
+     * source/rtl/descend.c
+          +Removed external reference for see also
+          +Formated see also between commas
+     + ngdoc/FT_helpc.prg
+          Source code for FT_HELPC  document  source Extriper
+     + ngdoc/ha.lnk
+          List of Functions categories to the FT_HELPC
+     + bldfthe.bat
+          Batch file to create the exe
+
 2000-01-03 18:25 EDT David G. Holm <dholm@jsd-llc.com>
 
    * source/rtl/inkey.c
@@ -1357,7 +1410,7 @@ Wed Nov 24 12:45:36 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 19991120-17:28 EDT Paul Tucker <ptucker@sympatico.ca>
   * makefile.vc
-   - hbfsapi for harbour.exe
+   - hbfsapi for 
 
 19991120-14:35 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 

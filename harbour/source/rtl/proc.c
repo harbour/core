@@ -79,7 +79,7 @@
  *  $COMPLIANCE$
  *      PROCNAME() is fully CA-Clipper compliant.
  *  $SEEALSO$
- *      PROCLINE() PROCFILE()
+ *      PROCLINE(),PROCFILE()
  *  $END$
  */
 

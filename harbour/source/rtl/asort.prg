@@ -106,7 +106,7 @@
  *      Clipper. But this is block calling frequency and order differs from
  *      Clipper anyway, since they use different sorting algorithm.
  *  $SEEALSO$
- *      ASCAN() EVAL() SORT
+ *      ASCAN(),EVAL(),SORT
  *  $END$
  */
 

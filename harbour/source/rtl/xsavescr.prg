@@ -88,7 +88,7 @@ STATIC s_cScrn
  *      platforms.
  *  $FILES$
  *  $SEEALSO$
- *       comm.ngo:'RESTORE SCREEN' RESTSCREEN()  SAVESCREEN()
+ *       RESTORE SCREEN,RESTSCREEN(),SAVESCREEN()
  *  $END$
  */
 /*  $DOC$
@@ -129,7 +129,7 @@ STATIC s_cScrn
  *      platforms.
  *  $FILES$
  *  $SEEALSO$
- *      comm.ngo:'RESTORE SCREEN' datai.ngo:__XRESTSCREEN()  datai.ngo:__XSAVESCREEN()
+ *      RESTORE SCREEN,__XRESTSCREEN(),__XSAVESCREEN()
  *  $END$
  */
 
@@ -179,7 +179,7 @@ PROCEDURE __XSAVESCREEN()
  *      platforms.
  *  $FILES$
  *  $SEEALSO$
- *      datai.ngo:__XRESTSCREEN()  comm.ngo:'SAVE SCREEN'  datai.ngo:__XSAVESCREEN()
+ *      __XRESTSCREEN(),SAVE SCREEN,__XSAVESCREEN()
  *  $END$
  */
 
@@ -221,7 +221,7 @@ PROCEDURE __XSAVESCREEN()
  *      platforms.
  *  $FILES$
  *  $SEEALSO$
- *      datai.ngo:__XRESTSCREEN()   comm.ngo:'SAVE SCREEN'  datai.ngo:__XSAVESCREEN()
+ *      __XRESTSCREEN(),SAVE SCREEN,__XSAVESCREEN()
  *  $END$
  */
 

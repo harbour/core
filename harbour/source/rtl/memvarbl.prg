@@ -75,7 +75,7 @@
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *      __MVGET()  __MVPUT()
+ *      __MVGET(),__MVPUT()
  *  $END$
  */
 

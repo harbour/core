@@ -60,7 +60,7 @@
  *  $COMPLIANCE$
  *      __INPUT() is fully CA-Clipper compliant.
  *  $SEEALSO$
- *      event.ngo:__WAIT() __ACCEPT()
+ *      __WAIT(),__ACCEPT()
  *  $END$
  */
 

@@ -78,7 +78,7 @@
  *      DEVOUTPICT() is mostly CA-Clipper compliant. Any differences are due
  *      to enhancements in the Harbour TRANSFORM() over CA-Clipper.
  *  $SEEALSO$
- *      DEVOUT() TRANSFORM()
+ *      DEVOUT(),TRANSFORM()
  *  $END$
  */
 
