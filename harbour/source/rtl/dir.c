@@ -107,9 +107,9 @@
    #define INCL_DOSERRORS
 #endif
 
-/* NOTE: The following #include "wincheck.h" must
+/* NOTE: The following #include "hbwinapi.h" must
          be ahead of any other #include statements! */
-#include "wincheck.h"
+#include "hbwinapi.h"
 
 #include <ctype.h>
 #include "extend.h"

@@ -1,3 +1,14 @@
+19991020-19:15 EDT David G. Holm <dholm@jsd-llc.com>
+
+   + include/hbwinapi.h
+   - include/wincheck.h
+   * source/rtl/dates.c
+   * source/rtl/dir.c
+   * source/rtl/environ.c
+   * source/rtl/inkey.c
+     % Changed name of wincheck.h to hbwinapi.h (and added missing
+       CVS ID, Copyright and free software header, and self-check).
+
 Wed Oct 20 19:28:51 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* source/Makefile: 

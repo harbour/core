@@ -65,9 +65,9 @@
  *
  */
 
-/* NOTE: The following #include "wincheck.h" must
+/* NOTE: The following #include "hbwinapi.h" must
          be ahead of any other #include statements! */
-#include "wincheck.h"
+#include "hbwinapi.h"
 
 #include "extend.h"
 #include "errorapi.h"

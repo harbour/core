@@ -55,9 +55,9 @@
    #define INCL_DOSMISC
 #endif
 
-/* NOTE: The following #include "wincheck.h" must
+/* NOTE: The following #include "hbwinapi.h" must
          be ahead of any other #include statements! */
-#include "wincheck.h"
+#include "hbwinapi.h"
 
 #if defined(__BORLANDC__) && defined(_Windows) && ! defined(VER_PLATFORM_WIN32_WINDOWS)
    #define VER_PLATFORM_WIN32_WINDOWS 1
