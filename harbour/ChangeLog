@@ -1,3 +1,7 @@
+19990727-19:48 GMT+1 Bruno Cantero <bruno@issnet.net>
+   * source/rdd/dbcmd.c
+     Fixed a GFP (Paul, test it)
+
 19990727-19:18 GMT+1 Bruno Cantero <bruno@issnet.net>
    * source/rdd/dbfntx1.c
      Fixed a bug

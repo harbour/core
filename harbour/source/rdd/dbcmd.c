@@ -112,7 +112,7 @@ void hb_rddInitialize( void )
    szDefDriver = ( char * ) hb_xgrab( 1 );
    szDefDriver[ 0 ] = '\0';
    pWorkAreas = ( AREAP ) hb_xgrab( sizeof( AREA ) );
-   memset(pWorkAreas, 0, sizeof(AREA));
+//   memset(pWorkAreas, 0, sizeof(AREA));
    uiWorkAreas = 1;
 }
 
