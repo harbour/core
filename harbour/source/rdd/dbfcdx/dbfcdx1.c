@@ -4079,6 +4079,8 @@ ERRCODE hb_cdxOrderListAdd( CDXAREAP pAreaCdx, LPDBORDERINFO pOrderInfo )
    PHB_ITEM pError = NULL;
    BOOL bRetry;
    LPCDXTAG pTag, pLastTag;
+   LPCDXTAG TagList, pTag1, pTag2, pTagTmp;
+
 
    HB_TRACE(HB_TR_DEBUG, ("cdxOrderListAdd(%p, %p)", pArea, pOrderInfo));
 
@@ -4154,22 +4156,58 @@ ERRCODE hb_cdxOrderListAdd( CDXAREAP pAreaCdx, LPDBORDERINFO pOrderInfo )
    pIndex->pCompound->OptFlags = 0xE0;
    hb_cdxIndexResetAvailPage( pIndex );
    hb_cdxTagTagOpen( pIndex->pCompound, 0 );
+   TagList = NULL;
    while( !pIndex->pCompound->TagEOF )
    {
       pTag = hb_cdxTagNew( pIndex,
               pIndex->pCompound->CurKeyInfo->Value,
               pIndex->pCompound->CurKeyInfo->Tag );
-      if( pIndex->TagList == NULL )
-        pIndex->TagList = pTag;
+      if( TagList == NULL )
+        TagList = pTag;
       else
       {
-        pLastTag = pIndex->TagList;
+        pLastTag = TagList;
         while( pLastTag->pNext )
           pLastTag = pLastTag->pNext;
         pLastTag->pNext = pTag;
       }
       hb_cdxTagKeyRead( pIndex->pCompound, NEXT_RECORD );
    }
+   /* Reorder the Tag list to be compatible with Clipper */
+   pTag1 = TagList;
+   while (pTag1->pNext)
+   {
+      if (pTag1->TagBlock < pTag1->pNext->TagBlock)
+         pTag1 = pTag1->pNext;
+      else
+      {
+         if ( TagList->TagBlock > pTag1->pNext->TagBlock)
+         {
+            pTagTmp = TagList;
+            TagList = pTag1->pNext;
+            pTag1->pNext = pTagTmp;
+         }
+         else
+         {
+            pTag2 = TagList;
+            while (pTag2->pNext && (pTag2->pNext->TagBlock < pTag1->pNext->TagBlock) )
+               pTag2 = pTag2->pNext;
+            pTagTmp = pTag2->pNext;
+            pTag2->pNext = pTag1->pNext;
+            pTag1->pNext = pTagTmp;
+         }
+      }
+   }
+   if( pIndex->TagList == NULL )
+      pIndex->TagList = TagList;
+   else
+   {
+      pLastTag = pIndex->TagList;
+      while( pLastTag->pNext )
+         pLastTag = pLastTag->pNext;
+      pLastTag->pNext = TagList;
+   }
+
    /*missing: ordSetFocus(1) if there was no other open index in the area*/
    pIndex->uiTag = 1;
    SELF_GOTOP( ( AREAP ) pArea );
