@@ -116,12 +116,12 @@ return .f.
 
 HB_FUNC( GETSYMBOLPOINTER )
 {
-   hb_retnl( ( long ) hb_dynsymGet( hb_parc( 1 ) ) );
+   hb_retptr( hb_dynsymGet( hb_parc( 1 ) ) );
 }
 
 HB_FUNC( GETSYMBOLNAME )
 {
-   PHB_DYNS pDynSym = ( PHB_DYNS ) hb_parnl( 1 );
+   PHB_DYNS pDynSym = ( PHB_DYNS ) hb_parptr( 1 );
 
    hb_retc( ( pDynSym != NULL ? pDynSym->pSymbol->szName : "" ) );
 }
@@ -146,9 +146,9 @@ HB_FUNC( SYMBOL_EXEC )
    /* we invoke the message with no parameters */
    hb_vmFunction( 0 );
 
-   pSym = ( PHB_DYNS ) hb_parnl( -1 );  /* we take the returned DATA value from
+   pSym = ( PHB_DYNS ) hb_parptr( -1 );  /* we take the returned DATA value from
                                            the HVM hb_stack.Return */
-   if( pSym != NULL && pSym->pSymbol->pFunPtr )
+   if( pSym != NULL && pSym->pSymbol->value.pFunPtr )
    {
       int i;
 

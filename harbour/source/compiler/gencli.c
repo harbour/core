@@ -165,7 +165,7 @@ void hb_compGenILCode( PHB_FNAME pFileName )  /* generates the IL output */
       //      * we are using these two bits to mark the special function used to
       //      * initialize static variables
       //      */
-      //      fprintf( yyc, "{ \"(_INITSTATICS)\", HB_FS_INIT | HB_FS_EXIT, hb_INITSTATICS, NULL }" ); /* NOTE: hb_ intentionally in lower case */
+      //      fprintf( yyc, "{ \"(_INITSTATICS)\", HB_FS_INIT | HB_FS_EXIT, {hb_INITSTATICS}, NULL }" ); /* NOTE: hb_ intentionally in lower case */
       //   }
       //   else
       //   {
@@ -200,11 +200,11 @@ void hb_compGenILCode( PHB_FNAME pFileName )  /* generates the IL output */
       //      /* specify the function address if it is a defined function or an
       //         external called function */
       //      if( hb_compFunctionFind( pSym->szName ) ) /* is it a function defined in this module */
-      //         fprintf( yyc, ", HB_FUNCNAME( %s ), NULL }", pSym->szName );
+      //         fprintf( yyc, ", {HB_FUNCNAME( %s )}, NULL }", pSym->szName );
       //      else if( hb_compFunCallFind( pSym->szName ) ) /* is it a function called from this module */
-      //         fprintf( yyc, ", HB_FUNCNAME( %s ), NULL }", pSym->szName );
+      //         fprintf( yyc, ", {HB_FUNCNAME( %s )}, NULL }", pSym->szName );
       //      else
-      //         fprintf( yyc, ", NULL, NULL }" );   /* memvar */
+      //         fprintf( yyc, ", {NULL}, NULL }" );   /* memvar */
       //   }
       //
       //   if( pSym != hb_comp_symbols.pLast )

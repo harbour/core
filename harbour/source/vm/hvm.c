@@ -212,7 +212,7 @@ ULONG hb_ulOpcodesTime[ HB_P_LAST_PCODE ]; /* array to profile opcodes consumed 
 
 /* virtual machine state */
 
-HB_SYMB  hb_symEval = { "__EVAL", HB_FS_PUBLIC, hb_vmDoBlock, NULL }; /* symbol to evaluate codeblocks */
+HB_SYMB  hb_symEval = { "__EVAL", HB_FS_PUBLIC, {hb_vmDoBlock}, NULL }; /* symbol to evaluate codeblocks */
 
 static HB_ITEM  s_aStatics;         /* Harbour array to hold all application statics variables */
 static USHORT   s_uiStatics;        /* Number of statics added after processing hb_vmStatics() */
@@ -303,7 +303,7 @@ void hb_vmDoInitRdd( void )
    for ( i = 0; rddName[i]; i++ )
    {
       pDynSym = hb_dynsymFind( rddName[i] );
-      if( pDynSym && pDynSym->pSymbol->pFunPtr )
+      if( pDynSym && pDynSym->pSymbol->value.pFunPtr )
       {
          hb_vmPushSymbol( pDynSym->pSymbol );
          hb_vmPushNil();
@@ -380,7 +380,7 @@ void HB_EXPORT hb_vmInit( BOOL bStartMainProc )
    {
       PHB_DYNS pDynSym = hb_dynsymFind( "_APPMAIN" );
 
-      if( pDynSym && pDynSym->pSymbol->pFunPtr )
+      if( pDynSym && pDynSym->pSymbol->value.pFunPtr )
          s_pSymStart = pDynSym->pSymbol;
 #ifdef HARBOUR_START_PROCEDURE
       else
@@ -396,11 +396,11 @@ void HB_EXPORT hb_vmInit( BOOL bStartMainProc )
          {
             pDynSym = hb_dynsymFind( HARBOUR_START_PROCEDURE );
 
-            if( ! ( pDynSym && pDynSym->pSymbol->pFunPtr ) && s_pszLinkedMain )
+            if( ! ( pDynSym && pDynSym->pSymbol->value.pFunPtr ) && s_pszLinkedMain )
                pDynSym = hb_dynsymFind( s_pszLinkedMain );
          }
 
-         if( pDynSym && pDynSym->pSymbol->pFunPtr )
+         if( pDynSym && pDynSym->pSymbol->value.pFunPtr )
             s_pSymStart = pDynSym->pSymbol;
          else
             hb_errInternal( HB_EI_VMBADSTARTUP, NULL, HARBOUR_START_PROCEDURE, NULL );
@@ -2275,7 +2275,7 @@ static void hb_vmFuncPtr( void )  /* pushes a function address pointer. Removes 
    if( HB_IS_SYMBOL( pItem ) )
    {
       hb_stackPop();
-      hb_vmPushLong( ( ULONG ) pItem->item.asSymbol.value->pFunPtr );
+      hb_vmPushPointer( ( void* ) pItem->item.asSymbol.value->value.pFunPtr );
    }
    else
       hb_errInternal( HB_EI_VMNOTSYMBOL, NULL, "hb_vmFuncPtr()", NULL );
@@ -3308,7 +3308,7 @@ void HB_EXPORT hb_vmDo( USHORT uiParams )
       PHB_BASEARRAY pSelfBase = NULL;
 
       if( pSym == &( hb_symEval ) && HB_IS_BLOCK( pSelf ) )
-         pFunc = pSym->pFunPtr;                 /* __EVAL method = function */
+         pFunc = pSym->value.pFunPtr;                 /* __EVAL method = function */
       else
       {
          pFunc = hb_objGetMethod( pSelf, pSym );
@@ -3400,7 +3400,7 @@ void HB_EXPORT hb_vmDo( USHORT uiParams )
    }
    else /* it is a function */
    {
-      pFunc = pSym->pFunPtr;
+      pFunc = pSym->value.pFunPtr;
 
       if( pFunc )
       {
@@ -3498,7 +3498,7 @@ void HB_EXPORT hb_vmSend( USHORT uiParams )
 
    if( HB_IS_NIL( pSelf ) ) /* are we sending a message ? */
    {
-      pFunc = pSym->pFunPtr;
+      pFunc = pSym->value.pFunPtr;
 
       if( pFunc )
       {
@@ -3557,12 +3557,12 @@ void HB_EXPORT hb_vmSend( USHORT uiParams )
       {
          if( pSym == &( hb_symEval ) )
          {
-            pFunc = pSym->pFunPtr;                 /* __EVAL method = function   */
+            pFunc = pSym->value.pFunPtr;                 /* __EVAL method = function   */
          }
          else if( strncmp( pSym->szName, "EVAL", 4 ) == 0 )
          {
             pSym = &hb_symEval;
-            pFunc = pSym->pFunPtr;                 /* __EVAL method = function */
+            pFunc = pSym->value.pFunPtr;                 /* __EVAL method = function */
          }
       }
       else if( HB_IS_OBJECT( pSelf ) )               /* Object passed            */
@@ -3849,7 +3849,7 @@ static void hb_vmSFrame( PHB_SYMB pSym )      /* sets the statics frame for a fu
    HB_TRACE(HB_TR_DEBUG, ("hb_vmSFrame(%p)", pSym));
 
    /* _INITSTATICS is now the statics frame. Statics() changed it! */
-   hb_stack.iStatics = ( int ) pSym->pFunPtr; /* pSym is { "$_INITSTATICS", HB_FS_INIT | HB_FS_EXIT, _INITSTATICS } for each PRG */
+   hb_stack.iStatics = pSym->value.iStaticsBase; /* pSym is { "$_INITSTATICS", HB_FS_INIT | HB_FS_EXIT, _INITSTATICS } for each PRG */
 }
 
 static void hb_vmStatics( PHB_SYMB pSym, USHORT uiStatics ) /* initializes the global aStatics array or redimensionates it */
@@ -3858,12 +3858,12 @@ static void hb_vmStatics( PHB_SYMB pSym, USHORT uiStatics ) /* initializes the g
 
    if( HB_IS_NIL( &s_aStatics ) )
    {
-      pSym->pFunPtr = NULL;         /* statics frame for this PRG */
+      pSym->value.iStaticsBase = 0;         /* statics frame for this PRG */
       hb_arrayNew( &s_aStatics, uiStatics );
    }
    else
    {
-      pSym->pFunPtr = ( PHB_FUNC ) hb_arrayLen( &s_aStatics );
+      pSym->value.iStaticsBase = hb_arrayLen( &s_aStatics );
       hb_arraySize( &s_aStatics, hb_arrayLen( &s_aStatics ) + uiStatics );
    }
 
@@ -5206,8 +5206,8 @@ void HB_EXPORT hb_vmProcessDllSymbols( PHB_SYMB pModuleSymbols, USHORT uiModuleS
       {
          PHB_DYNS pDynSym = hb_dynsymFind( ( pModuleSymbols + ui )->szName );
 
-         if( pDynSym && pDynSym->pFunPtr && ( pModuleSymbols + ui )->pFunPtr )
-            ( pModuleSymbols + ui )->pFunPtr = pDynSym->pFunPtr;
+         if( pDynSym && pDynSym->pFunPtr && ( pModuleSymbols + ui )->value.pFunPtr )
+            ( pModuleSymbols + ui )->value.pFunPtr = pDynSym->pFunPtr;
          else
              hb_dynsymNew( ( pModuleSymbols + ui ) );
       }

@@ -70,7 +70,10 @@ typedef struct
 {
    char *            szName;  /* the name of the symbol */
    HB_SYMBOLSCOPE    cScope;  /* the scope of the symbol */
-   PHB_FUNC          pFunPtr; /* function address for function symbol table entries */
+   union {
+     PHB_FUNC        pFunPtr;        /* function address for function symbol table entries */
+     int             iStaticsBase;
+   } value;
    struct _HB_DYNS * pDynSym; /* pointer to its dynamic symbol if defined */
 } HB_SYMB, * PHB_SYMB;
 #if defined(_MSC_VER) && _MSC_VER < 1000

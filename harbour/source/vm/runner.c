@@ -335,7 +335,7 @@ PHRB_BODY hb_hrbLoad( char* szHrb )
       {
          pSymRead[ ul ].szName  = hb_hrbFileReadId( file, szFileName );
          pSymRead[ ul ].cScope  = hb_hrbFileReadByte( file, szFileName );
-         pSymRead[ ul ].pFunPtr = ( PHB_FUNC ) ( ULONG ) hb_hrbFileReadByte( file, szFileName );
+         pSymRead[ ul ].value.pFunPtr = ( PHB_FUNC ) ( ULONG ) hb_hrbFileReadByte( file, szFileName );
          pSymRead[ ul ].pDynSym = NULL;
 
          if ( pHrbBody->ulSymStart == -1 &&
@@ -366,7 +366,7 @@ PHRB_BODY hb_hrbLoad( char* szHrb )
       s_ulSymEntry = 0;
       for( ul = 0; ul < pHrbBody->ulSymbols; ul++ )    /* Linker                   */
       {
-         if( ( ( ULONG ) pSymRead[ ul ].pFunPtr ) == SYM_FUNC )
+         if( ( ( ULONG ) pSymRead[ ul ].value.pFunPtr ) == SYM_FUNC )
          {
             ulPos = hb_hrbFindSymbol( pSymRead[ ul ].szName, pDynFunc, pHrbBody->ulFuncs );
             if( ulPos != SYM_NOT_FOUND )
@@ -380,12 +380,12 @@ PHRB_BODY hb_hrbLoad( char* szHrb )
                   break;
                }
 */
-               pSymRead[ ul ].pFunPtr = pDynFunc[ ulPos ].pAsmCall->pFunPtr;
+               pSymRead[ ul ].value.pFunPtr = pDynFunc[ ulPos ].pAsmCall->pFunPtr;
             }
             else
-               pSymRead[ ul ].pFunPtr = ( PHB_FUNC ) SYM_EXTERN;
+               pSymRead[ ul ].value.pFunPtr = ( PHB_FUNC ) SYM_EXTERN;
          }
-         if( ( ( ULONG ) pSymRead[ ul ].pFunPtr ) == SYM_EXTERN )
+         if( ( ( ULONG ) pSymRead[ ul ].value.pFunPtr ) == SYM_EXTERN )
          {                                   /* External function        */
             pDynSym = hb_dynsymFind( pSymRead[ ul ].szName );
             if( !pDynSym )
@@ -397,7 +397,7 @@ PHRB_BODY hb_hrbLoad( char* szHrb )
                bError = TRUE;
                break;
             }
-            pSymRead[ ul ].pFunPtr = pDynSym->pFunPtr;
+            pSymRead[ ul ].value.pFunPtr = pDynSym->pFunPtr;
          }
       }
       if( bError )
@@ -429,7 +429,7 @@ void hb_hrbDo( PHRB_BODY pHrbBody, int argc, char * argv[] )
           * to pass any parameters to this function because they
           * cannot be used to initialize static variable.
           */
-         pHrbBody->pSymRead[ ul ].pFunPtr();
+         pHrbBody->pSymRead[ ul ].value.pFunPtr();
       }
    }
    for( ul = 0; ul < pHrbBody->ulSymbols; ul++ )    /* Check INIT functions     */

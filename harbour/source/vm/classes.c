@@ -216,7 +216,7 @@ static void     hb_clsRelease( PCLASS );
        PHB_FUNC hb_objGetMethod( PHB_ITEM, PHB_SYMB );
        PHB_FUNC hb_objGetMthd( PHB_ITEM pObject, PHB_SYMB pMessage, BOOL lAllowErrFunc );
        PMETHOD  hb_objGetpMethod( PHB_ITEM, PHB_SYMB );
-       ULONG    hb_objHasMsg( PHB_ITEM pObject, char * szString );
+       BOOL     hb_objHasMsg( PHB_ITEM pObject, char * szString );
 
        void *   hb_mthRequested( void );
        void     hb_mthAddTime( void * pMethod, ULONG ulClockTicks );
@@ -955,13 +955,13 @@ PMETHOD hb_objGetpMethod( PHB_ITEM pObject, PHB_SYMB pMessage )
 
 
 /*
- * <uPtr> = hb_objHasMsg( <pObject>, <szString> )
+ * <bool> = hb_objHasMsg( <pObject>, <szString> )
  *
  * Check whether <szString> is an existing message for object.
  *
  * <uPtr> should be read as a boolean
  */
-ULONG hb_objHasMsg( PHB_ITEM pObject, char *szString )
+BOOL hb_objHasMsg( PHB_ITEM pObject, char *szString )
 {
    PHB_DYNS pDynSym = hb_dynsymFindName( szString );
 
@@ -969,11 +969,11 @@ ULONG hb_objHasMsg( PHB_ITEM pObject, char *szString )
 
    if( pDynSym )
     {
-      return ( ULONG ) hb_objGetMthd( pObject, pDynSym->pSymbol, FALSE );
+      return hb_objGetMthd( pObject, pDynSym->pSymbol, FALSE ) != NULL;
     }
    else
     {
-      return 0;
+      return FALSE;
     }
 }
 
@@ -1135,7 +1135,7 @@ HB_FUNC( __CLSADDMSG )
       {
          case HB_OO_MSG_METHOD:
 
-            pNewMeth->pFunction = ( PHB_FUNC ) hb_parnl( 3 );
+            pNewMeth->pFunction = ( PHB_FUNC ) hb_parptr( 3 );
             pNewMeth->uiScope = uiScope;
             pNewMeth->uiData = 0;
             break;
@@ -1237,7 +1237,7 @@ HB_FUNC( __CLSADDMSG )
 
          case HB_OO_MSG_ONERROR:
 
-            pClass->pFunError = ( PHB_FUNC ) hb_parnl( 3 );
+            pClass->pFunError = ( PHB_FUNC ) hb_parptr( 3 );
             break;
 
          default:
@@ -1748,7 +1748,7 @@ HB_FUNC( __CLSMODMSG )
             }
             else                                   /* Modify METHOD            */
             {
-               pClass->pMethods[ uiAt ].pFunction = ( PHB_FUNC ) hb_parnl( 3 );
+               pClass->pMethods[ uiAt ].pFunction = ( PHB_FUNC ) hb_parptr( 3 );
             }
          }
       }
