@@ -1,3 +1,83 @@
+20000426-12:30 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+    * harbour/include/hbcomp.h
+       + Added:
+         BYTE   pStack[256];              /* Compile Time Stack */
+         SHORT   iStackIndex;              /* Compile Time Stack Index */
+         BYTE   pFunctionCalls[256];      /* Array of Function Calls Compile Time Stack Postion */
+         SHORT  iFunctionIndex;           /* Index into Array of Function Calls Compile Time Stack Postion */
+
+    * harbour/include/hberrors.h
+       * Modified Memory Errors to indicate the requested size.
+       -* Removed few Strong Type warnings, and modified few others.
+
+    * harbour/include/hbexprb.c
+      * Modified all HB_EXPR_PCODE?( hb_compGenPCode1 ,...) to HB_EXPR_GENPCODE?( ... ) to diferntiate between the
+        calls top GenPCode?() and the other calls using this macro, since the GenPCode?() now uses additional parameter:
+	BOOL bAffectStack
+      * Modified all the GenPCode?() to pass additional required paramter.
+
+    * harbour/include/hbexprc.c
+      * Modified all HB_EXPR_PCODE?( hb_compGenPCode1 ,...) to HB_EXPR_GENPCODE?( ... ) to diferntiate between the
+        calls top GenPCode?() and the other calls using this macro, since the GenPCode?() now uses additional parameter:
+	BOOL bAffectStack
+      * Modified all the GenPCode?() to pass additional required paramter.
+
+    * harbour/include/hbexprop.h
+      + Added macros:
+        #define HB_EXPR_GENPCODE1( action, p1 ) action( (p1) )
+        #define HB_EXPR_GENPCODE2( action, p1, p2, p3 ) action( (p1), (p2), (p3) )
+        #define HB_EXPR_GENPCODE3( action, p1, p2, p3, p4 ) action( (p1), (p2), (p3), (p4) )
+        #define HB_EXPR_GENPCODE4( action, p1, p2, p3, p4, p5 ) action( (p1), (p2), (p3), (p4), (p5) )
+
+	And:
+
+        #define HB_EXPR_GENPCODE1( action, p1 ) action( (p1), pMacro )
+        #define HB_EXPR_GENPCODE2( action, p1, p2, p3 ) action( (p1), (p2), (p3), pMacro )
+        #define HB_EXPR_GENPCODE3( action, p1, p2, p3, p4 ) action( (p1), (p2), (p3), (p4), pMacro )
+        #define HB_EXPR_GENPCODE4( action, p1, p2, p3, p4, p5 ) action( (p1), (p2), (p3), (p4), (p5), pMacro )
+
+    * harbour/include/hbmacro.h
+       Added:
+         extern void hb_compGenPCode1( BYTE, HB_MACRO_DECL );
+         extern void hb_compGenPCode2( BYTE, BYTE, BOOL, HB_MACRO_DECL );
+         extern void hb_compGenPCode3( BYTE, BYTE, BYTE, BOOL, HB_MACRO_DECL );
+         extern void hb_compGenPCode4( BYTE, BYTE, BYTE, BYTE, BOOL, HB_MACRO_DECL );
+         extern void hb_compGenPCodeN( BYTE * pBuffer, ULONG ulSize, BOOL, HB_MACRO_DECL );
+
+	 And:
+         extern void hb_compGenPCode1( BYTE byte, HB_MACRO_DECL );
+         extern void hb_compGenPCode2( BYTE byte1, BYTE byte2, BOOL bStackAffected, HB_MACRO_DECL );
+         extern void hb_compGenPCode3( BYTE byte1, BYTE byte2, BYTE byte3, BOOL bStackAffected, HB_MACRO_DECL );
+         extern void hb_compGenPCode4( BYTE byte1, BYTE byte2, BYTE byte3, BYTE byte4, BOOL bStackAffected, HB_MACRO_DECL );
+         extern void hb_compGenPCodeN( BYTE * pBuffer, ULONG ulSize, BOOL, HB_MACRO_DECL );
+
+	 *** I think this is redundant but I went by exisitng declarations !!! Ryszard Please Check !!!
+
+    * harbour/source/compiler/harbour.c
+      * Modified GenPCode2-N() to require additional paramter.
+      * Modified GenPCode2-N() to call StrongType() if needed.
+      * Modified all the GenPCode?() calls to pass additional required paramter.
+
+    * harbour/source/compiler/harbour.y
+      * Modified all the GenPCode?() to pass additional required paramter.
+
+    * harbour/source/compiler/hbgenerr.c
+       * Modified Memory Errors to indicate the requested size.
+       -* Removed few Strong Type warnings, and modified few others.
+
+    * harbour/source/compiler/hbpcode.c
+      Added void hb_compStrongType( int iSize ) - This is the Strong Type Checker! It's not 100% completed but it's stable and the
+      approch guarntee 100% accuracy once we fine tune the calculations of the Compile Time Stack to be identical to the R/T Stack.
+
+    * harbour/source/vm/macro.c
+      * Modified GenPCode2-N() to require additional paramter.
+      * Modified GenPCode2-N() to call StrongType() if needed.
+      * Modified all the GenPCode?() calls to pass additional required paramter.
+
+    * harbour/tests/testwarn.prg
+      + Added code to demonstrate more warnings.
+
 20000426-21:12 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/vm/borsym.asm
      naming minor changes.
