@@ -1,16 +1,20 @@
 #include "std.ch"
+SET PATH TO c:\database\
  @ 1,1,10,10 BOX ORAMKA
- @ 2, 3 SAY "Hello,world"
+ @ 10,10 say "Hello World"
  SET DATE BRITISH
- USE JOUPL SHARED INDEX JOUPI1
+ USE \Sklad\dbskl\JOUPL SHARED INDEX CUST, POSTI, ACCOU
+ SET ORDER TO 2
+ SET RELATION TO STR(NPOST,6) INTO POSTAV
+ SUM NUM, SCHET, PARS TO x1,y1,z1
  SET FILTER TO
  SEEK STR(A->NOMER,10)
  go top
  DO WHILE x>1
-  skip 3
+  SKIP 3
  ENDDO
  LOCATE FOR Family = "Johnson"
  ? "Family:", Family, "--"
  REPLACE PARAM1 WITH 3, PARAM2 WITH "Hello", PARAM3 WITH PARAM4 * 2
- STORE 10 to x,y,z 
+ STORE 10 to x,y,z
 return

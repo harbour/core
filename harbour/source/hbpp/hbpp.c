@@ -1,4 +1,4 @@
-/* Harbour Preprocessor , version 0.7
+/* Harbour Preprocessor , version 0.8
    author - Alexander Kresin             */
 #include <stdio.h>
 #include <io.h>
@@ -10,32 +10,43 @@
 int Hp_Parse( int, int );
 int ParseDirective( char* );
 int ParseDefine( char* );
+int AddDefine ( char* );
 int ParseUndef( char* );
 int ParseIfdef( char*, int);
 int ParseCommand( char* );
+int ConvertPatterns ( char*, int, char*, int );
+void AddCommand ( char * );
 int ParseExpression( char*, char* );
 void WorkDefine ( char**, char**, int);
-int WorkCommand ( char*, char**, char**, int);
+int WorkCommand ( char*, char*, char**, int);
 void CmdParse ( char *ptri, int aCmdStru[100][2] );
+int WorkMarkers( char**, char*, char*, int*, int aCmdStru[100][2], int*, int );
 void SkipOptional( char**, char*, int*);
 
 int DefSearch(char *);
 int ComSearch(char *,int);
-void SearnRep( char*,int,char*,int,char*,int*);
+void SearnRep( char*,char*,int,char*,int*);
+int ReplacePattern ( char, char*, int, char*, int );
 int RdStr(int,char *,int,int,char*,int*,int*);
 int WrStr(int,char *);
 int hb_strAt(char *, int, char*, int);
 int IsInStr ( char, char*);
 void Stuff (char*, char*, int, int, int);
-void Stringify( char *, int);
-void pEnclose( char *, int, char);
-int NextWord ( char**, char*);
+int strocpy (char*, char* );
+int stroncpy (char*, char*, int);
+int strocmp (char*, char**);
+int strolen ( char* );
+char* strodup ( char * );
+int NextWord ( char**, char*, int);
 int NextName ( char**, char*, char**);
 
 #define isname(c)  (isalnum(c) || c=='_' || (c) > 0x7e)
 #define SKIPTABSPACES(sptr) while ( *sptr == ' ' || *sptr == '\t' ) (sptr)++
 #define MAX_NAME 255
 #define BUFF_SIZE 2048
+#define STR_SIZE 1024
+#define FALSE               0
+#define TRUE                1
 
 #define STATE_INIT 0
 #define STATE_NORMAL 1
@@ -56,6 +67,7 @@ int lInclude = 0;
 int *aCondCompile, nCondCompile = 0, maxCondCompile = 5;
 int nline=0;
 int Repeate;
+char groupchar;
 
 typedef struct
 {
@@ -72,7 +84,6 @@ typedef struct
 {
   char *name;
   char *mpatt;
-  int npars;
   char *value;
 } COMMANDS;
 
@@ -106,34 +117,33 @@ FILENAME *pFileName =NULL;
 
  Hp_Parse(handl_i,handl_o);
  close(handl_i); close(handl_o);
-/*
+
  for (i=0;i<kolcommands;i++)
  {
-  printf("\n%s",aCommands[i].name);
-  if (aCommands[i].mpatt !=NULL)   printf(" /%s/",aCommands[i].mpatt);
-  if (aCommands[i].value !=NULL)   printf(" /%s/",aCommands[i].value);
+  printf("\n\"%s\",",aCommands[i].name);
+  if (aCommands[i].mpatt !=NULL)   printf("\"%s\",",aCommands[i].mpatt);
+   else printf("NULL,");
+  if (aCommands[i].value !=NULL)   printf("\n\"%s\",",aCommands[i].value);
+   else printf("\nNULL,");
  }
-*/
+
  return 0;
 }
 
 int Hp_Parse( int handl_i, int handl_o )
 {
- char sBuffer[BUFF_SIZE];
+ char sBuffer[BUFF_SIZE];           /* File read buffer */
  int iBuffer = 10, lenBuffer = 10;
- char sLine[1024], sOutLine[1024];
- int lChanged;
+ char sLine[STR_SIZE], sOutLine[STR_SIZE], *ptr;
  int lContinue = 0;
- int lDirective;
- int lens=0;
- int i;
+ int lens=0, rdlen;
  int rezParse;
 
- while ( (i=RdStr(handl_i,sLine+lens, ((lDirective)? 1024:256)-lens,lContinue,sBuffer,&lenBuffer,&iBuffer ))>=0 )
+ while ( ( rdlen = RdStr(handl_i,sLine+lens, STR_SIZE-lens,lContinue,
+                                     sBuffer,&lenBuffer,&iBuffer ) ) >= 0 )
  {
   if ( !lInclude ) nline++;
-  lens+=i;
-  lChanged = 0;
+  lens += rdlen;
 
   if( sLine[lens-1] == ';' )
   {
@@ -146,24 +156,23 @@ int Hp_Parse( int handl_i, int handl_o )
 
   if ( *sLine != '\0' && !lContinue )
   {
-   i = 0;
-   while ( *(sLine+i) == ' ' || *(sLine+i) == '\t' ) i++;
-   if ( *(sLine+i) == '#' )
+   ptr = sLine;
+   SKIPTABSPACES( ptr );
+   if ( *ptr == '#' )
    {
-    lDirective = 1;
-    if ( (rezParse=ParseDirective(sLine+i+1)) > 0 )
+    if ( (rezParse=ParseDirective( ptr+1 )) > 0 )
     {
      if ( !lInclude )
        printf ( "\nError number %u in line %u", rezParse, nline );
      return rezParse;
     }
+    *sLine = '\0';
    }
    else
    {
-    lDirective = 0;
     if ( nCondCompile==0 || aCondCompile[nCondCompile-1])
     {
-      if ( (rezParse = ParseExpression( sLine+i,sOutLine)) > 0 )
+      if ( (rezParse = ParseExpression( ptr, sOutLine)) > 0 )
       {
        printf ( "\nError number %u in line %u", rezParse, nline );
        return rezParse;
@@ -174,35 +183,37 @@ int Hp_Parse( int handl_i, int handl_o )
   }
 
   if(!lInclude)
-   if(lDirective || lContinue) WrStr(handl_o,"\0");
-   else if(!lChanged) WrStr(handl_o,sLine);
+  {
+   if( lContinue ) WrStr(handl_o,"\0");  else WrStr(handl_o,sLine);
+  }
  }
  return 0;
 }
 
 int ParseDirective( char* sLine )
 {
- char sDirective[11];
+ char sDirective[MAX_NAME];
  int i = 0;
  int handl_i;
 
- while ( *sLine != '\0' && (*sLine == ' ' || *sLine == '\t') ) sLine++;
- while ( *sLine != '\0' && *sLine != ' ' && *sLine != '\t' && i<10 )
-  *(sDirective+i++) = tolower(*sLine++);
- *(sDirective+i) = '\0';
+ i = NextWord( &sLine, sDirective, TRUE );
  SKIPTABSPACES(sLine);
 
  if ( i == 4 && memcmp ( sDirective, "else", 4 ) == 0 )
- {
-  if ( nCondCompile == 0 ) return 3001;
-  else aCondCompile[nCondCompile-1] = 1 - aCondCompile[nCondCompile-1];
+ {     /* ---  #else  --- */
+   if ( nCondCompile == 0 ) return 3001;
+   else aCondCompile[nCondCompile-1] = 1 - aCondCompile[nCondCompile-1];
  }
+
  else if ( i == 5 && memcmp ( sDirective, "endif", 5 ) == 0 )
-  { if ( nCondCompile == 0 ) return 3001; else nCondCompile--; }
+ {     /* --- #endif  --- */
+   if ( nCondCompile == 0 ) return 3001; else nCondCompile--;
+ }
+
  else if ( nCondCompile==0 || aCondCompile[nCondCompile-1])
  {
   if ( i == 7 && memcmp ( sDirective, "include", 7 ) == 0 )
-  {
+  {    /* --- #include --- */
    if ( *sLine != '\"' ) return 1000;
    sLine++; i = 0;
    while ( *(sLine+i) != '\0' && *(sLine+i) != '\"' ) i++;
@@ -217,25 +228,33 @@ int ParseDirective( char* sLine )
    lInclude--;
    close(handl_i);
   }
+
   else if ( i == 6 && memcmp ( sDirective, "define", 6 ) == 0 )
-   ParseDefine ( sLine );
+   ParseDefine ( sLine );   /* --- #define  --- */
+
   else if ( i == 5 && memcmp ( sDirective, "undef", 5 ) == 0 )
-   ParseUndef ( sLine );
+   ParseUndef ( sLine );    /* --- #undef  --- */
+
   else if ( i == 5 && memcmp ( sDirective, "ifdef", 5 ) == 0 )
-   ParseIfdef ( sLine, 1 );
+   ParseIfdef ( sLine, TRUE ); /* --- #ifdef  --- */
+
   else if ( i == 6 && memcmp ( sDirective, "ifndef", 6 ) == 0 )
-   ParseIfdef ( sLine, 0 );
+   ParseIfdef ( sLine, FALSE ); /* --- #ifndef  --- */
+
   else if ( (i == 7 && memcmp ( sDirective, "command", 7 ) == 0) ||
             (i == 8 && memcmp ( sDirective, "xcommand", 8 ) == 0) )
-   ParseCommand ( sLine );
+   ParseCommand ( sLine ); /* --- #command  --- */
+
   else if ( (i == 9 && memcmp ( sDirective, "translate", 9 ) == 0) ||
             (i == 10 && memcmp ( sDirective, "xtranslate", 10 ) == 0) )
-  {
+  {                        /* --- #translate  --- */
   }
+
   else if ( i == 6 && memcmp ( sDirective, "stdout", 6 ) == 0 )
-   printf ( "%s", sLine );
+   printf ( "%s", sLine ); /* --- #stdout  --- */
+
   else if ( i == 5 && memcmp ( sDirective, "error", 5 ) == 0 )
-  {
+  {                        /* --- #error  --- */
    printf ( " #error: %s", sLine );
    return 2000;
   }
@@ -247,17 +266,16 @@ int ParseDirective( char* sLine )
 int ParseDefine( char* sLine)
 {
  char defname[MAX_NAME], pars[MAX_NAME];
- int i = 0, deflen, parslen, npars = 0;
-
+ int i = 0, npars = 0, ndef;
+     /* Drag identifier */
  while ( *sLine != '\0' && *sLine != ' ')
  {
-  if ( *sLine == '(' ) break;
+  if ( *sLine == '(' ) break;  /* If pseudofunction */
   *(defname+i++) = *sLine++;
  }
  *(defname+i) = '\0';
- deflen = i;
 
- if ( *sLine == '(' )
+ if ( *sLine == '(' ) /* If pseudofunction was found */
  {
   sLine++; i = 0;
   while ( *sLine != '\0' && *sLine != ')')
@@ -268,45 +286,39 @@ int ParseDefine( char* sLine)
   }
   if ( i > 0 ) npars++;
   *(pars+i) = '\0';
-  parslen = i;
   sLine++;
  }
+ SKIPTABSPACES(sLine);
 
- if ( ( i = DefSearch(defname) ) >= 0 )
+ ndef = AddDefine ( defname );
+
+ aDefines[ndef].value = ( *sLine == '\0' )? NULL : strodup ( sLine );
+ aDefines[ndef].npars = npars;
+ aDefines[ndef].pars = ( npars == 0 )? NULL : strodup ( pars );
+
+ return 0;
+}
+
+int AddDefine ( char* defname )
+{
+ int ndef = DefSearch( defname );
+
+ if ( ndef >= 0 )
  {
-  if ( aDefines[i].pars != NULL ) _xfree ( aDefines[i].pars );
-  _xfree ( aDefines[i].value );
+  if ( aDefines[ndef].pars != NULL ) _xfree ( aDefines[ndef].pars );
+  _xfree ( aDefines[ndef].value );
  }
  else
  {
-  if ( koldefines == maxdefines )
+  if ( koldefines == maxdefines )      /* Add new entry to defines table */
   {
    maxdefines += 50;
    aDefines = (DEFINES *)_xrealloc( aDefines, sizeof( DEFINES ) * maxdefines );
   }
-  i = koldefines++;
-  aDefines[i].name = ( char * ) _xgrab( deflen + 1 );
-  memcpy( aDefines[i].name,defname, deflen );
-  aDefines[i].name[deflen] = '\0';
+  ndef = koldefines++;
+  aDefines[ndef].name = strodup ( defname );
  }
- SKIPTABSPACES(sLine);
- if ( *sLine == '\0' ) aDefines[i].value = NULL;
- else
- {
-  deflen = 0;
-  while ( *(sLine+deflen) != '\0' ) deflen++;
-  aDefines[i].value = ( char * ) _xgrab( deflen + 1 );
-  memcpy( aDefines[i].value,  sLine, deflen+1 );
-  aDefines[i].value[deflen] = '\0';
- }
- aDefines[i].npars = npars;
- if ( npars > 0 )
- {
-  aDefines[i].pars = ( char * ) _xgrab( parslen + 1 );
-  memcpy( aDefines[i].pars,  pars, parslen+1 );
- }
- else aDefines[i].pars = NULL;
- return 0;
+ return ndef;
 }
 
 int ParseUndef( char* sLine)
@@ -314,7 +326,7 @@ int ParseUndef( char* sLine)
  char defname[MAX_NAME];
  int i = 0;
 
- NextWord( &sLine, defname );
+ NextWord( &sLine, defname, FALSE );
 
  if ( ( i = DefSearch(defname) ) >= 0 )
  {
@@ -338,7 +350,7 @@ int ParseIfdef( char* sLine, int usl)
  char defname[MAX_NAME];
  int i;
 
-  NextWord( &sLine, defname );
+  NextWord( &sLine, defname, FALSE );
   if ( *defname == '\0' ) return 3000;
   if ( nCondCompile == maxCondCompile )
   {
@@ -379,67 +391,118 @@ int ComSearch(char *cmdname, int ncmd)
 
 int ParseCommand( char* sLine)
 {
- char cmdname[MAX_NAME], pars[MAX_NAME];
- int cmdlen = 0, pattlen, ipos, i;
+ char cmdname[MAX_NAME];
+ char mpatt[STR_SIZE], rpatt[STR_SIZE];
+ int mlen,rlen;
+ int ipos, rez;
 
- while ( *sLine != '\0' && *sLine != ' ')  *(cmdname+cmdlen++) = *sLine++;
- *(cmdname+cmdlen) = '\0';
-
+ NextWord( &sLine, cmdname, FALSE );
  SKIPTABSPACES(sLine);
- for ( ipos=0; *(sLine+ipos) != '\0'; ipos++ )
-  if ( *(sLine+ipos) == '=' && *(sLine+ipos+1) == '>' ) break;
- if( *(sLine+ipos) == '\0' ) return 4000;
 
+ if ( (ipos = hb_strAt( "=>", 2, sLine, strolen(sLine) )) > 0 )
+   mlen = stroncpy( mpatt, sLine, ipos-1 );
+ else return 4000;  /* Quit, if '=>' absent */
+
+ sLine += ipos + 1;
+ SKIPTABSPACES(sLine);
+ rlen = strocpy( rpatt, sLine );
+
+ if ( (rez = ConvertPatterns ( mpatt, mlen, rpatt, rlen )) > 0 ) return rez;
+
+ AddCommand ( cmdname );
+ aCommands[kolcommands-1].mpatt = strodup ( mpatt );
+ aCommands[kolcommands-1].value = ( rlen > 0 )? strodup ( rpatt ) : NULL;
+
+ return 0;
+}
+
+int ConvertPatterns ( char *mpatt, int mlen, char *rpatt, int rlen )
+{
+ int i = 0, ipos, ifou;
+ int explen,rmlen;
+ char exppatt[MAX_NAME], expreal[4] = "\1  0";
+ char lastchar = '@', exptype;
+ char *ptr;
+
+ while ( *(mpatt+i) != '\0' )
+ {
+  if ( *(mpatt+i) == '<' )
+  {  /* Drag match marker, determine it type */
+   explen = 0; ipos = i; i++; exptype = '0';
+   if ( *(mpatt+i) == '*' ) { exptype = '3'; i++; }
+   else if ( *(mpatt+i) == '(' ) { exptype = '4'; i++; }
+   while ( *(mpatt+i) != '>' )
+   {
+    if ( *(mpatt+i) == ',' ) { exptype = '1'; while ( *(mpatt+i++) != '>' ); break; }
+    else if ( *(mpatt+i) == ':' ) { exptype = '2'; break; }
+    *(exppatt+explen++) = *(mpatt+i++);
+   }
+   if ( exptype == '3' )
+    { if ( *(exppatt+explen-1) == '*' ) explen--; else return 4001; }
+   else if ( exptype == '4' )
+    { if ( *(exppatt+explen-1) == ')' ) explen--; else return 4001; }
+   rmlen = i - ipos + 1;
+     /* Replace match marker with new marker */
+   lastchar = (char) ( (unsigned int)lastchar + 1 );
+   expreal[1] = lastchar;
+   expreal[2] = exptype;
+   Stuff ( expreal, mpatt+ipos, 4, rmlen, mlen );
+   mlen += 4 - rmlen; i += 4 - rmlen;
+
+   ptr = rpatt;
+   while ( (ifou = hb_strAt( exppatt, explen, ptr, rlen-(ptr-rpatt) )) > 0 )
+   {
+    ptr += ifou;
+    if ( *(ptr-2) == '<' && *(ptr+explen-1) == '>' )
+    {
+     if ( *(ptr-3) == '#' ) { exptype = '1'; ptr -= 3; rmlen = explen+3; }
+     else { exptype = '0'; ptr -= 2; rmlen = explen+2; }
+    }
+    else if ( *(ptr-3) == '<' && *(ptr+explen) == '>' )
+    {
+     ptr -= 2;
+     if ( *ptr == '\"' ) exptype = '2';
+     else if ( *ptr == '(' ) exptype = '3';
+     else if ( *ptr == '{' ) exptype = '4';
+     else if ( *ptr == '.' ) exptype = '5';
+     ptr--;
+     rmlen = explen+4;
+    }
+    else continue;
+    expreal[2] = exptype;
+    Stuff ( expreal, ptr, 4, rmlen, rlen );
+    rlen += 4 - rmlen;
+   }
+  }
+  i++;
+ }
+ return 0;
+}
+
+void AddCommand ( char *cmdname )
+{
  if ( kolcommands == maxcommands )
  {
   maxcommands += 50;
   aCommands = (COMMANDS *)_xrealloc( aCommands, sizeof( COMMANDS ) * maxcommands );
  }
- aCommands[kolcommands].name = ( char * ) _xgrab( cmdlen + 1 );
- for ( i=0; i<cmdlen; i++ ) *(aCommands[kolcommands].name+i) = toupper(*(cmdname+i));
- aCommands[kolcommands].name[cmdlen] = '\0';
-
- if ( ipos > 1 )
- {
-  pattlen = ipos - 2;
-  while ( *(sLine+pattlen) == ' ' ) pattlen--;
-  pattlen++;
-
-  aCommands[kolcommands].mpatt = ( char * ) _xgrab( pattlen + 1 );
-  memcpy( aCommands[kolcommands].mpatt, sLine, pattlen );
-  *(aCommands[kolcommands].mpatt+pattlen) = '\0';
- }
- else aCommands[kolcommands].mpatt = NULL;
-
- ipos += 2;
- while ( *(sLine+ipos) == ' ' ) ipos++;
- pattlen = 0;
- while ( *(sLine+ipos+pattlen) != '\0' ) pattlen++;
-
- if ( pattlen > 0 )
- {
-  aCommands[kolcommands].value = ( char * ) _xgrab( pattlen + 1 );
-  memcpy( aCommands[kolcommands].value, sLine+ipos, pattlen + 1 );
-  *(aCommands[kolcommands].value+pattlen) = '\0';
- }
- else aCommands[kolcommands].value = NULL;
-
+ aCommands[kolcommands].name = strodup ( cmdname );
  kolcommands++;
- return 0;
 }
 
-int ParseExpression( char* sLine, char* sOutLine)
+int ParseExpression( char* sLine, char* sOutLine )
 {
  char sToken[MAX_NAME];
  char *ptri, *ptro;
  int lenToken,npars,ndef,i;
- int rezDef;
+ int rezDef, rezCom, kolpass = 0;
  int aUsed[100], kolused = 0, lastused;
 
  do
  {
   ptri = sLine; ptro = sOutLine;
-  rezDef = 0; lastused = kolused;
+  rezDef = 0; rezCom = 0;
+  lastused = kolused;
    /* Look for macros from #define      */
   while ( ( lenToken = NextName(&ptri, sToken, &ptro) ) > 0 )
    if ( (ndef=DefSearch(sToken)) >= 0 )
@@ -479,26 +542,31 @@ int ParseExpression( char* sLine, char* sOutLine)
    }
   *ptro = '\0';
   memcpy ( sLine, sOutLine, ptro - sOutLine + 1);
- }
- while ( rezDef );
 
- /* Look for definitions from #command      */
- ptri = sLine; ptro = sOutLine;
- lenToken = NextWord( &ptri, sToken);
- if ( (ndef=ComSearch(sToken,0)) >= 0 )
- {
-  if ( (i = WorkCommand( sToken, &ptri, &ptro, ndef )) > 0 )
-   memcpy ( sLine, sOutLine, i+1);
+  /* Look for definitions from #command      */
+  if ( !kolpass )
+  {
+   ptri = sLine; ptro = sOutLine;
+   lenToken = NextWord( &ptri, sToken, FALSE);
+   if ( (ndef=ComSearch(sToken,0)) >= 0 )
+   {
+    if ( (i = WorkCommand( sToken, ptri, &ptro, ndef )) > 0 )
+     memcpy ( sLine, sOutLine, i+1);
+    rezCom = 1;
+   }
+  }
+  kolpass++;
  }
+ while ( rezDef || rezCom );
+
  return 0;
 }
 
 void WorkDefine ( char** ptri, char** ptro, int ndef )
 {
  char parfict[MAX_NAME], parreal[MAX_NAME];
- char *ptrb, *ptr1, *ptr2;
+ char *ptrb;
  int ipos = 0, ifou, ibeg;
- int i;
  int lenfict, lenreal, lenres;
 
  while ( *(aDefines[ndef].value+ipos) != '\0' ) /* Copying value of macro */
@@ -550,222 +618,91 @@ void WorkDefine ( char** ptri, char** ptro, int ndef )
  *ptro += lenres;
 }
 
-int WorkCommand ( char* sToken, char** ptri, char** ptro, int ndef )
+int WorkCommand ( char* sToken, char* ptri, char** ptro, int ndef )
 {
- char expreal[MAX_NAME], exppatt[MAX_NAME];
- int lenreal, lenpatt;
- int aCmdStru[100][2], iItem, ifiItem;
- int rez, rezrestr, rezpatt, nbr;
+ int aCmdStru[100][2], iItem;
+ int rez, nbr;
  int lenres = 0;
- int ifou, i;
- char *lastopti;
- char *ptrin, *ptrmp, *ptr;
+ char *lastopti[2];
+ char *ptrmp;
 
- while ( *(aCommands[ndef].value+lenres) != '\0' ) /* Copying result pattern */
- {                                                 /* to destination string  */
-  *(*ptro+lenres) = *(aCommands[ndef].value+lenres);
-  lenres++;
- }
+ /* Copying result pattern to destination string  */
+ lenres = strocpy ( *ptro, aCommands[ndef].value );
 
- CmdParse ( *ptri, aCmdStru );     /* Parse input string */
- ptrmp = aCommands[ndef].mpatt;
+ CmdParse ( ptri, aCmdStru );     /* Parse input string */
+ ptrmp = aCommands[ndef].mpatt;    /* Pointer to a match pattern */
  do
  {
   Repeate = 0;
+  groupchar = '@';
   rez = 1; nbr = 0;
   if ( ptrmp == NULL ) rez = ( aCmdStru[0][0] )? 0:1;
   else
    for ( iItem=1; iItem <= aCmdStru[0][0] && rez; iItem++)
    {
-    do
-    {
-      rezpatt = 0;
-      SKIPTABSPACES( ptrmp );
-      if ( *ptrmp == '[' ) { rezpatt = 1; nbr++; ptrmp++; lastopti = ptrmp; }
-      else if ( *ptrmp == ']' )
-      {
-       rezpatt = 1;
-       if ( Repeate ) { Repeate = 0; ptrmp = lastopti; }
-       else { nbr--; ptrmp++; }
-      }
-      else if ( *ptrmp == ',' )
-      {
+     SKIPTABSPACES( ptrmp );
+     switch ( *ptrmp ) {
+      case '[':
+       iItem--;
+       nbr++; ptrmp++; lastopti[Repeate] = ptrmp;
+       break;
+      case ']':
+        iItem--;
+        if ( Repeate ) { Repeate--; ptrmp = lastopti[Repeate]; }
+        else { nbr--; ptrmp++; }
+        break;
+      case ',':
        if ( aCmdStru[iItem][1] == IT_COMMA ) ptrmp++;
-       else { rez = 0; break; }
-      }
-      else if ( *ptrmp == '<' )
-      {     /* -------        Match marker            ------- */
-       if ( aCmdStru[iItem][1] == IT_COMMA )   { rez = 0; break; }
-               /* Copying a match pattern to 'exppatt' */
-       lenpatt = 0;
-       while ( *ptrmp != '>' && *ptrmp!= '\0' ) *(exppatt+lenpatt++) = *ptrmp++;
-       *(exppatt+lenpatt++) = '>';
-       *(exppatt+lenpatt) = '\0';
-       ptrmp++;
-               /* Copying a real expression to 'expreal' */
-       lenreal = 0; ptrin = *ptri + aCmdStru[iItem][0];
-       while ( lenreal < aCmdStru[iItem+1][0]-aCmdStru[iItem][0] )
-        { *(expreal+lenreal) = *(ptrin+lenreal); lenreal++; }
-       if ( *(expreal+lenreal) == ' ' )
-        { while ( *(expreal+lenreal) == ' ' ) lenreal--;  lenreal++;  }
-       *(expreal+lenreal) = '\0';
-
-       if ( *(exppatt+1) == '(' )
-       /*  ---- In case of extended match marker  */
-       {
-        Stringify( expreal, lenreal ); lenreal += 2;
-        SearnRep( exppatt,lenpatt,expreal,lenreal,*ptro,&lenres);
-       }
-       else if ( *(exppatt+1) == '*' )
-       /*  ---- In case of wild match marker  */
-       {
-         ifiItem = iItem; iItem = aCmdStru[0][0];
-         if ( iItem > ifiItem ) /* Copying a real expression to 'expreal' */
-         {
-          lenreal = 0; ptrin = *ptri + aCmdStru[ifiItem][0];
-          while ( lenreal < aCmdStru[iItem+1][0]-aCmdStru[ifiItem][0] )
-           { *(expreal+lenreal) = *(ptrin+lenreal); lenreal++; }
-          if ( *(expreal+lenreal) == ' ' )
-           { while ( *(expreal+lenreal) == ' ' ) lenreal--;  lenreal++;  }
-          *(expreal+lenreal) = '\0';
-         }
-       }
-       else if ( (ifou = hb_strAt(":",1,exppatt,lenpatt)) > 0 )
-       /*  ---- In case of restricted match marker  */
-       {
-        ptr = exppatt + ifou;
-        rezrestr = 0;
-        while ( *ptr != '>' )
-        {
-         if ( *ptr == '&' )
-         {
-          if ( *expreal == '&' )
-          {
-           rezrestr = 1;
-           break;
-          }
-          else ptr++;
-         }
-         else
-         {
-           SKIPTABSPACES( ptr );
-           /* Comparing real parameter and restriction value */
-          for ( i=0; toupper(*ptr) == toupper(*(expreal+i)) && *ptr != ','
-                && *ptr != '>' && i < lenreal; i++,ptr++ );
-          if ( i == lenreal || *ptr == ',' || *ptr == '>' )
-          {
-           pEnclose( exppatt, ifou, '.' ); lenpatt = ifou+2;
-           SearnRep( exppatt,lenpatt,".T.",3,*ptro,&lenres);
-           rezrestr = 1;
-           break;
-          }
-          else
-          {
-            while ( *ptr != ',' && *ptr != '>' ) ptr++;
-            if ( *ptr == ',' ) ptr++;
-          }
-         }
-        }
-        if ( rezrestr == 0 )
-        {  /* If restricted match marker doesn't correspond to real parameter */
-         if ( nbr )
-         {
-          pEnclose( exppatt, ifou, '.' ); lenpatt = ifou+2;
-          SearnRep( exppatt,lenpatt,".F.",3,*ptro,&lenres);
-          rezpatt = 1;      /* if was optional, go to the next */
-         }
-         else { rez = 0; break; } /* else break this rule            */
-        }
-       }
-       else if ( (ifou = hb_strAt(",",1,exppatt,lenpatt)) > 0 )
-       /*  ---- In case of list match marker  */
-       {
-         *(exppatt+ifou-1) = '>';
-         *(exppatt+ifou) = '\0';
-         lenpatt = ifou;
-         ifiItem = iItem;
-         while ( iItem < aCmdStru[0][0] && aCmdStru[iItem+1][1] == IT_COMMA ) iItem+=2;
-         if ( iItem > ifiItem ) /* Copying a real expression to 'expreal' */
-         {
-          lenreal = 0; ptrin = *ptri + aCmdStru[ifiItem][0];
-          while ( lenreal < aCmdStru[iItem+1][0]-aCmdStru[ifiItem][0] )
-           { *(expreal+lenreal) = *(ptrin+lenreal); lenreal++; }
-          if ( *(expreal+lenreal) == ' ' )
-           { while ( *(expreal+lenreal) == ' ' ) lenreal--;  lenreal++;  }
-          *(expreal+lenreal) = '\0';
-         }
-         SearnRep( exppatt,lenpatt,expreal,lenreal,*ptro,&lenres);
-       }
        else
-       /*  ---- In case of regular match marker  */
        {
-                         /* Search for regular result markers */
-         SearnRep( exppatt,lenpatt,expreal,lenreal,*ptro,&lenres);
-                         /* Search for smart stringify  result markers */
-         pEnclose( exppatt, lenpatt, '(' ); lenpatt += 2;
-         if ( *expreal != '(' )
-         { Stringify( expreal, lenreal ); lenreal += 2; }
-         SearnRep( exppatt,lenpatt,expreal,lenreal,*ptro,&lenres);
-                         /* Search for normal stringify  result markers */
-         *(exppatt+1) = *(exppatt+lenpatt-2) = '\"';
-         if ( *expreal != '\"' )
-         { Stringify( expreal, lenreal ); lenreal += 2; }
-         SearnRep( exppatt,lenpatt,expreal,lenreal,*ptro,&lenres);
-                         /* Search for blockify result markers */
-         *(exppatt+1) = '{'; *(exppatt+lenpatt-2) = '}';
-         *expreal = '{'; *(expreal+lenreal-1) = '}';
-         Stuff ( "||", expreal+1, 2, 0, lenreal );
-         lenreal += 2;
-         SearnRep( exppatt,lenpatt,expreal,lenreal,*ptro,&lenres);
+        if ( nbr ) { SkipOptional( &ptrmp, *ptro, &lenres); iItem--; }
+        else rez = 0;
        }
-      }     /* ------- End of match marker processing ------- */
-      else if ( *ptrmp == '\0' ) { rez = 0; break; }
-      else  /* -------           Key word             ------- */
-      {
-       if ( aCmdStru[iItem][1] != IT_ID )   { rez = 0; break; }
-       ptrin = *ptri + aCmdStru[iItem][0];
-       for (;isname(*ptrin) && isname(*ptrmp) && toupper(*ptrin)==toupper(*ptrmp); ptrmp++, ptrin++ );
-       if ( *ptrmp != *ptrin )
+       break;
+      case '\1':  /*  Match marker */
+       rez = WorkMarkers( &ptrmp, ptri, *ptro, &lenres, aCmdStru, &iItem, nbr );
+       break;
+      case '\0':
+       rez = 0;
+       break;
+      default:    /*   Key word    */
+       if ( aCmdStru[iItem][1] != IT_ID ||
+           strocmp(ptri + aCmdStru[iItem][0], &ptrmp ) )
        {
-        if ( nbr ) { SkipOptional( &ptrmp, *ptro, &lenres); rezpatt = 1; }
-        else { rez = 0; break; }
+        if ( nbr ) { SkipOptional( &ptrmp, *ptro, &lenres); iItem--; }
+        else rez = 0;
        }
-      }     /* -------   End of key word processing  -------  */
-    }
-    while ( rezpatt );
+     }
    }
 
   if ( rez && ptrmp != NULL)
   {
    SKIPTABSPACES( ptrmp );
-   if ( *ptrmp == ']' ) ptrmp++; nbr--;
-   if ( Repeate ) ptrmp = lastopti - 1;
+   if ( *ptrmp == ']' ) { ptrmp++; nbr--; }
+   if ( Repeate ) { Repeate = 0; ptrmp = lastopti[0] - 1; }
    do
    {
     SKIPTABSPACES( ptrmp );
     if ( *ptrmp != '\0' )
-     if ( *ptrmp == '[' )
-     {
-      ptrmp++;
-      SkipOptional( &ptrmp, *ptro, &lenres);
-      ptrmp++;
+     switch ( *ptrmp ) {
+      case '[':
+       ptrmp++;
+       SkipOptional( &ptrmp, *ptro, &lenres);
+       ptrmp++;
+       break;
+      case ']': ptrmp++; break;
+      default:
+       rez = 0;
      }
-     else if ( *ptrmp=='<' && *(ptrmp+1)=='*' ) break;
-     else rez = 0;
    }
    while ( *ptrmp != '\0' && rez );
   }
 
   if ( !rez && (ndef = ComSearch(sToken,ndef-1))>=0 )
   {
-   ptrmp = aCommands[ndef].mpatt;
-   ptrin = *ptri;
-   lenres = 0;
-   while ( *(aCommands[ndef].value+lenres) != '\0' ) /* Copying result pattern */
-   {                                                 /* to destination string  */
-    *(*ptro+lenres) = *(aCommands[ndef].value+lenres);
-    lenres++;
-   }
+   ptrmp = aCommands[ndef].mpatt; /* Pointer to a match pattern */
+               /* Copying result pattern to destination string  */
+   lenres = strocpy ( *ptro, aCommands[ndef].value );
   }
  }
  while ( !rez && ndef >= 0 );
@@ -808,7 +745,7 @@ void CmdParse ( char *ptri, int aCmdStru[100][2] )
      break;
     case STATE_ID:
     case STATE_ID_END:
-     if ( ( isname(*ptri) && State == STATE_ID_END ) ||
+     if ( ( (isname(*ptri) || *ptri=='\\') && State == STATE_ID_END ) ||
           *ptri==',' || *ptri=='\'' || *ptri=='\"')
      {
       if ( !aCmdStru[ aCmdStru[0][0] ][1] ) aCmdStru[ aCmdStru[0][0] ][1] = IT_ID;
@@ -875,9 +812,108 @@ void CmdParse ( char *ptri, int aCmdStru[100][2] )
  aCmdStru[ aCmdStru[0][0]+1 ][0] = i;
 }
 
+int WorkMarkers( char **ptrmp, char *ptri, char *ptro, int *lenres, int aCmdStru[100][2], int *iItem, int nbr )
+{
+ int ifiItem;
+ char expreal[MAX_NAME], exppatt[MAX_NAME];
+ int lenreal, lenpatt;
+ int rezrestr,i;
+ char *ptr;
+
+  if ( aCmdStru[*iItem][1] == IT_COMMA )  return 0;
+         /* Copying a match pattern to 'exppatt' */
+  lenpatt = stroncpy ( exppatt, *ptrmp, 4 );
+  *ptrmp += 4;
+
+  if ( *(exppatt+2) == '4' )       /*  ----  extended match marker  */
+  {
+        /* Copying a real expression to 'expreal' */
+    lenreal = stroncpy ( expreal, ptri + aCmdStru[*iItem][0],
+                              aCmdStru[*iItem+1][0]-aCmdStru[*iItem][0] );
+    SearnRep( exppatt,expreal,lenreal,ptro,lenres);
+  }
+  else if ( *(exppatt+2) == '3' )  /*  ----  wild match marker  */
+  {
+    ifiItem = *iItem; *iItem = aCmdStru[0][0];
+        /* Copying a real expression to 'expreal' */
+    lenreal = stroncpy ( expreal, ptri + aCmdStru[ifiItem][0],
+                         aCmdStru[*iItem+1][0]-aCmdStru[ifiItem][0] );
+    SearnRep( exppatt,expreal,lenreal,ptro,lenres);
+  }
+  else if ( *(exppatt+2) == '2' )  /*  ---- restricted match marker  */
+  {
+   while ( **ptrmp != '>' && **ptrmp!= '\0' ) *(exppatt+lenpatt++) = *((*ptrmp)++);
+   *(exppatt+lenpatt++) = '>';
+   *(exppatt+lenpatt) = '\0';
+   (*ptrmp)++;
+               /* Copying a real expression to 'expreal' */
+   lenreal = stroncpy ( expreal, ptri + aCmdStru[*iItem][0],
+                           aCmdStru[*iItem+1][0]-aCmdStru[*iItem][0] );
+
+   ptr = exppatt + 4;
+   rezrestr = 0;
+   while ( *ptr != '>' )
+   {
+     if ( *ptr == '&' )
+     {
+       if ( *expreal == '&' )
+       {
+         rezrestr = 1;
+         break;
+       }
+       else ptr++;
+     }
+     else
+     {
+       SKIPTABSPACES( ptr );
+           /* Comparing real parameter and restriction value */
+       for ( i=0; toupper(*ptr) == toupper(*(expreal+i)) && *ptr != ','
+                && *ptr != '>' && i < lenreal; i++,ptr++ );
+       if ( i == lenreal || *ptr == ',' || *ptr == '>' )
+       {
+         SearnRep( exppatt,expreal,lenreal,ptro,lenres);
+         rezrestr = 1;
+         break;
+       }
+       else
+       {
+          while ( *ptr != ',' && *ptr != '>' ) ptr++;
+          if ( *ptr == ',' ) ptr++;
+       }
+     }
+   }
+   if ( rezrestr == 0 )
+   {  /* If restricted match marker doesn't correspond to real parameter */
+      if ( nbr )
+      {
+        SearnRep( exppatt,"",0,ptro,lenres);
+        (*iItem)--;      /* if was optional, go to the next */
+      }
+      else return 0;
+   }
+  }
+  else if ( *(exppatt+2) == '1' )  /*  ---- list match marker  */
+  {
+     ifiItem = *iItem;
+     while ( *iItem < aCmdStru[0][0] && aCmdStru[*iItem+1][1] == IT_COMMA ) *iItem+=2;
+        /* Copying a real expression to 'expreal' */
+     lenreal = stroncpy ( expreal, ptri + aCmdStru[ifiItem][0],
+                             aCmdStru[*iItem+1][0]-aCmdStru[ifiItem][0] );
+     SearnRep( exppatt,expreal,lenreal,ptro,lenres);
+  }
+  else                             /*  ---- regular match marker  */
+  {
+               /* Copying a real expression to 'expreal' */
+     lenreal = stroncpy ( expreal, ptri + aCmdStru[*iItem][0],
+                          aCmdStru[*iItem+1][0]-aCmdStru[*iItem][0] );
+     SearnRep( exppatt,expreal,lenreal,ptro,lenres);
+  }
+  return 1;
+}
+
 void SkipOptional( char** ptri, char *ptro, int* lenres)
 {
- int nbr = 0, ifou, lCopy;
+ int nbr = 0;
  char exppatt[MAX_NAME];
  int lenpatt;
 
@@ -885,57 +921,43 @@ void SkipOptional( char** ptri, char *ptro, int* lenres)
  SKIPTABSPACES( *ptri );
  while ( **ptri != ']' || nbr )
  {
-  if ( **ptri == '[' ) nbr++;
-  if ( **ptri == ']' ) nbr--;
-  if ( **ptri == '<' )
-  {
-   lenpatt = 0; lCopy = 1;
-   do     /* Drag the match marker ( <...> )  */
-   {
-    if ( **ptri == ':' ) lCopy = 0;
-    if ( lCopy ) *(exppatt+lenpatt++) = **ptri;
-    (*ptri)++;
-   }
-   while ( **ptri != '>' );
-   *(exppatt+lenpatt++) = '>';
-   *(exppatt+lenpatt) = '\0';
-       /* Search for regular result markers */
-   SearnRep( exppatt,lenpatt,"",0,ptro,lenres);
-       /* Search for logify result markers */
-   pEnclose( exppatt, lenpatt, '.' ); lenpatt += 2;
-   SearnRep( exppatt,lenpatt,".F.",3,ptro,lenres);
-       /* Search for smart stringify result markers */
-   *(exppatt+1) = '('; *(exppatt+lenpatt-2) = ')';
-   SearnRep( exppatt,lenpatt,"",0,ptro,lenres);
-       /* Search for normal stringify result markers */
-   *(exppatt+1) = *(exppatt+lenpatt-2) = '\"';
-   SearnRep( exppatt,lenpatt,"",0,ptro,lenres);
-       /* Search for blockify result markers */
-   *(exppatt+1) = '{'; *(exppatt+lenpatt-2) = '}';
-   SearnRep( exppatt,lenpatt,"",0,ptro,lenres);
+  switch ( **ptri ) {
+   case '[':  nbr++; break;
+   case ']':  nbr--; break;
+   case '\1':
+     for ( lenpatt=0; lenpatt<4; lenpatt++ ) *(exppatt+lenpatt) = *((*ptri)++);
+     (*ptri)--;
+     if ( exppatt[2] == '2' )
+     while ( **ptri != '>' ) (*ptri)++;
+     SearnRep( exppatt,"",0,ptro,lenres);
+     break;
   }
   (*ptri)++;
  }
 }
 
-void SearnRep( char *exppatt,int lenpatt,char *expreal,int lenreal,char *ptro, int *lenres)
+void SearnRep( char *exppatt,char *expreal,int lenreal,char *ptro, int *lenres)
 {
  int ifou, isdvig = 0, rezs;
+ int kolmarkers;
+ char lastchar = '0';
  char *ptr, *ptr2;
-   while ( (ifou = hb_strAt( exppatt, lenpatt, ptro+isdvig, *lenres-isdvig )) > 0 )
+   while ( (ifou = hb_strAt( exppatt, 2, ptro+isdvig, *lenres-isdvig )) > 0 )
    {
     rezs = 0;
     ptr = ptro+isdvig+ifou-2;
+    kolmarkers = 0;
     while ( ptr >= ptro+isdvig )
     {
      if ( *ptr == '[' || *ptr == ']' ) break;
+     if  ( *ptr == '\1' ) kolmarkers++;
      ptr--;
     }
     if ( *ptr == '[' )
     {
-     if ( Repeate && lenreal ) return;
-     ptr2 = ptro+isdvig+ifou+lenpatt-1;
-     while ( *ptr2 != ']' ) ptr2++;
+     ptr2 = ptro+isdvig+ifou+3;
+     while ( *ptr2 != ']' ) { if ( *ptr2 == '\1' ) kolmarkers++; ptr2++; }
+     if ( Repeate && lenreal && kolmarkers) return;
      if ( lenreal == 0 )
      {
       Stuff ( "", ptr, 0, ptr2-ptr+1, *lenres-(ptr-ptro) );
@@ -950,28 +972,110 @@ void SearnRep( char *exppatt,int lenpatt,char *expreal,int lenreal,char *ptro, i
 
       memcpy ( expnew, ptr+1, lennew );
       *(expnew + lennew) = '\0';
-      i = hb_strAt( exppatt, lenpatt, expnew, lennew );
-      Stuff ( expreal, expnew+i-1, lenreal, lenpatt, lennew );
-      lennew += lenreal - lenpatt;
+      i = hb_strAt( exppatt, 2, expnew, lennew );
+      lennew += ReplacePattern ( exppatt[2], expreal, lenreal,
+                             expnew+i-1, lennew );
+      if ( kolmarkers )
+      {
+       groupchar = (char) ( (unsigned int)groupchar + 1 );
+       for ( i=0; i<lennew; i++ )
+        if ( *(expnew+i) == '\1' )
+        {
+         *(expnew+i+3) = groupchar;
+         i += 4;
+        }
+      }
       Stuff ( expnew, ptr, lennew, 0, *lenres-(ptr-ptro)+1 );
       *lenres += lennew;
       isdvig = ptr - ptro + (ptr2-ptr-1) + lennew;
       rezs = 1;
-      Repeate = 1;
+      Repeate++;
      }
     }
     if ( !rezs )
     {
-     Stuff ( expreal, ptro+isdvig+ifou-1, lenreal, lenpatt, *lenres-ifou+1 );
-     *lenres += lenreal - lenpatt;
-     isdvig += ifou +lenreal;
+     if ( *(ptro+isdvig+ifou+2) != '0' )
+     {
+      if ( lastchar == '0' ) lastchar = *(ptro+isdvig+ifou+2);
+      if ( lastchar != *(ptro+isdvig+ifou+2) )
+       { isdvig += ifou + 3; continue; }
+     }
+     *lenres += ReplacePattern ( exppatt[2], expreal, lenreal,
+                             ptro+isdvig+ifou-1, *lenres-isdvig-ifou+1 );
+     isdvig += ifou;
     }
    }
 }
 
+int ReplacePattern ( char patttype, char *expreal, int lenreal, char *ptro, int lenres )
+{
+ int rmlen = lenreal;
+
+     switch ( *(ptro+2) ) {
+      case '0':  /* Regular result marker  */
+         Stuff ( expreal, ptro, lenreal, 4, lenres );
+         break;
+      case '1':  /* Dumb stringify result marker  */
+         Stuff ( "\"\"", ptro, 2, 4, lenres );
+         if ( lenreal )
+          Stuff ( expreal, ptro+1, lenreal, 0, lenres );
+         rmlen = lenreal + 2;
+         break;
+      case '2':  /* Normal stringify result marker  */
+         if ( !lenreal )
+          Stuff ( "", ptro, 0, 4, lenres );
+         else if ( patttype == '1' )          /* list match marker */
+         {
+         }
+         else
+         {
+          Stuff ( "\"\"", ptro, 2, 4, lenres );
+          Stuff ( expreal, ptro+1, lenreal, 0, lenres );
+          rmlen = lenreal + 2;
+         }
+         break;
+      case '3':  /* Smart stringify result marker  */
+         if ( patttype == '1' )          /* list match marker */
+         {
+         }
+         else if ( !lenreal || *expreal == '(' )
+           Stuff ( expreal, ptro, lenreal, 4, lenres );
+         else
+         {
+          Stuff ( "\"\"", ptro, 2, 4, lenres );
+          Stuff ( expreal, ptro+1, lenreal, 0, lenres );
+          rmlen = lenreal + 2;
+         }
+         break;
+      case '4':  /* Blockify result marker  */
+         if ( !lenreal )
+           Stuff ( expreal, ptro, lenreal, 4, lenres );
+         else if ( patttype == '1' )          /* list match marker */
+         {
+         }
+         else
+         {
+          Stuff ( "{||}", ptro, 4, 4, lenres );
+          Stuff ( expreal, ptro+3, lenreal, 0, lenres );
+          rmlen = lenreal + 4;
+         }
+         break;
+      case '5':  /* Logify result marker  */
+         rmlen = 3;
+         if ( !lenreal )
+         {
+          Stuff ( ".F.", ptro, 3, 4, lenres );
+         }
+         else
+          Stuff ( ".T.", ptro, 3, 4, lenres );
+         break;
+     }
+     return rmlen - 4;
+}
+
 int RdStr(int handl_i,char *buffer,int maxlen,int lDropSpaces,char* sBuffer, int* lenBuffer, int* iBuffer)
 {
-int readed = 0,bytes;
+int readed = 0;
 int State = 0;
 char cha,cLast='\0';
   if ( *lenBuffer == 0 ) return -1;
@@ -1088,33 +1192,65 @@ void Stuff (char *ptri, char * ptro, int len1, int len2, int lenres )
   for ( i=0; i < len1; i++ ) *ptr2++ = *(ptri+i);
 }
 
-void Stringify( char *stroka, int lens )
+int strocpy (char* ptro, char* ptri )
 {
- char *ptr = stroka + lens + 2;
-
- *ptr-- = '\0';
- *ptr-- = '\"';
- for ( ; ptr > stroka; ptr-- ) *ptr = *(ptr-1);
- *ptr = '\"';
+ int lens = 0;
+ while ( *ptri != '\0' )
+ {
+  *ptro++ = *ptri++;
+  lens++;
+ }
+ *ptro = '\0';
+ return lens;
 }
 
-void pEnclose( char *stroka, int lens, char symb )
+int stroncpy (char* ptro, char* ptri, int lens )
 {
- char *ptr = stroka + lens + 2;
-
- *ptr-- = '\0';
- *ptr-- = '>';
- *ptr-- = (symb=='(')? ')':(symb=='{')? '}':symb;
- for ( ; ptr > stroka+1; ptr-- ) *ptr = *(ptr-1);
- *ptr = symb;
+ int i = 0;
+ for ( ; i < lens; i++ ) *(ptro+i) = *ptri++;
+ i--;
+ while ( i > 0 && *(ptro+i) == ' ' ) i--;
+ i++;
+ *(ptro+i) = '\0';
+ return i;
 }
 
-int NextWord ( char** sSource, char* sDest )
+int strocmp (char* ptro, char** ptri )
+{
+ for ( ; isname(**ptri) && isname(*ptro) && toupper(**ptri)==toupper(*ptro);
+     ptro++, (*ptri)++ );
+ if ( toupper(**ptri) != toupper(*ptro) ) return 1;
+ return 0;
+}
+
+char* strodup ( char *stroka )
+{
+ char *ptr;
+ int lens = 0;
+  while ( *(stroka+lens) != '\0' ) lens++;
+  ptr = ( char * ) _xgrab( lens + 1 );
+  memcpy( ptr,  stroka, lens+1 );
+  *(ptr+lens) = '\0';
+  return ptr;
+}
+
+int strolen ( char *stroka )
+{
+ int lens = 0;
+  while ( *(stroka+lens) != '\0' ) lens++;
+  return lens;
+}
+
+int NextWord ( char** sSource, char* sDest, int lLower )
 {
  int i = 0;
  SKIPTABSPACES( (*sSource) );
  while ( **sSource != '\0' && **sSource != ' ')
-  { *sDest++ = *(*sSource)++; i++; }
+ {
+   *sDest++ = (lLower)? tolower(**sSource):**sSource;
+   (*sSource)++;
+   i++;
+ }
  *sDest = '\0';
  return i;
 }

@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <mem.h>
-#include <alloc.h>
+#ifndef __dj_include_stdio_h_
+ #include <alloc.h>
+#endif
 #include "harb.h"
 /*
  * Split given filename into path, name and extension

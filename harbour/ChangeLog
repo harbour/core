@@ -1,3 +1,9 @@
+19990529-23:46 Alexander Kresin
+  Preprocessor: implementation of #command almost complete
+  Updated:
+   * source/hbpp/hbpp.c - main preprocessor file
+   * source/hbpp/harb.c
+   * source/hbpp/c.prg  - sample file
 19990529-19:45 CET Eddie Runia
   * tests/working/run_exp.h
     hb_f* functions added
