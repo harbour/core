@@ -3,7 +3,7 @@ rem
 rem $Id$
 rem 
 
-hbdoc -htm genwww.lnk genwww.rsp
+hbdoc -htm genhtm.lnk genhtm.rsp
 cd htm
 echo renaming Harbour.htm to index.htm
 ren harbour.htm index.htm
