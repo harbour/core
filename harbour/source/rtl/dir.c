@@ -33,6 +33,10 @@
  *
  */
 
+/* TOFIX: Filename/path splitting and merging should be rewritten to use
+          hb_FName*() functions, instead of repeating the functionality
+          in the current partially buggy way. */
+
 /*
  *  DIR.C: Returns a Harbour array of specified directory contents filtered
  *         by the optional file and attribute mask.

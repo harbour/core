@@ -1,3 +1,19 @@
+19991018-11:58 GMT+1 Victor Szel <info@szelvesz.hu>
+   * source/rtl/adir.prg
+     + SET DEFAULT handling added.
+   * source/rtl/dir.c
+     + TOFIX: added to change to filename splitting/merging to use the
+       hb_FName*() functions. That's why DIRECTORY() will GPF now on some
+       systems (WinNT/MINGW32/normal slash in directory).
+   * tests/rtl_test.prg
+     ! Small fixes for some time parameters.
+   * source/rtl/soundex.c
+     ! Small pedantic fix.
+   * source/rtl/fm.c
+     * TODO text modified.
+   * source/rtl/asort.prg
+     * Small change.
+
 19991018-09:36 GMT+1 Antonio Linares <alinares@fivetech.com>
   * source/rtl/gt/gtwin.c
     + Added support for Windows apps without console.

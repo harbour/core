@@ -36,7 +36,7 @@
 #include "common.ch"
 #include "directry.ch"
 
-FUNCTION aDir( cFileMask, aName, aSize, aDate, aTime, aAttr )
+FUNCTION ADir( cFileMask, aName, aSize, aDate, aTime, aAttr )
 
    LOCAL aDir
    LOCAL nDirLen
@@ -46,17 +46,23 @@ FUNCTION aDir( cFileMask, aName, aSize, aDate, aTime, aAttr )
 
    LOCAL aFileInfo
 
+   LOCAL cDir
+   LOCAL cName
+   LOCAL cExt
+
    // ; CA-Clipper would fail on this case.
 
    IF !ISCHARACTER( cFileMask )
       RETURN 0
    ENDIF
 
-   // ;
+   // ; If no drive/dir specified, use the SET DEFAULT setting.
 
-   /* TODO: Some portable code should be added here, which would  */
-   /*       use the drive + dir from Set( _SET_DEFAULT ) if there */
-   /*       was none specified in cFileMask                       */
+   hb_FNameSplit( cFileMask, @cDir, @cName, @cExt )
+
+   IF Empty( cDir )
+      cFileMask := hb_FNameMerge( DefPath(), cName, cExt )
+   ENDIF
 
    // ;
 

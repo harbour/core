@@ -1697,14 +1697,14 @@ STATIC FUNCTION Main_MISC()
 
    TEST_LINE( DAYS( 100000 )                  , 1 )
 
-   TEST_LINE( ELAPTIME("24:12:34","12:34:57") , "12:22:23" )
-   TEST_LINE( ELAPTIME("12:34:57","24:12:34") , "11:37:37" )
+   TEST_LINE( ELAPTIME("23:12:34","12:34:57") , "13:22:23" )
+   TEST_LINE( ELAPTIME("12:34:57","23:12:34") , "10:37:37" )
 
    TEST_LINE( LENNUM( 10 )                    , 2 )
    TEST_LINE( LENNUM( 10.9 )                  , 4 )
    TEST_LINE( LENNUM( 10.90 )                 , 5 )
 
-   TEST_LINE( SECS("24:12:34")                , 87154 )
+   TEST_LINE( SECS("23:12:34")                , 83554 )
    TEST_LINE( SECS("12:34:57")                , 45297 )
 
    TEST_LINE( TSTRING(1000)                   , "00:16:40" )

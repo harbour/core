@@ -57,13 +57,13 @@ HARBOUR HB_SOUNDEX( void )
       ULONG ulLen = hb_itemGetCLen( pString );
       ULONG nPos = 0;
       ULONG nResultPos = 0;
-      char cCharPrev = 0;
+      char cCharPrev = '0';
 
       while( nPos < ulLen && nResultPos < SOUNDEX_LEN_MAX )
       {
          if( isalpha( pszString[ nPos ] ) )
          {
-                                         /* "ABCDEFGHIJKLMNOPQRSTUVWXYS" */
+                                         /* "ABCDEFGHIJKLMNOPQRSTUVWXYZ" */
             static const char s_szTable[] = "01230120022455012623010202"; /* NOTE: SoundEx result codes for letters from "A" to "Z" */
 
             char cChar = toupper( pszString[ nPos ] );

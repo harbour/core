@@ -240,7 +240,7 @@ void * hb_xmemset( void * pDestArg, int iFill, ULONG ulLen )
 
 HARBOUR HB_MEMORY( void )
 {
-   /* TODO: Implement */
+   /* TODO: Implement MEMORY() */
 
    hb_retni( 9999 );
 }

@@ -36,11 +36,11 @@
 #include "common.ch"
 
 /*
- * <aSorted> aSort( <aUnsorted>, [<nStart>], [<nCount>], [<bBlock>] )
+ * <aSorted> ASort( <aUnsorted>, [<nStart>], [<nCount>], [<bBlock>] )
  *
  * Sort an array
  */
-FUNCTION aSort( aArray, nStart, nCount, bBlock )
+FUNCTION ASort( aArray, nStart, nCount, bBlock )
 
    IF !ISARRAY( aArray )
       RETURN NIL
