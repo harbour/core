@@ -51,8 +51,8 @@
  *
  */
 
-#include "Common.ch"
-#include "hbSetup.ch"
+#include "common.ch"
+#include "hbsetup.ch"
 #ifdef HB_COMPAT_C53
 
 FUNCTION CHECKBOX(nRow,nCol,cCaption) 

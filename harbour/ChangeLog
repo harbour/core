@@ -1,3 +1,7 @@
+2001-07-21 09:20 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
+   *source/rtl/checkbox.prg
+      *lowercased the include file names
+
 2001-07-20 20:00 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
    +source/rtl/checkbox.prg
       *CheckBox Class Compatible with Ca-Clipper 5.3
