@@ -20,9 +20,9 @@
  *  $FUNCNAME$
  *      DBEVAL()
  *  $CATEGORY$
- *      DATA BASE
+ *      Database
  *  $ONELINER$
- *      Performs a code block operation on the current DATA BASE
+ *      Performs a code block operation on the current Database
  *  $SYNTAX$
  *      DBEVAL( <bBlock>,
  *      [<bFor>], [<bWhile>],
@@ -43,7 +43,7 @@
  *  $RETURNS$
  *      DBEVAL() always returns NIL
  *  $DESCRIPTION$
- *        Performs a code block operation on the current DATA BASE
+ *        Performs a code block operation on the current Database
  *  $EXAMPLES$
  *      FUNCTION Main()
  *         LOCAL nCount
@@ -73,7 +73,7 @@
  *  $FUNCNAME$
  *     DBF()
  *  $CATEGORY$
- *      DATA BASE
+ *      Database
  *  $ONELINER$
  *      Alias name of a work area
  *  $SYNTAX$
@@ -109,7 +109,7 @@
  *  $FUNCNAME$
  *     DBAPPEND()
  *  $CATEGORY$
- *      DATA BASE
+ *      Database
  *  $ONELINER$
  *      Appends a new record to a database file.
  *  $SYNTAX$
@@ -163,7 +163,7 @@
  *  $FUNCNAME$
  *      DBCLEARFILTER()
  *  $CATEGORY$
- *      DATA BASE
+ *      Database
  *  $ONELINER$
  *      Clears the current filter condiction in a work area
  *  $SYNTAX$
@@ -202,7 +202,7 @@
  *  $FUNCNAME$
  *      DBCLOSEALL()
  *  $CATEGORY$
- *      DATA BASE
+ *      Database
  *  $ONELINER$
  *      Close all open files in all work areas.
  *  $SYNTAX$
@@ -244,7 +244,7 @@
  *  $FUNCNAME$
  *     DBCLOSEAREA()
  *  $CATEGORY$
- *      DATA BASE
+ *      Database
  *  $ONELINER$
  *      Close a database file in a work area.
  *  $SYNTAX$
@@ -281,7 +281,7 @@
  *  $FUNCNAME$
  *      DBCOMMIT()
  *  $CATEGORY$
- *      DATA BASE
+ *      Database
  *  $ONELINER$
  *      Updates all index and database buffers for a given workarea
  *  $SYNTAX$
@@ -325,7 +325,7 @@
  *  $FUNCNAME$
  *      DBCOMMITALL()
  *  $CATEGORY$
- *      DATA BASE
+ *      Database
  *  $ONELINER$
  *      Flushes the memory buffer and performs a hard-disk write
  *  $SYNTAX$
@@ -373,7 +373,7 @@
  *  $FUNCNAME$
  *      __DBCONTINUE()
  *  $CATEGORY$
- *      DATA BASE
+ *      Database
  *  $ONELINER$
  *      Resume a pending LOCATE
  *  $SYNTAX$
@@ -443,7 +443,7 @@
  *  $FUNCNAME$
  *      DBCREATE()
  *  $CATEGORY$
- *      DATA BASE
+ *      Database
  *  $ONELINER$
  *      Creates an empty database from a array.
  *  $SYNTAX$
@@ -524,7 +524,7 @@
  *  $FUNCNAME$
  *      DBDELETE()
  *  $CATEGORY$
- *      DATA BASE
+ *      Database
  *  $ONELINER$
  *      Marks records for deletion in a database.
  *  $SYNTAX$
@@ -563,7 +563,7 @@
  *  $FUNCNAME$
  *      DBFILTER()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      Return the filter expression in a work area
  *  $SYNTAX$
@@ -598,7 +598,7 @@
  *  $FUNCNAME$
  *      DBGOBOTTOM()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      Moves the record pointer to the bottom of the database.
  *  $SYNTAX$
@@ -633,7 +633,7 @@
  *  $FUNCNAME$
  *      DBGOTO()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      Position the record pointer to a specific location.
  *  $SYNTAX$
@@ -682,7 +682,7 @@
  *  $FUNCNAME$
  *      DBGOTOP()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      Moves the record pointer to the bottom of the database.
  *  $SYNTAX$
@@ -717,7 +717,7 @@
  *  $FUNCNAME$
  *      DBRECALL()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      Recalls a record previousy marked for deletion.
  *  $SYNTAX$
@@ -754,7 +754,7 @@
  *  $FUNCNAME$
  *      DBRLOCK()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      This function locks the record basedon identify
  *  $SYNTAX$
@@ -794,7 +794,7 @@
  *  $FUNCNAME$
  *      DBRLOCKLIST()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      This function return a list of records in the database work area
  *  $SYNTAX$
@@ -836,7 +836,7 @@
  *  $FUNCNAME$
  *      DBRUNLOCK()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      Unlocks a record base on its indentifier
  *  $SYNTAX$
@@ -875,7 +875,7 @@
  *  $FUNCNAME$
  *      DBSEEK()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      Searches for a value based on an active index.
  *  $SYNTAX$
@@ -944,7 +944,7 @@
  *  $FUNCNAME$
  *      DBSELECTAREA()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      Change to another work area
  *  $SYNTAX$
@@ -991,7 +991,7 @@
  *  $FUNCNAME$
  *      DBSETDRIVER()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      Establishes the name of replaceable daabas driver for a selected work area
  *  $SYNTAX$
@@ -1023,7 +1023,7 @@
  *  $FUNCNAME$
  *      DBSKIP()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      Moves the record pointer in the selected work area.
  *  $SYNTAX$
@@ -1063,7 +1063,7 @@
  *  $FUNCNAME$
  *      DBSETFILTER()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      Establishes a filter condition for a work area.
  *  $SYNTAX$
@@ -1102,7 +1102,7 @@
  *  $FUNCNAME$
  *      DBSTRUCT()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      Creates a multidimensional array of a database structure.
  *  $SYNTAX$
@@ -1142,7 +1142,7 @@
  *  $FUNCNAME$
  *      DBUNLOCK()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      Unlock a record or release a file lock
  *  $SYNTAX$
@@ -1179,7 +1179,7 @@
  *  $FUNCNAME$
  *      DBUNLOCKALL()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      Unlocks all records and releases all file locks in all work areas.
  *  $SYNTAX$
@@ -1217,7 +1217,7 @@
  *  $FUNCNAME$
  *      DBUSEAREA()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      Opens a work area and uses a database file.
  *  $SYNTAX$
@@ -1277,7 +1277,7 @@
  *  $FUNCNAME$
  *      __DBZAP()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      Remove all records from the current database file
  *  $SYNTAX$

@@ -19,7 +19,7 @@
  *  $FUNCNAME$
  *     AFIELDS()
  *  $CATEGORY$
- *      DATA BASE
+ *      Database
  *  $ONELINER$
  *      Fills referenced arrays with database field information
  *  $SYNTAX$
@@ -71,7 +71,7 @@
  *  $FUNCNAME$
  *     ALIAS()
  *  $CATEGORY$
- *      DATA BASE
+ *      Database
  *  $ONELINER$
  *      Returns the alias name of a work area
  *  $SYNTAX$
@@ -109,7 +109,7 @@
  *  $FUNCNAME$
  *     BOF()
  *  $CATEGORY$
- *      DATA BASE
+ *      Database
  *  $ONELINER$
  *      Test for the beggining-of-file condition
  *  $SYNTAX$
@@ -175,7 +175,7 @@
  *  $FUNCNAME$
  *      DELETED()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      Tests the record's deletion flag.
  *  $SYNTAX$
@@ -210,7 +210,7 @@
  *  $FUNCNAME$
  *      EOF()
  *  $CATEGORY$
- *      DATA BASE
+ *      Database
  *  $ONELINER$
  *      Test for end-of-file condition.
  *  $SYNTAX$
@@ -245,7 +245,7 @@
  *  $FUNCNAME$
  *      FCOUNT()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      Counts the number of fields in an active database.
  *  $SYNTAX$
@@ -277,7 +277,7 @@
  *  $FUNCNAME$
  *      FIELDGET()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      Obtains the value  of a specified field
  *  $SYNTAX$
@@ -312,7 +312,7 @@
  *  $FUNCNAME$
  *      FIELDNAME()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      Return the name of a field at a numeric field location.
  *  $SYNTAX$
@@ -350,7 +350,7 @@
  *  $FUNCNAME$
  *      FIELDPOS()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      Return the ordinal position of a field.
  *  $SYNTAX$
@@ -385,7 +385,7 @@
  *  $FUNCNAME$
  *      FIELDPUT()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      Set the value of a field variable
  *  $SYNTAX$
@@ -421,7 +421,7 @@
  *  $FUNCNAME$
  *      FLOCK()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      Locks a file
  *  $SYNTAX$
@@ -455,7 +455,7 @@
  *  $FUNCNAME$
  *      FOUND()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      Determine the success of a previous search operation.
  *  $SYNTAX$
@@ -492,7 +492,7 @@
  *  $FUNCNAME$
  *      HEADER()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      Return the length of a database file header 
  *  $SYNTAX$
@@ -524,45 +524,27 @@
  *  $FUNCNAME$
  *      LASTREC()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
- *      Determine the number of records in the current (.dbf) file
+ *      Returns the number of records in an active work area or database.
  *  $SYNTAX$
  *      LASTREC() | RECCOUNT()* --> nRecords
  *  $RETURNS$
- *      <nRecords > the number of physical records in the current database
- *      file as an integer numeric value.  Filtering commands such as SET FILTER
- *      or SET DELETED have no effect on the return value.  LASTREC() returns
- *      zero if there is no database file in USE in the current work area.
+ *      <nRecords > The number of records
  *  $DESCRIPTION$
- *      LASTREC() is a database function that determines the number of physical
- *      records in the current database file.  LASTREC() is identical to
- *      RECCOUNT() which is supplied as a compatibility function.
- *
- *      By default, LASTREC() operates on the currently selected work area.  It
- *      will operate on an unselected work area if you specify it as part of an
- *      aliased expression (see example below).
+ *      This function returns the number of records present in the database
+ *      in the selected or designated work area.If no records are present
+ *      the value of this function will be 0.
  *  $EXAMPLES$
- *      This example illustrates the relationship between LASTREC(),
- *      RECCOUNT(), and COUNT:
- *
- *      USE Sales NEW
- *      ? LASTREC(), RECCOUNT()          // Result: 84 84
- *      //
- *      SET FILTER TO Salesman = "1001"
- *      COUNT TO nRecords
- *      ? nRecords, LASTREC()            // Result: 14 84
- *
- *      This example uses an aliased expression to access the number
- *      of records in a open database file in an unselected work area:
- *
- *      USE Sales NEW
- *      USE Customer NEW
- *      ? LASTREC(), Sales->(LASTREC())
+ *      USE Tests NEW
+ *      ? LASTREC(), RECCOUNT()
+ *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      This function is CA Clipper compatible
+ *  $PLATFORMS$
+ *      All
  *  $FILES$
  *      Library is Rdd.lib
  *  $SEEALSO$
@@ -574,13 +556,13 @@
  *  $FUNCNAME$
  *      LUPDATE()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      Return the last modification date of a (.dbf) file
  *  $SYNTAX$
  *      LUPDATE() --> dModification
  *  $ARGUMENTS$
- *
+ *      None
  *  $RETURNS$
  *      <dModification>  the date of last change to the open database file in
  *      the current work area.  If there is no database file in USE, LUPDATE()
@@ -612,12 +594,17 @@
  *      USE Sales NEW
  *      USE Customer NEW
  *      ? LUPDATE(), Sales->(LUPDATE())
+ *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      This function is CA Clipper compliant
+ *  $PLATFORMS$
+ *      All
+ *  $FILES$
+ *      Library is Rdd.lib
  *  $SEEALSO$
- *  FIELDNAME(),LASTREC(),RECSIZE()
+ *      FIELDNAME(),LASTREC(),RECSIZE()
  *  $END$
  */
 
@@ -625,7 +612,7 @@
  *  $FUNCNAME$
  *      NETERR()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      Determine if a network command has failed
  *  $SYNTAX$
@@ -688,7 +675,7 @@
  *  $FUNCNAME$
  *      RECCOUNT()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      Determine the number of records in the current (.dbf) file
  *  $SYNTAX$
@@ -742,7 +729,7 @@
  *  $FUNCNAME$
  *      RECNO()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      Return the identity at the position of the record pointer
  *  $SYNTAX$
@@ -789,7 +776,7 @@
  *  $FUNCNAME$
  *      RECSIZE()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      Determine the record length of a database (.dbf) file
  *  $SYNTAX$
@@ -846,7 +833,7 @@
  *  $FUNCNAME$
  *      RLOCK()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      Lock the current record in the active work area
  *  $SYNTAX$
@@ -937,7 +924,7 @@
  *  $FUNCNAME$
  *      SELECT()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      Determine the work area number of a specified alias
  *  $SYNTAX$
@@ -989,7 +976,7 @@
  *  $FUNCNAME$
  *      USED()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      Determine whether a database file is in USE
  *  $SYNTAX$

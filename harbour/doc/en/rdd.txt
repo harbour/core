@@ -20,7 +20,7 @@
  *  $FUNCNAME$
  *      RDDLIST()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      Return an array of the available Replaceable Database Drivers
  *  $SYNTAX$
@@ -95,7 +95,7 @@
  *  $FUNCNAME$
  *      RDDNAME()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      Return the name of the currently active RDD
  *  $SYNTAX$
@@ -135,7 +135,7 @@
  *  $FUNCNAME$
  *      RDDSETDEFAULT()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      Set or return the default RDD for the application
  *  $SYNTAX$
@@ -182,7 +182,7 @@
  *  $FUNCNAME$
  *      __RDDSETDEFAULT()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      Set or return the default RDD for the application
  *  $SYNTAX$

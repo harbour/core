@@ -15,64 +15,12 @@
  *
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      INDEXORD()
- *  $CATEGORY$
- *      Data Base
- *  $ONELINER$
- *      Return the order position of the controlling index
- *  $SYNTAX$
- *      INDEXORD() --> nOrder
- *  $RETURNS$
- *     <nOrder>  an integer numeric value.  The value returned is
- *     equal to the position of the controlling index in the list of open
- *     indexes for the current work area.  A value of zero indicates that there
- *     is no controlling index and records are being accessed in natural order.
- *     If no database file is open, INDEXORD() will also return a zero.
- *  $DESCRIPTION$
- *     INDEXORD() is a database function that determines the position of the
- *     controlling index in the list of index files opened by the last
- *     USE...INDEX or SET INDEX TO in the current work area.  It is often
- *     useful to save the last controlling index so it can be restored later.
- *
- *     By default, INDEXORD() operates on the currently selected work area.  It
- *     will operate on an unselected work area if you specify it as part of an
- *     aliased expression (see example below).
- *  $EXAMPLES$
- *      This example uses INDEXORD() to save the current order.  After
- *      changing to a new order, it uses the saved value to restore the
- *      original order:
- *
- *      USE Customer INDEX Name, Serial NEW
- *      nOrder := INDEXORD()                  // Result: 1
- *      SET ORDER TO 2
- *      ? INDEXORD()                          // Result: 2
- *      SET ORDER TO nOrder
- *      ? INDEXORD()                          // Result: 1
- *
- *     This example uses an aliased expression to determine the order
- *      number of the controlling index in an unselected work area:
- *
- *      USE Sales INDEX Salesman, CustNum NEW
- *      USE Customer INDEX Name, Serial NEW
- *      ? Sales->(INDEXORD())                 // Result: 1
- *  $STATUS$
- *      S
- *  $COMPLIANCE$
- *      This function is CA Clipper compliant
- *  $FILES$
- *      Library is Rdd.lib
- *  $SEEALSO$
- *      INDEXKEY()
- *  $END$
- */
 
 /*  $DOC$
  *  $FUNCNAME$
  *      ORDBAGEXT()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      Return the default Order Bag RDD extension
  *  $SYNTAX$
@@ -106,7 +54,7 @@
  *  $FUNCNAME$
  *      ORDBAGNAME()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      Return the Order Bag name of a specific Order
  *  $SYNTAX$
@@ -117,7 +65,6 @@
  *
  *     <cOrderName> is a character string that represents the name of the
  *   target Order whose Order Bag name is sought.
- *
  *  $RETURNS$
  *     ORDBAGNAME() returns a character string, the Order Bag name of the
  *   specific Order.
@@ -147,15 +94,12 @@
  *      ORDBAGNAME( "CuName" )        // Returns: Customer
  *      ORDBAGNAME( "CuZip" )         // Returns: Customer
  *  $TESTS$
- *
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
  *      ORDBAGEXT()
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -163,7 +107,7 @@
  *  $FUNCNAME$
  *      ORDCONDSET()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      Set the Condition and scope for an order
  *  $SYNTAX$
@@ -213,7 +157,7 @@
  *  $FUNCNAME$
  *      ORDCREATE()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      Create an Order in an Order Bag
  *  $SYNTAX$
@@ -320,7 +264,7 @@
  *  $FUNCNAME$
  *      ORDDESTROY()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      Remove a specified Order from an Order Bag
  *  $SYNTAX$
@@ -372,7 +316,7 @@
  *  $FUNCNAME$
  *      ORDFOR()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      Return the FOR expression of an Order
  *  $SYNTAX$
@@ -428,7 +372,7 @@
  *  $FUNCNAME$
  *      ORDKEY()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      Return the key expression of an Order
  *  $SYNTAX$
@@ -487,7 +431,7 @@
  *  $FUNCNAME$
  *      ORDLISTADD()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      Add Orders to the Order List
  *  $SYNTAX$
@@ -557,7 +501,7 @@
  *  $FUNCNAME$
  *      ORDLISTCLEAR()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      Clear the current Order List
  *  $SYNTAX$
@@ -597,7 +541,7 @@
  *  $FUNCNAME$
  *      ORDLISTREBUILD()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      Rebuild all Orders in the Order List of the current work area
  *  $SYNTAX$
@@ -638,7 +582,7 @@
  *  $FUNCNAME$
  *      ORDNAME()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      Return the name of an Order in the Order List
  *  $SYNTAX$
@@ -700,7 +644,7 @@
  *  $FUNCNAME$
  *      ORDNUMBER()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      Return the position of an Order in the current Order List
  *  $SYNTAX$
@@ -754,7 +698,7 @@
  *  $FUNCNAME$
  *      ORDSETFOCUS()
  *  $CATEGORY$
- *      Data Base
+ *      Database
  *  $ONELINER$
  *      Set focus to an Order in an Order List
  *  $SYNTAX$
@@ -810,5 +754,117 @@
  *
  *  $INCLUDE$
  *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      INDEXEXT()
+ *  $CATEGORY$
+ *      Database
+ *  $ONELINER$
+ *      Returns the file extension of the index module used in an application
+ *  $SYNTAX$
+ *      INDEXEXT() --> <cExtension>
+ *  $ARGUMENTS$
+ *      None.
+ *  $RETURNS$
+ *      <cExtension>   Current driver file extension
+ *  $DESCRIPTION$
+ *      This function returns a string that tells what indexes are to be used
+ *      or will be created in the compiled application.The default value is
+ *      ".NTX". This is controled by the particular database driver that is
+ *      linked with the application,.
+ *  $EXAMPLES$
+ *      IF INDEXEXT()==".NTX"
+ *          ? "Current driver being used is DBFNTX"
+ *      Endif
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is Ca-Clipper compliant
+ *  $PLATFORMS$
+ *      All
+ *  $FILES$
+ *      Library is Rdd.lib
+ *  $SEEALSO$
+ *      INDEXKEY(),INDEXORD()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      INDEXKEY()
+ *  $CATEGORY$
+ *      Database
+ *  $ONELINER$
+ *      Yields the key expression of a specified index file.
+ *  $SYNTAX$
+ *      INDEXKEY(<nOrder>) --> <cIndexKey>
+ *  $ARGUMENTS$
+ *      <nOrder>  Index order number
+ *  $RETURNS$
+ *      <cIndexKey>   The index key
+ *  $DESCRIPTION$
+ *      This function returns a character string stored in the header of the
+ *      index file
+ *  
+ *      The index key is displayed for an index file that is designated by
+ *      <nOrder>,its position in the USE...INDEX or SET INDEX TO command in
+ *      the currently selected or designated work area.If there is no
+ *      corresnponding index key at the specified order position,a NULL
+ *      byte will be returned.
+ *  $EXAMPLES$
+ *      USE TESTS NEW INDEX TEST1
+ *      ? INDEXKEY(1)
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is Ca-Clipper compliant
+ *  $PLATFORMS$
+ *      All
+ *  $FILES$
+ *      Library is Rdd.lib
+ *  $SEEALSO$
+ *      INDEXORD()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      INDEXORD()
+ *  $CATEGORY$
+ *      Database
+ *  $ONELINER$
+ *      Returns the numeric position of the controlling index.
+ *  $SYNTAX$
+ *      INDEXORD() --> <nPosition>
+ *  $ARGUMENTS$
+ *      None.
+ *  $RETURNS$
+ *      <nPosition>   Ordinal position of a controling index
+ *  $DESCRIPTION$
+ *      The INDEXORD() function returns the numeric position of the current
+ *      controlling index in the selected or designated work area.
+ *      A returned value of 0 indicated that no active index is controlling
+ *      the database,which therefore is in the natural order.
+ *  $EXAMPLES$
+ *      USE TESTS NEW INDEX TEST1
+ *      IF INDEXORD()>0
+ *          ? "Current order is ",INDEXORD()
+ *      Endif
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is Ca-Clipper compliant
+ *  $PLATFORMS$
+ *      All
+ *  $FILES$
+ *      Library is Rdd.lib
+ *  $SEEALSO$
+ *      INDEXKEY()
  *  $END$
  */
