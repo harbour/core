@@ -142,7 +142,8 @@ METHOD Edit() CLASS TMemoEditor
                case nUserKey == ME_DEFAULT
                   super:Edit(nKey)
 
-               case nUserKey >= 1 .AND. nUserKey <= 31
+               // TOFIX: Not clipper compatible, see teditor.prg
+               case (nUserKey >= 1 .AND. nUserKey <= 31) .OR. nUserKey == K_ALT_W
                   super:Edit(nUserKey)
 
                case nUserKey == ME_DATA
@@ -191,7 +192,8 @@ METHOD KeyboardHook(nKey) CLASS TMemoEditor
       nUserKey := Do(::xUserFunction, iif(::lDirty, ME_UNKEYX, ME_UNKEY), ::nRow, ::nCol - 1)
 
       do case
-         case nUserKey >= 1 .AND. nUserKey <= 31
+         // TOFIX: Not clipper compatible, see teditor.prg
+         case (nUserKey >= 1 .AND. nUserKey <= 31) .OR. nUserKey == K_ALT_W
             super:Edit(nUserKey)
 
          case nUserKey == ME_DATA

@@ -1,3 +1,7 @@
+2001-04-20 11:09 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+   * source/rtl/memoedit.prg
+      ! fixed handling of K_ALT_W
+
 2001-04-20 10:50 CET Martin Vogel <vogel@inttec.de>
 
   + contrib/libct/charevod.c
