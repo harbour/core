@@ -1,3 +1,34 @@
+19990830-14:25 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * tests/working/rtl_test.prg
+    + Added the possibility to test expressions resulting in a runtime error.
+    + Added ABS(), EXP(), operator tests, some runtime error tests.
+    * Some bugs fixed, some enhancements.
+  * include/errorapi.h
+    source/rtl/errorapi.c
+    ! hb_errRT_TERM now accept the OS code parameter.
+  * source/rtl/set.c
+    ! Open error now shows the correct error codes for SET_PRINTFILE,
+      and SET_EXTRAFILE. The error message made completely Clipper compatible.
+      Retry and Default now works.
+  * source/rtl/arrays.c
+    ! Fixed two error messages ("AEVAL" -> "(AEVAL() function)")
+      UNDONE.
+  * source/rtl/classes.c
+    - Removed some externs not needed anymore.
+  * include/set.h
+    * Cleaned up.
+  * source/rtl/set.c
+    source/rtl/dates.c
+    source/rtl/transfrm.c
+    source/rtl/strings.c
+    source/rtl/inkey.c
+    source/rtl/setcolor.c
+    source/rtl/console.c
+    source/rtl/mouseapi.c
+    source/rtl/filesys.c
+    * Formatting errors corrected.
+
 19990830-10:40 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/rtl/errorapi.c

@@ -90,7 +90,7 @@
 #endif
 
 #if defined(HARBOUR_GCC_OS2)
-  ULONG DosSleep (ULONG ulMilliseconds);
+  ULONG DosSleep( ULONG ulMilliseconds );
 #endif
 
 #if defined(OS_UNIX_COMPATIBLE)
@@ -425,7 +425,7 @@ void hb_inkeyReset( BOOL allocate )     /* Reset the keyboard buffer */
             minimum buffer size (which is 16) must still be allocated, because
             even when polling is disabled, calling INKEY() or NEXTKEY() will
             temporarily re-enable polling */
-         s_inkeyBuffer = (int *)hb_xgrab( sizeof( int )
+         s_inkeyBuffer = ( int * ) hb_xgrab( sizeof( int )
          * ( hb_set.HB_SET_TYPEAHEAD == 0 ? 16 : hb_set.HB_SET_TYPEAHEAD ) );
       }
    }

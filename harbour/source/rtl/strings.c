@@ -388,7 +388,7 @@ HARBOUR HB_PADR( void )
          for( lPos = ( LONG ) ulSize; lPos < lLen; lPos++ )
             szResult[ lPos ] = cPad;
 
-         hb_retclen( szResult , lLen);
+         hb_retclen( szResult , lLen );
          hb_xfree( szResult );
       }
       else
@@ -431,7 +431,7 @@ HARBOUR HB_PADL( void )
 
          cPad = ( ISCHAR( 3 ) ? *( hb_parc( 3 ) ) : ' ');
 
-         for(; lPos > 0; lPos--)
+         for(; lPos > 0; lPos-- )
          {
             szResult[ lPos - 1 ] = cPad;
          }
@@ -1207,7 +1207,8 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
          }
       }
    }
-   return( szResult );
+
+   return szResult;
 }
 
 
@@ -1412,7 +1413,7 @@ HARBOUR HB_STRZERO( void )
          if( hb_pcount() > 1 )
          {
             pWidth = hb_param( 2, IT_NUMERIC );
-            if( !pWidth)
+            if( !pWidth )
                bValid = FALSE;
          }
          if( hb_pcount() > 2 )

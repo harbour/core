@@ -34,12 +34,14 @@
    their web site at http://www.gnu.org/).
 */
 
-/* TRANSFORM() tests written by Eddie Runia <eddie@runia.comu> */
+/* TRANSFORM() tests written by Eddie Runia <eddie@runia.com> */
 
 /* NOTE: Always compile with /n switch */
 /* TODO: Add checks for string parameters with embedded NUL character */
 /* TODO: Add test cases for other string functions */
 /* TODO: Incorporate tests from test/working/string*.prg */
+
+#include "error.ch"
 
 #translate TEST_LINE( <x>, <result> ) => TEST_CALL(<(x)>, {|| <x> }, <result>)
 
@@ -59,10 +61,47 @@ FUNCTION Main( cPar1 )
 
    /* Initialize test */
 
+// SET LANGID TO EN
+
    TEST_BEGIN( cPar1 )
+
+   /* (operators) */
+
+   TEST_LINE( 1 + NIL                         , "E BASE 1081 Argument error + F:S" )
+   TEST_LINE( 1 - NIL                         , "E BASE 1082 Argument error - F:S" )
+   TEST_LINE( 1 / NIL                         , "E BASE 1084 Argument error / F:S" )
+   TEST_LINE( 1 * NIL                         , "E BASE 1083 Argument error * F:S" )
+// PP fails to preprocess this line, so it's temporarly commented out
+#ifndef __HARBOUR__
+   TEST_LINE( 1 ^ NIL                         , "E BASE 1088 Argument error ^ F:S" )
+#endif
+   TEST_LINE( 1 % NIL                         , "E BASE 1085 Argument error % F:S" )
+
+   /* ABS() */
+
+   TEST_LINE( Abs("A")                        , "E BASE 1089 Argument error ABS F:S"   )
+   TEST_LINE( Abs(0)                          , 0                                      )
+   TEST_LINE( Abs(10)                         , 10                                     )
+   TEST_LINE( Abs(-10)                        , 10                                     )
+   TEST_LINE( Abs(0.1)                        , 0.1                                    )
+   TEST_LINE( Abs(10.5)                       , 10.5                                   )
+   TEST_LINE( Abs(-10.7)                      , 10.7                                   )
+   TEST_LINE( Abs(100000)                     , 100000                                 )
+   TEST_LINE( Abs(-100000)                    , 100000                                 )
+
+   /* EXP() */
+
+   TEST_LINE( Exp("A")                        , "E BASE 1096 Argument error EXP F:S"   )
+   TEST_LINE( Exp(0)                          , 1.00                                   )
+   TEST_LINE( Round(Exp(1),2)                 , 2.72                                   )
+   TEST_LINE( Str(Exp(1),20,10)               , "        2.7182818285"                 )
+   TEST_LINE( Round(Exp(10),2)                , 22026.47                               )
+   TEST_LINE( Str(Exp(10),20,10)              , "    22026.4657948067"                 )
 
    /* ROUND() */
 
+   TEST_LINE( Round(NIL, 0)                   , "E BASE 1094 Argument error ROUND F:S" )
+   TEST_LINE( Round(0, NIL)                   , "E BASE 1094 Argument error ROUND F:S" )
    TEST_LINE( Round(0, 0)                     , 0                )
    TEST_LINE( Round(0, 2)                     , 0.00             )
    TEST_LINE( Round(0, -2)                    , 0                )
@@ -529,6 +568,11 @@ FUNCTION Main( cPar1 )
 
    RETURN NIL
 
+#define TEST_RESULT_COL1_WIDTH  4
+#define TEST_RESULT_COL2_WIDTH  30
+#define TEST_RESULT_COL3_WIDTH  40
+#define TEST_RESULT_COL4_WIDTH  40
+
 STATIC FUNCTION TEST_BEGIN( cParam )
    LOCAL cOs := OS()
 
@@ -564,38 +608,54 @@ STATIC FUNCTION TEST_BEGIN( cParam )
                    "===========================================================================" + scNewLine +;
                    scNewLine )
 
-   fWrite( snFhnd, PadL( "No", 4 ) + ". " +;
-                   PadR( "TestCall()", 35 ) + " -> " +;
-                   PadR( "Result", 15 ) + " | " +;
-                   PadR( "Expected", 15 ) +;
+   fWrite( snFhnd, PadL( "No", TEST_RESULT_COL1_WIDTH ) + ". " +;
+                   PadR( "TestCall()", TEST_RESULT_COL2_WIDTH ) + " -> " +;
+                   PadR( "Result", TEST_RESULT_COL3_WIDTH ) + " | " +;
+                   PadR( "Expected", TEST_RESULT_COL4_WIDTH ) +;
                    " [! *FAIL* !]" + scNewLine )
    fWrite( snFhnd, "---------------------------------------------------------------------------" + scNewLine )
 
    RETURN NIL
 
 STATIC FUNCTION TEST_CALL( cBlock, bBlock, xResultExpected )
-   LOCAL xResult := Eval( bBlock )
+   LOCAL xResult
+   LOCAL oError
+   LOCAL bOldError
+   LOCAL lFailed
+
+   bOldError := ErrorBlock( {|oError| Break( oError ) } )
+
+   BEGIN SEQUENCE
+      xResult := Eval( bBlock )
+   RECOVER USING oError
+      xResult := ErrorMessage( oError )
+   END SEQUENCE
+
+   ErrorBlock( bOldError )
 
    snCount++
 
-   IF slShowAll .OR. !( xResult == xResultExpected )
+   lFailed := !( ValType( xResult ) == ValType( xResultExpected ) ) .OR. ;
+              !( xResult == xResultExpected )
 
-      fWrite( snFhnd, Str( snCount, 4 ) + ". " +;
-                      PadR( StrTran( cBlock, Chr(0), "." ), 35 ) + " -> " +;
-                      PadR( '"' + StrTran( XToStr( xResult ), Chr(0), "." ) + '"', 15 ) + " | " +;
-                      PadR( '"' + StrTran( XToStr( xResultExpected ), Chr(0), "." ) + '"', 15 ) )
+   IF slShowAll .OR. lFailed
 
-      IF !( xResult == xResultExpected )
+      fWrite( snFhnd, Str( snCount, TEST_RESULT_COL1_WIDTH ) + ". " +;
+                      PadR( StrTran( cBlock, Chr(0), "." ), TEST_RESULT_COL2_WIDTH ) + " -> " +;
+                      PadR( StrTran( XToStr( xResult ), Chr(0), "." ), TEST_RESULT_COL3_WIDTH ) + " | " +;
+                      PadR( StrTran( XToStr( xResultExpected ), Chr(0), "." ), TEST_RESULT_COL4_WIDTH ) )
+
+      IF lFailed
          fWrite( snFhnd, " ! *FAIL* !" )
       ENDIF
 
       fWrite( snFhnd, scNewLine )
    ENDIF
 
-   IF xResult == xResultExpected
-      snPass++
-   ELSE
+   IF lFailed
       snFail++
+   ELSE
+      snPass++
    ENDIF
 
    RETURN NIL
@@ -609,9 +669,9 @@ STATIC FUNCTION TEST_END()
                    scNewLine )
 
    IF snFail != 0
-      IF "CLIPPER" $ Upper( Version() )
-         fWrite( snFhnd, "WARNING ! Failures detected using Clipper." + scNewLine +;
-                         "Please fix the expected result list, if this is not a bug in Clipper itself." + scNewLine )
+      IF "CLIPPER (R)" $ Upper( Version() )
+         fWrite( snFhnd, "WARNING ! Failures detected using CA-Clipper." + scNewLine +;
+                         "Please fix those expected results which are not bugs in CA-Clipper itself." + scNewLine )
       ELSE
          fWrite( snFhnd, "WARNING ! Failures detected" + scNewLine )
       ENDIF
@@ -625,7 +685,7 @@ STATIC FUNCTION XToStr( xValue )
    LOCAL cType := ValType( xValue )
 
    DO CASE
-   CASE cType == "C" ; RETURN xValue
+   CASE cType == "C" ; RETURN '"' + xValue + '"'
    CASE cType == "N" ; RETURN LTrim( Str( xValue ) )
    CASE cType == "D" ; RETURN DToC( xValue )
    CASE cType == "L" ; RETURN iif( xValue, ".T.", ".F." )
@@ -638,18 +698,60 @@ STATIC FUNCTION XToStr( xValue )
 
    RETURN ""
 
+STATIC FUNCTION ErrorMessage( oError )
+   LOCAL cMessage := ""
+
+   IF ValType( oError:severity ) == "N"
+      DO CASE
+      CASE oError:severity == ES_WHOCARES     ; cMessage += "M "
+      CASE oError:severity == ES_WARNING      ; cMessage += "W "
+      CASE oError:severity == ES_ERROR        ; cMessage += "E "
+      CASE oError:severity == ES_CATASTROPHIC ; cMessage += "C "
+      ENDCASE
+   ENDIF
+   IF ValType( oError:subsystem ) == "C"
+      cMessage += oError:subsystem() + " "
+   ENDIF
+   IF ValType( oError:subCode ) == "N"
+      cMessage += LTrim( Str( oError:subCode ) ) + " "
+   ENDIF
+   IF ValType( oError:description ) == "C"
+      cMessage += oError:description + " "
+   ENDIF
+   IF !Empty( oError:operation )
+      cMessage += oError:operation + " "
+   ENDIF
+   IF !Empty( oError:filename )
+      cMessage += oError:filename + " "
+   ENDIF
+
+   IF oError:canDefault .OR. ;
+      oError:canRetry .OR. ;
+      oError:canSubstitute
+
+      cMessage += "F:"
+      IF oError:canDefault
+         cMessage += "D"
+      ENDIF
+      IF oError:canRetry
+         cMessage += "R"
+      ENDIF
+      IF oError:canSubstitute
+         cMessage += "S"
+      ENDIF
+   ENDIF
+
+   RETURN cMessage
+
 #ifndef __HARBOUR__
 #ifndef __XPP__
 
 STATIC FUNCTION SToD( cDate )
-   LOCAL cOldDateFormat := Set( _SET_DATEFORMAT, "dd/mm/yyyy" )
-   LOCAL dDate
+   LOCAL cOldDateFormat := Set( _SET_DATEFORMAT, "yyyy/mm/dd" )
 
-   Set( _SET_DATEFORMAT, "yyyy/mm/dd" )
-
-   dDate := CToD( SubStr( cDate, 1, 4 ) + "/" +;
-                  SubStr( cDate, 5, 2 ) + "/" +;
-                  SubStr( cDate, 7, 2 ) )
+   LOCAL dDate := CToD( SubStr( cDate, 1, 4 ) + "/" +;
+                        SubStr( cDate, 5, 2 ) + "/" +;
+                        SubStr( cDate, 7, 2 ) )
 
    Set( _SET_DATEFORMAT, cOldDateFormat )
 

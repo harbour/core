@@ -60,7 +60,7 @@ double hb_secondsToday( void )
 #if defined(__TURBOC__) || defined(__BORLANDC__)  || defined(__DJGPP__) /* || defined(_MSC_VER) */
    struct time t;
    gettime( &t );
-   return( ( ( t.ti_hour * 3600 ) + ( t.ti_min * 60 ) + t.ti_sec ) + ( double ) t.ti_hund / 100 );
+   return ( ( t.ti_hour * 3600 ) + ( t.ti_min * 60 ) + t.ti_sec ) + ( double ) t.ti_hund / 100;
 #elif defined(_MSC_VER)
    struct _timeb tb;
    struct tm *oTime;
@@ -193,7 +193,7 @@ HARBOUR HB_CTOD( void )
          int d_pos = 0, m_pos = 0, y_pos = 0;
          int count, digit, size = strlen( hb_set.HB_SET_DATEFORMAT );
 
-         for( count = 0; count < size; count++)
+         for( count = 0; count < size; count++ )
          {
             switch( hb_set.HB_SET_DATEFORMAT[ count ] )
             {
@@ -623,7 +623,7 @@ long hb_dow( long d, long m, long y )
    else
       m++;
 
-   return ( ( d + 26 * m / 10 + y + y / 4 - y / 100 + y / 400 + 6 ) % 7 + 1 );
+   return ( d + 26 * m / 10 + y + y / 4 - y / 100 + y / 400 + 6 ) % 7 + 1;
 }
 
 HARBOUR HB_DOW( void )

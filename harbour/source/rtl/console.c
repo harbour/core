@@ -113,7 +113,7 @@ void hb_consoleInitialize( void )
 
 #ifdef HARBOUR_USE_GTAPI
    hb_gtInit();
-   hb_gtGetPos( &dev_row, & dev_col);
+   hb_gtGetPos( &dev_row, &dev_col );
 #else
    dev_row = 0;
    dev_col = 0;
@@ -497,7 +497,7 @@ HARBOUR HB_OUTSTD( void ) /* writes a list of values to the standard output devi
    for( w = 1; w <= pcount; w++ )
    {
       hb_out( w, hb_outstd );
-      if( w < pcount) hb_outstd( " ", 1 );
+      if( w < pcount ) hb_outstd( " ", 1 );
    }
 }
 
@@ -746,7 +746,7 @@ HARBOUR HB_ROW( void ) /* Return the current screen row position (zero origin) *
    if( hb_pcount() == 0 )
    {
 #ifdef HARBOUR_USE_GTAPI
-      hb_gtGetPos( &dev_row, & dev_col);
+      hb_gtGetPos( &dev_row, &dev_col );
 #endif
       hb_retni( dev_row );
    }
@@ -759,7 +759,7 @@ HARBOUR HB_COL( void ) /* Return the current screen column position (zero origin
    if( hb_pcount() == 0 )
    {
 #ifdef HARBOUR_USE_GTAPI
-      hb_gtGetPos( &dev_row, &dev_col);
+      hb_gtGetPos( &dev_row, &dev_col );
 #endif
       hb_retni( dev_col );
    }
@@ -767,7 +767,7 @@ HARBOUR HB_COL( void ) /* Return the current screen column position (zero origin
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "COL" ); /* NOTE: Clipper catches this at compile time! */
 }
 
-HARBOUR HB_DISPBOX (void)
+HARBOUR HB_DISPBOX( void )
 {
 #ifdef HARBOUR_USE_GTAPI
    if( ISNUM( 1 ) && ISNUM( 2 ) && ISNUM( 3 ) && ISNUM( 4 ) )
@@ -893,12 +893,12 @@ HARBOUR HB_DISPBOX (void)
          hb_setpos( row, left );
          if( height > 1 )
             printf( "%c", Borders[ 3 ] ); /* Left side */
-         if( height > 1 && width > 1) for( col = left + 1; col < right; col++ )
+         if( height > 1 && width > 1 ) for( col = left + 1; col < right; col++ )
             printf( "%c", Borders[ 8 ] ); /* Fill */
          if( height > 1 && width > 1 )
             printf( "%c", Borders[ 7 ] ); /* Right side */
       }
-      if( height > 1 && width > 1)
+      if( height > 1 && width > 1 )
       {
          hb_setpos( bottom, left );
          col = left;
@@ -907,26 +907,26 @@ HARBOUR HB_DISPBOX (void)
             printf( "%c", Borders[ 5 ] ); /* Bottom line */
          printf( "%c", Borders[ 4 ] );    /* Bottom right corner */
       }
-      hb_setpos( bottom + 1, right + 1);
+      hb_setpos( bottom + 1, right + 1 );
    }
 #endif
 }
 
-HARBOUR HB_DISPBEGIN (void)
+HARBOUR HB_DISPBEGIN( void )
 {
 #ifdef HARBOUR_USE_GTAPI
    hb_gtDispBegin();
 #endif
 }
 
-HARBOUR HB_DISPEND (void)
+HARBOUR HB_DISPEND( void )
 {
 #ifdef HARBOUR_USE_GTAPI
    hb_gtDispEnd();
 #endif
 }
 
-HARBOUR HB_DISPCOUNT (void)
+HARBOUR HB_DISPCOUNT( void )
 {
 #ifdef HARBOUR_USE_GTAPI
    hb_retni( hb_gtDispCount() );
@@ -935,7 +935,7 @@ HARBOUR HB_DISPCOUNT (void)
 #endif
 }
 
-HARBOUR HB_ISCOLOR (void)
+HARBOUR HB_ISCOLOR( void )
 {
 #ifdef HARBOUR_USE_GTAPI
    hb_retl( hb_gtIsColor() );
@@ -944,7 +944,7 @@ HARBOUR HB_ISCOLOR (void)
 #endif
 }
 
-HARBOUR HB_NOSNOW (void)
+HARBOUR HB_NOSNOW( void )
 {
 #ifdef HARBOUR_USE_GTAPI
    if( ISLOG( 1 ) )
@@ -954,7 +954,7 @@ HARBOUR HB_NOSNOW (void)
 #endif
 }
 
-HARBOUR HB___SHADOW (void)
+HARBOUR HB___SHADOW( void )
 {
 #ifdef HARBOUR_USE_GTAPI
    USHORT uiAttr;
@@ -968,16 +968,16 @@ HARBOUR HB___SHADOW (void)
       hb_gt_DrawShadow( hb_parni( 1 ) + 1,
                         hb_parni( 2 ) + 1,
                         hb_parni( 3 ) + 1,
-                        hb_parni( 4 ) + 1, uiAttr);
+                        hb_parni( 4 ) + 1, uiAttr );
 #endif
 }
 
-HARBOUR HB_DBGSHADOW (void)
+HARBOUR HB_DBGSHADOW( void )
 {
    HB___SHADOW();
 }
 
-HARBOUR HB_SAVESCREEN (void)
+HARBOUR HB_SAVESCREEN( void )
 {
 #ifdef HARBOUR_USE_GTAPI
    USHORT uiX;
@@ -991,7 +991,7 @@ HARBOUR HB_SAVESCREEN (void)
 
    for( uiX = 1; uiX < 5; uiX++ )
       if( ISNUM( uiX ) )
-         uiCoords[uiX - 1 ] = hb_parni( uiX );
+         uiCoords[ uiX - 1 ] = hb_parni( uiX );
 
    hb_gtRectSize( uiCoords[ 0 ], uiCoords[ 1 ], uiCoords[ 2 ], uiCoords[ 3 ], &uiX );
    pBuffer = ( char * ) hb_xgrab( uiX );
@@ -1001,7 +1001,7 @@ HARBOUR HB_SAVESCREEN (void)
 #endif
 }
 
-HARBOUR HB_RESTSCREEN (void)
+HARBOUR HB_RESTSCREEN( void )
 {
 #ifdef HARBOUR_USE_GTAPI
    if( hb_pcount() == 5 )
@@ -1016,7 +1016,7 @@ HARBOUR HB_RESTSCREEN (void)
 
       for( uiX = 1; uiX < 5; uiX++ )
          if( ISNUM( uiX ) )
-            uiCoords[uiX - 1 ] = hb_parni( uiX );
+            uiCoords[ uiX - 1 ] = hb_parni( uiX );
 
       hb_gtRest( uiCoords[ 0 ], uiCoords[ 1 ], uiCoords[ 2 ], uiCoords[ 3 ],
                  hb_parc( 5 ) );

@@ -78,124 +78,124 @@
 
 typedef enum
 {
-   SC_NONE     = 0,        /* None */
-   SC_NORMAL   = 1,        /* Underline */
-   SC_INSERT   = 2,        /* Lower half block */
-   SC_SPECIAL1 = 3,        /* Full block */
-   SC_SPECIAL2 = 4         /* Upper half block */
+   SC_NONE              = 0,    /* None */
+   SC_NORMAL            = 1,    /* Underline */
+   SC_INSERT            = 2,    /* Lower half block */
+   SC_SPECIAL1          = 3,    /* Full block */
+   SC_SPECIAL2          = 4     /* Upper half block */
 } HB_cursor_enum;
 
 typedef enum
 {
-   INKEY_MOVE     = 1,     /* Mouse Events */
-   INKEY_LDOWN    = 2,     /* Mouse Left Click Down */
-   INKEY_LUP      = 4,     /* Mouse Left Click Up */
-   INKEY_RDOWN    = 8,     /* Mouse Right Click Down */
-   INKEY_RUP      = 16,    /* Mouse Right Click Up */
-   INKEY_KEYBOARD = 128,   /* Keyboard Events */
-   INKEY_ALL      = 159,   /* All Mouse and Keyboard Events */
-   INKEY_EXTENDED = 256    /* Extended Keyboard Events */
+   INKEY_MOVE           = 1,    /* Mouse Events */
+   INKEY_LDOWN          = 2,    /* Mouse Left Click Down */
+   INKEY_LUP            = 4,    /* Mouse Left Click Up */
+   INKEY_RDOWN          = 8,    /* Mouse Right Click Down */
+   INKEY_RUP            = 16,   /* Mouse Right Click Up */
+   INKEY_KEYBOARD       = 128,  /* Keyboard Events */
+   INKEY_ALL            = 159,  /* All Mouse and Keyboard Events */
+   INKEY_EXTENDED       = 256   /* Extended Keyboard Events */
 } HB_inkey_enum;
 
 typedef enum
 {
-   HB_SET_INVALID_    = 0,
+   HB_SET_INVALID_      = 0,
 
-   HB_SET_EXACT       = 1,
-   HB_SET_FIXED       = 2,
-   HB_SET_DECIMALS    = 3,
-   HB_SET_DATEFORMAT  = 4,
-   HB_SET_EPOCH       = 5,
-   HB_SET_PATH        = 6,
-   HB_SET_DEFAULT     = 7,
+   HB_SET_EXACT         = 1,
+   HB_SET_FIXED         = 2,
+   HB_SET_DECIMALS      = 3,
+   HB_SET_DATEFORMAT    = 4,
+   HB_SET_EPOCH         = 5,
+   HB_SET_PATH          = 6,
+   HB_SET_DEFAULT       = 7,
 
-   HB_SET_EXCLUSIVE   = 8,
-   HB_SET_SOFTSEEK    = 9,
-   HB_SET_UNIQUE      = 10,
-   HB_SET_DELETED     = 11,
+   HB_SET_EXCLUSIVE     = 8,
+   HB_SET_SOFTSEEK      = 9,
+   HB_SET_UNIQUE        = 10,
+   HB_SET_DELETED       = 11,
 
-   HB_SET_CANCEL      = 12,
-   HB_SET_DEBUG       = 13,
-   HB_SET_TYPEAHEAD   = 14,
+   HB_SET_CANCEL        = 12,
+   HB_SET_DEBUG         = 13,
+   HB_SET_TYPEAHEAD     = 14,
 
-   HB_SET_COLOR       = 15,
-   HB_SET_CURSOR      = 16,
-   HB_SET_CONSOLE     = 17,
-   HB_SET_ALTERNATE   = 18,
-   HB_SET_ALTFILE     = 19,
-   HB_SET_DEVICE      = 20,
-   HB_SET_EXTRA       = 21,
-   HB_SET_EXTRAFILE   = 22,
-   HB_SET_PRINTER     = 23,
-   HB_SET_PRINTFILE   = 24,
-   HB_SET_MARGIN      = 25,
+   HB_SET_COLOR         = 15,
+   HB_SET_CURSOR        = 16,
+   HB_SET_CONSOLE       = 17,
+   HB_SET_ALTERNATE     = 18,
+   HB_SET_ALTFILE       = 19,
+   HB_SET_DEVICE        = 20,
+   HB_SET_EXTRA         = 21,
+   HB_SET_EXTRAFILE     = 22,
+   HB_SET_PRINTER       = 23,
+   HB_SET_PRINTFILE     = 24,
+   HB_SET_MARGIN        = 25,
 
-   HB_SET_BELL        = 26,
-   HB_SET_CONFIRM     = 27,
-   HB_SET_ESCAPE      = 28,
-   HB_SET_INSERT      = 29,
-   HB_SET_EXIT        = 30,
-   HB_SET_INTENSITY   = 31,
-   HB_SET_SCOREBOARD  = 32,
-   HB_SET_DELIMITERS  = 33,
-   HB_SET_DELIMCHARS  = 34,
+   HB_SET_BELL          = 26,
+   HB_SET_CONFIRM       = 27,
+   HB_SET_ESCAPE        = 28,
+   HB_SET_INSERT        = 29,
+   HB_SET_EXIT          = 30,
+   HB_SET_INTENSITY     = 31,
+   HB_SET_SCOREBOARD    = 32,
+   HB_SET_DELIMITERS    = 33,
+   HB_SET_DELIMCHARS    = 34,
 
-   HB_SET_WRAP        = 35,
-   HB_SET_MESSAGE     = 36,
-   HB_SET_MCENTER     = 37,
-   HB_SET_SCROLLBREAK = 38,
+   HB_SET_WRAP          = 35,
+   HB_SET_MESSAGE       = 36,
+   HB_SET_MCENTER       = 37,
+   HB_SET_SCROLLBREAK   = 38,
 
-   HB_SET_EVENTMASK   = 39
+   HB_SET_EVENTMASK     = 39
 } HB_set_enum;
 
 typedef struct
 {
-   BOOL HB_SET_EXACT;       /* Logical */
-   BOOL HB_SET_FIXED;       /* Logical */
-   int  HB_SET_DECIMALS;    /* Numeric */
-   char *HB_SET_DATEFORMAT; /* Character */
-   int  HB_SET_EPOCH;       /* Numeric */
-   char *HB_SET_PATH;       /* Character */
-   char *HB_SET_DEFAULT;    /* Character */
-   BOOL HB_SET_EXCLUSIVE;   /* Logical */
-   BOOL HB_SET_SOFTSEEK;    /* Logical */
-   BOOL HB_SET_UNIQUE;      /* Logical */
-   BOOL HB_SET_DELETED;     /* Logical */
-   BOOL HB_SET_CANCEL;      /* Logical */
-   int  HB_SET_DEBUG;       /* Numeric */
-   int  HB_SET_TYPEAHEAD;   /* Numeric */
-   char HB_SET_COLOR[ 64 ]; /* Character */
-   HB_cursor_enum  HB_SET_CURSOR;      /* Numeric */
-   BOOL HB_SET_CONSOLE;     /* Logical */
-   BOOL HB_SET_ALTERNATE;   /* Logical */
-   char *HB_SET_ALTFILE;    /* Character */
-   char * HB_SET_DEVICE;    /* Character */
-   BOOL HB_SET_EXTRA;       /* Logical */
-   char *HB_SET_EXTRAFILE;  /* Character */
-   BOOL HB_SET_PRINTER;     /* Logical */
-   char *HB_SET_PRINTFILE;  /* Character */
-   int  HB_SET_MARGIN;      /* Numeric */
-   BOOL HB_SET_BELL;        /* Logical */
-   BOOL HB_SET_CONFIRM;     /* Logical */
-   BOOL HB_SET_ESCAPE;      /* Logical */
-   BOOL HB_SET_INSERT;      /* Logical */
-   BOOL HB_SET_EXIT;        /* Logical */
-   BOOL HB_SET_INTENSITY;   /* Logical */
-   BOOL HB_SET_SCOREBOARD;  /* Logcial */
-   char *HB_SET_DELIMCHARS; /* Character */
-   BOOL HB_SET_DELIMITERS;  /* Logical */
-   BOOL HB_SET_WRAP;        /* Logical */
-   int  HB_SET_MESSAGE;     /* Numeric */
-   BOOL HB_SET_MCENTER;     /* Logical */
-   int  HB_SET_SCROLLBREAK; /* Logical */ /* QUESTION: What does this do? */
-   HB_inkey_enum  HB_SET_EVENTMASK;   /* Numeric */
+   BOOL   HB_SET_EXACT;
+   BOOL   HB_SET_FIXED;
+   int    HB_SET_DECIMALS;
+   char * HB_SET_DATEFORMAT;
+   int    HB_SET_EPOCH;
+   char * HB_SET_PATH;
+   char * HB_SET_DEFAULT;
+   BOOL   HB_SET_EXCLUSIVE;
+   BOOL   HB_SET_SOFTSEEK;
+   BOOL   HB_SET_UNIQUE;
+   BOOL   HB_SET_DELETED;
+   BOOL   HB_SET_CANCEL;
+   int    HB_SET_DEBUG;
+   int    HB_SET_TYPEAHEAD;
+   char   HB_SET_COLOR[ 64 ];
+   HB_cursor_enum HB_SET_CURSOR;
+   BOOL   HB_SET_CONSOLE;
+   BOOL   HB_SET_ALTERNATE;
+   char * HB_SET_ALTFILE;
+   char * HB_SET_DEVICE;
+   BOOL   HB_SET_EXTRA;
+   char * HB_SET_EXTRAFILE;
+   BOOL   HB_SET_PRINTER;
+   char * HB_SET_PRINTFILE;
+   int    HB_SET_MARGIN;
+   BOOL   HB_SET_BELL;
+   BOOL   HB_SET_CONFIRM;
+   BOOL   HB_SET_ESCAPE;
+   BOOL   HB_SET_INSERT;
+   BOOL   HB_SET_EXIT;
+   BOOL   HB_SET_INTENSITY;
+   BOOL   HB_SET_SCOREBOARD;
+   char * HB_SET_DELIMCHARS;
+   BOOL   HB_SET_DELIMITERS;
+   BOOL   HB_SET_WRAP;
+   int    HB_SET_MESSAGE;
+   BOOL   HB_SET_MCENTER;
+   BOOL   HB_SET_SCROLLBREAK;   /* QUESTION: What does this do ? */
+   HB_inkey_enum HB_SET_EVENTMASK;
 }  HB_set_struct;
 
 extern HB_set_struct hb_set;
 extern BOOL hb_set_century;
-extern int hb_set_althan;
-extern int hb_set_extrahan;
-extern int hb_set_printhan;
+extern int  hb_set_althan;
+extern int  hb_set_extrahan;
+extern int  hb_set_printhan;
 
 extern void hb_setInitialize( void );
 extern void hb_setRelease( void );

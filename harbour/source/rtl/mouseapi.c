@@ -207,19 +207,19 @@ HARBOUR MSAVESTATE( void )
    hb_mouseGetBounds( &iTop, &iLeft, &iBottom, &iRight );
 
    uiPos = 0;
-   *(pBuffer + uiPos) = hb_mouseRow();
+   *( pBuffer + uiPos ) = hb_mouseRow();
    uiPos += sizeof( int );
-   *(pBuffer + uiPos) = hb_mouseCol();
+   *( pBuffer + uiPos ) = hb_mouseCol();
    uiPos += sizeof( int );
-   *(pBuffer + uiPos) = s_bVisible;
+   *( pBuffer + uiPos ) = s_bVisible;
    uiPos += sizeof( BOOL );
-   *(pBuffer + uiPos) = iTop;
+   *( pBuffer + uiPos ) = iTop;
    uiPos += sizeof( int );
-   *(pBuffer + uiPos) = iLeft;
+   *( pBuffer + uiPos ) = iLeft;
    uiPos += sizeof( int );
-   *(pBuffer + uiPos) = iBottom;
+   *( pBuffer + uiPos ) = iBottom;
    uiPos += sizeof( int );
-   *(pBuffer + uiPos) = iRight;
+   *( pBuffer + uiPos ) = iRight;
 
    hb_retclen( pBuffer, uiLen );
 
@@ -243,19 +243,19 @@ HARBOUR MRESTSTATE( void )
       BYTE * pBuffer = ( BYTE * ) hb_parc( 1 );
 
       uiPos = 0;
-      iRow = *(pBuffer + uiPos);
+      iRow = *( pBuffer + uiPos );
       uiPos += sizeof( int );
-      iCol = *(pBuffer + uiPos);
+      iCol = *( pBuffer + uiPos );
       uiPos += sizeof( int );
-      bVisible = *(pBuffer + uiPos);
+      bVisible = *( pBuffer + uiPos );
       uiPos += sizeof( BOOL );
-      iTop = *(pBuffer + uiPos);
+      iTop = *( pBuffer + uiPos );
       uiPos += sizeof( int );
-      iLeft = *(pBuffer + uiPos);
+      iLeft = *( pBuffer + uiPos );
       uiPos += sizeof( int );
-      iBottom = *(pBuffer + uiPos);
+      iBottom = *( pBuffer + uiPos );
       uiPos += sizeof( int );
-      iRight = *(pBuffer + uiPos);
+      iRight = *( pBuffer + uiPos );
 
       hb_mouseSetPos( iRow, iCol );
       hb_mouseSetBounds( iTop, iLeft, iBottom, iRight );

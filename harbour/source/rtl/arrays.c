@@ -467,7 +467,7 @@ void hb_arrayEval( PHB_ITEM pArray, PHB_ITEM bBlock, ULONG ulStart, ULONG ulCoun
       }
    }
    else
-      hb_errRT_BASE( EG_ARG, 2017, NULL, "(AEVAL() function)" );
+      hb_errRT_BASE( EG_ARG, 2017, NULL, "AEVAL" );
 }
 
 void hb_arrayRelease( PHB_ITEM pArray )
@@ -703,7 +703,7 @@ HARBOUR HB_AEVAL( void )
       hb_itemCopy( &stack.Return, pArray ); /* AEval() returns the array itself */
    }
    else
-      hb_errRT_BASE( EG_ARG, 2017, NULL, "(AEVAL() function)" );
+      hb_errRT_BASE( EG_ARG, 2017, NULL, "AEVAL" );
 }
 
 /* TOFIX: nCount parameter == zero is incompatible. */

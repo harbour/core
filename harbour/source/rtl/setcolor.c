@@ -30,21 +30,21 @@
  static char old_string[ sizeof( hb_set.HB_SET_COLOR ) ];
 #endif
 
-char *hb_setColor( char *sColor )
+char * hb_setColor( char * sColor )
 {
 #ifdef HARBOUR_USE_GTAPI
    hb_gtGetColorStr( hb_set.HB_SET_COLOR );
 #else
-   strncpy (old_string, hb_set.HB_SET_COLOR, sizeof( hb_set.HB_SET_COLOR ) );
+   strncpy( old_string, hb_set.HB_SET_COLOR, sizeof( hb_set.HB_SET_COLOR ) );
    old_string[ sizeof( hb_set.HB_SET_COLOR ) - 1 ] = 0;
 #endif
 
-   if( sColor != (char *)0 )
+   if( sColor != ( char * ) NULL )
    {
    #ifdef HARBOUR_USE_GTAPI
       hb_gtSetColorStr( sColor );
    #else
-      strncpy (hb_set.HB_SET_COLOR, sColor, sizeof( hb_set.HB_SET_COLOR ) );
+      strncpy( hb_set.HB_SET_COLOR, sColor, sizeof( hb_set.HB_SET_COLOR ) );
       hb_set.HB_SET_COLOR[ sizeof( hb_set.HB_SET_COLOR ) - 1 ] = 0;
       hb_strUpper( hb_set.HB_SET_COLOR, strlen( hb_set.HB_SET_COLOR ) );
    #endif
@@ -58,13 +58,13 @@ char *hb_setColor( char *sColor )
 
 HARBOUR HB_SETCOLOR( void )
 {
-    hb_retc( hb_setColor( hb_pcount() ? hb_parc(1) : NULL ) );
+    hb_retc( hb_setColor( hb_pcount() ? hb_parc( 1 ) : NULL ) );
 }
 
 HARBOUR HB_COLORSELECT( void )
 {
 #ifdef HARBOUR_USE_GTAPI
-    if (ISNUM(1))
-        hb_gtColorSelect( hb_parni(1) );
+    if( ISNUM( 1 ) )
+        hb_gtColorSelect( hb_parni( 1 ) );
 #endif
 }

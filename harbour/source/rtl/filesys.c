@@ -121,8 +121,10 @@ static USHORT s_uiErrorLast = 0;
    #define PATH_MAX 256
 #endif
 
-#define MKLONG(_1,_2,_3,_4) (((long)_4)<<24)|(((long)_3)<<16)|(((long)_2)<<8)|_1
-#define MKINT(_1,_2)        (((long)_2)<<8)|_1
+#define MKLONG( _1, _2, _3, _4 ) ( ( ( long ) _4 ) << 24 ) | \
+                                 ( ( ( long ) _3 ) << 16 ) | \
+                                 ( ( ( long ) _2 ) <<  8 ) | _1
+#define MKINT( _1, _2 )          ( ( ( long ) _2 ) <<  8 ) | _1
 
 extern int rename( const char *, const char * );
 
@@ -418,7 +420,7 @@ int hb_fsDelete ( BYTE * pFilename )
    #if defined(_MSC_VER)
 
       errno = 0;
-      retval = remove( ( char *) pFilename );
+      retval = remove( ( char * ) pFilename );
       s_uiErrorLast = errno;
 
    #else

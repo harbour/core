@@ -76,7 +76,7 @@
 #define DF_YMD 2
 #define DF_EOT 3                                /* End of table for Century */
 
-static char *szBritish[] = { "DD/MM/YY", "DD/MM/YYYY" }; /* For @E                */
+static char * szBritish[] = { "DD/MM/YY", "DD/MM/YYYY" }; /* For @E                */
 
 extern HARBOUR HB_STR( void );
 
@@ -102,10 +102,10 @@ static WORD PictFunc( char **szPict, ULONG *pulPicLen )
    char *szPic    = *szPict;
 
    szPic++;
-   (*pulPicLen)--;
-   while( *pulPicLen && !bDone )
+   ( *pulPicLen )--;
+   while( *pulPicLen && ! bDone )
    {
-      switch( toupper(*szPic) )
+      switch( toupper( *szPic ) )
       {
          case ' ':                              /* End of function string   */
             bDone = TRUE;
@@ -142,9 +142,9 @@ static WORD PictFunc( char **szPict, ULONG *pulPicLen )
             break;
       }
       szPic++;
-      (*pulPicLen)--;
+      ( *pulPicLen )--;
    }
-   return( wPicFlags );
+   return wPicFlags;
 }
 
 /*
@@ -158,8 +158,8 @@ static WORD PictFunc( char **szPict, ULONG *pulPicLen )
     iOrigWidth  : Original width
     iOrigDec    : Original decimals
 */
-static char *NumPicture( char *szPic, ULONG ulPic, WORD wPicFlags, double dValue,
-                         ULONG *pulRetSize, int iOrigWidth, int iOrigDec )
+static char * NumPicture( char *szPic, ULONG ulPic, WORD wPicFlags, double dValue,
+                          ULONG *pulRetSize, int iOrigWidth, int iOrigDec )
 {
    int      iWidth;                             /* Width of string          */
    int      iDecimals;                          /* Number of decimals       */
@@ -177,14 +177,14 @@ static char *NumPicture( char *szPic, ULONG ulPic, WORD wPicFlags, double dValue
 
    double   dPush;
 
-   szRet  = (char *) hb_xgrab( ulPic+4 );       /* Grab enough              */
+   szRet  = ( char * ) hb_xgrab( ulPic + 4 );   /* Grab enough              */
    *szRet = '\0';
-   for( i=0; i < ulPic && !bFound; i++ )        /* Count number in front    */
+   for( i = 0; i < ulPic && !bFound; i++ )      /* Count number in front    */
    {
-      if( szPic[i] == '.' )
+      if( szPic[ i ] == '.' )
          bFound = !( wPicFlags & PF_NUMDATE );  /* Exit when numeric        */
-      else if( szPic[i] == '9' || szPic[i] == '#' ||
-               szPic[i] == '$' || szPic[i] == '*' )
+      else if( szPic[ i ] == '9' || szPic[ i ] == '#' ||
+               szPic[ i ] == '$' || szPic[ i ] == '*' )
          iCount++;
    }
    iWidth = iCount;
@@ -193,10 +193,10 @@ static char *NumPicture( char *szPic, ULONG ulPic, WORD wPicFlags, double dValue
    {
       iDecimals = 0;
       iWidth++;                                 /* Also adjust iWidth       */
-      for( ; i<ulPic; i++ )
+      for( ; i < ulPic; i++ )
       {
-         if( szPic[i] == '9' || szPic[i] == '#' ||
-             szPic[i] == '$' || szPic[i] == '*' )
+         if( szPic[ i ] == '9' || szPic[ i ] == '#' ||
+             szPic[ i ] == '$' || szPic[ i ] == '*' )
          {
             iWidth++;
             iDecimals++;
@@ -206,7 +206,7 @@ static char *NumPicture( char *szPic, ULONG ulPic, WORD wPicFlags, double dValue
    else
       iDecimals = 0;
 
-   if( ( wPicFlags & (PF_DEBIT + PF_PARNEG) ) && ( dValue < 0 ) )
+   if( ( wPicFlags & ( PF_DEBIT + PF_PARNEG ) ) && ( dValue < 0 ) )
       dPush = -dValue;                          /* Always push absolute val */
    else
       dPush = dValue;
@@ -232,25 +232,25 @@ static char *NumPicture( char *szPic, ULONG ulPic, WORD wPicFlags, double dValue
 
       if( wPicFlags & PF_ZERO )                 /* Pad with Zero's          */
       {
-         for( i=0; szStr[i] == ' ' && i < iWidth; i++ )
-            szStr[i] = '0';
+         for( i = 0; szStr[ i ] == ' ' && i < iWidth; i++ )
+            szStr[ i ] = '0';
       }
       if( bEmpty && pItem->item.asString.length )
                                                 /* Suppress empty value     */
       {
-         szStr[pItem->item.asString.length - 1] = ' ';
+         szStr[ pItem->item.asString.length - 1 ] = ' ';
       }
 
       if( wPicFlags & PF_LEFT )                 /* Left align               */
       {
-         for( i=0; szStr[i] == ' ' && i <= iWidth; i++ );
+         for( i = 0; szStr[ i ] == ' ' && i <= iWidth; i++ );
                                                 /* Find first non-space     */
 
          if( i && i != ( iWidth + 1 ) )         /* Any found or end of str  */
          {
             memcpy( szStr, szStr + i, iWidth - i );
             for( i = iWidth - i; i < iWidth; i++ )
-               szStr[i] = ' ';                  /* Pad with spaces          */
+               szStr[ i ] = ' ';                /* Pad with spaces          */
          }
       }
 
@@ -260,7 +260,7 @@ static char *NumPicture( char *szPic, ULONG ulPic, WORD wPicFlags, double dValue
       if( !iCount )                             /* No real picture          */
       {
          hb_xfree( szRet );
-         szRet = (char *) hb_xgrab( iWidth + 1 );
+         szRet = ( char * ) hb_xgrab( iWidth + 1 );
                                                 /* Grab enough              */
          memcpy( szRet, szStr, iWidth );
          szRet[ iWidth ] = 0;                   /* Terminate string         */
@@ -268,9 +268,9 @@ static char *NumPicture( char *szPic, ULONG ulPic, WORD wPicFlags, double dValue
       else
       {
 #endif
-         for( i=0; i < ulPic; i++ )
+         for( i = 0; i < ulPic; i++ )
          {
-            cPic = szPic[i];
+            cPic = szPic[ i ];
             if( cPic == '9' || cPic == '#' )
                szRet[ i ] = szStr[ iCount++ ];  /* Just copy                */
             else if( cPic == '.' )
@@ -290,62 +290,62 @@ static char *NumPicture( char *szPic, ULONG ulPic, WORD wPicFlags, double dValue
             }
             else if( cPic == '$' || cPic == '*' )
             {
-               if( szStr[iCount] == ' ' )
+               if( szStr[ iCount ] == ' ' )
                {
-                  szRet[i] = cPic;
+                  szRet[ i ] = cPic;
                   iCount++;
                }
                else
-                  szRet[i] = szStr[iCount++];
+                  szRet[ i ] = szStr[ iCount++ ];
             }
             else if( cPic == ',' )              /* Comma                    */
             {
                if( iCount && isdigit( szStr[ iCount - 1 ] ) )
                {                                /* May we place it     */
                   if( wPicFlags & PF_EXCHANG )
-                     szRet[i] = '.';
+                     szRet[ i ] = '.';
                   else
-                     szRet[i] = ',';
+                     szRet[ i ] = ',';
                }
                else
-                  szRet[i] = ' ';
+                  szRet[ i ] = ' ';
             }
             else
-               szRet[i] = cPic;
+               szRet[ i ] = cPic;
          }
 #if 0
       }
 #endif
       if( ( wPicFlags & PF_CREDIT ) && ( dValue >= 0 ) )
       {
-         szRet[i++] = ' ';
-         szRet[i++] = 'C';
-         szRet[i++] = 'R';
+         szRet[ i++ ] = ' ';
+         szRet[ i++ ] = 'C';
+         szRet[ i++ ] = 'R';
       }
 
       if( ( wPicFlags & PF_DEBIT ) && ( dValue < 0 ) )
       {
-         szRet[i++] = ' ';
-         szRet[i++] = 'D';
-         szRet[i++] = 'B';
+         szRet[ i++ ] = ' ';
+         szRet[ i++ ] = 'D';
+         szRet[ i++ ] = 'B';
       }
 
       if( ( wPicFlags & PF_PARNEG ) && ( dValue < 0 ) )
       {
-         if( isdigit(*szRet) )                  /* Overflow                 */
+         if( isdigit( *szRet ) )                /* Overflow                 */
          {
             for( iCount = 1; iCount < i; iCount++ )
             {
-               if( isdigit( szRet[iCount] ) )
-                  szRet[iCount] = '*';
+               if( isdigit( szRet[ iCount ] ) )
+                  szRet[ iCount ] = '*';
             }
          }
          *szRet     = '(';
-         szRet[i++] = ')';
+         szRet[ i++ ] = ')';
       }
 
       *pulRetSize = i;
-      szRet[i]  = '\0';
+      szRet[ i ]  = '\0';
    }
    else
       hb_errInternal( 9999, "NumPicture(): STR does not return string", NULL, NULL );
@@ -360,14 +360,14 @@ static char *NumPicture( char *szPic, ULONG ulPic, WORD wPicFlags, double dValue
     wPicFlags   : Function flags
     szResult    : Buffer of at least size 11 to hold formatted date
 */
-static char *DatePicture( char * szDate, WORD wPicFlags, char * szResult )
+static char * DatePicture( char * szDate, WORD wPicFlags, char * szResult )
 {
    if( wPicFlags & PF_BRITISH )
       hb_dtoc( szDate, szResult, szBritish[ ( hb_set_century ? 1 : 0 ) ] );
    else
       hb_dtoc( szDate, szResult, hb_set.HB_SET_DATEFORMAT );
 
-   return( szResult );
+   return szResult;
 }
 
 
@@ -406,16 +406,16 @@ HARBOUR HB_TRANSFORM( void )
             case IT_STRING:
             {
                szExp = pExp->item.asString.value;
-               szResult = (char *)hb_xgrab( ( (ulPic-ulPicStart) >
-                          pExp->item.asString.length) ?
-                          (ulPic-ulPicStart) + 64 : pExp->item.asString.length + 64 );
+               szResult = ( char * ) hb_xgrab( ( ( ulPic-ulPicStart ) >
+                          pExp->item.asString.length ) ?
+                          ( ulPic - ulPicStart ) + 64 : pExp->item.asString.length + 64 );
                                                    /* Grab enough              */
                szPic += ulPicStart;                /* Skip functions           */
 
                if( wPicFlags & PF_UPPER )          /* Function : @!            */
                {
                   szTemp = szExp;                  /* Convert to upper         */
-                  for( n = pExp->item.asString.length; n ; n--)
+                  for( n = pExp->item.asString.length; n != 0; n-- )
                   {
                      *szTemp = toupper( *szTemp );
                      szTemp++;
@@ -430,7 +430,7 @@ HARBOUR HB_TRANSFORM( void )
                      {
                         case '!':                  /* Upper                    */
                         {
-                           szResult[ulResultPos++] = toupper(szExp[ulExpPos++]);
+                           szResult[ ulResultPos++ ] = toupper( szExp[ ulExpPos++ ] );
                            break;
                         }
                         case 'L':                  /* Ignored                  */
@@ -448,13 +448,13 @@ HARBOUR HB_TRANSFORM( void )
                         case 'X':
                         case ' ':
                         {
-                           szResult[ulResultPos++] = szExp[ulExpPos++];
+                           szResult[ ulResultPos++ ] = szExp[ ulExpPos++ ];
                            break;
                         }
 
                         default:                   /* Other choices            */
                         {
-                           szResult[ulResultPos++] = *szPic;
+                           szResult[ ulResultPos++ ] = *szPic;
                            ulExpPos++;
                         }
                      }
@@ -462,20 +462,20 @@ HARBOUR HB_TRANSFORM( void )
                      ulPic--;
                   }
                }
-               else if( wPicFlags & (PF_UPPER + PF_REMAIN) )
+               else if( wPicFlags & ( PF_UPPER + PF_REMAIN ) )
                {                                   /* Without template         */
-                  for( n = pExp->item.asString.length; n; n--)
-                    szResult[ulResultPos++] = *szExp++;
+                  for( n = pExp->item.asString.length; n != 0; n-- )
+                    szResult[ ulResultPos++ ] = *szExp++;
                }
 
                if( ( wPicFlags & PF_REMAIN ) && ulPic )
                {                                   /* Any chars left           */
-                  for( n = ulPic; n; n--)
-                     szResult[ulResultPos++] = *szPic;
+                  for( n = ulPic; n != 0; n-- )
+                     szResult[ ulResultPos++ ] = *szPic;
                                                    /* Export remainder         */
                }
-               hb_retclen(szResult, ulResultPos);
-               hb_xfree(szResult);
+               hb_retclen( szResult, ulResultPos );
+               hb_xfree( szResult );
                break;
             }
 
@@ -483,7 +483,7 @@ HARBOUR HB_TRANSFORM( void )
             {
                BOOL bDone = FALSE;
 
-               szResult    =  (char *) hb_xgrab( ulPic + 1 );
+               szResult    = ( char * ) hb_xgrab( ulPic + 1 );
                                                    /* That's all folks        */
                szPic       += ulPicStart;          /* Skip functions           */
                ulResultPos =  1;
@@ -521,9 +521,9 @@ HARBOUR HB_TRANSFORM( void )
                if( ( wPicFlags & PF_REMAIN ) && ulPic )
                {                                   /* Any chars left           */
                   for( n = ulPic; n; n--)          /* Copy remainder           */
-                     szResult[ulResultPos++] = *szPic++;
+                     szResult[ ulResultPos++ ] = *szPic++;
                   if( !bDone )                     /* Logical written ?        */
-                     szResult[ulResultPos++] = pExp->item.asLogical.value ? 'T' : 'F';
+                     szResult[ ulResultPos++ ] = pExp->item.asLogical.value ? 'T' : 'F';
                }
                hb_retclen( szResult, ulResultPos );
                hb_xfree( szResult );
@@ -532,7 +532,7 @@ HARBOUR HB_TRANSFORM( void )
             case IT_INTEGER:
             {
                szResult = NumPicture( szPic + ulPicStart, ulPic, wPicFlags,
-                       (double) pExp->item.asInteger.value, &ulResultPos,
+                        ( double ) pExp->item.asInteger.value, &ulResultPos,
                         pExp->item.asInteger.length, 0 );
                hb_retclen( szResult, ulResultPos );
                hb_xfree( szResult );
@@ -541,7 +541,7 @@ HARBOUR HB_TRANSFORM( void )
             case IT_LONG:
             {
                szResult = NumPicture( szPic + ulPicStart, ulPic, wPicFlags,
-                       (double) pExp->item.asLong.value, &ulResultPos,
+                        ( double ) pExp->item.asLong.value, &ulResultPos,
                         pExp->item.asLong.length, 0 );
                hb_retclen( szResult, ulResultPos );
                hb_xfree( szResult );
@@ -550,9 +550,9 @@ HARBOUR HB_TRANSFORM( void )
             case IT_DOUBLE:
             {
                szResult = NumPicture( szPic + ulPicStart, ulPic, wPicFlags,
-                       (double) pExp->item.asDouble.value, &ulResultPos,
+                        ( double ) pExp->item.asDouble.value, &ulResultPos,
                         pExp->item.asDouble.length, pExp->item.asDouble.decimal );
-               hb_retclen( szResult, ulResultPos);
+               hb_retclen( szResult, ulResultPos );
                hb_xfree( szResult );
                break;
             }
@@ -567,13 +567,13 @@ HARBOUR HB_TRANSFORM( void )
                hb_errRT_BASE( EG_ARG, 1122, NULL, "TRANSFORM" );
          }
       }
-      else if ( ISCHAR( 2 ) || ISNIL( 2 ) )        /* No picture supplied      */
+      else if( ISCHAR( 2 ) || ISNIL( 2 ) )         /* No picture supplied      */
       {
          switch( pExp->type & ~IT_BYREF )          /* Default behaviour        */
          {
             case IT_STRING:
             {
-               hb_retclen( pExp->item.asString.value, pExp->item.asString.length);
+               hb_retclen( pExp->item.asString.value, pExp->item.asString.length );
                break;
             }
             case IT_LOGICAL:
@@ -585,15 +585,15 @@ HARBOUR HB_TRANSFORM( void )
             case IT_LONG:
             case IT_DOUBLE:
             {
-               char * szStr = hb_itemStr(pExp, 0, 0);
+               char * szStr = hb_itemStr( pExp, 0, 0 );
 
-               if (szStr)
+               if( szStr )
                {
                   hb_retc( szStr );
                   hb_xfree( szStr );
                }
                else
-                  hb_retc("");
+                  hb_retc( "" );
 
                break;
             }

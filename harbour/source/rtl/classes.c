@@ -101,23 +101,6 @@ static HARBOUR  hb___msgSetClsData( void );
 static HARBOUR  hb___msgGetData( void );
 static HARBOUR  hb___msgSetData( void );
 
-/* All function contained in matching objfunc.prg */
-
-extern HARBOUR  HB___OBJGETMSGLIST( void );
-extern HARBOUR  HB___OBJGETMETHODLIST( void );
-extern HARBOUR  HB___OBJGETVALUELIST( void );
-extern HARBOUR  HB___OBJSETVALUELIST( void );
-extern HARBOUR  HB___OBJHASDATA( void );
-extern HARBOUR  HB___OBJHASMETHOD( void );
-extern HARBOUR  HB___OBJADDDATA( void );
-extern HARBOUR  HB___OBJADDINLINE( void );
-extern HARBOUR  HB___OBJADDMETHOD( void );
-extern HARBOUR  HB___OBJDELDATA( void );
-extern HARBOUR  HB___OBJDELINLINE( void );
-extern HARBOUR  HB___OBJDELMETHOD( void );
-extern HARBOUR  HB___OBJMODINLINE( void );
-extern HARBOUR  HB___OBJMODMETHOD( void );
-
 /*
  * __clsAddMsg( <hClass>, <cMessage>, <pFunction>, <nType>, [xInit] )
  *
@@ -146,7 +129,7 @@ HARBOUR HB___CLSADDMSG( void )
       WORD     wMask    = pClass->wHashKey * BUCKET;
       PMETHOD  pNewMeth;
 
-      if ( wType == MET_INLINE && hb_param( 3, IT_BLOCK ) == NULL )
+      if( wType == MET_INLINE && hb_param( 3, IT_BLOCK ) == NULL )
       {
          hb_errRT_BASE( EG_ARG, 3000, NULL, "__CLSADDMSG" );
       }
@@ -375,7 +358,7 @@ HARBOUR HB___CLSINST( void )
 
       hb_arrayNew( &stack.Return, pClass->wDatas );
       stack.Return.item.asArray.value->wClass = wClass;
-      
+
       for( wAt = 0; wAt < wLimit; wAt++, pMeth++ )
          if( pMeth->pInitValue )
             hb_itemArrayPut( &stack.Return, pMeth->wData, pMeth->pInitValue );
@@ -418,7 +401,7 @@ HARBOUR HB___CLSMODMSG( void )
          {
             PHB_ITEM pBlock = hb_param( 3, IT_BLOCK );
 
-            if ( pBlock == NULL )
+            if( pBlock == NULL )
                hb_errRT_BASE( EG_ARG, 3000, NULL, "__CLSMODMSG" );
             else
                hb_arraySet( pClass->pInlines, pClass->pMethods[ wAt ].wData, pBlock );
@@ -727,7 +710,7 @@ PHB_FUNC hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage )
 ULONG hb_objHasMsg( PHB_ITEM pObject, char *szString )
 {
    PHB_SYMB pMessage = hb_dynsymGet( szString )->pSymbol;
-   return( ( ULONG ) hb_objGetMethod( pObject, pMessage ) );
+   return ( ULONG ) hb_objGetMethod( pObject, pMessage );
 }                                                /* Get funcptr of message   */
 
 
@@ -757,7 +740,7 @@ HARBOUR HB___OBJCLONE( void )
 {
    PHB_ITEM pSrcObject = hb_param( 1, IT_OBJECT );
 
-   if ( pSrcObject )
+   if( pSrcObject )
    {
       PHB_ITEM pDstObject = hb_arrayClone( pSrcObject );
 
