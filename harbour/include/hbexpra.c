@@ -453,12 +453,18 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms )
                pVar = pVar->value.asList.pExprList;
             }
 
-            /* create a set/get codeblock */
-#ifdef HB_MACRO_SUPPORT
-            pVar = hb_compExprSetGetBlock( pVar, HB_MACRO_PARAM );
-#else
-            pVar = hb_compExprSetGetBlock( pVar );
-#endif
+            /* create a set only codeblock */
+            if( pVar->ExprType == HB_ET_MACRO )
+            {
+               /* &var[1] */
+               hb_compExprFree( pVar, NULL );
+               pVar = hb_compExprNewNil();
+            }
+            else
+            {
+               pVar = hb_compExprAddCodeblockExpr( hb_compExprNewCodeBlock(NULL,0,0), pVar );
+            }
+
             /* pVar will be the first argument now
              */
             pParms->value.asList.pExprList = pVar;
@@ -594,7 +600,23 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms )
 #ifdef HB_MACRO_SUPPORT
             pArg = hb_compExprSetGetBlock( pArg, HB_MACRO_PARAM );
 #else
-            pArg = hb_compExprSetGetBlock( pArg );
+            if( pArg->ExprType == HB_ET_VARIABLE )
+            {
+               if( hb_compVariableScope( pArg->value.asSymbol ) > 0 )
+                  pArg = hb_compExprSetGetBlock( pArg );
+               else
+               {
+                  /* Undeclared variable name - create a set/get codeblock
+                   * at runtime
+                  */
+                  hb_compExprFree( pArg, NULL );
+                  pArg = hb_compExprNewNil();
+               }
+            }
+            else
+            {
+               pArg = hb_compExprSetGetBlock( pArg );
+            }
 #endif
             /* restore next arguments */
             pArg->pNext = pNext;
@@ -932,7 +954,7 @@ HB_EXPR_PTR hb_compExprReduce( HB_EXPR_PTR pExpr )
 #ifndef SIMPLEX
 /* Creates a set/get codeblock for passed expression used in __GET
  *
- * {|| IIF( PCOUNT()==0, <pExpr>, <pExpr>:=HB_PARAM(1) )}
+ * {|var| IIF( var==NIL, <pExpr>, <pExpr>:=var )}
  */
 #ifdef HB_MACRO_SUPPORT
 HB_EXPR_PTR hb_compExprSetGetBlock( HB_EXPR_PTR pExpr, HB_MACRO_DECL )
@@ -943,42 +965,35 @@ HB_EXPR_PTR hb_compExprSetGetBlock( HB_EXPR_PTR pExpr )
    HB_EXPR_PTR pIIF;
    HB_EXPR_PTR pSet;
 
-   /* create PCOUNT() expression */
+   /* create {|var|  expression 
+    * NOTE: this is not a valid variable name so there will be no collisions
+   */
+   pIIF =hb_compExprNewVar( hb_strdup("~1") );           
+   /* create var==NIL */
 #ifdef HB_MACRO_SUPPORT
-   pIIF = hb_compExprNewFunCall( hb_compExprNewFunName( hb_strdup("PCOUNT") ),
-              hb_compExprNewArgList( hb_compExprNewEmpty() ), HB_MACRO_PARAM );
+   pIIF = hb_compExprSetOperand( hb_compExprNewEQ( pIIF ), hb_compExprNewNil(), HB_MACRO_PARAM );
 #else
-   pIIF = hb_compExprNewFunCall( hb_compExprNewFunName( hb_strdup("PCOUNT") ),
-              hb_compExprNewArgList( hb_compExprNewEmpty() ) );
+   pIIF = hb_compExprSetOperand( hb_compExprNewEQ( pIIF ), hb_compExprNewNil() );
 #endif
-   /* create PCOUNT()==0 */
-#ifdef HB_MACRO_SUPPORT
-   pIIF = hb_compExprSetOperand( hb_compExprNewEQ( pIIF ), hb_compExprNewLong( 0 ), HB_MACRO_PARAM );
-#else
-   pIIF = hb_compExprSetOperand( hb_compExprNewEQ( pIIF ), hb_compExprNewLong( 0 ) );
-#endif
-   /* create ( PCOUNT()==0, */
+   /* create ( var==NIL, */
    pIIF = hb_compExprNewList( pIIF );
-   /* create ( PCOUNT()==0, <pExpr>, */
+   /* create ( var==NIL, <pExpr>, */
    pIIF = hb_compExprAddListExpr( pIIF, pExpr );
-   /* create HB_PCOUNT(1) */
-#ifdef HB_MACRO_SUPPORT
-   pSet = hb_compExprNewFunCall( hb_compExprNewFunName( hb_strdup("HB_PVALUE") ),
-              hb_compExprNewArgList( hb_compExprNewLong( 1 ) ), HB_MACRO_PARAM );
-#else
-   pSet = hb_compExprNewFunCall( hb_compExprNewFunName( hb_strdup("HB_PVALUE") ),
-              hb_compExprNewArgList( hb_compExprNewLong( 1 ) ) );
-#endif
-   /* create <pExpr>:=HB_PCOUNT(1) */
+   /* create var */
+   pSet =hb_compExprNewVar( hb_strdup("~1") );           
+   /* create <pExpr>:=var */
    pSet = hb_compExprAssign( hb_compExprClone( pExpr ), pSet );
-   /* create ( PCOUNT()==0, <pExpr>, <pExpr>:=HB_PARAM(1)) */
+   /* create ( var==nil, <pExpr>, <pExpr>:=var ) */
    pIIF = hb_compExprAddListExpr( pIIF, pSet );
    /* create IIF() expression */
    pIIF = hb_compExprNewIIF( pIIF );
    /* create a codeblock
-    * NOTE: we can ommit a local variable if HB_PARAM() is used
    */
-   return hb_compExprAddCodeblockExpr( hb_compExprNewCodeBlock(NULL,0,0), pIIF );
+#ifdef HB_MACRO_SUPPORT
+   return hb_compExprAddCodeblockExpr( hb_compExprCBVarAdd( hb_compExprNewCodeBlock(NULL,0,0), hb_strdup("~1"), HB_MACRO_PARAM ), pIIF );
+#else
+   return hb_compExprAddCodeblockExpr( hb_compExprCBVarAdd( hb_compExprNewCodeBlock(NULL,0,0), "~1", ' ' ), pIIF );
+#endif
 }
 
 #endif

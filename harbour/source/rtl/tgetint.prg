@@ -60,6 +60,9 @@
 #include "hbclass.ch"
 #include "hbsetup.ch"
 
+REQUEST HB_PVALUE
+REQUEST PCOUNT
+
 //---------------------------------------------------------------------------//
 
 FUNCTION GetNew( nRow, nCol, bVarBlock, cVarName, cPicture, cColor )
@@ -72,11 +75,12 @@ FUNCTION __GET( bSetGet, cVarName, cPicture, bValid, bWhen )
    LOCAL oGet
 
    IF bSetGet == NIL
-      IF __MVEXIST( cVarName )
+      IF FieldPos( cVarName ) > 0
+         bSetGet := &( "{|| IIF( PCOUNT()==0, FIELD->" + cVarName + ", FIELD->" + cVarName + " := HB_PVALUE(1) ) }" )
+      ELSEIF __MVEXIST( cVarName )
          bSetGet := {|_1| iif( _1 == NIL,  __MVGET( cVarName ), __MVPUT( cVarName, _1 ) ) }
       ELSE
-         // "{|_1| IIF( _1 == NIL, &cVarName, &cVarName := _1 )"
-         bSetGet := &( "{|_1| iif( _1 == NIL, " + cVarName + ", " + cVarName + " := _1 ) }" )
+         bSetGet := &( "{|| IIF( PCOUNT()==0, " + cVarName + ", " + cVarName + " := HB_PVALUE(1) ) }" )
       ENDIF
    ENDIF
 
@@ -90,27 +94,18 @@ FUNCTION __GET( bSetGet, cVarName, cPicture, bValid, bWhen )
 FUNCTION __GETA( bGetArray, cVarName, cPicture, bValid, bWhen, aIndex )
 
    LOCAL oGet
-   LOCAL nDim := Len( aIndex )
-   LOCAL bSetGet
-   LOCAL aGetVar
-   LOCAL nCounter
 
    IF bGetArray == NIL
-      IF __MVEXIST( cVarName )
-         aGetVar := __MVGET( cVarName )
+      IF FieldPos( cVarName ) > 0
+         bGetArray := &( "{|| FIELD->" + cVarName + "}" )
+      ELSEIF __MVEXIST( cVarName )
+         bGetArray := {|| __MVGET( cVarName ) }
       ELSE
-         aGetVar := &cVarName
+         bGetArray := &( "{|| " + cVarName + "}" )
       ENDIF
-   ELSE
-      aGetVar := Eval( bGetArray )
    ENDIF
 
-   FOR nCounter := 1 TO nDim - 1
-      aGetVar := aGetVar[ aIndex[ nCounter ] ]
-   NEXT
-   bSetGet := {|_1| iif( _1 == NIL, aGetVar[ aIndex[ nCounter ] ], aGetVar[ aIndex[ nCounter ] ] := _1 ) }
-
-   oGet := Get():New(,, bSetGet, cVarName, cPicture )
+   oGet := Get():New(,, bGetArray, cVarName, cPicture )
    oGet:SubScript := aIndex
 
    oGet:PreBlock := bWhen

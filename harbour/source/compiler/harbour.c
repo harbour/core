@@ -376,7 +376,16 @@ void hb_compExternAdd( char * szExternName ) /* defines a new extern name */
 {
    PEXTERN pExtern = ( PEXTERN ) hb_xgrab( sizeof( _EXTERN ) ), pLast;
 
-   pExtern->szName = szExternName;
+   if( strcmp( "_GET_", szExternName ) == 0 )
+   {
+      /* special function to implement @ GET statement */
+      hb_compExternAdd( hb_strdup("__GETA") );
+      pExtern->szName = hb_strdup("__GET");
+   }
+   else
+   {
+      pExtern->szName = szExternName;
+   }
    pExtern->pNext  = NULL;
 
    if( hb_comp_pExterns == NULL )
@@ -836,7 +845,7 @@ int hb_compVariableScope( char * szVarName )
     {
          /* Check file-wide variables 
           */
-         if( hb_compMemvarGetPos( szVarName, hb_comp_functions.pFirst ) == 0 )
+         if( hb_compMemvarGetPos( szVarName, hb_comp_functions.pFirst ) > 0 )
             iScope = HB_VS_GLOBAL_MEMVAR;
          else if( hb_compFieldGetPos( szVarName, hb_comp_functions.pFirst ) > 0 )
             iScope = HB_VS_GLOBAL_FIELD;

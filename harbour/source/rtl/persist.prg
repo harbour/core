@@ -98,13 +98,13 @@ METHOD LoadFromText( cObjectText ) CLASS HBPersistent
               cLine := StrTran( cLine, "::", "oSelf:" )
               cLine := StrTran( cLine, " LEN ", " = Array( " )
               cLine := RTrim( StrTran( cLine, "=", ":=", , 1 ) ) + " )"
-              &( cLine )
+              cLine := &( cLine )
 
          case Left( cToken := LTrim( __StrToken( cLine, 1, "=" ) ), 2 ) == "::"
               M->oSelf := Self
               cLine := StrTran( cLine, "::", "oSelf:" )
               cLine := StrTran( cLine, "=", ":=", , 1 )
-              &( cLine )
+              cLine := &( cLine )
 
       endcase
 

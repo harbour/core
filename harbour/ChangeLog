@@ -8,6 +8,20 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-05-14 16:05 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+   * include/hbexpra.c
+   * source/compiler/expropta.c
+   * source/compiler/harbour.c
+   * source/macro/macroa.c
+   * source/rtl/tget.prg
+   * source/rtl/tgetint.prg
+      * fixed to be more Clipper compatible
+
+   * source/rtl/persist.prg
+      * fixed to not use xBase extensions
+      
+
 2004-05-13 11:00 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
    * source/rtl/transform.c

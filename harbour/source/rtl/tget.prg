@@ -541,11 +541,24 @@ return Self
 //---------------------------------------------------------------------------//
 
 METHOD VarPut( xValue, lReFormat ) CLASS Get
+LOCAL aSubs, nLen, aValue
+LOCAL i
 
    DEFAULT lReFormat TO .t.
 
    if ValType( ::Block ) == 'B'
-      Eval( ::block, xValue )
+      IF ::SubScript == NIL
+         Eval( ::Block, xValue )
+      ELSE
+         aSubs := ::SubScript
+         nLen := Len( aSubs )
+         aValue := Eval( ::Block )
+         FOR i:=1 TO nLen - 1
+            aValue := aValue[ aSubs[ i ] ]
+         NEXT
+         aValue[ aSubs[ i ] ] := xValue
+      ENDIF
+   
       if lReFormat
          if !::hasfocus
             ::Original := xValue
@@ -561,8 +574,27 @@ return xValue
 //---------------------------------------------------------------------------//
 
 METHOD VarGet() CLASS Get
+LOCAL aSubs, nLen, aValue
+LOCAL i
+LOCAL xValue
 
-return IIF( ValType( ::Block ) == 'B', Eval( ::Block ), NIL )
+   IF ValType( ::Block ) == 'B'
+      IF ::SubScript == NIL
+         xValue := Eval( ::Block )
+      ELSE
+         aSubs := ::SubScript
+         nLen := Len( aSubs )
+         aValue := Eval( ::Block )
+         FOR i:=1 TO nLen - 1
+            aValue := aValue[ aSubs[ i ] ]
+         NEXT
+         xValue := aValue[ aSubs[ i ] ]
+      ENDIF
+   ELSE
+      xValue := NIL
+   ENDIF
+   
+return xValue
 
 //---------------------------------------------------------------------------//
 
