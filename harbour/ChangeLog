@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-12-30 16:50 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>
+   * source/rdd/dbfcdx/dbfcdx1.c
+        ! fixed scope related bug, reported by Blue Face
+        + added support for the EVAL clause in INDEX
+
 2002-12-28 09:05 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>
    * source/rdd/dbfcdx/dbfcdx1.c
    * source/rdd/dbfcdx/dbfcdx2.h
