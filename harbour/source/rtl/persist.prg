@@ -102,14 +102,12 @@ METHOD SaveToText( cObjectName ) CLASS TPersistent
 
          otherwise
             cObject += Space( nIndent ) + "   ::" + aProperties[ n ] + " = " + ;
-                       If( ValType( uValue ) == "C", '"', "" ) + ;
-                       HB_ValToStr( uValue ) + ;
-                       If( ValType( uValue ) == "C", '"', "" )
+                       ValToText( uValue )
       endcase
       cObject += HB_OsNewLine()
    next
 
-   cObject += HB_OsNewLine() + Space( nIndent ) + "ENDOBJECT"
+   cObject += HB_OsNewLine() + Space( nIndent ) + "ENDOBJECT" + HB_OsNewLine()
    nIndent -= 3
    if nIndent > 0
       cObject += HB_OsNewLine()
@@ -121,15 +119,53 @@ static function ArrayToText( aArray, cName, nIndent )
 
    local cArray := Space( nIndent ) + "ARRAY ::" + cName + " LEN " + ;
                    AllTrim( Str( Len( aArray ) ) ) + HB_OsNewLine() + HB_OsNewLine()
-   local n, uValue
+   local n, uValue, cType
 
    for n = 1 to Len( aArray )
-      if __objDerivedFrom( aArray[ n ], "TPERSISTENT" )
-         cArray += aArray[ n ]:SaveToText( cName + "[ " + AllTrim( Str( n ) ) + ;
-                   " ]" ) + HB_OsNewLine()
-      endif
+      uValue = aArray[ n ]
+      cType  = ValType( uValue )
+
+      do case
+         case cType == "A"
+              nIndent += 3
+              cArray += HB_OsNewLine() + ArrayToText( uValue, cName + "[ " + ;
+                        AllTrim( Str( n ) ) + " ]", nIndent ) + HB_OsNewLine()
+              nIndent -= 3
+
+         case cType == "O"
+              if __objDerivedFrom( uValue, "TPERSISTENT" )
+                 cArray += uValue:SaveToText( cName + "[ " + AllTrim( Str( n ) ) + ;
+                           " ]" ) + HB_OsNewLine()
+              endif
+
+         otherwise
+              cArray += Space( nIndent ) + "   ::" + cName + ;
+                        + "[ " + AllTrim( Str( n ) ) + " ]" + " = " + ;
+                        ValToText( uValue ) + HB_OsNewLine()
+      endcase
    next
 
-   cArray += Space( nIndent ) + "ENDARRAY"
+   cArray += HB_OsNewLine() + Space( nIndent ) + "ENDARRAY" + HB_OsNewLine()
 
 return cArray
+
+static function ValToText( uValue )
+
+   local cType := ValType( uValue )
+   local cText
+
+   do case
+      case cType == "C"
+           cText = '"' + uValue + '"'
+
+      case cType == "N"
+           cText = AllTrim( Str( uValue ) )
+
+      case cType == "D"
+           cText = 'CToD( "' + DToC( uValue ) + '" )'
+
+      otherwise
+           cText = HB_ValToStr( uValue )
+   endcase
+
+return cText
