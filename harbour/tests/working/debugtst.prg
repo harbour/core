@@ -17,6 +17,10 @@ function Main()
    QOut( "-DEBUG Functions-")
    QOut()
 
+   QOut( "-oForm-" )
+   QOut( ToChar( oForm:ClassSel(), ", ", .T. ))
+   QOut()
+
    QOut( "-Statics-" )
    QOut( ToChar ( __aStatic(), ", ", .T. ) )
    QOut()
@@ -124,7 +128,11 @@ function ToChar( xTxt, cSeparator, lDebug )
          cOut       := ""
          cSeparator := Default( cSeparator, " ")
          if lDebug
-            cOut += if( cValTxt=="A", "{", "Object(" )
+            if cValTxt=="A"
+               cOut += "{"
+            else
+               cOut += "Class#"+ToChar( xTxt:ClassH() )+"("
+            endif
          endif
          nLen := Len( xTxt )
          for n := 1 to nLen                     // For each item : Recurse !

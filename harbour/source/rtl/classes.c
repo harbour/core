@@ -3,6 +3,7 @@
  */
 
 #include <extend.h>
+#include <itemapi.h>
 
 void Push( PITEM );
 void PushNil( void );
@@ -44,7 +45,7 @@ extern SYMBOL symEval;
 PCLASS  pClasses = 0;
 WORD    wClasses = 0;
 PMETHOD pMethod = 0;
-PDYNSYM msgClassName = 0, msgClassH = 0, msgEval = 0;
+PDYNSYM msgClassName = 0, msgClassH = 0, msgEval = 0, msgClassSel = 0;
 
 HARBOUR CLASSCREATE() /* cClassName, nDatas --> hClass */
 {
@@ -241,6 +242,50 @@ static void DictRealloc( PCLASS pClass )
    }
 }
 
+static HARBOUR ClassSel() /* hClass */
+{
+   WORD    wClass = IS_ARRAY( stack.pBase + 1 ) ?
+        ( ( PBASEARRAY ) ( stack.pBase + 1 )->value.pBaseArray )->wClass: 0;
+                                                /* Get class word           */
+   WORD    wLimit;                              /* Number of Hash keys      */
+   WORD    wAt;
+   WORD    wPos = 0;
+   PCLASS  pClass;
+   PDYNSYM pMessage;
+   PITEM   pReturn = _itemNew( NULL );
+   PITEM   pItem;
+   PITEM   pItemRef;
+
+   /* Variables by reference */
+   if( ( ! wClass ) && IS_BYREF( stack.pBase + 1 ) )
+   {
+      pItemRef = stack.pItems + ( stack.pBase + 1 )->value.wItem;
+      if( IS_ARRAY( pItemRef ) )
+         wClass = ( ( PBASEARRAY ) pItemRef->value.pBaseArray )->wClass;
+   }
+
+   if( wClass && wClass <= wClasses )
+   {
+      pClass   = &pClasses[ wClass - 1 ];
+      wLimit   = pClass->wHashKey * BUCKET;
+      pReturn = _itemArrayNew( pClass->wMethods );
+                                                /* Create a transfer array  */
+      for( wAt = 0; wAt < wLimit ; wAt++ )
+      {
+         pMessage = pClass->pMethods[ wAt ].pMessage;
+         if( pMessage )                         /* Hash Entry used ?        */
+         {
+            pItem  = _itemNew(  NULL );         /* Add to array             */
+            pItem  = _itemPutC( pItem, pMessage->pSymbol->szName );
+            _itemArrayPut( pReturn, ++wPos, pItem );
+            ItemRelease( pItem );
+         }
+      }
+   }
+   _itemReturn( pReturn );
+   _xfree( pReturn );
+}
+
 HARBOUR CLASSADD() /* hClass, cMessage, pFunction, nType */
 {
    WORD wClass = _parnl( 1 );
@@ -359,6 +404,7 @@ HARBOURFUNC GetMethod( PITEM pObject, PSYMBOL pMessage )
    {
       msgClassName = GetDynSym( "CLASSNAME" );
       msgClassH    = GetDynSym( "CLASSH" );
+      msgClassSel  = GetDynSym( "CLASSSEL" );
       msgEval      = GetDynSym( "EVAL" );
    }
 
@@ -386,6 +432,9 @@ HARBOURFUNC GetMethod( PITEM pObject, PSYMBOL pMessage )
 
    else if( pMsg == msgClassH )
       return ClassH;
+
+   else if( pMsg == msgClassSel )
+      return ClassSel;
 
    else if( pMsg == msgEval )
       return EvalInline;
