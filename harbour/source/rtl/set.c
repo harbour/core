@@ -1021,6 +1021,8 @@ void hb_setRelease( void )
    hb_set.HB_SET_TYPEAHEAD = -1; hb_inkeyReset( TRUE ); /* Free keyboard typeahead buffer */
 }
 
+/* TOFIX: Clipper appends a slash after the path in this function */
+
 HARBOUR HB_DEFPATH( void )
 {
    if( hb_set.HB_SET_DEFAULT )

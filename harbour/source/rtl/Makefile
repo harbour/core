@@ -53,6 +53,7 @@ PRG_SOURCES=\
         errorsys.prg \
         fieldbl.prg \
         harbinit.prg \
+        input.prg \
 	memvarbl.prg \
 	menuto.prg \
         objfunc.prg \
@@ -61,6 +62,7 @@ PRG_SOURCES=\
         rddord.prg \
         setfunc.prg \
         setkey.prg \
+        setta.prg \
         tclass.prg \
         tbcolumn.prg \
         tbrowse.prg \
@@ -68,7 +70,8 @@ PRG_SOURCES=\
         text.prg \
         tget.prg \
         tgetlist.prg \
-        xsavescr.prg
+        wait.prg \
+        xsavescr.prg \
 
 LIB=rtl
 

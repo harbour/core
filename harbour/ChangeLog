@@ -1,3 +1,18 @@
+19991012-02:50 GMT+1 Victor Szel <info@szelvesz.hu>
+   * include/caundoc.h
+     + _bcmp, _bscan added (thanks to Jose Lalin)
+   * source/rtl/set.c
+     + TOFIX: added for DEFPATH()
+   * source/rtl/Makefile
+   + source/rtl/input.prg
+   + source/rtl/setta.prg
+   + source/rtl/wait.prg
+     + __INPUT(), __WAIT(), SETTYPEAHEAD() functions added.
+       (Thanks to Jose Lalin)
+       Note that INPUT() is not yet working, since it require macro 
+       functionality.
+       Please add them to non-GNU make systems.
+
 19991012-02:30 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/rtl/filesys.c
      + Added some info about driver numbering to hb_fsChDrv(), hb_fsIsDrv(),
