@@ -1,3 +1,12 @@
+20000207-12:22 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * source/rtl/math.c
+     ! MOD(): Added value substitution on error.
+     ! MOD(): Made completely CA-Cl*pper compatible including 
+       bugs/side-effects (related to behaviour on zero base value).
+   * tests/regress/rt_hvm.prg
+     tests/regress/rt_math.prg
+     + % and MOD() tests added. All of them passes.
+
 20000207-09:15 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/debug/debugger.prg
      * Mouse support to select any window.

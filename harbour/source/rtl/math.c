@@ -269,7 +269,7 @@ HARBOUR HB_MAX( void )
    if( IS_NUMERIC( p1 ) && IS_NUMERIC( p2 ) )
    {
       /* NOTE: The order of these if() branches is significant, */
-      /*       Please, don't change it. */
+      /*       please, don't change it. [vszakats] */
 
       if( IS_DOUBLE( p1 ) || IS_DOUBLE( p2 ) )
       {
@@ -329,7 +329,7 @@ HARBOUR HB_MIN( void )
    if( IS_NUMERIC( p1 ) && IS_NUMERIC( p2 ) )
    {
       /* NOTE: The order of these if() branches is significant, */
-      /*       Please, don't change it. */
+      /*       please, don't change it. [vszakats] */
 
       if( IS_DOUBLE( p1 ) || IS_DOUBLE( p2 ) )
       {
@@ -380,22 +380,26 @@ HARBOUR HB_MIN( void )
    }
 }
 
-/* TOFIX: In Clipper this is written in Clipper, see the source below, */
-/*        and the error handling is NOT made here, but in the % operator */
+/* NOTE: In Clipper this is written in Clipper, see the source below,
+         and the error handling is NOT made here, but in the % operator.
+         [vszakats] */
+
+/* NOTE: CA-Clipper is buggy since it relies on the fact that the errorhandler
+         will silently handle zero division errors. [vszakats] */
+
+/* NOTE: This C version fully emulates the behaviour of the original
+         CA-Cl*pper version, including bugs/side-effects. [vszakats] */
 
 HARBOUR HB_MOD( void )
 {
+
 /*
-FUNCTION MOD(cl_num, cl_base)
+FUNCTION MOD( cl_num, cl_base )
+   LOCAL cl_result := cl_num % cl_base
 
-   LOCAL cl_result
-
-        cl_result = cl_num % cl_base
-
-        RETURN IF( cl_base = 0, ;
-                           cl_num,;
-                           IF(cl_result * cl_base < 0, cl_result + cl_base, cl_result) )
+   RETURN IF( cl_base = 0, cl_num, iif( cl_result * cl_base < 0, cl_result + cl_base, cl_result ) )
 */
+
    PHB_ITEM pNumber = hb_param( 1, IT_NUMERIC );
 
    if( pNumber && ISNUM( 2 ) )
@@ -414,15 +418,30 @@ FUNCTION MOD(cl_num, cl_base)
       }
       else
       {
-         int iDec;
+         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ZERODIV, 1341, NULL, "%" );
 
-         hb_itemGetNLen( pNumber, NULL, &iDec );
+         if( pResult )
+         {
+            int iDec;
 
-         hb_retndlen( dNumber, 0, iDec );
+            hb_itemRelease( pResult );
+
+            hb_itemGetNLen( pNumber, NULL, &iDec );
+  
+            hb_retndlen( dNumber, 0, iDec );
+         }
       }
    }
    else
-      hb_errRT_BASE( EG_ARG, 1085, NULL, "%" );
+   {
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1085, NULL, "%" );
+
+      if( pResult )
+      {
+         hb_itemReturn( pResult );
+         hb_itemRelease( pResult );
+      }
+   }
 }
 
 double hb_numRound( double dResult, int iDec )
