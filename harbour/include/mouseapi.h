@@ -10,6 +10,8 @@
    Copyright 1999  Victor Szel <info@szelvesz.hu>
    www - http://www.harbour-project.org
 
+   API interface proposal mainly by Jose Lalin <dezac@corevia.com>.
+
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation; either version 2 of the License, or

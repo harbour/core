@@ -1,3 +1,20 @@
+19990826-06:00 GMT+1 Victor Szel <info@szelvesz.hu>
+ 
+  * include/mouseapi.h
+    source/rtl/mouseapi.c
+    source/rtl/mouse/mousedos.c
+    + Copyright info corrected.
+    + Added original (BorlandC) implementation (MOUSE.ZIP) by
+      Jose Lalin <dezac@corevia.com>.
+      Luiz Rafael Culik <Culik@sl.conex.net>.
+    + The OS/2 implementation is thanks to
+      Chen Kedem <niki@actcom.co.il>
+
+      Please note that these files have not been tested yet, Borland
+      users should comment out the #define BORLANDC line in mousedos.c.
+      Non-GNU make file users should add the new files source/rtl/mouseapi.c
+      and source/rtl/mouse/mousedos.c file to their make system.
+
 19990826-05:00 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * include/Makefile

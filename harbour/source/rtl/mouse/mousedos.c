@@ -7,7 +7,8 @@
 
    Harbour Mouse Subsystem for DOS
 
-   Copyright 1999  ????????????????
+   Copyright 1999 Jose Lalin <dezac@corevia.com>.
+                  Luiz Rafael Culik <Culik@sl.conex.net>.
    www - http://www.harbour-project.org
 
    This program is free software; you can redistribute it and/or modify
@@ -34,57 +35,165 @@
 
 */
 
+/* TOFIX: Change this to something better */
+/* #define BORLANDC */
+
+#ifdef BORLANDC
+   #pragma inline
+
+   #include <dos.h>
+   #include <mouse.h>
+#endif
+
 #include "mouseapi.h"
+#include "gtapi.h"
 
 /* C callable low-level interface */
+
+BOOL s_bPresent = FALSE;          /* Is there a mouse ? */
+int  s_iButtons = 0;              /* Mouse buttons */
+int  s_iCursorVisible = 0;        /* Is mouse cursor visible ? */
+int  s_iInitCol = 0;              /* Init mouse pos */
+int  s_iInitRow = 0;              /* Init mouse pos */
 
 void hb_mouse_Init( void )
 {
    /* TODO: */
+
+#ifdef BORLANDC
+   asm
+   {
+      xor ax, ax
+      int MOUSE_INTERRUPT
+      mov s_bPresent, ax
+      mov s_iButtons, bx
+   }
+
+   if( s_bPresent )
+   {
+      s_iInitCol = hb_mouse_Col();
+      s_iInitRow = hb_mouse_Row();
+   }
+#endif
 }
 
 void hb_mouse_Exit( void )
 {
-   /* TODO: */
+   hb_mouse_SetPos( s_iInitRow, s_iInitCol );
+   hb_mouse_SetBounds( 0, 0, hb_gtMaxCol(), hb_gtMaxRow() );
 }
 
 BOOL hb_mouse_IsPresent( void )
 {
-   /* TODO: */
-
-   return 0;
+   return s_bPresent;
 }
 
 void hb_mouse_Show( void )
 {
    /* TODO: */
+
+   if( s_bPresent )
+   {
+#ifdef BORLANDC
+      asm
+      {
+         mov ax, 1
+         int MOUSE_INTERRUPT
+      }
+
+      s_iCursorVisible = TRUE;
+#endif
+   }
+
 }
 
 void hb_mouse_Hide( void )
 {
    /* TODO: */
+
+   if( s_bPresent )
+   {
+#ifdef BORLANDC
+      asm
+      {
+         mov ax, 2
+         int MOUSE_INTERRUPT
+      }
+
+      s_iCursorVisible = FALSE;
+#endif
+   }
 }
 
 int hb_mouse_Col( void )
 {
    /* TODO: */
 
-   return 0;
+   if( s_bPresent )
+   {
+#ifdef BORLANDC
+      int iCol;
+
+      asm
+      {
+         mov ax, 3
+         int MOUSE_INTERRUPT
+         mov iCol, cx
+      }
+
+      return iCol / 8;
+#else
+      return 0;
+#endif
+   }
+
+   return -1;
 }
 
 int hb_mouse_Row( void )
 {
    /* TODO: */
 
-   return 0;
+   if( s_bPresent )
+   {
+#ifdef BORLANDC
+      int iRow;
+
+      asm
+      {
+
+         mov ax, 3
+         int MOUSE_INTERRUPT
+         mov iRow, dx
+      }
+      return  iRow / 8;
+#else
+      return 0;
+#endif
+   }
+
+   return -1;
 }
 
 void hb_mouse_SetPos( int iRow, int iCol )
 {
    /* TODO: */
 
-   HB_SYMBOL_UNUSED( iRow );
-   HB_SYMBOL_UNUSED( iCol );
+   if( s_bPresent )
+   {
+#ifdef BORLANDC
+      iRow *= 8;
+      iCol *= 8;
+
+      asm
+      {
+         mov ax, 4
+         mov cx, iRow
+         mov dx, iCol
+         int MOUSE_INTERRUPT
+      }
+#endif
+   }
 }
 
 BOOL hb_mouse_IsButtonPressed( int iButton )
@@ -100,17 +209,53 @@ int hb_mouse_CountButton( void )
 {
    /* TODO: */
 
-   return 0;
+   int iButton = 0;
+
+   if( s_bPresent )
+   {
+#ifdef BORLANDC
+      asm
+      {
+         mov ax,3
+         int MOUSE_INTERRUPT
+         mov iButton,bx
+      }
+#endif
+   }
+
+   return iButton;
 }
 
 void hb_mouse_SetBounds( int iTop, int iLeft, int iBottom, int iRight )
 {
    /* TODO: */
 
-   HB_SYMBOL_UNUSED( iTop );
-   HB_SYMBOL_UNUSED( iLeft );
-   HB_SYMBOL_UNUSED( iBottom );
-   HB_SYMBOL_UNUSED( iRight );
+   if( s_bPresent )
+   {
+#ifdef BORLANDC
+      iLeft *= 8;
+      iRight *= 8;
+
+      asm
+      {
+         mov ax, 7
+         mov cx, iLeft
+         mov dx, iRight
+         int MOUSE_INTERRUPT
+      }
+
+      iTop *= 8;
+      iBottom *= 8;
+
+      asm
+      {
+         mov ax, 8
+         mov cx, iTop
+         mov dx, iBottom
+         int MOUSE_INTERRUPT
+      }
+#endif
+   }
 }
 
 void hb_mouse_GetBounds( int * piTop, int * piLeft, int * piBottom, int * piRight )
