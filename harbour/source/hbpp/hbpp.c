@@ -64,7 +64,7 @@ int WorkDefine ( char**, char**, DEFINES *, int );
 void WorkPseudoF ( char**, char**, DEFINES*);
 int WorkCommand ( char*, char*, char*, int);
 int CommandStuff ( char *, char *, char *, int*, int );
-int WorkTranslate ( char*, char**, char*, int);
+int WorkTranslate ( char*, char*, char*, int, int* );
 int WorkMarkers( char**, char**, char*, int*, int );
 int getExpReal ( char *, char **, int, int );
 int isExpres ( char* );
@@ -385,7 +385,7 @@ int TraSearch(char *cmdname, int ncmd)
 {
  int i,j;
 
- for ( i=(ncmd)? ncmd:koltranslates-1; i >= 0; i-- )
+ for ( i=(ncmd>=0)? ncmd:koltranslates-1; i >= 0; i-- )
  {
   for ( j=0; *(aTranslates[i].name+j)==toupper(*(cmdname+j)) &&
              *(aTranslates[i].name+j)!='\0' &&
@@ -543,103 +543,141 @@ COMMANDS* getCommand ( int ndef )
 
 int ParseExpression( char* sLine, char* sOutLine )
 {
- char sToken[MAX_NAME];
- char *ptri, *ptro;
- int lenToken, i, ndef, ipos, isdvig, lens;
- int rezDef, rezCom, kolpass = 0;
- int kolused = 0, lastused;
- DEFINES *aUsed[100], *stdef;
+  char sToken[MAX_NAME];
+  char *ptri, *ptro;
+  int lenToken, i, ndef, ipos, isdvig, lens;
+  int rezDef, rezDefsub, rezCom, kolpass = 0;
+  int kolused = 0, lastused;
+  DEFINES *aUsed[100], *stdef;
 
- do
- {
-  strotrim ( sLine );
-  ptri = sLine; ptro = sOutLine;
-  rezDef = 0; rezCom = 0;
-  lastused = kolused;
-   /* Look for macros from #define      */
-  while ( ( lenToken = NextName(&ptri, sToken, &ptro) ) > 0 )
-   if ( (stdef=DefSearch(sToken)) != NULL )
-   {
-     for(i=0;i<kolused;i++) if ( aUsed[i] == stdef ) break;
-     if ( i < kolused )
-     {
-       if ( i < lastused ) GenError( _szPErrors, 'P', ERR_RECURSE, NULL, NULL );
-     }
-     if ( WorkDefine ( &ptri, &ptro, stdef, lenToken ) )
-     {
-       aUsed[kolused++] = stdef;
-       rezDef++;
-     }
-   }
-  *ptro = '\0';
-  memcpy ( sLine, sOutLine, ptro - sOutLine + 1);
-
-  /* Look for definitions from #translate    */
-  ptri = sLine;
-  while ( ( lenToken = NextName(&ptri, sToken, NULL) ) > 0 )
-    if ( (ndef=TraSearch(sToken,0)) >= 0 )
-      WorkTranslate( sToken, &ptri, ptro, ndef );
-
-  /* Look for definitions from #command      */
-  if ( kolpass < 3 )
+  do
   {
-   ptri = sLine; isdvig = 0;
-   do
-   {
-     ptri = sLine + isdvig;
-     ipos = md_strAt( ";", 1, ptri );
-     if ( ipos > 0 ) *(ptri+ipos-1) = '\0';
-     SKIPTABSPACES( ptri );
-     if ( *ptri == '#' )
-     {
-       ParseDirective( ptri+1 );
-       lens = strolen( sLine+isdvig );
-       pp_Stuff ( "", sLine+isdvig, 0, (ipos)? ipos-1:lens, lens );
-     }
-     else
-     {
-       if ( isname(*ptri) )
-         NextName( &ptri, sToken, NULL);
-       else
-       {
-         i = 0;
-         while ( *ptri != ' ' && *ptri != '\t' && *ptri != '\0' && !isname(*ptri) )
-         {
-           *(sToken+i) = *ptri++;
-           i++;
-         }
-         *(sToken+i) = '\0';
-       }
-       SKIPTABSPACES( ptri );
-
-       if ( *ptri != ':' && *ptri != '=' && (isname(*ptri) || *(ptri+1) != '=')
-         && (ndef=ComSearch(sToken,0)) >= 0 )
-       {
-         ptro = sOutLine;
-         i = WorkCommand( sToken, ptri, ptro, ndef );
-         if ( ipos > 0 ) *(sLine+isdvig+ipos-1) = ';';
-         if ( i >= 0 )
-         {
+    strotrim ( sLine );
+    ptri = sLine; ptro = sOutLine;
+    rezDef = 0; rezCom = 0;
+    lastused = kolused;
+    isdvig = 0;
+    do
+    {
+      ptri = sLine + isdvig;
+      ipos = md_strAt( ";", 1, ptri );
+      if ( ipos > 0 ) *(ptri+ipos-1) = '\0';
+      SKIPTABSPACES( ptri );
+      if ( *ptri == '#' )
+      {
+        ParseDirective( ptri+1 );
+        lens = strolen( sLine+isdvig );
+        pp_Stuff ( "", sLine+isdvig, 0, (ipos)? ipos-1:lens, lens );
+      }
+      else
+      {
+         /* Look for macros from #define      */
+        rezDefsub = 0;
+        while ( ( lenToken = NextName(&ptri, sToken, &ptro) ) > 0 )
+        if ( (stdef=DefSearch(sToken)) != NULL )
+        {
+          for(i=0;i<kolused;i++) if ( aUsed[i] == stdef ) break;
+          if ( i < kolused )
+          {
+            if ( i < lastused ) GenError( _szPErrors, 'P', ERR_RECURSE, NULL, NULL );
+          }
+          if ( WorkDefine ( &ptri, &ptro, stdef, lenToken ) )
+          {
+            aUsed[kolused++] = stdef;
+            rezDef++; rezDefsub++;
+          }
+        }
+        if ( rezDefsub )  /* if some defines was processed */
+        {
+          *ptro = '\0';
+          ptri = sLine + isdvig;
           if ( isdvig + ipos > 0 )
           {
-            lens = strolen( sLine+isdvig );
-            pp_Stuff ( ptro, sLine+isdvig, i, (ipos)? ipos-1:lens, lens );
-            ipos = i + 1;
+            lens = strolen( ptri );
+            if ( ipos > 0 )
+            {
+              *(ptri+lens) = ';';
+              lens += strolen( ptri+ipos );
+            }
+            pp_Stuff ( sOutLine, ptri, ptro - sOutLine + 1, (ipos)? ipos-1:lens, lens );
+            if ( ipos > 0 )
+            {
+              ipos = strolen( ptri );
+              *(ptri+ipos) = '\0';
+            }
           }
           else
-            memcpy ( sLine, sOutLine, i+1);
-         }
-         rezCom = 1;
-       }
-       else if ( ipos > 0 ) *(sLine+isdvig+ipos-1) = ';';
-     }
-     isdvig += ipos;
-   }
-   while ( ipos != 0 );
+            memcpy ( sLine, sOutLine, ptro - sOutLine + 1);
+        }
+
+          /* Look for definitions from #translate    */
+        ptri = sLine + isdvig;
+        while ( ( lenToken = NextName(&ptri, sToken, NULL) ) > 0 )
+          if ( (ndef=TraSearch(sToken,-1)) >= 0 )
+          {
+            if( (i = WorkTranslate( sToken, ptri, ptro, ndef, &lens )) >= 0 )
+            {
+              while ( lens > 0 && (*(ptri+lens-1)==' ' || *(ptri+lens-1)=='\t') )
+                lens--;
+              ptri -= lenToken;
+              if ( ipos > 0 )  *(sLine+isdvig+ipos-1) = ';';
+              pp_Stuff( ptro, ptri, i, lens+lenToken, strolen(ptri) );
+              if ( ipos > 0 )
+              {
+                ipos += i - lens - lenToken;
+		*(sLine+isdvig+ipos-1) = '\0';
+              }
+              ptri += i;
+            }
+          }
+
+          /* Look for definitions from #command      */
+        if ( kolpass < 3 )
+        {
+          ptri = sLine + isdvig;
+          if ( isname(*ptri) )
+            NextName( &ptri, sToken, NULL);
+          else
+          {
+            i = 0;
+            while ( *ptri != ' ' && *ptri != '\t' && *ptri != '\0' && !isname(*ptri) )
+            {
+              *(sToken+i) = *ptri++;
+              i++;
+            }
+            *(sToken+i) = '\0';
+          }
+          SKIPTABSPACES( ptri );
+
+          if ( *ptri != ':' && *ptri != '=' && (isname(*ptri) || *(ptri+1) != '=')
+              && (ndef=ComSearch(sToken,0)) >= 0 )
+          {
+            ptro = sOutLine;
+            i = WorkCommand( sToken, ptri, ptro, ndef );
+            ptri = sLine + isdvig;
+            if ( ipos > 0 ) *(ptri+ipos-1) = ';';
+            if ( i >= 0 )
+            {
+              if ( isdvig + ipos > 0 )
+              {
+                lens = strolen( sLine+isdvig );
+                pp_Stuff ( ptro, sLine+isdvig, i, (ipos)? ipos-1:lens, lens );
+                if( ipos > 0 ) ipos = i + 1;
+              }
+              else
+                memcpy ( sLine, sOutLine, i+1);
+            }
+            rezCom = 1;
+          }
+          else if ( ipos > 0 ) *(sLine+isdvig+ipos-1) = ';';
+        }
+      }
+      isdvig += ipos;
+    }
+    while ( ipos != 0 );
+    kolpass++;
   }
-  kolpass++;
- }
- while ( rezDef || rezCom );
+  while ( rezDef || rezCom );
 
  return 0;
 }
@@ -758,22 +796,19 @@ int WorkCommand ( char* sToken, char* ptri, char* ptro, int ndef )
  return -1;
 }
 
-int WorkTranslate ( char* sToken, char** ptri, char* ptro, int ndef )
+int WorkTranslate ( char* sToken, char* ptri, char* ptro, int ndef, int *lens )
 {
  int rez;
  int lenres;
- int lenToken;
- char *ptrmp, *ptr;
+ char *ptrmp;
 
- lenToken = strolen( sToken );
- ptr = *ptri - lenToken;
  do
  {
   lenres = strocpy ( ptro, aTranslates[ndef].value );
   ptrmp = aTranslates[ndef].mpatt;
   Repeate = 0;
   groupchar = '@';
-  rez = CommandStuff ( ptrmp, *ptri, ptro, &lenres, FALSE );
+  rez = CommandStuff ( ptrmp, ptri, ptro, &lenres, FALSE );
 
   if ( rez < 0 ) ndef = TraSearch(sToken,ndef-1);
  }
@@ -782,12 +817,10 @@ int WorkTranslate ( char* sToken, char** ptri, char* ptro, int ndef )
  *(ptro+lenres) = '\0';
  if ( rez >= 0 )
  {
-  while ( rez > 0 && (*(*ptri+rez-1)==' ' || *(*ptri+rez-1)=='\t') ) rez--;
-  pp_Stuff( ptro, ptr, lenres, rez + lenToken, strolen(ptr) );
-  *ptri = ptr + lenres;
-  return lenres;
+   *lens = rez;
+   return lenres;
  }
- return 0;
+ return -1;
 }
 
 int CommandStuff ( char *ptrmp, char *inputLine, char * ptro, int *lenres, int com_or_tra )
@@ -1318,7 +1351,7 @@ int ReplacePattern ( char patttype, char *expreal, int lenreal, char *ptro, int 
 void pp_rQuotes( char *expreal, char **sQuotes )
 {
    int lQuote1 = 0, lQuote2 = 0;
-   
+
    while( *expreal != '\0' )
    {
      if( *expreal == '\"' ) lQuote2 = 1;
@@ -1600,7 +1633,7 @@ int NextWord ( char** sSource, char* sDest, int lLower )
 {
  int i = 0;
  SKIPTABSPACES( (*sSource) );
- while ( **sSource != '\0' && **sSource != ' ' && **sSource != '(')
+ while ( **sSource != '\0' && **sSource != ' ' && **sSource != '\t' && **sSource != '(')
  {
    *sDest++ = (lLower)? tolower(**sSource):**sSource;
    (*sSource)++;
