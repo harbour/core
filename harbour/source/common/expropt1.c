@@ -216,6 +216,30 @@ HB_EXPR_PTR hb_compExprNewLong( long lValue )
    return pExpr;
 }
 
+int hb_compExprIsInteger( HB_EXPR_PTR pExpr )
+{
+   return ( pExpr->ExprType == HB_ET_NUMERIC && pExpr->value.asNum.NumType == HB_ET_LONG &&
+       pExpr->value.asNum.lVal >= -32768 && pExpr->value.asNum.lVal <= 32767 );
+}
+
+int hb_compExprAsInteger( HB_EXPR_PTR pExpr )
+{
+   if( pExpr->ExprType == HB_ET_NUMERIC && pExpr->value.asNum.NumType == HB_ET_LONG )
+      return ( int ) pExpr->value.asNum.lVal;
+   else
+      return 0;
+}
+
+char *hb_compExprAsString( HB_EXPR_PTR pExpr )
+{
+   switch( pExpr->ExprType )
+   {
+      case HB_ET_VARIABLE:
+         return pExpr->value.asSymbol ;
+         
+   }
+   return NULL;
+}
 
 HB_EXPR_PTR hb_compExprNewCodeBlock( char *string, BOOL isMacro, BOOL lateEval )
 {
@@ -474,7 +498,8 @@ HB_EXPR_PTR hb_compExprNewAliasExpr( HB_EXPR_PTR pAlias, HB_EXPR_PTR pExpList )
    if( pAlias->ExprType == HB_ET_MACRO )
    {
        /* Is it a special case &variable->( expressionList ) */
-       if( pAlias->value.asMacro.SubType == HB_ET_MACRO_VAR )
+       if( pAlias->value.asMacro.SubType == HB_ET_MACRO_VAR ||
+           pAlias->value.asMacro.SubType == HB_ET_MACRO_EXPR )
            pAlias->value.asMacro.SubType = HB_ET_MACRO_ALIASED;
    }
 

@@ -509,7 +509,7 @@ return Self
 METHOD PathForFiles() CLASS TDebugger
 
    ::cPathForFiles := ::InputBox( "Search path for source files:", ::cPathForFiles )
-   IF RIGHT(::cPathForFiles,1) $ HB_OSPATHDELIMITERS()
+   IF ! RIGHT(::cPathForFiles,1) $ HB_OSPATHDELIMITERS()
      ::cPathForFiles:=::cPathForFiles + HB_OSPATHSEPARATOR()
    ENDIF
 

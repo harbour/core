@@ -1546,22 +1546,17 @@ ForNext    : FOR LValue ForAssign Expression          /* 1  2  3  4 */
 
                   if( $<asExpr>8 )
                   {
-                     if( $<asExpr>8->ExprType == HB_ET_NUMERIC && $<asExpr>8->value.asNum.NumType == HB_ET_LONG &&
-                         $<asExpr>8->value.asNum.lVal >= -32768 && $<asExpr>8->value.asNum.lVal <= 32767 )
-                     {
-                        iStep = ( short ) $<asExpr>8->value.asNum.lVal;
-                     }
+                     if( hb_compExprIsInteger($<asExpr>8) )
+                        iStep = hb_compExprAsInteger($<asExpr>8);
                      else
-                     {
                         iStep = 0;
-                     }
                   }
                   else
                   {
                      iStep = 1;
                   }
 
-                  if( iStep && ( iLocal = hb_compLocalGetPos( $<asExpr>2->value.asSymbol ) ) > 0 && iLocal < 256 )
+                  if( iStep && ( iLocal = hb_compLocalGetPos( hb_compExprAsString($<asExpr>2) ) ) > 0 && iLocal < 256 )
                   {
                      hb_compGenPCode4( HB_P_LOCALNEARADDINT, ( BYTE ) iLocal, HB_LOBYTE( iStep ), HB_HIBYTE( iStep ), ( BOOL ) 0 );
                   }

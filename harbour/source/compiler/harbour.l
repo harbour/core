@@ -196,7 +196,7 @@ Separator     {SpaceTab}
                       hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_STRING_TERMINATOR, yytext, NULL );
                       hb_comp_iState = LOOKUP;
 
-                      return LITERAL;
+                      return NIL;
                     }
 
 <STRING1>[^'\n]*'   { BEGIN 0;
@@ -221,7 +221,7 @@ Separator     {SpaceTab}
                        hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_STRING_TERMINATOR, yytext, NULL );
                        hb_comp_iState = LOOKUP;
 
-                       return LITERAL;
+                       return NIL;
                     }
 
 <STRING3>.*\n  {
@@ -295,7 +295,7 @@ Separator     {SpaceTab}
     hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_STRING_TERMINATOR, yytext, NULL );
     hb_comp_iState = LOOKUP;
 
-    return LITERAL;
+    return NIL;
 }
 
 <STRING5>.*\n  {

@@ -8,6 +8,32 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-03-18 12:45 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+   * include/hberrors.h
+   * source/pp/ppcore.c
+      *fixed #define parsing of pseudofunctions in cases where 
+       passed argument has the same name as declared parameter
+      *fixed #define parsing of pseudofunctions - the following
+      syntax is not allowed:
+      #define test(x,x) - duplicated parameters
+      #define test(x,)  - missing parameter
+      #define test(x    - missing parenthes
+   
+   * source/common/expropt1.c
+      * fixed generation of pcode for &(macro)->() syntax
+
+   * source/compiler/harbour.l
+      * fixed GPF when string with unmatched terminator was used
+      
+      
+   * include/hbexprop.h
+   * source/compiler/harbour.y
+      * removed direct access to internals of expression 
+      optimizer structure
+      
+   * source/debug/debugger.prg
+      * fixed checking of path separator
+
 2004-03-17 8:14 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
    * contrib/rdd_sys/ads1.c
      * reuploaded to CVS (somehow it didn't get through the last time)

@@ -217,7 +217,10 @@ char * hb_pp_szErrors[] =
    "Can\'t open command definitions file: \'%s\'",
    "Invalid command definitions file name: \'%s\'",
    "Too many nested #includes, can\'t open: \'%s\'",
-   "Input buffer overflow"
+   "Input buffer overflow",
+   "Label missing in #define '%s'",
+   "Comma or right parenthesis missing in #define '%s'",
+   "Label duplicated in #define '%s(%s)'",
 };
 
 /* Table with warnings */
@@ -535,7 +538,7 @@ int hb_pp_ParseDirective( char * sLine )
 
 int hb_pp_ParseDefine( char * sLine )
 {
-  char defname[ MAX_NAME ], pars[ MAX_NAME ];
+  char defname[ MAX_NAME ], pars[ MAX_NAME+1 ];
   int i, npars = -1;
   DEFINES * lastdef;
 
@@ -544,27 +547,103 @@ int hb_pp_ParseDefine( char * sLine )
   HB_SKIPTABSPACES( sLine );
   if( ISNAME( *sLine ) )
     {
+      char *cParams = NULL;
+
       NextName( &sLine, defname );
       if( *sLine == '(' ) /* If pseudofunction was found */
         {
-          sLine++; i = 0;
+          int iParLen = 0;
+          int iLen;
+          
+          sLine++; 
+          HB_SKIPTABSPACES( sLine );
+
+          i = 0;
           npars = 0;
-          while( *sLine != '\0' && *sLine != ')')
-            {
-              if( *sLine == ',' ) npars++;
-              if( *sLine != ' ' && *sLine != '\t' ) *(pars+i++) = *sLine;
-              sLine++;
-            }
-          if( i > 0 ) npars++;
-          *(pars+i) = '\0';
+          while( *sLine && *sLine != ')' )
+          {
+             if( ISNAME(*sLine) )
+             {
+                 NextName( &sLine, pars );
+                 iLen = strlen( pars );
+                 if( cParams == NULL )
+                 {
+                    /* 'xy0' -> '~xy0' */
+                    cParams = hb_xgrab( iLen+2 );
+                 }
+                 else
+                 {
+                    /* '~xy0' -> '~xy,~ab0' */
+                    char *cPos;
+                    cPos = strstr( cParams, pars );
+                    if( cPos && (cPos[iLen]==',' || cPos[iLen]=='\0') )
+                    {
+                       cPos--;
+                       if( *cPos == '\001' )
+                           hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_LABEL_DUPL_IN_DEFINE, defname, pars );
+                    }
+                    cParams = hb_xrealloc( cParams, iParLen+iLen+3 );
+                    cParams[iParLen++] = ',';
+                    cParams[iParLen]   = '\0';
+                 }
+                 cParams[iParLen] = '\001';
+                 strcpy( cParams+iParLen+1, pars );
+                 iParLen += iLen+1;
+                 npars++;
+                 HB_SKIPTABSPACES( sLine );
+             }
+             else
+                hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_LABEL_MISSING_IN_DEFINE, defname, NULL );
+                
+             if( *sLine == ',' )
+             {
+                sLine++;   
+                HB_SKIPTABSPACES( sLine );
+                if( *sLine == ')' )
+                   hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_LABEL_MISSING_IN_DEFINE, defname, NULL );
+             }
+          }
           sLine++;
         }
+        
       HB_SKIPTABSPACES(sLine);
+      if( *sLine == '\0' )
+         hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_PARE_MISSING_IN_DEFINE, defname, NULL );
 
+      if( cParams )
+      {
+         char *tmp = cParams;
+         char *cPos;
+         int iPar, iLen, iPos, iOldPos;
+
+         iLen = strlen( sLine );
+         for(i=0; i<npars; i++ )
+         {
+            /*1z,1y*/
+            cPos =strchr( tmp, ',' );
+            if( cPos )
+               iPar = cPos - tmp;
+            else
+               iPar = strlen( tmp );
+            memcpy( pars, tmp, iPar );
+            pars[ iPar ] = '\0';
+            iPos = iOldPos = 0;
+            while( (iPos = md_strAt( pars+1, iPar-1, sLine+iOldPos, TRUE, FALSE, FALSE )) )
+            {
+               if( sLine[iOldPos+iPos] != '\001' )
+               {
+                  hb_pp_Stuff( pars, sLine+iOldPos+iPos-1, iPar, iPar-1, iLen-iPos );
+                  iLen++;
+               }
+               iOldPos +=iPos + iPar;
+            }
+            tmp = cPos+1;
+         }   
+      }
       lastdef = hb_pp_AddDefine( defname, ( *sLine == '\0' ) ? NULL : sLine );
 
       lastdef->npars = npars;
-      lastdef->pars = ( npars <= 0 ) ? NULL : hb_strdup( pars );
+      lastdef->pars = cParams;
     }
   else
     hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_DEFINE_ABSENT, NULL, NULL );
