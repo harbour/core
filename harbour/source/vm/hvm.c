@@ -75,7 +75,7 @@ static void    hb_vmReleaseLocalSymbols( void );  /* releases the memory of the 
 static void    hb_vmDebuggerShowLine( WORD wLine ); /* makes the debugger shows a specific source code line */
 static void    hb_vmDebuggerEndProc( void ); /* notifies the debugger for an endproc */
 
-static void    hb_vmArrayNew( HB_ITEM_PTR, WORD ); /* creates array */
+static void    hb_vmArrayNew( HB_ITEM_PTR, USHORT ); /* creates array */
 
 #ifdef HARBOUR_OBJ_GENERATION
 static void    hb_vmProcessObjSymbols ( void ); /* process Harbour generated OBJ symbols */
@@ -116,7 +116,7 @@ static LONG     s_lRecoverBase = 0;
 
 /* Request for some action - stop processing of opcodes
  */
-static WORD s_wActionRequest = 0;
+static USHORT s_uiActionRequest = 0;
 
 /* uncomment it to trace the virtual machine activity */
 /* #define  bHB_DEBUG */
@@ -186,7 +186,7 @@ int main( int argc, char * argv[] )
 
 void hb_vmQuit( void )
 {
-   s_wActionRequest = 0;         /* EXIT procedures should be processed */
+   s_uiActionRequest = 0;         /* EXIT procedures should be processed */
    hb_vmDoExitFunctions();       /* process defined EXIT functions */
 
    while( stack.pPos > stack.pItems )
@@ -509,7 +509,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
               break;
 
          case HB_P_PUSHDOUBLE:
-              hb_vmPushDouble( * ( double * ) ( &pCode[ w + 1 ] ), ( WORD ) * ( BYTE * ) &pCode[ w + 1 + sizeof( double ) ] );
+              hb_vmPushDouble( * ( double * ) ( &pCode[ w + 1 ] ), ( int ) * ( BYTE * ) &pCode[ w + 1 + sizeof( double ) ] );
               w += 1 + sizeof( double ) + 1;
               break;
 
@@ -737,9 +737,9 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
               break;
       }
 
-      if( s_wActionRequest )
+      if( s_uiActionRequest )
       {
-         if( s_wActionRequest & HB_BREAK_REQUESTED )
+         if( s_uiActionRequest & HB_BREAK_REQUESTED )
          {
             if( bCanRecover )
             {
@@ -760,12 +760,12 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
                 * leave the SEQUENCE envelope on the stack - it will
                 * be popped either in RECOVER or END opcode
                 */
-               s_wActionRequest = 0;
+               s_uiActionRequest = 0;
             }
             else
                break;
          }
-         else if( s_wActionRequest & HB_QUIT_REQUESTED )
+         else if( s_uiActionRequest & HB_QUIT_REQUESTED )
             break;
       }
    }
@@ -895,9 +895,9 @@ void hb_vmDec( void )
 {
    if( IS_NUMERIC( stack.pPos - 1 ) )
    {
-      WORD wDec;
-      double dNumber = hb_vmPopDouble( &wDec );
-      hb_vmPushNumber( --dNumber, wDec );
+      int iDec;
+      double dNumber = hb_vmPopDouble( &iDec );
+      hb_vmPushNumber( --dNumber, iDec );
    }
    else if( IS_DATE( stack.pPos - 1 ) )
       hb_vmPushDate( hb_vmPopDate() - 1 );
@@ -918,19 +918,19 @@ void hb_vmDec( void )
    }
 }
 
-/* This function creates an array item using 'wDimension' as an index
+/* This function creates an array item using 'uiDimension' as an index
  * to retrieve the number of elements from the stack
  */
-static void hb_vmArrayNew( HB_ITEM_PTR pArray, WORD wDimension )
+static void hb_vmArrayNew( HB_ITEM_PTR pArray, USHORT uiDimension )
 {
    ULONG ulElements;
-   HB_ITEM_PTR pDim = stack.pPos - wDimension;
+   HB_ITEM_PTR pDim = stack.pPos - uiDimension;
 
    /* use the proper type of number of elements */
    switch( pDim->type & ~IT_BYREF )
    {
       case IT_INTEGER:
-         ulElements = (ULONG) pDim->item.asInteger.value;
+         ulElements = ( ULONG ) pDim->item.asInteger.value;
          break;
 
       case IT_LONG:
@@ -938,7 +938,7 @@ static void hb_vmArrayNew( HB_ITEM_PTR pArray, WORD wDimension )
          break;
 
       case IT_DOUBLE:
-         ulElements = (ULONG) pDim->item.asDouble.value;
+         ulElements = ( ULONG ) pDim->item.asDouble.value;
          break;
 
       default:
@@ -953,23 +953,23 @@ static void hb_vmArrayNew( HB_ITEM_PTR pArray, WORD wDimension )
    /* create an array */
    hb_arrayNew( pArray, ulElements );
 
-   if( --wDimension )
+   if( --uiDimension )
    {
       /* call self recursively to create next dimensions
        */
       while( ulElements )
-         hb_vmArrayNew( hb_arrayGetItemPointer( pArray, ulElements-- ), wDimension );
+         hb_vmArrayNew( hb_arrayGetItemPointer( pArray, ulElements-- ), uiDimension );
    }
 }
 
-void hb_vmDimArray( WORD wDimensions ) /* generates a wDimensions Array and initialize those dimensions from the stack values */
+void hb_vmDimArray( USHORT uiDimensions ) /* generates an uiDimensions Array and initialize those dimensions from the stack values */
 {
    HB_ITEM itArray;
 
    itArray.type = IT_NIL;
-   hb_vmArrayNew( &itArray, wDimensions );
+   hb_vmArrayNew( &itArray, uiDimensions );
 
-   while( wDimensions-- )
+   while( uiDimensions-- )
       hb_stackPop();
 
    hb_itemCopy( stack.pPos, &itArray );
@@ -982,9 +982,9 @@ void hb_vmDivide( void )
    if( IS_NUMERIC( stack.pPos - 1 ) && IS_NUMERIC( stack.pPos - 2 ) )
    {
       BOOL bIntegerOperands = !IS_DOUBLE( stack.pPos - 1 ) && !IS_DOUBLE( stack.pPos - 2 );
-      WORD wDec1, wDec2;
-      double d2 = hb_vmPopDouble( &wDec2 );
-      double d1 = hb_vmPopDouble( &wDec1 );
+      int iDec1, iDec2;
+      double d2 = hb_vmPopDouble( &iDec2 );
+      double d1 = hb_vmPopDouble( &iDec1 );
 
       if( d2 == 0.0 )
       {
@@ -1184,8 +1184,8 @@ void hb_vmEqual( BOOL bExact )
 
    else if( IS_NUMERIC( pItem1 ) && IS_NUMERIC( pItem2 ) )
    {
-      WORD wDec;
-      hb_vmPushLogical( hb_vmPopDouble( &wDec ) == hb_vmPopDouble( &wDec ) );
+      int iDec;
+      hb_vmPushLogical( hb_vmPopDouble( &iDec ) == hb_vmPopDouble( &iDec ) );
    }
 
    else if( IS_DATE( pItem1 ) && IS_DATE( pItem2 ) )
@@ -1239,11 +1239,11 @@ void hb_vmForTest( void )        /* Test to check the end point of the FOR */
 {
    if( IS_NUMERIC( stack.pPos - 1 ) )
    {
-      WORD   wDec;
+      int iDec;
       double dStep;
       BOOL   bEqual;
 
-      dStep = hb_vmPopDouble( &wDec );
+      dStep = hb_vmPopDouble( &iDec );
 
       /* NOTE: step of zero will cause endless loop, as in Clipper */
 
@@ -1253,7 +1253,7 @@ void hb_vmForTest( void )        /* Test to check the end point of the FOR */
           hb_vmGreater();
 
       bEqual = hb_vmPopLogical();    /* Logical should be on top of stack */
-      hb_vmPushNumber( dStep, wDec );   /* Push the step expression back on the stack */
+      hb_vmPushNumber( dStep, iDec );   /* Push the step expression back on the stack */
       hb_vmPushLogical( bEqual );
    }
    else
@@ -1296,18 +1296,18 @@ void hb_vmFunction( WORD wParams )
    hb_stackPush();
 }
 
-void hb_vmGenArray( WORD wElements ) /* generates a wElements Array and fills it from the stack values */
+void hb_vmGenArray( ULONG ulElements ) /* generates an ulElements Array and fills it from the stack values */
 {
    HB_ITEM itArray;
-   WORD w;
+   ULONG ulPos;
 
    itArray.type = IT_NIL;
-   hb_arrayNew( &itArray, wElements );
-   for( w = 0; w < wElements; w++ )
-      hb_itemCopy( itArray.item.asArray.value->pItems + w,
-                   stack.pPos - wElements + w );
+   hb_arrayNew( &itArray, ulElements );
+   for( ulPos = 0; ulPos < ulElements; ulPos++ )
+      hb_itemCopy( itArray.item.asArray.value->pItems + ulPos,
+                   stack.pPos - ulElements + ulPos );
 
-   for( w = 0; w < wElements; w++ )
+   for( ulPos = 0; ulPos < ulElements; ulPos++ )
       hb_stackPop();
 
    hb_itemCopy( stack.pPos, &itArray );
@@ -1413,9 +1413,9 @@ void hb_vmInc( void )
 {
    if( IS_NUMERIC( stack.pPos - 1 ) )
    {
-      WORD wDec;
-      double dNumber = hb_vmPopDouble( &wDec );
-      hb_vmPushNumber( ++dNumber, wDec );
+      int iDec;
+      double dNumber = hb_vmPopDouble( &iDec );
+      hb_vmPushNumber( ++dNumber, iDec );
    }
    else if( IS_DATE( stack.pPos - 1 ) )
       hb_vmPushDate( hb_vmPopDate() + 1 );
@@ -1657,8 +1657,8 @@ void hb_vmNotEqual( void )
 
    else if( IS_NUMERIC( pItem1 ) && IS_NUMERIC( pItem2 ) )
    {
-      WORD wDec;
-      hb_vmPushLogical( hb_vmPopDouble( &wDec ) != hb_vmPopDouble( &wDec ) );
+      int iDec;
+      hb_vmPushLogical( hb_vmPopDouble( &iDec ) != hb_vmPopDouble( &iDec ) );
    }
 
    else if( IS_DATE( pItem1 ) && IS_DATE( pItem2 ) )
@@ -1704,11 +1704,11 @@ void hb_vmMinus( void )
 
    if( IS_NUMERIC( pItem2 ) && IS_NUMERIC( pItem1 ) )
    {
-      WORD wDec2, wDec1;
-      double dNumber2 = hb_vmPopDouble( &wDec2 );
-      double dNumber1 = hb_vmPopDouble( &wDec1 );
+      int iDec2, iDec1;
+      double dNumber2 = hb_vmPopDouble( &iDec2 );
+      double dNumber1 = hb_vmPopDouble( &iDec1 );
 
-      hb_vmPushNumber( dNumber1 - dNumber2, ( wDec1 > wDec2 ) ? wDec1 : wDec2 );
+      hb_vmPushNumber( dNumber1 - dNumber2, ( iDec1 > iDec2 ) ? iDec1 : iDec2 );
    }
    else if( IS_DATE( pItem2 ) && IS_DATE( pItem1 ) )
    {
@@ -1784,9 +1784,9 @@ void hb_vmModulus( void )
 {
    if( IS_NUMERIC( stack.pPos - 1 ) && IS_NUMERIC( stack.pPos - 2 ) )
    {
-      WORD wDec1, wDec2;
-      double d2 = hb_vmPopDouble( &wDec2 );
-      double d1 = hb_vmPopDouble( &wDec1 );
+      int iDec1, iDec2;
+      double d2 = hb_vmPopDouble( &iDec2 );
+      double d1 = hb_vmPopDouble( &iDec1 );
 
       if( d2 == 0.0 )
       {
@@ -1821,11 +1821,11 @@ void hb_vmMult( void )
 {
    if( IS_NUMERIC( stack.pPos - 1 ) && IS_NUMERIC( stack.pPos - 2 ) )
    {
-      WORD wDec2, wDec1;
-      double d2 = hb_vmPopDouble( &wDec2 );
-      double d1 = hb_vmPopDouble( &wDec1 );
+      int iDec2, iDec1;
+      double d2 = hb_vmPopDouble( &iDec2 );
+      double d1 = hb_vmPopDouble( &iDec1 );
 
-      hb_vmPushNumber( d1 * d2, wDec1 + wDec2 );
+      hb_vmPushNumber( d1 * d2, iDec1 + iDec2 );
    }
    else
    {
@@ -1859,7 +1859,7 @@ void hb_vmOperatorCall( PHB_ITEM pItem1, PHB_ITEM pItem2, char * szSymbol )
          hb_itemClear( &stack.Return );
          hb_itemCopy( stack.pPos, pResult );
          hb_stackPush();
-	 hb_itemClear( pResult );
+         hb_itemClear( pResult );
       }
    }
 }
@@ -1881,7 +1881,7 @@ void hb_vmOperatorCallUnary( PHB_ITEM pItem1, char * szSymbol )
          hb_itemClear( &stack.Return );
          hb_itemCopy( stack.pPos, pResult );
          hb_stackPush();
-	 hb_itemClear( pResult );
+         hb_itemClear( pResult );
       }
    }
 }
@@ -1930,11 +1930,11 @@ void hb_vmPlus( void )
 
    else if( IS_NUMERIC( pItem1 ) && IS_NUMERIC( pItem2 ) )
    {
-      WORD wDec2, wDec1;
-      double dNumber1 = hb_vmPopDouble( &wDec2 );
-      double dNumber2 = hb_vmPopDouble( &wDec1 );
+      int iDec2, iDec1;
+      double dNumber1 = hb_vmPopDouble( &iDec2 );
+      double dNumber2 = hb_vmPopDouble( &iDec1 );
 
-      hb_vmPushNumber( dNumber1 + dNumber2, ( wDec1 > wDec2 ) ? wDec1 : wDec2 );
+      hb_vmPushNumber( dNumber1 + dNumber2, ( iDec1 > iDec2 ) ? iDec1 : iDec2 );
    }
 
    else if( IS_DATE( pItem1 ) && IS_DATE( pItem2 ) )
@@ -1947,8 +1947,8 @@ void hb_vmPlus( void )
 
    else if( IS_DATE( pItem1 ) && IS_NUMERIC( pItem2 ) )
    {
-      WORD wDec;
-      double dNumber2 = hb_vmPopDouble( &wDec );
+      int iDec;
+      double dNumber2 = hb_vmPopDouble( &iDec );
       long lDate1 = hb_vmPopDate();
 
       hb_vmPushDate( lDate1 + dNumber2 );
@@ -2017,7 +2017,7 @@ static void hb_vmPopAliasedField( PHB_SYMB pSym )
    HB_DEBUG( "hb_vmPopAliasedField\n" );
 }
 
-double hb_vmPopDouble( WORD *pwDec )
+double hb_vmPopDouble( int * piDec )
 {
    double dNumber;
 
@@ -2027,17 +2027,17 @@ double hb_vmPopDouble( WORD *pwDec )
    {
       case IT_INTEGER:
            dNumber = ( double ) stack.pPos->item.asInteger.value;
-           *pwDec = 0;
+           *piDec = 0;
            break;
 
       case IT_LONG:
            dNumber = ( double ) stack.pPos->item.asLong.value;
-           *pwDec = 0;
+           *piDec = 0;
            break;
 
       case IT_DOUBLE:
            dNumber = stack.pPos->item.asDouble.value;
-           *pwDec = stack.pPos->item.asDouble.decimal;
+           *piDec = stack.pPos->item.asDouble.decimal;
            break;
 
       default:
@@ -2158,9 +2158,9 @@ void hb_vmPower( void )
 {
    if( IS_NUMERIC( stack.pPos - 1 ) && IS_NUMERIC( stack.pPos - 2 ) )
    {
-      WORD wDec1, wDec2;
-      double d2 = hb_vmPopDouble( &wDec2 );
-      double d1 = hb_vmPopDouble( &wDec1 );
+      int iDec1, iDec2;
+      double d2 = hb_vmPopDouble( &iDec2 );
+      double d1 = hb_vmPopDouble( &iDec1 );
 
       /* NOTE: Clipper always returns the result of power
                with the SET number of decimal places. */
@@ -2274,10 +2274,10 @@ void hb_vmPushNil( void )
    HB_DEBUG( "hb_vmPushNil\n" );
 }
 
-void hb_vmPushNumber( double dNumber, WORD wDec )
+void hb_vmPushNumber( double dNumber, int iDec )
 {
-   if( wDec )
-      hb_vmPushDouble( dNumber, wDec );
+   if( iDec )
+      hb_vmPushDouble( dNumber, iDec );
 
    else if( SHRT_MIN <= dNumber && dNumber <= SHRT_MAX )
       hb_vmPushInteger( dNumber );
@@ -2389,13 +2389,12 @@ void hb_vmPushDate( LONG lDate )
    HB_DEBUG( "hb_vmPushDate\n" );
 }
 
-void hb_vmPushDouble( double dNumber, WORD wDec )
+void hb_vmPushDouble( double dNumber, int iDec )
 {
    stack.pPos->type = IT_DOUBLE;
    stack.pPos->item.asDouble.value = dNumber;
-   if( dNumber >= 10000000000.0 ) stack.pPos->item.asDouble.length = 20;
-   else stack.pPos->item.asDouble.length = 10;
-   stack.pPos->item.asDouble.decimal = ( wDec > 9 ) ? 9 : wDec;
+   stack.pPos->item.asDouble.length = ( dNumber > 10000000000.0 ) ? 20 : 10;
+   stack.pPos->item.asDouble.decimal = ( iDec > 9 ) ? 9 : iDec;
    hb_stackPush();
 
    HB_DEBUG( "hb_vmPushDouble\n" );
@@ -2588,17 +2587,17 @@ void hb_vmSFrame( PHB_SYMB pSym )      /* sets the statics frame for a function 
 
 void hb_vmStatics( PHB_SYMB pSym ) /* initializes the global aStatics array or redimensionates it */
 {
-   WORD wStatics = hb_vmPopNumber();
+   USHORT uiStatics = hb_vmPopNumber();
 
    if( IS_NIL( &aStatics ) )
    {
       pSym->pFunPtr = NULL;         /* statics frame for this PRG */
-      hb_arrayNew( &aStatics, wStatics );
+      hb_arrayNew( &aStatics, uiStatics );
    }
    else
    {
       pSym->pFunPtr = ( PHB_FUNC )hb_arrayLen( &aStatics );
-      hb_arraySize( &aStatics, hb_arrayLen( &aStatics ) + wStatics );
+      hb_arraySize( &aStatics, hb_arrayLen( &aStatics ) + uiStatics );
    }
 
    HB_DEBUG2( "Statics %li\n", hb_arrayLen( &aStatics ) );
@@ -2819,7 +2818,7 @@ static void hb_vmDoExitFunctions( void )
                hb_vmPushSymbol( pLastSymbols->pModuleSymbols + w );
                hb_vmPushNil();
                hb_vmDo( 0 );
-               if( s_wActionRequest )
+               if( s_uiActionRequest )
                   /* QUIT or BREAK was issued - stop processing
                   */
                   return;
@@ -3074,7 +3073,7 @@ HARBOUR HB_PROCLINE( void )
 
 void hb_vmRequestQuit( void )
 {
-   s_wActionRequest = HB_QUIT_REQUESTED;
+   s_uiActionRequest = HB_QUIT_REQUESTED;
 }
 
 HARBOUR HB___QUIT( void )
@@ -3125,15 +3124,15 @@ void hb_vmRequestBreak( PHB_ITEM pItem )
    {
       if( pItem )
          hb_itemCopy( stack.pItems + s_lRecoverBase + HB_RECOVER_VALUE, pItem );
-      s_wActionRequest = HB_BREAK_REQUESTED;
+      s_uiActionRequest = HB_BREAK_REQUESTED;
    }
    else
-      s_wActionRequest = HB_QUIT_REQUESTED;
+      s_uiActionRequest = HB_QUIT_REQUESTED;
 }
 
-WORD hb_vmRequestQuery( void )
+USHORT hb_vmRequestQuery( void )
 {
-   return s_wActionRequest;
+   return s_uiActionRequest;
 }
 
 /* NOTE: This function should normally have a parameter count check. But
@@ -3153,7 +3152,7 @@ void hb_vmRequestCancel( void )
       printf( hb_consoleGetNewLine() );
       printf( "Cancelled at: %s (%i)", stack.pBase->item.asSymbol.value->szName, stack.pBase->item.asSymbol.lineno );
       printf( hb_consoleGetNewLine() );
-      s_wActionRequest = HB_QUIT_REQUESTED;
+      s_uiActionRequest = HB_QUIT_REQUESTED;
    }
 }
 
@@ -3163,7 +3162,7 @@ void hb_vmRequestCancel( void )
 
 HARBOUR HB___XHELP( void )
 {
-   PHB_DYNS pDynSym = hb_dynsymFind( "HELP" );
+   PHB_DYNS pDynSym = hb_dynsymFindName( "HELP" );
 
    if( pDynSym )
    {

@@ -43,18 +43,19 @@ typedef struct
 } DYNHB_ITEM, * PDYNHB_ITEM, * DYNHB_ITEM_PTR;
 
 static PDYNHB_ITEM s_pDynItems = NULL;    /* Pointer to dynamic items */
-static WORD        s_wDynSymbols = 0;     /* Number of symbols present */
-static WORD        s_wClosestDynSym = 0;
-              /* Closest symbol for match. hb_dynsymFind() will search for the name. */
-              /* If it cannot find the name, it positions itself to the */
-              /* closest symbol.  */
+static USHORT      s_uiDynSymbols = 0;    /* Number of symbols present */
+
+/* Closest symbol for match. hb_dynsymFind() will search for the name. */
+/* If it cannot find the name, it positions itself to the */
+/* closest symbol.  */
+static USHORT      s_uiClosestDynSym = 0; /* TOFIX: This solution is not thread safe. */
 
 void hb_dynsymLog( void )
 {
-   WORD w;
+   USHORT uiPos;
 
-   for( w = 0; w < s_wDynSymbols; w++ )   /* For all dynamic symbols */
-      printf( "%i %s\n", w + 1, s_pDynItems[ w ].pDynSym->pSymbol->szName );
+   for( uiPos = 0; uiPos < s_uiDynSymbols; uiPos++ )   /* For all dynamic symbols */
+      printf( "%i %s\n", uiPos + 1, s_pDynItems[ uiPos ].pDynSym->pSymbol->szName );
 }
 
 PHB_SYMB hb_symbolNew( char * szName )      /* Create a new symbol */
@@ -85,26 +86,26 @@ PHB_DYNS hb_dynsymNew( PHB_SYMB pSymbol )    /* creates a new dynamic symbol */
       return pDynSym;                /* Return pointer to DynSym */
    }
 
-   if( s_wDynSymbols == 0 )   /* Do we have any symbols ? */
+   if( s_uiDynSymbols == 0 )   /* Do we have any symbols ? */
       pDynSym = s_pDynItems[ 0 ].pDynSym;     /* Point to first symbol */
                             /* *<1>* Remember we already got this one */
    else
    {                        /* We want more symbols ! */
-      s_pDynItems = ( PDYNHB_ITEM ) hb_xrealloc( s_pDynItems, ( s_wDynSymbols + 1 ) * sizeof( DYNHB_ITEM ) );
+      s_pDynItems = ( PDYNHB_ITEM ) hb_xrealloc( s_pDynItems, ( s_uiDynSymbols + 1 ) * sizeof( DYNHB_ITEM ) );
 
-      if( s_wClosestDynSym <= s_wDynSymbols )   /* Closest < current !! */
+      if( s_uiClosestDynSym <= s_uiDynSymbols )   /* Closest < current !! */
       {                                     /* Here it goes :-) */
-         WORD w;
+         USHORT uiPos;
 
-         for( w = 0; w < ( s_wDynSymbols - s_wClosestDynSym ); w++ )
-            memcpy( &s_pDynItems[ s_wDynSymbols - w ],
-                    &s_pDynItems[ s_wDynSymbols - w - 1 ], sizeof( DYNHB_ITEM ) );
+         for( uiPos = 0; uiPos < ( s_uiDynSymbols - s_uiClosestDynSym ); uiPos++ )
+            memcpy( &s_pDynItems[ s_uiDynSymbols - uiPos ],
+                    &s_pDynItems[ s_uiDynSymbols - uiPos - 1 ], sizeof( DYNHB_ITEM ) );
       }                                     /* Insert element in array */
       pDynSym = ( PHB_DYNS ) hb_xgrab( sizeof( HB_DYNS ) );
-      s_pDynItems[ s_wClosestDynSym ].pDynSym = pDynSym;    /* Enter DynSym */
+      s_pDynItems[ s_uiClosestDynSym ].pDynSym = pDynSym;    /* Enter DynSym */
    }
 
-   s_wDynSymbols++;                   /* Got one more symbol */
+   s_uiDynSymbols++;                   /* Got one more symbol */
    pDynSym->pSymbol = pSymbol;
    pDynSym->hMemvar = 0;
    pDynSym->hArea   = 0;
@@ -170,77 +171,80 @@ PHB_DYNS hb_dynsymFind( char * szName )
       return NULL;
    }
    else
-   {        /* Classic Tree Insert Sort Mechanism
-             *
-             * Insert Sort means the new item is entered alphabetically into
-             * the array. In this case s_pDynItems !
-             *
-             * 1) We start in the middle of the array.
-             * 2a) If the symbols are equal -> we have found the symbol !!
-             *     Champagne ! We're done.
-             *  b) If the symbol we are looking for ('ge') is greater than the
-             *     middle ('po'), we start looking left.
-             *     Only the first part of the array is going to be searched.
-             *     Go to (1)
-             *  c) If the symbol we are looking for ('ge') is smaller than the
-             *     middle ('ko'), we start looking right
-             *     Only the last part of the array is going to be searched.
-             *     Go to (1)
-             */
+   {
+      /* Classic Tree Insert Sort Mechanism
+       *
+       * Insert Sort means the new item is entered alphabetically into
+       * the array. In this case s_pDynItems !
+       *
+       * 1) We start in the middle of the array.
+       * 2a) If the symbols are equal -> we have found the symbol !!
+       *     Champagne ! We're done.
+       *  b) If the symbol we are looking for ('ge') is greater than the
+       *     middle ('po'), we start looking left.
+       *     Only the first part of the array is going to be searched.
+       *     Go to (1)
+       *  c) If the symbol we are looking for ('ge') is smaller than the
+       *     middle ('ko'), we start looking right
+       *     Only the last part of the array is going to be searched.
+       *     Go to (1)
+       */
 
-      WORD wFirst = 0;
-      WORD wLast = s_wDynSymbols;
-      WORD wMiddle = wLast / 2;
+      USHORT uiFirst = 0;
+      USHORT uiLast = s_uiDynSymbols;
+      USHORT uiMiddle = uiLast / 2;
 
-      s_wClosestDynSym = wMiddle;                   /* Start in the middle      */
+      s_uiClosestDynSym = uiMiddle;                  /* Start in the middle      */
 
-      while( wFirst < wLast )
+      while( uiFirst < uiLast )
       {
-         switch( hb_strgreater( s_pDynItems[ wMiddle ].pDynSym->pSymbol->szName, szName ) )
+         switch( hb_strgreater( s_pDynItems[ uiMiddle ].pDynSym->pSymbol->szName, szName ) )
          {
             case HB_STRGREATER_EQUAL:  /* they are equals */
-                 return s_pDynItems[ wMiddle ].pDynSym;
+                 return s_pDynItems[ uiMiddle ].pDynSym;
 
             case HB_STRGREATER_LEFT:  /* pMiddle is greater */
-                 wLast = wMiddle;
-                 s_wClosestDynSym = wMiddle;
+                 uiLast = uiMiddle;
+                 s_uiClosestDynSym = uiMiddle;
                  break;
 
             case HB_STRGREATER_RIGHT:  /* szName is greater */
-                 wFirst = wMiddle + 1;
-                 s_wClosestDynSym = wFirst;
+                 uiFirst = uiMiddle + 1;
+                 s_uiClosestDynSym = uiFirst;
                  break;
          }
-         wMiddle = wFirst + ( ( wLast - wFirst ) / 2 );
+
+         uiMiddle = uiFirst + ( ( uiLast - uiFirst ) / 2 );
       }
    }
+
    return NULL;
 }
 
 void hb_dynsymEval( PHB_DYNS_FUNC pFunction, void * Cargo )
 {
    BOOL bCont = TRUE;
-   WORD i;
+   USHORT uiPos;
 
-   for( i = 0; i < s_wDynSymbols && bCont; i++ )
-      bCont = ( pFunction )( s_pDynItems[ i ].pDynSym, Cargo );
+   for( uiPos = 0; uiPos < s_uiDynSymbols && bCont; uiPos++ )
+      bCont = ( pFunction )( s_pDynItems[ uiPos ].pDynSym, Cargo );
 }
 
 
 void hb_dynsymRelease( void )
 {
-   WORD w;
+   USHORT uiPos;
 
-   for( w = 0; w < s_wDynSymbols; w++ )
+   for( uiPos = 0; uiPos < s_uiDynSymbols; uiPos++ )
    {
       /* it is a allocated symbol ? */
-      if( ( s_pDynItems + w )->pDynSym->pSymbol->cScope == SYM_ALLOCATED )
+      if( ( s_pDynItems + uiPos )->pDynSym->pSymbol->cScope == SYM_ALLOCATED )
       {
-         hb_xfree( ( s_pDynItems + w )->pDynSym->pSymbol->szName );
-         hb_xfree( ( s_pDynItems + w )->pDynSym->pSymbol );
+         hb_xfree( ( s_pDynItems + uiPos )->pDynSym->pSymbol->szName );
+         hb_xfree( ( s_pDynItems + uiPos )->pDynSym->pSymbol );
       }
 
-      hb_xfree( ( s_pDynItems + w )->pDynSym );
+      hb_xfree( ( s_pDynItems + uiPos )->pDynSym );
    }
 
    hb_xfree( s_pDynItems );
@@ -248,7 +252,7 @@ void hb_dynsymRelease( void )
 
 HARBOUR HB___DYNSCOUNT( void ) /* How much symbols do we have: dsCount = __dynsymCount() */
 {
-   hb_retnl( s_wDynSymbols );
+   hb_retnl( s_uiDynSymbols );
 }
 
 HARBOUR HB___DYNSGETNAME( void ) /* Get name of symbol: cSymbol = __dynsymGetName( dsIndex ) */
@@ -258,6 +262,6 @@ HARBOUR HB___DYNSGETNAME( void ) /* Get name of symbol: cSymbol = __dynsymGetNam
 
 HARBOUR HB___DYNSGETINDEX( void ) /* Gimme index number of symbol: dsIndex = __dynsymGetIndex( cSymbol ) */
 {
-   hb_retnl( ( LONG ) hb_dynsymGet( hb_parc( 1 ) ) );
+   hb_retnl( ( LONG ) hb_dynsymFindName( hb_parc( 1 ) ) );
 }
 

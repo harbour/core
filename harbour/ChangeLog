@@ -1,3 +1,25 @@
+19990917-11:30 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * include/ctoharb.h
+    source/vm/hvm.c
+    + WORD -> USHORT (s_wActionRequest)
+    + WORD -> int (wDec)
+    + WORD -> USHORT (array dimensions)
+    + WORD -> ULONG (array elements)
+    ! __XHELP now uses hb_dynsymFindName() instead of hb_dynsymFind()
+  * source/vm/debug.c
+    + WORD -> USHORT
+    * Using hb_itemRelease() instead of hb_itemClear() + hb_xfree()
+    * Small formatting changes.
+  * source/vm/dynsym.c 
+    + WORD -> USHORT
+  * source/rtl/gtapi.c
+    + Some types changed from char* to BYTE* to match the environment, so a
+      few casts could be removed.
+  * tests/working/dynsym.prg
+    + Added test for __dynsymGetIndex(), it will now GPF, since this function
+      is buggy right now.
+
 19990916-23:45 EDT Paul Tucker <ptucker@sympatico.ca>
   * source/rtl/console.c
   * source/rtl/gtapi.c

@@ -78,7 +78,7 @@ extern void    hb_vmSymbolInit_RT( void );   /* initialization of runtime suppor
 extern void    hb_vmRequestQuit( void );
 extern void    hb_vmRequestCancel( void );
 extern void    hb_vmRequestBreak( PHB_ITEM pItem );
-extern WORD    hb_vmRequestQuery( void );
+extern USHORT  hb_vmRequestQuery( void );
 extern void    hb_vmQuit( void );            /* Immediately quits the virtual machine */
 
 /* Return values of hb_vmRequestQuery() */
@@ -116,8 +116,8 @@ extern void    hb_vmNot( void );             /* changes the latest logical value
 /* Array */
 extern void    hb_vmArrayAt( void );         /* pushes an array element to the stack, removing the array and the index from the stack */
 extern void    hb_vmArrayPut( void );        /* sets an array value and pushes the value on to the stack */
-extern void    hb_vmDimArray( WORD wDimensions ); /* generates a wDimensions Array and initialize those dimensions from the stack values */
-extern void    hb_vmGenArray( WORD wElements ); /* generates a wElements Array and fills it from the stack values */
+extern void    hb_vmDimArray( USHORT uiDimensions ); /* generates an uiDimensions Array and initialize those dimensions from the stack values */
+extern void    hb_vmGenArray( ULONG ulElements ); /* generates an ulElements Array and fills it from the stack values */
 
 /* Object */
 extern void    hb_vmMessage( PHB_SYMB pSymMsg ); /* sends a message to an object */
@@ -144,10 +144,10 @@ extern void    hb_vmForTest( void );         /* test for end condition of for */
 /* Push */
 extern void    hb_vmPush( PHB_ITEM pItem );     /* pushes a generic item onto the stack */
 extern void    hb_vmPushNil( void );            /* in this case it places nil at self */
-extern void    hb_vmPushNumber( double dNumber, WORD wDec ); /* pushes a number on to the stack and decides if it is integer, long or double */
+extern void    hb_vmPushNumber( double dNumber, int iDec ); /* pushes a number on to the stack and decides if it is integer, long or double */
 extern void    hb_vmPushInteger( int iNumber ); /* pushes a integer number onto the stack */
 extern void    hb_vmPushLong( long lNumber ); /* pushes a long number onto the stack */
-extern void    hb_vmPushDouble( double lNumber, WORD wDec ); /* pushes a double number onto the stack */
+extern void    hb_vmPushDouble( double lNumber, int iDec ); /* pushes a double number onto the stack */
 extern void    hb_vmPushLogical( BOOL bValue );    /* pushes a logical value onto the stack */
 extern void    hb_vmPushString( char * szText, ULONG length );  /* pushes a string on to the stack */
 extern void    hb_vmPushDate( LONG lDate );   /* pushes a long date onto the stack */
@@ -161,9 +161,9 @@ extern void    hb_vmPushStaticByRef( WORD iLocal ); /* pushes a static by refren
 /* Pop */
 extern long    hb_vmPopDate( void );         /* pops the stack latest value and returns its date value as a LONG */
 extern double  hb_vmPopNumber( void );          /* pops the stack latest value and returns its numeric value */
-extern double  hb_vmPopDouble( WORD * );   /* pops the stack latest value and returns its double numeric format value */
+extern double  hb_vmPopDouble( int * );    /* pops the stack latest value and returns its double numeric format value */
 extern BOOL    hb_vmPopLogical( void );           /* pops the stack latest value and returns its logical value */
-extern void    hb_vmPopLocal( SHORT wLocal );      /* pops the stack latest value onto a local */
+extern void    hb_vmPopLocal( SHORT iLocal );      /* pops the stack latest value onto a local */
 extern void    hb_vmPopStatic( WORD wStatic );    /* pops the stack latest value onto a static */
 extern void    hb_vmPopDefStat( WORD wStatic ); /* pops the stack latest value onto a static as default init */
 

@@ -713,7 +713,7 @@ int hb_gtWrite( BYTE * fpStr, ULONG length )
    int iRow, iCol, iMaxCol, iMaxRow;
    ULONG size = length;
    BYTE attr = s_Color[ s_uiColorIndex ] & 0xFF;
-   char *fpPointer = ( char * ) fpStr;
+   BYTE * fpPointer = fpStr;
 
    /* TODO: this is doing more work than needed */
 
@@ -769,7 +769,7 @@ int hb_gtWrite( BYTE * fpStr, ULONG length )
    else size = length;
 
    /* Now the text string can be displayed */
-   hb_gt_Puts( s_uiCurrentRow, s_uiCurrentCol, attr, ( BYTE * ) fpPointer, size );
+   hb_gt_Puts( s_uiCurrentRow, s_uiCurrentCol, attr, fpPointer, size );
 
    /* Finally, save the new cursor position */
    hb_gtSetPos( iRow, iCol );
@@ -795,10 +795,10 @@ int hb_gtWriteCon( BYTE * fpStr, ULONG length )
    USHORT tmpRow = s_uiCurrentRow, tmpCol = s_uiCurrentCol;
    USHORT uiMaxRow = hb_gtMaxRow();
    USHORT uiMaxCol = hb_gtMaxCol();
-   int ch;
-   char * fpPtr = ( char * ) fpStr;
+   BYTE ch;
+   BYTE * fpPtr = fpStr;
    #define STRNG_SIZE 500
-   char strng[ STRNG_SIZE ];
+   BYTE strng[ STRNG_SIZE ];
 
    while( length-- )
    {
@@ -852,7 +852,7 @@ int hb_gtWriteCon( BYTE * fpStr, ULONG length )
 
          case HB_CHAR_CR:
             uiCol = 0;
-            if( *fpPtr != '\n') ldisp = TRUE;
+            if( *fpPtr != HB_CHAR_LF ) ldisp = TRUE;
             break;
 
          default:
@@ -868,7 +868,7 @@ int hb_gtWriteCon( BYTE * fpStr, ULONG length )
       if( ldisp || ! length )
       {
          if( nLen )
-            rc = hb_gtWrite( ( BYTE * ) strng, nLen );
+            rc = hb_gtWrite( strng, nLen );
          nLen = 0;
          if( uiRow > uiMaxRow )
          {
@@ -896,8 +896,8 @@ int hb_gtScroll( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, S
 #ifdef TEST
 void main( void )
 {
-   char * test = "Testing GT API Functions";
-   char * test2 = "This message wraps!";
+   BYTE * test = "Testing GT API Functions";
+   BYTE * test2 = "This message wraps!";
    int iRow, iCol;
 
    /* NOTE: always have to initialze video subsystem */
@@ -905,11 +905,11 @@ void main( void )
 
    /* save screen (doesn't work under DOS) */
    /*
-   char * scr;
+   BYTE * scr;
    USHORT size;
 
    hb_gtRectSize( 1, 1, hb_gtMaxRow(), hb_gtMaxCol(), &size );
-   scr = ( char * ) hb_xgrab( size );
+   scr = ( BYTE * ) hb_xgrab( size );
    hb_gtSave( 1, 1, hb_gtMaxRow() - 1, hb_gtMaxCol() - 1, scr );
    */
 

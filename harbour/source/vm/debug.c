@@ -48,7 +48,7 @@
  *
  *                Please aClone before assignments
  * $End$ */
-HARBOUR HB___ASTATIC(void)
+HARBOUR HB___ASTATIC( void )
 {
    PHB_ITEM pStatics = hb_arrayClone( &aStatics );
 
@@ -61,41 +61,38 @@ HARBOUR HB___ASTATIC(void)
  * $FuncName$     <xStat> __Static(<nStatic>)
  * $Description$  Return a specified statics
  * $End$ */
-HARBOUR HB___STATIC(void)
+HARBOUR HB___STATIC( void )
 {
-   PHB_ITEM pStatic;
-   WORD  wStatic;
+   USHORT uiStatic = hb_parni( 1 );
+   PHB_ITEM pStatic = aStatics.item.asArray.value->pItems +
+                      stack.iStatics + uiStatic - 1;
 
-   wStatic = hb_parni(1);
-   pStatic = aStatics.item.asArray.value->pItems +
-             stack.iStatics + wStatic - 1;
    hb_itemReturn( pStatic );
 }
 
 
 /* $Doc$
- * $FuncName$     AddToArray( <pItem>, <pReturn>, <wPos> )
- * $Description$  Add <pItem> to array <pReturn> at pos <wPos>
+ * $FuncName$     AddToArray( <pItem>, <pReturn>, <uiPos> )
+ * $Description$  Add <pItem> to array <pReturn> at pos <uiPos>
  * $End$ */
-static void AddToArray( PHB_ITEM pItem, PHB_ITEM pReturn, WORD wPos )
+static void AddToArray( PHB_ITEM pItem, PHB_ITEM pReturn, ULONG ulPos )
 {
    PHB_ITEM pTemp;
 
-   if( pItem->type == IT_SYMBOL)
+   if( pItem->type == IT_SYMBOL )
    {                                            /* Symbol is pushed as text */
-      pTemp = hb_itemNew(NULL);                 /* Create temporary string  */
-      pTemp->type   = IT_STRING;
-      pTemp->item.asString.length = strlen( pItem->item.asSymbol.value->szName )+2;
-      pTemp->item.asString.value = (char *) hb_xgrab( pTemp->item.asString.length+1 );
+      pTemp = hb_itemNew( NULL );               /* Create temporary string */
+      pTemp->type = IT_STRING;
+      pTemp->item.asString.length = strlen( pItem->item.asSymbol.value->szName ) + 2;
+      pTemp->item.asString.value = ( char * ) hb_xgrab( pTemp->item.asString.length + 1 );
 
       sprintf( pTemp->item.asString.value, "[%s]", pItem->item.asSymbol.value->szName );
 
-      hb_itemArrayPut( pReturn, wPos, pTemp );
-      hb_itemClear( pTemp );                     /* Get rid of temporary str.*/
-      hb_xfree( pTemp );
+      hb_itemArrayPut( pReturn, ulPos, pTemp );
+      hb_itemRelease( pTemp );                  /* Get rid of temporary str.*/
    }
    else                                         /* Normal types             */
-      hb_itemArrayPut( pReturn, wPos, pItem );
+      hb_itemArrayPut( pReturn, ulPos, pItem );
 }
 
 
@@ -103,15 +100,17 @@ static void AddToArray( PHB_ITEM pItem, PHB_ITEM pReturn, WORD wPos )
  * $FuncName$     <nVars> __GlobalStackLen()
  * $Description$  Returns the length of the global stack
  * $End$ */
-static WORD GlobalStackLen( void )
+static USHORT GlobalStackLen( void )
 {
    PHB_ITEM pItem;
-   WORD  nCount = 0;
+   USHORT uiCount = 0;
 
-   for( pItem = stack.pItems; pItem++ <= stack.pPos; nCount++ );
-   return( nCount );
+   for( pItem = stack.pItems; pItem++ <= stack.pPos; uiCount++ );
+
+   return uiCount;
 }
-HARBOUR HB___GLOBALSTACKLEN(void)
+
+HARBOUR HB___GLOBALSTACKLEN( void )
 {
    hb_retni( GlobalStackLen() );
 }
@@ -121,20 +120,21 @@ HARBOUR HB___GLOBALSTACKLEN(void)
  * $FuncName$     <aStack> __aGlobalStack()
  * $Description$  Returns the global stack
  * $End$ */
-HARBOUR HB___AGLOBALSTACK(void)
+HARBOUR HB___AGLOBALSTACK( void )
 {
    PHB_ITEM pReturn;
    PHB_ITEM pItem;
 
-   WORD  wLen = GlobalStackLen();
-   WORD  wPos = 1;
+   USHORT uiLen = GlobalStackLen();
+   USHORT uiPos = 1;
 
-   pReturn = hb_itemArrayNew( wLen );           /* Create a transfer array  */
+   pReturn = hb_itemArrayNew( uiLen );           /* Create a transfer array  */
+
    for( pItem = stack.pItems; pItem <= stack.pPos; pItem++ )
-      AddToArray( pItem, pReturn, wPos++ );
+      AddToArray( pItem, pReturn, uiPos++ );
+
    hb_itemReturn( pReturn );
-   hb_itemClear( pReturn );
-   hb_xfree( pReturn );
+   hb_itemRelease( pReturn );
 }
 
 
@@ -142,17 +142,18 @@ HARBOUR HB___AGLOBALSTACK(void)
  * $FuncName$     <nVars> __StackLen()
  * $Description$  Returns the length of the stack of the calling function
  * $End$ */
-static WORD StackLen( void )
+static USHORT StackLen( void )
 {
    PHB_ITEM pItem;
    PHB_ITEM pBase = stack.pItems + stack.pBase->item.asSymbol.stackbase;
 
-   WORD  nCount = 0;
+   USHORT uiCount = 0;
 
-   for( pItem = pBase; pItem < stack.pBase; pItem++, nCount++ );
-   return( nCount );
+   for( pItem = pBase; pItem < stack.pBase; pItem++, uiCount++ );
+
+   return uiCount;
 }
-HARBOUR HB___STACKLEN(void)
+HARBOUR HB___STACKLEN( void )
 {
    hb_retni( StackLen() );
 }
@@ -169,21 +170,20 @@ HARBOUR HB___STACKLEN(void)
  *                [x+1 .. y] Locals
  *                [y+1 ..]   Pushed data
  * $End$ */
-HARBOUR HB___ASTACK(void)
+HARBOUR HB___ASTACK( void )
 {
    PHB_ITEM pReturn;
    PHB_ITEM pItem;
    PHB_ITEM pBase = stack.pItems + stack.pBase->item.asSymbol.stackbase;
 
-   WORD  wLen  = StackLen();
-   WORD  wPos  = 1;
+   USHORT uiLen = StackLen();
+   USHORT uiPos = 1;
 
-   pReturn = hb_itemArrayNew( wLen );           /* Create a transfer array  */
+   pReturn = hb_itemArrayNew( uiLen );           /* Create a transfer array  */
    for( pItem = pBase; pItem < stack.pBase; pItem++ )
-      AddToArray( pItem, pReturn, wPos++ );
+      AddToArray( pItem, pReturn, uiPos++ );
    hb_itemReturn( pReturn );
-   hb_itemClear( pReturn );
-   hb_xfree( pReturn );
+   hb_itemRelease( pReturn );
 }
 
 
@@ -194,21 +194,22 @@ HARBOUR HB___ASTACK(void)
                /* TODO : put bLocals / bParams      */
                /* somewhere for declared parameters */
                /* and locals                        */
-HARBOUR HB___APARAM(void)
+HARBOUR HB___APARAM( void )
 {
    PHB_ITEM pReturn;
    PHB_ITEM pItem;
    PHB_ITEM pBase = stack.pItems + stack.pBase->item.asSymbol.stackbase;
                                                 /* Skip function + self     */
-   WORD  wLen  = pBase->item.asSymbol.paramcnt;
-   WORD  wPos  = 1;
+   USHORT uiLen = pBase->item.asSymbol.paramcnt;
+   USHORT uiPos = 1;
 
-   pReturn = hb_itemArrayNew( wLen );           /* Create a transfer array  */
-   for( pItem = pBase+2; wLen--; pItem++ )
-      AddToArray( pItem, pReturn, wPos++ );
+   pReturn = hb_itemArrayNew( uiLen );           /* Create a transfer array  */
+
+   for( pItem = pBase + 2; uiLen--; pItem++ )
+      AddToArray( pItem, pReturn, uiPos++ );
+
    hb_itemReturn( pReturn );
-   hb_itemClear( pReturn );
-   hb_xfree( pReturn );
+   hb_itemRelease( pReturn );
 }
 
 /* -------------------------------------------------------------------------- */
@@ -218,7 +219,6 @@ HARBOUR HB___APARAM(void)
  *  $CATEGORY$
  *    Variable management
  *  $ONELINER$
- *    This function releases all PRIVATE and PUBLIC variables
  *  $SYNTAX$
  *    __GETLOCAL( <nProcLevel>, <nLocal> )
  *  $ARGUMENTS$
