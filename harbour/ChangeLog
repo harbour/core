@@ -1,3 +1,7 @@
+2001-09-16 20:40 GMT -3   Luiz Rafael Culik<culik@sl.conex.net>
+   *contrib/libct/files.c
+     * fixed compiler problem for MINGW
+
 2001-09-13 06:02 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * source/vm/arrays.c
