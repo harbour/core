@@ -2639,7 +2639,7 @@ static void SearnRep( char * exppatt, char * expreal, int lenreal, char * ptro, 
       rezs = FALSE;
       ptr = ptrOut + ifou - 2;
       kolmarkers = 0;
-      ptr = PrevSquare( ptr, ptrOut, &kolmarkers );
+      ptr = PrevSquare( ptr, ptro, &kolmarkers );
       if( ptr )
         {
           if( s_Repeate ) s_aIsRepeate[ s_Repeate - 1 ]++;
