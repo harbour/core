@@ -1,3 +1,7 @@
+2001-02-14 12:45 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * harbour/source/debug/debugger.prg
+     ! Locals are restored when returning from a function or procedure.
+
 2001-02-14 12:40 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * harbour/include/hbapirdd.h
      * Wrong parameters of SUPER_UNLOCK fixed
