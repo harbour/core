@@ -18,7 +18,7 @@ function Main()
 
    QOut( "-OBJECT additions-" )
    QOut( "What is in oForm ? " )
-   HBDebug( oForm:Transfer() )
+   Debug( oForm:Transfer() )
 
    QOut( "Does transfer exists ? ", IsMessage( oForm, "Transfer" ) )
    QOut( "Is   transfer DATA   ? ", IsData   ( oForm, "Transfer" ) )
@@ -32,23 +32,23 @@ function Main()
 
    QOut( "Set nLeft to 50 and nRight to 100" )
    oForm:Transfer( {"nLeft", 50}, {"nRight", 100} )
-   HBDebug( oForm:Transfer() )
+   Debug( oForm:Transfer() )
 
    Pause()
 
 
    QOut( "-DEBUG Functions-")
    QOut( "-Statics-" )
-   HBDebug( __aStatic() )
+   Debug( __aStatic() )
 
    QOut( "-Global Stack-" )
-   HBDebug ( __aGlobalStack() )
+   Debug ( __aGlobalStack() )
 
    QOut( "-Local Stack-" )
-   HBDebug ( __aStack() )
+   Debug ( __aStack() )
 
    QOut( "-Parameters-" )
-   HBDebug ( __aParam() )
+   Debug ( __aParam() )
 
    Pause()
 
@@ -73,19 +73,19 @@ function FuncSecond( nParam, cParam, uParam )
    QOut()
 
    QOut( "-Statics-" )
-   HBDebug ( __aStatic() )
+   Debug ( __aStatic() )
    QOut()
 
    QOut( "-Global Stack- Len=", __GlobalStackLen() )
-   HBDebug ( __aGlobalStack() )
+   Debug ( __aGlobalStack() )
    QOut()
 
    QOut( "-Local Stack- Len=", __StackLen() )
-   xStack := HBDebug ( __aStack() )
+   xStack := Debug ( __aStack() )
    QOut()
 
    QOut( "-Parameters-" )
-   xParam := HBDebug( __aParam() )
+   xParam := Debug( __aParam() )
    if xParam[ xStack[ 7 ] ] == "Hello"
       QOut( ":-)" )
    endif

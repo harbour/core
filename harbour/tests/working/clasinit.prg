@@ -6,16 +6,16 @@ function Main()
    local oSecond
 
    QOut( "What's the default oForm and calculate area" )
-   HBDebug( oForm )
+   Debug( oForm )
    QOut( oForm:CalcArea()  )
    QOut( "Set nTop to 5 and recalculate" )
    oForm:nTop := 5
-   HBDebug( oForm )
+   Debug( oForm )
    QOut( oForm:CalcArea()  )
 
    QOut( "Create a new instance and calculate area" )
    oSecond := TForm():New()
-   HBDebug( oSecond )
+   Debug( oSecond )
    QOut( oSecond:CalcArea()  )
 
 return nil

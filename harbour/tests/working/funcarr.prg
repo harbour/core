@@ -41,9 +41,9 @@ Function Main
    QOut( "To the power 3   : ", aFunc()[1] )
 
    QOut( "Global stack" )
-   HBDebug( __aGlobalStack() )        // Please note a is a reference to aArray !
+   Debug( __aGlobalStack() )        // Please note a is a reference to aArray !
    QOut( "Statics")
-   HBDebug( __aStatic() )
+   Debug( __aStatic() )
 return NIL
 
 Function aFunc()

@@ -1,3 +1,16 @@
+19990612-08:00 CET Eddie Runia
+   * tests/working/debugtst.prg, tests/working/clasinit.prg,
+   * tests/working/funcarr.prg, tests/working/objarr.prg,
+   * tests/working/objasign.prg
+     Reference to HBDebug() renamed to Debug()
+   * tests/working/run_exp.h, tests/working/runner.c
+     all reference now correct
+   * source/tools/debug.c
+     HB_Static -> HB___Static
+   * source/tools/stringp.prg
+     HBDebug() renamed to Debug()
+
+
 Fri Jun 11 1999 19:35 PST Ron Pinkas
    * source/compiler/harbour.y
         Moved code to check non used declared variable from GenReturn() to FunDef()

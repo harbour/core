@@ -46,9 +46,9 @@ Function Main
    QOut( "To the power 3   : ", ToChar( o:x ) )
 
    QOut( "Global stack" )
-   HBDebug( __aGlobalStack() )        // Please note a is a reference to aArray !
+   Debug( __aGlobalStack() )
    QOut( "Statics")
-   HBDebug( __aStatic() )
+   Debug( __aStatic() )
 return NIL
 
 Function TNumber()                              // Very simple class

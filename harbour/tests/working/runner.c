@@ -48,7 +48,7 @@ typedef struct
 static PASM_CALL CreateFun( PSYMBOL, PBYTE );   /* Create a dynamic function*/
        void      Do( WORD );
 static ULONG     FindSymbol( char *, PDYNFUNC, ULONG );
-       HARBOUR   HB_RUN();
+       HARBOUR   HB_HB_RUN();
 static void      HRB_FileClose( FILE * );
 static void      HRB_FileRead ( char *, int, int, FILE * );
 static FILE     *HRB_FileOpen ( char * );
@@ -84,7 +84,7 @@ ULONG ulSymEntry = 0;                           /* Link enhancement         */
    In due time it should also be able to collect the data from the
    binary/executable itself
 */
-HARBOUR HB_RUN( void )
+HARBOUR HB_HB_RUN( void )
 {
    char *szFileName;
 
