@@ -1,3 +1,22 @@
+19991122-11:35 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/compiler/harbour.y
+        * fixed line numer generation in FOR/NEXT statement
+        * all expressions used in FOR/NEXT are correctly deleted
+
+    *source/compiler/expropt.c
+        * the alias symbol is correctly pushed in alias expressions
+        alias->( expression )
+
+    *include/extend.h
+    *source/compiler/expropt.c
+    *source/vm/hvm.c
+        * double values created during compile time divide optimization
+        uses unspecified number of decimal places (defined as
+        HB_DEFAULT_DECIMALS) - this value replaced at runtime by current 
+        SET DECIMALS setting
+
+
 19991122-10:37 GMT+1 Antonio Linares
    * makefile.b32 updated
    * hbpp.b32 updated

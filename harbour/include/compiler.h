@@ -399,6 +399,7 @@ HB_EXPR_PTR hb_compExprGenPush( HB_EXPR_PTR );
 HB_EXPR_PTR hb_compExprGenStatement( HB_EXPR_PTR );
 ULONG hb_compExprListLen( HB_EXPR_PTR );
 void hb_compExprDelete( HB_EXPR_PTR );
+void hb_compExprClear( HB_EXPR_PTR );
 char * hb_compExprDescription( HB_EXPR_PTR );
 HB_EXPR_PTR hb_compExprCBVarAdd( HB_EXPR_PTR, char *, BYTE );
 

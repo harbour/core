@@ -409,9 +409,18 @@ HB_EXPR_PTR hb_compExprNew( int iType )
    return pExpr;
 }
 
+/* Delete all components and delete self
+ */
 void hb_compExprDelete( HB_EXPR_PTR pExpr )
 {
    HB_EXPR_USE( pExpr, HB_EA_DELETE );
+   HB_XFREE( pExpr );
+}
+
+/* Delete self - all components will be deleted somewhere else
+ */
+void hb_compExprClear( HB_EXPR_PTR pExpr )
+{
    HB_XFREE( pExpr );
 }
 
@@ -432,8 +441,8 @@ HB_EXPR_PTR hb_compExprNewDouble( double dValue, unsigned char ucDec )
 {
    HB_EXPR_PTR pExpr =hb_compExprNew( HB_ET_NUMERIC );
 
-   pExpr->value.asNum.dVal  = dValue;
-   pExpr->value.asNum.bDec     = ucDec;
+   pExpr->value.asNum.dVal    = dValue;
+   pExpr->value.asNum.bDec    = ucDec;
    pExpr->value.asNum.NumType = HB_ET_DOUBLE;
    pExpr->ValType = HB_EV_NUMERIC;
 
@@ -2320,7 +2329,10 @@ static HB_EXPR_FUNC( hb_compExprUseSymbol )
       case HB_EA_ARRAY_AT:
       case HB_EA_ARRAY_INDEX:
       case HB_EA_LVALUE:
+         break;
       case HB_EA_PUSH_PCODE:
+         hb_compGenPushSymbol( pSelf->value.asSymbol, FALSE );
+         break;
       case HB_EA_POP_PCODE:
       case HB_EA_PUSH_POP:
       case HB_EA_STATEMENT:
@@ -4527,10 +4539,10 @@ static HB_EXPR_FUNC( hb_compExprUseDiv )
                      {
                         /* Return non-integer results as double */
                         pSelf->value.asNum.dVal = dVal;
-                        pSelf->value.asNum.bDec = 2; /* TODO: See NOTE 1 */
+                        pSelf->value.asNum.bDec = HB_DEFAULT_DECIMALS;
                         pSelf->value.asNum.NumType = HB_ET_DOUBLE;
                      }
-		     pSelf->ExprType = HB_ET_NUMERIC;
+                     pSelf->ExprType = HB_ET_NUMERIC;
                   }
                   break;
 
@@ -4540,8 +4552,8 @@ static HB_EXPR_FUNC( hb_compExprUseDiv )
                         dVal = pLeft->value.asNum.dVal / pRight->value.asNum.dVal;
                      pSelf->value.asNum.dVal = dVal;
                      pSelf->value.asNum.NumType = HB_ET_DOUBLE;
-                     pSelf->value.asNum.bDec = 2; /* TODO: See NOTE 1 */
-		     pSelf->ExprType = HB_ET_NUMERIC;
+                     pSelf->value.asNum.bDec = HB_DEFAULT_DECIMALS;
+                     pSelf->ExprType = HB_ET_NUMERIC;
                   }
                   break;
 
@@ -4552,36 +4564,27 @@ static HB_EXPR_FUNC( hb_compExprUseDiv )
                         if( pRight->value.asNum.lVal )
                            dVal = pLeft->value.asNum.dVal / ( double ) pRight->value.asNum.lVal;
                         pSelf->value.asNum.dVal = dVal;
-                        pSelf->value.asNum.bDec = 2; /* TODO: See NOTE 1 */
+                        pSelf->value.asNum.bDec = HB_DEFAULT_DECIMALS;
                      }
                      else
                      {
                         if( pRight->value.asNum.dVal != 0.0 )
                            dVal = ( double ) pLeft->value.asNum.lVal / pRight->value.asNum.dVal;
                         pSelf->value.asNum.dVal = dVal;
-                        pSelf->value.asNum.bDec = 2; /* TODO: See NOTE 1 */
+                        pSelf->value.asNum.bDec = HB_DEFAULT_DECIMALS;
 
                      }
                      pSelf->value.asNum.NumType = HB_ET_DOUBLE;
-		     pSelf->ExprType = HB_ET_NUMERIC;
+                     pSelf->ExprType = HB_ET_NUMERIC;
                   }
-                  /* TODO: NOTE 1
-                     Clipper manages to print the default number of decimal
-                     digits for optimized division results. Should we add a
-                     "marker value" that tells Harbour to print the default
-                     number of decimal digits? For example: pSelf->value.
-                     asNum.bDec = HB_DEC_DEFAULT and then have Harbour check
-                     for HB_DEC_DEFAULT when formatting numbers and print
-                     the current default number of decimal digits.
-                  */
                } /* switch bType*/
-		  if( pSelf->ExprType == HB_ET_NUMERIC )
-		  {
-		     /* The expression was reduced - delete old components */
-		     pSelf->ValType = HB_EV_NUMERIC;
-		     hb_compExprDelete( pLeft );
-		     hb_compExprDelete( pRight );
-		  }
+               if( pSelf->ExprType == HB_ET_NUMERIC )
+               {
+                  /* The expression was reduced - delete old components */
+                  pSelf->ValType = HB_EV_NUMERIC;
+                  hb_compExprDelete( pLeft );
+                  hb_compExprDelete( pRight );
+               }
             }
             else
             {

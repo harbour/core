@@ -1200,6 +1200,7 @@ EndWhile   : END
 
 ForNext    : FOR LValue ForAssign Expression          /* 1  2  3  4 */
                {
+                  hb_compLinePush();
                   ++hb_comp_wForCounter;              /* 5 */
                   $<asExpr>$ = hb_compExprGenStatement( hb_compExprAssign( $2, $4 ) );
                }
@@ -1225,14 +1226,16 @@ ForNext    : FOR LValue ForAssign Expression          /* 1  2  3  4 */
                {
                   hb_compLoopHere();
                   if( $<asExpr>8 )
-                     hb_compExprGenStatement( hb_compExprSetOperand( hb_compExprNewPlusEq( $2 ), $<asExpr>8 ) );
+                     hb_compExprClear( hb_compExprGenStatement( hb_compExprSetOperand( hb_compExprNewPlusEq( $2 ), $<asExpr>8 ) ) );
                   else
-                     hb_compExprGenStatement( hb_compExprNewPreInc( $2 ) );
+                     hb_compExprClear( hb_compExprGenStatement( hb_compExprNewPreInc( $2 ) ) );
                   hb_compGenJump( $<lNumber>9 - hb_comp_functions.pLast->lPCodePos );
                   hb_compGenJumpHere( $<lNumber>11 );
                   hb_compLoopEnd();
                   hb_compExprDelete( $7 );
-                  hb_compExprDelete( $<asExpr>5 );
+                  hb_compExprDelete( $<asExpr>5 ); /* deletes $5, $2, $4 */
+                  if( $<asExpr>8 )
+                     hb_compExprDelete( $<asExpr>8 );
                   hb_comp_functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
                }
            ;

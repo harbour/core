@@ -113,6 +113,11 @@ struct hb_struDate
    LONG value;
 };
 
+/* this definition signals that number of decimal places for double value
+ * was not specified at compile time (the value is a result of optimization
+ * performed by the compiler)
+ */
+#define HB_DEFAULT_DECIMALS  255
 struct hb_struDouble
 {
    USHORT length;

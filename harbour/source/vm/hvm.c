@@ -2651,7 +2651,10 @@ void hb_vmPushDouble( double dNumber, int iDec )
    hb_stack.pPos->type = IT_DOUBLE;
    hb_stack.pPos->item.asDouble.value = dNumber;
    hb_stack.pPos->item.asDouble.length = ( dNumber > 10000000000.0 ) ? 20 : 10;
-   hb_stack.pPos->item.asDouble.decimal = ( iDec > 9 ) ? 9 : iDec;
+   if( iDec == HB_DEFAULT_DECIMALS )
+      hb_stack.pPos->item.asDouble.decimal =hb_set.HB_SET_DECIMALS;
+   else
+      hb_stack.pPos->item.asDouble.decimal = ( iDec > 9 ) ? 9 : iDec;
    hb_stackPush();
 }
 
