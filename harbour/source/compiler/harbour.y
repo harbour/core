@@ -5011,26 +5011,31 @@ void CheckArgs( char *cFuncCall, int iArgs )
    FUNCINFO *f = _StdFun;
    int i = 0;
    int iPos = -1;
-   char *s = cFuncCall;
+   int iCmp;
 
    while( f[i].cFuncName )
-      if( stricmp( f[i].cFuncName, cFuncCall ) == 0 )
-      {
+   {
+     iCmp = strncmp( cFuncCall, f[i].cFuncName, 4 );
+     if( iCmp == 0 )
+         iCmp = strncmp( cFuncCall, f[i].cFuncName, strlen(cFuncCall) );
+     if( iCmp == 0 )
+     {
          iPos = i;
          break;
-      }
-      else
+     }
+     else
          ++i;
+   }
+   
+   if( iPos >= 0 && ( f[iPos].iMinParam != -1 ) )
+     if( iArgs < f[iPos].iMinParam || iArgs > f[iPos].iMaxParam )
+     {
+        char *szMsg = ( char * ) OurMalloc( 30 );
 
-      if( iPos >= 0 && ( f[iPos].iMinParam != -1 ) )
-         if( iArgs < f[iPos].iMinParam || iArgs > f[iPos].iMaxParam )
-         {
-            char *szMsg = ( char * ) OurMalloc( 30 );
+        sprintf( szMsg, " Passed: %i Expected: %i", iArgs, f[iPos].iMinParam );
+        GenError( _szCErrors, 'E', ERR_CHECKING_ARGS, cFuncCall, szMsg );
 
-            sprintf( szMsg, " Passed: %i Expected: %i", iArgs, f[iPos].iMinParam );
-            GenError( _szCErrors, 'E', ERR_CHECKING_ARGS, cFuncCall, szMsg );
-
-          //Clipper way 
-          // GenError( _szCErrors, 'E', ERR_CHECKING_ARGS, cFuncCall, NULL );
-         }
+        //Clipper way 
+        // GenError( _szCErrors, 'E', ERR_CHECKING_ARGS, cFuncCall, NULL );
+     }
 }

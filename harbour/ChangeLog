@@ -1,3 +1,8 @@
+19990719-18:30 GMT+2 Ryszard Glab <rglab@imid.med.pl>
+    *source/compiler/harbour.y
+     -removed call for non ANSI C 'stricmp'
+     *changed to support abbreviated functions' names
+     
 19990719-11:40 EDT Paul Tucker <ptucker@sympatico.ca>
     *source/rtl/gtapi.c
      * Changed call in hb_gtinit() to pass the
