@@ -1,3 +1,7 @@
+2001-06-30 09:40 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/vm/hvm.c
+     + Added profiler support for functions and procedures
+
 2001-06-30 09:25 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/vm/dynsym.c
      + Added profiler initialization for created dynamic symbols
