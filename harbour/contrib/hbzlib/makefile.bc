@@ -60,15 +60,20 @@ LDFLAGS        = $(LDFLAGS)
 
 ZLIB_LIB   = $(LIB_DIR)\zlib.lib
 ZLIB_EXE   = $(ZLIB_DIR)\test.exe
+ZLIB_EXE2   = $(ZLIB_DIR)\test2.exe
 ZLIB_BOR_DLL = $(ZLIB_DIR)\hbzlib.dll
 ZLIB_BOR_DEF = $(LIB_DIR)\zlib.def
 ZLIB_BOR_LIB = $(LIB_DIR)\zlib_bor.lib
 ZLIB_LIB_OBJS =  \
     $(OBJ_DIR)\zipfile1.obj   \
     $(OBJ_DIR)\zipfile2.obj   \
-    $(OBJ_DIR)\zlibapi.obj    
+    $(OBJ_DIR)\zlibapi.obj    \
+    $(OBJ_DIR)\tzipfile.obj
 ZLIB_EXE_OBJS =  \
     $(OBJ_DIR)\test.obj
+ZLIB_EXE2_OBJS =  \
+    $(OBJ_DIR)\test2.obj
+
 ZLIB_DEF_OBJ = $(ZLIB_DIR)\hbzlib.dll
 ZLIB_BOR_LIB_OBJ = $(LIB_DIR)\zlib.def
 
@@ -77,12 +82,13 @@ all: \
    $(ZLIB_BOR_DEF) \
    $(ZLIB_BOR_LIB) \
    $(ZLIB_EXE_OBJS) \
-   $(ZLIB_EXE)
-
+   $(ZLIB_EXE2_OBJS) \
+   $(ZLIB_EXE) \
+   $(ZLIB_EXE2) 
 $(ZLIB_LIB) = $(ZLIB_LIB_OBJS)
 
 $(ZLIB_EXE) = $(ZLIB_EXE_OBJS)
-
+$(ZLIB_EXE2) = $(ZLIB_EXE2_OBJS)
 $(ZLIB_BOR_DEF) = $(ZLIB_DEF_OBJ)
 
 $(ZLIB_BOR_LIB) = $(ZLIB_BOR_LIB_OBJ)
@@ -101,6 +107,12 @@ $(OBJ_DIR)\zlibapi.obj : $(ZLIB_DIR)\zlibapi.c
    $(CC) -c -v $(CLIBFLAGS) -o$@ $**
    tlib $(ZLIB_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\tzipfile.c : $(ZLIB_DIR)\tzipfile.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\tzipfile.obj : $(OBJ_DIR)\tzipfile.c
+   $(CC) -c $(CLIBFLAGS) -o$@ $**
+   tlib $(ZLIB_LIB) $(ARFLAGS) -+$@,,
 $(ZLIB_BOR_DEF) : $(ZLIB_DEF_OBJ)
     $(ID)  $(LIB_DIR)\zlib.def  $(ZLIB_DIR)\hbzlib.dll
 
@@ -133,6 +145,35 @@ $(OBJ_DIR)\test.c : $(ZLIB_DIR)\test.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
 $(OBJ_DIR)\test.obj : $(OBJ_DIR)\test.c
+   $(CC) -c $(CLIBFLAGS) -o$@ $**
+
+
+$(ZLIB_EXE2) : $(ZLIB_EXE2_OBJS)
+
+   echo. $(CFLAGS) > make.tmp
+   echo. -M -e$(ZLIB_EXE) >> make.tmp
+   echo. -I$(INCLUDE_DIR) >> make.tmp
+   echo. $(OBJ_DIR)\test2.obj >> make.tmp 
+   echo. $(SAMPLES_LIB) >> make.tmp
+   echo. $(ZLIB_LIB) >> make.tmp
+   echo. $(ZLIB_BOR_LIB) >> make.tmp
+   echo. $(PP_LIB) >> make.tmp
+   echo. $(COMMON_LIB) >> make.tmp
+   echo. $(VM_LIB) >> make.tmp
+   echo. $(RTL_LIB) >> make.tmp
+   echo. $(HB_GT_LIB) >> make.tmp
+   echo. $(LANG_LIB) >> make.tmp
+   echo. $(RDD_LIB) >> make.tmp
+   echo. $(MACRO_LIB) >> make.tmp
+   echo. $(DBFNTX_LIB) >> make.tmp
+   echo. $(DBFCDX_LIB) >> make.tmp
+   $(CC) @make.tmp
+   del make.tmp
+
+$(OBJ_DIR)\test2.c : $(ZLIB_DIR)\test2.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\test2.obj : $(OBJ_DIR)\test2.c
    $(CC) -c $(CLIBFLAGS) -o$@ $**
 
 

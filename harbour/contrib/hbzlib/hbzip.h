@@ -36,18 +36,26 @@
 
 #ifndef HB_APIZLIB_H_
 #define HB_APIZLIB_H_
-#include "hbsetup.h"
-#include "hbapi.h"
-#include "hbapiitm.h"
-#include "hbapifs.h"
-#include "hbapigt.h"
-#include "hbvmpub.h"
-#include "hbvm.h"
+#include <hbsetup.h>
+#include <hbapi.h>
+#include <hbapiitm.h>
+#include <hbapifs.h>
+#include <hbapigt.h>
+#include <hbvmpub.h>
+#include <hbvm.h>
 #include "zip.h"
 #include "unzip.h"
 #if defined(HB_EXTERN_C)
 extern "C" {
 #endif
+#define filePos 1
+#define Lenght 2
+#define Method 3
+#define Size 4
+#define Ratio 5
+#define Date 6
+#define Time 7
+#define Crc32 8
 
 extern uLong hb___filetime(char *f, tm_zip *tmzip, uLong *dt);
 extern char *hb___CheckFile( char * szFile);
@@ -58,7 +66,7 @@ extern int hb___ExtractCurrentFile(unzFile uf,BOOL popt_extract_without_path,BOO
 extern void hb____ChangeFileDate(char *filename,uLong dosdate,tm_unz tmu_date);
 extern int hb___MakeDir(char *szNewDirectory);
 extern int hb___GetNumbersofFilestoUnzip(char *szFile);
-extern PHB_ITEM hb___GetFilesNamesFromZip(char *szFile);
+extern PHB_ITEM hb___GetFilesNamesFromZip(char *szFile,BOOL iMode);
 #if defined(HB_EXTERN_C)
 }
 #endif

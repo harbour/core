@@ -1,3 +1,24 @@
+2000-07-25 22:00 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
+-contrib/hbzlib/zipfile1.C
++contrib/hbzlib/zipfile.c
+    *Renamed to match linux
+-contrib/hbzlib/makefile
++contrib/hbzlib/Makefile
+    *Renamed to match linux
+-contrib/hbzlib/zlibapi.c
++contrib/hbzlib/zlibapi.c
+    *Renamed to match linux
+*contrib/hbzlib/makefile.bc
+    +Added tzipfile.prg reference and test2.exe reference
++contrib/hbzlib/test2.prg
+    *Test file for tzipfile Class
++contrib/hbzlib/tzipfile.prg
+    *Tzipfile Class
++contrib/hbzlib/tzipfile.ch
+    *Command for tZipClass
+*contrib/hbzlib/zipfile2.c
+    *some enhacements to hb___GetFilesNamesFromZip()
+
 2000-07-25 00:53 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
    * source/vm/itemapi.c
