@@ -1,3 +1,8 @@
+2001-05-14 21:10 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+  * source/compiler/hbusage.c
+    % Corrected copyright year and URL, per diff from Dave Pearson.
+
 2001-05-14 02:09 UTC-0800 Brian Hays <bhays@abacuslaw.com>
 
    * source/rdd/dbcmd.c
