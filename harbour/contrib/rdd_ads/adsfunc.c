@@ -1372,7 +1372,7 @@ HB_FUNC(ADSVERSION)
    UNSIGNED8  ucLetter;
    UNSIGNED8  ucDesc[128];
    UNSIGNED16 usDescLen = sizeof(ucDesc) - 1;
-   UNSIGNED8  ucVersion[256];
+   char ucVersion[256];
 
    AdsGetVersion( &ulMajor, &ulMinor, &ucLetter, ucDesc, &usDescLen);
 
@@ -1382,7 +1382,7 @@ HB_FUNC(ADSVERSION)
       sprintf(ucVersion, "%ld.%ld%c", ulMajor, ulMinor, ucLetter);
       break;
    case 3:
-      sprintf(ucVersion, "%s, v%ld.%ld%c", ucDesc, ulMajor, ulMinor, ucLetter);
+      sprintf(ucVersion, "%s, v%ld.%ld%c", (char *)ucDesc, ulMajor, ulMinor, ucLetter);
       break;
    default:
       ucVersion[0] = 0;

@@ -1592,11 +1592,11 @@ static ERRCODE adsInfo( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          UNSIGNED8  ucLetter;
          UNSIGNED8  ucDesc[128];
          UNSIGNED16 usDescLen = sizeof(ucDesc) - 1;
-         UNSIGNED8  ucVersion[256];
+         char ucVersion[256];
 
          AdsGetVersion( &ulMajor, &ulMinor, &ucLetter, ucDesc, &usDescLen);
 
-         sprintf(ucVersion, "%s, v%ld.%ld%c", ucDesc, ulMajor, ulMinor, ucLetter);
+         sprintf(ucVersion, "%s, v%ld.%ld%c", (char *)ucDesc, ulMajor, ulMinor, ucLetter);
 
          hb_itemPutC( pItem, ucVersion );
          break;
