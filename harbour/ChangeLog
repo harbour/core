@@ -1,3 +1,23 @@
+2000-11-12 15:20 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+    *include/hbapirdd.h
+    *include/hbrddwrk.h
+    *source/rdd/dbf1.c
+    *source/rdd/dbfcdx/dbfcdx1.c
+    *contrib/rdd_ads/ads1.c
+        *added typedef for setScope member of virtual table
+         typedef USHORT ( * DBENTRYP_VOS  )( AREAP area, LPDBORDSCOPEINFO param );
+        
+    *source/rdd/rddcpy.c
+        * replaced NULL with 0
+        
+    *source/vm/asort.c
+    *source/vm/classes.c
+    *source/vm/hvm.c
+    *source/vm/itemapi.c
+    *source/vm/memvars.c
+        *added initialization of items created on the stack
+
 2000-11-11 23:35 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * contrib/dot/pp.prg
      ! Corrected few pre-processor bugs.

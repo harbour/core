@@ -122,7 +122,7 @@ extern ERRCODE hb_waFilterText( AREAP pArea, PHB_ITEM pFilter );
 #define hb_waScopeInfo                      ( DBENTRYP_SI ) hb_waUnsupported
 extern ERRCODE hb_waSetFilter( AREAP pArea, LPDBFILTERINFO pFilterInfo );
 extern ERRCODE hb_waSetLocate( AREAP pArea, LPDBSCOPEINFO pScopeInfo );
-#define hb_waSetScope                       ( DBENTRYP_VP ) hb_waUnsupported
+#define hb_waSetScope                       ( DBENTRYP_VOS ) hb_waUnsupported
 #define hb_waSkipScope                     ( DBENTRYP_VPL ) hb_waUnsupported
 extern ERRCODE hb_waCompile( AREAP pArea, BYTE * pExpr );
 extern ERRCODE hb_waError( AREAP pArea, PHB_ITEM pError );

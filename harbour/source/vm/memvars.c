@@ -910,6 +910,7 @@ HB_FUNC( __MVPUBLIC )
                ULONG j, ulLen = hb_arrayLen( pMemvar );
                HB_ITEM VarItem;
 
+               hb_itemInit( &VarItem );
                for( j = 1; j <= ulLen; j++ )
                {
                   hb_arrayGet( pMemvar, j, &VarItem );
@@ -945,6 +946,7 @@ HB_FUNC( __MVPRIVATE )
                ULONG j, ulLen = hb_arrayLen( pMemvar );
                HB_ITEM VarItem;
 
+               hb_itemInit( &VarItem );
                for( j = 1; j <= ulLen; j++ )
                {
                   hb_arrayGet( pMemvar, j, &VarItem );
@@ -980,6 +982,7 @@ HB_FUNC( __MVXRELEASE )
                ULONG j, ulLen = hb_arrayLen( pMemvar );
                HB_ITEM VarItem;
 
+               hb_itemInit( &VarItem );
                for( j = 1; j <= ulLen; j++ )
                {
                   hb_arrayGet( pMemvar, j, &VarItem );
@@ -1098,6 +1101,8 @@ HB_FUNC( __MVGET )
       if( pDynVar )
       {
          HB_ITEM retValue;
+
+         hb_itemInit( &retValue );
          hb_memvarGetValue( &retValue, pDynVar->pSymbol );
          hb_itemClear( hb_itemReturn( &retValue ) );
       }
@@ -1121,6 +1126,8 @@ HB_FUNC( __MVGET )
                if( pDynVar )
                {
                   HB_ITEM retValue;
+                  
+                  hb_itemInit( &retValue );
                   hb_memvarGetValue( &retValue, pDynVar->pSymbol );
                   hb_itemClear( hb_itemReturn( &retValue ) );
                   uiAction = E_DEFAULT;

@@ -1090,6 +1090,7 @@ void hb_itemSwap( PHB_ITEM pItem1, PHB_ITEM pItem2 )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_itemSwap(%p, %p)", pItem1, pItem2));
 
+   temp.type = HB_IT_NIL;
    hb_itemCopy( &temp, pItem2 );
    hb_itemCopy( pItem2, pItem1 );
    hb_itemCopy( pItem1, &temp );

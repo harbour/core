@@ -68,7 +68,7 @@ static LPAREANODE GetTheOtherArea( char *szDriver, char * szFileName )
 
   if( SELF_OPEN( ( AREAP ) pAreaNode->pArea, &pInfo ) == FAILURE )
   {
-    hb_errRT_DBCMD( EG_OPEN, NULL, NULL, "DBAPP" ); // Could not open it
+    hb_errRT_DBCMD( EG_OPEN, 0, NULL, "DBAPP" ); // Could not open it
     SELF_RELEASE( ( AREAP ) pAreaNode->pArea );
     hb_xfree( pAreaNode );
     return NULL;

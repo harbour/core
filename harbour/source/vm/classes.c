@@ -1332,6 +1332,7 @@ static PHB_ITEM hb_clsInst( USHORT uiClass, PHB_ITEM * * ppObjects, USHORT * pui
             HB_ITEM init;
             PHB_ITEM pInit;
 
+            hb_itemInit( &init );
             hb_arrayGet( pClass->pClassDatas, pMeth->uiData, &init );
             if( init.type == HB_IT_NIL )
             {
@@ -1417,6 +1418,7 @@ static PHB_ITEM hb_clsInst( USHORT uiClass, PHB_ITEM * * ppObjects, USHORT * pui
                HB_ITEM init;
                PHB_ITEM pInit;
 
+               hb_itemInit( &init );
                hb_arrayGet( pClass->pClassDatas, pMeth->uiData, &init );
                if( init.type == HB_IT_NIL )
                {
@@ -1969,6 +1971,7 @@ static HARBOUR hb___msgEvalInline( void )
    USHORT uiParam;
    USHORT uiPCount=hb_pcount();
 
+   hb_itemInit( &block );
    hb_arrayGet( s_pClasses[ uiClass - 1 ].pInlines, s_pMethod->uiData, &block );
 
    hb_vmPushSymbol( &hb_symEval );

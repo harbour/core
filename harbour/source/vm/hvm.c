@@ -2486,6 +2486,7 @@ static void hb_vmArrayPush( void )
             */
             HB_ITEM item;
 
+            hb_itemInit( &item );
             hb_arrayGet( pArray, ulIndex, &item );
             hb_stackPop();
 
@@ -3133,6 +3134,7 @@ static void hb_vmDebuggerEndProc( void )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmDebuggerEndProc()"));
 
+   hb_itemInit( &item );
    hb_itemCopy( &item, &hb_stack.Return ); /* saves the previous returned value */
 
    s_bDebugShowLines = FALSE;

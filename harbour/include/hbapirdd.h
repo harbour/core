@@ -631,6 +631,7 @@ typedef USHORT ( * DBENTRYP_VEI  )( AREAP area, LPDBEVALINFO param );
 typedef USHORT ( * DBENTRYP_VLO  )( AREAP area, LPDBSCOPEINFO param );
 typedef USHORT ( * DBENTRYP_VOC  )( AREAP area, LPDBORDERCREATEINFO param );
 typedef USHORT ( * DBENTRYP_VOI  )( AREAP area, LPDBORDERCONDINFO param );
+typedef USHORT ( * DBENTRYP_VOS  )( AREAP area, LPDBORDSCOPEINFO param );
 typedef USHORT ( * DBENTRYP_OI   )( AREAP area, LPDBORDERINFO param );
 typedef USHORT ( * DBENTRYP_OII  )( AREAP area, USHORT index, LPDBORDERINFO param );
 typedef USHORT ( * DBENTRYP_SP   )( AREAP area, USHORT * param );
@@ -753,7 +754,7 @@ typedef struct _RDDFUNCS
    DBENTRYP_SI   scopeInfo;
    DBENTRYP_VFI  setFilter;
    DBENTRYP_VLO  setLocate;
-   DBENTRYP_VP   setScope;
+   DBENTRYP_VOS  setScope;
    DBENTRYP_VPL  skipScope;
 
 

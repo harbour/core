@@ -111,6 +111,7 @@ static LONG hb_arraySortQuickPartition( PHB_ITEM pItems, LONG lb, LONG ub, PHB_I
    if( p != lb )
       memcpy( pItems + p, pItems + lb, sizeof( HB_ITEM ) );
 #else
+   hb_itemInit( &pivot );
    hb_itemCopy( &pivot, pItems + p );
    if( p != lb )
       hb_itemCopy( pItems + p, pItems + lb );
@@ -175,6 +176,7 @@ static LONG hb_arraySortQuickPartition( PHB_ITEM pItems, LONG lb, LONG ub, PHB_I
          memcpy( pItems + j, pItems + i, sizeof( HB_ITEM ) );
          memcpy( pItems + i, &temp, sizeof( HB_ITEM ) );
 #else
+         hb_itemInit( &temp );
          hb_itemCopy( &temp, pItems + j );
          hb_itemCopy( pItems + j, pItems + i );
          hb_itemCopy( pItems + i, &temp );
