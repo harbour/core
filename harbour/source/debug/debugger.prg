@@ -1454,7 +1454,7 @@ METHOD SaveSettings() CLASS TDebugger
    if LastKey() != K_ESC
 
       if ! Empty( ::cPathForFiles )
-         cInfo += "Options Path " + ::cPathForFiles + Chr( 13 ) + Chr( 10 )
+         cInfo += "Options Path " + ::cPathForFiles + HB_OsNewLine()
       endif
 
       cInfo += "Options Colors {"
@@ -1464,27 +1464,27 @@ METHOD SaveSettings() CLASS TDebugger
             cInfo += ","
          endif
       next
-      cInfo += "}" + Chr( 13 ) + Chr( 10 )
+      cInfo += "}" + HB_OsNewLine()
 
       if ::lMonoDisplay
-         cInfo += "Options mono " + Chr( 13 ) + Chr( 10 )
+         cInfo += "Options mono " + HB_OsNewLine()
       endif
 
       if ::nSpeed != 0
-         cInfo += "Run Speed " + AllTrim( Str( ::nSpeed ) ) + Chr( 13 ) + Chr( 10 )
+         cInfo += "Run Speed " + AllTrim( Str( ::nSpeed ) ) + HB_OsNewLine()
       endif
 
       for n := 1 to Len( ::aWindows )
          oWnd := ::aWindows[ n ]
          cInfo += "Window Size " + AllTrim( Str( oWnd:nBottom - oWnd:nTop + 1 ) ) + " "
-         cInfo += AllTrim( Str( oWnd:nRight - oWnd:nLeft + 1 ) ) + Chr( 13 ) + Chr( 10 )
+         cInfo += AllTrim( Str( oWnd:nRight - oWnd:nLeft + 1 ) ) + HB_OsNewLine()
          cInfo += "Window Move " + AllTrim( Str( oWnd:nTop ) ) + " "
-         cInfo += AllTrim( Str( oWnd:nLeft ) ) + Chr( 13 ) + Chr( 10 )
-         cInfo += "Window Next" + Chr( 13 ) + Chr( 10 )
+         cInfo += AllTrim( Str( oWnd:nLeft ) ) + HB_OsNewLine()
+         cInfo += "Window Next" + HB_OsNewLine()
       next
 
       if ::nTabWidth != 4
-         cInfo += "Options Tab " + AllTrim( Str( ::nTabWidth ) ) + Chr( 13 ) + Chr( 10 )
+         cInfo += "Options Tab " + AllTrim( Str( ::nTabWidth ) ) + HB_OsNewLine()
       endif
 
       MemoWrit( ::cSettingsFileName, cInfo )
