@@ -2338,9 +2338,23 @@ HB_FUNC( ORDKEY )
 
    if( s_pCurrArea )
    {
-      pOrderInfo.itmOrder = hb_param( 1, HB_IT_STRING );
-      if( !pOrderInfo.itmOrder )
-         pOrderInfo.itmOrder = hb_param( 1, HB_IT_NUMERIC );
+      if ( ISNUM(1) )
+      {
+         if ( hb_parnl(1) == 0 )          /* if ask for 0, get current order  */
+         {
+            pOrderInfo.itmResult = hb_itemPutNI( NULL, 0 );
+            pOrderInfo.itmOrder  = NULL;  /* This is necessary to get the NUMBER back */
+            SELF_ORDINFO( ( AREAP ) s_pCurrArea->pArea, DBOI_NUMBER, &pOrderInfo );
+            pOrderInfo.itmOrder = hb_param( 1, HB_IT_NUMERIC );
+            hb_itemPutNI( pOrderInfo.itmOrder, hb_itemGetNI( pOrderInfo.itmResult ) );
+            hb_itemRelease( pOrderInfo.itmResult );
+         }
+         else
+            pOrderInfo.itmOrder = hb_param( 1, HB_IT_NUMERIC );
+
+      }else
+         pOrderInfo.itmOrder = hb_param( 1, HB_IT_STRING );
+
       pOrderInfo.atomBagName = hb_param( 2, HB_IT_STRING );
       if( !pOrderInfo.itmOrder )
       {

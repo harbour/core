@@ -1,8 +1,13 @@
-2000-10-13 11:28 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
-     * source/rdd/dbfcdx/dbfcdx1.c
-     * source/rdd/dbcmd.c
-     * source/include/hbrddcdx.h
-       * fixed some warnings, added HB_TRACE_...
+2000-10-13 0:33 UTC+0800 Brian Hays <bhays@abacuslaw.com>
+   * source/rdd/dbcmd.c
+      fixed ORDKEY to accept 0 as a parameter (to get current index's key)
+   * contrib/rdd_ads/ads1.c
+      * added to adsSkip() a check for skip -1 from EOF.
+         ADS behavior is to go to TOP if EOF had been reached by GO LASTREC()+1.
+         Forced to Go Bottom instead, to stay compatible with standard behavior.
+   * source/rdd/workarea.c
+      * added a TODO note to review questionable code in hb_waSkipFilter
+
 
 2000-10-12 23:50 UTC-0400 David G. Holm <dholm@jsd-llc.com>
    * include/hbver.h
@@ -199,6 +204,12 @@
       ! PageDown() and GoBottom() methods weren't working when number of available record was lower than
         available display space (::RowCount).
       ! Presence and need to draw header and/or footers is evaluated during column insertion/deletion
+        calling method Configure(). Method Configure() _has_ to be called when an already added TBColumn
+        object is changed.
+   *tests/testbrw.prg
+      ! Added call to Configure() method
+
+tion/deletion
         calling method Configure(). Method Configure() _has_ to be called when an already added TBColumn
         object is changed.
    *tests/testbrw.prg

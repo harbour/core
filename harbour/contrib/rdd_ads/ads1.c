@@ -324,7 +324,6 @@ static ERRCODE adsGoTo( ADSAREAP pArea, ULONG ulRecNo )
 
    if( ulRecNo > 0  && ulRecNo <= pArea->ulRecCount )
    {
-      // bh: do we use ulRecno??
       pArea->ulRecNo = ulRecNo;
       pArea->fBof = pArea->fEof = FALSE;
       AdsGotoRecord( pArea->hTable, ulRecNo );
@@ -437,6 +436,19 @@ static ERRCODE adsSkip( ADSAREAP pArea, LONG lToSkip )
 
    HB_TRACE(HB_TR_DEBUG, ("adsSkip(%p, %ld)", pArea, lToSkip));
 
+/* -----------------10/11/00 Brian Hays ------------------
+
+   In ADS, if you GO 0 (as opposed to skipping past lastrec),
+   it considers the record pointer "unpositioned".
+   If you then try to skip -1 you end up at Top with BOF True.
+   (If you skip past lastrec, then skip -1 it works right.)
+   To fix this we need to trap for a (negative lToSkip .AND. EOF)
+   and do a GoBottom--but only after letting ads try first and
+   testing for BOF.  We need to avoid our GoBottom hack as much as
+   possible because with a filter set it could be quite slow.
+
+ --------------------------------------------------*/
+
    pArea->fTop = pArea->fBottom = FALSE;
    AdsSkip  ( (pArea->hOrdCurrent) ? pArea->hOrdCurrent : pArea->hTable, lToSkip );
 
@@ -444,8 +456,22 @@ static ERRCODE adsSkip( ADSAREAP pArea, LONG lToSkip )
       return SUCCESS;    /*bh: dbskip(0) created infinite loop; this should never move the record pointer via skipfilter */
    else
 	{
+      if ( lToSkip < 0 && pArea->fEof ) /* skipped -1 or more from EOF will NOT go to bottom in ads if we went straight to 0! It sets BOF in this case. */
+      {
+         AdsAtBOF( pArea->hTable, (UNSIGNED16 *)&(pArea->fBof) );
+         if ( pArea->fBof )             /* might also be true in and empty data set, but this is probably our problem situation so move again */
+         {
+            //pArea->fTop = FALSE;
+            pArea->fBottom = TRUE;
+            AdsGotoBottom  ( (pArea->hOrdCurrent) ? pArea->hOrdCurrent : pArea->hTable );
+            if ( lToSkip < -1 )
+            {
+               AdsSkip  ( (pArea->hOrdCurrent) ? pArea->hOrdCurrent : pArea->hTable, (lToSkip + 1) );
+            }
+         }
+      }
    	hb_adsCheckBofEof( pArea );
-      return SUPER_SKIPFILTER( (AREAP)pArea, lToSkip>0 ? 1:-1 );
+      return SUPER_SKIPFILTER( (AREAP)pArea, lToSkip>0 ? 1 : -1 );
 	}
 }
 

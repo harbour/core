@@ -169,6 +169,11 @@ ERRCODE hb_waSkipFilter( AREAP pArea, LONG lUpDown )
    }
    if( bOutOfRange )
    {
+      /*
+         TODO: these calls to SELF_GOTO are redundant; in most cases
+         we are already at EOF from the skips above, and GO 0 is not necessary.
+         We should take a closer look at these. --BH
+      */
       if( bTop && lUpDown > 0 )
          uiError = SELF_GOTO( pArea, 0 );
       else if( bBottom && lUpDown < 0 )
