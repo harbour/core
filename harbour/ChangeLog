@@ -1,3 +1,7 @@
+2001-06-04 16:55 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   * source/pp/pplib.c
+     * __PreProcess() works now.
+
 2001-06-03 23:50 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * contrib/dot/pp.prg
      + Added #ifdef WIN to support using Windows MessageBox() instead of Alert(), use BLD pp -dWIN to activate.

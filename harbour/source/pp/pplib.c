@@ -121,6 +121,8 @@ HB_FUNC( __PREPROCESS )
 
          HB_SKIPTABSPACES( ptr );
 
+         if( !hb_pp_topDefine )
+            hb_pp_Table();
          if( hb_pp_ParseExpression( ptr, pOut ) > 0 )
          {
             /* Some error here? */
