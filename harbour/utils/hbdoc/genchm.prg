@@ -375,8 +375,15 @@ FUNCTION ProcessChm()
                   cFuncname := SUBSTR( cFuncName, 1, AT( "(", cFuncName ) - 1 )
                ENDIF
                IF lEndDesc .AND. lClassDoc
-                  lEndDesc := .f.
+                  if lWasTestExamples
+                  oChm:WriteText( "</pre>" )
+                  else
                   oChm:WriteText( "</p></dd>" )
+                  lWasTestExamples:=.f.
+                  endif
+
+                  lEndDesc := .f.
+
                ENDIF
                oChm:WriteText( '<br>' )
                oChm:WriteText( '<br>' )
@@ -408,10 +415,10 @@ FUNCTION ProcessChm()
                //  Now start writing out what we know
 
                IF lData
-                  oChm:WriteText( "<H1>DATA " + ALLTRIM( PAD( cFuncName, 21 ) ) + "</H1>" )
+                  oChm:WriteText( "<H1>DATA " + ALLTRIM(  cFuncName ) + "</H1>" )
                   oChm:WriteText( "<p>" + cOneline + "</p>" + hb_osnewline() )
                ELSEIF lMethod
-                  oChm:WriteText( "<H1> METHOD " + ALLTRIM( PAD( cFuncName, 21 ) ) + "</H1>" )
+                  oChm:WriteText( "<H1>"+ LEFT( cFileName, AT( ".", cFileName ) - 1 )+ ":" + ALLTRIM( cFuncName ) + "</H1>" )
                   oChm:WriteText( "<p>" + cOneline + "</p>" + hb_osnewline() )
                ELSE
                   oChm:WriteText( "<H1>" + ALLTRIM( PAD( cFuncName, 21 ) ) + "</H1>" )
@@ -473,6 +480,54 @@ end
                   lAddBlank := .T.
                   lEndDesc  := .t.
                end
+
+               ELSEIF AT( cdatalink, cBuffer ) > 0
+                  IF GetItem( cBuffer, nCurdoc )
+                     IF !lBlankLine
+oChm:writeText("<br>")  //:endpar()
+//                     oChm:WriteParBold( " Data" )
+                        oChm:WriteText( "</dl><dl><dt><b>Data</b></dt>" )
+//oChm:writeText("<br>")  //:endpar()
+                     endif
+                     nMode     := D_DATALINK
+  //                   lAddBlank := .T.
+
+                     lIsDataLink := .T.
+                  END
+               ELSEIF AT( cDatanolink, cBuffer ) > 0
+                  IF GetItem( cBuffer, nCurdoc )
+                     IF !lIsDataLink
+                    oChm:writeText("<br>")                //:endpar()
+                        oChm:WriteText( "</dl><dl><dt><b>Data</b></dt>" )
+//                    oChm:writeText("<br>")                //:endpar()
+                     ENDIF
+                     nMode     := D_NORMAL
+                     lAddBlank := .T.
+
+                  END
+               ELSEIF AT( cMethodslink, cBuffer ) > 0
+                  IF GetItem( cBuffer, nCurdoc )
+                 oChm:writeText("<br>")                //:endpar()
+                     oChm:WriteParBold( " Method" )
+//oChm:writeText("<br>")  //:endpar()
+                     nMode     := D_METHODLINK
+                     lAddBlank := .T.
+
+                     lIsMethodLink := .T.
+                  END
+               ELSEIF AT( cMethodsnolink, cBuffer ) > 0
+                  IF GetItem( cBuffer, nCurdoc )
+                     IF !lIsMethodLink
+                    oChm:writeText("<br>")                //:endpar()
+                        oChm:WriteParBold( " Methods" )
+                       oChm:writepar("<br>")                //:endpar()
+                     ENDIF
+//                       oChm:writeText("<br>")                //:endpar()
+                     nMode     := D_NORMAL
+                     lAddBlank := .T.
+
+                  END
+
                ELSEIF AT( cExam, cBuffer ) > 0
                   if GetItem( cBuffer, nCurdoc ) 
                   IF !lBlankLine
@@ -607,6 +662,33 @@ end
                      IF .NOT. EMPTY( cBuffer )
                         cSeeAlso := StripFiles( ALLTRIM( cBuffer ) )
                      ENDIF
+                  ELSEIF nMode = D_DATALINK
+                     IF LEN( cBuffer ) > LONGLINE
+//                        WRITE_ERROR( "General", cBuffer, nLineCnt, ;
+  //                                   LONGLINE, aDirList[ i, F_NAME ] )
+                     ENDIF
+                     lBlankLine := EMPTY( cBuffer )
+                     IF lAddBlank
+                        lAddBlank := .F.
+                     ENDIF
+                     cTemp := ALLTRIM( SUBSTR( cBuffer, 1, AT( ":", cBuffer ) - 1 ) )
+                     oChm:WriteText( "<dd><a href=" + cFileName + "#" +  cTemp  + ">" + cBuffer + '</a></dd>' )
+                     oChm:writetext('<dd><br></dd>')
+                  ELSEIF nMode = D_METHODLINK
+                     IF LEN( cBuffer ) > LONGLINE
+//                        WRITE_ERROR( "General", cBuffer, nLineCnt, ;
+  //                                   LONGLINE, aDirList[ i, F_NAME ] )
+                     ENDIF
+                     lBlankLine := EMPTY( cBuffer )
+                     IF lAddBlank
+                        lAddBlank := .F.
+                     ENDIF
+                     cTemp := ALLTRIM( SUBSTR( cBuffer, 1, AT( "(", cBuffer ) - 1 ) )
+                     if !lBlankline
+                     oChm:WriteText( "<dd><a href=" + cFileName + "#" +  cTemp  + ">" + cBuffer + '</a></dd>' )
+                     oChm:writetext('<dd><br></dd>')
+                    endif
+
                   ELSEIF nMode = D_INCLUDE
                      //  read next line
                      IF .NOT. EMPTY( cBuffer )

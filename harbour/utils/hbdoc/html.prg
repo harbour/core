@@ -218,21 +218,22 @@ METHOD NewChm( cFile ,aMetaContents,cFuncName) CLASS THTML
    FWRITE( Self:nHandle, '<BODY BGCOLOR="#FFFFFF" TEXT="#000000">' + CRLF )
    ::AddObject("application/x-oleobject","clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e")
    ::ADDPARAM("Keyword",cFuncName)
+   ::AddParam("ALink Name",cFuncName)
    ::ENDOBJECT()
 RETURN Self
 
 method ADDOBJECT(cType,cClassId) Class THTML
    IF VALTYPE(cClassId)<>NIL .and. VALTYPE(cClassId)=="C"
-      FWRITE( Self:nHandle,'<OBJECT TYPE="'+cType+'" CLASSID="'+cClassId+'">'+CRLF)
+      FWRITE( Self:nHandle,'<Object type="'+cType+'" classid="'+cClassId+'">'+CRLF)
    ELSE
-      FWRITE( Self:nHandle,'<OBJECT TYPE="'+ cType +'">'+CRLF)
+      FWRITE( Self:nHandle,'<Object type="'+ cType +'">'+CRLF)
    ENDIF
 RETURN Self
 METHOD  ENDOBJECT() Class THTML
    FWRITE( Self:nHandle,"</OBJECT>"+CRLF)
 RETURN Self
 METHOD ADDPARAM(cType,cValue) Class THTML
-   FWRITE( Self:nHandle,'<PARAM NAME="'+cType+ '" VALUE="'+cValue +'">'  +CRLF)
+   FWRITE( Self:nHandle,'<param name="'+cType+ '" value="'+cValue +'">'  +CRLF)
 RETURN Self
 
 METHOD NewContent( cFile ) CLASS THTML

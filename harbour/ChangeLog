@@ -1,5 +1,25 @@
+2000-11-02 19:20 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
+   *doc/en/tbrowse.txt
+     *added missing CVS ID
+   *doc/en/terminal.txt
+     *Fixed typo on MAXROW() doc
+   *doc/en/rddord.txt
+      *Removed 5 dumb lines
+   *doc/en/idle.txt
+    doc/en/garbage.txt
+      *Changes // coments to /* */
+   *utils/hbdoc/rtf.prg
+    utils/hbdoc/genrtf.prg
+    utils/hbdoc/hbdoc.prg
+     *Small Changes   
+    *utils/hbdoc/genrtf.prg
+     utils/hbdoc/genrtf.prg
+     *Small Fix to work with $CLASSDOC$ style headers
+   *tests/testbrw.prg
+    *small fixes
+
 2000-11-02 00:10 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
-   *doc/en/trowse.txt
+   *doc/en/tbrowse.txt
      *Small changes
    *doc/en/terminal.txt
      +Row(),COL(),PROW(),PCOL() documentes

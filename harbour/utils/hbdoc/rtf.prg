@@ -57,7 +57,7 @@ CLASS TRTF
    METHOD WriteParBox( cPar )
    METHOD WriteLink( clink )
    METHOD WriteJumpLink( clink )
-   METHOD WritekLink( aLink )
+   METHOD WritekLink( aLink ,lAlink)
    METHOD WriteJumpLink1( cLink, cName, cText )
    METHOD CLOSE()
    METHOD WriteParBold( cPar, lCenter )
@@ -284,10 +284,12 @@ METHOD WriteJumpLink1( cLink, cName, cText ) CLASS TRTF
 
 RETURN Self
 
-METHOD WritekLink( aLink ) CLASS TRTF
+METHOD WritekLink( aLink ,lAlink) CLASS TRTF
 Local cItem:=' '
 Local nPos:=0
 Local nSize:=Len(aLink)
+
+if nSize >2
 For nPos:=1 to nSize
     if nPos==nSize
         cItem+= aLink[nPos]
@@ -296,8 +298,13 @@ For nPos:=1 to nSize
         cItem+=";"
     endif
 next
+cItem:=Alltrim(cItem)
    FWRITE( Self:nHandle, '\par \pard\cf1\fs20       {\f6\uldb Related Topic }'+'{\v\f6 !ALink(" '+cItem + '", 2) }'+ CRLF )
-
+else
+For nPos:=1 to nSize
+    FWRITE( Self:nHandle, '\par \pard\cf1\fs20       {\f6\uldb '+aLink[nPos] +' }{\v\f6 !KLink(" '+UPPERLOWER(aLink[nPos]) + '", 2) }'+ CRLF )
+next
+endif
 RETURN Self
 
 *+ EOF: RTF.PRG

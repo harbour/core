@@ -50,6 +50,7 @@ function Main()
    nRow := Row()
    nCol := Col()
    @ 4,4,17,31 BOX "ÚÄ¿³ÙÄÀ³ "
+#ifdef HB_COMPAT_C53
  oBrowse:Setkey(0,{|ob,nkey| Defproc(ob,nKey)})
 while .t.
     oBrowse:ForceStable()
@@ -57,7 +58,8 @@ while .t.
    exit
 endif
 enddo
-/*
+#else
+While !lEnd
       oBrowse:ForceStable()
 
 
@@ -119,14 +121,15 @@ enddo
       endcase
       
    end
-*/
+#endif
    DevPos( nRow, nCol )
    SetColor( cColor )
    SetCursor( nCursor )
 
 return nil
+#ifdef HB_COMPAT_C53
 function  defproc(ob,nkey)
-
+Local nTmpRow,nTmpCol
         if nKey = K_TAB
               nTmpRow := ROW()
               nTmpCol := COL()
@@ -135,3 +138,4 @@ function  defproc(ob,nkey)
             ob:Refreshall()
         endif
         return 1
+#endif

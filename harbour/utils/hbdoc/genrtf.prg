@@ -243,11 +243,12 @@ FUNCTION ProcessRtf()
                   oRtf:WriteParBold( "See Also" )
                   oRtf:WritePar( "" )   //:endpar()
                   aAlso:=ListAsArray2(cSeeAlso,",")
-                  if Len(aAlso) <3
-                    ProcRtfalso( oRtf, cSeealso )
-                  else
+//                  if Len(aAlso) <3
+//                    ProcRtfalso( oRtf, cSeealso )
+//                    oRtf:WriteKLink(aAlso,.f.)
+//                  else
                   oRtf:WriteKLink(aAlso)
-                  endif  
+//                  endif  
                ENDIF
                lDoc := .F.
 

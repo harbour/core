@@ -449,7 +449,7 @@ FUNCTION ProcessWww()
                   oHtm:WriteText( "<H1>DATA " + ALLTRIM(  cFuncName ) + "</H1>" )
                   oHtm:WriteText( "<p>" + cOneline + "</p>" + hb_osnewline() )
                ELSEIF lMethod
-                  oHtm:WriteText( "<H1> METHOD " + ALLTRIM( cFuncName ) + "</H1>" )
+                  oHtm:WriteText( "<H1>"+ LEFT( cFileName, AT( ".", cFileName ) - 1 )+ ":" + ALLTRIM( cFuncName ) + "</H1>" )
                   oHtm:WriteText( "<p>" + cOneline + "</p>" + hb_osnewline() )
                ELSE
                   oHtm:WriteText( "<H1>" + ALLTRIM(  cFuncName ) + "</H1>" )

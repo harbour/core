@@ -1,3 +1,6 @@
+/*
+ * $Id$
+ */
 
 /*  $CLASSDOC$
  *  $FUNCNAME$

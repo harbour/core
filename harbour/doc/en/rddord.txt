@@ -1,11 +1,6 @@
 /*
  * $Id$
  */
-         ordKey
-         ordFor
-         ordBagName
-         ordName
-         ordNumber
 
 /*
  * The following parts are Copyright of the individual authors.

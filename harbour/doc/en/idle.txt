@@ -1,6 +1,7 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+*/
+
 /*  $DOC$
  *  $FUNCNAME$
  *      The idle states

@@ -848,7 +848,7 @@
  *  $PLATFORMS$
  *      It works in all platform with some remarks:Under Linux and OS/2 the
  *      number of columns avaliable depends of the current Terminal screen
- *      size.Under Win32, the return value of MAXCOL() function is only
+ *      size.Under Win32, the return value of MAXROW() function is only
  *      affected if called after an SETMODE() function
  *  $FILES$
  *      Library is rtl
