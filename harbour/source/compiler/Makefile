@@ -4,7 +4,15 @@
 
 ROOT = ../../
 
+ifeq ($(HB_LEX),SIMPLEX)
+
+YACC_SOURCE=harbour.sly
+
+else
+
 YACC_SOURCE=harbour.y
+
+endif
 
 YACC_HEADERS=\
 	hbcomp.h \

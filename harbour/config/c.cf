@@ -8,6 +8,10 @@ C_MAIN_OBJ = $(C_MAIN:.c=$(OBJ_EXT))
 
 ifdef YACC_SOURCE
 YACC_BASE = $(YACC_SOURCE:.y=)
+#must be harbour.sly
+ifeq ($(YACC_BASE),$(YACC_SOURCE))
+YACC_BASE = $(YACC_SOURCE:.sly=)
+endif
 YACC_C = $(YACC_BASE)y.c
 YACC_H_TMP = $(YACC_C:.c=.h)
 YACC_H = y_tab.h
