@@ -78,7 +78,7 @@
                        JOB_INFO_2 **ppJobInfo,
                        int *pcJobs,
                        DWORD *pStatus);
-
+   static BOOL DPGetDefaultPrinter(LPTSTR pPrinterName, LPDWORD pdwBufferSize);
 #endif
 
 BOOL hb_printerIsReady( char * pszPrinterName )
@@ -155,7 +155,16 @@ BOOL hb_printerIsReady( char * pszPrinterName )
 
 HB_FUNC( ISPRINTER )
 {
-   hb_retl( hb_printerIsReady( ISCHAR( 1 ) ? hb_parc( 1 ) : "LPT1" ) );
+   #if defined(HB_OS_WIN_32)
+   {
+      char DefaultPrinter[ 80 ];
+      DWORD pdwBufferSize = 80;
+      DPGetDefaultPrinter( ( LPTSTR ) &DefaultPrinter, &pdwBufferSize);
+      hb_retl( hb_printerIsReady( ISCHAR( 1 ) ? hb_parc( 1 ) : (char*)DefaultPrinter ) );
+   }
+   #else
+      hb_retl( hb_printerIsReady( ISCHAR( 1 ) ? hb_parc( 1 ) : "LPT1" ) );
+   #endif
 }
 
 /* The code below does the check for the printer under Win32 */
@@ -313,6 +322,103 @@ static BOOL GetJobs(HANDLE hPrinter,        /* Handle to the printer. */
     free(pPrinterInfo);
 
     return TRUE;
+}
+
+BOOL DPGetDefaultPrinter(LPTSTR pPrinterName, LPDWORD pdwBufferSize)
+{
+  BOOL bFlag;
+  OSVERSIONINFO osv;
+  TCHAR cBuffer[MAXBUFFERSIZE];
+  PRINTER_INFO_2 *ppi2 = NULL;
+  DWORD dwNeeded = 0;
+  DWORD dwReturned = 0;
+
+  /* What version of Windows are you running? */
+  osv.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
+  GetVersionEx(&osv);
+
+  /* If Windows 95 or 98, use EnumPrinters... */
+  if (osv.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS)
+  {
+    /* The first EnumPrinters() tells you how big our buffer should
+       be in order to hold ALL of PRINTER_INFO_2. Note that this will
+       usually return FALSE. This only means that the buffer (the 4th
+       parameter) was not filled in. You don't want it filled in here... */
+    EnumPrinters(PRINTER_ENUM_DEFAULT, NULL, 2, NULL, 0, &dwNeeded, &dwReturned);
+    if (dwNeeded == 0)
+      return FALSE;
+
+    /* Allocate enough space for PRINTER_INFO_2... */
+    ppi2 = (PRINTER_INFO_2 *)GlobalAlloc(GPTR, dwNeeded);
+    if (!ppi2)
+      return FALSE;
+
+    /* The second EnumPrinters() will fill in all the current information... */
+    bFlag = EnumPrinters(PRINTER_ENUM_DEFAULT, NULL, 2, (LPBYTE)ppi2, dwNeeded, &dwNeeded, &dwReturned);
+    if (!bFlag)
+    {
+      GlobalFree(ppi2);
+      return FALSE;
+    }
+
+    /* If given buffer too small, set required size and fail... */
+    if ((DWORD)lstrlen(ppi2->pPrinterName) >= *pdwBufferSize)
+    {
+      *pdwBufferSize = (DWORD)lstrlen(ppi2->pPrinterName) + 1;
+      GlobalFree(ppi2);
+      return FALSE;
+    }
+
+    /* Copy printer name into passed-in buffer... */
+    lstrcpy(pPrinterName, ppi2->pPrinterName);
+
+    /* Set buffer size parameter to min required buffer size... */
+    *pdwBufferSize = (DWORD)lstrlen(ppi2->pPrinterName) + 1;
+  }
+
+  /* If Windows NT, use the GetDefaultPrinter API for Windows 2000,
+     or GetProfileString for version 4.0 and earlier... */
+  else if (osv.dwPlatformId == VER_PLATFORM_WIN32_NT)
+  {
+#if(WINVER >= 0x0500)
+    if (osv.dwMajorVersion >= 5) /* Windows 2000 or later */
+    {
+      bFlag = GetDefaultPrinter(pPrinterName, pdwBufferSize);
+      if (!bFlag)
+        return FALSE;
+    }
+
+    else /* NT4.0 or earlier */
+#endif
+    {
+      /* Retrieve the default string from Win.ini (the registry).
+         String will be in form "printername,drivername,portname". */
+      if (GetProfileString("windows", "device", ",,,", cBuffer, MAXBUFFERSIZE) <= 0)
+        return FALSE;
+
+      /* Printer name precedes first "," character... */
+      strtok(cBuffer, ",");
+
+      /* If given buffer too small, set required size and fail... */
+      if ((DWORD)lstrlen(cBuffer) >= *pdwBufferSize)
+      {
+        *pdwBufferSize = (DWORD)lstrlen(cBuffer) + 1;
+        return FALSE;
+      }
+
+      /* Copy printer name into passed-in buffer... */
+      lstrcpy(pPrinterName, cBuffer);
+
+      /* Set buffer size parameter to min required buffer size... */
+      *pdwBufferSize = (DWORD)lstrlen(cBuffer) + 1;
+    }
+  }
+
+  /* Cleanup... */
+  if (ppi2)
+    GlobalFree(ppi2);
+
+  return TRUE;
 }
 
 #endif
