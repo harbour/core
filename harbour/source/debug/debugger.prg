@@ -843,7 +843,6 @@ static procedure SetsKeyPressed( nKey, oBrwSets, nSets, oWnd )
            if oBrwSets:Cargo > 1
               oBrwSets:Cargo := 1
               oBrwSets:GoTop()
-              oBrwSets:RefreshAll()
               oBrwSets:ForceStable()
            endif
 
@@ -851,7 +850,6 @@ static procedure SetsKeyPressed( nKey, oBrwSets, nSets, oWnd )
            if oBrwSets:Cargo < nSets
               oBrwSets:Cargo := nSets
               oBrwSets:GoBottom()
-              oBrwSets:RefreshAll()
               oBrwSets:ForceStable()
            endif
 
