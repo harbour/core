@@ -1,3 +1,12 @@
+19990705-14:10 Alexander Kresin
+  * source\hbpp\hbpp.c
+  * source\hbpp\table.c
+  * source\hbpp\hbppmain.c
+  * source\hbpp\hbppint.c
+  * include\hberrors.h
+    * Implemented genError() for preprocessor
+    + Added copyright and license information
+
 19990707-23:10 EDT David G. Holm <dholm@jsd-llc.com>
   + harbour.b31
     + Separate harbour.exe makefile, so that it is possible to build

@@ -1,9 +1,28 @@
 /*
  * $Id$
- */
 
-/* Harbour Preprocessor , version 0.99
-   author - Alexander Kresin             */
+   Harbour Project source code
+
+   This file contains the main part of preprocessor implementation.
+
+   Copyright 1999  Alexander S.Kresin <alex@belacy.belgorod.su>
+   www - http://www.harbour-project.org
+
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2 of the License, or
+   (at your option) any later version, with one exception:
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software
+   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
+   their web site at http://www.gnu.org/).
+ */
 
 #if defined(__GNUC__)
  #include <string.h>
@@ -20,6 +39,7 @@
 #include <stdio.h>
 #include <ctype.h>
 #include "harb.h"
+#include "hberrors.h"
 
 int Hp_Parse( FILE*, FILE* );
 int ParseDirective( char* );
@@ -112,6 +132,17 @@ int kolcommands = 0, maxcommands = INITIAL_ACOM_SIZE;
 TRANSLATES *aTranslates ;
 int koltranslates = 0, maxtranslates = 50;
 
+/* Table with parse errors */
+char * _szPErrors[] = { "Can\'t open include file \"%s\"",
+                       "#else does not match #if",
+                       "#endif does not match #if",
+                       "Error in include file name",
+                       "#define without parameters",
+                       "Absent \"=>\" in command definition",
+                       "Error in pattern definition",
+                       "Cycled #define"
+                     };
+
 int ParseDirective( char* sLine )
 {
  char sDirective[MAX_NAME];
@@ -123,28 +154,33 @@ int ParseDirective( char* sLine )
 
  if ( i == 4 && memcmp ( sDirective, "else", 4 ) == 0 )
  {     /* ---  #else  --- */
-   if ( nCondCompile == 0 ) return 3001;
+   if ( nCondCompile == 0 )
+      GenError( _szPErrors, 'P', ERR_DIRECTIVE_ELSE, NULL, NULL );
    else aCondCompile[nCondCompile-1] = 1 - aCondCompile[nCondCompile-1];
  }
 
  else if ( i == 5 && memcmp ( sDirective, "endif", 5 ) == 0 )
  {     /* --- #endif  --- */
-   if ( nCondCompile == 0 ) return 3001; else nCondCompile--;
+   if ( nCondCompile == 0 )
+     GenError( _szPErrors, 'P', ERR_DIRECTIVE_ENDIF, NULL, NULL );
+   else nCondCompile--;
  }
 
  else if ( nCondCompile==0 || aCondCompile[nCondCompile-1])
  {
   if ( i == 7 && memcmp ( sDirective, "include", 7 ) == 0 )
   {    /* --- #include --- */
-   if ( *sLine != '\"' ) return 1000;
+   if ( *sLine != '\"' )
+     GenError( _szPErrors, 'P', ERR_WRONG_NAME, NULL, NULL );
    sLine++; i = 0;
    while ( *(sLine+i) != '\0' && *(sLine+i) != '\"' ) i++;
-   if ( *(sLine+i) != '\"' ) return 1000;
+   if ( *(sLine+i) != '\"' )
+     GenError( _szPErrors, 'P', ERR_WRONG_NAME, NULL, NULL );
    *(sLine+i) = '\0';
 
    /*   if ((handl_i = fopen(sLine, "r")) == NULL) */
    if ( !OpenInclude( sLine, _pIncludePath, &handl_i ) )
-    { printf("\nCan't open %s\n",sLine); return 1001; }
+     GenError( _szPErrors, 'P', ERR_CANNOT_OPEN, sLine, NULL );
    lInclude++;
    Hp_Parse(handl_i, 0 );
    lInclude--;
@@ -270,7 +306,8 @@ int ParseIfdef( char* sLine, int usl)
  DEFINES *stdef;
 
   NextWord( &sLine, defname, FALSE );
-  if ( *defname == '\0' ) return 3000;
+  if ( *defname == '\0' )
+    GenError( _szPErrors, 'P', ERR_DEFINE_ABSENT, NULL, NULL );
   if ( nCondCompile == maxCondCompile )
   {
     maxCondCompile += 5;
@@ -357,7 +394,7 @@ int ParseCommand( char* sLine, int com_or_xcom, int com_or_tra )
 
  if ( (ipos = hb_strAt( "=>", 2, sLine, strolen(sLine) )) > 0 )
    stroncpy( mpatt, sLine, ipos-1 );
- else return 4000;  /* Quit, if '=>' absent */
+ else GenError( _szPErrors, 'P', ERR_COMMAND_DEFINITION, NULL, NULL );
  mlen = strotrim( mpatt );
 
  sLine += ipos + 1;
@@ -412,9 +449,15 @@ int ConvertPatterns ( char *mpatt, int mlen, char *rpatt, int rlen )
     *(exppatt+explen++) = *(mpatt+i++);
    }
    if ( exptype == '3' )
-    { if ( *(exppatt+explen-1) == '*' ) explen--; else return 4001; }
+   {
+     if ( *(exppatt+explen-1) == '*' ) explen--;
+     else GenError( _szPErrors, 'P', ERR_PATTERN_DEFINITION, NULL, NULL );
+   }
    else if ( exptype == '4' )
-    { if ( *(exppatt+explen-1) == ')' ) explen--; else return 4001; }
+   {
+     if ( *(exppatt+explen-1) == ')' ) explen--;
+     else GenError( _szPErrors, 'P', ERR_PATTERN_DEFINITION, NULL, NULL );
+   }
    rmlen = i - ipos + 1;
      /* Replace match marker with new marker */
    lastchar = (char) ( (unsigned int)lastchar + 1 );
@@ -500,7 +543,10 @@ int ParseExpression( char* sLine, char* sOutLine )
    if ( (stdef=DefSearch(sToken)) != NULL )
    {
      for(i=0;i<kolused;i++) if ( aUsed[i] == stdef ) break;
-     if ( i < kolused ) { if ( i < lastused ) return 1000; }
+     if ( i < kolused )
+     {
+       if ( i < lastused ) GenError( _szPErrors, 'P', ERR_RECURSE, NULL, NULL );
+     }
      else
        aUsed[kolused++] = stdef;
      rezDef += WorkDefine ( &ptri, &ptro, stdef, lenToken );
