@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+  * source/rdd/dbfntx/dbfntx1.c
+    ! Minor fix
+
+2002-03-29 14:17 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * include/hbrddntx.h
   * source/rdd/dbfntx/dbfntx1.c
     * OrdKeyCount() implemented for DBFNTX
