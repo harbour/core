@@ -1,3 +1,12 @@
+19990918-01:55 EDT David G. Holm <dholm@jsd-llc.com>
+  * config/win32/bcc32.cf
+    ! My previous update only allowed Borland to compile, but not link.
+      For some reason, the -L option didn't work. This update fixes that
+      by dropping the -L option and specifying all libraries fully.
+  * source/tools/io.c
+    ! Restored version 1.11 as version 1.13 to restore the functions
+      that were removed but shouldn't have been removed.
+
 19990917-23:45 EDT David G. Holm <dholm@jsd-llc.com>
 
   * source/tools/Makefile

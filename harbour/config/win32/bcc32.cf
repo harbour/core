@@ -32,17 +32,20 @@ LD_OUT = -e
 
 # Add all libraries specified in LIBS.
 ifeq ($(HB_LIB_COMPILE),)
-LINKPATHS += $(foreach lib, $(LIBS), -L$(TOP)$(ROOT)source/$(lib)/$(ARCH))
+LINKLIBS += $(foreach lib, $(LIBS), $(HARBOURDIR)/source/$(lib)/$(ARCH)/$(lib)$(LIB_EXT))
 else
 LINKPATHS += -L$(HB_LIB_COMPILE)
+LINKLIBS += $(foreach lib, $(LIBS), $(lib)$(LIB_EXT))
 endif
-
-LINKLIBS += $(foreach lib, $(LIBS), $(lib).lib)
 
 # If LIBS specifies the rdd library, add all DB drivers.
 ifeq ($(findstring rdd,$(LIBS)),rdd)
-LINKPATHS += $(foreach drv, $(HB_DB_DRIVERS), -L$(TOP)$(ROOT)source/rdd/$(drv)/$(ARCH))
-LINKLIBS += $(foreach drv, $(HB_DB_DRIVERS), $(drv).lib)
+ifeq ($(HB_LIB_COMPILE),)
+LINKLIBS += $(foreach drv, $(HB_DB_DRIVERS), $(HARBOURDIR)/source/rdd/$(drv)/$(ARCH)/$(drv)$(LIB_EXT))
+else
+LINKPATHS += -L$(HB_LIB_COMPILE)
+LINKLIBS += $(foreach drv, $(HB_DB_DRIVERS), $(drv)$(LIB_EXT))
+endif
 endif
 
 LDFLAGS = $(LINKPATHS)
