@@ -56,6 +56,7 @@
  */
 
 #define HB_OS_WIN_32_USED
+#define HB_NO_DEFAULT_API_MACROS
 
 #include "hbtypes.h"
 
