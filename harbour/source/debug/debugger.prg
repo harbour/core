@@ -809,7 +809,7 @@ METHOD ViewSets() CLASS TDebugger
    ocol:ColorBlock := { || { iif( n == oBrwSets:Cargo, 3, 1 ), 3 } }
 
 
-   oWndSets:bPainted    := { || oBrwSets:ForceStable(),myColors(oBrwsets,{1,2}) }
+   oWndSets:bPainted    := { || oBrwSets:ForceStable() }
    oWndSets:bKeyPressed := { | nKey | SetsKeyPressed( nKey, oBrwSets, Len( aSets ),;
                             oWndSets ) }
 
@@ -826,13 +826,17 @@ static procedure SetsKeyPressed( nKey, oBrwSets, nSets, oWnd )
       case nKey == K_UP
            if oBrwSets:Cargo > 1
               oBrwSets:Cargo--
-              SetsUp( oBrwSets )
+              oBrwSets:RefreshCurrent()
+              oBrwSets:Up()
+              oBrwSets:ForceStable()
            endif
 
       case nKey == K_DOWN
            if oBrwSets:Cargo < nSets
               oBrwSets:Cargo++
-              SetsDown( oBrwSets )
+              oBrwSets:RefreshCurrent()
+              oBrwSets:Down()
+              oBrwSets:ForceStable()
            endif
 
       case nKey == K_HOME
@@ -850,32 +854,16 @@ static procedure SetsKeyPressed( nKey, oBrwSets, nSets, oWnd )
               oBrwSets:RefreshAll()
               oBrwSets:ForceStable()
            endif
+
 /*      case nKey == K_ENTER
           ::doGet(*/
+
    endcase
 
    if nSet != oBrwSets:Cargo
       oWnd:SetCaption( "System Settings[" + AllTrim( Str( oBrwSets:Cargo ) ) + ;
                        "..47]" )
    endif
-   myColors(oBrwsets,{1,2})
-return
-
-static procedure SetsUp( oBrw )
-
-   oBrw:RefreshCurrent()
-   oBrw:Up()
-   oBrw:ForceStable()
-   //myColors(oBrw,{1,2}) //NOTE: What is this needed for?
-
-return
-
-static procedure SetsDown( oBrw )
-
-   oBrw:RefreshCurrent()
-   oBrw:Down()
-   oBrw:ForceStable()
-   //myColors(oBrw,{1,2})
 
 return
 
@@ -911,16 +899,3 @@ static function ValToStr( uVal )
    endcase
 
 return cResult
-
-static function myColors( oBrowse, aColColors )
-   local i
-   local nColPos := oBrowse:colpos
-
-   for i := 1 to len( aColColors )
-      oBrowse:colpos := aColColors[i]
-      oBrowse:DeHilite()
-      oBrowse:hilite()
-   next
-
-   oBrowse:colpos := nColPos
-return Nil
