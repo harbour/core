@@ -88,7 +88,7 @@ CLASS TRadioBtn
 ENDCLASS
 
 METHOD New(nRow,nCol,cCaption,xData) CLASS TRadioBtn
-
+   Local cColor
    ::Buffer:= .f.
    ::CapRow:= nRow
    ::CapCol:=  nCol+3+1

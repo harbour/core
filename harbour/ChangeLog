@@ -1,4 +1,10 @@
 2001-07-22 18:00 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
+   +source/rtl/radiobtn.prg
+      *Added an 'LOCAL cColor' to compile without warning
+   +source/rtl/radiogrp.prg
+      *Added 'LOCAL nPos,nLen' to compile without warning
+
+2001-07-22 18:00 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
    * utils/hbmake/hbmake.prg
       * Added suport for !iffile/!else/!endif and !stdout
    * utils/hbdoc/hbdoc.prg

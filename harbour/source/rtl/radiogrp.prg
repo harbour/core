@@ -158,7 +158,7 @@ METHOD  SETSTYLE( xStyle ) CLASS TRadioGroup
 METHOD  SETFOCus() CLASS TRadioGroup
 
 
-   local Local1, Local2, aItems
+   local nPos, nLen, aItems
    if ( !::HasFocus )
       ::lCursor := setcursor(0)
       ::HasFocus := .T.
