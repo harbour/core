@@ -581,7 +581,7 @@ static void hb_dbfWriteMemo( DBFAREAP pArea, ULONG ulBlock, PHB_ITEM pItem, ULON
    ULONG ulNewBlock, ulNextBlock;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfWriteMemo(%p, %lu, %p, %lu, %p)", pArea, ulBlock, pItem,
-                           ulLen, ulNewBlock));
+                           ulLen, ulStoredBlock));
 
    memset( pBlock, 0x1A, DBT_BLOCKSIZE );
    bNewBlock = !( ulBlock && ulLen < DBT_BLOCKSIZE - 1 );

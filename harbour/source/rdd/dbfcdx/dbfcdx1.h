@@ -162,7 +162,8 @@ typedef CDXDATA * LPCDXDATA;
 typedef struct _CDXKEYINFO
 {
    char   * Value;
-   ULONG    length;
+   USHORT   length;
+   USHORT   realLength;
    BOOL     fString;
    LONG     Tag;
    LONG     Xtra;

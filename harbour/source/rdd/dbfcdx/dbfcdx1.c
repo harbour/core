@@ -417,7 +417,7 @@ static void hb_cdxAddFreeBlocks( CDXAREAP pArea, ULONG ulBlock, ULONG ulBlocks )
    LPMEMOFREEBLOCK pFreeBlock;
    */
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_cdxAddFreeBlocks(%p, %lu, %hu)", pArea, ulBlock, uiBlocks));
+   HB_TRACE(HB_TR_DEBUG, ("hb_cdxAddFreeBlocks(%p, %lu, %hu)", pArea, ulBlock, ulBlocks));
    HB_SYMBOL_UNUSED( pArea );
    HB_SYMBOL_UNUSED( ulBlock );
    HB_SYMBOL_UNUSED( ulBlocks );
@@ -512,7 +512,7 @@ static BOOL hb_cdxCompleteFromFreeBlocks( CDXAREAP pArea, ULONG ulBlock, ULONG u
    MEMOBLOCK mbBlock;
    */
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_cdxCompleteFromFreeBlocks(%p, %lu, %hu)", pArea, ulBlock, uiBlocks));
+   HB_TRACE(HB_TR_DEBUG, ("hb_cdxCompleteFromFreeBlocks(%p, %lu, %hu)", pArea, ulBlock, ulBlocks));
    HB_SYMBOL_UNUSED( pArea );
    HB_SYMBOL_UNUSED( ulBlock );
    HB_SYMBOL_UNUSED( ulBlocks );
@@ -743,6 +743,7 @@ static LPCDXKEYINFO hb_cdxKeyNew()
    pKey = ( LPCDXKEYINFO ) hb_xgrab( sizeof( CDXKEYINFO ) );
    pKey->Value = NULL;
    pKey->length = 0;
+   pKey->realLength = 0;
    pKey->fString = FALSE;
    pKey->Tag = pKey->Xtra = 0;
    pKey->pNext = NULL;
@@ -771,6 +772,8 @@ static int hb_cdxKeyValCompare( LPCDXTAG pTag, char * pKeyVal1, BYTE keyLen1,
    pKey1.length  = (ULONG) keyLen1;
    pKey2.Value   = pKeyVal2;
    pKey2.length  = (ULONG) keyLen2;
+   pKey1.realLength = pTag->uiLen;
+   pKey2.realLength = pTag->uiLen;
    pKey1.fString = (pTag->uiType == 'C');
    pKey2.fString = (pTag->uiType == 'C');
 
@@ -816,6 +819,24 @@ static int hb_cdxKeyCompare( LPCDXKEYINFO pKey1, LPCDXKEYINFO pKey2, USHORT * En
                     ( (unsigned char) pKey2->Value[ * EndPos ]);
           (* EndPos)++;   /* EndPos += 1; */
       } while( iResult == 0 && * EndPos < iLimit );
+      if ( iResult == 0 ) {
+         unsigned char c1, c2;
+         iLimit = ( pKey1->realLength > pKey2->realLength ) ? pKey2->realLength : pKey1->realLength;
+         while( iResult == 0 && * EndPos < iLimit )
+         {
+            c1 = (unsigned char) ( ( *EndPos < pKey1->length ) ? ( pKey1->Value[ * EndPos ]) : ' ' );
+            c2 = (unsigned char) ( ( *EndPos < pKey2->length ) ? ( pKey2->Value[ * EndPos ]) : ' ' );
+            iResult = c1 - c2;
+            (* EndPos)++;
+         }
+      }
+      if( iResult == 0 )
+      {
+         (* EndPos)++;
+         iResult = pKey1->realLength - pKey2->realLength;
+      }
+      if( (iResult < 0) && (* EndPos > pKey1->realLength) && !Exact )
+         iResult = 0;
    }
    else
    {
@@ -823,17 +844,17 @@ static int hb_cdxKeyCompare( LPCDXKEYINFO pKey1, LPCDXKEYINFO pKey2, USHORT * En
       {
           iResult = ( (unsigned char) pKey1->Value[ * EndPos ]) -
                     ( (unsigned char) pKey2->Value[ * EndPos ]);
-          (* EndPos)++;  /*  * EndPos += 1;  */
+          (* EndPos)++;
       } while( iResult == 0 && * EndPos < iLimit );
+      if( iResult == 0 )
+      {
+         (* EndPos)++;
+         iResult = pKey1->length - pKey2->length;
+      }
+      if( (iResult < 0) && (* EndPos > pKey1->length) && !Exact )
+         iResult = 0;
    }
 
-   if( iResult == 0 )
-   {
-      (* EndPos)++;  /* * EndPos += 1; */
-      iResult = pKey1->length - pKey2->length;
-   }
-   if( (iResult < 0) && ((ULONG)* EndPos > pKey1->length) && !Exact )
-      iResult = 0;
 
    if( iResult < 0 )
       return -1;
@@ -856,68 +877,69 @@ static LPCDXKEYINFO hb_cdxKeyPutItem( LPCDXKEYINFO pKey, PHB_ITEM pItem )
       pKey->Value = NULL;
    }
 
+   pKey->realLength = 0;
    switch( hb_itemType( pItem ) )
    {
-        case HB_IT_STRING:
+      case HB_IT_STRING:
 
-           pKey->Value = hb_itemGetC( pItem );
-           pKey->length = pItem->item.asString.length;
-           pKey->fString = TRUE;
+         pKey->Value = hb_itemGetC( pItem );
+         pKey->realLength = pKey->length = pItem->item.asString.length;
+         pKey->fString = TRUE;
 
-           while( pKey->length > 0 &&
-                  pKey->Value[ pKey->length - 1 ] == ' ' )
-                  /*pKey->Value[ pItem->item.asString.length - 1 ] == ' ' )*/
-              pKey->length--;
-           pKey->Value[ pKey->length ] = 0;
+         while( pKey->length > 0 &&
+               pKey->Value[ pKey->length - 1 ] == ' ' )
+               /*pKey->Value[ pItem->item.asString.length - 1 ] == ' ' )*/
 
-        break;
+            pKey->length--;
+         pKey->Value[ pKey->length ] = 0;
 
-        case HB_IT_INTEGER:
-        case HB_IT_LONG:
-        case HB_IT_DOUBLE:
-           hb_cdxDNtoSort( hb_itemGetND( pItem ), &cTemp[0] );
+         break;
 
-           i = 7;
-           while( !cTemp[i] )
-              i--;
+      case HB_IT_INTEGER:
+      case HB_IT_LONG:
+      case HB_IT_DOUBLE:
+         hb_cdxDNtoSort( hb_itemGetND( pItem ), &cTemp[0] );
+         i = 7;
+         while( !cTemp[i] )
+            i--;
 
-           i++;
-           pKey->length = i;
-           pKey->Value = (char *) hb_xgrab( i + 1 );
-           pKey->Value[i] = 0;
-           memcpy( pKey->Value, cTemp, i );
-           pKey->fString = FALSE;
+         i++;
+         pKey->length = i;
+         pKey->Value = (char *) hb_xgrab( i + 1 );
+         pKey->Value[i] = 0;
+         memcpy( pKey->Value, cTemp, i );
+         pKey->fString = FALSE;
 
-           break;
+         break;
 
-        case HB_IT_DATE:
-           hb_cdxDNtoSort( (double) hb_itemGetDL( pItem ), &cTemp[0] );
+      case HB_IT_DATE:
+         hb_cdxDNtoSort( (double) hb_itemGetDL( pItem ), &cTemp[0] );
 
-           i = 7;
-           while( !cTemp[i] )
-              i--;
+         i = 7;
+         while( !cTemp[i] )
+            i--;
 
-           i++;
-           pKey->length = i;
-           pKey->Value = (char *) hb_xgrab( i + 1 );
-           pKey->Value[i] = 0;
-           memcpy( pKey->Value, cTemp, i );
-           pKey->fString = FALSE;
+         i++;
+         pKey->length = i;
+         pKey->Value = (char *) hb_xgrab( i + 1 );
+         pKey->Value[i] = 0;
+         memcpy( pKey->Value, cTemp, i );
+         pKey->fString = FALSE;
 
-           break;
+         break;
 
-        case HB_IT_LOGICAL:
-           pKey->length = 1;
-           pKey->Value = (char *) hb_xgrab( 2 );
-           pKey->fString = TRUE;
+      case HB_IT_LOGICAL:
+         pKey->realLength = pKey->length = 1;
+         pKey->Value = (char *) hb_xgrab( 2 );
+         pKey->fString = TRUE;
 
-           pKey->Value[0] = (char) ( hb_itemGetL( pItem ) ? 'T' : 'F' );
-           pKey->Value[1] = 0;
+         pKey->Value[0] = (char) ( hb_itemGetL( pItem ) ? 'T' : 'F' );
+         pKey->Value[1] = 0;
 
-           break;
+         break;
 
-        default:
-           printf( "hb_cdxKeyPutItem( )" );
+      default:
+         printf( "hb_cdxKeyPutItem( )" );
    }
 
    return pKey;
@@ -991,6 +1013,7 @@ static LPCDXKEYINFO hb_cdxKeyCopy( LPCDXKEYINFO pKeyDest, LPCDXKEYINFO pKey )
        pKeyDest->Value = (char *) hb_xgrab( pKey->length + 1 );
        memcpy( pKeyDest->Value, pKey->Value, pKey->length );
        pKeyDest->length = pKey->length;
+       pKeyDest->realLength = pKey->realLength;
        pKeyDest->Value[ pKeyDest->length ] = 0;
        pKeyDest->fString = pKey->fString;
        pKeyDest->Tag = pKey->Tag;
@@ -1000,7 +1023,7 @@ static LPCDXKEYINFO hb_cdxKeyCopy( LPCDXKEYINFO pKeyDest, LPCDXKEYINFO pKey )
    return pKeyDest;
 }
 
-static LPCDXKEYINFO hb_cdxKeyPut( LPCDXKEYINFO pKey, BYTE * szText, USHORT uiLen )
+static LPCDXKEYINFO hb_cdxKeyPut( LPCDXKEYINFO pKey, BYTE * szText, USHORT uiLen, USHORT uiRealLen, BOOL fString )
 {
    if( !pKey )
       pKey = hb_cdxKeyNew();
@@ -1010,24 +1033,24 @@ static LPCDXKEYINFO hb_cdxKeyPut( LPCDXKEYINFO pKey, BYTE * szText, USHORT uiLen
       hb_xfree( pKey->Value );
       pKey->Value = NULL;
    }
-
+   pKey->realLength = uiRealLen;
    if( szText == NULL )
    {
       pKey->length = 0;
-      pKey->fString = FALSE;
+      pKey->fString = fString;
    }
    else
    {
       pKey->length = uiLen;
       pKey->Value = ( char * ) hb_xgrab( uiLen + 1 );
       memcpy( pKey->Value, szText, uiLen );
-      pKey->fString = FALSE;
+      pKey->fString = fString;
    }
 
    return pKey;
 }
 
-static LPCDXKEYINFO hb_cdxKeyPutC( LPCDXKEYINFO pKey, char * szText )
+static LPCDXKEYINFO hb_cdxKeyPutC( LPCDXKEYINFO pKey, char * szText, USHORT uiRealLen )
 {
    if( !pKey )
       pKey = hb_cdxKeyNew();
@@ -1041,6 +1064,7 @@ static LPCDXKEYINFO hb_cdxKeyPutC( LPCDXKEYINFO pKey, char * szText )
       pKey->Value = NULL;
    }
 
+   pKey->realLength = uiRealLen;
    pKey->length = strlen( szText );
    pKey->Value = ( char * ) hb_xgrab( pKey->length + 1 );
    strcpy( pKey->Value, szText );
@@ -1632,6 +1656,8 @@ static void hb_cdxTagExtNodeWrite( LPCDXTAG pTag, LONG PN, LPCDXDATA pData,
       if( q != NULL )
       {
          hb_cdxKeyCompare( p, q, &cd, TRUE );
+         if ( cd > p->length )
+            cd = p->length + 1;
          if( cd > 0 )
             cd--;
       }
@@ -1712,6 +1738,8 @@ static USHORT hb_cdxTagFillExternalNode( LPCDXTAG pTag, LPCDXDATA pData,
       if( q != NULL )
       {
          hb_cdxKeyCompare( * p,  q, &cd, TRUE );
+         if ( cd > ( * p )->length )
+            cd = ( * p )->length + 1;
          if( cd > 0 )
             cd--;
       }
@@ -1777,9 +1805,11 @@ static void hb_cdxTagExtNodeBuild( LPCDXTAG pTag, LPCDXDATA pData, LPPAGEINFO PI
          pKey->Tag = r;
          pKey->Xtra = r;
          pKey->length = pTag->uiLen - t;
+         pKey->realLength = pTag->uiLen;
          pKey->Value = (char *) hb_xgrab( pKey->length + 1 );
          memcpy( pKey->Value, szBuffer, pKey->length );
          pKey->Value[ pKey->length ] = 0;
+         pKey->fString = ( pTag->uiType == 'C' ? TRUE : FALSE);
 
          if( PIK->pKeys == NULL )
             PIK->pKeys = pKey;
@@ -2047,6 +2077,7 @@ static void hb_cdxTagIntNodeBuild( LPCDXTAG pTag, LPCDXDATA pData, LPPAGEINFO pP
             v--;
          szBuffer[ v ] = 0;
       }
+      pKey->realLength = pTag->uiLen;
       pKey->length = v;
       pKey->Value = (char *) hb_xgrab( v + 1 );
       memcpy( pKey->Value, szBuffer, v );
@@ -2748,7 +2779,7 @@ static LPCDXTAG hb_cdxIndexAddTag( LPCDXINDEX pIndex, char * szTagName, char * s
 
    hb_cdxTagTagOpen( pIndex->pCompound, 0 );
    pKey = hb_cdxKeyNew();
-   pKey = hb_cdxKeyPutC( pKey, szTagName );
+   pKey = hb_cdxKeyPutC( pKey, szTagName, CDX_MAX_TAG_NAME_LEN );
    pTag = pIndex->TagList;
    pLastTag = NULL;
    while( pTag != NULL )
@@ -2782,7 +2813,7 @@ static LPCDXTAG hb_cdxIndexAddTag( LPCDXINDEX pIndex, char * szTagName, char * s
    }
    hb_cdxTagIndexTagNew( pTag, szKeyExp, pKeyItem, bType, uiLen, szForExp,
                          pForItem, bAscending, bUnique );
-   pKey = hb_cdxKeyPutC( pKey, pTag->szName );
+   pKey = hb_cdxKeyPutC( pKey, pTag->szName, CDX_MAX_TAG_NAME_LEN );
    pKey->Tag = pTag->TagBlock;
    hb_cdxTagKeyAdd( pIndex->pCompound, pKey );
    hb_cdxKeyFree( pKey );
@@ -2799,7 +2830,7 @@ static void hb_cdxIndexDelTag( LPCDXINDEX pIndex, char * szTagName )
 
    hb_cdxTagTagOpen( pIndex->pCompound, 0 );
    pKey = hb_cdxKeyNew();
-   pKey = hb_cdxKeyPutC( pKey, szTagName );
+   pKey = hb_cdxKeyPutC( pKey, szTagName, CDX_MAX_TAG_NAME_LEN );
    pTag = pIndex->TagList;
    pLastTag = NULL;
    while( pTag != NULL )
@@ -2846,11 +2877,21 @@ static USHORT hb_cdxIndexCheckVersion( LPCDXINDEX pIndex )
          while ( pTag ) {
             if( pTag->RootPage != NULL )
             {
+               /*
                if ( !pTag->HotKey) {
                   hb_errInternal( 9110, "hb_cdxIndexCheckVersion: ulVersion changed and !HotKey.", "", "" );
                }
                hb_cdxTagTagOpen( pTag, 0 );
                hb_cdxTagKeyFind( pTag, pTag->HotKey );
+               */
+               if ( pTag->HotKey ) {
+                  hb_cdxTagTagOpen( pTag, 0 );
+                  hb_cdxTagKeyFind( pTag, pTag->HotKey );
+               }
+               else
+               {
+                  SELF_GOTO( ( AREAP ) ( pIndex->pArea ), pIndex->pArea->ulRecNo );
+               }
             }
             pTag = pTag->pNext;
          }
@@ -2918,7 +2959,7 @@ static USHORT hb_cdxIndexUnLockRead( LPCDXINDEX pIndex, LPCDXTAG pTag )
       ulVersion = hb_cdxSwapBytes( pIndex->ulVersion );
       if( !( (hb_fsSeek( pIndex->hFile, 0x08, FS_SET ) == 0x08) &&
              (hb_fsWrite( pIndex->hFile, ( BYTE * ) &ulVersion, 4) == 4) ) )
-         hb_errInternal( 1010, "Write in index page failed.", "", "" );
+         hb_errInternal( 1010, "Write in index page failed 2.", "", "" );
       pIndex->changesWritten = 0;
    }
    ret = hb_fsLock ( pIndex->hFile, 0x7FFFFFFEL, 1, FL_UNLOCK );
@@ -3713,7 +3754,8 @@ static void hb_cdxSortOutputWord( LPSORTINFO pSort, LONG Tag, BYTE * Value,
    {
       uiLen--;
    }
-   hb_cdxKeyPut( pSort->KeyWork, Value, uiLen );
+   hb_cdxKeyPut( pSort->KeyWork, Value, uiLen,
+         pSort->CurTag->uiLen, ( pSort->CurTag->uiType == 'C') );
    hb_cdxSortAddToNode( pSort, 0, Tag, Tag, pSort->KeyWork );
    pSort->LastTag = Tag;
    hb_cdxKeyCopy( pSort->LastKey, pSort->KeyWork );
@@ -3774,11 +3816,13 @@ static void hb_cdxSortAddExternal( LPSORTINFO pSort, USHORT Lvl, LONG Tag, LONG 
       memset( pSort->NodeList[ Lvl ]->cdxu.External.ExtData, 0,
               sizeof( pSort->NodeList[ Lvl ]->cdxu.External.ExtData ) );
       pSort->NodeList[ Lvl ]->cdxu.External.FreeSpace = CDX_EXTERNAL_SPACE;
-      hb_cdxKeyPutC( pSort->LastKey, "" );
+      hb_cdxKeyPutC( pSort->LastKey, "", 0 );
    }
    m = ~pSort->NodeList[ Lvl ]->cdxu.External.RecNumMask;
    ct = ( USHORT ) ( pSort->CurTag->uiLen - Value->length );
    hb_cdxKeyCompare( Value, pSort->LastKey, &cd, TRUE );
+   if ( cd > Value->length )
+      cd = Value->length + 1;
    if( cd > 0 )
       cd -= ( USHORT ) 1;
    v = ( USHORT ) ( pSort->NodeList[ Lvl ]->Entry_Ct *
@@ -4534,12 +4578,16 @@ ERRCODE hb_cdxSeek( CDXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFindLas
                   lRecno = 0;
                   pTag->TagEOF = 1;
                }
+               /*-----------------20/09/2002 11:38a.---------------
+                * maybe this is not needed anymore after last changes
+                * --------------------------------------------------
                else if( strncmp( pKey->item.asString.value, pTag->CurKeyInfo->Value,
                   ( pKey->item.asString.length < pTag->CurKeyInfo->length ?
                     pKey->item.asString.length : pTag->CurKeyInfo->length) ) != 0 )
                {
                   lRecno = 0;
                }
+               */
                break;
             }
          }
