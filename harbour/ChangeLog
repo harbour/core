@@ -1,3 +1,8 @@
+19990610-10:30 Alexander Kresin ( files posted by Marek Horodyski )
+  + source/rtl/natmsg/msgpl852.c
+  + source/rtl/natmsg/msgplmaz.c
+    National language message files for Polish
+
 19990609-12:55 EDT David G. Holm <dholm@jsd-llc.com>
   * source/rtl/files.c
     - Set _fmode to O_BINARY before using creat(),
