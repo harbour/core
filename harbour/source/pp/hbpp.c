@@ -1115,7 +1115,7 @@ static int RemoveSlash( char * stroka )
               {
                 hb_pp_Stuff( "", ptr, 0, 1, lenres - (ptr - stroka) );
                 lenres--;
-                ptr++;
+//                ptr++;
               }
           }
         break;
@@ -1859,7 +1859,7 @@ int hb_pp_RdStr( FILE * handl_i, char * buffer, int maxlen, BOOL lDropSpaces, ch
 {
   int readed = 0;
   int State = 0;
-  char cha,cLast='\0';
+  char cha, cLast = '\0', symbLast = '\0';
 
   HB_TRACE(HB_TR_DEBUG, ("hb_pp_RdStr(%p, %s, %d, %d, %s, %p, %p)", handl_i, buffer, maxlen, lDropSpaces, sBuffer, lenBuffer, iBuffer));
 
@@ -1874,7 +1874,12 @@ int hb_pp_RdStr( FILE * handl_i, char * buffer, int maxlen, BOOL lDropSpaces, ch
         }
       cha = sBuffer[ *iBuffer ];
       (*iBuffer)++;
-      if( cha == '\n' )  break;
+      if( cha == '\n' )
+      {
+         if( s_ParseState == STATE_COMMENT && symbLast == ';' )
+            buffer[readed++] = ';';         
+         break;
+      }
       if( maxlen > 0 )
         {
           switch( s_ParseState ) {
@@ -1885,6 +1890,7 @@ int hb_pp_RdStr( FILE * handl_i, char * buffer, int maxlen, BOOL lDropSpaces, ch
                 cha = ' ';
               }
             cLast = cha;
+            if( cha != ' ' && cha != '\t' ) symbLast = cha;
             break;
           case STATE_QUOTE1: if(cha=='\'') s_ParseState = STATE_NORMAL; break;
           case STATE_QUOTE2: if(cha=='\"') s_ParseState = STATE_NORMAL; break;
