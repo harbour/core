@@ -105,26 +105,31 @@ HB_FUNC( __VMSTKGLIST )
 }
 
 /* $Doc$
- * $FuncName$     <nVars> __vmStkLCount()
- * $Description$  Returns the length of the stack of the calling function
+ * $FuncName$     <nVars> __vmStkLCount( <nProcLevel> )
+ * $Description$  Returns params plus locals amount of the nProcLevel function
  * $End$ */
-static USHORT hb_stackLen( void )
+static USHORT hb_stackLen( int iLevel )
 {
    PHB_ITEM * pItem;
-   PHB_ITEM * pBase;
+   PHB_ITEM * pBase = hb_stack.pBase;
    USHORT uiCount = 0;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_stackLen()"));
 
-   pBase = hb_stack.pItems + ( *(hb_stack.pBase) )->item.asSymbol.stackbase;
-   for( pItem = pBase; pItem < hb_stack.pBase; pItem++, uiCount++ );
+   while( ( iLevel-- > 0 ) && pBase != hb_stack.pItems )
+   {
+      uiCount = pBase - ( hb_stack.pItems + ( *pBase )->item.asSymbol.stackbase ) - 2;
+      pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackbase;
+   }
 
    return uiCount;
 }
 
 HB_FUNC( __VMSTKLCOUNT )
 {
-   hb_retni( hb_stackLen() );
+   int iLevel = hb_parni( 1 ) + 1;
+
+   hb_retni( hb_stackLen( iLevel ) );
 }
 
 /* $Doc$
@@ -144,7 +149,7 @@ HB_FUNC( __VMSTKLLIST )
    PHB_ITEM * pItem;
    PHB_ITEM * pBase = hb_stack.pItems + ( *(hb_stack.pBase) )->item.asSymbol.stackbase;
 
-   USHORT uiLen = hb_stackLen();
+   USHORT uiLen = hb_stackLen( 1 );
    USHORT uiPos = 1;
 
    pReturn = hb_itemArrayNew( uiLen );           /* Create a transfer array  */
