@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+        Now only accept character, memo, numeric, date and logical
+        types of data.
+        Any other types of data is ignored.
+
 2002-04-22 14:14 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rdd/dbfntx/dbfntx1.c
   * source/rdd/dbcmd.c

@@ -194,19 +194,42 @@ static int hb_ntxItemCompare( char* s1, char* s2, int ilen1, int ilen2, BOOL Exa
 #define KEYPOINTER(P,N) ( (USHORT*)((P)->buffer+(N)*2+2) )
 #define hb_ntxKeyFree(K) hb_xfree(K)
 
-static int hb_ntxKeysInPage( ULONG ulRecCount, USHORT maxkeys )
+static ULONG* hb_ntxKeysInPage( ULONG ulRecCount, USHORT maxkeys )
 {
-  ULONG ulSum = 0;
-  int iLevel = 0;
-  double _maxkeys = (double) maxkeys;
+  double dSum = 0, koeff, _maxkeys = (double) maxkeys, 
+         recCount = (double)ulRecCount, dMul = 1;
+  int iLevel = 0, i, j;
+  ULONG *lpArray;
 
   do
   {
-     ulSum += maxkeys * (ULONG) pow( _maxkeys, (double)iLevel );
+     dSum += maxkeys * dMul;
+     dMul *= (_maxkeys+1);
      iLevel ++;
   }
-  while( ulSum < ulRecCount );
-  return iLevel;
+  while( dSum < recCount );
+
+  lpArray = (ULONG*) hb_xgrab( sizeof(int) * (iLevel+2) );
+  lpArray[0] = (ULONG)iLevel;
+  for( i=1; i<=iLevel; i++ )
+     lpArray[i] = 0;
+
+  for( i=iLevel; i; i-- )
+  {
+     koeff = dSum / recCount;
+     lpArray[i] = (ULONG) ceil( _maxkeys/koeff );
+     dMul = 1;
+     for( j=iLevel,dSum=0; j; j-- )
+     {
+        dSum += ( (lpArray[j])? lpArray[j]:maxkeys ) * dMul;
+        if( j > 1 )
+           dMul *= (double)(( (lpArray[j])? lpArray[j]:maxkeys )+1);
+     }
+  }
+  dSum -= recCount;
+  lpArray[iLevel+1] = (dMul > dSum)? (ULONG)(dMul - dSum):(ULONG)dMul;
+
+  return lpArray;
 }
 
 static void commonError( NTXAREAP pArea, USHORT uiGenCode, USHORT uiSubCode, char* filename, USHORT uiFlags )
@@ -2015,9 +2038,9 @@ static void hb_ntxSortKeyEnd( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo )
    }
 }
 
-static void hb_ntxRootPage( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo, LPSORTITEM pKey, USHORT maxKeys, USHORT level )
+static void hb_ntxRootPage( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo, LPSORTITEM pKey, ULONG* lpArray, USHORT level )
 {
-   USHORT i;
+   USHORT i, maxKeys = lpArray[level+1];
    LPNTXBUFFER itemlist;
    LPNTXITEM item;
 
@@ -2054,7 +2077,7 @@ static void hb_ntxRootPage( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo, LPSORTITEM 
       }
       if( !pKey )
          pTag->RootBlock = pSortInfo->Tag;
-      hb_ntxRootPage( pTag, pSortInfo, pKey, maxKeys, level+1 );
+      hb_ntxRootPage( pTag, pSortInfo, pKey, lpArray, level+1 );
    }
 }
 
@@ -2143,14 +2166,17 @@ static BOOL hb_ntxGetSortedKey( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo, LPSORTI
 
 static void hb_ntxBufferSave( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo )
 {
-   USHORT i, maxKeys = pTag->MaxKeys * 3/4;
+   USHORT i, maxKeys;
    LPNTXBUFFER itemlist;
    LPNTXITEM item;
-   ULONG numKey = 0;
+   ULONG numKey = 0, ulFullNodes;
    LPSORTITEM pKey = pSortInfo->pKeyFirst;
    char* buffer;
    BOOL lSave = FALSE;
+   ULONG* lpArray = hb_ntxKeysInPage( pSortInfo->ulKeyCount, pTag->MaxKeys );
 
+   maxKeys = (USHORT)lpArray[1];
+   ulFullNodes = lpArray[lpArray[0]+1];
    hb_fsSeek( pTag->Owner->DiskFile, 1024, FS_SET );
    pSortInfo->Tag = 0;
    pSortInfo->pageBuffers = (char**) hb_xgrab( sizeof( char* ) * 10 );
@@ -2216,11 +2242,17 @@ static void hb_ntxBufferSave( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo )
             lKeys = hb_ntxGetSortedKey( pTag, pSortInfo, &pKey, pKeyRoot );
             if( lKeys )
             {
-               hb_ntxRootPage( pTag, pSortInfo, pKeyRoot, maxKeys, 1 );
+               hb_ntxRootPage( pTag, pSortInfo, pKeyRoot, lpArray, 1 );
                numKey++;
             }
             else
-               hb_ntxRootPage( pTag, pSortInfo, NULL, maxKeys, 1 );
+               hb_ntxRootPage( pTag, pSortInfo, NULL, lpArray, 1 );
+            if( ulFullNodes )
+            {
+               ulFullNodes --;
+               if( !ulFullNodes )
+                  maxKeys --;
+            }
          }
       }
       while( lKeys );
@@ -2246,7 +2278,13 @@ static void hb_ntxBufferSave( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo )
             hb_fsWrite( pTag->Owner->DiskFile, (BYTE *) buffer, NTXBLOCKSIZE );
          }
          /* printf( "\nhb_ntxBufferSave - 5 ( numKey=%d )",numKey ); */
-         hb_ntxRootPage( pTag, pSortInfo, pKey, maxKeys, 1 );
+         hb_ntxRootPage( pTag, pSortInfo, pKey, lpArray, 1 );
+         if( ulFullNodes )
+         {
+            ulFullNodes --;
+            if( !ulFullNodes )
+               maxKeys --;
+         }
          if( pKey )
          {
             numKey ++;
@@ -2274,6 +2312,7 @@ static void hb_ntxBufferSave( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo )
          hb_xfree( pSortInfo->pageBuffers[ i ] );
       }
    hb_xfree( pSortInfo->pageBuffers );
+   hb_xfree( lpArray );
    if( !pTag->RootBlock )
       pTag->RootBlock = 1024;
 }
