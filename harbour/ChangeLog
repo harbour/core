@@ -1,3 +1,7 @@
+2001-07-23 18:15 GMT Dave Pearson <davep@davep.org>
+   * source/rtl/seconds.c
+      * Renamed CLOCKS2SECS() to HB_CLOCKS2SECS().
+	
 2001-07-23 20:10 MEST Martin Vogel <vogel@inttec.de>
 
    + contrib/libct/count.c

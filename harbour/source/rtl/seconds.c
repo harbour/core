@@ -84,7 +84,7 @@ HB_FUNC( SECONDS )
    hb_retnd( hb_dateSeconds() );
 }
 
-HB_FUNC( CLOCKS2SECS )
+HB_FUNC( HB_CLOCKS2SECS )
 {
    hb_retnl( hb_parnl( 1 ) / CLOCKS_PER_SEC );
 }
