@@ -265,12 +265,16 @@ void hb_compChkEnvironVar( char * szSwitch )
                       switch( *( s + 2 ) )
                       {
                          case '\0':
+                         case '2':
+                            hb_comp_iGenCOutput = HB_COMPGENC_VERBOSE;
+                            break;
+
                          case '1':
-                            hb_comp_bGenCVerbose = TRUE;
+                            hb_comp_iGenCOutput = HB_COMPGENC_NORMAL;
                             break;
 
                          case '0':
-                            hb_comp_bGenCVerbose = FALSE;
+                            hb_comp_iGenCOutput = HB_COMPGENC_COMPACT;
                             break;
 
                          default:

@@ -86,7 +86,7 @@ BOOL        hb_comp_bAutoMemvarAssume = FALSE;         /* holds if undeclared va
 BOOL        hb_comp_bForceMemvars = FALSE;             /* holds if memvars are assumed when accesing undeclared variable (-v)*/
 BOOL        hb_comp_bDebugInfo = FALSE;                /* holds if generate debugger required info */
 char        hb_comp_szPrefix[ 20 ] = { '\0' };         /* holds the prefix added to the generated symbol init function name (in C output currently) */
-BOOL        hb_comp_bGenCVerbose = TRUE;               /* C code generation should be verbose (use comments) or not */
+BOOL        hb_comp_iGenCOutput = HB_COMPGENC_VERBOSE; /* C code generation should be verbose (use comments) or not */
 int         hb_comp_iExitLevel = HB_EXITLEVEL_DEFAULT; /* holds if there was any warning during the compilation process */
 PATHNAMES * hb_comp_pIncludePath = NULL;
 int         hb_comp_iFunctionCnt;

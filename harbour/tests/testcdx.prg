@@ -17,8 +17,8 @@ function Main()
    FErase( "testcdx.cdx" )
 //   dbCreate( "testcdx", aStruct, "DBFCDX" )
    dbUseArea( ,, "testcdx", "MYALIAS" )
-   ordCreate( "testcdx", "1Tag ", "Character", { || Character }, .F. )
-   ordCreate( "testcdx", "2Tag ", "Character", { || Character }, .F. )
+   ordCreate( "testcdx", "1Tag ", "FIELD->Character", { || FIELD->Character }, .F. )
+   ordCreate( "testcdx", "2Tag ", "FIELD->Character", { || FIELD->Character }, .F. )
 //   ? MYALIAS->CHARACTER
 
 return nil

@@ -128,6 +128,8 @@ HB_GT_LIBS = \
 
 !if !$d(HB_GT_LIB)
 HB_GT_LIB = $(GTDOS_LIB)
+!else
+HB_GT_LIB = $(LIB_DIR)\$(HB_GT_LIB).lib
 !endif
 
 !else
@@ -141,7 +143,9 @@ HB_GT_LIBS = \
 
 !if !$d(HB_GT_LIB)
 HB_GT_LIB = $(GTWIN_LIB)
-!endif                  
+!else
+HB_GT_LIB = $(LIB_DIR)\$(HB_GT_LIB).lib
+!endif
 
 !endif
 

@@ -1,3 +1,30 @@
+20000420-23:33 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * tests/Makefile
+     ! Restored.
+
+   * makefile.vc
+   * makefile.bc
+     ! lib path is added to the GT driver name.
+
+   * include/hbcomp.h
+   * source/compiler/genc.c
+   * source/compiler/cmdcheck.c
+   * source/compiler/hbusage.c
+   * source/compiler/harbour.c
+     + Added new -gc output type, namely a simple byte dump.
+       Now -gc0 is the byte dump (this one is used by default when building 
+       Harbour itself, use HARBOURFLAGS to override), -gc1 is the pcode source
+       without comments, and -gc2 is the pcode source with comments, which is 
+       also the default.
+       When using -gc0 instead of -gc1, the size of the /obj dir after a 
+       Harbour build dropped by almost 25%
+       (~1300K, from 5830K to 4506K for BCC55).
+       
+   * source/compiler/genjava.c
+     ! Fixed some fputc() calls to hb_fputc() in GENJAVA
+     % Optimized the GENJAVA output generation. 
+
 2000-04-20 15:50 GMT-4 David G. Holm <dholm@jsd-llc.com>
   * config/w32/msvc.cf
     ! Added $(LIB_EXT) following $(HB_GT_LIB) for LINKLIBS variable.

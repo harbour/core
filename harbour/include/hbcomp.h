@@ -343,7 +343,7 @@ extern BOOL        hb_comp_bAutoMemvarAssume;
 extern BOOL        hb_comp_bForceMemvars;
 extern BOOL        hb_comp_bDebugInfo;
 extern char        hb_comp_szPrefix[ 20 ];
-extern BOOL        hb_comp_bGenCVerbose;
+extern int         hb_comp_iGenCOutput;
 extern int         hb_comp_iExitLevel;
 extern int         hb_comp_iFunctionCnt;
 extern char        hb_comp_cVarType;
@@ -370,6 +370,11 @@ extern USHORT      hb_comp_wCaseCounter;
 
 extern char *      hb_comp_szErrors[];
 extern char *      hb_comp_szWarnings[];
+
+/* /GC command line setting types */
+#define HB_COMPGENC_COMPACT     0
+#define HB_COMPGENC_NORMAL      1
+#define HB_COMPGENC_VERBOSE     2
 
 /* /ES command line setting types */
 #define HB_EXITLEVEL_DEFAULT    0

@@ -40,9 +40,10 @@
 #define SYM_FUNC    1              /* Defined function                  */
 #define SYM_EXTERN  2              /* Previously defined function       */
 
-static void hb_fputc( BYTE b, FILE * yyc );
-static void hb_fputs( char * szName, FILE * yyc );
+static void hb_fputc( BYTE b );
+static void hb_fputs( char * szName );
 
+static FILE * s_yyc;
 static int s_nChar = 0;
 
 void hb_compGenJava( PHB_FNAME pFileName )
@@ -55,14 +56,14 @@ void hb_compGenJava( PHB_FNAME pFileName )
    LONG lPad;
    LONG lSymbols;
    ULONG ulCodeLength;
-   FILE * yyc;             /* file handle for C output */
+   FILE * s_yyc;             /* file handle for C output */
 
    if( ! pFileName->szExtension )
       pFileName->szExtension = ".java";
    hb_fsFNameMerge( szFileName, pFileName );
 
-   yyc = fopen( szFileName, "wb" );
-   if( ! yyc )
+   s_yyc = fopen( szFileName, "wb" );
+   if( ! s_yyc )
    {
       hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_CREATE_OUTPUT, szFileName, NULL );
       return;
@@ -76,15 +77,15 @@ void hb_compGenJava( PHB_FNAME pFileName )
 
    s_nChar = 0;
 
-   fprintf( yyc, "/*\n * Harbour Compiler, %d.%d%s (Build %d) (%04d.%02d.%02d)\n",
+   fprintf( s_yyc, "/*\n * Harbour Compiler, %d.%d%s (Build %d) (%04d.%02d.%02d)\n",
       HB_VER_MAJOR, HB_VER_MINOR, HB_VER_REVISION, HB_VER_BUILD, HB_VER_YEAR, HB_VER_MONTH, HB_VER_DAY );
-   fprintf( yyc, " * Generated JAVA source code\n */\n\n" );
+   fprintf( s_yyc, " * Generated JAVA source code\n */\n\n" );
 
-   fprintf( yyc, "public class %s\n", pFileName->szName );
-   fprintf( yyc, "{\n" );
-   fprintf( yyc, "   public static int[] pCode =\n" );
-   fprintf( yyc, "   {\n" );
-   fprintf( yyc, "      " );
+   fprintf( s_yyc, "public class %s\n", pFileName->szName );
+   fprintf( s_yyc, "{\n" );
+   fprintf( s_yyc, "   public static int[] pCode =\n" );
+   fprintf( s_yyc, "   {\n" );
+   fprintf( s_yyc, "      " );
 
    /* writes the symbol table */
 
@@ -94,36 +95,36 @@ void hb_compGenJava( PHB_FNAME pFileName )
       lSymbols++;
       pSym = pSym->pNext;
    }
-   hb_fputc( ( BYTE ) ( ( lSymbols       ) & 255 ), yyc ); /* Write number symbols */
-   hb_fputc( ( BYTE ) ( ( lSymbols >> 8  ) & 255 ), yyc );
-   hb_fputc( ( BYTE ) ( ( lSymbols >> 16 ) & 255 ), yyc );
-   hb_fputc( ( BYTE ) ( ( lSymbols >> 24 ) & 255 ), yyc );
+   hb_fputc( ( BYTE ) ( ( lSymbols       ) & 255 ) ); /* Write number symbols */
+   hb_fputc( ( BYTE ) ( ( lSymbols >> 8  ) & 255 ) );
+   hb_fputc( ( BYTE ) ( ( lSymbols >> 16 ) & 255 ) );
+   hb_fputc( ( BYTE ) ( ( lSymbols >> 24 ) & 255 ) );
 
    pSym = hb_comp_symbols.pFirst;
    while( pSym )
    {
-      hb_fputs( pSym->szName, yyc );
-      hb_fputc( 0, yyc );
+      hb_fputs( pSym->szName );
+      hb_fputc( 0 );
       if( pSym->cScope != HB_FS_MESSAGE )
-         hb_fputc( pSym->cScope, yyc );
+         hb_fputc( pSym->cScope );
       else
-         hb_fputc( 0, yyc );
+         hb_fputc( 0 );
 
       /* specify the function address if it is a defined function or a
          external called function */
       if( hb_compFunctionFind( pSym->szName ) ) /* is it a defined function ? */
       {
-         hb_fputc( SYM_FUNC, yyc );
+         hb_fputc( SYM_FUNC );
       }
       else
       {
          if( hb_compFunCallFind( pSym->szName ) )
          {
-            hb_fputc( SYM_EXTERN, yyc );
+            hb_fputc( SYM_EXTERN );
          }
          else
          {
-            hb_fputc( SYM_NOLINK, yyc );
+            hb_fputc( SYM_NOLINK );
          }
       }
       pSym = pSym->pNext;
@@ -139,10 +140,10 @@ void hb_compGenJava( PHB_FNAME pFileName )
       lSymbols++;
       pFunc = pFunc->pNext;
    }
-   hb_fputc( ( BYTE ) ( ( lSymbols       ) & 255 ), yyc ); /* Write number symbols */
-   hb_fputc( ( BYTE ) ( ( lSymbols >> 8  ) & 255 ), yyc );
-   hb_fputc( ( BYTE ) ( ( lSymbols >> 16 ) & 255 ), yyc );
-   hb_fputc( ( BYTE ) ( ( lSymbols >> 24 ) & 255 ), yyc );
+   hb_fputc( ( BYTE ) ( ( lSymbols       ) & 255 ) ); /* Write number symbols */
+   hb_fputc( ( BYTE ) ( ( lSymbols >> 8  ) & 255 ) );
+   hb_fputc( ( BYTE ) ( ( lSymbols >> 16 ) & 255 ) );
+   hb_fputc( ( BYTE ) ( ( lSymbols >> 24 ) & 255 ) );
 
    /* Generate functions data
     */
@@ -152,13 +153,13 @@ void hb_compGenJava( PHB_FNAME pFileName )
 
    while( pFunc )
    {
-      hb_fputs( pFunc->szName, yyc );
-      hb_fputc( 0, yyc );
+      hb_fputs( pFunc->szName );
+      hb_fputc( 0 );
       ulCodeLength = pFunc->lPCodePos;
-      hb_fputc( ( BYTE ) ( ( ulCodeLength       ) & 255 ), yyc ); /* Write size */
-      hb_fputc( ( BYTE ) ( ( ulCodeLength >> 8  ) & 255 ), yyc );
-      hb_fputc( ( BYTE ) ( ( ulCodeLength >> 16 ) & 255 ), yyc );
-      hb_fputc( ( BYTE ) ( ( ulCodeLength >> 24 ) & 255 ), yyc );
+      hb_fputc( ( BYTE ) ( ( ulCodeLength       ) & 255 ) ); /* Write size */
+      hb_fputc( ( BYTE ) ( ( ulCodeLength >> 8  ) & 255 ) );
+      hb_fputc( ( BYTE ) ( ( ulCodeLength >> 16 ) & 255 ) );
+      hb_fputc( ( BYTE ) ( ( ulCodeLength >> 24 ) & 255 ) );
 
 /*      printf( "Creating output for %s\n", pFunc->szName ); */
 
@@ -213,14 +214,14 @@ void hb_compGenJava( PHB_FNAME pFileName )
             case HB_P_SEQRECOVER:
             case HB_P_TRUE:
             case HB_P_ZERO:
-               hb_fputc( pFunc->pCode[ lPCodePos++ ], yyc );
+               hb_fputc( pFunc->pCode[ lPCodePos++ ] );
                break;
 
             case HB_P_JUMPSHORT:
             case HB_P_JUMPSHORTFALSE:
             case HB_P_JUMPSHORTTRUE:
-               fputc( pFunc->pCode[ lPCodePos++ ], yyc );
-               fputc( pFunc->pCode[ lPCodePos++ ], yyc );
+               hb_fputc( pFunc->pCode[ lPCodePos++ ] );
+               hb_fputc( pFunc->pCode[ lPCodePos++ ] );
                break;
 
             case HB_P_ARRAYDIM:
@@ -251,9 +252,9 @@ void hb_compGenJava( PHB_FNAME pFileName )
             case HB_P_PUSHALIASEDFIELD:
             case HB_P_POPALIASEDVAR:
             case HB_P_PUSHALIASEDVAR:
-               hb_fputc( pFunc->pCode[ lPCodePos++ ], yyc );
-               hb_fputc( pFunc->pCode[ lPCodePos++ ], yyc );
-               hb_fputc( pFunc->pCode[ lPCodePos++ ], yyc );
+               hb_fputc( pFunc->pCode[ lPCodePos++ ] );
+               hb_fputc( pFunc->pCode[ lPCodePos++ ] );
+               hb_fputc( pFunc->pCode[ lPCodePos++ ] );
                break;
 
             case HB_P_JUMPFAR:
@@ -262,10 +263,10 @@ void hb_compGenJava( PHB_FNAME pFileName )
             case HB_P_PARAMETER:
             case HB_P_SEQBEGIN:
             case HB_P_SEQEND:
-               fputc( pFunc->pCode[ lPCodePos++ ], yyc );
-               fputc( pFunc->pCode[ lPCodePos++ ], yyc );
-               fputc( pFunc->pCode[ lPCodePos++ ], yyc );
-               fputc( pFunc->pCode[ lPCodePos++ ], yyc );
+               hb_fputc( pFunc->pCode[ lPCodePos++ ] );
+               hb_fputc( pFunc->pCode[ lPCodePos++ ] );
+               hb_fputc( pFunc->pCode[ lPCodePos++ ] );
+               hb_fputc( pFunc->pCode[ lPCodePos++ ] );
                break;
 
             case HB_P_FRAME:
@@ -282,9 +283,9 @@ void hb_compGenJava( PHB_FNAME pFileName )
 
                   if( bLocals || pFunc->wParamCount )
                   {
-                     hb_fputc( pFunc->pCode[ lPCodePos++ ], yyc );
-                     hb_fputc( ( BYTE )( bLocals - pFunc->wParamCount ), yyc );
-                     hb_fputc( ( BYTE )( pFunc->wParamCount ), yyc );
+                     hb_fputc( pFunc->pCode[ lPCodePos++ ] );
+                     hb_fputc( ( BYTE )( bLocals - pFunc->wParamCount ) );
+                     hb_fputc( ( BYTE )( pFunc->wParamCount ) );
                      lPCodePos += 2;
                   }
                   else
@@ -297,58 +298,58 @@ void hb_compGenJava( PHB_FNAME pFileName )
 
             case HB_P_PUSHBLOCK:
                wVar = * ( ( USHORT * ) &( pFunc->pCode [ lPCodePos + 5 ] ) );
-               hb_fputc(   pFunc->pCode[ lPCodePos++ ], yyc );
-               hb_fputc(   pFunc->pCode[ lPCodePos++ ], yyc );
-               hb_fputc(   pFunc->pCode[ lPCodePos++ ], yyc );
-               hb_fputc(   pFunc->pCode[ lPCodePos++ ], yyc );
-               hb_fputc(   pFunc->pCode[ lPCodePos++ ], yyc );
-               hb_fputc(   pFunc->pCode[ lPCodePos++ ], yyc );
-               hb_fputc(   pFunc->pCode[ lPCodePos++ ], yyc );
+               hb_fputc( pFunc->pCode[ lPCodePos++ ] );
+               hb_fputc( pFunc->pCode[ lPCodePos++ ] );
+               hb_fputc( pFunc->pCode[ lPCodePos++ ] );
+               hb_fputc( pFunc->pCode[ lPCodePos++ ] );
+               hb_fputc( pFunc->pCode[ lPCodePos++ ] );
+               hb_fputc( pFunc->pCode[ lPCodePos++ ] );
+               hb_fputc( pFunc->pCode[ lPCodePos++ ] );
                /* create the table of referenced local variables */
                while( wVar-- )
                {
-                  hb_fputc(   pFunc->pCode[ lPCodePos++ ], yyc );
-                  hb_fputc(   pFunc->pCode[ lPCodePos++ ], yyc );
+                  hb_fputc( pFunc->pCode[ lPCodePos++ ] );
+                  hb_fputc( pFunc->pCode[ lPCodePos++ ] );
                }
                break;
 
             case HB_P_PUSHDOUBLE:
                {
                   int i;
-                  hb_fputc( pFunc->pCode[ lPCodePos++ ], yyc );
+                  hb_fputc( pFunc->pCode[ lPCodePos++ ] );
                   for( i = 0; i < sizeof( double ); ++i )
-                     hb_fputc( ( ( BYTE * ) pFunc->pCode )[ lPCodePos + i ], yyc );
-                  hb_fputc( pFunc->pCode[ lPCodePos + sizeof( double ) ], yyc );
+                     hb_fputc( ( ( BYTE * ) pFunc->pCode )[ lPCodePos + i ] );
+                  hb_fputc( pFunc->pCode[ lPCodePos + sizeof( double ) ] );
                   lPCodePos += sizeof( double ) + 1;
                }
                break;
 
             case HB_P_PUSHLONG:
-               hb_fputc( pFunc->pCode[ lPCodePos++ ], yyc );
-               hb_fputc( pFunc->pCode[ lPCodePos++ ], yyc );
-               hb_fputc( pFunc->pCode[ lPCodePos++ ], yyc );
-               hb_fputc( pFunc->pCode[ lPCodePos++ ], yyc );
-               hb_fputc( pFunc->pCode[ lPCodePos++ ], yyc );
+               hb_fputc( pFunc->pCode[ lPCodePos++ ] );
+               hb_fputc( pFunc->pCode[ lPCodePos++ ] );
+               hb_fputc( pFunc->pCode[ lPCodePos++ ] );
+               hb_fputc( pFunc->pCode[ lPCodePos++ ] );
+               hb_fputc( pFunc->pCode[ lPCodePos++ ] );
                break;
 
             case HB_P_PUSHSTR:
                wLen = pFunc->pCode[ lPCodePos + 1 ] +
                       pFunc->pCode[ lPCodePos + 2 ] * 256;
-               hb_fputc( pFunc->pCode[ lPCodePos     ], yyc );
-               hb_fputc( pFunc->pCode[ lPCodePos + 1 ], yyc );
-               hb_fputc( pFunc->pCode[ lPCodePos + 2 ], yyc );
+               hb_fputc( pFunc->pCode[ lPCodePos     ] );
+               hb_fputc( pFunc->pCode[ lPCodePos + 1 ] );
+               hb_fputc( pFunc->pCode[ lPCodePos + 2 ] );
                lPCodePos += 3;
                while( wLen-- )
-                  hb_fputc( pFunc->pCode[ lPCodePos++ ], yyc );
+                  hb_fputc( pFunc->pCode[ lPCodePos++ ] );
                break;
 
             case HB_P_SFRAME:
                /* we only generate it if there are statics used in this function */
                if( pFunc->bFlags & FUN_USES_STATICS )
                {
-                   hb_fputc( pFunc->pCode[ lPCodePos++ ], yyc );
-                   hb_fputc( pFunc->pCode[ lPCodePos++ ], yyc );
-                   hb_fputc( pFunc->pCode[ lPCodePos++ ], yyc );
+                   hb_fputc( pFunc->pCode[ lPCodePos++ ] );
+                   hb_fputc( pFunc->pCode[ lPCodePos++ ] );
+                   hb_fputc( pFunc->pCode[ lPCodePos++ ] );
                }
                else
 	       {
@@ -358,11 +359,11 @@ void hb_compGenJava( PHB_FNAME pFileName )
                break;
 
             case HB_P_STATICS:
-                   hb_fputc( pFunc->pCode[ lPCodePos++ ], yyc );
-                   hb_fputc( pFunc->pCode[ lPCodePos++ ], yyc );
-                   hb_fputc( pFunc->pCode[ lPCodePos++ ], yyc );
-                   hb_fputc( pFunc->pCode[ lPCodePos++ ], yyc );
-                   hb_fputc( pFunc->pCode[ lPCodePos++ ], yyc );
+                   hb_fputc( pFunc->pCode[ lPCodePos++ ] );
+                   hb_fputc( pFunc->pCode[ lPCodePos++ ] );
+                   hb_fputc( pFunc->pCode[ lPCodePos++ ] );
+                   hb_fputc( pFunc->pCode[ lPCodePos++ ] );
+                   hb_fputc( pFunc->pCode[ lPCodePos++ ] );
                break;
 
             default:
@@ -377,46 +378,42 @@ void hb_compGenJava( PHB_FNAME pFileName )
          /* write additional bytes to agree with stored earlier
           * function/procedure size
           */
-         hb_fputc( 0, yyc );
+         hb_fputc( 0 );
       }
       pFunc = pFunc->pNext;
    }
 
-   fprintf( yyc, "\n   };\n\n" );
-   fprintf( yyc, "   static public void main( String argv[] )\n" );
-   fprintf( yyc, "   {\n" );
-   fprintf( yyc, "      Harbour.Run( %s.pCode ); \n", pFileName->szName );
-   fprintf( yyc, "   }\n\n" );
-   fprintf( yyc, "}\n" );
+   fprintf( s_yyc, "\n   };\n\n" );
+   fprintf( s_yyc, "   static public void main( String argv[] )\n" );
+   fprintf( s_yyc, "   {\n" );
+   fprintf( s_yyc, "      Harbour.Run( %s.pCode ); \n", pFileName->szName );
+   fprintf( s_yyc, "   }\n\n" );
+   fprintf( s_yyc, "}\n" );
 
-   fclose( yyc );
+   fclose( s_yyc );
 
    if( ! hb_comp_bQuiet )
       printf( "Done.\n" );
 }
 
-static void hb_fputc( BYTE b, FILE * yyc )
+static void hb_fputc( BYTE b )
 {
-   int x = b;
-
-   s_nChar++;
-
-   if( s_nChar > 1 )
-      fprintf( yyc, ", " );
+   if( ++s_nChar > 1 )
+      fprintf( s_yyc, ", " );
 
    if( s_nChar == 9 )
    {
-      fprintf( yyc, "\n      " );
+      fprintf( s_yyc, "\n      " );
       s_nChar = 1;
    }
 
-   fprintf( yyc, "0x%02X", x );
+   fprintf( s_yyc, "0x%02X", ( int ) b );
 }
 
-static void hb_fputs( char * szName, FILE * yyc )
+static void hb_fputs( char * szName )
 {
    unsigned int nPos = 0;
    while( nPos < strlen( szName ) )
-      hb_fputc( szName[ nPos++ ], yyc );
+      hb_fputc( szName[ nPos++ ] );
 }
 

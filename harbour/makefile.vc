@@ -115,6 +115,8 @@ HBDOC_EXE    = $(BIN_DIR)\hbdoc.exe
 
 !ifndef HB_GT_LIB
 HB_GT_LIB = $(GTWIN_LIB)
+!else
+HB_GT_LIB = $(LIB_DIR)\$(HB_GT_LIB).lib
 !endif
 
 #
