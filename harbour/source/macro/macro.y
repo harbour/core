@@ -77,6 +77,11 @@
 #define free hb_xfree
 /* This is workaround of yyparse() declaration bug in bison.simple
 */
+
+#if !defined(__GNUC__)
+   void __yy_memcpy ( char*, char*, unsigned int ); /* to satisfy Borland compiler */
+#endif
+
 #ifdef __GNUC__
 #undef __GNUC__
 #endif

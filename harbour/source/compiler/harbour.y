@@ -55,6 +55,9 @@ extern void yy_delete_buffer( void * ); /* yacc functions to manage multiple fil
 #endif
 
 /* lex & yacc related prototypes */
+#if !defined(__GNUC__)
+extern void __yy_memcpy ( char*, char*, unsigned int ); /* to satisfy Borland compiler */
+#endif
 extern int yyparse( void );    /* main yacc parsing function */
 extern void yyerror( char * ); /* parsing error management function */
 extern int yylex( void );      /* main lex token function, called by yyparse() */
