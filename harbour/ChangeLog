@@ -1,3 +1,7 @@
+19991231-06:15 GMT+1 Antonio Linares <alinares@fivetech.com>
+  * source/rtl/gt/gtwin.c
+    * fix for a Win API wrong parameter call detected using NuMega BoundsChecker
+
 19991230-19:28 GMT+1 Patrick Mast <Harbour@PatrickMast.com>
   + doc/harbour.ng (Luiz Rafael Culik)
 

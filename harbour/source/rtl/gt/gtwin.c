@@ -140,7 +140,8 @@ void hb_gt_Init( void )
       }
    }
 
-   SetConsoleMode( hb_gtHInput, 0 );
+   if( hb_gtHInput != INVALID_HANDLE_VALUE )
+      SetConsoleMode( hb_gtHInput, 0 );
 
    /* ptucker */
    s_HOriginal = CreateFile( "CONOUT$",     /* filename    */
