@@ -1,3 +1,7 @@
+20000202-16:40 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+    *include/hbver.c
+	* fixed version and revision numbers
+
 20000202-13:50 GMT+1 Patrick Mast <harbour@PatrickMast.com>
    * include/hbver.c
      * Updated to version 31a
