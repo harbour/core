@@ -1,3 +1,11 @@
+19991016-14:40 GMT+8 Ron Pinkas <Ron@Profit-Master.com>
+   * compiler.h
+	  + added lLstPushPos to PFUNCTION structure to support nesting (like in blocks ).
+
+   * harbour.y
+          * Corrected bug with Push/Pop optimizer when var assignment in CodeBlock used.
+	  + added Push/Pop Optimizer support to CodeBlock expressions list.
+
 19991016-20:46 GMT+1 Victor Szel <info@szelvesz.hu>
    * tests/test.dbf
      ! Readded in binary mode

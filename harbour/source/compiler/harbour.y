@@ -511,7 +511,6 @@ PHB_FNAME _pFileName     = NULL;
 PHB_FNAME _pOutPath      = NULL;
 ALIASID_PTR pAliasId     = NULL;
 ULONG _ulLastLinePos     = 0;    /* position of last opcode with line number */
-LONG _lLastPushPos       = -1; /* position of last push pcode */
 BOOL _bDontGenLineNum    = FALSE;   /* suppress line number generation */
 
 EXPLIST_PTR _pExpList    = NULL;    /* stack used for parenthesized expressions */
@@ -1012,10 +1011,10 @@ CodeBlock  : BlockBegin '|' BlockExpList '}'           { CodeBlockEnd(); }
 BlockBegin : '{' '|'  { CodeBlockStart(); }
            ;
 
-BlockExpList : Expression                            { $$ = 1; }
-           | ','                            { PushNil(); GenPopPCode(); PushNil(); $$ = 2; }
-           | BlockExpList ','                        { GenPopPCode(); PushNil(); $$++; }
-           | BlockExpList ',' { GenPopPCode(); } Expression  { $$++; }
+BlockExpList : { SetLastPushPos(); } Expression                            { $$ = 1; }
+           | ','                            { SetLastPushPos(); PushNil(); RemoveExtraPush(); PushNil(); $$ = 2; }
+           | BlockExpList ',' { RemoveExtraPush(); PushNil(); $$++; }
+           | BlockExpList ',' { RemoveExtraPush(); } Expression  { $$++; }
            ;
 
 BlockList  : IDENTIFIER AsType                { AddVar( $1 ); $$ = 1; }
@@ -2088,16 +2087,11 @@ void FunMacroAssign( void )
    _ulBufferSize = functions.pLast->lPCodePos - _ulBookMark ;
    _pCodeBuffer  = ( BYTE * ) hb_xgrab( _ulBufferSize + 1);
 
-   //printf( "\n%s BookMark:%i Pos: %i\n", functions.pLast->pCode + _ulBookMark, _ulBookMark, functions.pLast->lPCodePos );
-
-   //memcpy( _pCodeBuffer, functions.pLast->pCode + _ulBookMark, _ulBufferSize );
    while( i < _ulBufferSize )
    {
       _pCodeBuffer[ i ] = functions.pLast->pCode[ _ulBookMark + i ];
       i++;
    }
-
-   //printf( "\n%s\n", _pCodeBuffer );
 
    Do( 1 );
 
@@ -2107,7 +2101,6 @@ void FunMacroAssign( void )
    PushSymbol( yy_strdup( "__MVPUT" ), 1);
    PushNil();
 
-   //memcpy( functions.pLast->pCode + functions.pLast->lPCodePos, _pCodeBuffer, _ulBufferSize );
    i = 0;
    while( i < _ulBufferSize )
    {
@@ -2116,7 +2109,6 @@ void FunMacroAssign( void )
    }
 
    hb_xfree( ( void * ) _pCodeBuffer );
-
 }
 
 void AddVar( char * szVarName )
@@ -2684,14 +2676,13 @@ PFUNCTION FunctionNew( char * szName, SYMBOLSCOPE cScope )
    pFunc->pCode        = NULL;
    pFunc->lPCodeSize   = 0;
    pFunc->lPCodePos    = 0;
+   pFunc->lLastPushPos = -1;
    pFunc->pNext        = NULL;
    pFunc->wParamCount  = 0;
    pFunc->wParamNum    = 0;
    pFunc->iStaticsBase = _iStatics;
    pFunc->pOwner       = NULL;
    pFunc->bFlags       = 0;
-
-   _lLastPushPos = -1;
 
    return pFunc;
 }
@@ -3385,7 +3376,7 @@ void Line( void ) /* generates the pcode with the currently compiled source code
    }
    _bDontGenLineNum = FALSE;
    functions.pLast->bFlags &= ~ FUN_WITH_RETURN;   /* clear RETURN flag */
-   _lLastPushPos = -1;
+   functions.pLast->lLastPushPos = -1;
 }
 
 /* Generates the pcode with the currently compiled source code line
@@ -4044,26 +4035,17 @@ static void GenNegatePCode( void )
 
 static void SetLastPushPos( void )
 {
-   PFUNCTION pFunc = functions.pLast;   /* get the currently defined Clipper function */
-
-   _lLastPushPos = pFunc->lPCodePos;
+   functions.pLast->lLastPushPos = functions.pLast->lPCodePos;
 }
 
 static void RemoveExtraPush( void )
 {
-   /* NOTE: Commented out because it will break the pcode generation for 
-            assigments inside codeblocks and possibly for some other cases, 
-            too. */
-#if 0
-   PFUNCTION pFunc = functions.pLast;   /* get the currently defined Clipper function */
-
-   if( _lLastPushPos > -1 && pFunc->lPCodePos > _lLastPushPos )
+   if( functions.pLast->lLastPushPos > -1 && functions.pLast->lPCodePos > functions.pLast->lLastPushPos )
    {
-      pFunc->lPCodePos = _lLastPushPos;
-      _lLastPushPos = -1;
+      functions.pLast->lPCodePos = functions.pLast->lLastPushPos;
+      functions.pLast->lLastPushPos = -1;
    }
    else
-#endif
       GenPCode1( HB_P_POP );
 
    ValTypePop( 1 );
@@ -4081,9 +4063,9 @@ static void GenPCode1( BYTE byte )
 
    if( ! pFunc->pCode )   /* has been created the memory block to hold the pcode ? */
    {
-      pFunc->pCode      = ( BYTE * ) hb_xgrab( PCODE_CHUNK );
-      pFunc->lPCodeSize = PCODE_CHUNK;
-      pFunc->lPCodePos  = 0;
+      pFunc->pCode        = ( BYTE * ) hb_xgrab( PCODE_CHUNK );
+      pFunc->lPCodeSize   = PCODE_CHUNK;
+      pFunc->lPCodePos    = 0;
    }
    else
       if( ( pFunc->lPCodeSize - pFunc->lPCodePos ) < 1 )
@@ -4098,9 +4080,9 @@ static void GenPCode3( BYTE byte1, BYTE byte2, BYTE byte3 )
 
    if( ! pFunc->pCode )   /* has been created the memory block to hold the pcode ? */
    {
-      pFunc->pCode      = ( BYTE * ) hb_xgrab( PCODE_CHUNK );
-      pFunc->lPCodeSize = PCODE_CHUNK;
-      pFunc->lPCodePos  = 0;
+      pFunc->pCode        = ( BYTE * ) hb_xgrab( PCODE_CHUNK );
+      pFunc->lPCodeSize   = PCODE_CHUNK;
+      pFunc->lPCodePos    = 0;
    }
    else
       if( ( pFunc->lPCodeSize - pFunc->lPCodePos ) < 3 )
@@ -4117,9 +4099,9 @@ static void GenPCodeN( BYTE * pBuffer, ULONG ulSize )
 
    if( ! pFunc->pCode )   /* has been created the memory block to hold the pcode ? */
    {
-      pFunc->lPCodeSize = ( ( ulSize / PCODE_CHUNK ) + 1 ) * PCODE_CHUNK;
-      pFunc->pCode      = ( BYTE * ) hb_xgrab( pFunc->lPCodeSize );
-      pFunc->lPCodePos  = 0;
+      pFunc->lPCodeSize   = ( ( ulSize / PCODE_CHUNK ) + 1 ) * PCODE_CHUNK;
+      pFunc->pCode        = ( BYTE * ) hb_xgrab( pFunc->lPCodeSize );
+      pFunc->lPCodePos    = 0;
    }
    else if( pFunc->lPCodePos + ulSize > pFunc->lPCodeSize )
    {
