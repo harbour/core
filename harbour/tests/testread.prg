@@ -14,6 +14,8 @@ function Main()
    SET COLOR TO GR+/B, W+/BG
    CLS
 
+   SET KEY -1 TO ShowVar()
+
    @ 2, 2 SAY "  Enter your name:" GET cName
    @ 4, 2 SAY "  Enter your wish:" GET cWish
    @ 6, 2 SAY "Enter your effort:" GET cEffort
@@ -26,3 +28,8 @@ function Main()
 
 return nil
 
+function ShowVar()
+
+   Alert( Readvar() )
+
+return nil

@@ -1,3 +1,13 @@
+20000211-04:15 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/rtl/tgetlist.prg
+     * proper support for ReadVar()
+
+   - source/rtl/readvar.prg
+     * removed. It was obsolete.
+
+   * tests/testread.prg
+     * enhanced to test ReadVar() when pressing F2
+
 20000210-23:53 GMT+1 Victor Szakats <info@szelvesz.hu>
    * include/hboo.ch
      source/rtl/classes.c
@@ -9,7 +19,7 @@
      source/rtl/readvar.prg
      * My name changed to the real one.
    * source/rtl/filesys.c
-     ! Minor formatting fix.  
+     ! Minor formatting fix.
 
 20000210-14:45 EST Paul Tucker <ptucker@sympatico.ca>
    * makefile.vc
@@ -29,24 +39,24 @@
 20000210-15:15 GMT+3 Alexander Kresin
    * source/rtl/setfunc.prg
      * minor bug fixed:
-       #include "common.ch" was missed, so ISCHARACTER() 
+       #include "common.ch" was missed, so ISCHARACTER()
        caused 'unresolved external' message while app linking
 
 20000210-13:20 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.l
 	* fixed syntax for RETURN statement
-	
+
     *source/compiler/hbgenerr.c
 	* changed warning level for 'unreachable code' - it will be generated
 	if /w2 option is used
-	
+
     *source/genc.c
 	* fixed 'unused "wSym" variable' warning
-	
+
     *tests/keywords.prg
 	* added some more code related to RETURN statement
-	
+
 20000209-22:37 EST Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/tone.c
      * change _Windows to _WINDOWS_

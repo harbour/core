@@ -34,7 +34,7 @@ COMMON_LIB_OBJS   = $(OBJ_DIR)\hbfsapi.obj \
                     $(OBJ_DIR)\reserved.obj \
                     $(OBJ_DIR)\hbtrace.obj
 
-PP_LIB            = $(LIB_DIR)\pp.lib
+PP_LIB            = $(LIB_DIR)\hbpp.lib
 PP_LIB_OBJS       = $(OBJ_DIR)\hbppint.obj \
                     $(OBJ_DIR)\hbpp.obj \
                     $(OBJ_DIR)\table.obj \
@@ -146,7 +146,6 @@ HARBOUR_LIB_OBJS  = $(OBJ_DIR)\achoice.obj \
                     $(OBJ_DIR)\proc.obj \
                     $(OBJ_DIR)\pvalue.obj \
                     $(OBJ_DIR)\readkey.obj \
-                    $(OBJ_DIR)\readvar.obj \
                     $(OBJ_DIR)\samples.obj \
                     $(OBJ_DIR)\set.obj \
                     $(OBJ_DIR)\setcolor.obj \
@@ -735,13 +734,6 @@ $(OBJ_DIR)\readkey.c : $(RTL_DIR)\readkey.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
 
 $(OBJ_DIR)\readkey.obj : $(OBJ_DIR)\readkey.c
-   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
-   tlib $(HARBOUR_LIB) -+$@,,
-
-$(OBJ_DIR)\readvar.c : $(RTL_DIR)\readvar.prg
-   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
-
-$(OBJ_DIR)\readvar.obj : $(OBJ_DIR)\readvar.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
@@ -1410,4 +1402,3 @@ $(OBJ_DIR)\gentrf.c : $(HBDOC_DIR)\gentrf.prg
 
 $(OBJ_DIR)\gentrf.obj : $(OBJ_DIR)\gentrf.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
-
