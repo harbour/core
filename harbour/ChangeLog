@@ -1,3 +1,7 @@
+2001-09-06 14:39 UTC+0300 Chen Kedem <niki@actcom.co.il>
+   + doc/dirstruc.txt
+     * add a document which list Harbour directory structure
+
 2001-09-06 09:34 GMT+1 Antonio Linares <alinares@fivetech.com>
    * harbour/source/rtl/persist.prg
      Method CreateNew() added

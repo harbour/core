@@ -1,0 +1,220 @@
+/*
+ * $Id:
+ */
+
+Harbour directory structure
+===========================
+
+Follow are the various directories that exist under the Harbour tree.
+Under each directory exist in this list there is also a special directory
+named CVS, which should normally ignored since it is used by the CVS to keep
+track of all files (read the FAQ if you don't know what CVS is). Note that
+the tree might contain other empty directories, they might be obsolete but
+there is no simple way to remove them completely (you can use: cvs update -d
+in order to remove empty directories)
+
+
+<harbour>              - Main Harbour directory. Contain all the various make
+|                        file and Changelog (=changes history) files.
+|
++---bin                - Executable and build scripts.
+|   |                    Should contain HARBOUR.EXE and other executable. (*)
+|   |
+|   +---b16            -
+|   |
+|   +---b32            -
+|   |
+|   +---vc             -
+|
++---config             - Configuration Files (.cf) for the GNU Make system.
+|   |
+|   +---dos            -
+|   |
+|   +---linux          -
+|   |
+|   +---os2            -
+|   |
+|   +---w32            -
+|
++---contrib            - Miscellaneous contribution files. Those are not part
+|   |                    of the official Harbour project.
+|   |
+|   +---directx        - DirectDraw implementation for Windows.
+|   |   |
+|   |   +---lib        -
+|   |   |   |
+|   |   |   +---vc     -
+|   |   |
+|   |   +---media      -
+|   |   |
+|   |   +---samples    -
+|   |
+|   +---dot            - Pre-Processor/Dot prompt environment.
+|   |
+|   +---hbclip         - Harbour Compatibility Library (HCL) for CA-Clipper 5.x
+|   |
+|   +---hbzlib         - Interface for 'zlib' general purpose compression
+|   |   |                library to work with ZIP files.
+|   |   |
+|   |   +---doc        - Documents for the ZIP functions.
+|   |
+|   +---hb_struc       - Base Class for internal handling of class creation
+|   |                    as structures.
+|   |
+|   +---hgf            - Harbour GUI framework.
+|   |   |
+|   |   +---gtk        - Implementation for GTK environment.
+|   |   |
+|   |   +---os2pm      - Implementation for OS/2 Presentation Manager
+|   |   |                environment.
+|   |   |
+|   |   +---tests      - Test programs.
+|   |   |
+|   |   +---win32      - Implementation for Win32 environment.
+|   |
+|   +---libct          - CA-T**ls Compatible Library for Harbour.
+|   |   |
+|   |   +---alt        - Alternate version of CT function.
+|   |   |
+|   |   +---tests      - Test programs.
+|   |
+|   +---libgt          - GT library port to Harbour.
+|   |   |
+|   |   +---doc        - Documents for the GT library.
+|   |       |
+|   |       +---en     - English documentation.
+|   |
+|   +---libmisc        - Miscellaneous contribution.
+|   |   |
+|   |   +---doc        - Documents for above contribution.
+|   |       |
+|   |       +---en     - English documentation.
+|   |
+|   +---libnf          - Nanforum library port for Harbour.
+|   |
+|   +---msql           - Harbour mSQL access classes.
+|   |
+|   +---mysql          - Harbour MySQL access classes.
+|   |
+|   +---odbc           - ODBS Access Class Demonstration.
+|   |
+|   +---pdflib         - PDF low level Api for HBDOC to inteface with PDFlib.
+|   |
+|   +---rdd_ads        - RDD for Advantage Database Server.
+|   |   |
+|   |   +---doc        - Documents for Advantage Database Server RDD.
+|   |       |
+|   |       +---en     - English documentation.
+|   |
+|   +---runjava        - JAVA runner for Harbour Portable Object (.HRB) files.
+|   |
+|   +---samples        - Miscellaneous contribution files.
+|   |
+|   +---tprepro        - PreProcessor class based on Harbour Preprocessor
+|                        runtime library.
+|
++---doc                - Documentation and white-paper.
+|   |
+|   +---en             - English documentation.
+|   |
+|   +---es             - Spanish documentation.
+|
++---include            - Include files for both Harbour and C.
+|
++---lib                - Run-Time libraries binaries for each platform. (*)
+|   |
+|   +---b16            -
+|   |
+|   +---b32            -
+|   |
+|   +---vc             -
+|
++---obj                - Object files. (*)
+|   |
+|   +---b16            -
+|   |
+|   +---b32            -
+|   |
+|   +---vc             -
+|
++---samples            - Sample files and small applications.
+|   |
+|   +---guestbk        - Harbour Guests Book.
+|   |
+|   +---hscript        - Harbour Script.
+|   |
+|   +---misc           - a few humble demonstration.
+|   |
+|   +---pe             - Editor.
+|
++---source             - All source files reside underneath.
+|   |
+|   +---common         - Common function and Expression Optimizer.
+|   |
+|   +---compiler       - Harbour compiler module.
+|   |
+|   +---debug          - Debugger.
+|   |
+|   +---lang           - National language message support files.
+|   |
+|   +---macro          - Macro compiler.
+|   |
+|   +---pp             - Harbour Preprocessor.
+|   |
+|   +---rdd            - Replaceable Database Driver (RDD).
+|   |   |
+|   |   +---dbfcdx     - DBFCDX RDD.
+|   |   |
+|   |   +---dbfntx     - DBFNTX RDD.
+|   |   |
+|   |   +---nulsys     - NULL RDD.
+|   |
+|   +---rtl            - Run-Time libraries functions and various General
+|   |   |                Terminal (GT) implementation
+|   |   |
+|   |   +---gtcgi      -
+|   |   |
+|   |   +---gtcrs      - GT subsystem based on ncurses.
+|   |   |
+|   |   +---gtdos      - GT subsystem for DOS compilers.
+|   |   |
+|   |   +---gtos2      - GT subsystem for OS/2 compilers.
+|   |   |
+|   |   +---gtpca      - GT subsystem for ANSI terminals.
+|   |   |
+|   |   +---gtsln      - GT subsystem based on slang.
+|   |   |
+|   |   +---gtstd      - GT subsystem for plain ANSI C stream IO.
+|   |   |
+|   |   +---gtwin      - GT subsystem for Win32 compilers.
+|   |   |
+|   |   +---gt_tpl     - GT subsystem template.
+|   |
+|   +---vm             - Harbour Virtual Machine and internal Run-Time library
+|                        functions.
+|
++---tests              - Test programs.
+|
++---utils              - Utilities and tools that are part of Harbour.
+    |
+    +---hbdoc          - Documentation generation tool.
+    |
+    +---hbextern       - HBEXTERN.CH generator.
+    |
+    +---hbmake         - Harbour Make utility.
+    |
+    +---hbpp           - Harbour Preprocessor as a standalone module.
+    |
+    +---hbrun          - Standalone Harbour Portable Object file runner.
+    |
+    +---hbtest         - Regression tests for the Run-Time library.
+
+
+Legend:
+=======
+(*)      Should exist in a final build or if you build them yourself, in normal
+         CVS distribution this directory is empty or does not contain all
+         files.
+
+
+Chen Kedem <niki@actcom.co.il>
