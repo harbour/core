@@ -96,8 +96,8 @@ HB_FUNC( FREAD )
    {
       PHB_ITEM pItem = hb_itemUnRef( hb_stackItemFromBase( 2 ) );
 
-      if( pItem->item.asString.bStatic /* == TRUE */ ||
-          ( * pItem->item.asString.puiHolders ) > 1 )
+      if( pItem->item.asString.bStatic ||
+          ( * pItem->item.asString.u.puiHolders ) > 1 )
          hb_itemPutC( pItem, hb_parc( 2 ) );
 
       ulRead = hb_parnl( 3 );

@@ -8,8 +8,19 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-01-28 11:25 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * include/hbapi.h
+  * source/rtl/philes.c
+  * source/vm/itemapi.c
+  * source/vm/hvm.c
+    * Optimization of string operations. Now if the size of the string is less
+      than sizeof(short int *) - in most systems it is 4, it is kept in the
+      item itself, additional memory isn't allocated for it.
+      This leads to performance improvement and decreasing of memory
+      fragmentation/usage.
+
 2003-01-26 16:20 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
-  * hbapiitm.h
+  * include/hbapiitm.h
   * source/vm/itemapi.c
   * source/vm/hvm.c
     * hb_itemMove() function added, which is intended for use instead of

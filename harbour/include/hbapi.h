@@ -200,8 +200,12 @@ struct hb_struString
 {
    ULONG length;
    char * value;
-   BOOL bStatic;        /* it is a static string from pcode or from a C string */
-   USHORT * puiHolders; /* number of holders of this string */
+   SHORT bStatic;        /* it is a static string from pcode or from a C string */
+   union
+   {
+      char   value[1];
+      USHORT * puiHolders; /* number of holders of this string */
+   } u;
 };
 
 struct hb_struSymbol
