@@ -1,7 +1,32 @@
+2000-09-07 00:10 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * include/hbcomp.h
+   * source/compiler/harbour.c
+     + Added: char hb_comp_cCastType
+
+   * source/compiler/harbour.y
+     ! Optimized AsType
+     + Added: support for type casting like: Var := FunCal() AS ... and, return Var AS ...
+     /* Todo: add support for Array[n] := ... AS ..., and oVar:Data := ... AS ... */
+
+   * source/compiler/hbpcode.c
+     + Added type casting support to:
+       HB_P_POPLOCAL
+       HB_P_POPLOCALNEAR
+       HB_P_POPMEMVAR
+       HB_P_POPSTATIC
+       HB_P_RETVALUE
+
+   * include/hbclass.ch
+     + Added type casting to resolve Strong Type warnings:
+       return s_oClass:Instance() AS CLASS _CLASS_NAME_
+       local Self AS CLASS <ClassName> := QSelf() AS CLASS <ClassName>
+
+   /* Note: Strong Type code, and Class code, should compile with upto -w4, without [invalid] Strong Type warnings. */
+
 2000-09-06 12:40 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/harbour.l
      + Added AS CHAR[ACTER] for compatibility with FW (FW can't use #translate AS CHAR => AS STRING, because FW also uses AS CHAR
-       in DLL calls where AS CHAR referes to *native* char type).
+       in DLL calls where AS CHAR refers to *native* char type).
      ! Correted AS ... to allow multiple space/tab, and support abbreviations.
 
    * source/compiler/simplex.c
@@ -12,7 +37,7 @@
 
    * source/compiler/harbour.slx
      + Added AS CHAR[ACTER] for compatibility with FW (FW can't use #translate AS CHAR => AS STRING, because FW also uses AS CHAR
-       in DLL calls where AS CHAR referes to *native* char type.
+       in DLL calls where AS CHAR refers to *native* char type.
      ! Optimized numerous HB_*_ID to a single HB_IDENTIFIER.
 
    * include/hbclass.ch

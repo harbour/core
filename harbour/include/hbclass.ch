@@ -47,7 +47,7 @@
  * See doc/license.txt for licensing terms.
  *
  */
-/*
+
 DECLARE TClass ;
 	New( cName AS STRING, OPTIONAL SuperParams ) AS CLASS TClass ;
 	Create() AS OBJECT;
@@ -57,7 +57,7 @@ DECLARE TClass ;
 	AddMultiData( cType AS STRING, uVal, nScope AS NUMERIC, aDatas AS ARRAY OF STRING );
 	AddMethod( cName AS STRING, @MethodName(), nScope AS NUMERIC );
 	AddInLine( cName AS STRING, bBlock AS CODEBLOCK, nScope AS NUMERIC );
-        AddVirtual( cName AS STRING ) */
+        AddVirtual( cName AS STRING )
 
 #ifndef HB_CLASS_CH_
 #define HB_CLASS_CH_
@@ -422,7 +422,7 @@ DECLARE TClass ;
 #xcommand ENDCLASS => ;;
                       s_oClass:Create() ;;
                       endif ;;
-                      return s_oClass:Instance()
+                      return s_oClass:Instance() AS CLASS _CLASS_NAME_
 
 #xtranslate :Super( <SuperClass> ) : => :<SuperClass>:
 #xtranslate :Super() : => :Super:
@@ -432,28 +432,28 @@ DECLARE TClass ;
 
 #xcommand METHOD <MethodName>( [<params,...>] ) CLASS <ClassName> => ;
           static function <ClassName>_<MethodName>( [<params>] ) ;;
-          local Self AS CLASS <ClassName> := QSelf()
+          local Self AS CLASS <ClassName> := QSelf() AS CLASS <ClassName>
 
 #xcommand ACCESS <AccessName>() CLASS <ClassName> => ;
           static function <ClassName>_<AccessName>() ;;
-          local Self AS CLASS <ClassName> := QSelf()
+          local Self AS CLASS <ClassName> := QSelf() AS CLASS <ClassName>
 
 #xcommand ASSIGN <AssignName>( [<params,...>] ) CLASS <ClassName> => ;
           static function <ClassName>__<AssignName>( [<params>] ) ;;
-          local Self AS CLASS <ClassName> := QSelf()
+          local Self AS CLASS <ClassName> := QSelf() AS CLASS <ClassName>
 #else
 
 #xcommand METHOD <MethodName>( [<params,...>] ) CLASS <ClassName> => ;
           static function <MethodName>( [<params>] ) ;;
-          local Self AS CLASS <ClassName> := QSelf()
+          local Self AS CLASS <ClassName> := QSelf() AS CLASS <ClassName>
 
 #xcommand ACCESS <AccessName>() CLASS <ClassName> => ;
           static function <AccessName>() ;;
-          local Self AS CLASS <ClassName> := QSelf()
+          local Self AS CLASS <ClassName> := QSelf() AS CLASS <ClassName>
 
 #xcommand ASSIGN <AssignName>( [<params,...>] ) CLASS <ClassName> => ;
           static function _<AssignName>( [<params>] ) ;;
-          local Self AS CLASS <ClassName> := QSelf()
+          local Self AS CLASS <ClassName> := QSelf() AS CLASS <ClassName>
 
 #endif /* HB_SHORTNAMES */
 

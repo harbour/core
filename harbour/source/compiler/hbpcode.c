@@ -257,6 +257,9 @@ void hb_compStrongType( int iSize )
         break;
 
      case HB_P_RETVALUE :
+       if( pFunc->iStackIndex < 1 )
+          break;
+
        pFunc->iStackIndex--;
 
        pSym = hb_compSymbolFind( pFunc->szName, NULL );
@@ -269,6 +272,38 @@ void hb_compStrongType( int iSize )
 
           if( pDeclared )
           {
+             if( hb_comp_cCastType == ' ' )
+                ; /* No casting - do nothing. */
+             else if( toupper( hb_comp_cCastType ) == 'S' )
+             {
+                PCOMCLASS pClass = hb_compClassFind( hb_comp_szFromClass );
+
+                if( pClass )
+                {
+                   if( toupper( pFunc->pStack[ pFunc->iStackIndex ] ) == 'S' && pFunc->iStackClasses )
+                   {
+                      pFunc->pStackClasses[ pFunc->iStackClasses - 1 ] = pClass;
+                   }
+                   else
+                   {
+                      pFunc->pStackClasses[ pFunc->iStackClasses++ ] = pClass;
+                   }
+                   pFunc->pStack[ pFunc->iStackIndex ] = hb_comp_cCastType;
+                }
+                else
+                {
+                   hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, hb_comp_szFromClass, pDeclared->szName );
+                   pFunc->pStack[ pFunc->iStackIndex ] = ( isupper(  ( int ) hb_comp_cCastType ) ? 'O' : 'o' );
+                }
+
+                hb_comp_cCastType = ' ';
+             }
+             else
+             {
+                pFunc->pStack[ pFunc->iStackIndex ] = hb_comp_cCastType;
+                hb_comp_cCastType = ' ';
+             }
+
              /* Variant as SubType. */
              if( pFunc->pStack[ pFunc->iStackIndex ]  >= ( 'A' + VT_OFFSET_VARIANT ) )
                 cSubType1 = ( pFunc->pStack[ pFunc->iStackIndex ] -= VT_OFFSET_VARIANT );
@@ -278,9 +313,9 @@ void hb_compStrongType( int iSize )
              if( cSubType1 )
              {
                 if( cSubType1 == 'S' && pFunc->iStackClasses )
-                   sprintf( ( char * ) szType1, "AnyType.SubType[%s]", pFunc->pStackClasses[ pFunc->iStackClasses-- ]->szName );
+                   sprintf( ( char * ) szType1, "AnyType.SubType[%s]", pFunc->pStackClasses[ --pFunc->iStackClasses ]->szName );
                 else if( cSubType1 == 's' && pFunc->iStackClasses )
-                   sprintf( ( char * ) szType1, "AnyType.SubType[ARRAY OF %s]", pFunc->pStackClasses[ pFunc->iStackClasses-- ]->szName );
+                   sprintf( ( char * ) szType1, "AnyType.SubType[ARRAY OF %s]", pFunc->pStackClasses[ --pFunc->iStackClasses ]->szName );
                 else if( cSubType1 == '-' )
                    strcpy( ( char * ) szType1,  "AnyType.SubType[NIL]" );
                 else
@@ -289,9 +324,9 @@ void hb_compStrongType( int iSize )
              else
              {
                 if( cType1 == 'S' && pFunc->iStackClasses )
-                   sprintf( ( char * ) szType1, "%s", pFunc->pStackClasses[ pFunc->iStackClasses-- ]->szName );
+                   sprintf( ( char * ) szType1, "%s", pFunc->pStackClasses[ --pFunc->iStackClasses ]->szName );
                 else if( cType1 == 's' && pFunc->iStackClasses )
-                   sprintf( ( char * ) szType1, "ARRAY OF %s", pFunc->pStackClasses[ pFunc->iStackClasses-- ]->szName );
+                   sprintf( ( char * ) szType1, "ARRAY OF %s", pFunc->pStackClasses[ --pFunc->iStackClasses ]->szName );
                 else if( cType1 == '-' )
                    strcpy( ( char * ) szType1,  "NIL" );
                 else
@@ -1794,6 +1829,38 @@ void hb_compStrongType( int iSize )
 
                 /*printf( "Variable: %s Type: \'%c\' SubType: %c Comparing: %c Recorded: %s\n", pSym->szName, pVar->cType, pVar->cType - 100, pFunc->pStack[ pFunc->iStackIndex ], ( char * ) szType );*/
 
+                if( hb_comp_cCastType == ' ' )
+                   ; /* No casting - do nothing. */
+                else if( toupper( hb_comp_cCastType ) == 'S' )
+                {
+                   PCOMCLASS pClass = hb_compClassFind( hb_comp_szFromClass );
+
+                   if( pClass )
+                   {
+                      if( toupper( pFunc->pStack[ pFunc->iStackIndex ] ) == 'S' && pFunc->iStackClasses )
+                      {
+                         pFunc->pStackClasses[ pFunc->iStackClasses - 1 ] = pClass;
+                      }
+                      else
+                      {
+                         pFunc->pStackClasses[ pFunc->iStackClasses++ ] = pClass;
+                      }
+                      pFunc->pStack[ pFunc->iStackIndex ] = hb_comp_cCastType;
+                   }
+                   else
+                   {
+                      hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, hb_comp_szFromClass, pVar->szName );
+                      pFunc->pStack[ pFunc->iStackIndex ] = ( isupper(  ( int ) hb_comp_cCastType ) ? 'O' : 'o' );
+                   }
+
+                   hb_comp_cCastType = ' ';
+                }
+                else
+                {
+                   pFunc->pStack[ pFunc->iStackIndex ] = hb_comp_cCastType;
+                   hb_comp_cCastType = ' ';
+                }
+
                 if( pFunc->pStack[ pFunc->iStackIndex ]  >= ( 'A' + VT_OFFSET_VARIANT ) )
                    pFunc->pStack[ pFunc->iStackIndex ] -= VT_OFFSET_VARIANT;
 
@@ -1968,6 +2035,38 @@ void hb_compStrongType( int iSize )
             else
                sprintf( ( char * ) szType, "%c", pVar->cType );
 
+            if( hb_comp_cCastType == ' ' )
+               ; /* No casting - do nothing. */
+            else if( toupper( hb_comp_cCastType ) == 'S' )
+            {
+               PCOMCLASS pClass = hb_compClassFind( hb_comp_szFromClass );
+
+               if( pClass )
+               {
+                  if( toupper( pFunc->pStack[ pFunc->iStackIndex ] ) == 'S' && pFunc->iStackClasses )
+                  {
+                     pFunc->pStackClasses[ pFunc->iStackClasses - 1 ] = pClass;
+                  }
+                  else
+                  {
+                     pFunc->pStackClasses[ pFunc->iStackClasses++ ] = pClass;
+                  }
+                  pFunc->pStack[ pFunc->iStackIndex ] = hb_comp_cCastType;
+               }
+               else
+               {
+                  hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, hb_comp_szFromClass, pVar->szName );
+                  pFunc->pStack[ pFunc->iStackIndex ] = ( isupper(  ( int ) hb_comp_cCastType ) ? 'O' : 'o' );
+               }
+
+               hb_comp_cCastType = ' ';
+            }
+            else
+            {
+               pFunc->pStack[ pFunc->iStackIndex ] = hb_comp_cCastType;
+               hb_comp_cCastType = ' ';
+            }
+
             if( pFunc->pStack[ pFunc->iStackIndex ]  >= ( 'A' + VT_OFFSET_VARIANT ) )
                pFunc->pStack[ pFunc->iStackIndex ] -= VT_OFFSET_VARIANT;
 
@@ -2063,6 +2162,38 @@ void hb_compStrongType( int iSize )
                sprintf( ( char * ) szType, "ARRAY OF %c", toupper( pVar->cType ) );
             else
                sprintf( ( char * ) szType, "%c", pVar->cType );
+
+            if( hb_comp_cCastType == ' ' )
+               ; /* No casting - do nothing. */
+            else if( toupper( hb_comp_cCastType ) == 'S' )
+            {
+               PCOMCLASS pClass = hb_compClassFind( hb_comp_szFromClass );
+
+               if( pClass )
+               {
+                  if( toupper( pFunc->pStack[ pFunc->iStackIndex ] ) == 'S' && pFunc->iStackClasses )
+                  {
+                     pFunc->pStackClasses[ pFunc->iStackClasses - 1 ] = pClass;
+                  }
+                  else
+                  {
+                     pFunc->pStackClasses[ pFunc->iStackClasses++ ] = pClass;
+                  }
+                  pFunc->pStack[ pFunc->iStackIndex ] = hb_comp_cCastType;
+               }
+               else
+               {
+                  hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, hb_comp_szFromClass, pVar->szName );
+                  pFunc->pStack[ pFunc->iStackIndex ] = ( isupper(  ( int ) hb_comp_cCastType ) ? 'O' : 'o' );
+               }
+
+               hb_comp_cCastType = ' ';
+            }
+            else
+            {
+               pFunc->pStack[ pFunc->iStackIndex ] = hb_comp_cCastType;
+               hb_comp_cCastType = ' ';
+            }
 
             if( pFunc->pStack[ pFunc->iStackIndex ]  >= ( 'A' + VT_OFFSET_VARIANT ) )
                pFunc->pStack[ pFunc->iStackIndex ] -= VT_OFFSET_VARIANT;

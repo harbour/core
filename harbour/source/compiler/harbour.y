@@ -292,23 +292,18 @@ Params     :                                                         { $$ = 0; }
            ;
 
 AsType     : /* not specified */           { hb_comp_cVarType = ' '; }
-           | AS_NUMERIC                    { hb_comp_cVarType = 'N'; }
+	   | StrongType
+           ;
+
+StrongType : AS_NUMERIC                    { hb_comp_cVarType = 'N'; }
            | AS_CHARACTER                  { hb_comp_cVarType = 'C'; }
            | AS_DATE                       { hb_comp_cVarType = 'D'; }
            | AS_LOGICAL                    { hb_comp_cVarType = 'L'; }
-           | AS_ARRAY                      { hb_comp_cVarType = 'A'; }
            | AS_BLOCK                      { hb_comp_cVarType = 'B'; }
            | AS_OBJECT                     { hb_comp_cVarType = 'O'; }
            | AS_CLASS IdentName            { hb_comp_cVarType = 'S'; hb_comp_szFromClass = $2 }
            | AS_VARIANT                    { hb_comp_cVarType = ' '; }
-           | AS_NUMERIC_ARRAY              { hb_comp_cVarType = 'n'; }
-           | AS_CHARACTER_ARRAY            { hb_comp_cVarType = 'c'; }
-           | AS_DATE_ARRAY                 { hb_comp_cVarType = 'd'; }
-           | AS_LOGICAL_ARRAY              { hb_comp_cVarType = 'l'; }
-           | AS_ARRAY_ARRAY                { hb_comp_cVarType = 'a'; }
-           | AS_BLOCK_ARRAY                { hb_comp_cVarType = 'b'; }
-           | AS_OBJECT_ARRAY               { hb_comp_cVarType = 'o'; }
-           | AS_CLASS_ARRAY IdentName      { hb_comp_cVarType = 's'; hb_comp_szFromClass = $2 }
+	   | AsArray
            ;
 
 AsArray    : AS_ARRAY                      { hb_comp_cVarType = 'A'; }
@@ -363,7 +358,11 @@ Statement  : ExecFlow   CrlfStmnt   { }
                         hb_comp_bDontGenLineNum = TRUE;
                         hb_comp_functions.pLast->bFlags |= FUN_BREAK_CODE;
                      }
-           | RETURN { hb_compLinePushIfInside(); } Expression Crlf {
+           | RETURN { hb_compLinePushIfInside(); hb_comp_cVarType = ' '; } Expression Crlf {
+
+		        hb_comp_cCastType = hb_comp_cVarType;
+		        hb_comp_cVarType = ' ';
+
                         if( hb_comp_wSeqCounter )
                         {
                            hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_EXIT_IN_SEQUENCE, "RETURN", NULL );
@@ -619,15 +618,15 @@ VariableAtAlias : VariableAt ALIASOP      { $$ = $1; }
 
 /* Function call
  */
-FunCall    : IdentName '(' ArgList ')'   { $$ = hb_compExprNewFunCall( hb_compExprNewFunName( $1 ), $3 ); }
-           | MacroVar '(' ArgList ')'     { $$ = hb_compExprNewFunCall( $1, $3 ); }
-;
+FunCall    : IdentName '(' ArgList ')' { $$ = hb_compExprNewFunCall( hb_compExprNewFunName( $1 ), $3 ); }
+           | MacroVar '(' ArgList ')'  { $$ = hb_compExprNewFunCall( $1, $3 ); }
+           ;
 
 ArgList    : Argument                     { $$ = hb_compExprNewArgList( $1 ); }
            | ArgList ',' Argument         { $$ = hb_compExprAddListExpr( $1, $3 ); }
            ;
 
-Argument   : EmptyExpression                   { $$ = $1; }
+Argument   : EmptyExpression                  { $$ = $1; }
            | '@' IdentName                    { $$ = hb_compExprNewVarRef( $2 ); }
            | '@' IdentName '(' ')'            { $$ = hb_compExprNewFunRef( $2 ); }
            ;
@@ -684,6 +683,7 @@ SimpleExpression :
            | CodeBlock                        { $$ = $1; }
            | Logical                          { $$ = $1; }
            | SelfValue                        { $$ = $1; }
+           | SelfValue    {hb_comp_cVarType = ' '} StrongType { $$ = $1; }
            | Array                            { $$ = $1; }
            | ArrayAt                          { $$ = $1; }
            | AliasVar                         { $$ = $1; }
@@ -691,9 +691,12 @@ SimpleExpression :
            | MacroExpr                        { $$ = $1; }
            | VariableAt                       { $$ = $1; }
            | FunCall                          { $$ = $1; }
+           | FunCall      {hb_comp_cVarType = ' '} StrongType { $$ = $1; }
            | IfInline                         { $$ = $1; }
            | ObjectData                       { $$ = $1; }
+           | ObjectData   {hb_comp_cVarType = ' '} StrongType { $$ = $1; }
            | ObjectMethod                     { $$ = $1; }
+           | ObjectMethod {hb_comp_cVarType = ' '} StrongType { $$ = $1; }
            | AliasExpr                        { $$ = $1; }
            | ExprAssign                       { $$ = $1; }
            | ExprOperEq                       { $$ = $1; }
@@ -703,16 +706,18 @@ SimpleExpression :
            | ExprMath                         { $$ = $1; }
            | ExprBool                         { $$ = $1; }
            | ExprRelation                     { $$ = $1; }
-;
+           ;
 
-Expression : Variable                        { $$ = $1; }
-           | SimpleExpression                { $$ = $1; }
-           | PareExpList                     { $$ = $1; }
-;
+Expression : Variable         { $$ = $1; }
+	   | SimpleExpression { $$ = $1; }
+	   | PareExpList      { $$ = $1; }
+	   | Variable         { hb_comp_cVarType = ' ';} StrongType { $$ = $1; }
+           | PareExpList      { hb_comp_cVarType = ' ';} StrongType { $$ = $1; }
+           ;
 
 EmptyExpression: /* nothing => nil */        { $$ = hb_compExprNewEmpty(); }
            | Expression
-;
+           ;
 
 LValue      : IdentName                     { $$ = hb_compExprNewVar( $1 ); }
             | AliasVar
@@ -776,16 +781,16 @@ ExprAssign  : NumValue     INASSIGN Expression   { $$ = hb_compExprAssign( $1, $
             | SelfValue    INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3 ); }
             | Array        INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3 ); }
             | ArrayAt      INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3 ); }
-            | Variable     INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3 ); }
+            | Variable     INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3 ); hb_comp_cCastType = hb_comp_cVarType; hb_comp_cVarType = ' ';}
             | MacroVar     INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3 ); }
             | MacroExpr    INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3 ); }
             | AliasVar     INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3 ); }
             | AliasExpr    INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3 ); }
-            | VariableAt   INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3 ); }
+            | VariableAt   INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3 ); hb_comp_cCastType = hb_comp_cVarType; hb_comp_cVarType = ' ';}
             | PareExpList  INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3 ); }
             | IfInline     INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3 ); }
             | FunCall      INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3 ); }
-            | ObjectData   INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3 ); }
+            | ObjectData   INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3 ); hb_comp_cCastType = hb_comp_cVarType; hb_comp_cVarType = ' ';}
             | ObjectMethod INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3 ); }
             ;
 
@@ -1116,23 +1121,26 @@ VarDef     : IdentName AsType { hb_compVariableAdd( $1, hb_comp_cVarType ); }
            | IdentName AsType { $<iNumber>$ = hb_comp_iVarScope;
                                 hb_compVariableAdd( $1, hb_comp_cVarType );
                               }
-             INASSIGN Expression
+             INASSIGN {hb_comp_cVarType = ' ';} Expression
                {
+		  hb_comp_cCastType = hb_comp_cVarType;
+		  hb_comp_cVarType = ' ';
+
                   hb_comp_iVarScope = $<iNumber>3;
                   if( hb_comp_iVarScope == VS_STATIC )
                   {
                      hb_compStaticDefStart();   /* switch to statics pcode buffer */
-                     hb_compExprDelete( hb_compExprGenStatement( hb_compExprAssignStatic( hb_compExprNewVar( $1 ), $5 ) ) );
+                     hb_compExprDelete( hb_compExprGenStatement( hb_compExprAssignStatic( hb_compExprNewVar( $1 ), $6 ) ) );
                      hb_compStaticDefEnd();
                   }
                   else if( hb_comp_iVarScope == VS_PUBLIC || hb_comp_iVarScope == VS_PRIVATE )
                   {
-                     hb_compExprDelete( hb_compExprGenPush( $5 ) );
+                     hb_compExprDelete( hb_compExprGenPush( $6 ) );
                      hb_compRTVariableAdd( hb_compExprNewRTVar( $1, NULL ), TRUE );
                   }
                   else
                   {
-                     hb_compExprDelete( hb_compExprGenStatement( hb_compExprAssign( hb_compExprNewVar( $1 ), $5 ) ) );
+                     hb_compExprDelete( hb_compExprGenStatement( hb_compExprAssign( hb_compExprNewVar( $1 ), $6 ) ) );
                   }
                   hb_comp_iVarScope = $<iNumber>3;
                }

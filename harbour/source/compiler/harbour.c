@@ -114,6 +114,7 @@ int           hb_comp_iFunctionCnt;
 int           hb_comp_iErrorCount;
 char          hb_comp_cVarType;                          /* current declared variable type */
 char          hb_comp_cDataListType;                     /* current declared variable list type */
+char          hb_comp_cCastType;                         /* current casting type */
 BOOL          hb_comp_bDontGenLineNum = FALSE;           /* suppress line number generation */
 ULONG         hb_comp_ulLastLinePos;                     /* position of last opcode with line number */
 int           hb_comp_iStaticCnt;                        /* number of defined statics variables on the PRG */

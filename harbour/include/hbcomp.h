@@ -411,6 +411,7 @@ extern int           hb_comp_iExitLevel;
 extern int           hb_comp_iFunctionCnt;
 extern char          hb_comp_cVarType;
 extern char          hb_comp_cDataListType;
+extern char          hb_comp_cCastType;
 extern int           hb_comp_iVarScope;
 extern BOOL          hb_comp_bDontGenLineNum;
 extern FILES         hb_comp_files;
