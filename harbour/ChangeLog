@@ -1,3 +1,13 @@
+2001-05-30 01:30 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * contrib/dot/pp.prg
+     + Added PP_PreProText( cText [, acLines ] ) returns the pre-process text and optional file asLines with pre=processed lines.
+     + Added PP_RunText( cText, [bPreProcess], [aParmas] ) returns the return value of executed code. bPreProcess defaults to .T.
+     * Enhanced PP_Run( cFile [, aParams] ) to accept optioanl Array with Paramaters.
+     ! Minor correction in NextExp().
+
+   * contrib/dot/prgscrpt.prg
+     * Rewrote sample to demonstarte new simpler wrapper functions:
+
 2001-05-28 19:10 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * contrib/dot/pp.prg
      * Modified PP_PreProLine() to handle multi-line lines (;) as primary line.

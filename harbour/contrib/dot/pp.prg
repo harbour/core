@@ -1608,15 +1608,13 @@ RETURN
 
 //--------------------------------------------------------------//
 
-PROCEDURE PP_Run( cFile )
+PROCEDURE PP_Run( cFile, aParams )
 
    LOCAL nBaseProc := s_nProcId, sPresetModule := s_sModule, nProc
 
-   s_sModule := cFile
-
-   bCompile := .T.
-
-   ErrorBlock( {|oErr| RP_Comp_Err( oErr ) } )
+   IF ValType( aParams ) == 'A'
+      s_aParams := aParams
+   ENDIF
 
    //PP_PreProFile( "rp_run.ch" )
 
@@ -1635,25 +1633,35 @@ PROCEDURE PP_Run( cFile )
       ENDIF
    ENDIF
 
+   ErrorBlock( {|oErr| RP_Comp_Err( oErr ) } )
+
+   s_sModule := cFile
+   bCompile  := .T.
+
    PP_PreProFile( cFile )
+
+   bCompile  := .F.
 
    ErrorBlock( {|oErr| RP_Run_Err( oErr, s_aProcedures, s_sModule ) } )
 
-   IF nBaseProc == 0
-      FOR nProc := 1 TO Len( s_aInitExit[1] )
-         PP_ExecProcedure( s_aProcedures[ s_aInitExit[1][nProc] ] )
-      NEXT
-   ENDIF
+   FOR nProc := 1 TO Len( s_aInitExit[1] )
+      PP_ExecProcedure( s_aProcedures[ s_aInitExit[1][nProc] ] )
+   NEXT
+   aSize( s_aInitExit[1], 0 )
 
-   PP_ExecProcedure( s_aProcedures[ nBaseProc + 1 ] )
-
-   bCompile := .F.
+   FOR nProc := ( nBaseProc + 1 ) TO s_nProcId
+      IF aScan( s_aInitExit[1], nProc ) == 0 .AND. aScan( s_aInitExit[2], nProc ) == 0
+         PP_ExecProcedure( s_aProcedures[nProc] )
+         EXIT
+      ENDIF
+   NEXT
 
    IF nBaseProc == 0
       FOR nProc := 1 TO Len( s_aInitExit[2] )
          PP_ExecProcedure( s_aProcedures[ s_aInitExit[2][nProc] ] )
       NEXT
       aSize( s_aProcedures, 0 )
+      aSize( s_aInitExit[2], 0 )
    ENDIF
 
    #ifdef __CLIPPER__
@@ -1856,8 +1864,8 @@ FUNCTION RP_Run_Err( oErr, aProcedures, sModule )
       ENDIF
    ENDIF
 
-   TraceLog( "Sorry, R/T Error: '" + oErr:Operation + "' " + oErr:Description + sArgs + " " + PP_ProcName() + '(' + LTrim( Str( PP_ProcLine() ) ) + ") " + ProcName(2)  + "(" + LTrim( Str( ProcLine(2) ) ) + ")" )
-   Alert( "Sorry, R/T Error: '" + oErr:Operation + "' " + oErr:Description + sArgs + " " + PP_ProcName() + '(' + LTrim( Str( PP_ProcLine() ) ) + ") " + ProcName(2)  + "(" + LTrim( Str( ProcLine(2) ) ) + ")" )
+   TraceLog( "Sorry, R/T Error: [" + oErr:SubSystem + "] '" + oErr:Operation + "' " + oErr:Description + sArgs + " " + PP_ProcName() + '(' + LTrim( Str( PP_ProcLine() ) ) + ") " + ProcName(2)  + "(" + LTrim( Str( ProcLine(2) ) ) + ")" )
+   Alert( "Sorry, R/T Error: [" + oErr:SubSystem + "/" + LTrim( Str( oErr:SubCode ) ) + "] '" + oErr:Operation + "' " + oErr:Description + sArgs + " " + PP_ProcName() + '(' + LTrim( Str( PP_ProcLine() ) ) + ") " + ProcName(2)  + "(" + LTrim( Str( ProcLine(2) ) ) + ")" )
 
    BREAK oErr
 
@@ -2312,23 +2320,16 @@ FUNCTION PP_PreProFile( sSource )
                    nClose := At( '"', SubStr( sBuffer, nPosition + 1 ) )
                    nNewLine := At( Chr(10), SubStr( sBuffer, nPosition + 1 ) )
 
-                   IF nNewLine > 0 .AND. ( nClose > nNewLine )
-                      //? nNewLine, nClose, SubStr( sBuffer, nPosition + 1, 78 )
-                      Alert( [ERROR! Unterminated '"' [] + Str( ProcLine() ) + "]" )
-                      sLine     += SubStr( sBuffer, nPosition, nNewLine - 1 )
-                      nPosition += ( nNewLine - 1 )
-                      cChar     := ''
+                   IF nNewLine > 0 .AND. ( nClose == 0 .OR. nClose > nNewLine )
                       EXIT
                    ENDIF
 
-                   IF nClose == 0
+                   IF nNewLine == 0
                       sLine += SubStr( sBuffer, nPosition )
                       FSeek( hSource, -1, 1 )
                       nLen := FRead( hSource, @sBuffer, PP_BUFFER_SIZE )
                       IF nLen < 2
-                         Alert( 'ERROR! Unterminated ["]' )
-                         cChar := ''
-                         EXIT
+                         BREAK 'ERROR! Unterminated ["]'
                       ENDIF
                       nMaxPos   := nLen - 1
                       nPosition := 1
@@ -2345,16 +2346,11 @@ FUNCTION PP_PreProFile( sSource )
                    nClose   := At( "'", SubStr( sBuffer, nPosition + 1 ) )
                    nNewLine := At( Chr(10), SubStr( sBuffer, nPosition + 1 ) )
 
-                   IF nNewLine > 0 .AND. ( nClose > nNewLine )
-                      //? nNewLine, nClose, SubStr( sBuffer, nPosition + 1, 78 )
-                      Alert( "ERROR! Unterminated [']" )
-                      sLine     += SubStr( sBuffer, nPosition, nNewLine - 1 )
-                      nPosition += ( nNewLine - 1 )
-                      cChar     := ''
+                   IF nNewLine > 0 .AND. ( nClose == 0 .OR. nClose > nNewLine )
                       EXIT
                    ENDIF
 
-                   IF nClose == 0
+                   IF nNewLine == 0
                       sLine += SubStr( sBuffer, nPosition )
                       FSeek( hSource, -1, 1 )
                       nLen := FRead( hSource, @sBuffer, PP_BUFFER_SIZE )
@@ -4498,7 +4494,9 @@ STATIC FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor, bX )
      nLen := Len( sLastToken )
      cLastChar := Right( sLastToken, 1 )
 
-     IF ( ! Empty( sLine ) ) //.AND. sLine == sNextLine
+     IF Empty( sLine )
+        EXIT
+     ELSE
         sNextLine  := sLine
         sNextToken := NextToken( @sNextLine, .T. )
         IF sNextToken == NIL
@@ -7479,11 +7477,15 @@ RETURN sIdentifier
 
 //--------------------------------------------------------------//
 
-FUNCTION nAtSkipStr( sFind, sLine )
+FUNCTION nAtSkipStr( sFind, sLine, nStart )
 
    LOCAL nAt, nLen := Len( sLine ), cChar, cLastChar := ' ', sTmp, nLenFind := Len( sFind )
 
-   FOR nAt := 1 TO nLen
+   IF nStart == NIL
+      nStart := 1
+   ENDIF
+
+   FOR nAt := nStart TO nLen
        IF SubStr( sLine, nAt, nLenFind ) == sFind
           RETURN nAt
        ENDIF
@@ -7631,8 +7633,6 @@ RETURN .T.
 //--------------------------------------------------------------//
 PROCEDURE PP_RunInit( aProcedures )
 
-   STATIC s_anRulesLen[6]
-
    IF ValType( aProcedures ) != 'A'
       Alert( "Invalid parameter to: " + ProcName() + " must be Array!" )
    ELSE
@@ -7640,31 +7640,131 @@ PROCEDURE PP_RunInit( aProcedures )
       ErrorBlock( {|oErr| RP_Run_Err( oErr, aProcedures ) } )
    ENDIF
 
-   IF ! s_lRunLoaded
-      s_lRunLoaded := .T.
+   InitRules()
+   InitResults()
 
-      InitRules()
-      InitResults()
-
-      InitRunRules()
-      InitRunResults()
-
-      s_anRulesLen[1] := Len( aDefRules     )
-      s_anRulesLen[2] := Len( aDefResults   )
-      s_anRulesLen[3] := Len( aTransRules   )
-      s_anRulesLen[4] := Len( aTransResults )
-      s_anRulesLen[5] := Len( aCommRules    )
-      s_anRulesLen[6] := Len( aCommResults  )
-   ELSE
-      aSize( aDefRules    , s_anRulesLen[1] )
-      aSize( aDefResults  , s_anRulesLen[2] )
-      aSize( aTransRules  , s_anRulesLen[3] )
-      aSize( aTransResults, s_anRulesLen[4] )
-      aSize( aCommRules   , s_anRulesLen[5] )
-      aSize( aCommResults , s_anRulesLen[6] )
-   ENDIF
+   InitRunRules()
+   InitRunResults()
 
 RETURN
+
+//--------------------------------------------------------------//
+FUNCTION PP_PreProText( sLines, asLines )
+
+   LOCAL nOpen, nClose, sTemp := "", nLine, nLines
+
+   IF asLines == NIL
+      asLines := {}
+   ENDIF
+
+   WHILE ( nOpen := nAtSkipStr( "/*", sLines ) ) > 0
+      sTemp += Left( sLines, nOpen - 1 )
+      nClose := nAtSkipStr( "*/", sLines, nOpen + 2 )
+      IF nClose == 0
+      ENDIF
+      sLines := SubStr( sLines, nClose + 2 )
+   ENDDO
+   sLines := ( sTemp += sLines )
+
+   nOpen := 0
+   nClose := 0
+   WHILE ( nOpen := nAtSkipStr( ";", sLines, nOpen + 1 ) ) > 0
+      aAdd( asLines, SubStr( sLines, nClose + 1, nOpen - ( nClose + 1 ) ) )
+      nClose := nOpen
+   ENDDO
+   IF Len( sLines ) > nClose
+      aAdd( asLines, SubStr( sLines, nClose + 1 ) )
+   ENDIF
+
+   sLines := ""
+   nLines := Len( asLines )
+   FOR nLine := 1 TO nLines
+      IF Left( asLines[nLine], 1 ) == '*'
+         LOOP
+      ENDIF
+
+      nOpen := nAtSkipStr( "&&", asLines[nLine] )
+      IF nOpen > 0
+         sTemp := Left( asLines[nLine], nOpen - 1 )
+      ELSE
+         sTemp := asLines[nLine]
+      ENDIF
+
+      nOpen := nAtSkipStr( "//", sTemp )
+      IF nOpen > 0
+         sTemp := Left( sTemp, nOpen - 1 )
+      ENDIF
+
+      sTemp := PP_PreProLine( sTemp )
+      sLines += sTemp
+      IF nLine < nLines
+         sLines += ";"
+      ENDIF
+
+      asLines[nLine] := sTemp
+   NEXT
+
+RETURN sLines
+
+//--------------------------------------------------------------//
+FUNCTION PP_RunText( sLines, bPP, aParams )
+
+   LOCAL aProcedures := {}, aInitExit := { {}, {} }, nProcId := 0, ;
+         nLine, nLines, xRet, asLines := {}, nProc, nOpen, nClose
+
+   IF bPP == NIL
+      bPP := .T.
+   ENDIF
+
+   IF ValType( aParams ) == 'A'
+      s_aParams := aParams
+   ENDIF
+
+   PP_RunInit( aProcedures, aInitExit )
+
+   ErrorBlock( {|oErr| RP_Comp_Err( oErr ) } )
+
+   IF bPP
+      PP_PreProText( sLines, asLines )
+   ELSE
+      nOpen := 0
+      nClose := 0
+      WHILE ( nOpen := nAtSkipStr( ";", sLines, nOpen + 1 ) ) > 0
+         aAdd( asLines, SubStr( sLines, nClose + 1, nOpen - ( nClose + 1 ) ) )
+         nClose := nOpen
+      ENDDO
+      IF Len( sLines ) > nClose
+         aAdd( asLines, SubStr( sLines, nClose + 1 ) )
+      ENDIF
+   ENDIF
+
+   nLines := Len( asLines )
+   FOR nLine := 1 TO nLines
+      PP_CompileLine( asLines[nLine], nLine, aProcedures, aInitExit, @nProcId )
+   NEXT
+
+   ErrorBlock( {|oErr| RP_Run_Err( oErr, aProcedures ) } )
+
+   FOR nProc := 1 TO Len( aInitExit[1] )
+      PP_ExecProcedure( aProcedures[ aInitExit[1][nProc] ] )
+   NEXT
+   FOR nProc := 1 TO nProcId
+      IF aScan( aInitExit[1], nProc ) == 0 .AND. aScan( aInitExit[2], nProc ) == 0
+         xRet := PP_ExecProcedure( aProcedures[nProc] )
+         EXIT
+      ENDIF
+   NEXT
+   FOR nProc := 1 TO Len( aInitExit[2] )
+      PP_ExecProcedure( aProcedures[ aInitExit[2][nProc] ] )
+   NEXT
+
+RETURN xRet
+
+//--------------------------------------------------------------//
+#ifdef __HARBOUR__
+   FUNCTION PP_CompileText( sLines )
+   RETURN PP_CompileLine( sLines )
+#endif
 
 //--------------------------------------------------------------//
 #ifdef __HARBOUR__
