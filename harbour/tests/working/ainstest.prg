@@ -63,11 +63,17 @@ function aDump( aShow )
    local n
    local CRLF := chr(13)+chr(10)
 
-   QQOut( "Len=", len(aShow) )
+   QQOut( "Len=", ALLTRIM( STR( len( aShow ) ) ) )
+   QQOut( ": " )
    for n=1 to len(aShow)
 
+      QQOut( "[" )
+      QQOut( ALLTRIM (STR (n)) )
+      QQOut( "]= " )
       QQOut( ValType( aShow[n] ) )
+      QQOut( ":" )
       if ValType( aShow[n] ) == "A"             /* Iterate array         */
+         QQOut( CRLF )
          QQOut("[")
          aDump( aShow[n] )
          QQOut("]")
@@ -76,7 +82,7 @@ function aDump( aShow )
       endif
 
       if n != len(aShow)
-         QQOut( "," )
+         QQOut( ", " )
       endif
 
    next n

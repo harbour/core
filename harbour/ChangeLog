@@ -1,3 +1,25 @@
+19990519-21:40 EST David G. Holm <dholm@jsd-llc.com>
+  * makefile.b31
+    - Modified to support changes to source/compiler/fixflex.c
+  * source/compiler/fixflex.c
+    - The two largest tables in lexyy.c are now larger than 64K combined,
+      so they are now placed into separate source files and the four next
+      largest tables are split into a third source file.
+  * source/rtl/console.c
+    - Corrected display of IT_LONG to use value.lNumber instead of iNumber.
+    - Corrected display of IT_DOUBLE to use wLength as integer size, so that
+      when printing decimals the total display size is wLength + wDec + 1.
+  * source/rtl/extend.c
+    - _retnd and _stornd now set wLength to 10 instead of 13.
+  * source/rtl/itemapi.c
+    - hb_itemPutL now sets wLength to 3.
+    - hb_itemPutNL now sets wLength to 10 and wDec to 0.
+    - hb_itemPutND now sets wLength to 10 and wDec to 2.
+  * source/vm/hvm.c
+    - PushDouble, PushInteger, and PushLong now set wLength and wDec.
+  * tests/working/ainstest.prg
+    - Modified formatting done by aDump() to be more readable.
+
 19990520-01:40 Ryszard Glab <rglab@imid.med.pl>
 
     * source/compiler/harbour.y

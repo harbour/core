@@ -336,7 +336,7 @@ PITEM hb_itemPutL( PITEM pItem, BOOL bValue )
       pItem = hb_itemNew(0);
 
    pItem->wType = IT_LOGICAL;
-   pItem->wLength = 1;
+   pItem->wLength = 3;
    pItem->value.iLogical = bValue;
    return pItem;
 }
@@ -349,7 +349,8 @@ PITEM hb_itemPutND( PITEM pItem, double dNumber )
       pItem = hb_itemNew(0);
 
    pItem->wType = IT_DOUBLE;
-   pItem->wLength = sizeof( double );
+   pItem->wLength = 10;
+   pItem->wDec    = 2;
    pItem->value.dNumber = dNumber;
    return pItem;
 }
@@ -362,7 +363,8 @@ PITEM hb_itemPutNL( PITEM pItem, long lNumber )
       pItem = hb_itemNew(0);
 
    pItem->wType = IT_DOUBLE;
-   pItem->wLength = sizeof( double );
+   pItem->wLength = 10;
+   pItem->wDec    = 2;
    pItem->value.lNumber = lNumber;
    return pItem;
 }

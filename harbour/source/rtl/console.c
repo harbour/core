@@ -50,7 +50,6 @@ static void hb_outstd( WORD wParam )
            break;
 
       case IT_NIL:
-           printf( "NIL" );
            break;
 
       case IT_LOGICAL:
@@ -61,7 +60,7 @@ static void hb_outstd( WORD wParam )
            break;
 
       case IT_LONG:
-           printf( "%*li", pItem->wLength, pItem->value.iNumber );
+           printf( "%*li", pItem->wLength, pItem->value.lNumber );
            break;
 
       case IT_STRING:
@@ -77,7 +76,7 @@ static void hb_outstd( WORD wParam )
 
       case IT_DOUBLE:
            if( pItem->wDec )
-              printf( "%*.*f", pItem->wLength, pItem->wDec, pItem->value.dNumber );
+              printf( "%*.*f", pItem->wLength + 1 + pItem->wDec, pItem->wDec, pItem->value.dNumber );
            else
               printf( "%*ld", pItem->wLength, (long)pItem->value.dNumber );
            break;

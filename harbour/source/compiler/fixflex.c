@@ -36,17 +36,17 @@ int main (int argc, char * argv [])
    int c_plus_plus = 0, rc = 0;
    char backup [MAXPATH];
 
-   if (argc < 3)
+   if (argc < 4)
    {
-      /* Must have at least 2 arguments. */
+      /* Must have at least 4 arguments. */
       rc = 1;
-      puts ("\nUsage: FIX_FLEX source dest [-P[+|-]]\n\n\Where source is the name of the generated FLEX source file, dest\n\is the name of the source file to extract the two largest flex tables into\n\and -P or -P+ is needed when compiling Harbour using C++ instead of C.\nNote: -P- may be used to indicate the default of compiling Harbour using ANSI C.");
+      puts ("\nUsage: FIXFLEX source dest1 dest2 dest3 [-P[+|-]]\n\n\Where source is the name of the generated FLEX source file, dest1 and dest2\n\are the names of the source files to extract the two largest flex tables into\n\and -P or -P+ is needed when compiling Harbour using C++ instead of C.\nNote: -P- may be used to indicate the default of compiling Harbour using ANSI C.");
    }
    else
    {
       int i;
       size_t len;
-      for (i = 3; i < argc; i++)
+      for (i = 5; i < argc; i++)
       {
          if (strcmp (argv[i], "-P") == 0) c_plus_plus = 1;
          if (strcmp (argv[i], "-P+") == 0) c_plus_plus = 1;
@@ -83,17 +83,32 @@ int main (int argc, char * argv [])
          }
          else
          {
-            /* Create dest. */
-            FILE * dest = fopen (argv[2], "w");
-            if (!dest)
+            /* Create dest 1. */
+            FILE * dest1, * dest2, * dest3;
+            dest1 = fopen (argv[2], "w");
+            if (!dest1)
             {
                rc = 13;
                printf ("\nUnable to create %s for writing.", argv[2]);
             }
-            else
+            /* Create dest 2. */
+            dest2 = fopen (argv[3], "w");
+            if (!dest2)
+            {
+               rc = 17;
+               printf ("\nUnable to create %s for writing.", argv[3]);
+            }
+            /* Create dest 2. */
+            dest3 = fopen (argv[4], "w");
+            if (!dest3)
+            {
+               rc = 19;
+               printf ("\nUnable to create %s for writing.", argv[4]);
+            }
+            if (rc == 0)
             {
                /* Initialize. */
-               int copy = 0, move = 0, check_count = 3;
+               int copy = 0, move1 = 0, move2 = 0, move3 = 0, check_count = 7;
                int defer_move = 0, defer_end = 0;
                static char inbuf [BUF_SIZE + 1];
                static char outbuf [sizeof (inbuf)];
@@ -113,16 +128,16 @@ int main (int argc, char * argv [])
                      strcpy (outbuf, inbuf);
 
                      /* Check for stuff to copy or move to dest. */
-                     if (check_count > 0 && !move && !copy)
+                     if (check_count > 0 && !move1 && !move2 && !move3 && !copy)
                      {
                         ptr = strstr (inbuf, "yy_nxt");
                         if (ptr)
                         {
                            /* It's the first of the two big tables.
-                              Move it out of source into dest, leaving only
+                              Move it out of source into dest1, leaving only
                               an extern or extern "C" declaration. */
                            fixup (inbuf, outbuf, c_plus_plus);
-                           move = 1;
+                           move1 = 1;
                            defer_move = 1;
                            check_count--;
                         }
@@ -132,10 +147,10 @@ int main (int argc, char * argv [])
                            if (ptr)
                            {
                               /* It's the second of the two big tables.
-                                 Move it out of source into dest, leaving only
+                                 Move it out of source into dest2, leaving only
                                  an extern or extern "C" declaration. */
                               fixup (inbuf, outbuf, c_plus_plus);
-                              move = 1;
+                              move2 = 1;
                               defer_move = 1;
                               check_count--;
                            }
@@ -150,31 +165,69 @@ int main (int argc, char * argv [])
                                  copy = 1;
                                  check_count--;
                               }
+                              else
+                              {
+                                 ptr = strstr (inbuf, "yy_acclist");
+                                 if (!ptr) ptr = strstr (inbuf, "yy_accept");
+                                 if (!ptr) ptr = strstr (inbuf, "yy_base");
+                                 if (!ptr) ptr = strstr (inbuf, "yy_def");
+                                 if (ptr)
+                                 {
+                                    /* It's one of the smaller big tables.
+                                       Move them all out of source into dest3, leaving
+                                       only an extern or extern "C" declaration. */
+                                    fixup (inbuf, outbuf, c_plus_plus);
+                                    move3 = 1;
+                                    defer_move = 1;
+                                    check_count--;
+                                 }
+                              }
                            }
                         }
                      }
-                     else if (move || copy)
+                     else if (move1 || move2 || move3 || copy)
                      {
                         /* Check for stuff to end copy or move. */
                         ptr = strstr (inbuf, "}");
-                        if (ptr && move) defer_end = 1; /* End of table to move. */
+                        if (ptr && (move1 || move2 || move3)) defer_end = 1; /* End of table to move. */
                         else
                         {
                            ptr = strstr (inbuf, "#ifdef YY_USE_PROTOS");
                            if (ptr && copy) copy = 0; /* End of #defines to copy. */
                         }
                      }
-                     if (move || copy)
+                     if (move1 || move2 || move3 || copy)
                      {
                         /* If moving or copying from source to dest, do so. */
-                        fputs (outbuf, dest);
-                        if (ferror (dest))
+                        if (copy || move1)
                         {
-                           rc = 15;
-                           printf ("\nError %d (DOS error %02xd) writing to %s.", errno, _doserrno, argv[2]);
+                           fputs (outbuf, dest1);
+                           if (ferror (dest1))
+                           {
+                              rc = 15;
+                              printf ("\nError %d (DOS error %02xd) writing to %s.", errno, _doserrno, argv[2]);
+                           }
+                        }
+                        if (copy || move2)
+                        {
+                           fputs (outbuf, dest2);
+                           if (ferror (dest2))
+                           {
+                              rc = 18;
+                              printf ("\nError %d (DOS error %02xd) writing to %s.", errno, _doserrno, argv[3]);
+                           }
+                        }
+                        if (copy || move3)
+                        {
+                           fputs (outbuf, dest3);
+                           if (ferror (dest3))
+                           {
+                              rc = 20;
+                              printf ("\nError %d (DOS error %02xd) writing to %s.", errno, _doserrno, argv[4]);
+                           }
                         }
                      }
-                     if (!feof (source) && (!move || defer_move) && rc == 0)
+                     if (!feof (source) && ((!move1 && !move2 && !move3) || defer_move) && rc == 0)
                      {
                         /* If not moving to dest, then write to new source. */
                         fputs (inbuf, replace);
@@ -188,7 +241,9 @@ int main (int argc, char * argv [])
                      if (defer_move) defer_move = 0;
                      if (defer_end)
                      {
-                        move = 0;
+                        move1 = 0;
+                        move2 = 0;
+                        move3 = 0;
                         defer_end = 0;
                      }
                   }

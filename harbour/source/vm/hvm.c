@@ -1649,6 +1649,8 @@ void PushDouble( double dNumber )
    ItemRelease( stack.pPos );
    stack.pPos->wType   = IT_DOUBLE;
    stack.pPos->value.dNumber = dNumber;
+   stack.pPos->wLength = 10;
+   stack.pPos->wDec    = 2;
    StackPush();
    HBDEBUG( "PushDouble\n" );
 }
@@ -1658,6 +1660,8 @@ void PushInteger( int iNumber )
    ItemRelease( stack.pPos );
    stack.pPos->wType = IT_INTEGER;
    stack.pPos->value.iNumber = iNumber;
+   stack.pPos->wLength = 10;
+   stack.pPos->wDec    = 0;
    StackPush();
    HBDEBUG( "PushInteger\n" );
 }
@@ -1667,6 +1671,8 @@ void PushLong( long lNumber )
    ItemRelease( stack.pPos );
    stack.pPos->wType   = IT_LONG;
    stack.pPos->value.lNumber = lNumber;
+   stack.pPos->wLength = 10;
+   stack.pPos->wDec    = 0;
    StackPush();
    HBDEBUG( "PushLong\n" );
 }

@@ -351,7 +351,7 @@ void _retnd( double dNumber )
 {
    ItemRelease( &stack.Return );
    stack.Return.wType   = IT_DOUBLE;
-   stack.Return.wLength = 13;
+   stack.Return.wLength = 10;
    stack.Return.wDec    = 2;
    stack.Return.value.dNumber = dNumber;
 }
@@ -479,7 +479,8 @@ void _stords( char * szDate, WORD wParam, ... ) /* szDate must have yyyymmdd for
       {
          pItemRef = stack.pItems + pItem->value.wItem;
          ItemRelease( pItemRef );
-         pItemRef->wType = IT_DATE;
+         pItemRef->wType   = IT_DATE;
+         pItemRef->wLength = 8;
          pItemRef->value.lDate = hb_dateEncode( lDay, lMonth, lYear );
       }
    }
@@ -597,7 +598,7 @@ void _stornd( double dValue, WORD wParam, ... )
          pItemRef = stack.pItems + pItem->value.wItem;
          ItemRelease( pItemRef );
          pItemRef->wType   = IT_DOUBLE;
-         pItemRef->wLength = 13;
+         pItemRef->wLength = 10;
          pItemRef->wDec    = 2;
          pItemRef->value.dNumber = dValue;
       }

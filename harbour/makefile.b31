@@ -93,9 +93,10 @@ transfrm.obj : transfrm.c extend.h types.h
   tasm -I.\include $< $@
   tlib .\libs\b16\harbour.lib -+$@,,
 
-harbour.exe : y_tab.obj lexyy.obj lex_tab.obj harbour.obj genobj32.obj
+harbour.exe : y_tab.obj lexyy.obj lex_t1.obj lex_t2.obj lex_t3.obj harbour.obj genobj32.obj
    echo -ebin\harbour.exe obj\y_tab.obj > b31.bc
-   echo obj\lexyy.obj obj\lex_tab.obj >> b31.bc
+   echo obj\lexyy.obj obj\lex_t1.obj >> b31.bc
+   echo obj\lex_t2.obj obj\lex_t3.obj >> b31.bc
    echo obj\harbour.obj obj\genobj32.obj >> b31.bc
    bcc $(c_opt) -Isource\compiler @b31.bc
 
@@ -103,7 +104,9 @@ fixflex.obj : source\compiler\fixflex.c
 genobj32.obj : source\compiler\genobj32.c
 # harbour.obj : source\compiler\harbour.c
 lexyy.obj : source\compiler\lexyy.c harbour.l
-lex_tab.obj : source\compiler\lex_tab.c harbour.l
+lex_t1.obj : source\compiler\lex_t1.c harbour.l
+lex_t2.obj : source\compiler\lex_t2.c harbour.l
+lex_t3.obj : source\compiler\lex_t3.c harbour.l
 y_tab.obj : source\compiler\y_tab.c harbour.y
 
 source\compiler\y_tab.c : harbour.y
@@ -112,8 +115,9 @@ source\compiler\y_tab.c : harbour.y
 fixflex.exe : fixflex.obj
   bcc -mh $(c_opt) -ebin\fixflex.exe obj\fixflex.obj
 
-source\compiler\lex_tab.c :: harbour.l fixflex.exe
+source\compiler\lex_t1.c :: harbour.l fixflex.exe
+source\compiler\lex_t2.c :: harbour.l fixflex.exe
 source\compiler\lexyy.c :: harbour.l fixflex.exe
    flex -i -8 -osource\compiler\lexyy.c source\compiler\harbour.l
    if exist source\compiler\lexyy.bak del source\compiler\lexyy.bak
-   fixflex source\compiler\lexyy.c source\compiler\lex_tab.c -P-
+   fixflex source\compiler\lexyy.c source\compiler\lex_t1.c source\compiler\lex_t2.c source\compiler\lex_t3.c -P-
