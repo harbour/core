@@ -1,3 +1,10 @@
+19990803-22:10 EDT David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/setcolor.c
+    + Added missing '#ifdef HARBOUR_USE_GTAPI'.
+  * source/rtl/gt/gtos2.c
+    + Added missing 'char' type on 'cRight' parameter for
+      both hb_gt_SetAttribute() and hb_gt_DrawShadow().
+
 19990803-21:20 EDT Paul Tucker <ptucker@sympatico.ca>
   * source/rtl/gt/gtwin.c
     * SetCursor fixed

@@ -75,6 +75,8 @@ HARBOUR HB_SETCOLOR( void )
 
 HARBOUR HB_COLORSELECT( void )
 {
+#ifdef HARBOUR_USE_GTAPI
     if (ISNUM(1))
         hb_gtColorSelect( hb_parni(1) );
+#endif
 }

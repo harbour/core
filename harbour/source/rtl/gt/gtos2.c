@@ -132,11 +132,11 @@ void hb_gt_PutText(char cTop, char cLeft, char cBottom, char cRight, char *srce)
     }
 }
 
-void hb_gt_SetAttribute( char cTop, char cLeft, char cBottom, cRight, char attribute )
+void hb_gt_SetAttribute( char cTop, char cLeft, char cBottom, char cRight, char attribute )
 {
 }
 
-void hb_gt_DrawShadow( char cTop, char cLeft, char cBottom, cRight, char attribute )
+void hb_gt_DrawShadow( char cTop, char cLeft, char cBottom, char cRight, char attribute )
 {
 }
 
