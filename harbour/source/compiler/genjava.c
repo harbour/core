@@ -359,11 +359,11 @@ void hb_compGenJava( PHB_FNAME pFileName )
                break;
 
             case HB_P_STATICS:
-                   hb_fputc( pFunc->pCode[ lPCodePos++ ] );
-                   hb_fputc( pFunc->pCode[ lPCodePos++ ] );
-                   hb_fputc( pFunc->pCode[ lPCodePos++ ] );
-                   hb_fputc( pFunc->pCode[ lPCodePos++ ] );
-                   hb_fputc( pFunc->pCode[ lPCodePos++ ] );
+               hb_fputc( pFunc->pCode[ lPCodePos++ ] );
+               hb_fputc( pFunc->pCode[ lPCodePos++ ] );
+               hb_fputc( pFunc->pCode[ lPCodePos++ ] );
+               hb_fputc( pFunc->pCode[ lPCodePos++ ] );
+               hb_fputc( pFunc->pCode[ lPCodePos++ ] );
                break;
 
             default:
