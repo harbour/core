@@ -57,7 +57,9 @@
 
 #include "hbapi.h"
 #include "hb_io.h"
-
+#if defined(__DJGPP__) || defined(__RSX32__) || defined(__GNUC__)
+    #include "sys/param.h"
+#endif
 /* NOTE: Clipper will only return a maximum of 15 bytes from this function.
          And it will be padded with spaces. Harbour does the same in the
          DOS platform.
@@ -65,7 +67,20 @@
 
 HB_FUNC( NETNAME )
 {
-#if defined(HB_OS_DOS)
+#if defined(__DJGPP__) || defined(__RSX32__) || defined(__GNUC__)
+
+      {
+     char * pszValue = (char *) hb_xgrab(MAXGETHOSTNAME+1);
+     pszValue[ 0 ] = '\0';
+          
+     gethostname (pszValue, MAXGETHOSTNAME);
+
+     hb_retc( pszValue );
+     hb_xfree( pszValue );
+}
+
+
+#elif defined(HB_OS_DOS)
    {
       char szValue[ 16 ];
       union REGS regs;
@@ -95,17 +110,6 @@ HB_FUNC( NETNAME )
       hb_retc( pszValue );
       hb_xfree( pszValue );
    }
-#elif defined(__DJGPP__) || defined(__RSX32__) || defined(__GNUC__)
-      {
-     char * pszValue = (char *) hb_xgrab(MAXGETHOSTNAME+1)
-     pszValue[ 0 ] = '\0';
-          
-     gethostname (pszValue, MAXGETHOSTNAME)
-
-     hb_retc( pszValue );
-     hb_xfree( pszValue );
-}
-
 #else
    hb_retc( "" );
 #endif
