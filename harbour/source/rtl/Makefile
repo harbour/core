@@ -64,7 +64,6 @@ PRG_SOURCES=\
         objfunc.prg \
         readkey.prg \
         readvar.prg \
-        rddord.prg \
         setfunc.prg \
         setkey.prg \
         setta.prg \

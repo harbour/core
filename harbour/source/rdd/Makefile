@@ -15,6 +15,7 @@ PRG_SOURCES=\
         dbf0.prg \
         sdf0.prg \
         delim0.prg \
+        rddord.prg \
 	rddsys.prg \
 
 LIBNAME=rdd
