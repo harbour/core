@@ -2754,7 +2754,7 @@ WORD GetVarPos( PVAR pVars, char * szVarName ) /* returns the order + 1 of a var
 
             pVars->iUsed = 1;
 
-            pNewStackType = OurMalloc( sizeof( STACK_VAL_TYPE ) );
+            pNewStackType = ( STACK_VAL_TYPE * )OurMalloc( sizeof( STACK_VAL_TYPE ) );
             pNewStackType->cType = pVars->cType;
             pNewStackType->pPrev = pStackValType;
 
@@ -3246,7 +3246,7 @@ void PushLogical( int iTrueFalse ) /* pushes a logical value on the virtual mach
 
    if( _iWarnings )
    {
-      pNewStackType = OurMalloc( sizeof( STACK_VAL_TYPE ) );
+      pNewStackType = ( STACK_VAL_TYPE * )OurMalloc( sizeof( STACK_VAL_TYPE ) );
       pNewStackType->cType = 'L';
       pNewStackType->pPrev = pStackValType;
 
@@ -3262,7 +3262,7 @@ void PushNil( void )
    {
       PSTACK_VAL_TYPE pNewStackType;
 
-      pNewStackType = OurMalloc( sizeof( STACK_VAL_TYPE ) );
+      pNewStackType = ( STACK_VAL_TYPE * )OurMalloc( sizeof( STACK_VAL_TYPE ) );
       pNewStackType->cType = 'U';
       pNewStackType->pPrev = pStackValType;
 
@@ -3281,7 +3281,7 @@ void PushDouble( double dNumber, BYTE bDec )
    {
       PSTACK_VAL_TYPE pNewStackType;
 
-      pNewStackType = OurMalloc( sizeof( STACK_VAL_TYPE ) );
+      pNewStackType = ( STACK_VAL_TYPE * )OurMalloc( sizeof( STACK_VAL_TYPE ) );
       pNewStackType->cType = 'N';
       pNewStackType->pPrev = pStackValType;
 
@@ -3301,7 +3301,7 @@ void PushInteger( int iNumber )
    {
       PSTACK_VAL_TYPE pNewStackType;
 
-      pNewStackType = OurMalloc( sizeof( STACK_VAL_TYPE ) );
+      pNewStackType = ( STACK_VAL_TYPE * )OurMalloc( sizeof( STACK_VAL_TYPE ) );
       pNewStackType->cType = 'N';
       pNewStackType->pPrev = pStackValType;
 
@@ -3327,7 +3327,7 @@ void PushLong( long lNumber )
    {
       PSTACK_VAL_TYPE pNewStackType;
 
-      pNewStackType = OurMalloc( sizeof( STACK_VAL_TYPE ) );
+      pNewStackType = ( STACK_VAL_TYPE * )OurMalloc( sizeof( STACK_VAL_TYPE ) );
       pNewStackType->cType = 'N';
       pNewStackType->pPrev = pStackValType;
 
@@ -3347,7 +3347,7 @@ void PushString( char * szText )
    {
       PSTACK_VAL_TYPE pNewStackType;
 
-      pNewStackType = OurMalloc( sizeof( STACK_VAL_TYPE ) );
+      pNewStackType = ( STACK_VAL_TYPE * )OurMalloc( sizeof( STACK_VAL_TYPE ) );
       pNewStackType->cType = 'C';
       pNewStackType->pPrev = pStackValType;
 

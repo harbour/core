@@ -2,7 +2,7 @@
 
 .SUFFIXES : .prg .c
 
-path_c   = source\compiler;source\hbpp;source\vm;source\rtl;source\rtl\gt;source\rtl\natmsg;source\tools
+path_c   = source\compiler;source\hbpp;source\vm;source\rtl;source\rtl\gt;source\rtl\natmsg;source\tools;source\contrib
 path_h   = include
 path_l   = source\compiler
 path_y   = source\compiler
@@ -187,6 +187,10 @@ $(path_obj)\stringp.obj   : {$(path_prg)}\stringp.prg $(path_h)\pcode.h $(path_h
   ilib .\libs\icc\harbour.lib -+$@,,
 
 {source\tools}.c{$(path_obj)}.obj:
+  icc /C+ $(c_opt) /Fo$@ /Tp$<
+  ilib .\libs\icc\hbtools.lib -+$@,,
+
+{source\contrib}.c{$(path_obj)}.obj:
   icc /C+ $(c_opt) /Fo$@ /Tp$<
   ilib .\libs\icc\hbtools.lib -+$@,,
 

@@ -1,3 +1,11 @@
+19990618-21:50 EDT David G. Holm <dholm@jsd-llc.com>
+  * makefile.icc
+    - genobj.c was moved to source/contrib
+  * source/compiler/harbour.y
+    - Added missing type overrides to OurMalloc() calls
+  * tests/working/scroll.prg
+    - Modified to use the preprocessor
+
 19990618-20:55 EDT David G. Holm <dholm@jsd-llc.com>
   * source/rtl/dir.c
     - Corrected #if test GNU C on Unix/Linux test to use && ! instead of || !
