@@ -66,7 +66,7 @@ ZLIB_BOR_LIB = $(LIB_DIR)\ziparchive.lib
 ZLIB_LIB_OBJS =  \
     $(OBJ_DIR)\zipnew.obj \
     $(OBJ_DIR)\zipcomp.obj \
-    $(OBJ_DIR)\zipfile.obj
+    $(OBJ_DIR)\zip.obj
 
 ZLIB_EXE_OBJS =  \
     $(OBJ_DIR)\test.obj
@@ -88,7 +88,7 @@ $(OBJ_DIR)\zipnew.obj : $(ZLIB_DIR)\zipnew.cpp
    $(CC)  -u -c $(CLIBFLAGS) -P -o$@ $**
    tlib $(ZLIB_LIB) $(ARFLAGS) -+$@,,
 
-$(OBJ_DIR)\zipfile.obj : $(ZLIB_DIR)\zipfile.c
+$(OBJ_DIR)\zip.obj : $(ZLIB_DIR)\zip.c
    $(CC)  -c $(CLIBFLAGS) -o$@ $**
    tlib $(ZLIB_LIB) $(ARFLAGS) -+$@,,
 
