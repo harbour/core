@@ -9,15 +9,17 @@ LIB_DIR = ..\..\..\lib\b32
 
 $(LIB_DIR)\hgfwin32.lib :  \
    $(OBJ_DIR)\button.obj   \
-   $(OBJ_DIR)\win32.obj    \
+   $(OBJ_DIR)\edit.obj     \
    $(OBJ_DIR)\form.obj     \
    $(OBJ_DIR)\menu.obj     \
    $(OBJ_DIR)\menuitem.obj \
-   $(OBJ_DIR)\winctrl.obj
+   $(OBJ_DIR)\winctrl.obj  \
+   $(OBJ_DIR)\win32.obj
 
 $(OBJ_DIR)\button.c     : button.prg
 $(OBJ_DIR)\button.obj   : $(OBJ_DIR)\button.c
-$(OBJ_DIR)\win32.obj    : win32.c
+$(OBJ_DIR)\edit.c       : edit.prg
+$(OBJ_DIR)\edit.obj     : $(OBJ_DIR)\edit.c
 $(OBJ_DIR)\form.c       : form.prg
 $(OBJ_DIR)\form.obj     : $(OBJ_DIR)\form.c
 $(OBJ_DIR)\menu.c       : menu.prg
@@ -26,6 +28,7 @@ $(OBJ_DIR)\menuitem.c   : menuitem.prg
 $(OBJ_DIR)\menuitem.obj : $(OBJ_DIR)\menuitem.c
 $(OBJ_DIR)\winctrl.c    : winctrl.prg
 $(OBJ_DIR)\winctrl.obj  : $(OBJ_DIR)\winctrl.c
+$(OBJ_DIR)\win32.obj    : win32.c
 
 .c.obj:
   bcc32 $(CLIBFLAGS) -c -O2 -I$(INCLUDE_DIR) -o$@ $<
