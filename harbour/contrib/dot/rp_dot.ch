@@ -15,6 +15,7 @@
 #COMMAND IF <ifExp> => __SetIf( <ifExp> )
 #COMMAND ELSEIF <elseifExp> => __SetElseIf( <elseifExp> )
 #COMMAND ELSE => __SetElse()
+#COMMAND ENDIF [<*x*>] => __SetEnd()
 #COMMAND END [<*x*>] => __SetEnd()
 
 #COMMAND DO CASE => __SetDoCase()

@@ -157,7 +157,8 @@ STATIC aCommRules    := {}, aCommResults  := {}
 
 STATIC nPendingLines := 0, aPendingLines  := {}
 
-STATIC bDbgMatch := .F., bDbgExp := .F., bDbgPPO := .F., bLoadRules := .T., bCount := .T., bCCH := .F., bPP := .F.
+STATIC bDbgMatch := .F., bDbgExp := .F., bDbgPPO := .F., bLoadRules := .T., ;
+       bCount := .T., bCCH := .F., bPP := .F., bRun := .F.
 
 STATIC nIfDef := 0, abIfDef := {}, nIf := 0, abIf := {}
 
@@ -168,6 +169,10 @@ STATIC s_asPaths := {}
 STATIC s_cLastChar := ' '
 
 STATIC s_sIncludeFile := NIL
+
+STATIC nRow, nCol
+
+//--------------------------------------------------------------//
 
 PROCEDURE Main( sSource, sSwitch )
 
@@ -200,6 +205,9 @@ PROCEDURE Main( sSource, sSwitch )
       IF "-U" $ sSwitch
          bLoadRules := .F.
       ENDIF
+      IF "-R" $ sSwitch
+         bRun := .T.
+      ENDIF
    ENDIF
 
    #ifdef __HARBOUR__
@@ -214,18 +222,24 @@ PROCEDURE Main( sSource, sSwitch )
    ENDIF
 
    IF sSource != NIL //bPP
+      nRow := Row()
+      nCol := Col()
       ProcessFile( sSource, sSwitch )
    ELSE
+      nRow := 1
+      nCol := 0
       RP_Dot()
    ENDIF
 
+   DevPos( nRow, nCol )
+
 RETURN
+
+//------------------------------- *** RP DOT Functions *** -------------------------------//
 
 PROCEDURE RP_Dot()
 
-   LOCAL sLine := Space(256), GetList := {}, sPPed, nNext, sBlock, sTemp
-   LOCAL sTemp2, nLen, sLeft, sSymbol, nNextAssign
-   LOCAL nRow := 1, nCol := 0
+   LOCAL GetList := {}, sLine := Space(256)
 
    bCount := .F.
 
@@ -247,107 +261,122 @@ PROCEDURE RP_Dot()
 
       sLine := StrTran( sLine,  Chr(9), "  " )
 
-      sPPed := ProcessLine( RTrim( sLine ), 1, '' )
-
-      ExtractLeadingWS( @sPPed )
-      DropTrailingWS( @sPPed )
-      sTemp := sPPed
-
-      @ 0,0 SAY "PP: "
-      @ 0,4 SAY Pad( sPPed, 76 ) COLOR "N/R"
-      DevPos( nRow, nCol )
-
-      BEGIN SEQUENCE
-
-         WHILE ( nNext := At( ';', sTemp ) ) > 0
-            sBlock := Left( sTemp, nNext - 1 )
-            ExtractLeadingWS( @sBlock )
-            DropTrailingWS( @sBlock )
-
-            sTemp2 := sBlock
-            WHILE ( nNextAssign := At( ":=", sTemp2 ) ) > 0
-               sLeft  := Left( sTemp2, nNextAssign - 1 )
-               sTemp2 := SubStr( sTemp2, nNextAssign + 2 )
-
-               DropTrailingWS( @sLeft )
-               nLen := Len( sLeft )
-               WHILE nLen > 0
-                  IF SubStr( sLeft, nLen, 1 ) $ " (,=><*+-\^&@["
-                     EXIT
-                  ENDIF
-                  nLen--
-               ENDDO
-               IF nLen == 0
-                  sSymbol := sLeft
-               ELSE
-                  sSymbol := SubStr( sLeft, nLen + 1 )
-               ENDIF
-               IF ( Type( sSymbol ) == 'U' )
-                  PUBLIC &sSymbol
-               ENDIF
-            ENDDO
-
-            sSymbol := Upper( Left( sBlock, 14 ) ) // Len( "__SetOtherwise" )
-            IF nIf == 0 .OR. ;
-               sSymbol = "__SETIF" .OR. sSymbol = "__SETELSE" .OR. sSymbol = "__SETELSEIF" .OR. sSymbol = "__SETEND" .OR. ;
-               sSymbol = "__SETDOCASE" .OR. sSymbol = "__SETCASE" .OR. sSymbol = "__SETOTHERWISE" .OR. sSymbol = "__SETENDCASE" .OR. ;
-               abIf[ nIf ]
-
-               Eval( &( "{|| " + sBlock + " }" ) )
-            ENDIF
-
-            sTemp  := RTrim( SubStr( sTemp, nNext + 1 ) )
-            ExtractLeadingWS( @sTemp )
-         ENDDO
-
-         sBlock := sTemp
-         DropTrailingWS( @sBlock )
-
-         IF ! ( sBlock == '' )
-            sTemp2 := sBlock
-            WHILE ( nNextAssign := At( ":=", sTemp2 ) ) > 0
-               sLeft  := Left( sTemp2, nNextAssign - 1 )
-               sTemp2 := SubStr( sTemp2, nNextAssign + 2 )
-
-               DropTrailingWS( @sLeft )
-               nLen := Len( sLeft )
-               WHILE nLen > 0
-                  IF SubStr( sLeft, nLen, 1 ) $ " (,=><*+-\^&@["
-                     EXIT
-                  ENDIF
-                  nLen--
-               ENDDO
-               IF nLen == 0
-                  sSymbol := sLeft
-               ELSE
-                  sSymbol := SubStr( sLeft, nLen + 1 )
-               ENDIF
-               IF ( Type( sSymbol ) == 'U' )
-                  PUBLIC &sSymbol
-               ENDIF
-            ENDDO
-
-            sSymbol := Upper( Left( sBlock, 11 ) ) // Len( "__SetElseIf" )
-            IF nIf == 0 .OR. ;
-               sSymbol = "__SETIF" .OR. sSymbol = "__SETELSE" .OR. sSymbol = "__SETELSEIF" .OR. sSymbol = "__SETEND" .OR. ;
-               sSymbol = "__SETDOCASE" .OR. sSymbol = "__SETCASE" .OR. sSymbol = "__SETOTHERWISE" .OR. sSymbol = "__SETENDCASE" .OR. ;
-               abIf[ nIf ]
-               Eval( &( "{|| " + sTemp + " }" ) )
-            ENDIF
-         ENDIF
-
-         nRow := Row()
-         nCol := Col()
-
-         @ 0,0 SAY "PP: "
-         @ 0,4 SAY Pad( sPPed, 76 ) COLOR "N/R"
-
-      END SEQUENCE
+      ExecuteLine( ProcessLine( RTrim( sLine ), 1, '' ) )
    ENDDO
 
    CLEAR SCREEN
 
 RETURN
+
+//--------------------------------------------------------------//
+
+PROCEDURE ExecuteLine( sPPed )
+
+   LOCAL nNext, sBlock, sTemp
+   LOCAL sTemp2, nLen, sLeft, sSymbol, nNextAssign
+
+   ExtractLeadingWS( @sPPed )
+   DropTrailingWS( @sPPed )
+   sTemp := sPPed
+
+   IF ! bRun
+      @ 0,0 SAY "PP: "
+      @ 0,4 SAY Pad( sPPed, 76 ) COLOR "N/R"
+   ENDIF
+   DevPos( nRow, nCol )
+
+   BEGIN SEQUENCE
+
+      WHILE ( nNext := At( ';', sTemp ) ) > 0
+         sBlock := Left( sTemp, nNext - 1 )
+         ExtractLeadingWS( @sBlock )
+         DropTrailingWS( @sBlock )
+
+         sTemp2 := sBlock
+         WHILE ( nNextAssign := At( ":=", sTemp2 ) ) > 0
+            sLeft  := Left( sTemp2, nNextAssign - 1 )
+            sTemp2 := SubStr( sTemp2, nNextAssign + 2 )
+
+            DropTrailingWS( @sLeft )
+            nLen := Len( sLeft )
+            WHILE nLen > 0
+               IF SubStr( sLeft, nLen, 1 ) $ " (,=><*+-\^&@["
+                  EXIT
+               ENDIF
+               nLen--
+            ENDDO
+            IF nLen == 0
+               sSymbol := sLeft
+            ELSE
+               sSymbol := SubStr( sLeft, nLen + 1 )
+            ENDIF
+            IF ( Type( sSymbol ) = 'U' )
+               PUBLIC &sSymbol
+            ENDIF
+         ENDDO
+
+         sSymbol := Upper( Left( sBlock, 14 ) ) // Len( "__SetOtherwise" )
+         IF nIf == 0 .OR. ;
+            sSymbol = "__SETIF" .OR. sSymbol = "__SETELSE" .OR. sSymbol = "__SETELSEIF" .OR. sSymbol = "__SETEND" .OR. ;
+            sSymbol = "__SETDOCASE" .OR. sSymbol = "__SETCASE" .OR. sSymbol = "__SETOTHERWISE" .OR. sSymbol = "__SETENDCASE" .OR. ;
+            abIf[ nIf ]
+
+            Eval( &( "{|| " + sBlock + " }" ) )
+         ENDIF
+
+         sTemp  := RTrim( SubStr( sTemp, nNext + 1 ) )
+         ExtractLeadingWS( @sTemp )
+      ENDDO
+
+      sBlock := sTemp
+      DropTrailingWS( @sBlock )
+
+      IF ! ( sBlock == '' )
+         sTemp2 := sBlock
+         WHILE ( nNextAssign := At( ":=", sTemp2 ) ) > 0
+            sLeft  := Left( sTemp2, nNextAssign - 1 )
+            sTemp2 := SubStr( sTemp2, nNextAssign + 2 )
+
+            DropTrailingWS( @sLeft )
+            nLen := Len( sLeft )
+            WHILE nLen > 0
+               IF SubStr( sLeft, nLen, 1 ) $ " (,=><*+-\^&@["
+                  EXIT
+               ENDIF
+               nLen--
+            ENDDO
+            IF nLen == 0
+               sSymbol := sLeft
+            ELSE
+               sSymbol := SubStr( sLeft, nLen + 1 )
+            ENDIF
+            IF ( Type( sSymbol ) = 'U' )
+               PUBLIC &sSymbol
+            ENDIF
+         ENDDO
+
+         sSymbol := Upper( Left( sBlock, 11 ) ) // Len( "__SetElseIf" )
+         IF nIf == 0 .OR. ;
+            sSymbol = "__SETIF" .OR. sSymbol = "__SETELSE" .OR. sSymbol = "__SETELSEIF" .OR. sSymbol = "__SETEND" .OR. ;
+            sSymbol = "__SETDOCASE" .OR. sSymbol = "__SETCASE" .OR. sSymbol = "__SETOTHERWISE" .OR. sSymbol = "__SETENDCASE" .OR. ;
+            abIf[ nIf ]
+            Eval( &( "{|| " + sTemp + " }" ) )
+         ENDIF
+      ENDIF
+
+      nRow := Row()
+      nCol := Col()
+
+      IF ! bRun
+         @ 0,0 SAY "PP: "
+         @ 0,4 SAY Pad( sPPed, 76 ) COLOR "N/R"
+      ENDIF
+
+   END SEQUENCE
+
+RETURN
+
+//--------------------------------------------------------------//
 
 PROCEDURE RP_Dot_Err()
 
@@ -355,6 +384,112 @@ PROCEDURE RP_Dot_Err()
    BREAK
 
 //RETURN // Unreacable code
+
+//--------------------------------------------------------------//
+
+FUNCTION __SetIf( bExp )
+
+   IF nIf > 0 .AND. ! abIf[nIf]
+      bExp := .F.
+   ENDIF
+
+   nIf++
+   aSize( abIf, nIf )
+   abIf[nIf] := bExp
+
+RETURN abIf[nIf]
+
+//--------------------------------------------------------------//
+
+FUNCTION __SetElseIf( bExp )
+
+   IF nIf > 1 .AND.  ! abIf[nIf - 1]
+      RETURN .F.
+   ENDIF
+
+   abIf[nIf] := ! abIf[nIf]
+
+   IF abIf[nIf]
+      abIf[nIf] := bExp
+   ENDIF
+
+RETURN abIf[nIf]
+
+//--------------------------------------------------------------//
+
+FUNCTION __SetElse()
+
+   IF nIf > 1 .AND.  ! abIf[nIf - 1]
+      RETURN .F.
+   ENDIF
+
+   abIf[nIf] := ! abIf[nIf]
+
+RETURN abIf[nIf]
+
+//--------------------------------------------------------------//
+
+FUNCTION __SetEnd()
+
+   IF nIf > 0
+      nIf--
+   ELSE
+      Alert( "END with no IF in sight!" )
+   ENDIF
+
+RETURN nIf
+
+//--------------------------------------------------------------//
+
+FUNCTION __SetDoCase()
+
+   nIf++
+   aSize( abIf, nIf )
+   abIf[nIf] := .F.
+
+RETURN abIf[nIf]
+
+//--------------------------------------------------------------//
+
+FUNCTION __SetCase( bExp )
+
+   IF nIf > 1 .AND.  ! abIf[nIf - 1]
+      RETURN .F.
+   ENDIF
+
+   abIf[nIf] := ! abIf[nIf]
+
+   IF abIf[nIf]
+      abIf[nIf] := bExp
+   ENDIF
+
+RETURN abIf[nIf]
+
+//--------------------------------------------------------------//
+
+FUNCTION __SetOtherwise()
+
+   IF nIf > 1 .AND.  ! abIf[nIf - 1]
+      RETURN .F.
+   ENDIF
+
+   abIf[nIf] := ! abIf[nIf]
+
+RETURN abIf[nIf]
+
+//--------------------------------------------------------------//
+
+FUNCTION __SetEndCase()
+
+   IF nIf > 0
+      nIf--
+   ELSE
+      Alert( "ENDCASE with no DO CASE in sight!" )
+   ENDIF
+
+RETURN nIf
+
+//------------------------------- *** END - RP DOT Functions *** -------------------------------//
 
 FUNCTION ProcessFile( sSource, sSwitch )
 
@@ -412,6 +547,12 @@ FUNCTION ProcessFile( sSource, sSwitch )
    ELSE
       FWrite( hPP, '#line 1 "' + sPath + Upper( sSource ) + '"' + CRLF )
       bBlanks := .F.
+   ENDIF
+
+   IF bRun .AND. ProcName(1) == "MAIN"
+      bCount := .F.
+      ErrorBlock( {|| RP_Dot_Err() } )
+      ProcessFile( "rp_dot.ch" )
    ENDIF
 
    sBuffer   := Space( PP_BUFFER_SIZE )
@@ -840,6 +981,8 @@ FUNCTION ProcessFile( sSource, sSwitch )
 
 RETURN .T.
 
+//--------------------------------------------------------------//
+
 FUNCTION ProcessLine( sLine, nLine, sSource )
 
    LOCAL sDirective, bX, sToken, nRule
@@ -1239,7 +1382,13 @@ FUNCTION ProcessLine( sLine, nLine, sSource )
       //WAIT
    ENDIF
 
+   IF bRun
+      ExecuteLine( sOut )
+   ENDIF
+
 RETURN sOut
+
+//--------------------------------------------------------------//
 
 FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
 
@@ -1941,6 +2090,8 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
 
 RETURN 0
 
+//--------------------------------------------------------------//
+
 FUNCTION NextToken( sLine, bCheckRules )
 
   LOCAL  sReturn := NIL, cChar, Counter, nLen, nClose, sLeft2Chars := Left( sLine, 2 )
@@ -2172,6 +2323,8 @@ FUNCTION NextToken( sLine, bCheckRules )
   ENDIF
 
 RETURN sReturn
+
+//--------------------------------------------------------------//
 
 FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
 
@@ -2690,6 +2843,8 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
 
 RETURN IIF( cType == 'A', aExp, sExp )
 
+//--------------------------------------------------------------//
+
 FUNCTION PPOut( aResults, aMarkers )
 
   LOCAL Counter, nResults, sResult := "", nMarker, nMatches, nMatch//, aMarkers := aResults[3]
@@ -2990,6 +3145,8 @@ FUNCTION PPOut( aResults, aMarkers )
   ENDIF
 
 RETURN sResult
+
+//--------------------------------------------------------------//
 
 FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
 
@@ -4037,6 +4194,8 @@ FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
 
 RETURN NIL
 
+//--------------------------------------------------------------//
+
 FUNCTION RemoveDefine( sDefine )
 
    LOCAL nId
@@ -4049,6 +4208,8 @@ FUNCTION RemoveDefine( sDefine )
    ENDIF
 
 RETURN nId
+
+//--------------------------------------------------------------//
 
 FUNCTION CompileDefine( sRule )
 
@@ -4139,7 +4300,7 @@ FUNCTION CompileDefine( sRule )
          aMP := { 0, 0, ')', NIL, NIL }
          aAdd( aRule[2], aMP )
 
-/*----------------------------------------- */
+         /*----------------------------------------- */
 
          aRPs := {}
 
@@ -4202,6 +4363,8 @@ FUNCTION CompileDefine( sRule )
 
 RETURN Len( aDefRules )
 
+//--------------------------------------------------------------//
+
 FUNCTION ExtractLeadingWS( sLine, sWS )
 
    LOCAL Counter, cChar, nLen := Len( sLine )
@@ -4225,6 +4388,8 @@ FUNCTION ExtractLeadingWS( sLine, sWS )
    //? "Removed: '" + sWs + "' Returning: " + sLine
 
 RETURN sWS
+
+//--------------------------------------------------------------//
 
 FUNCTION DropTrailingWS( sLine, sWS )
 
@@ -4286,6 +4451,8 @@ FUNCTION DropTrailingWS( sLine, sWS )
 
 RETURN sLine
 
+//--------------------------------------------------------------//
+
 FUNCTION DropExtraTrailingWS( sLine )
 
   #ifdef __HARBOUR__
@@ -4328,6 +4495,8 @@ FUNCTION DropExtraTrailingWS( sLine )
 
 RETURN sLine
 
+//--------------------------------------------------------------//
+
 FUNCTION SetIfDef( sDefine, bExist )
 
    LOCAL nId
@@ -4348,93 +4517,7 @@ FUNCTION SetIfDef( sDefine, bExist )
 
 RETURN nIfDef
 
-FUNCTION __SetIf( bExp )
-
-   IF nIf > 0 .AND. ! abIf[nIf]
-      bExp := .F.
-   ENDIF
-
-   nIf++
-   aSize( abIf, nIf )
-   abIf[nIf] := bExp
-
-RETURN abIf[nIf]
-
-FUNCTION __SetElseIf( bExp )
-
-   IF nIf > 1 .AND.  ! abIf[nIf - 1]
-      RETURN .F.
-   ENDIF
-
-   abIf[nIf] := ! abIf[nIf]
-
-   IF abIf[nIf]
-      abIf[nIf] := bExp
-   ENDIF
-
-RETURN abIf[nIf]
-
-FUNCTION __SetElse()
-
-   IF nIf > 1 .AND.  ! abIf[nIf - 1]
-      RETURN .F.
-   ENDIF
-
-   abIf[nIf] := ! abIf[nIf]
-
-RETURN abIf[nIf]
-
-FUNCTION __SetEnd()
-
-   IF nIf > 0
-      nIf--
-   ELSE
-      Alert( "END with no IF in sight!" )
-   ENDIF
-
-RETURN nIf
-
-FUNCTION __SetDoCase()
-
-   nIf++
-   aSize( abIf, nIf )
-   abIf[nIf] := .F.
-
-RETURN abIf[nIf]
-
-FUNCTION __SetCase( bExp )
-
-   IF nIf > 1 .AND.  ! abIf[nIf - 1]
-      RETURN .F.
-   ENDIF
-
-   abIf[nIf] := ! abIf[nIf]
-
-   IF abIf[nIf]
-      abIf[nIf] := bExp
-   ENDIF
-
-RETURN abIf[nIf]
-
-FUNCTION __SetOtherwise()
-
-   IF nIf > 1 .AND.  ! abIf[nIf - 1]
-      RETURN .F.
-   ENDIF
-
-   abIf[nIf] := ! abIf[nIf]
-
-RETURN abIf[nIf]
-
-FUNCTION __SetEndCase()
-
-   IF nIf > 0
-      nIf--
-   ELSE
-      Alert( "ENDCASE with no DO CASE in sight!" )
-   ENDIF
-
-RETURN nIf
+//--------------------------------------------------------------//
 
 FUNCTION CompileToCCH( sSource )
 
@@ -4611,6 +4694,8 @@ FUNCTION CompileToCCH( sSource )
    FClose( hCCH )
 
 RETURN .T.
+
+//--------------------------------------------------------------//
 
 FUNCTION InitRules()
 
@@ -4904,6 +4989,8 @@ aAdd( aCommRules, { 'SET' , { {    0,   0, 'ORDER', NIL, NIL }, {    0,   0, 'TO
 
 RETURN .T.
 
+//--------------------------------------------------------------//
+
 FUNCTION InitResults()
 
 /* Defines Results*/
@@ -5195,3 +5282,5 @@ aAdd( aCommResults, { { {   0, 'ordSetFocus( ' }, {   0,   1 }, {   2, ' , ' }, 
 aAdd( aCommResults, { { {   0, 'ordSetFocus(0)' } }, { -1} , { }  } )
 
 RETURN .T.
+
+//--------------------------------------------------------------//
