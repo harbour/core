@@ -101,7 +101,6 @@ extern void    hb_vmPushString( char * szText, ULONG length );  /* pushes a stri
 extern void    hb_vmPushStringPcode( char * szText, ULONG length );  /* pushes a string from pcode on to the stack */
 extern void    hb_vmPushDate( long lDate );   /* pushes a long date onto the stack */
 extern void    hb_vmPushSymbol( PHB_SYMB pSym ); /* pushes a function pointer onto the stack */
-extern void    hb_vmPushMacroSymbol( PHB_SYMB pSym ); /* pushes a symbol created by the macro compiler onto the stack */
 extern void    hb_vmPushPointer( void * ); /* push an item of HB_IT_POINTER type */
 
 /* various flags for supported features 

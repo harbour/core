@@ -1672,11 +1672,13 @@ static int WorkTranslate( char * ptri, char * ptro, COMMANDS * sttra, int * lens
   return -1;
 }
 
+#define MAX_OPTIONALS 5
+
 static int CommandStuff( char * ptrmp, char * inputLine, char * ptro, int * lenres, BOOL com_or_tra, BOOL com_or_xcom )
 {
   BOOL endTranslation = FALSE;
   int ipos;
-  char * lastopti[ 3 ], * strtopti = NULL, * strtptri = NULL;
+  char * lastopti[ MAX_OPTIONALS ], * strtopti = NULL, * strtptri = NULL;
   char * ptri = inputLine, * ptr, tmpname[ MAX_NAME ];
   int isWordInside = 0;
 

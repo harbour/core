@@ -203,16 +203,6 @@ PHB_DYNS HB_EXPORT hb_dynsymGet( char * szName )  /* finds and creates a symbol 
    return pDynSym;
 }
 
-BOOL hb_dynsymScope( PHB_DYNS pSym, HB_SYMBOLSCOPE scope )
-{
-   if( pSym->pSymbol->cScope != SYM_ALLOCATED )
-   {
-      return pSym->pSymbol->cScope & scope;
-   }
-
-   return FALSE;
-}
-
 PHB_DYNS HB_EXPORT hb_dynsymFindName( char * szName )  /* finds a symbol */
 {
    char szUprName[ HB_SYMBOL_NAME_LEN + 1 ];

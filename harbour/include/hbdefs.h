@@ -987,6 +987,8 @@ typedef PHB_FUNC HB_FUNC_PTR;
          are also prefixed with HB_. [vszakats] */
 
 #define HB_FUNCNAME( funcname )    HB_FUN_##funcname
+#define HB_INIT_FUNCNAME( funcname )    HB_FUN_init_##funcname
+#define HB_EXIT_FUNCNAME( funcname )    HB_FUN_exit_##funcname
 
 #if ( defined( _MSC_VER ) || defined( __WATCOMC__ ) ) && defined( HB_FUNC_NO_DECORATION )
    #define HB_EXTERN_C_ extern "C"
@@ -997,8 +999,8 @@ typedef PHB_FUNC HB_FUNC_PTR;
 #define HB_FUNC( funcname )        HB_EXTERN_C_ HARBOUR HB_EXPORT HB_FUN_##funcname ( void )
 #define HB_FUNC_STATIC( funcname ) HB_EXTERN_C_ static HARBOUR HB_FUN_##funcname ( void )
 #define HB_FUNC_EXTERN( funcname ) HB_EXTERN_C_ extern HARBOUR HB_FUN_##funcname ( void )
-#define HB_FUNC_INIT( funcname )   HB_EXTERN_C_ static HARBOUR HB_FUN_##funcname ( void )
-#define HB_FUNC_EXIT( funcname )   HB_EXTERN_C_ static HARBOUR HB_FUN_##funcname ( void )
+#define HB_FUNC_INIT( funcname )   HB_EXTERN_C_ static HARBOUR HB_FUN_init_##funcname ( void )
+#define HB_FUNC_EXIT( funcname )   HB_EXTERN_C_ static HARBOUR HB_FUN_exit_##funcname ( void )
 
 typedef ULONG HB_HANDLE;        /* handle to memvar value */
 typedef char  HB_SYMBOLSCOPE;   /* stores symbol's scope */

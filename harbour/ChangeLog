@@ -8,6 +8,47 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-03-18 11:45 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+   * config/dos/global.cf
+      *restored creation of subdirectiories under plain DOS
+   
+   * include/hbapi.h
+   * include/hbcomp.h
+   * include/hbdefs.h
+   * include/hbvm.h
+   * source/compiler/genc.c
+   * source/compiler/harbour.c
+   * source/compiler/hbpcode.c
+   * source/vm/dynsym.c
+   * source/vm/hvm.c
+   * source/vm/macro.c
+      *modified creation of symbols table 
+         *symbol of function name never share a symbol of variable
+         *symbol for INIT/EXIT procedure has now '$' suffix - this means
+         that such procedures cannot be called from user code
+         (Clipper compatible)
+       See the following code:
+       PROCEDURE MAIN
+        aaa()
+       RETURN
+       INIT PROCEDURE aaa
+        ? "In INIT procedure", PROCNAME(0)
+       RETURN
+       STATIC PROCEDURE aaa
+        ? "In STATIC procedure", PROCNAME(0)
+       RETURN
+       It will print:
+       In INIT procedure aaa$
+       In STATIC procedure aaa
+       
+      *fixed access to static functions in a macro compiler (symbols for
+      static functions never goes into dynamic symbols table)
+
+   * source/pp/ppcore.c
+      *increased numer of nested optional clauses (max 5 currently - work
+      in progress)
+      
 2005-02-16 13:52 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
   * source/vm/classes.c
     hb_objGetpMethod() compiled as extern "C" for MSVC compatibility with xHarbour

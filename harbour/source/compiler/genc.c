@@ -32,6 +32,7 @@
 
 static void hb_compGenCReadable( PFUNCTION pFunc, FILE * yyc );
 static void hb_compGenCCompact( PFUNCTION pFunc, FILE * yyc );
+static void hb_compGenCFunc( FILE *yyc, char *cDecor, char *szName, int iStrip );
 
 /* helper structure to pass information */
 typedef struct HB_stru_genc_info
@@ -108,10 +109,10 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
             fprintf( yyc, "static HARBOUR hb_INITSTATICS( void );\n" ); /* NOTE: hb_ intentionally in lower case */
          /* Is it an INIT FUNCTION/PROCEDURE */
          else if ( bIsInitFunction )
-            fprintf( yyc, "HB_FUNC_INIT( %s );\n", pFunc->szName );
+            hb_compGenCFunc( yyc, "HB_FUNC_INIT( %s );\n", pFunc->szName, 1 );
          /* Is it an EXIT FUNCTION/PROCEDURE */
          else if ( bIsExitFunction )
-            fprintf( yyc, "HB_FUNC_EXIT( %s );\n", pFunc->szName );
+            hb_compGenCFunc( yyc, "HB_FUNC_EXIT( %s );\n", pFunc->szName, 1 );
          /* Then it must be a STATIC FUNCTION/PROCEDURE */
          else
             fprintf( yyc, "HB_FUNC_STATIC( %s );\n", pFunc->szName );
@@ -178,11 +179,7 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
             if( pSym->cScope & HB_FS_STATIC )
             {
                fprintf( yyc, "HB_FS_STATIC" );
-
-               if( pSym->cScope & HB_FS_PUBLIC )
-                  fprintf( yyc, " | HB_FS_PUBLIC" );
             }
-
             else if( pSym->cScope & HB_FS_INIT )
                fprintf( yyc, "HB_FS_INIT" );
 
@@ -203,9 +200,16 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
 
             /* specify the function address if it is a defined function or an
                external called function */
-            if( hb_compFunctionFind( pSym->szName ) ) /* is it a function defined in this module */
-               fprintf( yyc, ", {HB_FUNCNAME( %s )}, NULL }", pSym->szName );
-            else if( hb_compFunCallFind( pSym->szName ) ) /* is it a function called from this module */
+            if( pSym->bFunc && hb_compFunctionFind( pSym->szName ) ) /* is it a function defined in this module */
+            {
+               if( pSym->cScope & HB_FS_INIT )
+                  hb_compGenCFunc( yyc, ", {HB_INIT_FUNCNAME( %s )}, NULL }", pSym->szName, 1 );
+               else if( pSym->cScope & HB_FS_EXIT )
+                  hb_compGenCFunc( yyc, ", {HB_EXIT_FUNCNAME( %s )}, NULL }", pSym->szName, 1 );
+               else
+                  fprintf( yyc, ", {HB_FUNCNAME( %s )}, NULL }", pSym->szName );
+            }
+            else if( pSym->bFunc && hb_compFunCallFind( pSym->szName ) ) /* is it a function called from this module */
                fprintf( yyc, ", {HB_FUNCNAME( %s )}, NULL }", pSym->szName );
             else
                fprintf( yyc, ", {NULL}, NULL }" );   /* memvar */
@@ -259,10 +263,10 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
             fprintf( yyc, "static HARBOUR hb_INITSTATICS( void )" ); /* NOTE: hb_ intentionally in lower case */
          /* Is it an INIT FUNCTION/PROCEDURE */
          else if ( bIsInitFunction )
-            fprintf( yyc, "HB_FUNC_INIT( %s )", pFunc->szName );
+            hb_compGenCFunc( yyc, "HB_FUNC_INIT( %s )", pFunc->szName, 1 );
          /* Is it an EXIT FUNCTION/PROCEDURE */
          else if ( bIsExitFunction )
-            fprintf( yyc, "HB_FUNC_EXIT( %s )", pFunc->szName );
+            hb_compGenCFunc( yyc, "HB_FUNC_EXIT( %s )", pFunc->szName, 1 );
          /* Then it must be a STATIC FUNCTION/PROCEDURE */
          else
             fprintf( yyc, "HB_FUNC_STATIC( %s )", pFunc->szName );
@@ -371,6 +375,30 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
 
    if( ! hb_comp_bQuiet )
       printf( "Done.\n" );
+}
+
+static void hb_compGenCFunc( FILE * yyc, char *cDecor, char *szName, int iStrip )
+{
+   int i=0;
+
+   while( cDecor[i] )
+   {
+      if( cDecor[i] == '%' && cDecor[i+1] == 's' )
+      {
+         int j=0;
+         while( szName[j+iStrip] )
+         {
+            fwrite( (void*)(szName+j), 1, 1, yyc );
+            j++;
+         }
+         i +=2;
+      }
+      else   
+      {
+         fwrite( (void*)(cDecor+i), 1, 1, yyc );
+         i++;
+      }
+   }
 }
 
 static HB_GENC_FUNC( hb_p_and )

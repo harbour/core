@@ -65,7 +65,9 @@ MD = md
 RANLIB = ranlib
 
 dirbase::
-	-@for %d in ($(HB_ARCHITECTURE) $(ARCH_DOS)) do if not exist %d\nul $(MD) %d
+	-if not exist $(HB_ARCHITECTURE) $(MD) $(HB_ARCHITECTURE)
+	-if not exist $(ARCH_DOS)        $(MD) $(ARCH_DOS)
+#	-@for %d in ($(HB_ARCHITECTURE) $(ARCH_DOS)) do if not exist %d\nul $(MD) %d
 
 clean::
 	-@for %f in ($(ARCH_DOS)\*.* *.bak *.obj *.o *.tds) do $(RM) %f

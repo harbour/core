@@ -831,7 +831,7 @@ void hb_macroPushSymbol( HB_ITEM_PTR pItem )
          /* NOTE: checking for valid function name (valid pointer) is done
           * in hb_vmDo()
           */
-         hb_vmPushMacroSymbol( pDynSym->pSymbol );  /* push compiled symbol instead of a string */
+         hb_vmPushSymbol( pDynSym->pSymbol );  /* push compiled symbol instead of a string */
 
          if( bNewBuffer )
             hb_xfree( szString );   /* free space allocated in hb_macroTextSubst */
@@ -1227,7 +1227,7 @@ void hb_compGenPushSymbol( char * szSymbolName, BOOL bFunction, BOOL bAlias, HB_
       }
       else if( bFunction )
       {
-         if( pSym && hb_dynsymScope(pSym, HB_FS_STATIC) )
+         if( pSym && pSym->pFunPtr==NULL )
          {
             /* static functions are not allowed in macro */
             HB_MACRO_DATA->status |= HB_MACRO_UNKN_SYM;

@@ -1661,7 +1661,7 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          case HB_P_MPUSHSYM:
          {
             HB_DYNS_PTR pDynSym = ( HB_DYNS_PTR ) HB_GET_PTR( pCode + w + 1 );
-            hb_vmPushMacroSymbol( pDynSym->pSymbol );
+            hb_vmPushSymbol( pDynSym->pSymbol );
             w += sizeof( HB_DYNS_PTR ) + 1;
             break;
          }
@@ -3586,16 +3586,6 @@ void HB_EXPORT hb_vmDo( USHORT uiParams )
 
       if( pFunc )
       {
-         if( pItem->item.asSymbol.macro && (pSym->cScope & HB_FS_STATIC) )
-         {
-            /* static functions are not allowed in macro 
-            */
-            PHB_ITEM pArgsArray = hb_arrayFromStack( uiParams );
-            hb_errRT_BASE_SubstR( EG_NOFUNC, 1001, NULL, pSym->szName, 1, pArgsArray );
-            hb_itemRelease( pArgsArray );
-         }
-         else
-         {
             if( bProfiler && pSym->pDynSym ) {
                pSym->pDynSym->ulRecurse++;
             }
@@ -3618,7 +3608,6 @@ void HB_EXPORT hb_vmDo( USHORT uiParams )
             if( bProfiler && pSym->pDynSym ) {
                pSym->pDynSym->ulRecurse--;
             }
-         }
       }
       else
       {
@@ -4391,20 +4380,6 @@ void HB_EXPORT hb_vmPushSymbol( PHB_SYMB pSym )
    pStackTopItem->type = HB_IT_SYMBOL;
    pStackTopItem->item.asSymbol.value = pSym;
    pStackTopItem->item.asSymbol.stackbase = hb_stackTopOffset();
-   pStackTopItem->item.asSymbol.macro = FALSE;
-   hb_stackPush();
-}
-
-void hb_vmPushMacroSymbol( PHB_SYMB pSym )
-{
-   PHB_ITEM pStackTopItem = hb_stackTopItem();
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmPushSymbol(%p)", pSym));
-
-   pStackTopItem->type = HB_IT_SYMBOL;
-   pStackTopItem->item.asSymbol.value = pSym;
-   pStackTopItem->item.asSymbol.stackbase = hb_stackTopOffset();
-   pStackTopItem->item.asSymbol.macro = TRUE;
    hb_stackPush();
 }
 

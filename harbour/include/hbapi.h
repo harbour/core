@@ -219,6 +219,7 @@ struct hb_struRefer
 {
    union {
       struct _HB_CODEBLOCK * block;    /* codeblock */
+      struct _HB_ITEM * itemPtr;       /* item pointer  */
       struct _HB_ITEM ** itemsbase;    /* static variables */
       struct _HB_ITEM ** *itemsbasePtr; /* local variables */
    } BasePtr;
@@ -240,7 +241,6 @@ struct hb_struString
 
 struct hb_struSymbol
 {
-   BOOL macro;    /* if symbol was pushed by the macro compiler */
    LONG stackbase;
    USHORT lineno;
    USHORT paramcnt;
@@ -532,7 +532,6 @@ extern PHB_DYNS hb_dynsymFindName( char * szName ); /* converts to uppercase and
 extern void     hb_dynsymLog( void );             /* displays all dynamic symbols */
 extern void     hb_dynsymRelease( void );         /* releases the memory of the dynamic symbol table */
 extern void     hb_dynsymEval( PHB_DYNS_FUNC pFunction, void * Cargo ); /* enumerates all dynamic symbols */
-extern BOOL     hb_dynsymScope( PHB_DYNS pSym, HB_SYMBOLSCOPE scope ); /* check if given symbol has a required scope */
 
 /* Command line and environment argument management */
 extern void HB_EXPORT hb_cmdargInit( int argc, char * argv[] ); /* initialize command line argument API's */

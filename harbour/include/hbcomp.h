@@ -209,6 +209,7 @@ typedef struct _COMSYMBOL
    char *    szName;               /* the name of the symbol */
    char      cScope;               /* the scope of the symbol */
    BYTE      cType;
+   BOOL      bFunc;     /* is it a function name (TRUE) or memvar (FALSE) */
    PCOMCLASS pClass;
    struct _COMSYMBOL * pNext;   /* pointer to the next defined symbol */
 } COMSYMBOL, * PCOMSYMBOL;
@@ -300,9 +301,11 @@ extern PVAR hb_compVariableFind( PVAR pVars, USHORT wOrder ); /* returns a varia
 extern PVAR hb_compLocalVariableFind( PFUNCTION pFunc, USHORT wVar );
 extern USHORT hb_compVariableGetPos( PVAR pVars, char * szVarName ); /* returns the order + 1 of a variable if defined or zero */
 
-extern PCOMSYMBOL hb_compSymbolAdd( char *, USHORT * );
+#define HB_SYM_MEMVAR   FALSE
+#define HB_SYM_FUNCNAME TRUE
+extern PCOMSYMBOL hb_compSymbolAdd( char *, USHORT *, BOOL );
 extern PCOMSYMBOL hb_compSymbolKill( PCOMSYMBOL );    /* releases all memory allocated by symbol and returns the next one */
-extern PCOMSYMBOL hb_compSymbolFind( char *, USHORT * ); /* returns a symbol pointer from the symbol table */
+extern PCOMSYMBOL hb_compSymbolFind( char *, USHORT *, BOOL ); /* returns a symbol pointer from the symbol table */
 extern PCOMSYMBOL hb_compSymbolGetPos( USHORT );   /* returns a symbol based on its index on the symbol table */
 
 extern PCOMDECLARED hb_compDeclaredAdd( char * );

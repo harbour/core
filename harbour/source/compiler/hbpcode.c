@@ -275,7 +275,7 @@ void hb_compStrongType( int iSize )
 
        pFunc->iStackIndex--;
 
-       pSym = hb_compSymbolFind( pFunc->szName, NULL );
+       pSym = hb_compSymbolFind( pFunc->szName, NULL, HB_SYM_FUNCNAME );
 
        if( pSym && pSym->szName )
        {
