@@ -68,9 +68,11 @@ Function SubFun()
 
 	? '"cVar_1" = [' + M->cVar_1 + '] BEFORE SubFun() PRIVATE'
 
-	// Testing conflict with KEY WORD
-	PRIVATE PRIVATE := 'I am a Var named PRIVATE ', &cMainPrivate, SomeVar, OtherVar := 1, &GlobalPrivate
-	PUBLIC PUBLIC := 'My Name is PUBLIC', &( 'NewPublicVar' )
+	// Testing conflict with KEY WORDS
+	PRIVATE PRIVATE := 'I am a Var named PRIVATE ', &cMainPrivate, SomeVar, OtherVar := 1, &GlobalPrivate := 'I was born in Run Time'
+	PUBLIC PUBLIC := 'My Name is PUBLIC', &( 'NewPublicVar' ) := 'Test Inline Assignment'
+
+	? M->NewPublicVar
 
 	M->NewPublicVar := 'Still Alive because I am PUBLIC'
 

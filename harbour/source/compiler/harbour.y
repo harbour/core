@@ -72,8 +72,9 @@
 extern FILE *yyin;      /* currently yacc parsed file */
 extern int iLine;       /* currently parsed file line number */
   /* Following two lines added for preprocessor */
-extern BOOL _bPPO;       /* flag indicating, is ppo output needed */
+extern BOOL _bPPO;      /* flag indicating, is ppo output needed */
 extern FILE *yyppo;     /* output .ppo file */
+extern char *yytext;    /* have accees to original string form of numbers */
 
 typedef struct          /* #include support */
 {
@@ -200,6 +201,7 @@ void AddExtern( char * szExternName ); /* defines a new extern name */
 void AddSearchPath( char *, PATHNAMES * * ); /* add pathname to a search list */
 void AddVar( char * szVarName ); /* add a new param, local, static variable to a function definition or a public or private */
 void SetVarMacro( void ); /* Set the stack for the creation of a MACRO variable */
+void FunMacroAssign( void ); /* stores the last interpreted macro to be reused if inline assignment */
 PCOMSYMBOL AddSymbol( char *, USHORT * );
 void CheckDuplVars( PVAR pVars, char * szVarName, int iVarScope ); /*checks for duplicate variables definitions */
 void Dec( void );                  /* generates the pcode to decrement the latest value on the virtual machine stack */
@@ -494,39 +496,40 @@ char _szPrefix[ 20 ] = { '\0' };         /* holds the prefix added to the genera
 BOOL _bGenCVerbose = TRUE;               /* C code generation should be verbose (use comments) or not */
 int  _iExitLevel = HB_EXITLEVEL_DEFAULT; /* holds if there was any warning during the compilation process */
 
-USHORT _wSeqCounter   = 0;
-USHORT _wForCounter   = 0;
-USHORT _wIfCounter    = 0;
-USHORT _wWhileCounter = 0;
-USHORT _wCaseCounter  = 0;
-ULONG _ulMessageFix = 0;  /* Position of the message which needs to be changed */
-int _iStatics = 0;       /* number of defined statics variables on the PRG */
-PEXTERN pExterns = NULL;
-PTR_LOOPEXIT pLoops = NULL;
+USHORT _wSeqCounter      = 0;
+USHORT _wForCounter      = 0;
+USHORT _wIfCounter       = 0;
+USHORT _wWhileCounter    = 0;
+USHORT _wCaseCounter     = 0;
+ULONG _ulMessageFix      = 0;  /* Position of the message which needs to be changed */
+ULONG _ulBookMark        = 0;
+int _iStatics            = 0;       /* number of defined statics variables on the PRG */
+PEXTERN pExterns         = NULL;
+PTR_LOOPEXIT pLoops      = NULL;
 PATHNAMES *_pIncludePath = NULL;
-PHB_FNAME _pFileName = NULL;
-PHB_FNAME _pOutPath = NULL;
-ALIASID_PTR pAliasId = NULL;
-ULONG _ulLastLinePos = 0;    /* position of last opcode with line number */
-LONG _lLastPushPos = -1; /* position of last push pcode */
-BOOL _bDontGenLineNum = FALSE;   /* suppress line number generation */
+PHB_FNAME _pFileName     = NULL;
+PHB_FNAME _pOutPath      = NULL;
+ALIASID_PTR pAliasId     = NULL;
+ULONG _ulLastLinePos     = 0;    /* position of last opcode with line number */
+LONG _lLastPushPos       = -1; /* position of last push pcode */
+BOOL _bDontGenLineNum    = FALSE;   /* suppress line number generation */
 
-EXPLIST_PTR _pExpList = NULL;    /* stack used for parenthesized expressions */
+EXPLIST_PTR _pExpList    = NULL;    /* stack used for parenthesized expressions */
 
-char _cVarType = ' ';               /* current declared variable type */
+char _cVarType           = ' ';               /* current declared variable type */
 
 #define LOOKUP 0
-extern int _iState;     /* current parser state (defined in harbour.l */
+extern int _iState;      /* current parser state (defined in harbour.l */
 %}
 
-%union                  /* special structure used by lex and yacc to share info */
+%union                   /* special structure used by lex and yacc to share info */
 {
-   char * string;       /* to hold a string returned by lex */
-   int    iNumber;      /* to hold a number returned by lex */
-   long   lNumber;      /* to hold a long number returned by lex */
+   char * string;        /* to hold a string returned by lex */
+   int    iNumber;       /* to hold a number returned by lex */
+   long   lNumber;       /* to hold a long number returned by lex */
    struct
    {
-      double dNumber;   /* to hold a double number returned by lex */
+      double dNumber;    /* to hold a double number returned by lex */
       /* NOTE: Intentionally using "unsigned char" instead of "BYTE" */
       unsigned char bDec; /* to hold the number of decimal points in the value */
    } dNum;
@@ -696,17 +699,6 @@ Statement  : ExecFlow Crlf        {}
            | EXTERN ExtList Crlf
            ;
 
-VarMacro   : MACROOP IDENTIFIER           { PushId( $2 ); }
-	   | MACROALIAS IDENTIFIER    { PushId( $2 ); }
-	   | Macro
-	   | VarMacro DOT IDENTIFIER { PushString( $3 ); GenPlusPCode( HB_P_PLUS ); }
-	   | VarMacro NUM_DOUBLE { PushString( yy_strdup( yylval.string + 1 ) ); GenPlusPCode( HB_P_PLUS ); }
-	   ;
-
-MacroAssign : INASSIGN
-	    | '='
-	    ;
-
 LineStat   : Crlf          { $<lNumber>$ = 0; }
            | Statement     { $<lNumber>$ = 1; }
            ;
@@ -830,12 +822,6 @@ EmptyExpression: /* nothing => nil */
 
 IfInline   : IIF PareExpList3       { GenIfInline(); }
            | IF  PareExpList3       { GenIfInline(); }
-           ;
-
-Macro      : MACROOP Variable
-           | MACROOP '(' Expression ')'
-	   | MACROALIAS Variable
-           | MACROALIAS '(' Expression ')'
            ;
 
 AliasVar   : NUM_INTEGER ALIASOP { AliasAddInt( $1 ); } IDENTIFIER  { $$ = $4; }
@@ -1083,78 +1069,102 @@ VarDefs    : LOCAL { iVarScope = VS_LOCAL; Line(); } VarList Crlf { _cVarType = 
                              MemvarList Crlf
            ;
 
-ExtVarList : VarDef                                  { $$ = 1; }
-           | ExtVarList ',' VarDef                      { $$++; }
-           | { SetVarMacro(); } VarMacro { Do( 1 ); }
-           | ExtVarList ',' { SetVarMacro(); } VarMacro { Do( 1 ); }
-	   ;
 
-VarList    : VarDef                                  { $$ = 1; }
-           | VarList ',' VarDef                      { $$++; }
-           ;
+ExtVarList  : VarDef                                     { $$ = 1; }
+            | ExtVarList ',' VarDef                      { $$++;   }
+            | SetVarMacro { Do( 1 ); }
+            | ExtVarList ',' SetVarMacro { Do( 1 ); }
+            | SetVarMacro MacroAssign { FunMacroAssign(); } Expression { Do( 2 ); }
+            | ExtVarList ',' SetVarMacro MacroAssign { FunMacroAssign(); } Expression { Do( 2 ); }
+            ;
 
-VarDef     : IDENTIFIER AsType       { AddVar( $1 ); }
-           | IDENTIFIER AsType       INASSIGN { AddVar( $1 ); } Expression  { PopId( $1 ); }
-           | IDENTIFIER ArrExpList ']'                { _cVarType = 'A'; AddVar( $1 ); ArrayDim( $2 ); PopId( $1 ); }
-           | IDENTIFIER ArrExpList ']' AS_ARRAY       { _cVarType = 'A'; AddVar( $1 ); ArrayDim( $2 ); PopId( $1 ); }
-           ;
+SetVarMacro : { SetVarMacro(); } VarMacro
+	    ;
 
-ArrExpList : '[' Expression                { $$ = 1; }
-           | ArrExpList ',' Expression     { $$++; }
-           | ArrExpList ']' '[' Expression { $$++; }
-           ;
+VarMacro    : MACROOP IDENTIFIER      { PushId( $2 ); }
+	    | MACROALIAS IDENTIFIER   { PushId( $2 ); }
+	    | Macro
+	    | VarMacro DOT IDENTIFIER { PushString( $3 ); GenPlusPCode( HB_P_PLUS ); }
+	    | VarMacro NUM_DOUBLE     { PushString( yy_strdup( yytext + 1 ) ); GenPlusPCode( HB_P_PLUS ); }
+	    ;
 
-FieldsDef  : FIELD { iVarScope = VS_FIELD; } FieldList Crlf
-           ;
+MacroAssign : INASSIGN
+	    | '='
+	    ;
 
-FieldList  : IDENTIFIER AsType               { $$=FieldsCount(); AddVar( $1 ); }
-           | FieldList ',' IDENTIFIER AsType { AddVar( $3 ); }
-           | FieldList IN IDENTIFIER { FieldsSetAlias( $3, $<iNumber>1 ); }
-           ;
+Macro       : MACROOP Variable
+            | MACROOP '(' Expression ')'
+	    | MACROALIAS Variable
+            | MACROALIAS '(' Expression ')'
+            ;
 
-MemvarDef  : MEMVAR { iVarScope = VS_MEMVAR; } MemvarList Crlf
-           ;
 
-MemvarList : IDENTIFIER                            { AddVar( $1 ); }
-           | MemvarList ',' IDENTIFIER             { AddVar( $3 ); }
-           ;
+VarList     : VarDef                                  { $$ = 1; }
+            | VarList ',' VarDef                      { $$++; }
+            ;
 
-ExecFlow   : IfEndif
-           | DoCase
-           | DoWhile
-           | ForNext
-           | BeginSeq
-           ;
+VarDef      : IDENTIFIER AsType       { AddVar( $1 ); }
+            | IDENTIFIER AsType       INASSIGN { AddVar( $1 ); } Expression  { PopId( $1 ); }
+            | IDENTIFIER ArrExpList ']'                { _cVarType = 'A'; AddVar( $1 ); ArrayDim( $2 ); PopId( $1 ); }
+            | IDENTIFIER ArrExpList ']' AS_ARRAY       { _cVarType = 'A'; AddVar( $1 ); ArrayDim( $2 ); PopId( $1 ); }
+            ;
 
-IfEndif    : IfBegin EndIf                    { JumpHere( $1 ); }
-           | IfBegin IfElse EndIf             { JumpHere( $1 ); }
-           | IfBegin IfElseIf EndIf           { JumpHere( $1 ); FixElseIfs( $2 ); }
-           | IfBegin IfElseIf IfElse EndIf    { JumpHere( $1 ); FixElseIfs( $2 ); }
-           ;
+ArrExpList  : '[' Expression                { $$ = 1; }
+            | ArrExpList ',' Expression     { $$++; }
+            | ArrExpList ']' '[' Expression { $$++; }
+            ;
 
-EmptyStats : /* empty */
-           | Statements
-           ;
+FieldsDef   : FIELD { iVarScope = VS_FIELD; } FieldList Crlf
+            ;
 
-IfBegin    : IF SimpleExpression { ++_wIfCounter; } Crlf { $$ = JumpFalse( 0 ); Line(); }
-                EmptyStats
-                { $$ = Jump( 0 ); JumpHere( $<iNumber>5 ); }
+FieldList   : IDENTIFIER AsType               { $$=FieldsCount(); AddVar( $1 ); }
+            | FieldList ',' IDENTIFIER AsType { AddVar( $3 ); }
+            | FieldList IN IDENTIFIER { FieldsSetAlias( $3, $<iNumber>1 ); }
+            ;
 
-           | IF PareExpList1 { ++_wIfCounter; } Crlf { $$ = JumpFalse( 0 ); Line(); }
-                EmptyStats
-                { $$ = Jump( 0 ); JumpHere( $<iNumber>5 ); }
+MemvarDef   : MEMVAR { iVarScope = VS_MEMVAR; } MemvarList Crlf
+            ;
 
-           | IF PareExpList2 { ++_wIfCounter; } Crlf { $$ = JumpFalse( 0 ); Line(); }
-                EmptyStats
-                { $$ = Jump( 0 ); JumpHere( $<iNumber>5 ); }
+MemvarList  : IDENTIFIER                            { AddVar( $1 ); }
+            | MemvarList ',' IDENTIFIER             { AddVar( $3 ); }
+            ;
 
-           | IF PareExpListN { ++_wIfCounter; } Crlf { $$ = JumpFalse( 0 ); Line(); }
-                EmptyStats
-                { $$ = Jump( 0 ); JumpHere( $<iNumber>5 ); }
-           ;
+ExecFlow    : IfEndif
+            | DoCase
+            | DoWhile
+            | ForNext
+            | BeginSeq
+            ;
 
-IfElse     : ELSE Crlf { Line(); } EmptyStats
-           ;
+IfEndif     : IfBegin EndIf                    { JumpHere( $1 ); }
+            | IfBegin IfElse EndIf             { JumpHere( $1 ); }
+            | IfBegin IfElseIf EndIf           { JumpHere( $1 ); FixElseIfs( $2 ); }
+            | IfBegin IfElseIf IfElse EndIf    { JumpHere( $1 ); FixElseIfs( $2 ); }
+            ;
+
+EmptyStats  : /* empty */
+            | Statements
+            ;
+
+IfBegin     : IF SimpleExpression { ++_wIfCounter; } Crlf { $$ = JumpFalse( 0 ); Line(); }
+                 EmptyStats
+                 { $$ = Jump( 0 ); JumpHere( $<iNumber>5 ); }
+
+            | IF PareExpList1 { ++_wIfCounter; } Crlf { $$ = JumpFalse( 0 ); Line(); }
+                 EmptyStats
+                 { $$ = Jump( 0 ); JumpHere( $<iNumber>5 ); }
+
+            | IF PareExpList2 { ++_wIfCounter; } Crlf { $$ = JumpFalse( 0 ); Line(); }
+                 EmptyStats
+                 { $$ = Jump( 0 ); JumpHere( $<iNumber>5 ); }
+
+            | IF PareExpListN { ++_wIfCounter; } Crlf { $$ = JumpFalse( 0 ); Line(); }
+                 EmptyStats
+                 { $$ = Jump( 0 ); JumpHere( $<iNumber>5 ); }
+            ;
+
+IfElse      : ELSE Crlf { Line(); } EmptyStats
+            ;
 
 IfElseIf   : ELSEIF Expression Crlf { $<iNumber>$ = JumpFalse( 0 ); Line(); }
                 EmptyStats { $$ = GenElseIf( 0, Jump( 0 ) ); JumpHere( $<iNumber>4 ); }
@@ -2064,6 +2074,49 @@ void SetVarMacro( void )
        PushSymbol( yy_strdup( "__MVPUBLIC" ), 1);
 
    PushNil();
+
+   /* Mark Position of the begining ogf the interpreted macro pcode. */
+   _ulBookMark = functions.pLast->lPCodePos ;
+}
+
+void FunMacroAssign( void )
+{
+   ULONG _ulBufferSize, i = 0;
+   BYTE * _pCodeBuffer;
+
+   /* We'll need the interpreted value of the macro (recently pushed) again for use by __MVPUT() */
+   _ulBufferSize = functions.pLast->lPCodePos - _ulBookMark ;
+   _pCodeBuffer  = ( BYTE * ) hb_xgrab( _ulBufferSize + 1);
+
+   //printf( "\n%s BookMark:%i Pos: %i\n", functions.pLast->pCode + _ulBookMark, _ulBookMark, functions.pLast->lPCodePos );
+
+   //memcpy( _pCodeBuffer, functions.pLast->pCode + _ulBookMark, _ulBufferSize );
+   while( i < _ulBufferSize )
+   {
+      _pCodeBuffer[ i ] = functions.pLast->pCode[ _ulBookMark + i ];
+      i++;
+   }
+
+   //printf( "\n%s\n", _pCodeBuffer );
+
+   Do( 1 );
+
+   if( functions.pLast->lPCodeSize - functions.pLast->lPCodePos <= _ulBufferSize )
+       functions.pLast->pCode = ( BYTE * ) hb_xrealloc( functions.pLast->pCode, functions.pLast->lPCodeSize += ( _ulBufferSize + PCODE_CHUNK ) );
+
+   PushSymbol( yy_strdup( "__MVPUT" ), 1);
+   PushNil();
+
+   //memcpy( functions.pLast->pCode + functions.pLast->lPCodePos, _pCodeBuffer, _ulBufferSize );
+   i = 0;
+   while( i < _ulBufferSize )
+   {
+      functions.pLast->pCode[ functions.pLast->lPCodePos++ ] = _pCodeBuffer[ i ];
+      i++ ;
+   }
+
+   hb_xfree( ( void * ) _pCodeBuffer );
+
 }
 
 void AddVar( char * szVarName )

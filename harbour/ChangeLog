@@ -1,3 +1,12 @@
+19991013-20:10 GMT+8 Ron Pinkas <Ron@Profit-Master.com>
+   * harbour.y
+	  + added rules to allow inline assignment to RIVATE/PUBLIC &cVar (as in PRIVATE &cVar := 'Hello').
+	  + added extern char *yytext to have acces to the original string form of numbers.
+   * harbour.l
+          + added rules to support new TOKEN MACROOP and completed support for macro in MODES PRIVATE and PUBLIC_ (Ryszard TODO removed).
+   * tests/tstmacro.prg
+	  added more tests to demonstrate working capabilities of macro.
+
 19991013-01:40 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/rtl/dates.c
      ! #ifdef ...WIN_GTAPI changed to proper platform tests.
@@ -46,7 +55,7 @@
    * harbour.l
           + added rules to support new TOKEN MACROOP and completed support for macro in MODES PRIVATE and PUBLIC_ (Ryszard TODO removed).
    * tests/tstmacro.prg
-	  added even more tests to demonstrate working capabilities og macro.
+	  added even more tests to demonstrate working capabilities of macro.
 
 19991013-17:45 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/oldbox.c
@@ -78,7 +87,7 @@
    * harbour.l
           + added rules to support new TOKEN DOT and yylval.string to have the string value when parsing DOUBLE.
    * tests/tstmacro.prg
-	  added many tests to demonstrate working capabilities og macro.
+	  added many tests to demonstrate working capabilities of macro.
 
 19991013-13:52 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/inkey.c
