@@ -227,17 +227,6 @@ void hb_compGenILCode( PHB_FNAME pFileName )  /* generates the IL output */
       //              hb_comp_szPrefix, pFileName->szName,
       //              hb_comp_szPrefix, pFileName->szName );
 
-      /* QOUT( object ) --> object null */
-      fprintf( yyc, "\n.method public static object QOUT( object o )\n{\n" );
-      fprintf( yyc, "   .maxstack  1\n" );
-      fprintf( yyc, "   .locals init ( object V_0 )\n" );
-      fprintf( yyc, "   ldarg.0\n" );
-      fprintf( yyc, "   call void [mscorlib]System.Console::WriteLine( object )\n" );
-      fprintf( yyc, "   ldnull\n" );
-      fprintf( yyc, "   stloc.0\n" );
-      fprintf( yyc, "   ldloc.0\n" );
-      fprintf( yyc, "   ret\n}\n" );
-
       /* Generate functions data
        */
       pFunc = hb_comp_functions.pFirst;
@@ -528,7 +517,12 @@ static HB_GENC_FUNC( hb_p_false )
    HB_SYMBOL_UNUSED( pFunc );
    HB_SYMBOL_UNUSED( lPCodePos );
 
-   fprintf( cargo->yyc, "\tHB_P_FALSE,\n" );
+   fprintf( cargo->yyc, "  IL_%04lX:  ", lPCodePos );
+   fprintf( cargo->yyc, "ldc.i4.0\n" );
+   fprintf( cargo->yyc, "            box [mscorlib]System.Boolean\n" );
+
+   // fprintf( cargo->yyc, "\tHB_P_FALSE,\n" );
+
    return 1;
 }
 
@@ -1053,7 +1047,11 @@ static HB_GENC_FUNC( hb_p_not )
    HB_SYMBOL_UNUSED( pFunc );
    HB_SYMBOL_UNUSED( lPCodePos );
 
-   fprintf( cargo->yyc, "\tHB_P_NOT,\n" );
+   fprintf( cargo->yyc, "  IL_%04lX:  ", lPCodePos );
+   fprintf( cargo->yyc, "call object ObjNot( object )\n" );
+
+   // fprintf( cargo->yyc, "\tHB_P_NOT,\n" );
+
    return 1;
 }
 
@@ -1560,7 +1558,13 @@ static HB_GENC_FUNC( hb_p_pushnil )
    if( bFirstSymbolParam )
       bFirstSymbolParam = FALSE;
    else
-      fprintf( cargo->yyc, "   // HB_P_PUSHNIL,\n" );
+   {
+      // fprintf( cargo->yyc, "  IL_%04lX:  ", lPCodePos );
+      // fprintf( cargo->yyc, "ldnull\n" );
+   }
+
+   // fprintf( cargo->yyc, "   // HB_P_PUSHNIL,\n" );
+
    return 1;
 }
 
@@ -1894,7 +1898,12 @@ static HB_GENC_FUNC( hb_p_true )
    HB_SYMBOL_UNUSED( pFunc );
    HB_SYMBOL_UNUSED( lPCodePos );
 
-   fprintf( cargo->yyc, "\tHB_P_TRUE,\n" );
+   fprintf( cargo->yyc, "  IL_%04lX:  ", lPCodePos );
+   fprintf( cargo->yyc, "ldc.i4.1\n" );
+   fprintf( cargo->yyc, "            box [mscorlib]System.Boolean\n" );
+
+   // fprintf( cargo->yyc, "\tHB_P_TRUE,\n" );
+
    return 1;
 }
 
@@ -2380,6 +2389,76 @@ static void hb_genNetFunctions( FILE * yyc )
 "  IL_0074:  ret",
 "}", 0 };
 
+   // public static object ObjNot( object o )
+   // {
+   //    return ! ( bool ) o;
+   // }
+
+   char * ObjNot[] = {
+"\n.method public static object ObjNot(object o)",
+"{",
+"  .maxstack  2",
+"  .locals init (object V_0)",
+"  IL_0000:  ldarg.0",
+"  IL_0001:  unbox      [mscorlib]System.Boolean",
+"  IL_0006:  ldind.i1",
+"  IL_0007:  ldc.i4.0",
+"  IL_0008:  ceq",
+"  IL_000a:  box        [mscorlib]System.Boolean",
+"  IL_000f:  stloc.0",
+"  IL_0010:  br.s       IL_0012",
+"  IL_0012:  ldloc.0",
+"  IL_0013:  ret",
+"}", 0 };
+
+   // public static object QOUT( object o )
+   // {
+   //    if( o == null )
+   //       Console.WriteLine( "NIL" );
+   //
+   //    if( o.GetType() == typeof( bool ) )
+   //       Console.WriteLine( ( bool ) o ? ".T.": ".F." );
+   //
+   //    else
+   //       Console.WriteLine( o );
+   //
+   //    return null;
+   // }
+
+   char * QOUT[] = {
+"\n.method public static object QOUT(object o)",
+"{",
+"  .maxstack  2",
+"  .locals init (object V_0)",
+"  IL_0000:  ldarg.0",
+"  IL_0001:  callvirt   instance class [mscorlib]System.Type [mscorlib]System.Object::GetType()",
+"  IL_0006:  ldtoken    [mscorlib]System.Boolean",
+"  IL_000b:  call       class [mscorlib]System.Type [mscorlib]System.Type::GetTypeFromHandle(valuetype [mscorlib]System.RuntimeTypeHandle)",
+"  IL_0010:  bne.un.s   IL_002e",
+"  IL_0012:  ldarg.0",
+"  IL_0013:  unbox      [mscorlib]System.Boolean",
+"  IL_0018:  ldind.i1",
+"  IL_0019:  brtrue.s   IL_0022",
+"  IL_001b:  ldstr      \".F.\"",
+"  IL_0020:  br.s       IL_0027",
+"  IL_0022:  ldstr      \".T.\"",
+"  IL_0027:  call       void [mscorlib]System.Console::WriteLine(string)",
+"  IL_002c:  br.s       IL_0048",
+"  IL_002e:  ldarg.0",
+"  IL_002f:  callvirt   instance class [mscorlib]System.Type [mscorlib]System.Object::GetType()",
+"  IL_0034:  brtrue.s   IL_0042",
+"  IL_0036:  ldstr      \"nil\"",
+"  IL_003b:  call       void [mscorlib]System.Console::WriteLine(string)",
+"  IL_0040:  br.s       IL_0048",
+"  IL_0042:  ldarg.0",
+"  IL_0043:  call       void [mscorlib]System.Console::WriteLine(object)",
+"  IL_0048:  ldnull",
+"  IL_0049:  stloc.0",
+"  IL_004a:  br.s       IL_004c",
+"  IL_004c:  ldloc.0",
+"  IL_004d:  ret",
+"}", 0 };
+
    i = 0;
    while( ObjAdd[ i ] != 0 )
       fprintf( yyc, "%s\n", ObjAdd[ i++ ] );
@@ -2395,4 +2474,12 @@ static void hb_genNetFunctions( FILE * yyc )
    i = 0;
    while( ObjExactlyEqual[ i ] != 0 )
       fprintf( yyc, "%s\n", ObjExactlyEqual[ i++ ] );
+
+   i = 0;
+   while( ObjNot[ i ] != 0 )
+      fprintf( yyc, "%s\n", ObjNot[ i++ ] );
+
+   i = 0;
+   while( QOUT[ i ] != 0 )
+      fprintf( yyc, "%s\n", QOUT[ i++ ] );
 }
