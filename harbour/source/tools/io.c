@@ -39,51 +39,17 @@ HB_FUNC( RD )
 
 HB_FUNC( DISKUSED )
 {
-#if defined(HB_OS_DOS)
-   struct diskfree_t disk;
-   long bytsfree, bytsfull;
-
-   _dos_getdiskfree( 0, &disk );
-
-   bytsfree = ( long ) disk.avail_clusters *
-              ( long ) disk.sectors_per_cluster *
-              ( long ) disk.bytes_per_sector;
-   bytsfull = ( long ) disk.total_clusters *
-              ( long ) disk.sectors_per_cluster *
-              ( long ) disk.bytes_per_sector;
-
-   hb_retnl( bytsfull - bytsfree );
-#else
-   hb_retnl( 0 );
-#endif
+   hb_retnd( hb_DiskSpace( ISNUM( 1 ) ? hb_parni( 1 ) : 0, HB_DISK_USED ));
 }
+
 
 HB_FUNC( DISKFREE )
 {
-#if defined(HB_OS_DOS)
-   struct diskfree_t disk;
-
-   _dos_getdiskfree( 0, &disk );
-
-   hb_retnl( ( long ) disk.avail_clusters *
-             ( long ) disk.sectors_per_cluster *
-             ( long ) disk.bytes_per_sector );
-#else
-   hb_retnl( 0 );
-#endif
+   hb_retnd( hb_DiskSpace( ISNUM( 1 ) ? hb_parni( 1 ) : 0, HB_DISK_FREE ));
 }
+
 
 HB_FUNC( DISKFULL )
 {
-#if defined(HB_OS_DOS)
-   struct diskfree_t disk;
-
-   _dos_getdiskfree( 0, &disk );
-
-   hb_retnl( ( long ) disk.total_clusters *
-             ( long ) disk.sectors_per_cluster *
-             ( long ) disk.bytes_per_sector );
-#else
-   hb_retnl( 0 );
-#endif
+   hb_retnd( hb_DiskSpace( ISNUM( 1 ) ? hb_parni( 1 ) : 0, HB_DISK_TOTAL ));
 }

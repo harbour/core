@@ -122,7 +122,7 @@ HB_FUNC( DISKSPACE )
                                   ( PULARGE_INTEGER ) &i64TotalBytes,
                                   ( PULARGE_INTEGER ) &i64FreeBytes ) )
 
-            dSpaceFree = ( double ) i64FreeBytesToCaller.QuadPart ;
+            dSpaceFree = ( double ) (unsigned)i64FreeBytesToCaller.QuadPart ;
       }
       else 
       {

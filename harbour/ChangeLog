@@ -1,3 +1,18 @@
+20000321-16:45 EST Paul Tucker <ptucker@sympatico.ca>
+   * source/rtl/diskspac.c
+     * Modified code since math wasn't working in '32 bit' mode
+     * reworked to be consistant amongst platforms.
+     + hb_DiskSpace() does the grunt work for all supported platforms
+     * DiskSpace() calls hb_diskSpace()
+   * source/tools/io.c
+     * DiskFree(), DiskUsed, DiskFull() now call hb_DiskSpace()
+   * include/hbapi.c
+     + #define HB_DISK_....
+     + declaration for hb_DiskSpace()
+   ! Disk...() functions return a double.
+   + tests/tstdspac.prg
+     * tests for diskspace related functions
+
 20000321-15:08 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/rtl/diskspac.c
