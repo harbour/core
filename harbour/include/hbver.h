@@ -60,13 +60,13 @@
 #endif
 #define HB_VER_MAJOR    0       /* Major version number */
 #define HB_VER_MINOR    38      /* Minor version number */
-#define HB_VER_REVISION 0       /* Revision number */
+#define HB_VER_REVISION 1       /* Revision number */
 
 /* TOFIX: Ideally these should be generated dynamically, until 
           then, they should be updated by the builder. [vszakats] */
 
-#define HB_VER_LENTRY   "2002-01-12 19:00 UTC+0500 Phil Barnett <philb@the-oasis.net>"
-#define HB_VER_CHLCVS   "ChangeLog,v 1.3751 2002/01/12 23:59:46 philb"
+#define HB_VER_LENTRY   "2002-01-16 11:10 UTC-0500 David G. Holm <dholm@jsd-llc.com>"
+#define HB_VER_CHLCVS   "ChangeLog,v 1.3763 2002/01/16 16:10:57 dholm"
 #define HB_VER_C_USR    ""
 #define HB_VER_L_USR    ""
 #define HB_VER_PRG_USR  ""

@@ -7,6 +7,13 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+2002-01-19 05:00 UTC+0700 Andi Jahja <harbour@cbn.net.id>
+   * include/hbexpra.c
+   * source/vm/hvm.c
+     * Optimized Eval() processing, and added support for bBlock:Eval().
+   * tests/speed.prg
+     * Test program for bBlock:Eval().
        Time consumed, previously: 11.59 secs
                       now       :  5.06 secs
        Environment: 1 GHz, 128 MB, BCC 5.5.1, SimpLex and -DHB_FM_STATISTICS_OFF
