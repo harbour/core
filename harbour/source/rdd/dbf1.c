@@ -229,7 +229,7 @@ static BOOL hb_dbfWriteMemo( AREAP pArea, LPDBFMEMO pMemo, ULONG * lNewRecNo )
 
    if( * lNewRecNo == 0 )                    /* Add an entry at eof */
    {
-      hb_fsSeek( pArea->lpFileInfo->pNext->hFile, 1, FS_SET );
+      hb_fsSeek( pArea->lpFileInfo->pNext->hFile, 0, FS_SET );
       hb_fsRead( pArea->lpFileInfo->pNext->hFile, ( BYTE * ) &pMemoHeader,
                  sizeof( MEMOHEADER ) );
       * lNewRecNo = pMemoHeader.lNextBlock;
@@ -669,17 +669,15 @@ static ERRCODE Append( AREAP pArea, BOOL bUnLockAll )
 
 static ERRCODE Close( AREAP pArea )
 {
-   SELF_FLUSH( pArea );
-
-   if( pArea->lpExtendInfo->fHasMemo )
-      SELF_CLOSEMEMFILE( pArea );
-
    if( pArea->lpFileInfo->hFile != FS_ERROR )
    {
       SELF_RAWLOCK( pArea, FILE_UNLOCK, 0 );
+      SELF_FLUSH( pArea );
       hb_fsClose( pArea->lpFileInfo->hFile );
       pArea->lpFileInfo->hFile = FS_ERROR;
    }
+   if( pArea->lpExtendInfo->fHasMemo )
+      SELF_CLOSEMEMFILE( pArea );
 
    return SUPER_CLOSE( pArea );
 }
