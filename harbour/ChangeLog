@@ -1,3 +1,7 @@
+19990720-09:55 CET Eddie Runia <eddie@runia.com>
+  * source/rtl/files.c
+    #include <errno.h> added for __BORLANDC__
+
 19990720-09:30 CET Eddie Runia <eddie@runia.com>
   * tests/working/run_all.bat
     %1 exchanged for test_all

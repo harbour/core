@@ -52,6 +52,7 @@
     #define HAVE_POSIX_IO
     #endif
   #endif
+  #include <errno.h>
 #endif
 
 #ifdef __MPW__
