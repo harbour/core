@@ -1,3 +1,7 @@
+20000213-13:27 GMT+1 Victor Szakats <info@szelvesz.hu>
+   ! makefile.bc
+     ! Some bugs fixed related to the previous change.
+
 20000213-12:04 GMT+1 Victor Szakats <info@szelvesz.hu>
    - makefile.b32
    - makefile.b16
