@@ -801,12 +801,30 @@ METHOD CreateTable(cTable, aStruct,cPrimaryKey,cUniqueKey,cAuto) CLASS TMySQLSer
          ::cCreateQuery += aStruct[i][DBS_NAME] + " text" + Eval(cNN, aStruct[i]) + ","
 
       case aStruct[i][DBS_TYPE] == "N"
+         /*
          if aStruct[i][DBS_DEC] == 0
             ::cCreateQuery += aStruct[i][DBS_NAME] + " int(" + AllTrim(Str(aStruct[i][DBS_LEN])) + ")" + Eval(cNN, aStruct[i]) + if(aStruct[i][DBS_NAME]==cPrimaryKey," NOT NULL ",'' )+ if(aStruct[i][DBS_NAME]==cAuto," auto_increment ",'' ) + ","
          else
             ::cCreateQuery += aStruct[i][DBS_NAME] + " real(" + AllTrim(Str(aStruct[i][DBS_LEN])) + "," + AllTrim(Str(aStruct[i][DBS_DEC])) + ")" + Eval(cNN, aStruct[i]) + ","
          endif
-
+         */
+         if (aStruct[i][DBS_DEC] == 0) .and. (aStruct[i][DBS_LEN] <= 18)
+            do case
+               case (aStruct[i][DBS_LEN] <= 2)
+                  ::cCreateQuery += aStruct[i][DBS_NAME] + " tinyint(" + AllTrim(Str(aStruct[i][DBS_LEN])) + ")"
+               case (aStruct[i][DBS_LEN] <= 4)
+                  ::cCreateQuery += aStruct[i][DBS_NAME] + " smallint(" + AllTrim(Str(aStruct[i][DBS_LEN])) + ")"
+               case (aStruct[i][DBS_LEN] <= 6)
+                  ::cCreateQuery += aStruct[i][DBS_NAME] + " mediumint(" + AllTrim(Str(aStruct[i][DBS_LEN])) + ")"
+               case (aStruct[i][DBS_LEN] <= 9)
+                  ::cCreateQuery += aStruct[i][DBS_NAME] + " int(" + AllTrim(Str(aStruct[i][DBS_LEN])) + ")"
+               otherwise
+                  ::cCreateQuery += aStruct[i][DBS_NAME] + " bigint(" + AllTrim(Str(aStruct[i][DBS_LEN])) + ")"
+            endcase
+            ::cCreateQuery += Eval(cNN, aStruct[i]) + if(aStruct[i][DBS_NAME]==cPrimaryKey," NOT NULL ",'' )+ if(aStruct[i][DBS_NAME]==cAuto," auto_increment ",'' ) + ","
+         else
+            ::cCreateQuery += aStruct[i][DBS_NAME] + " real(" + AllTrim(Str(aStruct[i][DBS_LEN])) + "," + AllTrim(Str(aStruct[i][DBS_DEC])) + ")" + Eval(cNN, aStruct[i]) + ","
+         endif
       case aStruct[i][DBS_TYPE] == "D"
          ::cCreateQuery += aStruct[i][DBS_NAME] + " date " + Eval(cNN, aStruct[i]) + ","
 
