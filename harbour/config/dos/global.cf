@@ -30,7 +30,19 @@ else
   ifeq ($(HB_COMPILER),bcc16)
     #Use standard dos path, which is already set up.
   else
-    COMSPEC := $(subst \,/,$(COMSPEC))
+    ifeq ($(HB_COMPILER),rsx32)
+      #Use standard dos path, which is already set up.
+    else
+      ifeq ($(HB_COMPILER),watcom)
+        #Use standard dos path, which is already set up.
+      else
+        ifeq ($(HB_COMPILER),djgpp)
+          #Use standard dos path, which is already set up.
+        else
+          COMSPEC := $(subst \,/,$(COMSPEC))
+        endif
+      endif
+    endif
   endif
 endif
 

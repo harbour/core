@@ -852,39 +852,39 @@ BOOL    hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
    s_uiErrorLast = errno;
 
 #elif defined(HB_OS_OS2)
-	
-	{
-		/* 08/04/2000 - maurilio.longo@libero.it */
-		struct _FILELOCK fl, ful;
+
+        {
+                /* 08/04/2000 - maurilio.longo@libero.it */
+                struct _FILELOCK fl, ful;
 
       errno = 0;
 
-   	switch(uiMode)	{
-      	case FL_LOCK:
-      	
-      		fl.lOffset = ulStart;
-	      	fl.lRange = ulLength;
-	      	ful.lOffset = 0;
-	      	ful.lRange = 0;
-	      	
-	      	/* lock region, 2 seconds timeout, exclusive access - no atomic */
-         	iResult = (int) DosSetFileLocks(hFileHandle, &ful, &fl, 2000L, 0L);
-         	break;
+        switch(uiMode)  {
+        case FL_LOCK:
 
-      	case FL_UNLOCK:
-      	
-      		fl.lOffset = 0;
-	      	fl.lRange = 0;
-	      	ful.lOffset = ulStart;
-	      	ful.lRange = ulLength;
-	      	
-	      	/* unlock region, 2 seconds timeout, exclusive access - no atomic */
-         	iResult = (int) DosSetFileLocks(hFileHandle, &ful, &fl, 2000L, 0L);
-         	break;
+                fl.lOffset = ulStart;
+                fl.lRange = ulLength;
+                ful.lOffset = 0;
+                ful.lRange = 0;
 
-      	default:
-         	iResult = 0;
-   	}
+                /* lock region, 2 seconds timeout, exclusive access - no atomic */
+                iResult = (int) DosSetFileLocks(hFileHandle, &ful, &fl, 2000L, 0L);
+                break;
+
+        case FL_UNLOCK:
+
+                fl.lOffset = 0;
+                fl.lRange = 0;
+                ful.lOffset = ulStart;
+                ful.lRange = ulLength;
+
+                /* unlock region, 2 seconds timeout, exclusive access - no atomic */
+                iResult = (int) DosSetFileLocks(hFileHandle, &ful, &fl, 2000L, 0L);
+                break;
+
+        default:
+                iResult = 0;
+        }
       s_uiErrorLast = errno;
    }
 
@@ -965,12 +965,12 @@ void    hb_fsCommit( FHANDLE hFileHandle )
    }
 
 #elif defined(HB_OS_OS2)
-	
-	{
+
+        {
       errno = 0;
 
-		/* 08/04/2000 - maurilio.longo@libero.it
-			TODO: what about error code from DosResetBuffer() call? */
+                /* 08/04/2000 - maurilio.longo@libero.it
+                        TODO: what about error code from DosResetBuffer() call? */
       DosResetBuffer(hFileHandle);
 
       s_uiErrorLast = errno;
@@ -1333,6 +1333,9 @@ FHANDLE hb_fsExtOpen( BYTE * pFilename, BYTE * pDefExt,
 
    return s_uiErrorLast;
 }
+
+/* TOFIX: CA-Cl*pper will allow wildcards in the filename. This should be
+          added to Harbour. [vszakats] */
 
 BOOL hb_fsFile( BYTE * pFilename )
 {

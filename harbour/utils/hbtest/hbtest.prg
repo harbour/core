@@ -217,12 +217,12 @@ STATIC FUNCTION TEST_BEGIN( cParam )
 
    /* Feedback */
 
-   /* NOTE: The 0 parameter of Version() will force Harbour to include the
-            compiler version in the version string. */
-
    FWrite( s_nFhnd, "---------------------------------------------------------------------------" + HB_OSNewLine() +;
-                    "      Version: " + Version( 0 ) + HB_OSNewLine() +;
-                    "           OS: " + OS() + HB_OSNewLine() +;
+                    "      Version: " + Version() + HB_OSNewLine() )
+#ifdef __HARBOUR__
+   FWrite( s_nFhnd, "     Compiler: " + HB_Compiler() + HB_OSNewLine() )
+#endif
+   FWrite( s_nFhnd, "           OS: " + OS() + HB_OSNewLine() +;
                     "   Date, Time: " + DToC( Date() ) + " " + Time() + HB_OSNewLine() +;
                     "       Output: " + s_cFileName + HB_OSNewLine() +;
                     "Shortcut opt.: " + iif( s_lShortcut, "ON", "OFF" ) + HB_OSNewLine() +;

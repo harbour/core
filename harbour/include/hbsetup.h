@@ -96,13 +96,6 @@
 #define HB_FM_STATISTICS
 
 /* ***********************************************************************
- * This symbol defines if we are trying to compile using GCC for OS/2
- *
- * By default it is disabled (symbol is not defined)
-*/
-/*#define HARBOUR_GCC_OS2*/
-
-/* ***********************************************************************
  * This symbol defines which national language module should be included
  * in the Harbour run time library. See source/rtl/msgxxx for all allowed
  * values for <nl> in this manifest constant.
@@ -163,12 +156,18 @@
 */
 #endif
 
+/* Detect GCC/OS2 */
+
+#if defined(__EMX__) && ! defined(__RSXNT__)
+   #define HARBOUR_GCC_OS2
+#endif
+
 /* ***********************************************************************
  * Operating system specific definitions
  */
 #if defined(__GNUC__)
    /* The GNU C compiler is used */
-   #if defined(__DJGPP__) || defined(HARBOUR_GCC_OS2) || defined(_Windows) || defined(_WIN32)
+   #if defined(__DJGPP__) || defined(__EMX__) || defined(_Windows) || defined(_WIN32)
       /* The DJGPP port of GNU C is used - for DOS platform */
       #define OS_DOS_COMPATIBLE
       #define OS_PATH_LIST_SEPARATOR    ';'
@@ -202,7 +201,7 @@
  */
 
 #ifndef HB_OS_DOS
-   #if defined(DOS) || defined(_QC) || defined(__DOS__) || defined(MSDOS) || defined(__MSDOS__)
+   #if defined(DOS) || defined(_QC) || defined(__DOS__) || defined(MSDOS) || defined(__MSDOS__) || defined(__RSX32__)
       #define HB_OS_DOS
       #if defined(__386__)
          #define HB_OS_DOS_32
@@ -222,7 +221,7 @@
 #endif
 
 #ifndef HB_OS_WIN_32
-   #if defined(WINNT) || defined(_Windows) || defined(__NT__) || defined(_WIN32) || defined(_WINDOWS_) || defined(__WINDOWS_386__)
+   #if defined(WINNT) || defined(_Windows) || defined(__NT__) || defined(_WIN32) || defined(_WINDOWS_) || defined(__WINDOWS_386__) || defined(__WIN32__)
       #define HB_OS_WIN_32
    #endif
 #endif

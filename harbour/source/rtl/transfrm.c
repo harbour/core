@@ -277,7 +277,7 @@ static char * NumPicture( char * szPic, ULONG ulPicLen, USHORT * puiPicFlags, do
          }
          else if( cPic == ',' )              /* Comma                    */
          {
-            if( iCount && isdigit( szStr[ iCount - 1 ] ) )
+            if( iCount && isdigit( ( int ) szStr[ iCount - 1 ] ) )
             {                                /* May we place it     */
                if( uiPicFlags & PF_EXCHANG )
                   szResult[ i ] = '.';
@@ -293,11 +293,11 @@ static char * NumPicture( char * szPic, ULONG ulPicLen, USHORT * puiPicFlags, do
 
       if( ( uiPicFlags & PF_PARNEG ) && ( dValue < 0 ) )
       {
-         if( isdigit( *szResult ) )          /* Overflow */
+         if( isdigit( ( int ) *szResult ) )          /* Overflow */
          {
             for( iCount = 1; ( ULONG ) iCount < i; iCount++ )
             {
-               if( isdigit( szResult[ iCount ] ) )
+               if( isdigit( ( int ) szResult[ iCount ] ) )
                   szResult[ iCount ] = '*';
             }
          }

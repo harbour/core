@@ -53,8 +53,6 @@
    #define INCL_NOPMAPI
 #endif
 
-#define HB_OS_WIN_32_USED
-
 #include "hbapi.h"
 #include "hbapierr.h"
 #include "hbapiitm.h"
@@ -63,41 +61,7 @@
 #include "hbset.h"
 #include "inkey.ch"
 
-#if defined(__TURBOC__) || defined(__BORLANDC__) || defined(_MSC_VER) || defined(__MINGW32__)
-   #include <conio.h>
-   #include <dos.h>
-#elif  defined(__DJGPP__)
-   #include <pc.h>
-   #include <dos.h>
-   #include <sys\exceptn.h>
-#elif defined(HARBOUR_GCC_OS2)
-   #include <stdlib.h>
-#elif defined(__IBMCPP__)
-   #include <bsedos.h>
-   #include <conio.h>
-#endif
 #include <time.h>
-
-#if defined(__WATCOMC__)
-   #include <conio.h>
-   #include <i86.h>
-   #if defined(__386__) && !defined(__WINDOWS_386__)
-      #define INT_86 int386
-      #define DOS_REGS REGS
-   #else
-      #define INT_86 int86
-      #define DOS_REGS REGS
-   #endif
-#elif defined(__EMX__)
-   #define INT_86 _int86
-   #define DOS_REGS REGS
-#elif defined(_MSC_VER)
-   #define INT_86 _int86
-   #define DOS_REGS _REGS
-#else
-   #define INT_86 int86
-   #define DOS_REGS REGS
-#endif
 
 #if defined(HARBOUR_GCC_OS2)
    ULONG DosSleep( ULONG ulMilliseconds );
@@ -113,43 +77,39 @@ static HB_inkey_enum s_eventmask;
 
 void hb_releaseCPU( void )
 {
-/* TODO: Add code to release time slices on all platforms */
-#if defined(_WINDOWS_) || defined(__MINGW32__)
+   HB_TRACE(HB_TR_DEBUG, ("releaseCPU()"));
+
+   /* TODO: Add code to release time slices on all platforms */
+
+#if defined(HB_OS_WIN_32)
    /* according to ms docs, you should not do this in a Win app. dos only */
 #elif defined(HB_OS_OS2)
    DosSleep( 25 ); /* Duration is in milliseconds */
 #elif defined(HB_OS_DOS)
-/* NOTE: there is a bug under NT 4 and 2000 -  if the app is running
-   in protected mode, time slices will _not_ be released - you must switch
-   to real mode first, execute the following, and switch back.
 
-   It just occurred to me that this is actually by design.  Since MS doesn't
-   want you to do this from a console app, their solution was to not allow
-   the call to work in protected mode - screw the rest of the planet <g>.
+   /* NOTE: there is a bug under NT 4 and 2000 -  if the app is running
+      in protected mode, time slices will _not_ be released - you must switch
+      to real mode first, execute the following, and switch back.
+   
+      It just occurred to me that this is actually by design.  Since MS doesn't
+      want you to do this from a console app, their solution was to not allow
+      the call to work in protected mode - screw the rest of the planet <g>.
+   
+      returns zero on failure. (means not supported)
+   */
 
-   returns zero on failure. (means not supported)
- */
-   #if defined(__TURBOC__)
-      _AX = 0x1680;
-      geninterrupt( 0x2f );
-      _AH = 0;
-      _AL ^= 0x80;
-   #elif ! defined(__DJGPP__)
+   {
       union REGS regs;
-      regs.h.ah = 0x16;
-      regs.h.al = 0x80;
-      #if defined(__WATCOMC__) && defined(__386__)
-         int386( 0x2f, &regs, &regs );
-      #else
-         int86( 0x2f, &regs, &regs );
-      #endif
-      regs.h.ah  = 0;
-      regs.h.al ^= 0x80;
-   #endif
-#elif defined(OS_UNIX_COMPATIBLE)
+
+      regs.h.ah = 2;
+      regs.x.ax = 0x1680;
+
+      HB_DOS_INT86( 0x2F, &regs, &regs );
+   }
+
+#elif defined(HB_OS_UNIX)
 #else
 #endif
-   HB_TRACE(HB_TR_DEBUG, ("releaseCPU()"));
 }
 
 int hb_inkey( double seconds, HB_inkey_enum event_mask, BOOL wait, BOOL forever )

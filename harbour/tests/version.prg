@@ -11,7 +11,6 @@
 function Main()
 
    outstd( chr( 34 ) + version() + chr( 34 ) + hb_osnewline() )
-   outstd( chr( 34 ) + version( NIL ) + chr( 34 ) + hb_osnewline() )
    outstd( chr( 34 ) + hb_compiler() + chr( 34 ) + hb_osnewline() )
    outstd( chr( 34 ) + os() + chr( 34 ) + hb_osnewline() )
 

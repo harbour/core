@@ -43,7 +43,7 @@
 
 HB_FUNC( ISALPHA )
 {
-   hb_retl( isalpha( *hb_parc( 1 ) ) );
+   hb_retl( isalpha( ( int ) *hb_parc( 1 ) ) );
 }
 
 /* determines if first char of string is digit */
@@ -52,7 +52,7 @@ HB_FUNC( ISALPHA )
 
 HB_FUNC( ISDIGIT )
 {
-   hb_retl( isdigit( *hb_parc( 1 ) ) );
+   hb_retl( isdigit( ( int ) *hb_parc( 1 ) ) );
 }
 
 /* determines if first char of string is upper-case */
@@ -61,7 +61,7 @@ HB_FUNC( ISDIGIT )
 
 HB_FUNC( ISUPPER )
 {
-   hb_retl( isupper( *hb_parc( 1 ) ) );
+   hb_retl( isupper( ( int ) *hb_parc( 1 ) ) );
 }
 
 /* determines if first char of string is lower-case */
@@ -70,6 +70,6 @@ HB_FUNC( ISUPPER )
 
 HB_FUNC( ISLOWER )
 {
-   hb_retl( islower( *hb_parc( 1 ) ) );
+   hb_retl( islower( ( int ) *hb_parc( 1 ) ) );
 }
 

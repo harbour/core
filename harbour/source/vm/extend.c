@@ -43,6 +43,9 @@
  *    hb_retnllen()
  *    hb_retndlen()
  *
+ * Copyright 2000 Jose Lalin <dezac@corevia.com>
+ *    hb_retd()
+ *
  * See doc/license.txt for licensing terms.
  *
  */
@@ -486,6 +489,13 @@ void hb_retds( char * szDate )
    HB_TRACE(HB_TR_DEBUG, ("hb_retds(%s)", szDate));
 
    hb_itemPutDS( &hb_stack.Return, szDate );
+}
+
+void hb_retd( long lDay, long lMonth, long lYear )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_retd(%02i, %02i, %04i)", lDay, lMonth, lYear));
+
+   hb_itemPutDL( &hb_stack.Return, hb_dateEncode( lDay, lMonth, lYear ) );
 }
 
 void hb_retl( int iLogical )

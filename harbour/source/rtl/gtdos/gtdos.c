@@ -61,7 +61,6 @@
 #include "inkey.ch"
 
 #include <string.h>
-#include <dos.h>
 #include <time.h>
 #include <conio.h>
 
@@ -69,33 +68,14 @@
    #include <pc.h>
    #include <sys\exceptn.h>
    #include <sys\farptr.h>
-#elif defined(__WATCOMC__)
-   #include <i86.h>
 #elif defined(_MSC_VER)
    #include <signal.h>
 #endif
 
-#if defined(__WATCOMC__)
-   #if defined(__386__) && !defined(__WINDOWS_386__)
-      #define INT_86 int386
-      #define DOS_REGS REGS
-   #else
-      #define INT_86 int86
-      #define DOS_REGS REGS
-   #endif
-#elif defined(_MSC_VER)
-   #define INT_86 _int86
-   #define DOS_REGS _REGS
-#else
-   #define INT_86 int86
-   #define DOS_REGS REGS
-#endif
-
 /* For screen support */
-#if defined(__POWERC) || (defined(__TURBOC__) && !defined(__BORLANDC__)) || \
-   (defined(__ZTC__) && !defined(__SC__))
+#if defined(__POWERC) || (defined(__TURBOC__) && !defined(__BORLANDC__)) || (defined(__ZTC__) && !defined(__SC__))
    #define FAR far
-#elif defined(HB_OS_DOS) && !defined(__DJGPP__)
+#elif defined(HB_OS_DOS) && !defined(__DJGPP__) && !defined(__RSX32__)
    #define FAR _far
 #else
    #define FAR
@@ -121,7 +101,7 @@ static void hb_gt_GetCursorSize( char * start, char * end );
    #endif
    #include <signal.h>
 #endif
-#ifndef __DJGPP__
+#if !defined(__DJGPP__)
    static char FAR * scrnPtr;
    static char FAR * scrnStealth = NULL;
    static char FAR * hb_gt_ScreenAddress( void );
@@ -130,7 +110,21 @@ static void hb_gt_GetCursorSize( char * start, char * end );
 static BOOL s_bBreak; /* Used to signal Ctrl+Break to hb_inkeyPoll() */
 static USHORT s_uiDispCount;
 
-#ifndef __DJGPP__
+#if defined(__RSX32__)
+
+static int kbhit( void )
+{
+   union REGS regs;
+
+   regs.h.ah = 0x0B;
+   HB_DOS_INT86( 0x21, &regs, &regs );
+
+   return regs.x.ax;
+}
+
+#endif
+
+#if !defined(__DJGPP__) && !defined(__RSX32__)
 #if defined(__WATCOMC__) || defined(_MSC_VER)
 static void hb_gt_CtrlBreak_Handler( int iSignal )
 {
@@ -155,10 +149,10 @@ static void hb_gt_CtrlBrkRestore( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_CtrlBrkRestore()"));
    #if defined(__WATCOMC__)
-      signal( SIGBREAK, SIG_DFL);
+      signal( SIGBREAK, SIG_DFL );
    #elif defined(_MSC_VER)
-      signal( SIGINT, SIG_DFL);
-   #else
+      signal( SIGINT, SIG_DFL );
+   #elif !defined(__RSX32__)
       setcbrk( s_iOldCtrlBreak );
    #endif
 }
@@ -175,28 +169,41 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
    s_bBreak = FALSE;
    s_uiDispCount = 0;
 
+   /* Set the Ctrl+Break handler [vszakats] */
+
 #if defined(__DJGPP__)
+
    gppconio_init();
    __djgpp_hwint_flags |= 2;     /* Count Ctrl+Break instead of killing program */
    __djgpp_set_ctrl_c( 0 );      /* Disable Ctrl+C */
    __djgpp_set_sigquit_key( 0 ); /* Disable Ctrl+\ */
 
-#else
-   /* Set the Ctrl+Break handler [vszakats] */
+#elif defined(__WATCOMC__)
 
-   #if defined(__WATCOMC__)
-      signal( SIGBREAK, hb_gt_CtrlBreak_Handler );
-   #elif defined(_MSC_VER)
-      signal( SIGINT, hb_gt_CtrlBreak_Handler );
-   #else
-      ctrlbrk( hb_gt_CtrlBrkHandler );
-      s_iOldCtrlBreak = getcbrk();
-      setcbrk( 1 );
-   #endif
+   signal( SIGBREAK, hb_gt_CtrlBreak_Handler );
    atexit( hb_gt_CtrlBrkRestore );
+
+#elif defined(_MSC_VER)
+
+   signal( SIGINT, hb_gt_CtrlBreak_Handler );
+   atexit( hb_gt_CtrlBrkRestore );
+
+#elif defined(__RSX32__)
+
+   /* TODO */
+
+#else
+
+   ctrlbrk( hb_gt_CtrlBrkHandler );
+   s_iOldCtrlBreak = getcbrk();
+   setcbrk( 1 );
+   atexit( hb_gt_CtrlBrkRestore );
+
+#endif
 
    /* */
 
+#if !defined(__DJGPP__)
    scrnStealth = ( char * ) -1;
    scrnPtr = hb_gt_ScreenAddress();
 #endif
@@ -206,7 +213,7 @@ void hb_gt_Done( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Done()"));
 
-#ifndef __DJGPP__
+#if !defined(__DJGPP__)
   if( scrnStealth != ( char * ) -1 )
      hb_xfree( scrnStealth );
 #endif
@@ -381,31 +388,18 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
 
 BOOL hb_gt_AdjustPos( BYTE * pStr, ULONG ulLen )
 {
+   union REGS regs;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_AdjustPos(%s, %lu)", pStr, ulLen ));
 
    HB_SYMBOL_UNUSED( pStr );
    HB_SYMBOL_UNUSED( ulLen );
 
-#if defined(__TURBOC__)
-   {
-     _AH = 0x03;
-     _BH = 0;
-     geninterrupt( 0x10 );
-     hb_gtSetPos( _DH, _DL );
-   }
-#else
-   {
-     union REGS regs;
-     regs.h.ah = 0x03;
-     regs.h.bh = 0;
-#if defined(__WATCOMC__) && defined(__386__)
-     int386( 0x10, &regs, &regs );
-#else
-     int86( 0x10, &regs, &regs );
-#endif
-     hb_gtSetPos( regs.h.dh, regs.h.dl );
-   }
-#endif
+   regs.h.ah = 0x03;
+   regs.h.bh = 0;
+   HB_DOS_INT86( 0x10, &regs, &regs );
+
+   hb_gtSetPos( regs.h.dh, regs.h.dl );
 
    return TRUE;
 }
@@ -417,7 +411,7 @@ BOOL hb_gt_IsColor( void )
    return hb_gt_GetScreenMode() != 7;
 }
 
-#ifndef __DJGPP__
+#if !defined(__DJGPP__)
 static char FAR * hb_gt_ScreenAddress()
 {
    char FAR * ptr;
@@ -426,29 +420,21 @@ static char FAR * hb_gt_ScreenAddress()
 
    #if defined(__WATCOMC__) && defined(__386__)
       if( hb_gt_IsColor() )
-      {
          ptr = ( char * ) ( 0xB800 << 4 );
-      }
       else
-      {
          ptr = ( char * )( 0xB000 << 4 );
-      }
    #else
       if( hb_gt_IsColor() )
-      {
          ptr = ( char FAR * ) MK_FP( 0xB800, 0x0000 );
-      }
       else
-      {
          ptr = ( char FAR * ) MK_FP( 0xB000, 0x0000 );
-      }
    #endif
 
    return ptr;
 }
 #endif
 
-#ifndef __DJGPP__
+#if !defined(__DJGPP__)
 char FAR * hb_gt_ScreenPtr( USHORT cRow, USHORT cCol )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_ScreenPtr(%hu, %hu)", cRow, cCol));
@@ -498,88 +484,40 @@ USHORT hb_gt_GetScreenHeight( void )
 
 void hb_gt_SetPos( SHORT iRow, SHORT iCol )
 {
+   union REGS regs;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetPos(%hd, %hd)", iRow, iCol));
 
-#if defined(__TURBOC__)
-   {
-     BYTE cRow, cCol;
-     cRow = ( BYTE ) iRow;
-     cCol = ( BYTE ) iCol;
-
-     _AH = 0x02;
-     _BH = 0;
-     _DH = cRow;
-     _DL = cCol;
-     geninterrupt( 0x10 );
-   }
-#else
-   {
-     union REGS regs;
-     regs.h.ah = 0x02;
-     regs.h.bh = 0;
-     regs.h.dh = ( BYTE ) iRow;
-     regs.h.dl = ( BYTE ) iCol;
-#if defined(__WATCOMC__) && defined(__386__)
-     int386( 0x10, &regs, &regs );
-#else
-     int86( 0x10, &regs, &regs );
-#endif
-   }
-#endif
+   regs.h.ah = 0x02;
+   regs.h.bh = 0;
+   regs.h.dh = ( BYTE ) iRow;
+   regs.h.dl = ( BYTE ) iCol;
+   HB_DOS_INT86( 0x10, &regs, &regs );
 }
 
 static void hb_gt_SetCursorSize( char start, char end )
 {
+   union REGS regs;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetCursorSize(%d, %d)", (int) start, (int) end));
 
-#if defined(__TURBOC__)
-   {
-     _AH = 0x01;
-     _CH = start;
-     _CL = end;
-     geninterrupt( 0x10 );
-   }
-#else
-   {
-     union REGS regs;
-     regs.h.ah = 0x01;
-     regs.h.ch = start;
-     regs.h.cl = end;
-#if defined(__WATCOMC__) && defined(__386__)
-     int386( 0x10, &regs, &regs );
-#else
-     int86( 0x10, &regs, &regs );
-#endif
-   }
-#endif
+   regs.h.ah = 0x01;
+   regs.h.ch = start;
+   regs.h.cl = end;
+   HB_DOS_INT86( 0x10, &regs, &regs );
 }
 
 static void hb_gt_GetCursorSize( char * start, char *end )
 {
+   union REGS regs;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetCursorSize(%p, %p)", start, end));
 
-#if defined(__TURBOC__)
-   {
-     _AH = 0x03;
-     _BH = 0;
-     geninterrupt( 0x10 );
-     *start = _CH;
-     *end = _CL;
-   }
-#else
-   {
-     union REGS regs;
-     regs.h.ah = 0x03;
-     regs.h.bh = 0;
-#if defined(__WATCOMC__) && defined(__386__)
-     int386( 0x10, &regs, &regs );
-#else
-     int86( 0x10, &regs, &regs );
-#endif
-     *start = regs.h.ch;
-     *end = regs.h.cl;
-   }
-#endif
+   regs.h.ah = 0x03;
+   regs.h.bh = 0;
+   HB_DOS_INT86( 0x10, &regs, &regs );
+   *start = regs.h.ch;
+   *end = regs.h.cl;
 }
 
 USHORT hb_gt_GetCursorStyle( void )
@@ -812,54 +750,28 @@ void hb_gt_SetAttribute( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT us
 
 SHORT hb_gt_Col( void )
 {
+   union REGS regs;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Col()"));
 
-#if defined(__TURBOC__)
-   {
-     _AH = 0x03;
-     _BH = 0;
-     geninterrupt( 0x10 );
-     return _DL;
-   }
-#else
-   {
-     union REGS regs;
-     regs.h.ah = 0x03;
-     regs.h.bh = 0;
-#if defined(__WATCOMC__) && defined(__386__)
-     int386( 0x10, &regs, &regs );
-#else
-     int86( 0x10, &regs, &regs );
-#endif
-     return regs.h.dl;
-   }
-#endif
+   regs.h.ah = 0x03;
+   regs.h.bh = 0;
+   HB_DOS_INT86( 0x10, &regs, &regs );
+
+   return regs.h.dl;
 }
 
 SHORT hb_gt_Row( void )
 {
+   union REGS regs;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Row()"));
 
-#if defined(__TURBOC__)
-   {
-     _AH = 0x03;
-     _BH = 0;
-     geninterrupt( 0x10 );
-     return _DH;
-   }
-#else
-   {
-     union REGS regs;
-     regs.h.ah = 0x03;
-     regs.h.bh = 0;
-#if defined(__WATCOMC__) && defined(__386__)
-     int386( 0x10, &regs, &regs );
-#else
-     int86( 0x10, &regs, &regs );
-#endif
-     return regs.h.dh;
-   }
-#endif
+   regs.h.ah = 0x03;
+   regs.h.bh = 0;
+   HB_DOS_INT86( 0x10, &regs, &regs );
+
+   return regs.h.dh;
 }
 
 void hb_gt_Scroll( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight, BYTE attr, SHORT sVert, SHORT sHoriz )
@@ -933,7 +845,7 @@ void hb_gt_DispBegin( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_DispBegin()"));
 
 /* ptucker */
-#ifndef __DJGPP__
+#if !defined(__DJGPP__)
    if( ++s_uiDispCount == 1 )
    {
       char FAR * ptr;
@@ -955,7 +867,7 @@ void hb_gt_DispEnd( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_DispEnd()"));
 
 /* ptucker */
-#ifndef __DJGPP__
+#if !defined(__DJGPP__)
    if( --s_uiDispCount == 0 )
    {
       char FAR * ptr;
@@ -1006,28 +918,15 @@ BOOL hb_gt_GetBlink()
 
 void hb_gt_SetBlink( BOOL bBlink )
 {
+   union REGS regs;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetBlink(%d)", (int) bBlink));
 
-#if defined(__TURBOC__)
-   {
-     _AX = 0x1003;
-     _BX = bBlink;
-     geninterrupt( 0x10 );
-   }
-#else
-   {
-     union REGS regs;
-     regs.h.ah = 0x10;
-     regs.h.al = 0x03;
-     regs.h.bh = 0;
-     regs.h.bl = bBlink;
-#if defined(__WATCOMC__) && defined(__386__)
-     int386( 0x10, &regs, &regs );
-#else
-     int86( 0x10, &regs, &regs );
-#endif
-   }
-#endif
+   regs.h.ah = 0x10;
+   regs.h.al = 0x03;
+   regs.h.bh = 0;
+   regs.h.bl = bBlink;
+   HB_DOS_INT86( 0x10, &regs, &regs );
 }
 
 void hb_gt_Tone( double dFrequency, double dDuration )

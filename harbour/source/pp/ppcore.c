@@ -121,7 +121,7 @@ static void   DebugPragma( char *, int, BOOL );
 
 static BOOL s_bTracePragma = FALSE;
 
-#define ISNAME( c )  ( isalnum( c ) || ( c ) == '_' || ( c ) > 0x7E )
+#define ISNAME( c )  ( isalnum( ( int ) c ) || ( c ) == '_' || ( c ) > 0x7E )
 #define MAX_NAME     255
 #define MAX_EXP      1024
 #define PATTERN_SIZE 2048

@@ -12,12 +12,13 @@ LIB_EXT = .a
 CC = gcc
 CC_IN = -c
 CC_OUT = -o
-CPPFLAGS = -I. -I$(HB_INC_COMPILE)
+CPPFLAGS = -I. -I$(HB_INC_COMPILE) -Zwin32
 CFLAGS = -Wall
 
 LD = gcc
-LDFLAGS =
-LD_OUT = -o $(SPACE)
+LDFLAGS = -Zwin32
+# Note the space after -o
+LD_OUT = -o 
 
 # Add all libraries specified in LIBS.
 ifeq ($(HB_LIB_COMPILE),)
@@ -25,8 +26,17 @@ LINKPATHS += $(foreach lib, $(LIBS), -L$(TOP)$(ROOT)source/$(lib)/$(ARCH))
 else
 LINKPATHS += -L$(HB_LIB_COMPILE)
 endif
-#LINKLIBS += -Wl,-(
+
+# The -( option could be appropriate to link against libraries with
+# cyclic dependencies, but I think it is not really necessary if the
+# libraries are kept in proper order.
+# LINKLIBS += -Wl,-(
+
 LINKLIBS += $(foreach lib, $(LIBS), -l$(lib))
+
+# This library is needed for CharToOemBuff() and OemToCharBuff() support.
+# it's automatically added by RSXNT
+#LINKLIBS += -luser32
 
 # If LIBS specifies the rdd library, add all DB drivers.
 ifeq ($(findstring rdd,$(LIBS)),rdd)
@@ -40,28 +50,23 @@ LINKPATHS += -L$(TOP)$(ROOT)source/rtl/$(HB_GT_LIB)/$(ARCH)
 LINKLIBS += -l$(HB_GT_LIB)
 endif
 
-#LINKLIBS += -Wl,-)
+# HB_SCREEN_LIB: empty, or one of ncurses, slang
+# HB_SCREEN_LIB=ncurses
+# HB_SCREEN_LIB=slang
+
+ifneq ($(HB_SCREEN_LIB),)
+LINKLIBS += -l$(HB_SCREEN_LIB)
+endif
+
+# The -) option could be appropriate to link against libraries with
+# cyclic dependencies, but I think it is not really necessary if the
+# libraries are kept in proper order.
+# LINKLIBS += -Wl,-)
+
 LDFLAGS += $(LINKPATHS)
-
-# Note: The empty line directly before 'endef' HAVE TO exist!
-# It causes that every echo command will be separated by LF
-define lib_object
-echo ADDMOD $(file) >> __lib__.tmp
-
-endef
-
-# We have to use a script to overcome the AR limit of max 850 characters
-# in commmand line
-define create_library
-echo CREATE $@ > __lib__.tmp
-$(foreach file, $^, $(lib_object))
-echo SAVE >> __lib__.tmp
-echo END >> __lib__.tmp
-$(AR) -M < __lib__.tmp
-endef
 
 AR = ar
 ARFLAGS =
-AR_RULE = $(create_library) || $(RM) $@
+AR_RULE = $(AR) $(ARFLAGS) r $@ $^ || $(RM) $@
 
 include $(TOP)$(ROOT)config/rules.cf

@@ -1,3 +1,87 @@
+20000411-00:24 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   ; Please retest Harbour on every possible platform.
+
+   * make_gnu.*
+   * bin/bld.*
+     * Added RSX32 and RSXNT
+
+   * makefile.bc
+     + $(ARFLAGS) added.
+     + /P32 added for BCC32, to avoid overflowing libs when compiling with
+       debug info.
+
+   + config/dos/rsx32.cf
+   * include/hbsetup.h
+   * source/common/hbver.c
+   * source/rtl/gtdos/gtdos.c
+   * source/rtl/gtdos/mousedos.c
+     + Added support for the RSXNT compiler under DOS 32 bit.
+       Harbour executable don't run yet.
+     + DISKSPACE() for DOS now uses INT_86 instead of the less-portable 
+       library call.
+     ! GTDOS and MOUSEDOS use the standard INT86, so they should work on
+       more platforms now, easier to extend and much more clear.
+
+   + config/w32/rsxnt.cf
+   * include/hbsetup.h   
+   * source/common/hbver.c
+   * source/rtl/diskspac.c
+   * source/rtl/gtwin/gtwin.c
+     + Added support for the RSXNT compiler under Windows NT.
+
+   * source/common/hbver.c
+   * source/rtl/is.c
+   * source/rtl/transfrm.c
+   * source/pp/ppcore.c
+   * source/vm/fm.c
+     ! Fixed warnings for GCC -O2 and the new RSX compiler.
+     ! Fixed warning for turned off HB_FM_STATISTICS
+
+   * source/vm/extend.c
+   * include/hbapi.h
+     + hb_retd() function added. Thanks to Jose Lalin.
+
+   * include/hbdefs.h
+   * source/common/hbver.c
+   * source/rtl/isprint.c
+   * source/rtl/inkey.c
+   * source/rtl/dateshb.c
+   * source/rtl/gtdos/gtdos.c
+   * source/vm/mainwin.c
+   * source/vm/maindll.c
+     % Cleaned up the multiplatform code. (mainly for DOS (INT_86)).
+     + Added common HB_DOS_INT86 macro to the central header, local
+       declarations removed.
+     % Removed the branches where the word registers were accessed via "w".
+       "x" is supported by __BORLANDC__, __DJGPP__, _MSC_VER, __RSX32__,
+       __WATCOM__, __TURBOC__ (9.5). Who's missing ?
+   
+   * source/common/hbver.c
+     + Shows DJGPP package version.
+
+   * source/rtl/filesys.c
+     + TOFIX added for hb_fsFile()
+
+   * config/dos/global.cf
+     ! Got rid of the \ to / conversion for rsx32, watcom and djgpp
+
+   * config/dos/djgpp.cf
+     ! Modified to avoid long command lines when linking.
+       I finally found a way to build DJGPP under W2K, using the MAKE.EXE
+       supplied with RSXNT.
+
+   * config/os2/gcc.cf
+   * include/hbsetup.h
+     - The -DHARBOUR_GCC_OS2 detection made automatic.
+
+   * source/rtl/version.c
+   * tests/version.prg
+   * utils/hbtest/hbtest.prg
+     * VERSION() no longer has the parameter extension to make things
+       more straight. One can use HB_COMPILER() to retrieve this info.
+       ! WARNING ! Please update the docs.
+
 20000410-09:00 Luiz Rafael Culik <culik@sl.conex.net
    *Doc/en/set.txt
      +doc for: SET PRINTER,SET FIXED,SET DECIMALS

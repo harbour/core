@@ -33,11 +33,12 @@
  *
  */
 
-#if defined(_Windows) || defined(_WIN32)
+#define HB_OS_WIN_32_USED
 
-#include <windows.h>
 #include "hbapi.h"
 #include "hbvm.h"
+
+#if defined(HB_OS_WIN_32)
 
 HANDLE hb_hInstance = 0;
 HANDLE hb_hPrevInstance = 0;

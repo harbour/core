@@ -351,6 +351,8 @@ ULONG hb_xsize( void * pMem ) /* returns the size of an allocated memory block *
 #ifdef HB_FM_STATISTICS
    return ( ( PHB_MEMINFO ) ( ( char * ) pMem - sizeof( HB_MEMINFO ) ) )->ulSize;
 #else
+   HB_SYMBOL_UNUSED( pMem );
+
    return 0;
 #endif
 }

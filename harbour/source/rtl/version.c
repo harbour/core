@@ -60,25 +60,9 @@ HB_FUNC( HB_COMPILER )
    hb_xfree( pszCompiler );
 }
 
-/* NOTE: The parameter accepted is a Harbour extension. */
-
 HB_FUNC( VERSION )
 {
    char * pszVersion = hb_verHarbour();
-
-   if( hb_pcount() > 0 )
-   {
-      char * pszCompiler = hb_verCompiler();
-
-      pszVersion = ( char * ) hb_xrealloc( pszVersion, strlen( pszVersion ) + strlen( pszCompiler ) + ( 4 * sizeof( char ) ) );
-
-      strcat( pszVersion, " (" );
-      strcat( pszVersion, pszCompiler );
-      strcat( pszVersion, ")" );
-
-      hb_xfree( pszCompiler );
-   }
-
    hb_retc( pszVersion );
    hb_xfree( pszVersion );
 }

@@ -38,31 +38,6 @@
 #include "hbapi.h"
 #include "hbapifs.h"
 
-#if defined(__TURBOC__) || defined(__BORLANDC__) || defined(_MSC_VER) || defined(__DJGPP__)
-   #include <dos.h>
-#endif
-
-#if defined(__WATCOMC__)
-   #include <i86.h>
-   #if defined(__386__) && !defined(__WINDOWS_386__)
-      #define INT_86 int386
-   #else
-      #define INT_86 int86
-   #endif
-#else
-   #if defined(__EMX__)
-      #define INT_86 _int86
-   #else
-      #define INT_86 int86
-   #endif
-#endif
-
-#if defined(__TURBOC__) || defined(__BORLANDC__) || defined(_MSC_VER) || defined(__DJGPP__)
-   #if !(defined(_Windows) || defined(__NT__) || defined(WINNT) || defined(_WINDOWS_))
-      #define HB_LOCAL_DOS
-   #endif
-#endif
-
 /* NOTE: The parameter is an extension over CA-Cl*pper, it's also supported
          by Xbase++. [vszakats] */
 
@@ -72,7 +47,7 @@ HB_FUNC( ISPRINTER )
    USHORT uiPort = atoi( pszDOSPort + 3 );
    BOOL bIsPrinter = FALSE;
 
-#if defined(HB_LOCAL_DOS)
+#if defined(HB_OS_DOS)
 
    /* NOTE: DOS specific solution, using BIOS interrupt */
 
@@ -81,13 +56,9 @@ HB_FUNC( ISPRINTER )
       union REGS regs;
 
       regs.h.ah = 2;
-   #if defined(__BORLANDC__) || defined(_MSC_VER)
       regs.x.dx = uiPort - 1;
-   #else
-      regs.w.dx = uiPort - 1;
-   #endif
 
-      INT_86( 0x17, &regs, &regs );
+      HB_DOS_INT86( 0x17, &regs, &regs );
 
       bIsPrinter = ( regs.h.ah == 0x90 );
    }

@@ -66,30 +66,19 @@
 #include "hbver.h"
 
 #if defined(HB_OS_WIN_32)
+
    #include <ctype.h>
-   #if ! defined(VER_PLATFORM_WIN32_WINDOWS)
+   #ifndef VER_PLATFORM_WIN32_WINDOWS
       #define VER_PLATFORM_WIN32_WINDOWS 1
    #endif
-   #if ! defined(VER_PLATFORM_WIN32_CE)
+   #ifndef VER_PLATFORM_WIN32_CE
       #define VER_PLATFORM_WIN32_CE 3
    #endif
-#endif
 
-#if defined(HB_OS_DOS)
-   #include <dos.h>
-   #if defined(__WATCOMC__)
-      #include <i86.h>
-   #endif
+#elif defined(HB_OS_UNIX)
 
-   #if defined(__WATCOMC__) && defined(__386__) && !defined(__WINDOWS_386__)
-      #define INT_86 int386
-   #else
-      #define INT_86 int86
-   #endif
-#endif
-
-#if defined(HB_OS_UNIX)
    #include <sys/utsname.h>
+
 #endif
 
 /* NOTE: OS() function, as a primary goal will detect the version number
@@ -115,19 +104,15 @@ char * hb_verPlatform( void )
       union REGS regs;
 
       regs.h.ah = 0x30;
-      INT_86( 0x21, &regs, &regs );
+      HB_DOS_INT86( 0x21, &regs, &regs );
 
       sprintf( pszPlatform, "DOS %d.%02d", regs.h.al, regs.h.ah );
 
       /* Host OS detection: Windows 2.x, 3.x, 95/98 */
 
       {
-         #if defined(__BORLANDC__) || defined(_MSC_VER)
-            regs.x.ax = 0x1600;
-         #else
-            regs.w.ax = 0x1600;
-         #endif
-         INT_86( 0x2F, &regs, &regs );
+         regs.x.ax = 0x1600;
+         HB_DOS_INT86( 0x2F, &regs, &regs );
 
          if( regs.h.al != 0x00 && regs.h.al != 0x80 )
          {
@@ -145,26 +130,18 @@ char * hb_verPlatform( void )
       /* Host OS detection: Windows NT/2000 */
 
       {
-         #if defined(__BORLANDC__) || defined(_MSC_VER)
-            regs.x.ax = 0x3306;
-         #else
-            regs.w.ax = 0x3306;
-         #endif
-         INT_86( 0x21, &regs, &regs );
+         regs.x.ax = 0x3306;
+         HB_DOS_INT86( 0x21, &regs, &regs );
 
-         #if defined(__BORLANDC__) || defined(_MSC_VER)
-            if( regs.x.bx == 0x3205 )
-         #else
-            if( regs.w.bx == 0x3205 )
-         #endif
-               strcat( pszPlatform, " (Windows NT/2000)" );
+         if( regs.x.bx == 0x3205 )
+            strcat( pszPlatform, " (Windows NT/2000)" );
       }
 
       /* Host OS detection: OS/2 */
 
       {
          regs.h.ah = 0x30;
-         INT_86( 0x21, &regs, &regs );
+         HB_DOS_INT86( 0x21, &regs, &regs );
 
          if( regs.h.al >= 10 )
          {
@@ -235,11 +212,11 @@ char * hb_verPlatform( void )
                break;
          }
 
-         sprintf( pszPlatform, "%s %d.%02d.%04d",
+         sprintf( pszPlatform, "%s %lu.%02lu.%04d",
             pszName,
-            osVer.dwMajorVersion,
-            osVer.dwMinorVersion,
-            LOWORD( osVer.dwBuildNumber ) );
+            ( ULONG ) osVer.dwMajorVersion,
+            ( ULONG ) osVer.dwMinorVersion,
+            ( USHORT ) LOWORD( osVer.dwBuildNumber ) );
 
          /* Add service pack/other info */
 
@@ -248,7 +225,7 @@ char * hb_verPlatform( void )
             int i;
 
             /* Skip the leading spaces (Win95B, Win98) */
-            for( i = 0; osVer.szCSDVersion[ i ] != '\0' && isspace( osVer.szCSDVersion[ i ] ); i++ );
+            for( i = 0; osVer.szCSDVersion[ i ] != '\0' && isspace( ( int ) osVer.szCSDVersion[ i ] ); i++ );
 
             if( osVer.szCSDVersion[ i ] != '\0' )
             {
@@ -363,15 +340,19 @@ char * hb_verCompiler( void )
 #elif defined(__GNUC__)
 
    #if defined(__DJGPP__)
-      pszName = "Delorie GCC";
+      pszName = "Delorie GNU C";
    #elif defined(__CYGWIN__)
-      pszName = "Cygnus Cygwin GCC";
+      pszName = "Cygnus Cygwin GNU C";
    #elif defined(__MINGW32__)
-      pszName = "Cygnus Mingw32 GCC";
+      pszName = "Cygnus Mingw32 GNU C";
+   #elif defined(__RSX32__)
+      pszName = "EMX/RSXNT/DOS GNU C";
+   #elif defined(__RSXNT__)
+      pszName = "EMX/RSXNT/Win32 GNU C";
    #elif defined(__EMX__)
-      pszName = "EMX GCC";
+      pszName = "EMX GNU C";
    #else
-      pszName = "GCC";
+      pszName = "GNU C";
    #endif
 
    iVerMajor = __GNUC__;
@@ -386,9 +367,19 @@ char * hb_verCompiler( void )
 #endif
 
    if( pszName )
-      sprintf( pszCompiler, "%s %d.%d", pszName, iVerMajor, iVerMinor );
+      sprintf( pszCompiler, "%s %hd.%hd", pszName, iVerMajor, iVerMinor );
    else
       strcpy( pszCompiler, "(unknown)" );
+
+#if defined(__DJGPP__)
+
+   {
+      char szSub[ 32 ];
+      sprintf( szSub, " (DJGPP %i.%02i)", ( int ) __DJGPP__, ( int ) __DJGPP_MINOR__ );
+      strcat( pszCompiler, szSub );
+   }
+
+#endif
 
    return pszCompiler;
 }

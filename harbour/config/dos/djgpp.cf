@@ -24,7 +24,6 @@ LINKPATHS += $(foreach lib, $(LIBS), -L$(TOP)$(ROOT)source/$(lib)/$(ARCH))
 else
 LINKPATHS += -L$(HB_LIB_COMPILE)
 endif
-# LINKLIBS += -Wl,-(
 LINKLIBS += $(foreach lib, $(LIBS), -l$(lib))
 
 # If LIBS specifies the rdd library, add all DB drivers.
@@ -39,10 +38,7 @@ LINKPATHS += -L$(TOP)$(ROOT)source/rtl/$(HB_GT_LIB)/$(ARCH)
 LINKLIBS += -l$(HB_GT_LIB)
 endif
 
-# LINKLIBS += -Wl,-)
-LDFLAGS = $(LINKPATHS)
-
-# Note: The empty line directly before 'endef' HAVE TO exist!
+# NOTE: The empty line directly before 'endef' HAVE TO exist!
 # It causes that every echo command will be separated by LF
 define lib_object
 echo ADDMOD $(file) >> __lib__.tmp
@@ -59,8 +55,23 @@ echo END >> __lib__.tmp
 $(AR) -M < __lib__.tmp
 endef
 
+# NOTE: The empty line below HAVE TO exist!
+define link_file
+echo $(file) >> __link__.tmp
+
+endef
+
+define link_exe_file
+echo $(LDFLAGS) $(LD_OUT)$@ > __link__.tmp
+$(foreach file, $^, $(link_file))
+echo $(LINKPATHS) $(LINKLIBS) >> __link__.tmp
+-$(LD) @__link__.tmp
+endef
+
 AR = ar
 ARFLAGS =
 AR_RULE = $(create_library)
+
+LD_RULE = $(link_exe_file)
 
 include $(TOP)$(ROOT)config/rules.cf

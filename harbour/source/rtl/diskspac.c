@@ -33,17 +33,6 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://www.harbour-project.org
- *
- * Copyright 1999 Luiz Rafael Culik <culik@sl.conex.net>
- *    Parts of DOS support
- *
- * See doc/license.txt for licensing terms.
- *
- */
-
 /* NOTE: DISKSPACE() supports larger disks than 2GB. CA-Cl*pper will always
          return a (long) value, Harbour may return a (double) for large
          values, the decimal places are always set to zero, though. */
@@ -53,10 +42,6 @@
 #include "hbapi.h"
 #include "hbapierr.h"
 #include "hbapifs.h"
-
-#if defined(HB_OS_DOS) || defined(__WATCOMC__)
-   #include <dos.h>
-#endif
 
 #if defined(HB_OS_OS2)
    #define INCL_BASE
@@ -76,49 +61,59 @@ HB_FUNC( DISKSPACE )
    if( uiType > HB_DISK_TOTAL )
       uiType = HB_DISK_TOTAL;
 
-#if defined(HB_OS_DOS) || defined(__WATCOMC__)
+#if defined(HB_OS_DOS)
 
    {
-      struct diskfree_t disk;
-      unsigned uiResult;
-      
-      while( ( uiResult = _dos_getdiskfree( uiDrive, &disk ) ) != 0 )
+      while( TRUE )
       {
-         USHORT uiAction = hb_errRT_BASE_Ext1( EG_OPEN, 2018, NULL, NULL, 0, EF_CANDEFAULT );
-      
-         /* NOTE: Under 'Standard' behaviour, this error does not allow 'retry'
-                  but if you should wish to make it so, then or EF_CANRETRY with
-                  EF_CANDEFAULT above)
-         */
-      
-         if( uiAction != E_RETRY )
-            break;
-      }
-      
-      if( uiResult != 0 )
-      {
-         switch( uiType )
+         union REGS regs;
+         
+         regs.x.dx = uiDrive;
+         regs.h.ah = 0x36;
+         HB_DOS_INT86( 0x21, &regs, &regs );
+         
+         if( regs.x.ax != 0xFFFF )
          {
-            case HB_DISK_AVAIL:
-            case HB_DISK_FREE:
-               dSpace = ( double ) disk.avail_clusters *
-                        ( double ) disk.sectors_per_cluster *
-                        ( double ) disk.bytes_per_sector;
-               break;
-      
-            case HB_DISK_USED:
-            case HB_DISK_TOTAL:
-               dSpace = ( double ) disk.total_clusters *
-                        ( double ) disk.sectors_per_cluster *
-                        ( double ) disk.bytes_per_sector;
-      
-               if( uiType == HB_DISK_USED )
-                  dSpace -= ( double ) disk.avail_clusters *
-                            ( double ) disk.sectors_per_cluster *
-                            ( double ) disk.bytes_per_sector;
-               break;
+            USHORT uiClusterTotal  = regs.x.dx;
+            USHORT uiClusterFree   = regs.x.bx;
+            USHORT uiSecPerCluster = regs.x.ax;
+            USHORT uiSectorSize    = regs.x.cx;
+         
+            switch( uiType )
+            {
+               case HB_DISK_AVAIL:
+               case HB_DISK_FREE:
+                  dSpace = ( double ) uiClusterFree *
+                           ( double ) uiSecPerCluster *
+                           ( double ) uiSectorSize;
+                  break;
+         
+               case HB_DISK_USED:
+               case HB_DISK_TOTAL:
+                  dSpace = ( double ) uiClusterTotal *
+                           ( double ) uiSecPerCluster *
+                           ( double ) uiSectorSize;
+         
+                  if( uiType == HB_DISK_USED )
+                     dSpace -= ( double ) uiClusterFree *
+                               ( double ) uiSecPerCluster *
+                               ( double ) uiSectorSize;
+                  break;
+            }
          }
-      
+         else
+         {
+            USHORT uiAction = hb_errRT_BASE_Ext1( EG_OPEN, 2018, NULL, NULL, 0, EF_CANDEFAULT );
+         
+            /* NOTE: Under 'Standard' behaviour, this error does not allow 'retry'
+                     but if you should wish to make it so, then or EF_CANRETRY
+                     with EF_CANDEFAULT above)
+            */
+         
+            if( uiAction == E_RETRY )
+               continue;
+         }
+         break;
       }
    }
 
@@ -184,7 +179,7 @@ HB_FUNC( DISKSPACE )
                      memcpy( &i64RetVal, &i64TotalBytes, sizeof( ULARGE_INTEGER ) );
                }
       
-               #if defined(__GNUC__) || defined(_MSC_VER)
+               #if (defined(__GNUC__) || defined(_MSC_VER)) && !defined(__RSXNT__)
       
                   dSpace  = ( double ) i64RetVal.LowPart +
                             ( double ) i64RetVal.HighPart +
@@ -286,7 +281,7 @@ HB_FUNC( DISKSPACE )
       USHORT rc;
       
       /* Query level 1 info from filesystem */
-      while( ( rc = DosQueryFSInfo( uiDrive, 1, &fsa, sizeof( fsa )) ) != 0 )
+      while( ( rc = DosQueryFSInfo( uiDrive, 1, &fsa, sizeof( fsa ) ) ) != 0 )
       {
          USHORT uiAction = hb_errRT_BASE_Ext1( EG_OPEN, 2018, NULL, NULL, 0, EF_CANDEFAULT );
       

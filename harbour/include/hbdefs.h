@@ -47,14 +47,15 @@
 /* Include windows.h if applicable and requested */
 
 #if defined(HB_OS_WIN_32_USED) && defined(HB_OS_WIN_32)
+
    #define WIN32_LEAN_AND_MEAN
    #include <windows.h>
    #if defined(__GNUC__)
       #define HB_DONT_DEFINE_BASIC_TYPES
    #endif
-#endif
 
-#if defined(__IBMCPP__) || defined(HARBOUR_GCC_OS2)
+#elif defined(HB_OS_OS2)
+
    /* With the exception of WORD, the IBM Visual Age C++ compiler has
       its own definitions of the Harbour types most of which conflict with the
       Harbour #undefs, due to typedef being the prevalent method of
@@ -76,7 +77,23 @@
    #undef INT
    #undef UINT
    #define HB_DONT_DEFINE_BASIC_TYPES
-#endif /* __IBMCPP__ */
+
+#elif defined(HB_OS_DOS)
+
+   #include <dos.h>
+   #if defined(__WATCOMC__)
+      #include <i86.h>
+   #endif
+
+   #if defined(__WATCOMC__) && defined(__386__) && !defined(__WINDOWS_386__)
+      #define HB_DOS_INT86 int386
+   #elif defined(__RSX32__)
+      #define HB_DOS_INT86 _int86
+   #else
+      #define HB_DOS_INT86 int86
+   #endif
+
+#endif
 
 #if ! defined(HB_DONT_DEFINE_BASIC_TYPES)
 
