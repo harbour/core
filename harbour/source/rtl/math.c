@@ -278,10 +278,10 @@ FUNCTION MOD(cl_num, cl_base)
    }
    else
    {
-      PHB_ITEM pError = _errNew();
-      _errPutDescription(pError, "Argument error: %");
-      _errLaunch(pError);
-      _errRelease(pError);
+      PHB_ITEM pError = hb_errNew();
+      hb_errPutDescription(pError, "Argument error: %");
+      hb_errLaunch(pError);
+      hb_errRelease(pError);
    }
 }
 

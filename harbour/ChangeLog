@@ -1,3 +1,12 @@
+19990617-00:00 EDT David G. Holm <dholm@jsd-llc.com>
+  * include/errorapi.h
+    - Added "#include <extend.h>"
+  * source/rtl/environ.c
+    - Added "#include <errorapi.h>
+    - Converted all _errFunctions to hb_errFunctions
+  * source/rtl/math.c
+    - Added missing _errFunction to hb_errFunction conversions
+
 19990616-23:30 EDT David G. Holm <dholm@jsd-llc.com>
   * makefile.icc
     - Added or corrected various include file dependencies

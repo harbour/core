@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#include <errorapi.h>
+
 #ifdef __IBMCPP__
   #define INCL_DOSMISC
 #endif
@@ -246,10 +248,10 @@ HARBOUR HB___RUN( void )
    }
    else
    {
-      PHB_ITEM pError = _errNew();
-      _errPutDescription( pError, "RUN: Incorrect number of arguments" );
-      _errLaunch( pError );
-      _errRelease( pError );
+      PHB_ITEM pError = hb_errNew();
+      hb_errPutDescription( pError, "RUN: Incorrect number of arguments" );
+      hb_errLaunch( pError );
+      hb_errRelease( pError );
    }
 #endif
 }

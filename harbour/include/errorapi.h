@@ -9,6 +9,7 @@
 //                      compatible
 //-
 
+#include <extend.h>
 #include "error.ch"
 
 
