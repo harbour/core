@@ -18,6 +18,9 @@
  * Copyright 2001 Chen Kedem <niki@actcom.co.il>
  *    Documentation for: __MVEXIST()
  *
+ * Copyright 2002 Walter Negro <anegro@overnet.com.ar>
+ *    Documentation for: HB_ISBYREF()
+ *
  * See doc/license.txt for licensing terms.
  *
  */
@@ -793,5 +796,60 @@
  *      Library is rtl
  *  $SEEALSO$
  *      TYPE()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      HB_ISBYREF()
+ *  $CATEGORY$
+ *      Misc
+ *  $ONELINER$
+ *      Inform if the variable is passed by reference.
+ *  $SYNTAX$
+ *      HB_ISBYREF( @<Var> ) --> <lVarIsByRef>
+ *  $ARGUMENTS$
+ *      @<Var> is the variable to test passed by reference.
+ *  $RETURNS$
+ *      <lVarIsByRef> a logical value indicating if the variable is passed
+ *      by reference to actual function or procedure.
+ *  $DESCRIPTION$
+ *      This function return a logical value indicating if the variable
+ *      is passed by reference to actual function or procedure.
+ *      ATTENTION: The variable to test must be passed by reference.
+ *      If the variable is not passed by reference, the function return NIL.
+ *      This function is based on the form that Harbour manages to the
+ *      variables for reference. When a variable is passed by reference,
+ *      what receives the function or procedure is, a pointer to the
+ *      previous variable, be this the container variable of the data or
+ *      a pointer to another variable. The function observes if the
+ *      variable passed points to a common variable or to a variable
+ *      passed by reference.
+ *  $EXAMPLES$
+ *      See Test
+ *  </fixed>
+ *  $TESTS$
+ *      function Main()
+ *         local cVar := "Test local"
+ *         private nVar := 0
+ *
+ *         Test( @cVar, @nVar, cVar, nVar )
+ *      return nil
+ *
+ *      procedure Test( Arg1, Arg2, Arg3, Arg4 )
+ *         ? hb_isbyref( @Arg1 )        // .T.
+ *         ? hb_isbyref( @Arg2 )        // .T.
+ *         ? hb_isbyref( @Arg3 )        // .F.
+ *         ? hb_isbyref( @Arg4 )        // .F.
+ *      return
+ *  </fixed>
+ *  $STATUS$
+ *      S
+ *  $COMPLIANCE$
+ *      HB_ISBYREF() is an extention of Harbour
+ *  $FILES$
+ *      Library is rtl
+ *  $SEEALSO$
+ *      VALTYPE()
  *  $END$
  */
