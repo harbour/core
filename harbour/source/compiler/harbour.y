@@ -253,13 +253,13 @@ void StaticDefEnd( int );
 void StaticAssign( void ); /* checks if static variable is initialized with function call */
 
 /* output related functions */
-extern void GenCCode( char *, char * );      /* generates the C language output */
-extern void GenJava( char *, char * );       /* generates the Java language output */
-extern void GenPascal( char *, char * );     /* generates the Pascal language output */
-extern void GenRC( char *, char * );         /* generates the RC language output */
-extern void GenPortObj( char *, char * );    /* generates the portable objects */
+extern void GenCCode( PHB_FNAME );      /* generates the C language output */
+extern void GenJava( PHB_FNAME );       /* generates the Java language output */
+extern void GenPascal( PHB_FNAME );     /* generates the Pascal language output */
+extern void GenRC( PHB_FNAME );         /* generates the RC language output */
+extern void GenPortObj( PHB_FNAME );    /* generates the portable objects */
 #ifdef HARBOUR_OBJ_GENERATION
-extern void GenObj32( char *, char * );      /* generates OBJ 32 bits */
+extern void GenObj32( PHB_FNAME );      /* generates OBJ 32 bits */
 #endif
 
 /* argument checking */
@@ -272,6 +272,7 @@ void PrintUsage( char * );
 typedef enum
 {
    LANG_C,                  /* C language (by default) <file.c> */
+   LANG_OBJ32,              /* DOS/Windows 32 bits <file.obj> */
    LANG_JAVA,               /* Java <file.java> */
    LANG_PASCAL,             /* Pascal <file.pas> */
    LANG_RESOURCES,          /* Resources <file.rc> */
@@ -459,9 +460,6 @@ WORD _wIfCounter    = 0;
 WORD _wWhileCounter = 0;
 WORD _wCaseCounter  = 0;
 ULONG _ulMessageFix = 0;  /* Position of the message which needs to be changed */
-#ifdef HARBOUR_OBJ_GENERATION
-BOOL _bObj32 = FALSE;     /* generate OBJ 32 bits */
-#endif
 int _iStatics = 0;       /* number of defined statics variables on the PRG */
 PEXTERN pExterns = NULL;
 PTR_LOOPEXIT pLoops = NULL;
@@ -1443,18 +1441,6 @@ int harbour_main( int argc, char * argv[] )
                      GenError( _szCErrors, 'E', ERR_BADOPTION, &argv[ iArg ][ 0 ], NULL );
 
                   break;
-
-#ifdef HARBOUR_OBJ_GENERATION
-               case 'f':
-               case 'F':
-                  {
-                     char * szUpper = yy_strupr( yy_strdup( &argv[ iArg ][ 2 ] ) );
-                     if( ! strcmp( szUpper, "OBJ32" ) )
-                        _bObj32 = TRUE;
-                     free( szUpper );
-                  }
-                  break;
-#endif
                case 'g':
                case 'G':
                   switch( argv[ iArg ][ 2 ] )
@@ -1462,6 +1448,11 @@ int harbour_main( int argc, char * argv[] )
                      case 'c':
                      case 'C':
                         _iLanguage = LANG_C;
+                        break;
+
+                     case 'f':
+                     case 'F':
+                        _iLanguage = LANG_OBJ32;
                         break;
 
                      case 'j':
@@ -1688,11 +1679,7 @@ int harbour_main( int argc, char * argv[] )
             }
          }
 
-#ifdef HARBOUR_OBJ_GENERATION
-         if( ! _bSyntaxCheckOnly && ! bSkipGen && ! _bObj32 )
-#else
          if( ! _bSyntaxCheckOnly && ! bSkipGen )
-#endif
          {
             if( _pInitFunc )
             {
@@ -1728,50 +1715,33 @@ int harbour_main( int argc, char * argv[] )
             switch( _iLanguage )
             {
                case LANG_C:
-                  if( ! _pFileName->szExtension )
-                     _pFileName->szExtension =".c";
-                  hb_fsFNameMerge( szFileName, _pFileName );
-                  GenCCode( szFileName, _pFileName->szName );
+                  GenCCode( _pFileName );
+                  break;
+
+               case LANG_OBJ32:
+#ifdef HARBOUR_OBJ_GENERATION
+                  GenObj32( _pFileName );
+#endif
                   break;
 
                case LANG_JAVA:
-                  if( ! _pFileName->szExtension )
-                     _pFileName->szExtension =".java";
-                  hb_fsFNameMerge( szFileName, _pFileName );
-                  GenJava( szFileName, _pFileName->szName );
+                  GenJava( _pFileName );
                   break;
 
                case LANG_PASCAL:
-                  if( ! _pFileName->szExtension )
-                     _pFileName->szExtension =".pas";
-                  hb_fsFNameMerge( szFileName, _pFileName );
-                  GenPascal( szFileName, _pFileName->szName );
+                  GenPascal( _pFileName );
                   break;
 
                case LANG_RESOURCES:
-                  if( ! _pFileName->szExtension )
-                     _pFileName->szExtension =".rc";
-                  hb_fsFNameMerge( szFileName, _pFileName );
-                  GenRC( szFileName, _pFileName->szName );
+                  GenRC( _pFileName );
                   break;
 
                case LANG_PORT_OBJ:
-                  if( ! _pFileName->szExtension )
-                     _pFileName->szExtension =".hrb";
-                  hb_fsFNameMerge( szFileName, _pFileName );
-                  GenPortObj( szFileName, _pFileName->szName );
+                  GenPortObj( _pFileName );
                   break;
             }
          }
-#ifdef HARBOUR_OBJ_GENERATION
-         if( _bObj32 )
-         {
-            if( ! _pFileName->szExtension )
-               _pFileName->szExtension = ".obj";
-            hb_fsFNameMerge( szFileName, _pFileName );
-            GenObj32( szFileName, _pFileName->szName );
-         }
-#endif
+
          if( _bPPO )
             fclose( yyppo );
       }
@@ -1794,42 +1764,42 @@ int harbour_main( int argc, char * argv[] )
 */
 void PrintUsage( char * szSelf )
 {
-   printf( "Syntax: %s <file.prg> [options]\n"
-           "\nOptions: \n"
-           "\t/a\t\tautomatic memvar declaration\n"
-           "\t/b\t\tdebug info\n"
-           "\t/d<id>[=<val>]\t#define <id>\n"
-           "\t/es[<level>]\tset exit severity\n"
+   printf( "\nSyntax:  %s <file[.prg]> [options]"
+           "\n"
+           "\nOptions:  /a               automatic memvar declaration"
+           "\n          /b               debug info"
+           "\n          /d<id>[=<val>]   #define <id>"
+           "\n          /es[<level>]     set exit severity"
+           "\n          /g<type>         output type generated is <type> (see below)"
+           "\n          /gc              output type: C source (.c) (default)"
 #ifdef HARBOUR_OBJ_GENERATION
-           "\t/f\t\tgenerated object file\n"
-           "\t\t\t /fobj32 --> Windows/Dos 32 bits OBJ\n"
+           "\n          /gf              output type: Windows/DOS OBJ32 (.obj)"
 #endif
-           "\t/g\t\tgenerated output language\n"
-           "\t\t\t /gc (C default) --> <file.c>\n"
-           "\t\t\t /gh (HRB file)  --> <file.hrb>\n"
-           "\t\t\t /gj (Java)      --> <file.java>\n"
-           "\t\t\t /gp (Pascal)    --> <file.pas>\n"
-           "\t\t\t /gr (Resources) --> <file.rc>\n"
-           "\t/i<path>\tadd #include file search path\n"
-           "\t/l\t\tsuppress line number information\n"
-/* TODO:   "\t/m\t\tcompile module only\n" */
-           "\t/n\t\tno implicit starting procedure\n"
-           "\t/o<path>\tobject file drive and/or path\n"
-           "\t/p\t\tgenerate pre-processed output (.ppo) file\n"
-           "\t/q\t\tquiet\n"
-/* TODO:   "\t/r[<lib>]\trequest linker to search <lib> (or none)\n" */
-           "\t/s\t\tsyntax check only\n"
-/* TODO:   "\t/t<path>\tpath for temp file creation\n" */
-/* TODO:   "\t/u[<file>]\tuse command def set in <file> (or none)\n" */
-           "\t/v\t\tvariables are assumed M->\n"
-           "\t/w\t\tenable warnings\n"
-           "\t/x[<prefix>]\tset symbol init function name prefix\n"
+           "\n          /gh              output type: Harbour Portable Object (.hrb)"
+           "\n          /gj              output type: Java source (.java)"
+           "\n          /gp              output type: Pascal source (.pas)"
+           "\n          /gr              output type: Windows resource (.rc)"
+           "\n          /i<path>         add #include file search path"
+           "\n          /l               suppress line number information"
+/* TODO:   "\n          /m               compile module only" */
+           "\n          /n               no implicit starting procedure"
+           "\n          /o<path>         object file drive and/or path"
+           "\n          /p               generate pre-processed output (.ppo) file"
+           "\n          /q               quiet"
+           "\n          /q0              quiet and don't display program header"
+/* TODO:   "\n          /r[<lib>]        request linker to search <lib> (or none)" */
+           "\n          /s               syntax check only"
+/* TODO:   "\n          /t<path>         path for temp file creation" */
+/* TODO:   "\n          /u[<file>]       use command def set in <file> (or none)" */
+           "\n          /v               variables are assumed M->"
+           "\n          /w               enable warnings"
+           "\n          /x[<prefix>]     set symbol init function name prefix (for .c only)"
 #ifdef YYDEBUG
-           "\t/y\t\ttrace lex & yacc activity\n"
+           "\n          /y               trace lex & yacc activity"
 #endif
-           "\t/z\t\tsuppress shortcutting (.and. & .or.)\n"
-           "\t/10\t\trestrict symbol length to 10 characters\n"
-/* TODO:   "\t @<file>\tcompile list of modules in <file>\n" */
+           "\n          /z               suppress shortcutting (.and. & .or.)"
+           "\n          /10              restrict symbol length to 10 characters"
+/* TODO:   "\n           @<file>         compile list of modules in <file>" */
            , szSelf );
 }
 

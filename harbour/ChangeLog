@@ -1,3 +1,14 @@
+19990914-13:15 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/compiler/harbour.y
+    source/compiler/gen*.c
+    + Help screen made more Clipper like.
+    + /f switch changed to /gf, and the whole object generation build
+      in to the source in a more standard way. It works now.
+    + /q0 switch added to the help screen.
+    + All filename composing stuff related to specific output types moved to 
+      the appropriate gen*.c file. This way the code is more modular.
+    ! One variable made static in genobj32.c
+
 19990914-11:40 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/runner/stdalone/external.prg
     include/external.ch

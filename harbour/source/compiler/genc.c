@@ -38,8 +38,9 @@
 #include "pcode.h"
 #include "hberrors.h"
 
-void GenCCode( char * szFileName, char * szName )       /* generates the C language output */
+void GenCCode( PHB_FNAME pFileName )       /* generates the C language output */
 {
+   char szFileName[ _POSIX_PATH_MAX ];
    PFUNCTION pFunc = functions.pFirst, pFTemp;
    PCOMSYMBOL pSym = symbols.pFirst;
    WORD w, wLen, wSym, wVar;
@@ -50,7 +51,9 @@ void GenCCode( char * szFileName, char * szName )       /* generates the C langu
 
    FILE * yyc;             /* file handle for C output */
 
-   HB_SYMBOL_UNUSED( szName );
+   if( ! pFileName->szExtension )
+      pFileName->szExtension =".c";
+   hb_fsFNameMerge( szFileName, pFileName );
 
    yyc = fopen( szFileName, "wb" );
    if( ! yyc )
@@ -60,7 +63,7 @@ void GenCCode( char * szFileName, char * szName )       /* generates the C langu
    }
 
    if( ! _bQuiet )
-      printf( "\nGenerating C language output to \'%s\'... ", szFileName );
+      printf( "\nGenerating C source output to \'%s\'... ", szFileName );
 
    fprintf( yyc, "/* Harbour compiler generated code */\n\n" );
    fprintf( yyc, "#include \"hb_vmpub.h\"\n" );
@@ -94,8 +97,8 @@ void GenCCode( char * szFileName, char * szName )       /* generates the C langu
    /* writes the symbol table */
    /* Generate the wrapper that will initialize local symbol table
     */
-   yy_strupr( _pFileName->szName );
-   fprintf( yyc, "\n\nHB_INIT_SYMBOLS_BEGIN( hb_vm_SymbolInit_%s%s )\n", _szPrefix, _pFileName->szName );
+   yy_strupr( pFileName->szName );
+   fprintf( yyc, "\n\nHB_INIT_SYMBOLS_BEGIN( hb_vm_SymbolInit_%s%s )\n", _szPrefix, pFileName->szName );
 
    if( ! _bStartProc )
       pSym = pSym->pNext; /* starting procedure is always the first symbol */
@@ -149,8 +152,8 @@ void GenCCode( char * szFileName, char * szName )       /* generates the C langu
 
       pSym = pSym->pNext;
    }
-   fprintf( yyc, "\nHB_INIT_SYMBOLS_END( hb_vm_SymbolInit_%s%s )\n", _szPrefix, _pFileName->szName );
-   fprintf( yyc, "#if ! defined(__GNUC__)\n   #pragma startup hb_vm_SymbolInit_%s%s\n#endif\n\n\n", _szPrefix, _pFileName->szName );
+   fprintf( yyc, "\nHB_INIT_SYMBOLS_END( hb_vm_SymbolInit_%s%s )\n", _szPrefix, pFileName->szName );
+   fprintf( yyc, "#if ! defined(__GNUC__)\n   #pragma startup hb_vm_SymbolInit_%s%s\n#endif\n\n\n", _szPrefix, pFileName->szName );
 
    /* Generate functions data
     */

@@ -5,7 +5,7 @@
 /*
    Harbour Project source code
 
-   Harbour RC Generation.
+   Harbour Java source Generation.
 
    Copyright 1999  Antonio Linares <alinares@fivetech.com>
    www - http://www.harbour-project.org
@@ -38,8 +38,14 @@
 #include "pcode.h"
 #include "hberrors.h"
 
-void GenJava( char * szFileName, char * szName )
+void GenJava( PHB_FNAME pFileName )
 {
-   printf( "\nGenerating Java language output...\n" );
-   printf( "%s -> not implemented yet! %s\n", szFileName, szName );
+   char szFileName[ _POSIX_PATH_MAX ];
+
+   if( ! pFileName->szExtension )
+      pFileName->szExtension =".java";
+   hb_fsFNameMerge( szFileName, pFileName );
+
+   printf( "\nGenerating Java source output to \'%s\'... ", szFileName );
+   printf( "\nNot implemented yet!\n" );
 }

@@ -42,8 +42,9 @@
 #define SYM_FUNC    1              /* Defined function                  */
 #define SYM_EXTERN  2              /* Previously defined function       */
 
-void GenPortObj( char * szFileName, char * szName )
+void GenPortObj( PHB_FNAME pFileName )
 {
+   char szFileName[ _POSIX_PATH_MAX ];
    PFUNCTION pFunc /*= functions.pFirst */;
    PCOMSYMBOL pSym = symbols.pFirst;
    WORD w, wLen, wVar;
@@ -54,7 +55,9 @@ void GenPortObj( char * szFileName, char * szName )
    ULONG ulCodeLength;
    FILE * yyc;             /* file handle for C output */
 
-   HB_SYMBOL_UNUSED( szName );
+   if( ! pFileName->szExtension )
+      pFileName->szExtension =".hrb";
+   hb_fsFNameMerge( szFileName, pFileName );
 
    yyc = fopen( szFileName, "wb" );
    if( ! yyc )
@@ -64,7 +67,7 @@ void GenPortObj( char * szFileName, char * szName )
    }
 
    if( ! _bQuiet )
-      printf( "\nGenerating portable object output to \'%s\'... ", szFileName );
+      printf( "\nGenerating Harbour Portable Object output to \'%s\'... ", szFileName );
 
    /* writes the symbol table */
 

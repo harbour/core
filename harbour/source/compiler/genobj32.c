@@ -64,20 +64,25 @@ static BYTE prgFunction[] = { 0x68, 0x00, 0x00, 0x00, 0x00, 0x68, 0x00, 0x00, 0x
                               0x00, 0xE8, 0x00, 0x00, 0x00, 0x00, 0x83, 0xC4, 0x08, 0xC3 };
 
 static char * * externNames = 0;
-WORD wExternals = 1; /* _hb_vmExecute is always added */
+static WORD wExternals = 1; /* _hb_vmExecute is always added */
 
-void GenObj32( char * szObjFileName, char * szFileName )
+void GenObj32( PHB_FNAME pFileName )
 {
+  char szFileName[ _POSIX_PATH_MAX ];
   FILE * hObjFile;  /* file handle for OBJ output */
 
-  if( ! ( hObjFile = fopen( szObjFileName, "wb" ) ) )
+  if( ! pFileName->szExtension )
+    pFileName->szExtension =".obj";
+  hb_fsFNameMerge( szFileName, pFileName );
+
+  if( ! ( hObjFile = fopen( szFileName, "wb" ) ) )
     {
       GenError( _szCErrors, 'E', ERR_CREATE_OUTPUT, szFileName, NULL );
       return;
     }
 
   if( ! _bQuiet )
-    printf( "\nGenerating Windows/DOS OBJ 32 bits language output to \'%s\'... ", szObjFileName );
+    printf( "\nGenerating Windows/DOS OBJ32 output to \'%s\'... ", szFileName );
 
   CompiledFileName( hObjFile, szFileName );
   CompilerVersion( hObjFile, "Harbour" );
