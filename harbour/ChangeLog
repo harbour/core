@@ -1,3 +1,9 @@
+2001-08-21 01:30 UTC-0800 Brian Hays <bhays@abacuslaw.com>
+   * contrib/libgt/bitflags.c
+      added the cvs header
+   + todo.txt
+      first stab at a todo list
+
 2001-08-20 11:55 UTC-0800 Brian Hays <bhays@abacuslaw.com>
 
    * contrib/rdd_ads/ads1.c
@@ -40,8 +46,6 @@
       The parameter list was incorrectly handled before because
       of the 12th parameter that is always NIL.
       See Harbour Archives, subject "XINDEX warning" for details
-
-
 
 2001-08-21 06:47 GMT Dave Pearson <davep@davep.org>
   * source/rtl/gtcrs/gtcrs.c

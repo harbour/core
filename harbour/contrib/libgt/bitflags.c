@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * File......: BITFLAGS.C
  * Author....: Dave Pearson
  * BBS.......: The Dark Knight Returns
@@ -9,13 +13,15 @@
  *
  * This is an original work by Dave Pearson and is placed in the public
  * domain.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
  * Modification history:
  * ---------------------
  *
  * 8/19/2001 Modifications for Harbour by Brian Hays, also placed in
  * the public domain.
-
  *
  */
 

@@ -1,0 +1,84 @@
+/*
+ * $Id$
+ */
+
+                  Harbour Project To-Do list
+
+=======================================================================
+Tasks for v.1 beta:
+_______________________________________________________________________
+
+          Topic                              Responsible developer(s)
+===================================          =========================
+
+Mlctopos() and Mpostolc()                    Ignacio Ortiz
+
+SET listener API                             David Holm
+
+DBFCDX support                               Ryszard Glab
+
+Fixing internal HVM/RTL handling of string   ???
+items (Clipper passes a pointer to the same
+allocated memory instead of creating
+string copies)
+
+Finish HbMake                                Luiz Rafael Culik
+
+CaClipper remaining classes                  Luiz Rafael Culik
+
+Map Harbour functions 10 chars to be         Luiz Rafael Culik
+compatible with Caclipper
+
+Optimize out the need for the PUSHNIL        ???
+opcode before each function call.
+
+Eliminate the "#pragma pack" type of hacks   ???
+from the code (especially RDD), to make it
+more multiplatform. This mostly involves
+changing the direct writing of structures
+to the disk.
+
+OO system                                    Jean-Francois Lefebvre (JFL)
+   Adding Class Method
+   Adding Multiple Constructor
+   Adding Class init Support
+
+
+
+Integrate floating point methods to          ???
+avoid inequalities at 13 or more
+decimals.  See DETAILS_FLOAT below.
+
+Add missing 5.3 ord* functions.              Brian Hays
+OrdKeyVal and others are still in
+dummy.prg. Move dbcmd.c
+
+'SAVE TO' statement doesn't work             ???
+like clipper's.  Is memofile
+support complete?
+
+
+=======================================================================
+Tasks for v.1 release:
+_______________________________________________________________________
+
+
+
+
+
+=======================================================================
+Tasks for after v.1 release:
+_______________________________________________________________________
+
+
+
+
+=======================================================================
+Detail descriptions for Tasks:
+_______________________________________________________________________
+
+DETAILS_FLOAT
+   The building of the double in val.c is simply different than how it
+   gets created when coded in source or read from a dbf
+   See Harbour archives under the subject
+      Some numbers are not as equal as others
