@@ -44,16 +44,12 @@
  *      NEXT
  *      USE
  *      RETURN NIL
- *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      This function is CA-CLIPPER TOOLS compatible
  *  $SEEALSO$
- *    FIELDSIZE(), FIELDDECI()
- *  $INCLUDE$
- *
+ *    FIELDSIZE(),FIELDDECI()
  *  $END$
  */
 
@@ -81,16 +77,12 @@
  *      NEXT
  *      USE
  *      RETURN NIL
- *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      This function is CA-CLIPPER TOOLS compatible
  *  $SEEALSO$
- *    FIELDTYPE(), FIELDDECI()
- *  $INCLUDE$
- *
+ *    FIELDTYPE(),FIELDDECI()
  *  $END$
  */
 
@@ -120,15 +112,11 @@
  *      NEXT
  *      USE
  *      RETURN NIL
- *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      This function is CA-CLIPPER TOOLS compatible
  *  $SEEALSO$
- *    FIELDTYPE(), FIELDSIZE()
- *  $INCLUDE$
- *
+ *    FIELDTYPE(),FIELDSIZE()
  *  $END$
  */

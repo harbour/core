@@ -56,7 +56,9 @@
 
 #xtranslate UPPERLOWER(<exp>) => (UPPER(SUBSTR(<exp>,1,1))+LOWER(SUBSTR(<exp>,2)))
 MEMVAR aDirList,aDocInfo
-
+STATIC aTable := {}
+STATIC lIsTable :=.F.
+Static myh
 FUNCTION ProcessRtf()
 
    //
@@ -156,7 +158,7 @@ FUNCTION ProcessRtf()
    lMethod := .F.
    lIsDataLink := .F.
    lIsMethodLink := .F.
-
+    myh:=fcreate('error.txt')
    lWrite:=.f.
    cTempx:=''
    //
@@ -569,10 +571,6 @@ FUNCTION ProcessRtf()
                             Else
                               oRtf:WriteParText(  " "+ ALLTRIM(cBuffer) +" ")                             
                             endif
-                     ELSEIF   StrPos(cBuffer)=12
-                          cBuffer:=Substr(cBuffer,6)
-                          oRtf:WriteParNoIndent(cBuffer+" ")
-
                      ELSEIF AT("<",cBuffer)> 0
                         nPos := AT("<",cBuffer)
                         if  nPos>0   .and. nPos<12
@@ -584,28 +582,19 @@ FUNCTION ProcessRtf()
                      ELSEIF AT("()",Cbuffer)>0
                         nPos:=AT("()",Cbuffer)
                         nEpos:=AT(")",cBuffer)
-                        if nPos>0 .and. nPos<22
-                         
+                        if nPos>0 .and. nPos<22                       
                             oRtf:WriteParBoldText( substr(cBuffer,1,nEpos ),substr(cBuffer,nEpos+1)+" ")
                         ELSE
                             oRtf:WriteParText(  " "+ ALLTRIM(cBuffer) +" ")
                         Endif
-                      ELSEIf AT('*',cBuffer)>0
-                            nPos := AT("*",cBuffer)
-                            oRtf:WritePar(Strtran(cBuffer,"*",""))
-                            lWasLine:=.T.
                      ELSEIF at("===",cBuffer)>0 .or. at("---",cBuffer)>0
                             oRtf:WritePar(cBuffer+" ")
-                     ELSEIF lBlankline
+                     ELSEIF !lBlankline
+                                oRtf:WriteParText(  ALLTRIM(cBuffer) +" " )
+                     ELSE 
                         //ortf:endpar()
                         ortf:writepar('') //:endpar()
-                     ELSE
-                            if lWasLine
-                                oRtf:WritePar(cBuffer+" ")
-                                lWasLine:=.F.
-                             ELSE
-                                oRtf:WriteParText(  ALLTRIM(cBuffer) +" " )
-                             ENDIF
+
                      ENDIF 
                   ELSEIF nMode = D_DATALINK
                      IF LEN( cBuffer ) > LONGLINE
@@ -619,9 +608,6 @@ FUNCTION ProcessRtf()
                      cTemp:=Substr(cBuffer,1,AT(":",cBuffer)-1)
                      cBuffer:=Substr(cBuffer,AT(":",cBuffer)+1)
                      oRtf:WriteJumpLink(Left(cfilename,At('.',cFilename)-1)+alltrim(cTemp),cTemp,cBuffer)
-
-
-
                   ELSEIF nMode = D_METHODLINK
                      IF LEN( cBuffer ) > LONGLINE
                         write_error( "General", cBuffer, nLineCnt, ;
@@ -656,7 +642,7 @@ FUNCTION ProcessRtf()
                         oRtf:WritePar( "" ) //:endpar()
                         lAddBlank := .F.
                      ENDIF
-                     oRtf:WritePar(  cBuffer  ) //:endpar()
+                     oRtf:WriteParNoIndent(  cBuffer  ) //:endpar()
 
                   ELSEIF nMode = D_SEEALSO
                      IF .NOT. EMPTY( cBuffer )
@@ -701,6 +687,7 @@ FUNCTION ProcessRtf()
       FT_FUSE()
    NEXT
                     ortf:close()
+                    fclose(myh)
 RETURN NIL
 
 FUNCTION ProcRtfAlso( nWriteHandle, cSeeAlso )
@@ -788,10 +775,13 @@ func filesize(cfile)
 return nretval
 */
 FUNCTION  ProcRtfDesc(cBuffer,lBlankLine,oRtf,lPar)
-          IF   StrPos(cBuffer)=12
-              cBuffer:=Substr(cBuffer,6)
-              oRtf:WriteParNoIndent(cBuffer+" ")
+          cBuffer:=StrTran(cBuffer,"\","\\")
+          IF   StrPos(cBuffer)=8
+              lIsTable:=.T.
+              ProcRtfTable(cBuffer)
               lPar:=.f.
+          ELSEIF !lIsTable .and. len(aTable)>0
+              GenRtfTable(oRtf)
           ELSEIF lPar
               oRtf:WritePar(cBuffer+" ")
               lPar:=.F.
@@ -799,48 +789,70 @@ FUNCTION  ProcRtfDesc(cBuffer,lBlankLine,oRtf,lPar)
               lPar:=.T.
               oRtf:WritePar(cBuffer+" ")
           ELSEIF lBlankLine
+              lIsTable:=.F.
               oRtf:WritePar("")
               lPar:=.T.
-          ELSE    
+          ELSE              
               oRtf:WriteParText(" "+alltrim(cBuffer))
           ENDIF
 
 RETURN lPar
 
-/*                      if !lBlankLine
-                        if lPar
-                           if at("==",cBuffer)>0 .or. at("--",cBuffer)>0 .or. at("*",cBuffer)>0
-                                if at("*",cBuffer)>0
-                                  cbuffer:=Strtran(cBuffer,"*","")
-                                 endif
-                                oRtf:WritePar(cBuffer+" ")
-                              lPar:=.t.
-                           else
-                               oRtf:WritePar(cBuffer+" ")
-                               lPar:=.f.
-                          endif
-                        else
-                           if at("==",cBuffer)>0 .or. at("--",cBuffer)>0 
-                                oRtf:WritePar(cBuffer+" ")
-                            
-                            else
-                              oRtf:WriteParText(" "+alltrim(cBuffer))
-                              endif
-                        endif
-                      Endif
-                      if lBlankline
-                         oRtf:WritePar("")
-                         lPar:=.T.
-                      endif
-
-*/
 FUNCTION StrPos(cBuffer)
 LOCAL nPos,x,cChar
       FOR x:=1 to LEN(cBuffer)
           cChar:=SubStr(cBuffer,x,1)
-          if cChar>=chr(64) .and. cChar <=Chr(90) .or. cChar>=chr(97) .and. cChar <=Chr(122) .or. cChar>=Chr(48)  .and. cChar <=chr(57)
+          if cChar>=chr(64) .and. cChar <=Chr(90) .or. cChar>=chr(97) ;
+          .and. cChar <=Chr(122) .or. cChar>=Chr(48)  .and. cChar <=chr(57) ;
+          .or. cChar==chr(60) .or. cchar==CHR(ASC("-")) ;
+          .or. cchar==CHR(ASC("(")) .or. cchar=chr(asc("|")) .or. ;
+          cchar==chr(asc('.')) .or. cchar==chr(asc('*')) .or. ;
+          cchar==chr(asc('#')) .or. cchar==chr(asc('"')) .or. ;
+          cchar==chr(asc('/')) .or. cchar==chr(asc("@")) ;
+          .or. cchar==chr(asc("="))
              nPos=x
              Exit
           ENDIF
       NEXT
 return nPos
+
+Function ProcRtfTable(cBuffer)
+
+Local nPos,cItem,cItem2,cItem3
+
+      cItem:=SubStr(cBuffer,1,22)
+      fwrite(myh,citem+hb_osnewline())
+      cBuffer:=StrTran(cBuffer,cItem,Space(len(cItem)))
+      nPos:=STRPos(cBuffer)
+      IF nPos=23
+          cItem2:=SubStr(cBuffer,nPos)
+      Endif
+        fwrite(myh,citem2+hb_osnewline())
+      AADD(aTable,{ltrim(cItem),cItem2})
+Return Nil          
+
+Function GenRtfTable(oRtf)
+
+LOCAL y,nLen2,x,nMax,nSpace
+LOCAL aLensFItem:={}
+LOCAL aLensSItem:={}
+  FOR X:=1 to LEN(aTable)
+     AADD(aLensFItem,Len(aTable[x,1]))
+  NEXT
+  FOR X:=1 to LEN(aTable)
+     AADD(aLensSItem,Len(aTable[x,2]))
+  NEXT
+  ASORT(aLensFItem,,,{|x,y| x < y})
+  ASORT(aLensSItem,,,{|x,y| x > y})
+    nMax:=aLensSItem[1]+1
+oRtf:WriteParBox("       6"+REPL("4",aLensFitem[1]+1)+"="+REPL("4",nMax)+"7")
+FOR x:=1 to len(aTable)
+    nSpace:=nMax-Len(atable[x,2])-1
+    oRtf:WriteParText( "\par"+HB_OSNEWLINE()+"\pard\f14\fs20"+"       5"+" \cf1\f8\fs20\b0\i0 "+ aTable[x,1]+"\f14\fs20 " + "5 "+"\cf1\f8\fs20\b0\i0 "+ aTable[x,2] +space(nspace)+"\f14\fs20 5" +HB_OSNEWLINE(),.F.)
+Next
+oRtf:WriteParBox("       9"+REPL("4",aLensFitem[1]+1)+";"+REPL("4",nMax)+"8")
+oRtf:WritePar("")
+aTable:={}
+lIsTable:=.T.
+Return Nil
+

@@ -42,12 +42,10 @@
  *      ? __objHasData( oB, "nLeft" )      // this should return .T.
  *      ? __objHasData( oB, "lBugFree" )   // hopefully this should be .F.
  *      ? __objHasData( oB, "Left" )       // .F. since this is a METHOD
- *  $TESTS$
  *  $STATUS$
+ *      R
  *  $COMPLIANCE$
  *      __objHasData() is a Harbour extension.
- *  $PLATFORMS$
- *  $FILES$
  *  $SEEALSO$
  *      __ObjGetMethodList(),__objGetMsgList(),__objHasMethod()
  *  $END$
@@ -77,12 +75,10 @@
  *      ? __objHasMethod( oB, "nLeft" )      // .F. since this is a DATA
  *      ? __objHasMethod( oB, "FixBugs" )    // hopefully this should be .F.
  *      ? __objHasMethod( oB, "Left" )       // this should return .T.
- *  $TESTS$
  *  $STATUS$
+ *      R
  *  $COMPLIANCE$
  *      __objHasMethod() is a Harbour extension.
- *  $PLATFORMS$
- *  $FILES$
  *  $SEEALSO$
  *      __ObjGetMethodList(),__objGetMsgList(),__objHasData()
  *  $END$
@@ -124,12 +120,10 @@
  *      FOR i = 1 to len ( aMethod )
  *          ? "METHOD name:", aMethod[ i ]
  *      NEXT
- *  $TESTS$
  *  $STATUS$
+ *      R
  *  $COMPLIANCE$
  *      __objGetMsgList() is a Harbour extension.
- *  $PLATFORMS$
- *  $FILES$
  *  $SEEALSO$
  *      __ObjGetMethodList(),__ObjGetValueList(),__objHasData(),__objHasMethod()
  *  $END$
@@ -161,12 +155,10 @@
  *      FOR i = 1 to len ( aMethod )
  *          ? "METHOD name:", aMethod[ i ]
  *      NEXT
- *  $TESTS$
  *  $STATUS$
+ *      R
  *  $COMPLIANCE$
  *      __objGetMethodList() is a Harbour extension.
- *  $PLATFORMS$
- *  $FILES$
  *  $SEEALSO$
  *      __objGetMsgList(),__ObjGetValueList(),__objHasData(),__objHasMethod()
  *  $END$
@@ -204,11 +196,10 @@
  *          ? "DATA name:", aData[ i, HB_OO_DATA_SYMBOL ], ;
  *            "    value=", aData[ i, HB_OO_DATA_VALUE  ]
  *      NEXT
- *  $TESTS$
  *  $STATUS$
+ *      R
  *  $COMPLIANCE$
  *      __objGetValueList() is a Harbour extension.
- *  $PLATFORMS$
  *  $FILES$
  *      Header file is hboo.ch
  *  $SEEALSO$
@@ -255,11 +246,10 @@
  *      ? oB:nLeft     // 10
  *      ? oB:nBottom   // 20
  *      ? oB:nRight    // 70
- *  $TESTS$
  *  $STATUS$
+ *      R
  *  $COMPLIANCE$
  *      __ObjSetValueList() is a Harbour extension.
- *  $PLATFORMS$
  *  $FILES$
  *      Header file is hboo.ch
  *  $SEEALSO$
@@ -310,12 +300,10 @@
  *              cSmile := "*SMILE*"
  *      ENDCASE
  *      RETURN cSmile
- *  $TESTS$
  *  $STATUS$
+ *      R 
  *  $COMPLIANCE$
  *      __objAddMethod() is a Harbour extension.
- *  $PLATFORMS$
- *  $FILES$
  *  $SEEALSO$
  *      __objAddInline(),__objAddData(),__objDelMethod(),__ObjGetMethodList(),__objGetMsgList(),__objHasMethod(),__objModMethod()
  *  $END$
@@ -350,12 +338,10 @@
  *      ? oHappy:Smile( 1 )       // :)
  *      ? oHappy:Smile( 2 )       // ;)
  *      ? oHappy:Smile( 3 )       // *SMILE*
- *  $TESTS$
  *  $STATUS$
+ *      R
  *  $COMPLIANCE$
  *      __objAddInline() is a Harbour extension.
- *  $PLATFORMS$
- *  $FILES$
  *  $SEEALSO$
  *      __objAddData(),__objAddMethod(),__objDelInline(),__ObjGetMethodList(),__objGetMsgList(),__objHasMethod() ,__objModInline()
  *  $END$
@@ -390,12 +376,10 @@
  *      ELSE
  *         ? ":(..."
  *      ENDIF
- *  $TESTS$
  *  $STATUS$
+ *      R
  *  $COMPLIANCE$
  *      __objAddData() is a Harbour extension.
- *  $PLATFORMS$
- *  $FILES$
  *  $SEEALSO$
  *      __objAddInline(),__objAddMethod(),__objDelData(),__objGetMsgList(),__ObjGetValueList(),__objHasData(),__ObjSetValueList()
  *  $END$
@@ -457,12 +441,10 @@
  *              cSmile := "*WINK*"
  *      ENDCASE
  *      RETURN cSmile
- *  $TESTS$
  *  $STATUS$
+ *      R
  *  $COMPLIANCE$
  *      __objModMethod() is a Harbour extension.
- *  $PLATFORMS$
- *  $FILES$
  *  $SEEALSO$
  *      __objAddMethod(),__objDelMethod(),__ObjGetMethodList(),__objGetMsgList(),__objHasMethod()
  *  $END$
@@ -503,12 +485,10 @@
  *      __objModInline( oHappy, "Smile", bYourInline )
  *      ? oHappy:Smile( 1 )       // *SMILE*
  *      ? oHappy:Smile( 2 )       // *WINK*
- *  $TESTS$
  *  $STATUS$
+ *      R
  *  $COMPLIANCE$
  *      __objModInline() is a Harbour extension.
- *  $PLATFORMS$
- *  $FILES$
  *  $SEEALSO$
  *      __objAddInline(),__objDelInline(),__ObjGetMethodList(),__objGetMsgList(),__objHasMethod()
  *  $END$
@@ -555,12 +535,10 @@
  *              cSmile := ";)"
  *      ENDCASE
  *      RETURN cSmile
- *  $TESTS$
  *  $STATUS$
+ *      R
  *  $COMPLIANCE$
  *      __objDelMethod() is a Harbour extension.
- *  $PLATFORMS$
- *  $FILES$
  *  $SEEALSO$
  *      __objAddInline(),__objAddMethod(),__ObjGetMethodList(),__objGetMsgList(),__objHasMethod(),__objModInline(),__objModMethod()
  *  $END$
@@ -605,12 +583,10 @@
  *              cSmile := ";)"
  *      ENDCASE
  *      RETURN cSmile
- *  $TESTS$
  *  $STATUS$
+ *      R
  *  $COMPLIANCE$
  *      __objDelMethod() is a Harbour extension.
- *  $PLATFORMS$
- *  $FILES$
  *  $SEEALSO$
  *      __objAddInline(),__objAddMethod(),__ObjGetMethodList(),__objGetMsgList(),__objHasMethod(),__objModInline(),__objModMethod()
  *  $END$
@@ -644,12 +620,10 @@
  *      // remove lHappy DATA
  *      __objDelData( oHappy, "lHappy" )
  *      ? __objHasData( oHappy, "lHappy" )    // .F.
- *  $TESTS$
  *  $STATUS$
+ *      R
  *  $COMPLIANCE$
  *      __objDelData() is a Harbour extension.
- *  $PLATFORMS$
- *  $FILES$
  *  $SEEALSO$
  *    __objAddData(),__objGetMsgList(),__ObjGetValueList(),__objHasData(),__ObjSetValueList()
  *  $END$

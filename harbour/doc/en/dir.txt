@@ -53,8 +53,8 @@
  *
  *      // list all files in the public section on a Unix like machine
  *      __Dir( "/pub" )
- *  $TESTS$
  *  $STATUS$
+ *      R
  *  $COMPLIANCE$
  *      DBF information: CA-Clipper display 8.3 file names, Harbour display
  *      the first 15 characters of a long file name if available.
@@ -76,15 +76,12 @@
  *  $ONELINER$
  *      Display listings of files
  *  $SYNTAX$
- *
  *      DIR [<cFileMask>]
  *  $ARGUMENTS$
  *      <cFileMask> File mask to include in the function return. It could
  *      contain path and standard wildcard characters as supported by your
  *      OS (like * and ?). If <cFileMask> contain no path, then SET DEFAULT
  *      path is used to display files in the mask.
- *  $RETURNS$
- *
  *  $DESCRIPTION$
  *      If no <cFileMask> is given, __Dir() display information about all
  *      *.dbf in the SET DEFAULT path, this information contain: file name,
@@ -109,8 +106,8 @@
  *
  *      // list all files in the public section on a Unix like machine
  *        Dir  "/pub"
- *  $TESTS$
  *  $STATUS$
+ *      R
  *  $COMPLIANCE$
  *      DBF information: CA-Clipper display 8.3 file names, Harbour display
  *      the first 15 characters of a long file name if available.
@@ -189,13 +186,11 @@
  *      ELSE
  *         ? "This directory is clean from smut"
  *      ENDIF
- *  $TESTS$
  *  $STATUS$
  *     R
  *  $COMPLIANCE$
  *      <aName> is going to be fill with long file name and not necessarily
  *      the 8.3 uppercase name.
- *
  *  $SEEALSO$
  *      ARRAY(),DIRECTORY(),SET DEFAULT
  *  $END$

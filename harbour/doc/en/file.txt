@@ -41,21 +41,21 @@
  *      value of <nMode> represents the status of the file to be opened;
  *      the default value is 0. The DOS file open modes are as the follows:
  *
- *           0          Read only
- *           1          Write only
- *           2          Read/write
- *           16         Exclusive read only
- *           17         Exclusive write only
- *           18         Exclusive read/write only
- *           32         Prevent others from writing
- *           33         Prevent others from reading
- *           34         Prevent read/write only
- *           48         Deny read only
- *           49         Deny write only
- *           50         Deny read/Write
- *           64         Share read only
- *           65         Share write only
- *           66         Share read/write
+ *       0              Read only
+ *       1              Write only
+ *       2              Read/write
+ *       16             Exclusive read only
+ *       17             Exclusive write only
+ *       18             Exclusive read/write only
+ *       32             Prevent others from writing
+ *       33             Prevent others from reading
+ *       34             Prevent read/write only
+ *       48             Deny read only
+ *       49             Deny write only
+ *       50             Deny read/Write
+ *       64             Share read only
+ *       65             Share write only
+ *       66             Share read/write
  *
  *      If there is an error in opening a file, a -1 will be returned by
  *      the function.Files handles may be in the range of 0 to 65535. The
@@ -68,15 +68,12 @@
  *      IF (nH:=FOPEN('X.TXT',66)<0
  *         ? 'File cann't be open'
  *      ENDIF
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      This function is CA-Clipper compliant
  *  $SEEALSO$
  *      FCREATE(),FERROR(),FCLOSE()
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -109,15 +106,13 @@
  *      and their related meaning to the file <cFile> being created by
  *      this Function.
  *
- *      Value of <nAttribute>       File Attribute
- *
- *           0                       Normal/Default,Read/Write
- *           1                       Read-only,Attemptinf to open for
- *                                   output returns an error
- *           2                       Hidden,Excluded from normal DIR
- *                                   search
- *           4                       Create,Excluded from normal DIR
- *                                   search
+ *       <nAttribute>   File Attribute
+ *       0              Normal/Default,Read/Write
+ *       1              Read-only,Attempting to open for
+ *       |              output returns an error
+ *       2              Hidden,Excluded from normal DIR search                                  
+ *       4              Create,Excluded from normal DIR search
+ *                                 
  *  $EXAMPLES$
  *      IF (nh:=FCREATE("TEST.TXT") <0
  *          ? "Can not create file"
@@ -128,8 +123,6 @@
  *      This function is CA-Clipper compliant
  *  $SEEALSO$
  *      FCLOSE(),FOPEN(),FWRITE(),FREAD(),FERROR()
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -175,7 +168,6 @@
  *         ? cbuffer
  *      ENDIF
  *      FCLOSE(nH)
- *  $TESTS$
  *  $STATUS$
  *     R
  *  $COMPLIANCE$
@@ -183,7 +175,6 @@
  *     strings greather the 65K depending of platform.
  *  $SEEALSO$
  *     BIN2I(),BIN2L(),BIN2W(),FERROR(),FWRITE()
- *  $INCLUDE$
  *  $END$
  */
 
@@ -223,7 +214,6 @@
  *        FWRITE(nHandle,STR(x))
  *      NEXT
  *      FCLOSE(nHandle)
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -231,8 +221,6 @@
  *      it can writes strings greather the 64K
  *  $SEEALSO$
  *      FCLOSE(),FCREATE(),FERROR(),FOPEN(),I2BIN(),L2BIN()
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -245,8 +233,6 @@
  *      Reports the error status of low-level file functions
  *  $SYNTAX$
  *      FERROR() --> <nErrorCode>
- *  $ARGUMENTS$
- *
  *  $RETURNS$
  *      <nErrorCode> Value of the DOS error last encountered by a
  *      low-level file function.
@@ -289,8 +275,6 @@
  *     This function is CA-Clipper compatible
  *  $SEEALSO$
  *     FCLOSE(),FERASE(),FOPEN(),FWRITE()
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -322,8 +306,6 @@
  *     This function is CA-Clipper compliant
  *  $SEEALSO$
  *     FOPEN(),FCREATE(),FREAD(),FWRITE(),FERROR()
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -366,8 +348,6 @@
  *     This function is CA-Clipper Compatible
  *  $SEEALSO$
  *     FERROR(),FRENAME()
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -410,15 +390,12 @@
  *      IF nResult <0
  *         ? "File could not be renamed."
  *      ENDIF
- *  $TESTS$
  *  $STATUS$
  *     R
  *  $COMPLIANCE$
  *     This function is CA-Clipper compliant
  *  $SEEALSO$
  *     ERASE,FERASE(),FERROR(),FILE(),RENAME
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -451,11 +428,10 @@
  *      The value of <nOrigin> designates the starting point from which the
  *      file pointer should he moved, as shown in the following table:
  *
- *      <nOrigin> File position
- *
- *        0     Beginning of file
- *        1     Current file pointer position
- *        2     End of file
+ *       <nOrigin>      File position
+ *       0              Beginning of file
+ *       1              Current file pointer position
+ *       2              End of file
  *
  *      If a value is not provided for <nOrigin>, it defaults to 0 and
  *      moves the file pointer from the beginning of the file.
@@ -480,7 +456,6 @@
  *        FSEEK( nH, nSavePos + nEol + 1, FS_SET )
  *      ENDIF
  *      RETURN nNumRead != 0
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -524,8 +499,6 @@
  *      This function is CA-Clipper compatible.
  *  $SEEALSO$
  *      SET PATH,SET DEFAULT,SET()
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -565,7 +538,6 @@
  *         ? cStr
  *      ENDIF
  *      FCLOSE(nH)
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -573,8 +545,6 @@
  *      strings greather the 65K depending of platform.
  *  $SEEALSO$
  *      BIN2I(),BIN2L(),BIN2W(),FERROR(),FREAD(),FSEEK()
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -592,7 +562,6 @@
  *  $ARGUMENTS$
  *      <cOldFile> Old filename
  *      <cNewFile> New Filename
- *  $RETURNS$
  *  $DESCRIPTION$
  *      This command changes the name of <cOldFile> to <cNewFile>.Both
  *      <cOldFile> and <cNewFile> must include a file extension.This command
@@ -603,16 +572,12 @@
  *      command will not perform the desired operation.
  *  $EXAMPLES$
  *      RENAME c:\autoexec.bat to c:\autoexec.old
- *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      This command is CA-Clipper compatible
  *  $SEEALSO$
  *      CURDIR(),ERASE,FILE(),FERASE(),FRENAME()
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -627,7 +592,6 @@
  *      ERASE <xcFile>
  *  $ARGUMENTS$
  *      <xcFile> Name of file to remove
- *  $RETURNS$
  *  $DESCRIPTION$
  *      This command removes a file from the disk.The use of a drive,directo-
  *      ry,and wild-card skeleton operator is allowed for the root of the
@@ -638,16 +602,12 @@
  *  $EXAMPLES$
  *      Erase c:\autoexec.bat
  *      Erase c:/temp/read.txt
- *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      This command is CA-Clipper compatible
  *  $SEEALSO$
  *      CURDIR(),FILE(),FERASE(),DELETE FILE
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -662,7 +622,6 @@
  *      DELETE FILE <xcFile>
  *  $ARGUMENTS$
  *      <xcFile> Name of file to remove
- *  $RETURNS$
  *  $DESCRIPTION$
  *      This command removes a file from the disk.The use of a drive,directo-
  *      ry,and wild-card skeleton operator is allowed for the root of the
@@ -673,16 +632,12 @@
  *  $EXAMPLES$
  *      Erase c:\autoexec.bat
  *      Erase c:/temp/read.txt
- *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      This command is CA-Clipper compatible
  *  $SEEALSO$
  *      CURDIR(),FILE(),FERASE(),ERASE
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -732,13 +687,10 @@
  *      SET CONSOLE OFF
  *      __TYPEFILE( "MyText.DAT", .T. )
  *      SET CONSOLE ON
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      __TYPEFILE() works exactly like CA-Clipper's __TYPEFILE()
- *  $PLATFORMS$
- *  $FILES$
  *  $SEEALSO$
  *      COPY FILE,SET DEFAULT,SET PATH,SET PRINTER,TYPE
  *  $END$
@@ -766,7 +718,6 @@
  *      extension is given (.txt) is added to the output file name.
  *      <xcDestFile> can be specified as literal file name or as a character
  *      expression enclosed in parentheses.
- *  $RETURNS$
  *  $DESCRIPTION$
  *      TYPE command type the content of a text file on the screen
  *      with an option to send this information also to the printer or to
@@ -799,13 +750,10 @@
  *
  *      // display MyText.DAT file on screen and into a file MyReport.txt
  *      TYPE MyText.DAT TO FILE MyReport
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      TYPE works exactly like CA-Clipper's TYPE
- *  $PLATFORMS$
- *  $FILES$
  *  $SEEALSO$
  *      COPY FILE,SET DEFAULT,SET PATH,SET PRINTER,__TYPEFILE()
  *  $END$
@@ -835,15 +783,12 @@
  *      byte.
  *  $EXAMPLES$
  *      ? Curdir()
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      This function is Ca-Clipper Compatible
  *  $PLATFORMS$
  *      ALL
- *  $FILES$
- *
  *  $SEEALSO$
  *      FILE()
  *  $END$

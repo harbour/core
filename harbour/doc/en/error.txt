@@ -30,8 +30,6 @@
  *      ERRORSYS() is called upon startup by Harbour and install the default
  *      error handler. Normally you should not call this function directly,
  *      instead use ERRORBLOCK() to install your own error handler.
- *  $EXAMPLES$
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$

@@ -816,6 +816,9 @@ FUNCTION ProcessWww()
                      IF lAddBlank
                         lAddBlank := .F.
                      ENDIF
+                     IF   StrPos(cBuffer)=12
+                        cBuffer:=Substr(cBuffer,5)
+                     ENDIF
                      IF AT("<",Alltrim(cBuffer))> 0
                         nPos := AT("<",ALLTRIM(cBuffer))
                         IF nPos <= 3 
@@ -844,6 +847,10 @@ FUNCTION ProcessWww()
                      IF lAddBlank
                         lAddBlank := .F.
                      ENDIF
+                     IF   StrPos(cBuffer)=12
+                        cBuffer:=Substr(cBuffer,5)
+                     ENDIF
+
                      ohtm:WriteText(Alltrim(StripNgControls( cBuffer )))
 
                   ELSEIF nMode = D_DATALINK

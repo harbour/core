@@ -241,9 +241,8 @@
  *      GetList that is going to be used by the Get system, It activate the
  *      default error handler, and (at least for the moment) call the
  *      function that set the default help key.
- *  $EXAMPLES$
- *  $TESTS$
  *  $STATUS$
+ *      R
  *  $COMPLIANCE$
  *      It is said that CLIPINIT() should not call that function that set
  *      the default help key since CA-Clipper do it in some other place.
@@ -270,13 +269,10 @@
  *  $DESCRIPTION$
  *      Set F1 to execute a function called HELP if such a function is
  *      linked into the program.
- *  $EXAMPLES$
- *  $TESTS$
  *  $STATUS$
+ *      R
  *  $COMPLIANCE$
  *      __SetHelpK() works exactly like CA-Clipper's __SetHelpK()
- *  $PLATFORMS$
- *  $FILES$
  *  $SEEALSO$
  *      __XHelp(),SET KEY,SETKEY()
  *  $END$
@@ -301,7 +297,6 @@
  *      BEGIN SEQUENCE block.
  *  $EXAMPLES$
  *      Break( NIL )
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -313,72 +308,59 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *    DO()
+ *      DO()
  *  $CATEGORY$
- *    Utility
+ *      Utility
  *  $ONELINER$
- *    Calls a procedure or a function
+ *      Calls a procedure or a function
  *  $SYNTAX$
- *    DO( <xFuncProc> [, <xArguments...>] )
+ *      DO( <xFuncProc> [, <xArguments...>] )
  *  $ARGUMENTS$
- *    <xFuncProc> = Either a string with a function/procedure name to be called
- *          or a codeblock to evaluate
- *    <xArguments> = arguments passed to a called function/procedure or to
- *          a codeblock
+ *      <xFuncProc> = Either a string with a function/procedure name to be called
+ *      or a codeblock to evaluate
+ *      <xArguments> = arguments passed to a called function/procedure or to
+ *      a codeblock
  *  $RETURNS$
- *    A value that was returned from called function
+ *      A value that was returned from called function
  *  $DESCRIPTION$
- *    This function can be called either by the harbour compiler or by user.
- *    The compiler always passes the item of IT_SYMBOL type that stores the
- *    name of procedure specified in DO <proc> WITH ... statement.
- *       If called procedure/function doesn't exist then the runtime error
- *    is generated.
- *       This function can be used as replacement of macro operator.
- *    It is also used internally to implement DO <proc> WITH <args...>
- *    In this case <xFuncProc> is of type HB_SYMB
+ *      This function can be called either by the harbour compiler or by user.
+ *      The compiler always passes the item of IT_SYMBOL type that stores the
+ *      name of procedure specified in DO <proc> WITH ... statement.
+ *      If called procedure/function doesn't exist then the runtime error
+ *      is generated.
+ *      This function can be used as replacement of macro operator.
+ *      It is also used internally to implement DO <proc> WITH <args...>
+ *      In this case <xFuncProc> is of type HB_SYMB
  *  $EXAMPLES$
- *       cbCode ={|x| MyFunc( x )}
- *       DO( cbCode, 1 )
+ *      cbCode ={|x| MyFunc( x )}
+ *      DO( cbCode, 1 )
  *
- *       cFunction := "MyFunc"
- *       xRetVal :=DO( cFunction, 2 )
+ *      cFunction := "MyFunc"
+ *      xRetVal :=DO( cFunction, 2 )
  *
- *       Old style (slower):
- *          DO &cFunction WITH 3
- *
- *  $TESTS$
- *
- *  $STATUS$
- *
- *  $COMPLIANCE$
- *
- *  $SEEALSO$
+ *      Old style (slower):
+ *      DO &cFunction WITH 3
  *
  *  $END$
  */
 
 /*  $DOC$
  *  $FUNCNAME$
- *    __VMVARLGET()
+ *      __VMVARLGET()
  *  $CATEGORY$
- *    Variable management
+ *      Variable management
  *  $ONELINER$
+ *      Retrive a local variable from a procedure level
  *  $SYNTAX$
- *    __VMVARLGET( <nProcLevel>, <nLocal> )
+ *      __VMVARLGET( <nProcLevel>, <nLocal> )
  *  $ARGUMENTS$
- *    <nProcLevel> Is the procedure level, same as used in ProcName()
- *    and ProcLine(), from which a local variable containts is going to
- *    be retrieved.
- *    <nLocal> Is the index of the local variable to retrieve.
+ *      <nProcLevel> Is the procedure level, same as used in ProcName()
+ *      and ProcLine(), from which a local variable containts is going to
+ *      be retrieved.
+ *      <nLocal> Is the index of the local variable to retrieve.
  *  $RETURNS$
- *    The containts of a specific local variable
+ *      The containts of a specific local variable
  *  $DESCRIPTION$
- *    This function is used from the debugger
- *  $STATUS$
- *
- *  $COMPLIANCE$
- *
- *  $SEEALSO$
- *
+ *      This function is used from the debugger
  *  $END$
  */

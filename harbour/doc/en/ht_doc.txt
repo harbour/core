@@ -52,16 +52,12 @@
  *      oHtm:Close()
  *      RETURN Nil
  *
- *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      This is a new Harbour Tools class
  *  $PLATFORMS$
  *      ALL
- *  $FILES$
- *
  *  $SEEALSO$
  *      TCLASS()
  *  $END$
@@ -106,8 +102,6 @@
  *      oNg:WritePar( "See the Links Above" )
  *      oNg:Close()
  *      RETURN Nil
- *
- *  $TESTS$
  *
  *  $STATUS$
  *      R
@@ -159,14 +153,12 @@
  *      oNg:WritePar( "See the Links Above" )
  *      oNg:Close()
  *      RETURN Nil
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      This is a new Harbour Tools class
  *  $PLATFORMS$
  *      ALL
- *  $FILES$
  *  $SEEALSO$
  *      TTroff(),TRtf(),THtml(),TOs2()
  *  $END$
@@ -213,16 +205,12 @@
  *      oRtf:Close()
  *      RETURN Nil
  *
- *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      This is a new Harbour Tools class
  *  $PLATFORMS$
  *      ALL
- *  $FILES$
- *
  *  $SEEALSO$
  *      TNortonGuide()
  *  $END$
@@ -267,16 +255,12 @@
  *
  *      RETURN Nil
  *
- *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      This is a new Harbour Tools class
  *  $PLATFORMS$
  *      ALL
- *  $FILES$
- *
  *  $SEEALSO$
  *      TNortonGuide()
  *  $END$

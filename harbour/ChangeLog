@@ -1,3 +1,34 @@
+20000307-14:20 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
+  *utils/hbdoc/genrtf.prg
+  source/tools/rtf.prg
+      *small changes
+  *utils/hbdoc/genng.prg
+  *source/tools/ng.prg
+    *Added code to display tables
+  *source/tools/os2.prg
+  *utils/hbdoc/genos2.prg
+    *Fixed generating of IPF file, thanks to a compilatation log send by Chen
+  *source/rtl/dir.c
+    *fixed warning on chmod on borland compilers
+  *doc/en/array.txt
+   doc/en/Browse.txt
+   doc/en/dir.txt
+   doc/en/error.txt
+   doc/en/file.txt
+   doc/en/ht_dbf.txt
+   doc/en/ht_doc.txt
+   doc/en/ht_gt.txt
+   doc/en/ht_str.txt
+   doc/en/hvm.txt
+   doc/en/imput.txt
+   doc/en/menu.txt
+   doc/en/misc.txt
+   doc/en/objfunc.txt
+   doc/en/rdd.txt
+      *Some formating. Their was many docs that the text starts on line 8 or 7
+      !removed empty tag from the docs
+
+
 20000307-17:34 GMT+1 Victor Szakats <info@szelvesz.hu>
    ; Now the non-GNU make process reorganization can be considered done.
    * make_b16.bat

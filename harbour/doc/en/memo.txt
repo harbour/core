@@ -30,7 +30,7 @@
  *      <cSoft> is the character to replace soft carriages with. If not
  *      specified defaults to single space.
  *  $RETURNS$
- *      Trasformed string.
+ *      <cConvertedString> Trasformed string.
  *  $DESCRIPTION$
  *      Returns a string/memo with carriage chars converted to specified
  *      chars.
@@ -51,31 +51,31 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *     HARDCR()
+ *      HARDCR()
  *  $CATEGORY$
- *     STRINGS
+ *      STRINGS
  *  $ONELINER$
- *     Globaly replace all soft cariages returns with hard cariages returs
+ *      Replace all soft cariages returns with hard cariages returs
  *  $SYNTAX$
- *     HARDCR( <cString> ) --> <cConvertedString>
+ *      HARDCR( <cString> ) --> <cConvertedString>
  *  $ARGUMENTS$
- *     <cString> is a string of chars to convert.
+ *      <cString> is a string of chars to convert.
  *  $RETURNS$
- *     Trasformed string.
+ *      <cConvertedString> Trasformed string.
  *  $DESCRIPTION$
- *     Returns a string/memo with soft carriages chars converted to
- *     hard carraige char.
+ *      Returns a string/memo with soft carriages chars converted to
+ *      hard carraige char.
  *  $EXAMPLES$
- *     ? HARDCR( Data->CNOTES )
+ *      ? HARDCR( Data->CNOTES )
  *  $TESTS$
- *     @ 1, 1 SAY HARDCR( Data->CNOTES )
- *     will display converted string starting on row two, column two of the
- *     current device.
+ *      @ 1, 1 SAY HARDCR( Data->CNOTES )
+ *      will display converted string starting on row two, column two of the
+ *      current device.
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
- *     HARDCR() is fully CA-Clipper compliant.
+ *      HARDCR() is fully CA-Clipper compliant.
  *  $SEEALSO$
- *     MEMOTRAN(),STRTRAN()
+ *      MEMOTRAN(),STRTRAN()
  *  $END$
  */

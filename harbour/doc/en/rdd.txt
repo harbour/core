@@ -32,7 +32,7 @@
  *  $RETURNS$
  *      <nFields> Number od fields in a database or work area
  *  $DESCRIPTION$
- *        This function will fill a series of arrays with field
+ *      This function will fill a series of arrays with field
  *      names,field types,field lenghts, and number of field
  *      decimal positions for the currently selected or designed
  *      database. Each array parallels the different descriptors
@@ -55,7 +55,6 @@
  *         ? "Number of fields", nFields
  *
  *         RETURN NIL
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -91,7 +90,6 @@
  *      qOut(Alias(1))
  *
  *      RETURN NIL
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -120,7 +118,7 @@
  *      <nRecord> Record number to work on exactly
  *      <lRest> Toggle to rewind record pointer
  *  $RETURNS$
- *      NIL
+ *      DBEVAL() always returns NIL
  *  $DESCRIPTION$
  *        Performs a code block operation on the current DATA BASE
  *  $EXAMPLES$
@@ -137,7 +135,6 @@
  *         ? RecNo(), nCount
  *
  *         RETURN NIL
- *  $TESTS$
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
@@ -155,8 +152,6 @@
  *      Alias name of a work area
  *  $SYNTAX$
  *      Dbf() --> <cWorkArea>
- *  $ARGUMENTS$
- *
  *  $RETURNS$
  *      <cWorkArea> Name of alias
  *  $DESCRIPTION$
@@ -173,7 +168,6 @@
  *         qOut(Alias(1))
  *
  *         RETURN NIL
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -191,10 +185,8 @@
  *      Test for the beggining-of-file condition
  *  $SYNTAX$
  *      BOF() --> <lBegin>
- *  $ARGUMENTS$
- *
  *  $RETURNS$
- *      Logical true (.T.) or false (.F.)
+ *      BOF() Logical true (.T.) or false (.F.)
  *  $DESCRIPTION$
  *      This function determines if the beggining of the file marker has been
  *      reached. If so, the function will return a logical true (.T.); otherwise,
@@ -210,7 +202,6 @@
  *        ? "Is Eof()",EOF()
  *        USE
  *     RETURN NIL
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -232,8 +223,9 @@
  *  $ARGUMENTS$
  *      <lLock> Toggle to release record locks
  *  $RETURNS$
+ *      DbAppend() always returns NIL
  *  $DESCRIPTION$
- *        This function add a new record to the end of the database
+ *     This function add a new record to the end of the database
  *     in the selected or aliased work area. All fields in that
  *     database will be given empty data values - character fields
  *     will be filled with blank spaces,date fields with CTOD('//'),
@@ -241,13 +233,13 @@
  *     with NULL bytes.The header of the database is not updated until
  *     the record is flushed from the buffer and the contents are
  *     written to the disk.
- *        Under a networking enviroment, DBAPPEND() performs an addi-
+ *     Under a networking enviroment, DBAPPEND() performs an addi-
  *     tional operation: It attrmps to lock the newly added record. If
  *     the database file is currently locked or if a locking assignment
  *     if made to LASTREC()+1,NETERR() will return a logical true (.T.)
  *     immediately after the DBAPPEND() function. This function does
  *     not unlock the locked records.
- *        If <lLock> is passed a logical true (.T.) value, it will
+ *     If <lLock> is passed a logical true (.T.) value, it will
  *     release the record locks, which allows the application to main-
  *     tain multiple record locks during an appending operation. The
  *     default for this parameter is a logical false (.F.).
@@ -260,12 +252,12 @@
  *         Replace Test->Name wit cName,Id with nId
  *         Use
  *         RETURN NIL
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      DBAPPEND() is fully CA-Clipper compliant.
  *  $SEEALSO$
+ *      DBUNLOCK(0,DBUNLOCKALL()
  *  $END$
  */
 
@@ -278,10 +270,8 @@
  *      Clears the current filter condiction in a work area
  *  $SYNTAX$
  *      DbClearFilTer() -> NIL
- *  $ARGUMENTS$
- *
  *  $RETURNS$
- *
+ *      DbClearFilTer() always returns NIL
  *  $DESCRIPTION$
  *        This function clears any active filter condiction
  *      for the current or selected work area.
@@ -299,12 +289,12 @@
  *       USE
  *
  *       Return Nil
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      DBCLEARFILTER() is fully CA-Clipper compliant.
  *  $SEEALSO$
+ *      DBSETFILTER(),DBFILTER()
  *  $END$
  */
 
@@ -317,12 +307,10 @@
  *      Close all open files in all work areas.
  *  $SYNTAX$
  *      DbCloseAll() -> NIL
- *  $ARGUMENTS$
- *
  *  $RETURNS$
- *      DBCLOSEALL always return NIL
+ *      DBCLOSEALL() always return NIL
  *  $DESCRIPTION$
- *        This function close all open databases and all associated
+ *      This function close all open databases and all associated
  *      indexes.In addition, it closes all format files and moves
  *      the work area pointer to the first position
  *  $EXAMPLES$
@@ -341,12 +329,12 @@
  *       USE
  *
  *       Return Nil
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      DBCLOSEALL() is fully CA-Clipper compliant.
  *  $SEEALSO$
+ *      DBUSEAREA(),DBCLOSEAREA()
  *  $END$
  */
 
@@ -359,12 +347,10 @@
  *      Close a database file in a work area.
  *  $SYNTAX$
  *      DbCloseArea() -> NIL
- *  $ARGUMENTS$
- *
  *  $RETURNS$
- *
+ *      DbCloseArea() always returns NIL.
  *  $DESCRIPTION$
- *        This function  will close any database open in the selected
+ *      This function  will close any database open in the selected
  *      or aliased work area.
  *  $EXAMPLES$
  *      Function Main()
@@ -378,12 +364,12 @@
  *       USE
  *
  *       Return Nil
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      DBCLOSEAREA() is fully CA-Clipper compliant.
  *  $SEEALSO$
+ *      DBUSEAREA(),DBCLOSEALL()
  *  $END$
  */
 
@@ -396,8 +382,6 @@
  *      Updates all index and database buffers for a given workarea
  *  $SYNTAX$
  *     DBCOMMIT() --> NIL
- *  $ARGUMENTS$
- *
  *  $RETURNS$
  *      DBCOMMIT() always returns NIL.
  *  $DESCRIPTION$
@@ -422,31 +406,26 @@
  *         Tests->( DBCOMMIT() )
  *      ENDIF
  *      RETURN NIL
- *  $TESTS$
- *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
+ *      This function is CA-Clipper compliant
  *  $SEEALSO$
- *     DBCLOSEALL(),DBCOMMITALL(),DBUNLOCK()
- *  $INCLUDE$
- *
+ *      DBCLOSEALL(),DBCOMMITALL(),DBUNLOCK()
  *  $END$
  */
 
 /*  $DOC$
  *  $FUNCNAME$
- *     DBCOMMITALL()
+ *      DBCOMMITALL()
  *  $CATEGORY$
- *     DATA BASE
+ *      DATA BASE
  *  $ONELINER$
- *     Flushes the memory buffer and performs a hard-disk write
+ *      Flushes the memory buffer and performs a hard-disk write
  *  $SYNTAX$
- *     DBCOMMIT() --> NIL
- *  $ARGUMENTS$
- *
+ *      DBCOMMIT() --> NIL
  *  $RETURNS$
- *     DBCOMMIT() always returns NIL.
+ *      DBCOMMIT() always returns NIL.
  *  $DESCRIPTION$
  *      This function performs a hard-disk write for all work areas.
  *      Before the disk write is performed,all buffers are flushed.
@@ -473,45 +452,41 @@
  *      ENDIF
  *      DBCOMMITALL()
  *      RETURN NIL
- *  $TESTS$
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
+ *      This function is CA-Clipper compliant.
  *  $SEEALSO$
  *     DBCLOSEALL(),DBCOMMIT(),DBUNLOCK()
- *  $INCLUDE$
- *
  *  $END$
  */
 
 /*  $DOC$
  *  $FUNCNAME$
- *     __DBCONTINUE()
+ *      __DBCONTINUE()
  *  $CATEGORY$
- *     DATA BASE
+ *      DATA BASE
  *  $ONELINER$
- *     Resume a pending LOCATE
+ *      Resume a pending LOCATE
  *  $SYNTAX$
- *     __DbCONTINUE()   -> NIL
- *  $ARGUMENTS$
- *
+ *      __DbCONTINUE()   -> NIL
  *  $RETURNS$
- *     __DbCONTINUE()  Always return nil
+ *      __DbCONTINUE()  Always return nil
  *  $DESCRIPTION$
- *   __DBCONTINUE is a database command that searches from the current record
- *   position for the next record meeting the most recent LOCATE condition
- *   executed in the current work area.  It terminates when a match is found
- *   or end of file is encountered.  If __DBCONTINUE is successful, the matching
- *   record becomes the current record and FOUND() returns true (.T.); if
- *   unsuccessful, FOUND() returns false (.F.).
+ *      __DBCONTINUE is a database command that searches from the current record
+ *      position for the next record meeting the most recent LOCATE condition
+ *      executed in the current work area.  It terminates when a match is found
+ *      or end of file is encountered.  If __DBCONTINUE is successful, the matching
+ *      record becomes the current record and FOUND() returns true (.T.); if
+ *      unsuccessful, FOUND() returns false (.F.).
  *
- *   Each work area may have an active LOCATE condition.  In CA-Clipper, a
- *   LOCATE condition remains pending until a new LOCATE condition is
- *   specified.  No other commands release the condition.
+ *      Each work area may have an active LOCATE condition.  In CA-Clipper, a
+ *      LOCATE condition remains pending until a new LOCATE condition is
+ *      specified.  No other commands release the condition.
  *
- *   Notes
+ *      Notes
  *
- *     Scope and WHILE condition: Note that the scope and WHILE
+ *      Scope and WHILE condition: Note that the scope and WHILE
  *      condition of the initial LOCATE are ignored; only the FOR condition
  *      is used with CONTINUE.  If you are using a LOCATE with a WHILE
  *      condition and want to continue the search for a matching record, use
@@ -545,29 +520,25 @@
  *            FOR Sales->Amount > 5000
  *      ENDDO
  *
- *  $TESTS$
- *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
- *
- *
+ *      This function is CA-Clipper compliant.
  *  $SEEALSO$
- *     EOF(),FOUND()
- *  $INCLUDE$
- *
+ *      EOF(),FOUND()
  *  $END$
  */
 
 /*  $DOC$
  *  $FUNCNAME$
- *     DBCREATE()
+ *      DBCREATE()
  *  $CATEGORY$
- *     DATA BASE
+ *      DATA BASE
  *  $ONELINER$
  *      Creates an empty database from a array.
  *  $SYNTAX$
- *     DBCREATE(<cDatabase>, <aStruct>,[<cDriver>],[<lOpen>],[<cAlias>]) --> NIL
+ *      DBCREATE(<cDatabase>, <aStruct>,[<cDriver>],[<lOpen>],
+ *      [<cAlias>]) --> NIL
  *  $ARGUMENTS$
  *      <cDatabase> Name of database to be create
  *      <aStruct>   Name of a multidimensional array that contains the a database
@@ -595,12 +566,12 @@
  *        for 'N'): however, the first letter of this array element must
  *        be a proper value.
  *
- *        The DBCREATE( ) function does not use the decimal field to
- *        calculate the length of a character held longer than 256. Values
- *        up to the maximum length of a character field (which is 65,519 bytes)
- *        are stored directly in the database in the length attribute if that
- *        database was created via this function. However, a file containing
- *        fields longer than 256 bytes is not compatible with any interpreter.
+ *      The DBCREATE( ) function does not use the decimal field to
+ *      calculate the length of a character held longer than 256. Values
+ *      up to the maximum length of a character field (which is 65,519 bytes)
+ *      are stored directly in the database in the length attribute if that
+ *      database was created via this function. However, a file containing
+ *      fields longer than 256 bytes is not compatible with any interpreter.
  *
  *      The <cDriver> parameter specifies the name of the Replaceable Da-
  *      tabase Driver to use to create the database. If it is not specified, then the
@@ -623,7 +594,6 @@
  *      dbCreate( "testdbf", aStruct, "DBFCDX", .t., "MYALIAS" )
  *
  *      RETURN NIL
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -637,17 +607,15 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *     DBDELETE()
+ *      DBDELETE()
  *  $CATEGORY$
- *     DATA BASE
+ *      DATA BASE
  *  $ONELINER$
- *     Marks records for deletion in a database.
+ *      Marks records for deletion in a database.
  *  $SYNTAX$
- *     DBDELETE() --> NIL
- *  $ARGUMENTS$
- *
+ *      DBDELETE() --> NIL
  *  $RETURNS$
- *     DBDELETE() always returns NIL.
+ *      DBDELETE() always returns NIL.
  *  $DESCRIPTION$
  *      This function marks a record for deletion in the selected
  *      or aliased work area.If the DELETED setting is on, the record
@@ -664,14 +632,12 @@
  *         ENDIF
  *      ENDIF
  *      USE
- *  $TESTS$
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
+ *      This function is CA-Clipper compliant
  *  $SEEALSO$
- *    DBRECALL()
- *  $INCLUDE$
- *
+ *      DBRECALL()
  *  $END$
  */
 
@@ -684,8 +650,6 @@
  *      Return the filter expression in a work area
  *  $SYNTAX$
  *      DBFILTER() --> cFilter
- *  $ARGUMENTS$
- *
  *  $RETURNS$
  *      DBFILTER() returns the filter expression.
  *  $DESCRIPTION$
@@ -701,14 +665,12 @@
  *      //
  *      ? DBFILTER()
  *      ? TestId->(DBFILTER())
- *  $TESTS$
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
+ *      This function is CA-Clipper compliant
  *  $SEEALSO$
  *      DBRELATION(),DBRSELECT()
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -721,8 +683,6 @@
  *      Moves the record pointer to the bottom of the database.
  *  $SYNTAX$
  *      DBGOBOTTOM() --> NIL
- *  $ARGUMENTS$
- *
  *  $RETURNS$
  *      DBGOBOTTOM() always returns NIL.
  *  $DESCRIPTION$
@@ -738,14 +698,12 @@
  *      DBGOBOTTOM()
  *      ? RECNO()
  *      USE
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
+ *      This function is CA-Clipper compliant
  *  $SEEALSO$
  *      BOF(),EOF(),DBSKIP(),DBSEEK(),DBGOTOP()
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -786,16 +744,12 @@
  *         Sales->Group := "Bear"
  *      ENDDO
  *
- *  $TESTS$
- *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
- *
+ *      This function is CA-Clipper compliant.
  *  $SEEALSO$
- *     BOF(),EOF(),DBGOTOP(),DBGOBOTTOM(),DBSEEK(),DBSKIP()
- *  $INCLUDE$
- *
+ *      BOF(),EOF(),DBGOTOP(),DBGOBOTTOM(),DBSEEK(),DBSKIP()
  *  $END$
  */
 
@@ -808,10 +762,9 @@
  *      Moves the record pointer to the bottom of the database.
  *  $SYNTAX$
  *      DBGOTOP() --> NIL
- *  $ARGUMENTS$
- *
  *  $RETURNS$
  *      DBGOTOP() always returns NIL.
+ *  $DESCRIPTION$
  *      This function moves the record pointer in the selected or aliased
  *      work area to the top of the file.The position of the record pointer
  *      is affected by the values in the index key or by an active FILTER
@@ -824,14 +777,12 @@
  *      DBGOBOTTOM()
  *      ? RECNO()
  *      USE
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
+ *      This function is CA-Clipper compliant
  *  $SEEALSO$
  *      BOF(),EOF(),DBSKIP(),DBSEEK(),DBGOBOTTOM()
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -844,8 +795,6 @@
  *      Recalls a record previousy marked for deletion.
  *  $SYNTAX$
  *      DBRECALL() --> NIL
- *  $ARGUMENTS$
- *
  *  $RETURNS$
  *      DBRECALL() always returns NIL.
  *  $DESCRIPTION$
@@ -863,14 +812,12 @@
  *      DBRECALL()
  *      ? DELETED()
  *      USE
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
+ *      This function is CA-Clipper compliant
  *  $SEEALSO$
  *      DBDELETE()
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -903,16 +850,12 @@
  *        ENDIF
  *      NEXT
  *      USE
- *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *
+ *      This function is CA-Clipper compliant
  *  $SEEALSO$
  *      DBUNLOCK(),DBUNLOCKALL(),FLOCK(),RLOCK()
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -925,10 +868,8 @@
  *      This function return a list of records in the database work area
  *  $SYNTAX$
  *      DBRLOCKLIST() --> aRecordLocks
- *  $ARGUMENTS$
- *
  *  $RETURNS$
- *      DBRLOCKLIST() return a array of lock records
+ *      <aRecordList> is an array of lock records
  *  $DESCRIPTION$
  *      This function will return an array of locked records in a given
  *      and active work area.If the return array is an empty array
@@ -949,16 +890,12 @@
  *      NEXT
  *      USE
  *      RETURN NIL
- *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *
+ *      This function is CA-Clipper compliant
  *  $SEEALSO$
  *      RLOCK(),DBRLOCK(),DBRUNLOCK()
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -990,16 +927,12 @@
  *      ENDIF
  *      USE
  *      RETURN NIL
- *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *
+ *      This function is CA-Clipper compliant
  *  $SEEALSO$
  *      RLOCK(),DBRLOCK(),DBRLOCKLIST()
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -1016,7 +949,7 @@
  *      <expKey> Any expression
  *      <lSoftSeek> Toggle SOFTSEEK condition
  *      <lFindLast> is an optional logical value that set the current
- *   record position to the last record if successful
+ *      record position to the last record if successful
  *  $RETURNS$
  *      DBSEEK() returns logical true (.T.) if found, otherwise false
  *  $DESCRIPTION$
@@ -1058,16 +991,12 @@
  *         ? "Not found"
  *      END
  *
- *  $TESTS$
- *
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
  *      DBSEEK() is  Compatible with CA-Clipper 5.3
  *  $SEEALSO$
  *      DBGOBOTTOM(),DBGOTOP(),DBSKIP(),EOF(),BOF(),FOUND()
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -1106,16 +1035,12 @@
  *      ENDIF
  *      DBCLOSEALL()
  *      RETURN NIL
- *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      This function is CA-CLIPPER compatible.
  *  $SEEALSO$
  *      DBUSEAREA(),SELECT()
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -1140,16 +1065,12 @@
  *      function will have no effect.
  *  $EXAMPLES$
  *      DBSETDRIVER("ADS")
- *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      This function is CA-Clipper compatible
  *  $SEEALSO$
  *      DBUSEAREA()
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -1182,16 +1103,12 @@
  *      ENDDO
  *      USE
  *      RETURN NIL
- *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      This function is CA-CLIPPER compatible
  *  $SEEALSO$
  *    BOF(),DBGOBOTTOM(),DBGOTOP(),DBSEEK(),EOF()
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -1222,16 +1139,12 @@
  *      DBSETFILTER({|| Tests->Id <100},"Tests->Id <100")
  *      DBGOTOP()
  *
- *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *
+ *      This function is CA-Clipper compliant.
  *  $SEEALSO$
  *      DBFILTER(),DBCLEARFILTER()
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -1244,8 +1157,6 @@
  *      Creates a multidimensional array of a database structure.
  *  $SYNTAX$
  *      DBSTRUCT() --> aStruct
- *  $ARGUMENTS$
- *
  *  $RETURNS$
  *      DBSTRUCT() returns an array pointer to database structure
  *  $DESCRIPTION$
@@ -1265,12 +1176,10 @@
  *      NEXT
  *      USE
  *      RETURN NIL
- *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *
+ *      This function is CA-Clipper compliant
  *  $SEEALSO$
  *      AFIELDS()
  *  $INCLUDE$
@@ -1287,8 +1196,6 @@
  *      Unlock a record or release a file lock
  *  $SYNTAX$
  *      DBUNLOCK() --> NIL
- *  $ARGUMENTS$
- *
  *  $RETURNS$
  *      DBUNLOCK() always returns NIL.
  *  $DESCRIPTION$
@@ -1306,15 +1213,12 @@
  *         ENDIF
  *      ENDIF
  *      USE
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      This function is CA-Clipper compatible.
  *  $SEEALSO$
  *      DBUNLOCKALL(),FLOCK(),RLOCK()
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -1327,8 +1231,6 @@
  *      Unlocks all records and releases all file locks in all work areas.
  *  $SYNTAX$
  *      DBUNLOCKALL() --> NIL
- *  $ARGUMENTS$
- *
  *  $RETURNS$
  *      DBUNLOCKALL() always returns NIL.
  *  $DESCRIPTION$
@@ -1347,16 +1249,12 @@
  *         DBUNLOCKALL()
  *      ENDIF
  *      USE
- *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *
+ *      This function is CA Clipper compliant
  *  $SEEALSO$
  *      DBUNLOCK(),FLOCK(),RLOCK()
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -1401,16 +1299,12 @@
  *      mode.
  *  $EXAMPLES$
  *      DBUSEAREA(.T.,,"Tests")
- *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      This function is CA-Clipper compliant
  *  $SEEALSO$
  *      DBCLOSEAREA(),DBSETDRIVER(),SELECT(),SET()
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -1423,12 +1317,10 @@
  *      Remove all records from the current database file
  *  $SYNTAX$
  *      __DbZap()  -> NIL
- *  $ARGUMENTS$
- *
  *  $RETURNS$
  *      __DbZap()   will always return nil
  *  $DESCRIPTION$
- *      __DbZap*( is a database command that permanently removes all records from
+ *      __DbZap( is a database command that permanently removes all records from
  *   files open in the current work area.  This includes the current database
  *   file, index files, and associated memo file.  Disk space previously
  *   occupied by the ZAPped files is released to the operating system.
@@ -1451,16 +1343,10 @@
  *         ? "Zap operation failed"
  *         BREAK
  *      ENDIF
- *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *
- *  $SEEALSO$
- *
- *  $INCLUDE$
- *
+ *      This function is CA Clipper compliant
  *  $END$
  */
 
@@ -1473,10 +1359,6 @@
  *      Remove all records from the current database file
  *  $SYNTAX$
  *      ZAP
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *
  *  $DESCRIPTION$
  *      This command removes all of the records from the database in the
  *      current work area.This operation also updates any index file in
@@ -1488,16 +1370,12 @@
  *      USE Tests NEW index Tests
  *      ZAP
  *      USE
- *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *
+ *      This command is CA Clipper compliant
  *  $SEEALSO$
  *      DELETE,PACK,USE
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -1510,7 +1388,6 @@
  *      Tests the record's deletion flag.
  *  $SYNTAX$
  *      DELETED() --> lDeleted
- *  $ARGUMENTS$
  *  $RETURNS$
  *      DELETED() return a logical true (.T.) or false (.F.).
  *  $DESCRIPTION$
@@ -1526,15 +1403,12 @@
  *      DBRECALL()
  *      USE
  *      RETURN NIL
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      This function is CA-Clipper compliant
  *  $SEEALSO$
  *      DBDELETE()
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -1547,10 +1421,8 @@
  *      Test for end-of-file condition.
  *  $SYNTAX$
  *      EOF() --> <lEnd>
- *  $ARGUMENTS$
- *
  *  $RETURNS$
- *      Logical true (.T.) or false (.F.)
+ *      <lEnd> A logical true (.T.) or false (.F.)
  *  $DESCRIPTION$
  *      This function determines if the end-of-file marker has been reached.
  *      If it has, the function will return a logical true (.T.); otherwise
@@ -1564,7 +1436,6 @@
  *        ? "Is Eof()",EOF()
  *        USE
  *     RETURN NIL
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -1583,10 +1454,8 @@
  *      Counts the number of fields in an active database.
  *  $SYNTAX$
  *      FCOUNT() --> nFields
- *  $ARGUMENTS$
- *
  *  $RETURNS$
- *      FCOUNT() Return the number of fields
+ *      <nFields> Return the number of fields
  *  $DESCRIPTION$
  *      This function returns the number of fields in the current or designated
  *      work area.If no database is open in this work area, the function will
@@ -1597,15 +1466,12 @@
  *        ? "This database have ",Tests->(FCOUNT()),"Fields"
  *        USE
  *      RETURN Nil
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      This function is CA-Clipper compliant
  *  $SEEALSO$
  *      FIELDNAME(),TYPE()
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -1621,7 +1487,7 @@
  *  $ARGUMENTS$
  *      <nField> Is the numeric field position
  *  $RETURNS$
- *      FIELDGET() Any expression
+ *      <ValueField>  Any expression
  *  $DESCRIPTION$
  *      This function returns the value of the field at the <nField>th location
  *      in the selected or designed work area.If the value in <nField> does not
@@ -1633,15 +1499,12 @@
  *      ? Test->(FieldGet(1))
  *      USE
  *      RETURN NIL
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      This function is CA-Clipper Compliant.
  *  $SEEALSO$
  *      FIELDPUT()
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -1657,7 +1520,7 @@
  *  $ARGUMENTS$
  *      <nPosition> Field order in the database.
  *  $RETURNS$
- *      FIELDNAME() returns the field name.
+ *      <cFieldName> returns the field name.
  *  $DESCRIPTION$
  *      This function return the name of the field at the <nPosition>th position.
  *      If the numeric value passed to this function does not correspond to an
@@ -1672,16 +1535,12 @@
  *        NEXT
  *        USE
  *      RETURN Nil
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      This function is CA-Clipper compatible.
  *  $SEEALSO$
  *    DBSTRUCT(),FCOUNT(),LEN(),VALTYPE()
- *
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -1697,7 +1556,7 @@
  *  $ARGUMENTS$
  *      <cFieldName> Name of a field.
  *  $RETURNS$
- *      FIELDPOS() returns the ordinal position of the field.
+ *      <nFieldPos> is ordinal position of the field.
  *  $DESCRIPTION$
  *      This function return the ordinal position of the specified field <cField>
  *      in the current or aliased work areaIf there isn't  field under the name
@@ -1709,15 +1568,12 @@
  *      ? Test->(FIELDPOS("ID"))
  *      USE
  *      RETURN NIL
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      This function is CA-Clipper compliant.
  *  $SEEALSO$
  *      FIELDGET(),FIELDPUT()
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -1746,16 +1602,12 @@
  *      USE Tests New
  *      FIELDPUT(1,"Mr. Jones")
  *      USE
- *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      This function is CA-Clipper compatible.
  *  $SEEALSO$
  *      FIELDGET()
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -1768,8 +1620,6 @@
  *      Locks a file
  *  $SYNTAX$
  *      FLOCK() --> lSuccess
- *  $ARGUMENTS$
- *
  *  $RETURNS$
  *      <lSuccess> A true (.T.) value, if the lock was successful;otherwise
  *      false (.F.)
@@ -1784,16 +1634,12 @@
  *         SUM Tests->Ammount
  *      ENDIF
  *      USE
- *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      This function is CA-Clipper compatible
  *  $SEEALSO$
  *      RLOCK()
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -1803,7 +1649,7 @@
  *  $CATEGORY$
  *      Data Base
  *  $ONELINER$
- *      Determine if the previous search operation succeeded
+ *      Determine the success of a previous search operation.
  *  $SYNTAX$
  *      FOUND() --> lSuccess
  *  $ARGUMENTS$
@@ -1823,16 +1669,12 @@
  *        ? Tests->Name
  *      ENDIF
  *      USE
- *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      This function is CA-Clipper compatible
  *  $SEEALSO$
  *      EOF()
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -1845,8 +1687,6 @@
  *      Return the length of a database file header 
  *  $SYNTAX$
  *      HEADER() --> nBytes
- *  $ARGUMENTS$
- *
  *  $RETURNS$
  *      <nBytes> The numeric size of a database file header in bytes
  *  $DESCRIPTION$
@@ -1859,16 +1699,12 @@
  *  $EXAMPLES$
  *      USE Tests New
  *      ? Header()
- *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      This function is CA-Clipper compatible
  *  $SEEALSO$
  *      DISKSPACE(),LASTREC(),RECSIZE()
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -1881,25 +1717,23 @@
  *      Return the order position of the controlling index
  *  $SYNTAX$
  *      INDEXORD() --> nOrder
- *  $ARGUMENTS$
- *
  *  $RETURNS$
- *     INDEXORD() returns an integer numeric value.  The value returned is
- *   equal to the position of the controlling index in the list of open
- *   indexes for the current work area.  A value of zero indicates that there
- *   is no controlling index and records are being accessed in natural order.
- *   If no database file is open, INDEXORD() will also return a zero.
+ *     <nOrder>  an integer numeric value.  The value returned is
+ *     equal to the position of the controlling index in the list of open
+ *     indexes for the current work area.  A value of zero indicates that there
+ *     is no controlling index and records are being accessed in natural order.
+ *     If no database file is open, INDEXORD() will also return a zero.
  *  $DESCRIPTION$
  *     INDEXORD() is a database function that determines the position of the
- *   controlling index in the list of index files opened by the last
- *   USE...INDEX or SET INDEX TO in the current work area.  It is often
- *   useful to save the last controlling index so it can be restored later.
+ *     controlling index in the list of index files opened by the last
+ *     USE...INDEX or SET INDEX TO in the current work area.  It is often
+ *     useful to save the last controlling index so it can be restored later.
  *
  *     By default, INDEXORD() operates on the currently selected work area.  It
- *   will operate on an unselected work area if you specify it as part of an
- *   aliased expression (see example below).
+ *     will operate on an unselected work area if you specify it as part of an
+ *     aliased expression (see example below).
  *  $EXAMPLES$
- *     This example uses INDEXORD() to save the current order.  After
+ *      This example uses INDEXORD() to save the current order.  After
  *      changing to a new order, it uses the saved value to restore the
  *      original order:
  *
@@ -1916,16 +1750,12 @@
  *      USE Sales INDEX Salesman, CustNum NEW
  *      USE Customer INDEX Name, Serial NEW
  *      ? Sales->(INDEXORD())                 // Result: 1
- *  $TESTS$
- *
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
- *
+ *      This function is CA Clipper compliant
  *  $SEEALSO$
  *      INDEXKEY()
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -1937,24 +1767,22 @@
  *  $ONELINER$
  *      Determine the number of records in the current (.dbf) file
  *  $SYNTAX$
- *          LASTREC() | RECCOUNT()* --> nRecords
- *  $ARGUMENTS$
- *
+ *      LASTREC() | RECCOUNT()* --> nRecords
  *  $RETURNS$
- *     LASTREC() returns the number of physical records in the current database
- *   file as an integer numeric value.  Filtering commands such as SET FILTER
- *   or SET DELETED have no effect on the return value.  LASTREC() returns
- *   zero if there is no database file in USE in the current work area.
+ *      <nRecords > the number of physical records in the current database
+ *      file as an integer numeric value.  Filtering commands such as SET FILTER
+ *      or SET DELETED have no effect on the return value.  LASTREC() returns
+ *      zero if there is no database file in USE in the current work area.
  *  $DESCRIPTION$
- *     LASTREC() is a database function that determines the number of physical
- *   records in the current database file.  LASTREC() is identical to
- *   RECCOUNT() which is supplied as a compatibility function.
+ *      LASTREC() is a database function that determines the number of physical
+ *      records in the current database file.  LASTREC() is identical to
+ *      RECCOUNT() which is supplied as a compatibility function.
  *
- *     By default, LASTREC() operates on the currently selected work area.  It
- *   will operate on an unselected work area if you specify it as part of an
- *   aliased expression (see example below).
+ *      By default, LASTREC() operates on the currently selected work area.  It
+ *      will operate on an unselected work area if you specify it as part of an
+ *      aliased expression (see example below).
  *  $EXAMPLES$
- *     This example illustrates the relationship between LASTREC(),
+ *      This example illustrates the relationship between LASTREC(),
  *      RECCOUNT(), and COUNT:
  *
  *      USE Sales NEW
@@ -1964,22 +1792,18 @@
  *      COUNT TO nRecords
  *      ? nRecords, LASTREC()            // Result: 14 84
  *
- *     This example uses an aliased expression to access the number
+ *      This example uses an aliased expression to access the number
  *      of records in a open database file in an unselected work area:
  *
  *      USE Sales NEW
  *      USE Customer NEW
  *      ? LASTREC(), Sales->(LASTREC())
- *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *
+ *      This function is CA Clipper compatible
  *  $SEEALSO$
  *      EOF()
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -1995,18 +1819,17 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *     LUPDATE() returns the date of last change to the open database file in
- *   the current work area.  If there is no database file in USE, LUPDATE()
- *   returns a blank date.
- *
+ *      <dModification>  the date of last change to the open database file in
+ *      the current work area.  If there is no database file in USE, LUPDATE()
+ *      returns a blank date.
  *  $DESCRIPTION$
- *     LUPDATE() is a database function that determines the date the database
- *   file in the current work area was last modified and CLOSEd.  By default,
- *   LUPDATE() operates on the currently selected work area.  It will operate
- *   on an unselected work area if you specify it as part of an aliased
- *   expression as shown in the example below.
+ *      LUPDATE() is a database function that determines the date the database
+ *      file in the current work area was last modified and CLOSEd.  By default,
+ *      LUPDATE() operates on the currently selected work area.  It will operate
+ *      on an unselected work area if you specify it as part of an aliased
+ *      expression as shown in the example below.
  *  $EXAMPLES$
- *     This example demonstrates that the modification date of
+ *      This example demonstrates that the modification date of
  *      database file is not changed until the database file is closed:
  *
  *      ? DATE()                  // Result: 09/01/90
@@ -2020,22 +1843,18 @@
  *      USE Sales NEW
  *      ? LUPDATE()               // Result: 09/01/90
  *
- *     This example uses an aliased expression to access LUPDATE()
+ *      This example uses an aliased expression to access LUPDATE()
  *      for a database file open in an unselected work area:
  *
  *      USE Sales NEW
  *      USE Customer NEW
  *      ? LUPDATE(), Sales->(LUPDATE())
- *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *
+ *      This function is CA Clipper compliant
  *  $SEEALSO$
  *  FIELDNAME(),LASTREC(),RECSIZE()
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -2049,40 +1868,39 @@
  *  $SYNTAX$
  *      NETERR([<lNewError>]) --> lError
  *  $ARGUMENTS$
- *     <lNewError> if specified sets the value returned by NETERR() to the
- *   specified status.  <lNewError> can be either true (.T.) or false (.F.).
- *   Setting NETERR() to a specified value allows the runtime error handler
- *   to control the way certain file errors are handled.  For more
- *   information, refer to Errorsys.prg.
- *
+ *      <lNewError> if specified sets the value returned by NETERR() to the
+ *      specified status.  <lNewError> can be either true (.T.) or false (.F.).
+ *      Setting NETERR() to a specified value allows the runtime error handler
+ *      to control the way certain file errors are handled.  For more
+ *      information, refer to Errorsys.prg.
  *  $RETURNS$
- *     NETERR() returns true (.T.) if a USE or APPEND BLANK fails.  The initial
- *   value of NETERR() is false (.F.).  If the current process is not running
- *   under a network operating system, NETERR() always returns false (.F.).
+ *      NETERR() returns true (.T.) if a USE or APPEND BLANK fails.  The initial
+ *      value of NETERR() is false (.F.).  If the current process is not running
+ *      under a network operating system, NETERR() always returns false (.F.).
  *  $DESCRIPTION$
- *     NETERR() is a network function.  It is a global flag set by USE,
- *   USE...EXCLUSIVE, and APPEND BLANK in a network environment.  It is used
- *   to test whether any of these commands have failed by returning true
- *   (.T.) in the following situations:
+ *      NETERR() is a network function.  It is a global flag set by USE,
+ *      USE...EXCLUSIVE, and APPEND BLANK in a network environment.  It is used
+ *      to test whether any of these commands have failed by returning true
+ *      (.T.) in the following situations:
  *
- *   NETERR() Causes
- *   컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
- *   Command             Cause
- *   컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
- *   USE                 USE EXCLUSIVE by another process
- *   USE...EXCLUSIVE     USE EXCLUSIVE or USE by another process
- *   APPEND BLANK        FLOCK() or RLOCK() of LASTREC() + 1 by another user
- *   컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
+ *      NETERR() Causes
+ *      컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
+ *      Command             Cause
+ *      컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
+ *      USE                 USE EXCLUSIVE by another process
+ *      USE...EXCLUSIVE     USE EXCLUSIVE or USE by another process
+ *      APPEND BLANK        FLOCK() or RLOCK() of LASTREC() + 1 by another user
+ *      컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
  *
- *     NETERR() is generally applied in a program by testing it following a USE
- *   or APPEND BLANK command.  If it returns false (.F.), you can perform the
- *   next operation.  If the command is USE, you can open index files.  If it
- *   is APPEND BLANK, you can assign values to the new record with a REPLACE
- *   or @...GET command.  Otherwise, you must handle the error by either
- *   retrying the USE or APPEND BLANK, or terminating the current operation
- *   with a BREAK or RETURN.
+ *      NETERR() is generally applied in a program by testing it following a USE
+ *      or APPEND BLANK command.  If it returns false (.F.), you can perform the
+ *      next operation.  If the command is USE, you can open index files.  If it
+ *      is APPEND BLANK, you can assign values to the new record with a REPLACE
+ *      or @...GET command.  Otherwise, you must handle the error by either
+ *      retrying the USE or APPEND BLANK, or terminating the current operation
+ *      with a BREAK or RETURN.
  *  $EXAMPLES$
- *     This example demonstrates typical usage of NETERR().  If the
+ *      This example demonstrates typical usage of NETERR().  If the
  *      USE succeeds, the index files are opened and processing continues.
  *      If the USE fails, a message displays and control returns to the
  *      nearest BEGIN SEQUENCE construct:
@@ -2094,16 +1912,12 @@
  *         ? "File is in use by another"
  *         BREAK
  *      ENDIF
- *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *
+ *      This function is CA Clipper compliant
  *  $SEEALSO$
  *      FLOCK(),RLOCK()
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -2116,28 +1930,24 @@
  *      Return the default Order Bag RDD extension
  *  $SYNTAX$
  *      ORDBAGEXT() --> cBagExt
- *  $ARGUMENTS$
- *
  *  $RETURNS$
- *      ORDBAGEXT() returns a character expression.
+ *      <cBagExt> a character expression.
  *  $DESCRIPTION$
- *     ORDBAGEXT() is an Order management function that returns a character
- *   expression that is the default Order Bag extension of the current or
- *   aliased work area.  cBagExt is determined by the RDD active in the
- *   current work area.
+ *      ORDBAGEXT() is an Order management function that returns a character
+ *      expression that is the default Order Bag extension of the current or
+ *      aliased work area.  cBagExt is determined by the RDD active in the
+ *      current work area.
  *
- *     ORDBAGEXT() supersedes the INDEXEXT() and is not recommended.
+ *      ORDBAGEXT() supersedes the INDEXEXT() and is not recommended.
  *
  *  $EXAMPLES$
  *     USE sample VIA "DBFNTX"
  *     ? ORDBAGEXT()      //  Returns .ntx
  *
- *  $TESTS$
- *
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
- *
+ *      This function is CA Clipper compliant
  *  $SEEALSO$
  *      INDEXEXT(),ORDBAGNAME()
  *  $INCLUDE$

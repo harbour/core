@@ -52,6 +52,7 @@ CLASS TRTF
    METHOD WritePar( cPar )
    METHOD WriteParText( cPar )
    METHOD WriteParNoIndent(cPar)
+   METHOD WriteParBox(cPar)
    METHOD WriteLink( clink )
    METHOD WriteJumpLink( clink )
    METHOD Close()
@@ -88,6 +89,7 @@ METHOD WriteHeader() CLASS TRTF
       '{\f11\fswiss Univers (WN);}' + CRLF + ;
       '{\f12\fnil Wingdings;}' + CRLF + ;
       '{\f13\fswiss MS Sans Serif;}' + CRLF + ;
+      '{\f14\fmodern\fcharset2 LotusWP Box;}'+CRLF +;
       '}' + CRLF
 
    LOCAL cColortable := '{\colortbl;' + CRLF + ;
@@ -123,14 +125,25 @@ RETURN Self
 METHOD WriteParNoIndent( cPar ) CLASS TRTF
    cPar:=StrTran(cPar,"{","\{")
    cPar:=StrTran(cPar,"}","\}")
-   FWRITE( Self:nHandle, '\par'+CRLF+ '\pard\cf1\f8\fs20\b0\i0' + cPar +CRLF)
+   FWRITE( Self:nHandle, '\par'+CRLF+ '\pard\cf1\f8\fs20\b0\i0' + HB_OEMTOANSI(cPar) +CRLF)
 RETURN Self
-
-METHOD WriteParText( cPar ) CLASS TRTF
+METHOD WriteParBox( cPar ) CLASS TRTF
    cPar:=StrTran(cPar,"{","\{")
    cPar:=StrTran(cPar,"}","\}")
-   FWRITE( Self:nHandle,  HB_OEMTOANSI(cPar ))
+   FWRITE( Self:nHandle, '\par'+CRLF+ '\pard\cf1\f14\b0\i0' + cPar +CRLF)
 RETURN Self
+
+METHOD WriteParText( cPar,lConv ) CLASS TRTF
+DEFAULT lConv to .T.
+   cPar:=StrTran(cPar,"{","\{")
+   cPar:=StrTran(cPar,"}","\}")
+IF lConv
+   FWRITE( Self:nHandle,  HB_OEMTOANSI(cPar ))
+ELSE
+   FWRITE( Self:nHandle,  cPar )
+ENDIF
+RETURN Self
+
 METHOD EndPar() CLASS TRTF
    FWRITE( Self:nHandle, '\par' + CRLF )
 RETURN Self

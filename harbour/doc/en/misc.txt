@@ -22,18 +22,14 @@
  *      OS()   -> <cOperatinSystem>
  *  $CATEGORY$
  *      DOS
- *  $ARGUMENTS$
- *
  *  $RETURNS$
  *     <cOperatinSystem>  -> The Current operating system
  *  $DESCRIPTION$
  *      This function will return the current operating system
  *  $EXAMPLES$
  *      ? OS()
- *
  *  $FILES$
  *      source/rtl/environ.c
- *  $SEEALSO$
  *  $END$
  */
 
@@ -58,8 +54,6 @@
  *  $EXAMPLES$
  *     ? QOUT(VERSION())    // Displays Harbour version only
  *     ? QOUT(VERSION(NIL)) // Displays Harbour and C Compiler versions
- *  $TESTS$
- *
  *  $STATUS$
  *     S
  *  $COMPLIANCE$
@@ -69,8 +63,6 @@
  *     only the Harbour Version if called without the <nMode> parameter, but
  *     returns both the Harbour Version and the Version of the C compiler used
  *     to build Harbour when the <nMode> parameter is present.
- *  $PLATFORMS$
- *
  *  $FILES$
  *    source/rtl/environ.c
  *  $SEEALSO$
@@ -101,18 +93,12 @@
  *      ? QOUT(GETENV('PATH'))
  *      ? QOUT(GETENV('CONFIG'))
  *      ? QOUT(GETENV('HARBOURCMD', '-n -l -es2'))
- *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      This functions is CA-CLIPPER compliant
- *  $PLATFORMS$
- *
  *  $FILES$
  *     source/rtl/environ.c
- *  $SEEALSO$
- *
  *  $END$
  */
 

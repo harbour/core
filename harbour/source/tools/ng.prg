@@ -36,6 +36,7 @@
 #define CRLF HB_OSNewLine()
 
 #include 'hbclass.ch'
+#include 'common.ch'
 
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
@@ -48,8 +49,8 @@ CLASS TNortonGuide
    DATA cFile
    DATA nHandle
    METHOD New( cFile )
-
-   METHOD WritePar( cPar )
+   METHOD WriteParBox( cPar )
+   METHOD WritePar( cPar ,lConv)
    METHOD WriteLink( clink )
    METHOD Close()
    METHOD WriteParBold( cPar )
@@ -65,10 +66,16 @@ METHOD NEW( cFile ) CLASS TNortonGuide
 
 RETURN Self
 
-METHOD WritePar( cPar ) CLASS TNortonGuide
-
-   FWRITE( Self:nHandle, HB_OEMTOANSI( cPar ) + CRLF )
-
+METHOD WritePar( cPar,lconv ) CLASS TNortonGuide
+   DEFAULT lConv to .T.
+   IF lConv
+     FWRITE( Self:nHandle, HB_OEMTOANSI( cPar ) + CRLF )
+   ELSE
+     FWRITE( Self:nHandle, cPar  + CRLF )
+   ENDIF
+RETURN Self
+METHOD WriteParBox( cPar ) CLASS TNortonGuide
+     FWRITE( Self:nHandle, cPar   )
 RETURN Self
 
 METHOD WriteParBold( cPar ) CLASS TNortonGuide

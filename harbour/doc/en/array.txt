@@ -121,7 +121,6 @@
  *      aArray := { 1 }          // Result: aArray is { 1 }
  *      ASIZE(aArray, 3)         // Result: aArray is { 1, NIL, NIL }
  *      ASIZE(aArray, 1)         // Result: aArray is { 1 }
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -154,10 +153,10 @@
  *  $EXAMPLES$
  *      LOCAL array:= {"Harbour", "is", "Supreme", "Power"}
  *      ? ATAIL(aArray)
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
+ *      This function is CA Clipper compliant
  *  $SEEALSO$
  *      LEN(),ARRAY(),ASIZE(),AADD()
  *  $INCLUDE$
@@ -188,15 +187,15 @@
  *      item in the array will be removed completely. In other words, if an
  *      array element were to be inserted at the fifth subscript position,
  *      the element previously in the fifth position would now be located
- *                at the sixth position. The length of the array <aArray> will remain
- *                unchanged.
+ *      at the sixth position. The length of the array <aArray> will remain
+ *      unchanged.
  *  $EXAMPLES$
  *      LOCAL aArray:={"Harbour","is","Power!","!!!"}
  *      AINS(aArray,4)
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
+ *      This function is CA Clipper compliant
  *  $SEEALSO$
  *      AADD(),ACOPY(),ADEL(),AEVAL(),AFILL(),ASIZE()
  *  $INCLUDE$
@@ -232,10 +231,10 @@
  *      aArray := { "Harbour","is","Power" }      // Result: aArray is
  *
  *      ADEL(aArray, 2)            // Result: aArray is
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
+ *      This function is CA Clipper compliant
  *  $SEEALSO$
  *      ACOPY(),AINS(),AFILL()
  *  $INCLUDE$
@@ -278,10 +277,10 @@
  *  $EXAMPLES$
  *      LOCAL aTest:={Nil,0,1,2}
  *      Afill(aTest,5)
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
+ *      This function is CA Clipper compliant
  *  $SEEALSO$
  *      AADD(),AEVAL(),DBSTRUCT(),DIRECTORY()
  *  $INCLUDE$
@@ -331,7 +330,6 @@
  *  $EXAMPLES$
  *      aDir:=Directory("*.prg")
  *      AScan(aDir,,,{|x,y| x[1]="Test.prg"})
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -379,11 +377,10 @@
  *      If an array is an autonomous unit, AEVAL() is appropriate. If the
  *      array is to be altered or if elements are to be reevaluated, a
  *      FOR...NEXT loop is more appropriate.
- *  $EXAMPLES$
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
+ *      This function is CA Clipper compliant
  *  $SEEALSO$
  *      EVAL(),DBEVAL()
  *  $INCLUDE$
@@ -439,10 +436,10 @@
  *      aOne := {"HABOUR"," is ","POWER"}
  *      aTwo := {"CLIPPER"," was ","POWER"}
  *      ACOPY(aOne, aTwo, nStart, nCount)
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
+ *      This function is CA Clipper compliant
  *  $SEEALSO$
  *      ACLONE(),ADEL(),AEVAL(),AFILL(),AINS(),ASORT()
  *  $INCLUDE$
@@ -478,7 +475,6 @@
  *      aTwo := ACLONE(aOne)       // Result: aTwo is {1, 2, 3}
  *      aOne[1] := "The Harbour Compiler"              // Result: aOne is {99, 2, 3}
  *                                 // aTwo is still {1, 2, 3}
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -541,7 +537,6 @@
  *     aPair :=   { {"Sun",8}, {"Mon",1}, {"Tue",57}, {"Wed",-6} }
  *     ASORT( aPair,,, {| x, y | x[2] < y[2] } )
  *     // result: { {"Wed",-6}, {"Mon",1}, {"Sun",8}, {"Tue",57} }
- *  $TESTS$
  *  $STATUS$
  *     R
  *  $COMPLIANCE$

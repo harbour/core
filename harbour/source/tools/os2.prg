@@ -74,6 +74,11 @@ METHOD New( cFile ) CLASS TOs2
    FWRITE( Self:nHandle, ':userdoc.'+CRLF)
 
    FWRITE( Self:nHandle, ':docprof toc=123456.'+CRLF)
+   fWrite(Self:nHandle,':title.'+"Harbour Reference Guide"+CRLF)
+
+   fWrite(Self:nHandle,'.* FT_HelpC generated IPF Source File.'+CRLF)
+
+   fWrite(Self:nHandle,'.* FT_HELPC Document Source Extractor, (c)2000 Luiz Rafael Culik.'+CRLF)
 
 RETURN Self
 
@@ -103,16 +108,10 @@ METHOD WriteTitle( cTopic, cTitle ) CLASS TOs2
      nItem:=ASCAN(Self:aLinkRef,{|a| a[1]==cTopic})
    ENDIF
 
-   fWrite(Self:nHandle,':title.'+ALLTRIM(cTitle)+CRLF)
-
-   fWrite(Self:nHandle,'.* FT_HelpC generated IPF Source File.'+CRLF)
-
-   fWrite(Self:nHandle,'.* FT_HELPC Document Source Extractor, (c)2000 Luiz Rafael Culik.'+CRLF)
 
 
    fWrite(Self:nHandle,':h1 res='+Alltrim(str(nItem))+'.'+cTopic+CRLF)
-
-
+   fWrite(Self:nHandle,':i1 id='+UPPER(cTopic)+"."+UPPER(cTopic)+CRLF)
    FWRITE( Self:nHandle,":p."+cTitle+CRLF)
 
 

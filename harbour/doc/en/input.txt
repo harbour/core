@@ -126,7 +126,7 @@
  *  $ONELINER$
  *      Put an inkey code to the keyboard buffer
  *  $SYNTAX$
- *      hb_keyPut( <nInkeyCode> )
+ *      HB_keyPut( <nInkeyCode> )
  *  $ARGUMENTS$
  *      <nInkeyCode> is the inkey code, which should be inserted into the
  *      keyboard buffer.
@@ -140,10 +140,10 @@
  *      be inserted.
  *  $EXAMPLES$
  *      // Stuff an Alt+PgDn key into the keyboard buffer
- *      hb_keyPut( K_ALT_PGDN )
+ *      HB_KEYPUT( K_ALT_PGDN )
  *  $TESTS$
- *      hb_keyPut( K_ALT_PGDN ) ; ? INKEY() ==> 417
- *      hb_keyPut( K_F11 ) ; ? INKEY() ==> -40
+ *      HB_KEYPUT( K_ALT_PGDN ) ; ? INKEY() ==> 417
+ *      HB_KEYPUT( K_F11 ) ; ? INKEY() ==> -40
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -243,8 +243,6 @@
  *  $ARGUMENTS$
  *      <cString> String to be processed, one character at a time,
  *      by the Harbour keyboard processor
- *  $RETURNS$
- *
  *  $DESCRIPTION$
  *      This command stuff the input buffer with <cString>. The
  *      number of character that can be stuffed into the keyboard
@@ -309,13 +307,10 @@
  *      is superseded by LASTKEY() which return INKEY() code for that key,
  *      UPDATED() could be use to find if the get buffer was changed during
  *      READ.
- *  $EXAMPLES$
- *  $TESTS$
  *  $STATUS$
+ *      R
  *  $COMPLIANCE$
  *      READKEY() works exactly like CA-Clipper's READKEY().
- *  $PLATFORMS$
- *  $FILES$
  *  $SEEALSO$
  *       @...GET,INKEY(),LASTKEY(),READ,READEXIT(),UPDATED()
  *  $END$
@@ -340,7 +335,6 @@
  *      nKey = InKey( 0 )
  *      do case
  *         case nKey ==
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -371,7 +365,6 @@
  *      nKey = InKey( 0 )
  *      do case
  *         case nKey ==
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$

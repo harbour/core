@@ -57,16 +57,12 @@
  *         ? "Can not open file"
  *      ENDIF
  *      RETURN NIL
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      BIN2W() works exactly like CA-Clipper's BIN2W()
- *  $PLATFORMS$
- *  $FILES$
  *  $SEEALSO$
- *      BIN2I(),BIN2L(),BIN2U(),I2BIN(),L2BIN(),W2BIN(),WORD(),U2BIN(),
- *      FREAD()
+ *      BIN2I(),BIN2L(),BIN2U(),I2BIN(),L2BIN(),W2BIN(),WORD(),U2BIN(),FREAD()
  *  $END$
  */
 
@@ -116,16 +112,12 @@
  *         ? "Can not open file"
  *      ENDIF
  *      RETURN NIL
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      BIN2I() works exactly like CA-Clipper's BIN2I()
- *  $PLATFORMS$
- *  $FILES$
  *  $SEEALSO$
- *      BIN2L(),BIN2U(),BIN2W(),I2BIN(),L2BIN(),W2BIN(),WORD(),U2BIN(),
- *      FREAD()
+ *      BIN2L(),BIN2U(),BIN2W(),I2BIN(),L2BIN(),W2BIN(),WORD(),U2BIN(),FREAD()
  *  $END$
  */
 
@@ -172,16 +164,12 @@
  *         ? "Can not open file"
  *      ENDIF
  *      RETURN NIL
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      BIN2L() works exactly like CA-Clipper's BIN2L()
- *  $PLATFORMS$
- *  $FILES$
  *  $SEEALSO$
- *      BIN2I(),BIN2U(),BIN2W(),I2BIN(),L2BIN(),W2BIN(),WORD(),U2BIN(),
- *      FREAD()
+ *      BIN2I(),BIN2U(),BIN2W(),I2BIN(),L2BIN(),W2BIN(),WORD(),U2BIN(),FREAD()
  *  $END$
  */
 
@@ -228,7 +216,6 @@
  *         ? "Can not open file"
  *      ENDIF
  *      RETURN NIL
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -237,11 +224,8 @@
  *
  *      This function is only visible if source/rtl/binnum.c was compiled
  *      with the HB_COMPAT_XPP flag.
- *  $PLATFORMS$
- *  $FILES$
  *  $SEEALSO$
- *      BIN2I(),BIN2L(),BIN2W(),I2BIN(),L2BIN(),W2BIN(),WORD(),U2BIN(),
- *      FREAD()
+ *      BIN2I(),BIN2L(),BIN2W(),I2BIN(),L2BIN(),W2BIN(),WORD(),U2BIN(),FREAD()
  *  $END$
  */
 
@@ -299,16 +283,12 @@
  *         ? "Can not open file"
  *      ENDIF
  *      RETURN NIL
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      I2BIN() works exactly like CA-Clipper's I2BIN()
- *  $PLATFORMS$
- *  $FILES$
  *  $SEEALSO$
- *      BIN2I,BIN2L(),BIN2U(),BIN2W(),L2BIN(),W2BIN(),WORD(),U2BIN(),
- *      FWRITE()
+ *      BIN2I,BIN2L(),BIN2U(),BIN2W(),L2BIN(),W2BIN(),WORD(),U2BIN(),FWRITE()
  *  $END$
  */
 
@@ -341,8 +321,6 @@
  *      instance).
  *
  *      W2BIN() is the opposite of BIN2W()
- *  $EXAMPLES$
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -351,11 +329,8 @@
  *
  *      This function is only visible if source/rtl/binnum.c was compiled
  *      with the HB_COMPAT_XPP flag.
- *  $PLATFORMS$
- *  $FILES$
  *  $SEEALSO$
- *      BIN2I,BIN2L(),BIN2U(),BIN2W(),I2BIN(),L2BIN(),WORD(),U2BIN(),
- *      FWRITE()
+ *      BIN2I,BIN2L(),BIN2U(),BIN2W(),I2BIN(),L2BIN(),WORD(),U2BIN(),FWRITE()
  *  $END$
  */
 
@@ -388,17 +363,12 @@
  *      instance).
  *
  *      L2BIN() is the opposite of BIN2L()
- *  $EXAMPLES$
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      L2BIN() works exactly like CA-Clipper's L2BIN()
- *  $PLATFORMS$
- *  $FILES$
  *  $SEEALSO$
- *      BIN2I,BIN2L(),BIN2U(),BIN2W(),I2BIN(),W2BIN(),WORD(),U2BIN(),
- *      FWRITE()
+ *      BIN2I,BIN2L(),BIN2U(),BIN2W(),I2BIN(),W2BIN(),WORD(),U2BIN(),FWRITE()
  *  $END$
  */
 
@@ -431,8 +401,6 @@
  *      instance).
  *
  *      U2BIN() is the opposite of BIN2U()
- *  $EXAMPLES$
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -441,11 +409,8 @@
  *
  *      This function is only visible if source/rtl/binnum.c was compiled
  *      with the HB_COMPAT_XPP flag.
- *  $PLATFORMS$
- *  $FILES$
  *  $SEEALSO$
- *      BIN2I,BIN2L(),BIN2U(),BIN2W(),I2BIN(),L2BIN(),W2BIN(),WORD()
- *      FWRITE()
+ *      BIN2I,BIN2L(),BIN2U(),BIN2W(),I2BIN(),L2BIN(),W2BIN(),WORD(),FWRITE()
  *  $END$
  */
 
@@ -465,8 +430,6 @@
  *  $DESCRIPTION$
  *      This function converts double values to integers to use
  *      within the CALL command
- *  $EXAMPLES$
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$

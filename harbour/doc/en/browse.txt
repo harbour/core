@@ -110,26 +110,25 @@
  *      Following are active keys that handled by DBEDIT():
  *      ---------------------------------------------------
  *
- *
- *           Left           - Move one column to the left (previous field)
- *           Right          - Move one column to the right (next field)
- *           Up             - Move up one row (previous record)
- *           Down           - Move down one row (next record)
- *           Page-Up        - Move to the previous screen
- *           Page-Down      - Move to the next screen
- *           Ctrl Page-Up   - Move to the top of the file
- *           Ctrl Page-Down - Move to the end of the file
- *           Home           - Move to the leftmost visible column
- *           End            - Move to the rightmost visible column
- *           Ctrl Left      - Pan one column to the left
- *           Ctrl Right     - Pan one column to the right
- *           Ctrl Home      - Move to the leftmost column
- *           Ctrl End       - Move to the rightmost column
+ *       Left           - Move one column to the left (previous field)
+ *       Right          - Move one column to the right (next field)
+ *       Up             - Move up one row (previous record)
+ *       Down           - Move down one row (next record)
+ *       Page-Up        - Move to the previous screen
+ *       Page-Down      - Move to the next screen
+ *       Ctrl Page-Up   - Move to the top of the file
+ *       Ctrl Page-Down - Move to the end of the file
+ *       Home           - Move to the leftmost visible column
+ *       End            - Move to the rightmost visible column
+ *       Ctrl Left      - Pan one column to the left
+ *       Ctrl Right     - Pan one column to the right
+ *       Ctrl Home      - Move to the leftmost column
+ *       Ctrl End       - Move to the rightmost column
  *
  *      When <xUserFunc> is omitted, two more keys are active:
  *
- *           Esc            - Terminate BROWSE()
- *           Enter          - Terminate BROWSE()
+ *       Esc            - Terminate BROWSE()
+ *       Enter          - Terminate BROWSE()
  *
  *      When DBEDIT() execute <xUserFunc> it pass the following arguments:
  *      nMode and the index of current record in <acColumns>. If <acColumns>
@@ -139,12 +138,11 @@
  *      DBEDIT() nMode could be one of the following:
  *      ---------------------------------------------
  *
- *           DE_IDLE         0      DBEDIT() is idle, all movement keys have been
- *                                  handled.
- *           DE_HITTOP       1      Attempt to cursor past top of file.
- *           DE_HITBOTTOM    2      Attempt to cursor past bottom of file.
- *           DE_EMPTY        3      No records in work area, database is empty.
- *           DE_EXCEPT       4      Key exception.
+ *       DE_IDLE        DBEDIT() is idle, all movement keys have been handled.
+ *       DE_HITTOP      Attempt to cursor past top of file.
+ *       DE_HITBOTTOM   Attempt to cursor past bottom of file.
+ *       DE_EMPTY       No records in work area, database is empty.
+ *       DE_EXCEPT      Key exception.
  *
  *      The user define function or code block must return a value that tell
  *      DBEDIT() what to do next.
@@ -152,9 +150,9 @@
  *      User function return codes:
  *      ---------------------------
  *
- *           DE_ABORT        0      Abort DBEDIT().
- *           DE_CONT         1      Continue DBEDIT() as is.
- *           DE_REFRESH      2      Force reread/redisplay of all data rows.
+ *       DE_ABORT       Abort DBEDIT().
+ *       DE_CONT        Continue DBEDIT() as is.
+ *       DE_REFRESH     Force reread/redisplay of all data rows.
  *
  *      The user function is called once in each of the following cases:
  *      - The database is empty.
@@ -171,8 +169,8 @@
  *      DBEDIT()
  *
  *      // TODO: put a longer example or point to a sample file
- *  $TESTS$
  *  $STATUS$
+ *      S
  *  $COMPLIANCE$
  *      <xUserFunc> can take a code block value, this is a Harbour
  *      extension.
@@ -221,30 +219,30 @@
  *      BROWSE() is a general purpose database browser, without any
  *      thinking you can browse a file using the following keys:
  *
- *           Left           - Move one column to the left (previous field)
- *           Right          - Move one column to the right (next field)
- *           Up             - Move up one row (previous record)
- *           Down           - Move down one row (next record)
- *           Page-Up        - Move to the previous screen
- *           Page-Down      - Move to the next screen
- *           Ctrl Page-Up   - Move to the top of the file
- *           Ctrl Page-Down - Move to the end of the file
- *           Home           - Move to the leftmost visible column
- *           End            - Move to the rightmost visible column
- *           Ctrl Left      - Pan one column to the left
- *           Ctrl Right     - Pan one column to the right
- *           Ctrl Home      - Move to the leftmost column
- *           Ctrl End       - Move to the rightmost column
- *           Esc            - Terminate BROWSE()
+ *       Left           - Move one column to the left (previous field)
+ *       Right          - Move one column to the right (next field)
+ *       Up             - Move up one row (previous record)
+ *       Down           - Move down one row (next record)
+ *       Page-Up        - Move to the previous screen
+ *       Page-Down      - Move to the next screen
+ *       Ctrl Page-Up   - Move to the top of the file
+ *       Ctrl Page-Down - Move to the end of the file
+ *       Home           - Move to the leftmost visible column
+ *       End            - Move to the rightmost visible column
+ *       Ctrl Left      - Pan one column to the left
+ *       Ctrl Right     - Pan one column to the right
+ *       Ctrl Home      - Move to the leftmost column
+ *       Ctrl End       - Move to the rightmost column
+ *       Esc            - Terminate BROWSE()
  *
  *      On top of the screen you see a status line with the following
  *      indication:
  *
- *           Record ###/###  - Current record number / Total number of records.
- *           <none>          - There are no records, the file is empty.
- *           <new>           - You are in append mode at the bottom of file.
- *           <Deleted>       - Current record is deleted.
- *           <bof>           - You are at the top of file.
+ *      Record ###/###  - Current record number / Total number of records.
+ *      <none>          - There are no records, the file is empty.
+ *      <new>           - You are in append mode at the bottom of file.
+ *      <Deleted>       - Current record is deleted.
+ *      <bof>           - You are at the top of file.
  *
  *      You should pass whole four valid coordinate, if less than four
  *      parameters are passed to BROWSE() the coordinate are default to:
@@ -253,11 +251,8 @@
  *      // this one shows you how to browse around
  *      USE Around
  *      BROWSE()
- *  $TESTS$
  *  $STATUS$
  *      S
- *  $COMPLIANCE$
- *
  *  $SEEALSO$
  *      DBEDIT()*,TBrowse class
  *  $END$
@@ -292,8 +287,8 @@
  *  $EXAMPLES$
  *      for a good example, look at the source code for BROWSE() function
  *      at source/rtl/browse.prg
- *  $TESTS$
  *  $STATUS$
+ *      S   
  *  $COMPLIANCE$
  *      TBrowseDB() works exactly like CA-Clipper's TBrowseDB().
  *  $SEEALSO$
@@ -330,8 +325,8 @@
  *         ? "Too bad, you should really work harder"
  *      ENDIF
  *      CLOSE
- *  $TESTS$
  *  $STATUS$
+ *      R
  *  $COMPLIANCE$
  *      dbSkipper() is an XBase++ compatibility function and does not exist
  *      as a standard CA-Clipper 5.x function.

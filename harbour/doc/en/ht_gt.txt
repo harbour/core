@@ -27,7 +27,7 @@
  *      <cStr>  - The string
  *      <nPos>  - The position in <cStr>
  *  $RETURNS$
- *      nAscVal - The ascii value of substr(<cStr>, <nPos>, 1)
+ *      <nAscVal> - The ascii value of substr(<cStr>, <nPos>, 1)
  *  $DESCRIPTION$
  *      Return the ascii value of a specified character in a string
  *      Equivalent (but much faster) to
@@ -58,7 +58,7 @@
  *  $ARGUMENTS$
  *      <cStr>  - The string to sum
  *  $RETURNS$
- *      nSum    - The sum of all ascii values in <cStr>.
+ *      <nSum>    - The sum of all ascii values in <cStr>.
  *  $DESCRIPTION$
  *      Sum the ascii value of every character in the passed string
  *      and return the result.
@@ -80,7 +80,7 @@
  *      <cStr1>  - A character string to compare
  *      <cStr2>  - The string to compare with
  *  $RETURNS$
- *      nPos     - The position in <cStr2> where <cStr1> begins to differ
+ *      <nPos>     - The position in <cStr2> where <cStr1> begins to differ
  *  $DESCRIPTION$
  *      Return the position in <cStr2> where <cStr1> begins to differ.
  *      If the strings differ in the first character GT_AtDiff() will
@@ -109,7 +109,7 @@
  *  $ARGUMENTS$
  *      <cStr>   - A character string to extract chars from
  *  $RETURNS$
- *      cRet     - A string of all the chars in even positions
+ *      <cRet>     - A string of all the chars in even positions
  *  $DESCRIPTION$
  *      Return a string consisting of all the characters in even
  *      positions in <cStr1>.
@@ -137,7 +137,7 @@
  *      <cStr1>  - A character string to mix
  *      <cStr2>  - A character string to mix with
  *  $RETURNS$
- *      cRet     - A string consisting of all the characters in <cStr1>
+ *      <cRet>     - A string consisting of all the characters in <cStr1>
  *                 mixed with all the characters in <cStr2>
  *  $DESCRIPTION$
  *      Return a string consisting of all the characters in <cStr1>
@@ -167,7 +167,7 @@
  *  $ARGUMENTS$
  *      <cStr>   - A character string to extract chars from
  *  $RETURNS$
- *      cRet     - A string of all the chars in odd positions
+ *      <cRet>     - A string of all the chars in odd positions
  *  $DESCRIPTION$
  *      Return a string consisting of all the characters in odd
  *      positions in <cStr1>.
@@ -223,7 +223,7 @@
  *      <cChars> - The set of characters to find
  *      <cStr>   - The input string
  *  $RETURNS$
- *      nAsc     - The ASCII value of the first character in <cChars>
+ *      <nAsc>     - The ASCII value of the first character in <cChars>
  *                 which appears first in <cStr>
  *  $DESCRIPTION$
  *      Return the ascii value of a character in <cChars>
@@ -250,7 +250,7 @@
  *      <cChrs> - The set of characters
  *      <cStr>  - The string to search
  *  $RETURNS$
- *      nTotOcc - The number of times the characters specified in
+ *      <nTotOcc> - The number of times the characters specified in
  *                <cChrs> appears in <cStr>
  *  $DESCRIPTION$
  *      Returns the numnber of occurrences of characters belonging
@@ -282,7 +282,7 @@
  *      <cChrs> - The substring to find the frequence of
  *      <cStr>  - The string in which to find the character
  *  $RETURNS$
- *      nFreq   - The number of times <cChrs> occurs in <cStr>
+ *      <nFreq>   - The number of times <cChrs> occurs in <cStr>
  *  $DESCRIPTION$
  *      GT_StrCount() counts how many times a specified substring
  *      appears in a string.
@@ -314,7 +314,7 @@
  *      <cString> - The string to find the prefix in
  *      <cSet>    - The set of characters
  *  $RETURNS$
- *      nLength   - The length of a string upto a character in the set
+ *      <nLength>   - The length of a string upto a character in the set
  *  $DESCRIPTION$
  *      Return the number of characters in the leading segment of a
  *      string that consists solely of characters NOT in the set.
@@ -340,7 +340,7 @@
  *      <cStr1>  - A character string to compare
  *      <cStr2>  - The string to compare with
  *  $RETURNS$
- *      cRet     - A string beginning at the position in <cStr2> where
+ *      <cRet>     - A string beginning at the position in <cStr2> where
  *                 <cStr1> begins to differ from <cStr1>
  *  $DESCRIPTION$
  *      Return a string beginning at the position in <cStr2> where
@@ -372,7 +372,7 @@
  *      <nNum>   - The number of fill characters to insert (default 1)
  *      <cChar>  - The fill chararacter (default space)
  *  $RETURNS$
- *      cRet     - The input string with fill characters inserted between
+ *      <cRet>     - The input string with fill characters inserted between
  *                 every character in the original.
  *  $DESCRIPTION$
  *      Inserts fill characters into a string.
@@ -433,7 +433,7 @@
  *      <cStr>   - The input string
  *      <cSet>   - The set of characters to find
  *  $RETURNS$
- *      cString  - The input string after the first occurance of any
+ *      <cString>  - The input string after the first occurance of any
  *                 character from <cSet>
  *  $DESCRIPTION$
  *      Return a string after the first occurance of any character from
@@ -460,7 +460,7 @@
  *      <cStr>   - The input string
  *      <cChars> - The set of characters to find
  *  $RETURNS$
- *      nLen     - The length of the prefix found.
+ *      <nLen>     - The length of the prefix found.
  *  $DESCRIPTION$
  *      Return the length of the trailing segment in the passed string
  *      <cStr> that consists solely of the characters in the character

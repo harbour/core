@@ -27,7 +27,8 @@
  *  $ARGUMENTS$
  *      <cChar> is a char or string of chars
  *  $RETURNS$
- *      True if passed char is an affirmation char, false otherwise
+ *      <lTrueOrFalse> True if passed char is an affirmation char,otherwise
+ *      false
  *  $DESCRIPTION$
  *      This function it is used to check if a user input is true or not
  *      regarding of the msgxxx module used.
@@ -57,7 +58,8 @@
  *  $ARGUMENTS$
  *      <cChar> is a char or string of chars
  *  $RETURNS$
- *      True if passed char is a negation char, false otherwise
+ *      <lTrueOrFalse> True if passed char is a negation char,otherwise
+ *      false
  *  $DESCRIPTION$
  *      This function it is used to check if a user input is true or not
  *      regarding of the msgxxx module used.
@@ -87,9 +89,9 @@
  *  $ARGUMENTS$
  *      <nMsg> is the message number you want to get
  *  $RETURNS$
- *      If <nMsg> is a valid message selector return the message, if <nMsg>
- *      is nil returns "Invalid Argument" and if <nMsg> is any other type it
- *      returns an empty string.
+ *      <cMessage> If <nMsg> is a valid message selector return the message,
+ *      if <nMsg> is nil returns "Invalid Argument" and if <nMsg> is any
+ *      other type it returns an empty string.
  *  $DESCRIPTION$
  *      This functions returns international message descriptions.
  *  $EXAMPLES$

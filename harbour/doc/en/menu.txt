@@ -23,56 +23,53 @@
  *  $SYNTAX$
  *      ACHOICE(<nTop>, <nLeft>, <nBottom>, <nRight>,
  *         <acMenuItems>,
- *         [<alSelectableItems> | <lSelectableItems>],
+ *         [<alSelableItems> | <lSelableItems>],
  *         [<cUserFunction> | <bUserBlock>],
  *         [<nInitialItem>],
  *         [<nWindowRow>]) --> nPosition
  *
  *  $ARGUMENTS$
- *      nTop           - topmost row used to display array (default 0)
- *      nLeft          - leftmost row used to display array (default 0)
- *      nBottom        - bottommost row used to display array (default MAXROW())
- *      nRight         - rightmost row used to display array (default MAXCOL())
- *      acMenuItems    - the character array of items from which to select
- *      alSelectableItems - an array of items, either logical or character,
- *                          which is used to determine if a particular item
- *                          may be selected.  If the type of a given item is
- *                          character, it is macro evaluated, and the result
- *                          is expected to be a logical.  A value of .T. means
- *                          that the item may be selected, .F. that it may not.
- *                          (See next argument: lSelectableItems)
- *      lSelectableItems  - a logical value which is used to apply to all
- *                          items in acMenuItems.  If .T., all items may be
- *                          selected; if .F., none may be selected.
- *                          (See previous argument: alSelectableItems)
- *                          Default .T.
- *      cUserFunction     - the name of a function to be called which may
- *                          affect special processing of keystrokes.  It is
- *                          specified without parentheses or parameters.
- *                          When it is called, it will be supplied with the
- *                          parameters: nMode, nCurElement, and nRowPos.
- *                          Default NIL.
- *      bUserBlock     - a codeblock to be called which may
- *                          affect special processing of keystrokes. It
- *                          should be specified in the form
- *                          {|nMode, nCurElemenet, nRowPos| ;
- *                                 MyFunc(nMode, nCurElemenet, nRowPos) }.
- *                          Default NIL.
- *      nInitialItem   - the number of the element to be highlighted as
- *                          the current item when the array is initially
- *                          displayed.  1 origin.  Default 1.
- *      nWindowRow     - the number of the window row on which the initial
- *                          item is to be displayed. 0 origin.  Default 0.
- *
+ *      <nTop>           - topmost row used to display array (default 0)
+ *      <nLeft>          - leftmost row used to display array (default 0)
+ *      <nBottom>        - bottommost row used to display array (default MAXROW())
+ *      <nRight>         - rightmost row used to display array (default MAXCOL())
+ *      <acMenuItems>    - the character array of items from which to select
+ *      <alSelableItems> - an array of items, either logical or character,
+ *                         which is used to determine if a particular item
+ *                         may be selected.  If the type of a given item is
+ *                         character, it is macro evaluated, and the result
+ *                         is expected to be a logical.  A value of .T. means
+ *                         that the item may be selected, .F. that it may not.
+ *                         (See next argument: lSelectableItems)
+ *      <lSelableItems>  - a logical value which is used to apply to all
+ *                         items in acMenuItems.  If .T., all items may be
+ *                         selected; if .F., none may be selected.
+ *                         (See previous argument: alSelectableItems)
+ *                         Default .T.
+ *      <cUserFunction>  - the name of a function to be called which may
+ *                         affect special processing of keystrokes.  It is
+ *                         specified without parentheses or parameters.
+ *                         When it is called, it will be supplied with the
+ *                         parameters: nMode, nCurElement, and nRowPos.
+ *                         Default NIL.
+ *      <bUserBlock>     - a codeblock to be called which may
+ *                         affect special processing of keystrokes. It
+ *                         should be specified in the form
+ *                         {|nMode, nCurElemenet, nRowPos| ;
+ *                         MyFunc(nMode, nCurElemenet, nRowPos) }.
+ *                         Default NIL.
+ *      <nInitialItem>   - the number of the element to be highlighted as
+ *                         the current item when the array is initially
+ *                         displayed.  1 origin.  Default 1.
+ *      <nWindowRow>     - the number of the window row on which the initial
+ *                         item is to be displayed. 0 origin.  Default 0.
  *  $RETURNS$
- *      nPosition  - the number of the item to be selected, or 0 if the
+ *      <nPosition>  - the number of the item to be selected, or 0 if the
  *                   selection was aborted.
- *
  *  $DESCRIPTION$
  *      Allows selection of an element from an array.
  *      Please see standard Clipper documentation for ACHOICE for
  *      additional detail.
- *
  *  $EXAMPLES$
  *      aItems := { "One", "Two", "Three" }
  *      nChoice := ACHOICE( 10, 10, 20, 20, aItems )
@@ -97,7 +94,6 @@
  *      Display a menu item on screen and define a message
  *  $SYNTAX$
  *      __AtPrompt( <nRow>, <nCol>, <cPrompt>, [<xMsg>] ) --> .F.
- *
  *  $ARGUMENTS$
  *      <nRow> is the row number to display the menu <cPrompt>. Value could
  *      range from zero to MAXROW().
@@ -139,22 +135,20 @@
  *         CASE nChoice == 2           // user select 2nd menu item
  *              ? "Just another day for some"
  *      ENDCASE
- *  $TESTS$
  *  $STATUS$
+ *      R
  *  $COMPLIANCE$
  *      CA-Clipper array is limited to 4096 items, and therefor 4096 menu
  *      items are the maximum that could be defined per one menu, Harbour
  *      does not have this limit (not that you'll ever need that).
- *  $PLATFORMS$
- *  $FILES$
  *  $SEEALSO$
- *    ACHOICE(),MENU TO,SET MESSAGE,SET INTENSITY,SET WRAP,__MENUTO()
+ *      ACHOICE(),MENU TO,SET MESSAGE,SET INTENSITY,SET WRAP,__MENUTO()
  *  $END$
  */
 
 /*  $DOC$
  *  $FUNCNAME$
- *     @...PROMPT
+ *      @...PROMPT
  *  $CATEGORY$
  *      Command
  *  $ONELINER$
@@ -202,16 +196,14 @@
  *         CASE nChoice == 2           // user select 2nd menu item
  *              ? "Just another day for some"
  *      ENDCASE
- *  $TESTS$
  *  $STATUS$
+ *      R
  *  $COMPLIANCE$
  *      CA-Clipper array is limited to 4096 items, and therefor 4096 menu
  *      items are the maximum that could be defined per one menu, Harbour
  *      does not have this limit (not that you'll ever need that).
- *  $PLATFORMS$
- *  $FILES$
  *  $SEEALSO$
- *    ACHOICE(),MENU TO,SET MESSAGE,SET INTENSITY,SET WRAP,__MENUTO()
+ *      ACHOICE(),MENU TO,SET MESSAGE,SET INTENSITY,SET WRAP,__MENUTO()
  *  $END$
  */
 
@@ -255,18 +247,18 @@
  *      Following are active keys that handled by __MenuTo():
  *      -----------------------------------------------------
  *
- *      Up             - Move to previous item
- *      Down           - Move to next item
- *      Left           - Move to previous item
- *      Right          - Move to next item
- *      Home           - Move to the first item
- *      End            - Move to the last item
- *      Page-Up        - Select menu item, return position
- *      Page-Down      - Select menu item, return position
- *      Enter          - Select menu item, return position
- *      Esc            - Abort selection, return 0
- *      First letter   - Select next menu with the same first letter,
- *                       return this item position.
+ *       Up             - Move to previous item
+ *       Down           - Move to next item
+ *       Left           - Move to previous item
+ *       Right          - Move to next item
+ *       Home           - Move to the first item
+ *       End            - Move to the last item
+ *       Page-Up        - Select menu item, return position
+ *       Page-Down      - Select menu item, return position
+ *       Enter          - Select menu item, return position
+ *       Esc            - Abort selection, return 0
+ *       First letter   - Select next menu with the same first letter,
+ *       |              return this item position.
  *
  *      upon exit the cursor is placed at MAXROW()-1, 0
  *      __MenuTo() can be nested without loosing the previous prompts.
@@ -289,12 +281,10 @@
  *      else
  *         ?? "Selected option is", nChoice
  *      endif
- *  $TESTS$
  *  $STATUS$
+ *      R
  *  $COMPLIANCE$
- *
- *  $PLATFORMS$
- *  $FILES$
+ *      This command is CA-Clipper compliant
  *  $SEEALSO$
  *      @...PROMPT,ACHOICE(),SET MESSAGE,SET INTENSITY,SET WRAP,__ATPROMPT()
  *  $END$
@@ -302,7 +292,7 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *     MENU TO
+ *      MENU TO
  *  $CATEGORY$
  *      Command
  *  $ONELINER$
@@ -338,18 +328,18 @@
  *      Following are active keys that handled by Menu To:
  *      -----------------------------------------------------
  *
- *      Up             - Move to previous item
- *      Down           - Move to next item
- *      Left           - Move to previous item
- *      Right          - Move to next item
- *      Home           - Move to the first item
- *      End            - Move to the last item
- *      Page-Up        - Select menu item, return position
- *      Page-Down      - Select menu item, return position
- *      Enter          - Select menu item, return position
- *      Esc            - Abort selection, return 0
- *      First letter   - Select next menu with the same first letter,
- *                       return this item position.
+ *       Up             - Move to previous item
+ *       Down           - Move to next item
+ *       Left           - Move to previous item
+ *       Right          - Move to next item
+ *       Home           - Move to the first item
+ *       End            - Move to the last item
+ *       Page-Up        - Select menu item, return position
+ *       Page-Down      - Select menu item, return position
+ *       Enter          - Select menu item, return position
+ *       Esc            - Abort selection, return 0
+ *       First letter   - Select next menu with the same first letter,
+ *       |              return this item position.
  *
  *      upon exit the cursor is placed at MAXROW()-1, 0
  *      Menu To can be nested without loosing the previous prompts.
@@ -372,12 +362,10 @@
  *      else
  *         ?? "Selected option is", nChoice
  *      endif
- *  $TESTS$
  *  $STATUS$
+ *      R
  *  $COMPLIANCE$
- *
- *  $PLATFORMS$
- *  $FILES$
+ *      This command is CA Clipper compliant
  *  $SEEALSO$
  *   @...PROMPT,ACHOICE(),SET MESSAGE,SET INTENSITY,SET WRAP,__ATPROMPT()
  *  $END$
