@@ -996,7 +996,7 @@ PHB_ITEM hb_itemUnRefOnce( PHB_ITEM pItem )
       {
          HB_VALUE_PTR pValue;
 
-         pValue = *( pItem->item.asMemvar.itemsbase ) + pItem->item.asMemvar.offset +
+         pValue = *( pItem->item.asMemvar.itemsbase ) + 
                      pItem->item.asMemvar.value;
          pItem = &pValue->item;
       }

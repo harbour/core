@@ -89,7 +89,6 @@ HB_CODEBLOCK_PTR hb_codeblockNew( BYTE * pBuffer,
        */
       USHORT ui = 1;
       PHB_ITEM pLocal;
-      HB_HANDLE hMemvar;
 
       /* Create a table that will store the values of local variables
        * accessed in a codeblock
@@ -118,18 +117,12 @@ HB_CODEBLOCK_PTR hb_codeblockNew( BYTE * pBuffer,
              * pool so it can be shared by codeblocks
              */
 
-         if( HB_IS_BYREF( pLocal ) )
-         {
-            pLocal = hb_itemUnRef( pLocal );
-         }
+            if( HB_IS_BYREF( pLocal ) )
+            {
+               pLocal = hb_itemUnRef( pLocal );
+            }
 
-            hMemvar = hb_memvarValueNew( pLocal, FALSE );
-
-            pLocal->type = HB_IT_BYREF | HB_IT_MEMVAR;
-            pLocal->item.asMemvar.itemsbase = hb_memvarValueBaseAddress();
-            pLocal->item.asMemvar.offset    = 0;
-            pLocal->item.asMemvar.value     = hMemvar;
-
+            hb_memvarDetachLocal( pLocal );
             memcpy( pCBlock->pLocals + ui, pLocal, sizeof( HB_ITEM ) );
          }
          else

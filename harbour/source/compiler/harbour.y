@@ -1148,6 +1148,7 @@ VarDef     : IdentName AsType { hb_compVariableAdd( $1, hb_comp_cVarType ); }
                   {
                      hb_compStaticDefStart();   /* switch to statics pcode buffer */
                      hb_compStaticDefEnd();
+                     hb_compGenStaticName( $1 );
                   }
                   else if( hb_comp_iVarScope == VS_PUBLIC || hb_comp_iVarScope == VS_PRIVATE )
                   {
@@ -1169,6 +1170,7 @@ VarDef     : IdentName AsType { hb_compVariableAdd( $1, hb_comp_cVarType ); }
                      hb_compStaticDefStart();   /* switch to statics pcode buffer */
                      hb_compExprDelete( hb_compExprGenStatement( hb_compExprAssignStatic( hb_compExprNewVar( $1 ), $6 ) ) );
                      hb_compStaticDefEnd();
+                     hb_compGenStaticName( $1 );
                   }
                   else if( hb_comp_iVarScope == VS_PUBLIC || hb_comp_iVarScope == VS_PRIVATE )
                   {

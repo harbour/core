@@ -55,6 +55,7 @@
 
 #include "hbapigt.h"
 #include "hbinit.h"
+#include "hbapiitm.h"
 
 /*
 #define hb_gt_xPutch( uiRow, uiCol, byAttr, byChar ) \
@@ -78,6 +79,7 @@ static char s_xTermBox[ 10 ] = "lqkxjqmx ";
 
 extern void hb_gt_keyboard_Init( void );
 extern void hb_gt_keyboard_Exit( void );
+
 
 static void hb_gt_terminal_Init( void )
 {
@@ -847,3 +849,23 @@ BOOL hb_gt_PostExt()
 {
    return TRUE;
 }
+
+
+/*
+	Add definition of nonstandard character mapping
+	for example:
+	HB_GT_MAPCHAR( 251,ASC('x'), .F. )
+*/
+HB_FUNC( HB_GT_ADDCHARMAP )
+{
+   if( ISNUM( 1 ) && ISNUM( 2 ) )
+	{
+      unsigned uIn = hb_parni( 1 );
+      unsigned uOut = hb_parni( 2 );
+      if( uIn < 256 && uOut < 256 )
+         s_charmap_table[ uIn ] = uOut;
+      if( ISLOG(3) && hb_parl(3) )
+         s_charmap_table[ uIn ] |= A_ALTCHARSET;
+	}
+}
+

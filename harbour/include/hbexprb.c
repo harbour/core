@@ -479,6 +479,8 @@ static void hb_compExprCodeblockPush( HB_EXPR_PTR pSelf )
             pVar =pVar->pNext;
        }
     }
+    
+    HB_EXPR_PCODE0( hb_compLinePushIfDebugger );
 #endif
     pExpr = pSelf->value.asCodeblock.pExprList;
     pPrev = &pSelf->value.asCodeblock.pExprList;

@@ -348,6 +348,12 @@ METHOD Configure(nMode) CLASS TBrowse
    next
 
 
+   IF( nMode == NIL ) 
+      for n := 1 to ::nColumns
+         ::aColsWidth[n] := ::SetColumnWidth( ::aColumns[n] )
+      next
+   ENDIF
+
    // 20/nov/2000 - maurilio.longo@libero.it
    // If I add (or remove) header or footer (separator) I have to change number
    // of available rows

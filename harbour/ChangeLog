@@ -7,6 +7,50 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+2004-01-20 19:15 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+   * include/hbcomp.h
+   * include/hbexprb.c
+   * source/macro/macrob.c
+   * source/compiler/exproptb.c
+   * source/compiler/genc.c
+   * source/compiler/gencli.c
+   * source/compiler/harbour.c
+   * source/compiler/harbour.y
+   * source/compiler/hbfix.c
+      *when debug information is requested then the compiler generates 
+      correct pcode with static variable name (it was correct if
+      -gc1 or -gc2 options were used previously)
+      *the pcode of a codeblock contains the module name (in debug mode) 
+
+   + include/hbdebug.ch
+      *a new file with a definition of __dbgEntry call modes
+      
+   * source/debug/debugger.prg
+   * source/vm/hvm.c
+      *changed parameters passed to __dbgEntry function to make the
+      function more flexible
+      *fixed monitoring of local and static variables
+      *when a codeblock is eveluated then debugger shows the code
+      where the codeblock was created
+
+   * source/rtl/tbrowse.prg
+      *'configure' method recalculates the width of columns
+
+   * include/hbapi.h
+   * source/vm/codebloc.c
+   * source/vm/itemapi.c
+   * source/vm/memvars.c
+      *code clean-up and optimalization related to codeblocks
+
+   * source/rtl/gtcrs/Makefile
+   * source/rtl/gtcrs/gtcrs.c
+   + source/rtl/gtcrs/charmap.prg
+      *added possibility to load a character mapping using HB_GT_CHARMAP
+
+   + source/rtl/gtcrs/debug.map
+      *an example character mapping
+      
 2004-01-08 18:45 UTC-0500 David G. Holm <dholm@jsd-llc.com>
   *  contrib/Makefile
     + Added a section for rsxnt, which is unable to compile Ole and odbc.

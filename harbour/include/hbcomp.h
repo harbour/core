@@ -385,6 +385,7 @@ extern int hb_compFieldsCount( void );
 /* Static variables */
 extern void hb_compStaticDefStart( void );
 extern void hb_compStaticDefEnd( void );
+extern void hb_compGenStaticName( char * );
 
 extern HB_EXPR_PTR hb_compErrorStatic( char *, HB_EXPR_PTR );
 extern HB_EXPR_PTR hb_compErrorType( HB_EXPR_PTR );

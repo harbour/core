@@ -241,7 +241,7 @@ static HB_FIX_FUNC( hb_p_staticname )
    ULONG ulStart = lPCodePos;
 
    HB_SYMBOL_UNUSED( cargo );
-   lPCodePos += 3;
+   lPCodePos += 4;
    while( pFunc->pCode[ lPCodePos ] )
       ++lPCodePos;
 

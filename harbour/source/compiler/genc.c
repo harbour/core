@@ -1668,10 +1668,6 @@ static HB_GENC_FUNC( hb_p_sframe )
 
 static HB_GENC_FUNC( hb_p_statics )
 {
-   PFUNCTION pInitStatics = hb_comp_functions.pFirst;
-   PVAR pVar;
-   USHORT wVar = 0, i;
-   char chr;
    long lByteCount = 5;
 
    fprintf( cargo->yyc, "\tHB_P_STATICS, %i, %i, %i, %i,",
@@ -1682,41 +1678,6 @@ static HB_GENC_FUNC( hb_p_statics )
    if( cargo->bVerbose ) fprintf( cargo->yyc, "\t/* symbol (_INITSTATICS), %i statics */", pFunc->pCode[ lPCodePos + 3 ] + pFunc->pCode[ lPCodePos + 4 ] * 256 );
    fprintf( cargo->yyc, "\n" );
 
-   if( hb_comp_bDebugInfo )
-   {
-      if( pInitStatics->szName[0] == 0 ) /* is _INITSTATICS ? */
-      {
-         pVar = pInitStatics->pStatics; /* first static variable */
-
-         while( pVar )
-         {
-            fprintf( cargo->yyc, "\tHB_P_STATICNAME, 1, %i, %i,", /* 1 means global static */
-                     HB_LOBYTE( wVar + 1 ), HB_HIBYTE( wVar + 1 ) );
-
-            lByteCount += 4;
-
-            if( cargo->bVerbose ) fprintf( cargo->yyc, "\t/* %s */", pVar->szName );
-            fprintf( cargo->yyc, "\n" );
-
-            i = 0;
-
-            while( ( chr = pVar->szName[ i++ ] ) != 0 )
-            {
-               if( chr == '\'' || chr == '\\')
-                  fprintf( cargo->yyc, " \'\\%c\',", chr );
-               else
-                  fprintf( cargo->yyc, " \'%c\',", chr );
-               lByteCount++;
-            }
-
-            fprintf( cargo->yyc, " 0,\n" );
-            lByteCount++;
-            pVar = pVar->pNext;
-            wVar++;
-         }
-      }
-   }
-
    return (USHORT) lByteCount;
 }
 
@@ -1724,12 +1685,14 @@ static HB_GENC_FUNC( hb_p_staticname )
 {
    ULONG ulStart = lPCodePos;
 
-   fprintf( cargo->yyc, "\tHB_P_STATICNAME, 0, %i, %i,", /* zero means it is a in-function static */
+   fprintf( cargo->yyc, "\tHB_P_STATICNAME, %i, %i, %i,", 
             pFunc->pCode[ lPCodePos + 1 ],
-            pFunc->pCode[ lPCodePos + 2 ] );
-   if( cargo->bVerbose ) fprintf( cargo->yyc, "\t/* %s */", ( char * ) pFunc->pCode + lPCodePos + 3 );
+            pFunc->pCode[ lPCodePos + 2 ],
+            pFunc->pCode[ lPCodePos + 3 ] );
+   if( cargo->bVerbose ) fprintf( cargo->yyc, "\t/* %s */", ( char * ) pFunc->pCode + lPCodePos + 4 );
    fprintf( cargo->yyc, "\n" );
-   lPCodePos += 3;
+   
+   lPCodePos += 4;
    while( pFunc->pCode[ lPCodePos ] )
    {
       char chr = pFunc->pCode[ lPCodePos++ ];

@@ -178,7 +178,6 @@ struct hb_struLong
 struct hb_struMemvar
 {
    struct _HB_VALUE ** itemsbase;
-   LONG offset;
    LONG value;
 };
 
@@ -483,7 +482,6 @@ extern void     hb_codeblockEvaluate( HB_ITEM_PTR pItem ); /* evaluate a codeblo
 
 /* memvars subsystem */
 extern HB_HANDLE hb_memvarValueNew( HB_ITEM_PTR pSource, BOOL bTrueMemvar ); /* create a new global value */
-extern HB_VALUE_PTR * hb_memvarValueBaseAddress( void ); /* retrieve the base address of the values table */
 extern void     hb_memvarsInit( void ); /* initialize the memvar API system */
 extern void     hb_memvarsRelease( void ); /* clear all PUBLIC and PRIVATE variables */
 extern void     hb_memvarsFree( void ); /* release the memvar API system */
@@ -500,6 +498,7 @@ extern void     hb_memvarNewParameter( PHB_SYMB pSymbol, PHB_ITEM pValue );
 extern char   * hb_memvarGetStrValuePtr( char * szVarName, ULONG *pulLen );
 extern void     hb_memvarCreateFromItem( PHB_ITEM pMemvar, BYTE bScope, PHB_ITEM pValue );
 extern int      hb_memvarScope( char * szVarName, ULONG ulLength ); /* retrieve scope of a dynamic variable symbol */
+extern void     hb_memvarDetachLocal( HB_ITEM_PTR pLocal ); /* Detach a local variable from the eval stack */
 
 /* console I/O subsystem */
 extern void     hb_conInit( void ); /* initialize the console API system */

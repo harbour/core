@@ -1,0 +1,8 @@
+//
+// $Id$
+//
+//Linux console - character mapping
+//checked mark
+251:'x'
+//window handle
+254:'o'

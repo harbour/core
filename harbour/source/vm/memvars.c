@@ -240,6 +240,17 @@ HB_HANDLE hb_memvarValueNew( HB_ITEM_PTR pSource, BOOL bTrueMemvar )
    return hValue;
 }
 
+/* Detach local variable (swap current value with a memvar handle)
+*/
+void hb_memvarDetachLocal( HB_ITEM_PTR pLocal )
+{
+   HB_HANDLE hMemvar = hb_memvarValueNew( pLocal, FALSE );
+
+   pLocal->type = HB_IT_BYREF | HB_IT_MEMVAR;
+   pLocal->item.asMemvar.itemsbase = &s_globalTable;
+   pLocal->item.asMemvar.value     = hMemvar;
+}
+
 /*
  * This function pushes passed dynamic symbol that belongs to PRIVATE variable
  * into the stack. The value will be popped from it if the variable falls
@@ -518,7 +529,6 @@ void hb_memvarGetRefer( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
       {
          /* value is already created */
          pItem->type = HB_IT_BYREF | HB_IT_MEMVAR;
-         pItem->item.asMemvar.offset = 0;
          pItem->item.asMemvar.value = pDyn->hMemvar;
          pItem->item.asMemvar.itemsbase = &s_globalTable;
          ++s_globalTable[ pDyn->hMemvar ].counter;
@@ -543,7 +553,6 @@ void hb_memvarGetRefer( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
                {
                   /* value is already created */
                   pItem->type = HB_IT_BYREF | HB_IT_MEMVAR;
-                  pItem->item.asMemvar.offset = 0;
                   pItem->item.asMemvar.value = pDyn->hMemvar;
                   pItem->item.asMemvar.itemsbase = &s_globalTable;
                   ++s_globalTable[ pDyn->hMemvar ].counter;

@@ -10,11 +10,13 @@ C_SOURCES=\
    kbdcrs.c \
 
 PRG_SOURCES=\
-	keymap.prg
+	keymap.prg \
+	charmap.prg
 
 PRG_HEADERS=\
 	eterm.map \
 	linux.map \
+   debug.map \
 
 LIBNAME=gtcrs
 

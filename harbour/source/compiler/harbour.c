@@ -720,22 +720,24 @@ void hb_compVariableAdd( char * szVarName, BYTE cValueType )
 
                   pLastVar->pNext = pVar;
                }
-
+/*
                if( hb_comp_bDebugInfo )
                {
-                  BYTE * pBuffer = ( BYTE * ) hb_xgrab( strlen( szVarName ) + 4 );
+                  BYTE * pBuffer = ( BYTE * ) hb_xgrab( strlen( szVarName ) + 5 );
                   int iVar = hb_compStaticGetPos( szVarName, pFunc );
 
                   pBuffer[0] = HB_P_STATICNAME;
-                  pBuffer[1] = HB_LOBYTE( iVar );
-                  pBuffer[2] = HB_HIBYTE( iVar );
+                  pBuffer[1] = (hb_compVariableScope( szVarName )==HB_VS_GLOBAL_STATIC)?1:0;
+                  pBuffer[2] = HB_LOBYTE( iVar );
+                  pBuffer[3] = HB_HIBYTE( iVar );
 
-                  memcpy( ( BYTE * ) ( & ( pBuffer[3] ) ), szVarName, strlen( szVarName ) + 1 );
+                  memcpy( ( BYTE * ) ( & ( pBuffer[4] ) ), szVarName, strlen( szVarName ) + 1 );
 
-                  hb_compGenPCodeN( pBuffer, strlen( szVarName ) + 4 , 0 );
+                  hb_compGenPCodeN( pBuffer, strlen( szVarName ) + 5 , 0 );
 
                   hb_xfree( pBuffer );
                }
+*/
             }
             break;
 
@@ -752,6 +754,43 @@ void hb_compVariableAdd( char * szVarName, BYTE cValueType )
             break;
       }
 
+   }
+}
+
+void hb_compGenStaticName( char *szVarName )
+{
+  if( hb_comp_bDebugInfo )
+  {
+      BYTE bGlobal = 0;
+      PFUNCTION pFunc;
+      BYTE * pBuffer;
+      int iVar;
+      
+      if( ! hb_comp_bStartProc && hb_comp_functions.iCount <= 1 )
+      {
+         /* Variable declaration is outside of function/procedure body.
+            File-wide static variable
+         */
+         hb_compStaticDefStart();
+         bGlobal = 1;
+      }
+      pFunc = hb_comp_functions.pLast;
+      pBuffer = ( BYTE * ) hb_xgrab( strlen( szVarName ) + 5 );
+      iVar = hb_compStaticGetPos( szVarName, pFunc );
+
+      pBuffer[0] = HB_P_STATICNAME;
+      pBuffer[1] = bGlobal;
+      pBuffer[2] = HB_LOBYTE( iVar );
+      pBuffer[3] = HB_HIBYTE( iVar );
+
+      memcpy( ( BYTE * ) ( & ( pBuffer[4] ) ), szVarName, strlen( szVarName ) + 1 );
+
+      hb_compGenPCodeN( pBuffer, strlen( szVarName ) + 5 , 0 );
+
+      hb_xfree( pBuffer );
+      
+      if( bGlobal )
+         hb_compStaticDefEnd();
    }
 }
 
@@ -797,15 +836,15 @@ int hb_compVariableScope( char * szVarName )
 
     iLocalPos = hb_compLocalGetPos( szVarName );
     if( iLocalPos > 0 )
-	iScope = HB_VS_LOCAL_VAR;
+	   iScope = HB_VS_LOCAL_VAR;
     else if( iLocalPos < 0 )
-	iScope = HB_VS_CBLOCAL_VAR;
+	   iScope = HB_VS_CBLOCAL_VAR;
     else if( hb_compStaticGetPos( szVarName, hb_comp_functions.pLast ) > 0 )
-	iScope = HB_VS_STATIC_VAR;
+	   iScope = HB_VS_STATIC_VAR;
     else if( hb_compFieldGetPos( szVarName, hb_comp_functions.pLast ) > 0 )
-	iScope = HB_VS_LOCAL_FIELD;
+	   iScope = HB_VS_LOCAL_FIELD;
     else if( hb_compMemvarGetPos( szVarName, hb_comp_functions.pLast ) > 0 )
-         iScope = HB_VS_LOCAL_MEMVAR;
+      iScope = HB_VS_LOCAL_MEMVAR;
     else if( ! hb_comp_bStartProc )
     {
          /* Check file-wide variables 
@@ -3700,7 +3739,6 @@ int hb_compFieldsCount()
  * pcode needed to initialize all static variables declared in PRG module.
  * pOwner member will point to a function where the static variable is
  * declared:
- * TODO: support for static variables in codeblock
  */
 void hb_compStaticDefStart( void )
 {
@@ -3764,7 +3802,7 @@ void hb_compCodeBlockStart()
    pBlock->iStaticsBase = hb_comp_functions.pLast->iStaticsBase;
 
    hb_comp_functions.pLast = pBlock;
-   hb_compLinePushIfDebugger();
+/*   hb_compLinePushIfDebugger(); */
 }
 
 void hb_compCodeBlockEnd( void )
@@ -3820,6 +3858,10 @@ void hb_compCodeBlockEnd( void )
    {
       /* NOTE: 8 = HB_P_PUSHBLOCK + USHORT( size ) + USHORT( wParams ) + USHORT( wLocals ) + _ENDBLOCK */
       wSize = ( USHORT ) pCodeblock->lPCodePos + 8 + wLocals * 2;
+      if( hb_comp_bDebugInfo )
+      {
+         wSize += (3 + strlen( hb_comp_files.pLast->szFileName ) + strlen( hb_comp_functions.pLast->szName ));
+      }
 
       hb_compGenPCode3( HB_P_PUSHBLOCK, HB_LOBYTE( wSize ), HB_HIBYTE( wSize ), ( BOOL ) 0 );
       hb_compGenPCode2( HB_LOBYTE( pCodeblock->wParamCount ), HB_HIBYTE( pCodeblock->wParamCount ), ( BOOL ) 0 );
@@ -3837,6 +3879,19 @@ void hb_compCodeBlockEnd( void )
 
       pVar = pVar->pNext;
       hb_xfree( ( void * ) pFree );
+   }
+
+   if( hb_comp_bDebugInfo )
+   {
+      BYTE * pBuffer;
+
+      pBuffer = ( BYTE * ) hb_xgrab( 3 + strlen( hb_comp_files.pLast->szFileName ) + strlen( hb_comp_functions.pLast->szName ) );
+      pBuffer[0] = HB_P_MODULENAME;
+      memcpy( ( BYTE * ) ( &( pBuffer[1] ) ), ( BYTE * ) hb_comp_files.pLast->szFileName, strlen( hb_comp_files.pLast->szFileName ) );
+      pBuffer[ strlen( hb_comp_files.pLast->szFileName ) + 1 ] = ':';
+      memcpy( ( BYTE * ) ( &( pBuffer[ strlen( hb_comp_files.pLast->szFileName ) + 2 ] ) ), ( BYTE * ) hb_comp_functions.pLast->szName, strlen( hb_comp_functions.pLast->szName ) + 1 );
+      hb_compGenPCodeN( pBuffer, 3 + strlen( hb_comp_files.pLast->szFileName ) + strlen( hb_comp_functions.pLast->szName ), 0 );
+      hb_xfree( pBuffer );
    }
 
    hb_compGenPCodeN( pCodeblock->pCode, pCodeblock->lPCodePos, ( BOOL ) 0 );
