@@ -9,6 +9,10 @@
 */
    * tests/testpers.prg
 
+   * source/vm/hvm.c
+      * HB_P_SEND now invokes hb_vmPushSymbol()
+	
+
 2002-01-25 00:40 UTC-0800 Brian Hays <bhays@abacuslaw.com>
      * HBProfileLowLevel:gatherOPCodes() wasn't making a call to 
       * added arg to StrTran in LoadFromText() to limit conversion of
