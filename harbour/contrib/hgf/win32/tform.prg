@@ -53,59 +53,84 @@
 
 #include "common.ch"
 #include "hbclass.ch"
-#include "..\os2pm\os2pm.ch"
 
-CLASS TForm
+#define WM_CLOSE    0x0010
+#define WM_COMMAND  0x0111
+#define WM_DESTROY  0x0002
+#define WS_VISIBLE  0x10000000
+
+static aForms := {}
+
+CLASS TForm FROM TPersistent
 
    DATA      hWnd
    DATA      oMainMenu
+   DATA      cName
 
    CLASSDATA lRegistered
 
    METHOD    New()
+   METHOD    Close() INLINE SendMessage( ::hWnd, WM_CLOSE )
+   METHOD    Command( nNotifyCode, nId, hWndCtl )
+   METHOD    HandleEvent( nMsg, nParam1, nParam2 )
    METHOD    ShowModal()
 
-   METHOD    cCaption() INLINE WinGetText( ::hWnd )
+   METHOD    Caption() INLINE WinGetText( ::hWnd ) PROPERTY
 
-   ASSIGN    cCaption( cNewCaption ) INLINE ;
+   ASSIGN    Caption( cNewCaption ) INLINE ;
                 WinSetWindowText( ::hWnd, cNewCaption )
 
-   METHOD    oMenu() INLINE ::oMainMenu
-   ASSIGN    oMenu( oNewMenu )
+   METHOD    Menu() INLINE ::oMainMenu PROPERTY
+   ASSIGN    Menu( oNewMenu )
 
 ENDCLASS
 
 
 METHOD New() CLASS TForm
 
-   local hWndClient, res
-
    DEFAULT ::lRegistered TO .f.
 
+   Super:New()
+
    if ! ::lRegistered
-
-      // Notice that this code may be moved to a method Register()
-      // so we hide again the OS API details
-
-      res := WinRegisterClass( "HB_TFORM",;
-                        (CS_SIZEREDRAW + 0x2000001), 0 )
+      WinRegisterClass( "HB_TFORM" )
       ::lRegistered = .t.
    endif
 
-   // Again this code may be moved to a method Create() to hide the
-   // OS API details
+   ::hWnd  = WinCreateStdWindow( , WS_VISIBLE,, "HB_TFORM", "Harbour TForm" )
 
-   ::hWnd := WinCreateStdWindow( HWND_DESKTOP,;
-                                WS_VISIBLE,;
-                                (FCF_TITLEBAR + FCF_SYSMENU +;
-                                FCF_SIZEBORDER + FCF_TASKLIST +;
-                                FCF_MINMAX + FCF_SHELLPOSITION ),;
-                                "HB_TFORM", "Harbour TForm",;
-                                (WS_SYNCPAINT + WS_VISIBLE ),,,;
-                                @hWndClient ) // Not used yet
+   AAdd( aForms, Self )
 
 return Self
 
+METHOD Command( nNotifyCode, nId, hWndCtl ) CLASS TForm
+
+   local oMenuItem
+
+   if nNotifyCode == 0  // Menu command
+      if ::Menu != nil
+         if( oMenuItem := ::Menu:FindItem( nId ) ) != nil
+            if oMenuItem:OnClick != nil
+               __ObjSendMsg( Self, oMenuItem:OnClick, oMenuItem )
+            endif
+         endif
+      endif
+   endif
+
+return nil
+
+METHOD HandleEvent( nMsg, nParam1, nParam2 ) CLASS TForm
+
+   do case
+      case nMsg == WM_COMMAND
+           return ::Command( nHiWord( nParam1 ), nLoWord( nParam1 ), nParam2 )
+
+      case nMsg == WM_DESTROY
+           PostQuitMessage( 0 )
+           return 0
+   endcase
+
+return nil
 
 METHOD ShowModal() CLASS TForm
 
@@ -114,10 +139,22 @@ METHOD ShowModal() CLASS TForm
 return nil
 
 
-ASSIGN oMenu( oNewMenu ) CLASS TForm
+ASSIGN Menu( oNewMenu ) CLASS TForm
 
    ::oMainMenu = oNewMenu
 
    SetMenu( ::hWnd, oNewMenu:nHandle )
 
 return nil
+
+function HB_GUI( hWnd, nMsg, nParam1, nParam2 ) // messages entry point
+
+   local nForm := AScan( aForms, { | oForm | oForm:hWnd == hWnd } )
+
+   static aReturn := { nil, nil }
+
+   if nForm != 0
+      aReturn[ 1 ] = aForms[ nForm ]:HandleEvent( nMsg, nParam1, nParam2 )
+   endif
+
+return aReturn
