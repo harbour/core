@@ -1894,7 +1894,7 @@ ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
    {
       pField = ( LPDBFFIELD ) ( pBuffer + uiCount * sizeof( DBFFIELD ) );
       pFieldInfo.atomName = pField->bName;
-      hb_strUpper( pFieldInfo.atomName,11 );
+      hb_strUpper( ( char * ) pFieldInfo.atomName,11 );
       pFieldInfo.uiLen = pField->bLen;
       pFieldInfo.uiDec = 0;
       switch( pField->bType )
