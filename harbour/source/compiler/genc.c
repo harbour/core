@@ -1100,25 +1100,27 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
                break;
 
             case HB_P_SEQBEGIN:
-               w = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
-               fprintf( yyc, "\tHB_P_SEQBEGIN, %i, %i,",
+               w = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 + pFunc->pCode[ lPCodePos + 3 ] * 65536;
+               fprintf( yyc, "\tHB_P_SEQBEGIN, %i, %i, %i,",
                         pFunc->pCode[ lPCodePos + 1 ],
-                        pFunc->pCode[ lPCodePos + 2 ] );
-               if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %i (abs: %05li) */", w, lPCodePos + ( w ? w : 3 ) );
+                        pFunc->pCode[ lPCodePos + 2 ],
+                        pFunc->pCode[ lPCodePos + 3 ] );
+               if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %i (abs: %05li) */", w, lPCodePos + ( w ? w : 4 ) );
                fprintf( yyc, "\n" );
-               lPCodePos += 3;
+               lPCodePos += 4;
                break;
 
             case HB_P_SEQEND:
                if( hb_comp_bGenCVerbose ) fprintf( yyc, "/* %05li */ ", lPCodePos );
                else fprintf( yyc, "\t" );
-               w = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
-               fprintf( yyc, "HB_P_SEQEND, %i, %i,",
+               w = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 + pFunc->pCode[ lPCodePos + 3 ] * 65536;
+               fprintf( yyc, "HB_P_SEQEND, %i, %i, %i,",
                         pFunc->pCode[ lPCodePos + 1 ],
-                        pFunc->pCode[ lPCodePos + 2 ] );
-               if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %i (abs: %05li) */", w, lPCodePos + ( w ? w : 3 ) );
+                        pFunc->pCode[ lPCodePos + 2 ],
+                        pFunc->pCode[ lPCodePos + 3 ] );
+               if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %i (abs: %05li) */", w, lPCodePos + ( w ? w : 4 ) );
                fprintf( yyc, "\n" );
-               lPCodePos += 3;
+               lPCodePos += 4;
                break;
 
             case HB_P_SEQRECOVER:
@@ -1166,6 +1168,11 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
 
             case HB_P_ZERO:
                fprintf( yyc, "\tHB_P_ZERO,\n" );
+               lPCodePos++;
+               break;
+
+            case HB_P_NOOP:
+               fprintf( yyc, "\tHB_P_NOOP,\n" );
                lPCodePos++;
                break;
 

@@ -185,7 +185,7 @@ static void hb_macroSyntaxError( HB_MACRO_PTR pMacro )
    if( pMacro )
    {
       HB_TRACE(HB_TR_DEBUG, ("hb_macroSyntaxError.(%s)", pMacro->string));
-      
+
       hb_macroDelete( pMacro );   /* TODO: use pMacro->status for more detailed error messagess */
    }
 
@@ -936,7 +936,7 @@ void hb_compGenPopAliasedVar( char * szVarName,
                               long lWorkarea, HB_MACRO_DECL )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_compGenPopAliasedVar(%s->%s)",szAlias,szVarName));
-   
+
    if( bPushAliasValue )
    {
       if( szAlias )
@@ -1031,7 +1031,7 @@ void hb_compGenPushAliasedVar( char * szVarName,
                                long lWorkarea, HB_MACRO_DECL )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_compGenPushAliasedVar(%s->%s)",szAlias,szVarName));
-   
+
    if( bPushAliasValue )
    {
       if( szAlias )

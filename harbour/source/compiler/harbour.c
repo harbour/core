@@ -1246,7 +1246,7 @@ ULONG hb_compGenJump( LONG lOffset )
 {
    int iBytes;
 
-   /* Just a place holder so it might be a far jump...*/
+   /* Just a place holder, it might be a far jump...*/
    if ( lOffset == 0 )
    {
       hb_compGenPCode3( HB_P_JUMPFAR, 0, 0 );
@@ -1276,7 +1276,7 @@ ULONG hb_compGenJumpFalse( LONG lOffset )
 {
    int iBytes;
 
-   /* Just a place holder so it might be a far jump...*/
+   /* Just a place holder, it might be a far jump...*/
    if ( lOffset == 0 )
    {
       hb_compGenPCode3( HB_P_JUMPFARFALSE, 0, 0 );
@@ -1309,11 +1309,63 @@ void hb_compGenJumpThere( ULONG ulFrom, ULONG ulTo )
 
    if ( lOffset >= SHRT_MIN && lOffset <= SHRT_MAX )
    {
+      switch ( pCode[ ( ULONG ) ulFrom - 1 ] )
+      {
+         case HB_P_JUMP :
+            break;
+
+         case HB_P_JUMPTRUE :
+            break;
+
+         case HB_P_JUMPFALSE :
+            break;
+         case HB_P_JUMPFAR :
+            pCode[ ( ULONG ) ulFrom - 1 ] = HB_P_JUMP;
+            pCode[ ( ULONG ) ulFrom + 2 ] = HB_P_NOOP;
+            break;
+
+         case HB_P_JUMPFARTRUE :
+            pCode[ ( ULONG ) ulFrom - 1 ] = HB_P_JUMPTRUE;
+            pCode[ ( ULONG ) ulFrom + 2 ] = HB_P_NOOP;
+            break;
+
+         case HB_P_JUMPFARFALSE :
+            pCode[ ( ULONG ) ulFrom - 1 ] = HB_P_JUMPFALSE;
+            pCode[ ( ULONG ) ulFrom + 2 ] = HB_P_NOOP;
+            break;
+
+         case HB_P_SEQBEGIN :
+            break;
+
+         case HB_P_SEQEND :
+            break;
+
+         default:
+            printf( "\rPCode: %i", pCode[ ( ULONG ) ulFrom - 1 ] );
+            hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_JUMP_NOT_FOUND, NULL, NULL );
+            break;
+      }
+
       pCode[ ( ULONG ) ulFrom ]     = HB_LOBYTE( lOffset );
       pCode[ ( ULONG ) ulFrom + 1 ] = HB_HIBYTE( lOffset );
    }
    else if ( lOffset >= (-8388608L) && lOffset <= 8388607L )
    {
+      switch ( pCode[ ( ULONG ) ulFrom - 1 ] )
+      {
+         case HB_P_JUMP :
+            hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_INVALID_JUMP, NULL, NULL );
+            break;
+
+         case HB_P_JUMPTRUE :
+            hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_INVALID_JUMPTRUE, NULL, NULL );
+            break;
+
+         case HB_P_JUMPFALSE :
+            hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_INVALID_JUMPFALSE, NULL, NULL );
+            break;
+      }
+
       pCode[ ( ULONG ) ulFrom ]     = HB_LOBYTE( lOffset );
       pCode[ ( ULONG ) ulFrom + 1 ] = HB_HIBYTE( lOffset );
       pCode[ ( ULONG ) ulFrom + 2 ] = ( BYTE ) ( ( ( USHORT ) ( lOffset ) >> 16 ) & 0xFF );
@@ -1333,7 +1385,7 @@ ULONG hb_compGenJumpTrue( LONG lOffset )
 {
    int iBytes;
 
-   /* Just a place holder so it might be a far jump...*/
+   /* Just a place holder, it might be a far jump...*/
    if ( lOffset == 0 )
    {
       hb_compGenPCode3( HB_P_JUMPFARTRUE, 0, 0 );
@@ -1358,7 +1410,6 @@ ULONG hb_compGenJumpTrue( LONG lOffset )
 
    return hb_comp_functions.pLast->lPCodePos - iBytes;
 }
-
 
 void hb_compLinePush( void ) /* generates the pcode with the currently compiled source code line */
 {
@@ -2056,8 +2107,9 @@ void hb_compFixReturns( void ) /* fixes all last defined function returns jumps 
 ULONG hb_compSequenceBegin( void )
 {
    hb_compGenPCode3( HB_P_SEQBEGIN, 0, 0 );
+   hb_compGenPCode1( 0 );
 
-   return hb_comp_functions.pLast->lPCodePos - 2;
+   return hb_comp_functions.pLast->lPCodePos - 3;
 }
 
 /* Generate the opcode to close BEGIN/END sequence
@@ -2070,8 +2122,9 @@ ULONG hb_compSequenceBegin( void )
 ULONG hb_compSequenceEnd( void )
 {
    hb_compGenPCode3( HB_P_SEQEND, 0, 0 );
+   hb_compGenPCode1( 0 );
 
-   return hb_comp_functions.pLast->lPCodePos - 2;
+   return hb_comp_functions.pLast->lPCodePos - 3;
 }
 
 /* Remove unnecessary opcodes in case there were no executable statements
@@ -2084,7 +2137,7 @@ void hb_compSequenceFinish( ULONG ulStartPos, int bUsualStmts )
       if( ! bUsualStmts )
       {
          hb_comp_functions.pLast->lPCodePos = ulStartPos - 1; /* remove also HB_P_SEQBEGIN */
-         hb_comp_ulLastLinePos = ulStartPos - 4;
+         hb_comp_ulLastLinePos = ulStartPos - 5;
       }
    }
 }

@@ -81,7 +81,11 @@ char * hb_comp_szErrors[] =
    "Bound error: \'%s\'",
    "Macro of declared symbol: \'%s\'",
    "Invalid selector in send: \'%s\'",
-   "ANNOUNCEd procedure \'%s\' must be a public symbol"
+   "ANNOUNCEd procedure \'%s\' must be a public symbol",
+   "Jump offset too long for HB_P_JUMP needed HB_P_JUMPFAR",
+   "Jump offset too long for HB_P_JUMPTRUE needed HB_P_JUMPFARTRUE",
+   "Jump offset too long for HB_P_JUMPFALSE needed HB_P_JUMPFARFALSE",
+   "HB_P_JUMPx not found when fixing offset"
 };
 
 /* Table with parse warnings */

@@ -616,7 +616,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
              * 2) store the address of RECOVER or END opcode
              */
             hb_stack.pPos->type = HB_IT_LONG;
-            hb_stack.pPos->item.asLong.value = w + pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
+            hb_stack.pPos->item.asLong.value = w + pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) + ( pCode[ w + 3 ] * 65536 );
             hb_stackPush();
             /*
              * 3) store current RECOVER base
@@ -639,7 +639,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
              * we are now inside a valid SEQUENCE envelope
              */
             bCanRecover = TRUE;
-            w += 3;
+            w += 4;
             break;
 
          case HB_P_SEQEND:
@@ -672,7 +672,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
             /*
              * skip outside of SEQUENCE structure
              */
-            w += pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
+            w += pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) + ( pCode[ w + 3 ] * 65536 );
             break;
 
          case HB_P_SEQRECOVER:
