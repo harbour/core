@@ -239,10 +239,6 @@ DECLARE TClass ;
    _HB_MEMBER <MethodName>() [ AS <type> ];;
    s_oClass:AddVirtual( <(MethodName)> )
 
-#xcommand METHOD <MethodName> [ AS <type> ] DEFERRED => ;
-   _HB_MEMBER <MethodName>() [ AS <type> ];;
-   s_oClass:AddVirtual( <(MethodName)> )
-
 #endif
 
 
