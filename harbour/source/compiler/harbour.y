@@ -309,7 +309,8 @@ char * _szCErrors[] =
    "Invalid lvalue",
    "Invalid use of \'@\' (pass by reference): \'%s\'",
    "Formal parameters already declared",
-   "Invalid %s from within of SEQUENCE code"
+   "Invalid %s from within of SEQUENCE code",
+   "Unterminated array index"
 };
 
 /* Table with parse warnings */

@@ -6,6 +6,7 @@
     + Changed spaces to tabs in the generated code. This made the 
       generated code size almost 30% smaller, and the comments better aligned.
   * source/compiler/harbour.l
+    source/compiler/harbour.y
     include/hberrors.h
     + One yyerror() call converted to standard GenError().
   * source/hbpp/hbppint.c
