@@ -36,8 +36,6 @@
 
 /* Compile using: flex -i -8 -oyylex.c harbour.l */
 
-/* TODO: 4 character abbreviation for strong typing keywords should be added
-         to be VO compatible [vszakats] */
 /* TODO: VOID strong typing keyword should be added as a new type for NIL.
          [vszakats] */
 

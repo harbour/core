@@ -1,3 +1,7 @@
+2000-09-23 10:10 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * source/compiler/harbour.l
+     * Removed TODO 4 Char abbreviation (done few weeks back).
+
 2000-09-23 10:00 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * include/hbclass.ch
      * Changed AS ... from ALL CAPS to Capitalized, to avoid conflict with FWH #defines, for those not using modified DLL.CH
