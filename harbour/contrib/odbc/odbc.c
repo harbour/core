@@ -64,6 +64,10 @@
  *
  */
 
+#include "hbapi.h"
+#include "hbapiitm.h"
+#include "hbdefs.h"
+ 
 #if defined(HB_OS_WIN_32)
    #include <windows.h>
 #endif
@@ -73,9 +77,6 @@
 #include <math.h>
 #include <stdlib.h>
 #include <ctype.h>
-#include "hbapi.h"
-#include "hbapiitm.h"
-#include "hbdefs.h"
 #include <sql.h>
 #include <sqlext.h>
 #include <sqltypes.h>

@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+    ! The default SET PRINTER TO device is supposed to be "PRN".
+
+2002-03-20 14:38 UTC-0300 Walter Negro <anegro@overnet.com.ar>
+   * source/rtl/tget.prg
      * Fix bug in PICTURE '@S'
    * source/rtl/tgetlist.prg
    * source/rtl/listbox.prg
