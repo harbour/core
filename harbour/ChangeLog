@@ -1,11 +1,13 @@
+19991004-18:58 GMT+1 Victor Szel <info@szelvesz.hu>
+  + source/runner/stdalone/hbrun.prg
+    + Added (now for sure)
+
 19991004-18:53 GMT+1 Victor Szel <info@szelvesz.hu>
   + include/reserved.ch
     + Added for complete Clipper compatibility, the file is a dummy, so it's
       a TODO to replicate to originial functionality.
   * include/Makefile
     * Updated.
-  - source/runner/stdalone/hbrun.prg
-    + Added (now for sure)
 
 Mon Oct 04 12:52:42 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
