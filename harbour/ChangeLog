@@ -8,21 +8,26 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-03-02 12:17 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+   * source/rtl/fstemp.c
+   * source/rdd/dbfntx/dbfntx1.c
+     - Two linux linking time warnings removed
+
 2004-03-01 11:15 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * include/hbexprb.c
    * include/hbmacro.ch
-      * fixed support for strings as array of bytes 
+      * fixed support for strings as array of bytes
         (in macro compiler)
       * added a new #define HB_SM_ARRSTR as a flag
         for HB_SETMACRO() to disable/enable strings
         as array of bytes
-       
+
    * source/vm/macro.c
       * added HB_SM_ARRSTR support
       * fixed TYPE() function to return correct value when an
         assigment to undeclared variable is checked (Clipper
         creates the memvar variable) - thanks to Phil Krylov
-      
+
    * source/compiler/hbusage.c
       * fixed typo for -ks switch
 
@@ -54,7 +59,7 @@
       * added HB_ITEM_PTR pError member to HB_MACRO structure
       * fixed bug in macro compiler - calls to static
         functions are not allowed in macro compiler
-      
+
    * source/common/expropt1.c
    * source/common/hbffind.c
       *fixed minor warnings reported by Randy Portnoff
@@ -64,11 +69,11 @@
 
    * source/rtl/idle.c
       *small optimization of hb_idleState()
-      
+
    * source/compiler/harbour.y
       *the compiler generates line number for DO CASE
       (if debug info requested - to allow breakpoint)
-      
+
    * source/debug/debugger.prg
       *the debugger shows the line number for modules where
       no source code is available
@@ -97,7 +102,7 @@
    * source/rtl/tbrowse.prg
      ! fixed initialization bug that miscalculated ::RowCount in ::Stabilize()
      ! fixed ASSIGN freeze to return ::nFrozenCols (Clipper compatibility)
-     ! fixed ::RefreshCurrent() to validate ::aRedraw to avoid r/t error  
+     ! fixed ::RefreshCurrent() to validate ::aRedraw to avoid r/t error
      ! fixed ::rect assignment in ::Configure (3rd param was ::nHeaderHeight
              instead of ::nFooterHeight)
 
@@ -108,7 +113,7 @@
       #define PRE_CHAR  'A'
       #define IDX_EXPR(x)  PRE_CHAR+x
       INDEX ON IDX_EXPR(myfield) TO myfile
-            
+
    * source/pp/pptable.c
       * updated for fixes in ppcore.c (_DFSET define)
 
@@ -130,34 +135,34 @@
 2004-03-19 08:20 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * source/debug/debugger.prg
       * fixed refreshing of watchpoints
-      
+
    * source/pp/ppcore.c
       * fixed bug introduced with my previous commit
-      
+
 
 2004-03-18 12:45 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * include/hberrors.h
    * source/pp/ppcore.c
-      *fixed #define parsing of pseudofunctions in cases where 
+      *fixed #define parsing of pseudofunctions in cases where
        passed argument has the same name as declared parameter
       *fixed #define parsing of pseudofunctions - the following
       syntax is not allowed:
       #define test(x,x) - duplicated parameters
       #define test(x,)  - missing parameter
       #define test(x    - missing parenthes
-   
+
    * source/common/expropt1.c
       * fixed generation of pcode for &(macro)->() syntax
 
    * source/compiler/harbour.l
       * fixed GPF when string with unmatched terminator was used
-      
-      
+
+
    * include/hbexprop.h
    * source/compiler/harbour.y
-      * removed direct access to internals of expression 
+      * removed direct access to internals of expression
       optimizer structure
-      
+
    * source/debug/debugger.prg
       * fixed checking of path separator
 
@@ -183,7 +188,7 @@
   * source/rdd/workarea.c
   * source/rdd/dbfcdx/dbfcdx1.c
     * more synchronization with xHarbour's RDD.
- 
+
 2004-03-09 10:15 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
    * hrbdll.bc
      * Added reference to missing hbrandom.c. Can a MSVC user sync hrbdll.vc?
@@ -191,7 +196,7 @@
 2004-03-09 13:50 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    + source/rtl/altd.prg
       +new file with ALTD() procedure code
-      
+
    * hrbdll.bc
    * hrbdll.vc
    * makefile.bc
