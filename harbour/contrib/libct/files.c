@@ -53,7 +53,7 @@
 
 #define HB_OS_WIN_32_USED
 #include <hbapi.h>
-#include <dir.h>
+
 
 #if defined(HB_OS_DOS) 
 static struct ffblk fsOldFiles;
@@ -76,13 +76,14 @@ static struct ffblk fsOldFiles;
    #endif
       #include "hb_io.h"
       #include "dos.h"
-
+      #include <dir.h>
 #endif
 #if defined(HB_OS_WIN_32)
 static       HANDLE hLastFind;
 static       WIN32_FIND_DATA  Lastff32;
 LPTSTR GetDate(FILETIME *rTime);
 LPTSTR GetTime(FILETIME *rTime);
+#include <dir.h>
 #endif
 
 
