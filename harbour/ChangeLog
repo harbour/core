@@ -1,3 +1,17 @@
+2000-12-03 15:05 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * source/compiler/harbour.sly
+     ! Optimized __GETA() support, and changed it to be implementated identical to Clipper.
+       /* Clipper passed a bGet Block which refrences the Base Array Variable and not the Variable itself.
+          Clipper passes NIL instead of bGet block if the Base Array is MACROVAR or MACROTEXT.
+          Clipper does not optimize "&Macro" to Macro, but Harbour does! */
+
+   * source/rtl/tgetint.prg
+     * __GETA() Changed 1st parameter aVar to bGetArray and logic to get the Base Array if bGetArray is NIL
+       /* Optimized to not use macro if possible (most cases) even if the GetArray is a macro. */
+
+   * tests/testget.prg
+     + Added additional test.
+
 2000-12-03 10:45 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/pp/ppcore.c
      + Added support for whaite space between = and > in #[x]command/[x]translate rules.

@@ -31,6 +31,13 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
  * their web site at http://www.gnu.org/).
  *
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2000 RonPinkas <Ron@Profit-Master.com>
+ *    __GET()
+ *    __GETA()
+ *
  */
 
 #include "hbclass.ch"
@@ -50,11 +57,9 @@ FUNCTION __GET( bSetGet, cVarName, cPicture, bValid, bWhen )
    LOCAL oGet
 
    IF( bSetGet == NIL )
-      //Alert( "No Block: " + cVarName )
       IF __ISMV( cVarName )
          bSetGet := {|_1| IIF( _1 == NIL,  __MVGET( cVarName ), __MVPUT( cVarName, _1 ) ) }
       ELSE
-         //Alert( "Not Mem Var: " + cVarName )
          // "{|_1| IIF( _1 == NIL, &cVarName, &cVarName := _1 )"
          bSetGet := &( "{|_1| IIF( _1 == NIL, " + cVarName + ", " + cVarName + " := _1 ) }" )
       ENDIF
@@ -68,15 +73,24 @@ FUNCTION __GET( bSetGet, cVarName, cPicture, bValid, bWhen )
    RETURN oGet
 
 
-FUNCTION __GETA( aVar, cVarName, cPicture, bValid, bWhen, aIndex )
+FUNCTION __GETA( bGetArray, cVarName, cPicture, bValid, bWhen, aIndex )
 
    LOCAL oGet, nDim := Len( aIndex ), bSetGet, aGetVar, Counter
 
-   aGetVar := aVar
+   IF( bGetArray == NIL )
+      IF __ISMV( cVarName )
+         aGetVar := __MVGET( cVarName )
+      ELSE
+         aGetVar := &cVarName
+      ENDIF
+   ELSE
+      aGetVar := Eval( bGetArray )
+   ENDIF
+
    FOR Counter := 1 TO nDim - 1
       aGetVar := aGetVar[aIndex[Counter]]
    NEXT
-   bSetGet := {|xValue| IIF( PCOUNT() == 0, aGetVar[aIndex[Counter]], aGetVar[aIndex[Counter]] := xValue )}
+   bSetGet := {|_1| IIF( _1 == NIL, aGetVar[aIndex[Counter]], aGetVar[aIndex[Counter]] := _1 ) }
 
    oGet := Get():New( , ,bSetGet, cVarName, cPicture )
    oGet:SubScript := aIndex

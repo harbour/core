@@ -241,7 +241,7 @@ static void hb_compDebugStart( void ) { };
 %type <asExpr>  DimIndex DimList
 %type <asExpr>  FieldAlias FieldVarAlias
 %type <asExpr>  PostOp
-%type <asExpr>  Get GetVar GetA GetArgList
+%type <asExpr>  Get GetVar GetA GetVarArray GetArgList
 
 %%
 
@@ -452,7 +452,7 @@ NilAlias   : NilValue ALIASOP          { $$ = $1; }
 /* Literal string value
  */
 LiteralValue : LITERAL                    { $$ = hb_compExprNewString( $1 );
-					    if( bTrancuateBaseArray )
+					    if( bTrancuateBaseArray && pBaseArrayName == NULL )
                                             { char *pCopy = hb_strdup( $1 ), *pTmp = strchr( pCopy, '[' );
                                               if( pTmp )
 					      {
@@ -1058,7 +1058,6 @@ Get        : GET GetVar ','
              EmptyExpression { hb_compExprAddListExpr( pGetArgList, $14 ); /* WhenBlock  */ }
 	     GetAExt ')'
              {
-
 		/* TODO: Clipper allways error, but we can handle simple macros or macros with no declared symbols!!! */
                 hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_GET_COMPLEX_MACRO, NULL, NULL );
                 $$ = hb_compExprNewFunCall( hb_compExprNewFunName( "__GET"), pGetArgList ); pGetArgList = NULL;
@@ -1082,35 +1081,33 @@ GetArgList : Argument                     { $$ = hb_compExprAddListExpr( pGetArg
            | GetArgList ',' Argument      { $$ = hb_compExprAddListExpr( pGetArgList, $3 ); }
            ;
 
-GetA       : GET Variable ArrayIndex { pGetArgList = hb_compExprNewArgList( $2 ); bTrancuateBaseArray = TRUE; } ','
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, ( pBaseArrayName ? pBaseArrayName : $6 ) ); pBaseArrayName = NULL; /* Var Name */ } ','
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, $9 ) ; /* Picture    */ } ','
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, $12 ); /* ValidBlock */ } ','
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, $15 ); /* WhenBlock  */ } ','
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, hb_compExprNewArray( pArrayIndexAsList ) ); /* Array with Index Expressions as 6th parameter */ }
-	     GetAExt ')' { $$ = hb_compExprNewFunCall( hb_compExprNewFunName( "__GETA"), pGetArgList ); pGetArgList = NULL; }
-          | GET AliasVar ArrayIndex { pGetArgList = hb_compExprNewArgList( $2 ); bTrancuateBaseArray = TRUE; } ','
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, ( pBaseArrayName ? pBaseArrayName : $6 ) ); pBaseArrayName = NULL; /* Var Name */ } ','
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, $9 ) ; /* Picture    */ } ','
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, $12 ); /* ValidBlock */ } ','
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, $15 ); /* WhenBlock  */ } ','
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, hb_compExprNewArray( pArrayIndexAsList ) ); /* Array with Index Expressions as 6th parameter */ }
-	     GetAExt ')' { $$ = hb_compExprNewFunCall( hb_compExprNewFunName( "__GETA"), pGetArgList ); pGetArgList = NULL; }
-         | GET MacroVar ArrayIndex { pGetArgList = hb_compExprNewArgList( $2 ); bTrancuateBaseArray = TRUE; } ','
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, ( pBaseArrayName ? pBaseArrayName : $6 ) ); pBaseArrayName = NULL; /* Var Name */ } ','
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, $9 ) ; /* Picture    */ } ','
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, $12 ); /* ValidBlock */ } ','
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, $15 ); /* WhenBlock  */ } ','
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, hb_compExprNewArray( pArrayIndexAsList ) ); /* Array with Index Expressions as 6th parameter */ }
-	     GetAExt ')' { $$ = hb_compExprNewFunCall( hb_compExprNewFunName( "__GETA"), pGetArgList ); pGetArgList = NULL; }
-         | GET MacroExpr ArrayIndex { pGetArgList = hb_compExprNewArgList( $2 ); bTrancuateBaseArray = TRUE; } ','
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, ( pBaseArrayName ? pBaseArrayName : $6 ) ); pBaseArrayName = NULL; /* Var Name */ } ','
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, $9 ) ; /* Picture    */ } ','
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, $12 ); /* ValidBlock */ } ','
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, $15 ); /* WhenBlock  */ } ','
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, hb_compExprNewArray( pArrayIndexAsList ) ); /* Array with Index Expressions as 6th parameter */ }
-	     GetAExt ')' { $$ = hb_compExprNewFunCall( hb_compExprNewFunName( "__GETA"), pGetArgList ); pGetArgList = NULL; }
+GetA       : GET GetVarArray { pGetArgList = hb_compExprNewArgList( $2 ); bTrancuateBaseArray = TRUE; } ','
+             EmptyExpression { hb_compExprAddListExpr( pGetArgList, ( pBaseArrayName ? pBaseArrayName : $5 ) ); pBaseArrayName = NULL; /* Var Name */ } ','
+             EmptyExpression { hb_compExprAddListExpr( pGetArgList, $8 ) ; /* Picture    */ } ','
+             EmptyExpression { hb_compExprAddListExpr( pGetArgList, $11 ); /* ValidBlock */ } ','
+             EmptyExpression { hb_compExprAddListExpr( pGetArgList, $14 ); /* WhenBlock  */
+                               hb_compExprAddListExpr( pGetArgList, hb_compExprNewArray( pArrayIndexAsList ) ); /* Array with Index Expressions as 6th parameter */
+                             }
+	     GetAExt ')'     { $$ = hb_compExprNewFunCall( hb_compExprNewFunName( "__GETA"), pGetArgList ); pGetArgList = NULL; }
 	   ;
+
+GetVarArray : Variable  ArrayIndex { $$ = hb_compExprAddListExpr( hb_compExprNewCodeBlock(), $1 ); }
+	    | AliasVar  ArrayIndex { $$ = hb_compExprAddListExpr( hb_compExprNewCodeBlock(), $1 ); }
+	    | MacroVar  ArrayIndex { $$ = hb_compExprNewNil();
+                                     if( $1->value.asMacro.cMacroOp )
+				     {
+					pBaseArrayName = hb_compExprNewVar( $1->value.asMacro.szMacro );
+				     }
+				     else
+				     {
+					pBaseArrayName = hb_compExprNewString( $1->value.asMacro.szMacro );
+				     }
+                                   }
+	    | MacroExpr ArrayIndex { $$ = hb_compExprNewNil();
+		          /* TODO: Clipper allways error, but we can handle simple macros or macros with no declared symbols!!! */
+                          hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_GET_COMPLEX_MACRO, NULL, NULL );
+			}
+	    ;
 
 GetAExt   : { /* Nothing*/ }
 	  | ',' GetArgList
