@@ -43,7 +43,7 @@
 #include <errno.h>
 #include <fcntl.h>
 
-#if defined(HB_OS_UNIX) || defined(HARBOUR_GCC_OS2)
+#if defined(HB_OS_UNIX) || defined(HARBOUR_GCC_OS2) || defined(__DJGPP__)
 # include <unistd.h>
 # include <utime.h>
 # include <sys/types.h>
@@ -74,7 +74,7 @@ void hb____ChangeFileDate(char *filename,uLong dosdate,tm_unz tmu_date)
   LocalFileTimeToFileTime(&ftLocal,&ftm);
   SetFileTime(hFile,&ftm,&ftLastAcc,&ftm);
   CloseHandle(hFile);
-#elif defined(HB_OS_UNIX) || defined(HARBOUR_GCC_OS2)
+#elif defined(HB_OS_UNIX) || defined(HARBOUR_GCC_OS2)  || defined(__DJGPP__)
   struct utimbuf ut;
   struct tm newdate;
   newdate.tm_sec = tmu_date.tm_sec;
@@ -174,7 +174,7 @@ int hb___Extract(unzFile szUnzipFile,BOOL bExtractPath,BOOL opt_overwrite,PHB_IT
         if (err!=UNZ_OK) {
 /*                printf("error %d with zipfile in unzGetGlobalInfo \n",err);*/
 }
-        for (uiCounter=1;uiCounter<=szGlobalUnzipInfo.number_entry;uiCounter++)
+        for (uiCounter=1;uiCounter<=(uLong)szGlobalUnzipInfo.number_entry;uiCounter++)
 	{
 
         if (hb___ExtractCurrentFile(szUnzipFile,bExtractPath,
@@ -194,7 +194,6 @@ int hb___Extract(unzFile szUnzipFile,BOOL bExtractPath,BOOL opt_overwrite,PHB_IT
 
         return 1;
 }
-
 
 
 
@@ -227,8 +226,8 @@ BOOL hb___unZipFiles(char *szFile,PHB_ITEM pBlock,BOOL bExtractPath)
 
         if (szUnzipFile==NULL)
 	{
-/*                printf("Cannot open %s or %s.zip\n",szZipFileName,szZipFileName);*/
-		exit (1);
+
+        return -1;
 	}
 
         if (opt_do_extract)
@@ -323,7 +322,7 @@ int hb___ExtractCurrentFile(unzFile szUnzipFile,BOOL popt_extract_without_path,B
 		if ((skip==0) && (err==UNZ_OK))
 		{
 
-                        nFileHandle=hb_fsCreate((char *) write_filename,FC_NORMAL);
+                        nFileHandle=(FHANDLE) hb_fsCreate((char *) write_filename,FC_NORMAL);
 
 
             /* some zipfile don't contain directory alone before file */
@@ -411,7 +410,7 @@ int hb___GetNumbersofFilestoUnzip(char *szFile)
 
         if (szUnzipFile==NULL)
 	{
-		exit (1);
+        return 0;
 	}
         err = unzGetGlobalInfo (szUnzipFile,&szGlobalUnzipInfo);
 /*        if (err==ZIP_OK)                                {
@@ -435,7 +434,7 @@ PHB_ITEM hb___GetFilesNamesFromZip(char *szFile,BOOL iMode)
         PHB_ITEM pItem=NULL;
         PHB_ITEM pArray=NULL;
 
-        uLong uiCount;
+        int uiCount;
         unz_global_info szGlobalUnzipInfo;
                 if (szZipFileName == NULL)
                 {
@@ -459,7 +458,7 @@ PHB_ITEM hb___GetFilesNamesFromZip(char *szFile,BOOL iMode)
 	}
         err = unzGetGlobalInfo (szUnzipFile,&szGlobalUnzipInfo);
         if (err==ZIP_OK)                                {
-        iNumbersOfFiles=szGlobalUnzipInfo.number_entry;
+        iNumbersOfFiles=(uLong)szGlobalUnzipInfo.number_entry;
         pArray=hb_itemArrayNew( iNumbersOfFiles );
 }
  for(uiCount=0;uiCount<iNumbersOfFiles;uiCount++) {
@@ -566,11 +565,9 @@ PHB_ITEM hb___GetFilesNamesFromZip(char *szFile,BOOL iMode)
                 hb_itemRelease(pItem);
 
                 }
-                if ((uiCount+1)<iNumbersOfFiles)
-		{
+                if ((uiCount+1)<iNumbersOfFiles)		{
                         err = unzGoToNextFile(szUnzipFile);
-			if (err!=UNZ_OK)
-			{
+			if (err!=UNZ_OK)			{
 				break;
 			}
 
@@ -582,11 +579,9 @@ PHB_ITEM hb___GetFilesNamesFromZip(char *szFile,BOOL iMode)
         hb_itemReturn(pArray);
 
 }
-void   hb_____GetTime(unz_file_info file_info)
+void  hb_____GetTime(unz_file_info file_info)
 {
-
   struct tm t;
-
   t.tm_sec    = file_info.tmu_date.tm_sec;
   t.tm_min    = file_info.tmu_date.tm_min;
   t.tm_hour   = file_info.tmu_date.tm_hour;
@@ -597,4 +592,5 @@ void   hb_____GetTime(unz_file_info file_info)
   t.tm_yday   = 0;
   t.tm_isdst  = 0;
   strcpy(szTempTime, asctime(&t));
+
 }

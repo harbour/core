@@ -43,7 +43,7 @@
 #include <errno.h>
 #include <fcntl.h>
 
-#if defined(HB_OS_UNIX) || defined(HARBOUR_GCC_OS2)
+#if defined(HB_OS_UNIX) || defined(HARBOUR_GCC_OS2) || defined(__DJGPP__)
 # include <unistd.h>
 # include <utime.h>
 # include <sys/types.h>
@@ -85,7 +85,7 @@ uLong hb___filetime(char *f, tm_zip *tmzip, uLong *dt)
   }
   return iRet;
 }
-#elif defined(HB_OS_UNIX)
+#elif defined(HB_OS_UNIX) || defined(HARBOUR_GCC_OS2) || defined(__DJGPP__)
 uLong hb___filetime(char *f, tm_zip *tmzip, uLong *dt)
 {
   int ret=0;
@@ -146,7 +146,7 @@ char *hb___CheckFile( char * szFile)
 int hb___CompressOneFile(char *szFile,char *szFiletoCompress,int iCompLevel,PHB_ITEM pBlock,BOOL bOverWrite)
 
 {
-    int uiCount;
+
     char szNewFile[MAXFILENAME];
     strcpy(szNewFile,szFile);
 
@@ -192,7 +192,7 @@ int hb___CompressOneFile(char *szFile,char *szFiletoCompress,int iCompLevel,PHB_
 
                 if (err == ZIP_OK)
                 {
-                    nFileHandle = hb_fsOpen(filenameinzip,FO_READ+FO_COMPAT);
+                    nFileHandle = (FHANDLE) hb_fsOpen(filenameinzip,FO_READ+FO_COMPAT);
                     if (nFileHandle==NULL)
                     {
                         err=ZIP_ERRNO;
@@ -305,7 +305,7 @@ int   hb___CompressMultipleFile(char *szFile,PHB_ITEM pArray,int iCompLevel,PHB_
 
                 if (err == ZIP_OK)                {
 
-                nFileHandle = hb_fsOpen((char*)  filenameinzip,FO_READ+FO_COMPAT);
+                nFileHandle = (FHANDLE)hb_fsOpen((char*)  filenameinzip,FO_READ+FO_COMPAT);
 
                     if (nFileHandle==NULL)
                     {
