@@ -25,6 +25,7 @@
     minor fixes.
   * include/set.h
     source/rtl/set.c
+    source/vm/hvm.c
     InitializeSets() -> hb_setInitialize()
     ReleaseSets() -> hb_setRelease()
   * types.h -> hbdefs.h

@@ -113,7 +113,6 @@ void LogSymbols( void );         /* displays all dynamic symbols */
 void ReleaseClasses( void );       /* releases all defined classes */
 void ReleaseLocalSymbols( void );  /* releases the memory of the local symbols linked list */
 void ReleaseDynamicSymbols( void ); /* releases the memory of the dynamic symbol table */
-void ReleaseSets( void ); /* releases Sets consumed memory */
 
 /* stack management functions */
 void StackPop( void );        /* pops an item from the stack */
@@ -197,7 +196,7 @@ BYTE bErrorLevel = 0;  /* application exit errorlevel */
    stack.Return.wType = IT_NIL;
    StackInit();
    NewDynSym( &symEval );  /* initialize dynamic symbol for evaluating codeblocks */
-   InitializeSets();       /* initialize Sets */
+   hb_setInitialize();     /* initialize Sets */
    InitializeConsole();    /* initialize Console */
 #ifdef HARBOUR_OBJ_GENERATION
    ProcessObjSymbols(); /* initialize Harbour generated OBJs symbols */
@@ -238,7 +237,7 @@ BYTE bErrorLevel = 0;  /* application exit errorlevel */
    ReleaseClasses();
    ReleaseLocalSymbols();       /* releases the local modules linked list */
    ReleaseDynamicSymbols();     /* releases the dynamic symbol table */
-   ReleaseSets();               /* releases Sets */
+   hb_setRelease();             /* releases Sets */
    StackFree();
    /* LogSymbols(); */
    HB_DEBUG( "Done!\n" );

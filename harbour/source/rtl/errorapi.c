@@ -257,6 +257,7 @@ PHB_ITEM hb_errPutFlags( PHB_ITEM pError, USHORT uiFlags )
 WORD hb_errorRT_BASE( ULONG ulGenCode, ULONG ulSubCode, char* szDescription, char* szOperation )
 {
    PHB_ITEM pError = hb_errNew();
+   WORD wRetVal;
 
    hb_errPutSeverity( pError, ES_ERROR );
    hb_errPutSubSystem( pError, HB_ERR_SS_BASE );
@@ -264,8 +265,11 @@ WORD hb_errorRT_BASE( ULONG ulGenCode, ULONG ulSubCode, char* szDescription, cha
    hb_errPutSubCode( pError, ulSubCode );
    hb_errPutDescription( pError, szDescription );
    hb_errPutOperation( pError, szOperation );
-   hb_errLaunch( pError );
 
-   return hb_errRelease( pError );
+   wRetVal = hb_errLaunch( pError );
+
+   hb_errRelease( pError );
+
+   return wRetVal;
 }
 
