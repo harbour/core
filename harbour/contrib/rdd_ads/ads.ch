@@ -38,6 +38,20 @@
 #define ADS_CDX                  2
 #define ADS_ADT                  3
 
+/* Advantage Optimized Filter (AOF) optimization levels */
+#define ADS_OPTIMIZED_FULL       1
+#define ADS_OPTIMIZED_PART       2
+#define ADS_OPTIMIZED_NONE       3
+
+/* Advantage Optimized Filter (AOF) resolution options */
+#define ADS_RESOLVE_IMMEDIATE    1
+#define ADS_RESOLVE_DYNAMIC      2
+
+/* Advantage Optimized Filter (AOF) customization options */
+#define ADS_AOF_ADD_RECORD       1
+#define ADS_AOF_REMOVE_RECORD    2
+#define ADS_AOF_TOGGLE_RECORD    3
+
 #command SET FILETYPE TO <x:NTX,CDX,ADT>                              ;
       => AdsSetFileType( if( upper( <(x)> ) == "NTX", 1,              ;
                          if( upper( <(x)> ) == "CDX", 2, 3 ) ) )

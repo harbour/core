@@ -43,6 +43,8 @@
 #include "hbapierr.h"
 #include "rddads.h"
 
+#define HARBOUR_MAX_RDD_FILTER_LENGTH     256
+
 int adsFileType = ADS_CDX;
 int adsLockType = ADS_PROPRIETARY_LOCKING;
 int adsRights = 1;
@@ -244,4 +246,170 @@ HARBOUR HB_ADSKEYCOUNT( void )
    }
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSKEYCOUNT" );
+}
+
+
+HARBOUR HB_ADSCLEARAOF( void )
+{
+   ADSAREAP pArea;
+
+   pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
+   if( pArea )
+      AdsClearAOF( pArea->hTable );
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSCLEARAOF" );
+}
+
+HARBOUR HB_ADCUSTOMIZEAOF( void )
+{
+   ADSAREAP pArea;
+   UNSIGNED32 pulRecords[1];
+   UNSIGNED16 usOption = ADS_AOF_ADD_RECORD;
+   UNSIGNED32 ulRetVal;
+
+   pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
+   if( pArea )
+   {
+      pulRecords[1] = hb_parni( 1 );
+      if( hb_pcount() > 1 )
+         usOption = hb_parni( 2 );
+      ulRetVal = AdsCustomizeAOF( pArea->hTable, 1, pulRecords, usOption);
+      if ( ulRetVal == AE_SUCCESS )
+         hb_retl( 1 );
+      else
+         hb_retl( 0 );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSCUSTOMIZEAOF" );
+}
+
+HARBOUR HB_ADSEVALAOF( void )
+{
+   ADSAREAP pArea;
+   char * pucFilter;
+   UNSIGNED16 pusOptLevel;
+
+   pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
+   if( pArea )
+   {
+      pucFilter = hb_parc( 1 );
+
+      AdsEvalAOF( pArea->hTable, (UNSIGNED8*) pucFilter, &pusOptLevel );
+      hb_retni( pusOptLevel );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSEVALAOF" );
+   
+}
+
+HARBOUR HB_ADSGETAOF( void )
+{
+   ADSAREAP pArea;
+   UNSIGNED8 pucFilter[HARBOUR_MAX_RDD_FILTER_LENGTH+1];
+   UNSIGNED16 pusLen = HARBOUR_MAX_RDD_FILTER_LENGTH;
+   UNSIGNED32 ulRetVal;
+
+   pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
+   if( pArea )
+   {
+      ulRetVal = AdsGetAOF( pArea->hTable, pucFilter, &pusLen );
+      if ( ulRetVal == AE_SUCCESS )
+         hb_retc( pucFilter );
+      else
+         hb_ret();
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSGETAOF" );
+}
+
+HARBOUR HB_ADSGETAOFOPTLEVEL( void )
+{
+   ADSAREAP pArea;
+   UNSIGNED16 pusOptLevel;
+   UNSIGNED8 pucNonOpt[1];
+   UNSIGNED16 pusLen = 0;
+
+   pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
+   if( pArea )
+   {
+      AdsGetAOFOptLevel( pArea->hTable, &pusOptLevel, pucNonOpt, &pusLen );
+      hb_retni( pusOptLevel );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSGETAOFOPTLEVEL" );
+}
+
+HARBOUR HB_ADSGETAOFNOOPT( void )
+{
+   ADSAREAP pArea;
+   UNSIGNED16 pusOptLevel;
+   UNSIGNED8 pucNonOpt[HARBOUR_MAX_RDD_FILTER_LENGTH+1];
+   UNSIGNED16 pusLen = HARBOUR_MAX_RDD_FILTER_LENGTH;
+
+   pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
+   if( pArea )
+   {
+      AdsGetAOFOptLevel( pArea->hTable, &pusOptLevel, pucNonOpt, &pusLen );
+      hb_retc( pucNonOpt );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSGETAOFNOOPT" );
+}
+
+HARBOUR HB_ADSISRECORDINAOF( void )
+{
+   ADSAREAP pArea;
+   UNSIGNED32 ulRecordNumber = 0;
+   UNSIGNED16 bIsInAOF;
+   UNSIGNED32 ulRetVal;
+
+   pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
+   if( pArea )
+   {
+      if( hb_pcount() > 0 )
+         ulRecordNumber = hb_parni( 1 );
+      ulRetVal = AdsIsRecordInAOF( pArea->hTable, ulRecordNumber, &bIsInAOF );
+      if ( ulRetVal == AE_SUCCESS && bIsInAOF )
+         hb_retl( 1 );
+      else
+         hb_retl( 0 );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSISRECORDINAOF" );
+}
+
+HARBOUR HB_ADSREFRESHAOF( void )
+{
+   ADSAREAP pArea;
+
+   pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
+   if( pArea )
+      AdsRefreshAOF( pArea->hTable );
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSREFRESHAOF" );
+}
+
+HARBOUR HB_ADSSETAOF( void )
+{
+   ADSAREAP pArea;
+   char * pucFilter;
+   UNSIGNED16 usResolve = ADS_RESOLVE_IMMEDIATE;
+   UNSIGNED32 ulRetVal;
+
+   pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
+   if( pArea )
+   {
+      pucFilter = hb_parc( 1 );
+      if( hb_pcount() > 1 )
+         usResolve = hb_parni( 2 );
+
+      ulRetVal = AdsSetAOF( pArea->hTable, (UNSIGNED8*) pucFilter, usResolve );
+      if ( ulRetVal == AE_SUCCESS )
+         hb_retl( 1 );
+      else
+         hb_retl( 0 );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSSETAOF" );
+   
 }

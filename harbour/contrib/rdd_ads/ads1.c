@@ -1021,13 +1021,32 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
    return SUCCESS;
 }
 
-#define  adsClearFilter           NULL
+
+static ERRCODE adsClearFilter( ADSAREAP pArea )
+{
+   HB_TRACE(HB_TR_DEBUG, ("adsClearFilter(%p)", pArea));
+
+   AdsClearFilter  ( pArea->hTable );
+
+   return SUPER_CLEARFILTER( ( AREAP ) pArea );
+}
+
 #define  adsClearLocate           NULL
 #define  adsClearScope            NULL
 #define  adsCountScope            NULL
 #define  adsFilterText            NULL
 #define  adsScopeInfo             NULL
-#define  adsSetFilter             NULL
+
+static ERRCODE adsSetFilter( ADSAREAP pArea, LPDBFILTERINFO pFilterInfo )
+{
+   HB_TRACE(HB_TR_DEBUG, ("adsSetFilter(%p, %p)", pArea, pFilterInfo));
+
+   AdsSetFilter( pArea->hTable, (UNSIGNED8*) hb_itemGetCPtr( pFilterInfo->abFilterText ) );
+   printf( "\r\nadsSetfilter - after" );
+
+   return SUPER_SETFILTER( ( AREAP ) pArea, pFilterInfo );
+}
+
 #define  adsSetLocate             NULL
 #define  adsSetScope              NULL
 #define  adsSkipScope             NULL
@@ -1233,13 +1252,13 @@ static RDDFUNCS adsTable = {  adsBof,
                              ( DBENTRYP_VOC ) adsOrderCreate,
                              ( DBENTRYP_OI ) adsOrderDestroy,
                              ( DBENTRYP_OII ) adsOrderInfo,
-                             adsClearFilter,
+                             ( DBENTRYP_V ) adsClearFilter,
                              adsClearLocate,
                              adsClearScope,
                              adsCountScope,
                              adsFilterText,
                              adsScopeInfo,
-                             adsSetFilter,
+                             ( DBENTRYP_VFI ) adsSetFilter,
                              adsSetLocate,
                              adsSetScope,
                              adsSkipScope,

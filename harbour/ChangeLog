@@ -1,3 +1,22 @@
+20000312-14:20 GMT+3 Alexander Kresin
+   * contrib/rdd_ads/ads.ch
+   * contrib/rdd_ads/adsfunc.c
+     + full set of AOF functions added:
+        AdsClearAOF()
+        AdsCustomizeAOF()
+        AdsEvalAOF()
+        AdsGetAOF()
+        AdsGetAOFOptLevel()
+        AdsGetAOFNoOpt()
+        AdsIsRecordInAOF()
+        AdsRefreshAOF()
+        AdsSetAOF
+
+   * contrib/rdd_ads/ads1.c
+     + functions added:
+        adsSetFilter()
+        adsClearFilter()
+
 20000312-04:55 EST Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/dir.c
      use _chmod( f,0 ) to get attribs.
