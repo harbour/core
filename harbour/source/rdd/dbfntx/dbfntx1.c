@@ -1485,7 +1485,7 @@ static ERRCODE hb_ntxHeaderLoad( LPNTXINDEX pIndex , char *ITN)
    memset( pTag, 0, sizeof( TAGINFO ) );
    pIndex->CompoundTag = pTag;
    pIndex->NextAvail = Header.next_page;
-   pTag->TagBlock = ulPos/1024;
+   pTag->TagBlock = ulPos - 1024;
    pTag->RootBlock = Header.root;
    pTag->TagName = (char *) hb_xgrab( strlen( ITN ) + 1 );
    hb_strncpyUpper( pTag->TagName, ITN, strlen( ITN ) );
@@ -1721,6 +1721,32 @@ static ERRCODE ntxSkipRaw( NTXAREAP pArea, LONG lToSkip )
    return SUCCESS;
 }
 
+static ERRCODE ntxAppend( NTXAREAP pArea, BOOL bUnLockAll )
+{
+   HB_TRACE(HB_TR_DEBUG, ("ntxAppend(%p, %d)", pArea, bUnLockAll ));
+
+   if( SUPER_APPEND( ( AREAP ) pArea, bUnLockAll ) == SUCCESS )
+   {
+      LPNTXINDEX lpIndex, lpIndexTmp;
+      LPTAGINFO pTag;
+
+      lpIndex = pArea->lpNtxIndex;
+      lpIndexTmp = pArea->lpCurIndex;
+      while( lpIndex )
+      {
+         pArea->lpCurIndex = lpIndex;
+         pTag = lpIndex->CompoundTag;
+         hb_ntxGetCurrentKey( pTag, pTag->CurKeyInfo );
+         hb_ntxPageKeyAdd( hb_ntxPageLoad( 0 ), pTag->CurKeyInfo->pItem, 0);
+         lpIndex = lpIndex->pNext;
+      }
+      pArea->lpCurIndex = lpIndexTmp;
+      return SUCCESS;
+   }
+   else
+      return FAILURE;
+}
+
 static ERRCODE ntxPutValue( NTXAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 {
    LPNTXINDEX lpIndex, lpIndexTmp;
@@ -1770,7 +1796,7 @@ static ERRCODE ntxPutValue( NTXAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          pPage = hb_ntxPageLoad( pTag->CurKeyInfo->Tag );
          pPage->CurKey =  hb_ntxPageFindCurrentKey( pPage,pTag->CurKeyInfo->Xtra ) - 1;
          hb_ntxPageKeyDel( pPage, pPage->CurKey );
-         hb_ntxTagKeyAdd( pTag, pKey->pItem );
+         hb_ntxPageKeyAdd( hb_ntxPageLoad( 0 ), pKey->pItem, 0);
       }
       lpIndex = lpIndex->pNext;
    }
@@ -2078,10 +2104,13 @@ static ERRCODE ntxOrderInfo( NTXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo
 
 static ERRCODE ntxOrderListAdd( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
 {
+   USHORT uiFlags;
    char * szFileName;
    PHB_FNAME pFileName;
    DBORDERINFO pExtInfo;
    LPNTXINDEX pIndex, pIndexNext;
+   PHB_ITEM pError = NULL;
+   BOOL bRetry;
 
    HB_TRACE(HB_TR_DEBUG, ("ntxOrderListAdd(%p, %p)", pArea, pOrderInfo));
 
@@ -2097,7 +2126,39 @@ static ERRCODE ntxOrderListAdd( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
       hb_itemRelease( pExtInfo.itmResult );
    }
    pIndex = hb_ntxIndexNew( pArea );
-   pIndex->DiskFile = hb_fsOpen( ( BYTE * ) szFileName , FO_READWRITE | FO_DENYNONE );
+
+   uiFlags =  pArea->fReadonly  ? FO_READ : FO_READWRITE;
+   uiFlags |= pArea->fShared ? FO_DENYNONE : FO_EXCLUSIVE;
+
+   do
+   {
+     pIndex->DiskFile = hb_fsOpen( ( BYTE * ) szFileName, uiFlags );
+     if( pIndex->DiskFile == FS_ERROR )
+     {
+       if( !pError )
+       {
+         pError = hb_errNew();
+         hb_errPutGenCode( pError, EG_OPEN );
+         hb_errPutSubCode( pError, 1003 );
+         hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_OPEN ) );
+         hb_errPutFileName( pError, szFileName );
+         hb_errPutFlags( pError, EF_CANRETRY | EF_CANDEFAULT );
+       }
+       bRetry = ( SELF_ERROR( ( AREAP ) pArea, pError ) == E_RETRY );
+     }
+     else
+       bRetry = FALSE;
+   } while( bRetry );
+   if( pError )
+      hb_errRelease( pError );
+
+   if( pIndex->DiskFile == FS_ERROR )
+   {
+      ntxOrderListClear( pArea );
+      hb_xfree( szFileName );
+      return FAILURE;
+   }
+
    if( hb_ntxHeaderLoad( pIndex, pFileName->szName ) == FAILURE )
    {
       hb_xfree( pIndex );
@@ -2190,7 +2251,7 @@ static RDDFUNCS ntxTable = { ntxBof,
                              ntxSkipFilter,
                              ( DBENTRYP_L ) ntxSkipRaw,
                              ntxAddField,
-                             ntxAppend,
+                             ( DBENTRYP_B ) ntxAppend,
                              ntxCreateFields,
                              ntxDeleteRec,
                              ntxDeleted,
@@ -2290,4 +2351,5 @@ HB_FUNC( DBFNTX_GETFUNCTABLE )
       hb_retni( hb_rddInherit( pTable, &ntxTable, &ntxSuper, ( BYTE * ) "DBF" ) );
    else
       hb_retni( FAILURE );    
+      
 }

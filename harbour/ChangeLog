@@ -1,3 +1,11 @@
+2001-02-13 13:15 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   * harbour/include/hbrddntx.h
+   * harbour/source/rdd/dbfntx/dbfntx1.c
+     + ntxAppend() added;
+     * updating of opened indexex while new record adding is implemented;
+     * few fixes;
+     * error now is generated while opening, if index file doesn't exist.
+
 2001-02-12 21:58 GMT+1 Antonio Linares <alinares@fivetech.com>
    * harbour/source/debug/dbgmenu.prg
      + more options implemented.

@@ -300,7 +300,7 @@ static ERRCODE ntxSeek( NTXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
 #define ntxSkipFilter            NULL
 static ERRCODE ntxSkipRaw( NTXAREAP pArea, LONG lToSkip );
 #define ntxAddField              NULL
-#define ntxAppend                NULL
+static ERRCODE ntxAppend( NTXAREAP pArea, BOOL bUnLockAll );
 #define ntxCreateFields          NULL
 #define ntxDeleteRec             NULL
 #define ntxDeleted               NULL
