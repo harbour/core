@@ -61,7 +61,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Library is Rdd.lib
+ *      Library is rdd.lib
  *  $SEEALSO$
  *      COPY STRUCTURE,COPY STRUCTURE EXTENDED,DBCREATE(),DBSTRUCT(),__dbCopyXStruct(),__dbCreate(),__dbStructFilter()
  *  $END$
@@ -77,14 +77,14 @@
  *  $SYNTAX$
  *      COPY STRUCTURE TO <xcFileName> [FIELDS <field,...>]
  *  $ARGUMENTS$
- *      TO <xcFileName> is the name of the new database file to create.
- *      (.dbf) is the default extension if none is given. It can be
+ *      <b>TO <xcFileName></b> is the name of the new database file to
+ *      create. (.dbf) is the default extension if none is given. It can be
  *      specified as literal file name or as a character expression
  *      enclosed in parentheses.
  *
- *      FIELDS <field,...> is an optional list of field names to copy from
- *      the currently open database in the specified order, the default is
- *      all fields. Names could be specified as uppercase or lowercase.
+ *      <b>FIELDS <field,...></b> is an optional list of field names to copy
+ *      from the currently open database in the specified order, the default
+ *      is all fields. Names could be specified as uppercase or lowercase.
  *  $DESCRIPTION$
  *      COPY STRUCTURE create a new empty database file with a structure
  *      that is based on the currently open database in this work-area.
@@ -183,7 +183,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Library is Rdd.lib
+ *      Library is rdd.lib
  *  $SEEALSO$
  *      COPY STRUCTURE,COPY STRUCTURE EXTENDED,CREATE,CREATE FROM,DBCREATE(),DBSTRUCT(),__dbCopyStruct(),__dbCreate()
  *  $END$
@@ -199,8 +199,8 @@
  *  $SYNTAX$
  *      COPY STRUCTURE EXTENDED TO <xcFileName>
  *  $ARGUMENTS$
- *      TO <xcFileName> is the name of target definition file to create.
- *      (.dbf) is the default extension if none is given. It can be
+ *      <b>TO <xcFileName></b> is the name of target definition file to
+ *      create. (.dbf) is the default extension if none is given. It can be
  *      specified as literal file name or as a character expression
  *      enclosed in parentheses.
  *  $DESCRIPTION$
@@ -364,7 +364,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Library is Rdd.lib
+ *      Library is rdd.lib
  *  $SEEALSO$
  *      COPY STRUCTURE,COPY STRUCTURE EXTENDED,CREATE,CREATE FROM,DBCREATE(),DBSTRUCT(),__dbCopyStruct(),__dbCopyXStruct()
  *  $END$
@@ -385,12 +385,13 @@
  *      literal file name or as a character expression enclosed in
  *      parentheses.
  *
- *      VIA <xcRDDName> is RDD name to create target with. If omitted, the
- *      default RDD is used. It can be specified as literal name or as a
+ *      <b>VIA <xcRDDName></b> is RDD name to create target with. If omitted,
+ *      the default RDD is used. It can be specified as literal name or as a
  *      character expression enclosed in parentheses.
  *
- *      ALIAS <xcAlias> is an optional alias to USE the target file with. If
- *      not specified, alias is based on the root name of <xcFileName>.
+ *      <b>ALIAS <xcAlias></b> is an optional alias to USE the target file
+ *      with. If not specified, alias is based on the root name of
+ *      <xcFileName>.
  *  $DESCRIPTION$
  *      CREATE a new empty structure extended file with the name <cFileName>
  *      and then open it in the current work-area. The new file has the
@@ -456,21 +457,22 @@
  *      literal file name or as a character expression enclosed in
  *      parentheses.
  *
- *      FROM <xcFileFrom> is a structure extended file name from which the
- *      target file <xcFileName> is going to be built. It can be specified
- *      as literal file name or as a character expression enclosed in
- *      parentheses.
+ *      <b>FROM <xcFileFrom></b> is a structure extended file name from
+ *      which the target file <xcFileName> is going to be built. It can be
+ *      specified as literal file name or as a character expression enclosed
+ *      in parentheses.
  *
- *      VIA <xcRDDName> is RDD name to create target with. If omitted, the
- *      default RDD is used. It can be specified as literal name or as a
+ *      <b>VIA <xcRDDName></b> is RDD name to create target with. If omitted,
+ *      the default RDD is used. It can be specified as literal name or as a
  *      character expression enclosed in parentheses.
  *
- *      NEW open the target file name <xcFileName> in the next available
- *      unused work-area and making it the current work-area. If omitted
- *      open the target file in current work-area.
+ *      <b>NEW</b> open the target file name <xcFileName> in the next
+ *      available unused work-area and making it the current work-area. If
+ *      omitted open the target file in current work-area.
  *
- *      ALIAS <xcAlias> is an optional alias to USE the target file with. If
- *      not specified, alias is based on the root name of <xcFileName>.
+ *      <b>ALIAS <xcAlias></b> is an optional alias to USE the target file
+ *      with. If not specified, alias is based on the root name of
+ *      <xcFileName>.
  *  $DESCRIPTION$
  *      CREATE FROM open a structure extended file <xcFileFrom> where each
  *      record contain at least the following fields (in no particular
@@ -583,12 +585,12 @@
  *      function to use.
  *
  *      This function is only visible if source/rdd/dbstrux.prg was compiled
- *      with the HARBOUR_STRICT_CLIPPER_COMPATIBILITY flag.
+ *      with the HB_C52_UNDOC flag.
  *  $PLATFORMS$
- *       All
+ *      All
  *  $FILES$
  *      Header file is dbstruct.ch
- *      Library is Rdd.lib
+ *      Library is rdd.lib
  *  $SEEALSO$
  *      DBCREATE(),DBSTRUCT(),__dbCopyStruct(),__dbStructFilter()
  *  $END$
@@ -670,7 +672,7 @@
  *      All
  *  $FILES$
  *      Header file is dbstruct.ch
- *      Library is Rdd.lib
+ *      Library is rdd.lib
  *  $SEEALSO$
  *      DBCREATE(),DBSTRUCT(),__dbCopyStruct(),__FLEDIT()*
  *  $END$

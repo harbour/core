@@ -1,3 +1,16 @@
+20000413-16:40 GMT+2 Chen Kedem <niki@actcom.co.il>
+   * doc/en/dbstrux.txt
+     * in __FLTEDIT() HARBOUR_STRICT_CLIPPER_COMPATIBILITY was changed into
+       HB_C52_UNDOC as used by the source
+     * insert explicit <b> marks to make Commands $ARGUMENTS$ bold
+
+   * doc/en/terminal.txt
+     * in ALERT() HARBOUR_STRICT_CLIPPER_COMPATIBILITY was changed into
+       HB_C52_STRICT as used by the source
+     * in ALERT() and __NONOALERT() the $COMPLIANCE$ section was extended
+     + $PLATFORMS$ section for HB_OSNEWLINE()
+     * a bit re-formating
+
 20000413-12:32 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/compiler/genc.c
