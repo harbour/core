@@ -59,9 +59,10 @@ HB_FILE_VER( "$Id$" )
 
 #define AppendEOL( handle ) FWRITE( handle, CHR( 13 ) + CHR( 10 ) )
 #define AppendEOF( handle ) FWRITE( handle, CHR( 26 ) )
+#define SkipEOL( handle ) FSEEK( handle, 2, FS_RELATIVE )
 
 PROCEDURE __dbSDF( lExport, cFile, aFields, bFor, bWhile, nNext, nRecord, lRest )
-   LOCAL index, handle, cFileName := cFile, nStart, nCount, oErr
+   LOCAL index, handle, cFileName := cFile, nStart, nCount, oErr, nFileLen, aStruct
 
    // Process the file name argument.
    index := RAT( ".", cFileName )
@@ -186,6 +187,24 @@ PROCEDURE __dbSDF( lExport, cFile, aFields, bFor, bWhile, nNext, nRecord, lRest 
             // This simplifies the looping logic.
             bWhile := {||.T.}
          END IF
+         nFileLen := FSEEK( handle,0,FS_END )
+         FSEEK( handle,0 )
+         aStruct := DBSTRUCT()
+         WHILE FSEEK( handle,0,FS_RELATIVE ) + 1 <= nFileLen
+            IF EMPTY( aFields )
+               // Process all fields.
+               FOR index := 1 TO FCOUNT()
+                  FieldPut( index,ImportFixed( handle,index,aStruct )
+               NEXT index
+            ELSE
+               // Process the specified fields.
+               FOR index := 1 TO LEN( aFields )
+                  FieldPut( FIELDPOS( aFields[ index ] ),ImportFixed( handle,FIELDPOS( aFields[ index ],aStruct )
+               NEXT index
+            END IF
+            // Set up for the start of the next record.
+            SkipEOL( handle )
+         END WHILE
          FCLOSE( handle )
       END IF
       */
@@ -206,4 +225,19 @@ STATIC FUNCTION ExportFixed( handle, xField )
          RETURN .F.
    END CASE
 RETURN .T.
+
+STATIC FUNCTION ImportFixed( handle, index, aStruct )
+   LOCAL cBuffer
+   FREAD( handle, @cBuffer, aStruct[ index,3 ] )
+   DO CASE
+      CASE aStruct[ index,2 ] == "C"
+         RETURN cBuffer
+      CASE aStruct[ index,2 ] == "D"
+         RETURN HB_STOD( cBuffer )
+      CASE aStruct[ index,2 ] == "L"
+         RETURN iif( cBuffer == "T",.T.,.F. )
+      CASE aStruct[ index,2 ] == "N"
+         RETURN VAL( cBuffer )
+   END CASE
+RETURN cBuffer
 

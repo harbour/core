@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+   * source/rtl/persist.prg
+      * added 254 as linelength to MLCount call in LoadFromText so
+         it matches later call to MemoLine
+
    * source\common\hbffind.c
       *  fixed the "Directory() can't see files with cleared
                      archive bits" problem.
