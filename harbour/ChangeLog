@@ -1,17 +1,25 @@
+2000-06-13 22:47 UTC+0200 JfL&RaC <jfl@mafact.com> <rac@mafact.com>
+    * Classes.c
+      * Initialisation is now properly working
+      * As with AutoInit for Logical (.F.) and Numerical (0) (previous TClass.prg)
+    * MakeFile.bc
+      * Restoring tasm call in place of tasm32 (sorry :-((( )
+
+
 2000-06-13 19:55 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *include/hbapigt.h
-	*added declaration of hb_gt_Suspend()/hb_gt_Resume()
-	
+        *added declaration of hb_gt_Suspend()/hb_gt_Resume()
+
     *source/rtl/gtapi.c
-	*hb_gtPreExt()/hb_gtPostExt() calls driver dependend functions
-	to save/restore terminal settings
-	
+        *hb_gtPreExt()/hb_gtPostExt() calls driver dependend functions
+        to save/restore terminal settings
+
     *source/rtl/run.c
-	*fixed to properly use hb_gtPreExt()/hb_gtPosExt()
-	
+        *fixed to properly use hb_gtPreExt()/hb_gtPosExt()
+
     *source/rtl/gtcrs/gtcrs.c
-	*added full support for suspend/resume terminal settings
+        *added full support for suspend/resume terminal settings
 
 2000-06-13 08:08 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
 

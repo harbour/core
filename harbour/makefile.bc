@@ -50,7 +50,7 @@ LIB_DIR = lib\b16
 CC = bcc32
 # NOTE: Using TASM for some reason, this should be normally TASM32.
 #       I'll leave it to TASM until a better solution is found
-AS = tasm32
+AS = tasm
 
 BIN_DIR = bin\b32
 OBJ_DIR = obj\b32

@@ -96,6 +96,10 @@
  *
  *    ...and many minors (and not so minors ;-) modifications ( for TObject by ex.)
  *
+ *    1.16 06/13/2000 JFL&RAC
+ *    Initialisation is now working correctly
+ *    as with autoinit for Logical (.F.) and Numerical (0) from tClass.prg
+ *
  * See doc/license.txt for licensing terms.
  *
  */
@@ -105,6 +109,8 @@
 #include "hbapiitm.h"
 #include "hbvm.h"
 #include "hboo.ch"
+
+#include <ctype.h>
 
 typedef struct
 {
@@ -946,10 +952,7 @@ HB_FUNC( __CLSNEW )
 
          /* Now working on pMethods */
          if( ( pNewCls->uiMethods + 1 ) > ( pNewCls->uiHashKey * BUCKET * 2 / 3 ) )
-          {
-            printf("\nDictRealloc");
             hb_clsDictRealloc( pNewCls );
-          }
 
          if( i == 1 )
          {
@@ -1156,13 +1159,14 @@ PHB_ITEM hb__clsinst( USHORT uiClass, BOOL lInit )
 
    PHB_ITEM pSelf = 0;
 
-   if (lInit)
-    {
+   if( lInit )
+   {
       if( ppObjects )
          hb_xfree( ppObjects );
+
       ppObjects=0;
       uiSize=0;
-    }
+   }
 
    if( uiClass <= s_uiClasses )
    {
@@ -1184,13 +1188,11 @@ PHB_ITEM hb__clsinst( USHORT uiClass, BOOL lInit )
       // Do not try to work on A:C (inherited class super object from B)
       for( uiAt = 0; uiAt < uiLimit; uiAt++, pMeth++ )
       {
-
           if( ( pMeth->uiScope & HB_OO_CLSTP_CLASS ) == HB_OO_CLSTP_CLASS
                &&
               ( pMeth->uiScope & HB_OO_CLSTP_SUPER ) != HB_OO_CLSTP_SUPER
             )
           {
-
              pSprObj = hb__clsinst( pMeth->uiSprClass, FALSE );  /*instance super object*/
              hb_arraySet( pSelf, pMeth->uiData, pSprObj );
              hb_itemRelease( pSprObj );
@@ -1240,9 +1242,11 @@ PHB_ITEM hb__clsinst( USHORT uiClass, BOOL lInit )
       // Phase III Create link between instancied object and SuperDataMessages
       // Initialise value if initialisation was requested
       pMeth = pClass->pMethods;
+
       for( uiAt = 0; uiAt < uiLimit; uiAt++, pMeth++ )
       {
          if( ( pMeth->uiScope & HB_OO_CLSTP_SUPER ) == HB_OO_CLSTP_SUPER )
+          {
             if( pMeth->pFunction == hb___msgGetData )
              {
                USHORT uiCnt;
@@ -1279,23 +1283,22 @@ PHB_ITEM hb__clsinst( USHORT uiClass, BOOL lInit )
                    }
                }
              }
-
-         if( pMeth->pInitValue && !( pMeth->bClsDataInitiated ) )
+          }
+         else if( pMeth->pInitValue )
          {
-            if( (! ( pMeth->uiScope & HB_OO_CLSTP_SUPER ) == HB_OO_CLSTP_SUPER ) &&
-                ( pMeth->pFunction == hb___msgGetData ) ) /* is a DATA but not herited */
+            if( pMeth->pFunction == hb___msgGetData ) /* is a DATA but not herited */
             {
                if( HB_IS_ARRAY( pMeth->pInitValue ) )
                {
                   PHB_ITEM pInitValue = hb_arrayClone( pMeth->pInitValue );
-                  hb_itemArrayPut( pSelf, pMeth->uiData, pInitValue );
+                  hb_arraySet( pSelf, pMeth->uiData, pInitValue );
                   hb_itemRelease( pInitValue );
                }
                else
-                  hb_itemArrayPut( pSelf, pMeth->uiData,
+                  hb_arraySet( pSelf, pMeth->uiData,
                                    pMeth->pInitValue );
             }
-            else if( pMeth->pFunction == hb___msgGetClsData ) /* it is a ClassData */
+            else if( pMeth->pFunction == hb___msgGetClsData && !( pMeth->bClsDataInitiated )) /* it is a ClassData */
             {
                HB_ITEM init;
                hb_arrayGet( pClass->pClassDatas, pMeth->uiData, &init );
@@ -1306,7 +1309,7 @@ PHB_ITEM hb__clsinst( USHORT uiClass, BOOL lInit )
                }
                hb_itemClear( &init );
             }
-            else if( pMeth->pFunction == hb___msgGetShrData ) /* it is a ClassData SHARED */
+            else if( pMeth->pFunction == hb___msgGetShrData && !( pMeth->bClsDataInitiated )) /* it is a ClassData SHARED */
             {
                HB_ITEM init;
 
