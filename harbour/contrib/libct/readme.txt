@@ -55,6 +55,10 @@ Martin Vogel <vogel@inttec.de>
 
 + CTEXIT()     library exit function
 
++ DAYSINMONTH() Returns the number of days in month
+
++ DAYSTOMONTH() Total number of days from first of Jan to beginning of nMonth.
+
 + NUMANDX()    \
 + NUMORX()     |
 + NUMXORX()    |- equivalents to NUMAND(),... functions, but working
@@ -87,6 +91,9 @@ Martin Vogel <vogel@inttec.de>
 * TOKENLOWER() New 4th parameter <nSkipWidth>
 
 * TOKENUPPER() New 4th parameter <nSkipWidth>
+
+* WEEK()       New 2nd parameter <lSWN>; week() function can either return
+               "simple week number" of week number defined by ISO 6801 
 
 + WORDREM()    remove double characters from a string
 

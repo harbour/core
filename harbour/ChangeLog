@@ -8,6 +8,29 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-01-20 00:20 UTC+0100 Martin Vogel <vogel@inttec.de>
+  * contrib/libct/Makefile
+  * contrib/libct/Makefile.bc
+  * contrib/libct/Makefile.vc
+  * contrib/libct/readme.txt
+  * contrib/libct/ctflist.txt
+  * contrib/libct/tests/Makefile
+  + contrib/libct/dattim2.prg 
+  + contrib/libct/tests/datetime.prg
+    + addmonth(),ctodow(),ctomonth(),daysinmonth(),daystomonth(),dmy(),
+      doy(),isleap(),lastdayom(),ntocdow(),ntocmonth(),quarter(),week()
+      Thanks to Alan Secker <alansecker@globalnet.co.uk> for providing these
+      functions and the test program; small enhancements, mostly making
+      the functions interational, docu headers etc. added by me :-)
+  * contrib/libct/pos1.c
+    * interpretation of <lMode> parameter in posalpha(),poslower(),posupper() and
+      posrange() corrected; thanks to Guenther Steiner <byte-one@aon.at>
+      for reporting this bug
+	
+  * include/hblang.ch
+      + added constant definitions accessing language specific string via HB_LANG_MESSAGE()
+
+	
 2002-11-01 16:20 UTC-0300 Walter Negro <anegro@overnet.com.ar>
   * include/hbexprb.c
     ! Fix assign to array_at.

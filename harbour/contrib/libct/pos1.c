@@ -156,7 +156,7 @@ static void do_pos1 (int iSwitch)
         }; break;
       }
   
-      if ((iMode && iDoRet) || (!iMode && !iDoRet))
+      if ((iMode && !iDoRet) || (!iMode && iDoRet))
       {
         hb_retnl (puc-pcString+1);
         return;
