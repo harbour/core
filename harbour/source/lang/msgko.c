@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (KR)
+ * Language Support Module (KO)
  *
  * Copyright 2000 Kwon, Oh-Jun  <ohjun@fivetech.net>
  * www - http://www.harbour-project.org
@@ -50,9 +50,9 @@
  *
  */
 
-/* Language name: <Your language> */
-/* ISO language code (2 chars): (please look it up in /doc/lang_id.txt) */
-/* Codepage: <Your codepage> */
+/* Language name: Korean           */
+/* ISO language code (2 chars): KO */
+/* Codepage: 949                   */
 
 #include "hbapilng.h"
 

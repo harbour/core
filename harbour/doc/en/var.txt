@@ -16,7 +16,7 @@
  *    Documentation for: FIELDBLOCK(), FIELDWBLOCK()
  *
  * Copyright 2001 Chen Kedem <niki@actcom.co.il>
- *    Documentation for: __ISMV()
+ *    Documentation for: __MVEXIST()
  *
  * See doc/license.txt for licensing terms.
  *
@@ -401,17 +401,17 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *      __ISMV()
+ *      __MVEXIST()
  *  $CATEGORY$
  *      Variable Management
  *  $ONELINER$
  *      Determine if a given name is a PUBLIC or PRIVATE memory variable
  *  $SYNTAX$
- *      __ISMV( <cVarName> )  --> <lVariableExist>
+ *      __MVEXIST( <cVarName> )  --> <lVariableExist>
  *  $ARGUMENTS$
  *      <cVarName> - string that specifies the name of variable to check
  *  $RETURNS$
- *      __ISMV() return TRUE (.T.) if a MEMVAR named <cVarName> exist.
+ *      __MVEXIST() return TRUE (.T.) if a MEMVAR named <cVarName> exist.
  *  $DESCRIPTION$
  *      This function determine if a PUBLIC or PRIVATE variable with the
  *      name <cVarName> exist or not.
@@ -420,11 +420,11 @@
  *      STATIC  TheStatic
  *      PUBLIC  ThePublic
  *      PRIVATE ThePrivate
- *      ? __ISMV( "NotExist"   )        // .F.
- *      ? __ISMV( "TheLocal"   )        // .F.
- *      ? __ISMV( "TheStatic"  )        // .F.
- *      ? __ISMV( "ThePublic"  )        // .T.
- *      ? __ISMV( "ThePrivate" )        // .T.
+ *      ? __MVEXIST( "NotExist"   )        // .F.
+ *      ? __MVEXIST( "TheLocal"   )        // .F.
+ *      ? __MVEXIST( "TheStatic"  )        // .F.
+ *      ? __MVEXIST( "ThePublic"  )        // .T.
+ *      ? __MVEXIST( "ThePrivate" )        // .T.
  *  </fixed>
  *  $STATUS$
  *      R

@@ -8,6 +8,23 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2001-12-16 14:20 UTC+0200 Chen Kedem <niki@actcom.co.il>
+
+   * doc/en/lang.txt
+     * HB_LANGSELECT() - Sort table according to language
+     + HB_LANGSELECT() - Add missing languages: CSWIN, EO, HR852, HRISO
+     ! Wrong comment Romanian --> Spanish
+
+   * doc/en/var.txt
+     * __ISMV() renamed to __MVEXIST()
+       (to reflect ChangeLog 2001-12-15 23:05 UTC+0100 Viktor Szakats)
+
+   * source/lang/msghewin.c
+     * Comment changed: Code Page 1255 is now Windows-1255
+
+   * source/lang/msgko.c
+     ! Comment changed: KR --> KO
+
 2001-12-16 12:07 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * source/common/hbgete.c
@@ -3108,8 +3125,6 @@ e.vc
       +gl option to tell that the compiler is gcc under linux
       *fixes to the edit mode to be more compatible with linux
       *Now Setbuild() return the command line to gcc(Linux and Os/2) insted of an response file
-
-
 
 
    * source/pp/pragma.c

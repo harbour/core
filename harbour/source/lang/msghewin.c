@@ -53,7 +53,7 @@
 
 /* Language name: Hebrew - Windows */
 /* ISO language code (2 chars): HE */
-/* Codepage: 1255                  */
+/* Codepage: Windows-1255          */
 
 #include "hbapilng.h"
 
