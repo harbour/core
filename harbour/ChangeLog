@@ -1,3 +1,13 @@
+2000-12-06 16:09 UTC-0800 Brian Hays <bhays@abacuslaw.com>
+   * makefile.bc
+   + include/hbrddntx.h
+   * source/rdd/dbfntx/dbfntx0.prg
+   * source/rdd/dbfntx/dbfntx1.c
+      * Fixes by Alexander
+
+   * contrib/rdd_ads/doc/en/readme.txt
+      * BH added compatibility notes
+
 2000-12-04 19:40 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/rtl/tget.prg
      ! Corrected 2 bugs when New Method called without any parameters.

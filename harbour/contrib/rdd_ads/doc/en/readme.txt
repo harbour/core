@@ -74,6 +74,10 @@
  *      ACE will <b>always</b> automatically open an index with the same
  *      name as the data file.  There is no way to turn this feature off.
 
+ *      A COMMIT command or dbCommit() call will commit ALL changes in
+ *      ALL workareas.  ADS does not have a "commit just this table" call.
+ *      Use dbSkip(0) to commit changes to the current record.
+
  *      For programmers who are already familiar with the
  *      ACE engine, this also means there are some differences
  *      between the RDDADS in Harbour and the parallel ACE documentation.

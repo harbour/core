@@ -40,11 +40,11 @@ ANNOUNCE DBFNTX
 
 init procedure DBFNTXInit
 
-/*   REQUEST _DBFNTX
-*/
+   REQUEST _DBFNTX
+
    rddRegister( "DBF", RDT_FULL )
-/*   rddRegister( "DBFNTX", RDT_FULL )
-*/
+   rddRegister( "DBFNTX", RDT_FULL )
+
 return
 
 /* NOTE: Commented out, because in Harbour the INIT order is not guaranteed,
