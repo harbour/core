@@ -44,11 +44,16 @@
  *
  */
 
+/* NOTE: DISKSPACE() supports larger disks than 2GB. CA-Cl*pper will always 
+         return a (long) value, Harbour may return a (double) for large
+         values, the decimal places are always set to zero, though. */
+
 #define HB_OS_WIN_32_USED
 
 #include "hbapi.h"
 #include "hbapierr.h"
 #include "hbapifs.h"
+#include "hbapiitm.h"
 
 #if defined(HB_OS_DOS) || defined(__WATCOMC__)
    #include <dos.h>
@@ -56,7 +61,7 @@
 
 HB_FUNC( DISKSPACE )
 {
-   ULONG ulSpaceFree = 0;
+   double dSpaceFree = 0.0;
    USHORT uiDrive = ISNUM( 1 ) ? hb_parni( 1 ) : 0;
 
 #if defined(HB_OS_DOS) || defined(__WATCOMC__)
@@ -73,19 +78,19 @@ HB_FUNC( DISKSPACE )
    }
 
    if( uiResult != 0 )
-      ulSpaceFree = ( ULONG ) disk.avail_clusters *
-                    ( ULONG ) disk.sectors_per_cluster *
-                    ( ULONG ) disk.bytes_per_sector;
+      dSpaceFree = ( double ) disk.avail_clusters *
+                   ( double ) disk.sectors_per_cluster *
+                   ( double ) disk.bytes_per_sector;
 
 #elif defined(HB_OS_WIN_32)
-
+   
    {
-      char szPath[ 4 ];
 
-      DWORD dwSectorsPerCluster;
-      DWORD dwBytesPerSector;
-      DWORD dwNumberOfFreeClusters;
-      DWORD dwTotalNumberOfClusters;
+      typedef BOOL (WINAPI *P_GDFSE)(LPCTSTR, PULARGE_INTEGER, 
+                                     PULARGE_INTEGER, PULARGE_INTEGER);
+
+      char szPath[ 4 ];
+      P_GDFSE pGetDiskFreeSpaceEx;
 
       /* Get the default drive */
 
@@ -103,15 +108,39 @@ HB_FUNC( DISKSPACE )
       szPath[ 2 ] = '\\';
       szPath[ 3 ] = '\0';
 
-      if( GetDiskFreeSpace( szPath,
-                            &dwSectorsPerCluster,
-                            &dwBytesPerSector,
-                            &dwNumberOfFreeClusters,
-                            &dwTotalNumberOfClusters ) )
+      pGetDiskFreeSpaceEx = ( P_GDFSE ) GetProcAddress( GetModuleHandle( "kernel32.dll" ),
+                                                        "GetDiskFreeSpaceExA");
+
+      if( pGetDiskFreeSpaceEx )
       {
-         ulSpaceFree = dwNumberOfFreeClusters *
-                       dwSectorsPerCluster *
-                       dwBytesPerSector;
+         ULARGE_INTEGER i64FreeBytesToCaller;
+         ULARGE_INTEGER i64TotalBytes;
+         ULARGE_INTEGER i64FreeBytes;
+
+         if( pGetDiskFreeSpaceEx( szPath,
+                                  ( PULARGE_INTEGER ) &i64FreeBytesToCaller,
+                                  ( PULARGE_INTEGER ) &i64TotalBytes,
+                                  ( PULARGE_INTEGER ) &i64FreeBytes ) )
+
+            dSpaceFree = ( double ) i64FreeBytesToCaller.QuadPart ;
+      }
+      else 
+      {
+         DWORD dwSectorsPerCluster;
+         DWORD dwBytesPerSector;
+         DWORD dwNumberOfFreeClusters;
+         DWORD dwTotalNumberOfClusters;
+
+         if( GetDiskFreeSpace( szPath,
+                               &dwSectorsPerCluster,
+                               &dwBytesPerSector,
+                               &dwNumberOfFreeClusters,
+                               &dwTotalNumberOfClusters ) )
+         {
+            dSpaceFree = ( double ) dwNumberOfFreeClusters *
+                         ( double ) dwSectorsPerCluster *
+                         ( double ) dwBytesPerSector;
+         }
       }
    }
 
@@ -121,6 +150,13 @@ HB_FUNC( DISKSPACE )
 
 #endif
 
-   hb_retnl( ( long ) ulSpaceFree );
+   {
+      PHB_ITEM pRetVal;
+
+      pRetVal = hb_itemNew( NULL );
+      hb_itemPutNLen( pRetVal, dSpaceFree, -1, 0 );
+      hb_itemReturn( pRetVal );
+      hb_itemRelease( pRetVal );
+   }
 }
 

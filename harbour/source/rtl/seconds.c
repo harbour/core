@@ -42,7 +42,7 @@
    #include <sys\timeb.h>
 #endif
 
-double hb_secondsToday( void )
+double hb_seconds( void )
 {
 #if defined(_MSC_VER)
    #define timeb _timeb
@@ -51,7 +51,7 @@ double hb_secondsToday( void )
    struct timeb tb;
    struct tm * oTime;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_secondsToday()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_seconds()"));
 
    ftime( &tb );
    oTime = localtime( &tb.time );
@@ -64,6 +64,6 @@ double hb_secondsToday( void )
 
 HB_FUNC( SECONDS )
 {
-   hb_retnd( hb_secondsToday() );
+   hb_retnd( hb_seconds() );
 }
 

@@ -584,12 +584,12 @@ void hb_gt_Tone( double dFrequency, double dDuration )
    /* The conversion from Clipper timer tick units to
       milliseconds is * 1000.0 / 18.2. */
 
-   dFrequency = HB_MIN_( HB_MAX_( 0.0, dFrequency ), 32767.0 );
+   dFrequency = HB_MIN( HB_MAX( 0.0, dFrequency ), 32767.0 );
    dDuration = dDuration * 1000.0 / 18.2; /* milliseconds */
 
    while( dDuration > 0.0 )
    {
-      USHORT temp = ( USHORT ) HB_MIN_( HB_MAX_( 0, dDuration ), USHRT_MAX );
+      USHORT temp = ( USHORT ) HB_MIN( HB_MAX( 0, dDuration ), USHRT_MAX );
 
       dDuration -= temp;
       if( temp <= 0 )

@@ -1146,10 +1146,10 @@ void hb_gt_Tone( double dFrequency, double dDuration )
       milliseconds is * 1000.0 / 18.2. */
 
    dDuration = dDuration * 1000.0 / 18.2; /* milliseconds */
-   dDuration = HB_MIN_( HB_MAX_( 0, dDuration ), ULONG_MAX );
+   dDuration = HB_MIN( HB_MAX( 0, dDuration ), ULONG_MAX );
 
    if( dDuration > 0.0 )
-      Beep( ( ULONG ) HB_MIN_( HB_MAX_( 0.0, dFrequency ), 32767.0 ),
+      Beep( ( ULONG ) HB_MIN( HB_MAX( 0.0, dFrequency ), 32767.0 ),
             ( ULONG ) dDuration );
 }
 

@@ -1,3 +1,28 @@
+20000321-15:08 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/rtl/diskspac.c
+     + Supports larger disks than 2GB by design.
+     + Support added for Win95B, Win98, WinNT, Win2K to return the correct
+       free space for >2GB disks. (Wewwh, Win32 API *is* a strange beast ;)
+
+   * source/rtl/seconds.c
+     include/hbdate.h
+     * hb_secondsToday() -> hb_seconds() Hack to avoid name collision removed.
+
+   * include/hbdefs.h
+     pp/pplib.c
+     rtl/gtdos/gtdos.c
+     rtl/gtos2/gtos2.c
+     rtl/gtwin/gtwin.c
+     rtl/ampm.c
+     rtl/gtapi.c
+     rtl/memoline.c
+     rtl/round.c
+     vm/arrayshb.c
+     vm/fm.c
+     * HB_MIN_() -> HB_MIN()
+       HB_MAX_() -> HB_MAX()
+
 20000321-12:32 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * include/hbdefs.h

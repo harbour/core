@@ -39,7 +39,7 @@ HB_FUNC( AMPM )
 {
    char * pszTime = hb_parc( 1 );
    ULONG  ulTimeLen = hb_parclen( 1 );
-   char * pszResult = ( char * ) hb_xgrab( HB_MAX_( ulTimeLen, 2 ) + 3 + 1 );
+   char * pszResult = ( char * ) hb_xgrab( HB_MAX( ulTimeLen, 2 ) + 3 + 1 );
    USHORT uiHour = ( USHORT ) hb_strVal( pszTime );
    BOOL   bAM;
 

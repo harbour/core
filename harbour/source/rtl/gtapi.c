@@ -964,7 +964,7 @@ USHORT hb_gtDrawShadow( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiR
    /* Draw the bottom edge */
 
    if( uiBottom <= uiMaxRow && uiLeft <= uiMaxCol )
-      hb_gt_SetAttribute( uiBottom, uiLeft, uiBottom, HB_MIN_( uiRight, uiMaxCol ), byAttr );
+      hb_gt_SetAttribute( uiBottom, uiLeft, uiBottom, HB_MIN( uiRight, uiMaxCol ), byAttr );
 
    uiRight++;
    uiTop++;
@@ -972,7 +972,7 @@ USHORT hb_gtDrawShadow( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiR
    /* Draw the right edge */
 
    if( uiTop <= uiMaxRow && uiRight <= uiMaxCol )
-      hb_gt_SetAttribute( uiTop, uiRight, uiBottom, HB_MIN_( uiRight + 1, uiMaxCol ), byAttr );
+      hb_gt_SetAttribute( uiTop, uiRight, uiBottom, HB_MIN( uiRight + 1, uiMaxCol ), byAttr );
 
    return 0;
 }

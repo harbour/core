@@ -507,7 +507,7 @@ ULONG hb_xquery( USHORT uiMode )
       {
          MEMORYSTATUS memorystatus;
          GlobalMemoryStatus( &memorystatus );
-         ulResult = HB_MIN_( memorystatus.dwAvailPhys, ULONG_MAX ) / 1024;
+         ulResult = HB_MIN( memorystatus.dwAvailPhys, ULONG_MAX ) / 1024;
       }
       #else
          ulResult = 9999;

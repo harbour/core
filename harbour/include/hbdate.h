@@ -40,7 +40,7 @@
 extern char *   hb_monthsname [];
 extern char *   hb_daysname [];
 
-extern double   hb_secondsToday( void );
+extern double   hb_seconds( void );
 extern char *   hb_cmonth( int iMonth );
 extern char *   hb_cdow( int iDay );
 extern long     hb_dow( long lDay, long lMonth, long lYear );

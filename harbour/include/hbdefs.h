@@ -102,10 +102,8 @@
 
 #endif /* HB_DONT_DEFINE_BASIC_TYPES */
 
-/* NOTE: Underscore postfix needed to avoid conflict with the functions
-         named HB_MIN() and HB_MAX() [vszakats] */
-#define HB_MAX_( a, b )         ( ( ( a ) > ( b ) ) ? ( a ) : ( b ) )
-#define HB_MIN_( a, b )         ( ( ( a ) < ( b ) ) ? ( a ) : ( b ) )
+#define HB_MAX( a, b )          ( ( ( a ) > ( b ) ) ? ( a ) : ( b ) )
+#define HB_MIN( a, b )          ( ( ( a ) < ( b ) ) ? ( a ) : ( b ) )
 
 #define HB_LOBYTE( w )          ( ( BYTE ) ( w ) )
 #define HB_HIBYTE( w )          ( ( BYTE ) ( ( ( USHORT ) ( w ) >> 8 ) & 0xFF ) )
@@ -145,9 +143,17 @@ typedef BYTE HB_ATTR;
 typedef HARBOUR ( * PHB_FUNC )( void );
 typedef PHB_FUNC HB_FUNC_PTR;
 
-/* Function declaration macro */
+/* Function declaration macros */
+
+/* NOTE: The prefix is "HB_FUN_" currently, this is needed to
+         avoid collision with any other declared symbol.
+         Note that "HB_" is not enough, since the Harbour internals
+         are also prefixed with HB_. [vszakats] */
+
 #define HB_FUNCNAME( funcname ) HB_FUN_##funcname
 #define HB_FUNC( funcname )     HARBOUR HB_FUN_##funcname ( void )
+
+/* */
 
 typedef ULONG HB_HANDLE;        /* handle to memvar value */
 typedef char  HB_SYMBOLSCOPE;   /* stores symbol's scope */

@@ -121,7 +121,7 @@ HB_FUNC( ROUND )
    {
       int iDec = hb_parni( 2 );
 
-      hb_retndlen( hb_numRound( hb_parnd( 1 ), iDec ), 0, HB_MAX_( iDec, 0 ) );
+      hb_retndlen( hb_numRound( hb_parnd( 1 ), iDec ), 0, HB_MAX( iDec, 0 ) );
    }
    else
    {

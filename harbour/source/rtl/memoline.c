@@ -70,7 +70,7 @@ HB_FUNC( MEMOLINE )
          case HB_CHAR_LF:
             ulCurLength = 0;
             ulLastSpace = 0;
-            ulLineEnd   = HB_MAX_( ulPos - 2, ulLineBegin );
+            ulLineEnd   = HB_MAX( ulPos - 2, ulLineBegin );
             ulLines++;
             if( ulLines < ulLineNumber )
             {

@@ -1029,7 +1029,7 @@ void hb_gt_Tone( double dFrequency, double dDuration )
    /* The conversion from Clipper timer tick units to
       milliseconds is * 1000.0 / 18.2. */
 
-   dFrequency = HB_MIN_( HB_MAX_( 0.0, dFrequency ), 32767.0 );
+   dFrequency = HB_MIN( HB_MAX( 0.0, dFrequency ), 32767.0 );
    dDuration = dDuration * CLOCKS_PER_SEC / 18.2 ; /* clocks */
 
 #if defined(__BORLANDC__) || defined(__WATCOMC__)
@@ -1042,7 +1042,7 @@ void hb_gt_Tone( double dFrequency, double dDuration )
    {
       /* Use USHORT, because this variable gets added to clock()    
          to form end_clock and we want to minimize overflow risk */ 
-      USHORT temp = ( USHORT ) HB_MIN_( HB_MAX_( 0, dDuration ), USHRT_MAX );
+      USHORT temp = ( USHORT ) HB_MIN( HB_MAX( 0, dDuration ), USHRT_MAX );
       clock_t end_clock;
 
       dDuration -= temp;

@@ -127,7 +127,7 @@ HB_FUNC( ASIZE )
    {
       long lSize = hb_parnl( 2 );
 
-      hb_arraySize( pArray, HB_MAX_( lSize, 0 ) );
+      hb_arraySize( pArray, HB_MAX( lSize, 0 ) );
 
       hb_itemReturn( pArray ); /* ASize() returns the array itself */
    }
