@@ -1,8 +1,8 @@
-2000-02-02 15:40 GMT+1 Antonio Linares <alinares@fivetech.com>
+2001-02-02 15:40 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/compiler/harbour.c
      * HB_P_LOCALNAME local index fixed.
 
-2000-02-02 14:39 GMT+1 Antonio Linares <alinares@fivetech.com>
+2001-02-02 14:39 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/vm/hvm.c
      * function hb_vmLocalName() properly implemented.
 
@@ -11,7 +11,7 @@
 
    ! Warning: HB_P_LOCALNAME is working wrong! It has to be revised!
 
-2000-02-02 11:46 GMT+1 Antonio Linares <alinares@fivetech.com>
+2001-02-02 11:46 GMT+1 Antonio Linares <alinares@fivetech.com>
    * makefile.bc
      - removed an empty blank line (was causing a make error)
 
@@ -21,7 +21,7 @@
    * source/debug/dbgtarr.prg
      * fixed editing window height when reviewing just a 1 element array
 
-2000-02-01 06:20 UTC-0800 Brian Hays <bhays@abacuslaw.com>
+2001-02-01 06:20 UTC-0800 Brian Hays <bhays@abacuslaw.com>
    * source/rtl/memoline.c
       * fixed nasty bug that would blow away the app if word wrap was on
          and the next character after filling the line length was a space.
