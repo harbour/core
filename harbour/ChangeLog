@@ -1,3 +1,9 @@
+2000-07-08 10:40 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/vm/garbage.c
+        * fixed possible endless loop during the garbage collecting
+        (this time for real :-)
+        
 2000-07-07 17:30 UTC+0800 Ron Pinkas <ron@profit-master.com>
   - include\harbour.slx
   - source\compiler\harbourl.c

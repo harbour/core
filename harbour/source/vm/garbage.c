@@ -271,19 +271,22 @@ BOOL hb_gcItemRef( HB_ITEM_PTR pItem, void *pBlock )
          ULONG ulSize = pItem->item.asArray.value->ulLen;
 
          --pAlloc;
-         pAlloc->status |= HB_GC_CHECKING;
-         pItem = pItem->item.asArray.value->pItems;
-         while( ulSize-- )
+         if( !( pAlloc->status & HB_GC_CHECKING ) )
          {
-            if( hb_gcItemRef( pItem, pBlock ) )
+            pAlloc->status |= HB_GC_CHECKING;
+            pItem = pItem->item.asArray.value->pItems;
+            while( ulSize-- )
             {
-               pAlloc->status &= ~( (ULONG) ( HB_GC_CHECKING ) );
-               return TRUE;
+               if( hb_gcItemRef( pItem, pBlock ) )
+               {
+                  pAlloc->status &= ~( (ULONG) ( HB_GC_CHECKING ) );
+                  return TRUE;
+               }
+               else
+                  ++pItem;
             }
-            else
-               ++pItem;
+            pAlloc->status &= ~( (ULONG) ( HB_GC_CHECKING ) );
          }
-         pAlloc->status &= ~( (ULONG) ( HB_GC_CHECKING ) );
       }
    }
    else if( HB_IS_BLOCK( pItem ) )
