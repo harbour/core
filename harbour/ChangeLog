@@ -1,12 +1,20 @@
+20000423-04:02 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/compiler/genc.c
+   * source/compiler/harbour.c
+   * source/vm/hvm.c
+     ! PUSHLOCALNEAR and POPLOCALNEAR pcodes fixed. They didn't work in a 
+       codeblock.
+
 20000423-03:24 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/compiler/harbour.c
      ! Frame optimizer is called after all functions have been processed, 
        otherwise the static frames cannot be fixed up correctly.
      ! Frame optimizer also called for the static initialization function to
-       fixup or remove its SFRAME pcode.
+       fixup or remove its SFRAME/STATICS pcode.
      ! Frame optimizer now fixes up HB_P_STATICS pcode.
-     + Added SFRAME removing for the static initializatoin function.
+     + Added SFRAME removing for the static initialization function.
      % The frame pcode removing made much faster.
 
 20000422-22:47 GMT+1 Victor Szakats <info@szelvesz.hu>

@@ -1834,7 +1834,7 @@ void hb_compGenPopVar( char * szVarName ) /* generates the pcode to pop a value 
       /* local variable
        */
       if( iVar >= -128 && iVar <= 127 )
-         hb_compGenPCode2( HB_P_POPLOCALNEAR, iVar );
+         hb_compGenPCode2( HB_P_POPLOCALNEAR, ( BYTE ) iVar );
       else
          hb_compGenPCode3( HB_P_POPLOCAL, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ) );
    }
@@ -1990,7 +1990,7 @@ void hb_compGenPushVar( char * szVarName )
       /* local variable
        */
       if( iVar >= -128 && iVar <= 127 )
-         hb_compGenPCode2( HB_P_PUSHLOCALNEAR, iVar );
+         hb_compGenPCode2( HB_P_PUSHLOCALNEAR, ( BYTE ) iVar );
       else
          hb_compGenPCode3( HB_P_PUSHLOCAL, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ) );
    }
@@ -2630,7 +2630,7 @@ void hb_compOptimizeJumps( void )
             break;
          }
 
-         /* Only intrested in forward (positive) jumps. */
+         /* Only interested in forward (positive) jumps. */
          if( bForward )
          {
             //printf( "\rCurrent NOOP=%li, Address=%li, Jump=%i, Base=%li, Offset=%li, Target=%li", iNOOP, pNOOPs[ iNOOP ], iJump, pJumps[ iJump ], ulOffset, pJumps[ iJump ] + ulOffset );

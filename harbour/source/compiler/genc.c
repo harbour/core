@@ -748,7 +748,7 @@ static void hb_compGenCReadable( PFUNCTION pFunc, FILE * yyc )
                      pFunc->pCode[ lPCodePos + 1 ] );
             if( bVerbose )
             {
-               SHORT wVar = ( SHORT ) pFunc->pCode[ lPCodePos + 1 ];
+               char wVar = ( char ) pFunc->pCode[ lPCodePos + 1 ];
                /* Variable with negative order are local variables
                 * referenced in a codeblock -handle it with care
                 */
@@ -961,7 +961,7 @@ static void hb_compGenCReadable( PFUNCTION pFunc, FILE * yyc )
                      pFunc->pCode[ lPCodePos + 1 ] );
             if( bVerbose )
             {
-               SHORT wVar = ( SHORT ) pFunc->pCode[ lPCodePos + 1 ];
+               char wVar = ( char ) pFunc->pCode[ lPCodePos + 1 ];
                /* Variable with negative order are local variables
                 * referenced in a codeblock -handle it with care
                 */

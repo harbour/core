@@ -983,7 +983,7 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_PUSHLOCALNEAR:
-            hb_vmPushLocal( ( SHORT ) pCode[ w + 1 ] );
+            hb_vmPushLocal( ( char ) pCode[ w + 1 ] );
             w += 2;
             break;
 
@@ -1072,7 +1072,7 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_POPLOCALNEAR:
-            hb_vmPopLocal( ( SHORT ) pCode[ w + 1 ] );
+            hb_vmPopLocal( ( char ) pCode[ w + 1 ] );
             w += 2;
             break;
 
