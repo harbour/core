@@ -1,3 +1,9 @@
+20000308-00:14 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * include/hbver.h
+     * Version bumped to 0.32 2000-03-07
+   * config/w32/gcc.cfg
+     ! Added user32 to the library list to make OEMANSI.C link.
+
 20000307-23:26 GMT+1 Victor Szakats <info@szelvesz.hu>
    * makefile.vc
      ! UNISTD.H problem solved with another method, now it doesn't leave

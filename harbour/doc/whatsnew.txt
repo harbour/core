@@ -4,7 +4,7 @@
 
 ----------------------------------------------------------------------
 
-Build 0.31c 2000-??-?? (not yet released)
+Build 0.32 2000-03-07
 
 - New Borland make files
 - Many make and build processes fixes, enhancments, warning fixes.
