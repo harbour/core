@@ -781,7 +781,7 @@ void * hb_rddGetCurrentWorkAreaPointer( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_rddGetCurrentWorkAreaPointer()"));
 
-   return s_pCurrArea->pArea;
+   return ( s_pCurrArea )? s_pCurrArea->pArea:NULL;
 }
 
 /*
