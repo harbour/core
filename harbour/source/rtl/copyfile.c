@@ -48,11 +48,8 @@ HB_INIT_SYMBOLS_END( CopyFile__InitSymbols );
 static BOOL hb_fsCopy(char* szSource, char* szDest, ULONG* ulWrittenTotal);
 
 /* INCOMPATIBILITY: Clipper returns .F. on failure and NIL on success */
-/* TODO: hb_errorRT_BASE() or a replacement should also handle DOS error */
-/*       and canRetry/canDefault flags */
 
 HARBOUR HB___COPYFILE( void )
-
 {
    if ( ISCHAR(1) && ISCHAR(2) )
    {
@@ -74,7 +71,6 @@ HARBOUR HB___COPYFILE( void )
 }
 
 static BOOL hb_fsCopy(char* szSource, char* szDest, ULONG* ulWrittenTotal)
-
 {
    BOOL bRetVal = FALSE;
    FHANDLE fhndSource;
@@ -84,7 +80,7 @@ static BOOL hb_fsCopy(char* szSource, char* szDest, ULONG* ulWrittenTotal)
 
    while ((fhndSource = hb_fsOpen((BYTEP)szSource, FO_READ)) == FS_ERROR)
    {
-      if (hb_errorRT_BASE(EG_OPEN, 2012, NULL, szSource) == E_DEFAULT)
+      if (hb_errorRT_BASE_Ext1(EG_OPEN, 2012, NULL, szSource, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY ) == E_DEFAULT)
       {
          *ulWrittenTotal = (ULONG)-1L;
          break;
@@ -95,7 +91,7 @@ static BOOL hb_fsCopy(char* szSource, char* szDest, ULONG* ulWrittenTotal)
    {
       while ((fhndDest = hb_fsCreate((BYTEP)szDest, FC_NORMAL)) == FS_ERROR)
       {
-         if (hb_errorRT_BASE(EG_CREATE, 2012, NULL, szDest) == E_DEFAULT)
+         if (hb_errorRT_BASE_Ext1(EG_CREATE, 2012, NULL, szDest, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY ) == E_DEFAULT)
          {
             *ulWrittenTotal = (ULONG)-2L;
             break;
@@ -123,7 +119,7 @@ static BOOL hb_fsCopy(char* szSource, char* szDest, ULONG* ulWrittenTotal)
          {
             while ((usWritten = hb_fsWrite(fhndDest, buffer, usRead)) != usRead)
             {
-               if (hb_errorRT_BASE(EG_WRITE, 2012, NULL, szDest) == E_DEFAULT)
+               if (hb_errorRT_BASE_Ext1(EG_WRITE, 2012, NULL, szDest, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY ) == E_DEFAULT)
                {
                   bRetVal = FALSE;
                   break;

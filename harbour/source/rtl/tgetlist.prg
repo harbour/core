@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 /* Harbour Class TGetList
  * Copyright(C) 1999 by Antonio Linares.
  *
@@ -486,7 +490,7 @@ METHOD ReadVar( cNewVarName ) CLASS TGetList
    local cOldName := ::cVarName
 
    if ValType( cNewVarName ) == "C"
-      ::cVarName = cNewVarName
+      ::cVarName := cNewVarName
    endif
 
 return cOldName

@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 /* Harbour Class TGet
  * Copyright(C) 1999 by Ignacio Ortiz de Zúniga
  *

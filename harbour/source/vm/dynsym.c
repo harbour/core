@@ -45,9 +45,9 @@ void hb_LogDynSym( void )
       printf( "%i %s\n", w + 1, pDynItems[ w ].pDynSym->pSymbol->szName );
 }
 
-PSYMBOL hb_NewSymbol( char * szName )      /* Create a new symbol */
+PHB_SYMB hb_NewSymbol( char * szName )      /* Create a new symbol */
 {
-   PSYMBOL pSymbol = ( PSYMBOL ) hb_xgrab( sizeof( SYMBOL ) );
+   PHB_SYMB pSymbol = ( PHB_SYMB ) hb_xgrab( sizeof( HB_SYMB ) );
 
    pSymbol->szName = ( char * ) hb_xgrab( strlen( szName ) + 1 );
    pSymbol->cScope = SYM_ALLOCATED; /* to know what symbols to release when exiting the app */
@@ -58,7 +58,7 @@ PSYMBOL hb_NewSymbol( char * szName )      /* Create a new symbol */
    return pSymbol;
 }
 
-PDYNSYM hb_NewDynSym( PSYMBOL pSymbol )    /* creates a new dynamic symbol */
+PDYNSYM hb_NewDynSym( PHB_SYMB pSymbol )    /* creates a new dynamic symbol */
 {
    PDYNSYM pDynSym = hb_FindDynSym( pSymbol->szName ); /* Find position */
    WORD w;
@@ -202,18 +202,17 @@ void hb_ReleaseDynSym( void )
    hb_xfree( pDynItems );
 }
 
-HARBOUR HB_DYNSYMNAME(void)            /* Get name of symbol */
-{                               /* cSymbol = DynSymName( dsIndex ) */
-   hb_retc( pDynItems[ hb_parnl( 1 ) - 1 ].pDynSym->pSymbol->szName );
-}
-
-HARBOUR HB_DYNSYMBOLS(void)            /* How much symbols do we have */
-{                               /* dsCount = DynSymbols() */
+HARBOUR HB___DYNSYMCOUNT( void ) /* How much symbols do we have: dsCount = __dynsymCount() */
+{
    hb_retnl( wDynSymbols );
 }
 
-HARBOUR HB_GETDYNSYM(void)         /* Gimme index number of symbol */
-                            /* dsIndex = hb_GetDynSym( cSymbol ) */
+HARBOUR HB___DYNSYMGETNAME( void ) /* Get name of symbol: cSymbol = __dynsymGetName( dsIndex ) */
+{
+   hb_retc( pDynItems[ hb_parnl( 1 ) - 1 ].pDynSym->pSymbol->szName );
+}
+
+HARBOUR HB___DYNSYMGETINDEX( void ) /* Gimme index number of symbol: dsIndex = __dynsymGetIndex( cSymbol ) */
 {
    hb_retnl( ( LONG ) hb_GetDynSym( hb_parc( 1 ) ) );
 }

@@ -44,27 +44,70 @@ return
 static function DefError( oError )
    LOCAL cMessage
 
-   local cInfo := ""
-   local n := 2
+   LOCAL aOptions
+   LOCAL nChoice
+
+   LOCAL cInfo := ""
+   LOCAL n := 2
 
    cMessage := ErrorMessage(oError)
+
+   // Build buttons
+
+   aOptions := {}
+
+// aAdd(aOptions, "Break" )
+   aAdd(aOptions, "Quit" )
+
+   IF oError:canRetry
+      aAdd(aOptions, "Retry")
+   ENDIF
+
+   IF oError:canDefault
+      aAdd(aOptions, "Default")
+   ENDIF
+
+   // Show alert box
+
+   nChoice := 0
+   DO WHILE nChoice == 0
+
+      IF Empty( oError:osCode )
+         nChoice := Alert( cMessage, aOptions )
+      ELSE
+         nChoice := Alert( cMessage + ";(DOS Error " + LTrim(Str(oError:osCode)) + ")", aOptions)
+      ENDIF
+
+   ENDDO
+
+   DO CASE
+   CASE aOptions[ nChoice ] == "Break"
+//    Break(oError)
+   CASE aOptions[ nChoice ] == "Retry"
+      RETURN .T.
+   CASE aOptions[ nChoice ] == "Default"
+      RETURN .F.
+   ENDCASE
+
+   // "Quit" selected
+
    IF !Empty(oError:osCode)
       cMessage += " (DOS Error " + LTrim(Str(oError:osCode)) + ")"
    ENDIF
 
    QOut( cMessage)
 
-   do while ! Empty( ProcName( n ) )
+   DO WHILE ! Empty( ProcName( n ) )
       QOut("Called from " + ProcName( n ) + ;
                "(" + AllTrim( Str( ProcLine( n++ ) ) ) + ")")
-   enddo
+   ENDDO
 
    // TOFIX: Removing ErrorLevel() call will cause a VM error
    //        don't know why [vszel]
    ErrorLevel(1)
    QUIT
 
-return .F.
+   RETURN .F.
 
 //----------------------------------------------------------------------------//
 

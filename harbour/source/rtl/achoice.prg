@@ -29,7 +29,7 @@
  *      ACHOICE(<nTop>, <nLeft>, <nBottom>, <nRight>,
  *         <acMenuItems>,
  *         [<alSelectableItems> | <lSelectableItems>],
- *         [<cUserFunction>],
+ *         [<cUserFunction> | <bUserBlock>],
  *         [<nInitialItem>],
  *         [<nWindowRow>]) --> nPosition
  *
@@ -56,6 +56,12 @@
  *                          specified without parentheses or parameters.
  *                          When it is called, it will be supplied with the
  *                          parameters: nMode, nCurElement, and nRowPos.
+ *                          Default NIL.
+ *      bUserBlock        - a codeblock to be called which may
+ *                          effect special processing of keystrokes. It 
+ *                          should be specified in the form 
+ *                          {|nMode, nCurElemenet, nRowPos| ;
+ *                                 MyFunc(nMode, nCurElemenet, nRowPos) }.
  *                          Default NIL.
  *      nInitialItem      - the number of the element to be highlighted as
  *                          the current item when the array is initally
@@ -101,7 +107,8 @@
 *+
 *+--------------------------------------------------------------------
 *+
-function achoice( nTop, nLft, nBtm, nRyt, acItems, xSelect, cUserFunc, nPos, nHiLytRow )
+
+function achoice( nTop, nLft, nBtm, nRyt, acItems, xSelect, xUserFunc, nPos, nHiLytRow )
 
 local nNumCols  := 0                    // Number of columns in the window
 local nNumRows  := 0                    // Number of rows in the window
@@ -117,10 +124,8 @@ local nItems    := 0                    // The number of items
 local nGap      := 0                    // The number of lines between top and current lines
                                         // Block used to search for items
 local bScan := { | cX | if( left( cX, 1 ) == upper( chr( nKey ) ), .T., .F. ) }
-                                        // Is a user function to be used?
-local lUserFunc := ( !empty( cUserFunc ) )
+local lUserFunc                         // Is a user function to be used?
 local nUserFunc := 0                    // Return value from user function
-local bUserFunc := { || AC_ABORT }      // Block form of user function
 local cLoClr    := Before( ",", setcolor() )
 local cHiClr    := Before( ",", After( ",", setcolor() ) )
 local cUnClr    := After( ",", After( ",", After( ",", After( ",", setcolor() ) ) ) )
@@ -129,9 +134,7 @@ local nFrstItem := 0
 local nLastItem := 0
 local nCntr
 
-IF lUserFunc
-   bUserFunc := cUserFunc
-endif
+lUserFunc := !empty( xUserFunc ) .AND. ValType( xUserFunc ) $ "CB"
 
 IF empty( cHiClr )
    cHiClr := After( "/", cLoClr ) + "/" + Before( "/", cLoClr )
@@ -147,7 +150,6 @@ DEFAULT nBtm to maxrow() + 1            // The bottommost row of the windows
 DEFAULT nRyt to maxcol() + 1            // The rightmost column of the window
 DEFAULT acItems to {}                   // The items from which to choose
 DEFAULT xSelect to .T.                  // Array or logical, what is selectable
-DEFAULT cUserFunc to NIL                // Optional function for key exceptions
 DEFAULT nPos to 1                       // The number of the selected item
 DEFAULT nHiLytRow to 0                  // The row to be highlighted
 
@@ -493,7 +495,7 @@ do while ( !lFinished )
    endcase
 
    IF lUserFunc
-      nUserFunc := do( bUserFunc, nMode, nPos, nPos - nAtTop )
+      nUserFunc := do( xUserFunc, nMode, nPos, nPos - nAtTop )
       // DISPVAR nUserFunc
       do case
       case nUserFunc == AC_ABORT
@@ -560,8 +562,6 @@ return ( NIL )
 *+
 static function DispLine( cLine, nRow, nCol, lSelect, lHiLyt, cLoClr, cHiClr, cUnClr )
 
-DEFAULT lHiLyt to .F.
-
 @ nRow, nCol say cLine color if( lSelect, if( lHiLyt, cHiClr, cLoClr ), cUnClr )
 
 return ( NIL )
@@ -601,10 +601,13 @@ return ( min( max( xLo, xVal ), xHi ) )
 *+
 static function Before( cDelim, cValue )
 
-local cRetVal := cValue
+local cRetVal
+local nPos
 
-IF cDelim $ cValue
-   cRetVal := left( cValue, at( cDelim, cValue ) - 1 )
+IF (nPos := at( cDelim, cValue )) > 0
+   cRetVal := left( cValue, nPos - 1 )
+else
+   cRetVal := cValue
 endif
 
 return ( cRetVal )
@@ -619,10 +622,13 @@ return ( cRetVal )
 *+
 static function After( cDelim, cValue )
 
-local cRetVal := ""
+local cRetVal
+local nPos
 
-IF cDelim $ cValue
-   cRetVal := substr( cValue, at( cDelim, cValue ) + 1 )
+IF (nPos := at( cDelim, cValue )) > 0
+   cRetVal := substr( cValue, nPos + 1 )
+else
+   cRetVal := ""
 endif
 
 return ( cRetVal )

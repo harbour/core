@@ -45,12 +45,14 @@ PRG_SOURCES=\
 	dates2.prg \
 	dates3.prg \
 	dates4.prg \
+        debugger.prg \
 	debugtst.prg \
 	descend.prg \
 	dirtest.prg \
 	docase.prg \
 	dosshell.prg \
 	dynobj.prg \
+        dynsym.prg \
 	empty.prg \
 	exittest.prg \
 	fib.prg \
@@ -127,6 +129,7 @@ PRG_SOURCES=\
 	teststr.prg \
 	testtok.prg \
 	testpre.prg \
+        testread.prg \
 	testrdd.prg \
 	testvars.prg \
 	testwarn.prg \

@@ -25,6 +25,7 @@
 #include "itemapi.h"
 #include "extend.h"
 #include "errorapi.h"
+#include "langapi.h"
 #include "ctoharb.h"
 #include "init.h"
 #include "dates.h"
@@ -86,12 +87,12 @@ char * hb_arrayGetDate( PHB_ITEM pArray, ULONG ulIndex, char * szDate )
         }
       else
         {
-          hb_errorRT_BASE(EG_BOUND, 1132, NULL, hb_errorNatDescription(EG_ARRACCESS));
+          hb_errorRT_BASE(EG_BOUND, 1132, NULL, hb_langDGetErrorDesc(EG_ARRACCESS));
         }
     }
   else
     {
-      hb_errorRT_BASE(EG_ARG, 1068, NULL, hb_errorNatDescription(EG_ARRACCESS));
+      hb_errorRT_BASE(EG_ARG, 1068, NULL, hb_langDGetErrorDesc(EG_ARRACCESS));
     }
 
   return szDate;
@@ -113,12 +114,12 @@ BOOL hb_arrayGetBool( PHB_ITEM pArray, ULONG ulIndex )
         }
       else
         {
-          hb_errorRT_BASE(EG_BOUND, 1132, NULL, hb_errorNatDescription(EG_ARRACCESS));
+          hb_errorRT_BASE(EG_BOUND, 1132, NULL, hb_langDGetErrorDesc(EG_ARRACCESS));
         }
     }
   else
     {
-      hb_errorRT_BASE(EG_ARG, 1068, NULL, hb_errorNatDescription(EG_ARRACCESS));
+      hb_errorRT_BASE(EG_ARG, 1068, NULL, hb_langDGetErrorDesc(EG_ARRACCESS));
     }
   return 0;
 }
@@ -145,12 +146,12 @@ double hb_arrayGetDouble( PHB_ITEM pArray, ULONG ulIndex )
         }
       else
         {
-          hb_errorRT_BASE(EG_BOUND, 1132, NULL, hb_errorNatDescription(EG_ARRACCESS));
+          hb_errorRT_BASE(EG_BOUND, 1132, NULL, hb_langDGetErrorDesc(EG_ARRACCESS));
         }
     }
   else
     {
-      hb_errorRT_BASE(EG_ARG, 1068, NULL, hb_errorNatDescription(EG_ARRACCESS));
+      hb_errorRT_BASE(EG_ARG, 1068, NULL, hb_langDGetErrorDesc(EG_ARRACCESS));
     }
   return 0;
 }
@@ -197,12 +198,12 @@ void hb_arrayGet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem )
         hb_itemCopy( pItem, pArray->item.asArray.value->pItems + ( ulIndex - 1 ) );
       else
         {
-          hb_errorRT_BASE(EG_BOUND, 1132, NULL, hb_errorNatDescription(EG_ARRACCESS));
+          hb_errorRT_BASE(EG_BOUND, 1132, NULL, hb_langDGetErrorDesc(EG_ARRACCESS));
         }
     }
   else
     {
-      hb_errorRT_BASE(EG_ARG, 1068, NULL, hb_errorNatDescription(EG_ARRACCESS));
+      hb_errorRT_BASE(EG_ARG, 1068, NULL, hb_langDGetErrorDesc(EG_ARRACCESS));
     }
 }
 
@@ -221,12 +222,12 @@ char *hb_arrayGetString( PHB_ITEM pArray, ULONG ulIndex )
         }
       else
         {
-          hb_errorRT_BASE(EG_BOUND, 1132, NULL, hb_errorNatDescription(EG_ARRACCESS));
+          hb_errorRT_BASE(EG_BOUND, 1132, NULL, hb_langDGetErrorDesc(EG_ARRACCESS));
         }
     }
   else
     {
-      hb_errorRT_BASE(EG_ARG, 1068, NULL, hb_errorNatDescription(EG_ARRACCESS));
+      hb_errorRT_BASE(EG_ARG, 1068, NULL, hb_langDGetErrorDesc(EG_ARRACCESS));
     }
   return "";
 }
@@ -246,12 +247,12 @@ ULONG hb_arrayGetStringLen( PHB_ITEM pArray, ULONG ulIndex )
         }
       else
         {
-          hb_errorRT_BASE(EG_BOUND, 1132, NULL, hb_errorNatDescription(EG_ARRACCESS));
+          hb_errorRT_BASE(EG_BOUND, 1132, NULL, hb_langDGetErrorDesc(EG_ARRACCESS));
         }
     }
   else
     {
-      hb_errorRT_BASE(EG_ARG, 1068, NULL, hb_errorNatDescription(EG_ARRACCESS));
+      hb_errorRT_BASE(EG_ARG, 1068, NULL, hb_langDGetErrorDesc(EG_ARRACCESS));
     }
   return 0;
 }
@@ -267,12 +268,12 @@ int hb_arrayGetType( PHB_ITEM pArray, ULONG ulIndex )
         }
       else
         {
-          hb_errorRT_BASE(EG_BOUND, 1132, NULL, hb_errorNatDescription(EG_ARRACCESS));
+          hb_errorRT_BASE(EG_BOUND, 1132, NULL, hb_langDGetErrorDesc(EG_ARRACCESS));
         }
     }
   else
     {
-      hb_errorRT_BASE(EG_ARG, 1068, NULL, hb_errorNatDescription(EG_ARRACCESS));
+      hb_errorRT_BASE(EG_ARG, 1068, NULL, hb_langDGetErrorDesc(EG_ARRACCESS));
     }
   return 0;
 }
@@ -292,7 +293,7 @@ ULONG hb_arrayLen( PHB_ITEM pArray )
     return pArray->item.asArray.value->ulLen;
   else
     {
-      hb_errorRT_BASE(EG_ARG, 1068, NULL, hb_errorNatDescription(EG_ARRACCESS));
+      hb_errorRT_BASE(EG_ARG, 1068, NULL, hb_langDGetErrorDesc(EG_ARRACCESS));
     }
   return 0;
 }
@@ -305,12 +306,12 @@ void hb_arraySet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem )
         hb_itemCopy( pArray->item.asArray.value->pItems + ( ulIndex - 1 ), pItem );
       else
         {
-          hb_errorRT_BASE(EG_BOUND, 1133, NULL, hb_errorNatDescription(EG_ARRASSIGN));
+          hb_errorRT_BASE(EG_BOUND, 1133, NULL, hb_langDGetErrorDesc(EG_ARRASSIGN));
         }
     }
   else
     {
-      hb_errorRT_BASE(EG_ARG, 1069, NULL, hb_errorNatDescription(EG_ARRASSIGN));
+      hb_errorRT_BASE(EG_ARG, 1069, NULL, hb_langDGetErrorDesc(EG_ARRASSIGN));
     }
 }
 
@@ -373,7 +374,7 @@ void hb_arrayFill( PHB_ITEM pArray, PHB_ITEM pValue, ULONG ulStart, ULONG ulCoun
     }
   else
     {
-      hb_errorRT_BASE(EG_ARG, 1068, NULL, hb_errorNatDescription(EG_NOTARRAY));
+      hb_errorRT_BASE(EG_ARG, 1068, NULL, hb_langDGetErrorDesc(EG_NOTARRAY));
     }
 }
 
@@ -396,12 +397,12 @@ void hb_arrayDel( PHB_ITEM pArray, ULONG ulIndex )
         }
       else
         {
-          hb_errorRT_BASE(EG_BOUND, 1132, NULL, hb_errorNatDescription(EG_ARRACCESS));
+          hb_errorRT_BASE(EG_BOUND, 1132, NULL, hb_langDGetErrorDesc(EG_ARRACCESS));
         }
     }
   else
     {
-      hb_errorRT_BASE(EG_ARG, 1068, NULL, hb_errorNatDescription(EG_NOTARRAY));
+      hb_errorRT_BASE(EG_ARG, 1068, NULL, hb_langDGetErrorDesc(EG_NOTARRAY));
     }
 }
 
@@ -424,12 +425,12 @@ void hb_arrayIns( PHB_ITEM pArray, ULONG ulIndex )
         }
       else
         {
-          hb_errorRT_BASE(EG_BOUND, 1132, NULL, hb_errorNatDescription(EG_ARRACCESS));
+          hb_errorRT_BASE(EG_BOUND, 1132, NULL, hb_langDGetErrorDesc(EG_ARRACCESS));
         }
     }
   else
     {
-      hb_errorRT_BASE(EG_ARG, 1068, NULL, hb_errorNatDescription(EG_NOTARRAY));
+      hb_errorRT_BASE(EG_ARG, 1068, NULL, hb_langDGetErrorDesc(EG_NOTARRAY));
     }
 }
 
@@ -503,7 +504,7 @@ int hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG ulStart, ULONG ulCount
     }
   else
     {
-      hb_errorRT_BASE(EG_ARG, 1068, NULL, hb_errorNatDescription(EG_NOTARRAY));
+      hb_errorRT_BASE(EG_ARG, 1068, NULL, hb_langDGetErrorDesc(EG_NOTARRAY));
     }
   return 0;
 }
@@ -565,7 +566,7 @@ void hb_arrayRelease( PHB_ITEM pArray )
     }
   else
     {
-      hb_errorRT_BASE(EG_ARG, 1068, NULL, hb_errorNatDescription(EG_NOTARRAY));
+      hb_errorRT_BASE(EG_ARG, 1068, NULL, hb_langDGetErrorDesc(EG_NOTARRAY));
     }
 }
 
@@ -603,7 +604,7 @@ void hb_arrayCopy( PHB_ITEM pSrcArray, PHB_ITEM pDstArray, ULONG ulStart,
     }
   else
     {
-      hb_errorRT_BASE(EG_ARG, 1068, NULL, hb_errorNatDescription(EG_NOTARRAY));
+      hb_errorRT_BASE(EG_ARG, 1068, NULL, hb_langDGetErrorDesc(EG_NOTARRAY));
     }
 }
 
@@ -640,7 +641,7 @@ PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray )
    }
    else
    {
-      hb_errorRT_BASE(EG_ARG, 1068, NULL, hb_errorNatDescription(EG_NOTARRAY));
+      hb_errorRT_BASE(EG_ARG, 1068, NULL, hb_langDGetErrorDesc(EG_NOTARRAY));
    }
    return pDstArray;
 }

@@ -27,7 +27,9 @@
 
 #include "pcode.h"
 #include "errorapi.h"
+#include "ctoharb.h"
 #include "init.h"
+#include "initsymd.h"
 
 /* #if INTEL32 */
 static BYTE prgFunction[] = { 0x68, 0x00, 0x00, 0x00, 0x00,
@@ -72,16 +74,12 @@ typedef struct
 #define SYM_NOT_FOUND 0xFFFFFFFF                /* Symbol not found.
                                                    FindSymbol               */
 
-static PASM_CALL CreateFun( PSYMBOL, PBYTE );   /* Create a dynamic function*/
-       void      Do( WORD );
-static ULONG     FindSymbol( char *, PDYNFUNC, ULONG );
        HARBOUR   HB_HB_RUN();
+static PASM_CALL CreateFun( PHB_SYMB, PBYTE );   /* Create a dynamic function*/
+static ULONG     FindSymbol( char *, PDYNFUNC, ULONG );
 static void      HRB_FileClose( FILE * );
 static void      HRB_FileRead ( char *, int, int, FILE * );
 static FILE     *HRB_FileOpen ( char * );
-       void      Push( PHB_ITEM );
-       void      PushNil( void );
-       void      PushSymbol( PSYMBOL );
        BYTE      ReadByte( FILE * );
        char     *ReadId  ( FILE * );
        long      ReadLong( FILE * );
@@ -92,26 +90,9 @@ static FILE     *HRB_FileOpen ( char * );
  */
 #include "run_exp.h"
 
-extern void Arrays__InitSymbols( void );
-extern void Classes__InitSymbols( void );
-extern void Console__InitSymbols( void );
-extern void CopyFile__InitSymbols( void );
-extern void Dates__InitSymbols( void );
-extern void Dates2__InitSymbols( void );
-extern void Descend__InitSymbols( void );
-extern void Dir__InitSymbols( void );
-extern void Environ__InitSymbols( void );
-extern void Files__InitSymbols( void );
-extern void HardCR__InitSymbols( void );
-extern void Math__InitSymbols( void );
-extern void Memotran__InitSymbols( void );
-extern void Set__InitSymbols( void );
-extern void Strings__InitSymbols( void );
-extern void Transfrm__InitSymbols( void );
-
 static void InitRunnerTable( void )
 {
-#include "initsymb.h"                           /* Include default symbols  */
+#include "initsymc.h"                           /* Include default symbols  */
 }
 #if !defined( __GNUC__ )
    #pragma startup InitRunnerTable
@@ -142,7 +123,7 @@ HARBOUR HB_HB_RUN( void )
 
    int i;
 
-   PSYMBOL  pSymRead;                           /* Symbols read             */
+   PHB_SYMB pSymRead;                           /* Symbols read             */
    PDYNFUNC pDynFunc;                           /* Functions read           */
    PDYNSYM  pDynSym;
 
@@ -155,7 +136,7 @@ HARBOUR HB_HB_RUN( void )
       if( file )
       {
          ulSymbols = ReadLong( file );
-         pSymRead = ( PSYMBOL )hb_xgrab( ulSymbols * sizeof( SYMBOL ) );
+         pSymRead = ( PHB_SYMB )hb_xgrab( ulSymbols * sizeof( HB_SYMB ) );
 
          for( ul=0; ul < ulSymbols; ul++)       /* Read symbols in .HRB     */
          {
@@ -454,7 +435,7 @@ static void PatchRelative( PBYTE pCode,   ULONG ulOffset,
    If a .PRG contains 10 functions, 10 dynamic functions are created which
    are all the same :-) except for 2 pointers.
 */
-static PASM_CALL CreateFun( PSYMBOL pSymbols, PBYTE pCode )
+static PASM_CALL CreateFun( PHB_SYMB pSymbols, PBYTE pCode )
 {
    PASM_CALL asmRet = (PASM_CALL) hb_xgrab( sizeof( ASM_CALL ) );
 

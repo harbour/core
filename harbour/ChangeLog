@@ -1,3 +1,89 @@
+19990804-17:30 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/msgxxx.c
+    - __TURBOC__ branch deleted.
+  * source/rtl/alert.prg
+    + Added the handling of first parameters of Alert() if they are not strings.
+  * source/rtl/copyfile.c
+    + Changed to use: hb_errorRT_BASE_Ext1()
+      So now it can retry or default.
+  * source/rtl/errorapi.c
+    include/rtl/errorapi.h
+    + Added: hb_errorRT_BASE_Ext1()
+    + Added: hb_errorRT_New() (static)
+    ! Fixed: hb_errorLaunch() so that it converts the logical
+      value returned by the codeblock to a number.
+    + Added: hb_errorLaunch() some notes about internal error which can occur
+      here.
+  * source/rtl/errorsys.prg
+    + Added: Alert() box.
+  * source/rtl/msgxxx.c (code moved away from here)
+    source/rtl/classes.c
+    source/rtl/errorapi.c
+    source/vm/hvm.v
+    + Uses Language API instead of hb_errorNat...() function.
+  * source/vm/hvm.c
+    ! LONG lLineNo -> WORD wLineNo to suppress a warning.
+  * include/langapi.h
+    source/rtl/langapi.c
+    + Language API initial implementation.
+  * source/rtl/vm/ForTest()
+    - Removed the "internal error" which stated that there will
+      be infinite loop if STEP 0 is used, Clipper just goes into an 
+      ininite loop.
+    ! Changed printf() to a standard error is STEP expression is not numeric.
+  * include/errorapi.h
+    source/rtl/errorapi.c
+    source/rtl/msgxxx.c
+    source/rtl/msg*.c
+    + Added internal error launcher API call hb_errorInternal()
+  * source/hbpp/hbpp.c
+    include/hberrors.h
+    * "#error" message standardized, made Clipper like.
+  * tests/working/Makefile
+    tests/working/dyssym.prg
+    + __DYNSYM*() tests added.
+  * include/Makefile
+    include/initsymc.h (renamed from initsymb.h)
+    include/initsymd.h (added)
+    source/vm/initsymb.c
+    source/runner/runner.c
+    Init function extern declarations put into initsymd.h
+  * source/vm/dynsym.c
+    * Name changes:
+      HB_DYNSYMBOLS -> HB___DYNSYMCOUNT
+      HB_DYNSYMNAME -> HB___DYNSYMGETNAME
+      HB_GETDYNSYM  -> HB___DYNSYMGETINDEX
+  * source/runner/runner.c
+    ! Using "ctoharb.h"
+  * source/rtl/gt/gtwin.c
+    ! Compiler warning corrected.
+  * source/rtl/achoice.prg
+    % Some small optimalizations, userfunc as codeblock support documented.
+  * source/rtl/alert.prg
+    + Added TOFIX: DispBegin issue.
+  * include/ctoharb.h
+    include/extend.h
+    include/init.h
+    source/vm/initsymb.c
+    source/vm/hvm.c
+    source/vm/dynsym.c
+    source/rtl/memvars.c
+    source/rtl/codebloc.c
+    source/rtl/classes.c
+    source/runner/runner.c
+    source/compiler/genobj32.c
+    * SYMBOL -> HB_SYMB
+      PSYMBOL -> PHB_SYMB
+  * tests/working/Makefile
+    + debugger.prg and testread.prg added
+  * source/rtl/tget.prg
+    source/rtl/tgetlist.prg
+    tests/working/testread.prg
+    tests/working/debugger.prg
+    + CVS tags added.
+  * source/rtl/Makefile
+    + Added tget*.prg
+  
 Wed Aug 04 11:00:07 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* source/tools/stringsx.c: 

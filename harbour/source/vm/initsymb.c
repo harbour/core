@@ -9,23 +9,7 @@
 #include "hbsetup.h"
 #include "extend.h"
 #include "hbdefs.h"
-
-extern void Arrays__InitSymbols( void );
-extern void Classes__InitSymbols( void );
-extern void Console__InitSymbols( void );
-extern void CopyFile__InitSymbols( void );
-extern void Dates__InitSymbols( void );
-extern void Dates2__InitSymbols( void );
-extern void Descend__InitSymbols( void );
-extern void Dir__InitSymbols( void );
-extern void Environ__InitSymbols( void );
-extern void Files__InitSymbols( void );
-extern void HardCR__InitSymbols( void );
-extern void Math__InitSymbols( void );
-extern void Memotran__InitSymbols( void );
-extern void Set__InitSymbols( void );
-extern void Strings__InitSymbols( void );
-extern void Transfrm__InitSymbols( void );
+#include "initsymd.h"
 
 HARBOUR HB_AADD( void );
 HARBOUR HB_ABS( void );
@@ -73,7 +57,7 @@ HARBOUR HB_UPPER( void );
 HARBOUR HB_VAL( void );
 HARBOUR HB_YEAR( void );
 
-static SYMBOL symbols[] = {
+static HB_SYMB symbols[] = {
     { "AADD"      , FS_PUBLIC, HB_AADD         , 0 },
     { "ABS"       , FS_PUBLIC, HB_ABS          , 0 },
     { "ASC"       , FS_PUBLIC, HB_ASC          , 0 },
@@ -155,11 +139,11 @@ void InitSymbolTable( void )
    * The symbol tables from runtime support modules start here
    */
 #ifdef HARBOUR_STRICT_ANSI_C
-   #include "initsymb.h"
+   #include "initsymc.h"
 #endif
 
   /*
    * The system symbol table with runtime functions HAVE TO be called last
    */
-  ProcessSymbols( symbols, sizeof(symbols)/sizeof( SYMBOL ) );
+  ProcessSymbols( symbols, sizeof(symbols)/sizeof( HB_SYMB ) );
 }

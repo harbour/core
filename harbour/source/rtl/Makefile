@@ -23,6 +23,7 @@ C_SOURCES=\
         hardcr.c \
         inkey.c \
         itemapi.c \
+        langapi.c \
         math.c \
         memvars.c \
         mtran.c \
@@ -47,8 +48,8 @@ PRG_SOURCES=\
         objfunc.prg \
         setkey.prg \
         tclass.prg \
-	tget.prg \
-	tgetlist.prg \
+        tget.prg \
+        tgetlist.prg \
 
 LIB=rtl
 

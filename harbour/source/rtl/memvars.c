@@ -334,7 +334,7 @@ void hb_MemvarValueDecRef( HB_HANDLE hValue )
  * pItem   - value to store in memvar
  *
  */
-void hb_MemvarSetValue( PSYMBOL pMemvarSymb, HB_ITEM_PTR pItem )
+void hb_MemvarSetValue( PHB_SYMB pMemvarSymb, HB_ITEM_PTR pItem )
 {
    PDYNSYM pDyn;
 
@@ -365,7 +365,7 @@ void hb_MemvarSetValue( PSYMBOL pMemvarSymb, HB_ITEM_PTR pItem )
       hb_errorRT_BASE( EG_NOVAR, 1003, NULL, pMemvarSymb->szName );
 }
 
-void hb_MemvarGetValue( HB_ITEM_PTR pItem, PSYMBOL pMemvarSymb )
+void hb_MemvarGetValue( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
 {
    PDYNSYM pDyn;
 
@@ -393,7 +393,7 @@ void hb_MemvarGetValue( HB_ITEM_PTR pItem, PSYMBOL pMemvarSymb )
       hb_errorRT_BASE( EG_NOVAR, 1003, NULL, pMemvarSymb->szName );
 }
 
-void hb_MemvarGetRefer( HB_ITEM_PTR pItem, PSYMBOL pMemvarSymb )
+void hb_MemvarGetRefer( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
 {
    PDYNSYM pDyn;
 

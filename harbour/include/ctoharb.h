@@ -30,8 +30,8 @@
 /* Calling Harbour from C code */
 
 /* executing Harbour code from C */
-extern void Message( PSYMBOL );
-extern void PushSymbol( PSYMBOL pSym ); /* pushes a function pointer onto the stack */
+extern void Message( PHB_SYMB );
+extern void PushSymbol( PHB_SYMB pSym ); /* pushes a function pointer onto the stack */
 extern void Push( PHB_ITEM pItem );        /* pushes any item to the stack */
 extern void PushNil( void );            /* in this case it places nil at self */
 /* parameters should come here using Push...() */
@@ -41,7 +41,7 @@ extern void PushLong( long lNumber );
 extern void PushDouble( double dNumber, WORD wDec );
 extern void PushString( char * szText, ULONG length );  /* pushes a string on to the stack */
 extern void PushLogical( int iTrueFalse ); /* pushes a logical value onto the stack */
-extern void PushSymbol( PSYMBOL );
+extern void PushSymbol( PHB_SYMB );
 extern void Do( WORD wParams );         /* invokes the virtual machine */
 extern void Function( WORD wParams );         /* invokes the virtual machine */
 

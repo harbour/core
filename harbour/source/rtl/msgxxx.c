@@ -50,17 +50,5 @@
 #elif defined(HARBOUR_LANGUAGE_PLMAZ)
 #include "natmsg/msgplmaz.c"
 #else
-#ifdef __TURBOC__
-   #include "source\rtl\natmsg\msgen.c"
-#else
-   #include "natmsg/msgen.c"
+#include "natmsg/msgen.c"
 #endif
-#endif
-
-char *hb_errorNatDescription( ULONG ulGenError )
-{
-   if( ulGenError < sizeof(hb_errorsGeneric) / sizeof(hb_errorsGeneric[ 0 ]) )
-      return hb_errorsGeneric[ ulGenError ];
-   else
-      return hb_errorsGeneric[ 0 ];
-}

@@ -103,7 +103,7 @@ static void     DictRealloc( PCLASS );
 static HARBOUR  EvalInline( void );
 static HARBOUR  GetClassData( void );
 static HARBOUR  GetData( void );
-       PHB_FUNC hb_GetMethod( PHB_ITEM, PSYMBOL );
+       PHB_FUNC hb_GetMethod( PHB_ITEM, PHB_SYMB );
        ULONG    hb_isMessage( PHB_ITEM, char *);
        HARBOUR  HB_ISMESSAGE( void );
        HARBOUR  HB_OCLONE( void );
@@ -345,7 +345,7 @@ HARBOUR HB_CLASSCREATE(void)
 HARBOUR HB_CLASSDEL(void)
 {
    PHB_ITEM pString  = hb_param( 2, IT_STRING );
-   PSYMBOL  pMessage = hb_GetDynSym( pString->item.asString.value )->pSymbol;
+   PHB_SYMB pMessage = hb_GetDynSym( pString->item.asString.value )->pSymbol;
    PDYNSYM  pMsg     = ( PDYNSYM ) pMessage->pDynSym;
    PCLASS   pClass;
 
@@ -446,7 +446,7 @@ HARBOUR HB_CLASSINSTANCE(void)
 HARBOUR HB_CLASSMOD(void)
 {
    PHB_ITEM pString  = hb_param( 2, IT_STRING );
-   PSYMBOL  pMessage = hb_GetDynSym( pString->item.asString.value )->pSymbol;
+   PHB_SYMB pMessage = hb_GetDynSym( pString->item.asString.value )->pSymbol;
    PDYNSYM  pMsg     = ( PDYNSYM ) pMessage->pDynSym;
    PCLASS   pClass;
 
@@ -723,7 +723,7 @@ static HARBOUR GetData( void )
  *
  * Internal function to the function pointer of a message of an object
  */
-PHB_FUNC hb_GetMethod( PHB_ITEM pObject, PSYMBOL pMessage )
+PHB_FUNC hb_GetMethod( PHB_ITEM pObject, PHB_SYMB pMessage )
 {
    WORD    wAt, wLimit, wMask;
    WORD    wClass;
@@ -789,7 +789,7 @@ PHB_FUNC hb_GetMethod( PHB_ITEM pObject, PSYMBOL pMessage )
  */
 ULONG hb_isMessage( PHB_ITEM pObject, char *szString )
 {
-   PSYMBOL pMessage = hb_GetDynSym( szString )->pSymbol;
+   PHB_SYMB pMessage = hb_GetDynSym( szString )->pSymbol;
    return( (ULONG) hb_GetMethod( pObject, pMessage ) );
 }                                                /* Get funcptr of message   */
 

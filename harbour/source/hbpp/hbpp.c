@@ -141,7 +141,8 @@ char * _szPErrors[] = { "Can\'t open include file \"%s\"",
                        "Absent \"=>\" in command definition",
                        "Error in pattern definition",
                        "Cycled #define",
-                       "Wrong directive \"%s\""
+                       "Wrong directive \"%s\"",
+                       "#error: \'%s\'"
                      };
 
 int ParseDirective( char* sLine )
@@ -225,7 +226,7 @@ int ParseDirective( char* sLine )
 
   else if ( i == 5 && memcmp ( sDirective, "ERROR", 5 ) == 0 )
   {                        /* --- #error  --- */
-   printf ( "\n#error: %s\n", sLine );
+   GenError( _szPErrors, 'P', ERR_EXPLICIT, sLine, NULL );
    exit(1);
   }
   else if ( i == 4 && memcmp ( sDirective, "LINE", 4 ) == 0 )

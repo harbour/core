@@ -13,12 +13,18 @@
 #include "box.ch"
 #include "inkey.ch"
 
+// ; TOFIX: Clipper can display an alert box even when DispBegin() is in effect.
 // ; Clipper defines a clipped window for Alert()
+// ; Clipper will return NIL if the first parameter is not a string, but
+//   this is not documented. This implementation convert the first parameter
+//   to a string if another type was passed. You can switch back to
+//   Clipper compatible mode by defining constant
+//   HARBOUR_STRICT_CLIPPER_COMPATIBILITY.
 // ; Clipper handles these buttons { "Ok", "", "Cancel" } in a buggy way.
 //   This is fixed.
 // ; nDelay parameter is a Harbour addition.
 
-FUNCTION Alert(cMessage, aOptions, cColorNorm, nDelay)
+FUNCTION Alert(xMessage, aOptions, cColorNorm, nDelay)
    LOCAL nChoice
    LOCAL aSay, nPos, nWidth, nOpWidth, nInitRow, nInitCol, iEval
    LOCAL nKey, aPos, nCurrent, aHotkey, aOptionsOK
@@ -29,19 +35,54 @@ FUNCTION Alert(cMessage, aOptions, cColorNorm, nDelay)
    LOCAL nOldCursor
    LOCAL cOldScreen
 
-   /* TOFIX: Clipper decides at runtime, whether the GT is linked, */
+   /* TOFIX: Clipper decides at runtime, whether the GT is linked in, */
    /*        if it is not, the console mode is choosed here */
    LOCAL lConsole := .F.
 
 #ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+// TODO: Enable this when we have a function for querying the command line
+//       parameters.
 // IF "//NOALERT" $ /* Upper(cCommandLine) */
 //    QUIT
 // ENDIF
 #endif
 
-   IF !(ValType(cMessage) == "C")
+   aSay := {}
+
+#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+
+   IF !(ValType(xMessage) == "C")
       RETURN NIL
    ENDIF
+
+#else
+
+   DO CASE
+   CASE ValType(xMessage) $ "CM"
+
+      DO WHILE (nPos := At(';', xMessage)) != 0
+         AAdd(aSay, Left(xMessage, nPos - 1))
+         xMessage := SubStr(xMessage, nPos + 1)
+      ENDDO
+      AAdd(aSay, xMessage)
+
+   CASE ValType(xMessage) == "A"
+
+      FOR iEval := 1 TO Len(xMessage)
+         IF ValType( xMessage[ iEval ] ) == "C"
+            AAdd(aSay, xMessage[ iEval ] )
+         ENDIF
+      NEXT
+
+   CASE ValType(xMessage) == "N" ; xMessage := Str( xMessage )
+   CASE ValType(xMessage) == "D" ; xMessage := DToC( xMessage )
+   CASE ValType(xMessage) == "L" ; xMessage := iif( xMessage, ".T.", ".F." )
+   CASE ValType(xMessage) == "O" ; xMessage := xMessage:className + " Object"
+   CASE ValType(xMessage) == "B" ; xMessage := "{||...}"
+   OTHERWISE                     ; xMessage := "NIL"
+   ENDCASE
+
+#endif
 
    IF !(ValType(aOptions) == "A")
       aOptions := {}
@@ -58,13 +99,6 @@ FUNCTION Alert(cMessage, aOptions, cColorNorm, nDelay)
    IF nDelay == NIL
       nDelay := 0
    ENDIF
-
-   aSay := {}
-   DO WHILE (nPos := At(';', cMessage)) != 0
-      AAdd(aSay, Left(cMessage, nPos - 1))
-      cMessage := SubStr(cMessage, nPos + 1)
-   ENDDO
-   AAdd(aSay, cMessage)
 
    /* The longest line */
    nWidth := 0

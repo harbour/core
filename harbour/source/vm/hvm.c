@@ -38,6 +38,7 @@
 #include "extend.h"
 #include "errorapi.h"
 #include "itemapi.h"
+#include "langapi.h"
 #include "pcode.h"
 #include "set.h"
 #include "inkey.h"
@@ -54,11 +55,11 @@ extern ULONG ulMemoryMaxConsumed; /* memory max size consumed */
 
 typedef struct _SYMBOLS
 {
-   PSYMBOL pModuleSymbols; /* pointer to a one module own symbol table */
-   WORD    wModuleSymbols; /* number of symbols on that table */
-   struct _SYMBOLS * pNext;/* pointer to the next SYMBOLS structure */
-   SYMBOLSCOPE hScope;     /* scope collected from all symbols in module used to speed initialization code */
-} SYMBOLS, * PSYMBOLS;     /* structure to keep track of all modules symbol tables */
+   PHB_SYMB pModuleSymbols; /* pointer to a one module own symbol table */
+   WORD     wModuleSymbols; /* number of symbols on that table */
+   struct _SYMBOLS * pNext; /* pointer to the next SYMBOLS structure */
+   SYMBOLSCOPE hScope;      /* scope collected from all symbols in module used to speed initialization code */
+} SYMBOLS, * PSYMBOLS;      /* structure to keep track of all modules symbol tables */
 
 HARBOUR HB_ERRORSYS( void );
 HARBOUR HB_ERRORNEW( void );
@@ -90,7 +91,7 @@ void    Inc( void );             /* increment the latest numeric value on the st
 void    Instring( void );        /* check whether string 1 is contained in string 2 */
 void    Less( void );            /* checks if the latest - 1 value is less than the latest, removes both and leaves result */
 void    LessEqual( void );       /* checks if the latest - 1 value is less than or equal the latest, removes both and leaves result */
-void    Message( PSYMBOL pSymMsg ); /* sends a message to an object */
+void    Message( PHB_SYMB pSymMsg ); /* sends a message to an object */
 void    Minus( void );           /* substracts the latest two values on the stack, removes them and leaves the result */
 void    Modulus( void );         /* calculates the modulus of latest two values on the stack, removes them and leaves the result */
 void    Mult( void );            /* multiplies the latest two values on the stack, removes them and leaves the result */
@@ -105,33 +106,33 @@ void    PopDefStat( WORD wStatic ); /* pops the stack latest value onto a static
 double  PopDouble( WORD * );   /* pops the stack latest value and returns its double numeric format value */
 void    PopLocal( SHORT wLocal );      /* pops the stack latest value onto a local */
 int     PopLogical( void );           /* pops the stack latest value and returns its logical value */
-void    PopMemvar( PSYMBOL );     /* pops a value of memvar variable */
+void    PopMemvar( PHB_SYMB );      /* pops a value of memvar variable */
 double  PopNumber( void );          /* pops the stack latest value and returns its numeric value */
-void    PopParameter( PSYMBOL, BYTE );  /* creates a PRIVATE variable and sets it with parameter's value */
+void    PopParameter( PHB_SYMB, BYTE );  /* creates a PRIVATE variable and sets it with parameter's value */
 void    PopStatic( WORD wStatic );    /* pops the stack latest value onto a static */
 void    Power( void );            /* power the latest two values on the stack, removes them and leaves the result */
 void    Push( PHB_ITEM pItem );     /* pushes a generic item onto the stack */
-void    PushBlock( BYTE * pCode, PSYMBOL pSymbols ); /* creates a codeblock */
+void    PushBlock( BYTE * pCode, PHB_SYMB pSymbols ); /* creates a codeblock */
 void    PushDate( LONG lDate );   /* pushes a long date onto the stack */
 void    PushDouble( double lNumber, WORD wDec ); /* pushes a double number onto the stack */
 void    PushLocal( SHORT iLocal );     /* pushes the containts of a local onto the stack */
 void    PushLocalByRef( SHORT iLocal ); /* pushes a local by refrence onto the stack */
 void    PushLogical( int iTrueFalse ); /* pushes a logical value onto the stack */
 void    PushLong( long lNumber ); /* pushes a long number onto the stack */
-void    PushMemvar( PSYMBOL );     /* pushes a value of memvar variable */
-void    PushMemvarByRef( PSYMBOL ); /* pushes a reference to a memvar variable */
+void    PushMemvar( PHB_SYMB );     /* pushes a value of memvar variable */
+void    PushMemvarByRef( PHB_SYMB ); /* pushes a reference to a memvar variable */
 void    PushNil( void );            /* in this case it places nil at self */
 void    PushNumber( double dNumber, WORD wDec ); /* pushes a number on to the stack and decides if it is integer, long or double */
 void    PushStatic( WORD wStatic );   /* pushes the containts of a static onto the stack */
 void    PushStaticByRef( WORD iLocal ); /* pushes a static by refrence onto the stack */
 void    PushString( char * szText, ULONG length );  /* pushes a string on to the stack */
-void    PushSymbol( PSYMBOL pSym ); /* pushes a function pointer onto the stack */
+void    PushSymbol( PHB_SYMB pSym ); /* pushes a function pointer onto the stack */
 void    PushInteger( int iNumber ); /* pushes a integer number onto the stack */
 void    RetValue( void );           /* pops the latest stack value into stack.Return */
-void    SFrame( PSYMBOL pSym );     /* sets the statics frame for a function */
-void    Statics( PSYMBOL pSym );    /* increases the the global statics array to hold a PRG statics */
+void    SFrame( PHB_SYMB pSym );     /* sets the statics frame for a function */
+void    Statics( PHB_SYMB pSym );    /* increases the the global statics array to hold a PRG statics */
 
-void ProcessSymbols( PSYMBOL pSymbols, WORD wSymbols ); /* statics symbols initialization */
+void ProcessSymbols( PHB_SYMB pSymbols, WORD wSymbols ); /* statics symbols initialization */
 void DoInitStatics( void ); /* executes all _INITSTATICS functions */
 void DoInitFunctions( int argc, char * argv[] ); /* executes all defined PRGs INIT functions */
 void DoExitFunctions( void ); /* executes all defined PRGs EXIT functions */
@@ -142,8 +143,8 @@ void ProcessObjSymbols ( void ); /* process Harbour generated OBJ symbols */
 
 typedef struct
 {
-   WORD wSymbols;                 /* module local symbol table symbols amount */
-   PSYMBOL pSymbols;              /* module local symbol table address */
+   WORD     wSymbols;             /* module local symbol table symbols amount */
+   PHB_SYMB pSymbols;             /* module local symbol table address */
 } OBJSYMBOLS, * POBJSYMBOLS;      /* structure used from Harbour generated OBJs */
 
 #ifdef __cplusplus
@@ -168,8 +169,8 @@ static void ForceLink( void );
 
 int      iHB_DEBUG = 0;    /* if 1 traces the virtual machine activity */
 STACK    stack;
-SYMBOL   symEval = { "__EVAL", FS_PUBLIC, DoBlock, 0 }; /* symbol to evaluate codeblocks */
-PSYMBOL  pSymStart;        /* start symbol of the application. MAIN() is not required */
+HB_SYMB  symEval = { "__EVAL", FS_PUBLIC, DoBlock, 0 }; /* symbol to evaluate codeblocks */
+PHB_SYMB pSymStart;        /* start symbol of the application. MAIN() is not required */
 HB_ITEM  aStatics;         /* Harbour array to hold all application statics variables */
 HB_ITEM  errorBlock;       /* errorblock */
 PSYMBOLS pSymbols = 0;     /* to hold a linked list of all different modules symbol tables */
@@ -263,7 +264,7 @@ int main( int argc, char * argv[] )
    return bErrorLevel;
 }
 
-void VirtualMachine( PBYTE pCode, PSYMBOL pSymbols )
+void VirtualMachine( PBYTE pCode, PHB_SYMB pSymbols )
 {
    BYTE bCode;
    WORD w = 0, wParams, wSize;
@@ -742,13 +743,13 @@ void Div( void )
 void Do( WORD wParams )
 {
    PHB_ITEM pItem = stack.pPos - wParams - 2;   /* procedure name */
-   PSYMBOL pSym = pItem->item.asSymbol.value;
+   PHB_SYMB pSym = pItem->item.asSymbol.value;
    LONG wStackBase = stack.pBase - stack.pItems; /* as the stack memory block could change */
    LONG wItemIndex = pItem - stack.pItems;
    PHB_ITEM pSelf = stack.pPos - wParams - 1;   /* NIL, OBJECT or BLOCK */
    PHB_FUNC pFunc;
    int iStatics = stack.iStatics;              /* Return iStatics position */
-   LONG lLineNo = stack.pBase->item.asSymbol.lineno;
+   WORD wLineNo = stack.pBase->item.asSymbol.lineno;
 
    if( ! IS_SYMBOL( pItem ) )
    {
@@ -780,8 +781,8 @@ void Do( WORD wParams )
 
       if( ! pFunc )
       {
-         printf( "error: message %s not implemented for class %s in line %li\n",
-         pSym->szName, hb_GetClassName( pSelf ), lLineNo );
+         printf( "error: message %s not implemented for class %s in line %i\n",
+         pSym->szName, hb_GetClassName( pSelf ), wLineNo );
          exit( 1 );
       }
       pFunc();
@@ -944,19 +945,21 @@ void ForTest( void )        /* Test to check the end point of the FOR */
 
        dStep = PopDouble( &wDec );
 
+       /* NOTE: step of zero will cause endless loop, as in Clipper */
+
        if( dStep > 0 )           /* Positive loop. Use LESS */
            Less();
        else if( dStep < 0 )      /* Negative loop. Use GREATER */
            Greater();
-       else
-           printf( "step of zero will cause endless loop" );
-                                 /* Add some break code or so... */
+
        iEqual = PopLogical();    /* Logical should be on top of stack */
        PushNumber( dStep, wDec );   /* Push the step expression back on the stack */
        PushLogical( iEqual );
    }
    else
-       printf( "step expression should be numerical" );
+   {
+      hb_errorRT_BASE(EG_ARG, 1073, NULL, "<");
+   }
 }
 
 void Frame( BYTE bLocals, BYTE bParams )
@@ -1237,7 +1240,7 @@ void LessEqual( void )
    }
 }
 
-void Message( PSYMBOL pSymMsg ) /* sends a message to an object */
+void Message( PHB_SYMB pSymMsg ) /* sends a message to an object */
 {
    hb_itemCopy( stack.pPos, stack.pPos - 1 ); /* moves the object forward */
    hb_itemClear( stack.pPos - 1 );
@@ -1564,12 +1567,12 @@ int PopLogical( void )
    }
    else
    {
-      hb_errorRT_BASE(EG_ARG, 1066, NULL, hb_errorNatDescription(EG_CONDITION));
+      hb_errorRT_BASE(EG_ARG, 1066, NULL, hb_langDGetErrorDesc(EG_CONDITION));
       return 0;
    }
 }
 
-void PopMemvar( PSYMBOL pSym )
+void PopMemvar( PHB_SYMB pSym )
 {
    StackDec();
    hb_MemvarSetValue( pSym, stack.pPos );
@@ -1608,7 +1611,7 @@ double PopNumber( void )
    return dNumber;
 }
 
-void PopParameter( PSYMBOL pSym, BYTE bParam )
+void PopParameter( PHB_SYMB pSym, BYTE bParam )
 {
    hb_MemvarSetValue( pSym, stack.pBase +1 +bParam );
    HB_DEBUG( "PopParameter\n" );
@@ -1684,14 +1687,14 @@ void PushLocalByRef( SHORT iLocal )
    HB_DEBUG2( "PushLocalByRef %i\n", iLocal );
 }
 
-void PushMemvar( PSYMBOL pSym )
+void PushMemvar( PHB_SYMB pSym )
 {
    hb_MemvarGetValue( stack.pPos, pSym );
    StackPush();
    HB_DEBUG( "PushMemvar\n" );
 }
 
-void PushMemvarByRef( PSYMBOL pSym )
+void PushMemvarByRef( PHB_SYMB pSym )
 {
    hb_MemvarGetRefer( stack.pPos, pSym );
    StackPush();
@@ -1759,7 +1762,7 @@ void PushString( char * szText, ULONG length )
    HB_DEBUG( "PushString\n" );
 }
 
-void PushSymbol( PSYMBOL pSym )
+void PushSymbol( PHB_SYMB pSym )
 {
    stack.pPos->type   = IT_SYMBOL;
    stack.pPos->item.asSymbol.value = pSym;
@@ -1781,7 +1784,7 @@ void Push( PHB_ITEM pItem )
 * +5 +6 -> number of referenced local variables
 * +7 -> start of table with referenced local variables
 */
-void PushBlock( BYTE * pCode, PSYMBOL pSymbols )
+void PushBlock( BYTE * pCode, PHB_SYMB pSymbols )
 {
    WORD wLocals;
 
@@ -1981,14 +1984,14 @@ void StackShow( void )
    printf( "\n" );
 }
 
-void SFrame( PSYMBOL pSym )      /* sets the statics frame for a function */
+void SFrame( PHB_SYMB pSym )      /* sets the statics frame for a function */
 {
    /* _INITSTATICS is now the statics frame. Statics() changed it! */
    stack.iStatics = ( int ) pSym->pFunPtr; /* pSym is { "$_INITSTATICS", FS_INIT | FS_EXIT, _INITSTATICS } for each PRG */
    HB_DEBUG( "SFrame\n" );
 }
 
-void Statics( PSYMBOL pSym ) /* initializes the global aStatics array or redimensionates it */
+void Statics( PHB_SYMB pSym ) /* initializes the global aStatics array or redimensionates it */
 {
    WORD wStatics = PopNumber();
 
@@ -2006,7 +2009,7 @@ void Statics( PSYMBOL pSym ) /* initializes the global aStatics array or redimen
    HB_DEBUG2( "Statics %li\n", hb_arrayLen( &aStatics ) );
 }
 
-void ProcessSymbols( PSYMBOL pModuleSymbols, WORD wModuleSymbols ) /* module symbols initialization */
+void ProcessSymbols( PHB_SYMB pModuleSymbols, WORD wModuleSymbols ) /* module symbols initialization */
 {
    PSYMBOLS pNewSymbols, pLastSymbols;
    WORD w;

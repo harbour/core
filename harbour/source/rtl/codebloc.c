@@ -56,7 +56,7 @@
 HB_CODEBLOCK_PTR hb_CodeblockNew( BYTE * pBuffer,
             WORD wLocals,
             WORD *pLocalPosTable,
-            PSYMBOL pSymbols )
+            PHB_SYMB pSymbols )
 {
   HB_CODEBLOCK_PTR pCBlock;
 

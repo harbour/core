@@ -2,8 +2,8 @@
  * $Id$
  */
 
-#ifndef HB_INITSYMB_H_
-#define HB_INITSYMB_H_
+#ifndef HB_INITSYMC_H_
+#define HB_INITSYMC_H_
 
 /* This file contains all the Run-Time library init symbols */
 
@@ -27,4 +27,4 @@
 #endif  
   Transfrm__InitSymbols();
 
-#endif /* HB_INITSYMB_H_ */
+#endif /* HB_INITSYMC_H_ */

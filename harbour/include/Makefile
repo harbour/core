@@ -20,9 +20,11 @@ C_HEADERS=\
         hbsetup.h    \
         hbver.h      \
         init.h       \
-        initsymb.h   \
+        initsymc.h   \
+        initsymd.h   \
         inkey.h      \
         itemapi.h    \
+        langapi.h    \
         pcode.h      \
         rddapi.h     \
         run_exp.h    \

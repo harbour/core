@@ -49,7 +49,7 @@ typedef struct
    SYMBOLSCOPE cScope;  /* the scope of the symbol */
    PHB_FUNC    pFunPtr; /* function address for function symbol table entries */
    struct _DYNSYM * pDynSym;   /* pointer to its dynamic symbol if defined */
-} SYMBOL, * PSYMBOL, * SYMBOL_PTR;
+} HB_SYMB, * PHB_SYMB, * HB_SYMB_PTR, SYMBOL, * PSYMBOL, * SYMBOL_PTR;
 
 /* Harbour Functions scope */
 #define FS_PUBLIC       0
@@ -60,8 +60,8 @@ typedef struct
 #define FS_MESSAGE     32
 #define FS_MEMVAR     128
 
-extern void VirtualMachine( PBYTE pCode, PSYMBOL pSymbols );  /* invokes the virtual machine */
-extern void ProcessSymbols( SYMBOL *, WORD );
+extern void VirtualMachine( PBYTE pCode, PHB_SYMB pSymbols );  /* invokes the virtual machine */
+extern void ProcessSymbols( PHB_SYMB pSymbols, WORD wSymbols ); /* statics symbols initialization */
 
 /* items types */
 #define IT_NIL       0x0000
@@ -166,7 +166,7 @@ struct hb_struSymbol
    LONG stackbase;
    WORD lineno;
    WORD paramcnt;
-   PSYMBOL value;
+   PHB_SYMB value;
 };
 
 /* items hold at the virtual machine stack */
@@ -218,9 +218,9 @@ typedef struct _DYNSYM
 {
    HB_HANDLE hArea;       /* Workarea number */
    HB_HANDLE hMemvar;     /* Index number into memvars ( publics & privates ) array */
-   PSYMBOL   pSymbol;     /* pointer to its relative local symbol */
+   PHB_SYMB  pSymbol;     /* pointer to its relative local symbol */
    PHB_FUNC  pFunPtr;     /* Pointer to the function address */
-} DYNSYM, * PDYNSYM, * DYNSYM_PTR;      
+} DYNSYM, * PDYNSYM, * DYNSYM_PTR;
 
 typedef struct
 {
@@ -233,7 +233,7 @@ typedef struct _HB_CODEBLOCK
    BYTE*    pCode;        /* codeblock pcode */
    PHB_ITEM pLocals;      /* table with referenced local variables */
    WORD     wLocals;      /* number of referenced local variables */
-   PSYMBOL  pSymbols;     /* codeblocks symbols */
+   PHB_SYMB pSymbols;     /* codeblocks symbols */
    ULONG    lCounter;     /* numer of references to this codeblock */
 } HB_CODEBLOCK, * PHB_CODEBLOCK, * HB_CODEBLOCK_PTR;
 
@@ -245,7 +245,7 @@ typedef struct _HB_VALUE
 } HB_VALUE, * PHB_VALUE, * HB_VALUE_PTR;
 
 extern STACK stack;
-extern SYMBOL symEval;
+extern HB_SYMB symEval;
 extern HB_ITEM errorBlock;
 extern HB_ITEM aStatics;
 
@@ -316,19 +316,19 @@ extern ULONG    hb_strAt( char *, long, char *, long );
 extern char *   hb_strUpper( char * szText, long lLen );
 extern char *   hb_strLower( char * szText, long lLen );
 
-extern PHB_FUNC hb_GetMethod( PHB_ITEM pObject, PSYMBOL pSymMsg ); /* returns the method pointer of a object class */
+extern PHB_FUNC hb_GetMethod( PHB_ITEM pObject, PHB_SYMB pSymMsg ); /* returns the method pointer of a object class */
 extern char *   hb_GetClassName( PHB_ITEM pObject ); /* retrieves an object class name */
 extern ULONG    hb_isMessage( PHB_ITEM, char * );
 
 /* dynamic symbol table management */
 extern PDYNSYM  hb_GetDynSym( char * szName );    /* finds and creates a dynamic symbol if not found */
-extern PDYNSYM  hb_NewDynSym( PSYMBOL pSymbol );  /* creates a new dynamic symbol based on a local one */
+extern PDYNSYM  hb_NewDynSym( PHB_SYMB pSymbol );  /* creates a new dynamic symbol based on a local one */
 extern PDYNSYM  hb_FindDynSym( char * szName );   /* finds a dynamic symbol */
 extern void     hb_LogDynSym( void );             /* displays all dynamic symbols */
 extern void     hb_ReleaseDynSym( void );         /* releases the memory of the dynamic symbol table */
-extern PSYMBOL  hb_NewSymbol( char * szName );
+extern PHB_SYMB hb_NewSymbol( char * szName );
 
-extern HB_CODEBLOCK_PTR hb_CodeblockNew( BYTE *, WORD, WORD *, PSYMBOL );
+extern HB_CODEBLOCK_PTR hb_CodeblockNew( BYTE *, WORD, WORD *, PHB_SYMB );
 extern void     hb_CodeblockDelete( PHB_ITEM );
 extern PHB_ITEM hb_CodeblockGetVar( PHB_ITEM, LONG );
 extern PHB_ITEM hb_CodeblockGetRef( PHB_ITEM, PHB_ITEM );
@@ -342,14 +342,13 @@ extern void     hb_MemvarsInit( void );
 extern void     hb_MemvarsRelease( void );
 extern void     hb_MemvarValueIncRef( HB_HANDLE );
 extern void     hb_MemvarValueDecRef( HB_HANDLE );
-extern void     hb_MemvarSetValue( PSYMBOL, HB_ITEM_PTR );
-extern void     hb_MemvarGetValue( HB_ITEM_PTR, PSYMBOL );
-extern void     hb_MemvarGetRefer( HB_ITEM_PTR, PSYMBOL );
-extern void     hb_MemvarNewSymbol( PSYMBOL );
+extern void     hb_MemvarSetValue( PHB_SYMB, HB_ITEM_PTR );
+extern void     hb_MemvarGetValue( HB_ITEM_PTR, PHB_SYMB );
+extern void     hb_MemvarGetRefer( HB_ITEM_PTR, PHB_SYMB );
+extern void     hb_MemvarNewSymbol( PHB_SYMB );
 extern ULONG    hb_MemvarGetPrivatesBase( void );
 extern void     hb_MemvarSetPrivatesBase( ULONG );
 
-extern void     ProcessSymbols( PSYMBOL pSymbols, WORD wSymbols ); /* statics symbols initialization */
 extern char *   hb_setColor( char * );
 
 #endif /* HB_EXTEND_H_ */

@@ -26,6 +26,7 @@
 #include "ctoharb.h"
 #include "itemapi.h"
 #include "errorapi.h"
+#include "langapi.h"
 
 PHB_ITEM hb_errNew( void )
 {
@@ -42,12 +43,28 @@ PHB_ITEM hb_errNew( void )
 
 WORD hb_errLaunch( PHB_ITEM pError )
 {
+   if ( !IS_BLOCK( &errorBlock ) )
+   {
+      /* TODO: Internal error: */
+      /* "No ERRORBLOCK() for error at: MODULENAME (0)" */
+
+      exit(1);
+   }
+
    PushSymbol( &symEval );
    Push( &errorBlock );
    Push( pError );
    Do( 1 );
 
-   return stack.Return.item.asInteger.value;  /* TODO: hb_parnl( -1 ) */
+   if ( !IS_LOGICAL( &stack.Return ) )
+   {
+      /* TODO: Internal error: */
+      /* "Error recovery failure, MODULENAME (0)" */
+
+      exit(1);
+   }
+
+   return stack.Return.item.asLogical.value ? E_RETRY : E_DEFAULT;
 }
 
 void hb_errRelease( PHB_ITEM pError )
@@ -270,91 +287,75 @@ PHB_ITEM hb_errPutFlags( PHB_ITEM pError, USHORT uiFlags )
 
 /* Wrappers for hb_errLaunch() */
 
-WORD hb_errorRT_BASE( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation )
+static WORD hb_errorRT_New
+(
+   USHORT uiSeverity,
+   char * szSubSystem,
+   ULONG  ulGenCode,
+   ULONG  ulSubCode,
+   char * szDescription,
+   char * szOperation,
+   USHORT uiOsCode,
+   USHORT uiFlags
+)
 {
    PHB_ITEM pError = hb_errNew();
    WORD wRetVal;
 
-   hb_errPutSeverity( pError, ES_ERROR );
-   hb_errPutSubSystem( pError, HB_ERR_SS_BASE );
+   hb_errPutSeverity( pError, uiSeverity );
+   hb_errPutSubSystem( pError, szSubSystem );
    hb_errPutGenCode( pError, ulGenCode );
    hb_errPutSubCode( pError, ulSubCode );
-   if( szDescription )
-      hb_errPutDescription( pError, szDescription );
-   else
-      hb_errPutDescription( pError, hb_errorNatDescription(ulGenCode) );
+   hb_errPutDescription( pError, szDescription ? szDescription : hb_langDGetErrorDesc(ulGenCode) );
    hb_errPutOperation( pError, szOperation );
+   hb_errPutOsCode( pError, uiOsCode );
+   hb_errPutFlags( pError, uiFlags );
 
    wRetVal = hb_errLaunch( pError );
 
    hb_errRelease( pError );
 
    return wRetVal;
+}
+
+WORD hb_errorRT_BASE( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation )
+{
+   return hb_errorRT_New( ES_ERROR, HB_ERR_SS_BASE, ulGenCode, ulSubCode, szDescription, szOperation, 0, EF_NONE );
+}
+
+WORD hb_errorRT_BASE_Ext1( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiOsCode, USHORT uiFlags )
+{
+   return hb_errorRT_New( ES_ERROR, HB_ERR_SS_BASE, ulGenCode, ulSubCode, szDescription, szOperation, uiOsCode, uiFlags );
 }
 
 WORD hb_errorRT_TERMINAL( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation )
 {
-   PHB_ITEM pError = hb_errNew();
-   WORD wRetVal;
-
-   hb_errPutSeverity( pError, ES_ERROR );
-   hb_errPutSubSystem( pError, HB_ERR_SS_TERMINAL );
-   hb_errPutGenCode( pError, ulGenCode );
-   hb_errPutSubCode( pError, ulSubCode );
-   if( szDescription )
-      hb_errPutDescription( pError, szDescription );
-   else
-      hb_errPutDescription( pError, hb_errorNatDescription(ulGenCode) );
-   hb_errPutOperation( pError, szOperation );
-
-   wRetVal = hb_errLaunch( pError );
-
-   hb_errRelease( pError );
-
-   return wRetVal;
+   return hb_errorRT_New( ES_ERROR, HB_ERR_SS_TERMINAL, ulGenCode, ulSubCode, szDescription, szOperation, 0, EF_NONE );
 }
 
 WORD hb_errorRT_DBCMD( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation )
 {
-   PHB_ITEM pError = hb_errNew();
-   WORD wRetVal;
-
-   hb_errPutSeverity( pError, ES_ERROR );
-   hb_errPutSubSystem( pError, HB_ERR_SS_DBCMD );
-   hb_errPutGenCode( pError, ulGenCode );
-   hb_errPutSubCode( pError, ulSubCode );
-   if( szDescription )
-      hb_errPutDescription( pError, szDescription );
-   else
-      hb_errPutDescription( pError, hb_errorNatDescription(ulGenCode) );
-   hb_errPutOperation( pError, szOperation );
-
-   wRetVal = hb_errLaunch( pError );
-
-   hb_errRelease( pError );
-
-   return wRetVal;
+   return hb_errorRT_New( ES_ERROR, HB_ERR_SS_DBCMD, ulGenCode, ulSubCode, szDescription, szOperation, 0, EF_NONE );
 }
 
 WORD hb_errorRT_TOOLS( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation )
 {
-   PHB_ITEM pError = hb_errNew();
-   WORD wRetVal;
+   return hb_errorRT_New( ES_ERROR, HB_ERR_SS_BASE, ulGenCode, ulSubCode, szDescription, szOperation, 0, EF_NONE );
+}
 
-   hb_errPutSeverity( pError, ES_ERROR );
-   hb_errPutSubSystem( pError, HB_ERR_SS_BASE );
-   hb_errPutGenCode( pError, ulGenCode );
-   hb_errPutSubCode( pError, ulSubCode );
-   if( szDescription )
-      hb_errPutDescription( pError, szDescription );
-   else
-      hb_errPutDescription( pError, hb_errorNatDescription(ulGenCode) );
-   hb_errPutOperation( pError, szOperation );
+/* NOTES: Use as minimal calls from here, as possible. */
+/*        Don't allocate memory from this function. */
 
-   wRetVal = hb_errLaunch( pError );
+void hb_errorInternal ( ULONG ulIntCode, char * szText, char * szModule, WORD wLine, char * szPar1, char * szPar2, char * szPar3 )
+{
+   char szError [ 256 ];
 
-   hb_errRelease( pError );
+   if ( szModule )
+      printf( "\n%s (%i)  ", szModule, wLine );
 
-   return wRetVal;
+   sprintf( szError, szText ? szText : hb_langDGetErrorIntr( ulIntCode ), szPar1, szPar2, szPar3 );
+   printf( "Internal error %lu: %s\n\n", ulIntCode, szError );
+
+   exit( 1 );
 }
 

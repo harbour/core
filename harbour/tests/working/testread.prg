@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 // Harbour Get System sample
 
 function Main()
