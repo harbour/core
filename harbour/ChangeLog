@@ -1,3 +1,19 @@
+19990706-20:15 Bruno Cantero <bruno@issnet.net>
+CVSed by Andi Jahja <andij@aonlippo.co.id>
+
+=> retrieve the logical value contained on an array element
+=> retrieve the double value contained on an array element
+
+source/rtl/arrays.c
+  + internal hb_arrayGetBool
+  + internal hb_arrayGetDouble
+source/rtl/extend.c
+  * hb_parnl
+  * hb_parnd
+include/extend.h
+  + hb_arrayGetBool prototye
+  + hb_arrayGetDouble prototype
+
 19990705-14:10 Alexander Kresin
   * source\hbpp\hbpp.c
     * fixed some warnings
