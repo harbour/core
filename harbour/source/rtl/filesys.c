@@ -102,6 +102,10 @@
    #include <fcntl.h>
    #include <errno.h>
 
+   #if defined(__CYGWIN__)
+      #include <io.h>
+   #endif
+
    #if defined(__DJGPP__)
       #include <dir.h>
       #define _getdrive getdisk
