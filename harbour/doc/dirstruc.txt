@@ -28,6 +28,8 @@ in order to remove empty directories)
 |
 +---config             - Configuration Files (.cf) for the GNU Make system.
 |   |
+|   +---bsd            - Configuration files specific to FreeBSD.
+|   |
 |   +---dos            - Configuration files specific to DOS.
 |   |
 |   +---linux          - Configutation files specific to GNU/Linux.
@@ -38,6 +40,11 @@ in order to remove empty directories)
 |
 +---contrib            - Miscellaneous contribution files. Those are not part
 |   |                    of the official Harbour project.
+|   |
+|   +---apollo         - Wrapper functions for VistaSoftware's Apollo database
+|   |   |                driver.
+|   |   |
+|   |   +---test       - Test programs.
 |   |
 |   +---directx        - DirectDraw implementation for Windows.
 |   |   |
@@ -72,6 +79,8 @@ in order to remove empty directories)
 |   |   |
 |   |   +---win32      - Implementation for Win32 environment.
 |   |
+|   +---htmllib        - HTMLLIB (HTML classes) port for Harbour
+|   |
 |   +---libct          - CA-T**ls Compatible Library for Harbour.
 |   |   |
 |   |   +---alt        - Alternate version of CT function.
@@ -87,8 +96,10 @@ in order to remove empty directories)
 |   +---libmisc        - Miscellaneous contribution.
 |   |   |
 |   |   +---doc        - Documents for above contribution.
-|   |       |
-|   |       +---en     - English documentation.
+|   |   |   |
+|   |   |   +---en     - English documentation.
+|   |   |
+|   |   +---tests      - Test programs.
 |   |
 |   +---libnf          - Nanforum library port for Harbour.
 |   |

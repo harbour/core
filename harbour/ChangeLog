@@ -7,6 +7,12 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+   * source/vm/memvars.c
+     ! Fixed warnings in __MVEXIST()
+
+2002-01-03 17:00 UTC+0700 Andi Jahja <harbour@cbn.net.id>
+   * source/vm/fm.c
      ! restore original copy as it caused memory leak in Windows OS
        as reported by Sid 'Saylor'. Now hb_xgrab() problem when running
        hbtest.exe which compiled with -DHB_FMSTATISTICS_OFF ( harbour.exe
