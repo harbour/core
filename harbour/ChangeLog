@@ -1,3 +1,29 @@
+19990908-02:30 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/math.c
+    source/rtl/strings.c
+    source/rtl/extend.c
+    source/rdd/dbf1.c
+    * WORDs changed to int to reflect the recent Item API changes.
+  * include/itemapi.h
+    source/rtl/itemapi.c
+    ! hb_itemParam(), hb_itemType() parameter type and retval changed to USHORT 
+      from WORD, to be Clipper compatible.
+    * hb_itemGetNLen(), hb_itemPutN?Len() WORD types changed to int.
+  * include/extend.h
+    source/rtl/arrays.c
+    * hb_arrayGetType() retval type changed to USHORT instead of WORD.
+  * include/extend.h
+    source/rtl/extend.c
+    * hb_retn?len() functions now uses int instead of WORD.
+    * hb_parinfo() and hb_pcount() now returns int instead of WORD, to be
+      more Clipper like.
+    * hb_param() WORD param type changed to int.
+  * tests/working/rtl_test.prg
+    + The execution time is now showed at the end of the tests.
+    + One missing copyright added.
+  * source/rtl/filesys.c
+    ! Formatting fixes.
+
 19990907-20:17 EDT Paul Tucker <ptucker@sympatico.ca>
   * source/rtl/console.c
     + added HB_SETMODE() (reported by Matteo Bacaan
@@ -7,7 +33,7 @@
     % FREAD() now uses the fixed ISCHAR() macro for parameter checking,
       and ISBYREF().
   * source/rtl/extend.c
-    ! hb_param() now checks the type mask against the dereferenced item, 
+    ! hb_param() now checks the type mask against the dereferenced item,
       until now hb_param() was not working with values passed by reference.
       After this fix the IS????() macros are Clipper compatible.
   * source/rtl/tbcolumn.prg
@@ -25,7 +51,7 @@
     + Some byref tests added for several functions.
     + SQRT() and some other math function tests added.
   * source/rtl/strings.c
-    ! hb_itemStr() fixed to always use the "%*.*f" format to convert 
+    ! hb_itemStr() fixed to always use the "%*.*f" format to convert
       a DOUBLE value.
     ! hb_itemStr() fixed a possible error when the item.asDouble member
       could accessed but the type was not DOUBLE.
@@ -41,7 +67,7 @@
   * include/extend.h
     + One cast added the IT_NUMERIC #define.
   * source/rtl/environ.c
-    + OS(): Added Windows version detection code by 
+    + OS(): Added Windows version detection code by
       Luiz Rafael Culik <Culik@sl.conex.net>
 
 19990907-17:00 GMT+1 Victor Szel <info@szelvesz.hu>
@@ -54,7 +80,7 @@
     ! hb_vmNegate() now handles the number width in a Clipper compatible way.
     ! hb_vmEqual(), hb_vmNotEqual(), hb_vmLess*(), hb_vmGreater*(), hb_vmDo(),
       hb_arrayAt() error handling now support value substitution.
-      hb_vmDo() and hb_vmArrayAt() should be tested, since I'm not exactly sure 
+      hb_vmDo() and hb_vmArrayAt() should be tested, since I'm not exactly sure
       if they are correctly pushing the result.
   * source/rtl/strings.c
     ! VAL() fixed to return INTEGER/LONG if applicable, not always a DOUBLE.
@@ -64,7 +90,7 @@
       most probable moved to the top. Some Extend API calls changed to Item API
       ones, to make it faster.
     ! hb_itemPadConv() was casting back DOUBLE value without decimals to LONG
-      to convert it to string. Corrected. There may be other places where 
+      to convert it to string. Corrected. There may be other places where
       DOUBLE is converted to LONG, these should be revised, since a DOUBLE is
       also used when there are *no* decimal places, but the value is too big
       to fit in a LONG (like: 5000000000), for example INT() is buggy because
@@ -99,7 +125,7 @@
     ! hb_numRound() now uses a much larger buffer (like in hb_itemStr()), this
       seem to have fixed the random GPFs in Cygwin when running RTL_TEST.
       Same type of dangerous code can be found in RDD/DBF1.C, too. (Bruno!)
-    + ABS(), INT(), ROUND(), EXP(), LOG(), SQRT(), MIN(), MAX() value 
+    + ABS(), INT(), ROUND(), EXP(), LOG(), SQRT(), MIN(), MAX() value
       substitution added.
   * source/rtl/descend.c
     * Now using Item API only, internals totally eliminated. Simpler code,
@@ -116,7 +142,7 @@
     + Copyright info added.
   * source/rtl/set.c
     ! Some minor formatting corrections.
- 
+
 19990907-02:30 GMT+1 Victor Szel <info@szelvesz.hu>
   * include/external.ch
     source/runner/stdalone/external.prg
@@ -165,7 +191,7 @@
       This way it's more Clipper compatible, since in CA-Cl*pper the RDDSYS
       doesn't need to clean-up on exit. RDDSYS.PRG is now exchangeable with
       the Clipper one.
-    ! hb_rddShutDown() fixed a possible GPF if there was no rddSetDefault() 
+    ! hb_rddShutDown() fixed a possible GPF if there was no rddSetDefault()
       calls at all (when RDDSYS was overridden by a dummy one).
   * source/rtl/setkey.prg
     * Not CA-Clipper compatible functions (extensions) renamed to avoid

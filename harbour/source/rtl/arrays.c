@@ -326,7 +326,7 @@ ULONG hb_arrayGetCLen( PHB_ITEM pArray, ULONG ulIndex )
       return 0;
 }
 
-WORD hb_arrayGetType( PHB_ITEM pArray, ULONG ulIndex )
+USHORT hb_arrayGetType( PHB_ITEM pArray, ULONG ulIndex )
 {
    if( IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
       return hb_itemType( pArray->item.asArray.value->pItems + ulIndex - 1 );

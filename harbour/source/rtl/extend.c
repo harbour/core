@@ -39,7 +39,7 @@
 /* NOTE: iParam = -1 can be used to access the return value. */
 /* NOTE: iParam = 0 can be used to access the SELF object. */
 
-PHB_ITEM hb_param( int iParam, WORD wMask )
+PHB_ITEM hb_param( int iParam, int iMask )
 {
    if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
    {
@@ -56,7 +56,7 @@ PHB_ITEM hb_param( int iParam, WORD wMask )
 
       wType = pItem->type;
 
-      if( ( wType & wMask ) || ( wType == IT_NIL && wMask == IT_ANY ) )
+      if( ( wType & ( WORD ) iMask ) || ( wType == IT_NIL && ( WORD ) iMask == IT_ANY ) )
          return pItem;
    }
 
@@ -386,10 +386,10 @@ ULONG hb_parinfa( int iParamNum, ULONG uiArrayIndex )
       return 0;
 }
 
-WORD hb_parinfo( int iParam )
+int hb_parinfo( int iParam )
 {
    if( iParam == 0 )
-      return stack.pBase->item.asSymbol.paramcnt;
+      return ( int ) stack.pBase->item.asSymbol.paramcnt;
    else
    {
       if( ( iParam > 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
@@ -414,16 +414,16 @@ WORD hb_parinfo( int iParam )
                wType |= pItem->type;
          }
 
-         return wType;
+         return ( int ) wType;
       }
       else
          return 0;
    }
 }
 
-WORD hb_pcount( void )
+int hb_pcount( void )
 {
-   return stack.pBase->item.asSymbol.paramcnt;
+   return ( int ) stack.pBase->item.asSymbol.paramcnt;
 }
 
 void hb_ret( void )
@@ -471,19 +471,19 @@ void hb_retnl( long lNumber )
    hb_itemPutNL( &stack.Return, lNumber );
 }
 
-void hb_retndlen( double dNumber, WORD wWidth, WORD wDecimal )
+void hb_retndlen( double dNumber, int iWidth, int iDec )
 {
-   hb_itemPutNDLen( &stack.Return, dNumber, wWidth, wDecimal );
+   hb_itemPutNDLen( &stack.Return, dNumber, iWidth, iDec );
 }
 
-void hb_retnilen( int iNumber, WORD wWidth )
+void hb_retnilen( int iNumber, int iWidth )
 {
-   hb_itemPutNILen( &stack.Return, iNumber, wWidth );
+   hb_itemPutNILen( &stack.Return, iNumber, iWidth );
 }
 
-void hb_retnllen( long lNumber, WORD wWidth )
+void hb_retnllen( long lNumber, int iWidth )
 {
-   hb_itemPutNLLen( &stack.Return, lNumber, wWidth );
+   hb_itemPutNLLen( &stack.Return, lNumber, iWidth );
 }
 
 void hb_storc( char * szText, int iParam, ... )

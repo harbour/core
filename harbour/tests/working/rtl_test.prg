@@ -36,6 +36,7 @@
 
 /* TRANSFORM() tests written by Eddie Runia <eddie@runia.com> */
 /* EMPTY() tests written by Eddie Runia <eddie@runia.com> */
+/* :class* tests written by Dave Pearson <davep@hagbard.demon.co.uk> */
 
 /* NOTE: Always compile with /n switch */
 /* NOTE: It's worth to make tests with and without the /z switch */
@@ -61,6 +62,8 @@ STATIC s_nCount
 STATIC s_lShowAll
 STATIC s_lShortcut
 STATIC s_aSkipList
+STATIC s_nStartTime
+STATIC s_nEndTime
 
 STATIC scString
 STATIC scStringE
@@ -1505,7 +1508,11 @@ STATIC FUNCTION Main_MISC()
 #define TEST_RESULT_COL5_WIDTH  40
 
 STATIC FUNCTION TEST_BEGIN( cParam )
-   LOCAL cOs := OS()
+   LOCAL cOs
+
+   s_nStartTime := Seconds()
+
+   cOs := OS()
 
    IF "OS/2" $ cOs .OR. ;
       "DOS"  $ cOs
@@ -1708,11 +1715,14 @@ STATIC FUNCTION TEST_OPT_Z()
 
 STATIC FUNCTION TEST_END()
 
+   s_nEndTime := Seconds()
+
    fWrite( s_nFhnd, "===========================================================================" + s_cNewLine +;
                     "Test calls passed: " + Str( s_nPass ) + s_cNewLine +;
                     "Test calls failed: " + Str( s_nFail ) + s_cNewLine +;
                     "                   ----------" + s_cNewLine +;
-                    "            Total: " + Str( s_nPass + s_nFail ) + s_cNewLine +;
+                    "            Total: " + Str( s_nPass + s_nFail ) +;
+                    " ( Time elapsed: " + LTrim( Str( s_nEndTime - s_nStartTime ) ) + " seconds )" + s_cNewLine +;
                     s_cNewLine )
 
    IF s_nFail != 0

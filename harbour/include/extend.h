@@ -238,13 +238,13 @@ extern ULONG    hb_parclen( int iParam, ... ); /* retrieve a string parameter le
 extern ULONG    hb_parcsiz( int iParam, ... );
 extern char *   hb_pards( int iParam, ... ); /* retrieve a date as a string yyyymmdd */
 extern ULONG    hb_parinfa( int iParamNum, ULONG uiArrayIndex );
-extern WORD     hb_parinfo( int iParam ); /* Determine the param count or data type */
+extern int      hb_parinfo( int iParam ); /* Determine the param count or data type */
 extern int      hb_parl( int iParam, ... ); /* retrieve a logical parameter as an int */
 extern double   hb_parnd( int iParam, ... ); /* retrieve a numeric parameter as a double */
 extern int      hb_parni( int iParam, ... ); /* retrieve a numeric parameter as a integer */
 extern long     hb_parnl( int iParam, ... ); /* retrieve a numeric parameter as a long */
-extern PHB_ITEM hb_param( int iParam, WORD wType ); /* retrieve a generic parameter */
-extern WORD     hb_pcount( void );          /* returns the number of suplied parameters */
+extern PHB_ITEM hb_param( int iParam, int iMask ); /* retrieve a generic parameter */
+extern int      hb_pcount( void );          /* returns the number of suplied parameters */
 
 extern void     hb_ret( void );             /* post a NIL return value */
 extern void     hb_retc( char * szText );   /* returns a string */
@@ -254,9 +254,9 @@ extern void     hb_retl( int iTrueFalse );  /* returns a logical integer */
 extern void     hb_retnd( double dNumber ); /* returns a double */
 extern void     hb_retni( int iNumber );    /* returns a integer number */
 extern void     hb_retnl( long lNumber );   /* returns a long number */
-extern void     hb_retndlen( double dNumber, WORD wWidth, WORD wDecimal ); /* returns a double, with specific width and decimals */
-extern void     hb_retnilen( int iNumber, WORD wWidth ); /* returns a integer number, with specific width */
-extern void     hb_retnllen( long lNumber, WORD wWidth ); /* returns a long number, with specific width */
+extern void     hb_retndlen( double dNumber, int iWidth, int iDec ); /* returns a double, with specific width and decimals */
+extern void     hb_retnilen( int iNumber, int iWidth ); /* returns a integer number, with specific width */
+extern void     hb_retnllen( long lNumber, int iWidth ); /* returns a long number, with specific width */
 extern void     hb_reta( ULONG ulLen );  /* returns an array with a specific length */
 
 extern void     hb_storc( char * szText, int iParam, ... ); /* stores a szString on a variable by reference */
@@ -267,13 +267,13 @@ extern void     hb_storni( int iValue, int iParam, ... ); /* stores an integer o
 extern void     hb_stornl( long lValue, int iParam, ... ); /* stores a long on a variable by reference */
 extern void     hb_stornd( double dValue, int iParam, ... ); /* stores a double on a variable by reference */
 
-extern void     hb_xinit( void );                        /* Initialize fixed memory subsystem */
-extern void     hb_xexit( void );                        /* Deinitialize fixed memory subsystem */
-extern void *   hb_xalloc( ULONG lSize );                /* allocates memory, returns NULL on failure */
-extern void *   hb_xgrab( ULONG lSize );                 /* allocates memory, exists on failure */
-extern void     hb_xfree( void * pMem );                 /* frees memory */
-extern void *   hb_xrealloc( void * pMem, ULONG lSize ); /* reallocates memory */
-extern ULONG    hb_xsize( void * pMem );                 /* returns the size of an allocated memory block */
+extern void     hb_xinit( void );                         /* Initialize fixed memory subsystem */
+extern void     hb_xexit( void );                         /* Deinitialize fixed memory subsystem */
+extern void *   hb_xalloc( ULONG ulSize );                /* allocates memory, returns NULL on failure */
+extern void *   hb_xgrab( ULONG ulSize );                 /* allocates memory, exists on failure */
+extern void     hb_xfree( void * pMem );                  /* frees memory */
+extern void *   hb_xrealloc( void * pMem, ULONG ulSize ); /* reallocates memory */
+extern ULONG    hb_xsize( void * pMem );                  /* returns the size of an allocated memory block */
 
 /* array management */
 extern BOOL     hb_arrayError( PHB_ITEM pArray, ULONG ulIndex, BOOL bAssign ); /* Checks if the passed parameters are valid, launches runtim error if needed */
@@ -297,7 +297,7 @@ extern int      hb_arrayGetNI( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves th
 extern long     hb_arrayGetNL( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the long numeric value contained on an array element */
 extern double   hb_arrayGetND( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the double value contained on an array element */
 extern char *   hb_arrayGetDS( PHB_ITEM pArray, ULONG ulIndex, char * szDate ); /* retrieves the date value contained on an array element */
-extern WORD     hb_arrayGetType( PHB_ITEM pArray, ULONG ulIndex );
+extern USHORT   hb_arrayGetType( PHB_ITEM pArray, ULONG ulIndex );
 extern BOOL     hb_arrayFill( PHB_ITEM pArray, PHB_ITEM pValue, ULONG ulStart, ULONG ulCount );
 extern ULONG    hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG ulStart, ULONG ulCount );
 extern BOOL     hb_arrayEval( PHB_ITEM pArray, PHB_ITEM bBlock, ULONG ulStart, ULONG ulCount );

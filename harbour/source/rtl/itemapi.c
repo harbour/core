@@ -86,14 +86,14 @@ PHB_ITEM hb_evalLaunch( PEVALINFO pEvalInfo )
 
    if( pEvalInfo )
    {
-      WORD w = 1;
+      USHORT uiParam = 1;
 
       if( IS_STRING( pEvalInfo->pItems[ 0 ] ) )
       {
          hb_vmPushSymbol( hb_dynsymGet( hb_itemGetCPtr( pEvalInfo->pItems[ 0 ] ) )->pSymbol );
          hb_vmPushNil();
-         while( w <= pEvalInfo->paramCount )
-            hb_vmPush( pEvalInfo->pItems[ w++ ] );
+         while( uiParam <= pEvalInfo->paramCount )
+            hb_vmPush( pEvalInfo->pItems[ uiParam++ ] );
          hb_vmDo( pEvalInfo->paramCount );
 
          pResult = hb_itemNew( NULL );
@@ -103,8 +103,8 @@ PHB_ITEM hb_evalLaunch( PEVALINFO pEvalInfo )
       {
          hb_vmPushSymbol( &symEval );
          hb_vmPush( pEvalInfo->pItems[ 0 ] );
-         while( w <= pEvalInfo->paramCount )
-            hb_vmPush( pEvalInfo->pItems[ w++ ] );
+         while( uiParam <= pEvalInfo->paramCount )
+            hb_vmPush( pEvalInfo->pItems[ uiParam++ ] );
          hb_vmDo( pEvalInfo->paramCount );
 
          pResult = hb_itemNew( NULL );
@@ -125,12 +125,12 @@ BOOL hb_evalRelease( PEVALINFO pEvalInfo )
 
    if( pEvalInfo )
    {
-      WORD w;
+      USHORT uiParam;
 
-      for( w = 0; w <= pEvalInfo->paramCount; w++ )
+      for( uiParam = 0; uiParam <= pEvalInfo->paramCount; uiParam++ )
       {
-         hb_itemRelease( pEvalInfo->pItems[ w ] );
-         pEvalInfo->pItems[ w ] = NULL;
+         hb_itemRelease( pEvalInfo->pItems[ uiParam ] );
+         pEvalInfo->pItems[ uiParam ] = NULL;
       }
 
       pEvalInfo->paramCount = 0;
@@ -263,10 +263,10 @@ PHB_ITEM hb_itemNew( PHB_ITEM pNull )
    return pItem;
 }
 
-PHB_ITEM hb_itemParam( WORD wParam )
+PHB_ITEM hb_itemParam( USHORT uiParam )
 {
    PHB_ITEM pNew = hb_itemNew( NULL );
-   PHB_ITEM pItem = hb_param( wParam, IT_ANY );
+   PHB_ITEM pItem = hb_param( uiParam, IT_ANY );
 
    if( pItem )
       hb_itemCopy( pNew, pItem );
@@ -595,85 +595,85 @@ PHB_ITEM hb_itemPutNL( PHB_ITEM pItem, long lNumber )
    return pItem;
 }
 
-PHB_ITEM hb_itemPutNDLen( PHB_ITEM pItem, double dNumber, WORD wWidth, WORD wDecimal )
+PHB_ITEM hb_itemPutNDLen( PHB_ITEM pItem, double dNumber, int iWidth, int iDec )
 {
    if( pItem )
       hb_itemClear( pItem );
    else
       pItem = hb_itemNew( NULL );
 
-   if( wWidth == 0 || wWidth > 99 )
-      wWidth = ( dNumber > 10000000000.0 ) ? 20 : 10;
+   if( iWidth == 0 || iWidth > 99 )
+      iWidth = ( dNumber > 10000000000.0 ) ? 20 : 10;
 
-   if( wDecimal == ( ( WORD ) -1 ) )
-      wDecimal = hb_set.HB_SET_DECIMALS;
+   if( iDec == -1 )
+      iDec = hb_set.HB_SET_DECIMALS;
 
    pItem->type = IT_DOUBLE;
-   pItem->item.asDouble.length = wWidth;
-   pItem->item.asDouble.decimal = wDecimal;
+   pItem->item.asDouble.length = iWidth;
+   pItem->item.asDouble.decimal = iDec;
    pItem->item.asDouble.value = dNumber;
 
    return pItem;
 }
 
-PHB_ITEM hb_itemPutNILen( PHB_ITEM pItem, int iNumber, WORD wWidth )
+PHB_ITEM hb_itemPutNILen( PHB_ITEM pItem, int iNumber, int iWidth )
 {
    if( pItem )
       hb_itemClear( pItem );
    else
       pItem = hb_itemNew( NULL );
 
-   if( wWidth == 0 || wWidth > 99 )
-      wWidth = 10;
+   if( iWidth == 0 || iWidth > 99 )
+      iWidth = 10;
 
    pItem->type = IT_INTEGER;
-   pItem->item.asInteger.length = wWidth;
+   pItem->item.asInteger.length = iWidth;
    pItem->item.asInteger.value = iNumber;
 
    return pItem;
 }
 
-PHB_ITEM hb_itemPutNLLen( PHB_ITEM pItem, long lNumber, WORD wWidth )
+PHB_ITEM hb_itemPutNLLen( PHB_ITEM pItem, long lNumber, int iWidth )
 {
    if( pItem )
       hb_itemClear( pItem );
    else
       pItem = hb_itemNew( NULL );
 
-   if( wWidth == 0 || wWidth > 99 )
-      wWidth = 10;
+   if( iWidth == 0 || iWidth > 99 )
+      iWidth = 10;
 
    pItem->type = IT_LONG;
-   pItem->item.asLong.length = wWidth;
+   pItem->item.asLong.length = iWidth;
    pItem->item.asLong.value = lNumber;
 
    return pItem;
 }
 
-void hb_itemGetNLen( PHB_ITEM pItem, WORD * pwWidth, WORD * pwDecimal )
+void hb_itemGetNLen( PHB_ITEM pItem, int * piWidth, int * piDecimal )
 {
    if( pItem )
    {
       switch( pItem->type )
       {
          case IT_DOUBLE:
-            if( pwWidth ) *pwWidth = pItem->item.asDouble.length;
-            if( pwDecimal ) *pwDecimal = pItem->item.asDouble.decimal;
+            if( piWidth ) *piWidth = ( int ) pItem->item.asDouble.length;
+            if( piDecimal ) *piDecimal = ( int ) pItem->item.asDouble.decimal;
             break;
 
          case IT_LONG:
-            if( pwWidth ) *pwWidth = pItem->item.asLong.length;
-            if( pwDecimal ) *pwDecimal = 0;
+            if( piWidth ) *piWidth = ( int ) pItem->item.asLong.length;
+            if( piDecimal ) *piDecimal = 0;
             break;
 
          case IT_INTEGER:
-            if( pwWidth ) *pwWidth = pItem->item.asInteger.length;
-            if( pwDecimal ) *pwDecimal = 0;
+            if( piWidth ) *piWidth = ( int ) pItem->item.asInteger.length;
+            if( piDecimal ) *piDecimal = 0;
             break;
 
          default:
-            if( pwWidth ) *pwWidth = 0;
-            if( pwDecimal ) *pwDecimal = 0;
+            if( piWidth ) *piWidth = 0;
+            if( piDecimal ) *piDecimal = 0;
       }
    }
 }
@@ -695,10 +695,10 @@ ULONG hb_itemSize( PHB_ITEM pItem )
    return 0;
 }
 
-WORD hb_itemType( PHB_ITEM pItem )
+USHORT hb_itemType( PHB_ITEM pItem )
 {
    if( pItem )
-      return pItem->type;
+      return ( USHORT ) pItem->type;
    else
       return IT_NIL;
 }

@@ -815,9 +815,9 @@ static ERRCODE GetValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          szEndChar = * ( szText + pField->uiLen );
          * ( szText + pField->uiLen ) = '\0';
          if( pField->uiDec )
-            hb_itemPutNDLen( pItem, atof( ( char * ) szText ), ( WORD ) pField->uiLen - ( ( WORD ) pField->uiDec + 1 ), ( WORD ) pField->uiDec );
+            hb_itemPutNDLen( pItem, atof( ( char * ) szText ), ( int ) pField->uiLen - ( ( int ) pField->uiDec + 1 ), ( int ) pField->uiDec );
          else
-            hb_itemPutNLLen( pItem, atol( ( char * ) szText ), ( WORD ) pField->uiLen );
+            hb_itemPutNLLen( pItem, atol( ( char * ) szText ), ( int ) pField->uiLen );
          * ( szText + pField->uiLen ) = szEndChar;
          break;
 

@@ -21,17 +21,17 @@ HARBOUR HB_ABS( void )
 
       if( pNumber )
       {
-         WORD wWidth;
-         WORD wDec;
+         int iWidth;
+         int iDec;
 
-         hb_itemGetNLen( pNumber, &wWidth, &wDec );
+         hb_itemGetNLen( pNumber, &iWidth, &iDec );
 
          if( IS_INTEGER( pNumber ) )
          {
             int iNumber = hb_itemGetNI( pNumber );
 
             if( iNumber >= 0 )
-               hb_retnilen( iNumber, wWidth );
+               hb_retnilen( iNumber, iWidth );
             else
                hb_retni( -iNumber );
          }
@@ -40,7 +40,7 @@ HARBOUR HB_ABS( void )
             long lNumber = hb_itemGetNL( pNumber );
 
             if( lNumber >= 0 )
-               hb_retnllen( lNumber, wWidth );
+               hb_retnllen( lNumber, iWidth );
             else
                hb_retnl( -lNumber );
          }
@@ -48,7 +48,7 @@ HARBOUR HB_ABS( void )
          {
             double dNumber = hb_itemGetND( pNumber );
 
-            hb_retndlen( dNumber >= 0.0 ? dNumber : -dNumber, 0, wDec );
+            hb_retndlen( dNumber >= 0.0 ? dNumber : -dNumber, 0, iDec );
          }
       }
       else
@@ -96,11 +96,11 @@ HARBOUR HB_INT( void )
       if( pNumber )
       {
          double dNumber = hb_itemGetND( pNumber );
-         WORD wWidth;
+         int iWidth;
 
-         hb_itemGetNLen( pNumber, &wWidth, NULL );
+         hb_itemGetNLen( pNumber, &iWidth, NULL );
 
-         hb_retndlen( dNumber >= 0 ? floor( dNumber ) : ceil( dNumber ), wWidth, 0 );
+         hb_retndlen( dNumber >= 0 ? floor( dNumber ) : ceil( dNumber ), iWidth, 0 );
       }
       else
       {
@@ -127,7 +127,7 @@ HARBOUR HB_LOG( void )
 
          if( dNumber <= 0.0 )
             /* Indicate overflow if called with an invalid argument */
-            hb_retndlen( log( dNumber ), 99, ( WORD ) -1 );
+            hb_retndlen( log( dNumber ), 99, -1 );
          else
             hb_retnd( log( dNumber ) );
       }
@@ -164,13 +164,13 @@ HARBOUR HB_MAX( void )
             double d1 = hb_itemGetND( p1 );
             double d2 = hb_itemGetND( p2 );
 
-            WORD wDec1;
-            WORD wDec2;
+            int iDec1;
+            int iDec2;
 
-            hb_itemGetNLen( p1, NULL, &wDec1 );
-            hb_itemGetNLen( p2, NULL, &wDec2 );
+            hb_itemGetNLen( p1, NULL, &iDec1 );
+            hb_itemGetNLen( p2, NULL, &iDec2 );
 
-            hb_retndlen( d1 >= d2 ? d1 : d2, 0, ( d1 >= d2 ? wDec1 : wDec2 ) );
+            hb_retndlen( d1 >= d2 ? d1 : d2, 0, ( d1 >= d2 ? iDec1 : iDec2 ) );
          }
          else if( IS_LONG( p1 ) || IS_LONG( p2 ) )
          {
@@ -223,13 +223,13 @@ HARBOUR HB_MIN( void )
             double d1 = hb_itemGetND( p1 );
             double d2 = hb_itemGetND( p2 );
 
-            WORD wDec1;
-            WORD wDec2;
+            int iDec1;
+            int iDec2;
 
-            hb_itemGetNLen( p1, NULL, &wDec1 );
-            hb_itemGetNLen( p2, NULL, &wDec2 );
+            hb_itemGetNLen( p1, NULL, &iDec1 );
+            hb_itemGetNLen( p2, NULL, &iDec2 );
 
-            hb_retndlen( d1 <= d2 ? d1 : d2, 0, ( d1 <= d2 ? wDec1 : wDec2 ) );
+            hb_retndlen( d1 <= d2 ? d1 : d2, 0, ( d1 <= d2 ? iDec1 : iDec2 ) );
          }
          else if( IS_LONG( p1 ) || IS_LONG( p2 ) )
          {
@@ -298,11 +298,11 @@ FUNCTION MOD(cl_num, cl_base)
       }
       else
       {
-         WORD wDec;
+         int iDec;
 
-         hb_itemGetNLen( pNumber, NULL, &wDec );
+         hb_itemGetNLen( pNumber, NULL, &iDec );
 
-         hb_retndlen( dNumber, 0, wDec );
+         hb_retndlen( dNumber, 0, iDec );
       }
    }
    else

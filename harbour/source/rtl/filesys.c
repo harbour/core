@@ -604,14 +604,14 @@ void    hb_fsSetError( USHORT uiError )
    s_uiErrorLast = uiError;
 }
 
-int hb_fsDelete ( BYTE * pFilename )
+int     hb_fsDelete( BYTE * pFilename )
 {
-   int retval;
+   int iResult;
 
 #if defined(HAVE_POSIX_IO)
 
    errno = 0;
-   retval = unlink( ( char * ) pFilename );
+   iResult = unlink( ( char * ) pFilename );
    s_uiErrorLast = errno;
 
 #else
@@ -619,36 +619,39 @@ int hb_fsDelete ( BYTE * pFilename )
    #if defined(_MSC_VER)
 
       errno = 0;
-      retval = remove( ( char * ) pFilename );
+      iResult = remove( ( char * ) pFilename );
       s_uiErrorLast = errno;
 
    #else
 
+      iResult = -1;
       s_uiErrorLast = FS_ERROR;
 
    #endif
 
 #endif
-   return retval;
+
+   return iResult;
 }
 
 int hb_fsRename( BYTE * pOldName, BYTE * pNewName )
 {
-   int retval = -1;
+   int iResult;
 
 #if defined(HAVE_POSIX_IO) || defined(_MSC_VER)
 
    errno = 0;
-   retval = rename( ( char * ) pOldName, ( char * ) pNewName );
+   iResult = rename( ( char * ) pOldName, ( char * ) pNewName );
    s_uiErrorLast = errno;
 
 #else
 
+   iResult = -1;
    s_uiErrorLast = FS_ERROR;
 
 #endif
 
-   return retval;
+   return iResult;
 }
 
 BOOL    hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
@@ -1008,30 +1011,31 @@ HARBOUR HB_FCLOSE( void )
 
 HARBOUR HB_FERASE( void )
 {
-   int retval = -1;
+   int iResult;
 
    s_uiErrorLast = 3;
 
    if( ISCHAR( 1 ) )
-   {
-      retval = hb_fsDelete( ( BYTE * ) hb_parc( 1 ) );
-   }
+      iResult = hb_fsDelete( ( BYTE * ) hb_parc( 1 ) );
+   else
+      iResult = -1;
 
-   hb_retni( retval );
+   hb_retni( iResult );
 }
 
 HARBOUR HB_FRENAME( void )
 {
-   int retval = -1;
+   int iResult;
 
    s_uiErrorLast = 2;
 
    if( ISCHAR( 1 ) && ISCHAR( 2 ) )
-   {
-      retval = hb_fsRename( ( BYTE * ) hb_parc( 1 ),
+      iResult = hb_fsRename( ( BYTE * ) hb_parc( 1 ),
                             ( BYTE * ) hb_parc( 2 ) );
-   }
-   hb_retni( retval );
+   else
+      iResult = -1;
+
+   hb_retni( iResult );
 }
 
 HARBOUR HB_FSEEK( void )

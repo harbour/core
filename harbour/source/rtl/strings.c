@@ -1098,7 +1098,7 @@ HARBOUR HB_VAL( void )
             hb_retnllen( ( long ) dNumber, iWidth );
 
          else
-            hb_retndlen( dNumber, iWidth, ( WORD ) -1 );
+            hb_retndlen( dNumber, iWidth, -1 );
       }
       else
          hb_errRT_BASE( EG_ARG, 1098, NULL, "VAL" );
@@ -1123,30 +1123,30 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
    {
       /* Default to the width and number of decimals specified by the item,
          with a limit of 20 integer places and 9 decimal places */
-      WORD wWidth;
-      WORD wDec;
+      int iWidth;
+      int iDec;
 
-      hb_itemGetNLen( pNumber, &wWidth, &wDec );
+      hb_itemGetNLen( pNumber, &iWidth, &iDec );
 
-      if( wWidth > 20 )
-         wWidth = 20;
-      if( wDec > 9 )
-         wDec = 9;
+      if( iWidth > 20 )
+         iWidth = 20;
+      if( iDec > 9 )
+         iDec = 9;
       if( hb_set.HB_SET_FIXED )
-         wDec = hb_set.HB_SET_DECIMALS;
+         iDec = hb_set.HB_SET_DECIMALS;
 
       if( pWidth )
       {
          /* If the width parameter is specified, override the default value
             and set the number of decimals to zero */
-         int iWidth = ( int ) hb_itemGetNL( pWidth );
+         int iWidthPar = hb_itemGetNI( pWidth );
 
-         if( iWidth < 1 )
-            wWidth = 10;                   /* If 0 or negative, use default */
+         if( iWidthPar < 1 )
+            iWidth = 10;                   /* If 0 or negative, use default */
          else
-            wWidth = ( WORD ) iWidth;
+            iWidth = iWidthPar;
 
-         wDec = 0;
+         iDec = 0;
       }
 
       if( pDec )
@@ -1154,27 +1154,27 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
          /* This function does not include the decimal places in the width,
             so the width must be adjusted downwards, if the decimal places
             parameter is greater than 0  */
-         int iDec = ( int ) hb_itemGetNL( pDec );
+         int iDecPar = hb_itemGetNI( pDec );
 
-         if( iDec < 0 )
-            wDec = 0;
-         else if( iDec > 0 )
+         if( iDecPar < 0 )
+            iDec = 0;
+         else if( iDecPar > 0 )
          {
-            wDec = ( WORD ) iDec;
-            wWidth -= ( wDec + 1 );
+            iDec = iDecPar;
+            iWidth -= ( iDec + 1 );
          }
       }
 
-      if( wWidth )
+      if( iWidth )
       {
          /* We at least have a width value */
          int iBytes;
-         int iSize = ( wDec ? wWidth + 1 + wDec : wWidth );
+         int iSize = ( iDec ? iWidth + 1 + iDec : iWidth );
 
          /* Be paranoid and use a large amount of padding */
          szResult = ( char * ) hb_xgrab( HB_MAX_DOUBLE_LENGTH );
 
-         if( IS_DOUBLE( pNumber ) || wDec != 0 )
+         if( IS_DOUBLE( pNumber ) || iDec != 0 )
          {
             double dNumber = hb_itemGetND( pNumber );
 
@@ -1185,23 +1185,23 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
             else
             #endif
             {
-               if( wDec < IS_DOUBLE( pNumber ) ? pNumber->item.asDouble.decimal : 0 )
-                  dNumber = hb_numRound( dNumber, wDec );
+               if( iDec < IS_DOUBLE( pNumber ) ? pNumber->item.asDouble.decimal : 0 )
+                  dNumber = hb_numRound( dNumber, iDec );
 
-               if( wDec == 0 )
+               if( iDec == 0 )
                   iBytes = sprintf( szResult, "%*.0f", iSize, dNumber );
                else
-                  iBytes = sprintf( szResult, "%*.*f", iSize, wDec, dNumber );
+                  iBytes = sprintf( szResult, "%*.*f", iSize, iDec, dNumber );
             }
          }
          else switch( pNumber->type & ~IT_BYREF )
          {
             case IT_INTEGER:
-                 iBytes = sprintf( szResult, "%*i", wWidth, pNumber->item.asInteger.value );
+                 iBytes = sprintf( szResult, "%*i", iWidth, pNumber->item.asInteger.value );
                  break;
 
             case IT_LONG:
-                 iBytes = sprintf( szResult, "%*li", wWidth, pNumber->item.asLong.value );
+                 iBytes = sprintf( szResult, "%*li", iWidth, pNumber->item.asLong.value );
                  break;
 
             default:
