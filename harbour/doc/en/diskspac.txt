@@ -64,7 +64,9 @@
  *      CA-Clipper will return an integer value which limits it's usefulness to
  *      drives less than 2 gigabytes.  The Harbour version will return a
  *      floating point value with 0 decimals if the disk is > 2 gigabytes.
- *      <nType> is a Harbour extension.   
+ *      <nType> is a Harbour extension.
+ *  $PLATFORMS$
+ *      Dos,Windows and OS/2
  *  $FILES$
  *      Library is Rtl.lib
  *      Header is Fileio.ch

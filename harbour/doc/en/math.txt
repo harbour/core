@@ -8,7 +8,7 @@
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
  *    Documentation for: ABS(),EXP(),LOG(),INT(),MAX()
- *    MIN(),SQRT()
+ *    MIN(),SQRT(),ROUND()
  * See doc/license.txt for licensing terms.
  *
  */
@@ -300,5 +300,42 @@
  *      Library is Rtl.lib
  *  $SEEALSO$
  *      ROUND()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      ROUND()
+ *  $CATEGORY$
+ *      Math
+ *  $ONELINER$
+ *      Rounds off a numeric expression
+ *  $SYNTAX$
+ *      ROUND( <nNumber>,<nPlace> ) --> <nResult>
+ *  $ARGUMENTS$
+ *      <nNumber> Any numeric value
+ *
+ *      <nPlace>  The number of places to round to
+ *  $RETURNS$
+ *      <nResult> Rounded number
+ *  $DESCRIPTION$
+ *      This function rounds off the value of <nNumber> to the number of
+ *      decimal places specified by <nPlace>.If the value of <nPlace> is a
+ *      negative number,the function will atempt to round <nNumber> in whole
+ *      numbers;numbers from 5 through 9 will be rounded up, all others will
+ *      be rounded down.
+ *  $EXAMPLES$
+ *      ? ROUND(632512.62541,5)
+ *      ? ROUND(845414111.91440,3)     
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is CA-Clipper compliant.   
+ *  $PLATFORMS$
+ *      All   
+ *  $FILES$
+ *      Library is Rtl.lib
+ *  $SEEALSO$
+ *      INT(),STR(),VAL(),SET FIXED
  *  $END$
  */

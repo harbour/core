@@ -6,6 +6,12 @@
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
  *
+ * Copyright 1999 Jose Lanin <dezac@corevia.com>
+ *    Documentation for: PROCLINE(),PROCFILE(),PROCNAME()
+ *
+ * Copyright 1999 Eddie Ruina
+ *   Documentation for: __VMVARLGET()
+ *  
  * Copyright 1999 Chen Kedem <niki@actcom.co.il>
  *    Documentation for: CLIPINIT(), __SETHELPK()
  *

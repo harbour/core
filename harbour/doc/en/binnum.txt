@@ -306,7 +306,7 @@
  *  $FILES$
  *      Library is rtl.lib
  *  $SEEALSO$
- *      BIN2I,BIN2L(),BIN2U(),BIN2W(),L2BIN(),W2BIN(),WORD(),U2BIN(),FWRITE()
+ *      BIN2I(),BIN2L(),BIN2U(),BIN2W(),L2BIN(),W2BIN(),WORD(),U2BIN(),FWRITE()
  *  $END$
  */
 
@@ -348,7 +348,7 @@
  *  $FILES$
  *      Library is rtl.lib
  *  $SEEALSO$
- *      BIN2I,BIN2L(),BIN2U(),BIN2W(),I2BIN(),L2BIN(),WORD(),U2BIN(),FWRITE()
+ *      BIN2I(),BIN2L(),BIN2U(),BIN2W(),I2BIN(),L2BIN(),WORD(),U2BIN(),FWRITE()
  *  $END$
  */
 
@@ -387,7 +387,7 @@
  *  $FILES$
  *      Library is rtl.lib
  *  $SEEALSO$
- *      BIN2I,BIN2L(),BIN2U(),BIN2W(),I2BIN(),W2BIN(),WORD(),U2BIN(),FWRITE()
+ *      BIN2I(),BIN2L(),BIN2U(),BIN2W(),I2BIN(),W2BIN(),WORD(),U2BIN(),FWRITE()
  *  $END$
  */
 
@@ -429,7 +429,7 @@
  *  $FILES$
  *      Library is rtl.lib
  *  $SEEALSO$
- *      BIN2I,BIN2L(),BIN2U(),BIN2W(),I2BIN(),L2BIN(),W2BIN(),WORD(),FWRITE()
+ *      BIN2I(),BIN2L(),BIN2U(),BIN2W(),I2BIN(),L2BIN(),W2BIN(),WORD(),FWRITE()
  *  $END$
  */
 

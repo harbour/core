@@ -23,14 +23,14 @@
  *  $CATEGORY$
  *      DOS
  *  $RETURNS$
- *     <cOperatinSystem>  -> The Current operating system   </par>
+ *     <cOperatinSystem>  -> The Current operating system   
  *  $DESCRIPTION$
- *      This function will return the current operating system   </par>
+ *      This function will return the current operating system   
  *  $EXAMPLES$
  *      ? OS()
  *  </fixed>
  *  $FILES$
- *      source/rtl/version.c   </par>
+ *      source/rtl/version.c   
  *  $END$
  */
 
@@ -45,13 +45,13 @@
  *      VERSION([<xMode>]  --> <cReturn>
  *  $ARGUMENTS$
  *      [<xMode>]   Optional Parameter that enables the display
- *      of the C compiler version that HARBOUR was built with.   </par>
+ *      of the C compiler version that HARBOUR was built with.   
  *  $RETURNS$
  *      <cReturn>   String contining the Harbour Version or the Harbour
- *      and C compiler Version when the <nMode> parameter is used.   </par>
+ *      and C compiler Version when the <nMode> parameter is used.   
  *  $DESCRIPTION$
  *      This function returns the HARBOUR Version or the Harbour Version+C
- *      compiler Version used to create the Harbour runtime library   </par>
+ *      compiler Version used to create the Harbour runtime library   
  *  $EXAMPLES$
  *      ? QOUT(VERSION())    // Displays Harbour version only
  *      ? QOUT(VERSION(NIL)) // Displays Harbour and C Compiler versions
@@ -64,9 +64,9 @@
  *      the Version of the CA-Clipper Compiler. The Harbour version returns
  *      only the Harbour Version if called without the <nMode> parameter, but
  *      returns both the Harbour Version and the Version of the C compiler used
- *      to build Harbour when the <nMode> parameter is present.   </par>
+ *      to build Harbour when the <nMode> parameter is present.   
  *  $FILES$
- *      source/rtl/version.c   </par>
+ *      source/rtl/version.c   
  *      Library is Rtl.lib
  *  $SEEALSO$
  *      OS()
@@ -83,16 +83,16 @@
  *  $SYNTAX$
  *      GETENV(<cEnviroment>, <cDefaultValue> )  --> <cReturn>
  *  $ARGUMENTS$
- *      <cEnviroment> Enviromental variable to obtain   </par>
+ *      <cEnviroment> Enviromental variable to obtain   
  *
- *      <cDefaultValue> Optional value to return if <cEnvironment> is not found   </par>
+ *      <cDefaultValue> Optional value to return if <cEnvironment> is not found   
  *  $RETURNS$
- *      <cReturn>     Value of the Variable   </par>
+ *      <cReturn>     Value of the Variable   
  *  $DESCRIPTION$
  *      This function yields a string that is the value of the
  *      environmental variable <cEnviroment>, witch is stored at the
  *      level with the Set command. If no environmental variable
- *      can be found, the value of the function will be a empty string.   </par>
+ *      can be found, the value of the function will be a empty string.   
  *  $EXAMPLES$
  *      ? QOUT(GETENV('PATH'))
  *      ? QOUT(GETENV('CONFIG'))
@@ -101,9 +101,9 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This functions is CA-CLIPPER compliant   </par>
+ *      This functions is CA-CLIPPER compliant   
  *  $FILES$
- *     source/rtl/gete.c   </par>
+ *     source/rtl/gete.c   
  *      Library is Rtl.lib
  *  $END$
  */
@@ -118,22 +118,22 @@
  *  $SYNTAX$
  *      __RUN( <cCommand> )
  *  $ARGUMENTS$
- *      <cCommand> Command to execute   </par>
+ *      <cCommand> Command to execute   
  *  $DESCRIPTION$
  *      This command runs an external program. Please make sure that you have
- *      enough free memory to be able to run the external program.   </par>
+ *      enough free memory to be able to run the external program.   
  *      Do not use it to run Terminate and Stay Resident programs
- *      (in case of DOS) since it cause several problems   </par>
+ *      (in case of DOS) since it cause several problems   
  *
  *      Note: This function is what the RUN command preprocesses into.
  *            It is considered bad form to use this function directly.
- *            Use the RUN command instead.   </par>
+ *            Use the RUN command instead.   
  *  $EXAMPLES$
  *      __Run( "edit " + cMyTextFile )    // Runs an external editor
  *      __Run( "command" )                // Gives a DOS shell (DOS only)
  *  </fixed>
  *  $FILES$
- *      source/rtl/run.c   </par>
+ *      source/rtl/run.c   
  *      Library is Rtl.lib
  *  $SEEALSO$
  *      RUN
@@ -151,16 +151,16 @@
  *      TONE( <nFrequency>, <nDuration> ) --> NIL
  *  $ARGUMENTS$
  *      <nFrequency> is a non-negative numeric value that specifies the
- *      frequency of the tone in hertz.   </par>
+ *      frequency of the tone in hertz.   
 
  *      <nDuration> is a positive numeric value which specifies the duration
- *      of the tone in 1/18 of a second units.   </par>
+ *      of the tone in 1/18 of a second units.   
  *  $RETURNS$
- *      TONE() always return NIL.   </par>
+ *      TONE() always return NIL.   
  *  $DESCRIPTION$
  *      TONE() is a sound function that could be used to irritate the end
  *      user, his or her dog, and the surrounding neighborhood. The frequency
- *      is clamped to the range 0 to 32767 Hz.   </par>
+ *      is clamped to the range 0 to 32767 Hz.   
  *  $EXAMPLES$
  *      If lOk   // Good Sound
  *         TONE(  500, 1 )
@@ -185,10 +185,37 @@
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
- *      TONE() works exactly like CA-Clipper's TONE().   </par>
+ *      TONE() works exactly like CA-Clipper's TONE().   
  *  $FILES$
  *      Library is Rtl.lib
  *  $SEEALSO$
  *      CHR(),SET BELL
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      RUN
+ *  $CATEGORY$
+ *      Command
+ *  $ONELINER$
+ *      Run a external program
+ *  $SYNTAX$
+ *      RUN  <cCommand> 
+ *  $ARGUMENTS$
+ *      <cCommand> Command to execute   
+ *  $DESCRIPTION$
+ *      This command runs an external program. Please make sure that you have
+ *      enough free memory to be able to run the external program.   
+ *      Do not use it to run Terminate and Stay Resident programs
+ *      (in case of DOS) since it cause several problems   
+ *  $EXAMPLES$
+ *      Run  "edit " + cMyTextFile      // Runs an external editor
+ *      Run  "command"                  // Gives a DOS shell (DOS only)
+ *  $FILES$
+ *      source/rtl/run.c   
+ *      Library is Rtl.lib
+ *  $SEEALSO$
+ *      RUN
  *  $END$
  */

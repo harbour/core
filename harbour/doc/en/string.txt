@@ -24,7 +24,8 @@
  *    SUBSTR()    Documentation  
  *    UPPER()     Documentation  
  *    LOWER()     Documentation
- *
+ *    ASC()       Documentation
+ *    CHR()       Documentation
  * See doc/license.txt for licensing terms.
  *
  */
@@ -828,6 +829,75 @@
  *      Library is Rtl.lib
  *  $SEEALSO$
  *      LOWER(),ISUPPER(),ISLOWER()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      CHR()
+ *  $CATEGORY$
+ *      Strings
+ *  $ONELINER$
+ *      Converts an ASCII value to it character value
+ *  $SYNTAX$
+ *      CHR(<nAsciiNum>)  --> cReturn
+ *  $ARGUMENTS$
+ *      <nAsciiNum> Any ASCII character code.
+ *  $RETURNS$
+ *      <cReturn> Character expression of that ASCII value
+ *  $DESCRIPTION$
+ *      This function returns the ASCII character code for <nAsciiNum>.The
+ *      number expressed must be an interger value within the range of 0 to
+ *      255 inclusive.The CHR() function will send the character returned
+ *      to whatever device is presently set.
+ *
+ *      The CHR() function may be used for printing special codes as well
+ *      as normal and graphics character codes.
+ *  $EXAMPLES$
+ *      ? CHR(32)
+ *      ? chr(215)
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is Ca-Clipper compliant
+ *  $PLATFORMS$
+ *      All
+ *  $FILES$
+ *      Library is Rtl.lib
+ *  $SEEALSO$   
+ *      ASC(),INKEY()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      ASC()
+ *  $CATEGORY$
+ *      Strings
+ *  $ONELINER$
+ *      Returns the ASCII value of a character
+ *  $SYNTAX$
+ *      ASC( <cCharacter> ) --> nAscNumber
+ *  $ARGUMENTS$
+ *      <cCharacter> Any character expression
+ *  $RETURNS$
+ *      <nAscNumber> ASCII value
+ *  $DESCRIPTION$
+ *      This function return the ASCII value of the leftmost character of
+ *      any character expression passed as <cCharacter>.
+ *  $EXAMPLES$
+ *      ? ASC("A")
+ *      ? ASC("¹")
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is Ca-Clipper compliant
+ *  $PLATFORMS$
+ *      All
+ *  $FILES$
+ *      Library is Rtl.lib
+ *  $SEEALSO$
+ *      CHR()
  *  $END$
  */
 

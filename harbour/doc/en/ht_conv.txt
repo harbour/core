@@ -28,10 +28,10 @@
  *      <cNr> .T. IF THE STRING IS BYNARY,otherwise .F.   
  *  $DESCRIPTION$
  *      check if the passed string is a bynary number or not   
+ *  $FILES$
+ *      Library is Tools.lib
  *  $SEEALSO$
  *      ISOCTAL(),ISDEC(),ISHEXA()
- *  $Files$
- *      Library is Tools.lib
  *  $END$
  */
 
@@ -50,10 +50,10 @@
  *   <cNr> .T. IF THE STRING IS OCTAL;otherwise .F.   
  *  $DESCRIPTION$
  *      check if the passed string is a octal number or not   
+ *  $FILES$
+ *      Library is Tools.lib
  *  $SEEALSO$
  *      ISBIN(),ISDEC(),ISHEXA()
- *  $Files$
- *      Library is Tools.lib
  *  $END$
  */
 
@@ -72,10 +72,10 @@
  *      <cNr> .T. IF THE STRING IS DECIMAL;otherwise .F.   
  *  $DESCRIPTION$
  *      check if the passed string is a decimal number or not   
+ *  $FILES$
+ *      Library is Tools.lib
  *  $SEEALSO$
  *      ISOCTAL(),ISBIN(),ISHEXA()
- *  $Files$
- *      Library is Tools.lib
  *  $END$
  */
 
@@ -94,10 +94,10 @@
  *      <cNr> .T. IF THE STRING IS HEXA;otherwise .F.   
  *  $DESCRIPTION$
  *      check if the passed string is a hexa number or not   
+ *  $FILES$
+ *      Library is Tools.lib
  *  $SEEALSO$
  *      ISOCTAL(),ISDEC(),ISBIN()
- *  $Files$
- *      Library is Tools.lib
  *  $END$
  */
 
@@ -117,10 +117,10 @@
  *  $DESCRIPTION$
  *      This function converts a string <cN> from an decimal value
  *      to an binary value.   
+ *  $FILES$
+ *      Library is Tools.lib
  *  $SEEALSO$
  *      Dectohexa(),dectooctal()
- *  $Files$
- *      Library is Tools.lib
  *  $END$
  */
 
@@ -140,10 +140,10 @@
  *  $DESCRIPTION$
  *      This function converts a string <cN> from an decimal value
  *      to an octal value.   
+ *  $FILES$
+ *      Library is Tools.lib
  *  $SEEALSO$
  *      Dectohexa(),dectobin()
- *  $Files$
- *      Library is Tools.lib
  *  $END$
  */
 
@@ -163,10 +163,10 @@
  *  $DESCRIPTION$
  *      This function converts a string <cN> from an decimal value
  *      to an hexadecimal value.   
+ *  $FILES$
+ *      Library is Tools.lib
  *  $SEEALSO$
  *      Dectobin(),dectooctal()
- *  $Files$
- *      Library is Tools.lib
  *  $END$
  */
 
@@ -186,10 +186,10 @@
  *  $DESCRIPTION$
  *      This function converts a string <cN> from an binary value
  *      to a numeric decimal value.   
+ *  $FILES$
+ *      Library is Tools.lib
  *  $SEEALSO$
  *      OctaltoDec(),HexatoDec()
- *  $Files$
- *      Library is Tools.lib
  *  $END$
  */
 
@@ -209,10 +209,10 @@
  *  $DESCRIPTION$
  *      This function converts a string <cN> from an octal value
  *      to a numeric decimal value.   
+ *  $FILES$
+ *      Library is Tools.lib
  *  $SEEALSO$
  *      BintoDec(),HexatoDec()
- *  $Files$
- *      Library is Tools.lib
  *  $END$
  */
 
@@ -232,10 +232,10 @@
  *  $DESCRIPTION$
  *      This function converts a string <cN> from an hexadecimal value
  *      to a numeric decimal value.   
+ *  $FILES$
+ *      Library is Tools.lib
  *  $SEEALSO$
  *      OctaltoDec(),BintoDec()
- *  $Files$
- *      Library is Tools.lib
  *  $END$
  */
 

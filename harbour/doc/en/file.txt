@@ -875,3 +875,34 @@
  *      FILE()
  *  $END$
  */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      COPY FILE
+ *  $CATEGORY$
+ *      Command
+ *  $ONELINER$
+ *      Copies a file.
+ *  $SYNTAX$
+ *      COPY FILE <cfile> TO <cfile1>
+ *  $ARGUMENTS$
+ *      <cFile>   Filename of source file
+ *      <cFile1>  Filename of target file
+ *  $DESCRIPTION$
+ *      This command makes an exact copy of <cFile> and names it <cFile1>.
+ *      Both files must have the file extension included; the drive and the
+ *      directory names must also be specified if they are different from
+ *      the default drive and/or director.<cFile1> also can refer to a OS
+ *      device (e.g. LPT1).This command does not obsert the SET PATH TO or
+ *      SET DEFAULT TO settings.
+ *  $EXAMPLES$
+ *      COPY FILE C:\HARBOUR\TESTS\ADIRTEST.PRG to C:\TEMP\ADIRTEST.PRG
+ *      COPY FILE c:\harbour\utils\hbdoc\gennf.prg to LPT1
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This command is Ca-Clipper compliant
+ *  $SEEALSO$
+ *      ERASE,RENAME,FRENAME(),FERASE()
+ *  $END$
+ */

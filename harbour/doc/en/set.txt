@@ -24,7 +24,7 @@
  *    Documentation for: SET WRAP,SET DEFAULT,SET MESSAGE
  *    Documentation for: SET PATH,SET INTENSITY,SET ALTERNATE
  *    Documentation for: SET CENTURY,SET DATE,SET CONSOLE
- *    Documentation for: SET EPOCH
+ *    Documentation for: SET EPOCH,SET PRINTER,SET FIXED
  *
  * See doc/license.txt for licensing terms.
  *
@@ -1020,7 +1020,7 @@
  *  $CATEGORY$
  *      Command
  *  $ONELINER$
- *      Toggle the century digits in all ates display
+ *      Toggle the century digits in all dates display
  *  $SYNTAX$
  *      SET CENTURY [ON / OFF] [(<lCent>)]
  *  $ARGUMENTS$
@@ -1091,3 +1091,224 @@
  *      SET DATE,SET EPOCH,CTOD(),DATE(),DTOC(),SET()
  *  $END$
  */
+
+/*  $DOC$
+ *  $COMMANDNAME$
+ *      SET EPOCH
+ *  $CATEGORY$
+ *      Command
+ *  $ONELINER$
+ *      Specifie a base year for interpreting dates
+ *  $SYNTAX$
+ *      SET EPOCH TO <nEpoch>
+ *  $ARGUMENTS$
+ *      <nEpoch> Base Century.
+ *  $DESCRIPTION$
+ *      This command sets the base year value for dates that have only two
+ *      digits.The default setting is 1900.Dates between 01/01/0100 and
+ *      12/31/2999 are fully supported.
+ *  $EXAMPLES$
+ *      SET EPOCH TO 2000
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This command is Ca-Clipper compliant
+ *  $SEEALSO$
+ *      SET DATE,SET CENTURY,CTOD(),DATE(),DTOC(),SET()
+ *  $END$
+
+/*  $DOC$
+ *  $COMMANDNAME$
+ *      SET FIXED
+ *  $CATEGORY$
+ *      Command
+ *  $ONELINER$
+ *      Set the number of decimal position to be displayed
+ *  $SYNTAX$
+ *      SET FIXED [ON / OFF] [(<lFixed>)]
+ *  $ARGUMENTS$
+ *      <lFixed> Logical expression for toggle   
+ *  $DESCRIPTION$
+ *      This command activates a system wide fixed placement of decimals
+ *      places shown for all numeric outputs.If the value of <lFixed> is
+ *      a logical true (.T.),FIXED will be turned ON;otherwise it will be
+ *      turned OFF.
+ *
+ *      When SET DECIMALS OFF is used, the follow rules aply to the number
+ *      of decimal placed displayed.
+ *
+ *      <table>
+ *       Addition         Same as operand with the greatest number of decimal digits  
+ *       Subraction       Same as operand with the greatest number of decimal digits  
+ *       Multiplication   Sum of operand decimal digits
+ *       Division         Determined by SET DECIMAL TO
+ *       Exponential      Determined by SET DECIMAL TO
+ *       LOG()            Determined by SET DECIMAL TO
+ *       EXP()            Determined by SET DECIMAL TO
+ *       SQRT()           Determined by SET DECIMAL TO
+ *       VAL()            Determined by SET DECIMAL TO
+ *      </table>
+ *  $EXAMPLES$
+ *      SET FIXED ON
+ *      ? 25141251/362
+ *      SET FIXED OFF
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This command is Ca-Clipper compliant
+ *  $SEEALSO$
+ *      SET DECIMALS,EXP(),LOG(),SQRT(),VAL(),SET()
+ *  $END$
+
+/*  $DOC$
+ *  $COMMANDNAME$
+ *      SET PRINTER
+ *  $CATEGORY$
+ *      Command
+ *  $ONELINER$
+ *      Toggles the printer and controls the printer device
+ *  $SYNTAX$
+ *      SET FIXED ON / OFF
+ *      SET PRINTER (<lPrinter>)
+ *      SET PRINTER TO [<cPrinter>] [ADDITIVE]
+ *  $ARGUMENTS$
+ *      <lFixed>   Logical condition by which to toggle the printer
+ *      <cPrinter> A device name or an alternate name
+ *  $DESCRIPTION$
+ *      This command can direct all output that is not controled by the
+ *      @...SAY command and the DEVPOS() and DEVOUT() functions to the
+ *      printer.If specified,the condition <lPrinter> toggles the printer
+ *      ON if a logical true (.T.) and OFF if a logical false (.F.).If no
+ *      argument is specified in the command, the alternate file (if one
+ *      is open) is closed, or the device is reselected and the PRINTER
+ *      option is turned OFF.
+ *
+ *      If a device is specified in <cPrinter>, the outpur will be directed
+ *      to that device instead of to the PRINTER.A specified device may be
+ *      a literal string or a variable, as long as the variable is enclosed
+ *      in parentheses.For a network,do not use a trailing colon when
+ *      redirecting to a device.
+ *
+ *      If an alternate file is specified,<cPrinter> becomes the name of a
+ *      file that will contain the output.If no file extension is specified
+ *      an extension of.PRN will be defaulted to.
+ *
+ *      If the ADDITIVE clause is specified,the information will be appended
+ *      to the end of the specified output file.Otherwise, a new file will
+ *      be created with the specified name (or an existing file will first
+ *      be cleared) and the information will then be appended to the file.
+ *      The default is to create a new file.
+ *  $EXAMPLES$
+ *      SET PRINTER ON
+ *      SET PRINTER TO LPT1
+ *      ? 25141251/362
+ *      SET PRINTER .F.
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This command is Ca-Clipper compliant
+ *  $SEEALSO$
+ *      SET DEVICE,SET CONSOLE,DEVOUT(),SET()
+ *  $END$
+
+/*  $DOC$
+ *  $COMMANDNAME$
+ *      SET CONSOLE
+ *  $CATEGORY$
+ *      Command
+ *  $ONELINER$
+ *      Toggle the console display
+ *  $SYNTAX$
+ *      SET CONSOLE [ON / OFF] [(<lConsole>)]
+ *  $ARGUMENTS$
+ *      <lConsole> Logical expression for toggle command
+ *  $DESCRIPTION$
+ *      This command turns the screen display either off or on for all
+ *      screens display other then direct output via the @...SAY commands
+ *      or the <-> DEVOUT() function.
+ *
+ *      If <lConsole > is a logical true (.T.),the console will be turned
+ *      ON;otherwise, the console will be turned off.
+ *  $EXAMPLES$
+ *      SET console on
+ *      ? DATE()
+ *      SET console off
+ *      ? date()
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This command is Ca-Clipper compliant
+ *  $SEEALSO$
+ *      SET DEVICE,SET()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $COMMANDNAME$
+ *      SET DECIMALS
+ *  $CATEGORY$
+ *      Command
+ *  $ONELINER$
+ *      Toggle the console display
+ *  $SYNTAX$
+ *      SET DECIMALS TO [<nDecimal>]
+ *  $ARGUMENTS$
+ *      <nDecimal> Number of decimals places
+ *  $DESCRIPTION$
+ *      This command establishes the number of decimal places that Harbour
+ *      will display in mathematical calculations,functions,memory variables,
+ *      and fields.Issuing no parameter with this command will the default
+ *      number of decimals to 0.For decimals to be seen,the SET FIXED ON
+ *      command must be activated.
+ *  $EXAMPLES$
+ *      SET FIXED ON
+ *      ? 25141251/362
+ *      SET DECIMALS TO 10
+ *      ? 214514.214/6325
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This command is Ca-Clipper compliant
+ *  $SEEALSO$
+ *      SET FIXED,SET()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $COMMANDNAME$
+ *      SET DEVICE
+ *  $CATEGORY$
+ *      Command
+ *  $ONELINER$
+ *      Directs all @...SAY output to a device.
+ *  $SYNTAX$
+ *      SET DEVICE TO [PRINTER / SCREEN]
+ *  $ARGUMENTS$
+ *      None.
+ *  $DESCRIPTION$
+ *      This command determines whether the output from the @...SAY command
+ *      and the DEVPOS() and DEVOUT() function will be displayed on the
+ *      printer.
+ *
+ *      When the device is set to the PRINTER,the SET MARGIN value adjusts
+ *      the position of the column values accordingly.Also,an automatic
+ *      page eject will be issued when the current printhead position is
+ *      less than the last printed row.Finally,if used in conjunction with
+ *      the @...GET commands,the values for the GETs will all be ignored.
+ *  $EXAMPLES$
+ *      SET DEVICE TO SCRENN
+ *      ? 25141251/362
+ *      SET DEVICE TO PRINTER
+ *      SET PRINTER TO LPT1
+ *      ? 214514.214/6325
+ *      SET PRINTER OFF
+ *      SET DEVICE TO SCREEN
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This command is Ca-Clipper compliant
+ *  $SEEALSO$
+ *      @...SAY,SET PRINTER,SETPRC(),SET()
+ *  $END$
+ */
+
