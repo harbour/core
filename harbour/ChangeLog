@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-01-29 18:30 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
+   * contrib/rdd_ads/adsfunc.c
+     + Added 3 ADS functions: adsGetNumOpenTables(), adsShowError() and adsGetNumActiveLinks()
+
 2004-01-28 11:10 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * source/compiler/harbour.c
       * removed duplicated line causing memory leak 
@@ -49,8 +53,8 @@
       *replaced '__vm*' functions with 'hb_dbg_vm*' names
 
 2004-01-26 8:30 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
-  * source/rtl/tget.prg
-    ! Fixed bug in get class when using "@9" picture with strings
+   * source/rtl/tget.prg
+     ! Fixed bug in get class when using "@9" picture with strings
 
 2004-01-26 11:45 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * source/compiler/harbour.c

@@ -1314,6 +1314,35 @@ HB_FUNC( ADSGETLASTERROR )
    hb_retnl( ulLastErr );
 }
 
+HB_FUNC( ADSGETNUMOPENTABLES )
+{
+   UNSIGNED16 pusNum = 0;
+
+   AdsGetNumOpenTables( &pusNum ) ;
+   hb_retnl( pusNum );
+}
+
+HB_FUNC( ADSSHOWERROR )
+{
+   char * pucTitle;
+   if( ISCHAR( 1 ) )
+   {
+      pucTitle = (UNSIGNED8*) hb_parc( 1 );
+   }
+   AdsShowError( pucTitle );
+}
+
+HB_FUNC( ADSGETNUMACTIVELINKS )
+{
+   UNSIGNED16 pusNumLinks = 0;
+
+   if( adsConnectHandle )
+   {
+      AdsGetNumActiveLinks( adsConnectHandle, &pusNumLinks );
+   }
+   hb_retnl( pusNumLinks );
+}
+
 #ifdef ADS_REQUIRE_VERSION6
 
 HB_FUNC(ADSADDTABLE)
