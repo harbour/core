@@ -76,6 +76,10 @@ METHOD LoadFromText( cObjectText ) CLASS HBPersistent
    local lStart := .t., aArray
    private oSelf
 
+   if empty( cObjectText )
+      return .F.
+   endif
+
    while Empty( MemoLine( cObjectText,, nLine ) ) // We skip the first empty lines
       nLine++
    end
@@ -106,7 +110,7 @@ METHOD LoadFromText( cObjectText ) CLASS HBPersistent
       nLine++
    end
 
-return nil
+return .T.
 
 METHOD SaveToText( cObjectName ) CLASS HBPersistent
 

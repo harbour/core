@@ -1,3 +1,8 @@
+2001-11-09 10:30 UTC-0800 Brian Hays <bhays@abacuslaw.com>
+   * harbour/source/rtl/persist.prg
+      * fixed error handling for LoadFromText()
+        Both it and LoadFromFile() now return lSuccess
+
 2001-11-09 14:41 GMT Dave Pearson <davep@davep.org>
    * source/compiler/gencobj.c
       * Further fixes to remove core dumps regarding missing config files
@@ -51,11 +56,11 @@
    * makefile.bc
    * makefile.vc
      * Updated with new lang modules.
-       Now only Chinese and Dutch modules are not converted, if anyone 
+       Now only Chinese and Dutch modules are not converted, if anyone
        feel like doing, please do.
 
    * make_vc.bat
-     - Removed the call to create libmisc. If you need this, please 
+     - Removed the call to create libmisc. If you need this, please
        make a batch file and set it locally.
 
    * source/rtl/oldbox.c
@@ -81,11 +86,11 @@
    * include/hbextern.ch
    * include/hbapifs.h
    * source/rtl/fstemp.c
-      - Removed (made static) hb_fsTempName() low-level function, 
+      - Removed (made static) hb_fsTempName() low-level function,
         since it's unsafe, and will be incorporated into hb_fsCreateTemp().
       - Removed HB_FTEMPNAME function, since it's unsafe.
       ! Fixed some recent HB_FTEMPCREATE bugs.
-      + HB_FTEMPCREATE() now will store the generated filename in the 
+      + HB_FTEMPCREATE() now will store the generated filename in the
         fourth parameter if it's passed by reference.
 
    * makefile.bc
@@ -99,24 +104,24 @@
    - hb_slex.vc
    * makefile.vc
      - Removed the batch files which initated a Simplex based Harbour.
-       from now on you can simply set the environment variable 
+       from now on you can simply set the environment variable
        HB_LEX=SIMPLEX and get the same result using the standard make files.
 
-       So if you're a Simplex user, please don't forget to put the following 
+       So if you're a Simplex user, please don't forget to put the following
        line into your configuration files:
        set HB_LEX=SIMPLEX
 
-     * The Simplex specific parallel MSVC make file has been consolidated 
-       into the standard MSVC make file. Note that I couldn't test it, 
+     * The Simplex specific parallel MSVC make file has been consolidated
+       into the standard MSVC make file. Note that I couldn't test it,
        so please report any errors you find.
 
    * make_b32.bat
-     ! Doesn't override the HB_LEX variable, so that it can be set by 
+     ! Doesn't override the HB_LEX variable, so that it can be set by
        the caller.
 
    * makefile.bc
    * makefile.vc
-     * PDF environment variable changed to HB_DOC_PDF. Please change your 
+     * PDF environment variable changed to HB_DOC_PDF. Please change your
        settings according to this, if needed.
      + Documented this switch.
 
@@ -126,14 +131,14 @@
 
 2001-11-07 00:11 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
-   * include/hbapifs.h 
+   * include/hbapifs.h
    * source/rtl/filesys.c
-     + Added hb_fsCreateEx() function which is similar to hb_fsCreate() 
+     + Added hb_fsCreateEx() function which is similar to hb_fsCreate()
        with the plus that the opening mode can be also specified.
 
-   * include/hbextern.ch 
+   * include/hbextern.ch
    * source/rtl/philes.c
-     + Added HB_FCREATE() where you can specifiy the opening mode using 
+     + Added HB_FCREATE() where you can specifiy the opening mode using
        the FO_* contants.
 
    * source/lang/Makefile
@@ -142,12 +147,12 @@
      + Added some new language files.
 
    * include/Makefile
-     ! Synced with the actual list of header files. This fixes the 
+     ! Synced with the actual list of header files. This fixes the
        installation with the GNU-make system.
 
    * source/rtl/fstemp.c
    * include/hbapifs.h
-     * Changed to make use of hb_fsCreateEx(), and open the temp file 
+     * Changed to make use of hb_fsCreateEx(), and open the temp file
        in exclusive mode.
 
    * source/rdd/hbdbsort.c
@@ -158,13 +163,13 @@
      ! MinGW name change.
 
    * include/hbapigt.h
-     + Added some functions which have incompatible prototypes with 
+     + Added some functions which have incompatible prototypes with
        CA-Clipper Extend System.
 
    * source/vm/extend.c
      * Some formatting.
 
-   * source/vm/mainlgtk.c 
+   * source/vm/mainlgtk.c
      ! Fixed CVS header.
 
 2001-11-06 19:28 GMT-3 Horacio Roldan <harbour_ar@yahoo.com.ar>
@@ -176,7 +181,7 @@
 2001-11-06 09:50 GMT Dave Pearson <davep@davep.org>
    * tests/Makefile
       * testprof.prg was missing. Added.
-	
+
 2001-11-06 06:20 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
    * source/debug/dbgtarr.prg
       * Some enhacementes . Now you can use Page up/Page Down keys for movement
