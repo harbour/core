@@ -309,13 +309,36 @@ ENDCLASS
 
 METHOD New() CLASS TDebugger
 
-   ::aColors := {"W+/BG","N/BG","R/BG","N+/BG","W+/B","GR+/B","W/B","N/W","R/W","N/BG","R/BG"}
-
-   ::lMonoDisplay   := .f.
    s_oDebugger := Self
 
-   ::aWindows       := {}
-   ::nCurrentWindow := 1
+   ::aColors := {"W+/BG","N/BG","R/BG","N+/BG","W+/B","GR+/B","W/B","N/W","R/W","N/BG","R/BG"}
+   ::lMonoDisplay      := .f.
+   ::aWindows          := {}
+   ::nCurrentWindow    := 1
+   ::lAnimate          := .f.
+   ::lEnd              := .f.
+   ::lTrace            := .f.
+   ::aBreakPoints      := {}
+   ::aCallStack        := {}
+   ::lGo               := .f.
+   ::aVars             := {}
+   ::lCaseSensitive    := .f.
+   ::cSearchString     := ""
+   ::cPathForFiles     := ""
+   ::nTabWidth         := 4
+   ::nSpeed            := 0
+   ::lShowPublics      := .f.
+   ::lShowPrivates     := .f.
+   ::lShowStatics      := .f.
+   ::lShowLocals       := .f.
+   ::lAll              := .f.
+   ::lSortVars         := .f.
+
+   ::cSettingsFileName := "init.cld"
+   if File( ::cSettingsFileName )
+      ::LoadSettings()
+   endif
+
    ::oPullDown      := __dbgBuildMenu( Self )
 
    ::oWndCode       := TDbWindow():New( 1, 0, MaxRow() - 6, MaxCol() )
@@ -335,31 +358,6 @@ METHOD New() CLASS TDebugger
    AAdd( ::aWindows, ::oWndCode )
 
    ::BuildCommandWindow()
-
-   ::lAnimate          := .f.
-   ::lEnd              := .f.
-   ::lTrace            := .f.
-   ::aBreakPoints      := {}
-   ::aCallStack        := {}
-   ::lGo               := .f.
-   ::aVars             := {}
-   ::lCaseSensitive    := .f.
-   ::cSearchString     := ""
-   ::cPathForFiles     := ""
-   ::nTabWidth         := 4
-   ::nSpeed            := 0
-
-   ::lShowPublics      := .f.
-   ::lShowPrivates     := .f.
-   ::lShowStatics      := .f.
-   ::lShowLocals       := .f.
-   ::lAll              := .f.
-   ::lSortVars         := .f.
-
-   ::cSettingsFileName := "init.cld"
-   if File( ::cSettingsFileName )
-      ::LoadSettings()
-   endif
 
 return Self
 
@@ -607,7 +605,7 @@ METHOD EditColor( nColor, oBrwColors ) CLASS TDebugger
    oBrwColors:ForceStable()
 
    SetCursor( SC_NORMAL )
-   @ Row(), Col() GET cColor COLOR SubStr( ::ClrModal(), 5 ) ;
+   @ Row(), Col() + 15 GET cColor COLOR SubStr( ::ClrModal(), 5 ) ;
       VALID iif( Type( cColor ) != "C", ( Alert( "Must be string" ), .f. ), .t. )
 
    READ
@@ -762,6 +760,11 @@ METHOD HandleEvent() CLASS TDebugger
       nKey := InKey( 0, INKEY_ALL )
 
       do case
+         case nKey == K_ALT_X
+              s_oDebugger:Exit()
+              s_oDebugger:Hide()
+              __Quit()
+
          case ::oPullDown:IsOpen()
               ::oPullDown:ProcessKey( nKey )
               if ::oPullDown:nOpenPopup == 0 // Closed
@@ -1048,7 +1051,7 @@ METHOD LoadSettings() CLASS TDebugger
          case Upper( SubStr( cLine, 1, 13 ) ) == "MONITOR LOCAL"
             ::lShowLocals := .t.
          case Upper( SubStr( cLine, 1, 15 ) ) == "MONITOR PRIVATE"
-            ::lShowPrivates := .t.		
+            ::lShowPrivates := .t.
       endcase
    next
 
