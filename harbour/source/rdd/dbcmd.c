@@ -2322,7 +2322,6 @@ HB_FUNC( ORDBAGNAME )
 HB_FUNC( ORDCONDSET )
 {
    LPDBORDERCONDINFO lpdbOrdCondInfo;
-   char * szFor;
    ULONG ulLen;
    PHB_ITEM pItem;
 
@@ -2331,14 +2330,10 @@ HB_FUNC( ORDCONDSET )
       lpdbOrdCondInfo = ( LPDBORDERCONDINFO ) hb_xgrab( sizeof( DBORDERCONDINFO ) );
 
       ulLen = hb_parclen( 1 );
-      if( ISCHAR(1) && ulLen > 0 )
+      if( ulLen > 0 )
       {
-         szFor = hb_parc( 1 );
-         if( ulLen > 0 )
-         {
-            lpdbOrdCondInfo->abFor = ( BYTE * ) hb_xgrab( ulLen + 1 );
-            strcpy( ( char * ) lpdbOrdCondInfo->abFor, szFor );
-         }
+         lpdbOrdCondInfo->abFor = ( BYTE * ) hb_xgrab( ulLen + 1 );
+         strcpy( ( char * ) lpdbOrdCondInfo->abFor, hb_parc( 1 ) );
       }
       else
          lpdbOrdCondInfo->abFor = NULL;
@@ -2788,10 +2783,7 @@ HB_FUNC( RDDREGISTER )
    uiLen = ( USHORT ) hb_parclen( 1 );
    if( uiLen > 0 )
    {
-      if( uiLen > HARBOUR_MAX_RDD_DRIVERNAME_LENGTH )
-         uiLen = HARBOUR_MAX_RDD_DRIVERNAME_LENGTH;
-
-      hb_strncpyUpper( szDriver, hb_parc( 1 ), uiLen );
+      hb_strncpyUpper( szDriver, hb_parc( 1 ), HARBOUR_MAX_RDD_DRIVERNAME_LENGTH );
       /*
        * hb_rddRegister returns:
        *
@@ -2913,10 +2905,7 @@ HB_FUNC( RDDSETDEFAULT )
    uiLen = ( USHORT ) hb_parclen( 1 );
    if( uiLen > 0 )
    {
-      if( uiLen > HARBOUR_MAX_RDD_DRIVERNAME_LENGTH )
-         uiLen = HARBOUR_MAX_RDD_DRIVERNAME_LENGTH;
-
-      hb_strncpyUpper( szNewDriver, hb_parc( 1 ), uiLen );
+      hb_strncpyUpper( szNewDriver, hb_parc( 1 ), HARBOUR_MAX_RDD_DRIVERNAME_LENGTH );
 
       if( !hb_rddFindNode( szNewDriver, NULL ) )
       {
@@ -2940,10 +2929,7 @@ HB_FUNC( DBSETDRIVER )
    uiLen = ( USHORT ) hb_parclen( 1 );
    if( uiLen > 0 )
    {
-      if( uiLen > HARBOUR_MAX_RDD_DRIVERNAME_LENGTH )
-         uiLen = HARBOUR_MAX_RDD_DRIVERNAME_LENGTH;
-
-      hb_strncpyUpper( szNewDriver, hb_parc( 1 ), uiLen );
+      hb_strncpyUpper( szNewDriver, hb_parc( 1 ), HARBOUR_MAX_RDD_DRIVERNAME_LENGTH );
 
       if( !hb_rddFindNode( szNewDriver, NULL ) )
       {
@@ -3042,7 +3028,7 @@ HB_FUNC( DBSETRELATION )
       else
       {
          szAlias = hb_parc( 1 );
-         if( szAlias == (char*)0 || ( uiChildArea = hb_rddSelect( szAlias ) ) == 0 )
+         if( szAlias == NULL || ( uiChildArea = hb_rddSelect( szAlias ) ) == 0 )
          {
             hb_errRT_BASE( EG_NOALIAS, EDBCMD_NOALIAS, NULL, szAlias, 0 );
             return;
@@ -3438,6 +3424,7 @@ HB_FUNC( DBDROP )
     szDriver = hb_parc( 2 );
   else
     szDriver = s_szDefDriver;
+
   pRDDNode = hb_rddFindNode( szDriver, &uiRddID );  // find the RDD
 
   if ( !pRDDNode )
@@ -3461,6 +3448,7 @@ HB_FUNC( DBEXISTS )
     szDriver = hb_parc( 3 );
   else
     szDriver = s_szDefDriver;
+
   pRDDNode = hb_rddFindNode( szDriver, &uiRddID );  // find the RDD
 
   if ( !pRDDNode )
