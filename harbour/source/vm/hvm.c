@@ -2977,8 +2977,9 @@ void hb_vmDo( USHORT uiParams )
    HB_TRACE(HB_TR_DEBUG, ("hb_vmDo(%hu)", uiParams));
 
    /*
-   printf( "\nItems: %i Params: %i Extra %i\n", hb_stack.pPos - hb_stack.pBase, uiParams, hb_vm_aiExtraParams[hb_vm_iExtraParamsIndex - 1] );
+   printf( "\VmDo nItems: %i Params: %i Extra %i\n", hb_stack.pPos - hb_stack.pBase, uiParams, hb_vm_aiExtraParams[hb_vm_iExtraParamsIndex - 1] );
    */
+
    if( hb_vm_iExtraParamsIndex && HB_IS_SYMBOL( pItem = hb_stackItemFromTop( -( uiParams + hb_vm_aiExtraParams[hb_vm_iExtraParamsIndex - 1] + 2 ) ) ) && pItem->item.asSymbol.value == hb_vm_apExtraParamsSymbol[hb_vm_iExtraParamsIndex - 1] )
    {
       uiParams += hb_vm_aiExtraParams[--hb_vm_iExtraParamsIndex];
@@ -3000,6 +3001,8 @@ void hb_vmDo( USHORT uiParams )
 
       BOOL lPopSuper = FALSE ;
       PHB_BASEARRAY pSelfBase = NULL;
+      PHB_ITEM pRealSelf=NULL;
+      USHORT uiClass;
 
       if( pSym == &( hb_symEval ) && HB_IS_BLOCK( pSelf ) )
          pFunc = pSym->pFunPtr;                 /* __EVAL method = function */
@@ -3011,17 +3014,28 @@ void hb_vmDo( USHORT uiParams )
             pSelfBase = pSelf->item.asArray.value;
             if( pSelfBase->uiPrevCls ) /* Is is a Super cast ? */
             {
+              USHORT nPos ;
+              /*
+              printf( "\n VmDo Method: %s \n", pSym->szName );
+              */
+              uiClass=pSelfBase->uiClass;
+              /*pSelfBase->uiClass = pSelfBase->uiPrevCls;*/
+              /*pSelfBase->uiPrevCls = 0 ;                */
+              /* take care this is a fake object */
+              /* take back the real Self */
+              pRealSelf = hb_arrayGetItemPtr(pSelf,pSelfBase->ulLen) ;
+              /* and take back the good pSelfBase */
+              pSelfBase = pRealSelf->item.asArray.value;
+
               /* Push current SuperClass handle */
               lPopSuper = TRUE ;
-              if( pSelfBase->puiClsTree )
-               pSelfBase->puiClsTree = ( USHORT * ) hb_xrealloc( pSelfBase->puiClsTree, sizeof( USHORT ) * ( pSelfBase->uiClsTree + 1 ) );
-              else
-               pSelfBase->puiClsTree = ( USHORT * ) hb_xgrab( sizeof( USHORT ) );
-              pSelfBase->uiClsTree  ++ ;
-              pSelfBase->puiClsTree[pSelfBase->uiClsTree -1 ] = pSelfBase->uiClass;
 
-              pSelfBase->uiClass    = pSelfBase->uiPrevCls;
-              pSelfBase->uiPrevCls  = 0;
+              nPos=pSelfBase->puiClsTree[0]+1;
+              pSelfBase->puiClsTree = ( USHORT * ) hb_xrealloc( pSelfBase->puiClsTree, sizeof( USHORT ) * ( nPos + 1 ) );
+
+              pSelfBase->puiClsTree[0] = nPos ;
+              pSelfBase->puiClsTree[ nPos ] = uiClass;
+
             }
          }
       }
@@ -3035,14 +3049,10 @@ void hb_vmDo( USHORT uiParams )
 
          if (lPopSuper)
          {
+           USHORT nPos=pSelfBase->puiClsTree[0]-1;
            /* POP SuperClass handle */
-           if ( -- pSelfBase->uiClsTree )
-            pSelfBase->puiClsTree = ( USHORT * ) hb_xrealloc( pSelfBase->puiClsTree, sizeof( USHORT ) * ( pSelfBase->uiClsTree ) );
-           else
-            {
-             hb_xfree(pSelfBase->puiClsTree);
-             pSelfBase->puiClsTree = 0;
-            }
+           pSelfBase->puiClsTree = ( USHORT * ) hb_xrealloc( pSelfBase->puiClsTree, sizeof( USHORT ) * (nPos + 1) );
+           pSelfBase->puiClsTree[0]=nPos;
          }
 
          if( bProfiler )
@@ -3119,6 +3129,10 @@ void hb_vmSend( USHORT uiParams )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmSend(%hu)", uiParams));
 
+   /*
+   printf( "\n VmSend nItems: %i Params: %i Extra %i\n", hb_stack.pPos - hb_stack.pBase, uiParams, hb_vm_aiExtraParams[hb_vm_iExtraParamsIndex - 1] );
+   */
+
    if( hb_vm_iExtraParamsIndex && HB_IS_SYMBOL( pItem = hb_stackItemFromTop( -( uiParams + hb_vm_aiExtraParams[hb_vm_iExtraParamsIndex - 1] + 2 ) ) ) && pItem->item.asSymbol.value == hb_vm_apExtraParamsSymbol[hb_vm_iExtraParamsIndex - 1] )
    {
       uiParams += hb_vm_aiExtraParams[--hb_vm_iExtraParamsIndex];
@@ -3137,7 +3151,9 @@ void hb_vmSend( USHORT uiParams )
    {
 
       BOOL lPopSuper = FALSE ;
-      PHB_BASEARRAY pSelfBase;
+      PHB_BASEARRAY pSelfBase = NULL;
+      PHB_ITEM pRealSelf=NULL;
+      USHORT uiClass;
 
       if( ! ( pSym == &( hb_symEval ) && HB_IS_BLOCK( pSelf ) ) )
       {
@@ -3148,17 +3164,24 @@ void hb_vmSend( USHORT uiParams )
             pSelfBase = pSelf->item.asArray.value;
             if( pSelfBase->uiPrevCls ) /* Is is a Super cast ? */
             {
+              USHORT nPos ;
+              /*
+              printf( "\n VmSend Method: %s \n", pSym->szName );
+              */
+              uiClass=pSelfBase->uiClass;
+              /*pSelfBase->uiClass = pSelfBase->uiPrevCls;*/
+              /*pSelfBase->uiPrevCls = 0 ;                */
+              /* take care this is a fake object */
+              /* take back the real Self */
+              pRealSelf = hb_arrayGetItemPtr(pSelf,pSelfBase->ulLen) ;
+              /* and take back the good pSelfBase */
+              pSelfBase = pRealSelf->item.asArray.value;
               /* Push current SuperClass handle */
               lPopSuper = TRUE ;
-              if( pSelfBase->puiClsTree )
-               pSelfBase->puiClsTree = ( USHORT * ) hb_xrealloc( pSelfBase->puiClsTree, sizeof( USHORT ) * ( pSelfBase->uiClsTree + 1 ) );
-              else
-               pSelfBase->puiClsTree = ( USHORT * ) hb_xgrab( sizeof( USHORT ) );
-              pSelfBase->uiClsTree  ++ ;
-              pSelfBase->puiClsTree[pSelfBase->uiClsTree -1 ] = pSelfBase->uiClass;
-
-              pSelfBase->uiClass   = pSelfBase->uiPrevCls;
-              pSelfBase->uiPrevCls = 0;
+              nPos=pSelfBase->puiClsTree[0]+1;
+              pSelfBase->puiClsTree = ( USHORT * ) hb_xrealloc( pSelfBase->puiClsTree, sizeof( USHORT ) * (nPos+1) ) ;
+              pSelfBase->puiClsTree[0] = nPos ;
+              pSelfBase->puiClsTree[ nPos ] = uiClass;
             }
 
             if( pFunc )
@@ -3170,14 +3193,10 @@ void hb_vmSend( USHORT uiParams )
 
                if (lPopSuper)
                {
-                 /* POP SuperClass handle */
-                 if ( -- pSelfBase->uiClsTree )
-                  pSelfBase->puiClsTree = ( USHORT * ) hb_xrealloc( pSelfBase->puiClsTree, sizeof( USHORT ) * ( pSelfBase->uiClsTree ) );
-                 else
-                  {
-                   hb_xfree(pSelfBase->puiClsTree);
-                   pSelfBase->puiClsTree = 0;
-                  }
+                USHORT nPos=pSelfBase->puiClsTree[0]-1;
+                /* POP SuperClass handle */
+                pSelfBase->puiClsTree = ( USHORT * ) hb_xrealloc( pSelfBase->puiClsTree, sizeof( USHORT ) * (nPos + 1) );
+                pSelfBase->puiClsTree[0]=nPos;
                }
 
                if( bProfiler )

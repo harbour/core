@@ -621,6 +621,13 @@ BOOL hb_arrayRelease( PHB_ITEM pArray )
       ULONG ulLen = pBaseArray->ulLen;
       ULONG ulPos;
 
+      /* clear object tree as needed */
+      if( pBaseArray->uiClass && pBaseArray->puiClsTree )
+      {
+        hb_xfree(pBaseArray->puiClsTree);
+        pBaseArray->puiClsTree = NULL;
+      }
+
       if( pBaseArray->pItems )
       {
          for( ulPos = 0; ulPos < ulLen; ulPos++ )

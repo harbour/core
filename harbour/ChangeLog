@@ -1,3 +1,18 @@
+2001-08-19 23:30 GMT +1 JFL (mafact) <jfl@mafact.com>
+   harbour/include/hbapi.h
+    * changed structure of _HB_BASEARRAY (puiClsTree)
+    *         suppressed uiClsTree not anymore needed
+   harbour/source/vm/arrays.c
+    * modified ArrayRelease() to handle the release of puiClsTree pointer
+   harbour/source/vm/classes.c
+    * Changed the way MsgSuper() return a Super Object.
+      Now ::Super(::nX) is allowed
+          ::Super:Classname() return the superClassName.
+    * Added some code to check or validate puiClsTree
+    * improved validation of scoping
+   harbour/source/vm/hvm.c
+    * Changed vmdo as vmsend to handle the new SuperObject
+
 2001-08-19 10:50 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
    *source/rdd/rddord.prg
      *Mapped functions to 10 character for ORDLISTCLE(),ORDLISTREB(),ORDSETFOCU()

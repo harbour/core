@@ -238,7 +238,6 @@ typedef struct _HB_BASEARRAY
    USHORT   uiHolders;    /* number of holders of this array */
    USHORT   uiClass;      /* offset to the classes base if it is an object */
    USHORT   uiPrevCls;    /* for fixing after access super */
-   USHORT   uiClsTree;    /* remember number of pushed super call */
    USHORT * puiClsTree;   /* remember array of super called ID Tree  */
 } HB_BASEARRAY, * PHB_BASEARRAY, * HB_BASEARRAY_PTR;
 
