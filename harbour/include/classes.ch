@@ -32,10 +32,14 @@
    function <ClassName>() ;;
       static oClass ;;
       if oClass == nil ;;
-         oClass = TClass():New( <(ClassName)> [,<(SuperClass)>] )
+         oClass = TClass():New( <(ClassName)> [,<(SuperClass)>] ) ;
+     [ ; #define _Super_ <(SuperClass)> ]
 
 #xcommand DATA <DataName1> [,<DataNameN>] => ;
    oClass:AddData( <(DataName1)> ) [; oClass:AddData( <(DataNameN)> ) ]
+
+#xcommand CLASSDATA <DataName1> [,<DataNameN>] => ;
+   oClass:AddClassData( <(DataName1)> ) [; oClass:AddClassData( <(DataNameN)> ) ]
 
 #xcommand METHOD <MethodName>( [<params,...>] ) => ;
    oClass:AddMethod( <(MethodName)>, @<MethodName>() )
@@ -45,6 +49,12 @@
 
 #xcommand METHOD <MethodName>( [<params,...>] ) INLINE <Code,...> => ;
    oClass:AddInline( <(MethodName)>, {|Self [,<params>] | <Code> } )
+
+#xcommand METHOD <MethodName>( [<params,...>] ) VIRTUAL => ;
+   oClass:AddVirtual( <(MethodName)> )
+
+#xcommand MESSAGE <MessageName> METHOD <MethodName>( [<params,...>] ) => ;
+   oClass:AddMethod( <(MessageName)>, @<MethodName>() )
 
 #xcommand ENDCLASS => oClass:Create() ;;
                       endif ;;
