@@ -423,10 +423,9 @@ HB_FUNC( _M_MSETCOORD)
 
 HB_FUNC( _M_MXLIMIT)
 {
+#if defined(HB_OS_DOS)
    int iMaxRow;
    int iMinRow;
-
-#if defined(HB_OS_DOS)
    {
       union REGS regs;
       iMaxRow=hb_parni(2);
@@ -444,9 +443,9 @@ HB_FUNC( _M_MXLIMIT)
 
 HB_FUNC( _M_MYLIMIT)
 {
+#if defined(HB_OS_DOS)
    int iMaxCol;
    int iMinCol;
-#if defined(HB_OS_DOS)
    {
       union REGS regs;
       iMaxCol=hb_parni(2);

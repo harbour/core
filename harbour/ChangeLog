@@ -1,3 +1,9 @@
+2001-13-11 04:45 GMT+0700 Andi Jahja <harbour@cbn.net.id>
+   * contrib/libnf/descend.c
+     ! added type casts for MsVC
+   * contrib/libnf/mouse.c
+     ! some clean-ups
+
 2001-12-11 20:00 GMT+0700 Andi Jahja <harbour@cbn.net.id>
    * contrib/rdd_ads/ads1.c
      ! added type casts for MsVC (but still got warning on line 2086)

@@ -75,7 +75,7 @@ HB_FUNC( FT_DESCEND)
 
       else if ( uiType & HB_IT_STRING )
       {
-         uiLen = hb_itemSize( iP );
+         uiLen = (USHORT) hb_itemSize( iP );
 
          pDescend = ( char *) hb_xgrab( uiLen );
 
