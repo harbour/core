@@ -5,7 +5,11 @@
 ROOT = ../../
 
 C_SOURCES=\
+	msgca.c      \
 	msgen.c      \
+	msges.c      \
+	msgeu.c      \
+	msggl.c      \
 	msghu852.c   \
 	msghucwi.c   \
 	msghuwin.c   \

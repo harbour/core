@@ -1,3 +1,17 @@
+20000415-21:39 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * makefile.bc
+   * makefile.vc
+   * source/rtl/lang/Makefile
+   * source/rtl/lang/
+     * msgca.c
+     * msges.c
+     * msgeu.c
+     * msggl.c
+     * Catalan, Spanish, Basque and Galician message modules converted to
+       the new format and added to the makefiles.
+     ; by Jose Lalin
+
 20000415-15:15 DST Paul Tucker <ptucker@sympatico.ca>
    * source/rdd/dbfcdx/dbfcdx1.c
      * a number of casts to allow msvc to compile

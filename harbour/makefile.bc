@@ -297,7 +297,11 @@ RTL_LIB_OBJS = \
 #
 
 LANG_LIB_OBJS = \
+   $(OBJ_DIR)\msgca.obj \
    $(OBJ_DIR)\msgen.obj \
+   $(OBJ_DIR)\msges.obj \
+   $(OBJ_DIR)\msgeu.obj \
+   $(OBJ_DIR)\msggl.obj \
    $(OBJ_DIR)\msghu852.obj \
    $(OBJ_DIR)\msghucwi.obj \
    $(OBJ_DIR)\msghuwin.obj \
@@ -1583,7 +1587,23 @@ $(OBJ_DIR)\xsavescr.obj : $(OBJ_DIR)\xsavescr.c
 # LANG.LIB dependencies
 #
 
+$(OBJ_DIR)\msgca.obj : $(LANG_DIR)\msgca.c
+   $(CC) $(CLIBFLAGS) -I$(LANG_DIR) -o$@ $**
+   tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\msgen.obj : $(LANG_DIR)\msgen.c
+   $(CC) $(CLIBFLAGS) -I$(LANG_DIR) -o$@ $**
+   tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\msges.obj : $(LANG_DIR)\msges.c
+   $(CC) $(CLIBFLAGS) -I$(LANG_DIR) -o$@ $**
+   tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\msgeu.obj : $(LANG_DIR)\msgeu.c
+   $(CC) $(CLIBFLAGS) -I$(LANG_DIR) -o$@ $**
+   tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\msggl.obj : $(LANG_DIR)\msggl.c
    $(CC) $(CLIBFLAGS) -I$(LANG_DIR) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
