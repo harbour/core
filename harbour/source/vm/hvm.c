@@ -199,16 +199,16 @@ extern POBJSYMBOLS HB_FIRSTSYMBOL, HB_LASTSYMBOL;
 /* virtual machine state */
 
 HB_STACK hb_stack;
-HB_SYMB  hb_symEval = { "__EVAL", FS_PUBLIC, hb_vmDoBlock, 0 }; /* symbol to evaluate codeblocks */
-
-BOOL hb_DebuggerIsWorking = FALSE; /* to know when __DBGENTRY is beeing invoked */
+HB_SYMB  hb_symEval = { "__EVAL", FS_PUBLIC, hb_vmDoBlock, NULL }; /* symbol to evaluate codeblocks */
 
 static HB_ITEM  s_aStatics;         /* Harbour array to hold all application statics variables */
-static BOOL     s_bDebugging = FALSE;
-static BOOL     s_bDebugShowLines = FALSE; /* update source code line on the debugger display */
 static PHB_SYMB s_pSymStart = NULL; /* start symbol of the application. MAIN() is not required */
 static PSYMBOLS s_pSymbols = NULL;  /* to hold a linked list of all different modules symbol tables */
 static BYTE     s_byErrorLevel = 0; /* application exit errorlevel */
+
+static BOOL     s_bDebugging = FALSE;
+static BOOL     s_bDebugShowLines = FALSE; /* update source code line on the debugger display */
+static BOOL     s_bDebuggerIsWorking = FALSE; /* to know when __DBGENTRY is beeing invoked */
 
 /* Stores the position on the stack of current SEQUENCE envelope or 0 if no
  * SEQUENCE is active
@@ -257,7 +257,7 @@ void hb_vmInit( BOOL bStartMainProc )
    hb_vmDoInitFunctions(); /* process defined INIT functions */
 
    /* This is undocumented CA-Clipper, if there's a function called _APPMAIN
-      it will be executed first. */
+      it will be executed first. [vszakats] */
    {
       PHB_DYNS pDynSym = hb_dynsymFind( "_APPMAIN" );
 
@@ -2649,9 +2649,9 @@ static void hb_vmModuleName( char * szModuleName ) /* PRG and function name info
    hb_vmPushSymbol( hb_dynsymFind( "__DBGENTRY" )->pSymbol );
    hb_vmPushNil();
    hb_vmPushString( szModuleName, strlen( szModuleName ) );
-   hb_DebuggerIsWorking = TRUE;
+   s_bDebuggerIsWorking = TRUE;
    hb_vmDo( 1 );
-   hb_DebuggerIsWorking = FALSE;
+   s_bDebuggerIsWorking = FALSE;
    s_bDebugShowLines = TRUE;
 }
 
@@ -2724,9 +2724,9 @@ static void hb_vmDebuggerEndProc( void )
    s_bDebugShowLines = FALSE;
    hb_vmPushSymbol( hb_dynsymFind( "__DBGENTRY" )->pSymbol );
    hb_vmPushNil();
-   hb_DebuggerIsWorking = TRUE;
+   s_bDebuggerIsWorking = TRUE;
    hb_vmDo( 0 );
-   hb_DebuggerIsWorking = FALSE;
+   s_bDebuggerIsWorking = FALSE;
    s_bDebugShowLines = TRUE;
 
    hb_itemCopy( &hb_stack.Return, &item ); /* restores the previous returned value */
@@ -2741,9 +2741,9 @@ static void hb_vmDebuggerShowLine( USHORT uiLine ) /* makes the debugger shows a
    hb_vmPushSymbol( hb_dynsymFind( "__DBGENTRY" )->pSymbol );
    hb_vmPushNil();
    hb_vmPushInteger( uiLine );
-   hb_DebuggerIsWorking = TRUE;
+   s_bDebuggerIsWorking = TRUE;
    hb_vmDo( 1 );
-   hb_DebuggerIsWorking = FALSE;
+   s_bDebuggerIsWorking = FALSE;
    s_bDebugShowLines = TRUE;
 }
 
@@ -3737,8 +3737,9 @@ static void hb_vmDoInitFunctions( void )
    } while( pLastSymbols );
 }
 
-/* NOTE: We should make sure that these get linked. */
-/*       Don't make this function static, because it's not called from this file. */
+/* NOTE: We should make sure that these get linked.
+         Don't make this function static, because it's not called from 
+         this file. */
 void hb_vmForceLink( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmForceLink()"));
@@ -3753,7 +3754,7 @@ HARBOUR HB_ERRORLEVEL( void )
    hb_retni( s_byErrorLevel );
 
    /* NOTE: This should be ISNUM( 1 ), but it's sort of a Clipper bug that it
-            accepts other types also and consider them zero. [vszakats] */
+            accepts other types also and considers them zero. [vszakats] */
 
    if( hb_pcount() >= 1 )
       /* Only replace the error level if a parameter was passed */

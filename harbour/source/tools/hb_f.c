@@ -39,7 +39,6 @@
 
 #define b_size     1024
 #define c_size     4096
-#define IT_NUMBER  (IT_INTEGER|IT_LONG|IT_DOUBLE)
 
 static long hb_hbfskip( int recs );
 
@@ -59,7 +58,7 @@ HARBOUR HB_HB_FUSE( void )
 {
 
    PHB_ITEM arg1_it = hb_param(1,IT_STRING);
-   PHB_ITEM arg2_it = hb_param(2,IT_NUMBER);
+   PHB_ITEM arg2_it = hb_param(2,IT_NUMERIC);
    int open_flags;
 
    if ( arg1_it ) {
@@ -104,7 +103,7 @@ HARBOUR HB_HB_FSKIP( void )
 
 {
 
-   PHB_ITEM arg1_it = hb_param(1,IT_NUMBER);
+   PHB_ITEM arg1_it = hb_param(1,IT_NUMERIC);
    int nskip;
 
    if( arg1_it )
@@ -117,11 +116,9 @@ HARBOUR HB_HB_FSKIP( void )
 }
 
 static long hb_hbfskip( int recs )
-
 {
-
    long read_pos;
-   size_t read_len;
+   long read_len;
    long x, y;
 
 

@@ -1,3 +1,28 @@
+20000306-04:43 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * source/rtl/cmdcheck.c
+     ! -gc0 switch got removed. Added again.
+   * config/rules.cf
+     makefile.bc
+     makefile.vc
+     % -gc0 switch added to speed up make process.
+       The size of the obj/b32 dir after a make was 8.9MB before, 
+       and 7.7MB after.
+   * source/vm/debug.c
+     doc/en/hvm.txt
+     ! One $DOC$ left in the source moved to the docs dir.
+   * source/vm/hvm.c
+     ! One variable name standardized and made static.
+   * source/rdd/dbf1.c
+     ! Unused variable warning fixed.
+   * source/rtl/transfrm.c
+     ! Borland warning fixed.
+     ! TRANSFORM(<logical>,"@") case fixed. Three more tests pass in RT_MAIN.
+   * source/vm/memvars.c
+     ! hb_memvarValueNew() Borland warning fixed. Comment added.
+   * source\tools\hb_f.c
+     ! Borland warning fixed.
+     % IT_NUMBER changed to the standard IT_NUMERIC
+
 20000305-13:47 GMT+1 Victor Szakats <info@szelvesz.hu>
    * source/rtl/empty.c
      source/rtl/valtype.c

@@ -241,7 +241,7 @@ static char * NumPicture( char * szPic, ULONG ulPicLen, USHORT * puiPicFlags, do
       /* Pad with Zero's */
       if( uiPicFlags & PF_ZERO )
       {
-         for( i = 0; szStr[ i ] == ' ' && i < iWidth; i++ )
+         for( i = 0; szStr[ i ] == ' ' && i < ( ULONG ) iWidth; i++ )
             szStr[ i ] = '0';
       }
 
@@ -295,7 +295,7 @@ static char * NumPicture( char * szPic, ULONG ulPicLen, USHORT * puiPicFlags, do
       {
          if( isdigit( *szResult ) )          /* Overflow */
          {
-            for( iCount = 1; iCount < i; iCount++ )
+            for( iCount = 1; ( ULONG ) iCount < i; iCount++ )
             {
                if( isdigit( szResult[ iCount ] ) )
                   szResult[ iCount ] = '*';
@@ -517,6 +517,8 @@ HARBOUR HB_TRANSFORM( void )
                }
             }
          }
+         else
+            *szResult = hb_itemGetL( pExp ) ? 'T' : 'F';
 
          /* Any chars left */
          if( ( uiPicFlags & PF_REMAIN ) && ulPicLen )

@@ -356,3 +356,29 @@
  *
  *  $END$
  */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *    __VMVARLGET()
+ *  $CATEGORY$
+ *    Variable management
+ *  $ONELINER$
+ *  $SYNTAX$
+ *    __VMVARLGET( <nProcLevel>, <nLocal> )
+ *  $ARGUMENTS$
+ *    <nProcLevel> Is the procedure level, same as used in ProcName()
+ *    and ProcLine(), from which a local variable containts is going to
+ *    be retrieved.
+ *    <nLocal> Is the index of the local variable to retrieve.
+ *  $RETURNS$
+ *    The containts of a specific local variable
+ *  $DESCRIPTION$
+ *    This function is used from the debugger
+ *  $STATUS$
+ *
+ *  $COMPLIANCE$
+ *
+ *  $SEEALSO$
+ *
+ *  $END$
+ */

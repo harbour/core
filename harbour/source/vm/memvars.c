@@ -156,7 +156,8 @@ HB_VALUE_PTR *hb_memvarValueBaseAddress( void )
 HB_HANDLE hb_memvarValueNew( HB_ITEM_PTR pSource, BOOL bTrueMemvar )
 {
    HB_VALUE_PTR pValue;
-   HB_HANDLE hValue = 1;   /* handle 0 is reserved */
+   HB_HANDLE hValue;   /* handle 0 is reserved */
+                       /* = 1 removed, since it's initialized in all branches. Caused a warning with Borland C++ */
 
    HB_TRACE(HB_TR_DEBUG, ("hb_memvarValueNew(%p, %d)", pSource, (int) bTrueMemvar));
 

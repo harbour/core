@@ -62,7 +62,6 @@ static void AddToArray( PHB_ITEM pItem, PHB_ITEM pReturn, ULONG ulPos )
       hb_itemArrayPut( pReturn, ulPos, pItem );
 }
 
-
 /* $Doc$
  * $FuncName$     <nVars> __vmStkGCount()
  * $Description$  Returns the length of the global stack
@@ -83,7 +82,6 @@ HARBOUR HB___VMSTKGCOUNT( void )
 {
    hb_retni( hb_stackLenGlobal() );
 }
-
 
 /* $Doc$
  * $FuncName$     <aStack> __vmStkGList()
@@ -106,7 +104,6 @@ HARBOUR HB___VMSTKGLIST( void )
    hb_itemRelease( pReturn );
 }
 
-
 /* $Doc$
  * $FuncName$     <nVars> __vmStkLCount()
  * $Description$  Returns the length of the stack of the calling function
@@ -128,7 +125,6 @@ HARBOUR HB___VMSTKLCOUNT( void )
 {
    hb_retni( StackLen() );
 }
-
 
 /* $Doc$
  * $FuncName$     <aStack> __vmStkLList()
@@ -157,7 +153,6 @@ HARBOUR HB___VMSTKLLIST( void )
    hb_itemRelease( pReturn );
 }
 
-
 /* $Doc$
  * $FuncName$     <aParam> __vmParLGet()
  * $Description$  Returns the passed parameters of the calling function
@@ -182,33 +177,6 @@ HARBOUR HB___VMPARLLIST( void )
    hb_itemReturn( pReturn );
    hb_itemRelease( pReturn );
 }
-
-/* -------------------------------------------------------------------------- */
-/*  $DOC$
- *  $FUNCNAME$
- *    __VMVARLGET()
- *  $CATEGORY$
- *    Variable management
- *  $ONELINER$
- *  $SYNTAX$
- *    __VMVARLGET( <nProcLevel>, <nLocal> )
- *  $ARGUMENTS$
- *    <nProcLevel> Is the procedure level, same as used in ProcName()
- *    and ProcLine(), from which a local variable containts is going to
- *    be retrieved.
- *    <nLocal> Is the index of the local variable to retrieve.
- *  $RETURNS$
- *    The containts of a specific local variable
- *  $DESCRIPTION$
- *    This function is used from the debugger
- *  $STATUS$
- *
- *  $COMPLIANCE$
- *
- *  $SEEALSO$
- *
- *  $END$
- */
 
 HARBOUR HB___VMVARLGET( void )
 {

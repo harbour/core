@@ -1009,6 +1009,7 @@ static ERRCODE dbfGetValueFile( AREAP pArea, USHORT uiIndex, void * pFile )
    LPFIELD pField;
 
    HB_TRACE(HB_TR_DEBUG, ("dbfGetValueFile(%p, %hu, %p)", pArea, uiIndex, pFile));
+
    HB_SYMBOL_UNUSED( pFile );
 
    if( uiIndex > pArea->uiFieldCount )
@@ -1613,6 +1614,8 @@ static ERRCODE dbfPutValueFile( AREAP pArea, USHORT uiIndex, void * pFile )
    ULONG lMemoBlock;
 
    HB_TRACE(HB_TR_DEBUG, ("dbfPutValueFile(%p, %hu, %p)", pArea, uiIndex, pFile));
+
+   HB_SYMBOL_UNUSED( pFile );
 
    if( uiIndex > pArea->uiFieldCount )
       return FAILURE;

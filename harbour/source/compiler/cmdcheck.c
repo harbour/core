@@ -281,6 +281,21 @@ void hb_compChkEnvironVar( char * szSwitch )
                    case 'c':
                    case 'C':
                       hb_comp_iLanguage = LANG_C;
+
+                      switch( *( s + 2 ) )
+                      {
+                         case '\0':
+                         case '1':
+                            hb_comp_bGenCVerbose = TRUE;
+                            break;
+                      
+                         case '0':
+                            hb_comp_bGenCVerbose = FALSE;
+                            break;
+                      
+                         default:
+                            hb_compGenError( hb_comp_szErrors, 'F', ERR_BADOPTION, s, NULL );
+                      }
                       break;
 
 #ifdef HARBOUR_OBJ_GENERATION
