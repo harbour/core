@@ -102,6 +102,7 @@ RDD_LIB      = $(LIB_DIR)\rdd.lib
 RTL_LIB      = $(LIB_DIR)\rtl.lib
 VM_LIB       = $(LIB_DIR)\vm.lib
 
+GTCGI_LIB    = $(LIB_DIR)\gtcgi.lib
 GTPCA_LIB    = $(LIB_DIR)\gtpca.lib
 GTSTD_LIB    = $(LIB_DIR)\gtstd.lib
 GTWIN_LIB    = $(LIB_DIR)\gtwin.lib
@@ -569,6 +570,17 @@ VM_LIB_OBJS = \
    $(OBJ_DIR)\harbinit.obj
 
 #
+# GTCGI.LIB rules
+#
+
+{$(RTL_DIR)\gtcgi}.c{$(OBJ_DIR)}.obj::
+   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+
+GTCGI_LIB_OBJS = \
+   $(OBJ_DIR)\gtcgi.obj \
+   $(OBJ_DIR)\mousecgi.obj
+
+#
 # GTPCA.LIB rules
 #
 
@@ -621,6 +633,7 @@ all: zot \
    $(NULSYS_LIB) \
    $(DBFNTX_LIB) \
    $(DBFCDX_LIB) \
+   $(GTCGI_LIB) \
    $(GTPCA_LIB) \
    $(GTSTD_LIB) \
    $(GTWIN_LIB) \
@@ -653,6 +666,7 @@ all: \
    $(NULSYS_LIB) \
    $(DBFNTX_LIB) \
    $(DBFCDX_LIB) \
+   $(GTCGI_LIB) \
    $(GTPCA_LIB) \
    $(GTSTD_LIB) \
    $(GTWIN_LIB) \
@@ -785,6 +799,9 @@ $(NULSYS_LIB) : $(NULSYS_LIB_OBJS)
 $(VM_LIB) : $(VM_LIB_OBJS)
    lib /out:$@ $**
 
+$(GTCGI_LIB) : $(GTCGI_LIB_OBJS)
+   lib /out:$@ $**
+
 $(GTPCA_LIB) : $(GTPCA_LIB_OBJS)
    lib /out:$@ $**
 
@@ -835,6 +852,7 @@ $(DBFCDX_LIB)2 : $(DBFCDX_LIB_OBJS)
 $(DBFNTX_LIB)2 : $(DBFNTX_LIB_OBJS)
 $(NULSYS_LIB)2 : $(NULSYS_LIB_OBJS)
 $(VM_LIB)2     : $(VM_LIB_OBJS)
+$(GTCGI_LIB)2  : $(GTCGI_LIB_OBJS)
 $(GTPCA_LIB)2  : $(GTPCA_LIB_OBJS)
 $(GTSTD_LIB)2  : $(GTSTD_LIB_OBJS)
 $(GTWIN_LIB)2  : $(GTWIN_LIB_OBJS)

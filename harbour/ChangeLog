@@ -1,3 +1,9 @@
+2000-08-30 00:19 UTC+0100 Victor Szakats <info@szelvesz.hu>
+
+   * makefile.vc
+   * makefile.bc
+     + GTCGI added to the make process.
+
 2000-08-30 10:48 GMT+1 Bruno Cantero <bruno@issnet.net>
   * source/rdd/dbf1.c
     * Fixed two warning.

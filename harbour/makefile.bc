@@ -113,6 +113,7 @@ RDD_LIB      = $(LIB_DIR)\rdd.lib
 RTL_LIB      = $(LIB_DIR)\rtl.lib
 VM_LIB       = $(LIB_DIR)\vm.lib
 
+GTCGI_LIB    = $(LIB_DIR)\gtcgi.lib
 GTDOS_LIB    = $(LIB_DIR)\gtdos.lib
 GTPCA_LIB    = $(LIB_DIR)\gtpca.lib
 GTSTD_LIB    = $(LIB_DIR)\gtstd.lib
@@ -131,6 +132,7 @@ HBDOC_EXE    = $(BIN_DIR)\hbdoc.exe
 !if $d(B16)
 
 HB_GT_LIBS = \
+   $(GTCGI_LIB) \
    $(GTDOS_LIB) \
    $(GTPCA_LIB) \
    $(GTSTD_LIB)
@@ -146,6 +148,7 @@ HB_GT_LIB = $(LIB_DIR)\$(HB_GT_LIB).lib
 # TODO: Add GTSLN and GTCRS
 
 HB_GT_LIBS = \
+   $(GTCGI_LIB) \
    $(GTPCA_LIB) \
    $(GTSTD_LIB) \
    $(GTWIN_LIB)
@@ -484,6 +487,14 @@ VM_LIB_OBJS = $(VM_LIB_OBJS) \
 !endif
 
 #
+# GTCGI.LIB rules
+#
+
+GTCGI_LIB_OBJS = \
+   $(OBJ_DIR)\gtcgi.obj \
+   $(OBJ_DIR)\mousecgi.obj
+
+#
 # GTDOS.LIB rules
 #
 
@@ -625,6 +636,7 @@ $(PP_LIB)     : $(PP_LIB_OBJS)
 $(RDD_LIB)    : $(RDD_LIB_OBJS)
 $(RTL_LIB)    : $(RTL_LIB_OBJS)
 $(VM_LIB)     : $(VM_LIB_OBJS)
+$(GTCGI_LIB)  : $(GTCGI_LIB_OBJS)
 $(GTDOS_LIB)  : $(GTDOS_LIB_OBJS)
 $(GTPCA_LIB)  : $(GTPCA_LIB_OBJS)
 $(GTSTD_LIB)  : $(GTSTD_LIB_OBJS)
@@ -1953,6 +1965,18 @@ $(OBJ_DIR)\tbrwtext.c : $(DEBUG_DIR)\tbrwtext.prg
 $(OBJ_DIR)\tbrwtext.obj : $(OBJ_DIR)\tbrwtext.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(DEBUG_LIB) $(ARFLAGS) -+$@,,
+
+#
+# GTCGI.LIB dependencies
+#
+
+$(OBJ_DIR)\gtcgi.obj : $(RTL_DIR)\gtcgi\gtcgi.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(GTCGI_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\mousecgi.obj : $(RTL_DIR)\gtcgi\mousecgi.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(GTCGI_LIB) $(ARFLAGS) -+$@,,
 
 #
 # GTDOS.LIB dependencies
