@@ -1246,7 +1246,7 @@ ERRCODE hb_dbfPutValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
             memcpy( pArea->pRecord + pArea->pFieldOffset[ uiIndex ],
                     hb_itemGetCPtr( pItem ), uiSize );
             if( HB_IS_STRING( pItem ) )
-               hb_cdpnTranslate( pArea->pRecord + pArea->pFieldOffset[ uiIndex ], s_cdpage, pArea->cdPage, uiSize );
+               hb_cdpnTranslate( (char *) pArea->pRecord + pArea->pFieldOffset[ uiIndex ], s_cdpage, pArea->cdPage, uiSize );
             memset( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] + uiSize,
                     ' ', pField->uiLen - uiSize );
          }
@@ -1745,7 +1745,7 @@ ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
    ( ( PHB_DYNS ) pArea->atomAlias )->hArea = pOpenInfo->uiArea;
    if( pOpenInfo->cdpId )
    {
-      pArea->cdPage = hb_cdpFind( pOpenInfo->cdpId );
+      pArea->cdPage = hb_cdpFind( (char *) pOpenInfo->cdpId );
       if( !pArea->cdPage )
          pArea->cdPage = s_cdpage;
    }

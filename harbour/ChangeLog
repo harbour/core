@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-10-27 21:35 UTC+0100 J-F lefebvre <jfl@mafact.com>
+  * source/rdd/dbf1.c
+    * added missing typecasting for msvc.
+
+
 2002-10-27 10:28 UTC+0200 Chen Kedem <niki@actcom.co.il>
   * doc/en/lang.txt
     + Added Russian KIO-8 to HB_LANGSELECT() list of supported ID's
