@@ -171,6 +171,14 @@ static char * numToStr( PHB_ITEM pItem, char* szBuffer, USHORT length, USHORT de
                 dec, hb_itemGetND( pItem ) );
    }
    szBuffer[ length ] = 0;
+   if( hb_itemGetND( pItem ) < 0 )
+   {
+      char *ptr = szBuffer;
+      *ptr++ = ',';
+      for( ;*ptr;ptr++ )
+         if( *ptr >= '0' && *ptr <= '9' )
+            *ptr = (char) ( 92 - (int)*ptr );
+   }
    return szBuffer;
 }
 
