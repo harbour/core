@@ -121,11 +121,17 @@ CLASS TBrowseSQL from TBrowse
    DATA     oQuery                        // Query / table object which we are browsing
 
    METHOD   New(nTop, nLeft, nBottom, nRight, oServer, oQuery, cTable)
+
    METHOD   EditField()                   // Editing of hilighted field, after editing does an update of
                                           // corresponding row inside table
-   METHOD   BrowseTable(nKey, lCanEdit)   // Handles standard moving inside table and if lCanEdit == .T.
-                                          // allows editing of field. It is the stock ApplyKey() moved inside a table
-                                          // if lCanEdit K_DEL deletes current row
+
+   METHOD   BrowseTable(lCanEdit, aExitKeys) // Handles standard moving inside table and if lCanEdit == .T.
+                                             // allows editing of field. It is the stock ApplyKey() moved inside a table
+                                             // if lCanEdit K_DEL deletes current row
+                                             // When a key is pressed which is present inside aExitKeys it leaves editing loop
+
+   METHOD   KeyboardHook(nKey)            // Where do all unknown keys go?
+
 ENDCLASS
 
 
@@ -314,75 +320,97 @@ METHOD EditField() CLASS TBrowseSQL
 RETURN Self
 
 
-METHOD BrowseTable(nKey, lCanEdit) CLASS TBrowseSQL
+METHOD BrowseTable(lCanEdit, aExitKeys) CLASS TBrowseSQL
+
+   local nKey
+   local lKeepGoing := .T.
 
    default nKey      to nil
    default lCanEdit  to .F.
+   default aExitKeys to {K_ESC}
 
 
-   do case
-   case nKey == K_DOWN
-      ::down()
+   while lKeepGoing
 
-   case nKey == K_PGDN
-      ::pageDown()
-
-   case nKey == K_CTRL_PGDN
-      ::goBottom()
-
-   case nKey == K_UP
-      ::up()
-
-   case nKey == K_PGUP
-      ::pageUp()
-
-   case nKey == K_CTRL_PGUP
-      ::goTop()
-
-   case nKey == K_RIGHT
-      ::right()
-
-   case nKey == K_LEFT
-      ::left()
-
-   case nKey == K_HOME
-      ::home()
-
-   case nKey == K_END
-      ::end()
-
-   case nKey == K_CTRL_LEFT
-      ::panLeft()
-
-   case nKey == K_CTRL_RIGHT
-      ::panRight()
-
-   case nKey == K_CTRL_HOME
-      ::panHome()
-
-   case nKey == K_CTRL_END
-      ::panEnd()
-
-   case nKey == K_RETURN
-      if lCanEdit
-         ::EditField()
+      if !::Stable
+         ::ForceStable()
       endif
 
-   /*case nKey == K_DEL
-      if lCanEdit
-         if ! ::oQuery:Delete(::oCurRow)
-            Alert("not deleted " + ::oQuery:Error())
-         endif
-         if !::oQuery:Refresh()
-            Alert(::oQuery:Error())
-         endif
+      nKey := Inkey(0)
 
-         ::inValidate()
-         ::refreshAll():forceStable()
-      endif*/
+      if AScan(aExitKeys, nKey) > 0
+         lKeepGoing := .F.
+         LOOP
+      endif
 
-   otherwise
-   endcase
+      do case
+         case nKey == K_DOWN
+            ::down()
+
+         case nKey == K_PGDN
+            ::pageDown()
+
+         case nKey == K_CTRL_PGDN
+            ::goBottom()
+
+         case nKey == K_UP
+            ::up()
+
+         case nKey == K_PGUP
+            ::pageUp()
+
+         case nKey == K_CTRL_PGUP
+            ::goTop()
+
+         case nKey == K_RIGHT
+            ::right()
+
+         case nKey == K_LEFT
+            ::left()
+
+         case nKey == K_HOME
+            ::home()
+
+         case nKey == K_END
+            ::end()
+
+         case nKey == K_CTRL_LEFT
+            ::panLeft()
+
+         case nKey == K_CTRL_RIGHT
+            ::panRight()
+
+         case nKey == K_CTRL_HOME
+            ::panHome()
+
+         case nKey == K_CTRL_END
+            ::panEnd()
+
+         case nKey == K_RETURN .AND. lCanEdit
+            ::EditField()
+
+         /*case nKey == K_DEL
+            if lCanEdit
+               if ! ::oQuery:Delete(::oCurRow)
+                  Alert("not deleted " + ::oQuery:Error())
+               endif
+               if !::oQuery:Refresh()
+                  Alert(::oQuery:Error())
+               endif
+
+               ::inValidate()
+               ::refreshAll():forceStable()
+            endif*/
+
+         otherwise
+            ::KeyboardHook(nKey)
+      endcase
+   enddo
 
 return Self
 
+
+// Empty method to be subclassed
+METHOD KeyboardHook(nKey) CLASS TBrowseSQL
+
+return Self

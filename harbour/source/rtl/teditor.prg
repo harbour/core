@@ -103,6 +103,9 @@ CLASS TEditor
    METHOD InsertState(lInsState)                         // Changes lInsert value and insertion / overstrike mode of editor
    METHOD Edit(nPassedKey)                               // Handles input (can receive a key in which case handles only this key and then exits)
 
+   METHOD KeyboardHook(nKey)                             // Gets called every time there is a key not handled directly by TEditor
+   METHOD IdleHook()                                     // Gets called every time there are no more keys to hanlde just before TEditor blocks itself waiting for a char
+
    METHOD Resize(nTop, nLeft, nBottom, nRight)           // Redefines editor window size and refreshes it
    METHOD SetColor(cColorString)                         // Sets/retrieves color used for screen writes
    METHOD Hilite()                                       // Start Hilighting swapping first two color definitions inside cColorSpec
@@ -784,8 +787,11 @@ METHOD Edit(nPassedKey) CLASS TEditor
 
       while lKeepGoing
 
-         // If I've been called with a key already preset, evaluate this key and then exit
+         // If I haven't been called with a key already preset, evaluate this key and then exit
          if nPassedKey == NIL
+            if NextKey() == 0
+               ::IdleHook()
+            endif
             nKey := InKey(0)
          else
             lKeepGoing := .F.
@@ -793,7 +799,7 @@ METHOD Edit(nPassedKey) CLASS TEditor
          endif
 
          do case
-            case nKey >= 32 .AND. nKey <= 255
+            case nKey >= K_SPACE .AND. nKey < 256
                // If I'm past EOL I need to add as much spaces as I need to reach ::nCol
                if ::nCol > ::LineLen(::nRow)
                   ::aText[::nRow]:cText += Space(::nCol - ::LineLen(::nRow))
@@ -885,10 +891,25 @@ METHOD Edit(nPassedKey) CLASS TEditor
                lKeepGoing := .F.
 
             otherwise
-               /* TODO: Here we should call an user defined function (to match memoedit() behaviour) */
+               /* NOTE: if you call ::Edit() with a key that is passed to ::KeyboardHook() and then
+                        ::KeyboardHook() calls ::Edit() with the same key you end up with an endless loop */
+               ::KeyboardHook(nKey)
          endcase
       enddo
    endif
+
+return Self
+
+
+// This in an empty method which can be used by classes subclassing TEditor to be able
+// to handle particular keys.
+METHOD KeyboardHook(nKey)  CLASS TEditor
+
+return Self
+
+
+// There are no more keys to handle. Can I do something for you?
+METHOD IdleHook()  CLASS TEditor
 
 return Self
 
