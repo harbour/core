@@ -8,6 +8,15 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-01-03 14:15 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+   * include/hbexprb.c
+   * source/compiler/exproptb.c
+   * source/macro/macrob.c
+      * fixed to compile with SIMPLEX defined
+      Notice: Simplex version is not updated for a long time and
+      it doesn't support all fixes from FLEX version
+
+
 2005-01-03 10:30 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * include/hbcomp.h
    * include/hbexprb.c

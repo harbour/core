@@ -419,9 +419,12 @@ static HB_EXPR_FUNC( hb_compExprUseCodeblock )
          break;
       case HB_EA_PUSH_PCODE:
          {
-#if defined(SIMPLEX) || defined(HB_MACRO_SUPPORT)	 
+#if defined(HB_MACRO_SUPPORT)	 
 	    HB_EXPR_PCODE1( hb_compExprCodeblockPush, pSelf );
 #else
+# if defined(SIMPLEX) 	 
+	    HB_EXPR_PCODE2( hb_compExprCodeblockPush, pSelf, TRUE );
+# else       
 	    if( !pSelf->value.asCodeblock.isMacro || pSelf->value.asCodeblock.lateEval )
 		   hb_compExprCodeblockPush( pSelf, TRUE );
 	    else
@@ -429,6 +432,7 @@ static HB_EXPR_FUNC( hb_compExprUseCodeblock )
 		   /* early evaluation of a macro */
 		   hb_compExprCodeblockEarly( pSelf );
 	    }
+# endif       
 #endif
          }
          break;
