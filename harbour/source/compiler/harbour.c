@@ -681,14 +681,38 @@ void hb_compVariableAdd( char * szVarName, BYTE cValueType )
             break;
 
          case VS_STATIC:
-            if( ! pFunc->pStatics )
-               pFunc->pStatics = pVar;
-            else
             {
-               pLastVar = pFunc->pStatics;
-               while( pLastVar->pNext )
-                  pLastVar = pLastVar->pNext;
-               pLastVar->pNext = pVar;
+               USHORT wStatic = 1;
+
+               if( ! pFunc->pStatics )
+                  pFunc->pStatics = pVar;
+               else
+               {
+                  pLastVar = pFunc->pStatics;
+                  while( pLastVar->pNext )
+                  {
+                     pLastVar = pLastVar->pNext;
+                     wStatic++;
+                  }
+                  pLastVar->pNext = pVar;
+                  wStatic++;
+               }
+               if( hb_comp_bDebugInfo )
+               {
+                  BYTE * pBuffer;
+
+                  pBuffer = ( BYTE * ) hb_xgrab( strlen( szVarName ) + 4 );
+
+                  pBuffer[0] = HB_P_STATICNAME;
+                  pBuffer[1] = HB_LOBYTE( wStatic );
+                  pBuffer[2] = HB_HIBYTE( wStatic );
+
+                  memcpy( ( BYTE * ) ( & ( pBuffer[3] ) ), szVarName, strlen( szVarName ) + 1 );
+
+                  hb_compGenPCodeN( pBuffer, strlen( szVarName ) + 4 , 0 );
+
+                  hb_xfree( pBuffer );
+               }
             }
             break;
 
