@@ -1,3 +1,9 @@
+2001-28-02 23:41 GMT+1 JFL (Mafact) <jfl@mafact.com>
+   *harbour/include/hb_class.ch
+    * Reset :Class within the control of Class(y) define
+      so as anyone can disable it as needed.
+
+
 2001-02-28 00:05 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/rtl/filesys.c
      * Temporarily changed all #if defined(__WIN32__) to #if defined(X__WIN32__) to disable

@@ -166,8 +166,11 @@ DECLARE TClass ;
 
 /* Disable the message :Class */
 #ifndef HB_CLS_ALLOWCLASS
+/* CLASSY SYNTAX */
+#IFDEF HB_CLS_CSY
 #xtranslate  :CLASS  =>
 #xtranslate  :CLASS: => :
+endif
 #endif
 
 /* CLASSY SYNTAX */
