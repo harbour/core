@@ -41,7 +41,7 @@
    The following functions are Copyright 1999 Victor Szel <info@szelvesz.hu>:
       HB___MVSAVE()
       HB___MVRESTORE() (Thanks to Dave Pearson and Jo French for the original
-                        Clipper function (FReadMen()) to read .MEM files)
+                        Clipper function (FReadMem()) to read .MEM files)
       HB___MSAVE()
       HB___MRESTORE()
 
@@ -1579,7 +1579,7 @@ HARBOUR HB___MVPUT( void )
 
 HARBOUR HB___MVSAVE( void )
 {
-   /* Clipper also check for the number of arguments here */
+   /* Clipper also checks for the number of arguments here */
    if( hb_pcount() == 3 && ISCHAR( 1 ) && ISCHAR( 2 ) && ISLOG( 3 ) )
    {
       PHB_FNAME pFileName;
@@ -1711,11 +1711,11 @@ HARBOUR HB___MVSAVE( void )
 }
 
 /* NOTE: There's an extension in Harbour, which makes it possible to only
-         load (or not load) variables names with a specific name mask. */
+         load (or not load) variable names with a specific name mask. */
 
 HARBOUR HB___MVRESTORE( void )
 {
-   /* Clipper check for the number of arguments here here, but we cannot
+   /* Clipper checks for the number of arguments here here, but we cannot
       in Harbour since we have two optional parameters as an extension. */
    if( ISCHAR( 1 ) && ISLOG( 2 ) )
    {

@@ -1,3 +1,17 @@
+19990915-11:15 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/dir.c
+    ! Two warnings fixed about possibly missing paranthesis.
+    + Reformatted.
+  * source/rtl/adir.prg
+    ! Default flags reset to "HSD"
+  * tests/working/adirtest.prg
+    ! Fixed a bug which caused an error when zero files was found.
+    + Added: SET DATE ANSI, SET CENTURY ON
+    ! Newline handling made platform compatible.
+    ! Some other fixes.
+  * source/rtl/memvars.c
+    ! Typos fixed.
+
 19990915-03:40 EDT Paul Tucker <ptucker@sympatico.ca>
   * source/rtl/dir.c
     * Now Clipper compatible results are returned.
@@ -37,12 +51,12 @@
     tests/working/*.bat
     tests/working/*.ch
     + CVS header added to all files.
-    + @echo off added were missing.
+    + @echo off added where missing.
 
 19990915-00:30 GMT+1 Victor Szel <info@szelvesz.hu>
   * (*.* in the root directory)
     + CVS header added to all files.
-    + @echo off added were missing.
+    + @echo off added where missing.
   * build32.bat
     build40.bat
     build31.bat

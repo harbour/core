@@ -191,34 +191,34 @@ static USHORT osToHarbourMask( USHORT usMask )
 #if defined(OS_UNIX_COMPATIBLE)
    /* The use of any particular FA_ define here is meaningless */
    /* they are essentially placeholders */
-    usRetMask = 0;
-    if( S_ISREG( usMask ) )
-        usRetMask |= FA_ARCH;        /* A */
-    if( S_ISDIR( usMask ) )
-        usRetMask |= FA_DIREC;       /* D */
-    if( S_ISLNK( usMask ) )
-        usRetMask |= FA_REPARSE;     /* L */
-    if( S_ISCHR( usMask ) )
-        usRetMask |= FA_COMPRESSED;  /* C */
-    if( S_ISBLK( usMask ) )
-        usRetMask |= FA_DEVICE;      /* B  (I) */
-    if( S_ISFIFO( usMask ) )
-        usRetMask |= FA_TEMPORARY;   /* F  (T) */
-    if( S_ISSOCK( usMask ) )
-        usRetMask |= FA_SPARSE;      /* K  (P) */
+   usRetMask = 0;
+   if( S_ISREG( usMask ) )
+      usRetMask |= FA_ARCH;        /* A */
+   if( S_ISDIR( usMask ) )
+      usRetMask |= FA_DIREC;       /* D */
+   if( S_ISLNK( usMask ) )
+      usRetMask |= FA_REPARSE;     /* L */
+   if( S_ISCHR( usMask ) )
+      usRetMask |= FA_COMPRESSED;  /* C */
+   if( S_ISBLK( usMask ) )
+      usRetMask |= FA_DEVICE;      /* B  (I) */
+   if( S_ISFIFO( usMask ) )
+      usRetMask |= FA_TEMPORARY;   /* F  (T) */
+   if( S_ISSOCK( usMask ) )
+      usRetMask |= FA_SPARSE;      /* K  (P) */
 #else
    #if defined(__IBMCPP__)
-    usRetMask = 0;
-    if( usMask & FILE_ARCHIVED )
-        usRetMask |= FA_ARCH;
-    if( usMask & FILE_DIRECTORY )
-        usRetMask |= FA_DIREC;
-    if( usMask & FILE_HIDDEN )
-        usRetMask |= FA_HIDDEN;
-    if( usMask & FILE_RDONLY )
-        usRetMask |= FA_READONLY;
-    if( usMask & FILE_SYSTEM )
-        usRetMask |= FA_SYSTEM;
+      usRetMask = 0;
+      if( usMask & FILE_ARCHIVED )
+         usRetMask |= FA_ARCH;
+      if( usMask & FILE_DIRECTORY )
+         usRetMask |= FA_DIREC;
+      if( usMask & FILE_HIDDEN )
+         usRetMask |= FA_HIDDEN;
+      if( usMask & FILE_RDONLY )
+         usRetMask |= FA_READONLY;
+      if( usMask & FILE_SYSTEM )
+         usRetMask |= FA_SYSTEM;
    #endif
 #endif
 
@@ -233,40 +233,40 @@ static USHORT HarbourToOsMask( USHORT usMask )
 /* TODO: Need to look into this one */
 /* what to do with Hidden and System? */
 
-    usRetMask = 0;
-    if( usMask & FA_ARCH )
-        usRetMask = S_ISREG;    /* 0x0000  (numbers as in ms impimentation) */
-    if( usMask & FA_DIREC )
-        usRetMask |= S_IFDIR;   /* 0x3000 */
-    if( usMask & FA_REPARSE )
-        usRetMask |= S_IFLNK;   /* -not in ms- cygwin=120000 decimal */
-    if( usMask & FA_COMPRESSED )
-        usRetMask |= S_IFCHR;   /* 0x2000 */
-    if( usMask & FA_DEVICE )    /* s_isblk... */
-        usRetMask |= S_IFBLK;   /* 0x1000 */
-    if( usMask & FA_TEMPORARY ) /* s_isfifo... */
-        usRetMask |= S_IFIFO;   /* 0x4000 */
-    if( usMask & FA_SPARSE )    /* s_issock... */
-        usRetMask |= S_IFSOCK;  /* -not in ms- cygwin=140000 decimal! */
-    if( usMask & FA_LABEL )
-        usRetMask |= S_IFLABEL; /* 0x5000 */
-    if( usMask & FA_RDONLY )
-        usRetMask ~= S_IRUSR;   /* ??? - want to mask off this bit */
+   usRetMask = 0;
+   if( usMask & FA_ARCH )
+      usRetMask = S_ISREG;    /* 0x0000  (numbers as in ms impimentation) */
+   if( usMask & FA_DIREC )
+      usRetMask |= S_IFDIR;   /* 0x3000 */
+   if( usMask & FA_REPARSE )
+      usRetMask |= S_IFLNK;   /* -not in ms- cygwin=120000 decimal */
+   if( usMask & FA_COMPRESSED )
+      usRetMask |= S_IFCHR;   /* 0x2000 */
+   if( usMask & FA_DEVICE )    /* s_isblk... */
+      usRetMask |= S_IFBLK;   /* 0x1000 */
+   if( usMask & FA_TEMPORARY ) /* s_isfifo... */
+      usRetMask |= S_IFIFO;   /* 0x4000 */
+   if( usMask & FA_SPARSE )    /* s_issock... */
+      usRetMask |= S_IFSOCK;  /* -not in ms- cygwin=140000 decimal! */
+   if( usMask & FA_LABEL )
+      usRetMask |= S_IFLABEL; /* 0x5000 */
+   if( usMask & FA_RDONLY )
+      usRetMask ~= S_IRUSR;   /* ??? - want to mask off this bit */
 
 #else
    #if defined(__IBMCPP__)
 /* TODO: Need more! -> FA_LABEL */
-    usRetMask = 0;
-    if( usMask & FA_ARCH )
-        usRetMask |= FILE_ARCHIVED;
-    if( usMask & FA_DIREC )
-        usRetMask |= FILE_DIRECTORY;
-    if( usMask & FA_HIDDEN )
-        usRetMask |= FILE_HIDDEN;
-    if( usMask & FA_READONLY )
-        usRetMask |= FILE_RDONLY;
-    if( usMask & FA_SYSTEM )
-        usRetMask |= FILE_SYSTEM;
+      usRetMask = 0;
+      if( usMask & FA_ARCH )
+         usRetMask |= FILE_ARCHIVED;
+      if( usMask & FA_DIREC )
+         usRetMask |= FILE_DIRECTORY;
+      if( usMask & FA_HIDDEN )
+         usRetMask |= FILE_HIDDEN;
+      if( usMask & FA_READONLY )
+         usRetMask |= FILE_RDONLY;
+      if( usMask & FA_SYSTEM )
+         usRetMask |= FILE_SYSTEM;
    #endif
 #endif
 
@@ -274,7 +274,7 @@ static USHORT HarbourToOsMask( USHORT usMask )
 }
 
 /*
-static USHORT osAttributesToMask( BYTE *byAttrib )
+static USHORT osAttributesToMask( BYTE * byAttrib )
 {
    USHORT usRetMask = 0;
 
@@ -282,21 +282,21 @@ static USHORT osAttributesToMask( BYTE *byAttrib )
 #else
    #if defined(__IBMCPP__)
    #else
-     #if defined(_MSC_VER)
-     #elif defined(__BORLANDC__) || defined(__DJGPP__)
-     #else
-     #endif
-     #if defined(USE_NT)
-     #endif
+      #if defined(_MSC_VER)
+      #elif defined(__BORLANDC__) || defined(__DJGPP__)
+      #else
+      #endif
+      #if defined(USE_NT)
+      #endif
    #endif
 #endif
 
    return usRetMask;
 }
 
-static BYTE *osMaskToAttributes( USHORT usMask, BYTE *byAttrib )
+static BYTE * osMaskToAttributes( USHORT usMask, BYTE * byAttrib )
 {
-   char *cAttrib = (char *)byAttrib;
+   char * cAttrib = ( char * ) byAttrib;
 
 #if defined(OS_UNIX_COMPATIBLE)
 #else
@@ -315,15 +315,15 @@ static BYTE *osMaskToAttributes( USHORT usMask, BYTE *byAttrib )
 }
 */
 
-static USHORT HarbourAttributesToMask( BYTE *byAttrib )
+static USHORT HarbourAttributesToMask( BYTE * byAttrib )
 {
-   BYTE *pos = byAttrib;
+   BYTE * pos = byAttrib;
    BYTE c;
    USHORT usMask = 0;
 
-   while ( c=toupper( *pos++ ) )
+   while( ( c = toupper( *pos++ ) ) != '\0' )
    {
-      switch (c)
+      switch( c )
       {
          case 'A': usMask |= FA_ARCH;       break;
          case 'D': usMask |= FA_DIREC;      break;
@@ -347,49 +347,49 @@ static USHORT HarbourAttributesToMask( BYTE *byAttrib )
    return usMask;
 }
 
-static BYTE *HarbourMaskToAttributes( USHORT usMask, BYTE *byAttrib )
+static BYTE * HarbourMaskToAttributes( USHORT usMask, BYTE * byAttrib )
 {
-    char * cAttrib = (char *)byAttrib;
+   char * cAttrib = ( char * ) byAttrib;
 
-    *cAttrib = '\0';
-    if( usMask & FA_RDONLY )
-        strcat( cAttrib,"R" );
-    if( usMask & FA_DIREC )
-        strcat( cAttrib,"D" );
-    if( usMask & FA_HIDDEN )
-        strcat( cAttrib,"H" );
-    if( usMask & FA_SYSTEM )
-        strcat( cAttrib,"S" );
-    if( usMask & FA_ARCH )
-        strcat( cAttrib,"A" );
-    if( usMask & FA_LABEL )
-    {
-        strcat( cAttrib, "V" );
-        if( usMask & FA_VOLCOMP )
-            strcat( cAttrib, "M" );  /* volume supports compression. */
-    }
+   *cAttrib = '\0';
+   if( usMask & FA_RDONLY )
+      strcat( cAttrib, "R" );
+   if( usMask & FA_DIREC )
+      strcat( cAttrib, "D" );
+   if( usMask & FA_HIDDEN )
+      strcat( cAttrib, "H" );
+   if( usMask & FA_SYSTEM )
+      strcat( cAttrib, "S" );
+   if( usMask & FA_ARCH )
+      strcat( cAttrib, "A" );
+   if( usMask & FA_LABEL )
+   {
+      strcat( cAttrib, "V" );
+      if( usMask & FA_VOLCOMP )
+         strcat( cAttrib, "M" );  /* volume supports compression. */
+   }
 /* thse can be returned under NT with NTFS - I picked the letters to use.*/
 /* needs testing on a Novell drive */
 /* PLEASE! If these cause you trouble let me know! <ptucker@sympatico.ca> */
 
-    if( usMask & FA_DEVICE )
-        strcat( cAttrib, "I" );
-/*  if( usMask & FA_NORMAL )      */
-/*      strcat( cAttrib, "N" );   */
-    if( usMask & FA_TEMPORARY )
-        strcat( cAttrib, "T" );
-    if( usMask & FA_SPARSE )
-        strcat( cAttrib, "P" );
-    if( usMask & FA_REPARSE )
-        strcat( cAttrib, "L" );
-    if( usMask & FA_COMPRESSED )
-        strcat( cAttrib, "C" );
-    if( usMask & FA_OFFLINE )
-        strcat( cAttrib, "O" );
-    if( usMask & FA_NOTINDEXED )
-        strcat( cAttrib, "X" );
-    if( usMask & FA_ENCRYPTED )
-        strcat( cAttrib, "E" );
+   if( usMask & FA_DEVICE )
+      strcat( cAttrib, "I" );
+/* if( usMask & FA_NORMAL )      */
+/*    strcat( cAttrib, "N" );   */
+   if( usMask & FA_TEMPORARY )
+      strcat( cAttrib, "T" );
+   if( usMask & FA_SPARSE )
+      strcat( cAttrib, "P" );
+   if( usMask & FA_REPARSE )
+      strcat( cAttrib, "L" );
+   if( usMask & FA_COMPRESSED )
+      strcat( cAttrib, "C" );
+   if( usMask & FA_OFFLINE )
+      strcat( cAttrib, "O" );
+   if( usMask & FA_NOTINDEXED )
+      strcat( cAttrib, "X" );
+   if( usMask & FA_ENCRYPTED )
+      strcat( cAttrib, "E" );
 
    return byAttrib;
 }
@@ -453,16 +453,16 @@ HARBOUR HB_DIRECTORY( void )
 
    /* Get the passed attributes and convert them to Harbour Flags */
    if( arg2_it && hb_parclen( 2 ) >= 1 )
-      ushbMask |= HarbourAttributesToMask( (BYTE *)hb_parc( 2 ) );
+      ushbMask |= HarbourAttributesToMask( ( BYTE * ) hb_parc( 2 ) );
 
    /* Translate Harbour Flags into OS specific flags */
    usosMask = HarbourToOsMask( ushbMask );
 
    /* Do we want 8.3 support? */
    if( arg3_it )
-      blEightDotThree = ( hb_parl( 3 ) ? TRUE :FALSE );
+      blEightDotThree = ( hb_parl( 3 ) ? TRUE : FALSE );
 
-   pattern[0] = '\0';
+   pattern[ 0 ] = '\0';
 
    /* TODO: add supporting code */
    /* if you request the volume label, that's all you get */
@@ -476,9 +476,9 @@ HARBOUR HB_DIRECTORY( void )
          strcpy( string, hb_parc( 1 ) );
          pos = strrchr( string, ':' );
          if( pos )
-            *(++pos) = '\0';
+            *( ++pos ) = '\0';
          else
-            string[0] = '\0';
+            string[ 0 ] = '\0';
 
          strcpy( pattern, string );
       }
@@ -551,33 +551,32 @@ HARBOUR HB_DIRECTORY( void )
 
    if( ( hFile = _findfirst( string, &entry ) ) != -1L )
    {
+      do
+      {
+         strcpy( string, dirname );
+         strcat( string, entry.name );
 
-    do
-    {
-      strcpy( string, dirname );
-      strcat( string, entry.name );
-
-      /* this needs the full path to the file */
-      if( blEightDotThree )
-         GetShortPathName( string, string, _POSIX_PATH_MAX );
+         /* this needs the full path to the file */
+         if( blEightDotThree )
+            GetShortPathName( string, string, _POSIX_PATH_MAX );
 
 #elif defined(__IBMCPP__)
    strcpy( string, dirname );
    strcat( string, pattern );
    if( DosFindFirst( string, &hFind, fileTypes, &entry, findSize, &findCount, FIL_STANDARD ) == NO_ERROR && findCount > 0 )
    {
-    do
-    {
-      strcpy( string, entry.achName );
+      do
+      {
+         strcpy( string, entry.achName );
 #else
    #if defined(__WATCOMC__)
    /* opendir in Watcom doesn't like the path delimiter at the end of a string */
-     dirname[ iDirnameLen   ] = '.';
-     dirname[ iDirnameLen+1 ] = '\0';
+      dirname[ iDirnameLen   ] = '.';
+      dirname[ iDirnameLen+1 ] = '\0';
    #endif
    dir = opendir( dirname );
    #if defined(__WATCOMC__)
-     dirname[ iDirnameLen ] = '\0';
+      dirname[ iDirnameLen ] = '\0';
    #endif
    if( NULL == dir )
    {
@@ -598,7 +597,7 @@ HARBOUR HB_DIRECTORY( void )
       else
          pos = strrchr( string, '.' );
 
-      if( pos && !(pos==&string[0]) )
+      if( pos && ! ( pos == &string[ 0 ] ) )
       {
          strcpy( fext, pos + 1 );
          *pos = '\0';
@@ -631,7 +630,7 @@ HARBOUR HB_DIRECTORY( void )
             if( pos )
             {
                ++pos;
-               if( !*pos || (*pos == '.' && !pos[1] ))
+               if( ! *pos || ( *pos == '.' && ! pos[ 1 ] ) )
                   strcat( string, "." );
             }
             strcpy( filename, string );     /* entry.name ); */
@@ -671,43 +670,43 @@ HARBOUR HB_DIRECTORY( void )
             ftime = statbuf.st_mtime;
 
             #if defined(OS_UNIX_COMPATIBLE)
-              /* GNU C on Linux or on other UNIX */
-              attrib = osToHarbourMask( statbuf.st_mode );
+               /* GNU C on Linux or on other UNIX */
+               attrib = osToHarbourMask( statbuf.st_mode );
             #else
-              #if defined(__IBMCPP__)
-                attrib = entry.attrFile;
-              #else
-                #if defined(_MSC_VER)
-                  attrib = entry.attrib;
-                  if( blEightDotThree )
-                  {
-                     /* need to strip off the path */
-                     pos = strrchr( filename, OS_PATH_DELIMITER );
-                     if( pos )
-                        strcpy( filename, ++pos );
-                  }
-                #elif defined(__BORLANDC__) || defined(__DJGPP__)
-                  attrib = _chmod( fullfile, 0 );
-                #else
-                  attrib = 0;
-                #endif
-              #endif
-              attrib = osToHarbourMask( attrib );
-              if( attrib & FA_DIREC )
-              {
-                 /* MS says size for a Directory is undefined.
-                    Novell uses these bits for other purposes
-                  */
-                 fsize = 0;
-              }
+               #if defined(__IBMCPP__)
+                  attrib = entry.attrFile;
+               #else
+                  #if defined(_MSC_VER)
+                     attrib = entry.attrib;
+                     if( blEightDotThree )
+                     {
+                         /* need to strip off the path */
+                         pos = strrchr( filename, OS_PATH_DELIMITER );
+                         if( pos )
+                            strcpy( filename, ++pos );
+                     }
+                  #elif defined(__BORLANDC__) || defined(__DJGPP__)
+                     attrib = _chmod( fullfile, 0 );
+                  #else
+                     attrib = 0;
+                  #endif
+               #endif
+               attrib = osToHarbourMask( attrib );
+               if( attrib & FA_DIREC )
+               {
+                  /* MS says size for a Directory is undefined.
+                     Novell uses these bits for other purposes
+                   */
+                  fsize = 0;
+               }
             #endif
-         
+
             ft = localtime( &ftime );
             sprintf( ddate, "%04d%02d%02d",
-                    ft->tm_year + 1900, ft->tm_mon + 1, ft->tm_mday );
+               ft->tm_year + 1900, ft->tm_mon + 1, ft->tm_mday );
 
             sprintf( ttime, "%02d:%02d:%02d",
-                    ft->tm_hour, ft->tm_min, ft->tm_sec );
+               ft->tm_hour, ft->tm_min, ft->tm_sec );
 
 /* debug code
 
@@ -717,16 +716,16 @@ HARBOUR HB_DIRECTORY( void )
 
          }
 
-         if(!(( ushbMask & FA_HIDDEN ) == 0 && ( attrib & FA_HIDDEN ) > 0 ||
-              ( ushbMask & FA_SYSTEM ) == 0 && ( attrib & FA_SYSTEM ) > 0 ||
-              ( ushbMask & FA_DIREC ) == 0 && ( attrib & FA_DIREC ) > 0 ))
+         if( !( ( ( ushbMask & FA_HIDDEN ) == 0 && ( attrib & FA_HIDDEN ) > 0 ) ||
+                ( ( ushbMask & FA_SYSTEM ) == 0 && ( attrib & FA_SYSTEM ) > 0 ) ||
+                ( ( ushbMask & FA_DIREC  ) == 0 && ( attrib & FA_DIREC  ) > 0 ) ) )
          {
             /* array  cname, csize, ddate, ctime, cattributes */
             pfilename = hb_itemPutC( NULL, filename );
             psize     = hb_itemPutNL( NULL, fsize );
             pdate     = hb_itemPutDS( NULL, ddate );
             ptime     = hb_itemPutC( NULL, ttime );
-            pattr     = hb_itemPutC( NULL, (char *)HarbourMaskToAttributes(attrib, (BYTE *)aatrib) );
+            pattr     = hb_itemPutC( NULL, ( char * ) HarbourMaskToAttributes( attrib, ( BYTE * ) aatrib ) );
             psubarray = hb_itemArrayNew( 5 );
             hb_itemArrayPut( psubarray, 1, pfilename );
             hb_itemArrayPut( psubarray, 2, psize );
