@@ -1111,6 +1111,10 @@ return Get():New( nRow, nCol, bVarBlock, cVarName, cPicture, cColor )
 
 //---------------------------------------------------------------------------//
 
+/* Until support of __GET and __GETA() built into harbour.y */
+FUNCTION _GET_( uVar, cVarName, cPicture, bValid, bWhen, bSetGet )
+RETURN __GET( uVar, cVarName, cPicture, bValid, bWhen, bSetGet )
+
 FUNCTION __GET( uVar, cVarName, cPicture, bValid, bWhen, bSetGet )
 
    LOCAL oGet := Get():New(,, bSetGet, cVarName, cPicture )
