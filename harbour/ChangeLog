@@ -1,3 +1,10 @@
+19991104-23:45 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/filesys.c
+    ! hb_fsSeek() now returns 0 instead of -1 on error, just like Clipper.
+    % hb_fsSeek() double assigments removed.
+    ! hb_fsLock() last error code handling fixed for some platforms.
+    % hb_fsCommit() small simplification, double assignment removed.
+
 19991104-14:30 EDT David G. Holm <dholm@jsd-llc.com>
 
    * source/pp/stdalone/hbpp.c

@@ -452,7 +452,6 @@ void    hb_fsClose( FHANDLE hFileHandle )
    /* Convert 'Invalid Memory Block' to 'Invalid Handle' */
    if( s_uiErrorLast == 9 )
       s_uiErrorLast = 6;
-
 }
 
 void    hb_fsSetDevMode( FHANDLE hFileHandle, USHORT uiDevMode )
@@ -518,7 +517,7 @@ USHORT  hb_fsRead( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
    errno = 0;
    uiRead = read( hFileHandle, pBuff, uiCount );
    s_uiErrorLast = errno;
-   if( uiRead == ( USHORT )-1 )
+   if( uiRead == ( USHORT ) -1 )
       uiRead = 0;
 
 #else
@@ -542,7 +541,7 @@ USHORT  hb_fsWrite( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
    errno = 0;
    uiWritten = write( hFileHandle, pBuff, uiCount );
    s_uiErrorLast = errno;
-   if( uiWritten == ( USHORT )-1 )
+   if( uiWritten == ( USHORT ) -1 )
       uiWritten = 0;
 
 #else
@@ -589,7 +588,7 @@ ULONG   hb_fsReadLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
       /* -1 on bad hFileHandle
           0 on disk full
        */
-      if( uiRead == ( USHORT )-1 || uiRead == 0 )
+      if( uiRead == ( USHORT ) -1 || uiRead == 0 )
          break;
 
       ulRead += ( ULONG ) uiRead;
@@ -636,7 +635,7 @@ ULONG   hb_fsWriteLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
       /* -1 on bad hFileHandle
           0 on disk full
        */
-      if( uiWritten == ( USHORT )-1 || uiWritten == 0 )
+      if( uiWritten == ( USHORT ) -1 || uiWritten == 0 )
          break;
 
       ulWritten += ( ULONG ) uiWritten;
@@ -657,23 +656,33 @@ ULONG   hb_fsWriteLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
 
 ULONG   hb_fsSeek( FHANDLE hFileHandle, LONG lOffset, USHORT uiFlags )
 {
-   ULONG ulPos = -1;
+   ULONG ulPos;
    USHORT Flags;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsSeek(%p, %ld, %hu)", hFileHandle, lOffset, uiFlags));
 
    Flags = convert_seek_flags( uiFlags );
+
    if( lOffset < 0 && Flags == SEEK_SET )
    {
-      /* 'Seek Error' */
-      s_uiErrorLast = 25;
 
    #if defined(HAVE_POSIX_IO) || defined(_MSC_VER) || defined(__MINGW32__)
+
       /* get current offset */
       errno = 0;
       ulPos = lseek( hFileHandle, 0, SEEK_CUR );
       if( errno != 0 )
+      {
+         ulPos = 0;
          s_uiErrorLast = errno;
+      }
+      else
+         s_uiErrorLast = 25; /* 'Seek Error' */
+
+   #else
+
+      ulPos = 0;
+      s_uiErrorLast = 25; /* 'Seek Error' */
 
    #endif
 
@@ -685,6 +694,8 @@ ULONG   hb_fsSeek( FHANDLE hFileHandle, LONG lOffset, USHORT uiFlags )
 
       errno = 0;
       ulPos = lseek( hFileHandle, lOffset, Flags );
+      if( errno != 0 )
+         ulPos = 0;
       s_uiErrorLast = errno;
 
    #else
@@ -697,7 +708,6 @@ ULONG   hb_fsSeek( FHANDLE hFileHandle, LONG lOffset, USHORT uiFlags )
       /* Convert 'Unknown Command' to 'Seek Error' */
       if( s_uiErrorLast == 22 )
          s_uiErrorLast = 25;
-
    }
 
    return ulPos;
@@ -819,6 +829,7 @@ BOOL    hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
    {
       ULONG ulOldPos = hb_fsSeek( hFileHandle, ulStart, FS_SET );
 
+      errno = 0;
       switch( uiMode )
       {
          case FL_LOCK:
@@ -832,6 +843,7 @@ BOOL    hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
          default:
             iResult = 0;
       }
+      s_uiErrorLast = errno;
 
       hb_fsSeek( hFileHandle, ulOldPos, FS_SET );
    }
@@ -841,6 +853,7 @@ BOOL    hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
    {
       ULONG ulOldPos = hb_fsSeek( hFileHandle, ulStart, FS_SET );
 
+      errno = 0;
       switch( uiMode )
       {
          case FL_LOCK:
@@ -854,6 +867,7 @@ BOOL    hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
          default:
             iResult = 0;
       }
+      s_uiErrorLast = errno;
 
       hb_fsSeek( hFileHandle, ulOldPos, FS_SET );
    }
@@ -878,14 +892,12 @@ void    hb_fsCommit( FHANDLE hFileHandle )
       int dup_handle;
 
       errno = 0;
-      dup_handle = dup( hFileHandle );
-      s_uiErrorLast = errno;
 
+      dup_handle = dup( hFileHandle );
       if( dup_handle != -1 )
-      {
          close( dup_handle );
-         s_uiErrorLast = errno;
-      }
+
+      s_uiErrorLast = errno;
    }
 
 #else
