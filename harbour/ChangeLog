@@ -1,3 +1,8 @@
+19990918-13:07 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * tests/working/rtl_test.prg
+    ! OS_NewLine() is only used when __HARBOUR__ is defined.
+
 19990918-01:55 EDT David G. Holm <dholm@jsd-llc.com>
   * config/win32/bcc32.cf
     ! My previous update only allowed Borland to compile, but not link.
@@ -44,7 +49,7 @@
     % These test programs now use OS_NewLine()
       instead of using 4 different methods.
 
-19990917-04:58 GMT+1 Victor Szel <info@szelvesz.hu>
+19990918-04:58 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/vm/hvm.c
     + Added WORD typedef for HARBOUR_OBJ_GENERATION section.
@@ -58,7 +63,7 @@
     + hb_max_row() now returns 23 for UNIXes and 24 otherwise.
     % fputs(" "...) -> fputc(' '...)
 
-19990917-03:22 GMT+1 Victor Szel <info@szelvesz.hu>
+19990918-03:22 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/rtl/memofile.c
     source/rtl/Makefile

@@ -1513,7 +1513,7 @@ STATIC FUNCTION Main_STRINGS()
 #ifdef __HARBOUR__
 STATIC FUNCTION Long_STRINGS()
 
-   TEST_LINE( RIGHT( SPACE( 64 * 1024 - 5 ) + "12345 7890", 10                      ), "12345 7890"                                 ) 
+   TEST_LINE( RIGHT( SPACE( 64 * 1024 - 5 ) + "12345 7890", 10                      ), "12345 7890"                                 )
    TEST_LINE( LEN( SPACE( 81910 ) + "1234567890"                                    ), 81920                                        )
    TEST_LINE( ( "1234567890" + SPACE( 810910 ) ) - ( "1234567890" + SPACE( 810910 ) ), "12345678901234567890" + SPACE( 810910 * 2 ) )
 
@@ -2062,7 +2062,11 @@ STATIC FUNCTION TEST_BEGIN( cParam )
 
    s_nStartTime := Seconds()
 
+#ifdef __HARBOUR__
    s_cNewLine := OS_NewLine()
+#else
+   s_cNewLine := Chr( 13 ) + Chr( 10 )
+#endif
 
    s_lShowAll := "/ALL" $ Upper( cParam )
    s_aSkipList := ListToNArray( CMDLGetValue( Upper( cParam ), "/SKIP:", "" ) )
