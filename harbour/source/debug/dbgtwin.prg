@@ -77,6 +77,7 @@ CLASS TDbWindow  // Debugger windows and dialogs
    METHOD nWidth() INLINE ::nRight - ::nLeft + 1
    METHOD ScrollUp( nLines )
    METHOD SetCaption( cCaption )
+   METHOD ShowCaption()
    METHOD SetFocus( lOnOff )
    METHOD Show( lFocused )
    METHOD ShowModal()
@@ -129,14 +130,14 @@ return nil
 
 METHOD SetCaption( cCaption ) CLASS TDbWindow
 
-   local nOldLen := iif( ::cCaption != nil, Len( ::cCaption ), 0 )
-
    ::cCaption := cCaption
-
-   if ! Empty( cCaption )
+return nil
+  
+METHOD ShowCaption CLASS TDbWindow
+   if ! Empty( ::cCaption )
       DispOutAt( ::nTop, ::nLeft + ( ( ::nRight - ::nLeft ) / 2 ) - ;
-         ( ( Len( cCaption ) + 2 ) / 2 ),;
-         " " + cCaption + " ", ::cColor )
+         ( ( Len( ::cCaption ) + 2 ) / 2 ),;
+         " " + ::cCaption + " ", ::cColor )
    endif
 
 return nil
@@ -157,7 +158,7 @@ METHOD SetFocus( lOnOff ) CLASS TDbWindow
    DispOutAt( ::nTop, ::nLeft + 1, "[" + Chr( 254 ) + "]", ::cColor )
 
    if ! Empty( ::cCaption )
-      ::SetCaption( ::cCaption )
+      ::ShowCaption( ::cCaption )
    endif
 
    if ::bPainted != nil
@@ -182,7 +183,7 @@ METHOD Refresh() CLASS TDbWindow
    DispOutAt( ::nTop, ::nLeft + 1, "[" + Chr( 254 ) + "]", ::cColor )
 
    if ! Empty( ::cCaption )
-      ::SetCaption( ::cCaption )
+      ::ShowCaption( ::cCaption )
    endif
 
    if ::bPainted != nil
@@ -207,6 +208,7 @@ METHOD Show( lFocused ) CLASS TDbWindow
       hb_Shadow( ::nTop, ::nLeft, ::nBottom, ::nRight )
    endif
 
+   ::ShowCaption()
    ::lVisible := .t.
 
 return nil
