@@ -345,6 +345,10 @@ ULONG   hb_fsRead   ( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
          break;
 
       ulReadTotal += ( ULONG ) uiRead;
+
+      if( uiRead < ulCount - ulReadTotal )
+         break;
+
    }
    s_uiErrorLast = errno;
 

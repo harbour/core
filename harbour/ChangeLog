@@ -1,3 +1,8 @@
+19990901-14:05 EDT Paul Tucker <ptucker@sympatico.ca>
+   * source/rtl/filesys.c
+     * hb_fsread() -> account for the possibility that num read is less
+       than requested.  (It was staying in the while loop forever without this)
+
 19990901-17:59 GMT+1 Bruno Cantero <bruno@issnet.net>
    * source/rdd/dbcmd.c
      + Added Lock() function
