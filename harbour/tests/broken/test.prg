@@ -1,0 +1,4 @@
+/*
+ * $Id$
+ */
+proc atest
