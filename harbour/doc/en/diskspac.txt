@@ -48,7 +48,7 @@
  *
  *      If information is requested on a removeable disk that is not available,
  *      the O/S may request that a disk be inserted in the drive, otherwise the
- *      return value will be 0.0
+ *      return value will be 0.
  *  $EXAMPLES$
  *      ? "You can use : " +Str( DiskSpace() ) + " bytes " +;
  *        "Out of a total of " + Str( DiskSpace(0,HB_FS_TOTAL) )
@@ -57,7 +57,7 @@
  *  $COMPLIANCE$
  *      CA-Clipper will return an integer value which limits it's usefulness to
  *      drives less than 2 gigabytes.  The Harbour version returns a floating
- *      point value.
+ *      point value if the disk is > 2 gigabytes.
  *      <nType> is a Harbour extension.
  *  $SEEALSO$
  *      DISKFREE(),DISKUSED(),DISKFULL(),tests\tstdspac.prg
