@@ -303,8 +303,8 @@ HB_FUNC( MRESTSTATE )
 
 HB_FUNC( MSETBOUNDS )
 {
-   hb_mouseSetBounds( ISNUM( 1 ) ? hb_parni( 1 ) : 0, 
-                      ISNUM( 2 ) ? hb_parni( 2 ) : 0, 
+   hb_mouseSetBounds( hb_parni( 1 ), /* Defaults to zero on bad type */
+                      hb_parni( 2 ), /* Defaults to zero on bad type */
                       ISNUM( 3 ) ? hb_parni( 3 ) : hb_gtMaxRow(),
                       ISNUM( 4 ) ? hb_parni( 4 ) : hb_gtMaxCol() );
 }

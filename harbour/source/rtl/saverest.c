@@ -38,8 +38,8 @@
 
 HB_FUNC( SAVESCREEN )
 {
-   USHORT uiTop    = ISNUM( 1 ) ? hb_parni( 1 ) : 0;      
-   USHORT uiLeft   = ISNUM( 2 ) ? hb_parni( 2 ) : 0;      
+   USHORT uiTop    = hb_parni( 1 ); /* Defaults to zero on bad type */
+   USHORT uiLeft   = hb_parni( 2 ); /* Defaults to zero on bad type */
    USHORT uiBottom = ISNUM( 3 ) ? hb_parni( 3 ) : hb_gtMaxRow();
    USHORT uiRight  = ISNUM( 4 ) ? hb_parni( 4 ) : hb_gtMaxCol();
 
@@ -58,8 +58,8 @@ HB_FUNC( SAVESCREEN )
 HB_FUNC( RESTSCREEN )
 {
    if( ISCHAR( 5 ) )
-      hb_gtRest( ISNUM( 1 ) ? hb_parni( 1 ) : 0,            
-                 ISNUM( 2 ) ? hb_parni( 2 ) : 0,            
+      hb_gtRest( hb_parni( 1 ), /* Defaults to zero on bad type */
+                 hb_parni( 2 ), /* Defaults to zero on bad type */
                  ISNUM( 3 ) ? hb_parni( 3 ) : hb_gtMaxRow(),
                  ISNUM( 4 ) ? hb_parni( 4 ) : hb_gtMaxCol(),
                  ( void * ) hb_parc( 5 ) );

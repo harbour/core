@@ -43,30 +43,44 @@ HB_FUNC( SCROLL )
    int iMaxRow = hb_gtMaxRow();
    int iMaxCol = hb_gtMaxCol();
 
-   int iTop    = ISNUM( 1 ) ? hb_parni( 1 ) : 0;      
-   int iLeft   = ISNUM( 2 ) ? hb_parni( 2 ) : 0;      
-   int iBottom = ISNUM( 3 ) ? hb_parni( 3 ) : iMaxRow;
-   int iRight  = ISNUM( 4 ) ? hb_parni( 4 ) : iMaxCol;
+   int iTop;
+   int iLeft;
+   int iBottom;
+   int iRight;
 
    /* Enforce limits of (0,0) to (MAXROW(),MAXCOL()) */
 
+   iTop = hb_parni( 1 );
    if( iTop < 0 ) iTop = 0;
    else if( iTop > iMaxRow ) iTop = iMaxRow;
 
+   iLeft = hb_parni( 2 );
    if( iLeft < 0 ) iLeft = 0;
    else if( iLeft > iMaxCol ) iLeft = iMaxCol;
 
-   if( iBottom < 0 ) iBottom = 0;
-   else if( iBottom > iMaxRow ) iBottom = iMaxRow;
+   if( ISNUM( 3 ) )
+   {
+      iBottom = hb_parni( 3 );
+      if( iBottom < 0 ) iBottom = 0;
+      else if( iBottom > iMaxRow ) iBottom = iMaxRow;
+   }
+   else
+      iBottom = iMaxRow;
 
-   if( iRight < 0 ) iRight = 0;
-   else if( iRight > iMaxCol ) iRight = iMaxCol;
+   if( ISNUM( 4 ) )
+   {
+      iRight = hb_parni( 4 );
+      if( iRight < 0 ) iRight = 0;
+      else if( iRight > iMaxCol ) iRight = iMaxCol;
+   }
+   else
+      iRight = iMaxCol;
 
    hb_gtScroll( ( USHORT ) iTop, 
                 ( USHORT ) iLeft, 
                 ( USHORT ) iBottom, 
                 ( USHORT ) iRight, 
-                ISNUM( 5 ) ? hb_parni( 5 ) : 0, 
-                ISNUM( 6 ) ? hb_parni( 6 ) : 0 );
+                hb_parni( 5 ), /* Defaults to zero on bad type */
+                hb_parni( 6 ) ); /* Defaults to zero on bad type */
 }
 

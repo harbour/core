@@ -65,9 +65,10 @@ HB_FUNC( SETBLINK )
    BOOL bPreviousBlink;
 
    hb_gtGetBlink( &bPreviousBlink );
-   if( ISLOG( 1 ) )
-      hb_gtSetBlink( hb_parl( 1 ) );
 
    hb_retl( bPreviousBlink );
+
+   if( ISLOG( 1 ) )
+      hb_gtSetBlink( hb_parl( 1 ) );
 }
 

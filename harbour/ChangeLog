@@ -1,3 +1,16 @@
+2000-06-17 18:58 UTC+0100 Victor Szakats <info@szelvesz.hu>
+
+   * source/compiler/harbour.y
+     + One TODO readded
+
+   * source/rtl/scroll.c
+   * source/rtl/saverest.c
+   * source/rtl/mouseapi.c
+     % Some optimizations.
+
+   * source/rtl/setcolor.c
+     * Minor code standardization.
+
 2000-05-07 23:30 CET Patrick Mast <harbour@PatrickMast.com>
    * tests/testhtml.prg
      * changed the Default() function into If(...)
@@ -19,7 +32,6 @@
      % Better Table support, Now it generate true Tables
      * Many thanks for Maurilio Longo.With out his help this changes was not
        possible
-    
 
 2000-06-16 21:28 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
