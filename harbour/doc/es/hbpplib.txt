@@ -7,12 +7,12 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 2001 Felipe Coury <fcoury@flexsys-ci.com>
- *   Documentación en Inglés
+ *   Documentaci¢n en Ingl‚s
  *
- * Copyright 2001 Alejandro de Gárate <alex_degarate@hotmail.com>
- *   Traducción al Español de hbpplib.txt
+ * Copyright 2001 Alejandro de G rate <alex_degarate@hotmail.com>
+ *   Traducci¢n al Espa¤ol de hbpplib.txt
  *
- * Vea doc/license.txt por los términos de la licencia.
+ * Vea doc/license.txt por los t‚rminos de la licencia.
  *
  */
 
@@ -20,13 +20,13 @@
 LIBRERIA DE PREPROCESAMIENTO DE HARBOUR EN TIEMPO DE EJECUCION
 ==============================================================
 
-Cómo crear HBPP.LIB
+C¢mo crear HBPP.LIB
 ===================
 
-Este archivo debería contener prreproc.c, hbpplib32, bldhbpp.bat,
+Este archivo deber¡a contener prreproc.c, hbpplib32, bldhbpp.bat,
 testpre.prg, bld32exe.bat y hbpplib.txt (este archivo).
 
-En orden de crear y testear esta librería, Ud. debería poner:
+En orden de crear y testear esta librer¡a, Ud. deber¡a poner:
 (suponiendo que el directorio de trabajo sea HARBOUR)
 
 - preproc.c   en el directorio \HARBOUR\SOURCE\HBPP ;
@@ -35,11 +35,13 @@ En orden de crear y testear esta librería, Ud. debería poner:
 - hbpplib.txt en el directorio \HARBOUR\DOC ;
 
 Entonces, Ud. necesita correr bldhbpp.bat para crear HBPP.LIB sobre
-el directorio \HARBOUR\LIBS\B32. Note que por ahora el único makefile 
+el directorio \HARBOUR\LIBS\B32. Note que por ahora el £nico makefile 
 es para compilar con los compiladores de Borland. 
 Se solicita a quienes tienen otros compiladores/entornos colaboren
 escribiendo los makefiles faltantes. Gracias.
 
-Para testear testpre.prg Ud. sólo necesita ir al subdirectorio
+Para testear testpre.prg Ud. s¢lo necesita ir al subdirectorio
 HARBOUR\TEST\WORKING y hacerlo usando TESTPRE.
+   
+
 

@@ -1,15 +1,18 @@
+/*
+ * $Id$
+ */
 
 /*
  * Las siguientes partes son derechos adquiridos de sus autores individuales.
  * www - http://www.harbour-project.org
  *
  * Copyright 2001 Antonio Linares
- *   Documentación en Inglés
+ *   Documentaci¢n en Ingl‚s
  *
- * Copyright 2001 Alejandro de Gárate <alex_degarate@hotmail.com>
- *   Traducción al Español de pcode.txt
+ * Copyright 2001 Alejandro de G rate <alex_degarate@hotmail.com>
+ *   Traducci¢n al Espa¤ol de pcode.txt
  *
- * Vea doc/license.txt por los términos de la licencia.
+ * Vea doc/license.txt por los t‚rminos de la licencia.
  *
  */
 
@@ -25,10 +28,10 @@ function Main()
 
 return nil
 
-Una vez que esto se compila dentro de un OBJ, qué es lo que hay dentro 
-de él ?
+Una vez que esto se compila dentro de un OBJ, qu‚ es lo que hay dentro 
+de ‚l ?
 En efecto, lo que nosostros tenemos es un equivalente a la siguiente 
-aplicación de lenguaje C:
+aplicaci¢n de lenguaje C:
 
 SYMBOL symbols[] = { ... };
 
@@ -39,12 +42,12 @@ void MAIN( void )
    VirtualMachine( pcode, symbols );
 }
 
-Básicamente, el código fuente de test.prg ha sido convertido en una 
+B sicamente, el c¢digo fuente de test.prg ha sido convertido en una 
 secuencia de bytes pcode contenidos en el array pcode[] = {...}
-Todo lo que nuestra función MAIN hace es invocar, en tiempo de ejecución
-a la función de VirtualMachine() que procesará aquellos bytes de pcodes.
+Todo lo que nuestra funci¢n MAIN hace es invocar, en tiempo de ejecuci¢n
+a la funci¢n de VirtualMachine() que procesar  aquellos bytes de pcodes.
 
-Vamos a revisar la estructura de pcodes de test.prg con más detalle:
+Vamos a revisar la estructura de pcodes de test.prg con m s detalle:
 
 0000 (2A) LINE 0                    2A 00 00
 0003 (2A) LINE 3                    2A 03 00
@@ -71,7 +74,7 @@ hbpcode.h
 ...
 ----------------------
 
-Así finalmente esto quedaría como:
+As¡ finalmente esto quedar¡a como:
 
 BYTE pcode[] =
      { LINE, 0, 0,
@@ -85,56 +88,57 @@ BYTE pcode[] =
        JMP, 0, 0,
        ENDPROC };
 
-Y qué es SYMBOL symbols[] ?
-Cliper crea una tabla de símbolos en el archivo OBJ que luego será usada 
-para crear una tabla dinámica de símbolos compartida por la aplicación
-entera. cada uno de esos símbolos tiene la siguiente estructura:
+Y qu‚ es SYMBOL symbols[] ?
+Cliper crea una tabla de s¡mbolos en el archivo OBJ que luego ser  usada 
+para crear una tabla din mica de s¡mbolos compartida por la aplicaci¢n
+entera. cada uno de esos s¡mbolos tiene la siguiente estructura:
 
    typedef struct
    {
-      char * szName;  // Clipper de hecho mantiene un array aquí (11 bytes)
+      char * szName;  // Clipper de hecho mantiene un array aqu¡ (11 bytes)
       BYTE   bScope;
       LPVOID pVoid;
    } SYMBOL;
 
-#define PUBLIC 0    // el alcance de la función !
+#define PUBLIC 0    // el alcance de la funci¢n !
 
 SYMBOL symbols[] = { { "MAIN",  PUBLIC, MAIN },
                      { "QQOUT", PUBLIC, QQOUT } };
 
-Recordemos que el nombre de una función (MAIN, QQOUT) es la dirección de 
-la función, así nuestra tabla de símbolos estará lista para usarla para 
-saltar y ejecutar cualquier función enlazada (linkeada). 
+Recordemos que el nombre de una funci¢n (MAIN, QQOUT) es la direcci¢n de 
+la funci¢n, as¡ nuestra tabla de s¡mbolos estar  lista para usarla para 
+saltar y ejecutar cualquier funci¢n enlazada (linkeada). 
 
-De hecho, el pcode SYMF 2, 0 en nuestro ejemplo, instruirá a la función
-VirtualMachine(), para usar el 2do símbolo que es QQOUT.
+De hecho, el pcode SYMF 2, 0 en nuestro ejemplo, instruir  a la funci¢n
+VirtualMachine(), para usar el 2do s¡mbolo que es QQOUT.
 
 Vamos a leer el pcode:
 
-LINE 0, 0   =>  Nosotros estamos ubicados en la línea 0
-LINE 3, 0   =>  Nosotros estamos ubicados en la línea 3
-SYMF 2, 0   =>  Vamos a llamar a QQOUT desde nuestra tabla de símbolos
-PUSHC ...   =>  Esta cadena va a ser usada como un parámetro
-DO   1, 0   =>  ok, saltemos a QQOUT y recordemos que le dimos 1 parámetro
-LINE 5, 0   =>  Estamos de vuelta desde QQOUT y estamos ubicados en línea 5
+LINE 0, 0   =>  Nosotros estamos ubicados en la l¡nea 0
+LINE 3, 0   =>  Nosotros estamos ubicados en la l¡nea 3
+SYMF 2, 0   =>  Vamos a llamar a QQOUT desde nuestra tabla de s¡mbolos
+PUSHC ...   =>  Esta cadena va a ser usada como un par metro
+DO   1, 0   =>  ok, saltemos a QQOUT y recordemos que le dimos 1 par metro
+LINE 5, 0   =>  Estamos de vuelta desde QQOUT y estamos ubicados en l¡nea 5
 UNDEF       =>  Nosotros vamos a retornar este valor (NIL)
 SAVE_RET    =>  Ok, retornemoslo
-JMP  0      =>  No saltamos dondequiera, continuamos con el próximo pcode
-ENDPROC     =>  Es el fin. hemos completado la ejecución de esta función
+JMP  0      =>  No saltamos dondequiera, continuamos con el pr¢ximo pcode
+ENDPROC     =>  Es el fin. hemos completado la ejecuci¢n de esta funci¢n
 
-Todas estas funciones serán evaluadas desde nuestra función 
+Todas estas funciones ser n evaluadas desde nuestra funci¢n 
 VirtualMachine(), (Clipper la llama _plankton() ). Todas las funciones 
-terminan usando ENDPROC, así cuando VirtualMachine() encuentra ENDPROC 
-sabe que ha alcanzado el final de una función pcode.
+terminan usando ENDPROC, as¡ cuando VirtualMachine() encuentra ENDPROC 
+sabe que ha alcanzado el final de una funci¢n pcode.
 
-Ahora que nosotros entendemos claramente el modelo básico, nosotros 
-estamos en condiciones de comenzar a implementar "reglas de producción" 
+Ahora que nosotros entendemos claramente el modelo b sico, nosotros 
+estamos en condiciones de comenzar a implementar "reglas de producci¢n" 
 en nuestra sintaxis yacc (harbour.y) para generar el archivo de salida 
-específico (test.c) con la estructura de arriba (ó nosotros podemos 
-fácilmente generar el archivo OBJ para él).
+espec¡fico (test.c) con la estructura de arriba (¢ nosotros podemos 
+f cilmente generar el archivo OBJ para ‚l). 
 
-Continuará...
+Continuar ...
 
 Antonio Linares
+  
 
 

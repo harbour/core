@@ -7,49 +7,49 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 2001 Antonio Linares
- *   Documentación en Inglés de vm.txt
+ *   Documentaci¢n en Ingl‚s de vm.txt
  *
- * Copyright 2001 Alejandro de Gárate <alex_degarate@hotmail.com>
- *   Traducción al Español de vm.txt
+ * Copyright 2001 Alejandro de G rate <alex_degarate@hotmail.com>
+ *   Traducci¢n al Espa¤ol de vm.txt
  *
- * Vea doc/license.txt por los términos de la licencia.
+ * Vea doc/license.txt por los t‚rminos de la licencia.
  *
  */
  
 
-La Máquina Virtual de Harbour (Virtual Machine ó VM) 
+La M quina Virtual de Harbour (Virtual Machine ¢ VM) 
 ====================================================
 
-La VM es un bucle de ejecución infinita mientras se ejecute el programa.
-La VM esta formada por el bucle principal de ejecución y varios 
-subsistemas, cada uno de los cuales puede ser teóricamente reemplazado, 
+La VM es un bucle de ejecuci¢n infinita mientras se ejecute el programa.
+La VM esta formada por el bucle principal de ejecuci¢n y varios 
+subsistemas, cada uno de los cuales puede ser te¢ricamente reemplazado, 
 suponiendo que Ud. respete la interfaz de cada subsistema.
 
-El bucle principal de ejecución esta definido en una funcion de C 
+El bucle principal de ejecuci¢n esta definido en una funcion de C 
 llamada VirtualMachine(), la cual recibe 2 parametros: la intrucciones 
-pcode para ejecutar y la tabla local de símbolos (una porción de la 
-tabla de símbolos OBJs (estatica) ) usada para ese pcode. 
+pcode para ejecutar y la tabla local de s¡mbolos (una porci¢n de la 
+tabla de s¡mbolos OBJs (estatica) ) usada para ese pcode. 
 Por favor revise hbpcode.h para la implementacion actual de los pcode 
 de los opcodes. 
 
 VM( pcode, local symbols )
 
-La VM puede invocar a la VM de nuevo (a sí misma). Esto permite al 
+La VM puede invocar a la VM de nuevo (a s¡ misma). Esto permite al 
 lenguaje Clipper acceder a funciones y metodos Clipper y funciones 
 externas en lenguaje C una vez y otra vez. La VM organiza estos 
-múltiples accesos en una forma ordenada y totalmente controlada e 
-implementa servicios para acceder a esos múltiples niveles de ejecución 
-(ProcName(), ProcLine(), depuración y acceso a las variables de la pila).
+m£ltiples accesos en una forma ordenada y totalmente controlada e 
+implementa servicios para acceder a esos m£ltiples niveles de ejecuci¢n 
+(ProcName(), ProcLine(), depuraci¢n y acceso a las variables de la pila).
 
 Los subsistemas VM son continuamente usados por el bucle principal de
-ejecución. Vamos a revisar esos subsistemas VM.
+ejecuci¢n. Vamos a revisar esos subsistemas VM.
 
 
  El Arranque:
  La Pila (stack):
- La tabla estática de símbolos:
- La tabla dinámica de símbolos:
- Variables estáticas y públicas:
+ La tabla est tica de s¡mbolos:
+ La tabla din mica de s¡mbolos:
+ Variables est ticas y p£blicas:
  La memoria:
  El sistema extendido:
  Arrays Multidimensionales:
@@ -60,9 +60,9 @@ ejecución. Vamos a revisar esos subsistemas VM.
 
 El Arranque: 
 ============
-Controla la inicialización de los diferentes subsistemas de la VM,
-esta es invocada al principio de la aplicación. Esta también controla 
-la salida de la aplicación.
+Controla la inicializaci¢n de los diferentes subsistemas de la VM,
+esta es invocada al principio de la aplicaci¢n. Esta tambi‚n controla 
+la salida de la aplicaci¢n.
  
 
 
@@ -70,38 +70,38 @@ La Pila (stack):
 ================
 La VM No usa la pila de la computadora directamente, esta usa en su 
 lugar su propia pila para manipular valores (parametros, valores 
-retornados y símbolos) como lo hace la pila de hardware.
+retornados y s¡mbolos) como lo hace la pila de hardware.
 
 
-La tabla estática de símbolos: 
+La tabla est tica de s¡mbolos: 
 =============================
-Es creada por el compilador en tiempo de compilación y agrupada por 
+Es creada por el compilador en tiempo de compilaci¢n y agrupada por 
 el enlazador (linker) en los OBJs, Este subsistema es responsable por 
-un inmediato acceso a la ubicación de las funciones y está altamente 
-relacionada a la tabla dinámica de símbolos en tiempo de ejecución.
-Esta tabla contiene muchos símbolos duplicados que serán optimizados 
-por la tabla dinámica de símbolos.
+un inmediato acceso a la ubicaci¢n de las funciones y est  altamente 
+relacionada a la tabla din mica de s¡mbolos en tiempo de ejecuci¢n.
+Esta tabla contiene muchos s¡mbolos duplicados que ser n optimizados 
+por la tabla din mica de s¡mbolos.
 
 
-La tabla dinámica de símbolos: 
+La tabla din mica de s¡mbolos: 
 ==============================
-Es dinámicamente generada desde el subsistema de inicio al principio 
-de la aplicación. Esta organiza en una forma eficiente la tabla 
-estática de símbolos creando un índice alfabetico que permite, una 
-búsqueda dicotomica de los símbolos. Este subsistema es responsable 
-por el rápido acceso a los símbolos (funciones, variables, campos y 
-alias de las áreas de trabajo).
+Es din micamente generada desde el subsistema de inicio al principio 
+de la aplicaci¢n. Esta organiza en una forma eficiente la tabla 
+est tica de s¡mbolos creando un ¡ndice alfabetico que permite, una 
+b£squeda dicotomica de los s¡mbolos. Este subsistema es responsable 
+por el r pido acceso a los s¡mbolos (funciones, variables, campos y 
+alias de las  reas de trabajo).
 
 
-Variables estáticas y públicas: 
+Variables est ticas y p£blicas: 
 ===============================
-Responsable por el almacenamiento de variables públicas y estáticas.
+Responsable por el almacenamiento de variables p£blicas y est ticas.
 
 
 La memoria: 
 ===========
-Responsable por la ubicación, reubicación, bloqueo, desbloqueo y 
-liberación de memoria.
+Responsable por la ubicaci¢n, reubicaci¢n, bloqueo, desbloqueo y 
+liberaci¢n de memoria.
 
 
 El sistema extendido: 
@@ -109,47 +109,47 @@ El sistema extendido:
 Define la interfaz (_parc(), ..., _retc() ) desde un bajo nivel 
 (lenguaje C) hasta un alto nivel (lenguaje Clipper). Este subsistema 
 es responsable por conectar en una forma adecuada las funciones en 
-lenguaje C a la aplicación entera.
+lenguaje C a la aplicaci¢n entera.
 
 
 Arrays Multidimensionales: 
 ==========================
-Este subsistema permite la creación de arrays, y los servicios para 
+Este subsistema permite la creaci¢n de arrays, y los servicios para 
 manipular estos en todas sus formas. Los arrays son extensivamente 
-usados por el lenguaje Clipper y también ellos son la fundación de 
-los Objetos (los Objetos son sólo arrays referidos a una Clase 
-específica).
+usados por el lenguaje Clipper y tambi‚n ellos son la fundaci¢n de 
+los Objetos (los Objetos son s¢lo arrays referidos a una Clase 
+espec¡fica).
 
 
 El motor de Objetos: 
 ====================
-Responsable por la creación de Clases y Objetos. Este también define 
-la forma de acceso a un método específico de clase para ser invocados 
-por la VM y provee todo tipo de información de clases que pueden ser 
-requeridos al tiempo de la ejecución.
+Responsable por la creaci¢n de Clases y Objetos. Este tambi‚n define 
+la forma de acceso a un m‚todo espec¡fico de clase para ser invocados 
+por la VM y provee todo tipo de informaci¢n de clases que pueden ser 
+requeridos al tiempo de la ejecuci¢n.
 
 
 El subsistema macro: 
 ====================
 Este implementa un compilador reducido que puede ser usado en tiempo 
-de ejecución para generar pcodes para ser usados por la aplicación.
+de ejecuci¢n para generar pcodes para ser usados por la aplicaci¢n.
 En efecto esta es una parte de la especificaciones de yacc (Bison) 
 para Harbour.
 
 
-El subsistema de áreas de trabajo: 
+El subsistema de  reas de trabajo: 
 ==================================
 Responsable por el manejo de las bases de datos. Este subsistema 
-define la ubicación donde las areas de trabajos serán almacenadas 
+define la ubicaci¢n donde las areas de trabajos ser n almacenadas 
 y provee todas las funciones de acceso a esas areas de trabajo. 
-Este también implementa la interfaz para el controlador de base de 
+Este tambi‚n implementa la interfaz para el controlador de base de 
 datos reemplazable.
 
 Pregunta:
 
-  Los opcodes de Harbour imitarán a los de Clipper ? (habrá una 
-relación 1:1 entre ellos) Si es así, están los opcodes de Clipper 
-descriptos en algún lado ?.
+  Los opcodes de Harbour imitar n a los de Clipper ? (habr  una 
+relaci¢n 1:1 entre ellos) Si es as¡, est n los opcodes de Clipper 
+descriptos en alg£n lado ?.
 
 Respuesta:
                   Lenguaje Clipper pcode de opcodes
@@ -340,40 +340,41 @@ Respuesta:
     #define       SETPOS           0xCE      1
     #define       SETPOSBS         0xCF      1
 
-Harbour no implementará todos ellos porque nosotros queremos proveer 
+Harbour no implementar  todos ellos porque nosotros queremos proveer 
 la mayor libertad a los programadores para extender y modificar 
 Harbour tanto como se necesite. Por ejemplo:
 El lenguaje Clipper usa opcodes para Row(), Col(), Upper(), Space(),
-Replicate(), InKey(), Year(), Month(), etc... donde nosotros sólo 
-queremos llamar a una función estandar de lenguaje C, que use el 
-sistema extendido estándar y que pueda ser facilmente modificada.
-Así Harbour usará muchos menos opcodes que el lenguaje Clippper. 
-Esto ayudará a tener un compilador y una VM más simple y fácil de 
+Replicate(), InKey(), Year(), Month(), etc... donde nosotros s¢lo 
+queremos llamar a una funci¢n estandar de lenguaje C, que use el 
+sistema extendido est ndar y que pueda ser facilmente modificada.
+As¡ Harbour usar  muchos menos opcodes que el lenguaje Clippper. 
+Esto ayudar  a tener un compilador y una VM m s simple y f cil de 
 mantener.
 
 Pregunta:
 
    He visto que, por ejemplo Clipper tiene un opcode llamado 
 "PUSHWORD" (06), mientras Valkyirie lo llama "PUSHW"(3B): 
-Diferentes nombres, diferentes códigos. No es deseable que el pCode 
-de Harbour sea binario-compatible con Clipper ?. Si fuera así la VM 
-de Harbour podría interpretar código de Clipper y viceversa.
+Diferentes nombres, diferentes c¢digos. No es deseable que el pCode 
+de Harbour sea binario-compatible con Clipper ?. Si fuera as¡ la VM 
+de Harbour podr¡a interpretar c¢digo de Clipper y viceversa.
 
 Respuesta:
 
 Los opcodes de Harbour estan definidos en hbpcode.h 
-Nosotros estamos tratando que los mnemónicos sean muy fáciles de 
-usar, así PUSHWORD parece mas fácil que PUSHW. Los valores de los 
+Nosotros estamos tratando que los mnem¢nicos sean muy f ciles de 
+usar, as¡ PUSHWORD parece mas f cil que PUSHW. Los valores de los 
 opcodes son de poco valor porque ellos son solo usados por una 
 sentencia switch del lenguaje C (en realidad hay una poderosa 
-optimización la cual es: usar el mismo pcode de los opcodes como un 
-índice al array de punteros de las funciones de la VM, así la 
-velocidad de ejecución de la VM puede incrementarse). 
+optimizaci¢n la cual es: usar el mismo pcode de los opcodes como un 
+¡ndice al array de punteros de las funciones de la VM, as¡ la 
+velocidad de ejecuci¢n de la VM puede incrementarse). 
 Clipper usa esto.
 
 Nosotros no estamos implementando totalmente el modelo de OBJs del 
 lenguaje Clipper (por ej. para proveer identificadores de nombre 
-de longitud mayora 10 caracteres) así los OBJ de Harbour no serán 
+de longitud mayor a 10 caracteres) as¡ los OBJ de Harbour no ser n 
 soportados por Clipper y viceversa.
-
-
+ 
+ 
+ 

@@ -1,11 +1,17 @@
 /*
  * $Id$
  */
+
 /*
- * Copyright 2000 Alejandro de Garate <alex_degarate@hotmail.com>
- *    Documentation for: SETMODE()
+ * Las siguientes partes son derechos adquiridos de sus autores individuales.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2000 Alejandro de G rate <alex_degarate@hotmail.com>
+ * Documentaci¢n en Espa¤ol de: 
+ *    SETMODE()
  *
  * See doc/license.txt for licensing terms.
+ *
  */
 
 /*  $DOC$
@@ -14,7 +20,7 @@
  *  $CATEGORY$
  *      Entorno
  *  $ONELINER$
- *      Cambia el modo de video a un n£mero especificado de filas y columnas
+ *      Cambia el modo de video a un n£mero dado de filas y columnas
  *  $SYNTAX$
  *      SETMODE( <nFil>, <nCol> ) --> lSatisfactorio
  *  $ARGUMENTS$
@@ -65,8 +71,10 @@
  *  $PLATFORMS$
  *      DOS
  * $FILES$
- *      El Achivo fuente es gtdos.c
+ *      El Achivo fuente es ..\source\rtl\gtdos\gtdos.c
  *  $SEEALSO$
  *      MAXCOL(), MAXROW()
  *  $END$
- */
+ */ 
+
+

@@ -7,12 +7,12 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 2001 Ron Pinkas <ron@profit-master.com> 
- *   Documentación en Inglés de: simplex.txt
+ *   Documentaci¢n en Ingl‚s de: simplex.txt
  *
- * Copyright 2002 Alejandro de Gárate <alex_degarate@hotmail.com>
- *   Documentación en Español de: simplex.txt
+ * Copyright 2002 Alejandro de G rate <alex_degarate@hotmail.com>
+ *   Documentaci¢n en Espa¤ol de: simplex.txt
  *
- * Vea doc/license.txt por los términos de la licencia.
+ * Vea doc/license.txt por los t‚rminos de la licencia.
  *
  */
 
@@ -21,90 +21,91 @@ SIMPLEX
 =======
 
 Simplex usa definiciones de alto nivel, lo cual para muchos 
-programadores podría ser más legible, que las definiciones 
+programadores podr¡a ser m s legible, que las definiciones 
 equivalentes de Flex.
 Las definiciones de Simplex son divididas en 6 secciones 
 principales:
 
 1. Delimiters (Delimitadores). Hay tres tipos de delimitadores 
-   Léxicos:
+   L‚xicos:
 
-   a. Ignorable. Típico ejemplo de estos delimitadores son los 
+   a. Ignorable. T¡pico ejemplo de estos delimitadores son los 
       "espacios en blanco", por ej. espacio y tabulador.            
 
-   b. Retornable: Típico ejemplos de estos delimitadores son 
-      las comas, paréntesis y operadores matemáticos.
+   b. Retornable: T¡pico ejemplos de estos delimitadores son 
+      las comas, par‚ntesis y operadores matem ticos.
 
-   c. Agregables. Mientras Yo no tengo ningún ejemplo en mente, 
-      sospecho que podría haber una necesidad para esos 
+   c. Agregables. Mientras Yo no tengo ning£n ejemplo en mente, 
+      sospecho que podr¡a haber una necesidad para esos 
       delimitadores. 
-      Este tipo de delimitadores deberían ser agregados al 
+      Este tipo de delimitadores deber¡an ser agregados al 
       token que lo precede, haciendo de ese delimitador, un 
       caracter terminador.
 
 
 2. Streams (flujos). 
    Estos son referidos como "pares". flujos, como su nombre 
-   puede sugerir, es cualquier secuencia (ó flujo) de caracteres, 
+   puede sugerir, es cualquier secuencia (¢ flujo) de caracteres, 
    encerrados dentro de caracter[es] de inicio (START) y 
-   caracter[es] de finalización (END) (el par).
-   Típico ejemplo de ese elemento léxico es una cadena literal, 
+   caracter[es] de finalizaci¢n (END) (el par).
+   T¡pico ejemplo de ese elemento l‚xico es una cadena literal, 
    por ejemplo: "Hola Mundo".
 
 
 3. Self Contained Words (Palabras Auto-contenidas).
-   Estos son un grupo específico de palabras reservadas, las 
-   cuales NO necesitan NINGUN delimitador. Estas palabras podrían 
+   Estos son un grupo espec¡fico de palabras reservadas, las 
+   cuales NO necesitan NINGUN delimitador. Estas palabras podr¡an 
    ser vistas como una forma de meta delimitadores. Estas palabras
-   serán extraidas desde el fujo de entrada sin importar los 
-   caracteres que los preceden ó los caracteres que los siguen.
-   Típico ejemplo de estos tokens son los operadores lógicos de 
-   dBase: .AND., .OR., .NOT., los operadores de asignación en 
-   linea de lenguaje C  +=  *= etc., así como también los 
+   ser n extraidas desde el fujo de entrada sin importar los 
+   caracteres que los preceden ¢ los caracteres que los siguen.
+   T¡pico ejemplo de estos tokens son los operadores l¢gicos de 
+   dBase: .AND., .OR., .NOT., los operadores de asignaci¢n en 
+   linea de lenguaje C  +=  *= etc., as¡ como tambi‚n los 
    operadores pre y post incremento / decremento -- y ++
-   El único atributo de esos esos elementos es el hecho que 
-   estos elementos NO requieren delimitadores precedentes ó 
+   El £nico atributo de esos esos elementos es el hecho que 
+   estos elementos NO requieren delimitadores precedentes ¢ 
    siguientes.
 
    
 4. Keywords (Palabras Claves). 
-   Estos son un grupo específico de palabras reservadas, 
-   las cuales tienen significancia léxica en el lenguaje 
+   Estos son un grupo espec¡fico de palabras reservadas, 
+   las cuales tienen significancia l‚xica en el lenguaje 
    definido, cuando aparecen como el token primero (FIRST) 
-   en una línea dada del fuente.
-   Las palabras Claves pueden ser contracciones de múltiples 
+   en una l¡nea dada del fuente.
+   Las palabras Claves pueden ser contracciones de m£ltiples 
    palabras con espacios en blanco (delimitadores ignorables) 
-   cuando se usa el patrón de coincidencia predefinido (WS).
+   cuando se usa el patr¢n de coincidencia predefinido (WS).
 
 
 5. Words (Palabras). 
-   Estos son un grupo específico de palabras reservadas, las 
-   cuales tienen significancia léxica en el lenguaje definido, 
+   Estos son un grupo espec¡fico de palabras reservadas, las 
+   cuales tienen significancia l‚xica en el lenguaje definido, 
    cuando aparecen en cualquier lugar de una linea dada de 
-   código fuente.
-   Las palabras pueden ser contracciones de múltiples palabras 
+   c¢digo fuente.
+   Las palabras pueden ser contracciones de m£ltiples palabras 
    con espacios en blanco (delimitadores ignorables) cuando se 
-   usa el patrón de coincidencia predefinido (WS).
+   usa el patr¢n de coincidencia predefinido (WS).
 
    
 6. Rules (Reglas). hay 2 tipos de reglas:
 
-   a. Reduction Rules (Reglas de reducción). 
-      Este tipo de reglas definen la traducción de uno
-      ó muchos tokens dentro de uno ó más tokens (ó 
+   a. Reduction Rules (Reglas de reducci¢n). 
+      Este tipo de reglas definen la traducci¢n de uno
+      ¢ muchos tokens dentro de uno ¢ m s tokens (¢ 
       acciones establecidas).
       Las Reducciones son infinitamente recursivas, lo 
-      cual significa que los resultados de la reducción, 
-      son puestos de nuevo, en caso de ser parte todavía 
+      cual significa que los resultados de la reducci¢n, 
+      son puestos de nuevo, en caso de ser parte todav¡a 
       de otra regla.
       Para eliminar esos ciclos recursivos, los resultados 
-      de la Reducción pueden ser de la forma de n + DONT_REDUCE, 
-      pasando así a través del token resultante sin chequeos 
+      de la Reducci¢n pueden ser de la forma de n + DONT_REDUCE, 
+      pasando as¡ a trav‚s del token resultante sin chequeos 
       posteriores.
 
-   b. Pass Through (Pasaje a Través, asociación izquierda). 
+   b. Pass Through (Pasaje a Trav‚s, asociaci¢n izquierda). 
       Este tipo de reglas dirige al lexer para aceptar esos 
-      tokens como una forma válida. 
+      tokens como una forma v lida. 
 
+    
 
 

@@ -7,12 +7,12 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 2001 Jose Lalin <dezac@corevia.com>
- *   Documentación en Inglés
+ *   Documentaci¢n en Ingl‚s
  *
- * Copyright 2001 Alejandro de Gárate <alex_degarate@hotmail.com>
- *   Traducción al Español de pragma.txt
+ * Copyright 2001 Alejandro de G rate <alex_degarate@hotmail.com>
+ *   Traducci¢n al Espa¤ol de pragma.txt
  *
- * Vea doc/license.txt por los términos de la licencia.
+ * Vea doc/license.txt por los t‚rminos de la licencia.
  *
  */
 
@@ -23,16 +23,16 @@ DIRECTIVA #pragma
 
 INTRODUCCION
 ============
-Este archivo explica qué es y cómo usar la directiva #pragma con Harbour.
-Primariamente esto le da control sobre los switches de la línea de 
-comandos del compilador, desde adentro de su código fuente.
+Este archivo explica qu‚ es y c¢mo usar la directiva #pragma con Harbour.
+Primariamente esto le da control sobre los switches de la l¡nea de 
+comandos del compilador, desde adentro de su c¢digo fuente.
 
 
 QUE ES ?
 ========
-#pragma es una directiva usada dentro del código fuente en muchos 
+#pragma es una directiva usada dentro del c¢digo fuente en muchos 
 compiladores para cambiar el comportamiento del compilador en tiempo 
-de compilación.
+de compilaci¢n.
 
 
 USO
@@ -42,22 +42,22 @@ La directiva #pragma puede ser usada en dos formas:
 1- el modo switch
 2- modo comando
 
-La sintaxis es: #pragma <Expression>[=On/Off] ó
+La sintaxis es: #pragma <Expression>[=On/Off] ¢
                 #pragma -CompilerFlag[+|-]
 
-Ud. puede usar ambos modos mezclados en el mismo módulo y en mayúsculas ó
-minúsculas sin preocuparse.
+Ud. puede usar ambos modos mezclados en el mismo m¢dulo y en may£sculas ¢
+min£sculas sin preocuparse.
 
-Para habilitar ó deshabilitar un comando ó un switch Ud simplemente haga:
+Para habilitar ¢ deshabilitar un comando ¢ un switch Ud simplemente haga:
 
   * Modo Comando                      Modo Switch 
   --------------------------------------------------------------
   * #pragma <CommandName>=On/Off      #pragma /<SwitchName>+/-
 
   Ejemplo: 
-     #pragma AddDebugInfo=Off    /* Suprime información de depuración */
-     #pragma /B+                 /* Agrega información de depuración 
-                                        desde aquí                    */
+     #pragma AddDebugInfo=Off    /* Suprime informaci¢n de depuraci¢n */
+     #pragma /B+                 /* Agrega informaci¢n de depuraci¢n 
+                                        desde aqu¡                    */
 
 
 IMPLEMENTACION
@@ -79,11 +79,11 @@ Esta es la lista de los comandos soportados y switches:
   * SHORTCUTTING        =<On/Off>     /Z<+/->
 
   Los switches tienen el mismo comportamiento que los del compilador  
-  y los comandos son sinónimos de los switches.
+  y los comandos son sin¢nimos de los switches.
 
   * TRACEPRAGMAS (Rastreo de pragmas)
   Este comando muestra la actividad de los pragmas en tiempo de 
-  compilación cuando están habilitados.
+  compilaci¢n cuando est n habilitados.
 
   NOTA: Ud. puede usar el modo de comando abreviado tipeando solamente 
         los ocho primeros caracteres.
@@ -91,7 +91,7 @@ Esta es la lista de los comandos soportados y switches:
 
 NOTAS:
 ======
-Esta directiva no es soportada en la versión aislada del preprocesador 
+Esta directiva no es soportada en la versi¢n aislada del preprocesador 
 de Harbour.
 
 
@@ -103,12 +103,10 @@ EJEMPLOS
 function Test()
 return nil
 
-Esto es lo mismo que llamar a Harbour con el switch -n en la línea de
+Esto es lo mismo que llamar a Harbour con el switch -n en la l¡nea de
 comandos pero con el gran beneficio que si Ud. olvida pasar el switch, 
-este podrá ser usado de todas maneras, porque está incluido dentro del 
-código fuente.
-
-
+este podr  ser usado de todas maneras, porque est  incluido dentro del 
+c¢digo fuente.
 
 
 
