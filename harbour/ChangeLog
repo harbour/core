@@ -1,3 +1,9 @@
+19990818-19:20 EDT David G. Holm <dholm@jsd-llc.com>
+  * source/vm/hvm.c
+    * Added TODO: comment to indicate that the divide by zero check
+      needs to be removed once proper divide by zero error handling
+      has been added to Harbour.
+
 19990818-18:45 EDT David G. Holm <dholm@jsd-llc.com>
   * config/os2/icc.cf
     ! Fix to only use RDD libraries when RDD library is specified.

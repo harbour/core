@@ -821,10 +821,8 @@ void hb_vmDivide( void )
    double d2 = hb_vmPopDouble( &wDec2 );
    double d1 = hb_vmPopDouble( &wDec1 );
 
-   /* NOTE: Clipper always returns the result of a division
-            with the SET number of decimal places, unless the
-            divisor is zero, in which case the result is zero
-            with zero decimal places. */
+   /* TODO: Remove the if zero, return zero code once the proper
+            error handling for divide by zero has been added. */
    if( d2 == 0.0 )
       hb_vmPushInteger( 0 );
    else
