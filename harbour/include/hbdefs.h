@@ -118,6 +118,6 @@ typedef USHORT HB_HANDLE;
 #define ISMEMO( n )        hb_param( n, IT_MEMO )
 #define ISBYREF( n )       hb_param( n, IT_BYREF )
 #define ISARRAY( n )       hb_param( n, IT_ARRAY )
-#define ALENGTH( n )       hb_parinfa( n, 0 ) /* TODO! */
+#define ALENGTH( n )       hb_parinfa( n, 0 )
 
 #endif /* HB_DEFS_H_ */
