@@ -264,9 +264,10 @@ HB_FUNC( DISKSPACE )
                   with EF_CANDEFAULT above)
          */
 
-         if( uiAction != E_RETRY )
-            break;
+         if( uiAction == E_RETRY )
+            continue;
       }
+      break;
    }
 
 #else
