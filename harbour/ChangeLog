@@ -1,3 +1,8 @@
+19990606-00:30 CET Eddie Runia
+  * tests/working/hardcr.prg; tests/working/mtran.prg
+    Uploaded. Matching .C untested and missing for now.
+    Just wanted #100 & #101 in !
+
 19990605-11:12 EST Les. Griffith
   * removed DIRECTORY() from files.c
   * added rtl\dir.c
