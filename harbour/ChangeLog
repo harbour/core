@@ -7,6 +7,11 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+  * contrib/libnf/makefile
+  * contrib/libnf/nanfor.bc
+  * contrib/libnf/makefile.vc
+    + Add reference for dispc.c, ftattr.c and dfile.prg
+
   * include/hbsetup.h
     + defines for compiler __DJGPP__ is HB_OS_DOS_32.
 
