@@ -3,7 +3,7 @@
     Class TPersistent to implement objects persistence
 
   + harbour/tests/testpers.prg
-    objects persistance sample using Class TPersistent objects
+    objects persistence sample using Class TPersistent objects
 
 2001-09-02 18:32 GMT+1 Antonio Linares <alinares@fivetech.com>
   * harbour/source/vm/classes.c
