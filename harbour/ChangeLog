@@ -1,3 +1,7 @@
+2001-06-25 14:51 GMT+1 Patrick Mast <harbour@PatrickMast.com>
+   * contrib/tprepro/tprepro.prg
+     * Bug fix in TranslateFile() method
+
 2001-06-24 23:43 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
    *utils/hbmake/hbmake.prg
      * Reverted last change to hbmake, and put the file existence test on the correct place

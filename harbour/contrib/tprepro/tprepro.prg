@@ -74,13 +74,12 @@ RETURN NIL
 
 CLASS TPreProcessor
 
-   DATA cIncludePath,cPreProcesses
+   DATA cIncludePath,cPreProcessed
 
    METHOD New( cIncludePath )
    METHOD End()
 
    METHOD AddRule( cRule )
-   METHOD AddIncludepath( cIncludePath )
    METHOD SetIncludepath( cIncludePath )
    METHOD TranslateLine( cCode )
    METHOD TranslateFile( cFile, lWritePPO )
@@ -96,7 +95,8 @@ METHOD New( cIncludePath ) CLASS TPreprocessor
 
    __PP_Init( cIncludePath )
 
-   ::cIncludepath:=cIncludePath
+   ::cIncludepath  := cIncludePath
+   ::cPreProcessed := ""
 
 return Self
 
@@ -113,20 +113,9 @@ return Self
 
 METHOD SetIncludepath( cIncludePath ) CLASS TPreprocessor
 
-   __PP_PATH( cIncludePath, .t. )
+   __PP_Init( cIncludePath )
 
    ::cIncludepath:=cIncludePath
-
-return Self
-
-
-
-
-METHOD AddIncludepath( cIncludePath ) CLASS TPreprocessor
-
-   __PP_PATH( cIncludePath, .f. )
-
-   ::cIncludepath:=::cIncludePath+";"+cIncludePath
 
 return Self
 
@@ -217,10 +206,14 @@ METHOD TranslateFile( cFile, lWritePPO, cPPOExt, lWasteNoSpace ) CLASS TPreproce
 
       if lWasteNoSpace
          if !Empty( cPP )
-            cResult+= LTrim( cPP ) + Replicate(CRLF,nPuntComma)
+            cResult+= LTrim( cPP )
          endif
       else
-         cResult+=cPP + Replicate(CRLF,nPuntComma)
+         if Empty( cPP )
+            cResult+= Replicate(CRLF,nPuntComma)
+         else
+            cResult+=cPP + Replicate(CRLF,nPuntComma)
+         endif
       endif
 
    enddo
@@ -245,5 +238,7 @@ METHOD TranslateFile( cFile, lWritePPO, cPPOExt, lWasteNoSpace ) CLASS TPreproce
       endif
 
    endif
+
+   ::cPreProcessed := cResult
 
 return cResult
