@@ -1,3 +1,10 @@
+20000407-15:25 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+
+   * source/rtl/diskspac.c
+     + Added OS/2 (GCC and icc) support
+   * tests/MakeFile
+     + db_brows was missing from sources list
+
 20000407-03:26 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * include/hbver.h
@@ -15,8 +22,8 @@
 20000406-10:55 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.y
-	* the parser resumes parsing after 'parse errors' (parsing errors
-	are non-fatal now)
+   * the parser resumes parsing after 'parse errors' (parsing errors
+   are non-fatal now)
 
 20000406-08:52 GMT+1 Victor Szakats <info@szelvesz.hu>
 
@@ -69,7 +76,7 @@
    * source/rtl/math.c
      ! exception redefined as _exception for Borland C++ 5.5 and upper.
      ! Disabled math exception handling for Borland C++ 5.3 C++ mode,
-       since it won't work. Other Borland C++ version (4.x,5.x) should be 
+       since it won't work. Other Borland C++ version (4.x,5.x) should be
        also checked in this respect.
 
    * source/rtl/gtwin/gtwin.c
@@ -87,8 +94,8 @@
 
    * makefile.vc
      ! Using a safer method for the unistd.h workaround. It's now created
-       in the local OBJ dir instead of the common INCLUDE. This way it's 
-       impossible to accidently leave it there and break Cygnus and other 
+       in the local OBJ dir instead of the common INCLUDE. This way it's
+       impossible to accidently leave it there and break Cygnus and other
        GCC make processes.
 
    + utils/hbtest/rt_stra.prg
@@ -96,10 +103,10 @@
    * makefile.*
      ! rt_str.prg split to make it compile with BCC31.
 
-   ; All these fixes were needed to compile in C++ mode with Borland C++ 
+   ; All these fixes were needed to compile in C++ mode with Borland C++
      (3.1, 5.3, 5.5). Hmm, the Harbour .EXE sizes are actually 10% smaller
      than with 32 bit Borland Cs.
-      
+
 2000-04-04 20:00 GMT-4 David G. Holm <dholm@jsd-llc.com>
 
    * source/rtl/dir.c
@@ -146,7 +153,7 @@
 
    * source/rtl/dircmd.prg
      + Changed to use NationMsg() instead of the hard-wired English
-       string. The previous 100% compatible version left in STRICT_COMPAT 
+       string. The previous 100% compatible version left in STRICT_COMPAT
        branch.
 
    * source/rtl/console.c
@@ -205,7 +212,7 @@
 
    * source/rtl/tget.prg
      + Added XPP compatible _Assign and _End() methods.
-     ! Home(), End(), Access(), ColorDisp(), UpdateBuffer() 
+     ! Home(), End(), Access(), ColorDisp(), UpdateBuffer()
        fixed to return Self.
      + TODO added about Xbase++ compatible method.
 

@@ -44,7 +44,7 @@
  *
  */
 
-/* NOTE: DISKSPACE() supports larger disks than 2GB. CA-Cl*pper will always 
+/* NOTE: DISKSPACE() supports larger disks than 2GB. CA-Cl*pper will always
          return a (long) value, Harbour may return a (double) for large
          values, the decimal places are always set to zero, though. */
 
@@ -56,6 +56,12 @@
 
 #if defined(HB_OS_DOS) || defined(__WATCOMC__)
    #include <dos.h>
+#endif
+
+#if defined(HB_OS_OS2)
+   #define INCL_BASE
+   #define INCL_DOSERRORS
+   #include <os2.h>
 #endif
 
 /* NOTE: The second parameter is a Harbour extension, check fileio.ch for
@@ -120,7 +126,7 @@ HB_FUNC( DISKSPACE )
    while( TRUE )
    {
 
-      typedef BOOL (WINAPI *P_GDFSE)(LPCTSTR, PULARGE_INTEGER, 
+      typedef BOOL (WINAPI *P_GDFSE)(LPCTSTR, PULARGE_INTEGER,
                                      PULARGE_INTEGER, PULARGE_INTEGER);
 
       char szPath[ 4 ];
@@ -202,7 +208,7 @@ HB_FUNC( DISKSPACE )
                          ( double ) i64RetVal.u.HighPart +
                          ( double ) i64RetVal.u.HighPart *
                          ( double ) 0xFFFFFFFF;
-      
+
                if( uiType == HB_DISK_USED )
                {
                   dSpace -= ( double ) i64FreeBytes.u.LowPart +
@@ -214,7 +220,7 @@ HB_FUNC( DISKSPACE )
             #endif
          }
       }
-      else 
+      else
       {
          DWORD dwSectorsPerCluster;
          DWORD dwBytesPerSector;
@@ -269,6 +275,53 @@ HB_FUNC( DISKSPACE )
             continue;
       }
       break;
+   }
+
+#elif defined(HB_OS_OS2)
+
+   struct _FSALLOCATE fsa;
+   USHORT rc;
+
+   uiType = HB_MIN( uiType, HB_DISK_TOTAL );
+
+   /* Query level 1 info from filesystem */
+   while( ( rc = DosQueryFSInfo(uiDrive, 1, &fsa, sizeof(fsa)) ) != 0 )
+   {
+      USHORT uiAction = hb_errRT_BASE_Ext1( EG_OPEN, 2018, NULL, NULL, 0, EF_CANDEFAULT );
+
+      /* NOTE: Under 'Standard' behaviour, this error does not allow 'retry'
+               but if you should wish to make it so, then or EF_CANRETRY with
+               EF_CANDEFAULT above)
+      */
+
+      if( uiAction != E_RETRY )
+         break;
+   }
+
+   if(rc == 0)
+   {
+      switch( uiType )
+      {
+         case HB_DISK_AVAIL:
+         case HB_DISK_FREE:
+            dSpace = ( double ) fsa.cUnitAvail *
+                     ( double ) fsa.cSectorUnit *
+                     ( double ) fsa.cbSector;
+            break;
+
+         case HB_DISK_USED:
+         case HB_DISK_TOTAL:
+            dSpace = ( double ) fsa.cUnit *
+                     ( double ) fsa.cSectorUnit *
+                     ( double ) fsa.cbSector;
+
+            if( uiType == HB_DISK_USED )
+               dSpace -= ( double ) fsa.cUnitAvail *
+                         ( double ) fsa.cSectorUnit *
+                         ( double ) fsa.cbSector;
+            break;
+      }
+
    }
 
 #else
