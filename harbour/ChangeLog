@@ -1,3 +1,10 @@
+19991012-14:00 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/rtl/dates.c
+     + Added support for Windows requirements.
+   * include/hbclass.ch
+     + Added support for METHOD ... OPERATOR ... for Harbour operators
+       overloading. (An outstanding job from Eddie!)
+
 19991012-13:13 GMT+1 Victor Szel <info@szelvesz.hu>
    * include/clipdefs.h
      ! ERRCODE typedef removed from here, since it has been moved to extend.h.
@@ -5,9 +12,9 @@
 19991012-10:38 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *samples/pe
-	* new directory with a sample editor that can be used as a base for 
+	* new directory with a sample editor that can be used as a base for
   	  MEMOEDIT and TEditor class
-	
+
 19991012-00:52 EDT Paul Tucker <ptucker@sympatico.ca>
    * makefile.vc
      + source/rtl/input.prg
@@ -29,7 +36,7 @@
    + source/rtl/wait.prg
      + __INPUT(), __WAIT(), SETTYPEAHEAD() functions added.
        (Thanks to Jose Lalin)
-       Note that INPUT() is not yet working, since it require macro 
+       Note that INPUT() is not yet working, since it require macro
        functionality.
        Please add them to non-GNU make systems.
 
@@ -39,7 +46,7 @@
        hb_fsCurDrv(), hb_fsCurDir()
      + hb_fsIsDevice() added. (by Jose Lalin), return value type changed to
        BOOL to match Clipper.
-     ! hb_fsIsDrv(), hb_fsChDrv() fixed to call the OS functions with the 
+     ! hb_fsIsDrv(), hb_fsChDrv() fixed to call the OS functions with the
        right drive number. (Please test this!)
    * include/ctoharb.h
      + More undocumented file functions added. (by Jose Lalin)
