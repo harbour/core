@@ -16,17 +16,17 @@ function main()
 return nil
 
 function CheckDate( dDate )
-
-   OutStd( "Testing date:", dDate , chr( 10 ) )
-   OutStd( "Days in month..:", daysinmonth( dDate ), chr( 10 ) )
-   OutStd( "Day of year....:", doy( dDate ), chr( 10 ) )
-   OutStd( "Begin of month.:", bom( dDate ), chr( 10 ) )
-   OutStd( "End of month...:", eom( dDate ), chr( 10 ) )
-   OutStd( "Week of month..:", wom( dDate ), chr( 10 ) )
-   OutStd( "Week of year...:", woy( dDate ), chr( 10 ) )
-   OutStd( "Begin of year..:", boy( dDate ), chr( 10 ) )
-   OutStd( "End of year....:", eoy( dDate ), chr( 10 ) )
-   OutStd( chr( 13 ), chr( 13 ) )
+   local cNewLine := chr( 13 ) + chr( 10 )
+   OutStd( "Testing date:", dDate , cNewLine )
+   OutStd( "Days in month..:", daysinmonth( dDate ), cNewLine )
+   OutStd( "Day of year....:", doy( dDate ), cNewLine )
+   OutStd( "Begin of month.:", bom( dDate ), cNewLine )
+   OutStd( "End of month...:", eom( dDate ), cNewLine )
+   OutStd( "Week of month..:", wom( dDate ), cNewLine )
+   OutStd( "Week of year...:", woy( dDate ), cNewLine )
+   OutStd( "Begin of year..:", boy( dDate ), cNewLine )
+   OutStd( "End of year....:", eoy( dDate ), cNewLine )
+   OutStd( chr( 10 ), chr( 10 ) )
    __Accept( "Press ENTER to continue..." )
 
 return nil

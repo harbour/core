@@ -6,7 +6,7 @@ ifeq ($(SHLVL),) # COMMAND.COM
 
 INSTALL_LIST = $(subst /,\,$(INSTALL_OBJS))
 INSTALL_RULE =\
-	command.com /c FOR %f IN ($(INSTALL_LIST)) DO COPY %f $(INSTALL_DIR)
+	$(COMSPEC) /c FOR %f IN ($(INSTALL_LIST)) DO COPY %f $(subst /,\,$(INSTALL_DIR))
 
 else  # bash
 

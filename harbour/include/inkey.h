@@ -43,6 +43,7 @@
 #include "hbdefs.h"
 
 /* Harbour keyboard support functions */
+extern int  hb_inkey ( double seconds, HB_inkey_enum event_mask, int wait, int forever ); /* Wait for keyboard input */
 extern int  hb_inkeyGet( void );            /* Extract the next key from the Harbour keyboard buffer */
 extern int  hb_inkeyLast( void );           /* Return the value of the last key that was extracted */
 extern int  hb_inkeyNext( void );           /* Return the next key without extracting it */

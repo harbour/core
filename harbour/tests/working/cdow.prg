@@ -3,13 +3,13 @@
 //
 
 function main()
+local cNewLine := chr (13)+chr (10)
+  OutStd( cMonth( date() ) + cNewLine )
+  OutStd( cMonth( date() + 31 ) + cNewLine )
+  OutStd( cMonth( date() + 60 ) + cNewLine )
 
-  OutStd( cMonth( date() ) + chr(10) )
-  OutStd( cMonth( date() + 31 ) + chr(10) )
-  OutStd( cMonth( date() + 60 ) + chr(10) )
-
-  OutStd( cDow( date() ) + chr(10) )
-  OutStd( cDow( date() + 6 ) + chr(10) )
-  OutStd( cDow( date() + 7 ) + chr(10) )
+  OutStd( cDow( date() ) + cNewLine )
+  OutStd( cDow( date() + 6 ) + cNewLine )
+  OutStd( cDow( date() + 7 ) + cNewLine )
 
 return nil

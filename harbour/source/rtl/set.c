@@ -310,9 +310,14 @@ static int open_handle (char * file_name, BOOL bMode, char * def_ext)
    handle = open (path,
                   O_BINARY|O_WRONLY|O_CREAT|(bMode?O_APPEND:O_TRUNC),
                   S_IWRITE );
-   if (handle < 0)
+   if (handle == -1)
    {
-      hb_errorRT_TERMINAL( EG_CREATE, 2013, NULL, path );
+      int error = errno;
+      char * error_message = strerror( error );
+      char * message = ( char * )hb_xgrab( strlen( error_message ) + 64 );
+      sprintf( message, "Create error %d (%s)", error, error_message );
+      hb_errorRT_TERMINAL( EG_CREATE, 2013, message, path );
+      hb_xfree( message );
    }
    return handle;
 #endif

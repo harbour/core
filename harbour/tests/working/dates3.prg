@@ -8,41 +8,41 @@
 
 function main()
 
-   LOCAL dDate, i
+   LOCAL dDate, i, cNewLine := chr( 13 ) + chr( 10 )
 
    set( _SET_DATEFORMAT, "dd/mm/yyyy" )
    dDate := cToD( "25/05/1999" )
 
-   OutStd( dDate, dow( dDate ), chr( 10 ) )
+   OutStd( dDate, dow( dDate ), cNewLine )
 
-   OutStd( LastMonday( dDate ), chr( 10 ) )
+   OutStd( LastMonday( dDate ), cNewLine )
 
    dDate += 3
-   OutStd( dDate, dow( dDate ), chr( 10 ) )
+   OutStd( dDate, dow( dDate ), cNewLine )
 
    dDate += 4
-   OutStd( dDate, dow( dDate ), chr( 10 ) )
+   OutStd( dDate, dow( dDate ), cNewLine )
 
    set( _SET_DATEFORMAT, "mm/dd/yyyy" )
    dDate := cToD( "05/25/1999" )
 
-   OutStd( dDate, dow( dDate ), chr( 10 ) )
+   OutStd( dDate, dow( dDate ), cNewLine )
 
-   OutStd( LastMonday( dDate ), chr( 10 ) )
+   OutStd( LastMonday( dDate ), cNewLine )
 
    dDate += 3
-   OutStd( dDate, dow( dDate ), chr( 10 ) )
+   OutStd( dDate, dow( dDate ), cNewLine )
 
    dDate += 4
-   OutStd( dDate, dow( dDate ), chr( 10 ) )
+   OutStd( dDate, dow( dDate ), cNewLine )
    
-   OutStd( chr( 10 ) )
+   OutStd( cNewLine )
    dDate := DATE ()
    FOR i := 1 TO 7
-      OutStd( dDate, dow( dDate ), chr( 10 ) )
+      OutStd( dDate, dow( dDate ), cNewLine )
       dDate++
    NEXT
-   OutStd( ctod( "" ), dow( ctod( "" ) ), chr( 10 ) )
+   OutStd( ctod( "" ), dow( ctod( "" ) ), cNewLine )
 
 return nil
 

@@ -1,3 +1,78 @@
+19990802-20:00 EDT David G. Holm <dholm@jsd-llc.com>
+   * config/os2/icc.cf
+     * Added '/NOE' to 'AR_FLAGS' to get rid of linker errors for
+       multiply defined and unresolved symbols.
+   * config/win32/dir.cf
+     ! Fixed COMMAND shell support .
+   * config/win32/gcc.cf
+     + Added 'moldname' to list of libraries to include
+       (for hb_inkeyPoll() support).
+   * config/win32/install.cf
+     ! Fixed COMMAND shell support.
+   * include/hbdefs.h
+     ! Macros MAX and MIN are not types and must therefore be
+       outside 'the #if ! defined(HB_DONT_DEFINE_BASIC_TYPES)'
+       and '#if defined(__IBMCPP__)' type exclusion blocks.
+   * include/inkey.h
+     + Added extern prototype for hb_inkey().
+   * source/hbpp/stdalone/hbpp.c
+     * Changed #include tests to allow more compilers to build it.
+   * source/rtl/console.c
+     * Added code to switch stdout and errout from text mode to
+       binary for Borland C, IBM C++, DJGPP, Cygwin, and MS C.
+     * Changed HB___ACCEPT() to use hb_altout() instead of using a
+       P-Code call to QOUT(). Changed HB_OS_DOS_COMPATIBLE version
+       to use INKEY(). Moved the function to the bottom of the file
+       in order to avoid having to add a prototype for hb_dispout().
+   * source/rtl/dir.c
+     ! Worked around bug where certain compilers that only have standard
+       chmod() support were being treated as if they had Borland / DJGPP
+       style _chmod() support, which resulted in OS/2 / GCC and Windows /
+       GCC version of DIRTEST marking all files read only. Compilers that
+       previously caused read-only files will no longer show attributes.
+   * source/rtl/inkey.c
+     - Removed __CYGWIN__ exclusion from hb_inkeyPoll().
+     + Added comments to key translations.
+     + Created hb_inkey() from the low-level guts of HB_INKEY, so that
+       internal Harbour functions can get input events without having
+       to resort to using a P-Code call to INKEY().
+   * source/rtl/set.c
+     * Added message with actual error for file create failure.
+   * tests/working/cdow.prg
+     * Changed CHR(10) to CHR(13)+CHR(10)
+   * tests/working/dates.prg
+     * Changed CHR(10) to CHR(13)+CHR(10)
+   * tests/working/dates2.prg
+     * Changed CHR(10) to CHR(13)+CHR(10)
+   * tests/working/dates3.prg
+     * Changed CHR(10) to CHR(13)+CHR(10)
+   * tests/working/dates4.prg
+     * Changed CHR(10) to CHR(13)+CHR(10)
+   * tests/working/dirtest.prg
+     * Attempt to determine if running on a DOS type system and 
+       use the result to determine whether to use CR,LF or LF.
+   * tests/working/inherit.prg
+     * Attempt to determine if running on a DOS type system and 
+       use the result to determine whether to use CR,LF or LF.
+   * tests/working/inkeytst.prg
+     + Added two command line parameters: If the first one is
+       present, only the last test will be run. If the second
+       one is present, extended keyboard codes are allowed.
+   * tests/working/longstr2.prg
+     * Attempt to determine if running on a DOS type system and 
+       use the result to determine whether to use CR,LF or LF.
+   * tests/working/readfile.prg
+     * Changed from having newline differ based on Clipper vs.
+       Harbour to having it differ based on DOS vs. Unix.
+   * tests/working/round.prg
+     * Attempt to determine if running on a DOS type system and 
+       use the result to determine whether to use CR,LF or LF.
+   * tests/working/seconds.prg
+     * Attempt to determine if running on a DOS type system and 
+       use the result to determine whether to use CR,LF or LF.
+   * tests/working/set_num.prg
+     * Changed CHR(10) to CHR(13)+CHR(10)
+
 19990802-19:45 GMT+1 Victor Szel <info@szelvesz.hu>
    + include/dates.h
      source/rtl/dates.c - const keyword added.

@@ -6,8 +6,14 @@
 
 function Main()
 
-   local short := "1234567890"
-   local i, long, very_long
+   local short := "1234567890", cOs := OS()
+   local i, long, very_long, cNewLine
+
+   IF "OS/2" $ cOs .OR. "WIN" $ cOs .OR. "DOS" $cOs
+      cNewLine := CHR( 13 ) + CHR( 10 )
+   ELSE
+      cNewLine := CHR( 10 )
+   END IF
 
    long := short
    for i := 1 TO 12
@@ -22,31 +28,19 @@ function Main()
    OutErr (len(short), len(long), len(very_long))
    Qout   (len(short), len(long), len(very_long))
 
-   CrLf()
+   OutStd (cNewLine)
    OutStd (len(short), len(long), len(very_long))
 
-   CrLf()
-   CrLf()
+   OutStd (cNewLine)
+   OutStd (cNewLine)
    OutStd (short)
 
-   CrLf()
-   CrLf()
+   OutStd (cNewLine)
+   OutStd (cNewLine)
    OutStd (long)
 
-   CrLf()
-   CrLf()
+   OutStd (cNewLine)
+   OutStd (cNewLine)
    OutStd (very_long)
 
 return nil
-
-procedure CrLf
-   #ifdef __HARBOUR__
-      OutStd (chr(10))
-   #else
-      OutStd (chr(13)+chr(10))
-   #endif
-return
-
-procedure Pause
-   __Accept("Pause: ")
-return

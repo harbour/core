@@ -64,19 +64,19 @@ typedef int BOOL;
 #define FALSE  0
 #define TRUE   1
 
-#ifndef MAX
-#define MAX(a,b)                (((a) > (b)) ? (a) : (b))
-#endif
-#ifndef MIN
-#define MIN(a,b)                (((a) < (b)) ? (a) : (b))
-#endif
-
 #define LOBYTE(w)           ((BYTE)(w))
 #define HIBYTE(w)           ((BYTE)(((WORD)(w) >> 8) & 0xFF))
 #define LOWORD(l)           ((WORD)(l))
 
 #endif /* HB_DONT_DEFINE_BASIC_TYPES */
 #endif /* __IBMCPP__ */
+
+#ifndef MAX
+#define MAX(a,b)                (((a) > (b)) ? (a) : (b))
+#endif
+#ifndef MIN
+#define MIN(a,b)                (((a) < (b)) ? (a) : (b))
+#endif
 
 #ifdef __GNUC__
    #define pascal __attribute__ ((stdcall))

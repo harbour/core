@@ -26,6 +26,9 @@ LINKPATHS += -L$(HB_LIB_COMPILE)
 endif
 LINKLIBS += $(foreach lib, $(LIBS), -l$(lib))
 
+# This library is needed for kbhit() and getch() support.
+LINKLIBS += -lmoldname
+
 # If LIBS specifies the rdd library, add all DB drivers.
 ifeq ($(findstring rdd,$(LIBS)),rdd)
 LINKPATHS += $(foreach drv, $(HB_DB_DRIVERS), -L$(TOP)$(ROOT)source/rdd/$(drv)/$(ARCH))

@@ -11,8 +11,9 @@
 
 #include "inkey.ch"
 
-PROCEDURE main()
+PROCEDURE main( cSkip, cExtended )
 LOCAL nKey, nMask, cText
+ IF EMPTY( cSkip )
    ? "Testing the KEYBOARD and CLEAR TYPEAHEAD commands and the"
    ? "INKEY(), NEXTKEY(), and LASTKEY() functions."
    ?
@@ -119,6 +120,7 @@ LOCAL nKey, nMask, cText
    ?
    NextTest()
    ?
+ END IF
    ? "For the last test, a loop is started and all keyboard and mouse"
    ? "events are allowed. Each event will be displayed. Press the ESC"
    ? "key to exit. Try moving the mouse, holding and releasing the mouse"
@@ -127,7 +129,10 @@ LOCAL nKey, nMask, cText
    ? "TODO: Mouse support needs to be added to Harbour."
    ?
    ? "Press any key."
-   nMask := INKEY_ALL + INKEY_EXTENDED
+   nMask := INKEY_ALL
+   IF !EMPTY( cExtended )
+      nMask += INKEY_EXTENDED
+   END IF
    SET(_SET_EVENTMASK, nMask)
    WHILE (nKey := INKEY( 0, nMask )) != K_ESC
       DO CASE

@@ -8,9 +8,10 @@ ifeq ($(DIRS),) # Empty directory list
 DIR_RULE =\
 	@echo Done
 else
-DIR_LIST = $(subst /,\,$(DIRS))
+DIR_LIST := $(subst /,\,$(DIRS))
+DIR_MAKE := $(subst /,\,$(MK))
 DIR_RULE =\
-	command.com /c FOR %d IN ($(DIR_LIST)) DO $(MK) -C %d $@
+	$(COMSPEC) /C FOR %d IN ($(DIR_LIST)) DO $(DIR_MAKE) -C %d $@
 endif
 
 else  # bash

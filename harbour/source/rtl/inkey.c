@@ -73,12 +73,12 @@
   #define DOS_REGS REGS
 #endif
 
-#include "inkey.h"
 #include "hbsetup.h"
 #include "errorapi.h"
 #include "extend.h"
 #include "init.h"
 #include "set.h"
+#include "inkey.h"
 
 HARBOUR HB___KEYBOARD( void );
 HARBOUR HB_INKEY( void );
@@ -148,6 +148,29 @@ void hb_releaseCPU( void )
 */
 }
 
+int hb_inkey ( double seconds, HB_inkey_enum event_mask, int wait, int forever )
+{
+   int key;
+   clock_t end_clock;
+   s_eventmask = event_mask;                   /* Set current input event mask */
+   /* Check or wait for input events */
+   if( wait ) end_clock = clock() + seconds * CLOCKS_PER_SEC;
+   s_inkeyPoll = TRUE;                         /* Force polling */
+   while( wait && hb_inkeyNext() == 0 )
+   {
+      /* Release the CPU between checks */
+      hb_releaseCPU();
+
+      /* Check for timeout */
+      if( !forever && clock() >= end_clock ) wait = FALSE;
+   }
+   /* Get the current input event or 0 */
+   key = hb_inkeyGet();
+   s_inkeyPoll = FALSE;                        /* Stop forced polling */
+   s_eventmask = hb_set.HB_SET_EVENTMASK;      /* Restore original input event mask */
+   return key;
+}
+
 int hb_inkeyGet( void )       /* Extract the next key from the keyboard buffer */
 {
    int key;
@@ -197,9 +220,8 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
    if( hb_set.HB_SET_TYPEAHEAD || s_inkeyPoll )
    {
       int ch = 0;
-#if defined(__CYGWIN__)
-#elif defined(OS_DOS_COMPATIBLE) || defined(HARBOUR_GCC_OS2) || defined(__IBMCPP__) || defined(_Windows)
-   /* The reason for including _Windows here is that kbhit() and getch() appear
+#if defined(OS_DOS_COMPATIBLE) || defined(HARBOUR_GCC_OS2) || defined(__IBMCPP__) || defined(_Windows)
+   /* The reason for including _Windows here is that kbhit() and getch() appear 
      to work properly in console mode. For true Windows mode, changes are needed. */
    #if defined(HARBOUR_GCC_OS2)
       /* Read from the keyboard with no echo, no wait, and no SIGSEV on Ctrl-C */
@@ -240,113 +262,114 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
       #endif
       }
    #endif
+      /* Perform key translations */
       switch( ch )
       {
-         case - 1:
+         case - 1:  /* No key available */
             ch = 0;
             break;
-         case 328:
+         case 328:  /* Up arrow */
             ch = 5;
             break;
-         case 336:
+         case 336:  /* Down arrow */
             ch = 24;
             break;
-         case 331:
+         case 331:  /* Left arrow */
             ch = 19;
             break;
-         case 333:
+         case 333:  /* Right arrow */
             ch = 4;
             break;
-         case 327:
+         case 327:  /* Home */
             ch = 1;
             break;
-         case 335:
+         case 335:  /* End */
             ch = 6;
             break;
-         case 329:
+         case 329:  /* Page Up */
             ch = 18;
             break;
-         case 337:
+         case 337:  /* Page Down */
             ch = 3;
             break;
-         case 371:
+         case 371:  /*  Ctrl + Left arrow */
             ch = 26;
             break;
-         case 372:
+         case 372:  /* Ctrl + Right arrow */
             ch = 2;
             break;
-         case 375:
+         case 375:  /* Ctrl + Home */
             ch = 29;
             break;
-         case 373:
+         case 373:  /* Ctrl + End */
             ch = 23;
             break;
-         case 388:
+         case 388:  /* Ctrl + Page Up */
             ch = 31;
             break;
-         case 374:
+         case 374:  /* Ctrl + Page Down */
             ch = 30;
             break;
-         case 338:
+         case 338:  /* Insert */
             ch = 22;
             break;
-         case 339:
+         case 339:  /* Delete */
             ch = 7;
             break;
-         case 315:
+         case 315:  /* F1 */
             ch = 28;
             break;
-         case 316:
-         case 317:
-         case 318:
-         case 319:
-         case 320:
-         case 321:
-         case 322:
-         case 323:
-         case 324:
+         case 316:  /* F2 */
+         case 317:  /* F3 */
+         case 318:  /* F4 */
+         case 319:  /* F5 */
+         case 320:  /* F6 */
+         case 321:  /* F7 */
+         case 322:  /* F8 */
+         case 323:  /* F9 */
+         case 324:  /* F10 */
             ch = 315 - ch;
             break;
-         case 340:
-         case 341:
-         case 342:
-         case 343:
-         case 344:
-         case 345:
-         case 346:
-         case 347:
-         case 348:
-         case 349:
-         case 350:
-         case 351:
-         case 352:
-         case 353:
-         case 354:
-         case 355:
-         case 356:
-         case 357:
-         case 358:
-         case 359:
-         case 360:
-         case 361:
-         case 362:
-         case 363:
-         case 364:
-         case 365:
-         case 366:
-         case 367:
-         case 368:
-         case 369:
+         case 340:  /* Shift + F1 */
+         case 341:  /* Shift + F2 */
+         case 342:  /* Shift + F3 */
+         case 343:  /* Shift + F4 */
+         case 344:  /* Shift + F5 */
+         case 345:  /* Shift + F6 */
+         case 346:  /* Shift + F7 */
+         case 347:  /* Shift + F8 */
+         case 348:  /* Shift + F9 */
+         case 349:  /* Shift + F10 */
+         case 350:  /* Ctrl + F1 */
+         case 351:  /* Ctrl + F2 */
+         case 352:  /* Ctrl + F3 */
+         case 353:  /* Ctrl + F4 */
+         case 354:  /* Ctrl + F5 */
+         case 355:  /* Ctrl + F6 */
+         case 356:  /* Ctrl + F7 */
+         case 357:  /* Ctrl + F8 */
+         case 358:  /* Ctrl + F9 */
+         case 359:  /* Ctrl + F10 */
+         case 360:  /* Alt + F1 */
+         case 361:  /* Alt + F2 */
+         case 362:  /* Alt + F3 */
+         case 363:  /* Alt + F4 */
+         case 364:  /* Alt + F5 */
+         case 365:  /* Alt + F6 */
+         case 366:  /* Alt + F7 */
+         case 367:  /* Alt + F8 */
+         case 368:  /* Alt + F9 */
+         case 369:  /* Alt + F10 */
             ch = 330 - ch;
             break;
-         case 389:
-         case 390:
-         case 391:
-         case 392:
-         case 393:
-         case 394:
-         case 395:
-         case 396:
+         case 389:  /* F11 */
+         case 390:  /* F12 */
+         case 391:  /* Shift + F11 */
+         case 392:  /* Shift + F12 */
+         case 393:  /* Ctrl + F11 */
+         case 394:  /* Ctrl + F12 */
+         case 395:  /* Alt + F11 */
+         case 396:  /* Alt + F12 */
             ch = 349 - ch;
       }
 #elif defined(OS_UNIX_COMPATIBLE)
@@ -473,9 +496,8 @@ void hb_inkeyReset( BOOL allocate)      /* Reset the keyboard buffer */
 HARBOUR HB_INKEY( void )
 {
    int args = hb_pcount(), key = 0, wait = FALSE, forever = FALSE;
-   clock_t end_clock;
    double seconds;
-   s_eventmask = hb_set.HB_SET_EVENTMASK;         /* Default to the SET input event mask */
+   HB_inkey_enum event_mask = hb_set.HB_SET_EVENTMASK; /* Default to the SET input event mask */
 
    if( args == 1 || ( args > 1 && hb_param( 1, IT_NUMERIC ) ) )
    {
@@ -484,37 +506,31 @@ HARBOUR HB_INKEY( void )
       seconds = hb_parnd( 1 );
       wait = TRUE;
       if( seconds * CLOCKS_PER_SEC < 1 ) forever = TRUE;
+   #ifndef HARBOUR_USE_GTAPI
+      /* When not using the GT API, flush both stdout and stderr,
+         because we are waiting for input and want to ensure that
+         any user prompts are visible. */
+      fflush( stdout );
+      fflush( stderr );
+   #endif
    }
 
    if( args > 1 && hb_param( 2, IT_NUMERIC ) )
    {
       /* If 2nd parameter is numeric, then use it as the input mask */
-      s_eventmask = ( HB_inkey_enum )hb_parni( 2 );
+      event_mask = ( HB_inkey_enum )hb_parni( 2 );
    }
 
-   if( wait && forever && ( s_eventmask & ( INKEY_ALL + INKEY_EXTENDED ) ) == 0 )
+   if( wait && forever && ( event_mask & ( INKEY_ALL + INKEY_EXTENDED ) ) == 0 )
    {
       /* There is no point in waiting forever for no input events! */
       hb_errorRT_BASE(EG_ARG, 3007, NULL, "INKEY");
    }
    else
    {
-      /* Check or wait for input events */
-      if( wait ) end_clock = clock() + seconds * CLOCKS_PER_SEC;
-      s_inkeyPoll = TRUE;                         /* Force polling */
-      while( wait && hb_inkeyNext() == 0 )
-      {
-         /* Release the CPU between checks */
-         hb_releaseCPU();
-
-         /* Check for timeout */
-         if( !forever && clock() >= end_clock ) wait = FALSE;
-      }
-      /* Get the current input event or 0 */
-      key = hb_inkeyGet();
-      s_inkeyPoll = FALSE;                        /* Stop forced polling */
+      /* Call the low-level hb_inkey() function. */
+      key = hb_inkey( seconds, event_mask, wait, forever );
    }
-   s_eventmask = hb_set.HB_SET_EVENTMASK;         /* Restore the SET input event mask */
    hb_retni( key );
 }
 

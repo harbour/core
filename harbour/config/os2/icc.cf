@@ -25,7 +25,7 @@ LINKLIBS = $(foreach lib, $(LIBS), $(lib)$(LIB_EXT))
 endif
 
 AR = ilib
-ARFLAGS =
+ARFLAGS = /NOE
 AROBJS = $(foreach file, $^, -+$(file))
 AR_RULE = $(AR) $(ARFLAGS) $@ $(AROBJS),,
 

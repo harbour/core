@@ -8,15 +8,18 @@
    Copyright 1999 David G. Holm <dholm@jsd-llc.com>
    See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
 */
-#ifdef __HARBOUR__
- #define NEW_LINE CHR( 10 )
-#else
- #define NEW_LINE CHR( 13 ) + CHR( 10 )
-#endif
+
 #include "fileio.ch"
 
 PROCEDURE Main( cFile )
 LOCAL oFile := TFileRead():New( cFile )
+LOCAL cOs := UPPER( OS() ), cNewLine
+
+   IF "OS/2" $ cOs .OR. "WIN" $ cOS .OR. "DOS" $cOS
+      cNewLine := CHR( 13 ) + CHR( 10 )
+   ELSE
+      cNewLine := CHR( 10 )
+   END IF
 
    oFile:Open()
    IF oFile:Error()
@@ -24,7 +27,7 @@ LOCAL oFile := TFileRead():New( cFile )
    ELSE
       WHILE oFile:MoreToRead()
          OUTSTD( oFile:ReadLine() )
-         OUTSTD( NEW_LINE )
+         OUTSTD( cNewLine )
       END WHILE
       oFile:Close()
    END IF

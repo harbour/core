@@ -9,26 +9,29 @@
    See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
 */
 
-#ifdef __HARBOUR__
- #define NEWLINE CHR(10)
-#else
- #define NEWLINE CHR(13)+CHR(10)
-#endif
-
 function Main( cParam )
 local n, limit := 10
+local cOs := OS(), cNewLine
+
+   IF "OS/2" $ cOs .OR. "WIN" $ cOs .OR. "DOS" $ cOs
+      cNewLine := CHR( 13 ) + CHR( 10 )
+   ELSE
+      cNewLine := CHR( 10 )
+   END IF
 
    IF( ! EMPTY( cParam ) )
       limit := VAL( cParam )
    END IF
+   OUTSTD( cNewLine )
    OUTSTD( SECONDS() )
-   OUTSTD( NEWLINE )
    FOR n := 1 TO limit
       IF( EMPTY( cParam ) )
-         __ACCEPT( "Pause: " )
+         OUTSTD( cNewLine )
+         OUTSTD( "Pause: " )
+         INKEY(0)
       END IF
+      OUTSTD( cNewLine )
       OUTSTD( SECONDS() )
-      OUTSTD( NEWLINE )
    NEXT
 
 RETURN NIL

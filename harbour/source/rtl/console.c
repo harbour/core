@@ -49,19 +49,13 @@
 #include "init.h"
 #include "dates.h"
 #include "set.h"
+#include "inkey.h"
 
 #if defined(__GNUC__)
   #include <unistd.h>
-  #if defined(__DJGPP__)
-    #include <io.h>
-  #endif
-#else
-  #ifndef __MPW__
-    #include <io.h>
-  #else
-    #include <fcntl.h>
-  #endif
 #endif
+#include <io.h>
+#include <fcntl.h>
 #include "gtapi.h"            /* HARBOUR_USE_GTAPI is checked inside gtapi.h, so that
                                  we can always get the border styles */
 
@@ -164,6 +158,16 @@ void hb_consoleInitialize( void )
    dev_col = 0;
 #endif
    p_row = p_col = 0;
+
+   /* Some compilers open stdout and stderr in text mode, but
+      Harbour needs them to be open in binary mode. */
+#if defined(__BORLANDC__) || defined(__IBMCPP__) || defined(__DJGPP__) || defined(__CYGWIN__)
+   setmode( fileno( stdout ), O_BINARY );
+   setmode( fileno( stderr ), O_BINARY );
+#elif defined(_MSC_VER)
+   _setmode( _fileno( stdout ), _O_BINARY );
+   _setmode( _fileno( stderr ), _O_BINARY );
+#endif
 }
 
 WORD hb_max_row( void )
@@ -221,33 +225,6 @@ static void adjust_pos( char * fpStr, ULONG len, WORD * row, WORD * col, WORD ma
    }
 }
 #endif
-
-HARBOUR HB___ACCEPT( void ) /* Internal Clipper function used in ACCEPT command  */
-                         /* Basically the simplest Clipper function to        */
-                         /* receive data. Parameter : cPrompt. Returns : cRet */
-{
-   char *szResult = ( char * ) hb_xgrab(ACCEPT_BUFFER_LEN); /* Return parameter. */
-   char *szPrompt = hb_parc(1);    /* Pass prompt                            */
-   ULONG len      = hb_parclen(1);
-
-   if( hb_pcount() == 1 )          /* cPrompt passed                         */
-   {
-      PushSymbol( hb_GetDynSym( "QOUT" )->pSymbol );  /* push the symbol pointer to the Harbour stack */
-      PushNil();                 /* places nil at self, as we are not sending a msg */
-      PushString( szPrompt, len ); /* places parameters on to the stack */
-      Do( 1 );                   /* 1 parameter supplied. Invoke the virtual machine */
-   }
-
-#ifdef OS_UNIX_COMPATIBLE
-   fgets( szResult, ACCEPT_BUFFER_LEN, stdin );             /* Read the data. Using fgets()            */
-#else
-/*TODO: check if it can be replaced with fgets() function
-*/
-   gets( szResult ); /* Read the data. using gets(). Note; it doesn't check for buffer overflow */
-#endif
-   hb_retc( szResult );
-   hb_xfree( szResult );
-}
 
 typedef void hb_out_func_typedef (char *, ULONG);
 
@@ -1059,4 +1036,55 @@ HARBOUR HB_SETCURSOR( void )
 
    hb_retni( usPreviousCursor );
 #endif
+}
+
+HARBOUR HB___ACCEPT( void ) /* Internal Clipper function used in ACCEPT command  */
+                         /* Basically the simplest Clipper function to        */
+                         /* receive data. Parameter : cPrompt. Returns : cRet */
+{
+   char *szResult = ( char * ) hb_xgrab(ACCEPT_BUFFER_LEN); /* Return parameter. */
+   char *szPrompt = hb_parc(1);    /* Pass prompt                            */
+   ULONG len      = hb_parclen(1);
+   int input;
+
+   if( hb_pcount() == 1 )          /* cPrompt passed                         */
+   {
+      hb_altout( CrLf, CRLF_BUFFER_LEN-1 );
+      hb_altout( szPrompt, len );
+   }
+#ifdef OS_UNIX_COMPATIBLE
+   /* Read the data using fgets(), because hb_inkeyPoll() doesn't support
+      Unix compatible operating systems yet. */
+   fgets( szResult, ACCEPT_BUFFER_LEN, stdin );
+#else
+   len = 0;
+   input = 0;
+   while( input != 13 )
+   {
+      /* Wait forever, for keyboard events only */
+      input = hb_inkey ( 0.0, INKEY_KEYBOARD, 1, 1 );
+      switch( input )
+      {
+         case 8:  /* Backspace */
+         case 19: /* Left arrow */
+            if( len > 0 )
+            {
+               len--; /* Adjust input count to get rid of last character */
+               hb_dispout( "\x8 \x8", 3L ); /* Then erase it */
+            }
+            break;
+         case 13:  /* Nothing to do. While loop will now exit. */
+            break;
+         default:
+            if( len < 255 && input >= 32 && input <= 127 )
+            {
+               szResult[ len ] = input; /* Accept the input */
+               hb_dispout( &szResult[ len ], 1 ); /* Then display it */
+               len++;  /* Then adjust the input count */
+            }
+      }
+   }
+#endif
+   hb_retclen( szResult, len );
+   hb_xfree( szResult );
 }

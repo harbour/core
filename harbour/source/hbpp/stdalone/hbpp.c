@@ -25,14 +25,21 @@
    their web site at http://www.gnu.org/).
  */
 
-#if defined(__DJGPP__) || defined(__GNUC__)
+#include <stdlib.h>
+#if defined(__GNUC__)
+ #include <unistd.h>
 #else
- #include <alloc.h>
- #include <mem.h>
+ #if ! defined(__MPW__)
+  #include <malloc.h>
+ #endif
+ #if (defined(_MSC_VER) || defined(__IBMCPP__))
+  #include <memory.h>
+ #else
+  #include <mem.h>
+ #endif
 #endif
 #include <string.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <ctype.h>
 #include "hbpp.h"
 

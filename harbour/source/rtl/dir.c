@@ -38,8 +38,6 @@
   #include <unistd.h>
   #if defined(__DJGPP__)
     #include <io.h>
-  #else
-    #define _chmod chmod
   #endif
 
   #if !defined(HAVE_POSIX_IO)
@@ -60,8 +58,6 @@
   #if !defined(HAVE_POSIX_IO)
   #define HAVE_POSIX_IO
   #endif
-
-  #define _chmod chmod
 #endif
 
 #if defined(__IBMCPP__)
@@ -389,8 +385,10 @@ HARBOUR HB_DIRECTORY( void )
    #else
       #if defined(_MSC_VER)
          attrib = entry.attrib;
-      #else
+      #elif defined(__BORLANDC__) || defined(__DJGPP__)
          attrib = _chmod(fullfile,0);
+      #else
+         attrib = 0;
       #endif
          if (attrib & FA_ARCH)
             strcat(aatrib,"A");

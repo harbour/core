@@ -272,7 +272,7 @@ function WriteLn( xTxt, lCRLF )
    else
       cBlock := ToChar( xTxt )                  // Convert to string
       if Default( lCRLF, .T. )
-         cBlock += Chr(10)                      // +chr(13) ??
+         cBlock += Chr(10)+Chr(13)
       endif
       fWrite( ::hFile, cBlock, len(cBlock) )
       if fError() != 0
