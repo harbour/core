@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-11-18 22:35 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/rdd/dbcmd.c
+    ! COPY TO ... FIELDS ... is fixed - fields in the result dbf are in the 
+      same secuence as in the FIELDS clause.
+
 2002-11-18 14:55 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * include/hbrddapi.c
   * source/rdd/dbcmd.c

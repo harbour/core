@@ -3528,6 +3528,19 @@ static BOOL IsFieldIn( char * fieldName, PHB_ITEM pFields )
   return FALSE;
 }
 
+static void AddField( PHB_ITEM pFieldArray, PHB_ITEM pItem, PHB_ITEM pData, USHORT uiCount )
+{
+    hb_arrayNew( pItem, 4 );
+    SELF_FIELDINFO( ( AREAP ) s_pCurrArea->pArea, uiCount, DBS_NAME, pData );
+    hb_arraySet( pItem, 1, pData );
+    SELF_FIELDINFO( ( AREAP ) s_pCurrArea->pArea, uiCount, DBS_TYPE, pData );
+    hb_arraySet( pItem, 2, pData );
+    SELF_FIELDINFO( ( AREAP ) s_pCurrArea->pArea, uiCount, DBS_LEN, pData );
+    hb_arraySet( pItem, 3, pData );
+    SELF_FIELDINFO( ( AREAP ) s_pCurrArea->pArea, uiCount, DBS_DEC, pData );
+    hb_arraySet( pItem, 4, pData );
+    hb_arrayAdd( pFieldArray, pItem );
+}
 /*   create a new AREANODE and open its Area
    If the file exists it will be deleted & a new one created
 */
@@ -3583,22 +3596,28 @@ static LPAREANODE GetTheOtherArea( char *szDriver, char * szFileName, BOOL creat
     hb_arrayNew( pFieldArray, 0 );
     pData = hb_itemNew( NULL );
     pItem = hb_itemNew( NULL );
-    for( uiCount = 1; uiCount <= uiFields; uiCount++ )
+    if( pFields )
     {
-      if ( !pFields || IsFieldIn( (( PHB_DYNS )((( AREAP )s_pCurrArea->pArea)->lpFields + (uiCount-1))->sym )->pSymbol->szName,  pFields ))
-      {
-        hb_arrayNew( pItem, 4 );
-        SELF_FIELDINFO( ( AREAP ) s_pCurrArea->pArea, uiCount, DBS_NAME, pData );
-        hb_arraySet( pItem, 1, pData );
-        SELF_FIELDINFO( ( AREAP ) s_pCurrArea->pArea, uiCount, DBS_TYPE, pData );
-        hb_arraySet( pItem, 2, pData );
-        SELF_FIELDINFO( ( AREAP ) s_pCurrArea->pArea, uiCount, DBS_LEN, pData );
-        hb_arraySet( pItem, 3, pData );
-        SELF_FIELDINFO( ( AREAP ) s_pCurrArea->pArea, uiCount, DBS_DEC, pData );
-        hb_arraySet( pItem, 4, pData );
-        hb_arrayAdd( pFieldArray, pItem );
-      }
+       USHORT i;
+       char *ptr;
+
+       uiFields = ( USHORT ) hb_arrayLen( pFields );
+       for ( i=0; i<uiFields; i++ )
+       {
+          PHB_ITEM pField = pFields->item.asArray.value->pItems + i;
+          ptr = strrchr( (char *)pField->item.asString.value,'>' );
+          if( ptr && ptr > (char *)pField->item.asString.value && *(ptr-1)=='-' )
+             ptr ++;
+          else
+             ptr = (char *)pField->item.asString.value;
+          if( ( uiCount = hb_rddFieldIndex( (AREAP) s_pCurrArea->pArea, 
+                           hb_strUpper( ptr,strlen(ptr)) ) ) != 0 )
+             AddField( pFieldArray, pItem, pData, uiCount );
+       }
     }
+    else
+       for( uiCount = 1; uiCount <= uiFields; uiCount++ )
+          AddField( pFieldArray, pItem, pData, uiCount );
     hb_itemRelease( pItem );
     hb_itemRelease( pData );
     if( !hb_arrayLen( pFieldArray ) )
