@@ -1,3 +1,12 @@
+19990510-21:45 EDT David G. Holm <dholm@jsd-llc.com>
+  * source/harbour.y
+    - Put back a C++ lvalue fix that appears to have gotten lost
+      during a diff merge:
+      Parameter in call to yy_switch_to_buffer with embedded
+      assignment needs () around the entire expression in order
+      to have the (YY_BUFFER_STATE) type override apply to the
+      result of the assignment.
+
 Mon May 10 19:32:34 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* makefile.b32: 
