@@ -54,20 +54,6 @@ HARBOUR W2BIN();
 HARBOUR EXP();
 HARBOUR LOG();
 HARBOUR MOD();
-HARBOUR ISDATA();
-HARBOUR ISMETHOD();
-HARBOUR AODATA();
-HARBOUR AOMETHOD();
-HARBOUR AOGET();
-HARBOUR AOSET();
-HARBOUR OADDMETHOD();
-HARBOUR OADDINLINE();
-HARBOUR OADDDATA();
-HARBOUR OMODMETHOD();
-HARBOUR OMODINLINE();
-HARBOUR ODELMETHOD();
-HARBOUR ODELINLINE();
-HARBOUR ODELDATA();
 HARBOUR DEFAULT();
 HARBOUR TOCHAR();
 HARBOUR HBDEBUG();
@@ -87,7 +73,6 @@ HARBOUR RIGHT();
 HARBOUR SPACE();
 HARBOUR STUFF();
 HARBOUR STRTRAN();
-HARBOUR TRANSFORM();
 HARBOUR DATETIME();
 HARBOUR DOW();
 HARBOUR __ASTATIC();
@@ -198,20 +183,6 @@ static SYMBOL symbols[] = {
 { "EXP",            FS_PUBLIC, EXP           , 0 },
 { "LOG",            FS_PUBLIC, LOG           , 0 },
 { "MOD",            FS_PUBLIC, MOD           , 0 },
-{ "ISDATA",         FS_PUBLIC, ISDATA        , 0 },
-{ "ISMETHOD",       FS_PUBLIC, ISMETHOD      , 0 },
-{ "AODATA",         FS_PUBLIC, AODATA        , 0 },
-{ "AOMETHOD",       FS_PUBLIC, AOMETHOD      , 0 },
-{ "AOGET",          FS_PUBLIC, AOGET         , 0 },
-{ "AOSET",          FS_PUBLIC, AOSET         , 0 },
-{ "OADDMETHOD",     FS_PUBLIC, OADDMETHOD    , 0 },
-{ "OADDINLINE",     FS_PUBLIC, OADDINLINE    , 0 },
-{ "OADDDATA",       FS_PUBLIC, OADDDATA      , 0 },
-{ "OMODMETHOD",     FS_PUBLIC, OMODMETHOD    , 0 },
-{ "OMODINLINE",     FS_PUBLIC, OMODINLINE    , 0 },
-{ "ODELMETHOD",     FS_PUBLIC, ODELMETHOD    , 0 },
-{ "ODELINLINE",     FS_PUBLIC, ODELINLINE    , 0 },
-{ "ODELDATA",       FS_PUBLIC, ODELDATA      , 0 },
 { "DEFAULT",        FS_PUBLIC, DEFAULT       , 0 },
 { "TOCHAR",         FS_PUBLIC, TOCHAR        , 0 },
 { "HBDEBUG",        FS_PUBLIC, HBDEBUG       , 0 },
@@ -231,7 +202,6 @@ static SYMBOL symbols[] = {
 { "SPACE",          FS_PUBLIC, SPACE         , 0 },
 { "STUFF",          FS_PUBLIC, STUFF         , 0 },
 { "STRTRAN",        FS_PUBLIC, STRTRAN       , 0 },
-{ "TRANSFORM",      FS_PUBLIC, TRANSFORM     , 0 },
 { "DATETIME",       FS_PUBLIC, DATETIME      , 0 },
 { "DOW",            FS_PUBLIC, DOW           , 0 },
 { "__ASTATIC",      FS_PUBLIC, __ASTATIC     , 0 },

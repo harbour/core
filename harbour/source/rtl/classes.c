@@ -46,6 +46,8 @@ WORD    wClasses = 0;
 PMETHOD pMethod  = 0;
 PDYNSYM msgClassName = 0, msgClassH = 0, msgEval = 0, msgClassSel = 0;
 
+/* All functions contained in classes.c */
+
        HARBOUR     CLASSADD();
        HARBOUR     CLASSCREATE();
        HARBOUR     CLASSDEL();
@@ -75,15 +77,48 @@ static HARBOUR     Virtual();
        HARBOUR     __WDATADEC();
        HARBOUR     __WDATAINC();
 
+/* All function contained in matching objfunc.prg */
+
+HARBOUR AODATA();
+HARBOUR AOGET();
+HARBOUR AOMETHOD();
+HARBOUR AOSET();
+HARBOUR ISDATA();
+HARBOUR ISMETHOD();
+HARBOUR OADDDATA();
+HARBOUR OADDINLINE();
+HARBOUR OADDMETHOD();
+HARBOUR ODELDATA();
+HARBOUR ODELINLINE();
+HARBOUR ODELMETHOD();
+HARBOUR OMODINLINE();
+HARBOUR OMODMETHOD();
+
+/* Exported symbols of both classes.c and objfunc.prg */
+
 static SYMBOL symbols[] = {
+{ "AODATA"        , FS_PUBLIC, AODATA         , 0 },
+{ "AOGET"         , FS_PUBLIC, AOGET          , 0 },
+{ "AOMETHOD"      , FS_PUBLIC, AOMETHOD       , 0 },
+{ "AOSET"         , FS_PUBLIC, AOSET          , 0 },
 { "CLASSADD"      , FS_PUBLIC, CLASSADD       , 0 },
 { "CLASSCREATE"   , FS_PUBLIC, CLASSCREATE    , 0 },
 { "CLASSDEL"      , FS_PUBLIC, CLASSDEL       , 0 },
 { "CLASSINSTANCE" , FS_PUBLIC, CLASSINSTANCE  , 0 },
 { "CLASSMOD"      , FS_PUBLIC, CLASSMOD       , 0 },
 { "CLASSNAME"     , FS_PUBLIC, CLASSNAME      , 0 },
+{ "ISDATA"        , FS_PUBLIC, ISDATA         , 0 },
 { "ISMESSAGE"     , FS_PUBLIC, ISMESSAGE      , 0 },
+{ "ISMETHOD"      , FS_PUBLIC, ISMETHOD       , 0 },
+{ "OADDDATA"      , FS_PUBLIC, OADDDATA       , 0 },
+{ "OADDINLINE"    , FS_PUBLIC, OADDINLINE     , 0 },
+{ "OADDMETHOD"    , FS_PUBLIC, OADDMETHOD     , 0 },
 { "OCLONE"        , FS_PUBLIC, OCLONE         , 0 },
+{ "ODELDATA"      , FS_PUBLIC, ODELDATA       , 0 },
+{ "ODELINLINE"    , FS_PUBLIC, ODELINLINE     , 0 },
+{ "ODELMETHOD"    , FS_PUBLIC, ODELMETHOD     , 0 },
+{ "OMODINLINE"    , FS_PUBLIC, OMODINLINE     , 0 },
+{ "OMODMETHOD"    , FS_PUBLIC, OMODMETHOD     , 0 },
 { "OSEND"         , FS_PUBLIC, OSEND          , 0 }
 };
 
