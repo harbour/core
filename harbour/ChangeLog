@@ -1,3 +1,7 @@
+19990929-16:42 GMT+1 Victor Szel <info@szelvesz.hu>
+  * include/hbver.h
+    + Version info updated.
+
 19990926-22:45 GMT+3 Alexander Kresin
   * source/hbpp/hbpp.c
     * Fixed a bug, noted by Antonio Linares
