@@ -269,7 +269,7 @@ void hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
 /*  return rc   */             /* TODO: set a return value for this function */
 }
 
-void hb_gt_Replicate(char c, DWORD nLength)
+void hb_gt_Replicate(char c, ULONG nLength)
 {
    /* TODO: this will write character c nlength times to the screen.
             Note that it is not used yet

@@ -54,12 +54,12 @@
 #include "set.h"
 #include "inkey.h"
 
-#if defined(__GNUC__) && ! defined(__DJGPP__)
+#if defined(__GNUC__)
   #include <unistd.h>
+  #if defined(__DJGPP__) || defined(__CYGWIN__) || defined(HARBOUR_GCC_OS2)
+    #include <io.h>
+  #endif
 #else
-  #include <io.h>
-#endif
-#if defined(__CYGWIN__)
   #include <io.h>
 #endif
 #include <fcntl.h>
@@ -1076,8 +1076,13 @@ HARBOUR HB___ACCEPT( void ) /* Internal Clipper function used in ACCEPT command 
    }
 #ifdef OS_UNIX_COMPATIBLE
    /* Read the data using fgets(), because hb_inkeyPoll() doesn't support
-      Unix compatible operating systems yet. */
-   fgets( szResult, ACCEPT_BUFFER_LEN, stdin );
+       Unix compatible operating systems yet. */
+   szResult[0] = `\0`;             /* start with something defined */
+   if (fgets( szResult, ACCEPT_BUFFER_LEN, stdin ))
+   {
+      strtok(szResult, "\n");     /* strip off the trailing newline
+                                     if it exists */
+   }
 #else
    len = 0;
    input = 0;

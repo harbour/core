@@ -155,6 +155,7 @@ BAD_PRG_SOURCES=\
 	extend1.prg \
 	keywords.prg \
 	linecont.prg \
+	setkeys.prg \
 	spawn.prg \
 	spawn2.prg \
 	statics1.prg \

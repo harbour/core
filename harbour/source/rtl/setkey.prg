@@ -30,10 +30,11 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
    their web site at http://www.gnu.org/).
 
+   V 1.1  A White                 Fixed wrong parameter aClone() bug in SetKeySave()
+                                  Added SetKeyCheck()
+                                  Added SetKeyGet()
    V 1.0  A White                 Initial version, submitted to Harbour Projects
 */
-
-/* TODO: Add SetKeyCheck() */
 
 // macro substitutions to access sub-array elements of aSetKeys[]
 #define KEY        1
@@ -82,7 +83,8 @@ static aSetKeys := {}       // holds array of hot-key id, code-block, activation
  *  $COMPLIANCE$
  *      SETKEY() is mostly CA-Clipper compliant. The only difference is the
  *      addition of the condition code-block parameter, allowing set-keys to
- *      be conditionally turned off or on.
+ *      be conditionally turned off or on.  This condition-block cannot be
+ *      returned once set - see SetKeyGet()
  *  $SEEALSO$
  *      SETKEYSAVE()
  *  $END$
@@ -90,12 +92,12 @@ static aSetKeys := {}       // holds array of hot-key id, code-block, activation
 Function SetKey( anKey, bBlock, bCondition )
   local nFound, bReturn, aKey
 
-  if valType( anKey ) == "A"
+  if valType( anKey ) = "A"
     aEval( anKey, {|x| setKey( x, bBlock, bCondition ) } )
 
-  elseif valType( anKey ) == "N" .and. anKey <> 0
-    if ( nFound := aScan( aSetKeys, {|x| x[ KEY ] == anKey } ) ) == 0
-      if valType( bBlock ) == "B"
+  elseif valType( anKey ) = "N" .and. anKey <> 0
+    if ( nFound := aScan( aSetKeys, {|x| x[ KEY ] = anKey } ) ) = 0
+      if valType( bBlock ) = "B"
         aAdd( aSetKeys, { anKey, bBlock, bCondition } )
 
       endif
@@ -103,16 +105,16 @@ Function SetKey( anKey, bBlock, bCondition )
     else
       aKey := aSetKeys[ nFound ]
 
-      if aKey[ CONDITION ] == NIL .or. eval( aKey[ CONDITION ], anKey )
+      if aKey[ CONDITION ] = NIL .or. eval( aKey[ CONDITION ], anKey )
         bReturn := aKey[ BLOCK ]
 
       endif
 
-      if valType( bBlock ) == "B"
+      if valType( bBlock ) = "B"
         aKey[ BLOCK ]     := bBlock
         aKey[ CONDITION ] := bCondition
 
-      elseif pcount() > 1 .and. bBlock == NIL
+      elseif pcount() > 1 .and. bBlock = NIL
         aSize( aDel( aSetKeys, nFound ), len( aSetKeys ) - 1 )
 
       endif
@@ -122,6 +124,56 @@ Function SetKey( anKey, bBlock, bCondition )
   endif
 
 return bReturn
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SetKeyGet
+ *  $CATEGORY$
+ *      ?
+ *  $ONELINER$
+ *      Determine a set-key code block & condition-block
+ *  $SYNTAX$
+ *      SETKEYGET( <nKey> [, <bConditionByRef> ] )
+ *  $ARGUMENTS$
+ *      <anKey> is an numeric key value
+ *      <bConditionByRef> is an optional return-parameter
+ *  $RETURNS$
+ *      Current assigned action-block
+ *  $DESCRIPTION$
+ *      The SetKeyGet() function returns the current code-block assigned to a
+ *      key, and optionally assignes the condition-block to the return-parameter
+ *  $EXAMPLES$
+ *      local bOldF10, bOldF10Cond
+ *      bOldF10 := SetKeyGet( K_F10, @bOldF10Cond )
+ *      ... // some other processing
+ *      SetKey( K_F10, bOldF10, bOldF10Cond )
+ *  $TESTS$
+ *      See test code above
+ *  $STATUS$
+ *      C
+ *  $COMPLIANCE$
+ *      SETKEYGET() is a new function and hence not CA-Clipper compliant.
+ *  $SEEALSO$
+ *      SETKEY(), SETKEYSAVE(), SETKEYCHECK()
+ *  $END$
+ */
+Function SetKeyGet( nKey, bCondition )
+  local nFound
+
+  if valType( nKey ) = "N" .and. nKey <> 0
+    if ( nFound := aScan( aSetKeys, {|x| x[ KEY ] = nKey } ) ) = 0
+      bCondition := NIL
+
+    else
+      bCondition := aSetKeys[ nFound, CONDITION ]
+      return        aSetKeys[ nFound, BLOCK ]
+
+    endif
+
+  endif
+
+return NIL //bReturn
 
 
 /*  $DOC$
@@ -162,14 +214,89 @@ return bReturn
 Function SetKeySave( OldKeys )
   local aReturn := aClone( aSetKeys )
 
-  if pcount() != 0 .or. valtype( OldKeys ) == "A"
-    if OldKeys == NIL
+  if pcount() != 0 .or. valtype( OldKeys ) = "A"
+    if OldKeys = NIL
       aSetKeys := {}
 
     else
       aSetKeys := aClone( OldKeys )
+
     endif
 
   endif
 
 return aReturn
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SetKeyCheck
+ *  $CATEGORY$
+ *      ?
+ *  $ONELINER$
+ *      Impliments common hot-key activation code
+ *  $SYNTAX$
+ *      SetKeyCheck( <nKey> [, <p1> ][, <p2> ][, <p3> ] )
+ *  $ARGUMENTS$
+ *      <nKey> is a numeric key value to be tested
+ *      code-block, if executed
+ *      <p1>..<p3> are optional parameters that will be passed to the code-block
+ *  $RETURNS$
+ *      True if there is a hot-key associated with <nKey> and it was executed;
+ *      otherwise False
+ *      If there is a hot-key association (before checking any condition):
+ *        - if there is a condition-block, it is passed one parameter - <nKey>
+ *        - when the hot-key code-block is called, it is passed 1 to 4 parameters,
+ *          depending on the parameters passed to SetKeyCheck().  Any parameters
+ *          so passed are directly passed to the code-block, with an additional
+ *          parameter being <nKey>
+ *  $DESCRIPTION$
+ *      SetKeyCheck() is intended as a common interface to the SetKey()
+ *      functionality for such functions as ACHOICE(), DBEDIT(), MEMOEDIT(),
+ *      ACCEPT, INPUT, READ, and WAIT
+ *  $EXAMPLES$
+ *      // within ReadModal()
+ *      if SetKeyCheck( K_ALT_X, GetActive() )
+ *      ... // some other processing
+ *      endif
+ *      // within TBrowse handler
+ *      case SetKeyCheck( nInkey, oTBrowse )
+ *        return
+ *      case nInKey == K_ESC
+ *      ... // some other processing
+ *  $TESTS$
+ *      None definable
+ *  $STATUS$
+ *      C
+ *  $COMPLIANCE$
+ *      SetKeyCheck() is new.
+ *  $SEEALSO$
+ *      SETKEY(), SETKEYSAVE()
+ *  $END$
+ */
+Function SetKeyCheck( nKey, p1, p2, p3 )
+  local nFound, aKey, bBlock
+
+  if ( nFound := aScan( aSetKeys, {|x| x[ KEY ] = nKey } ) ) > 0
+    aKey   := aSetKeys[ nFound ]
+    bBLock := aKey[ BLOCK ]
+
+    if aKey[ CONDITION ] = NIL .or. eval( aKey[ CONDITION ], nKey )
+
+      // is this overkill?  if a code-block checks its own pcount(),
+      // passing nil parameters would skew the count!
+
+      do case
+      case pcount() = 1  ;  eval( bBlock, nKey )
+      case pcount() = 2  ;  eval( bBlock, p1, nKey )
+      case pcount() = 3  ;  eval( bBlock, p1, p2, nKey )
+      otherwise          ;  eval( bBlock, p1, p2, p3, nKey )
+      end case
+
+      return .t.
+
+    endif
+
+  endif
+
+return .f.

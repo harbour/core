@@ -207,4 +207,16 @@ Harbour source code.
 
 The -r option isn't strictly necessary, but it does signficantly reduce
 the number of rules that make has to evaluate otherwise, which may give
-a big performance boost on a slow system.
+a performance boost on a slow system.
+
+
+To rebuild only a part of Harbour, go to the appropriate source directory
+and then run 'make -r'. For example, to rebuild all of Harbour, but not
+the test programs, change to the 'source' directory. To rebuild only the
+test programs, change to the 'test' directory.
+
+
+If you are using a DOS-based operating system, then you can build any
+program in tests/working by using the build batch file. For example,
+'build scroll' will rebuild the scroll.prg module. This can also be used
+for modules that aren't in the Makefile.

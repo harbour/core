@@ -1,3 +1,26 @@
+19990811-11:35 EDT David G. Holm <dholm@jsd-llc.com>
+  * doc/gmake.txt
+    + Added a new section under 'NOTES' discussing how to build only
+      parts of Harbour, with examples for Harbour only and tests only
+      and how to build a single test file using the DOS build.bat file.
+  * source/rtl/console.c
+    ! Corrected #ifdef blocks for unistd.h and io.h.
+    ! Added code to remove newline in Unix compatible ACCEPT() code,
+      per Georg Lehner <jorge_lehner@gmx.net>.
+  * source/rtl/setkey.prg
+    * New version from April White <awhite@user.rose.com>.
+  * source/rtl/gt/gtdos.c
+    + Added DJGPP compatible GTAPI handling, but not sure how to deal
+      with dispbegin()/dispend(). Need to add cursor handling.
+  * source/rtl/gt/gtos2.c
+    ! Changed DWORD to ULONG.
+  * tests/working/Makefile
+    ! Added new setkey test program (as BAD, because no GETACTIVE()).
+  + tests/working/setkey.prg
+    + New test program from April White <awhite@user.rose.com>.
+      Note: Needs a working get system and needs SetKeyCheck()
+      integrated into the appropriate Harbour input functions.
+
 19990810-00:55 EDT Paul Tucker <ptucker@sympatico.ca>
   * source/rtl/gtapi.c source/rtl/gt/gtwin/c source/rtl/gt/gt_tpl.c
     * minor formatting changes
