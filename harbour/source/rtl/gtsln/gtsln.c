@@ -577,7 +577,7 @@ void hb_gt_Scroll( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight,
       hb_xfree( fpBlank );
       hb_xfree( fpBuff );
 
-      hb_gtSetPos( usSaveRow, usSaveCol );
+      hb_gt_SetPos( usSaveRow, usSaveCol, HB_GT_SET_POS_AFTER );
 
       if( s_uiDispCount == 0 )
          SLsmg_refresh();

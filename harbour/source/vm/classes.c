@@ -191,7 +191,7 @@ static PHB_DYNS s_msgClassH    = NULL;
 static PHB_DYNS s_msgEval      = NULL;
 static PHB_DYNS s_msgClassSel  = NULL;
 static PHB_DYNS s_msgClsParent = NULL;
-static PHB_DYNS s_msgClass     = NULL;
+/* static PHB_DYNS s_msgClass     = NULL; */
 
 /* All functions contained in classes.c */
 
@@ -210,7 +210,7 @@ static void     hb_clsRelease( PCLASS );
 static HARBOUR  hb___msgClsH( void );
 static HARBOUR  hb___msgClsName( void );
 static HARBOUR  hb___msgClsSel( void );
-static HARBOUR  hb___msgClass( void );
+/* static HARBOUR  hb___msgClass( void ); */
 static HARBOUR  hb___msgSuper( void );
 static HARBOUR  hb___msgEvalInline( void );
 static HARBOUR  hb___msgClsParent( void );
@@ -1993,10 +1993,12 @@ static HARBOUR hb___msgSuper( void )
  *
  * Internal function to return Self at Self:Class call (classy compatibility)
  */
+/*
 static HARBOUR hb___msgClass( void )
 {
    hb_itemReturn( hb_stack.pBase + 1 );
 }
+*/
 
 /*
  * __msgGetClsData()
