@@ -135,9 +135,13 @@ Then, you must set a couple of environment variables that indicate
 your architecture and compiler.
 
 For gcc on Win95/WinNT with the Cygwin library:
+  Notes: The CYGWIN environment variable must include "noglob" in order
+         to avoid having Harbour or programs created with Harbour expand
+         wildcard command line arguments (this is checked at run-time!)
   HB_ARCHITECTURE   w32
   HB_COMPILER       gcc
   C_USR             -DHARBOUR_USE_WIN_GTAPI
+  CYGWIN            noglob
 
 For gcc on Win95/WinNT with the Mingw32 library:
   HB_ARCHITECTURE   w32

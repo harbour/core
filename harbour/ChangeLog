@@ -1,3 +1,12 @@
+2000-03-17 19:10 GMT-5 David G. Holm <dholm@jsd-llc.com>
+   * doc/gmake.txt
+     + Documented the need to have "CYGWIN" set to "noglob" to
+       avoid having Harbour and Harbour created programs expand
+       wildcard command line arguments (it's a run-time check).
+   * source/vm/main.c
+     + Added code to disable command line wildcard expansion by
+       DJGPP and MINGW32.
+
 20000317-18:00 GMT+1 Victor Szakats <info@szelvesz.hu>
    * source/vm/maindll.c
      ! __BORLAND__ -> __BORLANDC__
@@ -127,7 +136,7 @@
    * source/rtl/gtapi.c
      * removed extraneous ';'
 
-2000-03-16 02:30 GMT-5 David G. Holm <dholm@ sd-llc.com>
+2000-03-16 02:30 GMT-5 David G. Holm <dholm@jsd-llc.com>
    * include/hbapigt.h
    * include/hbsetup.h
    * source/rtl/console.c
@@ -172,7 +181,7 @@
    * source/rtl/gtapi.c
      * added explicit casts to remove warnings.
    
-2000-03-15 19:00 GMT-5 David G. Holm <dholm@ sd-llc.com>
+2000-03-15 19:00 GMT-5 David G. Holm <dholm@jsd-llc.com>
    * source/rtl/tone.c
      ! Rearranged include file #elif list to test for __CYGWIN__
        before testing for the various Windows manifest constants
@@ -397,7 +406,7 @@
    * contrib/rdd_ads/ads1.c
      * Little bug fixed in adsAppend()
 
-2000-03-12 21:50 GMT-5 David G. Holm <dholm@ sd-llc.com>
+2000-03-12 21:50 GMT-5 David G. Holm <dholm@jsd-llc.com>
    * source/compiler/harbour.y
      ! Added missing ( char * ) override for C++ on line 1549.
 
@@ -867,7 +876,7 @@
        Name of some Harbour internal functions changed to better reflect that 
        they are Harbour extensions.
 
-2000-03-06 20:05 GMT-5 David G. Holm <dholm@ sd-llc.com>
+2000-03-06 20:05 GMT-5 David G. Holm <dholm@jsd-llc.com>
    * tests/regress/Makefile
      ! Several of the supported platforms begin program execution with
        the first object module listed when the executable is created,
@@ -1077,7 +1086,7 @@
    + tests/regress/rt_vars.ch
      + Added.
 
-2000-03-02 15:10 GMT-5 David G. Holm <dholm@ sd-llc.com>
+2000-03-02 15:10 GMT-5 David G. Holm <dholm@jsd-llc.com>
    * compiler/Makefile
    * macro/Makefile
      ! Several include files were still using the old names
@@ -1367,7 +1376,7 @@
      * Corrected handling of bof()/eof()
      * Fixed some warnings
 
-2000-02-23 14:00 GMT-5 David G. Holm <dholm@ sd-llc.com>
+2000-02-23 14:00 GMT-5 David G. Holm <dholm@jsd-llc.com>
    * source/rtl/inkey.c
      ! KEYBOARD ";" now returns INKEY() == 13, just like Clipper.
 
@@ -1415,7 +1424,7 @@
    *utils/hbdoc/hbdoc.prg
       *Changed to generate the new HTML template output
 
-2000-02-21 15:45 GMT-5 David G. Holm <dholm@ sd-llc.com>
+2000-02-21 15:45 GMT-5 David G. Holm <dholm@jsd-llc.com>
    * config/rules.cf
    * config/w32/bcc32.cf
    * config/w32/global.cf
@@ -1500,7 +1509,7 @@
    *doc/harbext.txt
       *Added usage of @<Function>()
 
-2000-02-18 17:30 GMT-5 David G. Holm <dholm@ sd-llc.com>
+2000-02-18 17:30 GMT-5 David G. Holm <dholm@jsd-llc.com>
 
    + doc/cvs_ssh.txt
      + New file with information on how to get CVS to work with SSH.
@@ -1936,7 +1945,7 @@
    * makefile.b32
      - Removed -v option (debug info) from 4.0 mode.
 
-2000-02-11 19:15 GMT-5 David G. Holm <dholm@ sd-llc.com>
+2000-02-11 19:15 GMT-5 David G. Holm <dholm@jsd-llc.com>
    * source/rtl/inkey.c
      ! First pass at international character support for Windows console mode.
 
@@ -2032,7 +2041,7 @@
    * makefile.vc
      * temporarily - not defining _Windows for tone.c and oemansi.c
 
-2000-02-10 13:50 GMT-5 David G. Holm <dholm@ sd-llc.com>
+2000-02-10 13:50 GMT-5 David G. Holm <dholm@jsd-llc.com>
 
    * source/rtl/tone.c
      ! Borland C does not support Beep() under Windows.
@@ -2474,7 +2483,7 @@
      * s_xMousePos -> s_iMouseCol
      * s_yMousePos -> s_iMouseRow
 
-2000-02-03 16:10 GMT-5 David G. Holm <dholm@ sd-llc.com>
+2000-02-03 16:10 GMT-5 David G. Holm <dholm@jsd-llc.com>
 
    * bin/bld_tpl.bat
    * bin/bld_tpl.cmd
@@ -2536,7 +2545,7 @@
         * fixed to properly compile EXTERNAL directive if placed outside
           of a function body
 
-2000-02-01 20:40 GMT-5 David G. Holm <dholm@ sd-llc.com>
+2000-02-01 20:40 GMT-5 David G. Holm <dholm@jsd-llc.com>
 
    * bin/bld_tpl.bat
    * bin/bld_tpl.cmd
@@ -2564,7 +2573,7 @@
     source/runner/stdalone/external.prg
     ! EXTERNAL CLIPPER530 put between #ifdef HB_COMPAT_53 guards.
 
-20000131-13:30 GMT-5 David G. Holm <dholm@ sd-llc.com>
+20000131-13:30 GMT-5 David G. Holm <dholm@jsd-llc.com>
 
    * ChangeLog.005
      + Renamed from ChangeLog and started a new ChangeLog

@@ -35,10 +35,23 @@
 
 #include "hbsetup.h"
 
+#ifdef __MINGW32__
+int _CRT_glob = 0;
+#endif
+
 #if   defined(HARBOUR_MAIN_STD)
    #include "mainstd.c"
 #elif defined(HARBOUR_MAIN_WIN)
    #include "mainwin.c"
 #else
    #include "mainstd.c" /* Use the standard ANSI C entry point if not speficied */
+#endif
+
+#ifdef __DJGPP__
+char **__crt0_glob_function( char *_arg )
+{
+   /* This function disables command line wildcard expansion. */
+   HB_SYMBOL_UNUSED( _arg );
+   return 0;
+}
 #endif
