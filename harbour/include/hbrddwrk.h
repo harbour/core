@@ -113,7 +113,8 @@ extern ERRCODE hb_waSetRel( AREAP pArea, LPDBRELINFO pRelInfo );
 extern ERRCODE hb_waOrderCondition( AREAP pArea, LPDBORDERCONDINFO param );
 #define hb_waOrderCreate                   ( DBENTRYP_VOC ) hb_waUnsupported
 #define hb_waOrderDestroy                   ( DBENTRYP_OI ) hb_waUnsupported
-#define hb_waOrderInfo                            ( DBENTRYP_OII ) hb_waNull
+//#define hb_waOrderInfo                            ( DBENTRYP_OII ) hb_waNull
+extern ERRCODE hb_waOrderInfo( AREAP pArea, USHORT index, LPDBORDERINFO param );
 extern ERRCODE hb_waClearFilter( AREAP pArea );
 extern ERRCODE hb_waClearLocate( AREAP pArea );
 #define hb_waClearScope                                     hb_waUnsupported

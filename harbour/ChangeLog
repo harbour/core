@@ -1,3 +1,23 @@
+2000-11-13 16:18 UTC+0800 Brian Hays <bhays@abacuslaw.com>
+   * contrib/rdd_ads/ads1.c
+      + adsOrderInfo: added support for most options
+   + include/ord.ch
+      + 5.3-level SCOPE Commands and DBOI_* constants
+   * include/hbapirdd.h
+      + added note that DBOI_* constants are also in ord.ch
+   * source/rdd/dbcmd.c
+      * dbOrderInfo tweaks
+   * include/hbrddwrk.h
+      * removed stub for hb_waOrderInfo
+   * source/rdd/workarea.c
+      * added default hb_waOrderInfo
+         Currently this throws an error if a non-supported flag is passed
+         NOTE !!! -->
+         Clipper behavior was just to return NIL, but that usually creates
+         harder to trap errors down the road.
+         I will revert this to return NIL later after testing if the group desires
+
+
 2000-11-13 20:25 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *include/hbexpra.c
@@ -16,10 +36,10 @@
     *contrib/rdd_ads/ads1.c
         *added typedef for setScope member of virtual table
          typedef USHORT ( * DBENTRYP_VOS  )( AREAP area, LPDBORDSCOPEINFO param );
-        
+
     *source/rdd/rddcpy.c
         * replaced NULL with 0
-        
+
     *source/vm/asort.c
     *source/vm/classes.c
     *source/vm/hvm.c

@@ -37,6 +37,7 @@
 #define HB_APIRDD_H_
 
 #include "hbapifs.h"
+//#include "ord.ch"
 
 #if defined(HB_EXTERN_C)
 extern "C" {
@@ -98,8 +99,9 @@ extern void    hb_rddShutDown( void );
 #define DBLM_FILE          3
 
 
-
-/* Codes for SELF_ORDINFO() */
+/* Constants for SELF_ORDINFO()
+   Be sure these stay in sync with the same ones in ord.ch
+ */
 
 #define DBOI_CONDITION     1    /* Get the order condition */
 #define DBOI_EXPRESSION    2    /* Get the order expression */

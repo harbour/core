@@ -2744,15 +2744,21 @@ HB_FUNC( ORDSCOPE )
       }
       sInfo.nScope = hb_parni( 1 );
       pScopeValue = hb_itemPutC( NULL, "" );
+
       SELF_SCOPEINFO( ( AREAP ) s_pCurrArea->pArea, sInfo.nScope, pScopeValue );
       hb_retc( hb_itemGetCPtr( pScopeValue ) );
       hb_itemRelease( pScopeValue );
 
       if( hb_pcount() > 1 )
-         sInfo.scopeValue = (BYTE*) hb_parc( 2 );
-      else
+      {
+         if ( ISNIL( 2 ) )                /* explicitly passed NIL, clear it */
+            sInfo.scopeValue = NULL;
+         else
+            sInfo.scopeValue = (BYTE*) hb_parc( 2 );
+
+         SELF_SETSCOPE( ( AREAP ) s_pCurrArea->pArea, (LPDBORDSCOPEINFO) &sInfo );
+      }else
          sInfo.scopeValue = NULL;
-      SELF_SETSCOPE( ( AREAP ) s_pCurrArea->pArea, (LPDBORDSCOPEINFO) &sInfo );
    }
    else
       hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, "ORDSCOPE" );

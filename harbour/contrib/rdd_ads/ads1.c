@@ -47,7 +47,9 @@
 #include "rddads.h"
 #include <ctype.h>
 
-static ERRCODE adsRecCount( ADSAREAP pArea, ULONG * pRecCount );
+static ERRCODE adsRecCount(  ADSAREAP pArea, ULONG * pRecCount );
+static ERRCODE adsScopeInfo( ADSAREAP pArea, USHORT nScope, PHB_ITEM pItem );
+static ERRCODE adsSetScope(  ADSAREAP pArea, LPDBORDSCOPEINFO sInfo );
 
 HB_FUNC( _ADS );
 HB_FUNC( ADS_GETFUNCTABLE );
@@ -1398,7 +1400,9 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
    ADSHANDLE phIndex;
    UNSIGNED32 ulRetVal = AE_SUCCESS;
    UNSIGNED8  aucBuffer[MAX_STR_LEN + 1];
-   UNSIGNED16 pusLen = MAX_STR_LEN;
+   UNSIGNED16 pusLen   = MAX_STR_LEN;
+   UNSIGNED16 pus16    = 0;
+   UNSIGNED32 pul32    = 0;
 
    HB_TRACE(HB_TR_DEBUG, ("adsOrderInfo(%p, %hu, %p)", pArea, uiIndex, pOrderInfo));
 
@@ -1418,62 +1422,88 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
 
    switch( uiIndex )
    {
-      case DBOI_BAGEXT:
-         hb_itemPutC( pOrderInfo->itmResult,
-                ((adsFileType==ADS_ADT) ? ".adi" : (adsFileType==ADS_CDX) ? ".cdx" : ".ntx") );
+      case DBOI_CONDITION:
+         AdsGetIndexCondition( phIndex, aucBuffer, &pusLen);
+         hb_itemPutCL( pOrderInfo->itmResult, (char*)aucBuffer, pusLen );
          break;
-      case DBOI_ORDERCOUNT:
-         pusLen = 0;
-         if( pOrderInfo->atomBagName && (UNSIGNED8*) hb_itemGetCPtr( pOrderInfo->atomBagName ))
-         {
-            /* if already open, ads fills other info OK.
-               TODO: verify it is already open, or be sure to close it!
-            */
-            AdsOpenIndex  (pArea->hTable,
-                          (UNSIGNED8*) hb_itemGetCPtr( pOrderInfo->atomBagName ), NULL, &pusLen);
-
-         }else    /* no specific bag requested; get all current indexes */
-         {
-            AdsGetNumIndexes(pArea->hTable, &pusLen);
-         }
-         hb_itemPutNI(pOrderInfo->itmResult, pusLen);
-         break;
-      case DBOI_CUSTOM :
-         pusLen = 0;
-         AdsIsIndexCustom  (phIndex, &pusLen);
-         hb_itemPutL(pOrderInfo->itmResult, pusLen);
-         break;
-      case DBOI_KEYCOUNT :
-      {
-         UNSIGNED32 pulKey  ;
-         AdsGetRecordCount( (phIndex ? phIndex : pArea->hTable), ADS_RESPECTSCOPES/*usFilterOption*/, &pulKey);
-         hb_itemPutNL(pOrderInfo->itmResult, pulKey);
-         break;
-      }
-      case DBOI_KEYCOUNTRAW :           /* ignore filter or scope */
-      {
-         UNSIGNED32 pulKey  ;
-         AdsGetRecordCount( (phIndex ? phIndex : pArea->hTable), ADS_IGNOREFILTERS/*usFilterOption*/, &pulKey);
-         hb_itemPutNL(pOrderInfo->itmResult, pulKey);
-         break;
-      }
 
       case DBOI_EXPRESSION:
          AdsGetIndexExpr( phIndex, aucBuffer, &pusLen);
-         hb_itemPutC( pOrderInfo->itmResult, (char*)aucBuffer );
+         hb_itemPutCL( pOrderInfo->itmResult, (char*)aucBuffer, pusLen );
          break;
-      case DBOI_CONDITION:
+
+      case DBOI_ISCOND:
          AdsGetIndexCondition( phIndex, aucBuffer, &pusLen);
-         hb_itemPutC( pOrderInfo->itmResult, (char*)aucBuffer );
+         hb_itemPutL( pOrderInfo->itmResult, pusLen );
          break;
+
+      case DBOI_ISDESC:
+         AdsIsIndexDescending (phIndex, &pus16);
+         hb_itemPutL( pOrderInfo->itmResult, pus16 );
+         break;
+
+      case DBOI_UNIQUE:
+         AdsIsIndexUnique (phIndex, &pus16);
+         hb_itemPutL( pOrderInfo->itmResult, pus16 );
+         break;
+
+      case DBOI_KEYTYPE:
+         AdsGetKeyType(phIndex, &pus16);
+         switch( pus16 )
+         {
+            case ADS_STRING:
+               hb_itemPutC( pOrderInfo->itmResult, "C" );
+               break;
+            case ADS_NUMERIC:
+               hb_itemPutC( pOrderInfo->itmResult, "N" );
+               break;
+            case ADS_DATE:
+               hb_itemPutC( pOrderInfo->itmResult, "D" );
+               break;
+            case ADS_LOGICAL:
+               hb_itemPutC( pOrderInfo->itmResult, "L" );
+               break;
+            case ADS_RAW:
+            default:
+               hb_itemPutC( pOrderInfo->itmResult, "" );
+         }
+         break;
+
+      case DBOI_KEYSIZE:
+         AdsGetKeyLength(phIndex, &pus16);
+         hb_itemPutNL(pOrderInfo->itmResult, pus16);
+         break;
+
+      case DBOI_KEYVAL:
+         AdsExtractKey( phIndex, aucBuffer, &pusLen);
+         hb_itemPutCL( pOrderInfo->itmResult, (char*)aucBuffer, pusLen);
+         break;
+
+      case DBOI_POSITION :
+         if( phIndex )
+            AdsGetKeyNum  ( phIndex, ADS_RESPECTFILTERS, &pul32);
+         else
+            AdsGetRecordNum  ( pArea->hTable, ADS_RESPECTFILTERS, &pul32);
+         /*
+            TODO: This count will be wrong if server doesn't know full filter!
+         */
+         hb_itemPutNL(pOrderInfo->itmResult, pul32);
+         break;
+
+      case DBOI_RECNO :                 /* TODO: OR IS THIS JUST RECNO?? */
+      case DBOI_KEYNORAW :
+         if( phIndex )
+            AdsGetKeyNum  ( phIndex, ADS_IGNOREFILTERS, &pul32);
+         else
+            AdsGetRecordNum  ( pArea->hTable, ADS_IGNOREFILTERS, &pul32);
+         hb_itemPutNL(pOrderInfo->itmResult, pul32);
+         break;
+
       case DBOI_NAME:
          AdsGetIndexName( phIndex, aucBuffer, &pusLen);
-         hb_itemPutC( pOrderInfo->itmResult, (char*)aucBuffer );
+         hb_itemPutCL( pOrderInfo->itmResult, (char*)aucBuffer, pusLen);
          break;
-      case DBOI_BAGNAME:
-         AdsGetIndexFilename  ( phIndex,ADS_BASENAME , aucBuffer, &pusLen);
-         hb_itemPutC( pOrderInfo->itmResult, (char*)aucBuffer );
-         break;
+
       case DBOI_NUMBER :
       {
          UNSIGNED16 usOrder = 0;
@@ -1484,19 +1514,114 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
          hb_itemPutNI(pOrderInfo->itmResult, usOrder);
          break;
       }
-      case DBOI_POSITION :
-      {
-         UNSIGNED32 pulKey  ;
-         if( phIndex )
-            AdsGetKeyNum  ( phIndex, ADS_RESPECTSCOPES, &pulKey);
-         else
-            AdsGetRecordNum  ( pArea->hTable, ADS_IGNOREFILTERS, &pulKey);
-         hb_itemPutNL(pOrderInfo->itmResult, pulKey);
+
+      case DBOI_BAGNAME:
+         AdsGetIndexFilename  ( phIndex,ADS_BASENAME , aucBuffer, &pusLen);
+         hb_itemPutCL( pOrderInfo->itmResult, (char*)aucBuffer, pusLen );
          break;
-      }
+
+      case DBOI_BAGEXT:
+         hb_itemPutC( pOrderInfo->itmResult,
+                ((adsFileType==ADS_ADT) ? ".adi" : (adsFileType==ADS_CDX) ? ".cdx" : ".ntx") );
+         break;
+
+      case DBOI_ORDERCOUNT:
+         if( pOrderInfo->atomBagName && (UNSIGNED8*) hb_itemGetCPtr( pOrderInfo->atomBagName ))
+         {
+            /* if already open, ads fills other info OK.
+               TODO: verify it is already open, or be sure to close it!
+            */
+            AdsOpenIndex  (pArea->hTable,
+                          (UNSIGNED8*) hb_itemGetCPtr( pOrderInfo->atomBagName ), NULL, &pus16);
+
+         }else    /* no specific bag requested; get all current indexes */
+         {
+            AdsGetNumIndexes(pArea->hTable, &pus16);
+         }
+         hb_itemPutNI(pOrderInfo->itmResult, pus16);
+         break;
+
+      case DBOI_KEYCOUNT :
+         AdsGetRecordCount( (phIndex ? phIndex : pArea->hTable), ADS_RESPECTFILTERS, &pul32);
+         /*
+            TODO: This count will be wrong if server doesn't know full filter!
+         */
+         hb_itemPutNL(pOrderInfo->itmResult, pul32);
+         break;
+
+      case DBOI_KEYCOUNTRAW :           /* ignore filter or scope */
+         AdsGetRecordCount( (phIndex ? phIndex : pArea->hTable), ADS_IGNOREFILTERS, &pul32);
+         hb_itemPutNL(pOrderInfo->itmResult, pul32);
+         break;
+
+      case DBOI_SCOPETOP :
+         hb_itemPutC( pOrderInfo->itmResult, "" );
+         adsScopeInfo(  pArea, 0, pOrderInfo->itmResult );
+         break;
+
+      case DBOI_SCOPEBOTTOM :
+         hb_itemPutC( pOrderInfo->itmResult, "" );
+         adsScopeInfo(  pArea, 1, pOrderInfo->itmResult ) ;
+         break;
+
+      case DBOI_SCOPETOPCLEAR :
+         hb_itemPutC( pOrderInfo->itmResult, "" );
+         adsScopeInfo(  pArea, 0, pOrderInfo->itmResult ) ;
+         AdsClearScope( phIndex, (UNSIGNED16) 1);  /* ADS scopes are 1/2 instead of 0/1 */
+         break;
+
+      case DBOI_SCOPEBOTTOMCLEAR :
+         hb_itemPutC( pOrderInfo->itmResult, "" );
+         adsScopeInfo(  pArea, 1, pOrderInfo->itmResult ) ;
+         AdsClearScope( phIndex, (UNSIGNED16) 2);
+         break;
+
+      case DBOI_CUSTOM :
+         AdsIsIndexCustom  (phIndex, &pus16);
+         hb_itemPutL(pOrderInfo->itmResult, pus16);
+         break;
+
+      case DBOI_OPTLEVEL :
+         AdsGetAOFOptLevel( pArea->hTable, &pus16, NULL, NULL );
+         switch( pus16 )
+         {
+            case ADS_OPTIMIZED_FULL:
+               hb_itemPutNI(pOrderInfo->itmResult, 2);
+               break;
+            case ADS_OPTIMIZED_PART:
+               hb_itemPutNI(pOrderInfo->itmResult, 1);
+               break;
+            default:
+               hb_itemPutNI(pOrderInfo->itmResult, 0);
+         }
+         break;
+
+/* Unsupported:
+
+DBOI_FILEHANDLE
+DBOI_FULLPATH
+DBOI_SETCODEBLOCK
+DBOI_KEYDEC
+DBOI_HPLOCKING
+DBOI_LOCKOFFSET
+DBOI_KEYADD
+DBOI_KEYDELETE
+DBOI_KEYSINCLUDED
+DBOI_SKIPUNIQUE
+DBOI_STRICTREAD
+DBOI_OPTIMIZE
+DBOI_AUTOORDER
+DBOI_AUTOSHARE
+
+*/
+
+      case DBOI_AUTOOPEN :
+         hb_itemPutL( pOrderInfo->itmResult, TRUE );
+         /* TODO: throw some kind of error if caller tries to set to False */
+         break;
+
       default:
-         // TODO: This should call SUPER for default handling, but it never gets there
-         //SUPER_ORDINFO( ( AREAP ) pArea, uiIndex, pOrderInfo );
+         SUPER_ORDINFO( ( AREAP ) pArea, uiIndex, pOrderInfo );
          break;
    }
    return SUCCESS;
@@ -1525,10 +1650,10 @@ static ERRCODE adsScopeInfo( ADSAREAP pArea, USHORT nScope, PHB_ITEM pItem )
 
    if( pArea->hOrdCurrent )
    {
-      ulRetVal = AdsGetScope( pArea->hOrdCurrent, (UNSIGNED16) nScope, pucScope, &pusBufLen );
-      if ( ulRetVal != AE_SUCCESS )
-         return FAILURE;
-      hb_itemPutCL( pItem, ( char * ) pucScope, pusBufLen );
+      /*ADS top/bottom are 1,2 instead of 0,1*/
+      ulRetVal = AdsGetScope( pArea->hOrdCurrent, (UNSIGNED16) nScope + 1, pucScope, &pusBufLen );
+      if ( ulRetVal == AE_SUCCESS )
+         hb_itemPutCL( pItem, ( char * ) pucScope, pusBufLen );
    }
    return SUCCESS;
 }
@@ -1538,7 +1663,7 @@ static ERRCODE adsSetFilter( ADSAREAP pArea, LPDBFILTERINFO pFilterInfo )
    BOOL bValidExpr = FALSE;
    HB_TRACE(HB_TR_DEBUG, ("adsSetFilter(%p, %p)", pArea, pFilterInfo));
 
-   /* ----------------- BH ------------------
+   /* ----------------- NOTE: ------------------
       See if the server can evaluate the filter.
       If not, don't pass it to the server; let the super level
       filter the records locally.
@@ -1561,12 +1686,12 @@ static ERRCODE adsSetScope( ADSAREAP pArea, LPDBORDSCOPEINFO sInfo )
    {
       if( sInfo->scopeValue )
       {
-         AdsSetScope( pArea->hOrdCurrent, (UNSIGNED16) (sInfo->nScope + 1), /*ADS top/bottom are 1,2 instead of 0,1*/
+         AdsSetScope( pArea->hOrdCurrent, (UNSIGNED16) (sInfo->nScope) + 1, /*ADS top/bottom are 1,2 instead of 0,1*/
               (UNSIGNED8*) sInfo->scopeValue,
               (UNSIGNED16) strlen( (const char *)sInfo->scopeValue), ADS_STRINGKEY );
       }
       else
-         AdsClearScope( pArea->hOrdCurrent, (UNSIGNED16) sInfo->nScope );
+         AdsClearScope( pArea->hOrdCurrent, (UNSIGNED16) sInfo->nScope + 1 );
 
       return SUCCESS;
    }
