@@ -100,13 +100,14 @@ typedef enum
    HB_SET_MFILEEXT      = 42,
 
    HB_SET_STRICTREAD    = 43,
-   HB_SET_OPTIMIZE      = 44, 
+   HB_SET_OPTIMIZE      = 44,
    HB_SET_AUTOPEN       = 45,
    HB_SET_AUTORDER      = 46,
    HB_SET_AUTOSHARE     = 47,
 
    /* Harbour SET extensions start at 100 */
-   HB_SET_LANGUAGE      = 100
+   HB_SET_LANGUAGE      = 100,
+   HB_SET_IDLEREPEAT    = 101
 } HB_set_enum;
 
 typedef struct

@@ -98,8 +98,9 @@
 #define _SET_COUNT        47
 
 #define _SET_LANGUAGE     100 /* Harbour extension */
+#define _SET_IDLEREPEAT   101 /* Harbour extension */
 
 #define HB_SET_BASE       100
-#define HB_SET_COUNT      1
+#define HB_SET_COUNT      2
 
 #endif /* _SET_CH */

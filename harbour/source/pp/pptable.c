@@ -103,6 +103,7 @@ void hb_pp_Table( void )
    static DEFINES sD___49 = {"_SET_AUTORDER",NULL,-1,"46", &sD___48 };
    static DEFINES sD___50 = {"_SET_AUTOSHARE",NULL,-1,"47", &sD___49 };
    static DEFINES sD___51 = {"_SET_LANGUAGE",NULL,-1,"100", &sD___50 };
+   static DEFINES sD___52 = {"_SET_IDLEREPEAT",NULL,-1,"101", &sD___51 };
 
    static COMMANDS sC___1 = {0,"NOTE","\1A30",NULL,NULL };
    static COMMANDS sC___2 = {0,"DO","WHILE \1A00","while \1A00",&sC___1 };
@@ -398,7 +399,7 @@ void hb_pp_Table( void )
    static COMMANDS sC___238 = {0,"SET","ORDER TO TAG \1A40 [IN \1B40]","ordSetFocus( \1A30 [, \1B30] )",&sC___237 };
    static COMMANDS sC___239 = {0,"SET","ORDER TO","ordSetFocus(0)",&sC___238 };
 
-   hb_pp_topDefine = &sD___51;
+   hb_pp_topDefine = &sD___52;
    hb_pp_topCommand = &sC___239;
    hb_pp_topTranslate = NULL;
 }

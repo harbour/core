@@ -43,6 +43,8 @@
 #include "hbapilng.h"
 #include "hbset.h"
 
+extern hb_vm_bIdleRepeat;
+
 HB_SET_STRUCT hb_set;
 
 static BOOL set_logical( PHB_ITEM pItem )
@@ -209,7 +211,7 @@ static FHANDLE open_handle( char * file_name, BOOL bAppend, char * def_ext, HB_s
       {
          USHORT uiAction;
 
-         /* NOTE: using switch() here will result in a compiler warning. 
+         /* NOTE: using switch() here will result in a compiler warning.
                   [vszakats] */
          if( set_specifier == HB_SET_ALTFILE )
             uiAction = hb_errRT_TERM( EG_CREATE, 2013, NULL, path, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY );
@@ -617,6 +619,10 @@ HB_FUNC( SET )
             hb_langSelectID( hb_itemGetCPtr( pArg2 ) );
          }
          break;
+      case HB_SET_IDLEREPEAT :
+         hb_retl( hb_vm_bIdleRepeat );
+         if( args > 1 ) hb_vm_bIdleRepeat = set_logical( pArg2 );
+         break;
       default                :
          /* Return NIL if called with invalid SET specifier */
          break;
@@ -670,7 +676,7 @@ void hb_setInitialize( void )
    hb_set.HB_SET_MESSAGE = 0;
    hb_set.HB_SET_MFILEEXT = ( char * ) hb_xgrab( 1 );
    hb_set.HB_SET_MFILEEXT[ 0 ] = '\0';
-   hb_set.HB_SET_OPTIMIZE = FALSE; 
+   hb_set.HB_SET_OPTIMIZE = FALSE;
    hb_set.HB_SET_PATH = ( char * ) hb_xgrab( 1 );
    hb_set.HB_SET_PATH[ 0 ] = '\0';
    hb_set.HB_SET_PRINTER = FALSE;

@@ -1,3 +1,21 @@
+2000-11-24 12:50 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * include/hbset.h
+   * include/set.ch
+   * source/pp/pptable.c
+     + Added _SET_IDLEREPEAT = 101
+   * source/rtl/set.c
+     + Added suport for SET( _SET_IDLEREPEAT ) - Default is .T.
+
+   * source/rtl/idle.c
+     - Removed HB_IDLE_RESET()
+     * Changed handling of Idle Process to default to REPEAT.
+
+   * tests/onidle.prg
+     - Removed call to HB_IDLE_RESET()
+
+   + tests/testidle.prg
+     + New test of Idle Blocks in default (REPEAT) mode and optional NON REPEAT mode.
+
 2000-11-24 19:22 GMT+1 Maurilio Longo <maurilio.longo@libero.it>
    * contrib/mysql/tmysql.prg
       + ::FieldGet() and ::FieldPut() methods now accept a field name as field identifier and not

@@ -69,8 +69,8 @@ USHORT hb_vm_uiIdleMaxTask = 0;
 /* flag to indicate GarbageCollection should be done in idle state. */
 BOOL hb_vm_bCollectGarbage = TRUE;
 
-/* Dont allow repeated processing of Idle Tasks by default */
-BOOL hb_vm_bResetIdle = FALSE;
+/* Allow repeated processing of Idle Tasks by default */
+BOOL hb_vm_bIdleRepeat = TRUE;
 
 int hb_inkeyNext( void );      /* Return the next key without extracting it */
 
@@ -144,9 +144,8 @@ void hb_idleState( void )
          return;
       }
 
-      if( hb_vm_bResetIdle && hb_vm_uiIdleTask == hb_vm_uiIdleMaxTask )
+      if( hb_vm_bIdleRepeat && hb_vm_uiIdleTask == hb_vm_uiIdleMaxTask )
       {
-         hb_vm_bResetIdle = FALSE;
          hb_vm_uiIdleTask = 0;
          hb_vm_bCollectGarbage = TRUE;
 
@@ -185,15 +184,9 @@ HB_FUNC( HB_IDLESTATE )
 
    if( hb_vm_uiIdleTask == hb_vm_uiIdleMaxTask )
    {
-      hb_vm_bResetIdle = FALSE;
       hb_vm_uiIdleTask = 0;
       hb_vm_bCollectGarbage = TRUE;
    }
-}
-
-HB_FUNC( HB_IDLE_RESET )
-{
-   hb_vm_bResetIdle = TRUE;
 }
 
 /* add a new background task and return its handle */
