@@ -219,10 +219,10 @@ METHOD ParsePict( cPicture ) CLASS Get
       nAt := At( " ", cPicture )
 
       if nAt == 0
-         ::cPicFunc := cPicture
+         ::cPicFunc := Upper( cPicture )
          ::cPicMask := ""
       else
-         ::cPicFunc := SubStr( cPicture, 1, nAt - 1 )
+         ::cPicFunc := Upper( SubStr( cPicture, 1, nAt - 1 ) )
          ::cPicMask := SubStr( cPicture, nAt + 1 )
       endif
 
