@@ -738,7 +738,7 @@ static COMMANDS * TraSearch( char * cmdname, COMMANDS * sttraStart )
 static void ParseCommand( char * sLine, BOOL com_or_xcom, BOOL com_or_tra )
 {
   static char mpatt[ PATTERN_SIZE ];
-  static char rpatt[ PATTERN_SIZE ];
+  char *rpatt;
 
   char cmdname[ MAX_NAME ];
   COMMANDS * stcmd;
@@ -847,7 +847,8 @@ static void ParseCommand( char * sLine, BOOL com_or_xcom, BOOL com_or_tra )
     sLine += ipos + 1; */
 
     HB_SKIPTABSPACES(sLine);
-    hb_pp_strocpy( rpatt, sLine );
+    /* hb_pp_strocpy( rpatt, sLine ); */
+    rpatt = sLine;
     rlen = strotrim( rpatt, TRUE );
 
     ConvertPatterns( mpatt, mlen, rpatt, rlen );
@@ -953,7 +954,7 @@ static void ConvertPatterns( char * mpatt, int mlen, char * rpatt, int rlen )
                                        'a';
           expreal[1] = lastchar;
           expreal[2] = exptype;
-          hb_pp_Stuff( expreal, mpatt+ipos, 4, rmlen, mlen );
+          hb_pp_Stuff( expreal, mpatt+ipos, 4, rmlen, mlen-ipos );
           mlen += 4 - rmlen;
           i += 4 - rmlen;
 
@@ -1014,7 +1015,7 @@ static void ConvertPatterns( char * mpatt, int mlen, char * rpatt, int rlen )
                        rmlen++;
                     }
                     expreal[2] = exptype;
-                    hb_pp_Stuff( expreal, ptr, 4, rmlen, rlen );
+                    hb_pp_Stuff( expreal, ptr, 4, rmlen, rlen+(rpatt-ptr) );
                     rlen += 4 - rmlen;
                  }
                  else
@@ -1058,6 +1059,7 @@ static COMMANDS* AddTranslate( char * traname )
 
 int hb_pp_ParseExpression( char * sLine, char * sOutLine )
 {
+  static char rpatt[ PATTERN_SIZE ];
   char sToken[MAX_NAME];
   char * ptri, * ptro, * ptrb;
   int lenToken, i, ipos, isdvig, lens;
@@ -1098,7 +1100,8 @@ int hb_pp_ParseExpression( char * sLine, char * sOutLine )
 
         if( *ptri == '#' )
         {
-           hb_pp_ParseDirective( ptri+1 );
+           hb_pp_strocpy( rpatt, ptri+1 );
+           hb_pp_ParseDirective( rpatt );
 
            if( ipos > 0 )
            {
@@ -1415,7 +1418,7 @@ static int WorkPseudoF( char ** ptri, char * ptro, DEFINES * stdef )
                  ptrb = ptrb+ifou-1;
                  if( !ISNAME(*(ptrb-1)) && !ISNAME(*(ptrb+lenfict)) )
                  {
-                    hb_pp_Stuff( ptrreal, ptrb, lenreal, lenfict, lenres );
+                    hb_pp_Stuff( ptrreal, ptrb, lenreal, lenfict, lenres+(ptro-ptrb) );
                     lenres += lenreal - lenfict;
                     ptrb += lenreal;
                  }
@@ -2690,7 +2693,7 @@ static void SearnRep( char * exppatt, char * expreal, int lenreal, char * ptro, 
                             i += 4;
                           }
                     }
-                  hb_pp_Stuff( expnew, ptr, lennew, 0, *lenres-(ptr-ptro)+1 );
+                  hb_pp_Stuff( expnew, ptr, lennew, 0, *lenres-(ptr-ptro) );
                   *lenres += lennew;
                   isdvig = ptr - ptro + (ptr2-ptr-1) + lennew;
                   rezs = TRUE;
@@ -3531,15 +3534,7 @@ static int strotrim( char * stroka, BOOL bRule )
   char *ptr = stroka, lastc = '0', curc;
   int lens = 0, State = STATE_NORMAL;
 
-  /*
-  char *cLastChar = '\0';
-  */
-
   HB_TRACE(HB_TR_DEBUG, ("strotrim(%s)", stroka));
-
-  #if 0
-     printf( "StrIn: >%s<\n", stroka );
-  #endif
 
   while( ( curc = *stroka ) != '\0' )
   {
@@ -3592,23 +3587,12 @@ static int strotrim( char * stroka, BOOL bRule )
         *ptr++ = curc;
         lastc = curc;
         lens++;
-
-        /*
-        if( State == STATE_NORMAL && curc != ' ' )
-        {
-           cLastChar = curc;
-        }
-        */
      }
 
      stroka++;
   }
 
   *ptr = '\0';
-
-  #if 0
-     printf( "Str Out: >%s<\n", stroka - lens );
-  #endif
 
   return lens;
 }
