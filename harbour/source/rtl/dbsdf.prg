@@ -214,6 +214,16 @@ FUNCTION __dbSDF( lExport, cFile, aFields, bFor, bWhile, nNext, nRecord, lRest )
       END IF
    ELSE
       // APPEND FROM SDF
+         oErr := ErrorNew()
+         oErr:severity := ES_ERROR
+         oErr:genCode := EG_UNSUPPORTED
+         oErr:subSystem := "SDF"
+         oErr:subCode := 9999
+         oErr:description := HB_LANGERRMSG( oErr:genCode )
+         oErr:canRetry := .F.
+         oErr:canDefault := .T.
+         Eval(ErrorBlock(), oErr)
+      /*
       handle := FOPEN( cFileName )
       IF handle == -1
          oErr := ErrorNew()
@@ -234,6 +244,7 @@ FUNCTION __dbSDF( lExport, cFile, aFields, bFor, bWhile, nNext, nRecord, lRest )
          END IF
          FCLOSE( handle )
       END IF
+      */
    END IF
 RETURN NIL
 

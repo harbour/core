@@ -1,3 +1,11 @@
+2001-08-10 13:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+  * source/rtl/dbdelim.prg
+  * source/rtl/dbsdf.prg
+    + Added a run time error (9999, Operation not supported) when
+      trying to use APPEND FROM DELIMITED or APPEND FROM SDF, with
+      default allowed.
+
 2001-08-10 12:15 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * source/vm/extend.c
