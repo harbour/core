@@ -300,7 +300,8 @@ long hb_parnl( WORD wParam, ... )
    return 0;
 }
 
-int hb_parinfa( int iParamNum, ULONG uiArrayIndex )
+
+ULONG hb_parinfa( int iParamNum, ULONG uiArrayIndex )
 {
    PHB_ITEM pArray = hb_param( iParamNum, IT_ARRAY );
 
@@ -309,11 +310,13 @@ int hb_parinfa( int iParamNum, ULONG uiArrayIndex )
       if( ! uiArrayIndex )
          return hb_arrayLen( pArray );
       else
-         return hb_arrayGetType( pArray, uiArrayIndex );
+//       return hb_arrayGetType( pArray, uiArrayIndex );
+         return (long) hb_arrayGetType( pArray, uiArrayIndex );
    }
    else
       return 0; /* QUESTION: should we raise an error here ? */
 }
+
 
 WORD hb_parinfo( WORD wParam )
 {
