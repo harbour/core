@@ -15,6 +15,7 @@
 
 COMPILER_DIR=source\compiler
 RTL_DIR=source\rtl
+RDD_DIR=source\rdd
 HBPP_DIR=source\hbpp
 TOOLS_DIR=source\tools
 VM_DIR=source\vm
@@ -39,6 +40,7 @@ CLIBFLAGSDEBUG=$(CFLAGS) -c -Zi /TP
 HARBOUR_LIB=$(LIB_DIR)\harbour.lib
 TERMINAL_LIB=$(LIB_DIR)\terminal.lib
 TOOLS_LIB=$(LIB_DIR)\hbtools.lib
+RDD_LIB=$(LIB_DIR)\rdd.lib
 HARBOUR_EXE=$(BIN_DIR)\harbour.exe
 
 #
@@ -119,10 +121,18 @@ TERMINAL_LIB_OBJS = \
     $(OBJ_DIR)\gtxxx.obj
 
 #
+# OBJ list for rdd.lib. Add new ones as needed
+#
+
+RDD_LIB_OBJS = \
+    $(OBJ_DIR)\dbcmd.obj \
+    $(OBJ_DIR)\rddsys.obj
+
+#
 # Our default target
 #
 
-all: $(HARBOUR_EXE) $(HARBOUR_LIB) $(TOOLS_LIB) $(TERMINAL_LIB)
+all: $(HARBOUR_EXE) $(HARBOUR_LIB) $(TOOLS_LIB) $(TERMINAL_LIB) $(RDD_LIB)
 
 $(HARBOUR_EXE) : \
     $(COMPILER_DIR)\harboury.c \
@@ -384,3 +394,17 @@ $(OBJ_DIR)\strpbrk.obj : $(TOOLS_DIR)\strpbrk.c
 
 $(OBJ_DIR)\strright.obj : $(TOOLS_DIR)\strright.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+#
+# RDD source depencies below. Add as needed
+#
+
+$(OBJ_DIR)\dbcmd.obj : $(RDD_DIR)\dbcmd.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(RDD_DIR)\rddsys.c : $(RDD_DIR)\rddsys.prg
+    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(**D) $** -n
+
+$(OBJ_DIR)\rddsys.obj : $(RDD_DIR)\rddsys.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
