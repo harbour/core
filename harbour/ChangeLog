@@ -1,3 +1,13 @@
+2000-09-20 23:36 UTC+0200 JFL (mafact) <jfl@mafact.com>
+  * harbour/include/hbsetup.ch
+    + added a #define HB_CLS_ENFORCERO to enable full ReadOnly test on DATA
+  * harbour/source/pp/ppcore.c
+    minor reformating whith some comment and CygWin
+  * harbour/source/vm/classes.c
+    + added a #define HB_CLS_ENFORCERO to enable full ReadOnly test on DATA
+      (Now disabled by default to extend compatibility with TopClass and VO)
+      (will be completed later)
+
 2000-09-20 15:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
    * include/hbver.h
@@ -284,8 +294,8 @@
    * source/rdd/dbfcdx/dbfcdx1.c
       ! Changed SET_AUTOSHARE, now accept three values:
         0: AUTOSHARE disabled.
-	1: AUTOSHARE enabled.
-	2: force exclusive mode.
+        1: AUTOSHARE enabled.
+        2: force exclusive mode.
 
 2000-09-02 09:37 GMT+1 Bruno Cantero <bruno@issnet.net>
    * contrib/rdd_ads/rddads.h
@@ -497,16 +507,16 @@
 
    * include/hbclass.ch
      + Added TClass declaration:
-	DECLARE TClass ;
-		New( cName AS STRING, OPTIONAL SuperParams ) AS CLASS TClass ;
-		Create() AS OBJECT;
-		Instance() AS OBJECT ;
-		AddClsMthds( cName AS STRING, @Method(), nScope AS NUMERIC, n2 AS NUMERIC, n3 AS NUMERIC );
-		AddMultiClsData( cType AS STRING, uVal, nScope AS NUMERIC, aDatas AS ARRAY OF STRING );
-		AddMultiData( cType AS STRING, uVal, nScope AS NUMERIC, aDatas AS ARRAY OF STRING );
-		AddMethod( cName AS STRING, @Method(), nScope AS NUMERIC );
-		AddInLine( cName AS STRING, bBlock AS CODEBLOCK, nScope AS NUMERIC );
-		AddVirtual( cName AS STRING )
+        DECLARE TClass ;
+                New( cName AS STRING, OPTIONAL SuperParams ) AS CLASS TClass ;
+                Create() AS OBJECT;
+                Instance() AS OBJECT ;
+                AddClsMthds( cName AS STRING, @Method(), nScope AS NUMERIC, n2 AS NUMERIC, n3 AS NUMERIC );
+                AddMultiClsData( cType AS STRING, uVal, nScope AS NUMERIC, aDatas AS ARRAY OF STRING );
+                AddMultiData( cType AS STRING, uVal, nScope AS NUMERIC, aDatas AS ARRAY OF STRING );
+                AddMethod( cName AS STRING, @Method(), nScope AS NUMERIC );
+                AddInLine( cName AS STRING, bBlock AS CODEBLOCK, nScope AS NUMERIC );
+                AddVirtual( cName AS STRING )
      + Added declaration to s_oClass  AS CLASS TClass
 
    * tests/testdecl.prg
@@ -594,17 +604,17 @@
 
   * source/macro/macroslx.c
     + Added:
-	#define MAX_STREAM                               2048 /* Max length of in-line LITERAL */
-	#define MAX_STREAM_STARTER                          2
-	#define MAX_STREAM_TERMINATOR                       2
-	#define MAX_STREAM_EXCLUSIONS                       2
+        #define MAX_STREAM                               2048 /* Max length of in-line LITERAL */
+        #define MAX_STREAM_STARTER                          2
+        #define MAX_STREAM_TERMINATOR                       2
+        #define MAX_STREAM_EXCLUSIONS                       2
 
   * source/compiler/hbslex.c
     + Added:
-      	#define MAX_STREAM                               2048 /* Max length of in-line LITERAL */
-      	#define MAX_STREAM_STARTER                          7 /* "QOUT([" */
-      	#define MAX_STREAM_TERMINATOR                       4 /* "])\n"   */
-      	#define MAX_STREAM_EXCLUSIONS                       2
+        #define MAX_STREAM                               2048 /* Max length of in-line LITERAL */
+        #define MAX_STREAM_STARTER                          7 /* "QOUT([" */
+        #define MAX_STREAM_TERMINATOR                       4 /* "])\n"   */
+        #define MAX_STREAM_EXCLUSIONS                       2
 
   * source/macro/macro.slx
     * Replaced AND_IGNORE_DELIMITERS() with TEST_LEFT()

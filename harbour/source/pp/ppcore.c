@@ -701,7 +701,7 @@ static void ParseCommand( char * sLine, BOOL com_or_xcom, BOOL com_or_tra )
   /* JFL 2000-09-19 */
   /* This was the original line as Alexander wrote it */
   /* while( *sLine != '\0' && *sLine != ' ' && *sLine != '\t' && *sLine != '<' && *sLine != '=' && ( *sLine != '(' || ipos == 0 ) ) */
-  /* Now the line #xtranslate = name(.. => will be allowed
+  /* Now the line #xtranslate = name(.. => will be allowed */
 
   /* I changed it to the following to allow < and = to be the first char within a translate or xtranslate */
   while( *sLine != '\0' && *sLine != ' ' && *sLine != '\t' && ( *sLine != '<' || ipos == 0 ) && ( *sLine != '=' || ipos == 0 ) && ( *sLine != '(' || ipos == 0 ) )
@@ -972,7 +972,7 @@ int hb_pp_ParseExpression( char * sLine, char * sOutLine )
                 }
 
               /* Look for definitions from #command      */
-              if( kolpass < 3 )
+              if( kolpass < 3 )       /* JFL ! */
                 {
                   ptri = sLine + isdvig;
                   HB_SKIPTABSPACES( ptri );
@@ -1022,6 +1022,7 @@ int hb_pp_ParseExpression( char * sLine, char * sOutLine )
           isdvig += ipos;
         }
       while( ipos != 0 );
+
       kolpass++;
       if( kolpass > 20 && rezDef )
       {

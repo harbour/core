@@ -137,6 +137,9 @@
  *    __CLS_PAR00() (Allow the creation of class wich not autoinherit of the default TObject)
  *    Suppression of the default :Class message ==> transfered to tObject
  *
+ *    1.35 ?
+ *    1.36 Adding HB_CLS_ENFORCERO FLAG to disable Write access to RO VAR
+ *         This is work in progress (JFL) Should be related to some compatibility flag
  *
  * See doc/license.txt for licensing terms.
  *
@@ -446,6 +449,7 @@ void hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod )
       }
 #endif
 
+#ifdef HB_CLS_ENFORCERO  /* Not enabled by default */
       if( ( uiScope & HB_OO_CLSTP_READONLY ) == HB_OO_CLSTP_READONLY )
       {
          if(
@@ -463,6 +467,8 @@ void hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod )
             hb_errRT_BASE( EG_NOMETHOD, 1004, "Scope violation (readonly)", szName );
          }
       }
+#endif
+
    }
 }
 
