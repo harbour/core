@@ -1,3 +1,10 @@
+2000-01-24 20:15 GMT-5 David G. Holm <dholm@ sd-llc.com>
+
+   * source/rtl/environ.c
+     % Due to careless use of the CVS repository, I had to redo the following:
+     ! Fixed bug in setting end of string for case VER_PLATFORM_WIN32_WINDOWS:
+     ! Put Windows support for MingW32 back in after accidentally removing it.
+
 20000123-17:35 GMT+1 Ignacio Ortiz <ignacio@fivetech.com>
    * source/rtl/tget.prg
      * Improved: cursor flickering removed
@@ -52,6 +59,7 @@
       *Added support for OS2 IPF source code
    +source/tools/os2.prg
       Support class for FT_HELPC generate OS2 IPF files
+
 2000-01-22 10:22 GMT+1 Patrick Mast <harbour@PatrickMast.com>
    * source/rtl/environ.c (From Jose Lalin)
      ! Getenv accepts a default value to return when the envvar is not found
