@@ -155,7 +155,6 @@ method SetsKeyPressed( nKey, oBrwSets, nSets, oWnd ,cName,LenArr,aArray) class t
            if oBrwSets:Cargo > 1
               oBrwSets:Cargo := 1
               oBrwSets:GoTop()
-              oBrwSets:RefreshAll()
               oBrwSets:ForceStable()
            endif
 
@@ -163,7 +162,6 @@ method SetsKeyPressed( nKey, oBrwSets, nSets, oWnd ,cName,LenArr,aArray) class t
            if oBrwSets:Cargo < nSets
               oBrwSets:Cargo := nSets
               oBrwSets:GoBottom()
-              oBrwSets:RefreshAll()
               oBrwSets:ForceStable()
            endif
 
@@ -206,7 +204,6 @@ static procedure SetsUp( oBrw )
    if oBrw:RowPos == 1
       nSetPos := oBrw:Cargo
       oBrw:Cargo := 0
-      oBrw:Refreshall()
       oBrw:ForceStable()
       oBrw:Cargo := nSetPos
    endif
@@ -214,7 +211,6 @@ static procedure SetsUp( oBrw )
    oBrw:dehilite()
    oBrw:colpos:=2
    oBrw:Up()
-   oBrw:Refreshall()
 
    if nRow != oBrw:Cargo
       oBrw:aReDraw[ nRow ] := .f.
@@ -232,7 +228,6 @@ static procedure SetsDown( oBrw )
    if oBrw:RowPos == oBrw:RowCount
       nSetPos := oBrw:Cargo
       oBrw:Cargo := 0
-      oBrw:Refreshall()
       oBrw:ForceStable()
       oBrw:Cargo := nSetPos
    endif
@@ -240,7 +235,6 @@ static procedure SetsDown( oBrw )
    oBrw:dehilite()
    oBrw:colpos:=2
    oBrw:Down()
-   oBrw:Refreshall()
 
    if nRow != oBrw:Cargo
       oBrw:aReDraw[ nRow ] := .f.

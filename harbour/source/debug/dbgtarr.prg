@@ -185,7 +185,6 @@ static procedure SetsUp( oBrw )
    if oBrw:RowPos == 1
       nSetPos := oBrw:Cargo
       oBrw:Cargo := 0
-      oBrw:Refreshall()
       oBrw:ForceStable()
       oBrw:Cargo := nSetPos
    endif
@@ -193,12 +192,11 @@ static procedure SetsUp( oBrw )
    oBrw:dehilite()
    oBrw:colpos:=2
    oBrw:Up()
-   oBrw:Refreshall()
 
    if nRow != oBrw:Cargo
       oBrw:aReDraw[ nRow ] := .f.
       oBrw:Up()
-   endif 
+   endif
    oBrw:ForceStable()
    myColors(oBrw,{1,2})
 return
@@ -211,7 +209,6 @@ static procedure SetsDown( oBrw )
    if oBrw:RowPos == oBrw:RowCount
       nSetPos := oBrw:Cargo
       oBrw:Cargo := 0
-      oBrw:Refreshall()
       oBrw:ForceStable()
       oBrw:Cargo := nSetPos
    endif
@@ -219,7 +216,6 @@ static procedure SetsDown( oBrw )
    oBrw:dehilite()
    oBrw:colpos:=2
    oBrw:Down()
-   oBrw:Refreshall()
 
    if nRow != oBrw:Cargo
       oBrw:aReDraw[ nRow ] := .f.
@@ -302,7 +298,7 @@ static function myColors( oBrowse, aColColors )
    local nColPos := oBrowse:colpos
 
    for i := 1 to len( aColColors )
-      oBrowse:colpos := aColColors[i]  
+      oBrowse:colpos := aColColors[i]
       oBrowse:hilite()
       if  oBrowse:colPos==1
            oBrowse:dehilite()
