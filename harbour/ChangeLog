@@ -1,3 +1,29 @@
+19990708-14:00 Andi Jahja <andij@aonlippo.co.id>
+   * source/rtl/file.c
+   Change per Paul for MSC
+
+19990708-14:00 Bruno Cantero <bruno@issnet.net>
+CVSed by Andi Jahja <andij@aonlippo.co.id>
+
+include/extend.api
+   + #define _reta  hb_reta
+   * change hb_storlen to hb_storclen
+source/rtl/extend.h
+   + declaration of hb_reta
+source/rtl/extend.c
+   :) wArrayIndex use now completely implemented
+   + #include <itemapi.h>
+   * hb_storc
+   * hb_storclen
+   * hb_stords
+   * hb_storl
+   * hb_storni
+   * hb_stornl
+   * hb_stornd
+tests/working :
+   * extend1.prg
+   * extend2.c
+
 19990705-14:10 Alexander Kresin
   * source\hbpp\hbpp.c
   * source\hbpp\table.c
