@@ -77,4 +77,4 @@
  */
 
 FUNCTION MEMVARBLOCK( cMemvar )
-RETURN { |x| IIF( x==NIL, __mvGET(cMemvar), __mvPUT(cMemvar,x) ) }
+RETURN { |x| IIF( PCOUNT()==0, __mvGET(cMemvar), __mvPUT(cMemvar,x) ) }

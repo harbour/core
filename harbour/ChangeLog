@@ -1,3 +1,8 @@
+19990909-16:05 GMT+2 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/rtl/memvarbl.prg
+	+ corrected to allow setings of NIL value
+	
 19990909-13:00 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *source/runner/stdalone/external.prg
