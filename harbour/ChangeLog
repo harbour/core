@@ -1,3 +1,10 @@
+20000330-23:04 GMT+1 Maurilio Longo <maurilio.longo@libero.it>
+
+	* include/hbvmpub.h
+	  ! with OS/2 GCC pragma pack(8) is not valid
+	* source/rtl/gtos2/gtos2.c
+	  * with OS/2 GCC kbhit() is not available (it's a ToolKit function)  	
+
 20000330-12:15 EST Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/dates.c
      * account for possible overflow in calculation
@@ -149,7 +156,7 @@
 20000327-21:35 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    ! Trash in harbour CVS root directory removed by SourceForge staff.
-   ! File permission error corrected for CONTRIB/RDD_ADS/ dir 
+   ! File permission error corrected for CONTRIB/RDD_ADS/ dir
      by SourceForge staff.
 
    * utils/hbextern/hbextern.prg
@@ -193,7 +200,7 @@
      + The JAVA runner contribution has been added to a new directory
        along with all the support files needed to make it work.
        Thanks to Matteo Baccan for this contribution.
-     ; !! WARNING !! I could not test this since I don't have the java 
+     ; !! WARNING !! I could not test this since I don't have the java
        tools needed.
 
    * makefile.vc
@@ -241,17 +248,17 @@
    * include/clipdefs.h
      * Now the HARBOUR keyword requires the function name to be in uppercase.
        The compatibility CLIPPER keyword still allows for mixed case function
-       names on some platforms. The reason is that "pascal" keyword is 
+       names on some platforms. The reason is that "pascal" keyword is
        non-portable, and the above requirement was already there for some
        platforms, now it's a generic rule.
      - Removed the __attribute__ ((stdcall)) for the __GNUC__ branch. Setting
-       any specific calling convention is not needed, since we don't need to 
-       deal with compatibility with precompiled legacy libs, there's no 
+       any specific calling convention is not needed, since we don't need to
+       deal with compatibility with precompiled legacy libs, there's no
        such thing, CA-Cl*pper never supported GNU C.
      ; Now the HARBOUR macro is quite simple, it's plain "void".
 
    * source/pp/ppcore.c
-     + Added predefined macro __HB_MAIN__. The macro is undefined or holds the 
+     + Added predefined macro __HB_MAIN__. The macro is undefined or holds the
        value of HARBOUR_START_PROCEDURE depending on the compiler.
        Use this code to make your Harbour startup procedure platform/compiler
        independent:
@@ -331,7 +338,7 @@
    + bin/bld.*
      + GNU-make starters renamed to better show their purpose.
      + GNU-make starters modified to work like bld_gnu.*, so that they don't
-       need to be modified, instead they expect the HB_ envvars to be set. Now 
+       need to be modified, instead they expect the HB_ envvars to be set. Now
        they also throw a help screen when something is not set.
      + BLD.SH bash script added to build Harbour executables.
      + Other small improvements.

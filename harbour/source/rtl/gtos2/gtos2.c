@@ -58,9 +58,13 @@
 #define INCL_DOSPROCESS
 #define INCL_NOPMAPI
 
-#include <string.h>
-#include <os2.h>
+/* 25/03/2000 - maurilio.longo@libero.it
+   OS/2 GCC hasn't got ToolKit headers available */
+#if defined(HARBOUR_GCC_OS2)
+#include <stdlib.h>
+#else
 #include <bsedos.h>
+#endif
 #include <conio.h>
 
 #include "hbapigt.h"
@@ -105,11 +109,29 @@ BOOL hb_gt_AdjustPos( BYTE * pStr, ULONG ulLen )
    return TRUE;
 }
 
+
 int hb_gt_ReadKey( HB_inkey_enum eventmask )
 {
    int ch;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_ReadKey(%d)", (int) event_mask));
+
+#if defined(HARBOUR_GCC_OS2)
+   /* 25/03/2000 - maurilio.longo@libero.it
+      kbhit() isn't available when using emx/gcc under OS/2,
+      there is _read_kbd(), instead, which can be used to fetch characters from
+      keyboard buffer.
+   */
+   ch = _read_kbd(0, 0, 0);   /* readkey without echoing, waiting or breaking */
+   if(ch == 0) {
+         ch = _read_kbd(0, 0, 0);
+         if(ch != EOF) {
+            ch += 256;
+         }
+   }
+
+   /* TODO: Use KBDxxx subsystem to fetch keys */
+#else
 
    if( kbhit() )
    {
@@ -133,12 +155,13 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
    }
    else
       ch = 0;
+#endif
 
    /* Perform key translations */
    switch( ch )
    {
       case -1:  /* No key available */
-         return;
+         return 0;
       case 328:  /* Up arrow */
          ch = K_UP;
          break;
@@ -246,6 +269,7 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
 
    return ch;
 }
+
 
 BOOL hb_gt_IsColor( void )
 {

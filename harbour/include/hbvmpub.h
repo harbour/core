@@ -44,8 +44,15 @@ extern "C" {
 
 struct _HB_DYNS;
 
+/* 30/03/2000 - maurilio.longo@libero.it
+	OS/2 GCC valid values for pragma pack are 1, 2, 4 with 4 being default
+*/
+#if !defined(HARBOUR_GCC_OS2)
+
 /* symbol support structure */
 #pragma pack(8)
+
+#endif
 
 typedef struct
 {
