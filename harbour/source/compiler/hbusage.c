@@ -153,6 +153,7 @@ void hb_compPrintCredits( void )
            "Eddie Runia <eddie@runia.com>\n"
            "Felipe G. Coury <fcoury@creation.com.br>\n"
            "Gonzalo A. Diethelm <gonzalo.diethelm@iname.com>\n"
+           "Horacio D. Roldan Kasimatis <harbour_ar@yahoo.com.ar>\n"
            "Ignacio Ortiz de Zuniga <ignacio@fivetech.com>\n"
            "Janica Lubos <janica@fornax.elf.stuba.sk>\n"
            "Jean-Francois Lefebvre (mafact) <jfl@mafact.com>\n"
