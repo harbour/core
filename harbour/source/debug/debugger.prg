@@ -174,6 +174,7 @@ procedure __dbgEntry( uParam1, uParam2, uParam3 )  // debugger entry point
               if s_oDebugger:lGo
                  s_oDebugger:lGo := ! s_oDebugger:IsBreakPoint( uParam1 )
               endif
+/*  Alexander Kresin removed 21.06.2001
               if s_oDebugger:lGo
                  DispBegin()
                  DispBegin()
@@ -182,6 +183,9 @@ procedure __dbgEntry( uParam1, uParam2, uParam3 )  // debugger entry point
                  DispEnd()
                  DispEnd()
               else
+*/
+              if !s_oDebugger:lGo .or. isAltdPressed()
+                 s_oDebugger:lGo := .F.
                  s_oDebugger:SaveAppStatus()
                  s_oDebugger:GoToLine( uParam1 )
                  s_oDebugger:HandleEvent()

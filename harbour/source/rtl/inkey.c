@@ -79,6 +79,7 @@
   #include <sys/times.h>
 #endif
 
+static BOOL   s_altdPressed = 0;
 static int *  s_inkeyBuffer = 0; /* Harbour keyboard buffer (empty if head == tail)     */
 static int    s_inkeyHead;       /* Harbour keyboard buffer head pointer (next insert)  */
 static int    s_inkeyTail;       /* Harbour keyboard buffer tail pointer (next extract) */
@@ -222,6 +223,7 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
             if( hb_set.HB_SET_DEBUG )
             {
                ch = 0;              /* Make the keystroke disappear */
+               s_altdPressed = TRUE;
                hb_vmRequestDebug(); /* Request the debugger */
             }
       }
@@ -1103,4 +1105,11 @@ int hb_inkeyTranslate( int key, HB_inkey_enum event_mask )
       key = 0;
    }
    return key;
+}
+
+HB_FUNC( ISALTDPRESSED )
+{
+   BOOL bAltd = s_altdPressed;
+   s_altdPressed = FALSE;
+   hb_retl( bAltd );
 }

@@ -1,3 +1,14 @@
+2001-06-21 10:25 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   * source/rtl/inkey.c
+     + added static variable s_altdPressed, which is set after pressing Alt-D
+     + added function isAltdPressed(), which return a value of s_altdPressed
+       and set it to FALSE
+   * source/debug/debugger.prg
+     * __dbgEntry() now invokes isAltdPressed() and calls debug screen, if
+       isAltdPressed() returns TRUE
+     * commented few lines in __dbgEntry() - debugged program works now much
+       faster and better     
+
 2001-06-20 22:10 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * hb_slex.vc
    * makefile.vc
