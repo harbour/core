@@ -374,6 +374,7 @@ static void hb_cdxGetMemo( CDXAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
    ULONG ulBlock, ulSize;
    BYTE * pBuffer;
    MEMOBLOCK mbBlock;
+   long lSize;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_cdxGetMemo(%p, %hu, %p)", pArea, uiIndex, pItem));
 
@@ -388,8 +389,9 @@ static void hb_cdxGetMemo( CDXAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          ulSize = 0;
       else
          ulSize = hb_cdxSwapBytes( mbBlock.ulSize );
-
-      if( ulSize > 0 && ulSize < 0xFFFF )
+      lSize = (long) ulSize;
+      /* if( ulSize > 0 && ulSize < 0xFFFFFF ) */
+      if ( lSize > 0 )
       {
          pBuffer = ( BYTE * ) hb_xgrab( ulSize + 1 );
          hb_fsReadLarge( pArea->hMemoFile, pBuffer, ulSize );
@@ -414,7 +416,15 @@ static void hb_cdxAddFreeBlocks( CDXAREAP pArea, ULONG ulBlock, USHORT uiBlocks 
    LPMEMOFREEBLOCK pFreeBlock;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_cdxAddFreeBlocks(%p, %lu, %hu)", pArea, ulBlock, uiBlocks));
-
+   HB_SYMBOL_UNUSED( pArea );
+   HB_SYMBOL_UNUSED( ulBlock );
+   HB_SYMBOL_UNUSED( uiBlocks );
+   return;
+   /*
+    * Def'ed out temporarily this version doesn't seem correct for shared access or compatible with VFP.
+    * Do the dumb thing, no free block list (as VFP)
+    */
+#if 0
    bFound = FALSE;
    for( iCount = pArea->pMemoRoot->uiListLen - 1; iCount >= 0; iCount-- )
    {
@@ -486,6 +496,7 @@ static void hb_cdxAddFreeBlocks( CDXAREAP pArea, ULONG ulBlock, USHORT uiBlocks 
       pArea->pMemoRoot->uiListLen = HB_MIN( MAXFREEBLOCKS, pArea->pMemoRoot->uiListLen + 1 );
       pArea->pMemoRoot->fChanged = TRUE;
    }
+#endif
 }
 
 /*
@@ -498,7 +509,15 @@ static BOOL hb_cdxCompleteFromFreeBlocks( CDXAREAP pArea, ULONG ulBlock, USHORT 
    MEMOBLOCK mbBlock;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_cdxCompleteFromFreeBlocks(%p, %lu, %hu)", pArea, ulBlock, uiBlocks));
-
+   HB_SYMBOL_UNUSED( pArea );
+   HB_SYMBOL_UNUSED( ulBlock );
+   HB_SYMBOL_UNUSED( uiBlocks );
+   return FALSE;
+   /*
+    * Def'ed out temporarily this version doesn't seem correct for shared access or compatible with VFP.
+    * Do the dumb thing, no free block list (as VFP)
+    */
+#if 0
    for( uiCount = 0; uiCount < pArea->pMemoRoot->uiListLen; uiCount++ )
    {
       pFreeBlock = ( LPMEMOFREEBLOCK ) ( pArea->pMemoRoot->pFreeList + uiCount * SIZEOFMEMOFREEBLOCK );
@@ -531,23 +550,30 @@ static BOOL hb_cdxCompleteFromFreeBlocks( CDXAREAP pArea, ULONG ulBlock, USHORT 
       }
    }
    return FALSE;
+#endif
 }
 
 /*
  * Get free memo blocks from list or return a new block.
  */
-static void hb_cdxGetFreeBlocks( CDXAREAP pArea, USHORT uiBlocks, ULONG * ulBlock )
+/* static void hb_cdxGetFreeBlocks( CDXAREAP pArea, USHORT uiBlocks, ULONG * ulBlock ) */
+static void hb_cdxGetFreeBlocks( CDXAREAP pArea, ULONG ulBlocks, ULONG * ulBlock )
 {
    USHORT uiCount;
    LPMEMOFREEBLOCK pFreeBlock;
    MEMOBLOCK mbBlock;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_cdxGetFreeBlocks(%p, %hu, %p)", pArea, uiBlocks, ulBlock));
+   HB_TRACE(HB_TR_DEBUG, ("hb_cdxGetFreeBlocks(%p, %hu, %p)", pArea, ulBlocks, ulBlock));
 
+   /*
+    * Def'ed out temporarily this version doesn't seem correct for shared access or compatible with VFP.
+    * Do the dumb thing, no free block list (as VFP)
+    */
+#if 0
    for( uiCount = 0; uiCount < pArea->pMemoRoot->uiListLen; uiCount++ )
    {
       pFreeBlock = ( LPMEMOFREEBLOCK ) ( pArea->pMemoRoot->pFreeList + uiCount * SIZEOFMEMOFREEBLOCK );
-      if( uiBlocks <= pFreeBlock->uiBlocks )
+      if( ulBlocks <= pFreeBlock->uiBlocks )
       {
          * ulBlock = pFreeBlock->ulBlock;
 
@@ -572,10 +598,10 @@ static void hb_cdxGetFreeBlocks( CDXAREAP pArea, USHORT uiBlocks, ULONG * ulBloc
          return;
       }
    }
-
+#endif
    /* Not found a free block */
    * ulBlock = pArea->pMemoRoot->ulNextBlock;
-   pArea->pMemoRoot->ulNextBlock += uiBlocks;
+   pArea->pMemoRoot->ulNextBlock += ulBlocks;
    pArea->pMemoRoot->fChanged = TRUE;
 }
 
@@ -585,48 +611,56 @@ static void hb_cdxGetFreeBlocks( CDXAREAP pArea, USHORT uiBlocks, ULONG * ulBloc
 static void hb_cdxWriteMemo( CDXAREAP pArea, ULONG ulBlock, PHB_ITEM pItem, ULONG ulLen,
                              ULONG * ulStoredBlock, USHORT uiType )
 {
-   USHORT uiBloksRequired, uiBlocksUsed;
+   /* USHORT uiBloksRequired, uiBlocksUsed; */
+   ULONG ulBlocksRequired, ulBlocksUsed;
    MEMOBLOCK mbBlock;
    BOOL bWriteBlocks;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_cdxWriteMemo(%p, %lu, %p, %lu, %p, %hu)", pArea, ulBlock,
                            pItem, ulLen, ulStoredBlock, uiType));
-
+   /*
    uiBloksRequired = ( USHORT ) (( ulLen + sizeof( MEMOBLOCK ) + pArea->uiMemoBlockSize - 1 ) /
                                   pArea->uiMemoBlockSize);
+   */
+   ulBlocksRequired = (( ulLen + sizeof( MEMOBLOCK ) + pArea->uiMemoBlockSize - 1 ) /
+                      pArea->uiMemoBlockSize);
    if( ulBlock > 0 )
    {
       hb_fsSeek( pArea->hMemoFile, ulBlock * pArea->uiMemoBlockSize, FS_SET );
       hb_fsRead( pArea->hMemoFile, ( BYTE * ) &mbBlock, sizeof( MEMOBLOCK ) );
+      /*
       uiBlocksUsed = ( USHORT ) (( hb_cdxSwapBytes( mbBlock.ulSize ) + sizeof( MEMOBLOCK ) +
                                   pArea->uiMemoBlockSize - 1 ) / pArea->uiMemoBlockSize);
+      */
+      ulBlocksUsed = (( hb_cdxSwapBytes( mbBlock.ulSize ) + sizeof( MEMOBLOCK ) +
+                        pArea->uiMemoBlockSize - 1 ) / pArea->uiMemoBlockSize);
    }
 
    bWriteBlocks = FALSE;
    /* Use same space */
-   if( ulBlock > 0 && uiBlocksUsed >= uiBloksRequired )
+   if( ulBlock > 0 && ulBlocksUsed >= ulBlocksRequired )
    {
       * ulStoredBlock = ulBlock;
       bWriteBlocks = TRUE;
 
       /* Free space */
-      if( uiBlocksUsed > uiBloksRequired )
-         hb_cdxAddFreeBlocks( pArea, ulBlock + uiBloksRequired, uiBlocksUsed - uiBloksRequired );
+      if( ulBlocksUsed > ulBlocksRequired )
+         hb_cdxAddFreeBlocks( pArea, ulBlock + ulBlocksRequired, ulBlocksUsed - ulBlocksRequired );
    }
    else /* Need more space */
    {
       if( ulBlock > 0 )
       {
-         if( hb_cdxCompleteFromFreeBlocks( pArea, ulBlock + uiBlocksUsed,
-                                           uiBloksRequired - uiBlocksUsed ) )
+         if( hb_cdxCompleteFromFreeBlocks( pArea, ulBlock + ulBlocksUsed,
+                                           ulBlocksRequired - ulBlocksUsed ) )
             bWriteBlocks = TRUE;
          else /* Free all blocks */
-            hb_cdxAddFreeBlocks( pArea, ulBlock, uiBlocksUsed );
+            hb_cdxAddFreeBlocks( pArea, ulBlock, ulBlocksUsed );
       }
 
       if( !bWriteBlocks )
       {
-         hb_cdxGetFreeBlocks( pArea, uiBloksRequired, ulStoredBlock );
+         hb_cdxGetFreeBlocks( pArea, ulBlocksRequired, ulStoredBlock );
          bWriteBlocks = TRUE;
       }
    }
@@ -647,7 +681,8 @@ static void hb_cdxWriteMemo( CDXAREAP pArea, ULONG ulBlock, PHB_ITEM pItem, ULON
  */
 static BOOL hb_cdxPutMemo( CDXAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 {
-   USHORT uiBlocksUsed;
+   /* USHORT uiBlocksUsed; */
+   ULONG ulBlocksUsed;
    ULONG ulLen, ulBlock;
    MEMOBLOCK mbBlock;
 
@@ -664,9 +699,14 @@ static BOOL hb_cdxPutMemo( CDXAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
       {
          hb_fsSeek( pArea->hMemoFile, ulBlock * pArea->uiMemoBlockSize, FS_SET );
          hb_fsRead( pArea->hMemoFile, ( BYTE * ) &mbBlock, sizeof( MEMOBLOCK ) );
+         /*
          uiBlocksUsed = ( USHORT ) (( hb_cdxSwapBytes( mbBlock.ulSize ) +
                                      pArea->uiMemoBlockSize - 1 ) / pArea->uiMemoBlockSize);
          hb_cdxAddFreeBlocks( pArea, ulBlock, uiBlocksUsed );
+         */
+         ulBlocksUsed = (( hb_cdxSwapBytes( mbBlock.ulSize ) +
+                           pArea->uiMemoBlockSize - 1 ) / pArea->uiMemoBlockSize);
+         hb_cdxAddFreeBlocks( pArea, ulBlock, ulBlocksUsed );
       }
       ulBlock = 0;
    }
@@ -4102,9 +4142,9 @@ ERRCODE hb_cdxSeek( CDXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFindLas
                      pArea->fFound = FALSE;
                      if( !bSoftSeek )
                      {
-                        //retvalue = SELF_GOTO( ( AREAP ) pArea, 0 );
-                        SELF_GOBOTTOM( ( AREAP ) pArea );
-                        retvalue = SELF_SKIP( ( AREAP ) pArea, 1 );
+                        //SELF_GOBOTTOM( ( AREAP ) pArea );
+                        //retvalue = SELF_SKIP( ( AREAP ) pArea, 1 );
+                        retvalue = hb_cdxGoEof( pArea );
                      }
                   }
                }
@@ -4130,10 +4170,9 @@ ERRCODE hb_cdxSeek( CDXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFindLas
          }
          else
          {
-            SELF_GOBOTTOM( ( AREAP ) pArea );
-            /* return SELF_SKIP( ( AREAP ) pArea, 1 ); */
-            retvalue = SELF_SKIP( ( AREAP ) pArea, 1 );
-            /*pArea->fEof = pTag->TagEOF = TRUE; */
+            /* SELF_GOBOTTOM( ( AREAP ) pArea );
+            retvalue = SELF_SKIP( ( AREAP ) pArea, 1 ); */
+            retvalue = hb_cdxGoEof( pArea );
          }
       }
       if( !hb_cdxTopScope( pTag, pTag->CurKeyInfo ) ||
@@ -5640,11 +5679,18 @@ ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrderInf
          break;
 
       case DBOI_NUMBER:
-         if( pArea->lpIndexes )
-            /* hb_itemPutNI( pOrderInfo->itmResult, pArea->lpIndexes->uiTag ); */
-            hb_itemPutNI( pOrderInfo->itmResult, pArea->uiTag );
+         if( ! pOrderInfo->itmOrder )
+         {
+            if( pArea->lpIndexes )
+               /* hb_itemPutNI( pOrderInfo->itmResult, pArea->lpIndexes->uiTag ); */
+               hb_itemPutNI( pOrderInfo->itmResult, pArea->uiTag );
+            else
+               hb_itemPutNI( pOrderInfo->itmResult, 0 );
+         }
          else
-            hb_itemPutNI( pOrderInfo->itmResult, 0 );
+         {
+            hb_itemPutNI( pOrderInfo->itmResult, hb_cdxFindTag( pArea, pOrderInfo ) );
+         }
          break;
 
       case DBOI_BAGNAME :
