@@ -755,6 +755,98 @@ Separator     {SpaceTab}
                unput( yytext[ yyleng-1 ] );
                hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_SYNTAX, ((yytext[ yyleng-1 ]=='\n')?"FUNCTION":yytext), NULL );
              }
+
+%{
+/* ************************************************************************ */
+%}
+
+"hb_inline" {
+	    char sBuffer[ YY_BUF_SIZE ], *pBuffer, sInlineSym[] = "HB_INLINE_0";
+	    int iSize, iBraces = 0;
+	    extern BOOL hb_pp_bInline;
+            PINLINE pInline;
+
+            hb_pp_bInline = TRUE;
+
+	    sInlineSym[10] = hb_comp_cInlineID++;
+
+	    switch( sInlineSym[10] )
+	    {
+	       case '9' + 1 :
+		  sInlineSym[10] = 'A';
+		  break;
+
+	       case 'Z' + 1 :
+                  hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_TOOMANY_INLINE, NULL, NULL );
+		  break;
+	    }
+
+            pInline = hb_compInlineAdd( hb_compIdentifierNew( sInlineSym, TRUE ) );
+
+	  DigestInline :
+
+            YY_INPUT( (char*) sBuffer, iSize, YY_BUF_SIZE );
+	    if( iSize == 0 )
+	    {
+               hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_INVALID_INLINE, hb_comp_functions.pLast->szName, NULL );
+	       hb_pp_bInline = FALSE;
+	       return '\n';
+	    }
+	    pBuffer = (char*) sBuffer;
+
+	    while( *pBuffer && ( *pBuffer == ' ' || *pBuffer == '\t' ) )
+	    {
+               pBuffer++;
+	    }
+
+	    if( *pBuffer == '\0' )
+	    {
+	       goto DigestInline;
+	    }
+	    else if( *pBuffer == '{' )
+	    {
+	       iBraces++;
+	    }
+	    else if( *pBuffer == '}' && iBraces > 1 )
+	    {
+	       iBraces--;
+	    }
+	    else if( *pBuffer == '}' )
+	    {
+	       if( pInline->pCode == NULL )
+	       {
+	          pInline->pCode = hb_xgrab( ( iSize = strlen( (char*) sBuffer ) ) + 1 );
+	          strcpy( pInline->pCode, (char*) sBuffer );
+	       }
+	       else
+	       {
+	          pInline->pCode = hb_xrealloc( pInline->pCode, pInline->lPCodeSize + ( iSize = strlen( (char*) sBuffer ) ) + 1 );
+	          strcpy( pInline->pCode + pInline->lPCodeSize, (char*) sBuffer );
+	       }
+
+	       pInline->lPCodeSize += iSize;
+
+	       hb_pp_bInline = FALSE;
+               yylval.string = hb_compIdentifierNew( sInlineSym, TRUE );
+               return IDENTIFIER;
+	    }
+
+	    if( pInline->pCode == NULL )
+	    {
+	       pInline->pCode = hb_xgrab( ( iSize = strlen( (char*) sBuffer ) ) + 1 );
+	       strcpy( pInline->pCode, (char*) sBuffer );
+	    }
+	    else
+	    {
+	       pInline->pCode = hb_xrealloc( pInline->pCode, pInline->lPCodeSize + ( iSize = strlen( (char*) sBuffer ) ) + 1 );
+	       strcpy( pInline->pCode + pInline->lPCodeSize, (char*) sBuffer );
+	    }
+
+	    pInline->lPCodeSize += iSize;
+
+	    goto DigestInline;
+	 }
+
 %{
 /* ************************************************************************ */
 %}

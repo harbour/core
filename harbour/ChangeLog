@@ -1,3 +1,8 @@
+2000-01-02 10:00 UTC-0800 Ron Pinkas <ron@profit-master.com>
+
+   * source/compiler/harbour.l
+     + Added support for inline C code.
+
 2000-01-01 23:35 UTC-0800 Ron Pinkas <ron@profit-master.com>
 
    * source/compiler/harbour.c
