@@ -107,7 +107,7 @@ PITEM _itemParam( WORD wParam )
    PITEM pNew = _itemNew( 0 );
 
    if( _param( wParam, IT_ANY ) )
-      ItemCopy( pNew, _param( wParam, IT_ANY ) );
+      ItemCopy(pNew, _param( wParam, IT_ANY ));
 
    return pNew;
 }
@@ -118,6 +118,7 @@ BOOL _itemRelease( PITEM pItem )
 
    if( pItem )
    {
+      ItemRelease(pItem);
       _xfree( pItem );
       bResult = TRUE;
    }
@@ -151,27 +152,30 @@ PITEM _itemArrayPut( PITEM pArray, ULONG ulIndex, PITEM pItem )
 PITEM _itemPutC( PITEM pItem, char * szText )
 {
    if( pItem )
-   {
       ItemRelease( pItem );  /* warning: this is hvm.c one not this one */
-      pItem->wType = IT_STRING;
-      pItem->wLength = strlen( szText );
-      pItem->value.szText = ( char * ) _xgrab( pItem->wLength + 1 );
-      strcpy( pItem->value.szText, szText );
-   }
+   else
+      pItem = _itemNew(0);
+
+   pItem->wType = IT_STRING;
+   pItem->wLength = strlen( szText );
+   pItem->value.szText = ( char * ) _xgrab( pItem->wLength + 1 );
+   strcpy( pItem->value.szText, szText );
    return pItem;
 }
 
 PITEM _itemPutCL( PITEM pItem, char * nszText, ULONG ulLen )
 {
    if( pItem )
-   {
       ItemRelease( pItem );  /* warning: this is hvm.c one not this one */
-      pItem->wType = IT_STRING;
-      pItem->wLength = ulLen;
-      pItem->value.szText = ( char * ) _xgrab( ulLen + 1 );
-      memcpy( pItem->value.szText, nszText, ulLen );
-      pItem->value.szText[ ulLen ] = 0;
-   }
+   else
+      pItem = _itemNew(0);
+
+   pItem->wType = IT_STRING;
+   pItem->wLength = ulLen;
+   pItem->value.szText = ( char * ) _xgrab( ulLen + 1 );
+   memcpy( pItem->value.szText, nszText, ulLen );
+   pItem->value.szText[ ulLen ] = 0;
+
    return pItem;
 }
 
@@ -292,66 +296,87 @@ PITEM _itemReturn( PITEM pItem )
 
 PITEM _itemPutDS( PITEM pItem, char *szDate )
 {
+   long lDay, lMonth, lYear;
+
    if( pItem )
-   {
-      long lDay, lMonth, lYear;
+      ItemRelease( pItem );  /* warning: this is hvm.c one not this one */
+   else
+      pItem = _itemNew(0);
 
-      lDay   = ((szDate[ 6 ] - '0') * 10) + (szDate[ 7 ] - '0');
-      lMonth = ((szDate[ 4 ] - '0') * 10) + (szDate[ 5 ] - '0');
-      lYear  = ((szDate[ 0 ] - '0') * 1000) + ((szDate[ 1 ] - '0') * 100)
-         + ((szDate[ 2 ] - '0') * 10) + (szDate[ 3 ] - '0');
+   lDay   = ((szDate[ 6 ] - '0') * 10) + (szDate[ 7 ] - '0');
+   lMonth = ((szDate[ 4 ] - '0') * 10) + (szDate[ 5 ] - '0');
+   lYear  = ((szDate[ 0 ] - '0') * 1000) + ((szDate[ 1 ] - '0') * 100)
+      + ((szDate[ 2 ] - '0') * 10) + (szDate[ 3 ] - '0');
 
-      ItemRelease( pItem );
-      pItem->wType   = IT_DATE;
-      pItem->wLength = 8;
-      /* QUESTION: Is this ok ? we are going to use a long to store the date */
-      /* QUESTION: What happens if we use sizeof( LONG ) instead ? */
-      /* QUESTION: Would it break Clipper language code ? */
-      pItem->value.lDate = greg2julian(lDay, lMonth, lYear);
-   }
+   ItemRelease( pItem );
+   pItem->wType   = IT_DATE;
+   pItem->wLength = 8;
+   /* QUESTION: Is this ok ? we are going to use a long to store the date */
+   /* QUESTION: What happens if we use sizeof( LONG ) instead ? */
+   /* QUESTION: Would it break Clipper language code ? */
+   pItem->value.lDate = greg2julian(lDay, lMonth, lYear);
+
    return pItem;
 }
 
 PITEM _itemPutL( PITEM pItem, BOOL bValue )
 {
    if( pItem )
-   {
       ItemRelease( pItem );  /* warning: this is hvm.c one not this one */
-      pItem->wType = IT_LOGICAL;
-      pItem->wLength = 1;
-      pItem->value.iLogical = bValue;
-   }
+   else
+      pItem = _itemNew(0);
+
+   pItem->wType = IT_LOGICAL;
+   pItem->wLength = 1;
+   pItem->value.iLogical = bValue;
    return pItem;
 }
 
 PITEM _itemPutND( PITEM pItem, double dNumber )
 {
    if( pItem )
-   {
       ItemRelease( pItem );  /* warning: this is hvm.c one not this one */
-      pItem->wType = IT_DOUBLE;
-      pItem->wLength = sizeof( double );
-      pItem->value.dNumber = dNumber;
-   }
+   else
+      pItem = _itemNew(0);
+
+   pItem->wType = IT_DOUBLE;
+   pItem->wLength = sizeof( double );
+   pItem->value.dNumber = dNumber;
    return pItem;
 }
 
 PITEM _itemPutNL( PITEM pItem, long lNumber )
 {
    if( pItem )
-   {
       ItemRelease( pItem );  /* warning: this is hvm.c one not this one */
-      pItem->wType = IT_DOUBLE;
-      pItem->wLength = sizeof( double );
-      pItem->value.lNumber = lNumber;
-   }
+   else
+      pItem = _itemNew(0);
+
+   pItem->wType = IT_DOUBLE;
+   pItem->wLength = sizeof( double );
+   pItem->value.lNumber = lNumber;
    return pItem;
 }
 
 
 ULONG _itemSize( PITEM pItem )
 {
-   return pItem->wLength;
+   ULONG ulSize = 0;
+
+   if( pItem )
+   {
+      switch( pItem->wType )
+      {
+         case IT_ARRAY:
+              ulSize = ArrayLen( pItem );
+              break;
+
+         case IT_STRING:
+              ulSize = pItem->wLength;
+              break;
+      }
+   }
+   return ulSize;
 }
 
 WORD _itemType( PITEM pItem )
