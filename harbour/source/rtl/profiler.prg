@@ -1,6 +1,6 @@
 /*
- * $id:$
-*/
+ * $Id$
+ */
 
 /*
  * Harbour Project source code:
