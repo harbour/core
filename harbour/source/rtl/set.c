@@ -750,7 +750,7 @@ void hb_setInitialize( void )
    hb_set.HB_SET_ALTERNATE = FALSE;
    hb_set.HB_SET_ALTFILE = NULL;
    hb_set.hb_set_althan = FS_ERROR;
-   hb_set.HB_SET_AUTOPEN = FALSE;
+   hb_set.HB_SET_AUTOPEN = TRUE;
    hb_set.HB_SET_AUTORDER = FALSE;
    hb_set.HB_SET_AUTOSHARE = 0;
    hb_set.HB_SET_BELL = FALSE;

@@ -7,6 +7,25 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+   * source/vm/extend.c
+     ! Now all hb_ret...() and hb_pcount() functions are always exported
+
+2002-03-18 14:35 UTC+0100 Antonio Linares <alinares@fivetech.com>
+   * source/vm/macro.c
+     ! Fixed bug in Macro Compiler where Field Assignment is compiled mistakenly
+       as a Memvar Assignment.
+     /* Bug reported by Gerhard ? on Harbour's List. */
+
+     change borrowed from [x]Harbour
+
+2002-03-18 13:55 UTC+0100 Antonio Linares <alinares@fivetech.com>
+   * source/vm/hvm.c
+     * bug fix on codeblock execution memvars management
+
+   * source/vm/memvars.c
+     * bug fix in __MVSAVE()
+
+   both changes borrowed from [x]Harbour.
 
 2002-03-18 15:12 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * include/hbrddntx.h

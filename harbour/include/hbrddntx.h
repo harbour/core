@@ -137,6 +137,8 @@ typedef struct _TAGINFO
    char *     ForExpr;
    PHB_ITEM   pKeyItem;
    PHB_ITEM   pForItem;
+   PHB_ITEM   topScope;
+   PHB_ITEM   bottomScope;
    BOOL       AscendKey;
    BOOL       UniqueKey;
    BOOL       TagChanged;
@@ -167,6 +169,7 @@ typedef struct _NTXINDEX
 {
    char *    IndexName;
    BOOL      Exact;
+   BOOL      Locked;
    BOOL      Corrupted;
    LONG      TagRoot;
    LONG      NextAvail;
@@ -299,7 +302,6 @@ typedef struct _NTXAREA
    LPNTXINDEX lpCurIndex;         /* Pointer to current index */
    LPNTXINDEX lpNtxIndex;         /* Pointer to indexes array */
 
-
 } NTXAREA;
 
 typedef NTXAREA * LPNTXAREA;
@@ -392,13 +394,13 @@ static ERRCODE ntxOrderInfo( NTXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo
          /* Some information about index */
 #define ntxClearFilter           NULL
 #define ntxClearLocate           NULL
-#define ntxClearScope            NULL
+static ERRCODE ntxClearScope( NTXAREAP pArea );
 #define ntxCountScope            NULL
 #define ntxFilterText            NULL
-#define ntxScopeInfo             NULL
+static ERRCODE ntxScopeInfo( NTXAREAP pArea, USHORT nScope, PHB_ITEM pItem );
 #define ntxSetFilter             NULL
 #define ntxSetLocate             NULL
-#define ntxSetScope              NULL
+static ERRCODE ntxSetScope( NTXAREAP pArea, LPDBORDSCOPEINFO sInfo );
 #define ntxSkipScope             NULL
 #define ntxCompile               NULL
 #define ntxError                 NULL

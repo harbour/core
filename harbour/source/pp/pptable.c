@@ -414,8 +414,10 @@ void hb_pp_Table( void )
    static COMMANDS sC___240 = {0,"SET","EVENTMASK TO \1A00","Set( _SET_EVENTMASK, \1A00 )",&sC___239 };
    static COMMANDS sC___241 = {0,"SET","OPTIMIZE \1A20ON,OFF,&>","Set( _SET_OPTIMIZE, \1A30 )",&sC___240 };
    static COMMANDS sC___242 = {0,"SET","OPTIMIZE (\1A00)","Set( _SET_OPTIMIZE, \1A00 )",&sC___241 };
+   static COMMANDS sC___243 = {0,"SET","AUTOPEN \1A20 ON,OFF,&>","Set(_SET_AUTOPEN,\1A30 )",&sC___242 };
+   static COMMANDS sC___244 = {0,"SET","AUTOPEN (\1A00)","Set(_SET_AUTOPEN,\1A00 )",&sC___243 };
 
    hb_pp_topDefine = &sD___52;
-   hb_pp_topCommand = &sC___242;
+   hb_pp_topCommand = &sC___244;
    hb_pp_topTranslate = NULL;
 }

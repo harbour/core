@@ -67,15 +67,25 @@ HB_FUNC( STR )
 
       if( hb_pcount() >= 2 )
       {
-         pWidth = hb_param( 2, HB_IT_NUMERIC );
-         if( !pWidth )
+         if( ISNUM( 2 ) )
+         {
+            pWidth = hb_param( 2, HB_IT_NUMERIC );
+            if( !pWidth )
+               bValid = FALSE;
+         }
+         else if( !ISNIL( 2 ) )
             bValid = FALSE;
       }
 
       if( hb_pcount() >= 3 )
       {
-         pDec = hb_param( 3, HB_IT_NUMERIC );
-         if( !pDec )
+         if( ISNUM( 3 ) )
+         {
+            pDec = hb_param( 3, HB_IT_NUMERIC );
+            if( !pDec )
+               bValid = FALSE;
+         }
+         else if( !ISNIL( 3 ) )
             bValid = FALSE;
       }
    }

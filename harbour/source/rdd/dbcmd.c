@@ -2857,20 +2857,16 @@ HB_FUNC( ORDSCOPE )
       sInfo.nScope = hb_parni( 1 );
 
       SELF_SCOPEINFO( ( AREAP ) s_pCurrArea->pArea, sInfo.nScope, pScopeValue );
-      hb_itemRelease( hb_itemReturn( pScopeValue ) );
 
-      if( hb_pcount() > 1 )
-      {
-         if ( ISNIL( 2 ) )                /* explicitly passed NIL, clear it */
-            sInfo.scopeValue = NULL;
-         else
-            sInfo.scopeValue = hb_param( 2, HB_IT_ANY) ;
-
-         /* rdd must not alter the scopeValue item -- it's not a copy */
-         SELF_SETSCOPE( ( AREAP ) s_pCurrArea->pArea, (LPDBORDSCOPEINFO) &sInfo );
-
-      }else
+      if( hb_pcount() < 2 || ISNIL( 2 ) )     /* explicitly passed NIL, clear it */
          sInfo.scopeValue = NULL;
+      else
+         sInfo.scopeValue = hb_param( 2, HB_IT_ANY) ;
+
+      /* rdd must not alter the scopeValue item -- it's not a copy */
+      SELF_SETSCOPE( ( AREAP ) s_pCurrArea->pArea, (LPDBORDSCOPEINFO) &sInfo );
+
+      hb_itemRelease( hb_itemReturn( pScopeValue ) );
    }
    else
       hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, "ORDSCOPE" );
