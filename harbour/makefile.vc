@@ -301,19 +301,19 @@ $(OBJ_DIR)\table.obj : $(HBPP_DIR)\table.c
 # cl -w -Ow -Ge -I\mvs\vc98\crt\src -I$(INCLUDE_DIR) -Zi -GZ -GA -GF -DDEBUG -D_CRTBLD -c -Fo$@ $**
 
 $(RTL_DIR)\achoice.c : $(RTL_DIR)\achoice.prg
-    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
 
 $(OBJ_DIR)\achoice.obj : $(RTL_DIR)\achoice.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(RTL_DIR)\adir.c : $(RTL_DIR)\adir.prg
-    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
 
 $(OBJ_DIR)\adir.obj : $(RTL_DIR)\adir.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(RTL_DIR)\alert.c : $(RTL_DIR)\alert.prg
-    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
 
 $(OBJ_DIR)\alert.obj : $(RTL_DIR)\alert.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
@@ -322,13 +322,13 @@ $(OBJ_DIR)\arrays.obj : $(RTL_DIR)\arrays.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(RTL_DIR)\asort.c : $(RTL_DIR)\asort.prg
-    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
 
 $(OBJ_DIR)\asort.obj : $(RTL_DIR)\asort.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(RTL_DIR)\browdb.c : $(RTL_DIR)\browdb.prg
-    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
 
 $(OBJ_DIR)\browdb.obj : $(RTL_DIR)\browdb.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
@@ -352,7 +352,7 @@ $(OBJ_DIR)\descend.obj : $(RTL_DIR)\descend.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(RTL_DIR)\devoutp.c : $(RTL_DIR)\devoutp.prg
-    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
 
 $(OBJ_DIR)\devoutp.obj : $(RTL_DIR)\devoutp.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
@@ -370,7 +370,7 @@ $(OBJ_DIR)\errorapi.obj : $(RTL_DIR)\errorapi.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(RTL_DIR)\errorsys.c : $(RTL_DIR)\errorsys.prg
-    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
 
 $(OBJ_DIR)\errorsys.obj : $(RTL_DIR)\errorsys.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
@@ -391,7 +391,10 @@ $(OBJ_DIR)\gtxxx.obj : $(RTL_DIR)\gtxxx.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(RTL_DIR)\harbinit.c : $(RTL_DIR)\harbinit.prg
-    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
+
+$(OBJ_DIR)\harbinit.obj : $(RTL_DIR)\harbinit.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\hardcr.obj : $(RTL_DIR)\hardcr.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
@@ -409,7 +412,7 @@ $(OBJ_DIR)\math.obj : $(RTL_DIR)\math.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(RTL_DIR)\memvarbl.c : $(RTL_DIR)\memvarbl.prg
-    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
 
 $(OBJ_DIR)\memvarbl.obj : $(RTL_DIR)\memvarbl.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
@@ -418,7 +421,7 @@ $(OBJ_DIR)\memvars.obj : $(RTL_DIR)\memvars.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(RTL_DIR)\menuto.c : $(RTL_DIR)\menuto.prg
-    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
 
 $(OBJ_DIR)\menuto.obj : $(RTL_DIR)\menuto.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
@@ -430,13 +433,13 @@ $(OBJ_DIR)\mtran.obj : $(RTL_DIR)\mtran.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(RTL_DIR)\objfunc.c : $(RTL_DIR)\objfunc.prg
-    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
 
 $(OBJ_DIR)\objfunc.obj : $(RTL_DIR)\objfunc.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(RTL_DIR)\readvar.c : $(RTL_DIR)\readvar.prg
-    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
 
 $(OBJ_DIR)\readvar.obj : $(RTL_DIR)\readvar.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
@@ -448,7 +451,7 @@ $(OBJ_DIR)\setcolor.obj : $(RTL_DIR)\setcolor.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(RTL_DIR)\setkey.c : $(RTL_DIR)\setkey.prg
-    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
 
 $(OBJ_DIR)\setkey.obj : $(RTL_DIR)\setkey.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
@@ -457,37 +460,37 @@ $(OBJ_DIR)\strings.obj : $(RTL_DIR)\strings.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(RTL_DIR)\tbcolumn.c : $(RTL_DIR)\tbcolumn.prg
-    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
 
 $(OBJ_DIR)\tbcolumn.obj : $(RTL_DIR)\tbcolumn.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(RTL_DIR)\tbrowse.c : $(RTL_DIR)\tbrowse.prg
-    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
 
 $(OBJ_DIR)\tbrowse.obj : $(RTL_DIR)\tbrowse.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(RTL_DIR)\tclass.c : $(RTL_DIR)\tclass.prg
-    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
 
 $(OBJ_DIR)\tclass.obj : $(RTL_DIR)\tclass.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(RTL_DIR)\terror.c : $(RTL_DIR)\terror.prg
-    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
 
 $(OBJ_DIR)\terror.obj : $(RTL_DIR)\terror.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(RTL_DIR)\tget.c : $(RTL_DIR)\tget.prg
-    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
 
 $(OBJ_DIR)\tget.obj : $(RTL_DIR)\tget.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(RTL_DIR)\tgetlist.c : $(RTL_DIR)\tgetlist.prg
-    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
 
 $(OBJ_DIR)\tgetlist.obj : $(RTL_DIR)\tgetlist.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
@@ -499,7 +502,7 @@ $(OBJ_DIR)\transfrm.obj : $(RTL_DIR)\transfrm.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(RTL_DIR)\xsavescr.c : $(RTL_DIR)\xsavescr.prg
-    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
 
 $(OBJ_DIR)\xsavescr.obj : $(RTL_DIR)\xsavescr.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
@@ -509,13 +512,13 @@ $(OBJ_DIR)\xsavescr.obj : $(RTL_DIR)\xsavescr.c
 #
 
 $(DEBUG_DIR)\debugger.c : $(DEBUG_DIR)\debugger.prg
-    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
 
 $(OBJ_DIR)\debugger.obj : $(DEBUG_DIR)\debugger.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(DEBUG_DIR)\tbrwtext.c : $(DEBUG_DIR)\tbrwtext.prg
-    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
 
 $(OBJ_DIR)\tbrwtext.obj : $(DEBUG_DIR)\tbrwtext.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
@@ -574,7 +577,7 @@ $(OBJ_DIR)\datesx.obj : $(TOOLS_DIR)\datesx.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(TOOLS_DIR)\fileread.c : $(TOOLS_DIR)\fileread.prg
-    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
 
 $(OBJ_DIR)\fileread.obj : $(TOOLS_DIR)\fileread.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
@@ -604,7 +607,7 @@ $(OBJ_DIR)\strexpan.obj : $(TOOLS_DIR)\strexpan.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(TOOLS_DIR)\stringp.c : $(TOOLS_DIR)\stringp.prg
-    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
 
 $(OBJ_DIR)\stringp.obj : $(TOOLS_DIR)\stringp.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
@@ -629,13 +632,13 @@ $(OBJ_DIR)\dbcmd.obj : $(RDD_DIR)\dbcmd.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(RDD_DIR)\rddsys.c : $(RDD_DIR)\rddsys.prg
-    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
 
 $(OBJ_DIR)\rddsys.obj : $(RDD_DIR)\rddsys.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(RDD_DIR)\dbf0.c : $(RDD_DIR)\dbf0.prg
-    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
 
 $(OBJ_DIR)\dbf0.obj : $(RDD_DIR)\dbf0.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
@@ -644,7 +647,7 @@ $(OBJ_DIR)\dbf1.obj : $(RDD_DIR)\dbf1.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(RDD_DIR)\sdf0.c : $(RDD_DIR)\sdf0.prg
-    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
 
 $(OBJ_DIR)\sdf0.obj : $(RDD_DIR)\sdf0.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
@@ -653,7 +656,7 @@ $(OBJ_DIR)\sdf1.obj : $(RDD_DIR)\sdf1.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(RDD_DIR)\delim0.c : $(RDD_DIR)\delim0.prg
-    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
 
 $(OBJ_DIR)\delim0.obj : $(RDD_DIR)\delim0.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
@@ -662,7 +665,7 @@ $(OBJ_DIR)\delim1.obj : $(RDD_DIR)\delim1.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(RDD_DIR)\dbfntx\dbfntx0.c : $(RDD_DIR)\dbfntx\dbfntx0.prg
-    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
 
 $(OBJ_DIR)\dbfntx0.obj : $(RDD_DIR)\dbfntx\dbfntx0.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**

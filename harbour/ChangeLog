@@ -1,3 +1,7 @@
+19990916-14:30 GMT+1 Victor Szel <info@szelvesz.hu>
+  * makefile.vc
+    + Fixed version by Matteo Baccan.
+
 19990916-14:20 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/rtl/mouse/*.*
