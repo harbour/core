@@ -379,7 +379,7 @@ static USHORT hb_rddSelect( char * szAlias )
 }
 
 /*
- * Return thne next free WorkArea for later use.
+ * Return the next free WorkArea for later use.
  */
 static void hb_rddSelectFirstAvailable( void )
 {
@@ -2714,7 +2714,9 @@ HB_FUNC( SELECT )
    szAlias = hb_parc( 1 );
    ulLen = strlen( szAlias );
 
-   if( ulLen == 1 && toupper( szAlias[ 0 ] ) >= 'A' && toupper( szAlias[ 0 ] ) <= 'K' )
+   if( ulLen == 0 && ISCHAR( 1 ))
+      hb_retni( 0 );
+   else if( ulLen == 1 && toupper( szAlias[ 0 ] ) >= 'A' && toupper( szAlias[ 0 ] ) <= 'K' )
       hb_retni( toupper( szAlias[ 0 ] ) - 'A' + 1 );
    else if( ulLen > 0 )
       hb_retni( hb_rddSelect( szAlias ) );

@@ -1,3 +1,12 @@
+2001-06-21 11:19 UTC-0800 Brian Hays <bhays@abacuslaw.com>
+
+   * source/rtl/transfrm.c
+      * Fixed @Z handling
+
+   * source/rdd/dbcmd.c
+      * Fixed Select("") to return 0
+         Note that select() returns current workarea even if unused
+
 2001-06-21 22:20 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * contrib/dot/pp.prg
      * Added support fort '|' as a continuation token (as in Clipper).

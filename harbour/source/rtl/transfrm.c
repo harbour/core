@@ -366,7 +366,7 @@ HB_FUNC( TRANSFORM )
 
          /* Don't empty the result if the number is not zero */
          if( dPush != 0 && ( uiPicFlags & PF_EMPTY ) )
-            uiPicFlags &= ~uiPicFlags;
+               uiPicFlags &= ~PF_EMPTY;
 
          if( iWidth == 0 )                             /* Width calculated ??      */
          {
