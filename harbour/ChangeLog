@@ -7,6 +7,9 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+    ! DOS BCC fixes.
+  * source/common/hbgete.c
+    ! OS/2 IBM C++ fix.
   * source/rtl/filehb.c
     ! OS/2 IBM C++ fix.
 
