@@ -1,7 +1,10 @@
 19990901-21:24 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/filesys.c
-     hb_fsReadLarge() -> drop out on eof
-     hb_fsWriteLarge() -> drop out on disk full
+     * hb_fsReadLarge() -> drop out on eof
+     * hb_fsWriteLarge() -> drop out on disk full
+   * source/rtl/console.c
+     source/rtl/set.c
+     * added casts.
 
 19990902-01:44 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/filesys.c
