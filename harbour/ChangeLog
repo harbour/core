@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
   * source/rdd/dbfntx/dbfntx1.c
+    * Algorithm of updating keys is fully rewritten, now the index tree
+      remains balanced after adding new keys.
+
+2002-04-08 16:15 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/rdd/dbfntx/dbfntx1.c
     * Bug fixed, reported by Lorenzo Fiorini
 
 2002-04-05 13:56 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>

@@ -79,7 +79,9 @@
  * keysmove()
  * hb_ntxPageKeyDel()
  * hb_ntxSwapPageSave()
+ * hb_ntxKeysSort()
  * hb_ntxSortKeyAdd()
+ * hb_ntxSortKeyEnd()
  * hb_ntxRootPage()
  * hb_ntxGetSortedKey()
  * hb_ntxBufferSave()
@@ -108,6 +110,7 @@
  * static ERRCODE ntxUnLock()
  */
 
+#include <math.h>
 #include "hbapi.h"
 #include "hbinit.h"
 #include "hbapiitm.h"
@@ -1685,11 +1688,13 @@ typedef struct _NTXSORTINFO
 {
    ULONG       Tag;
    ULONG       ulKeyCount;
+   ULONG       ulSqrt;
+   ULONG       nItems;
    USHORT      itemLength;
-   USHORT      nItems;
    USHORT      nSwappages;
    BYTE *      sortBuffer;
    LPSORTITEM  pKeyFirst;
+   LPSORTITEM  pKeyTemp;
    LPSORTITEM  pKey1;
    LPSORTITEM  pKey2;
    char**      pageBuffers;
@@ -1726,54 +1731,12 @@ static void hb_ntxSwapPageSave( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo, USHORT 
    pSwapPage->numAllkeys = numAllkeys;
 }
 
-static BOOL hb_ntxSortKeyAdd( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo, char* szkey, ULONG ulKeyNo )
+static void hb_ntxKeysSort( LPNTXSORTINFO pSortInfo, LPSORTITEM* pKeyFirst, LPSORTITEM pKeyNew, int KeyLength, BOOL fDescend, BOOL fUnique )
 {
-
-   LPSORTITEM pKeyNew, pKey, pKeyTmp, pKeyLast = NULL, pKeyPrev;
+   LPSORTITEM pKey, pKeyTmp, pKeyLast = NULL, pKeyPrev;
    int result;
-   BOOL fDescend = !pTag->AscendKey;
 
-   /* printf( "\n\rhb_ntxSortKeyAdd - 0 ( %s )",szkey ); */
-   pKeyNew = (LPSORTITEM) ( pSortInfo->sortBuffer +
-           pSortInfo->itemLength * ( ulKeyNo - 1 ) );
-   if( szkey )
-   {
-      pKeyNew->rec_no = pTag->Owner->Owner->ulRecNo;
-      pKeyNew->pNext = NULL;
-      memcpy( pKeyNew->key, szkey, pTag->KeyLength );
-   }
-
-   if( szkey && ++(pSortInfo->nItems) < 2 && pKeyNew->rec_no < pTag->Owner->Owner->ulRecCount )
-      return TRUE;
-
-   if( pSortInfo->nItems == 2 )
-   {
-      pKeyTmp = (LPSORTITEM) ( pSortInfo->sortBuffer +
-           pSortInfo->itemLength * ( ulKeyNo - 2 ) );
-      result = memcmp( pKeyNew->key, pKeyTmp->key, pTag->KeyLength );
-      if( fDescend && result )
-         result = ( result > 0 )? -1:1;
-      if( result < 0 )
-         pKeyNew->pNext = pKeyTmp;
-      else if( !result && pTag->UniqueKey )
-      {
-         pSortInfo->ulKeyCount --;
-         ( pSortInfo->nItems ) --;
-      }
-      else
-      {
-         pKeyTmp->pNext = pKeyNew;
-         pKeyNew = pKeyTmp;
-      }
-   }
-   if( ulKeyNo < 3 )
-   {
-      pSortInfo->pKeyFirst = pKeyNew;
-      pSortInfo->nItems = 0;
-      return TRUE;
-   }
-
-   while( pSortInfo->nItems )
+   while( pKeyNew )
    {
       pKeyPrev = NULL;
       pKeyTmp = pKeyNew->pNext;
@@ -1786,16 +1749,15 @@ static BOOL hb_ntxSortKeyAdd( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo, char* szk
       }
       else if( pSortInfo->pKey1 )
       {
-         result = memcmp( pKeyNew->key, pSortInfo->pKey1->key, pTag->KeyLength );
+         result = memcmp( pKeyNew->key, pSortInfo->pKey1->key, KeyLength );
          if( fDescend && result )
             result = ( result > 0 )? -1:1;
          if( result >= 0 )
          {
-            if( !result && pTag->UniqueKey )
+            if( !result && fUnique )
             {
                pSortInfo->ulKeyCount --;
                pKeyNew = pKeyTmp;
-               ( pSortInfo->nItems ) --;
                continue;
             }
             else
@@ -1805,13 +1767,13 @@ static BOOL hb_ntxSortKeyAdd( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo, char* szk
             }
          }
          else
-            pKey = pSortInfo->pKeyFirst;
+            pKey = *pKeyFirst;
       }
       else
-         pKey = pSortInfo->pKeyFirst;
+         pKey = *pKeyFirst;
       while( pKey )
       {
-         result = memcmp( pKeyNew->key, pKey->key, pTag->KeyLength );
+         result = memcmp( pKeyNew->key, pKey->key, KeyLength );
          if( fDescend && result )
             result = ( result > 0 )? -1:1;
          if( result < 0 )
@@ -1823,10 +1785,10 @@ static BOOL hb_ntxSortKeyAdd( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo, char* szk
                pSortInfo->pKey1 = pKeyNew;
             }
             else
-               pSortInfo->pKeyFirst = pKeyNew;
+               *pKeyFirst = pKeyNew;
             break;
          }
-         else if( !result  && pTag->UniqueKey )
+         else if( !result  && fUnique )
          {
             pSortInfo->ulKeyCount --;
             pKeyNew = pKeyLast;
@@ -1843,7 +1805,40 @@ static BOOL hb_ntxSortKeyAdd( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo, char* szk
 
       pKeyLast = pKeyNew;
       pKeyNew = pKeyTmp;
-      ( pSortInfo->nItems ) --;
+   }
+}
+
+static void hb_ntxSortKeyAdd( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo, char* szkey, ULONG ulKeyNo )
+{
+   LPSORTITEM pKeyNew = (LPSORTITEM) ( pSortInfo->sortBuffer +
+                             pSortInfo->itemLength * ( ulKeyNo - 1 ) );
+   pKeyNew->rec_no = pTag->Owner->Owner->ulRecNo;
+   pKeyNew->pNext = NULL;
+   memcpy( pKeyNew->key, szkey, pTag->KeyLength );
+
+   if( ++(pSortInfo->nItems) < 2 )
+   {
+      pSortInfo->pKeyTemp = pKeyNew;
+   }
+   else
+   {
+      hb_ntxKeysSort( pSortInfo, &(pSortInfo->pKeyTemp), pKeyNew, pTag->KeyLength, !pTag->AscendKey, pTag->UniqueKey );
+
+      if( pSortInfo->nItems == pSortInfo->ulSqrt )
+      {
+         if( !pSortInfo->pKeyFirst )
+         {
+            pSortInfo->pKeyFirst = pSortInfo->pKeyTemp;
+            pSortInfo->pKey2 = pSortInfo->pKey1;
+         }
+         else
+         {
+            pSortInfo->pKey1 = pSortInfo->pKey2;
+            hb_ntxKeysSort( pSortInfo, &(pSortInfo->pKeyFirst), pSortInfo->pKeyTemp, pTag->KeyLength, !pTag->AscendKey, pTag->UniqueKey );
+            pSortInfo->pKey2 = pSortInfo->pKey1;
+         }
+         pSortInfo->nItems = 0;
+      }
    }
 /*
    {
@@ -1858,7 +1853,16 @@ static BOOL hb_ntxSortKeyAdd( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo, char* szk
       }
    }
 */
-   return TRUE;
+}
+
+static void hb_ntxSortKeyEnd( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo )
+{
+   if( pSortInfo->nItems )
+   {
+      pSortInfo->pKey1 = pSortInfo->pKey2;
+      hb_ntxKeysSort( pSortInfo, &(pSortInfo->pKeyFirst), pSortInfo->pKeyTemp, pTag->KeyLength, !pTag->AscendKey, pTag->UniqueKey );
+      pSortInfo->nItems = 0;
+   }
 }
 
 static void hb_ntxRootPage( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo, LPSORTITEM pKey, USHORT maxKeys, USHORT level )
@@ -2192,9 +2196,10 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
    /* itemLength = sizeof( LPSORTITEM ) + sizeof( ULONG ) + pTag->KeyLength; */
    sortInfo.itemLength = sizeof( LPSORTITEM ) + sizeof( ULONG ) + pTag->KeyLength;
    sortInfo.nItems = 0;
-   sortInfo.pKey1 = sortInfo.pKey2 = sortInfo.pKeyFirst = NULL;
+   sortInfo.pKey1 = sortInfo.pKey2 = sortInfo.pKeyFirst = sortInfo.pKeyTemp = NULL;
    if( ulRecCount )
    {
+      sortInfo.ulSqrt = floor( sqrt( ( double) ulRecCount ) );
       sortInfo.sortBuffer = (BYTE*) hb_xalloc( ulRecCount * sortInfo.itemLength );
       if( !sortInfo.sortBuffer )
       {
@@ -2263,12 +2268,10 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
                if( sortInfo.tempHandle == FS_ERROR )
                   hb_errInternal( HB_EI_ERRUNRECOV, "Cannot create temp file", "hb_ntxIndexCreate", NULL );
             }
-            ulKeyNo--;
-            if( ulKeyNo < ulRecCount && ulKeyNo%2 )
-               hb_ntxSortKeyAdd( pTag, &sortInfo, NULL, ulKeyNo );
+            hb_ntxSortKeyEnd( pTag, &sortInfo );
             hb_ntxSwapPageSave( pTag, &sortInfo, nParts-1 );
             sortInfo.nItems = 0;
-            sortInfo.pKey1 = sortInfo.pKey2 = sortInfo.pKeyFirst = NULL;
+            sortInfo.pKey1 = sortInfo.pKey2 = sortInfo.pKeyFirst = sortInfo.pKeyTemp = NULL;
             ulKeyNo = 1;
             nParts ++;
          }
@@ -2336,8 +2339,7 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
          }
       }
    }
-   if( ulKeyNo < ulRecCount && ulKeyNo%2 )
-      hb_ntxSortKeyAdd( pTag, &sortInfo, NULL, ulKeyNo );
+   hb_ntxSortKeyEnd( pTag, &sortInfo );
    if( !pArea->lpdbOrdCondInfo || pArea->lpdbOrdCondInfo->fAll )
    {
       pArea->pRecord = pRecordTmp;
