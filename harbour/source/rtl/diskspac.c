@@ -47,6 +47,10 @@
 #include "hbapierr.h"
 #include "hbapifs.h"
 
+#if defined( HB_OS_UNIX )
+  #include <sys/vfs.h>
+#endif
+
 /* NOTE: The second parameter is a Harbour extension, check fileio.ch for
          the possible values. */
 
@@ -317,6 +321,38 @@ HB_FUNC( DISKSPACE )
          }
       }
    }
+
+#elif defined(HB_OS_UNIX)
+  {
+    /* NOTE: U*ix like file systems don't use drive letters */
+    HB_SYMBOL_UNUSED( uiDrive );
+    if( ISCHAR( 1 ) )
+    {
+      struct statfs sf;
+    
+      statfs( hb_parc( 1 ), &sf );
+      
+      switch( uiType )
+      {
+         case HB_DISK_AVAIL:
+            dSpace = ( double ) sf.f_bavail * ( double ) sf.f_bsize;
+            break;
+
+         case HB_DISK_FREE:
+            dSpace = ( double ) sf.f_bfree * ( double ) sf.f_bsize;
+            break;
+
+         case HB_DISK_USED:
+             dSpace = ( double ) ( sf.f_blocks -  sf.f_bfree ) * 
+                     ( double ) sf.f_bsize;
+             break;
+             
+         case HB_DISK_TOTAL:
+            dSpace = ( double ) sf.f_blocks * ( double ) sf.f_bsize;
+            break;
+      }
+    }
+  }
 
 #else
 

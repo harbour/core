@@ -1,3 +1,8 @@
+20000417-15:55 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/rtl/diskspac.c
+        *added support for U*ix like systems
+
 20000417-15:27 GMT+3 Chen Kedem <niki@actcom.co.il>
    * source/lang/msghe862.c
    * source/lang/msghewin.c
