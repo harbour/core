@@ -7,6 +7,35 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+       open :(
+
+2002-01-03 00:40 UTC-0300 Luiz Rafael Culik <culik@sl.conex.net>
+   * include/hbfsapi.h
+     * under Win32 FHANDLE is typedef to long
+   * source/rtl/filesys.c
+     * Replaced all X__WIN32__ with __WIN32__
+     * hb_fscommit() now used true Win32 Api calls
+     * No more file limit on Win32
+
+2002-01-02 09:40 UTC+0200 Chen Kedem <niki@actcom.co.il>
+
+   * doc/dirstruc.txt
+     + Add description for newly added directories
+
+2002-01-02 10:03 UTC+0700 Andi Jahja <harbour@cbn.net.id>
+   * source/compiler/cmdcheck.c
+     ! harbour did not obey "set clippercmd=/n" -> fixed ( my fault, sorry )
+
+2002-01-02 09:06 UTC+0700 Andi Jahja <harbour@cbn.net.id>
+   * source\vm\fm.c
+     * function hb_xalloc() - Prevention for same symptom as noted on hb_xgrab():
+       (see ChangeLog : 2002-01-01 11:15 UTC+0700 Andi Jahja <harbour@cbn.net.id> )
+       modify memory allocation by adding extra bytes to be allocated
+       in line with byte alignment.
+   * include/hbcomp.h
+     + BOOL hb_comp_bNoStartUp, public variable for generating C-source with for
+       no_startup option. TRUE = no_startup. FALSE = with_startup
+     - remove definition of HB_COMPGENC_NO_STARTUP
    * source/compiler/cmdcheck.c
      - remove /gc3 switch
      ! add additional arguments to switch /n :

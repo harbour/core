@@ -451,6 +451,7 @@ extern BOOL           hb_comp_bForceMemvars;
 extern BOOL           hb_comp_bDebugInfo;
 extern char           hb_comp_szPrefix[ 20 ];
 extern int            hb_comp_iGenCOutput;
+extern BOOL           hb_comp_bNoStartUp;
 extern int            hb_comp_iExitLevel;
 extern int            hb_comp_iFunctionCnt;
 extern char           hb_comp_cVarType;
@@ -503,7 +504,6 @@ extern ULONG          hb_comp_Supported;
 #define HB_COMPGENC_COMPACT     0
 #define HB_COMPGENC_NORMAL      1
 #define HB_COMPGENC_VERBOSE     2
-#define HB_COMPGENC_NO_STARTUP  3
 
 /* /ES command line setting types */
 #define HB_EXITLEVEL_DEFAULT    0
