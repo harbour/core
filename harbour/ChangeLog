@@ -1,6 +1,14 @@
+2000-12-12 00:50 UTC-0800 Brian Hays <bhays@abacuslaw.com>
+   * source/rtl/memoline.c
+      Fixed "" returned only when reading past the end of the source
+
+   * source/rdd/dbfntx/dbfntx1.c
+      * More fixes by Alexander
+
 2000-12-11 21:45 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
     *utils/hbmake/hbmake.prg
        *Fixed an small bug
+
 2000-12-11 21:45 GMT+1 Maurilio Longo <maurilio.longo@libero.it>
    * source/rtl/tbrowse.prg
      - removed hidden: clause inside class definition (it doesn't work right now)

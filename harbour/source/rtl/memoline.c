@@ -33,6 +33,20 @@
  *
  */
 
+/*
+   TO-DO (added by BH):
+   Currently assumes CRLF for EndOfLine, which won't work for Unix text files.
+   Should do something like:
+
+#if defined(OS_UNIX_COMPATIBLE)
+   #define CRLF_LEN 1
+#else
+   #define CRLF_LEN 2
+#endif
+
+And then change all the '2' values with CRLF_LEN.
+*/
+
 #include "hbapi.h"
 
 HB_FUNC( MEMOLINE )
@@ -131,19 +145,23 @@ HB_FUNC( MEMOLINE )
       ulLineEnd = ( ulPos == 0 ) ? 0 : ( ulPos - 1 );
    }
 
-   if( ulLineNumber == ulLines && ulLineEnd >= ulLineBegin )
+   if( ulPos < ulLen || (ulLineNumber == ulLines && ulLineEnd >= ulLineBegin) )
    {
       ULONG ulSpAdded = 0;
       char * pszLine = ( char * ) hb_xgrab( ulLineLength );
 
       memset( pszLine, ' ', ulLineLength );
 
-      for( ulPos = 0; ulPos <= ( ulLineEnd - ulLineBegin ); ulPos++ )
+      if ( ulLineEnd > ulLineBegin )
       {
-         if( pszString[ ulLineBegin + ulPos ] == HB_CHAR_HT )
-            ulSpAdded += ( ( ULONG ) ( ulPos / ulTabLength ) * ulTabLength ) + ulTabLength - ulPos - 1;
-         else
-            * ( pszLine + ulPos + ulSpAdded ) = * ( pszString + ulLineBegin + ulPos );
+         for( ulPos = 0; ulPos <= ( ulLineEnd - ulLineBegin ); ulPos++ )
+         {
+            if( pszString[ ulLineBegin + ulPos ] == HB_CHAR_HT )
+               ulSpAdded += ( ( ULONG ) ( ulPos / ulTabLength ) * ulTabLength ) + ulTabLength - ulPos - 1;
+            else
+               * ( pszLine + ulPos + ulSpAdded ) = * ( pszString + ulLineBegin + ulPos );
+         }
+
       }
 
       hb_retclen( pszLine, ulLineLength );
