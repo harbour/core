@@ -82,6 +82,7 @@ C_SOURCES=\
 	setcolor.c   \
 	setcurs.c    \
 	setpos.c     \
+	setposbs.c   \
 	shadow.c     \
 	soundex.c    \
 	space.c      \

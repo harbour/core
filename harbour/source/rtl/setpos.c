@@ -4,10 +4,9 @@
 
 /*
  * Harbour Project source code:
- * SETPOS(), SETPOSBS() functions
+ * SETPOS(), ROW(), COL() functions
  *
- * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- * Copyright 1999 Victor Szakats <info@szelvesz.hu>
+ * Copyright 1999 Bil Simser <bsimser@home.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -41,9 +40,6 @@
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  *    SETPOS()
  *
- * Copyright 1999 Victor Szakats <info@szelvesz.hu>
- *    SETPOSBS()
- *
  * See doc/license.txt for licensing terms.
  *
  */
@@ -55,19 +51,6 @@ HB_FUNC( SETPOS ) /* Sets the screen position */
 {
    if( ISNUM( 1 ) && ISNUM( 2 ) )
       hb_gtSetPos( hb_parni( 1 ), hb_parni( 2 ) );
-}
-
-/* NOTE: CA-Cl*pper undocumented */
-
-HB_FUNC( SETPOSBS ) /* Move the screen position to the right by one column */
-{
-   SHORT iRow, iCol;
-
-   /* NOTE: CA-Cl*pper does no checks about reaching the border or anything.
-            [vszakats] */
-
-   hb_gtGetPos( &iRow, &iCol );
-   hb_gtSetPos( iRow, iCol + 1 );
 }
 
 HB_FUNC( ROW ) /* Return the current screen row position (zero origin) */

@@ -36,11 +36,6 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 
-#define CHR_HARD1   ( ( char ) HB_CHAR_CR )
-
-#define CHR_SOFT1   ( ( char ) 141 )
-#define CHR_SOFT2   ( ( char ) HB_CHAR_LF )
-
 char * hb_strHardCR( char * pszString, ULONG ulStringLen )
 {
    ULONG ulStringPos;
@@ -49,10 +44,10 @@ char * hb_strHardCR( char * pszString, ULONG ulStringLen )
 
    for( ulStringPos = 0; ulStringPos < ulStringLen; ulStringPos++ )
    {
-      if( pszString[ ulStringPos ]     == CHR_SOFT1 &&
-          pszString[ ulStringPos + 1 ] == CHR_SOFT2 )
+      if( pszString[ ulStringPos ]     == HB_CHAR_SOFT1 &&
+          pszString[ ulStringPos + 1 ] == HB_CHAR_SOFT2 )
       {
-         pszString[ ulStringPos ] = CHR_HARD1;
+         pszString[ ulStringPos ] = HB_CHAR_HARD1;
       }
    }
 

@@ -110,7 +110,6 @@ static char * hb_cmdargGet( const char * pszName, BOOL bRetValue )
 
    if( pszEnvVar != NULL )
    {
-      static const char * szSeparator = " ;,\t";
       char * pszNext;
 
       /* Step through all envvar switches. */
@@ -123,6 +122,7 @@ static char * hb_cmdargGet( const char * pszName, BOOL bRetValue )
 
       while( *pszNext )
       {
+         static const char * szSeparator = " ;,\t";
          char * pszEnd;
 
          /* Search for the end of this switch */
@@ -278,38 +278,42 @@ void hb_cmdargProcessVM( void )
 {
    if( hb_cmdargCheck( "INFO" ) )
    {
-      char * pszVersion;
-      char buffer[ 128 ];
+      {
+         char * pszVersion = hb_verHarbour();
+         hb_conOutErr( pszVersion, 0 );
+         hb_conOutErr( hb_conNewLine(), 0 );
+         hb_xfree( pszVersion );
+      }
 
-      pszVersion = hb_verHarbour();
-      hb_conOutErr( pszVersion, 0 );
-      hb_conOutErr( hb_conNewLine(), 0 );
-      hb_xfree( pszVersion );
+      {
+         char * pszVersion = hb_verPlatform();
+         hb_conOutErr( pszVersion, 0 );
+         hb_conOutErr( hb_conNewLine(), 0 );
+         hb_xfree( pszVersion );
+      }
 
-      pszVersion = hb_verPlatform();
-      hb_conOutErr( pszVersion, 0 );
-      hb_conOutErr( hb_conNewLine(), 0 );
-      hb_xfree( pszVersion );
-
-      sprintf( buffer, "DS avail=%luKB  OS avail=%luKB  EMM avail=%luKB", hb_xquery( HB_MEM_BLOCK ), hb_xquery( HB_MEM_VM ), hb_xquery( HB_MEM_EMS ) );
-      hb_conOutErr( buffer, 0 );
-      hb_conOutErr( hb_conNewLine(), 0 );
+      {
+         char buffer[ 128 ];
+         sprintf( buffer, "DS avail=%luKB  OS avail=%luKB  EMM avail=%luKB", hb_xquery( HB_MEM_BLOCK ), hb_xquery( HB_MEM_VM ), hb_xquery( HB_MEM_EMS ) );
+         hb_conOutErr( buffer, 0 );
+         hb_conOutErr( hb_conNewLine(), 0 );
+      }
    }
 
    if( hb_cmdargCheck( "BUILD" ) )
    {
-      char * pszCompiler;
-
       hb_conOutErr( "Harbour Compiler Build Info", 0 );
       hb_conOutErr( hb_conNewLine(), 0 );
       hb_conOutErr( "---------------------------", 0 );
       hb_conOutErr( hb_conNewLine(), 0 );
 
-      pszCompiler = hb_verCompiler();
-      hb_conOutErr( "Compiler: ", 0 );
-      hb_conOutErr( pszCompiler, 0 );
-      hb_conOutErr( hb_conNewLine(), 0 );
-      hb_xfree( pszCompiler );
+      {
+         char * pszVersion = hb_verCompiler();
+         hb_conOutErr( "Compiler: ", 0 );
+         hb_conOutErr( pszVersion, 0 );
+         hb_conOutErr( hb_conNewLine(), 0 );
+         hb_xfree( pszVersion );
+      }
 
       hb_conOutErr( "Strict CA-Clipper compatibility: ", 0 );
 #if defined( HARBOUR_STRICT_CLIPPER_COMPATIBILITY )
@@ -369,7 +373,6 @@ void hb_cmdargProcessVM( void )
 
       {
          char buffer[ 64 ];
-                           
          sprintf( buffer, "Maximum symbol name length: %i", HB_SYMBOL_NAME_LEN );
          hb_conOutErr( buffer, 0 );
          hb_conOutErr( hb_conNewLine(), 0 );

@@ -137,6 +137,38 @@ FUNCTION Main_HVM()
    TEST_LINE( ValType( @maArray   )           , "A"   ) /* Bug in CA-Cl*pper, it will return "U" */
 #endif
 
+   /* TYPE() */
+
+   TEST_LINE( Type( NIL )                     , "E BASE 1121 Argument error TYPE F:S" )
+   TEST_LINE( Type( 100 )                     , "E BASE 1121 Argument error TYPE F:S" )
+   TEST_LINE( Type( {} )                      , "E BASE 1121 Argument error TYPE F:S" )
+   TEST_LINE( Type( "w_TEST->TYPE_C" )        , "C"   )
+   TEST_LINE( Type( "w_TEST->TYPE_D" )        , "D"   )
+   TEST_LINE( Type( "w_TEST->TYPE_M" )        , "M"   )
+   TEST_LINE( Type( "w_TEST->TYPE_N_I" )      , "N"   )
+   TEST_LINE( Type( "w_TEST->TYPE_N_D" )      , "N"   )
+   TEST_LINE( Type( "w_TEST->TYPE_L" )        , "L"   )
+   TEST_LINE( Type( "mxNotHere"  )            , "U"   )
+   TEST_LINE( Type( "mcString"  )             , "C"   )
+   TEST_LINE( Type( "mcStringE" )             , "C"   )
+   TEST_LINE( Type( "mcStringZ" )             , "C"   )
+   TEST_LINE( Type( "mnIntZ"    )             , "N"   )
+   TEST_LINE( Type( "mnDoubleZ" )             , "N"   )
+   TEST_LINE( Type( "mnIntP"    )             , "N"   )
+   TEST_LINE( Type( "mnLongP"   )             , "N"   )
+   TEST_LINE( Type( "mnDoubleP" )             , "N"   )
+   TEST_LINE( Type( "mnIntN"    )             , "N"   )
+   TEST_LINE( Type( "mnLongN"   )             , "N"   )
+   TEST_LINE( Type( "mnDoubleN" )             , "N"   )
+   TEST_LINE( Type( "mnDoubleI" )             , "N"   )
+   TEST_LINE( Type( "mdDateE"   )             , "D"   )
+   TEST_LINE( Type( "mlFalse"   )             , "L"   )
+   TEST_LINE( Type( "mlTrue"    )             , "L"   )
+   TEST_LINE( Type( "moObject"  )             , "O"   )
+   TEST_LINE( Type( "muNIL"     )             , "U"   )
+   TEST_LINE( Type( "mbBlock"   )             , "B"   )
+   TEST_LINE( Type( "maArray"   )             , "A"   )
+
    /* Special internal messages */
 
 /* Harbour compiler not yet handles these */

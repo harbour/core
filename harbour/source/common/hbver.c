@@ -56,11 +56,8 @@
          be ahead of any and all #include statements!
 */
 
-/* 02/04/2000 - maurilio.longo@libero.it
-	DosXXX apis are needed by GCC as well */
 #if defined(__IBMCPP__) || defined(HARBOUR_GCC_OS2)
    #define INCL_DOSMISC
-   #include <os2.h>
 #endif
 
 #define HB_OS_WIN_32_USED

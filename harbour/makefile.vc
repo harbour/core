@@ -263,6 +263,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\setcolor.obj \
    $(OBJ_DIR)\setcurs.obj \
    $(OBJ_DIR)\setpos.obj \
+   $(OBJ_DIR)\setposbs.obj \
    $(OBJ_DIR)\shadow.obj \
    $(OBJ_DIR)\soundex.obj \
    $(OBJ_DIR)\space.obj \

@@ -224,6 +224,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\setcolor.obj \
    $(OBJ_DIR)\setcurs.obj \
    $(OBJ_DIR)\setpos.obj \
+   $(OBJ_DIR)\setposbs.obj \
    $(OBJ_DIR)\shadow.obj \
    $(OBJ_DIR)\soundex.obj \
    $(OBJ_DIR)\space.obj \
@@ -1349,6 +1350,10 @@ $(OBJ_DIR)\setkey.obj : $(OBJ_DIR)\setkey.c
    tlib $(RTL_LIB) -+$@,,
 
 $(OBJ_DIR)\setpos.obj : $(RTL_DIR)\setpos.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) -+$@,,
+
+$(OBJ_DIR)\setposbs.obj : $(RTL_DIR)\setposbs.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) -+$@,,
 

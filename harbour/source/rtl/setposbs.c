@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * TYPE() function
+ * SETPOSBS() function
  *
- * Copyright 1999 Ryszard Glab
+ * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -34,23 +34,19 @@
  */
 
 #include "hbapi.h"
-#include "hbapierr.h"
+#include "hbapigt.h"
 
-HB_FUNC( TYPE )
+/* NOTE: CA-Cl*pper undocumented */
+
+HB_FUNC( SETPOSBS ) /* Move the screen position to the right by one column */
 {
-   HB_ITEM_PTR pItem = hb_param( 1, HB_IT_STRING );
+   SHORT iRow;
+   SHORT iCol;
 
-   if( pItem )
-      hb_retc( hb_macroGetType( pItem ) );
-   else
-   {
-      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1121, NULL, "TYPE" );
+   /* NOTE: CA-Cl*pper does no checks about reaching the border or anything.
+            [vszakats] */
 
-      if( pResult )
-      {
-         hb_itemReturn( pResult );
-         hb_itemRelease( pResult );
-      }
-   }
+   hb_gtGetPos( &iRow, &iCol );
+   hb_gtSetPos( iRow, iCol + 1 );
 }
 

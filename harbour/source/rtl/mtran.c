@@ -36,14 +36,7 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 
-#define CHR_HARD1   ( ( char ) HB_CHAR_CR )
-#define CHR_HARD2   ( ( char ) HB_CHAR_LF )
-
-#define CHR_SOFT1   ( ( char ) 141 )
-#define CHR_SOFT2   ( ( char ) HB_CHAR_LF )
-
-/* NOTE: pszResult must have an allocated buffer of at least */
-/*       ulStringLen */
+/* NOTE: pszResult must have an allocated buffer of at least ulStringLen */
 
 char * hb_strMemotran( char * pszResult, ULONG * ulResultLen, const char * pszString, ULONG ulStringLen, char cHardcr, char cSoftcr )
 {
@@ -54,14 +47,14 @@ char * hb_strMemotran( char * pszResult, ULONG * ulResultLen, const char * pszSt
 
    while( ulStringPos < ulStringLen )
    {
-      if(      pszString[ ulStringPos ]     == CHR_HARD1 &&
-               pszString[ ulStringPos + 1 ] == CHR_HARD2 )
+      if(      pszString[ ulStringPos ]     == HB_CHAR_HARD1 &&
+               pszString[ ulStringPos + 1 ] == HB_CHAR_HARD2 )
       {
          pszResult[ ulResultPos++ ] = cHardcr;
          ulStringPos += 2;
       }
-      else if( pszString[ ulStringPos ]     == CHR_SOFT1 &&
-               pszString[ ulStringPos + 1 ] == CHR_SOFT2 )
+      else if( pszString[ ulStringPos ]     == HB_CHAR_SOFT1 &&
+               pszString[ ulStringPos + 1 ] == HB_CHAR_SOFT2 )
       {
          pszResult[ ulResultPos++ ] = cSoftcr;
          ulStringPos += 2;

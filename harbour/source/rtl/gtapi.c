@@ -430,7 +430,8 @@ USHORT hb_gtGetColorStr( char * fpColorString )
 
 USHORT hb_gtSetColorStr( char * fpColorString )
 {
-   char c, buff[ 6 ];
+   char c;
+   char buff[ 6 ];
    BOOL bHasI = FALSE;
    BOOL bHasU = FALSE;
    BOOL bHasX = FALSE;
@@ -442,7 +443,7 @@ USHORT hb_gtSetColorStr( char * fpColorString )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gtSetColorStr(%s)", fpColorString));
 
-   if( fpColorString == NULL )
+   if( fpColorString == ( char * ) NULL )
       return 1;
 
    if( *fpColorString == '\0' )

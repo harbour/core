@@ -70,7 +70,7 @@ HB_FUNC( VERSION )
    {
       char * pszCompiler = hb_verCompiler();
 
-      pszVersion = ( char * ) hb_xrealloc( pszVersion, strlen( pszVersion ) + strlen( pszCompiler ) + 3 );
+      pszVersion = ( char * ) hb_xrealloc( pszVersion, strlen( pszVersion ) + strlen( pszCompiler ) + ( 4 * sizeof( char ) ) );
 
       strcat( pszVersion, " (" );
       strcat( pszVersion, pszCompiler );

@@ -80,8 +80,7 @@ HB_FUNC( STRZERO )
 
             if( szResult[ ulPos ] == '-' )
             {
-               /* Negative sign found, put the negative sign to the first */
-               /* position */
+               /* NOTE: Negative sign found, put it to the first position */
 
                szResult[ ulPos ] = ' ';
 
