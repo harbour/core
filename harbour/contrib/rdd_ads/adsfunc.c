@@ -244,7 +244,12 @@ HB_FUNC( ADSSETCHARTYPE )
 
 HB_FUNC( ADSSETDEFAULT )
 {
-   AdsSetDefault  ( (UNSIGNED8*) hb_parc( 1 ) );
+   AdsSetDefault( (UNSIGNED8*) hb_parc( 1 ) );
+}
+
+HB_FUNC( ADSSETSEARCHPATH )
+{
+   AdsSetSearchPath( (UNSIGNED8*) hb_parc( 1 ) );
 }
 
 HB_FUNC( ADSSETDELETED )

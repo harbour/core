@@ -388,7 +388,7 @@
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
-  *  $SEEALSO$
+ *  $SEEALSO$
  *      ADSClearAOF(),ADSIsRecordInAOF(),ADSRefreshAOF()
  *  $END$
  */

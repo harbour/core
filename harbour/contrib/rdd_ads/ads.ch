@@ -104,6 +104,11 @@
 #command SET DEFAULT TO                                               ;
       => Set( _SET_DEFAULT, "" ); AdsSetDefault( "" )
 
+#command SET PATH TO <(path)>                                         ;
+      => Set( _SET_PATH, <(path)> ); AdsSetSearchPath( <(path)> )
+#command SET PATH TO                                                  ;
+      => Set( _SET_PATH, "" ); AdsSetSearchPath( "" )
+
 #command SET DELETED <x:ON,OFF,&>                                     ;
       =>  Set( _SET_DELETED, <(x)> )                                  ;
           ;AdsSetDeleted( if( upper( <(x)> ) == "ON", .t., .f. ) )

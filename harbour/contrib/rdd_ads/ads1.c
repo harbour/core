@@ -852,6 +852,7 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
               else
                  hb_itemPutC( pItem, "" );
            }
+           hb_itemSetCMemo( pItem );
            break;
          }
    }

@@ -1,3 +1,14 @@
+2001-09-21 11:30 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   * contrib/rdd_ads/ads1.c
+     ! Uploaded a fix, posted by Brian Hays
+   * contrib/rdd_ads/adsfunc.c
+   * contrib/rdd_ads/ads.ch
+     * SET PATH TO <cpath> added
+   * contrib/rdd_ads/doc/rddads.rsp
+     * adsfuncs.txt item added
+   * contrib/rdd_ads/doc/en/adsfuncs.txt
+     ! minor formatting bug fixed
+
 2001-09-18 02:06 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * source/vm/arrayshb.c
