@@ -77,7 +77,7 @@ static HANDLE HOsave;
 /* static HANDLE HSsave; */
 static HANDLE HDOutput  = INVALID_HANDLE_VALUE;
 /* static HANDLE HDStealth = INVALID_HANDLE_VALUE; */
-HANDLE HInput    = INVALID_HANDLE_VALUE;
+HANDLE hb_gtHInput    = INVALID_HANDLE_VALUE;
 static HANDLE HOutput   = INVALID_HANDLE_VALUE;
 static HANDLE HStealth  = INVALID_HANDLE_VALUE; /* DispBegin buffer */
 static HANDLE HOriginal;                      /* used to restore before quit */
@@ -109,8 +109,8 @@ do
 void hb_gt_Init( void )
 {
    LOG( "Initializing" );
-   HInput = GetStdHandle( STD_INPUT_HANDLE );
-   SetConsoleMode( HInput, 0 );
+   hb_gtHInput = GetStdHandle( STD_INPUT_HANDLE );
+   SetConsoleMode( hb_gtHInput, 0 );
    /* ptucker */
    HOriginal = HOutput = HCursor = CreateFile( "CONOUT$",     /* filename    */
                        GENERIC_READ    | GENERIC_WRITE,       /* Access flag */
@@ -135,8 +135,8 @@ void hb_gt_Done( void )
    }
 /* NOTE: There's no need to close these explicitly, moreover if we close them
          functions using stdout will not show anything.
-   CloseHandle( HInput );
-   HInput = INVALID_HANDLE_VALUE;
+   CloseHandle( hb_gtHInput );
+   hb_gtHInput = INVALID_HANDLE_VALUE;
    CloseHandle( HOutput );
    HOutput = INVALID_HANDLE_VALUE;
 */

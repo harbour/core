@@ -86,7 +86,7 @@
    #define WIN32_LEAN_AND_MEAN
    #include <windows.h>
    #define INPUT_BUFFER_LEN 128
-   extern HANDLE HInput; /* This variable is located in source/rtl/gt/gtwin.c */
+   extern HANDLE hb_gtHInput; /* This variable is located in source/rtl/gt/gtwin.c */
    DWORD cNumRead = 0;   /* Ok to use DWORD here, because this is specific... */
    DWORD cNumIndex = 0;  /* ...to the Windows API, which defines DWORD, etc.  */
    INPUT_RECORD irInBuf[INPUT_BUFFER_LEN];
@@ -296,12 +296,12 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
       {
          /* Check for keyboard input */
          cNumRead = 0;
-         GetNumberOfConsoleInputEvents( HInput, &cNumRead );
+         GetNumberOfConsoleInputEvents( hb_gtHInput, &cNumRead );
          if( cNumRead )
          {
             /* Read keyboard input */
             ReadConsoleInput(
-               HInput,           /* input buffer handle    */
+               hb_gtHInput,      /* input buffer handle    */
                irInBuf,          /* buffer to read into    */
                INPUT_BUFFER_LEN, /* size of read buffer    */
                &cNumRead);       /* number of records read */

@@ -131,6 +131,7 @@ PRG_SOURCES=\
         t1.prg \
         test.prg \
         test_all.prg \
+        testbrdb.prg \
         testbrw.prg \
         testcgi.prg \
         testdbf.prg \
