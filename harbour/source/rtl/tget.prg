@@ -143,7 +143,7 @@ METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) CLASS Get
    DEFAULT nRow       TO Row()
    DEFAULT nCol       TO Col()
    DEFAULT cVarName   TO ""
-   DEFAULT bVarBlock  TO MemvarBlock( cVarName )
+   DEFAULT bVarBlock  TO IIF( ValType( cVarName ) == 'C', MemvarBlock( cVarName ), NIL )
    DEFAULT cPicture   TO ""
    DEFAULT cColorSpec TO hb_ColorIndex( SetColor(), CLR_UNSELECTED ) + "," + hb_ColorIndex( SetColor(), CLR_ENHANCED )
 
@@ -421,7 +421,7 @@ return xValue
 
 METHOD VarGet() CLASS Get
 
-return Eval( ::block )
+return IIF( ValType( ::Block ) == 'B', Eval( ::Block ), NIL )
 
 //---------------------------------------------------------------------------//
 

@@ -1,3 +1,7 @@
+2000-12-04 19:40 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * source/rtl/tget.prg
+     ! Corrected 2 bugs when New Method called without any parameters.
+
 2000-12-04 17:54 GMT+1 Maurilio Longo <maurilio.longo@libero.it>
    * source/rtl/tbrowse.prg
      * I've rewritten from scratch stabilization and movement keys handling.
@@ -12,7 +16,7 @@
 2000-12-03 15:05 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/harbour.sly
      ! Optimized __GETA() support, and changed it to be implementated identical to Clipper.
-       /* Clipper passed a bGet Block which refrences the Base Array Variable and not the Variable itself.
+       /* Clipper passes a bGet Block which refrences the Base Array Variable and not the Variable itself.
           Clipper passes NIL instead of bGet block if the Base Array is MACROVAR or MACROTEXT.
           Clipper does not optimize "&Macro" to Macro, but Harbour does! */
 
