@@ -98,7 +98,7 @@
  *  $ONELINER$
  *      Return names of all DATA or METHOD for a given object
  *  $SYNTAX$
- *      __objGetMsgList( <oObject>, [<lData>] ) --> aNames
+ *      __objGetMsgList( <oObject>, [<lData>], [lClassOnly] ) --> aNames
  *  $ARGUMENTS$
  *      <oObject> is an object to scan.
  *
@@ -106,6 +106,11 @@
  *      to return. A value of .T. instruct the function to return list of
  *      all DATA names, .F. return list of all METHOD names. Default value
  *      is .T.
+ *
+ *      <lClassOnly> is on optional logical value. A value of .T. instruct
+ *      the function to return only CLASSDATA names, .F. return list of both
+ *      DATA and CLASSDATA names. Default value is .F.
+ *
  *  $RETURNS$
  *      __objGetMsgList() return an array of character stings with all DATA
  *      names or all METHOD names for a given object. __objGetMsgList()
@@ -118,10 +123,14 @@
  *  $EXAMPLES$
  *      // show information about TBrowse class
  *      oB := TBrowseNew( 0, 0, 24, 79 )
- *      aData   := __objGetMsgList( oB, .T. )
- *      aMethod := __objGetMsgList( oB, .F. )
+ *      aData      := __objGetMsgList( oB, .T. )
+ *      aClassData := __objGetMsgList( oB, .T., .T. )
+ *      aMethod    := __objGetMsgList( oB, .F. )
  *      FOR i = 1 to len ( aData )
  *          ? "DATA name:", aData[ i ]
+ *      NEXT
+ *      FOR i = 1 to len ( aClassData )
+ *          ? "CLASSDATA name:", aClassData[ i ]
  *      NEXT
  *      FOR i = 1 to len ( aMethod )
  *          ? "METHOD name:", aMethod[ i ]

@@ -1,3 +1,8 @@
+2001-05-10 09:46 UTC+0300 Chen Kedem <niki@actcom.co.il>
+   * doc/en/objfunc.txt
+     * update the doc for __objGetMsgList() to reflect
+       changelog 2001-05-09 00:02 UTC+1 JFL (mafact) <jfl@mafact.com>
+
 2001-05-09 22:10 UTC+1 JFL (mafact) <jfl@mafact.com>
   * include/hbclass.ch
     + EXPORT: same as EXPORTED:  for classy compatibility
