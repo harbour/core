@@ -1,3 +1,7 @@
+2000-06-26 06:22 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
+   * source/compiler/harbour.l
+     ! Fixed 3 typos that made strings to be compiled with the closing string delimiter, causing Run-Time error 9004.
+
 2000-06-26-14:40 GMT +1 Ignacio Ortiz de Zuniga <ignacio@fivetech.com>
   * memoline.c
       * fixed minor bug

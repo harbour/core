@@ -219,7 +219,7 @@ Separator     {SpaceTab}
                       else
                         BEGIN 0;
 
-                      yytext[yyleng--] = '\0';
+                      yytext[--yyleng] = '\0';
                       yylval.string = hb_strdup( yytext );
 
                       return LITERAL;
@@ -230,7 +230,7 @@ Separator     {SpaceTab}
                       else
                         BEGIN 0;
 
-                      yytext[yyleng--] = '\0';
+                      yytext[--yyleng] = '\0';
                       yylval.string = hb_strdup( yytext );
 
                       return LITERAL;
@@ -241,7 +241,7 @@ Separator     {SpaceTab}
                       else
                          BEGIN 0;
 
-                      yytext[yyleng--] = '\0';
+                      yytext[--yyleng] = '\0';
                       yylval.string = hb_strdup( yytext );
 
                       return LITERAL;
