@@ -1,6 +1,6 @@
-# 
+#
 # $Id$
-# 
+#
 
 # makefile for Borland C/C++ 32 bits
 # porting gt.lib's string functions to harbour
@@ -13,11 +13,12 @@
 .path.obj = obj
 
 lib\b32\hbgt.lib : \
-   ascpos.obj atdiff.obj chareven.obj charodd.obj chrcount.obj \
-   chrtotal.obj charmix.obj asciisum.obj chrfirst.obj io.obj numtxthu.obj numtxten.obj nconvert.obj \
+   asciisum.obj ascpos.obj atdiff.obj chareven.obj charodd.obj chrcount.obj \
+   chrtotal.obj charmix.obj chrfirst.obj io.obj numtxthu.obj numtxten.obj nconvert.obj \
    rtf.obj strasint.obj strcount.obj strcspn.obj strdiff.obj strexpan.obj html.obj \
    strleft.obj strpbrk.obj strright.obj ng.obj os2.obj troff.obj
 
+asciisum.obj : asciisum.c  extend.h hbdefs.h
 ascpos.obj   : ascpos.c    extend.h hbdefs.h
 atdiff.obj   : atdiff.c    extend.h hbdefs.h
 chareven.obj : chareven.c  extend.h hbdefs.h
@@ -25,8 +26,14 @@ charodd.obj  : charodd.c   extend.h hbdefs.h
 chrcount.obj : chrcount.c  extend.h hbdefs.h
 chrtotal.obj : chrtotal.c  extend.h hbdefs.h
 charmix.obj  : charmix.c   extend.h hbdefs.h
-asciisum.obj : asciisum.c  extend.h hbdefs.h
 chrfirst.obj : chrfirst.c  extend.h hbdefs.h
+html.obj     : html.c      extend.h hbdefs.h
+io.obj       : io.c        extend.h hbdefs.h
+nconvert.obj : nconvert.c  extend.h hbdefs.h
+numtxthu.obj : numtxthu.c  extend.h hbdefs.h
+numtxten.obj : numtxten.c  extend.h hbdefs.h
+ng.obj       : ng.c        extend.h hbdefs.h
+os2.obj      : os2.c       extend.h hbdefs.h
 strasint.obj : strasint.c  extend.h hbdefs.h
 strcount.obj : strcount.c  extend.h hbdefs.h
 strcspn.obj  : strcspn.c   extend.h hbdefs.h
@@ -35,24 +42,16 @@ strexpan.obj : strexpan.c  extend.h hbdefs.h
 strleft.obj  : strleft.c   extend.h hbdefs.h
 strpbrk.obj  : strpbrk.c   extend.h hbdefs.h
 strright.obj : strright.c  extend.h hbdefs.h
-numtxthu.obj : numtxthu.c  extend.h hbdefs.h
-numtxten.obj : numtxten.c  extend.h hbdefs.h
-nconvert.obj : nconvert.c  extend.h hbdefs.h
-io.obj       : io.c        extend.h hbdefs.h
 rtf.obj      : rtf.c       extend.h hbdefs.h
-html.obj     : html.c      extend.h hbdefs.h
-os2.obj      : os2.c       extend.h hbdefs.h
-ng.obj       : ng.c      extend.h hbdefs.h
-troff.obj    : troff.c       extend.h hbdefs.h
+troff.obj    : troff.c     extend.h hbdefs.h
 
-
+html.c       : html.prg     harbour.exe
 numtxthu.c   : numtxthu.prg harbour.exe
 numtxten.c   : numtxten.prg harbour.exe
-rtf.c        : rtf.prg      harbour.exe  
-html.c       : html.prg     harbour.exe
-os2.c        : os2.prg      harbour.exe
 ng.c         : ng.prg       harbour.exe
-troff.c      : troff.rpg    harbour.exe
+os2.c        : os2.prg      harbour.exe
+rtf.c        : rtf.prg      harbour.exe
+troff.c      : troff.prg    harbour.exe
 
 .prg.c:
   bin\harbour $< /n /osource\tools\ /iinclude
