@@ -39,34 +39,35 @@
 
 CLASS TEditor
 
-   DATA  cFile INIT ""     // name of file being edited
+   DATA  cFile INIT ""        // name of file being edited
 
-   DATA  aText INIT {}     // array with lines of text being edited
-   DATA  naTextLen INIT 0  // number of lines of text inside aText. Len function is not OK since deleting elements from
-                           // array creates NIL elements at array end which kill every text funcion (like substr) used on
-                           // array elements
+   DATA  aText INIT {}        // array with lines of text being edited
+   DATA  naTextLen INIT 0     // number of lines of text inside aText. Len function is not OK since deleting elements from
+                              // array creates NIL elements at array end which kill every text funcion (like substr) used on
+                              // array elements
 
-   DATA  nTop              // boundaries of editor window, without box around
+   DATA  nTop                 // boundaries of editor window, without box around
    DATA  nLeft
    DATA  nBottom
    DATA  nRight
 
-   DATA  nFirstCol INIT 1  // FirstCol/Row of current line visible inside editor window
+   DATA  nFirstCol INIT 1     // FirstCol/Row of current text visible inside editor window
    DATA  nFirstRow INIT 1
-   DATA  nRow INIT 1       // Cursor position inside aText (nRow) and inside current line of text (nCol)
+   DATA  nRow INIT 1          // Cursor position inside aText (nRow) and inside current line of text (nCol)
    DATA  nCol INIT 1
-   DATA  nNumCols INIT 1   // How many columns / rows can be displayed inside editor window
+   DATA  nNumCols INIT 1      // How many columns / rows can be displayed inside editor window
    DATA  nNumRows INIT 1
 
-   DATA  lInsert   INIT .F. // Is editor in Insert mode or in Overstrike one?
-   DATA  nTabWidth INIT 8   // Size of Tab chars
+   DATA  lInsert   INIT .F.   // Is editor in Insert mode or in Overstrike one?
+   DATA  nTabWidth INIT 8     // Size of Tab chars
+   DATA  lEditAllow INIT .T.  // Are changes to text allowed?
 
-   METHOD New(cString, nTop, nLeft, nBottom, nRight)
+   METHOD New(cString, nTop, nLeft, nBottom, nRight, lEditMode)
    METHOD RefreshWindow()
    METHOD RefreshLine()
    METHOD RefreshColumn()
    METHOD MoveCursor(nKey)
-   METHOD InsertState(lInsState)       // Changes lInsert value and insertion / overstrike mode of editor
+   METHOD InsertState(lInsState)    // Changes lInsert value and insertion / overstrike mode of editor
    METHOD Edit()
 
 ENDCLASS
@@ -129,7 +130,7 @@ STATIC function Text2Array(cString)
 return aArray
 
 
-METHOD New(cString, nTop, nLeft, nBottom, nRight) CLASS TEditor
+METHOD New(cString, nTop, nLeft, nBottom, nRight, lEditMode) CLASS TEditor
 
    ::aText := Text2Array(cString)
    ::naTextLen := Len(::aText)
@@ -143,6 +144,10 @@ METHOD New(cString, nTop, nLeft, nBottom, nRight) CLASS TEditor
    // How many cols and rows are available
    ::nNumCols := nRight - nLeft + 1
    ::nNumRows := nBottom - nTop + 1
+
+   if !lEditMode == NIL
+      ::lEditAllow := lEditMode
+   endif
 
    // Empty area of screen which will hold editor window
    Scroll(nTop, nLeft, nBottom, nRight)
@@ -214,6 +219,12 @@ METHOD MoveCursor(nKey) CLASS TEditor
 
    do case
       case (nKey == K_DOWN)
+         if !::lEditAllow
+            while Row() < ::nBottom .AND. ::nRow < ::naTextLen
+               ::nRow++
+               SetPos(Row() + 1, Col())
+            enddo
+         endif
          if Row() == ::nBottom
             if ::nRow < ::naTextLen
                Scroll(::nTop, ::nLeft, ::nBottom, ::nRight, 1)
@@ -243,6 +254,12 @@ METHOD MoveCursor(nKey) CLASS TEditor
          ::RefreshWindow()
 
       case (nKey == K_UP)
+         if !::lEditAllow
+            while Row() > ::nTop .AND. ::nRow > 1
+               ::nRow--
+               SetPos(Row() -1, Col())
+            enddo
+         endif
          if Row() == ::nTop
             if ::nRow > 1
                Scroll(::nTop, ::nLeft, ::nBottom, ::nRight, -1)
@@ -330,7 +347,9 @@ METHOD Edit() CLASS TEditor
 
    LOCAL i, nKey
 
-   while .T.
+   /* NOTE: changing EditMode SHOULD NOT be allowed from inside editor. Edit() method relies upon lEditAllow
+      being fixed for current editing session */
+   while ::lEditAllow
 
       nKey := InKey(0)
       do case
@@ -417,8 +436,19 @@ METHOD Edit() CLASS TEditor
             exit
 
          otherwise
-            // TODO: Here we should call an user defined function (to match memoedit() behaviour)
+            /* TODO: Here we should call an user defined function (to match memoedit() behaviour) */
          endcase
+   enddo
+
+   // if editing isn't allowed we enter this loop (instead of the previous one), this loop
+   // handles only movement keys and discards all the others
+   while !::lEditAllow
+      nKey := InKey(0)
+      if nKey <> K_ESC
+         ::MoveCursor(nKey)
+      else
+         exit
+      endif
    enddo
 
 return Self
@@ -429,7 +459,7 @@ function MemoEdit(cString, nTop, nLeft, nBottom, nRight, lEditMode, cUserFunctio
 
    LOCAL oEd
 
-   oEd := TEditor():New(cString, nTop, nLeft, nBottom, nRight)
+   oEd := TEditor():New(cString, nTop, nLeft, nBottom, nRight, lEditMode)
    oEd:RefreshWindow()
    oEd:Edit()
 
