@@ -77,7 +77,7 @@ static BOOL FindFile( BYTE * pFilename, BYTE * path )
 
       if( !bIsFile && hb_set.HB_SET_PATH )
       {
-         PATHNAMES * nextPath = hb_setGetFirstSetPath();
+         HB_PATHNAMES * nextPath = hb_setGetFirstSetPath();
          while( !bIsFile && nextPath )
          {
             pFilepath->szPath = nextPath->szPath;
@@ -90,7 +90,7 @@ static BOOL FindFile( BYTE * pFilename, BYTE * path )
    hb_xfree( pFilepath );
 
    if( !bIsFile )
-      * path = '\0';
+      *path = '\0';
 
    return bIsFile;
 }
@@ -106,27 +106,18 @@ BOOL hb_spFile( BYTE * pFilename )
 
 FHANDLE hb_spOpen( BYTE * pFilename, USHORT uiFlags )
 {
-   FHANDLE hFileHandle = -1;
    BYTE path[ _POSIX_PATH_MAX + 1 ];
 
    HB_TRACE(HB_TR_DEBUG, ("hb_spOpen(%p, %hu)", pFilename, uiFlags));
 
    if( FindFile( pFilename, path ) )
-   {
-      hFileHandle = hb_fsOpen( path, uiFlags );
-   }
+      return hb_fsOpen( path, uiFlags );
    else
-   {
-      hFileHandle = hb_fsOpen( pFilename, uiFlags );
-   }
-
-   return hFileHandle;
+      return hb_fsOpen( pFilename, uiFlags );
 }
 
 FHANDLE hb_spCreate( BYTE * pFilename, USHORT uiAttr )
 {
-   FHANDLE hFileHandle = -1;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_spCreate(%p, %hu)", pFilename, uiAttr));
 
    if( ISCHAR( 1 ) )
@@ -140,16 +131,14 @@ FHANDLE hb_spCreate( BYTE * pFilename, USHORT uiAttr )
       hb_fsFNameMerge( (char*) path, pFilepath );
       hb_xfree( pFilepath );
 
-      hFileHandle = hb_fsCreate( path, uiAttr );
+      return hb_fsCreate( path, uiAttr );
    }
-
-   return hFileHandle;
+   else
+      return FS_ERROR;
 }
 
 FHANDLE hb_spCreateEx( BYTE * pFilename, USHORT uiAttr, USHORT uiFlags )
 {
-   FHANDLE hFileHandle;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_spCreateEx(%p, %hu, %hu)", pFilename, uiAttr, uiFlags));
 
    if( ISCHAR( 1 ) )
@@ -163,8 +152,8 @@ FHANDLE hb_spCreateEx( BYTE * pFilename, USHORT uiAttr, USHORT uiFlags )
       hb_fsFNameMerge( (char*) path, pFilepath );
       hb_xfree( pFilepath );
 
-      hFileHandle = hb_fsCreateEx( path, uiAttr, uiFlags );
+      return hb_fsCreateEx( path, uiAttr, uiFlags );
    }
-
-   return hFileHandle;
+   else
+      return FS_ERROR;
 }

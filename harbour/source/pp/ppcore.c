@@ -126,7 +126,7 @@ static int    strotrim( char *, BOOL ); /* Ron Pinkas 2001-02-14 added 2nd param
 static int    NextWord( char **, char *, BOOL );
 static int    NextName( char **, char * );
 static int    NextParm( char **, char * );
-static BOOL   OpenInclude( char *, PATHNAMES *, PHB_FNAME, BOOL bStandardOnly, char * );
+static BOOL   OpenInclude( char *, HB_PATHNAMES *, PHB_FNAME, BOOL bStandardOnly, char * );
 static BOOL   IsIdentifier( char *szProspect );
 
 #define ISNAME( c )  ( isalnum( ( int ) c ) || ( c ) == '_' || ( c ) > 0x7E )
@@ -3849,7 +3849,7 @@ static BOOL IsIdentifier( char *szProspect )
    return FALSE;
 }
 
-static BOOL OpenInclude( char * szFileName, PATHNAMES * pSearch, PHB_FNAME pMainFileName, BOOL bStandardOnly, char * szInclude )
+static BOOL OpenInclude( char * szFileName, HB_PATHNAMES * pSearch, PHB_FNAME pMainFileName, BOOL bStandardOnly, char * szInclude )
 {
   FILE * fptr;
   PHB_FNAME pFileName;

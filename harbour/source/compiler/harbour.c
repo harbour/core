@@ -81,68 +81,68 @@ static void hb_compOptimizeFrames( PFUNCTION pFunc );
 static void hb_compDeclaredInit( void );
 
 /* global variables */
-FILES         hb_comp_files;
-FUNCTIONS     hb_comp_functions;
-FUNCTIONS     hb_comp_funcalls;
-SYMBOLS       hb_comp_symbols;
-PCOMDECLARED  hb_comp_pFirstDeclared;
-PCOMDECLARED  hb_comp_pLastDeclared;
-PCOMDECLARED  hb_comp_pReleaseDeclared;
+FILES          hb_comp_files;
+FUNCTIONS      hb_comp_functions;
+FUNCTIONS      hb_comp_funcalls;
+SYMBOLS        hb_comp_symbols;
+PCOMDECLARED   hb_comp_pFirstDeclared;
+PCOMDECLARED   hb_comp_pLastDeclared;
+PCOMDECLARED   hb_comp_pReleaseDeclared;
+               
+PCOMCLASS      hb_comp_pFirstClass;
+PCOMCLASS      hb_comp_pLastClass;
+PCOMCLASS      hb_comp_pReleaseClass;
+char *         hb_comp_szFromClass;
+PCOMDECLARED   hb_comp_pLastMethod;
+               
+int            hb_comp_iLine;                             /* currently processed line number (globaly) */
+char *         hb_comp_szFile;                            /* File Name of last compiled line */
+PFUNCTION      hb_comp_pInitFunc;
+PHB_FNAME      hb_comp_pFileName = NULL;
+               
+BOOL           hb_comp_bPPO = FALSE;                      /* flag indicating, is ppo output needed */
+FILE *         hb_comp_yyppo = NULL;                      /* output .ppo file */
+BOOL           hb_comp_bStartProc = TRUE;                 /* holds if we need to create the starting procedure */
+BOOL           hb_comp_bLineNumbers = TRUE;               /* holds if we need pcodes with line numbers */
+BOOL           hb_comp_bQuiet = FALSE;                    /* quiet mode */
+BOOL           hb_comp_bShortCuts = TRUE;                 /* .and. & .or. expressions shortcuts */
+int            hb_comp_iWarnings = 0;                     /* enable parse warnings */
+BOOL           hb_comp_bAnyWarning = FALSE;               /* holds if there was any warning during the compilation process */
+BOOL           hb_comp_bAutoMemvarAssume = FALSE;         /* holds if undeclared variables are automatically assumed MEMVAR (-a)*/
+BOOL           hb_comp_bForceMemvars = FALSE;             /* holds if memvars are assumed when accesing undeclared variable (-v)*/
+BOOL           hb_comp_bDebugInfo = FALSE;                /* holds if generate debugger required info */
+char           hb_comp_szPrefix[ 20 ] = { '\0' };         /* holds the prefix added to the generated symbol init function name (in C output currently) */
+int            hb_comp_iGenCOutput = HB_COMPGENC_VERBOSE; /* C code generation should be verbose (use comments) or not */
+int            hb_comp_iExitLevel = HB_EXITLEVEL_DEFAULT; /* holds if there was any warning during the compilation process */
+HB_PATHNAMES * hb_comp_pIncludePath = NULL;
+int            hb_comp_iFunctionCnt;
+int            hb_comp_iErrorCount;
+char           hb_comp_cVarType;                          /* current declared variable type */
+char           hb_comp_cDataListType;                     /* current declared variable list type */
+char           hb_comp_cCastType;                         /* current casting type */
+BOOL           hb_comp_bDontGenLineNum = FALSE;           /* suppress line number generation */
+ULONG          hb_comp_ulLastLinePos;                     /* position of last opcode with line number */
+int            hb_comp_iStaticCnt;                        /* number of defined statics variables on the PRG */
+int            hb_comp_iVarScope;                         /* holds the scope for next variables to be defined */
+PHB_FNAME      hb_comp_pOutPath = NULL;
+BOOL           hb_comp_bCredits = FALSE;                  /* print credits */
+BOOL           hb_comp_bBuildInfo = FALSE;                /* print build info */
+BOOL           hb_comp_bLogo = TRUE;                      /* print logo */
+BOOL           hb_comp_bSyntaxCheckOnly = FALSE;          /* syntax check only */
+int            hb_comp_iLanguage = LANG_C;                /* default Harbour generated output language */
+int            hb_comp_iJumpOptimize = 1;
+char *         hb_comp_szDeclaredFun = NULL;
 
-PCOMCLASS     hb_comp_pFirstClass;
-PCOMCLASS     hb_comp_pLastClass;
-PCOMCLASS     hb_comp_pReleaseClass;
-char *        hb_comp_szFromClass;
-PCOMDECLARED  hb_comp_pLastMethod;
+BOOL           hb_comp_bAutoOpen = TRUE;
+BOOL           hb_comp_bError = FALSE;
+char           hb_comp_cInlineID = '0';
 
-int           hb_comp_iLine;                             /* currently processed line number (globaly) */
-char *        hb_comp_szFile;                            /* File Name of last compiled line */
-PFUNCTION     hb_comp_pInitFunc;
-PHB_FNAME     hb_comp_pFileName = NULL;
-
-BOOL          hb_comp_bPPO = FALSE;                      /* flag indicating, is ppo output needed */
-FILE *        hb_comp_yyppo = NULL;                      /* output .ppo file */
-BOOL          hb_comp_bStartProc = TRUE;                 /* holds if we need to create the starting procedure */
-BOOL          hb_comp_bLineNumbers = TRUE;               /* holds if we need pcodes with line numbers */
-BOOL          hb_comp_bQuiet = FALSE;                    /* quiet mode */
-BOOL          hb_comp_bShortCuts = TRUE;                 /* .and. & .or. expressions shortcuts */
-int           hb_comp_iWarnings = 0;                     /* enable parse warnings */
-BOOL          hb_comp_bAnyWarning = FALSE;               /* holds if there was any warning during the compilation process */
-BOOL          hb_comp_bAutoMemvarAssume = FALSE;         /* holds if undeclared variables are automatically assumed MEMVAR (-a)*/
-BOOL          hb_comp_bForceMemvars = FALSE;             /* holds if memvars are assumed when accesing undeclared variable (-v)*/
-BOOL          hb_comp_bDebugInfo = FALSE;                /* holds if generate debugger required info */
-char          hb_comp_szPrefix[ 20 ] = { '\0' };         /* holds the prefix added to the generated symbol init function name (in C output currently) */
-int           hb_comp_iGenCOutput = HB_COMPGENC_VERBOSE; /* C code generation should be verbose (use comments) or not */
-int           hb_comp_iExitLevel = HB_EXITLEVEL_DEFAULT; /* holds if there was any warning during the compilation process */
-PATHNAMES *   hb_comp_pIncludePath = NULL;
-int           hb_comp_iFunctionCnt;
-int           hb_comp_iErrorCount;
-char          hb_comp_cVarType;                          /* current declared variable type */
-char          hb_comp_cDataListType;                     /* current declared variable list type */
-char          hb_comp_cCastType;                         /* current casting type */
-BOOL          hb_comp_bDontGenLineNum = FALSE;           /* suppress line number generation */
-ULONG         hb_comp_ulLastLinePos;                     /* position of last opcode with line number */
-int           hb_comp_iStaticCnt;                        /* number of defined statics variables on the PRG */
-int           hb_comp_iVarScope;                         /* holds the scope for next variables to be defined */
-PHB_FNAME     hb_comp_pOutPath = NULL;
-BOOL          hb_comp_bCredits = FALSE;                  /* print credits */
-BOOL          hb_comp_bBuildInfo = FALSE;                /* print build info */
-BOOL          hb_comp_bLogo = TRUE;                      /* print logo */
-BOOL          hb_comp_bSyntaxCheckOnly = FALSE;          /* syntax check only */
-int           hb_comp_iLanguage = LANG_C;                /* default Harbour generated output language */
-int           hb_comp_iJumpOptimize = 1;
-char *        hb_comp_szDeclaredFun = NULL;
-
-BOOL          hb_comp_bAutoOpen = TRUE;
-BOOL          hb_comp_bError = FALSE;
-char          hb_comp_cInlineID = '0';
-
-int           hb_comp_iLineINLINE = 0;
-int           hb_comp_iLinePRG;
-INLINES       hb_comp_inlines;
+int            hb_comp_iLineINLINE = 0;
+int            hb_comp_iLinePRG;
+INLINES        hb_comp_inlines;
 
 /* various compatibility flags (-k switch) */
-ULONG         hb_comp_Supported;
+ULONG          hb_comp_Supported;
 
 
 /* EXTERNAL statement can be placed into any place in a function - this flag is

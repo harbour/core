@@ -69,28 +69,28 @@
 
 #ifdef HB_EXTENSION
 
-PATHNAMES * hb_comp_pIncludePath = NULL;
-PHB_FNAME   hb_comp_pFileName = NULL;
-FILES       hb_comp_files;
-int         hb_comp_iLine;       /* currently parsed file line number */
-int         hb_comp_iLinePRG;
-int         hb_comp_iLineINLINE = 0;
+HB_PATHNAMES * hb_comp_pIncludePath = NULL;
+PHB_FNAME      hb_comp_pFileName = NULL;
+FILES          hb_comp_files;
+int            hb_comp_iLine;       /* currently parsed file line number */
+int            hb_comp_iLinePRG;
+int            hb_comp_iLineINLINE = 0;
 
 /* These are need for the PP #pragma support */
-BOOL hb_comp_bPPO = FALSE;                      /* flag indicating, is ppo output needed */
-BOOL hb_comp_bStartProc = TRUE;                 /* holds if we need to create the starting procedure */
-BOOL hb_comp_bLineNumbers = TRUE;               /* holds if we need pcodes with line numbers */
+BOOL           hb_comp_bPPO = FALSE;           /* flag indicating, is ppo output needed */
+BOOL           hb_comp_bStartProc = TRUE;      /* holds if we need to create the starting procedure */
+BOOL           hb_comp_bLineNumbers = TRUE;    /* holds if we need pcodes with line numbers */
 
 #if 0
-BOOL hb_comp_bShortCuts = TRUE;                 /* .and. & .or. expressions shortcuts */
+BOOL           hb_comp_bShortCuts = TRUE;      /* .and. & .or. expressions shortcuts */
 #endif
 
-int  hb_comp_iWarnings = 0;                     /* enable parse warnings */
-BOOL hb_comp_bAutoMemvarAssume = FALSE;         /* holds if undeclared variables are automatically assumed MEMVAR (-a)*/
-BOOL hb_comp_bForceMemvars = FALSE;             /* holds if memvars are assumed when accesing undeclared variable (-v)*/
-BOOL hb_comp_bDebugInfo = FALSE;                /* holds if generate debugger required info */
-int  hb_comp_iExitLevel = HB_EXITLEVEL_DEFAULT; /* holds if there was any warning during the compilation process */
-FILE *hb_comp_yyppo = NULL;
+int            hb_comp_iWarnings = 0;                     /* enable parse warnings */
+BOOL           hb_comp_bAutoMemvarAssume = FALSE;         /* holds if undeclared variables are automatically assumed MEMVAR (-a)*/
+BOOL           hb_comp_bForceMemvars = FALSE;             /* holds if memvars are assumed when accesing undeclared variable (-v)*/
+BOOL           hb_comp_bDebugInfo = FALSE;                /* holds if generate debugger required info */
+int            hb_comp_iExitLevel = HB_EXITLEVEL_DEFAULT; /* holds if there was any warning during the compilation process */
+FILE *         hb_comp_yyppo = NULL;
 
 static jmp_buf s_env;
 
@@ -101,9 +101,9 @@ static jmp_buf s_env;
  * should be returned  by a reference.
  */
 
-static void AddSearchPath( char * szPath, PATHNAMES * * pSearchList )
+static void AddSearchPath( char * szPath, HB_PATHNAMES * * pSearchList )
 {
-  PATHNAMES * pPath = *pSearchList;
+  HB_PATHNAMES * pPath = *pSearchList;
 
   HB_TRACE(HB_TR_DEBUG, ("AddSearchPath(%s, %p)", szPath, pSearchList));
 
@@ -111,12 +111,12 @@ static void AddSearchPath( char * szPath, PATHNAMES * * pSearchList )
     {
       while( pPath->pNext )
         pPath = pPath->pNext;
-      pPath->pNext = ( PATHNAMES * ) hb_xgrab( sizeof( PATHNAMES ) );
+      pPath->pNext = ( HB_PATHNAMES * ) hb_xgrab( sizeof( HB_PATHNAMES ) );
       pPath = pPath->pNext;
     }
   else
     {
-      *pSearchList = pPath = ( PATHNAMES * ) hb_xgrab( sizeof( PATHNAMES ) );
+      *pSearchList = pPath = ( HB_PATHNAMES * ) hb_xgrab( sizeof( HB_PATHNAMES ) );
     }
   pPath->pNext  = NULL;
   pPath->szPath = hb_strdup( szPath );
@@ -145,7 +145,7 @@ HB_FUNC( __PP_INIT )
 
 HB_FUNC( __PP_PATH )
 {
-   PATHNAMES * pPath = hb_comp_pIncludePath, * pPathNext;
+   HB_PATHNAMES * pPath = hb_comp_pIncludePath, * pPathNext;
 
    if( ISLOG( 2 ) && hb_parl( 2 ) )
    {
@@ -174,7 +174,7 @@ HB_FUNC( __PP_PATH )
 
 HB_FUNC( __PP_FREE )
 {
-  PATHNAMES * pPath = hb_comp_pIncludePath, * pPathNext;
+  HB_PATHNAMES * pPath = hb_comp_pIncludePath, * pPathNext;
 
    while( pPath )
    {

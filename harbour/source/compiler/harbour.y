@@ -1716,7 +1716,7 @@ void yyerror( char * s )
 }
 
 
-BOOL hb_compInclude( char * szFileName, PATHNAMES * pSearch )
+BOOL hb_compInclude( char * szFileName, HB_PATHNAMES * pSearch )
 {
    PFILE pFile;
 

@@ -8,6 +8,35 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2001-12-14 10:17 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * include/hbapifs.h
+   * source/common/hbfhnd.c
+   * source/common/hbfsapi.c
+   * source/rtl/spfiles.c
+   * include/hbset.h
+   * include/hbcomp.h
+   * include/hbpp.h
+   * source/compiler/harbour.c
+   * source/compiler/harbour.y
+   * source/compiler/harbour.sly
+   * source/rtl/set.c
+   * source/pp/pplib.c
+   * source/pp/ppcore.c
+   * utils/hbpp/hbpp.c
+   * source/vm/hvm.c
+   * source/vm/classes.c
+     * Some cleanups.
+     * PATHNAMES -> HB_PATHNAMES
+     ! Removed some warnings.
+
+   * include/Makefile
+   * include/hbapi.h
+   + include/hblang.ch 
+     + Added HB_I_() define for translatable strings.
+       In Harbour sources which contains translatable 
+       strings #include "hblang.ch" must be added.
+
 2001-12-13 16:40 UTC+0100 Antonio Linares <alinares@fivetech.com>
    * source/vm/eval.c
      + New function HB_DLLDO() added

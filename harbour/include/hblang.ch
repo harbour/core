@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * File handle tweaks
+ * Header file for Class commands
  *
- * Copyright 2001-2002 {list of individual authors and e-mail addresses}
+ * Copyright 2001-2002 Viktor Szakats <viktor.szakats@syenar.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,77 +50,10 @@
  *
  */
 
-#if defined(__BORLANDC__)
+#ifndef HB_LANG_CH_
+#define HB_LANG_CH_
 
-   #define ___NFILE_H
-   
-   #ifdef _NFILE_
-      #undef _NFILE_
-   #endif
-   #define _NFILE_ 600
-   
-   #include <stdio.h>
-   #include <io.h>
-   #include <fcntl.h>
+/* Dummy define for start */
+#define HB_I_( x ) x
 
-   #ifdef __cplusplus
-      extern "C" {
-   #endif
-
-   unsigned _RTLENTRY _EXPDATA _nfile = _NFILE_;   
-
-   void hb_files_setup( void );
-
-   extern void _RTLENTRY _init_handles( void );
-   extern void _RTLENTRY _init_streams( void );
-
-   #ifdef __cplusplus
-      }
-   #endif
-
-   #pragma startup hb_files_setup
-   #pragma startup _init_handles 4
-   #pragma startup _init_streams 5
-   
-#endif
-
-/* NOTE: This symbol must be requested for the inclusion of this 
-         module. [vszakats] */
-
-void hb_fhnd_ForceLink( void )
-{
-   /* Intentionally do nothing */
-};
-
-#if defined(__BORLANDC__)
-
-#define _F_STDIN        (_F_READ | _F_TERM | _F_LBUF)
-#define _F_STDOUT       (_F_WRIT | _F_TERM | _F_LBUF)
-#define _F_STDERR       (_F_WRIT | _F_TERM)
-
-FILE    _RTLENTRY _EXPDATA _streams [_NFILE_] =
-{
-        { NULL, NULL, 0, 0, 0, _F_STDIN,  0, 0, 0 },
-        { NULL, NULL, 0, 0, 0, _F_STDOUT, 0, 1, 0 },
-        { NULL, NULL, 0, 0, 0, _F_STDERR, 0, 2, 0 }
-};
-
-unsigned int _RTLENTRY _openfd[_NFILE_] =
-{
-        O_RDONLY | O_TEXT | O_DEVICE,
-        O_WRONLY | O_TEXT | O_DEVICE,
-        O_WRONLY | O_TEXT | O_DEVICE
-};
-
-unsigned int _RTLENTRY _pidtab[_NFILE_];
-
-#ifdef __WIN32__
-   unsigned long _RTLENTRY _handles[_NFILE_];
-#endif
-
-void hb_files_setup( void )
-{
-   _nfile = _NFILE_;
-}
-
-#endif
+#endif /* HB_LANG_CH_ */

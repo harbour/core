@@ -73,13 +73,13 @@ static PHB_SET_LISTENER sp_sl_first;
 static PHB_SET_LISTENER sp_sl_last;
 static int s_next_listener;
 
-static PATHNAMES * sp_set_path;
+static HB_PATHNAMES * sp_set_path;
 
 static void hb_setFreeSetPath( void )
 {
    /* Free all set paths */
-   PATHNAMES * curPath = sp_set_path;
-   PATHNAMES * nextPath;
+   HB_PATHNAMES * curPath = sp_set_path;
+   HB_PATHNAMES * nextPath;
    while( curPath )
    {
       nextPath = curPath->pNext;
@@ -881,7 +881,7 @@ int hb_setListenerRemove( int listener )
    return listener;
 }
 
-PATHNAMES * hb_setGetFirstSetPath( void )
+HB_PATHNAMES * hb_setGetFirstSetPath( void )
 {
    return sp_set_path;
 }

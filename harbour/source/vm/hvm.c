@@ -2915,11 +2915,8 @@ void hb_vmDo( USHORT uiParams )
 
    if( ! HB_IS_NIL( pSelf ) ) /* are we sending a message ? */
    {
-
-      BOOL lPopSuper = FALSE ;
+      BOOL lPopSuper = FALSE;
       PHB_BASEARRAY pSelfBase = NULL;
-      PHB_ITEM pRealSelf=NULL;
-      USHORT uiClass;
 
       if( pSym == &( hb_symEval ) && HB_IS_BLOCK( pSelf ) )
          pFunc = pSym->pFunPtr;                 /* __EVAL method = function */
@@ -2931,7 +2928,10 @@ void hb_vmDo( USHORT uiParams )
             pSelfBase = pSelf->item.asArray.value;
             if( pSelfBase->uiPrevCls ) /* Is is a Super cast ? */
             {
-              USHORT nPos ;
+              PHB_ITEM pRealSelf;
+              USHORT nPos;
+              USHORT uiClass;
+
               /*
               printf( "\n VmDo Method: %s \n", pSym->szName );
               */
@@ -3090,22 +3090,22 @@ void hb_vmSend( USHORT uiParams )
 
    if( ! HB_IS_NIL( pSelf ) ) /* are we sending a message ? */
    {
-
-      BOOL lPopSuper = FALSE ;
-      PHB_BASEARRAY pSelfBase;
-      PHB_ITEM pRealSelf=NULL;
-      USHORT uiClass;
-
       if( ! ( pSym == &( hb_symEval ) && HB_IS_BLOCK( pSelf ) ) )
       {
          if( HB_IS_OBJECT( pSelf ) )               /* Object passed            */
          {
+            PHB_BASEARRAY pSelfBase;
+            BOOL lPopSuper = FALSE;
 
             pFunc = hb_objGetMethod( pSelf, pSym );
             pSelfBase = pSelf->item.asArray.value;
+
             if( pSelfBase->uiPrevCls ) /* Is is a Super cast ? */
             {
-              USHORT nPos ;
+              PHB_ITEM pRealSelf;
+              USHORT nPos;
+              USHORT uiClass;
+
               /*
               printf( "\n VmSend Method: %s \n", pSym->szName );
               */

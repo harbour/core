@@ -404,7 +404,7 @@ extern void hb_compFixFuncPCode( PFUNCTION );
 #if 0
 extern int hb_compYACCMain( char * szName );
 #endif
-extern BOOL hb_compInclude( char * szFileName, PATHNAMES * pSearchPath );  /* end #include support */
+extern BOOL hb_compInclude( char * szFileName, HB_PATHNAMES * pSearchPath );  /* end #include support */
 
 extern char * hb_comp_buffer; /* yacc input buffer */
 
@@ -422,77 +422,77 @@ extern void hb_compIdentifierClose( void ); /* release the table of identifiers 
 
 /* variable used by compiler
  */
-extern int           hb_comp_iLine;
-extern FUNCTIONS     hb_comp_functions;
-extern FUNCTIONS     hb_comp_funcalls;
-extern SYMBOLS       hb_comp_symbols;
-extern PCOMDECLARED  hb_comp_pFirstDeclared;
-extern PCOMDECLARED  hb_comp_pLastDeclared;
-extern PCOMDECLARED  hb_comp_pReleaseDeclared;
-extern PCOMCLASS     hb_comp_pFirstClass;
-extern PCOMCLASS     hb_comp_pLastClass;
-extern PCOMCLASS     hb_comp_pReleaseClass;
-extern char *        hb_comp_szFromClass;
-extern PCOMDECLARED  hb_comp_pLastMethod;
-extern PATHNAMES *   hb_comp_pIncludePath;
-extern PFUNCTION     hb_comp_pInitFunc;
-extern PHB_FNAME     hb_comp_pFileName;
-extern BOOL          hb_comp_bPPO;
-extern FILE *        hb_comp_yyppo;
-extern BOOL          hb_comp_bStartProc;
-extern BOOL          hb_comp_bLineNumbers;
-extern BOOL          hb_comp_bQuiet;
-extern BOOL          hb_comp_bShortCuts;
-extern int           hb_comp_iWarnings;
-extern BOOL          hb_comp_bAnyWarning;
-extern BOOL          hb_comp_bAutoMemvarAssume;
-extern BOOL          hb_comp_bForceMemvars;
-extern BOOL          hb_comp_bDebugInfo;
-extern char          hb_comp_szPrefix[ 20 ];
-extern int           hb_comp_iGenCOutput;
-extern int           hb_comp_iExitLevel;
-extern int           hb_comp_iFunctionCnt;
-extern char          hb_comp_cVarType;
-extern char          hb_comp_cDataListType;
-extern char          hb_comp_cCastType;
-extern int           hb_comp_iVarScope;
-extern BOOL          hb_comp_bDontGenLineNum;
-extern FILES         hb_comp_files;
-extern int           hb_comp_iStaticCnt;
-extern int           hb_comp_iErrorCount;
-
-extern char *        hb_comp_szAnnounce;
-
-extern PHB_FNAME     hb_comp_pOutPath;
-extern BOOL          hb_comp_bCredits;
-extern BOOL          hb_comp_bBuildInfo;
-extern BOOL          hb_comp_bLogo;
-extern BOOL          hb_comp_bSyntaxCheckOnly;
-extern int           hb_comp_iLanguage;
-
-extern USHORT        hb_comp_wSeqCounter;
-extern USHORT        hb_comp_wForCounter;
-extern USHORT        hb_comp_wIfCounter;
-extern USHORT        hb_comp_wWhileCounter;
-extern USHORT        hb_comp_wCaseCounter;
-
-extern char *        hb_comp_szDeclaredFun;
-
-extern char *        hb_comp_szLastMethod;
-
-extern char *        hb_comp_szErrors[];
-extern char *        hb_comp_szWarnings[];
-
-extern char *        hb_pp_STD_CH;
-extern BOOL          hb_comp_bAutoOpen;
-extern BOOL          hb_comp_bError;
-extern char          hb_comp_cInlineID;
-
-extern INLINES       hb_comp_inlines;
-extern int           hb_comp_iLineINLINE;
-extern int           hb_comp_iLinePRG;
-
-extern ULONG         hb_comp_Supported;
+extern int            hb_comp_iLine;
+extern FUNCTIONS      hb_comp_functions;
+extern FUNCTIONS      hb_comp_funcalls;
+extern SYMBOLS        hb_comp_symbols;
+extern PCOMDECLARED   hb_comp_pFirstDeclared;
+extern PCOMDECLARED   hb_comp_pLastDeclared;
+extern PCOMDECLARED   hb_comp_pReleaseDeclared;
+extern PCOMCLASS      hb_comp_pFirstClass;
+extern PCOMCLASS      hb_comp_pLastClass;
+extern PCOMCLASS      hb_comp_pReleaseClass;
+extern char *         hb_comp_szFromClass;
+extern PCOMDECLARED   hb_comp_pLastMethod;
+extern HB_PATHNAMES * hb_comp_pIncludePath;
+extern PFUNCTION      hb_comp_pInitFunc;
+extern PHB_FNAME      hb_comp_pFileName;
+extern BOOL           hb_comp_bPPO;
+extern FILE *         hb_comp_yyppo;
+extern BOOL           hb_comp_bStartProc;
+extern BOOL           hb_comp_bLineNumbers;
+extern BOOL           hb_comp_bQuiet;
+extern BOOL           hb_comp_bShortCuts;
+extern int            hb_comp_iWarnings;
+extern BOOL           hb_comp_bAnyWarning;
+extern BOOL           hb_comp_bAutoMemvarAssume;
+extern BOOL           hb_comp_bForceMemvars;
+extern BOOL           hb_comp_bDebugInfo;
+extern char           hb_comp_szPrefix[ 20 ];
+extern int            hb_comp_iGenCOutput;
+extern int            hb_comp_iExitLevel;
+extern int            hb_comp_iFunctionCnt;
+extern char           hb_comp_cVarType;
+extern char           hb_comp_cDataListType;
+extern char           hb_comp_cCastType;
+extern int            hb_comp_iVarScope;
+extern BOOL           hb_comp_bDontGenLineNum;
+extern FILES          hb_comp_files;
+extern int            hb_comp_iStaticCnt;
+extern int            hb_comp_iErrorCount;
+                      
+extern char *         hb_comp_szAnnounce;
+                      
+extern PHB_FNAME      hb_comp_pOutPath;
+extern BOOL           hb_comp_bCredits;
+extern BOOL           hb_comp_bBuildInfo;
+extern BOOL           hb_comp_bLogo;
+extern BOOL           hb_comp_bSyntaxCheckOnly;
+extern int            hb_comp_iLanguage;
+                      
+extern USHORT         hb_comp_wSeqCounter;
+extern USHORT         hb_comp_wForCounter;
+extern USHORT         hb_comp_wIfCounter;
+extern USHORT         hb_comp_wWhileCounter;
+extern USHORT         hb_comp_wCaseCounter;
+                      
+extern char *         hb_comp_szDeclaredFun;
+                      
+extern char *         hb_comp_szLastMethod;
+                      
+extern char *         hb_comp_szErrors[];
+extern char *         hb_comp_szWarnings[];
+                      
+extern char *         hb_pp_STD_CH;
+extern BOOL           hb_comp_bAutoOpen;
+extern BOOL           hb_comp_bError;
+extern char           hb_comp_cInlineID;
+                      
+extern INLINES        hb_comp_inlines;
+extern int            hb_comp_iLineINLINE;
+extern int            hb_comp_iLinePRG;
+                      
+extern ULONG          hb_comp_Supported;
 
 /* /GC command line setting types */
 #define HB_COMPGENC_COMPACT     0

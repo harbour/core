@@ -53,24 +53,27 @@
 #include "hbapi.h"
 #include "hbapifs.h"
 
+/* NOTE: Not really belongs here, but until we can't find a better place 
+         it will do it. [vszakats] */
 extern void hb_fhnd_ForceLink( void );
+
 /*
  * Function that adds at most one path to a list of pathnames to search
  */
-static void AddSearchPath( char * szPath, PATHNAMES * * pSearchList )
+static void AddSearchPath( char * szPath, HB_PATHNAMES * * pSearchList )
 {
-   PATHNAMES * pPath = *pSearchList;
+   HB_PATHNAMES * pPath = *pSearchList;
 
    if( pPath )
    {
       while( pPath->pNext )
          pPath = pPath->pNext;
 
-      pPath->pNext = ( PATHNAMES * ) hb_xgrab( sizeof( PATHNAMES ) );
+      pPath->pNext = ( HB_PATHNAMES * ) hb_xgrab( sizeof( HB_PATHNAMES ) );
       pPath = pPath->pNext;
    }
    else
-      *pSearchList = pPath = ( PATHNAMES * ) hb_xgrab( sizeof( PATHNAMES ) );
+      *pSearchList = pPath = ( HB_PATHNAMES * ) hb_xgrab( sizeof( HB_PATHNAMES ) );
 
    pPath->pNext  = NULL;
    pPath->szPath = szPath;
@@ -79,7 +82,7 @@ static void AddSearchPath( char * szPath, PATHNAMES * * pSearchList )
 /*
  * Function that adds zero or more paths to a list of pathnames to search
  */
-void hb_fsAddSearchPath( char * szPath, PATHNAMES * * pSearchList )
+void hb_fsAddSearchPath( char * szPath, HB_PATHNAMES * * pSearchList )
 {
    char * pPath;
    char * pDelim;
@@ -91,6 +94,7 @@ void hb_fsAddSearchPath( char * szPath, PATHNAMES * * pSearchList )
       AddSearchPath( pPath, pSearchList );
       pPath = pDelim + 1;
    }
+
    AddSearchPath( pPath, pSearchList );
 }
 

@@ -2049,7 +2049,6 @@ static HARBOUR hb___msgClsParent( void )
 {
    PHB_ITEM pItemRef;
    PHB_ITEM pItemParam;
-   PCLASS pClass;
    char * szParentName = 0;
    USHORT uiClass, i;
    BOOL lClass=FALSE;
@@ -2060,8 +2059,6 @@ static HARBOUR hb___msgClsParent( void )
       pItemRef = hb_stackSelfItem();
 
    uiClass = pItemRef->item.asArray.value->uiClass;
-
-   pClass = s_pClasses + ( uiClass - 1 );
 
    pItemParam = hb_stackItemFromBase( 1 );
 

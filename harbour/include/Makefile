@@ -60,6 +60,7 @@ PRG_HEADERS=\
 	hbextern.ch  \
 	hbgetcmt.ch  \
 	hbinkey.ch   \
+	hblang.ch    \
 	hbmemory.ch  \
 	hbmemvar.ch  \
 	hboo.ch      \

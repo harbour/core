@@ -581,6 +581,11 @@ extern void   hb_verBuildInfo( void ); /* display harbour, compiler, and platfor
 /* WARNING: This returned pointer must be freed using hb_xfree( ( void * ) ptr ); */
 extern char * hb_getenv( const char * name );
 
+/* Translation related things */
+
+/* Dummy define for start */
+#define HB_I_( x ) x
+
 #if defined(HB_EXTERN_C)
 }
 #endif

@@ -132,16 +132,18 @@ extern PHB_FNAME hb_fsFNameSplit( char * pszFileName ); /* Split given filename 
 extern char *    hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName ); /* This function joins path, name and extension into a string with a filename */
 
 /* Searchable path support */
-typedef struct _PATHNAMES
+typedef struct _HB_PATHNAMES
 {
    char * szPath;
-   struct _PATHNAMES * pNext;
-} PATHNAMES;
-void hb_fsAddSearchPath( char * szPath, PATHNAMES * * pSearchList );
-BOOL hb_spFile( BYTE * pFilename );
-FHANDLE hb_spOpen( BYTE * pFilename, USHORT uiFlags );
-FHANDLE hb_spCreate( BYTE * pFilename, USHORT uiAttr );
-FHANDLE hb_spCreateEx( BYTE * pFilename, USHORT uiAttr, USHORT uiFlags );
+   struct _HB_PATHNAMES * pNext;
+} HB_PATHNAMES;
+
+extern void    hb_fsAddSearchPath( char * szPath, HB_PATHNAMES * * pSearchList );
+
+extern BOOL    hb_spFile( BYTE * pFilename );
+extern FHANDLE hb_spOpen( BYTE * pFilename, USHORT uiFlags );
+extern FHANDLE hb_spCreate( BYTE * pFilename, USHORT uiAttr );
+extern FHANDLE hb_spCreateEx( BYTE * pFilename, USHORT uiAttr, USHORT uiFlags );
 
 #if defined(HB_EXTERN_C)
 }

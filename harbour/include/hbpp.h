@@ -89,7 +89,7 @@ typedef struct _COMMANDS
 
 /* PPCORE.C exported functions and variables */
 
-#define HB_INCLUDE_FUNC_( hbFunc ) BOOL hbFunc( char *, PATHNAMES * )
+#define HB_INCLUDE_FUNC_( hbFunc ) BOOL hbFunc( char *, HB_PATHNAMES * )
 typedef HB_INCLUDE_FUNC_( HB_INCLUDE_FUNC );
 typedef HB_INCLUDE_FUNC * HB_INCLUDE_FUNC_PTR;
 

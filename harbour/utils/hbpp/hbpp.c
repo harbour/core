@@ -70,7 +70,7 @@
 
 extern int hb_pp_ParseDefine( char * );
 
-static void AddSearchPath( char * szPath, PATHNAMES * * pSearchList );
+static void AddSearchPath( char * szPath, HB_PATHNAMES * * pSearchList );
 static void OutTable( DEFINES * endDefine, COMMANDS * endCommand );
 static BOOL hb_pp_fopen( char * szFileName );
 
@@ -78,10 +78,10 @@ static char s_szLine[ HB_PP_STR_SIZE ];
 static int  s_iWarnings = 0;
 static char * hb_buffer;
 
-PATHNAMES * hb_comp_pIncludePath = NULL;
-PHB_FNAME   hb_comp_pFileName = NULL;
-FILES       hb_comp_files;
-int         hb_comp_iLine = 1; /* currently parsed file line number */
+HB_PATHNAMES * hb_comp_pIncludePath = NULL;
+PHB_FNAME      hb_comp_pFileName = NULL;
+FILES          hb_comp_files;
+int            hb_comp_iLine = 1; /* currently parsed file line number */
 
 /* These are need for the PP #pragma support */
 BOOL hb_comp_bPPO = FALSE;                      /* flag indicating, is ppo output needed */
@@ -426,9 +426,9 @@ static void OutTable( DEFINES * endDefine, COMMANDS * endCommand )
 /*
  * Function that adds specified path to the list of pathnames to search
  */
-static void AddSearchPath( char * szPath, PATHNAMES * * pSearchList )
+static void AddSearchPath( char * szPath, HB_PATHNAMES * * pSearchList )
 {
-  PATHNAMES * pPath = *pSearchList;
+  HB_PATHNAMES * pPath = *pSearchList;
 
   HB_TRACE(HB_TR_DEBUG, ("AddSearchPath(%s, %p)", szPath, pSearchList));
 
@@ -436,12 +436,12 @@ static void AddSearchPath( char * szPath, PATHNAMES * * pSearchList )
     {
       while( pPath->pNext )
         pPath = pPath->pNext;
-      pPath->pNext = ( PATHNAMES * ) hb_xgrab( sizeof( PATHNAMES ) );
+      pPath->pNext = ( HB_PATHNAMES * ) hb_xgrab( sizeof( HB_PATHNAMES ) );
       pPath = pPath->pNext;
     }
   else
     {
-      *pSearchList = pPath = ( PATHNAMES * ) hb_xgrab( sizeof( PATHNAMES ) );
+      *pSearchList = pPath = ( HB_PATHNAMES * ) hb_xgrab( sizeof( HB_PATHNAMES ) );
     }
   pPath->pNext  = NULL;
   pPath->szPath = szPath;
