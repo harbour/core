@@ -148,7 +148,7 @@ int hb_mouse_key( void )
    return 0;
 }
 
-void hb_mouse_initialize( void )
+void hb_gt_Initialize_Mouse( void )
 {
    mmask_t mm;
    
@@ -158,6 +158,10 @@ void hb_mouse_initialize( void )
               &mm );
    mouseinterval( 500 );
    s_last_event = -1;
+}
+
+void hb_gt_Exit_Mouse( void )
+{
 }
 
 void hb_mouse_Init( void )

@@ -184,6 +184,7 @@ extern void      hb_compFunCallCheck( char *, int );
 
 extern void hb_compVariableAdd( char * szVarName, char cType ); /* add a new param, local, static variable to a function definition or a public or private */
 extern PVAR hb_compVariableFind( PVAR pVars, USHORT wOrder ); /* returns a variable if defined or zero */
+extern PVAR hb_compLocalVariableFind( PFUNCTION pFunc, USHORT wVar );
 
 extern PCOMSYMBOL hb_compSymbolAdd( char *, USHORT * );
 extern PCOMSYMBOL hb_compSymbolKill( PCOMSYMBOL );    /* releases all memory allocated by symbol and returns the next one */
@@ -315,6 +316,7 @@ extern void hb_compPrintLogo( void );
 
 /* Misc functions defined in harbour.c */
 extern void hb_compFinalizeFunction( void ); /* fixes all last defined function returns jumps offsets */
+extern void hb_compNOOPadd( PFUNCTION pFunc, ULONG ulPos );
 
 /* Misc functions defined in hbfix.c */
 extern void hb_compFixFuncPCode( PFUNCTION );

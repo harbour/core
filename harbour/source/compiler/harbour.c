@@ -970,6 +970,16 @@ PFUNCTION hb_compFunctionFind( char * szFunctionName ) /* returns a previously d
    return NULL;
 }
 
+/* return variable using its order after final fixing */
+PVAR hb_compLocalVariableFind( PFUNCTION pFunc, USHORT wVar )
+{
+   if( pFunc->wParamCount && !(pFunc->bFlags & FUN_USES_LOCAL_PARAMS) )
+   {
+      wVar -= pFunc->wParamCount;
+   }
+   return hb_compVariableFind( pFunc->pLocals, wVar );
+}
+
 PVAR hb_compVariableFind( PVAR pVars, USHORT wOrder ) /* returns variable if defined or zero */
 {
    USHORT w = 1;
@@ -1282,6 +1292,22 @@ USHORT hb_compFunctionGetPos( char * szFunctionName ) /* return 0 if not found o
    return 0;
 }
 
+void hb_compNOOPadd( PFUNCTION pFunc, ULONG ulPos )
+{
+   pFunc->iNOOPs++;
+
+   if( hb_comp_functions.pLast->pNOOPs )
+   {
+      pFunc->pNOOPs = ( ULONG * ) hb_xrealloc( pFunc->pNOOPs, sizeof( ULONG ) * pFunc->iNOOPs );
+      pFunc->pNOOPs[ pFunc->iNOOPs - 1 ] = ulPos;
+   }
+   else
+   {
+      pFunc->pNOOPs = ( ULONG * ) hb_xgrab( sizeof( ULONG ) );
+      pFunc->pNOOPs[ pFunc->iNOOPs - 1 ] = ulPos;
+   }
+}
+
 static void hb_compPrepareOptimize()
 {
    if( ! hb_comp_iJumpOptimize )
@@ -1313,34 +1339,12 @@ static void hb_compPrepareOptimize()
    /* 3rd. Byte might be not used */
    if( hb_comp_functions.pLast->pCode[ hb_comp_functions.pLast->lPCodePos - 1 ] == HB_P_NOOP )
    {
-      hb_comp_functions.pLast->iNOOPs++;
-
-      if( hb_comp_functions.pLast->pNOOPs )
-      {
-         hb_comp_functions.pLast->pNOOPs = ( ULONG * ) hb_xrealloc( hb_comp_functions.pLast->pNOOPs, sizeof( ULONG ) * hb_comp_functions.pLast->iNOOPs );
-         hb_comp_functions.pLast->pNOOPs[ hb_comp_functions.pLast->iNOOPs - 1 ] = hb_comp_functions.pLast->lPCodePos - 1;
-      }
-      else
-      {
-         hb_comp_functions.pLast->pNOOPs = ( ULONG * ) hb_xgrab( sizeof( ULONG ) );
-         hb_comp_functions.pLast->pNOOPs[ hb_comp_functions.pLast->iNOOPs - 1 ] = hb_comp_functions.pLast->lPCodePos - 1;
-      }
+      hb_compNOOPadd( hb_comp_functions.pLast, hb_comp_functions.pLast->lPCodePos - 1 );
 
       /* 2nd. Byte might be not used */
       if( hb_comp_functions.pLast->pCode[ hb_comp_functions.pLast->lPCodePos - 2 ] == HB_P_NOOP )
       {
-         hb_comp_functions.pLast->iNOOPs++;
-
-         if( hb_comp_functions.pLast->pNOOPs )
-         {
-            hb_comp_functions.pLast->pNOOPs = ( ULONG * ) hb_xrealloc( hb_comp_functions.pLast->pNOOPs, sizeof( ULONG ) * hb_comp_functions.pLast->iNOOPs );
-            hb_comp_functions.pLast->pNOOPs[ hb_comp_functions.pLast->iNOOPs - 1 ] = hb_comp_functions.pLast->lPCodePos - 2;
-         }
-         else
-         {
-            hb_comp_functions.pLast->pNOOPs = ( ULONG * ) hb_xgrab( sizeof( ULONG ) );
-            hb_comp_functions.pLast->pNOOPs[ hb_comp_functions.pLast->iNOOPs - 1 ] = hb_comp_functions.pLast->lPCodePos - 2;
-         }
+         hb_compNOOPadd( hb_comp_functions.pLast, hb_comp_functions.pLast->lPCodePos - 2 );
       }
    }
 }
@@ -1498,7 +1502,7 @@ void hb_compGenJumpThere( ULONG ulFrom, ULONG ulTo )
             break;
 
          default:
-            printf( "\rPCode: %i", pCode[ ( ULONG ) ulFrom - 1 ] );
+/*            printf( "\rPCode: %i", pCode[ ( ULONG ) ulFrom - 1 ] ); */
             hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_JUMP_NOT_FOUND, NULL, NULL );
             break;
       }
@@ -1511,34 +1515,12 @@ void hb_compGenJumpThere( ULONG ulFrom, ULONG ulTo )
       /* Check if 3rd. Byte not used. */
       if( pCode[ ( ULONG ) ( ulFrom + 2 ) ] == HB_P_NOOP )
       {
-         hb_comp_functions.pLast->iNOOPs++;
-
-         if( hb_comp_functions.pLast->pNOOPs )
-         {
-            hb_comp_functions.pLast->pNOOPs = ( ULONG * ) hb_xrealloc( hb_comp_functions.pLast->pNOOPs, sizeof( ULONG ) * hb_comp_functions.pLast->iNOOPs );
-            hb_comp_functions.pLast->pNOOPs[ hb_comp_functions.pLast->iNOOPs - 1 ] = ( ULONG ) ulFrom + 2;
-         }
-         else
-         {
-            hb_comp_functions.pLast->pNOOPs = ( ULONG * ) hb_xgrab( sizeof( ULONG ) );
-            hb_comp_functions.pLast->pNOOPs[ 0 ] = ( ULONG ) ulFrom + 2;
-         }
+         hb_compNOOPadd( hb_comp_functions.pLast, ulFrom + 2 );
 
          /* Check if 2nd. Byte not used. */
          if( pCode[ ( ULONG ) ulFrom + 1 ] == HB_P_NOOP )
          {
-            hb_comp_functions.pLast->iNOOPs++;
-
-            if( hb_comp_functions.pLast->pNOOPs )
-            {
-               hb_comp_functions.pLast->pNOOPs = ( ULONG * ) hb_xrealloc( hb_comp_functions.pLast->pNOOPs, sizeof( ULONG ) * hb_comp_functions.pLast->iNOOPs );
-               hb_comp_functions.pLast->pNOOPs[ hb_comp_functions.pLast->iNOOPs - 1 ] = ( ULONG ) ulFrom + 1;
-            }
-            else
-            {
-               hb_comp_functions.pLast->pNOOPs = ( ULONG * ) hb_xgrab( sizeof( ULONG ) );
-               hb_comp_functions.pLast->pNOOPs[ 0 ] = ( ULONG ) ulFrom + 1;
-            }
+            hb_compNOOPadd( hb_comp_functions.pLast, ulFrom + 1 );
          }
       }
    }
@@ -1596,7 +1578,7 @@ void hb_compGenJumpThere( ULONG ulFrom, ULONG ulTo )
             break;
 
          default:
-            printf( "\rPCode: %i", pCode[ ( ULONG ) ulFrom - 1 ] );
+/*            printf( "\rPCode: %i", pCode[ ( ULONG ) ulFrom - 1 ] ); */
             hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_JUMP_NOT_FOUND, NULL, NULL );
             break;
       }
@@ -1610,18 +1592,7 @@ void hb_compGenJumpThere( ULONG ulFrom, ULONG ulTo )
       /* Check if 3rd. Byte not used. */
       if( pCode[ ( ULONG ) ulFrom + 2 ] == HB_P_NOOP )
       {
-         hb_comp_functions.pLast->iNOOPs++;
-
-         if( hb_comp_functions.pLast->pNOOPs )
-         {
-            hb_comp_functions.pLast->pNOOPs = ( ULONG * ) hb_xrealloc( hb_comp_functions.pLast->pNOOPs, sizeof( ULONG ) * hb_comp_functions.pLast->iNOOPs );
-            hb_comp_functions.pLast->pNOOPs[ hb_comp_functions.pLast->iNOOPs - 1 ] = ( ULONG ) ulFrom + 2;
-         }
-         else
-         {
-            hb_comp_functions.pLast->pNOOPs = ( ULONG * ) hb_xgrab( sizeof( ULONG ) );
-            hb_comp_functions.pLast->pNOOPs[ 0 ] = ( ULONG ) ulFrom + 2;
-         }
+         hb_compNOOPadd( hb_comp_functions.pLast, ulFrom + 2 );
       }
    }
    else if( lOffset >= ( -8388608L ) && lOffset <= 8388607L )
@@ -1823,7 +1794,16 @@ void hb_compGenPopVar( char * szVarName ) /* generates the pcode to pop a value 
       /* local variable
        */
       if( iVar >= -128 && iVar <= 127 )
-         hb_compGenPCode3( HB_P_POPLOCALNEAR, ( BYTE ) iVar, 0 );
+      {
+         /* local variables used in a coddeblock will not be adjusted
+          * if PARAMETERS statement will be used then it is safe to
+          * use 2 bytes for LOCALNEAR
+         */
+         if( hb_comp_functions.pLast->szName )
+            hb_compGenPCode3( HB_P_POPLOCALNEAR, ( BYTE ) iVar, 0 );
+         else
+            hb_compGenPCode2( HB_P_POPLOCALNEAR, ( BYTE ) iVar );
+      }
       else
          hb_compGenPCode3( HB_P_POPLOCAL, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ) );
    }
@@ -1979,7 +1959,16 @@ void hb_compGenPushVar( char * szVarName )
       /* local variable
        */
       if( iVar >= -128 && iVar <= 127 )
-         hb_compGenPCode3( HB_P_PUSHLOCALNEAR, ( BYTE ) iVar, 0 );
+      {
+         /* local variables used in a coddeblock will not be adjusted
+          * if PARAMETERS statement will be used then it is safe to
+          * use 2 bytes for LOCALNEAR
+         */
+         if( hb_comp_functions.pLast->szName )
+            hb_compGenPCode3( HB_P_PUSHLOCALNEAR, ( BYTE ) iVar, 0 );
+         else
+            hb_compGenPCode2( HB_P_PUSHLOCALNEAR, ( BYTE ) iVar );
+      }
       else
          hb_compGenPCode3( HB_P_PUSHLOCAL, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ) );
    }
@@ -2350,6 +2339,30 @@ void hb_compFinalizeFunction( void ) /* fixes all last defined function returns 
          hb_compGenPCode1( HB_P_ENDPROC );
       }
 
+      if( pFunc->bFlags & FUN_USES_LOCAL_PARAMS )
+      {
+         int PCount = pFunc->wParamCount;
+
+         /* do not adjust if local parameters are used -remove NOOPs only */
+         pFunc->wParamCount = 0;
+         /* There was a PARAMETERS statement used.
+         * NOTE: This fixes local variables references in a case when
+         * there is PARAMETERS statement after a LOCAL variable declarations.
+         * All local variables are numbered from 1 - which means use first
+         * item from the eval stack. However if PARAMETERS statement is used
+         * then there are additional items on the eval stack - the
+         * function arguments. Then first local variable is at the position
+         * (1 + <number of arguments>). We cannot fix this numbering
+         * because the PARAMETERS statement can be used even at the end
+         * of function body when all local variables are already created.
+         */
+
+         hb_compFixFuncPCode( pFunc );
+         pFunc->wParamCount = PCount;
+      }
+      else
+         hb_compFixFuncPCode( pFunc );
+      
       if( hb_comp_iJumpOptimize && pFunc->iNOOPs )
          hb_compOptimizeJumps();
 
@@ -2383,22 +2396,6 @@ void hb_compFinalizeFunction( void ) /* fixes all last defined function returns 
                         pFunc->szName, NULL );
       }
 
-      if( pFunc->wParamCount && !(pFunc->bFlags & FUN_USES_LOCAL_PARAMS) )
-      {
-         /* There was a PARAMETERS statement used.
-         * NOTE: This fixes local variables references in a case when
-         * there is PARAMETERS statement after a LOCAL variable declarations.
-         * All local variables are numbered from 1 - which means use first
-         * item from the eval stack. However if PARAMETERS statement is used
-         * then there are additional items on the eval stack - the
-         * function arguments. Then first local variable is at the position
-         * (1 + <number of arguments>). We cannot fix this nnumbering
-         * because the PARAMETERS statement can be used even at the end
-         * of function body when all local variables are already created.
-         */
-
-         hb_compFixFuncPCode( pFunc );
-      }
    }
 }
 
@@ -2450,7 +2447,17 @@ static void hb_compOptimizeFrames( PFUNCTION pFunc )
 
       if( bLocals || pFunc->wParamCount )
       {
-         pFunc->pCode[ 1 ] = ( BYTE )( bLocals );
+         if( pFunc->bFlags & FUN_USES_LOCAL_PARAMS )
+         {
+            pFunc->pCode[ 1 ] = ( BYTE )( bLocals ) - ( BYTE )( pFunc->wParamCount );
+         }
+         else
+         {
+            /* Parameters declared with PARAMETERS statement are not
+             * placed in the local variable list.
+             */
+            pFunc->pCode[ 1 ] = ( BYTE )( bLocals );
+         }
          pFunc->pCode[ 2 ] = ( BYTE )( pFunc->wParamCount );
          bSkipFRAME = FALSE;
       }
@@ -2793,8 +2800,6 @@ void hb_compCodeBlockEnd( void )
    USHORT wLocals = 0;   /* number of referenced local variables */
    USHORT wPos;
    PVAR pVar, pFree;
-   BYTE * pBuffer;
-   USHORT iOffset = 0;
 
    if( hb_comp_iJumpOptimize &&
        hb_comp_functions.pLast &&
@@ -2833,37 +2838,25 @@ void hb_compCodeBlockEnd( void )
    /* NOTE: 8 = HB_P_PUSHBLOCK + USHORT( size ) + USHORT( wParams ) + USHORT( wLocals ) + _ENDBLOCK */
    wSize = ( USHORT ) pCodeblock->lPCodePos + 8 + wLocals * 2;
 
-   pBuffer = hb_xgrab( wSize );
-
-   pBuffer[0] = HB_P_PUSHBLOCK;
-   pBuffer[1] = HB_LOBYTE( wSize );
-   pBuffer[2] = HB_HIBYTE( wSize );
-   pBuffer[3] = HB_LOBYTE( pCodeblock->wParamCount );
-   pBuffer[4] = HB_HIBYTE( pCodeblock->wParamCount );
-   pBuffer[5] = HB_LOBYTE( wLocals );
-   pBuffer[6] = HB_HIBYTE( wLocals );
+   hb_compGenPCode3( HB_P_PUSHBLOCK, HB_LOBYTE( wSize ), HB_HIBYTE( wSize ) );
+   hb_compGenPCode2( HB_LOBYTE( pCodeblock->wParamCount ), HB_HIBYTE( pCodeblock->wParamCount ) );
+   hb_compGenPCode2( HB_LOBYTE( wLocals ), HB_HIBYTE( wLocals ) );
 
    /* generate the table of referenced local variables */
    pVar = pCodeblock->pStatics;
    while( wLocals-- )
    {
       wPos = hb_compVariableGetPos( pFunc->pLocals, pVar->szName );
-
-      pBuffer[ 7 + iOffset++ ] = HB_LOBYTE( wPos );
-      pBuffer[ 7 + iOffset++ ] = HB_HIBYTE( wPos );
+      hb_compGenPCode2( HB_LOBYTE( wPos ), HB_HIBYTE( wPos ) );
 
       pFree = pVar;
       hb_xfree( ( void * ) pFree->szName );
       pVar = pVar->pNext;
       hb_xfree( ( void * ) pFree );
    }
-
-   memcpy( ( BYTE * )( &( pBuffer[ 7 + iOffset ] ) ), pCodeblock->pCode, pCodeblock->lPCodePos );
-   pBuffer[ wSize - 1 ] = HB_P_ENDBLOCK;
-
-   hb_compGenPCodeN( pBuffer, wSize );
-
-   hb_xfree( ( void * ) pBuffer );
+   
+   hb_compGenPCodeN( pCodeblock->pCode, pCodeblock->lPCodePos );
+   hb_compGenPCode1( HB_P_ENDBLOCK ); /* finish the codeblock */
 
    /* this fake-function is no longer needed */
    hb_xfree( ( void * ) pCodeblock->pCode );

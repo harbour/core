@@ -168,7 +168,12 @@ static HB_FIX_FUNC( hb_p_poplocalnear )
       SHORT * pVar = ( SHORT * ) &( pFunc->pCode )[ lPCodePos + 1 ];
 
       *pVar += pFunc->wParamCount;
-      if( !( *pVar >= -128 && *pVar <= 127 ) )
+      if( *pVar >= -128 && *pVar <= 127 )
+      {
+         pFunc->pCode[ lPCodePos + 2 ] = HB_P_NOOP;
+         hb_compNOOPadd( pFunc, lPCodePos + 2 );
+      }   
+      else
       {
          /* After fixing this variable cannot be accessed using near code
           */
@@ -188,7 +193,12 @@ static HB_FIX_FUNC( hb_p_pushlocalnear )
       SHORT * pVar = ( SHORT * ) &( pFunc->pCode )[ lPCodePos + 1 ];
 
       *pVar += pFunc->wParamCount;
-      if( !( *pVar >= -128 && *pVar <= 127 ) )
+      if( *pVar >= -128 && *pVar <= 127 )
+      {
+         pFunc->pCode[ lPCodePos + 2 ] = HB_P_NOOP;
+         hb_compNOOPadd( pFunc, lPCodePos + 2 );
+      }   
+      else
       {
          /* After fixing this variable cannot be accessed using near code
           */

@@ -43,7 +43,6 @@ PRG_SOURCES=\
 	byref.prg \
 	calling.prg \
 	cdow.prg \
-	clasinit.prg \
 	classch.prg \
 	classes.prg \
 	clsdata.prg \
@@ -56,28 +55,22 @@ PRG_SOURCES=\
 	dates.prg \
 	dates2.prg \
 	dates3.prg \
-	dates4.prg \
 	db_brows.prg \
 	dbevalts.prg \
-	debugtst.prg \
 	devtest.prg \
 	dirtest.prg \
 	disptest.prg \
 	docase.prg \
 	dosshell.prg \
-	dynobj.prg \
 	dynsym.prg \
 	exittest.prg \
 	fib.prg \
 	fornext.prg \
 	fortest.prg \
 	fsplit.prg \
-	funcarr.prg \
 	hello.prg \
 	ifelse.prg \
 	ifinline.prg \
-	inherit.prg \
-	inifiles.prg \
 	initexit.prg \
 	inkeytst.prg \
 	inline.prg \
@@ -87,15 +80,12 @@ PRG_SOURCES=\
 	longdev.prg \
 	longstr.prg \
 	longstr2.prg \
-	mathtest.prg \
 	memfile.prg \
 	memory.prg \
 	memvar.prg \
 	menutest.prg \
 	multiarg.prg \
 	nums.prg \
-	objarr.prg \
-	objasign.prg \
 	objects.prg \
 	os.prg \
 	output.prg \
@@ -104,12 +94,10 @@ PRG_SOURCES=\
 	passref.prg \
 	procline.prg \
 	procname.prg \
-	readfile.prg \
 	readhrb.prg \
 	recursiv.prg \
 	returns.prg \
 	round.prg \
-	rtfclass.prg \
 	say.prg \
 	scroll.prg \
 	seconds.prg \
@@ -120,9 +108,7 @@ PRG_SOURCES=\
 	statfun.prg \
 	statics.prg \
 	strdelim.prg \
-	stripem.prg \
 	t1.prg \
-	test.prg \
 	test_all.prg \
 	testbrdb.prg \
 	testbrw.prg \
@@ -131,13 +117,9 @@ PRG_SOURCES=\
 	testdbf.prg \
 	testerro.prg \
 	testfor.prg \
-	testgt.prg \
-	testhbf.prg \
-	testhtml.prg \
 	testinc.prg \
 	testmem.prg \
 	teststr.prg \
-	testtok.prg \
 	testpre.prg \
 	testread.prg \
 	testrdd.prg \
@@ -161,19 +143,37 @@ PRG_HEADERS=\
 BAD_PRG_SOURCES=\
 	alias.prg \
 	clasname.prg \
+	clasinit.prg \
+	dates4.prg \
+	debugtst.prg \
 	dupvars.prg \
+	dynobj.prg \
 	extend1.prg \
+	funcarr.prg \
+	inherit.prg \
+	inifiles.prg \
 	keywords.prg \
 	linecont.prg \
 	lnlenli1.prg \
 	lnlenli2.prg \
+	mathtest.prg \
+	objarr.prg \
+	objasign.prg \
+	readfile.prg \
+	rtfclass.prg \
 	setkeys.prg \
 	spawn.prg \
 	spawn2.prg \
 	statics1.prg \
 	statics2.prg \
+	stripem.prg \
+	test.prg \
 	test10.prg \
+	testgt.prg \
 	testid.prg \
+	testhbf.prg \
+	testhtml.prg \
+	testtok.prg \
 	tstprag.prg \
 	vec1.prg \
 

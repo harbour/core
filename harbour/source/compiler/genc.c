@@ -918,7 +918,7 @@ static HB_GENC_FUNC( hb_p_poplocal )
             fprintf( cargo->yyc, "\t/* codeblockvar%i */", wVar );
       }
       else
-         fprintf( cargo->yyc, "\t/* %s */", hb_compVariableFind( pFunc->pLocals, wVar )->szName );
+         fprintf( cargo->yyc, "\t/* %s */", hb_compLocalVariableFind( pFunc, wVar )->szName );
    }
    fprintf( cargo->yyc, "\n" );
    return 3;
@@ -926,7 +926,7 @@ static HB_GENC_FUNC( hb_p_poplocal )
 
 static HB_GENC_FUNC( hb_p_poplocalnear )
 {
-   fprintf( cargo->yyc, "\tHB_P_POPLOCALNEAR, %i, 0,",
+   fprintf( cargo->yyc, "\tHB_P_POPLOCALNEAR, %i,",
             pFunc->pCode[ lPCodePos + 1 ] );
    if( cargo->bVerbose )
    {
@@ -945,10 +945,10 @@ static HB_GENC_FUNC( hb_p_poplocalnear )
             fprintf( cargo->yyc, "\t/* codeblockvar%i */", wVar );
       }
       else
-         fprintf( cargo->yyc, "\t/* %s */", hb_compVariableFind( pFunc->pLocals, wVar )->szName );
+         fprintf( cargo->yyc, "\t/* %s */", hb_compLocalVariableFind( pFunc, wVar )->szName );
    }
    fprintf( cargo->yyc, "\n" );
-   return 3;
+   return 2;
 }
 
 static HB_GENC_FUNC( hb_p_popmemvar )
@@ -1074,7 +1074,7 @@ static HB_GENC_FUNC( hb_p_pushblock )
          * in which function was defined this local variable
          */
       if( ( pFunc->cScope & ( HB_FS_INIT | HB_FS_EXIT ) ) != ( HB_FS_INIT | HB_FS_EXIT ) )
-         if( cargo->bVerbose ) fprintf( cargo->yyc, "\t/* %s */", hb_compVariableFind( pFunc->pLocals, w )->szName );
+         if( cargo->bVerbose ) fprintf( cargo->yyc, "\t/* %s */", hb_compLocalVariableFind( pFunc, w )->szName );
       fprintf( cargo->yyc, "\n" );
       lPCodePos +=2;
    }
@@ -1152,7 +1152,7 @@ static HB_GENC_FUNC( hb_p_pushlocal )
             fprintf( cargo->yyc, "\t/* codeblockvar%i */", wVar );
       }
       else
-         fprintf( cargo->yyc, "\t/* %s */", hb_compVariableFind( pFunc->pLocals, wVar )->szName );
+         fprintf( cargo->yyc, "\t/* %s */", hb_compLocalVariableFind( pFunc, wVar )->szName );
    }
    fprintf( cargo->yyc, "\n" );
    return 3;
@@ -1160,7 +1160,7 @@ static HB_GENC_FUNC( hb_p_pushlocal )
 
 static HB_GENC_FUNC( hb_p_pushlocalnear )
 {
-   fprintf( cargo->yyc, "\tHB_P_PUSHLOCALNEAR, %i, 0,",
+   fprintf( cargo->yyc, "\tHB_P_PUSHLOCALNEAR, %i,",
             pFunc->pCode[ lPCodePos + 1 ] );
    if( cargo->bVerbose )
    {
@@ -1179,10 +1179,10 @@ static HB_GENC_FUNC( hb_p_pushlocalnear )
             fprintf( cargo->yyc, "\t/* codeblockvar%i */", wVar );
       }
       else
-         fprintf( cargo->yyc, "\t/* %s */", hb_compVariableFind( pFunc->pLocals, wVar )->szName );
+         fprintf( cargo->yyc, "\t/* %s */", hb_compLocalVariableFind( pFunc, wVar )->szName );
    }
    fprintf( cargo->yyc, "\n" );
-   return 3;
+   return 2;
 }
 
 static HB_GENC_FUNC( hb_p_pushlocalref )
@@ -1207,7 +1207,7 @@ static HB_GENC_FUNC( hb_p_pushlocalref )
             fprintf( cargo->yyc, "\t/* codeblockvar%i */", wVar );
       }
       else
-         fprintf( cargo->yyc, "\t/* %s */", hb_compVariableFind( pFunc->pLocals, wVar )->szName );
+         fprintf( cargo->yyc, "\t/* %s */", hb_compLocalVariableFind( pFunc, wVar )->szName );
    }
    fprintf( cargo->yyc, "\n" );
    return 3;

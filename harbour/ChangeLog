@@ -1,3 +1,36 @@
+20000426-13:15 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *include/hbcomp.h
+    *source/compiler/genc.c
+    *source/compiler/harbour.c
+    *source/compiler/hbfix.c
+    *source/compiler/hbpcode.c
+    *source/vm/hvm.c
+	* fixed support for HB_P_(PUSH/POP)LOCALNEAR - it uses two 
+	  bytes again
+	* added function hb_compNOOPadd() to add position of HB_P_NOOP
+	  opcode that will be later removed at the jump optimization
+	  phase
+	* due to CVS conflicts I have cancelled the latest Ron changes
+	  in hb_compCodeblockEnd - anyway I don't see any reason to create
+	  a temporary buffer that is filled with some values and next 
+	  copied into pcode buffer - all these values can be copied directly
+	  
+NOTE: All source code HAVE TO be recompiled!
+    
+    *source/rtl/gtcrs/Makefile
+    *source/rtl/gtcrs/gtcrs.c
+    *source/rtl/gtcrs/kbdcrs.c
+    *source/rtl/gtcrs/mousecrs.c
+	* added new file kbdcrs.c with keyboard support - the separation
+	  from terminal code will allow to use different modules for
+	  keyboard handling (for example 'rawkeys' library)
+    
+    *tests/Makefile
+	* all test modules that were using non-standard harbour functions
+	  are moved to BAD_PRG section
+    
+
 20000426-02:12 DST Paul Tucker <ptucker@sympatico.ca>
    * contrib/libmisc/make_vc.bat
      * correct lib name.

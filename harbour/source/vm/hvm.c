@@ -970,7 +970,7 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_PUSHLOCALNEAR:
             hb_vmPushLocal( ( signed char ) pCode[ w + 1 ] );
-            w += 3;  /* only first two bytes are used */
+            w += 2;  /* only first two bytes are used */
             break;
 
          case HB_P_PUSHLOCALREF:
@@ -1059,7 +1059,7 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_POPLOCALNEAR:
             hb_vmPopLocal( ( signed char ) pCode[ w + 1 ] );
-            w += 3;  /* only first two bytes are used */
+            w += 2;  /* only first two bytes are used */
             break;
 
          case HB_P_POPSTATIC:
@@ -1302,7 +1302,7 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
                /*
                 * reload the address of recovery code
                 */
-               w = ( USHORT ) hb_stack.pItems[ s_lRecoverBase + HB_RECOVER_ADDRESS ].item.asLong.value;
+               w = hb_stack.pItems[ s_lRecoverBase + HB_RECOVER_ADDRESS ].item.asLong.value;
                /*
                 * leave the SEQUENCE envelope on the stack - it will
                 * be popped either in RECOVER or END opcode

@@ -115,7 +115,7 @@ static BYTE s_pcode_len[] = {
    3,        /* HB_P_POPALIASEDVAR,        */
    3,        /* HB_P_POPFIELD,             */
    3,        /* HB_P_POPLOCAL,             */
-   3,        /* HB_P_POPLOCALNEAR,         */
+   2,        /* HB_P_POPLOCALNEAR,         */
    3,        /* HB_P_POPMEMVAR,            */
    3,        /* HB_P_POPSTATIC,            */
    3,        /* HB_P_POPVARIABLE,          */
@@ -128,7 +128,7 @@ static BYTE s_pcode_len[] = {
    2,        /* HB_P_PUSHBYTE,             */
    3,        /* HB_P_PUSHINT,              */
    3,        /* HB_P_PUSHLOCAL,            */
-   3,        /* HB_P_PUSHLOCALNEAR,        */
+   2,        /* HB_P_PUSHLOCALNEAR,        */
    3,        /* HB_P_PUSHLOCALREF,         */
    1+sizeof(long),        /* HB_P_PUSHLONG,             */
    3,        /* HB_P_PUSHMEMVAR,           */
