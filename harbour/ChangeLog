@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-10-31 16:40 UTC-0300 Walter Negro <anegro@overnet.com.ar>
+  * source/rtl/tget.prg
+    ! Fix ::DeleteEnd() method.
+      It didn't erase the last character.
+      Reported by Luiz Rafael Culik.
+
 2002-10-29 20:45 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
   * source/rtl/gtwin/gtwin.c
     * Win9x Tone() support currently only for Borland and MSVC compilers.
