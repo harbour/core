@@ -629,7 +629,7 @@ static void hb_ntxPageSave( LPPAGEINFO pPage )
    item=(NTXITEM *)(buffer+itemlist->item_offset[i]);
    item->page = pKey[i].Tag;
    hb_fsSeek( pPage->TagParent->Owner->DiskFile, pPage->Page, FS_SET );
-   hb_fsWrite( pPage->TagParent->Owner->DiskFile, buffer, NTXBLOCKSIZE );
+   hb_fsWrite( pPage->TagParent->Owner->DiskFile, (BYTE *) buffer, NTXBLOCKSIZE );
    pPage->Changed = FALSE;
 }
 
@@ -643,7 +643,7 @@ static LPPAGEINFO hb_ntxIndexRootPageLoad( LPINDEXINFO pIndex )
    LPPAGEINFO pPage;
 
    hb_fsSeek( pIndex->DiskFile, pIndex->CompoundTag->RootBlock, FS_SET );
-   uiCount = hb_fsRead( pIndex->DiskFile, buffer, NTXBLOCKSIZE );
+   uiCount = hb_fsRead( pIndex->DiskFile, ( BYTE * ) buffer, NTXBLOCKSIZE );
    if( uiCount != NTXBLOCKSIZE )
    {
       return NULL;
@@ -680,7 +680,7 @@ static LPPAGEINFO hb_ntxPageLoad( LPPAGEINFO pParentPage, ULONG ulOffset )
    LPPAGEINFO pPage;
 
    hb_fsSeek( pParentPage->TagParent->Owner->DiskFile, ulOffset, FS_SET );
-   uiCount = hb_fsRead( pParentPage->TagParent->Owner->DiskFile, buffer, NTXBLOCKSIZE );
+   uiCount = hb_fsRead( pParentPage->TagParent->Owner->DiskFile, ( BYTE * ) buffer, NTXBLOCKSIZE );
    if( uiCount != NTXBLOCKSIZE )
    {
       return NULL;
@@ -739,7 +739,7 @@ static ERRCODE hb_ntxHeaderLoad( LPINDEXINFO pIndex , char *ITN)
    hb_fsSeek( pIndex->DiskFile , 0 , 0 );
    if( hb_fsRead( pIndex->DiskFile,(BYTE*)&Header,sizeof(NTXHEADER)) != sizeof(NTXHEADER) )
       return FAILURE;
-   if( SELF_COMPILE( pIndex->Owner, Header.key_expr ) == FAILURE )
+   if( SELF_COMPILE( pIndex->Owner, (BYTE*)Header.key_expr ) == FAILURE )
       return FAILURE;
    pExpr = pIndex->Owner->valResult;
    pIndex->Owner->valResult = NULL;
@@ -988,7 +988,7 @@ static ERRCODE ntxOrderCreate( AREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
                         pOrderInfo->fUnique );
    pIndex->CompoundTag = pTag;
 
-   pIndex->DiskFile = hb_fsCreate( szFileName , FC_NORMAL );
+   pIndex->DiskFile = hb_fsCreate( ( BYTE * ) szFileName , FC_NORMAL );
    if(pIndex->DiskFile == FS_ERROR) {
       hb_xfree( szFileName );
       hb_itemRelease( pKeyExp );
@@ -1093,7 +1093,7 @@ static ERRCODE ntxOrderListAdd( AREAP pArea, LPDBORDERINFO pOrderInfo )
       hb_itemRelease( pExtInfo.itmResult );
    }
    pIndex = hb_ntxIndexNew( pArea );
-   pIndex->DiskFile = hb_fsOpen( szFileName , FO_READWRITE | FO_DENYNONE );
+   pIndex->DiskFile = hb_fsOpen( ( BYTE * ) szFileName , FO_READWRITE | FO_DENYNONE );
    if( hb_ntxHeaderLoad( pIndex, pFileName->szName ) == FAILURE )
    {
       hb_xfree( pIndex );
