@@ -1,3 +1,19 @@
+19990724-21:02 GMT+1 Bruno Cantero <bruno@issnet.net>
+   + include/set.h
+     Added two prototypes
+   + source/vm/hvm.c
+     Added one prototype and initialize the RDD
+   + include/errorapi.h
+     Added one prototype
+   + source/rtl/errorapi.c
+     New function: hb_errorRT_DBCMD
+   + source/rdd/dbcmd.c
+     New file. First functions for the RDD system
+   + source/rdd/rddsys.prg
+     New file. Define the default RDD driver (DBFNTX)
+   * source/rdd/nulsys/nulsys.prg
+     New file. Allow compile without RDD driver
+
 19990724-11:50 CET Patrick Mast <harbour@PatrickMast.com>
   * Makefile.b16 and Makefile.b32
     added -DHARBOUR_USE_GTAPI swicth

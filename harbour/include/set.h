@@ -67,13 +67,15 @@
 
 #include <hbdefs.h>
 
-HARBOUR HB_SET (void);
-HARBOUR HB_SETCENTURY (void);
-char * hb_setColor (char *);
-void hb_setInitialize (void);
-void hb_consoleInitialize (void);
-void hb_setRelease (void);
-void hb_consoleRelease (void);
+HARBOUR HB_SET( void );
+HARBOUR HB_SETCENTURY( void );
+char * hb_setColor( char * );
+void hb_setInitialize(void );
+void hb_consoleInitialize( void );
+void hb_rddInitialize( void );
+void hb_setRelease( void );
+void hb_consoleRelease( void );
+void hb_rddRelease( void );
 
 typedef enum
 {

@@ -96,8 +96,9 @@ PHB_ITEM hb_errPutFileName( PHB_ITEM pError, char * szFileName );
 
 /* Error launchers */
 
-WORD     hb_errorRT_BASE( ULONG ulGenCode, ULONG ulSubCode, char* szDescription, char* szOperation );
-WORD hb_errorRT_TERMINAL( ULONG ulGenCode, ULONG ulSubCode, char* szDescription, char* szOperation );
+WORD hb_errorRT_BASE( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation );
+WORD hb_errorRT_TERMINAL( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation );
+WORD hb_errorRT_DBCMD( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation );
 /* TODO: Enable this:
 void     hb_errorInternal( ULONG ulCode );
 */

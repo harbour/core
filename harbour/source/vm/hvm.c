@@ -53,6 +53,7 @@
 HARBOUR HB_ERRORSYS( void );
 HARBOUR HB_ERRORNEW( void );
 HARBOUR HB_EVAL( void );         /* Evaluates a codeblock from Harbour */
+HARBOUR HB_RDDSYS( void );
 HARBOUR HB_MAIN( void );         /* fixed entry point by now */
 HARBOUR HB_VALTYPE( void );      /* returns a string description of a value */
 
@@ -235,9 +236,10 @@ BYTE bErrorLevel = 0;  /* application exit errorlevel */
    stack.Return.type = IT_NIL;
    StackInit();
    hb_NewDynSym( &symEval );  /* initialize dynamic symbol for evaluating codeblocks */
-   hb_setInitialize();     /* initialize Sets */
-   hb_consoleInitialize(); /* initialize Console */
+   hb_setInitialize();        /* initialize Sets */
+   hb_consoleInitialize();    /* initialize Console */
    hb_MemvarsInit();
+   hb_rddInitialize();        /* initialize RDD */
 #ifdef HARBOUR_OBJ_GENERATION
    ProcessObjSymbols(); /* initialize Harbour generated OBJs symbols */
 #endif
@@ -267,10 +269,11 @@ BYTE bErrorLevel = 0;  /* application exit errorlevel */
    for( i = 1; i < argc; i++ ) /* places application parameters on the stack */
       PushString( argv[ i ], strlen( argv[ i ] ) );
 
-   Do( argc - 1 );         /* invoke it with number of supplied parameters */
+   Do( argc - 1 );          /* invoke it with number of supplied parameters */
 
-   DoExitFunctions();      /* process defined EXIT functions */
+   DoExitFunctions();       /* process defined EXIT functions */
 
+   hb_rddRelease();         /* release RDD */
    ItemRelease( &stack.Return );
    hb_arrayRelease( &aStatics );
    ItemRelease( &errorBlock );
@@ -927,6 +930,7 @@ static void ForceLink( void )  /* To force the link of some functions */
 {
    HB_ERRORSYS();
    HB_ERRORNEW();
+   HB_RDDSYS();
 }
 
 void ForTest( void )        /* Test to check the end point of the FOR */
