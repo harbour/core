@@ -52,12 +52,13 @@ extern int *aCondCompile, nCondCompile;
 extern int nline;
 extern DEFINES *aDefnew ;
 
-#define BUFF_SIZE 8192
+#define BUFF_SIZE 2048
 #define STR_SIZE 8192
 
 #define INITIAL_ACOM_SIZE 200
 extern COMMANDS *aCommnew ;
 extern TRANSLATES *aTranslates ;
+char sLine[STR_SIZE], sOutLine[STR_SIZE];
 
 PATHNAMES *_pIncludePath = NULL;
 void AddSearchPath( char *, PATHNAMES * * ); /* add pathname to a search list */
@@ -164,7 +165,7 @@ int iArg = 1, i;
 int Hp_Parse( FILE* handl_i, FILE* handl_o )
 {
  char sBuffer[BUFF_SIZE];           /* File read buffer */
- char sLine[STR_SIZE], sOutLine[STR_SIZE], *ptr;
+ char  *ptr;
  int lContinue = 0;
  int iBuffer = 10, lenBuffer = 10;
  int lens=0, rdlen;

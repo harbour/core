@@ -91,7 +91,7 @@ int OpenInclude( char *, PATHNAMES *, FILE** );
 #define isname(c)  (isalnum(c) || (c)=='_' || (c) > 0x7e)
 #define SKIPTABSPACES(sptr) while ( *sptr == ' ' || *sptr == '\t' ) (sptr)++
 #define MAX_NAME 255
-#define BUFF_SIZE 8192
+#define BUFF_SIZE 2048
 #define STR_SIZE 8192
 #define FALSE               0
 #define TRUE                1
@@ -148,28 +148,35 @@ char * _szPErrors[] = { "Can\'t open include file \"%s\"",
 
 int ParseDirective( char* sLine )
 {
- char sDirective[MAX_NAME];
- int i;
- FILE* handl_i;
+   char sDirective[MAX_NAME];
+   int i;
+   FILE* handl_i;
 
- i = NextWord( &sLine, sDirective, TRUE );
- SKIPTABSPACES(sLine);
+   i = NextWord( &sLine, sDirective, TRUE );
+   SKIPTABSPACES(sLine);
 
- if ( i == 4 && memcmp ( sDirective, "else", 4 ) == 0 )
- {     /* ---  #else  --- */
-   if ( nCondCompile == 0 )
-      GenError( _szPErrors, 'P', ERR_DIRECTIVE_ELSE, NULL, NULL );
-   else aCondCompile[nCondCompile-1] = 1 - aCondCompile[nCondCompile-1];
- }
+   if ( i == 4 && memcmp ( sDirective, "else", 4 ) == 0 )
+   {     /* ---  #else  --- */
+     if ( nCondCompile == 0 )
+       GenError( _szPErrors, 'P', ERR_DIRECTIVE_ELSE, NULL, NULL );
+     else if ( nCondCompile == 1 || aCondCompile[nCondCompile-2] )
+       aCondCompile[nCondCompile-1] = 1 - aCondCompile[nCondCompile-1];
+   }
 
- else if ( i == 5 && memcmp ( sDirective, "endif", 5 ) == 0 )
- {     /* --- #endif  --- */
-   if ( nCondCompile == 0 )
-     GenError( _szPErrors, 'P', ERR_DIRECTIVE_ENDIF, NULL, NULL );
-   else nCondCompile--;
- }
+   else if ( i == 5 && memcmp ( sDirective, "endif", 5 ) == 0 )
+   {     /* --- #endif  --- */
+     if ( nCondCompile == 0 )
+       GenError( _szPErrors, 'P', ERR_DIRECTIVE_ENDIF, NULL, NULL );
+     else nCondCompile--;
+   }
 
- else if ( nCondCompile==0 || aCondCompile[nCondCompile-1])
+   else if ( i == 5 && memcmp ( sDirective, "ifdef", 5 ) == 0 )
+     ParseIfdef ( sLine, TRUE ); /* --- #ifdef  --- */
+
+   else if ( i == 6 && memcmp ( sDirective, "ifndef", 6 ) == 0 )
+     ParseIfdef ( sLine, FALSE ); /* --- #ifndef  --- */
+
+   else if ( nCondCompile==0 || aCondCompile[nCondCompile-1])
  {
   if ( i == 7 && memcmp ( sDirective, "include", 7 ) == 0 )
   {    /* --- #include --- */
@@ -195,12 +202,6 @@ int ParseDirective( char* sLine )
 
   else if ( i == 5 && memcmp ( sDirective, "undef", 5 ) == 0 )
    ParseUndef ( sLine );    /* --- #undef  --- */
-
-  else if ( i == 5 && memcmp ( sDirective, "ifdef", 5 ) == 0 )
-   ParseIfdef ( sLine, TRUE ); /* --- #ifdef  --- */
-
-  else if ( i == 6 && memcmp ( sDirective, "ifndef", 6 ) == 0 )
-   ParseIfdef ( sLine, FALSE ); /* --- #ifndef  --- */
 
   else if ( (i == 7 && memcmp ( sDirective, "command", 7 ) == 0) ||
             (i == 8 && memcmp ( sDirective, "xcommand", 8 ) == 0) )
@@ -300,22 +301,29 @@ int ParseUndef( char* sLine)
 
 int ParseIfdef( char* sLine, int usl)
 {
- char defname[MAX_NAME];
- DEFINES *stdef;
+   char defname[MAX_NAME];
+   DEFINES *stdef;
 
-  NextWord( &sLine, defname, FALSE );
-  if ( *defname == '\0' )
-    GenError( _szPErrors, 'P', ERR_DEFINE_ABSENT, NULL, NULL );
-  if ( nCondCompile == maxCondCompile )
-  {
-    maxCondCompile += 5;
-    aCondCompile = (int*)_xrealloc( aCondCompile, sizeof( int ) * maxCondCompile );
-  }
-  if ( ( (stdef = DefSearch(defname)) != NULL && usl )
+   if ( nCondCompile==0 || aCondCompile[nCondCompile-1])
+   {
+     NextWord( &sLine, defname, FALSE );
+     if ( *defname == '\0' )
+       GenError( _szPErrors, 'P', ERR_DEFINE_ABSENT, NULL, NULL );
+   }
+   if ( nCondCompile == maxCondCompile )
+   {
+     maxCondCompile += 5;
+     aCondCompile = (int*)_xrealloc( aCondCompile, sizeof( int ) * maxCondCompile );
+   }
+   if ( nCondCompile==0 || aCondCompile[nCondCompile-1])
+   {
+     if ( ( (stdef = DefSearch(defname)) != NULL && usl )
        || ( stdef == NULL && !usl ) ) aCondCompile[nCondCompile] = 1;
-  else aCondCompile[nCondCompile] = 0;
-  nCondCompile++;
-  return 0;
+     else aCondCompile[nCondCompile] = 0;
+   }
+   else aCondCompile[nCondCompile] = 0;
+   nCondCompile++;
+   return 0;
 }
 
 DEFINES* DefSearch(char *defname)
@@ -389,7 +397,7 @@ int ParseCommand( char* sLine, int com_or_xcom, int com_or_tra )
  int ipos, rez;
 
  NextWord( &sLine, cmdname, FALSE );
-// NextName( &sLine, cmdname, NULL );
+ /*  NextName( &sLine, cmdname, NULL ); */
  SKIPTABSPACES(sLine);
  stroupper( cmdname );
 
@@ -582,9 +590,14 @@ int ParseExpression( char* sLine, char* sOutLine )
      else
      {
        if ( isname(*ptri) )
-          NextName( &ptri, sToken, NULL);
+         NextName( &ptri, sToken, NULL);
        else
-          { *sToken = *ptri++; *(sToken+1) = '\0'; }
+       {
+         i = 0;
+         while ( *ptri != ' ' && *ptri != '\t' && *ptri != '\0' && !isname(*ptri) )
+           *(sToken+i++) = *ptri++;
+         *(sToken+i) = '\0';
+       }
        SKIPTABSPACES( ptri );
 
        if ( *ptri != ':' && *ptri != '=' && (isname(*ptri) || *(ptri+1) != '=')

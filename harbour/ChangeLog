@@ -1,3 +1,8 @@
+19990720-09:38 Alexander Kresin
+  * source\hbpp\hbpp.c
+    * Fixed bugs related to nested #ifdef, #ifndef
+    * Fixed bug with '??' command
+
 19990720-17:15 EDT David G. Holm <dholm@jsd-llc.com>
   * funclist.txt
     * Updated the status of several functions
