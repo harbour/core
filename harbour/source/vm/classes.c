@@ -113,6 +113,10 @@
  *    Correction made relative to CLASSDATA SHARED !
  *    Completly new method
  *
+ *    1.21 06/23/2000 JFL&RAC
+ *    Correction made relative to CLASSDATA SHARED !
+ *    Fixed init when redefining on subclass
+ *
  * See doc/license.txt for licensing terms.
  *
  */
@@ -683,7 +687,8 @@ HB_FUNC( __CLSADDMSG )
          pClass->uiMethods++;           /* One more message */
       }
 
-      pNewMeth->uiSprClass = uiClass; /* now used !! */
+      pNewMeth->uiSprClass = uiClass  ; /* now used !! */
+      pNewMeth->bClsDataInitiated = 0 ; /* reset state */
 
       switch( wType )
       {
@@ -766,15 +771,13 @@ HB_FUNC( __CLSADDMSG )
                else
                   pNewMeth->pFunction = hb___msgGetShrData;
 
-
-
-             /*if (TRUE)
-                {
-                 char cTmp[255];
-                 wsprintf(cTmp, "Message %s, uidata %d\n", pMessage->pSymbol->szName, pNewMeth->uiData);
-                 MessageBox(0,cTmp,"ClassData Shared",0);
-                }
-             */
+/*             if (TRUE)
+*               {
+*                char cTmp[255];
+*                wsprintf(cTmp, "Class %s, Message %s, uidata %d\n", pClass->szName, pMessage->pSymbol->szName, pNewMeth->uiData);
+*                MessageBox(0,cTmp,"AddMsg ClassData Shared",0);
+*               }
+*/
 
             }
 
@@ -976,13 +979,6 @@ HB_FUNC( __CLSNEW )
                           pNewCls->pMethods[ uiAt+uiBucket ].pFunction ==  hb___msgGetClsData
                         )
                          pNewCls->pMethods[ uiAt+uiBucket ].uiData += nLenClsDatas;
-
-                      if(
-                          pNewCls->pMethods[ uiAt+uiBucket ].pFunction ==  hb___msgSetShrData
-                          ||
-                          pNewCls->pMethods[ uiAt+uiBucket ].pFunction ==  hb___msgGetShrData
-                        )
-                         pNewCls->pMethods[ uiAt+uiBucket ].uiData       += nLenClsDatas; /* in all case will never be used */
 
                       if(
                           pNewCls->pMethods[ uiAt+uiBucket ].pFunction ==  hb___msgSetData
@@ -1303,7 +1299,6 @@ static PHB_ITEM hb_clsInst( USHORT uiClass, BOOL bInit )
                   pMeth->bClsDataInitiated = 1;
                }
                hb_itemClear( &init );
-
 
              }
          }

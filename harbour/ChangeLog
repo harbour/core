@@ -1,3 +1,8 @@
+
+2000-06-23 21:11 UTC+0200 JFL & RAC <jflb@mafact.com>
+    *source/vm/classes.c
+     ! Fixed CLASSDATA SHARED INIT when redefinig same CLASSDATA in subclass !
+
 2000-06-22 20:35 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
    * source/pp/ppcomp.c
      ! Fixed bug when NO CR between end of last line and EOF. Last line was duplicated when resuming parrent file.
