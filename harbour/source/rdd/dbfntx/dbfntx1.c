@@ -2025,6 +2025,13 @@ static ERRCODE ntxSeek( NTXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
      switch( hb_itemType( pKey ) )
      {
         case HB_IT_STRING:
+           if( pKey->item.asString.length == 0 )
+           {
+             hb_ntxKeyFree( pKey2 );
+             retvalue = SELF_GOTOP( ( AREAP ) pArea );
+             pArea->fFound = TRUE;
+             return retvalue;
+           }
            hb_itemCopy( pKey2->pItem, pKey );
            break;
         case HB_IT_INTEGER:
@@ -2075,6 +2082,7 @@ static ERRCODE ntxSeek( NTXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
          pArea->lpCurIndex = NULL;
          SELF_GOBOTTOM( ( AREAP ) pArea );
          retvalue = SELF_SKIPRAW( ( AREAP ) pArea, 1 );
+         pArea->fBof = FALSE;
          pArea->lpCurIndex = lpCurIndex;
          return retvalue;
        }
@@ -2596,6 +2604,18 @@ static ERRCODE ntxOrderInfo( NTXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo
             if( pIndex )
             {
                hb_itemPutC( pInfo->itmResult, pIndex->IndexName );
+               return SUCCESS;
+            }
+         }
+         hb_itemPutC( pInfo->itmResult, "" );
+         break;
+      case DBOI_NAME:
+         if( pArea->lpNtxIndex )
+         {
+            pIndex = ntxFindIndex( pArea , pInfo->itmOrder );
+            if( pIndex )
+            {
+               hb_itemPutC( pInfo->itmResult, pIndex->CompoundTag->TagName );
                return SUCCESS;
             }
          }
