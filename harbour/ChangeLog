@@ -1,3 +1,7 @@
+19991008-06:31 EDT Paul Tucker <ptucker@sympatico.ca>
+   * source\compiler\genc.c
+     + && !defined(_MSC_VER) on generation of #pragma startup
+
 19991007-23:18 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/rtl/tclass.prg
      * Method SetType() small fix (missing else).

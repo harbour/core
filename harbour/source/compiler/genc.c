@@ -167,7 +167,7 @@ void GenCCode( PHB_FNAME pFileName )       /* generates the C language output */
       pSym = pSym->pNext;
    }
    fprintf( yyc, "\nHB_INIT_SYMBOLS_END( hb_vm_SymbolInit_%s%s )\n", _szPrefix, pFileName->szName );
-   fprintf( yyc, "#if ! defined(__GNUC__)\n   #pragma startup hb_vm_SymbolInit_%s%s\n#endif\n\n\n", _szPrefix, pFileName->szName );
+   fprintf( yyc, "#if ! defined(__GNUC__) && ! defined(_MSC_VER)\n   #pragma startup hb_vm_SymbolInit_%s%s\n#endif\n\n\n", _szPrefix, pFileName->szName );
 
    /* Generate functions data
     */
