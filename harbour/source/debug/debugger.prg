@@ -1735,7 +1735,7 @@ METHOD SaveSettings() CLASS TDebugger
       if ! Empty( ::aBreakPoints )
          for n := 1 to Len( ::aBreakPoints )
             cInfo += "BP " + AllTrim( Str( ::aBreakPoints[ n ][ 1 ] ) ) + " " + ;
-                     AllTrim( ::aBreakPoints[ n ][ 2 ] )
+                     AllTrim( ::aBreakPoints[ n ][ 2 ] ) + HB_OsNewLine()
          next
       endif
 
