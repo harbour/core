@@ -8,6 +8,29 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-05-30 09:37 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+
+  * contrib/htmllib/Makefile.bc
+    ! some minor fixes.
+
+  * source/compiler/harbour.l
+    ! hb_strVal() used instead of atof()
+
+    This fixes the MSVC incompatibility using RTL Val() and compiled
+    decimal values.
+
+    Warning: There are two more modules on Harbour that still use atof().
+    We should move hb_strVal() to source/common and also make the replace
+    on those places.
+
+  * source/debug/dbgtmenu.prg
+    ! Minor fix to allow new Classes inherit from this one.
+
+  * source/rtl/pushbtn.prg
+    ! sync with xHarbour.
+
+
+
 2003-05-28 13:00 UTC-0400 David G. Holm <dholm@jsd-llc.com>
   * contrib/rdd_ads/ads1.c
   * contrib/rdd_ads/adsfunc.c
