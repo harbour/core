@@ -1620,3 +1620,83 @@ HARBOUR HB_HB_FNAMEMERGE( void )
    hb_retc( hb_fsFNameMerge( szFileName, &pFileName ) );
 }
 
+ULONG   hb_fsTell( FHANDLE hFileHandle )
+{
+   ULONG ulPos;
+
+#if defined(HAVE_POSIX_IO) || defined(_MSC_VER) || defined(__MINGW32__)
+
+   errno = 0;
+   ulPos = tell( hFileHandle );
+   s_uiErrorLast = errno;
+
+#else
+
+   ulPos = 0;
+   s_uiErrorLast = FS_ERROR;
+
+#endif
+
+   return ulPos;
+}
+
+void    hb_fsSetDevRaw( FHANDLE hFileHandle )
+{
+
+#if defined(__BORLANDC__) || defined(__IBMCPP__) || defined(__DJGPP__) || defined(__CYGWIN__)
+
+   errno = 0;
+   setmode( hFileHandle, O_BINARY );
+   s_uiErrorLast = errno;
+
+#elif defined(_MSC_VER) || defined(__MINGW32__)
+
+   errno = 0;
+   _setmode( hFileHandle, _O_BINARY );
+   s_uiErrorLast = errno;
+
+#else
+
+   s_uiErrorLast = FS_ERROR;
+
+#endif
+
+}
+
+void    hb_fsSetDevText( FHANDLE hFileHandle )
+{
+
+#if defined(__BORLANDC__) || defined(__IBMCPP__) || defined(__DJGPP__) || defined(__CYGWIN__)
+
+   errno = 0;
+   setmode( hFileHandle, O_TEXT );
+   s_uiErrorLast = errno;
+
+#elif defined(_MSC_VER) || defined(__MINGW32__)
+
+   errno = 0;
+   _setmode( hFileHandle, _O_TEXT );
+   s_uiErrorLast = errno;
+
+#else
+
+   s_uiErrorLast = FS_ERROR;
+
+#endif
+
+}
+
+/* NOTE: Clipper 5.3 only */
+
+HARBOUR FSETDEVMOD( void )
+{
+   if( hb_pcount() == 1 )
+   {
+      if( ISNUM( 1 ) && ISNUM( 2 ) )
+      {
+         hb_fsSetDevMode( hb_parni( 1 ), hb_parni( 2 ) );
+         hb_ret();
+      }
+   }
+}
+
