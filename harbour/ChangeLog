@@ -1,3 +1,13 @@
+2000-07-16-20:30 GMT -3  Luiz Rafael Culik <culik@sl.conex.net>
+
+*contrib/hbzlib/hbzip.h
+     +Added declartration to hb___GetFilesNamesFromZip()
+*contrib/hbzlib/zipfile2.c
+       +Implementation of hb___GetFilesNamesFromZip()
+*contrib/hbzlib/zipfile1.c
+        +HB_GETFILESINZIP() function ( return the content of a files file in an array
+         % All functons optimized to Speed and Size
+
 2000-07-16 19:00 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *include/hbapi.h
