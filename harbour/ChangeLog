@@ -1,3 +1,9 @@
+2001-02-23 19:35 UTC+0300 Alex Shashkov <shashkov@ostu.ru>
+   * harbour/source/rtl/filesys.c
+   * harbour/source/rtl/math.c
+   * harbour/source/vm/item.c
+     ! Fixed support for Watcom C 11.0
+
 2001-02-23 08:25 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * contrib/dot/pp.prg
      + Added support for DO <>.prg

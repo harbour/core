@@ -193,7 +193,7 @@ static USHORT s_uiErrorLast = 0;
    #define HB_FS_FILE_IO
 #endif
 
-#if defined(_MSC_VER) || defined(__MINGW32__) || defined(__IBMCPP__)
+#if defined(_MSC_VER) || defined(__MINGW32__) || defined(__IBMCPP__) || defined(__WATCOMC__)
 /* These compilers use sopen() rather than open(), because their
    versions of open() do not support combined O_ and SH_ flags */
    #define HB_FS_SOPEN
