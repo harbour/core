@@ -62,8 +62,11 @@ typedef enum
    HB_P_INC,               /* increments the latest value on the virtual machine stack */
    HB_P_INSTRING,          /* checks if the second latest value on the stack is a substring of the latest one */
    HB_P_JUMP,              /* jumps to a relative offset */
+   HB_P_JUMPFAR,           /* jumps to a relative offset */
    HB_P_JUMPFALSE,         /* checks a logic expression of the stack and jumps to a relative offset */
+   HB_P_JUMPFARFALSE,      /* checks a logic expression of the stack and jumps to a relative offset */
    HB_P_JUMPTRUE,          /* checks a logic expression of the stack and jumps to a relative offset */
+   HB_P_JUMPFARTRUE,       /* checks a logic expression of the stack and jumps to a relative offset */
    HB_P_LESSEQUAL,         /* checks if the second latest value on the stack is less equal that the latest one, leaves the result only */
    HB_P_LESS,              /* checks if the second latest value on the stack is less that the lastest one */
    HB_P_LINE,              /* currently compiled source code line number */

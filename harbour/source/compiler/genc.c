@@ -191,9 +191,9 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
          fprintf( yyc, "HARBOUR hb_INITSTATICS( void )" ); /* NOTE: hb_ intentionally in lower case */
       else
          fprintf( yyc, "HB_FUNC( %s )", pFunc->szName );
-         
+
       fprintf( yyc, "\n{\n   static BYTE pcode[] =\n   {\n" );
-      
+
       bEndProcRequired = TRUE;
       lPCodePos = 0;
       while( lPCodePos < pFunc->lPCodePos )
@@ -369,6 +369,21 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
                lPCodePos += 3;
                break;
 
+            case HB_P_JUMPFAR:
+            /* if( 1 ) ( lPCodePos + 3 ) < pFunc->lPCodePos ) */
+               {
+                  SHORT sPos;
+                  sPos = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 + pFunc->pCode[ lPCodePos + 3 ] * 65536;
+                  fprintf( yyc, "\tHB_P_JUMPFAR, %i, %i, %i,",
+                            pFunc->pCode[ lPCodePos + 1 ],
+                            pFunc->pCode[ lPCodePos + 2 ],
+                            pFunc->pCode[ lPCodePos + 3 ] );
+                  if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %i (abs: %05li) */", sPos, lPCodePos + ( sPos ? sPos : 4 ) );
+                  fprintf( yyc, "\n" );
+               }
+               lPCodePos += 4;
+               break;
+
             case HB_P_JUMPFALSE:
                w = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
                fprintf( yyc, "\tHB_P_JUMPFALSE, %i, %i,",
@@ -379,6 +394,18 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
                lPCodePos += 3;
                break;
 
+            case HB_P_JUMPFARFALSE:
+               w = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 + pFunc->pCode[ lPCodePos + 3 ] * 65536;
+               fprintf( yyc, "\tHB_P_JUMPFARFALSE, %i, %i, %i,",
+                        pFunc->pCode[ lPCodePos + 1 ],
+                        pFunc->pCode[ lPCodePos + 2 ],
+                        pFunc->pCode[ lPCodePos + 3 ] );
+               if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %i (abs: %05li) */", w, lPCodePos + ( w ? w : 4 ) );
+               fprintf( yyc, "\n" );
+               lPCodePos += 4;
+               break;
+
+
             case HB_P_JUMPTRUE:
                w = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
                fprintf( yyc, "\tHB_P_JUMPTRUE, %i, %i,",
@@ -387,6 +414,17 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
                if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %i (abs: %05li) */", w, lPCodePos + ( w ? w : 3 ) );
                fprintf( yyc, "\n" );
                lPCodePos += 3;
+               break;
+
+            case HB_P_JUMPFARTRUE:
+               w = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 + pFunc->pCode[ lPCodePos + 3 ] * 65536;
+               fprintf( yyc, "\tHB_P_JUMPFARTRUE, %i, %i, %i,",
+                        pFunc->pCode[ lPCodePos + 1 ],
+                        pFunc->pCode[ lPCodePos + 2 ],
+                        pFunc->pCode[ lPCodePos + 3 ] );
+               if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %i (abs: %05li) */", w, lPCodePos + ( w ? w : 4 ) );
+               fprintf( yyc, "\n" );
+               lPCodePos += 4;
                break;
 
             case HB_P_LESS:

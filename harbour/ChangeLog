@@ -1,7 +1,22 @@
+20000413-01:30 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+   * source/include/hbpcode.h
+     + Added HB_P_JUMPFAR, HB_P_JUMPFARFALSE, and HB_P_JUMPFARTRUE
+
+   * source/compiler/hvm.c
+     + Added support for HB_P_JUMPFAR, HB_P_JUMPFARFALSE, and HB_P_JUMPFARTRUE to support longer than 2^15 jumps.
+
+   * source/compiler/harbour.c
+     * Enhanced hb_compGenJump(), hb_compGenJumpFalse(), hb_compGenJumpTrue(), hb_compGenJumpHere() and hb_compGenJumpThere()
+       to utilize HB_P_JUMPFAR, HB_P_JUMPFARFALSE, and HB_P_JUMPFARTRUE to support longer than 2^15 jumps.
+
+   * source/compiler/genc.c
+     + Added support for HB_P_JUMPFAR, HB_P_JUMPFARFALSE, and HB_P_JUMPFARTRUE to support longer than 2^15 jumps.
+
 20000413-04:42 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/common/hbtrace.c
-     ! Fixed a previous optimization attempt, which caused hb_tr_level() to 
+     ! Fixed a previous optimization attempt, which caused hb_tr_level() to
        reinit itself on every call. (10% speedup for HBTEST /ALL)
 
    * makefile.*
@@ -12,7 +27,7 @@
    * source/vm/extend.c
    * include/hbapi.h
      % Experimental HB_EXTEND_API_MACROS macro added, which (if defined) will
-       convert hb_pcount() and hb_ret*() Extend API function calls into 
+       convert hb_pcount() and hb_ret*() Extend API function calls into
        Item API calls and direct item accesses. So that it should be faster
        and also a bit larger (~3K larger Harbour exes for BCC55)
 
@@ -39,7 +54,7 @@
    * source/vm/extend.c
    * contrib/rdd_ads/ads1.c
    * source/rdd/dbf1.c
-     * Day/Month/Year parameters reordered to Year/Month/Day to match 
+     * Day/Month/Year parameters reordered to Year/Month/Day to match
        international conventions.
        (hb_retd(), hb_dateDOW(), hb_dateEncode(), hb_dateDecode(),
         hb_dateStrPut(), hb_dateStrGet())
@@ -97,7 +112,7 @@
    *doc/en/rddord.txt
      +Doc for INDEXEXT() and INDEXKEY()
    *doc/en/rddmisc.txt
-     *Changed doc for lastrec function()   
+     *Changed doc for lastrec function()
 
 20000412-01:17 GMT+1 Victor Szakats <info@szelvesz.hu>
 
@@ -125,7 +140,7 @@
        renamed. One strcpy() removed. Buffer overflow checked. It should be
        much faster now.
      ! hb_gtGetColorStr() fixed so that it will now put both + and * to the
-       first half of the colorspec. This is ugly but that's what CA-Cl*pper 
+       first half of the colorspec. This is ugly but that's what CA-Cl*pper
        does.
 
 20000411-21:08 GMT+1 Victor Szakats <info@szelvesz.hu>

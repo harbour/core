@@ -708,6 +708,14 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
                w += 3;
             break;
 
+         case HB_P_JUMPFAR:
+            uiParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) + ( pCode[ w + 3 ] * 65536 );
+            if( uiParams )
+               w += uiParams;
+            else
+               w += 4;
+            break;
+
          case HB_P_JUMPFALSE:
             if( ! hb_vmPopLogical() )
                w += pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
@@ -715,11 +723,25 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
                w += 3;
             break;
 
+         case HB_P_JUMPFARFALSE:
+            if( ! hb_vmPopLogical() )
+               w += pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) + ( pCode[ w + 3 ] * 65536 );
+            else
+               w += 4;
+            break;
+
          case HB_P_JUMPTRUE:
             if( hb_vmPopLogical() )
                w += pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
             else
                w += 3;
+            break;
+
+         case HB_P_JUMPFARTRUE:
+            if( hb_vmPopLogical() )
+               w += pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) + ( pCode[ w + 3 ] * 65536 );
+            else
+               w += 4;
             break;
 
          /* Push */
@@ -3811,7 +3833,7 @@ static void hb_vmDoInitFunctions( void )
 }
 
 /* NOTE: We should make sure that these get linked.
-         Don't make this function static, because it's not called from 
+         Don't make this function static, because it's not called from
          this file. */
 void hb_vmForceLink( void )
 {

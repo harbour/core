@@ -1244,26 +1244,62 @@ USHORT hb_compFunctionGetPos( char * szFunctionName ) /* return 0 if not found o
 
 ULONG hb_compGenJump( LONG lOffset )
 {
-   /* TODO: We need a longer offset (longer then two bytes)
-    */
-   if( lOffset < ( LONG ) SHRT_MIN || lOffset > ( LONG ) SHRT_MAX )
+   int iBytes;
+
+   /* Just a place holder so it might be a far jump...*/
+   if ( lOffset == 0 )
+   {
+      hb_compGenPCode3( HB_P_JUMPFAR, 0, 0 );
+      hb_compGenPCode1( 0 );
+      iBytes = 3;
+   }
+   else if ( lOffset >= SHRT_MIN && lOffset <= SHRT_MAX )
+   {
+      hb_compGenPCode3( HB_P_JUMP, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ) );
+      iBytes = 2;
+   }
+   else if ( lOffset >= (-8388608L) && lOffset <= 8388607L )
+   {
+      hb_compGenPCode3( HB_P_JUMPFAR, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ) );
+      hb_compGenPCode1( ( BYTE ) ( ( ( USHORT ) ( lOffset ) >> 16 ) & 0xFF ) );
+      iBytes = 3;
+   }
+   else
+   {
       hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_JUMP_TOO_LONG, NULL, NULL );
+   }
 
-   hb_compGenPCode3( HB_P_JUMP, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ) );
-
-   return hb_comp_functions.pLast->lPCodePos - 2;
+   return hb_comp_functions.pLast->lPCodePos - iBytes;
 }
 
 ULONG hb_compGenJumpFalse( LONG lOffset )
 {
-   /* TODO: We need a longer offset (longer then two bytes)
-    */
-   if( lOffset < ( LONG ) SHRT_MIN || lOffset > ( LONG ) SHRT_MAX )
+   int iBytes;
+
+   /* Just a place holder so it might be a far jump...*/
+   if ( lOffset == 0 )
+   {
+      hb_compGenPCode3( HB_P_JUMPFARFALSE, 0, 0 );
+      hb_compGenPCode1( 0 );
+      iBytes = 3;
+   }
+   else if ( lOffset >= SHRT_MIN && lOffset <= SHRT_MAX )
+   {
+      hb_compGenPCode3( HB_P_JUMPFALSE, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ) );
+      iBytes = 2;
+   }
+   else if ( lOffset >= (-8388608L) && lOffset <= 8388607L )
+   {
+      hb_compGenPCode3( HB_P_JUMPFARFALSE, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ) );
+      hb_compGenPCode1( ( BYTE ) ( ( ( USHORT ) ( lOffset ) >> 16 ) & 0xFF ) );
+      iBytes = 3;
+   }
+   else
+   {
       hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_JUMP_TOO_LONG, NULL, NULL );
+   }
 
-   hb_compGenPCode3( HB_P_JUMPFALSE, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ) );
-
-   return hb_comp_functions.pLast->lPCodePos - 2;
+   return hb_comp_functions.pLast->lPCodePos - iBytes;
 }
 
 void hb_compGenJumpThere( ULONG ulFrom, ULONG ulTo )
@@ -1271,13 +1307,21 @@ void hb_compGenJumpThere( ULONG ulFrom, ULONG ulTo )
    BYTE * pCode = hb_comp_functions.pLast->pCode;
    LONG lOffset = ulTo - ulFrom + 1;
 
-   /* TODO: We need a longer offset (longer then two bytes)
-    */
-   if( lOffset < ( LONG ) SHRT_MIN || lOffset > ( LONG ) SHRT_MAX )
+   if ( lOffset >= SHRT_MIN && lOffset <= SHRT_MAX )
+   {
+      pCode[ ( ULONG ) ulFrom ]     = HB_LOBYTE( lOffset );
+      pCode[ ( ULONG ) ulFrom + 1 ] = HB_HIBYTE( lOffset );
+   }
+   else if ( lOffset >= (-8388608L) && lOffset <= 8388607L )
+   {
+      pCode[ ( ULONG ) ulFrom ]     = HB_LOBYTE( lOffset );
+      pCode[ ( ULONG ) ulFrom + 1 ] = HB_HIBYTE( lOffset );
+      pCode[ ( ULONG ) ulFrom + 2 ] = ( BYTE ) ( ( ( USHORT ) ( lOffset ) >> 16 ) & 0xFF );
+   }
+   else
+   {
       hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_JUMP_TOO_LONG, NULL, NULL );
-
-   pCode[ ( ULONG ) ulFrom ]     = HB_LOBYTE( lOffset );
-   pCode[ ( ULONG ) ulFrom + 1 ] = HB_HIBYTE( lOffset );
+   }
 }
 
 void hb_compGenJumpHere( ULONG ulOffset )
@@ -1287,13 +1331,32 @@ void hb_compGenJumpHere( ULONG ulOffset )
 
 ULONG hb_compGenJumpTrue( LONG lOffset )
 {
-   /* TODO: We need a longer offset (longer then two bytes)
-    */
-   if( lOffset < ( LONG ) SHRT_MIN || lOffset > ( LONG ) SHRT_MAX )
-      hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_JUMP_TOO_LONG, NULL, NULL );
-   hb_compGenPCode3( HB_P_JUMPTRUE, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ) );
+   int iBytes;
 
-   return hb_comp_functions.pLast->lPCodePos - 2;
+   /* Just a place holder so it might be a far jump...*/
+   if ( lOffset == 0 )
+   {
+      hb_compGenPCode3( HB_P_JUMPFARTRUE, 0, 0 );
+      hb_compGenPCode1( 0 );
+      iBytes = 3;
+   }
+   if ( lOffset >= SHRT_MIN && lOffset <= SHRT_MAX )
+   {
+      hb_compGenPCode3( HB_P_JUMPTRUE, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ) );
+      iBytes = 2;
+   }
+   else if ( lOffset >= (-8388608L) && lOffset <= 8388607L )
+   {
+      hb_compGenPCode3( HB_P_JUMPFARTRUE, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ) );
+      hb_compGenPCode1( ( BYTE ) ( ( ( USHORT ) ( lOffset ) >> 16 ) & 0xFF ) );
+      iBytes = 3;
+   }
+   else
+   {
+      hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_JUMP_TOO_LONG, NULL, NULL );
+   }
+
+   return hb_comp_functions.pLast->lPCodePos - iBytes;
 }
 
 
