@@ -314,22 +314,25 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
          {
             /* Save the keyboard state and ASCII key code */
             DWORD dwState = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.dwControlKeyState;
+            WORD wChar = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualKeyCode;
+            WORD wKey = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualScanCode;
             ch = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.uChar.AsciiChar;
             if( ch == 224 )
             {
                /* Strip extended key lead-in codes */
                ch = 0;
             }
-            else if( ch < 0 )
+            /* && ( ch != -32  || wChar > 50 ) added for 
+               international keyboard support ( Alexander Kresin ) */
+            else if( ch < 0  && ( ch != -32  || wChar > 50 ) )
             {
                /* Process international key codes */
                ch += 256;
             }
-            else if( ch == 0 || ( dwState & ( ENHANCED_KEY | LEFT_ALT_PRESSED | LEFT_CTRL_PRESSED | RIGHT_ALT_PRESSED | RIGHT_CTRL_PRESSED | SHIFT_PRESSED ) ) )
+            /* && ch == -32 added for international keyboard support ( Alexander Kresin ) */
+            else if( ch == 0 || ch == -32 || ( dwState & ( ENHANCED_KEY | LEFT_ALT_PRESSED | LEFT_CTRL_PRESSED | RIGHT_ALT_PRESSED | RIGHT_CTRL_PRESSED | SHIFT_PRESSED ) ) )
             {
                /* Process non-ASCII key codes */
-               WORD wChar = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualKeyCode;
-               WORD wKey = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualScanCode;
                if( eventmask & INKEY_RAW ) wKey = wChar;
                /* Discard standalone state key presses for normal mode only */
                if( ( eventmask & INKEY_RAW ) == 0 ) switch( wKey )

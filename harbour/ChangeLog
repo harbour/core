@@ -1,3 +1,9 @@
+2000-08-14 11:00 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   * source/rtl/gtwin/gtwin.c
+     * fixed handling of arrow keys for international keyboards
+     * this need to be checked for different keyboards ( now it works
+     * for my :) )
+
 Changelog: 2000-08-13 15:20 UTC+0500 April White <awhite@user.rose.com>
    * doc/en/
      - removed hbapi.txt hbcompat.txt hbset.txt
