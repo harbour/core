@@ -1,3 +1,11 @@
+19991220-18:42 GMT+1 Chen Kedem <niki@actcom.co.il>
+  * source/rtl/menuto.prg
+    + doc for __AtPrompt()
+    + doc for __MenuTo()
+    I'm looking at v1.14 and the following are wrong:
+    ! __AtPrompt() : nCol <--> nRow (switch names, not places)
+    (Uploaded by Victor Szel)
+
 Mon Dec 20 13:49:01 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* source/rdd/dbcmd.c: 
