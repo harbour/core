@@ -1,3 +1,16 @@
+19990707-16:20:20 Bruno Cantero <bruno@issnet.net>
+CVSed by Andi Jahja <andij@aonlippo.co.id>
+
+source/rtl/arrays.c
+   + hb_arrayGetDate
+     - retrieves the date value contained on an array element
+include/extend.h:
+   + hb_arrayGetDate protoype
+source/rtl/extend.c
+   * hb_pards
+     - wArrayIndex use when retrieving date value of an array
+      element implemented
+
 19990707-11:10 Alexander Kresin
   * source\compiler\harbour.l
   * source\compiler\harbour.y
