@@ -1977,7 +1977,7 @@ static HARBOUR hb___msgEvalInline( void )
    hb_vmPush( &block );
    hb_vmPush( hb_stackSelfItem() );                     /* Push self                */
    for( uiParam = 1; uiParam <= uiPCount; uiParam++ )
-      hb_vmPush( hb_param( uiParam, HB_IT_ANY ) );
+      hb_vmPush( hb_stackItemFromBase( uiParam ) );
 
    hb_vmDo( ( USHORT ) (uiPCount + 1 ) );     /* Self is also an argument */
 

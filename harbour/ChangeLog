@@ -1,3 +1,7 @@
+2001-03-14 04:55 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * source/vm/classes.c
+     ! Fixed hb_param() to hb_stackItemFromBase() (posted by José F. Giménez)
+
 2001-03-13 03:45 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * contrib/dot/pp.txt
      * Updated status of newly added support.
