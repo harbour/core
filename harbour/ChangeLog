@@ -1,3 +1,7 @@
+19990731-15:10 EDT Paul Tucker <ptucker@sympatico.ca>
+  * makefile.vc
+    * oodles of changes.
+
 19990731-22:55 Alexander Kresin
   * source\hbpp\hbpp.c
     * Fixed bugs mentioned by Victor Szel
