@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Language Support Module (PT)
  *
- * Copyright 1999 {list of individual authors and e-mail addresses}
+ * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -46,7 +46,7 @@ static HB_LANG s_lang =
    
       "PT",                        /* ID */
       "Portuguese",                /* Name (in English) */
-      "Portuguese",                /* Name (in native language) */
+      "Portugues",                 /* Name (in native language) */
       "PT",                        /* RFC ID */
       "850",                       /* Codepage */
       "$Revision$ $Date$",         /* Version */
