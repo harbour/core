@@ -1,3 +1,10 @@
+2000-01-22 19:10 UTC-0800 Brian Hays <bhays@abacuslaw.com>
+   * harbour/include/hbsetup.h
+      + added #define OS_EOL_LEN  /* # of bytes in End of Line marker */
+   * source/rtl/console.c
+   * source/rtl/memoline.c
+      + implemented OS_EOL_LEN
+
 2000-01-22 18:00 UTC-0800 Brian Hays <bhays@abacuslaw.com>
    * contrib/rdd_ads/adsfunc.c
       + added ADSRegCallBack(cbBlock) and ADSClrCallBack() to register a callback function

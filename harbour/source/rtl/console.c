@@ -66,11 +66,7 @@
 #endif
 
 /* length of buffer for CR/LF characters */
-#if defined(OS_UNIX_COMPATIBLE)
-   #define CRLF_BUFFER_LEN 2
-#else
-   #define CRLF_BUFFER_LEN 3
-#endif
+#define CRLF_BUFFER_LEN   OS_EOL_LEN + 1
 
 static BOOL   s_bInit = FALSE;
 static USHORT s_uiPRow;
@@ -446,9 +442,9 @@ HB_FUNC( DISPOUT ) /* writes a single value to the screen, but is not affected b
       hb_gtSetColorStr( hb_parc( 2 ) );
 
       pszString = hb_itemString( hb_param( 1, HB_IT_ANY ), &ulLen, &bFreeReq );
-      
+
       hb_gtWrite( ( BYTE * ) pszString, ulLen );
-      
+
       if( bFreeReq )
          hb_xfree( pszString );
 
@@ -457,9 +453,9 @@ HB_FUNC( DISPOUT ) /* writes a single value to the screen, but is not affected b
    else if( hb_pcount() >= 1 )
    {
       pszString = hb_itemString( hb_param( 1, HB_IT_ANY ), &ulLen, &bFreeReq );
-      
+
       hb_gtWrite( ( BYTE * ) pszString, ulLen );
-      
+
       if( bFreeReq )
          hb_xfree( pszString );
    }
@@ -481,11 +477,11 @@ HB_FUNC( DISPOUTAT ) /* writes a single value to the screen at speficic position
 
       hb_gtGetColorStr( szOldColor );
       hb_gtSetColorStr( hb_parc( 4 ) );
-      
+
       pszString = hb_itemString( hb_param( 3, HB_IT_ANY ), &ulLen, &bFreeReq );
-      
+
       hb_gtWriteAt( hb_parni( 1 ), hb_parni( 2 ), ( BYTE * ) pszString, ulLen );
-      
+
       if( bFreeReq )
          hb_xfree( pszString );
 
@@ -494,9 +490,9 @@ HB_FUNC( DISPOUTAT ) /* writes a single value to the screen at speficic position
    else if( hb_pcount() >= 3 )
    {
       pszString = hb_itemString( hb_param( 3, HB_IT_ANY ), &ulLen, &bFreeReq );
-      
+
       hb_gtWriteAt( hb_parni( 1 ), hb_parni( 2 ), ( BYTE * ) pszString, ulLen );
-      
+
       if( bFreeReq )
          hb_xfree( pszString );
    }

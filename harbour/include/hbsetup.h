@@ -132,7 +132,7 @@
 
 #ifndef HB_SYMBOL_NAME_LEN
 /* NOTE: For complete CA-Cl*pper compatibility you can set the maximum
-         symbol name to 10. Sometimes this can be useful for compiling legacy 
+         symbol name to 10. Sometimes this can be useful for compiling legacy
          code. [vszakats] */
 /*
    #ifdef HB_C52_STRICT
@@ -163,12 +163,14 @@
       #define OS_PATH_DELIMITER         '\\'
       #define OS_PATH_DELIMITER_LIST    "\\/:"
       #define OS_OPT_DELIMITER_LIST     "/-"
+      #define OS_EOL_LEN                2  /* # of bytes in End of Line marker */
    #else
       #define OS_UNIX_COMPATIBLE
       #define OS_PATH_LIST_SEPARATOR    ':'
       #define OS_PATH_DELIMITER         '/'
       #define OS_PATH_DELIMITER_LIST    "/"
       #define OS_OPT_DELIMITER_LIST     "-"
+      #define OS_EOL_LEN                1
    #endif
 #else
    /* we are assuming here the DOS compatible OS */
@@ -177,6 +179,7 @@
    #define OS_PATH_DELIMITER         '\\'
    #define OS_PATH_DELIMITER_LIST    "\\/:"
    #define OS_OPT_DELIMITER_LIST     "/-"
+   #define OS_EOL_LEN                2
 #endif
 
 #ifndef _POSIX_PATH_MAX

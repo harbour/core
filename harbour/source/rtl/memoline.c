@@ -33,12 +33,6 @@
  *
  */
 
-#if defined(OS_UNIX_COMPATIBLE)
-   #define CRLF_LEN 1
-#else
-   #define CRLF_LEN 2
-#endif
-
 
 #include "hbapi.h"
 
@@ -77,7 +71,7 @@ HB_FUNC( MEMOLINE )
          case HB_CHAR_LF:
             ulCurLength = 0;
             ulLastSpace = 0;
-            ulLineEnd = ( ulPos >= CRLF_LEN ) ? ( ulPos - CRLF_LEN ) : ulLineBegin;
+            ulLineEnd = ( ulPos >= OS_EOL_LEN ) ? ( ulPos - OS_EOL_LEN ) : ulLineBegin;
             ulLines++;
             if( ulLines < ulLineNumber )
             {
