@@ -1,3 +1,8 @@
+20000501-23:25 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * include/Makefile
+     ! Missing hbapi.h added to the file list.
+
 20000501-23:21 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
 
    * ChangeLog

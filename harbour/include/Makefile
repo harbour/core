@@ -7,6 +7,7 @@ ROOT = ../
 C_HEADERS=\
 	clipdefs.h   \
 	extend.h     \
+	hbapi.h      \
 	hbapierr.h   \
 	hbapiext.h   \
 	hbapifs.h    \
