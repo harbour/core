@@ -1,3 +1,19 @@
+2001-05-14 02:09 UTC-0800 Brian Hays <bhays@abacuslaw.com>
+
+   * source/rdd/dbcmd.c
+      * replaced lpdbOrdCondInfo->fScoped with fUseCurrent
+         to clear "USECURRENT" property for subsequent indexes
+
+   * contrib/rdd_ads/make_b32.bat
+      * added CLEAN parameter handling
+
+   * include/hbapirdd.h
+      - removed fScoped member from DBORDERCONDINFO
+
+   * contrib/rdd_ads/adsfunc.c
+      * fixed retrieval of codeblock return value
+         for aborting indexing.
+
 2001-05-14 21:30 UTC+1 JFL (mafact) <jfl@mafact.com>
    * harbour/utils/hbmake/ffile1.prg
      * remed two old method wich where not anymore used

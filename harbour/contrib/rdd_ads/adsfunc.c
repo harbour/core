@@ -925,11 +925,12 @@ UNSIGNED32 WINAPI ShowPercentage( UNSIGNED16 usPercentDone )
 {
    UNSIGNED32 bRet = 0;
    PHB_ITEM pPercentDone = hb_itemPutNI(NULL, usPercentDone);
+   PHB_ITEM pReturn;
 
    if ( itmCobCallBack )
    {
-      hb_vmEvalBlockV( itmCobCallBack, 1, pPercentDone ) ;
-      bRet =  hb_itemGetL( &hb_stack.Return ) ;
+      pReturn = hb_vmEvalBlockV( itmCobCallBack, 1, pPercentDone ) ;
+      bRet =  hb_itemGetL( pReturn ) ;
    }
    else
    {
@@ -937,7 +938,7 @@ UNSIGNED32 WINAPI ShowPercentage( UNSIGNED16 usPercentDone )
       /*bRet = 1;*/
    }
    hb_itemRelease( pPercentDone );
-   return 0;
+   return bRet;
 
 }  /* ShowPercentage */
 

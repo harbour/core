@@ -309,7 +309,6 @@ typedef struct _DBORDERCONDINFO
    LONG     lRecno;
    BOOL     fRest;
    BOOL     fDescending;
-   BOOL     fScoped;
    BOOL     fAll;
    BOOL     fAdditive;
    BOOL     fUseCurrent;

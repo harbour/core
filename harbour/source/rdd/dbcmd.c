@@ -2252,15 +2252,15 @@ HB_FUNC( ORDCONDSET )
       else
          lpdbOrdCondInfo->itmCobEval = NULL;
 
-      lpdbOrdCondInfo->lStep = hb_parnl( 6 );
+      lpdbOrdCondInfo->lStep       = hb_parnl( 6 );
       lpdbOrdCondInfo->lStartRecno = hb_parnl( 7 );
-      lpdbOrdCondInfo->lNextCount = hb_parnl( 8 );
-      lpdbOrdCondInfo->lRecno = hb_parnl( 9 );
-      lpdbOrdCondInfo->fRest = hb_parl( 10 );
+      lpdbOrdCondInfo->lNextCount  = hb_parnl( 8 );
+      lpdbOrdCondInfo->lRecno      = hb_parnl( 9 );
+      lpdbOrdCondInfo->fRest       = hb_parl( 10 );
       lpdbOrdCondInfo->fDescending = hb_parl( 11 );
-      lpdbOrdCondInfo->fAdditive = hb_parl( 12 );
-      lpdbOrdCondInfo->fScoped = hb_parl( 13 );
-      lpdbOrdCondInfo->fCustom = hb_parl( 14 );
+      lpdbOrdCondInfo->fAdditive   = hb_parl( 12 );
+      lpdbOrdCondInfo->fUseCurrent = hb_parl( 13 );
+      lpdbOrdCondInfo->fCustom     = hb_parl( 14 );
       lpdbOrdCondInfo->fNoOptimize = hb_parl( 15 );
 
       if( !lpdbOrdCondInfo->itmCobWhile )

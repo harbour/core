@@ -1,7 +1,7 @@
 @echo off
-rem 
+rem
 rem $Id$
-rem 
+rem
 
 if "%1" == "clean" goto CLEAN
 if "%1" == "CLEAN" goto CLEAN
@@ -22,6 +22,11 @@ if "%1" == "CLEAN" goto CLEAN
    goto EXIT
 
 :CLEAN
+   if exist ..\..\lib\b32\rddads.lib   del ..\..\lib\b32\rddads.lib
+   if exist ..\..\lib\b32\rddads.bak   del ..\..\lib\b32\rddads.bak
+   if exist ..\..\obj\b32\ads1.obj     del ..\..\obj\b32\ads1.obj
+   if exist ..\..\obj\b32\adsfunc.obj  del ..\..\obj\b32\adsfunc.obj
+   if exist ..\..\obj\b32\adsmgmnt.obj del ..\..\obj\b32\adsmgmnt.obj
 
    goto EXIT
 
