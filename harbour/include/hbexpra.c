@@ -380,7 +380,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms )
                 /* Search for {|| &(cMacro) }. */
                 else if( pElem->ExprType == HB_ET_CODEBLOCK )
                 {
-                   HB_EXPR_PTR pBlock = pElem->value.asList.pExprList;
+                   HB_EXPR_PTR pBlock = pElem->value.asCodeblock.pExprList;
 
                    /* Search for macros {|| &cMacro }. */
                    if( pBlock->ExprType == HB_ET_MACRO )

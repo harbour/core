@@ -1049,7 +1049,7 @@ Get        : _Get_ GetVar ','
 		   pSetGetBlock = hb_compExprNewCodeBlock(NULL,0,0);
 		   pSetGetBlock = hb_compExprCBVarAdd( pSetGetBlock, "_1", ' ' );
 
-		   hb_compExprAddListExpr( pSetGetBlock, pIIF );
+		   hb_compExprAddCodeblockExpr( pSetGetBlock, pIIF );
 
                    pGetArgList  = hb_compExprNewArgList( pSetGetBlock );
                 }
@@ -1142,9 +1142,9 @@ GetA       : _Get_ GetVarArray { pGetArgList = hb_compExprNewArgList( $2 ); bTra
 	     GetAExt ')'     { $$ = hb_compExprNewFunCall( hb_compExprNewFunName( "__GETA"), pGetArgList ); pGetArgList = NULL; }
 	   ;
 
-GetVarArray : Variable  ArrayIndex  { pGetVarArray = $2; $$ = hb_compExprAddListExpr( hb_compExprNewCodeBlock(NULL,0,0), $1 ); }
-            | ObjectData ArrayIndex { pGetVarArray = $2; $$ = hb_compExprAddListExpr( hb_compExprNewCodeBlock(NULL,0,0), $1 ); }
-            | AliasVar  ArrayIndex  { pGetVarArray = $2; $$ = hb_compExprAddListExpr( hb_compExprNewCodeBlock(NULL,0,0), $1 ); }
+GetVarArray : Variable  ArrayIndex  { pGetVarArray = $2; $$ = hb_compExprAddCodeblockExpr( hb_compExprNewCodeBlock(NULL,0,0), $1 ); }
+            | ObjectData ArrayIndex { pGetVarArray = $2; $$ = hb_compExprAddCodeblockExpr( hb_compExprNewCodeBlock(NULL,0,0), $1 ); }
+            | AliasVar  ArrayIndex  { pGetVarArray = $2; $$ = hb_compExprAddCodeblockExpr( hb_compExprNewCodeBlock(NULL,0,0), $1 ); }
             | MacroVar  ArrayIndex  {
                                       pGetVarArray = $2; $$ = hb_compExprNewNil();
 

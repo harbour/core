@@ -177,7 +177,9 @@ static HB_EXPR_FUNC( hb_compExprUseNegate );
     static void hb_compExprCodeblockPush( HB_EXPR_PTR, HB_MACRO_DECL );
 #else
     static void hb_compExprCodeblockPush( HB_EXPR_PTR );
+#if !defined(SIMPLEX)
     static void hb_compExprCodeblockEarly( HB_EXPR_PTR );
+#endif
 #endif
 
 HB_EXPR_FUNC_PTR hb_comp_ExprTable[] = {
@@ -347,13 +349,21 @@ static HB_EXPR_FUNC( hb_compExprUseString )
       case HB_EA_PUSH_PCODE:
          {
 	    char *szDupl;
+	    BOOL bUseTextSubst;
+	    BOOL bValidMacro;
+	    
 	    szDupl = hb_strupr( hb_strdup( pSelf->value.asString.string ) );
             HB_EXPR_PCODE2( hb_compGenPushString, pSelf->value.asString.string, pSelf->ulLength + 1 );
-            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROTEXT );
-            if( ! hb_compExprIsValidMacro( szDupl ) )
-	        hb_compErrorMacro( pSelf->value.asString.string );
+	
+	    bValidMacro = hb_compExprIsValidMacro( szDupl, &bUseTextSubst );
+            if( bUseTextSubst )
+	    {
+        	if( bValidMacro )
+            	    HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROTEXT );
+		else
+	    	    hb_compErrorMacro( pSelf->value.asString.string );
+	    }
 	    hb_xfree( szDupl );
-
          }
          break;
       case HB_EA_POP_PCODE:
@@ -532,9 +542,10 @@ static void hb_compExprCodeblockEarly( HB_EXPR_PTR pSelf )
 	*/
 	HB_EXPR_PTR pNew;
 	char *szDupl;
+	BOOL bUseTextSubst;
 	
 	szDupl = hb_strupr( hb_strdup( pSelf->value.asCodeblock.string ) );
-	if( !hb_compExprIsValidMacro( szDupl ) )
+	if( !hb_compExprIsValidMacro( szDupl, &bUseTextSubst ) )
 	{
 	    hb_compErrorCodeblock( pSelf->value.asCodeblock.string );
 	    hb_compErrorMacro( pSelf->value.asCodeblock.string );

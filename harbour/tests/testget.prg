@@ -1,7 +1,7 @@
 Procedure Main()
 
    LOCAL   GetList := {}, cVar := "Hello"
-   MEMVAR  aVar, nIndex, cMacro
+   MEMVAR  aVar, nIndex, cMacro, cEarly, cEarly2, cLate
    PRIVATE aVar := { "World", "Again" }, nIndex := 1, cMacro := "cEarly", cEarly := {"Early"}, cLate := "Late!", cEarly2 := {"Early2"}
 
    CLS

@@ -309,11 +309,7 @@ HB_EXPR_PTR hb_compExprNewLong( LONG );
 HB_EXPR_PTR hb_compExprNewString( char * );
 HB_EXPR_PTR hb_compExprNewLogical( int );
 HB_EXPR_PTR hb_compExprNewSelf( void );
-#if defined(SIMPLEX)
-HB_EXPR_PTR hb_compExprNewCodeBlock( void );
-#else
 HB_EXPR_PTR hb_compExprNewCodeBlock( char *, BOOL, BOOL );
-#endif
 HB_EXPR_PTR hb_compExprNewArray( HB_EXPR_PTR );
 HB_EXPR_PTR hb_compExprNewVar( char * );
 HB_EXPR_PTR hb_compExprNewAliasVar( HB_EXPR_PTR, HB_EXPR_PTR );
@@ -375,7 +371,7 @@ int hb_compExprType( HB_EXPR_PTR );
 void hb_compExprFree( HB_EXPR_PTR, HB_MACRO_DECL );
 void hb_compExprErrorType( HB_EXPR_PTR, HB_MACRO_DECL );
 HB_EXPR_PTR hb_compExprListStrip( HB_EXPR_PTR, HB_MACRO_DECL );
-BOOL hb_compExprIsValidMacro( char * );
+BOOL hb_compExprIsValidMacro( char *, BOOL * );
 void hb_compExprCBVarDel( HB_CBVAR_PTR );
 HB_EXPR_PTR hb_compExprReducePlusStrings( HB_EXPR_PTR, HB_EXPR_PTR, HB_MACRO_DECL );
 

@@ -416,13 +416,14 @@ ULONG hb_compExprReduceList( HB_EXPR_PTR pExpr )
    return ulCnt;
 }
 
-BOOL hb_compExprIsValidMacro( char * szText )
+BOOL hb_compExprIsValidMacro( char * szText, BOOL *pbUseTextSubst )
 {
    char * pTmp = szText;
    BOOL bTextSubst;
    BOOL bMacroText = TRUE;
 
-   while( (( pTmp = strchr( pTmp, '&' ) ) != NULL) && bMacroText )
+   *pbUseTextSubst = FALSE;	/* no valid macro expression */
+   while( ((pTmp = strchr( pTmp, '&' )) != NULL) && bMacroText )
    {
       /* Check if macro operator is used inside a string
        * Macro operator is ignored if it is the last char or
@@ -464,6 +465,7 @@ BOOL hb_compExprIsValidMacro( char * szText )
          *pTmp = cSave;
 #endif
       }
+      *pbUseTextSubst |= bTextSubst;
    }
 	
    return bMacroText;

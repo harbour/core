@@ -216,11 +216,7 @@ HB_EXPR_PTR hb_compExprNewLong( long lValue )
 }
 
 
-#if defined(SIMPLEX)
-HB_EXPR_PTR hb_compExprNewCodeBlock( void )
-#else
 HB_EXPR_PTR hb_compExprNewCodeBlock( char *string, BOOL isMacro, BOOL lateEval )
-#endif
 {
    HB_EXPR_PTR pExpr;
 
@@ -231,15 +227,9 @@ HB_EXPR_PTR hb_compExprNewCodeBlock( char *string, BOOL isMacro, BOOL lateEval )
    pExpr->value.asCodeblock.pExprList = NULL;
    pExpr->value.asCodeblock.pLocals   = NULL;  /* this will hold local variables declarations */
    pExpr->ValType = HB_EV_CODEBLOCK;
-#if defined(SIMPLEX)
-    pExpr->value.asCodeblock.string = NULL;
-    pExpr->value.asCodeblock.isMacro = FALSE;
-    pExpr->value.asCodeblock.lateEval = FALSE;
-#else
     pExpr->value.asCodeblock.string = string;
     pExpr->value.asCodeblock.isMacro = isMacro;
     pExpr->value.asCodeblock.lateEval = lateEval;
-#endif
    return pExpr;
 }
 
@@ -403,8 +393,10 @@ HB_EXPR_PTR hb_compExprNewMacro( HB_EXPR_PTR pMacroExpr, unsigned char cMacroOp,
           * ? &var.ext  // this is invalid
           */
 	  char *szDupl;
+	  BOOL bUseTextSubst;
+	  
 	  szDupl = hb_strupr( hb_strdup( szName ) );
-          if( ! hb_compExprIsValidMacro( szDupl ) )
+          if( ! hb_compExprIsValidMacro( szDupl, &bUseTextSubst ) )
 	    hb_compErrorMacro( szName );
 	  hb_xfree( szDupl );
 

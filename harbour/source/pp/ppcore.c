@@ -2754,6 +2754,7 @@ static int ReplacePattern( char patttype, char * expreal, int lenreal, char * pt
             lenitem = (ifou)? ifou-1:lenreal;
             if( *expreal != '\0' )
               {
+#if defined(SIMPLEX)        
                 /* Ron Pinkas added 2000-01-21 */
                 if( *expreal == '&' )
                 {
@@ -2769,6 +2770,7 @@ static int ReplacePattern( char patttype, char * expreal, int lenreal, char * pt
                   hb_pp_Stuff( expreal + 1, ptro, lenitem, 0, lenres );
                 }
                 else /* END Ron Pinkas 2000-01-21 */
+#endif
                 {
                   i = (ifou)? 3:2;
                   pp_rQuotes( expreal, sQuotes );
@@ -2785,6 +2787,14 @@ static int ReplacePattern( char patttype, char * expreal, int lenreal, char * pt
       }
     else
       {
+#if defined(SIMPLEX)        
+	/* rglab 2003-10-19
+	 * SIMPLEX specific solution guarded with #ifdef
+	 * because this creates incorrect syntax:
+	 * @ 0,0 GET &var.1   =>   _GET_( &var.1, var.1, )
+	 * in FLEX we need a correct Clipper syntax:
+	 * @ 0,0 GET &var.1   =>   _GET_( &var.1, "&var.1", ) 
+	 */
         /* Ron Pinkas added 2000-01-21 */
         if( *expreal == '&' )
         {
@@ -2797,6 +2807,7 @@ static int ReplacePattern( char patttype, char * expreal, int lenreal, char * pt
           hb_pp_Stuff( expreal + 1, ptro, lenreal - 1, 4, lenres );
         }
         else /* END Ron Pinkas 2000-01-21 */
+#endif	
         {
           pp_rQuotes( expreal, sQuotes );
           hb_pp_Stuff( sQuotes, ptro, 2, 4, lenres );
@@ -2817,6 +2828,7 @@ static int ReplacePattern( char patttype, char * expreal, int lenreal, char * pt
             lenitem = (ifou)? ifou-1:lenreal;
             if( *expreal != '\0' )
               {
+#if defined(SIMPLEX)        
                 if( !lenitem || *expreal == '(' || (*expreal=='&' && lenreal>1) ||
                      ( *expreal=='\"' && *(expreal+lenitem-1)=='\"' ) ||
                      ( *expreal == '\'' && *(expreal+lenitem-1)=='\'' ) )
@@ -2832,6 +2844,14 @@ static int ReplacePattern( char patttype, char * expreal, int lenreal, char * pt
                     }
                     hb_pp_Stuff( ( *expreal=='&' ) ? expreal + 1 : expreal, ptro,
                               lenitem, 0, lenres );
+#else
+                if( !lenitem || *expreal == '(' || 
+                     ( *expreal=='\"' && *(expreal+lenitem-1)=='\"' ) ||
+                     ( *expreal == '\'' && *(expreal+lenitem-1)=='\'' ) )
+                  {
+                    if( ifou ) lenitem++;
+                    hb_pp_Stuff( expreal, ptro, lenitem, 0, lenres );
+#endif
                   }
                 else
                   {
@@ -2850,6 +2870,7 @@ static int ReplacePattern( char patttype, char * expreal, int lenreal, char * pt
           }
         while( ifou > 0 );
       }
+#if defined(SIMPLEX)        
     else if( !lenreal || *expreal == '(' || (*expreal=='&' && lenreal>1) ||
              ( *expreal == '\"' && *( expreal + lenreal - 1 ) == '\"' ) ||
              ( *expreal == '\'' && *( expreal + lenreal - 1 ) == '\'' ) )
@@ -2866,6 +2887,14 @@ static int ReplacePattern( char patttype, char * expreal, int lenreal, char * pt
         hb_pp_Stuff( ( *expreal == '&' ) ? expreal + 1 : expreal, ptro,
                 ( *expreal == '&' ) ? lenreal - 1 : lenreal, 4, lenres );
       }
+#else
+    else if( !lenreal || *expreal == '(' ||
+             ( *expreal == '\"' && *( expreal + lenreal - 1 ) == '\"' ) ||
+             ( *expreal == '\'' && *( expreal + lenreal - 1 ) == '\'' ) )
+      {
+        hb_pp_Stuff( expreal, ptro, lenreal, 4, lenres );
+      }
+#endif
     else
       {
         pp_rQuotes( expreal, sQuotes );
