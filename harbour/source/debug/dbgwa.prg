@@ -45,7 +45,8 @@ function __dbgShowWorkAreas( oDebugger )
    n2      := 1
    n3      := 1
 
-   cColor := "N/W, N/BG, R/W, R/BG"
+   cColor := If( __Dbg():lMonoDisplay, "N/W, W/N, W+/W, W+/N",;
+                 "N/W, N/BG, R/W, R/BG" )
 
    do while !Empty( Alias( n1 ) )
       Aadd(aAlias, Alias( n1 ))

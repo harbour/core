@@ -109,7 +109,7 @@ Local owndsets
    oBrwSets:=TbrowseNew(owndsets:nTop+1, owndsets:nLeft+1, owndsets:nBottom-1, owndsets:nRight-1)
    ::ArrayReference:=aarray
 
-   oBrwSets:ColorSpec := "N/W, R/W, N/bg"
+   oBrwSets:ColorSpec := __Dbg():ClrModal()
    oBrwSets:GoTopBlock := { || ::Arrayindex := 1 }
    oBrwSets:GoBottomBlock := { || ::arrayindex := Len( ::ArrayReference) }
    oBrwSets:SkipBlock := { | nSkip, nPos | nPos := ::arrayindex,;
