@@ -4,8 +4,8 @@
   listed following the applicable modules:
   * include/ctoharb.h
   * include/extend.h
-    - Also added #define ITEM PHB_ITEM
   * include/itemapi.h
+    - Also added #define ITEM PHB_ITEM
   * source/rtl/arrays.c
   * source/rtl/classes.c
   * source/rtl/codebloc.c
