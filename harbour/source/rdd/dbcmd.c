@@ -330,11 +330,10 @@ ERRCODE hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS pSuperTa
       szSuperName = ( char * ) hb_xgrab( uiCount + 1 );
       strcpy( szSuperName, ( char * ) szDrvName );
       szSuperName = hb_strUpper( szSuperName, uiCount );
+      pRddNode = hb_FindRddNode( szSuperName );
+      hb_xfree( szSuperName );
       if( !( pRddNode = hb_FindRddNode( szSuperName ) ) )
-      {
-         hb_xfree( szSuperName );
          return FAILURE;
-      }
       memcpy( pTable, &pRddNode->pTable, sizeof( RDDFUNCS ) );
    }
 
