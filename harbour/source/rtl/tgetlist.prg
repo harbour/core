@@ -162,6 +162,12 @@ METHOD Reader() CLASS TGetList
 
 return nil
 
+procedure GetReader( oGet )
+
+   oGet:Reader()
+
+return
+
 METHOD GetApplyKey( nKey ) CLASS TGetList
 
    local cKey, bKeyBlock, oGet := ::oGet
@@ -503,11 +509,21 @@ METHOD SetFormat( bFormat ) CLASS TGetList
 
    local bSavFormat := ::bFormat
 
-   if PCount() > 0
-      ::bFormat = bFormat
-   endif
+   ::bFormat = bFormat
 
 return bSavFormat
+
+procedure __SetFormat( bFormat )
+
+   if s_oGetListActive != nil
+      if ValType( bFormat ) == "B"
+         s_oGetListActive:SetFormat( bFormat )
+      else
+         s_oGetListActive:SetFormat()
+      endif
+   endif
+
+return
 
 METHOD KillRead( lKill ) CLASS TGetList
 
@@ -523,11 +539,15 @@ function ReadKill( lKill )
 
    if PCount() > 0
       return s_oGetListActive:KillRead( lKill )
-   else
-      return s_oGetListActive:KillRead()
    endif
 
-return nil
+return s_oGetListActive:KillRead()
+
+procedure __KillRead()
+
+   s_oGetListActive:KillRead( .T. )
+
+return
 
 METHOD GetActive( oGet ) CLASS TGetList
 
@@ -650,11 +670,9 @@ FUNCTION ReadVar( cNewVarName )
 
    if s_oGetListActive != nil
       return s_oGetListActive:ReadVar( cNewVarName )
-   else
-      return ""
    endif
 
-return nil
+return ""
 
 FUNCTION ReadExit( lExit )
    RETURN Set( _SET_EXIT, lExit )
@@ -676,11 +694,9 @@ function ReadUpdated( lUpdated )
 
    if PCount() > 0
       return s_oGetListActive:ReadUpdated( lUpdated )
-   else
-      return s_oGetListActive:ReadUpdate()
    endif
 
-return nil
+return s_oGetListActive:ReadUpdated()
 
 function Updated()
 
@@ -689,3 +705,13 @@ function Updated()
    endif
 
 return .f.
+
+function GetApplyKey( oGet, nKey )
+
+  if s_oGetListActive != nil
+     s_oGetListActive:oGet := oGet
+     s_oGetListActive:GetApplyKey( nKey )
+  endif
+
+return nil
+

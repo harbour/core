@@ -48,14 +48,15 @@ FUNCTION ordScope()        ; RETURN NIL /* 5.3 */
 FUNCTION ordSetRelation()  ; RETURN NIL /* 5.3 */
 FUNCTION ordSkipUnique()   ; RETURN .F. /* 5.3 */
 
-FUNCTION dbSetRelation()   ; RETURN NIL
-FUNCTION dbClearRelation() ; RETURN NIL
 FUNCTION dbFileGet()       ; RETURN .F. /* 5.3 */
 FUNCTION dbFilePut()       ; RETURN .F. /* 5.3 */
 FUNCTION dbInfo()          ; RETURN NIL /* 5.3 */
 FUNCTION dbOrderInfo()     ; RETURN NIL /* 5.3 */
 FUNCTION dbRecordInfo()    ; RETURN NIL /* 5.3 */
 FUNCTION dbFieldInfo()     ; RETURN NIL /* 5.3 */
+
+FUNCTION dbSetRelation()   ; RETURN NIL
+FUNCTION dbClearRelation() ; RETURN NIL
 
 FUNCTION MemoEdit( str )   ; RETURN str
 FUNCTION MLCToPos()        ; RETURN 0
@@ -80,6 +81,3 @@ FUNCTION __dbTransRec()    ; RETURN NIL
 
 FUNCTION __TypeFile()      ; RETURN NIL
 
-FUNCTION GetApplyKey()     ; RETURN NIL
-FUNCTION GetReader()       ; RETURN NIL
-FUNCTION __SetFormat()     ; RETURN NIL
