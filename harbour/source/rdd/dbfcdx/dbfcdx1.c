@@ -973,9 +973,9 @@ static void hb_xfptReadItemSx( FHANDLE hMemoFile, PHB_ITEM pItem )
 
       case 0x0400 : /* CLIP_IT_CHAR */
          ulLen = *(short *)(&itmBuffer[2]);  /* only 2 bytes for SIX compatibility */
-         pStr = (char *) hb_xgrab( ulLen + 1 );
+         pStr = ( BYTE * ) hb_xgrab( ulLen + 1 );
          hb_fsRead( hMemoFile, pStr, ulLen );
-         hb_itemPutCPtr( pItem, pStr, ulLen );
+         hb_itemPutCPtr( pItem, ( char * ) pStr, ulLen );
          break;
 
             //#define CLIP_IT_BLOCK             0x1000
@@ -1256,7 +1256,7 @@ static SHORT hb_cdxKeyFindDup( LPCDXKEYINFO pKey1, LPCDXKEYINFO pKey2 )
    if ( pKey2 != NULL )
    {
       int iLimit = (pKey1->length > pKey2->length) ? pKey2->length : pKey1->length;
-      while ( usDup < iLimit && ( (BYTE) pKey1->Value[ usDup ] ) == 
+      while ( usDup < iLimit && ( (BYTE) pKey1->Value[ usDup ] ) ==
                                 ( (BYTE) pKey2->Value[ usDup ] ) )
       {
          usDup++;
