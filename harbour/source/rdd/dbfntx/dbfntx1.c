@@ -486,7 +486,8 @@ static ULONG hb_ntxTagKeyCount( LPTAGINFO pTag )
       {
          LPKEYINFO pKey = hb_ntxKeyNew( NULL,pTag->KeyLength );
 
-         strcpy( pKey->key,pTag->topScope->item.asString.value );
+         strncpy( pKey->key,pTag->topScope->item.asString.value,pTag->KeyLength );
+         pTag->CurKeyInfo->Tag = pTag->CurKeyInfo->Xtra = pTag->TagEOF = 0;
          lRecno = ( hb_ntxTagFindCurrentKey( pTag, hb_ntxPageLoad( pTag,0 ),
                       pKey, FALSE, TRUE ) <= 0 )? pTag->CurKeyInfo->Xtra:0;
          hb_ntxKeyFree( pKey );
@@ -496,12 +497,11 @@ static ULONG hb_ntxTagKeyCount( LPTAGINFO pTag )
          hb_ntxTagKeyGoTo( pTag, TOP_RECORD, NULL );
       }
       if( lRecno )
-         do
+         while( !pTag->TagEOF && hb_ntxInBottomScope( pTag, pTag->CurKeyInfo->key ) )
          {
             ulKeyCount ++;
             hb_ntxTagKeyGoTo( pTag, NEXT_RECORD, &lContinue );
          }
-         while( !pTag->TagEOF && hb_ntxInBottomScope( pTag, pTag->CurKeyInfo->key ) );
 
       strcpy( pTag->CurKeyInfo->key, pKeyTmp->key );
       pTag->CurKeyInfo->Tag = pKeyTmp->Tag;
@@ -565,6 +565,7 @@ static ERRCODE hb_ntxGoEof( NTXAREAP pArea )
       pArea->fBof = lpCurTag->TagBOF = FALSE;
    pArea->fEof = lpCurTag->TagEOF = TRUE;
    pArea->lpCurTag = lpCurTag;
+   pArea->lpCurTag->CurKeyInfo->Tag = pArea->lpCurTag->CurKeyInfo->Xtra = 0;
    return retvalue;
 }
 
@@ -612,7 +613,7 @@ static LONG hb_ntxTagKeyFind( LPTAGINFO pTag, LPKEYINFO pKey, BOOL * result )
 {
    int K;
 
-   pTag->CurKeyInfo->Tag = 0;
+   pTag->CurKeyInfo->Tag = pTag->CurKeyInfo->Xtra = 0;
    pTag->TagBOF = pTag->TagEOF = *result = FALSE;
    K = hb_ntxTagFindCurrentKey( pTag, hb_ntxPageLoad( pTag,0 ), pKey, FALSE, TRUE );
    if( K == 0 )
@@ -800,22 +801,22 @@ static void hb_ntxGetCurrentKey( LPTAGINFO pTag, LPKEYINFO pKey )
    switch( hb_itemType( pItem ) )
    {
       case HB_IT_STRING:
-      strcpy( pKey->key, pItem->item.asString.value );
+         strcpy( pKey->key, pItem->item.asString.value );
          break;
       case HB_IT_INTEGER:
       case HB_IT_LONG:
       case HB_IT_DOUBLE:
-      strcpy( pKey->key, numToStr( pItem, szBuffer, pTag->KeyLength, pTag->KeyDec ) );
+         strcpy( pKey->key, numToStr( pItem, szBuffer, pTag->KeyLength, pTag->KeyDec ) );
          break;
-     case HB_IT_DATE:
-     hb_itemGetDS( pItem, szBuffer );
-        strcpy( pKey->key,szBuffer );
-        break;
-     case HB_IT_LOGICAL:
-     szBuffer[0] = ( hb_itemGetL( pItem ) ? 'T':'F' );
-        szBuffer[1] = 0;
-        strcpy( pKey->key, szBuffer );
-        break;
+      case HB_IT_DATE:
+         hb_itemGetDS( pItem, szBuffer );
+         strcpy( pKey->key,szBuffer );
+         break;
+      case HB_IT_LOGICAL:
+         szBuffer[0] = ( hb_itemGetL( pItem ) ? 'T':'F' );
+         szBuffer[1] = 0;
+         strcpy( pKey->key, szBuffer );
+         break;
    }
    if( pTag->nField )
       hb_itemRelease( pItem );
@@ -840,9 +841,9 @@ static BOOL hb_ntxTagGoToNextKey( LPTAGINFO pTag, BOOL lContinue )
            ( pPage->CurKey < pPage->uiKeys ||
            ( pPage->CurKey == pPage->uiKeys &&
              ( KEYITEM( pPage, pPage->CurKey ) )->page ) ) )
-        lCurrrentKey = TRUE;
+         lCurrrentKey = TRUE;
       else
-        hb_ntxPageRelease( pTag,pPage );
+         hb_ntxPageRelease( pTag,pPage );
    }
 
    if( !lCurrrentKey )
@@ -2671,7 +2672,7 @@ static LPTAGINFO hb_ntxTagNew( LPNTXINDEX PIF, char * ITN, char *szKeyExpr,
       strcpy( pTag->ForExpr, szForExp );
    }
    pTag->nField = hb_rddFieldIndex( (AREAP) pTag->Owner->Owner, 
-                           hb_strUpper(szKeyExpr,strlen(szKeyExpr)) );
+                           hb_strUpper(pTag->KeyExpr,strlen(pTag->KeyExpr)) );
    pTag->pKeyItem = pKeyExpr;
    pTag->pForItem = pForExp;
    pTag->AscendKey = fAscendKey;
@@ -2986,6 +2987,11 @@ static ERRCODE ntxGoTop( NTXAREAP pArea )
 
      if( pTag->topScope )
         ntxSeek( pArea, 1, pTag->topScope, 0 );
+        if( pTag->TagEOF )
+        {
+           hb_ntxGoEof( pArea );
+           return SUCCESS;
+        }
      else
         hb_ntxTagKeyGoTo( pTag, TOP_RECORD, NULL );
      SELF_GOTO( ( AREAP ) pArea, pTag->CurKeyInfo->Xtra );
@@ -4202,4 +4208,3 @@ HB_FUNC( DBFNTX_GETFUNCTABLE )
    else
       hb_retni( FAILURE );
 }
-
