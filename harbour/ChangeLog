@@ -1,3 +1,8 @@
+2000-06-10 04:05 UTC-0500 April White <awhite@user.rose.com>
+
+   * utils/hbdoc/makefile
+     + added getchm.prg
+
 2000-06-09 15:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
    * source/compiler/harbour.l
