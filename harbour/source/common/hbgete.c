@@ -62,9 +62,10 @@
 
 char * hb_getenv( const char * name )
 {
-   char * pszBuffer = ( char * ) hb_xgrab( 255 );
 
 #ifdef HB_OS_WIN_32
+
+   char * pszBuffer = ( char * ) hb_xgrab( 255 );
 
    {
       DWORD nSize = GetEnvironmentVariable( name, pszBuffer, 0 );
@@ -73,20 +74,24 @@ char * hb_getenv( const char * name )
          pszBuffer[ 0 ] = '\0';
 
       else
-         GetEnvironmentVariable( name, pszBuffer, nSize );
+         GetEnvironmentVariable( name, pszBuffer, 254 );
    }
 
 
 #elif defined(HB_OS_OS2)
+
+   char * pszBuffer = NULL;
 
    {
    	PSZ EnvValue = "";
    	ULONG ulrc = DosScanEnv(name, &EnvValue);
    	
    	if (ulrc == NO_ERROR) {
-   	   strcpy( pszBuffer, (char *) EnvValue );
+   	   pszBuffer = ( char * ) hb_xgrab( strlen(EnvValue) + 1 );
+   	   strcpy( pszBuffer, (char *) EnvValue);
    	
    	} else {
+   	   pszBuffer = ( char * ) hb_xgrab( 1 );
    	   pszBuffer[ 0 ] = '\0';
    	
    	}
@@ -94,13 +99,20 @@ char * hb_getenv( const char * name )
 
 #else
 
+   char * pszBuffer = NULL;
+
    {
       char * pszTemp = getenv( name );
 
-      if( pszTemp == NULL )
+      if( pszTemp == NULL ) {
+         pszBuffer = ( char * ) hb_xgrab( 1 );
          pszBuffer[ 0 ] = '\0';
-      else
-         strcpy( pszBuffer, pszTemp );
+
+      } else {
+         pszBuffer = ( char * ) hb_xgrab( strlen(pszTemp) + 1 );
+         strcpy( pszBuffer, pszTemp);
+
+      }
    }
 
 #endif

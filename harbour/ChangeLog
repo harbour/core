@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+
+2001-12-11 15:09 UTC+0100 Maurilio Longo <maurilio.longo@libero.it>
+   * source/common/hbgete.c
+     ! fixed problems with memory allocation for OS/2 end general case, please look at Win32 code
+       section
+
 2001-12-11 14:30 UTC+0100 Maurilio Longo <maurilio.longo@libero.it>
    * source/common/Makefile
      + added hbgete.c entry
