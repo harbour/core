@@ -2866,10 +2866,12 @@ void hb_vmSend( USHORT uiParams )
          pFunc = pSym->pFunPtr;                 /* __EVAL method = function */
       else
       {
-         pFunc = hb_objGetMethod( pSelf, pSym );
          if( HB_IS_OBJECT( pSelf ) )               /* Object passed            */
          {
             PHB_BASEARRAY pSelfBase;
+
+            pFunc = hb_objGetMethod( pSelf, pSym );
+
             pSelfBase = pSelf->item.asArray.value;
             if( pSelfBase->uiPrevCls ) /* Is is a Super cast ? */
             {
@@ -2877,14 +2879,70 @@ void hb_vmSend( USHORT uiParams )
               pSelfBase->uiPrevCls = 0;
             }
          }
+         else
+         {
+            char sClass[10], sDesc[40];
+
+            pFunc = NULL;
+
+            if( HB_IS_POINTER( pSelf ) )
+              sprintf( (char*) sClass, "POINTER" );
+            else if( HB_IS_DATE( pSelf ) )
+              sprintf( (char*) sClass, "DATE" );
+            else if( HB_IS_LOGICAL( pSelf ) )
+              sprintf( (char*) sClass, "LOGICAL" );
+            else if( HB_IS_SYMBOL( pSelf ) )
+              sprintf( (char*) sClass, "SYMBOL" );
+            else if( HB_IS_STRING( pSelf ) )
+              sprintf( (char*) sClass, "CHARACTER" );
+            else if( HB_IS_MEMO( pSelf ) )
+              sprintf( (char*) sClass, "MEMO" );
+            else if( HB_IS_BLOCK( pSelf ) )
+              sprintf( (char*) sClass, "BLOCK" );
+            else if( HB_IS_BYREF( pSelf ) )
+              sprintf( (char*) sClass, "BYREF" );
+            else if( HB_IS_MEMVAR( pSelf ) )
+              sprintf( (char*) sClass, "MEMVAR" );
+            else if( HB_IS_ARRAY( pSelf ) )
+              sprintf( (char*) sClass, "ARRAY" );
+            else if( HB_IS_NUMERIC( pSelf ) )
+              sprintf( (char*) sClass, "NUMERIC" );
+            else
+              sprintf( (char*) sClass, "UNKNOWN" );
+
+            if( strncmp( pSym->szName, "CLASSNAME", strlen( pSym->szName ) ) == 0 )
+            {
+               hb_itemPutC( &hb_stack.Return, (char *) sClass );
+            }
+            else if( pSym->szName[ 0 ] == '_' )
+            {
+              sprintf( (char *) sDesc, "Class: %s has no property", sClass );
+              hb_errRT_BASE_SubstR( EG_NOVARMETHOD, 1005, sDesc, pSym->szName + 1 );
+            }
+            else
+            {
+              sprintf( (char *) sDesc, "Class: %s has no exported method", sClass );
+              hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, sDesc, pSym->szName );
+            }
+         }
       }
 
       if( pFunc )
+      {
          pFunc();
+      }
+      else if( strncmp( pSym->szName, "CLASSNAME", strlen( pSym->szName ) ) == 0 )
+      {
+         /* Class Name of native type was set as return value abobe! */
+      }
       else if( pSym->szName[ 0 ] == '_' )
+      {
          hb_errRT_BASE_SubstR( EG_NOVARMETHOD, 1005, NULL, pSym->szName + 1 );
+      }
       else
+      {
          hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, NULL, pSym->szName );
+      }
    }
    else /* it is a function */
    {
@@ -2897,7 +2955,18 @@ void hb_vmSend( USHORT uiParams )
          /* Attempt to call an undefined function
           *  - generate unrecoverable runtime error
           */
-         hb_errRT_BASE( EG_NOFUNC, 1001, NULL, pSym->szName );
+         if( strncmp( pSym->szName, "CLASSNAME", strlen( pSym->szName ) ) == 0 )
+         {
+            hb_itemPutC( &hb_stack.Return, "NIL" );
+         }
+         else if( pSym->szName[ 0 ] == '_' )
+         {
+            hb_errRT_BASE_SubstR( EG_NOVARMETHOD, 1005, "Class: NIL has no exported property", pSym->szName + 1 );
+         }
+         else
+         {
+            hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, "Class: NIL has no exported method", pSym->szName );
+         }
       }
    }
 

@@ -13,13 +13,16 @@ Function Main()
 
    // First, try all the types. This checks that the VM can cope.
 
-   aeval( { NIL, "", 0, ctod( "" ), .F., {|| NIL }, ErrorNew() },;
+   aeval( { NIL, {}, "", 0, ctod( "" ), .F., {|| NIL }, ErrorNew() },;
             {|x| qout( x:className ) } )
 
    // Now try against values "in the code". This checks that the
    // compiler can cope.
 
+   ?
+
    qout( NIL:className )
+   qout( {}:className )
    qout( "":className )
    qout( 0:className )
    qout( ctod( "" ):className )
@@ -30,7 +33,10 @@ Function Main()
    // For fun, do it again while ensuring the parser doesn't care about
    // whitespace.
 
+   ?
+
    qout( NIL         :  className )
+   qout( {}          :  className )
    qout( ""          :  className )
    qout( 0           :  className )
    qout( ctod( "" )  :  className )
@@ -41,8 +47,11 @@ Function Main()
    // Now for some sillier ones. If the above work the following should
    // work too.
 
+   ?
    qout( ( NIL:className ):className )
-   qout( qout( ( NIL:className ):className ):className )
+
+   ?
+   qout( ( ( NIL:className ):className ):className )
 
 Return( NIL )
 

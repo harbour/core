@@ -1,3 +1,14 @@
+2001-01-25 12:00 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * source/vm/hvm.c
+     * Modified error messages in hb_vmSend() to report class name of native types (including NIL) along with missing method name.
+     + Added default implementation of ClassName() method of native types.
+
+     /* J.F. Can you please check why hb_objGetClsName() was not working correctly when called from hb_vmSend() ?
+        It was returning empty string ("") on my BCC55 latest build. */
+
+   * tests/clasname.prg
+     + Added Arrays to types checked.
+
 2001-01-24 20:50 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/pp/ppcore.c
      ! Fixed compilation and parsing of #command of single and bi-char operators
