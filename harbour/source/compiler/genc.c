@@ -876,6 +876,15 @@ static HB_GENC_FUNC( hb_p_popaliasedfield )
    return 3;
 }
 
+static HB_GENC_FUNC( hb_p_popaliasedfieldnear )
+{
+   fprintf( cargo->yyc, "\tHB_P_POPALIASEDFIELDNEAR, %i,",
+            pFunc->pCode[ lPCodePos + 1 ] );
+   if( cargo->bVerbose ) fprintf( cargo->yyc, "\t/* %s */", hb_compSymbolGetPos( pFunc->pCode[ lPCodePos + 1 ] )->szName );
+   fprintf( cargo->yyc, "\n" );
+   return 2;
+}
+
 static HB_GENC_FUNC( hb_p_popaliasedvar )
 {
    fprintf( cargo->yyc, "\tHB_P_POPALIASEDVAR, %i, %i,",
@@ -1017,6 +1026,15 @@ static HB_GENC_FUNC( hb_p_pushaliasedfield )
    if( cargo->bVerbose ) fprintf( cargo->yyc, "\t/* %s */", hb_compSymbolGetPos( pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 )->szName );
    fprintf( cargo->yyc, "\n" );
    return 3;
+}
+
+static HB_GENC_FUNC( hb_p_pushaliasedfieldnear )
+{
+   fprintf( cargo->yyc, "\tHB_P_PUSHALIASEDFIELDNEAR, %i,",
+            pFunc->pCode[ lPCodePos + 1 ] );
+   if( cargo->bVerbose ) fprintf( cargo->yyc, "\t/* %s */", hb_compSymbolGetPos( pFunc->pCode[ lPCodePos + 1 ] )->szName );
+   fprintf( cargo->yyc, "\n" );
+   return 2;
 }
 
 static HB_GENC_FUNC( hb_p_pushaliasedvar )
@@ -1613,6 +1631,7 @@ static HB_GENC_FUNC_PTR s_verbose_table[] = {
    hb_p_pop,
    hb_p_popalias,
    hb_p_popaliasedfield,
+   hb_p_popaliasedfieldnear,
    hb_p_popaliasedvar,
    hb_p_popfield,
    hb_p_poplocal,
@@ -1623,6 +1642,7 @@ static HB_GENC_FUNC_PTR s_verbose_table[] = {
    hb_p_power,
    hb_p_pushalias,
    hb_p_pushaliasedfield,
+   hb_p_pushaliasedfieldnear,
    hb_p_pushaliasedvar,
    hb_p_pushblock,
    hb_p_pushfield,

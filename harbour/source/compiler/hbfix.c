@@ -288,6 +288,7 @@ static HB_FIX_FUNC_PTR s_fixlocals_table[] =
    NULL,                       /* HB_P_POP,                  */
    NULL,                       /* HB_P_POPALIAS,             */
    NULL,                       /* HB_P_POPALIASEDFIELD,      */
+   NULL,                       /* HB_P_POPALIASEDFIELDNEAR,  */
    NULL,                       /* HB_P_POPALIASEDVAR,        */
    NULL,                       /* HB_P_POPFIELD,             */
    hb_p_poplocal,              /* HB_P_POPLOCAL,             */
@@ -298,6 +299,7 @@ static HB_FIX_FUNC_PTR s_fixlocals_table[] =
    NULL,                       /* HB_P_POWER,                */
    NULL,                       /* HB_P_PUSHALIAS,            */
    NULL,                       /* HB_P_PUSHALIASEDFIELD,     */
+   NULL,                       /* HB_P_PUSHALIASEDFIELDNEAR, */
    NULL,                       /* HB_P_PUSHALIASEDVAR,       */
    hb_p_pushblock,             /* HB_P_PUSHBLOCK,            */
    NULL,                       /* HB_P_PUSHFIELD,            */

@@ -123,6 +123,7 @@ static BYTE s_pcode_len[] = {
    1,        /* HB_P_POP,                  */
    1,        /* HB_P_POPALIAS,             */
    3,        /* HB_P_POPALIASEDFIELD,      */
+   2,        /* HB_P_POPALIASEDFIELDNEAR,  */
    3,        /* HB_P_POPALIASEDVAR,        */
    3,        /* HB_P_POPFIELD,             */
    3,        /* HB_P_POPLOCAL,             */
@@ -133,6 +134,7 @@ static BYTE s_pcode_len[] = {
    1,        /* HB_P_POWER,                */
    1,        /* HB_P_PUSHALIAS,            */
    3,        /* HB_P_PUSHALIASEDFIELD,     */
+   2,        /* HB_P_PUSHALIASEDFIELDNEAR, */
    3,        /* HB_P_PUSHALIASEDVAR,       */
    0,        /* HB_P_PUSHBLOCK,            */
    3,        /* HB_P_PUSHFIELD,            */

@@ -1,3 +1,13 @@
+20000501-16:08 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * include/hbpcode.h
+   * source/compiler/hbfix.c
+   * source/compiler/hbpcode.c
+   * source/compiler/genc.c
+   * source/compiler/harbour.c
+   * source/vm/hvm.c
+     + Added new near pcodes for POP/PUSHALIASEDFIELD
+
 20000501-15:45 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
    *source/rtl/filesys.c
@@ -51,6 +61,7 @@
 20000501 08:10 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
 *makefile.bc
     +added teditor.prg entry to makefile
+
 20000501 08:00 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
 *contrib/libgt/doc/gendoc.bat
  contrib/libmisc/doc/gendoc.bat

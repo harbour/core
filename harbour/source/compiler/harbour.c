@@ -1786,7 +1786,13 @@ void hb_compGenVarPCode( BYTE bPCode, char * szVarName )
    if( ! pSym )
       pSym = hb_compSymbolAdd( szVarName, &wVar );
    pSym->cScope |= VS_MEMVAR;
-   hb_compGenPCode3( bPCode, HB_LOBYTE( wVar ), HB_HIBYTE( wVar ), ( BOOL ) 1 );
+
+   if( bPCode == HB_P_PUSHALIASEDFIELD && wVar <= 255 )
+      hb_compGenPCode2( HB_P_PUSHALIASEDFIELDNEAR, ( BYTE ) wVar, ( BOOL ) 1 );
+   else if( bPCode == HB_P_POPALIASEDFIELD && wVar <= 255 )
+      hb_compGenPCode2( HB_P_POPALIASEDFIELDNEAR, ( BYTE ) wVar, ( BOOL ) 1 );
+   else
+      hb_compGenPCode3( bPCode, HB_LOBYTE( wVar ), HB_HIBYTE( wVar ), ( BOOL ) 1 );
 }
 
 void hb_compGenMessage( char * szMsgName )       /* sends a message to an object */

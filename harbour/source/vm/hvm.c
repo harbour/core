@@ -949,6 +949,11 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             w += 3;
             break;
 
+         case HB_P_PUSHALIASEDFIELDNEAR:
+            hb_vmPushAliasedField( pSymbols + pCode[ w + 1 ] );
+            w += 2;
+            break;
+
          case HB_P_PUSHALIASEDVAR:
             hb_vmPushAliasedVar( pSymbols + ( USHORT ) ( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) ) );
             w += 3;
@@ -1034,6 +1039,11 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          case HB_P_POPALIASEDFIELD:
             hb_vmPopAliasedField( pSymbols + ( USHORT ) ( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) ) );
             w += 3;
+            break;
+
+         case HB_P_POPALIASEDFIELDNEAR:
+            hb_vmPopAliasedField( pSymbols + pCode[ w + 1 ] );
+            w += 2;
             break;
 
          case HB_P_POPALIASEDVAR:
