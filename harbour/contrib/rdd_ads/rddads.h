@@ -47,29 +47,62 @@
 typedef struct _ADSAREA_
 {
    struct _RDDFUNCS * lprfsHost; /* Virtual method table for this workarea */
-   USHORT   uiArea;              /* The number assigned to this workarea */
-   void *   atomAlias;           /* Pointer to the alias symbol for this workarea */
-   USHORT   uiFieldExtent;       /* Total number of fields allocated */
-   USHORT   uiFieldCount;        /* Total number of fields used */
-   LPFIELD  lpFields;            /* Pointer to an array of fields */
-   void *   lpFieldExtents;      /* Void ptr for additional field properties */
+   USHORT uiArea;                /* The number assigned to this workarea */
+   void * atomAlias;             /* Pointer to the alias symbol for this workarea */
+   USHORT uiFieldExtent;         /* Total number of fields allocated */
+   USHORT uiFieldCount;          /* Total number of fields used */
+   LPFIELD lpFields;             /* Pointer to an array of fields */
+   void * lpFieldExtents;        /* Void ptr for additional field properties */
    PHB_ITEM valResult;           /* All purpose result holder */
    BOOL fTop;                    /* TRUE if "top" */
    BOOL fBottom;                 /* TRUE if "bottom" */
    BOOL fBof;                    /* TRUE if "bof" */
    BOOL fEof;                    /* TRUE if "eof" */
    BOOL fFound;                  /* TRUE if "found" */
-   DBSCOPEINFO  dbsi;            /* Info regarding last LOCATE */
+   DBSCOPEINFO dbsi;             /* Info regarding last LOCATE */
    DBFILTERINFO dbfi;            /* Filter in effect */
    LPDBORDERCONDINFO lpdbOrdCondInfo;
-   LPDBRELINFO  lpdbRelations;   /* Parent/Child relationships used */
-   USHORT       uiParents;       /* Number of parents for this area */
-   USHORT   heap;
-   USHORT   heapSize;
-   USHORT   rddID;
-   LPFILEINFO lpDataInfo;        /* Data files used by this workarea */
-   LPINDEXINFO lpIndexInfo;      /* Indexes used by this workarea */
-   LPDBEXTENDINFO lpExtendInfo;  /* Additional properties */
+   LPDBRELINFO lpdbRelations;    /* Parent/Child relationships used */
+   USHORT uiParents;             /* Number of parents for this area */
+   USHORT heap;
+   USHORT heapSize;
+   USHORT rddID;
+
+   /*
+   *  DBFS's additions to the workarea structure
+   *
+   *  Warning: The above section MUST match WORKAREA exactly!  Any
+   *  additions to the structure MUST be added below, as in this
+   *  example.
+   */
+
+   FHANDLE hDataFile;            /* Data file handle */
+   FHANDLE hMemoFile;            /* Memo file handle */
+   USHORT uiHeaderLen;           /* Size of header */
+   USHORT uiRecordLen;           /* Size of record */
+   ULONG ulRecCount;             /* Total records */
+   char * szDataFileName;        /* Name of data file */
+   char * szMemoFileName;        /* Name of memo file */
+   BOOL fHasMemo;                /* WorkArea with Memo fields */
+   BOOL fHasTags;                /* WorkArea with MDX or CDX index */
+   BOOL fShared;                 /* Shared file */
+   BOOL fReadOnly;               /* Read only file */
+   USHORT * pFieldOffset;        /* Pointer to field offset array */
+   BYTE * pRecord;               /* Buffer of record data */
+   BOOL fValidBuffer;            /* State of buffer */
+   BOOL fPositioned;             /* Positioned record */
+   ULONG ulRecNo;                /* Current record */
+   BOOL fRecordChanged;          /* Record changed */
+   BOOL fAppend;                 /* TRUE if new record is added */
+   BOOL fDeleted;                /* TRUE if record is deleted */
+   BOOL fUpdateHeader;           /* Update header of file */
+   BOOL fFLocked;                /* TRUE if file is locked */
+   LPDBRELINFO lpdbPendingRel;   /* Pointer to parent rel struct */
+   BYTE bYear;                   /* Last update */
+   BYTE bMonth;
+   BYTE bDay;
+   ULONG * pLocksPos;            /* List of records locked */
+   ULONG ulNumLocksPos;          /* Number of records locked */
 
    /*
    *  ADS's additions to the workarea structure

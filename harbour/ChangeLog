@@ -1,7 +1,13 @@
-2000-09-02 07:56 GMT+1 Bruno Cantero <bruno@issnet.net>
-   + Added ( BYTE * ) casting to hb_gt_AdjustPos() parameter calls.
-   + Added ( char * ) casting to out_stdout() parameter calls.
+2000-09-02 09:37 GMT+1 Bruno Cantero <bruno@issnet.net>
+   * contrib/rdd_ads/rddads.h
+   * contrib/rdd_ads/ads1.c
+   * contrib/rdd_ads/adsfunc.c
+      * Now RDD ADS compile (not tested).
 
+2000-09-02 07:56 GMT+1 Bruno Cantero <bruno@issnet.net>
+   * source/rtl/gtcgi/gtcgi.c
+      + Added ( BYTE * ) casting to hb_gt_AdjustPos() parameter calls.
+      + Added ( char * ) casting to out_stdout() parameter calls.
 
 2000-09-02 00:08 GMT+1 Bruno Cantero <bruno@issnet.net>
    + include/hbdbf.h
