@@ -2697,7 +2697,7 @@ int GetLocalVarPos( char * szVarName ) /* returns the order + 1 of a variable if
               /* this variable was not referenced yet - add it to the list */
               PVAR pVar;
 
-              pVar = (PVAR) OurMalloc( sizeof(PVAR) );
+              pVar = (PVAR) OurMalloc( sizeof(VAR) );
               pVar->szName = szVarName;
               //pVar->cType = 'U';
               pVar->iUsed = 0;

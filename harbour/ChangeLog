@@ -1,3 +1,7 @@
+19990617-12:20 CET Eddie Runia
+  * source/compiler/harbour.y
+    GetLocalVarPos : OurMalloc( sizeof(PVAR) ) should be sizeof(VAR)
+
 19990617-02:15 EDT David G. Holm <dholm@jsd-llc.com>
   * include/extend.api
     - Moved fixed memory functions to fm.api
