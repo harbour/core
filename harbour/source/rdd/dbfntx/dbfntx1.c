@@ -383,8 +383,8 @@ static void hb_ntxGetCurrentKey( LPTAGINFO pTag, LPKEYINFO pKey )
    }
 
    /* printf( "\n\rhb_ntxGetCurrentKey - 3:  |%s|",(pKey->pItem)->item.asString.value ); */
-   pKey->Tag = 0;
-   pKey->Xtra = 0;
+   // pKey->Tag = 0;
+   // pKey->Xtra = 0;
 
 }
 
@@ -2177,6 +2177,7 @@ static ERRCODE ntxAppend( NTXAREAP pArea, BOOL bUnLockAll )
          pArea->lpCurIndex = lpIndex;
          pTag = lpIndex->CompoundTag;
          hb_ntxGetCurrentKey( pTag, pTag->CurKeyInfo );
+/*
          if( pArea->fShared )
             while( !hb_fsLock( lpIndex->DiskFile, 0, 512, FL_LOCK ) );
          hb_ntxPageKeyAdd( hb_ntxPageLoad( 0 ), pTag->CurKeyInfo->pItem, 0, FALSE );
@@ -2186,6 +2187,7 @@ static ERRCODE ntxAppend( NTXAREAP pArea, BOOL bUnLockAll )
             pTag->RootPage = NULL;
             hb_fsLock( lpIndex->DiskFile, 0, 512, FL_UNLOCK );
          }
+*/
          lpIndex = lpIndex->pNext;
       }
       pArea->lpCurIndex = lpIndexTmp;
@@ -2202,6 +2204,7 @@ static ERRCODE ntxGoCold( NTXAREAP pArea )
    LPTAGINFO pTag;
    LPPAGEINFO pPage;
    BOOL fRecordChanged = pArea->fRecordChanged;
+   BOOL fAppend = pArea->fAppend;
 
    HB_TRACE(HB_TR_DEBUG, ("ntxGoCold(%p)", pArea));
 
@@ -2217,7 +2220,7 @@ static ERRCODE ntxGoCold( NTXAREAP pArea )
          {
             pTag = lpIndex->CompoundTag;
             hb_ntxGetCurrentKey( pTag, pKey );
-            if( hb_ntxItemCompare( pKey->pItem, pTag->CurKeyInfo->pItem, TRUE ) )
+            if( fAppend || hb_ntxItemCompare( pKey->pItem, pTag->CurKeyInfo->pItem, TRUE ) )
             {
                pArea->lpCurIndex = lpIndex;
                hb_itemCopy( pKeyOld->pItem, pTag->CurKeyInfo->pItem );
@@ -2225,15 +2228,18 @@ static ERRCODE ntxGoCold( NTXAREAP pArea )
                pKeyOld->Tag = NTX_IGNORE_REC_NUM;
                if( pArea->fShared )
                   while( !hb_fsLock( lpIndex->DiskFile, 0, 512, FL_LOCK ) );
-               if( hb_ntxTagFindCurrentKey( hb_ntxPageLoad( 0 ), pKeyOld->Tag, pKeyOld, FALSE, FALSE, 1 ) )
+               if( !fAppend )
                {
-                   printf( "\n\rntxGoCold: Cannot find current key:" );
-                   lpIndex = lpIndex->pNext;
-                   continue;
+                  if( hb_ntxTagFindCurrentKey( hb_ntxPageLoad( 0 ), pKeyOld->Tag, pKeyOld, FALSE, FALSE, 1 ) )
+                  {
+                      printf( "\n\rntxGoCold: Cannot find current key:" );
+                      lpIndex = lpIndex->pNext;
+                      continue;
+                  }
+                  pPage = hb_ntxPageLoad( pTag->CurKeyInfo->Tag );
+                  pPage->CurKey =  hb_ntxPageFindCurrentKey( pPage,pTag->CurKeyInfo->Xtra ) - 1;
+                  hb_ntxPageKeyDel( pPage, pPage->CurKey, 1 );
                }
-               pPage = hb_ntxPageLoad( pTag->CurKeyInfo->Tag );
-               pPage->CurKey =  hb_ntxPageFindCurrentKey( pPage,pTag->CurKeyInfo->Xtra ) - 1;
-               hb_ntxPageKeyDel( pPage, pPage->CurKey, 1 );
                hb_ntxPageKeyAdd( hb_ntxPageLoad( 0 ), pKey->pItem, 0, FALSE );
                if( pArea->fShared )
                {
@@ -2769,16 +2775,19 @@ static ERRCODE ntxOrderListFocus( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
 
    HB_TRACE(HB_TR_DEBUG, ("ntxOrderListFocus(%p, %p)", pArea, pOrderInfo));
 
-   hb_itemPutNI( pOrderInfo->itmResult, (pArea->lpCurIndex)? pArea->lpCurIndex->TagRoot:0 );
+   hb_itemPutC( pOrderInfo->itmResult, (pArea->lpCurIndex)? pArea->lpCurIndex->CompoundTag->TagName:"" );
 
-   if( hb_itemType( pOrderInfo->itmOrder ) != HB_IT_STRING &&
-               hb_itemGetNI( pOrderInfo->itmOrder ) == 0 )
-      pArea->lpCurIndex = NULL;
-   else
+   if( pOrderInfo->itmOrder )
    {
-      pIndex = ntxFindIndex( pArea, pOrderInfo->itmOrder );
-      if( pIndex )
-         pArea->lpCurIndex = pIndex;
+      if( hb_itemType( pOrderInfo->itmOrder ) != HB_IT_STRING &&
+                  hb_itemGetNI( pOrderInfo->itmOrder ) == 0 )
+         pArea->lpCurIndex = NULL;
+      else
+      {
+         pIndex = ntxFindIndex( pArea, pOrderInfo->itmOrder );
+         if( pIndex )
+            pArea->lpCurIndex = pIndex;
+      }
    }
 
    return SUCCESS;

@@ -886,13 +886,12 @@ ERRCODE hb_dbfAppend( DBFAREAP pArea, BOOL bUnLockAll )
 
    if( pArea->fShared )
    {
-      hb_dbfWriteRecord( pArea );
-      //hb_dbfWriteDBHeader( pArea );
-      SELF_WRITEDBHEADER( ( AREAP ) pArea );
+      return SELF_GOCOLD( ( AREAP ) pArea );
+      // hb_dbfWriteRecord( pArea );
+      // SELF_WRITEDBHEADER( ( AREAP ) pArea );
    }
    else
    {
-      //hb_dbfWriteDBHeader( pArea );
       SELF_WRITEDBHEADER( ( AREAP ) pArea );
       pArea->fUpdateHeader = TRUE;        /* To truncate the file later */
    }
