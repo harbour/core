@@ -8,6 +8,19 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-07-09 12:15 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+   * include/hbapi.h
+   * source/vm/codebloc.c
+   * source/vm/proc.c
+      *fixed to correctly return the procedure name where
+      the codeblock was created
+      
+   * source/common/hbffind.c
+      *fixed to set correctly size and modification date of
+      retrieved files on Linux/Unix -used from DIRECTORY()
+      function
+      
+
 2004-06-21 14:07 UTC-0500 Randy Portnoff <randy@palmasdev.com>
   * source/rdd/dbcmd.c
     * Fixed rddMoveRecords() so that copied records, which are

@@ -161,7 +161,20 @@ char * hb_procname( int iLevel, char * szName, BOOL bSkipBlock  )
                pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackbase;
          }
 
-         strcpy( szName, ( *pBase )->item.asSymbol.value->szName );
+         if( ( strcmp( ( *pBase )->item.asSymbol.value->szName, "EVAL" ) == 0 ) )
+         {
+            strcpy( szName, "(b)" );
+            if( ( *( pBase + 1 ) )->type == HB_IT_BLOCK )
+            {
+               PHB_SYMB pSymb;
+               pSymb = ( *( pBase + 1 ) )->item.asBlock.value->pDefSymb;
+               strcat( szName, pSymb->szName );
+            }
+            else
+               strcat( szName, ( *pBase )->item.asSymbol.value->szName );
+         }
+         else
+            strcpy( szName, ( *pBase )->item.asSymbol.value->szName );
       }
    }
    else

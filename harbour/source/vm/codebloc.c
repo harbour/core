@@ -178,6 +178,7 @@ HB_CODEBLOCK_PTR hb_codeblockNew( BYTE * pBuffer,
    pCBlock->pCode     = pBuffer;
    pCBlock->dynBuffer = FALSE;
 
+   pCBlock->pDefSymb  = hb_stackBaseItem()->item.asSymbol.value;
    pCBlock->pSymbols  = pSymbols;
    pCBlock->ulCounter = 1;
 
@@ -207,6 +208,7 @@ HB_CODEBLOCK_PTR hb_codeblockMacroNew( BYTE * pBuffer, USHORT usLen )
    memcpy( pCBlock->pCode, pBuffer, usLen );
    pCBlock->dynBuffer = TRUE;
 
+   pCBlock->pDefSymb  = hb_stackBaseItem()->item.asSymbol.value;
    pCBlock->pSymbols  = NULL; /* macro-compiled codeblock cannot acces a local symbol table */
    pCBlock->ulCounter = 1;
 

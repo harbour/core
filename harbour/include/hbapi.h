@@ -256,6 +256,7 @@ typedef struct _HB_CODEBLOCK
    PHB_ITEM    pLocals;      /* table with referenced local variables */
    USHORT      uiLocals;     /* number of referenced local variables */
    PHB_SYMB    pSymbols;     /* codeblocks symbols */
+   PHB_SYMB    pDefSymb;     /* symbol where the codeblock was created */
    HB_COUNTER  ulCounter;    /* numer of references to this codeblock */
    BOOL        dynBuffer;    /* is pcode buffer allocated dynamically */
 } HB_CODEBLOCK, * PHB_CODEBLOCK, * HB_CODEBLOCK_PTR;

@@ -152,6 +152,7 @@ HB_FILE_VER( "$Id$" )
       DIR *           dir;
       struct dirent * entry;
       char            pattern[ _POSIX_PATH_MAX + 1 ];
+      char            path[ _POSIX_PATH_MAX + 1 ];
    } HB_FFIND_INFO, * PHB_FFIND_INFO;
 
 #else
@@ -678,6 +679,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
    {
       PHB_FFIND_INFO info = ( PHB_FFIND_INFO ) ffind->info;
 
+      char dirname[ 2 * _POSIX_PATH_MAX + 1 ];
       char string[ _POSIX_PATH_MAX + 1 ];
 
       bFound = FALSE;
@@ -687,7 +689,6 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
       string[ 0 ] = '\0';
       if( ffind->bFirst )
       {
-         char dirname[ _POSIX_PATH_MAX + 1 ];
          char * pos;
 
          ffind->bFirst = FALSE;
@@ -717,6 +718,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
          tzset();
          
          info->dir = opendir( dirname );
+         strcpy( info->path, dirname );
       }
 
       if( info->dir != NULL)
@@ -739,7 +741,10 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
       {
          struct stat sStat;
       
-         stat( info->entry->d_name, &sStat );
+         strcpy( dirname, info->path );
+         strcat( dirname, info->entry->d_name );
+         if( stat( dirname, &sStat ) != 0 )
+            printf("\n%s (%i)", dirname, errno );
       
          strncpy( ffind->szName, info->entry->d_name, _POSIX_PATH_MAX );
          ffind->size = sStat.st_size;
