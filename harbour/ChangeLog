@@ -1,3 +1,7 @@
+19990604-12:35 EDT David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/dates.c
+    - Corrected HARBOUR DOW() to use _retni() instead of _retnl()
+
 19990604-12:30 EDT David G. Holm <dholm@jsd-llc.com>
   * source/vm/hvm.c
     - Corrected HARBOUR ERRORLEVEL() to not change the error level if

@@ -475,7 +475,7 @@ HARBOUR DOW( void )
    if( pDate )
    {
       hb_dateDecode( pDate->value.lDate, &lDay, &lMonth, &lYear );
-      _retnl( hb_dow( lDay, lMonth, lYear ) );
+      _retni( hb_dow( lDay, lMonth, lYear ) );
       stack.Return.wLength = 3;
    }
    else
