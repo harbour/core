@@ -46,13 +46,13 @@ char hb_gt_Row(void)
 {
 }
 
-void hb_gt_SetCursorStyle(int style)
-{
-}
-
 int hb_gt_GetCursorStyle(void)
 {
     return(0);
+}
+
+void hb_gt_SetCursorStyle(int style)
+{
 }
 
 void hb_gt_Puts(char x, char y, char attr, char *str, int len)
@@ -92,5 +92,14 @@ void hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
 }
 
 void hb_gt_Replicate( char c, DWORD nLength )
+{
+}
+
+BOOL hb_gt_GetBlink()
+{
+   RETURN FALSE;
+}
+
+void hb_gt_SetBlink( BOOL bBlink )
 {
 }

@@ -18,6 +18,7 @@ RTL_DIR=source\rtl
 RDD_DIR=source\rdd
 HBPP_DIR=source\hbpp
 TOOLS_DIR=source\tools
+DEBUG_DIR=source\debug
 VM_DIR=source\vm
 INCLUDE_DIR=include
 BIN_DIR=bin
@@ -90,6 +91,8 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\setcolor.obj \
     $(OBJ_DIR)\setkey.obj \
     $(OBJ_DIR)\strings.obj \
+    $(OBJ_DIR)\tbcolumn.obj \
+    $(OBJ_DIR)\tbrowse.obj \
     $(OBJ_DIR)\tclass.obj \
     $(OBJ_DIR)\tget.obj \
     $(OBJ_DIR)\tgetlist.obj \
@@ -401,6 +404,18 @@ $(OBJ_DIR)\setkey.obj : $(RTL_DIR)\setkey.c
 $(OBJ_DIR)\strings.obj : $(RTL_DIR)\strings.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
+$(RTL_DIR)\tbcolumn.c : $(RTL_DIR)\tbcolumn.prg
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
+
+$(OBJ_DIR)\tbcolumn.obj : $(RTL_DIR)\tbcolumn.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(RTL_DIR)\tbrowse.c : $(RTL_DIR)\tbrowse.prg
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
+
+$(OBJ_DIR)\tbrowse.obj : $(RTL_DIR)\tbrowse.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
 $(RTL_DIR)\tclass.c : $(RTL_DIR)\tclass.prg
     $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
 
@@ -420,6 +435,16 @@ $(OBJ_DIR)\tgetlist.obj : $(RTL_DIR)\tgetlist.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\transfrm.obj : $(RTL_DIR)\transfrm.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+#
+# Debugger source dependencies below. Add as needed
+#
+
+$(DEBUG_DIR)\debugger.c : $(DEBUG_DIR)\debugger.prg
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
+
+$(OBJ_DIR)\debugger.obj : $(DEBUG_DIR)\debugger.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 #

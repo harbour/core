@@ -1,3 +1,23 @@
+19990808-15:00 EDT Paul Tucker <ptucker@sympatico.ca>
+   * makefile.vc
+     + source/rtl/tbrowse.prg
+     + source/rtl/tbcolumn.prg
+     + source/debug/debugger.prg
+     + tests/working/testbrw.prg
+   * source/rtl/gtapi.c
+     -hb_gt_ScreenBuffer
+   * include/gtapi.h
+     -hb_gt_ScreenBuffer
+   * source/rtl/gt/gtwin.c source/rtl/gtdos.c 
+     + Improved or added Dispbegin/end support
+     * minor corrections in gtdos
+   * source/rtl/gt_tpl.c
+     + dummy hb_gt_Set/GetBlink hb_gt_replicate
+   * source/rtl/gtos2.c
+     + dummy hb_gt_Set/GetBlink hb_gt_replicate
+     * corrected parameter order as reported by Davig G. Holme
+       NOTE: cursor sizes are not correct in this version.
+
 19990807-19:34 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/rtl/tbrowse.prg
      * improved

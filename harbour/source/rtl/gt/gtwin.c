@@ -31,6 +31,8 @@ typedef WORD far *LPWORD;
 
 static HANDLE HInput = INVALID_HANDLE_VALUE;
 static HANDLE HOutput = INVALID_HANDLE_VALUE;
+static HANDLE HStealth = INVALID_HANDLE_VALUE;  /* DispBegin buffer */
+static HANDLE HOriginal;
 static HANDLE HCursor;  /* When DispBegin is in effect, all cursor related
                            functions must refer to the original handle!
                            Otherwise turds are left on the screen when
@@ -56,16 +58,61 @@ void hb_gt_Init(void)
 {
   LOG("Initializing");
   HInput = GetStdHandle(STD_INPUT_HANDLE);
-  HOutput = HCursor = GetStdHandle(STD_OUTPUT_HANDLE);
-  hb_gt_ScreenBuffer((ULONG)HOutput);
+  HOriginal = HOutput = HCursor = GetStdHandle(STD_OUTPUT_HANDLE);
 }
 
 void hb_gt_Done(void)
 {
+  /* because the current screen may not be the one that was active
+     when the app started, we need to restore that screen and update
+     it with the current image before quiting.
+   */
+
+  if( HOutput != HOriginal )
+  {
+    COORD coDest = {0, 0};
+    COORD coBuf;                        /* the size of the buffer to read into */
+    CHAR_INFO *pCharInfo;       /* buffer to store info from ReadConsoleOutput */
+    SMALL_RECT srWin;                         /* source rectangle to read from */
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+
+    srWin.Top    = srWin.Left = 0;
+    srWin.Bottom = (coBuf.Y = hb_gt_GetScreenHeight()) -1;
+    srWin.Right  = (coBuf.X = hb_gt_GetScreenWidth()) -1;
+
+    /* allocate a buffer for the screen rectangle */
+    pCharInfo = (CHAR_INFO *)hb_xgrab(coBuf.X * coBuf.Y * sizeof(CHAR_INFO));
+
+    /* read the screen rectangle into the buffer */
+    ReadConsoleOutput(HOutput,                     /* current screen handle  */
+                 pCharInfo,                        /* transfer area          */
+                 coBuf,                        /* size of destination buffer */
+                 coDest,               /* upper-left cell to write data to   */
+                 &srWin);            /* screen buffer rectangle to read from */
+
+    GetConsoleScreenBufferInfo(HOutput, &csbi);
+    HOutput = HOriginal;
+    SetConsoleScreenBufferSize(HOutput, coBuf);
+    SetConsoleCursorPosition(HOutput, csbi.dwCursorPosition);
+
+    WriteConsoleOutput(HOutput,                             /* output handle */
+                 pCharInfo,                                 /* data to write */
+                 coBuf,                     /* col/row size of source buffer */
+                 coDest,        /* upper-left cell to write data from in src */
+                 &srWin);             /* screen buffer rect to write data to */
+
+    hb_xfree(pCharInfo);
+
+    SetConsoleActiveScreenBuffer(HOutput);
+  }
   CloseHandle(HInput);
   HInput = INVALID_HANDLE_VALUE;
   CloseHandle(HOutput);
   HOutput = INVALID_HANDLE_VALUE;
+  CloseHandle(HStealth);
+  HStealth = INVALID_HANDLE_VALUE;
+  CloseHandle(HOriginal);
+  HOriginal = INVALID_HANDLE_VALUE;
   LOG("Ending");
 }
 
@@ -366,18 +413,15 @@ void hb_gt_DispBegin(void)
   COORD coBuf;                        /* the size of the buffer to read into */
   CHAR_INFO *pCharInfo;       /* buffer to store info from ReadConsoleOutput */
   SMALL_RECT srWin;                         /* source rectangle to read from */
-  USHORT uiCount;
 
-  if( ( uiCount = hb_gtDispCount() ) == 1)
+  if( hb_gtDispCount() == 1 )
   {
     srWin.Top    = srWin.Left = 0;
-    srWin.Right  = (coBuf.X = hb_gt_GetScreenWidth()) -1;
     srWin.Bottom = (coBuf.Y = hb_gt_GetScreenHeight()) -1;
+    srWin.Right  = (coBuf.X = hb_gt_GetScreenWidth()) -1;
 
     /* allocate a buffer for the screen rectangle */
     pCharInfo = (CHAR_INFO *)hb_xgrab(coBuf.X * coBuf.Y * sizeof(CHAR_INFO));
-
-    hb_gt_ScreenBuffer( (ULONG)HOutput );          /* store current handle   */
 
     /* read the screen rectangle into the buffer */
     ReadConsoleOutput(HOutput,                     /* current screen handle  */
@@ -386,14 +430,19 @@ void hb_gt_DispBegin(void)
                  coDest,               /* upper-left cell to write data to   */
                  &srWin);            /* screen buffer rectangle to read from */
 
-    HOutput = CreateConsoleScreenBuffer(
-               GENERIC_READ    | GENERIC_WRITE,    /* Access flag            */
-               FILE_SHARE_READ | FILE_SHARE_WRITE, /* Buffer share mode      */
-               NULL,                               /* Security attribute ptr */
-               CONSOLE_TEXTMODE_BUFFER,            /* Type of buffer         */
-               NULL);                              /* reserved               */
+    /* store current handle */
+    if( HStealth = INVALID_HANDLE_VALUE )
+    {
+       HStealth = CreateConsoleScreenBuffer(
+                  GENERIC_READ    | GENERIC_WRITE,    /* Access flag         */
+                  FILE_SHARE_READ | FILE_SHARE_WRITE, /* Buffer share mode   */
+                  NULL,                               /* Security attribute  */
+                  CONSOLE_TEXTMODE_BUFFER,            /* Type of buffer      */
+                  NULL);                              /* reserved            */
 
-    SetConsoleScreenBufferSize(HOutput, coBuf);
+       SetConsoleScreenBufferSize(HStealth, coBuf);
+    }
+    HOutput = HStealth;
 
     WriteConsoleOutput(HOutput,                             /* output handle */
                  pCharInfo,                                 /* data to write */
@@ -408,39 +457,16 @@ void hb_gt_DispBegin(void)
 void hb_gt_DispEnd(void)
 {
 /* ptucker */
-  COORD coDest = {0, 0};
-  COORD coBuf;                        /* the size of the buffer to read into */
-  CHAR_INFO *pCharInfo;       /* buffer to store info from ReadConsoleOutput */
-  SMALL_RECT srWin;                         /* source rectangle to read from */
-  USHORT uiCount;
 
-  if( ( uiCount = hb_gtDispCount() ) == 1 )
+  if( hb_gtDispCount() == 0 )
   {
-    srWin.Top    = srWin.Left = 0;
-    srWin.Right  = (coBuf.X = hb_gt_GetScreenWidth()) -1;
-    srWin.Bottom = (coBuf.Y = hb_gt_GetScreenHeight()) -1;
+    CONSOLE_CURSOR_INFO cci;
+    GetConsoleCursorInfo(HCursor, &cci);
+    SetConsoleCursorInfo(HOutput, &cci);
+    SetConsoleActiveScreenBuffer(HOutput);
+    HStealth = HCursor;
+    HCursor  = HOutput;
 
-    /* allocate a buffer for the screen rectangle */
-    pCharInfo = (CHAR_INFO *)hb_xgrab(coBuf.X * coBuf.Y * sizeof(CHAR_INFO));
-
-    /* read the screen rectangle into the buffer */
-    ReadConsoleOutput(HOutput,                      /* current screen buffer */
-               pCharInfo,                           /* transfer area         */
-               coBuf,                  /* col/row size of destination buffer */
-               coDest,           /* upper-left cell to write data to in dest */
-               &srWin);              /* screen buffer rectangle to read from */
-
-    CloseHandle( HOutput );
-
-    HOutput = (HANDLE)hb_gt_ScreenBuffer( 0 );  /* get previous handle       */
-
-    WriteConsoleOutput(HOutput,                 /* output buffer             */
-                  pCharInfo,                    /* buffer with data to write */
-                  coBuf,                    /* col/row size of source buffer */
-                  coDest,       /* upper-left cell to write data from in src */
-                  &srWin);            /* screen buffer rect to write data to */
-
-    hb_xfree(pCharInfo);
   }
 }
 
@@ -490,8 +516,17 @@ void hb_gt_Replicate(char c, DWORD nLength)
           c,                                    /* character to write        */
           nLength,                              /* number of cells to write  */
           coBuf,                                /* coordinates of first cell */
-          &nWritten                         /* receives actual number written */
+          &nWritten                        /* receives actual number written */
           );
 
 }
 
+BOOL hb_gt_GetBlink()
+{
+   return FALSE;
+}
+
+void hb_gt_SetBlink( BOOL bBlink )
+{
+   
+}

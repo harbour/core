@@ -7,6 +7,8 @@
  *
  *  This module is based on VIDMGR by Andrew Clarke and modified for
  *  the Harbour project
+ *
+ *  User programs should never call this layer directly!
  */
 
 #include <string.h>
@@ -36,8 +38,17 @@ static char hb_gt_GetScreenMode(void);
 static void hb_gt_SetCursorSize(char start, char end);
 static void hb_gt_GetCursorSize(char *start, char *end);
 
+#if defined(__WATCOMC__) && defined(__386__)
+#define FAR
+#endif
+static char FAR *scrnPtr;
+static char FAR *scrnStealth;
+static char FAR *hb_gt_ScreenAddress(void);
+
 void hb_gt_Init(void)
 {
+   scrnStealth = (char *)-1;
+   scrnPtr = hb_gt_ScreenAddress();
 }
 
 void hb_gt_Done(void)
@@ -49,11 +60,12 @@ int hb_gt_IsColor(void)
     return hb_gt_GetScreenMode() != 7;
 }
 
-#if defined(__WATCOMC__) && defined(__386__)
-
-char *hb_gt_ScreenPtr(char cRow, char cCol)
+static char FAR *hb_gt_ScreenAddress()
 {
-    char *ptr;
+
+    char FAR *ptr;
+
+#if defined(__WATCOMC__) && defined(__386__)
     if (hb_gt_IsColor())
     {
         ptr = (char *)(0xB800 << 4);
@@ -62,14 +74,7 @@ char *hb_gt_ScreenPtr(char cRow, char cCol)
     {
         ptr = (char *)(0xB000 << 4);
     }
-    return ptr + (cRow * hb_gt_GetScreenWidth() * 2) + (cCol * 2);
-}
-
 #else
-
-char FAR *hb_gt_ScreenPtr(char cRow, char cCol)
-{
-    char FAR *ptr;
     if (hb_gt_IsColor())
     {
         ptr = (char FAR *)MK_FP(0xB800, 0x0000);
@@ -78,10 +83,15 @@ char FAR *hb_gt_ScreenPtr(char cRow, char cCol)
     {
         ptr = (char FAR *)MK_FP(0xB000, 0x0000);
     }
-    return ptr + (cRow * hb_gt_GetScreenWidth() * 2) + (cCol * 2);
+#endif
+
+    return ptr;
 }
 
-#endif
+char FAR *hb_gt_ScreenPtr(char cRow, char cCol)
+{
+    return scrnPtr + (cRow * hb_gt_GetScreenWidth() * 2) + (cCol * 2);
+}
 
 static char hb_gt_GetScreenMode(void)
 {
@@ -115,8 +125,8 @@ void hb_gt_SetPos(char cRow, char cCol)
 #if defined(__TURBOC__)
     _AH = 0x02;
     _BH = 0;
-    _DH = cRow
-    _DL = cCol
+    _DH = cRow;
+    _DL = cCol;
     geninterrupt(0x10);
 #else
     union REGS regs;
@@ -268,10 +278,11 @@ void hb_gt_Puts(char cRow, char cCol, char attr, char *str, int len)
     }
 }
 
-void hb_gt_GetText(char cTop, char cLeft, char cBottom, char right, char *dest)
+void hb_gt_GetText(char cTop, char cLeft, char cBottom, char cRight, char *dest)
 {
     char x, y;
-    for (y = cTop; y <= cBottom, y++ )
+
+    for (y = cTop; y <= cBottom; y++ )
     {
         for (x = cLeft; x <= cRight; x++)
         {
@@ -284,6 +295,7 @@ void hb_gt_GetText(char cTop, char cLeft, char cBottom, char right, char *dest)
 void hb_gt_PutText(char cTop, char cLeft, char cBottom, char cRight, char *srce)
 {
     char x, y;
+
     for (y = cTop; y <= cBottom; y++)
     {
         for (x = cLeft; x <= cRight; x++)
@@ -294,25 +306,52 @@ void hb_gt_PutText(char cTop, char cLeft, char cBottom, char cRight, char *srce)
     }
 }
 
-void SetAttribute( char cTop, char cLeft, char cBottom, char cRight, char attribute )
+void hb_gt_SetAttribute( char cTop, char cLeft, char cBottom, char cRight, char attribute )
 {
+    char x, y;
+    char attr, ch;
+
+    for (y = cTop; y <= cBottom; y++)
+    {
+        for (x = cLeft; x <= cRight; x++)
+        {
+            hb_gt_xGetXY( y, x, &attr, &ch );
+            hb_gt_xPutch( y, x, attribute, ch);
+        }
+    }
 }
 
 void hb_gt_DrawShadow( char cTop, char cLeft, char cBottom, char cRight, char attribute )
 {
+    char x, y;
+    char attr, ch;
+
+    for (y = cTop; y <= cBottom; y++)
+    {
+
+        hb_gt_xGetXY( y, cRight, &attr, &ch );
+        hb_gt_xPutch( y, cRight, attribute, ch);
+       
+        if( y == cBottom )
+           for (x = cLeft; x <= cRight; x++)
+           {
+               hb_gt_xGetXY( y, x, &attr, &ch );
+               hb_gt_xPutch( y, x, attribute, ch );
+           }
+
+    }
 }
 
-  /* returns col */
 char hb_gt_Col(void)
 {
 #if defined(__TURBOC__)
     _AH = 0x03;
     _BH = 0;
     geninterrupt(0x10);
-    return _DH;
+    return _DL;
 #else
     union REGS regs;
-    regs.h.ah = 0x02;
+    regs.h.ah = 0x03;
     regs.h.bh = 0;
 #if defined(__WATCOMC__) && defined(__386__)
     int386(0x10, &regs, &regs);
@@ -323,7 +362,6 @@ char hb_gt_Col(void)
 #endif
 }
 
-  /* returns row */
 char hb_gt_Row(void)
 {
 #if defined(__TURBOC__)
@@ -333,7 +371,7 @@ char hb_gt_Row(void)
     return _DH;
 #else
     union REGS regs;
-    regs.h.ah = 0x02;
+    regs.h.ah = 0x03;
     regs.h.bh = 0;
 #if defined(__WATCOMC__) && defined(__386__)
     int386(0x10, &regs, &regs);
@@ -344,15 +382,78 @@ char hb_gt_Row(void)
 #endif
 }
 
+void hb_gt_DispBegin(void)
+{
+  if( hb_gtDispCount() == 1 )
+  {
+    char FAR *ptr;
+    ULONG nSize;
+
+    nSize = hb_gt_GetScreenWidth() * hb_gt_GetScreenHeight() * 2;
+
+    ptr = scrnPtr;
+    if( (scrnPtr = scrnStealth) == (char *)-1)
+       scrnPtr = (char FAR *)hb_xgrab( nSize );
+    scrnStealth = ptr;
+    memcpy( (void *)scrnPtr, (void *)ptr, nSize );
+  }
+}
+
+void hb_gt_DispEnd(void)
+{
+  if( hb_gtDispCount() == 0 )
+  {
+    char FAR *ptr;
+    ULONG nSize;
+
+    nSize = hb_gt_GetScreenWidth() * hb_gt_GetScreenHeight() * 2;
+
+    ptr = scrnPtr;
+    scrnPtr = scrnStealh;
+    scrnStealth = ptr;
+    memcpy( (void *)scrnPtr, (void *)ptr, nSize );
+  }
+}
+
 void hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
 {
    uiRows=uiCols=0;
 }
 
-void hb_gt_DispBegin(void)
+void hb_gt_Replicate(char c, DWORD nLength)
 {
+   c= ' ';
+   nLength = 0;
+
 }
 
-void hb_gt_DispEnd(void)
+BOOL hb_gt_GetBlink()
 {
+#if defined(__WATCOMC__) && defined(__386__)
+    return *((char *)0x0465) & 0x10;
+#else
+    return *((char FAR *)MK_FP(0x0040, 0x0065)) &0x10;
+#endif
+}
+
+void hb_gt_SetBlink( BOOL bBlink )
+{
+#if defined(__TURBOC__)
+    _AX = 0x1003;
+    _BX = bBlink;
+    geninterrupt(0x10);
+    return;
+#else
+    union REGS regs;
+    regs.h.ah = 0x10;
+    regs.h.al = 0x03;
+    regs.h.bh = 0;
+    regs.h.bl = bBlink;
+#if defined(__WATCOMC__) && defined(__386__)
+    int386(0x10, &regs, &regs);
+#else
+    int86(0x10, &regs, &regs);
+#endif
+    return;
+#endif
 }

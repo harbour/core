@@ -7,6 +7,8 @@
  *
  *  This module is based on VIDMGR by Andrew Clarke and modified for
  *  the Harbour project
+ *
+ *  User programs should never call this layer directly!
  */
 
 #define INCL_KBD
@@ -72,6 +74,14 @@ char hb_gt_Col(void)
     return y;
 }
 
+static void hb_gt_GetCursorSize(char *start, char *end)
+{
+    VIOCURSORINFO vi;
+    VioGetCurType(&vi, 0);
+    *start = vi.yStart;
+    *end = vi.cEnd;
+}
+
 static void hb_gt_SetCursorSize(char start, char end)
 {
     VIOCURSORINFO vi;
@@ -82,25 +92,68 @@ static void hb_gt_SetCursorSize(char start, char end)
     VioSetCurType(&vi, 0);
 }
 
-static void hb_gt_GetCursorSize(char *start, char *end)
+int hb_gt_GetCursorStyle(void)
 {
-    VIOCURSORINFO vi;
-    VioGetCurType(&vi, 0);
-    *start = vi.yStart;
-    *end = vi.cEnd;
+    char start, end;
+    int rc;
+
+    hb_gt_GetCursorSize(&start, &end);
+
+    if((start == 32) && (end == 32))
+    {
+        rc=SC_NONE;
+    }
+    else if((start == 6) && (end == 7))
+    {
+        rc=SC_NORMAL;
+    }
+    else if((start == 4) && (end == 7))
+    {
+        rc=SC_INSERT;
+    }
+    else if((start == 0) && (end == 7))
+    {
+        rc=SC_SPECIAL1;
+    }
+    else if((start == 0) && (end == 3))
+    {
+        rc=SC_SPECIAL2;
+    }
+    else
+    {
+        rc=SC_NONE;
+    }
+
+    return(rc);
 }
 
 void hb_gt_SetCursorStyle(int style)
 {
-    /* TODO: need to implement this */
-}
+    switch(style)
+    {
+    case SC_NONE:
+        hb_gt_SetCursorSize(32, 32);
+        break;
 
-int hb_gt_GetCursorStyle(void)
-{
-    /* TODO: need to implement this */
-    int rc=0;
+    case SC_NORMAL:
+        hb_gt_SetCursorSize(6, 7);
+        break;
 
-    return(rc);
+    case SC_INSERT:
+        hb_gt_SetCursorSize(4, 7);
+        break;
+
+    case SC_SPECIAL1:
+        hb_gt_SetCursorSize(0, 7);
+        break;
+
+    case SC_SPECIAL2:
+        hb_gt_SetCursorSize(0, 3);
+        break;
+
+    default:
+        break;
+    }
 }
 
 void hb_gt_Puts(char cRow, char cCol, char attr, char *str, int len)
@@ -150,5 +203,20 @@ void hb_gt_DispBegin(void)
 }
 
 void hb_gt_DispEnd(void)
+{
+}
+
+void hb_gt_Replicate(char c, DWORD nLength)
+{
+   c= ' ';
+   nLength = 0;
+
+}
+BOOL hb_gt_GetBlink()
+{
+   return FALSE;
+}
+
+void hb_gt_SetBlink( BOOL bBlink )
 {
 }

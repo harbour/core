@@ -6,6 +6,7 @@
  *  GTAPI.C: Generic Terminal for Harbour
  *
  * Latest mods:
+ * 1.53   19990807   ptucker   Modified Dispbegin/end support
  * 1.47   19990802   ptucker   DispBegin/End and SetMode for gtWin
  * 1.46   19990801   ptucker   simplified hb_gtScroll if gtWin
  * 1.44   19990730   ptucker   simplified gtputs and gtSetAttribute
@@ -81,14 +82,11 @@ int *_Color;           /* masks: 0x0007     Foreground
                         */
 int _ColorCount;
 
-ULONG *_ScrnBuffer;
-
 /* gt API functions */
 
 void hb_gtInit(void)
 {
 /* ptucker */
-    _ScrnBuffer = (ULONG *)hb_xgrab( sizeof( ULONG ) );
     _Color      = (int *)hb_xgrab(5*sizeof( int ) );
     _ColorCount = 5;
     hb_gt_Init();
@@ -105,20 +103,6 @@ void hb_gtExit(void)
     hb_xfree( _Color );
     while( s_uiDispCount )
        hb_gtDispEnd();
-    hb_xfree( _ScrnBuffer );
-}
-
-/* this gets called from gtwin/gtdos, etc. */
-/* otherwise it has to be duplicated in each driver */
-ULONG hb_gt_ScreenBuffer( ULONG NewBuffer)
-{
-/* ptucker */
-   ULONG Previous = _ScrnBuffer[s_uiDispCount];
-
-   if( NewBuffer )
-      _ScrnBuffer[s_uiDispCount] = NewBuffer;
-
-   return Previous;
 }
 
 int hb_gtBox (USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char* pbyFrame)
@@ -173,7 +157,7 @@ int hb_gtBox (USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char
     /* Draw the box or line as specified */
     height = uiBottom - uiTop + 1;
     width  = uiRight - uiLeft + 1;
-//    hb_gtDispBegin();
+/* hb_gtDispBegin(); */
 
     if( height > 1 && width > 1 )
     {
@@ -213,7 +197,7 @@ int hb_gtBox (USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char
     }
 
 /*    speed issue for now */
-//    hb_gtDispEnd();
+/*    hb_gtDispEnd(); */
 
     hb_gtSetPos(uiTopBak + 1, uiLeftBak + 1);
 
@@ -248,7 +232,6 @@ int hb_gtDispBegin(void)
 {
 /* ptucker */
     ++s_uiDispCount;
-    _ScrnBuffer = (ULONG *)hb_xrealloc( _ScrnBuffer, sizeof( ULONG ) * (s_uiDispCount+1) );
     hb_gt_DispBegin();
     return(0);
 }
@@ -261,9 +244,8 @@ USHORT hb_gtDispCount(void)
 int hb_gtDispEnd(void)
 {
 /* ptucker */
-    hb_gt_DispEnd();
     --s_uiDispCount;
-    _ScrnBuffer = (ULONG *)hb_xrealloc( _ScrnBuffer, sizeof( ULONG ) * (s_uiDispCount+1) );
+    hb_gt_DispEnd();
     return(0);
 }
 
@@ -585,14 +567,14 @@ int hb_gtScrDim(USHORT * uipHeight, USHORT * uipWidth)
 
 int hb_gtGetBlink(BOOL * bBlink)
 {
-    *bBlink = FALSE;
+    *bBlink = hb_gt_GetBlink();
 
-    return ( 0 );
+    return(0);
 }
 
 int hb_gtSetBlink(BOOL bBlink)
 {
-   HB_SYMBOL_UNUSED( bBlink );
+    hb_gt_SetBlink( bBlink );
     return(0);
 }
 
