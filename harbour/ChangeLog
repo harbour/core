@@ -1,3 +1,13 @@
+2001-06-07 17:06 GMT+1 Patrick Mast <harbour@PatrickMast.com>
+   + contrib/tprepro/tprepro.prg
+     + Added TPreProcessor class
+       METHOD New()
+       METHOD End()
+       METHOD AddRule()
+       METHOD SetIncludepath()
+       METHOD TranslateLine()
+       METHOD TranslateFile()
+
 2001-06-07 13:05 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * source/pp/ppcore.c
    * source/pp/pplib.c
