@@ -264,7 +264,7 @@ FUNCTION ProcessFile( sSource, sSwitch )
          bDbgPPO := .T.
       ENDIF
    ELSE
-      FWrite( hPP, '#line 1 "' + Upper( sSource ) + '"' )
+      FWrite( hPP, '#line 1 "' + Upper( sSource ) + '"' + Chr(13) + Chr(10) )
       bBlanks := .F.
    ENDIF
 
@@ -378,7 +378,10 @@ FUNCTION ProcessFile( sSource, sSwitch )
                                FWrite( hPP, Chr(13) + Chr(10) )
                             ENDIF
                          ELSE
-                            FWrite( hPP, ProcessLine( sLine, {}, {}, {}, nLine, sSource ) + Chr(13) + Chr(10) )
+                            sLine := ProcessLine( sLine, {}, {}, {}, nLine, sSource )
+                            IF bBlanks .OR. ! ( sLine == '' )
+                               FWrite( hPP, sLine + Chr(13) + Chr(10) )
+                            ENDIF
                          ENDIF
 
                          nPosition += ( nClose )
@@ -416,7 +419,10 @@ FUNCTION ProcessFile( sSource, sSwitch )
                             FWrite( hPP, Chr(13) + Chr(10) )
                          ENDIF
                       ELSE
-                         FWrite( hPP, ProcessLine( sLine, {}, {}, {}, nLine, sSource ) + Chr(13) + Chr(10) )
+                         sLine := ProcessLine( sLine, {}, {}, {}, nLine, sSource )
+                         IF bBlanks .OR. ! ( sLine == '' )
+                            FWrite( hPP, sLine + Chr(13) + Chr(10) )
+                         ENDIF
                       ENDIF
                       nPosition += ( nClose )
                       sLine := ''
@@ -560,7 +566,10 @@ FUNCTION ProcessFile( sSource, sSwitch )
                       ENDIF
                    ELSE
                       //sLine += sRight
-                      FWrite( hPP, ProcessLine( sLine, {}, {}, {}, nLine, sSource ) + Chr(13) + Chr(10) )
+                      sLine := ProcessLine( sLine, {}, {}, {}, nLine, sSource )
+                      IF bBlanks .OR. ! ( sLine == '' )
+                         FWrite( hPP, sLine + Chr(13) + Chr(10) )
+                      ENDIF
                    ENDIF
                    sLine := ''
                    cChar := ''
@@ -580,7 +589,10 @@ FUNCTION ProcessFile( sSource, sSwitch )
                       FWrite( hPP, Chr(13) + Chr(10) )
                    ENDIF
                 ELSE
-                   FWrite( hPP, ProcessLine( sLine, {}, {}, {}, nLine, sSource ) + Chr(13) + Chr(10) )
+                   sLine := ProcessLine( sLine, {}, {}, {}, nLine, sSource )
+                   IF bBlanks .OR. ! ( sLine == '' )
+                      FWrite( hPP, sLine + Chr(13) + Chr(10) )
+                   ENDIF
                 ENDIF
                 sLine := ''
                 cChar := ''
@@ -630,7 +642,10 @@ FUNCTION ProcessFile( sSource, sSwitch )
          FWrite( hPP, sLine )
       ENDIF
    ELSE
-      FWrite( hPP, ProcessLine( sLine, {}, {}, {}, nLine, sSource ) )
+      sLine := ProcessLine( sLine, {}, {}, {}, nLine, sSource )
+      IF bBlanks .OR. ! ( sLine == '' )
+         FWrite( hPP, sLine )
+      ENDIF
    ENDIF
 
    IF ProcName(1) == 'MAIN'
@@ -1193,12 +1208,6 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
                      ? "Stopper?: " + sPrimaryStopper
                   ENDIF
 
-                  IF aRules[nRule][3]
-                     nLen := 10
-                  ELSE
-                     nLen := Max( 4, Len( sPrimaryStopper) )
-                  ENDIF
-
                   nStoppers := Len( aList )
                   FOR nStopper := 1 TO nStoppers
 
@@ -1209,6 +1218,13 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
                      sMultiStopper := ''
                      WHILE ( nSpaceAt := At( ' ', sStopper ) ) > 0
                         sNextStopper := Left( sStopper, nSpaceAt - 1 )
+
+                        IF aRules[nRule][3]
+                           nLen := 10
+                        ELSE
+                           nLen := Max( 4, Len( sToken ) )
+                        ENDIF
+
                         //? "Next Stopper: " + sNextStopper, sToken
                         IF Left( sNextStopper, nLen ) == sToken
                            sMultiStopper += sNextStopper
@@ -1220,6 +1236,12 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
                            EXIT
                         ENDIF
                      ENDDO
+
+                     IF aRules[nRule][3]
+                        nLen := 10
+                     ELSE
+                        nLen := Max( 4, Len( sToken ) )
+                     ENDIF
 
                      IF Left( sStopper, nLen ) == sToken
                         sMultiStopper += sStopper
@@ -1260,7 +1282,7 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
                         aMP := aRules[nRule][2][nMatch]
 
                         IF aMP[3] == NIL .AND. aMP[4] == ':'
-                           IF aScan( aMP[5], sMultiStopper ) > 0
+                           IF aScan( aMP[5], {|sWord| sWord == sMultiStopper } ) > 0
                               EXIT
                            ENDIF
                         ELSE

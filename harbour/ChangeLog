@@ -1,3 +1,8 @@
+2000-10-19 22:00 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * contrib/dot/pp.prg
+     ! Fixed checking of stoppers for #XCOMMAND/#XTRANSLATE
+       /* No longer known issues - I think it's ready for serious testing ;-) */
+
 2000-10-19 19:40 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * contrib/dot/pp.prg
      ! Added logic to support multi-word stoppers needed by multi-word restricted list, like
