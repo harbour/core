@@ -424,9 +424,8 @@ FUNCTION HitTest( aGetList, MouseRow, MouseCol, aMsg ) // Removed STATIC
 
    IF oGetList != NIL
       RETURN oGetlist:Hittest( aGetList, MouseRow, MouseCol, aMsg ) // Removed STATIC
-   ELSE
-      RETURN 0
    ENDIF
+   RETURN 0
 
 /***
 *
@@ -440,8 +439,8 @@ FUNCTION Accelerator( aGetList, nKey, aMsg ) // Removed STATIC
 
    IF oGetList != NIL
       RETURN oGetlist:Accelerator( aGetList, nKey, aMsg ) // Removed STATIC
-   ELSE
-      RETURN 0
    ENDIF
+   RETURN 0
 
 #endif
+
