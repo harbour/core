@@ -44,6 +44,11 @@
  * Copyright 2000 Victor Szakats <info@szelvesz.hu>
  *    __DATE__, __TIME__, __HB_MAIN__ support
  *
+ * Copyright 2000 Ron Pinkas <Ron@Profit-Master.com>
+ *
+ * hb_pp_SetRules() and related code for supportting
+ * replaceable rules with -w switch
+ *
  * See doc/license.txt for licensing terms.
  *
  */
@@ -119,6 +124,8 @@ static int    StringToInt( char *, int );
 static BOOL   IsOnOffSwitch( char *, BOOL );
 static void   DebugPragma( char *, int, BOOL );
 
+void hb_pp_Table( void );
+
 static BOOL s_bTracePragma = FALSE;
 
 #define ISNAME( c )  ( isalnum( ( int ) c ) || ( c ) == '_' || ( c ) > 0x7E )
@@ -159,6 +166,8 @@ int        hb_pp_nEmptyStrings;
 int *      hb_pp_aCondCompile = NULL;
 int        hb_pp_nCondCompile = 0;
 
+char *     hb_pp_STD_CH = NULL;
+
 /* Table with parse errors */
 char * hb_pp_szErrors[] =
 {
@@ -183,6 +192,69 @@ char * hb_pp_szWarnings[] =
 {
    "1Redefinition or duplicate definition of #define %s"
 };
+
+void hb_pp_SetRules( BOOL (*hb_compInclude)(char *, PATHNAMES * ) )
+{
+   COMMANDS * stcmd;
+
+   if( hb_pp_STD_CH )
+   {
+      if( *hb_pp_STD_CH > ' ' )
+      {
+         hb_comp_pFileName = hb_fsFNameSplit( hb_pp_STD_CH );
+
+         if( hb_comp_pFileName->szName )
+         {
+            char szFileName[ _POSIX_PATH_MAX ];
+
+            if( !hb_comp_pFileName->szExtension )
+               hb_comp_pFileName->szExtension = ".ch";
+
+            hb_fsFNameMerge( szFileName, hb_comp_pFileName );
+
+            if( (* hb_compInclude)( szFileName, hb_comp_pIncludePath ) )
+            {
+                printf( "Loading standard defs from: \'%s\'\n", szFileName );
+
+                hb_pp_Init();
+
+                hb_pp_ReadRules();
+
+                stcmd = hb_pp_topCommand;
+
+                /*
+                while ( stcmd )
+                {
+                    printf( "Command: %s Pattern: %s\n", stcmd->name, stcmd->mpatt );
+                    stcmd = stcmd->last;
+                }
+                */
+
+                fclose( hb_comp_files.pLast->handle );
+                hb_xfree( hb_comp_files.pLast->pBuffer );
+                hb_xfree( hb_comp_files.pLast );
+                hb_comp_files.pLast = NULL;
+                hb_comp_files.iFiles = 0;
+
+                hb_xfree( ( void * ) hb_comp_pFileName );
+                hb_comp_pFileName = NULL;
+
+                s_kolAddDefs = 0;
+                s_kolAddComs = 0;
+                s_kolAddTras = 0;
+            }
+            else
+            {
+                printf( "Can\'t open standard rule file: \'%s\'", hb_pp_STD_CH );
+            }
+         }
+      }
+   }
+   else
+   {
+      hb_pp_Table();
+   }
+}
 
 void hb_pp_Init( void )
 {

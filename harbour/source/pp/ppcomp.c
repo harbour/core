@@ -178,3 +178,100 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
 
   return lens;
 }
+
+int hb_pp_ReadRules( void )
+{
+  PFILE pFile;
+  char * ptr;
+  int lContinue;
+  int lens, rdlen;
+  int lLine = 0, i;
+
+  HB_TRACE(HB_TR_DEBUG, ("hb_pp_ReadRules()"));
+
+  hb_pp_nEmptyStrings = 0;
+  while( TRUE )
+  {
+     pFile = hb_comp_files.pLast;
+     lens = lContinue = 0;
+     while( ( rdlen = hb_pp_RdStr( pFile->handle, s_szLine + lens, HB_PP_STR_SIZE -
+                  lens, lContinue, ( char * ) pFile->pBuffer, &( pFile->lenBuffer ),
+                  &( pFile->iBuffer ) ) ) >= 0 )
+       {
+         lens += rdlen;
+
+         if( s_szLine[ lens - 1 ] == ';' )
+           {
+             lContinue = 1;
+             lens--;
+             lens--;
+             while( s_szLine[ lens ] == ' ' || s_szLine[ lens ] == '\t' ) lens--;
+             s_szLine[ ++lens ] = ' ';
+             s_szLine[ ++lens ] = '\0';
+
+             hb_pp_nEmptyStrings++;
+           }
+         else
+           {
+             lContinue = 0;
+             lens = 0;
+           }
+
+         if( !lContinue )
+           {
+             if( *s_szLine != '\0' )
+               {
+                 ptr = s_szLine;
+                 HB_SKIPTABSPACES( ptr );
+                 if( *ptr == '#' )
+                   {
+                     hb_pp_ParseDirective( ptr + 1 );
+                     if( pFile != hb_comp_files.pLast )
+                     {
+                        pFile = ( PFILE ) ( ( PFILE ) hb_comp_files.pLast )->pPrev;
+                        if( lLine == 0)
+                           *s_szLine = '\0';
+                        lLine = 0;
+                        pFile->iLine += 1+hb_pp_nEmptyStrings;
+                        hb_pp_nEmptyStrings = 0;
+                     }
+                     else
+                     {
+                        *s_szLine = '\0';
+                        hb_pp_nEmptyStrings++;
+                     }
+                   }
+                 else
+                   {
+                      *s_szLine = '\0';
+                      hb_pp_nEmptyStrings++;
+                   }
+               }
+             else
+                hb_pp_nEmptyStrings++;
+             break;
+           }
+       }
+     if( rdlen < 0 )
+       {
+        if( hb_comp_files.iFiles == 1 )
+           return 0;      /* we have reached the main EOF */
+        else
+          {  /* we close the currently include file and continue */
+           fclose( hb_comp_files.pLast->handle );
+           hb_xfree( hb_comp_files.pLast->pBuffer );
+           hb_xfree( hb_comp_files.pLast->szFileName );
+           pFile = ( PFILE ) ( ( PFILE ) hb_comp_files.pLast )->pPrev;
+           hb_xfree( hb_comp_files.pLast );
+           hb_comp_files.pLast = pFile;
+           hb_comp_iLine = hb_comp_files.pLast->iLine;
+           hb_comp_files.iFiles--;
+           lLine = 1;
+           hb_pp_nEmptyStrings = 0;
+          }
+       }
+     if( *s_szLine ) break;
+  }
+
+  return lens;
+}

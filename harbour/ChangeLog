@@ -1,3 +1,26 @@
+2000-06-04 03:05 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
+
+   * include/hbcomp.h
+     + Added: extern char *        hb_pp_STD_CH;
+
+   * include/hbpp.h
+     + Added: extern void hb_pp_SetRules( BOOL (*hb_compInclude)(char *, PATHNAMES * ) );
+
+   * source/compiler/hbusage.c
+   * source/compiler/harbour.c
+   * source/compiler/cmdcheck.c
+     + Added support for -u[FileName]
+     - Removed TODO for -u
+
+   * source/pp/ppcomp.c
+     + Added hb_pp_ReadRules() - Logic to process directives from user supplied command defs.
+
+   * source/pp/ppcore.c
+     + Added hb_pp_SetRules() - Logic to use predefined rules, none, or user defined.
+
+   * source/pp/pptable.c
+     + Added hb_pp_Table() - Moved predefined rules into this function, to allow for conditional use.
+
 2000-06-03 13:36 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
    * makefile.bc
@@ -5,8 +28,8 @@
        You'll have to run make with -DBCC_NOSTARTUP.
 
    * source/common/hbver.c
-     * hb_verBuildInfo() Changed to display the platform info after the 
-       compiler version, because on some platform/OS/combinations (RSXNT,EMX) 
+     * hb_verBuildInfo() Changed to display the platform info after the
+       compiler version, because on some platform/OS/combinations (RSXNT,EMX)
        the program crashes on platform detection.
 
    * include/hbcomp.h
@@ -19,15 +42,15 @@
 
 2000-06-03 01:13 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
-   * include/button.ch 
-   * source/rtl/tmenuitm.prg 
+   * include/button.ch
+   * source/rtl/tmenuitm.prg
      * Some minor namespace fixes.
 
-   * include/hbsetup.h 
+   * include/hbsetup.h
      * Minor formatting
 
-   * utils/hbtest/rt_misc.prg 
-     ! The filename split/merge tests changed so that they now pass for Unix 
+   * utils/hbtest/rt_misc.prg
+     ! The filename split/merge tests changed so that they now pass for Unix
        systems. (there are still 4 tests which need to fixed)
 
 2000-06-02 14:45 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>

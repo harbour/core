@@ -140,6 +140,8 @@ static BOOL hb_comp_bExternal   = FALSE;
  */
 static PEXTERN hb_comp_pExterns = NULL;
 
+extern int yyparse( void );    /* main yacc parsing function */
+
 /* ************************************************************************* */
 
 int main( int argc, char * argv[] )
@@ -173,6 +175,12 @@ int main( int argc, char * argv[] )
       return iStatus;
    }
 
+   /* Set Search Path */
+   hb_compChkPaths();
+
+   /* Set standard rules */
+   hb_pp_SetRules( hb_compInclude );
+
    /* Process all files passed via the command line. */
 
    bAnyFiles = FALSE;
@@ -183,7 +191,6 @@ int main( int argc, char * argv[] )
       {
          if( !bAnyFiles )
          {
-            hb_compChkPaths();
             bAnyFiles = TRUE;
          }
 

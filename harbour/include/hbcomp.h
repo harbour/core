@@ -412,6 +412,8 @@ extern char *        hb_comp_szLastMethod;
 extern char *        hb_comp_szErrors[];
 extern char *        hb_comp_szWarnings[];
 
+extern char *        hb_pp_STD_CH;
+
 /* /GC command line setting types */
 #define HB_COMPGENC_COMPACT     0
 #define HB_COMPGENC_NORMAL      1

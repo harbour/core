@@ -64,7 +64,7 @@ void hb_compPrintUsage( char * szSelf )
 /* TODO:   "\n          %cr[<lib>]        request linker to search <lib> (or none)", */
            "\n          %cs               syntax check only",
 /* TODO:   "\n          %ct<path>         path for temp file creation", */
-/* TODO:   "\n          %cu[<file>]       use command def set in <file> (or none)", */
+           "\n          %cu[<file>]       use command def set in <file> (or none)",
            "\n          %cv               variables are assumed M->",
            "\n          %cw[<level>]      set warning level number (0..3, default 1)",
            "\n          %cx[<prefix>]     set symbol init function name prefix (for .c only)",
@@ -122,7 +122,7 @@ void hb_compPrintCredits( void )
            "Paul Tucker <ptucker@sympatico.ca>\n"
            "Peter Townsend <cephas@tpgi.com.au>\n"
            "Phil Barnett <philb@iag.net>\n"
-           "Ron Pinkas <ron@profit-Master.com>\n"
+           "Ron Pinkas <ron@profit-master.com>\n"
            "Ryszard Glab <rglab@imid.med.pl>\n"
            "Tim Stone <timstone@mstrlink.com>\n"
            "Victor Szakats <info@szelvesz.hu>\n"

@@ -421,8 +421,7 @@ void hb_compChkEnvironVar( char * szSwitch )
 
              case 'u':
              case 'U':
-                /* TODO: Implement this switch */
-                printf( "Not yet supported command line option: %s\n", s );
+                hb_pp_STD_CH = hb_strdup( s + 1 );
                 break;
 
              case 'v':
