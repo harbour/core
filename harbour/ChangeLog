@@ -1,4 +1,9 @@
-2000-01-31 13:30 GMT-5 David G. Holm <dholm@ sd-llc.com>
+20000131-21:20 GMT+1 Victor Szakats <info@szelvesz.hu>
+  * include/hbextern.ch
+    source/runner/stdalone/external.prg
+    ! EXTERNAL CLIPPER530 put between #ifdef HB_COMPAT_53 guards.
+
+20000131-13:30 GMT-5 David G. Holm <dholm@ sd-llc.com>
 
    * ChangeLog.005
      + Renamed from ChangeLog and started a new ChangeLog
@@ -8,7 +13,8 @@
      - Removed debug information from OS/2 builds of Harbour
 
    * doc/whatsnew.txt
-     % Synchronized with updates that were made to the build31 branch   * source/pp/pragma.c
+     % Synchronized with updates that were made to the build31 branch
+   * source/pp/pragma.c
    * contrib/dot/pp_harb.ch
    * tests/inline_c.prg
      * STOPDUMP renamed as ENDDUMP (with Ron permission)
