@@ -1,3 +1,15 @@
+20000423-05:15 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   - doc/compiler.txt 
+   - doc/gnulice.txt  
+   - doc/harbext.txt  
+   - doc/subcodes.txt 
+   + doc/en/compiler.txt 
+   + doc/en/gnulice.txt  
+   + doc/en/harbext.txt  
+   + doc/en/subcodes.txt 
+     * Moved some doc files which are part of the HBDOC generated docs.
+
 20000423-04:02 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/compiler/genc.c
