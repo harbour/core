@@ -1,3 +1,8 @@
+20000115-15:45 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/compiler/hbgenerr.c
+	* added missing comma separator in error messages list
+	
 20000115-15:15 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *include/pcode.h

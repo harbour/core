@@ -78,7 +78,7 @@ char * hb_comp_szErrors[] =
    "Operation not supported for this data type: \'%s\'",
    "Invalid alias expression: \'%s\'",
    "Invalid array index expression: \'%s\'",
-   "Bound error: \'%s\'"
+   "Bound error: \'%s\'",
    "Macro of declared symbol: \'%s\'",
    "Invalid selector in send: \'%s\'"
 };
