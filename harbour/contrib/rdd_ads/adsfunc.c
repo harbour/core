@@ -354,10 +354,22 @@ HB_FUNC( ADSKEYNO )
    UNSIGNED8 ordNum;
    UNSIGNED32 pulKey;
    ADSHANDLE hIndex;
+   UNSIGNED16 usFilterOption = ADS_IGNOREFILTERS;
 
    pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
    if( pArea )
    {
+      if( hb_pcount() > 2 )             /* 2nd parameter: unsupported Bag Name */
+      {
+         if( ISNUM( 3 ) )
+            usFilterOption = hb_parni( 3 );
+         else
+         {
+            hb_errRT_DBCMD( EG_ARG, 1014, NULL, "ADSKEYNO" );
+            return;
+         }
+      }
+
       if( hb_pcount() > 0 )
       {
          if( ISNUM( 1 ) )
@@ -370,17 +382,17 @@ HB_FUNC( ADSKEYNO )
             ordName = (UNSIGNED8*)hb_parc( 1 );
             AdsGetIndexHandle( pArea->hTable, ordName, &hIndex );
          }
-         AdsGetKeyNum  ( hIndex, ADS_IGNOREFILTERS, &pulKey);
+         AdsGetKeyNum( hIndex, usFilterOption, &pulKey );
       }
       else
       {
-         if( pArea->hOrdCurrent != 0)
+         if( pArea->hOrdCurrent != 0 )
          {
             hIndex = pArea->hOrdCurrent;
-            AdsGetKeyNum  ( hIndex, ADS_IGNOREFILTERS, &pulKey);
+            AdsGetKeyNum( hIndex, usFilterOption, &pulKey );
          }
          else
-            AdsGetRecordNum  ( pArea->hTable, ADS_IGNOREFILTERS, &pulKey);
+            AdsGetRecordNum( pArea->hTable, usFilterOption, &pulKey );
       }
 
       hb_retnl( pulKey );
@@ -397,7 +409,7 @@ HB_FUNC( ADSKEYCOUNT )
    UNSIGNED32 pulKey;
    ADSHANDLE  hIndex;
    UNSIGNED16 usFilterOption = ADS_IGNOREFILTERS;
-   UNSIGNED8  pucScope[ ADS_MAX_KEY_LENGTH+1 ];
+   UNSIGNED8  pucScope[ ADS_MAX_KEY_LENGTH+1];
    UNSIGNED8  pucFilter[HARBOUR_MAX_RDD_FILTER_LENGTH+1];
    UNSIGNED16 pusBufLen = ADS_MAX_KEY_LENGTH+1;
 
@@ -409,18 +421,18 @@ HB_FUNC( ADSKEYCOUNT )
          ordNum = hb_parni( 1 );
          AdsGetIndexHandleByOrder( pArea->hTable, ordNum, &hIndex );
       }
-      else if(ISCHAR( 1 ))
+      else if( ISCHAR( 1 ) )
       {
          ordName = (UNSIGNED8*)hb_parc( 1 );
          AdsGetIndexHandle( pArea->hTable, ordName, &hIndex );
       }
-      else if(! ISNIL( 1 ))
+      else if( ! ISNIL( 1 ) )
       {
          hb_errRT_DBCMD( EG_ARG, 1014, NULL, "ADSKEYCOUNT" );
          return;
       }
       else
-         hIndex = (pArea->hOrdCurrent == 0) ? pArea->hTable : pArea->hOrdCurrent;
+         hIndex = ( pArea->hOrdCurrent == 0 ) ? pArea->hTable : pArea->hOrdCurrent;
 
       if( hb_pcount() > 2 )             /* 2nd parameter: unsupported Bag Name */
       {
@@ -439,7 +451,7 @@ HB_FUNC( ADSKEYCOUNT )
          AdsGetRecordCount( hIndex, ADS_IGNOREFILTERS, &pulKey );
       else            /* ads scope handling is flawed; do our own */
       {               /* One more optimization would be to check if there's a fully optimized AOF available so don't walk ours */
-         AdsGetScope  ( hIndex, ADS_BOTTOM, pucScope, &pusBufLen);
+         AdsGetScope( hIndex, ADS_BOTTOM, pucScope, &pusBufLen );
          if ( pusBufLen )                // had a scope
          {
             AdsGetAOF( pArea->hTable, pucFilter, &pusBufLen );
@@ -449,7 +461,7 @@ HB_FUNC( ADSKEYCOUNT )
             {
                AdsGetRecordNum( pArea->hTable, ADS_IGNOREFILTERS,
                      (UNSIGNED32 *)&(pArea->ulRecNo) );
-               AdsGotoTop  ( hIndex );
+               AdsGotoTop( hIndex );
                AdsAtEOF( pArea->hTable, (UNSIGNED16 *)&(pArea->fEof) );
 
                while ( AdsSkip ( hIndex, 1 ) != AE_NO_CURRENT_RECORD && !pArea->fEof )
@@ -464,7 +476,7 @@ HB_FUNC( ADSKEYCOUNT )
                AdsGetRecordCount( hIndex, usFilterOption, &pulKey );
          }
          else                           /*  no scope set */
-            AdsGetRecordCount  ( hIndex, usFilterOption, &pulKey);
+            AdsGetRecordCount( hIndex, usFilterOption, &pulKey );
 
       }
 
