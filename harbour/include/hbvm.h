@@ -100,6 +100,7 @@ extern void    hb_vmPushLong( long lNumber ); /* pushes a long number onto the s
 extern void    hb_vmPushDouble( double lNumber, int iDec ); /* pushes a double number onto the stack */
 extern void    hb_vmPushLogical( BOOL bValue );    /* pushes a logical value onto the stack */
 extern void    hb_vmPushString( char * szText, ULONG length );  /* pushes a string on to the stack */
+extern void    hb_vmPushStringPcode( char * szText, ULONG length );  /* pushes a string from pcode on to the stack */
 extern void    hb_vmPushDate( long lDate );   /* pushes a long date onto the stack */
 extern void    hb_vmPushSymbol( PHB_SYMB pSym ); /* pushes a function pointer onto the stack */
 extern void    hb_vmPushPointer( void * ); /* push an item of HB_IT_POINTER type */
