@@ -50,7 +50,7 @@ CLASS TDbWindow  // Debugger windows and dialogs
    DATA   cCaption
    DATA   cBackImage, cColor
    DATA   lFocused, bGotFocus, bLostFocus
-   DATA   bKeyPressed, bPainted
+   DATA   bKeyPressed, bPainted, bLButtonDown, bLDblClick
    DATA   lShadow
    DATA   Cargo
 
@@ -63,6 +63,8 @@ CLASS TDbWindow  // Debugger windows and dialogs
    METHOD SetFocus( lOnOff )
    METHOD Show( lFocused )
    METHOD ShowModal()
+   METHOD LButtonDown( nMRow, nMCol )
+   METHOD LDblClick( nMRow, nMCol )
    METHOD Move()
    METHOD KeyPressed( nKey )
 
@@ -172,7 +174,7 @@ METHOD ShowModal() CLASS TDbWindow
    ::Show()
 
    while ! lExit
-      nKey := InKey( 0 )
+      nKey := InKey( 0, INKEY_ALL )
 
       if ::bKeyPressed != nil
          Eval( ::bKeyPressed, nKey )
@@ -181,10 +183,31 @@ METHOD ShowModal() CLASS TDbWindow
       do case
          case nKey == K_ESC
               lExit := .t.
+
+         case nKey == K_LBUTTONDOWN
+              if MRow() == ::nTop .and. MCol() == ::nLeft + 3
+                 lExit = .t.
+              endif
       endcase
    end
 
    ::Hide()
+
+return nil
+
+METHOD LButtonDown( nMRow, nMCol ) CLASS TDbWindow
+
+   if ::bLButtonDown != nil
+      Eval( ::bLButtonDown, nMRow, nMCol )
+   endif
+
+return nil
+
+METHOD LDblClick( nMRow, nMCol ) CLASS TDbWindow
+
+   if ::bLDblClick != nil
+      Eval( ::bLDblClick, nMRow, nMCol )
+   endif
 
 return nil
 
