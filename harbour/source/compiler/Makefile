@@ -14,12 +14,19 @@ YACC_HEADERS=\
 	hberrors.h \
 	hbpp.h
 
-#LEX_SOURCE=harbour.l
+ifeq ($(HB_LEX),SIMPLEX)
 
-#LEX_HEADERS=\
-#	hbsetup.h \
-#	hberrors.h \
-#	hbdefs.h
+C_EXTRA=hbslex.c
+
+else
+
+LEX_SOURCE=harbour.l
+
+LEX_HEADERS=\
+	hbsetup.h \
+	hberrors.h \
+	hbdefs.h
+endif
 
 C_SOURCES=\
 	cmdcheck.c \
@@ -33,10 +40,10 @@ C_SOURCES=\
 	hbusage.c \
 	hbfix.c \
 	hbident.c \
-	hbslex.c \
 	expropta.c \
 	exproptb.c \
 	exproptc.c \
+	$(C_EXTRA)
 
 C_MAIN=harbour.c
 

@@ -1,6 +1,19 @@
+2000-07-12 12:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+   * config/c.cf
+     * Changed to force flex to run before gcc, but after bison.
+
+   * source/compiler/Makefile
+     + Added test for HB_LEX being equal to SIMPLEX to compile
+       Harbour with SimpLex. If HB_LEX is missing or is set to
+       any value other than SIMPLEX, then Lex/Flex is used.
+
 20000712-18:18 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
 
-
+   * source\compiler\Makefile
+     + added hbslex.c and changed to remove flex usage
+   * config\c.cf
+     * changed to force bison to run before gcc
 
 2000-07-12 16:08 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
     * source/rdd/dbf1.c
