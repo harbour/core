@@ -1,3 +1,9 @@
+2001-02-24 13:20 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * contrib/dot/pp.prg
+     * Minor optimization.
+
+   + contrib/dot/pp.txt
+
 2001-02-25 20:25 UTC+0300 Alex Shashkov <shashkov@ostu.ru>
    * harbour/source/rdd/dbfcdx2.h
    * harbour/source/rdd/dbfcdx1.c
@@ -9,6 +15,7 @@
    *utils/hbdoc/genpdf1.prg
     utils/hbdoc/rtf.prg
       *Small enhacements
+
 2001-02-24 19:45 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * contrib/dot/pp.prg
      + Added CompileNestedBlocks() #ifdef __CLIPPER__, because Clipper's Macro Compiler can *not* compile nested blocks.
@@ -18,7 +25,7 @@
         Now PP will pre-compile such nested blocks. This makes PP fully functional when compiled with Clipper too :-) */
 
    * harbour/source/rdd/dbfcdx1.c
-     ! Moved few declarations above the HB_TRACE() lien, to fix compilation errors.
+     ! Moved few declarations above the HB_TRACE() line, to fix compilation errors.
 
 2001-02-24 18:10 UTC+0300 Alex Shashkov <shashkov@ostu.ru>
    * harbour/source/rtl/console.c

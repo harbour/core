@@ -1,0 +1,49 @@
+PP has 3 personalities which are tied tightly together.
+
+1. What is supposed to be 100% Clipper compatible Pre-Processor. Executing
+   PP followed by a source file name will create <filename.pp$> which is
+   the equivalent of the Clipper <filename.ppo> file. In this mode there
+   are few optional switches.
+
+   PP filename[.ext] [-U][-DM][-DE][-DP][-CCH]
+
+     -U   = Don't load standard rules.
+     -DM  = Show tracing information into the Match Engine.
+     -DE  = Show tracing information into the Expression Scanner.
+     -DP  = Show tracing information into the Output Generator.
+     -CCH = Generate a .cch file (compiled command header).
+
+   At this point all switches must *not* be separated by any spaces!
+
+2. DOT prompt, which suppose to allow most of Harbour syntax, with few
+   exceptions:
+
+     It does *not* support LOCAL/STATIC/PRIVATE/PUBLIC, but any refference
+     to a variable will create it as PRIVATE.
+
+     It does not (yet) support creation of FUNCTIONs/PROCEDUREs but will
+     execute any built-in, or linked, prodecure/function.
+
+     It does not (yet) support WHILE and FOR loops.
+
+   Executing PP with no source filename will start the DOT prompt mode. In
+   this mode you can execute a single line at a time, by typing the line
+   and pressing the [Enter] key.
+
+   Additionally you may type:
+
+     DO filename.prg [Enter]
+
+   So that DOT will "run" the specified source file.
+
+3. Finally, PP is a limited Harbour Interpreter. Subject to those same few
+   limitations it can execute most of Harbour syntax. Executing PP followed
+   by a source file name and the -R switch, will "RUN" that source (it will
+   also create the .pp$ file).
+
+   This final syntax is:
+
+     PP filename[.ext] -R
+
+I intend to add support for UDFs, LOOPs, and Variable scoping, so that the
+Interpreter will be as complete as possible.

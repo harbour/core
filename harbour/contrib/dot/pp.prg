@@ -319,14 +319,18 @@ PROCEDURE ExecuteLine( sPPed )
             ENDIF
          ENDDO
 
-         sSymbol := Upper( Left( sBlock, 14 ) ) // Len( "__SetOtherwise" )
+         IF sBlock = "__"
+            sSymbol := Upper( SubStr( sBlock, 3, 12 ) ) // Len( "SetOtherwise" )
+         ELSE
+            sSymbol := ""
+         ENDIF
          IF nIf == 0 .OR. ;
-            sSymbol = "__SETIF" .OR. sSymbol = "__SETELSE" .OR. sSymbol = "__SETELSEIF" .OR. sSymbol = "__SETEND" .OR. ;
-            sSymbol = "__SETDOCASE" .OR. sSymbol = "__SETCASE" .OR. sSymbol = "__SETOTHERWISE" .OR. sSymbol = "__SETENDCASE" .OR. ;
+            sSymbol = "SETIF" .OR. sSymbol = "SETELSE" .OR. sSymbol = "SETELSEIF" .OR. sSymbol = "SETEND" .OR. ;
+            sSymbol = "SETDOCASE" .OR. sSymbol = "SETCASE" .OR. sSymbol = "SETOTHERWISE" .OR. sSymbol = "SETENDCASE" .OR. ;
             abIf[ nIf ]
 
             #ifdef __CLIPPER__
-               /* Clipper Macro Compiler can't ompile nested blocks! */
+               /* Clipper Macro Compiler can't compile nested blocks! */
                CompileNestedBlocks( sBlock, @sBlock )
             #endif
 
@@ -379,14 +383,18 @@ PROCEDURE ExecuteLine( sPPed )
             ENDIF
          ENDDO
 
-         sSymbol := Upper( Left( sBlock, 11 ) ) // Len( "__SetElseIf" )
+         IF sBlock = "__"
+            sSymbol := Upper( SubStr( sBlock, 3, 12 ) ) // Len( "SetOtherwise" )
+         ELSE
+            sSymbol := ""
+         ENDIF
          IF nIf == 0 .OR. ;
-            sSymbol = "__SETIF" .OR. sSymbol = "__SETELSE" .OR. sSymbol = "__SETELSEIF" .OR. sSymbol = "__SETEND" .OR. ;
-            sSymbol = "__SETDOCASE" .OR. sSymbol = "__SETCASE" .OR. sSymbol = "__SETOTHERWISE" .OR. sSymbol = "__SETENDCASE" .OR. ;
+            sSymbol = "SETIF" .OR. sSymbol = "SETELSE" .OR. sSymbol = "SETELSEIF" .OR. sSymbol = "SETEND" .OR. ;
+            sSymbol = "SETDOCASE" .OR. sSymbol = "SETCASE" .OR. sSymbol = "SETOTHERWISE" .OR. sSymbol = "SETENDCASE" .OR. ;
             abIf[ nIf ]
 
             #ifdef __CLIPPER__
-                /* Clipper Macro Compiler can't ompile nested blocks! */
+                /* Clipper Macro Compiler can't compile nested blocks! */
                 CompileNestedBlocks( sBlock, @sBlock )
             #endif
 
