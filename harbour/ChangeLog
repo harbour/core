@@ -1,4 +1,12 @@
 19990807-8:39 GMT+1 Antonio Linares <alinares@fivetech.com>
+   + source/rtl/tbcolumn.prg
+     * Harbour Class TBColumn first outline
+   * tests/working/testbrw.prg
+     * Updated
+   * makefile.b32
+     * tbcolumn module added
+
+19990807-8:39 GMT+1 Antonio Linares <alinares@fivetech.com>
    + source/rtl/tbrowse.prg
      * Harbour Class TBrowse first outline
    + tests/working/testbrw.prg
