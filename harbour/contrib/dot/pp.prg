@@ -4079,13 +4079,6 @@ STATIC FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor, bX )
      CASE cType == ','
         sList := ""
 
-     CASE cType == '*'
-        sExp  := sLine
-
-        sLine := ""
-        //? "EXP (*): " + sExp
-        RETURN sExp
-
      CASE cType == ':'
         sWorkLine       := sLine
         sPrimaryStopper := NextToken( @sWorkLine )
@@ -4151,6 +4144,27 @@ STATIC FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor, bX )
               RETURN NIL
            ENDIF
         ENDIF
+
+     CASE cType == '*'
+        sExp  := sLine
+        sLine := ""
+        //? "EXP <*>: " + sExp
+        RETURN sExp
+
+     CASE cType == '('
+        nSpaceAt := At( ' ', sLine )
+
+        IF nSpaceAt = 0
+           sExp  := sLine
+           sLine := ""
+        ELSE
+           sExp  := Left( sLine, nSpaceAt - 1 )
+           sLine := SubStr( sLine, nSpaceAt )
+           sExp  += ExtractLeadingWS( @sLine )
+        ENDIF
+
+        //? "EXP <(>: " + sExp
+        RETURN sExp
 
      CASE cType == NIL
         RETURN "-"

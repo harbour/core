@@ -1,3 +1,7 @@
+2001-06-21 09:50 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * contrib/dot/pp.prg
+     + Added explicit support for Extended expression match marker, in NextExp()
+
 2001-06-21 13:20 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * source/debug/debugger.prg
      * partially fixed cursor appearance on debug screen
@@ -11,7 +15,7 @@
      * __dbgEntry() now invokes isAltdPressed() and calls debug screen, if
        isAltdPressed() returns TRUE
      * commented few lines in __dbgEntry() - debugged program works now much
-       faster and better     
+       faster and better
 
 2001-06-20 22:10 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * hb_slex.vc
