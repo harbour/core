@@ -1,3 +1,8 @@
+19990508-15:24 CET Victor Szel <info@szelvesz.hu>
+
+   * source/rtl/strings.c:
+     Fixed warning in PADR(), PADL(), PADC() (David G. Holm)
+
 19990507-23:45 EDT David G. Holm <dholm@jsd-llc.com>
   This update makes Harbour compatible with the IBM C++ compiler.
   * include/init.h

@@ -164,11 +164,12 @@ HARBOUR ALLTRIM( void )
 HARBOUR PADR( void )
 {
    char *szText = _parc(1);
+
    if( _pcount() > 1 )
    {
       ULONG lLen = _parnl(2);
 
-      if( lLen >= (ULONG)_parclen(1) )
+      if( lLen > (ULONG)_parclen(1) )
       {
          char *szResult = (char *)_xgrab(lLen + 1);
          ULONG lPos;
@@ -184,10 +185,8 @@ HARBOUR PADR( void )
          _retclen(szResult, lLen);
          _xfree(szResult);
       }
-      else if( lLen >= 0 )
-         _retclen(szText, lLen);
       else
-         _retc("");
+         _retclen(szText, lLen);
    }
    else
       _retc("");
@@ -227,10 +226,8 @@ HARBOUR PADL( void )
          _retclen(szResult, lLen);
          _xfree(szResult);
       }
-      else if( lLen >= 0 )
-         _retclen(szText, lLen);
       else
-         _retc("");
+         _retclen(szText, lLen);
    }
    else
       _retc("");
@@ -267,10 +264,8 @@ HARBOUR PADC( void )
          _retclen(szResult, lLen);
          _xfree(szResult);
       }
-      else if( lLen >= 0 )
-         _retclen(szText, lLen);
       else
-         _retc("");
+         _retclen(szText, lLen);
    }
    else
       _retc("");
