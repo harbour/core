@@ -1,3 +1,7 @@
+2000-11-30 07:50 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * source/pp/pptable.c
+     - Removed #ifdef SIMPLEX recently added by Ryszard, SimpLex was using same 5 paramters as Cliiper.
+
 2000-11-30 16:00 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *source/rtl/tgetint.prg
@@ -13,13 +17,13 @@
     *source/compiler/expropta.c
     *source/macro/macroa.c
         * _GET_ => __GET translation is now fully Clipper compatible
-        
+
     *source/pp/pptable.c
         * Flex version doesn't pass a sixth argument to _GET_ function
-        
+
     *source/rtl/tgetint.prg
         * replaced all internal '_1' variables with PCOUNT()/HB_PVALUE()
-        
+
 2000-11-29 23:30 UTC+0100 jfl (mafact) <jfl@mafact.com>
    * include/hbclass.ch
      * some work in progress about :class message
