@@ -8,6 +8,17 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-07-27 11:16 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+  * include/hbclass.ch
+    + Added optional clause FUNCTION to class definitions,
+      based on Class(y) implementation. This allows to use a different name,
+      if desired, to the defined class. i.e.:
+
+    CLASS Date FUNCTION _Date
+
+    As Date() is a reserved function name, we can use a _Date() one, but the
+    Class Name will remain as DATE.
+
 2004-07-27 02:09 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
   + source/rtl/characte.prg
     * Harbour implementation of Class(y) Class Character
