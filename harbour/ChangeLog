@@ -5,7 +5,7 @@
          Thanks, Harrier!
 
    * contrib/rdd_ads/ads1.c
-      * corrected commit to only flush current workarea
+      * fixed adsOrderDestroy to call DestroyIndex instead of CloseIndex
 
    * source/rtl/philes.c
       * changed HB_FEOF() to HB_F_EOF to avoid collision with the
