@@ -8,7 +8,7 @@ ifeq ($(HB_ARCHITECTURE),w32)
 	C_MAIN := mainstd.c mainwin.c
 else
 	ifeq ($(HB_ARCHITECTURE),os2)
-		C_MAIN := main.c mainpm.c
+		C_MAIN := mainstd.c mainpm.c
 	else
 		C_MAIN := main.c
 	endif

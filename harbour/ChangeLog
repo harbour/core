@@ -1,3 +1,13 @@
+2001-08-31 14:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+  * config/os2/icc.cf
+  * source/vm/Makefile
+    * Build and use mainstd.c for OS/2 instead of main.c in order
+      to avoid the main.c build dependencies.
+
+    Note to builders of OS/2 binary distributions: Please be
+    sure to include both the mainstd and mainpm object files!
+
 2001-08-31 12:15 GMT+1 Ignacio Ortiz <ignacio@fivetech.com>
    * source/bin/bld.bat
    * source/include/extend.api

@@ -25,7 +25,7 @@ ifeq ($(C_MAIN),)
 ifeq ($(HB_GT_LIB),os2pm)
 LDFLAGS +=/B"/PMtype:PM" $(TOP)$(ROOT)source/vm/$(ARCH)/mainpm.obj
 else
-LDFLAGS += $(TOP)$(ROOT)source/vm/$(ARCH)/main.obj
+LDFLAGS += $(TOP)$(ROOT)source/vm/$(ARCH)/mainstd.obj
 endif
 endif
 endif
