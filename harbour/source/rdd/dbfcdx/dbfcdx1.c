@@ -411,9 +411,11 @@ static void hb_cdxGetMemo( CDXAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
  */
 static void hb_cdxAddFreeBlocks( CDXAREAP pArea, ULONG ulBlock, USHORT uiBlocks )
 {
+   /*
    SHORT iCount;
    BOOL bFound;
    LPMEMOFREEBLOCK pFreeBlock;
+   */
 
    HB_TRACE(HB_TR_DEBUG, ("hb_cdxAddFreeBlocks(%p, %lu, %hu)", pArea, ulBlock, uiBlocks));
    HB_SYMBOL_UNUSED( pArea );
@@ -504,9 +506,11 @@ static void hb_cdxAddFreeBlocks( CDXAREAP pArea, ULONG ulBlock, USHORT uiBlocks 
  */
 static BOOL hb_cdxCompleteFromFreeBlocks( CDXAREAP pArea, ULONG ulBlock, USHORT uiBlocks )
 {
+   /*
    USHORT uiCount;
    LPMEMOFREEBLOCK pFreeBlock;
    MEMOBLOCK mbBlock;
+   */
 
    HB_TRACE(HB_TR_DEBUG, ("hb_cdxCompleteFromFreeBlocks(%p, %lu, %hu)", pArea, ulBlock, uiBlocks));
    HB_SYMBOL_UNUSED( pArea );
@@ -559,9 +563,11 @@ static BOOL hb_cdxCompleteFromFreeBlocks( CDXAREAP pArea, ULONG ulBlock, USHORT 
 /* static void hb_cdxGetFreeBlocks( CDXAREAP pArea, USHORT uiBlocks, ULONG * ulBlock ) */
 static void hb_cdxGetFreeBlocks( CDXAREAP pArea, ULONG ulBlocks, ULONG * ulBlock )
 {
+   /*
    USHORT uiCount;
    LPMEMOFREEBLOCK pFreeBlock;
    MEMOBLOCK mbBlock;
+    */
 
    HB_TRACE(HB_TR_DEBUG, ("hb_cdxGetFreeBlocks(%p, %hu, %p)", pArea, ulBlocks, ulBlock));
 
@@ -5882,7 +5888,7 @@ ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrderInf
 static ERRCODE hb_cdxClearScope( CDXAREAP pArea )
 {
    LPCDXTAG pTag;
-   PHB_ITEM *pScope;
+   /* PHB_ITEM *pScope; */
 
    HB_TRACE(HB_TR_DEBUG, ("hb_cdxClearScope(%p)", pArea));
 
