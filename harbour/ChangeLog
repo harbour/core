@@ -1,3 +1,7 @@
+2000-06-21 21:35 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
+   * source/pp/ppcore.c
+     ! getExpReal() Fixed silly typo introduced this morning in previous fix, that broke the PP.
+
 2000-06-22 03:23 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
    * source/rtl/filesys.c

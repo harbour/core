@@ -1909,13 +1909,14 @@ static int getExpReal( char * expreal, char ** ptri, BOOL prlist, int maxrez )
 
       *expreal = '\0';
 
-      /*
-      printf( "\nLen=%i \'%s\'\n", lens, expreal-lens );
-      */
+      #if 0
+         printf( "\nLen=%i >%s<\n", lens, expreal-lens );
+      #endif
    }
 
    /* Ron Pinkas added 2000-06-21 */
-   if( STATE_QUOTE1 || STATE_QUOTE2 || STATE_QUOTE3 || StBr1 || StBr2 || StBr3  )
+   if( State == STATE_QUOTE1 || State == STATE_QUOTE2 || State == STATE_QUOTE3 ||
+       State == STATE_BRACKET || StBr1 || StBr2 || StBr3  )
    {
       /* Alexander should we include this???
       expreal = NULL;
@@ -1933,23 +1934,19 @@ static BOOL isExpres( char * stroka )
 
   HB_TRACE(HB_TR_DEBUG, ("isExpres(%s)", stroka));
 
-  /*
-  printf( "Exp: >%s<\n", stroka );
-  */
+  #if 0
+     printf( "Exp: >%s<\n", stroka );
+  #endif
 
   l1 = strlen( stroka );
   l2 = getExpReal( NULL, &stroka, FALSE, HB_PP_STR_SIZE );
 
-  /*
-  printf( "Len1: %i Len2: %i RealExp: >%s< Last: %c\n", l1, l2, stroka - l2, ( stroka - l2 )[l1-1] );
-  */
+  #if 0
+     printf( "Len1: %i Len2: %i RealExp: >%s< Last: %c\n", l1, l2, stroka - l2, ( stroka - l2 )[l1-1] );
+  #endif
 
   /* Ron Pinkas modified 2000-06-17 Expression can't be valid if last charcter is one of these: ":/+*-%^=(<>"
   return ( l1 <= l2 );
-  */
-
-  /*
-  printf( "l1: %i l2: %i\n", l1, l2 );
   */
 
   return ( l1 <= l2 && ! IsInStr( ( stroka - l2 )[l1-1], ":/+*-%^=(<>[{" ) );
