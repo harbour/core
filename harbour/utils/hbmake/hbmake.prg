@@ -56,7 +56,7 @@ Static aMacros     := {}
 Static aPrgs       := {}
 Static aCs         := {}
 Static aObjs       := {}
-Static lEof        := .f.
+Static lEof        := .F.
 Static aRes        := {}
 Static nLinkHandle
 Static cLinker     := "makefile.@@@"
@@ -66,6 +66,7 @@ Static aFile       := {}
 Static lBcc        := .T.
 Static lGcc        := .F.
 Static lVcc        := .F.
+Static szProject:=""
 
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
@@ -269,13 +270,13 @@ While !leof
 
         If Len( atemp ) > 1
            If At( "$", atemp[ 2 ] ) > 0
-              If lgcc .and. aTemp[ 1 ] = "CFLAG1" .or. aTemp[ 1 ] = "CFLAG2"
+              If lgcc .and. aTemp[ 1 ] = "CFLAG1" .or. lGcc .and.  aTemp[ 1 ] = "CFLAG2"
                  Aadd( amacros, { aTemp[ 1 ], Strtran( Replacemacros( atemp[ 2 ] ), "\", "/" ) } )
               Else
                  Aadd( amacros, { aTemp[ 1 ], Replacemacros( atemp[ 2 ] ) } )
               Endif
            Else
-              If lgcc .and. aTemp[ 1 ] = "CFLAG1" .or. aTemp[ 1 ] = "CFLAG2"
+              If lgcc .and. aTemp[ 1 ] = "CFLAG1" .or. lGcc .and. aTemp[ 1 ] = "CFLAG2"
                  Aadd( aMacros, { aTemp[ 1 ], Strtran( atemp[ 2 ], "\", "/" ) } )
               Else
                  Aadd( aMacros, { aTemp[ 1 ], atemp[ 2 ] } )
@@ -299,6 +300,7 @@ While !leof
      Endif
   Endif
   If lbuildSec
+     szProject:=cTemp
      aBuildOrder := listasarray2( ctemp, ":" )
      // ? cTemp
      SetBuild()
@@ -531,11 +533,18 @@ Local cRead       := Alltrim( readln( @leof ) )
 Local nPos
 Local nCount      := 0
 Local aTempMacros := {}
-
+Local aLocalMacros :={}
 aTempMacros := listasarray2( cREad, " " )
 For nCount := 1 To Len( atempmacros )
    If At( "$", atempmacros[ ncount ] ) > 0
+      if At( ";", atempmacros[ ncount ] ) > 0
+      aLocalMacros:=listasarray2( atempmacros[ ncount ], ";" )
+      for nPos:=1 to len( aLocalmacros)
+      findmacro( aLocalmacros[ nPos ], @cRead )
+      next
+      else
       findmacro( atempmacros[ ncount ], @cRead )
+      endif
    Endif
 Next
 Aadd( aCommands, { cTemp, cRead } )
@@ -555,6 +564,7 @@ Function Findmacro( cMacro, cRead )
 
 Local nPos
 Local cTemp
+local aLocalMacros:={}
 cMacro := Substr( cMacro, 1, At( ")", cMacro ) )
 If At( "-", cMacro ) > 0
    cMacro := Substr( cMacro, 3 )
@@ -562,7 +572,6 @@ Endif
 If At( ";", cMacro ) > 0
    cMacro := Substr( cMacro, At( ";", cMacro ) + 1 )
 Endif
-
 nPos := Ascan( aMacros, { | x, y | "$(" + Alltrim( x[ 1 ] ) + ")" == cMacro } )
 If nPos = 0
    cTemp := Strtran( cmacro, "$(", "" )
@@ -573,7 +582,7 @@ If nPos = 0
 Else
    cRead := Alltrim( Strtran( cRead, cmacro, amacros[ npos, 2 ] ) )
 Endif
-Return nil
+Return cRead
 
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
@@ -588,11 +597,20 @@ Function Replacemacros( cMacros )
 Local nPos
 Local nCount      := 0
 Local aTempMacros := {}
+local aLocalMacros:={}
 // ? "replacing macros"
 aTempMacros := listasarray2( cMacros, " " )
 For nCount := 1 To Len( atempmacros )
    If At( "$", atempmacros[ ncount ] ) > 0
+      if At( ";", atempmacros[ ncount ] ) > 0
+      aLocalMacros:=listasarray2( atempmacros[ ncount ], ";" )
+      for nPos:=1 to len( aLocalmacros)
+      findmacro( aLocalmacros[ nPos ], @cmacros )
+      next
+      else
       findmacro( atempmacros[ ncount ], @cmacros )
+      endif
+
    Endif
 Next
 Return cmacros
@@ -614,6 +632,7 @@ Local aTemp
 Local nCount
 // ? "setting link file"
 cRead  := Alltrim( readln( @leof ) )
+     szProject:=cRead
 amacro := listasarray2( cRead, ":" )
 If Len( amacro ) > 1
    aTemp := listasarray2( amacro[ 2 ], " " )
@@ -782,18 +801,20 @@ For nPos := 1 To Len( aCommands )
 Next
 Outstd( "" + CRLF )
 Outstd( "Targets:" )
-Outstd( "    " + aMacros[ 6 ] + ":" + CRLF )
-Outstd( "        " + "Flags:" + CRLF )
-Outstd( "        " + "Dependents:" )
+Outstd( "    " + szProject + ":" + CRLF )
+Outstd( "        " + "Flags :" + CRLF )
+Outstd( "        " + "Dependents :" )
 For nPos := 1 To Len( aCs )
-   Outstd( acs[ nPos ] )
+   Outstd( acs[ nPos ] + " ")
 Next
 For nPos := 1 To Len( aobjs )
-   Outstd( aobjs[ nPos ] )
+   Outstd( aobjs[ nPos ]  + " ")
 Next
 Outstd( " " + CRLF )
-Outstd( "        commands:" + aBuildOrder[ Len( aBuildOrder ) - 1 ] )
-
+Outstd( "        commands:" + aBuildOrder[ Len( aBuildOrder )  ] )
+Outstd( " " + CRLF )
+Outstd( " " + CRLF )
+Outstd( " " + CRLF )
 Return Nil
 
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
@@ -846,7 +867,7 @@ Fwrite( nLinkHandle, "!endif" + CRLF )
 Fwrite( nLinkHandle, "!ifndef BHC" + CRLF )
 Fwrite( nLinkHandle, "BHC = $(HMAKEDIR)\.." + CRLF )
 Fwrite( nLinkHandle, "!endif" + CRLF )
-
+Fwrite( nLinkHandle, " " + CRLF )
 Cls
 Setcolor( 'w/b+,w/b,w+/b,w/b+,w/b,w+/b' )
 @  0,  0, Maxrow(), Maxcol() Box( Chr( 201 ) + Chr( 205 ) + Chr( 187 ) + Chr( 186 ) + Chr( 188 ) + Chr( 205 ) + Chr( 200 ) + Chr( 186 ) + Space( 1 ) )
@@ -903,7 +924,7 @@ If lBcc
 
    Aadd( aCommands, { ".c.obj:", "$(BCB)\BIN\bcc32 -I$(BHC)\include $(CFLAG1) $(CFLAG2) -o$* $**" } )
 
-   Aadd( aCommands, { ".prg.c:", "$(BHC)\bin\harbour -n -I$(BHC)\include $(HARBOURFLAGS) -o$* $**" } )
+   Aadd( aCommands, { ".prg.c:", "$(BHC)\bin\harbour -n -I$(BHC)\include $(HARBOURFLAGS) -I$(FWH)\include -o$* $**" } )
 
    Aadd( aCommands, { ".rc.res:", "$(BCB)\BIN\brcc32 $(RFLAGS) $<" } )
 
@@ -928,7 +949,7 @@ Elseif lVcc
 
    Aadd( aCommands, { ".c.obj:", "$(BCB)\bin\cl -I$(BHC)\include $(CFLAG1) $(CFLAG2) -Fo$* $**" } )
 
-   Aadd( aCommands, { ".prg.c:", "$(BHC)\bin\harbour -n -I$(BHC)\include $(HARBOURFLAGS) -o$* $**" } )
+   Aadd( aCommands, { ".prg.c:", "$(BHC)\bin\harbour -n -I$(BHC)\include $(HARBOURFLAGS) -I$(C4W)\include -o$* $**" } )
 
    Aadd( aCommands, { ".rc.res:", "$(BCB)\BIN\rc $(RFLAGS) $<" } )
 Endif
@@ -986,13 +1007,11 @@ Next
 
 
 If lFwh
-   Fwrite( nLinkHandle, "!ifndef FWH" + CRLF )
    Fwrite( nLinkHandle, "FWH = " + cfwhpath + CRLF )
-   Fwrite( nLinkHandle, "!endif" + CRLF )
 Elseif lCw
-   Fwrite( nLinkHandle, "!ifndef C4H" + CRLF )
+
    Fwrite( nLinkHandle, "C4W =" + ccwpath + CRLF )
-   Fwrite( nLinkHandle, "!endif" + CRLF )
+
 Endif
 
 Fwrite( nLinkHandle, "PROJECT = " + Strtran( cTopfile, ".prg", ".exe" ) + CRLF )
@@ -1042,7 +1061,7 @@ endif
  Fwrite( nLinkHandle, "DEFFILE = "+CRLF)
  fWrite( nLinkHandle, "HARBOURFLAGS =" +cDefHarOpts+CRLF)
 if lBcc
- Fwrite( nLinkHandle, "CFLAG1 =  -OS $(CFLAGS) -d -L$(BHC)\lib\b32 -c"+CRLF)
+ Fwrite( nLinkHandle, "CFLAG1 =  -OS $(CFLAGS) -d -L$(BHC)\lib;$(FWH)\lib -c"+CRLF)
  Fwrite( nLinkHandle, "CFLAG2 =  -I$(BHC)\include;$(BCB)\include" +CRLF)
 
  Fwrite( nLinkHandle, "RFLAGS = "+CRLF)
@@ -1050,7 +1069,7 @@ if lBcc
  Fwrite( nLinkHandle, "IFLAGS = " +CRLF)
  Fwrite( nLinkHandle, "LINKER = ilink32"+CRLF)
  Fwrite( nLinkHandle, " "+CRLF)
- Fwrite( nLinkHandle, "ALLOBJ = " +if(lFwh,"c0w32.obj","c0x32.obj")+ "$(OBJFILES)"+CRLF)
+ Fwrite( nLinkHandle, "ALLOBJ = " +if(lFwh,"c0w32.obj","c0x32.obj")+ " $(OBJFILES)"+CRLF)
  Fwrite( nLinkHandle, "ALLRES = $(RESFILES)"+CRLF)
  Fwrite( nLinkHandle, "ALLLIB = $(LIBFILES) import32.lib cw32.lib"+CRLF)
  Fwrite( nLinkHandle, ".autodepend"+CRLF)
@@ -1078,6 +1097,7 @@ elseif lGcc
  Fwrite( nLinkHandle, "ALLRES = $(RESFILES) "+CRLF)
  Fwrite( nLinkHandle, "ALLLIB = $(LIBFILES) "+CRLF)
  Fwrite( nLinkHandle, ".autodepend"+CRLF)
+endif
 Fwrite( nLinkHandle, " "+CRLF)
 Fwrite( nLinkHandle, "#COMMANDS"+CRLF)
 
@@ -1135,7 +1155,7 @@ elseif lGcc
         Fwrite( nLinkHandle, "    $(LFLAGS)  "+CRLF)
         Fwrite( nLinkHandle, "    $(ALLLIB)  "+CRLF)
         Fwrite( nLinkHandle, "!"+CRLF)
-endif
+
 endif
  
 
