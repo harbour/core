@@ -24,9 +24,9 @@ rem set L_USR=
 
 rem Set to constant value to be consistent with the non-GNU make files.
 
-set HB_BIN_INSTALL=bin\
-set HB_LIB_INSTALL=lib\
-set HB_INC_INSTALL=include\
+if "%HB_BIN_INSTALL%" == "" set HB_BIN_INSTALL=bin\
+if "%HB_LIB_INSTALL%" == "" set HB_LIB_INSTALL=lib\
+if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=include\
 
 :START
 

@@ -40,7 +40,7 @@ if [ -z "$1" ] || [ -z "$HB_ARCHITECTURE" ] || [ -z "$HB_COMPILER" ]; then
    echo
    echo "    HB_ARCHITECTURE:"
    echo "      - dos   (HB_GT_LIB=gtdos by default)"
-   echo "      - w32   (HB_GT_LIB=gtw32 by default)"
+   echo "      - w32   (HB_GT_LIB=gtwin by default)"
    echo "      - linux (HB_GT_LIB=gtstd by default)"
    echo "      - os2   (HB_GT_LIB=gtos2 by default)"
    echo

@@ -1,3 +1,9 @@
+20000429-09:50 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * bin/bld.*
+   * make_gnu.*
+     ! Some fixes.
+
 20000427-15:34 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/compiler/harbour.c
