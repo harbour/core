@@ -1,3 +1,8 @@
+2001-07-26 14:35 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+  * source/rtl/gtsln/gtsln.c
+    * Fixes by Marek Paliwoda <paliwoda@inetia.pl> 
+
 2001-07-26 14:30 GMT Dave Pearson <davep@davep.org>
    * source/rtl/profiler.prg
       * Resorted Antonio's profile reporter due to copyright concerns.

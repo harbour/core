@@ -60,12 +60,13 @@
    #include <slang.h>
 #endif
 
+/* missing defines in previous versions of Slang - this can not work ! */
+#if SLANG_VERSION < 10400
    typedef unsigned short SLsmg_Char_Type;
    #define SLSMG_EXTRACT_CHAR( x ) ( ( x ) & 0xFF )
    #define SLSMG_EXTRACT_COLOR( x ) ( ( ( x ) >> 8 ) & 0xFF )
    #define SLSMG_BUILD_CHAR( ch, color ) ( ( ( SLsmg_Char_Type ) ( unsigned char )( ch ) ) | ( ( color ) << 8 ) )
 
-/* missing defines in previous versions of Slang - this can not work ! */
 #if SLANG_VERSION < 10308
    #define SLSMG_DIAMOND_CHAR	0x04
    #define SLSMG_DEGREE_CHAR	0xF8
@@ -81,6 +82,7 @@
    #define SLSMG_BOARD_CHAR     'h'
    #define SLSMG_BLOCK_CHAR     '0'
    */
+#endif
 #endif
 
 #include <unistd.h>
@@ -100,7 +102,7 @@
 extern unsigned char s_convKDeadKeys[];
 extern int hb_gt_Init_Terminal( int phase );
 
-/* to convert characters desplayed */
+/* to convert characters displayed */
 static void hb_gt_build_conv_tabs();
 
 /* extern int _SLsnprintf (char *, unsigned int, char *, ...); */
@@ -329,7 +331,7 @@ void hb_gt_SetPos( SHORT iRow, SHORT iCol, SHORT iMethod )
    HB_SYMBOL_UNUSED( iMethod );
 
    SLsmg_gotorc( iRow, iCol );
-   /* SLtt_goto_rc( iRow, iCol ); */ /* ??? */
+   /* SLtt_goto_rc( iRow, iCol ); */
 
    if( s_uiDispCount == 0 )
       SLsmg_refresh();
@@ -458,11 +460,12 @@ void hb_gt_SetCursorStyle( USHORT uiStyle )
          }
 
          SLtt_write_string( cursDefseq );
-
-         if( s_uiDispCount == 0 )
-            SLsmg_refresh();
       }
 #endif
+
+      if( s_uiDispCount == 0 )
+         /* SLsmg_refresh(); */
+         SLtt_flush_output();
    }
 }
 
@@ -538,7 +541,8 @@ void hb_gt_Puts( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE * pbyStr, ULONG u
    if( ulLen > 0 )
       SLsmg_write_raw( pScr, ulLen );
 
-   hb_gt_SetPos( uiRow, uiCol + ulLen, HB_GT_SET_POS_AFTER );
+   /* NOTE : enable this if problems with cursor positioning occur */
+   /* hb_gt_SetPos( uiRow, uiCol + ulLen, HB_GT_SET_POS_AFTER ); */
 
    hb_xfree( ( BYTE * )pScr );
 }
@@ -650,6 +654,9 @@ void hb_gt_Scroll( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight,
          iColSize += iCols;
       }
 
+      /* this is probably not compatible with Clipper */
+      hb_gt_DispBegin();
+      
       hb_gtGetPos( &usSaveRow, &usSaveCol );
 
       for( iCount = ( iRows >= 0 ? usTop : usBottom );
@@ -673,11 +680,11 @@ void hb_gt_Scroll( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight,
       hb_xfree( fpBlank );
       hb_xfree( fpBuff );
 
-      hb_gtSetPos( usSaveRow, usSaveCol );
-/*
-      if( s_uiDispCount == 0 )
-         SLsmg_refresh();
-*/
+      /* hb_gtSetPos( usSaveRow, usSaveCol ); */
+      SLsmg_gotorc( usSaveRow, usSaveCol );
+
+      /* this is probably not compatible with Clipper */
+      hb_gt_DispEnd();
    }
 }
 
@@ -918,7 +925,8 @@ USHORT hb_gt_Box( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight,
       hb_gt_xPutch( uiBottom, uiRight, byAttr, szBox[ 4 ] ); /* Bottom right corner */
    }
 
-   SLsmg_gotorc( uiTop + 1, uiLeft + 1 );
+   /* NOTE : enable this if problems with cursor positioning occur */
+   /* SLsmg_gotorc( uiTop + 1, uiLeft + 1 ); */
 
    hb_gt_DispEnd();
 
