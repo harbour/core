@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-04-13 10:02 UTC+0300 Chen Kedem <niki@actcom.co.il>
+  * doc/whatsnew.txt
+    + Add information about builds 38..42 according to information
+      found on the Harbour site and the developers mailing list
+
 2003-04-12 23:00 UTC+0200 Tomaz Zupan <tomaz.zupan@orpo.si>
   * contrib/odbc/todbc.prg
     ! If recordset is cached, move to first record after fetching

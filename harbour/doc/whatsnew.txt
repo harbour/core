@@ -3,12 +3,108 @@
  */
 
 ----------------------------------------------------------------------
+Version 0.42 Alpha Build 42 (2003-04-08)
 
-Version 0.38 Build 38 (2001-12-15)
+- Further speed improvements
+- Codepage subsystem added
+- strings as (C-alike) bytes arrays management
+- Classes "[]" operator overloading support
+- Classes ":=" operator overloading support for locals and statics variables
+- Extend system Clipper more complete compatibility
+- RDDADS enhancements: SET PATH, DEFAULT, DELETED, EXACT, DATEFORMAT
+  and EPOCH and their Set() function equivalents are now automatically
+  synchronized with the server instead of using the preprocessor
+- Added support for some ADS version 6 features
+- Many bug fixes and enhancements
 
-(see http://www.harbour-project.org)
+----------------------------------------------------------------------
+Version 0.41 Alpha Build 41 was not officially released (2002-12-31)
 
-Version 0.37 Build 37 (2001-06-26)
+----------------------------------------------------------------------
+Version 0.40 Alpha Build 40 (2002-06-16)
+
+- Great speed improvements
+- ADS RDD: added support of extended data types, fixed seeking and
+  scoping on date type indexes
+- HbMake enhanced : Now support MuniGUI. Internationalization
+  (Portuguese/English/Spanish) + HbMake with Windows user interface
+- AltD() debugger invoke function fixed behavior
+- DBFNTX functionality is significantly extended over standard Clipper's.
+  Few bugs fixed, internal algorithms improved, what gives much better
+  performance and index quality. Now DBFNTX is fully ready to Beta 1.0 stage
+- DBFCDX more ready
+- New enhancements and bug fixes in the debugger
+- Many bug fixes and enhancements
+
+----------------------------------------------------------------------
+Version 0.39 Alpha Build 39 (2002-04-08)
+
+- Delphi integration started
+- Dbfntx basic functionality is ready
+- Added new possibilities in hrb handling
+- __dbSdf() is ready
+- Enhacements to hbmake,hbzlib
+- Great speed improvement
+- New enhancements and bug fixes in the debugger
+- Many bug fixes and enhancements.
+- Strings sharing and statics strings implementation (thanks to Ron Pinkas)
+- RTL strings management functions optimization thanks to new function
+  hb_retclen_buffer() and optimized use for hb_retc( NULL )
+- Optimized objects messages sending (thanks to Ron Pinkas)
+- Harbour persistence (Class HBPersistent) optimized and impresively
+  more faster
+
+----------------------------------------------------------------------
+Version 0.38 Alpha Build 38 (2001-12-15)
+
+- Added new function __VMVARSLEN() --> nStatics
+  It returns the total amount of used statics variables
+- include/hbapi.h Enhanced HB_IS_OBJECT( PHB_ITEM )
+- __ClsAddMsg() case HB_OO_MSG_ONERROR modifed to use hb_parnl( 3 )
+- __ClsAddMsg() call, for ON ERROR clause, modified suplied parameters
+- ::Super(::oneVar) is now correctly interpreted
+- Freezed Scooping because it was not anymore working after the
+  previous fix. Waiting after Alpha build 38 to fix and re-enable it
+- HGF (Harbour GUI multiplatform Framework) started
+- Class HBPersistent added to RTL to provide Harbour objects persistence
+- New PROPERTY | PERSISTENT clause added as a DATA feature.
+- New function __ClsGetProperties() added. Syntax:
+  __ClsGetProperties( <nClassHandle> ) --> <aPropertiesNames>
+- Harbour Profiler foundation functions added
+- New Apollo.lib for SIXNSX database connection via SDE60.DLL
+- RDD Scope handling was changed to handle non-character
+  scopes correctly. Numeric scopes now work in RDDADS, but
+  scopes are not yet supported in DBFCDX.
+- HB_FM_STATISTICS can be turned off by defining
+  HB_FM_STATISTICS_OFF in your make or bat files.
+  Rebuilding Harbour this way yields a faster program,
+  but it loses the ability to report on memory usage and leaks.
+- adssetServerType now returns any error numbers
+- Added AdsRefreshRecord, AdsIsTableLocked, AdsIsRecordLocked
+- Dave Pearson's bitflags.c, which I ported to Harbour.
+  Has functions to use a Harbour string for storing On/Off bit flags
+- Added HB_TRACESTRING() which lets prg code trace a string into same
+  trace file/window as C traces
+- Added __TRACEPRGCALLS( <lOnOff> ) --> <lOldValue>
+  Turns on | off tracing of PRG-level function and method calls.
+  Dumps symbol name just before it's called. This is very useful when
+  debugging GPFs as it will trace all PRG-level calls up until the crash.
+  Uses HB_TRACE so traces are in line with any C-level traces
+- Martin and Walter added a bunch of functions to libct.
+- David added the Path stuff so file() and other functions can work right
+- Platform support for FreeBSD 4.4, which requires installation
+  of the gmake (GNU make) port (instead of using FreeBSD's make)
+- Hbzlib enhacements
+- Some debugger fixes - it is now really usable.
+- Hbmake enhacements
+- On Win32 platforms, Harbour now supports the ability to create and use
+  .DLL files. These .DLL files can be used as pcode storage, Harbour
+  Runtime storage, or both, and if both, can be made callable from other
+  languages that use .DLL's as fully functional standalone modules
+- Extended run-time preprocessing possibilities
+
+----------------------------------------------------------------------
+Version 0.37 Alpha Build 37 (2001-06-26)
 
 - Fixed and improved NTX support
 - Improved and fixed OOP
@@ -24,7 +120,8 @@ Version 0.37 Build 37 (2001-06-26)
 - Debugger fixes. It is really usable now.
 - Access OLEDB & COM objects with the TOleAuto() class
 
-Version 0.36 Build 36 (2001-02-22)
+----------------------------------------------------------------------
+Version 0.36 Alpha Build 36 (2001-02-22)
 
 - NTX read and write support
 - Support for Inline C code
@@ -39,7 +136,8 @@ Version 0.36 Build 36 (2001-02-22)
 - APPEND FROM & COPY TO started
 - New hbMake utility
 
-Version 0.35 Build 35 (2000-08-15)
+----------------------------------------------------------------------
+Version 0.35 Alpha Build 35 (2000-08-15)
 
 - Added HB_IDLE*() idle state handling functions.
 - Watcom C++ fixes.
@@ -50,11 +148,11 @@ Version 0.35 Build 35 (2000-08-15)
 - .NTX support started (creation now works)
 - HBDOC .CHM output
 - Garbage collector added
-- Compiler -u, -m support, support for automatically compiled files for 
+- Compiler -u, -m support, support for automatically compiled files for
   DO, SET FORMAT TO, etc., memory usage optimizations
 - Added HB_DISKSPACE(), __DBLIST(), __DBAPPEND()
-- Fixes: Line numbering, PP, macro compiler, RTL (Extend API, Item API, 
-  TRANSFORM(), DISKSPACE(), CURDIR(), __GET()), HBDOC, 
+- Fixes: Line numbering, PP, macro compiler, RTL (Extend API, Item API,
+  TRANSFORM(), DISKSPACE(), CURDIR(), __GET()), HBDOC,
   HBTEST (for Xbase++ and Linux), Documentation, Class engine
 - HBZLIB enhancements
 - MySQL database access contribution started
@@ -64,7 +162,8 @@ Version 0.35 Build 35 (2000-08-15)
 - Alternate Lexer (SimpLex), utilizes less memory, smaller Harbour.exe
   as well as smaller compiled applications (due to smaller macro compiler).
 
-Version 0.34 Build 34 (2000-06-02)
+----------------------------------------------------------------------
+Version 0.34 Alpha Build 34 (2000-06-02)
 
 - OO engine enhanced (multiple inheritance, scoping, forwarding and delegating)
 - Linux/Unix ncurses screen output and xterm mouse input support
@@ -72,9 +171,9 @@ Version 0.34 Build 34 (2000-06-02)
 - CONTRIBs better separated from core Harbour (TOOLS moved there)
 - Simplified and enhanced base for multiplatform coding
 - Language API (link/compile time language module selection)
-- Several small optimizations, enhancements and fixes (compiler, macro, GT, 
+- Several small optimizations, enhancements and fixes (compiler, macro, GT,
   inkey, make and build systems, more strict compiler warnings)
-- Compiler pcode size optimizations (new compact pcode versions added and 
+- Compiler pcode size optimizations (new compact pcode versions added and
   other tricks)
 - Far jump pcode support
 - Double number size support in pcode
@@ -89,7 +188,7 @@ Version 0.34 Build 34 (2000-06-02)
 - HBDOC further enhanced
 - RSX32 and RSXNT compiler support
 - SETKEY functions, ASORT(), SAVESCREEN/RESTSCREEN rewritten in C
-- Extensions (XPP, C53, Harbour) are easier to switch of and better separated 
+- Extensions (XPP, C53, Harbour) are easier to switch of and better separated
   from Harbour.
 - Some fixes for 10 chars support.
 - New most compact and fast -gc0 (C language) output method added.
@@ -106,7 +205,8 @@ Version 0.34 Build 34 (2000-06-02)
 - DBU sources can be compiled with Harbour without changes
 - Added more ADS RDD functions
 
-Version 0.33 Build 33 (2000-04-07)
+----------------------------------------------------------------------
+Version 0.33 Alpha Build 33 (2000-04-07)
 
 - Final cleanups on global macro and symbol names.
   (date*(), console*(), HB_FUNC())
@@ -139,8 +239,9 @@ Version 0.33 Build 33 (2000-04-07)
   <color:></color> for color <fixed></fixed> for fixed text
   <table></table> for tables <insertfile:> to insert the content of another
   file.
-    
-Build 0.32 2000-03-07
+
+----------------------------------------------------------------------
+Version 0.32 Alpha Build 32 (2000-03-07)
 
 - New Borland make files
 - Many make and build processes fixes, enhancements, warning fixes.
@@ -159,14 +260,12 @@ Build 0.32 2000-03-07
 - __TYPEFILE() added
 
 ----------------------------------------------------------------------
-
-Build 0.31a 2000-02-02
+Version 0.31a Alpha Build 31a (2000-02-02)
 
 - Bugs fixed
 
 ----------------------------------------------------------------------
-
-Build #31 2000-01-27
+Version 0.31 Alpha Build 31 (2000-01-27)
 
 - Added macro support
 - Many changes, fixes, and enhancements to compiler internals
@@ -235,8 +334,7 @@ Build #31 2000-01-27
 - Added //BUILD app command line option
 
 ----------------------------------------------------------------------
-
-Build #30 September 30 1999
+Version 0.30 Alpha Build 30 (1999-09-30)
 
 - RDD support
 - Support for MEM files
@@ -267,8 +365,7 @@ Build #30 September 30 1999
 - Many new functions, samples and bug fixes
 
 ----------------------------------------------------------------------
-
-Build #29 27 July 1999
+Version 0.29 Alpha Build 29 (1999-07-27)
 
 - Support for these compilers:
    C++ Builder
@@ -290,8 +387,7 @@ Build #29 27 July 1999
 - Added support to generate runtime errors in functions
 
 ----------------------------------------------------------------------
-
-Build #28 18 July 1999
+Version 0.28 Alpha Build 28 (1999-07-18)
 
 - Added support for MS Visual C++
 - First support for Apple Macintosh
@@ -308,8 +404,7 @@ Build #28 18 July 1999
 - Many bug fixes
 
 ----------------------------------------------------------------------
-
-Build #27 18 June 1999
+Version 0.27 Alpha Build 27 (1999-06-18)
 
 - Added new directory with GNU MAKE files for GCC on Linux
 - Added support for Watcom C/C++ compiler
@@ -322,8 +417,7 @@ Build #27 18 June 1999
 - Extended syntax for AllTrim and RTrim
 
 ----------------------------------------------------------------------
-
-Build #26 12 June 1999
+Version 0.26 Alpha Build 26 (1999-06-12)
 
 - Check for non used declared variable
 - Better support for different platforms and compilers.
@@ -336,3 +430,6 @@ Build #26 12 June 1999
 - New National language message files
 - New TestBank. It compiles ALL Harbour samples
 - <object>:<data> := <value> can now be used inside expressions (codeblocks)
+
+----------------------------------------------------------------------
+
