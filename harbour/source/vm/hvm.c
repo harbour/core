@@ -2531,7 +2531,7 @@ static void hb_vmForTest( void )        /* Test to check the end point of the FO
 
    dCurrent = hb_vmPopNumber();
 
-   if( dStep > 0 )           /* Positive loop. Use LESS */
+   if( dStep >= 0 )          /* Positive loop. Use LESS */
       hb_vmPushLogical( dCurrent <= dEnd );
    else if( dStep < 0 )      /* Negative loop. Use GREATER */
       hb_vmPushLogical( dCurrent >= dEnd );
@@ -4706,7 +4706,7 @@ void hb_vmRequestCancel( void )
 
 void hb_vmRequestDebug( void )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmRequestCancel()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmRequestDebug()"));
    s_bDebugRequest = TRUE;
 }
 
