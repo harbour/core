@@ -11,6 +11,7 @@ C_SOURCES=\
 	msgcskam.c   \
 	msgcswin.c   \
 	msgde.c      \
+	msgdewin.c   \
 	msgen.c      \
 	msgeo.c      \
 	msges.c      \

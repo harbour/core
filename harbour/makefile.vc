@@ -408,6 +408,7 @@ LANG_LIB_OBJS = \
    $(OBJ_DIR)\msgcskam.obj \
    $(OBJ_DIR)\msgcswin.obj \
    $(OBJ_DIR)\msgde.obj \
+   $(OBJ_DIR)\msgdewin.obj \
    $(OBJ_DIR)\msgen.obj \
    $(OBJ_DIR)\msgeo.obj \
    $(OBJ_DIR)\msges.obj \
@@ -447,6 +448,7 @@ LANG_LIB_OBJS = \
 
 CODEPAGE_LIB_OBJS = \
    $(OBJ_DIR)\cdpgedos.obj \
+   $(OBJ_DIR)\cdpgewin.obj \
    $(OBJ_DIR)\cdpla850.obj \
    $(OBJ_DIR)\cdppl852.obj \
    $(OBJ_DIR)\cdppliso.obj \

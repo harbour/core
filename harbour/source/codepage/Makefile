@@ -6,6 +6,7 @@ ROOT = ../../
 
 C_SOURCES=\
 	cdpgedos.c    \
+	cdpgewin.c    \
 	cdpla850.c    \
 	cdppl852.c    \
 	cdppliso.c    \

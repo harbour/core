@@ -8,6 +8,19 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-03-25 21:35 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  + source/codepage/cdpgewin.c
+  * source/codepage/Makefile
+  + source/lang/cdpdewin.c
+  * source/lang/Makefile
+  * makefile.bc
+  * makefile.nt
+  * makefile.bc
+    Added German Win codepage and lang files, contributed by
+    Guenther Steiner <byte-one@aon.at>
+  + tests/testrdd2.prg
+    + Added RDD test, contributed by Randy Portnoff <randy@palmasdev.com>
+
 2003-03-25 16:46 UTC+0100 Martin Vogel <vogel@inttec.de>
   * contrib/libct/dattime2.prg	
     * bug fix in function addmonth()

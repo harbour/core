@@ -390,6 +390,7 @@ LANG_LIB_OBJS = \
    $(OBJ_DIR)\msgcskam.obj \
    $(OBJ_DIR)\msgcswin.obj \
    $(OBJ_DIR)\msgde.obj \
+   $(OBJ_DIR)\msgdewin.obj \
    $(OBJ_DIR)\msgen.obj \
    $(OBJ_DIR)\msgeo.obj \
    $(OBJ_DIR)\msges.obj \
@@ -422,6 +423,7 @@ LANG_LIB_OBJS = \
 
 CODEPAGE_LIB_OBJS = \
    $(OBJ_DIR)\cdpgedos.obj \
+   $(OBJ_DIR)\cdpgewin.obj \
    $(OBJ_DIR)\cdpla850.obj \
    $(OBJ_DIR)\cdppl852.obj \
    $(OBJ_DIR)\cdppliso.obj \
@@ -2039,6 +2041,10 @@ $(OBJ_DIR)\msgde.obj : $(LANG_DIR)\msgde.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\msgdewin.obj : $(LANG_DIR)\msgdewin.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\msgen.obj : $(LANG_DIR)\msgen.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
@@ -2159,6 +2165,10 @@ $(OBJ_DIR)\msgzhgb.obj : $(LANG_DIR)\msgzhgb.c
 # CODEPAGE.LIB dependencies
 #
 $(OBJ_DIR)\cdpgedos.obj : $(CODEPAGE_DIR)\cdpgedos.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\cdpgewin.obj : $(CODEPAGE_DIR)\cdpgewin.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
 
