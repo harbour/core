@@ -1,6 +1,9 @@
 20000211-19:11 GMT+1 Victor Szakats <info@szelvesz.hu>
    * source/rtl/Makefile
      - readvar.prg removed.
+   * doc/harbext.txt 
+     + CVD ID added
+       !! Please remember to add this to every file CVS-d !!
    * tests/bld_b16.bat 
      tests/bld_b32.bat 
      tests/bld_b32o.bat
