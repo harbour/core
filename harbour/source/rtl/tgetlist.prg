@@ -319,7 +319,8 @@ METHOD GetPostValidate() CLASS HBGetList
    endif
 
    if oGet:BadDate()
-      oGet:SetFocus()
+//      oGet:SetFocus()
+      oGet:TypeOut := .f.
       ::DateMsg()
       ::ShowScoreboard()
       return .f.
