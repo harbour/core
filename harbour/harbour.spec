@@ -28,7 +28,7 @@ lease 2>/dev/null`" ; if test $? != 0 ; then release="" ; fi ; echo "$release")
 %define releasen 0
 %define prefix   /usr
 %define hb_pref  hb
-%define hb_gt    sln
+%define hb_gt    crs
 %define hb_gpm   yes
 %define hb_mt    no
 %define hb_mgt   no
