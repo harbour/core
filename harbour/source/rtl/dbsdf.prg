@@ -221,13 +221,13 @@ STATIC FUNCTION ExportFixed( handle, xField )
 RETURN .T.
 
 STATIC FUNCTION ImportFixed( handle, index, aStruct )
-   LOCAL cBuffer := Space(aStruct[ index,3 ]), pos, res := .T.
+   LOCAL cBuffer := Space(aStruct[ index,3 ]), pos, res := .T., nRead
    LOCAL vres
 
-   FREAD( handle, @cBuffer, aStruct[ index,3 ] )
-   IF ( pos := At( CHR(13),cBuffer ) ) > 0
+   nRead := FREAD( handle, @cBuffer, aStruct[ index,3 ] )
+   IF ( pos := At( CHR(13),cBuffer ) ) > 0 .AND. pos <= nRead
       res := .F.
-      FSEEK( handle, -( aStruct[ index,3 ] - pos + 1 ), FS_RELATIVE )
+      FSEEK( handle, -( nRead - pos + 1 ), FS_RELATIVE )
       IF pos > 1
          cBuffer := Left( cBuffer,pos-1 )
       ELSE

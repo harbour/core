@@ -7,6 +7,11 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+  * source/compiler/harbour.sly
+    ! Correted minor bug in GetA
+
+2002-03-13 18:53 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/pp/ppcomp.c
     * bug fixed, related to 'ENDTEXT' position
 
