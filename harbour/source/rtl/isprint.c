@@ -69,7 +69,6 @@
 #if defined(HB_OS_WIN_32) && !defined(__RSXNT__)
 
    #include <stdio.h>
-/*   #include <malloc.h> */
    #include <winspool.h>
 
    static BOOL IsPrinterError(HANDLE hPrinter);
@@ -254,7 +253,7 @@ static BOOL GetJobs(HANDLE hPrinter,        /* Handle to the printer. */
             return FALSE;
     }
 
-    pPrinterInfo = (PRINTER_INFO_2 *)malloc(cByteNeeded);
+    pPrinterInfo = (PRINTER_INFO_2 *) hb_xgrab( cByteNeeded );
     if (!(pPrinterInfo))
         /* Failure to allocate memory. */
         return FALSE;
@@ -267,7 +266,7 @@ static BOOL GetJobs(HANDLE hPrinter,        /* Handle to the printer. */
             &cByteUsed))
     {
         /* Failure to access the printer. */
-        free(pPrinterInfo);
+        hb_xfree( pPrinterInfo );
         return FALSE;
     }
 
@@ -283,16 +282,16 @@ static BOOL GetJobs(HANDLE hPrinter,        /* Handle to the printer. */
     {
         if (GetLastError() != ERROR_INSUFFICIENT_BUFFER)
         {
-            free(pPrinterInfo);
+            hb_xfree( pPrinterInfo );
             return FALSE;
         }
     }
 
-    pJobStorage = (JOB_INFO_2 *)malloc(cByteNeeded);
+    pJobStorage = (JOB_INFO_2 *) hb_xgrab( cByteNeeded );
     if (!pJobStorage)
     {
         /* Failure to allocate Job storage space. */
-        free(pPrinterInfo);
+        hb_xfree( pPrinterInfo );
         return FALSE;
     }
 
@@ -308,8 +307,8 @@ static BOOL GetJobs(HANDLE hPrinter,        /* Handle to the printer. */
             (LPDWORD)&cByteUsed,
             (LPDWORD)&nReturned))
     {
-        free(pPrinterInfo);
-        free(pJobStorage);
+        hb_xfree( pPrinterInfo );
+        hb_xfree( pJobStorage );
         return FALSE;
     }
 
@@ -319,7 +318,7 @@ static BOOL GetJobs(HANDLE hPrinter,        /* Handle to the printer. */
     *pcJobs = nReturned;
     *pStatus = pPrinterInfo->Status;
     *ppJobInfo = pJobStorage;
-    free(pPrinterInfo);
+    hb_xfree( pPrinterInfo );
 
     return TRUE;
 }

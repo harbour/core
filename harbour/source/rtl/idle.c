@@ -71,9 +71,10 @@
 #include "hbset.h"
 #include "hbvm.h"
 #include "error.ch"
-#if defined(HB_OS_UNIX)
-   #include <time.h>
-   #include <unistd.h>
+#include <time.h>
+#if defined( HB_OS_UNIX )
+  #include <sys/times.h>
+  #include <unistd.h>
 #endif
 
 /* list of background tasks 
@@ -205,11 +206,38 @@ void hb_idleShutDown( void )
    }
 }
 
+void hb_idleSleep( double dSeconds )
+{
+#if defined( HB_OS_UNIX )
+   /* NOTE: clock() returns a time used by a program - if it is suspended
+    * then this time will be zero
+    */
+   clock_t end_clock;
+   struct tms tm;
+
+   end_clock = times( &tm ) + ( clock_t ) ( dSeconds * sysconf(_SC_CLK_TCK) );
+   while( times( &tm ) < end_clock )
+#else
+   clock_t end_clock = clock() + ( clock_t ) ( dSeconds * CLOCKS_PER_SEC );
+   while( clock() < end_clock )
+#endif
+   {
+      hb_idleState();
+   }
+   hb_idleReset();
+}
+
 /* signal that the user code is in idle state */
 HB_FUNC( HB_IDLESTATE )
 {
    hb_vm_bCollectGarbage = TRUE;
    hb_idleState();
+}
+
+/* call from user code to stay in idle state for given period */
+HB_FUNC( HB_IDLESLEEP )
+{
+   hb_idleSleep( hb_parnd( 1 ) );
 }
 
 /* add a new background task and return its handle */

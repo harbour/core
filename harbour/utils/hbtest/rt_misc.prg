@@ -604,7 +604,11 @@ FUNCTION Main_MISC()
 
    TEST_LINE( TESTFNAME( ""                            ) , ";;;;"                                                                    )
    TEST_LINE( TESTFNAME( "                           " ) , ";;;;"                                                                    )
+#ifdef __PLATFORM__UNIX
+   TEST_LINE( TESTFNAME( ":                          " ) , ":;;:;;"                                                                  )
+#else
    TEST_LINE( TESTFNAME( ":                          " ) , ":;:;;;"                                                                  )
+#endif
    TEST_LINE( TESTFNAME( "C:/WORK/HELLO              " ) , "C:/WORK/HELLO;C:/WORK/;HELLO;;"                                          )
    TEST_LINE( TESTFNAME( "C:/WORK/HELLO              " ) , "C:/WORK/HELLO;C:/WORK/;HELLO;;"                                          )
    TEST_LINE( TESTFNAME( "C:/WORK/HELLO              " ) , "C:/WORK/HELLO;C:/WORK/;HELLO;;"                                          )
@@ -663,9 +667,15 @@ FUNCTION Main_MISC()
    TEST_LINE( TESTFNAME( "C:/HELLO/.PRG              " ) , "C:/HELLO/.PRG;C:/HELLO/;.PRG;;"                                          )
    TEST_LINE( TESTFNAME( "C:/HELLO/A.PRG             " ) , "C:/HELLO/A.PRG;C:/HELLO/;A;.PRG;"                                        )
    TEST_LINE( TESTFNAME( "C:/HELLO/A.B.PRG           " ) , "C:/HELLO/A.B.PRG;C:/HELLO/;A.B;.PRG;"                                    )
+#ifdef __PLATFORM__UNIX
+   TEST_LINE( TESTFNAME( "C:HELLO                    " ) , "C:HELLO;;C:HELLO;;"                                                      )
+   TEST_LINE( TESTFNAME( "C:HELLO.                   " ) , "C:HELLO.;;C:HELLO;.;"                                                    )
+   TEST_LINE( TESTFNAME( "C:HELLO.PRG                " ) , "C:HELLO.PRG;;C:HELLO;.PRG;"                                              )
+#else
    TEST_LINE( TESTFNAME( "C:HELLO                    " ) , "C:HELLO;C:;HELLO;;"                                                      )
    TEST_LINE( TESTFNAME( "C:HELLO.                   " ) , "C:HELLO.;C:;HELLO;.;"                                                    )
    TEST_LINE( TESTFNAME( "C:HELLO.PRG                " ) , "C:HELLO.PRG;C:;HELLO;.PRG;"                                              )
+#endif
    TEST_LINE( TESTFNAME( "C:HELLO/                   " ) , "C:HELLO/;C:HELLO/;;;"                                                    )
    TEST_LINE( TESTFNAME( "C:HELLO/.PRG               " ) , "C:HELLO/.PRG;C:HELLO/;.PRG;;"                                            )
    TEST_LINE( TESTFNAME( "C:HELLO/A.PRG              " ) , "C:HELLO/A.PRG;C:HELLO/;A;.PRG;"                                          )
@@ -695,7 +705,11 @@ FUNCTION Main_MISC()
    TEST_LINE( TESTFNAME( "/                          " ) , "/;/;;;"                                                                  )
    TEST_LINE( TESTFNAME( "//                         " ) , "//;//;;;"                                                                )
    TEST_LINE( TESTFNAME( "C                          " ) , "C;;C;;"                                                                  )
+#ifdef __PLATFORM__UNIX
+   TEST_LINE( TESTFNAME( "C:                         " ) , "C:;;C:;;"                                                                )
+#else
    TEST_LINE( TESTFNAME( "C:                         " ) , "C:;C:;;;"                                                                )
+#endif
    TEST_LINE( TESTFNAME( "C:/                        " ) , "C:/;C:/;;;"                                                              )
    TEST_LINE( TESTFNAME( "C://                       " ) , "C://;C://;;;"                                                            )
 

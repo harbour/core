@@ -86,9 +86,8 @@ extern "C" {
 #define HB_IT_OBJECT    HB_IT_ARRAY
 #define HB_IT_NUMERIC   ( ( USHORT ) ( HB_IT_INTEGER | HB_IT_LONG | HB_IT_DOUBLE ) )
 #define HB_IT_NUMINT    ( ( USHORT ) ( HB_IT_INTEGER | HB_IT_LONG ) )
-#define HB_IS_NUMBER( p ) ( ( p )->type & HB_IT_NUMERIC )
-#define HB_IS_NUMINT( p ) ( ( p )->type & HB_IT_NUMINT )
 #define HB_IT_ANY       ( ( USHORT ) 0xFFFF )
+#define HB_IT_COMPLEX   ( ( USHORT ) ( HB_IT_STRING | HB_IT_BLOCK | HB_IT_ARRAY | HB_IT_MEMVAR | HB_IT_BYREF ) )
 
 #define HB_IS_OF_TYPE( p, t ) ( ( ( p )->type & ~HB_IT_BYREF ) == t )
 #define HB_IS_BYREF( p )   ( ( p )->type & HB_IT_BYREF )
@@ -100,13 +99,15 @@ extern "C" {
 #define HB_IS_INTEGER( p ) HB_IS_OF_TYPE( p, HB_IT_INTEGER )
 #define HB_IS_LOGICAL( p ) HB_IS_OF_TYPE( p, HB_IT_LOGICAL )
 #define HB_IS_LONG( p )    HB_IS_OF_TYPE( p, HB_IT_LONG )
-#define HB_IS_NUMERIC( p ) ( ( p )->type & HB_IT_NUMERIC )
 #define HB_IS_OBJECT( p )  ( HB_IS_OF_TYPE( p, HB_IT_OBJECT ) && ( p )->item.asArray.value->uiClass != 0 )
 #define HB_IS_STRING( p )  ( ( ( p )->type & ~( HB_IT_BYREF | HB_IT_MEMOFLAG ) ) == HB_IT_STRING )
 #define HB_IS_MEMO( p )    HB_IS_OF_TYPE( p, HB_IT_MEMO )
 #define HB_IS_SYMBOL( p )  HB_IS_OF_TYPE( p, HB_IT_SYMBOL )
 #define HB_IS_MEMVAR( p )  HB_IS_OF_TYPE( p, HB_IT_MEMVAR )
 #define HB_IS_POINTER( p ) HB_IS_OF_TYPE( p, HB_IT_POINTER )
+#define HB_IS_NUMERIC( p ) ( ( p )->type & HB_IT_NUMERIC )
+#define HB_IS_NUMINT( p )  ( ( p )->type & HB_IT_NUMINT )
+#define HB_IS_COMPLEX( p ) ( ( p )->type & HB_IT_COMPLEX )
 
 #if defined(__GNUC__)
 #  define HB_ITEM_NIL      { HB_IT_NIL, {} }
@@ -125,6 +126,28 @@ extern "C" {
 #define ISOBJECT( n )      ( ISARRAY( n ) && hb_param( n, HB_IT_ARRAY )->asArray.value->uiClass != 0 )
 #define ISBLOCK( n )       ( hb_param( n, HB_IT_BLOCK ) != NULL ) /* Not available in CA-Cl*pper. */
 #define ISPOINTER( n )     ( hb_param( n, HB_IT_POINTER ) != NULL ) /* Not available in CA-Cl*pper. */
+
+
+#define HB_ITEM_GET_NUMINTRAW( p )  ( HB_IS_INTEGER( p ) ? \
+                                      ( HB_LONG ) p->item.asInteger.value : \
+                                      ( HB_LONG ) p->item.asLong.value )
+
+#define HB_ITEM_PUT_NUMINTRAW( p, v )  \
+               do { \
+                  if( HB_LIM_INT( v ) ) \
+                  { \
+                     (p)->type = HB_IT_INTEGER; \
+                     (p)->item.asInteger.length = HB_INT_LENGTH( v ); \
+                     (p)->item.asInteger.value = ( int ) (v); \
+                  } \
+                  else \
+                  { \
+                     (p)->type = HB_IT_LONG; \
+                     (p)->item.asLong.value = (v); \
+                     (p)->item.asLong.length = HB_LONG_LENGTH( v ); \
+                  } \
+               } while ( 0 )
+
 
 /* forward declarations */
 struct _HB_CODEBLOCK;
@@ -500,6 +523,7 @@ extern char *   hb_objGetRealClsName( PHB_ITEM pObject, char * szString  ); /* r
 extern PHB_FUNC hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pSymMsg ); /* returns the method pointer of a object class */
 extern BOOL     hb_objHasMsg( PHB_ITEM pObject, char * szString ); /* returns TRUE/FALSE whether szString is an existing message for object */
 extern void     hb_objSendMsg( PHB_ITEM pObj, char *sMsg, ULONG ulArg, ... );
+extern USHORT   hb_objGetClass( PHB_ITEM pItem );
 
 /* dynamic symbol table management */
 extern PHB_DYNS hb_dynsymGet( char * szName );    /* finds and creates a dynamic symbol if not found */

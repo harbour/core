@@ -305,7 +305,7 @@
 #endif
 
 #ifndef HB_OS_UNIX
-   #if defined(OS_UNIX_COMPATIBLE) || defined(HB_OS_LINUX) || defined(HB_OS_BSD) || defined(HB_OS_SUNOS)
+   #if defined(OS_UNIX_COMPATIBLE) || defined(HB_OS_LINUX) || defined(HB_OS_BSD) || defined(HB_OS_SUNOS) || defined(HB_OS_HPUX)
       #define HB_OS_UNIX
    #endif
 #endif

@@ -102,31 +102,55 @@ typedef struct
 #define hb_stackSelfItem( )         ( * ( hb_stack.pBase + 1 ) )
 #define hb_stackItem( iItemPos )    ( * ( hb_stack.pItems + iItemPos ) )
 
+
+#define hb_stackDec( )              do { \
+                                       if( --hb_stack.pPos < hb_stack.pItems ) \
+                                       hb_errInternal( HB_EI_STACKUFLOW, NULL, NULL, NULL ); \
+                                    } while ( 0 )
+
+#define hb_stackPop( )              do { \
+                                       if( --hb_stack.pPos < hb_stack.pItems ) \
+                                          hb_errInternal( HB_EI_STACKUFLOW, NULL, NULL, NULL ); \
+                                       if( HB_IS_COMPLEX( * hb_stack.pPos ) ) \
+                                          hb_itemClear( * hb_stack.pPos ); \
+                                    } while ( 0 )
+
+#define hb_stackPush( )             do { \
+                                       if( hb_stack.wItems - 1 <= hb_stack.pPos - hb_stack.pItems ) \
+                                       { \
+                                          hb_stackIncrease(); \
+                                       } \
+                                       ( * (++hb_stack.pPos) )->type = HB_IT_NIL; \
+                                    } while ( 0 )
+
 #else
 
 extern HB_ITEM_PTR hb_stackItemFromTop( int nFromTop );
 extern HB_ITEM_PTR hb_stackItemFromBase( int nFromBase );
-extern LONG hb_stackTopOffset( void );
-extern LONG hb_stackBaseOffset( void );
+extern LONG        hb_stackTopOffset( void );
+extern LONG        hb_stackBaseOffset( void );
 extern HB_ITEM_PTR hb_stackTopItem( void );
 extern HB_ITEM_PTR hb_stackBaseItem( void );
 extern HB_ITEM_PTR hb_stackSelfItem( void );
 extern HB_ITEM_PTR hb_stackItem( LONG iItemPos );
 
-#endif
 
-extern void hb_stackRemove( LONG lUntilPos );
-extern HB_ITEM_PTR hb_stackNewFrame( HB_STACK_STATE * pStack, USHORT uiParams );
-extern void hb_stackOldFrame( HB_STACK_STATE * pStack );
+extern void        hb_stackDec( void );        /* pops an item from the stack without clearing it's contents */
+extern void        hb_stackPop( void );        /* pops an item from the stack */
+extern void        hb_stackPush( void );       /* pushes an item on to the stack */
+
+#endif
 
 /* stack management functions */
 extern void    hb_stackDispLocal( void );  /* show the types of the items on the stack for debugging purposes */
 extern void    hb_stackDispCall( void );
-extern void    hb_stackDec( void );        /* pops an item from the stack without clearing it's contents */
 extern void    hb_stackFree( void );       /* releases all memory used by the stack */
-extern void    hb_stackPush( void );       /* pushes an item on to the stack */
-extern void    hb_stackPop( void );        /* pops an item from the stack */
 extern void    hb_stackInit( void );       /* initializes the stack */
+extern void    hb_stackIncrease( void );   /* increase the stack size */
+
+extern void hb_stackRemove( LONG lUntilPos );
+extern HB_ITEM_PTR hb_stackNewFrame( HB_STACK_STATE * pStack, USHORT uiParams );
+extern void hb_stackOldFrame( HB_STACK_STATE * pStack );
 
 #if defined(HB_EXTERN_C)
 }

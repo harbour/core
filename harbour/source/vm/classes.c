@@ -352,30 +352,7 @@ void hb_clsReleaseAll( void )
 
    for( uiClass = 0  ; uiClass < s_uiClasses  ; uiClass++ )
    {
-
-
-
-
-
-
-
       hb_clsRelease( s_pClasses + uiClass );
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
    }
 
    if( s_pClasses )
@@ -623,6 +600,14 @@ BOOL hb_clsIsParent(  USHORT uiClass, char * szParentName )
    }
 
    return FALSE;
+}
+
+USHORT hb_objGetClass( PHB_ITEM pItem )
+{
+   if ( pItem && HB_IS_ARRAY( pItem ) )
+      return pItem->item.asArray.value->uiClass;
+   else
+      return 0;
 }
 
 /* ================================================ */

@@ -1,4 +1,5 @@
 #!/bin/sh
+[ "$BASH" ] || exec bash `which $0` ${1+"$@"}
 #
 # $Id$
 #
@@ -11,22 +12,42 @@
 # See doc/license.txt for licensing terms.
 # ---------------------------------------------------------------
 
-if [ $# -lt 2 ]
+if [ `uname` = "Darwin" ]; then
+   SLIB_EXT=".dylib"
+else
+   SLIB_EXT=".so"
+fi
+
+NAME="${1%${SLIB_EXT}}"
+LIB_NAME="${NAME##*/}"
+DSTDIR="${NAME%${LIB_NAME}}"
+[ -n "${DSTDIR}" ] || DSTDIR="./"
+
+if [ $# -lt 2 ] || [ -z "${LIB_NAME}" ]
 then
-    echo "usage: `basename $0` <target[.so]> src1.a .. srcN.a [obj1.o .. objN.o]"
+    echo "usage: `basename $0` <target[${SLIB_EXT}]> [link options] src1.a .. srcN.a [obj1.o .. objN.o]"
     exit 1
 fi
 
-OTMPDIR="/tmp/hb-mkslib-$$"
-HB_SO_LIB="$1"
 shift
-case "${HB_SO_LIB}" in
-    *.so)
-	;;
-    *)
-	HB_SO_LIB="${HB_SO_LIB}.so"
-	;;
-esac
+
+BASE=`echo ${LIB_NAME} | sed "s/\([^.-]*\)[.-][0-9.]*/\1/g"`
+VERSION="${LIB_NAME#${BASE}}"
+VERSION="${VERSION#[.-]}"
+REVIS="${VERSION}"
+MAJOR="${REVIS%%.*}"
+REVIS="${REVIS#${MAJOR}}"
+REVIS="${REVIS#.}"
+MINOR="${REVIS%%.*}"
+REVIS="${REVIS#${MINOR}}"
+REVIS="${REVIS#.}"
+REVIS="${REVIS%%.*}"
+[ -n "${MAJOR}" ] || MAJOR=0
+[ -n "${MINOR}" ] || MINOR=1
+[ -n "${REVIS}" ] || REVIS=0
+VERSION="${MAJOR}.${MINOR}.${REVIS}"
+
+OTMPDIR="/tmp/hb-mkslib-$$"
 dir=`pwd`
 
 cleanup()
@@ -42,16 +63,21 @@ cd "${OTMPDIR}"
 
 for f in $*
 do
-    if [ ! -r "${dir}/${f}" ]
-    then
-	echo "cannot read file: ${f}"
-	exit 1
-    fi
     case "${f}" in
 	*.o)
+            if [ ! -r "${dir}/${f}" ]
+	    then
+	        echo "cannot read file: ${f}"
+	        exit 1
+	    fi
 	    cp "${dir}/${f}" "${OTMPDIR}" || exit 1
 	    ;;
 	*.a)
+            if [ ! -r "${dir}/${f}" ]
+	    then
+	        echo "cannot read file: ${f}"
+	        exit 1
+	    fi
 	    d="${f%.a}"
 	    d="${f##*/}"
 	    mkdir $d
@@ -60,21 +86,34 @@ do
 	    cd ..
 	    ;;
 	*)
-	    echo "unrecognized file: ${f}"
-	    exit 1
+            linker_options="${linker_options} ${f}"
 	    ;;
     esac
 done
-OBJLST=`find . -name "*.o"`
-cd "${dir}"
-rm -f "${HB_SO_LIB}"
-cd "${OTMPDIR}"
+OBJLST=`find . -name \*.o`
 
-base=`basename "${HB_SO_LIB}"`
-gcc -shared -o "${base}" $OBJLST && \
+cd "${OTMPDIR}"
+if [ `uname` = "Darwin" ]; then
+    FULLNAME="${BASE}.${VERSION}${SLIB_EXT}"
+    ld -r -o "${FULLNAME}.o" $OBJLST && \
+    gcc -dynamiclib -install_name "${BASE}.${MAJOR}${SLIB_EXT}" \
+        -compatibility_version ${MAJOR}.${MINOR} -current_version ${VERSION} \
+        -flat_namespace -undefined warning -multiply_defined suppress \
+        -o "${FULLNAME}" "${FULLNAME}.o" ${linker_options} && \
     cd "${dir}" && \
-    mv -f "${OTMPDIR}/${base}" "${HB_SO_LIB}"
+    mv -f "${OTMPDIR}/${FULLNAME}" "${DSTDIR}${FULLNAME}" && \
+    ln -sf "${FULLNAME}" "${DSTDIR}${BASE}.${MAJOR}${SLIB_EXT}" && \
+    ln -sf "${FULLNAME}" "${DSTDIR}${BASE}${SLIB_EXT}"
+else
+    #FULLNAME="${BASE}-${VERSION}${SLIB_EXT}"
+    #FULLNAME="${BASE}{SLIB_EXT}.${VERSION}"
+    FULLNAME="${LIB_NAME}${SLIB_EXT}"
+    gcc -shared -o "${FULLNAME}" $OBJLST ${linker_options} && \
+        cd "${dir}" && \
+        mv -f "${OTMPDIR}/${FULLNAME}" "${DSTDIR}${FULLNAME}"
+fi
 
 stat="$?"
+[ $stat != 0 ] && cd "${dir}" && rm -f "${DSTDIR}${FULLNAME}"
 cleanup
 exit "${stat}"

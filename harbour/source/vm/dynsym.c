@@ -147,8 +147,11 @@ PHB_DYNS HB_EXPORT hb_dynsymNew( PHB_SYMB pSymbol )    /* creates a new dynamic 
 
    if( pSymbol->cScope & HB_FS_PUBLIC ) /* only for HB_FS_PUBLIC */
    {
-      if( pDynSym->pFunPtr != pSymbol->value.pFunPtr ) /* it contains a function pointer */
-         pDynSym->pFunPtr = pSymbol->value.pFunPtr;    /* place the function at DynSym */
+      pDynSym->pFunPtr = pSymbol->value.pFunPtr;    /* place the pointer function at DynSym */
+   }
+   else
+   {
+      pDynSym->pFunPtr = NULL;
    }
    pSymbol->pDynSym = pDynSym;                /* place a pointer to DynSym */
 

@@ -415,7 +415,11 @@ static BOOL hb_str2number( BOOL fPCode, const char* szNum, ULONG ulLen, HB_LONG 
    while ( ulPos < ulLen && isspace( ( BYTE ) szNum[ulPos] ) )
       ulPos++;
 
-   if ( szNum[ulPos] == '-' )
+   if ( ulPos >= ulLen )
+   {
+      fNeg = FALSE;
+   }
+   else if ( szNum[ulPos] == '-' )
    {
       fNeg = TRUE;
       ulPos++;

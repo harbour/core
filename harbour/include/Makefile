@@ -8,6 +8,7 @@ C_HEADERS=\
 	clipdefs.h   \
 	extend.h     \
 	hbapi.h      \
+	hbapicdp.h   \
 	hbapierr.h   \
 	hbapifs.h    \
 	hbapigt.h    \
@@ -17,6 +18,7 @@ C_HEADERS=\
 	hbcomp.h     \
 	hbdate.h     \
 	hbdbf.h      \
+	hbdbferr.h   \
 	hbdbsort.h   \
 	hbdefs.h     \
 	hberrors.h   \
@@ -29,6 +31,8 @@ C_HEADERS=\
 	hbpp.h       \
 	hbrddcdx.h   \
 	hbrdddbf.h   \
+	hbrdddbt.h   \
+	hbrddfpt.h   \
 	hbrdddel.h   \
 	hbrddntx.h   \
 	hbrddsdf.h   \
@@ -50,6 +54,7 @@ PRG_HEADERS=\
 	color.ch     \
 	common.ch    \
 	dbedit.ch    \
+	dbinfo.ch    \
 	dbstruct.ch  \
 	directry.ch  \
 	error.ch     \
@@ -57,6 +62,7 @@ PRG_HEADERS=\
 	getexit.ch   \
 	hbclass.ch   \
 	hbcommon.ch  \
+	hbdebug.ch   \
 	hbextern.ch  \
 	hbgetcmt.ch  \
 	hbinkey.ch   \

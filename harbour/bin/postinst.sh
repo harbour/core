@@ -49,7 +49,8 @@ then
     if [ "${HB_ARCHITECTURE}" = "sunos" ]; then
         install -m 755 -f "${HB_BIN_INSTALL}" "${hb_root}/bin/hb-mkslib.sh"
     elif [ "${HB_ARCHITECTURE}" != "dos" ]; then
-        install -m 755 "${hb_root}/bin/hb-mkslib.sh" "${HB_BIN_INSTALL}/hb-mkslib"
+        # Without -c some OSes _move_ the file instead of copying it!
+        install -c -m 755 "${hb_root}/bin/hb-mkslib.sh" "${HB_BIN_INSTALL}/hb-mkslib"
     fi
     mk_hbtools "${HB_BIN_INSTALL}" "$@"
     [ "$HB_COMPILER" = "gcc" ] && mk_hblibso "${hb_root}"
@@ -60,10 +61,12 @@ then
     rm -f fm.o
     ${MAKE} -r fm.o
     ${AR} ${HB_LIB_INSTALL}/libfm.a fm.o
+    [ -n "${RANLIB}" ] && ${RANLIB} ${HB_LIB_INSTALL}/libfm.a
     rm -f fm.o
     if [ "${HB_MT}" = "MT" ]; then
         ${MAKE} -r fm.o 'HB_LIBCOMP_MT=YES'
         ${AR} ${HB_LIB_INSTALL}/libfmmt.a fm.o
+        [ -n "${RANLIB}" ] && ${RANLIB} ${HB_LIB_INSTALL}/libfmmt.a
         rm -f fm.o
     fi
     )

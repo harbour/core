@@ -213,7 +213,7 @@ static ERRCODE hb_dbfDeleted( DBFAREAP pArea, BOOL * pDeleted );
 #define hb_dbfFieldInfo                            NULL
 #define hb_dbfFieldName                            NULL
 static ERRCODE hb_dbfFlush( DBFAREAP pArea );
-#define hb_dbfGetRec                               NULL
+static ERRCODE hb_dbfGetRec( DBFAREAP pArea, BYTE ** pBuffer );
 static ERRCODE hb_dbfGetValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem );
 static ERRCODE hb_dbfGetVarLen( DBFAREAP pArea, USHORT uiIndex, ULONG * pLength );
 static ERRCODE hb_dbfGoCold( DBFAREAP pArea );

@@ -68,6 +68,8 @@ static BOOL hb_itemIsLess( PHB_ITEM pItem1, PHB_ITEM pItem2 )
 {
    if( HB_IS_STRING( pItem1 ) && HB_IS_STRING( pItem2 ) )
       return hb_itemStrCmp( pItem1, pItem2, FALSE ) < 0;
+   else if( HB_IS_NUMINT( pItem1 ) && HB_IS_NUMINT( pItem2 ) )
+      return hb_itemGetNInt( pItem1 ) < hb_itemGetNInt( pItem2 );
    else if( HB_IS_NUMERIC( pItem1 ) && HB_IS_NUMERIC( pItem2 ) )
       return hb_itemGetND( pItem1 ) < hb_itemGetND( pItem2 );
    else if( HB_IS_DATE( pItem1 ) && HB_IS_DATE( pItem2 ) )

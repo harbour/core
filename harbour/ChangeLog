@@ -8,6 +8,92 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-12-12 02:55 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  + harbour/config/hpux/dir.cf
+  + harbour/config/hpux/gcc.cf
+  + harbour/config/hpux/global.cf
+  + harbour/config/hpux/install.cf
+    * Marcelo's files build files for HPUX borrowed from xHarbour
+
+  * harbour/bin/hb-func.sh
+  * harbour/bin/hb-mkslib.sh
+  * harbour/bin/postinst.sh
+    * recent Phil's changes for Darwin and some of mine modifications and
+      cleanups
+
+  * harbour/include/Makefile
+    + added some missing header files
+
+  * harbour/include/hbapi.h
+    + added HB_ITEM_{GET|PUT}_NUMINTRAW() macros
+    + added hb_objGetClass()
+
+  * harbour/include/hbdefs.h
+    * redefined multi commands macros to use do {...} while(0) for safe
+      use in any of C statement
+    + added HB_OS_HPUX
+
+  * harbour/include/hbsetup.h
+    + added HB_OS_HPUX
+
+  * harbour/include/hbstack.h
+    * hb_stackDec(), hb_stackPop(), hb_stackPush() redefined also as macros
+      when HB_STACK_MACROS is set
+    + added function hb_stackIncrease()
+
+  * harbour/source/common/hbstr.c
+    * fixed possible buffer overflow
+
+  * harbour/include/hbrdddbf.h
+  * harbour/source/rdd/dbf1.c
+  * harbour/source/rdd/workarea.c
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+  * harbour/source/rdd/dbfdbt/dbfdbt1.c
+  * harbour/source/rdd/dbffpt/dbffpt1.c
+    * my recent fixes in xHarbour
+
+  * harbour/source/rtl/copyfile.c
+    * small fix to error message
+
+  * harbour/source/rtl/idle.c
+    + added HB_IDLESLEEP() and 
+      void hb_idleSleep( double dSeconds )
+
+  * harbour/source/rtl/isprint.c
+    * use hb_xgrab()/hb_xfree() instead of malloc()/free()
+
+  * harbour/source/rtl/run.c
+    * added __WATCOMC__ to C compilers supporting system()
+
+  * harbour/source/vm/arrays.c
+    * cleaned hb_arrayFromStack(), hb_arrayFromParams()
+
+  * harbour/source/vm/arrayshb.c
+    * small fixes to error messages
+    ! improved Clipper compatibility in AFILL()
+  * harbour/source/vm/asort.c
+    * separate entry for integer items - conversion to double may
+      damage big 64bit numbers
+
+  * harbour/source/vm/classes.c
+    + added USHORT hb_objGetClass( PHB_ITEM pItem )
+
+  * harbour/source/vm/dynsym.c
+    ! fixed accessing to uninitialized memory
+
+  * harbour/source/vm/estack.c
+    + added hb_stackIncrease() and modification for new stack macros
+
+  * harbour/source/vm/hvm.c
+    * fixed some error messages
+    * some speed improvements
+
+  * harbour/source/vm/itemapi.c
+    * some small optimizations
+
+  * harbour/utils/hbtest/rt_misc.prg
+    * modified file name conversions test results for __PLATFORM__UNIX
+
 2004-10-31 01:55 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/compiler/cmdcheck.c
     * replaced some free by hb_xfree

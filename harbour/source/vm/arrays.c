@@ -880,29 +880,16 @@ PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray, PHB_NESTED_CLONED pClonedList )
 PHB_ITEM hb_arrayFromStack( USHORT uiLen )
 {
    PHB_ITEM pArray = hb_itemNew( NULL );
-   PHB_BASEARRAY pBaseArray = ( PHB_BASEARRAY ) hb_gcAlloc( sizeof( HB_BASEARRAY ), hb_arrayReleaseGarbage );
    USHORT uiPos;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_arrayFromStack(%iu)", uiLen));
 
-   pArray->type = HB_IT_ARRAY;
+   hb_arrayNew( pArray, uiLen );
 
-   if( uiLen > 0 )
-      pBaseArray->pItems = ( PHB_ITEM ) hb_xgrab( sizeof( HB_ITEM ) * uiLen );
-   else
-      pBaseArray->pItems = NULL;
-
-   pBaseArray->ulLen      = uiLen;
-   pBaseArray->ulHolders  = 1;
-   pBaseArray->uiClass    = 0;
-   pBaseArray->uiPrevCls  = 0;
-
-   for( uiPos = 0; uiPos < uiLen; uiPos++ )
+   for( uiPos = 1; uiPos <= uiLen; uiPos++ )
    {
-      hb_itemCopy( pBaseArray->pItems + uiPos, hb_stackItemFromTop( uiPos - uiLen ) );
+      hb_arraySet( pArray, uiPos, hb_stackItemFromTop( uiPos - uiLen - 1 ) );
    }
-
-   pArray->item.asArray.value = pBaseArray;
 
    return pArray;
 }
@@ -910,29 +897,16 @@ PHB_ITEM hb_arrayFromStack( USHORT uiLen )
 PHB_ITEM hb_arrayFromParams( PHB_ITEM *pBase )
 {
    PHB_ITEM pArray = hb_itemNew( NULL );
-   PHB_BASEARRAY pBaseArray = ( PHB_BASEARRAY ) hb_gcAlloc( sizeof( HB_BASEARRAY ), hb_arrayReleaseGarbage );
    USHORT uiPos, uiPCount = (* pBase)->item.asSymbol.paramcnt;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_arrayFromParams()"));
 
-   pArray->type = HB_IT_ARRAY;
+   hb_arrayNew( pArray, uiPCount );
 
-   if( uiPCount > 0 )
-      pBaseArray->pItems = ( PHB_ITEM ) hb_xgrab( sizeof( HB_ITEM ) * uiPCount );
-   else
-      pBaseArray->pItems = NULL;
-
-   pBaseArray->ulLen      = uiPCount;
-   pBaseArray->ulHolders  = 1;
-   pBaseArray->uiClass    = 0;
-   pBaseArray->uiPrevCls  = 0;
-
-   for( uiPos = 0; uiPos < uiPCount; uiPos++ )
+   for( uiPos = 1; uiPos <= uiPCount; uiPos++ )
    {
-      hb_itemCopy( pBaseArray->pItems + uiPos, *( pBase + uiPos + 2 ) );
+      hb_arraySet( pArray, uiPos, *( pBase + uiPos + 1 ) );
    }
-
-   pArray->item.asArray.value = pBaseArray;
 
    return pArray;
 }

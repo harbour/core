@@ -207,7 +207,10 @@ PHB_ITEM HB_EXPORT hb_itemPutC( PHB_ITEM pItem, char * szText )
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutC(%p, %s)", pItem, szText));
 
    if( pItem )
-      hb_itemClear( pItem );
+   {
+      if( HB_IS_COMPLEX( pItem ) )
+         hb_itemClear( pItem );
+   }
    else
       pItem = hb_itemNew( NULL );
 
@@ -243,7 +246,10 @@ PHB_ITEM HB_EXPORT hb_itemPutCConst( PHB_ITEM pItem, char * szText )
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutCConst(%p, %s)", pItem, szText));
 
    if( pItem )
-      hb_itemClear( pItem );
+   {
+      if( HB_IS_COMPLEX( pItem ) )
+         hb_itemClear( pItem );
+   }
    else
       pItem = hb_itemNew( NULL );
 
@@ -269,7 +275,10 @@ PHB_ITEM HB_EXPORT hb_itemPutCL( PHB_ITEM pItem, char * szText, ULONG ulLen )
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutCL(%p, %s, %lu)", pItem, szText, ulLen));
 
    if( pItem )
-      hb_itemClear( pItem );
+   {
+      if( HB_IS_COMPLEX( pItem ) )
+         hb_itemClear( pItem );
+   }
    else
       pItem = hb_itemNew( NULL );
 
@@ -310,7 +319,10 @@ PHB_ITEM HB_EXPORT hb_itemPutCPtr( PHB_ITEM pItem, char * szText, ULONG ulLen )
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutCPtr(%p, %s, %lu)", pItem, szText, ulLen));
 
    if( pItem )
-      hb_itemClear( pItem );
+   {
+      if( HB_IS_COMPLEX( pItem ) )
+         hb_itemClear( pItem );
+   }
    else
       pItem = hb_itemNew( NULL );
 
@@ -619,7 +631,10 @@ PHB_ITEM HB_EXPORT hb_itemPutDS( PHB_ITEM pItem, char * szDate )
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutDS(%p, %s)", pItem, szDate));
 
    if( pItem )
-      hb_itemClear( pItem );
+   {
+      if( HB_IS_COMPLEX( pItem ) )
+         hb_itemClear( pItem );
+   }
    else
       pItem = hb_itemNew( NULL );
 
@@ -634,7 +649,10 @@ PHB_ITEM HB_EXPORT hb_itemPutD( PHB_ITEM pItem, int iYear, int iMonth, int iDay 
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutD(%p, %04i, %02i, %02i)", pItem, iYear, iMonth, iDay));
 
    if( pItem )
-      hb_itemClear( pItem );
+   {
+      if( HB_IS_COMPLEX( pItem ) )
+         hb_itemClear( pItem );
+   }
    else
       pItem = hb_itemNew( NULL );
 
@@ -649,7 +667,10 @@ PHB_ITEM HB_EXPORT hb_itemPutDL( PHB_ITEM pItem, long lJulian )
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutDL(%p, %ld)", pItem, lJulian));
 
    if( pItem )
-      hb_itemClear( pItem );
+   {
+      if( HB_IS_COMPLEX( pItem ) )
+         hb_itemClear( pItem );
+   }
    else
       pItem = hb_itemNew( NULL );
 
@@ -664,7 +685,10 @@ PHB_ITEM HB_EXPORT hb_itemPutL( PHB_ITEM pItem, BOOL bValue )
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutL(%p, %d)", pItem, (int) bValue));
 
    if( pItem )
-      hb_itemClear( pItem );
+   {
+      if( HB_IS_COMPLEX( pItem ) )
+         hb_itemClear( pItem );
+   }
    else
       pItem = hb_itemNew( NULL );
 
@@ -679,7 +703,10 @@ PHB_ITEM HB_EXPORT hb_itemPutND( PHB_ITEM pItem, double dNumber )
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutND(%p, %lf)", pItem, dNumber));
 
    if( pItem )
-      hb_itemClear( pItem );
+   {
+      if( HB_IS_COMPLEX( pItem ) )
+         hb_itemClear( pItem );
+   }
    else
       pItem = hb_itemNew( NULL );
 
@@ -696,7 +723,10 @@ PHB_ITEM HB_EXPORT hb_itemPutNI( PHB_ITEM pItem, int iNumber )
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutNI(%p, %d)", pItem, iNumber));
 
    if( pItem )
-      hb_itemClear( pItem );
+   {
+      if( HB_IS_COMPLEX( pItem ) )
+         hb_itemClear( pItem );
+   }
    else
       pItem = hb_itemNew( NULL );
 
@@ -712,7 +742,10 @@ PHB_ITEM HB_EXPORT hb_itemPutNL( PHB_ITEM pItem, LONG lNumber )
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutNL(%p, %ld)", pItem, lNumber));
 
    if( pItem )
-      hb_itemClear( pItem );
+   {
+      if( HB_IS_COMPLEX( pItem ) )
+         hb_itemClear( pItem );
+   }
    else
       pItem = hb_itemNew( NULL );
 
@@ -735,7 +768,10 @@ PHB_ITEM HB_EXPORT hb_itemPutNLL( PHB_ITEM pItem, LONGLONG llNumber )
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutNL(%p, %" PFLL "d)", pItem, llNumber));
 
    if( pItem )
-      hb_itemClear( pItem );
+   {
+      if( HB_IS_COMPLEX( pItem ) )
+         hb_itemClear( pItem );
+   }
    else
       pItem = hb_itemNew( NULL );
 
@@ -820,7 +856,10 @@ PHB_ITEM HB_EXPORT hb_itemPutNDLen( PHB_ITEM pItem, double dNumber, int iWidth, 
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutNDLen(%p, %lf, %d, %d)", pItem, dNumber, iWidth, iDec));
 
    if( pItem )
-      hb_itemClear( pItem );
+   {
+      if( HB_IS_COMPLEX( pItem ) )
+         hb_itemClear( pItem );
+   }
    else
       pItem = hb_itemNew( NULL );
 
@@ -853,7 +892,10 @@ PHB_ITEM HB_EXPORT hb_itemPutNILen( PHB_ITEM pItem, int iNumber, int iWidth )
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutNILen(%p, %d, %d)", pItem, iNumber, iWidth));
 
    if( pItem )
-      hb_itemClear( pItem );
+   {
+      if( HB_IS_COMPLEX( pItem ) )
+         hb_itemClear( pItem );
+   }
    else
       pItem = hb_itemNew( NULL );
 
@@ -872,7 +914,10 @@ PHB_ITEM HB_EXPORT hb_itemPutNLLen( PHB_ITEM pItem, LONG lNumber, int iWidth )
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutNLLen(%p, %ld, %d)", pItem, lNumber, iWidth));
 
    if( pItem )
-      hb_itemClear( pItem );
+   {
+      if( HB_IS_COMPLEX( pItem ) )
+         hb_itemClear( pItem );
+   }
    else
       pItem = hb_itemNew( NULL );
 
@@ -901,7 +946,10 @@ PHB_ITEM HB_EXPORT hb_itemPutNLLLen( PHB_ITEM pItem, LONGLONG llNumber, int iWid
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutNLLLen(%p, %" PFLL "d, %d)", pItem, llNumber, iWidth));
 
    if( pItem )
-      hb_itemClear( pItem );
+   {
+      if( HB_IS_COMPLEX( pItem ) )
+         hb_itemClear( pItem );
+   }
    else
       pItem = hb_itemNew( NULL );
 
@@ -930,7 +978,10 @@ PHB_ITEM HB_EXPORT hb_itemPutPtr( PHB_ITEM pItem, void * pValue )
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutPtr(%p, %p)", pItem, pValue));
 
    if( pItem )
-      hb_itemClear( pItem );
+   {
+      if( HB_IS_COMPLEX( pItem ) )
+         hb_itemClear( pItem );
+   }
    else
       pItem = hb_itemNew( NULL );
 
@@ -1084,29 +1135,32 @@ void HB_EXPORT hb_itemCopy( PHB_ITEM pDest, PHB_ITEM pSource )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemCopy(%p, %p)", pDest, pSource));
 
-   if( pDest->type )
-      hb_itemClear( pDest );
-
    if( pDest == pSource )
       hb_errInternal( HB_EI_ITEMBADCOPY, NULL, "hb_itemCopy()", NULL );
 
+   if( HB_IS_COMPLEX( pDest ) )
+      hb_itemClear( pDest );
+
    memcpy( pDest, pSource, sizeof( HB_ITEM ) );
 
-   if( HB_IS_STRING( pSource ) )
+   if( HB_IS_COMPLEX( pSource ) )
    {
-      if( !pSource->item.asString.bStatic )
-         ++*( pSource->item.asString.u.pulHolders );
+      if( HB_IS_STRING( pSource ) )
+      {
+         if( !pSource->item.asString.bStatic )
+            ++*( pSource->item.asString.u.pulHolders );
+      }
+      else if( HB_IS_ARRAY( pSource ) )
+      {
+         ( pSource->item.asArray.value )->ulHolders++;
+      }
+      else if( HB_IS_BLOCK( pSource ) )
+      {
+         ( pSource->item.asBlock.value )->ulCounter++;
+      }
+      else if( HB_IS_MEMVAR( pSource ) )
+         hb_memvarValueIncRef( pSource->item.asMemvar.value );
    }
-   else if( HB_IS_ARRAY( pSource ) )
-   {
-      ( pSource->item.asArray.value )->ulHolders++;
-   }
-   else if( HB_IS_BLOCK( pSource ) )
-   {
-      ( pSource->item.asBlock.value )->ulCounter++;
-   }
-   else if( HB_IS_MEMVAR( pSource ) )
-      hb_memvarValueIncRef( pSource->item.asMemvar.value );
 }
 
 void HB_EXPORT hb_itemMove( PHB_ITEM pDest, PHB_ITEM pSource )
@@ -1116,7 +1170,7 @@ void HB_EXPORT hb_itemMove( PHB_ITEM pDest, PHB_ITEM pSource )
    if( pDest == pSource )
       hb_errInternal( HB_EI_ITEMBADCOPY, NULL, "hb_itemMove()", NULL );
 
-   if( pDest->type )
+   if( HB_IS_COMPLEX( pDest ) )
       hb_itemClear( pDest );
 
    memcpy( pDest, pSource, sizeof( HB_ITEM ) );
@@ -1139,7 +1193,8 @@ void HB_EXPORT hb_itemSwap( PHB_ITEM pItem1, PHB_ITEM pItem2 )
    hb_itemCopy( &temp, pItem2 );
    hb_itemCopy( pItem2, pItem1 );
    hb_itemCopy( pItem1, &temp );
-   hb_itemClear( &temp );
+   if( HB_IS_COMPLEX( &temp ) )
+      hb_itemClear( &temp );
 
 /* Faster, but less safe way
    memcpy( &temp, pItem2, sizeof( HB_ITEM ) );

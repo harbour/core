@@ -122,10 +122,10 @@ HB_FUNC( AADD )
       if( pValue && hb_arrayAdd( pArray, pValue ) )
          hb_itemReturn( pValue );
       else
-         hb_errRT_BASE( EG_BOUND, 1187, NULL, "AADD", 2, hb_paramError( 1 ), hb_paramError( 2 ) );
+         hb_errRT_BASE( EG_BOUND, 1187, NULL, "AADD", HB_MIN( hb_pcount(), 2 ), hb_paramError( 1 ), hb_paramError( 2 ) );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1123, NULL, "AADD", 2, hb_paramError(1), hb_paramError( 2 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 1123, NULL, "AADD", HB_MIN( hb_pcount(), 2 ), hb_paramError(1), hb_paramError( 2 ) );
 }
 
 HB_FUNC( HB_ARRAYID )  /* for debugging: returns the array's "address" so dual references to same array can be seen */
@@ -156,7 +156,7 @@ HB_FUNC( ASIZE )
    }
 #ifdef HB_COMPAT_C53 /* From CA-Cl*pper 5.3a */
    else
-      hb_errRT_BASE( EG_ARG, 2023, NULL, "ASIZE", 2, hb_paramError( 1 ), hb_paramError( 2 ) );
+      hb_errRT_BASE( EG_ARG, 2023, NULL, "ASIZE", HB_MIN( hb_pcount(), 2 ), hb_paramError( 1 ), hb_paramError( 2 ) );
 #endif
 }
 
@@ -205,27 +205,47 @@ HB_FUNC( AFILL )
    {
       PHB_ITEM pValue = hb_param( 2, HB_IT_ANY );
 
+      hb_itemReturn( pArray ); /* AFill() returns the array itself */
+
       if( pValue )
       {
-         ULONG ulStart = hb_parnl( 3 );
-         ULONG ulCount = hb_parnl( 4 );
+         ULONG ulStart, ulCount;
+         LONG lStart = hb_parnl( 3 ), lCount = hb_parnl( 4 );
 
+         /* Explicy lCount of 0 - Nothing to do! */
+         if ( ISNUM(4) && lCount == 0 )
+            return;
+         /* Clipper aborts if negative start. */
+         else if ( lStart < 0 )
+            return;
+         /* Clipper allows Start to be of wrong type, or 0, and corrects it to 1. */
+         else if ( lStart == 0 )
+            lStart = 1;
+         if ( lCount < 0 )
+         {
+            /* Clipper allows the Count to be negative, if start is 1, and corrects it to maximum elements. */
+            if( lStart == 1 )
+               ulCount = 0;
+            /* Clipper aborts if negative count and start is not at 1. */
+            else
+               return;
+         }
+         ulStart = ( ULONG ) lStart;
+         ulCount = ( ULONG ) lCount;
          hb_arrayFill( pArray,
                        pValue,
                        ISNUM( 3 ) ? &ulStart : NULL,
                        ISNUM( 4 ) ? &ulCount : NULL );
       }
-
-      hb_itemReturn( pArray ); /* AFill() returns the array itself */
    }
    else
 #ifdef HB_C52_STRICT
       /* NOTE: In CA-Cl*pper AFILL() is written in a manner that it will
                call AEVAL() to do the job, so the error (if any) will also be
                thrown by AEVAL().  [vszakats] */
-      hb_errRT_BASE( EG_ARG, 2017, NULL, "AEVAL", 4, hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ) );
+      hb_errRT_BASE( EG_ARG, 2017, NULL, "AEVAL", HB_MIN( hb_pcount(), 4 ), hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ) );
 #else
-      hb_errRT_BASE( EG_ARG, 9999, NULL, "AFILL", 4, hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ) );
+      hb_errRT_BASE( EG_ARG, 9999, NULL, "AFILL", HB_MIN( hb_pcount(), 4 ), hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ) );
 #endif
 }
 
@@ -269,7 +289,7 @@ HB_FUNC( AEVAL )
       hb_itemReturn( hb_stackItemFromBase( 1 ) ); /* AEval() returns the array itself */
    }
    else
-      hb_errRT_BASE( EG_ARG, 2017, NULL, "AEVAL", 4, hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ) );
+      hb_errRT_BASE( EG_ARG, 2017, NULL, "AEVAL", HB_MIN( hb_pcount(), 4 ), hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ) );
 }
 
 HB_FUNC( ACOPY )
