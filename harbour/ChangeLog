@@ -1,3 +1,12 @@
+19990514-16:00 CET Eddie Runia
+  * makefile.b32
+    - added objfunc.obj
+  * source/vm/hvm.c
+    #ifdef NO_OBJ added
+  * tests/working/hb32.bat, tests/working/bld32exe.bat
+    added.
+
+
 19990513-22:20 EDT David G. Holm <dholm@jsd-llc.com>
   * makefile.b31
     - Removed harbour.obj from harbour.exe build, due

@@ -37,7 +37,7 @@ void Do( WORD WParams );      /* invoke the virtual machine */
 HARBOUR DoBlock( void );      /* executes a codeblock */
 void Duplicate( void );       /* duplicates the latest value on the stack */
 void EndBlock( void );        /* copies the last codeblock pushed value into the return value */
-void Equal( BOOL bExact );    /* checks if the two latest values on the stack are equal, removes both and leaves result */
+void Equal( void );           /* checks if the two latest values on the stack are equal, removes both and leaves result */
 void ForTest( void );         /* test for end condition of for */
 void Frame( BYTE bLocals, BYTE bParams );  /* increases the stack pointer for the amount of locals and params suplied */
 void FuncPtr( void );         /* pushes a function address pointer. Removes the symbol from the satck */
@@ -132,7 +132,9 @@ typedef struct
    PSYMBOL pSymbols;              /* module local symbol table address */
 } OBJSYMBOLS, * POBJSYMBOLS;      /* structure used from Harbour generated OBJs */
 
+#ifndef NO_OBJ
 extern POBJSYMBOLS HB_FIRSTSYMBOL, HB_LASTSYMBOL;
+#endif
 
 STACK stack;
 int iHBDEBUG = 0;      /* if 1 traces the virtual machine activity */
@@ -171,7 +173,9 @@ BYTE bErrorLevel = 0;  /* application exit errorlevel */
    StackInit();
    NewDynSym( &symEval );  /* initialize dynamic symbol for evaluating codeblocks */
    InitializeSets(); /* initialize Sets */
+#ifndef NO_OBJ
    ProcessObjSymbols(); /* initialize Harbour generated OBJs symbols */
+#endif
    DoInitFunctions( argc, argv ); /* process defined INIT functions */
 
    PushSymbol( pSymStart ); /* pushes first FS_PUBLIC defined symbol to the stack */
@@ -256,12 +260,7 @@ void VirtualMachine( PBYTE pCode, PSYMBOL pSymbols )
               return;   /* end of a codeblock - stop evaluation */
 
          case _EQUAL:
-              Equal(FALSE);
-              w++;
-              break;
-
-         case _EXACTLYEQUAL:
-              Equal(TRUE);
+              Equal();
               w++;
               break;
 
@@ -739,7 +738,7 @@ void EndBlock( void )
    HBDEBUG( "EndBlock\n" );
 }
 
-void Equal( BOOL bExact )
+void Equal( void )
 {
    PITEM pItem2 = stack.pPos - 1;
    PITEM pItem1 = stack.pPos - 2;
@@ -761,7 +760,7 @@ void Equal( BOOL bExact )
 
    else if( IS_STRING( pItem1 ) && IS_STRING( pItem2 ) )
    {
-      i = hb_itemStrCmp( pItem1, pItem2, bExact );
+      i = hb_itemStrCmp( pItem1, pItem2 );
       StackPop();
       StackPop();
       PushLogical( i == 0 );
@@ -873,7 +872,7 @@ void Greater( void )
 
    if( IS_STRING( stack.pPos - 2 ) && IS_STRING( stack.pPos - 1 ) )
    {
-      i = hb_itemStrCmp( stack.pPos - 2, stack.pPos - 1, FALSE );
+      i = hb_itemStrCmp( stack.pPos - 2, stack.pPos - 1 );
       StackPop();
       StackPop();
       PushLogical( i > 0 );
@@ -916,7 +915,7 @@ void GreaterEqual( void )
 
    if( IS_STRING( stack.pPos - 2 ) && IS_STRING( stack.pPos - 1 ) )
    {
-      i = hb_itemStrCmp( stack.pPos - 2, stack.pPos - 1, FALSE );
+      i = hb_itemStrCmp( stack.pPos - 2, stack.pPos - 1 );
       StackPop();
       StackPop();
       PushLogical( i >= 0 );
@@ -1034,7 +1033,7 @@ void Less( void )
 
    if( IS_STRING( stack.pPos - 2 ) && IS_STRING( stack.pPos - 1 ) )
    {
-      i = hb_itemStrCmp( stack.pPos - 2, stack.pPos - 1, FALSE );
+      i = hb_itemStrCmp( stack.pPos - 2, stack.pPos - 1 );
       StackPop();
       StackPop();
       PushLogical( i < 0 );
@@ -1077,7 +1076,7 @@ void LessEqual( void )
 
    if( IS_STRING( stack.pPos - 2 ) && IS_STRING( stack.pPos - 1 ) )
    {
-      i = hb_itemStrCmp( stack.pPos - 2, stack.pPos - 1, FALSE );
+      i = hb_itemStrCmp( stack.pPos - 2, stack.pPos - 1 );
       StackPop();
       StackPop();
       PushLogical( i <= 0 );
@@ -1172,7 +1171,7 @@ void NotEqual( void )
 
    else if( IS_STRING( pItem1 ) && IS_STRING( pItem2 ) )
    {
-      i = hb_itemStrCmp( pItem1, pItem2, FALSE );
+      i = hb_itemStrCmp( pItem1, pItem2 );
       StackPop();
       StackPop();
       PushLogical( i != 0 );
@@ -1779,11 +1778,13 @@ void ProcessSymbols( PSYMBOL pModuleSymbols, WORD wModuleSymbols ) /* module sym
    WORD w;
    static int iObjChecked = 0;
 
+#ifndef NO_OBJ
    if( ! iObjChecked )
    {
       iObjChecked = 1;
       ProcessObjSymbols();   /* to asure Harbour OBJ symbols are processed first */
    }
+#endif
 
    pNewSymbols = ( PSYMBOLS ) _xgrab( sizeof( SYMBOLS ) );
    pNewSymbols->pModuleSymbols = pModuleSymbols;
@@ -1813,6 +1814,7 @@ void ProcessSymbols( PSYMBOL pModuleSymbols, WORD wModuleSymbols ) /* module sym
 
 void ProcessObjSymbols( void )
 {
+#ifndef NO_OBJ
    POBJSYMBOLS pObjSymbols = ( POBJSYMBOLS ) &HB_FIRSTSYMBOL;
 
    static int iDone = 0;
@@ -1826,6 +1828,7 @@ void ProcessObjSymbols( void )
          pObjSymbols++;
       }
    }
+#endif
 }
 
 void ReleaseLocalSymbols( void )
