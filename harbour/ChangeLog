@@ -1,3 +1,17 @@
+20000214-17:10 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * config/w32/bcc32.cf
+     ! Fixed so that it doesn't require the non-standard HARBOURDIR envvar
+       to be set.
+     + Added -d flag
+   * config/dos/bcc.cf
+     + Added -d flag
+   * config/lib.cf
+     config/test.cf
+     config/dir.cf
+     config/bin.cf
+     ! Checks if the HB_ARCHITECTURE and HB_PLATFORM envvars are set, if
+       not it simply does nothing instead of going into an infinite loop.
+
 20000214-09:15 GMT+1 Victor Szakats <info@szelvesz.hu>
    * tests/*
      ! Fixed missing CVD IDs (again and again).
@@ -40,7 +54,7 @@
 20000214-03:50 GMT+1 Victor Szakats <info@szelvesz.hu>
    * bin/bld_b*.bat
      bin/bld_vc.bat
-     + Made in sync with each other updated the lib file lists.
+     + Made in sync with each other, updated the lib file lists.
    * makefile.bc
      ! Changed hbpp.lib to pp.lib (again)
      ! Fixed NULSYS.LIB generation bug.
@@ -76,8 +90,8 @@
    * tests/testrpt.prg
      tests/testlbl.prg
      ! CVS ID added.
-   * include/rptdef.ch
-     include/hbrptlbl.ch
+   - include/rptdef.ch
+   + include/hbrptlbl.ch
      include/Makefile
      source/rtl/tlabel.prg
      source/rtl/treport.prg

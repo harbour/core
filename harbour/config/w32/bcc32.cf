@@ -2,7 +2,7 @@
 # $Id$
 #
 # The Harbour Project
-# GNU MAKE file for Borland C/C++ 3.1
+# GNU MAKE file for Borland C/C++ 32bit (4.x, 5.x)
 
 include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
 
@@ -24,7 +24,7 @@ CC = bcc32
 CC_IN = -c
 CC_OUT = -o
 CPPFLAGS = -I$(GRANDP) -I$(_HB_INC_COMPILE) -DHARBOUR_USE_WIN_GTAPI
-CFLAGS = -O2
+CFLAGS = -O2 -d
 
 LD = bcc32
 LDFLAGS = -O2
@@ -32,7 +32,7 @@ LD_OUT = -e
 
 # Add all libraries specified in LIBS.
 ifeq ($(HB_LIB_COMPILE),)
-LINKLIBS += $(foreach lib, $(LIBS), $(HARBOURDIR)/source/$(lib)/$(ARCH)/$(lib)$(LIB_EXT))
+LINKLIBS += $(foreach lib, $(LIBS), $(TOP)$(ROOT)/source/$(lib)/$(ARCH)/$(lib)$(LIB_EXT))
 else
 LINKPATHS += -L$(HB_LIB_COMPILE)
 LINKLIBS += $(foreach lib, $(LIBS), $(lib)$(LIB_EXT))
@@ -41,7 +41,7 @@ endif
 # If LIBS specifies the rdd library, add all DB drivers.
 ifeq ($(findstring rdd,$(LIBS)),rdd)
 ifeq ($(HB_LIB_COMPILE),)
-LINKLIBS += $(foreach drv, $(HB_DB_DRIVERS), $(HARBOURDIR)/source/rdd/$(drv)/$(ARCH)/$(drv)$(LIB_EXT))
+LINKLIBS += $(foreach drv, $(HB_DB_DRIVERS), $(TOP)$(ROOT)/source/rdd/$(drv)/$(ARCH)/$(drv)$(LIB_EXT))
 else
 LINKPATHS += -L$(HB_LIB_COMPILE)
 LINKLIBS += $(foreach drv, $(HB_DB_DRIVERS), $(drv)$(LIB_EXT))

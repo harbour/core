@@ -2,6 +2,9 @@
 # $Id$
 #
 
+ifneq ($(HB_ARCHITECTURE),)
+ifneq ($(HB_COMPILER),)
+
 include $(TOP)$(ROOT)config/global.cf
 include $(TOP)$(ROOT)config/c.cf
 include $(TOP)$(ROOT)config/prg.cf
@@ -43,3 +46,6 @@ INSTALL_OBJS = $(EXE_ARCH)
 INSTALL_DIR = $(HB_BIN_INSTALL)
 
 include $(TOP)$(ROOT)config/install.cf
+
+endif
+endif
