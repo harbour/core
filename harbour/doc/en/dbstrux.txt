@@ -133,9 +133,8 @@
  *      __dbCopyXStruct() create a new database named <cFileName> with a
  *      pre-defined structure (also called "structure extended file"):
  *
- *       <table:4>
- *       Field name   Type   Length   Decimals
- *
+ *       <table>
+ *       <color:red>Field name   Type   Length   Decimals </color>
  *       FIELD_NAME   C      10       0
  *       FIELD_TYPE   C      1        0
  *       FIELD_LEN    N      3        0
@@ -204,9 +203,8 @@
  *      COPY STRUCTURE EXTENDED create a new database named <cFileName> with
  *      a pre-defined structure (also called "structure extended file"):
  *
- *       <table:4>
- *       Field name   Type   Length   Decimals
- *
+ *       <table>
+ *       <color:red>Field name   Type   Length   Decimals </color>
  *       FIELD_NAME   C      10       0
  *       FIELD_TYPE   C      1        0
  *       FIELD_LEN    N      3        0
@@ -302,8 +300,7 @@
  *      file has the following structure:
  *
  *       <table:4>
- *       Field name   Type   Length   Decimals
- *
+ *       <color:red>Field name   Type   Length   Decimals </color>
  *       FIELD_NAME   C      10       0
  *       FIELD_TYPE   C      1        0
  *       FIELD_LEN    N      3        0
@@ -394,8 +391,8 @@
  *      following structure:
  *
  *       <table:4>
- *       Field name   Type   Length   Decimals
- *
+ *       <color:red>Field name   Type   Length   Decimals</color>
+ *       
  *       FIELD_NAME   C      10       0
  *       FIELD_TYPE   C      1        0
  *       FIELD_LEN    N      3        0
@@ -518,8 +515,7 @@
  *      array element has the following structure:
  *
  *       <table:3>
- *       Position   Description    dbstruct.ch
- *
+ *       <color:red>Position   Description    dbstruct.ch </color>
  *       1          cFieldName     DBS_NAME
  *       2          cFieldType     DBS_TYPE
  *       3          nFieldLength   DBS_LEN
@@ -607,8 +603,7 @@
  *      array element has the following structure:
  *
  *       <table:3>
- *       Position   Description    dbstruct.ch
- *
+ *       <color:red>Position   Description    dbstruct.ch </color>
  *       1          cFieldName     DBS_NAME
  *       2          cFieldType     DBS_TYPE
  *       3          nFieldLength   DBS_LEN
