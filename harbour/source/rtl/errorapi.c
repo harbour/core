@@ -114,7 +114,7 @@ WORD hb_errLaunch( PHB_ITEM pError )
 
       /* Check if we have a valid error handler */
 
-      if( ! IS_BLOCK( &s_errorBlock ) )
+      if( hb_itemType( &s_errorBlock ) != IT_BLOCK )
          hb_errInternal( 9999, "No ERRORBLOCK() for error", NULL, NULL );
 
       /* Check if the error launcher was called too many times recursively */
@@ -161,7 +161,7 @@ WORD hb_errLaunch( PHB_ITEM pError )
          /* If the error block didn't return a logical value, */
          /* or the canSubstitute flag has been set, consider it as a failure */
 
-         if( ! IS_LOGICAL( pResult ) || ( uiFlags & EF_CANSUBSTITUTE ) )
+         if( hb_itemType( pResult ) != IT_LOGICAL || ( uiFlags & EF_CANSUBSTITUTE ) )
             bFailure = TRUE;
          else
          {
@@ -206,7 +206,7 @@ PHB_ITEM hb_errLaunchSubst( PHB_ITEM pError )
 
       /* Check if we have a valid error handler */
 
-      if( ! IS_BLOCK( &s_errorBlock ) )
+      if( hb_itemType( &s_errorBlock ) != IT_BLOCK )
          hb_errInternal( 9999, "No ERRORBLOCK() for error", NULL, NULL );
 
       /* Check if the error launcher was called too many times recursively */
@@ -495,13 +495,12 @@ static WORD hb_errRT_New(
 {
    PHB_ITEM pError = hb_errNew();
    WORD wRetVal;
-
    hb_errPutSeverity( pError, uiSeverity );
    hb_errPutSubSystem( pError, szSubSystem );
    hb_errPutGenCode( pError, ulGenCode );
    hb_errPutSubCode( pError, ulSubCode );
    hb_errPutDescription( pError, szDescription ? szDescription : hb_langDGetErrorDesc( ulGenCode ) );
-   hb_errPutOperation( pError, szOperation );
+   hb_errPutOperation( pError, szOperation ? szOperation : "" );
    hb_errPutOsCode( pError, uiOsCode );
    hb_errPutFlags( pError, uiFlags );
 
@@ -530,7 +529,7 @@ static PHB_ITEM hb_errRT_New_Subst(
    hb_errPutGenCode( pError, ulGenCode );
    hb_errPutSubCode( pError, ulSubCode );
    hb_errPutDescription( pError, szDescription ? szDescription : hb_langDGetErrorDesc( ulGenCode ) );
-   hb_errPutOperation( pError, szOperation );
+   hb_errPutOperation( pError, szOperation ? szOperation : "" );
    hb_errPutOsCode( pError, uiOsCode );
    hb_errPutFlags( pError, uiFlags | EF_CANSUBSTITUTE );
 

@@ -210,7 +210,7 @@ SECONDS                 ;R;
 SELECT                  ;R;
 SET                     ;R;
 SETBLINK                ;S;
-SETCANCEL               ;N;
+SETCANCEL               ;R;
 SETCOLOR                ;S;
 SETCURSOR               ;S;
 SETKEY                  ;R;

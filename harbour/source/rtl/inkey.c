@@ -38,6 +38,14 @@
    V 1.1    David G. Holm               Committed to CVS.
    V 1.0    David G. Holm               Initial version.
 */
+
+/* Harbour Project source code
+   http://www.Harbour-Project.org/
+   The following functions are Copyright 1999 Victor Szel <info@szelvesz.hu>:
+      HB___KEYPUT()
+   See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
+*/
+
 /* Note: The following #ifdef block for __IBMCPP__ must be ahead
          of any and all #include statements and requires that
          Harbour includes are ahead of platform includes.
@@ -400,7 +408,7 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
 #endif
       if( ch )
       {
-         if( ch == 302 )
+         if( ch == 302 ) /* K_ALT_C */
             hb_vmRequestCancel( );  /* Alt-C was pressed */
          hb_inkeyPut( ch );
       }
@@ -605,8 +613,8 @@ HARBOUR HB___KEYBOARD( void )
          }
 
          while( size-- )
-	 {
-	    if( *fPtr )
+         {
+            if( *fPtr )
                hb_inkeyPut( *fPtr );
             ++fPtr;
          }

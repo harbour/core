@@ -43,7 +43,9 @@ static BOOL hb_fsCopy( char * szSource, char * szDest, ULONG * pulWrittenTotal )
 
    while( ( fhndSource = hb_fsOpen( ( BYTE * ) szSource, FO_READ ) ) == FS_ERROR )
    {
-      if( hb_errRT_BASE_Ext1( EG_OPEN, 2012, NULL, szSource, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY ) == E_DEFAULT )
+      WORD wResult = hb_errRT_BASE_Ext1( EG_OPEN, 2012, NULL, szSource, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY );
+
+      if( wResult == E_DEFAULT || wResult == E_BREAK )
       {
          ulWrittenTotal = ( ULONG ) -1L;
          break;
@@ -54,7 +56,9 @@ static BOOL hb_fsCopy( char * szSource, char * szDest, ULONG * pulWrittenTotal )
    {
       while( ( fhndDest = hb_fsCreate( ( BYTE * ) szDest, FC_NORMAL ) ) == FS_ERROR )
       {
-         if( hb_errRT_BASE_Ext1( EG_CREATE, 2012, NULL, szDest, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY ) == E_DEFAULT )
+         WORD wResult = hb_errRT_BASE_Ext1( EG_CREATE, 2012, NULL, szDest, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY );
+
+         if( wResult == E_DEFAULT || wResult == E_BREAK )
          {
             ulWrittenTotal = ( ULONG ) -2L;
             break;
@@ -79,7 +83,9 @@ static BOOL hb_fsCopy( char * szSource, char * szDest, ULONG * pulWrittenTotal )
          {
             while( ( usWritten = hb_fsWrite( fhndDest, buffer, usRead ) ) != usRead )
             {
-               if( hb_errRT_BASE_Ext1( EG_WRITE, 2016, NULL, szDest, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY ) == E_DEFAULT )
+               WORD wResult = hb_errRT_BASE_Ext1( EG_WRITE, 2016, NULL, szDest, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY );
+
+               if( wResult == E_DEFAULT || wResult == E_BREAK )
                {
                   bRetVal = FALSE;
                   break;

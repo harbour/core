@@ -1,3 +1,30 @@
+19990901-17:20 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/set.c
+    funclist.txt
+    + SetCancel() function added.
+  * source/vm/hvm.c
+    ! hb_vmRequestCancel() now diplays correctly on DOS/DJGPP, since it's
+      using hb_consoleGetNewLine() to display a newline instead of '\n'.
+  * source/runner/runlib.c
+    ! __HRBRUN() now handles if the error launcher returns with an E_BREAK.
+  * source/rtl/copyfile.c
+    ! The error launching now also reacts to a BREAK correctly.
+  * source/compiler/harbour.l
+    ! At one place BREAK was not converted to uppercase, so the generated pcode
+      was faulty. RTL_TEST.PRG didn't link because of that.
+      (Ryszard, is this the correct fix ?)
+  * source/rtl/errorapi.c
+    ! szOperation now can be NULL. This caused some error launchings to GPF,
+      for example BADALIAS calls in HVM.C.
+    * IS_*() internal macros changed to hb_itemType() calls.
+  * source/rtl/filesys.c
+    + Added runtime error 2018 to DISKSPACE().
+  * source/vm/hvm.c
+    ! Fixed a variable name which went out sync between the last two CVS
+      sessions.
+  * source/rtl/inkey.c
+    + Added copyright info.
+
 19990901-15:40 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/compiler/harbour.y
     + It will now recognize and accept filenames specified via the

@@ -1007,24 +1007,33 @@ HARBOUR HB_DIRREMOVE( void )
 
 HARBOUR HB_DISKSPACE( void )
 {
-   USHORT nDrive = ( ISCHAR( 1 ) && hb_parclen( 1 ) > 0 ) ?
-                   ( USHORT )( toupper( *hb_parc( 1 ) ) - 'A' + 1 ) : 0;
+   ULONG ulSpaceFree = 0;
+   USHORT uiDrive = ( ISCHAR( 1 ) && hb_parclen( 1 ) > 0 ) ?
+                     ( USHORT )( toupper( *hb_parc( 1 ) ) - 'A' + 1 ) : 0;
 
 #ifdef DOS
    struct diskfree_t disk;
+   unsigned uiResult;
 
-   _dos_getdiskfree( nDrive, &disk );
+   while( ( uiResult = _dos_getdiskfree( uiDrive, &disk ) ) != 0 )
+   {
+      WORD wResult = hb_errRT_BASE_Ext1( EG_OPEN, 2018, NULL, NULL, 0, EF_CANDEFAULT )
 
-   hb_retnl( ( LONG ) ( ( ULONG ) disk.avail_clusters *
-                        ( ULONG ) disk.sectors_per_cluster *
-                        ( ULONG ) disk.bytes_per_sector ) );
+      if( wResult == E_DEFAULT || wResult == E_BREAK )
+         break;
+   }
+
+   if( uiResult != 0 )
+      ulSpaceFree = ( ( ULONG ) disk.avail_clusters *
+                      ( ULONG ) disk.sectors_per_cluster *
+                      ( ULONG ) disk.bytes_per_sector );
 #else
 
-   HB_SYMBOL_UNUSED( nDrive );
-
-   hb_retnl( 0 );
+   HB_SYMBOL_UNUSED( uiDrive );
 
 #endif
+
+   hb_retnl( ( LONG ) ulSpaceFree );
 }
 
 HARBOUR HB_DISKCHANGE( void )

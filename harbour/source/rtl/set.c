@@ -326,6 +326,14 @@ static int open_handle( char * file_name, BOOL bMode, char * def_ext, HB_set_enu
 #endif
 }
 
+HARBOUR HB_SETCANCEL( void )
+{
+   hb_retl( hb_set.HB_SET_CANCEL );
+
+   if( ISLOG( 1 ) )
+      hb_set.HB_SET_CANCEL = hb_parl( 1 );
+}
+
 /* $DOC$
  * $FUNCNAME$   __SETCENTURY( [<lFlag> | <cOnOff> ] ) --> lPreviousValue
  * $ARGUMENTS$  optional <lFlag> or <cOnOff> (not case sensitive)

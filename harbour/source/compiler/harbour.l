@@ -41,8 +41,8 @@
 #include "hbdefs.h"
 
 /* Functions defined in harbour.y */
-char *yy_strupr( char * );
-char * yy_strdup( char *p );
+char * yy_strupr( char * p );
+char * yy_strdup( char * p );
 extern void     hb_xfree( void * pMem );    /* frees memory */
 
 /* YACC functions */
@@ -229,7 +229,7 @@ Separator     {SpaceTab}
                     BEGIN BREAK_;
                  else
                  {
-		    yylval.string = yy_strdup( yytext );
+                    yylval.string = yy_strupr( yy_strdup( yytext ) );
                     _iState =IDENTIFIER;
                     return IDENTIFIER;
                  }
@@ -244,7 +244,7 @@ Separator     {SpaceTab}
  *       There are no resons to limit this use in Harbour.
  */
 /*
-<BREAK_>{Separator}*[\[] { 
+<BREAK_>{Separator}*[\[] {
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                GenError( _szCErrors, 'E', ERR_SYNTAX, yytext, NULL );
              }

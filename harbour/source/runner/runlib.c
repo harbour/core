@@ -109,17 +109,17 @@ HARBOUR HB___HRBRUN( void )
    }
    else
    {
-      char *szFileName = hb_parc( 1 );
-      FILE *file;
+      char * szFileName = hb_parc( 1 );
+      FILE * file;
 
       /* Open as binary */
 
       while ( ( file = hb_hrbFileOpen( szFileName ) ) == NULL )
       {
-         if( hb_errRT_BASE_Ext1( EG_OPEN, 9999, NULL, szFileName, 0, EF_CANDEFAULT | EF_CANRETRY ) == E_DEFAULT )
-         {
+         WORD wResult = hb_errRT_BASE_Ext1( EG_OPEN, 9999, NULL, szFileName, 0, EF_CANDEFAULT | EF_CANRETRY );
+
+         if( wResult == E_DEFAULT && wResult == E_BREAK )
             break;
-         }
       }
 
       if( file )
@@ -191,6 +191,7 @@ HARBOUR HB___HRBRUN( void )
                if( !pDynSym )
                {
                   hb_errRT_BASE( EG_ARG, 9999, "Unknown or unregistered symbol", pSymRead[ ul ].szName );
+                  return;
                }
                pSymRead[ ul ].pFunPtr = pDynSym->pFunPtr;
             }
