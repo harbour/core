@@ -66,7 +66,7 @@
           then, they should be updated by the builder. [vszakats] */
 
 #define HB_VER_LENTRY   "2002-03-08 20:31 UTC-0500 Phil Barnett <midnight@the-oasis.net>"
-#define HB_VER_CHLCVS   "ChangeLog,v 1.3763 2002/01/16 16:10:57 dholm"
+#define HB_VER_CHLCVS   "ChangeLog,v 1.3922 2002/03/09 01:45:31 philb"
 #define HB_VER_C_USR    ""
 #define HB_VER_L_USR    ""
 #define HB_VER_PRG_USR  ""
