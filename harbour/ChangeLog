@@ -1,3 +1,9 @@
+20000502-14:25 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/compiler/harbour.c
+      * fixed unused variable warning in a code that nobody
+      is remembering why it was there
+
 20000502-10:41 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * include/hbpcode.h

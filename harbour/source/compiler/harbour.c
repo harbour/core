@@ -70,7 +70,7 @@ static void hb_compGenVariablePCode( BYTE , char * );    /* generates the pcode 
 static void hb_compGenVarPCode( BYTE , char * );    /* generates the pcode for undeclared variable */
 
 static PFUNCTION hb_compFunctionNew( char *, char );  /* creates and initialises the _FUNC structure */
-static void hb_compCheckDuplVars( PVAR pVars, char * szVarName, int iVarScope ); /*checks for duplicate variables definitions */
+static void hb_compCheckDuplVars( PVAR pVars, char * szVarName ); /*checks for duplicate variables definitions */
 
 //int hb_compSort_ULONG( ULONG * ulLeft, ULONG * ulRight );
 static void hb_compOptimizeJumps( void );
@@ -502,19 +502,19 @@ void hb_compVariableAdd( char * szVarName, char cValueType )
    if( pFunc->szName )
    {
       /* variable defined in a function/procedure */
-      hb_compCheckDuplVars( pFunc->pFields, szVarName, hb_comp_iVarScope );
-      hb_compCheckDuplVars( pFunc->pStatics, szVarName, hb_comp_iVarScope );
+      hb_compCheckDuplVars( pFunc->pFields, szVarName );
+      hb_compCheckDuplVars( pFunc->pStatics, szVarName );
       /*NOTE: Clipper warns if PARAMETER variable duplicates the MEMVAR
        * declaration
       */
       if( !( hb_comp_iVarScope == VS_PRIVATE || hb_comp_iVarScope == VS_PUBLIC ) )
-         hb_compCheckDuplVars( pFunc->pMemvars, szVarName, hb_comp_iVarScope );
+         hb_compCheckDuplVars( pFunc->pMemvars, szVarName );
    }
    else
       /* variable defined in a codeblock */
       hb_comp_iVarScope = VS_PARAMETER;
 
-   hb_compCheckDuplVars( pFunc->pLocals, szVarName, hb_comp_iVarScope );
+   hb_compCheckDuplVars( pFunc->pLocals, szVarName );
 
    pVar = ( PVAR ) hb_xgrab( sizeof( VAR ) );
    pVar->szName = szVarName;
@@ -2383,7 +2383,7 @@ void hb_compGenPushSymbol( char * szSymbolName, int iIsFunction )
 }
 
 
-static void hb_compCheckDuplVars( PVAR pVar, char * szVarName, int iVarScope )
+static void hb_compCheckDuplVars( PVAR pVar, char * szVarName )
 {
    while( pVar )
    {
