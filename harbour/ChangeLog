@@ -1,3 +1,15 @@
+2000-07-27 00:15 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
+*source/lang/msgit.c
+   *Renamed TPL to IT
+*source/lang/msgko.c
+   *Renamed TPL to KR
+-doc/garbage.txt
++doc/en/garbage.txt
+   *Some formating
+   *Removed spaces between see alsos
+*doc/genhtm.rsp
+   +en/garbage.txt added to hbdoc responde file
+
 20000726-22:50 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
    * contrib/mysql/makefile
      * changed to be harbour gnu make system compatible

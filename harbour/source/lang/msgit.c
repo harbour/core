@@ -179,12 +179,12 @@ static HB_LANG s_lang =
    }
 };
 
-HB_LANG_ANNOUNCE( TPL );
+HB_LANG_ANNOUNCE( IT );
 
-HB_CALL_ON_STARTUP_BEGIN( hb_lang_Init_TPL )
+HB_CALL_ON_STARTUP_BEGIN( hb_lang_Init_IT )
    hb_langRegister( &s_lang );
-HB_CALL_ON_STARTUP_END( hb_lang_Init_TPL )
+HB_CALL_ON_STARTUP_END( hb_lang_Init_IT )
 #if ! defined(__GNUC__) && ! defined(_MSC_VER)
-   #pragma startup hb_lang_Init_TPL
+   #pragma startup hb_lang_Init_IT
 #endif
 
