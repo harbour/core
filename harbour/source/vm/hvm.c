@@ -40,6 +40,7 @@
  * Copyright 1999 Victor Szel <info@szelvesz.hu>
  *    HB_WORD()
  *    HB___XHELP()
+ *    HB_PROCFILE()
  *
  * Copyright 1999 Eddie Runia <eddie@runia.com>
  *    HB___VMVARSGET()
@@ -3380,6 +3381,14 @@ HARBOUR HB_PROCLINE( void )
       hb_retni( pBase->item.asSymbol.lineno );
    else
       hb_retni( 0 );
+}
+
+/* NOTE: Clipper undocumented function, which always returns an empty 
+         string. */
+
+HARBOUR HB_PROCFILE( void )
+{
+   hb_retc( "" );
 }
 
 HARBOUR HB_ERRORLEVEL( void )

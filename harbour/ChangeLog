@@ -1,3 +1,16 @@
+19991017-13:34 GMT+1 Victor Szel <info@szelvesz.hu>
+   * source/rtl/dummy.prg
+     + Some more undocumented and internal functions added.
+   * source/rtl/harbinit.prg
+     + ANNOUNCE CLIPPER520, ANNCOUNT CLIPPER530 added for complete
+       compatibility.
+   * source/vm/hvm.c
+     + PROCFILE() function added. It does nothing, but it's there
+       in Clipper.
+   * include/hbextern.ch
+     source/runner/stdalone/external.prg
+     * Updated. ANNOUNCE-s also added this time.
+
 19991017-13:04 GMT+1 Bruno Cantero <bruno@issnet.net>
   * source/rtl/dummy.prg
     - __dbLocate() and __dbContinue() functions removed.

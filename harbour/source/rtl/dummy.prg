@@ -93,3 +93,22 @@ FUNCTION ReadKill()        ; RETURN .F.
 FUNCTION ReadUpdated()     ; RETURN .T.
 FUNCTION Updated()         ; RETURN .T.
 FUNCTION __SetFormat()     ; RETURN NIL
+
+FUNCTION AMPM()            ; RETURN ""
+FUNCTION TString()         ; RETURN ""
+FUNCTION Secs()            ; RETURN 0
+FUNCTION Days()            ; RETURN 0
+FUNCTION LenNum()          ; RETURN 0
+FUNCTION ElapTime()        ; RETURN 0
+
+FUNCTION __BNames()        ; RETURN NIL
+FUNCTION __LNames()        ; RETURN NIL
+FUNCTION __SNames()        ; RETURN NIL
+FUNCTION __SrcName()       ; RETURN NIL
+
+FUNCTION _NatSortVer()     ; RETURN ""
+FUNCTION IsAffirm()        ; RETURN .F.
+FUNCTION IsNegative()      ; RETURN .F.
+FUNCTION NationMsg()       ; RETURN ""
+FUNCTION _NatMsgVer()      ; RETURN ""
+

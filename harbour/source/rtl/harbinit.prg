@@ -37,6 +37,10 @@
 
 ANNOUNCE SysInit
 
+/* NOTE: For complete compatibility */
+ANNOUNCE CLIPPER520
+ANNOUNCE CLIPPER530
+
 INIT PROCEDURE ClipInit
 
    MEMVAR GetList
