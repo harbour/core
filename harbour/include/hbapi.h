@@ -168,6 +168,7 @@ struct hb_struPointer
 struct hb_struRefer
 {
    union {
+      struct _HB_CODEBLOCK * block;    /* codeblock */
       struct _HB_ITEM ** itemsbase;    /* static variables */
       struct _HB_ITEM ** *itemsbasePtr; /* local variables */
    } BasePtr;
@@ -420,7 +421,7 @@ extern HB_CODEBLOCK_PTR hb_codeblockNew( BYTE * pBuffer, USHORT uiLocals, USHORT
 extern HB_CODEBLOCK_PTR hb_codeblockMacroNew( BYTE * pBuffer, USHORT usLen );
 extern void     hb_codeblockDelete( HB_ITEM_PTR pItem ); /* delete a codeblock */
 extern PHB_ITEM hb_codeblockGetVar( PHB_ITEM pItem, LONG iItemPos ); /* get local variable referenced in a codeblock */
-extern PHB_ITEM hb_codeblockGetRef( PHB_ITEM pItem, PHB_ITEM pRefer ); /* get local variable passed by reference */
+extern PHB_ITEM hb_codeblockGetRef( HB_CODEBLOCK_PTR pCBlock, PHB_ITEM pRefer ); /* get local variable passed by reference */
 extern void     hb_codeblockEvaluate( HB_ITEM_PTR pItem ); /* evaluate a codeblock */
 
 /* memvars subsystem */

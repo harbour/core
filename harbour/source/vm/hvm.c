@@ -3516,7 +3516,16 @@ static void hb_vmPushLocalByRef( SHORT iLocal )
    /* we store its stack offset instead of a pointer to support a dynamic stack */
    pTop->item.asRefer.value = iLocal;
    pTop->item.asRefer.offset = hb_stackBaseOffset();
-   pTop->item.asRefer.BasePtr.itemsbasePtr = &hb_stack.pItems;
+   if( iLocal >= 0 )
+      pTop->item.asRefer.BasePtr.itemsbasePtr = &hb_stack.pItems;
+   else
+   {
+      /* store direct codeblock address because an item where a codeblock
+       * is stored can be no longer placed on the eval stack at the time
+       * of a codeblock evaluation or variable access
+      */
+      pTop->item.asRefer.BasePtr.block = (hb_stackSelfItem())->item.asBlock.value;
+   }
    hb_stackPush();
 }
 

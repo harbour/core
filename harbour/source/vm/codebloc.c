@@ -302,11 +302,9 @@ PHB_ITEM  hb_codeblockGetVar( PHB_ITEM pItem, LONG iItemPos )
 
 /* Get local variable passed by reference
  */
-PHB_ITEM  hb_codeblockGetRef( PHB_ITEM pItem, PHB_ITEM pRefer )
+PHB_ITEM  hb_codeblockGetRef( HB_CODEBLOCK_PTR pCBlock, PHB_ITEM pRefer )
 {
-   HB_CODEBLOCK_PTR pCBlock = pItem->item.asBlock.value;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_codeblockGetRef(%p, %p)", pItem, pRefer));
+   HB_TRACE(HB_TR_DEBUG, ("hb_codeblockGetRef(%p, %p)", pCBlock, pRefer));
 
    return pCBlock->pLocals - pRefer->item.asRefer.value;
 }
