@@ -190,7 +190,7 @@ static ERRCODE hb_adsCheckBofEof( ADSAREAP pArea )
 
    AdsAtBOF( pArea->hTable, (UNSIGNED16 *)&(pArea->fBof) );
    AdsAtEOF( pArea->hTable, (UNSIGNED16 *)&(pArea->fEof) );
-   
+
   if( pArea->fBof && !pArea->fEof )
      AdsSkip  ( (pArea->hOrdCurrent)? pArea->hOrdCurrent:pArea->hTable, 1 );
    return SUPER_SKIPFILTER( (AREAP)pArea, 1 );
@@ -416,39 +416,36 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
       return FAILURE;
 
    pField = pArea->lpFields + uiIndex - 1;
-   if( !pArea->fEof )
+   if( pArea->fEof )
+   {
+      int i;
+      pBuffer = pArea->lpExtendInfo->bRecord;
+      for( i=0; i < pArea->lpExtendInfo->uiRecordLen; i++ )
+         *( pBuffer+i ) = ' ';
+   }
+   else
    {
       if( !pArea->lpExtendInfo->fValidBuffer ) adsGetRec( pArea, &pBuffer );
-      szText = pBuffer + pField->uiOffset;
    }
+   szText = pBuffer + pField->uiOffset;
    switch( pField->uiType )
    {
       case 'C':
-         if( pArea->fEof )
-            hb_itemPutC( pItem, "" );
-         else
-            hb_itemPutCL( pItem, ( char * ) szText,
-                       pField->uiLen + ( ( USHORT ) pField->uiDec << 8 ) );
+         hb_itemPutCL( pItem, ( char * ) szText,
+                    pField->uiLen + ( ( USHORT ) pField->uiDec << 8 ) );
          break;
 
       case 'N':
-         if( pArea->fEof )
-            hb_itemPutNLLen( pItem, 0, ( int ) pField->uiLen );
+         szEndChar = * ( szText + pField->uiLen );
+         * ( szText + pField->uiLen ) = '\0';
+         if( pField->uiDec )
+            hb_itemPutNDLen( pItem, atof( ( char * ) szText ), ( int ) pField->uiLen - ( ( int ) pField->uiDec + 1 ), ( int ) pField->uiDec );
          else
-         {
-            szEndChar = * ( szText + pField->uiLen );
-            * ( szText + pField->uiLen ) = '\0';
-            if( pField->uiDec )
-               hb_itemPutNDLen( pItem, atof( ( char * ) szText ), ( int ) pField->uiLen - ( ( int ) pField->uiDec + 1 ), ( int ) pField->uiDec );
-            else
-               hb_itemPutNLLen( pItem, atol( ( char * ) szText ), ( int ) pField->uiLen );
-            * ( szText + pField->uiLen ) = szEndChar;
-         }
+            hb_itemPutNLLen( pItem, atol( ( char * ) szText ), ( int ) pField->uiLen );
+         * ( szText + pField->uiLen ) = szEndChar;
          break;
 
       case 'D':
-         if( pArea->fEof )
-            hb_itemPutDS( pItem, "        " );
          szEndChar = * ( szText + pField->uiLen );
          * ( szText + pField->uiLen ) = '\0';
          hb_itemPutDS( pItem, ( char * ) szText );
@@ -456,7 +453,7 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          break;
 
       case 'L':
-         if( pArea->fEof || *szText == 'F' )
+         if( *szText == ' ' || *szText == 'F' )
             hb_itemPutL( pItem, FALSE );
          else
             hb_itemPutL( pItem, TRUE );

@@ -1,3 +1,7 @@
+20000225-19:58 GMT+3 Alexander Kresin
+   * contrib/rdd_ads/ads1.c
+     * Bug fixed in adsGetValue()
+
 20000224-19:05 GMT+3 Alexander Kresin
    * contrib/rdd_ads/ads1.c
      * Corrected handling of bof()/eof()
@@ -21,11 +25,11 @@
      source/rtl/setcolor.c
      source/rtl/console.c
      source/rtl/gt/gtstd.c
-     % Reduced the GT vs. non-GT branches. Heading in the direction where 
+     % Reduced the GT vs. non-GT branches. Heading in the direction where
        there's no non-GT API mode, just a Standard/Stream GT API mode.
        In other words the point is to eliminate *all* HARBOUR_USE_GTAPI
        checks.
-   * source/rtl/inkey.c    
+   * source/rtl/inkey.c
      ! __KEYBOARD() fix by Matteo.
    * source/rtl/strings.c
      source/rtl/dummy.prg
@@ -50,7 +54,7 @@
    *utils/hbdoc/genhtm.prg
    *utils/hbdoc/hbdoc.prg
       *Changed to generate the new HTML template output
-   
+
 2000-02-21 15:45 GMT-5 David G. Holm <dholm@ sd-llc.com>
    * config/rules.cf
    * config/w32/bcc32.cf
