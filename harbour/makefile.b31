@@ -110,7 +110,7 @@ strright.obj : source\tools\strright.c  extend.h hbdefs.h
   tlib .\libs\b16\hbtools.lib -+$@,,
 
 .prg.obj:
-  bin\harbour $< /n /osource\rtl
+  bin\harbour $< /n /osource\rtl /iinclude
   bcc -c $(c_opt) -o$@ $*.c
   tlib .\libs\b16\harbour.lib -+$@,,
 

@@ -1,3 +1,9 @@
+19990720-20:55 GMT+1 Bruno Cantero <bruno@issnet.net>
+  * makefile.b31
+    Changed fixflex to bin\fixflex.
+  * harbour.b31
+    Added /iinclude to compile prg's.
+
 19990720-20:10 CET Eddie Runia <eddie@runia.com>
   * source/vm/hvm.c
     wsize =*( (WORD *) ... part removed.

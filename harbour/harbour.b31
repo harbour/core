@@ -62,4 +62,4 @@ source\compiler\lex_t2.c :: harbour.l fixflex.exe
 source\compiler\harbourl.c :: harbour.l fixflex.exe
    flex -i -8 -osource\compiler\harbourl.c source\compiler\harbour.l
    if exist source\compiler\harbourl.bak del source\compiler\harbourl.bak
-   fixflex source\compiler\harbourl.c source\compiler\lex_t1.c source\compiler\lex_t2.c source\compiler\lex_t3.c -P-
+   bin\fixflex source\compiler\harbourl.c source\compiler\lex_t1.c source\compiler\lex_t2.c source\compiler\lex_t3.c -P-
