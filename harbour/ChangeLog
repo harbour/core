@@ -1,3 +1,8 @@
+2000-10-31 20:56 GMT+1 JFL (Mafact) <jfl@mafact.com>
+   * source/vm/classes.c
+     * Bug correction where __OBJHASMSG() returned True when no msg exist
+       in some case
+
 2000-10-30 18:51 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
    * contrib/mysql/*
       * little changes chasing a bug :-|

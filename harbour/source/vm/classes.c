@@ -140,6 +140,8 @@
  *    1.35 ?
  *    1.36 Adding HB_CLS_ENFORCERO FLAG to disable Write access to RO VAR
  *         This is work in progress (JFL) Should be related to some compatibility flag
+ *    1.37 minor syntax correction
+ *    1.38 __ObjHasMsg() could return true when false
  *
  * See doc/license.txt for licensing terms.
  *
@@ -208,6 +210,7 @@ static void     hb_clsRelease( PCLASS );
 
        char *   hb_objGetClsName( PHB_ITEM pObject );
        PHB_FUNC hb_objGetMethod( PHB_ITEM, PHB_SYMB );
+       PHB_FUNC hb_objGetMthd( PHB_ITEM pObject, PHB_SYMB pMessage, BOOL lAllowErrFunc );
        ULONG    hb_objHasMsg( PHB_ITEM pObject, char * szString );
 
 static HARBOUR  hb___msgClsH( void );
@@ -589,6 +592,11 @@ char * hb_objGetClsName( PHB_ITEM pObject )
  */
 PHB_FUNC hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage )
 {
+  return hb_objGetMthd( (PHB_ITEM) pObject, (PHB_SYMB) pMessage, TRUE ) ;
+}
+
+PHB_FUNC hb_objGetMthd( PHB_ITEM pObject, PHB_SYMB pMessage, BOOL lAllowErrFunc )
+{
    USHORT uiClass;
    PHB_DYNS pMsg = pMessage->pDynSym;
 
@@ -656,7 +664,7 @@ PHB_FUNC hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage )
    {
       PCLASS pClass  = s_pClasses + ( uiClass - 1 );
 
-      if( pClass->pFunError )
+      if( lAllowErrFunc && pClass->pFunError )
          return pClass->pFunError;
    }
 
@@ -678,7 +686,7 @@ ULONG hb_objHasMsg( PHB_ITEM pObject, char *szString )
    HB_TRACE(HB_TR_DEBUG, ("hb_objHasMsg(%p, %s)", pObject, szString));
 
    if( pDynSym )
-      return ( ULONG ) hb_objGetMethod( pObject, pDynSym->pSymbol );
+      return ( ULONG ) hb_objGetMthd( pObject, pDynSym->pSymbol, FALSE );
    else
       return 0;
 }                                                /* Get funcptr of message   */
