@@ -218,9 +218,9 @@ typedef struct _HB_CODEBLOCK
 {
    BYTE *   pCode;        /* codeblock pcode */
    PHB_ITEM pLocals;      /* table with referenced local variables */
-   WORD     wLocals;      /* number of referenced local variables */
+   USHORT   uiLocals;     /* number of referenced local variables */
    PHB_SYMB pSymbols;     /* codeblocks symbols */
-   ULONG    lCounter;     /* numer of references to this codeblock */
+   ULONG    ulCounter;    /* numer of references to this codeblock */
 } HB_CODEBLOCK, * PHB_CODEBLOCK, * HB_CODEBLOCK_PTR;
 
 typedef struct _HB_VALUE
@@ -348,7 +348,7 @@ extern void     hb_dynsymEval( PHB_DYNS_FUNC, void * );   /* enumerates all dyna
 extern PHB_SYMB hb_symbolNew( char * szName );
 
 /* Codeblock management */
-extern HB_CODEBLOCK_PTR hb_codeblockNew( BYTE *, WORD, WORD *, PHB_SYMB );
+extern HB_CODEBLOCK_PTR hb_codeblockNew( BYTE *, USHORT, USHORT *, PHB_SYMB );
 extern void     hb_codeblockDelete( PHB_ITEM );
 extern PHB_ITEM hb_codeblockGetVar( PHB_ITEM, LONG );
 extern PHB_ITEM hb_codeblockGetRef( PHB_ITEM, PHB_ITEM );

@@ -1066,7 +1066,7 @@ HARBOUR HB_DBCREATE( void )
    AREAP pTempArea;
    USHORT uiSize, uiRddID;
    DBOPENINFO pInfo;
-   WORD wLen;
+   USHORT uiLen;
    PHB_FNAME pFileName;
 
    szFileName = hb_parc( 1 );
@@ -1095,8 +1095,8 @@ HARBOUR HB_DBCREATE( void )
 
    hb_rddCheck();
    szDriver = hb_parc( 3 );
-   if( ( wLen = strlen( szDriver ) ) > 0 )
-      hb_strUpper( szDriver, wLen );
+   if( ( uiLen = strlen( szDriver ) ) > 0 )
+      hb_strUpper( szDriver, uiLen );
    else
       szDriver = szDefDriver;
 
@@ -1406,7 +1406,7 @@ HARBOUR HB_DBUNLOCKALL( void )
 HARBOUR HB_DBUSEAREA( void )
 {
    char * szDriver, * szFileName, * szAlias;
-   WORD wLen;
+   USHORT uiLen;
    LPRDDNODE pRddNode;
    LPAREANODE pAreaNode;
    USHORT uiSize, uiRddID;
@@ -1440,8 +1440,8 @@ HARBOUR HB_DBUSEAREA( void )
 
    hb_rddCheck();
    szDriver = hb_parc( 2 );
-   if( ( wLen = strlen( szDriver ) ) > 0 )
-      hb_strUpper( szDriver, wLen );
+   if( ( uiLen = strlen( szDriver ) ) > 0 )
+      hb_strUpper( szDriver, uiLen );
    else
       szDriver = szDefDriver;
 
@@ -1808,13 +1808,13 @@ HARBOUR HB_RDDNAME( void )
 HARBOUR HB_RDDREGISTER( void )
 {
    char * szDriver;
-   WORD wLen;
+   USHORT uiLen;
 
    hb_rddCheck();
    szDriver = hb_parc( 1 );
-   if( ( wLen = strlen( szDriver ) ) > 0 )
+   if( ( uiLen = strlen( szDriver ) ) > 0 )
    {
-      hb_strUpper( szDriver, wLen );
+      hb_strUpper( szDriver, uiLen );
       /*
        * hb_rddRegister returns:
        *
@@ -1831,15 +1831,15 @@ HARBOUR HB_RDDREGISTER( void )
 HARBOUR HB_RDDSETDEFAULT( void )
 {
    char * szNewDriver;
-   WORD wLen;
+   USHORT uiLen;
 
    hb_rddCheck();
    hb_retc( szDefDriver );
    szNewDriver = hb_parc( 1 );
-   if( ( wLen = strlen( szNewDriver ) ) > 0 )
+   if( ( uiLen = strlen( szNewDriver ) ) > 0 )
    {
-      hb_strUpper( szNewDriver, wLen );
-      szDefDriver = ( char * ) hb_xrealloc( szDefDriver, wLen + 1 );
+      hb_strUpper( szNewDriver, uiLen );
+      szDefDriver = ( char * ) hb_xrealloc( szDefDriver, uiLen + 1 );
       strcpy( szDefDriver, szNewDriver );
    }
 }
@@ -1928,9 +1928,6 @@ HARBOUR HB_SELECT( void )
 
 HARBOUR HB_USED( void )
 {
-   if( pCurrArea )
-      hb_retl( 1 );
-   else
-      hb_retl( 0 );
+   hb_retl( pCurrArea ? TRUE : FALSE );
 }
 

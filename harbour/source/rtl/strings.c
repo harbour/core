@@ -1239,20 +1239,23 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
                   iBytes = sprintf( szResult, "%*.*f", iSize, iDec, dNumber );
             }
          }
-         else switch( pNumber->type & ~IT_BYREF )
+         else
          {
-            case IT_INTEGER:
-                 iBytes = sprintf( szResult, "%*i", iWidth, pNumber->item.asInteger.value );
-                 break;
+            switch( pNumber->type & ~IT_BYREF )
+            {
+               case IT_INTEGER:
+                  iBytes = sprintf( szResult, "%*i", iWidth, pNumber->item.asInteger.value );
+                  break;
 
-            case IT_LONG:
-                 iBytes = sprintf( szResult, "%*li", iWidth, pNumber->item.asLong.value );
-                 break;
+               case IT_LONG:
+                  iBytes = sprintf( szResult, "%*li", iWidth, pNumber->item.asLong.value );
+                  break;
 
-            default:
-                 iBytes = 0;
-                 szResult[ 0 ] = '\0';  /* null string */
-                 break;
+               default:
+                  iBytes = 0;
+                  szResult[ 0 ] = '\0';  /* null string */
+                  break;
+            }
          }
 
          /* Set to asterisks in case of overflow */

@@ -71,7 +71,7 @@
 
 /* Harbour virtual machine functions */
 extern void    hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols );  /* invokes the virtual machine */
-extern void    hb_vmProcessSymbols( PHB_SYMB pSymbols, WORD wSymbols ); /* statics symbols initialization */
+extern void    hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols ); /* statics symbols initialization */
 extern void    hb_vmSymbolInit_RT( void );   /* initialization of runtime support symbols */
 
 /* Harbour virtual machine escaping API */
@@ -126,7 +126,7 @@ extern void    hb_vmOperatorCallUnary( PHB_ITEM, char * ); /* call an overloaded
 
 /* Execution */
 extern void    hb_vmFrame( BYTE bLocals, BYTE bParams );  /* increases the stack pointer for the amount of locals and params suplied */
-extern void    hb_vmLocalName( WORD wLocal, char * szLocalName ); /* locals and parameters index and name information for the debugger */
+extern void    hb_vmLocalName( USHORT uiLocal, char * szLocalName ); /* locals and parameters index and name information for the debugger */
 extern void    hb_vmModuleName( char * szModuleName ); /* PRG and function name information for the debugger */
 extern void    hb_vmSFrame( PHB_SYMB pSym );     /* sets the statics frame for a function */
 extern void    hb_vmStatics( PHB_SYMB pSym );    /* increases the the global statics array to hold a PRG statics */
@@ -134,9 +134,9 @@ extern void    hb_vmRetValue( void );           /* pops the latest stack value i
 extern void    hb_vmEndBlock( void );        /* copies the last codeblock pushed value into the return value */
 
 /* Misc */
-extern void    hb_vmDo( WORD WParams );      /* invoke the virtual machine */
+extern void    hb_vmDo( USHORT uiParams );      /* invoke the virtual machine */
 extern HARBOUR hb_vmDoBlock( void );         /* executes a codeblock */
-extern void    hb_vmFunction( WORD wParams ); /* executes a function saving its result */
+extern void    hb_vmFunction( USHORT uiParams ); /* executes a function saving its result */
 extern void    hb_vmDuplicate( void );       /* duplicates the latest value on the stack */
 extern void    hb_vmDuplTwo( void );         /* duplicates the latest two value on the stack */
 extern void    hb_vmForTest( void );         /* test for end condition of for */
@@ -155,8 +155,8 @@ extern void    hb_vmPushBlock( BYTE * pCode, PHB_SYMB pSymbols ); /* creates a c
 extern void    hb_vmPushSymbol( PHB_SYMB pSym ); /* pushes a function pointer onto the stack */
 extern void    hb_vmPushLocal( SHORT iLocal );     /* pushes the containts of a local onto the stack */
 extern void    hb_vmPushLocalByRef( SHORT iLocal ); /* pushes a local by refrence onto the stack */
-extern void    hb_vmPushStatic( WORD wStatic );   /* pushes the containts of a static onto the stack */
-extern void    hb_vmPushStaticByRef( WORD iLocal ); /* pushes a static by refrence onto the stack */
+extern void    hb_vmPushStatic( USHORT uiStatic );   /* pushes the containts of a static onto the stack */
+extern void    hb_vmPushStaticByRef( USHORT uiLocal ); /* pushes a static by refrence onto the stack */
 
 /* Pop */
 extern long    hb_vmPopDate( void );         /* pops the stack latest value and returns its date value as a LONG */
@@ -164,8 +164,8 @@ extern double  hb_vmPopNumber( void );          /* pops the stack latest value a
 extern double  hb_vmPopDouble( int * );    /* pops the stack latest value and returns its double numeric format value */
 extern BOOL    hb_vmPopLogical( void );           /* pops the stack latest value and returns its logical value */
 extern void    hb_vmPopLocal( SHORT iLocal );      /* pops the stack latest value onto a local */
-extern void    hb_vmPopStatic( WORD wStatic );    /* pops the stack latest value onto a static */
-extern void    hb_vmPopDefStat( WORD wStatic ); /* pops the stack latest value onto a static as default init */
+extern void    hb_vmPopStatic( USHORT uiStatic );    /* pops the stack latest value onto a static */
+extern void    hb_vmPopDefStat( USHORT uiStatic ); /* pops the stack latest value onto a static as default init */
 
 /* stack management functions */
 extern void    hb_stackDec( void );        /* pops an item from the stack without clearing it's contents */

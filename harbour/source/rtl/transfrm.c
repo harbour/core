@@ -44,14 +44,8 @@
  *
  */
 
-/* TODO: Getting rid of calling back HARBOUR HB_STR() function */
-/*       and #include "ctoharb.h" */
-/* TOFIX: TRANSFORM() is directly modifying an item string buffer.
-          This is dangerous, and should be fixed. */
-
 #include <ctype.h>
 #include "extend.h"
-#include "ctoharb.h"
 #include "itemapi.h"
 #include "errorapi.h"
 #include "dates.h"
@@ -90,28 +84,18 @@
 #define DF_YMD 2
 #define DF_EOT 3                                /* End of table for Century */
 
-extern HARBOUR HB_STR( void );
-
-/* NOTE: This is called via its symbol name, so we should make sure */
-/*       that it gets linked */
-/*       Don't make this function static, because it's not called from this file. */
-void hb_transformForceLink()
-{
-   HB_STR();
-}
-
 /*
    PictFunc -> Analyze function flags and return binary flags bits
 
-   szPict  : Pointer to the picture
+   szPict   : Pointer to the picture
    ulPicLen : Pointer to the length.  Changed during execution.
 */
-static USHORT PictFunc( char **szPict, ULONG *pulPicLen )
+static USHORT PictFunc( char ** szPict, ULONG * pulPicLen )
 {
    BOOL bDone = FALSE;
    USHORT uiPicFlags = 0;
 
-   char *szPic    = *szPict;
+   char * szPic = *szPict;
 
    szPic++;
    ( *pulPicLen )--;
@@ -172,19 +156,21 @@ static USHORT PictFunc( char **szPict, ULONG *pulPicLen )
     iOrigWidth  : Original width
     iOrigDec    : Original decimals
 */
-static char * NumPicture( char *szPic, ULONG ulPic, USHORT uiPicFlags, double dValue,
-                          ULONG *pulRetSize, int iOrigWidth, int iOrigDec )
+static char * NumPicture( char * szPic, ULONG ulPic, USHORT uiPicFlags, double dValue,
+                          ULONG * pulRetSize, int iOrigWidth, int iOrigDec )
 {
    int      iWidth;                             /* Width of string          */
-   int      iDecimals;                          /* Number of decimals       */
+   int      iDec;                               /* Number of decimals       */
    ULONG    i;
    int      iCount = 0;
 
-   char    *szRet;
-   char    *szStr;
+   char *   szRet;
+   char *   szStr;
    char     cPic;
 
-   PHB_ITEM pItem;
+   PHB_ITEM pNumber;
+   PHB_ITEM pWidth;
+   PHB_ITEM pDec;
 
    BOOL     bFound = FALSE;
    BOOL     bEmpty;                             /* Suppress empty string    */
@@ -205,7 +191,7 @@ static char * NumPicture( char *szPic, ULONG ulPic, USHORT uiPicFlags, double dV
 
    if( bFound )                                 /* Did we find a dot        */
    {
-      iDecimals = 0;
+      iDec = 0;
       iWidth++;                                 /* Also adjust iWidth       */
       for( ; i < ulPic; i++ )
       {
@@ -213,35 +199,33 @@ static char * NumPicture( char *szPic, ULONG ulPic, USHORT uiPicFlags, double dV
              szPic[ i ] == '$' || szPic[ i ] == '*' )
          {
             iWidth++;
-            iDecimals++;
+            iDec++;
          }
       }
    }
    else
-      iDecimals = 0;
+      iDec = 0;
 
    if( ( uiPicFlags & ( PF_DEBIT + PF_PARNEG ) ) && ( dValue < 0 ) )
-      dPush = -dValue;                          /* Always push absolute val */
+      dPush = -dValue;                           /* Always push absolute val */
    else
       dPush = dValue;
 
    bEmpty = !dPush && ( uiPicFlags & PF_EMPTY ); /* Suppress 0               */
 
-   hb_vmPushSymbol ( hb_dynsymGet( "STR" )->pSymbol );  /* Push STR function        */
-   hb_vmPushNil    ();                               /* Function call. No object */
-   hb_vmPushDouble ( dPush, iDecimals );             /* Push value to transform  */
-   if( !iWidth  )                               /* Width calculated ??      */
+   if( !iWidth  )                                /* Width calculated ??      */
    {
-      iWidth    = iOrigWidth;                   /* Push original width      */
-      iDecimals = iOrigDec;                     /* Push original decimals   */
+      iWidth = iOrigWidth;                       /* Push original width      */
+      iDec = iOrigDec;                           /* Push original decimals   */
    }
-   hb_vmPushInteger( iWidth );                       /* Push numbers width       */
-   hb_vmPushInteger( iDecimals );                    /* Push decimals            */
-   hb_vmFunction( 3 );                               /* 3 Parameters             */
-   pItem = &stack.Return;
-   if( IS_STRING( pItem ) )                     /* Is it a string           */
+
+   pNumber = hb_itemPutNDLen( NULL, dPush, -1, iDec );
+   pWidth = hb_itemPutNI( NULL, iWidth );
+   pDec = hb_itemPutNI( NULL, iDec );
+   szStr = hb_itemStr( pNumber, pWidth, pDec );
+
+   if( szStr )
    {
-      szStr  = pItem->item.asString.value;
       iCount = 0;
 
 #ifndef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
@@ -254,9 +238,9 @@ static char * NumPicture( char *szPic, ULONG ulPic, USHORT uiPicFlags, double dV
 #endif
 
       /* Suppress empty value */
-      if( bEmpty && pItem->item.asString.length )
+      if( bEmpty && strlen( szStr ) > 0 )
       {
-         szStr[ pItem->item.asString.length - 1 ] = ' ';
+         szStr[ strlen( szStr ) - 1 ] = ' ';
       }
 
       /* Left align */
@@ -365,9 +349,13 @@ static char * NumPicture( char *szPic, ULONG ulPic, USHORT uiPicFlags, double dV
 
       *pulRetSize = i;
       szRet[ i ]  = '\0';
+
+      hb_xfree( szStr );
    }
-   else
-      hb_errInternal( 9999, "NumPicture(): STR does not return string", NULL, NULL );
+
+   hb_itemRelease( pNumber );
+   hb_itemRelease( pWidth );
+   hb_itemRelease( pDec );
 
    return szRet;
 }
@@ -604,7 +592,7 @@ HARBOUR HB_TRANSFORM( void )
             case IT_LONG:
             case IT_DOUBLE:
             {
-               char * szStr = hb_itemStr( pExp, 0, 0 );
+               char * szStr = hb_itemStr( pExp, NULL, NULL );
 
                if( szStr )
                {

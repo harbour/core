@@ -461,6 +461,7 @@ PEXTERN pExterns = NULL;
 PTR_LOOPEXIT pLoops = NULL;
 PATHNAMES *_pIncludePath = NULL;
 PHB_FNAME _pFileName = NULL;
+PHB_FNAME _pOutPath = NULL;
 ALIASID_PTR pAliasId = NULL;
 ULONG _ulLastLinePos = 0;    /* position of last opcode with line number */
 BOOL _bDontGenLineNum = FALSE;   /* suppress line number generation */
@@ -537,7 +538,7 @@ extern int _iState;     /* current parser state (defined in harbour.l */
 Main       : { Line(); } Source       {
                                          FixReturns();       /* fix all previous function returns offsets */
                                          if( ! _bQuiet )
-                                            printf( "\rLines %i, Functions %i\n", iLine, iFunctions );
+                                            printf( "\rLines %i, Functions/Procedures %i\n", iLine, iFunctions );
                                       }
 
 Source     : Crlf
@@ -1372,9 +1373,9 @@ int harbour_main( int argc, char * argv[] )
    {
       char szFileName[ _POSIX_PATH_MAX ];    /* filename to parse */
       char szPpoName[ _POSIX_PATH_MAX ];
-      PHB_FNAME pOutPath = NULL;
 
       _pFileName = NULL;
+      _pOutPath = NULL;
 
       Hbpp_init();  /* Initialization of preprocessor arrays */
       /* Command line options */
@@ -1523,7 +1524,7 @@ int harbour_main( int argc, char * argv[] )
 
                case 'o':
                case 'O':
-                  pOutPath = hb_fsFNameSplit( argv[ iArg ] + 2 );
+                  _pOutPath = hb_fsFNameSplit( argv[ iArg ] + 2 );
                   break;
 
                /* Added for preprocessor needs */
@@ -1729,15 +1730,15 @@ int harbour_main( int argc, char * argv[] )
             _pFileName->szExtension = NULL;
 
             /* we create a the output file */
-            if( pOutPath )
+            if( _pOutPath )
             {
-               if( pOutPath->szPath )
-                  _pFileName->szPath = pOutPath->szPath;
-               if( pOutPath->szName )
+               if( _pOutPath->szPath )
+                  _pFileName->szPath = _pOutPath->szPath;
+               if( _pOutPath->szName )
                {
-                  _pFileName->szName = pOutPath->szName;
-                  if( pOutPath->szExtension )
-                     _pFileName->szExtension = pOutPath->szExtension;
+                  _pFileName->szName = _pOutPath->szName;
+                  if( _pOutPath->szExtension )
+                     _pFileName->szExtension = _pOutPath->szExtension;
                }
             }
 
@@ -1780,7 +1781,8 @@ int harbour_main( int argc, char * argv[] )
          iStatus = 1;
       }
       hb_xfree( ( void * ) _pFileName );
-      if( pOutPath ) hb_xfree( pOutPath );
+      if( _pOutPath )
+         hb_xfree( _pOutPath );
    }
    else
       PrintUsage( argv[ 0 ] );

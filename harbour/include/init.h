@@ -36,7 +36,7 @@
 #ifndef HB_INIT_H_
 #define HB_INIT_H_
 
-extern void hb_vmProcessSymbols( PHB_SYMB pSymbols, WORD wSymbols ); /* statics symbols initialization */
+extern void hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols ); /* statics symbols initialization */
 
 #ifdef HARBOUR_STRICT_ANSI_C
 

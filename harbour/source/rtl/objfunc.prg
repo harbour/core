@@ -57,7 +57,7 @@ function __objHasData( oObject, cSymbol )
 
    if !ISOBJECT( oObject ) .or. ;
       !ISCHAR( cSymbol )
-      __errRT_BASE(EG_ARG, 3101, NIL, "__OBJHASDATA")
+      __errRT_BASE(EG_ARG, 3101, NIL, ProcName( 0 ) )
    endif
 
 return __objHasMsg( oObject, cSymbol ) .and. ;
@@ -73,7 +73,7 @@ function __objHasMethod( oObject, cSymbol )
 
    if !ISOBJECT( oObject ) .or. ;
       !ISCHAR( cSymbol )
-      __errRT_BASE(EG_ARG, 3101, NIL, "__OBJHASMETHOD")
+      __errRT_BASE(EG_ARG, 3101, NIL, ProcName( 0 ) )
    endif
 
 return __objHasMsg( oObject, cSymbol ) .and. ;
@@ -96,7 +96,7 @@ function __objGetMsgList( oObject, lDataMethod )
    local lFoundDM                               // Found DATA ?
 
    if !ISOBJECT( oObject )
-      __errRT_BASE(EG_ARG, 3101, NIL, "__OBJGETMSGLIST")
+      __errRT_BASE(EG_ARG, 3101, NIL, ProcName( 0 ) )
    endif
 
    IF !ISLOG( lDataMethod )
@@ -135,7 +135,7 @@ return aData
 function __objGetMethodList( oObject )
 
    if !ISOBJECT( oObject )
-      __errRT_BASE(EG_ARG, 3101, NIL, "__OBJGETMETHODLIST")
+      __errRT_BASE(EG_ARG, 3101, NIL, ProcName( 0 ) )
    endif
 
 return __objGetMsgList( oObject, .F. )
@@ -161,7 +161,7 @@ function __objGetValueList( oObject, aExcept )
    local n
 
    if !ISOBJECT( oObject )
-      __errRT_BASE(EG_ARG, 3101, NIL, "__OBJGETVALUELIST")
+      __errRT_BASE(EG_ARG, 3101, NIL, ProcName( 0 ) )
    endif
 
    IF !ISARRAY( aExcept )
@@ -191,7 +191,7 @@ return aData
 function __objSetValueList( oObject, aData )
 
    if !ISOBJECT( oObject )
-      __errRT_BASE(EG_ARG, 3101, NIL, "__OBJSETVALUELIST")
+      __errRT_BASE(EG_ARG, 3101, NIL, ProcName( 0 ) )
    endif
 
    aEval( aData,;
@@ -210,13 +210,13 @@ function __objAddMethod( oObject, cSymbol, nFuncPtr )
    if !ISOBJECT( oObject ) .or. ;
       !ISCHAR( cSymbol ) .or. ;
       !ISNUM( nFuncPtr )
-      __errRT_BASE(EG_ARG, 3101, NIL, "__OBJADDMETHOD")
+      __errRT_BASE(EG_ARG, 3101, NIL, ProcName( 0 ) )
    endif
 
    if !__objHasMsg( oObject, cSymbol )
       __clsAddMsg( oObject:ClassH, cSymbol, nFuncPtr, MET_METHOD )
    else
-      __errRT_BASE(EG_ARG, 3103, "Already existing symbol in class", "__OBJADDMETHOD")
+      __errRT_BASE(EG_ARG, 3103, "Already existing symbol in class", ProcName( 0 ) )
    endif
 
 return oObject
@@ -231,13 +231,13 @@ function __objAddInline( oObject, cSymbol, bInline )
 
    if !ISOBJECT( oObject ) .or. ;
       !ISCHAR( cSymbol )
-      __errRT_BASE(EG_ARG, 3101, NIL, "__OBJADDINLINE")
+      __errRT_BASE(EG_ARG, 3101, NIL, ProcName( 0 ) )
    endif
 
    if !__objHasMsg( oObject, cSymbol )
       __clsAddMsg( oObject:ClassH, cSymbol, bInline, MET_INLINE )
    else
-      __errRT_BASE(EG_ARG, 3103, "Already existing symbol in class", "__OBJADDINLINE")
+      __errRT_BASE(EG_ARG, 3103, "Already existing symbol in class", ProcName( 0 ) )
    endif
 
 return oObject
@@ -254,7 +254,7 @@ function __objAddData( oObject, cSymbol )
 
    if !ISOBJECT( oObject ) .or. ;
       !ISCHAR( cSymbol )
-      __errRT_BASE(EG_ARG, 3101, NIL, "__OBJADDDATA")
+      __errRT_BASE(EG_ARG, 3101, NIL, ProcName( 0 ) )
    endif
 
    if !__objHasMsg( oObject, cSymbol ) .and. ;
@@ -264,7 +264,7 @@ function __objAddData( oObject, cSymbol )
       __clsAddMsg( oObject:ClassH, cSymbol,       nSeq, MET_DATA )
       __clsAddMsg( oObject:ClassH, "_" + cSymbol, nSeq, MET_DATA )
    else
-      __errRT_BASE(EG_ARG, 3103, "Already existing symbol in class", "__OBJADDDATA")
+      __errRT_BASE(EG_ARG, 3103, "Already existing symbol in class", ProcName( 0 ) )
    endif
 
 return oObject
@@ -280,13 +280,13 @@ function __objModMethod( oObject, cSymbol, nFuncPtr )
    if !ISOBJECT( oObject ) .or. ;
       !ISCHAR( cSymbol ) .or. ;
       !ISNUM( nFuncPtr )
-      __errRT_BASE(EG_ARG, 3101, NIL, "__OBJMODMETHOD")
+      __errRT_BASE(EG_ARG, 3101, NIL, ProcName( 0 ) )
    endif
 
    if __objHasMethod( oObject, cSymbol )
       __clsModMsg( oObject:ClassH, cSymbol, nFuncPtr )
    else
-      __errRT_BASE(EG_ARG, 3102, "Not existing symbol in class", "__OBJMODMETHOD")
+      __errRT_BASE(EG_ARG, 3102, "Not existing symbol in class", ProcName( 0 ) )
    endif
 
 return oObject
@@ -302,13 +302,13 @@ function __objModInline( oObject, cSymbol, bInline )
    if !ISOBJECT( oObject ) .or. ;
       !ISCHAR( cSymbol ) .or. ;
       !ISBLOCK( bInline )
-      __errRT_BASE(EG_ARG, 3101, NIL, "__OBJMODINLINE")
+      __errRT_BASE(EG_ARG, 3101, NIL, ProcName( 0 ) )
    endif
 
    if __objHasMethod( oObject, cSymbol )
       __clsModMsg( oObject:ClassH, cSymbol, bInline )
    else
-      __errRT_BASE(EG_ARG, 3102, "Not existing symbol in class", "__OBJMODINLINE")
+      __errRT_BASE(EG_ARG, 3102, "Not existing symbol in class", ProcName( 0 ) )
    endif
 
 return oObject
@@ -323,13 +323,13 @@ function __objDelMethod( oObject, cSymbol )
 
    if !ISOBJECT( oObject ) .or. ;
       !ISCHAR( cSymbol )
-      __errRT_BASE(EG_ARG, 3101, NIL, "__OBJDELMETHOD")
+      __errRT_BASE(EG_ARG, 3101, NIL, ProcName( 0 ) )
    endif
 
    if __objHasMethod( oObject, cSymbol )
       __clsDelMsg( oObject:ClassH, cSymbol )
    else
-      __errRT_BASE(EG_ARG, 3102, "Not existing symbol in class", "__OBJDELMETHOD")
+      __errRT_BASE(EG_ARG, 3102, "Not existing symbol in class", ProcName( 0 ) )
    endif
 
 return oObject
@@ -346,7 +346,7 @@ function __objDelData( oObject, cSymbol )
 
    if !ISOBJECT( oObject ) .or. ;
       !ISCHAR( cSymbol )
-      __errRT_BASE(EG_ARG, 3101, NIL, "__OBJDELDATA")
+      __errRT_BASE(EG_ARG, 3101, NIL, ProcName( 0 ) )
    endif
 
    if __objHasData( oObject, cSymbol )
@@ -354,7 +354,7 @@ function __objDelData( oObject, cSymbol )
       __clsDelMsg( oObject:ClassH, "_" + cSymbol )
       __cls_DecData( oObject:ClassH )         // Decrease wData
    else
-      __errRT_BASE(EG_ARG, 3102, "Not existing symbol in class", "__OBJDELDATA")
+      __errRT_BASE(EG_ARG, 3102, "Not existing symbol in class", ProcName( 0 ) )
    endif
 
 return oObject

@@ -1,3 +1,36 @@
+19990917-13:30 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * source/rtl/codebloc.c
+    include/extend.h
+    * WORD -> USHORT for codeblocks.
+  * source/rtl/transfrm.c
+    % Internal vmDo() call replaced with standard API functions.
+    ! Internal error removed, direct buffer string modification resolved.
+  * source/rtl/objfunc.prg
+    + Explcitly repeated function names in the __ERR*() call changed to 
+      PROCNAME(0).
+  * source/vm/hvm.c
+    include/ctoharb.h
+    include/init.h
+    ! Typo fixed.
+    * WORD -> USHORT (for parameter count, local/static indexes and almost 
+      all the others)
+      Only one WORD declaration stayed, this one is related to OBJ generation
+      and SYMBOLS.ASM, so it should have strictly fixed size.
+    ; Here comes to mind that the PCODE model should have a clear definition on
+      the byte level, so that VMs could process pcode byte stream compiled
+      on any platform, we are almost there, but for example storing a DOUBLE
+      directly in the pcode could cause portability problems.
+  * source/rdd/dbcmd.c
+    + WORD -> USHORT (wLen)
+    % HB_USED() small opt.
+  * source/compiler/harbour.y
+    * pOutPath made global and renamed to _pOutPath
+    * "Functions %i" -> "Functions/Procedures %i"
+  * source/rtl/console.c
+    % __SHADOW() param checking logic simplified and corrected.
+    % DISPOUT(), DEVOUT() one ISCHAR() call removed so it's a bit faster now.
+
 19990917-11:30 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * include/ctoharb.h
