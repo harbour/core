@@ -8,10 +8,15 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-06-20 14:28 UTC+0100 Ignacio Ortiz <ignacio@fivetech.com>
+  * source/pp/ppcore.c
+    - Removed warning for #Define redefinition when the new define
+      value is exactly the same as the old value (same as Clipper)
+
 2002-06-19 17:14 UTC+0100 Dave Pearson <davep@davep.org>
   * doc/en/compiler.txt
     - Removed /10 switch.
-	
+
 2002-06-15 13:04 UTC-0300 Walter Negro <anegro@overnet.com.ar>
   * source/vm/hvm.c
     ! Fixed support for FOR_NEXT with STEP 0
