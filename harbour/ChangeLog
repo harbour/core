@@ -1,3 +1,7 @@
+20000321-06:57 GMT-8 Brian Hays <bhays@abacuslaw.com>
+   * doc/harbext.txt
+     + added SToD()
+
 20000322-02:25 GMT+1 Victor Szakats <info@szelvesz.hu>
    * include/fileio.ch
      include/hbapi.h
@@ -6,9 +10,9 @@
      source/tools/io.c
      * hb_DiskSpace() renamed to hb_fsDiskSpace() and moved the FS API header.
      * HB_DISK_* constants moved to fileio.ch
-     + Added a new parameter to the Harbour level DISKSPACE() function to 
+     + Added a new parameter to the Harbour level DISKSPACE() function to
        enable access to the new features. This is a Harbour extenstion.
-     ! DISKSPACE() (and the IO.C versions) use hb_retnlen() instead of 
+     ! DISKSPACE() (and the IO.C versions) use hb_retnlen() instead of
        hb_retnd().
      ! CD(), RD(), MD() are now using the FS API, so they are now working
        on more platforms.

@@ -3,7 +3,7 @@
  */
 /*  $DOC$
  *  $FUNCNAME$
- *      Harbour Extensions 
+ *      Harbour Extensions
  *  $CATEGORY$
  *      Document
  *  $ONELINER$
@@ -40,6 +40,9 @@
  *
  ** Transform()  --> new function in format string
  *        @0      Make a zero padded string out of the number.
+ *
+ ** SToD()  --> dDate
+ *        New function that converts a yyyymmdd string to a Date value.
  *
  ** Optional Compile Time STRONG TYPE declaration (and compile time TYPE
  *  MISMATCH warnings)
