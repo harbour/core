@@ -269,7 +269,7 @@ return aIn
 
 
 //
-// QuickSort( <aSort>, <nLeft>, <nRight> )
+// QuickSort( <aSort>, <nLeft>, <nRight>, <bOrder> )
 //
 // Perform a QuickSort of <aSort>.
 //
@@ -280,34 +280,42 @@ return aIn
 //
 function QuickSort( aSort, nLeft, nRight, bOrder )
 
-   local nI := nLeft
-   local nJ := nRight
-   local nX := aSort[ ( nLeft + nRight ) / 2 ]
-   local lOk := .T.
+   local nUp     := nLeft
+   local nDown   := nRight
+   local xMiddle := aSort[ ( nLeft + nRight ) / 2 ]
    local xTemp
+   local lOk     := .T.
 
    do while lOk
-      do while Eval( bOrder, aSort[ nI ], nX )
-         nI++
+      do while Eval( bOrder, aSort[ nUp ], xMiddle   )
+         nUp++
       enddo
-      do while Eval( bOrder, nX, aSort[ nJ ] )
-         nJ--
+
+      do while Eval( bOrder, xMiddle, aSort[ nDown ] )
+         nDown--
       enddo
-      if nI <= nJ
-         xTemp       := aSort[ nI ]
-         aSort[ nI ] := aSort[ nJ ]
-         aSort[ nJ ] := xTemp
-         nI++
-         nJ--
+
+      if nUp <= nDown
+         if nUp != nDown
+            xTemp          := aSort[ nUp ]
+            aSort[ nUp   ] := aSort[ nDown ]
+            aSort[ nDown ] := xTemp
+         endif
+         nUp++
+         nDown--
       endif
-      lOk := nI <= nJ
+
+      lOk := nUp <= nDown
    enddo
-   if nLeft < nJ
-      QuickSort( aSort, nLeft, nJ,  bOrder )
+
+   if nLeft < nDown
+      QuickSort( aSort, nLeft, nDown , bOrder )
    endif
-   if nI < nRight
-      QuickSort( aSort, nI, nRight, bOrder )
+
+   if nUp < nRight
+      QuickSort( aSort, nUp  , nRight, bOrder )
    endif
+
 return nil
 
 
