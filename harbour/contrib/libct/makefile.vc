@@ -118,7 +118,9 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\atrepl.obj \
    $(OBJ_DIR)\charevod.obj \
    $(OBJ_DIR)\charlist.obj \
+   $(OBJ_DIR)\charmirr.obj \
    $(OBJ_DIR)\charop.obj \
+   $(OBJ_DIR)\charrepl.obj \
    $(OBJ_DIR)\ctset.obj \
    $(OBJ_DIR)\ctstr.obj \
    $(OBJ_DIR)\ctchksum.obj \
@@ -127,6 +129,7 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\ctcrypt.obj \
    $(OBJ_DIR)\ctposupp.obj \
    $(OBJ_DIR)\token1.obj \
+   $(OBJ_DIR)\wordrepl.obj \
    \
    $(OBJ_DIR)\ctmisc.obj \
 
@@ -147,7 +150,9 @@ CLEAN:
    -@if exist $(OBJ_DIR)\atrepl.* del $(OBJ_DIR)\atrepl.*
    -@if exist $(OBJ_DIR)\charevod.* del $(OBJ_DIR)\charevod.*
    -@if exist $(OBJ_DIR)\charlist.* del $(OBJ_DIR)\charlist.*
+   -@if exist $(OBJ_DIR)\charmirr.* del $(OBJ_DIR)\charmirr.*
    -@if exist $(OBJ_DIR)\charop.* del $(OBJ_DIR)\charop.*
+   -@if exist $(OBJ_DIR)\charrepl.* del $(OBJ_DIR)\charrepl.*
    -@if exist $(OBJ_DIR)\ctset.* del $(OBJ_DIR)\ctset.*
    -@if exist $(OBJ_DIR)\ctstr.* del $(OBJ_DIR)\ctstr.*
    -@if exist $(OBJ_DIR)\ctchksum.* del $(OBJ_DIR)\ctchksum.*
@@ -156,6 +161,7 @@ CLEAN:
    -@if exist $(OBJ_DIR)\ctcrypt.* del $(OBJ_DIR)\ctcrypt.*
    -@if exist $(OBJ_DIR)\ctposupp.* del $(OBJ_DIR)\ctposupp.*
    -@if exist $(OBJ_DIR)\token1.* del $(OBJ_DIR)\token1.*
+   -@if exist $(OBJ_DIR)\wordrepl.* del $(OBJ_DIR)\wordrepl.*
    -@if exist $(OBJ_DIR)\ctmisc.* del $(OBJ_DIR)\ctmisc.*
    -@if exist $(TOOLS_LIB) del $(TOOLS_LIB)
 

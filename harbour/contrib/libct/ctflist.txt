@@ -174,7 +174,7 @@ CHARAND       ;R;
 CHAREVEN      ;R;
 CHARHIST      ;R;   !NEW!
 CHARLIST      ;R; 
-CHARMIRR      ;N; 
+CHARMIRR      ;R; 
 CHARMIX       ;R;
 CHARNOLIST    ;R; 
 CHARNOT       ;R; 
@@ -186,7 +186,7 @@ CHARPACK      ;N;
 CHARRELA      ;N; 
 CHARRELREP    ;N; 
 CHARREM       ;N; 
-CHARREPL      ;N; 
+CHARREPL      ;R;
 CHARRLL       ;R;   !NEW!
 CHARRLR       ;R;   !NEW!
 CHARSHL       ;R;   !NEW!
@@ -251,7 +251,7 @@ TOKENUPPER    ;R;
 VALPOS        ;R; 
 WORDONE       ;N; 
 WORDONLY      ;N; 
-WORDREPL      ;N; 
+WORDREPL      ;R; 
 WORDSWAP      ;N; 
 WORDTOCHAR    ;N; 
 ;

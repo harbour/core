@@ -44,10 +44,12 @@ PRG_SOURCES=\
 	chareven.prg \
 	charhist.prg \
 	charlist.prg \
+	charmirr.prg \
 	charnlst.prg \
 	charnot.prg \
 	charodd.prg \
 	charor.prg \
+	charrepl.prg \
 	charrll.prg \
 	charrlr.prg \
 	charshl.prg \
@@ -64,6 +66,7 @@ PRG_SOURCES=\
 	tokensep.prg \
 	tokenupp.prg \
 	valpos.prg \
+	wordrepl.prg \
 	
 
 PRG_HEADERS=\

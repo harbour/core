@@ -13,7 +13,9 @@ C_SOURCES=\
 	atrepl.c \
 	charevod.c \
 	charlist.c \
+	charmirr.c \
 	charop.c \
+	charrepl.c \
 	ctset.c \
 	ctstr.c \
 	ctchksum.c \
@@ -22,6 +24,7 @@ C_SOURCES=\
 	ctcrypt.c \
 	ctposupp.c \
 	token1.c \
+	wordrepl.c \
 
 PRG_SOURCES=\
 	ctmisc.prg \

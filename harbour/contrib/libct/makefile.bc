@@ -98,7 +98,9 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\atrepl.obj \
    $(OBJ_DIR)\charevod.obj \
    $(OBJ_DIR)\charlist.obj \
+   $(OBJ_DIR)\charmirr.obj \
    $(OBJ_DIR)\charop.obj \
+   $(OBJ_DIR)\charrepl.obj \
    $(OBJ_DIR)\ctset.obj \
    $(OBJ_DIR)\ctstr.obj \
    $(OBJ_DIR)\ctchksum.obj \
@@ -107,6 +109,7 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\ctcrypt.obj \
    $(OBJ_DIR)\ctposupp.obj \
    $(OBJ_DIR)\token1.obj \
+   $(OBJ_DIR)\wordrepl.obj \
    \
    $(OBJ_DIR)\ctmisc.obj \
 
@@ -159,7 +162,15 @@ $(OBJ_DIR)\charlist.obj : $(TOOLS_DIR)\charlist.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\charmirr.obj : $(TOOLS_DIR)\charmirr.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\charop.obj : $(TOOLS_DIR)\charop.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\charrepl.obj : $(TOOLS_DIR)\charrepl.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
@@ -192,6 +203,10 @@ $(OBJ_DIR)\ctposupp.obj : $(TOOLS_DIR)\ctposupp.c
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\token1.obj : $(TOOLS_DIR)\token1.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\wordrepl.obj : $(TOOLS_DIR)\wordrepl.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
