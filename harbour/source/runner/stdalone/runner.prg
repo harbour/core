@@ -39,11 +39,13 @@ FUNCTION Main( cHRBFile, cPar1, cPar2, cPar3, cPar4, cPar5, cPar6, cPar7, cPar8,
    LOCAL xRetVal
 
    IF Empty( cHRBFile )
-      ?? "Syntax: runner <hrbfile.hrb> [parameter]"
+      ?? "Harbour Runner"
+      ? "Copyright 1999, http://www.harbour-project.org"
       ?
+      ? "Syntax:  runner <hrbfile[.hrb]> [parameters]"
    ELSE
       xRetVal := __hrbRun( cHRBFile, cPar1, cPar2, cPar3, cPar4, cPar5, cPar6, cPar7, cPar8, cPar9 )
    ENDIF
 
-RETURN xRetVal
+   RETURN xRetVal
 

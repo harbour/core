@@ -65,6 +65,7 @@
  */
 
 #include "extend.h"
+#include "itemapi.h"
 
 #define CHR_HARD1   ( ( char ) 13 )
 
@@ -89,11 +90,16 @@ char * hb_strHardCR( char * pszString, ULONG ulStringLen )
 
 HARBOUR HB_HARDCR( void )
 {
-   if( ISCHAR( 1 ) )
-   {
-      ULONG ulStringLen = hb_parclen( 1 );
+   PHB_ITEM pString = hb_param( 1, IT_STRING );
 
-      hb_retclen( hb_strHardCR( hb_parc( 1 ), ulStringLen ), ulStringLen );
+   if( pString )
+   {
+      char * pszBuffer = hb_itemGetC( pString );
+      ULONG ulStringLen = hb_itemGetCLen( pString );
+
+      hb_retclen( hb_strHardCR( pszBuffer, ulStringLen ), ulStringLen );
+
+      hb_itemFreeC( pszBuffer );
    }
    else
       hb_retc( "" );

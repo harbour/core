@@ -36,6 +36,7 @@
 #include "extend.h"
 #include "itemapi.h"
 #include "errorapi.h"
+#include "filesys.h"
 #include "ctoharb.h"
 #include "pcode.h"
 
@@ -128,9 +129,21 @@ HARBOUR HB___HRBRUN( void )
 {
    if( hb_pcount() >= 1 )
    {
-      char * szFileName = hb_parc( 1 );
+      char szFileName[ _POSIX_PATH_MAX + 1 ];
+      PHB_FNAME pFileName;
       FILE * file;
       BOOL bError = FALSE;
+
+      /* Create full filename */
+
+      pFileName = hb_fsFNameSplit( hb_parc( 1 ) );
+
+      if( ! pFileName->szExtension )
+         pFileName->szExtension = ".hrb";
+
+      hb_fsFNameMerge( szFileName, pFileName );
+
+      hb_xfree( pFileName );
 
       /* Open as binary */
 

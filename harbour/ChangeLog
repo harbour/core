@@ -1,3 +1,15 @@
+19990917-00:50 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * source/rtl/hardcr.c
+    ! Fixed so that it doesn't modify the buffer returned by hb_parc(),
+      it now uses Item API calls.
+  * source/hbpp/stdalone/hbpp.c
+    + Enhanced header.
+  * source/runner/stdalone/runner.prg
+    + Enhanced header.
+  * source/runner/runlib.c
+    + __HRBRUN() will now add default extension (.hrb) to the passed filename.
+
 19990917-00:05 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * include/hbdefs.h

@@ -51,6 +51,7 @@
 #include <ctype.h>
 #include "hbpp.h"
 #include "hberrors.h"
+#include "hbver.h"
 
 extern int pp_strAt( char *, int, char *, int );
 extern void pp_Stuff( char *, char *, int, int, int );
@@ -77,7 +78,10 @@ int main( int argc, char * argv[] )
    DEFINES * stdef = topDefine;
    COMMANDS * stcmd = topCommand;
 
-   printf( "Harbour preprocessor\n" );
+   printf( "Harbour Preprocessor, Build %i%s (%04d.%02d.%02d)\n",
+      hb_build, hb_revision, hb_year, hb_month, hb_day );
+   printf( "Copyright 1999, http://www.harbour-project.org\n" );
+
    while( iArg < argc )
    {
       if( IS_OPT_SEP(argv[ iArg ][ 0 ]))
@@ -142,13 +146,14 @@ int main( int argc, char * argv[] )
    }
    else
    {
-      printf( "Syntax: hbpp <file.prg> [options]\n"
-              "\nOptions: \n"
-              "\t/d<id>[=<val>]\t#define <id>\n"
-              "\t/i<path>\tadd #include file search path\n"
-              "\t/o\t\tcreates hbpp.out with all tables\n"
-              "\t/n\t\twith those only, which defined in your file\n"
-              "\t/w\t\tenable warnings\n" );
+      printf( "\nSyntax:  %s <file[.prg]> [options]"
+              "\n"
+              "\nOptions:  /d<id>[=<val>]   #define <id>"
+              "\n          /i<path>         add #include file search path"
+              "\n          /o               creates hbpp.out with all tables"
+              "\n          /n               with those only, which defined in your file"
+              "\n          /w               enable warnings"
+              , argv[ 0 ] );
 
       if( bOutTable )
          OutTable( NULL, NULL );
