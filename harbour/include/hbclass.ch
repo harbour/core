@@ -573,15 +573,15 @@ DECLARE TClass ;
 #else
    //#define STRICT_OO
    #ifdef STRICT_OO
-      #xcommand METHOD <MethodName>                   _CLASS_IMPLEMENTATION_ => __ERR(Not declared <"MethodName"> or declaration mismatch in class: _CLASS_NAME_) ; function <MethodName> ; local self := QSelf()
-      #xcommand METHOD <MethodName> CLASS <ClassName> _CLASS_IMPLEMENTATION_ => #error Not declared <"MethodName"> or declaration mismatch in class: <ClassName> ; function <MethodName> ; local self := QSelf()
+      #xcommand METHOD <MethodName>                   _CLASS_IMPLEMENTATION_ => __ERR(Method <"MethodName"> not declared or declaration mismatch in class: _CLASS_NAME_) ; function <MethodName> ; local self := QSelf()
+      #xcommand METHOD <MethodName> CLASS <ClassName> _CLASS_IMPLEMENTATION_ => #error Method <"MethodName"> not declared or declaration mismatch in class: <ClassName> ; function <MethodName> ; local self := QSelf()
    #else
-      #xcommand METHOD <MethodName>                   _CLASS_IMPLEMENTATION_ => __ERR(Not declared <"MethodName"> in class: _CLASS_NAME_) ; function <MethodName> ; local self := QSelf()
-      #xcommand METHOD <MethodName> CLASS <ClassName> _CLASS_IMPLEMENTATION_ => #error Not declared <"MethodName"> in class: <ClassName> ; function <MethodName> ; local self := QSelf()
+      #xcommand METHOD <MethodName>                   _CLASS_IMPLEMENTATION_ => __ERR(Method <"MethodName"> not declared in class: _CLASS_NAME_) ; function <MethodName> ; local self := QSelf()
+      #xcommand METHOD <MethodName> CLASS <ClassName> _CLASS_IMPLEMENTATION_ => #error Method <"MethodName"> not declared in class: <ClassName> ; function <MethodName> ; local self := QSelf()
    #endif
 #endif
 
-#xcommand METHOD <MethodName> DECLCLASS <ClassName> _CLASS_IMPLEMENTATION_ => #error Not declared class <"ClassName"> for method: <MethodName> ; function <MethodName> ; local self := QSelf()
+#xcommand METHOD <MethodName> DECLCLASS <ClassName> _CLASS_IMPLEMENTATION_ => #error Class <"ClassName"> not declared for method: <MethodName> ; function <MethodName> ; local self := QSelf()
 
 #xcommand DECLARED METHOD <ClassName> <MethodName> => ;
           static function DECLMETH <ClassName> <MethodName> ;;
