@@ -2159,6 +2159,11 @@ static ERRCODE ntxOrderListAdd( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
    szFileName = ( char * ) hb_xgrab( _POSIX_PATH_MAX + 3 );
    szFileName[ 0 ] = '\0';
    strcpy( szFileName, hb_itemGetCPtr( pOrderInfo->atomBagName ) );
+   if( strlen( szFileName ) == 0 )
+   {
+      hb_xfree( szFileName );
+      return FAILURE;
+   }
    pFileName = hb_fsFNameSplit( szFileName );
    if( !pFileName->szExtension )
    {
