@@ -152,7 +152,7 @@ CLASS TBrowse
 
    METHOD Hilite()                                          // Highlights the current cell
    METHOD InsColumn( nPos, oCol ) INLINE;                   // Insert a column object in a browse
-          ASize( ::aColumns, Len( ::aColumns + 1 ) ), AIns( ::aColumns, nPos ),;
+          ASize( ::aColumns, Len( ::aColumns ) + 1 ), AIns( ::aColumns, nPos ),;
           ::aColumns[ nPos ] := oCol, ::Configure( 2 ), oCol
    METHOD Invalidate()                                      // Forces entire redraw during next stabilization
    METHOD RefreshAll()                                      // Causes all data to be recalculated during the next stabilize

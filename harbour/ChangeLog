@@ -1,3 +1,8 @@
+2001-10-10 10:07 GMT Dave Pearson <davep@davep.org>
+   * source/rtl/tbrowse.prg
+     * Fixed bug in :insColumn() as reported by Andreas Moroder in 
+       <URL:news:comp.lang.clipper>.
+	
 2001-10-08 21:30 GMT -3 Luiz Rafael Culik<culik@sl.conex.net>
   *source/rtl/isprint.c
    contrib/libct/files.c
