@@ -31,7 +31,7 @@ $(OBJ_DIR)\winctrl.obj  : $(OBJ_DIR)\winctrl.c
 $(OBJ_DIR)\win32.obj    : win32.c
 
 .c.obj:
-  bcc32 $(CLIBFLAGS) -c -O2 -I$(INCLUDE_DIR) -o$@ $<
+  bcc32 $(CLIBFLAGS) -DHB_API_MACROS -c -O2 -I$(INCLUDE_DIR) -o$@ $<
   tlib $(LIB_DIR)\hgfwin32.lib -+$@,,
 
 .prg.c:

@@ -5,7 +5,7 @@ INCLUDE_DIR = ..\..\..\include
 HARBOUR_EXE = ..\..\..\bin\vc\HARBOUR.EXE
 CC = CL
 CFLAGS = -TP -W3 -nologo -I$(INCLUDE_DIR) -DWIN32
-CLIBFLAGS = $(CFLAGS) -c
+CLIBFLAGS = $(CFLAGS) -c -DHB_API_MACROS
 CLIBFLAGSDEBUG = $(CLIBFLAGS) -Zi
 
 BIN_DIR = ..\..\..\bin\vc
