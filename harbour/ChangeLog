@@ -8,6 +8,15 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-08-30 18:05 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/dbdelim.prg
+    ! Bug fix to pass cSeparator to appendtodb() instead of cDelimArg,
+      which can be null and isn't the right value anyway, because the
+      appendtodb() function uses the argument as the field separator,
+      not as the field delimiter, which is currently ignored. I have
+      sent a detailed message to the author requesting that he fix the
+      code to honor the field delimiter when processing fields.
+
 2002-08-30 13:25 UTC-0400 David G. Holm <dholm@jsd-llc.com>
   * source/rtl/dbdelim.prg
     * Implementation of APPEND FROM <xcFile> SDF, submitted

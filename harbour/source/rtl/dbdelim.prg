@@ -251,7 +251,7 @@ local lcisonoeol
                    // cut the row
                    Pos:=1
                    cont_r:=substr(cByte,Pos,nposfl-Pos)
-                   appendtodb(cont_r,cDelimArg)
+                   appendtodb(cont_r,cSeparator)
                    // skipping the line feed and now we are on a good char
                    pos:=nposfl+2
                    cont_r:=""
