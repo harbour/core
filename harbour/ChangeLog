@@ -1,3 +1,10 @@
+19991004-21:34 GMT+1 Victor Szel <info@szelvesz.hu>
+  * tests/*.bat
+    ! Reworked, standardized, simplified. Please test them.
+      Now they resemble to the bin/*.bat batch files.
+  * tests/buildexe.bat
+    - Removed since it was obsolete, use bld_b16.bat instead.
+
 19991004-19:54 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/memvars.c
     ! memvars.ch changed to hbmemvar.ch
