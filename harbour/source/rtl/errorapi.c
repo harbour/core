@@ -128,9 +128,9 @@ PHB_ITEM hb_errNew( void )
    return pReturn;
 }
 
-WORD hb_errLaunch( PHB_ITEM pError )
+USHORT hb_errLaunch( PHB_ITEM pError )
 {
-   WORD wRetVal;
+   USHORT uiAction;
 
    if( pError )
    {
@@ -165,7 +165,7 @@ WORD hb_errLaunch( PHB_ITEM pError )
       else if( hb_vmRequestQuery() == HB_BREAK_REQUESTED )
       {
          hb_itemRelease( pResult );
-         wRetVal = E_BREAK;
+         uiAction = E_BREAK;
       }
       else
       {
@@ -179,10 +179,10 @@ WORD hb_errLaunch( PHB_ITEM pError )
             bFailure = TRUE;
          else
          {
-            wRetVal = hb_itemGetL( pResult ) ? E_RETRY : E_DEFAULT;
+            uiAction = hb_itemGetL( pResult ) ? E_RETRY : E_DEFAULT;
 
-            if( ( wRetVal == E_DEFAULT && !( uiFlags & EF_CANDEFAULT ) ) ||
-                ( wRetVal == E_RETRY   && !( uiFlags & EF_CANRETRY   ) ) )
+            if( ( uiAction == E_DEFAULT && !( uiFlags & EF_CANDEFAULT ) ) ||
+                ( uiAction == E_RETRY   && !( uiFlags & EF_CANRETRY   ) ) )
                bFailure = TRUE;
          }
 
@@ -193,14 +193,14 @@ WORD hb_errLaunch( PHB_ITEM pError )
 
          /* Add one try to the counter. */
 
-         if( wRetVal == E_RETRY )
+         if( uiAction == E_RETRY )
             hb_errPutTries( pError, hb_errGetTries( pError ) + 1 );
       }
    }
    else
-      wRetVal = E_RETRY; /* Clipper does this, undocumented */
+      uiAction = E_RETRY; /* Clipper does this, undocumented */
 
-   return wRetVal;
+   return uiAction;
 }
 
 /* This error launcher should be used in those situations, where the error
@@ -587,30 +587,30 @@ HARBOUR HB___ERRRT_BASE( void )
                   hb_parc( 4 ) );
 }
 
-WORD hb_errRT_BASE( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation )
+USHORT hb_errRT_BASE( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation )
 {
-   WORD wRetVal;
+   USHORT uiAction;
    PHB_ITEM pError =
       hb_errRT_New( ES_ERROR, HB_ERR_SS_BASE, ulGenCode, ulSubCode, szDescription, szOperation, 0, EF_NONE );
 
-   wRetVal = hb_errLaunch( pError );
+   uiAction = hb_errLaunch( pError );
 
    hb_errRelease( pError );
 
-   return wRetVal;
+   return uiAction;
 }
 
-WORD hb_errRT_BASE_Ext1( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiOsCode, USHORT uiFlags )
+USHORT hb_errRT_BASE_Ext1( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiOsCode, USHORT uiFlags )
 {
-   WORD wRetVal;
+   USHORT uiAction;
    PHB_ITEM pError =
       hb_errRT_New( ES_ERROR, HB_ERR_SS_BASE, ulGenCode, ulSubCode, szDescription, szOperation, uiOsCode, uiFlags );
 
-   wRetVal = hb_errLaunch( pError );
+   uiAction = hb_errLaunch( pError );
 
    hb_errRelease( pError );
 
-   return wRetVal;
+   return uiAction;
 }
 
 PHB_ITEM hb_errRT_BASE_Subst( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation )
@@ -626,43 +626,43 @@ PHB_ITEM hb_errRT_BASE_Subst( ULONG ulGenCode, ULONG ulSubCode, char * szDescrip
    return pRetVal;
 }
 
-WORD hb_errRT_TERM( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiOSCode, USHORT uiFlags )
+USHORT hb_errRT_TERM( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiOSCode, USHORT uiFlags )
 {
-   WORD wRetVal;
+   USHORT uiAction;
    PHB_ITEM pError =
       hb_errRT_New( ES_ERROR, HB_ERR_SS_TERMINAL, ulGenCode, ulSubCode, szDescription, szOperation, uiOSCode, uiFlags );
 
-   wRetVal = hb_errLaunch( pError );
+   uiAction = hb_errLaunch( pError );
 
    hb_errRelease( pError );
 
-   return wRetVal;
+   return uiAction;
 }
 
-WORD hb_errRT_DBCMD( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation )
+USHORT hb_errRT_DBCMD( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation )
 {
-   WORD wRetVal;
+   USHORT uiAction;
    PHB_ITEM pError =
       hb_errRT_New( ES_ERROR, HB_ERR_SS_DBCMD, ulGenCode, ulSubCode, szDescription, szOperation, 0, EF_NONE );
 
-   wRetVal = hb_errLaunch( pError );
+   uiAction = hb_errLaunch( pError );
 
    hb_errRelease( pError );
 
-   return wRetVal;
+   return uiAction;
 }
 
-WORD hb_errRT_TOOLS( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation )
+USHORT hb_errRT_TOOLS( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation )
 {
-   WORD wRetVal;
+   USHORT uiAction;
    PHB_ITEM pError =
       hb_errRT_New( ES_ERROR, HB_ERR_SS_BASE, ulGenCode, ulSubCode, szDescription, szOperation, 0, EF_NONE );
 
-   wRetVal = hb_errLaunch( pError );
+   uiAction = hb_errLaunch( pError );
 
    hb_errRelease( pError );
 
-   return wRetVal;
+   return uiAction;
 }
 
 /* NOTE: Use as minimal calls from here, as possible. */

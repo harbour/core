@@ -1,5 +1,22 @@
 19990917-03:15 GMT+1 Victor Szel <info@szelvesz.hu>
 
+  * source/rtl/transfrm.c
+    * WORD -> USHORT
+  * include/errorapi.h
+    source/rtl/errorapi.c
+    source/rtl/copyfile.c
+    source/rtl/filesys.c
+    source/rtl/memvars.c
+    source/rtl/set.c
+    source/runner/runlib.c
+    source/rdd/dbcmd.c
+    * Changed WORD to USHORT in all Error handling stuff.
+  * tests/working/rtl_test.prg
+    * Version() -> Version( 0 ) (xBase++ likes the numeric value better here,
+      but I could not test it)
+
+19990917-03:15 GMT+1 Victor Szel <info@szelvesz.hu>
+
   * source/rtl/console.c (mainly)
     source/rtl/gtapi.c
     source/rtl/strings.c
@@ -14,7 +31,7 @@
       it may be needed to place more explicit flush calls. This may have been 
       an issue already since printf() is only flushing on \n chars, at least
       in MINGW32.
-    ! s_szAcceptResult is now initialized on startup to an empty string.
+    ! s_szAcceptResult is now initialized on startup as an empty string.
     ! One cast added to hb_retc()/SAVESCREEN().
   * include/inkey.h
     + NOTE that is's used from C, too.

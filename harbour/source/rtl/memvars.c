@@ -414,16 +414,16 @@ void hb_memvarGetValue( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
          /* Generate an error with retry possibility
           * (user created error handler can create this variable)
           */
-         WORD wAction = E_RETRY;
+         USHORT uiAction = E_RETRY;
          HB_ITEM_PTR pError;
 
          pError = hb_errRT_New( ES_ERROR, NULL, EG_NOVAR, 1003,
                                  NULL, pMemvarSymb->szName, 0, EF_CANRETRY );
 
-         while( wAction == E_RETRY )
+         while( uiAction == E_RETRY )
          {
-            wAction = hb_errLaunch( pError );
-            if( wAction == E_RETRY )
+            uiAction = hb_errLaunch( pError );
+            if( uiAction == E_RETRY )
             {
                if( pDyn->hMemvar )
                {
@@ -434,7 +434,7 @@ void hb_memvarGetValue( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
                      hb_itemCopy( pItem, hb_itemUnRef( pGetItem ) );
                   else
                      hb_itemCopy( pItem, pGetItem );
-                  wAction = E_DEFAULT;
+                  uiAction = E_DEFAULT;
                }
             }
          }
@@ -468,16 +468,16 @@ void hb_memvarGetRefer( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
          /* Generate an error with retry possibility
           * (user created error handler can make this variable accessible)
           */
-         WORD wAction = E_RETRY;
+         USHORT uiAction = E_RETRY;
          HB_ITEM_PTR pError;
 
          pError = hb_errRT_New( ES_ERROR, NULL, EG_NOVAR, 1003,
                                  NULL, pMemvarSymb->szName, 0, EF_CANRETRY );
 
-         while( wAction == E_RETRY )
+         while( uiAction == E_RETRY )
          {
-            wAction = hb_errLaunch( pError );
-            if( wAction == E_RETRY )
+            uiAction = hb_errLaunch( pError );
+            if( uiAction == E_RETRY )
             {
                if( pDyn->hMemvar )
                {
@@ -487,7 +487,7 @@ void hb_memvarGetRefer( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
                   pItem->item.asMemvar.value = pDyn->hMemvar;
                   pItem->item.asMemvar.itemsbase = &s_globalTable;
                   ++s_globalTable[ pDyn->hMemvar ].counter;
-                  wAction = E_DEFAULT;
+                  uiAction = E_DEFAULT;
                }
             }
          }
@@ -1449,16 +1449,16 @@ HARBOUR HB___MVGET( void )
          /* Generate an error with retry possibility
           * (user created error handler can create this variable)
           */
-         WORD wAction = E_RETRY;
+         USHORT uiAction = E_RETRY;
          HB_ITEM_PTR pError;
 
          pError = hb_errRT_New( ES_ERROR, NULL, EG_NOVAR, 1003,
                                  NULL, pName->item.asString.value, 0, EF_CANRETRY );
 
-         while( wAction == E_RETRY )
+         while( uiAction == E_RETRY )
          {
-            wAction = hb_errLaunch( pError );
-            if( wAction == E_RETRY )
+            uiAction = hb_errLaunch( pError );
+            if( uiAction == E_RETRY )
             {
                pDynVar = hb_memvarFindSymbol( pName );
                if( pDynVar )
@@ -1467,7 +1467,7 @@ HARBOUR HB___MVGET( void )
                   hb_memvarGetValue( &retValue, pDynVar->pSymbol );
                   hb_itemReturn( &retValue );
                   hb_itemClear( &retValue );
-                  wAction =E_DEFAULT;
+                  uiAction = E_DEFAULT;
                }
             }
          }
@@ -1600,9 +1600,9 @@ HARBOUR HB___MVSAVE( void )
 
       while( ( fhnd = hb_fsCreate( ( BYTE * ) szFileName, FC_NORMAL ) ) == FS_ERROR )
       {
-         WORD wResult = hb_errRT_BASE_Ext1( EG_CREATE, 2006, NULL, szFileName, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY );
+         USHORT uiAction = hb_errRT_BASE_Ext1( EG_CREATE, 2006, NULL, szFileName, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY );
 
-         if( wResult == E_DEFAULT || wResult == E_BREAK )
+         if( uiAction == E_DEFAULT || uiAction == E_BREAK )
             break;
       }
 
@@ -1744,9 +1744,9 @@ HARBOUR HB___MVRESTORE( void )
 
       while( ( fhnd = hb_fsOpen( ( BYTE * ) szFileName, FO_READ | FO_SHARED ) ) == FS_ERROR )
       {
-         WORD wResult = hb_errRT_BASE_Ext1( EG_OPEN, 2005, NULL, szFileName, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY );
+         USHORT uiAction = hb_errRT_BASE_Ext1( EG_OPEN, 2005, NULL, szFileName, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY );
 
-         if( wResult == E_DEFAULT || wResult == E_BREAK )
+         if( uiAction == E_DEFAULT || uiAction == E_BREAK )
             break;
       }
 

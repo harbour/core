@@ -53,9 +53,9 @@ static BOOL hb_fsCopy( char * szSource, char * szDest )
 
    while( ( fhndSource = hb_fsOpen( ( BYTE * ) szSource, FO_READ ) ) == FS_ERROR )
    {
-      WORD wResult = hb_errRT_BASE_Ext1( EG_OPEN, 2012, NULL, szSource, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY );
+      USHORT uiAction = hb_errRT_BASE_Ext1( EG_OPEN, 2012, NULL, szSource, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY );
 
-      if( wResult == E_DEFAULT || wResult == E_BREAK )
+      if( uiAction == E_DEFAULT || uiAction == E_BREAK )
          break;
    }
 
@@ -63,9 +63,9 @@ static BOOL hb_fsCopy( char * szSource, char * szDest )
    {
       while( ( fhndDest = hb_fsCreate( ( BYTE * ) szDest, FC_NORMAL ) ) == FS_ERROR )
       {
-         WORD wResult = hb_errRT_BASE_Ext1( EG_CREATE, 2012, NULL, szDest, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY );
+         USHORT uiAction = hb_errRT_BASE_Ext1( EG_CREATE, 2012, NULL, szDest, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY );
 
-         if( wResult == E_DEFAULT || wResult == E_BREAK )
+         if( uiAction == E_DEFAULT || uiAction == E_BREAK )
             break;
       }
 
@@ -87,9 +87,9 @@ static BOOL hb_fsCopy( char * szSource, char * szDest )
          {
             while( ( usWritten = hb_fsWrite( fhndDest, buffer, usRead ) ) != usRead )
             {
-               WORD wResult = hb_errRT_BASE_Ext1( EG_WRITE, 2016, NULL, szDest, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY );
+               USHORT uiAction = hb_errRT_BASE_Ext1( EG_WRITE, 2016, NULL, szDest, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY );
 
-               if( wResult == E_DEFAULT || wResult == E_BREAK )
+               if( uiAction == E_DEFAULT || uiAction == E_BREAK )
                {
                   bRetVal = FALSE;
                   break;

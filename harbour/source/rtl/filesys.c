@@ -1259,9 +1259,9 @@ HARBOUR HB_DISKSPACE( void )
 
    while( ( uiResult = _dos_getdiskfree( uiDrive, &disk ) ) != 0 )
    {
-      WORD wResult = hb_errRT_BASE_Ext1( EG_OPEN, 2018, NULL, NULL, 0, EF_CANDEFAULT );
+      USHORT uiAction = hb_errRT_BASE_Ext1( EG_OPEN, 2018, NULL, NULL, 0, EF_CANDEFAULT );
 
-      if( wResult == E_DEFAULT || wResult == E_BREAK )
+      if( uiAction == E_DEFAULT || uiAction == E_BREAK )
          break;
    }
 

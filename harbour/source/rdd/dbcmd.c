@@ -688,21 +688,21 @@ ERRCODE hb_rddSelectWorkAreaSymbol( PHB_SYMB pSymAlias )
       /* generate an error with retry possibility
        * (user created error handler can open a missing database)
        */
-      WORD wAction = E_RETRY;
+      USHORT uiAction = E_RETRY;
       HB_ITEM_PTR pError;
 
       pError = hb_errRT_New( ES_ERROR, NULL, EG_NOALIAS, 1002,
                               NULL, pSymAlias->szName, 0, EF_CANRETRY );
 
       bResult = FAILURE;
-      while( wAction == E_RETRY )
+      while( uiAction == E_RETRY )
       {
-         wAction = hb_errLaunch( pError );
-         if( wAction == E_RETRY )
+         uiAction = hb_errLaunch( pError );
+         if( uiAction == E_RETRY )
             if( pSymAlias->pDynSym->hArea )
             {
                bResult = hb_rddSelectWorkAreaNumber( pSymAlias->pDynSym->hArea );
-               wAction = E_DEFAULT;
+               uiAction = E_DEFAULT;
             }
       }
       hb_errRelease( pError );
@@ -723,23 +723,23 @@ ERRCODE hb_rddSelectWorkAreaAlias( char * szName )
       /* generate an error with retry possibility
        * (user created error handler can open a missing database)
        */
-      WORD wAction = E_RETRY;
+      USHORT uiAction = E_RETRY;
       HB_ITEM_PTR pError;
 
       pError = hb_errRT_New( ES_ERROR, NULL, EG_NOALIAS, 1002,
                               NULL, szName, 0, EF_CANRETRY );
 
       bResult = FAILURE;
-      while( wAction == E_RETRY )
+      while( uiAction == E_RETRY )
       {
-         wAction = hb_errLaunch( pError );
-         if( wAction == E_RETRY )
+         uiAction = hb_errLaunch( pError );
+         if( uiAction == E_RETRY )
          {
             pSymArea = hb_dynsymFindName( szName );
             if( pSymArea && pSymArea->hArea )
             {
                bResult = hb_rddSelectWorkAreaNumber( pSymArea->hArea );
-               wAction = E_DEFAULT;
+               uiAction = E_DEFAULT;
             }
          }
       }
@@ -758,20 +758,20 @@ ERRCODE hb_rddGetFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
       /* generate an error with retry possibility
        * (user created error handler can make this field accessible)
        */
-      WORD wAction = E_RETRY;
+      USHORT uiAction = E_RETRY;
       HB_ITEM_PTR pError;
 
       pError = hb_errRT_New( ES_ERROR, NULL, EG_NOVAR, 1003,
                               NULL, pFieldSymbol->szName, 0, EF_CANRETRY );
 
-      while( wAction == E_RETRY )
+      while( uiAction == E_RETRY )
       {
-         wAction = hb_errLaunch( pError );
-         if( wAction == E_RETRY )
+         uiAction = hb_errLaunch( pError );
+         if( uiAction == E_RETRY )
          {
             bSuccess = hb_rddFieldGet( pItem, pFieldSymbol );
             if( bSuccess == SUCCESS )
-               wAction = E_DEFAULT;
+               uiAction = E_DEFAULT;
          }
       }
       hb_errRelease( pError );
@@ -788,20 +788,20 @@ ERRCODE hb_rddPutFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
       /* generate an error with retry possibility
        * (user created error handler can make this field accessible)
        */
-      WORD wAction = E_RETRY;
+      USHORT uiAction = E_RETRY;
       HB_ITEM_PTR pError;
 
       pError = hb_errRT_New( ES_ERROR, NULL, EG_NOVAR, 1003,
                               NULL, pFieldSymbol->szName, 0, EF_CANRETRY );
 
-      while( wAction == E_RETRY )
+      while( uiAction == E_RETRY )
       {
-         wAction = hb_errLaunch( pError );
-         if( wAction == E_RETRY )
+         uiAction = hb_errLaunch( pError );
+         if( uiAction == E_RETRY )
          {
             bSuccess = hb_rddFieldPut( pItem, pFieldSymbol );
             if( bSuccess == SUCCESS )
-               wAction = E_DEFAULT;
+               uiAction = E_DEFAULT;
          }
       }
       hb_errRelease( pError );

@@ -296,7 +296,6 @@ static FHANDLE open_handle( char * file_name, BOOL bAppend, char * def_ext, HB_s
    while( handle == FS_ERROR )
    {
       BOOL bCreate = FALSE;
-      WORD wResult;
 
       if( bAppend )
       {  /* Append mode */
@@ -335,17 +334,19 @@ static FHANDLE open_handle( char * file_name, BOOL bAppend, char * def_ext, HB_s
 
       if( handle == FS_ERROR )
       {
+         USHORT uiAction;
+
          /* NOTE: using switch() here will result in a compiler warning */
          if( set_specifier == HB_SET_ALTFILE )
-            wResult = hb_errRT_TERM( EG_CREATE, 2013, NULL, path, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY );
+            uiAction = hb_errRT_TERM( EG_CREATE, 2013, NULL, path, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY );
          else if( set_specifier == HB_SET_PRINTFILE )
-            wResult = hb_errRT_TERM( EG_CREATE, 2014, NULL, path, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY );
+            uiAction = hb_errRT_TERM( EG_CREATE, 2014, NULL, path, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY );
          else if( set_specifier == HB_SET_EXTRAFILE )
-            wResult = hb_errRT_TERM( EG_CREATE, 2015, NULL, path, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY );
+            uiAction = hb_errRT_TERM( EG_CREATE, 2015, NULL, path, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY );
          else
-            wResult = E_DEFAULT;
+            uiAction = E_DEFAULT;
 
-         if( wResult == E_DEFAULT || wResult == E_BREAK )
+         if( uiAction == E_DEFAULT || uiAction == E_BREAK )
             break;
       }
    }

@@ -2077,7 +2077,10 @@ STATIC FUNCTION TEST_BEGIN( cParam )
 
    /* Feedback */
 
-   fWrite( s_nFhnd, "      Version: " + Version() + s_cNewLine +;
+   /* NOTE: The 0 parameter of Version() will force Harbour to include the
+            compiler version in the version string. */
+
+   fWrite( s_nFhnd, "      Version: " + Version( 0 ) + s_cNewLine +;
                     "           OS: " + OS() + s_cNewLine +;
                     "   Date, Time: " + DToS( Date() ) + " " + Time() + s_cNewLine +;
                     "       Output: " + s_cFileName + s_cNewLine +;
