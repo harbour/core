@@ -69,8 +69,9 @@ function __MenuTo( bBlock, cVariable )
       lDeclared := .T.
    else
       lDeclared := .F.
-      n := eval( bBlock )
    endif
+
+   n := eval( bBlock )
 
    // if no prompts were defined, exit with 0
 
