@@ -880,7 +880,7 @@ static void ConvertPatterns( char * mpatt, int mlen, char * rpatt, int rlen )
   int explen, rmlen;
   char exppatt[ MAX_NAME ], expreal[ 5 ] = "\1  0";
   char lastchar = '@', exptype;
-  char * ptr;
+  char * ptr, * ptrtmp;
 
   HB_TRACE(HB_TR_DEBUG, ("ConvertPatterns(%s, %d, %s, %d)", mpatt, mlen, rpatt, rlen));
 
@@ -958,31 +958,66 @@ static void ConvertPatterns( char * mpatt, int mlen, char * rpatt, int rlen )
           while( (ifou = hb_strAt( exppatt, explen, ptr, rlen-(ptr-rpatt) )) > 0 )
             {
               /* Convert result marker into inner format */
+              ifou --;
               ptr += ifou;
-              if( *(ptr-2) == '<' && *(ptr+explen-1) == '>' &&
-                  *(ptr-3) != '\\'  && *(ptr+explen-2) != '\\' )  /* <...> */
-                {
-                  if( *(ptr-3) == '#' && *(ptr-4) != '\\' )          /* #<...> */
-                    { exptype = '1'; ptr -= 3; rmlen = explen+3; }
-                  else
-                    { exptype = '0'; ptr -= 2; rmlen = explen+2; }
-                }
-              else if( *(ptr-3) == '<' && *(ptr+explen) == '>' &&
-                       *(ptr-4) != '\\' && *(ptr+explen-1) != '\\' )   /* < ... > */
-                {
-                  ptr -= 2;
-                  if( *ptr == '\"' ) exptype = '2';
-                  else if( *ptr == '(' ) exptype = '3';
-                  else if( *ptr == '{' ) exptype = '4';
-                  else if( *ptr == '.' ) exptype = '5';
-                  else if( *ptr == '-' ) exptype = '6';
-                  ptr--;
-                  rmlen = explen+4;
-                }
-              else continue;
-              expreal[2] = exptype;
-              hb_pp_Stuff( expreal, ptr, 4, rmlen, rlen );
-              rlen += 4 - rmlen;
+              ptrtmp = ptr + 1;
+              rmlen = explen;
+              exptype = '0';
+              do
+              {
+                 ptr--;
+                 rmlen++;
+                 ifou--;
+                 if( *ptr == '<' )
+                    continue;
+                 else if( *ptr == '\"' )
+                    exptype = '2';
+                 else if( *ptr == '(' )
+                    exptype = '3';
+                 else if( *ptr == '{' )
+                    exptype = '4';
+                 else if( *ptr == '.' )
+                    exptype = '5';
+                 else if( *ptr == '-' )
+                    exptype = '6';
+                 else if( *ptr == ' ' || *ptr == '\t' )
+                    continue;
+                 else
+                    ifou = -1;
+              }
+              while( ifou >= 0 && *ptr!='<' && *(ptr-1)!= '\\' );
+              if( ifou >=0 && *ptr=='<' )
+              {
+                 ptr += rmlen++;
+                 while( *ptr != '\0' && *ptr != '>'  && *(ptr-1) != '\\' )
+                 {               
+                    if( *ptr != ' ' && *ptr != '\t' && *ptr != '\"' && *ptr != ')' && *ptr != '}' && *ptr != '.' && *ptr != '-' )
+                    {
+                       ifou = -1;
+                       break;
+                    }
+                    rmlen++;
+                    ptr++;
+                 }
+                 if( ifou >=0 && *ptr=='>' )
+                 {
+                    ptr -= rmlen;
+                    ptr++;
+                    if( exptype == '0' && *(ptr-1) == '#' && *(ptr-2) != '\\' )
+                    {
+                       exptype = '1';
+                       ptr--;
+                       rmlen++;
+                    }
+                    expreal[2] = exptype;
+                    hb_pp_Stuff( expreal, ptr, 4, rmlen, rlen );
+                    rlen += 4 - rmlen;
+                 }
+                 else
+                    ptr = ptrtmp;
+              }
+              else
+                 ptr = ptrtmp;
             }
         }
       i++;

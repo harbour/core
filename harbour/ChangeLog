@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+     * fixed 3 bugs with index not updating the tree
+
+2002-01-16 11:10 UTC-0500 David G. Holm <dholm@jsd-llc.com>
+  * contrib/libct/charsort.c
     ! OS/2 IBM C++ fix.
 
 2002-01-16 05:00 UTC+0700 Andi Jahja <harbour@cbn.net.id>
