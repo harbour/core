@@ -1,5 +1,6 @@
 function Main()
    local i := TIniFile():New('harbour.ini')
+   local s
 
    qout(i:readstring('test', 'hello', 'not found'))
    qout(i:readstring('not', 'there', 'not found'))
@@ -8,6 +9,16 @@ function Main()
    qout(i:readstring('not', 'there', 'not found'))
 
    i:WriteString('', 'not', 'in section!')
+
+   qout('')
+   qout('Sections:')
+   s := i:ReadSections()
+   aeval(s, {|x| qout('[' + x + ']')})
+
+   qout('')
+   qout('[' + s[1] + ']')
+   s := i:ReadSection(s[1])
+   aeval(s, {|x| qout(x)})
 
    i:Filename := 'harbour.new'
    i:Commit() // saves file
@@ -25,6 +36,8 @@ function TIniFile()
       oClass:AddMethod( "New",  @New() )  // define this class objects methods
       oClass:AddMethod( "ReadString", @ReadString() )
       oClass:AddMethod( "WriteString", @WriteString() )
+      oClass:AddMethod( "ReadSection", @ReadSection() )
+      oClass:AddMethod( "ReadSections", @ReadSections() )
       oClass:AddMethod( "Commit", @Commit() )
 
       oClass:Create()                     // builds this class
@@ -46,12 +59,12 @@ static function New(cFileName)
       ::Contents := {}
       CurrArray := ::Contents
 
-      //if Hb_File(cFileName)
+      if Hb_File(cFileName)
          hFile := fopen(cFilename, 0)
 
-      //else
-      //   hFile := fcreate(cFilename)
-      //endif
+      else
+         hFile := fcreate(cFilename)
+      endif
 
       cFile := space(255)
       do while (nPos := fread(hFile, @cFile, 255)) > 0
@@ -121,7 +134,7 @@ static procedure WriteString(cSection, cIdent, cString)
    local a, j, i
 
    if Empty(cIdent)
-      outerr('Must specifier an identifier')
+      outerr('Must specify an identifier')
 
    elseif Empty(cSection)
       j := AScan( ::Contents, {|x| x[1] == cIdent .and. ValType(x[2]) == 'C'} )
@@ -130,7 +143,6 @@ static procedure WriteString(cSection, cIdent, cString)
          ::Contents[j][2] := cString
 
       else
-//         a := aClone(::Contents)
          a := ::Contents
 
          /* QUESTION: Doing this directly on ::Contents didn't work!
@@ -141,10 +153,10 @@ static procedure WriteString(cSection, cIdent, cString)
          a[1] := {cIdent, cString}
 
          ::Contents := a
-//         ::Contents := aClone(a)
       endif
 
-   elseif (i := AScan( ::Contents, {|x| x[1] == cSection})) > 0
+   elseif (i := AScan( ::Contents, {|x| x[1] == cSection .and. ;
+           ValType(x[2]) == 'A'})) > 0
       j := AScan( ::Contents[i][2], {|x| x[1] == cIdent} )
 
       if j > 0
@@ -158,6 +170,37 @@ static procedure WriteString(cSection, cIdent, cString)
       AAdd( ::Contents, {cSection, {{cIdent, cString}}} )
    endif
 return
+
+static function ReadSection(cSection)
+   local Self := QSelf()
+   local i, j, aSection := {}
+
+   if Empty(cSection)
+      outerr('Must specify a section')
+
+   elseif (i := AScan( ::Contents, {|x| x[1] == cSection .and. ;
+           ValType(x[2]) == 'A'})) > 0
+
+      for j := 1 to Len(::Contents[i][2])
+
+         if ::Contents[i][2][j][1] <> NIL
+            AAdd(aSection, ::Contents[i][2][j][1])
+         endif
+      next j
+   endif
+return aSection
+
+static function ReadSections()
+   local Self := QSelf()
+   local i, aSections := {}
+
+   for i := 1 to Len(::Contents)
+
+      if ValType(::Contents[i][2]) == 'A'
+         AAdd(aSections, ::Contents[i][1])
+      endif
+   next i
+return aSections
 
 static procedure Commit()
    local Self := QSelf()
@@ -178,19 +221,17 @@ static procedure Commit()
                fwrite(hFile, ::Contents[i][2][j][2] + Chr(13) + Chr(10))
 
             else
-               fwrite(hFile, ::Contents[i][2][j][1] + '=' +;
+               fwrite(hFile, ::Contents[i][2][j][1] + '=' + ;
                       ::Contents[i][2][j][2] + Chr(13) + Chr(10))
             endif
-         next //j
+         next j
          fwrite(hFile, Chr(13) + Chr(10))
 
       elseif ValType(::Contents[i][2]) == 'C'
-         fwrite(hFile, ::Contents[i][1] + '=' + ::Contents[i][2] + Chr(13) +;
-                       Chr(10))
+         fwrite(hFile, ::Contents[i][1] + '=' + ::Contents[i][2] +;
+                       Chr(13) + Chr(10))
 
       endif
-   next //i
+   next i
    fclose(hFile)
 return
-
-

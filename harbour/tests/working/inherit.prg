@@ -105,7 +105,7 @@ return oFile:Instance()
 // <cMode>      mode for opening. Default "R"
 // <nBlockSize> Optional maximum blocksize
 //
- function New( cFileName, cMode, nBlock )
+static function New( cFileName, cMode, nBlock )
 
    local self := QSelf()                        // Get self
 
@@ -133,7 +133,7 @@ return oFile:Instance()
 return self
 
 
- function Run( xTxt, lCRLF )
+static function Run( xTxt, lCRLF )
 
    local self := QSelf()
    local xRet
@@ -149,7 +149,7 @@ return xRet
 //
 // Dispose -> Close the file handle
 //
- function Dispose()
+static function Dispose()
 
    local self := QSelf()
 
@@ -169,7 +169,7 @@ return self
 //
 // Read a single line
 //
- function Read()
+static function Read()
 
    local self := QSelf()
    local cRet  := ""
@@ -226,7 +226,7 @@ return cRet
 //         one or more strings
 // <lCRLF> End with Carriage Return/Line Feed (Default == TRUE)
 //
- function WriteLn( xTxt, lCRLF )
+static function WriteLn( xTxt, lCRLF )
 
    local self := QSelf()
    local cBlock
@@ -249,7 +249,7 @@ return cRet
 return self
 
 
- function Write( xTxt )
+static function Write( xTxt )
 
    local self := QSelf()
 
@@ -265,7 +265,7 @@ return ::WriteLn( xTxt, .F. )
 //
 // Go to a specified line number
 //
- function Goto( nLine )
+static function Goto( nLine )
 
    local self   := QSelf()
    local nWhere := 1

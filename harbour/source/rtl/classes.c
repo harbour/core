@@ -306,8 +306,7 @@ static HARBOUR ClassSel()
    {
       pClass   = &pClasses[ wClass - 1 ];
       wLimit   = pClass->wHashKey * BUCKET;
-      ItemRelease( pReturn );
-      _xfree( pReturn );
+      hb_itemRelease( pReturn );
       pReturn = hb_itemArrayNew( pClass->wMethods );
                                                 /* Create a transfer array  */
       for( wAt = 0; wAt < wLimit ; wAt++ )
@@ -315,17 +314,15 @@ static HARBOUR ClassSel()
          pMessage = (PDYNSYM) pClass->pMethods[ wAt ].pMessage;
          if( pMessage )                         /* Hash Entry used ?        */
          {
-            pItem  = hb_itemNew(  NULL );       /* Add to array             */
-            pItem  = hb_itemPutC( pItem, pMessage->pSymbol->szName );
+            pItem  = hb_itemPutC( NULL, pMessage->pSymbol->szName );
+                                                /* Add to array             */
             hb_itemArrayPut( pReturn, ++wPos, pItem );
-            ItemRelease( pItem );
-            _xfree( pItem );
+            hb_itemRelease( pItem );
          }
       }
    }
    hb_itemReturn( pReturn );
-   ItemRelease( pReturn );
-   _xfree( pReturn );
+   hb_itemRelease( pReturn );
 }
 
 HARBOUR CLASSADD() /* hClass, cMessage, pFunction, nType, xInit */
@@ -547,11 +544,9 @@ void ReleaseClass( PCLASS pClass )
    _xfree( pClass->szName );
    _xfree( pClass->pMethods );
 
-   hb_arrayRelease( pClass->pClassDatas );
-   hb_arrayRelease( pClass->pInlines );
-   /* hb_arrayRelease( pClass->pInitValues ); */
-   _xfree( pClass->pClassDatas );
-   _xfree( pClass->pInlines );
+   hb_itemRelease( pClass->pClassDatas );
+   hb_itemRelease( pClass->pInlines );
+   /* hb_itemRelease( pClass->pInitValues ); */
 }
 
 void ReleaseClasses( void )
@@ -724,8 +719,7 @@ HARBOUR OCLONE( void )
     {
       PITEM pDstObject = hb_arrayClone( pSrcObject );
       ItemCopy( &stack.Return, pDstObject ); /* OClone() returns the new object */
-      ItemRelease( pDstObject );
-      _xfree( pDstObject );
+      hb_itemRelease( pDstObject );
     }
   else
     _ret();

@@ -1,3 +1,9 @@
+19990601-12:15 CET Eddie Runia
+   * tests/working/inifiles.prg
+     new Mab version installed
+   * tests/working/inherit.prg, source/rtl/classes.c
+     stackfree() bug disappeared (??) after using itemapi in classes.c
+
 19990601-09:50 CET Eddie Runia
    * include/cgi.ch, tests/working/testcgi.prg
      CGI test program added
