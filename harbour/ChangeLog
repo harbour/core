@@ -1,3 +1,15 @@
+2000-08-07 12:20 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * source/compiler/harbour.y
+     + Added support for OPTIONAL Var... as first parameter[s] of declared function.
+
+   * tests/testdecl.prg
+     + Added: DECLARE SomeFunc( OPTIONAL SomeVar AS STRING ) and DECLARE SomeFunc( OPTIONAL SomeVar AS STRING, OPTIONAL OtherVar )
+       to test syntax of OPTIONAL as first parameter[s] of declared function.
+
+   * source/compiler/harbour.slx
+     - Removed few redundant rules.
+     * Improved handling of INC/DEC
+
 2000-08-07 09:05 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/harbour.l
      + Added rule to allow DECLARE Var AS ... (like PRIVATE Var AS ...)
@@ -5,7 +17,7 @@
    * source/compiler/harbour.slx
      + Added rule to allow DECLARE Var AS ... (like PRIVATE Var AS ...)
      ! Corrected typo with DECLARE IDENTIFIER := rule.
-     ! Corrcted compiler warnings reported by Maurilio
+     ! Corrected compiler warnings reported by Maurilio
 
    * tests/testdecl.prg
      + Added DECLARE Var9 AS STRING to test this syntax too.

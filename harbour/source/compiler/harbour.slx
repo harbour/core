@@ -308,12 +308,8 @@ LANGUAGE_WORDS_ARE {
 #define _CASE_WITH        3008
 #define _WHL_ID_CR        3009
 #define _WHL_ID_SEMI      3010
-#define _INC_CR           3011
-#define _INC_SEMI         3012
-#define _DEC_CR           3013
-#define _DEC_SEMI         3014
-#define _VAR_ARRAY        3015
-#define _TEXT_ARRAY       3016
+#define _VAR_ARRAY        3011
+#define _TEXT_ARRAY       3012
 
 LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( '^'         , 0           , 0      , 0          ) REDUCE_TO( POWER             , 0             ),
@@ -361,7 +357,6 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( EXTERN      , '['         , 0      , 0          ) REDUCE_TO( HB_EXTERN_ID      , '['          ),
                     IF_SEQUENCE_IS( EXTERN      , 0           , 0      , 0          ) REDUCE_TO( HB_EXTERN_ID      , 0            ),
 
-                    IF_SEQUENCE_IS( END         , TO          , 0      , 0          ) REDUCE_TO( HB_END_ID         , TO            ),
                     IF_SEQUENCE_IS( END         , INASSIGN    , 0      , 0          ) REDUCE_TO( HB_END_ID         , INASSIGN      ),
                     IF_SEQUENCE_IS( END         , INC         , 0      , 0          ) REDUCE_TO( HB_END_ID         , INC           ),
                     IF_SEQUENCE_IS( END         , DEC         , 0      , 0          ) REDUCE_TO( HB_END_ID         , DEC           ),
@@ -428,7 +423,6 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( LOCAL       , 0           , 0      , 0          ) REDUCE_TO( HB_LOCAL_ID       , 0             ),
 
 		    /* May have STATIC Func/Proc - Exclusion works best here. */
-                    IF_SEQUENCE_IS( STATIC      , TO          , 0      , 0          ) REDUCE_TO( HB_STATIC_ID      , TO            ),
                     IF_SEQUENCE_IS( STATIC      , INASSIGN    , 0      , 0          ) REDUCE_TO( HB_STATIC_ID      , INASSIGN      ),
                     IF_SEQUENCE_IS( STATIC      , INC         , 0      , 0          ) REDUCE_TO( HB_STATIC_ID      , INC           ),
                     IF_SEQUENCE_IS( STATIC      , DEC         , 0      , 0          ) REDUCE_TO( HB_STATIC_ID      , DEC           ),
@@ -475,10 +469,17 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( OTHERWISE   , 0           , 0      , 0          ) REDUCE_TO( HB_OTHERWISE_ID   , 0             ),
 
                     IF_SEQUENCE_IS( RETURN      , INASSIGN    , 0      , 0          ) REDUCE_TO( HB_RETURN_ID      , INASSIGN      ),
-                    IF_SEQUENCE_IS( RETURN      , INC         , '\n'   , 0          ) REDUCE_TO( HB_RETURN_ID      , _INC_CR       ),
-                    IF_SEQUENCE_IS( RETURN      , DEC         , '\n'   , 0          ) REDUCE_TO( HB_RETURN_ID      , _DEC_CR       ),
-                    IF_SEQUENCE_IS( RETURN      , INC         , ';'    , 0          ) REDUCE_TO( HB_RETURN_ID      , _INC_SEMI     ),
-                    IF_SEQUENCE_IS( RETURN      , DEC         , ';'    , 0          ) REDUCE_TO( HB_RETURN_ID      , _DEC_SEMI     ),
+
+		    /* INC/DEC belongs to the following Identifier. */
+                    IF_SEQUENCE_IS( RETURN      , INC         ,IDENTIFIER,0         ) PASS_THROUGH(),
+                    IF_SEQUENCE_IS( RETURN      , INC         ,MACROVAR,0           ) PASS_THROUGH(),
+                    IF_SEQUENCE_IS( RETURN      , INC         ,MACROTEXT,0          ) PASS_THROUGH(),
+                    IF_SEQUENCE_IS( RETURN      , DEC         ,IDENTIFIER,0         ) PASS_THROUGH(),
+                    IF_SEQUENCE_IS( RETURN      , DEC         ,MACROVAR,0           ) PASS_THROUGH(),
+                    IF_SEQUENCE_IS( RETURN      , DEC         ,MACROTEXT,0          ) PASS_THROUGH(),
+
+                    IF_SEQUENCE_IS( RETURN      , INC         , 0      , 0          ) REDUCE_TO( HB_RETURN_ID      , INC           ),
+                    IF_SEQUENCE_IS( RETURN      , DEC         , 0      , 0          ) REDUCE_TO( HB_RETURN_ID      , DEC           ),
                     IF_SEQUENCE_IS( RETURN      , ALIASOP     , 0      , 0          ) REDUCE_TO( HB_RETURN_ID      , ALIASOP       ),
                     IF_SEQUENCE_IS( RETURN      , PLUSEQ      , 0      , 0          ) REDUCE_TO( HB_RETURN_ID      , PLUSEQ        ),
                     IF_SEQUENCE_IS( RETURN      , MINUSEQ     , 0      , 0          ) REDUCE_TO( HB_RETURN_ID      , MINUSEQ       ),
@@ -490,11 +491,6 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( RETURN      , '='         , 0      , 0          ) REDUCE_TO( HB_RETURN_ID      , '='           ),
                     IF_SEQUENCE_IS( RETURN      , ':'         , 0      , 0          ) REDUCE_TO( HB_RETURN_ID      , ':'           ),
                     IF_SEQUENCE_IS( RETURN      , 0           , 0      , 0          ) PASS_THROUGH(),
-
-                    IF_SEQUENCE_IS( _INC_CR     , 0           , 0      , 0          ) REDUCE_TO( INC               , '\n'          ),
-                    IF_SEQUENCE_IS( _INC_SEMI   , 0           , 0      , 0          ) REDUCE_TO( INC               , ';'           ),
-                    IF_SEQUENCE_IS( _DEC_CR     , 0           , 0      , 0          ) REDUCE_TO( DEC               , '\n'          ),
-                    IF_SEQUENCE_IS( _DEC_SEMI   , 0           , 0      , 0          ) REDUCE_TO( DEC               , ';'           ),
 
 		    /* FOR ; EXIT ; NEXT LOOP */
 
@@ -536,10 +532,18 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( BEGIN_      , 0           , 0      , 0          ) REDUCE_TO( HB_BEGIN_ID       , 0             ),
                     IF_SEQUENCE_IS( _SEQUENCE_  , 0           , 0      , 0          ) REDUCE_TO( HB_SEQUENCE_ID    , 0             ),
 
-                    IF_SEQUENCE_IS( BREAK       , TO          , 0      , 0          ) REDUCE_TO( HB_BREAK_ID       , TO            ),
                     IF_SEQUENCE_IS( BREAK       , INASSIGN    , 0      , 0          ) REDUCE_TO( HB_BREAK_ID       , INASSIGN      ),
-    /* Assume Pre   IF_SEQUENCE_IS( BREAK       , INC         , 0      , 0          ) REDUCE_TO( HB_BREAK_ID       , INC           ),
-                    IF_SEQUENCE_IS( BREAK       , DEC         , 0      , 0          ) REDUCE_TO( HB_BREAK_ID       , DEC           ), */
+
+		    /* INC/DEC belongs to the following Identifier. */
+                    IF_SEQUENCE_IS( BREAK       , INC         ,IDENTIFIER,0         ) PASS_THROUGH(),
+                    IF_SEQUENCE_IS( BREAK       , INC         ,MACROVAR, 0          ) PASS_THROUGH(),
+                    IF_SEQUENCE_IS( BREAK       , INC         ,MACROTEXT,0          ) PASS_THROUGH(),
+                    IF_SEQUENCE_IS( BREAK       , DEC         ,IDENTIFIER,0         ) PASS_THROUGH(),
+                    IF_SEQUENCE_IS( BREAK       , DEC         ,MACROVAR, 0          ) PASS_THROUGH(),
+                    IF_SEQUENCE_IS( BREAK       , DEC         ,MACROTEXT,0          ) PASS_THROUGH(),
+
+                    IF_SEQUENCE_IS( BREAK       , INC         , 0      , 0          ) REDUCE_TO( HB_BREAK_ID       , INC           ),
+                    IF_SEQUENCE_IS( BREAK       , DEC         , 0      , 0          ) REDUCE_TO( HB_BREAK_ID       , DEC           ),
                     IF_SEQUENCE_IS( BREAK       , ALIASOP     , 0      , 0          ) REDUCE_TO( HB_BREAK_ID       , ALIASOP       ),
                     IF_SEQUENCE_IS( BREAK       , PLUSEQ      , 0      , 0          ) REDUCE_TO( HB_BREAK_ID       , PLUSEQ        ),
                     IF_SEQUENCE_IS( BREAK       , MINUSEQ     , 0      , 0          ) REDUCE_TO( HB_BREAK_ID       , MINUSEQ       ),
@@ -579,7 +583,6 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( _WHL_ID_SEMI, 0           , 0      , 0          ) REDUCE_TO( HB_WHILE_ID       , ';'           ),
 
                     /* This WHILE is only at BOL if followed by operator (other than logicals .t., .f., !) than Identifier else CASE. */
-                    IF_SEQUENCE_IS( WHILE       , TO          , 0      , 0          ) REDUCE_TO( HB_WHILE_ID 	    , TO           ),
                     IF_SEQUENCE_IS( WHILE       , INASSIGN    , 0      , 0          ) REDUCE_TO( HB_WHILE_ID 	    , INASSIGN     ),
                     IF_SEQUENCE_IS( WHILE       , ALIASOP     , 0      , 0          ) REDUCE_TO( HB_WHILE_ID 	    , ALIASOP      ),
                     IF_SEQUENCE_IS( WHILE       , PLUSEQ      , 0      , 0          ) REDUCE_TO( HB_WHILE_ID 	    , PLUSEQ       ),
@@ -598,7 +601,6 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( _CASE_      , 0           , 0      , 0          ) REDUCE_TO( HB_CASE_ID  	    , 0            ),
 
                     /* This CASE is only at BOL if followed by operator (other than logicals .t., .f., !) than Identifier else CASE. */
-                    IF_SEQUENCE_IS( CASE        , TO          , 0      , 0          ) REDUCE_TO( HB_CASE_ID  	    , TO           ),
                     IF_SEQUENCE_IS( CASE        , INASSIGN    , 0      , 0          ) REDUCE_TO( HB_CASE_ID  	    , INASSIGN     ),
                     IF_SEQUENCE_IS( CASE        , ALIASOP     , 0      , 0          ) REDUCE_TO( HB_CASE_ID  	    , ALIASOP      ),
                     IF_SEQUENCE_IS( CASE        , PLUSEQ      , 0      , 0          ) REDUCE_TO( HB_CASE_ID  	    , PLUSEQ       ),
@@ -622,7 +624,6 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( ')'         , _WITH_      , 0      , 0          ) REDUCE_TO( ')'                , WITH         ),
                     IF_SEQUENCE_IS( _WITH_      , 0           , 0      , 0          ) REDUCE_TO( HB_WITH_ID  	    , 0            ),
 
-                    IF_SEQUENCE_IS( DO          , TO          , 0      , 0          ) REDUCE_TO( HB_DO_ID    	    , TO           ),
                     IF_SEQUENCE_IS( DO          , INASSIGN    , 0      , 0          ) REDUCE_TO( HB_DO_ID    	    , INASSIGN     ),
                     IF_SEQUENCE_IS( DO          , INC         , 0      , 0          ) REDUCE_TO( HB_DO_ID    	    , INC          ),
                     IF_SEQUENCE_IS( DO          , DEC         , 0      , 0          ) REDUCE_TO( HB_DO_ID    	    , DEC          ),

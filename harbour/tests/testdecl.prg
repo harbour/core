@@ -6,7 +6,14 @@
 #TRANSLATE AS NEW <ClassName> => AS CLASS <ClassName> := <ClassName>():New()
 
 DECLARE nMyFun() AS NUMERIC
-DECLARE MyClass cVar AS STRING
+
+DECLARE MyClass While AS String
+
+DECLARE MyFun( Var1 AS STRING, OPTIONAL Var1 ) AS LOGICAL
+
+DECLARE SomeFunc( OPTIONAL SomeVar AS STRING )
+
+DECLARE SomeFunc( OPTIONAL SomeVar AS STRING, OPTIONAL OtherVar )
 
 Function Main()
 
@@ -19,6 +26,7 @@ Function Main()
     DECLARE aVar[2]
     DECLARE Var3 := 'Var9', Var4, aVar5[1]
     DECLARE Var6, Var7:=7, aVar8[8]
+    DECLARE Var9 AS STRING
     DECLARE &var3
     DECLARE &Var3.
     DECLARE &Var3. ; DECLARE &Var3.&Var3

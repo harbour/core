@@ -240,7 +240,7 @@ Main       : { hb_compLinePush(); } Source       { }
            | /* empty file */
            ;
 
-Source     : Crlf      
+Source     : Crlf
            | VarDefs
            | FieldsDef
            | MemvarDef
@@ -1239,6 +1239,7 @@ DecData    : IdentName { hb_comp_pLastMethod = hb_compMethodAdd( hb_comp_pLastCl
 
 DecList    :                  {}
            | FormalList
+	   | OptListOnly
            | FormalList OptList
            ;
 
@@ -1248,8 +1249,14 @@ FormalList : IdentName AsType                    { hb_compVariableAdd( $1, hb_co
            | FormalList ',' '@' IdentName AsType { hb_compVariableAdd( $4, hb_comp_cVarType + VT_OFFSET_BYREF ); }
            ;
 
-OptList    : ',' OPTIONAL IdentName AsType     { hb_compVariableAdd( $3, hb_comp_cVarType + VT_OFFSET_OPTIONAL ); }
-           | ',' OPTIONAL '@' IdentName AsType { hb_compVariableAdd( $4, hb_comp_cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ); }
+OptListOnly: OPTIONAL IdentName AsType                     { hb_compVariableAdd( $2, hb_comp_cVarType + VT_OFFSET_OPTIONAL ); }
+           | OPTIONAL '@' IdentName AsType                 { hb_compVariableAdd( $3, hb_comp_cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ); }
+           | OptListOnly ',' OPTIONAL IdentName AsType     { hb_compVariableAdd( $4, hb_comp_cVarType + VT_OFFSET_OPTIONAL ); }
+           | OptListOnly ',' OPTIONAL '@' IdentName AsType { hb_compVariableAdd( $5, hb_comp_cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ); }
+	   ;
+
+OptList    : ',' OPTIONAL IdentName AsType             { hb_compVariableAdd( $3, hb_comp_cVarType + VT_OFFSET_OPTIONAL ); }
+           | ',' OPTIONAL '@' IdentName AsType         { hb_compVariableAdd( $4, hb_comp_cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ); }
            | OptList ',' OPTIONAL IdentName AsType     { hb_compVariableAdd( $4, hb_comp_cVarType + VT_OFFSET_OPTIONAL ); }
            | OptList ',' OPTIONAL '@' IdentName AsType { hb_compVariableAdd( $5, hb_comp_cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ); }
            ;
@@ -1300,24 +1307,24 @@ IfElse     : ELSE Crlf { hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE; }
                 EmptyStats
            ;
 
-IfElseIf   : ELSEIF { hb_compLinePush(); } Expression Crlf 
-                { hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE; 
-                  hb_compExprDelete( hb_compExprGenPush( $3 ) ); 
-                  $<iNumber>$ = hb_compGenJumpFalse( 0 ); 
+IfElseIf   : ELSEIF { hb_compLinePush(); } Expression Crlf
+                { hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE;
+                  hb_compExprDelete( hb_compExprGenPush( $3 ) );
+                  $<iNumber>$ = hb_compGenJumpFalse( 0 );
                 }
-                EmptyStats 
-                { $$ = hb_compElseIfGen( NULL, hb_compGenJump( 0 ) ); 
-                  hb_compGenJumpHere( $<iNumber>5 ); 
+                EmptyStats
+                { $$ = hb_compElseIfGen( NULL, hb_compGenJump( 0 ) );
+                  hb_compGenJumpHere( $<iNumber>5 );
                 }
 
-           | IfElseIf ELSEIF { hb_compLinePush(); } Expression Crlf 
-                { hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE; 
-                  hb_compExprDelete( hb_compExprGenPush( $4 ) ); 
-                  $<iNumber>$ = hb_compGenJumpFalse( 0 ); 
+           | IfElseIf ELSEIF { hb_compLinePush(); } Expression Crlf
+                { hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE;
+                  hb_compExprDelete( hb_compExprGenPush( $4 ) );
+                  $<iNumber>$ = hb_compGenJumpFalse( 0 );
                 }
-                EmptyStats 
-                { $$ = hb_compElseIfGen( $1, hb_compGenJump( 0 ) ); 
-                  hb_compGenJumpHere( $<iNumber>6 ); 
+                EmptyStats
+                { $$ = hb_compElseIfGen( $1, hb_compGenJump( 0 ) );
+                  hb_compGenJumpHere( $<iNumber>6 );
                 }
            ;
 
@@ -1684,7 +1691,7 @@ BOOL hb_compInclude( char * szFileName, PATHNAMES * pSearch )
    pFile->pPrev = hb_comp_files.pLast;
 
    hb_comp_files.pLast = pFile;
-   
+
 #ifdef __cplusplus
    yy_switch_to_buffer( ( YY_BUFFER_STATE ) ( hb_comp_buffer = ( char * ) yy_create_buffer( yyin, 8192 * 2 ) ) );
 #else
