@@ -264,7 +264,7 @@ METHOD New() CLASS TDebugger
    ::oWndCode:bGotFocus   := { || ::oGetListCommand:SetFocus(), SetCursor( SC_SPECIAL1 ) }
    ::oWndCode:bLostFocus  := { || SetCursor( SC_NONE ) }
    ::oWndCode:bPainted = { || ::oBrwText:SetColor( __DbgColors()[ 2 ] + "," + ;
-                              __DbgColors()[ 3 ] + "," + __DbgColors()[ 4 ] ),;
+                              __DbgColors()[ 5 ] + "," + __DbgColors()[ 4 ] ),;
                               If( ::oBrwText != nil, ::oBrwText:RefreshWindow(), nil ) }
 
    AAdd( ::aWindows, ::oWndCode )
@@ -843,7 +843,7 @@ METHOD ShowCallStack() CLASS TDebugger
       ::oBrwStack:AddColumn( TBColumnNew( "",  { || PadC( ::aCallStack[ n ], 14 ) } ) )
       ::oBrwStack:ForceStable()
       ::oWndStack:bPainted = { || ::oBrwStack:ColorSpec := __DbgColors()[ 2 ] + "," + ;
-                                 __DbgColors()[ 3 ] + "," + __DbgColors()[ 4 ],;
+                                 __DbgColors()[ 5 ] + "," + __DbgColors()[ 4 ],;
                                  ::oBrwStack:RefreshAll(), ::oBrwStack:ForceStable() }
       ::oWndStack:Show( .f. )
    endif
@@ -936,12 +936,12 @@ METHOD ShowVars( bSort, nType ) CLASS TDebugger
       ::oWndVars:bLButtonDown = { | nMRow, nMCol | ::WndVarsLButtonDown( nMRow, nMCol ) }
       ::oWndVars:bLDblClick = { | nMRow, nMCol | ::EditVar( n ) }
       ::oWndVars:bPainted = { || ::oBrwVars:ColorSpec := __DbgColors()[ 2 ] + "," + ;
-                                 __DbgColors()[ 3 ] + "," + __DbgColors()[ 4 ],;
+                                 __DbgColors()[ 5 ] + "," + __DbgColors()[ 4 ],;
                                  ::oBrwVars:RefreshAll(), ::oBrwVars:ForceStable() }
 
       ::oBrwVars := TBrowseNew( 2, 1, 6, MaxCol() - iif( ::oWndStack != nil,;
                                ::oWndStack:nWidth(), 0 ) - 1 )
-      ::oBrwVars:ColorSpec := ::aColors[ 2 ] + "," + ::aColors[ 3 ] + "," + ::aColors[ 4 ]
+      ::oBrwVars:ColorSpec := ::aColors[ 2 ] + "," + ::aColors[ 5 ] + "," + ::aColors[ 4 ]
       ::LoadVars()
       ::oBrwVars:GoTopBlock := { || n := 1 }
       ::oBrwVars:GoBottomBlock := { || n := Len( ::aVars ) }
@@ -1007,8 +1007,8 @@ METHOD ShowCode( cModuleName ) CLASS TDebugger
       ::cPrgName := cPrgName
       ::oBrwText := TBrwText():New( ::oWndCode:nTop + 1, ::oWndCode:nLeft + 1,;
                    ::oWndCode:nBottom - 1, ::oWndCode:nRight - 1, ::cPrgName,;
-                   __DbgColors()[ 2 ] + "," + __DbgColors()[ 3 ] + "," + ;
-                   __DbgColors()[ 4 ] + "," + __DbgColors()[ 5 ] )
+                   __DbgColors()[ 2 ] + "," + __DbgColors()[ 5 ] + "," + ;
+                   __DbgColors()[ 4 ] + "," + __DbgColors()[ 3 ] )
 
       ::oWndCode:SetCaption( ::cPrgName )
    endif
