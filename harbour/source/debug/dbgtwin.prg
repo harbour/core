@@ -89,6 +89,7 @@ CLASS TDbWindow  // Debugger windows and dialogs
    METHOD Move()
    METHOD KeyPressed( nKey )
    METHOD Refresh()
+   METHOD Resize()
 
 ENDCLASS
 
@@ -104,6 +105,7 @@ METHOD New( nTop, nLeft, nBottom, nRight, cCaption, cColor ) CLASS TDbWindow
    ::cColor   := cColor
    ::lShadow  := .f.
    ::lVisible := .f.
+   ::lFocused := .f.
 
 return Self
 
@@ -166,10 +168,6 @@ METHOD SetFocus( lOnOff ) CLASS TDbWindow
    if ::bPainted != nil
       Eval( ::bPainted, Self )
    endif
-   
-   IF( ::Browser != NIL )
-      ::Browser:RefreshAll()
-   ENDIF
 
    DispEnd()
 
@@ -196,17 +194,13 @@ METHOD Refresh() CLASS TDbWindow
       Eval( ::bPainted, Self )
    endif
 
-   IF( ::Browser != NIL )
-      ::Browser:RefreshAll()
-   ENDIF
-
    DispEnd()
 
 return nil
 
 METHOD Show( lFocused ) CLASS TDbWindow
 
-   DEFAULT lFocused TO .f.
+   DEFAULT lFocused TO ::lFocused
 
    ::cBackImage := SaveScreen( ::nTop, ::nLeft, ::nBottom + iif( ::lShadow, 1, 0 ),;
                               ::nRight + iif( ::lShadow, 2, 0 ) )
@@ -347,3 +341,31 @@ LOCAL aClr:=__DbgColors()
    
 RETURN nil
 
+METHOD Resize( nTop, nLeft, nBottom, nRight ) CLASS TDbWindow
+LOCAL lShow
+   
+   IF( lShow:=::lVisible )
+      ::Hide()
+   ENDIF
+   IF( nTop != NIL )
+      ::nTop := nTop
+   ENDIF
+   IF( nBottom != NIL )
+      ::nBottom := nBottom
+   ENDIF
+   IF( nLeft != NIL )
+      ::nLeft := nLeft
+   ENDIF
+   IF( nRight != NIL )
+      ::nRight := nRight
+   ENDIF
+   
+   IF( ::Browser != NIL )
+      ::Browser:Resize( ::nTop+1, ::nLeft+1, ::nBottom-1, ::nRight-1 )
+   ENDIF
+
+   IF( lShow )
+      ::Show( ::lFocused )
+   ENDIF
+   
+RETURN self

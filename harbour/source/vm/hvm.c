@@ -3420,9 +3420,9 @@ void hb_vmDo( USHORT uiParams )
       }
    }
 
-   hb_stackOldFrame( &sStackState );
    if( s_bDebugging )
       hb_vmDebuggerEndProc();
+   hb_stackOldFrame( &sStackState );
 
    s_bDebugging = bDebugPrevState;
    s_ulProcLevel--;
@@ -3647,12 +3647,10 @@ void hb_vmSend( USHORT uiParams )
       }
    }
 
+   if( s_bDebugging )
+      hb_vmDebuggerEndProc();
    hb_stackOldFrame( &sStackState );
 
-   if( s_bDebugging )
-   {
-      hb_vmDebuggerEndProc();
-   }
 
    s_bDebugging = bDebugPrevState;
    s_ulProcLevel--;

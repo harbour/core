@@ -2486,6 +2486,13 @@ $(OBJ_DIR)\debugger.obj : $(OBJ_DIR)\debugger.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(DEBUG_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\dbgbrwsr.c : $(DEBUG_DIR)\dbgbrwsr.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\dbgbrwsr.obj : $(OBJ_DIR)\dbgbrwsr.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(DEBUG_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\tbrwtext.c : $(DEBUG_DIR)\tbrwtext.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 

@@ -119,36 +119,22 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
       CASE ValType( xMessage ) == "B" ; xMessage := "{||...}"
       OTHERWISE                       ; xMessage := "NIL"
       ENDCASE
+
       cOld:= xMessage
+      if Len(cOld) > 60 .AND. AT(';',cOld) == 0  //Dont do this  if ; exist
+         cNew := ""
+         WHILE LEN(cOld) > 60
+            cTemp := SubStr( cOld, 1, 60 )
+            nPos  := Rat(' ',cTemp)
 
-     if Len(cOld) >60
-      WHILE LEN(cOld) > 0
-
-        IF AT( ';' , cOld ) > 0 //Dont do this  if ; exist
-            EXIT
-        ENDIF
-
-        IF LEN( cOld ) < 60
-
-            xMessage += cOld
-            EXIT
-
-        ENDIF
-
-      cTemp := SubStr( cOld , 1 , 60 )
-      nPos  := Rat(' ',cTemp)
-
-      IF nPos > 0
-          cNew += SubStr( cTemp , 1 , nPos ) + ';'
-
-          cOld := SubStr( cOld , nPos + 1 )
-      ENDIF
-
-    xMessage := cNew
-
-    ENDDO
-
-     endif
+            IF( nPos = 0 )
+               nPos := 60
+            ENDIF
+            cNew += SubStr( cTemp, 1, nPos ) + ';'
+            cOld := SubStr( cOld, nPos + 1 )
+         ENDDO
+         xMessage := cNew + cOld
+      endif
 
 
       DO WHILE ( nPos := At( ';', xMessage ) ) != 0

@@ -87,6 +87,7 @@ CLASS TBrwText FROM HBEditor
    METHOD   PageDown()
    METHOD   RefreshAll()
    METHOD   RefreshCurrent()
+   METHOD   ForceStable() INLINE NIL
 
    METHOD   GotoLine(n)                      // Moves active line cursor, that is it hilights last executed line of code
 

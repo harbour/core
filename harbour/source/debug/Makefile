@@ -14,7 +14,8 @@ PRG_SOURCES=\
    dbgtobj.prg \
    tbrwtext.prg \
    dbgwa.prg \
-   dbghelp.prg
+   dbghelp.prg \
+   dbgbrwsr.prg
 
 LIBNAME=debug
 

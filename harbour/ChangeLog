@@ -8,6 +8,43 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-02-11 13:40 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+   + source/debug/dbgbrwsr.prg
+      + The new file with TDbgBrowser class which inherits
+      from TBrowse
+      
+   * hrbdll.bc
+   * hrbdll.vc
+   * makefile.bc
+   * makefile.nt
+   * makefile.vc
+   * source/debug/Makefile
+      + added the reference to dbgbrwsr.prg
+      
+   * source/debug/dbgmenu.prg
+      + added "Run at Startup' option
+      
+   * source/debug/dbgtwin.prg
+   * source/debug/debugger.prg
+   * source/debug/tbrwtext.prg
+      + added "Run at Startup' option - if it is enabled then
+      the debugged application runs until ALTD() is called or
+      Alt+D keys pressed (Clipper compatibility - the default
+      option). If it is disabled the the debugger shows up at 
+      the first code line with the debug info.
+        This setting is stored in the initialization file
+      (init.cld) as 'Options NoRunAtStartup'.
+      * fixed more display/refreshing issues
+      * fixed quiting the debugger
+      
+   * source/rtl/alert.prg
+      * fixed bug with messages longer then 60 bytes
+      
+   * source/vm/hvm.c
+      * hb_vmDebugEndProc() is called before the eval stack
+      is cleaned - this allows to handle INIT/EXIT procedures
+      correctly
+
 2004-02-05 18:49 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
    * source/vm/debug.c
      + add wrappers (some 3rd-party-libs still use these ones) for:

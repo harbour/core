@@ -71,6 +71,7 @@ function __dbgBuildMenu( oDebugger )  // Builds the debugger pulldown menu
    local oCallStack
    local oCBTrace
    local oPPo
+   local oRunAtStartup
 
    MENU oMenu
       MENUITEM " ~File "
@@ -79,7 +80,7 @@ function __dbgBuildMenu( oDebugger )  // Builds the debugger pulldown menu
          MENUITEM " ~Resume"          ACTION oDebugger:Resume()
          MENUITEM " O~S Shell"        ACTION oDebugger:OSShell()
          SEPARATOR
-         MENUITEM " e~Xit    Alt-X "  ACTION oDebugger:Exit(), oDebugger:Hide(), __Quit()
+         MENUITEM " e~Xit    Alt-X "  ACTION oDebugger:Quit()
       ENDMENU
 
       MENUITEM " ~Locate "
@@ -163,6 +164,8 @@ function __dbgBuildMenu( oDebugger )  // Builds the debugger pulldown menu
          MENUITEM " ~Colors..."             ACTION oDebugger:Colors()
          MENUITEM " ~Tab Width..."          ACTION oDebugger:TabWidth()
          MENUITEM " path for ~Files..."     ACTION oDebugger:PathForFiles()
+         MENUITEM oRunAtStartup PROMPT " R~un at startup" IDENT "ALTD";
+            ACTION ( oDebugger:RunAtStartup(), oRunAtStartup:Toggle() ) CHECKED
          SEPARATOR
          MENUITEM " ~Save Settings..."      ACTION oDebugger:SaveSettings()
          MENUITEM " ~Restore Settings... "  ACTION oDebugger:RestoreSettings()
