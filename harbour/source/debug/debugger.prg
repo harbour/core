@@ -137,6 +137,7 @@ procedure __dbgEntry( uParam1, uParam2, uParam3 )  // debugger entry point
                           AAdd( s_oDebugger:aVars, { cLocalName, nLocalIndex, "Local", ProcName( 1 ) } )
                        endif
                     endif
+                    AAdd( s_oDebugger:aCallStack[ 1 ][ 2 ], { cLocalName, nLocalIndex, "Local", ProcName( 1 ) } )
                  endif
                  if s_oDebugger:oBrwVars != nil
                     s_oDebugger:oBrwVars:RefreshAll()
@@ -198,8 +199,7 @@ CLASS TDebugger
    METHOD New()
    METHOD Activate( cModuleName )
 
-   METHOD All() INLINE ::lShowPublics := ::lShowPrivates := ::lShowStatics := ;
-                ::lShowLocals := ::lAll := ! ::lAll, If( ::lAll, ::ShowVars(), ::HideVars() )
+   METHOD All()
 
    METHOD Animate() INLINE ::lAnimate := .t., ::Step()
 
@@ -342,6 +342,15 @@ METHOD Activate( cModuleName ) CLASS TDebugger
    ::ShowCode( cModuleName )
    ::ShowCallStack()
    ::RestoreAppStatus()
+
+return nil
+
+METHOD All() CLASS TDebugger
+
+   ::lShowPublics := ::lShowPrivates := ::lShowStatics := ;
+   ::lShowLocals := ::lAll := ! ::lAll
+
+   If( ::lAll, ::ShowVars(), ::HideVars() )
 
 return nil
 
@@ -797,6 +806,8 @@ METHOD HandleEvent() CLASS TDebugger
          case nKey == K_F5
               ::Go()
 
+         case nKey == K_F6
+              ::ShowWorkAreas()
 
          case nKey == K_F8 .or. nKey == 255
               ::Step()
@@ -954,7 +965,7 @@ METHOD ShowCallStack() CLASS TDebugger
                              n := iif( nSkip > 0, Min( Len( ::aCallStack ), n + nSkip ),;
                              Max( 1, n + nSkip ) ), n - nPos }
 
-      ::oBrwStack:AddColumn( TBColumnNew( "",  { || PadC( ::aCallStack[ n ], 14 ) } ) )
+      ::oBrwStack:AddColumn( TBColumnNew( "",  { || PadC( ::aCallStack[ n ][ 1 ], 14 ) } ) )
       ::oBrwStack:ForceStable()
       ::oWndStack:bPainted = { || ::oBrwStack:ColorSpec := __DbgColors()[ 2 ] + "," + ;
                                  __DbgColors()[ 5 ] + "," + __DbgColors()[ 4 ],;
@@ -1026,6 +1037,12 @@ METHOD LoadVars() CLASS TDebugger // updates monitored variables
             next
          next
       endif
+   endif
+
+   if ::lShowLocals
+      for n = 1 to Len( ::aCallStack[ 1 ][ 2 ] )
+         AAdd( ::aVars, ::aCallStack[ 1 ][ 2 ][ n ] )
+      next
    endif
 
    if ::lSortVars
@@ -1160,11 +1177,7 @@ METHOD ShowCode( cModuleName ) CLASS TDebugger
 
    ASize( ::aCallStack, Len( ::aCallStack ) + 1 )
    AIns( ::aCallStack, 1 )
-   if Len( ::aCallStack ) == 1
-      ::aCallStack[ 1 ] := ProcName( 3 ) // cFunction
-   else
-      ::aCallStack[ 1 ] := ProcName( 2 ) // cFunction
-   endif
+   ::aCallStack[ 1 ] = { cFunction, {} } // function name and locals array
 
    if ::oWndStack != nil
       ::oBrwStack:RefreshAll()
