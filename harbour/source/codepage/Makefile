@@ -5,6 +5,9 @@
 ROOT = ../../
 
 C_SOURCES=\
+	cdppl852.c    \
+	cdppliso.c    \
+	cdpplmaz.c    \
 	cdpru866.c    \
 	cdprukoi.c    \
 	cdpruwin.c

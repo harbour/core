@@ -55,7 +55,7 @@
 
 #define HB_CDP_MAX_ 64
 
-static HB_CODEPAGE  s_en_codepage = { "EN",0,NULL,NULL,0,NULL,NULL,NULL };
+static HB_CODEPAGE  s_en_codepage = { "EN",0,NULL,NULL,0,0,0,NULL,NULL,NULL,NULL,0,NULL };
 static PHB_CODEPAGE s_cdpList[ HB_CDP_MAX_ ];
 PHB_CODEPAGE s_cdpage = &s_en_codepage;
 
@@ -93,6 +93,8 @@ BOOL hb_cdpRegister( PHB_CODEPAGE cdpage )
                char *ptrUpper = cdpage->CharsUpper;
                char *ptrLower = cdpage->CharsLower;
                char *ptr;
+               HB_MULTICHAR multi[12];
+               int nMulti = 0;
 
                s_cdpList[ iPos ] = cdpage;
 
@@ -100,17 +102,25 @@ BOOL hb_cdpRegister( PHB_CODEPAGE cdpage )
                if( cdpage->nChars )
                {
                   cdpage->s_chars = (BYTE*) hb_xgrab(256);
+                  memset( cdpage->s_chars,'\0',256 );
                   cdpage->s_upper = (BYTE*) hb_xgrab(256);
                   cdpage->s_lower = (BYTE*) hb_xgrab(256);
+                  if( cdpage->lAccInterleave )
+                  {
+                     cdpage->s_accent = (BYTE*) hb_xgrab(256);
+                     memset( cdpage->s_accent,'\0',256 );
+                  }
+                  else
+                     cdpage->s_accent = NULL;
+
                   for( i=0; i<256; i++ )
                   {
-                     cdpage->s_chars[i] = 0;
                      cdpage->s_upper[i] = toupper( (BYTE) i&255 );
                      cdpage->s_lower[i] = tolower( (BYTE) i&255 );
                   }
                   for( i=1; *ptrUpper; i++,ptrUpper++,ptrLower++ )
                   {
-                     if( *ptrUpper == '=' )
+                     if( *ptrUpper == '~' )
                      {
                         for( ptr=ptrUpper+1; *ptr; ptr++ )
                            *(ptr-1) = *ptr;
@@ -118,10 +128,43 @@ BOOL hb_cdpRegister( PHB_CODEPAGE cdpage )
                         for( ptr=ptrLower+1; *ptr; ptr++ )
                            *(ptr-1) = *ptr;
                         *(ptr-1) = '\0';
-                        i--;
+                        if( cdpage->lAccEqual )
+                           i--;
+                        if( cdpage->lAccInterleave )
+                        {
+                           char *ptrtmp;
+
+                           ptrtmp = ptrUpper-1;
+                           while( cdpage->s_accent[ (((int)*ptrtmp)&255) ] )
+                              ptrtmp --;
+                           iu = (((int)*ptrUpper)&255);
+                           cdpage->s_accent[ iu ] = *ptrtmp;
+
+                           ptrtmp = ptrLower-1;
+                           while( cdpage->s_accent[ (((int)*ptrtmp)&255) ] )
+                              ptrtmp --;
+                           il = (((int)*ptrLower)&255);
+                           cdpage->s_accent[ il ] = *ptrtmp;
+                        }
                      }
                      else if( *ptrUpper == '.' )
                      {
+                        multi[nMulti].cFirst[0] = *(ptrLower+1);
+                        multi[nMulti].cFirst[1] = *(ptrUpper+1);
+                        multi[nMulti].cLast[0] = *(ptrLower+2);
+                        multi[nMulti].cLast[1] = *(ptrUpper+2);
+                        multi[nMulti].nCode = i;
+
+                        for( ptr=ptrUpper+4; *ptr; ptr++ )
+                           *(ptr-4) = *ptr;
+                        *(ptr-4) = '\0';
+                        for( ptr=ptrLower+4; *ptr; ptr++ )
+                           *(ptr-4) = *ptr;
+                        *(ptr-4) = '\0';
+
+                        nMulti ++;
+                        ptrUpper --; ptrLower --;
+                        continue;
                      }
                      iu = (((int)*ptrUpper)&255);
                      cdpage->s_chars[ iu ] = i;
@@ -136,6 +179,14 @@ BOOL hb_cdpRegister( PHB_CODEPAGE cdpage )
                      il = ((int)(*ptrUpper))&255;
                      cdpage->s_lower[il] = *ptrLower;
                   }
+                  if( nMulti )
+                  {
+                     cdpage->multi = (PHB_MULTICHAR) hb_xgrab( sizeof(HB_MULTICHAR)*nMulti );
+                     memcpy( (BYTE*)cdpage->multi,(BYTE*)multi,sizeof(HB_MULTICHAR)*nMulti );
+                     cdpage->nMulti = nMulti;
+                  }
+                  else
+                     cdpage->multi = NULL;
                }
                // printf( "\n%s %d",s_cdpage->id,s_cdpage->lSort );
                return TRUE;
@@ -165,7 +216,12 @@ PHB_CODEPAGE hb_cdpSelect( PHB_CODEPAGE cdpage )
    HB_TRACE(HB_TR_DEBUG, ("hb_langSelect(%p)", cdpage));
 
    if( cdpage )
+   {
       s_cdpage = cdpage;
+      printf("Codepage - Yes");
+   }
+   else
+      printf("Codepage - No");
 
    return cdpOld;
 }
@@ -219,18 +275,81 @@ void hb_cdpnTranslate( char* psz, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut, unsig
 int hb_cdpcmp( char* szFirst, char* szSecond, int iLen, PHB_CODEPAGE cdpage )
 {
    int i, iRet = 0, n1, n2;
+   int lAcc1 = 0, lAcc2 = 0;
    // printf( "\nhb_cdpcmp-0 %s %s",szFirst,szSecond );
    for( i=0; i<iLen; i++,szFirst++,szSecond++ )
       if( *szFirst != *szSecond )
       {
          if( ( n1 = (int)cdpage->s_chars[ ((int)*szFirst)&255 ] ) == 0 ||
              ( n2 = (int)cdpage->s_chars[ ((int)*szSecond)&255 ] ) == 0 )
-            iRet = ( *szFirst < *szSecond )? -1 : 1;
+         {
+            /* One of characters doesn't belong to the national characters */
+            iRet = ( (((int)*szFirst)&255) < (((int)*szSecond)&255) )? -1 : 1;
+            // printf( "\n|%c|%c|%d %d %d",*szFirst,*szSecond,((int)*szFirst)&255,((int)*szSecond)&255,iRet );
+            break;
+         }
+         if( cdpage->nMulti && i )
+         {
+            int j, nd1 = 0, nd2 = 0;
+            PHB_MULTICHAR pmulti = cdpage->multi;
+            // printf( "\nhb_cdpcmp-1 %c %c",*szFirst,*szSecond );
+            for( j=0; j<cdpage->nMulti; j++,pmulti++ )
+            {
+               if( ( *szFirst == pmulti->cLast[0] || 
+                     *szFirst == pmulti->cLast[1] ) && 
+                   ( *(szFirst-1) == pmulti->cFirst[0] || 
+                     *(szFirst-1) == pmulti->cFirst[1] )  )
+                   nd1 = pmulti->nCode;
+               if( ( *szSecond == pmulti->cLast[0] || 
+                     *szSecond == pmulti->cLast[1] ) && 
+                   ( *(szSecond-1) == pmulti->cFirst[0] || 
+                     *(szSecond-1) == pmulti->cFirst[1] )  )
+                   nd2 = pmulti->nCode;
+            }
+            // printf( "\nhb_cdpcmp-2 %d %d",nd1,nd2 );
+            if( nd1 && !nd2 )
+            {
+               n2 = (int)cdpage->s_chars[ ((int)*(szSecond-1))&255 ];
+               iRet = ( nd1 < n2 )? -1 : 1;
+               break;
+            }
+            else if( !nd1 && nd2 )
+            {
+               n1 = (int)cdpage->s_chars[ ((int)*(szFirst-1))&255 ];
+               iRet = ( n1 < nd2 )? -1 : 1;
+               // printf( "\nhb_cdpcmp-3 %d %d %d",iRet,n1,nd2 );
+               break;
+            }
+            else if( nd1 && nd2 )
+            {
+               iRet = ( nd1 < nd2 )? -1 : 1;
+               break;
+            }
+         }
+         if( cdpage->lAccInterleave && !lAcc1 && !lAcc2 )
+         {
+            if( cdpage->s_accent[ ((int)*(szFirst))&255 ] == *((BYTE*)szSecond) )
+               lAcc1 = TRUE;
+            else if( cdpage->s_accent[ ((int)*(szSecond))&255 ] == *((BYTE*)szFirst) )
+               lAcc2 = TRUE;
+            else
+            {
+               iRet = ( n1 < n2 )? -1 : 1;
+               break;
+            }
+         }
          else
+         {
             iRet = ( n1 < n2 )? -1 : 1;
-         break;
+            break;
+         }
       }
    // printf( " : %d",iRet );
+
+   if( !iRet && lAcc1 )
+      return 1;
+   else if( !iRet && lAcc2 )
+      return -1;
    return iRet;
 }
 
@@ -246,6 +365,10 @@ void hb_cdpReleaseAll( void )
          hb_xfree( s_cdpList[ iPos ]->s_upper );
       if( s_cdpList[ iPos ]->s_lower )
          hb_xfree( s_cdpList[ iPos ]->s_lower );
+      if( s_cdpList[ iPos ]->s_accent )
+         hb_xfree( s_cdpList[ iPos ]->s_accent );
+      if( s_cdpList[ iPos ]->multi )
+         hb_xfree( s_cdpList[ iPos ]->multi );
       iPos ++;
    }
 }

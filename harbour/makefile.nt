@@ -482,6 +482,9 @@ LANG_LIB_OBJS = \
    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 
 CODEPAGE_LIB_OBJS = \
+   $(OBJ_DIR)\cdppl852.obj \
+   $(OBJ_DIR)\cdppliso.obj \
+   $(OBJ_DIR)\cdpplmaz.obj \
    $(OBJ_DIR)\cdpru866.obj \
    $(OBJ_DIR)\cdprukoi.obj \
    $(OBJ_DIR)\cdpruwin.obj

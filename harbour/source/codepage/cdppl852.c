@@ -4,10 +4,11 @@
 
 /*
  * Harbour Project source code:
- * National Collation Support Module (RUWIN)
+ * National Collation Support Module ( PL852 )
  *
  * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
  * www - http://www.harbour-project.org
+ * Polish collating sequence (PL852) CP852 done by Jacek Kubica <kubica@wssk.wroc.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,26 +49,49 @@
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
  *
- */
-
-/* Language name: Russian */
-/* ISO language code (2 chars): RU */
-/* Codepage: Windows-1251 */
+ *      Polish              CP852          PL852
+ *
+/* Language name: Polish */
+/* ISO language code (2 chars): PL */
+/* Codepage: 852 */
 
 #include <ctype.h>
 #include "hbapi.h"
 #include "hbapicdp.h"
 
-static HB_CODEPAGE s_codepage = { "RU1251",32,
-    "¿¡¬√ƒ≈∆«»… ÀÃÕŒœ–—“”‘’÷◊ÿŸ⁄€‹›ﬁﬂ","‡·‚„‰ÂÊÁËÈÍÎÏÌÓÔÒÚÛÙıˆ˜¯˘˙˚¸˝˛ˇ",
-    0,0,0,NULL,NULL,NULL,NULL,0,NULL };
+#define NUMBER_OF_CHARACTERS  34    /* The number of single characters in the
+                                       alphabet, two-as-one aren't considered
+                                       here, accented - are considered. */
+#define ACCENTED_EQUAL         0    /* Should be 1, if accented character 
+                                       has the same weight as appropriate
+                                       unaccented. */
+#define ACCENTED_INTERLEAVED   0    /* Should be 1, if accented characters
+                                       sort after their unaccented counterparts
+                                       only if the unaccented versions of all 
+                                       characters being compared are the same 
+                                       ( interleaving ) */
 
-HB_CODEPAGE_ANNOUNCE( RU1251 );
+/* If ACCENTED_EQUAL or ACCENTED_INTERLEAVED is 1, you need to mark the
+   accented characters with the symbol '~' before each of them, for example:
+      a~Ä
+   If there is two-character sequence, which is considered as one, it should
+   be marked with '.' before and after it, for example:
+      ... h.ch.i ...
 
-HB_CALL_ON_STARTUP_BEGIN( hb_codepage_Init_RU1251 )
+   The Upper case string and the Lower case string should be absolutely the
+   same excepting the characters case, of course.
+ */
+
+static HB_CODEPAGE s_codepage = { "PL852",NUMBER_OF_CHARACTERS,
+    "A§BCèDE®FGHIJKLùMN„O‡PQRSóTUWXYZçΩ","a•bcÜde©fghijklàmn‰o¢pqrsòtuwxyz´æ",
+    ACCENTED_EQUAL,ACCENTED_INTERLEAVED,0,NULL,NULL,NULL,NULL,0,NULL };
+
+HB_CODEPAGE_ANNOUNCE( PL852 );
+
+HB_CALL_ON_STARTUP_BEGIN( hb_codepage_Init_PL852 )
    hb_cdpRegister( &s_codepage );
-HB_CALL_ON_STARTUP_END( hb_codepage_Init_RU1251 )
+HB_CALL_ON_STARTUP_END( hb_codepage_Init_PL852 )
 #if ! defined(__GNUC__) && ! defined(_MSC_VER)
-   #pragma startup hb_codepage_Init_RU1251
+   #pragma startup hb_codepage_Init_PL852
 #endif
 

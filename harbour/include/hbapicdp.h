@@ -67,16 +67,28 @@
 
 #define HB_CODEPAGE_ANNOUNCE( id )          HB_FUNC( HB_CODEPAGE_##id ) {}
 
+typedef struct _HB_MULTICHAR
+{
+   char  cLast[2];
+   char  cFirst[2];
+   int   nCode;
+} HB_MULTICHAR, * PHB_MULTICHAR;
+
 typedef struct _HB_CODEPAGE
 {
    char *id;
    int   nChars;
    char *CharsUpper;
    char *CharsLower;
+   BOOL  lAccEqual;
+   BOOL  lAccInterleave;
    BOOL  lSort;
    BYTE *s_chars;
    BYTE *s_upper;
    BYTE *s_lower;
+   BYTE *s_accent;
+   int   nMulti;
+   PHB_MULTICHAR multi;
 } HB_CODEPAGE, * PHB_CODEPAGE;
 
 extern BOOL hb_cdpRegister( PHB_CODEPAGE );

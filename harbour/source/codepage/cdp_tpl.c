@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * National Collation Support Module (RUWIN)
+ * National Collation Support Module ( template )
  *
  * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
  * www - http://www.harbour-project.org
@@ -50,24 +50,47 @@
  *
  */
 
-/* Language name: Russian */
-/* ISO language code (2 chars): RU */
-/* Codepage: Windows-1251 */
+/* Language name: <Your language> */
+/* ISO language code (2 chars): (please look it up in /doc/lang_id.txt) */
+/* Codepage: <Your codepage> */
 
 #include <ctype.h>
 #include "hbapi.h"
 #include "hbapicdp.h"
 
-static HB_CODEPAGE s_codepage = { "RU1251",32,
-    "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞß","àáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ",
-    0,0,0,NULL,NULL,NULL,NULL,0,NULL };
+#define NUMBER_OF_CHARACTERS  26    /* The number of single characters in the
+                                       alphabet, two-as-one aren't considered
+                                       here, accented - are considered. */
+#define ACCENTED_EQUAL         0    /* Should be 1, if accented character 
+                                       has the same weight as appropriate
+                                       unaccented. */
+#define ACCENTED_INTERLEAVED   0    /* Should be 1, if accented characters
+                                       sort after their unaccented counterparts
+                                       only if the unaccented versions of all 
+                                       characters being compared are the same 
+                                       ( interleaving ) */
 
-HB_CODEPAGE_ANNOUNCE( RU1251 );
+/* If ACCENTED_EQUAL or ACCENTED_INTERLEAVED is 1, you need to mark the
+   accented characters with the symbol '~' before each of them, for example:
+      a~€
+   If there is two-character sequence, which is considered as one, it should
+   be marked with '.' before and after it, for example:
+      ... h.ch.i ...
 
-HB_CALL_ON_STARTUP_BEGIN( hb_codepage_Init_RU1251 )
+   The Upper case string and the Lower case string should be absolutely the
+   same excepting the characters case, of course.
+ */
+
+static HB_CODEPAGE s_codepage = { "EN",NUMBER_OF_CHARACTERS,
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZ","abcdefghijklmnopqrstuvwxyz",
+    ACCENTED_EQUAL,ACCENTED_INTERLEAVED,0,NULL,NULL,NULL,NULL,0,NULL };
+
+HB_CODEPAGE_ANNOUNCE( EN );
+
+HB_CALL_ON_STARTUP_BEGIN( hb_codepage_Init_EN )
    hb_cdpRegister( &s_codepage );
-HB_CALL_ON_STARTUP_END( hb_codepage_Init_RU1251 )
+HB_CALL_ON_STARTUP_END( hb_codepage_Init_EN )
 #if ! defined(__GNUC__) && ! defined(_MSC_VER)
-   #pragma startup hb_codepage_Init_RU1251
+   #pragma startup hb_codepage_Init_EN
 #endif
 

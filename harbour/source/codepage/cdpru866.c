@@ -60,7 +60,7 @@
 
 static HB_CODEPAGE s_codepage = { "RU866",32,
     "€‚ƒ„…†‡‰‹‘’“”•–—™›"," ΅Ά£¤¥¦§¨©ª«¬­®―ΰαβγδεζηθικλμνξο",
-    0,NULL,NULL,NULL };
+    0,0,0,NULL,NULL,NULL,NULL,0,NULL };
 
 HB_CODEPAGE_ANNOUNCE( RU866 );
 
