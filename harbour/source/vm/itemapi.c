@@ -1410,14 +1410,22 @@ char * HB_EXPORT hb_itemString( PHB_ITEM pItem, ULONG * ulLen, BOOL * bFreeReq )
 
       case HB_IT_POINTER:
          {
+            #ifdef _MSC_VER
+            int size = 16;    /* 8 bytes for address + 0x + \0 + padding (no snprintf function) */
+            #else
             int size = 11;    /* 8 bytes for address + 0x + \0 */
+            #endif
             int n;
             BOOL bFail = TRUE; 
 
             buffer = ( char * ) hb_xgrab( size );
             do
             {
+               #ifdef _MSC_VER
+               n = sprintf( buffer, "%p", hb_itemGetPtr( pItem ) );
+               #else
                n = snprintf( buffer, size, "%p", hb_itemGetPtr( pItem ) );
+               #endif
                if( (n > -1) && (n < size) )
                {
                   bFail = FALSE;
@@ -1428,7 +1436,7 @@ char * HB_EXPORT hb_itemString( PHB_ITEM pItem, ULONG * ulLen, BOOL * bFreeReq )
                      size = n + 1;
                   else
                      size *= 2;
-                  buffer = hb_xrealloc( buffer, size );
+                  buffer = ( char * ) hb_xrealloc( buffer, size );
                }
             }
             while( bFail );

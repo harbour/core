@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-05-06 21:10 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+  * source/vm/itemapi.c
+    ! The funtion snprintf is not a Standard C function and does not
+      exist in the Version 12 of the Microsoft C++ compiler (MSVC 6).
+
 2004-05-06 18:00 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    + CVSROOT/avail
    * CVSROOT/checkoutlist
