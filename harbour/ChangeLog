@@ -1,3 +1,10 @@
+2000-04-18 14:55 GMT-4 David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/gtwin/gtwin.c
+    ! Don't generate a key code for Caps Lock.
+    ! Generate the correct key code for Esc when Caps Lock is enabled
+      on Windows 95.
+    ! Changed 'coord' to 'coBuf' in hb_gt_Replicate().
+
 20000418-17:35 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/compiler/genobj32.c
      * Progressive fixes to support genc.c latest changes.

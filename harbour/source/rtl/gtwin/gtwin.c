@@ -340,6 +340,7 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
                   case 42: /* Left Shift */
                   case 54: /* Right Shift */
                   case 56: /* Alt */
+                  case 58: /* Caps Lock */
                   case 69: /* Num Lock */
                   case 70: /* Pause or Scroll Lock */
                      wKey = 0;
@@ -368,7 +369,7 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
                      BOOL bShift = dwState & SHIFT_PRESSED;
                      BOOL bEnhanced = dwState & ENHANCED_KEY;
 
-                        HB_TRACE(HB_TR_INFO, ("hb_gt_ReadKey(): wKey is %d, dwState is %d, ch is %d", wKey, dwState, ch));
+                     HB_TRACE(HB_TR_INFO, ("hb_gt_ReadKey(): wKey is %d, dwState is %d, ch is %d", wKey, dwState, ch));
 
                      if( bAlt )
                      {
@@ -542,14 +543,20 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
                      else
                      {
                         /* Normal key */
-                        if( wKey == 28 ) ch = K_ENTER; /* Num Pad Enter */
-                        else if( wKey == 53 && bEnhanced ) ch = '/'; /* Num Pad / */
-                        else if( wKey == 59 ) ch = K_F1; /* F1 */
+                        if( wKey == 53 && bEnhanced ) ch = '/'; /* Num Pad / */
                         else if( wKey > 59 && wKey <= 68 ) ch = 59 - wKey; /* F2 - F10 */
-                        else if( wKey == 76 ) ch = 332; /* Num Pad 5 */
                         else if( wKey == 87 || wKey == 88 ) ch = 47 - wKey; /* F11, F12 */
                         else switch( wKey )
                         {
+                           case 1: /* Esc */
+                              ch = K_ESC;
+                              break;
+                           case 28: /* Num Pad Enter */
+                              ch = K_ENTER;
+                              break;
+                           case 59: /* F1 */
+                              ch = K_F1;
+                              break;
                            case 82: /* Ins */
                               ch = K_INS;
                               break;
@@ -582,9 +589,6 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
                               break;
                            case 76: /* Num Pad 5 */
                               ch = 332;
-                              break;
-                           case 28: /* Num pad Enter */
-                              ch = K_ENTER;
                               break;
                            default:
                               ch = wKey + 128;
@@ -1137,7 +1141,7 @@ void hb_gt_Replicate( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE byChar, ULON
    coBuf.Y = uiRow;
    coBuf.X = uiCol;
 
-   FillConsoleOutputAttribute( s_HOutput, ( WORD )( byAttr & 0xFF ), ( DWORD )ulLength, coord, &dwWritten );
+   FillConsoleOutputAttribute( s_HOutput, ( WORD )( byAttr & 0xFF ), ( DWORD )ulLength, coBuf, &dwWritten );
    FillConsoleOutputCharacter(
            s_HOutput,                    /* handle to screen buffer        */
            byChar,                       /* character to write             */
