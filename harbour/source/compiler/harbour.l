@@ -1444,6 +1444,7 @@ Separator     {SpaceTab}
 "as boolean"         { return AS_LOGICAL; }
 "as num"             { return AS_NUMERIC; }
 "as numeric"         { return AS_NUMERIC; }
+"as obj"             { return AS_OBJECT; }
 "as object"          { return AS_OBJECT; }
 "as var"             { return AS_VARIANT; }
 "as variant"         { return AS_VARIANT; }
@@ -1461,9 +1462,8 @@ Separator     {SpaceTab}
 "as array of boolean"   { return AS_LOGICAL_ARRAY; }
 "as array of num"       { return AS_NUMERIC_ARRAY; }
 "as array of numeric"   { return AS_NUMERIC_ARRAY; }
+"as array of obj"       { return AS_OBJECT_ARRAY; }
 "as array of object"    { return AS_OBJECT_ARRAY; }
-
-"from class"            { return FROMCLASS; }
 
 %{
 /* ************************************************************************ */

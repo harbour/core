@@ -1,7 +1,19 @@
+20000520-10:07 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+   * source/compiler/harbour.l
+     - Removed rule for "FROM CLASS"
+     + Added "AS Obj" as an abrreviation for "AS Object"
+
+   * source/compiler/harbour.y
+     * Changed "AS Object FROM CLASS ClassName" to "As Object ClassName"
+
+   * tests/testwarn.prg
+     * Modified code to demonstrate new syntax for "As Object..."
+
 20000520-15:25 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/rtl/gtcrs/gtcrs.c
-	* fixed hb_gt_SetAttribute() to work correctly 
+	* fixed hb_gt_SetAttribute() to work correctly
 	with ncurses library
 	(thanks to Marek Paliwoda)
 
@@ -10,11 +22,11 @@
     *source/rtl/gtcrs/gtcrs.c
 	* fixed hb_gt_SetAttribute() to work with plain curses library
 	(thanks to Marek Paliwoda)
-	
+
     *source/rtl/gtcrs/kbdcrs.c
     *source/rtl/gtcrs/mousecrs.c
 	* fixed a module description
-    
+
 20000519-23:50 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
  *makefile.bc
   makefile.vc

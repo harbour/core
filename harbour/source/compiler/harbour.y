@@ -163,7 +163,6 @@ char * hb_comp_szAnnounce = NULL;    /* ANNOUNCEd procedure */
 %token MACROVAR MACROTEXT
 %token AS_ARRAY AS_BLOCK AS_CHARACTER AS_DATE AS_LOGICAL AS_NUMERIC AS_OBJECT AS_VARIANT DECLARE OPTIONAL
 %token AS_ARRAY_ARRAY AS_BLOCK_ARRAY AS_CHARACTER_ARRAY AS_DATE_ARRAY AS_LOGICAL_ARRAY AS_NUMERIC_ARRAY AS_OBJECT_ARRAY
-%token FROMCLASS
 
 /*the lowest precedence*/
 /*postincrement and postdecrement*/
@@ -277,24 +276,24 @@ Params     :                                                         { $$ = 0; }
            | '(' { hb_comp_iVarScope = VS_PARAMETER; } ParamList ')' { $$ = $3; }
            ;
 
-AsType     : /* not specified */           	 { hb_comp_cVarType = ' '; }
-           | AS_NUMERIC                    	 { hb_comp_cVarType = 'N'; }
-           | AS_CHARACTER                  	 { hb_comp_cVarType = 'C'; }
-           | AS_DATE                       	 { hb_comp_cVarType = 'D'; }
-           | AS_LOGICAL                    	 { hb_comp_cVarType = 'L'; }
-           | AS_ARRAY                      	 { hb_comp_cVarType = 'A'; }
-           | AS_BLOCK                      	 { hb_comp_cVarType = 'B'; }
-           | AS_OBJECT                     	 { hb_comp_cVarType = 'O'; }
-           | AS_OBJECT FROMCLASS IdentName 	 { hb_comp_cVarType = 'S'; hb_comp_szFromClass = $3 }
-           | AS_VARIANT                    	 { hb_comp_cVarType = ' '; }
-           | AS_NUMERIC_ARRAY              	 { hb_comp_cVarType = 'n'; }
-           | AS_CHARACTER_ARRAY            	 { hb_comp_cVarType = 'c'; }
-           | AS_DATE_ARRAY                 	 { hb_comp_cVarType = 'd'; }
-           | AS_LOGICAL_ARRAY              	 { hb_comp_cVarType = 'l'; }
-           | AS_ARRAY_ARRAY                	 { hb_comp_cVarType = 'a'; }
-           | AS_BLOCK_ARRAY                	 { hb_comp_cVarType = 'b'; }
-           | AS_OBJECT_ARRAY               	 { hb_comp_cVarType = 'o'; }
-           | AS_OBJECT_ARRAY FROMCLASS IdentName { hb_comp_cVarType = 's'; hb_comp_szFromClass = $3 }
+AsType     : /* not specified */           { hb_comp_cVarType = ' '; }
+           | AS_NUMERIC                    { hb_comp_cVarType = 'N'; }
+           | AS_CHARACTER                  { hb_comp_cVarType = 'C'; }
+           | AS_DATE                       { hb_comp_cVarType = 'D'; }
+           | AS_LOGICAL                    { hb_comp_cVarType = 'L'; }
+           | AS_ARRAY                      { hb_comp_cVarType = 'A'; }
+           | AS_BLOCK                      { hb_comp_cVarType = 'B'; }
+           | AS_OBJECT                     { hb_comp_cVarType = 'O'; }
+           | AS_OBJECT IdentName 	   { hb_comp_cVarType = 'S'; hb_comp_szFromClass = $2 }
+           | AS_VARIANT                    { hb_comp_cVarType = ' '; }
+           | AS_NUMERIC_ARRAY              { hb_comp_cVarType = 'n'; }
+           | AS_CHARACTER_ARRAY            { hb_comp_cVarType = 'c'; }
+           | AS_DATE_ARRAY                 { hb_comp_cVarType = 'd'; }
+           | AS_LOGICAL_ARRAY              { hb_comp_cVarType = 'l'; }
+           | AS_ARRAY_ARRAY                { hb_comp_cVarType = 'a'; }
+           | AS_BLOCK_ARRAY                { hb_comp_cVarType = 'b'; }
+           | AS_OBJECT_ARRAY               { hb_comp_cVarType = 'o'; }
+           | AS_OBJECT_ARRAY IdentName     { hb_comp_cVarType = 's'; hb_comp_szFromClass = $2 }
            ;
 
 AsArray    : AS_ARRAY                      { hb_comp_cVarType = 'A'; }
