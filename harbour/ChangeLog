@@ -1,3 +1,8 @@
+2000-03-28 13:40 GMT+1 Maurilio Longo <maurilio.longo@libero.it>
+
+   * include/hbdefs.h
+     ! You cannot redefine base types when using GCC under OS/2
+
 2000-03-27 23:20 GMT-5 David G. Holm <dholm@jsd-llc.com>
    * include/hbapi.h
    * include/hbapierr.h

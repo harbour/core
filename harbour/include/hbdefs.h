@@ -54,7 +54,7 @@
    #endif
 #endif
 
-#if defined(__IBMCPP__)
+#if defined(__IBMCPP__) || defined(HARBOUR_GCC_OS2)
    /* With the exception of WORD, the IBM Visual Age C++ compiler has
       its own definitions of the Harbour types most of which conflict with the
       Harbour #undefs, due to typedef being the prevalent method of
@@ -67,6 +67,9 @@
       NOTE: This only applies to the common types that most C compilers
             define. Any new types, particulary those that start with
             HB_, must be placed AFTER the #endif __IBMCPP__ line!
+   */
+   /* 28/03/2000 - maurilio.longo@libero.it
+      The same holds true when using GCC under OS/2
    */
    #define INCL_TYPES
    #include <os2.h>
