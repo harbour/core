@@ -105,7 +105,7 @@ HB_FUNC( ADSSETDATEFORMAT  )
    hb_retc( "");
    AdsGetDateFormat (pucFormat, &pusLen);
    if ( pusLen > 0 )
-      hb_retc( pucFormat );
+      hb_retc( (char *) pucFormat );
 
    if( ISCHAR( 1 ))
    {
@@ -565,7 +565,7 @@ HB_FUNC( ADSGETFILTER )
          pucFilter2 = (UNSIGNED8*) hb_xgrab(pusLen + 1);
          ulRetVal = AdsGetFilter( pArea->hTable, pucFilter2, &pusLen );
          if ( ulRetVal == AE_SUCCESS )
-            hb_retc( pucFilter2 );
+            hb_retc( (char *) pucFilter2 );
          else
          {
             HB_TRACE(HB_TR_DEBUG, ("adsGetFilter Error %lu", ulRetVal));
@@ -574,7 +574,7 @@ HB_FUNC( ADSGETFILTER )
       }
       else if ( ulRetVal == AE_SUCCESS )
       {
-         hb_retc( pucFilter );
+         hb_retc( (char *) pucFilter );
       }
       else
       {
@@ -807,7 +807,7 @@ HB_FUNC( ADSEXECUTESQLDIRECT )
                         && pArea->hStatement && ISCHAR( 1 ) )
    {
       adsCloseCursor( pArea );
-      ulRetVal = AdsExecuteSQLDirect( pArea->hStatement, hb_parc( 1 ), &hCursor );
+      ulRetVal = AdsExecuteSQLDirect( pArea->hStatement, (UNSIGNED8 *) hb_parc( 1 ),  &hCursor );
       if( ulRetVal == AE_SUCCESS )
       {
          if( hCursor )
@@ -820,7 +820,7 @@ HB_FUNC( ADSEXECUTESQLDIRECT )
       }
       else
       {
-         AdsShowError( "ExecuteSQL error:" );
+         AdsShowError( (UNSIGNED8 *) "ExecuteSQL error:" );
          hb_retl( 0 );
       }
    }
@@ -837,12 +837,12 @@ HB_FUNC( ADSPREPARESQL )
                         && pArea->hStatement && ISCHAR( 1 ) )
    {
       adsCloseCursor( pArea );
-      ulRetVal = AdsPrepareSQL( pArea->hStatement, hb_parc( 1 ) );
+      ulRetVal = AdsPrepareSQL( pArea->hStatement, (UNSIGNED8 *) hb_parc( 1 ) );
       if( ulRetVal == AE_SUCCESS )
          hb_retl( 1 );
       else
       {
-         AdsShowError( "PrepareSQL error:" );
+         AdsShowError( (UNSIGNED8 *) "PrepareSQL error:" );
          hb_retl( 0 );
       }
    }
@@ -874,7 +874,7 @@ HB_FUNC( ADSEXECUTESQL )
       }
       else
       {
-         AdsShowError( "ExecuteSQL error:" );
+         AdsShowError( (UNSIGNED8 *) "ExecuteSQL error:" );
          hb_retl( 0 );
       }
    }
@@ -901,7 +901,7 @@ HB_FUNC( ADSCOPYTABLE )
    {
       if( ISCHAR( 1 ) )
       {
-         AdsCopyTable( pArea->hTable, ADS_RESPECTFILTERS, hb_parc( 1 ) );
+         AdsCopyTable( pArea->hTable, ADS_RESPECTFILTERS, (UNSIGNED8 *) hb_parc( 1 ) );
       }
       else
       {
@@ -930,7 +930,7 @@ HB_FUNC( ADSCONVERTTABLE )
             if( usTableType < 1 || usTableType > 3 )
                usTableType = ADS_ADT;
          }
-         AdsConvertTable( pArea->hTable, ADS_IGNOREFILTERS, hb_parc( 1 ), usTableType );
+         AdsConvertTable( pArea->hTable, ADS_IGNOREFILTERS, (UNSIGNED8 *) hb_parc( 1 ), usTableType );
       }
       else
       {

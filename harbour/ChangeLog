@@ -1,3 +1,14 @@
+2001-06-19 17:40 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   ! contrib/rdd_ads/ads1.c
+   ! contrib/rdd_ads/adsfunc.c
+   ! contrib/rdd_ads/adsmgmnt.c
+     + Added many missing type casting required for C++ compilers.
+
+   ! contrib/rdd_ads/makefile.vc
+     + Added missing -DWIN32 to CFLAGS
+
+   /* RDDADS.lib can now be built with MSVC using the supplied contrib/rdd_ads/make_vc.bat */
+
 2001-06-19 14:50 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * source\rtl\browdbx.prg

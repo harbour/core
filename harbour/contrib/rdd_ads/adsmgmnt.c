@@ -71,7 +71,7 @@ HB_FUNC( ADSMGCONNECT )
       //                                       ADSHANDLE   *phMgmtHandle );
       */
 
-   hb_retnl( AdsMgConnect( hb_parc(1), hb_parc(2), hb_parc(3), &hMgmtHandle) );
+   hb_retnl( AdsMgConnect( (UNSIGNED8 *) hb_parc(1), (UNSIGNED8 *) hb_parc(2), (UNSIGNED8 *) hb_parc(3), &hMgmtHandle) );
 }
 
 HB_FUNC( ADSMGDISCONNECT )
@@ -96,14 +96,14 @@ HB_FUNC( ADSMGGETINSTALLINFO )
    if ( ulRetVal == AE_SUCCESS )
    {
       hb_reta( 8 );
-      hb_stornl( stInstallInfo.ulUserOption     , -1, 1 );  /* User option purchased*/
-      hb_storc ( stInstallInfo.aucRegisteredOwner,-1, 2 );  /* Registered owner     */
-      hb_storc ( stInstallInfo.aucVersionStr    , -1, 3 );  /* Advantage version    */
-      hb_storc ( stInstallInfo.aucInstallDate   , -1, 4 );  /* Install date string  */
-      hb_storc ( stInstallInfo.aucOemCharName   , -1, 5 );  /* OEM char language    */
-      hb_storc ( stInstallInfo.aucAnsiCharName  , -1, 6 );  /* ANSI char language   */
-      hb_storc ( stInstallInfo.aucEvalExpireDate, -1, 7 );  /* Eval expiration date */
-      hb_storc ( stInstallInfo.aucSerialNumber  , -1, 8 );  /* Serial number string */
+      hb_stornl( stInstallInfo.ulUserOption               , -1, 1 );  /* User option purchased*/
+      hb_storc ( (char *) stInstallInfo.aucRegisteredOwner, -1, 2 );  /* Registered owner     */
+      hb_storc ( (char *) stInstallInfo.aucVersionStr     , -1, 3 );  /* Advantage version    */
+      hb_storc ( (char *) stInstallInfo.aucInstallDate    , -1, 4 );  /* Install date string  */
+      hb_storc ( (char *) stInstallInfo.aucOemCharName    , -1, 5 );  /* OEM char language    */
+      hb_storc ( (char *) stInstallInfo.aucAnsiCharName   , -1, 6 );  /* ANSI char language   */
+      hb_storc ( (char *) stInstallInfo.aucEvalExpireDate , -1, 7 );  /* Eval expiration date */
+      hb_storc ( (char *) stInstallInfo.aucSerialNumber   , -1, 8 );  /* Serial number string */
    }
    else
      hb_ret( );
@@ -300,32 +300,32 @@ HB_FUNC( ADSMGGETCONFIGINFO )
       if ( iOption == 0 )
       {
          hb_reta( 26 );
-         hb_stornl( stConfigValues.ulNumConnections      , -1, 1 );  /* number connections            */
-         hb_stornl( stConfigValues.ulNumWorkAreas        , -1, 2 );  /* number work areas             */
-         hb_stornl( stConfigValues.ulNumTables           , -1, 3 );  /* number tables                 */
-         hb_stornl( stConfigValues.ulNumIndexes          , -1, 4 );  /* number indexes                */
-         hb_stornl( stConfigValues.ulNumLocks            , -1, 5 );  /* number locks                  */
-         hb_stornl( stConfigValues.ulUserBufferSize      , -1, 6 );  /* user buffer                   */
-         hb_stornl( stConfigValues.ulStatDumpInterval    , -1, 7 );  /* statistics dump interval      */
-         hb_stornl( stConfigValues.ulErrorLogMax         , -1, 8 );  /* max size of error log         */
-         hb_stornl( stConfigValues.ulNumTPSHeaderElems   , -1, 9 );  /* number TPS header elems       */
+         hb_stornl( stConfigValues.ulNumConnections       , -1, 1 );  /* number connections            */
+         hb_stornl( stConfigValues.ulNumWorkAreas         , -1, 2 );  /* number work areas             */
+         hb_stornl( stConfigValues.ulNumTables            , -1, 3 );  /* number tables                 */
+         hb_stornl( stConfigValues.ulNumIndexes           , -1, 4 );  /* number indexes                */
+         hb_stornl( stConfigValues.ulNumLocks             , -1, 5 );  /* number locks                  */
+         hb_stornl( stConfigValues.ulUserBufferSize       , -1, 6 );  /* user buffer                   */
+         hb_stornl( stConfigValues.ulStatDumpInterval     , -1, 7 );  /* statistics dump interval      */
+         hb_stornl( stConfigValues.ulErrorLogMax          , -1, 8 );  /* max size of error log         */
+         hb_stornl( stConfigValues.ulNumTPSHeaderElems    , -1, 9 );  /* number TPS header elems       */
          hb_stornl( stConfigValues.ulNumTPSVisibilityElems,-1, 10);  /* number TPS vis elems          */
-         hb_stornl( stConfigValues.ulNumTPSMemoTransElems, -1, 11);  /* number TPS memo elems         */
-         hb_stornl( stConfigValues.usNumReceiveECBs      , -1, 12);  /* number rcv ECBs (NLM only)    */
-         hb_stornl( stConfigValues.usNumSendECBs         , -1, 13);  /* number send ECBs (NLM only)   */
-         hb_stornd( stConfigValues.usNumBurstPackets     , -1, 14);  /* number packets per burst      */
-         hb_stornl( stConfigValues.usNumWorkerThreads    , -1, 15);  /* number worker threads         */
-         hb_stornl( stConfigValues.usSortBuffSize        , -1, 16);  /* index sort buffer size        */
-         hb_storni( stConfigValues.ucReserved1           , -1, 17);  /* reserved                      */
-         hb_storni( stConfigValues.ucReserved2           , -1, 18);  /* reserved                      */
-         hb_storc ( stConfigValues.aucErrorLog           , -1, 19);  /* error log path         */
-         hb_storc ( stConfigValues.aucSemaphore          , -1, 20);  /* semaphore file path    */
-         hb_storc ( stConfigValues.aucTransaction        , -1, 21);  /* TPS log file path      */
-         hb_storni( stConfigValues.ucReserved3           , -1, 22);  /* reserved                      */
-         hb_storni( stConfigValues.ucReserved4           , -1, 23);  /* reserved                      */
-         hb_stornl( stConfigValues.usSendIPPort          , -1, 24);  /* NT Service IP send port #     */
-         hb_stornl( stConfigValues.usReceiveIPPort       , -1, 25);  /* NT Service IP rcv port #      */
-         hb_stornl( stConfigValues.usReserved5           , -1, 26);  /* reserved                      */
+         hb_stornl( stConfigValues.ulNumTPSMemoTransElems , -1, 11);  /* number TPS memo elems         */
+         hb_stornl( stConfigValues.usNumReceiveECBs       , -1, 12);  /* number rcv ECBs (NLM only)    */
+         hb_stornl( stConfigValues.usNumSendECBs          , -1, 13);  /* number send ECBs (NLM only)   */
+         hb_stornd( stConfigValues.usNumBurstPackets      , -1, 14);  /* number packets per burst      */
+         hb_stornl( stConfigValues.usNumWorkerThreads     , -1, 15);  /* number worker threads         */
+         hb_stornl( stConfigValues.usSortBuffSize         , -1, 16);  /* index sort buffer size        */
+         hb_storni( stConfigValues.ucReserved1            , -1, 17);  /* reserved                      */
+         hb_storni( stConfigValues.ucReserved2            , -1, 18);  /* reserved                      */
+         hb_storc ( (char *) stConfigValues.aucErrorLog   , -1, 19);  /* error log path         */
+         hb_storc ( (char *) stConfigValues.aucSemaphore  , -1, 20);  /* semaphore file path    */
+         hb_storc ( (char *) stConfigValues.aucTransaction, -1, 21);  /* TPS log file path      */
+         hb_storni( stConfigValues.ucReserved3            , -1, 22);  /* reserved                      */
+         hb_storni( stConfigValues.ucReserved4            , -1, 23);  /* reserved                      */
+         hb_stornl( stConfigValues.usSendIPPort           , -1, 24);  /* NT Service IP send port #     */
+         hb_stornl( stConfigValues.usReceiveIPPort        , -1, 25);  /* NT Service IP rcv port #      */
+         hb_stornl( stConfigValues.usReserved5            , -1, 26);  /* reserved                      */
 
       }else
       if ( iOption == 1 )
@@ -356,7 +356,7 @@ HB_FUNC( ADSMGGETUSERNAMES )   /* Return array of connected users */
 {
 
    UNSIGNED32  ulRetVal ;
-   UNSIGNED32  ulMaxUsers = 100 ;        /* needed for array memory allocation; caller can set with 2nd arg */
+   UNSIGNED16  ulMaxUsers = 100 ;        /* needed for array memory allocation; caller can set with 2nd arg */
    UNSIGNED32  ulCount;
    UNSIGNED16  usStructSize = sizeof( ADS_MGMT_USER_INFO );
    ADS_MGMT_USER_INFO*  pastUserInfo;
@@ -366,14 +366,14 @@ HB_FUNC( ADSMGGETUSERNAMES )   /* Return array of connected users */
    if ( ISNUM( 2 ) )
       ulMaxUsers = hb_parnl( 2 );
 
-   pastUserInfo = hb_xgrab( sizeof( ADS_MGMT_USER_INFO ) * ulMaxUsers );
+   pastUserInfo = (ADS_MGMT_USER_INFO *) hb_xgrab( sizeof( ADS_MGMT_USER_INFO ) * ulMaxUsers );
       //   AdsMgGetUserNames ( ADSHANDLE hMgmtConnect,
       //                      UNSIGNED8 *pucFileName,
       //                      ADS_MGMT_USER_INFO astUserInfo[],
       //                      UNSIGNED16 *pusArrayLen,
       //                      UNSIGNED16 *pusStructSize );
 
-   ulRetVal = AdsMgGetUserNames( hMgmtHandle, ISCHAR( 1 ) ? hb_parc( 1 ) : NULL,
+   ulRetVal = AdsMgGetUserNames( hMgmtHandle, ISCHAR( 1 ) ? (UNSIGNED8 *) hb_parc( 1 ) : NULL,
                                  pastUserInfo,
                                  &ulMaxUsers,
                                  &usStructSize );
@@ -388,7 +388,7 @@ HB_FUNC( ADSMGGETUSERNAMES )   /* Return array of connected users */
       hb_reta( ulMaxUsers );
       for ( ulCount = 0; ulCount < ulMaxUsers; ulCount++ )
       {
-         hb_storc ( pastUserInfo[ulCount].aucUserName , -1, ulCount+1);
+         hb_storc ( (char *) pastUserInfo[ulCount].aucUserName , -1, ulCount+1);
       }
    }else
       hb_reta( 0 );

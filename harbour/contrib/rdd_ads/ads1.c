@@ -118,7 +118,7 @@ static void DumpArea( ADSAREAP pArea )  /* For debugging: call this to dump ads 
    UNSIGNED32 ulRetVal, ulRetAOF, ulRetFilt;
    UNSIGNED8  pucFormat[16];
    UNSIGNED8  pucFilter[1025];
-   UNSIGNED8  aucBuffer[MAX_STR_LEN + 1];
+   /*UNSIGNED8  aucBuffer[MAX_STR_LEN + 1];*/
    UNSIGNED8  pucIndexName[MAX_STR_LEN + 1];
    UNSIGNED8  pucIndexExpr[MAX_STR_LEN + 1];
    UNSIGNED8  pucIndexCond[MAX_STR_LEN + 1];
@@ -505,7 +505,7 @@ static ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
       {
          double dTemp;
          dTemp = hb_itemGetND( pKey );
-         AdsSeekLast( pArea->hOrdCurrent, (char *) &dTemp,
+         AdsSeekLast( pArea->hOrdCurrent, (UNSIGNED8 *) &dTemp,
                   8, ADS_DOUBLEKEY, (UNSIGNED16*) &(pArea->fFound) );
       }else
       {
@@ -525,7 +525,7 @@ static ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
       {
          double dTemp;
          dTemp = hb_itemGetND( pKey );
-         AdsSeek( pArea->hOrdCurrent, (char *) &dTemp,
+         AdsSeek( pArea->hOrdCurrent, (UNSIGNED8 *) &dTemp,
                   8, ADS_DOUBLEKEY, usSeekType, (UNSIGNED16*) &(pArea->fFound) );
       }
 /*
@@ -561,7 +561,7 @@ static ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
 
 static ERRCODE adsSkip( ADSAREAP pArea, LONG lToSkip )
 {
-   ERRCODE uiError;
+   /*ERRCODE uiError;*/
    LONG lUnit  = 1;
    LONG lCount = lToSkip;
    LONG lReturn ;
@@ -625,7 +625,7 @@ static ERRCODE adsSkip( ADSAREAP pArea, LONG lToSkip )
          lCount--;
       }
 
-      return lReturn;
+      return (ERRCODE) lReturn;
 	}
 }
 
@@ -772,11 +772,11 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
                pArea->fEof = TRUE;
             }
          if( pField->uiDec )
-            hb_itemPutNDLen( pItem, atof( pBuffer ),
+            hb_itemPutNDLen( pItem, atof( (char *) pBuffer ),
                              ( int ) pField->uiLen - ( ( int ) pField->uiDec + 1 ),
                              ( int ) pField->uiDec );
          else
-            hb_itemPutNLLen( pItem, atol( pBuffer ), ( int ) pField->uiLen );
+            hb_itemPutNLLen( pItem, atol( (char *) pBuffer ), ( int ) pField->uiLen );
          break;
 
       case HB_IT_DATE:
@@ -791,7 +791,7 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
                   memset( pBuffer, ' ', pField->uiLen );
                   pArea->fEof = TRUE;
                }
-            hb_itemPutDS( pItem, pBuffer );
+            hb_itemPutDS( pItem, (char *) pBuffer );
             AdsSetDateFormat  ( pucFormat );
             break;
          }
@@ -1035,7 +1035,7 @@ static ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo)
 
    HB_TRACE(HB_TR_DEBUG, ("adsCreate(%p, %p)", pArea, pCreateInfo));
 
-   pArea->szDataFileName = hb_xgrab( strlen(pCreateInfo->abName)+1 );
+   pArea->szDataFileName = (char *) hb_xgrab( strlen( (char *) ( pCreateInfo->abName)+1 ) );
    strcpy( pArea->szDataFileName, ( char * ) pCreateInfo->abName );
    uiLen = (pArea->uiFieldCount * 22) + 1;
    ucfieldDefs = (UNSIGNED8 *) hb_xgrab( uiLen );
@@ -1097,7 +1097,7 @@ static ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo)
    hb_xfree(ucfieldDefs);
    if( uRetVal != AE_SUCCESS )
    {
-      AdsShowError( "Error" );
+      AdsShowError( (UNSIGNED8 *) "Error" );
       return FAILURE;
    }
    AdsCloseTable(hTable);  // TODO: it would be nice if a parameter could be passed in to allow this to stay open to support the 4th parameter of dbCreate. As is, we have to close it here, then re-open it.
@@ -1203,7 +1203,7 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
 
    if( pOpenInfo->atomAlias )
    {
-      pArea->szDataFileName = hb_xgrab( strlen(pOpenInfo->abName)+1 );
+      pArea->szDataFileName = (char *) hb_xgrab( strlen( (char *) ( pOpenInfo->abName)+1 ) );
       strcpy( pArea->szDataFileName, ( char * ) pOpenInfo->abName );
       pArea->atomAlias = hb_dynsymGet( ( char * ) pOpenInfo->atomAlias );
       if( ( ( PHB_DYNS ) pArea->atomAlias )->hArea )
@@ -1307,7 +1307,7 @@ static ERRCODE adsSysName( ADSAREAP pArea, BYTE * pBuffer )
 {
    HB_TRACE(HB_TR_DEBUG, ("adsSysName(%p, %p)", pArea, pBuffer));
    HB_SYMBOL_UNUSED( pArea );
-   strcpy(pBuffer, "ADS");
+   strcpy( (char *) pBuffer, "ADS");
    return SUCCESS;
 }
 
@@ -1375,7 +1375,10 @@ static ERRCODE adsSetRel( ADSAREAP pArea, LPDBRELINFO  lpdbRelations )
    HB_TRACE(HB_TR_DEBUG, ("adsSetRel(%p, %p)", pArea, lpdbRelations));
 
    SUPER_SETREL( ( AREAP ) pArea, lpdbRelations );
-   if( !( hIndex = ( (ADSAREAP)lpdbRelations->lpaChild )->hOrdCurrent ) )
+
+   hIndex = ( (ADSAREAP)lpdbRelations->lpaChild )->hOrdCurrent;
+
+   if( ! hIndex )
       return FAILURE;
    if( !lpdbRelations->abKey )
       return FAILURE;
@@ -1513,14 +1516,14 @@ static ERRCODE adsOrderCreate( ADSAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
          pucWhile[pusLen] = 0;
          if ( pus16 == ADS_STRING )     /* add quotation marks around the key */
          {
-            strcat(pucWhile, "<=\"");
-            strcat(pucWhile, pucScope );
-            strcat(pucWhile, "\"" );
+            strcat( (char * ) pucWhile, "<=\"");
+            strcat( (char * ) pucWhile, (char * ) pucScope );
+            strcat( (char * ) pucWhile, "\"" );
          }
          else
          {
-            strcat(pucWhile, "<=");
-            strcat(pucWhile, pucScope );
+            strcat( (char * ) pucWhile, "<=");
+            strcat( (char * ) pucWhile, (char * ) pucScope );
          }
       }
       hTableOrIndex = pArea->hOrdCurrent;
@@ -1977,7 +1980,7 @@ static ERRCODE adsSetFilter( ADSAREAP pArea, LPDBFILTERINFO pFilterInfo )
 
 static ERRCODE adsSetScope( ADSAREAP pArea, LPDBORDSCOPEINFO sInfo )
 {
-   UNSIGNED8   aucKey[ADS_MAX_KEY_LENGTH];
+   /* UNSIGNED8   aucKey[ADS_MAX_KEY_LENGTH]; */
    HB_TRACE(HB_TR_DEBUG, ("adsSetScope(%p, %p)", pArea, sInfo));
 
    if( pArea->hOrdCurrent )
@@ -2084,27 +2087,27 @@ static ERRCODE adsUnLock( ADSAREAP pArea, ULONG lRecNo )
 
 static ERRCODE adsDrop( PHB_ITEM pItemTable )
 {
-  BYTE   * pBuffer;
+  char * pBuffer;
   char szFileName[ _POSIX_PATH_MAX + 1 ];
 
   pBuffer = hb_itemGetCPtr( pItemTable );
   strcpy( szFileName, pBuffer );
   if ( !strchr( szFileName, '.' ))
     strcat( szFileName, ((adsFileType==ADS_ADT) ? ".adt" : ".dbf") );
-  return hb_fsDelete( szFileName );
+  return hb_fsDelete( (BYTE *) szFileName );
 }
 
 /* returns 1 if exists, 0 else */
 BOOL adsExists( PHB_ITEM pItemTable, PHB_ITEM pItemIndex )
 {
   char szFileName[ _POSIX_PATH_MAX + 1 ];
-  BYTE * pBuffer;
+  char * pBuffer;
 
   pBuffer = hb_itemGetCPtr( pItemIndex != NULL ? pItemIndex : pItemTable );
   strcpy( szFileName, pBuffer );
   if ( pItemTable && !strchr( szFileName, '.' ))
     strcat( szFileName, ((adsFileType==ADS_ADT) ? ".adt" : ".dbf") );
-  return hb_fsFile( szFileName );
+  return hb_fsFile( (BYTE *) szFileName );
 }
 
 

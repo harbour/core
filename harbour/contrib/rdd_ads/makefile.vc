@@ -16,7 +16,7 @@ BIN_DIR     = ..\..\bin
 #
 
 CC = cl
-CFLAGS = -TP -W3 -nologo -I$(INCLUDE_DIR)
+CFLAGS = -TP -W3 -nologo -I$(INCLUDE_DIR) -DWIN32
 CLIBFLAGS = $(CFLAGS) -c
 CLIBFLAGSDEBUG = $(CLIBFLAGS) -Zi
 
