@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+     ! Added missing commas
+     * Some text translated from English to Chinese
+
+   All changes thanks to dongming <dongming@km169.net>
 
 2002-03-24 16:08 UTC-0300 Walter Negro <anegro@overnet.com.ar>
    * include\hbtrace.h
