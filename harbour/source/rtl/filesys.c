@@ -90,6 +90,8 @@
    This has been corrected by ptucker
  */
 
+#define HB_OS_WIN_32_USED
+
 #include <ctype.h>
 
 #include "hbapi.h"
@@ -763,12 +765,20 @@ ULONG   hb_fsReadLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
                uiToRead = ( USHORT ) ulLeftToRead;
                ulLeftToRead = 0;
             }
+
             uiRead = read( hFileHandle, pPtr, uiToRead );
             /* -1 on bad hFileHandle
                 0 on disk full
              */
-            if( uiRead == ( USHORT ) -1 || uiRead == 0 )
+
+            if( uiRead == 0 )
                break;
+
+            if( uiRead == ( USHORT ) -1 )
+            {
+               uiRead = 0;
+               break;
+            }
 
             ulRead += ( ULONG ) uiRead;
             pPtr += uiRead;
@@ -807,7 +817,11 @@ ULONG   hb_fsWriteLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
    #else
       if( ulCount )
       #if defined(HB_FS_LARGE_OPTIMIZED)
-         ulWritten = write( hFileHandle, pBuff, ulCount );
+         {
+            ulWritten = write( hFileHandle, pBuff, ulCount );
+            if( ulWritten == ( ULONG ) -1 )
+               ulWritten = 0;
+         }
       #else
          {
             ULONG ulLeftToWrite = ulCount;
@@ -834,8 +848,15 @@ ULONG   hb_fsWriteLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
                /* -1 on bad hFileHandle
                    0 on disk full
                 */
-               if( uiWritten == ( USHORT ) -1 || uiWritten == 0 )
+
+               if( uiWritten == 0 )
                   break;
+
+               if( uiWritten == ( USHORT ) -1 )
+               {
+                  uiWritten = 0;
+                  break;
+               }
 
                ulWritten += ( ULONG ) uiWritten;
                pPtr += uiWritten;
@@ -1007,16 +1028,15 @@ int     hb_fsDelete( BYTE * pFilename )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsDelete(%s)", (char*) pFilename));
 
-#if defined(HAVE_POSIX_IO)
+#if defined(HB_OS_WIN_32)
+
+   iResult = DeleteFile( ( char * ) pFilename );
+   s_uiErrorLast = GetLastError();
+
+#elif defined(HAVE_POSIX_IO)
 
    errno = 0;
-   #if defined(__WIN32__)
-       iResult=DeleteFile( ( char * ) pFilename );
-       if (!iResult)
-          errno=GetLastError();
-   #else  
-       iResult = unlink( ( char * ) pFilename );
-   #endif 
+   iResult = unlink( ( char * ) pFilename );
    s_uiErrorLast = errno;
 
 #elif defined(_MSC_VER) || defined(__MINGW32__)
@@ -1041,19 +1061,15 @@ int hb_fsRename( BYTE * pOldName, BYTE * pNewName )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsRename(%s, %s)", (char*) pOldName, (char*) pNewName));
 
-#if defined(HB_FS_FILE_IO)
+#if defined(HB_OS_WIN_32)
+
+   iResult = MoveFile( ( char * ) pOldName, ( char * ) pNewName );
+   s_uiErrorLast = GetLastError();
+
+#elif defined(HB_FS_FILE_IO)
 
    errno = 0;
-   #if defined(__WIN32__)
-   {
-     BOOL bSuccess;
-     bSuccess=MoveFile(( char * ) pOldName, ( char * ) pNewName );
-     if (!bSuccess)
-        errno=GetLastError();
-   } 
-   #elif
    iResult = rename( ( char * ) pOldName, ( char * ) pNewName );
-   #endif 
    s_uiErrorLast = errno;
 
 #else
@@ -1298,17 +1314,17 @@ BOOL    hb_fsMkDir( BYTE * pDirname )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsMkDir(%s)", (char*) pDirname));
 
-#if defined(HAVE_POSIX_IO) || defined(__MINGW32__)
+#if defined(HB_OS_WIN_32)
+
+   iResult = CreateDirectory( ( char * ) pDirname, NULL );
+   s_uiErrorLast = GetLastError();
+
+#elif defined(HAVE_POSIX_IO) || defined(__MINGW32__)
 
    errno = 0;
 
    #if !defined(__WATCOMC__) && !defined(__BORLANDC__) && !defined(__IBMCPP__) && !defined(__MINGW32__)
       iResult = mkdir( ( char * ) pDirname, S_IWUSR | S_IRUSR | S_IXUSR );
-   #elif defined(__WIN32__)
-    
-      iResult=CreateDirectory((char  *)pDirname,NULL);
-        if (!iResult)
-          errno = GetLastError();    
    #else
       iResult = mkdir( ( char * ) pDirname );
    #endif
@@ -1331,17 +1347,17 @@ BOOL    hb_fsChDir( BYTE * pDirname )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsChDir(%s)", (char*) pDirname));
 
-#if defined(HAVE_POSIX_IO) || defined(__MINGW32__)
+#if defined(HB_OS_WIN_32)
+
+   iResult = SetCurrentDirectory( ( char * ) pDirname );
+   s_uiErrorLast = GetLastError();
+
+#elif defined(HAVE_POSIX_IO) || defined(__MINGW32__)
 
    errno = 0;
-   #if defined(__WIN32__)
-       iResult=SetCurrentDirectory((char  *)pDirname);
-       if (!iResult)
-           errno = GetLastError();
-   #else
-       iResult = chdir( ( char * ) pDirname );
-   #endif
-         s_uiErrorLast = errno;                           
+   iResult = chdir( ( char * ) pDirname );
+   s_uiErrorLast = errno;
+
 #else
 
    iResult = 1;
@@ -1358,17 +1374,17 @@ BOOL    hb_fsRmDir( BYTE * pDirname )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsRmDir(%s)", (char*) pDirname));
 
-#if defined(HAVE_POSIX_IO) || defined(__MINGW32__)
+#if defined(HB_OS_WIN_32)
+
+   iResult = RemoveDirectory( ( char * ) pDirname );
+   s_uiErrorLast = GetLastError();
+
+#elif defined(HAVE_POSIX_IO) || defined(__MINGW32__)
 
    errno = 0;
-   #if defined(__WIN32__)
-       iResult =RemoveDirectory((char  *)pDirname);
-       if (!iResult)
-          errno = GetLastError();
-   #else 
-       iResult = rmdir( ( char * ) pDirname );
-   #endif 
+   iResult = rmdir( ( char * ) pDirname );
    s_uiErrorLast = errno;
+
 #else
 
    iResult = 1;
@@ -1404,19 +1420,15 @@ USHORT  hb_fsCurDirBuff( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen )
 
    pbyBuffer[ 0 ] = '\0';
 
-#if defined(HAVE_POSIX_IO)
+#if defined(HB_OS_WIN_32)
+
+   GetCurrentDirectory( ulLen, ( char * ) pbyBuffer );
+   s_uiErrorLast = GetLastError();
+
+#elif defined(HAVE_POSIX_IO)
 
    errno = 0;
-   #if defined(__WIN32__)
-   {
-   BOOL bResult;
-        bResult=GetCurrentDirectory( ulLen ,( char * ) pbyBuffer);
-        if (!bResult)
-            errno=GetLastError();
-       }
-   #else
-       getcwd( ( char * ) pbyBuffer, ulLen );
-   #endif 
+   getcwd( ( char * ) pbyBuffer, ulLen );
    s_uiErrorLast = errno;
     
 #elif defined(__MINGW32__)

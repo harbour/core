@@ -6,9 +6,9 @@
  * Harbour Project source code:
  * Harbour File Find API (C level)
  *
- * Copyright 2001 Luiz Rafael Culik <culik@sl.conex.net>
- *                Viktor Szakats <viktor.szakats@syenar.hu>
- *                Paul Tucker <ptucker@sympatico.ca>
+ * Copyright 2001-2002 Luiz Rafael Culik <culik@sl.conex.net>
+ *                     Viktor Szakats <viktor.szakats@syenar.hu>
+ *                     Paul Tucker <ptucker@sympatico.ca>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -51,9 +51,6 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-
-/* TOFIX: Set size to 0 on DOS/Win32 on directory entries */
-/* TOFIX: Call tzset(). For what platforms ? */
 
 #define INCL_DOSFILEMGR
 #define INCL_DOSERRORS
@@ -292,7 +289,7 @@ char * hb_fsAttrDecode( USHORT uiAttr, char * szAttr )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsAttrDecode(%hu, %p)", uiAttr, szAttr));
 
-   /* Using the same order as CA-Cl*pper did: RHSDA. */
+   /* Using the same order as CA-Cl*pper did: RHSVDA. */
    if( uiAttr & HB_FA_READONLY   ) *ptr++ = 'R';
    if( uiAttr & HB_FA_HIDDEN     ) *ptr++ = 'H';
    if( uiAttr & HB_FA_SYSTEM     ) *ptr++ = 'S';
@@ -401,12 +398,19 @@ static void hb_fsFindFill( PHB_FFIND ffind )
    {
       strncpy( ffind->szName, info->pFindFileData.cFileName, _POSIX_PATH_MAX );
 
-/* TOFIX: Use the complete value, to get around the 4GB limit */
-/*    ffind->size = ( info->pFindFileData.nFileSizeHigh * MAXDWORD ) + info->pFindFileData.nFileSizeLow; */
-      ffind->size = info->pFindFileData.nFileSizeLow;
-   
+      if( info->pFindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY )
+         ffind->size = 0;
+      else
+         /* TOFIX: Use the complete value, to get around the 4GB limit, must use some 
+                   larger type (double ?) in order to do this. [vszakats] */
+/*       ffind->size = ( info->pFindFileData.nFileSizeHigh * MAXDWORD ) + info->pFindFileData.nFileSizeLow; */
+         ffind->size = info->pFindFileData.nFileSizeLow;
+
       raw_attr = ( USHORT ) info->pFindFileData.dwFileAttributes;
-   
+
+      /* NOTE: One of these may fail when searching on an UNC path, I 
+               don't know yet what's the reason. [vszakats] */
+
       {
          FILETIME ft;
          SYSTEMTIME time;
@@ -517,6 +521,8 @@ PHB_FFIND hb_fsFindFirst( const char * pszFileName, USHORT uiAttr )
       ffind->info = ( void * ) hb_xgrab( sizeof( HB_FFIND_INFO ) );
       info = ( PHB_FFIND_INFO ) ffind->info;
 
+      tzset();
+
       bFound = ( findfirst( pszFileName, &info->entry, ( USHORT ) hb_fsAttrToRaw( uiAttr ) ) == 0 );
    }
 
@@ -527,6 +533,8 @@ PHB_FFIND hb_fsFindFirst( const char * pszFileName, USHORT uiAttr )
 
       ffind->info = ( void * ) hb_xgrab( sizeof( HB_FFIND_INFO ) );
       info = ( PHB_FFIND_INFO ) ffind->info;
+
+      tzset();
 
       info->hFindFile = HDIR_CREATE;
 
@@ -581,6 +589,8 @@ PHB_FFIND hb_fsFindFirst( const char * pszFileName, USHORT uiAttr )
 
       ffind->info = ( void * ) hb_xgrab( sizeof( HB_FFIND_INFO ) );
       info = ( PHB_FFIND_INFO ) ffind->info;
+
+      tzset();
 
       info->dir = opendir( pszFileName );
 

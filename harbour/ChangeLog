@@ -8,6 +8,17 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
    * source/rtl/Makefile
+   * makefile.bc
+   * makefile.vc
+     + New implementation of the DIRECTORY() function, faster
+       smaller, much more clean version.
+       Please test this as extensively as possible, with special
+       regards to attribute filtering.
+     ! Fixed write and read operations returning -1 
+       on bad file handle and access erros from either 
+     ; They are noth using the new multiplatform File Find API.
+       Note that it may require some work/testing on some platforms.
+     
    * source/rtl/filesys.c
    * source/rtl/philes.c
      - Removed old FILE() and hb_fsFile().
@@ -27,7 +38,8 @@
        low and Harbour level functions.
      * Cleaned up the new Win32 API branches.
 
-     * Renamed to ChangeLog.012 and started an new one   * source/pp/pragma.c
+     * Renamed to ChangeLog.012 and started an new one
+   * source/pp/pragma.c
    * contrib/dot/pp_harb.ch
    * tests/inline_c.prg
      * STOPDUMP renamed as ENDDUMP (with Ron permission)
