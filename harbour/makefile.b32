@@ -13,6 +13,7 @@
 PROJECT: harbour.exe harbour.lib libs\b32\terminal.lib libs\win32\terminal.lib
 
 harbour.lib : achoice.obj adir.obj alert.obj arrays.obj asort.obj \
+              browdb.obj \
               classes.obj codebloc.obj copyfile.obj \
               dates.obj dates2.obj datesx.obj debug.obj debugger.obj descend.obj devoutp.obj \
               dir.obj do.obj dynsym.obj environ.obj terror.obj \
@@ -21,7 +22,7 @@ harbour.lib : achoice.obj adir.obj alert.obj arrays.obj asort.obj \
               langapi.obj math.obj mathx.obj memvars.obj menuto.obj mtran.obj msges.obj \
               objfunc.obj \
               set.obj setcolor.obj setkey.obj strings.obj symbols.obj stringp.obj \
-              stringsx.obj tbcolumn.obj tbrowse.obj tclass.obj tget.obj tgetlist.obj transfrm.obj
+              stringsx.obj tbcolumn.obj tbrowse.obj tbrwtext.obj tclass.obj tget.obj tgetlist.obj transfrm.obj
 
 symbols.obj  : symbols.asm
 
@@ -30,6 +31,7 @@ adir.obj     : adir.c     extend.h hbdefs.h
 alert.obj    : alert.c    extend.h hbdefs.h
 arrays.obj   : arrays.c   extend.h hbdefs.h
 asort.obj    : asort.c    extend.h hbdefs.h
+browdb.obj   : browdb.c   extend.h hbdefs.h
 classes.obj  : classes.c  extend.h hbdefs.h
 codebloc.obj : codebloc.c extend.h hbdefs.h
 copyfile.obj : copyfile.c extend.h hbdefs.h
@@ -74,6 +76,7 @@ strings.obj  : strings.c  extend.h hbdefs.h
 stringsx.obj : stringsx.c extend.h hbdefs.h
 tbcolumn.obj : tbcolumn.c extend.h hbdefs.h
 tbrowse.obj  : tbrowse.c  extend.h hbdefs.h
+tbrwtext.obj : tbrwtext.c extend.h hbdefs.h
 tclass.obj   : tclass.c   extend.h hbdefs.h
 tget.obj     : tget.c     extend.h hbdefs.h
 tgetlist.obj : tgetlist.c extend.h hbdefs.h
@@ -83,6 +86,7 @@ achoice.c    : achoice.prg   harbour.exe
 adir.c       : adir.prg      harbour.exe
 alert.c      : alert.prg     harbour.exe
 asort.c      : asort.prg     harbour.exe
+browdb.c     : browdb.prg    harbour.exe
 debugger.c   : debugger.prg  harbour.exe
 devoutp.c    : devoutp.prg   harbour.exe
 terror.c     : terror.prg    harbour.exe
@@ -103,7 +107,7 @@ tgetlist.c   : tgetlist.prg  harbour.exe
   tlib .\libs\b32\harbour.lib -+$@,,
 
 .prg.c:
-  bin\harbour $< /n /osource\rtl /iinclude
+  bin\harbour $< /n /osource\rtl /iinclude /p
 
 .c.obj:
   bcc32 -c -O2 -I.\include -v -o$@ -DHARBOUR_USE_GTAPI $<

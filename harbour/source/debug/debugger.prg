@@ -39,11 +39,13 @@
 
 static oDebugger
 
-function Debugger( cModuleName)
+function Debugger( cModuleName )
 
    if oDebugger == nil
       oDebugger = TDebugger():New()
-      oDebugger:Activate()
+      oDebugger:Activate( cModuleName )
+   else
+      oDebugger:ShowCode( cModuleName )
    endif
 
 return nil
@@ -52,13 +54,14 @@ CLASS TDebugger
 
    DATA   oPullDown
    DATA   oWndCode, oWndCommand
-   DATA   oBar
+   DATA   oBar, oBrwText
    DATA   cBackImage, nOldCursor
    DATA   lEnd
 
    METHOD New()
-   METHOD Activate()
+   METHOD Activate( cModuleName )
    METHOD Show()
+   METHOD ShowCode( cModuleName )
    METHOD HandleEvent()
    METHOD Hide()
 
@@ -78,9 +81,10 @@ METHOD New() CLASS TDebugger
 
 return Self
 
-METHOD Activate() CLASS TDebugger
+METHOD Activate( cModuleName ) CLASS TDebugger
 
    ::Show()
+   ::ShowCode( cModuleName )
    ::HandleEvent()
    ::Hide()
 
@@ -100,6 +104,22 @@ METHOD HandleEvent() CLASS TDebugger
 
          case nKey == K_ESC
               ::Exit()
+
+         case nKey == K_UP
+              ::oBrwText:Up()
+              ::oBrwText:ForceStable()
+
+         case nKey == K_DOWN
+              ::oBrwText:Down()
+              ::oBrwText:ForceStable()
+
+         case nKey == K_HOME
+              ::oBrwText:GoTop()
+              ::oBrwText:ForceStable()
+
+         case nKey == K_END
+              ::oBrwText:GoBottom()
+              ::oBrwText:ForceStable()
 
          otherwise
               if ( nPopup := ::oPullDown:GetHotKeyPos( AltToKey( nKey ) ) ) != 0
@@ -142,11 +162,23 @@ METHOD Show() CLASS TDebugger
 
 return nil
 
+METHOD ShowCode( cModuleName ) CLASS TDebugger
+
+   local cPrgName := SubStr( cModuleName, 1, At( ":", cModuleName ) - 1 )
+
+   ::oBrwText = TBrwText():New( ::oWndCode:nTop + 1, ::oWndCode:nLeft + 1,;
+                ::oWndCode:nBottom - 1, ::oWndCode:nRight - 1, cPrgName, "BG+/B, N/BG" )
+
+   ::oBrwText:ForceStable()
+
+   @ ::oWndCode:nTop, ( ( ::oWndCode:nRight - ::oWndCode:nLeft ) / 2 ) - ;
+     ( Len( cPrgName ) + 2 ) / 2 SAY " " + cPrgName + " "
+
+return nil
+
 METHOD Open() CLASS TDebugger
 
    local cFileName := ::InputBox( "Please enter the filename", Space( 30 ) )
-
-   Alert( cFileName )
 
 return nil
 

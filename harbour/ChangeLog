@@ -1,3 +1,11 @@
+19990817-17:13 GMT+1 Antonio Linares <alinares@fivetech.com>
+   + source/debug/tbrwtext.prg
+     * Class TBrwText for browsing debugger source code
+   * source/debug/debugger.prg
+     * Improved
+   * makefile.b32
+     * TBrwText module added
+
 19990817-13:20 GMT+1 Antonio Linares <alinares@fivetech.com>
    * include/classes.ch
      * extern <SuperClass> added, so now the SuperClass symbol is properly linked.
