@@ -50,6 +50,8 @@
 static s_oDebugger
 static s_lExit := .F.
 
+memvar __DbgStatics
+
 procedure AltD( nAction )
    static s_lEnabled := .t.
 
@@ -71,6 +73,8 @@ return
 
 procedure __dbgEntry( uParam1, uParam2, uParam3 )  // debugger entry point
 
+   local nStaticsBase, nStaticIndex, cStaticName, nAt
+
    do case
       case ValType( uParam1 ) == "C"   // called from hvm.c hb_vmModuleName()
            if ! s_lExit
@@ -83,6 +87,22 @@ procedure __dbgEntry( uParam1, uParam2, uParam3 )  // debugger entry point
            endif
 
       case ValType( uParam1 ) == "N"   // called from hvm.c hb_vmDebuggerShowLines()
+           public __DbgStatics
+           if Type( "__DbgStatics" ) == "L"
+              __DbgStatics := {}
+           endif
+
+           if ProcName( 1 ) == "(_INITSTATICS)"
+              nStaticsBase = uParam1
+              cStaticName  = uParam2
+              if AScan( __DbgStatics, { | a | a[ 1 ] == nStaticsBase } ) == 0
+                 AAdd( __DbgStatics, { nStaticsBase, { cStaticName } } )
+              else
+                 AAdd( ATail( __DbgStatics )[ 2 ], cStaticName )
+              endif
+              return nil
+           endif
+
            if s_oDebugger != nil
               if PCount() == 3 // called from hvm.c hb_vmLocalName() and hb_vmStaticName()
                  if uParam3 == 1 // static variable
@@ -90,11 +110,10 @@ procedure __dbgEntry( uParam1, uParam2, uParam3 )  // debugger entry point
                  else            // local variable
                     AAdd( s_oDebugger:aVars, { uParam2, uParam1, "Local", ProcName( 1 ) } )
                  endif
-                 return
                  if s_oDebugger:oBrwVars != nil
                     s_oDebugger:oBrwVars:RefreshAll()
                  endif
-                 // return
+                 return
               endif
               if s_oDebugger:lGo
                  s_oDebugger:lGo := ! s_oDebugger:IsBreakPoint( uParam1 )
@@ -114,6 +133,9 @@ procedure __dbgEntry( uParam1, uParam2, uParam3 )  // debugger entry point
            endif
 
       otherwise   // called from hvm.c hb_vmDebuggerEndProc()
+         if Empty( ProcName( 1 ) ) // ending (_INITSTATICS)
+            return nil
+         endif
          if s_oDebugger != nil
             s_oDebugger:EndProc()
          endif
@@ -178,7 +200,7 @@ ENDCLASS
 
 METHOD New() CLASS TDebugger
 
-   ::aColors := { "BG+/B", "BG+/B", "BG+/B", "N/BG", "N/BG", "N/BG", "GR+/B", "N/BG",;
+   ::aColors := { "BG+/B", "BG+/B", "BG+/B", "N/BG", "N/BG", "N/BG", "GR+/B",;
                   "N/BG", "GR+/BG", "W+/N", "GR+/N" }
    s_oDebugger := Self
 
@@ -747,8 +769,9 @@ static function GetVarInfo( aVar )
                   ">: " + ValToStr( aVar[ 2 ] )
 
       case aVar[ 3 ] == "Static"
-           return aVar[ 1 ] + " <" + aVar[ 3 ] + ", " + ValType( aVar[ 2 ] ) + ;
-                  ">: " + ValToStr( aVar[ 2 ] )
+           return aVar[ 1 ] + " <" + aVar[ 3 ] + ", " + ;
+                  ValType( __vmVarSGet( aVar[ 2 ] ) ) + ;
+                  ">: " + ValToStr( __vmVarSGet( aVar[ 2 ] ) )
    endcase
 
 return ""
