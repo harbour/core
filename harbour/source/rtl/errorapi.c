@@ -21,7 +21,7 @@ PHB_ITEM hb_errNew( void )
 
    ItemCopy( pReturn, &stack.Return );
 
-   hb_errPutSeverity( pReturn, ES_ERROR );
+   hb_errPutSeverity( pReturn, ES_WHOCARES );
 
    return pReturn;
 }
