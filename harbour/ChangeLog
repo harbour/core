@@ -1,3 +1,7 @@
+2001-11-16 08:44 GMT Dave Pearson <davep@davep.org>
+   * source/compiler/gencobj.c
+      * Fixed core dump when using -o switch.
+
 2001-11-16 07:19 GMT Dave Pearson <davep@davep.org>
    * contrib/libct/print.c
      * Marked uiPort as HB_SYMBOL_UNUSED for unsupported platforms in
