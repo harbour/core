@@ -1,3 +1,9 @@
+19990624-08:00 WIB Andi Jahja <andij@aonlippo.co.id>
+  * source/rtl/copyfile.c
+   - function name now upper case
+   - change filesys.api to filesys.h
+   - add hb_ prefix to internal calls
+
 19990623-22:30 WIB Andi Jahja <andij@aonlippo.co.id>
   + tests/working/testcopy.prg
   + source/rtl/copyfile.c
