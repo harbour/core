@@ -1,3 +1,8 @@
+2000-08-10 11:50 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/compiler/harbour.l
+        * fixed handling of while[] and case[]
+
 2000-08-09 20:00 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/simplex.c
      * Corrected support for BREAK ( ).

@@ -70,10 +70,14 @@ extern FILE * yyin;  /* currently yacc parsed file */
 int yy_lex_input( char *, int );
 #define YY_INPUT( buf, result, max_size ) result = yy_lex_input( buf, max_size );
 
+/* NOTE: Uncomment this YY_USER_ACTION definition if you want to use
+ '^' match marker (beginning of line)
+*/
+/*
 #define YY_USER_ACTION \
            if ( yyleng > 0 ) \
               yy_current_buffer->yy_at_bol = ( yytext[yyleng - 1] == '\n' || yytext[0] == '\n' );
-
+*/
 
 #define LOOKUP          0       /* scan from the begining of line */
 #define OPERATOR        -1
@@ -308,14 +312,6 @@ Separator     {SpaceTab}
                unput( yytext[ yyleng-1 ] );
                return IDENTIFIER;
              }
-<CASE_>{Separator}*[\[] { /* Clipper assumes a [String] here */
-               if( hb_comp_wCaseCounter == 0 )
-                  hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_CASE, NULL, NULL );
-               BEGIN 0;
-               unput( yytext[ yyleng-1 ] );
-               hb_comp_iState =CASE;
-               return CASE;
-             }
 <CASE_>{Separator}*("+="|"-="|"->") { /* operators */
                BEGIN 0;
                yylval.string = hb_compIdentifierNew( "CASE", TRUE );
@@ -328,6 +324,8 @@ Separator     {SpaceTab}
                BEGIN 0;
                unput( yytext[ yyleng-1 ] );
                unput( yytext[ yyleng-2 ] );
+               if( hb_comp_wCaseCounter == 0 )
+                  hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_CASE, NULL, NULL );
                hb_comp_iState =CASE;
                return CASE;
              }
@@ -336,6 +334,8 @@ Separator     {SpaceTab}
                unput( yytext[ yyleng-1 ] );
                if( hb_comp_iState == LOOKUP )
                { /* it is first item in the line */
+                  if( hb_comp_wCaseCounter == 0 )
+                     hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_CASE, NULL, NULL );
                  hb_comp_iState =CASE;
                  return CASE;
                }
@@ -1031,11 +1031,6 @@ Separator     {SpaceTab}
                 yylval.string = hb_compIdentifierNew( "WHILE", TRUE );
                 return IDENTIFIER;
               }
-<WHILE_>{Separator}*[\[] { /* array */
-               /* Clipper does not like while[] at all */
-               BEGIN 0;
-               hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_SYNTAX, yytext, NULL );
-             }
 <WHILE_>{Separator}*[\:\=\|\$\%\*\,\/\]\)\}\^] { /* there is an operator after "case" */
                BEGIN 0;
                yylval.string = hb_compIdentifierNew( "WHILE", TRUE );
