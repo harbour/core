@@ -10,7 +10,7 @@ ROOT = ../../
 
 PRG_SOURCES=\
     hbmake.prg \
-    hbmutils.prg 
+    hbmutils.prg \
     fclass1.prg \
     ffile1.prg \
     ft_funcs.prg \

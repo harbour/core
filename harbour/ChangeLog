@@ -1,3 +1,9 @@
+2001-10-21 08:05 GMT Dave Pearson <davep@davep.org>
+   * source/hbmake/Makefile
+      * Added missing continuation character to line 14.
+   * utils/hbmake/hbmutils.prg
+      * Adding missing ")" to `if' in line 21.
+	
 2001-10-20 20:00 GMT -3 Luiz Rafael Culik<culik@sl.conex.net>
    * source/compiler/harbour.c
       * Changed some function parameters in the _DECL section

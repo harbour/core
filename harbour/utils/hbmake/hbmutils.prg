@@ -18,7 +18,7 @@ Function GetSourceFiles( lSubdir )
      Local adirs AS ARRAY
      Local aRet AS ARRAY := {}
      Local lLinux    := At( 'linux', Os() ) > 0
-     Local cdir as String := If( !llinux, '\' + Curdir() + '\', '/' + Curdir() + '/'
+     Local cdir as String := If( !llinux, '\' + Curdir() + '\', '/' + Curdir() + '/' )
      Local aStru     := { cDir }
      Local aData AS ARRAY
      Local nCounter as numeric := 0
