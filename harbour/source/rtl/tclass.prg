@@ -244,9 +244,9 @@ STATIC PROCEDURE AddData( cData, xInit, cType, nScope )  /* xInit is initializer
 
    // Default Init for Logical and numeric
    if (cType!=NIL .AND. xInit==NIL)
-    if ( cType == "L" )
+    if ( Upper(substr(cType,1,1)) == "L" )
      xInit := .F.
-    elseif cType == "N"
+    elseif Upper(substr(cType,1,1)) == "N"
      xInit := 0
     endif
    endif
@@ -287,11 +287,12 @@ STATIC PROCEDURE AddClassData( cData, xInit, cType, nScope )
 
    // Default Init for Logical and numeric
    if (cType!=NIL .AND. xInit==NIL)
-    if ( cType == "L" )
+    if ( Upper(Substr(cType,1,1)) == "L" )
      xInit := .F.
-    elseif cType == "N"
+    elseif Upper(Substr(cType,1,1)) == "N"
      xInit := 0
     endif
+
    endif
 
    AAdd( ::aClsDatas, { cData, xInit, cType, nScope } )

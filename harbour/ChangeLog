@@ -1,3 +1,9 @@
+2000-06-12 21:47 UTC+0200 JfL&RaC <jfl@mafact.com> <rac@mafact.com>
+   *source\rtl\tclass.prg
+    * Correct bug with default initialiser for Logical and Numeric
+      * Now a logical is .F. by default and a numeric is 0 !
+
+
 2000-06-12 17:20 UTC+0200 JfL&RaC <jfl@mafact.com> <rac@mafact.com>
    *source\rtl\tobject.prg
    *source\rtl\tclass.prg
