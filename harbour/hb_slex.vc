@@ -219,7 +219,6 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\binnum.obj \
    $(OBJ_DIR)\binnumx.obj \
    $(OBJ_DIR)\box.obj \
-   $(OBJ_DIR)\checkbox.obj \
    $(OBJ_DIR)\chrasc.obj \
    $(OBJ_DIR)\colorind.obj \
    $(OBJ_DIR)\console.obj \
@@ -263,6 +262,8 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\minmax.obj \
    $(OBJ_DIR)\mlcount.obj \
    $(OBJ_DIR)\mlpos.obj \
+   $(OBJ_DIR)\mlctopos.obj \
+   $(OBJ_DIR)\mpostolc.obj \
    $(OBJ_DIR)\mod.obj \
    $(OBJ_DIR)\mouseapi.obj \
    $(OBJ_DIR)\mousex.obj \
@@ -325,8 +326,9 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\browdb.obj \
    $(OBJ_DIR)\browdbx.obj \
    $(OBJ_DIR)\browse.obj \
-   $(OBJ_DIR)\dbdelim.obj \
+   $(OBJ_DIR)\checkbox.obj \
    $(OBJ_DIR)\dbedit.obj \
+   $(OBJ_DIR)\dbdelim.obj \
    $(OBJ_DIR)\dbsdf.obj \
    $(OBJ_DIR)\devoutp.obj \
    $(OBJ_DIR)\dircmd.obj \
@@ -340,6 +342,8 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\memvarbl.obj \
    $(OBJ_DIR)\menuto.obj \
    $(OBJ_DIR)\objfunc.obj \
+   $(OBJ_DIR)\persist.obj \
+   $(OBJ_DIR)\profiler.obj \
    $(OBJ_DIR)\pushbtn.obj \
    $(OBJ_DIR)\radiobtn.obj \
    $(OBJ_DIR)\radiogrp.obj \
@@ -478,8 +482,6 @@ DBFNTX_LIB_OBJS = \
    $(OBJ_DIR)\dbfntx1.obj \
    \
    $(OBJ_DIR)\dbfntx0.obj
-#DBFNTX_LIB_OBJS = \
-#   $(OBJ_DIR)\dbfntx0.obj
 
 #
 # DBFCDX.LIB rules
@@ -528,7 +530,10 @@ DEBUG_LIB_OBJS = \
    $(OBJ_DIR)\dbgtmitm.obj \
    $(OBJ_DIR)\dbgtwin.obj \
    $(OBJ_DIR)\debugger.obj \
-   $(OBJ_DIR)\tbrwtext.obj
+   $(OBJ_DIR)\dbgtarr.obj \
+   $(OBJ_DIR)\dbgtobj.obj \
+   $(OBJ_DIR)\tbrwtext.obj \
+   $(OBJ_DIR)\dbgwa.obj
 
 #
 # COMMON.LIB rules

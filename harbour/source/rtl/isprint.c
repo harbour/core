@@ -67,14 +67,14 @@
 #include "hbapifs.h"
 #if defined(HB_OS_WIN_32)
 #include <stdio.h>
-#include <alloc.h>
+#include <malloc.h>
 #include <winspool.h>
 BOOL DPGetDefaultPrinter(LPTSTR pPrinterName, LPDWORD pdwBufferSize);
 BOOL IsPrinterError(HANDLE hPrinter);
-BOOL GetJobs(HANDLE hPrinter,     
+BOOL GetJobs(HANDLE hPrinter,
                 JOB_INFO_2 **ppJobInfo,
-                int *pcJobs,           
-                DWORD *pStatus) ;      
+                int *pcJobs,
+                DWORD *pStatus) ;
 #define MAXBUFFERSIZE 250
 #endif
 /* NOTE: The parameter is an extension over CA-Cl*pper, it's also supported
@@ -148,11 +148,11 @@ BOOL DPGetDefaultPrinter(LPTSTR pPrinterName, LPDWORD pdwBufferSize)
   PRINTER_INFO_2 *ppi2 = NULL;
   DWORD dwNeeded = 0;
   DWORD dwReturned = 0;
-  
+
   // What version of Windows are you running?
   osv.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
   GetVersionEx(&osv);
-  
+
   // If Windows 95 or 98, use EnumPrinters...
   if (osv.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS)
   {
@@ -161,14 +161,14 @@ BOOL DPGetDefaultPrinter(LPTSTR pPrinterName, LPDWORD pdwBufferSize)
     // usually return FALSE. This only means that the buffer (the 4th
     // parameter) was not filled in. You don't want it filled in here...
     EnumPrinters(PRINTER_ENUM_DEFAULT, NULL, 2, NULL, 0, &dwNeeded, &dwReturned);
-    if (dwNeeded == 0) 
+    if (dwNeeded == 0)
       return FALSE;
-    
+
     // Allocate enough space for PRINTER_INFO_2...
     ppi2 = (PRINTER_INFO_2 *)GlobalAlloc(GPTR, dwNeeded);
     if (!ppi2)
       return FALSE;
-    
+
     // The second EnumPrinters() will fill in all the current information...
     bFlag = EnumPrinters(PRINTER_ENUM_DEFAULT, NULL, 2, (LPBYTE)ppi2, dwNeeded, &dwNeeded, &dwReturned);
     if (!bFlag)
@@ -176,7 +176,7 @@ BOOL DPGetDefaultPrinter(LPTSTR pPrinterName, LPDWORD pdwBufferSize)
       GlobalFree(ppi2);
       return FALSE;
     }
-    
+
     // If given buffer too small, set required size and fail...
     if ((DWORD)lstrlen(ppi2->pPrinterName) >= *pdwBufferSize)
     {
@@ -184,14 +184,14 @@ BOOL DPGetDefaultPrinter(LPTSTR pPrinterName, LPDWORD pdwBufferSize)
       GlobalFree(ppi2);
       return FALSE;
     }
-    
+
     // Copy printer name into passed-in buffer...
     lstrcpy(pPrinterName, ppi2->pPrinterName);
-    
+
     // Set buffer size parameter to min required buffer size...
     *pdwBufferSize = (DWORD)lstrlen(ppi2->pPrinterName) + 1;
   }
-  
+
   // If Windows NT, use the GetDefaultPrinter API for Windows 2000,
   // or GetProfileString for version 4.0 and earlier...
   else if (osv.dwPlatformId == VER_PLATFORM_WIN32_NT)
@@ -203,7 +203,7 @@ BOOL DPGetDefaultPrinter(LPTSTR pPrinterName, LPDWORD pdwBufferSize)
       if (!bFlag)
         return FALSE;
     }
-    
+
     else // NT4.0 or earlier
 #endif
     {
@@ -211,29 +211,29 @@ BOOL DPGetDefaultPrinter(LPTSTR pPrinterName, LPDWORD pdwBufferSize)
       // String will be in form "printername,drivername,portname".
       if (GetProfileString("windows", "device", ",,,", cBuffer, MAXBUFFERSIZE) <= 0)
         return FALSE;
-      
+
       // Printer name precedes first "," character...
       strtok(cBuffer, ",");
-      
+
       // If given buffer too small, set required size and fail...
       if ((DWORD)lstrlen(cBuffer) >= *pdwBufferSize)
       {
         *pdwBufferSize = (DWORD)lstrlen(cBuffer) + 1;
         return FALSE;
       }
-      
+
       // Copy printer name into passed-in buffer...
       lstrcpy(pPrinterName, cBuffer);
-      
+
       // Set buffer size parameter to min required buffer size...
       *pdwBufferSize = (DWORD)lstrlen(cBuffer) + 1;
     }
   }
-  
+
   // Cleanup...
   if (ppi2)
     GlobalFree(ppi2);
-  
+
   return TRUE;
 }
 
@@ -249,13 +249,13 @@ BOOL DPGetDefaultPrinter(LPTSTR pPrinterName, LPDWORD pdwBufferSize)
        /*
         *  Get the state information for the Printer Queue and
         *  the jobs in the Printer Queue.
-        */ 
+        */
        if (!GetJobs(hPrinter, &pJobs, &cJobs, &dwPrinterStatus))
            return FALSE;
 
        /*
         *  If the Printer reports an error, believe it.
-        */ 
+        */
        if (dwPrinterStatus &
            (PRINTER_STATUS_ERROR |
            PRINTER_STATUS_PAPER_JAM |
@@ -273,7 +273,7 @@ BOOL DPGetDefaultPrinter(LPTSTR pPrinterName, LPDWORD pdwBufferSize)
 
        /*
         *  Find the Job in the Queue that is printing.
-        */ 
+        */
        for (i=0; i < cJobs; i++)
        {
            if (pJobs[i].Status & JOB_STATUS_PRINTING)
@@ -284,7 +284,7 @@ BOOL DPGetDefaultPrinter(LPTSTR pPrinterName, LPDWORD pdwBufferSize)
                 *  Code could be inserted here to
                 *  attempt an interpretation of the
                 *  pStatus member as well.
-                */ 
+                */
                if (pJobs[i].Status &
                    (JOB_STATUS_ERROR |
                    JOB_STATUS_OFFLINE |
@@ -298,15 +298,15 @@ BOOL DPGetDefaultPrinter(LPTSTR pPrinterName, LPDWORD pdwBufferSize)
 
        /*
         *  No error condition.
-        */ 
+        */
        return FALSE;
 
    }
-   BOOL GetJobs(HANDLE hPrinter,        /* Handle to the printer. */ 
+   BOOL GetJobs(HANDLE hPrinter,        /* Handle to the printer. */
 
-                JOB_INFO_2 **ppJobInfo, /* Pointer to be filled.  */ 
-                int *pcJobs,            /* Count of jobs filled.  */ 
-                DWORD *pStatus)         /* Print Queue status.    */ 
+                JOB_INFO_2 **ppJobInfo, /* Pointer to be filled.  */
+                int *pcJobs,            /* Count of jobs filled.  */
+                DWORD *pStatus)         /* Print Queue status.    */
 
    {
 
@@ -316,7 +316,7 @@ BOOL DPGetDefaultPrinter(LPTSTR pPrinterName, LPDWORD pdwBufferSize)
     JOB_INFO_2          *pJobStorage = NULL;
     PRINTER_INFO_2       *pPrinterInfo = NULL;
 
-   /* Get the buffer size needed. */ 
+   /* Get the buffer size needed. */
        if (!GetPrinter(hPrinter, 2, NULL, 0, &cByteNeeded))
        {
            if (GetLastError() != ERROR_INSUFFICIENT_BUFFER)
@@ -325,23 +325,23 @@ BOOL DPGetDefaultPrinter(LPTSTR pPrinterName, LPDWORD pdwBufferSize)
 
        pPrinterInfo = (PRINTER_INFO_2 *)malloc(cByteNeeded);
        if (!(pPrinterInfo))
-           /* Failure to allocate memory. */ 
+           /* Failure to allocate memory. */
            return FALSE;
 
-       /* Get the printer information. */ 
+       /* Get the printer information. */
        if (!GetPrinter(hPrinter,
                2,
-               (LPSTR)pPrinterInfo,
+               (LPBYTE)pPrinterInfo,
                cByteNeeded,
                &cByteUsed))
        {
-           /* Failure to access the printer. */ 
+           /* Failure to access the printer. */
            free(pPrinterInfo);
            pPrinterInfo = NULL;
            return FALSE;
        }
 
-       /* Get job storage space. */ 
+       /* Get job storage space. */
        if (!EnumJobs(hPrinter,
                0,
                pPrinterInfo->cJobs,
@@ -362,7 +362,7 @@ BOOL DPGetDefaultPrinter(LPTSTR pPrinterName, LPDWORD pdwBufferSize)
        pJobStorage = (JOB_INFO_2 *)malloc(cByteNeeded);
        if (!pJobStorage)
        {
-           /* Failure to allocate Job storage space. */ 
+           /* Failure to allocate Job storage space. */
            free(pPrinterInfo);
            pPrinterInfo = NULL;
            return FALSE;
@@ -370,7 +370,7 @@ BOOL DPGetDefaultPrinter(LPTSTR pPrinterName, LPDWORD pdwBufferSize)
 
        ZeroMemory(pJobStorage, cByteNeeded);
 
-       /* Get the list of jobs. */ 
+       /* Get the list of jobs. */
        if (!EnumJobs(hPrinter,
                0,
                pPrinterInfo->cJobs,
@@ -389,7 +389,7 @@ BOOL DPGetDefaultPrinter(LPTSTR pPrinterName, LPDWORD pdwBufferSize)
 
        /*
         *  Return the information.
-        */ 
+        */
        *pcJobs = nReturned;
        *pStatus = pPrinterInfo->Status;
        *ppJobInfo = pJobStorage;

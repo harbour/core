@@ -1,3 +1,12 @@
+2001-09-06 22:20 GMT +1 JFL (mafact) <jfl@mafact.com>
+   * harbour/hb_slex.vc
+      synch. with hb_slex.bc
+   * harbour/makefile.vc
+      synch. with makefile.bc
+   * harbour/source/rtl/isprint.c
+      alloc.h => malloc.h
+      LPSTR => LPBYTE
+
 2001-09-06 14:50 GMT+1 Antonio Linares <alinares@fivetech.com>
    * harbour/source/rtl/persist.prg
      added methods LoadFromText() and LoadFromFile()
