@@ -1,6 +1,12 @@
+2000-06-14 22:37 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
+   * source/pp/ppcomp.c
+     ! Fixed missing CR at EOF of #include file, causing #line directive to be on same line with the next line in parrent file.
+     ! Big Improvment of line numbering of #line directive - almost identical to Clipper - to be continued.
+
 2000-06-14-22:10 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
    +doc/en/eval.txt
         *Documentation for Eval() function
+
 2000-06-14 23:37 UTC+0200 JfL&RaC <jfl@mafact.com> <rac@mafact.com>
    * source/vm/classes.c
      ! Temporary Fixed hb___msgsuper() to refer the good self value when accessing super
@@ -10,12 +16,10 @@
      keeping compatibility with the old method (this is work in progress)
 
 2000-06-14 15:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
-
    * source/rtl/gtwin/gtwin.c
      ! Removed debug printf() statements.
 
 2000-06-14 10:00 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
-
    * source/pp/ppcore.c
      ! Fixed getExpReal() to terminate on unbalanced ')'
 
@@ -31,6 +35,7 @@
       *updated __dblist() and __dbupdate() entries
    *source/rdd/dblist.prg
       +Source file for __dbList() and __dbUpdate functions
+
 2000-06-13 22:47 UTC+0200 JfL&RaC <jfl@mafact.com> <rac@mafact.com>
     * Classes.c
       * Initialisation is now properly working
@@ -38,9 +43,7 @@
     * MakeFile.bc
       * Restoring tasm call in place of tasm32 (sorry :-((( )
 
-
 2000-06-13 19:55 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
-
     *include/hbapigt.h
         *added declaration of hb_gt_Suspend()/hb_gt_Resume()
 
@@ -55,7 +58,6 @@
         *added full support for suspend/resume terminal settings
 
 2000-06-13 08:08 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
-
    * source/pp/ppcomp.c
      ! Minor correction - There should be no empty lines between #line directive any more.
 

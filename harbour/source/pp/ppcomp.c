@@ -71,92 +71,96 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
      while( ( rdlen = hb_pp_RdStr( pFile->handle, s_szLine + lens, HB_PP_STR_SIZE -
                   lens, lContinue, ( char * ) pFile->pBuffer, &( pFile->lenBuffer ),
                   &( pFile->iBuffer ) ) ) >= 0 )
-       {
-         lens += rdlen;
+     {
+        lens += rdlen;
 
-         if( s_szLine[ lens - 1 ] == ';' )
+        if( s_szLine[ lens - 1 ] == ';' )
+        {
+           lContinue = 1;
+           lens--;
+           lens--;
+           while( s_szLine[ lens ] == ' ' || s_szLine[ lens ] == '\t' ) lens--;
+           s_szLine[ ++lens ] = ' ';
+           s_szLine[ ++lens ] = '\0';
+
+           hb_pp_nEmptyStrings++;
+        }
+        else
+        {
+           lContinue = 0;
+           lens = 0;
+        }
+
+        if( !lContinue )
+        {
+           if( *s_szLine != '\0' )
            {
-             lContinue = 1;
-             lens--;
-             lens--;
-             while( s_szLine[ lens ] == ' ' || s_szLine[ lens ] == '\t' ) lens--;
-             s_szLine[ ++lens ] = ' ';
-             s_szLine[ ++lens ] = '\0';
+              ptr = s_szLine;
 
-             hb_pp_nEmptyStrings++;
-           }
-         else
-           {
-             lContinue = 0;
-             lens = 0;
-           }
+              HB_SKIPTABSPACES( ptr );
 
-         if( !lContinue )
-           {
-             if( *s_szLine != '\0' )
-               {
-                 ptr = s_szLine;
+              if( *ptr == '#' )
+              {
+                 hb_pp_ParseDirective( ptr + 1 );
 
-                 HB_SKIPTABSPACES( ptr );
+                 if( pFile != hb_comp_files.pLast )
+                 {
+                    pFile = ( PFILE ) ( ( PFILE ) hb_comp_files.pLast )->pPrev;
 
-                 if( *ptr == '#' )
-                   {
-                     hb_pp_ParseDirective( ptr + 1 );
+                    if( lLine )
+                       sprintf( s_szLine, "#line %d \"%s\"\n", pFile->iLine + hb_pp_nEmptyStrings, pFile->szFileName );
+                    else
+                       *s_szLine = '\0';
 
-                     if( pFile != hb_comp_files.pLast )
-                     {
-                        pFile = ( PFILE ) ( ( PFILE ) hb_comp_files.pLast )->pPrev;
+                    lLine = 0;
 
-                        if( lLine )
-                           sprintf( s_szLine, "#line %d \"%s\"\n", pFile->iLine + hb_pp_nEmptyStrings, pFile->szFileName );
-                        else
-                           *s_szLine = '\0';
-
-                        lLine = 0;
-
-                        pFile->iLine += ( 1 + hb_pp_nEmptyStrings );
-                        sprintf( s_szLine+strlen(s_szLine), "#line 1 \"%s\"", hb_comp_files.pLast->szFileName );
-                        hb_pp_nEmptyStrings = 0;
-                     }
-                     else
-                     {
-                        *s_szLine = '\0';
-                        /*hb_pp_nEmptyStrings++;*/
-                        hb_comp_files.pLast->iLine++;
-                     }
-                   }
+                    pFile->iLine += ( 1 + hb_pp_nEmptyStrings );
+                    sprintf( s_szLine+strlen(s_szLine), "#line 1 \"%s\"", hb_comp_files.pLast->szFileName );
+                    hb_pp_nEmptyStrings = 0;
+                 }
                  else
-                   {
-                     if( *ptr == '\0' )
-                     {
-                        if( hb_comp_files.iFiles == 1 )
-                        {
-                           hb_pp_nEmptyStrings++;
-                           *s_szLine = '\0';
-                        }
-                        else
-                        {
-                           hb_comp_files.pLast->iLine++;
-                           continue;
-                        }
-                     }
-                     else if( hb_pp_nCondCompile == 0 || hb_pp_aCondCompile[ hb_pp_nCondCompile - 1 ] )
-                     {
-                         hb_pp_ParseExpression( ptr, s_szOutLine );
-                         hb_comp_files.pLast->iLine++;
-                     }
-                     else
-                     {
+                 {
+                    *s_szLine = '\0';
+                    /*hb_pp_nEmptyStrings++;*/
+                    hb_comp_files.pLast->iLine++;
+                 }
+              }
+              else
+              {
+                 if( *ptr == '\0' )
+                 {
+                    if( hb_comp_files.iFiles == 1 )
+                    {
+                       hb_pp_nEmptyStrings++;
+                       *s_szLine = '\0';
+                    }
+                    else
+                    {
+                       hb_comp_files.pLast->iLine++;
+                       continue;
+                    }
+                 }
+                 else
+                 {
+                    if( hb_pp_nCondCompile == 0 || hb_pp_aCondCompile[ hb_pp_nCondCompile - 1 ] )
+                    {
+                       hb_pp_ParseExpression( ptr, s_szOutLine );
+                       hb_comp_files.pLast->iLine++;
+                    }
+                    else
+                    {
                        *s_szLine = '\0';
                        hb_pp_nEmptyStrings++;
-                     }
-                   }
-               }
-             else
-                hb_pp_nEmptyStrings++;
-             break;
+                    }
+                 }
+              }
            }
-       }
+           else
+              hb_pp_nEmptyStrings++;
+
+           break;
+        }
+     }
 
      if( rdlen < 0 )
        {
@@ -181,13 +185,34 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
 
   if( lLine )
   {
-     sprintf( ptrOut, "#line %d \"%s\"", hb_comp_files.pLast->iLine /*hb_comp_iLine + hb_pp_nEmptyStrings*/, hb_comp_files.pLast->szFileName );
+     sprintf( ptrOut, "#line %d \"%s\"", ( hb_comp_files.pLast->iLine += hb_pp_nEmptyStrings ) , hb_comp_files.pLast->szFileName );
      while( *ptrOut ) ptrOut++;
+
+     /* Ron Pinkas added 2000-06-14 */
+        /* Ignore empty lines immediatley after resuming after #include  */
+     hb_pp_nEmptyStrings = 0;
+     /* Ron Pinkas end 2000-06-14 */
+
+     /* Ron Pinkas added 2000-06-14 */
+     ptr = s_szLine;
+     HB_SKIPTABSPACES( ptr );
+
+     /* Last Opened file ended without CR - adding CR to the #line directive. */
+     if( *ptr != '\0' )
+     {
+        *ptrOut++ = '\n';
+        *ptrOut = '\0';
+        hb_comp_files.pLast->iLine++;
+     }
+     /* Ron Pinkas end 2000-06-14 */
   }
   else
   {
+     /* Ron Pinkas added 2000-06-13 */
+        /* Ignore empty lines in #included files. */
      if( hb_pp_nEmptyStrings && hb_comp_files.iFiles == 1 )
-        for( i=0;i<hb_pp_nEmptyStrings;i++ )
+     /* Ron Pinkas end 2000-06-13 */
+        for( i=0; i < hb_pp_nEmptyStrings; i++ )
            *ptrOut++ = '\n';
   }
 
@@ -197,7 +222,7 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
   *( sOut + lens ) = '\0';
 
   if( handl_o )
-    hb_pp_WrStr( handl_o, sOut );
+     hb_pp_WrStr( handl_o, sOut );
 
   return lens;
 }
