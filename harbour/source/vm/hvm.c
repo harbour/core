@@ -2839,8 +2839,17 @@ static ERRCODE hb_vmSelectWorkarea( PHB_ITEM pAlias )
       case HB_IT_STRING:
          /* Alias was evaluated from an expression, for example: (cVar)->field
           */
-         bSuccess = hb_rddSelectWorkAreaAlias( pAlias->item.asString.value );
-         hb_itemClear( pAlias );
+         {
+         /* expand '&' operator if exists */
+            char *cAlias;
+            BOOL bNewString;
+            
+            cAlias = hb_macroExpandString( pAlias->item.asString.value, pAlias->item.asString.length, &bNewString );
+            bSuccess = hb_rddSelectWorkAreaAlias( cAlias );
+            if( bNewString )
+               hb_xfree( cAlias );
+            hb_itemClear( pAlias );
+         }
          break;
 
       default:

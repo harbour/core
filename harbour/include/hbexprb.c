@@ -1062,11 +1062,13 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
       case HB_EA_DELETE:
          if( pSelf->value.asMacro.pExprList )
             HB_EXPR_PCODE1( hb_compExprDelete, pSelf->value.asMacro.pExprList );
-/* NOTE: This will be released during releasing of symbols' table
- *
- *        if( pSelf->value.asMacro.szMacro );
- *           HB_XFREE( pSelf->value.asMacro.szMacro );
- */
+
+#if defined( HB_MACRO_SUPPORT )           
+         if( pSelf->value.asMacro.szMacro );
+            HB_XFREE( pSelf->value.asMacro.szMacro );
+#else            
+         /* NOTE: This will be released during releasing of symbols' table */
+#endif         
          break;
    }
    return pSelf;

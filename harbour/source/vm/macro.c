@@ -625,6 +625,24 @@ static void hb_macroUseAliased( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, int iFlag 
    }
 }
 
+/* Check for '&' operator and replace it with a macro variable value
+ * Returns: the passed string if there is no '&' operator (pbNewString:=FALSE)
+ * new string if a valid macro text substitution was found (and sets
+ * pbNewString to TRUE)
+*/
+char * hb_macroExpandString( char *szString, ULONG ulLength, BOOL *pbNewString )
+{
+   char *szResultString;
+   HB_TRACE(HB_TR_DEBUG, ("hb_macroExpandString(%p)", pItem));
+
+   if( szString )
+      szResultString = hb_macroTextSubst( szString, &ulLength );
+   else
+      szResultString = szString;
+   *pbNewString = ( szString != szResultString );
+   return szResultString;
+}
+
 /* compile a string and return a pcode to push a value of expression
  * NOTE: it can be called to implement an index key evaluation
  * use hb_macroRun() to evaluate a compiled pcode

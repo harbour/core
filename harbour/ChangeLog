@@ -1,3 +1,19 @@
+2001-07-22 20:15 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+    *include/hbapi.h
+    *include/hbexprb.c
+    *source/vm/hvm.c
+    *source/vm/macro.c
+    *source/compiler/exproptb.c
+    *source/macro/macrob.c
+        * fixed to support nested aliases in macro, eg.
+        LOCAL cAlias
+        cAlias := "&area"
+        PRIVATE area
+        area := "MyAlias"
+        ? &cAlias->someFile
+        ? &cAlias->( someExpr )
+    
 2001-07-22 08:40 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
    *source/rtl/getsys.prg
        *Now if an get has an message it will display properly
