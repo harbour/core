@@ -1,0 +1,13 @@
+// $Id$
+
+------------------------------------------------------------------------
+This file is to make the first test with the cvs, withou influencing the
+rest of the project. 
+
+You can make changes to this file, without having to write to the
+changelog.
+
+Please leave this header intact
+------------------------------------------------------------------------
+
+bla bla
