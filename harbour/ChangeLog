@@ -1,3 +1,10 @@
+20000307-03:36 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * include/hbclip.ch
+     + All Harbour extensions included. (HB_*())
+     ! HB_SHADOW() #xtranslate fixed.
+   * utils/hbextern/hbextern.prg
+     * Cleanup.
+
 20000307-02:55 GMT+1 Victor Szakats <info@szelvesz.hu>
    * makefile.bc
      makefile.vc
