@@ -1,3 +1,12 @@
+19991005-12:30 GMT+2 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/compiler/harbour.y
+	* changed some rules to correctly handle the following syntax:
+	LOCAL cbVar:={|| cbVar}
+	(the cbVar inside a codeblock is correctly considered a local 
+	variable instead of memvar variable)
+	* corrected usage info to print LF at the end of message
+
 19991005-08:36 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/vm/main*.c
     source/vm/Makefile

@@ -1036,14 +1036,14 @@ VarDef     : IDENTIFIER                                   { cVarType = ' '; AddV
            | IDENTIFIER AS_ARRAY                          { cVarType = 'A'; AddVar( $1 ); }
            | IDENTIFIER AS_BLOCK                          { cVarType = 'B'; AddVar( $1 ); }
            | IDENTIFIER AS_OBJECT                         { cVarType = 'O'; AddVar( $1 ); }
-           | IDENTIFIER INASSIGN Expression               { cVarType = ' '; AddVar( $1 ); PopId( $1 ); }
-           | IDENTIFIER AS_NUMERIC   INASSIGN Expression  { cVarType = 'N'; AddVar( $1 ); PopId( $1 ); }
-           | IDENTIFIER AS_CHARACTER INASSIGN Expression  { cVarType = 'C'; AddVar( $1 ); PopId( $1 ); }
-           | IDENTIFIER AS_LOGICAL   INASSIGN Expression  { cVarType = 'L'; AddVar( $1 ); PopId( $1 ); }
-           | IDENTIFIER AS_DATE      INASSIGN Expression  { cVarType = 'D'; AddVar( $1 ); PopId( $1 ); }
-           | IDENTIFIER AS_ARRAY     INASSIGN Expression  { cVarType = 'A'; AddVar( $1 ); PopId( $1 ); }
-           | IDENTIFIER AS_BLOCK     INASSIGN Expression  { cVarType = 'B'; AddVar( $1 ); PopId( $1 ); }
-           | IDENTIFIER AS_OBJECT    INASSIGN Expression  { cVarType = 'O'; AddVar( $1 ); PopId( $1 ); }
+           | IDENTIFIER              INASSIGN { cVarType = ' '; AddVar( $1 ); } Expression  { PopId( $1 ); }
+           | IDENTIFIER AS_NUMERIC   INASSIGN { cVarType = 'N'; AddVar( $1 ); } Expression  { PopId( $1 ); }
+           | IDENTIFIER AS_CHARACTER INASSIGN { cVarType = 'C'; AddVar( $1 ); } Expression  { PopId( $1 ); }
+           | IDENTIFIER AS_LOGICAL   INASSIGN { cVarType = 'L'; AddVar( $1 ); } Expression  { PopId( $1 ); }
+           | IDENTIFIER AS_DATE      INASSIGN { cVarType = 'D'; AddVar( $1 ); } Expression  { PopId( $1 ); }
+           | IDENTIFIER AS_ARRAY     INASSIGN { cVarType = 'A'; AddVar( $1 ); } Expression  { PopId( $1 ); }
+           | IDENTIFIER AS_BLOCK     INASSIGN { cVarType = 'B'; AddVar( $1 ); } Expression  { PopId( $1 ); }
+           | IDENTIFIER AS_OBJECT    INASSIGN { cVarType = 'O'; AddVar( $1 ); } Expression  { PopId( $1 ); }
            | IDENTIFIER ArrExpList ']'                { cVarType = ' '; AddVar( $1 ); DimArray( $2 ); PopId( $1 ); }
            | IDENTIFIER ArrExpList ']' AS_ARRAY       { cVarType = 'A'; AddVar( $1 ); DimArray( $2 ); PopId( $1 ); }
            ;
@@ -1912,6 +1912,7 @@ void PrintUsage( char * szSelf )
            "\n          /z               suppress shortcutting (.and. & .or.)"
            "\n          /10              restrict symbol length to 10 characters"
 /* TODO:   "\n           @<file>         compile list of modules in <file>" */
+           "\n"
            , szSelf );
 }
 
