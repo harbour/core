@@ -73,6 +73,7 @@
 #include "hbcomp.h" /* for VS_* macros */
 #include "error.ch"
 #include "hbmemvar.ch"
+#include "hbset.h"
 
 static PHB_DYNS * s_privateStack  = NULL;
 static ULONG s_privateStackSize = 0;
@@ -1385,6 +1386,9 @@ HB_FUNC( __MVSAVE )
       if( pFileName->szExtension == NULL )
          pFileName->szExtension = ".mem";
 
+      if( pFileName->szPath == NULL )
+         pFileName->szPath = hb_set.HB_SET_DEFAULT;
+
       hb_fsFNameMerge( szFileName, pFileName );
       hb_xfree( pFileName );
 
@@ -1450,6 +1454,9 @@ HB_FUNC( __MVRESTORE )
 
       if( pFileName->szExtension == NULL )
          pFileName->szExtension = ".mem";
+
+      if( pFileName->szPath == NULL )
+         pFileName->szPath = hb_set.HB_SET_DEFAULT;
 
       hb_fsFNameMerge( szFileName, pFileName );
       hb_xfree( pFileName );
