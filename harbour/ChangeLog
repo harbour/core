@@ -1,3 +1,9 @@
+20000415-22:10 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
+   *makefile.bc
+     +added msgpt.c to dependencie list
+   + source/lang/msgpt.c
+     *Support module for Portugues Messages
+
 20000414-17:57 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
    * source/compiler/harbour.c
