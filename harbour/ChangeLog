@@ -7,6 +7,17 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+2001-12-19 20:00 UTC+0700 Andi Jahja <harbour@cbn.net.id>
+   * source/compiler/genc.c
+     ! Change C Outputs so one can freely export the public function
+       without interferring the above three kind of functions.
+       static function ( funcname ) => HB_FUNC_STATIC( funcname )
+       init procedure funcname      => HB_FUNC_INIT( funcname )
+       exit procedure funcname      => HB_FUNC_EXIT( funcname )
+   * include/hbdefs.h
+     + definition of HB_FUNC_STATIC()
+     + definition of HB_FUNC_INIT()
+     + definition of HB_FUNC_EXIT()
 
 2001-12-19 15:18 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
    * tests/db_brows.prg
