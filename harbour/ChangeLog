@@ -1,3 +1,11 @@
+20000403-21:08 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/rtl/readvar.prg
+     ! Fixed handling of non-GET system related functionality. (not tested)
+
+   * source/tools/ctposupp.c
+     ! MSVC cast.
+
 20000403-19:57 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    + source/rtl/getlist.prg

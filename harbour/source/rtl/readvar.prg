@@ -34,10 +34,18 @@
  */
 
 FUNCTION ReadVar( cNewVarName )
+   STATIC s_cVarName := ""
+   LOCAL cOldVarName
 
    IF __GetListActive() != NIL
       RETURN __GetListActive():ReadVar( cNewVarName )
    ENDIF
 
-   RETURN ""
+   cOldVarName := s_cVarName
+   
+   IF ISCHARACTER( cVarName )
+      s_cVarName := cVarName
+   ENDIF
+   
+   RETURN cOldVarName
 
