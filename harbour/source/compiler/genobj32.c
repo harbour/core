@@ -73,6 +73,7 @@ void hb_compGenObj32( PHB_FNAME pFileName )
 {
   char szFileName[ _POSIX_PATH_MAX ];
   FILE * hObjFile;  /* file handle for OBJ output */
+  char compiler[ 70 ];
 
   if( ! pFileName->szExtension )
     pFileName->szExtension = ".obj";
@@ -90,8 +91,12 @@ void hb_compGenObj32( PHB_FNAME pFileName )
     fflush( stdout );
   }
 
+  sprintf( compiler, "Harbour Compiler %d.%d%s (Build %d) (%04d.%02d.%02d)",
+           HB_VER_MAJOR, HB_VER_MINOR, HB_VER_REVISION, HB_VER_BUILD, HB_VER_YEAR,
+           HB_VER_MONTH, HB_VER_DAY );
+
   CompiledFileName( hObjFile, szFileName );
-  CompilerVersion( hObjFile, "Harbour" );
+  CompilerVersion( hObjFile, compiler );
   GenerateLocalNames( hObjFile );
   GenerateExternals( hObjFile );
   GenerateCodeSegment( hObjFile );
@@ -183,30 +188,54 @@ static USHORT GetExternalPos( char * szExternal )
 
 static void GenerateLocalNames( FILE * hObjFile )
 {
-  char * localNames[] = { "_TEXT", "CODE", "_DATA", "DATA",
-                          "HB_SYMBOLS", "HB_STARTSYMBOLS", "HB_ENDSYMBOLS", "SYMGROUP", 0 };
+  char * localNames[] = { "_TEXT", "CODE",
+                          "_NULL", "_DATA", "DATA",
+                          "_BSS", "BSS", "DGROUP",
+                          "HB_STARTSYMBOLS", "HB_SYMBOLS", "HB_ENDSYMBOLS", "HARBOUR",
+                          "HB_STARTBORSYMBOLS", "_INIT_", "HB_ENDBORSYMBOLS", "INITDATA", "BORLAND",
+                          0 };
 
   LocalNames( hObjFile, localNames );
 }
 
 static void GenerateSymbolsSegment( FILE * hObjFile )
 {
-  BYTE symbolsData[] = { 0, 0, 0, 0, 0, 0 };
-  BYTE groupSegments[] = { 3, 4, 5, 0 }; /* segments order for HB_... */
+  BYTE symbolsData[]   = { 0, 0, 0, 0, 0, 0 };
+  BYTE groupDGroup[]   = { 2, 3, 4, 0 }; /* segments defined order for DGROUP */
+  BYTE groupSymGroup[] = { 5, 6, 7, 0 }; /* segments defined order for SYMGROUP */
+  BYTE groupInitData[] = { 8, 9, 10, 0 }; /* segments defined order for INITDATA */
 
-  DefineSegment( hObjFile, 7, 5, 0 ); /* 7 = HB_STARTSYMBOLS, 5 = DATA */
-  DefineSegment( hObjFile, 6, /* "HB_SYMBOLS" position + 1 into localNames */
-                 5, /* "DATA" position + 1 into localNames */
-                 6 ); /* segment length */
-  DefineSegment( hObjFile, 8, 5, 0 ); /* 8 = HB_ENDSYMBOLS, 5 = DATA */
+  DefineSegment( hObjFile, 10,   /* HB_STARTSYMBOLS position + 1 into localnames */
+                            6,   /* "DATA" position + 1 into localNames */
+                            0 ); /* segment length */
+  DefineSegment( hObjFile, 11,   /* HB_SYMBOLS position + 1 into localNames */
+                            6,   /* "DATA" position + 1 into localNames */
+                            6 ); /* segment length */
+  DefineSegment( hObjFile, 12,   /* HB_ENDSYMBOLS position + 1 into localNames */
+                            6,   /* "DATA" position + 1 into localNames */
+                            0 ); /* segment length */
 
-  GroupDef( hObjFile, 8, groupSegments ); /* 8 = "SYMGROUP" localNames position */
+  DefineSegment( hObjFile, 14,   /* HB_STARTBORSYMBOLS position + 1 into localnames */
+                           17,   /* INITDATA position + 1 into localNames */
+                            0 ); /* segment length */
+  DefineSegment( hObjFile, 15,   /* HB_STARTSYMBOLS position + 1 into localnames */
+                           17,   /* INITDATA position + 1 into localNames */
+                            0 ); /* segment length */
+  DefineSegment( hObjFile, 16,   /* HB_ENDBORSYMBOLS position + 1 into localnames */
+                           17,   /* INITDATA position + 1 into localNames */
+                            0 ); /* segment length */
+
+  GroupDef( hObjFile,  8, groupDGroup );   /* "DGROUP" localNames position - 1 */
+  GroupDef( hObjFile, 12, groupSymGroup ); /* "SYMGROUP" localNames position - 1 */
+  GroupDef( hObjFile, 17, groupInitData ); /* "BORLAND" localNames position - 1 */
 
   * ( USHORT * ) symbolsData = GetSymbolsAmount();
 
-  EnumeratedData( hObjFile, 4, symbolsData, sizeof( symbolsData ), 0 ); /* 4 = HB_SYMBOLS defined segment */
+  EnumeratedData( hObjFile, 6, symbolsData, sizeof( symbolsData ), 0 ); /* HB_SYMBOLS defined order segment */
 
-  Fixup( hObjFile, 0xE4, 2, 0x54, 2 ); /* Data: symbols location */
+  Fixup( hObjFile, 0xE4, 2, /* offset into HB_SYMBOLS segment */
+                      0x54,
+                         4 ); /* DATA segment defined order */
 }
 
 static void GenerateDataSegment( FILE * hObjFile )
@@ -224,9 +253,15 @@ static void GenerateDataSegment( FILE * hObjFile )
 
   ulSize += GetPCodesSize();
 
-  DefineSegment( hObjFile, 4, /* "_DATA" position + 1 into localNames */
-                 5, /* "DATA" position + 1 into localNames */
-                 ulSize ); /* segment length */
+  DefineSegment( hObjFile,  4,   /* _NULL position + 1 into localnames */
+                            6,   /* "DATA" position + 1 into localNames */
+                            0 ); /* segment length */
+  DefineSegment( hObjFile,  7,   /* _BSS position + 1 into localNames */
+                            8,   /* "BSS" position + 1 into localNames */
+                            0 ); /* segment length */
+  DefineSegment( hObjFile, 5, /* "_DATA" position + 1 into localNames */
+                           6, /* "DATA" position + 1 into localNames */
+                    ulSize ); /* segment length */
 
   memset( &symbol, 0, sizeof( symbol ) );
   DataSegment( hObjFile, (BYTE *) &symbol,
@@ -235,7 +270,7 @@ static void GenerateDataSegment( FILE * hObjFile )
   pSymbol = GetFirstSymbol();
   for( ul = 0; ul < ulSymbols; ul++ )
     {
-      Fixup( hObjFile, 0xE4, ( ul * sizeof( HB_SYMB ) ), 0x54, 2 ); /* Data symbol name location */
+      Fixup( hObjFile, 0xE4, ( ul * sizeof( HB_SYMB ) ), 0x54, 4 ); /* 4 = Data symbol name location */
 
       if( IsExternal( ul ) )
         {
@@ -277,10 +312,10 @@ static void GenerateCodeSegment( FILE * hObjFile )
     {
       /* prgFunction fixups */
       Fixup( hObjFile, 0xE4, ( w * sizeof( prgFunction ) ) + 1,
-             0x54, 2 ); /* Data: symbols location */
+             0x54, 4 ); /* 4 = DATA segment defined order */
 
       Fixup( hObjFile, 0xE4, ( w * sizeof( prgFunction ) ) + 6,
-             0x54, 2 ); /* Data pcode location */
+             0x54, 4 ); /* DATA segment define order - pcode location */
 
       Fixup( hObjFile, 0xA4, ( w * sizeof( prgFunction ) ) + 11,
              0x56, 1 ); /* External: _hb_vmExecute */
@@ -479,7 +514,7 @@ static void DataSegment( FILE * hObjFile, BYTE * symbol, ULONG wSymLen, ULONG wS
 
   putbyte( 0xA0, hObjFile, &bChk );
   putword( wTotalLen, hObjFile, &bChk );
-  putbyte( 2, hObjFile, &bChk ); /* 2 = _DATA segment */
+  putbyte( 4, hObjFile, &bChk ); /* 2 = _DATA segment defined order */
   putword( 0, hObjFile, &bChk ); /* 0 = offset */
 
   for( y = 0; y < wSymbols; y++ )
