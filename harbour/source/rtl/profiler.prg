@@ -51,17 +51,32 @@
 function Profiler()
 
    local cText := "          *** Harbour profiler report ***" + CRLF + CRLF + ;
-                  "   CLASSES                   CALLS      CONSUMED TIME" + CRLF + ;
+                  "   FUNCTIONS/PROCEDURES      CALLS      CONSUMED TIME" + CRLF + ;
                   "=====================================================" + CRLF
-   local n := 1, m
-   local cClass, aInfo, aMethodInfo
+   local n, m
+   local cClass, aFunProcInfo, aInfo, aMethodInfo
 
+   for n = __DynSCount() to 1 step - 1 // Number of dynamic symbols on the global
+                                       // symbol table. Their names are ordered
+                                       // in reverse order.
+      if __DynSIsFun( n )              // Is this symbol a function or a procedure ?
+         aFunProcInfo = __DynSGetPrf( n ) // We get its profiler info
+         cText += "      " + PadR( __DynSGetName( n ), 20 ) + ;
+                  Str( aFunProcInfo[ 1 ], 7 ) + Str( aFunProcInfo[ 2 ], 17 ) + CRLF
+      endif
+   next
+
+   cText += CRLF + ;
+            "   CLASSES                   CALLS      CONSUMED TIME" + CRLF + ;
+            "=====================================================" + CRLF
+
+   n = 1
    while ! Empty( cClass := __ClassName( n ) )
       cText += CRLF + "   CLASS " + cClass + CRLF
-      aInfo = ASort( __ClassSel( n ) )
+      aInfo = ASort( __ClassSel( n ) ) // Retrieves all Class datas and methods names
       for m = 1 to Len( aInfo )
          if ! Empty( aInfo[ m ] ) // why __ClassSel() returns empty strings ?
-            aMethodInfo = __GetMsgPrf( n, aInfo[ m ] )
+            aMethodInfo = __GetMsgPrf( n, aInfo[ m ] ) // We get its profiler info
             cText += "      " + PadR( aInfo[ m ], 20 ) + ;
                      Str( aMethodInfo[ 1 ], 7 ) + Str( aMethodInfo[ 2 ], 17 ) + CRLF
          endif
