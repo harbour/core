@@ -8,12 +8,11 @@ C_SOURCES=\
 	addascii.c \
 	atadjust.c \
 	atnum.c \
+	charevod.c \
 	ctset.c \
 	ctstr.c \
 	ctchksum.c \
-	ctchrevn.c \
 	ctchrmix.c \
-	ctchrodd.c \
 	ctcolton.c \
 	ctcrypt.c \
 	ctposupp.c \
@@ -22,6 +21,6 @@ PRG_SOURCES=\
 	ctmisc.prg \
 	cttoken.prg \
 
-LIBNAME=libct
+LIBNAME=ct3
 
 include $(TOP)$(ROOT)config/lib.cf

@@ -1,3 +1,38 @@
+2001-04-20 10:50 CET Martin Vogel <vogel@inttec.de>
+
+  + contrib/libct/charevod.c
+  - contrib/libct/ctchrevn.c
+  - contrib/libct/ctchrodd.c
+    ! CHAREVEN() & CHARODD() functions merged to one file, some corrections
+
+  * contrib/libct/Makefile
+    * changed lib name to "ct3" again (sorry !)
+    + added contrib/libct/charevod.c
+    - removed contrib/libct/ctchrevn.c
+    - removed contrib/libct/ctchrodd.c
+
+  * contrib/libct/makefile.bc
+    * changed lib name to "ct3" again (sorry !)
+    + added contrib/libct/charevod.c
+    - removed contrib/libct/ctchrevn.c
+    - removed contrib/libct/ctchrodd.c
+
+  * contrib/libct/makefile.vc
+    * changed lib name to "ct3" again (sorry !)
+    + added contrib/libct/charevod.c
+    - removed contrib/libct/ctchrevn.c
+    - removed contrib/libct/ctchrodd.c
+
+  + contrib/libct/tests/chareven.prg
+    ! Small test program for chareven()
+
+  + contrib/libct/tests/charodd.prg
+    ! Small test program for charodd()
+
+  * contrib/libct/tests/Makefile
+    + added contrib/libct/tests/chareven.prg
+    + added contrib/libct/tests/charodd.prg
+
 2001-04-20 01:35 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * hb_slex.bc
      * Synched with makefile.bc

@@ -76,7 +76,7 @@ LDFLAGS        = $(LDFLAGS)
 # Macros to access our library names
 #
 
-TOOLS_LIB    = $(LIB_DIR)\libct.lib
+TOOLS_LIB    = $(LIB_DIR)\ct3.lib
 
 HARBOUR_EXE  = $(BIN_DIR)\harbour.exe
 
@@ -113,12 +113,11 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\addascii.obj \
    $(OBJ_DIR)\atadjust.obj \
    $(OBJ_DIR)\atnum.obj \
+   $(OBJ_DIR)\charevod.obj \
    $(OBJ_DIR)\ctset.obj \
    $(OBJ_DIR)\ctstr.obj \
    $(OBJ_DIR)\ctchksum.obj \
-   $(OBJ_DIR)\ctchrevn.obj \
    $(OBJ_DIR)\ctchrmix.obj \
-   $(OBJ_DIR)\ctchrodd.obj \
    $(OBJ_DIR)\ctcolton.obj \
    $(OBJ_DIR)\ctcrypt.obj \
    $(OBJ_DIR)\ctposupp.obj \
@@ -138,12 +137,11 @@ CLEAN:
    -@if exist $(OBJ_DIR)\addascii.* del $(OBJ_DIR)\addascii.*
    -@if exist $(OBJ_DIR)\atadjust.* del $(OBJ_DIR)\atadjust.*
    -@if exist $(OBJ_DIR)\atnum.* del $(OBJ_DIR)\atnum.*
+   -@if exist $(OBJ_DIR)\charevod.* del $(OBJ_DIR)\charevod.*
    -@if exist $(OBJ_DIR)\ctset.* del $(OBJ_DIR)\ctset.*
    -@if exist $(OBJ_DIR)\ctstr.* del $(OBJ_DIR)\ctstr.*
    -@if exist $(OBJ_DIR)\ctchksum.* del $(OBJ_DIR)\ctchksum.*
-   -@if exist $(OBJ_DIR)\ctchrevn.* del $(OBJ_DIR)\ctchrevn.*
    -@if exist $(OBJ_DIR)\ctchrmix.* del $(OBJ_DIR)\ctchrmix.*
-   -@if exist $(OBJ_DIR)\ctchrodd.* del $(OBJ_DIR)\ctchrodd.*
    -@if exist $(OBJ_DIR)\ctcolton.* del $(OBJ_DIR)\ctcolton.*
    -@if exist $(OBJ_DIR)\ctcrypt.* del $(OBJ_DIR)\ctcrypt.*
    -@if exist $(OBJ_DIR)\ctposupp.* del $(OBJ_DIR)\ctposupp.*

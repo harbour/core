@@ -127,7 +127,7 @@ int ct_getref (void)
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is ctset.c, library is libct.
+ *      Source is ctset.c, library is ct3.
  *  $SEEALSO$
  *      ADDASCII()   BLANK()       CHARADD()
  *      CHARAND()    CHARMIRR()    CHARNOT()
@@ -209,7 +209,7 @@ int ct_getatmupa (void)
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is ctset.c, library is libct.
+ *      Source is ctset.c, library is ct3.
  *  $SEEALSO$
  *      ATNUM()       AFTERATNUM()  BEFORATNUM()
  *      ATREPL()      NUMAT()       ATADJUST()
@@ -322,7 +322,7 @@ char ct_getatlikechar (void)
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is ctset.c, header is ct.ch, library is libct.
+ *      Source is ctset.c, header is ct.ch, library is ct3.
  *  $SEEALSO$
  *  $END$
  */

@@ -92,7 +92,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is atadjust.c, library is libct.
+ *      Source is atadjust.c, library is ct3.
  *  $SEEALSO$
  *      SETATLIKE()  CSETATMUPA()
  *  $END$

@@ -35,6 +35,8 @@ PRG_SOURCES=\
 	atadjust.prg \
 	atnum.prg \
 	beforatn.prg \
+	chareven.prg \
+	charodd.prg \
 	csetref.prg \
 	csetatmu.prg \
 	setatlik.prg \

@@ -340,7 +340,7 @@ static void do_atnum (int iSwitch)
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is atnum.c, library is libct.
+ *      Source is atnum.c, library is ct3.
  *  $SEEALSO$
  *      ATNUM()  BEFORATNUM()  CSETATMUPA()  SETATLIKE()
  *  $END$
@@ -405,7 +405,7 @@ HB_FUNC (AFTERATNUM)
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is atnum.c, library is libct.
+ *      Source is atnum.c, library is ct3.
  *  $SEEALSO$
  *      ATNUM()  AFTERATNUM()  CSETATMUPA()  SETATLIKE()
  *  $END$

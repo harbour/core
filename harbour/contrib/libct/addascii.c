@@ -114,7 +114,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is addascii.c, library is libct.
+ *      Source is addascii.c, library is ct3.
  *  $SEEALSO$
  *      CSETREF() 
  *  $END$
