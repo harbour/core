@@ -317,7 +317,9 @@ LANG_LIB_OBJS = \
    $(OBJ_DIR)\msghuwin.obj \
    $(OBJ_DIR)\msgis850.obj \
    $(OBJ_DIR)\msgpt.obj \
-   $(OBJ_DIR)\msgro.obj
+   $(OBJ_DIR)\msgro.obj \
+   $(OBJ_DIR)\msgsr852.obj \
+   $(OBJ_DIR)\msgsriso.obj
 
 #
 # MACRO.LIB rules
@@ -1631,6 +1633,14 @@ $(OBJ_DIR)\msgpt.obj : $(LANG_DIR)\msgpt.c
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\msgro.obj : $(LANG_DIR)\msgro.c
+   $(CC) $(CLIBFLAGS) -I$(LANG_DIR) -o$@ $**
+   tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\msgsr852.obj : $(LANG_DIR)\msgsr852.c
+   $(CC) $(CLIBFLAGS) -I$(LANG_DIR) -o$@ $**
+   tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\msgsriso.obj : $(LANG_DIR)\msgsriso.c
    $(CC) $(CLIBFLAGS) -I$(LANG_DIR) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 

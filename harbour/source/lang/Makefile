@@ -19,6 +19,8 @@ C_SOURCES=\
 	msgis850.c   \
 	msgpt.c      \
 	msgro.c      \
+	msgsr852.c   \
+	msgsriso.c   \
 
 LIBNAME=lang
 

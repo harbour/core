@@ -1,3 +1,13 @@
+20000516-03:59 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/lang/Makefile
+   * source/lang/msgsr852.c
+   + source/lang/msgsriso.c
+   * source/compiler/hbusage.c
+   * makefile.bc
+   * makefile.vc
+     + Added new languages.
+
 20000515-18:00 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
   * source/compiler/harbour.c

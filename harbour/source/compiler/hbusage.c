@@ -103,6 +103,7 @@ void hb_compPrintCredits( void )
            "Chen Kedem <niki@actcom.co.il>\n"
            "Dave Pearson <davep@davep.org>\n"
            "David G. Holm <dholm@jsd-llc.com>\n"
+           "Davor Siklic <siki@msoft.cz>\n"
            "Eddie Runia <eddie@runia.com>\n"
            "Felipe G. Coury <fcoury@creation.com.br>\n"
            "Gonzalo A. Diethelm <gonzalo.diethelm@iname.com>\n"
