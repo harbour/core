@@ -263,11 +263,14 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\dummy.obj \
    $(OBJ_DIR)\errorsys.obj \
    $(OBJ_DIR)\fieldbl.obj \
+   $(OBJ_DIR)\getlist.obj \
+   $(OBJ_DIR)\getsys.obj \
    $(OBJ_DIR)\input.obj \
    $(OBJ_DIR)\memvarbl.obj \
    $(OBJ_DIR)\menuto.obj \
    $(OBJ_DIR)\objfunc.obj \
    $(OBJ_DIR)\readkey.obj \
+   $(OBJ_DIR)\readvar.obj \
    $(OBJ_DIR)\setfunc.obj \
    $(OBJ_DIR)\setkey.obj \
    $(OBJ_DIR)\setta.obj \
@@ -1089,6 +1092,20 @@ $(OBJ_DIR)\fieldbl.obj : $(OBJ_DIR)\fieldbl.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) -+$@,,
 
+$(OBJ_DIR)\getlist.c : $(RTL_DIR)\getlist.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\getlist.obj : $(OBJ_DIR)\getlist.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) -+$@,,
+
+$(OBJ_DIR)\getsys.c : $(RTL_DIR)\getsys.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\getsys.obj : $(OBJ_DIR)\getsys.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) -+$@,,
+
 $(OBJ_DIR)\filesys.obj : $(RTL_DIR)\filesys.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) -+$@,,
@@ -1289,6 +1306,13 @@ $(OBJ_DIR)\readkey.c : $(RTL_DIR)\readkey.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
 $(OBJ_DIR)\readkey.obj : $(OBJ_DIR)\readkey.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) -+$@,,
+
+$(OBJ_DIR)\readvar.c : $(RTL_DIR)\readvar.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\readvar.obj : $(OBJ_DIR)\readvar.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) -+$@,,
 

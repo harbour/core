@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * GetList Class
+ * TGetList Class
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * www - http://www.harbour-project.org
@@ -40,45 +40,9 @@
 #include "setcurs.ch"
 
 #define SCORE_ROW       0
-#define SCORE_COL      60
+#define SCORE_COL       60
 
 #define K_UNDO   K_CTRL_U
-
-static s_oGetListActive
-
-function ReadModal( GetList, nPos )
-
-   local oGetList
-
-   if Empty( GetList )
-      SetPos( MaxRow() - 1, 0 )
-      return .f.
-   endif
-
-   oGetList := TGetList():New( GetList )
-   oGetList:cReadProcName := ProcName( 1 )
-   oGetList:nReadProcLine := ProcLine( 1 )
-   s_oGetListActive := oGetList
-
-   if ! ( ISNUMBER( nPos ) .and. nPos > 0 )
-      oGetList:nPos := oGetList:Settle( 0 )
-   endif
-
-   while oGetList:nPos != 0
-      oGetList:oGet := oGetList:aGetList[ oGetList:nPos ]
-      oGetList:PostActiveGet()
-
-      if ISBLOCK( oGetList:oGet:Reader )
-         Eval( oGetList:oGet:Reader, oGetList:oGet )
-      else
-         oGetList:Reader()
-      endif
-
-      oGetList:nPos := oGetList:Settle()
-   end
-   SetPos( MaxRow() - 1, 0 )
-
-return oGetList:lUpdated
 
 CLASS TGetList
 
@@ -93,6 +57,7 @@ CLASS TGetList
    DATA oActiveGet
    DATA cReadProcName, nReadProcLine
    DATA cVarName
+   DATA lHasFocus
 
    METHOD New( GetList )
    METHOD Settle( nPos )
@@ -111,28 +76,33 @@ CLASS TGetList
    METHOD ReadUpdated( lUpdated )
    METHOD ReadVar( cNewVarName )
    METHOD ReadExit( lNew ) INLINE Set( _SET_EXIT, lNew )
-
-   METHOD SetFocus() INLINE s_oGetListActive := Self,;
-                            ::aGetList[ ::nPos ]:SetFocus()
-
+   METHOD SetFocus()
    METHOD Updated() INLINE ::lUpdated
 
 ENDCLASS
 
 METHOD New( GetList ) CLASS TGetList
 
-   ::aGetList  := GetList
-   ::lKillRead := .f.
-   ::lBumpTop  := .f.
-   ::lBumpBot  := .f.
+   ::aGetList       := GetList
+   ::lKillRead      := .f.
+   ::lBumpTop       := .f.
+   ::lBumpBot       := .f.
    ::nLastExitState := 0
-   ::nLastPos  := 0
-   ::cReadProcName := ""
-   ::lUpdated  := .f.
-   ::nPos      := 1
-   ::oGet      := GetList[ 1 ]
+   ::nLastPos       := 0
+   ::cReadProcName  := ""
+   ::lUpdated       := .f.
+   ::nPos           := 1
+   ::oGet           := GetList[ 1 ]
+   ::lHasFocus      := .F.
 
 return Self
+
+METHOD SetFocus() CLASS TGetList
+
+   __GetListSetActive( Self )
+   ::aGetList[ ::nPos ]:SetFocus()
+
+   return Self
 
 METHOD Reader() CLASS TGetList
 
@@ -301,14 +271,6 @@ METHOD GetPreValidate() CLASS TGetList
 
 return lWhen
 
-function GetPreValidate( oGet )
-
-   if oGet != nil
-      s_oGetListActive:oGet := oGet
-   endif
-
-return s_oGetListActive:GetPreValidate()
-
 METHOD GetPostValidate() CLASS TGetList
 
    local oGet := ::oGet
@@ -349,14 +311,6 @@ METHOD GetPostValidate() CLASS TGetList
    endif
 
 return lValid
-
-function GetPostValidate( oGet )
-
-   if oGet != nil
-      s_oGetListActive:oGet := oGet
-   endif
-
-return s_oGetListActive:GetPostValidate()
 
 METHOD GetDoSetKey( bKeyBlock ) CLASS TGetList
 
@@ -476,18 +430,6 @@ METHOD GetReadVar() CLASS TGetList
 
 return cName
 
-function ReadFormat( bFormat )
-
-   if s_oGetListActive != NIL
-      if PCount() > 0
-         return s_oGetListActive:SetFormat( bFormat )
-      else
-         return s_oGetListActive:SetFormat()
-      endif
-   endif
-
-return nil
-
 METHOD SetFormat( bFormat ) CLASS TGetList
 
    local bSavFormat := ::bFormat
@@ -573,110 +515,3 @@ METHOD ReadUpdated( lUpdated ) CLASS TGetList
    endif
 
 return lSavUpdated
-
-/* ------------------ Global functions ------------------- */
-
-PROCEDURE GetReader( oGet )
-
-   oGet:Reader()
-
-   RETURN
-
-FUNCTION GetActive( oGet )
-
-   if s_oGetListActive != NIL
-      if PCount() > 0
-         RETURN s_oGetListActive:GetActive( oGet )
-      else
-         RETURN s_oGetListActive:GetActive()
-      endif
-   endif
-
-   RETURN NIL
-
-PROCEDURE GetDoSetKey( keyBlock, oGet )
-
-   if s_oGetListActive != NIL
-      if oGet != NIL
-         s_oGetListActive:oGet := oGet
-      endif
-      s_oGetListActive:GetDoSetKey( keyBlock )
-   endif
-
-   RETURN
-
-PROCEDURE GetApplyKey( oGet, nKey )
-
-   if s_oGetListActive != NIL
-      s_oGetListActive:oGet := oGet
-      s_oGetListActive:GetApplyKey( nKey )
-   endif
-
-   RETURN
-
-FUNCTION ReadVar( cNewVarName )
-
-   if s_oGetListActive != NIL
-      RETURN s_oGetListActive:ReadVar( cNewVarName )
-   endif
-
-   RETURN ""
-
-FUNCTION ReadExit( lExit )
-   RETURN Set( _SET_EXIT, lExit )
-
-FUNCTION ReadInsert( lInsert )
-   RETURN Set( _SET_INSERT, lInsert )
-
-FUNCTION ReadUpdated( lUpdated )
-
-   if s_oGetListActive != NIL
-      if PCount() > 0
-         RETURN s_oGetListActive:ReadUpdated( lUpdated )
-      else
-         RETURN s_oGetListActive:ReadUpdated()
-      endif
-   endif
-
-   RETURN .F.
-
-FUNCTION Updated()
-
-   if s_oGetListActive != NIL
-      RETURN s_oGetListActive:lUpdated
-   endif
-
-   RETURN .F.
-
-FUNCTION ReadKill( lKill )
-
-   if s_oGetListActive != NIL
-      if PCount() > 0
-         RETURN s_oGetListActive:KillRead( lKill )
-      else
-         RETURN s_oGetListActive:KillRead()
-      endif
-   endif
-
-   RETURN .F.
-
-PROCEDURE __KillRead()
-
-   IF s_oGetListActive != NIL
-      s_oGetListActive:KillRead( .T. )
-   ENDIF
-
-   RETURN
-
-PROCEDURE __SetFormat( bFormat )
-
-   if s_oGetListActive != NIL
-      if ValType( bFormat ) == "B"
-         s_oGetListActive:SetFormat( bFormat )
-      else
-         s_oGetListActive:SetFormat()
-      endif
-   endif
-
-   RETURN
-

@@ -122,11 +122,14 @@ PRG_SOURCES=\
 	dummy.prg    \
 	errorsys.prg \
 	fieldbl.prg  \
+	getlist.prg  \
+	getsys.prg   \
 	input.prg    \
 	memvarbl.prg \
 	menuto.prg   \
 	objfunc.prg  \
 	readkey.prg  \
+	readvar.prg  \
 	setfunc.prg  \
 	setkey.prg   \
 	setta.prg    \

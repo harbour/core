@@ -302,11 +302,14 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\dummy.obj \
    $(OBJ_DIR)\errorsys.obj \
    $(OBJ_DIR)\fieldbl.obj \
+   $(OBJ_DIR)\getlist.obj \
+   $(OBJ_DIR)\getsys.obj \
    $(OBJ_DIR)\input.obj \
    $(OBJ_DIR)\memvarbl.obj \
    $(OBJ_DIR)\menuto.obj \
    $(OBJ_DIR)\objfunc.obj \
    $(OBJ_DIR)\readkey.obj \
+   $(OBJ_DIR)\readvar.obj \
    $(OBJ_DIR)\setfunc.obj \
    $(OBJ_DIR)\setkey.obj \
    $(OBJ_DIR)\setta.obj \
