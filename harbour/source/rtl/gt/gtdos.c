@@ -34,8 +34,8 @@
   #endif
 #endif
 
-static void hb_gt_xGetXY(char cRow, char cCol, char *attr, char *ch);
-static void hb_gt_xPutch(char cRow, char cCol, char attr, char ch);
+static void hb_gt_xGetXY(USHORT cRow, USHORT cCol, BYTE *attr, char *ch);
+static void hb_gt_xPutch(USHORT cRow, USHORT cCol, BYTE attr, char ch);
 
 static char hb_gt_GetScreenMode(void);
 static void hb_gt_SetCursorSize(char start, char end);
@@ -99,7 +99,7 @@ static char FAR *hb_gt_ScreenAddress()
 #endif
 
 #ifndef __DJGPP__
-char FAR *hb_gt_ScreenPtr(char cRow, char cCol)
+char FAR *hb_gt_ScreenPtr(USHORT cRow, USHORT cCol)
 {
     return scrnPtr + (cRow * hb_gt_GetScreenWidth() * 2) + (cCol * 2);
 }
@@ -116,31 +116,36 @@ static char hb_gt_GetScreenMode(void)
 #endif
 }
 
-char hb_gt_GetScreenWidth(void)
+USHORT hb_gt_GetScreenWidth(void)
 {
 #if defined(__WATCOMC__) && defined(__386__)
-    return *((char *)0x044a);
+    return (USHORT)*((char *)0x044a);
 #elif defined(__DJGPP__)
-    return _farpeekb( 0x0040, 0x004a );
+    return (USHORT)_farpeekb( 0x0040, 0x004a );
 #else
-    return *((char FAR *)MK_FP(0x0040, 0x004a));
+    return (USHORT)*((char FAR *)MK_FP(0x0040, 0x004a));
 #endif
 }
 
-char hb_gt_GetScreenHeight(void)
+USHORT hb_gt_GetScreenHeight(void)
 {
 #if defined(__WATCOMC__) && defined(__386__)
-    return (char)(*((char *)0x0484) + 1);
+    return (USHORT)(char)(*((char *)0x0484) + 1);
 #elif defined(__DJGPP__)
-    return _farpeekb( 0x0040, 0x0084 ) + 1;
+    return (USHORT)_farpeekb( 0x0040, 0x0084 ) + 1;
 #else
-    return (char)(*((char FAR *)MK_FP(0x0040, 0x0084)) + 1);
+    return (USHORT)((char)(*((char FAR *)MK_FP(0x0040, 0x0084)) + 1));
 #endif
 }
 
-void hb_gt_SetPos(char cRow, char cCol)
+void hb_gt_SetPos(USHORT usRow, USHORT usCol)
 {
 #if defined(__TURBOC__)
+    BYTE cRow, cCol;
+
+    cRow = (BYTE)usRow;
+    cCol = (BYTE)usCol;
+
     _AH = 0x02;
     _BH = 0;
     _DH = cRow;
@@ -150,8 +155,8 @@ void hb_gt_SetPos(char cRow, char cCol)
     union REGS regs;
     regs.h.ah = 0x02;
     regs.h.bh = 0;
-    regs.h.dh = (unsigned char)(cRow);
-    regs.h.dl = (unsigned char)(cCol);
+    regs.h.dh = (BYTE)(usRow);
+    regs.h.dl = (BYTE)(usCol);
 #if defined(__WATCOMC__) && defined(__386__)
     int386(0x10, &regs, &regs);
 #else
@@ -266,7 +271,7 @@ void hb_gt_SetCursorStyle(int style)
     }
 }
 
-static void hb_gt_xGetXY(char cRow, char cCol, char *attr, char *ch)
+static void hb_gt_xGetXY(USHORT cRow, USHORT cCol, BYTE *attr, char *ch)
 {
 #ifdef __DJGPP__
     short ch_attr;
@@ -282,7 +287,7 @@ static void hb_gt_xGetXY(char cRow, char cCol, char *attr, char *ch)
 #endif
 }
 
-void hb_gt_xPutch(char cRow, char cCol, char attr, char ch)
+void hb_gt_xPutch(USHORT cRow, USHORT cCol, BYTE attr, char ch)
 {
 #ifdef __DJGPP__
     long ch_attr = ( ch << 8 ) | attr;
@@ -296,7 +301,7 @@ void hb_gt_xPutch(char cRow, char cCol, char attr, char ch)
 #endif
 }
 
-void hb_gt_Puts(char cRow, char cCol, char attr, char *str, int len)
+void hb_gt_Puts(USHORT cRow, USHORT cCol, BYTE attr, char *str, int len)
 {
 #ifdef __DJGPP__
     int i = len;
@@ -343,16 +348,16 @@ void hb_gt_Puts(char cRow, char cCol, char attr, char *str, int len)
 #endif
 }
 
-void hb_gt_GetText(char cTop, char cLeft, char cBottom, char cRight, char *dest)
+void hb_gt_GetText(USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight, char *dest)
 {
 #ifdef __DJGPP__
-    gettext( cLeft + 1, cTop + 1, cRight + 1, cBottom + 1, dest );
+    gettext( usLeft + 1, usTop + 1, usRight + 1, usBottom + 1, dest );
 #else
-    char x, y;
+    USHORT x, y;
 
-    for (y = cTop; y <= cBottom; y++ )
+    for (y = usTop; y <= usBottom; y++ )
     {
-        for (x = cLeft; x <= cRight; x++)
+        for (x = usLeft; x <= usRight; x++)
         {
             hb_gt_xGetXY(y, x, dest + 1, dest);
             dest += 2;
@@ -361,16 +366,16 @@ void hb_gt_GetText(char cTop, char cLeft, char cBottom, char cRight, char *dest)
 #endif
 }
 
-void hb_gt_PutText(char cTop, char cLeft, char cBottom, char cRight, char *srce)
+void hb_gt_PutText(USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight, char *srce)
 {
 #ifdef __DJGPP__
-    puttext( cLeft + 1, cTop + 1, cRight + 1, cBottom + 1, srce );
+    puttext( usLeft + 1, usTop + 1, usRight + 1, usBottom + 1, srce );
 #else
-    char x, y;
+    USHORT x, y;
 
-    for (y = cTop; y <= cBottom; y++)
+    for (y = usTop; y <= usBottom; y++)
     {
-        for (x = cLeft; x <= cRight; x++)
+        for (x = usLeft; x <= usRight; x++)
         {
             hb_gt_xPutch(y, x, *(srce + 1), *srce);
             srce += 2;
@@ -379,43 +384,45 @@ void hb_gt_PutText(char cTop, char cLeft, char cBottom, char cRight, char *srce)
 #endif
 }
 
-void hb_gt_SetAttribute( char cTop, char cLeft, char cBottom, char cRight, char attribute )
+void hb_gt_SetAttribute( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight, BYTE attr )
 {
-    char x, y;
-    char attr, ch;
+    USHORT x, y;
+    BYTE scratchattr;
+    char ch;
 
-    for (y = cTop; y <= cBottom; y++)
+    for (y = usTop; y <= usBottom; y++)
     {
-        for (x = cLeft; x <= cRight; x++)
+        for (x = usLeft; x <= usRight; x++)
         {
-            hb_gt_xGetXY( y, x, &attr, &ch );
-            hb_gt_xPutch( y, x, attribute, ch);
+            hb_gt_xGetXY( y, x, &scratchattr, &ch );
+            hb_gt_xPutch( y, x, attr, ch);
         }
     }
 }
 
-void hb_gt_DrawShadow( char cTop, char cLeft, char cBottom, char cRight, char attribute )
+void hb_gt_DrawShadow( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight, BYTE attr )
 {
-    char x, y;
-    char attr, ch;
+    USHORT x, y;
+    BYTE scratchattr;
+    char ch;
 
-    for (y = cTop; y <= cBottom; y++)
+    for (y = usTop; y <= usBottom; y++)
     {
 
-        hb_gt_xGetXY( y, cRight, &attr, &ch );
-        hb_gt_xPutch( y, cRight, attribute, ch);
+        hb_gt_xGetXY( y, usRight, &scratchattr, &ch );
+        hb_gt_xPutch( y, usRight, attr, ch);
        
-        if( y == cBottom )
-           for (x = cLeft; x <= cRight; x++)
+        if( y == usBottom )
+           for (x = usLeft; x <= usRight; x++)
            {
-               hb_gt_xGetXY( y, x, &attr, &ch );
-               hb_gt_xPutch( y, x, attribute, ch );
+               hb_gt_xGetXY( y, x, &scratchattr, &ch );
+               hb_gt_xPutch( y, x, attr, ch );
            }
 
     }
 }
 
-char hb_gt_Col(void)
+USHORT hb_gt_Col(void)
 {
 #if defined(__TURBOC__)
     _AH = 0x03;
@@ -435,7 +442,7 @@ char hb_gt_Col(void)
 #endif
 }
 
-char hb_gt_Row(void)
+USHORT hb_gt_Row(void)
 {
 #if defined(__TURBOC__)
     _AH = 0x03;
@@ -455,21 +462,18 @@ char hb_gt_Row(void)
 #endif
 }
 
-void hb_gt_Scroll( char cTop, char cLeft, char cBottom, char cRight, char attr, char vert, char horiz )
+void hb_gt_Scroll( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight, BYTE attr, SHORT sVert, SHORT sHoriz )
 {
-   /* Convert the "low-level" parameters back to the same types they
-      had when the following code used to be in gtapi.c */
-   USHORT uiTop = cTop, uiLeft = cLeft, uiBottom = cBottom, uiRight = cRight;
-   int iRows = vert, iCols = horiz;
-   /* End of parameter conversion */
+   int iRows = sVert, iCols = sHoriz;
 
-   USHORT uiRow, uiCol, uiSize;
-   int iLength = ( uiRight - uiLeft ) + 1;
+   USHORT usRow, usCol;
+   int uiSize;   /* gtRectSize returns int */
+   int iLength = ( usRight - usLeft ) + 1;
    int iCount, iColOld, iColNew, iColSize;
 
-   hb_gtGetPos( &uiRow, &uiCol );
+   hb_gtGetPos( &usRow, &usCol );
 
-   if( hb_gtRectSize( uiTop, uiLeft, uiBottom, uiRight, &uiSize ) == 0 )
+   if( hb_gtRectSize( usTop, usLeft, usBottom, usRight, &uiSize ) == 0 )
    {
       char * fpBlank = ( char * ) hb_xgrab( iLength );
       char * fpBuff = ( char * ) hb_xgrab( iLength * 2 );
@@ -477,30 +481,30 @@ void hb_gt_Scroll( char cTop, char cLeft, char cBottom, char cRight, char attr, 
       {
          memset( fpBlank, ' ', iLength );
 
-         iColOld = iColNew = uiLeft;
+         iColOld = iColNew = usLeft;
          if( iCols >= 0 )
          {
             iColOld += iCols;
-            iColSize = uiRight - uiLeft;
+            iColSize = (int) (usRight - usLeft);
             iColSize -= iCols;
          }
          else
          {
             iColNew -= iCols;
-            iColSize = uiRight - uiLeft;
+            iColSize = (int) (usRight - usLeft);
             iColSize += iCols;
          }
 
-         for( iCount = ( iRows >= 0 ? uiTop : uiBottom );
-              ( iRows >= 0 ? iCount <= uiBottom : iCount >= uiTop );
+         for( iCount = ( iRows >= 0 ? usTop : usBottom );
+              ( iRows >= 0 ? iCount <= usBottom : iCount >= usTop );
               ( iRows >= 0 ? iCount++ : iCount-- ) )
          {
             int iRowPos = iCount + iRows;
 
             /* Blank the scroll region in the current row */
-            hb_gt_Puts( iCount, uiLeft, attr, fpBlank, iLength );
+            hb_gt_Puts( iCount, usLeft, attr, fpBlank, iLength );
 
-            if( ( iRows || iCols ) && iRowPos <= uiBottom && iRowPos >= uiTop )
+            if( ( iRows || iCols ) && iRowPos <= usBottom && iRowPos >= usTop )
             {
                /* Read the text to be scrolled into the current row */
                hb_gt_GetText( iRowPos, iColOld, iRowPos, iColOld + iColSize, fpBuff );
@@ -514,7 +518,7 @@ void hb_gt_Scroll( char cTop, char cLeft, char cBottom, char cRight, char attr, 
       if( fpBuff ) hb_xfree( fpBuff );
    }
 
-   hb_gtSetPos( uiRow, uiCol );
+   hb_gtSetPos( usRow, usCol );
 }
 
 void hb_gt_DispBegin(void)
@@ -556,9 +560,9 @@ void hb_gt_DispEnd(void)
 #endif
 }
 
-BOOL hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
+BOOL hb_gt_SetMode( USHORT usRows, USHORT usCols )
 {
-   uiRows=uiCols=0;
+   usRows=usCols=0;
    return 0;
 }
 

@@ -60,12 +60,12 @@ char hb_gt_GetScreenHeight(void)
     return vi.row;
 }
 
-void hb_gt_SetPos(char cRow, char cCol)
+void hb_gt_SetPos(USHORT nRow, USHORT nCol)
 {
-    VioSetCurPos((USHORT) cRow, (USHORT) cCol, 0);
+    VioSetCurPos(nRow, nCol, 0);
 }
 
-char hb_gt_Row(void)
+USHORT hb_gt_Row(void)
 {
     USHORT x, y;
 
@@ -73,7 +73,7 @@ char hb_gt_Row(void)
     return y;
 }
 
-char hb_gt_Col(void)
+USHORT hb_gt_Col(void)
 {
     USHORT x, y;
 
@@ -82,17 +82,16 @@ char hb_gt_Col(void)
 }
 
 
-void hb_gt_Scroll( char cTop, char cLeft, char cBottom, char cRight, char attribute, char cRows, char cCols )
+void hb_gt_Scroll( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight, BYTE attr, SHORT sVert, SHORT sHoriz )
 {
 /* Chen Kedem <niki@actcom.co.il> */
 
-    USHORT usTop = cTop, usLeft = cLeft, usBottom = cBottom, usRight = cRight;
-    SHORT sVert = cRows, sHoriz = cCols;
     BYTE bCell[ 2 ];                            /* character/attribute pair */
+
     if( sVert > 128 ) sVert = sVert - 256;
     if( sHoriz > 128 ) sHoriz = sHoriz - 256;
     bCell [ 0 ] = ' ';
-    bCell [ 1 ] = (BYTE)attribute;
+    bCell [ 1 ] = attr;
     if ( (sVert | sHoriz) == 0 )                /* both zero, clear region */
         VioScrollUp ( usTop, usLeft, usBottom, usRight, 0xFFFF, bCell, 0 );
     else
@@ -228,65 +227,60 @@ void hb_gt_SetCursorStyle(int style)
     }
 }
 
-void hb_gt_Puts(char cRow, char cCol, char attr, char *str, int len)
+void hb_gt_Puts(USHORT usRow, USHORT usCol, BYTE attr, char *str, int len)
 {
-    VioWrtCharStrAtt(str, (USHORT) len, (USHORT) cRow, (USHORT) cCol, (BYTE *) &attr, 0);
+    VioWrtCharStrAtt(str, (USHORT) len, usRow, usCol, (BYTE *) &attr, 0);
 }
 
-void hb_gt_GetText(char cTop, char cLeft, char cBottom, char cRight, char *dest)
+void hb_gt_GetText(USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight, char *dest)
 {
-    USHORT width;
-    char y;
+    USHORT width, y;
 
-    width = (USHORT) ((cRight - cLeft + 1) * 2);
-    for (y = cTop; y <= cBottom; y++)
+    width = (USHORT) ((usRight - usLeft + 1) * 2);
+    for (y = usTop; y <= usBottom; y++)
     {
-        VioReadCellStr((BYTE *) dest, &width, (USHORT) y, (USHORT) cLeft, 0);
+        VioReadCellStr((BYTE *) dest, &width, y, usLeft, 0);
         dest += width;
     }
 }
 
-void hb_gt_PutText(char cTop, char cLeft, char cBottom, char cRight, char *srce)
+void hb_gt_PutText(USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight, char *srce)
 {
-    USHORT width;
-    char y;
+    USHORT width, y;
 
-    width = (USHORT) ((cRight - cLeft + 1) * 2);
-    for (y = cTop; y <= cBottom; y++)
+    width = (USHORT) ((usRight - usLeft + 1) * 2);
+    for (y = usTop; y <= usBottom; y++)
     {
-        VioWrtCellStr((BYTE *) srce, width, (USHORT) y, (USHORT) cLeft, 0);
+        VioWrtCellStr((BYTE *) srce, width, y, usLeft, 0);
         srce += width;
     }
 }
 
-void hb_gt_SetAttribute( char cTop, char cLeft, char cBottom, char cRight, char attribute )
+void hb_gt_SetAttribute( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight, BYTE attr )
 {
 /* Chen Kedem <niki@actcom.co.il> */
    /*
       TODO: work with DispBegin DispEnd
-      NOTE: type of attribute should be change from char to unsigned char to
-            allow the >127 attributes (sames goes for hb_gt_DrawShadow)
    */
 
-    USHORT width;
-    char y;
+    USHORT width, y
 
    /*
       assume top level check that coordinate are all valid and fall
       within visible screen, else if width cannot be fit on current line
       it is going to warp to the next line
    */
-    width = (USHORT) (cRight - cLeft + 1);
-    for (y = cTop; y <= cBottom; y++)
-        VioWrtNAttr( &attribute, width, y, (USHORT) cLeft, 0);
+    width = (USHORT) (usRight - usLeft + 1);
+    for (y = usTop; y <= usBottom; y++)
+        VioWrtNAttr( &attr, width, y, usLeft, 0);
 }
 
-void hb_gt_DrawShadow( char cTop, char cLeft, char cBottom, char cRight, char attribute )
+void hb_gt_DrawShadow( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight, BYTE attr )
 {
 /* Chen Kedem <niki@actcom.co.il> */
 
-    hb_gt_SetAttribute( cBottom+1, cLeft+1, cBottom+1, cRight+1, attribute );
-    hb_gt_SetAttribute( cTop+1, cRight+1, cBottom+1, cRight+1, attribute );
+    hb_gt_SetAttribute( usBottom+1, usLeft+1, usBottom+1, usRight+1, attr );
+    hb_gt_SetAttribute( usTop+1, usRight+1, usBottom+1, usRight+1, attr );
 }
 
 void hb_gt_DispBegin(void)

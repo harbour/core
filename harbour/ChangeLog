@@ -1,3 +1,10 @@
+19990915-23:35 EDT Paul Tucker <ptucker@sympatico.ca>
+  * source/rtl/gt/gtos2.c
+    source/rtl/gt/gtwin.c
+    source/rtl/gt/gtdos.c
+    include/gtapi.h
+    * converted a number of parameters to USHORT, SHORT or BYTE
+  
 19990916-05:30 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/compiler/harbour.y
