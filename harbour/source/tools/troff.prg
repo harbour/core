@@ -48,7 +48,6 @@ CLASS TTROFF
    DATA cFile
    DATA nHandle
    METHOD New( cFile )
-
    METHOD WritePar( cPar )
    METHOD WriteLink( clink )
    METHOD CLOSE()
@@ -138,3 +137,57 @@ METHOD WriteLink( cLink ) CLASS TTROFF
 RETURN Self
 
 *+ EOF: TROFF.PRG
+*+ EOF: RTF.PRG
+/*  $DOC$
+ *  $FUNCNAME$
+ *     TTroff()
+ *  $CATEGORY$
+ *     Harbour Tools
+ *  $ONELINER$
+ *     Troff Class
+ *  $SYNTAX$
+ *     oTroff:=TTrof():New(<cFile>)
+ *  $ARGUMENTS$
+ *     <cFile> Name of the RTF file to create
+ *  $RETURNS$
+ *     An  instance of the TTroff Class
+ *  $DESCRIPTION$
+ *     TRtf() is a class that create the Norton Guide Source
+ *     Code of the same name you pass to the constructor.
+ *     The class methods are as follows:
+ *        New(<cFile>) Create a new instance of the THtml class.
+ *        Close() Close the create file
+ *        WriteTitle(<cTopic>,<cTitle>) Write the file title
+ *        WritePar(<cPar>)   Writes a paragrafer
+ *        WriteParBold(<cPar>)   Same as WritePar(), but the text is bold style.
+ *        WriteLink(<cLink>)  Write a link to another topic
+ *        WriteText()  Writes a text with out formating
+ *  $EXAMPLES$
+ *     FUNCTION MAIN()
+ *
+ *     LOCAL oTroff
+ *     oTroff := TTroff():New( "tr\harbour.ngi" )
+ *     oTroff:WriteTitle( "Harbour Reference Guide" )
+ *     oTroff:WritePar( "HARBOUR" )
+ *     oTroff:WriteLink( "OverView" )
+ *     oTroff:WriteLink( "License" )
+ *     
+ *     oTroff:WritePar( "See the Links Above" )
+ *     oTroff:Close()
+ *
+ *     RETURN Nil
+ *
+ *  $TESTS$
+ *
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     This is a new Harbour Tools class
+ *  $PLATFORMS$
+ *     ALL
+ *  $FILES$
+ *
+ *  $SEEALSO$
+ *     TCLASS()
+ *  $END$
+ */

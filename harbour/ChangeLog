@@ -1,3 +1,19 @@
+20000128-20:3  GMT+3 Luiz Rafael Culik <culik@sl.conex.net>
+   *source/rdd/dbcmd.c
+   *source/rtl/arrays.c
+        *Enhaced the Docs
+   *doc/whatnew.txt
+        *Description of the program that extract documention from source code forget the OS2 and TROFF output
+20000115-20:3  GMT+3 Luiz Rafael Culik <culik@sl.conex.net>
+
+   * ngdoc/ft_helpc.prg
+       * Fixed some erros
+   * source/tools/rtf.prg
+   * source/tools/ng.prg
+   * source/tools/os2.prg
+   * source/tools/troff.prg
+       * Fixed the aligment of text on generating the source files
+
 20000127-12:54 GMT+1 Patrick Mast <harbour@PatrickMast.com>
    * doc/whatsnew.txt
      * updated for build 31

@@ -2036,65 +2036,44 @@ HARBOUR HB_DBCLOSEAREA( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     DBCOMMIT()
+ *      DBCOMMIT()
  *  $CATEGORY$
- *     DATA BASE
+ *      DATA BASE
  *  $ONELINER$
- *     Flush pending updates
+ *      Updates all index and database buffers for a given workarea
  *  $SYNTAX$
  *     DBCOMMIT() --> NIL
  *  $ARGUMENTS$
  *     
  *  $RETURNS$
- *     DBCOMMIT() always returns NIL.
+ *      DBCOMMIT() always returns NIL.
  *  $DESCRIPTION$
- *     DBCOMMIT() causes all updates to the current work area to be written to
- *   disk.  All updated database and index buffers are written to DOS and a
- *   DOS COMMIT request is issued for the database (.dbf) file and any index
- *   files associated with the work area.
- *
- *   DBCOMMIT() performs the same function as the standard COMMIT command
- *   except that it operates only on the current work area.  For more
- *   information, refer to the COMMIT command.
- * 
- *  Notes
- *
- *      Network environment: DBCOMMIT() makes database updates visible
- *      to other processes.  To insure data integrity, issue DBCOMMIT()
- *      before an UNLOCK operation.  For more information, refer to the
- *      Network Programming chapter in the Programming and Utilities guide.
- *
- *     DBCOMMIT() uses DOS interrupt 21h function 68h to perform the
- *      solid-disk write.  It is up to the network operating system to
- *      properly implement this request.  Check with the network vendor to
- *      see if this is supported.
- *     
+ *      This function updates all of the information for a give,selected,
+ *      or active workarea.This operation includes all database and index
+ *      buffers for that work area only. This function does not update all
+ *      open work areas.
  *  $EXAMPLES$
- *      In this example, COMMIT is used to force a write to disk after
- *      a series of memory variables are assigned to field variables:
- *
- *      USE Sales EXCLUSIVE NEW
- *      MEMVAR->Name := Sales->Name
- *      MEMVAR->Amount := Sales->Amount
+ *      FUNCTION Main()
+ *      LOCAL cName:=SPACE(40)
+ *      LOCAL nId:=0
+ *      USE Test EXCLUSIVE NEW
  *      //
- *      @ 10, 10 GET MEMVAR->Name
- *      @ 11, 10 GET MEMVAR->Amount
+ *      @ 10, 10 GET cName
+ *      @ 11, 10 GET nId
  *      READ
  *      //
  *      IF UPDATED()
  *         APPEND BLANK
- *         REPLACE Sales->Name WITH MEMVAR->Name
- *         REPLACE Sales->Amount WITH MEMVAR->Amount
- *         Sales->( DBCOMMIT() )
+ *         REPLACE Tests->Name WITH cName
+ *         REPLACE Tests->Id WITH nId
+ *         Tests->( DBCOMMIT() )
  *      ENDIF
- *
+ *      RETURN NIL
  *  $TESTS$
  *
  *  $STATUS$
  *     R
  *  $COMPLIANCE$
- *
- *
  *  $SEEALSO$
  *     DBCLOSEALL(),DBCOMMITALL(),DBUNLOCK()
  *  $INCLUDE$
@@ -2115,7 +2094,7 @@ HARBOUR HB_DBCOMMIT( void )
  *  $CATEGORY$
  *     DATA BASE
  *  $ONELINER$
- *     Flush pending updates in all work areas
+ *     Flushes the memory buffer and performs a hard-disk write
  *  $SYNTAX$
  *     DBCOMMIT() --> NIL
  *  $ARGUMENTS$
@@ -2123,53 +2102,35 @@ HARBOUR HB_DBCOMMIT( void )
  *  $RETURNS$
  *     DBCOMMIT() always returns NIL.
  *  $DESCRIPTION$
- *   DBCOMMITALL() causes all pending updates to all work areas to be written
- *   to disk.  It is equivalent to calling DBCOMMIT() for every occupied work
- *   area.
- *   For more information, refer to DBCOMMIT().
- * Notes
- *     DBCOMMITALL() uses DOS interrupt 21h function 68h to perform
- *      the solid-disk write.  It is up to the network operating system to
- *      properly implement this request.  Check with the network vendor to
- *      see if this is supported.
- *     
+ *      This function performs a hard-disk write for all work areas.
+ *      Before the disk write is performed,all buffers are flushed.
+ *      open work areas.
  *  $EXAMPLES$
-
- *     The following example writes all pending updates to disk:
-
- *      cLast := "Winston"
+ *      FUNCTION Main()
+ *      LOCAL cName:=SPACE(40)
+ *      LOCAL nId:=0
+ *      USE Test EXCLUSIVE NEW
+ *      USE TestId New INDEX Testid
  *      //
- *      DBUSEAREA( .T., "DBFNTX", "Sales", "Sales", .T. )
- *      DBSETINDEX( "SALEFNAM" )
- *      DBSETINDEX( "SALELNAM" )
+ *      @ 10, 10 GET cName
+ *      @ 11, 10 GET nId
+ *      READ
  *      //
- *      DBUSEAREA( .T., "DBFNTX", "Colls", "Colls", .T. )
- *      DBSETINDEX( "COLLFNAM" )
- *      DBSETINDEX( "COLLLNAM" )
-
- *      DBSELECTAREA( "Sales" )      // select "Sales" work area
-
- *      IF ( Sales->(DBSEEK(cLast)) )
- *         IF Sales->( DELETED() ) .AND. Sales( RLOCK() )
- *            Sales->( DBRECALL() )
- *            ? "Deleted record has been recalled."
+ *      IF UPDATED()
+ *         APPEND BLANK
+ *         REPLACE Tests->Name WITH cName
+ *         REPLACE Tests->Id WITH nId
+ *         IF !TestId->(DBSEEK(nId))
+ *            APPEND BLANK
+ *            REPLACE Tests->Id WITH nId
  *         ENDIF
- *      ELSE
- *         ? "Not found"
  *      ENDIF
- *      //
- *      // processing done, write updates to disk and close
  *      DBCOMMITALL()
- *      DBCLOSEALL()
- *      QUIT
- *
+ *      RETURN NIL
  *  $TESTS$
- *
  *  $STATUS$
  *     R
  *  $COMPLIANCE$
- *
-
  *  $SEEALSO$
  *     DBCLOSEALL(),DBCOMMIT(),DBUNLOCK()
  *  $INCLUDE$
@@ -2191,7 +2152,7 @@ HARBOUR HB_DBCOMMITALL( void )
 
 /*  $DOC$
  *  $FUNCNAME$
- *     __DBCONTINUE
+ *     __DBCONTINUE()
  *  $CATEGORY$
  *     DATA BASE
  *  $ONELINER$
@@ -2213,9 +2174,9 @@ HARBOUR HB_DBCOMMITALL( void )
  *   Each work area may have an active LOCATE condition.  In CA-Clipper, a
  *   LOCATE condition remains pending until a new LOCATE condition is
  *   specified.  No other commands release the condition.
-
- Notes
-
+ *
+ *   Notes
+ *
  *     Scope and WHILE condition: Note that the scope and WHILE
  *      condition of the initial LOCATE are ignored; only the FOR condition
  *      is used with CONTINUE.  If you are using a LOCATE with a WHILE
@@ -2688,7 +2649,7 @@ HARBOUR HB_DBCREATE( void )
  *  $CATEGORY$
  *     DATA BASE
  *  $ONELINER$
- *     Mark a record for deletion
+ *     Marks records for deletion in a database.
  *  $SYNTAX$
  *     DBDELETE() --> NIL
  *  $ARGUMENTS$
@@ -2696,52 +2657,25 @@ HARBOUR HB_DBCREATE( void )
  *  $RETURNS$
  *     DBDELETE() always returns NIL.
  *  $DESCRIPTION$
-       DBDELETE() marks the current record as deleted.  Records marked for
-     deletion can be filtered using SET DELETED or removed from the file
-     using the PACK command.
-
-     DBDELETE() performs the same function as the standard DELETE command
-     with a scope of the current record.  For more information, refer to the
-     DELETE command.
-
- Notes
-
-       Logical records: If the global _SET_DELETED status is true
-        (.T.), deleted records are not logically visible.  That is, database
-        operations which operate on logical records will not consider records
-        marked for deletion.  Note, however, that if _SET_DELETED is true
-        (.T.) when the current record is marked for deletion, the record
-        remains visible until it is no longer the current record.
-
-       Network environment: For a shared database on a network,
-        DBDELETE() requires the current record to be locked.  For more
-        information, refer to the Network Programming chapter of the
-        Programming and Utilities guide.
- *     
+ *      This function marks a record for deletion in the selected
+ *      or aliased work area.If the DELETED setting is on, the record
+ *      will still be visible until the record pointer in that work area
+ *      is moved to another record.
+ *      In a networking situation, this function requires that the record
+ *      be locked prior to issuing the DBDELETE() function.
  *  $EXAMPLES$
-       The following example deletes a record after a successful
-        record lock:
-
-        cLast := "Winston"
-        DBUSEAREA( .T., "DBFNTX", "Sales", "Sales", .T. )
-        DBSETINDEX( "LASTNAME" )
-        //
-        IF ( Sales->(DBSEEK(cLast)) )
-           IF Sales->( RLOCK() )
-              Sales->( DBDELETE() )
-              ? "Record deleted: ", Sales( DELETED() )
-           ELSE
-              ? "Unable to lock record..."
-           ENDIF
-        ELSE
-           ? "Not found"
-        ENDIF
+ *      nId:=10
+ *      USE TestId INDEX TestId NEW
+ *      IF TestId->(DBSEEK(nId))
+ *         IF TestId->(RLOCK())
+ *            DBDELETE()
+ *         ENDIF
+ *      ENDIF
+ *      USE
  *  $TESTS$
- *
  *  $STATUS$
  *     R
- *  $COMPLIANCE$
- *     
+ *  $COMPLIANCE$     
  *  $SEEALSO$
  *    DBRECALL() 
  *  $INCLUDE$
@@ -2758,78 +2692,34 @@ HARBOUR HB_DBDELETE( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     DBFILTER()
+ *      DBFILTER()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Return the current filter expression as a character string
+ *      Return the filter expression in a work area
  *  $SYNTAX$
- *     DBFILTER() --> cFilter
+ *      DBFILTER() --> cFilter
  *  $ARGUMENTS$
  *     
  *  $RETURNS$
- *     DBFILTER() returns the filter condition defined in the current work area
- *   as a character string.  If no FILTER has been SET, DBFILTER() returns a
- *   null string ("").
- *     
+ *      DBFILTER() returns the filter expression.
  *  $DESCRIPTION$
- *     DBFILTER() is a database function used to save and reexecute an active
- *   filter by returning the filter expression as a character string that can
- *   be later recompiled and executed using the macro operator (&).  This
- *   function operates like the DBRELATION() and DBRSELECT() functions which
- *   save and reexecute the linking expression of a relation within a work
- *   area.
- *
- *   Since each work area can have an active filter, DBFILTER() can return
- *   the filter expression of any work area.  This is done by referring to
- *   DBFILTER() within an aliased expression as demonstrated below.
- *
- *   Notes
- *
- *     Declared variables: A character string returned by DBFILTER()
- *      may not operate correctly when recompiled and executed using the
- *      macro operator (&) if the original filter expression contained
- *      references to local or static variables, or otherwise depended on
- *      compile-time declarations.
- *     
+ *      This function return the expression of the SET FILTER TO command
+ *      for the current or designated work area. If no filter condition
+ *      is present,a NULL string will be returned.
  *  $EXAMPLES$
- *     This example opens two database files, sets two filters, then
- *      displays the filter expressions for both work areas:
- *
- *      USE Customer INDEX Customer NEW
- *      SET FILTER TO Last = "Smith"
- *      USE Invoices INDEX Invoices NEW
- *      SET FILTER TO CustId = "Smi001"
- *      SELECT Customer
+ *      USE Test INDEX Test NEW
+ *      SET FILTER TO Name= "Harbour"
+ *      USE TestId INDEX TestId NEW
+ *      SET FILTER TO Id = 1
+ *      SELECT Test
  *      //
- *      ? DBFILTER()                  // Result: Last = "Smith"
- *      ? Invoices->(DBFILTER())      // Result: Custid = "Smi001"
- *
- *     This user-defined function, CreateQry(), uses DBFILTER() to
- *      create a memory file containing the current filter expression in the
- *      private variable cFilter:
- *
- *      FUNCTION CreateQry( cQryName )
- *
- *         PRIVATE cFilter := DBFILTER()
- *         SAVE ALL LIKE cFilter TO (cQryName + ".qwy")
- *         RETURN NIL
- *
- *     You can later RESTORE a query file with this user-defined
- *      function, SetFilter():
- *
- *      FUNCTION SetFilter()
- *      PARAMETER cQryName
- *         RESTORE FROM &cQryName..qwy ADDITIVE
- *         SET FILTER TO &cFilter.
- *         RETURN NIL
- *
+ *      ? DBFILTER()           
+ *      ? TestId->(DBFILTER()) 
  *  $TESTS$
- *
  *  $STATUS$
  *     R
  *  $COMPLIANCE$
- *
  *  $SEEALSO$
  *      DBRELATION(),DBRSELECT()
  *  $INCLUDE$
@@ -2853,65 +2743,36 @@ HARBOUR HB_DBFILTER( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     DBGOBOTTOM()
+ *      DBGOBOTTOM()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Move to the last logical record
+ *      Moves the record pointer to the bottom of the database.
  *  $SYNTAX$
- *     DBGOBOTTOM() --> NIL
+ *      DBGOBOTTOM() --> NIL
  *  $ARGUMENTS$
  *     
  *  $RETURNS$
- *     DBGOBOTTOM() always returns NIL.
+ *      DBGOBOTTOM() always returns NIL.
  *  $DESCRIPTION$
- *     DBGOBOTTOM() moves to last logical record in the current work area.
- *
- *     DBGOBOTTOM() performs the same function as the standard GO BOTTOM
- *   command.  For more information, refer to the GO command.
- *
- *  Notes
- *
- *     Logical records: DBGOBOTTOM() operates on logical records.  If
- *      there is an active index, DBGOBOTTOM() moves to the last record in
- *      indexed order.  If a filter is set, only records which meet the
- *      filter condition are considered.
- *
- *     Controlling order: If more than one index is active in the
- *      work area, the operation is performed using the controlling order as
- *      set by DBSETORDER() or the SET ORDER command.  For more information,
- *      refer to the SET ORDER command.
- *
- *     Network environment: For a shared file on a network, moving to
- *      a different record may cause updates to the current record to become
- *      visible to other processes. 
- *    
+ *      This function moves the record pointer in the selected or aliased
+ *      work area to the end of the file.The position of the record pointer
+ *      is affected by the values in the index key or by an active FILTER
+ *      condition.Otherwise,if no index is active or if no filter condition
+ *      is present,the value of the record pointer will be LASTREC().
  *  $EXAMPLES$
- *     The following example uses DBGOBOTTOM() to position the record
- *      pointer on the last logical record:
- *
- *      cLast := "Winston"
- *      DBUSEAREA( .T., "DBFNTX", "Sales", "Sales", .T. )
- *      DBSETINDEX( "LASTNAME" )
- *      //
- *      Sales->( DBGOBOTTOM() )
- *      IF ( Sales->Last == "Winston" )
- *         IF RLOCK()
- *            Sales->( DBDELETE() )
- *            ? "Record deleted: ", Sales( DELETED() )
- *         ELSE
- *            ? "Unable to lock record..."
- *         ENDIF
- *      END
- *
+ *      USE Tests
+ *      DBGOTOP()
+ *      ? RECNO()
+ *      DBGOBOTTOM()
+ *      ? RECNO()
+ *      USE
  *  $TESTS$
- *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
- *
  *  $SEEALSO$
- *     BOF(),EOF(),DBSKIP(),DBSEEK(),DBGOTOP()
+ *      BOF(),EOF(),DBSKIP(),DBSEEK(),DBGOTOP()
  *  $INCLUDE$
  *     
  *  $END$
@@ -2926,40 +2787,31 @@ HARBOUR HB_DBGOBOTTOM( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     DBGOTO()
+ *      DBGOTO()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Move to the record having the specified record number
+ *      Position the record pointer to a specific location.
  *  $SYNTAX$
- *     DBGOTO(<nRecordNumber>) --> NIL
+ *      DBGOTO(<xRecordNumber>) --> NIL
  *  $ARGUMENTS$
- *     <nRecordNumber> is a numeric value that specifies the record number
- *   of the desired record.
- *     
+ *      <xRecordNumber> Record number or unique identity
  *  $RETURNS$
- *     DBGOTO() always returns NIL.
+ *      DBGOTO() always returns NIL.
  *  $DESCRIPTION$
- *     DBGOTO() moves to the record whose record number is equal to
- *   <nRecordNumber>.  If no such record exists, the work area is positioned
- *   to LASTREC() + 1 and both EOF() and BOF() return true (.T.).
- *
- *   DBGOTO() performs the same function as the standard GO command.  For
- *   more information, refer to the GO command.
- *
- *   Notes
- *
- *     Logical records: DBGOTO() does not respect logical visibility.
- *      That is, if the specified record exists, it will become the current
- *      record regardless of any index or filter condition.
- *
- *     Network environment: For a shared file on a network, moving to
- *      a different record may cause updates to the current record to become
- *      visible to other processes. 
- *     
+ *      This function places the record pointer,if working with a .DBF file,
+ *      in selected or aliased work area at the record number specified by
+ *      <xRecordNumber>.The position if not affected by an active index or
+ *      by any enviromental SET condiction.
+ *      Issuing a DBGOTO(RECNO()) call in a network enviroment will refresh
+ *      the database and index buffers.This is the same as a DBSKIP(0) call.
+ *      The parameter <xRecordNumber> may be something other than a record
+ *      number.In some data formats, for example, the value of <xRecordNumber>
+ *      is a unique primary key while in other formats,<xRecordNumber> could
+ *      be an array offset if the data set was an array.
  *  $EXAMPLES$
  *
- *     The following example uses DBGOTO() to iteratively process
+ *      The following example uses DBGOTO() to iteratively process
  *      every fourth record:
  *
  *      DBUSEAREA( .T., "DBFNTX", "Sales", "Sales", .T. )
@@ -3001,58 +2853,35 @@ HARBOUR HB_DBGOTO( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     DBGOTOP()
+ *      DBGOTOP()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Move to the first logical record
+ *      Moves the record pointer to the bottom of the database.
  *  $SYNTAX$
- *     DBGOTOP() --> NIL
+ *      DBGOTOP() --> NIL
  *  $ARGUMENTS$
  *     
  *  $RETURNS$
- *     DBGOTOP() always returns NIL.
- *  $DESCRIPTION$
- *     DBGOTOP() moves to last logical record in the current work area.
- *
- *     DBGOTOP() performs the same function as the standard GO TOP
- *   command.  For more information, refer to the GO command.
- *
- *  Notes
- *
- *     Logical records: DBGOTOP() operates on logical records.  If
- *      there is an active index, DBGOTOP() moves to the last record in
- *      indexed order.  If a filter is set, only records which meet the
- *      filter condition are considered.
- *
- *     Controlling order: If more than one index is active in the
- *      work area, the operation is performed using the controlling order as
- *      set by DBSETORDER() or the SET ORDER command.  For more information,
- *      refer to the SET ORDER command.
- *
- *     Network environment: For a shared file on a network, moving to
- *      a different record may cause updates to the current record to become
- *      visible to other processes. 
- *    
+ *      DBGOTOP() always returns NIL.
+ *      This function moves the record pointer in the selected or aliased
+ *      work area to the top of the file.The position of the record pointer
+ *      is affected by the values in the index key or by an active FILTER
+ *      condition.Otherwise,if no index is active or if no filter condition
+ *      is present,the value of RECNO() will be 1.
  *  $EXAMPLES$
- *
- *     This example demonstrates the typical use of DBGOTOP():
- *
+ *      USE Tests
  *      DBGOTOP()
- *      WHILE ( !EOF() )
- *         ? FIELD->Name
- *         DBSKIP()
- *      END
- *
- *
+ *      ? RECNO()
+ *      DBGOBOTTOM()
+ *      ? RECNO()
+ *      USE
  *  $TESTS$
- *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
- *
  *  $SEEALSO$
- *     BOF(),EOF(),DBSKIP(),DBSEEK(),DBGOBOTTOM()
+ *      BOF(),EOF(),DBSKIP(),DBSEEK(),DBGOBOTTOM()
  *  $INCLUDE$
  *     
  *  $END$
@@ -3303,67 +3132,40 @@ HARBOUR HB___DBPACK( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     DBRECALL()
+ *      DBRECALL()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Reinstate a record marked for deletion
+ *      Recalls a record previousy marked for deletion.
  *  $SYNTAX$
- *     DBRECALL() --> NIL
+ *      DBRECALL() --> NIL
  *  $ARGUMENTS$
- *     
+ *      
  *  $RETURNS$
- *     DBRECALL() always returns NIL.
+ *      DBRECALL() always returns NIL.
  *  $DESCRIPTION$
- *     DBRECALL() causes the current record to be reinstated if it is marked
- *   for deletion.
- *
- *     DBRECALL() performs the same function as the RECALL command.  For more
- *   information, refer to the DELETE and RECALL commands.
- *
- *     Notes
- *
- *     Logical records: Reinstating a deleted record affects the
- *      record's logical visibility if the global _SET_DELETED status is true
- *      (.T.).  For more information, refer to the DBDELETE() function and
- *      the DELETE and RECALL commands.
- *
- *     Network environment: For a shared database on a network,
- *      DBRECALL() requires the current record to be locked. 
- *     
+ *      This function unmarks those records marked for deletion nd reactivates
+ *      them in the aliased or selected work area.If a record is DELETED and
+ *      the DELETED setting is on, the record will still be visible for a
+ *      DBRECALL() provided that the database record pointer has not been 
+ *      skipped.Once a record marked for deletion with the DELETE setting ON
+ *      has been skipped, it no longer canbe brought back with DBRECALL().
  *  $EXAMPLES$
- *
- *     The following example recalls a record if it is deleted and
- *      attempts to lock the record if successful:
- *
- *      cLast := "Winston"
- *      DBUSEAREA( .T., "DBFNTX", "Sales", "Sales", .T. )
- *      DBSETINDEX( "LASTNAME" )
- *      //
- *      IF ( Sales->(DBSEEK(cLast)) )
- *         IF Sales->( DELETED() )
- *
- *            IF Sales( RLOCK() )
- *               Sales( DBRECALL() )
- *               ? "Record recalled"
- *            ELSE
- *               ? "Unable to lock record..."
- *            ENDIF
- *         ENDIF
- *      ELSE
- *         ? "Not found"
- *      ENDIF
- *
+ *      USE Test NEW
+ *      DBGOTO(10)
+ *      DBDELETE()
+ *      ? DELETED()
+ *      DBRECALL()
+ *      ? DELETED()
+ *      USE
  *  $TESTS$
- *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
- *
  *  $SEEALSO$
- *     DBDELETE()
+ *      DBDELETE()
  *  $INCLUDE$
- *     
+ *      
  *  $END$
  */
 
@@ -3376,35 +3178,35 @@ HARBOUR HB_DBRECALL( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     DBRLOCK()
+ *      DBRLOCK()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Lock the record at the current or specified identity
+ *      Lock the record at the current or specified identity
  *  $SYNTAX$
- *     DBRLOCK([<xIdentity>]) --> lSuccess
+ *      DBRLOCK([<xIdentity>]) --> lSuccess
  *  $ARGUMENTS$
- *     <xIdentity> is a unique value guaranteed by the structure of the
- *   data file to reference a specific item in a data source (database).  In
- *   a (.dbf) <xIdentity> is the record number.  In other data formats,
- *   <xIdentity> is the unique primary key value.
- *     
+ *      <xIdentity> is a unique value guaranteed by the structure of the
+ *      data file to reference a specific item in a data source (database).  In
+ *      a (.dbf) <xIdentity> is the record number.  In other data formats,
+ *      <xIdentity> is the unique primary key value.
+ *      
  *  $RETURNS$
  *
- *     DBRLOCK() returns lSuccess, a logical data type that is true (.T.) if
- *   successful, false (.F.) if unsuccessful.
+ *      DBRLOCK() returns lSuccess, a logical data type that is true (.T.) if
+ *      successful, false (.F.) if unsuccessful.
  *
  *  $DESCRIPTION$
- *     DBRLOCK() is a database function that locks the record identified by the
- *   value <xIdentity>.  In Xbase, <xIdentity> is the record number.
+ *      DBRLOCK() is a database function that locks the record identified by the
+ *      value <xIdentity>.  In Xbase, <xIdentity> is the record number.
  *
- *     If you do not specify <xIdentity>, all record locks are released and the
- *   current record is locked.  If you specify <xIdentity>, DBRLOCK()
- *   attempts to lock it and, if successful, adds it to the locked record
- *   list.
- *     
+ *      If you do not specify <xIdentity>, all record locks are released and the
+ *      current record is locked.  If you specify <xIdentity>, DBRLOCK()
+ *      attempts to lock it and, if successful, adds it to the locked record
+ *      list.
+ *      
  *  $EXAMPLES$
- *     This example shows two different methods for locking multiple
+ *      This example shows two different methods for locking multiple
  *      records:
  *
  *      FUNCTION dbRLockRange( nLo, nHi )
@@ -3433,13 +3235,13 @@ HARBOUR HB_DBRECALL( void )
  *  $TESTS$
  *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     DBUNLOCK(),DBUNLOCKALL(),FLOCK(),RLOCK()
+ *      DBUNLOCK(),DBUNLOCKALL(),FLOCK(),RLOCK()
  *  $INCLUDE$
- *     
+ *      
  *  $END$
  */
 
@@ -3461,25 +3263,25 @@ HARBOUR HB_DBRLOCK( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     DBRLOCKLIST()
+ *      DBRLOCKLIST()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Return an array of the current Lock List
+ *      Return an array of the current Lock List
  *  $SYNTAX$
- *     DBRLOCKLIST() --> aRecordLocks
+ *      DBRLOCKLIST() --> aRecordLocks
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *   Returns an array of the locked records in the current or aliased work
- *   area.    
+ *      Returns an array of the locked records in the current or aliased work
+ *      area.    
  *  $DESCRIPTION$
- *     DBRLOCKLIST() is a database function that returns a one-dimensional
- *   array that contains the identities of record locks active in the
- *   selected work area.
- *     
+ *      DBRLOCKLIST() is a database function that returns a one-dimensional
+ *      array that contains the identities of record locks active in the
+ *      selected work area.
+ *      
  *  $EXAMPLES$
- *   PROCEDURE PrintCurLocks()
+ *      PROCEDURE PrintCurLocks()
  *
  *      LOCAL aList
  *      LOCAL nSize
@@ -3500,13 +3302,13 @@ HARBOUR HB_DBRLOCK( void )
  *  $TESTS$
  *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     RLOCK(),DBRLOCK(),DBRUNLOCK()
+ *      RLOCK(),DBRLOCK(),DBRUNLOCK()
  *  $INCLUDE$
- *     
+ *      
  *  $END$
  */
 
@@ -3525,27 +3327,27 @@ HARBOUR HB_DBRLOCKLIST( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     DBRUNLOCK()
+ *      DBRUNLOCK()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Release all or specified record locks
+ *      Release all or specified record locks
  *  $SYNTAX$
- *     DBRUNLOCK([<xIdentity>]) --> NIL
+ *      DBRUNLOCK([<xIdentity>]) --> NIL
  *  $ARGUMENTS$
- *     <xIdentity> is a unique value guaranteed by the structure of the
+ *      <xIdentity> is a unique value guaranteed by the structure of the
  *   data file to reference a specific item in a data source (database).  In
  *   a (.dbf) <xIdentity> is the record number.  In other data formats,
  *   <xIdentity> is the unique primary key value.   
  *  $RETURNS$
- *     DBRUNLOCK() always returns NIL.
+ *      DBRUNLOCK() always returns NIL.
  *  $DESCRIPTION$
- *     DBRUNLOCK() is a database function that releases the lock on <xIdentity>
+ *      DBRUNLOCK() is a database function that releases the lock on <xIdentity>
  *   and removes it from the Lock List.  If <xIdentity> is not specified, all
  *   record locks are released.
- *     
+ *      
  *  $EXAMPLES$
- *     PROCEDURE dbRUnlockRange( nLo, nHi )
+ *      PROCEDURE dbRUnlockRange( nLo, nHi )
  *
  *      LOCAL nCounter
  *
@@ -3559,13 +3361,13 @@ HARBOUR HB_DBRLOCKLIST( void )
  *  $TESTS$
  *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
  *      RLOCK(),DBRLOCK(),DBRLOCKLIST()
  *  $INCLUDE$
- *     
+ *      
  *  $END$
  */
 
@@ -3578,29 +3380,29 @@ HARBOUR HB_DBRUNLOCK( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     DBSEEK()
+ *      DBSEEK()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Move to the record having the specified key value
+ *      Move to the record having the specified key value
  *  $SYNTAX$
- *     DBSEEK(<expKey>, [<lSoftSeek>],[<lFindLast>]) --> lFound
+ *      DBSEEK(<expKey>, [<lSoftSeek>],[<lFindLast>]) --> lFound
  *  $ARGUMENTS$
- *     <expKey> is a value of any type that specifies the key value
+ *      <expKey> is a value of any type that specifies the key value
  *   associated with the desired record.
  *
- *     <lSoftSeek> is an optional logical value that specifies whether a
+ *      <lSoftSeek> is an optional logical value that specifies whether a
  *   soft seek is to be performed.  This determines how the work area is
  *   positioned if the specified key value is not found (see below).  If
  *   <lSoftSeek> is omitted, the current global _SET_SOFTSEEK setting is
  *   used.
- *     <lFindLast> is an optional logical value that set the current
+ *      <lFindLast> is an optional logical value that set the current
  *   record position to the last record if successful
  *  $RETURNS$
- *     DBSEEK() returns true (.T.) if the specified key value was found;
+ *      DBSEEK() returns true (.T.) if the specified key value was found;
  *   otherwise, it returns false (.F.).
  *  $DESCRIPTION$
- *     DBSEEK() moves to the first logical record whose key value is equal to
+ *      DBSEEK() moves to the first logical record whose key value is equal to
  *   <expKey>.  If such a record is found, it becomes the current record and
  *   DBSEEK() returns true (.T.).  Otherwise, DBSEEK() returns false (.F.)
  *   and the positioning of the work area is as follows: for a normal (not
@@ -3610,29 +3412,29 @@ HARBOUR HB_DBRUNLOCK( void )
  *   If no such record exists, the work area is positioned to LASTREC() + 1
  *   and EOF() returns true (.T.).
  *
- *     For a work area with no active indexes, DBSEEK() has no effect.
+ *      For a work area with no active indexes, DBSEEK() has no effect.
  *
- *     DBSEEK() performs the same function as the standard SEEK command.  For
+ *      DBSEEK() performs the same function as the standard SEEK command.  For
  *   more information, refer to the SEEK command.
  *
  *    Notes
  *
- *     Logical records: DBSEEK() operates on logical records.
+ *      Logical records: DBSEEK() operates on logical records.
  *      Records are considered in indexed order.  If a filter is set, only
  *      records which meet the filter condition are considered.
  *
- *     Controlling order: If the work area has more than one active
+ *      Controlling order: If the work area has more than one active
  *      index, the operation is performed using the controlling order as set
  *      by DBSETORDER() or the SET ORDER command.  For more information,
  *      refer to the SET ORDER command.
  *
- *     Network environment: For a shared file on a network, moving to
+ *      Network environment: For a shared file on a network, moving to
  *      a different record may cause updates to the current record to become
  *      visible to other processes.
  *
- *     
+ *      
  *  $EXAMPLES$
- *     In this example, DBSEEK() moves the pointer to the record in
+ *      In this example, DBSEEK() moves the pointer to the record in
  *      the database, Employee, in which the value in FIELD “cName” matches
  *      the entered value of cName:
  *
@@ -3646,13 +3448,13 @@ HARBOUR HB_DBRUNLOCK( void )
  *  $TESTS$
  *
  *  $STATUS$
- *     S
+ *      S
  *  $COMPLIANCE$
- *     DBSEEK() is  Compatible with CA-Clipper 5.3
+ *      DBSEEK() is  Compatible with CA-Clipper 5.3
  *  $SEEALSO$
- *     DBGOBOTTOM(),DBGOTOP(),DBSKIP(),EOF(),BOF(),FOUND()
+ *      DBGOBOTTOM(),DBGOTOP(),DBSKIP(),EOF(),BOF(),FOUND()
  *  $INCLUDE$
- *     
+ *      
  *  $END$
  */
 
@@ -3683,25 +3485,25 @@ HARBOUR HB_DBSEEK( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     DBSELECTAREA()
+ *      DBSELECTAREA()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Change the current work area
+ *      Change the current work area
  *  $SYNTAX$
- *     DBSELECTAREA(<nArea> | <cAlias>) --> NIL
+ *      DBSELECTAREA(<nArea> | <cAlias>) --> NIL
  *  $ARGUMENTS$
- *     <nArea> is a numeric value between zero and 250, inclusive, that
+ *      <nArea> is a numeric value between zero and 250, inclusive, that
  *   specifies the work area being selected.
  *
- *     <cAlias> is a character value that specifies the alias of a
+ *      <cAlias> is a character value that specifies the alias of a
  *   currently occupied work area being selected.
- *     
+ *      
  *  $RETURNS$
- *     DBSELECTAREA() always returns NIL.
+ *      DBSELECTAREA() always returns NIL.
  *  $DESCRIPTION$
  *
- *     DBSELECTAREA() causes the specified work area to become the current work
+ *      DBSELECTAREA() causes the specified work area to become the current work
  *   area.  All subsequent database operations will apply to this work area
  *   unless another work area is explicitly specified for an operation.
  *   DBSELECTAREA() performs the same function as the standard SELECT
@@ -3709,16 +3511,16 @@ HARBOUR HB_DBSEEK( void )
  *
  *   Notes
  *
- *     Selecting zero: Selecting work area zero causes the lowest
+ *      Selecting zero: Selecting work area zero causes the lowest
  *      numbered unoccupied work area to become the current work area.
  *
- *     Aliased expressions: The alias operator (->) can temporarily
+ *      Aliased expressions: The alias operator (->) can temporarily
  *      select a work area while an expression is evaluated and automatically
  *      restore the previously selected work area afterward.  For more
  *      information, refer to the alias operator (->).
  *
  *  $EXAMPLES$
- *     The following example selects a work area via the alias name:
+ *      The following example selects a work area via the alias name:
  *
  *      cLast := "Winston"
  *      DBUSEAREA( .T., "DBFNTX", "Sales", "Sales", .T. )
@@ -3743,13 +3545,13 @@ HARBOUR HB_DBSEEK( void )
  *  $TESTS$
  *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     DBUSEAREA(),SELECT()
+ *      DBUSEAREA(),SELECT()
  *  $INCLUDE$
- *     
+ *      
  *  $END$
  */
 
@@ -3802,27 +3604,27 @@ HARBOUR HB_DBSELECTAREA( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     DBSETDRIVER()
+ *      DBSETDRIVER()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Return the default database driver and optionally set a new driver
+ *      Return the default database driver and optionally set a new driver
  *  $SYNTAX$
- *     DBSETDRIVER([<cDriver>]) --> cCurrentDriver
+ *      DBSETDRIVER([<cDriver>]) --> cCurrentDriver
  *  $ARGUMENTS$
- *     <cDriver> is an optional character value that specifies the name of
+ *      <cDriver> is an optional character value that specifies the name of
  *   the database driver that should be used to activate and manage new work
  *   areas when no driver is explicitly specified.   
  *  $RETURNS$
- *     DBSETDRIVER() returns the name of the current default driver.
+ *      DBSETDRIVER() returns the name of the current default driver.
  *  $DESCRIPTION$
- *     DBSETDRIVER() sets the database driver to be used when activating new
+ *      DBSETDRIVER() sets the database driver to be used when activating new
  *   work areas without specifying a driver.  If the specified driver is not
  *   available to the application, the call has no effect.  DBSETDRIVER()
  *   returns the name of the current default driver, if any.
- *     
+ *      
  *  $EXAMPLES$
- *     This example makes the "DBFNDX" driver the default driver.  If
+ *      This example makes the "DBFNDX" driver the default driver.  If
  *      the driver is unavailable, a message is issued:
  *      DBSETDRIVER("DBFNDX")
  *      IF ( DBSETDRIVER() <> "DBFNDX" )
@@ -3832,13 +3634,13 @@ HARBOUR HB_DBSELECTAREA( void )
  *  $TESTS$
  *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     DBUSEAREA()
+ *      DBUSEAREA()
  *  $INCLUDE$
- *     
+ *      
  *  $END$
  */
 
@@ -3878,47 +3680,47 @@ HARBOUR HB___DBSETFOUND( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     DBSKIP()
+ *      DBSKIP()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Move relative to the current record
+ *      Move relative to the current record
  *  $SYNTAX$
- *     DBSKIP([<nRecords>]) --> NIL     
+ *      DBSKIP([<nRecords>]) --> NIL     
  *  $ARGUMENTS$
- *     <nRecords> is the number of logical records to move, relative to the
+ *      <nRecords> is the number of logical records to move, relative to the
  *   current record.  A positive value means to skip forward, and a negative
  *   value means to skip backward.  If <nRecords> is omitted, a value of 1 is
  *   assumed.     
  *  $RETURNS$
- *     DBSKIP() always returns NIL.
+ *      DBSKIP() always returns NIL.
  *  $DESCRIPTION$
- *     DBSKIP() moves either forward or backward relative to the current
+ *      DBSKIP() moves either forward or backward relative to the current
  *   record.  Attempting to skip forward beyond the last record positions the
  *   work area to LASTREC() + 1 and EOF() returns true (.T.).  Attempting to
  *   skip backward beyond the first record positions the work area to the
  *   first record and BOF() returns true (.T.).
- *     DBSKIP() performs the same function as the standard SKIP command.  For
+ *      DBSKIP() performs the same function as the standard SKIP command.  For
  *   more information, refer to the SKIP command.
  *
  *    Notes
  *
- *     Logical records: DBSKIP() operates on logical records.  If
+ *      Logical records: DBSKIP() operates on logical records.  If
  *      there is an active index, records are considered in indexed order.
  *      If a filter is set, only records which meet the filter condition are
  *      considered.
  *
- *     Controlling order: If the work area has more than one active
+ *      Controlling order: If the work area has more than one active
  *      index, the skip operation is performed using the controlling order as
  *      set by DBSETORDER() or the SET ORDER command.  For more information,
  *      refer to the SET ORDER command.
  *
- *     Network environment: For a shared file on a network, moving to
+ *      Network environment: For a shared file on a network, moving to
  *      a different record may cause updates to the current record to become
  *      visible to other processes.
  *
  *  $EXAMPLES$
- *     This example demonstrates a typical use of the DBSKIP()
+ *      This example demonstrates a typical use of the DBSKIP()
  *      function:
  *
  *      DBGOTOP()
@@ -3930,13 +3732,13 @@ HARBOUR HB___DBSETFOUND( void )
  *  $TESTS$
  *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
  *    BOF(),DBGOBOTTOM(),DBGOTOP(),DBSEEK(),EOF()    
  *  $INCLUDE$
- *     
+ *      
  *  $END$
  */
 
@@ -3955,47 +3757,47 @@ HARBOUR HB_DBSKIP( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     DBSETFILTER()
+ *      DBSETFILTER()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Set a filter condition
+ *      Set a filter condition
  *  $SYNTAX$
- *     DBSETFILTER(<bCondition>, [<cCondition>]) --> NIL
+ *      DBSETFILTER(<bCondition>, [<cCondition>]) --> NIL
  *  $ARGUMENTS$
- *     <bCondition> is a code block that expresses the filter condition in
+ *      <bCondition> is a code block that expresses the filter condition in
  *   executable form.
 
- *     <cCondition> is an optional character value that expresses the
+ *      <cCondition> is an optional character value that expresses the
  *   filter condition in textual form.  If <cCondition> is omitted, the
  *   DBSETFILTER() function will return an empty string for the work area.
- *     
+ *      
  *  $RETURNS$
- *     DBSETFILTER() always returns NIL.
+ *      DBSETFILTER() always returns NIL.
  *  $DESCRIPTION$
- *     DBSETFILTER() sets a logical filter condition for the current work area.
+ *      DBSETFILTER() sets a logical filter condition for the current work area.
  *   When a filter is set, records which do not meet the filter condition are
  *   not logically visible.  That is, database operations which act on
  *   logical records will not consider these records.
 
- *     The filter expression supplied to DBSETFILTER() evaluates to true (.T.)
+ *      The filter expression supplied to DBSETFILTER() evaluates to true (.T.)
  *   if the current record meets the filter condition; otherwise, it should
  *   evaluate to false (.F.).
 
- *     The filter expression may be a code block (<bCondition>) or both a code
+ *      The filter expression may be a code block (<bCondition>) or both a code
  *   block and equivalent text (<cCondition>).  If both versions are
  *   supplied, they must express the same condition.  If the text version is
  *   omitted, DBFILTER() will return an empty string for the work area.
 
- *     DBSETFILTER() performs the same function as the standard SET FILTER
+ *      DBSETFILTER() performs the same function as the standard SET FILTER
  *   command.  For more information, refer to the SET FILTER command.
  *
- *     Notes
+ *      Notes
  *
- *     Logical records: DBSETFILTER() affects the logical visibility
+ *      Logical records: DBSETFILTER() affects the logical visibility
  *      of records (see above).
  *
- *     Side effects: Setting a filter condition is only guaranteed to
+ *      Side effects: Setting a filter condition is only guaranteed to
  *      restrict visibility of certain records as described above.  The
  *      filter expression is not necessarily evaluated at any particular
  *      time, by any particular means, or on any particular record or series
@@ -4005,13 +3807,13 @@ HARBOUR HB_DBSKIP( void )
  *      moving to a different record or changing the contents of a record),
  *      the effect is unpredictable.
  *
- *     Evaluation context: When the filter expression is evaluated,
+ *      Evaluation context: When the filter expression is evaluated,
  *      the associated work area is automatically selected as the current
  *      work area before the evaluation; the previously selected work area is
  *      automatically restored afterward.
 
  *  $EXAMPLES$
- *     This example limits data access to records in which the Age
+ *      This example limits data access to records in which the Age
  *      field value is less than 40:
  *
  *      USE Employee NEW
@@ -4021,13 +3823,13 @@ HARBOUR HB_DBSKIP( void )
  *  $TESTS$
  *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     DBFILTER(),DBCLEARFILTER()
+ *      DBFILTER(),DBCLEARFILTER()
  *  $INCLUDE$
- *     
+ *      
  *  $END$
  */
 
@@ -4057,36 +3859,36 @@ HARBOUR HB_DBSETFILTER( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     DBSTRUCT()
+ *      DBSTRUCT()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Create an array containing the structure of a database file
+ *      Create an array containing the structure of a database file
  *  $SYNTAX$
- *     DBSTRUCT() --> aStruct
+ *      DBSTRUCT() --> aStruct
  *  $ARGUMENTS$
- *     
+ *      
  *  $RETURNS$
- *     DBSTRUCT() returns the structure of the current database file in an
+ *      DBSTRUCT() returns the structure of the current database file in an
  *   array whose length is equal to the number of fields in the database
  *   file.  Each element of the array is a subarray containing information
  *   for one field.  The subarrays have the following format:
 
- *     DBSTRUCT() Return Array
- *     ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
- *     Position *   Metasymbol *   Dbstruct.ch
- *     ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
- *     1 *    *     cName *    *   DBS_NAME
- *     2 *    *     cType *    *   DBS_TYPE
- *     3 *    *     nLength *      DBS_LEN
- *     4 *    *     nDecimals *    DBS_DEC
- *     ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+ *      DBSTRUCT() Return Array
+ *      ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+ *      Position *   Metasymbol *   Dbstruct.ch
+ *      ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+ *      1 *    *      cName *    *   DBS_NAME
+ *      2 *    *      cType *    *   DBS_TYPE
+ *      3 *    *      nLength *      DBS_LEN
+ *      4 *    *      nDecimals *    DBS_DEC
+ *      ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
 
- *     If there is no database file in USE in the current work area, DBSTRUCT()
+ *      If there is no database file in USE in the current work area, DBSTRUCT()
  *   returns an empty array ({}).
- *     
+ *      
  *  $DESCRIPTION$
- *     DBSTRUCT() is a database function that operates like COPY STRUCTURE
+ *      DBSTRUCT() is a database function that operates like COPY STRUCTURE
  *   EXTENDED by creating an array of structure information rather than a
  *   database file of structure information.  There is another function,
  *   DBCREATE(), that can create a database file from the structure array.
@@ -4095,11 +3897,11 @@ HARBOUR HB_DBSETFILTER( void )
  *   will operate on an unselected work area if you specify it as part of an
  *   aliased expression as shown below.
 
- *     Note, a header file, Dbstruct.ch, located in \HARBOUR\INCLUDE contains
+ *      Note, a header file, Dbstruct.ch, located in \HARBOUR\INCLUDE contains
  *   a series of manifest constants for each field attribute.
- *     
+ *      
  *  $EXAMPLES$
- *     This example opens two database files then creates an array
+ *      This example opens two database files then creates an array
  *      containing the database structure using DBSTRUCT() within an aliased
  *      expression.  The field names are then listed using AEVAL():
 
@@ -4115,13 +3917,13 @@ HARBOUR HB_DBSETFILTER( void )
  *  $TESTS$
  *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     AFIELDS()
+ *      AFIELDS()
  *  $INCLUDE$
- *     DbStruct.ch
+ *      DbStruct.ch
  *  $END$
  */
 
@@ -4207,32 +4009,32 @@ HARBOUR HB_DBTABLEEXT( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     DBUNLOCK()
+ *      DBUNLOCK()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Release all locks for the current work area
+ *      Release all locks for the current work area
  *  $SYNTAX$
- *     DBUNLOCK() --> NIL
+ *      DBUNLOCK() --> NIL
  *  $ARGUMENTS$
- *     
+ *      
  *  $RETURNS$
- *     DBUNLOCK() always returns NIL.
+ *      DBUNLOCK() always returns NIL.
  *  $DESCRIPTION$
- *     DBUNLOCK() releases any record or file locks obtained by the current
+ *      DBUNLOCK() releases any record or file locks obtained by the current
  *   process for the current work area.  DBUNLOCK() is only meaningful on a
  *   shared database in a network environment.
 
- *     DBUNLOCK() performs the same function as the standard UNLOCK command.
+ *      DBUNLOCK() performs the same function as the standard UNLOCK command.
  *   For more information, refer to the UNLOCK command.
 
  *   Notes
 
- *     Network environment: Releasing locks may cause updates to the
+ *      Network environment: Releasing locks may cause updates to the
  *      database to become visible to other processes.  
- *     
+ *      
  *  $EXAMPLES$
- *     The following example illustrates a basic use of the
+ *      The following example illustrates a basic use of the
  *      DBUNLOCK() function:
 
  *      cLast := "Winston"
@@ -4254,13 +4056,13 @@ HARBOUR HB_DBTABLEEXT( void )
  *  $TESTS$
  *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
  *      DBUNLOCKALL(),FLOCK(),RLOCK()
  *  $INCLUDE$
- *     
+ *      
  *  $END$
  */
 
@@ -4273,28 +4075,28 @@ HARBOUR HB_DBUNLOCK( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     DBUNLOCKALL()
+ *      DBUNLOCKALL()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Release all locks for all work areas
+ *      Release all locks for all work areas
  *  $SYNTAX$
- *     DBUNLOCKALL() --> NIL
+ *      DBUNLOCKALL() --> NIL
  *  $ARGUMENTS$
- *     
+ *      
  *  $RETURNS$
- *     DBUNLOCKALL() always returns NIL.
+ *      DBUNLOCKALL() always returns NIL.
  *  $DESCRIPTION$
- *     DBUNLOCKALL() releases any record or file locks obtained by the current
+ *      DBUNLOCKALL() releases any record or file locks obtained by the current
  *   process for any work area.  DBUNLOCKALL() is only meaningful on a shared
  *   database in a network environment.  It is equivalent to calling
  *   DBUNLOCK() on every occupied work area.
 
- *     DBUNLOCKALL() performs the same function as the UNLOCK ALL command.  For
+ *      DBUNLOCKALL() performs the same function as the UNLOCK ALL command.  For
  *   more information, refer to the UNLOCK ALL command.
- *     
+ *      
  *  $EXAMPLES$
- *     The following example marks a record for deletion if an
+ *      The following example marks a record for deletion if an
  *      RLOCK() attempt is successful, then clears all locks in all work
  *      areas:
 
@@ -4325,13 +4127,13 @@ HARBOUR HB_DBUNLOCK( void )
  *  $TESTS$
  *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     DBUNLOCK(),FLOCK(),RLOCK()
+ *      DBUNLOCK(),FLOCK(),RLOCK()
  *  $INCLUDE$
- *     
+ *      
  *  $END$
  */
 
@@ -4348,38 +4150,38 @@ HARBOUR HB_DBUNLOCKALL( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     DBUSEAREA()
+ *      DBUSEAREA()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Use a database file in a work area
+ *      Use a database file in a work area
  *  $SYNTAX$
- *     DBUSEAREA( [<lNewArea>], [<cDriver>], <cName>, [<xcAlias>],
+ *      DBUSEAREA( [<lNewArea>], [<cDriver>], <cName>, [<xcAlias>],
  *      [<lShared>], [<lReadonly>]) --> NIL     
  *  $ARGUMENTS$
- *     <lNewArea> is an optional logical value.  A value of true (.T.)
+ *      <lNewArea> is an optional logical value.  A value of true (.T.)
  *   selects the lowest numbered unoccupied work area as the current work
  *   area before the use operation.  If <lNewArea> is false (.F.) or omitted,
  *   the current work area is used; if the work area is occupied, it is
  *   closed first.
 
- *     <cDriver> is an optional character value.  If present, it specifies
+ *      <cDriver> is an optional character value.  If present, it specifies
  *   the name of the database driver which will service the work area.  If
  *   <cDriver> is omitted, the current default driver is used (see note
  *   below).
 
- *     <cName> specifies the name of the database (.dbf) file to be opened.
+ *      <cName> specifies the name of the database (.dbf) file to be opened.
 
- *     <xcAlias> is an optional character value.  If present, it specifies
+ *      <xcAlias> is an optional character value.  If present, it specifies
  *   the alias to be associated with the work area.  The alias must
  *   constitute a valid HARBOUR identifier.  A valid <xcAlias> may be any
  *   legal identifier (i.e., it must begin with an alphabetic character and
  *   may contain numeric or alphabetic characters and the underscore).
  *   Within a single application, HARBOUR will not accept duplicate
  *   aliases.  If <xcAlias> is omitted, a default alias is constructed from
- *     <cName>.
+ *      <cName>.
 
- *     <lShared> is an optional logical value.  If present, it specifies
+ *      <lShared> is an optional logical value.  If present, it specifies
  *   whether the database (.dbf) file should be accessible to other processes
  *   on a network.  A value of true (.T.) specifies that other processes
  *   should be allowed access; a value of false (.F.) specifies that the
@@ -4387,45 +4189,45 @@ HARBOUR HB_DBUNLOCKALL( void )
  *   the current global _SET_EXCLUSIVE setting determines whether shared
  *   access is allowed.
 
- *     <lReadonly> is an optional logical value that specifies whether
+ *      <lReadonly> is an optional logical value that specifies whether
  *   updates to the work area are prohibited.  A value of true (.T.)
  *   prohibits updates; a value of false (.F.) permits updates.  A value of
  *   true (.T.) also permits read-only access to the specified database
  *   (.dbf) file.  If <lReadonly> is omitted, the default value is false
  *   (.F.).     
  *  $RETURNS$
- *     DBUSEAREA() always returns NIL.
+ *      DBUSEAREA() always returns NIL.
  *  $DESCRIPTION$
- *     DBUSEAREA() associates the specified database (.dbf) file with the
+ *      DBUSEAREA() associates the specified database (.dbf) file with the
  *   current work area.
 
- *     DBUSEAREA() performs the same function as the standard USE command.  For
+ *      DBUSEAREA() performs the same function as the standard USE command.  For
  *   more information, refer to the USE command.
 
- *     Notes
+ *      Notes
 
- *     Current driver: If no driver is specified in the call to
+ *      Current driver: If no driver is specified in the call to
  *      DBUSEAREA() the default driver is used.  If more than one driver is
  *      available to the application, the default driver is the driver
  *      specified in the most recent call to DBSETDRIVER().  If DBSETDRIVER()
  *      has not been called, the name of the default driver is undetermined.
- *     
+ *      
  *  $EXAMPLES$
- *     This example is a typical use of the DBUSEAREA() function:
+ *      This example is a typical use of the DBUSEAREA() function:
 
  *      DBUSEAREA(.T., "DBFNDX", "Employees")
  *
  *  $TESTS$
  *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
  * DBCLOSEAREA(),DBSETDRIVER(),SELECT(),SET()
- *     
+ *      
  *  $INCLUDE$
- *     
+ *      
  *  $END$
  */
 
@@ -4625,19 +4427,19 @@ HARBOUR HB_DBUSEAREA( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     __DBZAP()
+ *      __DBZAP()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Remove all records from the current database file
+ *      Remove all records from the current database file
  *  $SYNTAX$
- *     __DbZap()  -> NIL
+ *      __DbZap()  -> NIL
  *  $ARGUMENTS$
- *     
+ *      
  *  $RETURNS$
- *     __DbZap()   will always return nil
+ *      __DbZap()   will always return nil
  *  $DESCRIPTION$
- *     __DbZap*( is a database command that permanently removes all records from
+ *      __DbZap*( is a database command that permanently removes all records from
  *   files open in the current work area.  This includes the current database
  *   file, index files, and associated memo file.  Disk space previously
  *   occupied by the ZAPped files is released to the operating system.
@@ -4646,9 +4448,9 @@ HARBOUR HB_DBUSEAREA( void )
  *
  *   To ZAP in a network environment, the current database file must be USEd
  *   EXCLUSIVEly. 
- *     
+ *      
  *  $EXAMPLES$
- *     This example demonstrates a typical ZAP operation in a network
+ *      This example demonstrates a typical ZAP operation in a network
  *      environment:
  *
  *      USE Sales EXCLUSIVE NEW
@@ -4663,30 +4465,30 @@ HARBOUR HB_DBUSEAREA( void )
  *  $TESTS$
  *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     
+ *      
  *  $INCLUDE$
- *     
+ *      
  *  $END$
  */
 /*  $DOC$
  *  $COMMANDNAME$
- *     ZAP
+ *      ZAP
  *  $CATEGORY$
- *     Command
+ *      Command
  *  $ONELINER$
- *     Remove all records from the current database file
+ *      Remove all records from the current database file
  *  $SYNTAX$
- *     ZAP
+ *      ZAP
  *  $ARGUMENTS$
- *     
+ *      
  *  $RETURNS$
  *    
  *  $DESCRIPTION$
- *     ZAP is a database command that permanently removes all records from
+ *      ZAP is a database command that permanently removes all records from
  *   files open in the current work area.  This includes the current database
  *   file, index files, and associated memo file.  Disk space previously
  *   occupied by the ZAPped files is released to the operating system.  ZAP
@@ -4695,9 +4497,9 @@ HARBOUR HB_DBUSEAREA( void )
  *
  *   To ZAP in a network environment, the current database file must be USEd
  *   EXCLUSIVEly. 
- *     
+ *      
  *  $EXAMPLES$
- *     This example demonstrates a typical ZAP operation in a network
+ *      This example demonstrates a typical ZAP operation in a network
  *      environment:
  *
  *      USE Sales EXCLUSIVE NEW
@@ -4712,13 +4514,13 @@ HARBOUR HB_DBUSEAREA( void )
  *  $TESTS$
  *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     
+ *      
  *  $INCLUDE$
- *     
+ *      
  *  $END$
  */
 
@@ -4731,36 +4533,36 @@ HARBOUR HB___DBZAP( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     DELETED()
+ *      DELETED()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Return the deleted status of the current record
+ *      Return the deleted status of the current record
  *  $SYNTAX$
- *     DELETED() --> lDeleted
+ *      DELETED() --> lDeleted
  *  $ARGUMENTS$
- *     
+ *      
  *  $RETURNS$
- *     DELETED() returns true (.T.) if the current record is marked for
+ *      DELETED() returns true (.T.) if the current record is marked for
  *   deletion; otherwise, it returns false (.F.).  If there is no database
  *   file in USE in the current work area, DELETED() returns false (.F.).
      
  *  $DESCRIPTION$
- *     DELETED() is a database function that determines if the current record
+ *      DELETED() is a database function that determines if the current record
  *   in the active work area is marked for deletion.  Since each work area
  *   with an open database file can have a current record, each work area has
  *   its own DELETED() value.
 
- *     By default, DELETED() operates on the currently selected work area.  It
+ *      By default, DELETED() operates on the currently selected work area.  It
  *   will operate on an unselected work area if you specify it as part of an
  *   aliased expression (see example below).
 
- *     In applications, DELETED() is generally used to query the deleted status
+ *      In applications, DELETED() is generally used to query the deleted status
  *   as a part of record processing conditions, or to display the deleted
  *   status as a part of screens and reports.
      
  *  $EXAMPLES$
- *     This example uses DELETED() in the current and in an
+ *      This example uses DELETED() in the current and in an
  *      unselected work area:
 
  *      USE Customer NEW
@@ -4771,7 +4573,7 @@ HARBOUR HB___DBZAP( void )
  *      ? DELETED()  // Result: .T.
  *      ? Customer->(DELETED())       // Result: .F.
 
- *     This example uses DELETED() to display a record's deleted
+ *      This example uses DELETED() to display a record's deleted
  *      status in screens and reports:
 
  *      @ 1, 65 SAY IF(DELETED(), "Inactive", "Active")
@@ -4779,13 +4581,13 @@ HARBOUR HB___DBZAP( void )
  *  $TESTS$
  *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     
+ *      
  *  $INCLUDE$
- *     
+ *      
  *  $END$
  */
 
@@ -4800,7 +4602,7 @@ HARBOUR HB_DELETED( void )
 
 /*  $DOC$
  *  $FUNCNAME$
- *     EOF()
+ *      EOF()
  *  $CATEGORY$
  *      DATA BASE
  *  $ONELINER$
@@ -4819,32 +4621,32 @@ HARBOUR HB_DELETED( void )
 
  *  $DESCRIPTION$
 
- *     EOF() is a database function used to test for an end of file boundary
+ *      EOF() is a database function used to test for an end of file boundary
  *   condition when the record pointer is moving forward through a database
  *   file.  Any command that can move the record pointer can set EOF().
 
- *     The most typical application is as a part of the <lCondition> argument
+ *      The most typical application is as a part of the <lCondition> argument
  *   of a DO WHILE construct that sequentially processes records in a
  *   database file.  Here <lCondition> would include a test for .NOT. EOF(),
  *   forcing the DO WHILE loop to terminate when EOF() returns true (.T.).
 
- *     EOF() and FOUND() are often used interchangeably to test whether a SEEK,
+ *      EOF() and FOUND() are often used interchangeably to test whether a SEEK,
  *   FIND, or LOCATE command failed.  With these commands, however, FOUND()
  *   is preferred.
 
- *     When EOF() returns true (.T.), the record pointer is positioned at
+ *      When EOF() returns true (.T.), the record pointer is positioned at
  *   LASTREC() + 1 regardless of whether there is an active SET FILTER or SET
  *   DELETED is ON.  Further attempts to move the record pointer forward
  *   return the same result without error.  Once EOF() is set to true (.T.),
  *   it retains its value until there is another attempt to move the record
  *   pointer.
 
- *     By default, EOF() operates on the currently selected work area.  It can
+ *      By default, EOF() operates on the currently selected work area.  It can
  *   be made to operate on an unselected work area by specifying it within an
  *   aliased expression (see example below).
 
  *  $EXAMPLES$
- *     This example demonstrates EOF() by deliberately moving the
+ *      This example demonstrates EOF() by deliberately moving the
  *      record pointer beyond the last record:
 
  *      USE Sales
@@ -4853,7 +4655,7 @@ HARBOUR HB_DELETED( void )
  *      SKIP
  *      ? EOF()            // Result: .T.
 
- *     This example uses aliased expressions to query the value of
+ *      This example uses aliased expressions to query the value of
  *      EOF() in unselected work areas:
 
  *      USE Sales NEW
@@ -4861,7 +4663,7 @@ HARBOUR HB_DELETED( void )
  *      ? Sales->(EOF())
  *      ? Customer->(EOF())
 
- *     This example illustrates how EOF() can be used as part of a
+ *      This example illustrates how EOF() can be used as part of a
  *      condition for sequential database file operations:
 
  *      USE Sales INDEX CustNum NEW
@@ -4896,29 +4698,29 @@ HARBOUR HB_EOF( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     FCOUNT()
+ *      FCOUNT()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Return the number of fields in the current (.dbf) file
+ *      Return the number of fields in the current (.dbf) file
  *  $SYNTAX$
- *     FCOUNT() --> nFields
+ *      FCOUNT() --> nFields
  *  $ARGUMENTS$
- *     
+ *      
  *  $RETURNS$
- *     FCOUNT() returns the number of fields in the database file in the
+ *      FCOUNT() returns the number of fields in the database file in the
  *   current work area as an integer numeric value.  If there is no database
  *   file open, FCOUNT() returns zero.   
  *  $DESCRIPTION$
- *     FCOUNT() is a database function.  It is useful in applications
+ *      FCOUNT() is a database function.  It is useful in applications
  *   containing data-independent programs that can operate on any database
  *   file.  These include generalized import/export and reporting programs.
  *   Typically, you use FCOUNT() to establish the upper limit of a FOR...NEXT
  *   or DO WHILE loop that processes a single field at a time.
 
- *     By default, FCOUNT() operates on the currently selected work area.     
+ *      By default, FCOUNT() operates on the currently selected work area.     
  *  $EXAMPLES$
- *     This example illustrates FCOUNT(), returning the number of
+ *      This example illustrates FCOUNT(), returning the number of
  *      fields in the current and an unselected work area:
 
  *      USE Sales NEW
@@ -4926,13 +4728,13 @@ HARBOUR HB_EOF( void )
  *      ? FCOUNT()                     // Result: 5
  *      ? Sales->(FCOUNT())            // Result: 8
 
- *     This example uses FCOUNT() to DECLARE an array with field
+ *      This example uses FCOUNT() to DECLARE an array with field
  *      information:
 
  *      LOCAL aFields := ARRAY(FCOUNT())
  *      AFIELDS(aFields)
 
- *     This example uses FCOUNT() as the upper boundary of a FOR loop
+ *      This example uses FCOUNT() as the upper boundary of a FOR loop
  *      that processes the list of current work area fields:
 
  *      LOCAL nField
@@ -4944,13 +4746,13 @@ HARBOUR HB_EOF( void )
  *  $TESTS$
  *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
  *      FIELDNAME(),TYPE()
  *  $INCLUDE$
- *     
+ *      
  *  $END$
  */
 
@@ -4964,28 +4766,28 @@ HARBOUR HB_FCOUNT( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     FIELDGET()
+ *      FIELDGET()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Retrieve the value of a field variable
+ *      Retrieve the value of a field variable
  *  $SYNTAX$
- *     FIELDGET(<nField>) --> ValueField
+ *      FIELDGET(<nField>) --> ValueField
  *  $ARGUMENTS$
  *      <nField> is the ordinal position of the field in the record
  *   structure for the current work area.
  *  $RETURNS$
- *     FIELDGET() returns the value of the specified field.  If <nField> does
+ *      FIELDGET() returns the value of the specified field.  If <nField> does
  *   not correspond to the position of any field in the current database
  *   file, FIELDGET() returns NIL.     
  *  $DESCRIPTION$
- *     FIELDGET() is a database function that retrieves the value of a field
+ *      FIELDGET() is a database function that retrieves the value of a field
  *   using its position within the database file structure rather than its
  *   field name.  Within generic database service functions this allows,
  *   among other things, the retrieval of field values without use of the
  *   macro operator.     
  *  $EXAMPLES$
- *     This example compares FIELDGET() to functionally equivalent
+ *      This example compares FIELDGET() to functionally equivalent
  *      code that uses the macro operator to retrieve the value of a field:
 
  *      LOCAL nField := 1, FName, FVal
@@ -4999,13 +4801,13 @@ HARBOUR HB_FCOUNT( void )
  *  $TESTS$
  *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     FIELDPUT()
+ *      FIELDPUT()
  *  $INCLUDE$
- *     
+ *      
  *  $END$
  */
 
@@ -5025,41 +4827,41 @@ HARBOUR HB_FIELDGET( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     FIELDNAME()
+ *      FIELDNAME()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Return a field name from the current (.dbf) file
+ *      Return a field name from the current (.dbf) file
  *  $SYNTAX$
- *     FIELDNAME/FIELD(<nPosition>) --> cFieldName
+ *      FIELDNAME/FIELD(<nPosition>) --> cFieldName
  *  $ARGUMENTS$
- *     <nPosition> is the position of a field in the database file
+ *      <nPosition> is the position of a field in the database file
  *   structure.
  *  $RETURNS$
- *     FIELDNAME() returns the name of the specified field as a character
+ *      FIELDNAME() returns the name of the specified field as a character
  *   string.  If <nPosition> does not correspond to an existing field in the
  *   current database file or if no database file is open in the current work
  *   area, FIELDNAME() returns a null string ("").     
  *  $DESCRIPTION$
- *     FIELDNAME() is a database function that returns a field name using an
+ *      FIELDNAME() is a database function that returns a field name using an
  *   index to the position of the field name in the database structure.  Use
  *   it in data-independent applications where the field name is unknown.  If
  *   information for more than one field is required, use AFIELDS() to create
  *   an array of field information or COPY STRUCTURE EXTENDED to create a
  *   database of field information.
 
- *     If you need additional database file structure information, use TYPE()
+ *      If you need additional database file structure information, use TYPE()
  *   and LEN().  To obtain the number of decimal places for a numeric field,
  *   use the following expression:
 
  *   LEN(SUBSTR(STR(<idField>), RAT(".", ;
  *          STR(<idField>)) + 1))
 
- *     By default, FIELDNAME() operates on the currently selected work area as
+ *      By default, FIELDNAME() operates on the currently selected work area as
  *   shown in the example below.
- *     
+ *      
  *  $EXAMPLES$
- *     These examples illustrate FIELDNAME() used with several other
+ *      These examples illustrate FIELDNAME() used with several other
  *      functions:
 
  *      USE Sales
@@ -5068,7 +4870,7 @@ HARBOUR HB_FIELDGET( void )
  *      ? LEN(FIELDNAME(0))        // Result: 0
  *      ? LEN(FIELDNAME(40))       // Result: 0
 
- *     This example uses FIELDNAME() to list the name and type of
+ *      This example uses FIELDNAME() to list the name and type of
  *      each field in Customer.dbf:
 
  *      USE Customer NEW
@@ -5077,7 +4879,7 @@ HARBOUR HB_FIELDGET( void )
  *          VALTYPE(&(FIELDNAME(nField)))
  *      NEXT
 
- *     This example accesses fields in unselected work areas using
+ *      This example accesses fields in unselected work areas using
  *      aliased expressions:
 
  *      USE Sales NEW
@@ -5090,14 +4892,14 @@ HARBOUR HB_FIELDGET( void )
  *  $TESTS$
  *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *    DBSTRUCT()  FCOUNT()  LEN()  misc.ngo:VALTYPE()
- *     
+ *    DBSTRUCT(),FCOUNT(),LEN(),VALTYPE()
+ *      
  *  $INCLUDE$
- *     
+ *      
  *  $END$
  */
 
@@ -5126,38 +4928,38 @@ HARBOUR HB_FIELDNAME( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     FIELDPOS()
+ *      FIELDPOS()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Return the position of a field in a work area
+ *      Return the position of a field in a work area
  *  $SYNTAX$
- *     FIELDPOS(<cFieldName>) --> nFieldPos
+ *      FIELDPOS(<cFieldName>) --> nFieldPos
  *  $ARGUMENTS$
- *     <cFieldName> is the name of a field in the current or specified work
+ *      <cFieldName> is the name of a field in the current or specified work
  *   area.
  *  $RETURNS$
- *     FIELDPOS() returns the position of the specified field within the list
+ *      FIELDPOS() returns the position of the specified field within the list
  *   of fields associated with the current or specified work area.  If the
  *   current work area has no field with the specified name, FIELDPOS()
  *   returns zero.
  *  $DESCRIPTION$
- *     FIELDPOS() is a database function that is the inverse of the FIELDNAME()
+ *      FIELDPOS() is a database function that is the inverse of the FIELDNAME()
  *   function.  FIELDPOS() is most often used with the FIELDPUT() and
  *   FIELDGET() functions.
 
- *     FIELDPOS() return the names of fields in any unselected work area by
+ *      FIELDPOS() return the names of fields in any unselected work area by
  *   referring to the function using an aliased expression.  See the example
  *   below.
  *  $EXAMPLES$
- *     This example demonstrates a typical specification of the
+ *      This example demonstrates a typical specification of the
  *      FIELDPOS() function:
 
  *      USE Customer NEW
  *      ? FIELDPOS("Name") *    *    *    *    // Result: 1
  *      ? FIELDGET(FIELDPOS("Name")) *    *    // Result: Kate
 
- *     This example uses FIELDPOS() to return the position of a
+ *      This example uses FIELDPOS() to return the position of a
  *      specified field in a unselected work area:
 
  *      USE Customer NEW
@@ -5167,13 +4969,13 @@ HARBOUR HB_FIELDNAME( void )
  *  $TESTS$
  *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     FIELDGET(),FIELDPUT()
+ *      FIELDGET(),FIELDPUT()
  *  $INCLUDE$
- *     
+ *      
  *  $END$
  */
 
@@ -5204,33 +5006,33 @@ HARBOUR HB_FIELDPOS( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     FIELDPUT()
+ *      FIELDPUT()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Set the value of a field variable
+ *      Set the value of a field variable
  *  $SYNTAX$
- *     FIELDPUT(<nField>, <expAssign>) --> ValueAssigned
+ *      FIELDPUT(<nField>, <expAssign>) --> ValueAssigned
  *  $ARGUMENTS$
  *    <nField> is the ordinal position of the field in the current
  *   database file.
 
- *     <expAssign> is the value to assign to the given field.  The data
+ *      <expAssign> is the value to assign to the given field.  The data
  *   type of this expression must match the data type of the designated field
  *   variable.
  *  $RETURNS$    
- *     FIELDPUT() returns the value assigned to the designated field.  If
+ *      FIELDPUT() returns the value assigned to the designated field.  If
  *   <nField> does not correspond to the position of any field in the current
  *   database file, FIELDPUT() returns NIL.
  *  $DESCRIPTION$
- *     FIELDPUT() is a database function that assigns <expAssign> to the field
+ *      FIELDPUT() is a database function that assigns <expAssign> to the field
  *   at ordinal position <nField> in the current work area.  This function
  *   allows you to set the value of a field using its position within the
  *   database file structure rather than its field name.  Within generic
  *   database service functions this allows, among other things, the setting
  *   of field values without use of the macro operator.
  *  $EXAMPLES$
- *     This example compares FIELDPUT() to functionally equivalent
+ *      This example compares FIELDPUT() to functionally equivalent
  *      code that uses the macro operator to set the value of a field:
 
  *      // Using macro operator
@@ -5241,13 +5043,13 @@ HARBOUR HB_FIELDPOS( void )
  *  $TESTS$
  *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     FIELDGET()
+ *      FIELDGET()
  *  $INCLUDE$
- *     
+ *      
  *  $END$
  */
 
@@ -5270,28 +5072,28 @@ HARBOUR HB_FIELDPUT( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     FLOCK()
+ *      FLOCK()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Lock an open and shared database file
+ *      Lock an open and shared database file
  *  $SYNTAX$
- *     FLOCK() --> lSuccess
+ *      FLOCK() --> lSuccess
  *  $ARGUMENTS$
- *     
+ *      
  *  $RETURNS$
- *     FLOCK() returns true (.T.) if an attempt to lock a database file in USE
+ *      FLOCK() returns true (.T.) if an attempt to lock a database file in USE
  *   in the current work area succeeds; otherwise, it returns false (.F.).
  *   For more information on file locking, refer to the Network Programming
  *   chapter in the Programming and Utilities guide.
- *     
+ *      
  *  $DESCRIPTION$
- *     FLOCK() is a database function used in network environments to lock an
+ *      FLOCK() is a database function used in network environments to lock an
  *   open and shared database file, preventing other users from updating the
  *   file until the lock is released.  Records in the locked file are
  *   accessible for read-only operations.
  *
- *     FLOCK() is related to USE...EXCLUSIVE and RLOCK().  USE...EXCLUSIVE
+ *      FLOCK() is related to USE...EXCLUSIVE and RLOCK().  USE...EXCLUSIVE
  *   opens a database file so that no other user can open the same file at
  *   the same time and is the most restrictive locking mechanism in
  *   HARBOUR.  RLOCK() is the least restrictive and attempts to place an
@@ -5314,23 +5116,23 @@ HARBOUR HB_FIELDPUT( void )
  *   UPDATE ON                     FLOCK() or USE...EXCLUSIVE
  *   ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
  *
- *     For each invocation of FLOCK(), there is one attempt to lock the
+ *      For each invocation of FLOCK(), there is one attempt to lock the
  *   database file, and the result is returned as a logical value.  A file
  *   lock fails if another user currently has a file or record lock for the
  *   same database file or EXCLUSIVE USE of the database file.  If FLOCK() is
  *   successful, the file lock remains in place until you UNLOCK, CLOSE the
  *   DATABASE, or RLOCK().
  *
- *     By default, FLOCK() operates on the currently selected work area as
+ *      By default, FLOCK() operates on the currently selected work area as
  *   shown in the example below.
  *
- *     Notes
+ *      Notes
  *
- *     SET RELATION: HARBOUR does not automatically lock all work
+ *      SET RELATION: HARBOUR does not automatically lock all work
  *      areas in the relation chain when you lock the current work area, and
  *      an UNLOCK has no effect on related work areas.
  *  $EXAMPLES$
- *     This example uses FLOCK() for a batch update of prices in
+ *      This example uses FLOCK() for a batch update of prices in
  *      Inventory.dbf:
  *
  *      USE Inventory NEW
@@ -5341,7 +5143,7 @@ HARBOUR HB_FIELDPUT( void )
  *         ? "File not available"
  *      ENDIF
  *
- *     This example uses an aliased expression to attempt a file lock
+ *      This example uses an aliased expression to attempt a file lock
  *      in an unselected work area:
  *
  *      USE Sales NEW
@@ -5353,13 +5155,13 @@ HARBOUR HB_FIELDPUT( void )
  *  $TESTS$
  *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     RLOCK()
+ *      RLOCK()
  *  $INCLUDE$
- *     
+ *      
  *  $END$
  */
 
@@ -5381,47 +5183,47 @@ HARBOUR HB_FLOCK( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     FOUND()
+ *      FOUND()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Determine if the previous search operation succeeded
+ *      Determine if the previous search operation succeeded
  *  $SYNTAX$
- *     FOUND() --> lSuccess
+ *      FOUND() --> lSuccess
  *  $ARGUMENTS$
- *     
+ *      
  *  $RETURNS$
- *     FOUND() returns true (.T.) if the last search command was successful;
+ *      FOUND() returns true (.T.) if the last search command was successful;
  *   otherwise, it returns false (.F.).
- *     
+ *      
  *  $DESCRIPTION$     
- *     FOUND() is a database function that determines whether a search
+ *      FOUND() is a database function that determines whether a search
  *   operation (i.e., FIND, LOCATE, CONTINUE, SEEK, or SET RELATION)
  *   succeeded.  When any of these commands are executed, FOUND() is set to
  *   true (.T.) if there is a match; otherwise, it is set to false (.F.).
  *
- *     If the search command is LOCATE or CONTINUE, a match is the next record
+ *      If the search command is LOCATE or CONTINUE, a match is the next record
  *   meeting the scope and condition.  If the search command is FIND, SEEK or
  *   SET RELATION, a match is the first key in the controlling index that
  *   equals the search argument.  If the key value equals the search
  *   argument, FOUND() is true (.T.); otherwise, it is false (.F.).
  *
- *     The value of FOUND() is retained until another record movement command
+ *      The value of FOUND() is retained until another record movement command
  *   is executed.  Unless the command is another search command, FOUND() is
  *   automatically set to false (.F.).
  *
- *     Each work area has a FOUND() value.  This means that if one work area
+ *      Each work area has a FOUND() value.  This means that if one work area
  *   has a RELATION set to a child work area, querying FOUND() in the child
  *   returns true (.T.) if there is a match.
  *
- *     By default, FOUND() operates on the currently selected work area.  It
+ *      By default, FOUND() operates on the currently selected work area.  It
  *   can be made to operate on an unselected work area by specifying it
  *   within an aliased expression (see example below).
  *
  *    FOUND() will return false (.F.) if there is no database open in the
  *   current work area.
  *  $EXAMPLES$
- *     This example illustrates the behavior of FOUND() after a
+ *      This example illustrates the behavior of FOUND() after a
  *      record movement command:
  *
  *      USE Sales INDEX Sales
@@ -5433,7 +5235,7 @@ HARBOUR HB_FLOCK( void )
  *      SKIP
  *      ? FOUND()                // Result: .F.
  *
- *     This example tests a FOUND() value in an unselected work area
+ *      This example tests a FOUND() value in an unselected work area
  *      using an aliased expression:
  *
  *      USE Sales INDEX Sales NEW
@@ -5443,7 +5245,7 @@ HARBOUR HB_FLOCK( void )
  *      SEEK "Smith"
  *      ? FOUND(), Sales->(FOUND())
  *
- *     This code fragment processes all Customer records with the key
+ *      This code fragment processes all Customer records with the key
  *      value "Smith" using FOUND() to determine when the key value changes:
  *
  *      USE Customer INDEX Customer NEW
@@ -5458,13 +5260,13 @@ HARBOUR HB_FLOCK( void )
  *  $TESTS$
  *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     EOF()
+ *      EOF()
  *  $INCLUDE$
- *     
+ *      
  *  $END$
  */
 
@@ -5478,15 +5280,15 @@ HARBOUR HB_FOUND( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     HEADER()
+ *      HEADER()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Return the current database file header length
+ *      Return the current database file header length
  *  $SYNTAX$
- *     HEADER() --> nBytes
+ *      HEADER() --> nBytes
  *  $ARGUMENTS$
- *     
+ *      
  *  $RETURNS$
        HEADER() returns the number of bytes in the header of the current
      database file as an integer numeric value.  If no database file is in
@@ -5520,13 +5322,13 @@ HARBOUR HB_FOUND( void )
  *  $TESTS$
  *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     DISKSPACE(),LASTREC(),RECSIZE()
+ *      DISKSPACE(),LASTREC(),RECSIZE()
  *  $INCLUDE$
- *     
+ *      
  *  $END$
  */
 
@@ -5546,15 +5348,15 @@ HARBOUR HB_HEADER( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     INDEXORD()
+ *      INDEXORD()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Return the order position of the controlling index
+ *      Return the order position of the controlling index
  *  $SYNTAX$
- *     INDEXORD() --> nOrder
+ *      INDEXORD() --> nOrder
  *  $ARGUMENTS$
- *     
+ *      
  *  $RETURNS$
        INDEXORD() returns an integer numeric value.  The value returned is
      equal to the position of the controlling index in the list of open
@@ -5591,13 +5393,13 @@ HARBOUR HB_HEADER( void )
  *  $TESTS$
  *
  *  $STATUS$
- *     S
+ *      S
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     INDEXKEY()
+ *      INDEXKEY()
  *  $INCLUDE$
- *     
+ *      
  *  $END$
  */
 
@@ -5617,15 +5419,15 @@ HARBOUR HB_INDEXORD( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     LASTREC()
+ *      LASTREC()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Determine the number of records in the current (.dbf) file
+ *      Determine the number of records in the current (.dbf) file
  *  $SYNTAX$
  *          LASTREC() | RECCOUNT()* --> nRecords
  *  $ARGUMENTS$
- *     
+ *      
  *  $RETURNS$     
        LASTREC() returns the number of physical records in the current database
      file as an integer numeric value.  Filtering commands such as SET FILTER
@@ -5659,13 +5461,13 @@ HARBOUR HB_INDEXORD( void )
  *  $TESTS$
  *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     EOF()
+ *      EOF()
  *  $INCLUDE$
- *     
+ *      
  *  $END$
  */
 
@@ -5692,20 +5494,20 @@ HARBOUR HB_LOCK( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     LUPDATE()
+ *      LUPDATE()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Return the last modification date of a (.dbf) file
+ *      Return the last modification date of a (.dbf) file
  *  $SYNTAX$
- *     LUPDATE() --> dModification
+ *      LUPDATE() --> dModification
  *  $ARGUMENTS$
- *     
+ *      
  *  $RETURNS$
        LUPDATE() returns the date of last change to the open database file in
      the current work area.  If there is no database file in USE, LUPDATE()
      returns a blank date.
- *     
+ *      
  *  $DESCRIPTION$     
        LUPDATE() is a database function that determines the date the database
      file in the current work area was last modified and CLOSEd.  By default,
@@ -5736,13 +5538,13 @@ HARBOUR HB_LOCK( void )
  *  $TESTS$
  *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
  *  FIELDNAME(),LASTREC(),RECSIZE()
  *  $INCLUDE$
- *     
+ *      
  *  $END$
  */
 
@@ -5755,20 +5557,20 @@ HARBOUR HB_LUPDATE( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     NETERR()
+ *      NETERR()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Determine if a network command has failed
+ *      Determine if a network command has failed
  *  $SYNTAX$
- *     NETERR([<lNewError>]) --> lError
+ *      NETERR([<lNewError>]) --> lError
  *  $ARGUMENTS$
        <lNewError> if specified sets the value returned by NETERR() to the
      specified status.  <lNewError> can be either true (.T.) or false (.F.).
      Setting NETERR() to a specified value allows the runtime error handler
      to control the way certain file errors are handled.  For more
      information, refer to Errorsys.prg.
- *     
+ *      
  *  $RETURNS$     
        NETERR() returns true (.T.) if a USE or APPEND BLANK fails.  The initial
      value of NETERR() is false (.F.).  If the current process is not running
@@ -5811,13 +5613,13 @@ HARBOUR HB_LUPDATE( void )
  *  $TESTS$
  *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     FLOCK(),RLOCK()
+ *      FLOCK(),RLOCK()
  *  $INCLUDE$
- *     
+ *      
  *  $END$
  */
 
@@ -5830,17 +5632,17 @@ HARBOUR HB_NETERR( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     ORDBAGEXT()
+ *      ORDBAGEXT()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Return the default Order Bag RDD extension
+ *      Return the default Order Bag RDD extension
  *  $SYNTAX$
- *     ORDBAGEXT() --> cBagExt
+ *      ORDBAGEXT() --> cBagExt
  *  $ARGUMENTS$
- *     
+ *      
  *  $RETURNS$
- *     ORDBAGEXT() returns a character expression.
+ *      ORDBAGEXT() returns a character expression.
  *  $DESCRIPTION$
        ORDBAGEXT() is an Order management function that returns a character
      expression that is the default Order Bag extension of the current or
@@ -5848,7 +5650,7 @@ HARBOUR HB_NETERR( void )
      current work area.
 
        ORDBAGEXT() supersedes the INDEXEXT() and is not recommended.
- *     
+ *      
  *  $EXAMPLES$
        USE sample VIA "DBFNTX"
        ? ORDBAGEXT()      //  Returns .ntx
@@ -5856,13 +5658,13 @@ HARBOUR HB_NETERR( void )
  *  $TESTS$
  *
  *  $STATUS$
- *     S
+ *      S
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
  *      INDEXEXT(),ORDBAGNAME()
  *  $INCLUDE$
- *     
+ *      
  *  $END$
  */
 
@@ -5918,20 +5720,20 @@ HARBOUR HB_ORDBAGEXT( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     ORDBAGNAME()
+ *      ORDBAGNAME()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Return the Order Bag name of a specific Order
+ *      Return the Order Bag name of a specific Order
  *  $SYNTAX$
- *     ORDBAGNAME(<nOrder> | <cOrderName>) --> cOrderBagName
+ *      ORDBAGNAME(<nOrder> | <cOrderName>) --> cOrderBagName
  *  $ARGUMENTS$
        <nOrder> is an integer that identifies the position in the Order
      List of the target Order whose Order Bag name is sought.
 
        <cOrderName> is a character string that represents the name of the
      target Order whose Order Bag name is sought.
- *     
+ *      
  *  $RETURNS$    
        ORDBAGNAME() returns a character string, the Order Bag name of the
      specific Order.
@@ -5963,13 +5765,13 @@ HARBOUR HB_ORDBAGEXT( void )
  *  $TESTS$
  *
  *  $STATUS$
- *     S
+ *      S
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     ORDBAGEXT()
+ *      ORDBAGEXT()
  *  $INCLUDE$
- *     
+ *      
  *  $END$
  */
 
@@ -5997,13 +5799,13 @@ HARBOUR HB_ORDBAGNAME( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     ORDCONDSET()
+ *      ORDCONDSET()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Set the Condition and scope for an order
+ *      Set the Condition and scope for an order
  *  $SYNTAX$
- *     ORDCONSET([<cForCondition>],
+ *      ORDCONSET([<cForCondition>],
           [<bForCondition>],
           [<lAll>],
           [<bWhileCondition>],
@@ -6019,7 +5821,7 @@ HARBOUR HB_ORDBAGNAME( void )
           [<lCustom>],
           [<lNoOptimize>])
  *  $ARGUMENTS$
- *     <cForCondition> is a string that specifies the FOR condition for the
+ *      <cForCondition> is a string that specifies the FOR condition for the
      order.
        <bForCondition> is a code block that defines a FOR condition that
      each record within the scope must meet in order to be processed. If
@@ -6027,21 +5829,21 @@ HARBOUR HB_ORDBAGNAME( void )
      next  record is processed.Duplicate keys values are not added to the
      index file when a FOR condition is Used.
  *  $RETURNS$
- *     
+ *      
  *  $DESCRIPTION$
- *     
+ *      
  *  $EXAMPLES$
  *
  *  $TESTS$
  *
  *  $STATUS$
- *     S
+ *      S
  *  $COMPLIANCE$
- *     ORDCONDSET() is CA-CLIPPER 5.3 Compilant
+ *      ORDCONDSET() is CA-CLIPPER 5.3 Compilant
  *  $SEEALSO$
- *     
+ *      
  *  $INCLUDE$
- *     
+ *      
  *  $END$
  */
 
@@ -6113,11 +5915,11 @@ HARBOUR HB_ORDCONDSET( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     ORDCREATE()
+ *      ORDCREATE()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Create an Order in an Order Bag
+ *      Create an Order in an Order Bag
  *  $SYNTAX$
        ORDCREATE(<cOrderBagName>,[<cOrderName>],    <cExpKey>,
         [<bExpKey>], [<lUnique>]) --> NIL
@@ -6146,7 +5948,7 @@ HARBOUR HB_ORDCONDSET( void )
      unique Order is to be created.  If <lUnique> is omitted, the current
      global _SET_UNIQUE setting is used.
  *  $RETURNS$
- *     ORDCREATE() always returns NIL.
+ *      ORDCREATE() always returns NIL.
  *  $DESCRIPTION$     
        ORDCREATE() is an Order management function that creates an Order in the
      current work area.  It works like DBCREATEINDEX() except that it lets
@@ -6208,13 +6010,13 @@ HARBOUR HB_ORDCONDSET( void )
  *  $TESTS$
  *
  *  $STATUS$
- *     S
+ *      S
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     DBCREATEINDEX()
+ *      DBCREATEINDEX()
  *  $INCLUDE$
- *     
+ *      
  *  $END$
  */
 
@@ -6246,9 +6048,9 @@ HARBOUR HB_ORDCREATE( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     ORDDESTROY()
+ *      ORDDESTROY()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
  *      Remove a specified Order from an Order Bag
  *  $SYNTAX$
@@ -6263,7 +6065,7 @@ HARBOUR HB_ORDCREATE( void )
      extension as part of <cOrderBagName> HARBOUR uses the default
      extension of the current RDD.    
  *  $RETURNS$     
- *     ORDDESTROY() always returns NIL.
+ *      ORDDESTROY() always returns NIL.
  *  $DESCRIPTION$
        ORDDESTROY() is an Order management function that removes a specified
      Order from multiple-Order Bags.
@@ -6286,13 +6088,13 @@ HARBOUR HB_ORDCREATE( void )
  *  $TESTS$
  *
  *  $STATUS$
- *     S
+ *      S
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     ORDCREATE()
+ *      ORDCREATE()
  *  $INCLUDE$
- *     
+ *      
  *  $END$
  */
 
@@ -6311,15 +6113,15 @@ HARBOUR HB_ORDDESTROY( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     ORDFOR()
+ *      ORDFOR()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Return the FOR expression of an Order
+ *      Return the FOR expression of an Order
  *  $SYNTAX$
        ORDFOR(<cOrderName> | <nOrder>
         [, <cOrderBagName>]) --> cForExp
- *     
+ *      
  *  $ARGUMENTS$     
        <cOrderName> is the name of the target Order, whose cForExp is
      sought.
@@ -6355,13 +6157,13 @@ HARBOUR HB_ORDDESTROY( void )
  *  $TESTS$
  *
  *  $STATUS$
- *     S
+ *      S
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     ORDKEY(),ORDCREATE(),ORDNAME(),ORDNUMBER()
+ *      ORDKEY(),ORDCREATE(),ORDNAME(),ORDNUMBER()
  *  $INCLUDE$
- *     
+ *      
  *  $END$
  */
 
@@ -6390,11 +6192,11 @@ HARBOUR HB_ORDFOR( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     ORDKEY()
+ *      ORDKEY()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Return the key expression of an Order
+ *      Return the key expression of an Order
  *  $SYNTAX$     
        ORDKEY(<cOrderName> | <nOrder>
         [, <cOrderBagName>]) --> cExpKey
@@ -6411,7 +6213,7 @@ HARBOUR HB_ORDFOR( void )
      extension as part of <cOrderBagName> HARBOUR uses the default
      extension of the current RDD.
  *  $RETURNS$     
- *     Returns a character string, cExpKey.
+ *      Returns a character string, cExpKey.
  *  $DESCRIPTION$
        ORDKEY() is an Order management function that returns a character
      expression, cExpKey, that represents the key expression of the specified
@@ -6437,13 +6239,13 @@ HARBOUR HB_ORDFOR( void )
  *  $TESTS$
  *
  *  $STATUS$
- *     S
+ *      S
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     ORDFOR(),ORDNAME(),ORDNUMBER()
+ *      ORDFOR(),ORDNAME(),ORDNUMBER()
  *  $INCLUDE$
- *     
+ *      
  *  $END$
  */
 
@@ -6472,11 +6274,11 @@ HARBOUR HB_ORDKEY( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     ORDLISTADD()
+ *      ORDLISTADD()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Add Orders to the Order List
+ *      Add Orders to the Order List
  *  $SYNTAX$     
        ORDLISTADD(<cOrderBagName>
         [, <cOrderName>]) --> NIL
@@ -6492,7 +6294,7 @@ HARBOUR HB_ORDKEY( void )
      <cOrderName>, all orders in the Order Bag are added to the Order List of
      the current work area.
  *  $RETURNS$     
- *     ORDLISTADD() always returns NIL.
+ *      ORDLISTADD() always returns NIL.
  *  $DESCRIPTION$
        ORDLISTADD() is an Order management function that adds the contents of
      an Order Bag , or a single Order in an Order Bag, to the Order List.
@@ -6530,13 +6332,13 @@ HARBOUR HB_ORDKEY( void )
  *  $TESTS$
  *
  *  $STATUS$
- *     S
+ *      S
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     DBSETINDEX()
+ *      DBSETINDEX()
  *  $INCLUDE$
- *     
+ *      
  *  $END$
  */
 
@@ -6560,24 +6362,24 @@ HARBOUR HB_ORDLISTADD( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     ORDLISTCLEAR()
+ *      ORDLISTCLEAR()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Clear the current Order List
+ *      Clear the current Order List
  *  $SYNTAX$
- *     ORDLISTCLEAR() --> NIL
+ *      ORDLISTCLEAR() --> NIL
  *  $ARGUMENTS$
- *     
+ *      
  *  $RETURNS$
- *     ORDLISTCLEAR() always returns NIL.
+ *      ORDLISTCLEAR() always returns NIL.
  *  $DESCRIPTION$
        ORDLISTCLEAR() is an Order management function that removes all Orders
      from the Order List for the current or aliased work area.  When you are
      done, the Order List is empty.
 
       This function supersedes the function DBCLEARINDEX().
- *     
+ *      
  *  $EXAMPLES$
      USE Sales NEW
      SET INDEX TO SaRegion, SaRep, SaCode
@@ -6588,13 +6390,13 @@ HARBOUR HB_ORDLISTADD( void )
  *  $TESTS$
  *
  *  $STATUS$
- *     S
+ *      S
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
  *    DBCLEARINDEX()
  *  $INCLUDE$
- *     
+ *      
  *  $END$
  */
 
@@ -6607,17 +6409,17 @@ HARBOUR HB_ORDLISTCLEAR( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     ORDLISTREBUILD()
+ *      ORDLISTREBUILD()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Rebuild all Orders in the Order List of the current work area
+ *      Rebuild all Orders in the Order List of the current work area
  *  $SYNTAX$
- *     ORDLISTREBUILD() --> NIL
+ *      ORDLISTREBUILD() --> NIL
  *  $ARGUMENTS$
- *     
+ *      
  *  $RETURNS$
- *     ORDLISTREBUILD() always returns NIL.
+ *      ORDLISTREBUILD() always returns NIL.
  *  $DESCRIPTION$
        ORDLISTREBUILD() is an Order management function that rebuilds all the
      orders in the current or aliased Order List.
@@ -6626,7 +6428,7 @@ HARBOUR HB_ORDLISTCLEAR( void )
 
        Unlike ORDCREATE(), this function rebuilds all Orders in the Order List.
      It is equivalent to REINDEX.
- *     
+ *      
  *  $EXAMPLES$
      USE Customer NEW
      SET INDEX TO CuAcct, CuName, CuZip
@@ -6636,13 +6438,13 @@ HARBOUR HB_ORDLISTCLEAR( void )
  *  $TESTS$
  *
  *  $STATUS$
- *     S
+ *      S
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
  *      ORDCREATE()
  *  $INCLUDE$
- *     
+ *      
  *  $END$
  */
 
@@ -6655,13 +6457,13 @@ HARBOUR HB_ORDLISTREBUILD( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     ORDNAME()
+ *      ORDNAME()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Return the name of an Order in the Order List
+ *      Return the name of an Order in the Order List
  *  $SYNTAX$
- *     ORDNAME(<nOrder>[,<cOrderBagName>])
+ *      ORDNAME(<nOrder>[,<cOrderBagName>])
         --> cOrderName
  *  $ARGUMENTS$     
        <nOrder> is an integer that identifies the position in the Order
@@ -6705,13 +6507,13 @@ HARBOUR HB_ORDLISTREBUILD( void )
  *  $TESTS$
  *
  *  $STATUS$
- *     S
+ *      S
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     ORDFOR(),ORDKEY(),ORDNUMBER()
+ *      ORDFOR(),ORDKEY(),ORDNUMBER()
  *  $INCLUDE$
- *     
+ *      
  *  $END$
  */
 
@@ -6738,9 +6540,9 @@ HARBOUR HB_ORDNAME( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     ORDNUMBER()
+ *      ORDNUMBER()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
  *      Return the position of an Order in the current Order List
  *  $SYNTAX$
@@ -6780,13 +6582,13 @@ HARBOUR HB_ORDNAME( void )
  *  $TESTS$
  *
  *  $STATUS$
- *     S
+ *      S
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     INDEXORD()
+ *      INDEXORD()
  *  $INCLUDE$
- *     
+ *      
  *  $END$
  */
 
@@ -6813,15 +6615,15 @@ HARBOUR HB_ORDNUMBER( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     ORDSETFOCUS()
+ *      ORDSETFOCUS()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Set focus to an Order in an Order List
+ *      Set focus to an Order in an Order List
  *  $SYNTAX$
        ORDSETFOCUS([<cOrderName> | <nOrder>]
         [,<cOrderBagName>]) --> cPrevOrderNameInFocus
- *     
+ *      
  *  $ARGUMENTS$    
        <cOrderName> is the name of the selected Order, a logical ordering
      of a database.  ORDSETFOCUS() ignores any invalid values of
@@ -6836,7 +6638,7 @@ HARBOUR HB_ORDNUMBER( void )
      extension as part of <cOrderBagName> HARBOUR uses the default
      extension of the current RDD.
  *  $RETURNS$
- *     ORDSETFOCUS() returns the Order Name of the previous controlling Order.
+ *      ORDSETFOCUS() returns the Order Name of the previous controlling Order.
  *  $DESCRIPTION$     
        ORDSETFOCUS() is an Order management function that returns the Order
      Name of the previous controlling Order and optionally sets the focus to
@@ -6864,13 +6666,13 @@ HARBOUR HB_ORDNUMBER( void )
  *  $TESTS$
  *
  *  $STATUS$
- *     S
+ *      S
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     
+ *      
  *  $INCLUDE$
- *     
+ *      
  *  $END$
  */
 
@@ -6894,13 +6696,13 @@ HARBOUR HB_ORDSETFOCUS( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     RDDLIST()
+ *      RDDLIST()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
  *      Return an array of the available Replaceable Database Drivers
  *  $SYNTAX$
- *     RDDLIST([<nRDDType>]) --> aRDDList
+ *      RDDLIST([<nRDDType>]) --> aRDDList
  *  $ARGUMENTS$    
        <nRDDType> is an integer that represents the type of the RDD you
      wish to list.  The constants RDT_FULL and RDT_TRANSFER represent the two
@@ -6957,13 +6759,13 @@ HARBOUR HB_ORDSETFOCUS( void )
  *  $TESTS$
  *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     
+ *      
  *  $INCLUDE$
- *     RDDSYS.CH
+ *      RDDSYS.CH
  *  $END$
  */
 
@@ -6988,23 +6790,23 @@ HARBOUR HB_RDDLIST( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     RDDNAME()
+ *      RDDNAME()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Return the name of the currently active RDD
+ *      Return the name of the currently active RDD
  *  $SYNTAX$
- *     RDDNAME() --> cRDDName
+ *      RDDNAME() --> cRDDName
  *  $ARGUMENTS$
- *     
+ *      
  *  $RETURNS$     
- *     Returns a character string, cRDDName, the registered name of the active
+ *      Returns a character string, cRDDName, the registered name of the active
  *   RDD in the current or specified work area.
  *  $DESCRIPTION$     
- *     RDDNAME() is an RDD function that returns a character string, cRDDName,
+ *      RDDNAME() is an RDD function that returns a character string, cRDDName,
  *   the name of the active RDD in the current or specified work area.
  *
- *     You can specify a work area other than the currently active work area by
+ *      You can specify a work area other than the currently active work area by
  *   aliasing the function.
  *  $EXAMPLES$
  *   USE Customer VIA "DBFNTX" NEW
@@ -7016,13 +6818,13 @@ HARBOUR HB_RDDLIST( void )
  *  $TESTS$
  *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     RDDLIST()
+ *      RDDLIST()
  *  $INCLUDE$
- *     
+ *      
  *  $END$
  */
 
@@ -7069,25 +6871,25 @@ HARBOUR HB_RDDREGISTER( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     RDDSETDEFAULT()
+ *      RDDSETDEFAULT()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Set or return the default RDD for the application
+ *      Set or return the default RDD for the application
  *  $SYNTAX$
- *     RDDSETDEFAULT([<cNewDefaultRDD>])
+ *      RDDSETDEFAULT([<cNewDefaultRDD>])
  *      --> cPreviousDefaultRDD
- *     
+ *      
  *  $ARGUMENTS$     
- *     <cNewDefaultRDD> is a character string, the name of the RDD that is
+ *      <cNewDefaultRDD> is a character string, the name of the RDD that is
  *   to be made the new default RDD in the application.
  *  $RETURNS$     
- *     RDDSETDEFAULT() returns a character string, cPreviousDefaultRDD, the
+ *      RDDSETDEFAULT() returns a character string, cPreviousDefaultRDD, the
  *   name of the previous default driver.  The default driver is the driver
  *   that HARBOUR uses if you do not explicitly specify an RDD with the
  *   VIA clause of the USE command.
  *  $DESCRIPTION$     
- *     RDDSETDEFAULT() is an RDD function that sets or returns the name of the
+ *      RDDSETDEFAULT() is an RDD function that sets or returns the name of the
  *   previous default RDD driver and, optionally, sets the current driver to
  *   the new RDD driver specified by cNewDefaultRDD.  If <cNewDefaultDriver>
  *   is not specified, the current default driver name is returned and
@@ -7103,13 +6905,13 @@ HARBOUR HB_RDDREGISTER( void )
  *  $TESTS$
  *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     DBSETDRIVER()
+ *      DBSETDRIVER()
  *  $INCLUDE$
- *     
+ *      
  *  $END$
  */
 
@@ -7138,22 +6940,22 @@ HARBOUR HB_RDDSETDEFAULT( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     RECCOUNT()
+ *      RECCOUNT()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Determine the number of records in the current (.dbf) file
+ *      Determine the number of records in the current (.dbf) file
  *  $SYNTAX$
- *     RECCOUNT()* | LASTREC() --> nRecords
+ *      RECCOUNT()* | LASTREC() --> nRecords
  *  $ARGUMENTS$
- *     
+ *      
  *  $RETURNS$
        RECCOUNT() returns the number of physical records in the current
      database file as an integer numeric value.  Filtering commands such as
      SET FILTER or SET DELETED have no effect on the return value.
      RECCOUNT() returns zero if there is no database file open in the current
      work area.
- *     
+ *      
  *  $DESCRIPTION$*     
        RECCOUNT() is a database function that is a synonym for LASTREC().  By
      default, RECCOUNT() operates on the currently selected work area.  It
@@ -7180,13 +6982,13 @@ HARBOUR HB_RDDSETDEFAULT( void )
  *  $TESTS$
  *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     EOF(),LASTREC()
+ *      EOF(),LASTREC()
  *  $INCLUDE$
- *     
+ *      
  *  $END$
  */
 
@@ -7203,15 +7005,15 @@ HARBOUR HB_RECCOUNT( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     RECNO()
+ *      RECNO()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Return the identity at the position of the record pointer
+ *      Return the identity at the position of the record pointer
  *  $SYNTAX$
- *     RECNO() --> Identity
+ *      RECNO() --> Identity
  *  $ARGUMENTS$
- *     
+ *      
  *  $RETURNS$     
        RECNO() returns the identity found at the position of the record
      pointer.
@@ -7238,13 +7040,13 @@ HARBOUR HB_RECCOUNT( void )
  *  $TESTS$
  *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     DBGOTO()
+ *      DBGOTO()
  *  $INCLUDE$
- *     
+ *      
  *  $END$
  */
 
@@ -7260,15 +7062,15 @@ HARBOUR HB_RECNO( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     RECSIZE()
+ *      RECSIZE()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Determine the record length of a database (.dbf) file
+ *      Determine the record length of a database (.dbf) file
  *  $SYNTAX$
- *     RECSIZE() --> nBytes
+ *      RECSIZE() --> nBytes
  *  $ARGUMENTS$
- *     
+ *      
  *  $RETURNS$     
        RECSIZE() returns, as a numeric value, the record length, in bytes, of
      the database file open in the current work area.  RECSIZE() returns zero
@@ -7305,13 +7107,13 @@ HARBOUR HB_RECNO( void )
  *  $TESTS$
  *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
  *  DISKSPACE(),FIELDNAME(),HEADER(),LASTREC()
  *  $INCLUDE$
- *     
+ *      
  *  $END$
  */
 
@@ -7331,94 +7133,92 @@ HARBOUR HB_RECSIZE( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     RLOCK()
+ *      RLOCK()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Lock the current record in the active work area
+ *      Lock the current record in the active work area
  *  $SYNTAX$
- *     RLOCK() --> lSuccess
+ *      RLOCK() --> lSuccess
  *  $ARGUMENTS$
- *     
+ *      
  *  $RETURNS$     
        RLOCK() returns true (.T.) if the record lock is obtained; otherwise, it
      returns false (.F.).
  *  $DESCRIPTION$     
        RLOCK() is a network function that locks the current record, preventing
-     other users from updating the record until the lock is released.
-     RLOCK() provides a shared lock, allowing other users read-only access to
-     the locked record while allowing only the current user to modify it.  A
-     record lock remains until another record is locked, an UNLOCK is
-     executed, the current database file is closed, or an FLOCK() is obtained
-     on the current database file.
+        other users from updating the record until the lock is released.
+        RLOCK() provides a shared lock, allowing other users read-only access to
+        the locked record while allowing only the current user to modify it.  A
+        record lock remains until another record is locked, an UNLOCK is
+        executed, the current database file is closed, or an FLOCK() is obtained
+        on the current database file.
 
-       For each invocation of RLOCK(), there is one attempt to lock the current
-     record, and the result is returned as a logical value.  An attempt to
-     obtain a record lock fails if another user currently has a file or
-     record lock, or EXCLUSIVE USE of the database file.  An attempt to
-     RLOCK() in an empty database returns true (.T.).
+        For each invocation of RLOCK(), there is one attempt to lock the current
+        record, and the result is returned as a logical value.  An attempt to
+        obtain a record lock fails if another user currently has a file or
+        record lock, or EXCLUSIVE USE of the database file.  An attempt to
+ *      RLOCK() in an empty database returns true (.T.).
 
-       By default, RLOCK() operates on the currently selected work area.  It
-     will operate on an unselected work area if you specify it as part of an
-     aliased expression (see example below).  This feature is useful since
-     RLOCK() does not automatically attempt a record lock for related files.
+ *      By default, RLOCK() operates on the currently selected work area.  It
+ *      will operate on an unselected work area if you specify it as part of an
+ *      aliased expression (see example below).  This feature is useful since
+ *      RLOCK() does not automatically attempt a record lock for related files.
 
-       As a general rule, RLOCK() operates solely on the current record.  This
-     includes the following commands:
+ *      As a general rule, RLOCK() operates solely on the current record.  This
+ *      includes the following commands:
 
-       @...GET
+ *      @...GET
 
-       DELETE (single record)
+ *      DELETE (single record)
 
-       RECALL (single record)
+ *      RECALL (single record)
 
-       REPLACE (single record)
+ *      REPLACE (single record)
 
-     Refer to the Network Programming chapter in the Programming and
-     Utilities guide for more information.
 
-    Notes
+ *      Notes
 
-       SET RELATION: HARBOUR does not automatically lock all
-        records in the relation chain when you lock the current work area
-        record.  Also, an UNLOCK has no effect on related work areas.
+ *      SET RELATION: HARBOUR does not automatically lock all
+ *      records in the relation chain when you lock the current work area
+ *      record.  Also, an UNLOCK has no effect on related work areas.
  *  $EXAMPLES$
        This example deletes a record in a network environment, using
-        RLOCK():
+ *      RLOCK():
 
-        USE Customer INDEX CustName SHARED NEW
-        SEEK "Smith"
-        IF FOUND()
-           IF RLOCK()
-              DELETE
-              ? "Smith deleted"
-           ELSE
-              ? "Record in use by another"
-           ENDIF
-        ELSE
-           ? "Smith not in Customer file"
-        ENDIF
-        CLOSE
+ *      USE Customer INDEX CustName SHARED NEW
+ *      SEEK "Smith"
+ *      IF FOUND()
+ *         IF RLOCK()
+ *            DELETE
+ *            ? "Smith deleted"
+ *         ELSE
+ *            ? "Record in use by another"
+ *         ENDIF
+ *      ELSE
+ *         ? "Smith not in Customer file"
+ *      ENDIF
+ *      CLOSE
 
-       This example specifies RLOCK() as an aliased expression to
-        lock a record in an unselected work area:
+ *      This example specifies RLOCK() as an aliased expression to
+ *      lock a record in an unselected work area:
 
-        USE Sales SHARED NEW
-        USE Customer SHARED NEW
-        //
-        IF !Sales->(RLOCK())
-           ? "The current Sales record is in use by another"
-        ENDIF
+ *      USE Sales SHARED NEW
+ *      USE Customer SHARED NEW
+ *      //
+ *      IF !Sales->(RLOCK())
+ *         ? "The current Sales record is in use by another"
+ *      ENDIF
  *  $TESTS$
  *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     FLOCK()
+ *      FLOCK()
  *  $INCLUDE$
- *     
+ *      
  *  $END$
  */
 
@@ -7444,53 +7244,53 @@ HARBOUR HB_RLOCK( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     SELECT()
+ *      SELECT()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Determine the work area number of a specified alias
+ *      Determine the work area number of a specified alias
  *  $SYNTAX$
- *     SELECT([<cAlias>]) --> nWorkArea
+ *      SELECT([<cAlias>]) --> nWorkArea
  *  $ARGUMENTS$
- *     <cAlias> is the target work area alias name.
+ *      <cAlias> is the target work area alias name.
  *  $RETURNS$     
-       SELECT() returns the work area of the specified alias as a integer
-     numeric value.
+ *      SELECT() returns the work area of the specified alias as a integer
+ *      numeric value.
  *  $DESCRIPTION$     
-       SELECT() is a database function that determines the work area number of
-     an alias.  The number returned can range from zero to 250.  If <cAlias>
-     is not specified, the current work area number is returned.  If <cAlias>
-     is specified and the alias does not exist, SELECT() returns zero.
+ *      SELECT() is a database function that determines the work area number of
+ *      an alias.  The number returned can range from zero to 250.  If <cAlias>
+ *      is not specified, the current work area number is returned.  If <cAlias>
+ *      is specified and the alias does not exist, SELECT() returns zero.
 
-       Note:  The SELECT() function and SELECT command specified with an
-     extended expression argument look somewhat alike.  This shouldn't be a
-     problem since the SELECT() function is not very useful on a line by
-     itself
+ *      Note:  The SELECT() function and SELECT command specified with an
+ *      extended expression argument look somewhat alike.  This shouldn't be a
+ *      problem since the SELECT() function is not very useful on a line by
+ *      itself
  *  $EXAMPLES$
        This example uses SELECT() to determine which work area
-        USE...NEW selected:
+ *      USE...NEW selected:
 
-        USE Sales NEW
-        SELECT 1
-        ? SELECT("Sales")            // Result: 4
+ *      USE Sales NEW
+ *      SELECT 1
+ *      ? SELECT("Sales")          // Result: 4
 
-       To reselect the value returned from the SELECT() function, use
-        the SELECT command with the syntax, SELECT (<idMemvar>), like this:
+ *      To reselect the value returned from the SELECT() function, use
+ *      the SELECT command with the syntax, SELECT (<idMemvar>), like this:
 
-        USE Sales NEW
-        nWorkArea:= SELECT()
-        USE Customer NEW
-        SELECT (nWorkArea)
+ *      USE Sales NEW
+ *      nWorkArea:= SELECT()
+ *      USE Customer NEW
+ *      SELECT (nWorkArea)
  *  $TESTS$
  *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
  *      ALIAS(),USED()
  *  $INCLUDE$
- *     
+ *      
  *  $END$
  */
 
@@ -7511,41 +7311,41 @@ HARBOUR HB_SELECT( void )
 }
 /*  $DOC$
  *  $FUNCNAME$
- *     USED()
+ *      USED()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Determine whether a database file is in USE
+ *      Determine whether a database file is in USE
  *  $SYNTAX$
- *     USED() --> lDbfOpen
+ *      USED() --> lDbfOpen
  *  $ARGUMENTS$
- *     
+ *      
  *  $RETURNS$     
-       USED() returns true (.T.) if there is a database file in USE; otherwise,
-     it returns false (.F.).
+ *      USED() returns true (.T.) if there is a database file in USE; otherwise,
+ *      it returns false (.F.).
  *  $DESCRIPTION$     
-       USED() is a database function that determines whether there is a
-     database file in USE in a particular work area.  By default, USED()
-     operates on the currently selected work area.  It will operate on an
-     unselected work area if you specify it as part of an aliased expression.
+ *      USED() is a database function that determines whether there is a
+ *      database file in USE in a particular work area.  By default, USED()
+ *      operates on the currently selected work area.  It will operate on an
+ *      unselected work area if you specify it as part of an aliased expression.
  *  $EXAMPLES$
-       This example determines whether a database file is in USE in
-        the current work area:
+ *      This example determines whether a database file is in USE in
+ *      the current work area:
 
-        USE Customer NEW
-        ? USED()               // Result: .T.
-        CLOSE
-        ? USED()               // Result: .F.
+ *      USE Customer NEW
+ *      ? USED()              // Result: .T.
+ *      CLOSE
+ *      ? USED()              // Result: .F.
  *  $TESTS$
  *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     ALIAS(),SELECT()
+ *      ALIAS(),SELECT()
  *  $INCLUDE$
- *     
+ *      
  *  $END$
  */
 
@@ -7555,53 +7355,53 @@ HARBOUR HB_USED( void )
 }
 
 /* NOTE: Same as dbSetDriver() and rddSetDefault(), but doesn't
-         throw any error if the driver doesn't exist, this is
-         required in the RDDSYS INIT function, since it's not guaranteed
-         that the RDD is already registered at that point. */
+ *       throw any error if the driver doesn't exist, this is
+ *       required in the RDDSYS INIT function, since it's not guaranteed
+ *       that the RDD is already registered at that point. */
 
 /*  $DOC$
  *  $FUNCNAME$
- *     __RDDSETDEFAULT()
+ *      __RDDSETDEFAULT()
  *  $CATEGORY$
- *     Data Base
+ *      Data Base
  *  $ONELINER$
- *     Set or return the default RDD for the application
+ *      Set or return the default RDD for the application
  *  $SYNTAX$
-       __RDDSETDEFAULT([<cNewDefaultRDD>])
-        --> cPreviousDefaultRDD
- *     
+ *      __RDDSETDEFAULT([<cNewDefaultRDD>])
+ *      --> cPreviousDefaultRDD
+ *      
  *  $ARGUMENTS$     
-       <cNewDefaultRDD> is a character string, the name of the RDD that is
-     to be made the new default RDD in the application.
+ *      <cNewDefaultRDD> is a character string, the name of the RDD that is
+ *      to be made the new default RDD in the application.
  *  $RETURNS$     
-       __RDDSETDEFAULT() returns a character string, cPreviousDefaultRDD, the
-     name of the previous default driver.  The default driver is the driver
-     that HARBOUR uses if you do not explicitly specify an RDD with the
-     VIA clause of the USE command.
+ *      __RDDSETDEFAULT() returns a character string, cPreviousDefaultRDD, the
+ *      name of the previous default driver.  The default driver is the driver
+ *      that HARBOUR uses if you do not explicitly specify an RDD with the
+ *      VIA clause of the USE command.
  *  $DESCRIPTION$     
-       RDDSETDEFAULT() is an RDD function that sets or returns the name of the
-     previous default RDD driver and, optionally, sets the current driver to
-     the new RDD driver specified by cNewDefaultRDD.  If <cNewDefaultDriver>
-     is not specified, the current default driver name is returned and
-     continues to be the current default driver.
+ *      RDDSETDEFAULT() is an RDD function that sets or returns the name of the
+ *      previous default RDD driver and, optionally, sets the current driver to
+ *      the new RDD driver specified by cNewDefaultRDD.  If <cNewDefaultDriver>
+ *      is not specified, the current default driver name is returned and
+ *      continues to be the current default driver.
 
-      This function replaces the DBSETDRIVER() function.
+ *      This function replaces the DBSETDRIVER() function.
  *  $EXAMPLES$
-     // If the default driver is not DBFNTX, make it the default
+ *      // If the default driver is not DBFNTX, make it the default
 
-     IF ( __RDDSETDEFAULT() != "DBFNTX" )
-        cOldRdd := __RDDSETDEFAULT( "DBFNTX" )
-     ENDIF
+ *      IF ( __RDDSETDEFAULT() != "DBFNTX" )
+ *           cOldRdd := __RDDSETDEFAULT( "DBFNTX" )
+ *      ENDIF
  *  $TESTS$
  *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     DBSETDRIVER()
+ *      DBSETDRIVER()
  *  $INCLUDE$
- *     
+ *      
  *  $END$
  */
 

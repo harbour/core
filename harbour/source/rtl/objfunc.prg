@@ -184,7 +184,7 @@ return __objHasMsg( oObject, cSymbol ) .and. ;
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
- *      __ObjGetMethodList(),__ObjGetValueList,__objHasData(),__objHasMethod()
+ *      __ObjGetMethodList(),__ObjGetValueList(),__objHasData(),__objHasMethod()
  *  $END$
  */
 
@@ -569,7 +569,7 @@ return oObject
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
- *      __objAddInline(),__objAddMethod(),__objDelData(),__objGetMsgList(),__ObjGetValueList(),__objHasData()   ,__ObjSetValueList()
+ *      __objAddInline(),__objAddMethod(),__objDelData(),__objGetMsgList(),__ObjGetValueList(),__objHasData(),__ObjSetValueList()
  *  $END$
  */
 

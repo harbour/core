@@ -66,14 +66,14 @@ RETURN Self
 
 METHOD WritePar( cPar ) CLASS TNortonGuide
 
-   FWRITE( Self:nHandle, ALLTRIM( cPar ) + CRLF )
+   FWRITE( Self:nHandle, HB_OEMTOANSI( cPar ) + CRLF )
 
 RETURN Self
 
 METHOD WriteParBold( cPar ) CLASS TNortonGuide
-
-   FWRITE( Self:nHandle, '^b' + ALLTRIM( cPar ) + '^b^' + CRLF )
-
+   Self:WritePar("")
+   FWRITE( Self:nHandle, '^b' + HB_OEMTOANSI( cPar ) + '^b^' + CRLF )
+   Self:WritePar("")
 RETURN Self
 
 METHOD WriteTitle( cTopic, cTitle ) CLASS TNortonGuide
@@ -82,7 +82,7 @@ METHOD WriteTitle( cTopic, cTitle ) CLASS TNortonGuide
    LOCAL nPos
    LOCAL cWrite
 
-   cTopic := ALLTRIM( cTopic )
+   cTopic := HB_OEMTOANSI( cTopic )
 
    FWRITE( Self:nHandle, "!Short: " + cTopic + CRLF )
 
@@ -140,9 +140,7 @@ RETURN Self
  *     oNg:WritePar( "See the Links Above" )
  *     oNg:Close()
  *     RETURN Nil
- *
  *  $TESTS$
- *
  *  $STATUS$
  *     R
  *  $COMPLIANCE$
@@ -150,7 +148,6 @@ RETURN Self
  *  $PLATFORMS$
  *     ALL
  *  $FILES$
- *
  *  $SEEALSO$
  *     TCLASS()
  *  $END$

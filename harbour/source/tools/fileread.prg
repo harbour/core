@@ -120,7 +120,7 @@
  *  $COMPLIANCE$
  *      This is a new Harbour Tools class
  *  $SEEALSO$
- *      TClass
+ *      TClass()
  *  $END$
  */
 

@@ -45,7 +45,16 @@
  *
  *    1/18/2000  Added Cleanup procedure when Generating Norton Guide
  *               
+ *    V1.05
+ *    1/22/2000 Added Code to generate OS2 IPF files
  *
+ *    V1.06
+ *    1/25/2000 Fixed some error that was not generating a valid RTF File
+ *    Removed Call TO HB_OEMTOANSI() on the rountines to generate the .Ngi
+ *    and Rtf files.
+ *    Added support to generate the Docs from .Txt files, See doc\Subcodes.txt
+ *    for header file.
+ *      
  */
 
 /*
@@ -136,6 +145,8 @@ STATIC cTest     := DELIM + 'TESTS' + DELIM
 STATIC cStatus   := DELIM + 'STATUS' + DELIM
 STATIC cPlat     := DELIM + 'PLATFORMS' + DELIM
 STATIC cFiles    := DELIM + 'FILES' + DELIM
+STATIC cSubCode  := DELIM + 'SUBCODE' + DELIM
+STATIC cFunction := DELIM + 'FUNCTION' +DELIM
 STATIC theHandle
 
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
@@ -144,10 +155,10 @@ STATIC theHandle
 *+
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
-FUNCTION FT_HELPC( cFlags, cLinkName, cAtFile, cDir )
+FUNCTION FT_HELPC( cFlags, cLinkName, cAtFile )
 
    //  LOCAL variables:
-   LOCAL aExtensions := { "*.PRG", "*.C", "*.ASM", "*.CH" }
+   LOCAL aExtensions := { "*.PRG", "*.C", "*.ASM", "*.CH" , "*.TXT" }
    LOCAL i
    LOCAL j
    LOCAL nItem
@@ -657,14 +668,17 @@ STATIC FUNCTION ProcessFiles
    // -
    //  LOCAL variables:
 
-#define D_NORMAL  1
-#define D_ARG     2
-#define D_SYNTAX  3
-#define D_IGNORE  4
-#define D_SEEALSO 5
-#define D_INCLUDE 6
-#define D_ONELINE 7
-#define D_STATUS 8
+#define D_NORMAL     1
+#define D_ARG        2
+#define D_SYNTAX     3
+#define D_IGNORE     4
+#define D_SEEALSO    5
+#define D_INCLUDE    6
+#define D_ONELINE    7
+#define D_STATUS     8
+#define D_TESTS      9
+#define D_FUNCTIONS 10
+
    LOCAL i
    LOCAL j
    LOCAL nFiles      := LEN( aDirList )
@@ -782,7 +796,7 @@ STATIC FUNCTION ProcessFiles
          IF lDoc
             //  1) function name
 
-            IF AT( cFunc, cBuffer ) > 0 .OR. AT( cComm, cBuffer ) > 0
+            IF AT( cFunc, cBuffer ) > 0 .OR. AT( cComm, cBuffer ) > 0 .OR. AT(cSubCode,cBuffer) > 0
                cBuffer := ReadLN( @lEof )
                nLineCnt ++
                //  Save the function name
@@ -926,17 +940,7 @@ STATIC FUNCTION ProcessFiles
                   nMode     := D_NORMAL
                   lAddBlank := .T.
                ELSEIF AT( cTest, cBuffer ) > 0
-
-                  IF !lBlankLine
-                     FWRITE( nWriteHandle, CRLF )
-                  ENDIF
-                  FWRITE( nWriteHandle, ".par bold on" + CRLF )
-                  FWRITE( nWriteHandle, " Tests" + CRLF )
-                  FWRITE( nWriteHandle, ".endpar" + CRLF )
-
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-
+                      nMode=D_TESTS
                ELSEIF AT( cCompl, cBuffer ) > 0
 
                   IF !lBlankLine
@@ -971,6 +975,18 @@ STATIC FUNCTION ProcessFiles
 
                   nMode     := D_NORMAL
                   lAddBlank := .T.
+               ELSEIF AT( cFunction, cBuffer ) > 0
+
+                  IF !lBlankLine
+                     FWRITE( nWriteHandle, CRLF )
+                  ENDIF
+                  FWRITE( nWriteHandle, ".par bold on" + CRLF )
+                  FWRITE( nWriteHandle, " Function" + CRLF )
+                  FWRITE( nWriteHandle, ".endpar" + CRLF )
+
+                  nMode     := D_NORMAL
+                  lAddBlank := .T.
+
                ELSEIF AT( cStatus, cBuffer ) > 0
                   nMode := D_STATUS
                ELSEIF AT( cSee, cBuffer ) > 0
@@ -1038,7 +1054,15 @@ STATIC FUNCTION ProcessFiles
                         FWRITE( nWriteHandle, ".endpar" + CRLF )
                      ENDIF
                      ProcStatus( nWriteHandle, StripNgControls( cBuffer ) )
+                  ELSEIF    nMode=D_TESTS
+                     IF !EMPTY(cBuffer)
+                          FWRITE( nWriteHandle, ".par bold on" + CRLF )
+                          FWRITE( nWriteHandle, " Tests" + CRLF )
+                          FWRITE( nWriteHandle, ".endpar" + CRLF )
+                          FWRITE( nWriteHandle, CRLF )
 
+                  ENDIF
+                          FWRITE( nWriteHandle,StripNgControls( cBuffer ) +CRLF)
                   ELSE
 
                      //  unknown data from somewhere
@@ -2233,7 +2257,8 @@ STATIC FUNCTION ProcessRtf
                //  Now close down this little piece
                lDoc := .F.
                IF .NOT. EMPTY( cSeeAlso )
-                  oRtf:WritePar( "See Also" ):EndPar()
+                  oRtf:WritePar(""):EndPar()  
+                  oRtf:WriteParBold( "See Also" )
                   ProcRtfalso( oRtf, cSeealso )
                ENDIF
 
@@ -2248,7 +2273,7 @@ STATIC FUNCTION ProcessRtf
          IF lDoc
             //  1) function name
 
-            IF AT( cFunc, cBuffer ) > 0 .OR. AT( cComm, cBuffer ) > 0
+            IF AT( cFunc, cBuffer ) > 0 .OR. AT( cComm, cBuffer ) > 0 .OR. AT( cSubCode, cBuffer ) >0
                cBuffer := ReadLN( @lEof )
                nLineCnt ++
                //  Save the function name
@@ -2330,7 +2355,7 @@ STATIC FUNCTION ProcessRtf
                //  Now start writing out what we know
                oRtf:WriteTitle( PAD( cFuncName, 21 ), cFuncName )
                oRtf:WriteParBold( cOneLine )
-               oRtf:WritePar( HB_OEMTOANSI( cBar ) ):EndPar()
+               oRtf:WritePar(  cBar  ):EndPar()
                //  4) all other stuff
 
             ELSE
@@ -2401,6 +2426,7 @@ STATIC FUNCTION ProcessRtf
                   IF !lBlankLine
                      oRtf:WritePar( "" ):EndPar()
                   ENDIF
+                  oRtf:WritePar( "" ):EndPar()
                   oRtf:WriteParBold( " Compilance" )
                   nMode     := D_NORMAL
                   lAddBlank := .T.
@@ -2418,6 +2444,16 @@ STATIC FUNCTION ProcessRtf
                      oRtf:WritePar( "" ):EndPar()
                   ENDIF
                   oRtf:WriteParBold( " Files" )
+
+                  nMode     := D_NORMAL
+                  lAddBlank := .T.
+
+               ELSEIF AT( cFunction, cBuffer ) > 0
+
+                  IF !lBlankLine
+                     oRtf:WritePar( "" ):EndPar()
+                  ENDIF
+                  oRtf:WriteParBold( " Functions" )
 
                   nMode     := D_NORMAL
                   lAddBlank := .T.
@@ -2445,6 +2481,8 @@ STATIC FUNCTION ProcessRtf
                      /*    nNonBlank:=FirstNB(cBuffer)
                         cBuffer=STUFF(cBuffer,nNonBlank,0,"^a1f ")*/
                      oRtf:WritePar( cBuffer ):EndPar()
+                     oRtf:WritePar(""):EndPar()
+                     
                   ELSEIF nMode = D_ARG
                      IF LEN( cBuffer ) > LONGLINE
                         write_error( "Arguments", cBuffer, nLineCnt, ;
@@ -2469,6 +2507,7 @@ STATIC FUNCTION ProcessRtf
                         lAddBlank := .F.
                      ENDIF
                      oRtf:WritePar( StripNgControls( cBuffer ) ):EndPar()
+                     
                   ELSEIF nMode = D_SEEALSO
                      IF .NOT. EMPTY( cBuffer )
                         cSeeAlso := StripFiles( ALLTRIM( cBuffer ) )
@@ -2484,10 +2523,20 @@ STATIC FUNCTION ProcessRtf
                      ENDIF
                   ELSEIF nMode = D_STATUS
                      IF !EMPTY( cBuffer )
+                        oRtf:WritePar(""):EndPar()
                         oRtf:WriteParBold( "Status" )
+                        oRtf:WritePar(""):EndPar()
+                        xaddblank:=.T.
+                     ELSE
+                        oRtf:WritePar(""):EndPar()
+                        xAddBlank:=.T.
                      ENDIF
                      ProcStatusRtf( oRtf, cBuffer )
-
+                     IF !xAddBlank
+                         oRtf:WritePar(""):EndPar()
+                         xaddblank:=.T.
+                     ENDIF
+                     xAddBlank:=.F.
                   ELSE
 
                      //  unknown data from somewhere
@@ -2507,7 +2556,7 @@ STATIC FUNCTION ProcessRtf
    NEXT
 
 RETURN NIL
-
+                     
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
 *+    Function ProcRtfAlso()
@@ -2585,8 +2634,9 @@ RETURN nil
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
 FUNCTION ProcStatus( nWriteHandle, cBuffer )
-
-   IF SUBSTR( ALLTRIM( cBuffer ), 1 ) == "R"
+   IF LEN( ALLTRIM( cBuffer ) ) > 1
+      FWRITE( nWriteHandle, cBuffer + CRLF )
+   ELSEIF SUBSTR( ALLTRIM( cBuffer ), 1 ) == "R"
       FWRITE( nWriteHandle, "   Ready" + CRLF )
    ELSEIF SUBSTR( ALLTRIM( cBuffer ), 1 ) == "S"
       FWRITE( nWriteHandle, "   Started" + CRLF )
@@ -2602,8 +2652,9 @@ RETURN nil
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
 FUNCTION ProcStatusRTF( nWriteHandle, cBuffer )
-
-   IF SUBSTR( ALLTRIM( cBuffer ), 1 ) == "R"
+   IF LEN( ALLTRIM(cBuffer) ) >1
+      nWriteHandle:WritePar( cBuffer ):EndPar()
+   ELSEIF SUBSTR( ALLTRIM( cBuffer ), 1 ) == "R"
       nWriteHandle:WritePar( "   Ready" ):EndPar()
    ELSEIF SUBSTR( ALLTRIM( cBuffer ), 1 ) == "S"
       nWriteHandle:WritePar( "   Started" ):EndPar()
@@ -2756,7 +2807,7 @@ STATIC FUNCTION ProcessWww
          IF lDoc
             //  1) function name
 
-            IF AT( cFunc, cBuffer ) > 0 .OR. AT( cComm, cBuffer ) > 0
+            IF AT( cFunc, cBuffer ) > 0 .OR. AT( cComm, cBuffer ) > 0 .OR. AT( cSubCode, cBuffer ) >0
                cBuffer := ReadLN( @lEof )
                nLineCnt ++
                //  Save the function name
@@ -2927,6 +2978,15 @@ STATIC FUNCTION ProcessWww
                      oHtm:WritePar( "" )
                   ENDIF
                   oHtm:WriteParBold( " Files" )
+
+                  nMode     := D_NORMAL
+                  lAddBlank := .T.
+               ELSEIF AT( cFunction, cBuffer ) > 0
+
+                  IF !lBlankLine
+                     oHtm:WritePar( "" )
+                  ENDIF
+                  oHtm:WriteParBold( " Functions" )
 
                   nMode     := D_NORMAL
                   lAddBlank := .T.
@@ -3116,8 +3176,9 @@ RETURN nil
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
 FUNCTION ProcStatusWww( nWriteHandle, cBuffer )
-
-   IF SUBSTR( ALLTRIM( cBuffer ), 1 ) == "R"
+   IF LEN( ALLTRIM( cBuffer ) ) >1
+      nWriteHandle:WritePar( cBuffer) 
+   ELSEIF SUBSTR( ALLTRIM( cBuffer ), 1 ) == "R"
       nWriteHandle:WritePar( "   Ready" )
    ELSEIF SUBSTR( ALLTRIM( cBuffer ), 1 ) == "S"
       nWriteHandle:WritePar( "   Started" )
@@ -3333,7 +3394,7 @@ STATIC FUNCTION ProcessNgi
          IF lDoc
             //  1) function name
 
-            IF AT( cFunc, cBuffer ) > 0 .OR. AT( cComm, cBuffer ) > 0
+            IF AT( cFunc, cBuffer ) > 0 .OR. AT( cComm, cBuffer ) > 0 .OR. AT( cSubCode, cBuffer ) >0
                cBuffer := ReadLN( @lEof )
                nLineCnt ++
                //  Save the function name
@@ -3415,7 +3476,7 @@ STATIC FUNCTION ProcessNgi
                //  Now start writing out what we know
                oNgi:WriteTitle( PAD( cFuncName, 21 ) + cOneLine, cFuncName )
                oNgi:WritePar( cOneLine )
-               oNgi:WritePar( HB_OEMTOANSI( cBar ) )
+               oNgi:WritePar(  cBar ) 
                //  4) all other stuff
 
             ELSE
@@ -3507,6 +3568,15 @@ STATIC FUNCTION ProcessNgi
                   nMode     := D_NORMAL
                   lAddBlank := .T.
 
+               ELSEIF AT( cFunction, cBuffer ) > 0
+
+                  IF !lBlankLine
+                     oNgi:WritePar( "" )
+                  ENDIF
+                  oNgi:WriteParBold( " Functions" )
+
+                  nMode     := D_NORMAL
+                  lAddBlank := .T.
                ELSEIF AT( cSee, cBuffer ) > 0
                   nMode := D_SEEALSO
                ELSEIF AT( cInc, cBuffer ) > 0
@@ -4009,7 +4079,7 @@ STATIC FUNCTION ProcessTroff
          IF lDoc
             //  1) function name
 
-            IF AT( cFunc, cBuffer ) > 0 .OR. AT( cComm, cBuffer ) > 0
+            IF AT( cFunc, cBuffer ) > 0 .OR. AT( cComm, cBuffer ) > 0 .OR. AT( cSubCode, cBuffer ) >0
                cBuffer := ReadLN( @lEof )
                nLineCnt ++
                //  Save the function name
@@ -4432,7 +4502,7 @@ STATIC FUNCTION ProcessOs2
          IF lDoc
             //  1) function name
 
-            IF AT( cFunc, cBuffer ) > 0 .OR. AT( cComm, cBuffer ) > 0
+            IF AT( cFunc, cBuffer ) > 0 .OR. AT( cComm, cBuffer ) > 0 .OR. AT( cSubCode, cBuffer ) >0
                cBuffer := ReadLN( @lEof )
                nLineCnt ++
                //  Save the function name
@@ -4598,6 +4668,15 @@ STATIC FUNCTION ProcessOs2
                      oOs2:WritePar( "" )
                   ENDIF
                   oOs2:WriteParBold( " Files" )
+
+                  nMode     := D_NORMAL
+                  lAddBlank := .T.
+               ELSEIF AT( cFunction, cBuffer ) > 0
+
+                  IF !lBlankLine
+                     oOs2:WritePar( "" )
+                  ENDIF
+                  oOs2:WriteParBold( " Function" )
 
                   nMode     := D_NORMAL
                   lAddBlank := .T.

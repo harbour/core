@@ -77,7 +77,7 @@ RETURN Self
 
 METHOD WritePar( cPar ) CLASS TOs2
 
-   FWRITE( Self:nHandle, ".br"+CRLF+Self:DostoOs2Text(ALLTRIM( cPar )) + CRLF )
+   FWRITE( Self:nHandle, ".br"+CRLF+Self:DostoOs2Text( cPar ) + CRLF )
 
 RETURN Self
 
@@ -100,9 +100,6 @@ METHOD WriteTitle( cTopic, cTitle ) CLASS TOs2
    ELSE  // Just in case that nItem>0 so the Link is already referenced
      nItem:=ASCAN(Self:aLinkRef,{|a| a[1]==cTopic}) 
    ENDIF
-  // IF nItem==0
-  //    nItem:=Self:nRef
- //  ENDIF
 
    fWrite(Self:nHandle,':title.'+ALLTRIM(cTitle)+CRLF)
 

@@ -111,8 +111,9 @@ METHOD WriteHeader() CLASS TRTF
 RETURN Self
 
 METHOD WritePar( cPar ) CLASS TRTF
-
-   FWRITE( Self:nHandle, '\pard{\cf1\fs20 ' + ALLTRIM( cPar ) )
+   cPar:=StrTran(cPar,"{","\{")
+   cPar:=StrTran(cPar,"}","\}")
+   FWRITE( Self:nHandle, '\pard{\cf1\fs30 ' + HB_OEMTOANSI("    ")+ HB_OEMTOANSI(cPar )) 
 RETURN Self
 
 METHOD EndPar() CLASS TRTF
@@ -123,8 +124,9 @@ RETURN Self
 
 METHOD WriteParBold( cPar ) CLASS TRTF
 
-   FWRITE( Self:nHandle, '\pard{\plain\cf1\f2\fs20\i\b\qc ' + ALLTRIM( cPar ) + ' }\par' + CRLF )
-
+   cPar:=StrTran(cPar,"{","\{")
+   cPar:=StrTran(cPar,"}","\}")
+   FWRITE( Self:nHandle, '\pard{\plain\cf1\f2\fs30\i\b\qc ' +  ALLTRIM(HB_OEMTOANSI( cPar )) + ' }\par' + CRLF )
 RETURN Self
 
 METHOD WriteTitle( cTitle, cTopic ) CLASS TRTF
@@ -136,12 +138,13 @@ METHOD WriteTitle( cTitle, cTopic ) CLASS TRTF
    nPos := AT( "()", cTitle )
 
    IF nPos > 0
-      cTemp := ALLTRIM( STRTRAN( cTitle, "()", "xx" ) )
+      cTemp := ALLTRIM( HB_OEMTOANSI(STRTRAN( cTitle, "()", "xx" ) ))
    ELSE
-      cTemp := ALLTRIM( cTitle )
+      cTemp := HB_OEMTOANSI(ALLTRIM( cTitle ))
+      cTemp :=STRTRAN( cTemp,"@", "x" )
    ENDIF
 
-   cTopic := ALLTRIM( cTopic )
+   cTopic := ALLTRIM( HB_OEMTOANSI(cTopic ))
 
    cWrite := '{\f2' + CRLF + ;
              '  #{\footnote \pard\plain \fs20 # ' + "IDH_"+cTemp + ' }' + CRLF + ;
@@ -151,7 +154,7 @@ METHOD WriteTitle( cTitle, cTopic ) CLASS TRTF
 
    FWRITE( Self:nHandle, cWrite )
 
-   Self:WritePar( cTopic ):EndPar()
+   Self:WriteParBold( cTopic )
 
 RETURN Self
 
@@ -167,7 +170,7 @@ RETURN Self
 
 METHOD WriteLink( cLink ) CLASS TRTF
 
-   FWRITE( Self:nHandle, '\pard{\cf1\fs20 {\f2\uldb ' + ALLTRIM( cLink ) + '}{\v\f2 ' + "IDH_"+ALLTRIM( STRTRAN( cLink, "()", "xx" ) ) + '} }\par' + CRLF )
+   FWRITE( Self:nHandle, '\pard{\cf1\fs30 {\f2\uldb ' + ALLTRIM( HB_OEMTOANSI(cLink) ) + '}{\v\f2 ' + "IDH_"+IF(AT( "()",cLink)>0 , ALLTRIM( HB_OEMTOANSI(STRTRAN( cLink, "()", "xx" ) )),ALLTRIM( HB_OEMTOANSI(STRTRAN( cLink, "@", "x" )) )) + '} }\par' + CRLF )
 
 RETURN Self
 

@@ -49,7 +49,7 @@ Build #31 2000-01-27
   ISAFFIRM(), ISNEGATIVE(), NATIONMSG(), _NATSORTVER(), _NATMSGVER()
 - Added Harbour compiler tracing (i.e., debug output)
 - Many changes, fixes, and enhancements to documentation
-- Program added to extract documentation from source code and create NG and HLP files
+- Program added to extract documentation from source code and create NG,HLP ,OS2 IPF and TROFF output files
 - Compile time expression optimizer.
 - Some preprocessor fixes
 - Added ADS RDD
