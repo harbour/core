@@ -89,7 +89,7 @@ static LPKEYINFO hb_ntxKeyNew( LPKEYINFO pKeyFrom );
 static void hb_ntxKeyFree( LPKEYINFO pKey );
 static LONG hb_ntxTagKeyFind( LPTAGINFO pTag, LPKEYINFO pKey, BOOL* result );
 static BOOL ntxIsRecBad( NTXAREAP pArea, LONG ulRecNo );
-static int hb_ntxTagFindCurrentKey( LPPAGEINFO pPage, LONG lBlock, LPKEYINFO pKey, BOOL bExact, BOOL lSeek, int level );
+static int hb_ntxTagFindCurrentKey( LPPAGEINFO pPage, LPKEYINFO pKey, BOOL bExact, BOOL lSeek, int level );
 static USHORT hb_ntxPageFindCurrentKey( LPPAGEINFO pPage, ULONG ulRecno );
 static void hb_ntxGetCurrentKey( LPTAGINFO pTag, LPKEYINFO pKey );
 static BOOL hb_ntxPageReadNextKey( LPTAGINFO pTag, BOOL lContinue );
@@ -286,7 +286,7 @@ static LONG hb_ntxTagKeyFind( LPTAGINFO pTag, LPKEYINFO pKey, BOOL * result )
 
    pTag->CurKeyInfo->Tag = 0;
    pTag->TagBOF = pTag->TagEOF = *result = FALSE;
-   K = hb_ntxTagFindCurrentKey( hb_ntxPageLoad( pTag->Owner,0 ), pKey->Tag, pKey, FALSE, TRUE, 1 );
+   K = hb_ntxTagFindCurrentKey( hb_ntxPageLoad( pTag->Owner,0 ), pKey, FALSE, TRUE, 1 );
    if( K == 0 )
    {
       *result = TRUE;
@@ -374,7 +374,7 @@ static USHORT hb_ntxGetKeyType( LPTAGINFO pTag )
    }
 }
 
-static int hb_ntxTagFindCurrentKey( LPPAGEINFO pPage, LONG lBlock, LPKEYINFO pKey, BOOL bExact, BOOL lSeek, int level )
+static int hb_ntxTagFindCurrentKey( LPPAGEINFO pPage, LPKEYINFO pKey, BOOL bExact, BOOL lSeek, int level )
 {
    int k = 1, kChild;
    LPKEYINFO p;
@@ -397,15 +397,6 @@ static int hb_ntxTagFindCurrentKey( LPPAGEINFO pPage, LONG lBlock, LPKEYINFO pKe
          /* k > 0 : pKey->pItem > p->pItem */
          if( !pPage->TagParent->AscendKey )
             k = -k;
-         if( k == 0 && lBlock == NTX_MAX_REC_NUM )
-            k = 1;
-         if( k == 0 && lBlock != NTX_IGNORE_REC_NUM )
-         {
-            if( lBlock > p->Xtra )
-               k = 1;
-            else if( lBlock < p->Xtra )
-               k = -1;
-         }
       }
       if( k <= 0 )
       /* pKey <= p */
@@ -443,7 +434,7 @@ static int hb_ntxTagFindCurrentKey( LPPAGEINFO pPage, LONG lBlock, LPKEYINFO pKe
                   pPage->TagParent->keyNext = pPage->CurKey;
                }
             pChildPage = hb_ntxPageLoad( pPage->TagParent->Owner,p->Tag );
-            kChild = hb_ntxTagFindCurrentKey( pChildPage, lBlock, pKey, bExact, lSeek, level + 1 );
+            kChild = hb_ntxTagFindCurrentKey( pChildPage, pKey, bExact, lSeek, level + 1 );
             if( k != 0 || kChild == 0 )
                k = kChild;
             if( k > 0 )
@@ -453,13 +444,6 @@ static int hb_ntxTagFindCurrentKey( LPPAGEINFO pPage, LONG lBlock, LPKEYINFO pKe
                pPage->TagParent->keyPrev = keyPrev;
                pPage->TagParent->keyNext = keyNext;
             }
-         }
-         else if( k == 0 && lBlock != NTX_IGNORE_REC_NUM )
-         {
-            if( lBlock > p->Tag )
-               k = 1;
-            else if( lBlock < p->Tag )
-               k = -1;
          }
       }
       if( k > 0 )
@@ -589,8 +573,7 @@ static BOOL hb_ntxPageReadNextKey( LPTAGINFO pTag, BOOL lContinue )
       }
       else
          hb_ntxGetCurrentKey( pTag,pKey );
-      pKey->Tag = NTX_IGNORE_REC_NUM;
-      seekRes = hb_ntxTagFindCurrentKey( hb_ntxPageLoad( pTag->Owner,0 ), pKey->Tag, pKey, FALSE, FALSE, 1 );
+      seekRes = hb_ntxTagFindCurrentKey( hb_ntxPageLoad( pTag->Owner,0 ), pKey, FALSE, FALSE, 1 );
       hb_ntxKeyFree( pKey );
       if( seekRes )
       {
@@ -682,8 +665,7 @@ static BOOL hb_ntxPageReadPrevKey( LPTAGINFO pTag, BOOL lContinue )
       }
       else
          hb_ntxGetCurrentKey( pTag, pKey );
-      pKey->Tag = NTX_IGNORE_REC_NUM;
-      seekRes = hb_ntxTagFindCurrentKey( hb_ntxPageLoad( pTag->Owner,0 ), pKey->Tag, pKey, FALSE, FALSE, 1 );
+      seekRes = hb_ntxTagFindCurrentKey( hb_ntxPageLoad( pTag->Owner,0 ), pKey, FALSE, FALSE, 1 );
       hb_ntxKeyFree( pKey );
       if( seekRes )
       {
@@ -2477,11 +2459,6 @@ static ERRCODE ntxSeek( NTXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
        hb_ntxKeyFree( pKey2 );
        return hb_ntxGoEof( pArea );
      }
-    /*  if ( bFindLast )
-       pKey2->Tag = NTX_MAX_REC_NUM;  
-     else
-    */
-       pKey2->Tag = NTX_IGNORE_REC_NUM;
      pKey2->Xtra = 0;
 
      if( pArea->fShared )
@@ -2496,7 +2473,6 @@ static ERRCODE ntxSeek( NTXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
 
         hb_IncString( pKey2->pItem->item.asString.value,
                   pKey2->pItem->item.asString.length );
-        pKey2->Tag = NTX_IGNORE_REC_NUM;
         lRecnoLast = hb_ntxTagKeyFind( pTag, pKey2, &result );
         hb_ntxKeyFree( pKey2 );
         if( lRecnoLast > 0 )
@@ -2696,8 +2672,7 @@ static ERRCODE ntxGoCold( NTXAREAP pArea )
                {
                  hb_itemCopy( pKeyOld->pItem, pTag->CurKeyInfo->pItem );
                  pKeyOld->Xtra = pTag->CurKeyInfo->Xtra;
-                 pKeyOld->Tag = NTX_IGNORE_REC_NUM;
-                  if( hb_ntxTagFindCurrentKey( hb_ntxPageLoad( pTag->Owner,0 ), pKeyOld->Tag, pKeyOld, FALSE, FALSE, 1 ) )
+                  if( hb_ntxTagFindCurrentKey( hb_ntxPageLoad( pTag->Owner,0 ), pKeyOld, FALSE, FALSE, 1 ) )
                   {
                       printf( "\n\rntxGoCold: Cannot find current key:" );
                       lpIndex = lpIndex->pNext;
@@ -3576,7 +3551,6 @@ static RDDFUNCS ntxTable = { ntxBof,
 HB_FUNC(_DBFNTX )
 {
 }
-
 
 HB_FUNC( DBFNTX_GETFUNCTABLE )
 {

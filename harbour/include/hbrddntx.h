@@ -88,9 +88,6 @@ extern "C" {
 #define PREV_RECORD                                                     3
 #define NEXT_RECORD                                                     4
 
-#define NTX_MAX_REC_NUM                                       0x7FFFFFFFL
-#define NTX_IGNORE_REC_NUM                                             -1
-
 #define NTX_MAX_KEY  256      /* Max len of key */
 #define NTXBLOCKSIZE 1024     /* Size of block in NTX file */
 

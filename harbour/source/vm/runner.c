@@ -408,6 +408,7 @@ PHRB_BODY hb_hrbLoad( char* szHrb )
 
       hb_hrbFileClose( file );
    }
+   hb_vmProcessSymbols( pHrbBody->pSymRead, ( USHORT ) pHrbBody->ulSymbols );
    return pHrbBody;
 }
 
@@ -416,8 +417,6 @@ void hb_hrbDo( PHRB_BODY pHrbBody, int argc, char * argv[] )
    PHB_ITEM pRetVal = NULL;
    ULONG ul;
    int i;
-
-   hb_vmProcessSymbols( pHrbBody->pSymRead, ( USHORT ) pHrbBody->ulSymbols );
 
    /* Initialize static variables first
     */
