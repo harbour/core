@@ -262,7 +262,7 @@ void hb_compChkCompilerSwitch( int iArg, char * Args[] )
                      case 'G' :
                           /* Required argument */
                           Switch[2] = Args[i][j + 1];
-                          if( isdigit( Args[i][j + 2] ) )
+                          if( isdigit( (int) Args[i][j + 2] ) )
                           {
                              /* Optional argument */
                              Switch[3] = Args[i][j + 2];

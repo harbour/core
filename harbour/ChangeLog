@@ -1,3 +1,10 @@
+2001-07-10 01:55 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * source/compiler/cmdcheck.c
+     + Added missing type cast to resolve gcc warning.
+   * source/pp/ppcore.c
+     + Added missing type cast to resolve gcc warning.
+     - Removed 4 redundant #includes already included by included hbcomp.h
+
 2001-07-10 10:40 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
    * source/rtl/browse.prg
      ! fixed status line display

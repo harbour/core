@@ -75,10 +75,6 @@
    #endif
 #endif
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
 #include <time.h>
 #include <errno.h>
 
@@ -3802,7 +3798,7 @@ static int NextParm( char ** sSource, char * sDest )
 
 static BOOL IsIdentifier( char *szProspect )
 {
-   if( isalpha( szProspect[0] ) || szProspect[0] == '_' )
+   if( isalpha( (int) szProspect[0] ) || szProspect[0] == '_' )
    {
       int i = 1;
 
