@@ -122,9 +122,9 @@ static void    hb_vmSwapAlias( void );           /* swaps items on the eval stac
 static HARBOUR hb_vmDoBlock( void );             /* executes a codeblock */
 static void    hb_vmLocalName( USHORT uiLocal, char * szLocalName ); /* locals and parameters index and name information for the debugger */
 static void    hb_vmModuleName( char * szModuleName ); /* PRG and function name information for the debugger */
-static void    hb_vmFrame( BYTE bLocals, BYTE bParams );  /* increases the stack pointer for the amount of locals and params suplied */
+static void    hb_vmFrame( BYTE bLocals, BYTE bParams ); /* increases the stack pointer for the amount of locals and params suplied */
 static void    hb_vmSFrame( PHB_SYMB pSym );     /* sets the statics frame for a function */
-static void    hb_vmStatics( PHB_SYMB pSym );    /* increases the the global statics array to hold a PRG statics */
+static void    hb_vmStatics( PHB_SYMB pSym, USHORT uiStatics ); /* increases the the global statics array to hold a PRG statics */
 static void    hb_vmEndBlock( void );            /* copies the last codeblock pushed value into the return value */
 static void    hb_vmRetValue( void );            /* pops the latest stack value into stack.Return */
 static void    hb_vmDebuggerShowLine( USHORT uiLine ); /* makes the debugger shows a specific source code line */
@@ -557,8 +557,8 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_STATICS:
             uiParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
-            hb_vmStatics( pSymbols + uiParams );
-            w += 3;
+            hb_vmStatics( pSymbols + uiParams, pCode[ w + 3 ] + ( pCode[ w + 4 ] * 256 ) );
+            w += 5;
             break;
 
          case HB_P_RETVALUE:
@@ -2306,10 +2306,8 @@ static void hb_vmSFrame( PHB_SYMB pSym )      /* sets the statics frame for a fu
    HB_DEBUG( "SFrame\n" );
 }
 
-static void hb_vmStatics( PHB_SYMB pSym ) /* initializes the global aStatics array or redimensionates it */
+static void hb_vmStatics( PHB_SYMB pSym, USHORT uiStatics ) /* initializes the global aStatics array or redimensionates it */
 {
-   USHORT uiStatics = hb_vmPopNumber();
-
    if( IS_NIL( &s_aStatics ) )
    {
       pSym->pFunPtr = NULL;         /* statics frame for this PRG */

@@ -489,6 +489,7 @@ BOOL _bAutoMemvarAssume = FALSE;         /* holds if undeclared variables are au
 BOOL _bForceMemvars = FALSE;             /* holds if memvars are assumed when accesing undeclared variable (-v)*/
 BOOL _bDebugInfo = FALSE;                /* holds if generate debugger required info */
 char _szPrefix[ 20 ] = { '\0' };         /* holds the prefix added to the generated symbol init function name (in C output currently) */
+BOOL _bGenCVerbose = TRUE;               /* C code generation should be verbose (use comments) or not */
 int  _iExitLevel = HB_EXITLEVEL_DEFAULT; /* holds if there was any warning during the compilation process */
 
 USHORT _wSeqCounter   = 0;
@@ -1529,6 +1530,21 @@ int harbour_main( int argc, char * argv[] )
                      case 'c':
                      case 'C':
                         _iLanguage = LANG_C;
+
+                        switch( argv[ iArg ][ 3 ] )
+                        {
+                           case '\0':
+                           case '1':
+                              _bGenCVerbose = TRUE;
+                              break;
+  
+                           case '0':
+                              _bGenCVerbose = FALSE;
+                              break;
+ 
+                           default:
+                              GenError( _szCErrors, 'E', ERR_BADOPTION, argv[ iArg ], NULL );
+                        }
                         break;
 
                      case 'f':
@@ -1798,8 +1814,8 @@ int harbour_main( int argc, char * argv[] )
                PCOMSYMBOL pSym;
 
                /* Fix the number of static variables */
-               _pInitFunc->pCode[ 1 ] = LOBYTE( _iStatics );
-               _pInitFunc->pCode[ 2 ] = HIBYTE( _iStatics );
+               _pInitFunc->pCode[ 3 ] = LOBYTE( _iStatics );
+               _pInitFunc->pCode[ 4 ] = HIBYTE( _iStatics );
                _pInitFunc->iStaticsBase = _iStatics;
 
                pSym = AddSymbol( _pInitFunc->szName, NULL );
@@ -1884,7 +1900,8 @@ void PrintUsage( char * szSelf )
            "\n          /d<id>[=<val>]   #define <id>"
            "\n          /es[<level>]     set exit severity"
            "\n          /g<type>         output type generated is <type> (see below)"
-           "\n          /gc              output type: C source (.c) (default)"
+           "\n          /gc[<type>]      output type: C source (.c) (default)"
+           "\n                           <type>: 0=without comments, 1=normal (default)"
 #ifdef HARBOUR_OBJ_GENERATION
            "\n          /gf              output type: Windows/DOS OBJ32 (.obj)"
 #endif
@@ -4180,13 +4197,20 @@ void StaticDefStart( void )
    functions.pLast->bFlags |= FUN_USES_STATICS;
    if( ! _pInitFunc )
    {
+      BYTE pBuffer[ 5 ];
+
       _pInitFunc = FunctionNew( yy_strdup("(_INITSTATICS)"), FS_INIT );
       _pInitFunc->pOwner = functions.pLast;
       _pInitFunc->bFlags = FUN_USES_STATICS | FUN_PROCEDURE;
       _pInitFunc->cScope = FS_INIT | FS_EXIT;
       functions.pLast = _pInitFunc;
-      PushInteger( 1 );   /* the number of static variables is unknown now */
-      GenPCode3( HB_P_STATICS, 0, 0 );
+
+      pBuffer[ 0 ] = HB_P_STATICS;
+      pBuffer[ 1 ] = 0;
+      pBuffer[ 2 ] = 0;
+      pBuffer[ 3 ] = 1; /* the number of static variables is unknown now */
+      pBuffer[ 4 ] = 0;
+      GenPCodeN( pBuffer, 5 );
       GenPCode3( HB_P_SFRAME, 0, 0 );     /* frame for statics variables */
    }
    else

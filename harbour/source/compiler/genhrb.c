@@ -356,7 +356,9 @@ void GenPortObj( PHB_FNAME pFileName )
                fputc( pFunc->pCode[ lPCodePos ], yyc );
                fputc( LOBYTE( w ), yyc );
                fputc( HIBYTE( w ), yyc );
-               lPCodePos += 3;
+               fputc( pFunc->pCode[ lPCodePos + 3 ], yyc );
+               fputc( pFunc->pCode[ lPCodePos + 4 ], yyc );
+               lPCodePos += 5;
                break;
 
             default:

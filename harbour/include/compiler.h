@@ -124,6 +124,7 @@ extern PHB_FNAME _pFileName;
 extern BOOL _bQuiet;
 extern BOOL _bStartProc;
 extern char _szPrefix[ 20 ];         /* holds the prefix added to the generated symbol init function name (in C output currently) */
+extern BOOL _bGenCVerbose;
 
 extern char * _szCErrors[];
 

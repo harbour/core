@@ -1,3 +1,17 @@
+19991010-12:22 GMT+1 Victor Szel <info@szelvesz.hu>
+   * source/compiler/genc.c
+     source/compiler/genhrb.c
+     source/compiler/harbour.y
+     source/vm/hvm.c
+     % HB_P_STATICS now stores the number of statics in the pcode command
+       itself and doesn't POP it from the stack. This causes a small speedup 
+       in the STATIC init code.
+   * source/compiler/harbour.y
+     source/compiler/genc.c
+     include/compiler.h
+     + /gc0 switch added to generate C code without comments, this makes it
+       about 30% percent smaller, good for large code bases.
+
 19991010-07:28 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/rtl/classes.c
      - Undone latest changes from Eddie
