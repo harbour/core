@@ -631,7 +631,7 @@ HARBOUR HB_FREADSTR( void )
         {
            handle = _parni(1);
            bytes  = (arg2_it ? _parnl(2) : 0);
-           buffer = ( char * ) _xgrab(bytes);
+           buffer = ( char * ) _xgrab(bytes + 1);
 
            readed=0; ch[0]=1;
            while( readed < bytes )

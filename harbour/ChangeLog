@@ -1,3 +1,7 @@
+19990612-18:55 CET Eddie Runia
+  * source/rtl/files.c
+    One byte more allocated for fReadStr()
+
 19990612-17:00 CET Matthew Hamilton
   * source/rtl/strings.c
     Extended syntax for alltrim and rtrim
