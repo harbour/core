@@ -571,15 +571,35 @@ USHORT hb_gt_DispCount()
 
 /* *********************************************************************** */
 
-void hb_gt_PutCharAttr( USHORT uiRow, USHORT uiCol, BYTE byChar, BYTE byAttr )
+static void hb_gt_xPutch( USHORT usRow, USHORT usCol, BYTE byAttr, BYTE byChar )
 {
-    ULONG  i;
+    HB_TRACE(HB_TR_DEBUG, ("hb_gt_xPutch(%hu, %hu, %d, %i)", usRow, usCol, (int) byAttr, byChar));
 
+    if ( s_pCharInfoScreen != NULL &&
+         usRow < s_csbi.dwSize.Y && usCol < s_csbi.dwSize.X )
+    {
+        int i = ( int ) ( usRow * s_csbi.dwSize.X + usCol );
+
+        s_pCharInfoScreen[i].Char.AsciiChar = ( CHAR ) byChar;
+        s_pCharInfoScreen[i].Attributes = ( WORD )( byAttr & 0xFF );
+
+        hb_gt_xUpdtSet( usRow, usCol, usRow, usCol );
+    }
+}
+
+/* *********************************************************************** */
+
+void hb_gt_PutCharAttr( SHORT uiRow, SHORT uiCol, BYTE byChar, BYTE byAttr )
+{
     HB_TRACE(HB_TR_DEBUG, ("hb_gt_PutCharAttr(%hu, %hu, %i, %d)", uiRow, uiCol, byChar, (int) byAttr));
 
-    if ( s_pCharInfoScreen != NULL )
+    if ( s_pCharInfoScreen != NULL &&
+         uiRow >= 0 &&
+         uiCol >= 0 &&
+         uiRow < s_csbi.dwSize.Y && 
+         uiCol < s_csbi.dwSize.X )
     {
-        i = (uiRow * s_csbi.dwSize.X) + uiCol;
+        ULONG i = (uiRow * s_csbi.dwSize.X) + uiCol;
         s_pCharInfoScreen[i].Char.AsciiChar = ( CHAR ) byChar;
         s_pCharInfoScreen[i].Attributes = ( WORD ) byAttr;
         hb_gt_xUpdtSet( uiRow, uiCol, uiRow, uiCol );
@@ -587,11 +607,15 @@ void hb_gt_PutCharAttr( USHORT uiRow, USHORT uiCol, BYTE byChar, BYTE byAttr )
     }
 }
 
-void hb_gt_PutChar( USHORT uiRow, USHORT uiCol, BYTE byChar )
+void hb_gt_PutChar( SHORT uiRow, SHORT uiCol, BYTE byChar )
 {
     HB_TRACE(HB_TR_DEBUG, ("hb_gt_PutChar(%hu, %hu, %i)", uiRow, uiCol, byChar));
 
-    if ( s_pCharInfoScreen != NULL )
+    if ( s_pCharInfoScreen != NULL &&
+         uiRow >= 0 &&
+         uiCol >= 0 &&
+         uiRow < s_csbi.dwSize.Y && 
+         uiCol < s_csbi.dwSize.X )
     {
         s_pCharInfoScreen[(uiRow * s_csbi.dwSize.X) + uiCol].Char.AsciiChar = ( CHAR ) byChar;
         hb_gt_xUpdtSet( uiRow, uiCol, uiRow, uiCol );
@@ -599,11 +623,15 @@ void hb_gt_PutChar( USHORT uiRow, USHORT uiCol, BYTE byChar )
     }
 }
 
-void hb_gt_PutAttr( USHORT uiRow, USHORT uiCol, BYTE byAttr )
+void hb_gt_PutAttr( SHORT uiRow, SHORT uiCol, BYTE byAttr )
 {
     HB_TRACE(HB_TR_DEBUG, ("hb_gt_PutAttr(%hu, %hu, %d)", uiRow, uiCol, (int) byAttr));
 
-    if ( s_pCharInfoScreen != NULL )
+    if ( s_pCharInfoScreen != NULL &&
+         uiRow >= 0 &&
+         uiCol >= 0 &&
+         uiRow < s_csbi.dwSize.Y && 
+         uiCol < s_csbi.dwSize.X )
     {
         s_pCharInfoScreen[(uiRow * s_csbi.dwSize.X) + uiCol].Attributes = ( WORD ) byAttr;
         hb_gt_xUpdtSet( uiRow, uiCol, uiRow, uiCol );
@@ -611,18 +639,54 @@ void hb_gt_PutAttr( USHORT uiRow, USHORT uiCol, BYTE byAttr )
     }
 }
 
-void hb_gt_GetChar( USHORT uiRow, USHORT uiCol, BYTE * pbyChar )
+void hb_gt_GetCharAttr( SHORT uiRow, SHORT uiCol, BYTE * pbyChar, BYTE * pbyAttr )
+{
+    HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetCharAttr(%hu, %hu, %p, %p)", uiRow, uiCol, pbyChar, pbyAttr));
+
+    if ( s_pCharInfoScreen != NULL &&
+         uiRow >= 0 &&
+         uiCol >= 0 &&
+         uiRow < s_csbi.dwSize.Y && 
+         uiCol < s_csbi.dwSize.X )
+    {
+        ULONG i = (uiRow * s_csbi.dwSize.X) + uiCol;
+
+        *pbyAttr = ( BYTE ) ( s_pCharInfoScreen[i].Attributes & 0xFF );
+        *pbyChar = ( BYTE ) s_pCharInfoScreen[i].Char.AsciiChar;
+    }
+    else
+    {
+        *pbyChar = 0;
+        *pbyAttr = 0;
+    }
+}
+
+void hb_gt_GetChar( SHORT uiRow, SHORT uiCol, BYTE * pbyChar )
 {
     HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetChar(%hu, %hu, %p)", uiRow, uiCol, pbyChar));
 
-    *pbyChar = ( BYTE ) s_pCharInfoScreen[(uiRow * s_csbi.dwSize.X) + uiCol].Char.AsciiChar;
+    if ( s_pCharInfoScreen != NULL &&
+         uiRow >= 0 &&
+         uiCol >= 0 &&
+         uiRow < s_csbi.dwSize.Y && 
+         uiCol < s_csbi.dwSize.X )
+        *pbyChar = ( BYTE ) s_pCharInfoScreen[(uiRow * s_csbi.dwSize.X) + uiCol].Char.AsciiChar;
+    else
+        *pbyChar = 0;
 }
 
-void hb_gt_GetAttr( USHORT uiRow, USHORT uiCol, BYTE * pbyAttr )
+void hb_gt_GetAttr( SHORT uiRow, SHORT uiCol, BYTE * pbyAttr )
 {
     HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetAttr(%hu, %hu, %p)", uiRow, uiCol, pbyAttr));
 
-    *pbyAttr = ( BYTE ) ( s_pCharInfoScreen[(uiRow * s_csbi.dwSize.X) + uiCol].Attributes & 0xFF );
+    if ( s_pCharInfoScreen != NULL &&
+         uiRow >= 0 &&
+         uiCol >= 0 &&
+         uiRow < s_csbi.dwSize.Y && 
+         uiCol < s_csbi.dwSize.X )
+        *pbyAttr = ( BYTE ) ( s_pCharInfoScreen[(uiRow * s_csbi.dwSize.X) + uiCol].Attributes & 0xFF );
+    else
+        *pbyAttr = 0;
 }
 
 void hb_gt_Puts( USHORT usRow, USHORT usCol, BYTE byAttr, BYTE *pbyStr, ULONG ulLen )
@@ -958,24 +1022,6 @@ void hb_gt_SetBlink( BOOL bBlink )
 char * hb_gt_Version( void )
 {
     return "Harbour Terminal: Win32 buffered console";
-}
-
-/* *********************************************************************** */
-
-static void hb_gt_xPutch( USHORT usRow, USHORT usCol, BYTE byAttr, BYTE byChar )
-{
-    HB_TRACE(HB_TR_DEBUG, ("hb_gt_xPutch(%hu, %hu, %d, %i)", usRow, usCol, (int) byAttr, byChar));
-
-    if ( s_pCharInfoScreen != NULL &&
-         usRow < s_csbi.dwSize.Y && usCol < s_csbi.dwSize.X )
-    {
-        int i = ( int ) ( usRow * s_csbi.dwSize.X + usCol );
-
-        s_pCharInfoScreen[i].Char.AsciiChar = ( CHAR ) byChar;
-        s_pCharInfoScreen[i].Attributes = ( WORD )( byAttr & 0xFF );
-
-        hb_gt_xUpdtSet( usRow, usCol, usRow, usCol );
-    }
 }
 
 /* *********************************************************************** */

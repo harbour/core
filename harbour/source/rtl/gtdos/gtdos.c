@@ -668,60 +668,93 @@ static void hb_gt_xPutch( USHORT cRow, USHORT cCol, BYTE attr, BYTE ch )
 #endif
 }
 
-void hb_gt_PutCharAttr( USHORT uiRow, USHORT uiCol, BYTE byChar, BYTE byAttr )
+void hb_gt_PutCharAttr( SHORT uiRow, SHORT uiCol, BYTE byChar, BYTE byAttr )
 {
-    HB_TRACE(HB_TR_DEBUG, ("hb_gt_PutCharAttr(%hu, %hu, %i, %d)", uiRow, uiCol, byChar, (int) byAttr));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_PutCharAttr(%hu, %hu, %i, %d)", uiRow, uiCol, byChar, (int) byAttr));
 
-    /* TODO */
-
-    HB_SYMBOL_UNUSED( uiRow );
-    HB_SYMBOL_UNUSED( uiCol );
-    HB_SYMBOL_UNUSED( byChar );
-    HB_SYMBOL_UNUSED( byAttr );
+#if defined(__DJGPP__TEXT)
+   {
+     long ch_attr = ( byChar << 8 ) | byAttr;
+     puttext( uiCol + 1, uiRow + 1, uiCol + 1, uiRow + 1, &ch_attr );
+   }
+#elif defined(__DJGPP__)
+   {
+      ScreenPutChar( byChar, byAttr, uiCol, uiRow );
+   }
+#else
+   {
+     USHORT FAR * p = (USHORT FAR *) hb_gt_ScreenPtr( uiRow, uiCol );
+     *p = (byAttr << 8) + byChar;
+   }
+#endif
 }
 
-void hb_gt_PutChar( USHORT uiRow, USHORT uiCol, BYTE byChar )
+void hb_gt_PutChar( SHORT uiRow, SHORT uiCol, BYTE byChar )
 {
-    HB_TRACE(HB_TR_DEBUG, ("hb_gt_PutChar(%hu, %hu, %i)", uiRow, uiCol, byChar));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_PutChar(%hu, %hu, %i)", uiRow, uiCol, byChar));
 
-    /* TODO */
+   /* TODO */
 
-    HB_SYMBOL_UNUSED( uiRow );
-    HB_SYMBOL_UNUSED( uiCol );
-    HB_SYMBOL_UNUSED( byChar );
+   HB_SYMBOL_UNUSED( uiRow );
+   HB_SYMBOL_UNUSED( uiCol );
+   HB_SYMBOL_UNUSED( byChar );
 }
 
-void hb_gt_PutAttr( USHORT uiRow, USHORT uiCol, BYTE byAttr )
+void hb_gt_PutAttr( SHORT uiRow, SHORT uiCol, BYTE byAttr )
 {
-    HB_TRACE(HB_TR_DEBUG, ("hb_gt_PutAttr(%hu, %hu, %d)", uiRow, uiCol, (int) byAttr));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_PutAttr(%hu, %hu, %d)", uiRow, uiCol, (int) byAttr));
 
-    /* TODO */
+   /* TODO */
 
-    HB_SYMBOL_UNUSED( uiRow );
-    HB_SYMBOL_UNUSED( uiCol );
-    HB_SYMBOL_UNUSED( byAttr );
+   HB_SYMBOL_UNUSED( uiRow );
+   HB_SYMBOL_UNUSED( uiCol );
+   HB_SYMBOL_UNUSED( byAttr );
 }
 
-void hb_gt_GetChar( USHORT uiRow, USHORT uiCol, BYTE * pbyChar )
+void hb_gt_GetCharAttr( SHORT uiRow, SHORT uiCol, BYTE * pbyChar, BYTE * pbyAttr )
 {
-    HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetChar(%hu, %hu, %p)", uiRow, uiCol, pbyChar));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetCharAttr(%hu, %hu, %p, %p)", uiRow, uiCol, pbyChar, pbyAttr));
 
-    /* TODO */
-
-    HB_SYMBOL_UNUSED( uiRow );
-    HB_SYMBOL_UNUSED( uiCol );
-    HB_SYMBOL_UNUSED( pbyChar );
+#if defined(__DJGPP__TEXT)
+   {
+     short ch_attr;
+     gettext( uiCol + 1, uiRow + 1, uiCol + 1, uiRow + 1, &ch_attr );
+     *pbyChar = ch_attr >> 8;
+     *pbyAttr = ch_attr & 0xFF;
+   }
+#elif defined(__DJGPP__)
+   {
+      ScreenGetChar( (int *) pbyChar, (int *) pbyAttr, uiCol, uiRow );
+   }
+#else
+   {
+     char FAR *p = hb_gt_ScreenPtr( uiRow, uiCol );
+     *pbyChar = *p;
+     *pbyAttr = *( p + 1 );
+   }
+#endif
 }
 
-void hb_gt_GetAttr( USHORT uiRow, USHORT uiCol, BYTE * pbyAttr )
+void hb_gt_GetChar( SHORT uiRow, SHORT uiCol, BYTE * pbyChar )
 {
-    HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetAttr(%hu, %hu, %p)", uiRow, uiCol, pbyAttr));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetChar(%hu, %hu, %p)", uiRow, uiCol, pbyChar));
 
-    /* TODO */
+   /* TODO */
 
-    HB_SYMBOL_UNUSED( uiRow );
-    HB_SYMBOL_UNUSED( uiCol );
-    HB_SYMBOL_UNUSED( pbyAttr );
+   HB_SYMBOL_UNUSED( uiRow );
+   HB_SYMBOL_UNUSED( uiCol );
+   HB_SYMBOL_UNUSED( pbyChar );
+}
+
+void hb_gt_GetAttr( SHORT uiRow, SHORT uiCol, BYTE * pbyAttr )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetAttr(%hu, %hu, %p)", uiRow, uiCol, pbyAttr));
+
+   /* TODO */
+
+   HB_SYMBOL_UNUSED( uiRow );
+   HB_SYMBOL_UNUSED( uiCol );
+   HB_SYMBOL_UNUSED( pbyAttr );
 }
 
 void hb_gt_Puts( USHORT cRow, USHORT cCol, BYTE attr, BYTE *str, ULONG len )

@@ -329,6 +329,7 @@ void hb_gt_SetCursorStyle( USHORT style )
 static void hb_gt_xPutch( USHORT usRow, USHORT usCol, BYTE attr, BYTE byChar )
 {
    char tmp[ 2 ];
+
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_xPutch(%hu, %hu, %d, %i)", usRow, usCol, (int) attr, byChar));
 
    /* TOFIX: add correct support for a single byte instead of a string 
@@ -348,60 +349,83 @@ static void hb_gt_xPutch( USHORT usRow, USHORT usCol, BYTE attr, BYTE byChar )
    if( s_usCol > s_usMaxCol ) s_usCol = s_usMaxCol;
 }
 
-void hb_gt_PutCharAttr( USHORT uiRow, USHORT uiCol, BYTE byChar, BYTE byAttr )
+void hb_gt_PutCharAttr( SHORT uiRow, SHORT uiCol, BYTE byChar, BYTE byAttr )
 {
-    HB_TRACE(HB_TR_DEBUG, ("hb_gt_PutCharAttr(%hu, %hu, %i, %d)", uiRow, uiCol, byChar, (int) byAttr));
+   char tmp[ 2 ];
 
-    /* TODO */
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_PutCharAttr(%hu, %hu, %i, %d)", uiRow, uiCol, byChar, (int) byAttr));
 
-    HB_SYMBOL_UNUSED( uiRow );
-    HB_SYMBOL_UNUSED( uiCol );
-    HB_SYMBOL_UNUSED( byChar );
-    HB_SYMBOL_UNUSED( byAttr );
+   /* TOFIX: add correct support for a single byte instead of a string 
+    */
+   tmp[ 0 ] = byChar;
+   tmp[ 1 ] = '\0';
+
+   /* Disable line wrap, set the new cursor position, send the string, then
+      enable line wrap (for OUTSTD() and OUTERR() ) */
+   hb_gt_AnsiSetAttributes( byAttr );
+   fprintf( stdout, "\x1B[=7l\x1B[%d;%dH%s\x1B[=7h", uiRow + 1, uiCol + 1, tmp );
+
+   /* Restore whatever used to be at the termination position */
+   /* Update the cursor position */
+   s_usRow = uiRow;
+   s_usCol = uiCol + 1;
+   if( s_usCol > s_usMaxCol ) s_usCol = s_usMaxCol;
 }
 
-void hb_gt_PutChar( USHORT uiRow, USHORT uiCol, BYTE byChar )
+void hb_gt_PutChar( SHORT uiRow, SHORT uiCol, BYTE byChar )
 {
-    HB_TRACE(HB_TR_DEBUG, ("hb_gt_PutChar(%hu, %hu, %i)", uiRow, uiCol, byChar));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_PutChar(%hu, %hu, %i)", uiRow, uiCol, byChar));
 
-    /* TODO */
+   /* TODO */
 
-    HB_SYMBOL_UNUSED( uiRow );
-    HB_SYMBOL_UNUSED( uiCol );
-    HB_SYMBOL_UNUSED( byChar );
+   HB_SYMBOL_UNUSED( uiRow );
+   HB_SYMBOL_UNUSED( uiCol );
+   HB_SYMBOL_UNUSED( byChar );
 }
 
-void hb_gt_PutAttr( USHORT uiRow, USHORT uiCol, BYTE byAttr )
+void hb_gt_PutAttr( SHORT uiRow, SHORT uiCol, BYTE byAttr )
 {
-    HB_TRACE(HB_TR_DEBUG, ("hb_gt_PutAttr(%hu, %hu, %d)", uiRow, uiCol, (int) byAttr));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_PutAttr(%hu, %hu, %d)", uiRow, uiCol, (int) byAttr));
 
-    /* TODO */
+   /* TODO */
 
-    HB_SYMBOL_UNUSED( uiRow );
-    HB_SYMBOL_UNUSED( uiCol );
-    HB_SYMBOL_UNUSED( byAttr );
+   HB_SYMBOL_UNUSED( uiRow );
+   HB_SYMBOL_UNUSED( uiCol );
+   HB_SYMBOL_UNUSED( byAttr );
 }
 
-void hb_gt_GetChar( USHORT uiRow, USHORT uiCol, BYTE * pbyChar )
+void hb_gt_GetCharAttr( SHORT uiRow, SHORT uiCol, BYTE * pbyChar, BYTE * pbyAttr )
 {
-    HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetChar(%hu, %hu, %p)", uiRow, uiCol, pbyChar));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetCharAttr(%hu, %hu, %p, %p)", uiRow, uiCol, pbyChar, pbyAttr));
 
-    /* TODO */
+   /* TODO */
 
-    HB_SYMBOL_UNUSED( uiRow );
-    HB_SYMBOL_UNUSED( uiCol );
-    HB_SYMBOL_UNUSED( pbyChar );
+   HB_SYMBOL_UNUSED( uiRow );
+   HB_SYMBOL_UNUSED( uiCol );
+   HB_SYMBOL_UNUSED( pbyChar );
+   HB_SYMBOL_UNUSED( pbyAttr );
 }
 
-void hb_gt_GetAttr( USHORT uiRow, USHORT uiCol, BYTE * pbyAttr )
+void hb_gt_GetChar( SHORT uiRow, SHORT uiCol, BYTE * pbyChar )
 {
-    HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetAttr(%hu, %hu, %p)", uiRow, uiCol, pbyAttr));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetChar(%hu, %hu, %p)", uiRow, uiCol, pbyChar));
 
-    /* TODO */
+   /* TODO */
 
-    HB_SYMBOL_UNUSED( uiRow );
-    HB_SYMBOL_UNUSED( uiCol );
-    HB_SYMBOL_UNUSED( pbyAttr );
+   HB_SYMBOL_UNUSED( uiRow );
+   HB_SYMBOL_UNUSED( uiCol );
+   HB_SYMBOL_UNUSED( pbyChar );
+}
+
+void hb_gt_GetAttr( SHORT uiRow, SHORT uiCol, BYTE * pbyAttr )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetAttr(%hu, %hu, %p)", uiRow, uiCol, pbyAttr));
+
+   /* TODO */
+
+   HB_SYMBOL_UNUSED( uiRow );
+   HB_SYMBOL_UNUSED( uiCol );
+   HB_SYMBOL_UNUSED( pbyAttr );
 }
 
 void hb_gt_Puts( USHORT usRow, USHORT usCol, BYTE attr, BYTE * str, ULONG len )
