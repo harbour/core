@@ -1580,7 +1580,7 @@ HB_FUNC( __DBLOCATE )
                bFor = hb_itemGetL( pNewFor );
          }
       }
-      ( ( AREAP ) s_pCurrArea->pArea )->fFound = bFor;
+      ( ( AREAP ) s_pCurrArea->pArea )->fFound = bFor && bWhile;
    }
    else
    {
