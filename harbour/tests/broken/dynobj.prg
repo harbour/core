@@ -19,6 +19,7 @@
 function Main()
 
    local oForm := TForm():New()
+   local nSeq
 
    QOut( "What methods are in the class :" )
    HBDebug( aoMethod( oForm ) )
@@ -46,15 +47,23 @@ function Main()
    QOut( "Smile please " )
    oForm:Smile()
 
-/* The next code can _not_ be used in the offical classes.c */
+   QOut( "The next code can _not_ be used in the offical classes.c" )
+   Pause()
+
+   QOut( "Data items before" )
+   HBDebug( oForm )
 
    QOut( "Let's add an additional data item" )
 
-   ClassAdd( oForm:ClassH, "cHelp" , 6, MET_DATA )   // 6th item !
-   ClassAdd( oForm:ClassH, "_cHelp", 6, MET_DATA )
-   HBDebug( aoData( oForm ) )
+   nSeq := __wDataInc( oForm:ClassH )           // Allocate new Seq#
+   QOut( "New Seq# ", nSeq )
+   ClassAdd( oForm:ClassH, "cHelp" , nSeq, MET_DATA )
+   ClassAdd( oForm:ClassH, "_cHelp", nSeq, MET_DATA )
+   
 
    oForm:cHelp := "This is a real tricky test"
+
+   QOut( "Data items after" )
    HBDebug( oForm )
 
 return nil
@@ -106,4 +115,7 @@ static function Smile()
 return self
 
 
+function Pause()
 
+   __Accept( "Pause :" )
+return nil

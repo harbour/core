@@ -1,5 +1,5 @@
 --- \source\tcpp\cvstest\harbour\source\rtl\classes.c	Tue May 11 20:23:38 1999
-+++ \source\tcpp\harb21-2\source\rtl\classes.c	Wed May 12 22:40:40 1999
++++ \source\tcpp\harb21-2\source\rtl\classes.c	Wed May 12 23:21:24 1999
 @@ -136,12 +136,22 @@
  
  static HARBOUR GetData( void )
@@ -25,3 +25,16 @@
  }
  
  static HARBOUR GetClassData( void )
+@@ -505,4 +515,12 @@
+    }
+ }
+ 
++HARBOUR __WDATAINC()         /* <nSeq> = __wDataInc( <hClass> )*/
++{
++   WORD  wClass   = _parnl( 1 );
++
++   if( wClass )
++      _retni( ++pClasses[ wClass - 1 ].wDatas ); /* Return and increase     */
++}                                                /* number of DATAs         */
++
+ 
