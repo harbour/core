@@ -10,7 +10,7 @@ rem
 
 :BUILD_OK
 
-   copy ..\..\lib\vc\libgt.lib ..\..\lib\*.* >nul
+   copy ..\..\lib\vc\gt.lib ..\..\lib\*.* >nul
    goto EXIT
 
 :BUILD_ERR
