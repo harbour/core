@@ -3587,7 +3587,7 @@ static LPAREANODE GetTheOtherArea( char *szDriver, char * szFileName, BOOL creat
 }
 
 /* move the Field Data between areas by name */
-static void rddMoveFields( AREAP pAreaFrom, AREAP pAreaTo, PHB_ITEM pFields, BOOL bNameMatch )
+static void rddMoveFields( AREAP pAreaFrom, AREAP pAreaTo, PHB_ITEM pFields, BOOL bNameMatch, LPAREANODE s )
 {
   USHORT   i, f=1;
   PHB_ITEM fieldValue;
@@ -3602,8 +3602,12 @@ static void rddMoveFields( AREAP pAreaFrom, AREAP pAreaTo, PHB_ITEM pFields, BOO
         f = hb_rddFieldIndex( pAreaTo, (( PHB_DYNS )(pAreaFrom->lpFields + i)->sym )->pSymbol->szName );
       if ( f )
       {
+        LPAREANODE s_curr = s_pCurrArea; 
         SELF_GETVALUE( pAreaFrom, i+1, fieldValue );
+        if( s )
+           s_pCurrArea = s;
         SELF_PUTVALUE( pAreaTo, f++, fieldValue );
+        s_pCurrArea = s_curr;
       }
     }
   }
@@ -3702,8 +3706,12 @@ static ERRCODE rddMoveRecords( char *cAreaFrom, char *cAreaTo, PHB_ITEM pFields,
       {
          if ( bFor )
          {
+            if ( cAreaFrom )
+               s_pCurrArea = s_pCurrAreaSaved;
             SELF_APPEND( ( AREAP ) pAreaTo, FALSE );      /*put a new one on TO Area*/
-            rddMoveFields( pAreaFrom, pAreaTo, pFields, bNameMatch ); /*move the data*/
+            if ( cAreaFrom )
+               s_pCurrArea = pAreaRelease;
+            rddMoveFields( pAreaFrom, pAreaTo, pFields, bNameMatch,(cAreaFrom)?s_pCurrAreaSaved:NULL ); /*move the data*/
          }
          if ( lRec == 0 || pFor )  /*not only one record? Or there's a For clause?*/
             keepGoing = TRUE;
