@@ -1,3 +1,10 @@
+2001-10-27 06:50 GMT -3 Luiz Rafael Culik<culik@sl.conex.net>
+   * hb_slex.vc
+      * Make file sincronized with makefile.vc thanks to Ron Pinkas <ron@profit-master.com>forn this file update
+   * contrib/hbzlib/zipnew.cpp
+     contrib/hbzlib/zip.c
+       * Fixed an small bug when uncompressing File that has the drive letter
+
 2001-10-26 15:21 GMT-3 Horacio Roldan <harbour_ar@yahoo.com.ar>
    * source/rdd/dbfcdx/dbfcdx1.c
      * OrderListAdd now reorder the Tag List of the opened CDX by its
