@@ -1185,7 +1185,7 @@ static void hb_ntxPageSave( LPTAGINFO pTag, LPPAGEINFO pPage )
 {
    ( ( LPNTXBUFFER ) pPage->buffer )->item_count = pPage->uiKeys;
    hb_fsSeek( pTag->Owner->DiskFile, pPage->Page, FS_SET );
-   hb_fsWrite( pTag->Owner->DiskFile, (unsigned char *) pPage->buffer, NTXBLOCKSIZE );
+   hb_fsWrite( pTag->Owner->DiskFile, (BYTE *) pPage->buffer, NTXBLOCKSIZE );
    pPage->Changed = FALSE;
 }
 
@@ -1250,7 +1250,7 @@ static LPPAGEINFO hb_ntxPageLoad( LPTAGINFO pTag, ULONG ulOffset )
    pPage->Page = ulOffset;
 
    hb_fsSeek( pTag->Owner->DiskFile, ulOffset, FS_SET );
-   if( hb_fsRead( pTag->Owner->DiskFile, (unsigned char *) pPage->buffer, NTXBLOCKSIZE )
+   if( hb_fsRead( pTag->Owner->DiskFile, (BYTE *) pPage->buffer, NTXBLOCKSIZE )
             != NTXBLOCKSIZE )
       return NULL;
 

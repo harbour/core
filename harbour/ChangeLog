@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-05-24 20:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+  * source/rdd/dbf1.c
+  * contrib/libnf/dispc.c
+  * contrib/libnf/idle.c
+    ! Fixed some problems that caused C++ compiles to fail.
+
 2002-05-24 16:15 UTC-0300 Walter Negro <anegro@overnet.com.ar>
   * source/rtl/tgetlist.prg
     ! Corrected minor bug in using Len() on oGet:Buffer,

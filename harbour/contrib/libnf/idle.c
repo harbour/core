@@ -14,6 +14,8 @@
  *
  */
 
+#include "hbdefs.h"
+#include "hbapi.h"
 
 /*  $DOC$
  *  $FUNCNAME$

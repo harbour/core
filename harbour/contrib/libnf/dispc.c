@@ -13,6 +13,9 @@
  * Modification history:
  * ---------------------
  *
+ *    Rev 1.8   24 May 2002 19:25:00   David G. Holm <dholm@jsd-llc.com>
+ * Fixed some problems that caused C++ compiles to fail.
+ *
  *    Rev 1.7   29 Mar 2002 17:00:00   Walter Negro <anegro@overnet.com.ar>
  * Ported to Harbour
  *
@@ -560,8 +563,8 @@ HB_FUNC( _FT_DFINIT )
     maxlin   = hb_parni(12);
     buffsize = hb_parni(13);                  /* yes - load value */
 
-    buffer = hb_xalloc(buffsize);             /* allocate memory  */
-    lbuff  = hb_xalloc(maxlin + 1);           /*  for buffers     */
+    buffer = (char *) hb_xalloc(buffsize);    /* allocate memory  */
+    lbuff  = (char *) hb_xalloc(maxlin + 1);  /*  for buffers     */
 
 
     isallocated = !(buffer == NULL || lbuff == NULL || vseg == NULL); 
@@ -907,7 +910,7 @@ static int keyin()
     ch = 0;
     while ( ch == 0x00 )                   /* check to see if it's extended */
     {
-        ch = hb_inkeyTranslate( hb_gtReadKey( 0 ), 0);
+        ch = hb_inkeyTranslate( hb_gtReadKey( ( HB_inkey_enum ) 0 ), ( HB_inkey_enum ) 0);
         if (ch == 257)   /* error compiling with bcc55 */
            ch = 27;      /* ESC with CapsLock ON = 257, with CapsLock OFF = 27 */
         hb_idleState();

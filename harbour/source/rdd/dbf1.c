@@ -1588,7 +1588,7 @@ ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
    /* Create memo file */
    if( bHasMemo )
    {
-      unsigned char *tmp;
+      BYTE *tmp;
       ERRCODE result;
       pArea->szMemoFileName = ( char * ) hb_xgrab( _POSIX_PATH_MAX + 1 );
       pFileName = hb_fsFNameSplit( ( char * ) pCreateInfo->abName );
