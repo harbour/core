@@ -8,6 +8,15 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-07-27 02:09 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+  + source/rtl/characte.prg
+    * Harbour implementation of Class(y) Class Character
+
+  * makefile.bc
+    + Added module characte.prg
+
+  WARNING: Other makefiles need to be updated
+
 2004-07-26 9:03 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
   * hrbdll.bc
     + Added module scalar.prg
