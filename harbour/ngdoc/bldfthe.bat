@@ -3,6 +3,6 @@ rem
 rem $Id$
 rem
 
-..\bin\harbour %1 %2 /n /iinclude /DNANFOR
-bcc32 -e..\bin\%1.exe -O2 -M  -I..\include -L..\lib\b32 -v harbour.lib terminal.lib hbpp.lib hbgt.lib common.lib rdd.lib %1.c
+..\bin\harbour %1 %2 /n /iinclude /DNANFOR /p
+bcc32 -e%1.exe -O2 -M -v  -I..\include -L..\lib\b32  harbour.lib terminal.lib hbpp.lib hbgt.lib common.lib ..\lib\b32\rdd.lib %1.c
 rem del %1.c

@@ -1,3 +1,8 @@
+
+/*
+ * $Id$
+ */
+
 /*
  * Harbour Project source code:
  * HTML Support Code For FT_HELPC
@@ -33,47 +38,129 @@
 
 #define CRLF HB_OSNewLine()
 
+*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+
+*+    Class THTML
+*+
+*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+
 CLASS THTML
 
-DATA nHandle
-DATA cFile
-METHOD New(cFile)
-METHOD WriteTitle(cTitle)
-METHOD WritePar(cPar)
-METHOD WriteParBold(cPar)
-METHOD WriteLink(cLink)
-METHOD Close()
+   DATA nHandle
+   DATA cFile
+   METHOD New( cFile )
+   METHOD WriteTitle( cTitle )
+   METHOD WritePar( cPar )
+   METHOD WriteParBold( cPar )
+   METHOD WriteLink( cLink )
+   METHOD CLOSE()
+
 ENDCLASS
 
-Method New(cFile) CLASS THTML
-IF VALTYPE(cFile ) <> NIL .and. VALTYPE(cFile )=="C"
-     Self:cFile:=cFile
-     Self:nHandle:=FCREATE(Self:cFile)
-ENDIF
-FWRITE(Self:nHandle,"<HEAD>"+CRLF)
-RETURN Self
-METHOD WriteTitle(cTitle) CLASS THTML
-FWRITE(Self:nHandle,"<TITLE>"+CRLF+cTitle+CRLF+"</Title>"+CRLF+'<body bgcolor="#FFFFFF">'+CRLF)
-RETURN Self
-METHOD WritePar(cPar)     CLASS THTML
-FWRITE(Self:nHandle,"<p>"+cPar+'</p>'+CRLF)
+METHOD New( cFile ) CLASS THTML
+
+   IF VALTYPE( cFile ) <> NIL .AND. VALTYPE( cFile ) == "C"
+      Self:cFile   := LOWER( cFile )
+      Self:nHandle := FCREATE( Self:cFile )
+   ENDIF
+
+   FWRITE( Self:nHandle, "<HEAD>" + CRLF )
+
 RETURN Self
 
-METHOD WriteParBold(cPar) CLASS THTML
-FWRITE(Self:nHandle,"<p><b>"+cPar+'</b></p>'+CRLF)
+METHOD WriteTitle( cTitle ) CLASS THTML
+
+   FWRITE( Self:nHandle, "<TITLE>" + CRLF + cTitle + CRLF + "</Title>" + CRLF + '<body bgcolor="#FFFFFF">' + CRLF )
+
 RETURN Self
-METHOD Close()            CLASS THTML
-FWRITE(Self:nHandle,"</body>"+CRLF)
-FCLOSE(Self:nHandle)
+
+METHOD WritePar( cPar ) CLASS THTML
+
+   FWRITE( Self:nHandle, "<p>" + cPar + '</p>' + CRLF )
+
 RETURN Self
-METHOD WriteLink(cLink) CLASS THTML
-LOCAL nPos,cTemp:=''
-nPos:=AT("()",cLink)
-IF nPos>0
-     cTemp:=SubStr(cLink,1,nPos-1)+'.html'
-     FWrite(Self:nHandle,"<p><a href="+cTemp+">"+cLink+"</a></p>"+CRLF)
-ELSE
-     cTemp:=Alltrim(cLink)+'.html'
-      FWrite(Self:nHandle,"<p><a href="+cTemp+">"+cLink+"</a></p>"+CRLF)
-ENDIF
+
+METHOD WriteParBold( cPar ) CLASS THTML
+
+   FWRITE( Self:nHandle, "<p><b>" + cPar + '</b></p>' + CRLF )
+
 RETURN Self
+
+METHOD CLOSE() CLASS THTML
+
+   FWRITE( Self:nHandle, "</body>" + CRLF )
+
+   FCLOSE( Self:nHandle )
+
+RETURN Self
+
+METHOD WriteLink( cLink ) CLASS THTML
+
+   LOCAL nPos
+   LOCAL cTemp := ''
+
+   nPos := AT( "()", cLink )
+
+   IF nPos > 0
+      cTemp := SUBSTR( cLink, 1, nPos - 1 ) + '.html'
+      FWRITE( Self:nHandle, "<p><a href=" + cTemp + ">" + cLink + "</a></p>" + CRLF )
+   ELSE
+      cTemp := ALLTRIM( cLink ) + '.html'
+      FWRITE( Self:nHandle, "<p><a href=" + cTemp + ">" + cLink + "</a></p>" + CRLF )
+   ENDIF
+
+RETURN Self
+
+*+ EOF: HTML.PRG
+/*  $DOC$
+ *  $FUNCNAME$
+ *     THtml()
+ *  $CATEGORY$
+ *     Harbour Tools
+ *  $ONELINER$
+ *     Html Class
+ *  $SYNTAX$
+ *     oHtml:=THtml():New(<cFile>)
+ *  $ARGUMENTS$
+ *     <cFile> Name of the Html file to create
+ *  $RETURNS$
+ *     An  instance of the THtml Class
+ *  $DESCRIPTION$
+ *     THtml() is a class that create an .html file output of the same
+ *     name you pass to the constructor.
+ *     The class methods are as follows:
+ *        New(<cFile>) Create a new instance of the THtml class.
+ *        Close() Close the create file
+ *        WriteTitle(<cTitle>) Write the file title
+ *        WritePar(<cPar>)   Writes a paragrafer
+ *        WriteParBold(<cPar>)   Same as WritePar(), but the text is bold style.
+ *        WriteLink(<cLink>)  Write a link to another topic
+ *  $EXAMPLES$
+ *     FUNCTION MAIN()
+ *
+ *     LOCAL oHtm
+ *
+ *     oHtm := THTML():New( "www\harbour.html" )
+ *     oHtm:WriteTitle( "Harbour Reference Guide" )
+ *     oHtm:WritePar( "HARBOUR" )
+ *     oHtm:WriteLink( "OverView" )
+ *     oHtm:WriteLink( "License" )
+ *     oHtm:WriteLink( "http://www.gnu.org/copyleft/gpl" )
+ *     oHtm:WritePar( "See the Links Above" )
+ *     oHtm:Close()
+ *     RETURN Nil
+ *
+ *  $TESTS$
+ *
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     This is a new Harbour Tools class
+ *  $PLATFORMS$
+ *     ALL
+ *  $FILES$
+ *
+ *  $SEEALSO$
+ *     TCLASS()
+ *  $END$
+ */

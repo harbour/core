@@ -29,6 +29,7 @@ Object Manipulation     obj.ngo
 Operating System Specific        opersyst.ngo
 Parameter Checks              Parame.ngo
 Run-Time Library, Strings    runtime.ngo
+String                String.ngo
 Strings                Strings.ngo
 Tbrowse Class          tbrow.ngo
 Terminal               Terminal.ngo
