@@ -8,6 +8,7 @@ C_SOURCES=\
         hbfsapi.c \
         hbstr.c \
         hbtrace.c \
+        hbver.c \
 	reserved.c \
 	expropt1.c \
 	expropt2.c \

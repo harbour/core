@@ -1,3 +1,38 @@
+20000401-18:00 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/rtl/version.c
+   + source/common/hbver.c
+   * source/common/Makefile
+   * include/hbapi.h
+   * include/hbextern.ch
+   * contrib/hbclip/hbclip.prg
+   * source/vm/cmdarg.c
+   * tests/version.prg
+   * makefile.bc
+   * makefile.vc
+     % Cleaned up the include section.
+     + Added TRACE calls (CVSed previously)
+     + Separated hb_version() into hb_verCompiler() and hb_verHarbour()
+     * Renamed hb_os() to hb_verPlatform()
+     * Renamed variables in hb_verCompiler()
+     + Moved hb_ver*() functions to common directory.
+     + HB_COMPILER() function added to return just the compiler info.
+     + HB_COMPILER() function added to HBCLIP.LIB
+     + //INFO will now display platform info.
+     + //BUILD will now display compiler info.
+     - //INFO will not display compiler info.
+     * Test program updated.
+     ; Tested with BCC53, BCC55, BCC31, CYGWIN, MINGW32, MSC8 (compile only),
+       MSVC, DJGPP on W2KRC2, WNTSP4, W95, W95B, W98, MSDOS62, DOS5, DOS5+Win31
+     ; Please test it with WATCOM, Linux/GCC, OS2/GCC, OS2/ICC,
+       and BCC31/DJGPP under OS/2.
+
+   * Makefile
+     ! Some spaces comverted to tabs
+
+   * bin/bld.*
+     ! common -> commo for DJGPP
+
 20000401-03:20 EST Paul Tucker <ptucker@sympatico.ca>
    * source/rdd/dbf1.c
    * source/rdd/sdf1.c

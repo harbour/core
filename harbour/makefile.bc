@@ -390,6 +390,7 @@ COMMON_LIB_OBJS = \
    $(OBJ_DIR)\hbfsapi.obj \
    $(OBJ_DIR)\hbstr.obj \
    $(OBJ_DIR)\hbtrace.obj \
+   $(OBJ_DIR)\hbver.obj \
    $(OBJ_DIR)\expropt1.obj \
    $(OBJ_DIR)\expropt2.obj \
    $(OBJ_DIR)\reserved.obj
@@ -579,11 +580,11 @@ $(OBJ_DIR)\hbstr.obj : $(COMMON_DIR)\hbstr.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(COMMON_LIB) -+$@,,
 
-$(OBJ_DIR)\reserved.obj : $(COMMON_DIR)\reserved.c
+$(OBJ_DIR)\hbtrace.obj : $(COMMON_DIR)\hbtrace.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(COMMON_LIB) -+$@,,
 
-$(OBJ_DIR)\hbtrace.obj : $(COMMON_DIR)\hbtrace.c
+$(OBJ_DIR)\hbver.obj : $(COMMON_DIR)\hbver.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(COMMON_LIB) -+$@,,
 
@@ -592,6 +593,10 @@ $(OBJ_DIR)\expropt1.obj : $(COMMON_DIR)\expropt1.c
    tlib $(COMMON_LIB) -+$@,,
 
 $(OBJ_DIR)\expropt2.obj : $(COMMON_DIR)\expropt2.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(COMMON_LIB) -+$@,,
+
+$(OBJ_DIR)\reserved.obj : $(COMMON_DIR)\reserved.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(COMMON_LIB) -+$@,,
 

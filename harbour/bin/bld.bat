@@ -106,7 +106,7 @@ rem if "%HB_GT_LIB%" == "" set HB_GT_LIB=
    if "%HB_GT_LIB%" == "" set HB_GT_LIB=gtdos
 
    if "%HB_COMPILER%" == "bcc16"   bcc -O2 -mh -I..\include -L..\lib %1.c tools.lib debug.lib vm.lib rtl.lib %HB_GT_LIB%.lib rdd.lib macro.lib pp.lib dbfntx.lib dbfcdx.lib common.lib
-   if "%HB_COMPILER%" == "djgpp"   gcc %1.c -o%1.exe -I..\include -L..\lib -ltools -ldebug -lvm -lrtl -l%HB_GT_LIB% -lrdd -lrtl -lvm -lmacro -lpp -ldbfnt -ldbfcd -lcommon
+   if "%HB_COMPILER%" == "djgpp"   gcc %1.c -o%1.exe -I..\include -L..\lib -ltools -ldebug -lvm -lrtl -l%HB_GT_LIB% -lrdd -lrtl -lvm -lmacro -lpp -ldbfnt -ldbfcd -lcommo
    goto END
 
 :A_W32

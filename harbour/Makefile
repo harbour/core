@@ -7,8 +7,8 @@ ROOT = ./
 DIRS=\
 	include \
 	source \
-        utils \
+	utils \
 	tests \
-#       samples \
+#	samples \
 
 include $(ROOT)config/dir.cf

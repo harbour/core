@@ -86,7 +86,7 @@ else
       if [ "$HB_COMPILER" == "bcc16" ]; then
          bcc -O2 -mh -I..\include -L..\lib $1.c tools.lib debug.lib vm.lib rtl.lib $HB_GT_LIB.lib rdd.lib macro.lib pp.lib dbfntx.lib dbfcdx.lib common.lib
       elif [ "$HB_COMPILER" == "djgpp" ]; then
-         gcc $1.c -o$1.exe -I..\include -L..\lib -ltools -ldebug -lvm -lrtl -l$HB_GT_LIB -lrdd -lrtl -lvm -lmacro -lpp -ldbfnt -ldbfcd -lcommon
+         gcc $1.c -o$1.exe -I..\include -L..\lib -ltools -ldebug -lvm -lrtl -l$HB_GT_LIB -lrdd -lrtl -lvm -lmacro -lpp -ldbfnt -ldbfcd -lcommo
       else
          echo Error: HB_COMPILER value is unsupported.
       fi

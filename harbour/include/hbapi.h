@@ -479,8 +479,9 @@ extern void   hb_macroPushAliasedValue( HB_ITEM_PTR, HB_ITEM_PTR );
 extern char * hb_macroGetType( HB_ITEM_PTR );
 
 /* misc */
-extern char * hb_os( void );
-extern char * hb_version( USHORT uiMode );
+extern char * hb_verPlatform( void );
+extern char * hb_verCompiler( void );
+extern char * hb_verHarbour( void );
 
 #if defined(HB_EXTERN_C)
 }

@@ -278,24 +278,38 @@ void hb_cmdargProcessVM( void )
 {
    if( hb_cmdargCheck( "INFO" ) )
    {
-      char * pszVersion = hb_version( 1 );
+      char * pszVersion;
       char buffer[ 128 ];
 
+      pszVersion = hb_verHarbour();
       hb_conOutErr( pszVersion, 0 );
       hb_conOutErr( hb_conNewLine(), 0 );
+      hb_xfree( pszVersion );
+
+      pszVersion = hb_verPlatform();
+      hb_conOutErr( pszVersion, 0 );
+      hb_conOutErr( hb_conNewLine(), 0 );
+      hb_xfree( pszVersion );
+
       sprintf( buffer, "DS avail=%luKB  OS avail=%luKB  EMM avail=%luKB", hb_xquery( HB_MEM_BLOCK ), hb_xquery( HB_MEM_VM ), hb_xquery( HB_MEM_EMS ) );
       hb_conOutErr( buffer, 0 );
       hb_conOutErr( hb_conNewLine(), 0 );
-
-      hb_xfree( pszVersion );
    }
 
    if( hb_cmdargCheck( "BUILD" ) )
    {
+      char * pszCompiler;
+
       hb_conOutErr( "Harbour Compiler Build Info", 0 );
       hb_conOutErr( hb_conNewLine(), 0 );
       hb_conOutErr( "---------------------------", 0 );
       hb_conOutErr( hb_conNewLine(), 0 );
+
+      pszCompiler = hb_verCompiler();
+      hb_conOutErr( "Compiler: ", 0 );
+      hb_conOutErr( pszCompiler, 0 );
+      hb_conOutErr( hb_conNewLine(), 0 );
+      hb_xfree( pszCompiler );
 
       hb_conOutErr( "Strict CA-Clipper compatibility: ", 0 );
 #if defined( HARBOUR_STRICT_CLIPPER_COMPATIBILITY )

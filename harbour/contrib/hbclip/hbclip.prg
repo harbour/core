@@ -50,3 +50,6 @@ FUNCTION HB_TRACESTATE( nValue )
 FUNCTION HB_TRACELEVEL( nValue )
    RETURN 0
 
+FUNCTION HB_COMPILER()
+   RETURN iif( "5.3" $ Version(), "Microsoft C 8.0", "Microsoft C 5.1" )
+
