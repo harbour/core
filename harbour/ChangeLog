@@ -1,3 +1,7 @@
+19990911-07:42 EDT Paul Tucker <ptucker@sympatico.ca>
+  * makefile.vc
+    added new files for compiler to exe generation section
+
 19990911-13:03 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/compiler/harbour.y
     source/compiler/genc.c

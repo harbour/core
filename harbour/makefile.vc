@@ -206,13 +206,19 @@ $(HARBOUR_EXE) : \
     $(HBPP_DIR)\hbpp.c \
     $(HBPP_DIR)\hbppint.c \
     $(HBPP_DIR)\table.c
-    $(CC) $(CFLAGS) $(COMPILER_DIR)\harboury.c $(COMPILER_DIR)\harbourl.c $(COMPILER_DIR)\harbour.c $(HBPP_DIR)\hbppint.c $(HBPP_DIR)\hbpp.c $(HBPP_DIR)\table.c -o $(BIN_DIR)\harbour
+    $(CC) $(CFLAGS) $(COMPILER_DIR)\harboury.c $(COMPILER_DIR)\harbourl.c $(COMPILER_DIR)\harbour.c $(COMPILER_DIR)\genc.c $(COMPILER_DIR)\genhrb.c $(COMPILER_DIR)\genrc.c $(COMPILER_DIR)\genjava.c $(COMPILER_DIR)\genpas.c $(HBPP_DIR)\hbppint.c $(HBPP_DIR)\hbpp.c $(HBPP_DIR)\table.c -o $(BIN_DIR)\harbour
     -del harboury.obj
     -del harbourl.obj
     -del harbour.obj
     -del hbppint.obj
     -del hbpp.obj
     -del table.obj
+    -del genobj32.obj
+    -del genc.obj
+    -del genhrb.obj
+    -del genrc.obj
+    -del genjava.obj
+    -del genpas.obj
 
 #
 # Library dependencies and build rules
