@@ -258,9 +258,6 @@ int main( int argc, char * argv[] )
                         pFunc = pFunc->pNext;
                      }
 
-                     if( hb_comp_pInitFunc )
-                        hb_compOptimizeFrames( hb_comp_pInitFunc );
-
                      hb_compGenOutput( hb_comp_iLanguage );
                   }
                }

@@ -1,3 +1,8 @@
+20000424-03:44 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/compiler/harbour.c
+     % Small opt.: one frame optimizing call removed.
+
 20000423-19:10 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.y
