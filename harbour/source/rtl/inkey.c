@@ -99,7 +99,7 @@
    static DWORD s_cNumRead = 0;   /* Ok to use DWORD here, because this is specific... */
    static DWORD s_cNumIndex = 0;  /* ...to the Windows API, which defines DWORD, etc.  */
    static INPUT_RECORD s_irInBuf[ INPUT_BUFFER_LEN ];
-   static SHORT s_xMousePos = 0, s_yMousePos = 0;
+   static SHORT s_iMouseCol = 0, s_iMouseRow = 0;
 #endif
 #endif
 
@@ -650,8 +650,8 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
          }
          else if( s_irInBuf[ s_cNumIndex ].EventType == MOUSE_EVENT )
          {
-            s_xMousePos = s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwMousePosition.X;
-            s_yMousePos = s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwMousePosition.Y;
+            s_iMouseCol = s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwMousePosition.X;
+            s_iMouseRow = s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwMousePosition.Y;
 
             if( s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwEventFlags == MOUSE_MOVED )
                ch = K_MOUSEMOVE;
@@ -1030,7 +1030,7 @@ HARBOUR HB_INKEY( void )
  *  $COMPLIANCE$
  *      __KEYBOARD() is compliant with CA-Clipper 5.3
  *  $SEEALSO$
-     CLEAR TYPEAHEAD,KEYBOARD
+ *    CLEAR TYPEAHEAD, KEYBOARD
  *  $END$
  */
 
@@ -1152,7 +1152,7 @@ HARBOUR HB___KEYPUT( void )
 
 HARBOUR HB_MCOL( void )
 {
-   hb_retnl( s_xMousePos );
+   hb_retnl( s_iMouseCol );
 }
 
 /*  $DOC$
@@ -1185,7 +1185,7 @@ HARBOUR HB_MCOL( void )
 
 HARBOUR HB_MROW( void )
 {
-   hb_retnl( s_yMousePos );
+   hb_retnl( s_iMouseRow );
 }
 
 /*  $DOC$
@@ -1306,6 +1306,7 @@ HARBOUR HB_FKMAX( void )
 {
    hb_retni( 40 ); /* IBM specific */
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      KEYBOARD
@@ -1344,3 +1345,4 @@ HARBOUR HB_FKMAX( void )
  *       CLEAR TYPEAHEAD,__KEYBOARD()
  *  $END$
  */
+

@@ -151,6 +151,7 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
 
    LOCAL nOldDispCount
    LOCAL nCount
+
    LOCAL nMRow, nMCol
 
    /* TOFIX: Clipper decides at runtime, whether the GT is linked in, */
@@ -347,21 +348,6 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
          nKey := Inkey( nDelay )
 
          DO CASE
-         CASE nKey == K_LBUTTONDOWN
-            nMRow = MRow()
-            nMCol = MCol()
-            FOR nEval := 1 TO Len( aOptionsOK )
-               if nMRow == nInitRow + Len( aSay ) + 2 .and. ;
-                  nMCol >= aPos[ nEval ] .and. nMCol <= aPos[ nEval ] + ;
-                  Len( " " + aOptionsOK[ nEval ] + " " ) - 1
-                  nChoice = nEval
-                  EXIT
-               endif
-            NEXT
-            if nChoice == nEval
-               EXIT
-            endif
-
          CASE nKey == K_ENTER .OR. ;
               nKey == K_SPACE .OR. ;
               nKey == 0
@@ -372,6 +358,25 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
 
             nChoice := 0
             EXIT
+
+         CASE nKey == K_LBUTTONDOWN
+
+            nMRow := MRow()
+            nMCol := MCol()
+
+            FOR nEval := 1 TO Len( aOptionsOK )
+               IF nMRow == nInitRow + Len( aSay ) + 2 .AND. ;
+                  nMCol >= aPos[ nEval ] .AND. nMCol <= aPos[ nEval ] + ;
+                  Len( aOptionsOK[ nEval ] ) + 2 - 1
+                  nChoice := nEval
+                  EXIT
+               ENDIF
+            NEXT
+
+            IF nChoice == nEval
+               nChoice := 0
+               EXIT
+            ENDIF
 
          CASE ( nKey == K_LEFT .OR. nKey == K_SH_TAB ) .AND. Len( aOptionsOK ) > 1
 

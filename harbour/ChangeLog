@@ -1,3 +1,20 @@
+20000204-14:47 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * source/rtl/itemapi.c
+     ! hb_itemNew() fixed to set the item type *after* filling the item 
+       structure with zeros. It won't set the type at all when a param other
+       than NULL was passed.
+   * makewww.bat
+   * ngdoc/makewww.bat
+     ! Moved.
+     ! CVS ID fixed.
+   * source/rtl/alert.prg
+     ! Mouse support fixed when not clicked on button.
+     % Small optimization
+     * Formatted using the files style.
+   * source/rtl/inkey.c
+     * s_xMousePos -> s_iMouseCol
+     * s_yMousePos -> s_iMouseRow
+
 2000-02-03 16:10 GMT-5 David G. Holm <dholm@ sd-llc.com>
 
    * bin/bld_tpl.bat

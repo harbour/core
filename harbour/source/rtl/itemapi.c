@@ -307,11 +307,13 @@ PHB_ITEM hb_itemNew( PHB_ITEM pNull )
 
    pItem = ( PHB_ITEM ) hb_xgrab( sizeof( HB_ITEM ) );
 
-   pItem->type = IT_NIL;
    if( pNull )
       hb_itemCopy( pItem, pNull );
    else
+   {
       memset( pItem, 0, sizeof( HB_ITEM ) );
+      pItem->type = IT_NIL;
+   }
 
    return pItem;
 }
