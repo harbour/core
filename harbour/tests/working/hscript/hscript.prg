@@ -147,7 +147,6 @@ FUNCTION Main( cScript )
       fClose( hFile )
 
       // Creates the temporary HRB, erases the PRG
-      QOut( cHarbourDir + "harbour.exe" )
       __Run( cHarbourDir + "harbour.exe " + cFile + " /q /n /gHRB" )
       fErase( cFile )
 

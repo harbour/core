@@ -1,3 +1,7 @@
+19990619-09:40 CET Patrick Mast
+  * tests\working\hscript\hscript.prg
+    removed line 150
+    
 19990618-21:50 EDT David G. Holm <dholm@jsd-llc.com>
   * makefile.icc
     - genobj.c was moved to source/contrib
