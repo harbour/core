@@ -1445,12 +1445,12 @@ HARBOUR HB_FREADSTR( void )
 HARBOUR HB_CURDIR( void )
 {
    USHORT uiErrorOld = s_uiErrorLast;
-   BYTE * pbyBuffer = hb_xgrab( PATH_MAX + 1 );
+   BYTE * pbyBuffer = ( BYTE * ) hb_xgrab( PATH_MAX + 1 );
 
    hb_fsCurDirBuff( ( ISCHAR( 1 ) && hb_parclen( 1 ) > 0 ) ?
       ( USHORT )( toupper( *hb_parc( 1 ) ) - 'A' + 1 ) : 0, pbyBuffer, PATH_MAX + 1 );
 
-   hb_retc( pbyBuffer );
+   hb_retc( ( char * ) pbyBuffer );
    hb_xfree( pbyBuffer );
 
    s_uiErrorLast = uiErrorOld;

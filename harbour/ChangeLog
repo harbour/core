@@ -1,3 +1,7 @@
+19991025-23:35 EDT Paul Tucker <ptucker@sympatico.ca>
+   * source/rtl/filesys.c
+     * add casts on xgrab/free
+
 19991025-18:15 EDT David G. Holm <dholm@jsd-llc.com>
 
    * include/hbwinapi.h
