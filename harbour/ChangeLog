@@ -1,3 +1,10 @@
+2000-12-15 21:40 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
+
+*utils/hbmake/hbmake.prg
+    *fixed findmacro(),setbuild() and replacemacro() functions when a ";" is
+    used to separate multiple macros
+    *Fixed bug when -p switch is used
+
 2000-12-14 17:00 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/vm/eval.c
      * Removed unneeded hb_stackItemFromBase(1), reverted to use pItem obtained by hb_param()
