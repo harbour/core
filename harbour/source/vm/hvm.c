@@ -121,7 +121,7 @@ void CodeblockEvaluate( PCODEBLOCK, WORD );
 void CodeblockCopy( PITEM, PITEM );
 void CodeblockDetach( PCODEBLOCK );
 
-void ForceLink( void );
+static void ForceLink( void );
 
 #define STACK_INITITEMS   100
 #define STACK_EXPANDITEMS  20

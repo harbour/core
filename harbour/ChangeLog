@@ -1,3 +1,9 @@
+Thu May 06 13:58:48 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* source/vm/hvm.c: 
+	Changed the prototype for ForceLink so that it is declared and
+	defined as a static function.
+	
 Thu May 06 13:09:45 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* config/bin.cf: 
