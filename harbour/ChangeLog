@@ -1,3 +1,9 @@
+2000-08-09 15:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+   * source/pp/ppcore.c
+     ! Reset s_iIncludes to zero in hb_pp_init(), so that the include
+       file nesting limit will not accumulate for multiple compilation.
+
 2000-08-09 14:15 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.slx

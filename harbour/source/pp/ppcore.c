@@ -337,6 +337,7 @@ void hb_pp_Init( void )
    s_maxCondCompile = 5;
    s_bReplacePat = TRUE;
    s_prevchar = 'A';
+   s_iIncludes = 0;
 
    if( !hb_pp_aCondCompile )
        hb_pp_aCondCompile = ( int * ) hb_xgrab( sizeof( int ) * 5 );
