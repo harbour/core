@@ -56,7 +56,10 @@
 #xcommand METHOD <MethodName>( [<params,...>] ) VIRTUAL => ;
    oClass:AddVirtual( <(MethodName)> )
 
-#xcommand MESSAGE <MessageName>[()] METHOD <MethodName>( [<params,...>] ) => ;
+#xcommand MESSAGE <MessageName> METHOD <MethodName>( [<params,...>] ) => ;
+   oClass:AddMethod( <(MessageName)>, CLSMETH _CLASS_NAME_ <MethodName>() )
+
+#xcommand MESSAGE <MessageName>() METHOD <MethodName>( [<params,...>] ) => ;
    oClass:AddMethod( <(MessageName)>, CLSMETH _CLASS_NAME_ <MethodName>() )
 
 #xcommand ENDCLASS => oClass:Create() ;;
