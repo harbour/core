@@ -1,3 +1,8 @@
+2000-11-30 15:30 UTC-0500 David G. Holm <dholm@jsd-llc.com>
+   * include/hbver.h
+     % Bumped revision code to j and set date to 2000-11-30 for
+       a new set of interim builds that I'm going to release.
+
 2000-11-30 15:20 UTC-0500 David G. Holm <dholm@jsd-llc.com>
    * config/dos/bcc16.cf
    * config/dos/djgpp.cf
