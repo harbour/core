@@ -131,6 +131,7 @@ static int    NextWord( char **, char *, BOOL );
 static int    NextName( char **, char * );
 static int    NextParm( char **, char * );
 static BOOL   OpenInclude( char *, PATHNAMES *, PHB_FNAME, BOOL bStandardOnly, char * );
+static BOOL   IsIdentifier( char *szProspect );
 
 #define ISNAME( c )  ( isalnum( ( int ) c ) || ( c ) == '_' || ( c ) > 0x7E )
 #define MAX_NAME     255
@@ -897,6 +898,8 @@ static void ConvertPatterns( char * mpatt, int mlen, char * rpatt, int rlen )
             { exptype = '3'; i++; }
           else if( *(mpatt+i) == '(' )   /* Extended expression match marker */
             { exptype = '4'; i++; }
+          else if( *(mpatt+i) == '!' )   /* Extended expression match marker */
+            { exptype = '5'; i++; }
           ptr = mpatt + i;
           while( *ptr != '>' )
           {
@@ -934,6 +937,12 @@ static void ConvertPatterns( char * mpatt, int mlen, char * rpatt, int rlen )
           else if( exptype == '4' )
             {
               if( *(exppatt+explen-1) == ')' ) explen--;
+              else
+                hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_PATTERN_DEFINITION, NULL, NULL );
+            }
+          else if( exptype == '5' )
+            {
+              if( *(exppatt+explen-1) == '!' ) explen--;
               else
                 hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_PATTERN_DEFINITION, NULL, NULL );
             }
@@ -1784,12 +1793,25 @@ static int WorkMarkers( char ** ptrmp, char ** ptri, char * ptro, int * lenres, 
               printf( "\nExpr: '%s' ptrtemp: '%s' exppat: '%s'\n", expreal, ptrtemp, exppatt );
            #endif
 
-           if( ipos > 1 && isExpres( expreal ) )
+           if( ipos > 1 )
            {
-              /*
-              printf( "Accepted: >%s<\n", expreal );
-              */
-              *ptri += lenreal;
+               if( *(exppatt+2) == '5' )       /*  ----  Minimal match marker  */
+               {
+                  if( IsIdentifier( expreal ) )
+                  {
+                     /*
+                     printf( "Accepted ID: >%s<\n", expreal );
+                     */
+                     *ptri += lenreal;
+                  }
+               }
+               else if( isExpres( expreal ) )
+               {
+                  /*
+                  printf( "Accepted: >%s<\n", expreal );
+                  */
+                  *ptri += lenreal;
+               }
            }
            else
            {
@@ -3776,6 +3798,27 @@ static int NextParm( char ** sSource, char * sDest )
   #endif
 
   return lenName;
+}
+
+static BOOL IsIdentifier( char *szProspect )
+{
+   if( isalpha( szProspect[0] ) || szProspect[0] == '_' )
+   {
+      int i = 1;
+
+      while( ISNAME( szProspect[i] ) )
+      {
+        i++;
+      }
+      while( szProspect[i] == ' ' )
+      {
+        i++;
+      }
+
+      return ( szProspect[i] == '\0' ) ;
+   }
+
+   return FALSE;
 }
 
 static BOOL OpenInclude( char * szFileName, PATHNAMES * pSearch, PHB_FNAME pMainFileName, BOOL bStandardOnly, char * szInclude )

@@ -131,7 +131,7 @@ DECLARE TClass ;
  /* IF NOTHING DECIDED BY THE PROGRAMER USE ALL */
 #define HB_CLS_FWO
 #define HB_CLS_CSY
-//#define HB_CLS_VO
+#define HB_CLS_VO
 #define HB_CLS_TOP
 
 #endif
@@ -251,10 +251,9 @@ DECLARE TClass ;
 /* VO SYNTAX */
 #ifdef HB_CLS_VO
 
-// *** These rules are TOO generic and have undesired side effects!!!
-#xtranslate  ( <name>{ [<p,...>] }        =>  ( <name>():New( <p> )
-#xtranslate  = <name>{ [<p,...>] }        =>  = <name>():New( <p> )
-#xtranslate  , <name>{ [<p,...>] }        =>  , <name>():New( <p> )
+#xtranslate  ( <!name!>{ [<p,...>] }        =>  ( <name>():New( <p> )
+#xtranslate  = <!name!>{ [<p,...>] }        =>  = <name>():New( <p> )
+#xtranslate  , <!name!>{ [<p,...>] }        =>  , <name>():New( <p> )
 
 #xcommand EXPORT <DataNames,...> [ AS <type> ] [ INIT <uValue> ] [<ro: READONLY, RO>] => ;
    _HB_MEMBER {[AS <type>] <DataNames>} ;;

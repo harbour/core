@@ -1,3 +1,12 @@
+2001-06-22 07:30 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * source/pp/ppcore.c
+     + Added logic for new Idenitifier Match Marker <!AnyId!> which will only match Identifiers.
+     + Added static BOOL IsIdentifier( char *szProspect )
+
+   * include/hbclass.ch
+     ! Changed <name> to <!name!> in 3 VO OO compatibility rules, where regular match marker was TOO generic.
+     ! Reinstated default #define HB_CLS_VO
+
 2001-06-22 06:10 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * include/hbclass.ch
      ! Un-Commented out 3 rules used for VO OO and #undefed HB_CLS_VO instead.
