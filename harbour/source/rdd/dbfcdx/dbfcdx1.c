@@ -232,7 +232,8 @@ static double hb_cdxSorttoND( BYTE * szBuffer, USHORT uiLen )
    if ( szBuffer[0] & 0x80 )        // >0
    {
       for ( i = 0 ; i < 8 ; i++, pTemp-- )
-         if( i < 8 - uiLen )
+         /* if( i < 8 - uiLen ) */
+         if( i >= uiLen )
             (*pTemp) = 0;
          else
             (*pTemp) = szBuffer[i];
@@ -243,7 +244,8 @@ static double hb_cdxSorttoND( BYTE * szBuffer, USHORT uiLen )
    else
    {
        for ( i = 0 ; i < 8 ; i++, pTemp-- )
-          if( i < 8 - uiLen )
+          /* if( i < 8 - uiLen ) */
+           if( i >= uiLen )
              (*pTemp) = 0;
           else
              (*pTemp) = szBuffer[i] ^ 0xFF;
@@ -882,6 +884,7 @@ ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrderInf
 {
    USHORT uiTag;
    LPCDXTAG pTag;
+   USHORT uiAux;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_cdxOrderInfo(%p, %hu, %p)", pArea, uiIndex, pOrderInfo));
    HB_SYMBOL_UNUSED( pArea );
@@ -891,6 +894,23 @@ ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrderInf
       case DBOI_BAGEXT:
          pOrderInfo->itmResult = hb_itemPutC( pOrderInfo->itmResult, CDX_INDEXEXT );
          break;
+
+      case DBOI_BAGNAME:
+         if ( ! pOrderInfo->itmOrder )
+            pTag = hb_cdxGetActiveTag( pArea->lpIndexes );
+
+         else
+         {
+               uiTag = hb_cdxFindTag( pArea, pOrderInfo );
+               if ( uiTag )
+               {
+                  pTag = hb_cdxGetTagByNumber(pArea,  uiTag );
+               }
+         }
+         if ( pTag )
+            hb_itemPutC( pOrderInfo->itmResult, pTag->pIndex->pCompound->szName );
+         break;
+
 
       case DBOI_CONDITION:
          if ( ! pOrderInfo->itmOrder )
@@ -906,7 +926,6 @@ ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrderInf
          }
          if ( pTag )
             pOrderInfo->itmResult = hb_itemPutC( pOrderInfo->itmResult, pTag->ForExpr );
-
          break;
 
       case DBOI_EXPRESSION:
@@ -979,7 +998,6 @@ ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrderInf
          }
          if ( pTag )
             pOrderInfo->itmResult = hb_itemPutC( pOrderInfo->itmResult, pTag->szName );
-
          break;
 
       case DBOI_NUMBER:
@@ -1001,6 +1019,82 @@ ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrderInf
             }
          }
          hb_itemPutNI( pOrderInfo->itmResult, uiTag );
+         break;
+
+      case DBOI_KEYVAL:
+
+         pTag = hb_cdxGetActiveTag( pArea->lpIndexes );
+         if ( pTag && !pArea->fEof && pTag->CurKeyInfo && ((ULONG) pTag->CurKeyInfo->Tag == pArea->ulRecNo) )
+         {
+            switch ( pTag->uiType )
+            {
+               case 'N' :
+                  uiAux = HB_IT_DOUBLE; break;
+               case 'D' :
+                  uiAux = HB_IT_DATE; break;
+               case 'L' :
+                  uiAux = HB_IT_LOGICAL; break;
+               case 'C' :
+                  uiAux = HB_IT_STRING; break;
+               default:
+                  uiAux = HB_IT_NIL;
+            }
+            if ( uiAux != HB_IT_NIL )
+              hb_cdxKeyGetItem( pTag->CurKeyInfo, pOrderInfo->itmResult, uiAux );
+
+
+            /*
+            switch( pTag->uiType )
+            {
+               case HB_IT_STRING:
+                  hb_itemPutCL( pItem, pTag->CurKeyInfo->Value, pField->uiLen );
+         break;
+
+      case HB_IT_LOGICAL:
+         hb_itemPutL( pItem, pArea->pRecord[ pArea->pFieldOffset[ uiIndex ] ] == 'T' ||
+                      pArea->pRecord[ pArea->pFieldOffset[ uiIndex ] ] == 't' ||
+                      pArea->pRecord[ pArea->pFieldOffset[ uiIndex ] ] == 'Y' ||
+                      pArea->pRecord[ pArea->pFieldOffset[ uiIndex ] ] == 'y' );
+         break;
+
+      case HB_IT_MEMO:
+         hb_dbfGetMemo( pArea, uiIndex, pItem );
+         break;
+
+      case HB_IT_DATE:
+         memcpy( szBuffer, pArea->pRecord + pArea->pFieldOffset[ uiIndex ], 8 );
+         szBuffer[ 8 ] = 0;
+         hb_itemPutDS( pItem, szBuffer );
+         break;
+
+      case HB_IT_LONG:
+         if( pField->uiLen > 20 )
+            bError = TRUE;
+         else
+         {
+            memcpy( szBuffer, pArea->pRecord + pArea->pFieldOffset[ uiIndex ],
+                    pField->uiLen );
+            szBuffer[ pField->uiLen ] = 0;
+            if( pField->uiDec )
+               hb_itemPutNDLen( pItem, atof( szBuffer ),
+                                ( int ) pField->uiLen - ( ( int ) pField->uiDec + 1 ),
+                                ( int ) pField->uiDec );
+            else
+               if( pField->uiLen > 9 )
+                  hb_itemPutNDLen( pItem, atof( szBuffer ),
+                                   ( int ) pField->uiLen, ( int ) pField->uiDec );
+               else
+                  hb_itemPutNLLen( pItem, atol( szBuffer ), ( int ) pField->uiLen );
+         }
+         break;
+
+      default:
+         bError = TRUE;
+         break;
+   }
+         */
+
+         }
          break;
 
       //default:
@@ -1397,12 +1491,12 @@ static PHB_ITEM hb_cdxKeyGetItem( LPKEYINFO pKey, PHB_ITEM pItem, USHORT uiType 
          case HB_IT_LONG:
          case HB_IT_DOUBLE:
             pItem = hb_itemPutND( pItem,
-                        hb_cdxSorttoND( (BYTE*) &pKey->Value, pKey->length ) );
+                        hb_cdxSorttoND( (BYTE*) pKey->Value, pKey->length ) );
             break;
 
          case HB_IT_DATE:
             pItem = hb_itemPutDL( pItem,
-                  (long) hb_cdxSorttoND( (BYTE*) &pKey->Value, pKey->length ) );
+                  (long) hb_cdxSorttoND( (BYTE*) pKey->Value, pKey->length ) );
             break;
 
          case HB_IT_LOGICAL:
