@@ -2585,6 +2585,10 @@ static int ReplacePattern( char patttype, char * expreal, int lenreal, char * pt
                   if( ! ifou )
                   {
                     lenitem--;
+                    if( expreal[lenitem - 1] == '.' )
+                    {
+                       lenitem--;
+                    }
                   }
                   hb_pp_Stuff( expreal + 1, ptro, lenitem, 0, lenres );
                 }
@@ -2609,6 +2613,11 @@ static int ReplacePattern( char patttype, char * expreal, int lenreal, char * pt
         if( *expreal == '&' )
         {
           rmlen--;
+          if( expreal[lenreal - 1] == '.' )
+          {
+            rmlen--;
+            lenreal--;
+          }
           hb_pp_Stuff( expreal + 1, ptro, lenreal - 1, 4, lenres );
         }
         else /* END Ron Pinkas 2000-01-21 */
@@ -2637,7 +2646,14 @@ static int ReplacePattern( char patttype, char * expreal, int lenreal, char * pt
                      ( *expreal == '\'' && *(expreal+lenitem-1)=='\'' ) )
                   {
                     if( ifou ) lenitem++;
-                    if( *expreal == '&' ) lenitem--;
+                    if( *expreal == '&' )
+                    {
+                       lenitem--;
+                       if( expreal[lenitem - 1] == '.' )
+                       {
+                          lenitem--;
+                       }
+                    }
                     hb_pp_Stuff( ( *expreal=='&' ) ? expreal + 1 : expreal, ptro,
                               lenitem, 0, lenres );
                   }
@@ -2662,7 +2678,15 @@ static int ReplacePattern( char patttype, char * expreal, int lenreal, char * pt
              ( *expreal == '\"' && *( expreal + lenreal - 1 ) == '\"' ) ||
              ( *expreal == '\'' && *( expreal + lenreal - 1 ) == '\'' ) )
       {
-        if( *expreal == '&' ) rmlen--;
+        if( *expreal == '&' )
+        {
+          rmlen--;
+          if( expreal[lenreal - 1] == '.' )
+          {
+            rmlen--;
+            lenreal--;
+          }
+        }
         hb_pp_Stuff( ( *expreal == '&' ) ? expreal + 1 : expreal, ptro,
                 ( *expreal == '&' ) ? lenreal - 1 : lenreal, 4, lenres );
       }
