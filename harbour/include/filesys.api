@@ -1,0 +1,30 @@
+/*
+  $ Id: $
+*/
+
+#ifndef _FILESYS_API
+#define _FILESYS_API
+
+#include <filesys.h>
+
+#define _fsChDir   hb_fsChDir
+#define _fsChDrv   hb_fsChDrv
+#define _fsClose   hb_fsClose
+#define _fsCommit  hb_fsCommit
+#define _fsCreate  hb_fsCreate
+#define _fsCurDir  hb_fsCurDir
+#define _fsCurDrv  hb_fsCurDrv
+#define _fsDelete  hb_fsDelete
+#define _fsError   hb_fsError
+#define _fsExtOpen hb_fsExtOpen
+#define _fsIsDrv   hb_fsIsDrv
+#define _fsLock    hb_fsLock
+#define _fsMkDir   hb_fsMkDir
+#define _fsOpen    hb_fsOpen
+#define _fsRead    hb_fsRead
+#define _fsRmDir   hb_fsRmDir
+#define _fsRename  hb_fsRename
+#define _fsSeek    hb_fsSeek
+#define _fsWrite   hb_fsWrite
+
+#endif

@@ -3597,7 +3597,7 @@ void StaticAssign( void )
  */
 static void LoopStart( void )
 {
-  PLOOPEXIT pLoop = OurMalloc( sizeof(LOOPEXIT) );
+  PLOOPEXIT pLoop = ( PLOOPEXIT ) OurMalloc( sizeof(LOOPEXIT) );
 
   if( pLoops )
   {

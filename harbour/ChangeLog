@@ -1,3 +1,25 @@
+19990610-22:35 EDT David G. Holm <dholm@jsd-llc.com>
+  + include/fileio.ch
+    - File API related flags
+  + include/filesys.api
+    - Converts from _fs... functions to hb_fs... functions
+  + include/filesys.h
+    - Declares all hb_fs... functions
+  * source/compiler/harbour.y
+    - Added missing type override to OurMalloc() call in LoopStart()
+  * source/rtl/files.c
+    - Added support for IBM C++ compiler for OS/2
+    - All HARBOUR functions must have a void argument list
+    - Changed '#include <extern.h>' to '#include <filesys.h>'
+    - Changed all _fs... functions to hb_fs... functions
+    - Changed hb_fsCreate to use open() instead of creat()
+    - Corrected and/or added last_error handling in all hb_fs... functions
+    - Corrected return parameter handling in a few hb_fs and HARBOUR functions
+  * source/tools/hb_f.c
+    - Removed extern declarations for _fs... functions
+    - Added '#include <filesys.api>'
+    - Added two missing type overrides on _xgrab() calls in HB_FUSE()
+
 19990610-18:05 EDT David G. Holm <dholm@jsd-llc.com>
   * makefile.b16
     - Changed all 'y_tab' to 'harboury'

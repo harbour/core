@@ -2,20 +2,19 @@
  * $Id$
  */
 
-#include <extend.h>
+#include <filesys.h>
 #include <string.h>
 
 #if defined(__CYGNUS__)
   #include <mingw32/share.h>
 #endif
 
-#if defined(__GNUC__) || defined(__DJGPP__)
+#if defined(__GNUC__)
   #include <sys/types.h>
   #include <sys/stat.h>
   #include <unistd.h>
   #include <fcntl.h>
   #include <errno.h>
-  #include <dirent.h>
 
   #if !defined(HAVE_POSIX_IO)
   #define HAVE_POSIX_IO
@@ -30,7 +29,6 @@
   #include <fcntl.h>
   #include <io.h>
   #include <errno.h>
-  #include <direct.h>
 
   #if !defined(HAVE_POSIX_IO)
   #define HAVE_POSIX_IO
@@ -39,13 +37,14 @@
   #define PATH_SEPARATOR '\\'
 #endif
 
-#if defined(__BORLANDC__)
+#if defined(__BORLANDC__) || defined(__IBMCPP__)
   #include <sys\stat.h>
   #include <io.h>
   #include <fcntl.h>
   #include <share.h>
-  #include <dirent.h>
-  #include <dir.h>
+  #if defined(__IBMCPP__)
+    #define SH_COMPAT SH_DENYRW
+  #endif
 
   #if !defined(HAVE_POSIX_IO)
   #define HAVE_POSIX_IO
@@ -71,7 +70,7 @@
 
 #define IT_NUMBER       (IT_INTEGER|IT_LONG|IT_DOUBLE)
 
-static int last_error = 0;
+static USHORT last_error = 0;
 
 #if !defined(PATH_MAX)
 /* if PATH_MAX isn't defined, 256 bytes is a good number :) */
@@ -81,38 +80,6 @@ static int last_error = 0;
 #define MKLONG(_1,_2,_3,_4) (((long)_4)<<24)|(((long)_3)<<16)|(((long)_2)<<8)|_1
 #define MKINT(_1,_2)        (((long)_2)<<8)|_1
 
-/* FLAGS TO FOPEN */
-#define FO_READ         0
-#define FO_WRITE        1
-#define FO_READWRITE    2
-#define FO_COMPAT       0
-#define FO_EXCLUSIVE    16
-#define FO_DENYWRITE    32
-#define FO_DENYREAD     48
-#define FO_DENYONE      64
-#define FO_SHARE        FO_DENYONE
-
-/* FLAGS TO FCREATE */
-#define FC_NORMAL       0
-#define FC_READONLY     1
-#define FC_HIDDEN       2
-#define FC_SYSTEM       4
-
-/* FLAGS TO SEEK */
-#define FS_SET          0
-#define FS_RELATIVE     1
-#define FS_END          2
-
-/* FLAGS TO LOCK  */
-#define FL_LOCK         0
-#define FL_UNLOCK       1
-
-/*
- * NOTE: for avoid include stdio.h,
- * this include define as an 'struct FILE'
- * and we have a HARBOUR function named FILE() this
- * made a name conflict
- */
 extern int rename( const char *, const char * );
 
 /* Convert HARBOUR flags to IO subsystem flags */
@@ -146,10 +113,10 @@ static int convert_open_flags( int flags )
         if( flags & FO_DENYREAD )
                 result_flags |= SH_DENYRD;
 
-        if( flags & FO_DENYONE )
+        if( flags & FO_DENYNONE )
                 result_flags |= SH_DENYNO;
 
-        if( flags & FO_SHARE )
+        if( flags & FO_SHARED )
                 result_flags |= SH_DENYNO;
 
         return result_flags;
@@ -175,6 +142,8 @@ static int convert_create_flags( int flags )
 {
         /* by default FC_NORMAL is set */
         int result_flags=S_IWUSR;
+        
+        result_flags |= O_BINARY | O_CREAT | O_TRUNC | O_RDWR;
 
         if( flags & FC_READONLY )
                 result_flags = result_flags & ~(S_IWUSR);
@@ -195,28 +164,35 @@ static int convert_create_flags( int flags )
  * FILESYS.API FUNCTIONS --
  */
 
-int _fsOpen( char * name, int flags )
+FHANDLE hb_fsOpen   ( BYTEP name, USHORT flags )
 {
+	FHANDLE handle;
 #if defined(HAVE_POSIX_IO)
-        return open(name,convert_open_flags(flags));
+	errno = 0;
+        handle = open(name,convert_open_flags(flags));
+        last_error = errno;
 #else
-        return 0;
+        handle = FS_ERROR;
+        last_error = FS_ERROR;
 #endif
+	return handle;
 }
 
-int _fsCreate( char * name, int flags )
+FHANDLE hb_fsCreate ( BYTEP name, USHORT flags )
 {
+	FHANDLE handle;
 #if defined(HAVE_POSIX_IO)
-        int old_fmode = _fmode;
-        _fmode = O_BINARY;
-        return creat(name,convert_create_flags(flags));
-        _fmode = old_fmode;
+	errno = 0;
+        handle = open(name,convert_create_flags(flags));
+        last_error = errno;
 #else
-       return 0;
+        handle = FS_ERROR;
+        last_error = FS_ERROR;
 #endif
+	return handle;
 }
 
-void _fsClose( int handle )
+void    hb_fsClose  ( FHANDLE handle )
 {
 #if defined(HAVE_POSIX_IO)
     close(handle);
@@ -224,88 +200,107 @@ void _fsClose( int handle )
 #endif
 }
 
-long _fsRead( int handle, char * buff, long count )
+USHORT  hb_fsRead   ( FHANDLE handle, BYTEP buff, USHORT count )
 {
+	USHORT bytes;
 #if defined(HAVE_POSIX_IO)
-        return read(handle,buff,count);
+	errno = 0;
+        bytes = read(handle,buff,count);
+        last_error = errno;
 #else
-        return 0;
+        bytes = 0;
+        last_error = FS_ERROR;
 #endif
+	return bytes;
 }
 
-long _fsWrite( int handle, char * buff, long count )
+USHORT  hb_fsWrite  ( FHANDLE handle, BYTEP buff, USHORT count )
 {
+	USHORT bytes;
 #if defined(HAVE_POSIX_IO)
-        return write(handle,buff,count);
+	errno = 0;
+        bytes = write(handle,buff,count);
+        last_error = errno;
 #else
-        return 0;
+        bytes = 0;
+        last_error = FS_ERROR;
 #endif
+	return bytes;
 }
 
-long _fsSeek( int handle, long offset, int flags )
+ULONG   hb_fsSeek   ( FHANDLE handle, LONG offset, USHORT flags )
 {
+	ULONG position;
 #if defined(HAVE_POSIX_IO)
-        return lseek(handle,offset,convert_seek_flags(flags));
+	errno = 0;
+        position = lseek(handle,offset,convert_seek_flags(flags));
+        last_error = errno;
 #else
-        return 0;
+        position = 0;
+        last_error = FS_ERROR;
 #endif
+	return position;
 }
 
-int _fsError( void )
+USHORT  hb_fsError  ( void )
 {
         return last_error;
 }
 
-void _fsDelete( char * name )
+void    hb_fsDelete ( BYTEP name )
 {
 #if defined(HAVE_POSIX_IO)
+	errno = 0;
         unlink(name);
+        last_error = errno;
         return;
 #endif
 }
 
-void _fsRename( char * older, char * newer )
+void    hb_fsRename ( BYTEP older, BYTEP newer )
 {
 #if defined(HAVE_POSIX_IO)
+	errno = 0;
         rename(older,newer);
+        last_error = errno;
         return;
 #endif
 }
 
-int _fsLock( int handle, long start, long length, long mode )
+BOOL    hb_fsLock   ( FHANDLE handle, ULONG start,
+                      ULONG length, USHORT mode )
 {
         int result=0;
 
-#if !defined(__GNUC__) && !defined(__DJGPP__)
-#if defined(HAVE_POSIX_IO)
-        if (mode == FL_LOCK)
+#if defined(HAVE_POSIX_IO) && !defined(__GNUC__) && !defined(__IBMCPP__)
+	errno = 0;
+        switch( mode )
         {
-           last_error = 0;
-           result = lock(handle, start, length);
-           last_error = errno;
+           case FL_LOCK:
+              result = lock(handle, start, length);
+              break;
+
+           case FL_UNLOCK:
+              result = unlock(handle, start, length);
         }
-        if (mode == FL_UNLOCK)
-        {
-           last_error = 0;
-           result = unlock(handle, start, length);
-           last_error = errno;
-        }
-        result = (last_error=0?1:0);
-#endif
+        last_error = errno;
+#else
+	result = 1;
+        last_error = FS_ERROR;
 #endif
 
-        return result;
+        return (result ? FALSE : TRUE );
 }
 
-void _fsCommit( int handle )
+void    hb_fsCommit ( FHANDLE handle )
 {
 #if defined(HAVE_POSIX_IO)
 
         int dup_handle;
-        last_error = 0;
+        errno = 0;
         dup_handle = dup(handle);
         last_error = errno;
-        if (last_error == 0)
+        if (dup_handle != -1)
         {
            close(dup_handle);
            last_error = errno;
@@ -315,82 +310,117 @@ void _fsCommit( int handle )
         return;
 }
 
-int _fsMkDir( char * name )
+BOOL    hb_fsMkDir  ( BYTEP name )
 {
+	int result;
 #if defined(HAVE_POSIX_IO)
-  #if ! defined( __WATCOMC__ ) && ! defined( __BORLANDC__ )
-        return mkdir(name,S_IWUSR|S_IRUSR);
+	errno = 0;
+  #if !defined(__WATCOMC__) && !defined(__BORLANDC__) && !defined(__IBMCPP__)
+        result = mkdir(name,S_IWUSR|S_IRUSR);
   #else
-	return mkdir( name );
+	result = mkdir( name );
   #endif
+  	last_error = errno;
 #else
-	return 0;
+	result = 1;
+	last_error = FS_ERROR;
 #endif
+	return (result ? FALSE : TRUE );
 }
 
-int _fsChDir( char * name )
+BOOL    hb_fsChDir  ( BYTEP name )
 {
+	int result;
 #if defined(HAVE_POSIX_IO)
-        return chdir(name);
+	errno = 0;
+        result = chdir(name);
+        last_error = errno;
 #else
-	return 0;
+	result = 1;
+	last_error = FS_ERROR;
 #endif
+	return (result ? FALSE : TRUE );
 }
 
-int _fsRmDir( char * name )
+BOOL    hb_fsRmDir  ( BYTEP name )
 {
+	int result;
 #if defined(HAVE_POSIX_IO)
-        return rmdir(name);
+	errno = 0;
+        result = rmdir(name);
+        last_error = errno;
 #else
-	return 0;
+	result = 1;
+	last_error = FS_ERROR;
 #endif
+	return (result ? FALSE : TRUE );
 }
 
-char * _fsCurDir( int driver )
+BYTEP   hb_fsCurDir ( USHORT uiDrive )
 {
-#if defined(HAVE_POSIX_IO)
         static char cwd_buff[PATH_MAX+1];
+#if defined(HAVE_POSIX_IO)
+	errno = 0;
         getcwd(cwd_buff,PATH_MAX);
+        last_error = errno;
+#else
+	cwd_buff[0] = 0;
+	last_error = FS_ERROR;
+#endif
         return cwd_buff;
-#else
-	return 0;
-#endif
 }
 
-int _fsCurDrv( void  )
+USHORT  hb_fsChDrv  ( BYTEP nDrive )
 {
+	USHORT result;
 #if defined(HAVE_POSIX_IO)
-        return 0;
+	errno = 0;
+        result = 0;
+        last_error = errno;
+        last_error = FS_ERROR; /* TODO: Remove when function implemented */
 #else
-	return 0;
+	result = 0;
+	last_error = FS_ERROR;
 #endif
+	return result;
 }
 
-long _fsChDrv( int  driver )
+BYTE    hb_fsCurDrv ( void )
 {
+	USHORT result;
 #if defined(HAVE_POSIX_IO)
-        return 0;
+	errno = 0;
+        result = 0;
+        last_error = errno;
+        last_error = FS_ERROR; /* TODO: Remove when function implemented */
 #else
-	return 0;
+	result = 0;
+	last_error = FS_ERROR;
 #endif
+	return result;
 }
 
-long _fsIsDrv( int driver )
+USHORT  hb_fsIsDrv  ( BYTE nDrive )
 {
+	USHORT result;
 #if defined(HAVE_POSIX_IO)
-        return 0;
+	errno = 0;
+        result = 0;
+        last_error = errno;
+        last_error = FS_ERROR; /* TODO: Remove when function implemented */
 #else
-	return 0;
+	result = 0;
+	last_error = FS_ERROR;
 #endif
+	return result;
 }
 
-#ifdef NOT_IMPLEMENTED_YET
-
-/* Unknow that it make :( if anyone can say me !! */
-int    _fsExtOpen(PBYTE   filename, PBYTE defExt, ULONG flags,
-                   PBYTE   paths, ERRORP error );
-
-#endif
+/* TODO: Implement hb_fsExtOpen */
+FHANDLE hb_fsExtOpen( BYTEP fpFilename, BYTEP fpDefExt,
+                      USHORT uiFlags, BYTEP fpPaths, ERRORP pError )
+{
+   return FS_ERROR;
+}
 
 /*
  * -- HARBOUR FUNCTIONS --
@@ -401,7 +431,7 @@ int    _fsExtOpen(PBYTE   filename, PBYTE defExt, ULONG flags,
 #undef FOPEN
 #endif
 
-HARBOUR FOPEN()
+HARBOUR FOPEN( void )
 
 #ifdef HB_FOPEN
 #define FOPEN HB_FOPEN
@@ -422,16 +452,14 @@ HARBOUR FOPEN()
             else
                 open_flags = 0;
 
-            last_error = 0;
-            file_handle = _fsOpen(_parc(1),open_flags);
-            last_error = errno;
+            file_handle = hb_fsOpen(_parc(1),open_flags);
         }
 
         _retni(file_handle);
         return;
 }
 
-HARBOUR FCREATE()
+HARBOUR FCREATE( void )
 {
         PHB_ITEM arg1_it = _param(1,IT_STRING);
         PHB_ITEM arg2_it = _param(2,IT_NUMBER);
@@ -446,9 +474,7 @@ HARBOUR FCREATE()
             else
                 create_flags = 0;
 
-            last_error = 0;
-            file_handle = _fsCreate(_parc(1),create_flags);
-            last_error = errno;
+            file_handle = hb_fsCreate(_parc(1),create_flags);
         }
 
         _retni(file_handle);
@@ -460,7 +486,7 @@ HARBOUR FCREATE()
 #undef FREAD
 #endif
 
-HARBOUR FREAD()
+HARBOUR FREAD( void )
 
 #ifdef HB_FREAD
 #define FREAD HB_FREAD
@@ -476,9 +502,7 @@ HARBOUR FREAD()
 
         if( arg1_it && arg2_it && arg3_it )
         {
-            last_error = 0;
-            bytes = _fsRead(_parni(1),_parc(2),_parnl(3));
-            last_error = errno;
+            bytes = hb_fsRead(_parni(1),_parc(2),_parnl(3));
         }
 
         _retnl(bytes);
@@ -490,7 +514,7 @@ HARBOUR FREAD()
 #undef FWRITE
 #endif
 
-HARBOUR FWRITE()
+HARBOUR FWRITE( void )
 
 #ifdef HB_FWRITE
 #define FWRITE HB_FWRITE
@@ -506,69 +530,61 @@ HARBOUR FWRITE()
 
         if( arg1_it && arg2_it )
         {
-            last_error = 0;
             bytes = (arg3_it ? _parnl(3) : arg2_it->wLength );
-            bytes = _fsWrite(_parni(1),_parc(2),bytes);
-            last_error = errno;
+            bytes = hb_fsWrite(_parni(1),_parc(2),bytes);
         }
 
         _retnl(bytes);
         return;
 }
 
-HARBOUR FERROR()
+HARBOUR FERROR( void )
 {
-        _retni(_fsError());
+        _retni(hb_fsError());
         return;
 }
 
-HARBOUR FCLOSE()
+HARBOUR FCLOSE( void )
 {
         PHB_ITEM arg1_it = _param(1,IT_NUMBER);
 
+	last_error = 0;
         if( arg1_it )
         {
-            last_error = 0;
-            _fsClose(_parni(1));
-            last_error = errno;
+            hb_fsClose(_parni(1));
         }
-
-        _retl(last_error>=0?1:0);
+        _retl( last_error == 0 );
         return;
 }
 
-HARBOUR FERASE()
+HARBOUR FERASE( void )
 {
         PHB_ITEM arg1_it = _param(1,IT_STRING);
 
         if( arg1_it )
         {
-           last_error = 0;
-           _fsDelete(_parc(1));
-           last_error = errno;
+           hb_fsDelete(_parc(1));
         }
 
-        _retni(last_error=0?0:-1);
+        _retni(last_error=0);
         return;
 }
 
-HARBOUR FRENAME()
+HARBOUR FRENAME( void )
 {
         PHB_ITEM arg1_it = _param(1,IT_STRING);
         PHB_ITEM arg2_it = _param(2,IT_STRING);
 
         if( arg1_it && arg2_it )
         {
-            last_error = 0;
-            _fsRename(_parc(1),_parc(2));
-            last_error = errno;
+            hb_fsRename(_parc(1),_parc(2));
         }
 
-        _retni(last_error=0?0:-1);
+        _retni(last_error);
         return;
 }
 
-HARBOUR FSEEK()
+HARBOUR FSEEK( void )
 {
         PHB_ITEM arg1_it = _param(1,IT_NUMBER);
         PHB_ITEM arg2_it = _param(2,IT_NUMBER);
@@ -579,31 +595,27 @@ HARBOUR FSEEK()
 
         if( arg1_it && arg2_it )
         {
-            last_error = 0;
             pos = (arg3_it ? _parni(3) : FS_SET);
-            bytes = _fsSeek(_parni(1),_parnl(2),pos);
-            last_error = errno;
+            bytes = hb_fsSeek(_parni(1),_parnl(2),pos);
         }
 
         _retnl(bytes);
         return;
 }
 
-HARBOUR HB_FILE()
+HARBOUR HB_FILE( void )
 {
         PHB_ITEM arg1_it = _param( 1, IT_STRING );
 
         if( arg1_it )
         {
-           last_error = 0;
-           access(_parc(1), 0);
-           last_error = errno;
+           _retl( access(_parc(1), 0) == 0 );
         }
-        _retl(last_error==0?1:0);
+        else _retl(0);
         return;
 }
 
-HARBOUR FREADSTR()
+HARBOUR FREADSTR( void )
 {
         PHB_ITEM arg1_it = _param( 1, IT_NUMBER );
         PHB_ITEM arg2_it = _param( 2, IT_NUMBER );
@@ -660,7 +672,7 @@ HARBOUR BIN2I( void )
         return;
 }
 
-HARBOUR BIN2L()
+HARBOUR BIN2L( void )
 {
         PHB_ITEM arg1_it = _param( 1, IT_STRING );
         char * s;
@@ -679,7 +691,7 @@ HARBOUR BIN2L()
         return;
 }
 
-HARBOUR BIN2W()
+HARBOUR BIN2W( void )
 {
         BIN2I();
 }
@@ -704,7 +716,7 @@ HARBOUR I2BIN( void )
         return;
 }
 
-HARBOUR L2BIN()
+HARBOUR L2BIN( void )
 {
         PHB_ITEM arg1_it = _param( 1, IT_LONG );
         long  n;
@@ -726,7 +738,7 @@ HARBOUR L2BIN()
         return;
 }
 
-HARBOUR W2BIN()
+HARBOUR W2BIN( void )
 {
         I2BIN();
 }

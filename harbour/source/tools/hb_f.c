@@ -13,17 +13,13 @@ nanforum ft_f*() clones
 * hb_fskip
 */
 
-#include <extend.h>
+#include <filesys.api>
 
 #define b_size     1024
 #define c_size     4096
 #define IT_NUMBER  (IT_INTEGER|IT_LONG|IT_DOUBLE)
 
 static long _hbfskip( int recs );
-extern long _fsSeek( int, long, int );
-extern long _fsRead( int, char*, int );
-extern int  _fsOpen( char*, int );
-extern void _fsClose( int );
 
 static long last_rec[10];
 static long recno[10];
@@ -54,8 +50,8 @@ HARBOUR HB_FUSE( void )
       handles[area]  = _fsOpen( _parc(1), open_flags );
       offset[area]   = 0;
       recno[area]    = 1;
-      b              = _xgrab( b_size );
-      c              = _xgrab( c_size );
+      b              = ( char * )_xgrab( b_size );
+      c              = ( char * )_xgrab( c_size );
       lastbyte[area] = _fsSeek( handles[area], 0L, SEEK_END );
       _retni( handles[area] );
    }
