@@ -21,10 +21,10 @@ static function DefError( oError )
    local cInfo := ""
    local n := 2
 
-   while ! Empty( ProcName( n ) )
+   do while ! Empty( ProcName( n ) )
       cInfo += Chr( 13 ) + Chr( 10 ) + "Called from " + ProcName( n ) + ;
                "(" + AllTrim( Str( ProcLine( n++ ) ) ) + ")"
-   end
+   enddo
 
    QOut( oError:Description + Chr( 13 ) + Chr( 10 ) + cInfo )
 

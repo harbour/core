@@ -5,11 +5,14 @@
 ROOT = ../
 
 C_HEADERS=\
+	box.h \
+	compat.h \
 	compiler.h \
 	ctoharb.h \
 	dates.h \
 	errorapi.h \
 	extend.h \
+	extra.h \
 	filesys.h \
 	gtapi.h \
 	hberrors.h \
@@ -19,10 +22,13 @@ C_HEADERS=\
 	itemapi.h \
 	pcode.h \
 	set.h \
+	super.h \
 	types.h \
 	version.h \
 
 PRG_HEADERS=\
+	box.ch \
+	color.ch \
 	error.ch \
 	fileio.ch \
 	inkey.ch \
@@ -37,5 +43,6 @@ API_HEADERS=\
 	fm.api \
 	gt.api \
 	item.api \
+	rdd.api \
 
 include $(TOP)$(ROOT)config/header.cf

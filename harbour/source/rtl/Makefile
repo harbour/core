@@ -9,6 +9,7 @@ C_SOURCES=\
 	classes.c \
 	codebloc.c \
 	console.c \
+	copyfile.c \
 	dates.c \
 	descend.c \
 	dir.c \
