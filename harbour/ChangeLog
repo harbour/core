@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-03-22 11:25 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+  * source/compiler/harbour.y
+    * fix on recent If() changes
+      IIf() was accepted but If() not. Now it is ok.
+
 2003-03-17 15:30 UTC-0500 David G. Holm <dholm@jsd-llc.com>
   * source/rtl/filesys.c
   	! Added newline at end of file.
