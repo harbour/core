@@ -675,9 +675,10 @@ $(HBTEST_EXE) : \
    $(HBTEST_DIR)\rt_math.prg \
    $(HBTEST_DIR)\rt_misc.prg \
    $(HBTEST_DIR)\rt_str.prg \
+   $(HBTEST_DIR)\rt_stra.prg \
    $(HBTEST_DIR)\rt_trans.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $**
-   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\hbtest.c $(OBJ_DIR)\rt_array.c $(OBJ_DIR)\rt_date.c $(OBJ_DIR)\rt_file.c $(OBJ_DIR)\rt_hvm.c $(OBJ_DIR)\rt_math.c $(OBJ_DIR)\rt_misc.c $(OBJ_DIR)\rt_str.c $(OBJ_DIR)\rt_trans.c -o $(HBTEST_EXE) /link $(LIBS)
+   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\hbtest.c $(OBJ_DIR)\rt_array.c $(OBJ_DIR)\rt_date.c $(OBJ_DIR)\rt_file.c $(OBJ_DIR)\rt_hvm.c $(OBJ_DIR)\rt_math.c $(OBJ_DIR)\rt_misc.c $(OBJ_DIR)\rt_str.c $(OBJ_DIR)\rt_stra.c $(OBJ_DIR)\rt_trans.c -o $(HBTEST_EXE) /link $(LIBS)
 
 #
 # HBDOC.EXE rules
@@ -725,9 +726,9 @@ $(HARBOUR_EXE) : \
    $(COMPILER_DIR)\expropta.c \
    $(COMPILER_DIR)\exproptb.c \
    $(COMPILER_DIR)\exproptc.c
-   -echo. > $(INCLUDE_DIR)\unistd.h
-   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ -w $** -o $(HARBOUR_EXE) /link $(PP_LIB) $(COMMON_LIB)
-   -del $(INCLUDE_DIR)\unistd.h
+   -echo. > $(OBJ_DIR)\unistd.h
+   $(CC) $(CFLAGS) -I$(OBJ_DIR) -Fo$(OBJ_DIR)\ -w $** -o $(HARBOUR_EXE) /link $(PP_LIB) $(COMMON_LIB)
+   -del $(OBJ_DIR)\unistd.h
 
 
 #
@@ -800,9 +801,9 @@ $(OBJ_DIR)\macroy.obj : $(OBJ_DIR)\macroy.c
    $(CC) $(CLIBFLAGS) -w -Fo$@ $**
 
 $(OBJ_DIR)\macrol.obj : $(OBJ_DIR)\macrol.c
-   -echo. > $(INCLUDE_DIR)\unistd.h
-   $(CC) $(CLIBFLAGS) -w -Fo$@ $**
-   -del $(INCLUDE_DIR)\unistd.h
+   -echo. > $(OBJ_DIR)\unistd.h
+   $(CC) $(CLIBFLAGS) -I$(OBJ_DIR) -w -Fo$@ $**
+   -del $(OBJ_DIR)\unistd.h
 
 
 # dummy targets used for prg to c creation

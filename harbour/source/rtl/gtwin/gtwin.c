@@ -191,11 +191,11 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
       /* save screen info to restore on exit */
       memcpy( &s_csbi, &csbi, sizeof( csbi ) );
 
-      csbi.dwSize.X = min( csbi.dwSize.X, 80 );
-      csbi.dwSize.Y = min( csbi.dwSize.Y, 50 );
+      csbi.dwSize.X = HB_MIN( csbi.dwSize.X, 80 );
+      csbi.dwSize.Y = HB_MIN( csbi.dwSize.Y, 50 );
 
-      csbi.srWindow.Right = min( csbi.srWindow.Right, 79 );
-      csbi.srWindow.Bottom = min( csbi.srWindow.Bottom, 49 );
+      csbi.srWindow.Right = HB_MIN( csbi.srWindow.Right, 79 );
+      csbi.srWindow.Bottom = HB_MIN( csbi.srWindow.Bottom, 49 );
       csbi.srWindow.Top = csbi.srWindow.Left = 0;
 
       SetConsoleWindowInfo( s_HOriginal, TRUE,  &csbi.srWindow );
@@ -671,8 +671,8 @@ USHORT hb_gt_GetScreenWidth( void )
 
    GetConsoleScreenBufferInfo( s_HOutput, &csbi );
 /* return csbi.dwMaximumWindowSize.X; */
-/* return max( csbi.srWindow.Right - csbi.srWindow.Left + 1, 40 ); */
-   return max( csbi.dwSize.X, 40 );
+/* return HB_MAX( csbi.srWindow.Right - csbi.srWindow.Left + 1, 40 ); */
+   return HB_MAX( csbi.dwSize.X, 40 );
 }
 
 USHORT hb_gt_GetScreenHeight( void )
@@ -683,8 +683,8 @@ USHORT hb_gt_GetScreenHeight( void )
 
    GetConsoleScreenBufferInfo( s_HOutput, &csbi );
 /* return csbi.dwMaximumWindowSize.Y; */
-/* return max( csbi.srWindow.Bottom - csbi.srWindow.Top + 1, 25 ); */
-   return max( csbi.dwSize.Y, 25 );
+/* return HB_MAX( csbi.srWindow.Bottom - csbi.srWindow.Top + 1, 25 ); */
+   return HB_MAX( csbi.dwSize.Y, 25 );
 }
 
 void hb_gt_SetPos( SHORT iRow, SHORT iCol )
@@ -1047,8 +1047,8 @@ BOOL hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
 
    /* new console window size and scroll position */
    srWin.Top    = srWin.Left = 0;
-   srWin.Bottom = ( SHORT ) ( min( uiRows, coBuf.Y ) - 1 );
-   srWin.Right  = ( SHORT ) ( min( uiCols, coBuf.X ) - 1 );
+   srWin.Bottom = ( SHORT ) ( HB_MIN( uiRows, coBuf.Y ) - 1 );
+   srWin.Right  = ( SHORT ) ( HB_MIN( uiCols, coBuf.X ) - 1 );
 
    /* new console buffer size */
    coBuf.Y = uiRows;

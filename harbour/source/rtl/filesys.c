@@ -87,6 +87,9 @@
    #if !defined(HAVE_POSIX_IO)
       #define HAVE_POSIX_IO
    #endif
+
+   extern int rename( const char *, const char * );
+
 #endif
 
 #if defined(__WATCOMC__)
@@ -202,8 +205,6 @@ static USHORT s_uiErrorLast = 0;
 #else
    #define LARGE_MAX ( UINT_MAX - 1L )
 #endif
-
-extern int rename( const char *, const char * );
 
 /* Convert HARBOUR flags to IO subsystem flags */
 

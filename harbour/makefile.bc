@@ -512,6 +512,7 @@ HBTEST_EXE_OBJS = \
    $(OBJ_DIR)\rt_math.obj \
    $(OBJ_DIR)\rt_date.obj \
    $(OBJ_DIR)\rt_str.obj \
+   $(OBJ_DIR)\rt_stra.obj \
    $(OBJ_DIR)\rt_trans.obj \
    $(OBJ_DIR)\rt_array.obj \
    $(OBJ_DIR)\rt_file.obj \
@@ -676,7 +677,9 @@ $(OBJ_DIR)\harboury.obj : $(OBJ_DIR)\harboury.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
 $(OBJ_DIR)\harbourl.obj : $(OBJ_DIR)\harbourl.c
+   -echo. > $(OBJ_DIR)\unistd.h
    $(CC) $(CLIBFLAGS) -I$(OBJ_DIR) -o$@ $**
+   -del $(OBJ_DIR)\unistd.h
 
 $(OBJ_DIR)\cmdcheck.obj : $(COMPILER_DIR)\cmdcheck.c
    $(CC) $(CLIBFLAGS) -o$@ $**
@@ -1741,7 +1744,9 @@ $(OBJ_DIR)\macroy.obj : $(OBJ_DIR)\macroy.c
    tlib $(MACRO_LIB) -+$@,,
 
 $(OBJ_DIR)\macrol.obj : $(OBJ_DIR)\macrol.c
+   -echo. > $(OBJ_DIR)\unistd.h
    $(CC) $(CLIBFLAGS) -I$(OBJ_DIR) -o$@ $**
+   -del $(OBJ_DIR)\unistd.h
    tlib $(MACRO_LIB) -+$@,,
 
 $(OBJ_DIR)\macroa.obj : $(MACRO_DIR)\macroa.c
@@ -1949,6 +1954,7 @@ $(HBTEST_EXE) : $(HBTEST_EXE_OBJS)
    echo. $(OBJ_DIR)\rt_math.obj >> make.tmp
    echo. $(OBJ_DIR)\rt_date.obj >> make.tmp
    echo. $(OBJ_DIR)\rt_str.obj >> make.tmp
+   echo. $(OBJ_DIR)\rt_stra.obj >> make.tmp
    echo. $(OBJ_DIR)\rt_trans.obj >> make.tmp
    echo. $(OBJ_DIR)\rt_array.obj >> make.tmp
    echo. $(OBJ_DIR)\rt_file.obj >> make.tmp
@@ -1993,6 +1999,12 @@ $(OBJ_DIR)\rt_str.c : $(HBTEST_DIR)\rt_str.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
 $(OBJ_DIR)\rt_str.obj : $(OBJ_DIR)\rt_str.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\rt_stra.c : $(HBTEST_DIR)\rt_stra.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\rt_stra.obj : $(OBJ_DIR)\rt_stra.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
 $(OBJ_DIR)\rt_trans.c : $(HBTEST_DIR)\rt_trans.prg

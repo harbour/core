@@ -42,8 +42,18 @@
 #if defined(__WATCOMC__)
    #define HB_MATH_HANDLER
 #elif defined(__BORLANDC__)
-   #define HB_MATH_HANDLER
-   #define matherr _matherr
+   #if (__BORLANDC__ == 1328) && defined(__cplusplus)
+      /* NOTE: There seem to be a bug in Borland C++ 5.3 C++ mode which prevents
+               the redefinition of matherr, because nor "_exception" neither 
+               "exception" will work. [vszakats] */
+   #else
+      #define HB_MATH_HANDLER
+      #define matherr _matherr
+      /* NOTE: This is needed for Borland C++ 5.5 in C++/STDC mode. [vszakats] */
+      #if (__BORLANDC__ >= 1360)
+         #define exception _exception
+      #endif
+   #endif
 #elif defined(__MINGW32__)
    #define HB_MATH_HANDLER
    #define matherr _matherr

@@ -1,3 +1,39 @@
+20000405-02:03 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/rtl/math.c
+     ! exception redefined as _exception for Borland C++ 5.5 and upper.
+     ! Disabled math exception handling for Borland C++ 5.3 C++ mode,
+       since it won't work. Other Borland C++ version (4.x,5.x) should be 
+       also checked in this respect.
+
+   * source/rtl/gtwin/gtwin.c
+     ! max()/min() changed to HB_MAX()/HB_MIN()
+
+   * source/rtl/filesys.c
+     ! Explicit declaration of POSIX rename() moved to the Unix branch.
+
+   * source/compiler/harbour.c
+     ! isatty() declaration readded for (__BORLANDC__ && __cplusplus)
+
+   * makefile.bc
+     ! Fixed to create unistd.h in the local OBJ dir for macrol.c and
+       harbourl.c.
+
+   * makefile.vc
+     ! Using a safer method for the unistd.h workaround. It's now created
+       in the local OBJ dir instead of the common INCLUDE. This way it's 
+       impossible to accidently leave it there and break Cygnus and other 
+       GCC make processes.
+
+   + utils/hbtest/rt_stra.prg
+   * utils/hbtest/*
+   * makefile.*
+     ! rt_str.prg split to make it compile with BCC31.
+
+   ; All these fixes were needed to compile in C++ mode with Borland C++ 
+     (3.1, 5.3, 5.5). Hmm, the Harbour .EXE sizes are actually 10% smaller
+     than with 32 bit Borland Cs.
+      
 2000-04-04 20:00 GMT-4 David G. Holm <dholm@jsd-llc.com>
 
    * source/rtl/dir.c
@@ -21,6 +57,7 @@
 20000404-08:00 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
    *doc/en/dbstrux.txt
         *Small reformating
+
 20000404-13:00 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/rdd/dbstrux.prg
@@ -371,7 +408,7 @@
    * source/rtl/gtapi.c
      * Cast
 
-   * source/common/hbver.h
+   * source/common/hbver.c
      % #include <os2.h> is always included by hbdefs.h, so it's not needed
        to add it explicitly. Please test it anyway.
 

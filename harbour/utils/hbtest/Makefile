@@ -17,6 +17,7 @@ PRG_SOURCES=\
 	rt_math.prg  \
 	rt_misc.prg  \
 	rt_str.prg   \
+	rt_stra.prg  \
 	rt_trans.prg \
 
 PRG_MAIN=hbtest.prg
