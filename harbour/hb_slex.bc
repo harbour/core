@@ -405,6 +405,7 @@ DBFNTX_LIB_OBJS = \
    \
    $(OBJ_DIR)\dbfntx0.obj
 
+
 DBFCDX_LIB_OBJS = \
    $(OBJ_DIR)\dbfcdx1.obj \
    \
@@ -643,7 +644,6 @@ all: \
    $(HBTEST_EXE) \
    $(HBDOC_EXE) \
    $(HBMAKE_EXE)
-
 #
 # Library dependencies and build rules
 #
@@ -1170,6 +1170,13 @@ $(OBJ_DIR)\dbdelim.c : $(RTL_DIR)\dbdelim.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
 $(OBJ_DIR)\dbdelim.obj : $(OBJ_DIR)\dbdelim.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\dbsdf.c : $(RTL_DIR)\dbsdf.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\dbsdf.obj : $(OBJ_DIR)\dbsdf.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 

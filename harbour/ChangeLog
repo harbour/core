@@ -1,3 +1,14 @@
+2001-04-20 01:35 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * hb_slex.bc
+     * Synched with makefile.bc
+
+   * source/common/hbtrace.c
+     + Added missing #include <io.h>
+
+   * include/hbapilng.h
+   * source/rtl/langapi.c
+     * Corrected declaration of hb_langDGetItem() (required for C++)
+
 2001-04-19 17:10 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * hb_slex.bc

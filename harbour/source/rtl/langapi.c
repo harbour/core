@@ -39,7 +39,7 @@
 /* Always link in the default language */
 HB_LANG_REQUEST( HB_LANG_DEFAULT );
 
-/* NOTE: This is the maximum number of registered languages, later this can be 
+/* NOTE: This is the maximum number of registered languages, later this can be
          made dynamic. */
 #define HB_LANG_MAX_ 64
 
@@ -148,12 +148,12 @@ char * hb_langSelectID( char * pszID )
    return pszIDOld;
 }
 
-void * hb_langDGetItem( int iIndex )
+char * hb_langDGetItem( int iIndex )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_langDGetItem(%i)", iIndex));
 
    if( s_lang && iIndex >= 0 && iIndex < HB_LANG_ITEM_MAX_ )
-      return s_lang->pItemList[ iIndex ];
+      return (char *) s_lang->pItemList[ iIndex ];
    else
       return NULL;
 }
@@ -175,7 +175,7 @@ char * hb_langName( void )
    char * pszName = ( char * ) hb_xgrab( 128 );
 
    if( s_lang )
-      sprintf( pszName, "Harbour Language: %s %s (%s)", 
+      sprintf( pszName, "Harbour Language: %s %s (%s)",
          ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ID + HB_LANG_ITEM_ID_ID ),
          ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ID + HB_LANG_ITEM_ID_NAME ),
          ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ID + HB_LANG_ITEM_ID_NAMENAT ) );

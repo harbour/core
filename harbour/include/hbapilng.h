@@ -80,7 +80,7 @@ extern PHB_LANG hb_langFind             ( char * pszID );
 
 extern PHB_LANG hb_langSelect           ( PHB_LANG lang );
 extern char *   hb_langSelectID         ( char * pszID );
-extern void *   hb_langDGetItem         ( int iIndex );
+extern char *   hb_langDGetItem         ( int iIndex );
 extern char *   hb_langID               ( void );
 extern char *   hb_langName             ( void );
 
