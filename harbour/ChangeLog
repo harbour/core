@@ -8,6 +8,14 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-11-06 00:00 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
+  * makefile.vc
+  * makefile.nt
+  * make_vc.bat
+    * clean now handled by make
+    * corrected param handling
+    * use /? for help
+
 2002-11-05 21:41 UTC-0300 Luiz Rafael Culik <culikr@uol.com.br>
   * source/rtl/alert.prg
     ! Fixed problem when Text to display has more then 60 chars and the Line Breaker character (;) dont exist
@@ -44,7 +52,7 @@
   * makefile.vc
     * no more recursive nmake calls
   * makefile.nt
-    * corrected on batch mode call
+    * corrected one batch mode call
   * make_vc.bat
     * if building Harbour under NT, use the alternate makefile.nt
     * for faster builds.
