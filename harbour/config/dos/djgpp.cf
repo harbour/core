@@ -12,35 +12,36 @@ LIB_EXT = .a
 CC = gcc
 CC_IN = -c
 CC_OUT = -o
-CPPFLAGS = -DDEBUG -I. -I$(HB_INC_DIR)
-CFLAGS = -Wall -g
+CPPFLAGS = -I. -I$(HB_INC_DIR)
+CFLAGS = -Wall
 
 LD = gcc
 LD_OUT = -o
 ifdef HB_LIB_DIR
 LDFLAGS = -L$(HB_LIB_DIR)
 endif
-LINKLIBS = $(foreach lib, $(LIBS), -l$(lib))
+LINKLIBS := $(foreach lib, $(LIBS), -l$(lib))
 # LINKLIBS += -lm
 
-#Note: The empty line below HAVE TO exist!
+# Note: The empty line directly before 'endef' HAVE TO exist!
+# It causes that every echo command will be separated by LF
 define lib_object
 echo ADDMOD $(file) >> __lib__.tmp
 
 endef
 
+# We have to use script to overcome the DOS limit of max 128 characters
+# in commmand line
 define create_library
 echo CREATE $@ > __lib__.tmp
 $(foreach file, $^, $(lib_object))
 echo SAVE >> __lib__.tmp
 echo END >> __lib__.tmp
 $(AR) -M < __lib__.tmp
-del __lib__.tmp
 endef
 
 AR = ar
 ARFLAGS =
-#AR_RULE = $(AR) $(ARFLAGS) r $@ $^ || $(RM) $@
 AR_RULE = $(create_library)
 
 include $(TOP)$(ROOT)config/rules.cf

@@ -10,6 +10,7 @@ LIB_PREF = lib
 LIB_EXT = .a
 
 CC = gcc
+CC_IN = -c
 CC_OUT = -o
 CPPFLAGS = -DDEBUG -I. -I$(HB_INC_DIR)
 CFLAGS = -Wall -g

@@ -3,6 +3,6 @@
 #
 
 GRANDP = ../../
-ARCH = $(HB_ARCHITECTURE)/$(HB_COMPILER)
+ARCH := $(HB_ARCHITECTURE)/$(HB_COMPILER)
 
 include $(TOP)$(ROOT)config/$(ARCH).cf

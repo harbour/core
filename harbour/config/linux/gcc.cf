@@ -5,7 +5,7 @@
 include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
 
 OBJ_EXT = .o
-EXE_EXT = .exe
+EXE_EXT =
 LIB_PREF = lib
 LIB_EXT = .a
 

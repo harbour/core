@@ -13,24 +13,25 @@ YACC_H_TMP = $(YACC_C:.c=.h)
 YACC_H = y_tab.h
 YACC_OUTPUT = $(YACC_C:.c=.out)
 YACC_OBJ = $(YACC_C:.c=$(OBJ_EXT))
+YACC_HB_H := $(foreach h, $(YACC_HEADERS), $(HB_INC_DIR)/$(h))
 endif
 
 ifdef LEX_SOURCE
 LEX_BASE = $(LEX_SOURCE:.l=)
 LEX_C = $(LEX_BASE)l.c
 LEX_OBJ = $(LEX_C:.c=$(OBJ_EXT))
+LEX_HB_H := $(foreach h, $(LEX_HEADERS), $(HB_INC_DIR)/$(h))
 endif
 
 ALL_C_OBJS = $(C_OBJS) $(MAIN_OBJ) $(YACC_OBJ) $(LEX_OBJ)
 
-
 $(YACC_OBJ) : $(YACC_C)
 
-$(YACC_C) : ../../$(YACC_SOURCE)
-	$(YACC) $(YACC_FLAGS) -o$@ $?
+$(YACC_C) : ../../$(YACC_SOURCE) $(YACC_HB_H)
+	$(YACC) $(YACC_FLAGS) -o$@ $<
 
 
 $(LEX_OBJ) : $(LEX_C)
 
-$(LEX_C) : ../../$(LEX_SOURCE)
-	$(LEX) $(LEX_FLAGS) -o$@ $?
+$(LEX_C) : ../../$(LEX_SOURCE) $(LEX_HB_H)
+	$(LEX) $(LEX_FLAGS) -o$@ $<

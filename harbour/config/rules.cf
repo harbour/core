@@ -11,12 +11,12 @@ LEX = flex
 LEX_FLAGS = -i -8
 
 # How to run Harbour.
-_HB = $(notdir $(HB_BIN_DIR))
-ifeq ($(_HB),)
+HB := $(notdir $(HB_BIN_DIR))
+ifeq ($(HB),)
 # there is a slash at the end
-HB = $(HB_BIN_DIR)harbour$(EXE_EXT)
+HB := $(HB_BIN_DIR)harbour$(EXE_EXT)
 else
-HB = $(HB_BIN_DIR)/harbour$(EXE_EXT)
+HB := $(HB_BIN_DIR)/harbour$(EXE_EXT)
 endif
 HB_FLAGS = -n -q -I$(TOP) -I$(HB_INC_DIR)
 

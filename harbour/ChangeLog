@@ -1,3 +1,47 @@
+19990621-00:37 Ryszard Glab <rglab@imid.med.pl>
+* config/dos/watcom.cf
+ * changed invocation of 'echo' command to overcome problems with
+   too small space for environment variables.
+   Note also that it is possible that you will have to increase this
+   space at DOS startup (for example add 
+   SHELL=c:\command.com c:\ /E:2048 /P 
+   to config.sys)
+ * removed some variables that can be expanded directly
+
+* config/dos/global.cf
+ * all '\' are now replaced with '/' in COMSPEC variable to shell from
+   make utility succesully
+ + added check to not include this file recursively
+
+* config/dos/djgpp.cf
+ * removed some unnecessary data
+
+* config/linux/gcc.cf
+ * created executables have no extension now
+
+* config/win32/gcc.cf
+* config/win32/msvc.cf
+ + added missing CC_IN variable
+
+* config/c.cf
+* config/global.cf
+* config/lib.cf
+* config/rules.cf
+ + added dependency on header files for YACC and LEX sources
+ * some rules or variables got clarified
+
+* source/compiler/Makefile
+ + added dependency on header files
+
+* include/Makefile
+ + added missing hbpp.h
+
+* makewat.env, makefile.wat
+ - removed from repository - replaced by GNU make (dos/watcom.cf)
+
+* makefile.gcc, readmake.txt, tests/tests.mk
+ - removed from repository - replaced by GNU make (gcc.cf)
+ 
 19990620-23:40 CET Victor Szel <info@szelvesz.hu>
   * source/compiler/harbour.y
     Finished the required modifications for the PCODE

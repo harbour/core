@@ -13,6 +13,7 @@ C_HEADERS=\
 	filesys.h \
 	gtapi.h \
 	hberrors.h \
+	hbpp.h \
 	hbsetup.h \
 	init.h \
 	itemapi.h \

@@ -6,15 +6,15 @@ include $(TOP)$(ROOT)config/global.cf
 include $(TOP)$(ROOT)config/c.cf
 include $(TOP)$(ROOT)config/prg.cf
 
-LIB_NAME = $(LIB_PREF)$(LIB)$(LIB_EXT)
+LIB_NAME := $(LIB_PREF)$(LIB)$(LIB_EXT)
 
-_ARCH_DIR = $(notdir $(ARCH_DIR))
-ifeq ($(_ARCH_DIR),)
+LIB_ARCH := $(notdir $(ARCH_DIR))
+ifeq ($(LIB_ARCH),)
 # ARCH_DIR ends with a slash
-LIB_ARCH = $(ARCH_DIR)$(LIB_NAME)
+LIB_ARCH := $(ARCH_DIR)$(LIB_NAME)
 else
 # there is no slash at the end of ARCH_DIR
-LIB_ARCH = $(ARCH_DIR)/$(LIB_NAME)
+LIB_ARCH := $(ARCH_DIR)/$(LIB_NAME)
 endif
 
 ALL_OBJS = $(ALL_C_OBJS) $(ALL_PRG_OBJS)
