@@ -291,7 +291,17 @@ int _fsLock( int handle, long start, long length, long mode )
 void _fsCommit( int handle )
 {
 #if defined(HAVE_POSIX_IO)
-/* TODO: I'm thinking about this :) */
+
+        int dup_handle;
+        last_error = 0;
+        dup_handle = dup(handle);
+        last_error = errno;
+        if (last_error == 0)
+        {
+           close(dup_handle);
+           last_error = errno;
+        }
+
 #endif
         return;
 }
