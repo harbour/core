@@ -236,10 +236,10 @@ FUNCTION GetPostValidate( oGet )
    RETURN .F.
 
 FUNCTION ReadExit( lExit )
-   RETURN Set( _SET_EXIT, lExit )
+   RETURN IF( ISLOGICAL( lExit ), Set( _SET_EXIT, lExit ), Set( _SET_EXIT ) )
 
 FUNCTION ReadInsert( lInsert )
-   RETURN Set( _SET_INSERT, lInsert )
+   RETURN IF( ISLOGICAL( lInsert ), Set( _SET_INSERT, lInsert ), Set( _SET_INSERT ) )
 
 FUNCTION ReadUpdated( lUpdated )
 /*   LOCAL oGetList := __GetListActive() */
