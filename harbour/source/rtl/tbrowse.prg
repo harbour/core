@@ -98,7 +98,7 @@ CLASS TBrowse
                                   ::aColumns[ nPos ] := oCol, ::Configure( 2 ), oCol
                                   // Insert a column object in a browse
 
-   METHOD Invalidate()     INLINE AFill( ::aRedraw, .f. ), ::Stable := .f. // Forces entire redraw during next stabilization
+   METHOD Invalidate()     // Forces entire redraw during next stabilization
    METHOD RefreshAll()     INLINE ::Invalidate() // Causes all data to be recalculated during the next stabilize
    METHOD RefreshCurrent() INLINE ::aRedraw[ ::RowPos ] := .f., ::Stable := .f. // Causes the current row to be refilled and repainted on next stabilize
 
@@ -210,6 +210,26 @@ METHOD Home() CLASS TBrowse
    endif
 
 return Self
+
+METHOD Invalidate() CLASS TBrowse
+
+   local n, lFooters := .f.
+
+   for n = 1 to Len( ::aColumns )
+      if ! Empty( ::aColumns[ n ]:Footing )
+         lFooters = .t.
+         exit
+      endif
+   next
+
+   ::RowCount = ::nBottom - ::nTop + 1 - If( ::lHeaders, 1, 0 ) - ;
+               If( lFooters, 1, 0 ) - If( Empty(::HeadSep), 0, 1 ) - ;
+               If( Empty(::FootSep), 0, 1 )
+
+   AFill( ::aRedraw, .f. )
+   ::Stable := .f.
+
+return nil
 
 METHOD Left() CLASS TBrowse
 
