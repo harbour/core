@@ -1139,7 +1139,7 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
             double dNumber = hb_itemGetND( pNumber );
 
             /* #if defined(__BORLANDC__) || defined(__WATCOMC__) */
-	    /* added infinity check for Borland C [martin vogel] */
+            /* added infinity check for Borland C [martin vogel] */
             #if defined(__WATCOMC__)
             #else
             static double s_dInfinity = 0;
@@ -1147,27 +1147,31 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
 
             if( ! s_bInfinityInit )
             {
- 	       /* set math handler to NULL for evaluating log(0),
-		  to avoid error messages [martin vogel]*/
-	       HB_MATH_HANDLERPROC fOldMathHandler = hb_mathSetHandler (NULL); 
+                /* set math handler to NULL for evaluating log(0),
+                   to avoid error messages [martin vogel]*/
+               HB_MATH_HANDLERPROC fOldMathHandler = hb_mathSetHandler (NULL); 
                s_dInfinity = -log( ( double ) 0 );
-	       hb_mathSetHandler (fOldMathHandler); 
+               hb_mathSetHandler (fOldMathHandler); 
                s_bInfinityInit = TRUE;
+
+
             }
             #endif
 
-	    /* TODO: look if isinf()/_isinf or finite()/_finite() does exist for your compiler and add this to the check
-	       below [martin vogel] */
+            /* TODO: look if isinf()/_isinf or finite()/_finite() does exist for your compiler and add this to the check
+               below [martin vogel] */
             if( pNumber->item.asDouble.length == 99
             /* #if defined(__BORLANDC__) || defined(__WATCOMC__) */
             #if defined(__WATCOMC__)
-	    #elif defined(__BORLANDC__)
+            #elif defined(__BORLANDC__)
                /* No more checks for Borland C, which returns 0 for log( 0 ),
                   and is therefore unable to test for infinity */
-	       /* log(0) returning 0 seems to be a side effect of using a custom math error handler that
-		  always sets the return value to 0.0, switching this off, see above, yields -INF for log(0); 
-	          additionally one can use _finite() to check for infinity [martin vogel] */ 
-	       || dNumber == s_dInfinity || dNumber == -s_dInfinity || _finite(dNumber)==0
+               /* log(0) returning 0 seems to be a side effect of using a custom math error handler that
+                  always sets the return value to 0.0, switching this off, see above, yields -INF for log(0); 
+                  additionally one can use _finite() to check for infinity [martin vogel] */ 
+               || dNumber == s_dInfinity || dNumber == -s_dInfinity || _finite(dNumber)==0
+            #elif defined(__DJGPP__)
+               || !finite( dNumber ) || dNumber == s_dInfinity || dNumber == -s_dInfinity
             #else
                || dNumber == s_dInfinity || dNumber == -s_dInfinity
             #endif
