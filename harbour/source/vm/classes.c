@@ -1867,6 +1867,7 @@ static HARBOUR hb___msgClsParent( void )
    PCLASS pClass;
    char * szParentName = 0;
    USHORT uiClass, i;
+   BOOL lClass=FALSE;
 
    if( HB_IS_BYREF( hb_stack.pBase + 1 ) )            /* Variables by reference   */
       pItemRef = hb_itemUnRef( hb_stack.pBase + 1 );
@@ -1882,14 +1883,18 @@ static HARBOUR hb___msgClsParent( void )
    if( HB_IS_OBJECT( pItemParam ) )
       szParentName = hb_objGetClsName( pItemParam );
    else if( HB_IS_STRING( pItemParam ) )
+     {
       szParentName = hb_itemGetC( pItemParam );
+      lClass=TRUE;
+     }
 
    for( i = 0; szParentName[ i ] != '\0'; i++ )
       szParentName[ i ] = ( char ) toupper( szParentName[ i ] );
 
    hb_retl( hb_clsIsParent( pClass, szParentName ) );
 
-   hb_itemFreeC( szParentName );
+   if (lClass)
+    hb_itemFreeC( szParentName );
 }
 
 

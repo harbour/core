@@ -1,3 +1,8 @@
+2000-11-23 23:11 UTC+0100 jfl (mafact) <jfl@mafact.com>
+   * source/vm/classes.c
+     * corrected hb___msgClsParent( void )
+       where some pointer was badly deallocated
+
 2000-11-23 11:11 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/rtl/idle.c
      ! Added Reset Logic to HB_IDLESTATE()
