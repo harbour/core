@@ -39,8 +39,8 @@ HARBOUR hb_fuse( void )
 
 {
 
-   PITEM arg1_it = _param(1,IT_STRING);
-   PITEM arg2_it = _param(2,IT_NUMBER);
+   PHB_ITEM arg1_it = _param(1,IT_STRING);
+   PHB_ITEM arg2_it = _param(2,IT_NUMBER);
    int open_flags;
 
    if ( arg1_it ) {
@@ -85,7 +85,7 @@ HARBOUR hb_fskip( void )
 
 {
 
-   PITEM arg1_it = _param(1,IT_NUMBER);
+   PHB_ITEM arg1_it = _param(1,IT_NUMBER);
    int nskip;
 
    if( arg1_it )

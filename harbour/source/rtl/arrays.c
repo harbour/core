@@ -6,8 +6,8 @@
 #include <extend.h>
 #include <ctoharb.h>
 
-PITEM hb_itemNew( PITEM );
-PITEM hb_itemArrayPut( PITEM , ULONG , PITEM );
+PHB_ITEM hb_itemNew( PHB_ITEM );
+PHB_ITEM hb_itemArrayPut( PHB_ITEM , ULONG , PHB_ITEM );
 
 extern STACK  stack;
 extern SYMBOL symEval;
@@ -19,7 +19,7 @@ static char *szArgumentError = "Argument error: incorrect type";
  * Internal
  */
 
-void hb_arrayNew( PITEM pItem, ULONG ulLen ) /* creates a new array */
+void hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ) /* creates a new array */
 {
    PBASEARRAY pBaseArray = ( PBASEARRAY ) _xgrab( sizeof( BASEARRAY ) );
    ULONG ul;
@@ -29,7 +29,7 @@ void hb_arrayNew( PITEM pItem, ULONG ulLen ) /* creates a new array */
    pItem->wType = IT_ARRAY;
 
    if( ulLen )
-          pBaseArray->pItems = ( PITEM ) _xgrab( sizeof( ITEM ) * ulLen );
+          pBaseArray->pItems = ( PHB_ITEM ) _xgrab( sizeof( HB_ITEM ) * ulLen );
    else
           pBaseArray->pItems = 0;
 
@@ -44,7 +44,7 @@ void hb_arrayNew( PITEM pItem, ULONG ulLen ) /* creates a new array */
    pItem->value.pBaseArray = pBaseArray;
 }
 
-void hb_arrayAdd( PITEM pArray, PITEM pValue )
+void hb_arrayAdd( PHB_ITEM pArray, PHB_ITEM pValue )
 {
    PBASEARRAY pBaseArray = ( PBASEARRAY ) pArray->value.pBaseArray;
    hb_arraySize( pArray, pBaseArray->ulLen + 1 );
@@ -52,7 +52,7 @@ void hb_arrayAdd( PITEM pArray, PITEM pValue )
    ItemCopy( pBaseArray->pItems + ( pBaseArray->ulLen - 1 ), pValue );
 }
 
-void hb_arrayGet( PITEM pArray, ULONG ulIndex, PITEM pItem )
+void hb_arrayGet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem )
 {
   if( IS_ARRAY( pArray ) )
     {
@@ -60,7 +60,7 @@ void hb_arrayGet( PITEM pArray, ULONG ulIndex, PITEM pItem )
         ItemCopy( pItem, ( ( PBASEARRAY ) pArray->value.pBaseArray )->pItems + ( ulIndex - 1 ) );
       else
         {
-          PITEM pError = _errNew();
+          PHB_ITEM pError = _errNew();
           _errPutDescription( pError, szBoundError );
           _errLaunch( pError );
           _errRelease( pError );
@@ -68,20 +68,20 @@ void hb_arrayGet( PITEM pArray, ULONG ulIndex, PITEM pItem )
     }
   else
     {
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
       _errPutDescription( pError, szArgumentError );
       _errLaunch( pError );
       _errRelease( pError );
     }
 }
 
-char *hb_arrayGetString( PITEM pArray, ULONG ulIndex )
+char *hb_arrayGetString( PHB_ITEM pArray, ULONG ulIndex )
 {
   if( IS_ARRAY( pArray ) )
     {
       if( ulIndex <= ( unsigned )hb_arrayLen( pArray ) )
         {
-          PITEM pItem = ( ( PBASEARRAY ) pArray->value.pBaseArray )->pItems + ulIndex - 1;
+          PHB_ITEM pItem = ( ( PBASEARRAY ) pArray->value.pBaseArray )->pItems + ulIndex - 1;
 
           if( IS_STRING( pItem ) )
             return pItem->value.szText;
@@ -90,7 +90,7 @@ char *hb_arrayGetString( PITEM pArray, ULONG ulIndex )
         }
       else
         {
-          PITEM pError = _errNew();
+          PHB_ITEM pError = _errNew();
           _errPutDescription( pError, szBoundError );
           _errLaunch( pError );
           _errRelease( pError );
@@ -98,7 +98,7 @@ char *hb_arrayGetString( PITEM pArray, ULONG ulIndex )
     }
   else
     {
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
       _errPutDescription( pError, szArgumentError );
       _errLaunch( pError );
       _errRelease( pError );
@@ -106,13 +106,13 @@ char *hb_arrayGetString( PITEM pArray, ULONG ulIndex )
   return "";
 }
 
-ULONG hb_arrayGetStringLen( PITEM pArray, ULONG ulIndex )
+ULONG hb_arrayGetStringLen( PHB_ITEM pArray, ULONG ulIndex )
 {
   if( IS_ARRAY( pArray ) )
     {
       if( ulIndex <= ( unsigned )hb_arrayLen( pArray ) )
         {
-          PITEM pItem = ( ( PBASEARRAY ) pArray->value.pBaseArray )->pItems + ulIndex - 1;
+          PHB_ITEM pItem = ( ( PBASEARRAY ) pArray->value.pBaseArray )->pItems + ulIndex - 1;
 
           if( IS_STRING( pItem ) )
             return pItem->wLength;
@@ -121,7 +121,7 @@ ULONG hb_arrayGetStringLen( PITEM pArray, ULONG ulIndex )
         }
       else
         {
-          PITEM pError = _errNew();
+          PHB_ITEM pError = _errNew();
           _errPutDescription( pError, szBoundError );
           _errLaunch( pError );
           _errRelease( pError );
@@ -129,7 +129,7 @@ ULONG hb_arrayGetStringLen( PITEM pArray, ULONG ulIndex )
     }
   else
     {
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
       _errPutDescription( pError, szArgumentError );
       _errLaunch( pError );
       _errRelease( pError );
@@ -137,18 +137,18 @@ ULONG hb_arrayGetStringLen( PITEM pArray, ULONG ulIndex )
   return 0;
 }
 
-int hb_arrayGetType( PITEM pArray, ULONG ulIndex )
+int hb_arrayGetType( PHB_ITEM pArray, ULONG ulIndex )
 {
   if( IS_ARRAY( pArray ) )
     {
       if( ulIndex <= ( unsigned ) hb_arrayLen( pArray ) )
         {
-          PITEM pItem = ( ( PBASEARRAY ) pArray->value.pBaseArray )->pItems + ulIndex - 1;
+          PHB_ITEM pItem = ( ( PBASEARRAY ) pArray->value.pBaseArray )->pItems + ulIndex - 1;
           return pItem->wType;
         }
       else
         {
-          PITEM pError = _errNew();
+          PHB_ITEM pError = _errNew();
           _errPutDescription( pError, "Bound error: Array access" );
           _errLaunch( pError );
           _errRelease( pError );
@@ -157,7 +157,7 @@ int hb_arrayGetType( PITEM pArray, ULONG ulIndex )
   return 0;
 }
 
-void hb_arrayLast( PITEM pArray, PITEM pResult )
+void hb_arrayLast( PHB_ITEM pArray, PHB_ITEM pResult )
 {
   if ( ( ( PBASEARRAY ) pArray->value.pBaseArray )->ulLen )
     ItemCopy( pResult, ( ( PBASEARRAY ) pArray->value.pBaseArray )->pItems +
@@ -166,13 +166,13 @@ void hb_arrayLast( PITEM pArray, PITEM pResult )
     ItemRelease( pResult );
 }
 
-ULONG hb_arrayLen( PITEM pArray )
+ULONG hb_arrayLen( PHB_ITEM pArray )
 {
   if( IS_ARRAY( pArray ) )
     return ( ( PBASEARRAY ) pArray->value.pBaseArray )->ulLen;
   else
     {
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
       _errPutDescription( pError, szArgumentError );
       _errLaunch( pError );
       _errRelease( pError );
@@ -180,7 +180,7 @@ ULONG hb_arrayLen( PITEM pArray )
   return 0;
 }
 
-void hb_arraySet( PITEM pArray, ULONG ulIndex, PITEM pItem )
+void hb_arraySet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem )
 {
   if( IS_ARRAY( pArray ) )
     {
@@ -188,7 +188,7 @@ void hb_arraySet( PITEM pArray, ULONG ulIndex, PITEM pItem )
         ItemCopy( ( ( PBASEARRAY ) pArray->value.pBaseArray )->pItems + ( ulIndex - 1 ), pItem );
       else
         {
-          PITEM pError = _errNew();
+          PHB_ITEM pError = _errNew();
           _errPutDescription( pError, szBoundError );
           _errLaunch( pError );
           _errRelease( pError );
@@ -196,14 +196,14 @@ void hb_arraySet( PITEM pArray, ULONG ulIndex, PITEM pItem )
     }
   else
     {
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
       _errPutDescription( pError, szArgumentError );
       _errLaunch( pError );
       _errRelease( pError );
     }
 }
 
-void hb_arraySize( PITEM pArray, ULONG ulLen )
+void hb_arraySize( PHB_ITEM pArray, ULONG ulLen )
 {
   if ( IS_ARRAY( pArray ) )
     {
@@ -212,7 +212,7 @@ void hb_arraySize( PITEM pArray, ULONG ulLen )
 
       if( ! pBaseArray->ulLen )
         {
-          pBaseArray->pItems = ( PITEM ) _xgrab( ulLen * sizeof( ITEM ) );
+          pBaseArray->pItems = ( PHB_ITEM ) _xgrab( ulLen * sizeof( HB_ITEM ) );
           for ( ul = 0; ul < ulLen; ul ++ )
             ( pBaseArray->pItems + ul )->wType = IT_NIL;
         }
@@ -220,7 +220,7 @@ void hb_arraySize( PITEM pArray, ULONG ulLen )
         {
           if( pBaseArray->ulLen < ulLen )
             {
-              pBaseArray->pItems = ( PITEM )_xrealloc( pBaseArray->pItems, sizeof( ITEM ) * ulLen );
+              pBaseArray->pItems = ( PHB_ITEM )_xrealloc( pBaseArray->pItems, sizeof( HB_ITEM ) * ulLen );
 
               /* set value for new items */
               for( ul = pBaseArray->ulLen; ul < ulLen; ul++ )
@@ -232,21 +232,21 @@ void hb_arraySize( PITEM pArray, ULONG ulLen )
               for( ul = ulLen; ul < pBaseArray->ulLen; ul++ )
                 ItemRelease( pBaseArray->pItems + ul );
 
-              pBaseArray->pItems = ( PITEM )_xrealloc( pBaseArray->pItems, sizeof( ITEM ) * ulLen );
+              pBaseArray->pItems = ( PHB_ITEM )_xrealloc( pBaseArray->pItems, sizeof( HB_ITEM ) * ulLen );
             }
         }
       pBaseArray->ulLen = ulLen;
     }
   else
     {
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
       _errPutDescription( pError, szArgumentError );
       _errLaunch( pError );
       _errRelease( pError );
     }
 }
 
-void hb_arrayFill( PITEM pArray, PITEM pValue, ULONG ulStart, ULONG ulCount )
+void hb_arrayFill( PHB_ITEM pArray, PHB_ITEM pValue, ULONG ulStart, ULONG ulCount )
 {
   if ( IS_ARRAY( pArray ) )
     {
@@ -269,14 +269,14 @@ void hb_arrayFill( PITEM pArray, PITEM pValue, ULONG ulStart, ULONG ulCount )
     }
   else
     {
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
       _errPutDescription( pError, szArgumentError );
       _errLaunch( pError );
       _errRelease( pError );
     }
 }
 
-void hb_arrayDel( PITEM pArray, ULONG ulIndex )
+void hb_arrayDel( PHB_ITEM pArray, ULONG ulIndex )
 {
   if ( IS_ARRAY( pArray ) )
     {
@@ -295,7 +295,7 @@ void hb_arrayDel( PITEM pArray, ULONG ulIndex )
         }
       else
         {
-          PITEM pError = _errNew();
+          PHB_ITEM pError = _errNew();
           _errPutDescription( pError, szBoundError );
           _errLaunch( pError );
           _errRelease( pError );
@@ -303,14 +303,14 @@ void hb_arrayDel( PITEM pArray, ULONG ulIndex )
     }
   else
     {
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
       _errPutDescription( pError, szArgumentError );
       _errLaunch( pError );
       _errRelease( pError );
     }
 }
 
-void hb_arrayIns( PITEM pArray, ULONG ulIndex )
+void hb_arrayIns( PHB_ITEM pArray, ULONG ulIndex )
 {
   if ( IS_ARRAY( pArray ) )
     {
@@ -329,7 +329,7 @@ void hb_arrayIns( PITEM pArray, ULONG ulIndex )
         }
       else
         {
-          PITEM pError = _errNew();
+          PHB_ITEM pError = _errNew();
           _errPutDescription( pError, szBoundError );
           _errLaunch( pError );
           _errRelease( pError );
@@ -337,14 +337,14 @@ void hb_arrayIns( PITEM pArray, ULONG ulIndex )
     }
   else
     {
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
       _errPutDescription( pError, szArgumentError );
       _errLaunch( pError );
       _errRelease( pError );
     }
 }
 
-int hb_arrayScan( PITEM pArray, PITEM pValue, ULONG ulStart, ULONG ulCount )
+int hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG ulStart, ULONG ulCount )
 {
   if ( IS_ARRAY( pArray ) && pValue->wType != IT_NIL )
     {
@@ -365,7 +365,7 @@ int hb_arrayScan( PITEM pArray, PITEM pValue, ULONG ulStart, ULONG ulCount )
 
       for ( ulStart --; ulCount > 0; ulCount --, ulStart ++ )
         {
-          PITEM pItem = pBaseArray->pItems + ulStart;
+          PHB_ITEM pItem = pBaseArray->pItems + ulStart;
 
           if ( pValue->wType == IT_BLOCK )
             {
@@ -414,7 +414,7 @@ int hb_arrayScan( PITEM pArray, PITEM pValue, ULONG ulStart, ULONG ulCount )
     }
   else
     {
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
       _errPutDescription( pError, szArgumentError );
       _errLaunch( pError );
       _errRelease( pError );
@@ -422,7 +422,7 @@ int hb_arrayScan( PITEM pArray, PITEM pValue, ULONG ulStart, ULONG ulCount )
   return 0;
 }
 
-void hb_arrayEval( PITEM pArray, PITEM bBlock, ULONG ulStart, ULONG ulCount )
+void hb_arrayEval( PHB_ITEM pArray, PHB_ITEM bBlock, ULONG ulStart, ULONG ulCount )
 {
   if ( IS_ARRAY( pArray ) && IS_BLOCK( bBlock ) )
     {
@@ -442,7 +442,7 @@ void hb_arrayEval( PITEM pArray, PITEM bBlock, ULONG ulStart, ULONG ulCount )
 
       for ( ulStart --; ulCount > 0; ulCount --, ulStart ++ )
         {
-          PITEM pItem = pBaseArray->pItems + ulStart;
+          PHB_ITEM pItem = pBaseArray->pItems + ulStart;
 
           PushSymbol( &symEval );
           Push( bBlock );
@@ -452,14 +452,14 @@ void hb_arrayEval( PITEM pArray, PITEM bBlock, ULONG ulStart, ULONG ulCount )
     }
   else
     {
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
       _errPutDescription( pError, szArgumentError );
       _errLaunch( pError );
       _errRelease( pError );
     }
 }
 
-void hb_arrayRelease( PITEM pArray )
+void hb_arrayRelease( PHB_ITEM pArray )
 {
   if ( IS_ARRAY( pArray ) )
     {
@@ -481,14 +481,14 @@ void hb_arrayRelease( PITEM pArray )
     }
   else
     {
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
       _errPutDescription( pError, szArgumentError );
       _errLaunch( pError );
       _errRelease( pError );
     }
 }
 
-void hb_arrayCopy( PITEM pSrcArray, PITEM pDstArray, ULONG ulStart,
+void hb_arrayCopy( PHB_ITEM pSrcArray, PHB_ITEM pDstArray, ULONG ulStart,
                                  ULONG ulCount, ULONG ulTarget )
 {
   if ( IS_ARRAY( pSrcArray ) && IS_ARRAY( pDstArray ) )
@@ -522,16 +522,16 @@ void hb_arrayCopy( PITEM pSrcArray, PITEM pDstArray, ULONG ulStart,
     }
   else
     {
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
       _errPutDescription( pError, szArgumentError );
       _errLaunch( pError );
       _errRelease( pError );
     }
 }
 
-PITEM hb_arrayClone( PITEM pSrcArray )
+PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray )
 {
-   PITEM pDstArray = hb_itemNew( 0 );
+   PHB_ITEM pDstArray = hb_itemNew( 0 );
 
    if ( IS_ARRAY( pSrcArray ) )
    {
@@ -546,11 +546,11 @@ PITEM hb_arrayClone( PITEM pSrcArray )
 
       for ( ulCount = 0; ulCount < ulSrcLen; ulCount ++ )
       {
-         PITEM pSrcItem = pSrcBaseArray->pItems + ulCount;
+         PHB_ITEM pSrcItem = pSrcBaseArray->pItems + ulCount;
 
          if ( pSrcItem->wType == IT_ARRAY )
          {
-            PITEM pClone = hb_arrayClone( pSrcItem );
+            PHB_ITEM pClone = hb_arrayClone( pSrcItem );
 
             hb_itemArrayPut( pDstArray, ulCount + 1, pClone );
             hb_itemRelease( pClone );
@@ -562,7 +562,7 @@ PITEM hb_arrayClone( PITEM pSrcArray )
    }
    else
    {
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
       _errPutDescription( pError, szArgumentError );
       _errLaunch( pError );
       _errRelease( pError );
@@ -580,8 +580,8 @@ HARBOUR ARRAY( void )
 
 HARBOUR AADD( void )
 {
-  PITEM pArray = _param( 1, IT_ARRAY );
-  PITEM pValue = _param( 2, IT_ANY );
+  PHB_ITEM pArray = _param( 1, IT_ARRAY );
+  PHB_ITEM pValue = _param( 2, IT_ANY );
 
   if ( pArray )
     hb_arrayAdd( pArray, pValue );
@@ -591,7 +591,7 @@ HARBOUR AADD( void )
 
 HARBOUR ASIZE( void )
 {
-  PITEM pArray = _param( 1, IT_ARRAY );
+  PHB_ITEM pArray = _param( 1, IT_ARRAY );
 
   if ( pArray )
     {
@@ -604,7 +604,7 @@ HARBOUR ASIZE( void )
 
 HARBOUR ATAIL( void )
 {
-  PITEM pArray = _param( 1, IT_ARRAY );
+  PHB_ITEM pArray = _param( 1, IT_ARRAY );
 
   if ( pArray )
     hb_arrayLast( pArray, &stack.Return );
@@ -614,7 +614,7 @@ HARBOUR ATAIL( void )
 
 HARBOUR AINS( void )
 {
-  PITEM pArray  = _param( 1, IT_ARRAY );
+  PHB_ITEM pArray  = _param( 1, IT_ARRAY );
 
   if ( pArray )
     {
@@ -627,7 +627,7 @@ HARBOUR AINS( void )
 
 HARBOUR ADEL( void )
 {
-  PITEM pArray  = _param( 1, IT_ARRAY );
+  PHB_ITEM pArray  = _param( 1, IT_ARRAY );
 
   if ( pArray )
     {
@@ -640,7 +640,7 @@ HARBOUR ADEL( void )
 
 HARBOUR AFILL( void )
 {
-  PITEM pArray  = _param( 1, IT_ARRAY );
+  PHB_ITEM pArray  = _param( 1, IT_ARRAY );
 
   if ( pArray )
     {
@@ -653,7 +653,7 @@ HARBOUR AFILL( void )
 
 HARBOUR ASCAN( void )
 {
-  PITEM pArray = _param( 1, IT_ARRAY );
+  PHB_ITEM pArray = _param( 1, IT_ARRAY );
 
   if ( pArray )
     _retnl( hb_arrayScan( pArray, _param( 2, IT_ANY ), _parnl( 3 ), _parnl( 4 ) ) );
@@ -663,8 +663,8 @@ HARBOUR ASCAN( void )
 
 HARBOUR AEVAL( void )
 {
-  PITEM pArray = _param( 1, IT_ARRAY );
-  PITEM bBlock = _param( 2, IT_BLOCK );
+  PHB_ITEM pArray = _param( 1, IT_ARRAY );
+  PHB_ITEM bBlock = _param( 2, IT_BLOCK );
 
   if ( pArray )
     {
@@ -677,8 +677,8 @@ HARBOUR AEVAL( void )
 
 HARBOUR ACOPY( void )
 {
-  PITEM pSrcArray  = _param( 1, IT_ARRAY );
-  PITEM pDstArray  = _param( 2, IT_ARRAY );
+  PHB_ITEM pSrcArray  = _param( 1, IT_ARRAY );
+  PHB_ITEM pDstArray  = _param( 2, IT_ARRAY );
 
   if ( pSrcArray && pDstArray )
     {
@@ -691,11 +691,11 @@ HARBOUR ACOPY( void )
 
 HARBOUR ACLONE( void )
 {
-  PITEM pSrcArray  = _param( 1, IT_ARRAY );
+  PHB_ITEM pSrcArray  = _param( 1, IT_ARRAY );
 
   if ( pSrcArray )
     {
-      PITEM pDstArray = hb_arrayClone( pSrcArray );
+      PHB_ITEM pDstArray = hb_arrayClone( pSrcArray );
       ItemCopy( &stack.Return, pDstArray ); /* AClone() returns the new array */
       ItemRelease( pDstArray );
       _xfree( pDstArray );

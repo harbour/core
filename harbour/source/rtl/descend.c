@@ -30,7 +30,7 @@ HARBOUR DESCEND( void )
 {
    if( _pcount() == 1 )
    {
-      PITEM pItem = _param(1, IT_ANY );
+      PHB_ITEM pItem = _param(1, IT_ANY );
 
       if( pItem )
       {

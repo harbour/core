@@ -61,7 +61,7 @@ typedef void void_func_int (char *, WORD);
 static void hb_out( WORD wParam, void_func_int * hb_out_func )
 {
    char * szText;
-   PITEM pItem = _param( wParam, IT_ANY );
+   PHB_ITEM pItem = _param( wParam, IT_ANY );
    ULONG ulLenText;
    char szBuffer [11];
 
@@ -256,7 +256,7 @@ HARBOUR QOUT( void )
 
 HARBOUR DEVPOS( void ) /* Sets the screen and/or printer position */
 {
-   PITEM pRow, pCol;
+   PHB_ITEM pRow, pCol;
    if( _pcount() > 1 )
    {
       pRow = _param( 1, IT_NUMERIC );
@@ -276,7 +276,7 @@ HARBOUR DEVOUT( void ) /* writes a single values to the current device (screen o
       if( _pcount() > 1 )
       {
       #ifdef USE_GTAPI
-         PITEM pColor = _param( 2, IT_STRING );
+         PHB_ITEM pColor = _param( 2, IT_STRING );
          if( pColor )
          {
             _gtGetColorStr( fpOldColor );
@@ -314,8 +314,8 @@ HARBOUR SETPRC( void ) /* Sets the current printer row and column positions */
 {
    if( _pcount() > 1 )
    {
-      PITEM pRow = _param( 1, IT_NUMERIC );
-      PITEM pCol = _param( 1, IT_NUMERIC );
+      PHB_ITEM pRow = _param( 1, IT_NUMERIC );
+      PHB_ITEM pCol = _param( 1, IT_NUMERIC );
       if( pRow && pCol )
       {
          dev_row = _parni( 1 );

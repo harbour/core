@@ -324,7 +324,7 @@ HARBOUR DTOS( void )
       }
       else
       {
-         PITEM pError = _errNew();
+         PHB_ITEM pError = _errNew();
          _errPutDescription(pError, "Argument error: DTOS");
          _errLaunch(pError);
          _errRelease(pError);
@@ -333,7 +333,7 @@ HARBOUR DTOS( void )
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
       _errPutDescription(pError, "Incorrect number of arguments: DTOS");
       _errLaunch(pError);
       _errRelease(pError);
@@ -348,7 +348,7 @@ HARBOUR STOD( void )
 
 HARBOUR DAY( void )
 {
-   PITEM pDate = _param( 1, IT_DATE );
+   PHB_ITEM pDate = _param( 1, IT_DATE );
    long lDay, lMonth, lYear;
 
    if( pDate )
@@ -359,7 +359,7 @@ HARBOUR DAY( void )
    }
    else
    {
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
       _errPutDescription(pError, "Error BASE/1114  Argument error: DAY");
       _errLaunch(pError);
       _errRelease(pError);
@@ -368,7 +368,7 @@ HARBOUR DAY( void )
 
 HARBOUR MONTH( void )
 {
-   PITEM pDate = _param( 1, IT_DATE );
+   PHB_ITEM pDate = _param( 1, IT_DATE );
    long lDay, lMonth, lYear;
 
    if( pDate )
@@ -379,7 +379,7 @@ HARBOUR MONTH( void )
    }
    else
    {
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
       _errPutDescription(pError, "Error BASE/1113  Argument error: MONTH");
       _errLaunch(pError);
       _errRelease(pError);
@@ -388,7 +388,7 @@ HARBOUR MONTH( void )
 
 HARBOUR YEAR( void )
 {
-   PITEM pDate = _param( 1, IT_DATE );
+   PHB_ITEM pDate = _param( 1, IT_DATE );
    long lDay, lMonth, lYear;
 
    if( pDate )
@@ -399,7 +399,7 @@ HARBOUR YEAR( void )
    }
    else
    {
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
       _errPutDescription(pError, "Error BASE/1112  Argument error: YEAR");
       _errLaunch(pError);
       _errRelease(pError);
@@ -423,7 +423,7 @@ oTime->tm_sec);
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
       _errPutDescription(pError, "Incorrect number of arguments: TIME");
       _errLaunch(pError);
       _errRelease(pError);
@@ -447,7 +447,7 @@ oTime->tm_mday);
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
       _errPutDescription(pError, "Incorrect number of arguments: DATE");
       _errLaunch(pError);
       _errRelease(pError);
@@ -469,7 +469,7 @@ long hb_dow( long d, long m, long y )
 
 HARBOUR DOW( void )
 {
-   PITEM pDate = _param( 1, IT_DATE );
+   PHB_ITEM pDate = _param( 1, IT_DATE );
    long lDay, lMonth, lYear;
 
    if( pDate )
@@ -480,7 +480,7 @@ HARBOUR DOW( void )
    }
    else
    {
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
       _errPutDescription(pError, "Error BASE/1115  Argument error: DOW");
       _errLaunch(pError);
       _errRelease(pError);

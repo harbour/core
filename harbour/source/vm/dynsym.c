@@ -10,14 +10,14 @@
 typedef struct
 {
    PDYNSYM pDynSym;             /* Pointer to dynamic symbol */
-} DYNITEM, * PDYNITEM;
+} DYNHB_ITEM, * PDYNHB_ITEM;
 
 #define SYM_ALLOCATED   -1
 
 PSYMBOL  NewSymbol( char * szName );
 PDYNSYM  FindDynSym( char * szName );
 
-static PDYNITEM pDynItems = 0;              /* Pointer to dynamic items */
+static PDYNHB_ITEM pDynItems = 0;              /* Pointer to dynamic items */
 static WORD     wDynSymbols = 0;     /* Number of symbols present */
 static WORD     wClosestDynSym = 0;
               /* Closest symbol for match. FindDynSym will search for the name. */
@@ -87,13 +87,13 @@ PDYNSYM NewDynSym( PSYMBOL pSymbol )    /* creates a new dynamic symbol */
                             /* *<1>* Remember we already got this one */
    else
    {                        /* We want more symbols ! */
-      pDynItems = ( PDYNITEM ) _xrealloc( pDynItems, ( wDynSymbols + 1 ) * sizeof( DYNITEM ) );
+      pDynItems = ( PDYNHB_ITEM ) _xrealloc( pDynItems, ( wDynSymbols + 1 ) * sizeof( DYNHB_ITEM ) );
 
       if( wClosestDynSym <= wDynSymbols )   /* Closest < current !! */
       {                                     /* Here it goes :-) */
          for( w = 0; w < ( wDynSymbols - wClosestDynSym ); w++ )
             memcpy( &pDynItems[ wDynSymbols - w ],
-                    &pDynItems[ wDynSymbols - w - 1 ], sizeof( DYNITEM ) );
+                    &pDynItems[ wDynSymbols - w - 1 ], sizeof( DYNHB_ITEM ) );
       }                                     /* Insert element in array */
       pDynSym = ( PDYNSYM ) _xgrab( sizeof( DYNSYM ) );
       pDynItems[ wClosestDynSym ].pDynSym = pDynSym;    /* Enter DynSym */
@@ -146,7 +146,7 @@ PDYNSYM FindDynSym( char * szName )
 
    if( ! pDynItems )
    {
-      pDynItems = ( PDYNITEM ) _xgrab( sizeof( DYNITEM ) );     /* Grab array */
+      pDynItems = ( PDYNHB_ITEM ) _xgrab( sizeof( DYNHB_ITEM ) );     /* Grab array */
       pDynItems->pDynSym = ( PDYNSYM ) _xgrab( sizeof( DYNSYM ) );
                 /* Always grab a first symbol. Never an empty bucket. *<1>* */
       pDynItems->pDynSym->wMemvar = 0;

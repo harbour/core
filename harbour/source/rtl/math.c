@@ -11,7 +11,7 @@ HARBOUR ABS( void )
 {
    if( _pcount() == 1 )
    {
-      PITEM pNumber = _param(1, IT_NUMERIC);
+      PHB_ITEM pNumber = _param(1, IT_NUMERIC);
       
       if( pNumber ) switch( pNumber->wType )
       {
@@ -37,7 +37,7 @@ HARBOUR ABS( void )
       }
       else
       {
-         PITEM pError = _errNew();
+         PHB_ITEM pError = _errNew();
          _errPutDescription(pError, "Argument error: ABS");
          _errLaunch(pError);
          _errRelease(pError);
@@ -46,7 +46,7 @@ HARBOUR ABS( void )
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
       _errPutDescription(pError, "Incorrect number of arguments: ABS");
       _errLaunch(pError);
       _errRelease(pError);
@@ -57,7 +57,7 @@ HARBOUR EXP( void )
 {
    if( _pcount() == 1 )
    {
-      PITEM pNumber = _param(1, IT_NUMERIC);
+      PHB_ITEM pNumber = _param(1, IT_NUMERIC);
 
       if( pNumber )
       {
@@ -65,7 +65,7 @@ HARBOUR EXP( void )
       }
       else
       {
-         PITEM pError = _errNew();
+         PHB_ITEM pError = _errNew();
          _errPutDescription(pError, "Argument error: EXP");
          _errLaunch(pError);
          _errRelease(pError);
@@ -74,7 +74,7 @@ HARBOUR EXP( void )
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
       _errPutDescription(pError, "Incorrect number of arguments: EXP");
       _errLaunch(pError);
       _errRelease(pError);
@@ -89,7 +89,7 @@ HARBOUR INT( void )
          _retnl( _parnd( 1 ) );
       else
       {
-         PITEM pError = _errNew();
+         PHB_ITEM pError = _errNew();
          _errPutDescription(pError, "Argument error: INT");
          _errLaunch(pError);
          _errRelease(pError);
@@ -98,7 +98,7 @@ HARBOUR INT( void )
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
       _errPutDescription(pError, "Incorrect number of arguments: INT");
       _errLaunch(pError);
       _errRelease(pError);
@@ -109,7 +109,7 @@ HARBOUR LOG( void )
 {
    if( _pcount() == 1 )
    {
-      PITEM pNumber = _param(1, IT_NUMERIC);
+      PHB_ITEM pNumber = _param(1, IT_NUMERIC);
 
       if( pNumber )
       {
@@ -122,7 +122,7 @@ HARBOUR LOG( void )
       }
       else
       {
-         PITEM pError = _errNew();
+         PHB_ITEM pError = _errNew();
          _errPutDescription(pError, "Argument error: LOG");
          _errLaunch(pError);
          _errRelease(pError);
@@ -131,7 +131,7 @@ HARBOUR LOG( void )
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
       _errPutDescription(pError, "Incorrect number of arguments: LOG");
       _errLaunch(pError);
       _errRelease(pError);
@@ -143,7 +143,7 @@ HARBOUR MAX( void )
 {
    if( _pcount() == 2 )
    {
-      PITEM p1 = _param(1, IT_NUMERIC + IT_DATE), p2 = _param(2, IT_NUMERIC + IT_DATE);
+      PHB_ITEM p1 = _param(1, IT_NUMERIC + IT_DATE), p2 = _param(2, IT_NUMERIC + IT_DATE);
 
       if( p1 && p2 && p1->wType == p2->wType )
       {
@@ -160,7 +160,7 @@ HARBOUR MAX( void )
       }
       else
       {
-         PITEM pError = _errNew();
+         PHB_ITEM pError = _errNew();
          _errPutDescription(pError, "Argument error: MAX");
          _errLaunch(pError);
          _errRelease(pError);
@@ -169,7 +169,7 @@ HARBOUR MAX( void )
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
       _errPutDescription(pError, "Incorrect number of arguments: MAX");
       _errLaunch(pError);
       _errRelease(pError);
@@ -181,7 +181,7 @@ HARBOUR MIN( void )
 {
    if( _pcount() == 2 )
    {
-      PITEM p1 = _param(1, IT_NUMERIC + IT_DATE), p2 = _param(2, IT_NUMERIC + IT_DATE);
+      PHB_ITEM p1 = _param(1, IT_NUMERIC + IT_DATE), p2 = _param(2, IT_NUMERIC + IT_DATE);
 
       if( p1 && p2 && p1->wType == p2->wType )
       {
@@ -198,7 +198,7 @@ HARBOUR MIN( void )
       }
       else
       {
-         PITEM pError = _errNew();
+         PHB_ITEM pError = _errNew();
          _errPutDescription(pError, "Argument error: MIN");
          _errLaunch(pError);
          _errRelease(pError);
@@ -207,7 +207,7 @@ HARBOUR MIN( void )
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
       _errPutDescription(pError, "Incorrect number of arguments: MIN");
       _errLaunch(pError);
       _errRelease(pError);
@@ -227,8 +227,8 @@ FUNCTION MOD(cl_num, cl_base)
 			   cl_num,;
 			   IF(cl_result * cl_base < 0, cl_result + cl_base, cl_result) )
 */
-   PITEM pNumber = _param(1, IT_NUMERIC);
-   PITEM pBase = _param(2, IT_NUMERIC);
+   PHB_ITEM pNumber = _param(1, IT_NUMERIC);
+   PHB_ITEM pBase = _param(2, IT_NUMERIC);
 
    if( pNumber && pBase )
    {
@@ -250,7 +250,7 @@ FUNCTION MOD(cl_num, cl_base)
    }
    else
    {
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
       _errPutDescription(pError, "Argument error: %");
       _errLaunch(pError);
       _errRelease(pError);
@@ -261,7 +261,7 @@ HARBOUR SQRT( void )
 {
    if( _pcount() == 1 )
    {
-      PITEM pNumber = _param(1, IT_NUMERIC);
+      PHB_ITEM pNumber = _param(1, IT_NUMERIC);
 
       if( pNumber )
       {
@@ -275,7 +275,7 @@ HARBOUR SQRT( void )
       }
       else
       {
-         PITEM pError = _errNew();
+         PHB_ITEM pError = _errNew();
          _errPutDescription(pError, "Argument error: SQRT");
          _errLaunch(pError);
          _errRelease(pError);
@@ -284,7 +284,7 @@ HARBOUR SQRT( void )
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
       _errPutDescription(pError, "Incorrect number of arguments: SQRT");
       _errLaunch(pError);
       _errRelease(pError);

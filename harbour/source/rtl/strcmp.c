@@ -6,12 +6,12 @@
 #include <set.h>
 
 /* Check whether two strings are equal (0), smaller (-1), or greater (1) */
-int hb_itemStrCmp( PITEM pFirst, PITEM pSecond, BOOL bForceExact )
+int hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact )
 {
    char *szFirst   = pFirst->value.szText;
    char *szSecond  = pSecond->value.szText;
-   long lLenFirst  = pFirst->wLength;	/* TODO: change ITEM.wLength from WORD to long */
-   long lLenSecond = pSecond->wLength;	/* TODO: change ITEM.wLength from WORD to long */
+   long lLenFirst  = pFirst->wLength;	/* TODO: change HB_ITEM.wLength from WORD to long */
+   long lLenSecond = pSecond->wLength;	/* TODO: change HB_ITEM.wLength from WORD to long */
    long lMinLen;
    long lCounter;
    int  iRet = 0;                       /* Current status               */

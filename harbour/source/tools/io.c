@@ -23,8 +23,8 @@
 HARBOUR renfile()
 {
   int ok;
-  PITEM arg1 = _param(1,IT_STRING);
-  PITEM arg2 = _param(2,IT_STRING);
+  PHB_ITEM arg1 = _param(1,IT_STRING);
+  PHB_ITEM arg2 = _param(2,IT_STRING);
   if( arg1 && arg2)
     {
       ok=rename(_parc(1),_parc(2));
@@ -134,7 +134,7 @@ HARBOUR renfile()
 HARBOUR CD(void)
 
 {
-  PITEM MEUDIR = _param(1,IT_STRING);
+  PHB_ITEM MEUDIR = _param(1,IT_STRING);
   if(MEUDIR)
     {
       _retni(chdir(_parc(1)));
@@ -144,7 +144,7 @@ HARBOUR CD(void)
 HARBOUR MD(void)
 {
 
-  PITEM MEUDIR = _param(1,IT_STRING);
+  PHB_ITEM MEUDIR = _param(1,IT_STRING);
   if(MEUDIR)
     {
 
@@ -154,7 +154,7 @@ HARBOUR MD(void)
 
 HARBOUR RD(void)
 {
-  PITEM MEUDIR = _param(1,IT_STRING);
+  PHB_ITEM MEUDIR = _param(1,IT_STRING);
   if(MEUDIR)
     {
 
@@ -195,7 +195,7 @@ HARBOUR RD(void)
 
 HARBOUR file(void)
 {
-  PITEM arg1 = _param(1,IT_STRING);
+  PHB_ITEM arg1 = _param(1,IT_STRING);
   char *arquivos;
   int achou;
   struct ffblk arquivo;

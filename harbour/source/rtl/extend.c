@@ -14,10 +14,10 @@ ULONG ulMemoryMaxBlocks = 0;
 ULONG ulMemoryMaxConsumed = 0;
 ULONG ulMemoryConsumed = 0;
 
-PITEM _param( WORD wParam, WORD wMask )
+PHB_ITEM _param( WORD wParam, WORD wMask )
 {
    WORD wType;
-   PITEM pLocal;
+   PHB_ITEM pLocal;
 
    if( wParam <= _pcount() )
    {
@@ -39,7 +39,7 @@ PITEM _param( WORD wParam, WORD wMask )
 
 char * _parc( WORD wParam, ... )
 {
-   PITEM pItem;
+   PHB_ITEM pItem;
    va_list va;
    WORD wArrayIndex;
 
@@ -71,7 +71,7 @@ char * _parc( WORD wParam, ... )
 
 ULONG _parclen( WORD wParam, ... )
 {
-   PITEM pItem;
+   PHB_ITEM pItem;
    va_list va;
    WORD wArrayIndex;
 
@@ -103,7 +103,7 @@ ULONG _parclen( WORD wParam, ... )
 
 char * _pards( WORD wParam, ... )
 {
-   PITEM pItem;
+   PHB_ITEM pItem;
    va_list va;
    WORD wArrayIndex;
    long lDay, lMonth, lYear;
@@ -148,7 +148,7 @@ char * _pards( WORD wParam, ... )
 
 int _parl( WORD wParam, ... )
 {
-   PITEM pItem;
+   PHB_ITEM pItem;
    va_list va;
    WORD wArrayIndex;
 
@@ -177,7 +177,7 @@ int _parl( WORD wParam, ... )
 
 double _parnd( WORD wParam, ... )
 {
-   PITEM pItem;
+   PHB_ITEM pItem;
    va_list va;
    WORD wArrayIndex;
 
@@ -212,7 +212,7 @@ double _parnd( WORD wParam, ... )
 
 int _parni( WORD wParam, ... )
 {
-   PITEM pItem;
+   PHB_ITEM pItem;
    va_list va;
    WORD wArrayIndex;
 
@@ -247,7 +247,7 @@ int _parni( WORD wParam, ... )
 
 long _parnl( WORD wParam, ... )
 {
-   PITEM pItem;
+   PHB_ITEM pItem;
    va_list va;
    WORD wArrayIndex;
 
@@ -282,7 +282,7 @@ long _parnl( WORD wParam, ... )
 
 int _parinfa( int iParamNum, ULONG uiArrayIndex )
 {
-   PITEM pArray = _param( iParamNum, IT_ARRAY );
+   PHB_ITEM pArray = _param( iParamNum, IT_ARRAY );
 
    if( pArray )
    {
@@ -407,7 +407,7 @@ void _retnl( long lNumber )
 
 void _storc( char * szText, WORD wParam, ... )
 {
-   PITEM pItem, pItemRef;
+   PHB_ITEM pItem, pItemRef;
    va_list va;
    WORD wArrayIndex;
    ULONG ulLen;
@@ -439,7 +439,7 @@ void _storc( char * szText, WORD wParam, ... )
 
 void _storclen( char * fixText, WORD wLength, WORD wParam, ... )
 {
-   PITEM pItem, pItemRef;
+   PHB_ITEM pItem, pItemRef;
    va_list va;
    WORD wArrayIndex;
 
@@ -470,7 +470,7 @@ void _storclen( char * fixText, WORD wLength, WORD wParam, ... )
 
 void _stords( char * szDate, WORD wParam, ... ) /* szDate must have yyyymmdd format */
 {
-   PITEM pItem, pItemRef;
+   PHB_ITEM pItem, pItemRef;
    va_list va;
    WORD wArrayIndex;
    long lDay, lMonth, lYear;
@@ -511,7 +511,7 @@ void _stords( char * szDate, WORD wParam, ... ) /* szDate must have yyyymmdd for
 
 void _storl( int iLogical, WORD wParam, ... )
 {
-   PITEM pItem, pItemRef;
+   PHB_ITEM pItem, pItemRef;
    va_list va;
    WORD wArrayIndex;
 
@@ -540,7 +540,7 @@ void _storl( int iLogical, WORD wParam, ... )
 
 void _storni( int iValue, WORD wParam, ... )
 {
-   PITEM pItem, pItemRef;
+   PHB_ITEM pItem, pItemRef;
    va_list va;
    WORD wArrayIndex;
 
@@ -570,7 +570,7 @@ void _storni( int iValue, WORD wParam, ... )
 
 void _stornl( long lValue, WORD wParam, ... )
 {
-   PITEM pItem, pItemRef;
+   PHB_ITEM pItem, pItemRef;
    va_list va;
    WORD wArrayIndex;
 
@@ -600,7 +600,7 @@ void _stornl( long lValue, WORD wParam, ... )
 
 void _stornd( double dValue, WORD wParam, ... )
 {
-   PITEM pItem, pItemRef;
+   PHB_ITEM pItem, pItemRef;
    va_list va;
    WORD wArrayIndex;
 

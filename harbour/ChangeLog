@@ -1,3 +1,33 @@
+19990604-17:00 EDT David G. Holm <dholm@jsd-llc.com>
+  In each of the following modules, all occurrences of ITEM and PITEM
+  were changed to HB_ITEM and PHB_ITEM. Any additional changes are
+  listed following the applicable modules:
+  * include/ctoharb.h
+  * include/extend.h
+    - Also added #define ITEM PHB_ITEM
+  * include/itemapi.h
+  * source/rtl/arrays.c
+  * source/rtl/classes.c
+  * source/rtl/codebloc.c
+  * source/rtl/console.c
+  * source/rtl/dates.c
+  * source/rtl/descend.c
+  * source/rtl/errorapi.c
+  * source/rtl/extend.c
+  * source/rtl/files.c
+  * source/rtl/itemapi.c
+  * source/rtl/math.c
+  * source/rtl/set.c
+  * source/rtl/strcmp.c
+  * source/rtl/strings.c
+  * source/rtl/transfrm.c
+  * source/tools/debug.c
+  * source/tools/hb_f.c
+  * source/tools/io.c
+  * source/tools/stringsx.c
+  * source/vm/dynsym.c
+  * source/vm/hvm.c
+
 19990604-13:05 EDT David G. Holm <dholm@jsd-llc.com>
   * source/vm/hvm.c
     - Corrected ForTest() to use the correct decimal count

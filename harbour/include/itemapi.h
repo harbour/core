@@ -8,34 +8,35 @@ typedef struct
 {
    WORD   type;
    WORD   paramCount;
-   PITEM  pItems[ 10 ];
+   PHB_ITEM  pItems[ 10 ];
 } EVALINFO, * PEVALINFO;
 
-PITEM hb_evalLaunch( PEVALINFO pEvalInfo );
-BOOL hb_evalNew( PEVALINFO pEvalInfo, PITEM pItem );
-BOOL hb_evalPutParam( PEVALINFO pEvalInfo, PITEM pItem );
+#define ITEM PHB_ITEM
+PHB_ITEM hb_evalLaunch( PEVALINFO pEvalInfo );
+BOOL hb_evalNew( PEVALINFO pEvalInfo, PHB_ITEM pItem );
+BOOL hb_evalPutParam( PEVALINFO pEvalInfo, PHB_ITEM pItem );
 BOOL hb_evalRelease( PEVALINFO pEvalInfo );
 
-PITEM hb_itemArrayGet( PITEM pArray, ULONG ulIndex );
-PITEM hb_itemArrayNew( ULONG ulLen );
-PITEM hb_itemArrayPut( PITEM pArray, ULONG ulIndex, PITEM pItem );
-ULONG hb_itemCopyC( PITEM pItem, char *szBuffer, ULONG ulLen );
+PHB_ITEM hb_itemArrayGet( PHB_ITEM pArray, ULONG ulIndex );
+PHB_ITEM hb_itemArrayNew( ULONG ulLen );
+PHB_ITEM hb_itemArrayPut( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem );
+ULONG hb_itemCopyC( PHB_ITEM pItem, char *szBuffer, ULONG ulLen );
 BOOL hb_itemFreeC( char *szText );
-char * hb_itemGetC( PITEM pItem );
-char *hb_itemGetDS( PITEM pItem, char *szDate );
-BOOL hb_itemGetL( PITEM pItem );
-double hb_itemGetND( PITEM pItem );
-long hb_itemGetNL( PITEM pItem );
-PITEM hb_itemNew( PITEM pNull );
-PITEM hb_itemParam( WORD wParam );
-PITEM hb_itemPutC( PITEM pItem, char *szText );
-PITEM hb_itemPutCL( PITEM pItem, char *nszText, ULONG ulLen );
-PITEM hb_itemPutDS( PITEM pItem, char *szDate );
-PITEM hb_itemPutL( PITEM pItem, BOOL bValue );
-PITEM hb_itemPutND( PITEM pItem, double dNumber );
-PITEM hb_itemPutNL( PITEM pItem, long lNumber );
-BOOL  hb_itemRelease( PITEM pItem );
-PITEM hb_itemReturn( PITEM pItem );
-ULONG hb_itemSize( PITEM pItem );
-WORD hb_itemType( PITEM pItem );
+char * hb_itemGetC( PHB_ITEM pItem );
+char *hb_itemGetDS( PHB_ITEM pItem, char *szDate );
+BOOL hb_itemGetL( PHB_ITEM pItem );
+double hb_itemGetND( PHB_ITEM pItem );
+long hb_itemGetNL( PHB_ITEM pItem );
+PHB_ITEM hb_itemNew( PHB_ITEM pNull );
+PHB_ITEM hb_itemParam( WORD wParam );
+PHB_ITEM hb_itemPutC( PHB_ITEM pItem, char *szText );
+PHB_ITEM hb_itemPutCL( PHB_ITEM pItem, char *nszText, ULONG ulLen );
+PHB_ITEM hb_itemPutDS( PHB_ITEM pItem, char *szDate );
+PHB_ITEM hb_itemPutL( PHB_ITEM pItem, BOOL bValue );
+PHB_ITEM hb_itemPutND( PHB_ITEM pItem, double dNumber );
+PHB_ITEM hb_itemPutNL( PHB_ITEM pItem, long lNumber );
+BOOL  hb_itemRelease( PHB_ITEM pItem );
+PHB_ITEM hb_itemReturn( PHB_ITEM pItem );
+ULONG hb_itemSize( PHB_ITEM pItem );
+WORD hb_itemType( PHB_ITEM pItem );
 

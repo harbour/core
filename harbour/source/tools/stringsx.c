@@ -78,7 +78,7 @@ HARBOUR STRTOKEN( void )
 
 HARBOUR ROT13( void )
 {
-   PITEM pText = _param(1, IT_STRING);
+   PHB_ITEM pText = _param(1, IT_STRING);
 
    if( pText )
    {

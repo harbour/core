@@ -424,8 +424,8 @@ HARBOUR FOPEN()
 #endif
 
 {
-        PITEM arg1_it = _param(1,IT_STRING);
-        PITEM arg2_it = _param(2,IT_NUMBER);
+        PHB_ITEM arg1_it = _param(1,IT_STRING);
+        PHB_ITEM arg2_it = _param(2,IT_NUMBER);
 
         int open_flags;
         int file_handle = -1;
@@ -448,8 +448,8 @@ HARBOUR FOPEN()
 
 HARBOUR FCREATE()
 {
-        PITEM arg1_it = _param(1,IT_STRING);
-        PITEM arg2_it = _param(2,IT_NUMBER);
+        PHB_ITEM arg1_it = _param(1,IT_STRING);
+        PHB_ITEM arg2_it = _param(2,IT_NUMBER);
 
         int create_flags;
         int file_handle = -1;
@@ -483,9 +483,9 @@ HARBOUR FREAD()
 #endif
 
 {
-        PITEM arg1_it = _param(1,IT_NUMBER);
-        PITEM arg2_it = _param(2,IT_STRING+IT_BYREF);
-        PITEM arg3_it = _param(3,IT_NUMBER);
+        PHB_ITEM arg1_it = _param(1,IT_NUMBER);
+        PHB_ITEM arg2_it = _param(2,IT_STRING+IT_BYREF);
+        PHB_ITEM arg3_it = _param(3,IT_NUMBER);
 
         long   bytes=0;
 
@@ -513,9 +513,9 @@ HARBOUR FWRITE()
 #endif
 
 {
-        PITEM arg1_it = _param(1,IT_NUMBER);
-        PITEM arg2_it = _param(2,IT_STRING);
-        PITEM arg3_it = _param(3,IT_NUMBER);
+        PHB_ITEM arg1_it = _param(1,IT_NUMBER);
+        PHB_ITEM arg2_it = _param(2,IT_STRING);
+        PHB_ITEM arg3_it = _param(3,IT_NUMBER);
 
         long   bytes=0;
 
@@ -539,7 +539,7 @@ HARBOUR FERROR()
 
 HARBOUR FCLOSE()
 {
-        PITEM arg1_it = _param(1,IT_NUMBER);
+        PHB_ITEM arg1_it = _param(1,IT_NUMBER);
 
         if( arg1_it )
         {
@@ -554,7 +554,7 @@ HARBOUR FCLOSE()
 
 HARBOUR FERASE()
 {
-        PITEM arg1_it = _param(1,IT_STRING);
+        PHB_ITEM arg1_it = _param(1,IT_STRING);
 
         if( arg1_it )
         {
@@ -569,8 +569,8 @@ HARBOUR FERASE()
 
 HARBOUR FRENAME()
 {
-        PITEM arg1_it = _param(1,IT_STRING);
-        PITEM arg2_it = _param(2,IT_STRING);
+        PHB_ITEM arg1_it = _param(1,IT_STRING);
+        PHB_ITEM arg2_it = _param(2,IT_STRING);
 
         if( arg1_it && arg2_it )
         {
@@ -585,9 +585,9 @@ HARBOUR FRENAME()
 
 HARBOUR FSEEK()
 {
-        PITEM arg1_it = _param(1,IT_NUMBER);
-        PITEM arg2_it = _param(2,IT_NUMBER);
-        PITEM arg3_it = _param(3,IT_NUMBER);
+        PHB_ITEM arg1_it = _param(1,IT_NUMBER);
+        PHB_ITEM arg2_it = _param(2,IT_NUMBER);
+        PHB_ITEM arg3_it = _param(3,IT_NUMBER);
 
         long bytes=0;
         int  pos;
@@ -606,7 +606,7 @@ HARBOUR FSEEK()
 
 HARBOUR HB_FILE()
 {
-        PITEM arg1_it = _param( 1, IT_STRING );
+        PHB_ITEM arg1_it = _param( 1, IT_STRING );
 
         if( arg1_it )
         {
@@ -620,8 +620,8 @@ HARBOUR HB_FILE()
 
 HARBOUR FREADSTR()
 {
-        PITEM arg1_it = _param( 1, IT_NUMBER );
-        PITEM arg2_it = _param( 2, IT_NUMBER );
+        PHB_ITEM arg1_it = _param( 1, IT_NUMBER );
+        PHB_ITEM arg2_it = _param( 2, IT_NUMBER );
 
         int    handle;
         long   bytes;
@@ -658,7 +658,7 @@ HARBOUR FREADSTR()
 
 HARBOUR BIN2I( void )
 {
-        PITEM arg1_it = _param( 1, IT_STRING );
+        PHB_ITEM arg1_it = _param( 1, IT_STRING );
         char * s;
         int    result=0;
 
@@ -677,7 +677,7 @@ HARBOUR BIN2I( void )
 
 HARBOUR BIN2L()
 {
-        PITEM arg1_it = _param( 1, IT_STRING );
+        PHB_ITEM arg1_it = _param( 1, IT_STRING );
         char * s;
         long   result=0;
 
@@ -701,7 +701,7 @@ HARBOUR BIN2W()
 
 HARBOUR I2BIN( void )
 {
-        PITEM arg1_it = _param( 1, IT_INTEGER );
+        PHB_ITEM arg1_it = _param( 1, IT_INTEGER );
         int n;
         char s[3];
 
@@ -721,7 +721,7 @@ HARBOUR I2BIN( void )
 
 HARBOUR L2BIN()
 {
-        PITEM arg1_it = _param( 1, IT_LONG );
+        PHB_ITEM arg1_it = _param( 1, IT_LONG );
         long  n;
         char  s[5];
 
@@ -761,7 +761,7 @@ static int strcmp_wildcard( const char * pattern, const char * filename )
 HARBOUR DIRECTORY( void )
 {
 #if defined(HAVE_POSIX_IO)
-   PITEM arg1_it = _param(1,IT_STRING);
+   PHB_ITEM arg1_it = _param(1,IT_STRING);
 
    struct dirent ** nlist;
    char * string;

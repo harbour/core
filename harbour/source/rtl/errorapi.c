@@ -14,11 +14,11 @@
 #define E_RETRY			1
 #define E_DEFAULT       0
 
-extern ITEM errorBlock;
+extern HB_ITEM errorBlock;
 extern STACK stack;
 extern SYMBOL symEval;
 
-PITEM _errNew( void )
+PHB_ITEM _errNew( void )
 {
    PushSymbol( GetDynSym( "ERRORNEW" )->pSymbol );
    PushNil();
@@ -27,7 +27,7 @@ PITEM _errNew( void )
    return &stack.Return;
 }
 
-char * _errGetDescription( PITEM pError )
+char * _errGetDescription( PHB_ITEM pError )
 {
    PushSymbol( GetDynSym( "DESCRIPTION" )->pSymbol );
    Push( pError );
@@ -35,7 +35,7 @@ char * _errGetDescription( PITEM pError )
    return stack.Return.value.szText;
 }
 
-PITEM _errPutDescription( PITEM pError, char * szDescription )
+PHB_ITEM _errPutDescription( PHB_ITEM pError, char * szDescription )
 {
    PushSymbol( GetDynSym( "_DESCRIPTION" )->pSymbol );
    Push( pError );
@@ -44,7 +44,7 @@ PITEM _errPutDescription( PITEM pError, char * szDescription )
    return pError;
 }
 
-char * _errGetFileName( PITEM pError )
+char * _errGetFileName( PHB_ITEM pError )
 {
    PushSymbol( GetDynSym( "FILENAME" )->pSymbol );
    Push( pError );
@@ -52,7 +52,7 @@ char * _errGetFileName( PITEM pError )
    return stack.Return.value.szText;
 }
 
-PITEM _errPutFileName( PITEM pError, char * szFileName )
+PHB_ITEM _errPutFileName( PHB_ITEM pError, char * szFileName )
 {
    PushSymbol( GetDynSym( "_FILENAME" )->pSymbol );
    Push( pError );
@@ -61,7 +61,7 @@ PITEM _errPutFileName( PITEM pError, char * szFileName )
    return pError;
 }
 
-USHORT _errGetGenCode( PITEM pError )
+USHORT _errGetGenCode( PHB_ITEM pError )
 {
    PushSymbol( GetDynSym( "GENCODE" )->pSymbol );
    Push( pError );
@@ -69,7 +69,7 @@ USHORT _errGetGenCode( PITEM pError )
    return stack.Return.value.iNumber;
 }
 
-PITEM _errPutGenCode( PITEM pError, USHORT uiGenCode )
+PHB_ITEM _errPutGenCode( PHB_ITEM pError, USHORT uiGenCode )
 {
    PushSymbol( GetDynSym( "_GENCODE" )->pSymbol );
    Push( pError );
@@ -78,7 +78,7 @@ PITEM _errPutGenCode( PITEM pError, USHORT uiGenCode )
    return pError;
 }
 
-char * _errGetOperation( PITEM pError )
+char * _errGetOperation( PHB_ITEM pError )
 {
    PushSymbol( GetDynSym( "OPERATION" )->pSymbol );
    Push( pError );
@@ -86,7 +86,7 @@ char * _errGetOperation( PITEM pError )
    return stack.Return.value.szText;
 }
 
-PITEM _errPutOperation( PITEM pError, char * szOperation )
+PHB_ITEM _errPutOperation( PHB_ITEM pError, char * szOperation )
 {
    PushSymbol( GetDynSym( "_OPERATION" )->pSymbol );
    Push( pError );
@@ -95,7 +95,7 @@ PITEM _errPutOperation( PITEM pError, char * szOperation )
    return pError;
 }
 
-USHORT _errGetOsCode( PITEM pError )
+USHORT _errGetOsCode( PHB_ITEM pError )
 {
    PushSymbol( GetDynSym( "OSCODE" )->pSymbol );
    Push( pError );
@@ -103,7 +103,7 @@ USHORT _errGetOsCode( PITEM pError )
    return stack.Return.value.iNumber;
 }
 
-PITEM _errPutOsCode( PITEM pError, USHORT uiOsCode )
+PHB_ITEM _errPutOsCode( PHB_ITEM pError, USHORT uiOsCode )
 {
    PushSymbol( GetDynSym( "_OSCODE" )->pSymbol );
    Push( pError );
@@ -112,7 +112,7 @@ PITEM _errPutOsCode( PITEM pError, USHORT uiOsCode )
    return pError;
 }
 
-PITEM _errPutSeverity( PITEM pError, USHORT uiSeverity )
+PHB_ITEM _errPutSeverity( PHB_ITEM pError, USHORT uiSeverity )
 {
    PushSymbol( GetDynSym( "_SEVERITY" )->pSymbol );
    Push( pError );
@@ -121,7 +121,7 @@ PITEM _errPutSeverity( PITEM pError, USHORT uiSeverity )
    return pError;
 }
 
-PITEM _errPutSubCode( PITEM pError, USHORT uiSubCode )
+PHB_ITEM _errPutSubCode( PHB_ITEM pError, USHORT uiSubCode )
 {
    PushSymbol( GetDynSym( "_SUBCODE" )->pSymbol );
    Push( pError );
@@ -130,7 +130,7 @@ PITEM _errPutSubCode( PITEM pError, USHORT uiSubCode )
    return pError;
 }
 
-PITEM _errPutSubSystem( PITEM pError, char * szSubSystem )
+PHB_ITEM _errPutSubSystem( PHB_ITEM pError, char * szSubSystem )
 {
    PushSymbol( GetDynSym( "_SUBSYSTEM" )->pSymbol );
    Push( pError );
@@ -139,7 +139,7 @@ PITEM _errPutSubSystem( PITEM pError, char * szSubSystem )
    return pError;
 }
 
-PITEM _errPutTries( PITEM pError, USHORT uiTries )
+PHB_ITEM _errPutTries( PHB_ITEM pError, USHORT uiTries )
 {
    PushSymbol( GetDynSym( "_TRIES" )->pSymbol );
    Push( pError );
@@ -148,7 +148,7 @@ PITEM _errPutTries( PITEM pError, USHORT uiTries )
    return pError;
 }
 
-WORD _errLaunch( PITEM pError )
+WORD _errLaunch( PHB_ITEM pError )
 {
    PushSymbol( &symEval );
    Push( &errorBlock );
@@ -158,7 +158,7 @@ WORD _errLaunch( PITEM pError )
    return stack.Return.value.iNumber;  /* TODO: _parnl( -1 ) */
 }
 
-void _errRelease( PITEM pError )
+void _errRelease( PHB_ITEM pError )
 {
    ItemRelease( pError );
 }

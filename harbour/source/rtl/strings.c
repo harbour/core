@@ -78,7 +78,7 @@ HARBOUR LTRIM( void )
 {
    if( _pcount() == 1 )
    {
-      PITEM pText = _param(1, IT_STRING);
+      PHB_ITEM pText = _param(1, IT_STRING);
 
       if( pText )
       {
@@ -89,7 +89,7 @@ HARBOUR LTRIM( void )
       }
       else
       {
-         PITEM pError = _errNew();
+         PHB_ITEM pError = _errNew();
          _errPutDescription(pError, "Argument error: LTRIM");
          _errLaunch(pError);
          _errRelease(pError);
@@ -98,7 +98,7 @@ HARBOUR LTRIM( void )
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
       _errPutDescription(pError, "Incorrect number of arguments: LTRIM");
       _errLaunch(pError);
       _errRelease(pError);
@@ -119,7 +119,7 @@ HARBOUR RTRIM( void )
 {
    if( _pcount() == 1 )
    {
-      PITEM pText = _param(1, IT_STRING);
+      PHB_ITEM pText = _param(1, IT_STRING);
       if( pText )
          _retclen(pText->value.szText, hb_strRTrimLen(pText->value.szText, pText->wLength));
       else
@@ -129,7 +129,7 @@ HARBOUR RTRIM( void )
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
       _errPutDescription(pError, "Incorrect number of arguments: RTRIM");
       _errLaunch(pError);
       _errRelease(pError);
@@ -305,8 +305,8 @@ ULONG hb_strAt(char *szSub, long lSubLen, char *szText, long lLen)
 /* TEST: QOUT( "at( 'cde', 'abcdefgfedcba' ) = '" + at( 'cde', 'abcdefgfedcba' ) + "'" ) */
 HARBOUR AT( void )
 {
-   PITEM pSub = _param(1, IT_ANY);
-   PITEM pText = _param(2, IT_ANY);
+   PHB_ITEM pSub = _param(1, IT_ANY);
+   PHB_ITEM pText = _param(2, IT_ANY);
 
    if( pText && pSub )
    {
@@ -316,7 +316,7 @@ HARBOUR AT( void )
       }
       else
       {
-         PITEM pError = _errNew();
+         PHB_ITEM pError = _errNew();
          _errPutDescription(pError, "Argument error: AT");
          _errLaunch(pError);
          _errRelease(pError);
@@ -325,7 +325,7 @@ HARBOUR AT( void )
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
       _errPutDescription(pError, "Incorrect number of arguments: AT");
       _errLaunch(pError);
       _errRelease(pError);
@@ -368,7 +368,7 @@ HARBOUR CHR( void )
 {
    if( _pcount() == 1 )
    {
-      PITEM pAsc = _param(1, IT_NUMERIC);
+      PHB_ITEM pAsc = _param(1, IT_NUMERIC);
 
       if( pAsc )
       {
@@ -381,7 +381,7 @@ HARBOUR CHR( void )
       }
       else
       {
-         PITEM pError = _errNew();
+         PHB_ITEM pError = _errNew();
          _errPutDescription(pError, "Argument error: CHR");
          _errLaunch(pError);
          _errRelease(pError);
@@ -390,7 +390,7 @@ HARBOUR CHR( void )
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
       _errPutDescription(pError, "Incorrect number of arguments: CHR");
       _errLaunch(pError);
       _errRelease(pError);
@@ -402,7 +402,7 @@ HARBOUR ASC(void)
 {
    if( _pcount() == 1 )
    {
-      PITEM pText = _param(1, IT_STRING);
+      PHB_ITEM pText = _param(1, IT_STRING);
 
       if( pText )
       {
@@ -413,7 +413,7 @@ HARBOUR ASC(void)
       }
       else
       {
-         PITEM pError = _errNew();
+         PHB_ITEM pError = _errNew();
          _errPutDescription(pError, "Argument error: ASC");
          _errLaunch(pError);
          _errRelease(pError);
@@ -422,7 +422,7 @@ HARBOUR ASC(void)
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
       _errPutDescription(pError, "Incorrect number of arguments: ASC");
       _errLaunch(pError);
       _errRelease(pError);
@@ -434,11 +434,11 @@ HARBOUR LEFT( void )
 {
    if( _pcount() == 2 )
    {
-      PITEM pText = _param(1, IT_STRING);
+      PHB_ITEM pText = _param(1, IT_STRING);
 
       if( pText )
       {
-         PITEM pLen = _param(2, IT_NUMERIC);
+         PHB_ITEM pLen = _param(2, IT_NUMERIC);
 
          if( pLen )
          {
@@ -454,7 +454,7 @@ HARBOUR LEFT( void )
          }
          else
          {
-            PITEM pError = _errNew();
+            PHB_ITEM pError = _errNew();
             _errPutDescription(pError, "Argument error: LEFT");
             _errLaunch(pError);
             _errRelease(pError);
@@ -462,7 +462,7 @@ HARBOUR LEFT( void )
       }
       else
       {
-         PITEM pError = _errNew();
+         PHB_ITEM pError = _errNew();
          _errPutDescription(pError, "Argument error: LEFT");
          _errLaunch(pError);
          _errRelease(pError);
@@ -471,7 +471,7 @@ HARBOUR LEFT( void )
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
       _errPutDescription(pError, "Incorrect number of arguments: LEFT");
       _errLaunch(pError);
       _errRelease(pError);
@@ -483,11 +483,11 @@ HARBOUR RIGHT( void )
 {
    if( _pcount() == 2 )
    {
-      PITEM pText = _param(1, IT_STRING);
+      PHB_ITEM pText = _param(1, IT_STRING);
 
       if( pText )
       {
-         PITEM pLen = _param(2, IT_NUMERIC);
+         PHB_ITEM pLen = _param(2, IT_NUMERIC);
 
          if( pLen )
          {
@@ -503,7 +503,7 @@ HARBOUR RIGHT( void )
          }
          else
          {
-            PITEM pError = _errNew();
+            PHB_ITEM pError = _errNew();
             _errPutDescription(pError, "Argument error: RIGHT");
             _errLaunch(pError);
             _errRelease(pError);
@@ -511,7 +511,7 @@ HARBOUR RIGHT( void )
       }
       else
       {
-         PITEM pError = _errNew();
+         PHB_ITEM pError = _errNew();
          _errPutDescription(pError, "Argument error: RIGHT");
          _errLaunch(pError);
          _errRelease(pError);
@@ -520,7 +520,7 @@ HARBOUR RIGHT( void )
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
       _errPutDescription(pError, "Incorrect number of arguments: RIGHT");
       _errLaunch(pError);
       _errRelease(pError);
@@ -532,8 +532,8 @@ HARBOUR SUBSTR( void )
 {
    if( _pcount() > 1 && _pcount() < 4 )
    {
-      PITEM pText = _param(1, IT_STRING);
-      PITEM pPos = _param(2, IT_NUMERIC);
+      PHB_ITEM pText = _param(1, IT_STRING);
+      PHB_ITEM pPos = _param(2, IT_NUMERIC);
 
       if( pText && pPos )
       {
@@ -552,7 +552,7 @@ HARBOUR SUBSTR( void )
 
          if( lPos < pText->wLength )
          {
-            PITEM pLen = _param(3, IT_NUMERIC);
+            PHB_ITEM pLen = _param(3, IT_NUMERIC);
             long lLen;
 
             if( pLen )
@@ -575,7 +575,7 @@ HARBOUR SUBSTR( void )
       }
       else
       {
-         PITEM pError = _errNew();
+         PHB_ITEM pError = _errNew();
          _errPutDescription(pError, "Argument error: SUBSTR");
          _errLaunch(pError);
          _errRelease(pError);
@@ -584,7 +584,7 @@ HARBOUR SUBSTR( void )
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
       _errPutDescription(pError, "Incorrect number of arguments: SUBSTR");
       _errLaunch(pError);
       _errRelease(pError);
@@ -605,7 +605,7 @@ HARBOUR LOWER( void )
 {
    if( _pcount() == 1 )
    {
-      PITEM pText = _param(1, IT_STRING);
+      PHB_ITEM pText = _param(1, IT_STRING);
 
       if( pText )
       {
@@ -615,7 +615,7 @@ HARBOUR LOWER( void )
       }
       else
       {
-         PITEM pError = _errNew();
+         PHB_ITEM pError = _errNew();
          _errPutDescription(pError, "Argument error: LOWER");
          _errLaunch(pError);
          _errRelease(pError);
@@ -624,7 +624,7 @@ HARBOUR LOWER( void )
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
       _errPutDescription(pError, "Incorrect number of arguments: LOWER");
       _errLaunch(pError);
       _errRelease(pError);
@@ -645,7 +645,7 @@ HARBOUR UPPER( void )
 {
    if( _pcount() == 1 )
    {
-      PITEM pText = _param(1, IT_STRING);
+      PHB_ITEM pText = _param(1, IT_STRING);
 
       if( pText )
       {
@@ -655,7 +655,7 @@ HARBOUR UPPER( void )
       }
       else
       {
-         PITEM pError = _errNew();
+         PHB_ITEM pError = _errNew();
          _errPutDescription(pError, "Argument error: LOWER");
          _errLaunch(pError);
          _errRelease(pError);
@@ -664,7 +664,7 @@ HARBOUR UPPER( void )
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
       _errPutDescription(pError, "Incorrect number of arguments: LOWER");
       _errLaunch(pError);
       _errRelease(pError);
@@ -677,8 +677,8 @@ HARBOUR REPLICATE( void )
 {
    if( _pcount() == 2 )
    {
-      PITEM pText = _param(1, IT_STRING);
-      PITEM pTimes = _param(2, IT_NUMERIC);
+      PHB_ITEM pText = _param(1, IT_STRING);
+      PHB_ITEM pTimes = _param(2, IT_NUMERIC);
 
       if( pText && pTimes )
       {
@@ -705,7 +705,7 @@ HARBOUR REPLICATE( void )
       }
       else
       {
-         PITEM pError = _errNew();
+         PHB_ITEM pError = _errNew();
          _errPutDescription(pError, "Argument error: REPLICATE");
          _errLaunch(pError);
          _errRelease(pError);
@@ -714,7 +714,7 @@ HARBOUR REPLICATE( void )
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
       _errPutDescription(pError, "Incorrect number of arguments: REPLICATE");
       _errLaunch(pError);
       _errRelease(pError);
@@ -727,7 +727,7 @@ HARBOUR SPACE( void )
 {
    if( _pcount() == 1 )
    {
-      PITEM pLen = _param(1, IT_NUMERIC);
+      PHB_ITEM pLen = _param(1, IT_NUMERIC);
 
       if( pLen )
       {
@@ -746,7 +746,7 @@ HARBOUR SPACE( void )
       }
       else
       {
-         PITEM pError = _errNew();
+         PHB_ITEM pError = _errNew();
          _errPutDescription(pError, "Argument error: SPACE");
          _errLaunch(pError);
          _errRelease(pError);
@@ -755,7 +755,7 @@ HARBOUR SPACE( void )
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
       _errPutDescription(pError, "Incorrect number of arguments: SPACE");
       _errLaunch(pError);
       _errRelease(pError);
@@ -765,13 +765,13 @@ HARBOUR SPACE( void )
 /* replaces characters in a string */
 HARBOUR STUFF( void )
 {
-   PITEM pText;
+   PHB_ITEM pText;
 
    pText = _param(1, IT_STRING);
    if( pText )
    {
       char *szText = pText->value.szText;
-      PITEM pPos, pDel, pInsert;
+      PHB_ITEM pPos, pDel, pInsert;
       long lPos, lDel, lInsert, lTotalLen;
       char *szInsert;
 
@@ -825,18 +825,18 @@ HARBOUR STUFF( void )
 /* replaces lots of characters in a string */
 HARBOUR STRTRAN( void )
 {
-   PITEM pText = _param(1, IT_STRING);
+   PHB_ITEM pText = _param(1, IT_STRING);
 
    if( pText )
    {
-      PITEM pSeek = _param(2, IT_STRING);
+      PHB_ITEM pSeek = _param(2, IT_STRING);
       if( pSeek )
       {
          char *szText = pText->value.szText;
          if( pSeek->wLength && pSeek->wLength <= pText->wLength )
          {
             char *szSeek = pSeek->value.szText;
-            PITEM pStart = _param(4, IT_NUMERIC);
+            PHB_ITEM pStart = _param(4, IT_NUMERIC);
             char *szReplace;
             long iStart;
 
@@ -848,8 +848,8 @@ HARBOUR STRTRAN( void )
             }
             else if( iStart > 0 )
             {
-               PITEM pReplace = _param(3, IT_STRING);
-               PITEM pCount = _param(5, IT_NUMERIC);
+               PHB_ITEM pReplace = _param(3, IT_STRING);
+               PHB_ITEM pCount = _param(5, IT_NUMERIC);
                long iReplace;
                long iCount, bAll;
 
@@ -966,7 +966,7 @@ HARBOUR VAL( void )
 {
    if( _pcount() == 1 )
    {
-      PITEM pText = _param(1, IT_STRING);
+      PHB_ITEM pText = _param(1, IT_STRING);
 
       if( pText )
       {
@@ -984,7 +984,7 @@ HARBOUR VAL( void )
       }
       else
       {
-         PITEM pError = _errNew();
+         PHB_ITEM pError = _errNew();
          _errPutDescription(pError, "Argument error: VAL");
          _errLaunch(pError);
          _errRelease(pError);
@@ -993,7 +993,7 @@ HARBOUR VAL( void )
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
       _errPutDescription(pError, "Incorrect number of arguments: VAL");
       _errLaunch(pError);
       _errRelease(pError);
@@ -1007,7 +1007,7 @@ HARBOUR VAL( void )
    Note: The caller is responsible for calling _xfree to free the results buffer,
          but ONLY if the return value is not a NULL pointer!
 */
-char * hb_str( PITEM pNumber, PITEM pWidth, PITEM pDec )
+char * hb_str( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
 {
    char * szResult = 0;
 
@@ -1116,9 +1116,9 @@ HARBOUR STR( void )
    if( _pcount() > 0 && _pcount() < 4 )
    {
       BOOL bValid = TRUE;
-      PITEM pNumber = _param( 1, IT_NUMERIC );
-      PITEM pWidth  = 0;
-      PITEM pDec    = 0;
+      PHB_ITEM pNumber = _param( 1, IT_NUMERIC );
+      PHB_ITEM pWidth  = 0;
+      PHB_ITEM pDec    = 0;
 
       if( !pNumber )
          bValid = FALSE;
@@ -1150,7 +1150,7 @@ HARBOUR STR( void )
       }
       else
       {
-         PITEM pError = _errNew();
+         PHB_ITEM pError = _errNew();
          _errPutDescription(pError, "Argument error: STR");
          _errLaunch(pError);
          _errRelease(pError);
@@ -1159,7 +1159,7 @@ HARBOUR STR( void )
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
       _errPutDescription(pError, "Incorrect number of arguments: STR");
       _errLaunch(pError);
       _errRelease(pError);

@@ -135,7 +135,7 @@ char *NumPicture( char *szPic, long lPic, int iPicFlags, double dValue,
    char *szStr;
    char  cPic;
 
-   PITEM pItem  = NULL;                         /* Suppress warning         */
+   PHB_ITEM pItem  = NULL;                         /* Suppress warning         */
 
    BYTE  bFound = FALSE;
    BYTE  bEmpty;                                /* Suppress empty string    */
@@ -307,7 +307,7 @@ char *NumPicture( char *szPic, long lPic, int iPicFlags, double dValue,
     dValue      : Number to picture
     lRetSize    : The size of the returned string is passed here !
 */
-PITEM NumDefault( double dValue )
+PHB_ITEM NumDefault( double dValue )
 {                                               /* Default number           */
                                                 /* TODO: Change to str call */
    PushSymbol ( GetDynSym( "STR" )->pSymbol );  /* Push STR function         */
@@ -425,15 +425,15 @@ char *DatePicture( long lDate, int iPicFlags, long *lRetSize )
 
 HARBOUR TRANSFORM( void )
 {
-   PITEM pPic       = _param( 2, IT_STRING);    /* Picture string           */
-   PITEM pExp       = _param( 1, IT_ANY );      /* Input parameter          */
+   PHB_ITEM pPic       = _param( 2, IT_STRING);    /* Picture string           */
+   PHB_ITEM pExp       = _param( 1, IT_ANY );      /* Input parameter          */
 
    char *szPic      = pPic->value.szText;
    char *szTemp;
    char *szResult;
    char *szExp;
 
-   PITEM pItem;
+   PHB_ITEM pItem;
 
    long  lPic       = pPic->wLength;
    long  lPicStart  = 0;                        /* Start of template        */
@@ -613,7 +613,7 @@ HARBOUR TRANSFORM( void )
             }
             default:
             {
-               PITEM pError = _errNew();
+               PHB_ITEM pError = _errNew();
 
                _errPutDescription(pError, "Argument error: TRANSFORM");
                _errLaunch(pError);
@@ -624,7 +624,7 @@ HARBOUR TRANSFORM( void )
       }
       else
       {
-         PITEM pError = _errNew();
+         PHB_ITEM pError = _errNew();
 
          _errPutDescription(pError, "Argument error: TRANSFORM");
          _errLaunch(pError);
@@ -676,7 +676,7 @@ HARBOUR TRANSFORM( void )
          }
          default:
          {
-           PITEM pError = _errNew();
+           PHB_ITEM pError = _errNew();
 
            _errPutDescription(pError, "Argument error: TRANSFORM");
            _errLaunch(pError);

@@ -17,7 +17,7 @@ BOOL hb_set_fixed;
 int hb_set_althan;
 int hb_set_printhan;
 
-static BOOL set_logical (PITEM pItem)
+static BOOL set_logical (PHB_ITEM pItem)
 {
    BOOL logical;
    if (IS_LOGICAL (pItem)) logical = pItem->value.iLogical;
@@ -25,7 +25,7 @@ static BOOL set_logical (PITEM pItem)
    return (logical);
 }
 
-static int set_number (PITEM pItem, int old_value)
+static int set_number (PHB_ITEM pItem, int old_value)
 {
    int number;
    if (IS_INTEGER (pItem)) number = pItem->value.iNumber;
@@ -35,7 +35,7 @@ static int set_number (PITEM pItem, int old_value)
    return (number);
 }
 
-static char * set_string (PITEM pItem, char * old_str)
+static char * set_string (PHB_ITEM pItem, char * old_str)
 {
    char * string;
    if (IS_STRING (pItem))
@@ -105,7 +105,7 @@ if (handle < 0) printf("\nError %d creating %s (DOS error %02x)", errno, path, _
    if (handle < 0)
    {
       char error_message [32];
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
       sprintf( error_message, "create error %d: SET", errno );
       _errPutDescription(pError, error_message);
       _errLaunch(pError);
@@ -118,7 +118,7 @@ HARBOUR HB_SETCENTURY (void)
 {
    int digit, count, size, y_size, y_start, y_stop;
    int old_century_setting = hb_set_century;
-   PITEM pItem = _param (1, IT_ANY);
+   PHB_ITEM pItem = _param (1, IT_ANY);
    char *szDateFormat, *szNewFormat;
 
    /* Start by returning the current setting */
@@ -186,7 +186,7 @@ HARBOUR HB_SETCENTURY (void)
 
 HARBOUR HB_SETFIXED (void)
 {
-   PITEM pItem = _param (1, IT_ANY);
+   PHB_ITEM pItem = _param (1, IT_ANY);
 
    /* Start by returning the current setting */
    _retl (hb_set_fixed);
@@ -210,7 +210,7 @@ HARBOUR SET (void)
 {
    BOOL bFlag;
    int args = _pcount();
-   PITEM pArg2, pArg3;
+   PHB_ITEM pArg2, pArg3;
 
    HB_set_enum set_specifier = (HB_set_enum)_parni(1);
    if (args > 1) pArg2 = _param (2, IT_ANY);

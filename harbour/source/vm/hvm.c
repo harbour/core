@@ -55,7 +55,7 @@ void Greater( void );         /* checks if the latest - 1 value is greater than 
 void GreaterEqual( void );    /* checks if the latest - 1 value is greater than or equal the latest, removes both and leaves result */
 void Inc( void );             /* increment the latest numeric value on the stack */
 void Instring( void );        /* check whether string 1 is contained in string 2 */
-void ItemCopy( PITEM pDest, PITEM pSource ); /* copies an item to one place to another respecting its containts */
+void ItemCopy( PHB_ITEM pDest, PHB_ITEM pSource ); /* copies an item to one place to another respecting its containts */
 void Less( void );            /* checks if the latest - 1 value is less than the latest, removes both and leaves result */
 void LessEqual( void );       /* checks if the latest - 1 value is less than or equal the latest, removes both and leaves result */
 void Line( WORD wLine );      /* keeps track of the currently processed PRG line */
@@ -66,7 +66,7 @@ void Mult( void );            /* multiplies the latest two values on the stack, 
 void Negate( void );          /* negates (-) the latest value on the stack */
 void Not( void );             /* changes the latest logical value on the stack */
 void NotEqual( void );        /* checks if the two latest values on the stack are not equal, removes both and leaves result */
-void OperatorCall( PITEM, PITEM, char *); /* call an overloaded operator */
+void OperatorCall( PHB_ITEM, PHB_ITEM, char *); /* call an overloaded operator */
 void Or( void );              /* performs the logical OR on the latest two values, removes them and leaves result on the stack */
 void Plus( void );            /* sums the latest two values on the stack, removes them and leaves the result */
 long PopDate( void );         /* pops the stack latest value and returns its date value as a LONG */
@@ -77,7 +77,7 @@ int  PopLogical( void );           /* pops the stack latest value and returns it
 double PopNumber( void );          /* pops the stack latest value and returns its numeric value */
 void PopStatic( WORD wStatic );    /* pops the stack latest value onto a static */
 void Power( void );            /* power the latest two values on the stack, removes them and leaves the result */
-void Push( PITEM pItem );     /* pushes a generic item onto the stack */
+void Push( PHB_ITEM pItem );     /* pushes a generic item onto the stack */
 void PushBlock( BYTE * pCode, WORD wSize, WORD wParam, PSYMBOL pSymbols ); /* creates a codeblock */
 void PushDate( LONG lDate );   /* pushes a long date onto the stack */
 void PushDouble( double lNumber, WORD wDec ); /* pushes a double number onto the stack */
@@ -120,21 +120,21 @@ void StackShow( void );       /* show the types of the items on the stack for de
 
 PCODEBLOCK CodeblockNew( BYTE *, WORD, PSYMBOL, int, WORD );
 void CodeblockDelete( PCODEBLOCK );
-PITEM CodeblockGetVar( PITEM, SHORT );
+PHB_ITEM CodeblockGetVar( PHB_ITEM, SHORT );
 void CodeblockEvaluate( PCODEBLOCK );
-void CodeblockCopy( PITEM, PITEM );
+void CodeblockCopy( PHB_ITEM, PHB_ITEM );
 void CodeblockDetach( PCODEBLOCK );
 
 void InitSymbolTable( void );   /* initialization of runtime support symbols */
 
 static void ForceLink( void );
 
-ULONG hb_isMessage( PITEM, char * );
+ULONG hb_isMessage( PHB_ITEM, char * );
 ULONG hb_strAt( char *, long, char *, long );
-PITEM hb_itemReturn( PITEM );
+PHB_ITEM hb_itemReturn( PHB_ITEM );
 
-#define STACK_INITITEMS   100
-#define STACK_EXPANDITEMS  20
+#define STACK_INITHB_ITEMS   100
+#define STACK_EXPANDHB_ITEMS  20
 
 extern ULONG ulMemoryBlocks;      /* memory blocks used */
 extern ULONG ulMemoryMaxBlocks;   /* maximum number of used memory blocks */
@@ -161,8 +161,8 @@ STACK stack;
 int iHBDEBUG = 0;      /* if 1 traces the virtual machine activity */
 SYMBOL symEval = { "__EVAL", FS_PUBLIC, DoBlock, 0 }; /* symbol to evaluate codeblocks */
 PSYMBOL pSymStart;     /* start symbol of the application. MAIN() is not required */
-ITEM aStatics;         /* Harbour array to hold all application statics variables */
-ITEM errorBlock;       /* errorblock */
+HB_ITEM aStatics;         /* Harbour array to hold all application statics variables */
+HB_ITEM errorBlock;       /* errorblock */
 PSYMBOLS pSymbols = 0; /* to hold a linked list of all different modules symbol tables */
 BOOL bQuit = FALSE;    /* inmediately exit the application */
 BYTE bErrorLevel = 0;  /* application exit errorlevel */
@@ -580,9 +580,9 @@ void VirtualMachine( PBYTE pCode, PSYMBOL pSymbols )
 
 void And( void )
 {
-   PITEM pItem2 = stack.pPos - 1;
-   PITEM pItem1 = stack.pPos - 2;
-   PITEM pError;
+   PHB_ITEM pItem2 = stack.pPos - 1;
+   PHB_ITEM pItem1 = stack.pPos - 2;
+   PHB_ITEM pError;
    int   iResult;
 
    HBDEBUG( "And\n" );
@@ -606,8 +606,8 @@ void And( void )
 void ArrayAt( void )
 {
    double dIndex = PopNumber();
-   PITEM pArray  = stack.pPos - 1;
-   ITEM item;
+   PHB_ITEM pArray  = stack.pPos - 1;
+   HB_ITEM item;
 
    hb_arrayGet( pArray, dIndex, &item );
    StackPop();
@@ -619,9 +619,9 @@ void ArrayAt( void )
 
 void ArrayPut( void )
 {
-   PITEM pValue = stack.pPos - 1;
-   PITEM pIndex = stack.pPos - 2;
-   PITEM pArray = stack.pPos - 3;
+   PHB_ITEM pValue = stack.pPos - 1;
+   PHB_ITEM pIndex = stack.pPos - 2;
+   PHB_ITEM pArray = stack.pPos - 3;
    ULONG ulIndex;
 
    if( IS_INTEGER( pIndex ) )
@@ -670,11 +670,11 @@ void Div( void )
 
 void Do( WORD wParams )
 {
-   PITEM pItem = stack.pPos - wParams - 2;
+   PHB_ITEM pItem = stack.pPos - wParams - 2;
    PSYMBOL pSym = pItem->value.pSymbol;
    WORD wStackBase = stack.pBase - stack.pItems; /* as the stack memory block could change */
    WORD wItemIndex = pItem - stack.pItems;
-   PITEM pSelf = stack.pPos - wParams - 1;
+   PHB_ITEM pSelf = stack.pPos - wParams - 1;
    HARBOURFUNC pFunc;
    int iStatics = stack.iStatics;              /* Return iStatics position */
 
@@ -730,7 +730,7 @@ void Do( WORD wParams )
 
 HARBOUR DoBlock( void )
 {
-   PITEM pBlock = stack.pBase + 1;
+   PHB_ITEM pBlock = stack.pBase + 1;
    WORD wStackBase = stack.pBase - stack.pItems; /* as the stack memory block could change */
    int iParam;
 
@@ -775,7 +775,7 @@ void DuplTwo( void )
 
 HARBOUR EVAL( void )
 {
-   PITEM pBlock = _param( 1, IT_BLOCK );
+   PHB_ITEM pBlock = _param( 1, IT_BLOCK );
 
    if( pBlock )
    {
@@ -805,8 +805,8 @@ void EndBlock( void )
 
 void Equal( BOOL bExact )
 {
-   PITEM pItem2 = stack.pPos - 1;
-   PITEM pItem1 = stack.pPos - 2;
+   PHB_ITEM pItem2 = stack.pPos - 1;
+   PHB_ITEM pItem1 = stack.pPos - 2;
    int i;
 
    if( IS_NIL( pItem1 ) && IS_NIL( pItem2 ) )
@@ -892,7 +892,7 @@ void Frame( BYTE bLocals, BYTE bParams )
 
 void FuncPtr( void )  /* pushes a function address pointer. Removes the symbol from the satck */
 {
-   PITEM pItem = stack.pPos - 1;
+   PHB_ITEM pItem = stack.pPos - 1;
 
    if( IS_SYMBOL( pItem ) )
    {
@@ -915,7 +915,7 @@ void Function( WORD wParams )
 
 void GenArray( WORD wElements ) /* generates a wElements Array and fills it from the stack values */
 {
-   ITEM itArray;
+   HB_ITEM itArray;
    WORD w;
 
    itArray.wType = IT_NIL;
@@ -1030,7 +1030,7 @@ void Inc( void )
 {
    double dNumber;
    LONG lDate;
-   PITEM pError;
+   PHB_ITEM pError;
 
    if( IS_NUMERIC( stack.pPos - 1 ) )
    {
@@ -1050,7 +1050,7 @@ void Inc( void )
    }
 }
 
-void ItemRelease( PITEM pItem )
+void ItemRelease( PHB_ITEM pItem )
 {
    if( IS_STRING( pItem ) )
    {
@@ -1075,8 +1075,8 @@ void ItemRelease( PITEM pItem )
 
 void Instring( void )
 {
-   PITEM pItem1 = stack.pPos - 2;
-   PITEM pItem2 = stack.pPos - 1;
+   PHB_ITEM pItem1 = stack.pPos - 2;
+   PHB_ITEM pItem2 = stack.pPos - 1;
    int   iResult;
    ULONG ul;
 
@@ -1091,14 +1091,14 @@ void Instring( void )
    }
    else
    {
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
 
       _errPutDescription( pError, "Error BASE/1109  Argument error: $" );
       _errLaunch( pError );
    }
 }
 
-void ItemCopy( PITEM pDest, PITEM pSource )
+void ItemCopy( PHB_ITEM pDest, PHB_ITEM pSource )
 {
    ItemRelease( pDest );
 
@@ -1108,7 +1108,7 @@ void ItemCopy( PITEM pDest, PITEM pSource )
       exit( 1 );
    }
 
-   memcpy( pDest, pSource, sizeof( ITEM ) );
+   memcpy( pDest, pSource, sizeof( HB_ITEM ) );
 
    if( IS_STRING( pSource ) )
    {
@@ -1251,7 +1251,7 @@ void Negate( void )
 
 void Not( void )
 {
-   PITEM pItem = stack.pPos - 1;
+   PHB_ITEM pItem = stack.pPos - 1;
 
    if( IS_LOGICAL( pItem ) )
       pItem->value.iLogical = ! pItem->value.iLogical;
@@ -1261,8 +1261,8 @@ void Not( void )
 
 void NotEqual( void )
 {
-   PITEM pItem2 = stack.pPos - 1;
-   PITEM pItem1 = stack.pPos - 2;
+   PHB_ITEM pItem2 = stack.pPos - 1;
+   PHB_ITEM pItem1 = stack.pPos - 2;
    int i;
 
    if( IS_NIL( pItem1 ) && IS_NIL( pItem2 ) )
@@ -1358,7 +1358,7 @@ void Mult( void )
    PushNumber( d1 * d2, wDec1 + wDec2 );
 }
 
-void OperatorCall( PITEM pItem1, PITEM pItem2, char *szSymbol )
+void OperatorCall( PHB_ITEM pItem1, PHB_ITEM pItem2, char *szSymbol )
 {
    Push( pItem1 );                             /* Push object              */
    Message( GetDynSym( szSymbol )->pSymbol );  /* Push operation           */
@@ -1368,9 +1368,9 @@ void OperatorCall( PITEM pItem1, PITEM pItem2, char *szSymbol )
 
 void Or( void )
 {
-   PITEM pItem2 = stack.pPos - 1;
-   PITEM pItem1 = stack.pPos - 2;
-   PITEM pError;
+   PHB_ITEM pItem2 = stack.pPos - 1;
+   PHB_ITEM pItem1 = stack.pPos - 2;
+   PHB_ITEM pError;
    int   iResult;
 
    if( IS_LOGICAL( pItem1 ) && IS_LOGICAL( pItem2 ) )
@@ -1391,8 +1391,8 @@ void Or( void )
 
 void Plus( void )
 {
-   PITEM pItem1 = stack.pPos - 2;
-   PITEM pItem2 = stack.pPos - 1;
+   PHB_ITEM pItem1 = stack.pPos - 2;
+   PHB_ITEM pItem2 = stack.pPos - 1;
    double dNumber1, dNumber2;
    long lDate1, lDate2;
 
@@ -1460,7 +1460,7 @@ long PopDate( void )
 
 void PopDefStat( WORD wStatic )     /* Pops a default value to a STATIC */
 {
-   PITEM pStatic;
+   PHB_ITEM pStatic;
 
    StackPop();
    pStatic = ( ( PBASEARRAY ) aStatics.value.pBaseArray )->pItems + stack.iStatics +
@@ -1511,7 +1511,7 @@ double PopDouble( void )
 
 void PopLocal( SHORT iLocal )
 {
-   PITEM pLocal;
+   PHB_ITEM pLocal;
 
    StackPop();
 
@@ -1540,7 +1540,7 @@ void PopLocal( SHORT iLocal )
 
 int PopLogical( void )
 {
-   PITEM pError;
+   PHB_ITEM pError;
 
    StackPop();
 
@@ -1558,7 +1558,7 @@ int PopLogical( void )
 
 double PopNumber( void )
 {
-   PITEM pItem = stack.pPos - 1;
+   PHB_ITEM pItem = stack.pPos - 1;
    double dNumber;
 
    StackPop();
@@ -1587,7 +1587,7 @@ double PopNumber( void )
 
 void PopStatic( WORD wStatic )
 {
-   PITEM pStatic;
+   PHB_ITEM pStatic;
 
    StackPop();
    pStatic = ( ( PBASEARRAY ) aStatics.value.pBaseArray )->pItems + stack.iStatics +
@@ -1621,7 +1621,7 @@ void PushLogical( int iTrueFalse )
 
 void PushLocal( SHORT iLocal )
 {
-   PITEM pLocal;
+   PHB_ITEM pLocal;
 
    if( iLocal >= 0 )
    {
@@ -1719,7 +1719,7 @@ void PushSymbol( PSYMBOL pSym )
    HBDEBUG2( "PushSymbol: %s\n", pSym->szName );
 }
 
-void Push( PITEM pItem )
+void Push( PHB_ITEM pItem )
 {
    ItemCopy( stack.pPos, pItem );
    StackPush();
@@ -1828,13 +1828,13 @@ void StackPush( void )
 
       /* no, make more headroom: */
       /* StackShow(); */
-      stack.pItems = (PITEM)_xrealloc( stack.pItems, sizeof( ITEM ) *
-                                ( stack.wItems + STACK_EXPANDITEMS ) );
+      stack.pItems = (PHB_ITEM)_xrealloc( stack.pItems, sizeof( HB_ITEM ) *
+                                ( stack.wItems + STACK_EXPANDHB_ITEMS ) );
 
       /* fix possibly invalid pointers: */
       stack.pPos = stack.pItems + CurrIndex;
       stack.pBase = stack.pItems + BaseIndex;
-      stack.wItems += STACK_EXPANDITEMS;
+      stack.wItems += STACK_EXPANDHB_ITEMS;
       /* StackShow(); */
    }
 
@@ -1846,16 +1846,16 @@ void StackPush( void )
 
 void StackInit( void )
 {
-   stack.pItems = ( PITEM ) _xgrab( sizeof( ITEM ) * STACK_INITITEMS );
+   stack.pItems = ( PHB_ITEM ) _xgrab( sizeof( HB_ITEM ) * STACK_INITHB_ITEMS );
    stack.pBase  = stack.pItems;
    stack.pPos   = stack.pItems;     /* points to the first stack item */
-   stack.wItems = STACK_INITITEMS;
+   stack.wItems = STACK_INITHB_ITEMS;
    HBDEBUG( "StackInit\n" );
 }
 
  void StackShow( void )
 {
-   PITEM p;
+   PHB_ITEM p;
 
    for( p = stack.pBase; p <= stack.pPos; p++ )
    {
@@ -2053,7 +2053,7 @@ void DoInitFunctions( int argc, char * argv[] )
 
 HARBOUR LEN( void )
 {
-   PITEM pItem;
+   PHB_ITEM pItem;
 
    if( _pcount() )
    {
@@ -2080,7 +2080,7 @@ HARBOUR LEN( void )
 
 HARBOUR EMPTY()
 {
-   PITEM pItem = _param( 1, IT_ANY );
+   PHB_ITEM pItem = _param( 1, IT_ANY );
 
    if( pItem )
    {
@@ -2130,7 +2130,7 @@ HARBOUR EMPTY()
 
 HARBOUR VALTYPE( void )
 {
-   PITEM pItem;
+   PHB_ITEM pItem;
 
    if( _pcount() )
    {
@@ -2179,8 +2179,8 @@ HARBOUR VALTYPE( void )
 
 HARBOUR ERRORBLOCK()
 {
-   ITEM oldError;
-   PITEM pNewErrorBlock = _param( 1, IT_BLOCK );
+   HB_ITEM oldError;
+   PHB_ITEM pNewErrorBlock = _param( 1, IT_BLOCK );
 
    oldError.wType = IT_NIL;
    ItemCopy( &oldError, &errorBlock );
@@ -2195,7 +2195,7 @@ HARBOUR ERRORBLOCK()
 HARBOUR PROCNAME()
 {
    int iLevel = _parni( 1 ) + 1;  /* we are already inside ProcName() */
-   PITEM pBase = stack.pBase;
+   PHB_ITEM pBase = stack.pBase;
 
    while( ( iLevel-- > 0 ) && pBase != stack.pItems )
       pBase = stack.pItems + pBase->wBase;
@@ -2209,7 +2209,7 @@ HARBOUR PROCNAME()
 HARBOUR PROCLINE()
 {
    int iLevel  = _parni( 1 ) + 1;  /* we are already inside ProcName() */
-   PITEM pBase = stack.pBase;
+   PHB_ITEM pBase = stack.pBase;
 
    while( ( iLevel-- > 0 ) && pBase != stack.pItems )
       pBase = stack.pItems + pBase->wBase;
@@ -2237,7 +2237,7 @@ HARBOUR ERRORLEVEL()
 
 HARBOUR PCOUNT()
 {
-   PITEM pBase = stack.pItems + stack.pBase->wBase;
+   PHB_ITEM pBase = stack.pItems + stack.pBase->wBase;
    WORD  wRet  = pBase->wParams;                /* Skip current function     */
 
    _retni( wRet );
@@ -2246,14 +2246,14 @@ HARBOUR PCOUNT()
 HARBOUR PVALUE()                                /* PValue( <nArg> )         */
 {
    WORD  wParam = _parni( 1 );                  /* Get parameter            */
-   PITEM pBase = stack.pItems + stack.pBase->wBase;
+   PHB_ITEM pBase = stack.pItems + stack.pBase->wBase;
                                                 /* Skip function + self     */
 
    if( wParam && wParam <= pBase->wParams )     /* Valid number             */
       hb_itemReturn( pBase + 1 + wParam );
    else
    {
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
 
       _errPutDescription(pError, "Argument error: PVALUE");
       _errLaunch(pError);

@@ -21,7 +21,7 @@ typedef struct
    HARBOURFUNC pFunction;
    WORD    wData;
    WORD    wScope;
-   PITEM   pInitValue;
+   PHB_ITEM   pInitValue;
 } METHOD, * PMETHOD;
 
 typedef struct
@@ -32,8 +32,8 @@ typedef struct
    PMETHOD pMethods;
    WORD    wMethods;
    WORD    wHashKey;
-   PITEM   pClassDatas;  /* Array for ClassDatas */
-   PITEM   pInlines;     /* Array for inline codeblocks */
+   PHB_ITEM   pClassDatas;  /* Array for ClassDatas */
+   PHB_ITEM   pInlines;     /* Array for inline codeblocks */
 } CLASS, * PCLASS;
 
 #define BUCKET 4
@@ -61,8 +61,8 @@ static void        DictRealloc( PCLASS );
 static HARBOUR     EvalInline();
 static HARBOUR     GetClassData();
 static HARBOUR     GetData();
-       HARBOURFUNC GetMethod( PITEM, PSYMBOL );
-       ULONG       hb_isMessage( PITEM, char *);
+       HARBOURFUNC GetMethod( PHB_ITEM, PSYMBOL );
+       ULONG       hb_isMessage( PHB_ITEM, char *);
        HARBOUR     ISMESSAGE();
        HARBOUR     OCLONE();
        HARBOUR     OSEND();
@@ -149,7 +149,7 @@ HARBOUR CLASSADD()
    WORD    wType  = _parni( 4 );
    WORD    wAt, wMask;
 
-   PITEM   pInit  = _param( 5, IT_ANY );
+   PHB_ITEM   pInit  = _param( 5, IT_ANY );
    PCLASS  pClass;
    PDYNSYM pMessage;
    PMETHOD pNewMeth;
@@ -246,7 +246,7 @@ HARBOUR CLASSCREATE()
 {
    WORD   wSuper = _parni( 3 );                 /* Super class present      */
    WORD   wSize;
-   PITEM  pItem;
+   PHB_ITEM  pItem;
    PCLASS pNewCls;
    PCLASS pSprCls;
 
@@ -304,7 +304,7 @@ HARBOUR CLASSCREATE()
  */
 HARBOUR CLASSDEL()      
 {
-   PITEM   pString  = _param( 2, IT_STRING );
+   PHB_ITEM   pString  = _param( 2, IT_STRING );
    PSYMBOL pMessage = GetDynSym( pString->value.szText )->pSymbol;
    PDYNSYM pMsg     = ( PDYNSYM ) pMessage->pDynSym;
    PCLASS  pClass;
@@ -399,7 +399,7 @@ HARBOUR CLASSINSTANCE()
  */
 HARBOUR CLASSMOD()      
 {
-   PITEM   pString  = _param( 2, IT_STRING );
+   PHB_ITEM   pString  = _param( 2, IT_STRING );
    PSYMBOL pMessage = GetDynSym( pString->value.szText )->pSymbol;
    PDYNSYM pMsg     = ( PDYNSYM ) pMessage->pDynSym;
    PCLASS  pClass;
@@ -431,7 +431,7 @@ HARBOUR CLASSMOD()
                          _param( 3, IT_BLOCK ) );
          else if( ( pFunc == SetData ) || ( pFunc == GetData ) )
          {                                      /* Not allowed for DATA     */
-            PITEM pError = _errNew();
+            PHB_ITEM pError = _errNew();
             _errPutDescription(pError, "CLASSMOD: Cannot modify a DATA item");
             _errLaunch(pError);
             _errRelease(pError);
@@ -450,7 +450,7 @@ HARBOUR CLASSMOD()
  */
 static HARBOUR ClassName( void )
 {
-   PITEM pItemRef;
+   PHB_ITEM pItemRef;
                                                 
    if( IS_BYREF( stack.pBase + 1 ) )            /* Variables by reference   */
       pItemRef = stack.pItems + ( stack.pBase + 1 )->value.wItem;
@@ -468,7 +468,7 @@ static HARBOUR ClassName( void )
  */
 HARBOUR CLASSNAME() 
 {
-   PITEM pObject = _param( 0, IT_OBJECT );
+   PHB_ITEM pObject = _param( 0, IT_OBJECT );
    WORD wClass;
 
    if( pObject && ( ( PBASEARRAY ) pObject->value.pBaseArray )->wClass )
@@ -502,9 +502,9 @@ static HARBOUR ClassSel()
    WORD    wPos = 0;
    PCLASS  pClass;
    PDYNSYM pMessage;
-   PITEM   pReturn = hb_itemNew( NULL );
-   PITEM   pItem;
-   PITEM   pItemRef;
+   PHB_ITEM   pReturn = hb_itemNew( NULL );
+   PHB_ITEM   pItem;
+   PHB_ITEM   pItemRef;
 
    /* Variables by reference */
    if( ( ! wClass ) && IS_BYREF( stack.pBase + 1 ) )
@@ -561,7 +561,7 @@ static void DictRealloc( PCLASS pClass )
  */
 static HARBOUR EvalInline( void )
 {
-   ITEM block;
+   HB_ITEM block;
    WORD wClass = ( (PBASEARRAY) ( stack.pBase + 1 )->value.pBaseArray )->wClass;
    WORD w;
 
@@ -584,7 +584,7 @@ static HARBOUR EvalInline( void )
  * Get the class name of an object
  *
  */
-char * _GetClassName( PITEM pObject )
+char * _GetClassName( PHB_ITEM pObject )
 {
    char * szClassName;
 
@@ -659,7 +659,7 @@ static HARBOUR GetClassData( void )
  */
 static HARBOUR GetData( void )
 {
-   PITEM pObject = stack.pBase + 1;
+   PHB_ITEM pObject = stack.pBase + 1;
    WORD  wIndex  = pMethod->wData;
 
    if( wIndex > ( WORD ) hb_arrayLen ( pObject ) )
@@ -674,7 +674,7 @@ static HARBOUR GetData( void )
  *
  * Internal function to the function pointer of a message of an object
  */
-HARBOURFUNC GetMethod( PITEM pObject, PSYMBOL pMessage )
+HARBOURFUNC GetMethod( PHB_ITEM pObject, PSYMBOL pMessage )
 {
    WORD    wAt, wLimit, wMask;
    WORD    wClass = ( ( PBASEARRAY ) pObject->value.pBaseArray )->wClass;
@@ -732,7 +732,7 @@ HARBOURFUNC GetMethod( PITEM pObject, PSYMBOL pMessage )
  *
  * <uPtr> should be read as a boolean
  */
-ULONG hb_isMessage( PITEM pObject, char *szString )
+ULONG hb_isMessage( PHB_ITEM pObject, char *szString )
 {
    PSYMBOL pMessage = GetDynSym( szString )->pSymbol;
    return( (ULONG) GetMethod( pObject, pMessage ) );
@@ -746,14 +746,14 @@ ULONG hb_isMessage( PITEM pObject, char *szString )
  */
 HARBOUR ISMESSAGE()     
 {
-   PITEM   pObject  = _param( 1, IT_OBJECT );
-   PITEM   pString  = _param( 2, IT_STRING );
+   PHB_ITEM   pObject  = _param( 1, IT_OBJECT );
+   PHB_ITEM   pString  = _param( 2, IT_STRING );
 
    if( pObject && pString )
       _retl( hb_isMessage( pObject, pString->value.szText ) != 0 );
    else
    {
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
       _errPutDescription(pError, "Argument error: ISMESSAGE");
       _errLaunch(pError);
       _errRelease(pError);
@@ -768,18 +768,18 @@ HARBOUR ISMESSAGE()
  */
 HARBOUR OCLONE( void )
 {
-   PITEM pSrcObject  = _param( 1, IT_OBJECT );
+   PHB_ITEM pSrcObject  = _param( 1, IT_OBJECT );
 
    if ( pSrcObject )
    {
-      PITEM pDstObject = hb_arrayClone( pSrcObject );
+      PHB_ITEM pDstObject = hb_arrayClone( pSrcObject );
 
       ItemCopy( &stack.Return, pDstObject );
       hb_itemRelease( pDstObject );
    }
    else
    {
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
       _errPutDescription(pError, "Argument error: OCLONE");
       _errLaunch(pError);
       _errRelease(pError);
@@ -794,8 +794,8 @@ HARBOUR OCLONE( void )
  */
 HARBOUR OSEND()             
 {                           
-   PITEM pObject  = _param( 1, IT_OBJECT );
-   PITEM pMessage = _param( 2, IT_STRING );
+   PHB_ITEM pObject  = _param( 1, IT_OBJECT );
+   PHB_ITEM pMessage = _param( 2, IT_STRING );
    WORD  w;
 
    if( pMessage && pObject )                /* Object & message passed      */
@@ -809,7 +809,7 @@ HARBOUR OSEND()
    }
    else
    {
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
       _errPutDescription(pError, "Argument error: OSEND");
       _errLaunch(pError);
       _errRelease(pError);
@@ -866,12 +866,12 @@ void ReleaseClasses( void )
  */
 static HARBOUR SelectSuper( void )
 {
-   PITEM      pObject   = stack.pBase + 1;
-   PITEM      pSuper    = (PITEM) _xgrab( sizeof( ITEM ) );
+   PHB_ITEM      pObject   = stack.pBase + 1;
+   PHB_ITEM      pSuper    = (PHB_ITEM) _xgrab( sizeof( HB_ITEM ) );
    PBASEARRAY pNewBase  = (PBASEARRAY) _xgrab( sizeof( BASEARRAY ) );
    WORD       wSuperCls = pMethod->wData;       /* Get handle of superclass */
 
-   memcpy( pSuper,   pObject, sizeof( ITEM ) ); /* Allocate new structures  */
+   memcpy( pSuper,   pObject, sizeof( HB_ITEM ) ); /* Allocate new structures  */
    memcpy( pNewBase, pObject->value.pBaseArray, sizeof( BASEARRAY ) );
 
    pSuper->value.pBaseArray = pNewBase;
@@ -907,7 +907,7 @@ static HARBOUR SetClassData( void )
  */
 static HARBOUR SetData( void )
 {
-   PITEM pObject = stack.pBase + 1;
+   PHB_ITEM pObject = stack.pBase + 1;
    WORD  wIndex  = pMethod->wData;
 
    if( wIndex > ( WORD ) hb_arrayLen( pObject ) )
@@ -931,9 +931,9 @@ static HARBOUR Virtual( void )
  */
 HARBOUR __INSTSUPER( void )             
 {                                       
-   PITEM   pString = _param( 1, IT_STRING );
+   PHB_ITEM   pString = _param( 1, IT_STRING );
    PDYNSYM pDynSym;
-   PITEM   pSuperCls;
+   PHB_ITEM   pSuperCls;
    BYTE    bFound  = FALSE;
    WORD    w;
 
@@ -948,7 +948,7 @@ HARBOUR __INSTSUPER( void )
 
          if( !IS_OBJECT( &stack.Return ) )
          {
-            PITEM pError = _errNew();
+            PHB_ITEM pError = _errNew();
             _errPutDescription(pError, "INSTSUPER : Super class does not return an object");
             _errLaunch(pError);
             _errRelease(pError);
@@ -965,7 +965,7 @@ HARBOUR __INSTSUPER( void )
       }
       else
       {
-         PITEM pError = _errNew();
+         PHB_ITEM pError = _errNew();
          _errPutDescription(pError, "INSTSUPER : Cannot find super class");
          _errLaunch(pError);
          _errRelease(pError);

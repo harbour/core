@@ -10,9 +10,9 @@
 #include <itemapi.h>
 
 extern STACK stack;                             /* External data used       */
-extern ITEM  aStatics;
+extern HB_ITEM  aStatics;
 
-PITEM ArrayClone( PITEM );
+PHB_ITEM ArrayClone( PHB_ITEM );
 
 /* $Doc$
  * $FuncName$     <aStat> __aStatic()
@@ -32,7 +32,7 @@ HARBOUR __ASTATIC()
  * $End$ */
 HARBOUR __STATIC()
 {
-   PITEM pStatic;
+   PHB_ITEM pStatic;
    WORD  wStatic;
 
    wStatic = _parni(1);
@@ -46,9 +46,9 @@ HARBOUR __STATIC()
  * $FuncName$     AddToArray( <pItem>, <pReturn>, <wPos> )
  * $Description$  Add <pItem> to array <pReturn> at pos <wPos>
  * $End$ */
-void AddToArray( PITEM pItem, PITEM pReturn, WORD wPos )
+void AddToArray( PHB_ITEM pItem, PHB_ITEM pReturn, WORD wPos )
 {
-   PITEM pTemp;
+   PHB_ITEM pTemp;
 
    if( pItem->wType == IT_SYMBOL)
    {                                            /* Symbol is pushed as text */
@@ -74,7 +74,7 @@ void AddToArray( PITEM pItem, PITEM pReturn, WORD wPos )
  * $End$ */
 WORD GlobalStackLen( void )
 {
-   PITEM pItem;
+   PHB_ITEM pItem;
    WORD  nCount = 0;
 
    for( pItem = stack.pItems; pItem++ <= stack.pPos; nCount++ );
@@ -92,8 +92,8 @@ HARBOUR __GLOBALSTACKLEN()
  * $End$ */
 HARBOUR __AGLOBALSTACK()
 {
-   PITEM pReturn;
-   PITEM pItem;
+   PHB_ITEM pReturn;
+   PHB_ITEM pItem;
 
    WORD  wLen = GlobalStackLen();
    WORD  wPos = 1;
@@ -113,8 +113,8 @@ HARBOUR __AGLOBALSTACK()
  * $End$ */
 WORD StackLen( void )
 {
-   PITEM pItem;
-   PITEM pBase = stack.pItems + stack.pBase->wBase;
+   PHB_ITEM pItem;
+   PHB_ITEM pBase = stack.pItems + stack.pBase->wBase;
 
    WORD  nCount = 0;
 
@@ -140,9 +140,9 @@ HARBOUR __STACKLEN()
  * $End$ */
 HARBOUR __ASTACK()
 {
-   PITEM pReturn;
-   PITEM pItem;
-   PITEM pBase = stack.pItems + stack.pBase->wBase;
+   PHB_ITEM pReturn;
+   PHB_ITEM pItem;
+   PHB_ITEM pBase = stack.pItems + stack.pBase->wBase;
 
    WORD  wLen  = StackLen();
    WORD  wPos  = 1;
@@ -165,9 +165,9 @@ HARBOUR __ASTACK()
                /* and locals                        */
 HARBOUR __APARAM()
 {
-   PITEM pReturn;
-   PITEM pItem;
-   PITEM pBase = stack.pItems + stack.pBase->wBase;
+   PHB_ITEM pReturn;
+   PHB_ITEM pItem;
+   PHB_ITEM pBase = stack.pItems + stack.pBase->wBase;
                                                 /* Skip function + self     */
    WORD  wLen  = pBase->wParams;
    WORD  wPos  = 1;

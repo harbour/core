@@ -46,7 +46,7 @@ PCODEBLOCK CodeblockNew( BYTE * pBuffer, WORD wSize, PSYMBOL pSymbols,
      * all references will be replaced with current values of
      * these variables
      */
-    pCBlock->pItems =(PITEM) _xgrab( sizeof(ITEM) * wVars );
+    pCBlock->pItems =(PHB_ITEM) _xgrab( sizeof(HB_ITEM) * wVars );
 
     while( wVars-- )
     {
@@ -124,7 +124,7 @@ void CodeblockDetach( PCODEBLOCK pCBlock )
   {
     /* this codeblock refers to local variables */
     WORD w = 0;
-    PITEM pItem;
+    PHB_ITEM pItem;
 
     while( w < pCBlock->wLocals )
     {
@@ -162,10 +162,10 @@ void CodeblockEvaluate( PCODEBLOCK pCBlock )
 
 /* Get local variable referenced in a codeblock
  */
-PITEM  CodeblockGetVar( PITEM pItem, SHORT iItemPos )
+PHB_ITEM  CodeblockGetVar( PHB_ITEM pItem, SHORT iItemPos )
 {
   PCODEBLOCK pCBlock = (PCODEBLOCK)pItem->value.pCodeblock;
-  PITEM pLocalVar;
+  PHB_ITEM pLocalVar;
 
   pLocalVar =&pCBlock->pItems[ -iItemPos -1 ];
   /* if a codeblock have detached local variables then it stores their value */
@@ -184,7 +184,7 @@ PITEM  CodeblockGetVar( PITEM pItem, SHORT iItemPos )
  * TODO: check if such simple pointer coping will allow to evaluate
  * codeblocks recursively
  */
-void  CodeblockCopy( PITEM pDest, PITEM pSource )
+void  CodeblockCopy( PHB_ITEM pDest, PHB_ITEM pSource )
 {
   pDest->value.pCodeblock =pSource->value.pCodeblock;
   ((PCODEBLOCK) pDest->value.pCodeblock)->lCounter++;

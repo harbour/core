@@ -72,11 +72,11 @@ typedef struct     /* items hold at the virtual machine stack */
    WORD wBase;     /* stack frame number of items position for a function call */
    WORD wLine;     /* currently processed PRG line number */
    WORD wParams;   /* number of received parameters for a function call */
-} ITEM, * PITEM;
+} HB_ITEM, * PHB_ITEM;
 
 typedef struct
 {
-   PITEM pItems;               /* pointer to the array items */
+   PHB_ITEM pItems;               /* pointer to the array items */
    ULONG ulLen;                /* number of items in the array */
    WORD  wHolders;             /* number of holders of this array */
    WORD  wClass;               /* offset to the classes base if it is an object */
@@ -85,12 +85,12 @@ typedef struct
 
 typedef struct     /* stack managed by the virtual machine */
 {
-   PITEM pItems;   /* pointer to the stack items */
-   PITEM pPos;     /* pointer to the latest used item */
+   PHB_ITEM pItems;   /* pointer to the stack items */
+   PHB_ITEM pPos;     /* pointer to the latest used item */
    LONG  wItems;   /* total items that may be holded on the stack */
-   ITEM  Return;   /* latest returned value */
-   PITEM pBase;    /* stack frame position for the current function call */
-   PITEM pEvalBase;/* stack frame position for the evaluated codeblock */
+   HB_ITEM  Return;   /* latest returned value */
+   PHB_ITEM pBase;    /* stack frame position for the current function call */
+   PHB_ITEM pEvalBase;/* stack frame position for the evaluated codeblock */
    int  iStatics;  /* statics base for the current function call */
    char szDate[ 9 ]; /* last returned date from _pards() yyyymmdd format */
 } STACK;
@@ -107,7 +107,7 @@ typedef struct
 typedef struct _CODEBLOCK
 {
   BYTE * pCode;       /* codeblock pcode */
-  PITEM pItems;       /* table with referenced local variables */
+  PHB_ITEM pItems;       /* table with referenced local variables */
   WORD wLocals;       /* number of referenced local variables */
   WORD wDetached;     /* holds if pItems table variables values */
   PSYMBOL pSymbols;   /* codeblocks symbols */
@@ -116,7 +116,7 @@ typedef struct _CODEBLOCK
   long lCounter;      /* numer of references to this codeblock */
 } CODEBLOCK, * PCODEBLOCK;
 
-PITEM _param( WORD wParam, WORD wType ); /* retrieve a generic parameter */
+PHB_ITEM _param( WORD wParam, WORD wType ); /* retrieve a generic parameter */
 char * _parc( WORD wParam, ... );  /* retrieve a string parameter */
 ULONG _parclen( WORD wParam, ... );  /* retrieve a string parameter length */
 char * _pards( WORD wParam, ... ); /* retrieve a date as a string yyyymmdd */
@@ -145,30 +145,30 @@ void _stornl( long lValue, WORD wParam, ... ); /* stores a long on a variable by
 void * _xgrab( ULONG lSize );   /* allocates memory */
 void * _xrealloc( void * pMem, ULONG lSize );   /* reallocates memory */
 void _xfree( void * pMem );    /* frees memory */
-void ItemCopy( PITEM pDest, PITEM pSource );
-void ItemRelease( PITEM pItem );
+void ItemCopy( PHB_ITEM pDest, PHB_ITEM pSource );
+void ItemRelease( PHB_ITEM pItem );
 
-void hb_arrayNew( PITEM pItem, ULONG ulLen ); /* creates a new array */
-void hb_arrayGet( PITEM pArray, ULONG ulIndex, PITEM pItem ); /* retrieves an item */
-ULONG hb_arrayLen( PITEM pArray ); /* retrives the array len */
-void hb_arraySet( PITEM pArray, ULONG ulIndex, PITEM pItem ); /* sets an array element */
-void hb_arraySize( PITEM pArray, ULONG ulLen ); /* sets the array total length */
-void hb_arrayRelease( PITEM pArray ); /* releases an array - don't call it - use ItemRelease() !!! */
-char *hb_arrayGetString( PITEM pArray, ULONG ulIndex ); /* retrieves the string contained on an array element */
-ULONG hb_arrayGetStringLen( PITEM pArray, ULONG ulIndex ); /* retrieves the string length contained on an array element */
-int  hb_arrayGetType( PITEM pArray, ULONG ulIndex );
-void hb_arrayDel( PITEM pArray, ULONG ulIndex );
-PITEM hb_arrayClone( PITEM pArray );
-void hb_arrayAdd( PITEM pArray, PITEM pItemValue );
+void hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ); /* creates a new array */
+void hb_arrayGet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ); /* retrieves an item */
+ULONG hb_arrayLen( PHB_ITEM pArray ); /* retrives the array len */
+void hb_arraySet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ); /* sets an array element */
+void hb_arraySize( PHB_ITEM pArray, ULONG ulLen ); /* sets the array total length */
+void hb_arrayRelease( PHB_ITEM pArray ); /* releases an array - don't call it - use ItemRelease() !!! */
+char *hb_arrayGetString( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the string contained on an array element */
+ULONG hb_arrayGetStringLen( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the string length contained on an array element */
+int  hb_arrayGetType( PHB_ITEM pArray, ULONG ulIndex );
+void hb_arrayDel( PHB_ITEM pArray, ULONG ulIndex );
+PHB_ITEM hb_arrayClone( PHB_ITEM pArray );
+void hb_arrayAdd( PHB_ITEM pArray, PHB_ITEM pItemValue );
 
-int  hb_itemStrCmp( PITEM pFirst, PITEM pSecond, BOOL bForceExact ); /* our string compare */
-char * hb_str( PITEM pNumber, PITEM pWidth, PITEM pDec ); /* convert number to string */
+int  hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact ); /* our string compare */
+char * hb_str( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec ); /* convert number to string */
 BOOL hb_strempty( char * szText, ULONG ulLen );
 long hb_dateEncode( long lDay, long lMonth, long lYear );
 void hb_dateDecode( long julian, long * plDay, long * plMonth, long * plYear );
 
-HARBOURFUNC GetMethod( PITEM pObject, PSYMBOL pSymMsg ); /* returns the method pointer of a object class */
-char * _GetClassName( PITEM pObject ); /* retrieves an object class name */
+HARBOURFUNC GetMethod( PHB_ITEM pObject, PSYMBOL pSymMsg ); /* returns the method pointer of a object class */
+char * _GetClassName( PHB_ITEM pObject ); /* retrieves an object class name */
 
 /* dynamic symbol table management */
 PDYNSYM GetDynSym( char * szName );   /* finds and creates a dynamic symbol if not found */
@@ -176,18 +176,18 @@ PDYNSYM NewDynSym( PSYMBOL pSymbol ); /* creates a new dynamic symbol based on a
 PDYNSYM FindDynSym( char * szName );  /* finds a dynamic symbol */
 
 /* error API */
-PITEM _errNew( void );
-PITEM _errPutDescription( PITEM pError, char * szDescription );
-PITEM _errPutFileName( PITEM pError, char * szFileName );
-PITEM _errPutGenCode( PITEM pError, USHORT uiGenCode );
-PITEM _errPutOperation( PITEM pError, char * szOperation );
-PITEM _errPutOsCode( PITEM pError, USHORT uiOsCode );
-PITEM _errPutSeverity( PITEM pError, USHORT uiSeverity );
-PITEM _errPutSubCode( PITEM pError, USHORT uiSubCode );
-PITEM _errPutSubSystem( PITEM pError, char * szSubSystem );
-PITEM _errPutTries( PITEM pError, USHORT uiTries );
-WORD _errLaunch( PITEM pError );
-void _errRelease( PITEM pError );
+PHB_ITEM _errNew( void );
+PHB_ITEM _errPutDescription( PHB_ITEM pError, char * szDescription );
+PHB_ITEM _errPutFileName( PHB_ITEM pError, char * szFileName );
+PHB_ITEM _errPutGenCode( PHB_ITEM pError, USHORT uiGenCode );
+PHB_ITEM _errPutOperation( PHB_ITEM pError, char * szOperation );
+PHB_ITEM _errPutOsCode( PHB_ITEM pError, USHORT uiOsCode );
+PHB_ITEM _errPutSeverity( PHB_ITEM pError, USHORT uiSeverity );
+PHB_ITEM _errPutSubCode( PHB_ITEM pError, USHORT uiSubCode );
+PHB_ITEM _errPutSubSystem( PHB_ITEM pError, char * szSubSystem );
+PHB_ITEM _errPutTries( PHB_ITEM pError, USHORT uiTries );
+WORD _errLaunch( PHB_ITEM pError );
+void _errRelease( PHB_ITEM pError );
 
 #endif
 
