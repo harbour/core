@@ -1,3 +1,8 @@
+20000522-09:40 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+   * include/hbextern.ch
+     + Added HB_STRUCTURE to list of Externals
+
 20000522-09:20 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
    * source/compiler/harbour.c

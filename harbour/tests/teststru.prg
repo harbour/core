@@ -4,11 +4,13 @@ PROCEDURE MAIN()
 
   LOCAL sTest AS New MyStruct
 
-  sTest:Var1 := 8             // Warning Here as Expected.
-  sTest:NoSuchVar := "Error"  // Warning here as expected.
-
   sTest:Var1 := 'Working'     // No problem here.
 
-  ? sTest:Var1                // Np Problem here.
+  ? sTest:Var1                // No Problem here.
+
+  sTest:Var1 := 8             // Warning Here as Expected.
+
+  /* Run TIME ERROR Here */
+  sTest:NoSuchVar := "Error"  // Warning here as expected.
 
 RETURN

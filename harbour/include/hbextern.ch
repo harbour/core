@@ -673,6 +673,7 @@ EXTERNAL TBROWSENEW
 //symbols from file: rtl\tclass.prg
 //
 EXTERNAL TCLASS
+EXTERNAL HB_STRUCTURE
 //
 //symbols from file: rtl\text.prg
 //
