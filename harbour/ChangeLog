@@ -7,6 +7,14 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+  * source/rdd/dbfntx/dbfntx1.c
+    * OrdKeyAdd(), OrdKeyDel() support for dbfntx added.
+      Now dbfntx supports custom indexes.
+
+2002-05-06 21:40 UTC+0100 Tomaz Zupan <tomaz.zupan@orpo.si>
+  -source/vm/mainlgtk.c
+  +contrib/hgf/gtk/mainlgtk.c
+  *contrib/hgf/gtk/Makefile
     Moved mainlgtk.c from source/vm to contrib/hgf/gtk and
     updated Makefile to include it in library. 
         

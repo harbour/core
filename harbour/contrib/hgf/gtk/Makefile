@@ -11,6 +11,7 @@ C_SOURCES=\
 	creabutt.c \
 	dispatch.c \
 	msginfo.c \
+	mainlgtk.c \
 
 PRG_SOURCES=\
 	form.prg    \
