@@ -1,3 +1,10 @@
+19991117-10:51 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/compiler/expropt.c
+    ! Fixed the compile-time calculation of numeric operations with results
+      larger than LONG.
+    % Compile-time calculation of numeric operations - Removed doubled
+      calculation code.
+
 19991117-03:15 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/vm/hvm.c
     ! Added error substitution to hb_vmForTest(), now some more RTL_TESTs pass.

@@ -3911,11 +3911,11 @@ static HB_EXPR_FUNC( hb_compExprUsePlus )
                {
                   case HB_ET_LONG:
                   {
-                     double dVal = pLeft->value.asNum.lVal + pRight->value.asNum.lVal;
+                     double dVal = ( double ) pLeft->value.asNum.lVal + ( double ) pRight->value.asNum.lVal;
 
-                     if( ( double )LONG_MIN <= dVal && dVal <= ( double )LONG_MAX )
+                     if( ( double ) LONG_MIN <= dVal && dVal <= ( double ) LONG_MAX )
                      {
-                        pSelf->value.asNum.lVal = pLeft->value.asNum.lVal + pRight->value.asNum.lVal;
+                        pSelf->value.asNum.lVal = ( long ) dVal;
                         pSelf->value.asNum.bDec = 0;
                         pSelf->value.asNum.NumType = HB_ET_LONG;
                      }
@@ -4058,11 +4058,11 @@ static HB_EXPR_FUNC( hb_compExprUseMinus )
                {
                   case HB_ET_LONG:
                   {
-                     double dVal = pLeft->value.asNum.lVal - pRight->value.asNum.lVal;
+                     double dVal = ( double ) pLeft->value.asNum.lVal - ( double ) pRight->value.asNum.lVal;
 
-                     if( ( double )LONG_MIN <= dVal && dVal <= ( double )LONG_MAX )
+                     if( ( double ) LONG_MIN <= dVal && dVal <= ( double ) LONG_MAX )
                      {
-                        pSelf->value.asNum.lVal = pLeft->value.asNum.lVal - pRight->value.asNum.lVal;
+                        pSelf->value.asNum.lVal = ( long ) dVal;
                         pSelf->value.asNum.bDec = 0;
                         pSelf->value.asNum.NumType = HB_ET_LONG;
                      }
@@ -4185,11 +4185,11 @@ static HB_EXPR_FUNC( hb_compExprUseMult )
                {
                   case HB_ET_LONG:
                   {
-                     double dVal = pLeft->value.asNum.lVal * pRight->value.asNum.lVal;
+                     double dVal = ( double ) pLeft->value.asNum.lVal * ( double ) pRight->value.asNum.lVal;
 
-                     if( ( double )LONG_MIN <= dVal && dVal <= ( double )LONG_MAX )
+                     if( ( double ) LONG_MIN <= dVal && dVal <= ( double ) LONG_MAX )
                      {
-                        pSelf->value.asNum.lVal = pLeft->value.asNum.lVal * pRight->value.asNum.lVal;
+                        pSelf->value.asNum.lVal = ( long ) dVal;
                         pSelf->value.asNum.bDec = 0;
                         pSelf->value.asNum.NumType = HB_ET_LONG;
                      }
@@ -4306,12 +4306,12 @@ static HB_EXPR_FUNC( hb_compExprUseDiv )
                   case HB_ET_LONG:
                   {
                      if( pRight->value.asNum.lVal )
-                        dVal = ( double )pLeft->value.asNum.lVal / ( double )pRight->value.asNum.lVal;
+                        dVal = ( double ) pLeft->value.asNum.lVal / ( double ) pRight->value.asNum.lVal;
 
                      if( fmod( dVal, 1.0 ) == 0.0 )
                      {
                         /* Return integer results as long */
-                        pSelf->value.asNum.lVal = dVal;
+                        pSelf->value.asNum.lVal = ( long ) dVal;
                         pSelf->value.asNum.bDec = 0;
                         pSelf->value.asNum.NumType = HB_ET_LONG;
                      }
@@ -4444,7 +4444,7 @@ static HB_EXPR_FUNC( hb_compExprUseMod )
                   else
                      break;   /* QUESTION: should we generate a warning or error here */
 
-                  if( ( double )LONG_MIN <= dVal && dVal <= ( double )LONG_MAX )
+                  if( ( double ) LONG_MIN <= dVal && dVal <= ( double ) LONG_MAX )
                   {
                      pSelf->value.asNum.lVal = ( long ) dVal;
                      pSelf->value.asNum.bDec = 0;
