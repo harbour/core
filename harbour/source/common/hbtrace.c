@@ -33,6 +33,18 @@
  *
  */
 
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 1999 Victor Szel <info@szelvesz.hu>
+ *    hb_traceenable()
+ *    hb_traceenabled()
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
+
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -43,125 +55,141 @@ char * hb_tr_file_ = "";
 int    hb_tr_line_ = 0;
 int    hb_tr_level_ = 0;
 
-static int hb_tr_state_ = 1;
-static FILE* hb_tr_fp_ = 0;
-static char* slevel[HB_TR_LAST] =
+static int s_enabled = 1;
+static FILE * s_fp = 0;
+static char * s_slevel[ HB_TR_LAST ] =
 {
-  "HB_TR_ALWAYS",
-  "HB_TR_FATAL",
-  "HB_TR_ERROR",
-  "HB_TR_WARNING",
-  "HB_TR_INFO",
-  "HB_TR_DEBUG"
+   "HB_TR_ALWAYS",
+   "HB_TR_FATAL",
+   "HB_TR_ERROR",
+   "HB_TR_WARNING",
+   "HB_TR_INFO",
+   "HB_TR_DEBUG"
 };
 
+int hb_traceenabled( void )
+{
+   return s_enabled;
+}
+
+void hb_traceenable( int enabled )
+{
+   s_enabled = enabled;
+}
 
 void hb_traceon( void )
 {
-  hb_tr_state_ = 1;
+   s_enabled = 1;
 }
 
 void hb_traceoff( void )
 {
-  hb_tr_state_ = 0;
+   s_enabled = 0;
 }
 
 int hb_tracelevel( int new_level )
 {
-  int old_level = hb_tr_level_;
+   int old_level = hb_tr_level_;
 
-  if (new_level >= HB_TR_ALWAYS &&
-      new_level <  HB_TR_LAST) {
-    hb_tr_level_ = new_level;
-  }
+   if( new_level >= HB_TR_ALWAYS &&
+       new_level <  HB_TR_LAST )
+     hb_tr_level_ = new_level;
 
-  return old_level;
+   return old_level;
 }
 
-int hb_tr_level(void)
+int hb_tr_level( void )
 {
-  static int level = -1;
-  int i;
-  char* env;
-  char* out;
+   static int s_level = -1;
 
-  if (level != -1) {
-    return level;
-  }
+   if( s_level == -1 )
+   {
+      char * out;
+      char * env;
 
-  hb_tr_fp_ = stderr;
-  out = getenv("HB_TR_OUTPUT");
-  if (out != 0 && out[0] != '\0') {
-    hb_tr_fp_ = fopen(out, "w");
-    if (hb_tr_fp_ == NULL) {
-      hb_tr_fp_ = stderr;
-    }
-  }
+      out = getenv( "HB_TR_OUTPUT" );
+      if( out != NULL && out[ 0 ] != '\0' )
+      {
+         s_fp = fopen( out, "w" );
 
-  level = HB_TR_DEFAULT;
-  env = getenv("HB_TR_LEVEL");
-  if (env != 0 && env[0] != '\0') {
-    for (i = 0; i < HB_TR_LAST; ++i) {
-      if (strcmp(env, slevel[i]) == 0) {
-        level = i;
-        break;
+         if( s_fp == NULL )
+            s_fp = stderr;
       }
-    }
-  }
+      else
+         s_fp = stderr;
 
-  return level;
+      env = getenv( "HB_TR_LEVEL" );
+      if( env != NULL && env[ 0 ] != '\0' )
+      {
+         int i;
+
+         for( i = 0; i < HB_TR_LAST; ++i )
+         {
+            if( strcmp( env, s_slevel[ i ] ) == 0 )
+            {
+               s_level = i;
+               break;
+            }
+         }
+      }
+      else
+         s_level = HB_TR_DEFAULT;
+   }
+
+   return s_level;
 }
 
 void hb_tr_trace( char * fmt, ... )
 {
-  int i;
-  va_list ap;
+   /*
+    * If tracing is disabled, do nothing.
+    */
+   if( s_enabled )
+   {
+      int i;
+      va_list ap;
 
-  /*
-   * If tracing is disabled, do nothing.
-   */
-  if( ! hb_tr_state_ ) {
-    return;
-  }
+      /*
+       * Clean up the file, so that instead of showing
+       *
+       *   ../../../foo/bar/baz.c
+       *
+       * we just show
+       *
+       *   foo/bar/baz.c
+       */
+      for( i = 0; hb_tr_file_[ i ] != '\0'; ++i )
+      {
+         if( hb_tr_file_[ i ] != '.' &&
+             hb_tr_file_[ i ] != '/' &&
+             hb_tr_file_[ i ] != '\\' )
+            break;
+      }
 
-  /*
-   * Clean up the file, so that instead of showing
-   *
-   *   ../../../foo/bar/baz.c
-   *
-   * we just show
-   *
-   *   foo/bar/baz.c
-   */
-  for (i = 0; hb_tr_file_[i] != '\0'; ++i) {
-    if (hb_tr_file_[i] != '.' &&
-        hb_tr_file_[i] != '/' &&
-        hb_tr_file_[i] != '\\')
-      break;
-  }
+      /*
+       * Print file and line.
+       */
+      fprintf( s_fp, "%s:%d: %s ",
+               hb_tr_file_ + i, hb_tr_line_, s_slevel[ hb_tr_level_ ] );
 
-  /*
-   * Print file and line.
-   */
-  fprintf(hb_tr_fp_, "%s:%d: %s ",
-          hb_tr_file_ + i, hb_tr_line_, slevel[hb_tr_level_]);
+      /*
+       * Print the name and arguments for the function.
+       */
+      va_start( ap, fmt );
+      vfprintf( s_fp, fmt, ap );
+      va_end( ap );
 
-  /*
-   * Print the name and arguments for the function.
-   */
-  va_start(ap, fmt);
-  vfprintf(hb_tr_fp_, fmt, ap);
-  va_end(ap);
+      /*
+       * Print a new-line.
+       */
+      fprintf( s_fp, "\n" );
 
-  /*
-   * Print a new-line.
-   */
-  fprintf(hb_tr_fp_, "\n");
-
-  /*
-   * Reset file and line.
-   */
-  hb_tr_file_ = "";
-  hb_tr_line_ = -1;
-  hb_tr_level_ = -1;
+      /*
+       * Reset file and line.
+       */
+      hb_tr_file_ = "";
+      hb_tr_line_ = -1;
+      hb_tr_level_ = -1;
+   }
 }
+

@@ -1055,7 +1055,7 @@ void hb_setInitialize( void )
    hb_set.HB_SET_DEVICE = ( char * ) hb_xgrab( 7 );
    memcpy( hb_set.HB_SET_DEVICE, "SCREEN", 7 );
    hb_set.HB_SET_EPOCH = 1900;
-   hb_set.HB_SET_ESCAPE = 1;
+   hb_set.HB_SET_ESCAPE = TRUE;
    hb_set.HB_SET_EVENTMASK = INKEY_KEYBOARD;
    hb_set.HB_SET_EXACT = FALSE;
    hb_set.HB_SET_EXCLUSIVE = TRUE;

@@ -79,30 +79,23 @@
    #endif
 #endif
 
-#if ! defined(__GNUC__)
-#ifdef __CYGWIN__
-typedef WORD far * LPWORD;
+#if ! defined(__GNUC__) && defined(__CYGWIN__)
+   typedef WORD far * LPWORD;
 #endif
-#endif /* __GNUC__ */
 
-static BOOL hb_gt_SetScreenBuffer( HANDLE HNew, HANDLE HOld );
+static HANDLE s_HOsave;
+/* static HANDLE s_HSsave; */
+static HANDLE s_HDOutput   = INVALID_HANDLE_VALUE;
+/* static HANDLE s_HDStealth = INVALID_HANDLE_VALUE; */
 
-static HANDLE HOsave;
-/* static HANDLE HSsave; */
-static HANDLE HDOutput  = INVALID_HANDLE_VALUE;
-/* static HANDLE HDStealth = INVALID_HANDLE_VALUE; */
-       HANDLE hb_gtHInput = INVALID_HANDLE_VALUE; /* hb_inkeyPoll() needs this */
-       BOOL hb_gtBreak = FALSE; /* Used to signal Ctrl+Break to hb_inkeyPoll() */
-static HANDLE HOutput   = INVALID_HANDLE_VALUE;
-static HANDLE HStealth  = INVALID_HANDLE_VALUE; /* DispBegin buffer */
-static HANDLE HOriginal;                      /* used to restore before quit */
-static HANDLE HCursor;  /* When DispBegin is in effect, all cursor related
-                           functions must refer to the active handle!
-                           Otherwise turds are left on the screen when
-                           running in a window. This handle will always
-                           refer to the currently _active_ buffer which could
-                           be different than the one being written to.
-                         */
+static HANDLE s_HOriginal  = INVALID_HANDLE_VALUE;
+static HANDLE s_HOutput    = INVALID_HANDLE_VALUE;
+static HANDLE s_HActive    = INVALID_HANDLE_VALUE;
+static HANDLE s_HInactive  = INVALID_HANDLE_VALUE;
+static BOOL   s_bOldCursor = TRUE;
+
+HANDLE hb_gtHInput = INVALID_HANDLE_VALUE;
+BOOL   hb_gtBreak  = FALSE; /* Used to signal Ctrl+Break to hb_inkeyPoll() */
 
 static BOOL WINAPI hb_gt_CtrlHandler( DWORD dwCtrlType )
 {
@@ -135,6 +128,9 @@ void hb_gt_Init( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Init()"));
 
+   /* Add Ctrl+Break handler [vszel] */
+   SetConsoleCtrlHandler( hb_gt_CtrlHandler, TRUE );
+
    if( ( hb_gtHInput = GetStdHandle( STD_INPUT_HANDLE ) ) == INVALID_HANDLE_VALUE )
    {
       if( hb_dynsymFindName( "__DBGENTRY" ) ) /* the debugger is linked */
@@ -145,23 +141,51 @@ void hb_gt_Init( void )
    }
 
    SetConsoleMode( hb_gtHInput, 0 );
+
    /* ptucker */
-   HOriginal = HOutput = HCursor = CreateFile( "CONOUT$",     /* filename    */
+   s_HOriginal = CreateFile( "CONOUT$",     /* filename    */
                        GENERIC_READ    | GENERIC_WRITE,       /* Access flag */
                        FILE_SHARE_READ | FILE_SHARE_WRITE,    /* share mode  */
                        NULL,                                  /* security attributes */
                        OPEN_EXISTING,                         /* create mode */
                        0, 0 );
 
-   /* Add Ctrl+Break handler [vszel] */
-   SetConsoleCtrlHandler( hb_gt_CtrlHandler, TRUE );
+   s_HOutput = s_HOriginal;
+   s_HActive = s_HOutput;
+
+   {
+      CONSOLE_SCREEN_BUFFER_INFO csbi;
+      SMALL_RECT srWin;
+
+      s_HInactive = CreateConsoleScreenBuffer(
+                 GENERIC_READ    | GENERIC_WRITE,    /* Access flag        */
+                 FILE_SHARE_READ | FILE_SHARE_WRITE, /* Buffer share mode  */
+                 NULL,                               /* Security attribute */
+                 CONSOLE_TEXTMODE_BUFFER,            /* Type of buffer     */
+                 NULL );                             /* reserved           */
+
+      GetConsoleScreenBufferInfo( s_HOriginal, &csbi );
+
+      /* new console window size and scroll position */
+      srWin.Top    = srWin.Left = 0;
+      srWin.Bottom = csbi.dwSize.Y - 1;
+      srWin.Right  = csbi.dwSize.X - 1;
+
+      SetConsoleScreenBufferSize( s_HInactive, csbi.dwSize );
+      SetConsoleWindowInfo( s_HInactive, TRUE,  &csbi.srWindow );
+      SetConsoleWindowInfo( s_HInactive, FALSE, &srWin );
+   }
+
+/*
+   SetConsoleActiveScreenBuffer( s_HActive );
+*/
 }
 
 void hb_gt_Done( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Done()"));
 
-   if( HOutput != HOriginal )
+   if( s_HOutput != s_HOriginal )
    {
       /* ptucker */
       /* because the current screen may not be the one that was active
@@ -176,14 +200,11 @@ void hb_gt_Done( void )
          functions using stdout will not show anything.
    CloseHandle( hb_gtHInput );
    hb_gtHInput = INVALID_HANDLE_VALUE;
-   CloseHandle( HOutput );
-   HOutput = INVALID_HANDLE_VALUE;
+   CloseHandle( s_HOutput );
+   s_HOutput = INVALID_HANDLE_VALUE;
 */
-   if( HStealth != INVALID_HANDLE_VALUE )
-   {
-      CloseHandle( HStealth );
-      HStealth = INVALID_HANDLE_VALUE;
-   }
+   CloseHandle( s_HInactive );
+   s_HInactive = INVALID_HANDLE_VALUE;
 
    /* Remove Ctrl+Break handler [vszel] */
    SetConsoleCtrlHandler( hb_gt_CtrlHandler, FALSE );
@@ -203,7 +224,7 @@ USHORT hb_gt_GetScreenWidth( void )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetScreenWidth()"));
 
-   GetConsoleScreenBufferInfo( HOutput, &csbi );
+   GetConsoleScreenBufferInfo( s_HOutput, &csbi );
 /* return csbi.dwMaximumWindowSize.X; */
 /* return max( csbi.srWindow.Right - csbi.srWindow.Left + 1, 40 ); */
    return max( csbi.dwSize.X, 40 );
@@ -215,7 +236,7 @@ USHORT hb_gt_GetScreenHeight( void )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetScreenHeight()"));
 
-   GetConsoleScreenBufferInfo( HOutput, &csbi );
+   GetConsoleScreenBufferInfo( s_HOutput, &csbi );
 /* return csbi.dwMaximumWindowSize.Y; */
 /* return max( csbi.srWindow.Bottom - csbi.srWindow.Top + 1, 25 ); */
    return max( csbi.dwSize.Y, 25 );
@@ -230,7 +251,7 @@ void hb_gt_SetPos( USHORT uiRow, USHORT uiCol )
    dwCursorPosition.X = ( SHORT ) uiCol;
    dwCursorPosition.Y = ( SHORT ) uiRow;
 
-   SetConsoleCursorPosition( HCursor, dwCursorPosition );
+   SetConsoleCursorPosition( s_HActive, dwCursorPosition );
 }
 
 USHORT hb_gt_GetCursorStyle( void )
@@ -240,7 +261,7 @@ USHORT hb_gt_GetCursorStyle( void )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetCursorStyle()"));
 
-   GetConsoleCursorInfo( HCursor, &cci );
+   GetConsoleCursorInfo( s_HActive, &cci );
 
    if( ! cci.bVisible )
    {
@@ -279,7 +300,7 @@ void hb_gt_SetCursorStyle( USHORT style )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetCursorStyle(%hu)", style));
 
-   GetConsoleCursorInfo( HCursor, &cci );
+   GetConsoleCursorInfo( s_HActive, &cci );
 
    switch( style )
    {
@@ -312,7 +333,9 @@ void hb_gt_SetCursorStyle( USHORT style )
          break;
    }
 
-   SetConsoleCursorInfo( HCursor, &cci );
+   s_bOldCursor = cci.bVisible;
+
+   SetConsoleCursorInfo( s_HActive, &cci );
 }
 
 void hb_gt_Puts( USHORT uiRow, USHORT uiCol, BYTE attr, BYTE * str, ULONG len )
@@ -325,8 +348,8 @@ void hb_gt_Puts( USHORT uiRow, USHORT uiCol, BYTE attr, BYTE * str, ULONG len )
    coord.X = ( DWORD ) uiCol;
    coord.Y = ( DWORD ) uiRow;
 
-   FillConsoleOutputAttribute( HOutput, ( WORD )( attr & 0xFF ), ( DWORD ) len, coord, &dwWritten );
-   WriteConsoleOutputCharacterA( HOutput, ( char * ) str, ( DWORD ) len, coord, &dwWritten );
+   FillConsoleOutputAttribute( s_HOutput, ( WORD )( attr & 0xFF ), ( DWORD ) len, coord, &dwWritten );
+   WriteConsoleOutputCharacterA( s_HOutput, ( char * ) str, ( DWORD ) len, coord, &dwWritten );
 }
 
 void hb_gt_GetText( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * dest )
@@ -349,8 +372,8 @@ void hb_gt_GetText( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight
 
       coord.X = ( DWORD ) uiLeft;
       coord.Y = ( DWORD ) uiTop;
-      ReadConsoleOutputCharacterA( HOutput, ( char * ) pstr, width, coord, &dwWritten );
-      ReadConsoleOutputAttribute( HOutput, pwattr, width, coord, &dwWritten );
+      ReadConsoleOutputCharacterA( s_HOutput, ( char * ) pstr, width, coord, &dwWritten );
+      ReadConsoleOutputAttribute( s_HOutput, pwattr, width, coord, &dwWritten );
       for( i = 0; i < width; i++ )
       {
          *dest = *( pstr + i );
@@ -391,8 +414,8 @@ void hb_gt_PutText( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight
       }
       coord.X = ( DWORD ) uiLeft;
       coord.Y = ( DWORD ) uiTop;
-      WriteConsoleOutputAttribute( HOutput, pwattr, width, coord, &dwWritten );
-      WriteConsoleOutputCharacterA( HOutput, ( char * ) pstr, width, coord, &dwWritten );
+      WriteConsoleOutputAttribute( s_HOutput, pwattr, width, coord, &dwWritten );
+      WriteConsoleOutputCharacterA( s_HOutput, ( char * ) pstr, width, coord, &dwWritten );
    }
 
    hb_xfree( pstr );
@@ -417,7 +440,7 @@ void hb_gt_SetAttribute( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT ui
       DWORD dwWritten;
 
       coord.Y = uiTop;
-      FillConsoleOutputAttribute( HOutput, ( WORD )( attr & 0xFF ), width, coord, &dwWritten );
+      FillConsoleOutputAttribute( s_HOutput, ( WORD )( attr & 0xFF ), width, coord, &dwWritten );
    }
 }
 
@@ -427,7 +450,7 @@ USHORT hb_gt_Col( void )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Col()"));
 
-   GetConsoleScreenBufferInfo( HCursor, &csbi );
+   GetConsoleScreenBufferInfo( s_HActive, &csbi );
 
    return csbi.dwCursorPosition.X;
 }
@@ -438,7 +461,7 @@ USHORT hb_gt_Row( void )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Row()"));
 
-   GetConsoleScreenBufferInfo( HCursor, &csbi );
+   GetConsoleScreenBufferInfo( s_HActive, &csbi );
 
    return csbi.dwCursorPosition.Y;
 }
@@ -461,8 +484,8 @@ void hb_gt_Scroll( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight,
          DWORD dwWritten;
 
          coord.Y = uiTop;
-         FillConsoleOutputAttribute( HOutput, ( WORD )( attr & 0xFF ), width, coord, &dwWritten );
-         FillConsoleOutputCharacter( HOutput, ' ', width, coord, &dwWritten );
+         FillConsoleOutputAttribute( s_HOutput, ( WORD )( attr & 0xFF ), width, coord, &dwWritten );
+         FillConsoleOutputCharacter( s_HOutput, ' ', width, coord, &dwWritten );
       }
    }
    else
@@ -484,7 +507,7 @@ void hb_gt_Scroll( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight,
       FillChar.Char.AsciiChar = ' ';
       FillChar.Attributes = ( WORD )( attr & 0xFF );
 
-      ScrollConsoleScreenBuffer( HOutput, &Source, &Clip, Target, &FillChar );
+      ScrollConsoleScreenBuffer( s_HOutput, &Source, &Clip, Target, &FillChar );
    }
 }
 
@@ -501,7 +524,7 @@ void hb_gt_DispBegin( void )
       SMALL_RECT srWin;                     /* source rectangle to read from */
       CONSOLE_SCREEN_BUFFER_INFO csbi;
 
-      GetConsoleScreenBufferInfo( HCursor, &csbi );
+      GetConsoleScreenBufferInfo( s_HOutput, &csbi );
       srWin.Top    = srWin.Left = 0;
       srWin.Bottom = ( coBuf.Y = csbi.dwSize.Y ) - 1;
       srWin.Right  = ( coBuf.X = csbi.dwSize.X ) - 1;
@@ -510,31 +533,28 @@ void hb_gt_DispBegin( void )
       pCharInfo = ( CHAR_INFO * ) hb_xgrab( coBuf.Y * coBuf.X * sizeof( CHAR_INFO ) );
 
       /* read the screen rectangle into the buffer */
-      ReadConsoleOutput( HOutput,    /* current screen handle  */
-                   pCharInfo,        /* transfer area          */
-                   coBuf,            /* size of destination buffer */
-                   coDest,           /* upper-left cell to write data to   */
-                   &srWin );         /* screen buffer rectangle to read from */
+      ReadConsoleOutput( s_HOutput,    /* current screen handle  */
+                   pCharInfo,          /* transfer area          */
+                   coBuf,              /* size of destination buffer */
+                   coDest,             /* upper-left cell to write data to   */
+                   &srWin );           /* screen buffer rectangle to read from */
 
-      if( HStealth == INVALID_HANDLE_VALUE )
+      WriteConsoleOutput( s_HInactive, /* output handle */
+                   pCharInfo,          /* data to write */
+                   coBuf,              /* col/row size of source buffer */
+                   coDest,             /* upper-left cell to write data from in src */
+                   &srWin );           /* screen buffer rect to write data to */
+
+      s_HOutput = s_HInactive;
+
       {
-         HStealth = CreateConsoleScreenBuffer(
-                    GENERIC_READ    | GENERIC_WRITE,    /* Access flag        */
-                    FILE_SHARE_READ | FILE_SHARE_WRITE, /* Buffer share mode  */
-                    NULL,                               /* Security attribute */
-                    CONSOLE_TEXTMODE_BUFFER,            /* Type of buffer     */
-                    NULL );                             /* reserved           */
+         CONSOLE_CURSOR_INFO cci;
 
+         GetConsoleCursorInfo( s_HActive, &cci );
+         s_bOldCursor = cci.bVisible;
+         cci.bVisible = FALSE;
+         SetConsoleCursorInfo( s_HActive, &cci );
       }
-
-      hb_gt_SetScreenBuffer( HStealth, HOutput );
-
-      HOutput = HStealth;
-      WriteConsoleOutput( HOutput,    /* output handle */
-                   pCharInfo,         /* data to write */
-                   coBuf,             /* col/row size of source buffer */
-                   coDest,            /* upper-left cell to write data from in src */
-                   &srWin );          /* screen buffer rect to write data to */
 
       hb_xfree( pCharInfo );
    }
@@ -548,36 +568,19 @@ void hb_gt_DispEnd( void )
 
    if( hb_gtDispCount() == 1 )
    {
-      HANDLE htmp = HStealth;
+      s_HOutput = s_HInactive;
+      s_HInactive = s_HActive;
+      s_HActive = s_HOutput;
+      SetConsoleActiveScreenBuffer( s_HActive );
 
-      HStealth = HCursor;
-      hb_gt_DispBegin();
-      HStealth = htmp;
+      {
+         CONSOLE_CURSOR_INFO cci;
+
+         GetConsoleCursorInfo( s_HActive, &cci );
+         cci.bVisible = s_bOldCursor;
+         SetConsoleCursorInfo( s_HActive, &cci );
+      }
    }
-}
-
-static BOOL hb_gt_SetScreenBuffer( HANDLE HNew, HANDLE HOld )
-{
-/* ptucker */
-
-/* set a new buffer to have the same characteristics as an existing buffer */
-   CONSOLE_SCREEN_BUFFER_INFO csbi;
-   SMALL_RECT srWin;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetScreenBuffer(%p, %p)", HNew, HOld));
-
-   GetConsoleScreenBufferInfo( HOld, &csbi );
-
-   /* new console window size and scroll position */
-   srWin.Top    = srWin.Left = 0;
-   srWin.Bottom = csbi.dwSize.Y - 1;
-   srWin.Right  = csbi.dwSize.X - 1;
-
-   SetConsoleScreenBufferSize( HNew, csbi.dwSize );
-   SetConsoleWindowInfo( HNew, TRUE,  &csbi.srWindow );
-   SetConsoleWindowInfo( HNew, FALSE, &srWin );
-
-   return TRUE;
 }
 
 BOOL hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
@@ -590,8 +593,8 @@ BOOL hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetMode(%hu, %hu)", uiRows, uiCols));
 
-   GetConsoleScreenBufferInfo( HOutput, &csbi );
-   coBuf = GetLargestConsoleWindowSize( HOutput );
+   GetConsoleScreenBufferInfo( s_HOutput, &csbi );
+   coBuf = GetLargestConsoleWindowSize( s_HOutput );
 
    /* new console window size and scroll position */
    srWin.Top    = srWin.Left = 0;
@@ -606,14 +609,14 @@ BOOL hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
    /* console window first, then the buffer */
    if( ( DWORD ) csbi.dwSize.X * csbi.dwSize.Y > ( DWORD ) uiCols * uiRows )
    {
-      if( !SetConsoleWindowInfo( HOutput, TRUE, &srWin ) ||
-          !SetConsoleScreenBufferSize( HOutput, coBuf ) )
+      if( !SetConsoleWindowInfo( s_HOutput, TRUE, &srWin ) ||
+          !SetConsoleScreenBufferSize( s_HOutput, coBuf ) )
          bRetVal = FALSE;
    }
    else if( ( DWORD ) csbi.dwSize.X * csbi.dwSize.Y < ( DWORD ) uiCols * uiRows )
    {
-      if( !SetConsoleScreenBufferSize( HOutput, coBuf ) ||
-          !SetConsoleWindowInfo( HOutput, TRUE, &srWin ) )
+      if( !SetConsoleScreenBufferSize( s_HOutput, coBuf ) ||
+          !SetConsoleWindowInfo( s_HOutput, TRUE, &srWin ) )
          bRetVal = FALSE;
    }
 
@@ -631,7 +634,7 @@ void hb_gt_Replicate( BYTE c, ULONG ulLength )
 
 /* TODO: This is not used and may be eliminated after further review */
    FillConsoleOutputCharacter(
-           HOutput,                      /* handle to screen buffer        */
+           s_HOutput,                    /* handle to screen buffer        */
            c,                            /* character to write             */
            ( DWORD ) ulLength,           /* number of cells to write       */
            coBuf,                        /* coordinates of first cell      */
@@ -652,7 +655,7 @@ void hb_gt_SetBlink( BOOL bBlink )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetBlink(%d)", (int) bBlink));
 
-  /* TODO: set the bit if it's supported */
+   /* TODO: set the bit if it's supported */
    HB_SYMBOL_UNUSED( bBlink );
 }
 
@@ -664,26 +667,40 @@ void hb_gt_DebugScreen( BOOL bActivate )
    /* TODO: This is not used and is still a work in progress */
    if( bActivate )
    {
-      if( HDOutput == INVALID_HANDLE_VALUE )
+      if( s_HDOutput == INVALID_HANDLE_VALUE )
       {
-         HDOutput = CreateConsoleScreenBuffer(
+         CONSOLE_SCREEN_BUFFER_INFO csbi;
+         SMALL_RECT srWin;
+
+         s_HDOutput = CreateConsoleScreenBuffer(
                     GENERIC_READ    | GENERIC_WRITE,    /* Access flag        */
                     FILE_SHARE_READ | FILE_SHARE_WRITE, /* Buffer share mode  */
                     NULL,                               /* Security attribute */
                     CONSOLE_TEXTMODE_BUFFER,            /* Type of buffer     */
                     NULL );                             /* reserved           */
 
-         hb_gt_SetScreenBuffer( HDOutput, HOutput );
+
+         GetConsoleScreenBufferInfo( s_HOutput, &csbi );
+
+         /* new console window size and scroll position */
+         srWin.Top    = srWin.Left = 0;
+         srWin.Bottom = csbi.dwSize.Y - 1;
+         srWin.Right  = csbi.dwSize.X - 1;
+
+         SetConsoleScreenBufferSize( s_HDOutput, csbi.dwSize );
+         SetConsoleWindowInfo( s_HDOutput, TRUE,  &csbi.srWindow );
+         SetConsoleWindowInfo( s_HDOutput, FALSE, &srWin );
       }
-      HOsave = HOutput;
-      HOutput = HCursor = HDOutput;
+      s_HOsave = s_HOutput;
+      s_HOutput = s_HActive = s_HDOutput;
       hb_gtDispBegin();
       hb_gtDispEnd();
    }
    else
    {
-      HOutput = HOsave;
-      HCursor = HOriginal;
+      s_HOutput = s_HOsave;
+      s_HActive = s_HOriginal;
    }
-   SetConsoleActiveScreenBuffer( HOutput );
+   SetConsoleActiveScreenBuffer( s_HOutput );
 }
+

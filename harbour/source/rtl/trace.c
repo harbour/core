@@ -33,35 +33,39 @@
  *
  */
 
+
 /*
- * This code is based on a suggestion made by Jose Lalin
- * <dezac@corevia.com>.
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 1999 Victor Szel <info@szelvesz.hu>
+ *    HB_HB_TRACEENABLE()
  *
  * See doc/license.txt for licensing terms.
+ *
  */
 
 #include "extend.h"
 
-
-HARBOUR HB_TRACEON( void )
+HARBOUR HB_HB_TRACEENABLE( void )
 {
-  hb_traceon();
+   hb_retl( hb_traceenabled() );
+
+   if( ISLOG( 1 ) )
+      hb_traceenable( hb_parl( 1 ) ? 1 : 0 );
 }
 
-HARBOUR HB_TRACEOFF( void )
+HARBOUR HB_HB_TRACEON( void )
 {
-  hb_traceoff();
+   hb_traceon();
 }
 
-HARBOUR HB_TRACELEVEL( void )
+HARBOUR HB_HB_TRACEOFF( void )
 {
-  int old_level = 0;
-  int new_level = -1;
+   hb_traceoff();
+}
 
-  if( hb_pcount() == 1 ) {
-    new_level = hb_parni( 1 );
-  }
-
-  old_level = hb_tracelevel(new_level);
-  hb_retni( old_level );
+HARBOUR HB_HB_TRACELEVEL( void )
+{
+   hb_retni( hb_tracelevel( ISNUM( 1 ) ? hb_parni( 1 ) : -1 ) );
 }

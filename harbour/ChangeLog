@@ -1,3 +1,21 @@
+19991126-01:06 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/gt/gtwin.c
+    % DispBegin()/DispEnd() switching code optimized. The only "stepback" is
+      that now the second screen buffer gets allocated right at the startup
+      and not at the first DispBegin() call.
+    ! DispBegin() now hides cursor as in Clipper.
+  * source/rtl/set.c
+    ! One value changed to BOOL.
+  * source/rtl/trace.c
+    + Added HB_ prefix to the nonstandard Clipper function names.
+    % Optimized one function.
+    ! Fixed indentation level.
+  * source/common/hbtrace.c
+    include/hbtrace.h
+    + Some new interface added (to query enabled state for example)
+    * Trace code variable scopes and code optimized.
+    * Variable naming and formatting.
+
 Wed Nov 24 12:45:36 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* include/hbtrace.h: 
