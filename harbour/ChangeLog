@@ -1,3 +1,12 @@
+2000-08-02 21:10 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+    *doc/whatsnew.txt
+        * added polish language modules
+        
+    *source/compiler/harbour.l
+        * fixed support for ANNOUNCE and _PROCREQ_
+        * optimized some other rules
+
 2000-08-02 14:45 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
    * config/c.cf

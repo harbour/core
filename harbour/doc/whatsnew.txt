@@ -7,7 +7,7 @@
 - Added HB_IDLE*() idle state handling functions.
 - Watcom C++ fixes.
 - SET RELATION support for RDDADS
-- New language modules: IT, DE
+- New language modules: IT, DE, PL
 - Slang support enhanced
 - MemoEdit()/TEditor enhancements
 - .NTX support started (creation now works)
