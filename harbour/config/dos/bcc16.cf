@@ -2,7 +2,7 @@
 # $Id$
 #
 # The Harbour Project
-# GNU MAKE file for Borland C/C++ 3.1
+# GNU MAKE file for Borland C/C++ 3.x, 4.x, 5.0x
 
 include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
 

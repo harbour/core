@@ -49,7 +49,7 @@ rem if "%HB_GT_LIB%" == "" set HB_GT_LIB=
    pause   
    echo     HB_COMPILER:
    echo       - When HB_ARCHITECTURE=dos
-   echo         - bcc16   (Borland C++ 3.x, DOS 16-bit)
+   echo         - bcc16   (Borland C++ 3.x, 4.x, 5.0x, DOS 16-bit)
    echo         - djgpp   (Delorie GNU C, DOS 32-bit)
    echo         - rxs32   (EMX/RSXNT/DOS GNU C, DOS 32-bit)
    echo         - watcom  (Watcom C++ 9.x, 10.x, 11.x, DOS 32-bit)

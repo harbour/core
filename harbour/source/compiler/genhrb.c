@@ -231,6 +231,15 @@ void hb_compGenPortObj( PHB_FNAME pFileName )
                fputc( pFunc->pCode[ lPCodePos++ ], yyc );
                break;
 
+            case HB_P_JUMPFAR:
+            case HB_P_JUMPFARFALSE:
+            case HB_P_JUMPFARTRUE:
+               fputc( pFunc->pCode[ lPCodePos++ ], yyc );
+               fputc( pFunc->pCode[ lPCodePos++ ], yyc );
+               fputc( pFunc->pCode[ lPCodePos++ ], yyc );
+               fputc( pFunc->pCode[ lPCodePos++ ], yyc );
+               break;
+
             case HB_P_ENDPROC:
                fputc( pFunc->pCode[ lPCodePos++ ], yyc );
                if( lPCodePos == pFunc->lPCodePos )

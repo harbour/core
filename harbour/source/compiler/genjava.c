@@ -249,6 +249,15 @@ void hb_compGenJava( PHB_FNAME pFileName )
                hb_fputc( pFunc->pCode[ lPCodePos++ ], yyc );
                break;
 
+            case HB_P_JUMPFAR:
+            case HB_P_JUMPFARFALSE:
+            case HB_P_JUMPFARTRUE:
+               fputc( pFunc->pCode[ lPCodePos++ ], yyc );
+               fputc( pFunc->pCode[ lPCodePos++ ], yyc );
+               fputc( pFunc->pCode[ lPCodePos++ ], yyc );
+               fputc( pFunc->pCode[ lPCodePos++ ], yyc );
+               break;
+
             case HB_P_ENDPROC:
                hb_fputc( pFunc->pCode[ lPCodePos++ ], yyc );
                if( lPCodePos == pFunc->lPCodePos )

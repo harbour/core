@@ -1,3 +1,22 @@
+20000413-12:32 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/compiler/genc.c
+     ! JUMPFAR fix for 16 bit compilers.
+
+   * source/compiler/genhrb.c
+   * source/compiler/genjava.c
+     + JUMPFAR support for .HRB and java output.
+
+   * source/compiler/harbour.y
+     - JUMPFAR TODO removed.
+
+   (not yet tested)
+
+   * make_gnu.*
+   * bin/bld.*
+   * config/dos/bcc16.cf
+     + Added 4.x and 5.0x as a 16bit BC compiler.
+
 20000413-12:14 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * include/hbver.h
