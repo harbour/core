@@ -8,6 +8,18 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-07-09 10:50 UTC+0100 Antonio Linares <alinares@fivetech.com>
+   * source/debug/dbgtarr.prg
+     + added lEditable parameter and data
+
+   * source/debug/dbgtobj.prg
+     + added lEditable parameter and data
+     * fix for properly show objects datas names
+
+   * source/debug/debugger.prg
+     * Command window support for HELP and ?? (inspect) commands
+     * Some fixes on cursor management
+
 2002-07-08 20:45 UTC+0100 Antonio Linares <alinares@fivetech.com>
    * source/debug/debugger.prg
      * Command window support for DOS, QUIT, OUTPUT and empty commands
