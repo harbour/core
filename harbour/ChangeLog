@@ -1,3 +1,26 @@
+20000322-21:10 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
+    Missed from previos session
+    *doc/en/array.txt
+    doc/en/binnum.txt
+    doc/en/browse.txt
+    doc/en/command.txt
+    doc/en/dir.txt
+        *Small formating
+    *source/rtl/dir.c
+        *added test to determine the borland compiler version so
+         the _chmod obsolete warning wont appear
+    *source/tools/rtf.prg
+     source/tools/os2.prg
+     source/tools/ng.prg
+        *some enhacement
+    *utils/hbdoc/genng.prg
+     utils/hbdoc/genrtf.prg
+     utils/hbdoc/genos2.prg
+        +code to generate tables
+        +code to support new subtags.
+        *some enhacements
+
+
 20000322-22:30 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
     *doc/compiler.txt
      doc/gnulice.txt
