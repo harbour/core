@@ -281,23 +281,26 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms )
             {
                if( ( pArg->value.asNum.lVal % 256 ) == 0 && pArg->value.asNum.lVal != 0 )
                {
-                  pExpr->value.asString = ( char * ) HB_XGRAB( 1 );
-                  pExpr->value.asString[ 0 ] = '\0';
+                  pExpr->value.asString.string = ( char * ) HB_XGRAB( 1 );
+                  pExpr->value.asString.string[ 0 ] = '\0';
+                  pExpr->value.asString.dealloc = TRUE;
                   pExpr->ulLength = 0;
                }
                else
                {
-                  pExpr->value.asString = ( char * ) HB_XGRAB( 2 );
-                  pExpr->value.asString[ 0 ] = ( pArg->value.asNum.lVal % 256 );
-                  pExpr->value.asString[ 1 ] = '\0';
+                  pExpr->value.asString.string = ( char * ) HB_XGRAB( 2 );
+                  pExpr->value.asString.string[ 0 ] = ( pArg->value.asNum.lVal % 256 );
+                  pExpr->value.asString.string[ 1 ] = '\0';
+                  pExpr->value.asString.dealloc = TRUE;
                   pExpr->ulLength = 1;
                }
             }
             else
             {
-               pExpr->value.asString = ( char * ) HB_XGRAB( 2 );
-               pExpr->value.asString[ 0 ] = ( ( long ) pArg->value.asNum.dVal % 256 );
-               pExpr->value.asString[ 1 ] = '\0';
+               pExpr->value.asString.string = ( char * ) HB_XGRAB( 2 );
+               pExpr->value.asString.string[ 0 ] = ( ( long ) pArg->value.asNum.dVal % 256 );
+               pExpr->value.asString.string[ 1 ] = '\0';
+               pExpr->value.asString.dealloc = TRUE;
                pExpr->ulLength = 1;
             }
             HB_EXPR_PCODE1( hb_compExprDelete, pParms );
@@ -324,6 +327,32 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms )
 
    return pExpr;
 }
+
+/* In macro compiler strings should be automatically deallocated by
+ * the expression optimizer
+ * In harbour compiler strings are shared in the hash table then they
+ * cannot be deallocated by default
+*/
+HB_EXPR_PTR hb_compExprNewString( char *szValue )
+{
+   HB_EXPR_PTR pExpr;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewString(%s)", szValue));
+
+   pExpr =hb_compExprNew( HB_ET_STRING );
+
+   pExpr->value.asString.string = szValue;
+#ifdef HB_MACRO_SUPPORT
+   pExpr->value.asString.dealloc = TRUE;
+#else
+   pExpr->value.asString.dealloc = FALSE;
+#endif
+   pExpr->ulLength = strlen( szValue );
+   pExpr->ValType = HB_EV_STRING;
+
+   return pExpr;
+}
+
 
 /* Creates new array access expression
  *    pArray[ pIndex ]

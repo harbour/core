@@ -187,20 +187,6 @@ HB_EXPR_PTR hb_compExprNewLong( long lValue )
    return pExpr;
 }
 
-HB_EXPR_PTR hb_compExprNewString( char *szValue )
-{
-   HB_EXPR_PTR pExpr;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewString(%s)", szValue));
-
-   pExpr =hb_compExprNew( HB_ET_STRING );
-
-   pExpr->value.asString = szValue;
-   pExpr->ulLength = strlen( szValue );
-   pExpr->ValType = HB_EV_STRING;
-
-   return pExpr;
-}
 
 HB_EXPR_PTR hb_compExprNewCodeBlock( void )
 {

@@ -429,13 +429,7 @@ HB_EXPR_PTR hb_compExprReducePlus( HB_EXPR_PTR pSelf, HB_MACRO_DECL )
       }
       else
       {
-         pLeft->value.asString = (char *) hb_xrealloc( pLeft->value.asString, pLeft->ulLength + pRight->ulLength + 1 );
-         memcpy( pLeft->value.asString + pLeft->ulLength,
-            pRight->value.asString, pRight->ulLength );
-         pLeft->ulLength += pRight->ulLength;
-         pLeft->value.asString[ pLeft->ulLength ] = '\0';
-         pSelf = pLeft;
-         hb_compExprFree( pRight, HB_MACRO_PARAM );
+         pSelf = hb_compExprReducePlusStrings( pLeft, pRight, HB_MACRO_PARAM );
       }
    }
    else
@@ -461,8 +455,8 @@ HB_EXPR_PTR hb_compExprReduceIN( HB_EXPR_PTR pSelf, HB_MACRO_DECL )
       if( pSelf->value.asOperator.pLeft->ulLength == 0 )
          bResult = TRUE;
       else
-         bResult = ( hb_strAt( pSelf->value.asOperator.pLeft->value.asString, pSelf->value.asOperator.pLeft->ulLength,
-                     pSelf->value.asOperator.pRight->value.asString, pSelf->value.asOperator.pRight->ulLength ) != 0 );
+         bResult = ( hb_strAt( pSelf->value.asOperator.pLeft->value.asString.string, pSelf->value.asOperator.pLeft->ulLength,
+                     pSelf->value.asOperator.pRight->value.asString.string, pSelf->value.asOperator.pRight->ulLength ) != 0 );
 
       /* NOTE:
        * "" $ "XXX" = .T.
@@ -846,7 +840,7 @@ HB_EXPR_PTR hb_compExprReduceEQ( HB_EXPR_PTR pSelf, HB_MACRO_DECL )
                BOOL bResult = FALSE;
 
                if( pLeft->ulLength == pRight->ulLength )
-                  bResult = ( strcmp( pLeft->value.asString, pRight->value.asString ) == 0 );
+                  bResult = ( strcmp( pLeft->value.asString.string, pRight->value.asString.string ) == 0 );
                hb_compExprFree( pSelf->value.asOperator.pLeft, HB_MACRO_PARAM );
                hb_compExprFree( pSelf->value.asOperator.pRight, HB_MACRO_PARAM );
                pSelf->ExprType = HB_ET_LOGICAL;

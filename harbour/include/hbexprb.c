@@ -312,12 +312,12 @@ static HB_EXPR_FUNC( hb_compExprUseString )
          break;
       case HB_EA_PUSH_PCODE:
          {
-            HB_EXPR_PCODE2( hb_compGenPushString, pSelf->value.asString, pSelf->ulLength );
+            HB_EXPR_PCODE2( hb_compGenPushString, pSelf->value.asString.string, pSelf->ulLength );
 #if !defined( HB_MACRO_SUPPORT )
                 /* only memvar variables are allowed in macro compilation - there is no
                  * need to check for locals or static variables
                  */
-         if( hb_compExprCheckMacroVar( pSelf->value.asString ) )
+         if( hb_compExprCheckMacroVar( pSelf->value.asString.string ) )
             HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROTEXT );
 #endif
          }
@@ -329,7 +329,8 @@ static HB_EXPR_FUNC( hb_compExprUseString )
          hb_compWarnMeaningless( pSelf );
          break;
       case HB_EA_DELETE:
-         HB_XFREE( pSelf->value.asString );
+         if( pSelf->value.asString.dealloc )
+            HB_XFREE( pSelf->value.asString.string );
          break;
    }
    return pSelf;

@@ -95,7 +95,6 @@ void hb_hashTableKill( HB_HASH_TABLE_PTR pTable )
       {
          HB_HASH_ITEM_PTR pItem;
          HB_HASH_ITEM_PTR pNext;
-         
          pItem = pTable->pItems[ ulSize ];
          while( pItem )
          {

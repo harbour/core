@@ -221,7 +221,7 @@ Separator     {SpaceTab}
                         BEGIN 0;
 
                       yytext[--yyleng] = '\0';
-                      yylval.string = hb_strdup( yytext );
+                      yylval.string = hb_compIdentifierNew( yytext, TRUE );
 
                       return LITERAL;
                     }
@@ -232,7 +232,7 @@ Separator     {SpaceTab}
                         BEGIN 0;
 
                       yytext[--yyleng] = '\0';
-                      yylval.string = hb_strdup( yytext );
+                      yylval.string = hb_compIdentifierNew( yytext, TRUE );
 
                       return LITERAL;
                     }
@@ -243,7 +243,7 @@ Separator     {SpaceTab}
                          BEGIN 0;
 
                       yytext[--yyleng] = '\0';
-                      yylval.string = hb_strdup( yytext );
+                      yylval.string = hb_compIdentifierNew( yytext, TRUE );
 
                       return LITERAL;
                     }

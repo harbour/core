@@ -1,3 +1,26 @@
+2000-07-15 20:00 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+    *include/hbexpra.c
+    *include/hbexprb.c
+    *include/hbexprc.c
+    *include/hbexprop.h
+    *source/common/expropt1.c
+    *source/common/expropt2.c
+    *source/compiler/harbour.l
+    *source/macro/macroa.c
+    *source/macro/macrob.c
+    *source/macro/macroc.c
+        * literal strings are now stored in the hash table together with
+        identifiers (only the main compiler not the macro compiler)
+        * expression of string type (created by the exression optimier)
+        stores info it is allowed to deallocate the memory occupied by
+        the string (normally it stores pointer to memory allocated
+        in the identifies table - however after optimization it can store 
+        string allocated outside
+        
+    *source/compiler/hbident.c
+        * the hash table is increased to 373 items      
+
 2000-07-14 22:40 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/harbour.slx
      ! Removed Todo: Hex Numbers. There are no more known TODOs.

@@ -40,7 +40,7 @@
 
 static HB_HASH_TABLE_PTR s_comp_Identifiers;    /* table of identifiers for reuse */
 
-#define HB_IDENT_BUCKET    211
+#define HB_IDENT_TABLE_SIZE    373UL
 
 /* create a new identifier or return the existing one 
 */
@@ -65,15 +65,15 @@ char * hb_compIdentifierNew( char * szName, BOOL bCopy )
 /* returns a hash key */
 HB_HASH_FUNC( hb_comp_IdentKey )    /* ULONG func (void *Value, void *Cargo) */
 {
-   unsigned char ucSum = 0;
+   ULONG ulSum = 0;
    char *szName = ( char * )Value;
    
    while( *szName )
-     ucSum += *szName++;
+     ulSum += *szName++;
 
    HB_SYMBOL_UNUSED( Cargo );
      
-   return ucSum % HB_IDENT_BUCKET;
+   return ulSum % HB_IDENT_TABLE_SIZE;
 }
 
 /* deletes an identifier */
@@ -93,7 +93,7 @@ HB_HASH_FUNC( hb_comp_IdentComp )
 /* initialize the hash table for identifiers */
 void hb_compIdentifierOpen( )
 {
-   s_comp_Identifiers = hb_hashTableCreate( HB_IDENT_BUCKET, hb_comp_IdentKey, 
+   s_comp_Identifiers = hb_hashTableCreate( HB_IDENT_TABLE_SIZE, hb_comp_IdentKey, 
                            hb_comp_IdentDel, hb_comp_IdentComp );   
 }
 

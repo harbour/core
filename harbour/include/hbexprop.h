@@ -150,9 +150,13 @@ typedef struct HB_EXPR_
 {
    union
    {
-      char *asString;      /* literal strings */
       char *asSymbol;      /* variable name */
       BOOL asLogical;      /* logical value */
+      struct
+      {
+         char *string;      /* literal strings */
+         BOOL dealloc;      /* automatic deallocate on expresion deletion */
+      } asString;
       struct
       {
         struct HB_EXPR_ *pMacro;  /* macro variable */
@@ -336,6 +340,7 @@ void hb_compExprErrorType( HB_EXPR_PTR, HB_MACRO_DECL );
 HB_EXPR_PTR hb_compExprListStrip( HB_EXPR_PTR, HB_MACRO_DECL );
 BOOL hb_compExprCheckMacroVar( char * );
 void hb_compExprCBVarDel( HB_CBVAR_PTR );
+HB_EXPR_PTR hb_compExprReducePlusStrings( HB_EXPR_PTR, HB_EXPR_PTR, HB_MACRO_DECL );
 
 #ifdef HB_MACRO_SUPPORT
 
