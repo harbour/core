@@ -37,6 +37,7 @@
          code here. */
 
 #include "hbsetup.h"
+#include "hbdate.h"
 
 #if   defined(HARBOUR_LANGUAGE_EU)
    #include "natmsg/msgeu.c"
@@ -93,3 +94,4 @@
 #else
    #include "natmsg/msgen.c"
 #endif
+

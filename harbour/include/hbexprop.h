@@ -38,6 +38,10 @@
 
 #include "hbapi.h"
 
+#if defined(__cplusplus)
+extern "C" {
+#endif
+
 /* value types seen at language level
  */
 #define  HB_EV_UNKNOWN     0
@@ -345,6 +349,10 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR, HB_EXPR_PTR );
 HB_EXPR_PTR hb_compExprCBVarAdd( HB_EXPR_PTR, char *, BYTE );
 void hb_compExprDelete( HB_EXPR_PTR );
 
+#endif
+
+#if defined(__cplusplus)
+}
 #endif
 
 #endif  /* HB_EXPROP_H_ */

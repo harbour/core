@@ -38,6 +38,10 @@
 
 #include "hbdefs.h"
 
+#if defined(__cplusplus)
+extern "C" {
+#endif
+
 struct _HB_DYNS;
 
 /* symbol support structure */
@@ -71,5 +75,9 @@ typedef HB_DYNS_FUNC( PHB_DYNS_FUNC );
 #define HB_FS_MEMVAR   ( ( HB_SYMBOLSCOPE ) 0x80 )
 
 extern void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols );  /* invokes the virtual machine */
+
+#if defined(__cplusplus)
+}
+#endif
 
 #endif /* HB_VMPUB_H_ */

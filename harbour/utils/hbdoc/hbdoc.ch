@@ -32,14 +32,16 @@
  * their web site at http://www.gnu.org/).
  *
  */
-#ifndef _HBDOCDEF_CH_
-#define _HBDOCDEF_CH_
+
+#ifndef _HBDOC_CH_
+#define _HBDOC_CH_
 
 #define CRLF HB_OSNewLine()
 //  The delimiter
 #define DELIM   "$"                 // keyword delimiter
 
 #xtranslate UPPERLOWER(<exp>) => (UPPER(SUBSTR(<exp>,1,1))+LOWER(SUBSTR(<exp>,2)))
+
 #define D_NORMAL  1
 #define D_ARG     2
 #define D_SYNTAX  3

@@ -14,7 +14,6 @@ LIBS=\
         vm \
 	macro \
         pp \
-        runner \
         common \
 
 ifeq ($(PM),)

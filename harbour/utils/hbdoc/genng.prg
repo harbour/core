@@ -1,4 +1,3 @@
-
 /*
  * $Id$
  */
@@ -39,7 +38,7 @@
 #include "fileio.ch"
 #include "inkey.ch"
 #include 'common.ch'
-#include 'hbdocdef.ch'
+#include 'hbdoc.ch'
 //  output lines on the screen
 
 #define INFILELINE   10

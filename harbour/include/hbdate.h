@@ -36,6 +36,10 @@
 #ifndef HB_DATE_H_
 #define HB_DATE_H_
 
+#if defined(__cplusplus)
+extern "C" {
+#endif
+
 /* In msgxxx.c modules */
 extern char *   hb_monthsname [];
 extern char *   hb_daysname [];
@@ -51,5 +55,9 @@ extern void     hb_dateStrPut( char * szDate, long lDay, long lMonth, long lYear
 extern void     hb_dateStrGet( const char * szDate, long * plDay, long * plMonth, long * plYear );
 extern char *   hb_dateDecStr( char * szDate, long lJulian );
 extern long     hb_dateEncStr( char * szDate );
+
+#if defined(__cplusplus)
+}
+#endif
 
 #endif /* HB_DATE_H_ */

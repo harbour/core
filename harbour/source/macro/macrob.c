@@ -7,6 +7,10 @@
  * macro compiler (there is an additional parameter passed to some functions)
  * 0 - ignore this magic number - this is used to force compilation
 */
+
 #define HB_MACRO_SUPPORT
+
 #include "hbmacro.h"
+#include "hbcomp.h"
+
 #include "hbexprb.c"

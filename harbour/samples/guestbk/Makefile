@@ -21,7 +21,6 @@ LIBS=\
         vm \
 	macro \
         pp \
-        runner \
         common \
 
 include $(TOP)$(ROOT)config/bin.cf

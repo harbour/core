@@ -38,10 +38,10 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    HB_SETPOS()
+ *    SETPOS()
  *
  * Copyright 1999 Victor Szakats <info@szelvesz.hu>
- *    HB_SETPOSBS()
+ *    SETPOSBS()
  *
  * See doc/license.txt for licensing terms.
  *
@@ -56,13 +56,15 @@ HB_FUNC( SETPOS ) /* Sets the screen position */
       hb_gtSetPos( hb_parni( 1 ), hb_parni( 2 ) );
 }
 
-/* Move the screen position to the right by one column */
-HB_FUNC( SETPOSBS )
+/* NOTE: CA-Cl*pper undocumented */
+
+HB_FUNC( SETPOSBS ) /* Move the screen position to the right by one column */
 {
    SHORT iRow, iCol;
 
-   /* NOTE: Clipper does no checks about reaching the border or anything.
+   /* NOTE: CA-Cl*pper does no checks about reaching the border or anything.
             [vszakats] */
+
    hb_gtGetPos( &iRow, &iCol );
    hb_gtSetPos( iRow, iCol + 1 );
 }
@@ -86,3 +88,4 @@ HB_FUNC( COL ) /* Return the current screen column position (zero origin) */
 
    hb_retni( iCol );
 }
+

@@ -49,6 +49,10 @@
 #include "hbexprop.h"
 #include "hbpcode.h"
 
+#if defined(__cplusplus)
+extern "C" {
+#endif
+
 /* compiler related declarations */
 
 /* Output types */
@@ -212,8 +216,8 @@ extern void hb_compGenPCode3( BYTE, BYTE, BYTE, HB_MACRO_DECL ); /* generates 3 
 extern void hb_compGenPCodeN( BYTE * pBuffer, ULONG ulSize, HB_MACRO_DECL );  /* copy bytes to a pcode buffer */
 
 /* Codeblocks */
-void hb_compCodeBlockStart( HB_MACRO_DECL ); /* starts a codeblock creation */
-void hb_compCodeBlockEnd( HB_MACRO_DECL );   /* end of codeblock creation */
+extern void hb_compCodeBlockStart( HB_MACRO_DECL ); /* starts a codeblock creation */
+extern void hb_compCodeBlockEnd( HB_MACRO_DECL );   /* end of codeblock creation */
 
 #define hb_compErrorType( p )    hb_macroError( EG_ARG, HB_MACRO_PARAM )
 #define hb_compErrorIndex( p )   hb_macroError( EG_BOUND, HB_MACRO_PARAM )
@@ -264,8 +268,8 @@ extern ULONG hb_compSequenceEnd( void );
 extern void hb_compSequenceFinish( ULONG, int );
 
 /* Codeblocks */
-void hb_compCodeBlockStart( void );        /* starts a codeblock creation */
-void hb_compCodeBlockEnd( void );          /* end of codeblock creation */
+extern void hb_compCodeBlockStart( void );        /* starts a codeblock creation */
+extern void hb_compCodeBlockEnd( void );          /* end of codeblock creation */
 
 /* support for FIELD declaration */
 extern void hb_compFieldSetAlias( char *, int );
@@ -275,15 +279,15 @@ extern int hb_compFieldsCount( void );
 extern void hb_compStaticDefStart( void );
 extern void hb_compStaticDefEnd( void );
 
-HB_EXPR_PTR hb_compErrorStatic( char *, HB_EXPR_PTR );
-HB_EXPR_PTR hb_compErrorType( HB_EXPR_PTR );
-HB_EXPR_PTR hb_compErrorIndex( HB_EXPR_PTR );
-HB_EXPR_PTR hb_compErrorSyntax( HB_EXPR_PTR );
-HB_EXPR_PTR hb_compErrorLValue( HB_EXPR_PTR );
-HB_EXPR_PTR hb_compErrorBound( HB_EXPR_PTR );
-HB_EXPR_PTR hb_compErrorAlias( HB_EXPR_PTR );
+extern HB_EXPR_PTR hb_compErrorStatic( char *, HB_EXPR_PTR );
+extern HB_EXPR_PTR hb_compErrorType( HB_EXPR_PTR );
+extern HB_EXPR_PTR hb_compErrorIndex( HB_EXPR_PTR );
+extern HB_EXPR_PTR hb_compErrorSyntax( HB_EXPR_PTR );
+extern HB_EXPR_PTR hb_compErrorLValue( HB_EXPR_PTR );
+extern HB_EXPR_PTR hb_compErrorBound( HB_EXPR_PTR );
+extern HB_EXPR_PTR hb_compErrorAlias( HB_EXPR_PTR );
 extern void hb_compErrorDuplVar( char * );
-HB_EXPR_PTR hb_compWarnMeaningless( HB_EXPR_PTR );
+extern HB_EXPR_PTR hb_compWarnMeaningless( HB_EXPR_PTR );
 
 extern void hb_compChkCompilerSwitch( int, char * Args[] );
 extern void hb_compChkEnvironVar( char * );
@@ -295,8 +299,24 @@ extern void hb_compPrintLogo( void );
 
 #endif    /* HB_MACRO_SUPPORT */
 
-extern void hb_compGenError( char* _szErrors[], char cPrefix, int iError, char * szError1, char * szError2 );
-extern void hb_compGenWarning( char* _szWarnings[], char cPrefix, int iWarning, char * szWarning1, char * szWarning2);
+/* Misc functions defined in harbour.c */
+extern void hb_compFixReturns( void ); /* fixes all last defined function returns jumps offsets */
+
+/* Misc functions defined in harbour.y */
+extern int hb_compYACCMain( char * szName );
+extern BOOL hb_compInclude( char * szFileName, PATHNAMES * pSearchPath );  /* end #include support */
+
+extern char * hb_comp_buffer; /* yacc input buffer */
+
+/* output related functions defined in gen*.c */
+extern void hb_compGenCCode( PHB_FNAME );      /* generates the C language output */
+extern void hb_compGenJava( PHB_FNAME );       /* generates the Java language output */
+extern void hb_compGenPascal( PHB_FNAME );     /* generates the Pascal language output */
+extern void hb_compGenRC( PHB_FNAME );         /* generates the RC language output */
+extern void hb_compGenPortObj( PHB_FNAME );    /* generates the portable objects */
+#ifdef HARBOUR_OBJ_GENERATION
+extern void hb_compGenObj32( PHB_FNAME );      /* generates OBJ 32 bits */
+#endif
 
 /* variable used by compiler
  */
@@ -350,6 +370,10 @@ extern char *      hb_comp_szWarnings[];
 #define HB_EXITLEVEL_DEFAULT    0
 #define HB_EXITLEVEL_SETEXIT    1
 #define HB_EXITLEVEL_DELTARGET  2
+
+#if defined(__cplusplus)
+}
+#endif
 
 #endif /* HB_COMP_H_ */
 

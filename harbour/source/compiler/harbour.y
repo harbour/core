@@ -52,23 +52,23 @@ extern char *yytext;
 
 #ifdef __cplusplus
 typedef struct yy_buffer_state *YY_BUFFER_STATE;
-YY_BUFFER_STATE yy_create_buffer( FILE *, int ); /* yacc functions to manage multiple files */
-void yy_switch_to_buffer( YY_BUFFER_STATE ); /* yacc functions to manage multiple files */
-void yy_delete_buffer( YY_BUFFER_STATE ); /* yacc functions to manage multiple files */
+extern YY_BUFFER_STATE yy_create_buffer( FILE *, int ); /* yacc functions to manage multiple files */
+extern void yy_switch_to_buffer( YY_BUFFER_STATE ); /* yacc functions to manage multiple files */
+extern void yy_delete_buffer( YY_BUFFER_STATE ); /* yacc functions to manage multiple files */
 #else
-void * yy_create_buffer( FILE *, int ); /* yacc functions to manage multiple files */
-void yy_switch_to_buffer( void * ); /* yacc functions to manage multiple files */
-void yy_delete_buffer( void * ); /* yacc functions to manage multiple files */
+extern void * yy_create_buffer( FILE *, int ); /* yacc functions to manage multiple files */
+extern void yy_switch_to_buffer( void * ); /* yacc functions to manage multiple files */
+extern void yy_delete_buffer( void * ); /* yacc functions to manage multiple files */
 #endif
 
 /* lex & yacc related prototypes */
-void yyerror( char * ); /* parsing error management function */
-int yylex( void );      /* main lex token function, called by yyparse() */
-int yyparse( void );    /* main yacc parsing function */
+extern int yyparse( void );    /* main yacc parsing function */
+extern void yyerror( char * ); /* parsing error management function */
+extern int yylex( void );      /* main lex token function, called by yyparse() */
 #ifdef __cplusplus
 extern "C" int yywrap( void );
 #else
-int yywrap( void );     /* manages the EOF of current processed file */
+extern int yywrap( void );     /* manages the EOF of current processed file */
 #endif
 
 static void hb_compLoopStart( void );
@@ -84,12 +84,6 @@ static void hb_compRTVariableAdd( HB_EXPR_PTR, BOOL );
 static void hb_compRTVariableGen( char * );
 
 static void hb_compVariableDim( char *, HB_EXPR_PTR );
-
-/* Misc functions defined in harbour.c */
-extern void hb_compGenError( char* _szErrors[], char cPrefix, int iError, char * szError1, char * szError2 );
-extern void hb_compGenWarning( char* _szWarnings[], char cPrefix, int iWarning, char * szWarning1, char * szWarning2);
-void hb_compFixReturns( void ); /* fixes all last defined function returns jumps offsets */
-
 
 #ifdef HARBOUR_YYDEBUG
    #define YYDEBUG        1 /* Parser debug information support */
@@ -125,7 +119,7 @@ USHORT hb_comp_wIfCounter    = 0;
 USHORT hb_comp_wWhileCounter = 0;
 USHORT hb_comp_wCaseCounter  = 0;
 
-char *hb_comp_buffer; /* yacc input buffer */
+char * hb_comp_buffer; /* yacc input buffer */
 
 static PTR_LOOPEXIT hb_comp_pLoops = NULL;
 static HB_RTVAR_PTR hb_comp_rtvars = NULL;
@@ -166,7 +160,7 @@ char * hb_comp_szAnnounce = NULL;    /* ANNOUNCEd procedure */
 %token INC DEC ALIASOP DOCASE CASE OTHERWISE ENDCASE ENDDO MEMVAR
 %token WHILE EXIT LOOP END FOR NEXT TO STEP LE GE FIELD IN PARAMETERS
 %token PLUSEQ MINUSEQ MULTEQ DIVEQ POWER EXPEQ MODEQ EXITLOOP
-%token PRIVATE BEGINSEQ BREAK RECOVER RECOVERUSING DO WITH SELF LINE 
+%token PRIVATE BEGINSEQ BREAK RECOVER RECOVERUSING DO WITH SELF LINE
 %token MACROVAR MACROTEXT
 %token AS_NUMERIC AS_CHARACTER AS_LOGICAL AS_DATE AS_ARRAY AS_BLOCK AS_OBJECT DECLARE_FUN
 
@@ -242,7 +236,7 @@ char * hb_comp_szAnnounce = NULL;    /* ANNOUNCEd procedure */
 
 Main       : { hb_compLinePush(); } Source       { }
            | /* empty file */
-	   ;
+           ;
 
 Source     : Crlf
            | VarDefs
@@ -512,7 +506,7 @@ FieldVarAlias  : FieldAlias VarAlias            { hb_compExprDelete( $1 ); $$ = 
 
 AliasId     : IdentName      { $$ = hb_compExprNewVar( $1 ); }
             | MacroVar        { $$ = $1; }
-	    | MacroExpr       { $$ = $1; }
+            | MacroExpr       { $$ = $1; }
             ;
 
 AliasVar   : NumAlias AliasId          { $$ = hb_compExprNewAliasVar( $1, $2 ); }
@@ -890,13 +884,13 @@ ExprExpEq   : NumValue     EXPEQ Expression   { $$ = hb_compExprSetOperand( hb_c
             | ObjectMethod EXPEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewExpEq( $1 ), $3 ); }
             ;
 
-ExprOperEq  : ExprPlusEq	{ $$ = $1; }
-            | ExprMinusEq	{ $$ = $1; }
-            | ExprMultEq	{ $$ = $1; }
-            | ExprDivEq		{ $$ = $1; }
-            | ExprModEq		{ $$ = $1; }
-            | ExprExpEq		{ $$ = $1; }
-	    ;
+ExprOperEq  : ExprPlusEq        { $$ = $1; }
+            | ExprMinusEq       { $$ = $1; }
+            | ExprMultEq        { $$ = $1; }
+            | ExprDivEq         { $$ = $1; }
+            | ExprModEq         { $$ = $1; }
+            | ExprExpEq         { $$ = $1; }
+            ;
 
 ExprMath    : Expression '+' Expression     { $$ = hb_compExprSetOperand( hb_compExprNewPlus( $1 ), $3 ); }
             | Expression '-' Expression     { $$ = hb_compExprSetOperand( hb_compExprNewMinus( $1 ), $3 ); }
@@ -1245,7 +1239,7 @@ Cases      : CASE Expression Crlf
 
 Otherwise  : OTHERWISE Crlf { hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE; hb_compLinePush(); }
                 EmptyStats
-           | Otherwise OTHERWISE { hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_MAYHEM_IN_CASE, NULL, NULL ); } Crlf 
+           | Otherwise OTHERWISE { hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_MAYHEM_IN_CASE, NULL, NULL ); } Crlf
                 EmptyStats
            ;
 
@@ -1587,11 +1581,11 @@ int yywrap( void )   /* handles the EOF of the currently processed file */
 #else
       yy_switch_to_buffer( hb_comp_files.pLast->pBuffer );
 #endif
-      return 0;      
+      return 0;
    }
 */ /* we close the currently include file and continue */
 
-   return 0;      
+   return 0;
 }
 
 /* ************************************************************************* */
@@ -1890,3 +1884,4 @@ static void hb_compVariableDim( char * szName, HB_EXPR_PTR pInitValue )
      hb_compExprDelete( hb_compExprGenPop( hb_compExprNewVar( szName ) ) );
   }
 }
+

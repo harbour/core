@@ -156,18 +156,41 @@ double hb_fsDiskSpace( USHORT uiDrive, USHORT uiType )
                   memcpy( &i64RetVal, &i64TotalBytes, sizeof( ULARGE_INTEGER ) );
             }
 
-            dSpace  = ( double ) i64RetVal.u.HighPart +
-                      ( double ) i64RetVal.u.HighPart *
-                      ( double ) 0xFFFFFFFF;
-            dSpace += ( double ) i64RetVal.u.LowPart;
+            #if defined(__GNUC__)
 
-            if( uiType == HB_DISK_USED )
-            {
-               dSpace -= ( double ) i64FreeBytes.u.HighPart +
-                         ( double ) i64FreeBytes.u.HighPart *
+               /* NOTE: In Cygwin/Mingw32 (egcs-2.91.57) the declaration for
+                        ULARGE_INTEGER differs from the MS standard.
+                        [vszakats] */
+
+               dSpace  = ( double ) i64RetVal.HighPart +
+                         ( double ) i64RetVal.HighPart *
                          ( double ) 0xFFFFFFFF;
-               dSpace -= ( double ) i64FreeBytes.u.LowPart;
-            }
+               dSpace += ( double ) i64RetVal.LowPart;
+      
+               if( uiType == HB_DISK_USED )
+               {
+                  dSpace -= ( double ) i64FreeBytes.HighPart +
+                            ( double ) i64FreeBytes.HighPart *
+                            ( double ) 0xFFFFFFFF;
+                  dSpace -= ( double ) i64FreeBytes.LowPart;
+               }
+
+            #else
+
+               dSpace  = ( double ) i64RetVal.u.HighPart +
+                         ( double ) i64RetVal.u.HighPart *
+                         ( double ) 0xFFFFFFFF;
+               dSpace += ( double ) i64RetVal.u.LowPart;
+      
+               if( uiType == HB_DISK_USED )
+               {
+                  dSpace -= ( double ) i64FreeBytes.u.HighPart +
+                            ( double ) i64FreeBytes.u.HighPart *
+                            ( double ) 0xFFFFFFFF;
+                  dSpace -= ( double ) i64FreeBytes.u.LowPart;
+               }
+
+            #endif
          }
       }
       else 

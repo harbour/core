@@ -36,6 +36,10 @@
 #ifndef HB_APILNG_H_
 #define HB_APILNG_H_
 
+#if defined(__cplusplus)
+extern "C" {
+#endif
+
 #define HB_LANG_TEXT_DATEFMT    0
 #define HB_LANG_TEXT_YESCHAR    1
 #define HB_LANG_TEXT_NOCHAR     2
@@ -102,5 +106,9 @@ extern char *   hb_langDGetErrorIntr	( ULONG ulIndex );
 
 extern PHB_LANG hb_langNew              ( void );
 extern void     hb_langDelete           ( PHB_LANG lang );
+
+#if defined(__cplusplus)
+}
+#endif
 
 #endif /* HB_APILNG_H_ */

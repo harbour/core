@@ -350,8 +350,12 @@ HB_FUNC( DIRECTORY )
 
    PHB_ITEM pDirSpec = hb_param( 1, IT_STRING );
    PHB_ITEM pAttributes = hb_param( 2, IT_STRING );
+
 #if defined(_MSC_VER) || defined(__MINGW32__)
    PHB_ITEM pEightDotThree = hb_param( 3, IT_LOGICAL );
+   BOOL     bEightDotThree;
+#elif defined(__WATCOMC__)
+   int      iDirnameLen;
 #endif
 
    char     fullfile[ _POSIX_PATH_MAX + 1 ];
@@ -363,9 +367,6 @@ HB_FUNC( DIRECTORY )
    char     pfext[ _POSIX_PATH_MAX + 1 ];
    char     fname[ _POSIX_PATH_MAX + 1 ];
    char     fext[ _POSIX_PATH_MAX + 1 ];
-#if defined(_MSC_VER) || defined(__MINGW32__)
-   BOOL     bEightDotThree;
-#endif
    char     ddate[ 9 ];
    char     ttime[ 9 ];
    char     aatrib[ 17 ];
@@ -373,9 +374,6 @@ HB_FUNC( DIRECTORY )
    long     fsize;
    time_t   ftime;
    char *   pos;
-#if defined(__WATCOMC__)
-   int      iDirnameLen;
-#endif
    USHORT   ushbMask = FA_ARCH;
    PHB_ITEM pDir;
 
@@ -392,7 +390,7 @@ HB_FUNC( DIRECTORY )
    ULONG        findSize = sizeof( entry );
    ULONG        findCount = 1;
 #else
-   struct dirent *entry;
+   struct dirent * entry;
    DIR  * dir;
 #endif
 
@@ -485,7 +483,7 @@ HB_FUNC( DIRECTORY )
    HB_TRACE(HB_TR_INFO, ("dirname: |%s|, pattern: |%s|\n", dirname, pattern));
    HB_TRACE(HB_TR_INFO, ("pfname: |%s|, pfext: |%s|\n", pfname, pfext));
 
-   /* should have drive,directory in dirname and filespec in pattern */
+   /* should have drive, directory in dirname and filespec in pattern */
 
    tzset();
    pDir = hb_itemArrayNew( 0 );
@@ -507,20 +505,25 @@ HB_FUNC( DIRECTORY )
             GetShortPathName( string, string, _POSIX_PATH_MAX );
 
 #elif defined(__IBMCPP__)
+
    strcpy( string, dirname );
    strcat( string, pattern );
+
    if( DosFindFirst( string, &hFind, fileTypes, &entry, findSize, &findCount, FIL_STANDARD ) == NO_ERROR && findCount > 0 )
    {
       do
       {
          strcpy( string, entry.achName );
 #else
+
    #if defined(__WATCOMC__)
-   /* opendir in Watcom doesn't like the path delimiter at the end of a string */
+      /* opendir in Watcom doesn't like the path delimiter at the end of a string */
       dirname[ iDirnameLen ] = '.';
       dirname[ iDirnameLen + 1 ] = '\0';
    #endif
+
    dir = opendir( dirname );
+
    #if defined(__WATCOMC__)
       dirname[ iDirnameLen ] = '\0';
    #endif
@@ -540,6 +543,7 @@ HB_FUNC( DIRECTORY )
       strcpy( string, entry->d_name );
 
 #endif
+
       pos = strrchr( string, OS_PATH_DELIMITER );
       pos = strrchr( pos ? ( pos + 1 ) : string, '.' );
 
@@ -564,6 +568,7 @@ HB_FUNC( DIRECTORY )
          attrib = 0;
 
 #if defined(_MSC_VER) || defined(__MINGW32__)
+
          /* due to short-name support: reconstruct the filename */
          if( bEightDotThree )
          {
@@ -595,10 +600,10 @@ HB_FUNC( DIRECTORY )
          strcpy( filename, entry->d_name );
          strcpy( fullfile, dirname );
 #endif
+
          strcat( fullfile, filename );
 
-
-         if( -1 != stat( fullfile, &statbuf ) )
+         if( stat( fullfile, &statbuf ) != -1 )
          {
             fsize = statbuf.st_size;
             ftime = statbuf.st_mtime;
@@ -619,15 +624,14 @@ HB_FUNC( DIRECTORY )
                }
 
             #elif defined(__BORLANDC__) || (__BORLANDC__ >= 1280)
-              /* NOTE: _chmod( f, 0 ) => Get attribs
-                       _chmod( f, 1, n ) => Set attribs
-                 chmod() though, _will_ change the attributes */
-               attrib = (USHORT)_rtl_chmod( fullfile, 0,0 );
+               /* NOTE: _chmod( f, 0 ) => Get attribs
+                        _chmod( f, 1, n ) => Set attribs
+                        chmod() though, _will_ change the attributes */
+               attrib = ( USHORT ) _rtl_chmod( fullfile, 0, 0 );
             #elif defined(__BORLANDC__)
-               attrib = (USHORT)_chmod( fullfile, 0,0 );
-
+               attrib = ( USHORT ) _chmod( fullfile, 0, 0 );
             #elif defined(__DJGPP__)
-               attrib = (USHORT)_chmod( fullfile, 0 );
+               attrib = ( USHORT ) _chmod( fullfile, 0 );
             #else
                attrib = 0;
             #endif
@@ -650,24 +654,21 @@ HB_FUNC( DIRECTORY )
                ft->tm_hour, ft->tm_min, ft->tm_sec );
 
             HB_TRACE(HB_TR_INFO, ("name: |%s|, date: |%s|, time: |%s|\n", filename, ddate, ttime));
-
          }
          else
-         {
             HB_TRACE(HB_TR_INFO, ("invalid file |%s|\n", fullfile));
-         }
 
          if( !( ( ( ushbMask & FA_HIDDEN ) == 0 && ( attrib & FA_HIDDEN ) > 0 ) ||
                 ( ( ushbMask & FA_SYSTEM ) == 0 && ( attrib & FA_SYSTEM ) > 0 ) ||
                 ( ( ushbMask & FA_DIREC  ) == 0 && ( attrib & FA_DIREC  ) > 0 ) ) )
          {
-            PHB_ITEM  pSubarray = hb_itemArrayNew( F_LEN );
+            PHB_ITEM pSubarray = hb_itemArrayNew( F_LEN );
 
-            PHB_ITEM  pFilename = hb_itemPutC( NULL, filename );
-            PHB_ITEM  pSize = hb_itemPutNL( NULL, fsize );
-            PHB_ITEM  pDate = hb_itemPutDS( NULL, ddate );
-            PHB_ITEM  pTime = hb_itemPutC( NULL, ttime );
-            PHB_ITEM  pAttr = hb_itemPutC( NULL, ( char * ) HarbourMaskToAttributes( attrib, ( BYTE * ) aatrib ) );
+            PHB_ITEM pFilename = hb_itemPutC( NULL, filename );
+            PHB_ITEM pSize = hb_itemPutNL( NULL, fsize );
+            PHB_ITEM pDate = hb_itemPutDS( NULL, ddate );
+            PHB_ITEM pTime = hb_itemPutC( NULL, ttime );
+            PHB_ITEM pAttr = hb_itemPutC( NULL, ( char * ) HarbourMaskToAttributes( attrib, ( BYTE * ) aatrib ) );
 
             hb_itemArrayPut( pSubarray, F_NAME, pFilename );
             hb_itemArrayPut( pSubarray, F_SIZE, pSize );
@@ -688,6 +689,7 @@ HB_FUNC( DIRECTORY )
          }
       }
    }
+
 #if defined(_MSC_VER) || defined(__MINGW32__)
    while( _findnext( hFile, &entry ) == 0 );
    _findclose( hFile );
@@ -698,7 +700,7 @@ HB_FUNC( DIRECTORY )
    closedir( dir );
 #endif
 
-#if defined(_MSC_VER) || defined(__IBMCPP__) || defined(__MINGW32__)
+#if defined(_MSC_VER) || defined(__MINGW32__) || defined(__IBMCPP__)
    }
 #endif
 

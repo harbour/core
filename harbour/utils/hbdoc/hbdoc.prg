@@ -98,7 +98,7 @@
 #include "directry.ch"
 #include "fileio.ch"
 #include "inkey.ch"
-#include 'hbdocdef.ch'
+#include 'hbdoc.ch'
 //  output lines on the screen
 
 #define INFILELINE   10

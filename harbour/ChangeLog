@@ -1,3 +1,53 @@
+20000322-13:30 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * source/rtl/diskspac.c
+     ! Workaround for GCC/Win32 (Cygwin and Mingw32).
+   * include/*.h
+     + extern "C" added for C++ builds, to better interface with plain C.
+     ; Note that the support is not yet complete, because the Harbour level 
+       functions are not yet marked as extern "C".
+   * makefile.vc
+     ! Fix for exttools.prg
+   * tests/Makefile
+     samples/guestbk/makefile
+     samples/hscript/makefile
+     samples/misc/makefile
+     samples/pe/makefile
+     utils/hbdoc/makefile
+     utils/hbextern/makefile
+     utils/hbrun/makefile
+     utils/hbtest/makefile
+     ! runner lib removed from the GNU-make system
+   * include/hbmacro.h
+     + extern added where missing.
+     + extern declarations added for all functions in macro.c
+   * include/hbcomp.h
+     + extern added where missing.
+   * source/rtl/msgxxx.c
+     + Missing #include "hbdate.h" added.
+   * source/rtl/gtwin/gtwin.c
+     ! hb_gt_DebugScreen() made static and commented out to avoid warning.
+   * source/rtl/gtwin/*
+     ! Added "C" for externs. (later removed. Just for the record)
+   * source/vm/fm.c
+     - Commented out externs removed.
+   * source/compiler/harbour.y
+     include/hbcomp.h
+     include/hberrors.h
+     % Multiple declarations removed
+     * One declaration moved to hbcomp.h from harbour.y
+     + Some YY related functions marked as extern
+   * source/compiler/harbour.c
+     include/hbcomp.h
+     * Some declaration moved to hbcomp.h
+   * source/macro/*
+     + All files include hbmacro.h
+   * source/rtl/setpos.c
+     * Some changes in the comments
+   - include/hbdocdef.ch
+   + utils/hbdoc/hbdoc.ch
+   * utils/hbdoc/*
+     * Moved the private header to its private directory.
+
 20000322-00:05 EST Paul Tucker <ptucker@sympatico.ca>
    + doc/en/diskspac.txt
      * doc for DiskSpace(), DiskFree(), DiskUsed() and DiskFull()

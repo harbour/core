@@ -639,7 +639,7 @@ $(HBPP_EXE) : \
 #
 
 $(HBRUN_EXE) : \
-   $(HBRUN_DIR)\hbrun.prg
+   $(HBRUN_DIR)\hbrun.prg \
    $(HBRUN_DIR)\exttools.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $**
    $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\hbrun.c $(OBJ_DIR)\exttools.c -o $(HBRUN_EXE) /link $(LIBS2)

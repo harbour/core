@@ -86,6 +86,10 @@
 #include "hbapifs.h"
 #include "hbapigt.h"
 
+#if defined(__cplusplus)
+extern "C" {
+#endif
+
 typedef enum
 {
    HB_SET_INVALID_      = 0,
@@ -206,5 +210,9 @@ extern HB_SET_STRUCT hb_set;
 
 extern void hb_setInitialize( void );
 extern void hb_setRelease( void );
+
+#if defined(__cplusplus)
+}
+#endif
 
 #endif /* HB_SET_H_ */

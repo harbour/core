@@ -54,6 +54,10 @@
 #include "hbapi.h"
 #include "color.ch"
 
+#if defined(__cplusplus)
+extern "C" {
+#endif
+
 /* NOTE: The declaration of hb_gtSetPos(), hb_gtGetPos(), hb_gtWrite(), 
          hb_gtWriteAt(), hb_gtRepChar() differs in parameter types from the 
          original CA-Cl*pper versions. [vszakats] */
@@ -211,5 +215,9 @@ extern BOOL   hb_mouse_IsButtonPressed( int iButton );
 extern int    hb_mouse_CountButton( void );
 extern void   hb_mouse_SetBounds( int iTop, int iLeft, int iBottom, int iRight );
 extern void   hb_mouse_GetBounds( int * piTop, int * piLeft, int * piBottom, int * piRight );
+
+#if defined(__cplusplus)
+}
+#endif
 
 #endif /* HB_APIGT_H_ */

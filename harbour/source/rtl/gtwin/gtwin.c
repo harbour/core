@@ -1091,7 +1091,9 @@ void hb_gt_SetBlink( BOOL bBlink )
    HB_SYMBOL_UNUSED( bBlink );
 }
 
-void hb_gt_DebugScreen( BOOL bActivate )
+#if 0
+
+static void hb_gt_DebugScreen( BOOL bActivate )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_DebugScreen(%d)", (int) bActivate));
 
@@ -1137,6 +1139,8 @@ void hb_gt_DebugScreen( BOOL bActivate )
    }
    SetConsoleActiveScreenBuffer( s_HOutput );
 }
+
+#endif
 
 void hb_gt_Tone( double dFrequency, double dDuration )
 {

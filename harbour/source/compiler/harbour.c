@@ -42,19 +42,6 @@
    extern unsigned _stklen = UINT_MAX;
 #endif
 
-extern int hb_compYACCMain( char * szName );
-extern BOOL hb_compInclude( char * szFileName, PATHNAMES * pSearchPath );  /* end #include support */
-
-/* output related functions */
-extern void hb_compGenCCode( PHB_FNAME );      /* generates the C language output */
-extern void hb_compGenJava( PHB_FNAME );       /* generates the Java language output */
-extern void hb_compGenPascal( PHB_FNAME );     /* generates the Pascal language output */
-extern void hb_compGenRC( PHB_FNAME );         /* generates the RC language output */
-extern void hb_compGenPortObj( PHB_FNAME );    /* generates the portable objects */
-#ifdef HARBOUR_OBJ_GENERATION
-extern void hb_compGenObj32( PHB_FNAME );      /* generates OBJ 32 bits */
-#endif
-
 static void hb_compInitVars( void );
 static void hb_compGenOutput( int );
 static void hb_compOutputFile( void );

@@ -39,6 +39,10 @@
 #include "hbapi.h"
 #include "hbapifs.h"
 
+#if defined(__cplusplus)
+extern "C" {
+#endif
+
 /* RDD virtual machine integration functions */
 
 extern int     hb_rddGetCurrentWorkAreaNumber( void );
@@ -1097,5 +1101,9 @@ extern ERRCODE hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS p
 extern ERRCODE hb_rddDisinherit( BYTE * drvName );
 extern USHORT  hb_rddExtendType( USHORT fieldType );
 extern USHORT  hb_rddFieldType( USHORT extendType );
+
+#if defined(__cplusplus)
+}
+#endif
 
 #endif /* HB_APIRDD_H_ */

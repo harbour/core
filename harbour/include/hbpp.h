@@ -41,6 +41,10 @@
 #include "hberrors.h"
 #include "hbver.h"
 
+#if defined(__cplusplus)
+extern "C" {
+#endif
+
 /* the list of pathnames to search with #include */
 typedef struct _PATHNAMES
 {
@@ -102,5 +106,9 @@ extern int    hb_pp_nEmptyStrings;
 extern DEFINES *  hb_pp_topDefine;
 extern COMMANDS * hb_pp_topCommand;
 extern COMMANDS * hb_pp_topTranslate;
+
+#if defined(__cplusplus)
+}
+#endif
 
 #endif /* HB_PP_H_ */
