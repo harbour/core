@@ -175,12 +175,14 @@ typedef struct _CDXTAG
    //USHORT     KeyLength;
    USHORT     MaxKeys;
    LPCDXKEYINFO  CurKeyInfo;    /* current value of key expression */
-   LPPAGEINFO RootPage;
+   LPCDXPAGEINFO RootPage;
    LPCDXKEYINFO  HotKey;        /* value of hot key expression */
    PHB_ITEM   topScope;
    LPCDXKEYINFO  topScopeKey;
    PHB_ITEM   bottomScope;
    LPCDXKEYINFO  bottomScopeKey;
+   LPCDXPAGEINFO pagePool;
+   ULONG     ulVersion;
 } CDXTAG;
 typedef CDXTAG * LPCDXTAG;
 
@@ -458,7 +460,6 @@ extern ERRCODE hb_cdxOrderListAdd( CDXAREAP pArea, LPDBORDERINFO pOrderInfo );
 extern ERRCODE hb_cdxOrderListClear( CDXAREAP pArea );
 #define hb_cdxOrderListDelete                      NULL
 extern ERRCODE hb_cdxOrderListFocus( CDXAREAP pArea, LPDBORDERINFO pOrderInfo );
-//#define hb_cdxOrderListRebuild                     NULL
 static ERRCODE hb_cdxOrderListRebuild( CDXAREAP pArea );
 #define hb_cdxOrderCondition                       NULL
 extern ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo );
