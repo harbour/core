@@ -7,6 +7,11 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+  * source/pp/pptable.c
+    * TEXT/ENDTEXT implemented
+  * todo
+    removed implemented items
+
 2002-03-08 07:30 URC-0300 Luiz Rafael Culik<culikr@uol.com.br>
   * source/rdd/dbfntx/dbfntx1.c
      * bug fixed, related to seeking in filtered database
