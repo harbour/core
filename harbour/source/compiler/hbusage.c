@@ -81,7 +81,7 @@ void hb_compPrintUsage( char * szSelf )
            "\n                           <type>: 0=no implicit starting procedure",
            "\n                                   1=no starting procedure at all",
            "\n          %co<path>         object file drive and/or path",
-           "\n          %cp               generate pre-processed output (.ppo) file",
+           "\n          %cp[<path>]       generate pre-processed output (.ppo) file",
            "\n          %cq               quiet",
            "\n          %cq0              quiet and don't display program header",
 /* TODO:   "\n          %cr[<lib>]        request linker to search <lib> (or none)", */

@@ -856,7 +856,7 @@ static BOOL hb_ntxTagGoToNextKey( LPTAGINFO pTag, BOOL lContinue )
    LPPAGEINFO pPage, pChildPage;
    LPNTXITEM p;
 
-   // pTag->blockNext = 0; pTag->keyNext = 0;
+   /* pTag->blockNext = 0; pTag->keyNext = 0; */
    if( pTag->CurKeyInfo->Tag && ((ULONG)pTag->CurKeyInfo->Xtra) == pTag->Owner->Owner->ulRecNo )
    {
       pPage =  hb_ntxPageLoad( pTag,pTag->CurKeyInfo->Tag );
@@ -956,7 +956,7 @@ static BOOL hb_ntxTagGoToPrevKey( LPTAGINFO pTag, BOOL lContinue )
    BOOL lCurrrentKey = FALSE;
    LPPAGEINFO pPage, pChildPage;
 
-   // pTag->blockPrev = 0; pTag->keyPrev = 0;
+   /* pTag->blockPrev = 0; pTag->keyPrev = 0; */
    if( pTag->CurKeyInfo->Tag && ((ULONG)pTag->CurKeyInfo->Xtra) == pTag->Owner->Owner->ulRecNo )
    {
       pPage =  hb_ntxPageLoad( pTag,pTag->CurKeyInfo->Tag );
@@ -1142,7 +1142,7 @@ static void hb_ntxTagKeyGoTo( LPTAGINFO pTag, BYTE bTypRead, BOOL * lContinue )
       if( pTag->Owner->Owner->fShared && !pTag->Memory )
       {
          hb_ntxPageFree( pTag,FALSE );
-         // pTag->RootPage = NULL;
+         /* pTag->RootPage = NULL; */
          if( !wasLocked )
          {
             hb_fsLock( pTag->Owner->DiskFile, NTX_LOCK_OFFSET, 1, FL_UNLOCK );
@@ -2537,7 +2537,7 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
          }
          if( pTag->nField )
          {
-            // printf( "\nIndexCreate-1 %d",pTag->nField );
+            /* printf( "\nIndexCreate-1 %d",pTag->nField ); */
             SELF_GETVALUE( ( AREAP ) pArea, pTag->nField, pItem );
          }
          else if( hb_itemType( pTag->pKeyItem ) == HB_IT_BLOCK )
@@ -2603,8 +2603,10 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
             hb_vmSend( 0 );
          }
       }
-      // else if( pArea->lpdbRelations )
-      //   SELF_SKIP( ( AREAP ) pArea, 1 );
+      /*
+       else if( pArea->lpdbRelations )
+         SELF_SKIP( ( AREAP ) pArea, 1 );
+      */
    }
    hb_ntxSortKeyEnd( pTag, &sortInfo );
    if( ( !pArea->lpdbOrdCondInfo || pArea->lpdbOrdCondInfo->fAll ) && !pArea->lpdbRelations )

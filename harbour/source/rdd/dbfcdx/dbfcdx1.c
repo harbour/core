@@ -55,12 +55,12 @@
 
 
 #define HB_CDX_DBGCODE
-//#define HB_CDX_DBGCODE_EXT
+/*#define HB_CDX_DBGCODE_EXT */
 
-//#define HB_CDX_DSPDBG_INFO
-//#define HB_CDP_SUPPORT_OFF
-//#define HB_CDX_DBGTIME
-//#define HB_CDX_DBGUPDT
+/*#define HB_CDX_DSPDBG_INFO */
+/*#define HB_CDP_SUPPORT_OFF */
+/*#define HB_CDX_DBGTIME     */
+/*#define HB_CDX_DBGUPDT     */
 
 #include "hbapi.h"
 #include "hbinit.h"
@@ -1168,7 +1168,7 @@ static void hb_cdxIndexCheckVersion( LPCDXINDEX pIndex )
       hb_cdxIndexDiscardBuffers( pIndex );
    }
    /* TODO: !!! ## remove it */
-   //hb_cdxIndexDiscardBuffers( pIndex );
+   /*hb_cdxIndexDiscardBuffers( pIndex ); */
 }
 
 /*
@@ -2206,7 +2206,6 @@ static void hb_cdxPageStore( LPCDXPAGE pPage )
          hb_cdxPageLeafEncode( pPage, pPage->pKeyBuf, pPage->iKeys );
          pPage->fBufChanged = FALSE;
       }
-//#if 0
 #ifdef HB_CDX_DBGCODE_EXT
       if ( pPage->pKeyBuf )
       {
@@ -3807,16 +3806,18 @@ static BOOL hb_cdxPageReadPrevUniqKey( LPCDXPAGE pPage )
 static BOOL hb_cdxPageReadNextUniqKey( LPCDXPAGE pPage )
 {
    LPCDXPAGE pOwnerPage = NULL;
-//   BYTE pbVal[CDX_MAXKEY];
+/*   BYTE pbVal[CDX_MAXKEY]; */
 
    while ( pPage->Child )
    {
       pOwnerPage = pPage;
       pPage = pPage->Child;
    }
-//   memcpy( pbVal, hb_cdxPageGetKeyVal( pPage, pPage->iCurKey ), pPage->TagParent->uiLen );
-//   pPage->iCurKey++;
-//   while ( pPage->iCurKey >= pPage->iKeys || memcmp( pbVal, hb_cdxPageGetKeyVal( pPage, pPage->iCurKey ), pPage->TagParent->uiLen ) == 0 )
+/*   
+ *   memcpy( pbVal, hb_cdxPageGetKeyVal( pPage, pPage->iCurKey ), pPage->TagParent->uiLen );
+ *   pPage->iCurKey++;
+ *   while ( pPage->iCurKey >= pPage->iKeys || memcmp( pbVal, hb_cdxPageGetKeyVal( pPage, pPage->iCurKey ), pPage->TagParent->uiLen ) == 0 )
+*/
    while ( pPage->iCurKey >= pPage->iKeys || memcmp( pPage->TagParent->CurKey->val, hb_cdxPageGetKeyVal( pPage, pPage->iCurKey ), pPage->TagParent->uiLen ) == 0 )
    {
       if ( pPage->iCurKey < pPage->iKeys - 1 )
@@ -3902,7 +3903,7 @@ static void hb_cdxTagKeyRead( LPCDXTAG pTag, BYTE bTypRead )
             break;
       }
    }
-   //fBof = fEof = FALSE;
+   /* fBof = fEof = FALSE; */
    switch( bTypRead )
    {
       case TOP_RECORD:
@@ -6633,7 +6634,7 @@ static ERRCODE hb_cdxSetScope( CDXAREAP pArea, LPDBORDSCOPEINFO sInfo )
             type = HB_VM_STACK.Return.type;
             fCB = TRUE;
          }
-         //printf("\r\ntype=%lx", type);fflush(stdout);
+         /* printf("\r\ntype=%lx", type);fflush(stdout); */
 
          switch ( pTag->uiType )
          {
@@ -6900,7 +6901,7 @@ static void hb_cdxSortSwapSendWord( LPSORTINFO pSort, BYTE * Value )
    Value++;
    HB_ORD2DBL( &Value[bLen], &d );
    Tag = ( LONG ) d;
-   // hb_cdxSortOutputWord( pSort, Tag, Value, uiLen );
+   /*  hb_cdxSortOutputWord( pSort, Tag, Value, uiLen ); */
    if ( pSort->pSwapPage->nCurPos + sizeof(SORTSWAPITEM) + bLen - 1 >= sizeof(pSort->pSwapPage->page) ) {
       if ( hb_fsWrite( pSort->hTempFile, (BYTE *) pSort->pSwapPage->page, pSort->pSwapPage->nCurPos ) != pSort->pSwapPage->nCurPos )
       {
@@ -6927,7 +6928,7 @@ static void hb_cdxSortSwapSendWord( LPSORTINFO pSort, BYTE * Value )
 
 static void hb_cdxSortSwapRecurseDict( LPSORTINFO pSort, LONG WPtr, LONG WBgn )
 {
-   // USHORT WCnt;
+   /* USHORT WCnt; */
    BYTE WCnt;
 
    if( WPtr == 0 )
@@ -6994,7 +6995,7 @@ static int hb_cdxSortSwapSavePage( LPSORTINFO pSort )
    memcpy( ptr, (char *) &swap.pageLen, sizeof(swap.pageLen) );
    ptr += sizeof(swap.pageLen);
    memcpy( ptr, (char *) &swap.keyCount, sizeof(swap.keyCount) );
-   // ptr += sizeof(ULONG);
+   /* ptr += sizeof(ULONG); */
    swap.nCurPos += 2 * sizeof(char) + sizeof(USHORT) + 2 * sizeof(ULONG);
 
    /*
@@ -7024,7 +7025,7 @@ static int hb_cdxSortSwapSavePage( LPSORTINFO pSort )
    /* Clear memory structures */
    pSort->TotalWordCount += pSort->WordCount;
    pSort->WordCount = 0;
-   //pSort->KeyCnt = 0; /* esto debería sacarlo */
+   /*pSort->KeyCnt = 0;*/ /* esto debería sacarlo */
    if( pSort->ChunkList != NULL )
    {
       USHORT usCount;
@@ -7034,11 +7035,11 @@ static int hb_cdxSortSwapSavePage( LPSORTINFO pSort )
             memset( ( BYTE * ) pSort->ChunkList[ usCount ], 0, pSort->SortChunk * sizeof( BYTE ) );
       }
    }
-   //     BYTE *     SortBuffer; ???
+   /*     BYTE *     SortBuffer; ??? */
    pSort->ChunkCur = 0;
    pSort->NodeCur = 1;
    pSort->KeySize = 0;
-   // LPCDXDATA  NodeList[ 32 ];
+   /* LPCDXDATA  NodeList[ 32 ]; */
    hb_cdxSortLinkNew( pSort, &pSort->RootLink );
 
    return 0;
@@ -7159,7 +7160,7 @@ static int hb_cdxSortSwapBuildIndex( LPSORTINFO pSort )
          hb_errInternal( HB_EI_ERRUNRECOV, "hb_cdxTagDoIndex: Internal error 1", "hb_cdxTagDoIndex", NULL );
       if ( pPage->pageNum != nPage )
          hb_errInternal( HB_EI_ERRUNRECOV, "hb_cdxTagDoIndex: Internal error 2", "hb_cdxTagDoIndex", NULL );
-      //pPage->nCurPos ;
+      /*pPage->nCurPos ;*/
       pPage->nBytesLeft = pPage->pageLen - pPage->nBufLeft;
       pPage->keysLeft   = pPage->keyCount;
 
@@ -7322,7 +7323,7 @@ static void hb_cdxSortFree( LPSORTINFO pSort )
 
    if ( pSort->hTempFile )
    {
-      // hb_fsCommit( pSort->hTempFile );
+      /* hb_fsCommit( pSort->hTempFile ); */
       hb_fsClose( pSort->hTempFile );
       pSort->hTempFile = FS_ERROR;
    }
@@ -7620,7 +7621,7 @@ static LPSORTDATA hb_cdxSortLinkGet( LPSORTINFO pSort, LONG Value )
 
 static void hb_cdxSortDisplayWord( LPSORTINFO pSort )
 {
-   // esto hay que cambiarlo, está para prueba TODO
+   /* esto hay que cambiarlo, está para prueba TODO */
    if ( pSort->nSwapPages ) {
       if ( pSort->WordCount )
          hb_cdxSortSwapSavePage( pSort );
@@ -7636,7 +7637,7 @@ static void hb_cdxSortDisplayWord( LPSORTINFO pSort )
 
 static void hb_cdxSortRecurseDict( LPSORTINFO pSort, LONG WPtr, LONG WBgn )
 {
-   // USHORT WCnt;
+   /* USHORT WCnt;*/
    BYTE WCnt;
 
    if( WPtr == 0 )
@@ -7806,7 +7807,7 @@ static void hb_cdxSortAddExternal( LPSORTINFO pSort, USHORT Lvl, LONG Tag, LONG 
          pSort->NodeList[ Lvl ]->cdxu.External.ShortBytes ) * 1 ) /* 2 only if count after the key was added */
    {
       pa = pSort->NodeList[ Lvl ]->Rght_Ptr;
-      // TODO : check this, may be wrong
+      /* TODO : check this, may be wrong */
       /* if( pSort->KeyCnt < pSort->KeyTot ) */
       if( pSort->KeyCnt < pSort->TotalWordCount )
          pSort->NodeList[ Lvl ]->Rght_Ptr = hb_cdxIndexGetAvailPage( pSort->CurTag->pIndex, FALSE );

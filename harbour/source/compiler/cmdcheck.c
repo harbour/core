@@ -303,6 +303,24 @@ void hb_compChkCompilerSwitch( int iArg, char * Args[] )
                        j = strlen( Args[i] );
                        continue;
 
+                     case 'p' :
+                     case 'P' :
+                       if( Args[i][ j+1 ] )
+                       {
+                           Args[i] += (j - 1);
+                           hb_compChkEnvironVar( Args[i] );
+
+                           /* Accept rest as PPOPath and continue with next Args[]. */
+                           j += strlen( Args[i] ) -1;
+                       }
+                       else
+                       {
+                           Switch[2] = '\0';
+                           hb_compChkEnvironVar( (char*) Switch );
+                           j++;
+                       }
+                       continue;
+                       
                      case 'q' :
                      case 'Q' :
                        if( Args[i][j + 1] && isdigit((int) Args[i][j + 1] ) )
@@ -733,7 +751,18 @@ void hb_compChkEnvironVar( char * szSwitch )
                 if( *( s + 1 ) == '-' )
                    hb_comp_bPPO = 0;
                 else
+                {
+                   unsigned int i = 0;
+                   char * szPath = hb_strdup( s + 1 );
+                   while( i < strlen( szPath ) )
+                      i++;
+                   szPath[ i ] = '\0';
+
+                   hb_comp_pPpoPath = hb_fsFNameSplit( szPath );
+                   free( szPath );
+
                    hb_comp_bPPO = 1;
+                }
                 break;
 
              case 'q':

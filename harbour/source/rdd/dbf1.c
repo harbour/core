@@ -1283,7 +1283,7 @@ static ERRCODE hb_dbfPutValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          else
             uiError = EDBF_DATATYPE;
       }
-      // Must precede HB_IS_NUMERIC() because a DATE is also a NUMERIC. (xHarbour)
+      /* Must precede HB_IS_NUMERIC() because a DATE is also a NUMERIC. (xHarbour) */
       else if( HB_IS_DATE( pItem ) )
       {
          if( pField->uiType == HB_IT_DATE )
@@ -2655,10 +2655,10 @@ static ERRCODE hb_dbfReadDBHeader( DBFAREAP pArea )
    {
       hb_fsSeek( pArea->hDataFile, 0, FS_SET );
       if( hb_fsRead( pArea->hDataFile, ( BYTE * ) &dbHeader, sizeof( DBFHEADER ) ) != sizeof( DBFHEADER ) ||
-          ( dbHeader.bVersion != 0x03 &&    // dBase III
-            dbHeader.bVersion != 0x30 &&    // VisualFoxPro 6.0
-            dbHeader.bVersion != 0x83 &&    // dBase III w/memo
-            dbHeader.bVersion != 0xF5       // FoxPro??? w/memo
+          ( dbHeader.bVersion != 0x03 &&    /* dBase III        */
+            dbHeader.bVersion != 0x30 &&    /* VisualFoxPro 6.0 */
+            dbHeader.bVersion != 0x83 &&    /* dBase III w/memo */
+            dbHeader.bVersion != 0xF5       /* FoxPro??? w/memo */
         ) )
       {
          bError = TRUE;

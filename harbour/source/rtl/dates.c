@@ -253,14 +253,14 @@ char * hb_dateFormat( const char * szDate, char * szFormattedDate, const char * 
                   case 4:
                      if( ! used_d && format_count < size )
                      {
-//                        szFormattedDate[ format_count++ ] = '0';
+/*                        szFormattedDate[ format_count++ ] = '0'; */
                         szFormattedDate[ format_count++ ] = szDate[ 6 ];
                         digit_count--;
                      }
                   case 3:
                      if( ! used_d && format_count < size )
                      {
-//                        szFormattedDate[ format_count++ ] = '0';
+/*                        szFormattedDate[ format_count++ ] = '0'; */
                         szFormattedDate[ format_count++ ] = szDate[ 6 ];
                         digit_count--;
                      }
@@ -287,14 +287,14 @@ char * hb_dateFormat( const char * szDate, char * szFormattedDate, const char * 
                   case 4:
                      if( ! used_m && format_count < size )
                      {
-//                        szFormattedDate[ format_count++ ] = '0';
+/*                        szFormattedDate[ format_count++ ] = '0'; */
                         szFormattedDate[ format_count++ ] = szDate[ 4 ];
                         digit_count--;
                      }
                   case 3:
                      if( ! used_m && format_count < size )
                      {
-//                        szFormattedDate[ format_count++ ] = '0';
+/*                        szFormattedDate[ format_count++ ] = '0'; */
                         szFormattedDate[ format_count++ ] = szDate[ 4 ];
                         digit_count--;
                      }

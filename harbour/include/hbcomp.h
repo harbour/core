@@ -465,6 +465,7 @@ extern PCOMDECLARED   hb_comp_pLastMethod;
 extern HB_PATHNAMES * hb_comp_pIncludePath;
 extern PFUNCTION      hb_comp_pInitFunc;
 extern PHB_FNAME      hb_comp_pFileName;
+extern PHB_FNAME      hb_comp_pFilePpo;
 extern BOOL           hb_comp_bPPO;
 extern FILE *         hb_comp_yyppo;
 extern BOOL           hb_comp_bStartProc;
@@ -493,6 +494,7 @@ extern int            hb_comp_iErrorCount;
 extern char *         hb_comp_szAnnounce;
 
 extern PHB_FNAME      hb_comp_pOutPath;
+extern PHB_FNAME      hb_comp_pPpoPath;
 extern BOOL           hb_comp_bCredits;
 extern BOOL           hb_comp_bBuildInfo;
 

@@ -66,8 +66,8 @@ Code Implementation
     try avoiding it.
 
 
-[6] Use assert(). assert.h is included in php.h if it is available.  Not only
-    does good assertion catch bugs, but it also helps with code readability.
+[6] Use assert(). Not only does good assertion catch bugs, but it also
+    helps with code readability.
      - Do not use assert for error handling. Use assert only for the 
        condition that must be always true.
      - Do not use assignments in assert conditions.  If you assign inside an 
@@ -98,8 +98,7 @@ Naming Conventions
     Abbreviations should not be used when they greatly decrease the
     readability of the function name itself.
 
-
-[2] Variable names must be meaningful.  One letter variable names must be
+[2] Variable names must be meaningful. One letter variable names must be
     avoided, except for places where the variable has no real meaning or
     a trivial meaning (e.g. for (i=0; i<100; i++) ...).
 
@@ -141,7 +140,7 @@ Syntax and indentation
 
     if( foo )
     {
-        bar;
+       bar;
     }
 
     to:
@@ -151,16 +150,16 @@ Syntax and indentation
     and to:
     
     if( foo )
-      bar;
+       bar;
 
     Keep one empty line between the variable declaration section and
     the statements in a block, as well as between logical statement
     groups in a block.  Maintain at least one empty line between
     two functions, preferably two.
 
-[4] When indenting, use the tab character.  A tab is expected to represent
-    three spaces.  It is important to maintain consistency in indenture so
-    that definitions, comments, and control structures line up correctly.
+[4] When indenting, use three spaces. It is important to maintain 
+    consistency in indenture so that definitions, comments, and 
+    control structures line up correctly.
 
 Documentation
 --------------

@@ -61,6 +61,7 @@
 static void hb_compInitVars( void );
 static void hb_compGenOutput( int );
 static void hb_compOutputFile( void );
+static void hb_compPpoFile( void );
 
 int hb_compLocalGetPos( char * szVarName );   /* returns the order + 1 of a local variable */
 int hb_compStaticGetPos( char *, PFUNCTION ); /* return if passed name is a static variable */
@@ -100,6 +101,7 @@ int            hb_comp_iLine;                             /* currently processed
 char *         hb_comp_szFile;                            /* File Name of last compiled line */
 PFUNCTION      hb_comp_pInitFunc;
 PHB_FNAME      hb_comp_pFileName = NULL;
+PHB_FNAME      hb_comp_pFilePpo  = NULL;
 
 BOOL           hb_comp_bPPO = FALSE;                      /* flag indicating, is ppo output needed */
 FILE *         hb_comp_yyppo = NULL;                      /* output .ppo file */
@@ -127,6 +129,7 @@ ULONG          hb_comp_ulLastLinePos;                     /* position of last op
 int            hb_comp_iStaticCnt;                        /* number of defined statics variables on the PRG */
 int            hb_comp_iVarScope;                         /* holds the scope for next variables to be defined */
 PHB_FNAME      hb_comp_pOutPath = NULL;
+PHB_FNAME      hb_comp_pPpoPath = NULL;
 BOOL           hb_comp_bCredits = FALSE;                  /* print credits */
 BOOL           hb_comp_bBuildInfo = FALSE;                /* print build info */
 BOOL           hb_comp_bLogo = TRUE;                      /* print logo */
@@ -261,6 +264,9 @@ int main( int argc, char * argv[] )
 
    if( hb_comp_pOutPath )
       hb_xfree( hb_comp_pOutPath );
+
+   if( hb_comp_pPpoPath )
+      hb_xfree( hb_comp_pPpoPath );
 
    if( hb_comp_iErrorCount > 0 )
       iStatus = EXIT_FAILURE;
@@ -1194,17 +1200,17 @@ void hb_compDeclaredInit( void )
    _DECL s_201 = { "PROCLINE"        , 'N', 1 , (BYTE*)"\xa8"                                                 , NULL     , NULL , &s_200};
    _DECL s_202 = { "PROCNAME"        , 'N', 1 , (BYTE*)"\xa8"                                                 , NULL     , NULL , &s_201};
    _DECL s_203 = { "PROW"            , 'N', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_202};
-//////
-/// Both QOUT and QQOUT can take from 0 to as many parameters as you like
-/// of any type, so including them in the parameter checking is of no use,
-/// because the list requires an upper limit and a type declaration for all
-/// of the parameters. So instead of trying to fix the unfixable, I have
-/// commented them out and fixed the linkage for s_206 to point to s_203.
-/// - David G. Holm <dholm@jsd-llc.com>
-///
-///   _DECL s_204 = { "QOUT"            , '-', 2 , (BYTE*)"\x7a\x7a"                                             , NULL     , NULL , &s_203};
-///   _DECL s_205 = { "QQOUT"           , '-', 2 , (BYTE*)"\x7a\x7a"                                             , NULL     , NULL , &s_204};
-//////
+/*
+ * Both QOUT and QQOUT can take from 0 to as many parameters as you like
+ * of any type, so including them in the parameter checking is of no use,
+ * because the list requires an upper limit and a type declaration for all
+ * of the parameters. So instead of trying to fix the unfixable, I have
+ * commented them out and fixed the linkage for s_206 to point to s_203.
+ * - David G. Holm <dholm@jsd-llc.com>
+ *
+ *   _DECL s_204 = { "QOUT"            , '-', 2 , (BYTE*)"\x7a\x7a"                                             , NULL     , NULL , &s_203};
+ *   _DECL s_205 = { "QQOUT"           , '-', 2 , (BYTE*)"\x7a\x7a"                                             , NULL     , NULL , &s_204};
+*/
    _DECL s_206 = { "RAT"             , 'N', 2 , (BYTE*)"CC"                                                   , NULL     , NULL , &s_203};
    _DECL s_207 = { "RDDLIST"         , 'A', 1 , (BYTE*)"\xa8"                                                 , NULL     , NULL , &s_206};
    _DECL s_208 = { "RDDNAME"         , 'C', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_207};
@@ -4054,6 +4060,30 @@ static void hb_compGenOutput( int iLanguage )
    }
 }
 
+static void hb_compPpoFile( void )
+{
+   hb_comp_pFilePpo->szPath = NULL;
+   hb_comp_pFilePpo->szExtension = NULL;
+
+   /* we create the output file name */
+   if( hb_comp_pPpoPath )
+   {
+      if( hb_comp_pPpoPath->szPath )
+         hb_comp_pFilePpo->szPath = hb_comp_pPpoPath->szPath;
+
+      if( hb_comp_pPpoPath->szName )
+      {
+         hb_comp_pFilePpo->szName = hb_comp_pPpoPath->szName;
+         /*
+         if( hb_comp_pPpoPath->szExtension )
+            hb_comp_pFilePpo->szExtension = hb_comp_pPpoPath->szExtension;
+         else
+         */
+      }
+            hb_comp_pFilePpo->szExtension = ".ppo";
+   }
+}
+
 static void hb_compOutputFile( void )
 {
    hb_comp_pFileName->szPath = NULL;
@@ -4093,8 +4123,10 @@ int hb_compCompile( char * szPrg, int argc, char * argv[] )
 
       if( hb_comp_bPPO )
       {
-         hb_comp_pFileName->szExtension = ".ppo";
-         hb_fsFNameMerge( szPpoName, hb_comp_pFileName );
+         hb_comp_pFilePpo  = hb_fsFNameSplit( szPrg );
+         hb_compPpoFile();
+         //hb_comp_pFileName->szExtension = ".ppo";
+         hb_fsFNameMerge( szPpoName, hb_comp_pFilePpo );
          hb_comp_yyppo = fopen( szPpoName, "w" );
          if( ! hb_comp_yyppo )
          {

@@ -1351,12 +1351,12 @@ HB_FUNC( DBCREATE )
    /* Fill pInfo structure */
    pInfo.uiArea = s_uiCurrArea;
    pInfo.abName = ( BYTE * ) szFileName;
-   // pInfo.atomAlias = ( BYTE * ) szAlias;
+   /* pInfo.atomAlias = ( BYTE * ) szAlias; */
    pInfo.atomAlias = ( BYTE * ) szAliasTmp;
    pInfo.fShared = FALSE;
    pInfo.fReadonly = FALSE;
 
-   // ( ( AREAP ) s_pCurrArea->pArea )->atomAlias = hb_dynsymGet( ( char * ) szAlias );
+   /* ( ( AREAP ) s_pCurrArea->pArea )->atomAlias = hb_dynsymGet( ( char * ) szAlias ); */
    ( ( AREAP ) s_pCurrArea->pArea )->atomAlias = hb_dynsymGet( ( char * ) szAliasTmp );
    ( ( PHB_DYNS ) ( ( AREAP ) s_pCurrArea->pArea )->atomAlias )->hArea = s_uiCurrArea;
    ( ( AREAP ) s_pCurrArea->pArea )->uiArea = s_uiCurrArea;
@@ -1402,7 +1402,7 @@ HB_FUNC( DBCREATE )
       ( ( AREAP ) s_pCurrArea->pArea )->rddID = uiRddID;
       SELF_NEW( ( AREAP ) s_pCurrArea->pArea );
 
-      //pInfo.abName = ( BYTE * )  hb_xgrab( _POSIX_PATH_MAX + 1 );
+      /*pInfo.abName = ( BYTE * )  hb_xgrab( _POSIX_PATH_MAX + 1 ); */
       szFileName = ( char * )  hb_xgrab( _POSIX_PATH_MAX + 1 );
       pInfo.abName = ( BYTE * ) szFileName;
       pInfo.atomAlias = ( BYTE * ) szAlias;
@@ -1417,10 +1417,10 @@ HB_FUNC( DBCREATE )
       }
       else
          hb_ret();
-      //hb_xfree( pInfo.abName );
+      /*hb_xfree( pInfo.abName ); */
       hb_xfree( szFileName );
    }
-   //hb_xfree( szFileName );
+   /*hb_xfree( szFileName ); */
 }
 
 HB_FUNC( DBDELETE )
@@ -1829,7 +1829,7 @@ HB_FUNC( DBSELECTAREA )
             }
 
             hb_errRelease( pError );
-            // hb_errRT_BASE( EG_NOALIAS, EDBCMD_NOALIAS, NULL, szAlias, 0 );
+            /* hb_errRT_BASE( EG_NOALIAS, EDBCMD_NOALIAS, NULL, szAlias, 0 ); */
             return;
          }
       }
@@ -3662,7 +3662,7 @@ HB_FUNC( DBDROP )
   else
     szDriver = s_szDefDriver;
 
-  pRDDNode = hb_rddFindNode( szDriver, &uiRddID );  // find the RDD
+  pRDDNode = hb_rddFindNode( szDriver, &uiRddID );  /* find the RDD */
 
   if ( !pRDDNode )
   {
@@ -3686,7 +3686,7 @@ HB_FUNC( DBEXISTS )
   else
     szDriver = s_szDefDriver;
 
-  pRDDNode = hb_rddFindNode( szDriver, &uiRddID );  // find the RDD
+  pRDDNode = hb_rddFindNode( szDriver, &uiRddID );  /* find the RDD */
 
   if ( !pRDDNode )
   {
@@ -3707,7 +3707,8 @@ HB_FUNC( DBEXISTS )
    find __SBAPP & __DBCOPY at the bottom
 */
 
-// check if the field is on the Fields Array
+/* check if the field is on the Fields Array
+*/
 static BOOL IsFieldIn( char * fieldName, PHB_ITEM pFields )
 {
   USHORT i, j, uiFields = ( USHORT ) hb_arrayLen( pFields );
@@ -3761,7 +3762,7 @@ static LPAREANODE GetTheOtherArea( char *szDriver, char * szFileName, BOOL creat
   DBOPENINFO pInfo;
   char * szDbfName;
 
-  pRDDNode = hb_rddFindNode( szDriver, &uiRddID );  // find the RDD
+  pRDDNode = hb_rddFindNode( szDriver, &uiRddID );  /* find the RDD */
 
   if ( !pRDDNode )
   {
@@ -3886,7 +3887,7 @@ static LPAREANODE GetTheOtherArea( char *szDriver, char * szFileName, BOOL creat
     hb_xfree( pInfo.abName );
     hb_xfree( pAreaNode );
     if( createIt )
-       hb_errRT_DBCMD( EG_OPEN, 0, NULL, "DBAPP" ); // Could not open it
+       hb_errRT_DBCMD( EG_OPEN, 0, NULL, "DBAPP" ); /* Could not open it */
     else
        s_bNetError = TRUE;     /* Temp fix! What about other types of errors? */
     return NULL;
@@ -4080,7 +4081,7 @@ ERRCODE hb_rddGetTempAlias( char * szAliasTmp )
 {
    int i;
 
-   // szAliasTmp[0] = '\0';
+   /* szAliasTmp[0] = '\0'; */
    for ( i = 1 ; i < 1000 ; i++ )
    {
       sprintf( szAliasTmp, "HBTMP%3.3i", i);

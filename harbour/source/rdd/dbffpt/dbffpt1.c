@@ -976,9 +976,9 @@ static ERRCODE hb_fptReadSixItem( FPTAREAP pArea, BYTE ** pbMemoBuf, BYTE * bBuf
             }
             break;
 
-//         case FPTIT_SIX_BLOCK:
-//         case FPTIT_SIX_VREF:
-//         case FPTIT_SIX_MREF:
+/*         case FPTIT_SIX_BLOCK: */
+/*         case FPTIT_SIX_VREF:  */
+/*         case FPTIT_SIX_MREF:  */
 
          case FPTIT_SIX_ARRAY:
             ulLen = HB_GET_LE_ULONG( &(*pbMemoBuf)[2] );
@@ -1239,9 +1239,9 @@ static ERRCODE hb_fptGetMemo( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
             case FPTIT_SIX_LOG:
             case FPTIT_SIX_CHAR:
             case FPTIT_SIX_ARRAY:
-//            case FPTIT_SIX_BLOCK:
-//            case FPTIT_SIX_VREF:
-//            case FPTIT_SIX_MREF:
+/*            case FPTIT_SIX_BLOCK: */
+/*            case FPTIT_SIX_VREF:  */
+/*            case FPTIT_SIX_MREF:  */
                bMemoBuf = pBuffer;
                errCode = hb_fptReadSixItem( pArea, &bMemoBuf, bMemoBuf + ulSize, pItem );
                break;
@@ -1310,7 +1310,7 @@ static ULONG hb_fptCountSixItemLength( FPTAREAP pArea, PHB_ITEM pItem )
    usType = hb_itemType( pItem );
    switch ( usType )
    {
-      case HB_IT_ARRAY: // HB_IT_OBJECT = HB_IT_ARRAY
+      case HB_IT_ARRAY: /* HB_IT_OBJECT = HB_IT_ARRAY */
          ulSize = SIX_ITEM_BUFSIZE;
          ulLen = hb_arrayLen( pItem );
          if ( pArea->bMemoType == MEMO_FPT_SIX )
@@ -1357,7 +1357,7 @@ static ULONG hb_fptStoreSixItem( FPTAREAP pArea, PHB_ITEM pItem, BYTE ** bBufPtr
    ulSize = SIX_ITEM_BUFSIZE;
    switch ( usType )
    {
-      case HB_IT_ARRAY: // HB_IT_OBJECT = HB_IT_ARRAY
+      case HB_IT_ARRAY: /* HB_IT_OBJECT = HB_IT_ARRAY */
          HB_PUT_LE_USHORT( &(*bBufPtr)[0], FPTIT_SIX_ARRAY );
          ulLen = hb_arrayLen( pItem );
          if ( pArea->bMemoType == MEMO_FPT_SIX )
@@ -2002,7 +2002,7 @@ static ERRCODE hb_fptCreateMemFile( FPTAREAP pArea, LPDBOPENINFO pCreateInfo )
                               hb_set.HB_SET_MBLOCKSIZE < 0xFFFF ) ?
                             hb_set.HB_SET_MBLOCKSIZE : FPT_DEFBLOCKSIZE;
    pArea->bMemoType = MEMO_FPT_HB;
-   //pArea->bMemoType = MEMO_FPT_SIX;
+   /* pArea->bMemoType = MEMO_FPT_SIX; */
 
    ulNextBlock = ( sizeof( FPTHEADER ) + pArea->uiMemoBlockSize - 1 ) / pArea->uiMemoBlockSize;
    HB_PUT_BE_ULONG( fptHeader.nextBlock, ulNextBlock );

@@ -263,7 +263,7 @@ static HB_FIX_FUNC( hb_p_localnearaddint )
       }
       else
       {
-        // After fixing this variable cannot be accessed using near code
+        /* After fixing this variable cannot be accessed using near code */
         char sTemp[16];
 
         sprintf( (char *) sTemp, "%i", pFunc->wParamCount );
