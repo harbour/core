@@ -58,7 +58,7 @@ FUNCTION dbOrderInfo()     ; RETURN NIL
 FUNCTION MLCToPos()        ; RETURN 0
 FUNCTION MPosToLC()        ; RETURN 0
 
-FUNCTION __dbApp()         ; RETURN NIL
+//FUNCTION __dbApp()         ; RETURN NIL
 //FUNCTION __dbCopy()        ; RETURN NIL
 FUNCTION __dbDelim()       ; RETURN NIL
 FUNCTION __dbJoin()        ; RETURN NIL
