@@ -51,8 +51,6 @@
  *
  */
 
-#include <errno.h>
-
 #include "hbapi.h"
 #include "hbapifs.h"
 

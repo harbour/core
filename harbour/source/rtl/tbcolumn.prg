@@ -84,12 +84,14 @@ METHOD New( cHeading, bBlock ) CLASS TBColumn
 
    local cType, nTokenPos := 0, nL
 
+   DEFAULT cHeading TO ""
+
    ::DefColor := { 1, 2 }
    ::FootSep  := ""
    ::ColPos   := 1
 
    ::Width    := 0
-   ::Heading  := iif(!Empty(cHeading), cHeading, "")
+   ::Heading  := cHeading
 
    /* TOFIX: In Clipper the column widths are not determined at this point.
           [vszakats] */
@@ -116,7 +118,7 @@ METHOD New( cHeading, bBlock ) CLASS TBColumn
             ::Width := 0
       endcase
 
-      cHeading +=  ";"
+      cHeading += ";"
       while (nL := Len(__StrTkPtr(@cHeading, @nTokenPos, ";"))) > 0
          if nL > ::Width
             ::Width := nL
@@ -140,7 +142,4 @@ return Self
 function TBColumnNew(cHeading, bBlock)
 
 return TBColumn():New(cHeading, bBlock)
-
-
-
 

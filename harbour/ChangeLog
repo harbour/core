@@ -8,6 +8,15 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2001-12-15 10:53 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * source/rtl/tbcolumn.prg
+     ! Fixed case when heading parameter was NIL 
+       in TBColumnNew() or TBColumn():New()
+
+   * source/rtl/fstemp.c
+     - One unused #include removed.
+
 2001-12-15 10:05 UTC+0100 Antonio Linares <alinares@fivetech.com>
    + source/vm/dynlibhb.c
      + HB_LIBLOAD()
