@@ -49,15 +49,15 @@
  */
 
 DECLARE TClass ;
-	New( cName AS STRING, OPTIONAL SuperParams ) AS CLASS TClass ;
-	Create() AS OBJECT;
-	Instance() AS OBJECT ;
-	AddClsMthds( cName AS STRING, @MethodName(), nScope AS NUMERIC, n2 AS NUMERIC, n3 AS NUMERIC );
-	AddMultiClsData( cType AS STRING, uVal, nScope AS NUMERIC, aDatas AS ARRAY OF STRING );
-	AddMultiData( cType AS STRING, uVal, nScope AS NUMERIC, aDatas AS ARRAY OF STRING );
-	AddMethod( cName AS STRING, @MethodName(), nScope AS NUMERIC );
-	AddInLine( cName AS STRING, bBlock AS CODEBLOCK, nScope AS NUMERIC );
-	AddVirtual( cName AS STRING )
+	New( cName AS String, OPTIONAL SuperParams ) AS CLASS TClass ;
+	Create() AS Object;
+	Instance() AS Object ;
+	AddClsMthds( cName AS String, @MethodName(), nScope AS Numeric, n2 AS Numeric, n3 AS Numeric );
+	AddMultiClsData( cType AS String, uVal, nScope AS Numeric, aDatas AS ARRAY OF String );
+	AddMultiData( cType AS String, uVal, nScope AS Numeric, aDatas AS ARRAY OF String );
+	AddMethod( cName AS String, @MethodName(), nScope AS Numeric );
+	AddInLine( cName AS String, bBlock AS CodeBlock, nScope AS Numeric );
+	AddVirtual( cName AS String )
 
 #ifndef HB_CLASS_CH_
 #define HB_CLASS_CH_

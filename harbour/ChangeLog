@@ -1,3 +1,7 @@
+2000-09-05 15:30 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * include/hbclass.ch
+     ! Changed AS STRING to AS String, AS NUMERIC to AS Numeric, AS OBJECT to AS Object to avoid collision with FW #defines in dll.ch.
+
 2000-09-05 14:45 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
    * config/dos/bcc16.cf
