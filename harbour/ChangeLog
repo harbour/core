@@ -1,3 +1,14 @@
+19991205-14:22 GMT+1 Bruno Cantero <bruno@issnet.net>
+  * include/rddapi.h
+    source/rdd/dbcmd.c
+    source/rdd/dbf1.c
+    source/rdd/dbfcdx/dbfcdx1.c
+    + Added dbSeek(), IndexOrd(), ordSetFocus(), ordFor(), ordKey(),
+      ordNumber(), ordName() and ordBagName() functions.
+  * source/rtl/dummy.prg
+    - Removed dbSeek(), IndexOrd(), ordSetFocus(), ordFor(), ordKey(),
+      ordNumber(), ordName() and ordBagName() functions.
+
 19991204-17:22 GMT+1 Bruno Cantero <bruno@issnet.net>
   * include/rddapi.h
     source/rdd/dbcmd.c

@@ -639,6 +639,7 @@ static RDDFUNCS dbfSuper = { 0 };
 #define dbfBof                                  NULL
 #define dbfEof                                  NULL
 #define dbfFound                                NULL
+#define dbfSeek                                 NULL
 #define dbfSkip                                 NULL
 #define dbfSkipFilter                           NULL
 #define dbfSkipRaw                              NULL
@@ -655,6 +656,7 @@ static RDDFUNCS dbfSuper = { 0 };
 #define dbfEval                                 NULL
 #define dbfOrderListAdd                         NULL
 #define dbfOrderListClear                       NULL
+#define dbfOrderListFocus                       NULL
 #define dbfOrderListRebuild                     NULL
 #define dbfOrderCondition                       NULL
 #define dbfOrderCreate                          NULL
@@ -2012,6 +2014,7 @@ static RDDFUNCS dbfTable = { dbfBof,
                              dbfGoTo,
                              dbfGoToId,
                              dbfGoTop,
+                             dbfSeek,
                              dbfSkip,
                              dbfSkipFilter,
                              dbfSkipRaw,
@@ -2051,6 +2054,7 @@ static RDDFUNCS dbfTable = { dbfBof,
                              dbfZap,
                              dbfOrderListAdd,
                              dbfOrderListClear,
+                             dbfOrderListFocus,
                              dbfOrderListRebuild,
                              dbfOrderCondition,
                              dbfOrderCreate,

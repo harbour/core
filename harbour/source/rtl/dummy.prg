@@ -35,27 +35,19 @@
 
 /* TODO: Dummy functions, should be removed when implemented. */
 
-FUNCTION ordBagName()      ; RETURN ""
 FUNCTION ordCond()         ; RETURN NIL /* 5.3 */
 FUNCTION ordDescend()      ; RETURN .F. /* 5.3 */
-FUNCTION ordFor()          ; RETURN NIL
 FUNCTION ordIsUnique()     ; RETURN .F. /* 5.3 */
-FUNCTION ordKey()          ; RETURN ""
 FUNCTION ordKeyAdd()       ; RETURN .F. /* 5.3 */
 FUNCTION ordKeyCount()     ; RETURN 0   /* 5.3 */
 FUNCTION ordKeyDel()       ; RETURN .F. /* 5.3 */
 FUNCTION ordKeyGoto()      ; RETURN .F. /* 5.3 */
 FUNCTION ordKeyNo()        ; RETURN 0   /* 5.3 */
 FUNCTION ordKeyVal()       ; RETURN NIL /* 5.3 */
-FUNCTION ordName()         ; RETURN ""
-FUNCTION ordNumber()       ; RETURN 0
 FUNCTION ordScope()        ; RETURN NIL /* 5.3 */
-FUNCTION ordSetFocus()     ; RETURN 0
 FUNCTION ordSetRelation()  ; RETURN NIL /* 5.3 */
 FUNCTION ordSkipUnique()   ; RETURN .F. /* 5.3 */
-FUNCTION IndexOrd()        ; RETURN 0
 
-FUNCTION dbSeek()          ; RETURN .F.
 FUNCTION dbSetRelation()   ; RETURN NIL
 FUNCTION dbClearRelation() ; RETURN NIL
 FUNCTION dbFileGet()       ; RETURN .F. /* 5.3 */

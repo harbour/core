@@ -506,6 +506,13 @@ static ERRCODE cdxOrderListClear( AREAP pArea )
    return SUCCESS;
 }
 
+static ERRCODE cdxOrderListFocus( AREAP pArea, LPDBORDERINFO pOrderInfo )
+{
+   HB_TRACE(HB_TR_DEBUG, ("cdxOrderListFocus(%p, %p)", pArea, pOrderInfo));
+
+   return SUCCESS;
+}
+
 static ERRCODE cdxOrderListRebuild( AREAP pArea )
 {
    HB_TRACE(HB_TR_DEBUG, ("cdxOrderListRebuild(%p)", pArea));
@@ -539,6 +546,13 @@ static ERRCODE cdxPutValueFile( AREAP pArea, USHORT uiIndex, void * pFile )
       hb_xfree( ( ( LPDBFMEMO ) pField->memo )->pData );
       memset( pField->memo, 0, sizeof( DBFMEMO ) );
    }
+   return SUCCESS;
+}
+
+static ERRCODE cdxSeek( AREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFindLast )
+{
+   HB_TRACE(HB_TR_DEBUG, ("cdxSeek(%p, %d, %p, %d)", pArea, bSoftSeek, pKey, bFindLast));
+
    return SUCCESS;
 }
 
@@ -646,6 +660,7 @@ static RDDFUNCS cdxTable = { cdxBof,
                              cdxGoTo,
                              cdxGoToId,
                              cdxGoTop,
+                             cdxSeek,
                              cdxSkip,
                              cdxSkipFilter,
                              cdxSkipRaw,
@@ -685,6 +700,7 @@ static RDDFUNCS cdxTable = { cdxBof,
                              cdxZap,
                              cdxOrderListAdd,
                              cdxOrderListClear,
+                             cdxOrderListFocus,
                              cdxOrderListRebuild,
                              cdxOrderCondition,
                              cdxOrderCreate,

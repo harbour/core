@@ -600,6 +600,7 @@ typedef USHORT ( * DBENTRYP_VSP  )( AREAP area, USHORT action, ULONG lRecord );
 typedef USHORT ( * DBENTRYP_SVL  )( AREAP area, USHORT index, ULONG * param );
 typedef USHORT ( * DBENTRYP_SSI  )( AREAP area, USHORT p1, USHORT p2, PHB_ITEM p3 );
 typedef USHORT ( * DBENTRYP_ISI  )( AREAP area, PHB_ITEM p1, USHORT p2, PHB_ITEM p3 );
+typedef USHORT ( * DBENTRYP_BIB  )( AREAP area, BOOL p1, PHB_ITEM p2, BOOL p3 );
 
 #if 0
 typedef USHORT ( * DBENTRYP_VPL  )( AREAP area, void * p1, LONG p2);
@@ -622,9 +623,7 @@ typedef struct _RDDFUNCS
    DBENTRYP_UL   go;
    DBENTRYP_I    goToId;
    DBENTRYP_V    goTop;
-#if 0
-   DBENTRYP_SI   seek;
-#endif
+   DBENTRYP_BIB  seek;
    DBENTRYP_L    skip;
    DBENTRYP_L    skipFilter;
    DBENTRYP_L    skipRaw;
@@ -700,8 +699,8 @@ typedef struct _RDDFUNCS
    DBENTRYP_V    orderListClear;
 #if 0
    DBENTRYP_VP   orderListDelete;
-   DBENTRYP_VP   orderListFocus;
 #endif
+   DBENTRYP_OI   orderListFocus;
    DBENTRYP_V    orderListRebuild;
    DBENTRYP_VOI  orderCondition;
    DBENTRYP_VOC  orderCreate;
@@ -781,7 +780,7 @@ typedef RDDFUNCS * PRDDFUNCS;
 #define SELF_GOTOID(w, sp)              ((*(w)->lprfsHost->goToId)(w, sp))
 #define SELF_GOBOTTOM(w)                ((*(w)->lprfsHost->goBottom)(w))
 #define SELF_GOTOP(w)                   ((*(w)->lprfsHost->goTop)(w))
-#define SELF_SEEK(w, i, v)              ((*(w)->lprfsHost->seek)(w, i, v))
+#define SELF_SEEK(w, i1, v, i2)         ((*(w)->lprfsHost->seek)(w, i1, v, i2))
 #define SELF_SKIP(w, l)                 ((*(w)->lprfsHost->skip)(w, l))
 #define SELF_SKIPFILTER(w, l)           ((*(w)->lprfsHost->skipFilter)(w, l))
 #define SELF_SKIPRAW(w, l)              ((*(w)->lprfsHost->skipRaw)(w, l))
@@ -935,7 +934,7 @@ typedef RDDFUNCS * PRDDFUNCS;
 #define SUPER_GOTOID(w, sp)             ((*(SUPERTABLE)->goToId)(w, sp))
 #define SUPER_GOBOTTOM(w)               ((*(SUPERTABLE)->goBottom)(w))
 #define SUPER_GOTOP(w)                  ((*(SUPERTABLE)->goTop)(w))
-#define SUPER_SEEK(w, i, v)             ((*(SUPERTABLE)->seek)(w, i, v))
+#define SUPER_SEEK(w, i1, v, i2)        ((*(SUPERTABLE)->seek)(w, i1, v, i2))
 #define SUPER_SKIP(w, l)                ((*(SUPERTABLE)->skip)(w, l))
 #define SUPER_SKIPFILTER(w, l)          ((*(SUPERTABLE)->skipFilter)(w, l))
 #define SUPER_SKIPRAW(w, l)             ((*(SUPERTABLE)->skipRaw)(w, l))

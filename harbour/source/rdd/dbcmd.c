@@ -97,6 +97,7 @@ HARBOUR HB_DBRECALL( void );
 HARBOUR HB_DBRLOCK( void );
 HARBOUR HB_DBRLOCKLIST( void );
 HARBOUR HB_DBRUNLOCK( void );
+HARBOUR HB_DBSEEK( void );
 HARBOUR HB_DBSELECTAREA( void );
 HARBOUR HB_DBSETDRIVER( void );
 HARBOUR HB_DBSETFILTER( void );
@@ -119,17 +120,24 @@ HARBOUR HB_FIELDPUT( void );
 HARBOUR HB_FLOCK( void );
 HARBOUR HB_FOUND( void );
 HARBOUR HB_HEADER( void );
+HARBOUR HB_INDEXORD( void );
 HARBOUR HB_LASTREC( void );
 HARBOUR HB_LOCK( void );
 HARBOUR HB_LUPDATE( void );
 HARBOUR HB_NETERR( void );
 HARBOUR HB_ORDBAGEXT( void );
+HARBOUR HB_ORDBAGNAME( void );
 HARBOUR HB_ORDCONDSET( void );
 HARBOUR HB_ORDCREATE( void );
 HARBOUR HB_ORDDESTROY( void );
+HARBOUR HB_ORDFOR( void );
+HARBOUR HB_ORDKEY( void );
 HARBOUR HB_ORDLISTADD( void );
 HARBOUR HB_ORDLISTCLEAR( void );
 HARBOUR HB_ORDLISTREBUILD( void );
+HARBOUR HB_ORDNAME( void );
+HARBOUR HB_ORDNUMBER( void );
+HARBOUR HB_ORDSETFOCUS( void );
 HARBOUR HB_RDDLIST( void );
 HARBOUR HB_RDDNAME( void );
 HARBOUR HB_RDDREGISTER( void );
@@ -812,6 +820,7 @@ static RDDFUNCS defTable = { defBof,
                              ( DBENTRYP_UL ) defUnSupported,
                              ( DBENTRYP_I ) defUnSupported,
                              defUnSupported,
+                             ( DBENTRYP_BIB ) defUnSupported,
                              defSkip,
                              defSkipFilter,
                              defSkipRaw,
@@ -851,6 +860,7 @@ static RDDFUNCS defTable = { defBof,
                              defUnSupported,
                              ( DBENTRYP_OI ) defUnSupported,
                              defUnSupported,
+                             ( DBENTRYP_OI ) defUnSupported,
                              defUnSupported,
                              defOrderCondition,
                              ( DBENTRYP_VOC ) defUnSupported,
@@ -2294,6 +2304,32 @@ HARBOUR HB_DBRUNLOCK( void )
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "DBRUNLOCK" );
 }
 
+HARBOUR HB_DBSEEK( void )
+{
+   PHB_ITEM pKey;
+   BOOL bSoftSeek, bFindLast;
+
+   if( pCurrArea )
+   {
+      if( !ISNIL( 1 ) )
+      {
+         pKey = hb_param( 1, IT_ANY );
+         bSoftSeek = ISLOG( 2 ) ? hb_parl( 2 ) : hb_set.HB_SET_SOFTSEEK;
+         bFindLast = ISLOG( 3 ) ? hb_parl( 3 ) : FALSE;
+         if( SELF_SEEK( ( AREAP ) pCurrArea->pArea, bSoftSeek, pKey, bFindLast ) == SUCCESS )
+         {
+            hb_retl( ( ( AREAP ) pCurrArea->pArea )->fFound );
+            return;
+         }
+      }
+      else
+         hb_errRT_DBCMD( EG_ARG, 1001, NULL, "DBSEEK" );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "DBSEEK" );
+   hb_retl( FALSE );
+}
+
 HARBOUR HB_DBSELECTAREA( void )
 {
    USHORT uiNewArea;
@@ -2871,6 +2907,21 @@ HARBOUR HB_HEADER( void )
    }
 }
 
+HARBOUR HB_INDEXORD( void )
+{
+   DBORDERINFO pInfo;
+
+   if( pCurrArea )
+   {
+      pInfo.itmResult = hb_itemPutNI( NULL, 0 );
+      SELF_ORDINFO( ( AREAP ) pCurrArea->pArea, DBOI_NUMBER, &pInfo );
+      hb_retni( hb_itemGetNI( pInfo.itmResult ) );
+      hb_itemRelease( pInfo.itmResult );
+   }
+   else
+      hb_retni( 0 );
+}
+
 HARBOUR HB_LASTREC( void )
 {
    HB_RECCOUNT();
@@ -2958,6 +3009,29 @@ HARBOUR HB_ORDBAGEXT( void )
       hb_retc( pInfo.itmResult->item.asString.value );
       hb_itemRelease( pInfo.itmResult );
    }
+}
+
+HARBOUR HB_ORDBAGNAME( void )
+{
+   DBORDERINFO pOrderInfo;
+
+   if( pCurrArea )
+   {
+      pOrderInfo.itmOrder = hb_param( 1, IT_STRING );
+      if( !pOrderInfo.itmOrder )
+         pOrderInfo.itmOrder = hb_param( 1, IT_NUMERIC );
+      if( !pOrderInfo.itmOrder )
+      {
+         hb_errRT_DBCMD( EG_ARG, 1006, NULL, "ORDBAGNAME" );
+         return;
+      }
+      pOrderInfo.itmResult = hb_itemPutC( NULL, "" );
+      SELF_ORDINFO( ( AREAP ) pCurrArea->pArea, DBOI_BAGNAME, &pOrderInfo );
+      hb_retc( hb_itemGetC( pOrderInfo.itmResult ) );
+      hb_itemRelease( pOrderInfo.itmResult );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ORDBAGNAME" );
 }
 
 HARBOUR HB_ORDCONDSET( void )
@@ -3069,6 +3143,54 @@ HARBOUR HB_ORDDESTROY( void )
    }
 }
 
+HARBOUR HB_ORDFOR( void )
+{
+   DBORDERINFO pOrderInfo;
+
+   if( pCurrArea )
+   {
+      pOrderInfo.itmOrder = hb_param( 1, IT_STRING );
+      if( !pOrderInfo.itmOrder )
+         pOrderInfo.itmOrder = hb_param( 1, IT_NUMERIC );
+      pOrderInfo.atomBagName = hb_param( 2, IT_STRING );
+      if( !pOrderInfo.itmOrder )
+      {
+         hb_errRT_DBCMD( EG_ARG, 1006, NULL, "ORDFOR" );
+         return;
+      }
+      pOrderInfo.itmResult = hb_itemPutC( NULL, "" );
+      SELF_ORDINFO( ( AREAP ) pCurrArea->pArea, DBOI_CONDITION, &pOrderInfo );
+      hb_retc( hb_itemGetC( pOrderInfo.itmResult ) );
+      hb_itemRelease( pOrderInfo.itmResult );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ORDFOR" );
+}
+
+HARBOUR HB_ORDKEY( void )
+{
+   DBORDERINFO pOrderInfo;
+
+   if( pCurrArea )
+   {
+      pOrderInfo.itmOrder = hb_param( 1, IT_STRING );
+      if( !pOrderInfo.itmOrder )
+         pOrderInfo.itmOrder = hb_param( 1, IT_NUMERIC );
+      pOrderInfo.atomBagName = hb_param( 2, IT_STRING );
+      if( !pOrderInfo.itmOrder )
+      {
+         hb_errRT_DBCMD( EG_ARG, 1006, NULL, "ORDKEY" );
+         return;
+      }
+      pOrderInfo.itmResult = hb_itemPutC( NULL, "" );
+      SELF_ORDINFO( ( AREAP ) pCurrArea->pArea, DBOI_EXPRESSION, &pOrderInfo );
+      hb_retc( hb_itemGetC( pOrderInfo.itmResult ) );
+      hb_itemRelease( pOrderInfo.itmResult );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ORDKEY" );
+}
+
 HARBOUR HB_ORDLISTADD( void )
 {
    DBORDERINFO pOrderInfo;
@@ -3078,9 +3200,7 @@ HARBOUR HB_ORDLISTADD( void )
    {
       pOrderInfo.atomBagName = hb_param( 1, IT_STRING );
       pOrderInfo.itmOrder = hb_param( 2, IT_STRING );
-      if( !pOrderInfo.itmOrder )
-         pOrderInfo.itmOrder = hb_param( 2, IT_NUMERIC );
-      if( !pOrderInfo.atomBagName && !pOrderInfo.itmOrder )
+      if( !pOrderInfo.atomBagName )
       {
          hb_errRT_DBCMD( EG_ARG, 1006, NULL, "ORDLISTADD" );
          return;
@@ -3105,6 +3225,69 @@ HARBOUR HB_ORDLISTREBUILD( void )
       SELF_ORDLSTREBUILD( ( AREAP ) pCurrArea->pArea );
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ORDLISTCLEAR" );
+}
+
+HARBOUR HB_ORDNAME( void )
+{
+   DBORDERINFO pOrderInfo;
+
+   if( pCurrArea )
+   {
+      pOrderInfo.itmOrder = hb_param( 1, IT_NUMERIC );
+      pOrderInfo.atomBagName = hb_param( 2, IT_STRING );
+      if( !pOrderInfo.itmOrder )
+      {
+         hb_errRT_DBCMD( EG_ARG, 1006, NULL, "ORDNAME" );
+         return;
+      }
+      pOrderInfo.itmResult = hb_itemPutC( NULL, "" );
+      SELF_ORDINFO( ( AREAP ) pCurrArea->pArea, DBOI_NAME, &pOrderInfo );
+      hb_retc( hb_itemGetC( pOrderInfo.itmResult ) );
+      hb_itemRelease( pOrderInfo.itmResult );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ORDNAME" );
+}
+
+HARBOUR HB_ORDNUMBER( void )
+{
+   DBORDERINFO pOrderInfo;
+
+   if( pCurrArea )
+   {
+      pOrderInfo.itmOrder = hb_param( 1, IT_STRING );
+      pOrderInfo.atomBagName = hb_param( 2, IT_STRING );
+      if( !pOrderInfo.itmOrder )
+      {
+         hb_errRT_DBCMD( EG_ARG, 1006, NULL, "ORDNUMBER" );
+         return;
+      }
+      pOrderInfo.itmResult = hb_itemPutNI( NULL, 0 );
+      SELF_ORDINFO( ( AREAP ) pCurrArea->pArea, DBOI_NUMBER, &pOrderInfo );
+      hb_retni( hb_itemGetNI( pOrderInfo.itmResult ) );
+      hb_itemRelease( pOrderInfo.itmResult );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ORDNUMBER" );
+}
+
+HARBOUR HB_ORDSETFOCUS( void )
+{
+   DBORDERINFO pInfo;
+
+   if( pCurrArea )
+   {
+      pInfo.itmOrder = hb_param( 1, IT_STRING );
+      if( !pInfo.itmOrder )
+         pInfo.itmOrder = hb_param( 1, IT_NUMERIC );
+      pInfo.atomBagName = hb_param( 2, IT_STRING );
+      pInfo.itmResult = hb_itemPutC( NULL, "" );
+      SELF_ORDLSTFOCUS( ( AREAP ) pCurrArea->pArea, &pInfo );
+      hb_retc( hb_itemGetC( pInfo.itmResult ) );
+      hb_itemRelease( pInfo.itmResult );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ORDSETFOCUS" );
 }
 
 HARBOUR HB_RDDLIST( void )
