@@ -28,6 +28,18 @@
 
 .AUTODEPEND
 
+!if $d(ECHO)
+   # ECHO is defined.
+!else
+   ECHO=ECHO.
+!endif
+
+!if $d(DEL)
+   # DEL is defined.
+!else
+   DEL=DEL
+!endif
+
 !if $d(B16)
 
 BCC_NOSTARTUP = ""

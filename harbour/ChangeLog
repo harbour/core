@@ -1,3 +1,10 @@
+2001-09-05 22:45 UTC-0800 Brian Hays <bhays@abacuslaw.com>
+   * makefile.bc
+   * hb_slex.bc
+     * added defaults for ECHO and DEL macros so the make files are
+       not dependent upon definitions in
+         make_b32.bat and/or b32_slex.bat.
+
 2001-09-05 11:25 UTC-0800 Brian Hays <bhays@abacuslaw.com>
    * b32_slex.bat
    * make_b32.bat
