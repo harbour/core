@@ -209,6 +209,7 @@ static PCLASS   s_pClasses     = NULL;
 static USHORT   s_uiClasses    = 0;
 static PMETHOD  s_pMethod      = NULL; /* TOFIX: The object engine is not thread safe because of this. [vszakats] */
 static PHB_DYNS s_msgClassName = NULL;
+
 static PHB_DYNS s_msgClassH    = NULL;
 static PHB_DYNS s_msgEval      = NULL;
 static PHB_DYNS s_msgClassSel  = NULL;
@@ -226,6 +227,7 @@ static void     hb_clsRelease( PCLASS );
        void     hb_clsReleaseAll( void );
 
        char *   hb_objGetClsName( PHB_ITEM pObject );
+       char *   hb_objGetRealClsName( PHB_ITEM pObject, char * szName );
        PHB_FUNC hb_objGetMethod( PHB_ITEM, PHB_SYMB );
        PHB_FUNC hb_objGetMthd( PHB_ITEM pObject, PHB_SYMB pMessage, BOOL lAllowErrFunc );
        ULONG    hb_objHasMsg( PHB_ITEM pObject, char * szString );
