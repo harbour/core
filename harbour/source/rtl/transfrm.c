@@ -422,7 +422,8 @@ HB_FUNC( TRANSFORM )
          }
 
          /* TODO: maybe replace this 16 with something else */
-         szResult = ( char * ) hb_xgrab( ulPicLen + 16 );   /* Grab enough */
+//Toninho@fwi    szResult = ( char * ) hb_xgrab( ulPicLen + 16 );   /* Grab enough */
+         szResult = ( char * ) hb_xgrab( ulPicLen + (ULONG) iOrigWidth + (ULONG) iOrigDec + 16 );   /* Grab enough */
          *szResult = '\0';
 
          for( i = 0; i < ulPicLen && !bFound; i++ )      /* Count number in front    */
@@ -471,7 +472,8 @@ HB_FUNC( TRANSFORM )
          }
 
          pNumber = hb_itemPutNDLen( NULL, dPush, -1, iDec );
-         pWidth = hb_itemPutNI( NULL, iWidth + ( !ulPicLen && iDec > 0 ? iDec + 1 : 0 ) );
+//Toninho@fwi    pWidth = hb_itemPutNI( NULL, iWidth + ( !ulPicLen && iDec > 0 ? iDec + 1 : 0 ) );
+         pWidth = hb_itemPutNI( NULL, iWidth + ( ( ulPicLen || iDec == 0 ) ? 0 : ( iDec + 1 ) ) );
          pDec = hb_itemPutNI( NULL, iDec );
 
          szStr = hb_itemStr( pNumber, pWidth, pDec );
@@ -484,7 +486,7 @@ HB_FUNC( TRANSFORM )
          {
             iCount = 0;
 
-            /* Pad with Zero's */
+            /* Pad with padding char */
             if( uiPicFlags & PF_PADL )
             {
                for( i = 0; szStr[ i ] == ' ' && i < ( ULONG ) iWidth; i++ )
@@ -512,7 +514,8 @@ HB_FUNC( TRANSFORM )
 
                      if( uiPicFlags & PF_EXCHANG )  /* Exchange . and ,         */
                      {
-                        szResult[ i ] = '.';
+//Toninho@fwi                   szResult[ i ] = '.';
+                        szResult[ i ] = ',';
                         iCount++;
                      }
                      else
@@ -552,7 +555,8 @@ HB_FUNC( TRANSFORM )
                         if( i && szResult[ i - 1 ] == '*' )
                            szResult[ i ] = '*';
                         else
-                           szResult[ i ] = '0';
+//Toninho@fwi                      szResult[ i ] = '0';
+                           szResult[ i ] = ' ';
                      }
                   }
                   else
@@ -822,7 +826,8 @@ HB_FUNC( TRANSFORM )
             hb_xfree( szStr );
          }
          else
-            hb_retc( NULL );
+//Toninho@fwi       hb_retc( NULL );
+            hb_retc( "" );
       }
       else if( HB_IS_DATE( pValue ) )
       {

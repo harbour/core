@@ -8,6 +8,15 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-07-09 07:20 UTC-0300 Antonio Carlos Pantaglione <toninho@fwi.com.br>
+  * source/rtl/transfrm.c
+    ! Fix with numeric values and pictures with spaces and pictures with
+      severals dot. Changes by Walter Negro, borrow from xharbour.
+      The return values are compliant with Clipper.
+      eg: Transform( 1234, "9 999" )
+      eg: Transform( 123.123456, "999.99.99.99" )
+      PS: I comment ALL old lines with //Toninho@fwi and. If all is Ok, I delete it.
+
 2003-07-08 23:00 UTC-0300 Antonio Carlos Pantaglione <toninho@fwi.com.br>
   ! Sync with changes made in xHarbour by Walter Negro
   * contrib/rdd_ads/ace.h
