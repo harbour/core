@@ -553,9 +553,9 @@ zot:
    -@if exist $(OBJ_DIR)\*.obj del $(OBJ_DIR)\*.obj > nul
    -@if exist $(OBJ_DIR)\*.c del $(OBJ_DIR)\*.c > nul
    -@if exist $(OBJ_DIR)\*.h del $(OBJ_DIR)\*.h > nul
-   -@if exist $(BIN_DIR)\*.exe del $(OBJ_DIR)\*.exe > nul
-   -@if exist $(BIN_DIR)\*.map del $(OBJ_DIR)\*.map > nul
-   -@if exist $(BIN_DIR)\*.dll del $(OBJ_DIR)\*.dll > nul
+   -@if exist $(BIN_DIR)\*.exe del $(BIN_DIR)\*.exe > nul
+   -@if exist $(BIN_DIR)\*.map del $(BIN_DIR)\*.map > nul
+   -@if exist $(BIN_DIR)\*.dll del $(BIN_DIR)\*.dll > nul
 
 !else
 
