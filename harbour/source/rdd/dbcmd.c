@@ -99,8 +99,6 @@ HB_INIT_SYMBOLS_END( dbCmd__InitSymbols );
 #pragma startup dbCmd__InitSymbols
 #endif
 
-extern STACK stack;
-
 static char * szDefDriver = 0;      /* Default RDD name */
 static USHORT uiCurrArea = 1;       /* Selectd area */
 static PRDDNODE pRddList = 0;       /* Registered RDD's */
@@ -108,9 +106,6 @@ static USHORT uiNetError = 0;       /* Error on Networked environments */
 
 static PAREANODE pWorkAreas = 0;    /* WorkAreas */
 static PAREANODE pCurrArea = 0;     /* Pointer to a selectd and valid area */
-
-/* From strings.c */
-char * hb_strUpper( char * szText, long lLen );
 
 static void LinkRddSys( void )    /* Never must be called */
 {
