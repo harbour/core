@@ -5,171 +5,172 @@
 ROOT = ../../
 
 LIBS=\
-	tools \
+        tools \
         debug \
-	rdd \
-	vm \
-	rtl \
-	hbpp \
+        rtl \
+        rdd \
+        vm \
+        rtl \
+        hbpp \
 
 ifeq ($(PM),)
   PM := $(pm)
 endif
-ifeq ($(PM),)	# PM not defined = build all files
+ifeq ($(PM),)   # PM not defined = build all files
 PRG_SOURCES=\
         ac_test.prg \
         adirtest.prg \
-	ainstest.prg \
-	and_or.prg \
-	array16.prg \
-	arrayidx.prg \
-	arrays.prg \
+        ainstest.prg \
+        and_or.prg \
+        array16.prg \
+        arrayidx.prg \
+        arrays.prg \
         arreval.prg \
-	arrindex.prg \
-	atest.prg \
-	box.prg \
-	byref.prg \
-	calling.prg \
-	cdow.prg \
-	clasinit.prg \
-	clasname.prg \
-	classch.prg \
-	classes.prg \
-	clsdata.prg \
-	cmphello.prg \
-	codebl.prg \
-	codebloc.prg \
+        arrindex.prg \
+        atest.prg \
+        box.prg \
+        byref.prg \
+        calling.prg \
+        cdow.prg \
+        clasinit.prg \
+        clasname.prg \
+        classch.prg \
+        classes.prg \
+        clsdata.prg \
+        cmphello.prg \
+        codebl.prg \
+        codebloc.prg \
         colorind.prg \
-	comments.prg \
-	copyfile.prg \
+        comments.prg \
+        copyfile.prg \
         curdirt.prg \
         cursrtst.prg \
-	dates.prg \
-	dates2.prg \
-	dates3.prg \
-	dates4.prg \
-	debugtst.prg \
-	descend.prg \
-	dirtest.prg \
-	docase.prg \
-	dosshell.prg \
-	dynobj.prg \
+        dates.prg \
+        dates2.prg \
+        dates3.prg \
+        dates4.prg \
+        debugtst.prg \
+        descend.prg \
+        dirtest.prg \
+        docase.prg \
+        dosshell.prg \
+        dynobj.prg \
         dynsym.prg \
-	empty.prg \
-	exittest.prg \
-	fib.prg \
-	fileio.prg \
-	filexist.prg \
-	fornext.prg \
-	fornext2.prg \
-	funcarr.prg \
-	guess.prg \
-	hardcr.prg \
-	hello.prg \
-	ifelse.prg \
-	ifinline.prg \
-	inherit.prg \
-	inifiles.prg \
-	initexit.prg \
-	inkeytst.prg \
-	inline.prg \
-	instr.prg \
-	iotest.prg \
-	iotest2.prg \
-	longstr.prg \
-	longstr2.prg \
-	mankala.prg \
-	mathtest.prg \
-	memvar.prg \
+        empty.prg \
+        exittest.prg \
+        fib.prg \
+        fileio.prg \
+        filexist.prg \
+        fornext.prg \
+        fornext2.prg \
+        funcarr.prg \
+        guess.prg \
+        hardcr.prg \
+        hello.prg \
+        ifelse.prg \
+        ifinline.prg \
+        inherit.prg \
+        inifiles.prg \
+        initexit.prg \
+        inkeytst.prg \
+        inline.prg \
+        instr.prg \
+        iotest.prg \
+        iotest2.prg \
+        longstr.prg \
+        longstr2.prg \
+        mankala.prg \
+        mathtest.prg \
+        memvar.prg \
         menutest.prg \
-	mtran.prg \
-	multiarg.prg \
-	nums.prg \
-	objarr.prg \
-	objasign.prg \
-	objects.prg \
-	operat.prg \
-	os.prg \
-	output.prg \
-	overload.prg \
-	passref.prg \
-	procline.prg \
-	procname.prg \
-	readfile.prg \
-	readhrb.prg \
-	recursiv.prg \
-	returns.prg \
-	round.prg \
-	rtfclass.prg \
-	rtl_test.prg \
-	say.prg \
-	scroll.prg \
-	seconds.prg \
-	set_num.prg \
-	set_test.prg \
-	sound.prg \
-	statfun.prg \
-	statics.prg \
-	strcmp.prg \
-	strdelim.prg \
-	strings.prg \
-	strings2.prg \
-	strings3.prg \
-	strip.prg \
-	strsub.prg \
-	syserror.prg \
-	t1.prg \
-	test.prg \
-	test_all.prg \
+        mtran.prg \
+        multiarg.prg \
+        nums.prg \
+        objarr.prg \
+        objasign.prg \
+        objects.prg \
+        operat.prg \
+        os.prg \
+        output.prg \
+        overload.prg \
+        passref.prg \
+        procline.prg \
+        procname.prg \
+        readfile.prg \
+        readhrb.prg \
+        recursiv.prg \
+        returns.prg \
+        round.prg \
+        rtfclass.prg \
+        rtl_test.prg \
+        say.prg \
+        scroll.prg \
+        seconds.prg \
+        set_num.prg \
+        set_test.prg \
+        sound.prg \
+        statfun.prg \
+        statics.prg \
+        strcmp.prg \
+        strdelim.prg \
+        strings.prg \
+        strings2.prg \
+        strings3.prg \
+        strip.prg \
+        strsub.prg \
+        syserror.prg \
+        t1.prg \
+        test.prg \
+        test_all.prg \
         testbrw.prg \
-	testcgi.prg \
-	testcopy.prg \
-	testerro.prg \
-	testfor.prg \
-	testgt.prg \
-	testhbf.prg \
-	testhtml.prg \
-	testinc.prg \
-	testmem.prg \
-	teststr.prg \
-	testtok.prg \
-	testpre.prg \
+        testcgi.prg \
+        testcopy.prg \
+        testerro.prg \
+        testfor.prg \
+        testgt.prg \
+        testhbf.prg \
+        testhtml.prg \
+        testinc.prg \
+        testmem.prg \
+        teststr.prg \
+        testtok.prg \
+        testpre.prg \
         testread.prg \
-	testrdd.prg \
-	testvars.prg \
-	testwarn.prg \
-	tstcolor.prg \
-	transdef.prg \
-	transfrm.prg \
-	val.prg \
-	version.prg \
-	while.prg \
+        testrdd.prg \
+        testvars.prg \
+        testwarn.prg \
+        tstcolor.prg \
+        transdef.prg \
+        transfrm.prg \
+        val.prg \
+        version.prg \
+        while.prg \
 
 PRG_HEADERS=\
-	cgi.ch \
-	keywords.ch \
-	test.ch \
+        cgi.ch \
+        keywords.ch \
+        test.ch \
 
 BAD_PRG_SOURCES=\
-	alias.prg \
-	dupvars.prg \
-	extend1.prg \
-	keywords.prg \
-	linecont.prg \
-	setkeys.prg \
-	spawn.prg \
-	spawn2.prg \
-	statics1.prg \
-	statics2.prg \
-	test10.prg \
-	testid.prg \
+        alias.prg \
+        dupvars.prg \
+        extend1.prg \
+        keywords.prg \
+        linecont.prg \
+        setkeys.prg \
+        spawn.prg \
+        spawn2.prg \
+        statics1.prg \
+        statics2.prg \
+        test10.prg \
+        testid.prg \
 
 C_SOURCES=\
 
 C_HEADERS=\
 
 BAD_C_SOURCES=\
-	extend2.c \
+        extend2.c \
 
 include $(TOP)$(ROOT)config/test.cf
 

@@ -1,3 +1,37 @@
+19990813-01:30 EDT David G. Holm <dholm@jsd-llc.com>
+  * config/os2/gcc.cf
+    - Removed -( and -), which OS/2 GCC does not support.
+  * config/os2/icc.cf
+    + Added handling of HB_DB_DRIVERS.
+  * include/hbsetup.h
+    + If HARBOUR_GCC_OS2 is defined, then OS2 must get defined.
+  * include/hbver.h
+    * Set hb_revision to "a", hb_month to 8, and hb_day to 12.
+  * source/compiler/harbour.y
+    + Display revision code immediately following build code
+      (e.g., "Build 29a (1999.08.12)"
+    ! Moved display of compiler version from inside Include()
+      to immediately following command line option processing,
+      so that the version will always be displayed, unless the
+      /q option or an unsupported output language option is used.
+  * source/debug/debugger.prg
+    ! Changed CLEAR TO on line 208 to SCROLL(), to work around
+      preprocessor problem with certain compilers.
+  * source/rtl/console.c
+    ! Corrected display erasing for BackSpace in HB___ACCEPT()
+      for Harbour builds that are using the GT API.
+  * source/rtl/tone.c
+    ! Don't include <pc.h> for Borland C.
+    + Added support for OS/2 GCC/EMX.
+  * source/rtl/gt/gtos2.c
+    ! Put the fixes for the x vs. y coordinates bugaboo and the
+      change from DWORD to ULONG back in.
+  * tests/working/Makefile
+    ! Added rtl to the library list so that it can include rdd
+      functions and the rdd can include rtl functions for those
+      compilers that have no way to force recursive checking of
+      libraries (specifically, OS/2 GCC 2.8.1).
+
 19990812-22:29 GMT+3 Alexander Kresin
   * source/rtl/tbrowse.prg
   * source/rtl/tbcolumn.prg
@@ -5,7 +39,7 @@
     * added some functionality
   * funclist.txt
     * updated status of TBrowse functions
-  
+
 19990812-14:15 EDT David G. Holm <dholm@jsd-llc.com>
   * funclist.txt
     * Updated the status of several functions to S or R

@@ -20,8 +20,10 @@ LD_OUT = /Fe
 LDFLAGS = /C-
 ifeq ($(HB_LIB_COMPILE),)
 LINKLIBS = $(foreach lib, $(LIBS), $(TOP)$(ROOT)source/$(lib)/$(ARCH)/$(lib)$(LIB_EXT))
+LINKLIBS += $(foreach lib, $(HB_DB_DRIVERS), $(TOP)$(ROOT)source/rdd/$(lib)/$(ARCH)/$(lib)$(LIB_EXT))
 else
 LINKLIBS = $(foreach lib, $(LIBS), $(lib)$(LIB_EXT))
+LINKELIBS += $(foreach lib, $(HB_DB_DRIVERS), $(lib)$(LIB_EXT))
 endif
 
 AR = ilib

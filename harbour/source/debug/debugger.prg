@@ -205,7 +205,7 @@ METHOD Show( lFocused ) CLASS TDbWindow
    ::cBackImage = SaveScreen( ::nTop, ::nLeft, ::nBottom, ::nRight )
 
    SetColor( ::cColor )
-   @ ::nTop, ::nLeft CLEAR TO ::nBottom, ::nRight
+   SCROLL( ::nTop, ::nLeft, ::nBottom, ::nRight )
    @ ::nTop, ::nLeft, ::nBottom, ::nRight BOX If( lFocused, B_DOUBLE, B_SINGLE ) ;
       COLOR ::CColor
 

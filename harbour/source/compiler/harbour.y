@@ -1419,6 +1419,10 @@ int harbour_main( int argc, char * argv[] )
          iArg++;
       }
 
+      if( !_bQuiet )
+         printf( "Harbour compiler build %i%s (%04d.%02d.%02d)\n",
+            hb_build, hb_revision, hb_year, hb_month, hb_day );
+
       if( _pFileName )
       {
         if( !_pFileName->extension )
@@ -2103,11 +2107,7 @@ int Include( char * szFileName, PATHNAMES *pSearch )
     else
       return 0;
   }
-
-   if( !_bQuiet )
-     printf( "Harbour compiler build %i (%04d.%02d.%02d)\n", hb_build,
-              hb_year, hb_month, hb_day );
-
+  
    if( ! _bQuiet )
       printf( "\nparsing file %s\n", szFileName );
 

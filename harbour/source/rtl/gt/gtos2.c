@@ -71,7 +71,7 @@ char hb_gt_Row(void)
     USHORT x, y;
 
     VioGetCurPos(&y, &x, 0);
-    return x;
+    return y;
 }
 
 char hb_gt_Col(void)
@@ -79,7 +79,7 @@ char hb_gt_Col(void)
     USHORT x, y;
 
     VioGetCurPos(&y, &x, 0);
-    return y;
+    return x;
 }
 
 
@@ -215,7 +215,7 @@ void hb_gt_GetText(char cTop, char cLeft, char cBottom, char cRight, char *dest)
     width = (USHORT) ((cRight - cLeft + 1) * 2);
     for (y = cTop; y <= cBottom; y++)
     {
-        VioReadCellStr((BYTE *) dest, &width, (USHORT) cLeft, (USHORT) y, 0);
+        VioReadCellStr((BYTE *) dest, &width, (USHORT) y, (USHORT) cLeft, 0);
         dest += width;
     }
 }
@@ -228,7 +228,7 @@ void hb_gt_PutText(char cTop, char cLeft, char cBottom, char cRight, char *srce)
     width = (USHORT) ((cRight - cLeft + 1) * 2);
     for (y = cTop; y <= cBottom; y++)
     {
-        VioWrtCellStr((BYTE *) srce, width, (USHORT) cLeft, (USHORT) y, 0);
+        VioWrtCellStr((BYTE *) srce, width, (USHORT) y, (USHORT) cLeft, 0);
         srce += width;
     }
 }
@@ -241,7 +241,7 @@ void hb_gt_SetAttribute( char cTop, char cLeft, char cBottom, char cRight, char 
       NOTE: type of attribute should be change from char to unsigned char to
             allow the >127 attributes (sames goes for hb_gt_DrawShadow)
    */
- 
+
     USHORT width;
     char y;
 
@@ -287,7 +287,7 @@ BOOL hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
     return (BOOL)VioSetMode(&vi, 0);   /* 0 = Ok, other = Fail */
 }
 
-void hb_gt_Replicate(char c, DWORD nLength)
+void hb_gt_Replicate(char c, ULONG nLength)
 {
    /* TODO: this will write character c nlength times to the screen.
             Note that it is not used yet

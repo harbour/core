@@ -30,16 +30,15 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
    their web site at http://www.gnu.org/).
 
+   V 1.2    David G. Holm               Added OS/2 GCC/EMX support.
    V 1.1    David G. Holm               Split machine dependent code into
                                         hb_tone() function for internal use
                                         by other Harbour C functions.
    V 1.0    Chen Kedem                  Initial version (only OS/2 support).
 */
 
-#if defined(__BORLANDC__) || defined(__DJGPP__)
-  #include <pc.h>
-#endif
 #if defined(__DJGPP__)
+  #include <pc.h>
   #include <time.h>
 #endif
 #if defined(OS2) || defined(__BORLANDC__)
@@ -48,6 +47,10 @@
 
 #include "extend.h"
 #include "init.h"
+
+#if defined(HARBOUR_GCC_OS2)
+  ULONG DosBeep (ULONG ulFrequency, ULONG ulDuration);
+#endif
 
 /*  $DOC$
  *  $FUNCNAME$
@@ -115,7 +118,12 @@ void hb_tone( double frequency, double duration )
          Clipper 1/18 sec is * 1000.0 / 18.0
       */
    /* TODO: add more platform support */
-#if defined(OS2)
+#if defined(HARBOUR_GCC_OS2)
+      frequency = MIN( MAX( 0.0, frequency ), ULONG_MAX );
+      duration = duration * 1000.0 / 18.0;
+      duration = MIN( MAX ( 0.0, duration ), ULONG_MAX );
+      DosBeep( ( ULONG ) frequency, ( ULONG ) duration );
+#elif defined(OS2)
       frequency = MIN( MAX( 0.0, frequency ), 65535.0 );
       duration = duration * 1000.0 / 18.0;
       duration = MIN( MAX ( 0.0, duration ), 65535.0 );

@@ -147,7 +147,7 @@
 #endif
 
 #ifndef OS2
-#if defined(__OS2__) || defined(OS_2)
+#if defined(__OS2__) || defined(OS_2) || defined(HARBOUR_GCC_OS2)
 #define OS2
 #endif
 #endif

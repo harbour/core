@@ -1097,8 +1097,13 @@ HARBOUR HB___ACCEPT( void ) /* Internal Clipper function used in ACCEPT command 
          case 19: /* Left arrow */
             if( len > 0 )
             {
-               len--; /* Adjust input count to get rid of last character */
-               hb_dispout( "\x8 \x8", 3L ); /* Then erase it */
+               len--; /* Adjust input count to get rid of last character,
+                         then erase it from the screen. */
+#ifdef HARBOUR_USE_GTAPI
+               hb_gtWriteCon( "\x8 \x8", 3L );
+#else
+               printf( "\x8 \x8" );
+#endif
             }
             break;
          case 13:  /* Nothing to do. While loop will now exit. */

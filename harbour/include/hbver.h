@@ -32,6 +32,11 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
    their web site at http://www.gnu.org/).
 
+   V 1.4    David G. Holm               Bumped revision code to "a" and
+                                        set date for public OS/2 build.
+   V 1.3    ?
+   V 1.2    ?
+   V 1.1    ?                           Renamed to hbver.h
    V 1.11   Patrick Mast                Bumped build to 29 and updated date
                                         for new public release.
    V 1.12   David G. Holm               Bumped build to 29, reset revision
@@ -72,10 +77,10 @@ extern int    hb_day;
 
 #define hb_major     0       /* Major version number */
 #define hb_minor     0       /* Minor version number */
-#define hb_revision  ""      /* Revision letter */
+#define hb_revision  "a"     /* Revision letter */
 #define hb_build     29      /* Build number */
 #define hb_year      1999    /* Build year */
-#define hb_month     7       /* Build month */
-#define hb_day       21      /* Build day */
+#define hb_month     8       /* Build month */
+#define hb_day       12      /* Build day */
 
 #endif /* HB_VER_H_ */
