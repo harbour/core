@@ -12,7 +12,6 @@ C_SOURCES=\
 	copyfile.c \
 	dates.c \
 	descend.c \
-	devoutp.c \
 	dir.c \
 	environ.c \
 	errorapi.c \

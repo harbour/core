@@ -54,7 +54,9 @@ HARBOUR HB_TRANSFORM( void );
 HB_INIT_SYMBOLS_BEGIN( Transfrm__InitSymbols )
 { "TRANSFORM" , FS_PUBLIC, HB_TRANSFORM  , 0 }
 HB_INIT_SYMBOLS_END( Transfrm__InitSymbols );
+#if ! defined(__GNUC__)
 #pragma startup Transfrm__InitSymbols
+#endif
 
 extern STACK stack;
 

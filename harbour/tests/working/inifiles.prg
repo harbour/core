@@ -89,7 +89,7 @@ static function New(cFileName)
                if !Empty(cLine)
                   if Left(cLine, 1) == '[' // new section
                      if (nPos := At(']', cLine)) > 1
-                        cLine := substr(cLine, 2, nPos - 2);
+                        cLine := substr(cLine, 2, nPos - 2)
                      else
                         cLine := substr(cLine, 2)
                      endif

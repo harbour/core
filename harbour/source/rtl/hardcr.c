@@ -15,7 +15,9 @@ HARBOUR HB_HARDCR(void);
 HB_INIT_SYMBOLS_BEGIN( HardCR__InitSymbols )
 { "HARDCR", FS_PUBLIC, HB_HARDCR, 0 }
 HB_INIT_SYMBOLS_END( HardCR__InitSymbols );
+#if ! defined(__GNUC__)
 #pragma startup HardCR__InitSymbols
+#endif
 
 char *hb_hardcr( char *string )
 {

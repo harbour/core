@@ -86,14 +86,19 @@ HB_INIT_SYMBOLS_BEGIN( Strings__InitSymbols )
 { "STRTRAN"      , FS_PUBLIC, HB_STRTRAN, 0 },
 { "STUFF"        , FS_PUBLIC, HB_STUFF  , 0 }
 HB_INIT_SYMBOLS_END( Strings__InitSymbols );
+#if ! defined(__GNUC__)
 #pragma startup Strings__InitSymbols
+#endif
+
 /* The rest of functions is pulled automatically by initsymb.c */
 
 #ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
 HB_CALL_ON_STARTUP_BEGIN( Strings_InitInfinity )
    infinity = -log( 0 );
 HB_CALL_ON_STARTUP_END( Strings_InitInfinity );
+#if ! defined(__GNUC__)
 #pragma startup Strings_InitInfinity
+#endif
 #endif
 
 BOOL hb_strempty( char * szText, ULONG ulLen )

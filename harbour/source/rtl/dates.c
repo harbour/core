@@ -69,7 +69,10 @@ HARBOUR HB_YEAR( void );
 HB_INIT_SYMBOLS_BEGIN( Dates__InitSymbols )
 { "STOD",    FS_PUBLIC, HB_STOD,    0 }
 HB_INIT_SYMBOLS_END( Dates__InitSymbols );
+#if ! defined(__GNUC__)
 #pragma startup Dates__InitSymbols
+#endif
+
 /* rest of the functions is pulled automatically in initsymb.c */
 
 

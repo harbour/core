@@ -114,7 +114,9 @@ HB_INIT_SYMBOLS_BEGIN( Console__InitSymbols )
 { "QOUT"     , FS_PUBLIC, HB_QOUT     , 0 },
 { "QQOUT"    , FS_PUBLIC, HB_QQOUT    , 0 }
 HB_INIT_SYMBOLS_END( Console__InitSymbols );
+#if ! defined(__GNUC__)
 #pragma startup Console__InitSymbols
+#endif
 
 static unsigned short dev_row, dev_col, p_row, p_col;
 static char CrLf [ CRLF_BUFFER_LEN ];
@@ -139,7 +141,9 @@ HB_CALL_ON_STARTUP_BEGIN( InitializeConsole )
 #endif
    p_row = p_col = 0;
 HB_CALL_ON_STARTUP_END( InitializeConsole );
+#if ! defined(__GNUC__)
 #pragma startup InitializeConsole
+#endif
 
 WORD hb_max_row( void )
 {

@@ -55,7 +55,9 @@ HB_INIT_SYMBOLS_BEGIN( Arrays__InitSymbols )
 { "ASORT",          FS_PUBLIC, HB_ASORT         , 0 },
 { "ATAIL",          FS_PUBLIC, HB_ATAIL         , 0 },
 HB_INIT_SYMBOLS_END( Arrays__InitSymbols );
+#if ! defined(__GNUC__)
 #pragma startup Arrays__InitSymbols
+#endif
 
 PHB_ITEM hb_itemNew( PHB_ITEM );
 PHB_ITEM hb_itemArrayPut( PHB_ITEM , ULONG , PHB_ITEM );

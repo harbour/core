@@ -149,7 +149,9 @@ HB_INIT_SYMBOLS_BEGIN( Files__InitSymbols )
 { "L2BIN"   , FS_PUBLIC, HB_L2BIN   , 0 },
 { "W2BIN"   , FS_PUBLIC, HB_W2BIN   , 0 }
 HB_INIT_SYMBOLS_END( Files__InitSymbols );
+#if ! defined(__GNUC__)
 #pragma startup Files__InitSymbols
+#endif
 
 /* Convert HARBOUR flags to IO subsystem flags */
 

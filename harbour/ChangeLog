@@ -1,3 +1,30 @@
+Tue Jul 13 13:44:04 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* include/Makefile: 
+	* source/rtl/Makefile: 
+	* tests/working/Makefile: 
+	Updated list of files.
+	
+	* source/rtl/arrays.c: 
+	* source/rtl/classes.c: 
+	* source/rtl/console.c: 
+	* source/rtl/dates.c: 
+	* source/rtl/descend.c: 
+	* source/rtl/dir.c: 
+	* source/rtl/environ.c: 
+	* source/rtl/files.c: 
+	* source/rtl/hardcr.c: 
+	* source/rtl/math.c: 
+	* source/rtl/mtran.c: 
+	* source/rtl/set.c: 
+	* source/rtl/strings.c: 
+	* source/rtl/transfrm.c: 
+	Protected all uses of #pragma startup so they won't trigger a
+	warning with gcc.
+	
+	* tests/working/inifiles.prg: 
+	Fixed a typo.
+
 19990712-23:40 EDT David G. Holm <dholm@jsd-llc.com>
   * include/hbdefs.h
     ! The HB_HANDLE type was being defined in the #else section of a #ifdef

@@ -55,7 +55,9 @@ HB_INIT_SYMBOLS_BEGIN( Environ__InitSymbols )
 { "OS"     , FS_PUBLIC, HB_OS     , 0 },
 { "VERSION", FS_PUBLIC, HB_VERSION, 0 }
 HB_INIT_SYMBOLS_END( Environ__InitSymbols );
+#if ! defined(__GNUC__)
 #pragma startup Environ__InitSymbols
+#endif
 
 HARBOUR HB_OS(void)
 {

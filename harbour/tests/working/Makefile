@@ -1,4 +1,4 @@
-#
+
 # $Id$
 #
 
@@ -17,11 +17,14 @@ PRG_SOURCES=\
 	calling.prg \
 	cdow.prg \
 	clasinit.prg \
+	classch.prg \
 	classes.prg \
+	clsdata.prg \
 	cmphello.prg \
 	codebl.prg \
 	codebloc.prg \
 	comments.prg \
+	copyfile.prg \
 	dates.prg \
 	dates2.prg \
 	dates3.prg \
@@ -66,6 +69,7 @@ PRG_SOURCES=\
 	output.prg \
 	overload.prg \
 	passref.prg \
+	procline.prg \
 	procname.prg \
 	readhrb.prg \
 	recursiv.prg \
@@ -73,6 +77,7 @@ PRG_SOURCES=\
 	round.prg \
 	rtfclass.prg \
 	rtl_test.prg \
+	say.prg \
 	scroll.prg \
 	seconds.prg \
 	set_num.prg \
@@ -108,16 +113,18 @@ PRG_SOURCES=\
 	version.prg \
 	while.prg \
 
-
 BAD_PRG_SOURCES=\
 	dupvars.prg \
-	keywords.prg \
-	spawn.prg \
-	spawn2.prg \
+	extend1.prg \
 	keywords.prg \
 	linecont.prg \
+	spawn.prg \
+	spawn2.prg \
 	test10.prg \
 	testid.prg \
+
+BAD_C_SOURCES=\
+	extend2.c \
 
 LIBS=\
 	tools \

@@ -161,7 +161,9 @@ HB_INIT_SYMBOLS_BEGIN( Classes__InitSymbols )
 { "OMODMETHOD"    , FS_PUBLIC, HB_OMODMETHOD     , 0 },
 { "OSEND"         , FS_PUBLIC, HB_OSEND          , 0 }
 HB_INIT_SYMBOLS_END( Classes__InitSymbols );
+#if ! defined(__GNUC__)
 #pragma startup Classes__InitSymbols
+#endif
 
 /*
  * ClassAdd( <hClass>, <cMessage>, <pFunction>, <nType>, [xInit] )

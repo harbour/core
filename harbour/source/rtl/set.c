@@ -172,7 +172,9 @@ HB_INIT_SYMBOLS_BEGIN( Set__InitSymbols )
 { "__SETCENTURY", FS_PUBLIC, HB___SETCENTURY, 0 },
 { "SET"         , FS_PUBLIC, HB_SET       , 0   }
 HB_INIT_SYMBOLS_END( Set__InitSymbols );
+#if ! defined(__GNUC__)
 #pragma startup Set__InitSymbols
+#endif
 
 static BOOL set_logical (PHB_ITEM pItem)
 {

@@ -28,6 +28,7 @@ C_HEADERS=\
 
 PRG_HEADERS=\
 	box.ch \
+	classes.ch \
 	color.ch \
 	error.ch \
 	fileio.ch \
