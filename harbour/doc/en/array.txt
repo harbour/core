@@ -24,20 +24,17 @@
  *  $ONELINER$
  *      Create an uninitialized array of specified length
  *  $SYNTAX$
- *      ARRAY(<nElements> [, <nElements>...]) --> aArray
+ *      ARRAY(<nElements> [, <nElements>...]) --> aArray 
  *  $ARGUMENTS$
- *      <nElements> is the number of elements in the specified dimension.
+ *      <par><nElements> is the number of elements in the specified dimension.   </par>
  *  $RETURNS$
- *      <aArray> an array of specified dimensions.
+ *      <par><aArray> an array of specified dimensions.   </par>
  *  $DESCRIPTION$
- *      This function returns an uninitialized array with the length of
- *      <nElements>. Nested arrays are uninitialized within the same array
- *      pointer reference if additional parameters are specified.
- *      Establishing a memory variable with the same name as the array
- *      may destroy the original array and release the entire contents of
- *      the array. This depends, of course, on the data storage type of
- *      either the array or the variable with the same name as the array.
+ *      <par>This function returns an uninitialized array with the length of <nElements>. Nested arrays are uninitialized within the same array pointer reference if additional parameters are specified.   </par>
+
+ *      <par>Establishing a memory variable with the same name as the array may destroy the original array and release the entire contents of the array. This depends, of course, on the data storage type of either the array or the variable with the same name as the array.   </par>
  *  $EXAMPLES$
+    <fixed>
  *      FUNCTION Main()
  *        LOCAL aArray:=Array(10)
  *        LOCAL x:=1
@@ -45,16 +42,13 @@
  *          aArray[x]:=Array(x)
  *        NEXT
  *        Return Nil
+    <fixed>
  *  $STATUS$
  *      R
  *  $SEEALSO$
  *      AADD(),ADEL(),AFILL(),AINS()
  *  $COMPLIANCE$
- *      This function is CA-CLIPPER Compliant in all Cases, except
- *      that arrays in Harbour can have an unlimited number of dimensions,
- *      while Clipper has a limit of 4096 array elements.
- *  $INCLUDE$
- *
+ *      <par>This function is CA-CLIPPER Compliant in all Cases, except that arrays in Harbour can have an unlimited number of dimensions, while Clipper has a limit of 4096 array elements.   </par>
  *  $END$
  */
 
@@ -66,31 +60,28 @@
  *  $ONELINER$
  *      Dynamically add an element to an array
  *  $SYNTAX$
- *      AADD(<aArray>[, <xValue>]) --> Value
+ *      AADD(<aArray>[, <xValue>]) --> Value 
  *  $ARGUMENTS$
- *      <aArray> The name of an array
- *
- *      <xValue> Element to add to array <aArray>
+ *      <par><aArray> The name of an array   </par>
+ *      <par><xValue> Element to add to array <aArray>   </par>
  *  $RETURNS$
- *      <Value> if specified <xValue>,<xValue> will return , otherwise
- *      this function  returns a NIL value.
+ *      <par><Value> if specified <xValue>,<xValue> will return , otherwise this function  returns a NIL value.   </par>
  *  $DESCRIPTION$
- *      This function dynamically increases the length of the array
- *      named <aArray> by one element and stores the value of <xValue> to
- *      that newly created element.
- *      <xValue> may be an array reference pointer, which in turn may be
- *      stored to an array's subscript position.
+ *      <par>This function dynamically increases the length of the array named <aArray> by one element and stores the value of <xValue> to that newly created element.   </par>
+
+ *      <par><xValue> may be an array reference pointer, which in turn may be stored to an array's subscript position.   </par>
  *  $EXAMPLES$
+    <fixed>
  *      LOCAL aArray:={}
  *      AADD(aArray,10)
  *      FOR x:=1 to 10
  *          AADD(aArray,x)
  *      NEXT
+    </fixed>
  *  $STATUS$
  *      R
  *  $SEEALSO$
  *      AINS(),ASIZE()
- *  $INCLUDE$
  *
  *  $END$
  */
@@ -105,27 +96,23 @@
  *  $SYNTAX$
  *      ASIZE(<aArray>, <nLen>) --> aTarget
  *  $ARGUMENTS$
- *      <aArray> Name of array to be dynamically altered
- *
- *      <nLen> Numeric value representing the new size of <aArray>
+ *      <par><aArray> Name of array to be dynamically altered   </par>
+ *      <par><nLen> Numeric value representing the new size of <aArray>   </par>
  *  $RETURNS$
- *      <aTarget> an array pointer reference to <aTarget>.
+ *      <par><aTarget> an array pointer reference to <aTarget>.   </par>
  *  $DESCRIPTION$
- *      This function will dynamically increase or decrease the size
- *      of <aArray> by adjusting the length of the array to <nLen> subscript
- *      positions.
- *      If the length of the array <aArray> is shortened, those former
- *      subscript positions are lost. If the length of the array is
- *      lengthened a NIL value is assigned to the new subscript position.
+ *      <par>This function will dynamically increase or decrease the size of <aArray> by adjusting the length of the array to <nLen> subscript positions.   </par>
+
+ *      <par>If the length of the array <aArray> is shortened, those former subscript positions are lost. If the length of the array is lengthened a NIL value is assigned to the new subscript position.   </par>
  *  $EXAMPLES$
+    <fixed>
  *      aArray := { 1 }          // Result: aArray is { 1 }
  *      ASIZE(aArray, 3)         // Result: aArray is { 1, NIL, NIL }
- *      ASIZE(aArray, 1)         // Result: aArray is { 1 }
+ *      ASIZE(aArray, 1)         // Result: aArray is { 1 }   </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      If HB_COMPAT_C53 is defined, the function generates an Error,
- *      else it will return the array itself.
+ *      <par>If HB_COMPAT_C53 is defined, the function generates an Error, else it will return the array itself.   </par>
  *  $SEEALSO$
  *      AADD(),ADEL(),AFILL(),AINS()
  *  $INCLUDE$
@@ -141,26 +128,24 @@
  *  $ONELINER$
  *      Returns the rightmost element of an array
  *  $SYNTAX$
- *      ATAIL(<aArray>) --> Element
+ *      ATAIL(<aArray>) --> Element 
  *  $ARGUMENTS$
- *      <aArray> is the array.
+ *      <par><aArray> is the array.   </par>
  *  $RETURNS$
- *      <Element> the expression of the last element in the array.
+ *      <par><Element> the expression of the last element in the array.   </par>
  *  $DESCRIPTION$
- *      This function return the value of the last element in the array named
- *      <aArray>. This function does not alter the size of the array or any of
- *      the subscript values.
+ *      <par>This function return the value of the last element in the array named <aArray>. This function does not alter the size of the array or any of the subscript values.   </par>
  *  $EXAMPLES$
+    <fixed>
  *      LOCAL array:= {"Harbour", "is", "Supreme", "Power"}
  *      ? ATAIL(aArray)
+    </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA Clipper compliant
+ *      This function is CA Clipper compliant   </par>
  *  $SEEALSO$
  *      LEN(),ARRAY(),ASIZE(),AADD()
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -172,30 +157,25 @@
  *  $ONELINER$
  *      Insert a NIL value at an array subscript position.
  *  $SYNTAX$
- *      AINS(<aArray>, <nPos>) --> aTarget
+ *      AINS(<aArray>, <nPos>) --> aTarget 
  *  $ARGUMENTS$
- *      <aArray> Array name.
- *
- *      <nPos> Subscript position in <aArray>
+ *      <par><aArray> Array name.   </par>
+ *      <par><nPos> Subscript position in <aArray>   </par>
  *  $RETURNS$
- *      <aTarget> an array pointer reference. 
+ *      <par><aTarget> an array pointer reference.   </par> 
  *  $DESCRIPTION$
- *      This function inserts a NIL value in the array named <aArray>
- *      at the <nPos>th position.
- *      All array elements starting with the <nPos>th position will be
- *      shifted down one subscript position in the array list and the last
- *      item in the array will be removed completely. In other words, if an
- *      array element were to be inserted at the fifth subscript position,
- *      the element previously in the fifth position would now be located
- *      at the sixth position. The length of the array <aArray> will remain
- *      unchanged.
+ *      <par>This function inserts a NIL value in the array named <aArray> at the <nPos>th position.   </par>
+
+ *      <par>All array elements starting with the <nPos>th position will be shifted down one subscript position in the array list and the last item in the array will be removed completely. In other words, if an array element were to be inserted at the fifth subscript position, the element previously in the fifth position would now be located at the sixth position. The length of the array <aArray> will remain unchanged.   </par>
  *  $EXAMPLES$
+    <fixed>
  *      LOCAL aArray:={"Harbour","is","Power!","!!!"}
  *      AINS(aArray,4)
+    </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA Clipper compliant
+ *      <par>This function is CA Clipper compliant   </par>
  *  $SEEALSO$
  *      AADD(),ACOPY(),ADEL(),AEVAL(),AFILL(),ASIZE()
  *  $INCLUDE$
@@ -211,33 +191,27 @@
  *  $ONELINER$
  *      Delete an element form an array.
  *  $SYNTAX$
- *      ADEL(<aArray>, <nPos>) --> aTarget
+ *      ADEL(<aArray>, <nPos>) --> aTarget 
  *  $ARGUMENTS$
- *      <aArray> Name of array from which an element is to be removed.
- *
- *      <nPos>   Subscript of the element to be removed.
+ *      <par><aArray> Name of array from which an element is to be removed.   </par>
+ *      <par><nPos>   Subscript of the element to be removed.   </par>
  *  $RETURNS$
- *      <aTarget> an array pointer reference.
+ *      <par><aTarget> an array pointer reference.   </par>
  *  $DESCRIPTION$
- *      This function deletes the element found at <nPos> subscript
- *      position in the array <aArray>. All elements in the array
- *      <aArray> below the given subscript position <nPos> will move up
- *      one position in the array. In other words, what was formerly the
- *      sixth subscript position will become the fifth subscript position.
- *      The length of the array <aArray> will remain unchanged,as the last
- *      element in the array will become a NIL data type.
+ *      <par>This function deletes the element found at <nPos> subscript position in the array <aArray>. All elements in the array <aArray> below the given subscript position <nPos> will move up one position in the array. In other words, what was formerly the sixth subscript position will become the fifth subscript position. The length of the array <aArray> will remain unchanged,as the last element in the array will become a NIL data type.   </par>
  *  $EXAMPLES$
+    <fixed>
  *     LOCAL aArray
  *      aArray := { "Harbour","is","Power" }      // Result: aArray is
  *
  *      ADEL(aArray, 2)            // Result: aArray is
+    </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA Clipper compliant
+ *      <par>This function is CA Clipper compliant   </par>
  *  $SEEALSO$
  *      ACOPY(),AINS(),AFILL()
- *  $INCLUDE$
  *
  *  $END$
  */
@@ -250,41 +224,29 @@
  *  $ONELINER$
  *      Fill an array with a specified value
  *  $SYNTAX$
- *      AFILL(<aArray>, <xValue>,
- *      [<nStart>], [<nCount>]) --> aTarget
+ *      AFILL(<aArray>, <xValue>,[<nStart>], [<nCount>]) --> aTarget 
  *  $ARGUMENTS$
- *      <aArray> Name of array to be filled.
- *
- *      <xValue> Expression to be globally filled in <aArray>
- *
- *      <nStart> Subscript starting position
- *
- *      <nCount> Number of subscript to be filled
+ *      <par><aArray> Name of array to be filled.   </par>
+ *      <par><xValue> Expression to be globally filled in <aArray>   </par>
+ *      <par><nStart> Subscript starting position   </par>
+ *      <par><nCount> Number of subscript to be filled   </par>
  *  $RETURNS$
- *      <aTarget> an array pointer.
+ *      <par><aTarget> an array pointer.   </par>
  *  $DESCRIPTION$
- *      This function will fill each element of an array named <aArray> with
- *      the value <xValue>. If specified, <nStart> denotes the beginning
- *      element to be filled and the array elements will continue to be
- *      filled for <nCount> positions. If Not specified, the value of
- *      <nStart> will be 1, and the value of <nCount> will be the value
- *      of LEN(<aArray>); thus, all subscript positions in the array
- *      <aArray> will be filled with the value of <xValue>.
- *      This function will work on only a single dimension of <aArray>.
- *      If there are array pointer references within a subscript <aArray>,
- *      those values will be lost, since this function will overwrite those
- *      values with new values.
+ *      <par>This function will fill each element of an array named <aArray> with the value <xValue>. If specified, <nStart> denotes the beginning element to be filled and the array elements will continue to be filled for <nCount> positions. If Not specified, the value of <nStart> will be 1, and the value of <nCount> will be the value of LEN(<aArray>); thus, all subscript positions in the array <aArray> will be filled with the value of <xValue>.   </par>
+
+ *      <par>This function will work on only a single dimension of <aArray>. If there are array pointer references within a subscript <aArray>, those values will be lost, since this function will overwrite those values with new values.   </par>
  *  $EXAMPLES$
+    <fixed>
  *      LOCAL aTest:={Nil,0,1,2}
  *      Afill(aTest,5)
+    </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA Clipper compliant
+ *      <par>This function is CA Clipper compliant   </par>
  *  $SEEALSO$
  *      AADD(),AEVAL(),DBSTRUCT(),DIRECTORY()
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -296,49 +258,33 @@
  *  $ONELINER$
  *      Scan array elements for a specified condition
  *  $SYNTAX$
- *      ASCAN(<aTarget>, <xSearch>,
- *      [<nStart>], [<nCount>]) --> nStoppedAt
+ *      ASCAN(<aTarget>, <xSearch>,[<nStart>], [<nCount>]) --> nStoppedAt 
  *  $ARGUMENTS$
- *      <aTarget>   Name of array to be scanned.
- *
- *      <xSearch>   Expression to search for in <aTarget>
- *
- *      <nStart>    Beginning subscript position at which to start the
- *      search.
- *
- *      <nCount>    Number of elements to scan with <aTarget>.
- *      position.  If this argument is not specified, all elements from the
+ *      <par><aTarget>   Name of array to be scanned.   </par>
+ *      <par><xSearch>   Expression to search for in <aTarget>   </par>
+ *      <par><nStart>    Beginning subscript position at which to start the search.   </par>
+ *      <par><nCount>    Number of elements to scan with <aTarget>.   </par>
  *  $RETURNS$
- *      <nStoppedAt> A numeric value of subscript position where <xSearch>
- *      was found.
+ *      <par><nStoppedAt> A numeric value of subscript position where <xSearch> was found.   </par>
  *  $DESCRIPTION$
- *      This function scan the content of array named <aTarget> for the
- *      value of <xSearch>. The return value is the position in the
- *      array <aTarget> in which <xSearch> was found. If it was not
- *      found, the return value will be 0.
- *      If specified, the beginning subscript position at which to start
- *      scanning may be set with the value passed as <nStart>. The default
- *      is 1.
- *      If specified, the number of array elements to scan may be set with
- *      the value passed as <nCount>. The default is the number of elements
- *      in the array <aTarget>.
- *      If <xSearch> is a code block, the operation of the function is
- *      slightly different. Each array subscript pointer reference is passed
- *      to the code block to be evaluated. The scanning routine will
- *      continue until the value obtained from the code block is a logical
- *      true (.T.) or until the end of the array has been reached.
+ *      <par>This function scan the content of array named <aTarget> for the value of <xSearch>. The return value is the position in the array <aTarget> in which <xSearch> was found. If it was not found, the return value will be 0.   </par>
+
+ *      <par>If specified, the beginning subscript position at which to start scanning may be set with the value passed as <nStart>. The default is 1.   </par>
+
+ *      <par>If specified, the number of array elements to scan may be set with the value passed as <nCount>. The default is the number of elements in the array <aTarget>.   </par>
+
+ *      <par>If <xSearch> is a code block, the operation of the function is slightly different. Each array subscript pointer reference is passed to the code block to be evaluated. The scanning routine will continue until the value obtained from the code block is a logical true (.T.) or until the end of the array has been reached.   </par>
  *  $EXAMPLES$
+    </fixed>
  *      aDir:=Directory("*.prg")
  *      AScan(aDir,,,{|x,y| x[1]="Test.prg"})
+    </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is not CA-Clipper compatible. Clipper ASCAN() is
- *      affected by the SET EXACT ON/OFF Condition
+ *      <par>This function is not CA-Clipper compatible. Clipper ASCAN() is affected by the SET EXACT ON/OFF Condition   </par>
  *  $SEEALSO$
- *      ACOMP(),AEVAL()
- *  $INCLUDE$
- *
+ *      AEVAL()
  *  $END$
  */
 
@@ -350,41 +296,26 @@
  *  $ONELINER$
  *      Evaluated the subscript element of an array
  *  $SYNTAX$
- *      AEVAL(<aArray>, <bBlock>,
- *      [<nStart>], [<nCount>]) --> aArray
+ *      AEVAL(<aArray>, <bBlock>, [<nStart>], [<nCount>]) --> aArray 
  *  $ARGUMENTS$
- *      <aArray> Is the array to be evaluated.
- *
- *      <bBlock> Is a code block to evaluate for each element processed.
- *
- *      <nStart> The beginning  array element to evaluate.
- *
- *      <nCount> The number of elements to process.
+ *      <par><aArray> Is the array to be evaluated.   </par>
+ *      <par><bBlock> Is a code block to evaluate for each element processed.   </par>
+ *      <par><nStart> The beginning  array element to evaluate.   </par>
+ *      <par><nCount> The number of elements to process.   </par>
  *  $RETURNS$
- *      <aArray> an array pointer reference.
+ *      <par><aArray> an array pointer reference.   </par>
  *  $DESCRIPTION$
- *      This function will evaluate and process the subscript elements
- *      in <aArray>. A code block passed as <bBlock> defines the
- *      operation to be executed on each element of the array. All
- *      elements in <aArray> will be evaluated unless specified by a
- *      beginning subscript position in <nStart> for <nCount> elements.
- *
- *      Two parameters are passed to the code block <bBlock>. The
- *      individual elements in an array are the first parameter and the
- *      subscript position is the second.
- *
- *      AEVAL() does not replace a FOR...NEXT loop for processing arrays.
- *      If an array is an autonomous unit, AEVAL() is appropriate. If the
- *      array is to be altered or if elements are to be reevaluated, a
- *      FOR...NEXT loop is more appropriate.
+ *      <par>This function will evaluate and process the subscript elements in <aArray>. A code block passed as <bBlock> defines the operation to be executed on each element of the array. All elements in <aArray> will be evaluated unless specified by a beginning subscript position in <nStart> for <nCount> elements.   </par>
+
+ *      <par>Two parameters are passed to the code block <bBlock>. The individual elements in an array are the first parameter and the subscript position is the second.   </par>
+
+ *      <par>AEVAL() does not replace a FOR...NEXT loop for processing arrays. If an array is an autonomous unit, AEVAL() is appropriate. If the array is to be altered or if elements are to be reevaluated, a FOR...NEXT loop is more appropriate.   </par>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA Clipper compliant
+ *      <par>This function is CA Clipper compliant   </par>
  *  $SEEALSO$
  *      EVAL(),DBEVAL()
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -396,54 +327,41 @@
  *  $ONELINER$
  *      Copy elements from one array to another
  *  $SYNTAX$
- *      ACOPY(<aSource>, <aTarget>,
- *      [<nStart>], [<nCount>], [<nTargetPos>]) --> aTarget
+ *      ACOPY(<aSource>, <aTarget>, [<nStart>], [<nCount>], [<nTargetPos>]) --> aTarget 
  *  $ARGUMENTS$
- *      <aSource> is the array to copy elements from.
- *
- *      <aTarget> is the array to copy elements to.
- *
- *      <nStart>  is the beginning subscript position to copy from <aSource>
- *
- *      <nCount>  the number of subscript elements to copy from <aSource>.
- *
- *      <nTargetPos> the starting subscript position in <aTarget> to copy
- *      elements to.
+ *      <par><aSource> is the array to copy elements from.   </par>
+ *      <par><aTarget> is the array to copy elements to.   </par>
+ *      <par><nStart>  is the beginning subscript position to copy from <aSource>   </par>
+ *      <par><nCount>  the number of subscript elements to copy from <aSource>.   </par>
+ *      <par><nTargetPos> the starting subscript position in <aTarget> to copy elements to.   </par>
  *  $RETURNS$
- *      <aTarget> an array pointer reference
+ *      <par><aTarget> an array pointer reference   </par>
  *  $DESCRIPTION$
- *      This function copies array elements from <aSource> to <aTarget>.
- *      <nStart> is the beginning element to be copied from <aSource>; the
- *      default is 1.
- *      <nCount> is the number of elements to be copied from <aSource>; the
- *      default is the entire array.
- *      <nTargetPos> is the subscript number in the target array,<aTarget>,
- *      to which array elements are to be copied; the default is 1
- *      This function will copy all data types in <aSource> to <aTarget>.
- *      If an array element in <aSource> is a pointer reference to another
- *      array, that array pointer will be copied to <aTarget>; not all
- *      subdimensions will be copied from one array to the next. This must
- *      be accomplished via the ACLONE() function.
- *
- *      Note
- *      If array <aSource> is larger then <aTarget>, array elements will
- *      start copying at <nTargetPos> and continue copying until the end of
- *      array <aTarget> is reached. The ACOPY() function doesn't append
- *      subscript positions to the target array, the size of the target
- *      array <aTarget> remains constant.
+ *      <par>This function copies array elements from <aSource> to <aTarget>. <nStart> is the beginning element to be copied from <aSource>; the default is 1.   </par>
+
+ *      <par><nCount> is the number of elements to be copied from <aSource>; the default is the entire array.   </par>
+
+ *      <par><nTargetPos> is the subscript number in the target array,<aTarget>, to which array elements are to be copied; the default is 1   </par>
+
+ *      <par>This function will copy all data types in <aSource> to <aTarget>.   </par>
+
+ *      <par>If an array element in <aSource> is a pointer reference to another array, that array pointer will be copied to <aTarget>; not all subdimensions will be copied from one array to the next. This must be accomplished via the ACLONE() function.   </par>
+
+ *      <par>Note   </par>
+ *      <par>If array <aSource> is larger then <aTarget>, array elements will start copying at <nTargetPos> and continue copying until the end of array <aTarget> is reached. The ACOPY() function doesn't append subscript positions to the target array, the size of the target array <aTarget> remains constant.   </par>
  *  $EXAMPLES$
+    <fixed>
  *      LOCAL nCount := 2, nStart := 1, aOne, aTwo
  *      aOne := {"HABOUR"," is ","POWER"}
  *      aTwo := {"CLIPPER"," was ","POWER"}
  *      ACOPY(aOne, aTwo, nStart, nCount)
+    </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA Clipper compliant
+ *      <par>This function is CA Clipper compliant   </par>
  *  $SEEALSO$
  *      ACLONE(),ADEL(),AEVAL(),AFILL(),AINS(),ASORT()
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -455,34 +373,27 @@
  *  $ONELINER$
  *      Duplicate a  multidimensional array
  *  $SYNTAX$
- *      ACLONE(<aSource>) --> aDuplicate
+ *      ACLONE(<aSource>) --> aDuplicate 
  *  $ARGUMENTS$
- *      <aSource> Name of the array to be cloned.
+ *      <par><aSource> Name of the array to be cloned.   </par>
  *  $RETURNS$
- *      <aDuplicate> A new array pointer reference complete with nested array
- *      values.
+ *      <par><aDuplicate> A new array pointer reference complete with nested array values.   </par>
  *  $DESCRIPTION$
- *      This function makes a complete copy of the array expressed as
- *      <aSource> and return a cloned set of array values.This provides
- *      a complete
+ *      <par>This function makes a complete copy of the array expressed as <aSource> and return a cloned set of array values.This provides a complete set of arrays values for all dimensions within the orifical array <aSource>   </par>
  *  $EXAMPLES$
- *      This example creates an array then duplicates it using
- *      ACLONE().  The first array is then altered, but the duplicate copy is
- *      unaffected:
- *
+    <fixed>
  *      LOCAL aOne, aTwo
  *      aOne := {"Harbour"," is ","POWER"}
  *      aTwo := ACLONE(aOne)       // Result: aTwo is {1, 2, 3}
  *      aOne[1] := "The Harbour Compiler"              // Result: aOne is {99, 2, 3}
  *                                 // aTwo is still {1, 2, 3}
+    </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Clipper will return NIL if the parameter is not an array.
+ *      <par>Clipper will return NIL if the parameter is not an array.   </par>
  *  $SEEALSO$
  *      ACOPY(),ADEL(),AINS(),ASIZE()
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -494,37 +405,20 @@
  *  $ONELINER$
  *      Sort an array
  *  $SYNTAX$
- *      ASORT( <aArray>, [<nStart>], [<nCount>], [<bSort>] ) --> aArray
+ *      ASORT( <aArray>, [<nStart>], [<nCount>], [<bSort>] ) --> aArray 
  *  $ARGUMENTS$
- *      <aArray> Array to be sorted.
- *
- *      <nStart> The first element to start the sort from, default is 1.
- *
- *      <nCount> Number of elements starting from <nStart> to sort, default
- *      is all elements.
- *
- *      <bSort> Code block for sorting order, default is ascending order
- *      {| x, y | x < y }. The code block should accept two parameters and
- *      must return .T. if the sort is in order, .F. if not.
+ *      <par><aArray> Array to be sorted.   </par>
+ *      <par><nStart> The first element to start the sort from, default is 1.   </par>
+ *      <par><nCount> Number of elements starting from <nStart> to sort, default is all elements.   </par>
+ *      <par><bSort> Code block for sorting order, default is ascending order {| x, y | x < y }. The code block should accept two parameters and must return .T. if the sort is in order, .F. if not.   </par>
  *  $RETURNS$
- *      <aArray> reference to the now sorted <aArray> or NIL if the
- *      passed <aArray> is not an array.
+ *      <par><aArray> reference to the now sorted <aArray> or NIL if the passed <aArray> is not an array.   </par>
  *  $DESCRIPTION$
- *      ASORT() sort all or part of a given array. If <bSort> is omitted,
- *      the function expect <aArray> to be one dimensional array containing
- *      single data type (one of: Character, Date, Logical, Numeric) and
- *      sort this array in ascending order: Character are sorted by their
- *      ASCII value, Dates are sorted chronologically, Logical put .F.
- *      values before .T., Numeric are sorted by their value.
- *
- *      If <bSort> is specified, it is used to handle the sorting order.
- *      With each time the block is evaluate, two array elements are passed
- *      to the code block, and <bSort> must return a logical value that
- *      state if those elements are in order (.T.) or not (.F.). Using
- *      this block you can sort multidimensional array, descending orders
- *      or even (but why would you want to do that) sort array that contain
- *      different data type.
+ *      <par>ASORT() sort all or part of a given array. If <bSort> is omitted, the function expect <aArray> to be one dimensional array containing single data type (one of: Character, Date, Logical, Numeric) and sort this array in ascending order: Character are sorted by their ASCII value, Dates are sorted chronologically, Logical put .F. values before .T., Numeric are sorted by their value.   </par>
+
+ *      <par>If <bSort> is specified, it is used to handle the sorting order. With each time the block is evaluate, two array elements are passed to the code block, and <bSort> must return a logical value that state if those elements are in order (.T.) or not (.F.). Using this block you can sort multidimensional array, descending orders or even (but why would you want to do that) sort array that contain different data type.   </par>
  *  $EXAMPLES$
+ *       <fixed>
  *     // sort numeric values in ascending order
  *     ASORT( { 3, 1, 4, 42, 5, 9 } )      // result: { 1, 3, 4, 5, 9, 42 }
  *
@@ -537,14 +431,11 @@
  *     aPair :=   { {"Sun",8}, {"Mon",1}, {"Tue",57}, {"Wed",-6} }
  *     ASORT( aPair,,, {| x, y | x[2] < y[2] } )
  *     // result: { {"Wed",-6}, {"Mon",1}, {"Sun",8}, {"Tue",57} }
+ *       </fixed>
  *  $STATUS$
  *     R
  *  $COMPLIANCE$
- *      For speed we are checking the return type of the passed code block.
- *      This will result in a small incompatibility since the code block
- *      will be called one more time for the first logical element than in
- *      Clipper. But this is block calling frequency and order differs from
- *      Clipper anyway, since they use different sorting algorithm.
+ *      <par>For speed we are checking the return type of the passed code block. This will result in a small incompatibility since the code block will be called one more time for the first logical element than in Clipper. But this is block calling frequency and order differs from Clipper anyway, since they use different sorting algorithm.   </par>
  *  $SEEALSO$
  *      ASCAN(),EVAL(),SORT
  *  $END$
