@@ -82,9 +82,9 @@
 #include <ctype.h>
 #include <time.h>
 #if defined( OS_UNIX_COMPATIBLE )
-#include <sys/timeb.h>
+   #include <sys/timeb.h>
 #else
-#include <sys\timeb.h>
+   #include <sys\timeb.h>
 #endif
 #if defined(__TURBOC__) || defined(__BORLANDC__)  || defined(__DJGPP__)
    #include <dos.h>

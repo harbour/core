@@ -991,6 +991,10 @@ USHORT  hb_fsChDrv( BYTE nDrive )
 /* NOTE: 0=A:, 1=B:, 2=C:, 3=D:, ... */
 /* TODO: add documentation */
 
+/* TOFIX: This isn't fully compliant because Cl*pper doesn't access 
+          the drive before checking. hb_fsIsDrv only returns TRUE 
+          if there is a disk in the drive. */
+
 USHORT  hb_fsIsDrv( BYTE nDrive )
 {
    USHORT uiResult;

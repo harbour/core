@@ -1,3 +1,11 @@
+19991015-02:04 GMT+1 Victor Szel <info@szelvesz.hu>
+   * source/compiler/genjava.c
+     + Java source generation added to the compiler (by Matteo Baccan)
+   * source/rtl/filesys.c
+     + TOFIX: added to hb_fsIsDrv() (by Jose Lalin)
+   * source/rtl/dates.c
+     ! Some pp directives indented.
+
 Thu Oct 14 17:29:32 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* source/rtl/dates.c: 
