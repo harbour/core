@@ -1,3 +1,7 @@
+2001-03-08 15:00 UTC-0500 David G. Holm <dholm@jsd-llc.com>
+  + COPYING
+    + Added the GNU General Public License file
+
 2001-03-08 13:00 UTC-0500 David G. Holm <dholm@jsd-llc.com>
   * tests/inkeytst.prg
   * tests/longdev.prg
