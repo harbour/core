@@ -69,19 +69,21 @@ RETURN Self
 
 METHOD WriteTitle( cTitle ) CLASS THTML
 
-   FWRITE( Self:nHandle, "<TITLE>" + CRLF + cTitle + CRLF + "</Title>" + CRLF + '<body bgcolor="#FFFFFF">' + CRLF )
+   FWRITE( Self:nHandle, "<TITLE>" + CRLF + cTitle + CRLF + "</Title>" + CRLF + '<LINK Rel=StyleSheet href="harbour.css">'+CRLF+'<body bgcolor="#FFFFFF">' + CRLF )
 
 RETURN Self
 
 METHOD WritePar( cPar ) CLASS THTML
 
-   FWRITE( Self:nHandle, "<p>" + cPar + '</p>' + CRLF )
+   cPar:=STRTRAN(cPar,"<","&lt;")
+   cPar:=STRTRAN(cPar,">","&gt;")
+   FWRITE( Self:nHandle, "<p>" + Alltrim(cPar) + '</p>' + CRLF )
 
 RETURN Self
 
 METHOD WriteParBold( cPar ) CLASS THTML
 
-   FWRITE( Self:nHandle, "<p><b>" + cPar + '</b></p>' + CRLF )
+   FWRITE( Self:nHandle, "<p><b>" + Alltrim(cPar) + '</b></p>' + CRLF )
 
 RETURN Self
 
@@ -93,20 +95,23 @@ METHOD CLOSE() CLASS THTML
 
 RETURN Self
 
-METHOD WriteLink( cLink ) CLASS THTML
+METHOD WriteLink( cLink ,cName ) CLASS THTML
 
    LOCAL nPos
    LOCAL cTemp := ''
 
    nPos := AT( "()", cLink )
-
    IF nPos > 0
-      cTemp := SUBSTR( cLink, 1, nPos - 1 ) + '.html'
-      FWRITE( Self:nHandle, "<p><a href=" + cTemp + ">" + cLink + "</a></p>" + CRLF )
+      cTemp := SUBSTR( cLink, 1, nPos - 1 ) + '.htm'
    ELSE
-      cTemp := ALLTRIM( cLink ) + '.html'
-      FWRITE( Self:nHandle, "<p><a href=" + cTemp + ">" + cLink + "</a></p>" + CRLF )
+      cTemp := ALLTRIM( cLink ) + '.htm'
    ENDIF
+   IF cName!=Nil
+      cLink:=cName
+   ENDIF
+
+   FWRITE( Self:nHandle, "<p><a href=" + cTemp + ">" + cLink + "</a></p>" + CRLF )
+
 
 RETURN Self
 

@@ -1,3 +1,20 @@
+20000203-17:05 GMT-3  Luiz Rafael Culik <culik@sl.conex.net>
+    *Source/rdd/dbcmd.c
+        * Change some functions docs
+    *Source/tools/html.prg
+        * Some enhacements
+    *Ngdoc/ft_helpc.prg
+        * Fix on the text when FT_HELPC is called with out parameters +some enhacements
+    *Contrib/rdd_ads/rddads.b32
+        *Fixed type on library name
+    *Contrib/odbc/bld_b32.bat
+        * Added missing common.lib to the bcc32 line
+    *Ngdoc/harbwww.rps
+        + response file for ft_helpc generate html output
+    *makewww.bat
+        +batch make file to ft_helpc generate html output
+
+
 20000202-22:00 GMT+1 Antonio Linares <alinares@fivetech.com>
   * source/rtl/inkey.c
     + Added MCol() and MRow() mouse support functions
@@ -76,7 +93,8 @@
      - Removed debug information from OS/2 builds of Harbour
 
    * doc/whatsnew.txt
-     % Synchronized with updates that were made to the build31 branch   * source/pp/pragma.c
+     % Synchronized with updates that were made to the build31 branch
+   * source/pp/pragma.c
    * contrib/dot/pp_harb.ch
    * tests/inline_c.prg
      * STOPDUMP renamed as ENDDUMP (with Ron permission)

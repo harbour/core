@@ -54,7 +54,11 @@
  *    and Rtf files.
  *    Added support to generate the Docs from .Txt files, See doc\Subcodes.txt
  *    for header file.
- *      
+ *
+ *    V1.07
+ *    Added back the "<" and ">" symbols
+ *    Fixed the links on the Harbour.htm file
+ *    Fixed the help text when ft_helpc is called with out any parameter
  */
 
 /*
@@ -217,7 +221,7 @@ FUNCTION FT_HELPC( cFlags, cLinkName, cAtFile )
    //  Get the linkfile name and get the info in it
 
    IF cLinkName = NIL
-      ? "Syntax: FT_DOC [-txt][-con][-ngi][-doc][-HPC][-RTF][-HTM][-OS2][-TRF] <linkname> [<ifile>]"
+      ? "Syntax: FT_HELPC -txt|-con|-ngi|-doc|-HPC|-RTF|-HTM|-OS2|-TRF <linkname> [<ifile>]"
       ? "        Where -txt creates an ascii file instead of a Norton Guide"
       ? "              -con creates an ascii file without formfeeds"
       ? "              -HPC Helpc source file"
@@ -455,33 +459,34 @@ FUNCTION FT_HELPC( cFlags, cLinkName, cAtFile )
 
       NEXT
    ELSEIF lWWW
-      oHtm := THTML():New( "www\harbour.html" )
+      oHtm := THTML():New( "www\harbour.htm" )
       oHtm:WriteTitle( "Harbour Reference Guide" )
       oHtm:WritePar( "HARBOUR" )
       oHtm:WriteLink( "OverView" )
       oHtm:WriteLink( "License" )
-      oHtm:WriteLink( "http://www.gnu.org/copyleft/gpl" )
+      oHtm:WriteLink( "http://www.gnu.org/copyleft/gpl.html","GNU License" )
       oHtm:WritePar( "" )
       oHtm:WritePar( "Functions A-M" )
-      ASORT( awww )
+      ASORT( awww,,,{|x,y| x[1]<y[1] })
+             
       FOR nPos := 1 TO LEN( aWww )
-         cTemp := aWww[ nPos ]
+         cTemp := aWww[ nPos,1 ]
          IF LEFT( cTemp, 1 ) >= "A" .AND. LEFT( cTemp, 1 ) < "N" .AND. AT( "()", cTemp ) > 0
-            oHtm:WriteLink( aWww[ nPos ] )
+            oHtm:WriteLink( aWww[ nPos ,2],aWww[nPos,1] )
          ENDIF
       NEXT
       oHtm:WritePar( "Functions N-_" )
       FOR nPos := 1 TO LEN( aWww )
-         cTemp := aWww[ nPos ]
+         cTemp := aWww[ nPos,1 ]
          IF LEFT( cTemp, 1 ) >= "N" .AND. LEFT( cTemp, 1 ) < "_" .AND. AT( "()", cTemp ) > 0
-            oHtm:WriteLink( aWww[ nPos ] )
+            oHtm:WriteLink(aWww[ nPos ,2],aWww[nPos,1]   )       
          ENDIF
       NEXT
       oHtm:WritePar( "Commands" )
       FOR nPos := 1 TO LEN( aWww )
-         cTemp := aWww[ nPos ]
-         IF AT( "()", cTemp ) == 0 .AND. ctemp <> "LICENSE" .AND. cTemp <> "OVERVIEW"
-            oHtm:WriteLink( aWww[ nPos ] )
+         cTemp := aWww[ nPos,1 ]         
+         IF AT( "()", cTemp ) == 0 .AND. ctemp <> "LICENSE" .AND. cTemp <> "OVERVIEW"         
+            oHtm:WriteLink( aWww[ nPos ,2],aWww[nPos,1])
          ENDIF
       NEXT
       oHtm:Close()
@@ -2844,7 +2849,7 @@ STATIC FUNCTION ProcessWww
                nEnd      := 1
                nCount    := 0
                DO WHILE nEnd > 0
-                  nEnd := ASCAN( aDocInfo, { | a | a[ 4 ] == cFileName + ".html" } )
+                  nEnd := ASCAN( aDocInfo, { | a | a[ 4 ] == cFileName + ".htm" } )
                   IF nEnd > 0
 
                      //  This will break if there are more than 10 files with the same first
@@ -2860,12 +2865,12 @@ STATIC FUNCTION ProcessWww
                ENDDO
                //  Add on the extension
 
-               cFileName := LEFT( cFileName, 21 ) + ".html"
+               cFileName := LEFT( cFileName, 21 ) + ".htm"
 
                oHTM := THTML():new( "www\" + LOWER( cFileName ) )
                IF oHtm:nHandle < 1
-                  ? "Error creating", cFileName, ".html"
-                  write_error( "Error creating",,,, cFileName + ".html" )
+                  ? "Error creating", cFileName, ".htm"
+                  write_error( "Error creating",,,, cFileName + ".htm" )
                ENDIF
                //  2) Category
             ELSEIF AT( cCat, cBuffer ) > 0
@@ -2888,7 +2893,7 @@ STATIC FUNCTION ProcessWww
                nMode := D_ONELINE
                //  Now start writing out what we know
                oHtm:WriteTitle( PAD( cFuncName, 21 ) )
-               AADD( aWWW, cFuncName )
+               AADD( aWWW,{ cFuncName,LEFT(cFileName,AT(".",cFileName)-1)} )
                oHtm:WriteParBold( cOneLine )
                oHtm:WritePar( cBar )
                //  4) all other stuff
@@ -3087,12 +3092,13 @@ RETURN nil
 *+
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
-FUNCTION ProcWwwBuf( cBuffer )
+FUNCTION ProcWwwBuf( cPar )
 
-   LOCAL cTemp := ''
-   cTemp := STRTRAN( cBuffer, "<", "" )
-   cTemp := STRTRAN( cTemp, ">", "" )
-RETURN ctemp
+
+   cPar:=STRTRAN(cPar,"<","&lt;")
+   cPar:=STRTRAN(cPar,">","&gt;")
+
+RETURN cPar
 /***********************************
 * Function ProcWwwAlso(nWriteHandle,cSeeAlso)  -> NIL
 * Parameter nWriteHandle Handle of the output file

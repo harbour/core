@@ -3197,56 +3197,29 @@ HARBOUR HB_DBRECALL( void )
  *  $CATEGORY$
  *      Data Base
  *  $ONELINER$
- *      Lock the record at the current or specified identity
+ *      This function locks the record basedon identify
  *  $SYNTAX$
  *      DBRLOCK([<xIdentity>]) --> lSuccess
  *  $ARGUMENTS$
- *      <xIdentity> is a unique value guaranteed by the structure of the
- *      data file to reference a specific item in a data source (database).  In
- *      a (.dbf) <xIdentity> is the record number.  In other data formats,
- *      <xIdentity> is the unique primary key value.
- *      
+ *      <xIdentity> Record indetifier     
  *  $RETURNS$
- *
- *      DBRLOCK() returns lSuccess, a logical data type that is true (.T.) if
- *      successful, false (.F.) if unsuccessful.
- *
+ *      DBRLOCK() returns a logical true (.T.) if lock was successful
  *  $DESCRIPTION$
- *      DBRLOCK() is a database function that locks the record identified by the
- *      value <xIdentity>.  In Xbase, <xIdentity> is the record number.
- *
- *      If you do not specify <xIdentity>, all record locks are released and the
- *      current record is locked.  If you specify <xIdentity>, DBRLOCK()
- *      attempts to lock it and, if successful, adds it to the locked record
- *      list.
- *      
+ *      This function attempts to lock a record which is indentified
+ *      by <xIdentity> in the active data set.If the lock is successful
+ *      the function will return a logical true (.T.) value;otherwise
+ *      a logical false (.F.) will be returned.If <xIdentity> is not
+ *      passed it will be assumed to lock the current active record/data item.
  *  $EXAMPLES$
- *      This example shows two different methods for locking multiple
- *      records:
- *
- *      FUNCTION dbRLockRange( nLo, nHi )
- *
- *         LOCAL nRec
- *         FOR nRec := nLo TO nHi
- *            IF ! DBRLOCK( nRec )
- *               DBRUNLOCK()         // Failed - unlock everything
- *            ENDIF
- *         NEXT
- *         RETURN DBRLOCKLIST()      // Return array of actual locks
- *
- *      FUNCTION dbRLockArray( aList )
- *
- *         LOCAL nElement, nLen, lRet
- *         lRet := .T.
- *         nLen := LEN( aList )
- *         FOR nElement := 1 TO nLen
- *            IF ! DBRLOCK( aList[ nElement ] )
- *               DBRUNLOCK()         // Failed - unlock everything
- *               lRet := .F.
- *            ENDIF
- *         NEXT
- *         RETURN DBRLOCKLIST()
- *
+ *      FUNCTION Main()
+ *      LOCAL x:=0
+ *      USE Tests New
+ *      FOR x:=1 to reccount()
+ *        IF !DBRLOCK()
+ *          DBUNLOCK()
+ *        ENDIF
+ *      NEXT
+ *      USE
  *  $TESTS$
  *
  *  $STATUS$
@@ -3283,38 +3256,33 @@ HARBOUR HB_DBRLOCK( void )
  *  $CATEGORY$
  *      Data Base
  *  $ONELINER$
- *      Return an array of the current Lock List
+ *      This function return a list of records in the database work area
  *  $SYNTAX$
  *      DBRLOCKLIST() --> aRecordLocks
  *  $ARGUMENTS$
  *
  *  $RETURNS$
- *      Returns an array of the locked records in the current or aliased work
- *      area.    
+ *      DBRLOCKLIST() return a array of lock records 
  *  $DESCRIPTION$
- *      DBRLOCKLIST() is a database function that returns a one-dimensional
- *      array that contains the identities of record locks active in the
- *      selected work area.
- *      
+ *      This function will return an array of locked records in a given
+ *      and active work area.If the return array is an empty array
+ *      (meaning no elements in it),then there are no locked record in that
+ *      work area.
  *  $EXAMPLES$
- *      PROCEDURE PrintCurLocks()
- *
- *      LOCAL aList
- *      LOCAL nSize
- *      LOCAL nCount
- *
- *      aList := DBRLOCKLIST()
- *      nSize := LEN( aList )
- *
- *      ? "Currently locked records: "
- *      FOR nCount := 1 TO nSize
- *         ?? aList[ nCount ]
- *         ?? SPACE( 1 )
+ *      FUNCTION Main()
+ *      LOCAL aList:={}
+ *      LOCAL x:=0
+ *      USE Tests NEW
+ *      DBGOTO(10)
+ *      RLOCK()
+ *      DBGOTO(100)
+ *      RLOCK()
+ *      aList:=DBRLOCKLIST()
+ *      FOR x:=1 TO LEN(aList)
+ *         ? aList[x]
  *      NEXT
- *      ?
- *
- *      RETURN
- *
+ *      USE
+ *      RETURN NIL
  *  $TESTS$
  *
  *  $STATUS$
@@ -3348,33 +3316,28 @@ HARBOUR HB_DBRLOCKLIST( void )
  *  $CATEGORY$
  *      Data Base
  *  $ONELINER$
- *      Release all or specified record locks
+ *      Unlocks a record base on its indentifier
  *  $SYNTAX$
  *      DBRUNLOCK([<xIdentity>]) --> NIL
  *  $ARGUMENTS$
- *      <xIdentity> is a unique value guaranteed by the structure of the
- *   data file to reference a specific item in a data source (database).  In
- *   a (.dbf) <xIdentity> is the record number.  In other data formats,
- *   <xIdentity> is the unique primary key value.   
+ *      <xIdentity> Record indentifier,tipicaly a record number
  *  $RETURNS$
  *      DBRUNLOCK() always returns NIL.
  *  $DESCRIPTION$
- *      DBRUNLOCK() is a database function that releases the lock on <xIdentity>
- *   and removes it from the Lock List.  If <xIdentity> is not specified, all
- *   record locks are released.
- *      
+ *      This function will attempt to unlock the record specified as
+ *      <xIdentity>,which in a .DBF format is the record number.If not
+ *      specified,them the current active record/data item will be
+ *      unlocked       
  *  $EXAMPLES$
- *      PROCEDURE dbRUnlockRange( nLo, nHi )
- *
- *      LOCAL nCounter
- *
- *      // Unlock the records in the range from nLo to nHi
- *      FOR nCounter := nLo TO nHi
- *         DBRUNLOCK( nCounter )
- *      NEXT
- *
- *      RETURN
- *
+ *      FUNCTION Main()
+ *      USE Tests New
+ *      DBGOTO(10)
+ *      IF RLOCK()
+ *         ? Tests->ID
+ *         DBRUNLOCK()
+ *      ENDIF
+ *      USE
+ *      RETURN NIL
  *  $TESTS$
  *
  *  $STATUS$
@@ -3402,55 +3365,34 @@ HARBOUR HB_DBRUNLOCK( void )
  *  $CATEGORY$
  *      Data Base
  *  $ONELINER$
- *      Move to the record having the specified key value
+ *      Searches for a value based on an active index.
  *  $SYNTAX$
  *      DBSEEK(<expKey>, [<lSoftSeek>],[<lFindLast>]) --> lFound
  *  $ARGUMENTS$
- *      <expKey> is a value of any type that specifies the key value
- *   associated with the desired record.
- *
- *      <lSoftSeek> is an optional logical value that specifies whether a
- *   soft seek is to be performed.  This determines how the work area is
- *   positioned if the specified key value is not found (see below).  If
- *   <lSoftSeek> is omitted, the current global _SET_SOFTSEEK setting is
- *   used.
+ *      <expKey> Any expression
+ *      <lSoftSeek> Toggle SOFTSEEK condition
  *      <lFindLast> is an optional logical value that set the current
  *   record position to the last record if successful
  *  $RETURNS$
- *      DBSEEK() returns true (.T.) if the specified key value was found;
- *   otherwise, it returns false (.F.).
+ *      DBSEEK() returns logical true (.T.) if found, otherwise false
  *  $DESCRIPTION$
- *      DBSEEK() moves to the first logical record whose key value is equal to
- *   <expKey>.  If such a record is found, it becomes the current record and
- *   DBSEEK() returns true (.T.).  Otherwise, DBSEEK() returns false (.F.)
- *   and the positioning of the work area is as follows: for a normal (not
- *   soft) seek, the work area is positioned to LASTREC() + 1 and EOF()
- *   returns true (.T.); for a soft seek, the work area is positioned to the
- *   first record whose key value is greater than the specified key value.
- *   If no such record exists, the work area is positioned to LASTREC() + 1
- *   and EOF() returns true (.T.).
- *
- *      For a work area with no active indexes, DBSEEK() has no effect.
- *
- *      DBSEEK() performs the same function as the standard SEEK command.  For
- *   more information, refer to the SEEK command.
- *
- *    Notes
- *
- *      Logical records: DBSEEK() operates on logical records.
- *      Records are considered in indexed order.  If a filter is set, only
- *      records which meet the filter condition are considered.
- *
- *      Controlling order: If the work area has more than one active
- *      index, the operation is performed using the controlling order as set
- *      by DBSETORDER() or the SET ORDER command.  For more information,
- *      refer to the SET ORDER command.
- *
- *      Network environment: For a shared file on a network, moving to
- *      a different record may cause updates to the current record to become
- *      visible to other processes.
- *
- *      
+ *      This function searches for the first record in a database file whose index
+ *      key matches <expKey>. If the item is found, the function will return a logical
+ *      true (.T.), the value of FOUND() wilI be a logical true (.T.), and the value of
+ *      EOF() wilI be a logical false (.F.). If no item is found. then the function will
+ *      return a logical false, the value of FOUND( ) will be a logical false (.F.), and
+ *      the value of EOF( ) will be a logical true (.T.).
+ *      This function always "rewinds" the database pointer and starts the search from
+ *      the top of the file.
+ *      If the SOFTSEEK flag is on or if <lSoftSeek> is set to a logical true (.T.)
+ *      the value of FOUND() wilI be a logical false and EOF() will he a logical
+ *      false if there is an item in the index key with a greater value than the key
+ *      expression <expKey>; at this point the record pointer will position itself on that
+ *      record. However, if there is no greater key in the index,EOF() will return a
+ *      logical true (.T.) value. If <lSoftSeek> is not passed, the function will look
+ *      to the internal status of SOFTSEEK before performing the operation. The default
+ *      of <lSoftSeek> is a logical false (.F.)
+
  *  $EXAMPLES$
  *      In this example, DBSEEK() moves the pointer to the record in
  *      the database, Employee, in which the value in FIELD “cName” matches
