@@ -222,5 +222,7 @@ LOCAL oCheck
 function IsDefColor()
    local cColor:=SETCOLOR()
    Return ( ccolor== "W/N,N/W,N/N,N/N,N/W")
+function Checkbox(nr,ncol,cCaption)
+return HBCHECKBOX():new(nt, nCol, cCaption)
 
 #endif
