@@ -8,9 +8,20 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-07-08 23:00 UTC-0300 Antonio Carlos Pantaglione <toninho@fwi.com.br>
+  ! Sync with changes made in xHarbour by Walter Negro
+  * contrib/rdd_ads/ace.h
+    ! Fix warning in declaration of function
+  * contrib/rdd_ads/ads1.c
+  * contrib/rdd_ads/adsfunc.c
+    ! Fix error and potential error of AE_INSUFFICIENT_BUFFER in
+      some functions.
+      The len of buffer should include the NULL char.
+    ! Fix, now adsGoTo() test if the new position is EOF.
+
 2003-07-08 14:25 UTC-0300 Antonio Carlos Pantaglione <toninho@fwi.com.br>
   * contrib/rdd_ads/ads1.c
-    ! Fixed: deleted() return TRUE when is at eof()
+    ! Fixed: deleted() return TRUE when is at eof(), borrow from xHarbour.
 
 2003-07-08 11:27 UTC+0300 Chen Kedem <niki@actcom.co.il>
   * doc/en/lang.txt

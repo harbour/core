@@ -68,7 +68,7 @@
 static ERRCODE adsRecCount(  ADSAREAP pArea, ULONG * pRecCount );
 static ERRCODE adsScopeInfo( ADSAREAP pArea, USHORT nScope, PHB_ITEM pItem );
 static ERRCODE adsSetScope(  ADSAREAP pArea, LPDBORDSCOPEINFO sInfo );
-static iSetListenerHandle;
+static int iSetListenerHandle;
 
 HB_FUNC( _ADS );
 HB_FUNC( ADS_GETFUNCTABLE );
@@ -89,6 +89,7 @@ HB_INIT_SYMBOLS_BEGIN( ads1__InitSymbols )
 { "_ADS",             HB_FS_PUBLIC, HB_FUNCNAME( _ADS ), NULL },
 { "ADS_GETFUNCTABLE", HB_FS_PUBLIC, HB_FUNCNAME( ADS_GETFUNCTABLE ), NULL }
 HB_INIT_SYMBOLS_END( ads1__InitSymbols )
+
 #if defined(_MSC_VER)
    #if _MSC_VER >= 1010
       #pragma data_seg( ".CRT$XIY" )
@@ -494,6 +495,7 @@ static ERRCODE adsGoTo( ADSAREAP pArea, ULONG ulRecNo )
       pArea->ulRecNo = ulRecNo;
       pArea->fBof = pArea->fEof = FALSE;
       ulRetVal = AdsGotoRecord( pArea->hTable, ulRecNo );
+      AdsAtEOF( pArea->hTable, (UNSIGNED16 *)&(pArea->fEof) );
       /* hb_adsCheckBofEof( pArea );        // bh: GoTo should never do the skipfilter that may happen in hb_adsCheckBofEof */
    }
    else /* GoTo Phantom record */
@@ -1118,7 +1120,7 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          break;
 
       case HB_IT_LONG:
-         pulLength = pArea->maxFieldLen;
+         pulLength = pArea->maxFieldLen + 1;
          if (AdsGetField( pArea->hTable, szName, pBuffer, &pulLength, ADS_NONE ) == AE_NO_CURRENT_RECORD  )
          {
             memset( pBuffer, ' ', pField->uiLen );
@@ -1153,10 +1155,10 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
       case HB_IT_DATE:
          {
             UNSIGNED8 pucFormat[ 11 ];
-            UNSIGNED16 pusLen = 10;
+            UNSIGNED16 pusLen = 11;
             AdsGetDateFormat  ( pucFormat, &pusLen );
             AdsSetDateFormat  ( (UNSIGNED8*)"YYYYMMDD" );
-               pulLength = pArea->maxFieldLen;
+               pulLength = pArea->maxFieldLen + 1;
                if (AdsGetField( pArea->hTable, szName, pBuffer, &pulLength, ADS_NONE ) == AE_NO_CURRENT_RECORD  )
                {
                   memset( pBuffer, ' ', pField->uiLen );
@@ -1524,7 +1526,7 @@ static ERRCODE adsInfo( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          break;
 
       case DBI_GETHEADERSIZE:
-         if( !pArea->uiHeaderLen && pArea->iFileType!=ADS_ADT )
+         if( !pArea->uiHeaderLen && pArea->iFileType != ADS_ADT )
             pArea->uiHeaderLen = 32 + pArea->uiFieldCount * 32 + 2;
          hb_itemPutNL( pItem, pArea->uiHeaderLen );
          break;
@@ -1597,13 +1599,13 @@ static ERRCODE adsInfo( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          UNSIGNED8  ucLetter;
          UNSIGNED8  ucDesc[128];
          UNSIGNED16 usDescLen = sizeof(ucDesc) - 1;
-         char ucVersion[256];
+         UNSIGNED8  ucVersion[256];
 
          AdsGetVersion( &ulMajor, &ulMinor, &ucLetter, ucDesc, &usDescLen);
 
-         sprintf(ucVersion, "%s, v%ld.%ld%c", (char *)ucDesc, ulMajor, ulMinor, ucLetter);
+         sprintf(( char *) ucVersion, "%s, v%ld.%ld%c", ucDesc, ulMajor, ulMinor, ucLetter);
 
-         hb_itemPutC( pItem, ucVersion );
+         hb_itemPutC( pItem, ( char *) ucVersion );
          break;
       }
 
@@ -1694,7 +1696,6 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
       {
          if ( ulRetVal != 1001 ) /* && ulRetVal != 7008 ) */  /* 1001 and 7008 are standard ADS Open Errors that will usually be sharing issues */
             commonError( pArea, EG_OPEN, ( USHORT ) ulRetVal, ( char * ) pOpenInfo->abName );
-
          return FAILURE;                /* just set neterr  */
       }
 
@@ -1944,7 +1945,6 @@ static ERRCODE adsOrderListClear( ADSAREAP pArea )
 
    AdsCloseAllIndexes  ( pArea->hTable );
    pArea->hOrdCurrent = 0;
-
    return SUCCESS;
 }
 

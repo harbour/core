@@ -382,7 +382,7 @@
 #define AE_DD_UNSUPPORTED_DEPLOYMENT    5166
 #define AE_INFO_AUTO_CREATION_OCCURRED  5168
 #define AE_INFO_COPY_MADE_BY_CLIENT     5169
-#define AE_DATABASE_REQUIRE_NEW_SERVER  5170
+#define AE_DATABASE_REQUIRES_NEW_SERVER 5170
 
 /* Available OEM Languages (for Clipper compatibility) */
 #define ADS_LANG_USA          "USA"

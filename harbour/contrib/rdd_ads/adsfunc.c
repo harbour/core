@@ -103,7 +103,7 @@ HB_FUNC( ADSSETSERVERTYPE )
 HB_FUNC( ADSSETDATEFORMAT  )
 {
    UNSIGNED8  pucFormat[16];
-   UNSIGNED16 pusLen = 15;
+   UNSIGNED16 pusLen = 16;
 
    hb_retc( "");
    AdsGetDateFormat (pucFormat, &pusLen);
@@ -246,11 +246,11 @@ HB_FUNC( ADSSETCHARTYPE )
 HB_FUNC( ADSSETDEFAULT )
 {
    UNSIGNED8  pucDefault[ MAX_STR_LEN+1];
-   UNSIGNED16 pusLen = MAX_STR_LEN;
+   UNSIGNED16 pusLen = MAX_STR_LEN+1;
 
    AdsGetDefault( pucDefault, &pusLen);
 
-   hb_retclen( (char*)pucDefault, pusLen );
+   hb_retclen( ( char * ) pucDefault, pusLen );
 
    if( ISCHAR(1) )
       AdsSetDefault( (UNSIGNED8*) hb_parc( 1 ) );
@@ -261,11 +261,11 @@ HB_FUNC( ADSSETDEFAULT )
 HB_FUNC( ADSSETSEARCHPATH )
 {
    UNSIGNED8  pucPath[ MAX_STR_LEN+1];
-   UNSIGNED16 pusLen = MAX_STR_LEN;
+   UNSIGNED16 pusLen = MAX_STR_LEN+1;
 
    AdsGetSearchPath( pucPath, &pusLen);
 
-   hb_retclen( (char*)pucPath, pusLen );
+   hb_retclen( ( char *) pucPath, pusLen );
 
    if( ISCHAR(1) )
       AdsSetSearchPath( (UNSIGNED8*) hb_parc( 1 ) );
@@ -398,7 +398,7 @@ HB_FUNC( ADSKEYCOUNT )
    ADSHANDLE hIndex;
    UNSIGNED16 usFilterOption = ADS_IGNOREFILTERS;
    UNSIGNED8 pucScope[ ADS_MAX_KEY_LENGTH+1 ];
-   UNSIGNED16 pusBufLen = ADS_MAX_KEY_LENGTH;
+   UNSIGNED16 pusBufLen = ADS_MAX_KEY_LENGTH+1;
 
    pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
    if( pArea )
@@ -579,7 +579,7 @@ HB_FUNC( ADSGETTABLEALIAS )
 {
    ADSAREAP pArea;
    UNSIGNED8  pucAlias[HARBOUR_MAX_RDD_ALIAS_LENGTH +1];
-   UNSIGNED16 pusLen = HARBOUR_MAX_RDD_ALIAS_LENGTH;
+   UNSIGNED16 pusLen = HARBOUR_MAX_RDD_ALIAS_LENGTH+1;
    UNSIGNED32 ulRetVal = FAILURE;
 
    pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
@@ -599,7 +599,7 @@ HB_FUNC( ADSGETAOF )
    ADSAREAP pArea;
    UNSIGNED8  pucFilter[HARBOUR_MAX_RDD_FILTER_LENGTH+1];
    UNSIGNED8 *pucFilter2;
-   UNSIGNED16 pusLen = HARBOUR_MAX_RDD_FILTER_LENGTH;
+   UNSIGNED16 pusLen = HARBOUR_MAX_RDD_FILTER_LENGTH+1;
    UNSIGNED32 ulRetVal;
 
    hb_retc( "" );
@@ -649,7 +649,7 @@ HB_FUNC( ADSGETAOFNOOPT )
    UNSIGNED16 pusOptLevel;
    UNSIGNED8  pucNonOpt[HARBOUR_MAX_RDD_FILTER_LENGTH+1];
    UNSIGNED8 *pucNonOpt2;
-   UNSIGNED16 pusLen = HARBOUR_MAX_RDD_FILTER_LENGTH;
+   UNSIGNED16 pusLen = HARBOUR_MAX_RDD_FILTER_LENGTH+1;
    UNSIGNED32 ulRetVal;
 
    pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
@@ -743,7 +743,7 @@ HB_FUNC( ADSGETFILTER )
    ADSAREAP pArea;
    UNSIGNED8  pucFilter[HARBOUR_MAX_RDD_FILTER_LENGTH+1];
    UNSIGNED8 *pucFilter2;
-   UNSIGNED16 pusLen = HARBOUR_MAX_RDD_FILTER_LENGTH;
+   UNSIGNED16 pusLen = HARBOUR_MAX_RDD_FILTER_LENGTH+1;
    UNSIGNED32 ulRetVal;
 
    hb_retc( "" );
@@ -1337,7 +1337,7 @@ HB_FUNC(ADSADDTABLE)
       hb_retl(0);
 }
 
-HB_FUNC(ADSADDUSERTOGROUP)
+HB_FUNC( ADSADDUSERTOGROUP )
 {
    UNSIGNED32 ulRetVal;
    UNSIGNED8 *pGroup = hb_parc( 1 );
@@ -1353,7 +1353,7 @@ HB_FUNC(ADSADDUSERTOGROUP)
         hb_retl(0);
 }
 
-HB_FUNC(ADSUSEDICTIONARY)
+HB_FUNC( ADSUSEDICTIONARY )
 {
    BOOL bOld = bDictionary;
    if ( ISLOG( 1 ) )
@@ -1364,7 +1364,7 @@ HB_FUNC(ADSUSEDICTIONARY)
 
 #endif
 
-HB_FUNC(ADSVERSION)
+HB_FUNC( ADSVERSION )
 {
    int iVersionType = ISNUM(1) ? hb_parni(1) : 0;
    UNSIGNED32 ulMajor;
@@ -1390,3 +1390,4 @@ HB_FUNC(ADSVERSION)
 
    hb_retc(ucVersion);
 }
+
