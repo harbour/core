@@ -1,3 +1,8 @@
+19990514-13:55 CET Eddie Runia
+  * source/rtl/classes.c
+    Unreleased memory block in inline resolved. AGAIN !
+
+
 19990515-13:40 CET Eddie Runia
   * source/rtl/classes.c
     CVS Just deleted another upload !!!!

@@ -185,6 +185,8 @@ static HARBOUR EvalInline( void )
    for( w = 1; w <= _pcount(); w++ )
       Push( _param( w, IT_ANY ) );
    Do( _pcount() + 1 );                         /* Self is also an argument */
+
+   ItemRelease( &bBlock );                      /* Release block            */
 }
 
 static HARBOUR Virtual( void )
