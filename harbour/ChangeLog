@@ -1,3 +1,10 @@
+20000801-21:55 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+   * config/os2/global.cf
+     ! fixed removing of nested subdir (HB_ARCHITECTURE/HB_COMPILER) that under OS/2 you need to
+       remove from the bottom up and not a single DEL command
+   * source/compiler/cmdcheck.c
+     ! removed GCC warning since isdigit() expects an int but was called with a char
+
 2000-08-01 12:10 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/cmdcheck.c
      + Added support for "new style" switches specs, for command line arguments.

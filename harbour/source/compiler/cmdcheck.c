@@ -235,7 +235,7 @@ void hb_compChkCompilerSwitch( int iArg, char * Args[] )
 
                      case 'e' :
                      case 'E' :
-                       if( Args[i][j + 1] && toupper( Args[i][j + 1] ) == 'S' && Args[i][j + 2] && isdigit( Args[i][j + 2] ) )
+                       if( Args[i][j + 1] && toupper( Args[i][j + 1] ) == 'S' && Args[i][j + 2] && isdigit((int) Args[i][j + 2] ) )
                        {
                           Switch[2] = 'S';
                           Switch[3] = Args[i][j + 2];
@@ -256,7 +256,7 @@ void hb_compChkCompilerSwitch( int iArg, char * Args[] )
 
                      case 'g' :
                      case 'G' :
-                       if( Args[i][j + 1] && toupper( Args[i][j + 1] ) == 'C' && Args[i][j + 2] && isdigit( Args[i][j + 2] ) )
+                       if( Args[i][j + 1] && toupper( Args[i][j + 1] ) == 'C' && Args[i][j + 2] && isdigit((int) Args[i][j + 2] ) )
                        {
                           Switch[2] = 'C';
                           Switch[3] = Args[i][j + 2];
@@ -305,7 +305,7 @@ void hb_compChkCompilerSwitch( int iArg, char * Args[] )
 
                      case 'q' :
                      case 'Q' :
-                       if( Args[i][j + 1] && isdigit( Args[i][j + 1] ) )
+                       if( Args[i][j + 1] && isdigit((int) Args[i][j + 1] ) )
                        {
                           Switch[2] = Args[i][j + 1];
                           Switch[3] = '\0';
@@ -334,7 +334,7 @@ void hb_compChkCompilerSwitch( int iArg, char * Args[] )
 
                      case 'w' :
                      case 'W' :
-                       if( Args[i][j + 1] && isdigit( Args[i][j + 1] ) )
+                       if( Args[i][j + 1] && isdigit((int) Args[i][j + 1] ) )
                        {
                           Switch[2] = Args[i][j + 1];
                           Switch[3] = '\0';
