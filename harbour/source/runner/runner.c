@@ -148,13 +148,13 @@ HARBOUR HB_RUN( void )
                ulPos = FindSymbol( pSymRead[ ul ].szName, pDynFunc, ulFuncs );
                if( ulPos != SYM_NOT_FOUND )
                {
-                  if(    FindDynSym( pSymRead[ ul ].szName ) &&
+/*                  if(    FindDynSym( pSymRead[ ul ].szName ) &&
                       !( pSymRead[ ul ].cScope & FS_STATIC ) )
-                  {                             /* Exists and NOT static ?  */
-                     printf( "\nDuplicate identifier '%s'.",
-                             pSymRead[ ul ].szName );
+                  {                           */  /* Exists and NOT static ?  */
+/*                     printf( "\nDuplicate identifier '%s' %i.",
+                             pSymRead[ ul ].szName, pSymRead[ul].cScope );
                      exit( 1 );
-                  }
+                  } */
                   pSymRead[ ul ].pFunPtr = pDynFunc[ ulPos ].pAsmCall->pFunPtr;
                }
                else
