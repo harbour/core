@@ -289,7 +289,8 @@ return nil
 
 METHOD ToggleBreakPoint( cModule, nLine ) CLASS TDebugger
 
-   local nAt := AScan( ::aBreakPoints, { | aBreak, n | aBreak[ 1 ] == nLine } )
+   local nAt := AScan( ::aBreakPoints, { | aBreak, n | aBreak[ 1 ] == ;
+                       ::oBrwText:nLine } )
 
    if nAt == 0
       AAdd( ::aBreakPoints, { ::oBrwText:nLine, ::cPrgName } )
