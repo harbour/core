@@ -1,3 +1,12 @@
+19990829-13:30 EDT Paul Tucker <ptucker@sympatico.ca>
+   * source/include/set.h
+     rearrange set struct to be in correct order
+   * source/hbpp/table.c
+     hand corrected output for _SET_<xxx> defines
+   * tests/working/set_test.prg
+     modified output to show which set is being displayed, and
+     external 'hooks' so that it demonstrates the same thing under Clipper.
+
 19990829-14:45 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/vm/hvm.c (hb_vmArrayPut())

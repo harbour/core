@@ -150,45 +150,45 @@ typedef enum
 
 typedef struct
 {
+   BOOL HB_SET_EXACT;       /* Logical */
+   BOOL HB_SET_FIXED;       /* Logical */
+   int  HB_SET_DECIMALS;    /* Numeric */
+   char *HB_SET_DATEFORMAT; /* Character */
+   int  HB_SET_EPOCH;       /* Numeric */
+   char *HB_SET_PATH;       /* Character */
+   char *HB_SET_DEFAULT;    /* Character */
+   BOOL HB_SET_EXCLUSIVE;   /* Logical */
+   BOOL HB_SET_SOFTSEEK;    /* Logical */
+   BOOL HB_SET_UNIQUE;      /* Logical */
+   BOOL HB_SET_DELETED;     /* Logical */
+   BOOL HB_SET_CANCEL;      /* Logical */
+   int  HB_SET_DEBUG;       /* Numeric */
+   int  HB_SET_TYPEAHEAD;   /* Numeric */
+   char HB_SET_COLOR[ 64 ]; /* Character */
+   HB_cursor_enum  HB_SET_CURSOR;      /* Numeric */
+   BOOL HB_SET_CONSOLE;     /* Logical */
    BOOL HB_SET_ALTERNATE;   /* Logical */
    char *HB_SET_ALTFILE;    /* Character */
-   BOOL HB_SET_BELL;        /* Logical */
-   BOOL HB_SET_CANCEL;      /* Logical */
-   char HB_SET_COLOR[ 64 ]; /* Character */
-   BOOL HB_SET_CONFIRM;     /* Logical */
-   BOOL HB_SET_CONSOLE;     /* Logical */
-   HB_cursor_enum  HB_SET_CURSOR;      /* Numeric */
-   char *HB_SET_DATEFORMAT; /* Character */
-   int  HB_SET_DEBUG;       /* Numeric */
-   int  HB_SET_DECIMALS;    /* Numeric */
-   char *HB_SET_DEFAULT;    /* Character */
-   BOOL HB_SET_DELETED;     /* Logical */
-   char *HB_SET_DELIMCHARS; /* Character */
-   BOOL HB_SET_DELIMITERS;  /* Logical */
    char * HB_SET_DEVICE;    /* Character */
-   int  HB_SET_EPOCH;       /* Numeric */
-   BOOL HB_SET_ESCAPE;      /* Logical */
-   HB_inkey_enum  HB_SET_EVENTMASK;   /* Numeric */
-   BOOL HB_SET_EXACT;       /* Logical */
-   BOOL HB_SET_EXCLUSIVE;   /* Logical */
-   BOOL HB_SET_EXIT;        /* Logical */
    BOOL HB_SET_EXTRA;       /* Logical */
    char *HB_SET_EXTRAFILE;  /* Character */
-   BOOL HB_SET_FIXED;       /* Logical */
-   BOOL HB_SET_INSERT;      /* Logical */
-   BOOL HB_SET_INTENSITY;   /* Logical */
-   int  HB_SET_MARGIN;      /* Numeric */
-   BOOL HB_SET_MCENTER;     /* Logical */
-   int  HB_SET_MESSAGE;     /* Numeric */
-   char *HB_SET_PATH;       /* Character */
    BOOL HB_SET_PRINTER;     /* Logical */
    char *HB_SET_PRINTFILE;  /* Character */
+   int  HB_SET_MARGIN;      /* Numeric */
+   BOOL HB_SET_BELL;        /* Logical */
+   BOOL HB_SET_CONFIRM;     /* Logical */
+   BOOL HB_SET_ESCAPE;      /* Logical */
+   BOOL HB_SET_INSERT;      /* Logical */
+   BOOL HB_SET_EXIT;        /* Logical */
+   BOOL HB_SET_INTENSITY;   /* Logical */
    BOOL HB_SET_SCOREBOARD;  /* Logcial */
-   int  HB_SET_SCROLLBREAK; /* Logical */ /* QUESTION: What does this do? */
-   BOOL HB_SET_SOFTSEEK;    /* Logical */
-   int  HB_SET_TYPEAHEAD;   /* Numeric */
-   BOOL HB_SET_UNIQUE;      /* Logical */
+   char *HB_SET_DELIMCHARS; /* Character */
+   BOOL HB_SET_DELIMITERS;  /* Logical */
    BOOL HB_SET_WRAP;        /* Logical */
+   int  HB_SET_MESSAGE;     /* Numeric */
+   BOOL HB_SET_MCENTER;     /* Logical */
+   int  HB_SET_SCROLLBREAK; /* Logical */ /* QUESTION: What does this do? */
+   HB_inkey_enum  HB_SET_EVENTMASK;   /* Numeric */
 }  HB_set_struct;
 
 extern HB_set_struct hb_set;
