@@ -53,14 +53,6 @@
 
 #define HB_OS_WIN_32_USED
 
-#include "hbapi.h"
-#include "hbapiitm.h"
-#include "hbinit.h"
-#include "hbvm.h"
-#include "rddsys.ch"
-#include "hbapilng.h"
-#include "hbdate.h"
-#include "hbapierr.h"
 #include "rddads.h"
 
 

@@ -246,15 +246,20 @@ static ERRCODE hb_adsCheckBofEof( ADSAREAP pArea )
 
 ERRCODE adsCloseCursor( ADSAREAP pArea )
 {
+   UNSIGNED32  ulRetVal;
    ERRCODE uiError;
 
    HB_TRACE(HB_TR_DEBUG, ("adsCloseCursor(%p)", pArea));
 
    if( pArea->hTable )
    {
-      AdsCloseTable  ( pArea->hTable );
+      ulRetVal = AdsCloseTable  ( pArea->hTable );
+      if ( ulRetVal != AE_SUCCESS )
+         HB_TRACE(HB_TR_ALWAYS, ("adsCloseTable failed (%lu, %s)", ulRetVal, pArea->szDataFileName));
+
       pArea->hTable = 0;
    }
+
    uiError = SUPER_CLOSE( (AREAP)pArea );  // dbCreate needs this even if
 
    /* Free field offset array */
@@ -540,7 +545,7 @@ static ERRCODE adsSkip( ADSAREAP pArea, LONG lToSkip )
       hb_adsCheckBofEof( pArea );
       lReturn = SUPER_SKIPFILTER( (AREAP)pArea, lUnit );
 
-      // now handle non-1 values
+      /* now handle non-1 values */
       while( lCount > 1 && lReturn == SUCCESS && !pArea->fBof && !pArea->fEof)
       {
          AdsSkip  ( (pArea->hOrdCurrent) ? pArea->hOrdCurrent : pArea->hTable, lUnit );
@@ -662,7 +667,6 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 {
    LPFIELD    pField;
    BYTE *     pBuffer = pArea->pRecord;
-   // char szBuffer[ 21 ];
    UNSIGNED8  szName[ HARBOUR_MAX_RDD_FIELDNAME_LENGTH + 1 ];
    UNSIGNED16 pusBufLen = HARBOUR_MAX_RDD_FIELDNAME_LENGTH;
    UNSIGNED32 pulLength;
@@ -803,7 +807,6 @@ static ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
       return FAILURE;
 
    pField = pArea->lpFields + uiIndex - 1;
-   // szText = pArea->pRecord + pArea->pFieldOffset[ uiIndex - 1 ];
    szText = pArea->pRecord;
    bError = TRUE;
    AdsGetFieldName( pArea->hTable, uiIndex, szName, &pusBufLen );
@@ -816,8 +819,6 @@ static ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
             uiCount = ( USHORT ) hb_itemGetCLen( pItem );
             if( uiCount > pField->uiLen )
                uiCount = pField->uiLen;
-            // memcpy( szText, hb_itemGetCPtr( pItem ), uiCount );
-            // memset( szText + uiCount, ' ', pField->uiLen - uiCount );
             AdsSetString( pArea->hTable, szName, (UCHAR*)hb_itemGetCPtr( pItem ), uiCount );
             bError = FALSE;
          }
@@ -1158,6 +1159,7 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
             commonError( pArea, EG_OPEN, ( USHORT ) ulRetVal, ( char * ) pOpenInfo->abName );
 
       }
+
       pArea->hTable    = hTable;
       pArea->fShared   = pOpenInfo->fShared;
       pArea->fReadonly = pOpenInfo->fReadonly;
@@ -1725,6 +1727,8 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
                AdsGotoRecord( pArea->hTable, pArea->ulRecNo );
                AdsAtEOF( pArea->hTable, (UNSIGNED16 *)&(pArea->fEof) );
             }
+            else                           /*  no scope set */
+               AdsGetRecordCount  ( phIndex, ADS_RESPECTFILTERS, &pul32);
          }else
             AdsGetRecordCount( pArea->hTable, ADS_RESPECTFILTERS, &pul32);
 
@@ -1829,10 +1833,6 @@ static ERRCODE adsClearFilter( ADSAREAP pArea )
     We don't know if an AOF was used.
     Since a call to the server would need to be made to see if there's an AOF
     anyway, just always attempt to clear it.
-    ///
-    ///UNSIGNED8   aucAOF[64];
-    ///UNSIGNED16  usLength;
-    ///  if ( AdsGetAOF( pArea->hTable, aucAOF, &usLength ) == AE_SUCCESS && usLength > 0)
    */
    AdsClearAOF ( pArea->hTable );
    AdsClearFilter  ( pArea->hTable );

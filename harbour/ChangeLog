@@ -1,3 +1,28 @@
+2001-04-26 01:15 UTC-0800 Brian Hays <bhays@abacuslaw.com>
+
+   * source/rdd/dbcmd.c
+      * __dbLocate wasn't freeing mem blocks if dataset was empty
+      * added ordKeyCount
+      * formatted comments
+      * removed HB_SYMBOL_UNUSED( bRest ); since it's used now
+      * Fixed logic in __dbCopy for only having a For clause
+         (it was failing to copy if first record failed test)
+      Harrier - please review my change to bFor/pFor testing
+
+   * contrib/rdd_ads/adsfunc.c
+      + Added ADSGETFILTER() for retrieving what ADS thinks the
+         filter is
+
+   * contrib/rdd_ads/ads1.c
+      * fixed dbOrderInfo(DBOI_KEYCOUNT) when no scope was set
+         (was returning 0)
+
+   * contrib/rdd_ads/adsmgmnt.c
+      * removed unneeded headers
+
+   * source/rtl/dummy.prg
+      * removed ordKeyCount
+
 2001-04-25 17:51 GMT-3 Horacio Roldan <horacioroldan@usa.net>
    *source/rdd/workarea.c
      * patched GPF using valResult.

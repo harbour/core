@@ -66,7 +66,7 @@ static LPRDDNODE s_pRddList = NULL;    /* Registered RDD's */
 static BOOL s_bNetError = FALSE;       /* Error on Networked environments */
 
 static LPAREANODE s_pWorkAreas = NULL; /* WorkAreas */
-static LPAREANODE s_pCurrArea = NULL;  /* Pointer to a selectd and valid area */
+static LPAREANODE s_pCurrArea = NULL;  /* Pointer to a selected and valid area */
 
 /*
  * -- DEFAULT METHODS --
@@ -244,7 +244,7 @@ static void hb_rddCloseAll( void )
          s_pCurrArea = pAreaNode;
          pAreaNode = pAreaNode->pNext;
          if( ( !nCycl && ( ( AREAP ) s_pCurrArea->pArea )->lpdbRelations ) ||
-             ( nCycl && s_pCurrArea->pArea ) )
+             (  nCycl && s_pCurrArea->pArea ) )
          {
             SELF_CLOSE( ( AREAP ) s_pCurrArea->pArea );
             SELF_RELEASE( ( AREAP ) s_pCurrArea->pArea );
@@ -1416,7 +1416,7 @@ HB_FUNC( __DBLOCATE )
    {
       SELF_GOTOID( ( AREAP ) s_pCurrArea->pArea, pRecord );
       if( ( ( AREAP ) s_pCurrArea->pArea )->fEof )
-         return;
+         goto ExitLocate ;
       if( hb_itemType( pWhile ) == HB_IT_BLOCK )
          bWhile = hb_itemGetL( hb_vmEvalBlock( pWhile ) );
       else
@@ -1433,7 +1433,7 @@ HB_FUNC( __DBLOCATE )
    {
       lNext = hb_parnl( 3 );
       if( ( ( AREAP ) s_pCurrArea->pArea )->fEof || lNext <= 0 )
-         return;
+         goto ExitLocate ;
       if( hb_itemType( pWhile ) == HB_IT_BLOCK )
          bWhile = hb_itemGetL( hb_vmEvalBlock( pWhile ) );
       else
@@ -1459,7 +1459,7 @@ HB_FUNC( __DBLOCATE )
    else if( hb_itemGetL( pRest ) )
    {
       if( ( ( AREAP ) s_pCurrArea->pArea )->fEof )
-         return;
+         goto ExitLocate ;
       if( hb_itemType( pWhile ) == HB_IT_BLOCK )
          bWhile = hb_itemGetL( hb_vmEvalBlock( pWhile ) );
       else
@@ -1486,7 +1486,7 @@ HB_FUNC( __DBLOCATE )
    {
       SELF_GOTOP( ( AREAP ) s_pCurrArea->pArea );
       if( ( ( AREAP ) s_pCurrArea->pArea )->fEof )
-         return;
+         goto ExitLocate ;
       if( hb_itemType( pNewFor ) == HB_IT_BLOCK )
          bFor = hb_itemGetL( hb_vmEvalBlock( pNewFor ) );
       else
@@ -1502,6 +1502,7 @@ HB_FUNC( __DBLOCATE )
       ( ( AREAP ) s_pCurrArea->pArea )->fFound = bFor;
    }
 
+ExitLocate :
    /* Release items */
    hb_itemRelease( pNewFor );
    hb_itemRelease( pNewRest );
@@ -2381,6 +2382,27 @@ HB_FUNC( ORDKEY )
 }
 
 #ifdef HB_COMPAT_C53
+HB_FUNC( ORDKEYCOUNT )
+{
+   DBORDERINFO pOrderInfo;
+
+   if( s_pCurrArea )
+   {
+      pOrderInfo.itmOrder = hb_param( 1, HB_IT_STRING );
+      if( !pOrderInfo.itmOrder )
+         pOrderInfo.itmOrder = hb_param( 1, HB_IT_NUMERIC );
+      pOrderInfo.atomBagName = hb_param( 2, HB_IT_STRING );
+      /* Either or both may be NIL */
+
+      pOrderInfo.itmResult = hb_itemPutNL( NULL, 0 );
+      SELF_ORDINFO( ( AREAP ) s_pCurrArea->pArea, DBOI_KEYCOUNT, &pOrderInfo );
+      hb_retnl( hb_itemGetNL( pOrderInfo.itmResult ) );
+      hb_itemRelease( pOrderInfo.itmResult );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, "ORDKEYCOUNT" );
+
+}
 
 HB_FUNC( ORDKEYNO )
 {
@@ -3393,7 +3415,7 @@ static LPAREANODE GetTheOtherArea( char *szDriver, char * szFileName, BOOL creat
   return pAreaNode;
 }
 
-// move the Field Data between areas by name
+/* move the Field Data between areas by name */
 static void rddMoveFields( AREAP pAreaFrom, AREAP pAreaTo, PHB_ITEM pFields )
 {
   USHORT   i, f=1;
@@ -3402,7 +3424,7 @@ static void rddMoveFields( AREAP pAreaFrom, AREAP pAreaTo, PHB_ITEM pFields )
   fieldValue = hb_itemNew( NULL );
   for ( i=0 ; i<pAreaFrom->uiFieldCount; i++ )
   {
-    // list or field in the list?
+    /* list or field in the list?*/
     if ( !pFields || IsFieldIn( (( PHB_DYNS )(pAreaFrom->lpFields + i)->sym )->pSymbol->szName,  pFields ))
     {
       SELF_GETVALUE( pAreaFrom, i+1, fieldValue );
@@ -3412,7 +3434,7 @@ static void rddMoveFields( AREAP pAreaFrom, AREAP pAreaTo, PHB_ITEM pFields )
   hb_itemRelease( fieldValue );
 }
 
-// move the records filtering if apropiate
+/*move the records, filtering if apropiate*/
 static ERRCODE rddMoveRecords( char *cAreaFrom, char *cAreaTo, PHB_ITEM pFields,
                                PHB_ITEM pFor, PHB_ITEM pWhile, LONG lNext,
                                ULONG lRec, BOOL bRest, char *cDriver )
@@ -3427,32 +3449,31 @@ static ERRCODE rddMoveRecords( char *cAreaFrom, char *cAreaTo, PHB_ITEM pFields,
   LPAREANODE pAreaRelease=NULL;
   LPAREANODE s_pCurrAreaSaved=s_pCurrArea;
 
-  HB_SYMBOL_UNUSED( bRest );
   HB_TRACE(HB_TR_DEBUG, ("rddMoveRecords(%s, %s, %p, %p, %p, %d, %lu, %d, %s )",
          cAreaFrom, cAreaTo, pFields, pFor, pWhile, lNext, lRec, bRest, cDriver));
 
-  if ( !s_pCurrArea )  // We need a current Area to APPEND TO or FROM
+  if ( !s_pCurrArea )   /*We need a current Area to APPEND TO or FROM*/
   {
      hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, "DBAPP" );
      return EG_NOTABLE;
   }
 
-  // get the RDD Driver to use for the "other" Area
+  /*get the RDD Driver to use for the "other" Area*/
   if( cDriver )
      szDriver = cDriver;
   else
      szDriver = s_szDefDriver;
 
-  if( !cAreaFrom && ! cAreaTo )         // File is needed
+  if( !cAreaFrom && ! cAreaTo )          /*File is needed*/
   {
      hb_errRT_DBCMD( EG_ARG, EDBCMD_EVAL_BADPARAMETER, NULL, "DBAPP" );
      return EG_ARG;
   }
 
-  if ( pFields && hb_arrayLen( pFields ) == 0 ) // no field clause?
+  if ( pFields && hb_arrayLen( pFields ) == 0 )  /*no field clause?*/
     pFields = NULL;
 
-  if ( cAreaTo ) // it's a COPY TO
+  if ( cAreaTo )  /*it's a COPY TO*/
   {
     pAreaRelease = GetTheOtherArea( szDriver, cAreaTo, TRUE, pFields );
     pAreaTo = (AREAP) pAreaRelease->pArea;
@@ -3461,34 +3482,34 @@ static ERRCODE rddMoveRecords( char *cAreaFrom, char *cAreaTo, PHB_ITEM pFields,
     pAreaTo = (AREAP) s_pCurrArea->pArea;
 
 
-  if ( cAreaFrom ) // it's an APPEND FROM
-  {                // make it current
+  if ( cAreaFrom )  /*it's an APPEND FROM*/
+  {                 /*make it current*/
     pAreaRelease = s_pCurrArea = GetTheOtherArea( szDriver, cAreaFrom, FALSE, NULL );
     pAreaFrom =  (AREAP) pAreaRelease->pArea;
   }
   else
     pAreaFrom = (AREAP) s_pCurrArea->pArea;
 
-  // or one or the other but necer none
-  if ( !pAreaRelease )  // We need another Area to APPEND TO
+  /* one or the other but never none*/
+  if ( !pAreaRelease )   /*We need another Area to APPEND TO*/
   {
      hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, "DBAPP" );
      return EG_NOTABLE;
   }
 
-  if ( lRec > 0 )                 // only one record
-    SELF_GOTO( pAreaFrom, lRec ); // go there
+  if ( lRec > 0 )                  /*only one record*/
+    SELF_GOTO( pAreaFrom, lRec );  /*go there*/
   else
   {
-    if( !pWhile && !bRest )    // this two stay current
-      SELF_GOTOP( pAreaFrom ); // else start from the top
+    if( !pWhile && !bRest )        /*this two stay current*/
+       SELF_GOTOP( pAreaFrom );    /*else start from the top*/
   }
 
-  // move those records assuming we are positioned on one.
+  /*move those records assuming we are positioned on one.*/
   while( keepGoing )
   {
     keepGoing = FALSE;
-    if( !pAreaFrom->fEof ) // until eof or an evaluation failed
+    if( !pAreaFrom->fEof )  /*until eof or an evaluation failed*/
     {
        if( pWhile )
           bWhile = hb_itemGetL( hb_vmEvalBlock( pWhile ) );
@@ -3500,23 +3521,27 @@ static ERRCODE rddMoveRecords( char *cAreaFrom, char *cAreaTo, PHB_ITEM pFields,
        else
           bFor = TRUE;
 
-      if( bWhile && bFor && (!lNext || toGo > 0 )) // candidate?
+      if( bWhile && (!lNext || toGo > 0 ))                /*candidate?*/
       {
-        SELF_APPEND( ( AREAP ) pAreaTo, FALSE );   // put a new one on TO Area
-        rddMoveFields( pAreaFrom, pAreaTo, pFields ); // move the data
-        if ( lRec == 0 ) // only one record?
-          keepGoing = TRUE;
-        else
-          continue;
+         if ( bFor )
+         {
+            SELF_APPEND( ( AREAP ) pAreaTo, FALSE );      /*put a new one on TO Area*/
+            rddMoveFields( pAreaFrom, pAreaTo, pFields ); /*move the data*/
+         }
+         if ( lRec == 0 || pFor )  /*not only one record? Or there's a For clause?*/
+            keepGoing = TRUE;
+         else
+            continue;
       }
-      toGo--;                     // one less to go
-      SELF_SKIP( pAreaFrom, 1L ); // get the next one
+
+      toGo--;                      /*one less to go*/
+      SELF_SKIP( pAreaFrom, 1L );  /*get the next one*/
     }
   }
 
-  s_pCurrArea = s_pCurrAreaSaved;  // set current WorkArea to initial state
+  s_pCurrArea = s_pCurrAreaSaved;  /*set current WorkArea to initial state*/
 
-  // Close the File
+  /*Close the File*/
   SELF_CLOSE( ( AREAP ) pAreaRelease->pArea );
   SELF_RELEASE( ( AREAP ) pAreaRelease->pArea );
   hb_xfree( pAreaRelease );

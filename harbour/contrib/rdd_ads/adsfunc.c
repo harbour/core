@@ -479,6 +479,34 @@ HB_FUNC( ADSSETAOF )
 
 }
 
+HB_FUNC( ADSGETFILTER )
+{
+   ADSAREAP pArea;
+   UNSIGNED8  pucFilter[HARBOUR_MAX_RDD_FILTER_LENGTH+1];
+   UNSIGNED8 *pucFilter2;
+   UNSIGNED16 pusLen = HARBOUR_MAX_RDD_FILTER_LENGTH;
+   UNSIGNED32 ulRetVal;
+
+   hb_retc( "" );
+   pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
+   if( pArea )
+   {
+      ulRetVal = AdsGetFilter( pArea->hTable, pucFilter, &pusLen );
+      if ( ulRetVal == AE_SUCCESS )
+      {
+         if ( pusLen > HARBOUR_MAX_RDD_FILTER_LENGTH )
+         {
+            pucFilter2 = (UNSIGNED8*) hb_xgrab(pusLen + 1);
+            ulRetVal = AdsGetFilter( pArea->hTable, pucFilter2, &pusLen );
+            if ( ulRetVal == AE_SUCCESS )
+               hb_retc( pucFilter2 );
+            hb_xfree( pucFilter2 );
+         }
+         else
+            hb_retc( pucFilter );
+      }
+   }
+}
 
 HB_FUNC( ADSENABLEENCRYPTION )
 {

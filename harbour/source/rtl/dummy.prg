@@ -42,7 +42,6 @@ FUNCTION ordCond()         ; RETURN NIL
 FUNCTION ordDescend()      ; RETURN .F.
 FUNCTION ordIsUnique()     ; RETURN .F.
 FUNCTION ordKeyAdd()       ; RETURN .F.
-FUNCTION ordKeyCount()     ; RETURN 0
 FUNCTION ordKeyDel()       ; RETURN .F.
 FUNCTION ordKeyGoto()      ; RETURN .F.
 FUNCTION ordKeyVal()       ; RETURN NIL
