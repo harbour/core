@@ -7763,6 +7763,14 @@ FUNCTION PP_RunText( sLines, bPP, aParams )
 RETURN xRet
 
 //--------------------------------------------------------------//
+PROCEDURE PP_InitStd()
+
+   InitRules()
+   InitResults()
+
+RETURN
+
+//--------------------------------------------------------------//
 #ifdef __HARBOUR__
    FUNCTION PP_CompileText( sLines )
    RETURN PP_CompileLine( sLines )
