@@ -450,55 +450,14 @@ HARBOUR CLASSMOD()
  */
 static HARBOUR ClassName( void )
 {
-   WORD  wClass = IS_ARRAY( stack.pBase + 1 ) ?
-         ( ( PBASEARRAY ) ( stack.pBase + 1 )->value.pBaseArray )->wClass : 0;
    PITEM pItemRef;
-
-                                                /* Variables by reference   */
-   if( ( ! wClass ) && IS_BYREF( stack.pBase + 1 ) )
-   {
+                                                
+   if( IS_BYREF( stack.pBase + 1 ) )            /* Variables by reference   */
       pItemRef = stack.pItems + ( stack.pBase + 1 )->value.wItem;
-      if( IS_ARRAY( pItemRef ) )
-         wClass = ( ( PBASEARRAY ) pItemRef->value.pBaseArray )->wClass;
-   }
-
-   if( wClass && ( wClass <= wClasses ) )
-      _retc( pClasses[ wClass - 1 ].szName );
    else
-   {
-      switch( ( stack.pBase )->wType & ~IT_BYREF )
-      {
-         case IT_ARRAY:
-              _retc( "ARRAY" );
-              break;
+      pItemRef = stack.pBase + 1;
 
-         case IT_BLOCK:
-              _retc( "BLOCK" );
-              break;
-
-         case IT_STRING:
-              _retc( "CHARACTER" );
-              break;
-
-         case IT_DATE:
-              _retc( "DATE" );
-              break;
-
-         case IT_LOGICAL:
-              _retc( "LOGICAL" );
-              break;
-
-         case IT_INTEGER:
-         case IT_LONG:
-         case IT_DOUBLE:
-              _retc( "NUMERIC" );
-              break;
-
-         default:
-              _retc( "NIL" );
-              break;
-      }
-   }
+   _retc( _GetClassName( pItemRef ) );
 }
 
 

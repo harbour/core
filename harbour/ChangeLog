@@ -1,3 +1,7 @@
+19990604-11:45 CET Eddie Runia
+  * source/rtl/classes.c
+    _GetClassName() called by ClassName()
+
 19990603-00:00 PST Ron Pinkas
   * hvm.c
     - Reverted VitualMachine() to use case switch rather than direct dynamic call for processing pcodes,
