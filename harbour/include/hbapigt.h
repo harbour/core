@@ -158,6 +158,7 @@ extern void   hb_gt_GetText( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHOR
 extern void   hb_gt_PutText( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbySrc );
 extern void   hb_gt_SetAttribute( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE byAttr );
 extern void   hb_gt_DispBegin( void );
+extern USHORT hb_gt_DispCount( void );
 extern void   hb_gt_DispEnd( void );
 extern BOOL   hb_gt_SetMode( USHORT uiRows, USHORT uiCols );
 extern BOOL   hb_gt_GetBlink( void );

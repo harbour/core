@@ -39,6 +39,8 @@
 
 #include "hbapigt.h"
 
+static USHORT s_uiDispCount;
+
 void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Init()"));
@@ -288,6 +290,8 @@ void hb_gt_DispBegin( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_DispBegin()"));
 
+   ++s_uiDispCount;
+
    /* TODO: Is there a way to change screen buffers?
             ie: can we write somewhere without it going to the screen
             and then update the screen from this buffer at a later time?
@@ -298,6 +302,8 @@ void hb_gt_DispBegin( void )
 void hb_gt_DispEnd()
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_DispEnd()"));
+
+   --s_uiDispCount;
 
    /* TODO: here we flush the buffer, and restore normal screen writes */
 }
@@ -359,4 +365,9 @@ void hb_gt_Tone( double dFrequency, double dDuration )
 char * hb_gt_Version( void )
 {
    return "Harbour Terminal: (template)"
+}
+
+USHORT hb_gt_DispCount()
+{
+   return s_uiDispCount;
 }

@@ -51,7 +51,7 @@ static USHORT s_uiMaxCol;
 static USHORT s_uiCursorStyle;
 static BOOL   s_bBlink;
 static int    s_iFilenoStdout;
-static USHORT s_uiDispBegin;
+static USHORT s_uiDispCount;
 
 void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
 {
@@ -60,7 +60,7 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
    HB_SYMBOL_UNUSED( iFilenoStdin );
    HB_SYMBOL_UNUSED( iFilenoStderr );
 
-   s_uiDispBegin = 0;
+   s_uiDispCount = 0;
 
    s_iRow = 0;
    s_iCol = 0;
