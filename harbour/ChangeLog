@@ -1,3 +1,10 @@
+19990804-00:35 EDT David G. Holm <dholm@jsd-llc.com>
+  * source/vm/hvm.c
+    ! Corrected Power() to set the correct number of decimal points.
+  * tests/working/build.bat
+    + Added checks for HB_ARCHITECTURE and HB_COMPILER.
+    + Modified to always build the target.
+
 19990804-00:40 EDT Paul Tucker <ptucker@sympatico.ca>
   * source/rtl/gt/gtwin.c
     * corrected screen buffer size for dispbegin
