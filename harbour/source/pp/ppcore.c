@@ -582,8 +582,7 @@ DEFINES * hb_pp_AddDefine( char * defname, char * value )
 
   if( stdef != NULL )
   {
-    if( stdef->value && strcmp(stdef->value, value ) != 0 )
-        hb_compGenWarning( hb_pp_szWarnings, 'I', HB_PP_WARN_DEFINE_REDEF, defname, NULL );
+    hb_compGenWarning( hb_pp_szWarnings, 'I', HB_PP_WARN_DEFINE_REDEF, defname, NULL );
 
     if( isNew )
     {
