@@ -90,7 +90,7 @@ CLASS TBrowse
    DATA stable        // Indicates if the TBrowse object is stable
 
    DATA aRedraw       // Array of logical items indicating, is appropriate row need to be redraw
-   DATA RelativePos   // Indicates record position relatively position of first record on the screen
+   DATA LastRetrieved // Position, relative to first row, of last retrieved row
    DATA lHeaders      // Internal variable which indicates whether there are column footers to paint
    DATA lFooters      // Internal variable which indicates whether there are column footers to paint
    DATA lRedrawFrame  // True if I need to redraw Headers/Footers
@@ -182,7 +182,7 @@ METHOD New(nTop, nLeft, nBottom, nRight) CLASS TBrowse
    ::HeadSep     := ""
    ::RowPos      := 1
    ::stable      := .F.
-   ::RelativePos := 1
+   ::LastRetrieved := 1
    ::aRedraw     := {}
    ::lHeaders    := .F.
    ::lFooters    := .F.
@@ -282,7 +282,7 @@ METHOD Down() CLASS TBrowse
       if Eval( ::SkipBlock, 1 ) != 0
          if ::RowPos < ::RowCount
             ::RowPos++
-            ::RelativePos++
+            ::LastRetrieved++
             ::Hilite()
          else
             n := ::nTop + iif( ::lHeaders, 1, 0 ) + iif( Empty( ::HeadSep ), 0, 1 )
@@ -291,11 +291,38 @@ METHOD Down() CLASS TBrowse
          endif
       else
          ::Hilite()
-         ::HitBottom := .t.
+         ::HitBottom := .T.
       endif
    endif
 
 return Self
+
+
+METHOD Up() CLASS TBrowse
+
+   local n
+
+   ::HitBottom := .F.
+   if !::HitTop
+      ::DeHilite()
+      if Eval( ::SkipBlock, -1 ) != 0
+         if ::RowPos > 1
+            ::RowPos--
+            ::LastRetrieved--
+            ::Hilite()
+         else
+            n := ::nTop + iif( ::lHeaders, 1, 0 ) + iif( Empty( ::HeadSep ), 0, 1 )
+            Scroll( n, ::nLeft, n + ::RowCount - 1, ::nRight, -1 )
+            ::RefreshCurrent()
+         endif
+      else
+         ::Hilite()
+         ::HitTop := .T.
+      endif
+   endif
+
+return Self
+
 
 METHOD End() CLASS TBrowse
 
@@ -318,12 +345,12 @@ METHOD GoBottom() CLASS TBrowse
    if (nToEnd := Eval(::SkipBlock, ::RowCount)) < ::RowCount
       ::RefreshAll()
       ::RowPos += nToEnd
-      ::RelativePos += nToEnd
+      ::LastRetrieved += nToEnd
    else
       if Eval( ::goBottomBlock ) != 0
          ::RefreshAll()
          ::RowPos := ::RowCount
-         ::RelativePos := ::RowCount
+         ::LastRetrieved := ::RowCount
       endif
    endif
 
@@ -336,7 +363,7 @@ METHOD GoTop() CLASS TBrowse
    if Eval( ::goTopBlock ) != 0
       ::RefreshAll()
       ::RowPos := 1
-      ::RelativePos := 1
+      ::LastRetrieved := 1
    endif
 
 return Self
@@ -434,7 +461,7 @@ METHOD PageDown() CLASS TBrowse
       if ( nDown := Eval( ::SkipBlock, ::RowCount )  ) != 0
          if ::RowPos + nDown < ::RowCount
             ::RowPos += nDown
-            ::RelativePos += nDown
+            ::LastRetrieved += nDown
             ::RefreshAll()
          else
             ::RefreshAll()
@@ -455,13 +482,13 @@ METHOD PageUp() CLASS TBrowse
       if ( nUp := Abs( Eval( ::SkipBlock, - ::RowCount )  ) ) != 0
          if nUp < ::RowCount
             ::RowPos := 1
-            ::RelativePos := 1
+            ::LastRetrieved := 1
             ::RefreshAll()
          else
             ::RefreshAll()
          endif
       else
-         ::HitTop := .t.
+         ::HitTop := .T.
       endif
    endif
 
@@ -569,7 +596,7 @@ return Self
 
 METHOD Stabilize() CLASS TBrowse
 
-   local iW, n, nRow, nCol, lDisplay := .t.
+   local iW, n, nRow, nCol, lDisplay := .T.
    local nWidth := ::nRight - ::nLeft + 1  // Visible width of the browse
    local nColsWidth := 0                   // Total width of visible columns plus ColSep
    local nColsVisible                      // Number of columns that fit on the browse width
@@ -730,20 +757,18 @@ METHOD Stabilize() CLASS TBrowse
 
    if nRow > ::RowCount          // if all rows are draw, hilite current
       if !::stable
-         Eval( ::SkipBlock, ::RowPos - ::RelativePos )
-         ::RelativePos := ::RowPos
+         Eval( ::SkipBlock, ::RowPos - ::LastRetrieved )
+         ::LastRetrieved := ::RowPos
          ::HitBottom := .F.
-         ::stable := .t.
+         ::stable := .T.
       endif
       // NOTE: DBU relies upon current cell being reHilite()d even if it is already stable
       ::HiLite()
       return .t.
    else             // redraw a row
-      if nRow != ::RelativePos
-         if lDisplay := ( Eval( ::SkipBlock, nRow - ::RelativePos ) != 0 )
-            ::RelativePos := nRow
-         else
-            ::HitBottom := .T.
+      if nRow != ::LastRetrieved
+         if lDisplay := Eval( ::SkipBlock, nRow - ::LastRetrieved ) != 0
+            ::LastRetrieved := nRow
          endif
       endif
 
@@ -766,6 +791,7 @@ METHOD Stabilize() CLASS TBrowse
             SetPos( Row(), nCol + ::aColumns[ n ]:Width )
 
          else
+            // Clear cell
             DispOut( Space( ::aColumns[ n ]:Width ), ::ColorSpec )
 
          endif
@@ -785,30 +811,6 @@ METHOD Stabilize() CLASS TBrowse
 
 return .f.
 
-METHOD Up() CLASS TBrowse
-
-   local n
-
-   ::HitBottom := .F.
-   if !::HitTop
-      ::DeHilite()
-      if Eval( ::SkipBlock, -1 ) != 0
-         if ::RowPos > 1
-            ::RowPos--
-            ::Hilite()
-            ::RelativePos--
-         else
-            n := ::nTop + iif( ::lHeaders, 1, 0 ) + iif( Empty( ::HeadSep ), 0, 1 )
-            Scroll( n, ::nLeft, n + ::RowCount - 1, ::nRight, -1 )
-            ::RefreshCurrent()
-         endif
-      else
-         ::Hilite()
-         ::HitTop := .t.
-      endif
-   endif
-
-return Self
 
 METHOD ColorRect( aRect, aRectColor ) CLASS TBrowse
 
