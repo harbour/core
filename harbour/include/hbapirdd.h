@@ -354,6 +354,7 @@ typedef struct
    PHB_ITEM itmOrder;     /* Name or Number of the Order */
    PHB_ITEM itmCobExpr;   /* Code block containing the KEY expression */
    PHB_ITEM itmResult;    /* Operation result */
+   PHB_ITEM itmNewVal;    /* New Setting   */
    BOOL     fAllTags;     /* Open all tags */
 } DBORDERINFO;
 

@@ -49,6 +49,15 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*
+ * The following functions are added by
+ *       Horacio Roldan <harbour_ar@yahoo.com.ar>
+ *
+ * ordKeyVal()
+ * ordKeyAdd()
+ * ordKeyDel()
+ *
+ */
 
 #include <ctype.h>
 #include "hbvm.h"
@@ -2322,7 +2331,7 @@ HB_FUNC( ORDCONDSET )
 
       if( lpdbOrdCondInfo->itmCobWhile )
          lpdbOrdCondInfo->fRest = TRUE;
-      if( lpdbOrdCondInfo->lNextCount || lpdbOrdCondInfo->lRecno || 
+      if( lpdbOrdCondInfo->lNextCount || lpdbOrdCondInfo->lRecno ||
                lpdbOrdCondInfo->fRest || lpdbOrdCondInfo->fUseCurrent )
          lpdbOrdCondInfo->fAll = FALSE;
 
@@ -2481,7 +2490,6 @@ HB_FUNC( ORDKEYNO )
    }
    else
       hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, "ORDKEYNO" );
-
 }
 
 HB_FUNC( ORDKEYVAL )
@@ -2499,6 +2507,48 @@ HB_FUNC( ORDKEYVAL )
    else
       hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, "ORDKEYVAL" );
 }
+
+HB_FUNC( ORDKEYADD )
+{
+   DBORDERINFO pOrderInfo;
+
+   if( s_pCurrArea )
+   {
+      pOrderInfo.itmOrder = hb_param( 1, HB_IT_STRING );
+      if( !pOrderInfo.itmOrder )
+         pOrderInfo.itmOrder = hb_param( 1, HB_IT_NUMERIC );
+      pOrderInfo.atomBagName = hb_param( 2, HB_IT_STRING );
+      /* Either or both may be NIL */
+      pOrderInfo.itmNewVal = hb_param( 3 , HB_IT_ANY );
+      pOrderInfo.itmResult = hb_itemPutNL( NULL, 0 );
+      SELF_ORDINFO( ( AREAP ) s_pCurrArea->pArea, DBOI_KEYADD, &pOrderInfo );
+      hb_itemReturn(  pOrderInfo.itmResult );
+      hb_itemRelease( pOrderInfo.itmResult );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, "ORDKEYADD" );
+}
+HB_FUNC( ORDKEYDEL )
+{
+   DBORDERINFO pOrderInfo;
+
+   if( s_pCurrArea )
+   {
+      pOrderInfo.itmOrder = hb_param( 1, HB_IT_STRING );
+      if( !pOrderInfo.itmOrder )
+         pOrderInfo.itmOrder = hb_param( 1, HB_IT_NUMERIC );
+      pOrderInfo.atomBagName = hb_param( 2, HB_IT_STRING );
+      /* Either or both may be NIL */
+      pOrderInfo.itmNewVal = hb_param( 3 , HB_IT_ANY );
+      pOrderInfo.itmResult = hb_itemPutNL( NULL, 0 );
+      SELF_ORDINFO( ( AREAP ) s_pCurrArea->pArea, DBOI_KEYDELETE, &pOrderInfo );
+      hb_itemReturn(  pOrderInfo.itmResult );
+      hb_itemRelease( pOrderInfo.itmResult );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, "ORDKEYDEL" );
+}
+
 #endif
 
 HB_FUNC( ORDLISTADD )
@@ -2522,7 +2572,10 @@ HB_FUNC( ORDLISTADD )
       pOrderInfo.itmOrder  = hb_param( 2, HB_IT_STRING );
       if( !pOrderInfo.atomBagName )
       {
-         hb_errRT_DBCMD( EG_ARG, EDBCMD_REL_BADPARAMETER, NULL, "ORDLISTADD" );
+         if ( hb_parinfo(1) != HB_IT_NIL )
+            hb_errRT_DBCMD( EG_ARG, EDBCMD_REL_BADPARAMETER, NULL, "ORDLISTADD" );
+         else
+            hb_itemRelease( pOrderInfo.itmResult );
          return;
       }
       SELF_ORDLSTADD( ( AREAP ) s_pCurrArea->pArea, &pOrderInfo );
