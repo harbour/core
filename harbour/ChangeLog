@@ -1,3 +1,13 @@
+20000505-19:26 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/compiler/genobj32.c
+     * 4 bytes alignment compatible.
+
+   * source/vm/borinit.c
+     * 4 bytes aligment compatible.
+
+   * makefile.bc
+     + borinit.c added
+
 20000505-19:15 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *include/hbapi.h
@@ -14,11 +24,11 @@
     *include/hbcomp.h
     *source/compiler/harbour.c
 	*moved declaration of hb_compVariableGetPos into the header file
-	
+
     *source/compiler/harbour.c
 	* fixed generation of line number pcode at the beginning of
 	a function
-	
+
     *source/compiler/hbpcode.c
 	* fixed non-standard escape sequence "\]" (gcc warnings)
 	* fixed incorrect number of parameters passed to sprintf
