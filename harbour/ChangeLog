@@ -7,6 +7,11 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+2002-02-26 21:50 UTC+0100 Tomaz Zupan <tomaz.zupan@orpo.si>
+  * include/hbapi.h
+    * Added newline at the end to clear gcc warning
+
+2002-02-26 14:15 UTC-0500 David G. Holm <dholm@jsd-llc.com>
   * source/common/hbstr.c
     ! Fix bug in hb_strAt when the source string matches more than one
       character (but less than all) in the search string. As reported
