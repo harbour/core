@@ -71,7 +71,7 @@ HB_FUNC( VALTYPE )
    hb_retc( hb_itemTypeStr( hb_param( 1, HB_IT_ANY ) ) );
 }
 
-HB_FUNC( IS_VARBYREF )
+HB_FUNC( HB_ISBYREF )
 {
    PHB_ITEM pItem;
 
