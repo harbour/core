@@ -168,23 +168,22 @@ static int convert_seek_flags( int flags )
         return result_flags;
 }
 
-static int convert_create_flags( int flags )
+static convert_create_flags( int flags, int *result_flags, int *result_pmode )
 {
         /* by default FC_NORMAL is set */
-        int result_flags=S_IWUSR;
 
-        result_flags |= O_BINARY | O_CREAT | O_TRUNC | O_RDWR;
+        *result_flags = O_BINARY | O_CREAT | O_TRUNC | O_RDWR;
+        *result_pmode = S_IWUSR;
 
         if( flags & FC_READONLY )
-                result_flags = result_flags & ~(S_IWUSR);
+                *result_pmode = S_IREAD;
 
         if( flags & FC_HIDDEN )
-                result_flags |= 0;
+                *result_flags |= 0;
 
         if( flags & FC_SYSTEM )
-                result_flags |= 0;
+                *result_flags |= 0;
 
-        return result_flags;
 }
 
 #endif
@@ -211,9 +210,13 @@ FHANDLE hb_fsOpen   ( BYTEP name, USHORT flags )
 FHANDLE hb_fsCreate ( BYTEP name, USHORT flags )
 {
         FHANDLE handle;
+        int oflag;
+        int pmode;
+
 #if defined(HAVE_POSIX_IO)
         errno = 0;
-        handle = open(name,convert_create_flags(flags));
+        convert_create_flags( flags, &oflag, &pmode );
+        handle = open(name,oflag,pmode);
         last_error = errno;
 #else
         handle = FS_ERROR;

@@ -1,3 +1,8 @@
+19990612-13:45 CET Eddie Runia
+  * source/rtl/files.c
+    read-only file creation resolved. The permission should be passed as
+    the third parameter to open.
+
 19990612-11:22 CET Patrick Mast
   * Release of Build #26
   * version.h, updated build version
