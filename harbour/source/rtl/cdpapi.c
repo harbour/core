@@ -55,7 +55,7 @@
 
 #define HB_CDP_MAX_ 64
 
-static HB_CODEPAGE  s_en_codepage = { "EN",0,NULL,NULL,0,0,0,NULL,NULL,NULL,NULL,0,NULL };
+static HB_CODEPAGE  s_en_codepage = { "EN",0,NULL,NULL,0,0,0,0,NULL,NULL,NULL,NULL,0,NULL };
 static PHB_CODEPAGE s_cdpList[ HB_CDP_MAX_ ];
 PHB_CODEPAGE s_cdpage = &s_en_codepage;
 

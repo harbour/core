@@ -8,6 +8,30 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-05-26 15:50 UTC+0200 Przemyslaw Czerpak <druzus@polbox.com>
+  * harbour/source/rtl/cdpapi.c
+    * small correction in s_en_codepage = { ... }
+
+  + harbour/source/codepage/cdpplwin.c
+  * harbour/source/codepage/Makefile
+    + new Polish codepage PLWIN - CP1250 based
+
+  * harbour/source/rtl/gt.c
+    + new .prg function HB_GT_VERSION() which returns GT name.
+
+  * harbour/source/rtl/seconds.c
+    + new function added SECONDSCPU(n) which reports how many CPU and/or
+      system seconds have elapsed since the beginning of the program execution.
+      n == 1  utime  -> user CPU time of the current process
+      n == 2  stime  -> system CPU time behalf of the current process
+      n == 3  u + s  -> sum of utime + stime (default)
+      n == 11 cutime -> sum of the user CPU time of the current + child process
+      n == 12 cstime -> sum of the system CPU time of the current + child process
+      n == 13 cu+cs  -> sum of cutime + cstime
+      I have to ask someone similar with Windows to add support for this
+      function. I found 'GetProcessTimes' in WIN API which can be used for
+      NT based platforms but I cannot find anything for WIN 9X/ME.
+
 2003-05-22 23:45 UTC-0400 David G. Holm <dholm@jsd-llc.com>
   * contrib/rdd_ads/ads1.c
   * contrib/rdd_ads/adsfunc.c

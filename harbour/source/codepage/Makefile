@@ -5,14 +5,15 @@
 ROOT = ../../
 
 C_SOURCES=\
-        cdpesdos.c    \
-        cdpeswin.c    \
-        cdpgedos.c    \
+	cdpesdos.c    \
+	cdpeswin.c    \
+	cdpgedos.c    \
 	cdpgewin.c    \
 	cdpla850.c    \
 	cdppl852.c    \
 	cdppliso.c    \
 	cdpplmaz.c    \
+	cdpplwin.c    \
 	cdpru866.c    \
 	cdprukoi.c    \
 	cdpruwin.c
