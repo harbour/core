@@ -1,3 +1,7 @@
+19990523-14:30 CET Eddie Runia
+  * tools.b16, tools.b32, bldtls32, bldtools.bat
+    send to heaven
+
 19990523-14:05 CET Eddie Runia
   * source/rtl/files.c
     #include added for Borland
