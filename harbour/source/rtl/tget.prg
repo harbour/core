@@ -50,10 +50,10 @@ CLASS TGet
    METHOD VarGet()
    METHOD VarPut()
 
-   METHOD end()        INLINE iif( ::hasFocus, (::pos := ::nMaxLen, ::Clear := .f.),)
-   METHOD home()       INLINE iif( ::hasFocus, (::pos := 1,::Clear := .f.),)
-   MESSAGE left()      METHOD _left()
-   MESSAGE right     METHOD _right()
+   METHOD End()
+   METHOD Home()
+   MESSAGE Left()   METHOD _left()
+   MESSAGE Right()  METHOD _right()
    METHOD toDecPos()
    METHOD WordLeft()
    METHOD WordRight()
@@ -194,6 +194,30 @@ METHOD Display() CLASS TGet
    SetCursor( nOldCursor )
 
 return Self
+
+//---------------------------------------------------------------------------//
+
+METHOD End() CLASS TGet
+
+   if ::HasFocus
+      ::Pos := ::nMaxLen
+      ::Clear := .f.
+      SetPos( ::Row, ::Col + ::Pos - 1 )
+   endif
+
+return nil
+
+//---------------------------------------------------------------------------//
+
+METHOD Home() CLASS TGet
+
+   if ::HasFocus
+      ::Pos := 1
+      ::Clear := .f.
+      SetPos( ::Row, ::Col + ::Pos - 1 )
+   endif
+
+return nil
 
 //---------------------------------------------------------------------------//
 
