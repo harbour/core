@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-07-08 14:25 UTC-0300 Antonio Carlos Pantaglione <toninho@fwi.com.br>
+  * contrib/rdd_ads/ads1.c
+    ! Fixed: deleted() return TRUE when is at eof()
+
 2003-07-08 11:27 UTC+0300 Chen Kedem <niki@actcom.co.il>
   * doc/en/lang.txt
     + Added the following to HB_LANGSELECT() list of supported ID's:

@@ -952,8 +952,14 @@ static ERRCODE adsDeleted( ADSAREAP pArea, BOOL * pDeleted )
 
    HB_TRACE(HB_TR_DEBUG, ("adsDeleted(%p, %p)", pArea, pDeleted));
 
-   AdsIsRecordDeleted  ( pArea->hTable, &bDeleted);
-   *pDeleted = (BOOL) bDeleted;
+   if ( pArea->fEof )
+   {
+      *pDeleted = FALSE;                /* ADS by default returns True at eof */
+   }else
+   {
+      AdsIsRecordDeleted  ( pArea->hTable, &bDeleted);
+      *pDeleted = (BOOL) bDeleted;
+   }
    return SUCCESS;
 }
 
