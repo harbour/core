@@ -1,3 +1,7 @@
+20000322-00:05 EST Paul Tucker <ptucker@sympatico.ca>
+   + doc/en/diskspac.txt
+     * doc for DiskSpace(), DiskFree(), DiskUsed() and DiskFull()
+
 20000321-06:57 GMT-8 Brian Hays <bhays@abacuslaw.com>
    * doc/harbext.txt
      + added SToD()

@@ -1,0 +1,175 @@
+/*
+ * $Id$
+ */
+
+/*
+ * The following are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2000 Paul Tucker <ptucker@sympatico.ca>
+ *    Documentation for: DISKSPACE() and related functions
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      DISKSPACE()
+ *  $CATEGORY$
+ *      Low level disk information
+ *  $ONELINER$
+ *      Get the amount of space available on a disk
+ *  $SYNTAX$
+ *      DISKSPACE( [<nDrive>] [, <nType>] ) --> nDiskbytes
+ *  $ARGUMENTS$
+ *      <nDrive> The number of the drive you are requesting info on where 1 = A,
+ *      2 = B, etc. For 0 or no parameter, DiskSpace will operate on the current
+ *      drive.  The default is 0
+ *      <nType> The type of space being requested.  The default is HB_FS_AVAIL.
+ *  $RETURNS$
+ *      <nDiskBytes> The number of bytes on the requested disk that match the
+ *      requested type.
+ *  $DESCRIPTION$
+ *      By default, this function will return the number of bytes of amount of
+ *      free space on the current drive that is available to the user
+ *      requesting the information.
+ *
+ *      There are 4 types of information available:
+ *
+ *       HB_FS_AVAIL    The amount of space available to the user making the
+ *                      request.  This value could be less than HB_FS_FREE if
+ *                      disk quotas are supported by the O/S in use at runtime,
+ *                      and disk quotas are in effect.  Otherwise, the value
+ *                      will be equal to that returned for HB_FS_FREE.
+ *       HB_FS_FREE     The actual amount of free diskspace on the drive.
+ *       HB_FS_USED     The number of bytes in use on the disk.
+ *       HB_FS_TOTAL    The total size of the disk.
+ *
+ *      If information is requested on a removeable disk that is not available,
+ *      the O/S may request that a disk be inserted in the drive, otherwise the
+ *      return value will be 0.0
+ *  $EXAMPLES$
+ *      ? "You can use : " +Str( DiskSpace() ) + " bytes " +;
+ *        "Out of a total of " + Str( DiskSpace(0,HB_FS_TOTAL) )
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      CA-Clipper will return an integer value which limits it's usefulness to
+ *      drives less than 2 gigabytes.  The Harbour version returns a floating
+ *      point value.
+ *      <nType> is a Harbour extension.
+ *  $SEEALSO$
+ *      DISKFREE(),DISKUSED(),DISKFULL(),tests\tstdspac.prg
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      DISKFREE()
+ *  $CATEGORY$
+ *      Low level disk information
+ *  $ONELINER$
+ *      Get the amount of space on a disk
+ *  $SYNTAX$
+ *      DISKFREE( [<nDrive>] ) --> nDiskbytes
+ *  $ARGUMENTS$
+ *      <nDrive> The number of the drive you are requesting info on where 1 = A,
+ *      2 = B, etc. For 0 or no parameter, DiskFree will operate on the current
+ *      drive.  The default is 0
+ *  $RETURNS$
+ *      <nDiskBytes> The number of bytes of space available on the requested
+ *      disk
+ *  $DESCRIPTION$
+ *      This function will return the number of bytes of free space on the
+ *      current, or requested drive.
+ *
+ *      Using DiskFree(0) is the same as calling DiskSpace(0,HB_FS_FREE)
+ *
+ *      If information is requested on a removeable disk that is not available,
+ *      the O/S may request that a disk be inserted in the drive, otherwise the
+ *      return value will be 0.0
+ *  $EXAMPLES$
+ *      ? "There is : " +Str( DiskFree() ) + " bytes " +;
+ *        "Out of a total of " + Str( DiskSpace(0,HB_FS_TOTAL) )
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *       - unknown -
+ *  $SEEALSO$
+ *      DISKSPACE(),DISKUSED(),DISKFULL(),tests\tstdspac.prg
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      DISKUSED()
+ *  $CATEGORY$
+ *      Low level disk information
+ *  $ONELINER$
+ *      Get the amount of space in use on a disk
+ *  $SYNTAX$
+ *      DISKUSED( [<nDrive>] ) --> nDiskbytes
+ *  $ARGUMENTS$
+ *      <nDrive> The number of the drive you are requesting info on where 1 = A,
+ *      2 = B, etc. For 0 or no parameter, DiskUsed will operate on the current
+ *      drive.  The default is 0
+ *  $RETURNS$
+ *      <nDiskBytes> The number of bytes in use on the requested disk
+ *  $DESCRIPTION$
+ *      This function will return the number of bytes in use on the
+ *      current, or requested drive.
+ *
+ *      Using DiskUsed(0) is the same as calling DiskSpace(0,HB_FS_USED)
+ *
+ *      If information is requested on a removeable disk that is not available,
+ *      the O/S may request that a disk be inserted in the drive, otherwise the
+ *      return value will be 0.0
+ *  $EXAMPLES$
+ *      ? "There is : " +Str( DiskUsed() ) + " bytes " +;
+ *        "Out of a total of " + Str( DiskSpace(0,HB_FS_USED) )
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      - unknown -
+ *  $SEEALSO$
+ *      DISKSPACE(),DISKFREE(),DISKFULL(),tests\tstdspac.prg
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      DISKFULL()
+ *  $CATEGORY$
+ *      Low level disk information
+ *  $ONELINER$
+ *      Get the total amount of space on a disk
+ *  $SYNTAX$
+ *      DISKFULL( [<nDrive>] ) --> nDiskbytes
+ *  $ARGUMENTS$
+ *      <nDrive> The number of the drive you are requesting info on where 1 = A,
+ *      2 = B, etc. For 0 or no parameter, DiskUsed will operate on the current
+ *      drive.  The default is 0
+ *  $RETURNS$
+ *      <nDiskBytes> The total number of bytes on the requested disk
+ *  $DESCRIPTION$
+ *      This function will return the number of bytes on the
+ *      current, or requested drive.
+ *
+ *      Using DiskFull(0) is the same as calling DiskSpace(0,HB_FS_TOTAL)
+ *
+ *      If information is requested on a removeable disk that is not available,
+ *      the O/S may request that a disk be inserted in the drive, otherwise the
+ *      return value will be 0.0
+ *  $EXAMPLES$
+ *      ? "There is : " +Str( DiskUsed() ) + " bytes " +;
+ *        "Out of a total of " + Str( DiskFull() )
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      - unknown -
+ *  $SEEALSO$
+ *      DISKSPACE(),DISKFREE(),DISKUSED(),tests\tstdspac.prg
+ *  $END$
+ */
+
