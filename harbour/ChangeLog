@@ -8,6 +8,13 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-10-16 13:17 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+  * source/rtl/round.c
+    ! hb_numRound() completely redesigned
+      Source code provided by Vicente Aranzana.
+
+    Vicente Aranzana kindly requests to have CVS developer access rights.
+
 2003-10-10 10:00 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
   * source/rtl/round.c
     ! changes on round() function, proposed by Vicente Aranzana.
