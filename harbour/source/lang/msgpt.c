@@ -78,7 +78,7 @@ static HB_LANG s_lang =
    
       /* CA-Cl*pper compatible natmsg items */
    
-      "Database Files    # Records    Last Update     Size",
+      "Banco de Dados    # Registro    Ult. Atuali.    Tam.",
       "Voce quer mais testes?",
       "Pagina No.",
       "** Subtotal **",

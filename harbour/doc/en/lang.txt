@@ -1,0 +1,129 @@
+/*
+ * $Id$
+ */
+
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
+ *    Documentation for: HB_LANGSELECT(),HB_LANGNAME()
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      HB_LANGSELECT()
+ *  $CATEGORY$
+ *      Nation
+ *  $ONELINER$
+ *      Select a specific nation message module 
+ *  $SYNTAX$
+ *      HB_LANGSELECT(<cNewLang>)   --> cOldLang
+ *  $ARGUMENTS$
+ *      <cNewLang>  The ID of the country language module
+ *      The possible values for <cNewLang> is below as is defined in the
+ *      Lang library.
+ *
+ *      <table>
+ *      <cNewLang>   Language     Codepage
+ *      PT           Portuguese   850
+ *      EN           English      437
+ *      ES           Spanish      850
+ *      CA           Catalan      850
+ *      EU           Basque       850
+ *      FR           French       850
+ *      GL           Galician     850
+ *      HE862        Hebrew       862
+ *      HEWIN        Hebrew       1255
+ *      HU852        Hungarian    852
+ *      HUCWI        Hungarian    CWI-2
+ *      HUWIN        Hungarian    Windows-1
+ *      IS85         Icelandic    850
+ *      RO           Romanian     852
+ *      </table>
+ *  $RETURNS$
+ *      <cOldLang>   The old language indentifier
+ *  $DESCRIPTION$
+ *      This function set a default language module for date/month names,
+ *      internal warnigs,NatMsg messages and internal errors. When a
+ *      Lang ID is selected all messages will be output as the current lang
+ *      selected until another one is selected or the program ends.
+ *  $EXAMPLES$
+ *      REQUEST HB_LANG_PT
+ *      REQUEST HB_LANG_RO
+ *      REQUEST HB_LANG_ES
+ *      FUNCTION MAIN()
+ *      HB_LANGSELECT('PT')       // Default language is now Portuguese
+ *      ? CDOW(DATE()) //Segunda-feira
+ *      ? 'Old language id selected is ",HB_LANGSELECT()   // PT
+ *      HB_LANGSELECT('RO')       // Default language is now Romanian
+ *      ? CMONTH(DATE()) // Mai
+ *      ? 'Old language id selected is ",HB_LANGSELECT()   // RO
+ *      HB_LANGSELECT('ES')       // Default language is now Romanian
+ *      ? CMONTH(DATE()) //       Mayo
+ *      ? CDOW(DATE()) //  Lunes
+ *
+ *    Return nil
+ *  $TESTS$
+ *      See tests/langapi.prg
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is a Harbour Extension.
+ *  $PLATFORMS$
+ *      Dos,Win32,OS/2
+ *  $FILES$
+ *      Libraty is rtl
+ *  $SEEALSO$
+ *      HB_LANGNAME(),NATIONMSG()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      HB_LANGNAME()
+ *  $CATEGORY$
+ *      Nation
+ *  $ONELINER$
+ *      Return the Name of the Current Language module in USE
+ *  $SYNTAX$
+ *      HB_LANGNAME()   --> cLangName
+ *  $ARGUMENTS$
+ *      None.
+ *  $RETURNS$
+ *      <cLangName>  Name of the Current language in use
+ *  $DESCRIPTION$
+ *      This function return the current name of the language module in use.     
+ *  $EXAMPLES$
+  *      REQUEST HB_LANG_PT
+ *      REQUEST HB_LANG_RO
+ *      REQUEST HB_LANG_ES
+ *      FUNCTION MAIN()
+ *      HB_LANGSELECT('PT')       // Default language is now Portuguese
+ *      ? CDOW(DATE()) //Segunda-feira
+ *      ? 'Current language is ",HB_LANGNAME() //Portuguese
+ *      ? 'Old language id selected is ",HB_LANGSELECT()   // PT
+ *      HB_LANGSELECT('RO')       // Default language is now Romanian
+ *      ? CMONTH(DATE()) // Mai
+ *      ? 'Old language id selected is ",HB_LANGSELECT()   // RO
+ *      HB_LANGSELECT('ES')       // Default language is now Romanian
+ *      ? 'Current language is ",HB_LANGNAME() //Spanish
+ *      ? CMONTH(DATE()) //       Mayo
+ *      ? CDOW(DATE()) //  Lunes
+ *  $TESTS$
+ *      See tests/langapi.prg
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is a Harbour Extension
+ *  $PLATFORMS$
+ *      Dos,Win32,OS/2
+ *  $FILES$
+ *      Library is lang
+ *  $SEEALSO$
+ *      HB_LANGSELECT(),NATIONMSG()
+ *  $END$
+ */

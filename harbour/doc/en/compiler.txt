@@ -122,13 +122,20 @@
  *          variables (private or public variables). If this switch is not
  *          used then the scope of such variables is checked at runtime.   </par>
  *
- *      /w[<level>]      set warning level number (0..3, default 1)   </par>
+ *      /w[<level>]      set warning level number (0..4, default 1)   </par>
  *      -----------------   </par>
  *
  *          /w0         - no warnings   </par>
  *          /w or /w1   - Clipper compatible warnings   </par>
  *          /w2         - some useful warnings missed in Clipper   </par>
- *          /w3         - warnings generated for Harbour language extensions   </par>
+ *          /w3         - warnings generated for Harbour language extensions and
+ *			  also Enables strong type checking but only warns against
+ *			  declared types, or types which may be calculated at compile
+ *			  time   </par>
+ *          /w4         -Enables warning about suspicious operations, which means if you 
+ *		          mix undeclared types, or types which can not be calculated at 
+ *                        compile time,together with declared types, a warning will be 
+ *                        generated.  </par>
  *
  *      /x[<prefix>]     set symbol init function name prefix (for .c only)   </par>
  *      -----------------   </par>
