@@ -494,7 +494,9 @@ return Self
 
 METHOD KillFocus() CLASS Get
 
-   ::Assign()
+   if ::lEdit
+      ::Assign()
+   endif
 
    ::hasfocus := .f.
    ::buffer   := ::PutMask( )
@@ -540,9 +542,11 @@ METHOD Untransform( cBuffer ) CLASS Get
 
    DEFAULT cBuffer TO ::buffer
 
+/*
    if !::lEdit
       return ::VarGet()
    endif
+*/
 
    do case
    case ::type == "C"
@@ -1144,15 +1148,8 @@ METHOD PutMask( xValue, lEdit ) CLASS Get
       endif
    endif
 
-   if ::type == "C" .and. ValType( ::Original ) == "C"
-      for nFor := 1 to ::nMaxLen
-         if !::IsEditable( nFor )
-            nNoEditable++
-         else
-            nNoEditable := 0
-         endif
-      next
-      cBuffer += SubStr( ::Original, ::nMaxLen - nNoEditable + 1 )
+   if ::type == "C"
+      cBuffer += SubStr( ::VarGet(), ::nMaxLen + 1 )
    endif
 
    if ::type == "N"
