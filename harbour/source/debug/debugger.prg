@@ -88,6 +88,9 @@ procedure __dbgEntry( uParam1, uParam2, uParam3 )  // debugger entry point
               else
                  if ! s_oDebugger:lTrace
                     s_oDebugger:ShowCode( cModuleName )
+                 else
+                    ASize( s_oDebugger:aCallStack, Len( s_oDebugger:aCallStack ) + 1 )
+                    AIns( s_oDebugger:aCallStack, 1 )
                  endif
                  s_oDebugger:LoadVars()
               endif
@@ -141,11 +144,11 @@ procedure __dbgEntry( uParam1, uParam2, uParam3 )  // debugger entry point
                  return
               endif
               if s_oDebugger:lTrace
-                 if s_oDebugger:lStopTrace
+                 if s_oDebugger:nTraceLevel < Len( s_oDebugger:aCallStack )
+                    return
+                 else
                     s_oDebugger:lTrace = .f.
-                    s_oDebugger:lStopTrace = .f.
                  endif
-                 return
               endif
               if s_oDebugger:lGo
                  s_oDebugger:lGo := ! s_oDebugger:IsBreakPoint( uParam1 )
@@ -171,9 +174,6 @@ procedure __dbgEntry( uParam1, uParam2, uParam3 )  // debugger entry point
          if s_oDebugger != nil
             s_oDebugger:EndProc()
             s_oDebugger:LoadVars()
-            if s_oDebugger:lTrace
-               s_oDebugger:lStopTrace = .t.   // reset trace mode on next dbgentry
-            endif
          endif
    endcase
 
@@ -193,7 +193,7 @@ CLASS TDebugger
    DATA   cSearchString, cPathForFiles, cSettingsFileName
    DATA   nTabWidth, nSpeed
    DATA   lShowPublics, lShowPrivates, lShowStatics, lShowLocals, lAll
-   DATA   lStopTrace
+   DATA   nTraceLevel
 
    METHOD New()
    METHOD Activate( cModuleName )
@@ -269,7 +269,8 @@ CLASS TDebugger
 
    METHOD ToggleBreakPoint()
 
-   METHOD Trace() INLINE ::lTrace := .t., __Keyboard( Chr( 255 ) ) //forces a Step()
+   METHOD Trace() INLINE ::lTrace := .t., ::nTraceLevel := Len( ::aCallStack ),;
+                         __Keyboard( Chr( 255 ) ) //forces a Step()
 
    METHOD ViewSets()
    METHOD WndVarsLButtonDown( nMRow, nMCol )
@@ -316,7 +317,6 @@ METHOD New() CLASS TDebugger
    ::lAnimate          := .f.
    ::lEnd              := .f.
    ::lTrace            := .f.
-   ::lStopTrace        := .f.
    ::aBreakPoints      := {}
    ::aCallStack        := {}
    ::lGo               := .f.
@@ -696,7 +696,7 @@ METHOD EndProc() CLASS TDebugger
    if Len( ::aCallStack ) > 1
       ADel( ::aCallStack, 1 )
       ASize( ::aCallStack, Len( ::aCallStack ) - 1 )
-      if ::oBrwStack != nil
+      if ::oBrwStack != nil .and. ! ::lTrace
          ::oBrwStack:RefreshAll()
       endif
    endif
