@@ -1,3 +1,10 @@
+2001-12-05 14:08 GTM+1 Antonio Linares <alinares@fivetech.com>
+   * source/vm/eval.c
+     ! hb_evalBlock0() and hb_evalBlock1() functions added
+
+   * include/hbundoc.api
+     ! hb_evalBlock0() and hb_evalBlock1() defines added
+
 2001-12-05 12:31 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    + source/vm/evalhb.c
