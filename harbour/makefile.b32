@@ -6,13 +6,13 @@
 
 # avoid optimizer bug, when using compiler version 4.0
 !if $d(B40)
-   BCC_OPT =
+   BCC_OPT = -v
 !else
    BCC_OPT = -O2
 !endif
 
 .path.asm = source\vm
-.path.c   = source\compiler;source\vm;source\rtl;source\tools;source\rtl\gt;source\rtl\natmsg;source\pp;source\rdd
+.path.c   = source\compiler;source\common;source\vm;source\rtl;source\tools;source\rtl\gt;source\rtl\natmsg;source\pp;source\rdd
 .path.h   = include
 .path.l   = source\compiler
 .path.y   = source\compiler
@@ -26,12 +26,12 @@ PROJECT: harbour.exe harbour.lib lib\b32\terminal.lib lib\b32\termwin.lib
 harbour.lib : achoice.obj adir.obj alert.obj arrays.obj \
               asort.obj binnum.obj browdb.obj browse.obj \
               classes.obj cmdarg.obj codebloc.obj copyfile.obj \
-              dates.obj dates2.obj datesx.obj dbstrux.obj \
+              dates.obj dates2.obj datesx.obj dbedit.obj dbstrux.obj \
               debug.obj debugger.obj descend.obj devoutp.obj \
               dir.obj dircmd.obj do.obj dynsym.obj dummy.obj \
               environ.obj errorapi.obj errorsys.obj extend.obj \
               fieldbl.obj fileread.obj filesys.obj fm.obj \
-              harbinit.obj hardcr.obj hb_f.obj hvm.obj \
+              harbinit.obj hardcr.obj hbtrace.obj hb_f.obj hvm.obj \
               initsymb.obj inkey.obj input.obj isprint.obj itemapi.obj \
               langapi.obj mainstd.obj mainwin.obj math.obj \
               mathx.obj memofile.obj memoline.obj memvars.obj \
@@ -62,6 +62,7 @@ copyfile.obj : copyfile.c extend.h hbdefs.h
 dates.obj    : dates.c    extend.h hbdefs.h
 dates2.obj   : dates2.c   extend.h hbdefs.h
 datesx.obj   : datesx.c   extend.h hbdefs.h
+dbedit.obj   : dbedit.c   extend.h hbdefs.h
 dbstrux.obj  : dbstrux.c  extend.h hbdefs.h
 debug.obj    : debug.c    extend.h hbdefs.h
 debugger.obj : debugger.c extend.h hbdefs.h
@@ -83,6 +84,7 @@ filesys.obj  : filesys.c  extend.h hbdefs.h
 fm.obj       : fm.c       extend.h hbdefs.h
 harbinit.obj : harbinit.c extend.h hbdefs.h
 hardcr.obj   : hardcr.c   extend.h hbdefs.h
+hbtrace.obj  : hbtrace.c  extend.h hbdefs.h
 hb_f.obj     : hb_f.c     extend.h hbdefs.h
 hvm.obj      : hvm.c      extend.h hbdefs.h
 initsymb.obj : initsymb.c extend.h hbdefs.h

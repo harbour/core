@@ -73,7 +73,7 @@
 
 typedef struct
 {
-   void *   pMessage;   /* pointer to dynamic symbol when they get ready */
+   PHB_DYNS pMessage;
    PHB_FUNC pFunction;
    USHORT   uiData;
    USHORT   uiScope;
@@ -177,6 +177,7 @@ static void hb_clsDictRealloc( PCLASS pClass )
  *
  * Release a class from memory
  */
+
 static void hb_clsRelease( PCLASS pClass )
 {
    USHORT uiAt;
@@ -185,20 +186,10 @@ static void hb_clsRelease( PCLASS pClass )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_clsRelease(%p)", pClass));
 
-   for( uiAt = 0; uiAt < uiLimit; uiAt++, pMeth++ ) /* Release initializers     */
+   for( uiAt = 0; uiAt < uiLimit; uiAt++, pMeth++ ) /* Release initializers */
    {
       if( pMeth->pInitValue )
-      {
-         if( pMeth->pFunction == hb___msgGetClsData )  /* is it a ClassData initializer ? */
-         {
-            if( IS_ARRAY( pMeth->pInitValue ) )
-               hb_itemClear( pMeth->pInitValue ); /* Don't release it as it may be shared by inherited classes */
-            else
-               hb_itemRelease( pMeth->pInitValue );
-         }
-         else if( pMeth->uiData > pClass->uiDataFirst )
-            hb_itemRelease( pMeth->pInitValue );
-      }
+         hb_itemRelease( pMeth->pInitValue );
    }
 
    hb_xfree( pClass->szName );
@@ -444,10 +435,15 @@ HARBOUR HB___CLSADDMSG( void )
 
                  pNewMeth->pFunction  = hb___msgGetData;
 
-                 if( pInit && !IS_NIL( pInit )) /* Initializer found        */
+                 if( pInit && ! IS_NIL( pInit ) ) /* Initializer found */
                  {
-                    pNewMeth->pInitValue = hb_itemNew( NULL );
-                    hb_itemCopy( pNewMeth->pInitValue, pInit );
+                    if( IS_ARRAY( pInit ) )
+                       pNewMeth->pInitValue = hb_arrayClone( pInit );
+                    else
+                    {
+                       pNewMeth->pInitValue = hb_itemNew( NULL );
+                       hb_itemCopy( pNewMeth->pInitValue, pInit );
+                    }
                  }
               }
               break;
@@ -466,10 +462,15 @@ HARBOUR HB___CLSADDMSG( void )
 
                  pNewMeth->pFunction = hb___msgGetClsData;
 
-                 if( pInit && !IS_NIL( pInit )) /* Initializer found        */
+                 if( pInit && ! IS_NIL( pInit ) ) /* Initializer found */
                  {
-                    pNewMeth->pInitValue = hb_itemNew( NULL );
-                    hb_itemCopy( pNewMeth->pInitValue, pInit );
+                    if( IS_ARRAY( pInit ) )
+                       pNewMeth->pInitValue = hb_arrayClone( pInit );
+                    else
+                    {
+                       pNewMeth->pInitValue = hb_itemNew( NULL );
+                       hb_itemCopy( pNewMeth->pInitValue, pInit );
+                    }
                  }
               }
               break;
@@ -510,7 +511,7 @@ HARBOUR HB___CLSADDMSG( void )
  */
 HARBOUR HB___CLSNEW( void )
 {
-   USHORT uiSuper = hb_parni( 3 );               /* Super class present      */
+   USHORT uiSuper = hb_parni( 3 );          /* Super class present */
    PCLASS pNewCls;
 
    if( s_pClasses )
@@ -526,13 +527,13 @@ HARBOUR HB___CLSNEW( void )
    if( uiSuper )
    {
       PCLASS pSprCls = s_pClasses + uiSuper - 1;
-      USHORT uiSize;
+      USHORT uiSize, ui;
 
       pNewCls->uiDataFirst  = pSprCls->uiDatas;
       pNewCls->uiDatas      = pSprCls->uiDatas + hb_parni( 2 );
       pNewCls->uiMethods    = pSprCls->uiMethods;
 
-      /* pNewCls->pClassDatas = hb_arrayClone( pSprCls->pClassDatas ); */
+      /* pNewCls->pClassDatas = hb_arrayClone( pSprCls->pClassDatas ); NO! */
       pNewCls->pClassDatas = hb_itemNew( NULL );
       hb_itemCopy( pNewCls->pClassDatas, pSprCls->pClassDatas );
 
@@ -542,8 +543,20 @@ HARBOUR HB___CLSNEW( void )
 
       uiSize = pSprCls->uiHashKey * BUCKET * sizeof( METHOD );
       pNewCls->pMethods = ( PMETHOD ) hb_xgrab( uiSize );
-      memcpy( pNewCls->pMethods, pSprCls->pMethods, uiSize );
-   }                                            /* Copy all super methods   */
+      memcpy( pNewCls->pMethods, pSprCls->pMethods, uiSize ); /* Copy all super methods   */
+
+      /* Warning! pInitValue members can not just be copied.
+         A new HB_ITEM must be built */
+      for( ui = 0; ui < ( USHORT ) ( pSprCls->uiHashKey * BUCKET ); ui++ )
+      {
+         if( pNewCls->pMethods[ ui ].pInitValue )
+         {
+            PHB_ITEM pInitValue = hb_itemNew( NULL );
+            hb_itemCopy( pInitValue, pNewCls->pMethods[ ui ].pInitValue );
+            pNewCls->pMethods[ ui ].pInitValue = pInitValue;
+         }
+      }
+   }
    else
    {
       pNewCls->uiDatas     = hb_parni( 2 );
@@ -668,8 +681,7 @@ HARBOUR HB___CLSINST( void )
                   hb_arraySet( pClass->pClassDatas, pMeth->uiData, pMeth->pInitValue );
                   pMeth->bClsDataInitiated = 1;
                }
-               else
-                  hb_itemRelease( &init );
+               hb_itemClear( &init );
             }
          }
       }
