@@ -1,3 +1,8 @@
+2001-09-06 22:55 GMT +1 JFL (mafact) <jfl@mafact.com>
+   * harbour/source/vm/classes.c
+      __ObjSendMsg( Object, Message, xpar1, xparN )
+      Now generates a MessageNotfound error in case of unknow message sended
+
 2001-09-06 22:20 GMT +1 JFL (mafact) <jfl@mafact.com>
    * harbour/hb_slex.vc
       synch. with hb_slex.bc

@@ -785,7 +785,7 @@ PHB_FUNC hb_objGetMthd( PHB_ITEM pObject, PHB_SYMB pMessage, BOOL lAllowErrFunc 
       s_msgClassH    = hb_dynsymGet( "CLASSH" );     /* Not present in classdef. */
       s_msgClassSel  = hb_dynsymGet( "CLASSSEL" );
       s_msgEval      = hb_dynsymGet( "EVAL" );
-      s_msgClsParent = hb_dynsymGet( "ISDERIVEDFROM" );
+      /*s_msgClsParent = hb_dynsymGet( "ISDERIVEDFROM" );*/
       /*s_msgClass     = hb_dynsymGet( "CLASS" );*/
    }
 
@@ -1655,7 +1655,8 @@ HB_FUNC( __OBJSENDMSG )
 
    if( uiPCount>=2 && pObject )    /* Object & message passed      */
    {
-      PHB_DYNS pMsg = hb_dynsymFindName( hb_parc(2) );
+                    /*hb_dynsymFindName( hb_parc(2) );*/
+      PHB_DYNS pMsg = hb_dynsymGet( hb_parc(2) );
 
       if( pMsg )
       {
