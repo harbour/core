@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-11-04 12:20 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
+  * source/rtl/gtwin/gtwin.c
+    * reduced calls to gt_ScreenWidth
+    + missed include Conio.h for msvc
+
 2002-11-03 20:28 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rdd/dbcmd.c
     * hb_rddFieldIndex() was declared as static - is changed now, because it is

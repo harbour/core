@@ -90,7 +90,7 @@
 #include <io.h>
 
 #if defined( _MSC_VER )
-  #include <conio.h>
+   #include <conio.h>
 #endif
 
 /* *********************************************************************** */
@@ -259,6 +259,7 @@ static void hb_gt_xScreenUpdate( void )
              ( s_csbi.dwCursorPosition.Y != s_sCurRow ||
                s_csbi.dwCursorPosition.X != s_sCurCol ) )
             hb_gt_xSetCursorPos();
+
     }
 }
 
@@ -898,7 +899,6 @@ void hb_gt_SetBlink( BOOL bBlink )
     HB_SYMBOL_UNUSED( bBlink );
 }
 
-
 /* *********************************************************************** */
 
 char * hb_gt_Version( void )
@@ -934,28 +934,26 @@ USHORT hb_gt_Box( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right,
     SHORT Col;
     SHORT Height;
     SHORT Width;
+    USHORT sWidth = hb_gt_GetScreenWidth(),
+          sHeight = hb_gt_GetScreenHeight();
 
-    /* ???: What's this? All 4 lines below gives allways TRUE
-        x < 0  => x < hb_gt_...
-       MaP : Ok, ok ...
-    */
-    if( ( Left   >= 0 && Left   < hb_gt_GetScreenWidth()  ) ||
-        ( Right  >= 0 && Right  < hb_gt_GetScreenWidth()  ) ||
-        ( Top    >= 0 && Top    < hb_gt_GetScreenHeight() ) ||
-        ( Bottom >= 0 && Bottom < hb_gt_GetScreenHeight() ) )
+    if( ( Left   >= 0 && Left   < sWidth  ) ||
+        ( Right  >= 0 && Right  < sWidth  ) ||
+        ( Top    >= 0 && Top    < sHeight ) ||
+        ( Bottom >= 0 && Bottom < sHeight ) )
     {
         /* Ensure that box is drawn from top left to bottom right. */
         if( Top > Bottom )
         {
-            SHORT tmp = Top;
+            Row = Top;
             Top = Bottom;
-            Bottom = tmp;
+            Bottom = Row;
         }
         if( Left > Right )
         {
-            SHORT tmp = Left;
+            Row = Left;
             Left = Right;
-            Right = tmp;
+            Right = Row;
         }
 
         /* Draw the box or line as specified */
@@ -965,8 +963,8 @@ USHORT hb_gt_Box( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right,
         hb_gt_DispBegin();
 
         if( Height > 1 && Width > 1 &&
-               Top >= 0 && Top < hb_gt_GetScreenHeight() &&
-              Left >= 0 && Left < hb_gt_GetScreenWidth() )
+               Top >= 0 && Top < sHeight &&
+              Left >= 0 && Left < sWidth )
             hb_gt_xPutch( Top, Left, byAttr, szBox[ 0 ] ); /* Upper left corner */
 
         Col = ( Height > 1 ? Left + 1 : Left );
@@ -975,25 +973,25 @@ USHORT hb_gt_Box( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right,
             Width += Col;
             Col = 0;
         }
-        if( Right >= hb_gt_GetScreenWidth() )
+        if( Right >= sWidth )
         {
-            Width -= Right - hb_gt_GetScreenWidth();
+            Width -= Right - sWidth;
         }
 
-        if( Col <= Right && Col < hb_gt_GetScreenWidth() && 
-                Top >= 0 && Top < hb_gt_GetScreenHeight() )
+        if( Col <= Right && Col < sWidth &&
+                Top >= 0 && Top < sHeight )
             hb_gt_Replicate( Top, Col, byAttr, szBox[ 1 ], Width + ( (Right - Left) > 1 ? -2 : 0 ) ); /* Top line */
 
         if( Height > 1 &&
-               (Right - Left) > 1 && Right < hb_gt_GetScreenWidth() &&
-               Top >= 0 && Top < hb_gt_GetScreenHeight() )
+               (Right - Left) > 1 && Right < sWidth &&
+               Top >= 0 && Top < sHeight )
             hb_gt_xPutch( Top, Right, byAttr, szBox[ 2 ] ); /* Upper right corner */
 
         if( szBox[ 8 ] && Height > 2 && Width > 2 )
         {
             for( Row = Top + 1; Row < Bottom; Row++ )
             {
-                if( Row >= 0 && Row < hb_gt_GetScreenHeight() )
+                if( Row >= 0 && Row < sHeight )
                 {
                     Col = Left;
                     if( Col < 0 )
@@ -1001,7 +999,7 @@ USHORT hb_gt_Box( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right,
                     else
                         hb_gt_xPutch( Row, Col++, byAttr, szBox[ 7 ] ); /* Left side */
                     hb_gt_Replicate( Row, Col, byAttr, szBox[ 8 ], Width - 2 ); /* Fill */
-                    if( Right < hb_gt_GetScreenWidth() )
+                    if( Right < sWidth )
                         hb_gt_xPutch( Row, Right, byAttr, szBox[ 3 ] ); /* Right side */
                 }
             }
@@ -1010,11 +1008,11 @@ USHORT hb_gt_Box( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right,
         {
             for( Row = ( Width > 1 ? Top + 1 : Top ); Row < ( (Right - Left ) > 1 ? Bottom : Bottom + 1 ); Row++ )
             {
-                if( Row >= 0 && Row < hb_gt_GetScreenHeight() )
+                if( Row >= 0 && Row < sHeight )
                 {
-                    if( Left >= 0 && Left < hb_gt_GetScreenWidth() )
+                    if( Left >= 0 && Left < sWidth )
                         hb_gt_xPutch( Row, Left, byAttr, szBox[ 7 ] ); /* Left side */
-                    if( ( Width > 1 || Left < 0 ) && Right < hb_gt_GetScreenWidth() )
+                    if( ( Width > 1 || Left < 0 ) && Right < sWidth )
                         hb_gt_xPutch( Row, Right, byAttr, szBox[ 3 ] ); /* Right side */
                 }
             }
@@ -1022,17 +1020,17 @@ USHORT hb_gt_Box( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right,
 
         if( Height > 1 && Width > 1 )
         {
-            if( Left >= 0 && Bottom < hb_gt_GetScreenHeight() )
+            if( Left >= 0 && Bottom < sHeight )
                 hb_gt_xPutch( Bottom, Left, byAttr, szBox[ 6 ] ); /* Bottom left corner */
 
             Col = Left + 1;
             if( Col < 0 )
                 Col = 0; /* The width was corrected earlier. */
 
-            if( Col <= Right && Bottom < hb_gt_GetScreenHeight() )
+            if( Col <= Right && Bottom < sHeight )
                 hb_gt_Replicate( Bottom, Col, byAttr, szBox[ 5 ], Width - 2 ); /* Bottom line */
 
-            if( Right < hb_gt_GetScreenWidth() && Bottom < hb_gt_GetScreenHeight() )
+            if( Right < sWidth && Bottom < sHeight )
                 hb_gt_xPutch( Bottom, Right, byAttr, szBox[ 4 ] ); /* Bottom right corner */
         }
 
@@ -1495,7 +1493,6 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
 
     return ch;
 }
-
 
 /* *********************************************************************** */
 
