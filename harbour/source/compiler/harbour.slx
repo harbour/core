@@ -1452,9 +1452,6 @@ int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], char asHold[][TOKEN_
    {
       yylval.string = hb_compIdentifierNew( sIdentifier, TRUE );
 
-      /* No longer needed. */
-      hb_xfree( sIdentifier );
-
       iIdentifier++;
 
       /* Equivalent of PUSH_TOKEN(x). */
@@ -1463,6 +1460,9 @@ int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], char asHold[][TOKEN_
 
       x = 0;
    }
+
+   /* No longer needed. */
+   hb_xfree( sIdentifier );
 
    return x;
 }

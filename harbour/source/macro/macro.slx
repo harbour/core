@@ -39,6 +39,9 @@
 #undef LEX_ABBREVIATE_WORDS
    #define LEX_ABBREVIATE_WORDS 4
 
+#undef YY_BUF_SIZE
+   #define YY_BUF_SIZE 1 /* Not needed because using the pMacro->String as input buffer. */
+
 /* declaration of yylex function
  * NOTE: yylval is paassed automaticaly by bison if %pure_parser is used
  */
@@ -52,7 +55,7 @@
 
 #undef STREAM_EXCEPTION
    #define STREAM_EXCEPTION( sPair, cChar ) \
-	   hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_STRING_TERMINATOR, sPair, NULL ); \
+           hb_macroError( EG_SYNTAX, sPair ); \
            aiReturn[ iReturn++ ] = '\n'; \
            aiReturn[ iReturn++ ] = LITERAL;
 
@@ -62,7 +65,7 @@ static char* sIdOnHold;
 
 long hb_lex_Hex2L( char* sHex );
 
-void * yy_init_buffer( char * pBuffer, int iBufSize );
+void * yy_bytes_buffer( char * pBuffer, int iBufSize );
 
 /* -----------------------------------------------------  Language Definitions. ---------------------------------------------------- */
 
@@ -211,15 +214,6 @@ LANGUAGE_RULES_ARE {
 #undef LEX_CASE
    #define LEX_CASE(x) toupper(x)
 
-#undef NEW_LINE_ACTION
-   #define NEW_LINE_ACTION() \
-		while( iTexts ) \
-                { \
-                   DEBUG_INFO( printf( "Releasing short term Text: %i = %s At: %i\n", iTexts, aTexts[iTexts - 1], aTexts[iTexts - 1] ) ); \
-                   iTexts--; \
-                   hb_xfree( aTexts[iTexts] ); \
-                }
-
 #ifdef SHOW_LEX_TOKENS
    #undef INTERCEPT_ACTION
    	#define INTERCEPT_ACTION(x) \
@@ -250,12 +244,6 @@ LANGUAGE_RULES_ARE {
 #undef ELEMENT_TOKEN
   #define ELEMENT_TOKEN(x)\
 \
-   if( x == NULL || *x == '\0' )\
-   {\
-      printf( "Invalid Token passed to ELEMENT_TOKEN()\n" );\
-      iRet = 0;\
-   }\
-   else\
    {\
       yytext = x;\
       yyleng = strlen( yytext );\
@@ -329,12 +317,6 @@ LANGUAGE_RULES_ARE {
       {\
          DEBUG_INFO( printf(  "Passing Element \"%s\" to CONVERT_NUMBER()\n", sToken ) );\
 \
-         /* "Returns" Token in iRet. (yylval_ptr->string already allocated). */\
-	 yylval_ptr->string = (char*) hb_xgrab( TOKEN_SIZE );\
-	 yylval_ptr->string[0] = 0;\
-	 aTexts[iTexts++] = yylval_ptr->string;\
-	 /* printf( "Text %i At: %i for Converted %s\n", iTexts, aTexts[iTexts - 1], sToken ); */\
-\
          CONVERT_NUMBER();\
 \
          DEBUG_INFO( printf(  "Element \"%s\" is %i\n", sToken, iRet ) );\
@@ -353,8 +335,6 @@ LANGUAGE_RULES_ARE {
    {\
       long lNumber = hb_lex_Hex2L( yytext + 2 );\
 \
-      /* sscanf( yytext, "%lxI", &lNumber );*/\
-\
       if( ( double ) LONG_MIN <= lNumber && lNumber <= ( double ) LONG_MAX )\
       {\
          yylval_ptr->valLong.lNumber = lNumber;\
@@ -363,7 +343,6 @@ LANGUAGE_RULES_ARE {
       }\
       else\
       {\
-         /* NOTE: This will never happen */\
          yylval_ptr->valDouble.dNumber = lNumber;\
          yylval_ptr->valDouble.bWidth = HB_DEFAULT_WIDTH;\
          yylval_ptr->valDouble.bDec = 0;\
@@ -407,9 +386,6 @@ LANGUAGE_RULES_ARE {
 
 #undef CUSTOM_ACTION
    #define CUSTOM_ACTION(x) x = hb_lex_CustomAction(x, iWordLen, aiHold, asHold, &iHold, yylval_ptr )
-
-#undef INIT_ACTION
-   #define INIT_ACTION() hb_comp_bSimpLex = TRUE;
 
 long hb_lex_Hex2L( char* sHex )
 {
@@ -504,15 +480,15 @@ int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], char asHold[][TOKEN_
    {
       yylval_ptr->string = hb_strdup( sIdentifier );
 
-      /* No longer needed. */
-      hb_xfree( sIdentifier );
-
       /* Equivalent of PUSH_TOKEN(x). */
       aiHold[ (*ptr_iHold)++ ] = x;
       strcpy( asHold[ (*ptr_iHold) - 1 ], yylval_ptr->string );
 
       x = 0;
    }
+
+   /* No longer needed. */
+   hb_xfree( sIdentifier );
 
    return x;
 }
@@ -521,7 +497,7 @@ void * hb_compFlexNew( HB_MACRO_PTR pMacro )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_compFlexNew(%s, %i)", pMacro->string, pMacro->length));
 
-   return yy_init_buffer( pMacro->string, pMacro->length );
+   return yy_bytes_buffer( pMacro->string, pMacro->length );
 }
 
 void hb_compFlexDelete( void * pBuffer )

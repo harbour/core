@@ -1,7 +1,11 @@
-2000-07-30 21:15 UTC+0800 Ron Pinkas <ron@profit-master.com>
+2000-07-30 22:50 UTC+0800 Ron Pinkas <ron@profit-master.com>
   * source/macro/macro.slx
-    ! Corrected 1 unreleased memory block.
+    ! Corrected unreleased memory block.
 
+  * source/compiler/harbour.slx
+    ! Corrected unreleased memory block.
+
+2000-07-30 21:15 UTC+0800 Ron Pinkas <ron@profit-master.com>
   * source/compiler/harbour.slx
     - Removed unneeded comment.
 
