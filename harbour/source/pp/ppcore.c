@@ -1389,6 +1389,7 @@ static int RemoveSlash( char * stroka )
       case STATE_NORMAL:
         if( *ptr == '\'' )  State = STATE_QUOTE1;
         else if( *ptr == '\"' )  State = STATE_QUOTE2;
+        else if( *ptr == '[' )  State = STATE_QUOTE3;
         else if( *ptr == ';' )
           {
             State = STATE_INIT;
@@ -1402,9 +1403,6 @@ static int RemoveSlash( char * stroka )
               {
                 hb_pp_Stuff( "", ptr, 0, 1, lenres - (ptr - stroka) );
                 lenres--;
-/*
-                ptr++;
-*/
               }
           }
         break;
@@ -1413,6 +1411,9 @@ static int RemoveSlash( char * stroka )
         break;
       case STATE_QUOTE2:
         if( *ptr == '\"' )  State = STATE_NORMAL;
+        break;
+      case STATE_QUOTE3:
+        if( *ptr == ']' )  State = STATE_NORMAL;
         break;
       }
       ptr++;
@@ -2351,22 +2352,40 @@ static int md_strAt( char * szSub, int lSubLen, char * szText, BOOL checkword, B
         }
       else
         {
-          if( *(szText+lPos) == '\"' && ( lPos == 0 || *(szText+lPos-1) != '\\' ) )
+          if( State == STATE_QUOTE3 )
             {
-              State = STATE_QUOTE2;
-              lPos++;
-              continue;
+             if( *(szText+lPos) == ']' && ( lPos == 0 || *(szText+lPos-1) != '\\' ) )
+               {
+                State = STATE_NORMAL;
+                lPos++;
+                continue;
+               }
             }
-          else if( *(szText+lPos) == '\'' && ( lPos == 0 || *(szText+lPos-1) != '\\' ) )
+          else
             {
-              State = STATE_QUOTE1;
-              lPos++;
-              continue;
+             if( *(szText+lPos) == '\"' && ( lPos == 0 || *(szText+lPos-1) != '\\' ) )
+               {
+                 State = STATE_QUOTE2;
+                 lPos++;
+                 continue;
+               }
+             else if( *(szText+lPos) == '\'' && ( lPos == 0 || *(szText+lPos-1) != '\\' ) )
+               {
+                 State = STATE_QUOTE1;
+                 lPos++;
+                 continue;
+               }
+             else if( *(szText+lPos) == '[' && ( lPos == 0 || *(szText+lPos-1) != '\\' ) )
+               {
+                 State = STATE_QUOTE3;
+                 lPos++;
+                 continue;
+               }
+             else if( *(szText+lPos) == '(' )
+               kolPrth++;
+             else if( *(szText+lPos) == ')' )
+               kolPrth--;
             }
-          else if( *(szText+lPos) == '(' )
-            kolPrth++;
-          else if( *(szText+lPos) == ')' )
-            kolPrth--;
           if( !lSubPos && checkPrth && ( (kolPrth > 1) ||
                                          (kolPrth == 1 && *(szText+lPos) != '(') || (kolPrth == 0 && *(szText+lPos) == ')')) )
             {

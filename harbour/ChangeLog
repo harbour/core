@@ -1,10 +1,14 @@
+2000-06-18 20:16 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   * source/pp/ppcore.c
+        *fixed some problems with [ ... ] in pp, reported by Brian Hays
+
 2000-06-18 15:20 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *include/hbmacro.h
-	*changed functions declarations for documentation purposes
-	
+        *changed functions declarations for documentation purposes
+
     *source/pp/ppcode.c
-	*fixed "nested /* comments" warning when compiled with GCC
+        *fixed "nested /* comments" warning when compiled with GCC
 
 2000-06-17 13:38 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
    * source/pp/ppcore.c
