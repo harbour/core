@@ -1,3 +1,8 @@
+2000-08-04 19:00 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+   * source/rtl/run.c
+     * Changed submitted by Marek Paliwoda <paliwoda@inetia.pl>
+
 2000-08-03 18:50 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/macro/macro.slx
    * source/compiler/harbour.slx
