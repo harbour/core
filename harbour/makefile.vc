@@ -72,7 +72,7 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\itemapi.obj \
     $(OBJ_DIR)\math.obj \
     $(OBJ_DIR)\memvars.obj \
-    $(OBJ_DIR)\msguk.obj \
+    $(OBJ_DIR)\msgxxx.obj \
     $(OBJ_DIR)\mtran.obj \
     $(OBJ_DIR)\objfunc.obj \
     $(OBJ_DIR)\set.obj \
@@ -266,7 +266,7 @@ $(OBJ_DIR)\math.obj : $(RTL_DIR)\math.c
 $(OBJ_DIR)\memvars.obj : $(RTL_DIR)\memvars.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
-$(OBJ_DIR)\msguk.obj : $(RTL_DIR)\natmsg\msguk.c
+$(OBJ_DIR)\msgxxx.obj : $(RTL_DIR)\natmsg\msgxxx.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\mtran.obj : $(RTL_DIR)\mtran.c
