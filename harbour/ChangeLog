@@ -1,3 +1,7 @@
+2001-07-23 20:50 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * source/vm/macro.c
+     ! Corrected a compiler warning.
+
 2001-07-23  21:10 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>/Jose Lalin <dezac@corevia.com>
   * include/hbcomp.h
     + Added LANG_OBJ_MODULE
@@ -17,14 +21,14 @@
     *makefile.bc
     hb_slex.vc
     makefile.vc
-    source/compiler/makefile   
+    source/compiler/makefile
     ! Updated
 
 2001-07-23 22:35 UTC+0100 Lubos Janica <janicalubos@yahoo.com>
    * classes.c
-       Fixed function __CLSNEW. 
+       Fixed function __CLSNEW.
        Changed variable USHORT uiSize to ULONG ulSize
-       This fix random GPFs in function hb_clsDictRealloc by creating 
+       This fix random GPFs in function hb_clsDictRealloc by creating
        classes.
 
 2001-07-23 21:29 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
@@ -36,10 +40,10 @@
      * Cleaned up platform branching.
      ! Fixed redefined constant for DJGPP (reported by Dave Pearson)
 
-     I could not test this change, so please test it, and report any 
+     I could not test this change, so please test it, and report any
      bugs, especially under OS/2 (GCC or ICC) and DJGPP. Thanks.
 
-     Also note that OS/2 support with ICC is/was probably broken, so a 
+     Also note that OS/2 support with ICC is/was probably broken, so a
      native OS/2 solution would be better here.
 
 2001-07-23 22:30 MEST Martin Vogel <vogel@inttec.de>
@@ -64,12 +68,12 @@
    * source/rtl/profiler.prg
      * Access method `nSeconds' in class HB_ProfileEntity now used
        HB_CLOCKS2SECS to calculate seconds.
-	
+
 2001-07-23 18:15 GMT Dave Pearson <davep@davep.org>
-	
+
    * source/rtl/seconds.c
       * Renamed CLOCKS2SECS() to HB_CLOCKS2SECS().
-	
+
 2001-07-23 20:10 MEST Martin Vogel <vogel@inttec.de>
 
    + contrib/libct/count.c
@@ -86,7 +90,7 @@
 2001-07-23 17:37 GMT Dave Pearson <davep@davep.org>
    * source/rtl/profiler.prg
      * Replace old profile reporting code with an OO approach.
-	
+
 2001-07-23 18:40 MEST Martin Vogel <vogel@inttec.de>
 
    + contrib/libct/finan.c
@@ -100,25 +104,25 @@
      + mathematical functions provided by Alejandro de Garate <alex_degarate@hotmail.com>
      + Documentation (and some minor changes) added by me
 
-   * contrib/libct/ascpos.c 
-   * contrib/libct/atadjust.c 
-   * contrib/libct/atnum.c 
-   * contrib/libct/charlist.c 
-   * contrib/libct/charswap.c 
-   * contrib/libct/ct.c 
-   * contrib/libct/ct.h 
-   * contrib/libct/cterror.ch 
-   * contrib/libct/ctmath.h 
-   * contrib/libct/token1.c 
+   * contrib/libct/ascpos.c
+   * contrib/libct/atadjust.c
+   * contrib/libct/atnum.c
+   * contrib/libct/charlist.c
+   * contrib/libct/charswap.c
+   * contrib/libct/ct.c
+   * contrib/libct/ct.h
+   * contrib/libct/cterror.ch
+   * contrib/libct/ctmath.h
+   * contrib/libct/token1.c
      * some minor changes to remove warnings reported by Maurilio Longo
      * changed USHORT to ULONG in variable parameter functions
      * fixed $SEEALSO$ bug in documentation
 
-   * contrib/libct/ctflist.txt 
-   * contrib/libct/Makefile 
-   * contrib/libct/makefile.bc 
-   * contrib/libct/makefile.vc 
-   * contrib/libct/tests/Makefile 
+   * contrib/libct/ctflist.txt
+   * contrib/libct/Makefile
+   * contrib/libct/makefile.bc
+   * contrib/libct/makefile.vc
+   * contrib/libct/tests/Makefile
      * changes according to new files and function stati
 
 2001-07-23 04:20 UTC-0800 Ron Pinkas <ron@profit-master.com>

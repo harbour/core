@@ -478,7 +478,7 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext )
 
       iStatus = hb_macroParse( &struMacro, szString );
 
-      if( iContext && ( hb_vm_iExtraParamsIndex == HB_MAX_MACRO_ARGS ) || ( hb_vm_iExtraElementsIndex >= HB_MAX_MACRO_ARGS ) )
+      if( iContext && ( ( hb_vm_iExtraParamsIndex == HB_MAX_MACRO_ARGS ) || ( hb_vm_iExtraElementsIndex >= HB_MAX_MACRO_ARGS ) ) )
       {
          hb_macroSyntaxError( &struMacro );
       }
