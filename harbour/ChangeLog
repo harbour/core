@@ -1,3 +1,7 @@
+2001-03-11 14:05 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * include/hbexpra.c
+     ! Fixed hb_compExprSetOperand() to allow InAssign Exp on Right, if Left is >= HB_EO_PLUSEQ && <= HB_EO_EXPEQ
+
 2001-03-10 22:55 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
   * source/lang/msgru866.c
   * source/lang/msgruwin.c

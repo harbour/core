@@ -447,7 +447,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms )
                }
                else
                {
-                  /* text substitution text&variable - replace the second 
+                  /* text substitution text&variable - replace the second
                    * argument with a string
                    */
                   if( pArg->pNext == NULL )
@@ -466,7 +466,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms )
             }
             else
             {   /* @ 0,0 GET &(var)
-                 * TODO: generate a compilation time error - 
+                 * TODO: generate a compilation time error -
                  * invalid GET expression
                  */
             }
@@ -660,6 +660,7 @@ HB_EXPR_PTR hb_compExprSetOperand( HB_EXPR_PTR pExpr, HB_EXPR_PTR pItem )
    BYTE ucRight;
 
    ucRight = s_PrecedTable[ pItem->ExprType ];
+
    if( ucRight == HB_ET_NIL )
    {
       /* the right side of an operator is an ordinary value
@@ -674,7 +675,14 @@ HB_EXPR_PTR hb_compExprSetOperand( HB_EXPR_PTR pExpr, HB_EXPR_PTR pItem )
        *    a := 1 + b:=2
        *    a := 1 + b += 2
        */
-      hb_compErrorSyntax( pItem );
+
+      if( pExpr->ExprType >= HB_EO_PLUSEQ && pExpr->ExprType <= HB_EO_EXPEQ )
+      {
+      }
+      else
+      {
+         hb_compErrorSyntax( pItem );
+      }
       pExpr->value.asOperator.pRight = pItem; /* set it anyway */
    }
    else
@@ -828,37 +836,37 @@ HB_EXPR_PTR hb_compExprSetGetBlock( HB_EXPR_PTR pExpr )
 
    /* create PCOUNT() expression */
 #ifdef HB_MACRO_SUPPORT
-   pIIF = hb_compExprNewFunCall( hb_compExprNewFunName( hb_strdup("PCOUNT") ), 
+   pIIF = hb_compExprNewFunCall( hb_compExprNewFunName( hb_strdup("PCOUNT") ),
               hb_compExprNewArgList( hb_compExprNewEmpty() ), HB_MACRO_PARAM );
 #else
-   pIIF = hb_compExprNewFunCall( hb_compExprNewFunName( hb_strdup("PCOUNT") ), 
+   pIIF = hb_compExprNewFunCall( hb_compExprNewFunName( hb_strdup("PCOUNT") ),
               hb_compExprNewArgList( hb_compExprNewEmpty() ) );
-#endif              
+#endif
    /* create PCOUNT()==0 */
 #ifdef HB_MACRO_SUPPORT
    pIIF = hb_compExprSetOperand( hb_compExprNewEQ( pIIF ), hb_compExprNewLong( 0 ), HB_MACRO_PARAM );
-#else   
+#else
    pIIF = hb_compExprSetOperand( hb_compExprNewEQ( pIIF ), hb_compExprNewLong( 0 ) );
-#endif   
+#endif
    /* create ( PCOUNT()==0, */
    pIIF = hb_compExprNewList( pIIF );
    /* create ( PCOUNT()==0, <pExpr>, */
    pIIF = hb_compExprAddListExpr( pIIF, pExpr );
    /* create HB_PCOUNT(1) */
 #ifdef HB_MACRO_SUPPORT
-   pSet = hb_compExprNewFunCall( hb_compExprNewFunName( hb_strdup("__PVALUE") ), 
+   pSet = hb_compExprNewFunCall( hb_compExprNewFunName( hb_strdup("__PVALUE") ),
               hb_compExprNewArgList( hb_compExprNewLong( 1 ) ), HB_MACRO_PARAM );
 #else
-   pSet = hb_compExprNewFunCall( hb_compExprNewFunName( hb_strdup("__PVALUE") ), 
+   pSet = hb_compExprNewFunCall( hb_compExprNewFunName( hb_strdup("__PVALUE") ),
               hb_compExprNewArgList( hb_compExprNewLong( 1 ) ) );
 #endif
    /* create <pExpr>:=HB_PCOUNT(1) */
-   pSet = hb_compExprAssign( hb_compExprClone( pExpr ), pSet );   
+   pSet = hb_compExprAssign( hb_compExprClone( pExpr ), pSet );
    /* create ( PCOUNT()==0, <pExpr>, <pExpr>:=HB_PARAM(1)) */
    pIIF = hb_compExprAddListExpr( pIIF, pSet );
    /* create IIF() expression */
    pIIF = hb_compExprNewIIF( pIIF );
-   /* create a codeblock 
+   /* create a codeblock
     * NOTE: we can ommit a local variable if HB_PARAM() is used
    */
    return hb_compExprAddListExpr( hb_compExprNewCodeBlock(), pIIF );
