@@ -131,7 +131,7 @@ typedef struct _ALIASID
 #define  ALIAS_NAME     2
 #define  ALIAS_EVAL     3
 
-static DWORD PackDateTime( void );
+static ULONG PackDateTime( void );
 
 void AliasAddInt( int );
 void AliasAddExp( void );
@@ -6315,7 +6315,7 @@ void CheckArgs( char * szFuncCall, int iArgs )
 
 /* NOTE: Making the date and time info to fit into 32 bits can only be done
          in a "lossy" way, in practice that means it's not possible to unpack
-         the exact date/time info from the resulting DWORD. Since the year
+         the exact date/time info from the resulting ULONG. Since the year
          is only stored in 6 bits, 1980 will result in the same bit pattern
          as 2044. The purpose of this value is only used to *differenciate*
          between the dates ( the exact dates are not significant ), so this can
@@ -6330,7 +6330,7 @@ void CheckArgs( char * szFuncCall, int iArgs )
                        |____|           Minute  6 bits
                              |____|     Second  6 bits */
 
-static DWORD PackDateTime( void )
+static ULONG PackDateTime( void )
 {
    BYTE szString[ 4 ];
    BYTE nValue;

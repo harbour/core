@@ -1,3 +1,7 @@
+19990910-14:40 EDT David G. Holm <dholm@jsd-llc.com>
+  * source/compiler/harbour.y
+    ! Changed DWORD return type for PackDateTime() to ULONG.
+
 19990910-14:20 EDT David G. Holm <dholm@jsd-llc.com>
   * source/rtl/console.c
     ! Uncommented two calls to hb_fsSetDevMode() in hb_consoleInitialize()
