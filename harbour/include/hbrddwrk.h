@@ -110,7 +110,7 @@ extern ERRCODE hb_waSetRel( AREAP pArea, LPDBRELINFO pRelInfo );
 #define hb_waOrderListDelete                ( DBENTRYP_VP ) hb_waUnsupported
 #define hb_waOrderListFocus                 ( DBENTRYP_OI ) hb_waUnsupported
 #define hb_waOrderListRebuild                               hb_waUnsupported
-#define hb_waOrderCondition                ( DBENTRYP_VOI ) hb_waUnsupported
+extern ERRCODE hb_waOrderCondition( AREAP pArea, LPDBORDERCONDINFO param );
 #define hb_waOrderCreate                   ( DBENTRYP_VOC ) hb_waUnsupported
 #define hb_waOrderDestroy                   ( DBENTRYP_OI ) hb_waUnsupported
 #define hb_waOrderInfo                            ( DBENTRYP_OII ) hb_waNull

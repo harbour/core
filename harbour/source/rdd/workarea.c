@@ -457,6 +457,25 @@ ERRCODE hb_waNewArea( AREAP pArea )
    return SUCCESS;
 }
 
+ERRCODE hb_waOrderCondition( AREAP pArea, LPDBORDERCONDINFO param )
+{
+   if( pArea->lpdbOrdCondInfo )
+   {
+      if( pArea->lpdbOrdCondInfo->abFor )
+         hb_xfree( pArea->lpdbOrdCondInfo->abFor );
+      if( pArea->lpdbOrdCondInfo->itmCobFor )
+         hb_itemRelease( pArea->lpdbOrdCondInfo->itmCobFor );
+      if( pArea->lpdbOrdCondInfo->itmCobWhile )
+         hb_itemRelease( pArea->lpdbOrdCondInfo->itmCobWhile );
+      if( pArea->lpdbOrdCondInfo->itmCobEval )
+         hb_itemRelease( pArea->lpdbOrdCondInfo->itmCobEval );
+      hb_xfree( pArea->lpdbOrdCondInfo );
+   }
+   pArea->lpdbOrdCondInfo = param;
+
+   return SUCCESS;
+}
+
 /*
  * Release all references to a WorkArea.
  */

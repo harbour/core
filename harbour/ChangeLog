@@ -1,3 +1,9 @@
+2000-09-20 13:12 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   * source/rdd/workarea.c
+   * include/hbrddwrk.h
+     * added hb_waOrderCondition() function ( from old RDD ) - now indexing
+       works in RDD ADS again
+
 2000-09-20 10:40 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * source/pp/ppcore.c
      * fixed bug, reported by J. Lefebvre
