@@ -964,7 +964,7 @@ METHOD ShowCode( cModuleName ) CLASS TDebugger
    if cPrgName != ::cPrgName
       ::cPrgName := cPrgName
       ::oBrwText := TBrwText():New( ::oWndCode:nTop + 1, ::oWndCode:nLeft + 1,;
-                   ::oWndCode:nBottom - 1, ::oWndCode:nRight - 1, ::cPrgName, "BG+/B, N/BG", "W+/R, W+/BG" )
+                   ::oWndCode:nBottom - 1, ::oWndCode:nRight - 1, ::cPrgName, "BG+/B, N/BG, W+/R, W+/BG" )
 
       ::oWndCode:SetCaption( ::cPrgName )
    endif

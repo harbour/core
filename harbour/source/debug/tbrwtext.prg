@@ -39,22 +39,23 @@
 #include "inkey.ch"
 
 
+// Color definitions and positions inside ::cColorSpec
+#define  CLR_CODE       0        // color of code
+#define  CLR_CURSOR     1        // color of hilighted line
+#define  CLR_BKPT       2        // color of breakpoint line
+#define  CLR_HIBKPT     3        // color of hilighted breakpoint line
+
+
 CLASS TBrwText FROM TEditor
 
    DATA  cFileName      // the name of the browsed file
    DATA  nActiveLine    // Active line inside Code Window (last executed one)
 
-   DATA  cColor            // Color for code window lines
-   DATA  cCursorColor      // Hilited one
+   DATA  aBreakPoints   // Array with line numbers of active Break Points
 
-   DATA  cBreakpColor      // Color for lines with a break point active
-   DATA  cHiBreakpColor    // Hilited one
+   DATA  lLineNumbers   // If .T. source code lines are preceded by their number
 
-   DATA  aBreakPoints      // Array with line numbers of active Break Points
-
-   DATA  lLineNumbers      // If .T. source code lines are preceded by their number
-
-   METHOD   New(nTop, nLeft, nBottom, nRight, cFileName, cCursorC, cBreakpC)
+   METHOD   New(nTop, nLeft, nBottom, nRight, cFileName, cColor)
 
    METHOD   GoTop()           // Methods available on a standard TBrowse, needed to handle a TEditor like a TBrowse
    METHOD   GoBottom()
@@ -79,28 +80,19 @@ CLASS TBrwText FROM TEditor
 ENDCLASS
 
 
-// Color strings have two members: normal and inverted one
-METHOD New(nTop, nLeft, nBottom, nRight, cFileName, cCursorC, cBreakpC) CLASS TBrwText
+METHOD New(nTop, nLeft, nBottom, nRight, cFileName, cColor) CLASS TBrwText
 
-   DEFAULT cCursorC TO SetColor()
-   DEFAULT cBreakpC TO SetColor()
+   DEFAULT cColor TO SetColor()
 
    ::cFileName := cFileName
    ::nActiveLine := 1
-
-   ::cColor := cCursorC
-   ::cCursorColor := hb_ColorIndex(::cColor, 2) + hb_ColorIndex(::cColor, 1)
-
-   ::cBreakpColor := cBreakpC
-   ::cHiBreakpColor := hb_ColorIndex(::cBreakpColor, 2) + hb_ColorIndex(::cBreakpColor, 1)
 
    ::aBreakPoints := {}
 
    ::lLineNumbers := .T.
 
    Super:New("", nTop, nLeft, nBottom, nRight, .T.)
-   // Standard TEditor window drawing color
-   Super:SetColor(cCursorC)
+   Super:SetColor(cColor)
 
    Super:LoadFile(cFileName)
 
@@ -185,16 +177,16 @@ METHOD LineColor(nRow) CLASS TBrwText
    lBreak := AScan(::aBreakPoints, nRow) > 0
 
    if lHilited .AND. lBreak
-      cColor := ::cHiBreakpColor
+      cColor := hb_ColorIndex(::cColorSpec, CLR_HIBKPT)
 
    elseif lHilited
-      cColor := ::cCursorColor
+      cColor := hb_ColorIndex(::cColorSpec, CLR_CURSOR)
 
    elseif lBreak
-      cColor := ::cBreakpColor
+      cColor := hb_ColorIndex(::cColorSpec, CLR_BKPT)
 
    else
-      cColor := ::cColor
+      cColor := hb_ColorIndex(::cColorSpec, CLR_CODE)
 
    endif
 
