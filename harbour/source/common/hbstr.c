@@ -33,6 +33,18 @@
  *
  */
 
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
+ *    hb_stricmp()
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
+
+
 #include <ctype.h> /* Needed by hb_strupr() */
 
 #include "hbapi.h"
@@ -88,4 +100,34 @@ char * hb_strdup( const char * pszText )
    memcpy( pszDup, pszText, iLen );
 
    return pszDup;
+}
+
+int hb_stricmp( const char * s1, const char * s2 )
+{
+   int rc = 0;
+   ULONG l1;
+   ULONG l2;
+   ULONG count;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_stricmp(%s, %s)", s1, s2));
+
+   l1 = strlen( s1 );
+   l2 = strlen( s2 );
+   count = ( l1 < l2 ? l1 : l2 );
+
+   while( rc == 0 && count > 0 )
+   {
+      char c1 = toupper( *s1++ );
+      char c2 = toupper( *s2++ );
+
+      if( c1 != c2 )
+         rc = ( c1 < c2 ? -1 : 1 );
+
+      count--;
+   }
+
+   if( rc == 0 && l1 != l2 )
+      rc = ( l1 < l2 ? -1 : 1 );
+
+   return rc;
 }

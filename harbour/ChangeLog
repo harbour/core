@@ -1,3 +1,10 @@
+2000-04-17 20:30 GMT-4 David G. Holm <dholm@jsd-llc.com>
+  * source/common/hbstr.c
+  * source/common/hbtrace.c
+  * source/rtl/strings.c
+    % Changed stricmp() in hbtrace.c to hb_stricmp and
+      moved hb_stricmp() from strings.c to hbstr.c.
+
 2000-04-17 19:45 GMT-4 David G. Holm <dholm@jsd-llc.com>
   * include/hbapirdd.h
   * source/rdd/dbfcdx/dbfcdx1.c
