@@ -123,7 +123,7 @@ HB_FUNC (POSCHAR)
         sPosition = sStrLen;
       }
 
-      pcRet = hb_xgrab (sStrLen);
+      pcRet = ( char * )hb_xgrab (sStrLen);
       hb_xmemcpy (pcRet, pcString, sStrLen);
       *(pcRet+sPosition-1) = cReplace;
 
@@ -262,7 +262,7 @@ HB_FUNC (POSDEL)
       sStartPos = sStrLen-sDelLen+1;
     }
     
-    pcRet = hb_xgrab (sStrLen-sDelLen);
+    pcRet = ( char * )hb_xgrab (sStrLen-sDelLen);
 
     /* copy first part */
     if (sStartPos > 1)
@@ -382,7 +382,7 @@ HB_FUNC (POSINS)
         return;
       }
 
-      pcRet = hb_xgrab (sStrLen+sInsLen);
+      pcRet = ( char * )hb_xgrab (sStrLen+sInsLen);
 
       /* copy first part */
       if (sStartPos > 1)
@@ -547,7 +547,7 @@ HB_FUNC (POSREPL)
         sRetLen = sStartPos+sReplLen-1;
       }
 
-      pcRet = hb_xgrab (sRetLen);
+      pcRet = ( char * )hb_xgrab (sRetLen);
 
       /* copy first part */
       if (sStartPos > 1)

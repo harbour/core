@@ -108,7 +108,7 @@ HB_FUNC (WORDTOCHAR)
     size_t sRetIndex, sIndex;
     int iNoReplace;
 
-    pcRet = hb_xgrab (sStrLen);
+    pcRet = ( char * )hb_xgrab (sStrLen);
 
     sRetIndex = 0;
     sIndex = 0;

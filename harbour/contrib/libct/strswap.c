@@ -102,13 +102,13 @@ HB_FUNC (STRSWAP)
 
     if ((iChange1=ISBYREF(1)) != 0)
     {
-      pcRet1 = hb_xgrab (sStrLen1);
+      pcRet1 = ( char * )hb_xgrab (sStrLen1);
       hb_xmemcpy (pcRet1, pcString1, sStrLen1);
     }
 
     if ((iChange2=ISBYREF(2)) != 0)
     {
-      pcRet2 = hb_xgrab (sStrLen2);
+      pcRet2 = ( char * )hb_xgrab (sStrLen2);
       hb_xmemcpy (pcRet2, pcString2, sStrLen2);
     }
 

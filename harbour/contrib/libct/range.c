@@ -119,7 +119,7 @@ HB_FUNC (RANGEREM)
 
     iMode = (ucChar2 < ucChar1);
 
-    pcRet = hb_xgrab (sStrLen);
+    pcRet = ( char * )hb_xgrab (sStrLen);
     sRetIndex = 0;
     for (pc = pcString; pc < pcString+sStrLen; pc++)
     {
@@ -257,7 +257,7 @@ HB_FUNC (RANGEREPL)
 
     iMode = (ucChar2 < ucChar1);
 
-    pcRet = hb_xgrab (sStrLen);
+    pcRet = ( char * )hb_xgrab (sStrLen);
     sRetIndex = 0;
     for (pc = pcString; pc < pcString+sStrLen; pc++)
     {

@@ -268,7 +268,7 @@ HB_FUNC (CHARRELREP)
       return;
     }
 
-    pcRet = hb_xgrab (sStrLen2);
+    pcRet = ( char * ) hb_xgrab (sStrLen2);
     hb_xmemcpy (pcRet, pcString2, sStrLen2);
 
     sOffset1 = 0;
