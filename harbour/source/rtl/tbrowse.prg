@@ -719,7 +719,7 @@ METHOD Stabilize() CLASS TBrowse
          else
             DispOut( Replicate( ::HeadSep, nColsWidth ), ::ColorSpec )
          endif
-         DispOut( Replicate( Right( ::HeadSep, 1 ), ( nWidth - nColsWidth ) / 2 ), ::ColorSpec )
+         DispOut( Replicate( Right( ::HeadSep, 1 ), Int(Round((nWidth - nColsWidth) / 2, 0)) ), ::ColorSpec )
       endif
       if ! Empty( ::FootSep ) // Drawing footing separator
          DispOutAt( ::nBottom - iif( ::lFooters, 1, 0 ), ::nLeft, Replicate( Right( ::FootSep, 1 ), ( nWidth - nColsWidth ) / 2 ), ::ColorSpec )
@@ -739,7 +739,7 @@ METHOD Stabilize() CLASS TBrowse
          else
             DispOut( Replicate( ::FootSep, nColsWidth ), ::ColorSpec )
          endif
-         DispOut( Replicate( Right( ::FootSep, 1 ), ( nWidth - nColsWidth ) / 2 ), ::ColorSpec )
+         DispOut( Replicate( Right( ::FootSep, 1 ), Int(Round((nWidth - nColsWidth) / 2, 0)) ), ::ColorSpec )
       endif
       if ::lFooters                // Drawing footers
          DispOutAt( ::nBottom, ::nLeft, Space( ( nWidth - nColsWidth ) / 2 ), ::ColorSpec )
@@ -906,7 +906,7 @@ method initKeys(o) CLASS TBROWSE
               {K_CTRL_RIGHT,{|Ob,nKey| Ob:PanRight(),0}},;
               {K_RIGHT,{|Ob,nKey| Ob:Right(),0}},;
               {K_UP,{|Ob,nKey| Ob:Up(),0}},;
-              {K_ESC,{|Ob,nKey| -1 }}}         
+              {K_ESC,{|Ob,nKey| -1 }}}
 return o
 
 Method SetKey(nKey,bBlock) CLASS TBrowse

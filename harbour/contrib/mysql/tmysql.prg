@@ -89,7 +89,7 @@ METHOD FieldGet(nNum) CLASS TMySQLRow
    if nNum > 0 .AND. nNum <= Len(::aRow)
 
       // Char fields are padded with spaces since a real .dbf field would be
-      if ValType(::aRow[nNum]) == "C"
+      if ::FieldType(nNum) == "C"
          return PadR(::aRow[nNum], ::aFieldStruct[nNum][MYSQL_FS_LENGTH])
       else
          return ::aRow[nNum]
@@ -186,6 +186,7 @@ METHOD FieldType(nNum) CLASS TMySQLRow
 
          case ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_SHORT_TYPE .OR.;
               ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_LONG_TYPE .OR.;
+              ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_LONGLONG_TYPE .OR.;
               ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_FLOAT_TYPE .OR.;
               ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_DOUBLE_TYPE
             cType := "N"
@@ -427,7 +428,8 @@ METHOD GetRow(nRow) CLASS TMySQLQuery
                   aRow[i] := iif(Val(aRow[i]) == 0, .F., .T.)
 
                case ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_SHORT_TYPE .OR.;
-                    ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_LONG_TYPE
+                    ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_LONG_TYPE .OR.;
+                    ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_LONGLONG_TYPE
                   aRow[i] := Val(aRow[i])
 
                case ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_DOUBLE_TYPE .OR.;
@@ -868,7 +870,7 @@ METHOD Error() CLASS TMySQLServer
 
    ::lError := .F.
 
-return sqlGetErr(::nSocket)
+return iif(::nSocket > 0, sqlGetErr(::nSocket), "No connection to server")
 
 
 METHOD ListDBs() CLASS TMySQLServer
