@@ -1,3 +1,8 @@
+20000425-03:49 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/rtl/gtstd.c
+     * Some cosmetical changes, unused code removed.
+
 20000425-03:38 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * include/hbpcode.h
