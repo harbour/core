@@ -1,3 +1,8 @@
+2000-07-31 14:32 UTC+0100 Victor Szakats <info@szelvesz.hu>
+
+   * utils/hbdoc/ft_funcs.prg
+     ! Fixed to match changed strong typing syntax.
+
 2000-07-31 11:23 CET Patrick Mast <eMail@PatrickMast.com>
    * contrib/hbzlib/doc/zip.txt
      * Changes and corrections.
