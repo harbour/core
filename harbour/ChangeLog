@@ -1,3 +1,18 @@
+19990619-12:22 Ryszard Glab <rglab@imid.med.pl>
+
+* include/hbsetup.h
+ + added automatic definition of settings that can be used for OS specific code
+   OS_UNIX_COMPATIBLE  -for UNIX like systems
+   OS_DOS_COMPATIBLE -for DOS like systems
+   
+* source/rtl/console.c
+ + added calls for fgets instead of gets for GCC on UNIX-es   
+   TODO: check if this change can be applied on DOS also
+ * changed CR/LF use to LF for GCC on UNIX-es
+ 
+* source/rtl/dir.c
+ * changed to use OS_UNIX_COMPATIBLE/OS_DOS_COMPATIBLE settings
+ 
 19990619-10:42 Ryszard Glab <rglab@imid.med.pl>
 
 * tests/working/Makefile

@@ -47,14 +47,17 @@
     /* The DJGPP port of GNU C is used - for DOS platform */
     #define OS_PATH_LIST_SEPARATOR   ';'
     #define OS_PATH_DELIMITER '\\'
+    #define OS_DOS_COMPATIBLE
   #else
     #define OS_PATH_LIST_SEPARATOR   ':'
     #define OS_PATH_DELIMITER '/'
+    #define OS_UNIX_COMPATIBLE
   #endif
 #else
   /* we are assuming here the DOS compatible OS */
   #define OS_PATH_LIST_SEPARATOR    ';'
   #define OS_PATH_DELIMITER '\\'
+  #define OS_DOS_COMPATIBLE
 #endif
 
 #endif  /* HBSETUP_H_ */

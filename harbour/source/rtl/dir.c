@@ -2,11 +2,11 @@
  * $Id$
  */
 
+#include <hbsetup.h>
 #include <extend.h>
 #include <string.h>
 #include <ctype.h>
 #include <itemapi.h>
-#include <hbsetup.h>
 
 #if defined(__GNUC__)
   #include <sys/types.h>
@@ -262,7 +262,7 @@ HARBOUR HB_DIRECTORY( void )
          while(0==getchar());
 */
 
-#if defined(__GNUC__) && !defined(__DJGPP__)
+#if defined(OS_UNIX_COMPATIBLE)
 /* GNU C on Linux or on other UNIX */
 	 aatrib[ 0 ] = '\0';
 	 if( S_ISREG(statbuf.st_mode) )

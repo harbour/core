@@ -6,6 +6,7 @@
    #include <windows.h>
 #endif
 
+#include <hbsetup.h>
 #include <extend.h>
 #include <ctoharb.h>
 #include <dates.h>
@@ -20,6 +21,14 @@
 #endif
 #ifdef USE_GTAPI
    #include <gtapi.h>
+#endif
+
+#define ACCEPT_BUFFER_LEN 256 /*length of input buffer for ACCEPT command */
+
+#if defined(OS_UNIX_COMPATIBLE)
+#define CRLF_BUFFER_LEN 2     /*length of buffer for CR/LF characters */
+#else
+#define CRLF_BUFFER_LEN 3     /*length of buffer for CR/LF characters */
 #endif
 
 HARBOUR HB___ACCEPT(void);
@@ -66,13 +75,19 @@ void Console__InitSymbols( void )
 }
 
 static unsigned short dev_row, dev_col, p_row, p_col;
-static char CrLf [3];
+static char CrLf [ CRLF_BUFFER_LEN ];
 
 void InitializeConsole( void )
 {
+#if defined(OS_DOS_COMPATIBLE)
    CrLf [0] = 13;
    CrLf [1] = 10;
    CrLf [2] = 0;
+#else
+   CrLf [0] = 10;
+   CrLf [1] = 0;
+#endif
+
 #ifdef USE_GTAPI
    dev_row = gtWhereY();
    dev_col = gtWhereX();
@@ -142,7 +157,7 @@ HARBOUR HB___ACCEPT( void ) /* Internal Clipper function used in ACCEPT command 
                          /* Basically the simplest Clipper function to        */
                          /* receive data. Parameter : cPrompt. Returns : cRet */
 {
-   char *szResult = ( char * ) hb_xgrab(256); /* Return parameter. Limited to 255 chars */
+   char *szResult = ( char * ) hb_xgrab(ACCEPT_BUFFER_LEN); /* Return parameter. */
    char *szPrompt = hb_parc(1);    /* Pass prompt                            */
    long lLen      = hb_parclen(1); /* Please change to long later on         */
 
@@ -154,7 +169,13 @@ HARBOUR HB___ACCEPT( void ) /* Internal Clipper function used in ACCEPT command 
       Do( 1 );                   /* 1 parameter supplied. Invoke the virtual machine */
    }
 
-   gets( szResult );             /* Read the data. Using gets()            */
+#ifdef OS_UNIX_COMPATIBLE
+   fgets( szResult, ACCEPT_BUFFER_LEN, stdin );             /* Read the data. Using fgets()            */
+#else
+/*TODO: check if it can be replaced with fgets() function 
+*/
+   gets( szResult ); /* Read the data. using gets(). Note; it doesn't check for buffer overflow */
+#endif   
    hb_retc( szResult );
    hb_xfree( szResult );
 }
@@ -325,7 +346,7 @@ void hb_devpos( USHORT row, USHORT col )
          write( hb_set_printhan, "\x0C", 1 );
          p_row = p_col = 0;
       }
-      for( count = p_row; count < row; count++ ) write( hb_set_printhan, CrLf, strlen (CrLf) );
+      for( count = p_row; count < row; count++ ) write( hb_set_printhan, CrLf, CRLF_BUFFER_LEN-1 );
       if( row > p_row ) p_col = 0;
       col += hb_set.HB_SET_MARGIN;
       for( count = p_col; count < col; count++ ) write( hb_set_printhan, " ", 1 );
@@ -374,7 +395,7 @@ HARBOUR HB_QOUT( void )
       MessageBox( 0, hb_parc( 1 ), "Harbour", 0 );
    #else
       int count;
-      hb_altout( CrLf, strlen (CrLf) );
+      hb_altout( CrLf, CRLF_BUFFER_LEN-1 );
       if( hb_set.HB_SET_PRINTER && hb_set_printhan >= 0 )
       {
          p_row++;
