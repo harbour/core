@@ -1,0 +1,299 @@
+// RALTER.och oszt ly implement ci¢.
+// Gener lva: 1999.06.10, 14:40:26, OBJCCC  v2.2.03
+// Meta oszt ly defin¡ci¢: Van
+
+
+#ifndef CA_RMARKER_N
+#ifdef _STRICT_PARENT_
+#ifdef _CA_CM_ONLY_
+#include "RMARKER.och"
+#else // _CA_CM_ONLY_
+#define _CA_CM_ONLY_
+#include "RMARKER.och"
+#undef _CA_CM_ONLY_
+#endif // _CA_CM_ONLY_
+#else
+#include "RMARKER.och"
+#endif // _STRICT_PARENT_
+#endif // CA_RMARKER_N
+
+#ifndef _CA_CM_ONLY_
+#ifndef _RALTER_OCH_
+#define _RALTER_OCH_
+
+
+#xtranslate RALTER.<obj>:id               => <obj>\[CA_OBJECT_N+1\]
+#xtranslate RALTER.<obj>:str              => <obj>\[CA_OBJECT_N+2\]
+#xtranslate RALTER.<obj>:file             => <obj>\[CA_OBJECT_N+3\]
+#xtranslate RALTER.<obj>:line             => <obj>\[CA_OBJECT_N+4\]
+#xtranslate RALTER.<obj>:pos              => <obj>\[CA_OBJECT_N+5\]
+#xtranslate RALTER.<obj>:classify         => <obj>\[CA_OBJECT_N+6\]
+#xtranslate RALTER.<obj>:error            => <obj>\[CA_OBJECT_N+7\]
+#xtranslate RALTER.<obj>:eqtype           => <obj>\[CA_OBJECT_N+8\]
+#xtranslate RALTER.<obj>:mmnum            => <obj>\[CA_TOKEN_N+1\]
+#xtranslate RALTER.<obj>:mmtkid           => <obj>\[CA_TOKEN_N+2\]
+
+
+#xtranslate RALTER.<obj>:oinit            => (OBJGEN.(<obj>):(4))
+#xtranslate RALTER.<obj>:getclass         => (OBJGEN.(<obj>):(5))
+#xtranslate RALTER.<obj>:isclass          => (OBJGEN.(<obj>):(6))
+#xtranslate RALTER.<obj>:getattrib        => (OBJGEN.(<obj>):(7))
+#xtranslate RALTER.<obj>:setattrib        => (OBJGEN.(<obj>):(8))
+#xtranslate RALTER.<obj>:iserror          => (OBJGEN.(<obj>):(CM_OBJECT_N+1))
+#xtranslate RALTER.<obj>:errorstr         => (OBJGEN.(<obj>):(CM_OBJECT_N+2))
+#xtranslate RALTER.<obj>:printtostr       => (OBJGEN.(<obj>):(CM_OBJECT_N+3))
+#xtranslate RALTER.<obj>:getstr           => (OBJGEN.(<obj>):(CM_OBJECT_N+4))
+#xtranslate RALTER.<obj>:copytoken        => (OBJGEN.(<obj>):(CM_OBJECT_N+5))
+#xtranslate RALTER.<obj>:getname          => (OBJGEN.(<obj>):(CM_TOKEN_N+1))
+#xtranslate RALTER.<obj>:setmmidxbymm     => (OBJGEN.(<obj>):(CM_TOKEN_N+2))
+#xtranslate RALTER.<obj>:changebymmlist   => (OBJGEN.(<obj>):(CM_TOKEN_N+3))
+
+
+#xtranslate RALTER.<obj>:tokenlist        => <obj>\[CA_RMARKER_N+1\]
+
+// ™r”k”lve: getstr()
+// ™r”k”lve: oinit(id,str,file,line,pos)
+
+// ™r”k”lve: getstr()
+// ™r”k”lve: oinit(id,str,file,line,pos)
+
+#endif // _RALTER_OCH_
+#endif // _CA_CM_ONLY_
+
+#ifndef CA_RALTER_N
+#define CA_RALTER_N             CA_RMARKER_N+1
+#define CM_RALTER_N             CM_RMARKER_N+0
+#endif // CA_RALTER_N
+
+#ifndef _CA_CM_ONLY_
+#ifndef _RALTERCLASS_OCH_
+#define _RALTERCLASS_OCH_
+
+**********************************************************************
+#xtranslate C.RALTER:<m> => (RALTERCLASS.clRALTER():<m>)
+#xtranslate C.RALTER:self() => (clRALTER())
+
+
+#xtranslate RALTERCLASS.<obj>:parent           => <obj>\[CA_OBJECT_N+1\]
+#xtranslate RALTERCLASS.<obj>:name             => <obj>\[CA_OBJECT_N+2\]
+#xtranslate RALTERCLASS.<obj>:objsize          => <obj>\[CA_OBJECT_N+3\]
+#xtranslate RALTERCLASS.<obj>:attribs          => <obj>\[CA_OBJECT_N+4\]
+#xtranslate RALTERCLASS.<obj>:methods          => <obj>\[CA_OBJECT_N+5\]
+#xtranslate RALTERCLASS.<obj>:classid          => <obj>\[CA_OBJECT_N+6\]
+#xtranslate RALTERCLASS.<obj>:parentclassids   => <obj>\[CA_OBJECT_N+7\]
+#xtranslate RALTERCLASS.<obj>:amblock          => <obj>\[CA_OBJECT_N+8\]
+#xtranslate RALTERCLASS.<obj>:methodsblock     => <obj>\[CA_OBJECT_N+9\]
+#xtranslate RALTERCLASS.<obj>:objmethodsimplement  => <obj>\[CA_OBJECT_N+10\]
+#xtranslate RALTERCLASS.<obj>:errstrarray      => <obj>\[CA_BEHAVIOR_N+1\]
+#xtranslate RALTERCLASS.<obj>:equivclass       => <obj>\[CA_BEHAVIOR_N+2\]
+
+
+#xtranslate RALTERCLASS.<obj>:oinit            => (OBJGEN.(<obj>):(4))
+#xtranslate RALTERCLASS.<obj>:getclass         => (OBJGEN.(<obj>):(5))
+#xtranslate RALTERCLASS.<obj>:isclass          => (OBJGEN.(<obj>):(6))
+#xtranslate RALTERCLASS.<obj>:getattrib        => (OBJGEN.(<obj>):(7))
+#xtranslate RALTERCLASS.<obj>:setattrib        => (OBJGEN.(<obj>):(8))
+#xtranslate RALTERCLASS.<obj>:onew             => (OBJGEN.(<obj>):(CM_OBJECT_N+1))
+#xtranslate RALTERCLASS.<obj>:ocreate          => (OBJGEN.(<obj>):(CM_OBJECT_N+2))
+#xtranslate RALTERCLASS.<obj>:rawoinit         => (OBJGEN.(<obj>):(CM_OBJECT_N+3))
+#xtranslate RALTERCLASS.<obj>:oinitclass       => (OBJGEN.(<obj>):(CM_OBJECT_N+4))
+#xtranslate RALTERCLASS.<obj>:getmethodsimplement  => (OBJGEN.(<obj>):(CM_OBJECT_N+5))
+#xtranslate RALTERCLASS.<obj>:attribidx        => (OBJGEN.(<obj>):(CM_OBJECT_N+6))
+#xtranslate RALTERCLASS.<obj>:needclassid      => (OBJGEN.(<obj>):(CM_OBJECT_N+7))
+#xtranslate RALTERCLASS.<obj>:isinheritfrom    => (OBJGEN.(<obj>):(CM_OBJECT_N+8))
+#xtranslate RALTERCLASS.<obj>:onewerror        => (OBJGEN.(<obj>):(CM_BEHAVIOR_N+1))
+#xtranslate RALTERCLASS.<obj>:copyfromtoken    => (OBJGEN.(<obj>):(CM_BEHAVIOR_N+2))
+#xtranslate RALTERCLASS.<obj>:findclassify     => (OBJGEN.(<obj>):(CM_BEHAVIOR_N+3))
+#xtranslate RALTERCLASS.<obj>:isresultmarker   => (OBJGEN.(<obj>):(CM_TOKENCLASS_N+1))
+
+
+
+// ™r”k”lve: onew(id,str,file,line,pos)
+
+// ™r”k”lve: onew(id,str,file,line,pos)
+
+#endif // _RALTERCLASS_OCH_
+#endif // _CA_CM_ONLY_
+
+#ifndef CA_RALTERCLASS_N
+#define CA_RALTERCLASS_N             CA_RMARKERCLASS_N+0
+#define CM_RALTERCLASS_N             CM_RMARKERCLASS_N+0
+#endif // CA_RALTERCLASS_N
+
+
+**********************************************************************
+#ifdef _RALTER_PRG_
+#ifndef _RALTER_PRG_OCH_
+#define _RALTER_PRG_OCH_
+
+
+**********************************************************************
+#xtranslate othis:<m> => RALTER.(othis):<m>
+#xtranslate thisclass:<m> => RALTERCLASS.(this:getClass()):<m>
+#define CTHIS RALTER
+
+
+**********************************************************************
+#xtranslate this:<m> => RALTER.(this):<m>
+
+#xcommand implement getstr()       => static function getstr(this)
+#xcommand implement oinit(id,str,file,line,pos) => ;
+                    static function oinit(this,id,str,file,line,pos)
+
+#ifdef _IMPLEMENT_EXPORT_
+#xcommand implement export getstr()       => function getstr(this)
+#xcommand implement export oinit(id,str,file,line,pos) => ;
+                    function oinit(this,id,str,file,line,pos)
+#endif // _IMPLEMENT_EXPORT_
+
+#xtranslate super:oinit            => (OBJGENM.(eval(BEHAVIOR.clRMARKER():objmethodsimplement)).(this):(4))
+#xtranslate super:getclass         => (OBJGENM.(eval(BEHAVIOR.clRMARKER():objmethodsimplement)).(this):(5))
+#xtranslate super:isclass          => (OBJGENM.(eval(BEHAVIOR.clRMARKER():objmethodsimplement)).(this):(6))
+#xtranslate super:getattrib        => (OBJGENM.(eval(BEHAVIOR.clRMARKER():objmethodsimplement)).(this):(7))
+#xtranslate super:setattrib        => (OBJGENM.(eval(BEHAVIOR.clRMARKER():objmethodsimplement)).(this):(8))
+#xtranslate super:iserror          => (OBJGENM.(eval(BEHAVIOR.clRMARKER():objmethodsimplement)).(this):(CM_OBJECT_N+1))
+#xtranslate super:errorstr         => (OBJGENM.(eval(BEHAVIOR.clRMARKER():objmethodsimplement)).(this):(CM_OBJECT_N+2))
+#xtranslate super:printtostr       => (OBJGENM.(eval(BEHAVIOR.clRMARKER():objmethodsimplement)).(this):(CM_OBJECT_N+3))
+#xtranslate super:getstr           => (OBJGENM.(eval(BEHAVIOR.clRMARKER():objmethodsimplement)).(this):(CM_OBJECT_N+4))
+#xtranslate super:copytoken        => (OBJGENM.(eval(BEHAVIOR.clRMARKER():objmethodsimplement)).(this):(CM_OBJECT_N+5))
+#xtranslate super:getname          => (OBJGENM.(eval(BEHAVIOR.clRMARKER():objmethodsimplement)).(this):(CM_TOKEN_N+1))
+#xtranslate super:setmmidxbymm     => (OBJGENM.(eval(BEHAVIOR.clRMARKER():objmethodsimplement)).(this):(CM_TOKEN_N+2))
+#xtranslate super:changebymmlist   => (OBJGENM.(eval(BEHAVIOR.clRMARKER():objmethodsimplement)).(this):(CM_TOKEN_N+3))
+
+**********************************************************************
+static function setCMethods(pOsztaly)
+// Egy t”mb”t felt”lt az oszt ly m–veleti blokkjaival.
+   pOsztaly[(CM_OBJECT_N+4)]:={|this| getstr(this)}
+   pOsztaly[(4)]:={|this,id,str,file,line,pos| oinit(this,id,str,file,line,pos)}
+return pOsztaly
+
+**********************************************************************
+static function setCams(ta,tm)
+// Egy t”mb”t felt”lt az oszt ly  ltal def. objektumok attrib£tumaival ‚s m–veleteivel.
+   ta[CA_RMARKER_N+1-CA_NIL_N] := {CA_RMARKER_N+1,'tokenlist', }
+
+   tm[(CM_OBJECT_N+4)-CM_NIL_N] := {(CM_OBJECT_N+4),'getstr','',nil}
+   tm[(4)-CM_NIL_N] := {(4),'oinit','id,str,file,line,pos',nil}
+return nil
+
+#ifndef _NO_CLRALTER_
+#ifdef _STRICT_PARENT_
+#ifdef _CA_CM_ONLY_
+#include "meta.och"
+#else // _CA_CM_ONLY_
+#define _CA_CM_ONLY_
+#include "meta.och"
+#undef _CA_CM_ONLY_
+#endif // _CA_CM_ONLY_
+#else
+#include "meta.och"
+#endif // _STRICT_PARENT_
+**********************************************************************
+function clRALTER()
+// El“szedi az oszt lyt. (class)
+static osztaly
+   if (osztaly==nil)
+      osztaly:=META.mcRALTERCLASS():onew(;
+                  clRMARKER(),;
+                  "RALTER",;
+                  CA_RALTER_N,;
+                  CM_RALTER_N,;
+                  {|ta,tm|setCams(ta,tm)},;
+                  {|t|setCMethods(t)})
+   endif
+return osztaly
+#endif // _NO_CLRALTER_
+
+#ifndef _NO_RALTERCLASS_
+
+**********************************************************************
+#xtranslate class:<m> => RALTERCLASS.(class):<m>
+
+#xcommand cimplement onew(id,str,file,line,pos) => ;
+                    static function onew(class,id,str,file,line,pos)
+
+#ifdef _IMPLEMENT_EXPORT_
+#xcommand cimplement export onew(id,str,file,line,pos) => ;
+                    function onew(class,id,str,file,line,pos)
+#endif // _IMPLEMENT_EXPORT_
+
+#xtranslate superclass:oinit            => (OBJGENM.(eval(BEHAVIOR.mcRMARKERCLASS():objmethodsimplement)).(class):(4))
+#xtranslate superclass:getclass         => (OBJGENM.(eval(BEHAVIOR.mcRMARKERCLASS():objmethodsimplement)).(class):(5))
+#xtranslate superclass:isclass          => (OBJGENM.(eval(BEHAVIOR.mcRMARKERCLASS():objmethodsimplement)).(class):(6))
+#xtranslate superclass:getattrib        => (OBJGENM.(eval(BEHAVIOR.mcRMARKERCLASS():objmethodsimplement)).(class):(7))
+#xtranslate superclass:setattrib        => (OBJGENM.(eval(BEHAVIOR.mcRMARKERCLASS():objmethodsimplement)).(class):(8))
+#xtranslate superclass:onew             => (OBJGENM.(eval(BEHAVIOR.mcRMARKERCLASS():objmethodsimplement)).(class):(CM_OBJECT_N+1))
+#xtranslate superclass:ocreate          => (OBJGENM.(eval(BEHAVIOR.mcRMARKERCLASS():objmethodsimplement)).(class):(CM_OBJECT_N+2))
+#xtranslate superclass:rawoinit         => (OBJGENM.(eval(BEHAVIOR.mcRMARKERCLASS():objmethodsimplement)).(class):(CM_OBJECT_N+3))
+#xtranslate superclass:oinitclass       => (OBJGENM.(eval(BEHAVIOR.mcRMARKERCLASS():objmethodsimplement)).(class):(CM_OBJECT_N+4))
+#xtranslate superclass:getmethodsimplement  => (OBJGENM.(eval(BEHAVIOR.mcRMARKERCLASS():objmethodsimplement)).(class):(CM_OBJECT_N+5))
+#xtranslate superclass:attribidx        => (OBJGENM.(eval(BEHAVIOR.mcRMARKERCLASS():objmethodsimplement)).(class):(CM_OBJECT_N+6))
+#xtranslate superclass:needclassid      => (OBJGENM.(eval(BEHAVIOR.mcRMARKERCLASS():objmethodsimplement)).(class):(CM_OBJECT_N+7))
+#xtranslate superclass:isinheritfrom    => (OBJGENM.(eval(BEHAVIOR.mcRMARKERCLASS():objmethodsimplement)).(class):(CM_OBJECT_N+8))
+#xtranslate superclass:onewerror        => (OBJGENM.(eval(BEHAVIOR.mcRMARKERCLASS():objmethodsimplement)).(class):(CM_BEHAVIOR_N+1))
+#xtranslate superclass:copyfromtoken    => (OBJGENM.(eval(BEHAVIOR.mcRMARKERCLASS():objmethodsimplement)).(class):(CM_BEHAVIOR_N+2))
+#xtranslate superclass:findclassify     => (OBJGENM.(eval(BEHAVIOR.mcRMARKERCLASS():objmethodsimplement)).(class):(CM_BEHAVIOR_N+3))
+#xtranslate superclass:isresultmarker   => (OBJGENM.(eval(BEHAVIOR.mcRMARKERCLASS():objmethodsimplement)).(class):(CM_TOKENCLASS_N+1))
+
+**********************************************************************
+static function setMCMethods(pOsztaly)
+// Egy t”mb”t felt”lt a metaoszt ly m–veleti blokkjaival.
+   pOsztaly[(CM_OBJECT_N+1)]:={|class,id,str,file,line,pos| onew(class,id,str,file,line,pos)}
+return pOsztaly
+
+**********************************************************************
+static function setMCams(ta,tm)
+// Egy t”mb”t felt”lt a metaoszt ly  ltal def. objektumok attrib£tumaival ‚s m–veleteivel.
+
+   tm[(CM_OBJECT_N+1)-CM_NIL_N] := {(CM_OBJECT_N+1),'onew','id,str,file,line,pos',nil}
+return nil
+
+**********************************************************************
+#ifndef _NO_MCRALTERCLASS_
+#ifdef _STRICT_PARENT_
+#ifdef _CA_CM_ONLY_
+#include "meta.och" // "metaclas.och" 
+#else // _CA_CM_ONLY_
+#define _CA_CM_ONLY_
+#include "meta.och" // "metaclas.och" 
+#undef _CA_CM_ONLY_
+#endif // _CA_CM_ONLY_
+#else
+#include "meta.och" // "metaclas.och" 
+#endif // _STRICT_PARENT_
+function mcRALTERCLASS()
+// El“szedi az oszt ly metaoszt ly t. (metaclass)
+static metaOsztaly
+   if (metaOsztaly==nil)
+      metaOsztaly:=META.clMETA():onew(;
+                  mcRMARKERCLASS(),;
+                  "RALTERCLASS",;
+                  CA_RALTERCLASS_N,;
+                  CM_RALTERCLASS_N,;
+                  {|ta,tm|setMCams(ta,tm)},;
+                  {|t|setMCMethods(t)})
+   endif
+return metaOsztaly
+#endif // _NO_MCRALTERCLASS_
+
+#endif // _NO_RALTERCLASS_
+#ifdef _IMPLEMENT_ONEW_
+**********************************************************************
+cimplement onew(id,str,file,line,pos)
+local o:=class:ocreate()
+
+    RALTER.o:oinit(id,str,file,line,pos)
+return o
+#endif // _IMPLEMENT_ONEW_
+
+**********************************************************************
+#ifdef _IMPLEMENT_OINIT_
+implement oinit(id,str,file,line,pos)
+    super:oinit()
+return this
+#endif // _IMPLEMENT_OINIT_
+
+**********************************************************************
+**********************************************************************
+#endif // _RALTER_PRG_OCH_
+#endif // _RALTER_PRG_

@@ -1,0 +1,438 @@
+/*
+ * $Id$
+ */
+
+V ltoz sok
+----------
+
+Egy bejegyz‚snek a k”vetkez“eket kell tartalmaznia: 
+d tum, a programoz¢ neve, verzi¢ (ha van) a v ltoz s le¡r sa.
+
+Levente Csisz r <lcsiszar@index.hu>, 1998.01.13
+
+
+1999.11.07, Csisz r Levente, CCCPPC v0.7.06
+
+   - tnevezve CCCPPC-re.
+
+   - Kibocs t s teszt c‚lokra.
+
+   - Hozz vettem az OBJECT k”nyvt rat ‚s az OBJCCC ford¡t¢t.
+
+   - Elbukott a p06-os cteszt-en. (Ures zarojeles makrot nem tudott
+     helyettesiteni.) Ezt kijavitottam.
+
+   - Elbukik a p22-es cteszt-en. (Pontosvesszo, mint sorfolytato
+     karakter.) Ezt egyenlore nem tudtam megtalalni, ugy maradt.
+
+1999.09.30, Csisz r Levente
+
+   - Elk‚szlt a C++ v ltozat els“ b‚t ja. Ez a v ltozat lez rva,
+     tov bbi m¢dos¡t s csak m–k”d‚st g tl¢ (pl. elsz ll s) hiba
+     eset‚n lehets‚ges.
+
+1999.09.28, Csisz r Levente, v0.7.05
+
+   - Az stdout-ot nem kell lez rni.
+
+1999.09.25, Csisz r Levente, v0.7.04
+
+   - V‚gtelen ciklusba kerlt az ilyen esetekben: 
+
+        #xtranslate a [[b]] => bb
+
+        a
+
+     Mivel az 'a' sor eset‚n a '[[b]]'-ben a b nem illeszkedik,
+     ez‚rt a bels“ alternat¡v t mindig £jra pr¢b lta.
+
+1999.09.21, Csisz r Levente, v0.7.03
+
+   - Az eqNextToken elsz llt, ha valamelyik nextToken nil volt.
+
+     Pl. #xtranslate a <a> => a
+
+1999.06.16, Csisz r Levente, v0.7.02
+
+   - Elemz‚si hiba volt az xtranslate parancsokban. He egy norm l
+     token sor k‚t alternat¡va k”z‚ esett, akkor azt t”r”lte.
+     
+   - A '#' parancsokra ugyan£gy a r”vid¡tett n‚v egyez‚s ‚rv‚nyes,
+     mint az command-okra. (Teh t #define helyett elfogadja a 
+     '#defi'-t, etc.)
+     
+   - HPRERR_XTRUNDEFRM hibajelz‚sben a sz”veg jav¡tva, a hi nyolt
+     match marker-t ki¡rja.
+     
+   - CCC-ben 192 param‚ter vesz  t.
+     
+1999.06.10, Csisz r Levente, v0.7.01
+
+   - Optimaliz ci¢k: a define vagy az xtranslate elemz“t csak akkor 
+     h¡vja, ha t‚nylegesen van mit elemeznik.
+     
+   - A t”bb elem– alternat¡v k kezel‚s rossz volt.
+   
+   - A hparser-ben az  llapotok sz mok, nem stringek.
+   
+   - A TKID_XXX-ek sz mok ‚s nem stringek.
+   
+1999.06.09, Csisz r Levente, v0.7.00
+
+   - Az elemz‚st a translate/command f val v‚gzi.
+     A -t kapcsol¢val szab lyozhat¢, hogy melyik m¢dszert 
+     haszn lja.
+   
+1999.06.07, Csisz r Levente, v0.6.05
+
+   - A tokenekben t rolja, hogy r”vid¡tve (#translate vagy 
+     #xtranslate) kell-e illeszteni egy  #translate/#command bal 
+     oldal n.
+     
+   - —j 'r”vid¡tett illeszt‚s' k¢d.
+   
+   - A stringeket case insensit¡ven kell illeszteni, ‚s r juk is 
+     ‚rv‚nyes a r”v¡d¡tett illeszt‚si szab ly.
+     
+   - Fel‚p¡ti a translate/command f t, de egyenl“re nem haszn lja fel
+     az elemz‚skor.
+     
+1999.06.03, Csisz r Levente, v0.6.04
+
+   - T”bb user include fil‚t is elfogad.
+   
+1999.05.31, Csisz r Levente, v0.6.03
+
+   - A user include fil‚b“l '#include file' sort gy rt ‚s 
+     feldolgozza. Œgy a -I-k”z”tt is keresi ‚s makr¢k feldolgoz s val
+     is ”ssze van vonva.
+     
+1999.05.29, Csisz r Levente, v0.6.02
+
+   - '-l' helyett '-p' volt az include m‚lys‚g kapcsol¢ a 
+     param‚terek feldolgoz s n l.
+   
+   - Help sz”veg jav¡t sok.
+   
+   - A getopt() rossz volt, ha egy '-'-os opci¢ param‚teresnek volt
+     defini lva, de nem adtunk meg param‚tert.
+     
+1999.05.28, Csisz r Levente, v0.6.01
+
+   - Include m‚lys‚g maximaliz l sa.
+
+   - Hib ra be ll¡tja az errorlevel()-t.
+   
+   - Ha az el“feldolgoz s sor n hiba volt (-D,-u), akkor meg ll.
+   
+   - Miel“tt megnyitn  az output fil‚t, ellen“rzi, hogy az input
+     l‚tezik-e.
+
+   - A default hibakijelz“ meg‚rti a $<sz m>-ot a hibastringben.
+   
+   - Sz¢t rak ki¡r sa elemenk‚nt t”rt‚nik.
+
+   Kell m‚g:
+      
+      - A teszt k”rnyezetben minden ‚rdekes esetre teszt program.
+      - Tesztel‚s.
+      - Gyors¡t s.
+      
+1999.05.27, Csisz r Levente, v0.6.00
+
+   - Parancssori makr¢ megad si lehet“s‚g.
+   
+   - #command,#translate,#xcommand,#xtranslate
+   
+   - Az res sorokat £gy kezeli, ahogy kell.
+   
+   - A #line ott van, ahol kell.
+   
+   - #error, #stdout.
+
+   - Kell m‚g:
+      
+      - Include m‚lys‚g maximaliz l sa.
+      - Sz¢t rak ki¡r sa elemenk‚nt t”rt‚njen.
+      - Hib ra  ll¡tsa be az errorlevel()-t.
+      - Nagyobb hib kra  lljon meg.
+      - A default hibakijelz“ ‚rtse meg a $<sz m>-ot a hiba
+        stringben, ‚s helyettes¡tse be a megfelel“ param‚terrel.
+      - A teszt k”rnyezetben minden ‚rdekes esetre teszt program.
+      - Tesztel‚s
+      - Gyors¡t s.
+      
+      
+1999.05.26, Csisz r Levente, v0.5.00
+
+   - Hibakijelz‚s OK.
+     Mj.: Ha nem tal lja a fil‚t, akkor t£l sok hibajelz‚st ad.
+     
+   - Kompatibilis helyettes¡t‚si m¢d.
+   
+   - #xcommand-ok kis hib val: Csak sor elej‚n kezdi el 
+     helyettes¡teni, de azt nem n‚zi, hogy a teljes sort 
+     helyettes¡tette-e.
+   
+   - #define-n‚l a jobb oldal v‚g‚r“l a space-kat lev gja.
+   
+   - A kifejez‚s teszt program  tkerlt a cccppalx-be.
+   
+   - Rendk¡vl lass£ (3m.157s a konyvel.prg leford¡t sa).
+   
+   - Kell:
+      - les adatokon tesztelni.
+      - Gyors¡tani.
+      - #line el“tt/ut n az res sorokat t”r”lni.
+      
+1999.05.24, Csisz r Levente, v0.4.03
+
+   - Helyettes¡t‚sek.
+   
+   - #endif-re nem kell hibajelz‚s.
+   
+1999.05.24, Csisz r Levente, v0.4.02
+
+   - errorStream-es hibakezel‚s.
+   
+   - Srg“sen kell:
+   
+      - Helyettes¡t‚sek. (A string hat rol¢k is!)
+      
+      - Hiba kijelz‚s:
+         - Hi nyz¢ #endif
+         - Hib k az #xtranslate-ekben.
+         
+      - Parancssori makr¢ defin¡ci¢k.
+      
+   - Kell m‚g:
+   
+      - Az include m‚lys‚g maximaliz l sa.
+      
+      - R‚szletesebb hibazenetek.
+      
+      - Kapcsol¢, hogy csak unixos fil‚neveket fogadjon el.
+      
+      - Space-ek a /* */ el“tt.
+      
+      - šres sorok lenyel‚se.
+      
+1999.05.21, Csisz r Levente, v0.4.01
+
+   - Minden match ‚s minden result marker. (Nincs tesztelve.)
+   
+   - '\' kezel‚se.
+   
+   - Parancssorban meg lehet include fil‚t adni.
+     Mj.: Tesztelni kell, mi van, ha ez az include file k¢dot
+          gener l.
+          
+   - Az xcommand, translate, command ideiglenesen xtranslate-k‚nt
+     van kezelve.
+
+1999.05.19, Csisz r Levente, v0.4.00
+
+   - #line, #include, parancssori param‚terez‚s.
+   
+   - Hi nyzik:
+              
+      - '\' kezel‚se a xtranslate definici¢kban.
+      
+      - #line el“tt ut n az res sorok lenyel‚se.
+      
+      - #if ne ny£ljon t£l a fil‚n. (Ezt tesztelni kell!)
+      
+      - A '-' input fil‚ a standard input legyen az FREADER-ben.
+
+      - Parancssorban meg lehessen adni olyan include fil‚t, amit 
+        beolvas (std.ch).
+      
+      - Parancssorban meg lehessen #define makr¢ defin¡ci¢t.
+      
+      - Az xtranslate algoritmusa jobban hasonl¡tson a spec-hez.
+      
+        Mj.: A spec el“r“l megy h trafel‚, de nem tudni, hogyan l‚p 
+             vissza. A jelenlegi algoritmusunk h tulr¢l j”n el“re.
+             
+      - Helyettes¡t‚sek kezel‚se (kapcsol¢val szab lyozhat¢ legyen),
+        nagybet–s¡t‚sek, string hat rol¢k, lez ratlan stringek
+        helyes kezel‚se.
+        
+         Pl: '**' -> '^',  '.t.' ->'.T.', 'a' -> "a" etc.
+         
+      - Kapcsol¢val szab lyozhat¢ legyen, hogy a /* */ megjegyz‚s el“l
+        lenyelje-e a space-kat. Illetve, hagyjon-e egy space-t. 
+        
+        a /* huhu */b  -> ab
+        
+        A fenti p‚ld ban a ford¡t¢ az ab azonos¡t¢t fogja keresni, 
+        holott a spec-ben ez lefordul.
+        
+      - Rossz xtranslate defin¡ci¢k kijelz‚se:
+         - hi nyz¢ ']'
+         - k‚t‚rtelm– helyettes¡t‚s.
+         - Hi nyz¢ vagy dupl n defini lt marker nevek.
+         
+      - Hibafolyam nincs kl”n.
+      
+      - xtranslate p rjai. (xcommand, etc)
+      
+      - space-ek bel”v‚se.
+      
+      - A t”bbi match marker.
+      
+   
+1999.05.18, Csisz r Levente, v0.3.01
+
+   - #ifdef,#ifndef,#else,#endif
+   
+1999.05.15, Csisz r Levente, v0.3.00
+
+   - —j regular match marker illeszt“ k¢d elemz“ f kkal.
+   
+   - Tokeniz l s.
+   
+   - '&&' megjegyz‚s.
+   
+   Hi nyzik:
+      
+      - Tesztelni a kl”nb”z“ spec eseteket:
+        - A tokeneket case szenzit¡ven illeszti-e az xtranslate.
+        - A stringeket hogyan illeszti.
+        - Ha az alternat¡v k nem egyeznek meg a jobb ‚s a bal 
+          oldalon (bal oldalon alternat¡va, a jobb oldalon nem),
+          vagy nincs elegend“ sz m£ alternat¡va:
+          
+          #xtranslate HUHU [<a>] => f(<a>)
+          #xtranslate HUHU <a>   => f([<a>])
+          
+          #xtranslate HUHU [a <a>] [b <b>]   => f([<a>,<b>,])
+             HUHU a 1
+             HUHU b 2
+             HUHU a 1 b 1
+             HUHU a 1 a 1 b 1
+             HUHU a 1 b 1 b 1
+             HUHU a 1 a 1
+             HUHU b 1 b 1
+             
+          Mj.: Ilyenkor ha egy tal n volt illeszt‚s, akkor az 
+               utols¢t behelyettes¡ti.
+          
+        
+      - Helyettes¡t‚sek kezel‚se (kapcsol¢val szab lyozhat¢ legyen),
+        nagybet–s¡t‚sek, string hat rol¢k, lez ratlan stringek
+        helyes kezel‚se.
+        
+         Pl: '**' -> '^',  '.t.' ->'.T.', 'a' -> "a" etc.
+         
+      - Kapcsol¢val szab lyozhat¢ legyen, hogy a /* */ megjegyz‚s el“l
+        lenyelje-e a space-kat. Illetve, hagyjon-e egy space-t. 
+        
+        a /* huhu */b  -> ab
+        
+        A fenti p‚ld ban a ford¡t¢ az ab azonos¡t¢t fogja keresni, 
+        holott a spec-ben ez lefordul.
+        
+      - Rossz xtranslate defin¡ci¢k kijelz‚se:
+         - hi nyz¢ ']'
+         - k‚t‚rtelm– helyettes¡t‚s.
+         - Hi nyz¢ vagy dupl n defini lt marker nevek.
+         
+      - Hibafolyam nincs kl”n.
+      
+      - xtranslate p rjai.
+      
+      - space-ek bel”v‚se.
+      
+      - A t”bbi match marker.
+      
+      - A #ifdef, ‚s a #include, #line
+      
+      - Elemi gyors¡t sok: 
+         - A kommenteket nem kell t rolni.
+         - A classify-oknak sz moknak kellene lennie, hogy az elemz“
+           f kn l ne kelljen keresni, hanem a sz mmal lehessen 
+           indexelni.
+         - A kifejez‚shat r elemz‚sn‚l minden tokenre t”bbsz”r is
+           ind¡t elemz“ f t, ezt optimaliz lni lehet, £gy, hogy
+           kisz moljuk, honnan fog indulni.
+           
+
+1999.05.05, Csisz r Levente, v0.2.04
+
+   - Alternat¡v kat illeszt.
+   
+   - List ‚s regular match markereket illeszt, minden markert
+     helyettes¡t, de a space-k egyenl“re m‚g nem helyesek.
+     
+   - A sorv‚gjeleket kezeli crlf ‚s lf-es form ban is.
+   
+   Hi nyzik:
+   
+      - Rossz xtranslate defin¡ci¢k kijelz‚se:
+         - hi nyz¢ ']'
+         - k‚t‚rtelm– helyettes¡t‚s.
+         
+      - Hibafolyam nincs kl”n.
+      
+      - Nincs tokeniz l s (pedig ¡gy kell illeszteni)
+      
+      - xtranslate p rjai.
+      
+      - space-ek bel”v‚se.
+      
+      - A t”bbi match marker.
+      
+      - A #ifdef, ‚s a #include, #line
+      
+      
+1999.04.26, Csisz r Levente, v0.2.03
+
+   - Az xtranslate parancsokban elv‚gzi a helyettes¡t‚st, ha nincs 
+     benne marker (egyik oldalon sem) ‚s nincs benne alternat¡va
+     (egyik oldalon sem).
+     
+   - Hi nyzik: 
+        - markerek illeszt‚se, helyettes¡t‚se.
+ 
+        - Alternat¡v k illeszt‚se, helyettes¡t‚se.
+   
+        - xtranslate parancs elemz‚s‚n‚l jelezni kell, ha van
+          hi nyz¢ ']'
+          
+        - xtranslate parancs elemz‚s‚n‚l jelezni kell, ha 
+          t”bb‚rtelm– a parancs.
+          
+        - Hibakezel‚s (a token stream-be betett hiba tokenek
+          kl”n kezel‚se ‚s ki¡r sa).
+          Mj.: Ezeknek a tokeneknek kl”n stream-et kellene
+               rendszeres¡teni, hogy biztosan ne vesszenek
+               el.
+          
+   
+1999.04.24, Csisz r Levente, v0.2.02
+
+   - K¢d teljesen  t¡rva objektumosra.
+   
+   - A define teljesen k‚sz.
+   
+   - Az xtranslate parancsokat beolvassa, de a helyettes¡t‚st nem 
+     v‚gzi el.
+     
+   - include, ifdef, undef, hibakezel‚s hi nyzik.
+   
+1999.02.07, Csisz r Levente, v0.2.01
+
+   - wmkgen 1.2.03
+
+1998.09.08, Csisz r Levente, v0.2.00
+
+   - Els“ kibocs s: #ifdef,#ifndef,#define,#undef,#include
+     makr¢parancsok.
+     ™sszesen 4 nap alatt k‚szlt: 
+     1998.09.01, 1998.09.04, 1998.09.07, 1998.09.08.
+
+1998.09.01, Csisz r Levente, v0.1.00
+
+   - Indul¢ v ltozat.
+

@@ -1,0 +1,271 @@
+// DEFDICT.och oszt ly implement ci¢.
+// Gener lva: 1999.06.10, 14:39:58, OBJCCC  v2.2.03
+// Meta oszt ly defin¡ci¢: Van
+
+
+#ifndef CA_OBJECT_N
+#ifdef _STRICT_PARENT_
+#ifdef _CA_CM_ONLY_
+#include "OBJECT.och"
+#else // _CA_CM_ONLY_
+#define _CA_CM_ONLY_
+#include "OBJECT.och"
+#undef _CA_CM_ONLY_
+#endif // _CA_CM_ONLY_
+#else
+#include "OBJECT.och"
+#endif // _STRICT_PARENT_
+#endif // CA_OBJECT_N
+
+#ifndef _CA_CM_ONLY_
+#ifndef _DEFDICT_OCH_
+#define _DEFDICT_OCH_
+
+
+
+
+#xtranslate DEFDICT.<obj>:oinit            => (OBJGEN.(<obj>):(4))
+#xtranslate DEFDICT.<obj>:getclass         => (OBJGEN.(<obj>):(5))
+#xtranslate DEFDICT.<obj>:isclass          => (OBJGEN.(<obj>):(6))
+#xtranslate DEFDICT.<obj>:getattrib        => (OBJGEN.(<obj>):(7))
+#xtranslate DEFDICT.<obj>:setattrib        => (OBJGEN.(<obj>):(8))
+
+
+#xtranslate DEFDICT.<obj>:dict             => <obj>\[CA_OBJECT_N+1\]
+
+// Specifik lva: add(edefdict)
+// Specifik lva: atidx(name)
+// Specifik lva: atkey(name)
+// Specifik lva: delkey(name)
+// Specifik lva: printstr(printBlock)
+// ™r”k”lve: oinit()
+
+#xtranslate DEFDICT.<obj>:add              => (OBJGEN.(<obj>):(CM_OBJECT_N+1))
+#xtranslate DEFDICT.<obj>:atidx            => (OBJGEN.(<obj>):(CM_OBJECT_N+2))
+#xtranslate DEFDICT.<obj>:atkey            => (OBJGEN.(<obj>):(CM_OBJECT_N+3))
+#xtranslate DEFDICT.<obj>:delkey           => (OBJGEN.(<obj>):(CM_OBJECT_N+4))
+#xtranslate DEFDICT.<obj>:printstr         => (OBJGEN.(<obj>):(CM_OBJECT_N+5))
+// ™r”k”lve: oinit()
+
+#endif // _DEFDICT_OCH_
+#endif // _CA_CM_ONLY_
+
+#ifndef CA_DEFDICT_N
+#define CA_DEFDICT_N             CA_OBJECT_N+1
+#define CM_DEFDICT_N             CM_OBJECT_N+5
+#endif // CA_DEFDICT_N
+
+#ifndef _CA_CM_ONLY_
+#ifndef _DEFDICTCLASS_OCH_
+#define _DEFDICTCLASS_OCH_
+
+**********************************************************************
+#xtranslate C.DEFDICT:<m> => (DEFDICTCLASS.clDEFDICT():<m>)
+#xtranslate C.DEFDICT:self() => (clDEFDICT())
+
+
+#xtranslate DEFDICTCLASS.<obj>:parent           => <obj>\[CA_OBJECT_N+1\]
+#xtranslate DEFDICTCLASS.<obj>:name             => <obj>\[CA_OBJECT_N+2\]
+#xtranslate DEFDICTCLASS.<obj>:objsize          => <obj>\[CA_OBJECT_N+3\]
+#xtranslate DEFDICTCLASS.<obj>:attribs          => <obj>\[CA_OBJECT_N+4\]
+#xtranslate DEFDICTCLASS.<obj>:methods          => <obj>\[CA_OBJECT_N+5\]
+#xtranslate DEFDICTCLASS.<obj>:classid          => <obj>\[CA_OBJECT_N+6\]
+#xtranslate DEFDICTCLASS.<obj>:parentclassids   => <obj>\[CA_OBJECT_N+7\]
+#xtranslate DEFDICTCLASS.<obj>:amblock          => <obj>\[CA_OBJECT_N+8\]
+#xtranslate DEFDICTCLASS.<obj>:methodsblock     => <obj>\[CA_OBJECT_N+9\]
+#xtranslate DEFDICTCLASS.<obj>:objmethodsimplement  => <obj>\[CA_OBJECT_N+10\]
+
+
+#xtranslate DEFDICTCLASS.<obj>:oinit            => (OBJGEN.(<obj>):(4))
+#xtranslate DEFDICTCLASS.<obj>:getclass         => (OBJGEN.(<obj>):(5))
+#xtranslate DEFDICTCLASS.<obj>:isclass          => (OBJGEN.(<obj>):(6))
+#xtranslate DEFDICTCLASS.<obj>:getattrib        => (OBJGEN.(<obj>):(7))
+#xtranslate DEFDICTCLASS.<obj>:setattrib        => (OBJGEN.(<obj>):(8))
+#xtranslate DEFDICTCLASS.<obj>:onew             => (OBJGEN.(<obj>):(CM_OBJECT_N+1))
+#xtranslate DEFDICTCLASS.<obj>:ocreate          => (OBJGEN.(<obj>):(CM_OBJECT_N+2))
+#xtranslate DEFDICTCLASS.<obj>:rawoinit         => (OBJGEN.(<obj>):(CM_OBJECT_N+3))
+#xtranslate DEFDICTCLASS.<obj>:oinitclass       => (OBJGEN.(<obj>):(CM_OBJECT_N+4))
+#xtranslate DEFDICTCLASS.<obj>:getmethodsimplement  => (OBJGEN.(<obj>):(CM_OBJECT_N+5))
+#xtranslate DEFDICTCLASS.<obj>:attribidx        => (OBJGEN.(<obj>):(CM_OBJECT_N+6))
+#xtranslate DEFDICTCLASS.<obj>:needclassid      => (OBJGEN.(<obj>):(CM_OBJECT_N+7))
+#xtranslate DEFDICTCLASS.<obj>:isinheritfrom    => (OBJGEN.(<obj>):(CM_OBJECT_N+8))
+
+
+
+
+
+#endif // _DEFDICTCLASS_OCH_
+#endif // _CA_CM_ONLY_
+
+#ifndef CA_DEFDICTCLASS_N
+#define CA_DEFDICTCLASS_N             CA_BEHAVIOR_N+0
+#define CM_DEFDICTCLASS_N             CM_BEHAVIOR_N+0
+#endif // CA_DEFDICTCLASS_N
+
+
+**********************************************************************
+#ifdef _DEFDICT_PRG_
+#ifndef _DEFDICT_PRG_OCH_
+#define _DEFDICT_PRG_OCH_
+
+
+**********************************************************************
+#xtranslate othis:<m> => DEFDICT.(othis):<m>
+#xtranslate thisclass:<m> => DEFDICTCLASS.(this:getClass()):<m>
+#define CTHIS DEFDICT
+
+
+**********************************************************************
+#xtranslate this:<m> => DEFDICT.(this):<m>
+
+#xcommand implement add(edefdict)  => static function add(this,edefdict)
+#xcommand implement atidx(name)    => static function atidx(this,name)
+#xcommand implement atkey(name)    => static function atkey(this,name)
+#xcommand implement delkey(name)   => static function delkey(this,name)
+#xcommand implement printstr(printBlock) => ;
+                    static function printstr(this,printBlock)
+#xcommand implement oinit()        => static function oinit(this)
+
+#ifdef _IMPLEMENT_EXPORT_
+#xcommand implement export add(edefdict)  => function add(this,edefdict)
+#xcommand implement export atidx(name)    => function atidx(this,name)
+#xcommand implement export atkey(name)    => function atkey(this,name)
+#xcommand implement export delkey(name)   => function delkey(this,name)
+#xcommand implement export printstr(printBlock) => ;
+                    function printstr(this,printBlock)
+#xcommand implement export oinit()        => function oinit(this)
+#endif // _IMPLEMENT_EXPORT_
+
+#xtranslate super:oinit            => (OBJGENM.(eval(BEHAVIOR.clOBJECT():objmethodsimplement)).(this):(4))
+#xtranslate super:getclass         => (OBJGENM.(eval(BEHAVIOR.clOBJECT():objmethodsimplement)).(this):(5))
+#xtranslate super:isclass          => (OBJGENM.(eval(BEHAVIOR.clOBJECT():objmethodsimplement)).(this):(6))
+#xtranslate super:getattrib        => (OBJGENM.(eval(BEHAVIOR.clOBJECT():objmethodsimplement)).(this):(7))
+#xtranslate super:setattrib        => (OBJGENM.(eval(BEHAVIOR.clOBJECT():objmethodsimplement)).(this):(8))
+
+**********************************************************************
+static function setCMethods(pOsztaly)
+// Egy t”mb”t felt”lt az oszt ly m–veleti blokkjaival.
+   pOsztaly[(CM_OBJECT_N+1)]:={|this,edefdict| add(this,edefdict)}
+   pOsztaly[(CM_OBJECT_N+2)]:={|this,name| atidx(this,name)}
+   pOsztaly[(CM_OBJECT_N+3)]:={|this,name| atkey(this,name)}
+   pOsztaly[(CM_OBJECT_N+4)]:={|this,name| delkey(this,name)}
+   pOsztaly[(CM_OBJECT_N+5)]:={|this,printBlock| printstr(this,printBlock)}
+   pOsztaly[(4)]:={|this| oinit(this)}
+return pOsztaly
+
+**********************************************************************
+static function setCams(ta,tm)
+// Egy t”mb”t felt”lt az oszt ly  ltal def. objektumok attrib£tumaival ‚s m–veleteivel.
+   ta[CA_OBJECT_N+1-CA_NIL_N] := {CA_OBJECT_N+1,'dict', }
+
+   tm[(CM_OBJECT_N+1)-CM_NIL_N] := {(CM_OBJECT_N+1),'add','edefdict',nil}
+   tm[(CM_OBJECT_N+2)-CM_NIL_N] := {(CM_OBJECT_N+2),'atidx','name',nil}
+   tm[(CM_OBJECT_N+3)-CM_NIL_N] := {(CM_OBJECT_N+3),'atkey','name',nil}
+   tm[(CM_OBJECT_N+4)-CM_NIL_N] := {(CM_OBJECT_N+4),'delkey','name',nil}
+   tm[(CM_OBJECT_N+5)-CM_NIL_N] := {(CM_OBJECT_N+5),'printstr','printBlock',nil}
+   tm[(4)-CM_NIL_N] := {(4),'oinit','',nil}
+return nil
+
+#ifndef _NO_CLDEFDICT_
+#ifdef _STRICT_PARENT_
+#ifdef _CA_CM_ONLY_
+#include "meta.och"
+#else // _CA_CM_ONLY_
+#define _CA_CM_ONLY_
+#include "meta.och"
+#undef _CA_CM_ONLY_
+#endif // _CA_CM_ONLY_
+#else
+#include "meta.och"
+#endif // _STRICT_PARENT_
+**********************************************************************
+function clDEFDICT()
+// El“szedi az oszt lyt. (class)
+static osztaly
+   if (osztaly==nil)
+      osztaly:=META.mcDEFDICTCLASS():onew(;
+                  clOBJECT(),;
+                  "DEFDICT",;
+                  CA_DEFDICT_N,;
+                  CM_DEFDICT_N,;
+                  {|ta,tm|setCams(ta,tm)},;
+                  {|t|setCMethods(t)})
+   endif
+return osztaly
+#endif // _NO_CLDEFDICT_
+
+#ifndef _NO_DEFDICTCLASS_
+
+**********************************************************************
+#xtranslate class:<m> => DEFDICTCLASS.(class):<m>
+
+
+#ifdef _IMPLEMENT_EXPORT_
+#endif // _IMPLEMENT_EXPORT_
+
+#xtranslate superclass:oinit            => (OBJGENM.(eval(BEHAVIOR.clBEHAVIOR():objmethodsimplement)).(class):(4))
+#xtranslate superclass:getclass         => (OBJGENM.(eval(BEHAVIOR.clBEHAVIOR():objmethodsimplement)).(class):(5))
+#xtranslate superclass:isclass          => (OBJGENM.(eval(BEHAVIOR.clBEHAVIOR():objmethodsimplement)).(class):(6))
+#xtranslate superclass:getattrib        => (OBJGENM.(eval(BEHAVIOR.clBEHAVIOR():objmethodsimplement)).(class):(7))
+#xtranslate superclass:setattrib        => (OBJGENM.(eval(BEHAVIOR.clBEHAVIOR():objmethodsimplement)).(class):(8))
+#xtranslate superclass:onew             => (OBJGENM.(eval(BEHAVIOR.clBEHAVIOR():objmethodsimplement)).(class):(CM_OBJECT_N+1))
+#xtranslate superclass:ocreate          => (OBJGENM.(eval(BEHAVIOR.clBEHAVIOR():objmethodsimplement)).(class):(CM_OBJECT_N+2))
+#xtranslate superclass:rawoinit         => (OBJGENM.(eval(BEHAVIOR.clBEHAVIOR():objmethodsimplement)).(class):(CM_OBJECT_N+3))
+#xtranslate superclass:oinitclass       => (OBJGENM.(eval(BEHAVIOR.clBEHAVIOR():objmethodsimplement)).(class):(CM_OBJECT_N+4))
+#xtranslate superclass:getmethodsimplement  => (OBJGENM.(eval(BEHAVIOR.clBEHAVIOR():objmethodsimplement)).(class):(CM_OBJECT_N+5))
+#xtranslate superclass:attribidx        => (OBJGENM.(eval(BEHAVIOR.clBEHAVIOR():objmethodsimplement)).(class):(CM_OBJECT_N+6))
+#xtranslate superclass:needclassid      => (OBJGENM.(eval(BEHAVIOR.clBEHAVIOR():objmethodsimplement)).(class):(CM_OBJECT_N+7))
+#xtranslate superclass:isinheritfrom    => (OBJGENM.(eval(BEHAVIOR.clBEHAVIOR():objmethodsimplement)).(class):(CM_OBJECT_N+8))
+
+**********************************************************************
+static function setMCMethods(pOsztaly)
+// Egy t”mb”t felt”lt a metaoszt ly m–veleti blokkjaival.
+return pOsztaly
+
+**********************************************************************
+static function setMCams(ta,tm)
+// Egy t”mb”t felt”lt a metaoszt ly  ltal def. objektumok attrib£tumaival ‚s m–veleteivel.
+
+return nil
+
+**********************************************************************
+#ifndef _NO_MCDEFDICTCLASS_
+#ifdef _STRICT_PARENT_
+#ifdef _CA_CM_ONLY_
+#include "meta.och" // "metaclas.och" 
+#else // _CA_CM_ONLY_
+#define _CA_CM_ONLY_
+#include "meta.och" // "metaclas.och" 
+#undef _CA_CM_ONLY_
+#endif // _CA_CM_ONLY_
+#else
+#include "meta.och" // "metaclas.och" 
+#endif // _STRICT_PARENT_
+function mcDEFDICTCLASS()
+// El“szedi az oszt ly metaoszt ly t. (metaclass)
+static metaOsztaly
+   if (metaOsztaly==nil)
+      metaOsztaly:=META.clMETA():onew(;
+                  clBEHAVIOR(),;
+                  "DEFDICTCLASS",;
+                  CA_DEFDICTCLASS_N,;
+                  CM_DEFDICTCLASS_N,;
+                  {|ta,tm|setMCams(ta,tm)},;
+                  {|t|setMCMethods(t)})
+   endif
+return metaOsztaly
+#endif // _NO_MCDEFDICTCLASS_
+
+#endif // _NO_DEFDICTCLASS_
+
+**********************************************************************
+#ifdef _IMPLEMENT_OINIT_
+implement oinit()
+    super:oinit()
+return this
+#endif // _IMPLEMENT_OINIT_
+
+**********************************************************************
+**********************************************************************
+#endif // _DEFDICT_PRG_OCH_
+#endif // _DEFDICT_PRG_

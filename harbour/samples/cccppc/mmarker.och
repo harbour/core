@@ -1,0 +1,299 @@
+// MMARKER.och oszt ly implement ci¢.
+// Gener lva: 1999.06.10, 14:40:25, OBJCCC  v2.2.03
+// Meta oszt ly defin¡ci¢: Van
+
+
+#ifndef CA_TOKEN_N
+#ifdef _STRICT_PARENT_
+#ifdef _CA_CM_ONLY_
+#include "TOKEN.och"
+#else // _CA_CM_ONLY_
+#define _CA_CM_ONLY_
+#include "TOKEN.och"
+#undef _CA_CM_ONLY_
+#endif // _CA_CM_ONLY_
+#else
+#include "TOKEN.och"
+#endif // _STRICT_PARENT_
+#endif // CA_TOKEN_N
+
+#ifndef _CA_CM_ONLY_
+#ifndef _MMARKER_OCH_
+#define _MMARKER_OCH_
+
+
+#xtranslate MMARKER.<obj>:id               => <obj>\[CA_OBJECT_N+1\]
+#xtranslate MMARKER.<obj>:str              => <obj>\[CA_OBJECT_N+2\]
+#xtranslate MMARKER.<obj>:file             => <obj>\[CA_OBJECT_N+3\]
+#xtranslate MMARKER.<obj>:line             => <obj>\[CA_OBJECT_N+4\]
+#xtranslate MMARKER.<obj>:pos              => <obj>\[CA_OBJECT_N+5\]
+#xtranslate MMARKER.<obj>:classify         => <obj>\[CA_OBJECT_N+6\]
+#xtranslate MMARKER.<obj>:error            => <obj>\[CA_OBJECT_N+7\]
+#xtranslate MMARKER.<obj>:eqtype           => <obj>\[CA_OBJECT_N+8\]
+
+
+#xtranslate MMARKER.<obj>:oinit            => (OBJGEN.(<obj>):(4))
+#xtranslate MMARKER.<obj>:getclass         => (OBJGEN.(<obj>):(5))
+#xtranslate MMARKER.<obj>:isclass          => (OBJGEN.(<obj>):(6))
+#xtranslate MMARKER.<obj>:getattrib        => (OBJGEN.(<obj>):(7))
+#xtranslate MMARKER.<obj>:setattrib        => (OBJGEN.(<obj>):(8))
+#xtranslate MMARKER.<obj>:iserror          => (OBJGEN.(<obj>):(CM_OBJECT_N+1))
+#xtranslate MMARKER.<obj>:errorstr         => (OBJGEN.(<obj>):(CM_OBJECT_N+2))
+#xtranslate MMARKER.<obj>:printtostr       => (OBJGEN.(<obj>):(CM_OBJECT_N+3))
+#xtranslate MMARKER.<obj>:getstr           => (OBJGEN.(<obj>):(CM_OBJECT_N+4))
+#xtranslate MMARKER.<obj>:copytoken        => (OBJGEN.(<obj>):(CM_OBJECT_N+5))
+
+
+#xtranslate MMARKER.<obj>:mnum             => <obj>\[CA_TOKEN_N+1\]
+#xtranslate MMARKER.<obj>:nexttoken        => <obj>\[CA_TOKEN_N+2\]
+
+// ™r”k”lve: oinit(id,str,file,line,pos)
+// Specifik lva: getname()
+
+// ™r”k”lve: oinit(id,str,file,line,pos)
+#xtranslate MMARKER.<obj>:getname          => (OBJGEN.(<obj>):(CM_TOKEN_N+1))
+
+#endif // _MMARKER_OCH_
+#endif // _CA_CM_ONLY_
+
+#ifndef CA_MMARKER_N
+#define CA_MMARKER_N             CA_TOKEN_N+2
+#define CM_MMARKER_N             CM_TOKEN_N+1
+#endif // CA_MMARKER_N
+
+#ifndef _CA_CM_ONLY_
+#ifndef _MMARKERCLASS_OCH_
+#define _MMARKERCLASS_OCH_
+
+**********************************************************************
+#xtranslate C.MMARKER:<m> => (MMARKERCLASS.clMMARKER():<m>)
+#xtranslate C.MMARKER:self() => (clMMARKER())
+
+
+#xtranslate MMARKERCLASS.<obj>:parent           => <obj>\[CA_OBJECT_N+1\]
+#xtranslate MMARKERCLASS.<obj>:name             => <obj>\[CA_OBJECT_N+2\]
+#xtranslate MMARKERCLASS.<obj>:objsize          => <obj>\[CA_OBJECT_N+3\]
+#xtranslate MMARKERCLASS.<obj>:attribs          => <obj>\[CA_OBJECT_N+4\]
+#xtranslate MMARKERCLASS.<obj>:methods          => <obj>\[CA_OBJECT_N+5\]
+#xtranslate MMARKERCLASS.<obj>:classid          => <obj>\[CA_OBJECT_N+6\]
+#xtranslate MMARKERCLASS.<obj>:parentclassids   => <obj>\[CA_OBJECT_N+7\]
+#xtranslate MMARKERCLASS.<obj>:amblock          => <obj>\[CA_OBJECT_N+8\]
+#xtranslate MMARKERCLASS.<obj>:methodsblock     => <obj>\[CA_OBJECT_N+9\]
+#xtranslate MMARKERCLASS.<obj>:objmethodsimplement  => <obj>\[CA_OBJECT_N+10\]
+#xtranslate MMARKERCLASS.<obj>:errstrarray      => <obj>\[CA_BEHAVIOR_N+1\]
+#xtranslate MMARKERCLASS.<obj>:equivclass       => <obj>\[CA_BEHAVIOR_N+2\]
+
+
+#xtranslate MMARKERCLASS.<obj>:oinit            => (OBJGEN.(<obj>):(4))
+#xtranslate MMARKERCLASS.<obj>:getclass         => (OBJGEN.(<obj>):(5))
+#xtranslate MMARKERCLASS.<obj>:isclass          => (OBJGEN.(<obj>):(6))
+#xtranslate MMARKERCLASS.<obj>:getattrib        => (OBJGEN.(<obj>):(7))
+#xtranslate MMARKERCLASS.<obj>:setattrib        => (OBJGEN.(<obj>):(8))
+#xtranslate MMARKERCLASS.<obj>:onew             => (OBJGEN.(<obj>):(CM_OBJECT_N+1))
+#xtranslate MMARKERCLASS.<obj>:ocreate          => (OBJGEN.(<obj>):(CM_OBJECT_N+2))
+#xtranslate MMARKERCLASS.<obj>:rawoinit         => (OBJGEN.(<obj>):(CM_OBJECT_N+3))
+#xtranslate MMARKERCLASS.<obj>:oinitclass       => (OBJGEN.(<obj>):(CM_OBJECT_N+4))
+#xtranslate MMARKERCLASS.<obj>:getmethodsimplement  => (OBJGEN.(<obj>):(CM_OBJECT_N+5))
+#xtranslate MMARKERCLASS.<obj>:attribidx        => (OBJGEN.(<obj>):(CM_OBJECT_N+6))
+#xtranslate MMARKERCLASS.<obj>:needclassid      => (OBJGEN.(<obj>):(CM_OBJECT_N+7))
+#xtranslate MMARKERCLASS.<obj>:isinheritfrom    => (OBJGEN.(<obj>):(CM_OBJECT_N+8))
+#xtranslate MMARKERCLASS.<obj>:onewerror        => (OBJGEN.(<obj>):(CM_BEHAVIOR_N+1))
+#xtranslate MMARKERCLASS.<obj>:copyfromtoken    => (OBJGEN.(<obj>):(CM_BEHAVIOR_N+2))
+#xtranslate MMARKERCLASS.<obj>:findclassify     => (OBJGEN.(<obj>):(CM_BEHAVIOR_N+3))
+
+
+
+// ™r”k”lve: onew(id,str,file,line,pos)
+// Specifik lva: ismatchmarker(aToken)
+
+// ™r”k”lve: onew(id,str,file,line,pos)
+#xtranslate MMARKERCLASS.<obj>:ismatchmarker    => (OBJGEN.(<obj>):(CM_TOKENCLASS_N+1))
+
+#endif // _MMARKERCLASS_OCH_
+#endif // _CA_CM_ONLY_
+
+#ifndef CA_MMARKERCLASS_N
+#define CA_MMARKERCLASS_N             CA_TOKENCLASS_N+0
+#define CM_MMARKERCLASS_N             CM_TOKENCLASS_N+1
+#endif // CA_MMARKERCLASS_N
+
+
+**********************************************************************
+#ifdef _MMARKER_PRG_
+#ifndef _MMARKER_PRG_OCH_
+#define _MMARKER_PRG_OCH_
+
+
+**********************************************************************
+#xtranslate othis:<m> => MMARKER.(othis):<m>
+#xtranslate thisclass:<m> => MMARKERCLASS.(this:getClass()):<m>
+#define CTHIS MMARKER
+
+
+**********************************************************************
+#xtranslate this:<m> => MMARKER.(this):<m>
+
+#xcommand implement oinit(id,str,file,line,pos) => ;
+                    static function oinit(this,id,str,file,line,pos)
+#xcommand implement getname()      => static function getname(this)
+
+#ifdef _IMPLEMENT_EXPORT_
+#xcommand implement export oinit(id,str,file,line,pos) => ;
+                    function oinit(this,id,str,file,line,pos)
+#xcommand implement export getname()      => function getname(this)
+#endif // _IMPLEMENT_EXPORT_
+
+#xtranslate super:oinit            => (OBJGENM.(eval(BEHAVIOR.clTOKEN():objmethodsimplement)).(this):(4))
+#xtranslate super:getclass         => (OBJGENM.(eval(BEHAVIOR.clTOKEN():objmethodsimplement)).(this):(5))
+#xtranslate super:isclass          => (OBJGENM.(eval(BEHAVIOR.clTOKEN():objmethodsimplement)).(this):(6))
+#xtranslate super:getattrib        => (OBJGENM.(eval(BEHAVIOR.clTOKEN():objmethodsimplement)).(this):(7))
+#xtranslate super:setattrib        => (OBJGENM.(eval(BEHAVIOR.clTOKEN():objmethodsimplement)).(this):(8))
+#xtranslate super:iserror          => (OBJGENM.(eval(BEHAVIOR.clTOKEN():objmethodsimplement)).(this):(CM_OBJECT_N+1))
+#xtranslate super:errorstr         => (OBJGENM.(eval(BEHAVIOR.clTOKEN():objmethodsimplement)).(this):(CM_OBJECT_N+2))
+#xtranslate super:printtostr       => (OBJGENM.(eval(BEHAVIOR.clTOKEN():objmethodsimplement)).(this):(CM_OBJECT_N+3))
+#xtranslate super:getstr           => (OBJGENM.(eval(BEHAVIOR.clTOKEN():objmethodsimplement)).(this):(CM_OBJECT_N+4))
+#xtranslate super:copytoken        => (OBJGENM.(eval(BEHAVIOR.clTOKEN():objmethodsimplement)).(this):(CM_OBJECT_N+5))
+
+**********************************************************************
+static function setCMethods(pOsztaly)
+// Egy t”mb”t felt”lt az oszt ly m–veleti blokkjaival.
+   pOsztaly[(4)]:={|this,id,str,file,line,pos| oinit(this,id,str,file,line,pos)}
+   pOsztaly[(CM_TOKEN_N+1)]:={|this| getname(this)}
+return pOsztaly
+
+**********************************************************************
+static function setCams(ta,tm)
+// Egy t”mb”t felt”lt az oszt ly  ltal def. objektumok attrib£tumaival ‚s m–veleteivel.
+   ta[CA_TOKEN_N+1-CA_NIL_N] := {CA_TOKEN_N+1,'mnum', }
+   ta[CA_TOKEN_N+2-CA_NIL_N] := {CA_TOKEN_N+2,'nexttoken', }
+
+   tm[(4)-CM_NIL_N] := {(4),'oinit','id,str,file,line,pos',nil}
+   tm[(CM_TOKEN_N+1)-CM_NIL_N] := {(CM_TOKEN_N+1),'getname','',nil}
+return nil
+
+#ifndef _NO_CLMMARKER_
+#ifdef _STRICT_PARENT_
+#ifdef _CA_CM_ONLY_
+#include "meta.och"
+#else // _CA_CM_ONLY_
+#define _CA_CM_ONLY_
+#include "meta.och"
+#undef _CA_CM_ONLY_
+#endif // _CA_CM_ONLY_
+#else
+#include "meta.och"
+#endif // _STRICT_PARENT_
+**********************************************************************
+function clMMARKER()
+// El“szedi az oszt lyt. (class)
+static osztaly
+   if (osztaly==nil)
+      osztaly:=META.mcMMARKERCLASS():onew(;
+                  clTOKEN(),;
+                  "MMARKER",;
+                  CA_MMARKER_N,;
+                  CM_MMARKER_N,;
+                  {|ta,tm|setCams(ta,tm)},;
+                  {|t|setCMethods(t)})
+   endif
+return osztaly
+#endif // _NO_CLMMARKER_
+
+#ifndef _NO_MMARKERCLASS_
+
+**********************************************************************
+#xtranslate class:<m> => MMARKERCLASS.(class):<m>
+
+#xcommand cimplement onew(id,str,file,line,pos) => ;
+                    static function onew(class,id,str,file,line,pos)
+#xcommand cimplement ismatchmarker(aToken) => ;
+                    static function ismatchmarker(class,aToken)
+
+#ifdef _IMPLEMENT_EXPORT_
+#xcommand cimplement export onew(id,str,file,line,pos) => ;
+                    function onew(class,id,str,file,line,pos)
+#xcommand cimplement export ismatchmarker(aToken) => ;
+                    function ismatchmarker(class,aToken)
+#endif // _IMPLEMENT_EXPORT_
+
+#xtranslate superclass:oinit            => (OBJGENM.(eval(BEHAVIOR.mcTOKENCLASS():objmethodsimplement)).(class):(4))
+#xtranslate superclass:getclass         => (OBJGENM.(eval(BEHAVIOR.mcTOKENCLASS():objmethodsimplement)).(class):(5))
+#xtranslate superclass:isclass          => (OBJGENM.(eval(BEHAVIOR.mcTOKENCLASS():objmethodsimplement)).(class):(6))
+#xtranslate superclass:getattrib        => (OBJGENM.(eval(BEHAVIOR.mcTOKENCLASS():objmethodsimplement)).(class):(7))
+#xtranslate superclass:setattrib        => (OBJGENM.(eval(BEHAVIOR.mcTOKENCLASS():objmethodsimplement)).(class):(8))
+#xtranslate superclass:onew             => (OBJGENM.(eval(BEHAVIOR.mcTOKENCLASS():objmethodsimplement)).(class):(CM_OBJECT_N+1))
+#xtranslate superclass:ocreate          => (OBJGENM.(eval(BEHAVIOR.mcTOKENCLASS():objmethodsimplement)).(class):(CM_OBJECT_N+2))
+#xtranslate superclass:rawoinit         => (OBJGENM.(eval(BEHAVIOR.mcTOKENCLASS():objmethodsimplement)).(class):(CM_OBJECT_N+3))
+#xtranslate superclass:oinitclass       => (OBJGENM.(eval(BEHAVIOR.mcTOKENCLASS():objmethodsimplement)).(class):(CM_OBJECT_N+4))
+#xtranslate superclass:getmethodsimplement  => (OBJGENM.(eval(BEHAVIOR.mcTOKENCLASS():objmethodsimplement)).(class):(CM_OBJECT_N+5))
+#xtranslate superclass:attribidx        => (OBJGENM.(eval(BEHAVIOR.mcTOKENCLASS():objmethodsimplement)).(class):(CM_OBJECT_N+6))
+#xtranslate superclass:needclassid      => (OBJGENM.(eval(BEHAVIOR.mcTOKENCLASS():objmethodsimplement)).(class):(CM_OBJECT_N+7))
+#xtranslate superclass:isinheritfrom    => (OBJGENM.(eval(BEHAVIOR.mcTOKENCLASS():objmethodsimplement)).(class):(CM_OBJECT_N+8))
+#xtranslate superclass:onewerror        => (OBJGENM.(eval(BEHAVIOR.mcTOKENCLASS():objmethodsimplement)).(class):(CM_BEHAVIOR_N+1))
+#xtranslate superclass:copyfromtoken    => (OBJGENM.(eval(BEHAVIOR.mcTOKENCLASS():objmethodsimplement)).(class):(CM_BEHAVIOR_N+2))
+#xtranslate superclass:findclassify     => (OBJGENM.(eval(BEHAVIOR.mcTOKENCLASS():objmethodsimplement)).(class):(CM_BEHAVIOR_N+3))
+
+**********************************************************************
+static function setMCMethods(pOsztaly)
+// Egy t”mb”t felt”lt a metaoszt ly m–veleti blokkjaival.
+   pOsztaly[(CM_OBJECT_N+1)]:={|class,id,str,file,line,pos| onew(class,id,str,file,line,pos)}
+   pOsztaly[(CM_TOKENCLASS_N+1)]:={|class,aToken| ismatchmarker(class,aToken)}
+return pOsztaly
+
+**********************************************************************
+static function setMCams(ta,tm)
+// Egy t”mb”t felt”lt a metaoszt ly  ltal def. objektumok attrib£tumaival ‚s m–veleteivel.
+
+   tm[(CM_OBJECT_N+1)-CM_NIL_N] := {(CM_OBJECT_N+1),'onew','id,str,file,line,pos',nil}
+   tm[(CM_TOKENCLASS_N+1)-CM_NIL_N] := {(CM_TOKENCLASS_N+1),'ismatchmarker','aToken',nil}
+return nil
+
+**********************************************************************
+#ifndef _NO_MCMMARKERCLASS_
+#ifdef _STRICT_PARENT_
+#ifdef _CA_CM_ONLY_
+#include "meta.och" // "metaclas.och" 
+#else // _CA_CM_ONLY_
+#define _CA_CM_ONLY_
+#include "meta.och" // "metaclas.och" 
+#undef _CA_CM_ONLY_
+#endif // _CA_CM_ONLY_
+#else
+#include "meta.och" // "metaclas.och" 
+#endif // _STRICT_PARENT_
+function mcMMARKERCLASS()
+// El“szedi az oszt ly metaoszt ly t. (metaclass)
+static metaOsztaly
+   if (metaOsztaly==nil)
+      metaOsztaly:=META.clMETA():onew(;
+                  mcTOKENCLASS(),;
+                  "MMARKERCLASS",;
+                  CA_MMARKERCLASS_N,;
+                  CM_MMARKERCLASS_N,;
+                  {|ta,tm|setMCams(ta,tm)},;
+                  {|t|setMCMethods(t)})
+   endif
+return metaOsztaly
+#endif // _NO_MCMMARKERCLASS_
+
+#endif // _NO_MMARKERCLASS_
+#ifdef _IMPLEMENT_ONEW_
+**********************************************************************
+cimplement onew(id,str,file,line,pos)
+local o:=class:ocreate()
+
+    MMARKER.o:oinit(id,str,file,line,pos)
+return o
+#endif // _IMPLEMENT_ONEW_
+
+**********************************************************************
+#ifdef _IMPLEMENT_OINIT_
+implement oinit(id,str,file,line,pos)
+    super:oinit()
+return this
+#endif // _IMPLEMENT_OINIT_
+
+**********************************************************************
+**********************************************************************
+#endif // _MMARKER_PRG_OCH_
+#endif // _MMARKER_PRG_

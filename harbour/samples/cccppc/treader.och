@@ -1,0 +1,298 @@
+// TREADER.och oszt ly implement ci¢.
+// Gener lva: 1999.06.10, 14:39:57, OBJCCC  v2.2.03
+// Meta oszt ly defin¡ci¢: Van
+
+
+#ifndef CA_READER_N
+#ifdef _STRICT_PARENT_
+#ifdef _CA_CM_ONLY_
+#include "READER.och"
+#else // _CA_CM_ONLY_
+#define _CA_CM_ONLY_
+#include "READER.och"
+#undef _CA_CM_ONLY_
+#endif // _CA_CM_ONLY_
+#else
+#include "READER.och"
+#endif // _STRICT_PARENT_
+#endif // CA_READER_N
+
+#ifndef _CA_CM_ONLY_
+#ifndef _TREADER_OCH_
+#define _TREADER_OCH_
+
+
+#xtranslate TREADER.<obj>:name             => <obj>\[CA_OBJECT_N+1\]
+#xtranslate TREADER.<obj>:errorstream      => <obj>\[CA_OBJECT_N+2\]
+#xtranslate TREADER.<obj>:tbuffer          => <obj>\[CA_OBJECT_N+3\]
+
+
+#xtranslate TREADER.<obj>:oinit            => (OBJGEN.(<obj>):(4))
+#xtranslate TREADER.<obj>:getclass         => (OBJGEN.(<obj>):(5))
+#xtranslate TREADER.<obj>:isclass          => (OBJGEN.(<obj>):(6))
+#xtranslate TREADER.<obj>:getattrib        => (OBJGEN.(<obj>):(7))
+#xtranslate TREADER.<obj>:setattrib        => (OBJGEN.(<obj>):(8))
+#xtranslate TREADER.<obj>:read             => (OBJGEN.(<obj>):(CM_OBJECT_N+1))
+#xtranslate TREADER.<obj>:unread           => (OBJGEN.(<obj>):(CM_OBJECT_N+2))
+#xtranslate TREADER.<obj>:readtbuffer      => (OBJGEN.(<obj>):(CM_OBJECT_N+3))
+#xtranslate TREADER.<obj>:arraytbuffer     => (OBJGEN.(<obj>):(CM_OBJECT_N+4))
+#xtranslate TREADER.<obj>:readitem         => (OBJGEN.(<obj>):(CM_OBJECT_N+5))
+#xtranslate TREADER.<obj>:iserror          => (OBJGEN.(<obj>):(CM_OBJECT_N+6))
+#xtranslate TREADER.<obj>:adderror         => (OBJGEN.(<obj>):(CM_OBJECT_N+7))
+#xtranslate TREADER.<obj>:destruct         => (OBJGEN.(<obj>):(CM_OBJECT_N+8))
+
+
+#xtranslate TREADER.<obj>:inputreader      => <obj>\[CA_READER_N+1\]
+
+// Specifik lva: readinput()
+// Specifik lva: unreadinput(item)
+// Specifik lva: addinputreader(reader)
+// ™r”k”lve: oinit(inputReader,name,errorStream)
+
+#xtranslate TREADER.<obj>:readinput        => (OBJGEN.(<obj>):(CM_READER_N+1))
+#xtranslate TREADER.<obj>:unreadinput      => (OBJGEN.(<obj>):(CM_READER_N+2))
+#xtranslate TREADER.<obj>:addinputreader   => (OBJGEN.(<obj>):(CM_READER_N+3))
+// ™r”k”lve: oinit(inputReader,name,errorStream)
+
+#endif // _TREADER_OCH_
+#endif // _CA_CM_ONLY_
+
+#ifndef CA_TREADER_N
+#define CA_TREADER_N             CA_READER_N+1
+#define CM_TREADER_N             CM_READER_N+3
+#endif // CA_TREADER_N
+
+#ifndef _CA_CM_ONLY_
+#ifndef _TREADERCLASS_OCH_
+#define _TREADERCLASS_OCH_
+
+**********************************************************************
+#xtranslate C.TREADER:<m> => (TREADERCLASS.clTREADER():<m>)
+#xtranslate C.TREADER:self() => (clTREADER())
+
+
+#xtranslate TREADERCLASS.<obj>:parent           => <obj>\[CA_OBJECT_N+1\]
+#xtranslate TREADERCLASS.<obj>:name             => <obj>\[CA_OBJECT_N+2\]
+#xtranslate TREADERCLASS.<obj>:objsize          => <obj>\[CA_OBJECT_N+3\]
+#xtranslate TREADERCLASS.<obj>:attribs          => <obj>\[CA_OBJECT_N+4\]
+#xtranslate TREADERCLASS.<obj>:methods          => <obj>\[CA_OBJECT_N+5\]
+#xtranslate TREADERCLASS.<obj>:classid          => <obj>\[CA_OBJECT_N+6\]
+#xtranslate TREADERCLASS.<obj>:parentclassids   => <obj>\[CA_OBJECT_N+7\]
+#xtranslate TREADERCLASS.<obj>:amblock          => <obj>\[CA_OBJECT_N+8\]
+#xtranslate TREADERCLASS.<obj>:methodsblock     => <obj>\[CA_OBJECT_N+9\]
+#xtranslate TREADERCLASS.<obj>:objmethodsimplement  => <obj>\[CA_OBJECT_N+10\]
+
+
+#xtranslate TREADERCLASS.<obj>:oinit            => (OBJGEN.(<obj>):(4))
+#xtranslate TREADERCLASS.<obj>:getclass         => (OBJGEN.(<obj>):(5))
+#xtranslate TREADERCLASS.<obj>:isclass          => (OBJGEN.(<obj>):(6))
+#xtranslate TREADERCLASS.<obj>:getattrib        => (OBJGEN.(<obj>):(7))
+#xtranslate TREADERCLASS.<obj>:setattrib        => (OBJGEN.(<obj>):(8))
+#xtranslate TREADERCLASS.<obj>:onew             => (OBJGEN.(<obj>):(CM_OBJECT_N+1))
+#xtranslate TREADERCLASS.<obj>:ocreate          => (OBJGEN.(<obj>):(CM_OBJECT_N+2))
+#xtranslate TREADERCLASS.<obj>:rawoinit         => (OBJGEN.(<obj>):(CM_OBJECT_N+3))
+#xtranslate TREADERCLASS.<obj>:oinitclass       => (OBJGEN.(<obj>):(CM_OBJECT_N+4))
+#xtranslate TREADERCLASS.<obj>:getmethodsimplement  => (OBJGEN.(<obj>):(CM_OBJECT_N+5))
+#xtranslate TREADERCLASS.<obj>:attribidx        => (OBJGEN.(<obj>):(CM_OBJECT_N+6))
+#xtranslate TREADERCLASS.<obj>:needclassid      => (OBJGEN.(<obj>):(CM_OBJECT_N+7))
+#xtranslate TREADERCLASS.<obj>:isinheritfrom    => (OBJGEN.(<obj>):(CM_OBJECT_N+8))
+
+
+
+// ™r”k”lve: onew(inputReader,name,errorStream)
+
+// ™r”k”lve: onew(inputReader,name,errorStream)
+
+#endif // _TREADERCLASS_OCH_
+#endif // _CA_CM_ONLY_
+
+#ifndef CA_TREADERCLASS_N
+#define CA_TREADERCLASS_N             CA_READERCLASS_N+0
+#define CM_TREADERCLASS_N             CM_READERCLASS_N+0
+#endif // CA_TREADERCLASS_N
+
+
+**********************************************************************
+#ifdef _TREADER_PRG_
+#ifndef _TREADER_PRG_OCH_
+#define _TREADER_PRG_OCH_
+
+
+**********************************************************************
+#xtranslate othis:<m> => TREADER.(othis):<m>
+#xtranslate thisclass:<m> => TREADERCLASS.(this:getClass()):<m>
+#define CTHIS TREADER
+
+
+**********************************************************************
+#xtranslate this:<m> => TREADER.(this):<m>
+
+#xcommand implement readinput()    => static function readinput(this)
+#xcommand implement unreadinput(item) => ;
+                    static function unreadinput(this,item)
+#xcommand implement addinputreader(reader) => ;
+                    static function addinputreader(this,reader)
+#xcommand implement oinit(inputReader,name,errorStream) => ;
+                    static function oinit(this,inputReader,name,errorStream)
+
+#ifdef _IMPLEMENT_EXPORT_
+#xcommand implement export readinput()    => function readinput(this)
+#xcommand implement export unreadinput(item) => ;
+                    function unreadinput(this,item)
+#xcommand implement export addinputreader(reader) => ;
+                    function addinputreader(this,reader)
+#xcommand implement export oinit(inputReader,name,errorStream) => ;
+                    function oinit(this,inputReader,name,errorStream)
+#endif // _IMPLEMENT_EXPORT_
+
+#xtranslate super:oinit            => (OBJGENM.(eval(BEHAVIOR.clREADER():objmethodsimplement)).(this):(4))
+#xtranslate super:getclass         => (OBJGENM.(eval(BEHAVIOR.clREADER():objmethodsimplement)).(this):(5))
+#xtranslate super:isclass          => (OBJGENM.(eval(BEHAVIOR.clREADER():objmethodsimplement)).(this):(6))
+#xtranslate super:getattrib        => (OBJGENM.(eval(BEHAVIOR.clREADER():objmethodsimplement)).(this):(7))
+#xtranslate super:setattrib        => (OBJGENM.(eval(BEHAVIOR.clREADER():objmethodsimplement)).(this):(8))
+#xtranslate super:read             => (OBJGENM.(eval(BEHAVIOR.clREADER():objmethodsimplement)).(this):(CM_OBJECT_N+1))
+#xtranslate super:unread           => (OBJGENM.(eval(BEHAVIOR.clREADER():objmethodsimplement)).(this):(CM_OBJECT_N+2))
+#xtranslate super:readtbuffer      => (OBJGENM.(eval(BEHAVIOR.clREADER():objmethodsimplement)).(this):(CM_OBJECT_N+3))
+#xtranslate super:arraytbuffer     => (OBJGENM.(eval(BEHAVIOR.clREADER():objmethodsimplement)).(this):(CM_OBJECT_N+4))
+#xtranslate super:readitem         => (OBJGENM.(eval(BEHAVIOR.clREADER():objmethodsimplement)).(this):(CM_OBJECT_N+5))
+#xtranslate super:iserror          => (OBJGENM.(eval(BEHAVIOR.clREADER():objmethodsimplement)).(this):(CM_OBJECT_N+6))
+#xtranslate super:adderror         => (OBJGENM.(eval(BEHAVIOR.clREADER():objmethodsimplement)).(this):(CM_OBJECT_N+7))
+#xtranslate super:destruct         => (OBJGENM.(eval(BEHAVIOR.clREADER():objmethodsimplement)).(this):(CM_OBJECT_N+8))
+
+**********************************************************************
+static function setCMethods(pOsztaly)
+// Egy t”mb”t felt”lt az oszt ly m–veleti blokkjaival.
+   pOsztaly[(CM_READER_N+1)]:={|this| readinput(this)}
+   pOsztaly[(CM_READER_N+2)]:={|this,item| unreadinput(this,item)}
+   pOsztaly[(CM_READER_N+3)]:={|this,reader| addinputreader(this,reader)}
+   pOsztaly[(4)]:={|this,inputReader,name,errorStream| oinit(this,inputReader,name,errorStream)}
+return pOsztaly
+
+**********************************************************************
+static function setCams(ta,tm)
+// Egy t”mb”t felt”lt az oszt ly  ltal def. objektumok attrib£tumaival ‚s m–veleteivel.
+   ta[CA_READER_N+1-CA_NIL_N] := {CA_READER_N+1,'inputreader',nil}
+
+   tm[(CM_READER_N+1)-CM_NIL_N] := {(CM_READER_N+1),'readinput','',nil}
+   tm[(CM_READER_N+2)-CM_NIL_N] := {(CM_READER_N+2),'unreadinput','item',nil}
+   tm[(CM_READER_N+3)-CM_NIL_N] := {(CM_READER_N+3),'addinputreader','reader',nil}
+   tm[(4)-CM_NIL_N] := {(4),'oinit','inputReader,name,errorStream',nil}
+return nil
+
+#ifndef _NO_CLTREADER_
+#ifdef _STRICT_PARENT_
+#ifdef _CA_CM_ONLY_
+#include "meta.och"
+#else // _CA_CM_ONLY_
+#define _CA_CM_ONLY_
+#include "meta.och"
+#undef _CA_CM_ONLY_
+#endif // _CA_CM_ONLY_
+#else
+#include "meta.och"
+#endif // _STRICT_PARENT_
+**********************************************************************
+function clTREADER()
+// El“szedi az oszt lyt. (class)
+static osztaly
+   if (osztaly==nil)
+      osztaly:=META.mcTREADERCLASS():onew(;
+                  clREADER(),;
+                  "TREADER",;
+                  CA_TREADER_N,;
+                  CM_TREADER_N,;
+                  {|ta,tm|setCams(ta,tm)},;
+                  {|t|setCMethods(t)})
+   endif
+return osztaly
+#endif // _NO_CLTREADER_
+
+#ifndef _NO_TREADERCLASS_
+
+**********************************************************************
+#xtranslate class:<m> => TREADERCLASS.(class):<m>
+
+#xcommand cimplement onew(inputReader,name,errorStream) => ;
+                    static function onew(class,inputReader,name,errorStream)
+
+#ifdef _IMPLEMENT_EXPORT_
+#xcommand cimplement export onew(inputReader,name,errorStream) => ;
+                    function onew(class,inputReader,name,errorStream)
+#endif // _IMPLEMENT_EXPORT_
+
+#xtranslate superclass:oinit            => (OBJGENM.(eval(BEHAVIOR.mcREADERCLASS():objmethodsimplement)).(class):(4))
+#xtranslate superclass:getclass         => (OBJGENM.(eval(BEHAVIOR.mcREADERCLASS():objmethodsimplement)).(class):(5))
+#xtranslate superclass:isclass          => (OBJGENM.(eval(BEHAVIOR.mcREADERCLASS():objmethodsimplement)).(class):(6))
+#xtranslate superclass:getattrib        => (OBJGENM.(eval(BEHAVIOR.mcREADERCLASS():objmethodsimplement)).(class):(7))
+#xtranslate superclass:setattrib        => (OBJGENM.(eval(BEHAVIOR.mcREADERCLASS():objmethodsimplement)).(class):(8))
+#xtranslate superclass:onew             => (OBJGENM.(eval(BEHAVIOR.mcREADERCLASS():objmethodsimplement)).(class):(CM_OBJECT_N+1))
+#xtranslate superclass:ocreate          => (OBJGENM.(eval(BEHAVIOR.mcREADERCLASS():objmethodsimplement)).(class):(CM_OBJECT_N+2))
+#xtranslate superclass:rawoinit         => (OBJGENM.(eval(BEHAVIOR.mcREADERCLASS():objmethodsimplement)).(class):(CM_OBJECT_N+3))
+#xtranslate superclass:oinitclass       => (OBJGENM.(eval(BEHAVIOR.mcREADERCLASS():objmethodsimplement)).(class):(CM_OBJECT_N+4))
+#xtranslate superclass:getmethodsimplement  => (OBJGENM.(eval(BEHAVIOR.mcREADERCLASS():objmethodsimplement)).(class):(CM_OBJECT_N+5))
+#xtranslate superclass:attribidx        => (OBJGENM.(eval(BEHAVIOR.mcREADERCLASS():objmethodsimplement)).(class):(CM_OBJECT_N+6))
+#xtranslate superclass:needclassid      => (OBJGENM.(eval(BEHAVIOR.mcREADERCLASS():objmethodsimplement)).(class):(CM_OBJECT_N+7))
+#xtranslate superclass:isinheritfrom    => (OBJGENM.(eval(BEHAVIOR.mcREADERCLASS():objmethodsimplement)).(class):(CM_OBJECT_N+8))
+
+**********************************************************************
+static function setMCMethods(pOsztaly)
+// Egy t”mb”t felt”lt a metaoszt ly m–veleti blokkjaival.
+   pOsztaly[(CM_OBJECT_N+1)]:={|class,inputReader,name,errorStream| onew(class,inputReader,name,errorStream)}
+return pOsztaly
+
+**********************************************************************
+static function setMCams(ta,tm)
+// Egy t”mb”t felt”lt a metaoszt ly  ltal def. objektumok attrib£tumaival ‚s m–veleteivel.
+
+   tm[(CM_OBJECT_N+1)-CM_NIL_N] := {(CM_OBJECT_N+1),'onew','inputReader,name,errorStream',nil}
+return nil
+
+**********************************************************************
+#ifndef _NO_MCTREADERCLASS_
+#ifdef _STRICT_PARENT_
+#ifdef _CA_CM_ONLY_
+#include "meta.och" // "metaclas.och" 
+#else // _CA_CM_ONLY_
+#define _CA_CM_ONLY_
+#include "meta.och" // "metaclas.och" 
+#undef _CA_CM_ONLY_
+#endif // _CA_CM_ONLY_
+#else
+#include "meta.och" // "metaclas.och" 
+#endif // _STRICT_PARENT_
+function mcTREADERCLASS()
+// El“szedi az oszt ly metaoszt ly t. (metaclass)
+static metaOsztaly
+   if (metaOsztaly==nil)
+      metaOsztaly:=META.clMETA():onew(;
+                  mcREADERCLASS(),;
+                  "TREADERCLASS",;
+                  CA_TREADERCLASS_N,;
+                  CM_TREADERCLASS_N,;
+                  {|ta,tm|setMCams(ta,tm)},;
+                  {|t|setMCMethods(t)})
+   endif
+return metaOsztaly
+#endif // _NO_MCTREADERCLASS_
+
+#endif // _NO_TREADERCLASS_
+#ifdef _IMPLEMENT_ONEW_
+**********************************************************************
+cimplement onew(inputReader,name,errorStream)
+local o:=class:ocreate()
+
+    TREADER.o:oinit(inputReader,name,errorStream)
+return o
+#endif // _IMPLEMENT_ONEW_
+
+**********************************************************************
+#ifdef _IMPLEMENT_OINIT_
+implement oinit(inputReader,name,errorStream)
+    super:oinit()
+return this
+#endif // _IMPLEMENT_OINIT_
+
+**********************************************************************
+**********************************************************************
+#endif // _TREADER_PRG_OCH_
+#endif // _TREADER_PRG_

@@ -1,0 +1,359 @@
+// PARSER.och oszt ly implement ci¢.
+// Gener lva: 1999.06.10, 14:39:57, OBJCCC  v2.2.03
+// Meta oszt ly defin¡ci¢: Van
+
+
+#ifndef CA_TREADER_N
+#ifdef _STRICT_PARENT_
+#ifdef _CA_CM_ONLY_
+#include "TREADER.och"
+#else // _CA_CM_ONLY_
+#define _CA_CM_ONLY_
+#include "TREADER.och"
+#undef _CA_CM_ONLY_
+#endif // _CA_CM_ONLY_
+#else
+#include "TREADER.och"
+#endif // _STRICT_PARENT_
+#endif // CA_TREADER_N
+
+#ifndef _CA_CM_ONLY_
+#ifndef _PARSER_OCH_
+#define _PARSER_OCH_
+
+
+#xtranslate PARSER.<obj>:name             => <obj>\[CA_OBJECT_N+1\]
+#xtranslate PARSER.<obj>:errorstream      => <obj>\[CA_OBJECT_N+2\]
+#xtranslate PARSER.<obj>:tbuffer          => <obj>\[CA_OBJECT_N+3\]
+#xtranslate PARSER.<obj>:inputreader      => <obj>\[CA_READER_N+1\]
+
+
+#xtranslate PARSER.<obj>:oinit            => (OBJGEN.(<obj>):(4))
+#xtranslate PARSER.<obj>:getclass         => (OBJGEN.(<obj>):(5))
+#xtranslate PARSER.<obj>:isclass          => (OBJGEN.(<obj>):(6))
+#xtranslate PARSER.<obj>:getattrib        => (OBJGEN.(<obj>):(7))
+#xtranslate PARSER.<obj>:setattrib        => (OBJGEN.(<obj>):(8))
+#xtranslate PARSER.<obj>:read             => (OBJGEN.(<obj>):(CM_OBJECT_N+1))
+#xtranslate PARSER.<obj>:unread           => (OBJGEN.(<obj>):(CM_OBJECT_N+2))
+#xtranslate PARSER.<obj>:readtbuffer      => (OBJGEN.(<obj>):(CM_OBJECT_N+3))
+#xtranslate PARSER.<obj>:arraytbuffer     => (OBJGEN.(<obj>):(CM_OBJECT_N+4))
+#xtranslate PARSER.<obj>:readitem         => (OBJGEN.(<obj>):(CM_OBJECT_N+5))
+#xtranslate PARSER.<obj>:iserror          => (OBJGEN.(<obj>):(CM_OBJECT_N+6))
+#xtranslate PARSER.<obj>:adderror         => (OBJGEN.(<obj>):(CM_OBJECT_N+7))
+#xtranslate PARSER.<obj>:destruct         => (OBJGEN.(<obj>):(CM_OBJECT_N+8))
+#xtranslate PARSER.<obj>:readinput        => (OBJGEN.(<obj>):(CM_READER_N+1))
+#xtranslate PARSER.<obj>:unreadinput      => (OBJGEN.(<obj>):(CM_READER_N+2))
+#xtranslate PARSER.<obj>:addinputreader   => (OBJGEN.(<obj>):(CM_READER_N+3))
+
+
+#xtranslate PARSER.<obj>:item             => <obj>\[CA_TREADER_N+1\]
+#xtranslate PARSER.<obj>:parserbuffer     => <obj>\[CA_TREADER_N+2\]
+
+// ™r”k”lve: readitem()
+// Specifik lva: putparserbuffer(anItem)
+// Specifik lva: getparserbuffer()
+// Specifik lva: unputparserbuffer()
+// Specifik lva: ungetparserbuffer(anItem)
+// Specifik lva: clearparserbuffer()
+// Specifik lva: rds()
+// Specifik lva: unrds(n)
+// Specifik lva: strparserbuffer()
+// Specifik lva: arrayparserbuffer()
+// ™r”k”lve: oinit(inputReader,name,errorStream)
+
+// ™r”k”lve: readitem()
+#xtranslate PARSER.<obj>:putparserbuffer  => (OBJGEN.(<obj>):(CM_TREADER_N+1))
+#xtranslate PARSER.<obj>:getparserbuffer  => (OBJGEN.(<obj>):(CM_TREADER_N+2))
+#xtranslate PARSER.<obj>:unputparserbuffer  => (OBJGEN.(<obj>):(CM_TREADER_N+3))
+#xtranslate PARSER.<obj>:ungetparserbuffer  => (OBJGEN.(<obj>):(CM_TREADER_N+4))
+#xtranslate PARSER.<obj>:clearparserbuffer  => (OBJGEN.(<obj>):(CM_TREADER_N+5))
+#xtranslate PARSER.<obj>:rds              => (OBJGEN.(<obj>):(CM_TREADER_N+6))
+#xtranslate PARSER.<obj>:unrds            => (OBJGEN.(<obj>):(CM_TREADER_N+7))
+#xtranslate PARSER.<obj>:strparserbuffer  => (OBJGEN.(<obj>):(CM_TREADER_N+8))
+#xtranslate PARSER.<obj>:arrayparserbuffer  => (OBJGEN.(<obj>):(CM_TREADER_N+9))
+// ™r”k”lve: oinit(inputReader,name,errorStream)
+
+#endif // _PARSER_OCH_
+#endif // _CA_CM_ONLY_
+
+#ifndef CA_PARSER_N
+#define CA_PARSER_N             CA_TREADER_N+2
+#define CM_PARSER_N             CM_TREADER_N+9
+#endif // CA_PARSER_N
+
+#ifndef _CA_CM_ONLY_
+#ifndef _PARSERCLASS_OCH_
+#define _PARSERCLASS_OCH_
+
+**********************************************************************
+#xtranslate C.PARSER:<m> => (PARSERCLASS.clPARSER():<m>)
+#xtranslate C.PARSER:self() => (clPARSER())
+
+
+#xtranslate PARSERCLASS.<obj>:parent           => <obj>\[CA_OBJECT_N+1\]
+#xtranslate PARSERCLASS.<obj>:name             => <obj>\[CA_OBJECT_N+2\]
+#xtranslate PARSERCLASS.<obj>:objsize          => <obj>\[CA_OBJECT_N+3\]
+#xtranslate PARSERCLASS.<obj>:attribs          => <obj>\[CA_OBJECT_N+4\]
+#xtranslate PARSERCLASS.<obj>:methods          => <obj>\[CA_OBJECT_N+5\]
+#xtranslate PARSERCLASS.<obj>:classid          => <obj>\[CA_OBJECT_N+6\]
+#xtranslate PARSERCLASS.<obj>:parentclassids   => <obj>\[CA_OBJECT_N+7\]
+#xtranslate PARSERCLASS.<obj>:amblock          => <obj>\[CA_OBJECT_N+8\]
+#xtranslate PARSERCLASS.<obj>:methodsblock     => <obj>\[CA_OBJECT_N+9\]
+#xtranslate PARSERCLASS.<obj>:objmethodsimplement  => <obj>\[CA_OBJECT_N+10\]
+
+
+#xtranslate PARSERCLASS.<obj>:oinit            => (OBJGEN.(<obj>):(4))
+#xtranslate PARSERCLASS.<obj>:getclass         => (OBJGEN.(<obj>):(5))
+#xtranslate PARSERCLASS.<obj>:isclass          => (OBJGEN.(<obj>):(6))
+#xtranslate PARSERCLASS.<obj>:getattrib        => (OBJGEN.(<obj>):(7))
+#xtranslate PARSERCLASS.<obj>:setattrib        => (OBJGEN.(<obj>):(8))
+#xtranslate PARSERCLASS.<obj>:onew             => (OBJGEN.(<obj>):(CM_OBJECT_N+1))
+#xtranslate PARSERCLASS.<obj>:ocreate          => (OBJGEN.(<obj>):(CM_OBJECT_N+2))
+#xtranslate PARSERCLASS.<obj>:rawoinit         => (OBJGEN.(<obj>):(CM_OBJECT_N+3))
+#xtranslate PARSERCLASS.<obj>:oinitclass       => (OBJGEN.(<obj>):(CM_OBJECT_N+4))
+#xtranslate PARSERCLASS.<obj>:getmethodsimplement  => (OBJGEN.(<obj>):(CM_OBJECT_N+5))
+#xtranslate PARSERCLASS.<obj>:attribidx        => (OBJGEN.(<obj>):(CM_OBJECT_N+6))
+#xtranslate PARSERCLASS.<obj>:needclassid      => (OBJGEN.(<obj>):(CM_OBJECT_N+7))
+#xtranslate PARSERCLASS.<obj>:isinheritfrom    => (OBJGEN.(<obj>):(CM_OBJECT_N+8))
+
+
+
+// ™r”k”lve: onew(inputReader,name,errorStream)
+
+// ™r”k”lve: onew(inputReader,name,errorStream)
+
+#endif // _PARSERCLASS_OCH_
+#endif // _CA_CM_ONLY_
+
+#ifndef CA_PARSERCLASS_N
+#define CA_PARSERCLASS_N             CA_TREADERCLASS_N+0
+#define CM_PARSERCLASS_N             CM_TREADERCLASS_N+0
+#endif // CA_PARSERCLASS_N
+
+
+**********************************************************************
+#ifdef _PARSER_PRG_
+#ifndef _PARSER_PRG_OCH_
+#define _PARSER_PRG_OCH_
+
+
+**********************************************************************
+#xtranslate othis:<m> => PARSER.(othis):<m>
+#xtranslate thisclass:<m> => PARSERCLASS.(this:getClass()):<m>
+#define CTHIS PARSER
+
+
+**********************************************************************
+#xtranslate this:<m> => PARSER.(this):<m>
+
+#xcommand implement readitem()     => static function readitem(this)
+#xcommand implement putparserbuffer(anItem) => ;
+                    static function putparserbuffer(this,anItem)
+#xcommand implement getparserbuffer() => ;
+                    static function getparserbuffer(this)
+#xcommand implement unputparserbuffer() => ;
+                    static function unputparserbuffer(this)
+#xcommand implement ungetparserbuffer(anItem) => ;
+                    static function ungetparserbuffer(this,anItem)
+#xcommand implement clearparserbuffer() => ;
+                    static function clearparserbuffer(this)
+#xcommand implement rds()          => static function rds(this)
+#xcommand implement unrds(n)       => static function unrds(this,n)
+#xcommand implement strparserbuffer() => ;
+                    static function strparserbuffer(this)
+#xcommand implement arrayparserbuffer() => ;
+                    static function arrayparserbuffer(this)
+#xcommand implement oinit(inputReader,name,errorStream) => ;
+                    static function oinit(this,inputReader,name,errorStream)
+
+#ifdef _IMPLEMENT_EXPORT_
+#xcommand implement export readitem()     => function readitem(this)
+#xcommand implement export putparserbuffer(anItem) => ;
+                    function putparserbuffer(this,anItem)
+#xcommand implement export getparserbuffer() => ;
+                    function getparserbuffer(this)
+#xcommand implement export unputparserbuffer() => ;
+                    function unputparserbuffer(this)
+#xcommand implement export ungetparserbuffer(anItem) => ;
+                    function ungetparserbuffer(this,anItem)
+#xcommand implement export clearparserbuffer() => ;
+                    function clearparserbuffer(this)
+#xcommand implement export rds()          => function rds(this)
+#xcommand implement export unrds(n)       => function unrds(this,n)
+#xcommand implement export strparserbuffer() => ;
+                    function strparserbuffer(this)
+#xcommand implement export arrayparserbuffer() => ;
+                    function arrayparserbuffer(this)
+#xcommand implement export oinit(inputReader,name,errorStream) => ;
+                    function oinit(this,inputReader,name,errorStream)
+#endif // _IMPLEMENT_EXPORT_
+
+#xtranslate super:oinit            => (OBJGENM.(eval(BEHAVIOR.clTREADER():objmethodsimplement)).(this):(4))
+#xtranslate super:getclass         => (OBJGENM.(eval(BEHAVIOR.clTREADER():objmethodsimplement)).(this):(5))
+#xtranslate super:isclass          => (OBJGENM.(eval(BEHAVIOR.clTREADER():objmethodsimplement)).(this):(6))
+#xtranslate super:getattrib        => (OBJGENM.(eval(BEHAVIOR.clTREADER():objmethodsimplement)).(this):(7))
+#xtranslate super:setattrib        => (OBJGENM.(eval(BEHAVIOR.clTREADER():objmethodsimplement)).(this):(8))
+#xtranslate super:read             => (OBJGENM.(eval(BEHAVIOR.clTREADER():objmethodsimplement)).(this):(CM_OBJECT_N+1))
+#xtranslate super:unread           => (OBJGENM.(eval(BEHAVIOR.clTREADER():objmethodsimplement)).(this):(CM_OBJECT_N+2))
+#xtranslate super:readtbuffer      => (OBJGENM.(eval(BEHAVIOR.clTREADER():objmethodsimplement)).(this):(CM_OBJECT_N+3))
+#xtranslate super:arraytbuffer     => (OBJGENM.(eval(BEHAVIOR.clTREADER():objmethodsimplement)).(this):(CM_OBJECT_N+4))
+#xtranslate super:readitem         => (OBJGENM.(eval(BEHAVIOR.clTREADER():objmethodsimplement)).(this):(CM_OBJECT_N+5))
+#xtranslate super:iserror          => (OBJGENM.(eval(BEHAVIOR.clTREADER():objmethodsimplement)).(this):(CM_OBJECT_N+6))
+#xtranslate super:adderror         => (OBJGENM.(eval(BEHAVIOR.clTREADER():objmethodsimplement)).(this):(CM_OBJECT_N+7))
+#xtranslate super:destruct         => (OBJGENM.(eval(BEHAVIOR.clTREADER():objmethodsimplement)).(this):(CM_OBJECT_N+8))
+#xtranslate super:readinput        => (OBJGENM.(eval(BEHAVIOR.clTREADER():objmethodsimplement)).(this):(CM_READER_N+1))
+#xtranslate super:unreadinput      => (OBJGENM.(eval(BEHAVIOR.clTREADER():objmethodsimplement)).(this):(CM_READER_N+2))
+#xtranslate super:addinputreader   => (OBJGENM.(eval(BEHAVIOR.clTREADER():objmethodsimplement)).(this):(CM_READER_N+3))
+
+**********************************************************************
+static function setCMethods(pOsztaly)
+// Egy t”mb”t felt”lt az oszt ly m–veleti blokkjaival.
+   pOsztaly[(CM_OBJECT_N+5)]:={|this| readitem(this)}
+   pOsztaly[(CM_TREADER_N+1)]:={|this,anItem| putparserbuffer(this,anItem)}
+   pOsztaly[(CM_TREADER_N+2)]:={|this| getparserbuffer(this)}
+   pOsztaly[(CM_TREADER_N+3)]:={|this| unputparserbuffer(this)}
+   pOsztaly[(CM_TREADER_N+4)]:={|this,anItem| ungetparserbuffer(this,anItem)}
+   pOsztaly[(CM_TREADER_N+5)]:={|this| clearparserbuffer(this)}
+   pOsztaly[(CM_TREADER_N+6)]:={|this| rds(this)}
+   pOsztaly[(CM_TREADER_N+7)]:={|this,n| unrds(this,n)}
+   pOsztaly[(CM_TREADER_N+8)]:={|this| strparserbuffer(this)}
+   pOsztaly[(CM_TREADER_N+9)]:={|this| arrayparserbuffer(this)}
+   pOsztaly[(4)]:={|this,inputReader,name,errorStream| oinit(this,inputReader,name,errorStream)}
+return pOsztaly
+
+**********************************************************************
+static function setCams(ta,tm)
+// Egy t”mb”t felt”lt az oszt ly  ltal def. objektumok attrib£tumaival ‚s m–veleteivel.
+   ta[CA_TREADER_N+1-CA_NIL_N] := {CA_TREADER_N+1,'item',nil}
+   ta[CA_TREADER_N+2-CA_NIL_N] := {CA_TREADER_N+2,'parserbuffer',nil}
+
+   tm[(CM_OBJECT_N+5)-CM_NIL_N] := {(CM_OBJECT_N+5),'readitem','',nil}
+   tm[(CM_TREADER_N+1)-CM_NIL_N] := {(CM_TREADER_N+1),'putparserbuffer','anItem',nil}
+   tm[(CM_TREADER_N+2)-CM_NIL_N] := {(CM_TREADER_N+2),'getparserbuffer','',nil}
+   tm[(CM_TREADER_N+3)-CM_NIL_N] := {(CM_TREADER_N+3),'unputparserbuffer','',nil}
+   tm[(CM_TREADER_N+4)-CM_NIL_N] := {(CM_TREADER_N+4),'ungetparserbuffer','anItem',nil}
+   tm[(CM_TREADER_N+5)-CM_NIL_N] := {(CM_TREADER_N+5),'clearparserbuffer','',nil}
+   tm[(CM_TREADER_N+6)-CM_NIL_N] := {(CM_TREADER_N+6),'rds','',nil}
+   tm[(CM_TREADER_N+7)-CM_NIL_N] := {(CM_TREADER_N+7),'unrds','n',nil}
+   tm[(CM_TREADER_N+8)-CM_NIL_N] := {(CM_TREADER_N+8),'strparserbuffer','',nil}
+   tm[(CM_TREADER_N+9)-CM_NIL_N] := {(CM_TREADER_N+9),'arrayparserbuffer','',nil}
+   tm[(4)-CM_NIL_N] := {(4),'oinit','inputReader,name,errorStream',nil}
+return nil
+
+#ifndef _NO_CLPARSER_
+#ifdef _STRICT_PARENT_
+#ifdef _CA_CM_ONLY_
+#include "meta.och"
+#else // _CA_CM_ONLY_
+#define _CA_CM_ONLY_
+#include "meta.och"
+#undef _CA_CM_ONLY_
+#endif // _CA_CM_ONLY_
+#else
+#include "meta.och"
+#endif // _STRICT_PARENT_
+**********************************************************************
+function clPARSER()
+// El“szedi az oszt lyt. (class)
+static osztaly
+   if (osztaly==nil)
+      osztaly:=META.mcPARSERCLASS():onew(;
+                  clTREADER(),;
+                  "PARSER",;
+                  CA_PARSER_N,;
+                  CM_PARSER_N,;
+                  {|ta,tm|setCams(ta,tm)},;
+                  {|t|setCMethods(t)})
+   endif
+return osztaly
+#endif // _NO_CLPARSER_
+
+#ifndef _NO_PARSERCLASS_
+
+**********************************************************************
+#xtranslate class:<m> => PARSERCLASS.(class):<m>
+
+#xcommand cimplement onew(inputReader,name,errorStream) => ;
+                    static function onew(class,inputReader,name,errorStream)
+
+#ifdef _IMPLEMENT_EXPORT_
+#xcommand cimplement export onew(inputReader,name,errorStream) => ;
+                    function onew(class,inputReader,name,errorStream)
+#endif // _IMPLEMENT_EXPORT_
+
+#xtranslate superclass:oinit            => (OBJGENM.(eval(BEHAVIOR.mcTREADERCLASS():objmethodsimplement)).(class):(4))
+#xtranslate superclass:getclass         => (OBJGENM.(eval(BEHAVIOR.mcTREADERCLASS():objmethodsimplement)).(class):(5))
+#xtranslate superclass:isclass          => (OBJGENM.(eval(BEHAVIOR.mcTREADERCLASS():objmethodsimplement)).(class):(6))
+#xtranslate superclass:getattrib        => (OBJGENM.(eval(BEHAVIOR.mcTREADERCLASS():objmethodsimplement)).(class):(7))
+#xtranslate superclass:setattrib        => (OBJGENM.(eval(BEHAVIOR.mcTREADERCLASS():objmethodsimplement)).(class):(8))
+#xtranslate superclass:onew             => (OBJGENM.(eval(BEHAVIOR.mcTREADERCLASS():objmethodsimplement)).(class):(CM_OBJECT_N+1))
+#xtranslate superclass:ocreate          => (OBJGENM.(eval(BEHAVIOR.mcTREADERCLASS():objmethodsimplement)).(class):(CM_OBJECT_N+2))
+#xtranslate superclass:rawoinit         => (OBJGENM.(eval(BEHAVIOR.mcTREADERCLASS():objmethodsimplement)).(class):(CM_OBJECT_N+3))
+#xtranslate superclass:oinitclass       => (OBJGENM.(eval(BEHAVIOR.mcTREADERCLASS():objmethodsimplement)).(class):(CM_OBJECT_N+4))
+#xtranslate superclass:getmethodsimplement  => (OBJGENM.(eval(BEHAVIOR.mcTREADERCLASS():objmethodsimplement)).(class):(CM_OBJECT_N+5))
+#xtranslate superclass:attribidx        => (OBJGENM.(eval(BEHAVIOR.mcTREADERCLASS():objmethodsimplement)).(class):(CM_OBJECT_N+6))
+#xtranslate superclass:needclassid      => (OBJGENM.(eval(BEHAVIOR.mcTREADERCLASS():objmethodsimplement)).(class):(CM_OBJECT_N+7))
+#xtranslate superclass:isinheritfrom    => (OBJGENM.(eval(BEHAVIOR.mcTREADERCLASS():objmethodsimplement)).(class):(CM_OBJECT_N+8))
+
+**********************************************************************
+static function setMCMethods(pOsztaly)
+// Egy t”mb”t felt”lt a metaoszt ly m–veleti blokkjaival.
+   pOsztaly[(CM_OBJECT_N+1)]:={|class,inputReader,name,errorStream| onew(class,inputReader,name,errorStream)}
+return pOsztaly
+
+**********************************************************************
+static function setMCams(ta,tm)
+// Egy t”mb”t felt”lt a metaoszt ly  ltal def. objektumok attrib£tumaival ‚s m–veleteivel.
+
+   tm[(CM_OBJECT_N+1)-CM_NIL_N] := {(CM_OBJECT_N+1),'onew','inputReader,name,errorStream',nil}
+return nil
+
+**********************************************************************
+#ifndef _NO_MCPARSERCLASS_
+#ifdef _STRICT_PARENT_
+#ifdef _CA_CM_ONLY_
+#include "meta.och" // "metaclas.och" 
+#else // _CA_CM_ONLY_
+#define _CA_CM_ONLY_
+#include "meta.och" // "metaclas.och" 
+#undef _CA_CM_ONLY_
+#endif // _CA_CM_ONLY_
+#else
+#include "meta.och" // "metaclas.och" 
+#endif // _STRICT_PARENT_
+function mcPARSERCLASS()
+// El“szedi az oszt ly metaoszt ly t. (metaclass)
+static metaOsztaly
+   if (metaOsztaly==nil)
+      metaOsztaly:=META.clMETA():onew(;
+                  mcTREADERCLASS(),;
+                  "PARSERCLASS",;
+                  CA_PARSERCLASS_N,;
+                  CM_PARSERCLASS_N,;
+                  {|ta,tm|setMCams(ta,tm)},;
+                  {|t|setMCMethods(t)})
+   endif
+return metaOsztaly
+#endif // _NO_MCPARSERCLASS_
+
+#endif // _NO_PARSERCLASS_
+#ifdef _IMPLEMENT_ONEW_
+**********************************************************************
+cimplement onew(inputReader,name,errorStream)
+local o:=class:ocreate()
+
+    PARSER.o:oinit(inputReader,name,errorStream)
+return o
+#endif // _IMPLEMENT_ONEW_
+
+**********************************************************************
+#ifdef _IMPLEMENT_OINIT_
+implement oinit(inputReader,name,errorStream)
+    super:oinit()
+return this
+#endif // _IMPLEMENT_OINIT_
+
+**********************************************************************
+**********************************************************************
+#endif // _PARSER_PRG_OCH_
+#endif // _PARSER_PRG_

@@ -1,0 +1,289 @@
+// TBUFFER.och oszt ly implement ci¢.
+// Gener lva: 1999.06.10, 14:41:08, OBJCCC  v2.2.03
+// Meta oszt ly defin¡ci¢: Van
+
+
+#ifndef CA_OBJECT_N
+#ifdef _STRICT_PARENT_
+#ifdef _CA_CM_ONLY_
+#include "OBJECT.och"
+#else // _CA_CM_ONLY_
+#define _CA_CM_ONLY_
+#include "OBJECT.och"
+#undef _CA_CM_ONLY_
+#endif // _CA_CM_ONLY_
+#else
+#include "OBJECT.och"
+#endif // _STRICT_PARENT_
+#endif // CA_OBJECT_N
+
+#ifndef _CA_CM_ONLY_
+#ifndef _TBUFFER_OCH_
+#define _TBUFFER_OCH_
+
+
+
+
+#xtranslate TBUFFER.<obj>:oinit            => (OBJGEN.(<obj>):(4))
+#xtranslate TBUFFER.<obj>:getclass         => (OBJGEN.(<obj>):(5))
+#xtranslate TBUFFER.<obj>:isclass          => (OBJGEN.(<obj>):(6))
+#xtranslate TBUFFER.<obj>:getattrib        => (OBJGEN.(<obj>):(7))
+#xtranslate TBUFFER.<obj>:setattrib        => (OBJGEN.(<obj>):(8))
+
+
+#xtranslate TBUFFER.<obj>:buffer           => <obj>\[CA_OBJECT_N+1\]
+
+// Specifik lva: get()
+// Specifik lva: unget(item)
+// Specifik lva: put(item)
+// Specifik lva: unput()
+// Specifik lva: clear()
+// Specifik lva: bitemnumber()
+// Specifik lva: getbitem(i)
+// Specifik lva: appendbuffer(aTBuffer)
+// ™r”k”lve: oinit()
+
+#xtranslate TBUFFER.<obj>:get              => (OBJGEN.(<obj>):(CM_OBJECT_N+1))
+#xtranslate TBUFFER.<obj>:unget            => (OBJGEN.(<obj>):(CM_OBJECT_N+2))
+#xtranslate TBUFFER.<obj>:put              => (OBJGEN.(<obj>):(CM_OBJECT_N+3))
+#xtranslate TBUFFER.<obj>:unput            => (OBJGEN.(<obj>):(CM_OBJECT_N+4))
+#xtranslate TBUFFER.<obj>:clear            => (OBJGEN.(<obj>):(CM_OBJECT_N+5))
+#xtranslate TBUFFER.<obj>:bitemnumber      => (OBJGEN.(<obj>):(CM_OBJECT_N+6))
+#xtranslate TBUFFER.<obj>:getbitem         => (OBJGEN.(<obj>):(CM_OBJECT_N+7))
+#xtranslate TBUFFER.<obj>:appendbuffer     => (OBJGEN.(<obj>):(CM_OBJECT_N+8))
+// ™r”k”lve: oinit()
+
+#endif // _TBUFFER_OCH_
+#endif // _CA_CM_ONLY_
+
+#ifndef CA_TBUFFER_N
+#define CA_TBUFFER_N             CA_OBJECT_N+1
+#define CM_TBUFFER_N             CM_OBJECT_N+8
+#endif // CA_TBUFFER_N
+
+#ifndef _CA_CM_ONLY_
+#ifndef _TBUFFERCLASS_OCH_
+#define _TBUFFERCLASS_OCH_
+
+**********************************************************************
+#xtranslate C.TBUFFER:<m> => (TBUFFERCLASS.clTBUFFER():<m>)
+#xtranslate C.TBUFFER:self() => (clTBUFFER())
+
+
+#xtranslate TBUFFERCLASS.<obj>:parent           => <obj>\[CA_OBJECT_N+1\]
+#xtranslate TBUFFERCLASS.<obj>:name             => <obj>\[CA_OBJECT_N+2\]
+#xtranslate TBUFFERCLASS.<obj>:objsize          => <obj>\[CA_OBJECT_N+3\]
+#xtranslate TBUFFERCLASS.<obj>:attribs          => <obj>\[CA_OBJECT_N+4\]
+#xtranslate TBUFFERCLASS.<obj>:methods          => <obj>\[CA_OBJECT_N+5\]
+#xtranslate TBUFFERCLASS.<obj>:classid          => <obj>\[CA_OBJECT_N+6\]
+#xtranslate TBUFFERCLASS.<obj>:parentclassids   => <obj>\[CA_OBJECT_N+7\]
+#xtranslate TBUFFERCLASS.<obj>:amblock          => <obj>\[CA_OBJECT_N+8\]
+#xtranslate TBUFFERCLASS.<obj>:methodsblock     => <obj>\[CA_OBJECT_N+9\]
+#xtranslate TBUFFERCLASS.<obj>:objmethodsimplement  => <obj>\[CA_OBJECT_N+10\]
+
+
+#xtranslate TBUFFERCLASS.<obj>:oinit            => (OBJGEN.(<obj>):(4))
+#xtranslate TBUFFERCLASS.<obj>:getclass         => (OBJGEN.(<obj>):(5))
+#xtranslate TBUFFERCLASS.<obj>:isclass          => (OBJGEN.(<obj>):(6))
+#xtranslate TBUFFERCLASS.<obj>:getattrib        => (OBJGEN.(<obj>):(7))
+#xtranslate TBUFFERCLASS.<obj>:setattrib        => (OBJGEN.(<obj>):(8))
+#xtranslate TBUFFERCLASS.<obj>:onew             => (OBJGEN.(<obj>):(CM_OBJECT_N+1))
+#xtranslate TBUFFERCLASS.<obj>:ocreate          => (OBJGEN.(<obj>):(CM_OBJECT_N+2))
+#xtranslate TBUFFERCLASS.<obj>:rawoinit         => (OBJGEN.(<obj>):(CM_OBJECT_N+3))
+#xtranslate TBUFFERCLASS.<obj>:oinitclass       => (OBJGEN.(<obj>):(CM_OBJECT_N+4))
+#xtranslate TBUFFERCLASS.<obj>:getmethodsimplement  => (OBJGEN.(<obj>):(CM_OBJECT_N+5))
+#xtranslate TBUFFERCLASS.<obj>:attribidx        => (OBJGEN.(<obj>):(CM_OBJECT_N+6))
+#xtranslate TBUFFERCLASS.<obj>:needclassid      => (OBJGEN.(<obj>):(CM_OBJECT_N+7))
+#xtranslate TBUFFERCLASS.<obj>:isinheritfrom    => (OBJGEN.(<obj>):(CM_OBJECT_N+8))
+
+
+
+
+
+#endif // _TBUFFERCLASS_OCH_
+#endif // _CA_CM_ONLY_
+
+#ifndef CA_TBUFFERCLASS_N
+#define CA_TBUFFERCLASS_N             CA_BEHAVIOR_N+0
+#define CM_TBUFFERCLASS_N             CM_BEHAVIOR_N+0
+#endif // CA_TBUFFERCLASS_N
+
+
+**********************************************************************
+#ifdef _TBUFFER_PRG_
+#ifndef _TBUFFER_PRG_OCH_
+#define _TBUFFER_PRG_OCH_
+
+
+**********************************************************************
+#xtranslate othis:<m> => TBUFFER.(othis):<m>
+#xtranslate thisclass:<m> => TBUFFERCLASS.(this:getClass()):<m>
+#define CTHIS TBUFFER
+
+
+**********************************************************************
+#xtranslate this:<m> => TBUFFER.(this):<m>
+
+#xcommand implement get()          => static function get(this)
+#xcommand implement unget(item)    => static function unget(this,item)
+#xcommand implement put(item)      => static function put(this,item)
+#xcommand implement unput()        => static function unput(this)
+#xcommand implement clear()        => static function clear(this)
+#xcommand implement bitemnumber()  => static function bitemnumber(this)
+#xcommand implement getbitem(i)    => static function getbitem(this,i)
+#xcommand implement appendbuffer(aTBuffer) => ;
+                    static function appendbuffer(this,aTBuffer)
+#xcommand implement oinit()        => static function oinit(this)
+
+#ifdef _IMPLEMENT_EXPORT_
+#xcommand implement export get()          => function get(this)
+#xcommand implement export unget(item)    => function unget(this,item)
+#xcommand implement export put(item)      => function put(this,item)
+#xcommand implement export unput()        => function unput(this)
+#xcommand implement export clear()        => function clear(this)
+#xcommand implement export bitemnumber()  => function bitemnumber(this)
+#xcommand implement export getbitem(i)    => function getbitem(this,i)
+#xcommand implement export appendbuffer(aTBuffer) => ;
+                    function appendbuffer(this,aTBuffer)
+#xcommand implement export oinit()        => function oinit(this)
+#endif // _IMPLEMENT_EXPORT_
+
+#xtranslate super:oinit            => (OBJGENM.(eval(BEHAVIOR.clOBJECT():objmethodsimplement)).(this):(4))
+#xtranslate super:getclass         => (OBJGENM.(eval(BEHAVIOR.clOBJECT():objmethodsimplement)).(this):(5))
+#xtranslate super:isclass          => (OBJGENM.(eval(BEHAVIOR.clOBJECT():objmethodsimplement)).(this):(6))
+#xtranslate super:getattrib        => (OBJGENM.(eval(BEHAVIOR.clOBJECT():objmethodsimplement)).(this):(7))
+#xtranslate super:setattrib        => (OBJGENM.(eval(BEHAVIOR.clOBJECT():objmethodsimplement)).(this):(8))
+
+**********************************************************************
+static function setCMethods(pOsztaly)
+// Egy t”mb”t felt”lt az oszt ly m–veleti blokkjaival.
+   pOsztaly[(CM_OBJECT_N+1)]:={|this| get(this)}
+   pOsztaly[(CM_OBJECT_N+2)]:={|this,item| unget(this,item)}
+   pOsztaly[(CM_OBJECT_N+3)]:={|this,item| put(this,item)}
+   pOsztaly[(CM_OBJECT_N+4)]:={|this| unput(this)}
+   pOsztaly[(CM_OBJECT_N+5)]:={|this| clear(this)}
+   pOsztaly[(CM_OBJECT_N+6)]:={|this| bitemnumber(this)}
+   pOsztaly[(CM_OBJECT_N+7)]:={|this,i| getbitem(this,i)}
+   pOsztaly[(CM_OBJECT_N+8)]:={|this,aTBuffer| appendbuffer(this,aTBuffer)}
+   pOsztaly[(4)]:={|this| oinit(this)}
+return pOsztaly
+
+**********************************************************************
+static function setCams(ta,tm)
+// Egy t”mb”t felt”lt az oszt ly  ltal def. objektumok attrib£tumaival ‚s m–veleteivel.
+   ta[CA_OBJECT_N+1-CA_NIL_N] := {CA_OBJECT_N+1,'buffer', }
+
+   tm[(CM_OBJECT_N+1)-CM_NIL_N] := {(CM_OBJECT_N+1),'get','',nil}
+   tm[(CM_OBJECT_N+2)-CM_NIL_N] := {(CM_OBJECT_N+2),'unget','item',nil}
+   tm[(CM_OBJECT_N+3)-CM_NIL_N] := {(CM_OBJECT_N+3),'put','item',nil}
+   tm[(CM_OBJECT_N+4)-CM_NIL_N] := {(CM_OBJECT_N+4),'unput','',nil}
+   tm[(CM_OBJECT_N+5)-CM_NIL_N] := {(CM_OBJECT_N+5),'clear','',nil}
+   tm[(CM_OBJECT_N+6)-CM_NIL_N] := {(CM_OBJECT_N+6),'bitemnumber','',nil}
+   tm[(CM_OBJECT_N+7)-CM_NIL_N] := {(CM_OBJECT_N+7),'getbitem','i',nil}
+   tm[(CM_OBJECT_N+8)-CM_NIL_N] := {(CM_OBJECT_N+8),'appendbuffer','aTBuffer',nil}
+   tm[(4)-CM_NIL_N] := {(4),'oinit','',nil}
+return nil
+
+#ifndef _NO_CLTBUFFER_
+#ifdef _STRICT_PARENT_
+#ifdef _CA_CM_ONLY_
+#include "meta.och"
+#else // _CA_CM_ONLY_
+#define _CA_CM_ONLY_
+#include "meta.och"
+#undef _CA_CM_ONLY_
+#endif // _CA_CM_ONLY_
+#else
+#include "meta.och"
+#endif // _STRICT_PARENT_
+**********************************************************************
+function clTBUFFER()
+// El“szedi az oszt lyt. (class)
+static osztaly
+   if (osztaly==nil)
+      osztaly:=META.mcTBUFFERCLASS():onew(;
+                  clOBJECT(),;
+                  "TBUFFER",;
+                  CA_TBUFFER_N,;
+                  CM_TBUFFER_N,;
+                  {|ta,tm|setCams(ta,tm)},;
+                  {|t|setCMethods(t)})
+   endif
+return osztaly
+#endif // _NO_CLTBUFFER_
+
+#ifndef _NO_TBUFFERCLASS_
+
+**********************************************************************
+#xtranslate class:<m> => TBUFFERCLASS.(class):<m>
+
+
+#ifdef _IMPLEMENT_EXPORT_
+#endif // _IMPLEMENT_EXPORT_
+
+#xtranslate superclass:oinit            => (OBJGENM.(eval(BEHAVIOR.clBEHAVIOR():objmethodsimplement)).(class):(4))
+#xtranslate superclass:getclass         => (OBJGENM.(eval(BEHAVIOR.clBEHAVIOR():objmethodsimplement)).(class):(5))
+#xtranslate superclass:isclass          => (OBJGENM.(eval(BEHAVIOR.clBEHAVIOR():objmethodsimplement)).(class):(6))
+#xtranslate superclass:getattrib        => (OBJGENM.(eval(BEHAVIOR.clBEHAVIOR():objmethodsimplement)).(class):(7))
+#xtranslate superclass:setattrib        => (OBJGENM.(eval(BEHAVIOR.clBEHAVIOR():objmethodsimplement)).(class):(8))
+#xtranslate superclass:onew             => (OBJGENM.(eval(BEHAVIOR.clBEHAVIOR():objmethodsimplement)).(class):(CM_OBJECT_N+1))
+#xtranslate superclass:ocreate          => (OBJGENM.(eval(BEHAVIOR.clBEHAVIOR():objmethodsimplement)).(class):(CM_OBJECT_N+2))
+#xtranslate superclass:rawoinit         => (OBJGENM.(eval(BEHAVIOR.clBEHAVIOR():objmethodsimplement)).(class):(CM_OBJECT_N+3))
+#xtranslate superclass:oinitclass       => (OBJGENM.(eval(BEHAVIOR.clBEHAVIOR():objmethodsimplement)).(class):(CM_OBJECT_N+4))
+#xtranslate superclass:getmethodsimplement  => (OBJGENM.(eval(BEHAVIOR.clBEHAVIOR():objmethodsimplement)).(class):(CM_OBJECT_N+5))
+#xtranslate superclass:attribidx        => (OBJGENM.(eval(BEHAVIOR.clBEHAVIOR():objmethodsimplement)).(class):(CM_OBJECT_N+6))
+#xtranslate superclass:needclassid      => (OBJGENM.(eval(BEHAVIOR.clBEHAVIOR():objmethodsimplement)).(class):(CM_OBJECT_N+7))
+#xtranslate superclass:isinheritfrom    => (OBJGENM.(eval(BEHAVIOR.clBEHAVIOR():objmethodsimplement)).(class):(CM_OBJECT_N+8))
+
+**********************************************************************
+static function setMCMethods(pOsztaly)
+// Egy t”mb”t felt”lt a metaoszt ly m–veleti blokkjaival.
+return pOsztaly
+
+**********************************************************************
+static function setMCams(ta,tm)
+// Egy t”mb”t felt”lt a metaoszt ly  ltal def. objektumok attrib£tumaival ‚s m–veleteivel.
+
+return nil
+
+**********************************************************************
+#ifndef _NO_MCTBUFFERCLASS_
+#ifdef _STRICT_PARENT_
+#ifdef _CA_CM_ONLY_
+#include "meta.och" // "metaclas.och" 
+#else // _CA_CM_ONLY_
+#define _CA_CM_ONLY_
+#include "meta.och" // "metaclas.och" 
+#undef _CA_CM_ONLY_
+#endif // _CA_CM_ONLY_
+#else
+#include "meta.och" // "metaclas.och" 
+#endif // _STRICT_PARENT_
+function mcTBUFFERCLASS()
+// El“szedi az oszt ly metaoszt ly t. (metaclass)
+static metaOsztaly
+   if (metaOsztaly==nil)
+      metaOsztaly:=META.clMETA():onew(;
+                  clBEHAVIOR(),;
+                  "TBUFFERCLASS",;
+                  CA_TBUFFERCLASS_N,;
+                  CM_TBUFFERCLASS_N,;
+                  {|ta,tm|setMCams(ta,tm)},;
+                  {|t|setMCMethods(t)})
+   endif
+return metaOsztaly
+#endif // _NO_MCTBUFFERCLASS_
+
+#endif // _NO_TBUFFERCLASS_
+
+**********************************************************************
+#ifdef _IMPLEMENT_OINIT_
+implement oinit()
+    super:oinit()
+return this
+#endif // _IMPLEMENT_OINIT_
+
+**********************************************************************
+**********************************************************************
+#endif // _TBUFFER_PRG_OCH_
+#endif // _TBUFFER_PRG_

@@ -1,0 +1,305 @@
+// PRSERR.och oszt ly implement ci¢.
+// Gener lva: 1999.06.10, 14:40:39, OBJCCC  v2.2.03
+// Meta oszt ly defin¡ci¢: Van
+
+
+#ifndef CA_OBJECT_N
+#ifdef _STRICT_PARENT_
+#ifdef _CA_CM_ONLY_
+#include "OBJECT.och"
+#else // _CA_CM_ONLY_
+#define _CA_CM_ONLY_
+#include "OBJECT.och"
+#undef _CA_CM_ONLY_
+#endif // _CA_CM_ONLY_
+#else
+#include "OBJECT.och"
+#endif // _STRICT_PARENT_
+#endif // CA_OBJECT_N
+
+#ifndef _CA_CM_ONLY_
+#ifndef _PRSERR_OCH_
+#define _PRSERR_OCH_
+
+
+
+
+#xtranslate PRSERR.<obj>:oinit            => (OBJGEN.(<obj>):(4))
+#xtranslate PRSERR.<obj>:getclass         => (OBJGEN.(<obj>):(5))
+#xtranslate PRSERR.<obj>:isclass          => (OBJGEN.(<obj>):(6))
+#xtranslate PRSERR.<obj>:getattrib        => (OBJGEN.(<obj>):(7))
+#xtranslate PRSERR.<obj>:setattrib        => (OBJGEN.(<obj>):(8))
+
+
+#xtranslate PRSERR.<obj>:group            => <obj>\[CA_OBJECT_N+1\]
+#xtranslate PRSERR.<obj>:id               => <obj>\[CA_OBJECT_N+2\]
+#xtranslate PRSERR.<obj>:params           => <obj>\[CA_OBJECT_N+3\]
+#xtranslate PRSERR.<obj>:file             => <obj>\[CA_OBJECT_N+4\]
+#xtranslate PRSERR.<obj>:line             => <obj>\[CA_OBJECT_N+5\]
+#xtranslate PRSERR.<obj>:pos              => <obj>\[CA_OBJECT_N+6\]
+
+// Specifik lva: defaulterrformat(name)
+// Specifik lva: geterrstr()
+// ™r”k”lve: oinit(group_and_id,params,file,line,pos)
+
+#xtranslate PRSERR.<obj>:defaulterrformat  => (OBJGEN.(<obj>):(CM_OBJECT_N+1))
+#xtranslate PRSERR.<obj>:geterrstr        => (OBJGEN.(<obj>):(CM_OBJECT_N+2))
+// ™r”k”lve: oinit(group_and_id,params,file,line,pos)
+
+#endif // _PRSERR_OCH_
+#endif // _CA_CM_ONLY_
+
+#ifndef CA_PRSERR_N
+#define CA_PRSERR_N             CA_OBJECT_N+6
+#define CM_PRSERR_N             CM_OBJECT_N+2
+#endif // CA_PRSERR_N
+
+#ifndef _CA_CM_ONLY_
+#ifndef _PRSERRCLASS_OCH_
+#define _PRSERRCLASS_OCH_
+
+**********************************************************************
+#xtranslate C.PRSERR:<m> => (PRSERRCLASS.clPRSERR():<m>)
+#xtranslate C.PRSERR:self() => (clPRSERR())
+
+
+#xtranslate PRSERRCLASS.<obj>:parent           => <obj>\[CA_OBJECT_N+1\]
+#xtranslate PRSERRCLASS.<obj>:name             => <obj>\[CA_OBJECT_N+2\]
+#xtranslate PRSERRCLASS.<obj>:objsize          => <obj>\[CA_OBJECT_N+3\]
+#xtranslate PRSERRCLASS.<obj>:attribs          => <obj>\[CA_OBJECT_N+4\]
+#xtranslate PRSERRCLASS.<obj>:methods          => <obj>\[CA_OBJECT_N+5\]
+#xtranslate PRSERRCLASS.<obj>:classid          => <obj>\[CA_OBJECT_N+6\]
+#xtranslate PRSERRCLASS.<obj>:parentclassids   => <obj>\[CA_OBJECT_N+7\]
+#xtranslate PRSERRCLASS.<obj>:amblock          => <obj>\[CA_OBJECT_N+8\]
+#xtranslate PRSERRCLASS.<obj>:methodsblock     => <obj>\[CA_OBJECT_N+9\]
+#xtranslate PRSERRCLASS.<obj>:objmethodsimplement  => <obj>\[CA_OBJECT_N+10\]
+
+
+#xtranslate PRSERRCLASS.<obj>:oinit            => (OBJGEN.(<obj>):(4))
+#xtranslate PRSERRCLASS.<obj>:getclass         => (OBJGEN.(<obj>):(5))
+#xtranslate PRSERRCLASS.<obj>:isclass          => (OBJGEN.(<obj>):(6))
+#xtranslate PRSERRCLASS.<obj>:getattrib        => (OBJGEN.(<obj>):(7))
+#xtranslate PRSERRCLASS.<obj>:setattrib        => (OBJGEN.(<obj>):(8))
+#xtranslate PRSERRCLASS.<obj>:onew             => (OBJGEN.(<obj>):(CM_OBJECT_N+1))
+#xtranslate PRSERRCLASS.<obj>:ocreate          => (OBJGEN.(<obj>):(CM_OBJECT_N+2))
+#xtranslate PRSERRCLASS.<obj>:rawoinit         => (OBJGEN.(<obj>):(CM_OBJECT_N+3))
+#xtranslate PRSERRCLASS.<obj>:oinitclass       => (OBJGEN.(<obj>):(CM_OBJECT_N+4))
+#xtranslate PRSERRCLASS.<obj>:getmethodsimplement  => (OBJGEN.(<obj>):(CM_OBJECT_N+5))
+#xtranslate PRSERRCLASS.<obj>:attribidx        => (OBJGEN.(<obj>):(CM_OBJECT_N+6))
+#xtranslate PRSERRCLASS.<obj>:needclassid      => (OBJGEN.(<obj>):(CM_OBJECT_N+7))
+#xtranslate PRSERRCLASS.<obj>:isinheritfrom    => (OBJGEN.(<obj>):(CM_OBJECT_N+8))
+
+
+#xtranslate PRSERRCLASS.<obj>:errdict          => <obj>\[CA_BEHAVIOR_N+1\]
+
+// ™r”k”lve: onew(group_and_id,params,file,line,pos)
+// Specifik lva: onewfromtoken(group_and_id,params,token)
+// Specifik lva: registererror(group_and_id,name,printBlock)
+// ™r”k”lve: oinitclass()
+
+// ™r”k”lve: onew(group_and_id,params,file,line,pos)
+#xtranslate PRSERRCLASS.<obj>:onewfromtoken    => (OBJGEN.(<obj>):(CM_BEHAVIOR_N+1))
+#xtranslate PRSERRCLASS.<obj>:registererror    => (OBJGEN.(<obj>):(CM_BEHAVIOR_N+2))
+// ™r”k”lve: oinitclass()
+
+#endif // _PRSERRCLASS_OCH_
+#endif // _CA_CM_ONLY_
+
+#ifndef CA_PRSERRCLASS_N
+#define CA_PRSERRCLASS_N             CA_BEHAVIOR_N+1
+#define CM_PRSERRCLASS_N             CM_BEHAVIOR_N+2
+#endif // CA_PRSERRCLASS_N
+
+
+**********************************************************************
+#ifdef _PRSERR_PRG_
+#ifndef _PRSERR_PRG_OCH_
+#define _PRSERR_PRG_OCH_
+
+
+**********************************************************************
+#xtranslate othis:<m> => PRSERR.(othis):<m>
+#xtranslate thisclass:<m> => PRSERRCLASS.(this:getClass()):<m>
+#define CTHIS PRSERR
+
+
+**********************************************************************
+#xtranslate this:<m> => PRSERR.(this):<m>
+
+#xcommand implement defaulterrformat(name) => ;
+                    static function defaulterrformat(this,name)
+#xcommand implement geterrstr()    => static function geterrstr(this)
+#xcommand implement oinit(group_and_id,params,file,line,pos) => ;
+                    static function oinit(this,group_and_id,params,file,line,pos)
+
+#ifdef _IMPLEMENT_EXPORT_
+#xcommand implement export defaulterrformat(name) => ;
+                    function defaulterrformat(this,name)
+#xcommand implement export geterrstr()    => function geterrstr(this)
+#xcommand implement export oinit(group_and_id,params,file,line,pos) => ;
+                    function oinit(this,group_and_id,params,file,line,pos)
+#endif // _IMPLEMENT_EXPORT_
+
+#xtranslate super:oinit            => (OBJGENM.(eval(BEHAVIOR.clOBJECT():objmethodsimplement)).(this):(4))
+#xtranslate super:getclass         => (OBJGENM.(eval(BEHAVIOR.clOBJECT():objmethodsimplement)).(this):(5))
+#xtranslate super:isclass          => (OBJGENM.(eval(BEHAVIOR.clOBJECT():objmethodsimplement)).(this):(6))
+#xtranslate super:getattrib        => (OBJGENM.(eval(BEHAVIOR.clOBJECT():objmethodsimplement)).(this):(7))
+#xtranslate super:setattrib        => (OBJGENM.(eval(BEHAVIOR.clOBJECT():objmethodsimplement)).(this):(8))
+
+**********************************************************************
+static function setCMethods(pOsztaly)
+// Egy t”mb”t felt”lt az oszt ly m–veleti blokkjaival.
+   pOsztaly[(CM_OBJECT_N+1)]:={|this,name| defaulterrformat(this,name)}
+   pOsztaly[(CM_OBJECT_N+2)]:={|this| geterrstr(this)}
+   pOsztaly[(4)]:={|this,group_and_id,params,file,line,pos| oinit(this,group_and_id,params,file,line,pos)}
+return pOsztaly
+
+**********************************************************************
+static function setCams(ta,tm)
+// Egy t”mb”t felt”lt az oszt ly  ltal def. objektumok attrib£tumaival ‚s m–veleteivel.
+   ta[CA_OBJECT_N+1-CA_NIL_N] := {CA_OBJECT_N+1,'group', }
+   ta[CA_OBJECT_N+2-CA_NIL_N] := {CA_OBJECT_N+2,'id', }
+   ta[CA_OBJECT_N+3-CA_NIL_N] := {CA_OBJECT_N+3,'params', }
+   ta[CA_OBJECT_N+4-CA_NIL_N] := {CA_OBJECT_N+4,'file',nil}
+   ta[CA_OBJECT_N+5-CA_NIL_N] := {CA_OBJECT_N+5,'line',nil}
+   ta[CA_OBJECT_N+6-CA_NIL_N] := {CA_OBJECT_N+6,'pos',nil}
+
+   tm[(CM_OBJECT_N+1)-CM_NIL_N] := {(CM_OBJECT_N+1),'defaulterrformat','name',nil}
+   tm[(CM_OBJECT_N+2)-CM_NIL_N] := {(CM_OBJECT_N+2),'geterrstr','',nil}
+   tm[(4)-CM_NIL_N] := {(4),'oinit','group_and_id,params,file,line,pos',nil}
+return nil
+
+#ifndef _NO_CLPRSERR_
+#ifdef _STRICT_PARENT_
+#ifdef _CA_CM_ONLY_
+#include "meta.och"
+#else // _CA_CM_ONLY_
+#define _CA_CM_ONLY_
+#include "meta.och"
+#undef _CA_CM_ONLY_
+#endif // _CA_CM_ONLY_
+#else
+#include "meta.och"
+#endif // _STRICT_PARENT_
+**********************************************************************
+function clPRSERR()
+// El“szedi az oszt lyt. (class)
+static osztaly
+   if (osztaly==nil)
+      osztaly:=META.mcPRSERRCLASS():onew(;
+                  clOBJECT(),;
+                  "PRSERR",;
+                  CA_PRSERR_N,;
+                  CM_PRSERR_N,;
+                  {|ta,tm|setCams(ta,tm)},;
+                  {|t|setCMethods(t)})
+   endif
+return osztaly
+#endif // _NO_CLPRSERR_
+
+#ifndef _NO_PRSERRCLASS_
+
+**********************************************************************
+#xtranslate class:<m> => PRSERRCLASS.(class):<m>
+
+#xcommand cimplement onew(group_and_id,params,file,line,pos) => ;
+                    static function onew(class,group_and_id,params,file,line,pos)
+#xcommand cimplement onewfromtoken(group_and_id,params,token) => ;
+                    static function onewfromtoken(class,group_and_id,params,token)
+#xcommand cimplement registererror(group_and_id,name,printBlock) => ;
+                    static function registererror(class,group_and_id,name,printBlock)
+#xcommand cimplement oinitclass()   => static function oinitclass(class)
+
+#ifdef _IMPLEMENT_EXPORT_
+#xcommand cimplement export onew(group_and_id,params,file,line,pos) => ;
+                    function onew(class,group_and_id,params,file,line,pos)
+#xcommand cimplement export onewfromtoken(group_and_id,params,token) => ;
+                    function onewfromtoken(class,group_and_id,params,token)
+#xcommand cimplement export registererror(group_and_id,name,printBlock) => ;
+                    function registererror(class,group_and_id,name,printBlock)
+#xcommand cimplement export oinitclass()   => function oinitclass(class)
+#endif // _IMPLEMENT_EXPORT_
+
+#xtranslate superclass:oinit            => (OBJGENM.(eval(BEHAVIOR.clBEHAVIOR():objmethodsimplement)).(class):(4))
+#xtranslate superclass:getclass         => (OBJGENM.(eval(BEHAVIOR.clBEHAVIOR():objmethodsimplement)).(class):(5))
+#xtranslate superclass:isclass          => (OBJGENM.(eval(BEHAVIOR.clBEHAVIOR():objmethodsimplement)).(class):(6))
+#xtranslate superclass:getattrib        => (OBJGENM.(eval(BEHAVIOR.clBEHAVIOR():objmethodsimplement)).(class):(7))
+#xtranslate superclass:setattrib        => (OBJGENM.(eval(BEHAVIOR.clBEHAVIOR():objmethodsimplement)).(class):(8))
+#xtranslate superclass:onew             => (OBJGENM.(eval(BEHAVIOR.clBEHAVIOR():objmethodsimplement)).(class):(CM_OBJECT_N+1))
+#xtranslate superclass:ocreate          => (OBJGENM.(eval(BEHAVIOR.clBEHAVIOR():objmethodsimplement)).(class):(CM_OBJECT_N+2))
+#xtranslate superclass:rawoinit         => (OBJGENM.(eval(BEHAVIOR.clBEHAVIOR():objmethodsimplement)).(class):(CM_OBJECT_N+3))
+#xtranslate superclass:oinitclass       => (OBJGENM.(eval(BEHAVIOR.clBEHAVIOR():objmethodsimplement)).(class):(CM_OBJECT_N+4))
+#xtranslate superclass:getmethodsimplement  => (OBJGENM.(eval(BEHAVIOR.clBEHAVIOR():objmethodsimplement)).(class):(CM_OBJECT_N+5))
+#xtranslate superclass:attribidx        => (OBJGENM.(eval(BEHAVIOR.clBEHAVIOR():objmethodsimplement)).(class):(CM_OBJECT_N+6))
+#xtranslate superclass:needclassid      => (OBJGENM.(eval(BEHAVIOR.clBEHAVIOR():objmethodsimplement)).(class):(CM_OBJECT_N+7))
+#xtranslate superclass:isinheritfrom    => (OBJGENM.(eval(BEHAVIOR.clBEHAVIOR():objmethodsimplement)).(class):(CM_OBJECT_N+8))
+
+**********************************************************************
+static function setMCMethods(pOsztaly)
+// Egy t”mb”t felt”lt a metaoszt ly m–veleti blokkjaival.
+   pOsztaly[(CM_OBJECT_N+1)]:={|class,group_and_id,params,file,line,pos| onew(class,group_and_id,params,file,line,pos)}
+   pOsztaly[(CM_BEHAVIOR_N+1)]:={|class,group_and_id,params,token| onewfromtoken(class,group_and_id,params,token)}
+   pOsztaly[(CM_BEHAVIOR_N+2)]:={|class,group_and_id,name,printBlock| registererror(class,group_and_id,name,printBlock)}
+   pOsztaly[(CM_OBJECT_N+4)]:={|class| oinitclass(class)}
+return pOsztaly
+
+**********************************************************************
+static function setMCams(ta,tm)
+// Egy t”mb”t felt”lt a metaoszt ly  ltal def. objektumok attrib£tumaival ‚s m–veleteivel.
+   ta[CA_BEHAVIOR_N+1-CA_NIL_N] := {CA_BEHAVIOR_N+1,'errdict', }
+
+   tm[(CM_OBJECT_N+1)-CM_NIL_N] := {(CM_OBJECT_N+1),'onew','group_and_id,params,file,line,pos',nil}
+   tm[(CM_BEHAVIOR_N+1)-CM_NIL_N] := {(CM_BEHAVIOR_N+1),'onewfromtoken','group_and_id,params,token',nil}
+   tm[(CM_BEHAVIOR_N+2)-CM_NIL_N] := {(CM_BEHAVIOR_N+2),'registererror','group_and_id,name,printBlock',nil}
+   tm[(CM_OBJECT_N+4)-CM_NIL_N] := {(CM_OBJECT_N+4),'oinitclass','',nil}
+return nil
+
+**********************************************************************
+#ifndef _NO_MCPRSERRCLASS_
+#ifdef _STRICT_PARENT_
+#ifdef _CA_CM_ONLY_
+#include "meta.och" // "metaclas.och" 
+#else // _CA_CM_ONLY_
+#define _CA_CM_ONLY_
+#include "meta.och" // "metaclas.och" 
+#undef _CA_CM_ONLY_
+#endif // _CA_CM_ONLY_
+#else
+#include "meta.och" // "metaclas.och" 
+#endif // _STRICT_PARENT_
+function mcPRSERRCLASS()
+// El“szedi az oszt ly metaoszt ly t. (metaclass)
+static metaOsztaly
+   if (metaOsztaly==nil)
+      metaOsztaly:=META.clMETA():onew(;
+                  clBEHAVIOR(),;
+                  "PRSERRCLASS",;
+                  CA_PRSERRCLASS_N,;
+                  CM_PRSERRCLASS_N,;
+                  {|ta,tm|setMCams(ta,tm)},;
+                  {|t|setMCMethods(t)})
+   endif
+return metaOsztaly
+#endif // _NO_MCPRSERRCLASS_
+
+#endif // _NO_PRSERRCLASS_
+#ifdef _IMPLEMENT_ONEW_
+**********************************************************************
+cimplement onew(group_and_id,params,file,line,pos)
+local o:=class:ocreate()
+
+    PRSERR.o:oinit(group_and_id,params,file,line,pos)
+return o
+#endif // _IMPLEMENT_ONEW_
+
+**********************************************************************
+#ifdef _IMPLEMENT_OINIT_
+implement oinit(group_and_id,params,file,line,pos)
+    super:oinit()
+return this
+#endif // _IMPLEMENT_OINIT_
+
+**********************************************************************
+**********************************************************************
+#endif // _PRSERR_PRG_OCH_
+#endif // _PRSERR_PRG_

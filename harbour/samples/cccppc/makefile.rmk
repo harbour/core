@@ -1,0 +1,99 @@
+//
+// $Id$
+//
+
+#! if exist link.lnk del link.lnk
+
+.prg.obj:
+        echo file $*.obj >> link.lnk
+        clipper $< -o$*.obj /w /n /m /es2
+
+cccppc.exe: \
+   cccppc.obj    \
+   cccpp_pr.obj  \
+   creader.obj   \
+   crlf.obj      \
+   defdict.obj   \
+   edefdict.obj  \
+   expr.obj      \
+   extrdict.obj  \
+   felbont.obj   \
+   fnutil.obj    \
+   freader.obj   \
+   guesseol.obj  \
+   hparser.obj   \
+   hparser2.obj  \
+   incl.obj      \
+   lparser.obj   \
+   lreader.obj   \
+   maltrset.obj  \
+   mcontrol.obj  \
+   mmarker.obj   \
+   mparser.obj   \
+   newline.obj   \
+   nparser.obj   \
+   parser.obj    \
+   prserr.obj    \
+   prtree.obj    \
+   prtreepr.obj  \
+   ralter.obj    \
+   reader.obj    \
+   rmarker.obj   \
+   rsmmarkr.obj  \
+   sreader.obj   \
+   tbuffer.obj   \
+   tkstr.obj     \
+   token.obj     \
+   tokenst.obj   \
+   tostr.obj     \
+   treader.obj   \
+   util.obj      \
+   xtrdict.obj   \
+   object.obj    \
+   package.obj   \
+   version.obj
+       rtlink output cccppc.exe @link.lnk
+
+cccpp_pr.obj : cccpp_pr.prg
+cccppc.obj   : cccppc.prg
+creader.obj  : creader.prg
+crlf.obj     : crlf.prg
+defdict.obj  : defdict.prg
+edefdict.obj : edefdict.prg
+expr.obj     : expr.prg
+extrdict.obj : extrdict.prg
+felbont.obj  : felbont.prg
+fnutil.obj   : fnutil.prg
+freader.obj  : freader.prg
+guesseol.obj : guesseol.prg
+hparser.obj  : hparser.prg
+hparser2.obj : hparser2.prg
+incl.obj     : incl.prg
+lparser.obj  : lparser.prg
+lreader.obj  : lreader.prg
+maltrset.obj : maltrset.prg
+mcontrol.obj : mcontrol.prg
+mmarker.obj  : mmarker.prg
+mparser.obj  : mparser.prg
+newline.obj  : newline.prg
+nparser.obj  : nparser.prg
+parser.obj   : parser.prg
+prserr.obj   : prserr.prg
+prtree.obj   : prtree.prg
+prtreepr.obj : prtreepr.prg
+ralter.obj   : ralter.prg
+reader.obj   : reader.prg
+rmarker.obj  : rmarker.prg
+rsmmarkr.obj : rsmmarkr.prg
+sreader.obj  : sreader.prg
+tbuffer.obj  : tbuffer.prg
+tkstr.obj    : tkstr.prg
+token.obj    : token.prg
+tokenst.obj  : tokenst.prg
+tostr.obj    : tostr.prg
+treader.obj  : treader.prg
+util.obj     : util.prg
+xtrdict.obj  : xtrdict.prg
+object.obj   : object.prg
+package.obj  : package.prg
+version.obj  : version.prg

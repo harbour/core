@@ -1,3 +1,19 @@
+19991109-01:58 GMT+1 Victor Szel <info@szelvesz.hu>
+  * samples/Makefile
+    samples/cccppc/*.*
+    + Fully CA-Clipper 5.x compatible PP written in Clipper added to the 
+      samples directory. It also has a special object system (SmallTalk like
+      if I'm not mistaken), and it's a good test for the Harbour compiler.
+      Note that Harbour can't yet compile it, due to hangs in several .PRG.
+      (but it has an RMAKE makefile, so you can try it out)
+      The .PPO files produced by this program are exactly the same as the
+      ones produced by Clipper (with some really minor differences). Also note
+      that this version may have some bugs, since the project was later
+      rewritten and continued in C++, which is also Open Source, and you can
+      it at http://www.nexus.hu/cccpp/
+
+      This great contribution was made by Levente Csisz r <lcsiszar@index.hu>
+
 19991109-01:09 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/filesys.c
     ! tell() changed to lseek() for Posix (tell() is not a Posix function)
