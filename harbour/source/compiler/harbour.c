@@ -548,6 +548,7 @@ void hb_compVariableAdd( char * szVarName, BYTE cValueType )
    pVar->cType = cValueType;
    pVar->iUsed = VU_NOT_USED;
    pVar->pNext = NULL;
+   pVar->iDeclLine = hb_comp_iLine;
 
    if ( cValueType == '+' )
    {
@@ -1440,6 +1441,7 @@ static int hb_compLocalGetPos( char * szVarName ) /* returns the order + 1 of a 
                      pVar->cType = ' ';
                      pVar->iUsed = VU_NOT_USED;
                      pVar->pNext  = NULL;
+		     pVar->iDeclLine = hb_comp_iLine;
 
                      /* Use negative order to signal that we are accessing a local
                      * variable from a codeblock
@@ -2724,7 +2726,11 @@ void hb_compFinalizeFunction( void ) /* fixes all last defined function returns 
          while( pVar )
          {
             if( pVar->szName && pFunc->szName && pFunc->szName[0] && ! ( pVar->iUsed & VU_USED ) )
-               hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_VAR_NOT_USED, pVar->szName, pFunc->szName );
+	    {
+	       char szFun[ 256 ];
+	       sprintf( szFun, "%s(%i)", pFunc->szName, pVar->iDeclLine );
+               hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_VAR_NOT_USED, pVar->szName, szFun );
+            }
 
             pVar = pVar->pNext;
          }
@@ -2733,7 +2739,11 @@ void hb_compFinalizeFunction( void ) /* fixes all last defined function returns 
          while( pVar )
          {
             if( pVar->szName && pFunc->szName && pFunc->szName[0] && ! ( pVar->iUsed & VU_USED ) )
-               hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_VAR_NOT_USED, pVar->szName, pFunc->szName );
+	    {
+               char szFun[ 256 ];
+               sprintf( szFun, "%s(%i)", pFunc->szName, pVar->iDeclLine );
+               hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_VAR_NOT_USED, pVar->szName, szFun );
+	    }
 
             pVar = pVar->pNext;
          }

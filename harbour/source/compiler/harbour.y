@@ -410,8 +410,8 @@ Statement  : ExecFlow   CrlfStmnt   { }
                      ExtVarList
                     { hb_compRTVariableGen( "__MVPRIVATE" ); hb_comp_cVarType = ' '; hb_comp_iVarScope = VS_NONE; } CrlfStmnt
 
-           | EXITLOOP  CrlfStmnt            { hb_compLoopExit(); hb_comp_functions.pLast->bFlags |= FUN_BREAK_CODE; }
-           | LOOP  CrlfStmnt                { hb_compLoopLoop(); hb_comp_functions.pLast->bFlags |= FUN_BREAK_CODE; }
+           | EXITLOOP  { hb_comp_bDontGenLineNum = TRUE; hb_compLoopExit(); } CrlfStmnt { hb_comp_functions.pLast->bFlags |= FUN_BREAK_CODE; }
+           | LOOP      { hb_comp_bDontGenLineNum = TRUE; hb_compLoopLoop(); } CrlfStmnt { hb_comp_functions.pLast->bFlags |= FUN_BREAK_CODE; }
            | EXTERN ExtList Crlf
            | ANNOUNCE IdentName {
                if( hb_comp_szAnnounce == NULL )
@@ -438,7 +438,7 @@ LineStat   : Crlf          { $<lNumber>$ = 0; hb_comp_bDontGenLineNum = TRUE; }
            ;
 
 Statements : LineStat                  { $<lNumber>$ = $<lNumber>1; hb_compLinePush(); }
-           | Statements LineStat       { $<lNumber>$ += $<lNumber>2; hb_compLinePush(); }
+           | Statements LineStat       { $<lNumber>$ += $<lNumber>2; hb_compLinePush();  }
            ;
 
 ExtList    : IdentName                      { hb_compExternAdd( $1 ); }
@@ -1191,8 +1191,12 @@ IfEndif    : IfBegin EndIf                    { hb_compGenJumpHere( $1 ); }
            | IfBegin IfElseIf IfElse EndIf    { hb_compGenJumpHere( $1 ); hb_compElseIfFix( $2 ); }
            ;
 
-EmptyStats : /* empty */      { hb_comp_bDontGenLineNum = TRUE; hb_comp_EOL = FALSE; }
-           | Statements       { hb_comp_EOL = FALSE; }
+EmptyStatements : LineStat             { }
+           | EmptyStatements { hb_compLinePush(); } LineStat       {  }
+           ;
+
+EmptyStats : /* empty */           { hb_comp_bDontGenLineNum = TRUE; hb_comp_EOL = FALSE; }
+           | EmptyStatements       { hb_comp_EOL = FALSE; }
            ;
 
 IfBegin    : IF SimpleExpression { ++hb_comp_wIfCounter; hb_compLinePush(); } Crlf { hb_compExprDelete( hb_compExprGenPush( $2 ) ); $$ = hb_compGenJumpFalse( 0 ); hb_compLinePush(); }

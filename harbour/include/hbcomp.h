@@ -108,6 +108,7 @@ typedef struct _VAR
    char *    szName;               /* variable name */
    char *    szAlias;              /* variable alias namespace */
    int       iUsed;                /* number of times used */
+   int       iDeclLine;		   /* declaration line number */
    BYTE      cType;                /* optional strong typing */
    PCOMCLASS pClass;
    struct _VAR * pNext;            /* pointer to next defined variable */

@@ -1,3 +1,15 @@
+20000513-14:50 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *include/hbcomp.h
+	* added 'int iDeclLine' to VAR structure to hold the line number
+	where a variable was declared
+	
+    *source/compiler/harbour.c
+    *source/compiler/harbour.y
+	* fixed generation of 'unreachable code' warnings
+	* warnings for declared but not used variable reports the line
+	number where this variable was declared
+
 20000513-13:51 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
 
    - source/rtl/stringsx.c
