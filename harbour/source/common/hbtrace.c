@@ -93,7 +93,7 @@ int hb_tracelevel( int new_level )
 
    if( new_level >= HB_TR_ALWAYS &&
        new_level <  HB_TR_LAST )
-     hb_tr_level_ = new_level;
+      hb_tr_level_ = new_level;
 
    return old_level;
 }
