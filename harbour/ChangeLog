@@ -1,3 +1,64 @@
+19990726-21:35 EDT David G. Holm <dholm@jsd-llc.com>
+  * config/os2/dir.cf
+    ! Corrected FOR statement to work properly when called from CMD.EXE
+      which means that when using 4OS2, the GNU Make System must be run
+      using: CMD /C make -r (or CMD /C make -r clean)
+  * config/os2/install.cf
+    ! Corrected FOR statement to work properly when called from CMD.EXE
+      which means that when using 4OS2, the GNU Make System must be run
+      using: CMD /C make -r install
+  * include/inkey.ch
+    + Added INKEY_EXTENDED event mask code
+    + Added mouse event codes
+  + include/inkey.h
+    + New support module for new module source/rtl/inkey.c
+  * include/set.h
+    + Added INKEY_EXTENDED
+    + Added version comment for V 1.17 by Bruno Cantero
+    * Corrected version number in version history for V 1.16
+  * source/hbpp/Makefile
+    ! Added preproc.c, so that tests/working/testpre.prg will link
+  * source/rtl/Makefile
+    * Added inkey.c
+  * source/rtl/dates.c
+    + Added _MSC_VER to list of compilers that use DOS method to get
+      seconds and fractions in SECONDS() instead of just whole seconds
+  * source/rtl/files.c
+    * hb_fopen() now generates runtime error BASE/2021 when filename
+      parameter is not a string (argument error)
+  + source/rtl/inkey.c
+    + New module for CLEAR TYPEAHEAD, INKEY(), KEYBOARD, NEXTKEY(),
+      LASTKEY() and SET TYPEAHEAD support (no mouse support yet)
+  * source/rtl/math.c
+    ! MIN() and MAX() no longer generate an argument error when called
+      with different numeric types
+    ! MIN() and MAX() now return the first parameter when both are equal
+  * source/rtl/set.c
+    * Modified HB_SET_TYPEAHEAD handling to use INKEY() support function
+      hb_inkeyReset() to adjust the size of the keyboard typeahead buffer
+    ! Corrected HB_SET_TYPEAHEAD handling to use set_number()
+  * source/tools/Makefile
+    + Added fileread.prg
+  + source/tools/fileread.prg
+    + New file reader class reads files one line at a time
+  * source/vm/hvm.c
+    + Added call to hb_inkeyPoll() at top of Virtual Machine loop
+  * tests/working/Makefile
+    + Added inkeytst.prg
+    + Added readfile.prg
+  + tests/working/inkeytst.prg
+    + Test program for INKEY(), NEXTKEY(), LASTKEY(), KEYBOARD,
+      SET TYPEAHEAD, and CLEAR TYPEAHEAD.
+  * tests/working/mathtest.prg
+    + Added MIN() and MAX() tests
+  + tests/working/readfile.prg
+    + Test program for new file reader class (the test program dumps the
+      file contents to STDOUT to let you redirect to file so that you can
+      compare the input and output files)
+  * tests/working/seconds.prg
+    * If run with a number as a command line parameter, the loop will be
+      executed that many times, without pausing between calls to SECONDS()
+
 19990726-22:35 CET Patrick Mast <harbour@PatrickMast.com>
    + Build40.bat and Makefile.b40
      Build and makefile for Borland 4.0

@@ -29,6 +29,11 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
    their web site at http://www.gnu.org/).
 
+   V 1.18   David G. Holm               Added INKEY_EXTENDED to allow some
+                                        platforms to select between normal
+                                        and extended key codes.
+   V 1.17   Bruno Cantero               Added prototypes for hb_rddInitialize
+                                        and hb_rddRelease.
    V 1.16   David G. Holm               Added prototypes for hb_consoleRelease
                                         and hb_consoleInitialize, because set
                                         must be initialized before console and
@@ -94,11 +99,13 @@ typedef enum
    INKEY_RDOWN    = 8,     /* Mouse Right Click Down */
    INKEY_RUP      = 16,    /* Mouse Right Click Up */
    INKEY_KEYBOARD = 128,   /* Keyboard Events */
-   INKEY_ALL      = 159    /* All Mouse and Keyboard Events */
+   INKEY_ALL      = 159,   /* All Mouse and Keyboard Events */
+   INKEY_EXTENDED = 256    /* Extended Keyboard Events */
 } HB_inkey_enum;
 
 typedef enum
 {
+   HB_INVALID_SET     = 0,
    HB_SET_ALTERNATE   = 1,
    HB_SET_ALTFILE     = 2,
    HB_SET_BELL        = 3,

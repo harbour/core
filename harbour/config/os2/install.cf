@@ -7,25 +7,25 @@ ifeq ($(SHLVL),) # An OS/2 command shell
 INSTALL_LIST = $(subst /,\,$(INSTALL_OBJS))
 OS2_INSTALL_DIR = $(subst /,\,$(INSTALL_DIR))
 INSTALL_RULE =\
-	CMD.EXE /c FOR %%f IN ($(INSTALL_LIST)) DO COPY %%f $(OS2_INSTALL_DIR)
+        CMD.EXE /c FOR %f IN ($(INSTALL_LIST)) DO COPY %f $(OS2_INSTALL_DIR)
 
 else  # bash
 
 INSTALL_RULE =\
-	@if [ ! -d $(INSTALL_DIR) ]; \
-	then \
-	  echo "! Can't install, path not found:" $(INSTALL_DIR); \
-	else \
-	  for i in $(INSTALL_OBJS); \
-	  do \
-	    if [ -r $$i ]; \
-	    then \
-	      echo "! Installing $$i on $(INSTALL_DIR)"; \
-	      $(CP) $$i $(INSTALL_DIR); \
-	    else \
-	      echo "! Can't install $$i, not found"; \
-	    fi \
-	  done \
-	fi
+        @if [ ! -d $(INSTALL_DIR) ]; \
+        then \
+          echo "! Can't install, path not found:" $(INSTALL_DIR); \
+        else \
+          for i in $(INSTALL_OBJS); \
+          do \
+            if [ -r $$i ]; \
+            then \
+              echo "! Installing $$i on $(INSTALL_DIR)"; \
+              $(CP) $$i $(INSTALL_DIR); \
+            else \
+              echo "! Can't install $$i, not found"; \
+            fi \
+          done \
+        fi
 
 endif

@@ -168,6 +168,7 @@
  #include <sys/stat.h>
 #endif
 #include <set.h>
+#include <inkey.h>
 #include <errno.h>
 
 #ifndef O_BINARY
@@ -639,8 +640,10 @@ HARBOUR HB_SET (void)
    BOOL bFlag;
    int args = hb_pcount();
    PHB_ITEM pArg2, pArg3;
+   HB_set_enum set_specifier;
 
-   HB_set_enum set_specifier = (HB_set_enum) hb_parni(1);
+   if (args > 0) set_specifier = (HB_set_enum) hb_parni(1);
+   else set_specifier = HB_INVALID_SET;
    if (args > 1) pArg2 = hb_param (2, IT_ANY);
    if (args > 2) pArg3 = hb_param (3, IT_ANY);
 
@@ -873,9 +876,13 @@ HARBOUR HB_SET (void)
          if (args > 1)
          {
             /* Set the value and limit the range */
-            hb_set.HB_SET_TYPEAHEAD = set_logical (pArg2);
-            if( hb_set.HB_SET_TYPEAHEAD < 16 ) hb_set.HB_SET_TYPEAHEAD = 16;
+            int old = hb_set.HB_SET_TYPEAHEAD;
+            hb_set.HB_SET_TYPEAHEAD = set_number (pArg2, old);
+            if( hb_set.HB_SET_TYPEAHEAD == 0 ) /* Do nothing */ ;
+            else if( hb_set.HB_SET_TYPEAHEAD < 16 ) hb_set.HB_SET_TYPEAHEAD = 16;
             else if( hb_set.HB_SET_TYPEAHEAD > 4096 ) hb_set.HB_SET_TYPEAHEAD = 4096;
+            /* Always reset the buffer, but only reallocate if the size changed */
+            hb_inkeyReset( old == hb_set.HB_SET_TYPEAHEAD ? FALSE : TRUE );
          }
          break;
       case HB_SET_UNIQUE     :
@@ -886,6 +893,9 @@ HARBOUR HB_SET (void)
          hb_retl (hb_set.HB_SET_WRAP);
          if (args > 1) hb_set.HB_SET_WRAP = set_logical (pArg2);
          break;
+      default                :
+         /* Return NIL if called with invalid SET specifier */
+         hb_ret();
    }
 }
 
@@ -938,7 +948,7 @@ void hb_setInitialize (void)
    hb_set.HB_SET_SCOREBOARD = TRUE;
    hb_set.HB_SET_SCROLLBREAK = TRUE;
    hb_set.HB_SET_SOFTSEEK = FALSE;
-   hb_set.HB_SET_TYPEAHEAD = 50;
+   hb_set.HB_SET_TYPEAHEAD = 50; hb_inkeyReset( TRUE ); /* Allocate keyboard typeahead buffer */
    hb_set.HB_SET_UNIQUE = FALSE;
    hb_set.HB_SET_WRAP = FALSE;
 }
@@ -965,4 +975,5 @@ void hb_setRelease (void)
       hb_xfree (hb_set.HB_SET_PATH);
    if (hb_set.HB_SET_PRINTFILE)
       hb_xfree (hb_set.HB_SET_PRINTFILE);
+   hb_set.HB_SET_TYPEAHEAD = -1; hb_inkeyReset( TRUE ); /* Free keyboard typeahead buffer */
 }

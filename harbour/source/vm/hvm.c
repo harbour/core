@@ -45,10 +45,11 @@
 #include <string.h>
 
 #include "hbsetup.h"    /* main configuration file */
-#include <extend.h>
-#include <errorapi.h>
-#include <pcode.h>
-#include <set.h>
+#include "extend.h"
+#include "errorapi.h"
+#include "pcode.h"
+#include "set.h"
+#include "inkey.h"
 
 HARBOUR HB_ERRORSYS( void );
 HARBOUR HB_ERRORNEW( void );
@@ -307,6 +308,7 @@ void VirtualMachine( PBYTE pCode, PSYMBOL pSymbols )
 
    while( ( bCode = pCode[ w ] ) != HB_P_ENDPROC && ! bQuit )
    {
+      hb_inkeyPoll();                   /* Poll the console keyboard */
       switch( bCode )
       {
          case HB_P_AND:

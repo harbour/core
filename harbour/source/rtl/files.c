@@ -6,6 +6,7 @@
 #include <init.h>
 #include <filesys.h>
 #include <string.h>
+#include <errorapi.h>
 
 #if defined(__CYGNUS__)
   #include <mingw32/share.h>
@@ -530,6 +531,10 @@ HARBOUR HB_FOPEN( void )
                 open_flags = 0;
 
             file_handle = hb_fsOpen( (BYTEP)hb_parc(1), open_flags );
+        }
+        else
+        {
+            hb_errorRT_BASE(EG_ARG, 2021, "Argument error", "FOPEN");
         }
 
         hb_retni(file_handle);

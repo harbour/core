@@ -52,6 +52,7 @@ PRG_SOURCES=\
 	inherit.prg \
 	inifiles.prg \
 	initexit.prg \
+	inkeytst.prg \
 	inline.prg \
 	instr.prg \
 	iotest.prg \
@@ -75,6 +76,7 @@ PRG_SOURCES=\
 	passref.prg \
 	procline.prg \
 	procname.prg \
+	readfile.prg \
 	readhrb.prg \
 	recursiv.prg \
 	returns.prg \
@@ -88,8 +90,6 @@ PRG_SOURCES=\
 	set_test.prg \
 	statfun.prg \
 	statics.prg \
-	statics1.prg \
-	statics2.prg \
 	strcmp.prg \
 	strdelim.prg \
 	strings.prg \
@@ -150,5 +150,6 @@ LIBS=\
 	vm \
 	rtl \
 	rdd \
+	hbpp \
 
 include $(TOP)$(ROOT)config/test.cf

@@ -9,13 +9,26 @@
    See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
 */
 
-function Main()
-local n
+#ifdef __HARBOUR__
+ #define NEWLINE CHR(10)
+#else
+ #define NEWLINE CHR(13)+CHR(10)
+#endif
 
-   QOUT(SECONDS())
-   FOR n := 1 TO 10
-      __ACCEPT("Pause: ")
-      QOUT(SECONDS())
+function Main( cParam )
+local n, limit := 10
+
+   IF( ! EMPTY( cParam ) )
+      limit := VAL( cParam )
+   END IF
+   OUTSTD( SECONDS() )
+   OUTSTD( NEWLINE )
+   FOR n := 1 TO limit
+      IF( EMPTY( cParam ) )
+         __ACCEPT( "Pause: " )
+      END IF
+      OUTSTD( SECONDS() )
+      OUTSTD( NEWLINE )
    NEXT
 
-return NIL
+RETURN NIL

@@ -31,6 +31,7 @@ C_SOURCES=\
 	strright.c \
 
 PRG_SOURCES=\
+	fileread.prg \
 	stringp.prg \
 
 LIB=tools

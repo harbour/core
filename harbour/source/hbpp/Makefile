@@ -7,6 +7,7 @@ ROOT = ../../
 C_SOURCES=\
         hbpp.c \
         hbppint.c \
+        preproc.c \
         table.c \
 
 LIB=hbpp

@@ -19,6 +19,7 @@ C_SOURCES=\
         files.c \
         gtapi.c \
         hardcr.c \
+        inkey.c \
         itemapi.c \
         math.c \
         memvars.c \

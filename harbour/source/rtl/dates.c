@@ -78,22 +78,19 @@ HB_INIT_SYMBOLS_END( Dates__InitSymbols );
 #pragma startup Dates__InitSymbols
 #endif
 
-/* rest of the functions is pulled automatically in initsymb.c */
-
+/* The other functions are pulled in automatically by initsymb.c */
 
 double hb__seconds( void )
 {
-#if defined(__TURBOC__) || defined(__BORLANDC__)  || defined(__DJGPP__)
+#if defined(__TURBOC__) || defined(__BORLANDC__)  || defined(__DJGPP__) || defined(_MSC_VER)
    struct time t;
    gettime( &t );
    return( ( ( t.ti_hour * 3600 ) + ( t.ti_min * 60 ) + t.ti_sec ) + t.ti_hund / 100.0 );
 #else
    time_t t;
    struct tm *oTime;
-
    time(&t);
    oTime = localtime(&t);
-
    return( ( oTime->tm_hour * 3600 ) + ( oTime->tm_min * 60 ) + oTime->tm_sec );
 #endif
 }

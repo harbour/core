@@ -152,20 +152,20 @@ HARBOUR HB_MAX( void )
 {
    if( hb_pcount() == 2 )
    {
-      PHB_ITEM p1 = hb_param(1, IT_NUMERIC + IT_DATE), p2 = hb_param(2, IT_NUMERIC + IT_DATE);
+      PHB_ITEM p1 = hb_param(1, IT_ANY), p2 = hb_param(2, IT_ANY);
 
-      if( p1 && p2 && p1->type == p2->type )
+      if( ( IS_NUMERIC( p1 ) && IS_NUMERIC( p2 ) ) || ( IS_DATE( p1 ) && IS_DATE( p2 ) ) )
       {
          if( p1->type == IT_DATE )
          {
             long l1 = p1->item.asDate.value, l2 = p2->item.asDate.value;
-            hb_retds(l1 > l2? hb_pards(1): hb_pards(2));
+            hb_retds(l1 >= l2? hb_pards(1): hb_pards(2));
          }
          else
          {
             double d1 = hb_parnd(1), d2 = hb_parnd(2);
-            hb_retnd(d1 > d2? d1: d2);
-            stack.Return.item.asDouble.decimal = (d1 > d2? p1->item.asDouble.decimal : p2->item.asDouble.decimal);
+            hb_retnd(d1 >= d2? d1: d2);
+            stack.Return.item.asDouble.decimal = (d1 >= d2? p1->item.asDouble.decimal : p2->item.asDouble.decimal);
          }
       }
       else
@@ -185,20 +185,20 @@ HARBOUR HB_MIN( void )
 {
    if( hb_pcount() == 2 )
    {
-      PHB_ITEM p1 = hb_param(1, IT_NUMERIC + IT_DATE), p2 = hb_param(2, IT_NUMERIC + IT_DATE);
+      PHB_ITEM p1 = hb_param(1, IT_ANY), p2 = hb_param(2, IT_ANY);
 
-      if( p1 && p2 && p1->type == p2->type )
+      if( ( IS_NUMERIC( p1 ) && IS_NUMERIC( p2 ) ) || ( IS_DATE( p1 ) && IS_DATE( p2 ) ) )
       {
          if( p1->type == IT_DATE )
          {
             long l1 = p1->item.asDate.value, l2 = p2->item.asDate.value;
-            hb_retds(l1 < l2? hb_pards(1): hb_pards(2));
+            hb_retds(l1 <= l2? hb_pards(1): hb_pards(2));
          }
          else
          {
             double d1 = hb_parnd(1), d2 = hb_parnd(2);
-            hb_retnd(d1 < d2? d1: d2);
-            stack.Return.item.asDouble.decimal = (d1 < d2? p1->item.asDouble.decimal : p2->item.asDouble.decimal);
+            hb_retnd(d1 <= d2? d1: d2);
+            stack.Return.item.asDouble.decimal = (d1 <= d2? p1->item.asDouble.decimal : p2->item.asDouble.decimal);
          }
       }
       else
