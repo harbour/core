@@ -34,12 +34,13 @@
    oClass:AddMethod( <(MethodName)>, @<MethodName>() )
 
 #xcommand METHOD <MethodName>( [<params,...>] ) CONSTRUCTOR => ;
-   oClass:AddInline( <(MethodName)>, {|Self,<params>| <MethodName>(Self,<params>), Self } )
+   oClass:AddInline( <(MethodName)>, {|Self [,<params>] | <MethodName>(Self [,<params>] ), Self } )
 
 #xcommand METHOD <MethodName>( [<params,...>] ) INLINE <Code,...> => ;
-   oClass:AddInline( <(MethodName)>, {|Self,<params>| <Code> } )
+   oClass:AddInline( <(MethodName)>, {|Self [,<params>] | <Code> } )
 
-#xcommand ENDCLASS => endif ;;
+#xcommand ENDCLASS => oClass:Create() ;;
+                      endif ;;
                       return oClass:Instance()
 
 #xcommand METHOD <MethodName>([<params,...>]) CLASS <ClassName> => ;

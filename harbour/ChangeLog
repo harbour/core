@@ -1,3 +1,9 @@
+19990712-15:54 Antonio Linares <alinares@fivetech.com>
+  * include\classes.ch
+    * Missing oClass:Create call
+    * Fixed Method INLINE command
+  * Added tests\working\classch.prg classes.ch sample
+
 19990712-13:56 Antonio Linares <alinares@fivetech.com>
   * include\classes.ch
     * Added support for CONSTRUCTOR and INLINE Methods
