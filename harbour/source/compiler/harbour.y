@@ -90,14 +90,14 @@ int Include( char * szFileName, PATHNAMES * pSearchPath );  /* end #include supp
 
 typedef struct __ELSEIF
 {
-   WORD wOffset;
+   ULONG ulOffset;
    struct __ELSEIF * pNext;
 } _ELSEIF, * PELSEIF;      /* support structure for else if pcode fixups */
 
 typedef struct _LOOPEXIT
 {
-   WORD wOffset;
-   WORD wLine;
+   ULONG ulOffset;
+   int iLine;
    struct _LOOPEXIT * pLoopList;
    struct _LOOPEXIT * pExitList;
    struct _LOOPEXIT * pNext;
@@ -147,10 +147,10 @@ void AliasRemove( void );
 typedef struct _EXPLIST
 {
    BYTE * prevPCode;        /* pcode buffer used at the start of expression */
-   LONG prevSize;
-   LONG prevPos;
+   ULONG prevSize;
+   ULONG prevPos;
    BYTE * exprPCode;        /* pcode buffer for current expression */
-   LONG exprSize;
+   ULONG exprSize;
    struct _EXPLIST *pPrev;  /* previous expression in the list */
    struct _EXPLIST *pNext;  /* next expression in the list */
 } EXPLIST, *EXPLIST_PTR;
@@ -196,10 +196,10 @@ void AddVar( char * szVarName ); /* add a new param, local, static variable to a
 PCOMSYMBOL AddSymbol( char *, WORD * );
 void CheckDuplVars( PVAR pVars, char * szVarName, int iVarScope ); /*checks for duplicate variables definitions */
 void Dec( void );                  /* generates the pcode to decrement the latest value on the virtual machine stack */
-void DimArray( WORD wDimensions ); /* instructs the virtual machine to build an array with wDimensions */
+void DimArray( int iDimensions ); /* instructs the virtual machine to build an array with wDimensions */
 void Do( BYTE bParams );      /* generates the pcode to execute a Clipper function discarding its result */
 void Duplicate( void ); /* duplicates the virtual machine latest stack latest value and places it on the stack */
-void DupPCode( WORD wStart ); /* duplicates the current generated pcode from an offset */
+void DupPCode( ULONG ulStart ); /* duplicates the current generated pcode from an offset */
 void FieldPCode( BYTE , char * );      /* generates the pcode for database field */
 void FixElseIfs( void * pIfElseIfs ); /* implements the ElseIfs pcode fixups */
 void FixReturns( void ); /* fixes all last defined function returns jumps offsets */
@@ -207,9 +207,9 @@ WORD FixSymbolPos( WORD );    /* converts symbol's compile-time position into ge
 void Function( BYTE bParams ); /* generates the pcode to execute a Clipper function pushing its result */
 PFUNCTION FunctionNew( char *, char );  /* creates and initialises the _FUNC structure */
 void FunDef( char * szFunName, SYMBOLSCOPE cScope, int iType ); /* starts a new Clipper language function definition */
-void GenArray( WORD wElements ); /* instructs the virtual machine to build an array and load elemnst from the stack */
+void GenArray( int iElements ); /* instructs the virtual machine to build an array and load elemnst from the stack */
 void GenBreak( void );  /* generate code for BREAK statement */
-void * GenElseIf( void * pFirstElseIf, WORD wOffset ); /* generates a support structure for elseifs pcode fixups */
+void * GenElseIf( void * pFirstElseIf, ULONG ulOffset ); /* generates a support structure for elseifs pcode fixups */
 void GenExterns( void ); /* generates the symbols for the EXTERN names */
 void GenIfInline( void ); /* generates pcodes for IIF( expr1, expr2, expr3 ) */
 PFUNCTION GetFuncall( char * szFunName ); /* locates a previously defined called function */
@@ -220,11 +220,11 @@ int GetLocalVarPos( char * szVarName ); /* returns the order + 1 of a local vari
 PCOMSYMBOL GetSymbol( char *, WORD * ); /* returns a symbol pointer from the symbol table */
 PCOMSYMBOL GetSymbolOrd( WORD );   /* returns a symbol based on its index on the symbol table */
 void Inc( void );                       /* generates the pcode to increment the latest value on the virtual machine stack */
-WORD Jump( int iOffset );               /* generates the pcode to jump to a specific offset */
-WORD JumpFalse( int iOffset );          /* generates the pcode to jump if false */
-void JumpHere( int iOffset );           /* returns the pcode pos where to set a jump offset */
-void JumpThere( int iOffset, WORD wTo ); /* sets a jump offset */
-WORD JumpTrue( int iOffset );           /* generates the pcode to jump if true */
+ULONG Jump( LONG lOffset );                /* generates the pcode to jump to a specific offset */
+ULONG JumpFalse( LONG lOffset );           /* generates the pcode to jump if false */
+void JumpHere( ULONG ulOffset );             /* returns the pcode pos where to set a jump offset */
+void JumpThere( ULONG ulFrom, ULONG ulTo ); /* sets a jump offset */
+ULONG JumpTrue( LONG lOffset );            /* generates the pcode to jump if true */
 PFUNCTION KillFunction( PFUNCTION );    /* releases all memory allocated by function and returns the next one */
 PCOMSYMBOL KillSymbol( PCOMSYMBOL );    /* releases all memory allocated by symbol and returns the next one */
 void Line( void );                      /* generates the pcode with the currently compiled source code line */
@@ -247,11 +247,11 @@ void PushString( char * szText );       /* Pushes a string on the virtual machin
 void PushSymbol( char * szSymbolName, int iIsFunction ); /* Pushes a symbol on to the Virtual machine stack */
 void GenPCode1( BYTE );             /* generates 1 byte of pcode */
 void GenPCode3( BYTE, BYTE, BYTE ); /* generates 3 bytes of pcode */
-void GenPCodeN( BYTE * pBuffer, WORD wSize );  /* copy bytes to a pcode buffer */
+void GenPCodeN( BYTE * pBuffer, ULONG ulSize );  /* copy bytes to a pcode buffer */
 char * SetData( char * szMsg );     /* generates an underscore-symbol name for a data assignment */
-int SequenceBegin( void );
-int SequenceEnd( void );
-void SequenceFinish( int, int );
+ULONG SequenceBegin( void );
+ULONG SequenceEnd( void );
+void SequenceFinish( ULONG, int );
 
 /* support for FIELD declaration */
 void FieldsSetAlias( char *, int );
@@ -263,7 +263,7 @@ void CodeBlockEnd( void );          /* end of codeblock creation */
 
 /* Static variables */
 void StaticDefStart( void );
-void StaticDefEnd( WORD );
+void StaticDefEnd( int );
 void StaticAssign( void ); /* checks if static variable is initialized with function call */
 
 /* output related functions */
@@ -334,7 +334,8 @@ char * _szCErrors[] =
    "Memory allocation error",
    "Memory reallocation error",
    "Freeing a NULL memory pointer",
-   "%s" /* YACC error messages */
+   "%s", /* YACC error messages */
+   "Jump offset too long"
 };
 
 /* Table with parse warnings */
@@ -484,17 +485,17 @@ WORD _wForCounter   = 0;
 WORD _wIfCounter    = 0;
 WORD _wWhileCounter = 0;
 WORD _wCaseCounter  = 0;
-LONG _lMessageFix   = 0;  /* Position of the message which needs to be changed */
+ULONG _ulMessageFix = 0;  /* Position of the message which needs to be changed */
 #ifdef HARBOUR_OBJ_GENERATION
 BOOL _bObj32 = FALSE;     /* generate OBJ 32 bits */
 #endif
-WORD _wStatics = 0;       /* number of defined statics variables on the PRG */
+int _iStatics = 0;       /* number of defined statics variables on the PRG */
 PEXTERN pExterns = NULL;
 PTR_LOOPEXIT pLoops = NULL;
 PATHNAMES *_pIncludePath = NULL;
 PHB_FNAME _pFileName = NULL;
 ALIASID_PTR pAliasId = NULL;
-WORD _wLastLinePos = 0;    /* position of last opcode with line number */
+ULONG _ulLastLinePos = 0;    /* position of last opcode with line number */
 BOOL _bDontGenLineNum = FALSE;   /* suppress line number generation */
 
 EXPLIST_PTR _pExpList = NULL;    /* stack used for parenthesized expressions */
@@ -591,8 +592,8 @@ Line       : LINE INTEGER LITERAL Crlf
            | LINE INTEGER LITERAL '@' LITERAL Crlf   /* XBase++ style */
            ;
 
-Function   : FunScope FUNCTION  IDENTIFIER { cVarType = ' '; FunDef( $3, $1, 0 ); } Params Crlf {}
-           | FunScope PROCEDURE IDENTIFIER { cVarType = ' '; FunDef( $3, $1, FUN_PROCEDURE ); } Params Crlf {}
+Function   : FunScope FUNCTION  IDENTIFIER { cVarType = ' '; FunDef( $3, (SYMBOLSCOPE)$1, 0 ); } Params Crlf {}
+           | FunScope PROCEDURE IDENTIFIER { cVarType = ' '; FunDef( $3, (SYMBOLSCOPE)$1, FUN_PROCEDURE ); } Params Crlf {}
            | FunScope DECLARE_FUN IDENTIFIER Params              Crlf { cVarType = ' '; AddSymbol( $3, NULL ); }
            | FunScope DECLARE_FUN IDENTIFIER Params AS_NUMERIC   Crlf { cVarType = 'N'; AddSymbol( $3, NULL ); }
            | FunScope DECLARE_FUN IDENTIFIER Params AS_CHARACTER Crlf { cVarType = 'C'; AddSymbol( $3, NULL ); }
@@ -693,13 +694,13 @@ MethParams : /* empty */                       { $$ = 0; }
            | ArgList                           { $$ = $1; }
            ;
 
-ObjectData : IdSend IDENTIFIER                     { $$ = $2; _lMessageFix = functions.pLast->lPCodePos; Message( $2 ); Function( 0 ); }
-           | VarAt ':' IDENTIFIER                  { GenPCode1( HB_P_ARRAYAT ); $$ = $3; _lMessageFix = functions.pLast->lPCodePos; Message( $3 ); Function( 0 ); }
-           | ObjFunCall IDENTIFIER                 { $$ = $2; _lMessageFix = functions.pLast->lPCodePos; Message( $2 ); Function( 0 ); }
-           | ObjFunArray  ':' IDENTIFIER           { $$ = $3; _lMessageFix = functions.pLast->lPCodePos; Message( $3 ); Function( 0 ); }
-           | ObjectMethod ':' IDENTIFIER           { $$ = $3; _lMessageFix = functions.pLast->lPCodePos; Message( $3 ); Function( 0 ); }
-           | ObjectData   ':' IDENTIFIER           { $$ = $3; _lMessageFix = functions.pLast->lPCodePos; Message( $3 ); Function( 0 ); }
-           | ObjectData ArrayIndex ':' IDENTIFIER  { GenPCode1( HB_P_ARRAYAT ); $$ = $4; _lMessageFix = functions.pLast->lPCodePos; Message( $4 ); Function( 0 ); }
+ObjectData : IdSend IDENTIFIER                     { $$ = $2; _ulMessageFix = functions.pLast->lPCodePos; Message( $2 ); Function( 0 ); }
+           | VarAt ':' IDENTIFIER                  { GenPCode1( HB_P_ARRAYAT ); $$ = $3; _ulMessageFix = functions.pLast->lPCodePos; Message( $3 ); Function( 0 ); }
+           | ObjFunCall IDENTIFIER                 { $$ = $2; _ulMessageFix = functions.pLast->lPCodePos; Message( $2 ); Function( 0 ); }
+           | ObjFunArray  ':' IDENTIFIER           { $$ = $3; _ulMessageFix = functions.pLast->lPCodePos; Message( $3 ); Function( 0 ); }
+           | ObjectMethod ':' IDENTIFIER           { $$ = $3; _ulMessageFix = functions.pLast->lPCodePos; Message( $3 ); Function( 0 ); }
+           | ObjectData   ':' IDENTIFIER           { $$ = $3; _ulMessageFix = functions.pLast->lPCodePos; Message( $3 ); Function( 0 ); }
+           | ObjectData ArrayIndex ':' IDENTIFIER  { GenPCode1( HB_P_ARRAYAT ); $$ = $4; _ulMessageFix = functions.pLast->lPCodePos; Message( $4 ); Function( 0 ); }
            ;
 
 ObjectMethod : IdSend IDENTIFIER { Message( $2 ); } '(' MethParams ')' { Function( $5 ); }
@@ -1240,12 +1241,12 @@ BeginSeq   : BEGINSEQ { ++_wSeqCounter; $<lNumber>$=SequenceBegin(); } Crlf { Li
                    LineDebug();
                 else
                    --_wSeqCounter;  /* RECOVER is also considered as end of sequence */
-                SequenceFinish( $<lNumber>2, $<lNumber>5 );
+                SequenceFinish( $<lNumber>2, $<iNumber>5 );
              }
            ;
 
-SeqStatms  : /* empty */      { $<lNumber>$ = 0; }
-           | Statements       { $<lNumber>$ = 1; }
+SeqStatms  : /* empty */      { $<iNumber>$ = 0; }
+           | Statements       { $<iNumber>$ = 1; }
            ;
 
 RecoverSeq : /* no recover */  { $<lNumber>$ = 0; }
@@ -1307,11 +1308,11 @@ void yyerror( char * s )
    GenError( _szCErrors, 'E', ERR_YACC, s, NULL );
 }
 
-void * GenElseIf( void * pFirst, WORD wOffset )
+void * GenElseIf( void * pFirst, ULONG ulOffset )
 {
    PELSEIF pElseIf = ( PELSEIF ) hb_xgrab( sizeof( _ELSEIF ) ), pLast;
 
-   pElseIf->wOffset = wOffset;
+   pElseIf->ulOffset = ulOffset;
    pElseIf->pNext   = 0;
 
    if( ! pFirst )
@@ -1611,9 +1612,9 @@ int harbour_main( int argc, char * argv[] )
                PCOMSYMBOL pSym;
 
                /* Fix the number of static variables */
-               _pInitFunc->pCode[ 1 ] =LOBYTE( _wStatics );
-               _pInitFunc->pCode[ 2 ] =HIBYTE( _wStatics );
-               _pInitFunc->wStaticsBase =_wStatics;
+               _pInitFunc->pCode[ 1 ] =LOBYTE( _iStatics );
+               _pInitFunc->pCode[ 2 ] =HIBYTE( _iStatics );
+               _pInitFunc->iStaticsBase =_iStatics;
 
                pSym = AddSymbol( _pInitFunc->szName, NULL );
                pSym->cScope |= _pInitFunc->cScope;
@@ -2225,12 +2226,12 @@ void Duplicate( void )
    }
 }
 
-void DupPCode( WORD wStart ) /* duplicates the current generated pcode from an offset */
+void DupPCode( ULONG ulStart ) /* duplicates the current generated pcode from an offset */
 {
-   WORD w, wEnd = functions.pLast->lPCodePos - wStart;
+   ULONG w, wEnd = functions.pLast->lPCodePos - ulStart;
 
    for( w = 0; w < wEnd; w++ )
-      GenPCode1( functions.pLast->pCode[ wStart + w ] );
+      GenPCode1( functions.pLast->pCode[ ulStart + w ] );
 }
 
 /*
@@ -2359,7 +2360,7 @@ PFUNCTION FunctionNew( char * szName, SYMBOLSCOPE cScope )
    pFunc->pNext        = NULL;
    pFunc->wParamCount  = 0;
    pFunc->wParamNum    = 0;
-   pFunc->wStaticsBase = _wStatics;
+   pFunc->iStaticsBase = _iStatics;
    pFunc->pOwner       = NULL;
    pFunc->bFlags       = 0;
 
@@ -2423,7 +2424,7 @@ void FunDef( char * szFunName, SYMBOLSCOPE cScope, int iType )
    }
    functions.iCount++;
 
-   _wLastLinePos = 0;   /* optimization of line numbers opcode generation */
+   _ulLastLinePos = 0;   /* optimization of line numbers opcode generation */
 
    GenPCode3( HB_P_FRAME, 0, 0 );   /* frame for locals and parameters */
    GenPCode3( HB_P_SFRAME, 0, 0 );     /* frame for statics variables */
@@ -2462,7 +2463,7 @@ void GenCCode( char * szFileName, char * szName )       /* generates the C langu
    PCOMSYMBOL pSym = symbols.pFirst;
    WORD w, wLen, wSym, wVar;
    WORD iNestedCodeblock = 0;
-   LONG lPCodePos;
+   ULONG lPCodePos;
    char chr;
    BOOL bEndProcRequired;
 
@@ -2978,9 +2979,9 @@ void GenCCode( char * szFileName, char * szName )       /* generates the C langu
                     PFUNCTION pTmp = functions.pFirst;
 
                     wVar = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
-                    while( pTmp->pNext && pTmp->pNext->wStaticsBase < wVar )
+                    while( pTmp->pNext && pTmp->pNext->iStaticsBase < wVar )
                         pTmp =pTmp->pNext;
-                    pVar = GetVar( pTmp->pStatics, wVar - pTmp->wStaticsBase );
+                    pVar = GetVar( pTmp->pStatics, wVar - pTmp->iStaticsBase );
                     fprintf( yyc, "\t\tHB_P_POPSTATIC, %i, %i,\t/* %s */\n",
                               pFunc->pCode[ lPCodePos + 1 ],
                               pFunc->pCode[ lPCodePos + 2 ],
@@ -3197,9 +3198,9 @@ void GenCCode( char * szFileName, char * szName )       /* generates the C langu
                     PFUNCTION pTmp = functions.pFirst;
 
                     wVar = pFunc->pCode[ lPCodePos + 1 ] +pFunc->pCode[ lPCodePos + 2 ] * 256;
-                    while( pTmp->pNext && pTmp->pNext->wStaticsBase < wVar )
+                    while( pTmp->pNext && pTmp->pNext->iStaticsBase < wVar )
                         pTmp =pTmp->pNext;
-                    pVar = GetVar( pTmp->pStatics, wVar - pTmp->wStaticsBase );
+                    pVar = GetVar( pTmp->pStatics, wVar - pTmp->iStaticsBase );
                     fprintf( yyc, "\t\tHB_P_PUSHSTATIC, %i, %i,\t/* %s */\n",
                               pFunc->pCode[ lPCodePos + 1 ],
                               pFunc->pCode[ lPCodePos + 2 ],
@@ -3214,9 +3215,9 @@ void GenCCode( char * szFileName, char * szName )       /* generates the C langu
                     PFUNCTION pTmp = functions.pFirst;
 
                     wVar = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
-                    while( pTmp->pNext && pTmp->pNext->wStaticsBase < wVar )
+                    while( pTmp->pNext && pTmp->pNext->iStaticsBase < wVar )
                         pTmp =pTmp->pNext;
-                    pVar = GetVar( pTmp->pStatics, wVar - pTmp->wStaticsBase );
+                    pVar = GetVar( pTmp->pStatics, wVar - pTmp->iStaticsBase );
                     fprintf( yyc, "\t\tHB_P_PUSHSTATICREF, %i, %i,\t/* %s */\n",
                               pFunc->pCode[ lPCodePos + 1 ],
                               pFunc->pCode[ lPCodePos + 2 ],
@@ -3781,7 +3782,7 @@ int GetStaticVarPos( char * szVarName )
       pFunc =pFunc->pOwner;  /* we are in the static variable definition state */
    iPos =GetVarPos( pFunc->pStatics, szVarName );
    if( iPos )
-      return iPos + pFunc->wStaticsBase;
+      return iPos + pFunc->iStaticsBase;
 
    /* Next we have to check the list of global static variables
      * Note: It is not possible to have global static variables when
@@ -3958,16 +3959,26 @@ void Inc( void )
    }
 }
 
-WORD Jump( int iOffset )
+ULONG Jump( LONG lOffset )
 {
-   GenPCode3( HB_P_JUMP, LOBYTE( iOffset ), HIBYTE( iOffset ) );
+   /* TODO: We need a longer offset (longer then two bytes)
+    */
+   if( lOffset < (LONG)SHRT_MIN || lOffset > (LONG)SHRT_MAX )
+      GenError( _szCErrors, 'E', ERR_JUMP_TOO_LONG, NULL, NULL );
+
+   GenPCode3( HB_P_JUMP, LOBYTE( lOffset ), HIBYTE( lOffset ) );
 
    return functions.pLast->lPCodePos - 2;
 }
 
-WORD JumpFalse( int iOffset )
+ULONG JumpFalse( LONG lOffset )
 {
-   GenPCode3( HB_P_JUMPFALSE, LOBYTE( iOffset ), HIBYTE( iOffset ) );
+   /* TODO: We need a longer offset (longer then two bytes)
+    */
+   if( lOffset < (LONG)SHRT_MIN || lOffset > (LONG)SHRT_MAX )
+      GenError( _szCErrors, 'E', ERR_JUMP_TOO_LONG, NULL, NULL );
+
+   GenPCode3( HB_P_JUMPFALSE, LOBYTE( lOffset ), HIBYTE( lOffset ) );
 
    if( _bWarnings )
    {
@@ -4006,22 +4017,32 @@ WORD JumpFalse( int iOffset )
    return functions.pLast->lPCodePos - 2;
 }
 
-void JumpThere( int iOffset, WORD wTo )
+void JumpThere( ULONG ulFrom, ULONG ulTo )
 {
    BYTE * pCode = functions.pLast->pCode;
+   LONG lOffset = ulTo - ulFrom + 1;
 
-   pCode[ ( WORD ) iOffset ]     = LOBYTE( wTo - iOffset + 1 );
-   pCode[ ( WORD ) iOffset + 1 ] = HIBYTE( wTo - iOffset + 1 );
+   /* TODO: We need a longer offset (longer then two bytes)
+    */
+   if( lOffset < (LONG)SHRT_MIN || lOffset > (LONG)SHRT_MAX )
+      GenError( _szCErrors, 'E', ERR_JUMP_TOO_LONG, NULL, NULL );
+
+   pCode[ ( ULONG ) ulFrom ]     = LOBYTE( lOffset );
+   pCode[ ( ULONG ) ulFrom + 1 ] = HIBYTE( lOffset );
 }
 
-void JumpHere( int iOffset )
+void JumpHere( ULONG ulOffset )
 {
-   JumpThere( iOffset, functions.pLast->lPCodePos );
+   JumpThere( ulOffset, functions.pLast->lPCodePos );
 }
 
-WORD JumpTrue( int iOffset )
+ULONG JumpTrue( LONG lOffset )
 {
-   GenPCode3( HB_P_JUMPTRUE, LOBYTE( iOffset ), HIBYTE( iOffset ) );
+   /* TODO: We need a longer offset (longer then two bytes)
+    */
+   if( lOffset < (LONG)SHRT_MIN || lOffset > (LONG)SHRT_MAX )
+      GenError( _szCErrors, 'E', ERR_JUMP_TOO_LONG, NULL, NULL );
+   GenPCode3( HB_P_JUMPTRUE, LOBYTE( lOffset ), HIBYTE( lOffset ) );
 
    if( _bWarnings )
    {
@@ -4064,15 +4085,15 @@ void Line( void ) /* generates the pcode with the currently compiled source code
 {
    if( _bLineNumbers && ! _bDontGenLineNum )
    {
-      if( ((functions.pLast->lPCodePos - _wLastLinePos) > 3) || _bDebugInfo )
+      if( ((functions.pLast->lPCodePos - _ulLastLinePos) > 3) || _bDebugInfo )
       {
-         _wLastLinePos =functions.pLast->lPCodePos;
+         _ulLastLinePos =functions.pLast->lPCodePos;
          GenPCode3( HB_P_LINE, LOBYTE( iLine ), HIBYTE( iLine ) );
       }
       else
       {
-         functions.pLast->pCode[ _wLastLinePos +1 ] =LOBYTE( iLine );
-         functions.pLast->pCode[ _wLastLinePos +2 ] =HIBYTE( iLine );
+         functions.pLast->pCode[ _ulLastLinePos +1 ] =LOBYTE( iLine );
+         functions.pLast->pCode[ _ulLastLinePos +2 ] =HIBYTE( iLine );
       }
    }
    _bDontGenLineNum =FALSE;
@@ -4208,11 +4229,11 @@ void MessageDupl( char * szMsgName )  /* fix a generated message and duplicate t
       pSym =AddSymbol( szMsgName, &wSetSym );
    pSym->cScope |= FS_MESSAGE;
                                         /* Get previously generated message */
-   bLoGetSym = pFunc->pCode[ _lMessageFix + 1];
-   bHiGetSym = pFunc->pCode[ _lMessageFix + 2];
+   bLoGetSym = pFunc->pCode[ _ulMessageFix + 1];
+   bHiGetSym = pFunc->pCode[ _ulMessageFix + 2];
 
-   pFunc->pCode[ _lMessageFix + 1 ] = LOBYTE( wSetSym );
-   pFunc->pCode[ _lMessageFix + 2 ] = HIBYTE( wSetSym );
+   pFunc->pCode[ _ulMessageFix + 1 ] = LOBYTE( wSetSym );
+   pFunc->pCode[ _ulMessageFix + 2 ] = HIBYTE( wSetSym );
 
    pFunc->lPCodePos -= 3;               /* Remove unnecessary function call  */
    Duplicate();                         /* Duplicate object                  */
@@ -4231,8 +4252,8 @@ void MessageFix( char * szMsgName )  /* fix a generated message to an object */
       pSym =AddSymbol( szMsgName, &wSym );
    pSym->cScope |= FS_MESSAGE;
 
-   pFunc->pCode[ _lMessageFix + 1 ] = LOBYTE( wSym );
-   pFunc->pCode[ _lMessageFix + 2 ] = HIBYTE( wSym );
+   pFunc->pCode[ _ulMessageFix + 1 ] = LOBYTE( wSym );
+   pFunc->pCode[ _ulMessageFix + 2 ] = HIBYTE( wSym );
    pFunc->lPCodePos -= 3;        /* Remove unnecessary function call */
 }
 
@@ -4598,10 +4619,10 @@ void PushLong( long lNumber )
 /* generates the pcode to push a string on the virtual machine stack */
 void PushString( char * szText )
 {
-   WORD wStrLen = strlen( szText );
+   int iStrLen = strlen( szText );
 
-   GenPCode3( HB_P_PUSHSTR, LOBYTE(wStrLen), HIBYTE(wStrLen) );
-   GenPCodeN( ( BYTE * ) szText, wStrLen );
+   GenPCode3( HB_P_PUSHSTR, LOBYTE(iStrLen), HIBYTE(iStrLen) );
+   GenPCodeN( ( BYTE * ) szText, iStrLen );
 
    if( _bWarnings )
    {
@@ -4707,9 +4728,9 @@ void Dec( void )
    }
 }
 
-void DimArray( WORD wDimensions )
+void DimArray( int iDimensions )
 {
-   GenPCode3( HB_P_DIMARRAY, LOBYTE( wDimensions ), HIBYTE( wDimensions ) );
+   GenPCode3( HB_P_DIMARRAY, LOBYTE( iDimensions ), HIBYTE( iDimensions ) );
 }
 
 void Do( BYTE bParams )
@@ -4773,7 +4794,7 @@ void FixElseIfs( void * pFixElseIfs )
 
    while( pFix )
    {
-      JumpHere( pFix->wOffset );
+      JumpHere( pFix->ulOffset );
       pFix = pFix->pNext;
    }
 }
@@ -4824,7 +4845,7 @@ void FixReturns( void ) /* fixes all last defined function returns jumps offsets
       while( pLoop->pNext )
          pLoop =pLoop->pNext;
 
-      itoa( pLoop->wLine, cLine, 10 );
+      itoa( pLoop->iLine, cLine, 10 );
       GenError( _szCErrors, 'E', ERR_UNCLOSED_STRU, cLine, NULL );
    }
 */
@@ -4872,17 +4893,17 @@ void Function( BYTE bParams )
    }
 }
 
-void GenArray( WORD wElements )
+void GenArray( int iElements )
 {
-   GenPCode3( HB_P_GENARRAY, LOBYTE( wElements ), HIBYTE( wElements ) );
+   GenPCode3( HB_P_GENARRAY, LOBYTE( iElements ), HIBYTE( iElements ) );
 
    if( _bWarnings )
    {
       PSTACK_VAL_TYPE pFree;
-      WORD wIndex;
+      int iIndex;
 
       /* Releasing the stack items used by the _GENARRAY (other than the 1st element). */
-      for( wIndex = wElements; wIndex > 1; wIndex-- )
+      for( iIndex = iElements; iIndex > 1; iIndex-- )
       {
          pFree = pStackValType;
          debug_msg( "\n***---element %i at GenArray()\n", wIndex );
@@ -4898,7 +4919,7 @@ void GenArray( WORD wElements )
          }
       }
 
-      if( wElements == 0 )
+      if( iElements == 0 )
       {
          PSTACK_VAL_TYPE pNewStackType;
 
@@ -5179,25 +5200,25 @@ void GenPCode3( BYTE byte1, BYTE byte2, BYTE byte3 )
    pFunc->pCode[ pFunc->lPCodePos++ ] = byte3;
 }
 
-void GenPCodeN( BYTE * pBuffer, WORD wSize )
+void GenPCodeN( BYTE * pBuffer, ULONG ulSize )
 {
    PFUNCTION pFunc = functions.pLast;   /* get the currently defined Clipper function */
 
    if( ! pFunc->pCode )   /* has been created the memory block to hold the pcode ? */
    {
-      pFunc->lPCodeSize = ( ( wSize / PCODE_CHUNK ) + 1 ) * PCODE_CHUNK;
+      pFunc->lPCodeSize = ( ( ulSize / PCODE_CHUNK ) + 1 ) * PCODE_CHUNK;
       pFunc->pCode      = ( BYTE * ) hb_xgrab( pFunc->lPCodeSize );
       pFunc->lPCodePos  = 0;
    }
-   else if( pFunc->lPCodePos + wSize > pFunc->lPCodeSize )
+   else if( pFunc->lPCodePos + ulSize > pFunc->lPCodeSize )
    {
       /* not enough free space in pcode buffer - increase it */
-      pFunc->lPCodeSize += ( ( ( wSize / PCODE_CHUNK ) + 1 ) * PCODE_CHUNK );
+      pFunc->lPCodeSize += ( ( ( ulSize / PCODE_CHUNK ) + 1 ) * PCODE_CHUNK );
       pFunc->pCode = ( BYTE * ) hb_xrealloc( pFunc->pCode, pFunc->lPCodeSize );
    }
 
-   memcpy( pFunc->pCode+pFunc->lPCodePos, pBuffer, wSize );
-   pFunc->lPCodePos +=wSize;
+   memcpy( pFunc->pCode+pFunc->lPCodePos, pBuffer, ulSize );
+   pFunc->lPCodePos +=ulSize;
 }
 
 char * SetData( char * szMsg ) /* generates an underscore-symbol name for a data assignment */
@@ -5215,7 +5236,7 @@ char * SetData( char * szMsg ) /* generates an underscore-symbol name for a data
  * - either the address of HB_P_SEQEND opcode if there is no RECOVER clause
  * - or the address of RECOVER code
  */
-int SequenceBegin( void )
+ULONG SequenceBegin( void )
 {
    GenPCode3( HB_P_SEQBEGIN, 0, 0 );
 
@@ -5229,7 +5250,7 @@ int SequenceBegin( void )
  * last statement in code beetwen BEGIN ... RECOVER) or if BREAK was requested
  * and there was no matching RECOVER clause.
  */
-int SequenceEnd( void )
+ULONG SequenceEnd( void )
 {
    GenPCode3( HB_P_SEQEND, 0, 0 );
 
@@ -5239,14 +5260,14 @@ int SequenceEnd( void )
 /* Remove unnecessary opcodes in case there were no executable statements
  * beetwen BEGIN and RECOVER sequence
  */
-void SequenceFinish( int iStartPos, int bUsualStmts )
+void SequenceFinish( ULONG ulStartPos, int bUsualStmts )
 {
    if( ! _bDebugInfo ) /* only if no debugger info is required */
    {
       if( ! bUsualStmts )
       {
-         functions.pLast->lPCodePos = iStartPos - 1; /* remove also HB_P_SEQBEGIN */
-         _wLastLinePos = iStartPos - 4;
+         functions.pLast->lPCodePos = ulStartPos - 1; /* remove also HB_P_SEQBEGIN */
+         _ulLastLinePos = ulStartPos - 4;
       }
    }
 }
@@ -5260,7 +5281,7 @@ void CodeBlockStart()
    PFUNCTION pFunc = FunctionNew( NULL, FS_STATIC );
 
    pFunc->pOwner       = functions.pLast;
-   pFunc->wStaticsBase = functions.pLast->wStaticsBase;
+   pFunc->iStaticsBase = functions.pLast->iStaticsBase;
 
    functions.pLast = pFunc;
    LineDebug();
@@ -5269,7 +5290,7 @@ void CodeBlockStart()
 void CodeBlockEnd()
 {
    PFUNCTION pCodeblock;   /* pointer to the current codeblock */
-   PFUNCTION pFunc;        /* poiter to a function that owns a codeblock */
+   PFUNCTION pFunc;        /* pointer to a function that owns a codeblock */
    WORD wSize;
    WORD wLocals = 0;   /* number of referenced local variables */
    WORD wPos;
@@ -5428,11 +5449,11 @@ void StaticDefStart( void )
  * End of definition of static variable
  * Return to previously pcoded function.
  */
-void StaticDefEnd( WORD wCount )
+void StaticDefEnd( int iCount )
 {
    functions.pLast =_pInitFunc->pOwner;
    _pInitFunc->pOwner =NULL;
-   _wStatics += wCount;
+   _iStatics += iCount;
    iVarScope =VS_LOCAL;
 
    if( _bWarnings )
@@ -5442,7 +5463,7 @@ void StaticDefEnd( WORD wCount )
       if( pStackValType )
       {
          pFree = pStackValType;
-         debug_msg( "\n***---%i in StaticeDefEnd()\n", _wStatics );
+         debug_msg( "\n***---%i in StaticeDefEnd()\n", _iStatics );
 
          pStackValType = pStackValType->pPrev;
          hb_xfree( ( void * ) pFree );
@@ -5487,8 +5508,8 @@ static void LoopStart( void )
    pLoop->pNext       = NULL;
    pLoop->pExitList   = NULL;
    pLoop->pLoopList   = NULL;
-   pLoop->wOffset = functions.pLast->lPCodePos;  /* store the start position */
-   pLoop->wLine   = iLine;
+   pLoop->ulOffset = functions.pLast->lPCodePos;  /* store the start position */
+   pLoop->iLine   = iLine;
 }
 
 /*
@@ -5509,7 +5530,7 @@ static void LoopLoop( void )
    pLoop = (PTR_LOOPEXIT) hb_xgrab( sizeof( LOOPEXIT ) );
 
    pLoop->pLoopList =NULL;
-   pLoop->wOffset =functions.pLast->lPCodePos;  /* store the position to fix */
+   pLoop->ulOffset =functions.pLast->lPCodePos;  /* store the position to fix */
 
    pLast =pLoops;
    while( pLast->pNext )
@@ -5541,7 +5562,7 @@ static void LoopExit( void )
    pLoop = (PTR_LOOPEXIT) hb_xgrab( sizeof( LOOPEXIT ) );
 
    pLoop->pExitList =NULL;
-   pLoop->wOffset =functions.pLast->lPCodePos;  /* store the position to fix */
+   pLoop->ulOffset =functions.pLast->lPCodePos;  /* store the position to fix */
 
    pLast =pLoops;
    while( pLast->pNext )
@@ -5568,7 +5589,7 @@ static void LoopHere( void )
    pLoop = pLoop->pLoopList;
    while( pLoop )
    {
-      JumpHere( pLoop->wOffset +1 );
+      JumpHere( pLoop->ulOffset +1 );
       pFree = pLoop;
       pLoop = pLoop->pLoopList;
       hb_xfree( ( void * ) pFree );
@@ -5591,7 +5612,7 @@ static void LoopEnd( void )
    pExit =pLoop->pExitList;
    while( pExit )
    {
-      JumpHere( pExit->wOffset +1 );
+      JumpHere( pExit->ulOffset +1 );
       pFree = pExit;
       pExit = pExit->pExitList;
       hb_xfree( ( void * ) pFree );
@@ -6278,7 +6299,7 @@ void CheckArgs( char * szFuncCall, int iArgs )
          in a "lossy" way, in practice that means it's not possible to unpack
          the exact date/time info from the resulting DWORD. Since the year
          is only stored in 6 bits, 1980 will result in the same bit pattern
-         as 2044. The purpose of this value is only used to *differenciate* 
+         as 2044. The purpose of this value is only used to *differenciate*
          between to dates ( the exact dates are not significant ), so this can
          be used here without problems. */
 

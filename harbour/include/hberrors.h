@@ -69,6 +69,7 @@
 #define ERR_MEMREALLOC             28
 #define ERR_MEMFREE                29
 #define ERR_YACC                   30
+#define ERR_JUMP_TOO_LONG          31
 
 #define WARN_AMBIGUOUS_VAR         1
 #define WARN_MEMVAR_ASSUMED        2

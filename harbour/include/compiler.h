@@ -52,9 +52,9 @@ typedef struct __FUNC      /* functions definition support */
    PVAR   pFields;         /* pointer to fields variables list */
    PVAR   pMemvars;        /* pointer to memvar variables list */
    BYTE * pCode;           /* pointer to a memory block where pcode is stored */
-   LONG   lPCodeSize;      /* total memory size for pcode */
-   LONG   lPCodePos;       /* actual pcode offset */
-   WORD   wStaticsBase;    /* base for this function statics */
+   ULONG   lPCodeSize;     /* total memory size for pcode */
+   ULONG   lPCodePos;      /* actual pcode offset */
+   int   iStaticsBase;     /* base for this function statics */
    struct __FUNC * pOwner; /* pointer to the function/procedure that owns the codeblock */
    struct __FUNC * pNext;  /* pointer to the next defined function */
 } _FUNC, * PFUNCTION;

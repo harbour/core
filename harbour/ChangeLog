@@ -1,3 +1,17 @@
+19990910-11:05 GMT+2 Ryszard Glab <rglab@imim.med.pl>
+
+    *source/compiler/harbour.y
+        * corrected support for pcode buffer larger than 64kB
+        (many WORD converted to ULONG)
+          However jumps are still limited to signed 16 bits - the compiler
+        generates error when this limit is exceeded
+
+    *include/compiler.h
+        * changed WORD to ULONG 
+
+    *include/hberrors.h
+        * new error ERR_JUMP_TOO_LONG
+
 19990909-21:40 EDT Paul Tucker <ptucker@sympatico.ca>
   * makefile.vc
     + source/rtl/memvarbl.prg
