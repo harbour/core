@@ -341,12 +341,18 @@ static void hb_clsRelease( PCLASS pClass )
  */
 void hb_clsReleaseAll( void )
 {
-   USHORT uiClass;
+   SHORT uiClass;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_clsReleaseAll()"));
 
-   for( uiClass = 0; uiClass < s_uiClasses; uiClass++ )
-      hb_clsRelease( s_pClasses + uiClass );
+/* for( uiClass = 0  ; uiClass < s_uiClasses  ; uiClass++ )     */
+/*    hb_clsRelease( s_pClasses + uiClass );                    */
+
+   uiClass = (SHORT) (s_uiClasses-1) ;
+   s_uiClasses = 0 ;
+
+   for( ; uiClass >= 0 ; uiClass-- )
+       hb_clsRelease( s_pClasses + uiClass );
 
    if( s_pClasses )
       hb_xfree( s_pClasses );
@@ -358,6 +364,7 @@ void hb_clsReleaseAll( void )
 /* Mark all internal data as used so it will not be released by the
  * garbage collector
  */
+
 void hb_clsIsClassRef( void )
 {
    USHORT uiClass = s_uiClasses;
@@ -370,6 +377,7 @@ void hb_clsIsClassRef( void )
 
    while( uiClass-- )
    {
+      printf("isClassRef %i\n",uiClass );
 
       if( pClass->pInlines )
          hb_gcItemRef( pClass->pInlines );

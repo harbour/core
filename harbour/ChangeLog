@@ -1,3 +1,9 @@
+2001-11-28 22:45 GMT+1 JFL (mafact) <jfl@mafact.com>
+   * harbour/source/vm/classes.c
+     * Now releasing Classes from the last one to check Bryan GPF
+   * harbour/include/hbclass.ch
+     * Changed a bit some PP define to avoid unusued var warning from mscv
+
 2001-11-28 12:57 GMT-3 Horacio Roldan <harbour_ar@yahoo.com.ar>
    * include/hbrddcdx.h
    * source/rdd/dbfcdx/dbfcdx1.c

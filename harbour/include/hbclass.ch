@@ -150,6 +150,8 @@ DECLARE HBClass ;
 #xtranslate CREATE CLASS => CLASS
 #endif
 
+#ifdef HB_CLS_ALLOWCLASS  /* DONT DECLARE IT ! WORK IN PROGRESS !!! */
+
 #ifndef HB_SHORTNAMES
 
 #xtranslate DECLMETH <ClassName> <MethodName> => <ClassName>_<MethodName>
@@ -158,9 +160,13 @@ DECLARE HBClass ;
    _HB_CLASS <ClassName> ;;
    <static> function <ClassName>() ;;
       static s_oClass ;;
-      local MetaClass,nScope := HB_OO_CLSTP_EXPORTED ;;
+      local MetaClass,nScope ;;
+      nScope := HB_OO_CLSTP_EXPORTED ;;
       if s_oClass == NIL ;;
-         s_oClass := IIF(<.metaClass.>, <(metaClass)>, HBClass():new( <(ClassName)> , __HB_CLS_PAR ( [ <(SuperClass1)> ] [ ,<(SuperClassN)> ] ) ) ) ;;
+         s_oClass  := IIF(<.metaClass.>, <(metaClass)>, HBClass():new( <(ClassName)> , __HB_CLS_PAR ( [ <(SuperClass1)> ] [ ,<(SuperClassN)> ] ) ) ) ;;
+         if ! <.metaClass.> ;;
+          Metaclass := HBClass():new( <(ClassName)>+" class", __HB_CLS_PAR0 ( [ <SuperClass1>():class ] [ ,<SuperClassN>():class ] ) )  ;;
+         endif              ;;
      #undef  _CLASS_NAME_ ;;
      #define _CLASS_NAME_ <ClassName> ;;
      #undef  _CLASS_MODE_ ;;
@@ -180,9 +186,64 @@ DECLARE HBClass ;
    _HB_CLASS <ClassName> ;;
    <static> function <ClassName>() ;;
       static s_oClass  ;;
-      local MetaClass,nScope := HB_OO_CLSTP_EXPORTED ;;
+      local MetaClass,nScope ;;
+      nScope := HB_OO_CLSTP_EXPORTED ;;
       if s_oClass == NIL ;;
-         s_oClass := IIF(<.metaClass.>,<(metaClass)>, HBClass():new(<(ClassName)>, __HB_CLS_PAR ( [ <(SuperClass1)> ] [ ,<(SuperClassN)> ] ) ) ) ;;
+         s_oClass  := IIF(<.metaClass.>, <(metaClass)>, HBClass():new( <(ClassName)> , __HB_CLS_PAR ( [ <(SuperClass1)> ] [ ,<(SuperClassN)> ] ) ) ) ;;
+         if ! <.metaClass.> ;;
+          Metaclass := HBClass():new( <(ClassName)>+" class", __HB_CLS_PAR0 ( [ <SuperClass1>():class ] [ ,<SuperClassN>():class ] ) )  ;;
+         endif              ;;
+     #undef  _CLASS_NAME_ ;;
+     #define _CLASS_NAME_ <ClassName> ;;
+     #undef  _CLASS_MODE_ ;;
+     #define _CLASS_MODE_ _CLASS_DECLARATION_ ;;
+     #translate CLSMETH <ClassName> <MethodName>() => @<MethodName> ;
+     [ ; #translate Super( <SuperClassN> ) : => ::<SuperClassN>: ] ;
+     [ ; #translate Super( <SuperClass1> ) : => ::<SuperClass1>: ] ;
+     [ ; #translate Super() : => ::<SuperClass1>: ] ;
+     [ ; #translate Super : => ::<SuperClass1>: ] ;
+     [ ; #translate ::Super : => ::<SuperClass1>: ] ;
+     [ ; REQUEST <SuperClass1> ] [ ,<SuperClassN> ]
+
+#endif /* HB_SHORTNAMES */
+
+#else
+
+#ifndef HB_SHORTNAMES
+
+#xtranslate DECLMETH <ClassName> <MethodName> => <ClassName>_<MethodName>
+
+#xcommand CLASS <ClassName> [METACLASS <metaClass>] [ <frm: FROM, INHERIT> <SuperClass1> [,<SuperClassN>] ] [<static: STATIC>] => ;
+   _HB_CLASS <ClassName> ;;
+   <static> function <ClassName>() ;;
+      static s_oClass ;;
+      local nScope ;;
+      nScope := HB_OO_CLSTP_EXPORTED ;;
+      if s_oClass == NIL ;;
+         s_oClass  := IIF(<.metaClass.>, <(metaClass)>, HBClass():new( <(ClassName)> , __HB_CLS_PAR ( [ <(SuperClass1)> ] [ ,<(SuperClassN)> ] ) ) ) ;;
+     #undef  _CLASS_NAME_ ;;
+     #define _CLASS_NAME_ <ClassName> ;;
+     #undef  _CLASS_MODE_ ;;
+     #define _CLASS_MODE_ _CLASS_DECLARATION_ ;;
+     #xtranslate CLSMETH <ClassName> <MethodName> => @<ClassName>_<MethodName> ;;
+     #xtranslate DECLCLASS <ClassName> => ;;
+     [ ; #translate Super( <SuperClassN> ) : => ::<SuperClassN>: ] ;
+     [ ; #translate Super( <SuperClass1> ) : => ::<SuperClass1>: ] ;
+     [ ; #translate Super() : => ::<SuperClass1>: ] ;
+     [ ; #translate Super : => ::<SuperClass1>: ] ;
+     [ ; #translate ::Super : => ::<SuperClass1>: ] ;
+     [ ; REQUEST <SuperClass1> ] [ ,<SuperClassN> ]
+
+#else
+
+#xcommand CLASS <ClassName> [METACLASS <metaClass>] [ <frm: FROM, INHERIT> <SuperClass1> [,<SuperClassN>] ] [<static: STATIC>] => ;
+   _HB_CLASS <ClassName> ;;
+   <static> function <ClassName>() ;;
+      static s_oClass  ;;
+      local nScope ;;
+      nScope := HB_OO_CLSTP_EXPORTED ;;
+      if s_oClass == NIL ;;
+         s_oClass  := IIF(<.metaClass.>, <(metaClass)>, HBClass():new( <(ClassName)> , __HB_CLS_PAR ( [ <(SuperClass1)> ] [ ,<(SuperClassN)> ] ) ) ) ;;
      #undef  _CLASS_NAME_ ;;
      #define _CLASS_NAME_ <ClassName> ;;
      #undef  _CLASS_MODE_ ;;
@@ -198,13 +259,14 @@ DECLARE HBClass ;
 #endif /* HB_SHORTNAMES */
 
 /* Disable the message :Class */
-#ifndef HB_CLS_ALLOWCLASS
 /* CLASSY SYNTAX */
 #IFDEF HB_CLS_CSY
 #xtranslate  :CLASS  =>
 #xtranslate  :CLASS: => :
 #endif
+
 #endif
+
 
 /* CLASSY SYNTAX */
 #IFDEF HB_CLS_CSY
@@ -578,7 +640,7 @@ s_oClass:AddInline( <(op)>, {|Self, <cArg> | <Code> }, HBCLSCHOICE( <.export.>, 
 #ifdef HB_CLS_ALLOWCLASS
 #xcommand ENDCLASS => ;;
                        s_oClass:Create(MetaClass) ;;
-                       MetaClass:InitClass();;
+                       MetaClass:InitClass() ;;
                       endif ;;
                       return s_oClass:Instance() AS CLASS _CLASS_NAME_ ;;
                       #undef  _CLASS_MODE_ ;;
