@@ -14,8 +14,8 @@ C_SOURCES=\
 	dynsym.c     \
 	codebloc.c   \
 	extend.c     \
-	fm.c	 \
-	hvm.c	\
+	fm.c         \
+	hvm.c        \
 	initexit.c   \
 	initsymb.c   \
 	itemapi.c    \

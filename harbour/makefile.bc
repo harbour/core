@@ -205,6 +205,9 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\oldbox.obj \
    $(OBJ_DIR)\oldclear.obj \
    $(OBJ_DIR)\pad.obj \
+   $(OBJ_DIR)\padc.obj \
+   $(OBJ_DIR)\padl.obj \
+   $(OBJ_DIR)\padr.obj \
    $(OBJ_DIR)\philes.obj \
    $(OBJ_DIR)\philes53.obj \
    $(OBJ_DIR)\philesx.obj \
@@ -296,7 +299,9 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\chrtotal.obj \
    $(OBJ_DIR)\ctchksum.obj \
    $(OBJ_DIR)\ctchrmix.obj \
+   $(OBJ_DIR)\ctcolton.obj \
    $(OBJ_DIR)\ctcrypt.obj \
+   $(OBJ_DIR)\ctposupp.obj \
    $(OBJ_DIR)\dates2.obj \
    $(OBJ_DIR)\dbftools.obj \
    $(OBJ_DIR)\hb_f.obj \
@@ -312,6 +317,7 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\strpbrk.obj \
    $(OBJ_DIR)\strright.obj \
    \
+   $(OBJ_DIR)\ctmisc.obj \
    $(OBJ_DIR)\fileread.obj \
    $(OBJ_DIR)\nconvert.obj \
    $(OBJ_DIR)\numtxten.obj \
@@ -1249,6 +1255,18 @@ $(OBJ_DIR)\pad.obj : $(RTL_DIR)\pad.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) -+$@,,
 
+$(OBJ_DIR)\padc.obj : $(RTL_DIR)\padc.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) -+$@,,
+
+$(OBJ_DIR)\padl.obj : $(RTL_DIR)\padl.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) -+$@,,
+
+$(OBJ_DIR)\padr.obj : $(RTL_DIR)\padr.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) -+$@,,
+
 $(OBJ_DIR)\philes.obj : $(RTL_DIR)\philes.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) -+$@,,
@@ -1561,7 +1579,15 @@ $(OBJ_DIR)\ctchrmix.obj : $(TOOLS_DIR)\ctchrmix.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
+$(OBJ_DIR)\ctcolton.obj : $(TOOLS_DIR)\ctcolton.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) -+$@,,
+
 $(OBJ_DIR)\ctcrypt.obj : $(TOOLS_DIR)\ctcrypt.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) -+$@,,
+
+$(OBJ_DIR)\ctposupp.obj : $(TOOLS_DIR)\ctposupp.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
@@ -1570,6 +1596,13 @@ $(OBJ_DIR)\dates2.obj : $(TOOLS_DIR)\dates2.c
    tlib $(TOOLS_LIB) -+$@,,
 
 $(OBJ_DIR)\dbftools.obj : $(TOOLS_DIR)\dbftools.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) -+$@,,
+
+$(OBJ_DIR)\ctmisc.c : $(TOOLS_DIR)\ctmisc.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\ctmisc.obj : $(OBJ_DIR)\ctmisc.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 

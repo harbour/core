@@ -5,13 +5,13 @@
 ROOT = ../../
 
 C_SOURCES=\
-	abs.c	\
+	abs.c        \
 	accept.c     \
 	ampm.c       \
-	at.c	 \
+	at.c         \
 	binnum.c     \
 	binnumx.c    \
-	box.c	\
+	box.c        \
 	chrasc.c     \
 	colorind.c   \
 	console.c    \
@@ -22,10 +22,10 @@ C_SOURCES=\
 	datesx.c     \
 	defpath.c    \
 	descend.c    \
-	dir.c	\
+	dir.c        \
 	dirdrive.c   \
 	diskspac.c   \
-	do.c	 \
+	do.c         \
 	empty.c      \
 	errorapi.c   \
 	eval.c       \
@@ -35,16 +35,16 @@ C_SOURCES=\
 	fssize.c     \
 	fstemp.c     \
 	gete.c       \
-	gt.c	 \
+	gt.c         \
 	gtapi.c      \
-	gx.c	 \
+	gx.c         \
 	hardcr.c     \
 	inkey.c      \
-	is.c	 \
+	is.c         \
 	isprint.c    \
 	langapi.c    \
 	left.c       \
-	len.c	\
+	len.c        \
 	lennum.c     \
 	math.c       \
 	maxrow.c     \
@@ -53,36 +53,39 @@ C_SOURCES=\
 	minmax.c     \
 	mlcount.c    \
 	mlpos.c      \
-	mod.c	\
+	mod.c        \
 	mouseapi.c   \
 	mousex.c     \
 	mtran.c      \
 	natmsg.c     \
-	net.c	\
+	net.c        \
 	oemansi.c    \
 	oldbox.c     \
 	oldclear.c   \
-	pad.c	\
+	pad.c        \
+	padc.c       \
+	padl.c       \
+	padr.c       \
 	philes.c     \
 	philes53.c   \
 	philesx.c    \
-	rat.c	\
+	rat.c        \
 	replic.c     \
 	right.c      \
 	round.c      \
-	run.c	\
+	run.c        \
 	samples.c    \
 	saverest.c   \
 	scroll.c     \
 	seconds.c    \
-	set.c	\
+	set.c        \
 	setcolor.c   \
 	setcurs.c    \
 	setpos.c     \
 	shadow.c     \
 	soundex.c    \
 	space.c      \
-	str.c	\
+	str.c        \
 	strcase.c    \
 	strings.c    \
 	strmatch.c   \
@@ -95,7 +98,7 @@ C_SOURCES=\
 	transfrm.c   \
 	trim.c       \
 	type.c       \
-	val.c	\
+	val.c        \
 	valtostr.c   \
 	valtype.c    \
 	version.c    \

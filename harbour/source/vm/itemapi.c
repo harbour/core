@@ -1346,6 +1346,60 @@ char * hb_itemString( PHB_ITEM pItem, ULONG * ulLen, BOOL * bFreeReq )
    return buffer;
 }
 
+/* This function is used by all of the PAD functions to prepare the argument
+   being padded. If date, convert to string using hb_dateFormat(). If numeric,
+   convert to unpadded string. Return pointer to string and set string length */
+
+char * hb_itemPadConv( PHB_ITEM pItem, char * buffer, ULONG * pulSize )
+{
+   char * szText;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemPadConv(%p, %p, %p)", pItem, buffer, pulSize));
+
+   if( pItem )
+   {
+      if( HB_IS_STRING( pItem ) )
+      {
+         szText = hb_itemGetCPtr( pItem );
+         *pulSize = hb_itemGetCLen( pItem );
+      }
+      else if( HB_IS_DATE( pItem ) )
+      {
+         char szDate[ 9 ];
+
+         szText = hb_dateFormat( hb_pardsbuff( szDate, 1 ), buffer, hb_set.HB_SET_DATEFORMAT );
+         *pulSize = strlen( szText );
+      }
+      else if( HB_IS_INTEGER( pItem ) )
+      {
+         sprintf( buffer, "%d", hb_itemGetNI( pItem ) );
+         szText = buffer;
+         *pulSize = strlen( szText );
+      }
+      else if( HB_IS_LONG( pItem ) )
+      {
+         sprintf( buffer, "%ld", hb_itemGetNL( pItem ) );
+         szText = buffer;
+         *pulSize = strlen( szText );
+      }
+      else if( HB_IS_DOUBLE( pItem ) )
+      {
+         int iDecimal;
+
+         hb_itemGetNLen( pItem, NULL, &iDecimal );
+         sprintf( buffer, "%.*f", iDecimal, hb_itemGetND( pItem ) );
+         szText = buffer;
+         *pulSize = strlen( szText );
+      }
+      else
+         szText = NULL;
+   }
+   else
+      szText = NULL;
+
+   return szText;
+}
+
 PHB_ITEM hb_itemValToStr( PHB_ITEM pItem )
 {
    PHB_ITEM pResult;

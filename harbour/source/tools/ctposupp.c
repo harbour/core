@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * PAD() function
+ * CT_POSUPPER() CA-Tools function
  *
- * Copyright 1999 Victor Szakats <info@szelvesz.hu>
+ * Copyright 2000 Victor Szakats <info@szelvesz.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -33,13 +33,22 @@
  *
  */
 
+#include <ctype.h>
+
 #include "hbapi.h"
 
-extern HB_FUNC( PADR );
-
-/* synonymn for PADR */
-HB_FUNC( PAD )
+HB_FUNC( CT_POSUPPER )
 {
-   HB_FUNCNAME( PADR )();
+   BYTE * pbyString = hb_parc( 1 );
+   ULONG ulLen = hb_parclen( 1 );
+   ULONG ulPos;
+
+   for( ulPos = 0; ulPos < ulLen; ulPos++ )
+   {
+      if( isupper( pbyString[ ulPos ] ) )
+         hb_retnl( ulPos + 1 );
+   }
+
+   hb_retnl( 0 );
 }
 

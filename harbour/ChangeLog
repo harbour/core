@@ -1,3 +1,41 @@
+20000402-18:50 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   + source/tools/ctmisc.prg
+   + source/tools/ctcolton.c
+   + source/tools/ctposupp.c
+   * source/tools/Makefile
+   * makefile.bc
+   * makefile.vc
+   * utils/hbrun/exttools.prg
+     + CT_COLORTON()
+     + CT_CENTER()
+     + CT_CSETCURS()
+     + CT_CSETKEY()
+     + CT_ENHANCED()
+     + CT_STANDARD()
+     + CT_LTOC()
+     + CT_RESTGETS()
+     + CT_SAVEGETS()
+     + CT_SCREENMIX()
+     + CT_POSUPPER()
+     ; CA-Tools compatible functions added.
+
+   * include/hbapiitm.h
+   * source/rtl/pad.c
+   + source/rtl/padc.c
+   + source/rtl/padl.c
+   + source/rtl/padr.c
+   * source/vm/itemapi.c
+   * source/rtl/Makefile
+   * makefile.bc
+   * makefile.vc
+     * hb_itemPadConv() made global and moved to the Item API
+     ! hb_itemPadConv() TRACE call typo.
+     + Separated PAD*() calls.
+
+   * */Makefile
+     * Some corrections
+
 20000402-16:17 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * */Makefile

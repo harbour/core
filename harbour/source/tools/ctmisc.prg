@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * PAD() function
+ * Misc CA-Tools functions
  *
- * Copyright 1999 Victor Szakats <info@szelvesz.hu>
+ * Copyright 2000 Victor Szakats <info@szelvesz.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -33,13 +33,56 @@
  *
  */
 
-#include "hbapi.h"
+#include "color.ch"
+#include "common.ch"
+#include "setcurs.ch"
 
-extern HB_FUNC( PADR );
+MEMVAR GetList
 
-/* synonymn for PADR */
-HB_FUNC( PAD )
-{
-   HB_FUNCNAME( PADR )();
-}
+FUNCTION CT_CENTER( c, n, p )
+   RETURN PadC( AllTrim( c ), n, p )
+
+FUNCTION CT_CSETCURS( l )
+
+   IF PCount() == 0
+      RETURN SetCursor() != SC_NONE
+   ENDIF
+
+   RETURN SetCursor( iif( l, SC_NORMAL, SC_NONE ) ) != SC_NONE
+
+FUNCTION CT_CSETKEY( n )
+   RETURN SetKey( n )
+
+FUNCTION CT_ENHANCED()
+
+   ColorSelect( CLR_ENHANCED )
+
+   RETURN ""
+
+FUNCTION CT_STANDARD()
+
+   ColorSelect( CLR_STANDARD )
+
+   RETURN ""
+
+FUNCTION CT_LTOC( l )
+   RETURN iif( l, "T", "F" )
+
+FUNCTION CT_RESTGETS( aGetList )
+
+   GetList := aGetList
+
+   RETURN .T.
+
+FUNCTION CT_SAVEGETS()
+   RETURN GetList
+
+FUNCTION CT_SCREENMIX( c, a, row, col )
+
+   DEFAULT row TO Row()
+   DEFAULT col TO Col()
+
+   RestScreen( row, col, row, col + Len( a ) - 1, CT_CHARMIX( c, a ) )
+
+   RETURN ""
 

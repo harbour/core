@@ -244,6 +244,9 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\oldbox.obj \
    $(OBJ_DIR)\oldclear.obj \
    $(OBJ_DIR)\pad.obj \
+   $(OBJ_DIR)\padc.obj \
+   $(OBJ_DIR)\padl.obj \
+   $(OBJ_DIR)\padr.obj \
    $(OBJ_DIR)\philes.obj \
    $(OBJ_DIR)\philes53.obj \
    $(OBJ_DIR)\philesx.obj \
@@ -342,7 +345,9 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\chrtotal.obj \
    $(OBJ_DIR)\ctchksum.obj \
    $(OBJ_DIR)\ctchrmix.obj \
+   $(OBJ_DIR)\ctcolton.obj \
    $(OBJ_DIR)\ctcrypt.obj \
+   $(OBJ_DIR)\ctposupp.obj \
    $(OBJ_DIR)\dates2.obj \
    $(OBJ_DIR)\dbftools.obj \
    $(OBJ_DIR)\hb_f.obj \
@@ -358,6 +363,7 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\strpbrk.obj \
    $(OBJ_DIR)\strright.obj \
    \
+   $(OBJ_DIR)\ctmisc.obj \
    $(OBJ_DIR)\fileread.obj \
    $(OBJ_DIR)\nconvert.obj \
    $(OBJ_DIR)\numtxten.obj \

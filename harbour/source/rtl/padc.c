@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * PAD() function
+ * PADC() function
  *
- * Copyright 1999 Victor Szakats <info@szelvesz.hu>
+ * Copyright 1999 Matthew Hamilton <mhamilton@bunge.com.au>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -34,12 +34,50 @@
  */
 
 #include "hbapi.h"
+#include "hbapiitm.h"
+#include "hbapierr.h"
 
-extern HB_FUNC( PADR );
-
-/* synonymn for PADR */
-HB_FUNC( PAD )
+/* centre-pads a date, number, or string with spaces or supplied character */
+HB_FUNC( PADC )
 {
-   HB_FUNCNAME( PADR )();
+   ULONG ulSize;
+   char buffer[ 128 ];
+   char * szText = hb_itemPadConv( hb_param( 1, HB_IT_ANY ), buffer, &ulSize );
+
+   if( szText && ISNUM( 2 ) )
+   {
+      long lLen = hb_parnl( 2 );
+
+      if( lLen > ( long ) ulSize )
+      {
+         char * szResult = ( char * ) hb_xgrab( lLen + 1 );
+         char cPad;
+         long w, lPos = ( lLen - ( long ) ulSize ) / 2;
+
+         hb_xmemcpy( szResult + lPos, szText, ( long ) ulSize + 1 );
+
+         cPad = ( ISCHAR( 3 ) ? *hb_parc( 3 ) : ' ' );
+
+         for( w = 0; w < lPos; w++ )
+            szResult[ w ] = cPad;
+
+         for( w = ( long ) ulSize + lPos; w < lLen; w++ )
+            szResult[ w ] = cPad;
+
+         szResult[ lLen ] = '\0';
+
+         hb_retclen( szResult, lLen );
+         hb_xfree( szResult );
+      }
+      else
+      {
+         if( lLen < 0 )
+            lLen = 0;
+
+         hb_retclen( szText, lLen );
+      }
+   }
+   else
+      hb_retc( "" );
 }
 

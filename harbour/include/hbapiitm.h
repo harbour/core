@@ -108,6 +108,7 @@ extern PHB_ITEM hb_itemUnRef    ( PHB_ITEM pItem ); /* de-references passed vari
 extern char *   hb_itemStr      ( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec ); /* convert a number to a string */
 extern char *   hb_itemString   ( PHB_ITEM pItem, ULONG * ulLen, BOOL * bFreeReq );  /* Convert any scalar to a string */
 extern PHB_ITEM hb_itemValToStr ( PHB_ITEM pItem ); /* Convert any scalar to a string */
+extern char *   hb_itemPadConv  ( PHB_ITEM pItem, char * buffer, ULONG * pulSize );
 
 #if defined(HB_EXTERN_C)
 }
