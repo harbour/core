@@ -72,7 +72,7 @@
 /* keyboard states - these should be taken
    from system includes, not be hard coded
 */
-#ifdefined(__linux__)
+#if defined(__linux__)
    #define SHIFT_PRESSED        1
    #define ALTR_PRESSED         2
    #define CONTROL_PRESSED      4

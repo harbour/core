@@ -318,7 +318,7 @@ fflush( stderr );
             else
             {
                key_waiting = 0; /* return raw key sequence */
-               ch = K_HB_KEYCODES;
+               ch = HB_K_MULTICODE;
             }
          }
       }

@@ -1,3 +1,10 @@
+2000-06-22 18:15 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/rtl/gtcrs/kbdcrs.c
+    *source/rtl/gtsln/kbsln.c
+	*fixed after latest changes
+
+
 2000-06-22 03:30 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
    * include/hbclass.ch
      ! Uncommented  #xtranslate that was not pre-processing correctly, before recent fixes to ppcore.c and now works correctly.
