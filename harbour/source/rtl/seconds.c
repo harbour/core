@@ -82,7 +82,7 @@ double hb_dateSeconds( void )
 #if defined(HB_OS_BSD)
    gettimeofday( &tv, &tz );
    seconds = tv.tv_sec;
-   fraction = tv.tv_usec;
+   fraction = tv.tv_usec / 1000U;
 #else
    ftime( &tb );
    seconds = tb.time;
@@ -94,7 +94,7 @@ double hb_dateSeconds( void )
    return ( oTime->tm_hour * 3600 ) +
           ( oTime->tm_min * 60 ) +
             oTime->tm_sec +
-          ( ( double ) fraction / 1000 );
+          ( ( double ) fraction / 1000.0 );
 }
 
 HB_FUNC( SECONDS )
@@ -110,6 +110,10 @@ HB_FUNC( HB_CLOCKS2SECS )
 }
 
 #endif
+
+
+
+
 
 
 
