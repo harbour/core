@@ -1315,10 +1315,7 @@ STATIC FUNCTION Main_STRINGS()
    TEST_LINE( IsAlpha( "Aa" )                 , .T.              )
    TEST_LINE( IsAlpha( "Za" )                 , .T.              )
    TEST_LINE( IsAlpha( "@"  )                 , .F.              )
-/* TOFIX: Commented out due to Harbour bug */
-#ifndef __HARBOUR__
    TEST_LINE( IsAlpha( "["  )                 , .F.              )
-#endif
    TEST_LINE( IsAlpha( "`"  )                 , .F.              )
    TEST_LINE( IsAlpha( "{"  )                 , .F.              )
 

@@ -36,97 +36,128 @@
 #include "hbclass.ch"
 #include "color.ch"
 #include "common.ch"
+#include "setcurs.ch"
+
+/* TODO: Scrolling buffer support. */
+/* TOFIX: Handling of date. */
+/* TODO: Missing methods. */
+/* TOFIX: WordLeft(), WordRight() methods */
+
+#define GET_CLR_UNSELECTED	0
+#define GET_CLR_ENHANCED        1
 
 //----------------------------------------------------------------------------//
 
 CLASS TGet
 
-   DATA badDate, block, buffer, cargo, changed, clear, col, colorspec
-   DATA decpos, exitState, hasfocus, message, minus, name, original
-   DATA picture, pos, postBlock, preBlock, reader, rejected, row
-   DATA subscript, type, typeout
-   DATA cPicMask, cPicFunc, nMaxLen, lEdit, lDecRev, lPicComplex
+   // Exported
 
-   METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColor )
+   DATA BadDate
+   DATA Block
+   DATA Buffer
+   DATA Cargo
+   DATA Changed
+   DATA Clear
+   DATA Col
+   DATA ColorSpec
+   DATA DecPos
+   DATA ExitState
+   DATA HasFocus
+   DATA Minus
+   DATA Name
+   DATA Original
+   DATA Picture
+   DATA Pos
+   DATA PostBlock
+   DATA PreBlock
+   DATA Reader
+   DATA Rejected
+   DATA Row
+   DATA SubScript
+   DATA Type
+   DATA TypeOut
 
-   METHOD Assign()  INLINE ::VarPut( ::unTransform() )
+   METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec )
 
+   METHOD Assign() INLINE ::VarPut( ::unTransform() )
+   METHOD Display()
+   METHOD ColorDisp( cColorSpec ) INLINE ::ColorSpec := cColorSpec, ::Display()
    METHOD KillFocus()
    METHOD Reset()
    METHOD SetFocus()
    METHOD Undo()
-   METHOD unTransform()
-   METHOD UpdateBuffer()  INLINE ::Assign()
+   METHOD UnTransform()
+   METHOD UpdateBuffer() INLINE ::Assign()
    METHOD VarGet()
    METHOD VarPut()
 
    METHOD End()
    METHOD Home()
-   MESSAGE Left()   METHOD _left()
-   MESSAGE Right()  METHOD _right()
-   METHOD toDecPos()
+   MESSAGE Left() METHOD _Left()
+   MESSAGE Right() METHOD _Right()
+   METHOD ToDecPos()
    METHOD WordLeft()
    METHOD WordRight()
 
-   METHOD backspace()
-   MESSAGE Delete()    METHOD _delete()
+   METHOD BackSpace()
+   MESSAGE Delete() METHOD _Delete()
+   METHOD DelEnd()
+   METHOD DelLeft()
+   METHOD DelRight()
+   METHOD DelWordLeft()
+   METHOD DelWordRight()
+
+   METHOD Insert( cChar )
+   METHOD OverStrike( cChar )
+
+   // Protected
+
+   DATA cPicMask, cPicFunc, nMaxLen, lEdit, lDecRev, lPicComplex
+
    METHOD DeleteAll()
-
-   METHOD insert( cChar )
-   METHOD overstrike( cChar )
-
    METHOD IsEditable( nPos )
    METHOD Input( cChar )
    METHOD PutMask( cBuffer, lEdit )
-
-   METHOD Display()
-
-//   METHOD ColorDisp( cColorSpec ) VIRTUAL
-//   METHOD hitTest( nRow, nCol )   VIRTUAL
-//   METHOD delEnd()                VIRTUAL
-//   METHOD delLeft()               VIRTUAL
-//   METHOD delRight()              VIRTUAL
-//   METHOD delWordLeft()           VIRTUAL
-//   METHOD delWordRight()          VIRTUAL
 
 ENDCLASS
 
 //---------------------------------------------------------------------------//
 
-METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColor ) CLASS TGet
+METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) CLASS TGet
 
    local cChar
-   local nAt, nFor
+   local nAt
+   local nFor
+   local cNum
 
-   DEFAULT nRow     TO Row()
-   DEFAULT nCol     TO Col()
-   DEFAULT cVarName TO ""
-   DEFAULT cPicture TO ""
-   DEFAULT cColor   TO ""
+   DEFAULT nRow       TO Row()
+   DEFAULT nCol       TO Col()
+   DEFAULT cVarName   TO ""
+   DEFAULT cPicture   TO ""
+   DEFAULT cColorSpec TO hb_ColorIndex( SetColor(), CLR_UNSELECTED ) + "," + hb_ColorIndex( SetColor(), CLR_ENHANCED )
 
-   ::badDate    := .f.
-   ::block      := bVarBlock
-   ::changed    := .f.
-   ::clear      := .f.
-   ::col        := nCol
-   ::colorspec  := cColor
-   ::decpos     := Nil
-   ::exitState  := 0
-   ::hasfocus   := .f.
-   ::message    := ""
-   ::minus      := .f.
-   ::name       := cVarName
-   ::original   := ::VarGet()
-   ::picture    := cPicture
-   ::pos        := Nil
-   ::postBlock  := Nil
-   ::preBlock   := Nil
-   ::reader     := Nil
-   ::rejected   := .f.
-   ::row        := nRow
-   ::subscript  := Nil
-   ::type       := Valtype( ::VarGet() )
-   ::typeout    := .f.
+   ::BadDate    := .f.
+   ::Block      := bVarBlock
+   ::Changed    := .f.
+   ::Clear      := .f.
+   ::Col        := nCol
+   ::ColorSpec  := cColorSpec
+   ::DecPos     := Nil
+   ::ExitState  := 0
+   ::HasFocus   := .f.
+   ::Minus      := .f.
+   ::Name       := cVarName
+   ::Original   := ::VarGet()
+   ::Picture    := cPicture
+   ::Pos        := Nil
+   ::PostBlock  := Nil
+   ::PreBlock   := Nil
+   ::Reader     := Nil
+   ::Rejected   := .f.
+   ::Row        := nRow
+   ::SubScript  := Nil
+   ::Type       := Valtype( ::Original )
+   ::TypeOut    := .f.
 
    // Existe function en picture
 
@@ -155,24 +186,35 @@ METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColor ) CLASS TGet
       ::cPicMask := cPicture
    endif
 
-   // Si es fecha y no tiene plantilla ponersela
-
-   if ::type == "D" .and. Empty( ::cPicMask )
-      ::cPicMask := Set( _SET_DATEFORMAT )
-      ::cPicMask := StrTran( ::cPicmask, "y", "9" )
-      ::cPicMask := StrTran( ::cPicmask, "m", "9" )
-      ::cPicMask := StrTran( ::cPicmask, "d", "9" )
-   endif
-
-   // Si es numero y no tiene plantilla ponersela
-
-   if ::type == "N" .and. Empty( ::cPicMask )
-      ::cPicMask := "9999999999"
-   endif
-
    // Comprobar si tiene la , y el . cambiado (Solo en Xbase++)
 
-   ::lDecRev := "," $ transform( 1.1, "9.9" )
+   ::lDecRev := "," $ Transform( 1.1, "9.9" )
+
+   // Generate default picture mask if not specified
+
+   if Empty( ::cPicMask )
+
+      do case
+      case ::type == "D"
+
+         ::cPicMask := Set( _SET_DATEFORMAT )
+         ::cPicMask := StrTran( ::cPicmask, "y", "9" )
+         ::cPicMask := StrTran( ::cPicmask, "m", "9" )
+         ::cPicMask := StrTran( ::cPicmask, "d", "9" )
+
+      case ::type == "N"
+
+         cNum := Str( ::Original )
+         if ( nAt := At( iif( ::lDecRev, ",", "." ), cNum ) ) > 0
+            ::cPicMask := Replicate( '9', nAt - 1 ) + iif( ::lDecRev, ",", "." )
+            ::cPicMask += Replicate( '9', Len( cNum ) - Len( ::cPicMask ) )
+         else
+            ::cPicMask := Replicate( '9', Len( cNum ) )
+         endif
+
+      endcase
+
+   endif
 
    // Comprobar si tiene caracteres embebidos no modificables en la plantilla
 
@@ -188,7 +230,7 @@ METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColor ) CLASS TGet
       Next
    endif
 
-   ::buffer := ::PutMask( ::VarGet(), .f. )
+   ::buffer := ::PutMask( ::Original, .f. )
 
 return Self
 
@@ -196,7 +238,12 @@ return Self
 
 METHOD Display() CLASS TGet
 
-   DispOutAt( ::Row, ::Col, ::buffer, hb_ColorIndex( SetColor(), CLR_ENHANCED ) )
+   local nOldCursor := SetCursor( SC_NONE )
+
+   DispOutAt( ::Row, ::Col,;
+      ::buffer, hb_ColorIndex( ::ColorSpec, iif( ::HasFocus, GET_CLR_ENHANCED, GET_CLR_UNSELECTED ) ) )
+
+   SetCursor( nOldCursor )
 
 return Self
 
@@ -281,6 +328,7 @@ METHOD SetFocus() CLASS TGet
       ::BadDate := .f.
    endif
 
+   ::Display()
    SetPos( ::Row, ::Col + ::Pos - 1 )
 
 return Self
@@ -294,6 +342,7 @@ METHOD KillFocus() CLASS TGet
 
    ::Assign()
 
+   ::Display()
    ::buffer := ::PutMask()
 
 return Self
@@ -470,7 +519,7 @@ METHOD _Right() CLASS TGet
    local nPos
 
    if !::hasfocus
-      return self
+      return Self
    endif
 
    ::TypeOut := .f.
@@ -483,7 +532,7 @@ METHOD _Right() CLASS TGet
 
    nPos := ::Pos + 1
 
-   Do While !::IsEditable( nPos ) .and. nPos <= ::nMaxLen
+   do while !::IsEditable( nPos ) .and. nPos <= ::nMaxLen
       nPos++
    Enddo
 
@@ -504,7 +553,7 @@ METHOD _Left() CLASS TGet
    local nPos
 
    if !::hasfocus
-      return self
+      return Self
    endif
 
    ::TypeOut := .f.
@@ -517,7 +566,7 @@ METHOD _Left() CLASS TGet
 
    nPos := ::Pos - 1
 
-   Do While !::IsEditable( nPos ) .and. nPos > 0
+   do while !::IsEditable( nPos ) .and. nPos > 0
       nPos--
    Enddo
 
@@ -538,7 +587,7 @@ METHOD WordLeft() CLASS TGet
    local nPos
 
    if !::hasfocus
-      return self
+      return Self
    endif
 
    ::TypeOut := .f.
@@ -551,13 +600,15 @@ METHOD WordLeft() CLASS TGet
 
    nPos := ::Pos - 1
 
-   Do While SubStr( ::buffer, nPos, 1 ) != " " .and. nPos > 0
+   do while SubStr( ::buffer, nPos, 1 ) != " " .and. nPos > 0
       nPos--
    Enddo
 
    if nPos > 0
       ::Pos := nPos
    endif
+
+   SetPos( ::Row, ::Col + ::Pos - 1 )
 
 return Self
 
@@ -568,7 +619,7 @@ METHOD WordRight() CLASS TGet
    local nPos
 
    if !::hasfocus
-      return self
+      return Self
    endif
 
    ::TypeOut := .f.
@@ -581,7 +632,7 @@ METHOD WordRight() CLASS TGet
 
    nPos := ::Pos + 1
 
-   Do While SubStr( ::buffer, nPos, 1 ) != " " .and. nPos <= ::nMaxLen
+   do while SubStr( ::buffer, nPos, 1 ) != " " .and. nPos <= ::nMaxLen
       nPos++
    Enddo
 
@@ -589,19 +640,24 @@ METHOD WordRight() CLASS TGet
       ::Pos := nPos
    endif
 
+   SetPos( ::Row, ::Col + ::Pos - 1 )
+
 return Self
 
 //---------------------------------------------------------------------------//
 
- METHOD ToDecPos() CLASS TGet
+METHOD ToDecPos() CLASS TGet
 
-   if !::hasFocus .or. ::decpos == Nil
+   if !::HasFocus .or. ::DecPos == Nil
        Return .f.
    endif
 
    ::Clear  := .f.
    ::buffer := ::PutMask( ::UnTransform(), .t. )
-   ::pos    := ::decpos + 1
+   ::pos    := ::DecPos + 1
+
+   ::Display()
+   SetPos( ::Row, ::Col + ::Pos - 1 )
 
 return .t.
 
@@ -640,25 +696,31 @@ METHOD Input( cChar ) CLASS TGet
 
    do case
    case ::type == "N"
+
       do case
       case cChar == "-"
          if ::pos != 1
             return ""
          endif
          ::minus := .t.
+
       case cChar == "."
          ::toDecPos()
          return ""
+
       case !( cChar $ "0123456789" )
          return ""
+
       endcase
 
    case ::type == "D"
+
       if !( cChar $ "0123456789" )
          return ""
       endif
 
    case ::type == "L"
+
       if !( Upper( cChar ) $ "YNTF" )
          return ""
       endif
@@ -679,11 +741,15 @@ return cChar
 
 METHOD PutMask( xValue, lEdit ) CLASS TGet
 
-   local cChar, cBuffer
-   local nFor, nLen, nAt
+   local cChar
+   local cBuffer
+
+   local nFor
+   local nLen
+   local nAt
 
    DEFAULT xValue TO ::VarGet()
-   DEFAULT lEdit  TO ::hasfocus
+   DEFAULT lEdit  TO ::HasFocus
 
    cBuffer := Transform( xValue, Alltrim( ::cPicFunc + " " + ::cPicMask ) )
 
@@ -777,6 +843,38 @@ METHOD DeleteAll() CLASS TGet
    ::buffer := ::PutMask( xValue, .t. )
    ::Pos    := 1
    ::Assign()
+
+return Self
+
+//---------------------------------------------------------------------------//
+
+METHOD DelEnd() CLASS TGet
+
+   /* TODO: Implement DelEnd() */
+
+return Self
+
+METHOD DelLeft() CLASS TGet
+
+   /* TODO: Implement DelLeft() */
+
+return Self
+
+METHOD DelRight() CLASS TGet
+
+   /* TODO: Implement DelRight() */
+
+return Self
+
+METHOD DelWordLeft() CLASS TGet
+
+   /* TODO: Implement DelWordLeft() */
+
+return Self
+
+METHOD DelWordRight() CLASS TGet
+
+   /* TODO: Implement DelWordRight() */
 
 return Self
 

@@ -83,7 +83,6 @@ FUNCTION __dbFList()       ; RETURN {}
 FUNCTION __dbOpenSDF()     ; RETURN NIL
 FUNCTION __dbTrans()       ; RETURN NIL
 FUNCTION __dbTransRec()    ; RETURN NIL
-FUNCTION __FLEdit          ; RETURN {}
 
 FUNCTION dbEdit()          ; RETURN NIL
 FUNCTION __TypeFile()      ; RETURN NIL

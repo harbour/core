@@ -33,6 +33,7 @@
  *
  */
 
+#include "hbsetup.ch"
 #include "common.ch"
 #include "dbstruct.ch"
 
@@ -140,6 +141,17 @@ FUNCTION __dbCreate( cFileName, cFileFrom, cRDDName, lNew, cAlias )
    END SEQUENCE
 
    RETURN Used()
+
+#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+
+/* NOTE: Undocumented, internal Clipper function */
+
+FUNCTION __FLEDIT( aStruct, aFieldList )
+   RETURN __dbStructFilter( aStruct, aFieldList )
+
+#endif
+
+*/
 
 /* NOTE: Internal helper function, CA-Cl*pper name is: __FLEDIT() */
 

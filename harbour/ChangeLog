@@ -1,3 +1,29 @@
+19991026-11:35 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/tget.prg
+    % New() will evaluate the setget only once instead of three times.
+    ! New() fixed the picture generation for numeric values, decimals are 
+      detected for example.
+    ! ::ColorSpec now defaults to the proper color.
+    + ColorDisp() inline method added.
+    ! Display() changed back to hide cursor while displaying
+    ! Display() fixed to use ::ColorSpec instead of SetColor()
+    ! Display() is now selecting the proper colors from the ::ColorSpec
+    ! Displat() color now depends on ::HasFocus
+    ! SetFocus(), KillFocus() fixed to call ::Display(), like in Clipper.
+    + Dummy methods added for not yet implemented ones, TODOs added.
+    - "Message" DATA removed
+    + Exported/Private MESSAGEs grouped.
+    ! ToDecPos() fixed to redisplay and reposition the cursor.
+    ! WordLeft(), WordRight() fixed to reposition the cursor.
+    + Some TODOs and TOFIXs added.
+  * source/rdd/dbstrux.prg
+    source/rtl/dummy.prg
+    + __FLEDIT() function added, guarded with STRICT, for collectors only ;)
+  * source/rtl/oemansi.c
+    - #include "winuser.h" removed, since I mitakenly left it there.
+  * tests/rtl_test.prg
+    + One line enabled, since the PP is processing it now without hang.
+
 19991026-09:43 GMT+3 Alexander Kresin
   * source/pp/hbpp.c
     * Fixed bugs, reported by Antonio Linares and Victor Szel
