@@ -1,7 +1,13 @@
+19990723-12:00 CET Eddie Runia <eddie@runia.com>
+  * source/rtl/transfrm.c
+    Decimals and width from parameter used if no template specification
+    is present
+  + tests/working/transdef.prg
+    Test program used
+
 19990723-07:45 CET Matthew Hamilton
   * tests/working/inifiles.prg
     Even newer version
-
 
 19990723-02:45 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 

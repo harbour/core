@@ -162,9 +162,11 @@ int PictFunc( char **szPict, long *lPicLen )
     iPicFlags   : Function flags. NUM_DATE tells whether its a number or date
     dValue      : Number to picture
     lRetSize    : The size of the returned string is passed here !
+    iOrigWidth  : Original width
+    iOrigDec    : Original decimals
 */
 char *NumPicture( char *szPic, long lPic, int iPicFlags, double dValue,
-                  long *lRetSize )
+                  long *lRetSize, int iOrigWidth, int iOrigDec )
 {
    int      iWidth;                             /* Width of string          */
    int      iDecimals;                          /* Number of decimals       */
@@ -184,10 +186,10 @@ char *NumPicture( char *szPic, long lPic, int iPicFlags, double dValue,
 
    szRet  = (char *) hb_xgrab( lPic+4 );        /* Grab enough              */
    *szRet = 0;
-   for( i=0; i<lPic && !bFound; i++ )           /* Count number in front    */
+   for( i=0; i < lPic && !bFound; i++ )         /* Count number in front    */
    {
       if( szPic[i] == '.' )
-         bFound = !(iPicFlags & PF_NUMDATE);    /* Exit when numeric        */
+         bFound = !( iPicFlags & PF_NUMDATE );  /* Exit when numeric        */
       else if( szPic[i] == '9' || szPic[i] == '#' ||
                szPic[i] == '$' || szPic[i] == '*' )
          iCount++;
@@ -218,10 +220,15 @@ char *NumPicture( char *szPic, long lPic, int iPicFlags, double dValue,
 
    bEmpty = !dPush && ( iPicFlags & PF_EMPTY ); /* Suppress 0               */
 
-   PushSymbol ( hb_GetDynSym( "STR" )->pSymbol );  /* Push STR function        */
+   PushSymbol ( GetDynSym( "STR" )->pSymbol );  /* Push STR function        */
    PushNil    ();                               /* Function call. No object */
 
    PushDouble ( dPush, iDecimals );             /* Push value to transform  */
+   if( !iWidth  )                               /* Width calculated ??      */
+   {
+      iWidth    = iOrigWidth;                   /* Push original width      */
+      iDecimals = iOrigDec;                     /* Push original decimals   */
+   }
    PushInteger( iWidth );                       /* Push numbers width       */
    PushInteger( iDecimals );                    /* Push decimals            */
    Function( 3 );                               /* 3 Parameters             */
@@ -244,77 +251,88 @@ char *NumPicture( char *szPic, long lPic, int iPicFlags, double dValue,
 
       if( iPicFlags & PF_LEFT )                 /* Left align               */
       {
-         for( i=0; szStr[i] == ' ' && i < iWidth; i++ );
+         for( i=0; szStr[i] == ' ' && i <= iWidth; i++ );
                                                 /* Find first non-space     */
 
-         if( i && i != iWidth )                 /* Any found or end of str  */
+         if( i && i != ( iWidth + 1 ) )         /* Any found or end of str  */
          {
-            memcpy(szStr, szStr+i, iWidth-i);
-            for( i = iWidth-i; i < iWidth; i++ )
+            memcpy( szStr, szStr + i, iWidth - i );
+            for( i = iWidth - i; i < iWidth; i++ )
                szStr[i] = ' ';                  /* Pad with spaces          */
          }
       }
 
-      for( i=0; i < lPic; i++ )
+      if( !iCount )                             /* No real picture          */
       {
-         cPic = szPic[i];
-         if( cPic == '9' || cPic == '#' )
-            szRet[i] = szStr[iCount++];         /* Just copy                */
-         else if( cPic == '.' )
+         hb_xfree( szRet );
+         szRet = (char *) hb_xgrab( iWidth + 1 );
+                                                /* Grab enough              */
+         memcpy( szRet, szStr, iWidth );
+         szRet[ iWidth ] = 0;                   /* Terminate string         */
+      }
+      else
+      {
+         for( i=0; i < lPic; i++ )
          {
-            if( iPicFlags & PF_NUMDATE )        /* Dot in date              */
-               szRet[i] = cPic;
-            else                                /* Dot in number            */
+            cPic = szPic[i];
+            if( cPic == '9' || cPic == '#' )
+               szRet[ i ] = szStr[ iCount++ ];  /* Just copy                */
+            else if( cPic == '.' )
             {
-               if( iPicFlags & PF_EXCHANG )     /* Exchange . and ,         */
+               if( iPicFlags & PF_NUMDATE )     /* Dot in date              */
+                  szRet[ i ] = cPic;
+               else                             /* Dot in number            */
                {
-                  szRet[i] = ',';
+                  if( iPicFlags & PF_EXCHANG )  /* Exchange . and ,         */
+                  {
+                     szRet[ i ] = ',';
+                     iCount++;
+                  }
+                  else
+                     szRet[ i ] = szStr[ iCount++ ];
+               }
+            }
+            else if( cPic == '$' || cPic == '*' )
+            {
+               if( szStr[iCount] == ' ' )
+               {
+                  szRet[i] = cPic;
                   iCount++;
                }
                else
                   szRet[i] = szStr[iCount++];
             }
-         }
-         else if( cPic == '$' || cPic == '*' )
-         {
-            if( szStr[iCount] == ' ' )
+            else if( cPic == ',' )              /* Comma                    */
             {
-               szRet[i] = cPic;
-               iCount++;
-            }
-            else
-               szRet[i] = szStr[iCount++];
-         }
-         else if( cPic == ',' )                 /* Comma                    */
-         {
-            if( iCount && isdigit(szStr[iCount-1]) ) /* May we place it     */
-            {
-               if( iPicFlags & PF_EXCHANG )
-                  szRet[i] = '.';
+               if( iCount && isdigit( szStr[ iCount - 1 ] ) )
+               {                                /* May we place it     */
+                  if( iPicFlags & PF_EXCHANG )
+                     szRet[i] = '.';
+                  else
+                     szRet[i] = ',';
+               }
                else
-                  szRet[i] = ',';
+                  szRet[i] = ' ';
             }
             else
-               szRet[i] = ' ';
+               szRet[i] = cPic;
          }
-         else
-            szRet[i] = cPic;
       }
-      if( (iPicFlags & PF_CREDIT) && (dValue >= 0) )
+      if( ( iPicFlags & PF_CREDIT ) && ( dValue >= 0 ) )
       {
          szRet[i++] = ' ';
          szRet[i++] = 'C';
          szRet[i++] = 'R';
       }
 
-      if( (iPicFlags & PF_DEBIT) && (dValue < 0) )
+      if( ( iPicFlags & PF_DEBIT ) && ( dValue < 0 ) )
       {
          szRet[i++] = ' ';
          szRet[i++] = 'D';
          szRet[i++] = 'B';
       }
 
-      if( (iPicFlags & PF_PARNEG) && (dValue < 0) )
+      if( ( iPicFlags & PF_PARNEG ) && ( dValue < 0 ) )
       {
          if( isdigit(*szRet) )                  /* Overflow                 */
          {
@@ -348,7 +366,7 @@ char *NumPicture( char *szPic, long lPic, int iPicFlags, double dValue,
 */
 PHB_ITEM NumDefault( double dValue )
 {                                               /* Default number           */
-   PushSymbol ( hb_GetDynSym( "STR" )->pSymbol );  /* Push STR function        */
+   PushSymbol ( GetDynSym( "STR" )->pSymbol );  /* Push STR function        */
    PushNil    ();                               /* Function call. No object */
 
    PushDouble ( dValue, hb_set.HB_SET_DECIMALS );
@@ -548,7 +566,8 @@ HARBOUR HB_TRANSFORM( void )
          case IT_INTEGER:
          {
             szResult = NumPicture( szPic + lPicStart, lPic, iPicFlags,
-                    (double) pExp->item.asInteger.value, &lResultPos );
+                    (double) pExp->item.asInteger.value, &lResultPos,
+                     pExp->item.asInteger.length, pExp->item.asInteger.decimal );
             hb_retclen( szResult, lResultPos );
             hb_xfree( szResult );
             break;
@@ -556,7 +575,8 @@ HARBOUR HB_TRANSFORM( void )
          case IT_LONG:
          {
             szResult = NumPicture( szPic + lPicStart, lPic, iPicFlags,
-                    (double) pExp->item.asLong.value, &lResultPos );
+                    (double) pExp->item.asLong.value, &lResultPos,
+                     pExp->item.asLong.length, pExp->item.asLong.decimal );
             hb_retclen( szResult, lResultPos );
             hb_xfree( szResult );
             break;
@@ -564,7 +584,8 @@ HARBOUR HB_TRANSFORM( void )
          case IT_DOUBLE:
          {
             szResult = NumPicture( szPic + lPicStart, lPic, iPicFlags,
-                    (double) pExp->item.asDouble.value, &lResultPos );
+                    (double) pExp->item.asDouble.value, &lResultPos,
+                     pExp->item.asDouble.length, pExp->item.asDouble.decimal );
             hb_retclen( szResult, lResultPos);
             hb_xfree( szResult );
             break;
