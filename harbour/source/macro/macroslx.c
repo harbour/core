@@ -5,9 +5,6 @@
 
 #define HB_MACRO_SUPPORT
 
-/* NOTE: 02/08/2000 - maurilio.longo@libero.it, I DON'T KNOW why I need this define to make it work under
-         OS/2 GCC. :-D
-*/
 #define yylex hb_complex
 
 #include <stdio.h>

@@ -2924,12 +2924,49 @@ static BOOL OpenInclude( char * szFileName, PATHNAMES * pSearch, PHB_FNAME pMain
       printf( "Name=%s Ext=%s Path=%s\n", pMainFileName->szName, pMainFileName->szExtension, pMainFileName->szPath );
       */
 
-      if( strcmp( hb_strupr( pFileName->szName ), hb_strupr( pMainFileName->szName ) ) == 0 &&
-          ( ( pFileName->szExtension == NULL && pMainFileName->szExtension == NULL ) ||
-            ( pFileName->szExtension && pMainFileName->szExtension &&
-              strcmp( hb_strupr( pFileName->szExtension ), hb_strupr( pMainFileName->szExtension ) ) == 0 ) ) &&
-          ( pFileName->szPath == NULL || strcmp( hb_strupr( pFileName->szPath ), hb_strupr( pMainFileName->szPath ) ) == 0 ) )
-         hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_INCLUDE_SELF, szFileName, NULL );
+      {
+         char * szName, * szMainName, * szExt, * szMainExt, * szPath, * szMainPath;
+
+         if( pFileName->szName )
+            szName = hb_strupr( hb_strdup( pFileName->szName ) );
+         else
+            szName = hb_strdup( "" );
+
+         if( pMainFileName->szName )
+            szMainName = hb_strupr( hb_strdup( pMainFileName->szName ) );
+         else
+            szMainName = hb_strdup( "" );
+
+         if( pFileName->szExtension )
+            szExt = hb_strupr( hb_strdup( pFileName->szExtension ) );
+         else
+            szExt = hb_strdup( "" );
+
+         if( pMainFileName->szExtension )
+            szMainExt = hb_strupr( hb_strdup( pMainFileName->szExtension ) );
+         else
+            szMainExt = hb_strdup( "" );
+
+         if( pFileName->szPath )
+            szPath = hb_strupr( hb_strdup( pFileName->szPath ) );
+         else
+            szPath = hb_strdup( "" );
+
+         if( pMainFileName->szPath )
+            szMainPath = hb_strupr( hb_strdup( pMainFileName->szPath ) );
+         else
+            szMainPath = hb_strdup( "" );
+
+         if( strcmp( szName, szMainName  ) == 0 && strcmp( szExt, szMainExt ) == 0 && strcmp( szPath, szMainPath ) == 0 )
+            hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_INCLUDE_SELF, szFileName, NULL );
+
+         hb_xfree( szName );
+         hb_xfree( szMainName );
+         hb_xfree( szExt );
+         hb_xfree( szMainExt );
+         hb_xfree( szPath );
+         hb_xfree( szMainPath );
+      }
 
       hb_fsFNameMerge( szInclude, pFileName );
       fptr = fopen( szInclude, "r" );

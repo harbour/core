@@ -44,7 +44,6 @@
 /* this #define HAVE TO be placed before all #include directives
  */
 #define  HB_MACRO_SUPPORT
-#define yylex hb_complex
 
 #include "hbmacro.h"
 #include "hbcomp.h"

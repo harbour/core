@@ -1,3 +1,22 @@
+2000-08-02 11:30 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * hb_slex.bc
+   * makefile.bc
+     + Added: -Phb_comp -C to Flex (macro.l) as per GNU make.
+     + Added: -phb_comp to Bison (macro.y) as per GNU make.
+
+     /* We might need same change in other make files (VC etc.) */
+     /* BTW, Do we have SimpLex support in those other make files? */
+
+   * source/macro/macro.l
+   * source/macro/macro.y
+     - Removed: #define yylex hb_complex
+
+   * source/macro/macroslx.c
+     - Removed un-needed comment.
+
+   * source/pp/ppcore.c
+     ! Fixed unintended side effect of UPPER-CASING #include file names.
+
 2000-08-02 09:40 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/macro/macro.l
    * source/macro/macro.y

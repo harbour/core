@@ -48,7 +48,6 @@ NOTE: -C  controls the speed/size ratio of generated scanner
 */
 
 #define HB_MACRO_SUPPORT
-#define yylex hb_complex
 
 #include <stdio.h>
 #include <stdlib.h>
