@@ -8,8 +8,14 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-11-03 20:28 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/rdd/dbcmd.c
+    * hb_rddFieldIndex() was declared as static - is changed now, because it is
+      called from dbfntx1.c
+
 2002-11-02 19:26 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
-  * source/rdd/dbfntx/dbcmd.c
+  * include/hbrddntx.h
+  * source/rdd/dbfntx/dbfntx1.c
     * The algorithm of key expression evaluation is optimized. Now, if it is
       the field name only, macro/codeblock evaluation doesn't used -
       SELF_GETVALUE is used instead. It leads to sensible indexing speedup

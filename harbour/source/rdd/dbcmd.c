@@ -597,7 +597,7 @@ USHORT hb_rddInsertAreaNode( char *szDriver )
 /*
  * Find a field.
  */
-static USHORT hb_rddFieldIndex( AREAP pArea, char * szName )
+USHORT hb_rddFieldIndex( AREAP pArea, char * szName )
 {
    USHORT uiCount;
    LPFIELD pField;
