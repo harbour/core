@@ -83,6 +83,7 @@
 
 #include "hbdefs.h"
 #include "filesys.h"
+#include "gtapi.h"
 #include "setcurs.h"
 #include "inkey.h"
 
@@ -139,52 +140,52 @@ typedef enum
 
 typedef struct
 {
-   BOOL   HB_SET_EXACT;
-   BOOL   HB_SET_FIXED;
-   int    HB_SET_DECIMALS;
-   char * HB_SET_DATEFORMAT;
-   int    HB_SET_EPOCH;
-   char * HB_SET_PATH;
-   char * HB_SET_DEFAULT;
-   BOOL   HB_SET_EXCLUSIVE;
-   BOOL   HB_SET_SOFTSEEK;
-   BOOL   HB_SET_UNIQUE;
-   BOOL   HB_SET_DELETED;
-   BOOL   HB_SET_CANCEL;
-   BOOL   HB_SET_DEBUG;
-   int    HB_SET_TYPEAHEAD;
-   char   HB_SET_COLOR[ 64 ];
+   BOOL    HB_SET_EXACT;
+   BOOL    HB_SET_FIXED;
+   BOOL    hb_set_century;
+   int     HB_SET_DECIMALS;
+   char *  HB_SET_DATEFORMAT;
+   int     HB_SET_EPOCH;
+   char *  HB_SET_PATH;
+   char *  HB_SET_DEFAULT;
+   BOOL    HB_SET_EXCLUSIVE;
+   BOOL    HB_SET_SOFTSEEK;
+   BOOL    HB_SET_UNIQUE;
+   BOOL    HB_SET_DELETED;
+   BOOL    HB_SET_CANCEL;
+   BOOL    HB_SET_DEBUG;
+   int     HB_SET_TYPEAHEAD;
+   char    HB_SET_COLOR[ CLR_STRLEN ];
    HB_cursor_enum HB_SET_CURSOR;
-   BOOL   HB_SET_CONSOLE;
-   BOOL   HB_SET_ALTERNATE;
-   char * HB_SET_ALTFILE;
-   char * HB_SET_DEVICE;
-   BOOL   HB_SET_EXTRA;
-   char * HB_SET_EXTRAFILE;
-   BOOL   HB_SET_PRINTER;
-   char * HB_SET_PRINTFILE;
-   int    HB_SET_MARGIN;
-   BOOL   HB_SET_BELL;
-   BOOL   HB_SET_CONFIRM;
-   BOOL   HB_SET_ESCAPE;
-   BOOL   HB_SET_INSERT;
-   BOOL   HB_SET_EXIT;
-   BOOL   HB_SET_INTENSITY;
-   BOOL   HB_SET_SCOREBOARD;
-   char * HB_SET_DELIMCHARS;
-   BOOL   HB_SET_DELIMITERS;
-   BOOL   HB_SET_WRAP;
-   int    HB_SET_MESSAGE;
-   BOOL   HB_SET_MCENTER;
-   BOOL   HB_SET_SCROLLBREAK;   /* QUESTION: What does this do ? */
+   BOOL    HB_SET_CONSOLE;
+   BOOL    HB_SET_ALTERNATE;
+   char *  HB_SET_ALTFILE;
+   FHANDLE hb_set_althan;
+   char *  HB_SET_DEVICE;
+   BOOL    HB_SET_EXTRA;
+   char *  HB_SET_EXTRAFILE;
+   FHANDLE hb_set_extrahan;
+   BOOL    HB_SET_PRINTER;
+   char *  HB_SET_PRINTFILE;
+   FHANDLE hb_set_printhan;
+   int     HB_SET_MARGIN;
+   BOOL    HB_SET_BELL;
+   BOOL    HB_SET_CONFIRM;
+   BOOL    HB_SET_ESCAPE;
+   BOOL    HB_SET_INSERT;
+   BOOL    HB_SET_EXIT;
+   BOOL    HB_SET_INTENSITY;
+   BOOL    HB_SET_SCOREBOARD;
+   char *  HB_SET_DELIMCHARS;
+   BOOL    HB_SET_DELIMITERS;
+   BOOL    HB_SET_WRAP;
+   int     HB_SET_MESSAGE;
+   BOOL    HB_SET_MCENTER;
+   BOOL    HB_SET_SCROLLBREAK;   /* QUESTION: What does this do ? */
    HB_inkey_enum HB_SET_EVENTMASK;
-}  HB_set_struct;
+} HB_SET_STRUCT;
 
-extern HB_set_struct hb_set;
-extern BOOL    hb_set_century;
-extern FHANDLE hb_set_althan;
-extern FHANDLE hb_set_extrahan;
-extern FHANDLE hb_set_printhan;
+extern HB_SET_STRUCT hb_set;
 
 extern void hb_setInitialize( void );
 extern void hb_setRelease( void );

@@ -371,7 +371,7 @@ static char * NumPicture( char * szPic, ULONG ulPic, USHORT uiPicFlags, double d
 static char * DatePicture( char * szDate, USHORT uiPicFlags, char * szResult )
 {
    if( uiPicFlags & PF_BRITISH )
-      hb_dtoc( szDate, szResult, hb_set_century ? "DD/MM/YYYY" : "DD/MM/YY" );
+      hb_dtoc( szDate, szResult, hb_set.hb_set_century ? "DD/MM/YYYY" : "DD/MM/YY" );
    else
       hb_dtoc( szDate, szResult, hb_set.HB_SET_DATEFORMAT );
 

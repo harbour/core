@@ -181,11 +181,7 @@
 #include "set.h"
 #include "inkey.h"
 
-HB_set_struct hb_set;
-BOOL    hb_set_century;
-FHANDLE hb_set_althan;
-FHANDLE hb_set_extrahan;
-FHANDLE hb_set_printhan;
+HB_SET_STRUCT hb_set;
 
 static BOOL set_logical( PHB_ITEM pItem )
 {
@@ -374,14 +370,14 @@ HARBOUR HB_SETCANCEL( void )
  */
 HARBOUR HB___SETCENTURY( void )
 {
-   BOOL old_century_setting = hb_set_century;
+   BOOL old_century_setting = hb_set.hb_set_century;
 
    /*
     * Change the setting if the parameter is a logical value, or is
     * either "ON" or "OFF" (regardless of case)
     */
    if( ISLOG( 1 ) )
-      hb_set_century = hb_parl( 1 );
+      hb_set.hb_set_century = hb_parl( 1 );
    else if( ISCHAR( 1 ) )
    {
       char * szString = hb_parc( 1 );
@@ -390,19 +386,19 @@ HARBOUR HB___SETCENTURY( void )
       if( ulLen >= 2
        && toupper( szString[ 0 ] ) == 'O'
        && toupper( szString[ 1 ] ) == 'N' )
-         hb_set_century = TRUE;
+         hb_set.hb_set_century = TRUE;
       else if( ulLen >= 3
        && toupper( szString[ 0 ] ) == 'O'
        && toupper( szString[ 1 ] ) == 'F'
        && toupper( szString[ 2 ] ) == 'F' )
-         hb_set_century = FALSE;
+         hb_set.hb_set_century = FALSE;
    }
 
    /*
     * Finally, if the setting changed, adjust the current date format to use
     * the correct number of year digits.
     */
-   if( old_century_setting != hb_set_century )
+   if( old_century_setting != hb_set.hb_set_century )
    {
       int count, digit, size, y_size, y_start, y_stop;
       char * szDateFormat, * szNewFormat;
@@ -431,7 +427,7 @@ HARBOUR HB___SETCENTURY( void )
       y_size = y_stop - y_start;
       /* Calculate size of new format */
       size -= y_size;
-      if( hb_set_century ) size += 4;
+      if( hb_set.hb_set_century ) size += 4;
       else size += 2;
 
       /* Create the new date format */
@@ -442,7 +438,7 @@ HARBOUR HB___SETCENTURY( void )
          if( y_start > 0 ) memcpy( szNewFormat, szDateFormat, y_start );
          szNewFormat[ y_start ] = '\0';
          strcat( szNewFormat, "YY" );
-         if( hb_set_century ) strcat( szNewFormat, "YY" );
+         if( hb_set.hb_set_century ) strcat( szNewFormat, "YY" );
          format_len = strlen( szDateFormat );
          if( y_stop < format_len ) strcat( szNewFormat, szDateFormat + y_stop );
          hb_xfree( szDateFormat );
@@ -713,9 +709,9 @@ HARBOUR HB_SET( void )
          else bFlag = FALSE;
          if( args > 1 )
          {
-            close_text( hb_set_althan );
+            close_text( hb_set.hb_set_althan );
             if( hb_set.HB_SET_ALTFILE && strlen( hb_set.HB_SET_ALTFILE ) > 0 )
-               hb_set_althan = open_handle( hb_set.HB_SET_ALTFILE, bFlag, ".txt", HB_SET_ALTFILE );
+               hb_set.hb_set_althan = open_handle( hb_set.HB_SET_ALTFILE, bFlag, ".txt", HB_SET_ALTFILE );
          }
          break;
       case HB_SET_BELL       :
@@ -787,9 +783,9 @@ HARBOUR HB_SET( void )
          {
             /* If the print file is not already open, open it in overwrite mode. */
             hb_set.HB_SET_DEVICE = set_string( pArg2, hb_set.HB_SET_DEVICE );
-            if( hb_stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 && hb_set_printhan == FS_ERROR
+            if( hb_stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 && hb_set.hb_set_printhan == FS_ERROR
             && hb_set.HB_SET_PRINTFILE && strlen( hb_set.HB_SET_PRINTFILE ) > 0 )
-               hb_set_printhan = open_handle( hb_set.HB_SET_PRINTFILE, FALSE, ".prn", HB_SET_PRINTFILE );
+               hb_set.hb_set_printhan = open_handle( hb_set.HB_SET_PRINTFILE, FALSE, ".prn", HB_SET_PRINTFILE );
          }
          break;
       case HB_SET_EPOCH      :
@@ -834,9 +830,9 @@ HARBOUR HB_SET( void )
          else bFlag = FALSE;
          if( args > 1 )
          {
-            close_text( hb_set_extrahan );
+            close_text( hb_set.hb_set_extrahan );
             if( hb_set.HB_SET_EXTRAFILE && strlen( hb_set.HB_SET_EXTRAFILE ) > 0 )
-               hb_set_extrahan = open_handle( hb_set.HB_SET_EXTRAFILE, bFlag, ".prn", HB_SET_EXTRAFILE );
+               hb_set.hb_set_extrahan = open_handle( hb_set.HB_SET_EXTRAFILE, bFlag, ".prn", HB_SET_EXTRAFILE );
          }
          break;
       case HB_SET_FIXED      :
@@ -892,9 +888,9 @@ HARBOUR HB_SET( void )
          else bFlag = FALSE;
          if( args > 1 )
          {
-            close_binary( hb_set_printhan );
+            close_binary( hb_set.hb_set_printhan );
             if( hb_set.HB_SET_PRINTFILE && strlen( hb_set.HB_SET_PRINTFILE ) > 0 )
-               hb_set_printhan = open_handle( hb_set.HB_SET_PRINTFILE, bFlag, ".prn", HB_SET_PRINTFILE );
+               hb_set.hb_set_printhan = open_handle( hb_set.HB_SET_PRINTFILE, bFlag, ".prn", HB_SET_PRINTFILE );
          }
          break;
       case HB_SET_SCOREBOARD :
@@ -939,14 +935,12 @@ HARBOUR HB_SET( void )
 
 void hb_setInitialize( void )
 {
-   hb_set_century = FALSE;
-   hb_set_althan = FS_ERROR;
-   hb_set_extrahan = FS_ERROR;
-   hb_set_printhan = FS_ERROR;
    hb_set.HB_SET_ALTERNATE = FALSE;
    hb_set.HB_SET_ALTFILE = NULL;
+   hb_set.hb_set_althan = FS_ERROR;
    hb_set.HB_SET_BELL = FALSE;
    hb_set.HB_SET_CANCEL = TRUE;
+   hb_set.hb_set_century = FALSE;
    strncpy( hb_set.HB_SET_COLOR, "W/N,N/W,N/N,N/N,N/W", sizeof( hb_set.HB_SET_COLOR ) );
    hb_set.HB_SET_COLOR[ sizeof( hb_set.HB_SET_COLOR ) - 1 ] = '\0';
    hb_set.HB_SET_CONFIRM = FALSE;
@@ -972,6 +966,7 @@ void hb_setInitialize( void )
    hb_set.HB_SET_EXIT = FALSE;
    hb_set.HB_SET_EXTRA = FALSE;
    hb_set.HB_SET_EXTRAFILE = NULL;
+   hb_set.hb_set_extrahan = FS_ERROR;
    hb_set.HB_SET_FIXED = FALSE;
    hb_set.HB_SET_INSERT = FALSE;
    hb_set.HB_SET_INTENSITY = TRUE;
@@ -983,6 +978,7 @@ void hb_setInitialize( void )
    hb_set.HB_SET_PRINTER = FALSE;
    hb_set.HB_SET_PRINTFILE = ( char * ) hb_xgrab( 4 );
    memcpy( hb_set.HB_SET_PRINTFILE, "PRN", 4 ); /* Default printer device */
+   hb_set.hb_set_printhan = FS_ERROR;
    hb_set.HB_SET_SCOREBOARD = TRUE;
    hb_set.HB_SET_SCROLLBREAK = TRUE;
    hb_set.HB_SET_SOFTSEEK = FALSE;
@@ -993,9 +989,9 @@ void hb_setInitialize( void )
 
 void hb_setRelease( void )
 {
-   close_text( hb_set_althan );
-   close_text( hb_set_extrahan );
-   close_binary( hb_set_printhan );
+   close_text( hb_set.hb_set_althan );
+   close_text( hb_set.hb_set_extrahan );
+   close_binary( hb_set.hb_set_printhan );
 
    if( hb_set.HB_SET_ALTFILE )    hb_xfree( hb_set.HB_SET_ALTFILE );
    if( hb_set.HB_SET_DATEFORMAT ) hb_xfree( hb_set.HB_SET_DATEFORMAT );

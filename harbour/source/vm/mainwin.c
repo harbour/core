@@ -55,7 +55,7 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
    hb_vmInit();
    hb_vmQuit();
 
-   /* NOTE: The exit value is set by _exit() */
+   /* NOTE: The exit value is set by exit() */
    /* NOTE: This point is never reached */
 
    return 0;

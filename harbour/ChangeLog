@@ -1,3 +1,16 @@
+19991006-02:26 GMT+1 Victor Szel <info@szelvesz.hu>
+  * include/set.h
+    source/rtl/set.c
+    source/rtl/console.c
+    source/rtl/transfrm.c
+    ! 64 changed to CLR_STRLEN in set.h
+    * Separate global "set" variables moved inside HB_SET_STRUCT
+  * include/caundoc.api
+    + _bset, _bmove, _bcopy undocumented Clipper functions added, they are
+      mapped to mem*() functions.
+  * source/vm/main*.c
+    ! Typo fixed.
+
 19991006-00:32 GMT+1 Victor Szel <info@szelvesz.hu>
   * include/extend.h
     source/vm/debug.c

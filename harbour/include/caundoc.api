@@ -43,12 +43,12 @@
 #include "clipdefs.h"
 #include "filesys.h"
 
-/* Undocumented Extend API calls */
+/* Undocumented Extend API */
 
 #define _reta           hb_reta
 #define _pcount         hb_pcount
 
-/* Undocumented TSUPPORT API */
+/* Undocumented TSupport API */
 
 #define _tcreat         hb_fsCreate
 #define _tunlink        hb_fsDelete
@@ -60,5 +60,11 @@
 #define _trename        hb_fsRename
 #define _tlock          hb_fsLock
 #define _tcommit        hb_fsCommit
+
+/* Undocumented support functions */
+
+#define _bset           memset
+#define _bmove          memmove
+#define _bcopy          memcpy
 
 #endif /* HB_CAUNDOC_API_ */
