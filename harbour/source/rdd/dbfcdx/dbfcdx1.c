@@ -258,13 +258,14 @@ HB_INIT_SYMBOLS_BEGIN( dbfcdx1__InitSymbols )
 { "DBFCDX_GETFUNCTABLE", HB_FS_PUBLIC, HB_FUNCNAME( DBFCDX_GETFUNCTABLE ), NULL }
 HB_INIT_SYMBOLS_END( dbfcdx1__InitSymbols )
 #if defined(_MSC_VER)
-   #pragma data_seg( INIT$BEG,"DATA" )
-   #pragma data_seg( INIT$HRB,"DATA" )
+   #if _MSC_VER >= 1010
+      #pragma data_seg( ".CRT$XIY" )
+      #pragma comment( linker, "/Merge:.CRT=.data" )
+   #else
+      #pragma data_seg( "XIY" )
+   #endif
    static HB_$INITSYM hb_vm_auto_dbfcdx1__InitSymbols = dbfcdx1__InitSymbols;
    #pragma data_seg()
-   #if _MSC_VER >= 1000
-      #pragma comment( linker, "/Merge:.CRT=.data" )
-   #endif
 #elif ! defined(__GNUC__)
    #pragma startup dbfcdx1__InitSymbols
 #endif

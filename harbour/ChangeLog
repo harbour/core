@@ -1,3 +1,7 @@
+20000415-16:04 DST Paul Tucker <ptucker@sympatico.ca>
+   * source/rdd/dbfcdx/dbfcdx1.c
+     * corrected my change to the segment naming.
+
 20000415-21:39 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * makefile.bc
