@@ -1,3 +1,10 @@
+2001-11-04 17:25 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/vm/classes.c
+     __ClsAddMsg() case HB_OO_MSG_ONERROR modifed to use hb_parnl( 3 )
+
+   * source/rtl/tclass.prg
+     __ClsAddMsg() call, for ON ERROR clause, modified suplied parameters
+
 2001-11-04 15:54 GMT+1 Maurilio Longo <maurilio.longo@libero.it>
    * source/rtl/tbrowse.prg
      ! ::Hilite() cursor positioning was wrong for TBrowsers without heading
