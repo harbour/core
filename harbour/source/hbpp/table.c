@@ -14,6 +14,13 @@
    the Free Software Foundation; either version 2 of the License, or
    (at your option) any later version, with one exception:
 
+   The exception is that if you link the Harbour Runtime Library (HRL)
+   and/or the Harbour Virtual Machine (HVM) with other files to produce
+   an executable, this does not by itself cause the resulting executable
+   to be covered by the GNU General Public License. Your use of that
+   executable is in no way restricted on account of linking the HRL
+   and/or HVM code into it.
+
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -226,7 +233,7 @@ COMMANDS aCommands[] =
  {0,"DIR","[\1A40]","__Dir( \1A30 )"},
  {0,"TYPE","\1A40 [\1B20 TO PRINTER>] [TO FILE \1C40]","__TypeFile( \1A30, \1B50 ) [; COPY FILE \1A30 TO \1C30 ]"},
  {0,"TYPE","\1A40 [\1B20 TO PRINTER>]","__TypeFile( \1A30, \1B50 )"},
- {0,"REQUEST","\1A10s","EXTERNAL \1A00"},
+ {0,"REQUEST","\1A10","EXTERNAL \1A00"},
  {0,"CANCEL","","__Quit()"},
  {0,"QUIT","","__Quit()"},
  {0,"RUN","\1A30","__Run( \1A10 )"},

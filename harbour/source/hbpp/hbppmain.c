@@ -39,8 +39,8 @@
 int Hp_Parse( FILE*, FILE* );
 extern int ParseDirective( char* );
 extern int ParseExpression( char*, char* );
-extern int RdStr(FILE*,char *,int,int,char*,int*,int*);
-extern int WrStr(FILE*,char *);
+extern int pp_RdStr(FILE*,char *,int,int,char*,int*,int*);
+extern int pp_WrStr(FILE*,char *);
 extern DEFINES* AddDefine ( char*, char* );
 extern int strolen ( char* );
 extern char* strodup ( char * );
@@ -171,7 +171,7 @@ int Hp_Parse( FILE* handl_i, FILE* handl_o )
  int lens=0, rdlen;
  int rezParse;
 
- while ( ( rdlen = RdStr(handl_i,sLine+lens, STR_SIZE-lens,lContinue,
+ while ( ( rdlen = pp_RdStr(handl_i,sLine+lens, STR_SIZE-lens,lContinue,
                                      sBuffer,&lenBuffer,&iBuffer ) ) >= 0 )
  {
   if ( !lInclude ) nline++;
@@ -212,7 +212,7 @@ int Hp_Parse( FILE* handl_i, FILE* handl_o )
 
   if(!lInclude)
   {
-   if( lContinue ) WrStr(handl_o,"\n");  else WrStr(handl_o,sLine);
+   if( lContinue ) pp_WrStr(handl_o,"\n");  else pp_WrStr(handl_o,sLine);
   }
  }
  return 0;
@@ -401,3 +401,4 @@ void GenError( char* _szErrors[], char cPrefix, int iError, char * szError1, cha
   sprintf( szLine, _szErrors[ iError - 1 ], szError1, szError2 );
   printf( "%s\n\n", szLine );
   exit( 1 );
+}

@@ -13,6 +13,13 @@
    the Free Software Foundation; either version 2 of the License, or
    (at your option) any later version, with one exception:
 
+   The exception is that if you link the Harbour Runtime Library (HRL)
+   and/or the Harbour Virtual Machine (HVM) with other files to produce
+   an executable, this does not by itself cause the resulting executable
+   to be covered by the GNU General Public License. Your use of that
+   executable is in no way restricted on account of linking the HRL
+   and/or HVM code into it.
+
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -68,12 +75,13 @@ int ComSearch(char *,int);
 int TraSearch(char *,int);
 void SearnRep( char*,char*,int,char*,int*);
 int ReplacePattern ( char, char*, int, char*, int );
-int RdStr(FILE*,char *,int,int,char*,int*,int*);
-int WrStr(FILE*,char *);
-int hb_strAt(char *, int, char*, int);
+void pp_rQuotes( char *, char ** );
+int pp_RdStr(FILE*,char *,int,int,char*,int*,int*);
+int pp_WrStr(FILE*,char *);
+int pp_strAt(char *, int, char*, int);
 int md_strAt(char *, int, char*);
 int IsInStr ( char, char*);
-void Stuff (char*, char*, int, int, int);
+void pp_Stuff (char*, char*, int, int, int);
 int strocpy (char*, char* );
 int stroncpy (char*, char*, int);
 int strincpy (char*, char*);
@@ -93,6 +101,7 @@ int OpenInclude( char *, PATHNAMES *, FILE** );
 #define MAX_NAME 255
 #define BUFF_SIZE 2048
 #define STR_SIZE 8192
+#define PATTERN_SIZE 2048
 #define FALSE               0
 #define TRUE                1
 
@@ -391,7 +400,7 @@ int TraSearch(char *cmdname, int ncmd)
 
 int ParseCommand( char* sLine, int com_or_xcom, int com_or_tra )
 {
- char mpatt[STR_SIZE], rpatt[STR_SIZE];
+ static char mpatt[PATTERN_SIZE], rpatt[PATTERN_SIZE];
  char cmdname[MAX_NAME];
  int mlen,rlen;
  int ipos, rez;
@@ -401,7 +410,7 @@ int ParseCommand( char* sLine, int com_or_xcom, int com_or_tra )
  SKIPTABSPACES(sLine);
  stroupper( cmdname );
 
- if ( (ipos = hb_strAt( "=>", 2, sLine, strolen(sLine) )) > 0 )
+ if ( (ipos = pp_strAt( "=>", 2, sLine, strolen(sLine) )) > 0 )
    stroncpy( mpatt, sLine, ipos-1 );
  else GenError( _szPErrors, 'P', ERR_COMMAND_DEFINITION, NULL, NULL );
  mlen = strotrim( mpatt );
@@ -472,11 +481,11 @@ int ConvertPatterns ( char *mpatt, int mlen, char *rpatt, int rlen )
    lastchar = (char) ( (unsigned int)lastchar + 1 );
    expreal[1] = lastchar;
    expreal[2] = exptype;
-   Stuff ( expreal, mpatt+ipos, 4, rmlen, mlen );
+   pp_Stuff ( expreal, mpatt+ipos, 4, rmlen, mlen );
    mlen += 4 - rmlen; i += 4 - rmlen;
 
    ptr = rpatt;
-   while ( (ifou = hb_strAt( exppatt, explen, ptr, rlen-(ptr-rpatt) )) > 0 )
+   while ( (ifou = pp_strAt( exppatt, explen, ptr, rlen-(ptr-rpatt) )) > 0 )
    {
     ptr += ifou;
     if ( *(ptr-2) == '<' && *(ptr+explen-1) == '>' )
@@ -496,7 +505,7 @@ int ConvertPatterns ( char *mpatt, int mlen, char *rpatt, int rlen )
     }
     else continue;
     expreal[2] = exptype;
-    Stuff ( expreal, ptr, 4, rmlen, rlen );
+    pp_Stuff ( expreal, ptr, 4, rmlen, rlen );
     rlen += 4 - rmlen;
    }
   }
@@ -585,16 +594,21 @@ int ParseExpression( char* sLine, char* sOutLine )
      {
        ParseDirective( ptri+1 );
        lens = strolen( sLine+isdvig );
-       Stuff ( "", sLine+isdvig, 0, (ipos)? ipos-1:lens, lens );
+       pp_Stuff ( "", sLine+isdvig, 0, (ipos)? ipos-1:lens, lens );
      }
      else
      {
        if ( isname(*ptri) )
          NextName( &ptri, sToken, NULL);
        else
-       {        /* (ER) returned to old version */
-         *sToken = *ptri++;
-         *(sToken+1) = '\0';
+       {
+         i = 0;
+         while ( *ptri != ' ' && *ptri != '\t' && *ptri != '\0' && !isname(*ptri) )
+         {
+           *(sToken+i) = *ptri++;
+           i++;
+         }
+         *(sToken+i) = '\0';
        }
        SKIPTABSPACES( ptri );
 
@@ -609,7 +623,7 @@ int ParseExpression( char* sLine, char* sOutLine )
           if ( isdvig + ipos > 0 )
           {
             lens = strolen( sLine+isdvig );
-            Stuff ( ptro, sLine+isdvig, i, (ipos)? ipos-1:lens, lens );
+            pp_Stuff ( ptro, sLine+isdvig, i, (ipos)? ipos-1:lens, lens );
             ipos = i + 1;
           }
           else
@@ -697,12 +711,12 @@ void WorkPseudoF ( char** ptri, char** ptro, DEFINES *stdef )
            lenreal = NextParm( ptri, parreal );
 
            ptrb = *ptro;
-           while ( (ifou = hb_strAt( parfict, lenfict, ptrb, lenres-(ptrb-*ptro) )) > 0 )
+           while ( (ifou = pp_strAt( parfict, lenfict, ptrb, lenres-(ptrb-*ptro) )) > 0 )
            {
              ptrb = ptrb+ifou-1;
              if ( !isname(*(ptrb-1)) && !isname(*(ptrb+lenfict)) )
              {
-               Stuff ( parreal, ptrb, lenreal, lenfict, lenres );
+               pp_Stuff ( parreal, ptrb, lenreal, lenfict, lenres );
                lenres += lenreal - lenfict;
              }
              else ptrb++;
@@ -769,7 +783,7 @@ int WorkTranslate ( char* sToken, char** ptri, char* ptro, int ndef )
  if ( rez >= 0 )
  {
   while ( rez > 0 && (*(*ptri+rez-1)==' ' || *(*ptri+rez-1)=='\t') ) rez--;
-  Stuff( ptro, ptr, lenres, rez + lenToken, strolen(ptr) );
+  pp_Stuff( ptro, ptr, lenres, rez + lenToken, strolen(ptr) );
   *ptri = ptr + lenres;
   return lenres;
  }
@@ -1153,7 +1167,7 @@ void SearnRep( char *exppatt,char *expreal,int lenreal,char *ptro, int *lenres)
    char expnew[MAX_NAME];
    char *ptr, *ptr2, *ptrOut = ptro;
 
-   while ( (ifou = hb_strAt( exppatt, 2, ptrOut, *lenres-isdvig )) > 0 )
+   while ( (ifou = pp_strAt( exppatt, 2, ptrOut, *lenres-isdvig )) > 0 )
    {
      rezs = 0;
      ptr = ptrOut + ifou - 2;
@@ -1178,7 +1192,7 @@ void SearnRep( char *exppatt,char *expreal,int lenreal,char *ptro, int *lenres)
        {
          if ( lenreal == 0 )
          {
-           Stuff ( "", ptr, 0, ptr2-ptr+1, *lenres-(ptr-ptro) );
+           pp_Stuff ( "", ptr, 0, ptr2-ptr+1, *lenres-(ptr-ptro) );
            *lenres -= ptr2-ptr+1;
            isdvig = ptr - ptro;
            rezs = 1;
@@ -1190,7 +1204,7 @@ void SearnRep( char *exppatt,char *expreal,int lenreal,char *ptro, int *lenres)
            memcpy ( expnew, ptr+1, lennew );
            *(expnew + lennew++) = ' ';
            *(expnew + lennew) = '\0';
-           while ( (i = hb_strAt( exppatt, 2, expnew, lennew )) > 0 )
+           while ( (i = pp_strAt( exppatt, 2, expnew, lennew )) > 0 )
              lennew += ReplacePattern ( exppatt[2], expreal, lenreal, expnew+i-1, lennew );
            if ( kolmarkers )
            {
@@ -1202,7 +1216,7 @@ void SearnRep( char *exppatt,char *expreal,int lenreal,char *ptro, int *lenres)
                  i += 4;
                }
            }
-           Stuff ( expnew, ptr, lennew, 0, *lenres-(ptr-ptro)+1 );
+           pp_Stuff ( expnew, ptr, lennew, 0, *lenres-(ptr-ptro)+1 );
            *lenres += lennew;
            isdvig = ptr - ptro + (ptr2-ptr-1) + lennew;
            rezs = 1;
@@ -1232,27 +1246,30 @@ void SearnRep( char *exppatt,char *expreal,int lenreal,char *ptro, int *lenres)
 int ReplacePattern ( char patttype, char *expreal, int lenreal, char *ptro, int lenres )
 {
  int rmlen = lenreal;
+ char *sQuotes = "\"\"";
 
      switch ( *(ptro+2) ) {
       case '0':  /* Regular result marker  */
-         Stuff ( expreal, ptro, lenreal, 4, lenres );
+         pp_Stuff ( expreal, ptro, lenreal, 4, lenres );
          break;
       case '1':  /* Dumb stringify result marker  */
-         Stuff ( "\"\"", ptro, 2, 4, lenres );
+         pp_rQuotes( expreal, &sQuotes );
+         pp_Stuff ( "\"\"", ptro, 2, 4, lenres );
          if ( lenreal )
-          Stuff ( expreal, ptro+1, lenreal, 0, lenres );
+          pp_Stuff ( expreal, ptro+1, lenreal, 0, lenres );
          rmlen = lenreal + 2;
          break;
       case '2':  /* Normal stringify result marker  */
          if ( !lenreal )
-          Stuff ( "", ptro, 0, 4, lenres );
+          pp_Stuff ( "", ptro, 0, 4, lenres );
          else if ( patttype == '1' )          /* list match marker */
          {
          }
          else
          {
-          Stuff ( "\"\"", ptro, 2, 4, lenres );
-          Stuff ( expreal, ptro+1, lenreal, 0, lenres );
+          pp_rQuotes( expreal, &sQuotes );
+          pp_Stuff ( "\"\"", ptro, 2, 4, lenres );
+          pp_Stuff ( expreal, ptro+1, lenreal, 0, lenres );
           rmlen = lenreal + 2;
          }
          break;
@@ -1262,25 +1279,26 @@ int ReplacePattern ( char patttype, char *expreal, int lenreal, char *ptro, int 
          }
          else if ( !lenreal || *expreal == '(' || *expreal == '&' ||
                                   *expreal == '\"' || *expreal == '\'' )
-           Stuff ( (*expreal=='&')? expreal+1:expreal, ptro,
+           pp_Stuff ( (*expreal=='&')? expreal+1:expreal, ptro,
                    (*expreal=='&')? lenreal-1:lenreal, 4, lenres );
          else
          {
-          Stuff ( "\"\"", ptro, 2, 4, lenres );
-          Stuff ( expreal, ptro+1, lenreal, 0, lenres );
+          pp_rQuotes( expreal, &sQuotes );
+          pp_Stuff ( "\"\"", ptro, 2, 4, lenres );
+          pp_Stuff ( expreal, ptro+1, lenreal, 0, lenres );
           rmlen = lenreal + 2;
          }
          break;
       case '4':  /* Blockify result marker  */
          if ( !lenreal )
-           Stuff ( expreal, ptro, lenreal, 4, lenres );
+           pp_Stuff ( expreal, ptro, lenreal, 4, lenres );
          else if ( patttype == '1' )          /* list match marker */
          {
          }
          else
          {
-          Stuff ( "{||}", ptro, 4, 4, lenres );
-          Stuff ( expreal, ptro+3, lenreal, 0, lenres );
+          pp_Stuff ( "{||}", ptro, 4, 4, lenres );
+          pp_Stuff ( expreal, ptro+3, lenreal, 0, lenres );
           rmlen = lenreal + 4;
          }
          break;
@@ -1288,16 +1306,35 @@ int ReplacePattern ( char patttype, char *expreal, int lenreal, char *ptro, int 
          rmlen = 3;
          if ( !lenreal )
          {
-          Stuff ( ".F.", ptro, 3, 4, lenres );
+          pp_Stuff ( ".F.", ptro, 3, 4, lenres );
          }
          else
-          Stuff ( ".T.", ptro, 3, 4, lenres );
+          pp_Stuff ( ".T.", ptro, 3, 4, lenres );
          break;
      }
      return rmlen - 4;
 }
 
-int RdStr(FILE* handl_i,char *buffer,int maxlen,int lDropSpaces,char* sBuffer, int* lenBuffer, int* iBuffer)
+void pp_rQuotes( char *expreal, char **sQuotes )
+{
+   int lQuote1 = 0, lQuote2 = 0;
+   
+   while( *expreal != '\0' )
+   {
+     if( *expreal == '\"' ) lQuote2 = 1;
+     else if( *expreal == '\'' ) lQuote1 = 1;
+     expreal++;
+   }
+   if( lQuote2 )
+   {
+     if( lQuote1 )
+       { **sQuotes = '['; *(*sQuotes+1) = ']'; }
+     else
+       { **sQuotes = '\''; *(*sQuotes+1) = '\''; }
+   }
+}
+
+int pp_RdStr(FILE* handl_i,char *buffer,int maxlen,int lDropSpaces,char* sBuffer, int* lenBuffer, int* iBuffer)
 {
 int readed = 0;
 int State = 0;
@@ -1349,7 +1386,7 @@ char cha,cLast='\0';
   return readed;
 }
 
-int WrStr(FILE* handl_o,char *buffer)
+int pp_WrStr(FILE* handl_o,char *buffer)
 {
  int lens = strolen(buffer);
  fwrite(buffer,lens,1,handl_o);
@@ -1358,7 +1395,7 @@ int WrStr(FILE* handl_o,char *buffer)
 }
 
 /* locates a substring in a string */
-int hb_strAt(char *szSub, int lSubLen, char *szText, int lLen)
+int pp_strAt(char *szSub, int lSubLen, char *szText, int lLen)
 {
    if( lSubLen )
    {
@@ -1440,7 +1477,7 @@ int IsInStr ( char symb, char* s )
  return 0;
 }
 
-void Stuff (char *ptri, char * ptro, int len1, int len2, int lenres )
+void pp_Stuff (char *ptri, char * ptro, int len1, int len2, int lenres )
 {
  char *ptr1, *ptr2;
  int i;

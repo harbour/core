@@ -14,6 +14,13 @@
    the Free Software Foundation; either version 2 of the License, or
    (at your option) any later version, with one exception:
 
+   The exception is that if you link the Harbour Runtime Library (HRL)
+   and/or the Harbour Virtual Machine (HVM) with other files to produce
+   an executable, this does not by itself cause the resulting executable
+   to be covered by the GNU General Public License. Your use of that
+   executable is in no way restricted on account of linking the HRL
+   and/or HVM code into it.
+
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -42,8 +49,8 @@
 
 extern int ParseDirective( char* );
 extern int ParseExpression( char*, char* );
-extern int RdStr(FILE*,char *,int,int,char*,int*,int*);
-extern int WrStr(FILE*,char *);
+extern int pp_RdStr(FILE*,char *,int,int,char*,int*,int*);
+extern int pp_WrStr(FILE*,char *);
 extern int strolen ( char* );
 extern int strocpy (char*, char* );
 
@@ -56,7 +63,7 @@ extern int lInclude;
 extern int *aCondCompile, nCondCompile;
 extern int nline;
 
-#define BUFF_SIZE 8192
+#define BUFF_SIZE 2048
 #define STR_SIZE 8192
 #define INITIAL_ACOM_SIZE 200
 
@@ -85,7 +92,7 @@ int PreProcess( FILE* handl_i, FILE* handl_o, char *sOut )
  int lContinue = 0;
  int lens=0, rdlen;
  int rezParse;
- while ( ( rdlen = RdStr(handl_i,sLine+lens, STR_SIZE-lens,lContinue,
+ while ( ( rdlen = pp_RdStr(handl_i,sLine+lens, STR_SIZE-lens,lContinue,
                                      sBuffer,&lenBuffer,&iBuffer ) ) >= 0 )
  {
   if ( !lInclude ) nline++;
@@ -135,7 +142,7 @@ int PreProcess( FILE* handl_i, FILE* handl_o, char *sOut )
  *( sOut + lens ) = '\0';
 
  if ( lPpo )
-    WrStr(handl_o,sOut);
+    pp_WrStr(handl_o,sOut);
 
  return lens;
 }
@@ -147,7 +154,7 @@ int Hp_Parse( FILE* handl_i, FILE* handl_o )
  int lContinue = 0;
  int iBuffer = 10, lenBuffer = 10;
  int lens=0, rdlen;
- while ( ( rdlen = RdStr(handl_i,sLine+lens, STR_SIZE-lens,lContinue,
+ while ( ( rdlen = pp_RdStr(handl_i,sLine+lens, STR_SIZE-lens,lContinue,
                                      sBuffer,&lenBuffer,&iBuffer ) ) >= 0 )
  {
   lens += rdlen;
