@@ -1,3 +1,23 @@
+20000410-09:00 Luiz Rafael Culik <culik@sl.conex.net
+   *Doc/en/set.txt
+     +doc for: SET PRINTER,SET FIXED,SET DECIMALS
+   *doc/en/math.txt
+     +doc for: round()
+   *doc/en/string.txt
+     +doc for: CHR(),ASC()
+   *doc/en/diskspac.txt
+     *Added note of platform
+   *doc/en/hvm.txt
+     +added copyright header requestes by Jose Lanin
+   *rdd.txt
+     *Removed all database and ordfunctions
+   +rddmisc.txt
+     *misc documents of database functions
+   +rddord.txt
+     *documents for ord* functions
+   +rdddb.txt
+     +documents for db* functions
+
 20000409-03:48 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/rtl/gtcrs/gtcrs.c
