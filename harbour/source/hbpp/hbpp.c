@@ -69,7 +69,7 @@ int OpenInclude( char *, PATHNAMES *, FILE** );
 #define SKIPTABSPACES(sptr) while ( *sptr == ' ' || *sptr == '\t' ) (sptr)++
 #define MAX_NAME 255
 #define BUFF_SIZE 2048
-#define STR_SIZE 1024
+#define STR_SIZE 2048
 #define FALSE               0
 #define TRUE                1
 
@@ -114,7 +114,7 @@ int koltranslates = 0, maxtranslates = 50;
 int ParseDirective( char* sLine )
 {
  char sDirective[MAX_NAME];
- int i = 0;
+ int i;
  FILE* handl_i;
 
  i = NextWord( &sLine, sDirective, TRUE );
@@ -1191,7 +1191,7 @@ int WrStr(FILE* handl_o,char *buffer)
 {
  int lens = strolen(buffer);
  fwrite(buffer,lens,1,handl_o);
- fwrite("\n",1,1,handl_o);
+ if ( *(buffer+lens-1) != '\n' ) fwrite("\n",1,1,handl_o);
  return 0;
 }
 
@@ -1366,8 +1366,11 @@ int strotrim ( char *stroka )
    if ( *stroka == '\'' ) State = STATE_QUOTE1;
    else if ( *stroka == '\"' ) State = STATE_QUOTE2;
   }
-  if ( State != STATE_NORMAL || (*stroka != ' ' && *stroka != '\t') ||
+/*  if ( State != STATE_NORMAL || (*stroka != ' ' && *stroka != '\t') ||
       ( (isname(lastc) || lastc=='>') && (isname(*(stroka+1)) || *(stroka+1)=='<') ) )
+*/
+  if ( State != STATE_NORMAL || (*stroka != ' ' && *stroka != '\t') ||
+      ( *stroka==' ' && lastc != ' ' && lastc != ',' && lastc != '(' && *(stroka+1)!=',') )
   {
      *ptr++ = *stroka;
      lastc = *stroka;

@@ -33,7 +33,7 @@ extern int *aCondCompile, nCondCompile;
 extern int nline;
 
 #define BUFF_SIZE 2048
-#define STR_SIZE 1024
+#define STR_SIZE 2048
 #define INITIAL_ACOM_SIZE 200
 
 extern DEFINES *aDefnew ;
@@ -56,7 +56,7 @@ void Hbpp_init ( void )
 int PreProcess( FILE* handl_i, FILE* handl_o, char *sOut )
 {
  static char sBuffer[BUFF_SIZE];           /* File read buffer */
- char sLine[STR_SIZE], sOutLine[STR_SIZE], *ptr;
+ char sLine[STR_SIZE], sOutLine[STR_SIZE], *ptr, *ptrOut = sOut;
  int lContinue = 0;
  int lens=0, rdlen;
  int rezParse;
@@ -72,6 +72,8 @@ int PreProcess( FILE* handl_i, FILE* handl_o, char *sOut )
    lens--; lens--;
    while ( sLine[lens] == ' ' || sLine[lens] == '\t' ) lens--;
    sLine[++lens] = '\0';
+
+   *ptrOut++ = '\n';
   }
   else { lContinue = 0; lens=0; }
 
@@ -106,19 +108,14 @@ int PreProcess( FILE* handl_i, FILE* handl_o, char *sOut )
   }
  }
  if ( rdlen < 0 ) return 0;
- if(!lInclude)
- {
-   if ( lPpo ) WrStr(handl_o,sLine);
-   lens = strolen ( sLine );
-   *(sLine + lens++) = '\n';
-   *(sLine + lens) = '\0';
-   memcpy( sOut, sLine, lens );
- }
- else
- {
-   *sOut = '\n';
-   lens = 1;
- }
+
+ lens = strocpy( ptrOut, sLine ) + ( ptrOut - sOut );
+ *( sOut + lens++ ) = '\n';
+ *( sOut + lens ) = '\0';
+
+ if ( lPpo )
+    WrStr(handl_o,sOut);
+
  return lens;
 }
 

@@ -27,7 +27,7 @@ extern int nline;
 extern DEFINES *aDefnew ;
 
 #define BUFF_SIZE 2048
-#define STR_SIZE 1024
+#define STR_SIZE 2048
 
 #define INITIAL_ACOM_SIZE 200
 extern COMMANDS *aCommnew ;
@@ -168,7 +168,7 @@ int Hp_Parse( FILE* handl_i, FILE* handl_o )
 
   if(!lInclude)
   {
-   if( lContinue ) WrStr(handl_o,"\0");  else WrStr(handl_o,sLine);
+   if( lContinue ) WrStr(handl_o,"\n");  else WrStr(handl_o,sLine);
   }
  }
  return 0;

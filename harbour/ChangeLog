@@ -1,3 +1,10 @@
+19990616-11:19 Alexander Kresin
+ updated:
+ * source\hbpp\hbppmain.c
+ * source\hbpp\hbppint.c
+ * source\hbpp\hbpp.c
+  Fixed problems with preprocessor, mentioned by David G. Holm
+
 19990615-23:20 PST Ron Pinkas <Ron@Profit-Master.com>
   * compiler.h
     added member iUsed to struct VAR
