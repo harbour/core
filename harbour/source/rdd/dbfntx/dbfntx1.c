@@ -2531,7 +2531,7 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
                #endif
                while( --nAttemptLeft )
                {
-                  #if !defined( HB_OS_LINUX ) && !defined( HB_OS_BSD )
+                  #if !defined( HB_OS_UNIX ) && !defined( HB_OS_BSD )
                   tmpnam( pszTempName );
                   sortInfo.tempHandle = hb_fsCreate( (BYTE*)pszTempName,FC_NORMAL );
                   if( sortInfo.tempHandle != FS_ERROR )

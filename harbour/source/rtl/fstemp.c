@@ -70,7 +70,11 @@ static BOOL hb_fsTempName( BYTE * pszBuffer, const BYTE * pszDir, const BYTE * p
 
    pszBuffer[ 0 ] = '\0';
 
-   tmpnam( ( char * ) pszBuffer );
+   #ifndef HB_OS_UNIX
+      tmpnam( ( char * ) pszBuffer );
+   #else
+      mkstemp( ( char * ) pszBuffer );
+   #endif
 
    return pszBuffer[ 0 ] != '\0';
 }
