@@ -7,6 +7,8 @@
         * corrected generation of line number opcodes
         * corrected the support for local variables when nested
         codeblocks are used
+	* the step value is popped correctly at the end of FOR/NEXT loop
+	 (the nested loops are working correctly now)
 
     *source/rtl/codebloc.c
         * corrected the support for local variables when nested
