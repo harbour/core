@@ -15,7 +15,7 @@ PROJECT: harbour.exe harbour.lib libs\b32\terminal.lib libs\win32\terminal.lib
 harbour.lib : alert.obj arrays.obj asort.obj classes.obj codebloc.obj copyfile.obj \
               dates.obj dates2.obj datesx.obj debug.obj descend.obj devoutp.obj \
               dir.obj do.obj dynsym.obj environ.obj error.obj menu.obj \
-              errorapi.obj errorsys.obj extend.obj filesys.obj fm.obj \
+              errorapi.obj errorsys.obj extend.obj fileread.obj filesys.obj fm.obj \
               hardcr.obj hb_f.obj initsymb.obj inkey.obj itemapi.obj memvars.obj \
               math.obj mathx.obj msgxxx.obj mtran.obj objfunc.obj \
               set.obj setcolor.obj setkey.obj strings.obj symbols.obj stringp.obj \
@@ -43,6 +43,7 @@ error.obj    : error.c    extend.h hbdefs.h
 errorapi.obj : errorapi.c extend.h hbdefs.h
 errorsys.obj : errorsys.c extend.h hbdefs.h
 extend.obj   : extend.c   extend.h hbdefs.h
+fileread.obj : extend.c   extend.h hbdefs.h
 filesys.obj  : filesys.c  extend.h hbdefs.h
 fm.obj       : fm.c       extend.h hbdefs.h
 hardcr.obj   : hardcr.c   extend.h hbdefs.h
@@ -73,6 +74,7 @@ asort.c      : asort.prg     harbour.exe
 devoutp.c    : devoutp.prg   harbour.exe
 error.c      : error.prg     harbour.exe
 errorsys.c   : errorsys.prg  harbour.exe
+fileread.c   : fileread.prg  harbour.exe
 menu.c       : menu.prg      harbour.exe
 objfunc.c    : objfunc.prg   harbour.exe
 stringp.c    : stringp.prg   harbour.exe
