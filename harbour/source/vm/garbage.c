@@ -179,7 +179,7 @@ HB_ITEM_PTR hb_gcGripGet( HB_ITEM_PTR pOrigin )
    if( pAlloc )
    {
       HB_ITEM_PTR pItem = ( HB_ITEM_PTR )( pAlloc + 1 );
-      
+
       hb_gcLink( &s_pLockedBlock, pAlloc );
       pAlloc->pFunc  = hb_gcGripRelease;
       pAlloc->locked = 1;
@@ -209,7 +209,7 @@ void hb_gcGripDrop( HB_ITEM_PTR pItem )
        --pAlloc;
 
        hb_itemClear( pItem );    /* clear value stored in this item */
-          
+
        hb_gcUnlink( &s_pLockedBlock, pAlloc );
        HB_GARBAGE_FREE( pAlloc );
    }
@@ -368,7 +368,9 @@ void hb_gcCollectAll( void )
            /* call a cleanup function */
            s_pCurrBlock->used |= HB_GC_DELETE;
            if( s_pCurrBlock->pFunc )
+           {
               ( s_pCurrBlock->pFunc )( ( void *)( s_pCurrBlock + 1 ) );
+           }
          }
          s_pCurrBlock = s_pCurrBlock->pNext;
       } while ( s_pCurrBlock && (pAlloc != s_pCurrBlock) );
@@ -380,10 +382,18 @@ void hb_gcCollectAll( void )
          {
             pDelete = s_pCurrBlock;
             hb_gcUnlink( &s_pCurrBlock, s_pCurrBlock );
+
+            if( pDelete == pAlloc )
+            {
+                pAlloc = s_pCurrBlock;
+            }
+
             HB_GARBAGE_FREE( pDelete );
          }
          else
+         {
             s_pCurrBlock = s_pCurrBlock->pNext;
+         }
       } while ( s_pCurrBlock && (pAlloc != s_pCurrBlock) );
 
       s_bCollecting = FALSE;
