@@ -1,0 +1,4665 @@
+/*
+ * $Id$
+ */
+
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 1999 Victor Szakats <info@szelvesz.hu>
+ *   Compatibility header file for CA-Clipper Virtual Memory API
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _evalLaunch (macro replacement)
+ *  $CATEGORY$
+ *      Item compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _evalLaunch --> <see hb_evalLaunch>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is item.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_evalLaunch
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _evalNew (macro replacement)
+ *  $CATEGORY$
+ *      Item compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _evalNew --> <see hb_evalNew>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is item.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_evalNew
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _evalPutParam (macro replacement)
+ *  $CATEGORY$
+ *      Item compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _evalPutParam --> <see hb_evalPutParam>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is item.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_evalPutParam
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _evalRelease (macro replacement)
+ *  $CATEGORY$
+ *      Item compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _evalRelease --> <see hb_evalRelease>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is item.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_evalRelease
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _itemArrayGet (macro replacement)
+ *  $CATEGORY$
+ *      Item compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _itemArrayGet --> <see hb_itemArrayGet>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is item.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_itemArrayGet
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _itemArrayNew (macro replacement)
+ *  $CATEGORY$
+ *      Item compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _itemArrayNew --> <see hb_itemArrayNew>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is item.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_itemArrayNew
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _itemArrayPut (macro replacement)
+ *  $CATEGORY$
+ *      Item compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _itemArrayPut --> <see hb_itemArrayPut>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is item.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_itemArrayPut
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _itemNew (macro replacement)
+ *  $CATEGORY$
+ *      Item compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _itemNew --> <see hb_itemNew>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is item.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_itemNew
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _itemParam (macro replacement)
+ *  $CATEGORY$
+ *      Item compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _itemParam --> <see hb_itemParam>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is item.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_itemParam
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _itemRelease (macro replacement)
+ *  $CATEGORY$
+ *      Item compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _itemRelease --> <see hb_itemRelease>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is item.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_itemRelease
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _itemReturn (macro replacement)
+ *  $CATEGORY$
+ *      Item compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _itemReturn --> <see hb_itemReturn>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is item.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_itemReturn
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _itemSize (macro replacement)
+ *  $CATEGORY$
+ *      Item compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _itemSize --> <see hb_itemSize>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is item.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_itemSize
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _itemType (macro replacement)
+ *  $CATEGORY$
+ *      Item compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _itemType --> <see hb_itemType>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is item.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_itemType
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _reta (macro replacement)
+ *  $CATEGORY$
+ *      Undocumented compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _reta --> <see hb_reta>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is hbundoc.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_reta
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _pcount (macro replacement)
+ *  $CATEGORY$
+ *      Undocumented compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _pcount --> <see hb_pcount>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is hbundoc.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_pcount
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _tchdir (macro replacement)
+ *  $CATEGORY$
+ *      Undocumented compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _tchdir --> <see hb_fsChDir>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is hbundoc.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_fsChDir
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _tchdrv (macro replacement)
+ *  $CATEGORY$
+ *      Undocumented compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _tchdrv --> <see hb_fsChDrv>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is hbundoc.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_fsChDrv
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _tclose (macro replacement)
+ *  $CATEGORY$
+ *      Undocumented compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _tclose --> <see hb_fsClose>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is hbundoc.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_fsClose
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _tcommit (macro replacement)
+ *  $CATEGORY$
+ *      Undocumented compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _tcommit --> <see hb_fsCommit>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is hbundoc.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_fsCommit
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _tcreat (macro replacement)
+ *  $CATEGORY$
+ *      Undocumented compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _tcreat --> <see hb_fsCreate>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is hbundoc.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_fsCreate
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _tcurdir (macro replacement)
+ *  $CATEGORY$
+ *      Undocumented compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _tcurdir --> <see hb_fsCurDir>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is hbundoc.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_fsCurDir
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _tcurdrv (macro replacement)
+ *  $CATEGORY$
+ *      Undocumented compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _tcurdrv --> <see hb_fsCurDrv>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is hbundoc.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_fsCurDrv
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _tdevraw (macro replacement)
+ *  $CATEGORY$
+ *      Undocumented compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _tdevraw --> <see hb_fsSetDevRaw>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is hbundoc.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_fsSetDevRaw
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _terror (macro replacement)
+ *  $CATEGORY$
+ *      Undocumented compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _terror --> <see hb_fsError>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is hbundoc.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_fsError
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _tisdevice (macro replacement)
+ *  $CATEGORY$
+ *      Undocumented compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _tisdevice --> <see hb_fsIsDevice>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is hbundoc.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_fsIsDevice
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _tisdrv (macro replacement)
+ *  $CATEGORY$
+ *      Undocumented compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _tisdrv --> <see hb_fsIsDrv>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is hbundoc.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_fsIsDrv
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _tlock (macro replacement)
+ *  $CATEGORY$
+ *      Undocumented compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _tlock --> <see hb_fsLock>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is hbundoc.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_fsLock
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _tlseek (macro replacement)
+ *  $CATEGORY$
+ *      Undocumented compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _tlseek --> <see hb_fsSeek>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is hbundoc.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_fsSeek
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _tmkdir (macro replacement)
+ *  $CATEGORY$
+ *      Undocumented compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _tmkdir --> <see hb_fsMkDir>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is hbundoc.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_fsMkDir
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _topen (macro replacement)
+ *  $CATEGORY$
+ *      Undocumented compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _topen --> <see hb_fsOpen>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is hbundoc.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_fsOpen
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _tread (macro replacement)
+ *  $CATEGORY$
+ *      Undocumented compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _tread --> <see hb_fsRead>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is hbundoc.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_fsRead
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _trename (macro replacement)
+ *  $CATEGORY$
+ *      Undocumented compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _trename --> <see hb_fsRename>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is hbundoc.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_fsRename
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _trmdir (macro replacement)
+ *  $CATEGORY$
+ *      Undocumented compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _trmdir --> <see hb_fsRmDir>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is hbundoc.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_fsRmDir
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _tunlink (macro replacement)
+ *  $CATEGORY$
+ *      Undocumented compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _tunlink --> <see hb_fsDelete>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is hbundoc.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_fsDelete
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _twrite (macro replacement)
+ *  $CATEGORY$
+ *      Undocumented compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _twrite --> <see hb_fsWrite>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is hbundoc.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_fsWrite
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _bset (macro replacement)
+ *  $CATEGORY$
+ *      Undocumented compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _bset --> <see memset>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is hbundoc.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      memset
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _bmove (macro replacement)
+ *  $CATEGORY$
+ *      Undocumented compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _bmove --> <see memmove>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is hbundoc.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      memmove
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _bcopy (macro replacement)
+ *  $CATEGORY$
+ *      Undocumented compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _bcopy --> <see memcpy>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is hbundoc.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      memcpy
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _bcmp (macro replacement)
+ *  $CATEGORY$
+ *      Undocumented compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _bcmp --> <see memcmp>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is hbundoc.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      memcmp
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _gtBox (macro replacement)
+ *  $CATEGORY$
+ *      Terminal compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _gtBox --> <see hb_gtBox>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is gt.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_gtBox
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _gtColorSelect (macro replacement)
+ *  $CATEGORY$
+ *      Terminal compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _gtColorSelect --> <see hb_gtColorSelect>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is gt.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_gtColorSelect
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _gtDispBegin (macro replacement)
+ *  $CATEGORY$
+ *      Terminal compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _gtDispBegin --> <see hb_gtDispBegin>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is gt.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_gtDispBegin
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _gtDispCount (macro replacement)
+ *  $CATEGORY$
+ *      Terminal compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _gtDispCount --> <see hb_gtDispCount>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is gt.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_gtDispCount
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _gtDispEnd (macro replacement)
+ *  $CATEGORY$
+ *      Terminal compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _gtDispEnd --> <see hb_gtDispEnd>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is gt.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_gtDispEnd
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _gtGetColorStr (macro replacement)
+ *  $CATEGORY$
+ *      Terminal compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _gtGetColorStr --> <see hb_gtGetColorStr>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is gt.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_gtGetColorStr
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _gtGetCursor (macro replacement)
+ *  $CATEGORY$
+ *      Terminal compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _gtGetCursor --> <see hb_gtGetCursor>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is gt.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_gtGetCursor
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _gtGetPos (macro replacement)
+ *  $CATEGORY$
+ *      Terminal compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _gtGetPos --> <see hb_gtGetPos>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is gt.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_gtGetPos
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _gtIsColor (macro replacement)
+ *  $CATEGORY$
+ *      Terminal compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _gtIsColor --> <see hb_gtIsColor>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is gt.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_gtIsColor
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _gtMaxCol (macro replacement)
+ *  $CATEGORY$
+ *      Terminal compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _gtMaxCol --> <see hb_gtMaxCol>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is gt.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_gtMaxCol
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _gtMaxRow (macro replacement)
+ *  $CATEGORY$
+ *      Terminal compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _gtMaxRow --> <see hb_gtMaxRow>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is gt.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_gtMaxRow
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _gtPostExt (macro replacement)
+ *  $CATEGORY$
+ *      Terminal compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _gtPostExt --> <see hb_gtPostExt>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is gt.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_gtPostExt
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _gtPreExt (macro replacement)
+ *  $CATEGORY$
+ *      Terminal compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _gtPreExt --> <see hb_gtPreExt>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is gt.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_gtPreExt
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _gtRectSize (macro replacement)
+ *  $CATEGORY$
+ *      Terminal compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _gtRectSize --> <see hb_gtRectSize>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is gt.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_gtRectSize
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _gtRepChar (macro replacement)
+ *  $CATEGORY$
+ *      Terminal compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _gtRepChar --> <see hb_gtRepChar>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is gt.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_gtRepChar
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _gtRest (macro replacement)
+ *  $CATEGORY$
+ *      Terminal compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _gtRest --> <see hb_gtRest>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is gt.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_gtRest
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _gtSave (macro replacement)
+ *  $CATEGORY$
+ *      Terminal compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _gtSave --> <see hb_gtSave>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is gt.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_gtSave
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _gtScrDim (macro replacement)
+ *  $CATEGORY$
+ *      Terminal compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _gtScrDim --> <see hb_gtScrDim>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is gt.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_gtScrDim
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _gtScroll (macro replacement)
+ *  $CATEGORY$
+ *      Terminal compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _gtScroll --> <see hb_gtScroll>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is gt.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_gtScroll
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _gtSetBlink (macro replacement)
+ *  $CATEGORY$
+ *      Terminal compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _gtSetBlink --> <see hb_gtSetBlink>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is gt.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_gtSetBlink
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _gtSetColorStr (macro replacement)
+ *  $CATEGORY$
+ *      Terminal compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _gtSetColorStr --> <see hb_gtSetColorStr>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is gt.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_gtSetColorStr
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _gtSetCursor (macro replacement)
+ *  $CATEGORY$
+ *      Terminal compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _gtSetCursor --> <see hb_gtSetCursor>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is gt.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_gtSetCursor
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _gtSetMode (macro replacement)
+ *  $CATEGORY$
+ *      Terminal compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _gtSetMode --> <see hb_gtSetMode>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is gt.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_gtSetMode
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _gtSetPos (macro replacement)
+ *  $CATEGORY$
+ *      Terminal compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _gtSetPos --> <see hb_gtSetPos>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is gt.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_gtSetPos
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _gtSetSnowFlag (macro replacement)
+ *  $CATEGORY$
+ *      Terminal compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _gtSetSnowFlag --> <see hb_gtSetSnowFlag>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is gt.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_gtSetSnowFlag
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _gtWrite (macro replacement)
+ *  $CATEGORY$
+ *      Terminal compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _gtWrite --> <see hb_gtWrite>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is gt.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_gtWrite
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _gtWriteAt (macro replacement)
+ *  $CATEGORY$
+ *      Terminal compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _gtWriteAt --> <see hb_gtWriteAt>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is gt.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_gtWriteAt
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _gtWriteCon (macro replacement)
+ *  $CATEGORY$
+ *      Terminal compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _gtWriteCon --> <see hb_gtWriteCon>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is gt.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_gtWriteCon
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _gtInit (macro replacement)
+ *  $CATEGORY$
+ *      Terminal compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _gtInit --> <see hb_gtInit>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is gt.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_gtInit
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _gtExit (macro replacement)
+ *  $CATEGORY$
+ *      Terminal compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _gtExit --> <see hb_gtExit>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is gt.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_gtExit
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _gtWCreate (macro replacement)
+ *  $CATEGORY$
+ *      Terminal compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _gtWCreate --> <see hb_gtWCreate>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is gt.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_gtWCreate
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _gtWDestroy (macro replacement)
+ *  $CATEGORY$
+ *      Terminal compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _gtWDestroy --> <see hb_gtWDestroy>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is gt.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_gtWDestroy
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _gtWFlash (macro replacement)
+ *  $CATEGORY$
+ *      Terminal compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _gtWFlash --> <see hb_gtWFlash>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is gt.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_gtWFlash
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _gtWApp (macro replacement)
+ *  $CATEGORY$
+ *      Terminal compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _gtWApp --> <see hb_gtWApp>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is gt.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_gtWApp
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _gtWCurrent (macro replacement)
+ *  $CATEGORY$
+ *      Terminal compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _gtWCurrent --> <see hb_gtWCurrent>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is gt.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_gtWCurrent
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _gtWPos (macro replacement)
+ *  $CATEGORY$
+ *      Terminal compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _gtWPos --> <see hb_gtWPos>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is gt.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_gtWPos
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _gtWVis (macro replacement)
+ *  $CATEGORY$
+ *      Terminal compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _gtWVis --> <see hb_gtWVis>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is gt.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_gtWVis
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _gtModalRead (macro replacement)
+ *  $CATEGORY$
+ *      Terminal compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _gtModalRead --> <see hb_gtModalRead>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is gt.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_gtModalRead
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _gtBeginWrite (macro replacement)
+ *  $CATEGORY$
+ *      Terminal compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _gtBeginWrite --> <see hb_gtBeginWrite>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is gt.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_gtBeginWrite
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _gtEndWrite (macro replacement)
+ *  $CATEGORY$
+ *      Terminal compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _gtEndWrite --> <see hb_gtEndWrite>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is gt.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_gtEndWrite
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _gtFlushCursor (macro replacement)
+ *  $CATEGORY$
+ *      Terminal compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _gtFlushCursor --> <see hb_gtFlushCursor>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is gt.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_gtFlushCursor
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _gtSetColor (macro replacement)
+ *  $CATEGORY$
+ *      Terminal compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _gtSetColor --> <see hb_gtSetColor>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is gt.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_gtSetColor
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _gtGetColor (macro replacement)
+ *  $CATEGORY$
+ *      Terminal compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _gtGetColor --> <see hb_gtGetColor>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is gt.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_gtGetColor
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _gtSetBorder (macro replacement)
+ *  $CATEGORY$
+ *      Terminal compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _gtSetBorder --> <see hb_gtSetBorder>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is gt.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_gtSetBorder
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _xalloc (macro replacement)
+ *  $CATEGORY$
+ *      Fixed memory compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _xalloc --> <see hb_xalloc>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is fm.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_xalloc
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _xgrab (macro replacement)
+ *  $CATEGORY$
+ *      Fixed memory compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _xgrab --> <see hb_xgrab>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is fm.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_xgrab
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _xfree (macro replacement)
+ *  $CATEGORY$
+ *      Fixed memory compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _xfree --> <see hb_xfree>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is fm.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_xfree
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _exmgrab (macro replacement)
+ *  $CATEGORY$
+ *      Fixed memory compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _exmgrab --> <see hb_xgrab>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is fm.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_xgrab
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _fsChDir (macro replacement)
+ *  $CATEGORY$
+ *      FileSys compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _fsChDir --> <see hb_fsChDir>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is filesys.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_fsChDir
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _fsChDrv (macro replacement)
+ *  $CATEGORY$
+ *      FileSys compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _fsChDrv --> <see hb_fsChDrv>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is filesys.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_fsChDrv
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _fsClose (macro replacement)
+ *  $CATEGORY$
+ *      FileSys compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _fsClose --> <see hb_fsClose>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is filesys.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_fsClose
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _fsCommit (macro replacement)
+ *  $CATEGORY$
+ *      FileSys compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _fsCommit --> <see hb_fsCommit>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is filesys.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_fsCommit
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _fsCreate (macro replacement)
+ *  $CATEGORY$
+ *      FileSys compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _fsCreate --> <see hb_fsCreate>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is filesys.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_fsCreate
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _fsCurDir (macro replacement)
+ *  $CATEGORY$
+ *      FileSys compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _fsCurDir --> <see hb_fsCurDir>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is filesys.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_fsCurDir
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _fsCurDrv (macro replacement)
+ *  $CATEGORY$
+ *      FileSys compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _fsCurDrv --> <see hb_fsCurDrv>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is filesys.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_fsCurDrv
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _fsDelete (macro replacement)
+ *  $CATEGORY$
+ *      FileSys compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _fsDelete --> <see hb_fsDelete>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is filesys.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_fsDelete
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _fsError (macro replacement)
+ *  $CATEGORY$
+ *      FileSys compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _fsError --> <see hb_fsError>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is filesys.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_fsError
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _fsExtOpen (macro replacement)
+ *  $CATEGORY$
+ *      FileSys compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _fsExtOpen --> <see hb_fsExtOpen>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is filesys.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_fsExtOpen
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _fsIsDrv (macro replacement)
+ *  $CATEGORY$
+ *      FileSys compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _fsIsDrv --> <see hb_fsIsDrv>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is filesys.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_fsIsDrv
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _fsLock (macro replacement)
+ *  $CATEGORY$
+ *      FileSys compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _fsLock --> <see hb_fsLock>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is filesys.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_fsLock
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _fsMkDir (macro replacement)
+ *  $CATEGORY$
+ *      FileSys compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _fsMkDir --> <see hb_fsMkDir>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is filesys.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_fsMkDir
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _fsOpen (macro replacement)
+ *  $CATEGORY$
+ *      FileSys compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _fsOpen --> <see hb_fsOpen>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is filesys.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_fsOpen
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _fsRead (macro replacement)
+ *  $CATEGORY$
+ *      FileSys compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _fsRead --> <see hb_fsRead>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is filesys.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_fsRead
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _fsRmDir (macro replacement)
+ *  $CATEGORY$
+ *      FileSys compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _fsRmDir --> <see hb_fsRmDir>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is filesys.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_fsRmDir
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _fsRename (macro replacement)
+ *  $CATEGORY$
+ *      FileSys compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _fsRename --> <see hb_fsRename>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is filesys.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_fsRename
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _fsSeek (macro replacement)
+ *  $CATEGORY$
+ *      FileSys compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _fsSeek --> <see hb_fsSeek>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is filesys.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_fsSeek
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _fsWrite (macro replacement)
+ *  $CATEGORY$
+ *      FileSys compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _fsWrite --> <see hb_fsWrite>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is filesys.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_fsWrite
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      ALENGTH (macro definition)
+ *  $CATEGORY$
+ *      Extend compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      ALENGTH( n ) --> <see hb_parinfa( n, 0 )>
+ *  $ARGUMENTS$
+ *      <n>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is extend.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _parc (macro replacement)
+ *  $CATEGORY$
+ *      Extend compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _parc --> <see hb_parc>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is extend.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_parc
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _parclen (macro replacement)
+ *  $CATEGORY$
+ *      Extend compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _parclen --> <see hb_parclen>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is extend.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_parclen
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _parcsiz (macro replacement)
+ *  $CATEGORY$
+ *      Extend compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _parcsiz --> <see hb_parcsiz>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is extend.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_parcsiz
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _pards (macro replacement)
+ *  $CATEGORY$
+ *      Extend compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _pards --> <see hb_pards>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is extend.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_pards
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _parinfa (macro replacement)
+ *  $CATEGORY$
+ *      Extend compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _parinfa --> <see hb_parinfa>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is extend.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_parinfa
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _parinfo (macro replacement)
+ *  $CATEGORY$
+ *      Extend compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _parinfo --> <see hb_parinfo>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is extend.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_parinfo
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _parl (macro replacement)
+ *  $CATEGORY$
+ *      Extend compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _parl --> <see hb_parl>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is extend.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_parl
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _parnd (macro replacement)
+ *  $CATEGORY$
+ *      Extend compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _parnd --> <see hb_parnd>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is extend.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_parnd
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _parni (macro replacement)
+ *  $CATEGORY$
+ *      Extend compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _parni --> <see hb_parni>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is extend.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_parni
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _parnl (macro replacement)
+ *  $CATEGORY$
+ *      Extend compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _parnl --> <see hb_parnl>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is extend.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_parnl
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _ret (macro replacement)
+ *  $CATEGORY$
+ *      Extend compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _ret --> <see hb_ret>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is extend.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_ret
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _retc (macro replacement)
+ *  $CATEGORY$
+ *      Extend compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _retc --> <see hb_retc>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is extend.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_retc
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _retclen (macro replacement)
+ *  $CATEGORY$
+ *      Extend compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _retclen --> <see hb_retclen>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is extend.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_retclen
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _retds (macro replacement)
+ *  $CATEGORY$
+ *      Extend compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _retds --> <see hb_retds>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is extend.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_retds
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _retl (macro replacement)
+ *  $CATEGORY$
+ *      Extend compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _retl --> <see hb_retl>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is extend.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_retl
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _retnd (macro replacement)
+ *  $CATEGORY$
+ *      Extend compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _retnd --> <see hb_retnd>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is extend.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_retnd
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _retni (macro replacement)
+ *  $CATEGORY$
+ *      Extend compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _retni --> <see hb_retni>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is extend.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_retni
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _retnl (macro replacement)
+ *  $CATEGORY$
+ *      Extend compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _retnl --> <see hb_retnl>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is extend.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_retnl
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _storc (macro replacement)
+ *  $CATEGORY$
+ *      Extend compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _storc --> <see hb_storc>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is extend.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_storc
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _storclen (macro replacement)
+ *  $CATEGORY$
+ *      Extend compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _storclen --> <see hb_storclen>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is extend.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_storclen
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _stords (macro replacement)
+ *  $CATEGORY$
+ *      Extend compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _stords --> <see hb_stords>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is extend.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_stords
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _storl (macro replacement)
+ *  $CATEGORY$
+ *      Extend compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _storl --> <see hb_storl>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is extend.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_storl
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _stornd (macro replacement)
+ *  $CATEGORY$
+ *      Extend compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _stornd --> <see hb_stornd>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is extend.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_stornd
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _storni (macro replacement)
+ *  $CATEGORY$
+ *      Extend compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _storni --> <see hb_storni>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is extend.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_storni
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _stornl (macro replacement)
+ *  $CATEGORY$
+ *      Extend compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _stornl --> <see hb_stornl>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is extend.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_stornl
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _errGetDescription (macro replacement)
+ *  $CATEGORY$
+ *      Error compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _errGetDescription --> <see hb_errGetDescription>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is error.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_errGetDescription
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _errGetFileName (macro replacement)
+ *  $CATEGORY$
+ *      Error compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _errGetFileName --> <see hb_errGetFileName>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is error.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_errGetFileName
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _errGetFlags (macro replacement)
+ *  $CATEGORY$
+ *      Error compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _errGetFlags --> <see hb_errGetFlags>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is error.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_errGetFlags
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _errGetGenCode (macro replacement)
+ *  $CATEGORY$
+ *      Error compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _errGetGenCode --> <see hb_errGetGenCode>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is error.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_errGetGenCode
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _errGetOperation (macro replacement)
+ *  $CATEGORY$
+ *      Error compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _errGetOperation --> <see hb_errGetOperation>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is error.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_errGetOperation
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _errGetOsCode (macro replacement)
+ *  $CATEGORY$
+ *      Error compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _errGetOsCode --> <see hb_errGetOsCode>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is error.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_errGetOsCode
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _errGetSeverity (macro replacement)
+ *  $CATEGORY$
+ *      Error compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _errGetSeverity --> <see hb_errGetSeverity>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is error.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_errGetSeverity
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _errGetSubCode (macro replacement)
+ *  $CATEGORY$
+ *      Error compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _errGetSubCode --> <see hb_errGetSubCode>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is error.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_errGetSubCode
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _errGetSubSystem (macro replacement)
+ *  $CATEGORY$
+ *      Error compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _errGetSubSystem --> <see hb_errGetSubSystem>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is error.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_errGetSubSystem
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _errGetTries (macro replacement)
+ *  $CATEGORY$
+ *      Error compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _errGetTries --> <see hb_errGetTries>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is error.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_errGetTries
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _errLaunch (macro replacement)
+ *  $CATEGORY$
+ *      Error compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _errLaunch --> <see hb_errLaunch>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is error.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_errLaunch
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _errNew (macro replacement)
+ *  $CATEGORY$
+ *      Error compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _errNew --> <see hb_errNew>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is error.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_errNew
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _errPutDescription (macro replacement)
+ *  $CATEGORY$
+ *      Error compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _errPutDescription --> <see hb_errPutDescription>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is error.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_errPutDescription
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _errPutFileNaem (macro replacement)
+ *  $CATEGORY$
+ *      Error compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _errPutFileNaem --> <see hb_errPutFileName>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is error.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_errPutFileName
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _errPutFlags (macro replacement)
+ *  $CATEGORY$
+ *      Error compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _errPutFlags --> <see hb_errPutFlags>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is error.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_errPutFlags
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _errPutGenCode (macro replacement)
+ *  $CATEGORY$
+ *      Error compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _errPutGenCode --> <see hb_errPutGenCode>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is error.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_errPutGenCode
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _errPutOperation (macro replacement)
+ *  $CATEGORY$
+ *      Error compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _errPutOperation --> <see hb_errPutOperation>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is error.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_errPutOperation
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _errPutOsCode (macro replacement)
+ *  $CATEGORY$
+ *      Error compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _errPutOsCode --> <see hb_errPutOsCode>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is error.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_errPutOsCode
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _errPutSeverity (macro replacement)
+ *  $CATEGORY$
+ *      Error compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _errPutSeverity --> <see hb_errPutSeverity>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is error.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_errPutSeverity
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _errPutSubCode (macro replacement)
+ *  $CATEGORY$
+ *      Error compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _errPutSubCode --> <see hb_errPutSubCode>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is error.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_errPutSubCode
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _errPutSubSystem (macro replacement)
+ *  $CATEGORY$
+ *      Error compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _errPutSubSystem --> <see hb_errPutSubSystem>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is error.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_errPutSubSystem
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _errPutTries (macro replacement)
+ *  $CATEGORY$
+ *      Error compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _errPutTries --> <see hb_errPutTries>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is error.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_errPutTries
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      _errRelease (macro replacement)
+ *  $CATEGORY$
+ *      Error compatability API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      _errRelease --> <see hb_errRelease>
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      
+ *  $FILES$
+ *      Header file is error.api
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      hb_errRelease
+ *  $END$
+ */
+

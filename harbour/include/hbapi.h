@@ -324,7 +324,7 @@ extern void     hb_stornd( double dValue, int iParam, ... ); /* stores a double 
 extern void     hb_xinit( void );                         /* Initialize fixed memory subsystem */
 extern void     hb_xexit( void );                         /* Deinitialize fixed memory subsystem */
 extern void *   hb_xalloc( ULONG ulSize );                /* allocates memory, returns NULL on failure */
-extern void *   hb_xgrab( ULONG ulSize );                 /* allocates memory, exists on failure */
+extern void *   hb_xgrab( ULONG ulSize );                 /* allocates memory, exits on failure */
 extern void     hb_xfree( void * pMem );                  /* frees memory */
 extern void *   hb_xrealloc( void * pMem, ULONG ulSize ); /* reallocates memory */
 extern ULONG    hb_xsize( void * pMem );                  /* returns the size of an allocated memory block */
