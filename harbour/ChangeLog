@@ -1,3 +1,7 @@
+2001-04-21 22:59 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+   * source/rtl/memoedit.prg
+      ! fixed error when UserFunction is a logical value.
+
 2001-04-20 18:15 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * source/rtl/disksphb.c
@@ -30,7 +34,7 @@
 2001-04-20 16:30 CET Martin Vogel <vogel@inttec.de>
 
   + contrib/libct/charop.c
-    + charadd(), charand(), charor(), charxor(), charnot() and 
+    + charadd(), charand(), charor(), charxor(), charnot() and
       (NEW!) charsub(), charshl(), charshr(), charrll() and charrlr() functions
 
   * contrib/libct/Makefile
@@ -41,7 +45,7 @@
 
   * contrib/libct/makefile.vc
     + added contrib/libct/charop.c
- 
+
   * contrib/libct/ctflist.txt
     * changed status of functions mentioned above
 
@@ -58,7 +62,7 @@
   + contrib/libct/tests/charshr.prg
   + contrib/libct/tests/charrll.prg
   + contrib/libct/tests/charrlr.prg
-    ! small test programs for new functions 
+    ! small test programs for new functions
 
   * contrib/libct/tests/Makefile
     + added contrib/libct/tests/charadd.prg
