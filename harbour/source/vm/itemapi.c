@@ -198,6 +198,9 @@ PHB_ITEM hb_itemPutC( PHB_ITEM pItem, char * szText )
    pItem->type = HB_IT_STRING;
    pItem->item.asString.length = strlen( szText );
    pItem->item.asString.value = ( char * ) hb_xgrab( pItem->item.asString.length + 1 );
+   pItem->item.asString.bPcode = FALSE;
+   pItem->item.asString.puiHolders = ( USHORT * ) hb_xgrab( sizeof( USHORT ) );
+   * ( pItem->item.asString.puiHolders ) = 1;
    strcpy( pItem->item.asString.value, szText );
 
    return pItem;
@@ -227,6 +230,9 @@ PHB_ITEM hb_itemPutCL( PHB_ITEM pItem, char * szText, ULONG ulLen )
    pItem->item.asString.value = ( char * ) hb_xgrab( ulLen + 1 );
    hb_xmemcpy( pItem->item.asString.value, szText, ulLen );
    pItem->item.asString.value[ ulLen ] = '\0';
+   pItem->item.asString.bPcode = FALSE;
+   pItem->item.asString.puiHolders = ( USHORT * ) hb_xgrab( sizeof( USHORT ) );
+   * ( pItem->item.asString.puiHolders ) = 1;
 
    return pItem;
 }
@@ -244,6 +250,9 @@ PHB_ITEM hb_itemPutCPtr( PHB_ITEM pItem, char * szText, ULONG ulLen )
    pItem->item.asString.length = ulLen;
    pItem->item.asString.value = szText;
    pItem->item.asString.value[ ulLen ] = '\0';
+   pItem->item.asString.bPcode = FALSE;
+   pItem->item.asString.puiHolders = ( USHORT * ) hb_xgrab( sizeof( USHORT ) );
+   * ( pItem->item.asString.puiHolders ) = 1;
 
    return pItem;
 }
@@ -788,10 +797,16 @@ void hb_itemClear( PHB_ITEM pItem )
 
    if( HB_IS_STRING( pItem ) )
    {
-      if( pItem->item.asString.value )
-      {
-         hb_xfree( pItem->item.asString.value );
+      if( pItem->item.asString.bPcode )
          pItem->item.asString.value = NULL;
+      else
+      {
+         if( --*( pItem->item.asString.puiHolders ) == 0 )
+         {
+            hb_xfree( pItem->item.asString.value );
+            pItem->item.asString.value = NULL;
+            hb_xfree( pItem->item.asString.puiHolders );
+         }
       }
       pItem->item.asString.length = 0;
    }
@@ -823,13 +838,10 @@ void hb_itemCopy( PHB_ITEM pDest, PHB_ITEM pSource )
 
    memcpy( pDest, pSource, sizeof( HB_ITEM ) );
 
-   if( HB_IS_STRING( pSource ) )
+   if( HB_IS_STRING( pSource ) && ! pSource->item.asString.bPcode )
    {
-      pDest->item.asString.value = ( char * ) hb_xgrab( pSource->item.asString.length + 1 );
-      hb_xmemcpy( pDest->item.asString.value, pSource->item.asString.value, pSource->item.asString.length );
-      pDest->item.asString.value[ pSource->item.asString.length ] = '\0';
+      ++*( pSource->item.asString.puiHolders );
    }
-
    else if( HB_IS_ARRAY( pSource ) )
    {
       ( pSource->item.asArray.value )->uiHolders++;
