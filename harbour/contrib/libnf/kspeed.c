@@ -154,18 +154,21 @@ HB_FUNC( FT_SETRATE)
    {
 
       union REGS registers;
-      int tempo,nrepete;
-      switch(PCOUNT) {
-         case 0: tempo = 0 ;
+      int tempo = 0,nrepete = 0;
+      switch( hb_pcount() ) {
+         case 0: 
+              tempo = 0 ;
               nrepete = 0;
               break;
-         case 1: tempo = hb_parni(1) ;
+         case 1: 
+              tempo = hb_parni(1) ;
               nrepete = 0;
               break;
-         case 0: tempo = hb_parni(1);
+         case 2: 
+              tempo = hb_parni(1);
               nrepete = hb_parni(2);
               break;
-   }
+      }
       registers.h.ah = 0x03;
       registers.h.al = 0x05;
       registers.h.bh = tempo;
@@ -174,3 +177,6 @@ HB_FUNC( FT_SETRATE)
    }
 #endif
 }
+
+
+   
