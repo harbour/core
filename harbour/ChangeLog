@@ -1,3 +1,11 @@
+19990626-13:35 Ryszard Glab <rglab@imid.med.pl>
+
+* source/rtl/copyfile.c
+ * added code to copy also the file permissions on *nix
+ 
+* source/rtl/files.c
+ * 'access' function should use F_OK constant instead of 0 on *nix
+ 
 19990626-13:12 Ryszard Glab <rglab@imid.med.pl>
 
 * tests/working/Makefile

@@ -8,6 +8,11 @@
 #include <ctoharb.h>
 #include <filesys.h>
 
+#ifdef OS_UNIX_COMPATIBLE
+   #include <sys/stat.h>
+   #include <unistd.h>
+#endif
+
 #define BUFFER_SIZE 8192
 
 static long hb_fsCopy(BYTEP ,BYTEP ) ;
@@ -36,6 +41,10 @@ static long hb_fsCopy(BYTEP source,BYTEP dest)
    USHORT   usCount;
    ULONG    ulCount = 0L;
    PHB_ITEM pError;
+#ifdef OS_UNIX_COMPATIBLE   
+   struct stat struFileInfo;
+   int iSuccess;
+#endif   
    sHANDLE = hb_fsOpen(source, FO_READ);
    if ( hb_fsError() )
    {
@@ -45,6 +54,9 @@ static long hb_fsCopy(BYTEP source,BYTEP dest)
       hb_errRelease(pError);
       return( -1L) ;
    }
+#ifdef OS_UNIX_COMPATIBLE
+   iSuccess =fstat( sHANDLE, &struFileInfo );
+#endif   
    dHANDLE = hb_fsCreate(dest,FC_NORMAL);
    if ( hb_fsError() )
    {
@@ -71,6 +83,10 @@ static long hb_fsCopy(BYTEP source,BYTEP dest)
    hb_fsWrite(dHANDLE,buffer,usCount);
    hb_xfree(buffer);
    hb_fsClose(sHANDLE);
+#ifdef OS_UNIX_COMPATIBLE
+   if( iSuccess == 0 )
+      fchmod( dHANDLE, struFileInfo.st_mode );
+#endif   
    hb_fsClose(dHANDLE);
    return( ulCount );
 }

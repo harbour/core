@@ -659,7 +659,12 @@ HARBOUR HB_FILE( void )
 
         if( arg1_it )
         {
+/*TODO: Check if F_OK is defined in all compilers */	
+#ifdef OS_UNIX_COMPATIBLE
+           hb_retl( access(hb_parc(1), F_OK) == 0 );
+#else	
            hb_retl( access(hb_parc(1), 0) == 0 );
+#endif	   
         }
         else hb_retl(0);
         return;
