@@ -551,20 +551,21 @@ typedef USHORT ( * DBENTRYP_VF   )( AREAP area, LPDBFIELDINFO param );
 typedef USHORT ( * DBENTRYP_VL   )( AREAP area, LPDBLOCKINFO param );
 typedef USHORT ( * DBENTRYP_SP   )( AREAP area, USHORT * param );
 typedef USHORT ( * DBENTRYP_P    )( AREAP area, BYTE * param );
+typedef USHORT ( * DBENTRYP_PP   )( AREAP area, BYTE ** param );
 typedef USHORT ( * DBENTRYP_S    )( AREAP area, USHORT param );
 typedef USHORT ( * DBENTRYP_LP   )( AREAP area, LONG * param );
 typedef USHORT ( * DBENTRYP_ULP  )( AREAP area, ULONG * param );
 typedef USHORT ( * DBENTRYP_SVP  )( AREAP area, USHORT index, void * param );
 typedef USHORT ( * DBENTRYP_VSP  )( AREAP area, USHORT action, ULONG lRecord );
+typedef USHORT ( * DBENTRYP_SVL  )( AREAP area, USHORT index, ULONG * param );
 typedef USHORT ( * DBENTRYP_SSI  )( AREAP area, USHORT p1, USHORT p2, PHB_ITEM p3 );
+typedef USHORT ( * DBENTRYP_ISI  )( AREAP area, PHB_ITEM p1, USHORT p2, PHB_ITEM p3 );
 
 #if 0
-typedef USHORT ( * DBENTRYP_PP   )( AREAP area, void ** param);
 typedef USHORT ( * DBENTRYP_SVPB )( AREAP area, USHORT index, void * param, USHORT mode);
 typedef USHORT ( * DBENTRYP_VPL  )( AREAP area, void * p1, LONG p2);
 typedef USHORT ( * DBENTRYP_VPLP )( AREAP area, void * p1, LONGP p2);
 typedef USHORT ( * DBENTRYP_LSP  )( AREAP area, LONG p1, USHORTP p2);
-typedef USHORT ( * DBENTRYP_ISI  )( AREAP area, PHB_ITEM p1, USHORT p2, PHB_ITEM p3);
 #endif
 
 
@@ -598,30 +599,20 @@ typedef struct _RDDFUNCS
    DBENTRYP_V    deleterec;
    DBENTRYP_BP   deleted;
    DBENTRYP_SP   fieldCount;
-#if 0
-   DBENTRYP_VP   fieldDisplay;
-#endif
+   DBENTRYP_VF   fieldDisplay;
    DBENTRYP_SSI  fieldInfo;
    DBENTRYP_SVP  fieldName;
    DBENTRYP_V    flush;
-#if 0
    DBENTRYP_PP   getRec;
-#endif
    DBENTRYP_SI   getValue;
-#if 0
-   DBENTRYP_SVP  getVarLen;
-#endif
+   DBENTRYP_SVL  getVarLen;
    DBENTRYP_V    goCold;
    DBENTRYP_V    goHot;
-#if 0
-   DBENTRYP_VP   putRec;
-#endif
+   DBENTRYP_P    putRec;
    DBENTRYP_SI   putValue;
    DBENTRYP_V    recall;
    DBENTRYP_ULP  reccount;
-#if 0
    DBENTRYP_ISI  recInfo;
-#endif
    DBENTRYP_I    recno;
    DBENTRYP_S    setFieldExtent;
 
@@ -708,9 +699,7 @@ typedef struct _RDDFUNCS
 
    /* Memofile functions */
 
-#if 0
    DBENTRYP_V    closeMemFile;
-#endif
    DBENTRYP_VP   createMemFile;
 #if 0
    DBENTRYP_SVPB getValueFile;
@@ -729,9 +718,7 @@ typedef struct _RDDFUNCS
 
    /* Special and reserved methods */
 
-#if 0
    DBENTRYP_SVP  whoCares;
-#endif
 
 } RDDFUNCS;
 

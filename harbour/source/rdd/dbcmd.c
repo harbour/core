@@ -271,6 +271,12 @@ static ERRCODE Found( AREAP pArea, BOOL * pFound )
    return SUCCESS;
 }
 
+static ERRCODE GetRec( AREAP pArea, BYTE ** pBuffer )
+{
+   * pBuffer = pArea->lpExtendInfo->bRecord;
+   return SUCCESS;
+}
+
 static ERRCODE GoCold( AREAP pArea )
 {
    PHB_ITEM pError;
@@ -412,15 +418,20 @@ static RDDFUNCS defTable = { Bof,
                              UnSupported,
                              ( DBENTRYP_BP ) UnSupported,
                              FieldCount,
+                             ( DBENTRYP_VF ) UnSupported,
                              FieldInfo,
                              FieldName,
                              UnSupported,
+                             GetRec,
                              ( DBENTRYP_SI ) UnSupported,
+                             ( DBENTRYP_SVL ) UnSupported,
                              GoCold,
                              GoHot,
+                             ( DBENTRYP_P ) UnSupported,
                              ( DBENTRYP_SI ) UnSupported,
                              UnSupported,
                              ( DBENTRYP_ULP ) UnSupported,
+                             ( DBENTRYP_ISI ) UnSupported,
                              ( DBENTRYP_I ) UnSupported,
                              SetFieldExtent,
                              Alias,
@@ -436,10 +447,12 @@ static RDDFUNCS defTable = { Bof,
                              ( DBENTRYP_VSP ) UnSupported,
                              ( DBENTRYP_VL ) UnSupported,
                              ( DBENTRYP_UL ) UnSupported,
+                             UnSupported,
                              ( DBENTRYP_VP ) UnSupported,
                              ( DBENTRYP_VP ) UnSupported,
                              UnSupported,
-                             UnSupported
+                             UnSupported,
+                             ( DBENTRYP_SVP ) UnSupported
                            };
 
 

@@ -1,3 +1,12 @@
+19990831-19:09 GMT+1 Bruno Cantero <bruno@issnet.net>
+   * include/rddapi.h
+     source/rdd/dbcmd.c
+     source/rdd/dbf1.c
+     * Added more RDD functions.
+
+   * tests/working/Makefile
+     * Added testdbf.prg
+
 19990831-17:40 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/rtl/arrays.c

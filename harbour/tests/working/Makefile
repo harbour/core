@@ -128,6 +128,7 @@ PRG_SOURCES=\
         testbrw.prg \
         testcgi.prg \
         testcopy.prg \
+        testdbf.prg \
         testerro.prg \
         testfor.prg \
         testgt.prg \
