@@ -11,17 +11,12 @@ _______________________________________________________________________
           Topic                              Responsible developer(s)
 ===================================          =========================
 
-SET listener API                             David Holm
-
 DBFCDX support                               Ryszard Glab
 
 Fixing internal HVM/RTL handling of string   ???
 items (Clipper passes a pointer to the same
 allocated memory instead of creating
 string copies)
-
-Map Harbour functions 10 chars to be         Luiz Rafael Culik
-compatible with Caclipper
 
 Optimize out the need for the PUSHNIL        Ryszard Glab
 opcode before each function call.
