@@ -841,7 +841,7 @@ static BOOL hb_ntxTagGoToNextKey( LPTAGINFO pTag, BOOL lContinue )
    LPNTXITEM p;
 
    // pTag->blockNext = 0; pTag->keyNext = 0;
-   if( pTag->CurKeyInfo->Tag )
+   if( pTag->CurKeyInfo->Tag && ((ULONG)pTag->CurKeyInfo->Xtra) == pTag->Owner->Owner->ulRecNo )
    {
       pPage =  hb_ntxPageLoad( pTag,pTag->CurKeyInfo->Tag );
       pPage->CurKey =  hb_ntxPageFindCurrentKey( pPage,pTag->CurKeyInfo->Xtra );
@@ -941,7 +941,7 @@ static BOOL hb_ntxTagGoToPrevKey( LPTAGINFO pTag, BOOL lContinue )
    LPPAGEINFO pPage, pChildPage;
 
    // pTag->blockPrev = 0; pTag->keyPrev = 0;
-   if( pTag->CurKeyInfo->Tag )
+   if( pTag->CurKeyInfo->Tag && ((ULONG)pTag->CurKeyInfo->Xtra) == pTag->Owner->Owner->ulRecNo )
    {
       pPage =  hb_ntxPageLoad( pTag,pTag->CurKeyInfo->Tag );
       pPage->CurKey =  hb_ntxPageFindCurrentKey( pPage,pTag->CurKeyInfo->Xtra );

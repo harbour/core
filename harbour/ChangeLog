@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-07-03 11:46 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/rdd/dbfntx/dbfntx1.c
+    ! Bug fixed, which appeared after switching between orders and following skipping.
+
 2003-07-03 10:54 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   + source/codepage/cdpsl437.c
   + source/lang/msgsl437.c
