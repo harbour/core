@@ -311,3 +311,13 @@ HB_FUNC(SQLAFFROWS)
 {
    _retnl( mysql_affected_rows( (MYSQL *)_parnl(1) ) );
 }
+
+HB_FUNC(SQLHOSTINFO)
+{
+   _retc( mysql_get_host_info( (MYSQL *)_parnl(1) ) );
+}
+
+HB_FUNC(SQLSRVINFO)
+{
+   _retc( mysql_get_server_info( (MYSQL *)_parnl(1) ) );
+}

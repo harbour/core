@@ -1,3 +1,9 @@
+2001-04-26 22:10 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   * contrib/mysql/mysql.c
+     + added functions sqlHostInfo(), sqlSrvInfo()
+   * source/rdd/dbfntx/dbfntx1.c
+     * implemented seek for numeric and date indexes
+
 2001-04-26 14:00 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/vm/debug.c
       ! __VMSTKLCOUNT( <nProcLevel> ) enhanced to accept a nProcLevel.

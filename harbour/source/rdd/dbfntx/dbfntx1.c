@@ -125,6 +125,36 @@ static void backcpy( BYTE* dest, BYTE* src, long mlen )
         *dest = *src;
 }
 
+static char * numToStr( PHB_ITEM pItem, char* szBuffer, USHORT length, USHORT dec )
+{
+   if( HB_IS_DOUBLE( pItem ) )
+   {
+      if( dec == 0 )
+      {
+         if( length > 9 )
+            sprintf( szBuffer, "%0*.0f", length,
+                hb_numRound( hb_itemGetND( pItem ), 0 ) );
+         else
+            sprintf( szBuffer, "%0*li", length,
+                ( LONG ) hb_numRound( hb_itemGetND( pItem ), 0 ) );
+      }
+      else
+         sprintf( szBuffer, "%0*.*f", length,
+                dec, hb_numRound( hb_itemGetND( pItem ),
+                dec ) );
+   }
+   else
+   {
+      if( dec == 0 )
+         sprintf( szBuffer, "%0*li", length, hb_itemGetNL( pItem ) );
+      else
+         sprintf( szBuffer, "%0*.*f", length,
+                dec, hb_itemGetND( pItem ) );
+   }
+   szBuffer[ length ] = 0;
+   return szBuffer;
+}
+
 /* Implementation of internal functions */
 
 static LPKEYINFO hb_ntxKeyNew( LPKEYINFO pKeyFrom )
@@ -290,21 +320,49 @@ static USHORT hb_ntxPageFindCurrentKey( LPPAGEINFO pPage, ULONG ulRecno )
 
 static void hb_ntxGetCurrentKey( LPTAGINFO pTag, LPKEYINFO pKey )
 {
-
+   char szBuffer[ NTX_MAX_KEY ];
    /* printf( "\n\rhb_ntxGetCurrentKey - 0:  |%s|",pTag->KeyExpr ); */
    if( hb_itemType( pTag->pKeyItem ) == HB_IT_BLOCK )
    {
       hb_vmPushSymbol( &hb_symEval );
       hb_vmPush( pTag->pKeyItem );
       hb_vmDo( 0 );
-      hb_itemCopy( pKey->pItem , &hb_stack.Return );
+      switch( hb_itemType( &hb_stack.Return ) )
+      {
+         case HB_IT_STRING:
+            hb_itemCopy( pKey->pItem, &hb_stack.Return );
+            break;
+         case HB_IT_INTEGER:
+         case HB_IT_LONG:
+         case HB_IT_DOUBLE:
+            hb_itemPutC( pKey->pItem, numToStr( &hb_stack.Return, szBuffer, pTag->KeyLength, pTag->KeyDec ) );
+            break;
+        case HB_IT_DATE:
+           hb_itemGetDS( &hb_stack.Return, szBuffer );
+           hb_itemPutC( pKey->pItem,szBuffer );
+           break;
+      }
    }
    else
    {
       HB_MACRO_PTR pMacro;
       pMacro = ( HB_MACRO_PTR ) hb_itemGetPtr( pTag->pKeyItem );
       hb_macroRun( pMacro );
-      hb_itemCopy( pKey->pItem, hb_stackItemFromTop( - 1 ) );
+      switch( hb_itemType( hb_stackItemFromTop( - 1 ) ) )
+      {
+         case HB_IT_STRING:
+            hb_itemCopy( pKey->pItem, hb_stackItemFromTop( - 1 ) );
+            break;
+         case HB_IT_INTEGER:
+         case HB_IT_LONG:
+         case HB_IT_DOUBLE:
+            hb_itemPutC( pKey->pItem, numToStr( hb_stackItemFromTop( - 1 ), szBuffer, pTag->KeyLength, pTag->KeyDec ) );
+            break;
+        case HB_IT_DATE:
+           hb_itemGetDS( hb_stackItemFromTop( - 1 ), szBuffer );
+           hb_itemPutC( pKey->pItem,szBuffer );
+           break;
+      }
       hb_stackPop();
    }
 
@@ -735,6 +793,16 @@ static int hb_ntxItemCompare( PHB_ITEM pKey1, PHB_ITEM pKey2, BOOL Exact )
          if( iResult < 0 && !Exact )
             iResult = 0;
          break;
+/*
+      case HB_IT_INTEGER:
+      case HB_IT_LONG:
+      case HB_IT_DOUBLE:
+         iResult = hb_itemGetND( pKey1 ) - hb_itemGetND( pKey2 );
+         break;
+      case HB_IT_DATE:
+         iResult = hb_itemGetDL( pKey1 ) - hb_itemGetDL( pKey2 );
+         break;
+*/
       default:
          iResult = 0;
          printf( "hb_ntxKeyCompare()" );
@@ -1639,31 +1707,7 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
             case HB_IT_INTEGER:
             case HB_IT_LONG:
             case HB_IT_DOUBLE:
-               if( HB_IS_DOUBLE( pItem ) )
-               {
-                  if( pTag->KeyDec == 0 )
-                  {
-                     if( pTag->KeyLength > 9 )
-                        sprintf( szBuffer, "%0*.0f", pTag->KeyLength,
-                            hb_numRound( hb_itemGetND( pItem ), 0 ) );
-                     else
-                        sprintf( szBuffer, "%0*li", pTag->KeyLength,
-                            ( LONG ) hb_numRound( hb_itemGetND( pItem ), 0 ) );
-                  }
-                  else
-                     sprintf( szBuffer, "%0*.*f", pTag->KeyLength,
-                            pTag->KeyDec, hb_numRound( hb_itemGetND( pItem ),
-                            pTag->KeyDec ) );
-               }
-               else
-               {
-                  if( pTag->KeyDec == 0 )
-                     sprintf( szBuffer, "%0*li", pTag->KeyLength, hb_itemGetNL( pItem ) );
-                  else
-                     sprintf( szBuffer, "%0*.*f", pTag->KeyLength,
-                            pTag->KeyDec, hb_itemGetND( pItem ) );
-               }
-               szBuffer[ pTag->KeyLength ] = 0;
+               numToStr( pItem, szBuffer, pTag->KeyLength, pTag->KeyDec );
                hb_ntxSortKeyAdd( pTag, &sortInfo,szBuffer );
                break;
             case HB_IT_DATE:
@@ -1951,10 +1995,26 @@ static ERRCODE ntxSeek( NTXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
      LPKEYINFO pKey2;
      LPTAGINFO pTag;
      LPNTXINDEX lpCurIndex;
+     char szBuffer[ NTX_MAX_KEY ];
 
      pTag = pArea->lpCurIndex->CompoundTag;
      pKey2 = hb_ntxKeyNew( NULL );
-     hb_itemCopy( pKey2->pItem, pKey );
+     switch( hb_itemType( pKey ) )
+     {
+        case HB_IT_STRING:
+           hb_itemCopy( pKey2->pItem, pKey );
+           break;
+        case HB_IT_INTEGER:
+        case HB_IT_LONG:
+        case HB_IT_DOUBLE:
+           hb_itemPutC( pKey2->pItem, numToStr( pKey, szBuffer, pTag->KeyLength, pTag->KeyDec ) );
+           break;
+        case HB_IT_DATE:
+           hb_itemGetDS( pKey, szBuffer );
+           hb_itemPutC( pKey2->pItem,szBuffer );
+           break;
+     }
+     /* hb_itemCopy( pKey2->pItem, pKey ); */
      if ( bFindLast )
        pKey2->Tag = NTX_MAX_REC_NUM;
      else
