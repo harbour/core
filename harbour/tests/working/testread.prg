@@ -21,6 +21,7 @@ function Main()
    local cWish := "Power   "
    local GetList := {}
 
+   SET COLOR TO GR+/B, W+/BG
    CLS
 
    @ 2, 2 SAY "Enter your name:" GET cName
