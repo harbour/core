@@ -144,11 +144,11 @@ static BYTE s_pcode_len[] = {
    3,        /* HB_P_PUSHLOCAL,            */
    2,        /* HB_P_PUSHLOCALNEAR,        */
    3,        /* HB_P_PUSHLOCALREF,         */
-   1+sizeof(long),        /* HB_P_PUSHLONG,             */
+   1 + sizeof( long ),        /* HB_P_PUSHLONG,             */
    3,        /* HB_P_PUSHMEMVAR,           */
    3,        /* HB_P_PUSHMEMVARREF,        */
    1,        /* HB_P_PUSHNIL,              */
-   2+sizeof(double),        /* HB_P_PUSHDOUBLE,           */
+   1 + sizeof( double ) + sizeof( BYTE ) + sizeof( BYTE ),        /* HB_P_PUSHDOUBLE,           */
    1,        /* HB_P_PUSHSELF,             */
    3,        /* HB_P_PUSHSTATIC,           */
    3,        /* HB_P_PUSHSTATICREF,        */

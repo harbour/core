@@ -897,8 +897,10 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_PUSHDOUBLE:
-            hb_vmPushDoubleConst( * ( double * ) ( &pCode[ w + 1 ] ), -1, ( int ) * ( BYTE * ) &pCode[ w + 1 + sizeof( double ) ] );
-            w += 1 + sizeof( double ) + 1;
+            hb_vmPushDoubleConst( * ( double * ) ( &pCode[ w + 1 ] ),
+                                  ( int ) * ( BYTE * ) &pCode[ w + 1 + sizeof( double ) ],
+                                  ( int ) * ( BYTE * ) &pCode[ w + 1 + sizeof( double ) + sizeof( BYTE ) ] );
+            w += 1 + sizeof( double ) + sizeof( BYTE ) + sizeof( BYTE );
             break;
 
          case HB_P_PUSHSTR:
@@ -3102,17 +3104,18 @@ static void hb_vmPushDoubleConst( double dNumber, int iWidth, int iDec )
 
    if( dNumber >= 1000000000.0 )
    {
-      /* TODO: The width calculation should be made at compile time, and the
-               info should be stored in the code. Thus this huge ugly and slow
-               hack can be replaced. [vszakats] */
+      /* NOTE: If the width info is not provided by the pcode stream, 
+               it will be determined at runtime with a relatively slow
+               method. [vszakats] */
 
-      HB_SYMBOL_UNUSED( iWidth );
-
+      if( iWidth == -1 )
       {
          char buffer[ 360 ];
          sprintf( buffer, "%.*f", 0, dNumber );
          hb_stack.pPos->item.asDouble.length = strlen( buffer ) + 1;
       }
+      else
+         hb_stack.pPos->item.asDouble.length = iWidth;
 
       if( iDec )
          hb_stack.pPos->item.asDouble.length--;

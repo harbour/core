@@ -126,7 +126,7 @@ extern void hb_compGenPushAliasedVar( char * szVarName,
                                       char * szAlias,
                                       long lWorkarea, HB_MACRO_DECL );
 extern void hb_compGenPushLogical( int iTrueFalse, HB_MACRO_DECL );
-extern void hb_compGenPushDouble( double dNumber, BYTE bDec, HB_MACRO_DECL );
+extern void hb_compGenPushDouble( double dNumber, BYTE bWidth, BYTE bDec, HB_MACRO_DECL );
 extern void hb_compGenPushFunCall( char * szFunName, HB_MACRO_DECL );
 extern void hb_compGenPushString( char * szText, ULONG ulStrLen, HB_MACRO_DECL );
 extern void hb_compCodeBlockStart( HB_MACRO_DECL );

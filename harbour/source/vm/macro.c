@@ -1094,10 +1094,11 @@ void hb_compGenPushLogical( int iTrueFalse, HB_MACRO_DECL )
 }
 
 /* generates the pcode to push a double number on the virtual machine stack */
-void hb_compGenPushDouble( double dNumber, BYTE bDec, HB_MACRO_DECL )
+void hb_compGenPushDouble( double dNumber, BYTE bWidth, BYTE bDec, HB_MACRO_DECL )
 {
    hb_compGenPCode1( HB_P_PUSHDOUBLE, HB_MACRO_PARAM );
    hb_compGenPCodeN( ( BYTE * ) &dNumber, sizeof( double ), HB_MACRO_PARAM );
+   hb_compGenPCode1( bWidth, HB_MACRO_PARAM );
    hb_compGenPCode1( bDec, HB_MACRO_PARAM );
 }
 

@@ -1117,17 +1117,18 @@ static HB_GENC_FUNC( hb_p_pushdouble )
 {
    int i;
 
-   fprintf( cargo->yyc, "\tHB_P_PUSHDOUBLE, " );
+   fprintf( cargo->yyc, "\tHB_P_PUSHDOUBLE," );
    ++lPCodePos;
-   for( i = 0; i < sizeof( double ) + sizeof( BYTE ); ++i )
-      fprintf( cargo->yyc, "%i,", ( ( BYTE * ) pFunc->pCode )[ lPCodePos + i ] );
-   if( cargo->bVerbose ) fprintf( cargo->yyc, "\t/* %.*f, %d */",
+   for( i = 0; i < sizeof( double ) + sizeof( BYTE ) + sizeof( BYTE ); ++i )
+      fprintf( cargo->yyc, " %i,", ( ( BYTE * ) pFunc->pCode )[ lPCodePos + i ] );
+   if( cargo->bVerbose ) fprintf( cargo->yyc, "\t/* %.*f, %d, %d */",
       *( ( BYTE * ) &( pFunc->pCode[ lPCodePos + sizeof( double ) ] ) ),
       *( ( double * ) &( pFunc->pCode[ lPCodePos ] ) ),
-      *( ( BYTE * ) &( pFunc->pCode[ lPCodePos + sizeof( double ) ] ) ) );
+      *( ( BYTE * ) &( pFunc->pCode[ lPCodePos + sizeof( double ) ] ) ),
+      *( ( BYTE * ) &( pFunc->pCode[ lPCodePos + sizeof( double ) + sizeof( BYTE ) ] ) ) );
    fprintf( cargo->yyc, "\n" );
 
-   return sizeof( double ) + sizeof( BYTE ) + 1;
+   return sizeof( double ) + sizeof( BYTE ) + sizeof( BYTE ) + 1;
 }
 
 static HB_GENC_FUNC( hb_p_pushfield )

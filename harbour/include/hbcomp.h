@@ -229,7 +229,7 @@ extern void hb_compLinePushIfInside( void );   /* generates the pcode with the c
 extern void hb_compGenMessage( char * szMsgName );       /* sends a message to an object */
 extern void hb_compGenMessageData( char * szMsg );     /* generates an underscore-symbol name for a data assignment */
 extern void hb_compGenPopVar( char * szVarName );         /* generates the pcode to pop a value from the virtual machine stack onto a variable */
-extern void hb_compGenPushDouble( double fNumber, BYTE bDec ); /* Pushes a number on the virtual machine stack */
+extern void hb_compGenPushDouble( double dNumber, BYTE bWidth, BYTE bDec ); /* Pushes a number on the virtual machine stack */
 extern void hb_compGenPushFunCall( char * );             /* generates the pcode to push function's call */
 extern void hb_compGenPushVar( char * szVarName );        /* generates the pcode to push a variable value to the virtual machine stack */
 extern void hb_compGenPushVarRef( char * szVarName );    /* generates the pcode to push a variable by reference to the virtual machine stack */

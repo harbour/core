@@ -2270,17 +2270,18 @@ void hb_compGenPushNil( void )
 }
 
 /* generates the pcode to push a double number on the virtual machine stack */
-void hb_compGenPushDouble( double dNumber, BYTE bDec )
+void hb_compGenPushDouble( double dNumber, BYTE bWidth, BYTE bDec )
 {
-   BYTE pBuffer[ sizeof( double ) + 2 ];
+   BYTE pBuffer[ sizeof( double ) + sizeof( BYTE ) + sizeof( BYTE ) ];
 
-   pBuffer[0] = HB_P_PUSHDOUBLE;
+   pBuffer[ 0 ] = HB_P_PUSHDOUBLE;
 
-   memcpy( ( BYTE * )&(pBuffer[1]), ( BYTE * ) &dNumber, sizeof( double ) );
+   memcpy( ( BYTE * ) &( pBuffer[ 1 ] ), ( BYTE * ) &dNumber, sizeof( double ) );
 
-   pBuffer[ sizeof( double ) + 1 ] = bDec;
+   pBuffer[ 1 + sizeof( double ) ] = bWidth;
+   pBuffer[ 1 + sizeof( double ) + sizeof( BYTE ) ] = bDec;
 
-   hb_compGenPCodeN( pBuffer, sizeof( double ) + 2, 1 );
+   hb_compGenPCodeN( pBuffer, 1 + sizeof( double ) + sizeof( BYTE ) + sizeof( BYTE ), 1 );
 }
 
 void hb_compGenPushFunCall( char * szFunName )
