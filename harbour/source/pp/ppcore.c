@@ -3715,6 +3715,18 @@ static int NextName( char ** sSource, char * sDest )
         continue;
      }
      /* End - Ron Pinkas added 2001-02-21 */
+     else if( (*sSource)[0] == '.' && toupper( (*sSource)[1] ) == 'T' && (*sSource)[2] == '.' )
+     {
+        (*sSource) += 3;
+        cLastChar = ' ';
+        continue;
+     }
+     else if( (*sSource)[0] == '.' && toupper( (*sSource)[1] ) == 'F' && (*sSource)[2] == '.' )
+     {
+        (*sSource) += 3;
+        cLastChar = ' ';
+        continue;
+     }
      else if( **sSource == '\'' )
      {
         /* Ron Pinkas added 2000-11-08 */

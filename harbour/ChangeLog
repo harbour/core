@@ -8,6 +8,9 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-07-17 12:55 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/pp/ppcore.c
+    ! Bug fixed, related to #define f ..., #define t ... and .T., .F.
 
 2002-07-17 12:30 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/debug/debugger.prg
