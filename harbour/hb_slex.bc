@@ -23,11 +23,6 @@
 #
 
 #
-# NOTE: "echo." intentionally used instead of "echo", to avoid conflicts
-#       with external commands named echo.
-#
-
-#
 # NOTE: BCC_NOSTARTUP must be defined for Borland C++ 5.3 to make it work.
 #
 
@@ -228,6 +223,8 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\minmax.obj \
    $(OBJ_DIR)\mlcount.obj \
    $(OBJ_DIR)\mlpos.obj \
+   $(OBJ_DIR)\mlctopos.obj \
+   $(OBJ_DIR)\mpostolc.obj \
    $(OBJ_DIR)\mod.obj \
    $(OBJ_DIR)\mouseapi.obj \
    $(OBJ_DIR)\mousex.obj \
@@ -306,6 +303,8 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\memvarbl.obj \
    $(OBJ_DIR)\menuto.obj \
    $(OBJ_DIR)\objfunc.obj \
+   $(OBJ_DIR)\persist.obj \
+   $(OBJ_DIR)\profiler.obj \
    $(OBJ_DIR)\pushbtn.obj \
    $(OBJ_DIR)\radiobtn.obj \
    $(OBJ_DIR)\radiogrp.obj \
@@ -391,8 +390,8 @@ RDD_LIB_OBJS = \
    $(OBJ_DIR)\sdf1.obj \
    \
    $(OBJ_DIR)\dbf0.obj \
-   $(OBJ_DIR)\dblist.obj \
    $(OBJ_DIR)\dbfuncs.obj \
+   $(OBJ_DIR)\dblist.obj \
    $(OBJ_DIR)\dbsort.obj \
    $(OBJ_DIR)\hbdbsort.obj \
    $(OBJ_DIR)\dbstrux.obj \
@@ -736,29 +735,29 @@ $(OBJ_DIR)\pragma.obj : $(PP_DIR)\pragma.c
 #
 $(HARBOUR_EXE) : $(HARBOUR_EXE_OBJS)
 
-   echo. $(CFLAGS) > make.tmp
-   echo. -e$(HARBOUR_EXE) >> make.tmp
-   echo. $(OBJ_DIR)\harbour.obj >> make.tmp
-   echo. $(OBJ_DIR)\harboury.obj >> make.tmp
-   echo. $(OBJ_DIR)\hbslex.obj >> make.tmp
-   echo. $(OBJ_DIR)\cmdcheck.obj >> make.tmp
-   echo. $(OBJ_DIR)\hbusage.obj >> make.tmp
-   echo. $(OBJ_DIR)\hbident.obj >> make.tmp
-   echo. $(OBJ_DIR)\hbgenerr.obj >> make.tmp
-   echo. $(OBJ_DIR)\hbpcode.obj >> make.tmp
-   echo. $(OBJ_DIR)\hbfix.obj >> make.tmp
-   echo. $(OBJ_DIR)\genc.obj >> make.tmp
-   echo. $(OBJ_DIR)\gencobj.obj >> make.tmp
-   echo. $(OBJ_DIR)\genobj32.obj >> make.tmp
-   echo. $(OBJ_DIR)\genjava.obj >> make.tmp
-   echo. $(OBJ_DIR)\genhrb.obj >> make.tmp
-   echo. $(OBJ_DIR)\expropta.obj >> make.tmp
-   echo. $(OBJ_DIR)\exproptb.obj >> make.tmp
-   echo. $(OBJ_DIR)\exproptc.obj >> make.tmp
-   echo. $(OBJ_DIR)\hbfunchk.obj >> make.tmp
-   echo. $(COMMON_LIB) $(PP_LIB) >> make.tmp
+   $(ECHO)  $(CFLAGS) > make.tmp
+   $(ECHO)  -e$(HARBOUR_EXE) >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\harbour.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\harboury.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\hbslex.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\cmdcheck.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\hbusage.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\hbident.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\hbgenerr.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\hbpcode.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\hbfix.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\genc.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\gencobj.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\genobj32.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\genjava.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\genhrb.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\expropta.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\exproptb.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\exproptc.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\hbfunchk.obj >> make.tmp
+   $(ECHO)  $(COMMON_LIB) $(PP_LIB) >> make.tmp
    $(CC) @make.tmp
-   del make.tmp
+   $(DEL) make.tmp
 
 $(OBJ_DIR)\harbour.obj : $(COMPILER_DIR)\harbour.c
    $(CC) $(CLIBFLAGS) -o$@ $**
@@ -773,9 +772,9 @@ $(OBJ_DIR)\harboury.obj : $(OBJ_DIR)\harboury.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
 #$(OBJ_DIR)\harbourl.obj : $(COMPILER_DIR)\harbourl.c
-#   -echo. > $(OBJ_DIR)\unistd.h
+#   -$(ECHO)  > $(OBJ_DIR)\unistd.h
 #   $(CC) $(CLIBFLAGS) -I$(OBJ_DIR) -o$@ $**
-#   -del $(OBJ_DIR)\unistd.h
+#   -$(DEL) $(OBJ_DIR)\unistd.h
 
 $(OBJ_DIR)\hbslex.obj : $(COMPILER_DIR)\hbslex.c
    $(CC) $(CLIBFLAGS) -I$(OBJ_DIR) -o$@ $**
@@ -861,7 +860,6 @@ $(OBJ_DIR)\dbfuncs.c : $(RDD_DIR)\dbfuncs.prg
 $(OBJ_DIR)\dbfuncs.obj : $(OBJ_DIR)\dbfuncs.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RDD_LIB) $(ARFLAGS) -+$@,,
-
 
 $(OBJ_DIR)\dbsort.c : $(RDD_DIR)\dbsort.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
@@ -1148,6 +1146,7 @@ $(OBJ_DIR)\checkbox.obj : $(OBJ_DIR)\checkbox.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
+
 $(OBJ_DIR)\chrasc.obj : $(RTL_DIR)\chrasc.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
@@ -1422,6 +1421,14 @@ $(OBJ_DIR)\mlpos.obj : $(RTL_DIR)\mlpos.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\mpostolc.obj : $(RTL_DIR)\mpostolc.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\mlctopos.obj : $(RTL_DIR)\mlctopos.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\mod.obj : $(RTL_DIR)\mod.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
@@ -1493,10 +1500,17 @@ $(OBJ_DIR)\philesx.obj : $(RTL_DIR)\philesx.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
-$(OBJ_DIR)\radiobtn.c : $(RTL_DIR)\radiobtn.prg
+$(OBJ_DIR)\persist.c : $(RTL_DIR)\persist.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
-$(OBJ_DIR)\radiobtn.obj : $(OBJ_DIR)\radiobtn.c
+$(OBJ_DIR)\persist.obj : $(OBJ_DIR)\persist.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\profiler.c : $(RTL_DIR)\profiler.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\profiler.obj : $(OBJ_DIR)\profiler.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
@@ -1507,12 +1521,21 @@ $(OBJ_DIR)\pushbtn.obj : $(OBJ_DIR)\pushbtn.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
+
+$(OBJ_DIR)\radiobtn.c : $(RTL_DIR)\radiobtn.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\radiobtn.obj : $(OBJ_DIR)\radiobtn.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\radiogrp.c : $(RTL_DIR)\radiogrp.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
 $(OBJ_DIR)\radiogrp.obj : $(OBJ_DIR)\radiogrp.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
+
 
 $(OBJ_DIR)\rat.obj : $(RTL_DIR)\rat.c
    $(CC) $(CLIBFLAGS) -o$@ $**
@@ -1959,15 +1982,15 @@ $(OBJ_DIR)\macroy.obj : $(OBJ_DIR)\macroy.c
    tlib $(MACRO_LIB) $(ARFLAGS) -+$@,,
 
 #$(OBJ_DIR)\macrol.obj : $(OBJ_DIR)\macrol.c
-#   -echo. > $(OBJ_DIR)\unistd.h
+#   -$(ECHO)  > $(OBJ_DIR)\unistd.h
 #   $(CC) $(CLIBFLAGS) -I$(OBJ_DIR) -o$@ $**
-#   -del $(OBJ_DIR)\unistd.h
+#   -$(DEL) $(OBJ_DIR)\unistd.h
 #   tlib $(MACRO_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\macroslx.obj : $(MACRO_DIR)\macroslx.c
-   -echo. > $(OBJ_DIR)\unistd.h
+   -$(ECHO)  > $(OBJ_DIR)\unistd.h
    $(CC) $(CLIBFLAGS) -I$(OBJ_DIR) -o$@ $**
-   -del $(OBJ_DIR)\unistd.h
+   -$(DEL) $(OBJ_DIR)\unistd.h
    tlib $(MACRO_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\macroa.obj : $(MACRO_DIR)\macroa.c
@@ -2159,34 +2182,34 @@ $(HBPP_EXE) : \
    $(COMMON_LIB_OBJS)
 
    $(CC) $(CLIBFLAGS) -o$(OBJ_DIR)\hbpp.obj $(HBPP_DIR)\hbpp.c
-   echo. $(CFLAGS) > make.tmp
-   echo. -e$(HBPP_EXE) >> make.tmp
-   echo. $(OBJ_DIR)\hbpp.obj >> make.tmp
-   echo. $(COMMON_LIB) $(PP_LIB) >> make.tmp
+   $(ECHO)  $(CFLAGS) > make.tmp
+   $(ECHO)  -e$(HBPP_EXE) >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\hbpp.obj >> make.tmp
+   $(ECHO)  $(COMMON_LIB) $(PP_LIB) >> make.tmp
    $(CC) @make.tmp
-   del make.tmp
+   $(DEL) make.tmp
 
 #
 # HBRUN.EXE dependencies
 #
 $(HBRUN_EXE) : $(HBRUN_EXE_OBJS)
 
-   echo. $(CFLAGS) > make.tmp
-   echo. -e$(HBRUN_EXE) >> make.tmp
-   echo. $(OBJ_DIR)\hbrun.obj >> make.tmp
-   echo. $(OBJ_DIR)\external.obj >> make.tmp
-   echo. $(PP_LIB) >> make.tmp
-   echo. $(COMMON_LIB) >> make.tmp
-   echo. $(VM_LIB) >> make.tmp
-   echo. $(RTL_LIB) >> make.tmp
-   echo. $(HB_GT_LIB) >> make.tmp
-   echo. $(LANG_LIB) >> make.tmp
-   echo. $(RDD_LIB) >> make.tmp
-   echo. $(MACRO_LIB) >> make.tmp
-   echo. $(DBFNTX_LIB) >> make.tmp
-   echo. $(DBFCDX_LIB) >> make.tmp
+   $(ECHO)  $(CFLAGS) > make.tmp
+   $(ECHO)  -e$(HBRUN_EXE) >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\hbrun.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\external.obj >> make.tmp
+   $(ECHO)  $(PP_LIB) >> make.tmp
+   $(ECHO)  $(COMMON_LIB) >> make.tmp
+   $(ECHO)  $(VM_LIB) >> make.tmp
+   $(ECHO)  $(RTL_LIB) >> make.tmp
+   $(ECHO)  $(HB_GT_LIB) >> make.tmp
+   $(ECHO)  $(LANG_LIB) >> make.tmp
+   $(ECHO)  $(RDD_LIB) >> make.tmp
+   $(ECHO)  $(MACRO_LIB) >> make.tmp
+   $(ECHO)  $(DBFNTX_LIB) >> make.tmp
+   $(ECHO)  $(DBFCDX_LIB) >> make.tmp
    $(CC) @make.tmp
-   del make.tmp
+   $(DEL) make.tmp
 
 $(OBJ_DIR)\hbrun.c : $(HBRUN_DIR)\hbrun.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
@@ -2205,31 +2228,31 @@ $(OBJ_DIR)\external.obj : $(OBJ_DIR)\external.c
 #
 $(HBTEST_EXE) : $(HBTEST_EXE_OBJS)
 
-   echo. $(CFLAGS) > make.tmp
-   echo. -e$(HBTEST_EXE) >> make.tmp
-   echo. $(OBJ_DIR)\hbtest.obj >> make.tmp
-   echo. $(OBJ_DIR)\rt_hvm.obj >> make.tmp
-   echo. $(OBJ_DIR)\rt_hvma.obj >> make.tmp
-   echo. $(OBJ_DIR)\rt_math.obj >> make.tmp
-   echo. $(OBJ_DIR)\rt_date.obj >> make.tmp
-   echo. $(OBJ_DIR)\rt_str.obj >> make.tmp
-   echo. $(OBJ_DIR)\rt_stra.obj >> make.tmp
-   echo. $(OBJ_DIR)\rt_trans.obj >> make.tmp
-   echo. $(OBJ_DIR)\rt_array.obj >> make.tmp
-   echo. $(OBJ_DIR)\rt_file.obj >> make.tmp
-   echo. $(OBJ_DIR)\rt_misc.obj >> make.tmp
-   echo. $(PP_LIB) >> make.tmp
-   echo. $(COMMON_LIB) >> make.tmp
-   echo. $(VM_LIB) >> make.tmp
-   echo. $(RTL_LIB) >> make.tmp
-   echo. $(HB_GT_LIB) >> make.tmp
-   echo. $(LANG_LIB) >> make.tmp
-   echo. $(RDD_LIB) >> make.tmp
-   echo. $(MACRO_LIB) >> make.tmp
-   echo. $(DBFNTX_LIB) >> make.tmp
-   echo. $(DBFCDX_LIB) >> make.tmp
+   $(ECHO)  $(CFLAGS) > make.tmp
+   $(ECHO)  -e$(HBTEST_EXE) >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\hbtest.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\rt_hvm.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\rt_hvma.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\rt_math.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\rt_date.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\rt_str.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\rt_stra.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\rt_trans.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\rt_array.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\rt_file.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\rt_misc.obj >> make.tmp
+   $(ECHO)  $(PP_LIB) >> make.tmp
+   $(ECHO)  $(COMMON_LIB) >> make.tmp
+   $(ECHO)  $(VM_LIB) >> make.tmp
+   $(ECHO)  $(RTL_LIB) >> make.tmp
+   $(ECHO)  $(HB_GT_LIB) >> make.tmp
+   $(ECHO)  $(LANG_LIB) >> make.tmp
+   $(ECHO)  $(RDD_LIB) >> make.tmp
+   $(ECHO)  $(MACRO_LIB) >> make.tmp
+   $(ECHO)  $(DBFNTX_LIB) >> make.tmp
+   $(ECHO)  $(DBFCDX_LIB) >> make.tmp
    $(CC) @make.tmp
-   del make.tmp
+   $(DEL) make.tmp
 
 $(OBJ_DIR)\hbtest.c : $(HBTEST_DIR)\hbtest.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
@@ -2302,43 +2325,43 @@ $(OBJ_DIR)\rt_misc.obj : $(OBJ_DIR)\rt_misc.c
 #
 $(HBDOC_EXE) : $(HBDOC_EXE_OBJS)
 
-   echo. $(CFLAGS) > make.tmp
-   echo. -e$(HBDOC_EXE) >> make.tmp
-   echo. $(OBJ_DIR)\hbdoc.obj >> make.tmp
-   echo. $(OBJ_DIR)\genasc.obj >> make.tmp
-   echo. $(OBJ_DIR)\genhpc.obj >> make.tmp
-   echo. $(OBJ_DIR)\genhtm.obj >> make.tmp
-   echo. $(OBJ_DIR)\genchm.obj >> make.tmp
-   echo. $(OBJ_DIR)\genng.obj >> make.tmp
-   echo. $(OBJ_DIR)\genos2.obj >> make.tmp
-   echo. $(OBJ_DIR)\genrtf.obj >> make.tmp
-   echo. $(OBJ_DIR)\gentrf.obj >> make.tmp
-   echo. $(OBJ_DIR)\html.obj >> make.tmp
-   echo. $(OBJ_DIR)\ng.obj >> make.tmp
-   echo. $(OBJ_DIR)\os2.obj >> make.tmp
-   echo. $(OBJ_DIR)\rtf.obj >> make.tmp
-   echo. $(OBJ_DIR)\troff.obj >> make.tmp
-   echo. $(OBJ_DIR)\fclass1.obj >> make.tmp
-   echo. $(OBJ_DIR)\ffile1.obj >> make.tmp
-   echo. $(OBJ_DIR)\ft_funcs.obj >> make.tmp
-   echo. $(PP_LIB) >> make.tmp
-   echo. $(COMMON_LIB) >> make.tmp
-   echo. $(VM_LIB) >> make.tmp
-   echo. $(RTL_LIB) >> make.tmp
-   echo. $(HB_GT_LIB) >> make.tmp
-   echo. $(LANG_LIB) >> make.tmp
-   echo. $(RDD_LIB) >> make.tmp
-   echo. $(MACRO_LIB) >> make.tmp
-   echo. $(DBFNTX_LIB) >> make.tmp
-   echo. $(DBFCDX_LIB) >> make.tmp
+   $(ECHO)  $(CFLAGS) > make.tmp
+   $(ECHO)  -e$(HBDOC_EXE) >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\hbdoc.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\genasc.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\genhpc.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\genhtm.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\genchm.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\genng.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\genos2.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\genrtf.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\gentrf.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\html.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\ng.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\os2.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\rtf.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\troff.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\fclass1.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\ffile1.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\ft_funcs.obj >> make.tmp
+   $(ECHO)  $(PP_LIB) >> make.tmp
+   $(ECHO)  $(COMMON_LIB) >> make.tmp
+   $(ECHO)  $(VM_LIB) >> make.tmp
+   $(ECHO)  $(RTL_LIB) >> make.tmp
+   $(ECHO)  $(HB_GT_LIB) >> make.tmp
+   $(ECHO)  $(LANG_LIB) >> make.tmp
+   $(ECHO)  $(RDD_LIB) >> make.tmp
+   $(ECHO)  $(MACRO_LIB) >> make.tmp
+   $(ECHO)  $(DBFNTX_LIB) >> make.tmp
+   $(ECHO)  $(DBFCDX_LIB) >> make.tmp
 !if $d(PDF)
-   echo. $(OBJ_DIR)\genpdf1.obj >> make.tmp
-   echo. $(OBJ_DIR)\pdfhbdoc.obj >> make.tmp
-   echo. $(LIB_DIR)\pdflib.lib >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\genpdf1.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\pdfhbdoc.obj >> make.tmp
+   $(ECHO)  $(LIB_DIR)\pdflib.lib >> make.tmp
 !endif
 
    $(CC) @make.tmp
-   del make.tmp
+   $(DEL) make.tmp
 
 $(OBJ_DIR)\hbdoc.c : $(HBDOC_DIR)\hbdoc.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
@@ -2455,30 +2478,30 @@ $(OBJ_DIR)\pdfhbdoc.obj : $(HBPDF_DIR)\pdfhbdoc.c
 
 $(HBMAKE_EXE) : $(HBMAKE_EXE_OBJS)
 
-   echo. $(CFLAGS) > make.tmp
-   echo. -M -e$(HBMAKE_EXE) >> make.tmp
-   echo. $(OBJ_DIR)\hbmake.obj >> make.tmp
-   echo. $(OBJ_DIR)\radios.obj >> make.tmp
-   echo. $(OBJ_DIR)\checks.obj >> make.tmp
-   echo. $(OBJ_DIR)\fclass1.obj >> make.tmp
-   echo. $(OBJ_DIR)\ffile1.obj >> make.tmp
-   echo. $(OBJ_DIR)\ft_funcs.obj >> make.tmp
-   echo. $(OBJ_DIR)\pickarry.obj  >> make.tmp
-   echo. $(OBJ_DIR)\pickfile.obj  >> make.tmp
-   echo. $(OBJ_DIR)\prb_stak.obj  >> make.tmp
-   echo. $(PP_LIB) >> make.tmp
-   echo. $(COMMON_LIB) >> make.tmp
-   echo. $(VM_LIB) >> make.tmp
-   echo. $(RTL_LIB) >> make.tmp
-   echo. $(HB_GT_LIB) >> make.tmp
-   echo. $(LANG_LIB) >> make.tmp
-   echo. $(RDD_LIB) >> make.tmp
-   echo. $(MACRO_LIB) >> make.tmp
-   echo. $(DBFNTX_LIB) >> make.tmp
-   echo. $(DBFCDX_LIB) >> make.tmp
+   $(ECHO)  $(CFLAGS) > make.tmp
+   $(ECHO)  -M -e$(HBMAKE_EXE) >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\hbmake.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\radios.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\checks.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\fclass1.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\ffile1.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\ft_funcs.obj >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\pickarry.obj  >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\pickfile.obj  >> make.tmp
+   $(ECHO)  $(OBJ_DIR)\prb_stak.obj  >> make.tmp
+   $(ECHO)  $(PP_LIB) >> make.tmp
+   $(ECHO)  $(COMMON_LIB) >> make.tmp
+   $(ECHO)  $(VM_LIB) >> make.tmp
+   $(ECHO)  $(RTL_LIB) >> make.tmp
+   $(ECHO)  $(HB_GT_LIB) >> make.tmp
+   $(ECHO)  $(LANG_LIB) >> make.tmp
+   $(ECHO)  $(RDD_LIB) >> make.tmp
+   $(ECHO)  $(MACRO_LIB) >> make.tmp
+   $(ECHO)  $(DBFNTX_LIB) >> make.tmp
+   $(ECHO)  $(DBFCDX_LIB) >> make.tmp
 
    $(CC) @make.tmp
-   del make.tmp
+   $(DEL) make.tmp
 
 $(OBJ_DIR)\hbmake.c : $(HBMAKE_DIR)\hbmake.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
@@ -2515,4 +2538,5 @@ $(OBJ_DIR)\prb_stak.c : $(HBMAKE_DIR)\prb_stak.prg
 
 $(OBJ_DIR)\prb_stak.obj : $(OBJ_DIR)\prb_stak.c
    $(CC) $(CLIBFLAGS) -o$@ $**
+
 

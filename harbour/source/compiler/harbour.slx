@@ -68,8 +68,13 @@
 #undef YY_BUF_SIZE
    #define YY_BUF_SIZE HB_PP_STR_SIZE
 
-static int iTexts = 0, iCloseSquare = 0, iWantsEOL, iWantsEXP, iWantsID, iWantsVAR;
+static int iCloseSquare = 0, iWantsEOL, iWantsEXP, iWantsID, iWantsVAR;
+
+/* Commented 2001-08-29 - Not really needed!
 static char *aTexts[ NUMERALS_PER_LINE ];
+int iTexts = 0;
+*/
+
 static unsigned char iIdentifier = 0;
 static char *sIdOnHold, *s_sLastBlock = NULL;
 
@@ -385,10 +390,10 @@ LANGUAGE_RULES_ARE {
 		    /* Any other DECLARE IDENTIFIER, must be Strong Type DECLARE. */
                     IF_SEQUENCE_IS( DECLARE     , IDENTIFIER  , 0      , 0          ) PASS_THROUGH(),
 
-                    IF_SEQUENCE_IS( _ID_ON_HOLD , 0           , 0      , 0          ) REDUCE_TO( HB_ID_ON_HOLD      ,              ),
+                    IF_SEQUENCE_IS( _ID_ON_HOLD , 0           , 0      , 0          ) REDUCE_TO( HB_ID_ON_HOLD      , 0                   ),
 
 		    /* Any other DECLARE must be Identifier. */
-                    IF_SEQUENCE_IS( DECLARE     , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER      ,              ),
+                    IF_SEQUENCE_IS( DECLARE     , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER      , 0                   ),
 
 		    /* Expnasions from DECLARE ...*/
                     IF_SEQUENCE_IS( _ID_ARRAY   , 0           , 0      , 0          ) REDUCE_TO( IDENTIFIER + DONT_REDUCE , '[' + DONT_REDUCE      ),
@@ -439,6 +444,7 @@ LANGUAGE_RULES_ARE {
 #undef LEX_CASE
    #define LEX_CASE(x) ( (  ( iRet = (x) ) > 96 && iRet < 123 ) ? iRet - 32 : iRet )
 
+/* Commented 2001-08-29 - Not really needed!
 #undef NEW_LINE_ACTION
    #define NEW_LINE_ACTION() \
 		while( iTexts ) \
@@ -446,13 +452,8 @@ LANGUAGE_RULES_ARE {
                    DEBUG_INFO( printf( "Releasing short term Text: %i = %s At: %i\n", iTexts, aTexts[iTexts - 1], aTexts[iTexts - 1] ) ); \
                    iTexts--; \
                    hb_xfree( aTexts[iTexts] ); \
-                }\
-		\
-                if( ( hb_comp_iLine % 100 ) == 0 && hb_comp_bQuiet == FALSE ) \
-                { \
-                   printf( "\r%i", hb_comp_iLine ); \
-                   fflush( stdout ); \
                 }
+*/
 
 #undef INTERCEPT_ACTION
    #define INTERCEPT_ACTION(x) x = hb_comp_SLX_InterceptAction( x, (char*) sToken )
@@ -677,6 +678,7 @@ static int hb_comp_SLX_ElementToken( char* szToken, unsigned int iTokenLen )
       yylval.string = (char*) hb_xgrab( TOKEN_SIZE );
       yylval.string[0] = 0;
 
+      /* Commented 2001-08-29 - Not really needed!
       if( iTexts < NUMERALS_PER_LINE )
       {
          aTexts[iTexts++] = yylval.string;
@@ -687,6 +689,7 @@ static int hb_comp_SLX_ElementToken( char* szToken, unsigned int iTokenLen )
 	 hb_comp_iErrorCount++;
 	 iTexts = 0;
       }
+      */
 
       /* Hex Number */
       if( yytext[0] == '0' && yytext[1] == 'X' )
@@ -1208,8 +1211,13 @@ int hb_comp_SLX_CustomAction( int x, int aiHold[], int *ptr_iHold, BOOL *ptr_bIg
 
 int yy_lex_input( char *buffer, int iBufferSize )
 {
-   HB_SYMBOL_UNUSED( buffer );
    HB_SYMBOL_UNUSED( iBufferSize );
+
+   if( ( hb_comp_iLine % 100 ) == 0 && hb_comp_bQuiet == FALSE )
+   {
+      printf( "\r%i", hb_comp_iLine );
+      fflush( stdout );
+   }
 
    return hb_pp_Internal( hb_comp_bPPO ? hb_comp_yyppo : NULL, buffer );
 }

@@ -1403,7 +1403,8 @@ void SimpLex_CheckWords( void )
    void yy_switch_to_buffer( void * pBuffer )
 #endif
 {
-   HB_SYMBOL_UNUSED( pBuffer );
+   /* Avoid warning of unused symbols. */
+   (void) pBuffer;
    FORCE_REDUCE();
    iSize = 0;
 }
@@ -1414,7 +1415,8 @@ void SimpLex_CheckWords( void )
    void yy_delete_buffer( void * pBuffer )
 #endif
 {
-   HB_SYMBOL_UNUSED( pBuffer );
+   /* Avoid warning of unused symbols. */
+   (void) pBuffer;
    FORCE_REDUCE();
    iSize = 0;
 }

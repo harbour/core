@@ -1,3 +1,21 @@
+2001-09-05 11:25 UTC-0800 Brian Hays <bhays@abacuslaw.com>
+   * b32_slex.bat
+   * make_b32.bat
+      + Added default setting for $(DEL) and $(ECHO).
+
+   * makefile.bc
+      + Added macros $(DEL) and $(ECHO) to allow needed redefinition under
+         Win2K/Xp
+   * hb_slex.bc
+      * Synched with makefile.bc
+
+   * source/compiler/harbour.slx
+      * Removed unused piece of code in
+   * source/compiler/simplex.c
+      * changed two HB_SYMBOL_UNUSED() to (void) (to not use
+            external macros in core simplex).
+
+
 2001-09-05 12:24 GMT+1 Antonio Linares <alinares@fivetech.com>
 
    * harbour/source/rtl/persist.prg
