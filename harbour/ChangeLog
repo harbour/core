@@ -7,6 +7,32 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+  * contrib/libnf/descend.c
+  * contrib/libnf/getenvrn.c
+  * contrib/libnf/proper.c
+  * contrib/libnf/prtscr.c
+  * contrib/libnf/getvid.c
+    * Add some values for default to eliminate warnings when compiling
+      with gcc -O2.
+  * contrib/libnf/kspeed.c
+    * Fix values in switch-case.
+    * Add some values for default to eliminate warnings when compiling
+      with gcc -O2.
+  * contrib/libnf/mouse.c
+    * _MGET_PAGE() now return value when HB_OS_DOS.
+    * Add some values for default to eliminate warnings when compiling
+      with gcc -O2.
+
+2002-04-15 04:32 UTC-0300 Walter Negro <anegro@overnet.com.ar>
+  * contrib/libct/makefile.bc
+    * Correction in dependence of exponent.c
+
+2002-04-14 05:15 UTC-0300 Walter Negro <anegro@overnet.com.ar>
+  * contrib/libct/ctmisc.prg
+    + Add function: CSETCENT()   // Return state of SET CENTURY
+    + Add function: UNSELECTED() // Activate UNSELECTED color
+  * contrib/libct/bit1.c
+  * contrib/libct/bit3.c
   * contrib/libct/files.c
   * contrib/libct/pos1.c
   * contrib/libct/posdiff.c
