@@ -25,6 +25,7 @@
 /* Harbour Project source code
    http://www.Harbour-Project.org/
    The following functions are Copyright 1999 Victor Szel <info@szelvesz.hu>:
+      hb_itemGetCLen()
       hb_itemGetNLen()
       hb_itemSetNLen()
    See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
@@ -231,6 +232,14 @@ char * hb_itemGetC( PHB_ITEM pItem )
    }
    else
       return NULL;
+}
+
+ULONG hb_itemGetCLen( PHB_ITEM pItem )
+{
+   if( pItem && IS_STRING( pItem ) )
+      return pItem->item.asString.length;
+   else
+      return 0;
 }
 
 ULONG hb_itemCopyC( PHB_ITEM pItem, char * szBuffer, ULONG ulLen )

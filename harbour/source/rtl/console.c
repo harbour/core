@@ -107,8 +107,8 @@ void hb_consoleInitialize( void )
    /* Some compilers open stdout and stderr in text mode, but
       Harbour needs them to be open in binary mode. */
 
-   hb_fsSetMode( fileno( stdout ), FM_BINARY );
-   hb_fsSetMode( fileno( stderr ), FM_BINARY );
+   hb_fsSetDevMode( fileno( stdout ), FM_BINARY );
+   hb_fsSetDevMode( fileno( stderr ), FM_BINARY );
 
 #ifdef HARBOUR_USE_GTAPI
    hb_gtInit();
@@ -327,7 +327,7 @@ static void hb_altout( char * pStr, ULONG len )
             write_len = count;
             count = 0;
          }
-         hb_fsWrite( hb_set_althan, (BYTE *)pPtr, write_len );
+         hb_fsWrite( hb_set_althan, ( BYTE * ) pPtr, write_len );
          pPtr += write_len;
       }
    }
@@ -349,7 +349,7 @@ static void hb_altout( char * pStr, ULONG len )
             write_len = count;
             count = 0;
          }
-         hb_fsWrite( hb_set_extrahan, (BYTE *)pPtr, write_len );
+         hb_fsWrite( hb_set_extrahan, ( BYTE * ) pPtr, write_len );
          pPtr += write_len;
       }
    }
@@ -371,7 +371,7 @@ static void hb_altout( char * pStr, ULONG len )
             write_len = count;
             count = 0;
          }
-         hb_fsWrite( hb_set_printhan, (BYTE *)pPtr, write_len );
+         hb_fsWrite( hb_set_printhan, ( BYTE * ) pPtr, write_len );
          pPtr += write_len;
       }
       if( len + s_uiPCol > USHRT_MAX ) s_uiPCol = USHRT_MAX;
@@ -400,7 +400,7 @@ static void hb_devout( char * pStr, ULONG len )
             write_len = count;
             count = 0;
          }
-         hb_fsWrite( hb_set_printhan, (BYTE *)pPtr, write_len );
+         hb_fsWrite( hb_set_printhan, ( BYTE * ) pPtr, write_len );
          pPtr += write_len;
       }
       if( len + s_uiPCol > USHRT_MAX ) s_uiPCol = USHRT_MAX;
@@ -473,18 +473,18 @@ void hb_devpos( WORD row, WORD col )
    {
       if( row < s_uiPRow )
       {
-         hb_fsWrite( hb_set_printhan, (BYTE *)"\x0C", 1 );
+         hb_fsWrite( hb_set_printhan, ( BYTE * ) "\x0C", 1 );
          s_uiPRow = s_uiPCol = 0;
       }
 
       for( count = s_uiPRow; count < row; count++ )
-         hb_fsWrite( hb_set_printhan, (BYTE *)s_szCrLf, CRLF_BUFFER_LEN-1 );
+         hb_fsWrite( hb_set_printhan, ( BYTE * ) s_szCrLf, CRLF_BUFFER_LEN-1 );
 
       if( row > s_uiPRow ) s_uiPCol = 0;
       col += hb_set.HB_SET_MARGIN;
 
       for( count = s_uiPCol; count < col; count++ )
-         hb_fsWrite( hb_set_printhan, (BYTE *)" ", 1 );
+         hb_fsWrite( hb_set_printhan, ( BYTE * ) " ", 1 );
 
       s_uiPRow = row;
       s_uiPCol = col;
@@ -540,7 +540,7 @@ HARBOUR HB_QOUT( void )
       s_uiPCol = hb_set.HB_SET_MARGIN;
       count = s_uiPCol;
       while( count-- > 0 )
-         hb_fsWrite( hb_set_printhan, (BYTE *)" ", 1 );
+         hb_fsWrite( hb_set_printhan, ( BYTE * ) " ", 1 );
    }
 
    HB_QQOUT();
@@ -618,9 +618,7 @@ HARBOUR HB_DEVOUT( void ) /* writes a single value to the current device (screen
 
 #ifdef HARBOUR_USE_GTAPI
       if( ISCHAR( 2 ) )
-      {
          hb_gtSetColorStr( pOldColor );
-      }
 #endif
    }
 }
@@ -643,9 +641,7 @@ HARBOUR HB_DISPOUT( void ) /* writes a single value to the current device (scree
 
 #ifdef HARBOUR_USE_GTAPI
       if( ISCHAR( 2 ) )
-      {
          hb_gtSetColorStr( pOldColor );
-      }
 #endif
    }
 }
@@ -654,7 +650,7 @@ HARBOUR HB___EJECT( void ) /* Ejects the current page from the printer */
 {
    if( hb_stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 && hb_set_printhan >= 0 )
    {
-      hb_fsWrite( hb_set_printhan, (BYTE *)"\x0C\x0D", 2 );
+      hb_fsWrite( hb_set_printhan, ( BYTE * ) "\x0C\x0D", 2 );
       s_uiPRow = s_uiPCol = 0;
    }
 }
@@ -787,22 +783,14 @@ HARBOUR HB_DISPBOX( void )
       }
 
       if( ISCHAR( 5 ) )
-      {
          hb_gtBox( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parc( 5 ));
-      }
       else if( ISNUM( 5 ) && hb_parni( 5 ) == 2 )
-      {
          hb_gtBoxD( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ) );
-      }
       else
-      {
          hb_gtBoxS( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ) );
-      }
 
       if( ISCHAR( 6 ) )
-      {
          hb_gtSetColorStr( szOldColor );
-      }
    }
 #else
    if( ISNUM( 1 ) && ISNUM( 2 ) && ISNUM( 3 ) && ISNUM( 4 ) )
@@ -1079,10 +1067,7 @@ HARBOUR HB___ACCEPT( void ) /* Internal Clipper function used in ACCEPT command 
        Unix compatible operating systems yet. */
    szResult[ 0 ] = '\0';          /* start with something defined */
    if( fgets( szResult, ACCEPT_BUFFER_LEN, stdin ) )
-   {
-      strtok( szResult, "\n" );   /* strip off the trailing newline
-                                     if it exists */
-   }
+      strtok( szResult, "\n" ); /* strip off the trailing newline if it exists */
 #else
    len = 0;
    input = 0;

@@ -53,8 +53,6 @@
    #define HB_OPTIMIZE_DTOS
 #endif
 
-/* The other functions are pulled in automatically by initsymb.c */
-
 double hb_secondsToday( void )
 {
 #if defined(__TURBOC__) || defined(__BORLANDC__)  || defined(__DJGPP__) /* || defined(_MSC_VER) */
@@ -151,16 +149,21 @@ void hb_dateDecode( long julian, long * plDay, long * plMonth, long * plYear )
 
 void hb_dateStrPut( char * szDate, long lDay, long lMonth, long lYear )
 {
-   szDate[ 0 ] = ( lYear / 1000 ) + '0';
-   szDate[ 1 ] = ( ( lYear % 1000 ) / 100 ) + '0';
-   szDate[ 2 ] = ( ( lYear % 100 ) / 10 ) + '0';
-   szDate[ 3 ] = ( lYear % 10 ) + '0';
+   if( lDay && lMonth && lYear )
+   {
+      szDate[ 0 ] = ( lYear / 1000 ) + '0';
+      szDate[ 1 ] = ( ( lYear % 1000 ) / 100 ) + '0';
+      szDate[ 2 ] = ( ( lYear % 100 ) / 10 ) + '0';
+      szDate[ 3 ] = ( lYear % 10 ) + '0';
 
-   szDate[ 4 ] = ( lMonth / 10 ) + '0';
-   szDate[ 5 ] = ( lMonth % 10 ) + '0';
+      szDate[ 4 ] = ( lMonth / 10 ) + '0';
+      szDate[ 5 ] = ( lMonth % 10 ) + '0';
 
-   szDate[ 6 ] = ( lDay / 10 ) + '0';
-   szDate[ 7 ] = ( lDay % 10 ) + '0';
+      szDate[ 6 ] = ( lDay / 10 ) + '0';
+      szDate[ 7 ] = ( lDay % 10 ) + '0';
+   }
+   else
+      memset( szDate, ' ', 8 );
 }
 
 void hb_dateStrGet( const char * szDate, long * plDay, long * plMonth, long * plYear )

@@ -863,19 +863,16 @@ static void hb_vmDebuggerShowLine( WORD wLine ) /* makes the debugger shows a sp
 
 void hb_vmDec( void )
 {
-   double dNumber;
-   LONG lDate;
-   WORD wDec;
-
    if( IS_NUMERIC( stack.pPos - 1 ) )
    {
-      dNumber = hb_vmPopDouble( &wDec );
+      WORD wDec;
+      double dNumber = hb_vmPopDouble( &wDec );
       hb_vmPushNumber( --dNumber, wDec );
    }
    else if( IS_DATE( stack.pPos - 1 ) )
    {
-      lDate = hb_vmPopDate();
-      hb_vmPushDate( --lDate ); /* TOFIX: Dates should decreased other way */
+      LONG lDate = hb_vmPopDate();
+      hb_vmPushDate( --lDate ); /* TOFIX: Dates should be decreased other way */
    }
    else
       hb_errRT_BASE( EG_ARG, 1087, NULL, "--" );
@@ -1095,8 +1092,6 @@ void hb_vmEqual( BOOL bExact )
 {
    PHB_ITEM pItem2 = stack.pPos - 1;
    PHB_ITEM pItem1 = stack.pPos - 2;
-   int i;
-   WORD wDec;
 
    if( IS_NIL( pItem1 ) && IS_NIL( pItem2 ) )
    {
@@ -1114,17 +1109,23 @@ void hb_vmEqual( BOOL bExact )
 
    else if( IS_STRING( pItem1 ) && IS_STRING( pItem2 ) )
    {
-      i = hb_itemStrCmp( pItem1, pItem2, bExact );
+      int i = hb_itemStrCmp( pItem1, pItem2, bExact );
       hb_stackPop();
       hb_stackPop();
       hb_vmPushLogical( i == 0 );
    }
 
+   else if( IS_NUMERIC( pItem1 ) && IS_NUMERIC( pItem2 ) )
+   {
+      WORD wDec;
+      hb_vmPushLogical( hb_vmPopDouble( &wDec ) == hb_vmPopDouble( &wDec ) );
+   }
+
+   else if( IS_DATE( pItem1 ) && IS_DATE( pItem2 ) )
+      hb_vmPushLogical( hb_vmPopDate() == hb_vmPopDate() );
+
    else if( IS_LOGICAL( pItem1 ) && IS_LOGICAL( pItem2 ) )
       hb_vmPushLogical( hb_vmPopLogical() == hb_vmPopLogical() );
-
-   else if( IS_NUMERIC( pItem1 ) && IS_NUMERIC( pItem2 ) )
-      hb_vmPushLogical( hb_vmPopDouble( &wDec ) == hb_vmPopDouble( &wDec ) );
 
    else if( IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem1, "==" ) )
       hb_vmOperatorCall( pItem1, pItem2, "==" );
@@ -1218,13 +1219,9 @@ void hb_vmGenArray( WORD wElements ) /* generates a wElements Array and fills it
 
 void hb_vmGreater( void )
 {
-   double dNumber1, dNumber2;
-   LONG lDate1, lDate2;
-   int i;
-
    if( IS_STRING( stack.pPos - 2 ) && IS_STRING( stack.pPos - 1 ) )
    {
-      i = hb_itemStrCmp( stack.pPos - 2, stack.pPos - 1, FALSE );
+      int i = hb_itemStrCmp( stack.pPos - 2, stack.pPos - 1, FALSE );
       hb_stackPop();
       hb_stackPop();
       hb_vmPushLogical( i > 0 );
@@ -1232,15 +1229,15 @@ void hb_vmGreater( void )
 
    else if( IS_NUMERIC( stack.pPos - 1 ) && IS_NUMERIC( stack.pPos - 2 ) )
    {
-      dNumber2 = hb_vmPopNumber();
-      dNumber1 = hb_vmPopNumber();
+      double dNumber2 = hb_vmPopNumber();
+      double dNumber1 = hb_vmPopNumber();
       hb_vmPushLogical( dNumber1 > dNumber2 );
    }
 
    else if( IS_DATE( stack.pPos - 1 ) && IS_DATE( stack.pPos - 2 ) )
    {
-      lDate2 = hb_vmPopDate();
-      lDate1 = hb_vmPopDate();
+      LONG lDate2 = hb_vmPopDate();
+      LONG lDate1 = hb_vmPopDate();
       hb_vmPushLogical( lDate1 > lDate2 );
    }
 
@@ -1261,13 +1258,9 @@ void hb_vmGreater( void )
 
 void hb_vmGreaterEqual( void )
 {
-   double dNumber1, dNumber2;
-   LONG lDate1, lDate2;
-   int i;
-
    if( IS_STRING( stack.pPos - 2 ) && IS_STRING( stack.pPos - 1 ) )
    {
-      i = hb_itemStrCmp( stack.pPos - 2, stack.pPos - 1, FALSE );
+      int i = hb_itemStrCmp( stack.pPos - 2, stack.pPos - 1, FALSE );
       hb_stackPop();
       hb_stackPop();
       hb_vmPushLogical( i >= 0 );
@@ -1275,15 +1268,15 @@ void hb_vmGreaterEqual( void )
 
    else if( IS_NUMERIC( stack.pPos - 1 ) && IS_NUMERIC( stack.pPos - 2 ) )
    {
-      dNumber2 = hb_vmPopNumber();
-      dNumber1 = hb_vmPopNumber();
+      double dNumber2 = hb_vmPopNumber();
+      double dNumber1 = hb_vmPopNumber();
       hb_vmPushLogical( dNumber1 >= dNumber2 );
    }
 
    else if( IS_DATE( stack.pPos - 1 ) && IS_DATE( stack.pPos - 2 ) )
    {
-      lDate2 = hb_vmPopDate();
-      lDate1 = hb_vmPopDate();
+      LONG lDate2 = hb_vmPopDate();
+      LONG lDate1 = hb_vmPopDate();
       hb_vmPushLogical( lDate1 >= lDate2 );
    }
 
@@ -1304,18 +1297,15 @@ void hb_vmGreaterEqual( void )
 
 void hb_vmInc( void )
 {
-   double dNumber;
-   LONG lDate;
-   WORD wDec;
-
    if( IS_NUMERIC( stack.pPos - 1 ) )
    {
-      dNumber = hb_vmPopDouble( &wDec );
+      WORD wDec;
+      double dNumber = hb_vmPopDouble( &wDec );
       hb_vmPushNumber( ++dNumber, wDec );
    }
    else if( IS_DATE( stack.pPos - 1 ) )
    {
-      lDate = hb_vmPopDate();
+      LONG lDate = hb_vmPopDate();
       hb_vmPushDate( ++lDate );
    }
    else
@@ -1341,13 +1331,9 @@ void hb_vmInstring( void )
 
 void hb_vmLess( void )
 {
-   double dNumber1, dNumber2;
-   LONG lDate1, lDate2;
-   int i;
-
    if( IS_STRING( stack.pPos - 2 ) && IS_STRING( stack.pPos - 1 ) )
    {
-      i = hb_itemStrCmp( stack.pPos - 2, stack.pPos - 1, FALSE );
+      int i = hb_itemStrCmp( stack.pPos - 2, stack.pPos - 1, FALSE );
       hb_stackPop();
       hb_stackPop();
       hb_vmPushLogical( i < 0 );
@@ -1355,15 +1341,15 @@ void hb_vmLess( void )
 
    else if( IS_NUMERIC( stack.pPos - 1 ) && IS_NUMERIC( stack.pPos - 2 ) )
    {
-      dNumber2 = hb_vmPopNumber();
-      dNumber1 = hb_vmPopNumber();
+      double dNumber2 = hb_vmPopNumber();
+      double dNumber1 = hb_vmPopNumber();
       hb_vmPushLogical( dNumber1 < dNumber2 );
    }
 
    else if( IS_DATE( stack.pPos - 1 ) && IS_DATE( stack.pPos - 2 ) )
    {
-      lDate2 = hb_vmPopDate();
-      lDate1 = hb_vmPopDate();
+      LONG lDate2 = hb_vmPopDate();
+      LONG lDate1 = hb_vmPopDate();
       hb_vmPushLogical( lDate1 < lDate2 );
    }
 
@@ -1384,13 +1370,9 @@ void hb_vmLess( void )
 
 void hb_vmLessEqual( void )
 {
-   double dNumber1, dNumber2;
-   LONG lDate1, lDate2;
-   int i;
-
    if( IS_STRING( stack.pPos - 2 ) && IS_STRING( stack.pPos - 1 ) )
    {
-      i = hb_itemStrCmp( stack.pPos - 2, stack.pPos - 1, FALSE );
+      int i = hb_itemStrCmp( stack.pPos - 2, stack.pPos - 1, FALSE );
       hb_stackPop();
       hb_stackPop();
       hb_vmPushLogical( i <= 0 );
@@ -1398,15 +1380,15 @@ void hb_vmLessEqual( void )
 
    else if( IS_NUMERIC( stack.pPos - 1 ) && IS_NUMERIC( stack.pPos - 2 ) )
    {
-      dNumber2 = hb_vmPopNumber();
-      dNumber1 = hb_vmPopNumber();
+      double dNumber2 = hb_vmPopNumber();
+      double dNumber1 = hb_vmPopNumber();
       hb_vmPushLogical( dNumber1 <= dNumber2 );
    }
 
    else if( IS_DATE( stack.pPos - 1 ) && IS_DATE( stack.pPos - 2 ) )
    {
-      lDate2 = hb_vmPopDate();
-      lDate1 = hb_vmPopDate();
+      LONG lDate2 = hb_vmPopDate();
+      LONG lDate1 = hb_vmPopDate();
       hb_vmPushLogical( lDate1 <= lDate2 );
    }
 
@@ -1471,8 +1453,6 @@ void hb_vmNotEqual( void )
 {
    PHB_ITEM pItem2 = stack.pPos - 1;
    PHB_ITEM pItem1 = stack.pPos - 2;
-   int i;
-   WORD wDec;
 
    if( IS_NIL( pItem1 ) && IS_NIL( pItem2 ) )
    {
@@ -1490,14 +1470,20 @@ void hb_vmNotEqual( void )
 
    else if( IS_STRING( pItem1 ) && IS_STRING( pItem2 ) )
    {
-      i = hb_itemStrCmp( pItem1, pItem2, FALSE );
+      int i = hb_itemStrCmp( pItem1, pItem2, FALSE );
       hb_stackPop();
       hb_stackPop();
       hb_vmPushLogical( i != 0 );
    }
 
    else if( IS_NUMERIC( pItem1 ) && IS_NUMERIC( pItem2 ) )
+   {
+      WORD wDec;
       hb_vmPushLogical( hb_vmPopDouble( &wDec ) != hb_vmPopDouble( &wDec ) );
+   }
+
+   else if( IS_DATE( pItem1 ) && IS_DATE( pItem2 ) )
+      hb_vmPushLogical( hb_vmPopDate() != hb_vmPopDate() );
 
    else if( IS_LOGICAL( pItem1 ) && IS_LOGICAL( pItem2 ) )
       hb_vmPushLogical( hb_vmPopLogical() != hb_vmPopLogical() );

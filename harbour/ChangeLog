@@ -1,3 +1,46 @@
+19990902-12:20 GMT+1 Victor Szel <info@szelvesz.hu>
+  * tests/working/rtl_test.prg
+    + STOD() tests added.
+  * source/rtl/dir.c
+    * Direct stack access changed to hb_itemReturn().
+  * source/rtl/hvm.c
+    ! hb_vmEqual(), hb_vmNotEqual() didn't handle DATE type. Fixed.
+    % hb_vmEqual(), hb_vmNotEqual() reordered the order of type to be a bit
+      more efficient.
+    % hb_vmEqual(), hb_vmNotEqual(), hb_vmGreater*(), hb_vmLess*() function
+      variable scopes optimed. They need less stack space now.
+  * source/rtl/errorapi.c
+    funclist.txt
+    + First pass of DOSERROR() implementation.
+  * source/rtl/dates.c
+    source/rtl/extend.c
+    source/rtl/itemapi.c
+    + hb_dateStrPut() now takes care of filling the target with spaces when
+      the date is empty, so from now on the caller shouldn't bother with this.
+      This has also fixed a possible bug in RDD/PutValue with empty date.
+  * source/rtl/itemapi.c
+    include/itemapi.h
+    + hb_itemGetCLen() function added, which simply returns the length of
+      STRING item, arrays.c uses it right now.
+  * source/rtl/arrays.c
+    * Many stack.return accesses converted to use hb_itemReturn().
+    * One hb_itemClear()/hb_xfree() call pair converted to hb_itemRelease().
+    % Replaced internal hb_arrayLen() calls with direct access to the
+      array structure.
+    * hb_arrayGet*() functions will call the proper Item API function instead
+      of repeating the functionality.
+  * source/rtl/console.c
+    * hb_fsSetMode() -> hb_fsSetDevMode()
+  * include/filesys.h
+    source/filesys.c
+    + hb_fsSetError() added, to be able to get/set the last error number
+      in internal functions which uses the FS API.
+    * hb_fsSetMode() -> hb_fsSetDevMode()
+  * source/rtl/descend.c
+    - One obsolete comment removed.
+  * source/rtl/console.c
+    ! Some formatting errors removed.
+
 19990901-21:24 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/filesys.c
      * hb_fsReadLarge() -> drop out on eof
@@ -26,7 +69,7 @@
     ! hb_setRelease() called close_binary() instead of close_text() for
       hb_set_extrahan. Fixed.
     - Removed a bunch of (now) unneeded include files and OS branched. 
-      Source look kind of clean now.
+      Source looks kind of clean now.
   * config/rules.cf
     make_tpl.*
     + Added the L_USR variable, to make it possible to pass custom parameters

@@ -25,6 +25,7 @@
 /* Harbour Project source code
    http://www.Harbour-Project.org/
    The following functions are Copyright 1999 Victor Szel <info@szelvesz.hu>:
+      HB_DOSERROR()
       hb_errLaunch()
       hb_errLaunchSubst()
       hb_errGetFlags()
@@ -51,8 +52,9 @@
    better shows what is really the problem */
 #define HB_ERROR_LAUNCH_MAX 8
 
-static int     s_iLaunchCount = 0;
 static HB_ITEM s_errorBlock;
+static int     s_iLaunchCount = 0;
+static USHORT  s_uiErrorDOS = 0; /* The value of DOSERROR() */
 
 extern HARBOUR HB_ERRORNEW( void );
 
@@ -76,6 +78,16 @@ HARBOUR HB_ERRORBLOCK( void )
 
    hb_itemReturn( &oldError );
    hb_itemClear( &oldError );
+}
+
+/* TOFIX: Make it Clipper compatible */
+
+HARBOUR HB_DOSERROR( void )
+{
+   hb_retni( s_uiErrorDOS );
+
+   if( ISNUM( 1 ) )
+      s_uiErrorDOS = ( USHORT ) hb_parni( 1 );
 }
 
 void hb_errInit( void )

@@ -479,8 +479,7 @@ HARBOUR HB_DIRECTORY( void )
    closedir( dir );
 #endif
 
-   hb_itemCopy( &stack.Return, pdir ); /* DIRECTORY() returns an array */
-
+   hb_itemReturn( pdir ); /* DIRECTORY() returns an array */
    hb_itemRelease( pdir );
 
 #if defined(_MSC_VER) || defined(__IBMCPP__)

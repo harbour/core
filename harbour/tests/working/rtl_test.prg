@@ -226,6 +226,45 @@ FUNCTION Main( cPar1 )
    TEST_LINE( ValType( @mbBlock   )           , "U"   )
    TEST_LINE( ValType( @maArray   )           , "U"   )
 
+   /* STOD() */
+
+   /* For these tests in CA-Cl*pper 5.2e the following native STOD() has
+      been used ( not the emulated one written in Clipper ):
+
+      CLIPPER STOD( void )
+      {
+         // The length check is a fix to avoid buggy behaviour of _retds()
+         _retds( ( ISCHAR( 1 ) && _parclen( 1 ) == 8 ) ? _parc( 1 ) : "        " );
+      }
+   */
+
+   TEST_LINE( SToD()                          , SToD("        ")             )
+   TEST_LINE( SToD(1)                         , SToD("        ")             )
+   TEST_LINE( SToD(NIL)                       , SToD("        ")             )
+   TEST_LINE( SToD("")                        , SToD("        ")             )
+   TEST_LINE( SToD("        ")                , SToD("        ")             )
+   TEST_LINE( SToD("       ")                 , SToD("        ")             )
+   TEST_LINE( SToD("         ")               , SToD("        ")             )
+   TEST_LINE( SToD(" 1234567")                , SToD("        ")             )
+   TEST_LINE( SToD("1999    ")                , SToD("        ")             )
+   TEST_LINE( SToD("99999999")                , SToD("        ")             )
+   TEST_LINE( SToD("99990101")                , SToD("        ")             )
+   TEST_LINE( SToD("19991301")                , SToD("        ")             )
+   TEST_LINE( SToD("19991241")                , SToD("        ")             )
+   TEST_LINE( SToD("01000101")                , SToD("01000101")             )
+   TEST_LINE( SToD("29991231")                , SToD("29991231")             )
+   TEST_LINE( SToD("19990905")                , SToD("19990905")             )
+   TEST_LINE( SToD(" 9990905")                , SToD("        ")             )
+   TEST_LINE( SToD("1 990905")                , SToD("        ")             )
+   TEST_LINE( SToD("19 90905")                , SToD("17490905")             )
+   TEST_LINE( SToD("199 0905")                , SToD("19740905")             )
+   TEST_LINE( SToD("1999 905")                , SToD("        ")             )
+   TEST_LINE( SToD("19990 05")                , SToD("        ")             )
+   TEST_LINE( SToD("199909 5")                , SToD("        ")             )
+   TEST_LINE( SToD("1999090 ")                , SToD("        ")             )
+   TEST_LINE( SToD("1999 9 5")                , SToD("        ")             )
+   TEST_LINE( SToD("1999090" + Chr(0))        , SToD("        ")             )
+
    /* DESCEND() */
 
    TEST_LINE( Descend()                       , NIL                                                 ) /* Bug in CA-Cl*pper, it returns undefined trash */
@@ -257,42 +296,6 @@ FUNCTION Main( cPar1 )
    TEST_LINE( Descend( SToD( "" ) )           , 5231808                                             )
    TEST_LINE( Descend( SToD( "01000101" ) )   , 3474223                                             )
    TEST_LINE( Descend( SToD( "19801220" ) )   , 2787214                                             )
-
-   /* Decimals handling */
-
-   TEST_LINE( Str(Max(10, 12)             )   , "        12"                   )
-   TEST_LINE( Str(Max(10.50, 10)          )   , "        10.50"                )
-   TEST_LINE( Str(Max(10, 9.50)           )   , "        10"                   )
-   TEST_LINE( Str(Max(100000, 10)         )   , "    100000"                   )
-   TEST_LINE( Str(Max(20.50, 20.670)      )   , "        20.670"               )
-   TEST_LINE( Str(Max(20.5125, 20.670)    )   , "        20.670"               )
-   TEST_LINE( Str(Min(10, 12)             )   , "        10"                   )
-   TEST_LINE( Str(Min(10.50, 10)          )   , "        10"                   )
-   TEST_LINE( Str(Min(10, 9.50)           )   , "         9.50"                )
-   TEST_LINE( Str(Min(100000, 10)         )   , "        10"                   )
-   TEST_LINE( Str(Min(20.50, 20.670)      )   , "        20.50"                )
-   TEST_LINE( Str(Min(20.5125, 20.670)    )   , "        20.5125"              )
-   TEST_LINE( Str(Val("1")                )   , "1"                            )
-   TEST_LINE( Str(Val("15")               )   , "15"                           )
-   TEST_LINE( Str(Val("200")              )   , "200"                          )
-   TEST_LINE( Str(Val("15.0")             )   , "15.0"                         )
-   TEST_LINE( Str(Val("15.00")            )   , "15.00"                        )
-   TEST_LINE( Str(Year(SToD("19990905"))  )   , " 1999"                        )
-   TEST_LINE( Str(Month(SToD("19990905")) )   , "  9"                          )
-   TEST_LINE( Str(Day(SToD("19990905"))   )   , "  5"                          )
-   TEST_LINE( Str(10                      )   , "        10"                   )
-   TEST_LINE( Str(15.0                    )   , "        15.0"                 )
-   TEST_LINE( Str(10.1                    )   , "        10.1"                 )
-   TEST_LINE( Str(15.00                   )   , "        15.00"                )
-   TEST_LINE( Str(Log(0)                  )   , "***********************"      )
-   TEST_LINE( Str(100.2 * 200.12          )   , "     20052.024"               )
-   TEST_LINE( Str(100.20 * 200.12         )   , "     20052.0240"              )
-   TEST_LINE( Str(1000.2 * 200.12         )   , "    200160.024"               )
-   TEST_LINE( Str(100/1000                )   , "         0.10"                )
-   TEST_LINE( Str(100/100000              )   , "         0.00"                )
-   TEST_LINE( Str(10 * 10                 )   , "       100"                   )
-   TEST_LINE( Str(100 / 10                )   , "        10"                   )
-   TEST_LINE( Str(1234567890 * 1234567890 )   , " 1524157875019052000"         )
 
    /* (operators) */
 
@@ -829,6 +832,42 @@ FUNCTION Main( cPar1 )
    TEST_LINE( Str(-100000, 6, -1)             , "******"         )
    TEST_LINE( Str(-100000, 8, -1)             , " -100000"       )
 
+   /* Decimals handling */
+
+   TEST_LINE( Str(Max(10, 12)             )   , "        12"                   )
+   TEST_LINE( Str(Max(10.50, 10)          )   , "        10.50"                )
+   TEST_LINE( Str(Max(10, 9.50)           )   , "        10"                   )
+   TEST_LINE( Str(Max(100000, 10)         )   , "    100000"                   )
+   TEST_LINE( Str(Max(20.50, 20.670)      )   , "        20.670"               )
+   TEST_LINE( Str(Max(20.5125, 20.670)    )   , "        20.670"               )
+   TEST_LINE( Str(Min(10, 12)             )   , "        10"                   )
+   TEST_LINE( Str(Min(10.50, 10)          )   , "        10"                   )
+   TEST_LINE( Str(Min(10, 9.50)           )   , "         9.50"                )
+   TEST_LINE( Str(Min(100000, 10)         )   , "        10"                   )
+   TEST_LINE( Str(Min(20.50, 20.670)      )   , "        20.50"                )
+   TEST_LINE( Str(Min(20.5125, 20.670)    )   , "        20.5125"              )
+   TEST_LINE( Str(Val("1")                )   , "1"                            )
+   TEST_LINE( Str(Val("15")               )   , "15"                           )
+   TEST_LINE( Str(Val("200")              )   , "200"                          )
+   TEST_LINE( Str(Val("15.0")             )   , "15.0"                         )
+   TEST_LINE( Str(Val("15.00")            )   , "15.00"                        )
+   TEST_LINE( Str(Year(SToD("19990905"))  )   , " 1999"                        )
+   TEST_LINE( Str(Month(SToD("19990905")) )   , "  9"                          )
+   TEST_LINE( Str(Day(SToD("19990905"))   )   , "  5"                          )
+   TEST_LINE( Str(10                      )   , "        10"                   )
+   TEST_LINE( Str(15.0                    )   , "        15.0"                 )
+   TEST_LINE( Str(10.1                    )   , "        10.1"                 )
+   TEST_LINE( Str(15.00                   )   , "        15.00"                )
+   TEST_LINE( Str(Log(0)                  )   , "***********************"      )
+   TEST_LINE( Str(100.2 * 200.12          )   , "     20052.024"               )
+   TEST_LINE( Str(100.20 * 200.12         )   , "     20052.0240"              )
+   TEST_LINE( Str(1000.2 * 200.12         )   , "    200160.024"               )
+   TEST_LINE( Str(100/1000                )   , "         0.10"                )
+   TEST_LINE( Str(100/100000              )   , "         0.00"                )
+   TEST_LINE( Str(10 * 10                 )   , "       100"                   )
+   TEST_LINE( Str(100 / 10                )   , "        10"                   )
+   TEST_LINE( Str(1234567890 * 1234567890 )   , " 1524157875019052000"         )
+
    /* STRZERO() */
 
    TEST_LINE( StrZero(10)                     , "0000000010"     )
@@ -1232,13 +1271,20 @@ STATIC FUNCTION ErrorMessage( oError )
 #ifndef __XPP__
 
 STATIC FUNCTION SToD( cDate )
-   LOCAL cOldDateFormat := Set( _SET_DATEFORMAT, "yyyy/mm/dd" )
+   LOCAL cOldDateFormat
+   LOCAL dDate
 
-   LOCAL dDate := CToD( SubStr( cDate, 1, 4 ) + "/" +;
-                        SubStr( cDate, 5, 2 ) + "/" +;
-                        SubStr( cDate, 7, 2 ) )
+   IF ValType( cDate ) == "C"
+      cOldDateFormat := Set( _SET_DATEFORMAT, "yyyy/mm/dd" )
 
-   Set( _SET_DATEFORMAT, cOldDateFormat )
+      dDate := CToD( SubStr( cDate, 1, 4 ) + "/" +;
+                     SubStr( cDate, 5, 2 ) + "/" +;
+                     SubStr( cDate, 7, 2 ) )
+
+      Set( _SET_DATEFORMAT, cOldDateFormat )
+   ELSE
+      dDate := CToD( "" )
+   ENDIF
 
    RETURN dDate
 

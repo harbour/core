@@ -70,6 +70,7 @@ extern BYTE *   hb_fsCurDir     ( USHORT uiDrive );
 extern BYTE     hb_fsCurDrv     ( void );
 extern int      hb_fsDelete     ( BYTE * pFilename );
 extern USHORT   hb_fsError      ( void );
+extern void     hb_fsSetError   ( USHORT uiError );
 extern FHANDLE  hb_fsExtOpen    ( BYTE * pFilename, BYTE * pDefExt,
                                   USHORT uiFlags, BYTE * pPaths, PHB_ITEM pError );
 extern USHORT   hb_fsIsDrv      ( BYTE nDrive );
@@ -82,7 +83,7 @@ extern ULONG    hb_fsReadLarge  ( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCou
 extern BOOL     hb_fsRmDir      ( BYTE * pDirName );
 extern int      hb_fsRename     ( BYTE * pOldName, BYTE * pNewName );
 extern ULONG    hb_fsSeek       ( FHANDLE hFileHandle, LONG lOffset, USHORT uiMode );
-extern void     hb_fsSetMode    ( FHANDLE hFileHandle, USHORT uiMode );
+extern void     hb_fsSetDevMode ( FHANDLE hFileHandle, USHORT uiDevMode );
 extern USHORT   hb_fsWrite      ( FHANDLE hFileHandle, BYTE * pBuff, USHORT ulCount );
 extern ULONG    hb_fsWriteLarge ( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount );
 

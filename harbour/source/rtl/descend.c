@@ -106,10 +106,6 @@ HARBOUR HB_DESCEND( void )
          pReturn = hb_itemPutND( NULL, -1 * dValue );
          hb_itemReturn( pReturn );
          hb_itemRelease( pReturn );
-
-/* It is dangerous to operate on the stack directly
-         stack.Return.wDec = pItem->wDec;
-*/
       }
       else if( IS_LOGICAL( pItem ) )
          hb_retl( ! pItem->item.asLogical.value );

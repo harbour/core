@@ -136,7 +136,7 @@ ULONG hb_parclen( int iParam, ... )
    return 0;
 }
 
-/* Same as _parclen() but return the length including the */
+/* Same as _parclen() but returns the length including the */
 /* terminating zero byte */
 
 ULONG hb_parcsiz( int iParam, ... )
@@ -189,16 +189,13 @@ char * hb_pards( int iParam, ... )
 
       if( IS_DATE( pItem ) )
       {
-         if( pItem->item.asDate.value > 0 )
-         {
-            long lDay, lMonth, lYear;
+         long lDay, lMonth, lYear;
 
-            hb_dateDecode( pItem->item.asDate.value, &lDay, &lMonth, &lYear );
-            hb_dateStrPut( stack.szDate, lDay, lMonth, lYear );
-            stack.szDate[ 8 ] = '\0';
+         hb_dateDecode( pItem->item.asDate.value, &lDay, &lMonth, &lYear );
+         hb_dateStrPut( stack.szDate, lDay, lMonth, lYear );
+         stack.szDate[ 8 ] = '\0';
 
-            return stack.szDate; /* this guaranties good behavior when multithreading */
-         }
+         return stack.szDate; /* this guaranties good behavior when multithreading */
       }
       else if( IS_ARRAY( pItem ) )
       {

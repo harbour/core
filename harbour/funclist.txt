@@ -96,7 +96,7 @@ DISPBOX                 ;R;
 DISPCOUNT               ;S;
 DISPEND                 ;S;
 DISPOUT                 ;R;
-DOSERROR                ;N;
+DOSERROR                ;S;
 DOW                     ;R;
 DTOC                    ;R;
 DTOS                    ;R;

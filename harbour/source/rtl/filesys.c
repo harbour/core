@@ -5,7 +5,8 @@
 /* Harbour Project source code
    http://www.Harbour-Project.org/
    The following functions are Copyright 1999 Victor Szel <info@szelvesz.hu>:
-      hb_fsSetMode()
+      hb_fsSetError()
+      hb_fsSetDevMode()
       hb_fsReadLarge()
       hb_fsWriteLarge()
       HB_CURDIR()
@@ -349,13 +350,13 @@ void    hb_fsClose( FHANDLE hFileHandle )
 
 }
 
-void    hb_fsSetMode( FHANDLE hFileHandle, USHORT uiMode )
+void    hb_fsSetDevMode( FHANDLE hFileHandle, USHORT uiDevMode )
 {
 
 #if defined(__BORLANDC__) || defined(__IBMCPP__) || defined(__DJGPP__) || defined(__CYGWIN__)
 
    errno = 0;
-   switch( uiMode )
+   switch( uiDevMode )
    {
       case FM_BINARY:
          setmode( hFileHandle, O_BINARY );
@@ -370,7 +371,7 @@ void    hb_fsSetMode( FHANDLE hFileHandle, USHORT uiMode )
 #elif defined(_MSC_VER)
 
    errno = 0;
-   switch( uiMode )
+   switch( uiDevMode )
    {
       case FM_BINARY:
          _setmode( hFileHandle, _O_BINARY );
@@ -543,6 +544,11 @@ ULONG   hb_fsSeek( FHANDLE hFileHandle, LONG lOffset, USHORT uiFlags )
 USHORT  hb_fsError( void )
 {
    return s_uiErrorLast;
+}
+
+void    hb_fsSetError( USHORT uiError )
+{
+   s_uiErrorLast = uiError;
 }
 
 int hb_fsDelete ( BYTE * pFilename )
