@@ -1,3 +1,7 @@
+19990820-14:24 EDT Paul Tucker <ptucker@sympatico.ca>
+   * source/rdd/dbf1.c
+     * casts on sztext
+
 19990820-19:42 GMT+1 Bruno Cantero <bruno@issnet.net>
    * filelist.txt
      include/rddapi.h

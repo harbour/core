@@ -291,7 +291,7 @@ static ERRCODE PutValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          {
             szOldChar = szText + pField->uiLen + ( ( USHORT ) pField->uiDec << 8 );
             szEndChar = * szOldChar;
-            sprintf( szText, "%-*s", pField->uiLen, pItem->item.asString.value );
+            sprintf( (char *)szText, "%-*s", pField->uiLen, pItem->item.asString.value );
             bError = FALSE;
          }
          break;
@@ -300,9 +300,9 @@ static ERRCODE PutValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          if( pItem->type & IT_NUMERIC )
          {
             if( pField->uiDec )
-               sprintf( szText, "%*.*f", pField->uiLen, pField->uiDec, pItem->item.asDouble.value );
+               sprintf( (char *)szText, "%*.*f", pField->uiLen, pField->uiDec, pItem->item.asDouble.value );
             else
-               sprintf( szText, "%*ld", pField->uiLen, pItem->item.asInteger.value );
+               sprintf( (char *)szText, "%*ld", pField->uiLen, pItem->item.asInteger.value );
             bError = FALSE;
          }
          break;
@@ -311,7 +311,7 @@ static ERRCODE PutValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          if( pItem->type & IT_DATE )
          {
             hb_dateDecode( pItem->item.asDate.value, &lDay, &lMonth, &lYear );
-            hb_dateStrPut( szText, lDay, lMonth, lYear );
+            hb_dateStrPut( (char *)szText, lDay, lMonth, lYear );
             bError = FALSE;
          }
          break;
