@@ -215,20 +215,24 @@ STATIC FUNCTION Skipped( nRecs, oDataSource )
          // ODBC doesn't have skip(0)
       ELSEIF nRecs > 0 
          DO WHILE nSkipped < nRecs
-            oDataSource:next( )
-            IF oDataSource:Eof()
+           IF .NOT. oDataSource:Eof()
+             oDataSource:next( )
+             IF oDataSource:Eof()
                oDataSource:prior( )
                EXIT
-            ENDIF
-            nSkipped++
+             ENDIF
+             nSkipped++
+           ENDIF  
          ENDDO
       ELSEIF nRecs < 0
          DO WHILE nSkipped > nRecs
-            oDataSource:prior( )
-            IF oDataSource:Bof()
+           IF .NOT. oDataSource:Bof()
+             oDataSource:prior( )
+             IF oDataSource:Bof()
                EXIT
-            ENDIF
-            nSkipped--
+             ENDIF
+             nSkipped--
+           ENDIF  
          ENDDO
       ENDIF
    ENDIF
