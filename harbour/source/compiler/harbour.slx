@@ -296,8 +296,11 @@ LANGUAGE_WORDS_ARE {
 #define _TEXT_ARRAY       3004
 #define _CASE_WITH        3005
 #define _WHL_ID_CR        3006
+#define _WHL_ID_SEMI      3007
 #define _INC_CR           3007
+#define _INC_SEMI         3008
 #define _DEC_CR           3008
+#define _DEC_SEMI         3009
 
 LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( '^'         , 0           , 0      , 0          ) REDUCE_TO( POWER             , 0             ),
@@ -402,7 +405,9 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( _MACRO_ARRAY, 0           , 0      , 0          ) REDUCE_TO( MACROVAR          , '['           ),
                     IF_SEQUENCE_IS( DECLARE     , MACROTEXT   , '['    , 0          ) REDUCE_TO( PRIVATE           , _TEXT_ARRAY   ),
                     IF_SEQUENCE_IS( _TEXT_ARRAY , 0           , 0      , 0          ) REDUCE_TO( MACROTEXT         , '['           ),
-                    IF_SEQUENCE_IS( DECLARE     , IDENTIFIER  , 0      , 0          ) PASS_THROUGH(),
+                    IF_SEQUENCE_IS( DECLARE     , IDENTIFIER  , '('    , 0          ) PASS_THROUGH(),
+                    IF_SEQUENCE_IS( DECLARE     , IDENTIFIER  , HB_ID_ON_HOLD, 0    ) PASS_THROUGH(),
+                    IF_SEQUENCE_IS( DECLARE     , IDENTIFIER  , 0      , 0          ) REDUCE_TO( PRIVATE           , IDENTIFIER    ),
                     IF_SEQUENCE_IS( DECLARE     , 0           , 0      , 0          ) REDUCE_TO( HB_DECLARE_ID     , 0             ),
 
                     IF_SEQUENCE_IS( PUBLIC      , TO          , 0      , 0          ) REDUCE_TO( HB_PUBLIC_ID      , TO            ),
@@ -557,8 +562,8 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( RETURN      , INASSIGN    , 0      , 0          ) REDUCE_TO( HB_RETURN_ID      , INASSIGN      ),
                     IF_SEQUENCE_IS( RETURN      , INC         , '\n'   , 0          ) REDUCE_TO( HB_RETURN_ID      , _INC_CR       ),
                     IF_SEQUENCE_IS( RETURN      , DEC         , '\n'   , 0          ) REDUCE_TO( HB_RETURN_ID      , _DEC_CR       ),
-                    IF_SEQUENCE_IS( RETURN      , INC         , ';'    , 0          ) REDUCE_TO( HB_RETURN_ID      , _INC_CR       ),
-                    IF_SEQUENCE_IS( RETURN      , DEC         , ';'    , 0          ) REDUCE_TO( HB_RETURN_ID      , _DEC_CR       ),
+                    IF_SEQUENCE_IS( RETURN      , INC         , ';'    , 0          ) REDUCE_TO( HB_RETURN_ID      , _INC_SEMI     ),
+                    IF_SEQUENCE_IS( RETURN      , DEC         , ';'    , 0          ) REDUCE_TO( HB_RETURN_ID      , _DEC_SEMI     ),
                     IF_SEQUENCE_IS( RETURN      , ALIASOP     , 0      , 0          ) REDUCE_TO( HB_RETURN_ID      , ALIASOP       ),
                     IF_SEQUENCE_IS( RETURN      , PLUSEQ      , 0      , 0          ) REDUCE_TO( HB_RETURN_ID      , PLUSEQ        ),
                     IF_SEQUENCE_IS( RETURN      , MINUSEQ     , 0      , 0          ) REDUCE_TO( HB_RETURN_ID      , MINUSEQ       ),
@@ -574,7 +579,9 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( RETURN      , 0           , 0      , 0          ) PASS_THROUGH(),
 
                     IF_SEQUENCE_IS( _INC_CR     , 0           , 0      , 0          ) REDUCE_TO( INC               , '\n'          ),
+                    IF_SEQUENCE_IS( _INC_SEMI   , 0           , 0      , 0          ) REDUCE_TO( INC               , ';'           ),
                     IF_SEQUENCE_IS( _DEC_CR     , 0           , 0      , 0          ) REDUCE_TO( DEC               , '\n'          ),
+                    IF_SEQUENCE_IS( _DEC_SEMI   , 0           , 0      , 0          ) REDUCE_TO( DEC               , ';'           ),
 
 		    /* FOR ; EXIT ; NEXT LOOP */
 
@@ -673,7 +680,7 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( DO          , _WHILE_     , _WITH_ , 0          ) REDUCE_TO( DO                , _WHILE_WITH   ),
                     IF_SEQUENCE_IS( DO          , _CASE_      , _WITH_ , 0          ) REDUCE_TO( DO                , _CASE_WITH    ),
                     IF_SEQUENCE_IS( DO          , _WHILE_     , '\n'   , 0          ) REDUCE_TO( DO                , _WHL_ID_CR    ),
-                    IF_SEQUENCE_IS( DO          , _WHILE_     , ';'    , 0          ) REDUCE_TO( DO                , _WHL_ID_CR    ),
+                    IF_SEQUENCE_IS( DO          , _WHILE_     , ';'    , 0          ) REDUCE_TO( DO                , _WHL_ID_SEMI  ),
                     IF_SEQUENCE_IS( DO          , _WITH_      , 0      , 0          ) REDUCE_TO( DO                , HB_WITH_ID    ),
                     IF_SEQUENCE_IS( DO          , OPTIONAL    , 0      , 0          ) REDUCE_TO( DO                , HB_OPTIONAL_ID),
                     IF_SEQUENCE_IS( DO          , IN          , 0      , 0          ) REDUCE_TO( DO                , HB_IN_ID      ),
@@ -684,6 +691,7 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( _WHILE_WITH , 0           , 0      , 0          ) REDUCE_TO( HB_WHILE_ID       , WITH          ),
                     IF_SEQUENCE_IS( _CASE_WITH  , 0           , 0      , 0          ) REDUCE_TO( HB_CASE_ID        , WITH          ),
                     IF_SEQUENCE_IS( _WHL_ID_CR  , 0           , 0      , 0          ) REDUCE_TO( HB_WHILE_ID       , '\n'          ),
+                    IF_SEQUENCE_IS( _WHL_ID_SEMI, 0           , 0      , 0          ) REDUCE_TO( HB_WHILE_ID       , ';'           ),
 
                     /* This WHILE is only at BOL if followed by operator (other than logicals .t., .f., !) than Identifier else CASE. */
                     IF_SEQUENCE_IS( WHILE       , TO          , 0      , 0          ) REDUCE_TO( HB_WHILE_ID 	    , TO           ),
@@ -1004,6 +1012,12 @@ LANGUAGE_RULES_ARE {
          else\
          {\
       	    DEBUG_INFO( printf(  "Element \"%s\" is IDENTIFIER\n", yytext ) );\
+\
+            if( strlen( yytext ) > HB_SYMBOL_NAME_LEN )\
+            {\
+               yytext[ HB_SYMBOL_NAME_LEN ] = '\0';\
+               yyleng = HB_SYMBOL_NAME_LEN;\
+            }\
 \
 	    if( iIdentifier )\
 	    {\
