@@ -1,3 +1,7 @@
+20000326-16:58 EST Paul Tucker <ptucker@sympatico.ca>
+   * source/rtl/gtwin/gtwin.c
+     * further refinement on screen sizing.  Size is now restored on exit.
+
 20000326-13:14 GMT+1 Victor Szakats <info@szelvesz.hu>
    * makefile.bc
      ! Fixed.
