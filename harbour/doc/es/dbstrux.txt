@@ -155,7 +155,7 @@
  *      "archivo de estructura extendida"):
  *
  *       <table>
- *       Nombre Campo  Tipo   Tamaño   Decimales
+ *       Nombre Campo   Tipo   Tamaño   Decimales
  *
  *       FIELD_NAME     C      10       0
  *       FIELD_TYPE     C      1        0
@@ -234,7 +234,7 @@
  *      "archivo de estructura extendida"):
  *
  *       <table>
- *       Nombre Campo  Tipo   Tamaño   Decimales
+ *       Nombre Campo   Tipo   Tamaño   Decimales
  *
  *       FIELD_NAME     C      10       0
  *       FIELD_TYPE     C      1        0
@@ -344,7 +344,7 @@
  *      El nuevo archivo tiene la siguiente estructura:
  *
  *       <table>
- *       Nombre Campo  Tipo   Tamaño   Decimales
+ *       Nombre Campo   Tipo   Tamaño   Decimales
  *
  *       FIELD_NAME     C      10       0
  *       FIELD_TYPE     C      1        0
@@ -444,7 +444,7 @@
  *      El nuevo archivo tiene la siguiente estructura:
  *
  *       <table>
- *       Nombre Campo  Tipo   Tamaño   Decimales
+ *       Nombre Campo   Tipo   Tamaño   Decimales
  *
  *       FIELD_NAME     C      10       0
  *       FIELD_TYPE     C      1        0

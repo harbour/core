@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-10-01 08:25 UTC+0300 Chen Kedem <niki@actcom.co.il>
+  * doc/es/browse.txt
+  * doc/es/cmdline.txt
+  * doc/es/dbstrux.txt
+    ! columns in <table></table> need to be at least 3 spaces apart
+
 2002-09-30 16:46 UTC+0300 Chen Kedem <niki@actcom.co.il>
   * doc/en/input.txt
   * doc/en/lang.txt

@@ -117,22 +117,22 @@
  *      A Continuación estan las teclas manejadas por DBEDIT(): </par>
  *      -------------------------------------------------------
  *     <table>
- *       Tecla            Significado
+ *       Tecla             Significado
  *
- *       Izquierda        Mueve una columna a la izquierda (campo previo)
- *       Derecha          Mueve una columna a la derecha (proximo campo)
- *       Arriba           Mueve arriba una fila (registro previo)
- *       Abajo            Mueve abajo una fila (proximo registro)
- *       Pag-Arriba       Mueve a la pantalla previa
- *       Pag-Abajo        Mueve a la pantalla próxima
- *       Ctrl Pag-Arriba  Mueve al inicio del archivo
- *       Ctrl Pag-Abajo   Mueve al final del archivo
- *       Inicio           Mueve a la columna visible más a la izquierda
- *       Fin              Mueve a la columna visible más a la derecha
- *       Ctrl Izquierda   Desplaza una columna a la izquierda
- *       Ctrl Derecha     Desplaza una columna a la deecha
- *       Ctrl Inicio      Mueve a la columna más a la izquierda
- *       Ctrl Fin         Mueve a la columna más a la derecha
+ *       Izquierda         Mueve una columna a la izquierda (campo previo)
+ *       Derecha           Mueve una columna a la derecha (proximo campo)
+ *       Arriba            Mueve arriba una fila (registro previo)
+ *       Abajo             Mueve abajo una fila (proximo registro)
+ *       Pag-Arriba        Mueve a la pantalla previa
+ *       Pag-Abajo         Mueve a la pantalla próxima
+ *       Ctrl Pag-Arriba   Mueve al inicio del archivo
+ *       Ctrl Pag-Abajo    Mueve al final del archivo
+ *       Inicio            Mueve a la columna visible más a la izquierda
+ *       Fin               Mueve a la columna visible más a la derecha
+ *       Ctrl Izquierda    Desplaza una columna a la izquierda
+ *       Ctrl Derecha      Desplaza una columna a la deecha
+ *       Ctrl Inicio       Mueve a la columna más a la izquierda
+ *       Ctrl Fin          Mueve a la columna más a la derecha
  *     </table>
 
  *      Cuando <xFuncionUsuario> es omitida, dos teclas más estan activas:
@@ -152,17 +152,13 @@
  *      Valores de los Modos en DBEDIT() :    </par>
  *      ---------------------------------
  *      <table>
- *       Dbedit.ch     Valor  Significado
+ *       Dbedit.ch      Valor   Significado
  *
- *       DE_IDLE        0     DBEDIT() esta inactivo, todas la teclas de
- *                            movimiento han sido procesadas.
- *       DE_HITTOP      1     Intento de mover el cursor más alla de la parte
- *                            superior del archivo
- *       DE_HITBOTTOM   2     Intento de mover el cursor despues del final
- *                            del archivo.
- *       DE_EMPTY       3     No hay registros en el area de trabajo, la base
- *                            de datos está vacia.
- *       DE_EXCEPT      4     Interrupción de teclado
+ *       DE_IDLE        0       DBEDIT() esta inactivo, todas la teclas de movimiento han sido procesadas.
+ *       DE_HITTOP      1       Intento de mover el cursor más alla de la parte superior del archivo
+ *       DE_HITBOTTOM   2       Intento de mover el cursor despues del final del archivo.
+ *       DE_EMPTY       3       No hay registros en el area de trabajo, la base de datos está vacia.
+ *       DE_EXCEPT      4       Interrupción de teclado
  *      </table>
  *      La función definida por el usuario ó el bloque de código debe retornar
  *      un valor que le indique a DBEDIT() que hacer a continuación.
@@ -171,12 +167,11 @@
  *      --------------------------------------------
  *
  *      <table>
- *       Dbedit.ch   Valor   Significado
+ *       Dbedit.ch    Valor   Significado
  *
- *       DE_ABORT     0      Aborta DBEDIT().
- *       DE_CONT      1      Continua DBEDIT() como ahora.
- *       DE_REFRESH   2      Fueza relectura/revisualización en pantalla de
- *                           todas las filas de datos
+ *       DE_ABORT     0       Aborta DBEDIT().
+ *       DE_CONT      1       Continua DBEDIT() como ahora.
+ *       DE_REFRESH   2       Fueza relectura/revisualización en pantalla de todas las filas de datos
  *      </table>
  *
  *      La función del usuario es llamada una vez en cada uno de los
@@ -254,34 +249,34 @@
  *      siguientes teclas:
 
  *      <table>
- *       Tecla            Significado
+ *       Tecla             Significado
  *
- *       Izquierda        Mueve una columna a la izquierda (campo previo)
- *       Derecha          Mueve una columna a la derecha (proximo campo)
- *       Arriba           Mueve arriba una fila (registro previo)
- *       Abajo            Mueve abajo una fila (proximo registro)
- *       Pag-Arriba       Mueve a la pantalla previa
- *       Pag-Abajo        Mueve a la pantalla proxima
- *       Ctrl Pag-Arriba  Mueve al inicio del archivo
- *       Ctrl Pag-Abajo   Mueve al final del archivo
- *       Inicio           Mueve a la columna visible más a la izquierda
- *       Fin              Mueve a la columna visible más a la derecha
- *       Ctrl Izquierda   Desplaza una columna a la izquierda
- *       Ctrl Derecha     Desplaza una columna a la deecha
- *       Ctrl Inicio      Mueve a la columna más a la izquierda
- *       Ctrl Fin         Mueve a la columna más a la derecha
- *       Esc              Termina el BROWSE()
+ *       Izquierda         Mueve una columna a la izquierda (campo previo)
+ *       Derecha           Mueve una columna a la derecha (proximo campo)
+ *       Arriba            Mueve arriba una fila (registro previo)
+ *       Abajo             Mueve abajo una fila (proximo registro)
+ *       Pag-Arriba        Mueve a la pantalla previa
+ *       Pag-Abajo         Mueve a la pantalla proxima
+ *       Ctrl Pag-Arriba   Mueve al inicio del archivo
+ *       Ctrl Pag-Abajo    Mueve al final del archivo
+ *       Inicio            Mueve a la columna visible más a la izquierda
+ *       Fin               Mueve a la columna visible más a la derecha
+ *       Ctrl Izquierda    Desplaza una columna a la izquierda
+ *       Ctrl Derecha      Desplaza una columna a la deecha
+ *       Ctrl Inicio       Mueve a la columna más a la izquierda
+ *       Ctrl Fin          Mueve a la columna más a la derecha
+ *       Esc               Termina el BROWSE()
  *      </table>
  *
  *      En la parte superior de la pantalla ud. ve una linea de estado con
  *      la siguiente indicación:
  *
  *      <table>
- *      Registro ###/### Número registro actual / Número Total de registros.
- *       <none>           No hay registros, el archivo esta vacio.
- *       <new>            Ud.esta en modo de Agregado al final del archivo.
- *       <Deleted>        El registro actual esta borrado.
- *       <bof>            Ud. esta en el comienzo del archivo.
+ *      Registro ###/###   Número registro actual / Número Total de registros.
+ *       <none>            No hay registros, el archivo esta vacio.
+ *       <new>             Ud.esta en modo de Agregado al final del archivo.
+ *       <Deleted>         El registro actual esta borrado.
+ *       <bof>             Ud. esta en el comienzo del archivo.
  *      </table>
  *
  *      Ud. debería pasar las cuatro coordenadas validas, si menos de cuatro
