@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
     *contrib/hbzlib/zipnew.cpp
+      * All calls to hb_itemArrayPut() replaced with hb_arraySet()
+
+
+2002-01-25 21:35 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+	
     ! Few type casts for MSVC
 
 2002-01-25 19:00 UTC+0100 Antonio Linares <alinares@fivetech.com>

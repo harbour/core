@@ -10,8 +10,6 @@ function Main()
    local oTest := Test():New()
    local oTest2 := Test2():New()
 
-   oTest:cName = "oTest"  // We set a name for the persistent object to save
-
    oTest:One   = "hello"
    oTest:Two   = 123
    oTest:Three = "this value is not persistent"
