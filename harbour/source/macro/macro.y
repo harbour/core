@@ -45,7 +45,7 @@
  */
 #define  HB_MACRO_SUPPORT
 
-#include "macro.h"
+#include "hbmacro.h"
 
 /* Compile using: bison -d -p hb_comp macro.y */
 

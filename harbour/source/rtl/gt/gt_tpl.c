@@ -37,7 +37,7 @@
 
 /* TODO: include any standard headers here */
 
-#include "gtapi.h"
+#include "hbapigt.h"
 
 void hb_gt_Init( void )
 {

@@ -35,9 +35,9 @@
 
 #define SUPERTABLE ( &sdfSuper )
 
-#include "extend.h"
-#include "init.h"
-#include "rddapi.h"
+#include "hbapi.h"
+#include "hbinit.h"
+#include "hbapirdd.h"
 #include "rddsys.ch"
 
 HARBOUR HB__SDFC( void );

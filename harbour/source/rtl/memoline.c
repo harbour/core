@@ -33,7 +33,7 @@
  *
  */
 
-#include "extend.h"
+#include "hbapi.h"
 
 HARBOUR HB_MEMOLINE( void )
 {

@@ -35,7 +35,7 @@
 
 #include <ctype.h> /* Needed by hb_strupr() */
 
-#include "extend.h"
+#include "hbapi.h"
 
 ULONG hb_strAt( const char * szSub, ULONG ulSubLen, const char * szText, ULONG ulLen )
 {

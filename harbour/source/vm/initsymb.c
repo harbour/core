@@ -33,8 +33,8 @@
  *
  */
 
-#include "extend.h"
-#include "ctoharb.h"
+#include "hbapi.h"
+#include "hbvm.h"
 
 extern HARBOUR HB_AADD( void );
 extern HARBOUR HB_ABS( void );

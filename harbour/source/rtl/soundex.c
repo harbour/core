@@ -35,8 +35,8 @@
 
 #include <ctype.h>
 
-#include "extend.h"
-#include "itemapi.h"
+#include "hbapi.h"
+#include "hbapiitm.h"
 
 #define SOUNDEX_LEN_MAX         4
 

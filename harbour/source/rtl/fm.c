@@ -64,8 +64,8 @@
    #include <malloc.h>
 #endif
 
-#include "extend.h"
-#include "errorapi.h"
+#include "hbapi.h"
+#include "hbapierr.h"
 #include "hbmemory.ch"
 
 #if defined(HB_FM_STATISTICS) && !defined(HB_TR_LEVEL)

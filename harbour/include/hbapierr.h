@@ -33,10 +33,10 @@
  *
  */
 
-#ifndef HB_ERRORAPI_H_
-#define HB_ERRORAPI_H_
+#ifndef HB_APIERR_H_
+#define HB_APIERR_H_
 
-#include "extend.h"
+#include "hbapi.h"
 #include "error.ch"
 
 /* Error codes (returned from hb_errLaunch()) */
@@ -151,4 +151,4 @@ typedef struct HB_ERROR_INFO_
 /*  set/get current error handler */
 extern HB_ERROR_INFO_PTR hb_errorHandler( HB_ERROR_INFO_PTR );
 
-#endif /* HB_ERRORAPI_H_ */
+#endif /* HB_APIERR_H_ */

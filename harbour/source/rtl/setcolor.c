@@ -33,9 +33,9 @@
  *
  */
 
-#include "extend.h"
-#include "set.h"
-#include "gtapi.h"
+#include "hbapi.h"
+#include "hbset.h"
+#include "hbapigt.h"
 
 char * hb_setColor( char * szColor )
 {

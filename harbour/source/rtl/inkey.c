@@ -107,14 +107,14 @@
 #define HB_BREAK_FLAG 256 /* 256, because that's what DJGPP returns Ctrl+Break as.
                              Clipper has no key code 256, so it may as well be
                              used for all the Harbour builds that need it */
-#include "extend.h"
-#include "ctoharb.h"
-#include "errorapi.h"
-#include "itemapi.h"
-#include "set.h"
-#include "inkey.h"
+#include "hbapi.h"
+#include "hbvm.h"
+#include "hbapierr.h"
+#include "hbapiitm.h"
+#include "hbset.h"
+#include "hbinkey.h"
 #include "inkey.ch"
-#include "init.h"
+#include "hbinit.h"
 
 #if defined(__TURBOC__) || defined(__BORLANDC__) || defined(_MSC_VER) || defined(__MINGW32__)
    #include <conio.h>

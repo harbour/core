@@ -33,8 +33,8 @@
  *
  */
 
-#include "extend.h"
-#include "ctoharb.h"
+#include "hbapi.h"
+#include "hbvm.h"
 
 /* NOTE: This function should normally have a parameter count check. But
          since in Harbour we cannot distinguish between BREAK() function and

@@ -37,7 +37,7 @@
 
 /* TODO: include any standard headers here */
 
-#include "gtapi.h"
+#include "hbapigt.h"
 
 static SHORT  s_iRow;
 static SHORT  s_iCol;

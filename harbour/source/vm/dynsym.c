@@ -33,7 +33,7 @@
  *
  */
 
-#include "extend.h"
+#include "hbapi.h"
 
 #define SYM_ALLOCATED ( ( HB_SYMBOLSCOPE ) -1 )
 

@@ -47,8 +47,8 @@
 
 #include <ctype.h>
 
-#include "extend.h"
-#include "itemapi.h"
+#include "hbapi.h"
+#include "hbapiitm.h"
 
 /* TODO: Use the Language API to retrieve these strings. */
 /* NOTE: Ad-hoc names mostly taken from various Clipper source files. 

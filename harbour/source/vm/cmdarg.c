@@ -33,7 +33,7 @@
  *
  */
 
-#include "extend.h"
+#include "hbapi.h"
 #include "hbmemory.ch"
 
 /* Command line argument management */

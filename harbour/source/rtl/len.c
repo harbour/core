@@ -33,9 +33,9 @@
  *
  */
 
-#include "extend.h"
-#include "errorapi.h"
-#include "itemapi.h"
+#include "hbapi.h"
+#include "hbapierr.h"
+#include "hbapiitm.h"
 
 HARBOUR HB_LEN( void )
 {

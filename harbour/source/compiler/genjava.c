@@ -34,9 +34,9 @@
  *
  */
 
-#include "extend.h"
-#include "compiler.h"
-#include "pcode.h"
+#include "hbapi.h"
+#include "hbcomp.h"
+#include "hbpcode.h"
 #include "hberrors.h"
 #include "hbver.h"
 

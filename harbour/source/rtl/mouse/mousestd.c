@@ -33,7 +33,7 @@
  *
  */
 
-#include "mouseapi.h"
+#include "hbapimou.h"
 
 /* NOTE: This file is a simple stub for those platforms which don't have
          any kind of mouse support. [vszakats] */

@@ -35,10 +35,10 @@
 
 #include <ctype.h>
 #include <time.h>
-#include "extend.h"
-#include "errorapi.h"
-#include "itemapi.h"
-#include "dates.h"
+#include "hbapi.h"
+#include "hbapierr.h"
+#include "hbapiitm.h"
+#include "hbdate.h"
 
 static int hb__daysinmonth[ 12 ] =
 { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };

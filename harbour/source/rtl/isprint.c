@@ -37,8 +37,8 @@
          be ahead of any other #include statements! */
 #include "hbwinapi.h"
 
-#include "extend.h"
-#include "filesys.h"
+#include "hbapi.h"
+#include "hbapifs.h"
 
 #if defined(__TURBOC__) || defined(__BORLANDC__) || defined(_MSC_VER) || defined(__DJGPP__)
    #include <dos.h>

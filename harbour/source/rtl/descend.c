@@ -33,8 +33,8 @@
  *
  */
 
-#include "extend.h"
-#include "itemapi.h"
+#include "hbapi.h"
+#include "hbapiitm.h"
 
 void hb_strDescend( char * szStringTo, const char * szStringFrom, ULONG ulLen )
 {

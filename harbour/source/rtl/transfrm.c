@@ -46,11 +46,11 @@
 
 #include <ctype.h>
 
-#include "extend.h"
-#include "itemapi.h"
-#include "errorapi.h"
-#include "dates.h"
-#include "set.h"
+#include "hbapi.h"
+#include "hbapiitm.h"
+#include "hbapierr.h"
+#include "hbdate.h"
+#include "hbset.h"
 
 /* Picture function flags */
 #define PF_LEFT    0x0001   /* @B */

@@ -33,8 +33,8 @@
  *
  */
 
-#ifndef HB_COMPILER_H_
-#define HB_COMPILER_H_
+#ifndef HB_COMP_H_
+#define HB_COMP_H_
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -43,12 +43,12 @@
 #include <ctype.h>
 
 #include "hbsetup.h"
-#include "extend.h"
-#include "pcode.h"      /* pcode values */
+#include "hbapi.h"
+#include "hbpcode.h"      /* pcode values */
 #include "hberrors.h"
 #include "hbpp.h"
 #include "hbver.h"
-#include "expropt.h"
+#include "hbexprop.h"
 
 /* compiler related declarations */
 
@@ -352,5 +352,5 @@ extern char *      hb_comp_szWarnings[];
 #define HB_EXITLEVEL_SETEXIT    1
 #define HB_EXITLEVEL_DELTARGET  2
 
-#endif /* HB_COMPILER_H_ */
+#endif /* HB_COMP_H_ */
 

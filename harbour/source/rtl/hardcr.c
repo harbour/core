@@ -33,8 +33,8 @@
  *
  */
 
-#include "extend.h"
-#include "itemapi.h"
+#include "hbapi.h"
+#include "hbapiitm.h"
 
 #define CHR_HARD1   ( ( char ) HB_CHAR_CR )
 

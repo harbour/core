@@ -49,12 +49,12 @@
 #define HB_MACRO_PARAM  pMacro
 
 #include "hbsetup.h"
-#include "extend.h"
-#include "ctoharb.h"
-#include "pcode.h"      /* pcode values */
-#include "itemapi.h"
-#include "errorapi.h"
-#include "expropt.h"
+#include "hbapi.h"
+#include "hbvm.h"
+#include "hbpcode.h"      /* pcode values */
+#include "hbapiitm.h"
+#include "hbapierr.h"
+#include "hbexprop.h"
 
 /* flags for compilation process
  */
@@ -98,4 +98,4 @@ void hb_compGenJumpHere( ULONG, HB_MACRO_DECL );
 #define HB_MACRO_DATA     ( (HB_MACRO_PTR) HB_MACRO_PARAM )
 #define HB_PCODE_DATA     ( HB_MACRO_DATA->pCodeInfo )
 
-#endif
+#endif /* HB_MACRO_H_ */

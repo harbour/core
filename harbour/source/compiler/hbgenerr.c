@@ -33,7 +33,7 @@
  *
  */
 
-#include "compiler.h"
+#include "hbcomp.h"
 
 /* Table with parse errors */
 char * hb_comp_szErrors[] =

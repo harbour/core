@@ -33,7 +33,7 @@
  *
  */
 
-#include "compiler.h"
+#include "hbcomp.h"
 
 #define SYM_NOLINK  0              /* Symbol does not have to be linked */
 #define SYM_FUNC    1              /* Defined function                  */

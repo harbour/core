@@ -66,12 +66,12 @@
 
 #include <math.h> /* For log() */
 
-#include "extend.h"
-#include "itemapi.h"
-#include "ctoharb.h"
-#include "errorapi.h"
-#include "dates.h"
-#include "set.h"
+#include "hbapi.h"
+#include "hbapiitm.h"
+#include "hbvm.h"
+#include "hbapierr.h"
+#include "hbdate.h"
+#include "hbset.h"
 
 /* DJGPP can sprintf a float that is almost 320 digits long */
 #define HB_MAX_DOUBLE_LENGTH 320

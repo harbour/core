@@ -83,9 +83,9 @@
 #define HB_SET_H_
 
 #include "hbdefs.h"
-#include "filesys.h"
-#include "gtapi.h"
-#include "inkey.h"
+#include "hbapifs.h"
+#include "hbapigt.h"
+#include "hbinkey.h"
 
 typedef enum
 {

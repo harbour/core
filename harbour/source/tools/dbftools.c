@@ -33,8 +33,8 @@
  *
  */
 
-#include "extend.h"
-#include "rddapi.h"
+#include "hbapi.h"
+#include "hbapirdd.h"
  
 HARBOUR HB_FIELDTYPE( void )
 {

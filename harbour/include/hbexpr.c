@@ -33,8 +33,10 @@
  *
  */
 
+/* TOFIX: Split the code, since MSC8 can't compile it, even in Huge model. */
+
 /* TODO:
- *    Correct post- and pre- operations to correctly handle the following code
+ *    - Correct post- and pre- operations to correctly handle the following code
  *    a[ i++ ]++
  *    Notice: in current implementation (an in Clipper too) 'i++' is evaluated
  *    two times! This causes that the new value (after incrementation) is
@@ -42,7 +44,7 @@
  */
 
 #include <math.h>
-#include "compiler.h"
+#include "hbcomp.h"
 
 /* memory allocation
  */

@@ -33,7 +33,7 @@
  *
  */
 
-#include "compiler.h"
+#include "hbcomp.h"
 
 void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language output */
 {
@@ -69,8 +69,8 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
          hb_build, hb_revision, hb_year, hb_month, hb_day );
    fprintf( yyc, " * Generated C source code\n */\n\n" );
 
-   fprintf( yyc, "#include \"hb_vmpub.h\"\n" );
-   fprintf( yyc, "#include \"init.h\"\n\n\n" );
+   fprintf( yyc, "#include \"hbvmpub.h\"\n" );
+   fprintf( yyc, "#include \"hbinit.h\"\n\n\n" );
 
    if( ! hb_comp_bStartProc )
       pFunc = pFunc->pNext; /* No implicit starting procedure */

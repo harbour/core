@@ -44,10 +44,10 @@
  *
  */
 
-#include "extend.h"
-#include "itemapi.h"
-#include "mouseapi.h"
-#include "gtapi.h"
+#include "hbapi.h"
+#include "hbapiitm.h"
+#include "hbapimou.h"
+#include "hbapigt.h"
 
 /* TODO: This level should make sure that if there's no mouse present 
          the functions don't call the low level function, but return some

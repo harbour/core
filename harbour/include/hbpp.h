@@ -37,8 +37,8 @@
 #define HB_PP_H_
 
 #include "hbdefs.h"
-#include "hbfsapi.h"
-#include "extend.h"
+#include "hbapifs.h"
+#include "hbapi.h"
 #include "hberrors.h"
 #include "hbver.h"
 

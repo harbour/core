@@ -20,7 +20,7 @@ HB := $(HB_BIN_COMPILE)/
 endif
 HB := $(HB)harbour$(EXE_EXT)
 
-HB_FLAGS = -n -q0 -w -I$(TOP) -I$(HB_INC_COMPILE)
+HB_FLAGS = -n -q0 -w -es2 -I$(TOP) -I$(HB_INC_COMPILE)
 
 # The rule to link an executable.
 ifeq ($(LD_RULE),)

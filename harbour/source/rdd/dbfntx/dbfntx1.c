@@ -35,10 +35,10 @@
 
 #define SUPERTABLE ( &ntxSuper )
 
-#include "extend.h"
-#include "init.h"
-#include "itemapi.h"
-#include "rddapi.h"
+#include "hbapi.h"
+#include "hbinit.h"
+#include "hbapiitm.h"
+#include "hbapirdd.h"
 #include "rddsys.ch"
 
 HARBOUR HB__DBFNTX( void );

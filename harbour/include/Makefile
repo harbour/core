@@ -5,33 +5,35 @@
 ROOT = ../
 
 C_HEADERS=\
-        box.h        \
         clipdefs.h   \
-        compiler.h   \
-        ctoharb.h    \
-        dates.h      \
-        errorapi.h   \
         extend.h     \
-        filesys.h    \
-        gtapi.h      \
+        hbapierr.h   \
+        hbapiext.h   \
+        hbapifs.h    \
+        hbapigt.h    \
+        hbapiitm.h   \
+        hbapilng.h   \
+        hbapimou.h   \
+        hbapirdd.h   \
+        hbbox.h      \
+        hbcomp.h     \
+        hbcursor.h   \
+        hbdate.h     \
         hbdefs.h     \
         hberrors.h   \
-        hbfsapi.h    \
+        hbexprop.h   \
+        hbinit.h     \
+        hbinkey.h    \
+        hbmacro.h    \
+        hbpcode.h    \
         hbpp.h       \
+        hbset.h      \
         hbsetup.h    \
         hbtrace.h    \
         hbver.h      \
+        hbvm.h       \
+        hbvmpub.h    \
         hbwinapi.h   \
-        hb_vmpub.h   \
-        init.h       \
-        inkey.h      \
-        itemapi.h    \
-        langapi.h    \
-        mouseapi.h   \
-        pcode.h      \
-        rddapi.h     \
-        set.h        \
-        setcurs.h    \
 
 PRG_HEADERS=\
         achoice.ch   \
@@ -74,3 +76,4 @@ API_HEADERS=\
         vm.api       \
 
 include $(TOP)$(ROOT)config/header.cf
+

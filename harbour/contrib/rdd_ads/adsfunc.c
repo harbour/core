@@ -34,13 +34,13 @@
  */
 
 #include "windows.h"
-#include "extend.h"
-#include "init.h"
-#include "itemapi.h"
+#include "hbapi.h"
+#include "hbinit.h"
+#include "hbapiitm.h"
 #include "rddsys.ch"
-#include "langapi.h"
-#include "dates.h"
-#include "errorapi.h"
+#include "hbapilng.h"
+#include "hbdate.h"
+#include "hbapierr.h"
 #include "rddads.h"
 
 int adsFileType = ADS_CDX;

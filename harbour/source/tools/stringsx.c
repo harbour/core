@@ -2,7 +2,7 @@
  * $Id$
  */
 
-#include "extend.h"
+#include "hbapi.h"
 
 /* TODO: search this file for TODO and find 'em! */
 

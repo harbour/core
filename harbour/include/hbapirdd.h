@@ -33,10 +33,10 @@
  *
  */
 
-#ifndef HB_RDDAPI_H_
-#define HB_RDDAPI_H_
+#ifndef HB_APIRDD_H_
+#define HB_APIRDD_H_
 
-#include "filesys.h"
+#include "hbapifs.h"
 
 /* RDD virtual machine integration functions */
 
@@ -1094,4 +1094,4 @@ extern ERRCODE hb_rddDisinherit( BYTE * drvName );
 extern USHORT  hb_rddExtendType( USHORT fieldType );
 extern USHORT  hb_rddFieldType( USHORT extendType );
 
-#endif /* HB_RDDAPI_H_ */
+#endif /* HB_APIRDD_H_ */

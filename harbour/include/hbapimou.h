@@ -33,10 +33,10 @@
  *
  */
 
-#ifndef HB_MOUSEAPI_H_
-#define HB_MOUSEAPI_H_
+#ifndef HB_APIMOU_H_
+#define HB_APIMOU_H_
 
-#include "extend.h"
+#include "hbapi.h"
 
 /* Public interface. These should never change, only be added to. */
 
@@ -68,4 +68,4 @@ extern int    hb_mouse_CountButton( void );
 extern void   hb_mouse_SetBounds( int iTop, int iLeft, int iBottom, int iRight );
 extern void   hb_mouse_GetBounds( int * piTop, int * piLeft, int * piBottom, int * piRight );
 
-#endif /* HB_MOUSEAPI_H_ */
+#endif /* HB_APIMOU_H_ */

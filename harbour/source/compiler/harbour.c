@@ -35,7 +35,7 @@
 
 #include <malloc.h>     /* required for allocating and freeing memory */
 
-#include "compiler.h"
+#include "hbcomp.h"
 
 #if defined(DOS) && defined(__BORLANDC__)
    #include <limits.h>

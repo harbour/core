@@ -45,9 +45,9 @@
  */
 
 #include <math.h>
-#include "extend.h"
-#include "itemapi.h"
-#include "errorapi.h"
+#include "hbapi.h"
+#include "hbapiitm.h"
+#include "hbapierr.h"
 
 #if defined(__WATCOMC__)
    #define HB_MATH_HANDLER

@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * Header file for the common Filesys API
+ * Header file for the Cursor style constants
  *
- * Copyright 1999 Victor Szakats <info@szelvesz.hu>
+ * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -33,23 +33,16 @@
  *
  */
 
-#ifndef HB_FSAPI_H_
-#define HB_FSAPI_H_
+#ifndef HB_CURSOR_H_
+#define HB_CURSOR_H_
 
-#include "extend.h"
-
-/* Filename support */
-typedef struct
+typedef enum
 {
-   char   szBuffer[ _POSIX_PATH_MAX + 3 + 10 ]; /* TOFIX: +10 is for the drive letter support, and should be changed to some manifest constant */
-   char * szPath;
-   char * szName;
-   char * szExtension;
-   char * szDrive;
-} HB_FNAME, * PHB_FNAME, * HB_FNAME_PTR;
+   SC_NONE              = 0,    /* None */
+   SC_NORMAL            = 1,    /* Underline */
+   SC_INSERT            = 2,    /* Lower half block */
+   SC_SPECIAL1          = 3,    /* Full block */
+   SC_SPECIAL2          = 4     /* Upper half block */
+} HB_cursor_enum;
 
-extern PHB_FNAME hb_fsFNameSplit( char * pszFileName ); /* Split given filename into path, name and extension */
-extern char *    hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName ); /* This function joins path, name and extension into a string with a filename */
-
-#endif /* HB_FSAPI_H_ */
-
+#endif /* HB_CURSOR_H_ */

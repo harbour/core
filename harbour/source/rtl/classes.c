@@ -65,10 +65,10 @@
  *
  */
 
-#include "extend.h"
-#include "errorapi.h"
-#include "itemapi.h"
-#include "ctoharb.h"
+#include "hbapi.h"
+#include "hbapierr.h"
+#include "hbapiitm.h"
+#include "hbvm.h"
 #include "hboo.ch"
 
 typedef struct

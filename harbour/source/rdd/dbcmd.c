@@ -34,15 +34,15 @@
  */
 
 #include <ctype.h>
-#include "extend.h"
-#include "itemapi.h"
-#include "errorapi.h"
-#include "rddapi.h"
-#include "set.h"
-#include "ctoharb.h"
+#include "hbapi.h"
+#include "hbapiitm.h"
+#include "hbapierr.h"
+#include "hbapirdd.h"
+#include "hbset.h"
+#include "hbvm.h"
 #include "rddsys.ch"
 #include "set.ch"
-#include "langapi.h"
+#include "hbapilng.h"
 
 #define HARBOUR_MAX_RDD_DRIVERNAME_LENGTH       32
 #define HARBOUR_MAX_RDD_ALIAS_LENGTH            32

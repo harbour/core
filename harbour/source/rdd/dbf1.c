@@ -37,15 +37,15 @@
 
 #include <time.h>
 #include <ctype.h>
-#include "extend.h"
-#include "itemapi.h"
-#include "init.h"
-#include "rddapi.h"
+#include "hbapi.h"
+#include "hbapiitm.h"
+#include "hbinit.h"
+#include "hbapirdd.h"
 #include "rddsys.ch"
-#include "errorapi.h"
-#include "dates.h"
-#include "langapi.h"
-#include "ctoharb.h"
+#include "hbapierr.h"
+#include "hbdate.h"
+#include "hbapilng.h"
+#include "hbvm.h"
 
 typedef struct _DBFHEADER
 {

@@ -33,7 +33,7 @@
  *
  */
 
-#include "extend.h"
+#include "hbapi.h"
 
 #define HB_STRFORMAT_PARNUM_MAX_ 9
 

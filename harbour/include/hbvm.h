@@ -33,10 +33,10 @@
  *
  */
 
-#ifndef HB_CTOHARB_H_
-#define HB_CTOHARB_H_
+#ifndef HB_VM_H_
+#define HB_VM_H_
 
-#include "extend.h"
+#include "hbapi.h"
 
 /* Harbour virtual machine init/exit functions */
 extern void    hb_vmInit( BOOL bStartMainProc );
@@ -85,4 +85,5 @@ extern void    hb_vmPushSymbol( PHB_SYMB pSym ); /* pushes a function pointer on
 extern void    hb_stackDispCall( void );
 extern void    hb_stackPop( void );        /* pops an item from the stack */
 
-#endif /* HB_CTOHARB_H_ */
+#endif /* HB_VM_H_ */
+

@@ -191,12 +191,12 @@
  */
 
 #include <ctype.h>
-#include "extend.h"
-#include "itemapi.h"
-#include "errorapi.h"
-#include "filesys.h"
-#include "set.h"
-#include "inkey.h"
+#include "hbapi.h"
+#include "hbapiitm.h"
+#include "hbapierr.h"
+#include "hbapifs.h"
+#include "hbset.h"
+#include "hbinkey.h"
 
 HB_SET_STRUCT hb_set;
 

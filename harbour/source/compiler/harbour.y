@@ -42,7 +42,7 @@
 
 #include <malloc.h>
 
-#include "compiler.h"
+#include "hbcomp.h"
 
 /* Compile using: bison -d -v harbour.y */
 
@@ -1557,16 +1557,17 @@ BOOL hb_compInclude( char * szFileName, PATHNAMES * pSearch )
 
 int yywrap( void )   /* handles the EOF of the currently processed file */
 {
-   void * pLast;
-
    if( hb_comp_files.iFiles == 1 )
    {
       hb_xfree( hb_comp_files.pLast->pBuffer );
       return 1;      /* we have reached the main EOF */
    }
+
 /*
    else
    {
+      void * pLast;
+
       pLast = hb_comp_files.pLast;
       fclose( hb_comp_files.pLast->handle );
       hb_comp_files.pLast = ( PFILE ) ( ( PFILE ) hb_comp_files.pLast )->pPrev;
@@ -1587,6 +1588,8 @@ int yywrap( void )   /* handles the EOF of the currently processed file */
       return 0;      
    }
 */ /* we close the currently include file and continue */
+
+   return 0;      
 }
 
 /* ************************************************************************* */

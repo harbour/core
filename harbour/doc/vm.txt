@@ -20,7 +20,7 @@ interface of each subsystem.
 The main execution loop is defined in the C function named VirtualMachine(),
 which receives two parameters: the pcode instructions to execute and the
 local symbol table (a portion of the OBJs (static) symbol table) used by
-that pcode: (please review pcode.h for the currently implemented pcode
+that pcode: (please review hbpcode.h for the currently implemented pcode
 opcodes)
 
 VM( pcode, local symbols )
@@ -299,7 +299,7 @@ vice-versa.
 
 Answer :
 
-Harbour opcodes are defined in pcode.h. We are trying to use very easy to
+Harbour opcodes are defined in hbpcode.h. We are trying to use very easy to
 remember mnemonics, so PUSHWORD seems easier than PUSHW. The opcodes values
 are meaningless as they are just used by a C language switch sentence (in
 fact there is a powerful optimization which is to use the pcode opcodes

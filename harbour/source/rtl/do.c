@@ -33,10 +33,10 @@
  *
  */
 
-#include "extend.h"
-#include "itemapi.h"
-#include "errorapi.h"
-#include "ctoharb.h"
+#include "hbapi.h"
+#include "hbapiitm.h"
+#include "hbapierr.h"
+#include "hbvm.h"
 
 HARBOUR HB_DO( void )
 {

@@ -1,3 +1,40 @@
+20000302-11:21 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * config/rules.cf
+     makefile.bc
+     makefile.vc
+     + -es2 added as a default Harbour switch.
+       WARNING! HBDOC will not compile, since it has warnings.
+   * contrib/*
+     include/*
+     doc/*
+     source/*
+     * Changed the name of all header files, which didn't have a "hb" prefix.
+       WARNING! All .PRG files must be recompiled. Note that from now on the
+       most common header file EXTEND.H is only a CA-Cl*pper compatibility
+       file, in for new Harbour code you should use HBAPI.H instead.
+
+       errorapi.h -> hbapierr.h        
+       filesys.h  -> hbapifs.h         
+       gtapi.h    -> hbapigt.h         
+       itemapi.h  -> hbapiitm.h        
+       langapi.h  -> hbapilng.h        
+       mouseapi.h -> hbapimou.h        
+       rddapi.h   -> hbapirdd.h        
+       box.h      -> hbbox.h           
+       compiler.h -> hbcomp.h          
+       setcurs.h  -> hbcursor.h        
+       dates.h    -> hbdate.h          
+       expropt.h  -> hbexprop.h        
+       init.h     -> hbinit.h          
+       inkey.h    -> hbinkey.h         
+       macro.h    -> hbmacro.h         
+       pcode.h    -> hbpcode.h         
+       set.h      -> hbset.h           
+       ctoharb.h  -> hbvm.h            
+       hb_vmpub.h -> hbvmpub.h        
+       extend.h   -> hbapi.h           
+       hbfsapi.h  -> hbapifs.h (merged into)
+
 20000302-12:35 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/pp/hbpp.c
@@ -31,6 +68,7 @@
    *utils/hbdoc/hrb.rsp
    *utils/hbdoc/hrbtools.rsp
       *Change to use the new docs dir
+
 20000301-14:34 GMT+1 Victor Szakats <info@szelvesz.hu>
    * source/rtl/console.c
      source/rtl/oldclear.c

@@ -33,10 +33,10 @@
  *
  */
 
-#ifndef HB_EXPROPT_H_
-#define HB_EXPROPT_H_
+#ifndef HB_EXPROP_H_
+#define HB_EXPROP_H_
 
-#include "extend.h"
+#include "hbapi.h"
 
 typedef struct HB_EXPR_
 {
@@ -213,4 +213,4 @@ HB_EXPR_PTR hb_compExprCBVarAdd( HB_EXPR_PTR, char *, BYTE );
 
 #endif
 
-#endif  /* HB_EXPROPT_H_ */
+#endif  /* HB_EXPROP_H_ */

@@ -35,9 +35,9 @@
 
 /* The Harbour implementation of codeblocks */
 
-#include "extend.h"
-#include "ctoharb.h"
-#include "itemapi.h"
+#include "hbapi.h"
+#include "hbvm.h"
+#include "hbapiitm.h"
 
 /* Creates the codeblock structure
  *

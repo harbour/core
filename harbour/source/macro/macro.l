@@ -51,7 +51,7 @@ NOTE: -C  controls the speed/size ratio of generated scanner
 #include <stdlib.h>
 #include <string.h>
 #include <limits.h>
-#include "macro.h"
+#include "hbmacro.h"
 #include "macroy.h"
 #include "hbsetup.h"    /* main configuration file */
 #include "hberrors.h"

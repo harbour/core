@@ -33,7 +33,7 @@
  *
  */
 
-#include "mouseapi.h"
+#include "hbapimou.h"
 
 /* C callable low-level interface */
 

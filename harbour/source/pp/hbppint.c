@@ -47,7 +47,7 @@
 #include <string.h>
 #include "hbpp.h"
 #include "hberrors.h"
-#include "compiler.h"
+#include "hbcomp.h"
 
 extern FILES       hb_comp_files;
 extern int         hb_comp_iLine; /* currently parsed file line number */

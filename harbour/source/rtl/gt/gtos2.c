@@ -45,7 +45,7 @@
 
 #include <string.h>
 #include <os2.h>
-#include "gtapi.h"
+#include "hbapigt.h"
 
 static char hb_gt_GetCellSize( void );
 static void hb_gt_SetCursorSize( char start, char end, int visible );

@@ -33,7 +33,7 @@
  *
  */
 
-#include "compiler.h"
+#include "hbcomp.h"
 
 void hb_compGenPCode1( BYTE byte )
 {

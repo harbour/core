@@ -47,11 +47,11 @@
  *
  */
 
-#include "extend.h"
-#include "itemapi.h"
-#include "errorapi.h"
-#include "langapi.h"
-#include "ctoharb.h"
+#include "hbapi.h"
+#include "hbapiitm.h"
+#include "hbapierr.h"
+#include "hbapilng.h"
+#include "hbvm.h"
 
 /*
  * Internal

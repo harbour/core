@@ -33,9 +33,9 @@
  *
  */
 
-#include "extend.h"
-#include "compiler.h"
-#include "pcode.h"
+#include "hbapi.h"
+#include "hbcomp.h"
+#include "hbpcode.h"
 #include "hberrors.h"
 
 void hb_compGenRC( PHB_FNAME pFileName )

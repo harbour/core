@@ -46,10 +46,10 @@
 #include <setjmp.h>
 
 #include "hbpp.h"
-#include "compiler.h"
-#include "extend.h"
-#include "itemapi.h"
-#include "errorapi.h"
+#include "hbcomp.h"
+#include "hbapi.h"
+#include "hbapiitm.h"
+#include "hbapierr.h"
 #include "hberrors.h"
 
 PATHNAMES * hb_comp_pIncludePath = NULL;

@@ -33,8 +33,8 @@
  *
  */
 
-#include "extend.h"
-#include "itemapi.h"
+#include "hbapi.h"
+#include "hbapiitm.h"
 
 /* NOTE: szTime must be 9 chars large. */
 

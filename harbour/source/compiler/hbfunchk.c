@@ -33,7 +33,7 @@
  *
  */
 
-#include "compiler.h"
+#include "hbcomp.h"
 
 /* NOTE: iMinParam = -1, means no checking
  *       iMaxParam = -1, means no upper limit

@@ -110,8 +110,8 @@
 #include "hbwinapi.h"
 
 #include <ctype.h>
-#include "extend.h"
-#include "itemapi.h"
+#include "hbapi.h"
+#include "hbapiitm.h"
 #include "directry.ch"
 
 #if defined(__GNUC__) && ! defined(__MINGW32__)

@@ -37,7 +37,7 @@
 #define HB_VMPUB_H_
 
 #include "hbdefs.h"
-#include "pcode.h"
+#include "hbpcode.h"
 
 struct _HB_DYNS;
 

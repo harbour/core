@@ -54,8 +54,8 @@
 #include <math.h>
 #include <stdlib.h>
 #include <ctype.h>
-#include "extend.h"
-#include "itemapi.h"
+#include "hbapi.h"
+#include "hbapiitm.h"
 #include "hbdefs.h"
 #include <sql.h>
 #include <sqlext.h>

@@ -37,7 +37,7 @@
  */
 #define  HB_MACRO_SUPPORT
 
-#include "macro.h"
+#include "hbmacro.h"
 
 /* TODO:
  * include these variables in SET subsystem ?

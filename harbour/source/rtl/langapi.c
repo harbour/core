@@ -33,8 +33,8 @@
  *
  */
 
-#include "extend.h"
-#include "langapi.h"
+#include "hbapi.h"
+#include "hbapilng.h"
 
 static HB_LANG langEN =
 {

@@ -17,7 +17,7 @@
  * public domain.
  */
 
-#include "extend.h"
+#include "hbapi.h"
 
 HARBOUR HB_GT_CHRCOUNT( void )
 {

@@ -2,7 +2,7 @@
  * $Id$
  */
 
-#include "extend.h"
+#include "hbapi.h"
 #include <math.h>
 
 #ifndef M_PI_2

@@ -71,11 +71,11 @@
          be ahead of any other #include statements! */
 #include "hbwinapi.h"
 
-#include "extend.h"
-#include "errorapi.h"
-#include "itemapi.h"
-#include "set.h"
-#include "dates.h"
+#include "hbapi.h"
+#include "hbapierr.h"
+#include "hbapiitm.h"
+#include "hbset.h"
+#include "hbdate.h"
 
 #include <ctype.h>
 #include <time.h>

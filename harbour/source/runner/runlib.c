@@ -33,12 +33,12 @@
  *
  */
 
-#include "extend.h"
-#include "itemapi.h"
-#include "errorapi.h"
-#include "filesys.h"
-#include "ctoharb.h"
-#include "pcode.h"
+#include "hbapi.h"
+#include "hbapiitm.h"
+#include "hbapierr.h"
+#include "hbapifs.h"
+#include "hbvm.h"
+#include "hbpcode.h"
 
 /* TODO: Separate the loading/unloading and the caller functions,
          this way we could also call a specific function name from the

@@ -40,7 +40,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <limits.h>
-#include "compiler.h"
+#include "hbcomp.h"
 #include "harboury.h"
 #include "hbsetup.h"    /* main configuration file */
 #include "hberrors.h"

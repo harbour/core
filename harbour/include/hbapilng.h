@@ -33,8 +33,8 @@
  *
  */
 
-#ifndef HB_LANGAPI_H_
-#define HB_LANGAPI_H_
+#ifndef HB_APILNG_H_
+#define HB_APILNG_H_
 
 #define HB_LANG_TEXT_DATEFMT    0
 #define HB_LANG_TEXT_YESCHAR    1
@@ -103,4 +103,4 @@ extern char *   hb_langDGetErrorIntr	( ULONG ulIndex );
 extern PHB_LANG hb_langNew              ( void );
 extern void     hb_langDelete           ( PHB_LANG lang );
 
-#endif /* HB_LANGAPI_H_ */
+#endif /* HB_APILNG_H_ */

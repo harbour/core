@@ -33,13 +33,13 @@
  *
  */
 
-#ifndef HB_GTAPI_H_
-#define HB_GTAPI_H_
+#ifndef HB_APIGT_H_
+#define HB_APIGT_H_
 
-#include "extend.h"
+#include "hbapi.h"
 #include "color.ch"
-#include "setcurs.h"
-#include "box.h"
+#include "hbcursor.h"
+#include "hbbox.h"
 
 /* NOTE: The declaration of hb_gtSetPos(), hb_gtGetPos(), hb_gtWrite(), 
          hb_gtWriteAt(), hb_gtRepChar() differs in parameter types from the 
@@ -111,4 +111,4 @@ extern BOOL   hb_gt_GetBlink( void );
 extern void   hb_gt_SetBlink( BOOL bBlink );
 extern void   hb_gt_Replicate( BYTE byChar, ULONG ulLen );
 
-#endif /* HB_GTAPI_H_ */
+#endif /* HB_APIGT_H_ */

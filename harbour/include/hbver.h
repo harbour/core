@@ -87,10 +87,10 @@ extern int    hb_day;
 
 #define hb_major     0       /* Major version number */
 #define hb_minor     0       /* Minor version number */
-#define hb_revision  "a"     /* Revision letter */
+#define hb_revision  "b"     /* Revision letter */
 #define hb_build     31      /* Build number */
 #define hb_year      2000    /* Build year */
-#define hb_month     02      /* Build month */
+#define hb_month     03      /* Build month */
 #define hb_day       02      /* Build day */
 
 #endif /* HB_VER_H_ */

@@ -33,9 +33,9 @@
  *
  */
 
-#include "extend.h"
-#include "itemapi.h"
-#include "filesys.h"
+#include "hbapi.h"
+#include "hbapiitm.h"
+#include "hbapifs.h"
 
 /* NOTE: CA-Clipper has 64K (65516 bytes exactly) limit on read, in Harbour
          this limit is extended, so we are not *stricly* compatible here. 

@@ -24,8 +24,8 @@
 #define INITGUID
 #include "windows.h"
 #include "winuser.h"
-#include "extend.h"
-#include "ctoharb.h"
+#include "hbapi.h"
+#include "hbvm.h"
 #include "errno.h"
 #include "objbase.h"
 #include "tchar.h"

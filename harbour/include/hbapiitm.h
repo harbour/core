@@ -33,10 +33,10 @@
  *
  */
 
-#ifndef HB_ITEMAPI_H_
-#define HB_ITEMAPI_H_
+#ifndef HB_APIITM_H_
+#define HB_APIITM_H_
 
-#include "extend.h"
+#include "hbapi.h"
 
 #define HB_EVAL_PARAM_MAX_ 9
 
@@ -103,4 +103,4 @@ extern char *   hb_itemStr      ( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pD
 extern char *   hb_itemString   ( PHB_ITEM pItem, ULONG * ulLen, BOOL * bFreeReq );  /* Convert any scalar to a string */
 extern PHB_ITEM hb_itemValToStr ( PHB_ITEM pItem ); /* Convert any scalar to a string */
 
-#endif /* HB_ITEMAPI_H_ */
+#endif /* HB_APIITM_H_ */

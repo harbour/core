@@ -42,8 +42,8 @@
    #include <dos.h>
 #endif
 
-#include "mouseapi.h"
-#include "gtapi.h"
+#include "hbapimou.h"
+#include "hbapigt.h"
 
 /* C callable low-level interface */
 

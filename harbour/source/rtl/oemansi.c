@@ -40,8 +40,8 @@
          be ahead of any other #include statements! */
 #include "hbwinapi.h"
 
-#include "extend.h"
-#include "itemapi.h"
+#include "hbapi.h"
+#include "hbapiitm.h"
 
 HARBOUR HB_HB_ANSITOOEM( void )
 {

@@ -33,8 +33,8 @@
  *
  */
 
-#include "extend.h"
-#include "errorapi.h"
+#include "hbapi.h"
+#include "hbapierr.h"
 
 HARBOUR HB_TYPE( void )
 {

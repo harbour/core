@@ -40,7 +40,7 @@
 #endif /* __GNUC__ */
 
 #include <windows.h>
-#include "mouseapi.h"
+#include "hbapimou.h"
 
 #if defined(__IBMCPP__)
    #undef WORD                            /* 2 bytes unsigned */

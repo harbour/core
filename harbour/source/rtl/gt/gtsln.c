@@ -38,7 +38,7 @@
 
 #include <slang.h>
 
-#include "gtapi.h"
+#include "hbapigt.h"
 
 void hb_gt_Init( void )
 {

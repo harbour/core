@@ -36,7 +36,7 @@
 
 #include <curses.h>
 
-#include "gtapi.h"
+#include "hbapigt.h"
 
 static void gt_GetMaxRC(int* r, int* c);
 static void gt_GetRC(int* r, int* c);

@@ -49,9 +49,9 @@ Let's review the Test.prg pcode structure in more detail:
 0023 (60) ENDPROC                   60
 
 
-We could define a pcode.h file to better read that pcode:
+We could define a hbpcode.h file to better read that pcode:
 
-pcode.h
+hbpcode.h
 
 #define  LINE    0x2A
 #define  SYMF    0x13

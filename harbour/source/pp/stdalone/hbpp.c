@@ -51,7 +51,7 @@
 #include "hbpp.h"
 #include "hberrors.h"
 #include "hbver.h"
-#include "compiler.h"
+#include "hbcomp.h"
 
 static int hb_pp_Parse( FILE * handl_o );
 static void AddSearchPath( char * szPath, PATHNAMES * * pSearchList );

@@ -62,9 +62,9 @@
 #endif /* __GNUC__ */
 
 #include <windows.h>
-#include "gtapi.h"
-#include "set.h" /* For Ctrl+Break handling */
-#include "ctoharb.h" /* For Ctrl+Break handling */
+#include "hbapigt.h"
+#include "hbset.h" /* For Ctrl+Break handling */
+#include "hbvm.h" /* For Ctrl+Break handling */
 
 #if defined(__IBMCPP__)
    #undef WORD                            /* 2 bytes unsigned */

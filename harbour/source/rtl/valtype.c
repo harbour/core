@@ -33,7 +33,7 @@
  *
  */
 
-#include "extend.h"
+#include "hbapi.h"
 
 char * hb_valtypeGet( HB_ITEM_PTR pItem )
 {

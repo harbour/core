@@ -2,7 +2,7 @@
  * $Id$
  */
 
-#include "extend.h"
+#include "hbapi.h"
 
 #ifdef DOS
 #include <dos.h>

@@ -79,8 +79,8 @@
    #include <time.h>
 #endif
 
-#include "extend.h"
-#include "inkey.h" /* For hb_releaseCPU() */
+#include "hbapi.h"
+#include "hbinkey.h" /* For hb_releaseCPU() */
 
 #if defined(HARBOUR_GCC_OS2)
    ULONG DosBeep( ULONG ulFrequency, ULONG ulDuration );

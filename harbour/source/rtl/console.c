@@ -64,17 +64,17 @@
  *
  */
 
-#include "extend.h"
-#include "itemapi.h"
-#include "errorapi.h"
-#include "filesys.h"
-#include "dates.h"
-#include "set.h"
-#include "inkey.h"
+#include "hbapi.h"
+#include "hbapiitm.h"
+#include "hbapierr.h"
+#include "hbapifs.h"
+#include "hbdate.h"
+#include "hbset.h"
+#include "hbinkey.h"
 #include "inkey.ch"
-#include "gtapi.h"            /* HARBOUR_USE_GTAPI is checked inside gtapi.h, so that
+#include "hbapigt.h"            /* HARBOUR_USE_GTAPI is checked inside hbapigt.h, so that
                                  we can always get the border styles */
-#include "mouseapi.h"
+#include "hbapimou.h"
 
 #if defined(__GNUC__) && ! defined(__MINGW32__)
    #include <unistd.h>

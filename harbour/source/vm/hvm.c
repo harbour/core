@@ -50,15 +50,15 @@
 #endif
 #include <math.h>
 
-#include "extend.h"
-#include "ctoharb.h"
-#include "errorapi.h"
-#include "itemapi.h"
-#include "langapi.h"
-#include "rddapi.h"
-#include "pcode.h"
-#include "set.h"
-#include "inkey.h"
+#include "hbapi.h"
+#include "hbvm.h"
+#include "hbapierr.h"
+#include "hbapiitm.h"
+#include "hbapilng.h"
+#include "hbapirdd.h"
+#include "hbpcode.h"
+#include "hbset.h"
+#include "hbinkey.h"
 
 typedef struct _SYMBOLS
 {

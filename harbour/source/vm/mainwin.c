@@ -36,8 +36,8 @@
 #ifdef _Windows
 
 #include <windows.h>
-#include "extend.h"
-#include "ctoharb.h"
+#include "hbapi.h"
+#include "hbvm.h"
 
 HANDLE hb_hInstance = 0;
 HANDLE hb_hPrevInstance = 0;

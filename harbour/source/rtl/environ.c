@@ -68,8 +68,8 @@
 #endif
 #endif
 
-#include "extend.h"
-#include "errorapi.h"
+#include "hbapi.h"
+#include "hbapierr.h"
 #include "hbver.h"
 
 #if defined(__TURBOC__) || defined(__BORLANDC__) || defined(_MSC_VER) || defined(__DJGPP__) || defined(__MINGW32__)

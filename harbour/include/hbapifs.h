@@ -51,11 +51,11 @@
  *
  */
 
-#ifndef HB_FILESYS_H_
-#define HB_FILESYS_H_
+#ifndef HB_APIFS_H_
+#define HB_APIFS_H_
 
-#include "extend.h"
-#include "hbfsapi.h"
+#include "hbapi.h"
+#include "hbapifs.h"
 #include "fileio.ch"
 
 #define FS_ERROR F_ERROR
@@ -109,4 +109,17 @@ extern void     hb_fsSetError   ( USHORT uiError );
 extern USHORT   hb_fsWrite      ( FHANDLE hFileHandle, BYTE * pBuff, USHORT ulCount );
 extern ULONG    hb_fsWriteLarge ( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount );
 
-#endif /* HB_FILESYS_H_ */
+/* Filename support */
+typedef struct
+{
+   char   szBuffer[ _POSIX_PATH_MAX + 3 + 10 ]; /* TOFIX: +10 is for the drive letter support, and should be changed to some manifest constant */
+   char * szPath;
+   char * szName;
+   char * szExtension;
+   char * szDrive;
+} HB_FNAME, * PHB_FNAME, * HB_FNAME_PTR;
+
+extern PHB_FNAME hb_fsFNameSplit( char * pszFileName ); /* Split given filename into path, name and extension */
+extern char *    hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName ); /* This function joins path, name and extension into a string with a filename */
+
+#endif /* HB_APIFS_H_ */

@@ -33,8 +33,8 @@
  *
  */
 
-#include "extend.h"
-#include "ctoharb.h"
+#include "hbapi.h"
+#include "hbvm.h"
 
 int main( int argc, char * argv[] )
 {

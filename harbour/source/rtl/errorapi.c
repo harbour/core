@@ -56,16 +56,16 @@
  *
  */
 
-#include "extend.h"
-#include "ctoharb.h"
-#include "itemapi.h"
-#include "errorapi.h"
-#include "langapi.h"
+#include "hbapi.h"
+#include "hbvm.h"
+#include "hbapiitm.h"
+#include "hbapierr.h"
+#include "hbapilng.h"
 
 /* This is added to be able to detect a recursive error, and not let Harbour
    go into an infinite loop, this is an emulated version of the Clipper
    "Unrecoverable error 650: Processor stack fault" internal error, but
-   better shows what is really the problem */
+   better shows what is really the problem. [vszakats] */
 #define HB_ERROR_LAUNCH_MAX 8
 
 static HB_ERROR_INFO_PTR s_errorHandler = NULL;
@@ -259,7 +259,7 @@ USHORT hb_errLaunch( PHB_ITEM pError )
 
 /* This error launcher should be used in those situations, where the error
    handler is expected to return a value to be substituted as the result of
-   a failed operation. */
+   a failed operation. [vszakats] */
 
 /* NOTE: This should only be called when the EF_CANSUBSTITUE flag was set
          Since it this case the error handler will return the value
@@ -783,8 +783,8 @@ USHORT hb_errRT_TOOLS( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, c
    return uiAction;
 }
 
-/* NOTE: Use as minimal calls from here, as possible. */
-/*       Don't allocate memory from this function. [vszakats] */
+/* NOTE: Use as minimal calls from here, as possible.
+         Don't allocate memory from this function. [vszakats] */
 
 void hb_errInternal( ULONG ulIntCode, char * szText, char * szPar1, char * szPar2 )
 {

@@ -54,7 +54,7 @@
  * hb_vm_SymbolInit_<module_name>
  * (for example for myfirst.prg it will be: 'hb_vm_SymbolInit_MYFIRST'
  * The generation of this function is performed by the macro called
- * HB_CALL_ON_STARTUP that is defined in 'init.h'
+ * HB_CALL_ON_STARTUP that is defined in 'hbinit.h'
  *
  * By default we are using extensions to ANSI C (symbol is not defined)
 */

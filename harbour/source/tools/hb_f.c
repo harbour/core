@@ -35,7 +35,7 @@
 
 /* please run $(HARBOUR)\tests\working\testhbf.prg for testing */
 
-#include "filesys.h"
+#include "hbapifs.h"
 
 #define b_size     1024
 #define c_size     4096

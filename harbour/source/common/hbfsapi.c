@@ -33,8 +33,8 @@
  *
  */
 
-#include "extend.h"
-#include "hbfsapi.h"
+#include "hbapi.h"
+#include "hbapifs.h"
 
 /* Split given filename into path, name and extension, plus determine drive */
 PHB_FNAME hb_fsFNameSplit( char * pszFileName )

@@ -36,13 +36,13 @@
 #define SUPERTABLE ( &cdxSuper )
 
 #include <time.h>
-#include "extend.h"
-#include "init.h"
-#include "itemapi.h"
-#include "rddapi.h"
+#include "hbapi.h"
+#include "hbinit.h"
+#include "hbapiitm.h"
+#include "hbapirdd.h"
 #include "rddsys.ch"
-#include "errorapi.h"
-#include "langapi.h"
+#include "hbapierr.h"
+#include "hbapilng.h"
 
 
 typedef struct _DBFHEADER

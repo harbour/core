@@ -51,7 +51,7 @@
 
 #include <time.h>
 
-#include "compiler.h"
+#include "hbcomp.h"
 
 /* TODO: Add support for this compiler switches
    -m -r -t || getenv( "TMP" ) -u

@@ -7,7 +7,7 @@
 # Merge duplicate strings
 BCC_OPT = $(BCC_OPT) -d
 
-HARBOUR_OPT = $(HARBOUR_OPT) -q0 -w
+HARBOUR_OPT = $(HARBOUR_OPT) -q0 -w -es2
 
 !if $d(B16)
 

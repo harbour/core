@@ -33,7 +33,7 @@
  *
  */
 
-#include "rddapi.h"
+#include "hbapirdd.h"
 #include "ace.h"
 
 /*

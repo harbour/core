@@ -37,7 +37,7 @@
          be ahead of any other #include statements! */
 #include "hbwinapi.h"
 
-#include "extend.h"
+#include "hbapi.h"
 
 /* TODO: Implement NETNAME() for other platforms */
 /* NOTE: Clipper will only return a maximum of 15 bytes from this function.

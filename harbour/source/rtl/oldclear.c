@@ -33,7 +33,7 @@
  *
  */
 
-#include "gtapi.h"
+#include "hbapigt.h"
 
 HARBOUR HB___ATCLEAR( void )
 {

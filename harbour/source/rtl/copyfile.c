@@ -33,9 +33,9 @@
  *
  */
 
-#include "extend.h"
-#include "errorapi.h"
-#include "filesys.h"
+#include "hbapi.h"
+#include "hbapierr.h"
+#include "hbapifs.h"
 
 #ifdef OS_UNIX_COMPATIBLE
    #include <sys/stat.h>

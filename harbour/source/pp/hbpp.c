@@ -62,7 +62,7 @@
 
 #include "hbpp.h"
 #include "hberrors.h"
-#include "compiler.h"
+#include "hbcomp.h"
 
 #if defined( OS_UNIX_COMPATIBLE )
    #include <sys/timeb.h>

@@ -33,8 +33,8 @@
  *
  */
 
-#include "extend.h"
-#include "itemapi.h"
+#include "hbapi.h"
+#include "hbapiitm.h"
 
 /* $Doc$
  * $FuncName$     AddToArray( <pItem>, <pReturn>, <uiPos> )

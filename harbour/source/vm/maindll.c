@@ -36,7 +36,7 @@
 #ifdef _Windows
 
 #include <windows.h>
-#include "ctoharb.h"
+#include "hbvm.h"
 
 BOOL WINAPI _export DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason,
                                   PVOID pvReserved )

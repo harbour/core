@@ -46,8 +46,8 @@
  *
  */
 
-#include "extend.h"
-#include "itemapi.h"
+#include "hbapi.h"
+#include "hbapiitm.h"
 
 HARBOUR HB_BIN2W( void )
 {

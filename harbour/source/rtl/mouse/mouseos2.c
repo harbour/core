@@ -49,7 +49,7 @@
 #define INCL_NOPMAPI         /* exclude Presentation Manager Include File */
 
 #include <os2.h>
-#include "mouseapi.h"
+#include "hbapimou.h"
 
 static HMOU s_uMouHandle;                   /* mouse logical handle */
 

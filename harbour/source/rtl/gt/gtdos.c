@@ -54,9 +54,9 @@
 
 #include <string.h>
 #include <dos.h>
-#include "gtapi.h"
-#include "set.h" /* For Ctrl+Break handling */
-#include "ctoharb.h" /* For Ctrl+Break handling */
+#include "hbapigt.h"
+#include "hbset.h" /* For Ctrl+Break handling */
+#include "hbvm.h" /* For Ctrl+Break handling */
 
 #if defined(__POWERC) || (defined(__TURBOC__) && !defined(__BORLANDC__)) || \
    (defined(__ZTC__) && !defined(__SC__))

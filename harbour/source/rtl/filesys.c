@@ -80,10 +80,10 @@
 #include "hbwinapi.h"
 
 #include <ctype.h>
-#include "extend.h"
-#include "itemapi.h"
-#include "filesys.h"
-#include "errorapi.h"
+#include "hbapi.h"
+#include "hbapiitm.h"
+#include "hbapifs.h"
+#include "hbapierr.h"
 
 #if defined(__CYGWIN__)
    #include <mingw32/share.h>
