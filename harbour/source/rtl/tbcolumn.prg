@@ -51,27 +51,38 @@ METHOD New() CLASS TBColumn
 
 return Self
 
+/* NOFIX: In Clipper the column width are not determined at this point. */
+
 function TBColumnNew( cHeading, bBlock )
 
    local oCol := TBColumn():New()
-   loca nWidth, nType := Valtype( Eval( bBlock ) )
+   local nWidth, cType
 
-   oCol:Heading = cHeading
-   oCol:block   = bBlock
-   do case
-      case nType = "N"
-           nWidth = 10
+   oCol:Heading := cHeading
 
-      case nType = "L"
-           nWidth = 3
+   if ValType( bBlock ) == "B"
 
-      case nType = "C"
-           nWidth = Len( Eval( bBlock ) )
+      oCol:block := bBlock
 
-      otherwise
-           nWidth = 0
-   endcase
-   oCol:Width = If( cHeading != nil, Max( Len( cHeading ), nWidth ), nWidth )
+      cType := Valtype( Eval( bBlock ) )
+
+      do case
+         case cType == "N"
+            nWidth := 10
+
+         case cType == "L"
+            nWidth := 3
+
+         case cType == "C"
+            nWidth := Len( Eval( bBlock ) )
+
+         otherwise
+            nWidth := 0
+      endcase
+
+      oCol:Width := If( cHeading != nil, Max( Len( cHeading ), nWidth ), nWidth )
+
+   endif
 
 return oCol
 

@@ -8,11 +8,24 @@
  *      __RUN()
  */
 
-/* Note: The following #ifdef block for __IBMCPP__ must
-         be ahead of any and all #include statements!
+/* NOTE: Support for determining the window version by Luiz Rafael Culik
+   Culik@sl.conex.net
 */
+
+/* NOTE: The following #ifdef block for __IBMCPP__ must
+         be ahead of any and all #include statements! */
+
 #ifdef __IBMCPP__
    #define INCL_DOSMISC
+#endif
+
+/* NOTE: The following #ifdef block #including <windows.h> must
+         be ahead of any and all #include statements! */
+
+#if defined(_Windows) || defined(_WIN32)
+   #if !defined(__CYGWIN__)
+      #include <windows.h>
+   #endif
 #endif
 
 #include "extend.h"
@@ -86,9 +99,44 @@ HARBOUR HB_OS( void )
 /* TODO: add MSVC support but MSVC cannot detect any OS except Windows! */
 #if defined(__TURBOC__) || defined(__BORLANDC__) || defined(__MSC__) || defined(_MSC_VER)
 
-#if defined(_Windows) || defined(_WIN32)
-   /* TODO: Determine the Windows type (32s/95/98/NT) and version */
-   hb_os = "Windows";
+#if defined(_Windows) || defined(_WIN32) || defined(__BORLANDC__) || defined(__MSC__) || defined(_MSC_VER) && !defined(__CYGWIN__)
+
+/* NOTE: Support for determining the window version by Luiz Rafael Culik
+   Culik@sl.conex.net
+*/
+
+   OSVERSIONINFO osVer; /* for GetVersionEx() */
+
+   osVer.dwOSVersionInfoSize = sizeof( osVer );
+
+   if( GetVersionEx( &osVer ) )
+   {
+      switch( osVer.dwPlatformId )
+      {
+         case VER_PLATFORM_WIN32_WINDOWS:
+             hb_osmajor = osVer.dwMajorVersion;
+             hb_osminor = osVer.dwMinorVersion;
+             hb_osletter = osVer.dwBuildNumber;
+             hb_os = "Windows 95/98";
+             break;
+
+         case VER_PLATFORM_WIN32_NT:
+
+            hb_osmajor = osVer.dwMajorVersion;
+            hb_osminor = osVer.dwMinorVersion;
+            hb_osletter = osVer.dwBuildNumber;
+            hb_os = "Windows NT";
+            break;
+
+         case VER_PLATFORM_WIN32s:
+            hb_osmajor = osVer.dwMajorVersion;
+            hb_osminor = osVer.dwMinorVersion;
+            hb_osletter = osVer.dwBuildNumber;
+            hb_os = "Windows 32s";
+            break;
+      }
+   }
+
 #else
 #if defined(__MSC__) || defined(_MSC_VER)
       if( _osmode == _WIN_MODE )
@@ -99,16 +147,24 @@ HARBOUR HB_OS( void )
          hb_osletter = 0;
       }
 #else
-      /* detect Windows */
-      _AX = 0x160A;
-      geninterrupt( 0x2F );
-      if( _AX == 0 )
-      {
-         hb_osmajor = _BX / 256;
-         hb_osminor = _BX % 256;
-         hb_osletter = 0;
+    OSVERSIONINFO osVer; // for GetVersionEx()
+    osVer.dwOSVersionInfoSize = sizeof(osVer);
+     if (GetVersionEx(&osVer)) {
+         if (osVer.dwPlatformId = VER_PLATFORM_WIN32_WINDOWS){
+
+         hb_osmajor =  osVer.dwMajorVersion
+         hb_osminor =  osVer.dwMinorVersion
+         hb_osletter = osVer.dwBuildNumber;
          hb_os = "Windows 95/98";
       }
+         if (osVer.dwPlatformId = VER_PLATFORM_WIN32_NT){
+
+         hb_osmajor =  osVer.dwMajorVersion
+         hb_osminor =  osVer.dwMinorVersion
+         hb_osletter = osVer.dwBuildNumber;
+         hb_os = "Windows NT";
+      }
+}
 #endif /* __MSC__ */
       else
       {

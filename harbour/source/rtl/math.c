@@ -95,11 +95,12 @@ HARBOUR HB_INT( void )
 
       if( pNumber )
       {
+         double dNumber = hb_itemGetND( pNumber );
          WORD wWidth;
 
          hb_itemGetNLen( pNumber, &wWidth, NULL );
 
-         hb_retndlen( ( long ) hb_parnd( 1 ), wWidth, 0 );
+         hb_retndlen( dNumber >= 0 ? floor( dNumber ) : ceil( dNumber ), wWidth, 0 );
       }
       else
       {
@@ -308,47 +309,37 @@ FUNCTION MOD(cl_num, cl_base)
       hb_errRT_BASE( EG_ARG, 1085, NULL, "%" );
 }
 
-/* DJGPP can sprintf a float that is almost 320 digits long */
-#define HB_MAX_DOUBLE_LENGTH 320
-
 double hb_numRound( double dResult, int iDec )
 {
-   int iSize = 64;
-   char * szResult;
-
    if( dResult != 0.0 )
    {
       double dAdjust;
 
       if( iDec == 0 )
       {
-         dResult = floor( dResult + 0.5 );
+         if( dResult < 0.0 )
+            dResult = ceil( dResult - 0.5 );
+         else
+            dResult = floor( dResult + 0.5 );
       }
       else if( iDec < 0 )
       {
          dAdjust = pow( 10, -iDec );
-         dResult = floor( dResult / dAdjust + 0.5 );
+         if( dResult < 0.0 )
+            dResult = ceil( ( dResult / dAdjust ) - 0.5 );
+         else
+            dResult = floor( ( dResult / dAdjust ) + 0.5 );
          dResult = dResult * dAdjust;
       }
       else
       {
          dAdjust = pow( 10, iDec );
-         dResult = floor( dResult * dAdjust + 0.5 );
+         if( dResult < 0.0 )
+            dResult = ceil( ( dResult * dAdjust ) - 0.5 );
+         else
+            dResult = floor( ( dResult * dAdjust ) + 0.5 );
          dResult = dResult / dAdjust;
       }
-   }
-
-   /* Be paranoid and use a large amount of padding */
-   /* NOTE: In Cygwin allocating a buffer with the size: iSize + iDec + 1
-            often caused random GPFs. I'm not exactly sure about this, but
-            it seems that enlarging the buffer seemed to solve to problem. */
-   szResult = ( char * ) hb_xgrab( HB_MAX_DOUBLE_LENGTH );
-
-   if( szResult )
-   {
-      sprintf( szResult, "%*.*f", iSize, iDec, dResult );
-      dResult = atof( szResult );
-      hb_xfree( szResult );
    }
 
    return dResult;
@@ -362,7 +353,7 @@ HARBOUR HB_ROUND( void )
       {
          int iDec = hb_parni( 2 );
 
-         hb_retndlen( hb_numRound( hb_parnd( 1 ), iDec ), 0, iDec );
+         hb_retndlen( hb_numRound( hb_parnd( 1 ), iDec ), 0, MAX( iDec, 0 ) );
       }
       else
       {

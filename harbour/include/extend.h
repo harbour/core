@@ -54,7 +54,7 @@
 #define IT_MEMVAR       ( ( WORD ) 0x4000 )
 #define IT_ARRAY        ( ( WORD ) 0x8000 )
 #define IT_OBJECT       IT_ARRAY
-#define IT_NUMERIC      ( IT_INTEGER | IT_LONG | IT_DOUBLE )
+#define IT_NUMERIC      ( ( WORD ) ( IT_INTEGER | IT_LONG | IT_DOUBLE ) )
 #define IT_ANY          ( ( WORD ) 0xFFFF )
 
 #define IS_BYREF( p )      ( ( p )->type & IT_BYREF )

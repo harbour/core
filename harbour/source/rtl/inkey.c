@@ -57,6 +57,7 @@
 #include "extend.h"
 #include "ctoharb.h"
 #include "errorapi.h"
+#include "itemapi.h"
 #include "inkey.h"
 #include "init.h"
 
@@ -767,3 +768,36 @@ HARBOUR HB_LASTKEY( void )
 {
    hb_retni( s_inkeyLast );
 }
+
+/* Dumb function to maintain dBase III+ and CA-Cl*pper compatibility */
+
+HARBOUR HB_FKLABEL( void )
+{
+   PHB_ITEM pPar1 = hb_param( 1, IT_NUMERIC );
+
+   if( pPar1 != NULL )
+   {
+      USHORT uiFKey = hb_itemGetNI( pPar1 );
+
+      if( uiFKey > 0 && uiFKey <= 40 )
+      {
+         char szName[ 4 ];
+
+         sprintf( szName, "F%i", uiFKey );
+
+         hb_retc( szName );
+      }
+      else
+         hb_retc( "" );
+   }
+   else
+      hb_retc( "" );
+}
+
+/* Dumb function to maintain dBase III+ and CA-Cl*pper compatibility */
+
+HARBOUR HB_FKMAX( void )
+{
+   hb_retni( 40 ); /* IBM specific */
+}
+

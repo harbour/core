@@ -1185,13 +1185,13 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
             else
             #endif
             {
-               if( wDec < pNumber->item.asDouble.decimal )
+               if( wDec < IS_DOUBLE( pNumber ) ? pNumber->item.asDouble.decimal : 0 )
                   dNumber = hb_numRound( dNumber, wDec );
 
-               if( wDec > 0 )
-                  iBytes = sprintf( szResult, "%*.*f", iSize, wDec, dNumber );
+               if( wDec == 0 )
+                  iBytes = sprintf( szResult, "%*.0f", iSize, dNumber );
                else
-                  iBytes = sprintf( szResult, "%*ld", wWidth, ( LONG ) dNumber );
+                  iBytes = sprintf( szResult, "%*.*f", iSize, wDec, dNumber );
             }
          }
          else switch( pNumber->type & ~IT_BYREF )
@@ -1209,6 +1209,7 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
                  szResult[ 0 ] = '\0';  /* null string */
                  break;
          }
+
          /* Set to asterisks in case of overflow */
          if( iBytes > iSize )
          {
@@ -1303,13 +1304,13 @@ HARBOUR HB_STR( void )
          bValid = FALSE;
       else
       {
-         if( hb_pcount() > 1 )
+         if( hb_pcount() >= 2 )
          {
             pWidth = hb_param( 2, IT_NUMERIC );
             if( !pWidth )
                bValid = FALSE;
          }
-         if( hb_pcount() > 2 )
+         if( hb_pcount() >= 3 )
          {
             pDec = hb_param( 3, IT_NUMERIC );
             if( !pDec )
@@ -1329,7 +1330,15 @@ HARBOUR HB_STR( void )
             hb_retc( "" );
       }
       else
-         hb_errRT_BASE( EG_ARG, 1099, NULL, "STR" );
+      {
+         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1099, NULL, "STR" );
+
+         if( pResult )
+         {
+            hb_itemReturn( pResult );
+            hb_itemRelease( pResult );
+         }
+      }
    }
    else
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "STR" ); /* NOTE: Clipper catches this at compile time! */
@@ -1420,13 +1429,13 @@ HARBOUR HB_STRZERO( void )
          bValid = FALSE;
       else
       {
-         if( hb_pcount() > 1 )
+         if( hb_pcount() >= 2 )
          {
             pWidth = hb_param( 2, IT_NUMERIC );
             if( !pWidth )
                bValid = FALSE;
          }
-         if( hb_pcount() > 2 )
+         if( hb_pcount() >= 3 )
          {
             pDec = hb_param( 3, IT_NUMERIC );
             if( !pDec )
@@ -1442,9 +1451,7 @@ HARBOUR HB_STRZERO( void )
             ULONG ulPos = 0;
 
             while( szResult[ ulPos ] != '\0' && szResult[ ulPos ] != '-' )
-            {
                ulPos++;
-            }
 
             if( szResult[ ulPos ] == '-' )
             {
@@ -1455,9 +1462,7 @@ HARBOUR HB_STRZERO( void )
 
                ulPos = 0;
                while( szResult[ ulPos ] != '\0' && szResult[ ulPos ] == ' ' )
-               {
                   szResult[ ulPos++ ] = '0';
-               }
 
                szResult[ 0 ] = '-';
             }
@@ -1467,9 +1472,7 @@ HARBOUR HB_STRZERO( void )
 
                ulPos = 0;
                while( szResult[ ulPos ] != '\0' && szResult[ ulPos ] == ' ' )
-               {
                   szResult[ ulPos++ ] = '0';
-               }
             }
 
             hb_retc( szResult );
@@ -1479,7 +1482,22 @@ HARBOUR HB_STRZERO( void )
             hb_retc( "" );
       }
       else
-         hb_errRT_BASE( EG_ARG, 9999, NULL, "STRZERO" );
+      {
+#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+         /* NOTE: In CA-Cl*pper STRZERO() is writtin in Clipper, and will call
+                  STR() to do the job, the error (if any) will also be thrown
+                  by STR(). */
+         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1099, NULL, "STR" );
+#else
+         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 9999, NULL, "STRZERO" );
+#endif
+
+         if( pResult )
+         {
+            hb_itemReturn( pResult );
+            hb_itemRelease( pResult );
+         }
+      }
    }
 }
 

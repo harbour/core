@@ -43,27 +43,21 @@ PHB_ITEM hb_param( int iParam, WORD wMask )
 {
    if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
    {
+      PHB_ITEM pItem;
       WORD wType;
 
       if( iParam == -1 )
-         wType = stack.Return.type;
+         pItem = &stack.Return;
       else
-         wType = ( stack.pBase + 1 + iParam )->type;
+         pItem = stack.pBase + 1 + iParam;
+
+      if( pItem->type & IT_BYREF )
+         pItem = hb_itemUnRef( pItem );
+
+      wType = pItem->type;
 
       if( ( wType & wMask ) || ( wType == IT_NIL && wMask == IT_ANY ) )
-      {
-         PHB_ITEM pLocal;
-
-         if( iParam == -1 )
-            pLocal = &stack.Return;
-         else
-            pLocal = stack.pBase + 1 + iParam;
-
-         if( wType & IT_BYREF )
-            return hb_itemUnRef( pLocal );
-         else
-            return pLocal;
-      }
+         return pItem;
    }
 
    return NULL;

@@ -1,3 +1,45 @@
+19990908-00:33 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/filesys.c
+    % FREAD() now uses the fixed ISCHAR() macro for parameter checking,
+      and ISBYREF().
+  * source/rtl/extend.c
+    ! hb_param() now checks the type mask against the dereferenced item, 
+      until now hb_param() was not working with values passed by reference.
+      After this fix the IS????() macros are Clipper compatible.
+  * source/rtl/tbcolumn.prg
+    ! TBColumnNew() fixed not to throw an error when a block is not passed.
+    + TBColumnNew() TOFIX added about possibly different behviour than Clipper.
+  * source/rtl/math.c
+    ! hb_numRound() fixed for negative values.
+    % hb_numRound() is not using sprintf(), atof(), hb_x*() calls, so it should
+      be faster and requires less memory. All tests are still running fine.
+      I don't know why was it needed ? (David ?)
+    ! INT() fixed for values beyond -/+LONG_MAX.
+    ! ROUND() fixed to set the decimal width to MAX(iDec, 0) instead of iDec.
+  * tests/working/rtl_test.prg
+    + Some ROUND() tests added (mainly for negative numbers).
+    + Some byref tests added for several functions.
+    + SQRT() and some other math function tests added.
+  * source/rtl/strings.c
+    ! hb_itemStr() fixed to always use the "%*.*f" format to convert 
+      a DOUBLE value.
+    ! hb_itemStr() fixed a possible error when the item.asDouble member
+      could accessed but the type was not DOUBLE.
+    + STR(), STRZERO() value substitution possible on error.
+    + STRZERO() added a HARBOUR_STRICT_CLIPPER_COMPATIBILIY to throw the
+      same error code as in Clipper, actually Clippers STRZERO will call STR
+      and the error will be handled by STR(), too.
+  * source/rtl/inkey.c
+    funclist.txt
+    tests/working/rtl_test.prg
+    + FKLABEL(), FKMAX() added. These are *really* dumb functions, but anyway.
+      Tests added.
+  * include/extend.h
+    + One cast added the IT_NUMERIC #define.
+  * source/rtl/environ.c
+    + OS(): Added Windows version detection code by 
+      Luiz Rafael Culik <Culik@sl.conex.net>
+
 19990907-17:00 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/vm/hvm.c
     ! hb_vmEqual() is now Clipper compatible for ARRAY and BLOCK types.

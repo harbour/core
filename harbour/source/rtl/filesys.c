@@ -948,7 +948,7 @@ HARBOUR HB_FREAD( void )
 {
    ULONG ulRead = 0;
 
-   if( ISNUM( 1 ) && ( hb_parinfo( 2 ) & IT_STRING ) && ( hb_parinfo( 2 ) & IT_BYREF ) && ISNUM( 3 ) )
+   if( ISNUM( 1 ) && ISCHAR( 2 ) && ISBYREF( 2 ) && ISNUM( 3 ) )
    {
       ULONG ulToRead = hb_parnl( 3 );
 
