@@ -234,6 +234,8 @@ int      hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact ); /
 char *   hb_str( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec ); /* convert number to string */
 int      hb_stricmp( const char *s1, const char *s2 );
 BOOL     hb_strempty( char * szText, ULONG ulLen );
+BOOL     hb_arrayGetBool( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the logical value contained on an array element */
+double   hb_arrayGetDouble( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the double value contained on an array element */
 
 HARBOURFUNC GetMethod( PHB_ITEM pObject, PSYMBOL pSymMsg ); /* returns the method pointer of a object class */
 char *   hb_GetClassName( PHB_ITEM pObject ); /* retrieves an object class name */
