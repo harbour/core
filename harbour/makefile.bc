@@ -169,7 +169,6 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\diskspac.obj \
    $(OBJ_DIR)\do.obj \
    $(OBJ_DIR)\empty.obj \
-   $(OBJ_DIR)\environ.obj \
    $(OBJ_DIR)\errorapi.obj \
    $(OBJ_DIR)\eval.obj \
    $(OBJ_DIR)\filesys.obj \
@@ -241,6 +240,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\val.obj \
    $(OBJ_DIR)\valtostr.obj \
    $(OBJ_DIR)\valtype.obj \
+   $(OBJ_DIR)\version.obj \
    $(OBJ_DIR)\word.obj \
    $(OBJ_DIR)\xhelp.obj \
    \
@@ -1043,10 +1043,6 @@ $(OBJ_DIR)\empty.obj : $(RTL_DIR)\empty.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) -+$@,,
 
-$(OBJ_DIR)\environ.obj : $(RTL_DIR)\environ.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(RTL_LIB) -+$@,,
-
 $(OBJ_DIR)\errorapi.obj : $(RTL_DIR)\errorapi.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) -+$@,,
@@ -1472,6 +1468,10 @@ $(OBJ_DIR)\valtostr.obj : $(RTL_DIR)\valtostr.c
    tlib $(RTL_LIB) -+$@,,
 
 $(OBJ_DIR)\valtype.obj : $(RTL_DIR)\valtype.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) -+$@,,
+
+$(OBJ_DIR)\version.obj : $(RTL_DIR)\version.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) -+$@,,
 

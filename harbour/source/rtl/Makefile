@@ -27,7 +27,6 @@ C_SOURCES=\
         diskspac.c   \
         do.c         \
         empty.c      \
-        environ.c    \
         errorapi.c   \
         eval.c       \
         filesys.c    \
@@ -99,6 +98,7 @@ C_SOURCES=\
         val.c        \
         valtostr.c   \
         valtype.c    \
+        version.c    \
         word.c       \
         xhelp.c      \
         \

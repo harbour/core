@@ -57,6 +57,8 @@
 
 #define HB_OS_WIN_32_USED
 
+#include <ctype.h>
+
 #include "hbapi.h"
 #include "hbapierr.h"
 #include "hbver.h"
@@ -99,7 +101,7 @@
          The latter is mainly an issue in DOS, where the host OS can be OS/2
          WinNT/2K, Win3x, Win9x, DOSEMU, Desqview, etc. [vszakats] */
 
-#define HB_OS_BUFFER_LEN 128
+#define HB_OS_BUFFER_LEN 256
 
 char * hb_os( void )
 {
@@ -131,7 +133,7 @@ char * hb_os( void )
 
          if( regs.h.al != 0x00 && regs.h.al != 0x80 )
          {
-            char szHost[ 128 ] = "";
+            char szHost[ 128 ];
 
             if( regs.h.al == 0x01 || regs.h.al == 0xFF )
                sprintf( szHost, " (Windows 2.x)" );
@@ -168,7 +170,7 @@ char * hb_os( void )
 
          if( regs.h.al >= 10 )
          {
-            char szHost[ 128 ] = "";
+            char szHost[ 128 ];
 
             if( regs.h.al == 20 && regs.h.ah > 20 )
                sprintf( szHost, " (OS/2 %d.%02d)", regs.h.ah / 10, regs.h.ah % 10 );
@@ -200,76 +202,29 @@ char * hb_os( void )
    {
       OSVERSIONINFO osVer;
 
-      char * pszName;
-      char szBuild[ 128 ] = "";
-      int iVerMajor;
-      int iVerMinor;
-      int iVerLetter;
-
       osVer.dwOSVersionInfoSize = sizeof( osVer );
 
       if( GetVersionEx( &osVer ) )
       {
-         iVerMajor = osVer.dwMajorVersion;
-         iVerMinor = osVer.dwMinorVersion;
-         iVerLetter = LOWORD( osVer.dwBuildNumber );
+         char * pszName = "Windows";
 
          switch( osVer.dwPlatformId )
          {
             case VER_PLATFORM_WIN32_WINDOWS:
 
-               if( iVerMajor == 4 && iVerMinor == 0 && iVerLetter == 950 )
+               if( osVer.dwMajorVersion == 4 && osVer.dwMinorVersion < 10 )
                   pszName = "Windows 95";
-               else if( iVerMajor == 4 && iVerMinor > 0 &&
-                     iVerLetter > 950 && iVerLetter <= 1080 )
-                  pszName = "Windows 95 SP1";
-               else if( iVerMajor == 4 && iVerMinor < 10 &&
-                     iVerLetter > 1080 )
-                  pszName = "Windows 95 OSR2"; /* Formerly: "Windows 95 SP2" */
-               else if( iVerMajor == 4 && iVerMinor == 10 &&
-                     iVerLetter == 1998 )
+               else if( osVer.dwMajorVersion == 4 && osVer.dwMinorVersion == 10 )
                   pszName = "Windows 98";
-               else if( iVerMajor == 4 && iVerMinor == 10 &&
-                    iVerLetter > 1998 && iVerLetter < 2183 )
-                  pszName = "Windows 98 SP1";
-               else if( iVerMajor > 4 && iVerLetter >= 2183 )
-                  pszName = "Windows 98 SE";
-               else
-                  pszName = "Windows";
-
-               strncpy( szBuild, osVer.szCSDVersion, sizeof( szBuild ) );
-               szBuild[ sizeof( szBuild ) - 1 ] = '\0';
 
                break;
 
             case VER_PLATFORM_WIN32_NT:
 
-               if( iVerMajor == 3 && iVerMinor == 10 )
-                  pszName = "Windows NT 3.1";
-               else if( iVerMajor == 3 && iVerMinor == 50 )
-                  pszName = "Windows NT 3.5";
-               else if( iVerMajor == 3 && iVerMinor == 51 )
-                  pszName = "Windows NT 3.51";
-               else if( iVerMajor == 4 )
-                  pszName = "Windows NT 4";
-               else if( iVerMajor == 5 )
+               if( osVer.dwMajorVersion == 5 )
                   pszName = "Windows 2000";
                else
                   pszName = "Windows NT";
-
-               if( osVer.szCSDVersion )
-               {
-                  int i = 0;
-                  int iServicePack;
-
-                  while( osVer.szCSDVersion[ i ] != '\0' && ( osVer.szCSDVersion[ i ] < '0' || osVer.szCSDVersion[ i ] > '9' ) )
-                     i++;
-
-                  iServicePack = atoi( &osVer.szCSDVersion[ i ] );
-
-                  if( iServicePack )
-                     sprintf( szBuild, " SP%i", iServicePack );
-               }
 
                break;
 
@@ -280,21 +235,32 @@ char * hb_os( void )
             case VER_PLATFORM_WIN32_CE:
                pszName = "Windows CE";
                break;
+         }
 
-            default:
-               pszName = "Windows";
-               break;
+         sprintf( pszOS, "%s %d.%02d.%04d",
+            pszName,
+            osVer.dwMajorVersion,
+            osVer.dwMinorVersion,
+            LOWORD( osVer.dwBuildNumber ) );
+
+         /* Add service pack/other info */
+
+         if( osVer.szCSDVersion )
+         {
+            int i;
+
+            /* Skip the leading spaces (Win95B, Win98) */
+            for( i = 0; osVer.szCSDVersion[ i ] != '\0' && isspace( osVer.szCSDVersion[ i ] ); i++ );
+
+            if( osVer.szCSDVersion[ i ] != '\0' )
+            {
+               strcat( pszOS, " " );
+               strcat( pszOS, osVer.szCSDVersion + i );
+            }
          }
       }
       else
-      {
-         iVerMajor = osVer.dwMajorVersion;
-         iVerMinor = osVer.dwMinorVersion;
-         iVerLetter = LOWORD( osVer.dwBuildNumber );
-         pszName = "Windows";
-      }
-
-      sprintf( pszOS, "%s%s %d.%02d.%04d", pszName, szBuild, iVerMajor, iVerMinor, iVerLetter );
+         sprintf( pszOS, "Windows" );
    }
 
 #elif defined(HB_OS_UNIX)
