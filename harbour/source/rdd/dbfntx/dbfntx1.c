@@ -1869,8 +1869,13 @@ static void hb_ntxSortKeyEnd( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo )
 {
    if( pSortInfo->nItems )
    {
-      pSortInfo->pKey1 = pSortInfo->pKey2;
-      hb_ntxKeysSort( pSortInfo, &(pSortInfo->pKeyFirst), pSortInfo->pKeyTemp, pTag->KeyLength, !pTag->AscendKey, pTag->UniqueKey );
+      if( !pSortInfo->pKeyFirst )
+         pSortInfo->pKeyFirst = pSortInfo->pKeyTemp;
+      else
+      {
+         pSortInfo->pKey1 = pSortInfo->pKey2;
+         hb_ntxKeysSort( pSortInfo, &(pSortInfo->pKeyFirst), pSortInfo->pKeyTemp, pTag->KeyLength, !pTag->AscendKey, pTag->UniqueKey );
+      }
       pSortInfo->nItems = 0;
    }
 }
@@ -2236,7 +2241,7 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
          /* printf( "\nnParts=%d ulRecMax=%d",nParts,ulRecMax ); */
          nParts = 1;
       }
-      sortInfo.ulSqrt = floor( sqrt( ( double) ulRecMax ) );
+      sortInfo.ulSqrt = (ulRecMax>50)? floor( sqrt( ( double) ulRecMax ) ):ulRecMax;
    }
    else
       sortInfo.sortBuffer = NULL;
