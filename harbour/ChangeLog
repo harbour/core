@@ -1,3 +1,8 @@
+2001-11-19 16:00 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+  * source/rdd/dbfcdx/dbfcdx1.c
+  	! Removed spurious (BYTE) overrides on dual assignments.
+
 2001-11-19 17:20 GMT+1 Martin Vogel <vogel@inttec.de>
 
    + contrib/libct/bit2.c

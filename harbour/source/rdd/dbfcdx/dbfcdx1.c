@@ -1761,7 +1761,7 @@ static void hb_cdxTagEmptyIndex( LPCDXTAG pTag )
    pData.cdxu.External.RecNumBits = 24 - uiBitCount * 2;
    pData.cdxu.External.RecNumMask = hb_cdxMakeMask( pData.cdxu.External.RecNumBits );
    pData.cdxu.External.FreeSpace = CDX_EXTERNAL_SPACE;
-   pData.cdxu.External.DupCntBits = (BYTE) pData.cdxu.External.TrlCntBits = (BYTE) uiBitCount;
+   pData.cdxu.External.DupCntBits = pData.cdxu.External.TrlCntBits = (BYTE) uiBitCount;
    pData.cdxu.External.DupCntMask = (BYTE) hb_cdxMakeMask( pData.cdxu.External.DupCntBits );
    pData.cdxu.External.TrlCntMask = (BYTE) hb_cdxMakeMask( pData.cdxu.External.TrlCntBits );
    hb_cdxIndexPageWrite( pTag->pIndex, pTag->RootBlock, &pData, sizeof( CDXDATA ) );
@@ -2076,7 +2076,7 @@ static void hb_cdxTagExtNodeWrite( LPCDXTAG pTag, LONG PN, LPCDXDATA pData,
       }
    }
    PIK->Space = CDX_EXTERNAL_SPACE;
-   PIK->DCBits = (BYTE) PIK->TCBits = (BYTE) uiBitCount;
+   PIK->DCBits = PIK->TCBits = (BYTE) uiBitCount;
    PIK->DCMask = (BYTE) hb_cdxMakeMask( PIK->DCBits );
    PIK->TCMask = (BYTE) hb_cdxMakeMask( PIK->TCBits );
    sr = cd = kcnt = 0;
@@ -3692,7 +3692,7 @@ static void hb_cdxSortAddToNode( LPSORTINFO pSort, USHORT Lvl, LONG Tag,
          }
          pSort->NodeList[ 0 ]->cdxu.External.FreeSpace = CDX_EXTERNAL_SPACE;
          pSort->NodeList[ 0 ]->cdxu.External.DupCntBits =
-            (BYTE) pSort->NodeList[ 0 ]->cdxu.External.TrlCntBits = (BYTE) bitcnt;
+            pSort->NodeList[ 0 ]->cdxu.External.TrlCntBits = (BYTE) bitcnt;
          pSort->NodeList[ 0 ]->cdxu.External.DupCntMask =
             (BYTE) hb_cdxMakeMask( pSort->NodeList[ 0 ]->cdxu.External.DupCntBits );
          pSort->NodeList[ 0 ]->cdxu.External.TrlCntMask =
