@@ -978,7 +978,7 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
 
                yyleng = 1;
                yytext[1] = 0;
-               yylval.string = ')';
+               yylval.string = strdup( ")" );
 
                _iState = OPERATOR;
                return ')';
@@ -998,7 +998,7 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
 
                yyleng = 1;
                yytext[1] = 0;
-               yylval.string = ']';
+               yylval.string = strdup( "]" );
 
                _iState = OPERATOR;
                return ']';

@@ -1,3 +1,18 @@
+19990603-14:00 EDT David G. Holm <dholm@jsd-llc.com>
+  * makefile.dos
+    - Even with the -y in the source/compiler/makefile.dos, when I
+      used builddos, which uses makefile.dos, instead of a temporary
+      replacement batch file that I used before I figured out why I
+      was getting bad command errors when running builddos (it turned
+      out that I needed to add the DJGPP\bin directory to the path in
+      C:\WINNT\SYSTEM32\AUTOEXEC.NT), it moved y_tab.c to harbour.c!
+      So I converted everything in makefile.dos from upper case to
+      lower case and it stopped doing that. So i also added the missing
+      source/tools directory, so that everything gets build.
+  * source/compiler/harbour.l
+    - Changed yylval.string = ')'; to yylval.string = strdup( ")" );
+    - Changed yylval.string = ']'; to yylval.string = strdup( "]" );
+
 19990603-13:30 EDT David G. Holm <dholm@jsd-llc.com>
   Thanks go to Jose Lalin <dezac@corevia.com>
   * source/rtl/dates.c

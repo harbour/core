@@ -1,25 +1,29 @@
 # makefile for djgpp dos enviroment
-# Tell emacs that this is a -*- makefile -*-
+# tell emacs that this is a -*- makefile -*-
 
-.PHONY: COMPILER VM RTL TESTS
+.phony: compiler vm rtl tests
 
-all: COMPILER VM RTL TESTS
+all: compiler vm rtl tools
 
-COMPILER:
-	make -w --directory=SOURCE/COMPILER -f MAKEFILE.DOS
+compiler:
+	make -w --directory=source/compiler -f makefile.dos
 
-VM:
-	make -w --directory=SOURCE/VM -f MAKEFILE.DOS
+vm:
+	make -w --directory=source/vm -f makefile.dos
 
-RTL:
-	make -w --directory=SOURCE/RTL -f MAKEFILE.DOS
+rtl:
+	make -w --directory=source/rtl -f makefile.dos
+
+tools:
+	make -w --directory=source/tools -f makefile.dos
 
 # remarked out it created a make error and is now supercede by hbdos.bat
-# TESTS:
-#  make -w --directory=TESTS/WORKING -f MAKEFILE.DOS
+# tests:
+#  make -w --directory=tests/working -f makefile.dos
 
 clean:
-	make -w --directory=SOURCE/COMPILER -f MAKEFILE.DOS clean
-	make -w --directory=SOURCE/VM -f MAKEFILE.DOS clean
-	make -w --directory=SOURCE/RTL -f MAKEFILE.DOS clean
-#  make -w --directory=TESTS -f MAKEFILE.DOS clean
+	make -w --directory=source/compiler -f makefile.dos clean
+	make -w --directory=source/vm -f makefile.dos clean
+	make -w --directory=source/rtl -f makefile.dos clean
+	make -w --directory=source/tools -f makefile.dos clean
+#  make -w --directory=tests -f makefile.dos clean
