@@ -932,6 +932,7 @@ return nil
 METHOD ShowModal() CLASS TDbWindow
 
    local lExit := .f.
+   local nKey
 
    ::lShadow = .t.
    ::Show()

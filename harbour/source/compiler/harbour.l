@@ -1159,6 +1159,19 @@ Separator     {SpaceTab}
 [\(]           ++_iOpenBracket; hb_comp_iState =SEPARATOR; return yytext[ 0 ];
 [\)]           --_iOpenBracket; hb_comp_iState =SEPARATOR; return yytext[ 0 ];
 
+[\x00-\x1F]	return yytext[ 0 ]; /* see below */
+[\x80-\xFF]	{ 
+		/* This have to be the last rule - any nonstandard and not handled 
+	         * characters should go to grammar analyser instead of printing it
+	         * on stdout.
+ 	         */ 
+		return yytext[ 0 ]; 
+	    }
+
+%{
+/* ************************************************************************ */
+%}
+
 {InvalidNumber} BEGIN INVALIDNUM_; yylval.string = hb_strupr( hb_strdup( yytext ) );
 <INVALIDNUM_>("."|{Separator}+) {
                    hb_compGenError( hb_comp_szErrors, 'E', ERR_NUMERIC_FORMAT, NULL, NULL );

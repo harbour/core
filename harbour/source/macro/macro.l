@@ -281,6 +281,18 @@ Separator     {SpaceTab}
 [\(]           ++_iOpenBracket; return yytext[ 0 ];
 [\)]           --_iOpenBracket; return yytext[ 0 ];
 
+[\x00-\x1F]	return yytext[ 0 ]; /* see below */
+[\x80-\xFF]	{ 
+	    /* This have to be the last rule - any nonstandard and unhandled 
+	     * characters should go to grammar analyser instead of printing it
+	     * on stdout.
+ 	     */ 
+	    return yytext[ 0 ]; 
+	}
+
+%{
+/* ************************************************************************ */
+%}
 
 {Number}       {
    char * ptr;

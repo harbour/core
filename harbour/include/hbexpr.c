@@ -2929,6 +2929,12 @@ static HB_EXPR_FUNC( hb_compExprUseSend )
          }
 
       case HB_EA_DELETE:
+#ifdef HB_MACRO_SUPPORT
+	hb_compExprDelete( pSelf->value.asMessage.pObject );
+	if( pSelf->value.asMessage.pParms )
+	    hb_compExprDelete( pSelf->value.asMessage.pParms );
+	HB_XFREE( pSelf->value.asMessage.szMessage );
+#endif
          break;
    }
    return pSelf;
@@ -4666,8 +4672,8 @@ static HB_EXPR_FUNC( hb_compExprUsePlus )
                }
                pSelf->ExprType = HB_ET_NUMERIC;
                pSelf->ValType  = HB_EV_NUMERIC;
-               HB_EXPR_USE( pLeft,  HB_EA_DELETE );
-               HB_EXPR_USE( pRight, HB_EA_DELETE );
+               hb_compExprDelete( pLeft );
+               hb_compExprDelete( pRight );
             }
             else if( pLeft->ExprType == HB_ET_STRING && pRight->ExprType == HB_ET_STRING )
             {
@@ -4815,8 +4821,8 @@ static HB_EXPR_FUNC( hb_compExprUseMinus )
                }
                pSelf->ExprType = HB_ET_NUMERIC;
                pSelf->ValType  = HB_EV_NUMERIC;
-               HB_EXPR_USE( pLeft,  HB_EA_DELETE );
-               HB_EXPR_USE( pRight, HB_EA_DELETE );
+               hb_compExprDelete( pLeft );
+               hb_compExprDelete( pRight );
             }
             else if( pLeft->ExprType == HB_ET_STRING && pRight->ExprType == HB_ET_STRING )
             {
@@ -4941,8 +4947,8 @@ static HB_EXPR_FUNC( hb_compExprUseMult )
                }
                pSelf->ExprType = HB_ET_NUMERIC;
                pSelf->ValType  = HB_EV_NUMERIC;
-               HB_EXPR_USE( pLeft,  HB_EA_DELETE );
-               HB_EXPR_USE( pRight, HB_EA_DELETE );
+               hb_compExprDelete( pLeft );
+               hb_compExprDelete( pRight );
             }
             else
             {
@@ -5172,8 +5178,8 @@ static HB_EXPR_FUNC( hb_compExprUseMod )
 
                      pSelf->ExprType = HB_ET_NUMERIC;
                      pSelf->ValType  = HB_EV_NUMERIC;
-                     HB_EXPR_USE( pLeft,  HB_EA_DELETE );
-                     HB_EXPR_USE( pRight, HB_EA_DELETE );
+                     hb_compExprDelete( pLeft );
+                     hb_compExprDelete( pRight );
                   }
                }
             }
