@@ -94,7 +94,7 @@ METHOD SaveToText( cObjectName ) CLASS HBPersistent
                  endif
 
             case cType == "O"
-                 if __objDerivedFrom( uValue, "TPERSISTENT" )
+                 if __objDerivedFrom( uValue, "HBPERSISTENT" )
                     cObject += uValue:SaveToText( aProperties[ n ] )
                  endif
                  if n < Len( aProperties )
@@ -137,7 +137,7 @@ static function ArrayToText( aArray, cName, nIndent )
               nIndent -= 3
 
          case cType == "O"
-              if __objDerivedFrom( uValue, "TPERSISTENT" )
+              if __objDerivedFrom( uValue, "HBPERSISTENT" )
                  cArray += uValue:SaveToText( cName + "[ " + AllTrim( Str( n ) ) + ;
                            " ]" )
               endif
