@@ -2433,7 +2433,11 @@ static void hb_compOptimizeFrames( PFUNCTION pFunc )
    }
 }
 
-int hb_compSort_ULONG( const void * pLeft, const void * pRight )
+int
+#ifdef __IBMCPP__
+extern _LNK_CONV
+#endif
+hb_compSort_ULONG( const void * pLeft, const void * pRight )
 {
     ULONG ulLeft  = *( ( ULONG * ) ( pLeft ) );
     ULONG ulRight = *( ( ULONG * ) ( pRight ) );
