@@ -1,3 +1,23 @@
+Mon Nov 29 12:45:05 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* include/hbtrace.h: 
+	* source/common/hbtrace.c: 
+	* source/rtl/trace.c: 
+	* doc/tracing.txt: 
+	Modified the run-time trace interface functions, to simplify this
+	interface. Now there are just two C functions:
+	
+	  current_state = hb_tracestate(new_state);
+	  current_level = hb_tracelevel(new_level);
+
+	and just two Clipper functions:
+	
+	  current_state := HB_TRACESTATE( [new_state] )
+	  current_level := HB_TRACELEVEL( [new_level] )
+
+	Both check their argument, so passing a -1 to any of them will
+	return the appropriate current setting without modifying it.
+
 19991128-22:24 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/asort.prg
     source/rtl/browdb.prg

@@ -122,11 +122,9 @@ extern char * hb_tr_file_;
 extern int    hb_tr_line_;
 extern int    hb_tr_level_;
 
-extern int    hb_traceenabled( void );
-extern void   hb_traceenable( int state );
-extern void   hb_traceon( void );
-extern void   hb_traceoff( void );
+extern int    hb_tracestate( int new_state );
 extern int    hb_tracelevel( int new_level );
+
 extern int    hb_tr_level( void );
 extern void   hb_tr_trace( char * fmt, ... );
 

@@ -67,24 +67,16 @@ static char * s_slevel[ HB_TR_LAST ] =
    "HB_TR_DEBUG"
 };
 
-int hb_traceenabled( void )
-{
-   return s_enabled;
-}
 
-void hb_traceenable( int enabled )
+int hb_tracestate( int new_state )
 {
-   s_enabled = enabled;
-}
+   int old_state = s_enabled;
 
-void hb_traceon( void )
-{
-   s_enabled = 1;
-}
+   if( new_state == 0 ||
+       new_state == 1 )
+      s_enabled = new_state;
 
-void hb_traceoff( void )
-{
-   s_enabled = 0;
+   return old_state;
 }
 
 int hb_tracelevel( int new_level )

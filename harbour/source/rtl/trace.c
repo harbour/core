@@ -47,22 +47,9 @@
 
 #include "extend.h"
 
-HARBOUR HB_HB_TRACEENABLE( void )
+HARBOUR HB_HB_TRACESTATE( void )
 {
-   hb_retl( hb_traceenabled() );
-
-   if( ISLOG( 1 ) )
-      hb_traceenable( hb_parl( 1 ) ? 1 : 0 );
-}
-
-HARBOUR HB_HB_TRACEON( void )
-{
-   hb_traceon();
-}
-
-HARBOUR HB_HB_TRACEOFF( void )
-{
-   hb_traceoff();
+   hb_retni( hb_tracestate( ISNUM( 1 ) ? hb_parni( 1 ) : -1 ) );
 }
 
 HARBOUR HB_HB_TRACELEVEL( void )
