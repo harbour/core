@@ -1,5 +1,5 @@
-!name: Harbour tools help- GT lib
-!credits: The Harbour Project
+!name: Harbour Version %HB_VERSION% (c) Tools Help GTLIB
+!credits: Harbour Version %HB_VERSION% (c) http://www.harbour-project.org
           Luiz Rafael Culik
 !menu: Functions
 Functions      overview.ngo

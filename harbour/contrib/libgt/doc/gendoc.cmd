@@ -50,3 +50,5 @@ GOTO END
 :END
 del ass*.bat
 
+del libgt.lnk
+ren libgt.old libgt.lnk
