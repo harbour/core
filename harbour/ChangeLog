@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+   * source/compiler/hbusage.c
+   * source/common/hbver.c
+     * changed decimal build nr in "Alpha build .."
+
 2002-01-08 12:31 UTC+0700 Andi Jahja <harbour@cbn.net.id>
    * source/rdd/dbfcdx/dbfcdx1.c
      ! remove spurious type casts

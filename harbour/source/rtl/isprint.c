@@ -323,7 +323,7 @@ static BOOL GetJobs(HANDLE hPrinter,        /* Handle to the printer. */
 
     return TRUE;
 }
-
+#define MAXBUFFERSIZE 250
 static BOOL DPGetDefaultPrinter(LPTSTR pPrinterName, LPDWORD pdwBufferSize)
 {
   BOOL bFlag;
