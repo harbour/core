@@ -537,8 +537,7 @@ HB_FUNC( DIRECTORY )
    {
       HB_TRACE(HB_TR_INFO, ("invalid dirname |%s|\n", dirname));
 
-      hb_itemReturn( pDir );
-      hb_itemRelease( pDir );
+      hb_itemRelease( hb_itemReturn( pDir ) );
       return;
    }
 
@@ -717,8 +716,7 @@ HB_FUNC( DIRECTORY )
 
    HB_TRACE(HB_TR_INFO, ("normal return\n"));
 
-   hb_itemReturn( pDir ); /* DIRECTORY() returns an array */
-   hb_itemRelease( pDir );
+   hb_itemRelease( hb_itemReturn( pDir ) ); /* DIRECTORY() returns an array */
 
 #endif /* HAVE_POSIX_IO */
 }

@@ -162,10 +162,7 @@ HB_FUNC( CTOD )
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1119, NULL, "CTOD" );
 
       if( pResult )
-      {
-         hb_itemReturn( pResult );
-         hb_itemRelease( pResult );
-      }
+         hb_itemRelease( hb_itemReturn( pResult ) );
    }
 }
 
@@ -183,10 +180,7 @@ HB_FUNC( DTOC )
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1118, NULL, "DTOC" );
 
       if( pResult )
-      {
-         hb_itemReturn( pResult );
-         hb_itemRelease( pResult );
-      }
+         hb_itemRelease( hb_itemReturn( pResult ) );
    }
 }
 
@@ -203,10 +197,7 @@ HB_FUNC( DTOS )
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1120, NULL, "DTOS" );
 
       if( pResult )
-      {
-         hb_itemReturn( pResult );
-         hb_itemRelease( pResult );
-      }
+         hb_itemRelease( hb_itemReturn( pResult ) );
    }
 }
 
@@ -234,10 +225,7 @@ HB_FUNC( YEAR )
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1112, NULL, "YEAR" );
 
       if( pResult )
-      {
-         hb_itemReturn( pResult );
-         hb_itemRelease( pResult );
-      }
+         hb_itemRelease( hb_itemReturn( pResult ) );
    }
 }
 
@@ -258,10 +246,7 @@ HB_FUNC( MONTH )
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1113, NULL, "MONTH" );
 
       if( pResult )
-      {
-         hb_itemReturn( pResult );
-         hb_itemRelease( pResult );
-      }
+         hb_itemRelease( hb_itemReturn( pResult ) );
    }
 }
 
@@ -282,10 +267,7 @@ HB_FUNC( DAY )
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1114, NULL, "DAY" );
 
       if( pResult )
-      {
-         hb_itemReturn( pResult );
-         hb_itemRelease( pResult );
-      }
+         hb_itemRelease( hb_itemReturn( pResult ) );
    }
 }
 
@@ -327,10 +309,7 @@ HB_FUNC( DOW )
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1115, NULL, "DOW" );
 
       if( pResult )
-      {
-         hb_itemReturn( pResult );
-         hb_itemRelease( pResult );
-      }
+         hb_itemRelease( hb_itemReturn( pResult ) );
    }
 }
 

@@ -68,10 +68,7 @@ HB_FUNC( INT )
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1090, NULL, "INT" );
 
       if( pResult )
-      {
-         hb_itemReturn( pResult );
-         hb_itemRelease( pResult );
-      }
+         hb_itemRelease( hb_itemReturn( pResult ) );
    }
 }
 
@@ -128,9 +125,6 @@ HB_FUNC( ROUND )
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1094, NULL, "ROUND" );
 
       if( pResult )
-      {
-         hb_itemReturn( pResult );
-         hb_itemRelease( pResult );
-      }
+         hb_itemRelease( hb_itemReturn( pResult ) );
    }
 }

@@ -82,10 +82,7 @@ HB_FUNC( STR )
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1099, NULL, "STR" );
 
       if( pResult )
-      {
-         hb_itemReturn( pResult );
-         hb_itemRelease( pResult );
-      }
+         hb_itemRelease( hb_itemReturn( pResult ) );
    }
 }
 

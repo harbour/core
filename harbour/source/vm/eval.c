@@ -62,10 +62,7 @@ HB_FUNC( EVAL )
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_NOMETHOD, 1004, NULL, "EVAL" );
 
       if( pResult )
-      {
-         hb_itemReturn( pResult );
-         hb_itemRelease( pResult );
-      }
+         hb_itemRelease( hb_itemReturn( pResult ) );
    }
 }
 

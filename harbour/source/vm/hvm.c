@@ -2790,10 +2790,7 @@ void hb_vmDo( USHORT uiParams )
             pResult = hb_errRT_BASE_Subst( EG_NOMETHOD, 1004, NULL, pSym->szName );
 
          if( pResult )
-         {
-            hb_itemReturn( pResult );
-            hb_itemRelease( pResult );
-         }
+            hb_itemRelease( hb_itemReturn( pResult ) );
       }
    }
    else                     /* it is a function */
@@ -2888,10 +2885,7 @@ void hb_vmSend( USHORT uiParams )
             pResult = hb_errRT_BASE_Subst( EG_NOMETHOD, 1004, NULL, pSym->szName );
 
          if( pResult )
-         {
-            hb_itemReturn( pResult );
-            hb_itemRelease( pResult );
-         }
+            hb_itemRelease( hb_itemReturn( pResult ) );
       }
    }
    else                     /* it is a function */

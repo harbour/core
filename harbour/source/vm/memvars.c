@@ -1074,9 +1074,7 @@ HB_FUNC( __MVDBGINFO )
       }
       else
       {
-         pValue = hb_itemNew( NULL );
-         hb_itemReturn( pValue );      /* return NIL value */
-         hb_itemRelease( pValue );
+         hb_itemRelease( hb_itemReturn( hb_itemNew( NULL ) ) ); /* return NIL value */
 
          if( iCount >= 3 && ISBYREF( 3 ) )
          {
@@ -1102,8 +1100,7 @@ HB_FUNC( __MVGET )
       {
          HB_ITEM retValue;
          hb_memvarGetValue( &retValue, pDynVar->pSymbol );
-         hb_itemReturn( &retValue );
-         hb_itemClear( &retValue );
+         hb_itemClear( hb_itemReturn( &retValue ) );
       }
       else
       {
@@ -1126,8 +1123,7 @@ HB_FUNC( __MVGET )
                {
                   HB_ITEM retValue;
                   hb_memvarGetValue( &retValue, pDynVar->pSymbol );
-                  hb_itemReturn( &retValue );
-                  hb_itemClear( &retValue );
+                  hb_itemClear( hb_itemReturn( &retValue ) );
                   uiAction = E_DEFAULT;
                }
             }
@@ -1147,10 +1143,7 @@ HB_FUNC( __MVGET )
       HB_ITEM_PTR pRetValue = hb_errRT_BASE_Subst( EG_ARG, 3009, NULL, NULL );
 
       if( pRetValue )
-      {
-         hb_itemReturn( pRetValue );
-         hb_itemRelease( pRetValue );
-      }
+         hb_itemRelease( hb_itemReturn( pRetValue ) );
    }
 }
 

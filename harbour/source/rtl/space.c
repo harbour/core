@@ -66,9 +66,6 @@ HB_FUNC( SPACE )
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1105, NULL, "SPACE" );
 
       if( pResult )
-      {
-         hb_itemReturn( pResult );
-         hb_itemRelease( pResult );
-      }
+         hb_itemRelease( hb_itemReturn( pResult ) );
    }
 }

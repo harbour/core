@@ -109,10 +109,7 @@ HB_FUNC( AADD )
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1123, NULL, "AADD" );
 
       if( pResult )
-      {
-         hb_itemReturn( pResult );
-         hb_itemRelease( pResult );
-      }
+         hb_itemRelease( hb_itemReturn( pResult ) );
    }
 }
 
@@ -278,11 +275,6 @@ HB_FUNC( ACLONE )
    PHB_ITEM pSrcArray = hb_param( 1, HB_IT_ARRAY );
 
    if( pSrcArray && ! hb_arrayIsObject( pSrcArray ) )
-   {
-      PHB_ITEM pDstArray = hb_arrayClone( pSrcArray );
-
-      hb_itemReturn( pDstArray ); /* AClone() returns the new array */
-      hb_itemRelease( pDstArray );
-   }
+      hb_itemRelease( hb_itemReturn( hb_arrayClone( pSrcArray ) ) ); /* AClone() returns the new array */
 }
 

@@ -609,10 +609,7 @@ HB_FUNC( TRANSFORM )
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1122, NULL, "TRANSFORM" );
 
       if( pResult )
-      {
-         hb_itemReturn( pResult );
-         hb_itemRelease( pResult );
-      }
+         hb_itemRelease( hb_itemReturn( pResult ) );
    }
 }
 

@@ -2279,8 +2279,7 @@ HB_FUNC( DBRLOCKLIST )
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "DBRLOCKLIST" );
 
-   hb_itemReturn( pList );
-   hb_itemRelease( pList );
+   hb_itemRelease( hb_itemReturn( pList ) );
 }
 
 HB_FUNC( DBRUNLOCK )
@@ -2706,8 +2705,7 @@ HB_FUNC( FIELDGET )
    if( s_pCurrArea && uiField )
       SELF_GETVALUE( ( AREAP ) s_pCurrArea->pArea, uiField, pItem );
 
-   hb_itemReturn( pItem );
-   hb_itemRelease( pItem );
+   hb_itemRelease( hb_itemReturn( pItem ) );
 }
 
 HB_FUNC( FIELDNAME )
@@ -2774,7 +2772,6 @@ HB_FUNC( FIELDPUT )
       if( SELF_PUTVALUE( ( AREAP ) s_pCurrArea->pArea, uiIndex, pItem ) == SUCCESS )
       {
          hb_itemReturn( pItem );
-         return;
       }
    }
 }
@@ -2815,8 +2812,7 @@ HB_FUNC( HEADER )
 
       pRecSize = hb_itemNew( NULL );
       SELF_INFO( ( AREAP ) s_pCurrArea->pArea, DBI_GETHEADERSIZE, pRecSize );
-      hb_itemReturn( pRecSize );
-      hb_itemRelease( pRecSize );
+      hb_itemRelease( hb_itemReturn( pRecSize ) );
    }
 }
 
@@ -3301,8 +3297,7 @@ HB_FUNC( RECNO )
    pRecNo = hb_itemPutNL( NULL, 0 );
    if( s_pCurrArea )
       SELF_RECNO( ( AREAP ) s_pCurrArea->pArea, pRecNo );
-   hb_itemReturn( pRecNo );
-   hb_itemRelease( pRecNo );
+   hb_itemRelease( hb_itemReturn( pRecNo ) );
 }
 
 HB_FUNC( RECSIZE )
@@ -3313,8 +3308,7 @@ HB_FUNC( RECSIZE )
 
       pRecSize = hb_itemNew( NULL );
       SELF_INFO( ( AREAP ) s_pCurrArea->pArea, DBI_GETRECSIZE, pRecSize );
-      hb_itemReturn( pRecSize );
-      hb_itemRelease( pRecSize );
+      hb_itemRelease( hb_itemReturn( pRecSize ) );
    }
    else
       hb_retni( 0 );

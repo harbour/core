@@ -295,11 +295,8 @@ HB_FUNC( __HRBRUN )
                }
             }
 
-            if ( pRetVal )
-            {
-               hb_itemReturn( pRetVal );
-               hb_itemRelease( pRetVal );
-            }
+            if( pRetVal )
+               hb_itemRelease( hb_itemReturn( pRetVal ) );
          }
 
          for( ul = 0; ul < ulFuncs; ul++ )

@@ -121,10 +121,7 @@ HB_FUNC( EXP )
          s_internal_math_error = 0;
 
          if( pResult )
-         {
-            hb_itemReturn( pResult );
-            hb_itemRelease( pResult );
-         }
+            hb_itemRelease( hb_itemReturn( pResult ) );
       }
       else
          hb_retnd( dResult );
@@ -137,10 +134,7 @@ HB_FUNC( EXP )
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1096, NULL, "EXP" );
 
       if( pResult )
-      {
-         hb_itemReturn( pResult );
-         hb_itemRelease( pResult );
-      }
+         hb_itemRelease( hb_itemReturn( pResult ) );
    }
 }
 
@@ -158,10 +152,7 @@ HB_FUNC( LOG )
          s_internal_math_error = 0;
 
          if( pResult )
-         {
-            hb_itemReturn( pResult );
-            hb_itemRelease( pResult );
-         }
+            hb_itemRelease( hb_itemReturn( pResult ) );
       }
       else
          hb_retnd( dResult );
@@ -180,10 +171,7 @@ HB_FUNC( LOG )
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1095, NULL, "LOG" );
 
       if( pResult )
-      {
-         hb_itemReturn( pResult );
-         hb_itemRelease( pResult );
-      }
+         hb_itemRelease( hb_itemReturn( pResult ) );
    }
 }
 
@@ -201,10 +189,7 @@ HB_FUNC( SQRT )
          s_internal_math_error = 0;
 
          if( pResult )
-         {
-            hb_itemReturn( pResult );
-            hb_itemRelease( pResult );
-         }
+            hb_itemRelease( hb_itemReturn( pResult ) );
       }
       else
          hb_retnd( dResult );
@@ -219,10 +204,7 @@ HB_FUNC( SQRT )
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1097, NULL, "SQRT" );
 
       if( pResult )
-      {
-         hb_itemReturn( pResult );
-         hb_itemRelease( pResult );
-      }
+         hb_itemRelease( hb_itemReturn( pResult ) );
    }
 }
 

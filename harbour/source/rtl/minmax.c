@@ -90,10 +90,7 @@ HB_FUNC( MAX )
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1093, NULL, "MAX" );
 
       if( pResult )
-      {
-         hb_itemReturn( pResult );
-         hb_itemRelease( pResult );
-      }
+         hb_itemRelease( hb_itemReturn( pResult ) );
    }
 }
 
@@ -150,10 +147,7 @@ HB_FUNC( MIN )
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1092, NULL, "MIN" );
 
       if( pResult )
-      {
-         hb_itemReturn( pResult );
-         hb_itemRelease( pResult );
-      }
+         hb_itemRelease( hb_itemReturn( pResult ) );
    }
 }
 

@@ -1,3 +1,49 @@
+2000-07-25 00:23 UTC+0100 Victor Szakats <info@szelvesz.hu>
+
+   * source/rtl/abs.c
+   * source/rtl/at.c
+   * source/rtl/chrasc.c
+   * source/rtl/datec.c
+   * source/rtl/dateshb.c
+   * source/rtl/dir.c
+   * source/rtl/do.c
+   * source/rtl/idle.c
+   * source/rtl/left.c
+   * source/rtl/len.c
+   * source/rtl/math.c
+   * source/rtl/minmax.c
+   * source/rtl/mod.c
+   * source/rtl/replic.c
+   * source/rtl/round.c
+   * source/rtl/setkey.c
+   * source/rtl/space.c
+   * source/rtl/str.c
+   * source/rtl/strcase.c
+   * source/rtl/strtran.c
+   * source/rtl/strzero.c
+   * source/rtl/substr.c
+   * source/rtl/transfrm.c
+   * source/rtl/trim.c
+   * source/rtl/type.c
+   * source/rtl/val.c
+   * source/vm/arrayshb.c
+   * source/vm/classes.c
+   * source/vm/debug.c
+   * source/vm/eval.c
+   * source/vm/hvm.c
+   * source/vm/memvars.c
+   * source/vm/runner.c
+     % This construct:
+       hb_itemReturn( x );
+       hb_itemRelease/Clear( x );
+       converted to this smaller and faster one:
+       hb_itemRelease/Clear( hb_itemReturn( x ) );
+
+       Actually the speed increase and binary size decrease is almost zero, 
+       but the source code is more compact. This snippet is mostly found in 
+       error runtime error branches.
+       Some local variables could be eliminated this way.
+
 20000724-22:45 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
 
    + contrib/mysql

@@ -187,8 +187,7 @@ HB_FUNC( HB_IDLEDEL )
          if( ulID == ( ULONG ) pItem->item.asBlock.value )
          {
              hb_gcUnlockItem( pItem );
-             hb_itemReturn( pItem );    /* return a codeblock */
-             hb_itemClear( pItem );
+             hb_itemClear( hb_itemReturn( pItem ) ); /* return a codeblock */
           
              --s_uiIdleMaxTask;
              if( s_uiIdleMaxTask )

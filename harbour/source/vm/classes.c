@@ -1198,10 +1198,7 @@ HB_FUNC( __CLSINST )
    pSelf = hb_clsInst( ( USHORT ) hb_parni( 1 ), &ppObjects, &uiSize );
 
    if( pSelf )
-   {
-      hb_itemReturn( pSelf );
-      hb_itemRelease( pSelf );
-   }
+      hb_itemRelease( hb_itemReturn( pSelf ) );
 
    if( ppObjects )
       hb_xfree( ppObjects );
@@ -1522,11 +1519,7 @@ HB_FUNC( __OBJCLONE )
    PHB_ITEM pSrcObject = hb_param( 1, HB_IT_OBJECT );
 
    if( pSrcObject )
-   {
-      PHB_ITEM pDstObject = hb_arrayClone( pSrcObject );
-      hb_itemReturn( pDstObject );
-      hb_itemRelease( pDstObject );
-   }
+      hb_itemRelease( hb_itemReturn( hb_arrayClone( pSrcObject ) ) );
    else
       hb_errRT_BASE( EG_ARG, 3001, NULL, "__OBJCLONE" );
 }
@@ -1726,8 +1719,8 @@ HB_FUNC( __CLASSSEL )
          }
       }
    }
-   hb_itemReturn( pReturn );
-   hb_itemRelease( pReturn );
+
+   hb_itemRelease( hb_itemReturn( pReturn ) );
 }
 
 /* to be used from Classes ERROR HANDLER method */
@@ -1769,8 +1762,7 @@ HB_FUNC( __CLS_PARAM )
       hb_itemRelease( iTmp );
    }
 
-   hb_itemReturn( array );
-   hb_itemRelease( array );
+   hb_itemRelease( hb_itemReturn( array ) );
 }
 
 
@@ -1837,10 +1829,7 @@ HB_FUNC( __EVAL )
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_NOMETHOD, 1004, NULL, "EVAL" );
 
       if( pResult )
-      {
-         hb_itemReturn( pResult );
-         hb_itemRelease( pResult );
-      }
+         hb_itemRelease( hb_itemReturn( pResult ) );
    }
 
    hb_itemRelease( pObject );
@@ -1962,8 +1951,7 @@ static HARBOUR hb___msgClsSel( void )
       }
    }
 
-   hb_itemReturn( pReturn );
-   hb_itemRelease( pReturn );
+   hb_itemRelease( hb_itemReturn( pReturn ) );
 }
 
 
@@ -2013,10 +2001,7 @@ static HARBOUR hb___msgEval( void )
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_NOMETHOD, 1004, NULL, "EVAL" );
 
       if( pResult )
-      {
-         hb_itemReturn( pResult );
-         hb_itemRelease( pResult );
-      }
+         hb_itemRelease( hb_itemReturn( pResult ) );
    }
 }
 

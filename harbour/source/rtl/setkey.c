@@ -189,9 +189,7 @@ HB_FUNC( SETKEY )
             if( pIsActiveResults == NULL || ! HB_IS_LOGICAL( pIsActiveResults ) || hb_itemGetL( pIsActiveResults ) )
             {
 #endif
-               PHB_ITEM pAction = hb_itemNew( sk_list_tmp->pAction );
-               hb_itemReturn( pAction );
-               hb_itemRelease( pAction );
+               hb_itemRelease( hb_itemReturn( hb_itemNew( sk_list_tmp->pAction ) ) );
 #if defined( HB_EXTENSION )
             }
 #endif
@@ -298,8 +296,7 @@ HB_FUNC( HB_SETKEYSAVE )
       hb_itemRelease( pKeyElements );
    }
 
-   hb_itemReturn( pKeys );
-   hb_itemRelease( pKeys );
+   hb_itemRelease( hb_itemReturn( pKeys ) );
 
    pParam = hb_param( 1, HB_IT_ANY );
    if( pParam )

@@ -70,10 +70,7 @@ HB_FUNC( REPLICATE )
             PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_STROVERFLOW, 1234, NULL, "REPLICATE" );
 
             if( pResult )
-            {
-               hb_itemReturn( pResult );
-               hb_itemRelease( pResult );
-            }
+               hb_itemRelease( hb_itemReturn( pResult ) );
          }
       }
       else
@@ -84,10 +81,7 @@ HB_FUNC( REPLICATE )
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1106, NULL, "REPLICATE" );
 
       if( pResult )
-      {
-         hb_itemReturn( pResult );
-         hb_itemRelease( pResult );
-      }
+         hb_itemRelease( hb_itemReturn( pResult ) );
    }
 }
 

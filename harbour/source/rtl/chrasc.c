@@ -62,10 +62,7 @@ HB_FUNC( CHR )
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1104, NULL, "CHR" );
 
       if( pResult )
-      {
-         hb_itemReturn( pResult );
-         hb_itemRelease( pResult );
-      }
+         hb_itemRelease( hb_itemReturn( pResult ) );
    }
 }
 
@@ -86,10 +83,7 @@ HB_FUNC( ASC )
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1107, NULL, "ASC" );
 
       if( pResult )
-      {
-         hb_itemReturn( pResult );
-         hb_itemRelease( pResult );
-      }
+         hb_itemRelease( hb_itemReturn( pResult ) );
    }
 }
 

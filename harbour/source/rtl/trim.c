@@ -89,10 +89,7 @@ HB_FUNC( LTRIM )
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1101, NULL, "LTRIM" );
 
       if( pResult )
-      {
-         hb_itemReturn( pResult );
-         hb_itemRelease( pResult );
-      }
+         hb_itemRelease( hb_itemReturn( pResult ) );
    }
 }
 
@@ -117,10 +114,7 @@ HB_FUNC( RTRIM )
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1100, NULL, "TRIM" );
 
       if( pResult )
-      {
-         hb_itemReturn( pResult );
-         hb_itemRelease( pResult );
-      }
+         hb_itemRelease( hb_itemReturn( pResult ) );
    }
 }
 
@@ -153,10 +147,7 @@ HB_FUNC( ALLTRIM )
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 2022, NULL, "ALLTRIM" ); /* NOTE: This appeared in CA-Cl*pper 5.3 [vszakats] */
 
       if( pResult )
-      {
-         hb_itemReturn( pResult );
-         hb_itemRelease( pResult );
-      }
+         hb_itemRelease( hb_itemReturn( pResult ) );
    }
 #else
       hb_retc( "" );

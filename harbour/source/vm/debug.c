@@ -100,8 +100,7 @@ HB_FUNC( __VMSTKGLIST )
    for( pItem = hb_stack.pItems; pItem <= hb_stack.pPos; pItem++ )
       AddToArray( pItem, pReturn, uiPos++ );
 
-   hb_itemReturn( pReturn );
-   hb_itemRelease( pReturn );
+   hb_itemRelease( hb_itemReturn( pReturn ) );
 }
 
 /* $Doc$
@@ -148,10 +147,11 @@ HB_FUNC( __VMSTKLLIST )
    USHORT uiPos = 1;
 
    pReturn = hb_itemArrayNew( uiLen );           /* Create a transfer array  */
+
    for( pItem = pBase; pItem < hb_stack.pBase; pItem++ )
       AddToArray( pItem, pReturn, uiPos++ );
-   hb_itemReturn( pReturn );
-   hb_itemRelease( pReturn );
+
+   hb_itemRelease( hb_itemReturn( pReturn ) );
 }
 
 /* $Doc$
@@ -175,8 +175,7 @@ HB_FUNC( __VMPARLLIST )
    for( pItem = pBase + 2; uiLen--; pItem++ )
       AddToArray( pItem, pReturn, uiPos++ );
 
-   hb_itemReturn( pReturn );
-   hb_itemRelease( pReturn );
+   hb_itemRelease( hb_itemReturn( pReturn ) );
 }
 
 HB_FUNC( __VMVARLGET )

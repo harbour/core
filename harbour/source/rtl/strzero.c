@@ -117,10 +117,7 @@ HB_FUNC( STRZERO )
 #endif
 
          if( pResult )
-         {
-            hb_itemReturn( pResult );
-            hb_itemRelease( pResult );
-         }
+            hb_itemRelease( hb_itemReturn( pResult ) );
       }
    }
 }

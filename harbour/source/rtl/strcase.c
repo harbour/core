@@ -101,10 +101,7 @@ HB_FUNC( LOWER )
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1103, NULL, "LOWER" );
 
       if( pResult )
-      {
-         hb_itemReturn( pResult );
-         hb_itemRelease( pResult );
-      }
+         hb_itemRelease( hb_itemReturn( pResult ) );
    }
 }
 
@@ -127,9 +124,6 @@ HB_FUNC( UPPER )
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1102, NULL, "UPPER" );
 
       if( pResult )
-      {
-         hb_itemReturn( pResult );
-         hb_itemRelease( pResult );
-      }
+         hb_itemRelease( hb_itemReturn( pResult ) );
    }
 }
