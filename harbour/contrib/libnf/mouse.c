@@ -66,6 +66,7 @@ HB_FUNC(_MGET_PAGE)
       union REGS regs;
       regs.HB_XREGS.ax=0x1E;
       HB_DOS_INT86(0x33,&regs,&regs);
+      iPage=regs.HB_XREGS.bx;
    }
 #else
    {
