@@ -700,8 +700,13 @@ METHOD overstrike( cChar ) CLASS Get
 
    ::buffer := SubStr( ::buffer, 1, ::Pos - 1 ) + cChar + SubStr( ::buffer, ::Pos + 1 )
 
-   ::Changed := ValType( ::Original ) != ValType( ::unTransform() ) .or.;
-                !( ::unTransform() == ::Original )
+// To conform UPDATED() behaviour with that of Clipper
+   ::Changed := .T.
+
+// UPDATED() function previously did not return .T. even if a key press is
+// accepted.
+//   ::Changed := ValType( ::Original ) != ValType( ::unTransform() ) .or.;
+//                !( ::unTransform() == ::Original )
    ::Assign()
    ::Right( .f. )
 
@@ -770,8 +775,13 @@ METHOD Insert( cChar ) CLASS Get
       ::buffer := Left( Substr( ::buffer, 1, ::Pos-1 ) + cChar + Substr( ::buffer, ::Pos ), ::nMaxEdit )
    endif
 
-   ::Changed := ValType( ::Original ) != ValType( ::unTransform() ) .or.;
-                !( ::unTransform() == ::Original )
+// To conform UPDATED() behaviour with that of Clipper
+   ::Changed := .T.
+
+// UPDATED() function previously did not return .T. even if a key press is
+// accepted.
+//   ::Changed := ValType( ::Original ) != ValType( ::unTransform() ) .or.;
+//                !( ::unTransform() == ::Original )
    ::Assign()
    ::Right( .f. )
 
