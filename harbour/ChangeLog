@@ -1,3 +1,7 @@
+19991006-20:20 EDT Paul Tucker <ptucker@sympatico.ca>
+   * makefile.vc
+     * changed mainstd.c to main.c
+
 19991007-01:42 GMT+1 Victor Szel <info@szelvesz.hu>
    * include/filesys.h
      source/rtl/filesys.c

@@ -97,7 +97,7 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\inkey.obj \
     $(OBJ_DIR)\itemapi.obj \
     $(OBJ_DIR)\langapi.obj \
-    $(OBJ_DIR)\mainstd.obj \
+    $(OBJ_DIR)\main.obj \
     $(OBJ_DIR)\math.obj \
     $(OBJ_DIR)\memofile.obj \
     $(OBJ_DIR)\memoline.obj \
@@ -648,7 +648,7 @@ $(OBJ_DIR)\hvm.obj : $(VM_DIR)\hvm.c
 $(OBJ_DIR)\initsymb.obj : $(VM_DIR)\initsymb.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
-$(OBJ_DIR)\mainstd.obj : $(VM_DIR)\mainstd.c
+$(OBJ_DIR)\main.obj : $(VM_DIR)\main.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 #
