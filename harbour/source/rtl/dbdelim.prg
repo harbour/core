@@ -240,8 +240,10 @@ local lcisonoeol
              // fill the buffer
              cByte:=space(nDimBuff)
              fread(handle,@cByte,nDimBuff)
-             //we test the last position of the last eol +1 in this buffer
-             nPoslastEol+=rat(cCharEol,cByte)+1
+             // with +1 there is a problem on large import of data
+             // for now we keep it remmed
+             // please test and test and test
+             nPoslastEol+=rat(cCharEol,cByte) // +1
              //do this if in the buffer there are eol char
              lcisonoeol:=.t.
              do while lcisonoeol
