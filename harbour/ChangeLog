@@ -1,3 +1,11 @@
+Thu Oct 21 14:09:07 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* source/rtl/gt/gtlin.c: 
+	A first, very basic, implementation of GT for Linux using
+	curses. At this point, all I have tested is that tests/hello.prg
+	works acceptably well when compiled with -DHARBOUR_USE_LIN_GTAPI.
+	There are LOTS of functionality missing still.
+
 Thu Oct 21 14:02:53 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* config/linux/gcc.cf: 
