@@ -1838,9 +1838,9 @@ static void hb_compVariableDim( char * szName, HB_EXPR_PTR pInitValue )
      HB_EXPR_PTR pVar = hb_compExprNewVar( szName );
      HB_EXPR_PTR pAssign;
 
-     hb_compStaticDefStart();   /* switch to statics pcode buffer */
      /* create a static variable */
      hb_compVariableAdd( szName, 'A' );
+     hb_compStaticDefStart();   /* switch to statics pcode buffer */
      /* create an array */
      hb_compExprGenPush( pInitValue );
      hb_compGenPCode3( HB_P_ARRAYDIM, HB_LOBYTE( uCount ), HB_HIBYTE( uCount ) );

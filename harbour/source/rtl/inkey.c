@@ -1152,7 +1152,15 @@ HARBOUR HB___KEYPUT( void )
 
 HARBOUR HB_MCOL( void )
 {
-   hb_retnl( s_iMouseCol );
+#if defined(_WINDOWS_) || defined(WINNT)
+  #if ! defined(HARBOUR_USE_CRS_GTAPI) && ! defined(HARBOUR_USE_SLN_GTAPI)
+    hb_retnl( s_iMouseCol );
+  #else
+    hb_retnl( 0 );
+  #endif
+#else
+    hb_retnl( 0 );
+#endif
 }
 
 /*  $DOC$
@@ -1185,7 +1193,15 @@ HARBOUR HB_MCOL( void )
 
 HARBOUR HB_MROW( void )
 {
-   hb_retnl( s_iMouseRow );
+#if defined(_WINDOWS_) || defined(WINNT)
+  #if ! defined(HARBOUR_USE_CRS_GTAPI) && ! defined(HARBOUR_USE_SLN_GTAPI)
+    hb_retnl( s_iMouseRow );
+  #else
+    hb_retnl( 0 );
+  #endif
+#else
+    hb_retnl( 0 );
+#endif
 }
 
 /*  $DOC$

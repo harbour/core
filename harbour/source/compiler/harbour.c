@@ -1449,13 +1449,23 @@ void hb_compGenPopVar( char * szVarName ) /* generates the pcode to pop a value 
    }
    else
    {
-      iVar = hb_compStaticGetPos( szVarName, hb_comp_functions.pLast );
+      PFUNCTION pFunc;
+
+      /* Check if we are generating a pop code for static variable
+       * initialization function - if YES then we have to switch to a function
+       * where the static variable was declared
+       */      
+      if( ( hb_comp_functions.pLast->cScope & (FS_INIT | FS_EXIT) ) == (FS_INIT | FS_EXIT) )
+          pFunc = hb_comp_functions.pLast->pOwner;
+      else
+          pFunc = hb_comp_functions.pLast;
+      iVar = hb_compStaticGetPos( szVarName, pFunc );
       if( iVar )
       {
          /* Static variable declared in current function
           */
          hb_compGenPCode3( HB_P_POPSTATIC, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ) );
-         hb_comp_functions.pLast->bFlags |= FUN_USES_STATICS;
+         pFunc->bFlags |= FUN_USES_STATICS;
       }
       else
       {

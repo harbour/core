@@ -1,3 +1,13 @@
+20000204-20:45 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/compiler/harbour.y
+    *source/compiler/harbour.c
+	* fixed initialization of static variable with dimmed array
+	STATIC var[ 2 ]
+	
+    *source/rtl/inkey.c
+	* fixed s_iMouseCol/s_iMouseRow if compiled with GCC/LINUX
+	
 20000204-22:12 GMT+3 Alexander Kresin
    * source/rdd/dbcmd.c
      + added hb_rddGetCurrentWorkAreaPointer() function
