@@ -290,7 +290,7 @@ static int hb_ntxTagFindCurrentKey( LPPAGEINFO pPage, LONG lBlock, LPKEYINFO pKe
             pPage->TagParent->CurKeyInfo->Xtra = pKey->Xtra;
             pPage->TagParent->CurKeyInfo->Tag = pPage->Page;
          }
-         if( p->Tag && ( k < 0 || ( (ULONG)p->Xtra != pPage->TagParent->Owner->Owner->ulRecNo ) ) )
+         if( p->Tag && ( k < 0 || lSeek || ( (ULONG)p->Xtra != pPage->TagParent->Owner->Owner->ulRecNo ) ) )
          {
                LONG       blockPrev, blockNext;
                SHORT      keyPrev, keyNext;

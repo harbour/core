@@ -7,6 +7,11 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+  * source/rtl/filehb.c
+    ! OS/2 IBM C++ fix.
+
+2002-01-14 15:05 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
+  * source\common\hbffind.c
     * Added missed Attribute check (thanks Victor)
 
 2002-01-14 14:30 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
