@@ -64,7 +64,6 @@ FUNCTION ordSkipUnique()   ; RETURN .F.
 #endif
 
 FUNCTION __dbJoin()        ; RETURN NIL
-FUNCTION __dbTotal()       ; RETURN NIL
 
 /* NOTE: Internal functions */
 FUNCTION __dbFList()       ; RETURN {}

@@ -64,9 +64,13 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
    DEFAULT nHiLiteRow TO 0                 // The row to be highlighted
 
    IF nRight == 79 .and. nLeft ==0
-      nNumCols := 79
+      nNumCols := 80  
    ELSE
       nNumCols := nRight - nLeft + 1
+   ENDIF
+
+   IF nRight > MaxCol()
+      nRight--
    ENDIF
    nNumRows := nBottom - nTop + 1
 
@@ -508,7 +512,7 @@ STATIC PROCEDURE DispPage( acItems, alSelect, nTop, nLeft, nRight, nNumRows, nPo
    Default nRowsClr to nNumRows
 
    IF nRight == 79 .and. nLeft == 0
-      nRightPos := nRight
+      nRightPos := 80
    ELSE                            
       nRightPos := nRight - nLeft + 1 
    ENDIF
