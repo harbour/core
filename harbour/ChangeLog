@@ -1,3 +1,8 @@
+2000-07-31 11:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+   * source/rtl/gtsln/gtsln.c
+     * Changes submitted by Marek Paliwoda <paliwoda@inetia.pl>
+
 2000-07-31 14:32 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
    * utils/hbdoc/ft_funcs.prg
