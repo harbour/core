@@ -7,6 +7,12 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+       calls.
+
+   * include/hbapi.h
+   * include/hbundoc.api
+     * Some compatibility #defines moved to its place.
+
 
 2001-12-22 11:30 UTC+0100 Antonio Linares <alinares@fivetech.com>
    * source/vm/dynlibhb.c

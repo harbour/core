@@ -59,7 +59,7 @@
 extern "C" {
 #endif
 
-extern void hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols ); /* statics symbols initialization */
+extern void HB_EXPORT hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols ); /* statics symbols initialization */
 
 #if defined(HARBOUR_STRICT_ANSI_C)
 
