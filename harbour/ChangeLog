@@ -8,7 +8,13 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
   * source/vm/memvars.c
-2002-01-19 06:11 UTC+0100 Ron Pinkas <ron@ronpinkas.com>
+2002-01-20 08:50 UTC+0800 Ron Pinkas <ron@ronpinkas.com>
+       hb_vmArrayPop(), hb_vmPopLocal(), hb_vmPopStatic(), hb_memvarSetValue()
+  * source/rdd/dbfntx/dbfntx1.c
+    * Added support of DBOI_POSITION and DBOI_KEYCOUNT to ntxOrderInfo()
+      and empty prototypes of hb_ntxTagKeyNo(), hb_ntxTagKeyCount()
+
+2002-01-19 06:11 UTC+0800 Ron Pinkas <ron@ronpinkas.com>
    + Added ChangeLog to the /contrib/apollo dir
    + contrib/apollo/test/apollo.ch
      + defines for function sx_SysProp

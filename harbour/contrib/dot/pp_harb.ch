@@ -1,9 +1,9 @@
 /*
- * Harbour Project source code:
- * Pre-Processor/Dot prompt environment
+ * xBaseScript Project source code:
+ * Pre-Processor / Dot prompt environment / Script Interpreter
  *
- * Copyright 2000 Ron Pinkas <ronpinkas@profit-master.com>
- * www - http://www.harbour-project.org
+ * Copyright 2000-2001 Ron Pinkas <ronpinkas@profit-master.com>
+ * www - http://www.xBaseScript.com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -93,11 +93,15 @@ METHOD Compile()
 RETURN nProcId > 0
 
 //----------------------------------------------------------------------------//
+
+#ifdef USE_C_BOOST
+
 #pragma BEGINDUMP
 
 #include <ctype.h>
 
 #include "hbapi.h"
+#include "hbfast.h"
 #include "hbstack.h"
 #include "hbapierr.h"
 #include "hbapiitm.h"
@@ -122,14 +126,11 @@ static HB_FUNC( NEXTTOKEN )
 {
    PHB_ITEM pLine       = hb_param( 1, HB_IT_STRING );
    PHB_ITEM pDontRecord = hb_param( 2, HB_IT_LOGICAL );
-
    char *sLine, *pTmp;
-   BOOL lDontRecord;
-
    char sReturn[2048];
-   size_t Counter, nLen;
-
    char s2[3];
+   BOOL lDontRecord;
+   size_t Counter, nLen;
 
    if( pLine == NULL || pLine->item.asString.length == 0 )
    {
@@ -438,9 +439,7 @@ static HB_FUNC( NEXTTOKEN )
       }
       else
       {
-         pTmp = hb_strdup( sLine );
-         hb_itemPutC( pLine, pTmp );
-         hb_xfree( pTmp );
+         hb_itemPutCPtr( pLine, hb_strdup( sLine ), strlen( sLine ) );
       }
       //printf( "\nToken: '%s' value: '%s'\n", sReturn, pLine->item.asString.value );
    }
@@ -448,6 +447,8 @@ static HB_FUNC( NEXTTOKEN )
    {
       //printf( "\nToken: '%s' ***value: '%s'\n", sReturn, pLine->item.asString.value );
    }
+
+   //printf( "\nToken: '%s'\n", sReturn );
 
    hb_retclen( sReturn, nLen );
 }
@@ -457,12 +458,10 @@ static HB_FUNC( NEXTIDENTIFIER )
 {
    PHB_ITEM pLine    = hb_param( 1, HB_IT_STRING );
    PHB_ITEM pSkipped = hb_param( 2, HB_IT_ANY );
-
    char *sLine;
-
+   char cChar, cLastChar = ' ';
    size_t nAt, nLen;
    int nStart = -1;
-   char cChar, cLastChar = ' ';
 
    if( pLine == NULL || pLine->item.asString.length == 0 )
    {
@@ -556,13 +555,8 @@ static HB_FUNC( NEXTIDENTIFIER )
        }
        else
        {
-          char *sSkipped = (char *) hb_xgrab( nStart + 1 );
-
-          strncpy( sSkipped, sLine, nStart );
-          sSkipped[nStart]= '\0';
-          hb_itemPutCL( pSkipped, sSkipped, nStart );
-          //printf( "\nSkipped: '%s'\n", sSkipped );
-          hb_xfree( sSkipped );
+          hb_itemPutCL( pSkipped, sLine, nStart );
+          //printf( "\nSkipped: '%s'\n", pSkipped->item.asString.value );
        }
     }
 
@@ -577,17 +571,13 @@ static HB_FUNC( NEXTIDENTIFIER )
 
        if( ISBYREF( 1 ) )
        {
-          char *pTmp;
-
-          pTmp = hb_strdup( sLine + nAt );
-          hb_itemPutC( pLine, pTmp );
-          hb_xfree( pTmp );
+          hb_itemPutCPtr( pLine, hb_strdup( sLine + nAt ), strlen( sLine + nAt ) );
        }
 
        //printf( "\nIdentifier: '%s'\n", sIdentifier );
 
-       hb_retc( sIdentifier );
-       hb_xfree( sIdentifier );
+       hb_retcAdopt( sIdentifier );
+       //hb_xfree( sIdentifier );
     }
     else
     {
@@ -595,7 +585,132 @@ static HB_FUNC( NEXTIDENTIFIER )
     }
 }
 
+//----------------------------------------------------------------------------//
+HB_FUNC( EXTRACTLEADINGWS )
+{
+   PHB_ITEM pLine = hb_param( 1, HB_IT_STRING );
+   size_t iLen, i = 0;
+   char *pTmp;
+
+   if( pLine == NULL )
+   {
+      hb_retclen( "", 0 );
+      return;
+   }
+
+   iLen = pLine->item.asString.length;
+
+   while( pLine->item.asString.value[i] == ' ' )
+   {
+      i++;
+   }
+
+   if( i > 0 )
+   {
+      if( HB_IS_BYREF( hb_stackItemFromBase( 1 ) ) )
+      {
+         hb_itemPutCPtr( pLine, hb_strdup( pLine->item.asString.value + i ), iLen - i );
+      }
+   }
+
+   pTmp = ( char * ) hb_xgrab( i + 1 );
+   memset( pTmp, ' ', i );
+
+   if( HB_IS_BYREF( hb_stackItemFromBase( 2 ) ) )
+   {
+      PHB_ITEM pWS = hb_itemUnRef( hb_stackItemFromBase( 2 ) );
+      hb_itemPutCL( pWS, pTmp, i );
+   }
+
+   hb_retclenAdopt( pTmp, i );
+}
+
+//----------------------------------------------------------------------------//
+HB_FUNC( DROPTRAILINGWS )
+{
+   PHB_ITEM pLine = hb_param( 1, HB_IT_STRING );
+   char *pString;
+   size_t iLen, i;
+
+   if( pLine == NULL )
+   {
+      hb_retclen( "", 0 );
+      return;
+   }
+
+   pString = hb_itemGetC( pLine );
+   iLen    = hb_itemGetCLen( pLine );
+
+   i = iLen - 1;
+
+   while( pString[i] == ' ' )
+   {
+      i--;
+   }
+
+   if( ++i < iLen )
+   {
+      pString[i] = '\0';
+   }
+
+   if( HB_IS_BYREF( hb_stackItemFromBase( 1 ) ) )
+   {
+      hb_itemPutCL( pLine, pString, i );
+   }
+
+   if( HB_IS_BYREF( hb_stackItemFromBase( 2 ) ) )
+   {
+      PHB_ITEM pWS = hb_itemUnRef( hb_stackItemFromBase( 2 ) );
+      char *pTmp = ( char * ) hb_xgrab( iLen - i + 1 );
+
+      memset( pTmp, ' ', iLen - i );
+      hb_itemPutCPtr( pWS, pTmp, iLen - i );
+   }
+
+   hb_retclenAdopt( pString, i );
+   //hb_xfree( pString );
+}
+
+//----------------------------------------------------------------------------//
+HB_FUNC( DROPEXTRATRAILINGWS )
+{
+   PHB_ITEM pLine = hb_param( 1, HB_IT_STRING );
+   char *pString;
+   size_t iLen, i;
+
+   if( pLine == NULL )
+   {
+      hb_retclen( "", 0 );
+      return;
+   }
+
+   pString = hb_itemGetC( pLine );
+   iLen    = hb_itemGetCLen( pLine );
+
+   i = iLen - 1;
+
+   while( i > 1 && pString[i] == ' ' && pString[i - 1] == ' ' )
+   {
+      i--;
+   }
+
+   if( ++i < iLen )
+   {
+      pString[i] = '\0';
+   }
+
+   if( HB_IS_BYREF( hb_stackItemFromBase( 1 ) ) )
+   {
+      hb_itemPutCL( pLine, pString, i );
+   }
+
+   hb_retclenAdopt( pString, i );
+   //hb_xfree( pString );
+}
+
 #pragma ENDDUMP
+
+#endif
 
 //----------------------------------------------------------------------------//
 #ifdef WIN
