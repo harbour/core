@@ -47,6 +47,8 @@
 #define hb_osnewline() chr(13)+chr(10)
 #define CRLF hb_osnewline()
 #endif
+#xtranslate timetosec(<x>) => ((val(substr(<x>,1,2))*3600)+(val(substr(<x>,4,2))*60)+(val(substr(<x>,7,2))))
+#define datediff(<x>,<y>) (<x>-<y>)
 Static lPrint      := .f.
 Static nHandle
 Static aDefines    := {}
@@ -66,6 +68,7 @@ Static aFile       := {}
 Static lBcc        := .T.
 Static lGcc        := .F.
 Static lVcc        := .F.
+Static lForce      := .F.
 Static szProject:=""
 
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
@@ -96,6 +99,7 @@ If Pcount() == 0
    ? "          /b+ Use BCC as C compiler"
    ? "          /g  Use GCC as C compiler"
    ? "          /v  Use MSVC as C compiler"
+   ? "          /f  Force Recompiltion of all files"
    ? "          Note: /p and /d can be used together"
    ? "          Options with + are the default Value"
    Return NIL
@@ -105,6 +109,11 @@ If cFile == NIL
    Return Nil
 Endif
 If Pcount() == 2
+   if at("-F",allparam)>0
+      lforce := .T.
+      allparam:=strtran(allparam,"-F","")
+   Endif
+
    if at("-B",allparam)>0
       lBcc := .T.
       lGcc := .F.
@@ -151,6 +160,12 @@ if at("-E",allparam)>0
    Endif
 Endif
 If Pcount() > 2
+
+   if at("-F",allparam)>0
+      lforce := .T.
+      allparam:=strtran(allparam,"-F","")
+   Endif
+
    if at("-B",allparam)>0
       lBcc := .T.
       lGcc := .F.
@@ -203,7 +218,11 @@ parsemakfi( cFile )
 If lPrint
    PrintMacros()
 Endif
+if lForce
 compfiles()
+else
+CompUpdatedfiles()
+endif
 ! ( cLinkcomm )
 Return nil
 
@@ -873,13 +892,13 @@ Setcolor( 'w/b+,w/b,w+/b,w/b+,w/b,w+/b' )
 @  0,  0, Maxrow(), Maxcol() Box( Chr( 201 ) + Chr( 205 ) + Chr( 187 ) + Chr( 186 ) + Chr( 188 ) + Chr( 205 ) + Chr( 200 ) + Chr( 186 ) + Space( 1 ) )
 ATTENTION( "Enviroment options", 0 )
 @  1,  1 Say "Select Os"                                      
-@  1, 12 Get cos radio { "Win32", "OS/2", "Linux" }           
+@  1, 12 Get cos radio { "Win32", "OS/2", "Linux" }
 @  1, 23 Say "Select C Compiler"                              
-@  1, 40 Get cCompiler radio { "BCC", "MSVC", "GCC" }         
+@  1, 40 Get cCompiler radio { "BCC", "MSVC", "GCC" }  
 @  1, 48 Say "Graphic Library"                                
-@  1, 64 Get lFwh checkbox "Use FWH"                          
-@  2, 64 Get lcw checkbox "Use C4W"                          
-@  3, 64 Get lRddads checkbox "Use RddAds"                    
+@  1, 64 Get lFwh checkbox "Use FWH" when Cos=="Win32"                          
+@  2, 64 Get lcw checkbox "Use C4W"          when Cos=="Win32" 
+@  3, 64 Get lRddads checkbox "Use RddAds"   when Cos=="Win32"  
 Read
 
 If lFwh
@@ -900,22 +919,22 @@ lBcc := If( At( "BCC", cCompiler ) > 0, .t., .f. )
 lVcc := If( At( "MSVC", cCompiler ) > 0, .t., .f. )
 lGcc := If( At( "GCC", cCompiler ) > 0, .t., .f. )
 if lAutomemvar
-cDefHarOpts+="-a"
+cDefHarOpts+="-a "
 endif
 if lvarismemvar
-cDefHarOpts+="-v"
+cDefHarOpts+="-v "
 endif
 if ldebug
-cDefHarOpts+="-b"
+cDefHarOpts+="-b "
 endif
 if lSupressline
-cDefHarOpts+="-l"
+cDefHarOpts+="-l "
 endif
 if lGenppo
-cDefHarOpts+="-p"
+cDefHarOpts+="-p "
 endif
 if lCompmod
-cDefHarOpts+="-m"
+cDefHarOpts+="-m "
 endif
 
 
@@ -929,7 +948,7 @@ If lBcc
    Aadd( aCommands, { ".rc.res:", "$(BCB)\BIN\brcc32 $(RFLAGS) $<" } )
 
 Elseif lGcc
-   if at("linux",Getenv("HB_ARCHITECTURE"))>0
+   if at("linux",Getenv("HB_ARCHITECTURE"))>0 .or. cOs=="Linux"
    Aadd( aCommands, { ".cpp.o:", "$(BCB)/gcc $(CFLAG1) $(CFLAG2) -o$* $*" } )
 
    Aadd( aCommands, { ".c.o:", "$(BCB)/gcc -I$(HB_INC_INSTALL) $(CFLAG1) $(CFLAG2) -I. -o$* $**" } )
@@ -958,7 +977,7 @@ attention( 'Spacebar to select, Enter to continue process', 22 )
 
 Asize( aIn, nLenaSrc )
 For x := 1 To nLenaSrc
-   aIn[ x ] := lower(Pad( aSrc[ x, 1 ], 13 )) + ;
+   aIn[ x ] := Pad( aSrc[ x, 1 ], 13 ) + ;
                     Str( aSrc[ x, 2 ], 8 ) + '  ' + ;
                     Dtoc( aSrc[ x, 3 ] ) + '  ' + ;
                     aSrc[ x, 4 ]
@@ -980,7 +999,7 @@ If Len( aOut ) == 1
    cTopFile := aOut[ 1 ]
 Else
    attention( 'Select the TOP MODULE of your executable', 22 )
-   cTopFile := lower(pickfile( "*.prg" ))
+   cTopFile := pickfile( "*.prg" )
 Endif
 
 x:=ascan(aOut,{|x| lower(x)==lower(cTopFile)})
@@ -1013,12 +1032,23 @@ Elseif lCw
    Fwrite( nLinkHandle, "C4W =" + ccwpath + CRLF )
 
 Endif
+if lGcc
+   if at("linux",Getenv("HB_ARCHITECTURE"))>0 .or.  cOs=="Linux"
+        Fwrite( nLinkHandle, "PROJECT = " + if(isupper(cTopfile),Strtran( cTopfile, ".PRG", "" ),Strtran( cTopfile, ".prg", "" )) + CRLF )
+   else
 
-Fwrite( nLinkHandle, "PROJECT = " + Strtran( cTopfile, ".prg", ".exe" ) + CRLF )
-if len(aObjs)<2
-Fwrite( nLinkHandle, "OBJFILES = " +Strtran( cTopfile, ".prg", ".obj" ) + CRLF )
+        Fwrite( nLinkHandle, "PROJECT = " + if(isupper(cTopfile),Strtran( cTopfile, ".PRG", ".EXE" ),Strtran( cTopfile, ".prg", ".exe" )) + CRLF )
+   endif     
 else
-Fwrite( nLinkHandle, "OBJFILES = " +Strtran( cTopfile, ".prg", ".obj" )  )
+
+Fwrite( nLinkHandle, "PROJECT = " + if(isupper(cTopfile),Strtran( cTopfile, ".PRG", ".EXE" ),Strtran( cTopfile, ".prg", ".exe" )) + CRLF )
+endif
+if len(aObjs)<2
+
+Fwrite( nLinkHandle, "OBJFILES =  " + if(isupper(cTopfile),Strtran( cTopfile, ".PRG", ".OBJ" ),Strtran( cTopfile, ".prg", ".obj" )) + CRLF )
+else
+
+Fwrite( nLinkHandle, "OBJFILES = " + if(isupper(cTopfile),Strtran( cTopfile, ".PRG", ".OBJ" ),Strtran( cTopfile, ".prg", ".obj" )))
 
 For x := 1 To Len( aobjs )
    If x <> Len( aobjs ) .and. aObjs[x]<>cTopfile
@@ -1030,9 +1060,11 @@ For x := 1 To Len( aobjs )
 Next
 endif
 if len(aCs)<2
-Fwrite( nLinkHandle, "CFILES = " +Strtran( cTopfile, ".prg", ".c" ) +CRLF )
+
+Fwrite( nLinkHandle, "CFILES = " + if(isupper(cTopfile),Strtran( cTopfile, ".PRG", ".C" ),Strtran( cTopfile, ".prg", ".c" ))+CRLF)
 else
-Fwrite( nLinkHandle, "CFILES = " +Strtran( cTopfile, ".prg", ".c" )  )
+
+Fwrite( nLinkHandle, "CFILES = " + if(isupper(cTopfile),Strtran( cTopfile, ".PRG", ".C" ),Strtran( cTopfile, ".prg", ".c" )))
 For x := 1 To Len( acs )
    If x <> Len( acs ) .and. aCs[x]<>cTopfile
       Fwrite( nLinkHandle, " " + aCs[ x ] )
@@ -1201,3 +1233,99 @@ Function c( CSTRING )
 Return Max( ( Maxcol() / 2 ) - Int( Len( CSTRING ) / 2 ), 0 )
 
 *+ EOF: HBMAKE.PRG
+
+Function CompUpdatedfiles()
+
+Local cComm
+Local cOld
+Local nPos
+Local nCount
+Local nFiles
+Local aCtocompile:={}
+Local aOrder := listasarray2( aBuildOrder[ 2 ], " " )
+
+For nCount := 1 To Len( aOrder )
+   If aOrder[ nCount ] == "$(CFILES)"
+      nPos := Ascan( aCommands, { | x, y | x[ 1 ] == ".prg.c:" } )
+      If nPos > 0
+         cComm := aCommands[ nPos, 2 ]
+         cOld  := cComm
+      Endif
+      For nFiles := 1 To Len( aPrgs )
+         nPos := Ascan( aCs, { | x | Left( x, At( ".", x ) ) == Left( aPrgs[ nFiles ], At( ".", aPrgs[ nFiles ] ) ) } )
+         if  fileisnewer(aprgs[nPos])
+            If nPos > 0
+               aadd(aCtocompile,acs[nPos])
+               cComm := Strtran( cComm, "o$*", "o" + aCs[ nPos ] )
+               cComm := Strtran( cComm, "$**", aPrgs[ nFiles ] )
+               outstd( " ")
+               ! ( cComm )
+               cComm := cold
+            Endif
+            endif
+      Next
+   Endif
+   If aOrder[ nCount ] == "$(OBJFILES)"
+      If lGcc
+         nPos := Ascan( aCommands, { | x, y | x[ 1 ] == ".c.o:" } )
+      Else
+         nPos := Ascan( aCommands, { | x, y | x[ 1 ] == ".c.obj:" } )
+      Endif
+      If nPos > 0
+         cComm := aCommands[ nPos, 2 ]
+         cOld  := ccomm
+      Endif
+      For nFiles := 1 To Len( aCtocompile )
+         nPos := Ascan( aObjs, { | x | Left( x, At( ".", x ) ) == Left( aCtocompile[ nFiles ], At( ".", aCtocompile[ nFiles ] ) ) } )
+         If nPos > 0
+            cComm := Strtran( cComm, "o$*", "o" + aObjs[ nPos ] )
+            cComm := Strtran( cComm, "$**", aCtocompile[ nFiles ] )
+            outstd( " ")
+            // ? cComm
+            ! ( cComm )
+            ccomm := cold
+         Endif
+      Next
+   Endif
+   If aOrder[ nCount ] == "$(RESDEPEN)"
+      nPos := Ascan( aCommands, { | x, y | x[ 1 ] == ".rc.res:" } )
+      If nPos > 0
+         cComm := aCommands[ nPos, 2 ]
+      Endif
+      For nFiles := 1 To Len( aRes )
+         //            nPos:=ascan(aObjs,{|x| left(x,at(".",x)) == left(acs[nFiles],at(".",acs[nFiles]))})
+         If !Empty( ares[ nFiles ] )
+            cComm := Strtran( cComm, "$<", aRes[ nFiles ] )
+            outstd(" ")
+            ! ( cComm )
+         Endif
+      Next
+   Endif
+
+Next
+Return nil
+
+function fileisnewer(cFile)
+local aFile
+local aobj
+local lReturn:=.f.
+local nDate,nTime
+if !file(strtran(cFile,".prg",".c"))
+   return .t.
+endif
+aFile:=directory(cFile)
+aObj:=if(lGcc,directory(strtran(cFile,".prg",".o")),directory(strtran(cFile,".prg",".obj")))
+   nDate:=datediff(afile[1,3],aobj[1,3])
+   if nDate>0
+      lReturn:=.t.
+   else
+      nTime:=timetosec(afile[1,4])-timetosec(aobj[1,4])
+      if nTime>0
+          lreturn:=.t.
+      else
+          lReturn:=.f.
+      endif
+   endif
+return lReturn
+
+

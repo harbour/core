@@ -37,7 +37,7 @@
 #include "getexit.ch"
 #include "inkey.ch"
 #include "radios.ch"
-
+#include "common.ch"
 #include "radiodef.ch"
 
 FUNCTION RadioGets(bVar, cVar, aChoices, aGetList)
@@ -47,6 +47,8 @@ LOCAL nRow := Row(), nCol := Col()
 LOCAL nGets := Len(aChoices)
 LOCAL nGet
 LOCAL nStartGet := Len(aGetList) + 1
+
+
   // For each element in aChoices
   FOR nGet := 1 To nGets
 
@@ -67,6 +69,7 @@ LOCAL nStartGet := Len(aGetList) + 1
 
     // Radio gets have their own reader, of course
     oGet:reader := {|o| RadioReader(o, aGetList) }
+
     oGet:display()
   NEXT
 

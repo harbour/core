@@ -38,12 +38,12 @@
 #include "inkey.ch"
 #include "checks.ch"
 #include "checkdef.ch"
-
-FUNCTION CheckGetNew(bVar, cVar, cStr)
+#include "common.ch"
+FUNCTION CheckGetNew(bVar, cVar, cStr,bBlock)
 
 LOCAL oGet
 LOCAL nRow := Row(), nCol := Col()
-
+Default bblock to {||.t.}
   // Display [ ] before the get
   DevPos(nRow, nCol)
   DevOut("[ ]")
@@ -59,7 +59,7 @@ LOCAL nRow := Row(), nCol := Col()
 
   // Check box gets have their own reader, of course
   oGet:reader := {|o| CheckReader(o) }
-
+  oGet:PreBlock:=bblock
   // Draw the check box
   DrawCheck(oGet)
 
