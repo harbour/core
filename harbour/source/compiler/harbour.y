@@ -507,7 +507,7 @@ PHB_FNAME _pFileName = NULL;
 PHB_FNAME _pOutPath = NULL;
 ALIASID_PTR pAliasId = NULL;
 ULONG _ulLastLinePos = 0;    /* position of last opcode with line number */
-LONG lLastPushPos = -1; /* position of last push pcode */
+LONG _lLastPushPos = -1; /* position of last push pcode */
 BOOL _bDontGenLineNum = FALSE;   /* suppress line number generation */
 
 EXPLIST_PTR _pExpList = NULL;    /* stack used for parenthesized expressions */
@@ -2606,7 +2606,7 @@ PFUNCTION FunctionNew( char * szName, SYMBOLSCOPE cScope )
    pFunc->pOwner       = NULL;
    pFunc->bFlags       = 0;
 
-   lLastPushPos = -1;
+   _lLastPushPos = -1;
 
    return pFunc;
 }
@@ -3300,7 +3300,7 @@ void Line( void ) /* generates the pcode with the currently compiled source code
    }
    _bDontGenLineNum = FALSE;
    functions.pLast->bFlags &= ~ FUN_WITH_RETURN;   /* clear RETURN flag */
-   lLastPushPos = -1;
+   _lLastPushPos = -1;
 }
 
 /* Generates the pcode with the currently compiled source code line
@@ -3961,17 +3961,17 @@ static void SetLastPushPos( void )
 {
    PFUNCTION pFunc = functions.pLast;   /* get the currently defined Clipper function */
 
-   lLastPushPos = pFunc->lPCodePos;
+   _lLastPushPos = pFunc->lPCodePos;
 }
 
 static void RemoveExtraPush( void )
 {
    PFUNCTION pFunc = functions.pLast;   /* get the currently defined Clipper function */
 
-   if( lLastPushPos > -1 && pFunc->lPCodePos > lLastPushPos )
+   if( _lLastPushPos > -1 && pFunc->lPCodePos > _lLastPushPos )
    {
-      pFunc->lPCodePos = lLastPushPos;
-      lLastPushPos = -1;
+      pFunc->lPCodePos = _lLastPushPos;
+      _lLastPushPos = -1;
    }
    else
       GenPCode1( HB_P_POP );

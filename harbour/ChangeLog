@@ -1,3 +1,7 @@
+19991012-03:12 GMT+1 Victor Szel <info@szelvesz.hu>
+   * source/compiler/harbour.y
+     ! lLastPushPos -> _lLastPushPos
+
 19991012-02:50 GMT+1 Victor Szel <info@szelvesz.hu>
    * include/caundoc.h
      + _bcmp, _bscan added (thanks to Jose Lalin)
@@ -78,7 +82,7 @@
 19991011-10:40 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/vm/hvm.c
      ! __vmVarSList() <-> __vmVarSGet(), the function names were mistakenly
-       exchanged, not OK.
+       exchanged, now OK.
      % __vmVarSGet() - Simplified.
    * source/vm/hvm.c
      ! HB_P_NOOP - Caused an infinite loop, fixed. (again)
