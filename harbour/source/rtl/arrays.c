@@ -49,7 +49,65 @@ static char *szArgumentError = "Argument error: incorrect type";
 /*
  * Internal
  */
+ 
+ 
+BOOL hb_arrayGetBool( PHB_ITEM pArray, ULONG ulIndex )
+{
+  if( IS_ARRAY( pArray ) )
+    {
+      if( ulIndex <= ( unsigned )hb_arrayLen( pArray ) )
+        {
+          PHB_ITEM pItem = pArray->item.asArray.value->pItems + ulIndex - 1;
+          if( IS_LOGICAL( pItem ) )
+            return pItem->item.asLogical.value;
+          else
+            return 0;
+        }
+      else
+        {
+          hb_errorRT_BASE(EG_ARG, 1132, "Bound error", "array access");
+        }
+    }
+  else
+    {
+      hb_errorRT_BASE(EG_ARG, 1068, "Argument error", "array access");
+    }
+  return 0;
+}
 
+double hb_arrayGetDouble( PHB_ITEM pArray, ULONG ulIndex )
+{
+  if( IS_ARRAY( pArray ) )
+    {
+      if( ulIndex <= ( unsigned )hb_arrayLen( pArray ) )
+        {
+          PHB_ITEM pItem = pArray->item.asArray.value->pItems + ulIndex - 1;
+
+          if( IS_INTEGER( pItem ) )
+            return pItem->item.asInteger.value;
+
+          else if( IS_LONG( pItem ) )
+            return pItem->item.asLong.value;
+
+          else if( IS_DOUBLE( pItem ) )
+            return pItem->item.asDouble.value;
+
+          else
+            return 0;
+        }
+      else
+        {
+          hb_errorRT_BASE(EG_ARG, 1132, "Bound error", "array access");
+        }
+    }
+  else
+    {
+      hb_errorRT_BASE(EG_ARG, 1068, "Argument error", "array access");
+    }
+  return 0;
+} 
+ 
+ 
 void hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ) /* creates a new array */
 {
    PBASEARRAY pBaseArray = ( PBASEARRAY ) hb_xgrab( sizeof( BASEARRAY ) );
