@@ -1,3 +1,13 @@
+19991008-20:00 CET Eddie Runia <eddie@runia.com>
+    * include/extend.h
+      uiPrevCls added to BASEARRAY
+    * source/rtl/classes.c
+      PrevCls set with previous class when using Super
+    * source/vm/hvm.c
+      Previous class handle restore _after_ retrieving the method
+    + tests/inhprob.c
+      Test program
+
 19991008-15:42 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *source/rdd/dbcmd.c

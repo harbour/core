@@ -2153,6 +2153,7 @@ void hb_vmDo( USHORT uiParams )
    LONG wStackBase = hb_stack.pBase - hb_stack.pItems; /* as the stack memory block could change */
    LONG wItemIndex = pItem - hb_stack.pItems;
    PHB_ITEM pSelf = hb_stack.pPos - uiParams - 1;   /* NIL, OBJECT or BLOCK */
+   PBASEARRAY pSelfBase;
    PHB_FUNC pFunc;
    int iStatics = hb_stack.iStatics;              /* Return iStatics position */
    BOOL bDebugPrevState = s_bDebugging;
@@ -2187,7 +2188,18 @@ void hb_vmDo( USHORT uiParams )
       if( pSym == &( hb_symEval ) && IS_BLOCK( pSelf ) )
          pFunc = pSym->pFunPtr;                 /* __EVAL method = function */
       else
+      {
          pFunc = hb_objGetMethod( pSelf, pSym );
+         if( IS_OBJECT( pSelf ) )               /* Object passed            */
+         {
+            pSelfBase = pSelf->item.asArray.value;
+            if( pSelfBase->bSuperCast )
+            {
+              pSelfBase->bSuperCast = FALSE;
+              pSelfBase->uiClass    = pSelfBase->uiPrevCls;
+            }
+         }
+      }
 
       if( pFunc )
          pFunc();
