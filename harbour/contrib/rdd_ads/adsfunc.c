@@ -44,6 +44,9 @@
 #include "rddads.h"
 
 int adsFileType = ADS_CDX;
+int adsLockType = ADS_PROPRIETARY_LOCKING;
+int adsRights = 1;
+int adsCharType = ADS_ANSI;
 
 HARBOUR HB_ADSSETFILETYPE( void )
 {
@@ -68,5 +71,40 @@ HARBOUR HB_ADSSETSERVERTYPE( void )
          AdsSetServerType( servType );
    }
    hb_ret();
+   return;
+}
+
+HARBOUR HB_ADSLOCKING( void )
+{
+   int lockType, oldType = adsLockType;
+   if( hb_pcount() > 0 )
+   {
+      adsLockType = hb_parl( 1 );
+   }
+   hb_retl( oldType );
+   return;
+}
+
+HARBOUR HB_ADSRIGHTSCHECK( void )
+{
+   int lockType, oldType = (adsRights==1)? 1:0;
+   if( hb_pcount() > 0 )
+   {
+      adsRights = ( hb_parl( 1 ) )? 1:2;
+   }
+   hb_retl( oldType );
+   return;
+}
+
+HARBOUR HB_ADSSETCHARTYPE( void )
+{
+   int charType, oldType = adsCharType;
+   if( hb_pcount() > 0 )
+   {
+      charType = hb_parni( 1 );
+      if( charType>0 && charType<3 )
+         adsCharType = charType;
+   }
+   hb_retni( oldType );
    return;
 }

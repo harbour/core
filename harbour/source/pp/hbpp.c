@@ -1796,6 +1796,10 @@ static int ReplacePattern( char patttype, char * expreal, int lenreal, char * pt
           }
         while( ifou > 0 );
       }
+    else if( lenreal && *expreal == '{' )
+      {
+        hb_pp_Stuff( expreal, ptro, lenreal, 4, lenres );
+      }      
     else
       {
         hb_pp_Stuff( "{||}", ptro, 4, 4, lenres );
@@ -1882,10 +1886,10 @@ int hb_pp_RdStr( FILE * handl_i, char * buffer, int maxlen, BOOL lDropSpaces, ch
             break;
           case STATE_QUOTE1: if(cha=='\'') s_ParseState = STATE_NORMAL; break;
           case STATE_QUOTE2: if(cha=='\"') s_ParseState = STATE_NORMAL; break;
+          case STATE_BRACKET: if(cha==']') s_ParseState = STATE_NORMAL; break;
           default:
             switch( cha ) {
             case '[': s_ParseState = STATE_BRACKET; break;
-            case ']': s_ParseState = STATE_NORMAL; break;
             case '\"':
               if( s_ParseState != STATE_BRACKET ) s_ParseState = STATE_QUOTE2;
               break;
@@ -1916,6 +1920,8 @@ int hb_pp_RdStr( FILE * handl_i, char * buffer, int maxlen, BOOL lDropSpaces, ch
         }
     }
   while(--readed >= 0 && ( buffer[readed] == ' ' || buffer[readed] == '\t') );
+  if( buffer[readed] != ';' && s_ParseState != STATE_COMMENT )
+     s_ParseState = STATE_NORMAL;
   readed++;
   buffer[readed]='\0';
   return readed;

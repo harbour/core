@@ -1,31 +1,41 @@
+20000117-22:09 GMT+3 Alexander Kresin
+  * source/pp/hbpp.c
+    * Few bugs fixed, reported by Matteo Baccan
+  * contrib/rdd_ads/ads.ch
+  * contrib/rdd_ads/ads1.c
+  * contrib/rdd_ads/adsfunc.c
+  * contrib/rdd_ads/rddads.h
+    Bug fixed in SET INDEX TO ... implementation
+    New commands added
+
 20000117-16:05 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/rdd/dbcmd.c
-	* fixed GPF in ORDBAGEXT()
-	
+        * fixed GPF in ORDBAGEXT()
+
 20000117-13:30 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/rtl/type.c
-	* added hb_retc( "U" ) for initial implementation of TYPE() function
-	(due to a very popular demand :)
+        * added hb_retc( "U" ) for initial implementation of TYPE() function
+        (due to a very popular demand :)
 
 20000117-12:25 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/rtl/achoice.prg
     *source/rtl/input.prg
-	* macro related code are active now
-	
+        * macro related code are active now
+
     *source/compiler/harbour.y
-	* function that initializes static variables is generated
-	properly when ANNOUNCE statement is used
+        * function that initializes static variables is generated
+        properly when ANNOUNCE statement is used
 
 
 20000116-20:30 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/rtl/harbinit.prg
-	* replaced ANNOUNCEd CLIPPER5xx with procedure definition
-	
-	
+        * replaced ANNOUNCEd CLIPPER5xx with procedure definition
+
+
 20000116-15:35 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *include/hberrors.h
@@ -50,8 +60,8 @@
         * removed fixed translation of ANNOUNCE statement
 
     *source/compiler/cmdcheck.c
-	* restored correct support for '-w' compiler switch
-	
+        * restored correct support for '-w' compiler switch
+
 20000115-20:3  GMT+3 Luiz Rafael Culik <culik@sl.conex.net>
     *source/rtl/arrays.c
     *source/rtl/type.c
@@ -80,14 +90,14 @@
 20000115-19:35 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/macro/macro.l
-	* corrected recognition of variable names which ends with numbers 
-	e.g. X1, A123
+        * corrected recognition of variable names which ends with numbers
+        e.g. X1, A123
 
 20000115-15:45 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/hbgenerr.c
-	* added missing comma separator in error messages list
-	
+        * added missing comma separator in error messages list
+
 20000115-15:15 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *include/pcode.h
@@ -98,7 +108,7 @@
                 HB_P_MPOPALIASEDVAR
 
 NOTE: All sources HAVE TO be recompiled!!!
-    
+
     *include/macro.h
         * added new constant:
         HB_MACRO_GEN_PUSH     4   /* generate PUSH pcodes */
@@ -209,7 +219,7 @@ NOTE: All sources HAVE TO be recompiled!!!
     *include/hbexpr.c
     *source/compiler/expropt.c
     *source/compiler/harbour.y
-	* fixed STATIC var1[0], var2[3,4] initialization failure
+        * fixed STATIC var1[0], var2[3,4] initialization failure
 
 2000-01-07  GMT +3  Luiz Rafael Culik <Culik@sl.conex.net>
      * gt.b32
@@ -283,12 +293,12 @@ NOTE: All sources HAVE TO be recompiled!!!
     *source/compiler/harbour.y
     *source/compiler/harbour.l
         * added support for macro variables in PUBLIC and PRIVATE declarations
-	PRIVATE &var, &var.end
-	* optimization of PUBLIC/PRIVATE variables creation (there was a
-	single call __MVPUBLIC/__MVPRIVATE function for every variable,
-	there is a single call for a single statement now), for example:
-	PRIVATE var1, var2, var3
-	// 3 calls previously - only one call now
+        PRIVATE &var, &var.end
+        * optimization of PUBLIC/PRIVATE variables creation (there was a
+        single call __MVPUBLIC/__MVPRIVATE function for every variable,
+        there is a single call for a single statement now), for example:
+        PRIVATE var1, var2, var3
+        // 3 calls previously - only one call now
 
     *source/macro/macro.y
         * renamed: hb_compExprNewSymbol() -> hb_compExprNewFunName()
@@ -297,12 +307,12 @@ NOTE: All sources HAVE TO be recompiled!!!
     *source/macro/macro.c
         * fixed handling of &var.text syntax
         * handling of text substitution is now Clipper compatible -
-	previously only substituted value was scanned for nested macro
-	operator - the whole text is rescanned now, for example:
-	PRIVATE a:='&', b:='b'
-	? &a.b
-	will print a value of variable 'b' now instead of a generation
-	of a syntax error.
+        previously only substituted value was scanned for nested macro
+        operator - the whole text is rescanned now, for example:
+        PRIVATE a:='&', b:='b'
+        ? &a.b
+        will print a value of variable 'b' now instead of a generation
+        of a syntax error.
 
     *include/extend.h
         * added declaration for hb_macroTextSubst()
@@ -424,20 +434,20 @@ Fixed the documentation to make the ng linker happy and added docs for the array
 19991231-13:00 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/rtl/memvars.c
-	* new function hb_memvarGetStrValuePtr() that return a value
-	of passed variable if this variable exists and if it contains
-	a string value (the function is called from macro text
-	substitution)
+        * new function hb_memvarGetStrValuePtr() that return a value
+        of passed variable if this variable exists and if it contains
+        a string value (the function is called from macro text
+        substitution)
 
     *include/extend.h
-	* added declaration for hb_memvarGetStrValuePtr()
-	* added declaration of hb_macroTextValue()
+        * added declaration for hb_memvarGetStrValuePtr()
+        * added declaration of hb_macroTextValue()
 
     *source/vm/hvm.c
-	* added code to handle macro text substitution "text &macro"
+        * added code to handle macro text substitution "text &macro"
 
     *source/macro/macro.c
-	* added code to handle macro text substitution
+        * added code to handle macro text substitution
 
 19991231-06:15 GMT+1 Antonio Linares <alinares@fivetech.com>
   * source/rtl/gt/gtwin.c
@@ -497,16 +507,16 @@ Fixed the documentation to make the ng linker happy and added docs for the array
     *include/hbexpr.c
     *source/compiler/expropt.c
     *source/compiler/harbour.y
-	* fixed compiler parse error on aliased macro expressions
-	M->&( expression )
+        * fixed compiler parse error on aliased macro expressions
+        M->&( expression )
 
 19991222-18:20 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *include/hbexpr.c
     *source/compiler/expropt.c
-	* fixed generation of pcodes for aliased expressions used in
-	a statement context (the previously selected workarea is popped
-	from the eval stack instead of swapping)
+        * fixed generation of pcodes for aliased expressions used in
+        a statement context (the previously selected workarea is popped
+        from the eval stack instead of swapping)
 
 19991220-18:42 GMT+1 Chen Kedem <niki@actcom.co.il>
   * source/rtl/menuto.prg
@@ -518,14 +528,14 @@ Fixed the documentation to make the ng linker happy and added docs for the array
 
 Mon Dec 20 13:49:01 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* source/rdd/dbcmd.c:
-	* source/rtl/classes.c:
-	Fixed two minor warnings.
+        * source/rdd/dbcmd.c:
+        * source/rtl/classes.c:
+        Fixed two minor warnings.
 
 19991219-14:35 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.l
-	* fixed recognition of 'DO &var WITH' syntax
+        * fixed recognition of 'DO &var WITH' syntax
 
 19991219-15:55 GMT+3 Alexander Kresin
   * source/pp/hbpp.c

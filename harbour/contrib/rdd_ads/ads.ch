@@ -44,3 +44,9 @@
 
 #command SET SERVER LOCAL   => AdsSetServerType ( 1 )
 #command SET SERVER REMOTE  => AdsSetServerType ( 2 )
+
+#command SET AXS LOCKING <x:ON,OFF>                                   ;
+      => AdsLocking( if( upper( <(x)> ) == "ON", .t., .f. )  )
+
+#command SET CHARTYPE TO <x:ANSI,OEM>                                 ;
+      => AdsSetCharType( if( upper( <(x)> ) == "OEM", 2, 1 ) )

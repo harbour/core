@@ -54,6 +54,9 @@ HARBOUR HB__ADS( void );
 HARBOUR HB_ADS_GETFUNCTABLE( void );
 
 extern int adsFileType;
+extern int adsLockType;
+extern int adsRights;
+extern int adsCharType;
 
 HB_INIT_SYMBOLS_BEGIN( ads1__InitSymbols )
 { "_ADS",             FS_PUBLIC, HB__ADS,             0 },
@@ -649,7 +652,7 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
       return FAILURE;
 
    ulRetVal = AdsOpenTable  ( 0, pOpenInfo->abName, NULL,
-                  adsFileType,ADS_ANSI, ADS_COMPATIBLE_LOCKING, ADS_CHECKRIGHTS,
+                  adsFileType, adsCharType, adsLockType, adsRights,
                   ( (pOpenInfo->fShared)? ADS_SHARED:ADS_EXCLUSIVE ) |
                   ( (pOpenInfo->fReadonly)? ADS_READONLY:ADS_DEFAULT ),
                    &hTable);
@@ -714,7 +717,7 @@ static ERRCODE adsOrderListAdd( ADSAREAP pArea, LPDBORDERINFO pOrderInfo )
    HB_TRACE(HB_TR_DEBUG, ("adsOrderListAdd(%p, %p)", pArea, pOrderInfo));
 
    ulRetVal = AdsOpenIndex( pArea->hTable,
-     (UNSIGNED8*) hb_itemGetCPtr( pOrderInfo->itmOrder ), ahIndex, &pusArrayLen );
+     (UNSIGNED8*) hb_itemGetCPtr( pOrderInfo->atomBagName ), ahIndex, &pusArrayLen );
    if( ulRetVal != AE_SUCCESS )
        return FAILURE;
    pArea->hOrdCurrent = ahIndex[0];
