@@ -157,6 +157,7 @@ PITEM hb_arrayClone( PITEM pArray );
 void hb_arrayAdd( PITEM pArray, PITEM pItemValue );
 
 int  hb_itemStrCmp( PITEM pFirst, PITEM pSecond, BOOL bForceExact ); /* our string compare */
+char * hb_str( PITEM pNumber, PITEM pWidth, PITEM pDec ); /* convert number to string */
 BOOL hb_strempty( char * szText, ULONG ulLen );
 long hb_dateEncode( long lDay, long lMonth, long lYear );
 void hb_dateDecode( long julian, long * plDay, long * plMonth, long * plYear );

@@ -45,8 +45,15 @@ static void hb_outstd( WORD wParam )
            printf ("%s", hb_dtoc (_pards (wParam), szBuffer));
            break;
 
+      case IT_DOUBLE:
       case IT_INTEGER:
-           printf( "%*i", pItem->wLength, pItem->value.iNumber );
+      case IT_LONG:
+           szText = hb_str( pItem, 0, 0 ); /* Let hb_str() do the hard work */
+           if( szText )
+           {
+              printf( "%s", szText );
+              _xfree( szText );
+           }
            break;
 
       case IT_NIL:
@@ -59,10 +66,6 @@ static void hb_outstd( WORD wParam )
               printf( ".F." );
            break;
 
-      case IT_LONG:
-           printf( "%*li", pItem->wLength, pItem->value.lNumber );
-           break;
-
       case IT_STRING:
            szText   = _parc( wParam );
            ulLenText = _parclen( wParam );
@@ -72,13 +75,6 @@ static void hb_outstd( WORD wParam )
               szText++;
               ulLenText--;
            }
-           break;
-
-      case IT_DOUBLE:
-           if( pItem->wDec )
-              printf( "%*.*f", pItem->wLength + 1 + pItem->wDec, pItem->wDec, pItem->value.dNumber );
-           else
-              printf( "%*ld", pItem->wLength, (long)pItem->value.dNumber );
            break;
 
       default:

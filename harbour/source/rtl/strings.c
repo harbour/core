@@ -987,68 +987,117 @@ HARBOUR VAL( void )
    }
 }
 
-/* converts a numberic to a string with given width & precision */
+/* converts a numeric to a string with optional width & precision.
+   This function should be used by any function that wants to format numeric
+   data for displaying, printing, or putting in a database.
+   
+   Note: The caller is responsible for calling _xfree to free the results buffer,
+         but ONLY if the return value is not a NULL pointer!
+*/
+char * hb_str( PITEM pNumber, PITEM pWidth, PITEM pDec )
+{
+   char * szResult = 0;
+   if( pNumber )
+   {
+      /* Default to the width and number of decimals specified by the item,
+         with a limit of 9 decimal places */
+      int iWidth = pNumber->wLength;
+      int iDec   = pNumber->wDec;
+      if( iDec > 9 ) iDec = 9;
+
+      if( pWidth )
+      {
+         /* If the width parameter is specified, override the default value
+            and set the number of decimals to zero */
+         iWidth = _parnl(2);
+         if( iWidth < 1 ) iWidth = 10; /* If 0 or negative, use default */
+         iDec = 0;
+      }
+
+      if( pDec )
+      {
+         /* This function does not include the decimal places in the width,
+            so the width must be adjusted downwards, if the decimal places
+            parameter is greater than 0  */
+         iDec = _parnl(3);
+         if( iDec < 0 ) iDec = 0;
+         else if( iDec > 0 ) iWidth -= (iDec + 1);
+      }
+
+      if( iWidth )
+      {
+         /* We at least have a width value */
+         int iBytes, iSize = (iDec ? iWidth + 1 + iDec : iWidth);
+         
+         /* Be paranoid and use a large amount of padding */
+         szResult = (char *)_xgrab( iWidth + iDec + 64 );
+
+         if( pNumber->wType == IT_DOUBLE || iDec != 0 )
+         {
+            double dNumber = _parnd( 1 );
+            if( iDec > 0 )
+               iBytes = sprintf( szResult, "%*.*f", iSize, iDec, dNumber );
+            else
+               iBytes = sprintf( szResult, "%*ld", iWidth, (long)dNumber );
+         }
+         else switch( pNumber->wType )
+         {
+            case IT_LONG:
+                 iBytes = sprintf( szResult, "%*li", iWidth, pNumber->value.lNumber );
+                 break;
+
+            case IT_INTEGER:
+                 iBytes = sprintf( szResult, "%*i", iWidth, pNumber->value.iNumber );
+                 break;
+
+            default:
+                 iBytes = 0;
+                 *szResult = 0;
+                 break;
+         }
+         /* Set to asterisks in case of overflow (same reason for paranoia) */
+         if( iBytes > iSize )
+         {
+            memset( szResult, '*', iSize );
+            szResult[ iSize ] = 0;
+         }
+      }
+   }
+   return( szResult );
+}
+
+/* converts a numeric to a string with optional width & precision.
+   calls hb_str() after validating parameters
+*/
 HARBOUR STR( void )
 {
    if( _pcount() > 0 && _pcount() < 4 )
    {
-      PITEM pNumber = _param(1, IT_NUMERIC);
-      if( pNumber )
+      BOOL bValid = TRUE;
+      PITEM pNumber = _param( 1, IT_NUMERIC ), pWidth = 0, pDec = 0;
+      if( !pNumber ) bValid = FALSE;
+      else
       {
-         double dNumber = _parnd(1);
-         char szResult[348]; /* QUESTION: what about _really_ long numbers? */
-
-         PITEM pWidth = _param(2, IT_NUMERIC);
-         PITEM pDec = _param(3, IT_NUMERIC);
-         int iDec = (pDec? _parnl(3): -1);
-         int iWidth;
-
-         if( pWidth )
+         if( _pcount() > 1 )
          {
-            iWidth = _parnl(2);
-
-            if( pDec && iDec )
-            {
-               if( sprintf(szResult, "%*.*f", iWidth, iDec, dNumber) > iWidth )
-                  memset(szResult, '*', iWidth);
-            }
-            else if( sprintf(szResult, "%*.0f", iWidth, dNumber) > iWidth )
-               memset(szResult, '*', iWidth);
-            _retclen(szResult, iWidth);
+            pWidth = _param( 2, IT_NUMERIC );
+            if( !pWidth) bValid = FALSE;
          }
-         else if( pDec )
+         if( _pcount() > 2 )
          {
-            PITEM pError = _errNew();
-            _errPutDescription(pError, "Argument error: STR");
-            _errLaunch(pError);
-            _errRelease(pError);
+            pDec = _param( 3, IT_NUMERIC );
+            if( !pDec ) bValid = FALSE;
          }
-         else
+      }
+      if( bValid )
+      {
+         char * szResult = hb_str( pNumber, pWidth, pDec );
+         if( szResult )
          {
-            /*
-            TODO: Default formatting of Str()
-
-              Numeric expression     Length of the return character string
-              --------------------------------------------------------------
-              Expressions/Constants  At least ten digits plus decimal places
-              Field variable         Field length including decimal places
-              Month()/Day()          3 digits
-              RecNo()                7 digits
-              Val()                  At least 3 digits
-              Year()                 5 digits
-            */
-
-            /* get the width of the decimal places */
-            int iDecWidth = sprintf(szResult, "%f", dNumber - (long)dNumber);
-
-            /* now print it with width 10 + decimals (the 9 is due to the ".") */
-            iWidth = sprintf(szResult, "%*f", 9 + iDecWidth, dNumber);
-            while( szResult[iWidth - 1] == '0' )
-               iWidth--;
-            if( szResult[iWidth - 1] == '.' )
-               iWidth--;
-            _retclen(szResult, iWidth);
+            _retc( szResult );
+            _xfree( szResult );
          }
+         else _retc( "" );
       }
       else
       {

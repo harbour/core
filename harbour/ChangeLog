@@ -1,3 +1,14 @@
+19990520-03:00 EST David G. Holm <dholm@jsd-llc.com>
+  * include/extend.h
+    - Added new function hb_str() for public use.
+  * source/rtl/console.c
+    - hb_outstd() now uses hb_str() instead of formatting numerics itself.
+  * source/rtl/strings.c
+    - Added new hb_str() function to do all numeric formatting for all of Harbour.
+    - Rewrote STR() to call hb_str() after validating parameters.
+  + tests/working/teststr.prg
+    - New module to test new function hb_str() via STR() and STDOUT().
+
 19990519-23:50 EST David G. Holm <dholm@jsd-llc.com>
   * source/rtl/extend.c
     - Use wDec = hb_set.HB_SET_DECIMALS instead of wDec = 2.
