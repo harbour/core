@@ -26,20 +26,25 @@ $(COMSPEC) /E:2048 /Cecho FILE $(file) >> __link__.tmp
 
 endef
 
+#Note: The empty line directly before 'endef' HAVE TO exist!
+define link_lib
+$(COMSPEC) /E:2048 /Cecho LIB $(lib) >> __link__.tmp
+
+endef
 
 define link_exe_file
 $(COMSPEC) /E:2048 /Cecho $(LDFLAGS) NAME $@ > __link__.tmp
 $(foreach file, $^, $(link_file))
-$(COMSPEC) /E:2048 /Cecho $(LINKLIBS) >> __link__.tmp
+$(foreach lib, $(LINKLIBS), $(link_lib))
 -$(LD) @__link__.tmp
 endef
 
 LD = wlink
 LDFLAGS = debug all OP osn=DOS4G OP stack=65536
 ifeq ($(HB_LIB_COMPILE),)
-LINKLIBS = $(foreach lib, $(LIBS), LIB $(subst /,\,$(TOP)$(ROOT)source/$(lib)/$(ARCH)/$(lib)))
+LINKLIBS := $(foreach lib, $(LIBS), $(subst /,\,$(TOP)$(ROOT)source/$(lib)/$(ARCH)/$(lib)))
 else
-LINKLIBS := LIBP $(subst /,\,$(HB_LIB_COMPILE)) $(foreach lib, $(LIBS), LIB $(lib))
+LINKLIBS := $(foreach lib, $(LIBS), $(subst /,\,$(HB_LIB_COMPILE)/$(lib)))
 endif
 LD_RULE = $(link_exe_file)
 
@@ -60,3 +65,5 @@ ARFLAGS =
 AR_RULE = $(create_library)
 
 include $(TOP)$(ROOT)config/rules.cf
+
+HB := $(subst /,\\,$(HB))

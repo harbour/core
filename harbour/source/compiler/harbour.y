@@ -1040,8 +1040,8 @@ WhileStatements : Statement
            | WhileStatements Statement        { Line(); }
            ;
 
-EndWhile   : END      
-           | ENDDO    
+EndWhile   : END
+           | ENDDO
            ;
 
 ForNext    : FOR IDENTIFIER ForAssign Expression { PopId( $2 ); $<iNumber>$ = functions.pLast->lPCodePos; ++_wForCounter; LoopStart(); }
@@ -1084,10 +1084,10 @@ RecoverSeq : /* no recover */
            | RecoverUsing Crlf Statements
            ;
 
-RecoverEmpty : RECOVER        
+RecoverEmpty : RECOVER
            ;
 
-RecoverUsing : RECOVER USING IDENTIFIER      
+RecoverUsing : RECOVER USING IDENTIFIER
            ;
 
 DoProc     : DO IDENTIFIER { PushSymbol( $2, 1 ); PushNil(); Do( 0 ); }
@@ -2136,7 +2136,7 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
    }
 /*   fprintf( yyc, " };\n\n" ); */
    fprintf( yyc, "\nHB_INIT_SYMBOLS_END( %s__InitSymbols );\n", symbols.pFirst->szName );
-   fprintf( yyc, "#if ! defined(__GNUC__)\n#pragma startup %s__InitSymbols\n#endif\n", symbols.pFirst->szName );
+   fprintf( yyc, "#if ! defined(__GNUC__)\n#pragma startup %s__InitSymbols\n#endif\n\n\n", symbols.pFirst->szName );
 
    /* Generate functions data
     */
@@ -3254,7 +3254,7 @@ void LineBody( void ) /* generates the pcode with the currently compiled source 
          GenError( _szCErrors, 'E', ERR_OUTSIDE, NULL, NULL );
       }
    }
-       
+
    functions.pLast->bFlags |= FUN_STATEMENTS;
    if( _iLineNumbers )
       GenPCode3( HB_P_LINE, LOBYTE( iLine ), HIBYTE( iLine ) );
@@ -3366,7 +3366,10 @@ void PopId( char * szVarName ) /* generates the pcode to pop a value from the vi
    {
       iVar = GetStaticVarPos( szVarName );
       if( iVar )
+      {
          GenPCode3( HB_P_POPSTATIC, LOBYTE( iVar ), HIBYTE( iVar ) );
+         functions.pLast->bFlags |= FUN_USES_STATICS;
+      }
       else
       {
          MemvarPCode( HB_P_POPMEMVAR, szVarName );
@@ -3444,7 +3447,10 @@ void PushId( char * szVarName ) /* generates the pcode to push a variable value 
    {
       iVar = GetStaticVarPos( szVarName );
       if( iVar )
+      {
          GenPCode3( HB_P_PUSHSTATIC, LOBYTE( iVar ), HIBYTE( iVar ) );
+         functions.pLast->bFlags |= FUN_USES_STATICS;
+      }
       else
       {
          MemvarPCode( HB_P_PUSHMEMVAR, szVarName );
@@ -3483,7 +3489,10 @@ void PushIdByRef( char * szVarName ) /* generates the pcode to push a variable b
    {
       iVar = GetStaticVarPos( szVarName );
       if( iVar )
+      {
          GenPCode3( HB_P_PUSHSTATICREF, LOBYTE( iVar ), HIBYTE( iVar ) );
+         functions.pLast->bFlags |= FUN_USES_STATICS;
+      }
       else
       {
          MemvarPCode( HB_P_PUSHMEMVARREF, szVarName );

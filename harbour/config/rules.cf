@@ -10,6 +10,9 @@ YACC_FLAGS = -d
 LEX = flex
 LEX_FLAGS = -i -8
 
+#
+# How to run Harbour.
+#
 HB := $(notdir $(HB_BIN_COMPILE))
 ifneq ($(HB),)
 # there is no slash at the end

@@ -1,3 +1,27 @@
+19990716-06:45 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+	*source/compiler/harbour.y
+	 * corrected generation of proper static frame for functions
+	   (the values of static variables defined in different modules
+	   are no longer overlapped)
+
+	*tests/broken/statics1.prg
+	*tests/broken/statics2.prg
+	 -moved to tests/working directory
+
+	*config/dos/watcom.cf
+	 * corrected to support HB_*_COMPILE variables
+
+	*config/global.cf
+	*config/rules.cf
+	 * removed duplicated definition of HB variable
+	 * HB_*_COMPILE variables are defined now before architecture
+	   and compiler specific config file is included (it allows to change
+	   these variables for specific architecture/compiler requirements)
+
+	*doc/codebloc.txt
+	 + added description of an incompatibility with Clipper
+
 19990715-23:40 CET Eddie Runia <eddie@runia.com>
    * tests/working/arrays.prg;
      tests/working/dosshell.prg;

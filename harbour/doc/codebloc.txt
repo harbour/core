@@ -40,6 +40,8 @@ will be accessed from an outside of a function where it is created.
 
 
 Incompatbility with the Clipper.
+
+1) Detached locals passed by reference
   There is a little difference between the handling of variables passed by 
 the reference in a codeblock.
 The following code explains it (thanks to David G. Holm)
@@ -72,3 +74,34 @@ From Main: 42
   In Harbour it produces (it is the correct output, IMHO)
 From MakeBlock: 42
 From Main: 42
+
+2) Scope of undeclared variables
+ Consider the following code:
+
+PROCEDURE MAIN()
+LOCAL cb
+  cb :=Detach()
+  ? EVAL( cb, 10 )
+
+RETURN
+
+FUNCTION Detach()
+LOCAL b:={|x| x+a}
+LOCAL a:=0
+RETURN b
+
+  In Clipper the 'a' variable in a codeblock has the *local* scope however in
+Harbour the 'a' variable has the *private* scope. As a result, in Clipper 
+this code will print 10 and in Harbour it will raise 'argument error' in
+'+' operation.
+  This will be true also when the 'a' variable will be declared as PRIVATE
+
+PROCEDURE MAIN()
+LOCAL cb
+PRIVATE a
+  cb :=Detach()
+  ? EVAL( cb, 10)
+RETURN
+
+The above code also prints 10 in Clipper (even if compiled with -a or -v
+switches)

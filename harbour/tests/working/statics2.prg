@@ -19,6 +19,7 @@ function Test()
    uB := "b"
    QOut( '   uA := "a"' )
    QOut( '   uB := "b"' )
+   QOut( "   uA, uB =>", uA, ",", uB )
    QOut( "" )
 
 return nil
