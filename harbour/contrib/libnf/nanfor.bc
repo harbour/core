@@ -119,6 +119,7 @@ NANFOR_LIB_OBJ = \
    $(OBJ_DIR)\dayofyr.obj \
    $(OBJ_DIR)\daytobow.obj \
    $(OBJ_DIR)\dectobin.obj \
+   $(OBJ_DIR)\dfile.obj \
    $(OBJ_DIR)\diskfunc.obj \
    $(OBJ_DIR)\dispmsg.obj \
    $(OBJ_DIR)\dosver.obj \
@@ -197,11 +198,12 @@ NANFOR_LIB_OBJ = \
    $(OBJ_DIR)\stod.obj \
    $(OBJ_DIR)\kspeed.obj \
    $(OBJ_DIR)\mkdir.obj \
-   $(OBJ_DIR)\getver.obj
+   $(OBJ_DIR)\getver.obj \
+   $(OBJ_DIR)\ftattr.obj \
+   $(OBJ_DIR)\dispc.obj
 
 
 #   $(OBJ_DIR)\sysmem.obj \
-#   $(OBJ_DIR)\dfile.obj \
 #   $(OBJ_DIR)\vidcur.obj \
 #   $(OBJ_DIR)\scancode.obj \
 #   $(OBJ_DIR)\setdate.obj \
@@ -415,7 +417,8 @@ $(OBJ_DIR)\pvid.c     : pvid.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 $(OBJ_DIR)\bytexor.c  : bytexor.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
-#$(OBJ_DIR)\dfile.c    : dfile.prg
+$(OBJ_DIR)\dfile.c    : dfile.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
 $(OBJ_DIR)\acctmnth.c : acctmnth.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
@@ -917,3 +920,12 @@ $(OBJ_DIR)\mkdir.obj  : mkdir.c
 $(OBJ_DIR)\getver.obj  : getver.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(NANFOR_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\dispc.obj  : dispc.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(NANFOR_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\ftattr.obj  : ftattr.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(NANFOR_LIB) $(ARFLAGS) -+$@,,
+
