@@ -129,14 +129,14 @@ xsavescr.c   : xsavescr.prg  harbour.exe
    tlib lib\b16\harbour.lib -+$@,,
 
 harbour.exe : harboury.c harbourl.c harbour.obj
-   echo -ml -O2 > bld.31
-   echo -ebin\harbour.exe >> bld.31
-   echo -Iinclude;source\compiler >> bld.31
-   echo source\compiler\harboury.c >> bld.31
-   echo source\compiler\harbourl.c >> bld.31
-   echo source\compiler\harbour.obj >> bld.31
-   bcc @bld.31
-   del bld.31
+   echo -ml -O2 > temp.bld
+   echo -ebin\harbour.exe >> temp.bld
+   echo -Iinclude;source\compiler >> temp.bld
+   echo source\compiler\harboury.c >> temp.bld
+   echo source\compiler\harbourl.c >> temp.bld
+   echo source\compiler\harbour.obj >> temp.bld
+   bcc @temp.bld
+   del temp.bld
    del harboury.obj
    del harbourl.obj
 
@@ -148,7 +148,7 @@ harbourl.c : harbour.l
 
 harbour.obj : harbour.c
    bcc -c -ml -O2 -Iinclude -osource\compiler\harbour.obj \
-	source\compiler\harbour.c
+        source\compiler\harbour.c
 
 hbpp.exe : source\pp\stdalone\hbpp.c
    bcc -ml -Iinclude source\pp\stdalone\hbpp.c lib\b16\hbpp.lib

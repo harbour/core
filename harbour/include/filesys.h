@@ -92,6 +92,7 @@ extern ULONG    hb_fsReadLarge  ( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCou
 extern BOOL     hb_fsRmDir      ( BYTE * pDirName );
 extern int      hb_fsRename     ( BYTE * pOldName, BYTE * pNewName );
 extern ULONG    hb_fsSeek       ( FHANDLE hFileHandle, LONG lOffset, USHORT uiMode );
+extern ULONG    hb_fsTell       ( FHANDLE hFileHandle );
 extern void     hb_fsSetDevMode ( FHANDLE hFileHandle, USHORT uiDevMode );
 extern void     hb_fsSetError   ( USHORT uiError );
 extern USHORT   hb_fsWrite      ( FHANDLE hFileHandle, BYTE * pBuff, USHORT ulCount );

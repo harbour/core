@@ -1,3 +1,24 @@
+19991005-13:59 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/compiler/harbour.y
+    source/pp/stdalone/hbpp.c
+    + Added closing \n to the help text, to make it appear OK under some 
+      shells. (Thanks to Dave Pearson)
+  * source/compiler/harbour.c
+    - isatty() removed. (Thanks to Dave Pearson)
+  * makefile.*
+    samples/hscript/bldguest.bat
+    % Some more fix & cleanup.
+  * source/rtl/tgetlist.prg
+    doc/funclist.txt
+    + READINSERT() function added. (Thanks to Matteo Baccan)
+  * source/rtl/filesys.c
+    include/filesys.h
+    + hb_fsTell() added to the header file
+    % hb_fsSetDev*() now calls hb_fsSetDevMode(), so some platform specific
+      code could be eliminated.
+    % Some simplification in FSETDEVMOD()
+    + Added missing HB_ prefix to FSETDEVMOD()
+
 19991005-12:30 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.y

@@ -498,3 +498,6 @@ return cOldName
 FUNCTION ReadExit( lExit )
    RETURN Set( _SET_EXIT, lExit )
 
+FUNCTION ReadInsert( lInsert )
+   RETURN Set( _SET_INSERT, lInsert )
+

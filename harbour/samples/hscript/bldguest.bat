@@ -1,15 +1,15 @@
 @echo off
 
-..\..\bin\harbour guestbk /n
-..\..\bin\harbour ..\inifiles
-..\..\bin\harbour ..\testcgi
+..\..\bin\harbour /n guestbk
+..\..\bin\harbour /n ..\..\tests\inifiles
+..\..\bin\harbour /n ..\..\tests\testcgi
 
-echo -O2 -eguestbk.exe -I..\..\include ..\..\source\vm\hvm.c guestbk.c > b32.bc
-echo inifiles.c testcgi.c                                        >> b32.bc
-echo ..\..\libs\b32\harbour.lib  ..\..\libs\b32\terminal.lib >> b32.bc
-echo ..\..\libs\b32\hbgt.lib ..\..\libs\b32\hbpp.lib >> b32.bc
-echo ..\..\libs\b32\rdd.lib >> b32.bc
-bcc32 @b32.bc
-del b32.bc
+echo -O2 -eguestbk.exe -I..\..\include guestbk.c > temp.bld
+echo inifiles.c testcgi.c >> temp.bld
+echo ..\..\libs\b32\harbour.lib  ..\..\libs\b32\terminal.lib >> temp.bld
+echo ..\..\libs\b32\hbgt.lib ..\..\libs\b32\hbpp.lib >> temp.bld
+echo ..\..\libs\b32\rdd.lib >> temp.bld
+bcc32 @temp.bld
+del temp.bld
 
 guestbk

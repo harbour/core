@@ -156,6 +156,7 @@ int main( int argc, char * argv[] )
               "\n          /o               creates hbpp.out with all tables"
               "\n          /n               with those only, which defined in your file"
               "\n          /w               enable warnings"
+              "\n"
               , argv[ 0 ] );
 
       if( bOutTable )
