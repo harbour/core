@@ -6,12 +6,12 @@
    * make_tpl.bat
      make_tpl.cmd (added)
      make_tpl.sh
-     * Updated and extended make file starter files.
+     * Updated and extended make starter files.
    * source/rtl/readvar.prg
      source/rtl/Makefile
      funclist.txt
      + Added: READVAR() (used in MENU TO)
-      (Please update other makefiles accordingly)
+      (*** Please update other makefiles accordingly ***)
    * include/Makefile
      ! hb_vmpub.h added
    * source/rtl/achoice.prg
