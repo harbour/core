@@ -1,3 +1,12 @@
+19991022-10:33 GMT+1 Victor Szel <info@szelvesz.hu>
+   * source/rtl/fm.c
+     tests/memory.prg
+     tests/Makefile
+     doc/funclist.txt
+     + MEMORY() support for Win32 platform, it can now return available
+       physical, page, virtual memory and total physical memory.
+     + Test program added.
+
 19991022-10:03 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/rtl/fm.c
      + MEMORY() function enhanced internally.

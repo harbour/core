@@ -54,6 +54,10 @@
          This should be normally turned off in a final release */
 #define HB_FM_STATISTICS
 
+/* NOTE: The following #include "hbwinapi.h" must
+         be ahead of any other #include statements! */
+#include "hbwinapi.h"
+
 #ifndef __MPW__
    #include <malloc.h>
 #endif
@@ -287,43 +291,103 @@ HARBOUR HB_MEMORY( void )
    switch( uiMode )
    {
    case 0:              /*               (Free Variable Space [KB])          */
-      ulResult = 9999;
+      #if defined(_Windows) || defined(WINNT)
+      {
+         MEMORYSTATUS memorystatus;
+         GlobalMemoryStatus( &memorystatus );
+         ulResult = memorystatus.dwAvailPhys / 1024;
+      }
+      #else
+         ulResult = 9999;
+      #endif
       break;
 
    case 1:              /*               (Largest String [KB])               */
-      ulResult = 9999;
+      #if defined(_Windows) || defined(WINNT)
+      {
+         MEMORYSTATUS memorystatus;
+         GlobalMemoryStatus( &memorystatus );
+         ulResult = HB_MIN_( memorystatus.dwAvailPhys, ULONG_MAX ) / 1024;
+      }
+      #else
+         ulResult = 9999;
+      #endif
       break;
 
    case 2:              /*               (RUN Memory [KB])                   */
-      ulResult = 9999;
+      #if defined(_Windows) || defined(WINNT)
+      {
+         MEMORYSTATUS memorystatus;
+         GlobalMemoryStatus( &memorystatus );
+         ulResult = memorystatus.dwAvailPhys / 1024;
+      }
+      #else
+         ulResult = 9999;
+      #endif
       break;
 
    case 3:              /* UNDOCUMENTED! (Virtual Memory [KB])               */
-      ulResult = 9999;
+      #if defined(_Windows) || defined(WINNT)
+      {
+         MEMORYSTATUS memorystatus;
+         GlobalMemoryStatus( &memorystatus );
+         ulResult = memorystatus.dwAvailVirtual / 1024;
+      }
+      #else
+         ulResult = 9999;
+      #endif
       break;
 
    case 4:              /* UNDOCUMENTED! (Free Expanded Memory [KB]) (?)     */
-      ulResult = 9999;
+      #if defined(_Windows) || defined(WINNT)
+         ulResult = 0;
+      #else
+         ulResult = 9999;
+      #endif
       break;
 
    case 101:            /* UNDOCUMENTED! (Fixed Memory/Heap [KB]) (?)        */
-      ulResult = 9999;
+      #if defined(_Windows) || defined(WINNT)
+      {
+         MEMORYSTATUS memorystatus;
+         GlobalMemoryStatus( &memorystatus );
+         ulResult = memorystatus.dwTotalPhys / 1024;
+      }
+      #else
+         ulResult = 9999;
+      #endif
       break;
 
    case 102:            /* UNDOCUMENTED! (Segments in Fixed Memory/Heap) (?) */
-      ulResult = 9999;
+      #if defined(_Windows) || defined(WINNT)
+         ulResult = 1;
+      #else
+         ulResult = 9999;
+      #endif
       break;
 
    case 103:            /* UNDOCUMENTED! (Free Swap Memory [KB])             */
-      ulResult = 9999;
+      #if defined(_Windows) || defined(WINNT)
+      {
+         MEMORYSTATUS memorystatus;
+         GlobalMemoryStatus( &memorystatus );
+         ulResult = memorystatus.dwAvailPageFile / 1024;
+      }
+      #else
+         ulResult = 9999;
+      #endif
       break;
 
    case 104:            /* UNDOCUMENTED! (Free Conventional [KB])            */
-      ulResult = 9999;
+      #if defined(_Windows) || defined(WINNT)
+         ulResult = 0;
+      #else
+         ulResult = 9999;
+      #endif
       break;
 
    case 105:            /* UNDOCUMENTED! (Used Expanded Memory [KB]) (?)     */
-      ulResult = ( s_ulMemoryConsumed / 1024 );
+      ulResult = 0;
       break;
 
    case 1001:           /* Harbour extension (Memory used [bytes])           */

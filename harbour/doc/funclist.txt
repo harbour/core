@@ -176,7 +176,7 @@ MAXROW                  ;R;
 MEMOEDIT                ;N;
 MEMOLINE                ;R;
 MEMOREAD                ;R;
-MEMORY                  ;N;
+MEMORY                  ;S;
 MEMOTRAN                ;R;
 MEMOWRIT                ;R;
 MEMVARBLOCK             ;R;

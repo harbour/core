@@ -90,6 +90,7 @@ PRG_SOURCES=\
         longstr2.prg \
         mathtest.prg \
         memfile.prg \
+        memory.prg \
         memvar.prg \
         menutest.prg \
         mtran.prg \
