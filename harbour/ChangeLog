@@ -1,7 +1,18 @@
+20000426-21:12 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/vm/borsym.asm
+     naming minor changes.
+
+   * source/vm/startup.asm
+     symbols naming minor changes.
+
+   + source/vm/borinit.c
+     After latest genobj32.c changes, now we are able to extract this
+     function from hvm.c and place it standalone.
+
 20000426-16:58 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/rtl/gtcrs/gtcrs.c
-	* the terminal is no longer scrolled up if something is 
+	* the terminal is no longer scrolled up if something is
 	  written at MAXROW(),MAXCOL() position
 
 20000426-15:17 GMT+1 Antonio Linares <alinares@fivetech.com>
