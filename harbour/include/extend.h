@@ -37,7 +37,7 @@
    #include "fm.api"
 #endif
 
-/* items types */
+/* items types and type checking macros */
 #define IT_NIL          ( ( WORD ) 0x0000 )
 #define IT_INTEGER      ( ( WORD ) 0x0002 )
 #define IT_LONG         ( ( WORD ) 0x0008 )
@@ -56,6 +56,34 @@
 #define IT_OBJECT       IT_ARRAY
 #define IT_NUMERIC      ( IT_INTEGER | IT_LONG | IT_DOUBLE )
 #define IT_ANY          ( ( WORD ) 0xFFFF )
+
+#define IS_BYREF( p )      ( ( p )->type & IT_BYREF )
+#define IS_OF_TYPE( p, t ) ( ( ( p )->type & ~IT_BYREF ) == t )
+#define IS_ARRAY( p )      IS_OF_TYPE( p, IT_ARRAY )
+#define IS_NIL( p )        IS_OF_TYPE( p, IT_NIL )
+#define IS_BLOCK( p )      IS_OF_TYPE( p, IT_BLOCK )
+#define IS_DATE( p )       IS_OF_TYPE( p, IT_DATE )
+#define IS_DOUBLE( p )     IS_OF_TYPE( p, IT_DOUBLE )
+#define IS_INTEGER( p )    IS_OF_TYPE( p, IT_INTEGER )
+#define IS_LOGICAL( p )    IS_OF_TYPE( p, IT_LOGICAL )
+#define IS_LONG( p )       IS_OF_TYPE( p, IT_LONG )
+#define IS_NUMERIC( p )    ( ( p )->type & IT_NUMERIC )
+#define IS_OBJECT( p )     IS_OF_TYPE( p, IT_OBJECT )
+#define IS_STRING( p )     IS_OF_TYPE( p, IT_STRING )
+#define IS_SYMBOL( p )     IS_OF_TYPE( p, IT_SYMBOL )
+#define IS_MEMVAR( p )     IS_OF_TYPE( p, IT_MEMVAR )
+
+#define ISNIL( n )         ( hb_param( n, IT_NIL ) != NULL )
+#define ISCHAR( n )        ( hb_param( n, IT_STRING ) != NULL )
+#define ISNUM( n )         ( hb_param( n, IT_NUMERIC ) != NULL )
+#define ISLOG( n )         ( hb_param( n, IT_LOGICAL ) != NULL )
+#define ISDATE( n )        ( hb_param( n, IT_DATE ) != NULL )
+#define ISMEMO( n )        ( hb_param( n, IT_MEMO ) != NULL )
+#define ISBYREF( n )       ( hb_parinfo( n ) & IT_BYREF ) /* NOTE: Intentionally using a different method */
+#define ISARRAY( n )       ( hb_param( n, IT_ARRAY ) != NULL )
+
+#define PCOUNT             hb_pcount()
+#define ALENGTH( n )       hb_parinfa( n, 0 )
 
 /* forward declarations */
 struct _HB_CODEBLOCK;

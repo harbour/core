@@ -1288,57 +1288,57 @@ HARBOUR HB_W2BIN( void )
 #define IS_PATH_SEP( c ) ( strchr( OS_PATH_DELIMITER_LIST, ( c ) ) != NULL )
 
 /* Split given filename into path, name and extension */
-PHB_FNAME hb_fsFNameSplit( char * szFilename )
+PHB_FNAME hb_fsFNameSplit( char * szFileName )
 {
-   PHB_FNAME pName = ( PHB_FNAME ) hb_xgrab( sizeof( HB_FNAME ) );
+   PHB_FNAME pFileName = ( PHB_FNAME ) hb_xgrab( sizeof( HB_FNAME ) );
 
-   int iLen = strlen( szFilename );
+   int iLen = strlen( szFileName );
    int iSlashPos;
    int iDotPos;
    int iPos;
 
-   pName->szPath =
-   pName->szName =
-   pName->szExtension = NULL;
+   pFileName->szPath =
+   pFileName->szName =
+   pFileName->szExtension = NULL;
 
    iSlashPos = iLen - 1;
    iPos = 0;
 
-   while( iSlashPos >= 0 && !IS_PATH_SEP( szFilename[ iSlashPos ] ) )
+   while( iSlashPos >= 0 && !IS_PATH_SEP( szFileName[ iSlashPos ] ) )
       --iSlashPos;
 
    if( iSlashPos == 0 )
    {
       /* root path -> \filename */
-      pName->szBuffer[ 0 ] = OS_PATH_DELIMITER;
-      pName->szBuffer[ 1 ] = '\0';
-      pName->szPath = pName->szBuffer;
+      pFileName->szBuffer[ 0 ] = OS_PATH_DELIMITER;
+      pFileName->szBuffer[ 1 ] = '\0';
+      pFileName->szPath = pFileName->szBuffer;
       iPos = 2; /* first free position after the slash */
    }
    else if( iSlashPos > 0 )
    {
       /* If we are after a drive letter let's keep the following backslash */
       if( IS_PATH_SEP( ':' ) &&
-         ( szFilename[ iSlashPos ] == ':' || szFilename[ iSlashPos - 1 ] == ':' ) )
+         ( szFileName[ iSlashPos ] == ':' || szFileName[ iSlashPos - 1 ] == ':' ) )
       {
          /* path with separator -> d:\path\filename or d:path\filename */
-         memcpy( pName->szBuffer, szFilename, iSlashPos + 1 );
-         pName->szBuffer[ iSlashPos + 1 ] = '\0';
+         memcpy( pFileName->szBuffer, szFileName, iSlashPos + 1 );
+         pFileName->szBuffer[ iSlashPos + 1 ] = '\0';
          iPos = iSlashPos + 2; /* first free position after the slash */
       }
       else
       {
          /* path with separator -> path\filename */
-         memcpy( pName->szBuffer, szFilename, iSlashPos );
-         pName->szBuffer[ iSlashPos ] = '\0';
+         memcpy( pFileName->szBuffer, szFileName, iSlashPos );
+         pFileName->szBuffer[ iSlashPos ] = '\0';
          iPos = iSlashPos + 1; /* first free position after the slash */
       }
 
-      pName->szPath = pName->szBuffer;
+      pFileName->szPath = pFileName->szBuffer;
    }
 
    iDotPos = iLen - 1;
-   while( iDotPos > iSlashPos && szFilename[ iDotPos ] != '.' )
+   while( iDotPos > iSlashPos && szFileName[ iDotPos ] != '.' )
       --iDotPos;
 
    if( ( iDotPos - iSlashPos ) > 1 )
@@ -1349,15 +1349,15 @@ PHB_FNAME hb_fsFNameSplit( char * szFilename )
       if( iDotPos == iLen - 1 )
       {
          /* the dot is the last character - use it as extension name */
-         pName->szExtension = pName->szBuffer + iPos;
-         pName->szBuffer[ iPos++ ] = '.';
-         pName->szBuffer[ iPos++ ] = '\0';
+         pFileName->szExtension = pFileName->szBuffer + iPos;
+         pFileName->szBuffer[ iPos++ ] = '.';
+         pFileName->szBuffer[ iPos++ ] = '\0';
       }
       else
       {
-         pName->szExtension = pName->szBuffer + iPos;
+         pFileName->szExtension = pFileName->szBuffer + iPos;
          /* copy rest of the string with terminating ZERO character */
-         memcpy( pName->szExtension, szFilename + iDotPos + 1, iLen - iDotPos );
+         memcpy( pFileName->szExtension, szFileName + iDotPos + 1, iLen - iDotPos );
          iPos += iLen - iDotPos;
       }
    }
@@ -1365,14 +1365,22 @@ PHB_FNAME hb_fsFNameSplit( char * szFilename )
       /* there is no dot in the filename or it is  '.filename' */
       iDotPos = iLen;
 
-   pName->szName = pName->szBuffer + iPos;
-   memcpy( pName->szName, szFilename + iSlashPos + 1, iDotPos - iSlashPos - 1 );
-   pName->szName[ iDotPos - iSlashPos - 1 ] = '\0';
+   if( ( iDotPos - iSlashPos - 1 ) > 0 )
+   {
+      pFileName->szName = pFileName->szBuffer + iPos;
+      memcpy( pFileName->szName, szFileName + iSlashPos + 1, iDotPos - iSlashPos - 1 );
+      pFileName->szName[ iDotPos - iSlashPos - 1 ] = '\0';
+   }
 
-   return pName;
+/* DEBUG
+   printf( "\nFilename: %s\n", szFileName );
+   printf( "\n  szPath: %s\n", pFileName->szPath );
+   printf( "\n  szName: %s\n", pFileName->szName );
+   printf( "\n   szExt: %s\n", pFileName->szExtension );
+*/
+
+   return pFileName;
 }
-
-/* TOFIX: Check not to overrun the _POSIX_PATH_MAX buffer size. */
 
 /* This function joins path, name and extension into a string with a filename */
 char * hb_fsFNameMerge( char * szFileName, PHB_FNAME pFileName )
@@ -1397,10 +1405,14 @@ char * hb_fsFNameMerge( char * szFileName, PHB_FNAME pFileName )
             szFileName[ iLen ] = '\0';
          }
       }
-      strcpy( szFileName + iLen, pFileName->szName );
+      if( pFileName->szName )
+         strcpy( szFileName + iLen, pFileName->szName );
    }
    else
-      strcpy( szFileName, pFileName->szName );
+   {
+      if( pFileName->szName )
+         strcpy( szFileName, pFileName->szName );
+   }
 
    if( pFileName->szExtension )
    {
@@ -1415,6 +1427,13 @@ char * hb_fsFNameMerge( char * szFileName, PHB_FNAME pFileName )
       strcpy( szFileName + iLen, pFileName->szExtension );
    }
 
+/* DEBUG
+   printf( "\nMERGE:\n" );
+   printf( "\n  szPath: %s\n", pFileName->szPath );
+   printf( "\n  szName: %s\n", pFileName->szName );
+   printf( "\n   szExt: %s\n", pFileName->szExtension );
+   printf( "\nFilename result: %s\n", szFileName );
+*/
+
    return szFileName;
 }
-

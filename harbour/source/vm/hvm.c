@@ -488,7 +488,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
                * +1 +2 -> size of codeblock
                * +3 +4 -> number of expected parameters
                * +5 +6 -> number of referenced local variables
-               * +7 -> start of table with referenced local variables
+               * +7    -> start of table with referenced local variables
                */
               hb_vmPushBlock( pCode + w, pSymbols );
               w += ( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
@@ -2295,7 +2295,7 @@ void hb_vmPushString( char * szText, ULONG length )
 
    stack.pPos->type = IT_STRING;
    stack.pPos->item.asString.length = length;
-   stack.pPos->item.asString.value  = szTemp;
+   stack.pPos->item.asString.value = szTemp;
    hb_stackPush();
 
    HB_DEBUG( "hb_vmPushString\n" );
@@ -2319,12 +2319,12 @@ void hb_vmPush( PHB_ITEM pItem )
    HB_DEBUG( "hb_vmPush\n" );
 }
 
-/* +0   -> HB_P_PUSHBLOCK
-* +1 +2 -> size of codeblock
-* +3 +4 -> number of expected parameters
-* +5 +6 -> number of referenced local variables
-* +7 -> start of table with referenced local variables
-*/
+/* +0    -> HB_P_PUSHBLOCK
+ * +1 +2 -> size of codeblock
+ * +3 +4 -> number of expected parameters
+ * +5 +6 -> number of referenced local variables
+ * +7    -> start of table with referenced local variables
+ */
 void hb_vmPushBlock( BYTE * pCode, PHB_SYMB pSymbols )
 {
    WORD wLocals;
@@ -2333,9 +2333,9 @@ void hb_vmPushBlock( BYTE * pCode, PHB_SYMB pSymbols )
 
    wLocals = pCode[ 5 ] + ( pCode[ 6 ] * 256 );
    stack.pPos->item.asBlock.value =
-         hb_codeblockNew( pCode + 7 + wLocals*2, /* pcode buffer         */
-         wLocals,                                /* number of referenced local variables */
-         ( WORD * )( pCode + 7 ),                  /* table with referenced local variables */
+         hb_codeblockNew( pCode + 7 + wLocals * 2, /* pcode buffer         */
+         wLocals,                                  /* number of referenced local variables */
+         ( WORD * ) ( pCode + 7 ),                 /* table with referenced local variables */
          pSymbols );
 
    /* store the statics base of function where the codeblock was defined
@@ -2954,7 +2954,6 @@ HARBOUR HB_WORD( void )
    }
    else
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "WORD" );
-
 }
 
 HARBOUR HB_PROCNAME( void )
@@ -3026,10 +3025,10 @@ HARBOUR HB_PCOUNT( void )
 {
    if( hb_pcount() == 0 )
    {
+      /* Skip current function */
       PHB_ITEM pBase = stack.pItems + stack.pBase->item.asSymbol.stackbase;
-      WORD  wRet  = pBase->item.asSymbol.paramcnt;                /* Skip current function     */
 
-      hb_retni( wRet );
+      hb_retni( pBase->item.asSymbol.paramcnt );
    }
    else
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "PCOUNT" ); /* NOTE: Clipper catches this at compile time! */

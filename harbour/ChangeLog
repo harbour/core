@@ -1,3 +1,20 @@
+19990903-08:00 GMT+1 Victor Szel <info@szelvesz.hu>
+  * include/hbdefs.h
+    include/extend.h
+    ! IT_OBJECT() checked for IT_ARRAY type, correct to IT_OBJECT, which
+      is equal to IT_ARRAY, so there was no bug, but it's not a good practice 
+      to take shortcuts like this.
+    * Type checking macros moved to extend.h from hbdefs.h
+  * source/vm/hvm.c
+    % Variable optimed out in HB_PCOUNT().
+  * source/compiler/harbour.y
+    source/hbpp/stdalone/hbpp.c
+    source/rtl/filesys.c
+    ! hb_fsFNameSplit() now leaves the szName pointer to NULL if there was
+      no name specified.
+    ! hb_fsFNameMerge() now handles when szName is NULL.
+    * Some variable names made consistent in the functions above.
+
 19990902-21:15 EDT David G. Holm <dholm@jsd-llc.com>
   * source/rtl/filesys.c
     ! Added missing semi-colon for line 1842.
