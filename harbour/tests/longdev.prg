@@ -5,8 +5,7 @@
 // Testing Harbour long string handling with device output.
 /* Harbour Project source code
    http://www.Harbour-Project.org/
-   Copyright 1999 David G. Holm <dholm@jsd-llc.com>
-   See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
+   Donated to the public domain on 2001-03-08 by David G. Holm <dholm@jsd-llc.com>
 */
 
 FUNCTION Main()
