@@ -272,7 +272,7 @@ void hb_compGenILCode( PHB_FNAME pFileName )  /* generates the IL output */
 
          if( bIsFirstFunction )
          {
-            fprintf( yyc, "   .entrypoint\n" );
+            fprintf( yyc, "  .entrypoint\n" );
             bIsFirstFunction = FALSE;
          }
 
@@ -448,14 +448,16 @@ static HB_GENC_FUNC( hb_p_do )
 
 static HB_GENC_FUNC( hb_p_doshort )
 {
+   fprintf( cargo->yyc, "  IL_%04lX:  ", lPCodePos );
+
    // fprintf( cargo->yyc, "\tHB_P_DOSHORT, %i,\n", pFunc->pCode[ lPCodePos + 1 ] );
    if( strcmp( szSymbol, "QOUT" ) == 0 )
    {
-     fprintf( cargo->yyc, "   call object QOUT( object )\n" );
-     fprintf( cargo->yyc, "   pop\n" );
+     fprintf( cargo->yyc, "call object QOUT( object )\n" );
+     fprintf( cargo->yyc, "            pop\n" );
    }
    else
-     fprintf( cargo->yyc, "   call void %s()\n", szSymbol );
+     fprintf( cargo->yyc, "call void %s()\n", szSymbol );
 
    szSymbol = NULL;
    bFirstSymbolParam = FALSE;
@@ -540,7 +542,7 @@ static HB_GENC_FUNC( hb_p_frame )
 {
    int i;
 
-   fprintf( cargo->yyc, "   .locals init (" );
+   fprintf( cargo->yyc, "  .locals init (" );
 
    for( i = 0; i < pFunc->pCode[ lPCodePos + 1 ]; i++ )
    {
@@ -635,18 +637,28 @@ static HB_GENC_FUNC( hb_p_instring )
 
 static HB_GENC_FUNC( hb_p_jumpnear )
 {
-   fprintf( cargo->yyc, "\tHB_P_JUMPNEAR, %i,",
-            pFunc->pCode[ lPCodePos + 1 ] );
-   if( cargo->bVerbose )
-   {
-      LONG lOffset = ( LONG ) ( pFunc->pCode[ lPCodePos + 1 ] );
+   LONG lOffset = ( LONG ) ( pFunc->pCode[ lPCodePos + 1 ] );
 
-      if( lOffset > 127 )
-         lOffset -= 256;
+   if( lOffset > 127 )
+      lOffset -= 256;
 
-      fprintf( cargo->yyc, "\t/* %li (abs: %05li) */", lOffset, ( LONG ) ( lPCodePos + lOffset ) );
-   }
-   fprintf( cargo->yyc, "\n" );
+   fprintf( cargo->yyc, "  IL_%04lX:  ", lPCodePos );
+   fprintf( cargo->yyc, "br.s" );
+   fprintf( cargo->yyc, "  IL_%04lX\n", ( LONG ) ( lPCodePos + lOffset ) );
+
+   // fprintf( cargo->yyc, "\tHB_P_JUMPNEAR, %i,",
+   //          pFunc->pCode[ lPCodePos + 1 ] );
+   // if( cargo->bVerbose )
+   // {
+   //    LONG lOffset = ( LONG ) ( pFunc->pCode[ lPCodePos + 1 ] );
+   //
+   //    if( lOffset > 127 )
+   //       lOffset -= 256;
+   //
+   //    fprintf( cargo->yyc, "\t/* %li (abs: %05li) */", lOffset, ( LONG ) ( lPCodePos + lOffset ) );
+   // }
+   // fprintf( cargo->yyc, "\n" );
+
    return 2;
 }
 
@@ -688,18 +700,27 @@ static HB_GENC_FUNC( hb_p_jumpfar )
 
 static HB_GENC_FUNC( hb_p_jumpfalsenear )
 {
-   fprintf( cargo->yyc, "\tHB_P_JUMPFALSENEAR, %i,",
-            pFunc->pCode[ lPCodePos + 1 ] );
-   if( cargo->bVerbose )
-   {
-      LONG lOffset = ( LONG ) ( pFunc->pCode[ lPCodePos + 1 ] );
+   LONG lOffset = ( LONG ) ( pFunc->pCode[ lPCodePos + 1 ] );
 
-      if( lOffset > 127 )
-         lOffset -= 256;
+   if( lOffset > 127 )
+      lOffset -= 256;
 
-      fprintf( cargo->yyc, "\t/* %li (abs: %05li) */", lOffset, ( LONG ) ( lPCodePos + lOffset ) );
-   }
-   fprintf( cargo->yyc, "\n" );
+   fprintf( cargo->yyc, "  IL_%04lX:  ", lPCodePos );
+   fprintf( cargo->yyc, "brfalse.s" );
+   fprintf( cargo->yyc, "  IL_%04lX\n", ( LONG ) ( lPCodePos + lOffset ) );
+
+   // fprintf( cargo->yyc, "\tHB_P_JUMPFALSENEAR, %i,",
+   //          pFunc->pCode[ lPCodePos + 1 ] );
+   // if( cargo->bVerbose )
+   // {
+   //    LONG lOffset = ( LONG ) ( pFunc->pCode[ lPCodePos + 1 ] );
+   //
+   //    if( lOffset > 127 )
+   //       lOffset -= 256;
+   //
+   //    fprintf( cargo->yyc, "\t/* %li (abs: %05li) */", lOffset, ( LONG ) ( lPCodePos + lOffset ) );
+   // }
+   // fprintf( cargo->yyc, "\n" );
    return 2;
 }
 
@@ -804,12 +825,18 @@ static HB_GENC_FUNC( hb_p_lessequal )
    HB_SYMBOL_UNUSED( pFunc );
    HB_SYMBOL_UNUSED( lPCodePos );
 
-   fprintf( cargo->yyc, "\tHB_P_LESSEQUAL,\n" );
+   fprintf( cargo->yyc, "  IL_%04lX:  ", lPCodePos );
+   fprintf( cargo->yyc, "call bool ObjLessEqual( object, object )\n" );
+
+   // fprintf( cargo->yyc, "\tHB_P_LESSEQUAL,\n" );
    return 1;
 }
 
 static HB_GENC_FUNC( hb_p_line )
 {
+   fprintf( cargo->yyc, "  IL_%04lX:  ", lPCodePos );
+   fprintf( cargo->yyc, "nop  // HB_P_LINE\n" );
+
    // if( cargo->bVerbose )
    //    fprintf( cargo->yyc, "/* %05li */ ", lPCodePos );
    // else
@@ -1047,7 +1074,7 @@ static HB_GENC_FUNC( hb_p_plus )
    HB_SYMBOL_UNUSED( pFunc );
    HB_SYMBOL_UNUSED( lPCodePos );
 
-   fprintf( cargo->yyc, "   call object AddObjects( object, object )\n" );
+   fprintf( cargo->yyc, "   call object ObjAdd( object, object )\n" );
    // fprintf( cargo->yyc, "\tHB_P_PLUS,\n" );
 
    return 1;
@@ -1141,9 +1168,9 @@ static HB_GENC_FUNC( hb_p_poplocal )
 static HB_GENC_FUNC( hb_p_poplocalnear )
 {
    // important: check the below code for codeblock locals management
+   fprintf( cargo->yyc, "  IL_%04lX:  ", lPCodePos );
    // warning: IL requires zero based locals index
-
-   fprintf( cargo->yyc, "   stloc.%i\n", pFunc->pCode[ lPCodePos + 1 ] - 1 );
+   fprintf( cargo->yyc, "stloc.%i\n", pFunc->pCode[ lPCodePos + 1 ] - 1 );
 
    // fprintf( cargo->yyc, "\tHB_P_POPLOCALNEAR, %i,",
    //          pFunc->pCode[ lPCodePos + 1 ] );
@@ -1354,10 +1381,11 @@ static HB_GENC_FUNC( hb_p_pushfield )
 
 static HB_GENC_FUNC( hb_p_pushbyte )
 {
+   fprintf( cargo->yyc, "  IL_%04lX:  ", lPCodePos );
    // load constant numeric onto the stack
-   fprintf( cargo->yyc, "   ldc.i4.s   %i\n", pFunc->pCode[ lPCodePos + 1 ] );
+   fprintf( cargo->yyc, "ldc.i4.s   %i\n", pFunc->pCode[ lPCodePos + 1 ] );
    // turn the stack value into an object
-   fprintf( cargo->yyc, "   box        [mscorlib]System.Int32\n" );
+   fprintf( cargo->yyc, "            box [mscorlib]System.Int32\n" );
 
    // fprintf( cargo->yyc, "\tHB_P_PUSHBYTE, %i,",
    //          pFunc->pCode[ lPCodePos + 1 ] );
@@ -1411,8 +1439,9 @@ static HB_GENC_FUNC( hb_p_pushlocal )
 static HB_GENC_FUNC( hb_p_pushlocalnear )
 {
    // Important: check the below code for codeblocks locals
+   fprintf( cargo->yyc, "  IL_%04lX:  ", lPCodePos );
    // Warning: IL uses zero based locals indexes
-   fprintf( cargo->yyc, "   ldloc.%i\n", pFunc->pCode[ lPCodePos + 1 ] - 1 );
+   fprintf( cargo->yyc, "ldloc.%i\n", pFunc->pCode[ lPCodePos + 1 ] - 1 );
 
    // fprintf( cargo->yyc, "\tHB_P_PUSHLOCALNEAR, %i,",
    //          pFunc->pCode[ lPCodePos + 1 ] );
@@ -1607,7 +1636,8 @@ static HB_GENC_FUNC( hb_p_pushstrshort )
    USHORT wLen = pFunc->pCode[ lPCodePos + 1 ];
 
    // fprintf( cargo->yyc, "\tHB_P_PUSHSTRSHORT, %i,", pFunc->pCode[ lPCodePos + 1 ] );
-   fprintf( cargo->yyc, "   ldstr " );
+   fprintf( cargo->yyc, "  IL_%04lX:  ", lPCodePos );
+   fprintf( cargo->yyc, "ldstr " );
 
    // if( cargo->bVerbose )
    //      fprintf( cargo->yyc, "\t/* %i */", wLen );
@@ -1657,6 +1687,9 @@ static HB_GENC_FUNC( hb_p_pushsymnear )
    //         pFunc->pCode[ lPCodePos + 1 ] );
    // if( cargo->bVerbose )
    //    fprintf( cargo->yyc, "\t/* %s */", hb_compSymbolGetPos( pFunc->pCode[ lPCodePos + 1 ] )->szName );
+   fprintf( cargo->yyc, "  IL_%04lX:  ", lPCodePos );
+   fprintf( cargo->yyc, "nop\n" );
+
    szSymbol = hb_compSymbolGetPos( pFunc->pCode[ lPCodePos + 1 ] )->szName;
    bFirstSymbolParam = TRUE;
    // fprintf( cargo->yyc, "   call void %s()\n", hb_compSymbolGetPos( pFunc->pCode[ lPCodePos + 1 ] )->szName );
@@ -1848,7 +1881,12 @@ static HB_GENC_FUNC( hb_p_one )
    HB_SYMBOL_UNUSED( pFunc );
    HB_SYMBOL_UNUSED( lPCodePos );
 
-   fprintf( cargo->yyc, "\tHB_P_ONE,\n" );
+   fprintf( cargo->yyc, "   ldc.i4.1\n" );
+   // turn the stack value into an object
+   fprintf( cargo->yyc, "   box [mscorlib]System.Int32\n" );
+
+   // fprintf( cargo->yyc, "\tHB_P_ONE,\n" );
+
    return 1;
 }
 
@@ -2100,10 +2138,10 @@ static void hb_compGenCCompact( PFUNCTION pFunc, FILE * yyc )
 
 static void hb_genNetFunctions( FILE * yyc )
 {
-   int i = 0;
+   int i;
 
    // generated IL code for C# source code:
-   // public static object AddObjects( object a, object b )
+   // public static object ObjAdd( object a, object b )
    // {
    //    if( a.GetType() == typeof( int ) && b.GetType() == typeof( int ) )
    //       return ( int ) a + ( int ) b;
@@ -2113,11 +2151,11 @@ static void hb_genNetFunctions( FILE * yyc )
    //
    //    return null;
    // }
-   // VERY IMPORTANT: As AddObjects() is a public method, not specific to a Class,
+   // VERY IMPORTANT: As ObjAdd() is a public method, not specific to a Class,
    // then arguments have to be decreased, as on a normal method, argument 0 is Self.
 
-   char * AddObjects[] = {
-"\n.method public static object AddObjects(object a, object b)",
+   char * ObjAdd[] = {
+"\n.method public static object ObjAdd(object a, object b)",
 "{",
 "  .maxstack  2",
 "  .locals init (object V_0)",
@@ -2165,6 +2203,52 @@ static void hb_genNetFunctions( FILE * yyc )
 "  IL_0078:  ret",
 "}", 0 };
 
-   while( AddObjects[ i ] != 0 )
-      fprintf( yyc, "%s\n", AddObjects[ i++ ] );
+   // public static bool ObjLessEqual( object a, object b )
+   // {
+   //    if( a.GetType() == typeof( int ) && b.GetType() == typeof( int ) )
+   //       return ( int ) a <= ( int ) b;
+   //
+   //    return false;
+   // }
+
+   char * ObjLessEqual[] = {
+"\n.method public static bool ObjLessEqual( object a, object b )",
+"{",
+"  .maxstack  2",
+"  .locals init (bool V_0)",
+"  IL_0000:  ldarg.0",
+"  IL_0001:  callvirt   instance class [mscorlib]System.Type [mscorlib]System.Object::GetType()",
+"  IL_0006:  ldtoken    [mscorlib]System.Int32",
+"  IL_000b:  call       class [mscorlib]System.Type [mscorlib]System.Type::GetTypeFromHandle(valuetype [mscorlib]System.RuntimeTypeHandle)",
+"  IL_0010:  bne.un.s   IL_003a",
+"  IL_0012:  ldarg.1",
+"  IL_0013:  callvirt   instance class [mscorlib]System.Type [mscorlib]System.Object::GetType()",
+"  IL_0018:  ldtoken    [mscorlib]System.Int32",
+"  IL_001d:  call       class [mscorlib]System.Type [mscorlib]System.Type::GetTypeFromHandle(valuetype [mscorlib]System.RuntimeTypeHandle)",
+"  IL_0022:  bne.un.s   IL_003a",
+"  IL_0024:  ldarg.0",
+"  IL_0025:  unbox      [mscorlib]System.Int32",
+"  IL_002a:  ldind.i4",
+"  IL_002b:  ldarg.1",
+"  IL_002c:  unbox      [mscorlib]System.Int32",
+"  IL_0031:  ldind.i4",
+"  IL_0032:  cgt",
+"  IL_0034:  ldc.i4.0",
+"  IL_0035:  ceq",
+"  IL_0037:  stloc.0",
+"  IL_0038:  br.s       IL_003e",
+"  IL_003a:  ldc.i4.0",
+"  IL_003b:  stloc.0",
+"  IL_003c:  br.s       IL_003e",
+"  IL_003e:  ldloc.0",
+"  IL_003f:  ret",
+"}", 0 };
+
+   i = 0;
+   while( ObjAdd[ i ] != 0 )
+      fprintf( yyc, "%s\n", ObjAdd[ i++ ] );
+
+   i = 0;
+   while( ObjLessEqual[ i ] != 0 )
+      fprintf( yyc, "%s\n", ObjLessEqual[ i++ ] );
 }
