@@ -5,8 +5,8 @@
 
 #TRANSLATE AS NEW <ClassName> => AS CLASS <ClassName> := <ClassName>():New()
 
-DECLARE nMyFun() AS NUM
-DECLARE MyClass cVar AS CHAR
+DECLARE nMyFun() AS NUMERIC
+DECLARE MyClass cVar AS STRING
 
 Function Main()
 

@@ -50,11 +50,11 @@ HB_FUNC( SCROLL )
 
    /* Enforce limits of (0,0) to (MAXROW(),MAXCOL()) */
 
-   iTop = hb_parni( 1 );
+   iTop = hb_parni( 1 ); /* Defaults to zero on bad type */
    if( iTop < 0 ) iTop = 0;
    else if( iTop > iMaxRow ) iTop = iMaxRow;
 
-   iLeft = hb_parni( 2 );
+   iLeft = hb_parni( 2 ); /* Defaults to zero on bad type */
    if( iLeft < 0 ) iLeft = 0;
    else if( iLeft > iMaxCol ) iLeft = iMaxCol;
 

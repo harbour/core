@@ -69,30 +69,13 @@
 /* Strong typing */
 
 #translate AS ARRAY [OF <type>] =>
-
-#translate AS CHAR =>
-#translate AS CHARACTER =>
 #translate AS STRING =>
-
 #translate AS CLASS <ClassName> =>
-#translate AS STRU <StruName> =>
-#translate AS STRUCTURE <StruName> =>
-
-#translate AS NUM =>
 #translate AS NUMERIC =>
-
 #translate AS DATE =>
-#translate AS BLOCK =>
-
-#translate AS OBJ =>
+#translate AS CODEBLOCK =>
 #translate AS OBJECT =>
-
-#translate AS BOOL =>
-#translate AS BOOLEAN =>
-#translate AS LOG =>
 #translate AS LOGICAL =>
-
-#translate AS VAR =>
-#translate AS VARIANT =>
+#translate AS USUAL =>
 
 #endif

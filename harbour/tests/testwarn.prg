@@ -6,69 +6,52 @@
 #ifdef __HARBOUR__
    #pragma -es0
 #else
-    #TRANSLATE AS ARRAY [OF <type>] =>
+   #translate AS ARRAY [OF <type>] =>
+   #translate AS STRING =>
+   #translate AS CLASS <ClassName> =>
+   #translate AS NUMERIC =>
+   #translate AS DATE =>
+   #translate AS CODEBLOCK =>
+   #translate AS OBJECT =>
+   #translate AS LOGICAL =>
+   #translate AS USUAL =>
 
-    #TRANSLATE AS CHAR =>
-    #TRANSLATE AS CHARACTER =>
-    #TRANSLATE AS STRING =>
-
-    #TRANSLATE AS CLASS <ClassName> =>
-    #TRANSLATE AS STRU <StruName> =>
-    #TRANSLATE AS STRUCTURE <StruName> =>
-
-    #TRANSLATE AS NUM =>
-    #TRANSLATE AS NUMERIC =>
-
-    #TRANSLATE AS DATE =>
-    #TRANSLATE AS BLOCK =>
-
-    #TRANSLATE AS OBJ =>
-    #TRANSLATE AS OBJECT =>
-
-    #TRANSLATE AS BOOL =>
-    #TRANSLATE AS BOOLEAN =>
-    #TRANSLATE AS LOG =>
-    #TRANSLATE AS LOGICAL =>
-
-    #TRANSLATE AS VAR =>
-    #TRANSLATE AS VARIANT =>
-
-    #COMMAND DECLARE <*x*> =>
+   #command DECLARE <*x*> =>
 #endif
 
 DECLARE nMyFunc( cVar AS STRING, @nVar AS NUMERIC ) AS NUMERIC
 
-DECLARE cOtherFunc( ) AS CHAR
+DECLARE cOtherFunc( ) AS STRING
 
-DECLARE cOtherFunc( @cVar as char, optional nVar as num, optional other as variant ) AS CHAR
+DECLARE cOtherFunc( @cVar as string, optional nVar as numeric, optional other as usual ) AS STRING
 
-DECLARE Seconds() AS NUM
+DECLARE Seconds() AS NUMERIC
 
 DECLARE Int( n AS NUMERIC ) AS NUMERIC
 
 DECLARE TEST() AS NUMERIC
 
 DECLARE MyClass                              ;
-        nMyFunc( nVal As Num ) As Num
+        nMyFunc( nVal AS NUMERIC) As Num
 
 DECLARE MyClass                              ;
-        nMyFunc( nVal As Num ) As Num ;
-        nMyFunc( nVal As Num ) As Num ;
+        nMyFunc( nVal AS NUMERIC ) AS NUMERIC ;
+        nMyFunc( nVal AS NUMERIC ) AS NUMERIC ;
         cMyData    ;
         aInstances AS Array Of Object MyClass ;
         oNext( oInstance AS Class MyClass ) As Class MyClass
 
 DECLARE OtherClass                              ;
-        nMyFunc( nVal As Num ) As Num ;
-        nMyFunc( nVal As Num ) As Num ;
+        nMyFunc( nVal AS NUMERIC ) AS NUMERIC ;
+        nMyFunc( nVal AS NUMERIC ) AS NUMERIC ;
         cMyData    ;
         aInstances AS Array Of Object MyClass ;
         oNext( oInstance AS Class OtherClass ) As Class MyClass
 
-FIELD a AS CHAR
-FIELD b AS CHAR
+FIELD a AS STRING
+FIELD b AS STRING
 
-MEMVAR Var1 AS CHAR
+MEMVAR Var1 AS STRING
 
 STATIC lGlobal AS LOGICAL
 
@@ -76,15 +59,15 @@ PROCEDURE THEMAIN( optional )
 
   STATIC lStatic := 0, oMyObj As Class WrongClass
 
-  LOCAL cVar AS CHAR := [declare function]
+  LOCAL cVar AS STRING := [declare function]
 
-  LOCAL a As Char, oB AS Class MyClass, c AS Char, oD AS Class OtherClass
+  LOCAL a As STRING, oB AS Class MyClass, c AS STRING, oD AS Class OtherClass
 
-  FIELD b AS NUM
+  FIELD b AS NUMERIC
 
-  MEMVAR Var1 AS NUM
+  MEMVAR Var1 AS NUMERIC
 
-  PRIVATE TEST AS CHAR
+  PRIVATE TEST AS STRING
 
   USE TEMP
 
@@ -147,7 +130,7 @@ RETURN
 
 PROC MAIN1()
 
-  PRIVATE OTHER, TEST AS CHAR
+  PRIVATE OTHER, TEST AS STRING
 
   Var1 := M->TEST
 
@@ -178,7 +161,7 @@ Return( NIL )
 
 FUNCTION Main3()
 
-   LOCAL n AS NUMERIC, cVar AS CHARACTER, a[5,5,5] AS ARRAY OF Char
+   LOCAL n AS NUMERIC, cVar AS STRING, a[5,5,5] AS ARRAY OF STRING
 
    cVar := a[1]
 
@@ -200,7 +183,7 @@ FUNCTION Main3()
 
    n[2] := 4
 
-   cVar := {|nb AS NUMERIC , cb AS CHARACTER, db AS DATE| n := .F., nb := 'A', cb := 1, db := 0, n := 'wrong type', 0 }
+   cVar := {|nb AS NUMERIC , cb AS STRING, db AS DATE| n := .F., nb := 'A', cb := 1, db := 0, n := 'wrong type', 0 }
 
    ? "This is a compiler test."
 
@@ -216,8 +199,8 @@ FUNCTION Main3()
 
 FUNCTION SomeTest( lVar AS LOGICAL )
 
-   LOCAL nVar AS NUMERIC, cVar AS CHARACTER, lVar2 AS LOGICAL, nNoType := 3
-   PRIVATE cMemVar1 AS CHARACTER
+   LOCAL nVar AS NUMERIC, cVar AS STRING, lVar2 AS LOGICAL, nNoType := 3
+   PRIVATE cMemVar1 AS STRING
 
         nVar := .T.
 
@@ -241,7 +224,7 @@ FUNCTION SomeTest( lVar AS LOGICAL )
 
    NondDeclared := 2
 
-   cVar := {|n AS NUMERIC , c AS CHARACTER, d AS DATE| n := nMyFunc( n,c,d ), c := 2  }
+   cVar := {|n AS NUMERIC , c AS STRING, d AS DATE| n := nMyFunc( n,c,d ), c := 2  }
 
         nVar := 8 + cVar
 

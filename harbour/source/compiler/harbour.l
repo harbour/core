@@ -1378,42 +1378,29 @@ Separator     {SpaceTab}
                 }
               }
 
+/* TODO: 4 character abbreviation should be added to be VO compatible 
+         [vszakats] */
+
+/* TODO: VOID should be added as a new type for NIL. [vszakats] */
+
 "as array"           { return AS_ARRAY; }
-"as block"           { return AS_BLOCK; }
-"as char"            { return AS_CHARACTER; }
-"as character"       { return AS_CHARACTER; }
+"as codeblock"       { return AS_BLOCK; }
 "as string"          { return AS_CHARACTER; }
 "as class"           { return AS_CLASS; }
-"as stru"            { return AS_CLASS; }
-"as structure"       { return AS_CLASS; }
 "as date"            { return AS_DATE; }
 "as logical"         { return AS_LOGICAL; }
-"as bool"            { return AS_LOGICAL; }
-"as boolean"         { return AS_LOGICAL; }
-"as num"             { return AS_NUMERIC; }
 "as numeric"         { return AS_NUMERIC; }
-"as obj"             { return AS_OBJECT; }
 "as object"          { return AS_OBJECT; }
-"as var"             { return AS_VARIANT; }
-"as variant"         { return AS_VARIANT; }
+"as usual"           { return AS_VARIANT; }
 
-"as array of var"       { return AS_ARRAY; }
-"as array of variant"   { return AS_ARRAY; }
+"as array of usual"     { return AS_ARRAY; }
 "as array of array"     { return AS_ARRAY_ARRAY; }
-"as array of block"     { return AS_BLOCK_ARRAY; }
-"as array of char"      { return AS_CHARACTER_ARRAY; }
-"as array of character" { return AS_CHARACTER_ARRAY; }
+"as array of codeblock" { return AS_BLOCK_ARRAY; }
 "as array of string"    { return AS_CHARACTER_ARRAY; }
 "as array of class"     { return AS_CLASS_ARRAY; }
-"as array of stru"      { return AS_CLASS_ARRAY; }
-"as array of structure" { return AS_CLASS_ARRAY; }
 "as array of date"      { return AS_DATE_ARRAY; }
 "as array of logical"   { return AS_LOGICAL_ARRAY; }
-"as array of bool"      { return AS_LOGICAL_ARRAY; }
-"as array of boolean"   { return AS_LOGICAL_ARRAY; }
-"as array of num"       { return AS_NUMERIC_ARRAY; }
 "as array of numeric"   { return AS_NUMERIC_ARRAY; }
-"as array of obj"       { return AS_OBJECT_ARRAY; }
 "as array of object"    { return AS_OBJECT_ARRAY; }
 
 %{
