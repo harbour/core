@@ -52,3 +52,26 @@
 
 /* ************************************************************************* */
 
+#define HGF_EV_MENU            0x0001
+#define HGF_EV_CLICK           0x0002
+#define HGF_EV_CLOSE           0x0003
+#define HGF_EV_DESTROY         0x0004
+#define HGF_EV_LBUTTONPRESSED  0x0005
+#define HGF_EV_RBUTTONPRESSED  0x0006
+#define HGF_EV_MBUTTONPRESSED  0x0007
+
+/* ************************************************************************* */
+
+#define HGF_EVENTDATA_MAXLEN        3
+
+/* ************************************************************************* */
+
+/* These are for HGF GTK only */
+
+/* Harbour equivalent menu types of GTK+ menu types */
+#define HBGTKMENUTYPEBAR   0
+#define HBGTKMENUTYPEPOP   1
+
+#define HGF_GTK_WIDGET_GEOMETRY_UNKNOWN   -99999
+
+/* ************************************************************************* */

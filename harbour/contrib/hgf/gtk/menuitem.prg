@@ -5,9 +5,9 @@
 /*
  * Harbour Project source code:
  * Harbour GUI framework for Gtk
+ * Class HBMenuItem
  *
  * Copyright 2001 Antonio Linares <alinares@fivetech.com>
- * Copyright 2001 Maurilio Longo <maurilio.longo@libero.it>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -49,57 +49,86 @@
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
  *
+ * Additional Copyright notes :
+ *  adapted for Hgf Gtk by Marek Paliwoda <paliwoda@inetia.pl>
  */
 
 /* ********************************************************************* */
 
 #include "common.ch"
 #include "hbclass.ch"
+#include "harbgtk.ch"
 
 /* ********************************************************************* */
 
-CLASS TMenuItem
+CLASS HBMenuItem FROM HBPersistent
 
-    DATA   cCaption  INIT ""  // Specifies the text of the menu item
-    DATA   cAction   INIT ""  // A character description of the method to invoke
-    DATA   nId                // Command value to send to the container form
-    DATA   lEnabled  INIT .T. // Specifies whether the menu item is enabled
-    DATA   aItems    INIT {}  // Contains the menu items in the submenu of the menu item
-    DATA   oParent            // Identifies the parent menu item of this menu item
-    DATA   nHandle   INIT 0   // The handle of the submenu of this menu item
-    DATA   hMenuItem INIT 0   // The handle of this menu item
+    DATA   Caption   INIT ""  PROPERTY // Specifies the text of the menu item
+    DATA   Name               PROPERTY // The name of this component
+    DATA   OnClick            PROPERTY // A character description of the method to invoke
+    DATA   Enabled   INIT .T. PROPERTY // Specifies whether the menu item is enabled
+    DATA   Items     INIT {}  PROPERTY // Contains the menu items in the submenu of the menu item
+
+    DATA   nId                   // Command value to send to the container form
+    DATA   oParent               // Identifies the parent menu item of this menu item
+    DATA   Container
+
+    DATA   nHandle   INIT 0      // The handle of the submenu of this menu item
+    DATA   hMenuItem INIT 0      // The handle of this menu item
 
     CLASSDATA nIdStart INIT 110  // start value for commands value to assign to menu items
 
-    METHOD New( oOwner )      // Creates a new menu item
-    METHOD Add( oMenuItem )   // Adds a new drop down menu item
+    METHOD New( oOwner )         // Creates a new menu item
+    METHOD Add( oMenuItem )      // Adds a new drop down menu item
+    METHOD FindItem( nId )       // Searches for a sub menuitem given its id
 
 ENDCLASS
 
 /* ********************************************************************* */
 
-METHOD New( oOwner ) CLASS TMenuItem
+METHOD New( oOwner ) CLASS HBMenuItem
 
-    ::nId      := ::nIdStart++
-    ::oParent  := oOwner
+    ::nId := ::nIdStart++
+    IF oOwner != nil
+        ::Container := oOwner:Container
+    ENDIF
+    ::oParent := oOwner
 
     // NOTE : physical creation is delayed until MenuItem is added to a parent
 RETURN Self
 
 /* ********************************************************************* */
 
-METHOD Add( oMenuItem ) CLASS TMenuItem
+METHOD Add( oMenuItem ) CLASS HBMenuItem
     /* required because of a stupid Harbour compiler error */
     LOCAL nHandle := ::nHandle
 
     oMenuItem:hMenuItem := hb_GtkAddMenuItem( @nHandle, ::hMenuItem, ;
-         oMenuItem:hMenuItem, oMenuItem:cCaption, oMenuItem:nId,     ;
-         oMenuItem:lEnabled )
+         oMenuItem:hMenuItem, oMenuItem:Caption, oMenuItem:nId,     ;
+         oMenuItem:Enabled, ::Container:hWnd[ 1 ] )
 
     ::nHandle := nHandle
 
-    AAdd( ::aItems, oMenuItem )
-
+    oMenuItem:oParent = Self
+    AAdd( ::Items, oMenuItem )
 RETURN nil
+
+/* ********************************************************************* */
+
+METHOD FindItem( nId ) CLASS HBMenuItem
+   LOCAL oMenuItem, n
+
+   FOR n = 1 TO Len( ::Items )
+      IF ( oMenuItem := ::Items[ n ] ):nId == nId
+         RETURN oMenuItem
+      ELSE
+         IF oMenuItem:Items != nil
+            IF ( oMenuItem := oMenuItem:FindItem( nId ) ) != nil
+               RETURN oMenuItem
+            ENDIF
+         ENDIF
+      ENDIF
+   NEXT
+RETURN oMenuItem
 
 /* ********************************************************************* */

@@ -60,12 +60,21 @@
 
 /* ********************************************************************* */
 
+HB_FUNC( HB_GTKCREATEMENU )
+{
+    GtkWidget *Menu = gtk_menu_new();
+    hb_retnl( GPOINTER_TO_UINT( Menu ) );
+}
+
+/* ********************************************************************* */
+
 HB_FUNC( HB_GTKCREATEMENUBAR )
 {
     GtkBox *Box = ( GtkBox * )GUINT_TO_POINTER( hb_parnl( 1 ) );
     if( Box )
     {
         GtkWidget *MenuBar = gtk_menu_bar_new();
+        gtk_menu_bar_set_shadow_type( GTK_MENU_BAR( MenuBar ), GTK_SHADOW_OUT );
         gtk_box_pack_start( Box, MenuBar, FALSE, FALSE, 0 );
         gtk_box_reorder_child( Box, MenuBar, 0 );
 
@@ -77,6 +86,15 @@ HB_FUNC( HB_GTKCREATEMENUBAR )
 
 /* ********************************************************************* */
 
+static void ActivateMenuItem( GtkWidget *Widget, gpointer Data )
+{
+    GtkWidget *Form = ( GtkWidget * )gtk_object_get_data( GTK_OBJECT( Widget ), "Form" );
+    if( !( GTK_MENU_ITEM( Widget )->submenu ) )
+        CallHarbour( Form, Widget, HGF_EV_MENU, GPOINTER_TO_INT( Data ), ( PHB_ITEM )NULL );
+}
+
+/* ********************************************************************* */
+
 HB_FUNC( HB_GTKBARADDMENUITEM )
 {
     GtkMenuBar *Bar = ( GtkMenuBar * )GUINT_TO_POINTER( hb_parnl( 1 ) );
@@ -84,14 +102,24 @@ HB_FUNC( HB_GTKBARADDMENUITEM )
     if( Bar )
     {
         gchar *Caption = ( gchar * )hb_parc( 2 );
-        /* gint Id = ( gint )hb_parni( 3 ); */
+        gint ItemID = ( gint )hb_parni( 3 );
         gboolean Enabled = ( gboolean )hb_parl( 4 );
+        GtkWidget *Form = ( GtkWidget * )GUINT_TO_POINTER( hb_parnl( 5 ) );
 
         GtkWidget *Item = gtk_menu_item_new_with_label( Caption );
-        gtk_widget_set_sensitive( Item, Enabled );
-        gtk_widget_show( Item );
-        gtk_menu_bar_append( GTK_MENU_BAR( Bar ), Item );
 
+        gtk_widget_set_sensitive( Item, Enabled );
+        gtk_object_set_data( GTK_OBJECT( Item ), "Form", ( gpointer )Form );
+
+        gtk_signal_connect
+        (
+            GTK_OBJECT( Item ),
+            "activate",
+            GTK_SIGNAL_FUNC( ( GtkSignalFunc ) ActivateMenuItem ),
+            GINT_TO_POINTER( ItemID )
+        );
+
+        gtk_menu_bar_append( GTK_MENU_BAR( Bar ), Item );
         hb_retnl( GPOINTER_TO_UINT( Item ) );
     }
     else
@@ -103,31 +131,38 @@ HB_FUNC( HB_GTKBARADDMENUITEM )
 HB_FUNC( HB_GTKADDMENUITEM )
 {
     GtkWidget *Menu = ( GtkWidget * )GUINT_TO_POINTER( hb_parnl( 1 ) );
-    GtkMenuItem *Self = ( GtkMenuItem * )GUINT_TO_POINTER( hb_parnl( 2 ) );
+    GtkMenuItem *Curr = ( GtkMenuItem * )GUINT_TO_POINTER( hb_parnl( 2 ) );
 
     if( !Menu )
     {
         Menu = gtk_menu_new();
-        gtk_menu_item_set_submenu( Self, Menu );
+        gtk_menu_item_set_submenu( Curr, Menu );
         hb_stornl( GPOINTER_TO_UINT( Menu ), 1 );
     }
 
-    if( Self )
+    if( Curr )
     {
         GtkWidget *Item = ( GtkWidget * )GUINT_TO_POINTER( hb_parnl( 3 ) );
         gchar *Caption = ( gchar * )hb_parc( 4 );
-        /* gint Id = ( gint )hb_parni( 5 ); */
+        gint ItemID = ( gint )hb_parni( 5 );
         gboolean Enabled = ( gboolean )hb_parl( 6 );
+        GtkWidget *Form = ( GtkWidget * )GUINT_TO_POINTER( hb_parnl( 7 ) );
 
         if( !Item )
-        {
             Item = gtk_menu_item_new_with_label( Caption );
-            gtk_widget_show( Item );
-        }
 
         gtk_widget_set_sensitive( Item, Enabled );
-        gtk_menu_append( GTK_MENU( Menu ), Item );
+        gtk_object_set_data( GTK_OBJECT( Item ), "Form", ( gpointer )Form );
 
+        gtk_signal_connect
+        (
+            GTK_OBJECT( Item ),
+            "activate",
+            GTK_SIGNAL_FUNC( ( GtkSignalFunc ) ActivateMenuItem ),
+            GINT_TO_POINTER( ItemID )
+        );
+
+        gtk_menu_append( GTK_MENU( Menu ), Item );
         hb_retnl( GPOINTER_TO_UINT( Item ) );
     }
     else

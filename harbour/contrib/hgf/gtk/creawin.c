@@ -60,37 +60,69 @@
 
 /* ********************************************************************* */
 
-/* "delete_event" event handler - will be used for VALID clause in the future */
 static gint DeleteEventWindowCallback( GtkWidget *Widget, GdkEventAny *Event, gpointer Data )
 {
-    gint DeleteAllowed = FALSE;
-
-    /* the code needs to be added here in the future */
-
-    return ( DeleteAllowed );
+    return( CallHarbour( Widget, Widget, HGF_EV_CLOSE, GPOINTER_TO_INT( Data ), ( PHB_ITEM )NULL ) );
 }
 
 /* ********************************************************************* */
 
-/* "destroy" signal handler */
 static gint DestroyWindowCallback( GtkWidget *Widget, gpointer Data )
 {
-    gint DestroyAllowed = FALSE;
+    gint Propagate = CallHarbour( Widget, Widget, HGF_EV_DESTROY, GPOINTER_TO_INT( Data ), ( PHB_ITEM )NULL );
 
-    /* the code needs to be added here in the future */
-
-    if( !DestroyAllowed )
+    if( !Propagate )
     {
-        /* the code needs to be added here in the future */
+        /* the code needs to be added here in the future ? */
 
         if( Widget == gtk_widget_get_toplevel( Widget ) )
             gtk_main_quit();
     }
 
-    return ( DestroyAllowed );
+    return ( Propagate );
 }
 
 /* ********************************************************************* */
+
+static gint ButtonPressCallback( GtkWidget *Widget, GdkEventButton *Event, gpointer Data )
+{
+    GtkWidget *Form = ( GtkWidget * )gtk_object_get_data( GTK_OBJECT( Widget ), "Form" );
+    gint Propagate = FALSE, ButtonNO = Event->button;
+
+    PHB_ITEM ReturnArray = hb_itemArrayNew( HGF_EVENTDATA_MAXLEN );
+    PHB_ITEM ArrayItem = hb_itemNew( NULL );
+
+    if( !Form ) Form = Widget;
+
+    hb_itemPutND( ArrayItem, ( double )Event->y );
+    hb_itemArrayPut( ReturnArray, 1, ArrayItem );
+
+    hb_itemPutND( ArrayItem, ( double )Event->x );
+    hb_itemArrayPut( ReturnArray, 2, ArrayItem );
+
+    hb_itemPutNL( ArrayItem, ( LONG )Event->state & 0xFF );
+    hb_itemArrayPut( ReturnArray, 3, ArrayItem );
+
+    switch ( ButtonNO )
+    {
+        case 1 :
+            Propagate = CallHarbour( Form, Widget, HGF_EV_LBUTTONPRESSED, GPOINTER_TO_INT( Data ), ReturnArray );
+            break;
+        case 2 :
+            Propagate = CallHarbour( Form, Widget, HGF_EV_RBUTTONPRESSED, GPOINTER_TO_INT( Data ), ReturnArray );
+            break;
+        default :
+            Propagate = CallHarbour( Form, Widget, HGF_EV_MBUTTONPRESSED, GPOINTER_TO_INT( Data ), ReturnArray );
+            break;
+    }
+
+    hb_itemRelease( ReturnArray );
+    hb_itemRelease( ArrayItem );
+
+    return( Propagate );
+}
+
+/* ************************************************************************* */
 
 HB_FUNC( HB_GTKWINDOWCREATE )
 {
@@ -100,6 +132,8 @@ HB_FUNC( HB_GTKWINDOWCREATE )
 
     /* for the future enhancements */
     gint YSize=400, XSize=500;
+
+    gint WinID = ( gint )hb_parni( 1 );
 
     MainWin = gtk_window_new( GTK_WINDOW_TOPLEVEL );
     gtk_window_set_default_size( GTK_WINDOW( MainWin ), XSize, YSize );
@@ -112,28 +146,34 @@ HB_FUNC( HB_GTKWINDOWCREATE )
     Current = VBox;
 
     LayoutW = gtk_layout_new( NULL, NULL );
-    gtk_layout_set_size( GTK_LAYOUT( LayoutW ), XSize, YSize );
+    /* gtk_layout_set_size( GTK_LAYOUT( LayoutW ), XSize, YSize ); */
     gtk_box_pack_start( GTK_BOX( Current ), LayoutW, TRUE, TRUE, 0 );
 
-    /* for the future signal handling */
     gtk_signal_connect
     (
         GTK_OBJECT( MainWin ),
         "delete_event",
         GTK_SIGNAL_FUNC( ( GtkSignalFunc ) DeleteEventWindowCallback ),
-        ( gpointer ) NULL
+        GINT_TO_POINTER( WinID )
     );
 
-    /* for the future signal handling */
     gtk_signal_connect
     (
         GTK_OBJECT( MainWin ),
         "destroy",
         GTK_SIGNAL_FUNC( ( GtkSignalFunc ) DestroyWindowCallback ),
-        ( gpointer ) NULL
+        GINT_TO_POINTER( WinID )
     );
 
-    /* for the future enhancements */
+    gtk_widget_add_events( MainWin, GDK_BUTTON_PRESS_MASK );
+    gtk_signal_connect
+    (
+        GTK_OBJECT( MainWin ),
+        "button_press_event",
+        GTK_SIGNAL_FUNC( ButtonPressCallback ),
+        GINT_TO_POINTER( WinID )
+    );
+
     ScrlWin = MoveBar = MenuBar = NULL;
 
     {
@@ -171,7 +211,7 @@ HB_FUNC( HB_GTKWINDOWCREATE )
 
 /* ********************************************************************* */
 
-HB_FUNC( HB_GTKWINGETTEXT )
+HB_FUNC( HB_GTKWINDOWGETTEXT )
 {
     PHB_ITEM hWnd = hb_param( 1, HB_IT_ARRAY  );
 
@@ -186,13 +226,13 @@ HB_FUNC( HB_GTKWINGETTEXT )
 
 /* ********************************************************************* */
 
-HB_FUNC( HB_GTKWINSETTEXT )
+HB_FUNC( HB_GTKWINDOWSETTEXT )
 {
     PHB_ITEM hWnd = hb_param( 1, HB_IT_ARRAY  );
 
     if( hWnd )
     {
-        gchar *Title = hb_parc( 2 ); /* either tilte or "" */
+        gchar *Title = hb_parc( 2 );
         GtkWindow *Win = ( GtkWindow * )GUINT_TO_POINTER( hb_arrayGetNL( hWnd, 1 ) );
         gtk_window_set_title( Win, Title );
     }
@@ -210,6 +250,27 @@ HB_FUNC( HB_GTKSHOWMODAL )
         gtk_widget_show_all( Win );
         /* NOTE : this does not make any sense. It is only an example */
         gtk_main();
+    }
+}
+
+/* ********************************************************************* */
+
+HB_FUNC( HB_GTKWINDOWREQUESTDELETE )
+{
+    GtkWidget *Widget;
+    PHB_ITEM hWnd = hb_param( 1, HB_IT_ARRAY  );
+
+    if( hWnd )
+        Widget = ( GtkWidget * )GUINT_TO_POINTER( hb_arrayGetNL( hWnd, 1 ) );
+    else
+        Widget = ( GtkWidget * )GUINT_TO_POINTER( hb_parnl( 1 ) );
+
+    if( Widget )
+    {
+        GdkEvent Event;
+        Event.type = GDK_DELETE;
+        Event.any.window = Widget->window;
+        gdk_event_put( &Event );
     }
 }
 

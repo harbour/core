@@ -69,7 +69,9 @@
 /* delimiters into it */
 extern gchar *MultiLineDelimiters;
 
-/* a general Tooltips holder */
-extern GtkTooltips *MainTooltips;
+/* ************************************************************************* */
+
+/* calls Harbour level dispatcher */
+glong CallHarbour( GtkWidget *hWnd, GtkWidget *Widget, glong Command, gint ObjId, PHB_ITEM aParam );
 
 /* ************************************************************************* */
