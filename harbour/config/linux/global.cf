@@ -15,11 +15,10 @@ ifeq ($(HB_GT_LIB),)
    HB_GT_LIB = gtstd
 endif
 
+PRG_USR = $(PRG_USR) -DHB_LINUX
+
 ARCH_DIR = $(ARCH)/
 MK = $(MAKE)
-
-PRG_USR = -DHB_LINUX
-
 RM = rm -f
 RD = rm -f -r
 CP = cp -f

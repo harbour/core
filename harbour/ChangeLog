@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-12-02 15:30 UTC-0500 David G. Holm <dholm@jsd-llc.com>
+  * config/linux/global.cf
+    ! Add to PRG_USR instead of replacing it.
+  * source/rtl/set.c
+    ! When adding a new listener, set the next pointer to NULL.
+
 2002-12-03 22:40 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * makefile.bc
   * makefile.nt
