@@ -1,3 +1,14 @@
+2001-02-12 09:24 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * harbour/source/debug/dbgmenu.prg
+     + more options implemented.
+
+   * harbour/source/debug/dbgtwin.prg
+     + DATA lVisible added.
+
+   * harbour/source/debug/debugger.prg
+     + Methods Public(), Private(), Static(), Local(), All() and Sort() added
+     (many thanks to Luiz for the suggested code).
+
 2001-02-11 18:22 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * harbour/source/rdd/dbfntx/dbfntx1.c
      * few bugs fixed, related to using ntx in shared mode
