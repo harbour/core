@@ -105,6 +105,7 @@ local nDay
 // local nOldday
 local nMonth
 local nYear
+local nLDOM
 
 //   if nmth > 70 
 //      return ctod ("  /  /    ")
@@ -151,6 +152,11 @@ local nYear
 	 nMonth -= 12
 	 nYear++
       enddo
+   endif
+
+   // correction for different end of months
+   if nDay > (nLDOM := lastdayom (nMonth))
+     nDay := nLDOM
    endif
 
    ddate := stod (strzero (nYear, 4) + strzero (nMonth, 2) + strzero (nDay, 2))
