@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+    feature - in Clipper 5.3 it was absent for dbfntx.
+    + scopes implemented - you may now use ORDSCOPE() in DBFNTX.
+    + new items added to ntxOrderInfo:
+         DBOI_ISCOND, DBOI_ISDESC, DBOI_UNIQUE, DBOI_SCOPETOP, DBOI_SCOPEBOTTOM,
          DBOI_SCOPETOPCLEAR, DBOI_SCOPEBOTTOMCLEAR.
     * some cleanup.
   * source/rtl/set.c
