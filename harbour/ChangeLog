@@ -1,3 +1,15 @@
+2000-08-14 14:45 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+   * contrib/rdd_ads/ace.h
+     + Added separate test for RSXNT for definition of ENTRYPOINT.
+   * contrib/rdd_ads/ads1.c
+     + Added #include <ctype.h> to eliminate implicit declaration of
+       function 'tolower' warning in function `strcmpNoCase'
+   * contrib/rdd_ads/adsfunc.c
+     - Eliminated unused variable 'ulRetVal' in functions
+       HB_FUN_ADSISENCRYPTIONENABLED, HB_FUN_ADSISRECORDENCRYPTED,
+       and HB_FUN_ADSISTABLEENCRYPTED.
+
 2000-08-14 11:00 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * source/rtl/gtwin/gtwin.c
      * fixed handling of arrow keys for international keyboards

@@ -534,7 +534,6 @@ HB_FUNC( ADSDECRYPTRECORD )
 HB_FUNC( ADSISENCRYPTIONENABLED )
 {
    ADSAREAP pArea;
-   UNSIGNED32 ulRetVal;
    UNSIGNED16 usIsEnabled;
 
    pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
@@ -550,7 +549,6 @@ HB_FUNC( ADSISENCRYPTIONENABLED )
 HB_FUNC( ADSISRECORDENCRYPTED )
 {
    ADSAREAP pArea;
-   UNSIGNED32 ulRetVal;
    UNSIGNED16 usIsEnabled;
 
    pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
@@ -566,7 +564,6 @@ HB_FUNC( ADSISRECORDENCRYPTED )
 HB_FUNC( ADSISTABLEENCRYPTED )
 {
    ADSAREAP pArea;
-   UNSIGNED32 ulRetVal;
    UNSIGNED16 usIsEnabled;
 
    pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();

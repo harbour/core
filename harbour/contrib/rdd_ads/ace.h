@@ -31,7 +31,9 @@ typedef double         DOUBLE;
 #define EXTERN extern
 #define STATIC static
 
-#if defined( __GNUC__ )
+#if defined( __RSXNT__ )
+   #define ENTRYPOINT _export WINAPI
+#elif defined( __GNUC__ )
    #define ENTRYPOINT __attribute__ (( dllexport ))
 #elif defined( WIN32 ) && !defined( ASANT ) && !defined( __BORLANDC__ )
    #define ENTRYPOINT _declspec( dllexport ) WINAPI
