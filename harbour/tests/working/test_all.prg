@@ -9,6 +9,7 @@ Function Main( cOption )
 LOCAL aDir,f,o,cRead
 
 aDir:=Directory("*.PRG")
+
 o=fCreate("Test_All.Bat")
 IF !Empty( cOption ) .and. Upper( cOption ) == "HRB"
     fWrite(o,"del test_all.out"+chr(13)+chr(10))

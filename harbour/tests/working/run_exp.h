@@ -49,7 +49,7 @@ HARBOUR FCLOSE();
 HARBOUR FERASE();
 HARBOUR FRENAME();
 HARBOUR FSEEK();
-HARBOUR _FILE();
+HARBOUR FILE();
 HARBOUR FREADSTR();
 HARBOUR BIN2I();
 HARBOUR BIN2L();
@@ -168,7 +168,7 @@ static SYMBOL symbols[] = {
 { "FERASE",         FS_PUBLIC, FERASE        , 0 },
 { "FRENAME",        FS_PUBLIC, FRENAME       , 0 },
 { "FSEEK",          FS_PUBLIC, FSEEK         , 0 },
-{ "_FILE",          FS_PUBLIC, _FILE         , 0 },
+{ "FILE",           FS_PUBLIC, FILE         , 0 },
 { "FREADSTR",       FS_PUBLIC, FREADSTR      , 0 },
 { "BIN2I",          FS_PUBLIC, BIN2I         , 0 },
 { "BIN2L",          FS_PUBLIC, BIN2L         , 0 },

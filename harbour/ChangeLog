@@ -1,3 +1,9 @@
+19990525-10:03 CET Antonio Linares <alinares@fivetech.com>
+  * tests/working/runner.c (shouldn't this file be located at source/runner?)
+    - some small changes to admit FILE() Harbour name.
+  * tests/working/run_exp.h (shouldn't this file be located at include directory ?)
+    - some small changes to admit FILE() Harbour name.
+
 19990525-09:13 CET Antonio Linares <alinares@fivetech.com>
   * makefile.b32
     - project dependencies list order changed to properly build everything in one pass

@@ -1,6 +1,7 @@
 #include "pcode.h"
-#include <stdio.h>
 
+#define FILE _FILE
+#include <stdio.h>
 
 /* #if INTEL32 */
 static BYTE prgFunction[] = { 0x68, 0x00, 0x00, 0x00, 0x00,
@@ -52,8 +53,10 @@ void Do( WORD );
 ULONG FindSymbol( char *, PDYNFUNC, ULONG );
 void SafeRead( char *, int, int, FILE * );
 
-
+#undef FILE
 #include "run_exp.h"
+#define FILE _FILE
+
 /*
  *
  * This file contains the exportable functions available to the Harbour program
