@@ -1,3 +1,7 @@
+2001-07-16 15:19 GMT+1 Patrick Mast <harbour@PatrickMast.com>
+   * source/rtl/profiler.prg
+     * Renamed function from Profiler() to HB_Profiler()
+
 2001-07-16 13:00 GMT+1 Patrick Mast <harbour@PatrickMast.com>
    * source/rtl/profiler.prg
      - Removed <lOnlyUsed> parameter

@@ -59,7 +59,7 @@
  *           this Profiler(.t.), the profiler.txt will only be filled
  *           with used classes and/or functions.
  *
- *  2001-07-16 13:00 GMT+1
+ * 2001-07-16 13:00 GMT+1
  *    - Removed <lOnlyUsed> parameter
  *    + Added <cFile> parameter.
  *    + Added <lAll> parameter
@@ -82,11 +82,14 @@
  *      Profiler("profiler.txt", .t.)
  *       => Writes ALL profiler info to <profiler.txt> and returns Array of
  *          profiler info. Array contains ALL functions/classes.
+ *
+ * 2001-07-16 15:19 GMT+1
+ *    * Renamed function from Profiler() to HB_Profiler()
  */
 
 #define CRLF HB_OsNewLine()
 
-Function Profiler(cFile, lAll)
+Function HB_Profiler(cFile, lAll)
 LOCAL n, m, cClass, aFunProcInfo, aInfo, aMethodInfo
 LOCAL hFile, aProf:={}, cText:=""
 
