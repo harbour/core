@@ -751,7 +751,7 @@ PHB_ITEM hb_itemPutND( PHB_ITEM pItem, double dNumber )
       pItem = hb_itemNew( NULL );
 
    pItem->type = HB_IT_DOUBLE;
-   pItem->item.asDouble.length = ( dNumber > 10000000000.0 ) ? 20 : 10;
+   pItem->item.asDouble.length = ( dNumber >= 10000000000.0 || dNumber <= -1000000000.0 ) ? 20 : 10;
    pItem->item.asDouble.decimal = hb_set.HB_SET_DECIMALS;
    pItem->item.asDouble.value = dNumber;
 
@@ -795,7 +795,7 @@ PHB_ITEM hb_itemPutNLen( PHB_ITEM pItem, double dNumber, int iWidth, int iDec )
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutNLen(%p, %lf, %d, %d)", pItem, dNumber, iWidth, iDec));
 
    if( iWidth <= 0 || iWidth > 99 )
-      iWidth = ( dNumber > 10000000000.0 ) ? 20 : 10;
+      iWidth = ( dNumber >= 10000000000.0 || dNumber <= -1000000000.0 ) ? 20 : 10;
 
    if( iDec < 0 )
       iDec = hb_set.HB_SET_DECIMALS;
@@ -822,7 +822,7 @@ PHB_ITEM hb_itemPutNDLen( PHB_ITEM pItem, double dNumber, int iWidth, int iDec )
       pItem = hb_itemNew( NULL );
 
    if( iWidth <= 0 || iWidth > 99 )
-      iWidth = ( dNumber > 10000000000.0 ) ? 20 : 10;
+      iWidth = ( dNumber >= 10000000000.0 || dNumber <= -1000000000.0 ) ? 20 : 10;
 
    if( iDec < 0 )
       iDec = hb_set.HB_SET_DECIMALS;
@@ -1162,14 +1162,14 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
    if( pNumber )
    {
       /* Default to the width and number of decimals specified by the item,
-         with a limit of 20 integer places, plus one space for the sign. */
+         with a limit of 90 integer places, plus one space for the sign. */
       int iWidth;
       int iDec;
 
       hb_itemGetNLen( pNumber, &iWidth, &iDec );
 
-      if( iWidth > 20 )
-         iWidth = 20;
+      if( iWidth > 90 )
+         iWidth = 90;
 
       if( hb_set.HB_SET_FIXED )
          iDec = hb_set.HB_SET_DECIMALS;

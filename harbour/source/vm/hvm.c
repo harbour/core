@@ -37,6 +37,10 @@
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
  *
+ * Copyright 2000 Victor Szakats <info@szelvesz.hu>
+ *    hb_vmPushLongConst()
+ *    hb_vmPushDoubleConst()
+ *
  * Copyright 1999 Eddie Runia <eddie@runia.com>
  *    __VMVARSGET()
  *    __VMVARSLIST()
@@ -131,9 +135,11 @@ static void    hb_vmPushAlias( void );            /* pushes the current workarea
 static void    hb_vmPushAliasedField( PHB_SYMB ); /* pushes an aliased field on the eval stack */
 static void    hb_vmPushAliasedVar( PHB_SYMB );   /* pushes an aliased variable on the eval stack */
 static void    hb_vmPushBlock( BYTE * pCode, PHB_SYMB pSymbols ); /* creates a codeblock */
+static void    hb_vmPushDoubleConst( double dNumber, int iWidth, int iDec ); /* Pushes a double constant (pcode) */
 static void    hb_vmPushMacroBlock( BYTE * pCode, PHB_SYMB pSymbols ); /* creates a macro-compiled codeblock */
 static void    hb_vmPushLocal( SHORT iLocal );    /* pushes the containts of a local onto the stack */
 static void    hb_vmPushLocalByRef( SHORT iLocal );    /* pushes a local by refrence onto the stack */
+static void    hb_vmPushLongConst( long lNumber );  /* Pushes a long constant (pcode) */
 static void    hb_vmPushStatic( USHORT uiStatic );     /* pushes the containts of a static onto the stack */
 static void    hb_vmPushStaticByRef( USHORT uiStatic ); /* pushes a static by refrence onto the stack */
 static void    hb_vmPushVariable( PHB_SYMB pVarSymb ); /* pushes undeclared variable */
@@ -738,12 +744,12 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_PUSHLONG:
-            hb_vmPushLong( * ( long * ) ( &pCode[ w + 1 ] ) );
+            hb_vmPushLongConst( * ( long * ) ( &pCode[ w + 1 ] ) );
             w += 5;
             break;
 
          case HB_P_PUSHDOUBLE:
-            hb_vmPushDouble( * ( double * ) ( &pCode[ w + 1 ] ), ( int ) * ( BYTE * ) &pCode[ w + 1 + sizeof( double ) ] );
+            hb_vmPushDoubleConst( * ( double * ) ( &pCode[ w + 1 ] ), -1, ( int ) * ( BYTE * ) &pCode[ w + 1 + sizeof( double ) ] );
             w += 1 + sizeof( double ) + 1;
             break;
 
@@ -1184,13 +1190,13 @@ static void hb_vmNegate( void )
    else if( HB_IS_LONG( pItem ) )
    {
       pItem->item.asLong.value = -pItem->item.asLong.value;
-      pItem->item.asLong.length = 10;
+      pItem->item.asLong.length = ( pItem->item.asLong.value <= -1000000000 ) ? 20 : 10;
    }
    else if( HB_IS_DOUBLE( pItem ) )
    {
       pItem->item.asDouble.value = -pItem->item.asDouble.value;
-      pItem->item.asDouble.length = ( pItem->item.asDouble.value >= 10000000000.0 
-                                   || pItem->item.asDouble.value <= -10000000000.0 ) ? 20 : 10;
+      /* NOTE: Yes, -999999999.0 is right instead of-1000000000.0 [vszakats] */
+      pItem->item.asDouble.length = ( pItem->item.asDouble.value >= 10000000000.0 || pItem->item.asDouble.value <= -999999999.0 ) ? 20 : 10;
    }
    else
    {
@@ -2815,9 +2821,41 @@ void hb_vmPushLong( long lNumber )
    hb_stackPush();
 }
 
+void hb_vmPushLongConst( long lNumber )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmPushLongConst(%ld)", lNumber));
+
+   hb_stack.pPos->type = HB_IT_LONG;
+   hb_stack.pPos->item.asLong.value = lNumber;
+
+   if( lNumber >= 1000000000 )
+      hb_stack.pPos->item.asLong.length = 11;
+   else if( lNumber <= -1000000000 )
+      hb_stack.pPos->item.asLong.length = 20;
+   else
+      hb_stack.pPos->item.asLong.length = 10;
+
+   hb_stackPush();
+}
+
 void hb_vmPushDouble( double dNumber, int iDec )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmPushDouble(%lf, %d)", dNumber, iDec));
+
+   hb_stack.pPos->type = HB_IT_DOUBLE;
+   hb_stack.pPos->item.asDouble.value = dNumber;
+   hb_stack.pPos->item.asDouble.length = ( dNumber >= 10000000000.0 || dNumber <= -1000000000.0 ) ? 20 : 10;
+   if( iDec == HB_DEFAULT_DECIMALS )
+      hb_stack.pPos->item.asDouble.decimal = hb_set.HB_SET_DECIMALS;
+   else
+      hb_stack.pPos->item.asDouble.decimal = iDec;
+
+   hb_stackPush();
+}
+
+static void hb_vmPushDoubleConst( double dNumber, int iWidth, int iDec )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmPushDoubleConst(%lf, %d, %d)", dNumber, iWidth, iDec));
 
    hb_stack.pPos->type = HB_IT_DOUBLE;
    hb_stack.pPos->item.asDouble.value = dNumber;
@@ -2829,8 +2867,17 @@ void hb_vmPushDouble( double dNumber, int iDec )
 
    if( dNumber >= 1000000000.0 )
    {
-      /* TOFIX: This is wrong, the actual width should be extracted from the pcode. */
-      hb_stack.pPos->item.asDouble.length = 20;
+      /* TODO: The width calculation should be made at compile time, and the
+               info should be stored in the code. Thus this huge ugly and slow
+               hack can be replaced. [vszakats] */
+
+      HB_SYMBOL_UNUSED( iWidth );
+
+      {
+         char buffer[ 360 ];
+         sprintf( buffer, "%.*f", 0, dNumber );
+         hb_stack.pPos->item.asDouble.length = strlen( buffer ) + 1;
+      }
 
       if( iDec )
          hb_stack.pPos->item.asDouble.length--;

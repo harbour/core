@@ -1,3 +1,25 @@
+20000403-11:01 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/vm/itemapi.c
+   * source/vm/hvm.c
+     ! hb_itemPutND(), hb_itemPutNLen(), hb_itemPutNDLen(), hb_vmNegate(),
+       hb_vmPushDouble()
+       Fixed handling of double number widths. Negative numbers taken into 
+       account. Limits fixed. Checked against CA-Cl*pper.
+     + hb_vmPushLongConst() added to push a long constant (pcode) long value.
+     + hb_vmPushDoubleConst() added to push a constant (pcode) double value.
+     * hb_vmPushDouble() restored to previous version.
+     ! hb_vmPushDoubleConst() fixed to count the width of the double just like
+       CA-Cl*pper, note that this is an ugly hack, and as a next step the 
+       HB_P_PUSHDOUBLE pcode should be modified to fix this. ( !! TODO !! )
+     ; After these the decimal handling seems to be completely CA-Cl*pper
+       compatible, the failing tests are due to floating point precision
+       problems.
+
+   * utils/hbtest/rt_hvm.prg
+     ! Number width handling tests modified to avoid the Harbour expression
+       optimizer.
+
 20000403-04:47 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/rdd/dbf1.c
