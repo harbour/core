@@ -70,6 +70,7 @@
 #undef YYLEX_PARAM
 #define YYLEX_PARAM   ( (HB_MACRO_PTR)YYPARSE_PARAM ) /* additional parameter passed to yylex */
 
+extern int yyparse( void * );	/* to make happy some purist compiler */
 extern void * hb_compFlexNew( HB_MACRO_PTR );
 extern void hb_compFlexDelete( void * );
 

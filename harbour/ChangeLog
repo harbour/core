@@ -1,3 +1,8 @@
+20000320-13:45 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/macro/macro.y
+	*added declaration of yyparse() function
+
 20000320-13:10 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.y
