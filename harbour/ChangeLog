@@ -1,3 +1,8 @@
+2001-07-17 18:35 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/rdd/dbfntx1.c
+    * Fixed few bugs, reported by John M. S. Chiang,
+      partially fixed seeking while SET DELETED ON state
+
 2001-07-17 00:25 UTC+1 JFL (mafact) <jfl@mafact.com>
    * harbour/include/hbclass.ch
     ! Change NO_OO_ERR to HB_CLS_NO_OO_ERR

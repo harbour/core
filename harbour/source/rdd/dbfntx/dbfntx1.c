@@ -56,6 +56,7 @@
 #include "hbvm.h"
 #include "hbstack.h"
 #include "rddsys.ch"
+#include "hbset.h"
 #include "hbapierr.h"
 #include "hbapilng.h"
 #include "hbrddntx.h"
@@ -88,6 +89,7 @@ static int maxLevel = 0;
 static LPKEYINFO hb_ntxKeyNew( LPKEYINFO pKeyFrom );
 static void hb_ntxKeyFree( LPKEYINFO pKey );
 static LONG hb_ntxTagKeyFind( LPTAGINFO pTag, LPKEYINFO pKey, BOOL* result );
+static BOOL ntxIsDeleted( NTXAREAP pArea, LONG ulRecNo );
 static int hb_ntxTagFindCurrentKey( LPPAGEINFO pPage, LONG lBlock, LPKEYINFO pKey, BOOL bExact, BOOL lSeek, int level );
 static USHORT hb_ntxPageFindCurrentKey( LPPAGEINFO pPage, ULONG ulRecno );
 static void hb_ntxGetCurrentKey( LPTAGINFO pTag, LPKEYINFO pKey );
@@ -271,7 +273,8 @@ static int hb_ntxTagFindCurrentKey( LPPAGEINFO pPage, LONG lBlock, LPKEYINFO pKe
       if( k <= 0 )
       /* pKey <= p */
       {
-         if( k == 0 && !lSeek && (ULONG)p->Xtra != pPage->TagParent->Owner->Owner->ulRecNo )
+         if( ( k == 0 && !lSeek && (ULONG)p->Xtra != pPage->TagParent->Owner->Owner->ulRecNo )
+             || ( hb_set.HB_SET_DELETED && ntxIsDeleted( pPage->TagParent->Owner->Owner, p->Xtra ) ) )
             k = 1;
          if( k <= 0 )
          {
@@ -323,6 +326,18 @@ static int hb_ntxTagFindCurrentKey( LPPAGEINFO pPage, LONG lBlock, LPKEYINFO pKe
    }
    hb_ntxPageRelease( pPage );
    return k;
+}
+
+static BOOL ntxIsDeleted( NTXAREAP pArea, LONG ulRecNo )
+{
+
+   BOOL lDeleted;
+
+   if( SELF_GOTO( ( AREAP ) pArea,ulRecNo ) == SUCCESS && 
+                     SUPER_DELETED( ( AREAP ) pArea,&lDeleted ) == SUCCESS )
+      return lDeleted;
+   else
+      return FALSE;
 }
 
 static USHORT hb_ntxPageFindCurrentKey( LPPAGEINFO pPage, ULONG ulRecno )
@@ -1990,6 +2005,8 @@ static ERRCODE ntxGoBottom( NTXAREAP pArea )
 {
    HB_TRACE(HB_TR_DEBUG, ("ntxGoBottom(%p)", pArea));
 
+   if( SELF_GOCOLD( ( AREAP ) pArea ) == FAILURE )
+      return FAILURE;
    if ( !pArea->lpCurIndex || !pArea->lpNtxIndex )
      SUPER_GOBOTTOM( ( AREAP ) pArea );
    else
@@ -2022,6 +2039,8 @@ static ERRCODE ntxGoTop( NTXAREAP pArea )
 {
    HB_TRACE(HB_TR_DEBUG, ("ntxGoTop(%p)", pArea));
 
+   if( SELF_GOCOLD( ( AREAP ) pArea ) == FAILURE )
+      return FAILURE;
    if ( !pArea->lpCurIndex || !pArea->lpNtxIndex )
      SUPER_GOTOP( ( AREAP ) pArea );
    else
@@ -2043,6 +2062,8 @@ static ERRCODE ntxSeek( NTXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
    BOOL     result;
    HB_TRACE(HB_TR_DEBUG, ("ntxSeek(%p, %d, %p, %d)", pArea, bSoftSeek, pKey, bFindLast));
 
+   if( SELF_GOCOLD( ( AREAP ) pArea ) == FAILURE )
+      return FAILURE;
    if ( ! pArea->lpCurIndex )
    {
      pError = hb_errNew();
@@ -2136,6 +2157,8 @@ static ERRCODE ntxSkipRaw( NTXAREAP pArea, LONG lToSkip )
 {
    HB_TRACE(HB_TR_DEBUG, ("ntxSkipRaw(%p, %ld)", pArea, lToSkip));
 
+   if( SELF_GOCOLD( ( AREAP ) pArea ) == FAILURE )
+      return FAILURE;
    if ( ! pArea->lpCurIndex )
      SUPER_SKIPRAW( ( AREAP ) pArea, lToSkip );
    else
@@ -2602,6 +2625,7 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
       hb_fsWrite( pIndex->DiskFile, emptyBuffer, 250 );
    }
 
+   pIndex->CompoundTag->TagBlock = hb_fsSeek( pIndex->DiskFile, 0, SEEK_END ) - 1024;
    SELF_ORDSETCOND( ( AREAP ) pArea, NULL );
    return SELF_GOTOP( ( AREAP ) pArea );
 }
