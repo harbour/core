@@ -1,3 +1,7 @@
+19991016-18:40 GMT+8 Ron Pinkas <Ron@Profit-Master.com>
+   * harbour.y
+          * Corrected bug with Push/Pop optimizer and BlockList.
+
 19991016-14:40 GMT+8 Ron Pinkas <Ron@Profit-Master.com>
    * compiler.h
 	  + added lLstPushPos to PFUNCTION structure to support nesting (like in blocks ).

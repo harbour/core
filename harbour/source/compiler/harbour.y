@@ -1011,7 +1011,7 @@ CodeBlock  : BlockBegin '|' BlockExpList '}'           { CodeBlockEnd(); }
 BlockBegin : '{' '|'  { CodeBlockStart(); }
            ;
 
-BlockExpList : { SetLastPushPos(); } Expression                            { $$ = 1; }
+BlockExpList : Expression                            { $$ = 1; }
            | ','                            { SetLastPushPos(); PushNil(); RemoveExtraPush(); PushNil(); $$ = 2; }
            | BlockExpList ',' { RemoveExtraPush(); PushNil(); $$++; }
            | BlockExpList ',' { RemoveExtraPush(); } Expression  { $$++; }
