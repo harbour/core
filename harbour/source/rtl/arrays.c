@@ -8,30 +8,30 @@
 
 void ProcessSymbols( SYMBOL *, WORD );
 
-HARBOUR ACLONE();
-HARBOUR ACOPY();
-HARBOUR ADEL();
-HARBOUR AEVAL();
-HARBOUR AFILL();
-HARBOUR AINS();
-HARBOUR ARRAY();
-HARBOUR ASCAN();
-HARBOUR ASIZE();
-HARBOUR ASORT();
-HARBOUR ATAIL();
+HARBOUR HB_ACLONE(void);
+HARBOUR HB_ACOPY(void);
+HARBOUR HB_ADEL(void);
+HARBOUR HB_AEVAL(void);
+HARBOUR HB_AFILL(void);
+HARBOUR HB_AINS(void);
+HARBOUR HB_ARRAY(void);
+HARBOUR HB_ASCAN(void);
+HARBOUR HB_ASIZE(void);
+HARBOUR HB_ASORT(void);
+HARBOUR HB_ATAIL(void);
 
 static SYMBOL symbols[] = {
-{ "ACLONE",         FS_PUBLIC, ACLONE        , 0 },
-{ "ACOPY",          FS_PUBLIC, ACOPY         , 0 },
-{ "ADEL",           FS_PUBLIC, ADEL          , 0 },
-{ "AEVAL",          FS_PUBLIC, AEVAL         , 0 },
-{ "AFILL",          FS_PUBLIC, AFILL         , 0 },
-{ "AINS",           FS_PUBLIC, AINS          , 0 },
-{ "ARRAY",          FS_PUBLIC, ARRAY         , 0 },
-{ "ASCAN",          FS_PUBLIC, ASCAN         , 0 },
-{ "ASIZE",          FS_PUBLIC, ASIZE         , 0 },
-{ "ASORT",          FS_PUBLIC, ASORT         , 0 },
-{ "ATAIL",          FS_PUBLIC, ATAIL         , 0 },
+{ "ACLONE",         FS_PUBLIC, HB_ACLONE        , 0 },
+{ "ACOPY",          FS_PUBLIC, HB_ACOPY         , 0 },
+{ "ADEL",           FS_PUBLIC, HB_ADEL          , 0 },
+{ "AEVAL",          FS_PUBLIC, HB_AEVAL         , 0 },
+{ "AFILL",          FS_PUBLIC, HB_AFILL         , 0 },
+{ "AINS",           FS_PUBLIC, HB_AINS          , 0 },
+{ "ARRAY",          FS_PUBLIC, HB_ARRAY         , 0 },
+{ "ASCAN",          FS_PUBLIC, HB_ASCAN         , 0 },
+{ "ASIZE",          FS_PUBLIC, HB_ASIZE         , 0 },
+{ "ASORT",          FS_PUBLIC, HB_ASORT         , 0 },
+{ "ATAIL",          FS_PUBLIC, HB_ATAIL         , 0 },
 };
 
 
@@ -608,12 +608,12 @@ PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray )
 /*
  * HARBOUR
  */
-HARBOUR ARRAY( void )
+HARBOUR HB_ARRAY( void )
 {
   hb_arrayNew( &stack.Return, _parnl( 1 ) );
 }
 
-HARBOUR AADD( void )
+HARBOUR HB_AADD( void )
 {
   PHB_ITEM pArray = _param( 1, IT_ARRAY );
   PHB_ITEM pValue = _param( 2, IT_ANY );
@@ -624,7 +624,7 @@ HARBOUR AADD( void )
   ItemCopy( &stack.Return, pValue );
 }
 
-HARBOUR ASIZE( void )
+HARBOUR HB_ASIZE( void )
 {
   PHB_ITEM pArray = _param( 1, IT_ARRAY );
 
@@ -637,7 +637,7 @@ HARBOUR ASIZE( void )
     _ret();    /* QUESTION: Should we raise an error here ? */
 }
 
-HARBOUR ATAIL( void )
+HARBOUR HB_ATAIL( void )
 {
   PHB_ITEM pArray = _param( 1, IT_ARRAY );
 
@@ -647,7 +647,7 @@ HARBOUR ATAIL( void )
     _ret();  /* QUESTION: Should we raise an error here ? */
 }
 
-HARBOUR AINS( void )
+HARBOUR HB_AINS( void )
 {
   PHB_ITEM pArray  = _param( 1, IT_ARRAY );
 
@@ -660,7 +660,7 @@ HARBOUR AINS( void )
     _ret();
 }
 
-HARBOUR ADEL( void )
+HARBOUR HB_ADEL( void )
 {
   PHB_ITEM pArray  = _param( 1, IT_ARRAY );
 
@@ -673,7 +673,7 @@ HARBOUR ADEL( void )
     _ret();
 }
 
-HARBOUR AFILL( void )
+HARBOUR HB_AFILL( void )
 {
   PHB_ITEM pArray  = _param( 1, IT_ARRAY );
 
@@ -686,7 +686,7 @@ HARBOUR AFILL( void )
     _ret();
 }
 
-HARBOUR ASCAN( void )
+HARBOUR HB_ASCAN( void )
 {
   PHB_ITEM pArray = _param( 1, IT_ARRAY );
 
@@ -696,7 +696,7 @@ HARBOUR ASCAN( void )
     _retnl( 0 );
 }
 
-HARBOUR AEVAL( void )
+HARBOUR HB_AEVAL( void )
 {
   PHB_ITEM pArray = _param( 1, IT_ARRAY );
   PHB_ITEM bBlock = _param( 2, IT_BLOCK );
@@ -710,7 +710,7 @@ HARBOUR AEVAL( void )
     _ret();
 }
 
-HARBOUR ACOPY( void )
+HARBOUR HB_ACOPY( void )
 {
   PHB_ITEM pSrcArray  = _param( 1, IT_ARRAY );
   PHB_ITEM pDstArray  = _param( 2, IT_ARRAY );
@@ -724,7 +724,7 @@ HARBOUR ACOPY( void )
     _ret();
 }
 
-HARBOUR ACLONE( void )
+HARBOUR HB_ACLONE( void )
 {
   PHB_ITEM pSrcArray  = _param( 1, IT_ARRAY );
 

@@ -5,7 +5,13 @@
 /*  ---------------------------------------------
    Definitions, copied from Harbour.y and types.h    */
 
+/*
+ * Note: I don't think it is such a great idea to undef LONG...
+ */
+#if defined(LONG)
 #undef LONG                            /* 4 bytes unsigned */
+#endif
+
 typedef long LONG;
 typedef unsigned long ULONG;
 #define PATH_DELIMITER  "/\\"

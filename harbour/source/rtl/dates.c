@@ -109,7 +109,7 @@ void hb_dateDecode( long julian, long * plDay, long * plMonth, long * plYear )
   if( plYear )  * plYear  = X + U + ( W - 49 ) * 100;
 }
 
-HARBOUR CTOD( void )
+HARBOUR HB_CTOD( void )
 {
    char * szDate = _parc( 1 );
    int d_value = 0, m_value = 0, y_value = 0;
@@ -340,7 +340,7 @@ char * hb_dtoc (char * szDate, char * szDateFormat)
    return (szDateFormat);
 }
 
-HARBOUR DTOC( void )
+HARBOUR HB_DTOC( void )
 {
    char * szDate = _pards( 1 );
    char szDateFormat[ 11 ];
@@ -351,7 +351,7 @@ HARBOUR DTOC( void )
 /*           This function may be called many times in a real world */
 /*           application, for example in index creation. */
 /*           Clipper does these checks, anyway. */
-HARBOUR DTOS( void )
+HARBOUR HB_DTOS( void )
 {
 #ifndef _OPTIMIZE_DTOS
    if( _pcount() == 1 )
@@ -381,12 +381,12 @@ HARBOUR DTOS( void )
 #endif
 }
 
-HARBOUR STOD( void )
+HARBOUR HB_STOD( void )
 {
    _retds((ISCHAR(1) && _parclen(1) == 8) ? _parc(1) : "        ");
 }
 
-HARBOUR DAY( void )
+HARBOUR HB_DAY( void )
 {
    PHB_ITEM pDate = _param( 1, IT_DATE );
    long lDay, lMonth, lYear;
@@ -406,7 +406,7 @@ HARBOUR DAY( void )
    }
 }
 
-HARBOUR MONTH( void )
+HARBOUR HB_MONTH( void )
 {
    PHB_ITEM pDate = _param( 1, IT_DATE );
    long lDay, lMonth, lYear;
@@ -426,7 +426,7 @@ HARBOUR MONTH( void )
    }
 }
 
-HARBOUR YEAR( void )
+HARBOUR HB_YEAR( void )
 {
    PHB_ITEM pDate = _param( 1, IT_DATE );
    long lDay, lMonth, lYear;
@@ -446,7 +446,7 @@ HARBOUR YEAR( void )
    }
 }
 
-HARBOUR TIME( void )
+HARBOUR HB_TIME( void )
 {
    if( _pcount() == 0 )
    {
@@ -470,7 +470,7 @@ oTime->tm_sec);
    }
 }
 
-HARBOUR DATE( void )
+HARBOUR HB_DATE( void )
 {
    if( _pcount() == 0 )
    {
@@ -507,7 +507,7 @@ long hb_dow( long d, long m, long y )
    return ( d + 26 * m / 10 + y + y / 4 - y / 100 + y / 400 + ADJ ) % 7;
 }
 
-HARBOUR DOW( void )
+HARBOUR HB_DOW( void )
 {
    PHB_ITEM pDate = _param( 1, IT_DATE );
    long lDay, lMonth, lYear;
@@ -527,7 +527,7 @@ HARBOUR DOW( void )
    }
 }
 
-HARBOUR CMONTH( void )
+HARBOUR HB_CMONTH( void )
 {
    PHB_ITEM pDate = _param( 1, IT_DATE );
    long lDay, lMonth, lYear;
@@ -557,7 +557,7 @@ HARBOUR CMONTH( void )
    }
 }
 
-HARBOUR CDOW( void )
+HARBOUR HB_CDOW( void )
 {
    PHB_ITEM pDate = _param( 1, IT_DATE );
    long lDay, lMonth, lYear;
@@ -587,7 +587,7 @@ HARBOUR CDOW( void )
    }
 }
 
-HARBOUR SECONDS( void )
+HARBOUR HB_SECONDS( void )
 {
    if( _pcount() == 0 )
       _retnd( hb_seconds() );

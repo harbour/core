@@ -55,7 +55,7 @@ USHORT hb_maxcol( void )
 #endif
 }
 
-HARBOUR __ACCEPT( void ) /* Internal Clipper function used in ACCEPT command  */
+HARBOUR HB___ACCEPT( void ) /* Internal Clipper function used in ACCEPT command  */
                          /* Basically the simplest Clipper function to        */
                          /* receive data. Parameter : cPrompt. Returns : cRet */
 {
@@ -250,7 +250,7 @@ void hb_devpos( USHORT row, USHORT col )
    }
 }
 
-HARBOUR OUTSTD( void ) /* writes a list of values to the standard output device */
+HARBOUR HB_OUTSTD( void ) /* writes a list of values to the standard output device */
 {
    WORD w;
 
@@ -261,7 +261,7 @@ HARBOUR OUTSTD( void ) /* writes a list of values to the standard output device 
    }
 }
 
-HARBOUR OUTERR( void ) /* writes a list of values to the standard error device */
+HARBOUR HB_OUTERR( void ) /* writes a list of values to the standard error device */
 {
    WORD w;
 
@@ -272,7 +272,7 @@ HARBOUR OUTERR( void ) /* writes a list of values to the standard error device *
    }
 }
 
-HARBOUR QQOUT( void ) /* writes a list of values to the current device (screen or printer) and is affected by SET ALTERNATE */
+HARBOUR HB_QQOUT( void ) /* writes a list of values to the current device (screen or printer) and is affected by SET ALTERNATE */
 {
    WORD w;
 
@@ -283,17 +283,17 @@ HARBOUR QQOUT( void ) /* writes a list of values to the current device (screen o
    }
 }
 
-HARBOUR QOUT( void )
+HARBOUR HB_QOUT( void )
 {
    #ifdef WINDOWS
       MessageBox( 0, _parc( 1 ), "Harbour", 0 );
    #else
       hb_altout( CrLf, strlen (CrLf) );
-      QQOUT();
+      HB_QQOUT();
    #endif
 }
 
-HARBOUR DEVPOS( void ) /* Sets the screen and/or printer position */
+HARBOUR HB_DEVPOS( void ) /* Sets the screen and/or printer position */
 {
    PHB_ITEM pRow, pCol;
    if( _pcount() > 1 )
@@ -305,7 +305,7 @@ HARBOUR DEVPOS( void ) /* Sets the screen and/or printer position */
    }
 }
 
-HARBOUR DEVOUT( void ) /* writes a single values to the current device (screen or printer), but is not affected by SET ALTERNATE */
+HARBOUR HB_DEVOUT( void ) /* writes a single values to the current device (screen or printer), but is not affected by SET ALTERNATE */
 {
    if( _pcount() > 0 )
    {
@@ -329,7 +329,7 @@ HARBOUR DEVOUT( void ) /* writes a single values to the current device (screen o
    }
 }
 
-HARBOUR EJECT( void ) /* Ejects the current page from the printer */
+HARBOUR HB_EJECT( void ) /* Ejects the current page from the printer */
 {
    if( stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 && hb_set_printhan >= 0 )
    {
@@ -338,17 +338,17 @@ HARBOUR EJECT( void ) /* Ejects the current page from the printer */
    }
 }
 
-HARBOUR PROW( void ) /* Returns the current printer row position */
+HARBOUR HB_PROW( void ) /* Returns the current printer row position */
 {
    _retni( p_row );
 }
 
-HARBOUR PCOL( void ) /* Returns the current printer row position */
+HARBOUR HB_PCOL( void ) /* Returns the current printer row position */
 {
    _retni( p_col );
 }
 
-HARBOUR SETPRC( void ) /* Sets the current printer row and column positions */
+HARBOUR HB_SETPRC( void ) /* Sets the current printer row and column positions */
 {
    if( _pcount() > 1 )
    {
@@ -362,7 +362,7 @@ HARBOUR SETPRC( void ) /* Sets the current printer row and column positions */
    }
 }
 
-HARBOUR SCROLL( void ) /* Scrolls a screen region (requires the GT API) */
+HARBOUR HB_SCROLL( void ) /* Scrolls a screen region (requires the GT API) */
 {
    int top = 0, left = 0, bottom = hb_maxrow(), right = hb_maxcol(),
        v_scroll = 0, h_scroll = 0;
@@ -395,22 +395,22 @@ HARBOUR SCROLL( void ) /* Scrolls a screen region (requires the GT API) */
 #endif
 }
 
-HARBOUR MAXROW( void ) /* Return the maximum screen row number (zero origin) */
+HARBOUR HB_MAXROW( void ) /* Return the maximum screen row number (zero origin) */
 {
    _retni( hb_maxrow () );
 }
 
-HARBOUR MAXCOL( void ) /* Return the maximum screen column number (zero origin) */
+HARBOUR HB_MAXCOL( void ) /* Return the maximum screen column number (zero origin) */
 {
    _retni( hb_maxcol () );
 }
 
-HARBOUR ROW( void ) /* Return the current screen row position (zero origin) */
+HARBOUR HB_ROW( void ) /* Return the current screen row position (zero origin) */
 {
    _retni( dev_row );
 }
 
-HARBOUR COL( void ) /* Return the current screen column position (zero origin) */
+HARBOUR HB_COL( void ) /* Return the current screen column position (zero origin) */
 {
    _retni( dev_col );
 }

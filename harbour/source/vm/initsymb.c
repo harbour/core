@@ -1,4 +1,5 @@
-/* $Id$
+/*
+ * $Id$
  *
  * Initiialization of runtime support symbols
  */
@@ -14,112 +15,110 @@ extern void Memotran__InitSymbols( void );
 
 void ProcessSymbols( SYMBOL *, WORD );
 
-HARBOUR AADD( void );
-HARBOUR ABS( void );
-HARBOUR ASC( void );
-HARBOUR AT( void );
-HARBOUR CDOW( void );
-HARBOUR CHR( void );
-HARBOUR CMONTH( void );
-HARBOUR CTOD( void );
-HARBOUR DATE( void );
-HARBOUR DAY( void );
-HARBOUR DOW( void );
-HARBOUR DTOC( void );
-HARBOUR DTOS( void );
-HARBOUR EMPTY( void );
-HARBOUR EXP( void );
-HARBOUR INT( void );
-HARBOUR LEFT( void );
-HARBOUR LEN( void );
-HARBOUR LOG( void );
-HARBOUR LOWER( void );
-HARBOUR LTRIM( void );
-HARBOUR MAX( void );
-HARBOUR MIN( void );
-HARBOUR MONTH( void );
-HARBOUR PCOUNT( void );
-HARBOUR REPLICATE( void );
-HARBOUR RTRIM( void );
-HARBOUR SECONDS( void );
-HARBOUR SPACE( void );
-HARBOUR SQRT( void );
-HARBOUR STR( void );
-HARBOUR STR( void );
-HARBOUR SUBSTR( void );
-HARBOUR TIME( void );
-HARBOUR TRANSFORM( void );
-HARBOUR TRIM( void );
-HARBOUR UPPER( void );
-HARBOUR VAL( void );
-HARBOUR YEAR( void );
-
+HARBOUR HB_AADD( void );
+HARBOUR HB_ABS( void );
+HARBOUR HB_ASC( void );
+HARBOUR HB_AT( void );
+HARBOUR HB_CDOW( void );
+HARBOUR HB_CHR( void );
+HARBOUR HB_CMONTH( void );
+HARBOUR HB_CTOD( void );
+HARBOUR HB_DATE( void );
+HARBOUR HB_DAY( void );
+HARBOUR HB_DOW( void );
+HARBOUR HB_DTOC( void );
+HARBOUR HB_DTOS( void );
+HARBOUR HB_EMPTY( void );
+HARBOUR HB_EXP( void );
+HARBOUR HB_INT( void );
+HARBOUR HB_LEFT( void );
+HARBOUR HB_LEN( void );
+HARBOUR HB_LOG( void );
+HARBOUR HB_LOWER( void );
+HARBOUR HB_LTRIM( void );
+HARBOUR HB_MAX( void );
+HARBOUR HB_MIN( void );
+HARBOUR HB_MONTH( void );
+HARBOUR HB_PCOUNT( void );
+HARBOUR HB_REPLICATE( void );
+HARBOUR HB_RTRIM( void );
+HARBOUR HB_SECONDS( void );
+HARBOUR HB_SPACE( void );
+HARBOUR HB_SQRT( void );
+HARBOUR HB_STR( void );
+HARBOUR HB_SUBSTR( void );
+HARBOUR HB_TIME( void );
+HARBOUR HB_TRANSFORM( void );
+HARBOUR HB_TRIM( void );
+HARBOUR HB_UPPER( void );
+HARBOUR HB_VAL( void );
+HARBOUR HB_YEAR( void );
 
 static SYMBOL symbols[] = {
-    { "AADD"      , FS_PUBLIC, AADD         , 0 },
-    { "ABS"       , FS_PUBLIC, ABS          , 0 },
-    { "ASC"       , FS_PUBLIC, ASC          , 0 },
-    { "AT"        , FS_PUBLIC, AT           , 0 },
-    { "BOF"       , FS_PUBLIC, NULL         , 0 },
-    { "BREAK"     , FS_PUBLIC, NULL         , 0 },
-    { "CDOW"      , FS_PUBLIC, CDOW         , 0 },
-    { "CHR"       , FS_PUBLIC, CHR          , 0 },
-    { "CMONTH"    , FS_PUBLIC, CMONTH       , 0 },
-    { "COL"       , FS_PUBLIC, NULL         , 0 },
-    { "CTOD"      , FS_PUBLIC, CTOD         , 0 },
-    { "DATE"      , FS_PUBLIC, DATE         , 0 },
-    { "DAY"       , FS_PUBLIC, DAY          , 0 },
-    { "DELETED"   , FS_PUBLIC, NULL         , 0 },
-    { "DEVPOS"    , FS_PUBLIC, NULL         , 0 },
-    { "DO"        , FS_PUBLIC, NULL         , 0 },
-    { "DOW"       , FS_PUBLIC, DOW          , 0 },
-    { "DTOC"      , FS_PUBLIC, DTOC         , 0 },
-    { "DTOS"      , FS_PUBLIC, DTOS         , 0 },
-    { "EMPTY"     , FS_PUBLIC, EMPTY        , 0 },
-    { "EOF"       , FS_PUBLIC, NULL         , 0 },
-    { "EXP"       , FS_PUBLIC, EXP          , 0 },
-    { "FCOUNT"    , FS_PUBLIC, NULL         , 0 },
-    { "FIELDNAME" , FS_PUBLIC, NULL         , 0 },
-    { "FLOCK"     , FS_PUBLIC, NULL         , 0 },
-    { "FOUND"     , FS_PUBLIC, NULL         , 0 },
-    { "INKEY"     , FS_PUBLIC, NULL         , 0 },
-    { "INT"       , FS_PUBLIC, INT          , 0 },
-    { "LASTREC"   , FS_PUBLIC, NULL         , 0 },
-    { "LEFT"      , FS_PUBLIC, LEFT         , 0 },
-    { "LEN"       , FS_PUBLIC, LEN          , 0 },
-    { "LOCK"      , FS_PUBLIC, NULL         , 0 },
-    { "LOG"       , FS_PUBLIC, LOG          , 0 },
-    { "LOWER"     , FS_PUBLIC, LOWER        , 0 },
-    { "LTRIM"     , FS_PUBLIC, LTRIM        , 0 },
-    { "MAX"       , FS_PUBLIC, MAX          , 0 },
-    { "MIN"       , FS_PUBLIC, MIN          , 0 },
-    { "MONTH"     , FS_PUBLIC, MONTH        , 0 },
-    { "PCOL"      , FS_PUBLIC, NULL         , 0 },
-    { "PCOUNT"    , FS_PUBLIC, PCOUNT       , 0 },
-    { "PROW"      , FS_PUBLIC, NULL         , 0 },
-    { "QSELF"     , FS_PUBLIC, NULL         , 0 },
-    { "RECCOUNT"  , FS_PUBLIC, NULL         , 0 },
-    { "RECNO"     , FS_PUBLIC, NULL         , 0 },
-    { "REPLICATE" , FS_PUBLIC, REPLICATE    , 0 },
-    { "RLOCK"     , FS_PUBLIC, NULL         , 0 },
-    { "ROUND"     , FS_PUBLIC, NULL         , 0 },
-    { "ROW"       , FS_PUBLIC, NULL         , 0 },
-    { "RTRIM"     , FS_PUBLIC, RTRIM        , 0 },
-    { "SECONDS"   , FS_PUBLIC, SECONDS      , 0 },
-    { "SELECT"    , FS_PUBLIC, NULL         , 0 },
-    { "SETPOS"    , FS_PUBLIC, NULL         , 0 },
-    { "SPACE"     , FS_PUBLIC, SPACE        , 0 },
-    { "SQRT"      , FS_PUBLIC, SQRT         , 0 },
-    { "STR"       , FS_PUBLIC, STR          , 0 },
-    { "SUBSTR"    , FS_PUBLIC, SUBSTR       , 0 },
-    { "TIME"      , FS_PUBLIC, TIME         , 0 },
-    { "TRANSFORM" , FS_PUBLIC, TRANSFORM    , 0 },
-    { "TRIM"      , FS_PUBLIC, TRIM         , 0 },
-    { "TYPE"      , FS_PUBLIC, NULL         , 0 },
-    { "UPPER"     , FS_PUBLIC, UPPER        , 0 },
-    { "VAL"       , FS_PUBLIC, VAL          , 0 },
-    { "WORD"      , FS_PUBLIC, NULL         , 0 },
-    { "YEAR"      , FS_PUBLIC, YEAR         , 0 }
+    { "AADD"      , FS_PUBLIC, HB_AADD         , 0 },
+    { "ABS"       , FS_PUBLIC, HB_ABS          , 0 },
+    { "ASC"       , FS_PUBLIC, HB_ASC          , 0 },
+    { "AT"        , FS_PUBLIC, HB_AT           , 0 },
+    { "BOF"       , FS_PUBLIC, NULL            , 0 },
+    { "BREAK"     , FS_PUBLIC, NULL            , 0 },
+    { "CDOW"      , FS_PUBLIC, HB_CDOW         , 0 },
+    { "CHR"       , FS_PUBLIC, HB_CHR          , 0 },
+    { "CMONTH"    , FS_PUBLIC, HB_CMONTH       , 0 },
+    { "COL"       , FS_PUBLIC, NULL            , 0 },
+    { "CTOD"      , FS_PUBLIC, HB_CTOD         , 0 },
+    { "DATE"      , FS_PUBLIC, HB_DATE         , 0 },
+    { "DAY"       , FS_PUBLIC, HB_DAY          , 0 },
+    { "DELETED"   , FS_PUBLIC, NULL            , 0 },
+    { "DEVPOS"    , FS_PUBLIC, NULL            , 0 },
+    { "DO"        , FS_PUBLIC, NULL            , 0 },
+    { "DOW"       , FS_PUBLIC, HB_DOW          , 0 },
+    { "DTOC"      , FS_PUBLIC, HB_DTOC         , 0 },
+    { "DTOS"      , FS_PUBLIC, HB_DTOS         , 0 },
+    { "EMPTY"     , FS_PUBLIC, HB_EMPTY        , 0 },
+    { "EOF"       , FS_PUBLIC, NULL            , 0 },
+    { "EXP"       , FS_PUBLIC, HB_EXP          , 0 },
+    { "FCOUNT"    , FS_PUBLIC, NULL            , 0 },
+    { "FIELDNAME" , FS_PUBLIC, NULL            , 0 },
+    { "FLOCK"     , FS_PUBLIC, NULL            , 0 },
+    { "FOUND"     , FS_PUBLIC, NULL            , 0 },
+    { "INKEY"     , FS_PUBLIC, NULL            , 0 },
+    { "INT"       , FS_PUBLIC, HB_INT          , 0 },
+    { "LASTREC"   , FS_PUBLIC, NULL            , 0 },
+    { "LEFT"      , FS_PUBLIC, HB_LEFT         , 0 },
+    { "LEN"       , FS_PUBLIC, HB_LEN          , 0 },
+    { "LOCK"      , FS_PUBLIC, NULL            , 0 },
+    { "LOG"       , FS_PUBLIC, HB_LOG          , 0 },
+    { "LOWER"     , FS_PUBLIC, HB_LOWER        , 0 },
+    { "LTRIM"     , FS_PUBLIC, HB_LTRIM        , 0 },
+    { "MAX"       , FS_PUBLIC, HB_MAX          , 0 },
+    { "MIN"       , FS_PUBLIC, HB_MIN          , 0 },
+    { "MONTH"     , FS_PUBLIC, HB_MONTH        , 0 },
+    { "PCOL"      , FS_PUBLIC, NULL            , 0 },
+    { "PCOUNT"    , FS_PUBLIC, HB_PCOUNT       , 0 },
+    { "PROW"      , FS_PUBLIC, NULL            , 0 },
+    { "QSELF"     , FS_PUBLIC, NULL            , 0 },
+    { "RECCOUNT"  , FS_PUBLIC, NULL            , 0 },
+    { "RECNO"     , FS_PUBLIC, NULL            , 0 },
+    { "REPLICATE" , FS_PUBLIC, HB_REPLICATE    , 0 },
+    { "RLOCK"     , FS_PUBLIC, NULL            , 0 },
+    { "ROUND"     , FS_PUBLIC, NULL            , 0 },
+    { "ROW"       , FS_PUBLIC, NULL            , 0 },
+    { "RTRIM"     , FS_PUBLIC, HB_RTRIM        , 0 },
+    { "SECONDS"   , FS_PUBLIC, HB_SECONDS      , 0 },
+    { "SELECT"    , FS_PUBLIC, NULL            , 0 },
+    { "SETPOS"    , FS_PUBLIC, NULL            , 0 },
+    { "SPACE"     , FS_PUBLIC, HB_SPACE        , 0 },
+    { "SQRT"      , FS_PUBLIC, HB_SQRT         , 0 },
+    { "STR"       , FS_PUBLIC, HB_STR          , 0 },
+    { "SUBSTR"    , FS_PUBLIC, HB_SUBSTR       , 0 },
+    { "TIME"      , FS_PUBLIC, HB_TIME         , 0 },
+    { "TRANSFORM" , FS_PUBLIC, HB_TRANSFORM    , 0 },
+    { "TRIM"      , FS_PUBLIC, HB_TRIM         , 0 },
+    { "TYPE"      , FS_PUBLIC, NULL            , 0 },
+    { "UPPER"     , FS_PUBLIC, HB_UPPER        , 0 },
+    { "VAL"       , FS_PUBLIC, HB_VAL          , 0 },
+    { "WORD"      , FS_PUBLIC, NULL            , 0 },
+    { "YEAR"      , FS_PUBLIC, HB_YEAR         , 0 }
   };
 
 /*

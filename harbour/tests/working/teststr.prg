@@ -6,7 +6,7 @@ function main()
    test()
    __ACCEPT ("Pause before running again with SET FIXED ON: ")
    outstd (CHR(13)+CHR(10))
-   HB_SETFIXED ("ON")
+   SETFIXED ("ON")
    test()
 
 return nil

@@ -5,7 +5,7 @@
 
 function Main()
 
-   HB_SetCentury(.T.)
+   SetCentury(.T.)
    Set(_SET_DATEFORMAT, "dd/mm/yyyy")
    QOut( "Hallo      ", "!!!!!       ", transform( "Hallo   ", "!!!!!"    ) )
    QOut( "Hallo      ", "!!A!!       ", transform( "Hallo   ", "!!A!!"    ) )

@@ -25,11 +25,11 @@
 #include <pcode.h>
 #include <set.h>
 
-HARBOUR ERRORSYS( void );
-HARBOUR ERRORNEW( void );
-HARBOUR EVAL( void );         /* Evaluates a codeblock from Harbour */
-HARBOUR MAIN( void );         /* fixed entry point by now */
-HARBOUR VALTYPE( void );      /* returns a string description of a value */
+HARBOUR HB_ERRORSYS( void );
+HARBOUR HB_ERRORNEW( void );
+HARBOUR HB_EVAL( void );         /* Evaluates a codeblock from Harbour */
+HARBOUR HB_MAIN( void );         /* fixed entry point by now */
+HARBOUR HB_VALTYPE( void );      /* returns a string description of a value */
 
 extern void InitializeConsole(void); /* This prototype is needed by C++ compilers */
 extern void InitSymbolTable(void);   /* This prototype is needed by C++ compilers */
@@ -158,7 +158,7 @@ extern POBJSYMBOLS HB_FIRSTSYMBOL, HB_LASTSYMBOL;
 #endif
 
 STACK stack;
-int iHBDEBUG = 0;      /* if 1 traces the virtual machine activity */
+int iHB_DEBUG = 0;      /* if 1 traces the virtual machine activity */
 SYMBOL symEval = { "__EVAL", FS_PUBLIC, DoBlock, 0 }; /* symbol to evaluate codeblocks */
 PSYMBOL pSymStart;     /* start symbol of the application. MAIN() is not required */
 HB_ITEM aStatics;         /* Harbour array to hold all application statics variables */
@@ -167,8 +167,8 @@ PSYMBOLS pSymbols = 0; /* to hold a linked list of all different modules symbol 
 BOOL bQuit = FALSE;    /* inmediately exit the application */
 BYTE bErrorLevel = 0;  /* application exit errorlevel */
 
-#define HBDEBUG( x )     if( iHBDEBUG ) printf( x )
-#define HBDEBUG2( x, y ) if( iHBDEBUG ) printf( x, y )
+#define HB_DEBUG( x )     if( iHB_DEBUG ) printf( x )
+#define HB_DEBUG2( x, y ) if( iHB_DEBUG ) printf( x, y )
 
 /* application entry point */
 
@@ -185,9 +185,9 @@ BYTE bErrorLevel = 0;  /* application exit errorlevel */
    void ( * DontDiscardForceLink )( void ) = &ForceLink;
 
    if( ! DontDiscardForceLink )  /* just to avoid warnings from the C compiler */
-      iHBDEBUG += ( int ) DontDiscardForceLink; /* just to avoid warnings from the C compiler */
+      iHB_DEBUG += ( int ) DontDiscardForceLink; /* just to avoid warnings from the C compiler */
 
-   HBDEBUG( "main\n" );
+   HB_DEBUG( "main\n" );
    aStatics.wType     = IT_NIL;
    errorBlock.wType   = IT_NIL;
    stack.Return.wType = IT_NIL;
@@ -237,7 +237,7 @@ BYTE bErrorLevel = 0;  /* application exit errorlevel */
    ReleaseSets();               /* releases Sets */
    StackFree();
    /* LogSymbols(); */
-   HBDEBUG( "Done!\n" );
+   HB_DEBUG( "Done!\n" );
 
    if( ulMemoryBlocks )
    {
@@ -255,7 +255,7 @@ void VirtualMachine( PBYTE pCode, PSYMBOL pSymbols )
    BYTE bCode;
    WORD w = 0, wParams, wSize;
 
-   HBDEBUG( "VirtualMachine\n" );
+   HB_DEBUG( "VirtualMachine\n" );
 
    while( ( bCode = pCode[ w ] ) != _ENDPROC && ! bQuit )
    {
@@ -303,7 +303,7 @@ void VirtualMachine( PBYTE pCode, PSYMBOL pSymbols )
 
          case _ENDBLOCK:
               EndBlock();
-              HBDEBUG( "EndProc\n" );
+              HB_DEBUG( "EndProc\n" );
               return;   /* end of a codeblock - stop evaluation */
 
          case _EQUAL:
@@ -575,7 +575,7 @@ void VirtualMachine( PBYTE pCode, PSYMBOL pSymbols )
               break;
       }
    }
-   HBDEBUG( "EndProc\n" );
+   HB_DEBUG( "EndProc\n" );
 }
 
 void And( void )
@@ -585,7 +585,7 @@ void And( void )
    PHB_ITEM pError;
    int   iResult;
 
-   HBDEBUG( "And\n" );
+   HB_DEBUG( "And\n" );
 
    if( IS_LOGICAL( pItem1 ) && IS_LOGICAL( pItem2 ) )
    {
@@ -697,7 +697,7 @@ void Do( WORD wParams )
    stack.pBase    = stack.pItems + pItem->wBase;
    pItem->wBase   = wStackBase;
 
-   HBDEBUG2( "Do with %i params\n", wParams );
+   HB_DEBUG2( "Do with %i params\n", wParams );
 
    if( IS_OBJECT( pSelf ) ) /* are we sending a message to an object ? */
    {
@@ -756,7 +756,7 @@ HARBOUR DoBlock( void )
    /* restore stack pointers */
    stack.pBase = stack.pItems + wStackBase;
 
-   HBDEBUG( "End of DoBlock\n" );
+   HB_DEBUG( "End of DoBlock\n" );
 }
 
 void Duplicate( void )
@@ -773,7 +773,7 @@ void DuplTwo( void )
    StackPush();
 }
 
-HARBOUR EVAL( void )
+HARBOUR HB_EVAL( void )
 {
    PHB_ITEM pBlock = _param( 1, IT_BLOCK );
 
@@ -800,7 +800,7 @@ void EndBlock( void )
 {
    StackPop();
    ItemCopy( &stack.Return, stack.pPos );
-   HBDEBUG( "EndBlock\n" );
+   HB_DEBUG( "EndBlock\n" );
 }
 
 void Equal( BOOL bExact )
@@ -852,8 +852,8 @@ void Equal( BOOL bExact )
 
 static void ForceLink( void )  /* To force the link of some functions */
 {
-   ERRORSYS();
-   ERRORNEW();
+   HB_ERRORSYS();
+   HB_ERRORNEW();
 }
 
 void ForTest( void )        /* Test to check the end point of the FOR */
@@ -884,7 +884,7 @@ void Frame( BYTE bLocals, BYTE bParams )
 {
    int i, iTotal = bLocals + bParams;
 
-   HBDEBUG( "Frame\n" );
+   HB_DEBUG( "Frame\n" );
    if( iTotal )
       for( i = 0; i < ( iTotal - stack.pBase->wParams ); i++ )
          PushNil();
@@ -1230,13 +1230,13 @@ void Message( PSYMBOL pSymMsg ) /* sends a message to an object */
    ( stack.pPos - 1 )->value.pSymbol = pSymMsg;
    ( stack.pPos - 1 )->wBase = ( stack.pPos - 1 ) - stack.pItems;
    StackPush();
-   HBDEBUG2( "Message: %s\n", pSymMsg->szName );
+   HB_DEBUG2( "Message: %s\n", pSymMsg->szName );
 }
 
 void Line( WORD wLine )
 {
    stack.pBase->wLine = wLine;
-   HBDEBUG( "line\n" );
+   HB_DEBUG( "line\n" );
 }
 
 void Negate( void )
@@ -1443,7 +1443,7 @@ void Plus( void )
       OperatorCall( pItem1, pItem2, "+" );
 
    /* TODO: Generate an error if types don't match */
-   HBDEBUG( "Plus\n" );
+   HB_DEBUG( "Plus\n" );
 }
 
 long PopDate( void )
@@ -1479,7 +1479,7 @@ void PopDefStat( WORD wStatic )     /* Pops a default value to a STATIC */
          ItemCopy( pStatic, stack.pPos );
 
    ItemRelease( stack.pPos );
-   HBDEBUG( "PopDefStat\n" );
+   HB_DEBUG( "PopDefStat\n" );
 }
 
 double PopDouble( void )
@@ -1507,7 +1507,7 @@ double PopDouble( void )
            exit( 1 );
            d = 0;
    }
-   HBDEBUG( "PopDouble\n" );
+   HB_DEBUG( "PopDouble\n" );
    return d;
 }
 
@@ -1537,7 +1537,7 @@ void PopLocal( SHORT iLocal )
       ItemCopy( CodeblockGetVar( stack.pBase + 1, iLocal ), stack.pPos );
 
    ItemRelease( stack.pPos );
-   HBDEBUG( "PopLocal\n" );
+   HB_DEBUG( "PopLocal\n" );
 }
 
 int PopLogical( void )
@@ -1601,7 +1601,7 @@ void PopStatic( WORD wStatic )
       ItemCopy( pStatic, stack.pPos );
 
    ItemRelease( stack.pPos );
-   HBDEBUG( "PopStatic\n" );
+   HB_DEBUG( "PopStatic\n" );
 }
 
 void Power( void )
@@ -1618,7 +1618,7 @@ void PushLogical( int iTrueFalse )
    stack.pPos->wType    = IT_LOGICAL;
    stack.pPos->value.iLogical = iTrueFalse;
    StackPush();
-   HBDEBUG( "PushLogical\n" );
+   HB_DEBUG( "PushLogical\n" );
 }
 
 void PushLocal( SHORT iLocal )
@@ -1644,7 +1644,7 @@ void PushLocal( SHORT iLocal )
       /* local variable referenced in a codeblock */
      ItemCopy( stack.pPos, CodeblockGetVar( stack.pBase + 1, iLocal ) );
    StackPush();
-   HBDEBUG2( "PushLocal %i\n", iLocal );
+   HB_DEBUG2( "PushLocal %i\n", iLocal );
 }
 
 void PushLocalByRef( SHORT iLocal )
@@ -1663,14 +1663,14 @@ void PushLocalByRef( SHORT iLocal )
    }
 
    StackPush();
-   HBDEBUG2( "PushLocalByRef %i\n", iLocal );
+   HB_DEBUG2( "PushLocalByRef %i\n", iLocal );
 }
 
 void PushNil( void )
 {
    ItemRelease( stack.pPos );
    StackPush();
-   HBDEBUG( "PushNil\n" );
+   HB_DEBUG( "PushNil\n" );
 }
 
 void PushNumber( double dNumber, WORD wDec )
@@ -1693,7 +1693,7 @@ void PushStatic( WORD wStatic )
    ItemCopy( stack.pPos, ( ( PBASEARRAY ) aStatics.value.pBaseArray )->pItems +
              stack.iStatics + wStatic - 1 );
    StackPush();
-   HBDEBUG2( "PushStatic %i\n", wStatic );
+   HB_DEBUG2( "PushStatic %i\n", wStatic );
 }
 
 void PushString( char * szText, WORD wLength )
@@ -1708,7 +1708,7 @@ void PushString( char * szText, WORD wLength )
    stack.pPos->wLength = wLength;
    stack.pPos->value.szText  = szTemp;
    StackPush();
-   HBDEBUG( "PushString\n" );
+   HB_DEBUG( "PushString\n" );
 }
 
 void PushSymbol( PSYMBOL pSym )
@@ -1718,14 +1718,14 @@ void PushSymbol( PSYMBOL pSym )
    stack.pPos->value.pSymbol = pSym;
    stack.pPos->wBase   = stack.pPos - stack.pItems;
    StackPush();
-   HBDEBUG2( "PushSymbol: %s\n", pSym->szName );
+   HB_DEBUG2( "PushSymbol: %s\n", pSym->szName );
 }
 
 void Push( PHB_ITEM pItem )
 {
    ItemCopy( stack.pPos, pItem );
    StackPush();
-   HBDEBUG( "Push\n" );
+   HB_DEBUG( "Push\n" );
 }
 
 void PushBlock( BYTE * pCode, WORD wSize, WORD wParam, PSYMBOL pSymbols )
@@ -1741,7 +1741,7 @@ void PushBlock( BYTE * pCode, WORD wSize, WORD wParam, PSYMBOL pSymbols )
    /* store the line number where the codeblock was defined */
    stack.pPos->wLine   = stack.pBase->wLine;
    StackPush();
-   HBDEBUG( "PushBlock\n" );
+   HB_DEBUG( "PushBlock\n" );
 }
 
 void PushDate( LONG lDate )
@@ -1750,7 +1750,7 @@ void PushDate( LONG lDate )
    stack.pPos->wType   = IT_DATE;
    stack.pPos->value.lDate = lDate;
    StackPush();
-   HBDEBUG( "PushDate\n" );
+   HB_DEBUG( "PushDate\n" );
 }
 
 void PushDouble( double dNumber, WORD wDec )
@@ -1762,7 +1762,7 @@ void PushDouble( double dNumber, WORD wDec )
    else stack.pPos->wLength = 10;
    stack.pPos->wDec = (wDec > 9) ? 9 : wDec;
    StackPush();
-   HBDEBUG( "PushDouble\n" );
+   HB_DEBUG( "PushDouble\n" );
 }
 
 void PushInteger( int iNumber )
@@ -1773,7 +1773,7 @@ void PushInteger( int iNumber )
    stack.pPos->wLength = 10;
    stack.pPos->wDec    = 0;
    StackPush();
-   HBDEBUG( "PushInteger\n" );
+   HB_DEBUG( "PushInteger\n" );
 }
 
 void PushLong( long lNumber )
@@ -1784,7 +1784,7 @@ void PushLong( long lNumber )
    stack.pPos->wLength = 10;
    stack.pPos->wDec    = 0;
    StackPush();
-   HBDEBUG( "PushLong\n" );
+   HB_DEBUG( "PushLong\n" );
 }
 
 void RetValue( void )
@@ -1793,7 +1793,7 @@ void RetValue( void )
    ItemCopy( &stack.Return, stack.pPos );
    if( stack.Return.wType == IT_BLOCK )
       CodeblockDetach( (PCODEBLOCK)stack.Return.value.pCodeblock );
-   HBDEBUG( "RetValue\n" );
+   HB_DEBUG( "RetValue\n" );
 }
 
 void StackPop( void )
@@ -1810,7 +1810,7 @@ void StackPop( void )
 void StackFree( void )
 {
    _xfree( stack.pItems );
-   HBDEBUG( "StackFree\n" );
+   HB_DEBUG( "StackFree\n" );
 }
 
 void StackPush( void )
@@ -1852,7 +1852,7 @@ void StackInit( void )
    stack.pBase  = stack.pItems;
    stack.pPos   = stack.pItems;     /* points to the first stack item */
    stack.wItems = STACK_INITHB_ITEMS;
-   HBDEBUG( "StackInit\n" );
+   HB_DEBUG( "StackInit\n" );
 }
 
  void StackShow( void )
@@ -1917,7 +1917,7 @@ void SFrame( PSYMBOL pSym )      /* sets the statics frame for a function */
 {
    /* _INITSTATICS is now the statics frame. Statics() changed it! */
    stack.iStatics = ( int ) pSym->pFunPtr; /* pSym is { "_INITSTATICS", FS_INIT, _INITSTATICS } for each PRG */
-   HBDEBUG( "SFrame\n" );
+   HB_DEBUG( "SFrame\n" );
 }
 
 void Statics( PSYMBOL pSym ) /* initializes the global aStatics array or redimensionates it */
@@ -1935,7 +1935,7 @@ void Statics( PSYMBOL pSym ) /* initializes the global aStatics array or redimen
       hb_arraySize( &aStatics, hb_arrayLen( &aStatics ) + wStatics );
    }
 
-   HBDEBUG2( "Statics %li\n", hb_arrayLen( &aStatics ) );
+   HB_DEBUG2( "Statics %li\n", hb_arrayLen( &aStatics ) );
 }
 
 void ProcessSymbols( PSYMBOL pModuleSymbols, WORD wModuleSymbols ) /* module symbols initialization */
@@ -2053,7 +2053,7 @@ void DoInitFunctions( int argc, char * argv[] )
    } while( pLastSymbols );
 }
 
-HARBOUR LEN( void )
+HARBOUR HB_LEN( void )
 {
    PHB_ITEM pItem;
 
@@ -2080,7 +2080,7 @@ HARBOUR LEN( void )
       _retni( 0 );  /* QUESTION: Should we raise an error here ? */
 }
 
-HARBOUR EMPTY()
+HARBOUR HB_EMPTY(void)
 {
    PHB_ITEM pItem = _param( 1, IT_ANY );
 
@@ -2130,7 +2130,7 @@ HARBOUR EMPTY()
 }
 
 
-HARBOUR VALTYPE( void )
+HARBOUR HB_VALTYPE( void )
 {
    PHB_ITEM pItem;
 
@@ -2179,7 +2179,7 @@ HARBOUR VALTYPE( void )
       _retc( "U" );
 }
 
-HARBOUR ERRORBLOCK()
+HARBOUR HB_ERRORBLOCK(void)
 {
    HB_ITEM oldError;
    PHB_ITEM pNewErrorBlock = _param( 1, IT_BLOCK );
@@ -2194,7 +2194,7 @@ HARBOUR ERRORBLOCK()
    ItemRelease( &oldError );
 }
 
-HARBOUR PROCNAME()
+HARBOUR HB_PROCNAME(void)
 {
    int iLevel = _parni( 1 ) + 1;  /* we are already inside ProcName() */
    PHB_ITEM pBase = stack.pBase;
@@ -2208,7 +2208,7 @@ HARBOUR PROCNAME()
       _retc( "" );
 }
 
-HARBOUR PROCLINE()
+HARBOUR HB_PROCLINE(void)
 {
    int iLevel  = _parni( 1 ) + 1;  /* we are already inside ProcName() */
    PHB_ITEM pBase = stack.pBase;
@@ -2222,12 +2222,12 @@ HARBOUR PROCLINE()
       _retni( 0 );
 }
 
-HARBOUR __QUIT()
+HARBOUR HB___QUIT(void)
 {
    bQuit = TRUE;
 }
 
-HARBOUR ERRORLEVEL()
+HARBOUR HB_ERRORLEVEL(void)
 {
    BYTE bPrevValue = bErrorLevel;
 
@@ -2237,7 +2237,7 @@ HARBOUR ERRORLEVEL()
    _retni( bPrevValue );
 }
 
-HARBOUR PCOUNT()
+HARBOUR HB_PCOUNT(void)
 {
    PHB_ITEM pBase = stack.pItems + stack.pBase->wBase;
    WORD  wRet  = pBase->wParams;                /* Skip current function     */
@@ -2245,7 +2245,7 @@ HARBOUR PCOUNT()
    _retni( wRet );
 }
 
-HARBOUR PVALUE()                                /* PValue( <nArg> )         */
+HARBOUR HB_PVALUE(void)                                /* PValue( <nArg> )         */
 {
    WORD  wParam = _parni( 1 );                  /* Get parameter            */
    PHB_ITEM pBase = stack.pItems + stack.pBase->wBase;

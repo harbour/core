@@ -9,10 +9,10 @@
 
 void ProcessSymbols( SYMBOL *, WORD );
 
-HARBOUR MEMOTRAN();
+HARBOUR HB_MEMOTRAN(void);
 
 static SYMBOL symbols[] = {
-{ "MEMOTRAN", FS_PUBLIC, MEMOTRAN, 0 }
+{ "MEMOTRAN", FS_PUBLIC, HB_MEMOTRAN, 0 }
 };
 
 void Memotran__InitSymbols( void )
@@ -38,7 +38,7 @@ char *hb_memotran( char *string, char *hardcr, char *softcr )
    return string;
 }
 
-HARBOUR MEMOTRAN( void )
+HARBOUR HB_MEMOTRAN( void )
 {
    if( _pcount() == 1 )
    {

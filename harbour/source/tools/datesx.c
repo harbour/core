@@ -5,7 +5,7 @@
 #include <extend.h>
 #include <time.h>
 
-HARBOUR DATETIME( void )
+HARBOUR HB_DATETIME( void )
 {
    time_t current_time;
    char * szResult = ( char * ) _xgrab( 26 );

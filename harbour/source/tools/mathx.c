@@ -9,7 +9,7 @@
 #define M_PI_2      1.57079632679489661923
 #endif
 
-HARBOUR ACOS( void )
+HARBOUR HB_ACOS( void )
 {
    if( _pcount() > 0 )
    {
@@ -26,7 +26,7 @@ HARBOUR ACOS( void )
       _retnd(0);
 }
 
-HARBOUR ASIN( void )
+HARBOUR HB_ASIN( void )
 {
    if( _pcount() > 0 )
    {
@@ -43,7 +43,7 @@ HARBOUR ASIN( void )
       _retnd(0);
 }
 
-HARBOUR ATAN( void )
+HARBOUR HB_ATAN( void )
 {
    if( _pcount() > 0 )
    {
@@ -60,7 +60,7 @@ HARBOUR ATAN( void )
       _retnd(0);
 }
 
-HARBOUR COS( void )
+HARBOUR HB_COS( void )
 {
    if( _pcount() > 0 )
    {
@@ -71,7 +71,7 @@ HARBOUR COS( void )
       _retnd(0);
 }
 
-HARBOUR COSH( void )
+HARBOUR HB_COSH( void )
 {
    if( _pcount() > 0 )
    {
@@ -82,7 +82,7 @@ HARBOUR COSH( void )
       _retnd(0);
 }
 
-HARBOUR LOG10( void )
+HARBOUR HB_LOG10( void )
 {
    if( _pcount() > 0 )
    {
@@ -93,7 +93,7 @@ HARBOUR LOG10( void )
       _retnd(0);
 }
 
-HARBOUR SIN( void )
+HARBOUR HB_SIN( void )
 {
    if( _pcount() > 0 )
    {
@@ -104,7 +104,7 @@ HARBOUR SIN( void )
       _retnd(0);
 }
 
-HARBOUR SINH( void )
+HARBOUR HB_SINH( void )
 {
    if( _pcount() > 0 )
    {
@@ -115,7 +115,7 @@ HARBOUR SINH( void )
       _retnd(0);
 }
 
-HARBOUR TAN( void )
+HARBOUR HB_TAN( void )
 {
    if( _pcount() > 0 )
    {
@@ -126,7 +126,7 @@ HARBOUR TAN( void )
       _retnd(0);
 }
 
-HARBOUR TANH( void )
+HARBOUR HB_TANH( void )
 {
    if( _pcount() > 0 )
    {

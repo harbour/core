@@ -3,10 +3,10 @@
 
 void ProcessSymbols( SYMBOL *, WORD );
 
-HARBOUR DESCEND();
+HARBOUR HB_DESCEND(void);
 
 static SYMBOL symbols[] = {
-{ "DESCEND", FS_PUBLIC, DESCEND, 0 }
+{ "DESCEND", FS_PUBLIC, HB_DESCEND, 0 }
 };
 
 void Descend__InitSymbols( void )
@@ -26,7 +26,7 @@ char *hb_strdescend( char *string )
    return string;
 }
 
-HARBOUR DESCEND( void )
+HARBOUR HB_DESCEND( void )
 {
    if( _pcount() == 1 )
    {

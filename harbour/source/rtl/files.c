@@ -44,7 +44,6 @@
   #include <fcntl.h>
   #include <share.h>
   #if defined(__IBMCPP__)
-    #define SH_COMPAT SH_DENYRW
     #include <direct.h>
   #else
     #include <dir.h>
@@ -52,25 +51,52 @@
 
   #if !defined(HAVE_POSIX_IO)
   #define HAVE_POSIX_IO
-    #ifndef S_IEXEC
-      #define S_IEXEC  0x0040 /* owner may execute <directory search> */
-    #endif
-    #ifndef S_IRWXU
-      #define S_IRWXU  0x01c0 /* RWE permissions mask for owner */
-    #endif
-    #ifndef S_IRUSR
-      #define S_IRUSR  0x0100 /* owner may read */
-    #endif
-    #ifndef S_IWUSR
-      #define S_IWUSR  0x0080 /* owner may write */
-    #endif
-    #ifndef S_IXUSR
-      #define S_IXUSR  0x0040 /* owner may execute <directory search> */
-    #endif
   #endif
 
   #define PATH_SEPARATOR '\\'
 #endif
+
+
+#ifndef S_IEXEC
+#define S_IEXEC  0x0040 /* owner may execute <directory search> */
+#endif
+
+#ifndef S_IRWXU
+#define S_IRWXU  0x01c0 /* RWE permissions mask for owner */
+#endif
+
+#ifndef S_IRUSR
+#define S_IRUSR  0x0100 /* owner may read */
+#endif
+
+#ifndef S_IWUSR
+#define S_IWUSR  0x0080 /* owner may write */
+#endif
+
+#ifndef S_IXUSR
+#define S_IXUSR  0x0040 /* owner may execute <directory search> */
+#endif
+
+#ifndef SH_COMPAT
+#define SH_COMPAT       0x00    /* Compatibility */
+#endif
+
+#ifndef SH_DENYRW
+#define SH_DENYRW       0x10    /* Deny read/write */
+#endif
+
+#ifndef SH_DENYWR
+#define SH_DENYWR       0x20    /* Deny write */
+#endif
+
+#ifndef SH_DENYRD
+#define SH_DENYRD       0x30    /* Deny read */
+#endif
+
+#ifndef SH_DENYNO
+#define SH_DENYNO       0x40    /* Deny nothing */
+#endif
+
 
 #define IT_NUMBER       (IT_INTEGER|IT_LONG|IT_DOUBLE)
 
@@ -430,18 +456,7 @@ FHANDLE hb_fsExtOpen( BYTEP fpFilename, BYTEP fpDefExt,
  * -- HARBOUR FUNCTIONS --
  */
 
-#ifdef FOPEN
-#define HB_FOPEN FOPEN
-#undef FOPEN
-#endif
-
-HARBOUR FOPEN( void )
-
-#ifdef HB_FOPEN
-#define FOPEN HB_FOPEN
-#undef HB_FOPEN
-#endif
-
+HARBOUR HB_FOPEN( void )
 {
         PHB_ITEM arg1_it = _param(1,IT_STRING);
         PHB_ITEM arg2_it = _param(2,IT_NUMBER);
@@ -463,7 +478,7 @@ HARBOUR FOPEN( void )
         return;
 }
 
-HARBOUR FCREATE( void )
+HARBOUR HB_FCREATE( void )
 {
         PHB_ITEM arg1_it = _param(1,IT_STRING);
         PHB_ITEM arg2_it = _param(2,IT_NUMBER);
@@ -485,18 +500,7 @@ HARBOUR FCREATE( void )
         return;
 }
 
-#ifdef FREAD
-#define HB_FREAD FREAD
-#undef FREAD
-#endif
-
-HARBOUR FREAD( void )
-
-#ifdef HB_FREAD
-#define FREAD HB_FREAD
-#undef HB_FREAD
-#endif
-
+HARBOUR HB_FREAD( void )
 {
         PHB_ITEM arg1_it = _param(1,IT_NUMBER);
         PHB_ITEM arg2_it = _param(2,IT_STRING+IT_BYREF);
@@ -513,18 +517,7 @@ HARBOUR FREAD( void )
         return;
 }
 
-#ifdef FWRITE
-#define HB_FWRITE FWRITE
-#undef FWRITE
-#endif
-
-HARBOUR FWRITE( void )
-
-#ifdef HB_FWRITE
-#define FWRITE HB_FWRITE
-#undef HB_FWRITE
-#endif
-
+HARBOUR HB_FWRITE( void )
 {
         PHB_ITEM arg1_it = _param(1,IT_NUMBER);
         PHB_ITEM arg2_it = _param(2,IT_STRING);
@@ -542,13 +535,13 @@ HARBOUR FWRITE( void )
         return;
 }
 
-HARBOUR FERROR( void )
+HARBOUR HB_FERROR( void )
 {
         _retni(hb_fsError());
         return;
 }
 
-HARBOUR FCLOSE( void )
+HARBOUR HB_FCLOSE( void )
 {
         PHB_ITEM arg1_it = _param(1,IT_NUMBER);
 
@@ -561,7 +554,7 @@ HARBOUR FCLOSE( void )
         return;
 }
 
-HARBOUR FERASE( void )
+HARBOUR HB_FERASE( void )
 {
         PHB_ITEM arg1_it = _param(1,IT_STRING);
 
@@ -574,7 +567,7 @@ HARBOUR FERASE( void )
         return;
 }
 
-HARBOUR FRENAME( void )
+HARBOUR HB_FRENAME( void )
 {
         PHB_ITEM arg1_it = _param(1,IT_STRING);
         PHB_ITEM arg2_it = _param(2,IT_STRING);
@@ -588,7 +581,7 @@ HARBOUR FRENAME( void )
         return;
 }
 
-HARBOUR FSEEK( void )
+HARBOUR HB_FSEEK( void )
 {
         PHB_ITEM arg1_it = _param(1,IT_NUMBER);
         PHB_ITEM arg2_it = _param(2,IT_NUMBER);
@@ -619,7 +612,7 @@ HARBOUR HB_FILE( void )
         return;
 }
 
-HARBOUR FREADSTR( void )
+HARBOUR HB_FREADSTR( void )
 {
         PHB_ITEM arg1_it = _param( 1, IT_NUMBER );
         PHB_ITEM arg2_it = _param( 2, IT_NUMBER );
@@ -657,7 +650,7 @@ HARBOUR FREADSTR( void )
         return;
 }
 
-HARBOUR BIN2I( void )
+HARBOUR HB_BIN2I( void )
 {
         PHB_ITEM arg1_it = _param( 1, IT_STRING );
         char * s;
@@ -676,7 +669,7 @@ HARBOUR BIN2I( void )
         return;
 }
 
-HARBOUR BIN2L( void )
+HARBOUR HB_BIN2L( void )
 {
         PHB_ITEM arg1_it = _param( 1, IT_STRING );
         char * s;
@@ -695,12 +688,12 @@ HARBOUR BIN2L( void )
         return;
 }
 
-HARBOUR BIN2W( void )
+HARBOUR HB_BIN2W( void )
 {
-        BIN2I();
+        HB_BIN2I();
 }
 
-HARBOUR I2BIN( void )
+HARBOUR HB_I2BIN( void )
 {
         PHB_ITEM arg1_it = _param( 1, IT_INTEGER );
         int n;
@@ -720,7 +713,7 @@ HARBOUR I2BIN( void )
         return;
 }
 
-HARBOUR L2BIN( void )
+HARBOUR HB_L2BIN( void )
 {
         PHB_ITEM arg1_it = _param( 1, IT_LONG );
         long  n;
@@ -742,8 +735,8 @@ HARBOUR L2BIN( void )
         return;
 }
 
-HARBOUR W2BIN( void )
+HARBOUR HB_W2BIN( void )
 {
-        I2BIN();
+        HB_I2BIN();
 }
 

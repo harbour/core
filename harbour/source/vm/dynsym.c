@@ -216,17 +216,17 @@ void ReleaseDynamicSymbols( void )
    _xfree( pDynItems );
 }
 
-HARBOUR DYNSYMNAME()            /* Get name of symbol */
+HARBOUR HB_DYNSYMNAME(void)            /* Get name of symbol */
 {                               /* cSymbol = DynSymName( dsIndex ) */
    _retc( pDynItems[ _parnl( 1 ) - 1 ].pDynSym->pSymbol->szName );
 }
 
-HARBOUR DYNSYMBOLS()            /* How much symbols do we have */
+HARBOUR HB_DYNSYMBOLS(void)            /* How much symbols do we have */
 {                               /* dsCount = DynSymbols() */
    _retnl( wDynSymbols );
 }
 
-HARBOUR GETDYNSYM()         /* Gimme index number of symbol */
+HARBOUR HB_GETDYNSYM(void)         /* Gimme index number of symbol */
                             /* dsIndex = GetDynSym( cSymbol ) */
 {
    _retnl( ( LONG ) GetDynSym( _parc( 1 ) ) );

@@ -7,7 +7,7 @@
 
 extern STACK stack;
 
-HARBOUR ABS( void )
+HARBOUR HB_ABS( void )
 {
    if( _pcount() == 1 )
    {
@@ -53,7 +53,7 @@ HARBOUR ABS( void )
    }
 }
 
-HARBOUR EXP( void )
+HARBOUR HB_EXP( void )
 {
    if( _pcount() == 1 )
    {
@@ -81,7 +81,7 @@ HARBOUR EXP( void )
    }
 }
 
-HARBOUR INT( void )
+HARBOUR HB_INT( void )
 {
    if( _pcount() == 1 )
    {
@@ -105,7 +105,7 @@ HARBOUR INT( void )
    }
 }
 
-HARBOUR LOG( void )
+HARBOUR HB_LOG( void )
 {
    if( _pcount() == 1 )
    {
@@ -139,7 +139,7 @@ HARBOUR LOG( void )
 }
 
 /* returns the maximum of two date or numerics */
-HARBOUR MAX( void )
+HARBOUR HB_MAX( void )
 {
    if( _pcount() == 2 )
    {
@@ -177,7 +177,7 @@ HARBOUR MAX( void )
 }
 
 /* returns the minimum of two date or numerics */
-HARBOUR MIN( void )
+HARBOUR HB_MIN( void )
 {
    if( _pcount() == 2 )
    {
@@ -214,7 +214,7 @@ HARBOUR MIN( void )
    }
 }
 
-HARBOUR MOD( void )
+HARBOUR HB_MOD( void )
 {
 /*
 FUNCTION MOD(cl_num, cl_base)
@@ -257,7 +257,7 @@ FUNCTION MOD(cl_num, cl_base)
    }
 }
 
-HARBOUR SQRT( void )
+HARBOUR HB_SQRT( void )
 {
    if( _pcount() == 1 )
    {

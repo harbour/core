@@ -52,7 +52,7 @@ LOCAL nH1,lRetu,nH2
    fClose(nH1)
 
    IF !lRetu
-      IF !HB_File("NotTestd.txt")
+      IF !File("NotTestd.txt")
          nH2=fCreate("NotTestd.txt")
       ELSE
          nH2=fOpen("NotTestd.txt",1)

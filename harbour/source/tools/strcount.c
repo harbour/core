@@ -16,6 +16,9 @@
  * ---------------------
  *
  * $Log$
+ * Revision 1.3  1999/06/12 00:21:57  gdiet
+ * ChangeLogTag:Fri Jun 11 19:14:22 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+ *
  * Revision 1.2  1999/06/09 18:06:05  dholm
  * See ChangeLog entry 19990609-12:55 EDT David G. Holm <dholm@jsd-llc.com>
  *
@@ -59,7 +62,7 @@
 
 #include <extend.h>
 
-HARBOUR GT_STRCOUNT( void )
+HARBOUR HB_GT_STRCOUNT( void )
 {
   char *s1, *s2;
   int count, p1, p2, l1, l2;

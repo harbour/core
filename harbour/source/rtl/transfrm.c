@@ -423,7 +423,7 @@ char *DatePicture( long lDate, int iPicFlags, long *lRetSize )
 }
 
 
-HARBOUR TRANSFORM( void )
+HARBOUR HB_TRANSFORM( void )
 {
    PHB_ITEM pPic       = _param( 2, IT_STRING);    /* Picture string           */
    PHB_ITEM pExp       = _param( 1, IT_ANY );      /* Input parameter          */

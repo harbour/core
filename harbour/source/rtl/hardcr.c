@@ -6,10 +6,10 @@
 
 void ProcessSymbols( SYMBOL *, WORD );
 
-HARBOUR HARDCR();
+HARBOUR HB_HARDCR(void);
 
 static SYMBOL symbols[] = {
-{ "HARDCR", FS_PUBLIC, HARDCR, 0 }
+{ "HARDCR", FS_PUBLIC, HB_HARDCR, 0 }
 };
 
 void HardCR__InitSymbols( void )
@@ -32,7 +32,7 @@ char *hb_hardcr( char *string )
    return string;
 }
 
-HARBOUR HARDCR( void )
+HARBOUR HB_HARDCR( void )
 {
    if( _pcount() == 1 )
    {

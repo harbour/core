@@ -82,15 +82,10 @@
 #endif
 
 
-#ifdef __BORLANDC__
-   #undef DIRECTORY
-#endif
-
-
 static  BOOL  hb_strMatchDOS (char *pszString, char *pszMask);
 
 
-HARBOUR DIRECTORY( void )
+HARBOUR HB_DIRECTORY( void )
 {
 #if defined(HAVE_POSIX_IO)
    PHB_ITEM arg1_it = _param(1,IT_STRING);

@@ -9,6 +9,7 @@ C_HEADERS=\
 	ctoharb.h \
 	dates.h \
 	extend.h \
+	filesys.h \
 	gtapi.h \
 	harbclip.h \
 	hberrors.h \
@@ -23,6 +24,7 @@ C_HEADERS=\
 PRG_HEADERS=\
 	cgi.ch \
 	error.ch \
+	fileio.ch \
 	inkey.ch \
 	set.ch \
 	setcurs.ch \
@@ -30,5 +32,6 @@ PRG_HEADERS=\
 
 API_HEADERS=\
 	error.api \
+	filesys.api \
 
 include $(TOP)$(ROOT)config/header.cf

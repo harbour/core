@@ -28,7 +28,7 @@
   #endif
 #endif
 
-HARBOUR OS()
+HARBOUR HB_OS(void)
 {
    int hb_osmajor = -1, hb_osminor = -1, hb_osletter = -1;
    char * hb_os = 0;
@@ -165,7 +165,7 @@ HARBOUR OS()
    _retc (version);
 }
 
-HARBOUR VERSION()
+HARBOUR HB_VERSION(void)
 {
    char hb_ver[ 80 ];
    sprintf( hb_ver, "Harbour %d.%d%s Intl. (Build %d)  (%04d.%02d.%02d)",
@@ -173,7 +173,7 @@ HARBOUR VERSION()
    _retc( hb_ver );
 }
 
-HARBOUR GETENV()
+HARBOUR HB_GETENV(void)
 {
    if( _pcount() == 1 )
    {

@@ -60,7 +60,7 @@ static function New(cFileName)
       ::Contents := {}
       CurrArray := ::Contents
 
-      if Hb_File(cFileName)
+      if File(cFileName)
          hFile := fopen(cFilename, 0)
 
       else

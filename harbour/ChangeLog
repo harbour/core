@@ -1,3 +1,69 @@
+Fri Jun 11 19:14:22 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* include/Makefile: 
+	* include/set.h: 
+	* source/compiler/harbour.y: 
+	* source/hbpp/harb.h: 
+	* source/hbpp/hbpp.c: 
+	* source/rtl/arrays.c: 
+	* source/rtl/classes.c: 
+	* source/rtl/console.c: 
+	* source/rtl/dates.c: 
+	* source/rtl/descend.c: 
+	* source/rtl/dir.c: 
+	* source/rtl/environ.c: 
+	* source/rtl/files.c: 
+	* source/rtl/hardcr.c: 
+	* source/rtl/math.c: 
+	* source/rtl/mtran.c: 
+	* source/rtl/set.c: 
+	* source/rtl/strings.c: 
+	* source/rtl/transfrm.c: 
+	* source/runner/run_exp.h: 
+	* source/runner/runner.c: 
+	* source/tools/asciisum.c: 
+	* source/tools/ascpos.c: 
+	* source/tools/atdiff.c: 
+	* source/tools/chareven.c: 
+	* source/tools/charmix.c: 
+	* source/tools/charodd.c: 
+	* source/tools/chrcount.c: 
+	* source/tools/chrfirst.c: 
+	* source/tools/chrtotal.c: 
+	* source/tools/datesx.c: 
+	* source/tools/debug.c: 
+	* source/tools/hb_f.c: 
+	* source/tools/io.c: 
+	* source/tools/mathx.c: 
+	* source/tools/strcount.c: 
+	* source/tools/strcspn.c: 
+	* source/tools/strdiff.c: 
+	* source/tools/strexpan.c: 
+	* source/tools/stringsx.c: 
+	* source/tools/strleft.c: 
+	* source/tools/strpbrk.c: 
+	* source/tools/strright.c: 
+	* source/vm/dynsym.c: 
+	* source/vm/hvm.c: 
+	* source/vm/initsymb.c: 
+	* tests/working/Makefile: 
+	* tests/working/dates.prg: 
+	* tests/working/dates2.prg: 
+	* tests/working/empty.prg: 
+	* tests/working/filexist.prg: 
+	* tests/working/inifiles.prg: 
+	* tests/working/next.prg: 
+	* tests/working/test_all.prg: 
+	* tests/working/teststr.prg: 
+	* tests/working/transfrm.prg: 
+	When the compiler sees a function called FOO, it generates a call
+	to HB_FOO. This meant updating the code generation (with the help
+	of Eddie Runia) and updating all HARBOUR functions to prepend an
+	HB_ to each of them. I also made sure all of them where declared
+	in uppercase and had the signature HARBOUR HB_FOO(void).
+	I may have missed something. In particular, test testhbf.prg does
+	not work, but I wanted to commit this change anyway.
+
 Fri Jun 11 17:11:09 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* config/bin.cf: 

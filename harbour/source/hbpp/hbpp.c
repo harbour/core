@@ -124,7 +124,7 @@ int koltranslates = 0, maxtranslates = 50;
 
 int main (int argc,char* argv[])
 {
-int handl_i,handl_o,i;
+int handl_i,handl_o;
 char szFileName[ _POSIX_PATH_MAX ];
 FILENAME *pFileName =NULL;
 
@@ -256,7 +256,7 @@ int ParseDirective( char* sLine )
     { printf("\nCan't open %s",sLine); return 1001; }
 
    lInclude++;
-   Hp_Parse(handl_i, NULL);
+   Hp_Parse(handl_i, 0);
    lInclude--;
    close(handl_i);
   }
@@ -864,7 +864,7 @@ int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, int nbr )
 {
  char expreal[MAX_NAME], exppatt[MAX_NAME];
  int lenreal = 0, lenpatt;
- int rezrestr, i, ipos;
+ int rezrestr, ipos;
  char *ptr, *ptrtemp;
 
   if ( **ptri == ',' )  return 0;

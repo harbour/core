@@ -48,14 +48,14 @@ PDYNSYM msgClassName = 0, msgClassH = 0, msgEval = 0, msgClassSel = 0;
 
 /* All functions contained in classes.c */
 
-       HARBOUR     CLASSADD( void );
-       HARBOUR     CLASSCREATE( void );
-       HARBOUR     CLASSDEL( void );
+       HARBOUR     HB_CLASSADD( void );
+       HARBOUR     HB_CLASSCREATE( void );
+       HARBOUR     HB_CLASSDEL( void );
 static HARBOUR     ClassH( void );
-       HARBOUR     CLASSINSTANCE( void );
-       HARBOUR     CLASSMOD( void );
+       HARBOUR     HB_CLASSINSTANCE( void );
+       HARBOUR     HB_CLASSMOD( void );
 static HARBOUR     ClassName( void );
-       HARBOUR     CLASSNAME( void );
+       HARBOUR     HB_CLASSNAME( void );
 static HARBOUR     ClassSel( void );
 static void        DictRealloc( PCLASS );
 static HARBOUR     EvalInline( void );
@@ -63,63 +63,63 @@ static HARBOUR     GetClassData( void );
 static HARBOUR     GetData( void );
        HARBOURFUNC GetMethod( PHB_ITEM, PSYMBOL );
        ULONG       hb_isMessage( PHB_ITEM, char *);
-       HARBOUR     ISMESSAGE( void );
-       HARBOUR     OCLONE( void );
-       HARBOUR     OSEND( void );
+       HARBOUR     HB_ISMESSAGE( void );
+       HARBOUR     HB_OCLONE( void );
+       HARBOUR     HB_OSEND( void );
        void        ReleaseClass( PCLASS );
        void        ReleaseClasses( void );
 static HARBOUR     SelectSuper( void );
 static HARBOUR     SetClassData( void );
 static HARBOUR     SetData( void );
 static HARBOUR     Virtual( void );
-       HARBOUR     __INSTSUPER( void );
-       HARBOUR     __WDATAS( void );
-       HARBOUR     __WDATADEC( void );
-       HARBOUR     __WDATAINC( void );
+       HARBOUR     HB___INSTSUPER( void );
+       HARBOUR     HB___WDATAS( void );
+       HARBOUR     HB___WDATADEC( void );
+       HARBOUR     HB___WDATAINC( void );
 
 /* All function contained in matching objfunc.prg */
 
-HARBOUR AODATA( void );
-HARBOUR AOGET( void );
-HARBOUR AOMETHOD( void );
-HARBOUR AOSET( void );
-HARBOUR ISDATA( void );
-HARBOUR ISMETHOD( void );
-HARBOUR OADDDATA( void );
-HARBOUR OADDINLINE( void );
-HARBOUR OADDMETHOD( void );
-HARBOUR ODELDATA( void );
-HARBOUR ODELINLINE( void );
-HARBOUR ODELMETHOD( void );
-HARBOUR OMODINLINE( void );
-HARBOUR OMODMETHOD( void );
+HARBOUR HB_AODATA( void );
+HARBOUR HB_AOGET( void );
+HARBOUR HB_AOMETHOD( void );
+HARBOUR HB_AOSET( void );
+HARBOUR HB_ISDATA( void );
+HARBOUR HB_ISMETHOD( void );
+HARBOUR HB_OADDDATA( void );
+HARBOUR HB_OADDINLINE( void );
+HARBOUR HB_OADDMETHOD( void );
+HARBOUR HB_ODELDATA( void );
+HARBOUR HB_ODELINLINE( void );
+HARBOUR HB_ODELMETHOD( void );
+HARBOUR HB_OMODINLINE( void );
+HARBOUR HB_OMODMETHOD( void );
 
 /* Exported symbols of both classes.c and objfunc.prg */
 
 static SYMBOL symbols[] = {
-{ "AODATA"        , FS_PUBLIC, AODATA         , 0 },
-{ "AOGET"         , FS_PUBLIC, AOGET          , 0 },
-{ "AOMETHOD"      , FS_PUBLIC, AOMETHOD       , 0 },
-{ "AOSET"         , FS_PUBLIC, AOSET          , 0 },
-{ "CLASSADD"      , FS_PUBLIC, CLASSADD       , 0 },
-{ "CLASSCREATE"   , FS_PUBLIC, CLASSCREATE    , 0 },
-{ "CLASSDEL"      , FS_PUBLIC, CLASSDEL       , 0 },
-{ "CLASSINSTANCE" , FS_PUBLIC, CLASSINSTANCE  , 0 },
-{ "CLASSMOD"      , FS_PUBLIC, CLASSMOD       , 0 },
-{ "CLASSNAME"     , FS_PUBLIC, CLASSNAME      , 0 },
-{ "ISDATA"        , FS_PUBLIC, ISDATA         , 0 },
-{ "ISMESSAGE"     , FS_PUBLIC, ISMESSAGE      , 0 },
-{ "ISMETHOD"      , FS_PUBLIC, ISMETHOD       , 0 },
-{ "OADDDATA"      , FS_PUBLIC, OADDDATA       , 0 },
-{ "OADDINLINE"    , FS_PUBLIC, OADDINLINE     , 0 },
-{ "OADDMETHOD"    , FS_PUBLIC, OADDMETHOD     , 0 },
-{ "OCLONE"        , FS_PUBLIC, OCLONE         , 0 },
-{ "ODELDATA"      , FS_PUBLIC, ODELDATA       , 0 },
-{ "ODELINLINE"    , FS_PUBLIC, ODELINLINE     , 0 },
-{ "ODELMETHOD"    , FS_PUBLIC, ODELMETHOD     , 0 },
-{ "OMODINLINE"    , FS_PUBLIC, OMODINLINE     , 0 },
-{ "OMODMETHOD"    , FS_PUBLIC, OMODMETHOD     , 0 },
-{ "OSEND"         , FS_PUBLIC, OSEND          , 0 }
+{ "AODATA"        , FS_PUBLIC, HB_AODATA         , 0 },
+{ "AOGET"         , FS_PUBLIC, HB_AOGET          , 0 },
+{ "AOMETHOD"      , FS_PUBLIC, HB_AOMETHOD       , 0 },
+{ "AOSET"         , FS_PUBLIC, HB_AOSET          , 0 },
+{ "CLASSADD"      , FS_PUBLIC, HB_CLASSADD       , 0 },
+{ "CLASSCREATE"   , FS_PUBLIC, HB_CLASSCREATE    , 0 },
+{ "CLASSDEL"      , FS_PUBLIC, HB_CLASSDEL       , 0 },
+{ "CLASSINSTANCE" , FS_PUBLIC, HB_CLASSINSTANCE  , 0 },
+{ "CLASSMOD"      , FS_PUBLIC, HB_CLASSMOD       , 0 },
+{ "CLASSNAME"     , FS_PUBLIC, HB_CLASSNAME      , 0 },
+{ "ISDATA"        , FS_PUBLIC, HB_ISDATA         , 0 },
+{ "ISMESSAGE"     , FS_PUBLIC, HB_ISMESSAGE      , 0 },
+{ "ISMETHOD"      , FS_PUBLIC, HB_ISMETHOD       , 0 },
+{ "OADDDATA"      , FS_PUBLIC, HB_OADDDATA       , 0 },
+{ "OADDINLINE"    , FS_PUBLIC, HB_OADDINLINE     , 0 },
+{ "OADDMETHOD"    , FS_PUBLIC, HB_OADDMETHOD     , 0 },
+{ "OCLONE"        , FS_PUBLIC, HB_OCLONE         , 0 },
+{ "ODELDATA"      , FS_PUBLIC, HB_ODELDATA       , 0 },
+{ "ODELINLINE"    , FS_PUBLIC, HB_ODELINLINE     , 0 },
+{ "ODELMETHOD"    , FS_PUBLIC, HB_ODELMETHOD     , 0 },
+{ "OMODINLINE"    , FS_PUBLIC, HB_OMODINLINE     , 0 },
+{ "OMODMETHOD"    , FS_PUBLIC, HB_OMODMETHOD     , 0 },
+{ "OSEND"         , FS_PUBLIC, HB_OSEND          , 0 }
 };
 
 void Classes__InitSymbols( void )
@@ -143,7 +143,7 @@ void Classes__InitSymbols( void )
  * <nType>     see MET_*
  * <xInit>     Optional initializer for DATA
  */
-HARBOUR CLASSADD()
+HARBOUR HB_CLASSADD(void)
 {
    WORD    wClass = _parnl( 1 );
    WORD    wType  = _parni( 4 );
@@ -242,7 +242,7 @@ HARBOUR CLASSADD()
  * <nDatas>     Number of DATAs in the class
  * <hSuper>     Optional handle of superclass
  */
-HARBOUR CLASSCREATE()
+HARBOUR HB_CLASSCREATE(void)
 {
    WORD   wSuper = _parni( 3 );                 /* Super class present      */
    WORD   wSize;
@@ -301,7 +301,7 @@ HARBOUR CLASSCREATE()
  * <oObj>     Object
  * <cMessage> Message
  */
-HARBOUR CLASSDEL()
+HARBOUR HB_CLASSDEL(void)
 {
    PHB_ITEM   pString  = _param( 2, IT_STRING );
    PSYMBOL pMessage = GetDynSym( pString->value.szText )->pSymbol;
@@ -374,7 +374,7 @@ static HARBOUR ClassH( void )
  *
  * Create a new object from class definition <hClass>
  */
-HARBOUR CLASSINSTANCE()
+HARBOUR HB_CLASSINSTANCE(void)
 {
    WORD    wClass = _parni( 1 );
    WORD    wAt, wLimit;
@@ -402,7 +402,7 @@ HARBOUR CLASSINSTANCE()
  *
  * Modify message (only for INLINE and METHOD)
  */
-HARBOUR CLASSMOD()
+HARBOUR HB_CLASSMOD(void)
 {
    PHB_ITEM   pString  = _param( 2, IT_STRING );
    PSYMBOL pMessage = GetDynSym( pString->value.szText )->pSymbol;
@@ -475,7 +475,7 @@ static HARBOUR ClassName( void )
  *
  * Returns class name of <hClass>
  */
-HARBOUR CLASSNAME()
+HARBOUR HB_CLASSNAME(void)
 {
    PHB_ITEM pObject = _param( 0, IT_OBJECT );
    WORD wClass;
@@ -501,7 +501,7 @@ HARBOUR CLASSNAME()
  *
  * Returns all the messages in <obj>
  */
-static HARBOUR ClassSel()
+static HARBOUR ClassSel(void)
 {
    WORD    wClass = IS_ARRAY( stack.pBase + 1 ) ?
         ( ( PBASEARRAY ) ( stack.pBase + 1 )->value.pBaseArray )->wClass : 0;
@@ -755,7 +755,7 @@ ULONG hb_isMessage( PHB_ITEM pObject, char *szString )
  *
  * Is <cSymbol> a valid message for the <oObj>
  */
-HARBOUR ISMESSAGE()
+HARBOUR HB_ISMESSAGE(void)
 {
    PHB_ITEM   pObject  = _param( 1, IT_OBJECT );
    PHB_ITEM   pString  = _param( 2, IT_STRING );
@@ -777,7 +777,7 @@ HARBOUR ISMESSAGE()
  *
  * Clone an object. Note the similarity with aClone ;-)
  */
-HARBOUR OCLONE( void )
+HARBOUR HB_OCLONE( void )
 {
    PHB_ITEM pSrcObject  = _param( 1, IT_OBJECT );
 
@@ -803,7 +803,7 @@ HARBOUR OCLONE( void )
  *
  * Send a message to an object
  */
-HARBOUR OSEND()
+HARBOUR HB_OSEND(void)
 {
    PHB_ITEM pObject  = _param( 1, IT_OBJECT );
    PHB_ITEM pMessage = _param( 2, IT_STRING );
@@ -946,7 +946,7 @@ static HARBOUR Virtual( void )
  *
  * Instance super class and return class handle
  */
-HARBOUR __INSTSUPER( void )
+HARBOUR HB___INSTSUPER( void )
 {
    PHB_ITEM pString = _param( 1, IT_STRING );
    PDYNSYM  pDynSym;
@@ -997,7 +997,7 @@ HARBOUR __INSTSUPER( void )
  *
  * Return number of datas and decrease
  */
-HARBOUR __WDATADEC()
+HARBOUR HB___WDATADEC(void)
 {
    WORD wClass = _parnl( 1 );
 
@@ -1011,7 +1011,7 @@ HARBOUR __WDATADEC()
  *
  * Return number of datas and decrease
  */
-HARBOUR __WDATAINC()
+HARBOUR HB___WDATAINC(void)
 {
    WORD wClass = _parnl( 1 );
 
@@ -1025,7 +1025,7 @@ HARBOUR __WDATAINC()
  *
  * Return number of datas
  */
-HARBOUR __WDATAS()
+HARBOUR HB___WDATAS(void)
 {
    WORD wClass = _parnl( 1 );
 

@@ -32,7 +32,7 @@ static long last_off[10];
 static long lastbyte[10];
 static int isEof[10];
 
-HARBOUR HB_FUSE( void )
+HARBOUR HB_HB_FUSE( void )
 
 {
 
@@ -71,14 +71,14 @@ HARBOUR HB_FUSE( void )
 }
 
 
-HARBOUR HB_FRECNO( void )
+HARBOUR HB_HB_FRECNO( void )
 
 {
    _retnl( recno[area] );
 }
 
 
-HARBOUR HB_FSKIP( void )
+HARBOUR HB_HB_FSKIP( void )
 
 {
 
@@ -163,7 +163,7 @@ long _hbfskip( int recs )
    return ( recno[area] );
 }
 
-HARBOUR HB_FREADLN( void )
+HARBOUR HB_HB_FREADLN( void )
 
 {
 
@@ -184,7 +184,7 @@ HARBOUR HB_FREADLN( void )
 
 }
 
-HARBOUR HB_FEOF( void )
+HARBOUR HB_HB_FEOF( void )
 
 {
 
@@ -192,7 +192,7 @@ HARBOUR HB_FEOF( void )
 
 }
 
-HARBOUR HB_FGOTO( void )
+HARBOUR HB_HB_FGOTO( void )
 
 {
 
@@ -220,7 +220,7 @@ HARBOUR HB_FGOTO( void )
    }
 }
 
-HARBOUR HB_FGOBOTTOM()
+HARBOUR HB_HB_FGOBOTTOM(void)
 
 {
 
@@ -259,7 +259,7 @@ HARBOUR HB_FGOBOTTOM()
    }
 }
 
-HARBOUR HB_FGOTOP( void )
+HARBOUR HB_HB_FGOTOP( void )
 {
 
    offset[area] = 0L;
@@ -267,7 +267,7 @@ HARBOUR HB_FGOTOP( void )
 
 }
 
-HARBOUR HB_FLASTREC( void )
+HARBOUR HB_HB_FLASTREC( void )
 {
 
    long old_rec;
@@ -276,7 +276,7 @@ HARBOUR HB_FLASTREC( void )
    old_rec = recno[area];
    old_offset = offset[area];
 
-   HB_FGOBOTTOM();
+   HB_HB_FGOBOTTOM();
    _retnl( last_rec[area] );
 
    recno[area] = old_rec;
@@ -285,7 +285,7 @@ HARBOUR HB_FLASTREC( void )
 }
 
 
-HARBOUR HB_FSELECT( void )
+HARBOUR HB_HB_FSELECT( void )
 
 {
 

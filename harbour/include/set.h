@@ -7,7 +7,7 @@
 
 #include <types.h>
 
-HARBOUR SET (void);
+HARBOUR HB_SET (void);
 HARBOUR HB_SETCENTURY (void);
 HARBOUR HB_SETFIXED (void);
 void InitializeSets (void);

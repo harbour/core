@@ -8,7 +8,7 @@
 /* TODO: search this file for TODO and find 'em! */
 
 /* debug function to dump the ASCII values of an entire string */
-HARBOUR STRDUMP( void )
+HARBOUR HB_STRDUMP( void )
 {
    char *szText = _parc(1);
    long i, lLength = _parclen(1);
@@ -60,7 +60,7 @@ char *hb_strtoken(char *szText, long lText, long lIndex, char cDelimiter, long *
 }
 
 /* returns the nth occurence of a substring within a token-delimited string */
-HARBOUR STRTOKEN( void )
+HARBOUR HB_STRTOKEN( void )
 {
    char *szText;
    long lIndex = _parnl(2);
@@ -76,7 +76,7 @@ HARBOUR STRTOKEN( void )
    _retclen(szText, lLen);
 }
 
-HARBOUR ROT13( void )
+HARBOUR HB_ROT13( void )
 {
    PHB_ITEM pText = _param(1, IT_STRING);
 

@@ -16,6 +16,9 @@
  * ---------------------
  *
  * $Log$
+ * Revision 1.4  1999/06/12 00:21:55  gdiet
+ * ChangeLogTag:Fri Jun 11 19:14:22 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+ *
  * Revision 1.3  1999/06/09 18:06:04  dholm
  * See ChangeLog entry 19990609-12:55 EDT David G. Holm <dholm@jsd-llc.com>
  *
@@ -61,7 +64,7 @@
 
 #include <extend.h>
 
-HARBOUR GT_CHARMIX( void )
+HARBOUR HB_GT_CHARMIX( void )
 {
   char *s1, *s2, *s3;
   int l1, l2, i, pos;

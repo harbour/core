@@ -20,7 +20,7 @@
 
 #ifdef __DOS__
 
-HARBOUR renfile()
+HARBOUR HB_RENFILE(void)
 {
   int ok;
   PHB_ITEM arg1 = _param(1,IT_STRING);
@@ -131,7 +131,7 @@ HARBOUR renfile()
  */
 
 
-HARBOUR CD(void)
+HARBOUR HB_CD(void)
 
 {
   PHB_ITEM MEUDIR = _param(1,IT_STRING);
@@ -141,7 +141,7 @@ HARBOUR CD(void)
     }
 }
 
-HARBOUR MD(void)
+HARBOUR HB_MD(void)
 {
 
   PHB_ITEM MEUDIR = _param(1,IT_STRING);
@@ -152,7 +152,7 @@ HARBOUR MD(void)
     }
 }
 
-HARBOUR RD(void)
+HARBOUR HB_RD(void)
 {
   PHB_ITEM MEUDIR = _param(1,IT_STRING);
   if(MEUDIR)
@@ -193,7 +193,7 @@ HARBOUR RD(void)
  *  $END$
  */
 
-HARBOUR file(void)
+HARBOUR HB_FILE(void)
 {
   PHB_ITEM arg1 = _param(1,IT_STRING);
   char *arquivos;
@@ -212,7 +212,7 @@ HARBOUR file(void)
       }
   }
 }
-HARBOUR DISKUSED(void)
+HARBOUR HB_DISKUSED(void)
 {
   long bytsfree,bytsfull;
   struct diskfree_t disk;
@@ -226,7 +226,7 @@ HARBOUR DISKUSED(void)
   _retnl(bytsfull-bytsfree);
 }
 
-HARBOUR DISKFREE(void)
+HARBOUR HB_DISKFREE(void)
 {
   long bytsfree;
   struct diskfree_t disk;
@@ -238,7 +238,7 @@ HARBOUR DISKFREE(void)
   _retnl(bytsfree);
 }
 
-HARBOUR DISKFULL(void)
+HARBOUR HB_DISKFULL(void)
 {
   long bytsfull;
   struct diskfree_t disk;

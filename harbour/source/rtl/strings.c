@@ -31,7 +31,7 @@ BOOL hb_strempty( char * szText, ULONG ulLen )
 /* determines if first char of string is letter */
 /* TEST: QOUT( "isalpha( 'hello' ) = ", isalpha( 'hello' ) ) */
 /* TEST: QOUT( "isalpha( '12345' ) = ", isalpha( '12345' ) ) */
-HARBOUR ISALPHA( void )
+HARBOUR HB_ISALPHA( void )
 {
    _retl(isalpha(*_parc(1)));
 }
@@ -39,7 +39,7 @@ HARBOUR ISALPHA( void )
 /* determines if first char of string is digit */
 /* TEST: QOUT( "isdigit( '12345' ) = ", isdigit( '12345' ) ) */
 /* TEST: QOUT( "isdigit( 'abcde' ) = ", isdigit( 'abcde' ) ) */
-HARBOUR ISDIGIT( void )
+HARBOUR HB_ISDIGIT( void )
 {
    _retl(isdigit(*_parc(1)));
 }
@@ -47,7 +47,7 @@ HARBOUR ISDIGIT( void )
 /* determines if first char of string is upper-case */
 /* TEST: QOUT( "isupper( 'Abcde' ) = ", isupper( 'Abcde' ) ) */
 /* TEST: QOUT( "isupper( 'abcde' ) = ", isupper( 'abcde' ) ) */
-HARBOUR ISUPPER( void )
+HARBOUR HB_ISUPPER( void )
 {
    _retl(isupper(*_parc(1)));
 }
@@ -55,7 +55,7 @@ HARBOUR ISUPPER( void )
 /* determines if first char of string is lower-case */
 /* TEST: QOUT( "islower( 'abcde' ) = ", islower( 'abcde' ) ) */
 /* TEST: QOUT( "islower( 'Abcde' ) = ", islower( 'Abcde' ) ) */
-HARBOUR ISLOWER( void )
+HARBOUR HB_ISLOWER( void )
 {
    _retl(islower(*_parc(1)));
 }
@@ -74,7 +74,7 @@ char *hb_strLTrim( char *szText, ULONG *lLen )
 
 /* trims leading spaces from a string */
 /* TEST: QOUT( "ltrim( '  hello world  ' ) = '" + ltrim( '  hello world  ' ) + "'" ) */
-HARBOUR LTRIM( void )
+HARBOUR HB_LTRIM( void )
 {
    if( _pcount() == 1 )
    {
@@ -115,7 +115,7 @@ ULONG hb_strRTrimLen( char *szText, ULONG lLen )
 
 /* trims trailing spaces from a string */
 /* TEST: QOUT( "rtrim( '  hello world  ' ) = '" + rtrim( '  hello world  ' ) + "'" ) */
-HARBOUR RTRIM( void )
+HARBOUR HB_RTRIM( void )
 {
    if( _pcount() == 1 )
    {
@@ -137,14 +137,14 @@ HARBOUR RTRIM( void )
 }
 
 /* synonymn for RTRIM */
-HARBOUR TRIM( void )
+HARBOUR HB_TRIM( void )
 {
-   RTRIM();
+   HB_RTRIM();
 }
 
 /* trims leading and trailing spaces from a string */
 /* TEST: QOUT( "alltrim( '  hello world  ' ) = '" + alltrim( '  hello world  ' ) + "'" ) */
-HARBOUR ALLTRIM( void )
+HARBOUR HB_ALLTRIM( void )
 {
    if( _pcount() > 0 )
    {
@@ -162,7 +162,7 @@ HARBOUR ALLTRIM( void )
 
 /* right-pads a string with spaces or supplied character */
 /* TEST: QOUT( "padr( 'hello', 10 ) = '" + padr( 'hello', 10 ) + "'" ) */
-HARBOUR PADR( void )
+HARBOUR HB_PADR( void )
 {
    char *szText = _parc(1);
 
@@ -194,14 +194,14 @@ HARBOUR PADR( void )
 }
 
 /* synonymn for PADR */
-HARBOUR PAD( void )
+HARBOUR HB_PAD( void )
 {
-   PADR();
+   HB_PADR();
 }
 
 /* left-pads a string with spaces or supplied character */
 /* TEST: QOUT( "padl( 'hello', 10 ) = '" + padl( 'hello', 10 ) + "'" ) */
-HARBOUR PADL( void )
+HARBOUR HB_PADL( void )
 {
    char *szText = _parc(1);
 
@@ -236,7 +236,7 @@ HARBOUR PADL( void )
 
 /* centre-pads a string with spaces or supplied character */
 /* TEST: QOUT( "padc( 'hello', 10 ) = '" + padc( 'hello', 10 ) + "'" ) */
-HARBOUR PADC( void )
+HARBOUR HB_PADC( void )
 {
    char *szText = _parc(1);
 
@@ -303,7 +303,7 @@ ULONG hb_strAt(char *szSub, long lSubLen, char *szText, long lLen)
 
 /* locates a substring in a string */
 /* TEST: QOUT( "at( 'cde', 'abcdefgfedcba' ) = '" + at( 'cde', 'abcdefgfedcba' ) + "'" ) */
-HARBOUR AT( void )
+HARBOUR HB_AT( void )
 {
    PHB_ITEM pSub = _param(1, IT_ANY);
    PHB_ITEM pText = _param(2, IT_ANY);
@@ -334,7 +334,7 @@ HARBOUR AT( void )
 
 /* locates a substring in a string starting at the end */
 /* TEST: QOUT( "rat( 'cde', 'abcdefgfedcba' ) = '" + rat( 'cde', 'abcdefgfedcba' ) + "'" ) */
-HARBOUR RAT( void )
+HARBOUR HB_RAT( void )
 {
    long lSubLen = _parclen(1);
 
@@ -364,7 +364,7 @@ HARBOUR RAT( void )
 }
 
 /* converts an ASCII code to a character value */
-HARBOUR CHR( void )
+HARBOUR HB_CHR( void )
 {
    if( _pcount() == 1 )
    {
@@ -398,7 +398,7 @@ HARBOUR CHR( void )
 }
 
 /* converts a character value to an ASCII code */
-HARBOUR ASC(void)
+HARBOUR HB_ASC(void)
 {
    if( _pcount() == 1 )
    {
@@ -430,7 +430,7 @@ HARBOUR ASC(void)
 }
 
 /* returns the left-most n characters in string */
-HARBOUR LEFT( void )
+HARBOUR HB_LEFT( void )
 {
    if( _pcount() == 2 )
    {
@@ -479,7 +479,7 @@ HARBOUR LEFT( void )
 }
 
 /* returns the right-most n characters in string */
-HARBOUR RIGHT( void )
+HARBOUR HB_RIGHT( void )
 {
    if( _pcount() == 2 )
    {
@@ -528,7 +528,7 @@ HARBOUR RIGHT( void )
 }
 
 /* returns l characters from n characters into string */
-HARBOUR SUBSTR( void )
+HARBOUR HB_SUBSTR( void )
 {
    if( _pcount() > 1 && _pcount() < 4 )
    {
@@ -601,7 +601,7 @@ char *hb_strLower(char *szText, long lLen)
 }
 
 /* converts string to lower case */
-HARBOUR LOWER( void )
+HARBOUR HB_LOWER( void )
 {
    if( _pcount() == 1 )
    {
@@ -641,7 +641,7 @@ char *hb_strUpper(char *szText, long lLen)
 }
 
 /* converts string to upper case */
-HARBOUR UPPER( void )
+HARBOUR HB_UPPER( void )
 {
    if( _pcount() == 1 )
    {
@@ -673,7 +673,7 @@ HARBOUR UPPER( void )
 
 /* returns n copies of given string */
 /* TEST: QOUT( "replicate( 'abc', 5 ) = " + replicate( 'abc', 5 ) ) */
-HARBOUR REPLICATE( void )
+HARBOUR HB_REPLICATE( void )
 {
    if( _pcount() == 2 )
    {
@@ -723,7 +723,7 @@ HARBOUR REPLICATE( void )
 
 /* returns n copies of a single space */
 /* TEST: QOUT( "space( 5 ) = '" + space( 5 ) + "'" ) */
-HARBOUR SPACE( void )
+HARBOUR HB_SPACE( void )
 {
    if( _pcount() == 1 )
    {
@@ -763,7 +763,7 @@ HARBOUR SPACE( void )
 }
 
 /* replaces characters in a string */
-HARBOUR STUFF( void )
+HARBOUR HB_STUFF( void )
 {
    PHB_ITEM pText;
 
@@ -823,7 +823,7 @@ HARBOUR STUFF( void )
 }
 
 /* replaces lots of characters in a string */
-HARBOUR STRTRAN( void )
+HARBOUR HB_STRTRAN( void )
 {
    PHB_ITEM pText = _param(1, IT_STRING);
 
@@ -962,7 +962,7 @@ double hb_strVal( char *szText )
 }
 
 /* returns the numeric value of a character string representation of a number  */
-HARBOUR VAL( void )
+HARBOUR HB_VAL( void )
 {
    if( _pcount() == 1 )
    {
@@ -1111,7 +1111,7 @@ char * hb_str( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
 /* converts a numeric to a string with optional width & precision.
    calls hb_str() after validating parameters
 */
-HARBOUR STR( void )
+HARBOUR HB_STR( void )
 {
    if( _pcount() > 0 && _pcount() < 4 )
    {

@@ -225,7 +225,7 @@ HARBOUR HB_SETFIXED (void)
    }
 }
 
-HARBOUR SET (void)
+HARBOUR HB_SET (void)
 {
    BOOL bFlag;
    int args = _pcount();

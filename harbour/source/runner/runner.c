@@ -49,7 +49,7 @@ typedef struct
 PASM_CALL CreateFun( PSYMBOL, PBYTE );          /* Create a dynamic function*/
 void      Do( WORD );
 ULONG     FindSymbol( char *, PDYNFUNC, ULONG );
-HARBOUR   HB_RUN();
+HARBOUR   HB_HB_RUN(void);
 void      HRB_FileClose( _FILE * );
 void      HRB_FileRead ( char *, int, int, _FILE * );
 _FILE    *HRB_FileOpen ( char * );
@@ -60,9 +60,7 @@ BYTE      ReadByte( _FILE * );
 char     *ReadId  ( _FILE * );
 long      ReadLong( _FILE * );
 
-#undef  FILE
 #include "run_exp.h"
-#define FILE _FILE
 
 /*
  *
@@ -87,7 +85,7 @@ ULONG ulSymEntry = 0;                           /* Link enhancement         */
    In due time it should also be able to collect the data from the
    binary/executable itself
 */
-HARBOUR HB_RUN( void )
+HARBOUR HB_HB_RUN( void )
 {
    char *szFileName;
 

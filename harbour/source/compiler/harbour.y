@@ -1900,7 +1900,7 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
            pFunc->cScope & FS_EXIT )
          fprintf( yyc, "static " );
 
-      fprintf( yyc, "HARBOUR %s( void );\n", pFunc->szName );
+      fprintf( yyc, "HARBOUR HB_%s( void );\n", pFunc->szName );
       pFunc = pFunc->pNext;
    }
    /* write functions prototypes for called functions outside this PRG */
@@ -1908,7 +1908,7 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
    while( pFunc )
    {
       if( ! ( pFTemp = GetFunction( pFunc->szName ) ) || pFTemp == functions.pFirst )
-         fprintf( yyc, "HARBOUR %s( void );\n", pFunc->szName );
+         fprintf( yyc, "HARBOUR HB_%s( void );\n", pFunc->szName );
       pFunc = pFunc->pNext;
    }
 
@@ -1942,11 +1942,11 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
       /* specify the function address if it is a defined function or a
          external called function */
       if( ( pFTemp = GetFunction( pSym->szName ) ) ) /* is it a defined function ? */
-        fprintf( yyc, ", %s, 0 }", pFTemp->szName );
+        fprintf( yyc, ", HB_%s, 0 }", pFTemp->szName );
       else
       {
          if( ( pFTemp = GetFuncall( pSym->szName ) ) )
-            fprintf( yyc, ", %s, 0 }", pFTemp->szName );
+            fprintf( yyc, ", HB_%s, 0 }", pFTemp->szName );
          else
             fprintf( yyc, ", 0, 0 }" );
       }
@@ -1978,7 +1978,7 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
       if( pFunc->cScope != FS_PUBLIC )
          fprintf( yyc, "static " );
 
-      fprintf( yyc, "HARBOUR %s( void )\n{\n  static BYTE pcode[] = { \n", pFunc->szName );
+      fprintf( yyc, "HARBOUR HB_%s( void )\n{\n  static BYTE pcode[] = { \n", pFunc->szName );
 
       lPCodePos = 0;
       while( lPCodePos < pFunc->lPCodePos )
