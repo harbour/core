@@ -5,13 +5,13 @@
    * contrib/libct/ctmath.c
      * Renamed math handler C level functions to match the 
        naming system of Harbour:
-       hb_getMathError         -> hb_mathGetError        
-       hb_resetMathError       -> hb_mathResetError      
-       hb_isMathHandler        -> hb_mathIsHandler       
-       hb_installMathHandler   -> hb_mathHandlerInstall  
-       hb_deinstallMathHandler -> hb_mathHandlerDeinstall
-       hb_setMathHandlerStatus -> hb_mathHandlerSetStatus
-       hb_getMathHandlerStatus -> hb_mathHandlerGetStatus
+       hb_getMathError         -> hb_mathGetError
+       hb_resetMathError       -> hb_mathResetError
+       hb_isMathHandler        -> hb_mathIsHandler
+       hb_installMathHandler   -> hb_mathInstallHandler
+       hb_deinstallMathHandler -> hb_mathDeinstallHandler
+       hb_setMathHandlerStatus -> hb_mathSetHandlerStatus
+       hb_getMathHandlerStatus -> hb_mathGetHandlerStatus
        HB_MATHERR*             -> HB_MATH_ERR*           
 
    * source/rtl/mlctopos.c 

@@ -66,9 +66,9 @@ int ct_math_init (void)
   
   if (hb_mathIsHandler())
   {
-    s_ctMathHandler = hb_mathHandlerInstall (ct_matherr);
+    s_ctMathHandler = hb_mathInstallHandler (ct_matherr);
     /* CT3 math handler is inactive by default */
-    hb_mathHandlerSetStatus (s_ctMathHandler, CT_MATHERR_STATUS_INACTIVE);
+    hb_mathSetHandlerStatus (s_ctMathHandler, CT_MATHERR_STATUS_INACTIVE);
     return (1);
   }
   return (0);
@@ -79,7 +79,7 @@ int ct_math_exit (void)
   HB_TRACE(HB_TR_DEBUG, ("ctmath_exit()"));
   if (hb_mathIsHandler())
   {
-    hb_mathHandlerDeinstall (s_ctMathHandler);
+    hb_mathDeinstallHandler (s_ctMathHandler);
   }
   return (1);
 }
@@ -104,7 +104,7 @@ void ct_matherrbegin (void)
   HB_TRACE(HB_TR_DEBUG, ("ct_matherrbegin()"));
   if (hb_mathIsHandler() && (s_ct_matherr_status == CT_MATHERR_STATUS_ACTIVE))
   {
-    hb_mathHandlerSetStatus (s_ctMathHandler, CT_MATHERR_STATUS_ACTIVE);
+    hb_mathSetHandlerStatus (s_ctMathHandler, CT_MATHERR_STATUS_ACTIVE);
   }
   return;
 }
@@ -114,7 +114,7 @@ void ct_matherrend (void)
   HB_TRACE(HB_TR_DEBUG, ("ct_matherrend()"));
   if (hb_mathIsHandler())
   {
-    hb_mathHandlerSetStatus (s_ctMathHandler, CT_MATHERR_STATUS_INACTIVE);
+    hb_mathSetHandlerStatus (s_ctMathHandler, CT_MATHERR_STATUS_INACTIVE);
   }
   return;
 }

@@ -106,10 +106,10 @@ typedef PHB_MATH_HANDLERCHAINELEMENT HB_MATH_HANDLERHANDLE;
 extern int  hb_mathGetError( void );
 extern void hb_mathResetError( void );
 extern int  hb_mathIsHandler( void );
-extern HB_MATH_HANDLERHANDLE hb_mathHandlerInstall( HB_MATH_HANDLERPROC handlerproc );
-extern int  hb_mathHandlerDeinstall( HB_MATH_HANDLERHANDLE handle );
-extern int  hb_mathHandlerSetStatus( HB_MATH_HANDLERHANDLE handle, int status );
-extern int  hb_mathHandlerGetStatus( HB_MATH_HANDLERHANDLE handle );
+extern HB_MATH_HANDLERHANDLE hb_mathInstallHandler( HB_MATH_HANDLERPROC handlerproc );
+extern int  hb_mathDeinstallHandler( HB_MATH_HANDLERHANDLE handle );
+extern int  hb_mathSetHandlerStatus( HB_MATH_HANDLERHANDLE handle, int status );
+extern int  hb_mathGetHandlerStatus( HB_MATH_HANDLERHANDLE handle );
 
 #define HB_MATH_HANDLER_STATUS_NOTFOUND   ( ( int ) -1 )
 #define HB_MATH_HANDLER_STATUS_INACTIVE   ( ( int ) 0 )
