@@ -1,3 +1,9 @@
+19990510-11:30 Eddie Runia
+    * source/rtl/classes.c
+      Function IsMessage() added
+    * tests/working/debugtst.prg
+      Function IsData() / IsMethod() added. Also contains tests for Is*()
+
 19990510-10:05 Eddie Runia
     * source/vm/hvm.c
       Function PCount() added  /* QUESTION: Should it be there ? */

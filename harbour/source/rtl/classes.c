@@ -447,6 +447,19 @@ HARBOURFUNC GetMethod( PITEM pObject, PSYMBOL pMessage )
    return 0;
 }
 
+HARBOUR ISMESSAGE()     /* Is the message valid for the class               */
+                        /* <lRet> := IsMessage( <oObj>, <cSymbol> )         */
+{
+   PITEM   pObject  = _param( 1, IT_OBJECT );
+   PITEM   pString  = _param( 2, IT_STRING );
+   PSYMBOL pMessage = GetDynSym( pString->value.szText )->pSymbol;
+                        /* QUESTION: Warning when using HARBOURFUNC ?  */
+   ULONG   pFunc    = (ULONG) GetMethod( pObject, pMessage );
+                                                /* Get function pointer of  */
+                                                /* message                  */
+   _retl( pFunc != 0 );
+}
+
 void ReleaseClass( PCLASS pClass )
 {
    _xfree( pClass->szName );

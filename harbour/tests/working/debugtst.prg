@@ -23,11 +23,28 @@ function Main()
    oForm:Show()
    QOut()
 
-   QOut( "-DEBUG Functions-")
+   QOut( "-OBJECT additions-" )
+   QOut( "What is in oForm ? " )
    Debug( oForm:Transfer() )
 
-   oForm:Transfer( {"nLeft", 50}, {"nRight", 100} )
+   QOut( "Does transfer exists ? ", IsMessage( oForm, "Transfer" ) )
+   QOut( "Is   transfer DATA   ? ", IsData   ( oForm, "Transfer" ) )
+   QOut( "Is   transfer METHOD ? ", IsMethod ( oForm, "Transfer" ) )
+   QOut( "Does nLeft    exists ? ", IsMessage( oForm, "nLeft"    ) )
+   QOut( "Is   nLeft    DATA   ? ", IsData   ( oForm, "nLeft"    ) )
+   QOut( "Is   nLeft    METHOD ? ", IsMethod ( oForm, "nLeft"    ) )
+   QOut( "Does unknown  exists ? ", IsMessage( oForm, "Unknown"  ) )
+   QOut( "Is   unknown  DATA   ? ", IsData   ( oForm, "Unknown"  ) )
+   QOut( "Is   unknown  METHOD ? ", IsMethod ( oForm, "Unknown"  ) )
 
+   QOut( "Set nLeft to 50 and nRight to 100" )
+   oForm:Transfer( {"nLeft", 50}, {"nRight", 100} )
+   Debug( oForm:Transfer() )
+
+   Pause()
+
+
+   QOut( "-DEBUG Functions-")
    QOut( "-Statics-" )
    Debug( __aStatic() )
 
@@ -222,8 +239,7 @@ function TForm()
       oClass:AddData( "nBottom" )
       oClass:AddData( "nRight" )
 
-      oClass:AddVirtual( "aExcept" )
-                                          // Export exceptions
+      oClass:AddVirtual( "aExcept" )      // Export exceptions
 
       oClass:AddMethod( "New",  @New() )  // define this class objects methods
       oClass:AddMethod( "Show", @Show() )
@@ -515,5 +531,26 @@ function QuickSort( aSort, nLeft, nRight, bOrder )
    endif
 
 return nil
+
+//
+// <lRet> := IsData( <oObject>, <cSymbol> )
+//
+// Is the symbol present in the object as DATA ?
+//
+function IsData( oObject, cSymbol )
+
+return IsMessage( oObject, cSymbol ) .and. IsMessage( oObject, "_" + cSymbol )
+
+
+//
+// <lRet> := IsMethod( <oObject>, <cSymbol> )
+//
+// Is the symbol present in the object as METHOD ?
+//
+function IsMethod( oObject, cSymbol )
+
+return IsMessage( oObject, cSymbol ) .and. !IsMessage( oObject, "_" + cSymbol )
+
+
 
 
