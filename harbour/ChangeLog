@@ -1,8 +1,15 @@
+2000-07-29 07:40 UTC+0800 Ron Pinkas <ron@profit-master.com>
+  * source/compiler/harbour.slx
+    + Added 2 rules to support DECLARE MACROVAR and DECLARE MACRO TEXT
+
+  * tests/testdecl.prg
+    ! Fixed to allow it to be run without RT Error
+
 2000-07-29 15:55 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.l
         * fixed to properly support 'DECLARE var' statement
-        
+
     *tests/Makefile
     *tests/testdecl.prg
         * added testdecl.prg to Makefile
@@ -12,7 +19,7 @@
 
     *include/hbcomp.h
         * removed declaration of hb_comp_iCompiled and hb_comp_EOL
-        
+
     *source/compiler/harbour.c
     *source/compiler/harbour.l
     *source/compiler/harbour.y

@@ -17,7 +17,7 @@ Function Main()
     DECLARE Var1
     DECLARE Var2 := 2
     DECLARE aVar[2]
-    DECLARE Var3, Var4, aVar5[1]
+    DECLARE Var3 := 'Var9', Var4, aVar5[1]
     DECLARE Var6, Var7:=7, aVar8[8]
     DECLARE &var3
     DECLARE &Var3.

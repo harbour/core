@@ -297,10 +297,10 @@ LANGUAGE_WORDS_ARE {
 #define _CASE_WITH        3005
 #define _WHL_ID_CR        3006
 #define _WHL_ID_SEMI      3007
-#define _INC_CR           3007
-#define _INC_SEMI         3008
-#define _DEC_CR           3008
-#define _DEC_SEMI         3009
+#define _INC_CR           3008
+#define _INC_SEMI         3009
+#define _DEC_CR           3010
+#define _DEC_SEMI         3011
 
 LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( '^'         , 0           , 0      , 0          ) REDUCE_TO( POWER             , 0             ),
@@ -408,6 +408,8 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( DECLARE     , IDENTIFIER  , '('    , 0          ) PASS_THROUGH(),
                     IF_SEQUENCE_IS( DECLARE     , IDENTIFIER  , HB_ID_ON_HOLD, 0    ) PASS_THROUGH(),
                     IF_SEQUENCE_IS( DECLARE     , IDENTIFIER  , 0      , 0          ) REDUCE_TO( PRIVATE           , IDENTIFIER    ),
+                    IF_SEQUENCE_IS( DECLARE     , MACROVAR    , 0      , 0          ) REDUCE_TO( PRIVATE           , MACROVAR      ),
+                    IF_SEQUENCE_IS( DECLARE     , MACROTEXT   , 0      , 0          ) REDUCE_TO( PRIVATE           , MACROTEXT     ),
                     IF_SEQUENCE_IS( DECLARE     , 0           , 0      , 0          ) REDUCE_TO( HB_DECLARE_ID     , 0             ),
 
                     IF_SEQUENCE_IS( PUBLIC      , TO          , 0      , 0          ) REDUCE_TO( HB_PUBLIC_ID      , TO            ),
