@@ -262,8 +262,30 @@ static BOOL strcmpNoCase( char * s1, char * s2, int n )
  * -- ADS METHODS --
  */
 
-#define  adsBof                    NULL
-#define  adsEof                    NULL
+ERRCODE adsBof( ADSAREAP pArea, BOOL * pBof )
+{
+   HB_TRACE(HB_TR_DEBUG, ("adsBof(%p, %p)", pArea, pBof));
+
+   if( pArea->uiParents )
+   {
+      AdsAtBOF( pArea->hTable, (UNSIGNED16 *)&(pArea->fBof) );
+      *pBof = pArea->fBof;
+   }
+   return SUPER_BOF( (AREAP)pArea,pBof );
+}
+
+ERRCODE adsEof( ADSAREAP pArea, BOOL * pEof )
+{
+   HB_TRACE(HB_TR_DEBUG, ("adsEof(%p, %p)", pArea, pEof));
+
+   if( pArea->uiParents )
+   {
+      AdsAtEOF( pArea->hTable, (UNSIGNED16 *)&(pArea->fEof) );
+      *pEof = pArea->fEof;
+   }
+   return SUPER_EOF( (AREAP)pArea,pEof );
+}
+
 #define  adsFound                  NULL
 
 

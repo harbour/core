@@ -1,4 +1,9 @@
-2000-10-06 09:50 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+2000-10-07 22:16 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   * contrib/rdd_ads/ads1.c
+     * Added methods adsEof() and adsBof() for fixing problem with relations,
+        noted by Brian Hays
+
+2000-10-07 09:50 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * source/rdd/dbcmd.c
      * added #include "rddcpy.c" to the end of file.
    + source/rdd/rddcpy.c
