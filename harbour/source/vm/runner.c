@@ -50,7 +50,7 @@
  *
  */
 /*
- * The following functions are added Feb 01,2002 by 
+ * The following functions are added Feb 01,2002 by
  *       Alexander Kresin <alex@belacy.belgorod.su>
  *
  *  __HRBLOAD()
@@ -257,7 +257,7 @@ HB_FUNC( __HRBDOFU )
       hb_vmPushNil();
       for( i = 0; i < argc-1; i++ ) /* Push other  params  */
          hb_vmPush( hb_param( i + 2, HB_IT_ANY ) );
-                                  
+
       hb_vmSend( argc-1 );          /* Run function        */
    }
    else
@@ -320,8 +320,8 @@ PHRB_BODY hb_hrbLoad( char* szHrb )
          pSymRead[ ul ].pFunPtr = ( PHB_FUNC ) ( ULONG ) hb_hrbFileReadByte( file, szFileName );
          pSymRead[ ul ].pDynSym = NULL;
 
-         if ( pHrbBody->ulSymStart == -1 && 
-                    pSymRead[ ul ].cScope & HB_FS_FIRST && 
+         if ( pHrbBody->ulSymStart == -1 &&
+                    pSymRead[ ul ].cScope & HB_FS_FIRST &&
                     ! ( pSymRead[ ul ].cScope & HB_FS_INITEXIT ) )
              pHrbBody->ulSymStart = ul;
       }
@@ -423,7 +423,7 @@ void hb_hrbDo( PHRB_BODY pHrbBody, int argc, char * argv[] )
          hb_vmPushNil();
          for( i = 0; i < argc; i++ ) /* Push other cmdline params*/
             hb_vmPushString( argv[i],strlen(argv[i]) );
-                                     
+
          hb_vmSend( argc );          /* Run init function        */
       }
    }
@@ -512,8 +512,8 @@ static int hb_hrbFileReadHead( FILE * file, char * szFileName )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_hrbFileReadHead(%p)", file ));
 
-   hb_hrbFileRead( file, szFileName, szBuf, 1, 4 );
-   if( strncmp( szHead,szBuf,4 ) )
+   hb_hrbFileRead( file, szFileName, (char *) szBuf, 1, 4 );
+   if( strncmp( (char *) szHead, (char *) szBuf, 4 ) )
    {
       hb_errRT_BASE_Ext1( EG_CORRUPTION, 9999, NULL, szFileName, 0, EF_CANDEFAULT, 1, hb_paramError( 1 ) );
       return 0;

@@ -1958,8 +1958,8 @@ static void hb_vmPower( void )
 
    else if( HB_IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem1, "__OpPower" ) )
       hb_vmOperatorCall( pItem1, pItem2, "__OPPOWER" );
-   else if( HB_IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem1, "__OpMod" ) )
-      hb_vmOperatorCall( pItem1, pItem2, "__OPMOD" );
+   /* else if( HB_IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem1, "__OpMod" ) )
+      hb_vmOperatorCall( pItem1, pItem2, "__OPMOD" ); JFL 02/2002 */
    else
    {
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1088, NULL, "^", 2, pItem1, pItem2 );
