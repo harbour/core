@@ -7,6 +7,11 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+2002-05-07 14:19 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/rdd/dbf1.c
+    * Bug fixed in dbfCreate(), related to creating memo file
+
+2002-05-07 11:40 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rdd/dbfntx/dbfntx1.c
     * OrdKeyAdd(), OrdKeyDel() support for dbfntx added.
       Now dbfntx supports custom indexes.

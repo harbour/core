@@ -88,12 +88,15 @@
  * hb_ntxKeysSort()
  * hb_ntxSortKeyAdd()
  * hb_ntxSortKeyEnd()
+ * hb_ntxWritePage()
  * hb_ntxRootPage()
  * hb_ntxGetSortedKey()
  * hb_ntxBufferSave()
  * hb_ntxReadBuf()
  * hb_ntxPageFind()
  * ntxFindIndex()
+ * hb_ntxOrdKeyAdd()
+ * hb_ntxOrdKeyDel()
  * ntxGoBottom()
  * ntxGoTo()
  * ntxGoTop()
@@ -2840,6 +2843,70 @@ static LPNTXINDEX ntxFindIndex( NTXAREAP pArea , PHB_ITEM lpOrder )
    return NULL;
 }
 
+static BOOL hb_ntxOrdKeyAdd( LPTAGINFO pTag )
+{
+   LPKEYINFO pKey;
+   BOOL bResult = FALSE;
+
+   if( !pTag->Custom || pTag->Owner->Owner->fEof || ( pTag->pForItem &&
+               !checkLogicalExpr( pTag->pForItem, NULL ) ) )
+      return bResult;
+
+   pKey = hb_ntxKeyNew( NULL,pTag->KeyLength );
+   hb_ntxGetCurrentKey( pTag, pKey );
+   if( hb_ntxInTopScope( pTag, pTag->CurKeyInfo->key ) &&
+         hb_ntxInBottomScope( pTag, pTag->CurKeyInfo->key ) )
+   {
+      pKey->Tag = 0;
+      if( pTag->Owner->Owner->fShared && !pTag->Memory )
+         while( !hb_fsLock( pTag->Owner->DiskFile, NTX_LOCK_OFFSET, 1, FL_LOCK ) );
+      hb_ntxTagKeyAdd( pTag, pKey );
+      if( pTag->Owner->Owner->fShared && !pTag->Memory )
+      {
+         hb_ntxPageFree( pTag,FALSE );
+         hb_fsLock( pTag->Owner->DiskFile, NTX_LOCK_OFFSET, 1, FL_UNLOCK );
+      }
+      bResult = TRUE;
+   }
+   hb_ntxKeyFree( pKey );
+
+   return bResult;
+}
+
+static BOOL hb_ntxOrdKeyDel( LPTAGINFO pTag )
+{
+   LPKEYINFO pKey;
+   BOOL bResult = FALSE;
+
+   if( !pTag->Custom || pTag->Owner->Owner->fEof || ( pTag->pForItem &&
+               !checkLogicalExpr( pTag->pForItem, NULL ) ) )
+      return bResult;
+
+   pKey = hb_ntxKeyNew( NULL,pTag->KeyLength );
+   hb_ntxGetCurrentKey( pTag, pKey );
+   if( pTag->Owner->Owner->fShared && !pTag->Memory )
+      while( !hb_fsLock( pTag->Owner->DiskFile, NTX_LOCK_OFFSET, 1, FL_LOCK ) );
+   if( hb_ntxInTopScope( pTag, pTag->CurKeyInfo->key ) &&
+         hb_ntxInBottomScope( pTag, pTag->CurKeyInfo->key ) &&
+         !hb_ntxTagFindCurrentKey( pTag, hb_ntxPageLoad( pTag,0 ), pKey, FALSE, FALSE ) )
+   {
+      LPPAGEINFO pPage = hb_ntxPageLoad( pTag,pTag->CurKeyInfo->Tag );
+      pPage->CurKey =  hb_ntxPageFindCurrentKey( pPage,pTag->CurKeyInfo->Xtra ) - 1;
+      hb_ntxPageKeyDel( pTag, pPage, pPage->CurKey, 1 );
+      if( pTag->stack[0].ikey < 0 )
+         hb_ntxTagBalance( pTag,0 );
+      bResult = TRUE;
+   }
+   if( pTag->Owner->Owner->fShared && !pTag->Memory )
+   {
+      hb_ntxPageFree( pTag,FALSE );
+      hb_fsLock( pTag->Owner->DiskFile, NTX_LOCK_OFFSET, 1, FL_UNLOCK );
+   }
+   hb_ntxKeyFree( pKey );
+
+   return bResult;
+}
+
 /* Implementation of exported functions */
 
 static ERRCODE ntxGoBottom( NTXAREAP pArea )
@@ -3572,7 +3639,6 @@ static ERRCODE ntxOrderInfo( NTXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo
             break;
          case DBOI_NUMBER:
             hb_itemPutNI( pInfo->itmResult, pIndex->TagRoot );
-            /* TODO: Raise recoverable error */
             break;
          case DBOI_BAGNAME:
             hb_itemPutC( pInfo->itmResult, pIndex->IndexName );
@@ -3595,6 +3661,9 @@ static ERRCODE ntxOrderInfo( NTXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo
          case DBOI_UNIQUE:
             hb_itemPutL( pInfo->itmResult, pIndex->CompoundTag->UniqueKey );
             break;
+         case DBOI_CUSTOM:
+            hb_itemPutL( pInfo->itmResult, pIndex->CompoundTag->Custom );
+            break;
          case DBOI_SCOPETOP :
             ntxScopeInfo(  pArea, 0, pInfo->itmResult ) ;
             break;
@@ -3609,6 +3678,12 @@ static ERRCODE ntxOrderInfo( NTXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo
             ntxScopeInfo(  pArea, 1, pInfo->itmResult ) ;
             hb_ntxClearScope( pIndex->CompoundTag, 1 );
             break;
+         case DBOI_KEYADD:
+            hb_itemPutL( pInfo->itmResult, hb_ntxOrdKeyAdd( pIndex->CompoundTag ) );
+            break;
+         case DBOI_KEYDELETE:
+            hb_itemPutL( pInfo->itmResult, hb_ntxOrdKeyDel( pIndex->CompoundTag ) );
+            break;
       }
    }
    else
@@ -3621,6 +3696,9 @@ static ERRCODE ntxOrderInfo( NTXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo
          case DBOI_ISCOND:
          case DBOI_ISDESC:
          case DBOI_UNIQUE:
+         case DBOI_CUSTOM:
+         case DBOI_KEYADD:
+         case DBOI_KEYDELETE:
             hb_itemPutL( pInfo->itmResult, 0 );
             break;
          case DBOI_SCOPETOP :
