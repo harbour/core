@@ -1522,11 +1522,40 @@ ForNext    : FOR LValue ForAssign Expression          /* 1  2  3  4 */
                }
              ForStatements                            /* 12 */
                {
+                  short iStep, iLocal;
+
                   hb_compLoopHere();
+
                   if( $<asExpr>8 )
-                     hb_compExprClear( hb_compExprGenStatement( hb_compExprSetOperand( hb_compExprNewPlusEq( $2 ), $<asExpr>8 ) ) );
+                  {
+                     if( $<asExpr>8->ExprType == HB_ET_NUMERIC && $<asExpr>8->value.asNum.NumType == HB_ET_LONG &&
+                         $<asExpr>8->value.asNum.lVal >= -32768 && $<asExpr>8->value.asNum.lVal <= 32767 )
+                     {
+                        iStep = ( short ) $<asExpr>8->value.asNum.lVal;
+                     }
+                     else
+                     {
+                        iStep = 0;
+                     }
+                  }
                   else
+                  {
+                     iStep = 1;
+                  }
+
+                  if( iStep && ( iLocal = hb_compLocalGetPos( $<asExpr>2->value.asSymbol ) ) > 0 && iLocal < 256 )
+                  {
+                     hb_compGenPCode4( HB_P_LOCALNEARADDINT, ( BYTE ) iLocal, HB_LOBYTE( iStep ), HB_HIBYTE( iStep ), ( BOOL ) 0 );
+                  }
+                  else if( $<asExpr>8 )
+                  {
+                     hb_compExprClear( hb_compExprGenStatement( hb_compExprSetOperand( hb_compExprNewPlusEq( $2 ), $<asExpr>8 ) ) );
+                  }
+                  else
+                  {
                      hb_compExprClear( hb_compExprGenStatement( hb_compExprNewPreInc( $2 ) ) );
+                  }
+
                   hb_compGenJump( $<lNumber>9 - hb_comp_functions.pLast->lPCodePos );
                   hb_compGenJumpHere( $<lNumber>11 );
                   hb_compLoopEnd();

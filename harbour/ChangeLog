@@ -8,6 +8,19 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-01-29 22:05 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * include/hberrors.h
+  * include/hbpcode.h
+  * source/compiler/genc.c
+  * source/compiler/harbour.sly
+  * source/compiler/harbour.y
+  * source/compiler/hbfix.c
+  * source/compiler/hbpcode.c
+  * source/vm/hvm.c
+    * Added new pcode HB_P_LOCALNEARADDINT for using in FOR ... NEXT cycle,
+      it increases the speed of execution the cycle.
+      Borrowed from xHarbour.
+
 2003-01-28 22:20 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rdd/dbcmd.c
     ! Fixed a bug with APPEND FROM ..., COPY TO..., when there was a memo field

@@ -169,7 +169,8 @@ static BYTE s_pcode_len[] = {
    1,        /* HB_P_ONE,                  */
    1,        /* HB_P_MACROLIST,            */
    1,        /* HB_P_MACROLISTEND,         */
-   0         /* HB_P_MPUSHSTR              */
+   0,        /* HB_P_MPUSHSTR              */
+   4         /* HB_P_LOCALNEARADDINT,      */
 };
 
 static PVAR hb_compPrivateFind( char * szPrivateName )

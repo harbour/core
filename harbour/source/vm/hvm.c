@@ -1580,6 +1580,78 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
          }
 
+         case HB_P_LOCALNEARADDINT:
+            HB_TRACE( HB_TR_DEBUG, ("HB_P_LOCALNEARADDINT") );
+         {
+            #define HB_PCODE_MKSHORT( p )	( *( SHORT * )( p ) )
+            PHB_ITEM pLocal = hb_stackItemFromBase( pCode[ w + 1 ] );
+            short iAdd = HB_PCODE_MKSHORT( &( pCode[ w + 2 ] ) );
+            double dNewVal;
+
+            w += 4;
+
+            if( HB_IS_BYREF( pLocal ) )
+            {
+               pLocal = hb_itemUnRef( pLocal );
+            }
+
+            if( pLocal->type & HB_IT_INTEGER )
+            {
+               dNewVal = pLocal->item.asInteger.value + iAdd;
+            }
+            else if( pLocal->type & HB_IT_LONG )
+            {
+               dNewVal = pLocal->item.asLong.value + iAdd;
+            }
+            else if( pLocal->type & HB_IT_DOUBLE )
+            {
+               dNewVal = pLocal->item.asDouble.value + iAdd;
+            }
+            else if( HB_IS_DATE( pLocal ) )
+            {
+               pLocal->item.asDate.value += iAdd;
+               break;
+            }
+            else
+            {
+               PHB_ITEM pAdd = hb_itemPutNI( NULL, ( int ) iAdd );
+               PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1081, NULL, "+", 2, pLocal, pAdd );
+
+               hb_itemRelease( pAdd );
+
+               if( pResult )
+               {
+                  hb_itemMove( pLocal, pResult );
+               }
+
+               break;
+            }
+
+            if( pLocal->type & HB_IT_DOUBLE )
+            {
+               pLocal->item.asDouble.value = dNewVal;
+            }
+            else if( SHRT_MIN <= dNewVal && dNewVal <= SHRT_MAX )
+            {
+               pLocal->type = HB_IT_INTEGER;
+               pLocal->item.asInteger.value = ( int ) dNewVal;
+            }
+            else if( LONG_MIN <= dNewVal && dNewVal <= LONG_MAX )
+            {
+               pLocal->type = HB_IT_LONG;
+               pLocal->item.asLong.value = ( long ) dNewVal;
+            }
+            else
+            {
+               pLocal->type = HB_IT_DOUBLE;
+               pLocal->item.asDouble.value = dNewVal;
+               pLocal->item.asDouble.length = ( dNewVal >= 10000000000.0 || dNewVal <= -1000000000.0 ) ? 20 : 10;
+               pLocal->item.asDouble.decimal = hb_set.HB_SET_DECIMALS;
+            }
+
+            break;
+         }
+
          /* misc */
 
          case HB_P_NOOP:

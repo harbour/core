@@ -248,6 +248,33 @@ static HB_FIX_FUNC( hb_p_staticname )
    return (USHORT) (lPCodePos - ulStart + 1) ;
 }
 
+static HB_FIX_FUNC( hb_p_localnearaddint )
+{
+   BYTE cVarId = pFunc->pCode[ lPCodePos + 1 ];
+   USHORT wNewId;
+
+   HB_SYMBOL_UNUSED( cargo );
+
+   if( pFunc->wParamCount )
+   {
+      if( ( wNewId = cVarId + pFunc->wParamCount ) < 256 )
+      {
+         pFunc->pCode[ lPCodePos + 1 ] = (BYTE) wNewId;
+      }
+      else
+      {
+        // After fixing this variable cannot be accessed using near code
+        char sTemp[16];
+
+        sprintf( (char *) sTemp, "%i", pFunc->wParamCount );
+        hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_OPTIMIZEDLOCAL_OUT_OF_RANGE, "HB_P_LOCALNEARADDINT", (const char *) sTemp );
+      }
+   }
+
+   return (USHORT) 4;
+}
+
+
 /* NOTE: The  order of functions have to match the order of opcodes
  *       mnemonics
  */
@@ -380,7 +407,8 @@ static HB_FIX_FUNC_PTR s_fixlocals_table[] =
    NULL,                       /* HB_P_ONE,                  */
    NULL,                       /* HB_P_MACROLIST,            */
    NULL,                       /* HB_P_MACROLISTEND,         */
-   NULL                        /* HB_P_MPUSHSTR              */
+   NULL,                       /* HB_P_MPUSHSTR              */
+   hb_p_localnearaddint        /* HB_P_LOCALNEARADDINT,      */
 };
 
 void hb_compFixFuncPCode( PFUNCTION pFunc )
