@@ -1346,6 +1346,7 @@ void PrintUsage( char * szSelf )
           "\t/l\t\tsuppress line number information\n"
           "\t/n\t\tno implicit starting procedure\n"
           "\t/o<path>\tobject file drive and/or path\n"
+          "\t/p\t\tgenerate pre-processed output ( .ppo ) file\n"
           "\t/q\t\tquiet\n"
           "\t/s\t\tsyntax check only\n"
           "\t/t\t\talternative method of symbol table initialization\n"
