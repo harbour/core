@@ -8,15 +8,19 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2001-12-20 11:20 UTC+0100 Antonio Linares <alinares@fivetech.com>
+   * include/hbdefs.h
+     + HB_EXPORT definition added. All public functions are HB_EXPORT now
+
 2001-12-20 09:43 UTC+0000 Dave Pearson <davep@davep.org>
    * doc/howtocvs.txt
      + Updated the footnote about the files which are an exception to the
        "everything lowercase please" rule. Added COPYING, ERRATA and TODO.
-	
+
 2001-12-20 09:36 UTC+0000 Dave Pearson <davep@davep.org>
    + ERRATA
      + Added the ERRATA list.
-	
+
 2001-12-19 20:00 UTC+0700 Andi Jahja <harbour@cbn.net.id>
    * source/compiler/genc.c
      ! Change C Outputs so one can freely export the public function
@@ -39,12 +43,12 @@
    * include/hbsetup.ch
    + include/hbcommon.ch
    * include/Makefile
-     + Added HB_FILE_VER( id ) for Harbour and C 
-       sources. Note that in order to work in 
-       .prg files, HB_FILE_VER() should come after 
+     + Added HB_FILE_VER( id ) for Harbour and C
+       sources. Note that in order to work in
+       .prg files, HB_FILE_VER() should come after
        the #includes and the file should #include "hbcommon.ch"
        which will automatically include "hbsetup.ch" too.
-     + Added HB_FILE_VER_STATIC define which will 
+     + Added HB_FILE_VER_STATIC define which will
        enable the inclusion of HB_FILE_VER info.
 
    * source/common/hbffind.c
@@ -77,7 +81,7 @@
 2001-12-18 07:44 UTC+0000 Dave Pearson <davep@davep.org>
   * doc/howtocvs.txt
     * Updated the pointer to details about harbour's mailing lists.
-	
+
 2001-12-18 07:21 UTC+0100 JFL (Mafact) <jfl@mafact.com>
   * source/vm/garbage.c
     ! RON Further Fix for forever loop when GC try to free first item in the
