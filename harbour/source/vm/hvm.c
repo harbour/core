@@ -298,7 +298,21 @@ ULONG _System OS2TermHandler(PEXCEPTIONREPORTRECORD       p1,
                              PVOID                        pv);
 #endif
 
-void hb_vmDoInitRdd( void )
+/* call CLIPINIT function to initialize ErrorBlock() and __SetHelpK() */
+static void hb_vmDoInitClip( void )
+{
+   PHB_DYNS pDynSym = hb_dynsymFind( "CLIPINIT" );
+
+   if( pDynSym && pDynSym->pSymbol->value.pFunPtr )
+   {
+      hb_vmPushSymbol( pDynSym->pSymbol );
+      hb_vmPushNil();
+      hb_vmDo(0);
+   }
+}
+
+/* Initialize linked RDDs */
+static void hb_vmDoInitRdd( void )
 {
    PHB_DYNS pDynSym;
    int i;
@@ -363,7 +377,7 @@ void HB_EXPORT hb_vmInit( BOOL bStartMainProc )
 
    /* Check for some internal switches */
    s_VMFlags = hb_cmdargProcessVM( &s_VMCancelKey, &s_VMCancelKeyEx );
-	hb_inkeySetCancelKeys( s_VMCancelKey, s_VMCancelKeyEx );
+   hb_inkeySetCancelKeys( s_VMCancelKey, s_VMCancelKeyEx );
 
    /* Initialize opcodes profiler support arrays */
    {
@@ -381,7 +395,14 @@ void HB_EXPORT hb_vmInit( BOOL bStartMainProc )
     * because INIT function can use static variables
     */
    hb_vmDoInitStatics();
-   hb_vmDoInitRdd();
+   /* call CLIPINIT function to initialize ErrorBlock() and __SetHelpK()
+    * Because on some platform the execution order of init functions
+    * is out of Harbour control then this function has to be called
+    * explicitly in VM initialization process before hb_vmDoInitFunctions()
+    * and not depends on INIT clause.
+    */
+   hb_vmDoInitClip();      
+   hb_vmDoInitRdd();       /* initialize the Harbour's RDDs */
    hb_vmDoInitFunctions(); /* process defined INIT functions */
 
    /* This is undocumented CA-Clipper, if there's a function called _APPMAIN
@@ -510,11 +531,12 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 {
    LONG w = 0;
    BOOL bCanRecover = FALSE;
+   BYTE curPCode;
    ULONG ulPrivateBase;
    ULONG ulLastOpcode = 0; /* opcodes profiler support */
    ULONG ulPastClock = 0;  /* opcodes profiler support */
 #ifndef HB_GUI
-   static unsigned int uiPolls = 1;
+   static unsigned short uiPolls = 1;
 #endif
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmExecute(%p, %p)", pCode, pSymbols));
@@ -530,7 +552,7 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
    if( hb_bProfiler )
       ulPastClock = ( ULONG ) clock();
 
-   while( pCode[ w ] != HB_P_ENDPROC )
+   while( ( curPCode = pCode[ w ] ) != HB_P_ENDPROC )
    {
       if( hb_bProfiler )
       {
@@ -567,7 +589,7 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
       }
 #endif
 
-      switch( pCode[ w ] )
+      switch( curPCode )
       {
          /* Operators ( mathematical / character / misc ) */
 

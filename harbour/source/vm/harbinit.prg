@@ -67,7 +67,13 @@ PROCEDURE CLIPPER530()
 
 #endif
 
-INIT PROCEDURE ClipInit
+/*
+ * because on some platform the execution order of init functions
+ * is out of Harbour control then this function has to be called
+ * explicitly in VM initialization process before hb_vmDoInitFunctions()
+ * and not depends on INIT clause.
+ */
+PROCEDURE ClipInit
 
    MEMVAR GetList
 

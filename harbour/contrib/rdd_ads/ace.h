@@ -10,7 +10,7 @@
 #define __ACE_INCLUDED__
 
 
-#if defined( unix )
+#if defined( unix ) || defined(__LINUX__)
    #ifndef ADS_LINUX
    #define ADS_LINUX
    #endif

@@ -8,6 +8,84 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-01-30 22:10 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * xharbour/contrib/rdd_ads/ace.h
+    * small modification for OpenWatcom on Linux
+
+  * xharbour/source/rdd/dbfntx/dbfntx1.c
+    * minor fix: use *_GOTO( pArea, 0 ) instead
+      of *_GOTO( pArea, pArea->ulRecCount+1000 )
+    + use hb_fsSeekLarge() - for DBFs longer then 2GB
+
+  * xharbour/include/hbrddcdx.h
+  * xharbour/source/rdd/dbfcdx/dbfcdx1.c
+    + use hb_fsSeekLarge() - for DBFs longer then 2GB
+    * my last xHarbour modifications:
+      improved indexing speed of DBFs with very big number of
+      records. In small DBFs less then 100'000 records the new
+      algorithm can even decrease the speed by ~0.5% due to static
+      costs but in bigger it becomes faster. For 1'000'000 records
+      DBFs is about 20% faster, for 10'000'000 records about twice
+      faster. With bigger DBFs more. Please test it. If you will
+      have any troubles (I hope not) then please comment out in
+      dbfcdx.c:
+        #define HB_CDX_NEW_SORT
+      I should done it before when I was rewriting the indexing but
+      sorry I was too lazy. Now I've found a while. Current cost of
+      key comparisons is always n*log2(n) and cannot be more improved.
+      Some small optimizations still can be done but the static cost
+      for small database will be bigger then ~0.5% as in this case
+      so I do not plan to do it in the nearest future.
+
+  * harbour/include/dbinfo.ch
+  * harbour/source/rdd/dbf1.c
+    + use hb_fsSeekLarge() - for DBFs longer then 2GB
+    * synched with xHarbour (added DBRI_RAW*)
+    * do not call GOCOLD() inside CHILDSYNC() but do it in FORCEREL()
+      the modification based on CL5.3 NG.
+      Below is a note I lef in dbf1.c:
+      /*
+       * !!! The side effect of calling GOCOLD() inside CHILDSYNC() is
+       * evaluation of index expressions (index KEY and FOR condition)
+       * when the pArea is not the current one - it means that the
+       * used RDD has to set proper work area before eval, DBFCDX does
+       * but DBFNTX not yet - it should be changed.
+       * IMHO GOCOLD() could be safely removed from this place but I'm not
+       * sure it's Clipper compatible - I will have to check it, Druzus.
+       */
+      /*
+       * I've checked in CL5.3 Technical Reference Guide that only
+       * FORCEREL() should ensure that the work area buffer is not hot
+       * and then call RELEVAL() - I hope it describes the CL5.3 DBF* RDDs
+       * behavior so I replicate it - the GOCOLD() is moved from CHILDSYNC()
+       * to FORCEREL(), Druzus.
+       */
+
+  * harbour/source/rdd/dbf0.prg
+  * harbour/source/rdd/delim0.prg
+  * harbour/source/rdd/rddsys.prg
+  * harbour/source/rdd/sdf0.prg
+  * harbour/source/rdd/dbfntx/dbfntx0.prg
+    * formatting (adding EOL at EOF)
+
+  * harbour/include/hbapifs.h
+  * harbour/source/rtl/filesys.c
+    * added hb_fsLockLarge() and hb_fsSeekLarge() which uses 64bit ofsets
+    
+  * harbour/source/rdd/workarea.c
+    * set current work area to the used one in EVALBLOCK RDD method
+      before code block evaluation
+
+  * harbour/source/vm/harbinit.prg
+  * harbour/source/vm/hvm.c
+    + added hb_vmDoInitClip() which calls CLIPINIT function to initialize
+      ErrorBlock() and __SetHelpK()
+      Because on some platform the execution order of init functions
+      is out of Harbour control then CLIPINIT has to be called explicitly
+      in VM initialization process before hb_vmDoInitFunctions() and do not
+      depends on INIT clause.
+    * small modification in VM loop which gives noticeable speed-up
+
 2005-01-23 09:05 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
   * makefile.nt
     + hbverdsp.obj module added to makefile.nt
@@ -20,14 +98,14 @@
   * source/rdd/dbfntx/dbfntx1.c
     ! Bug fixed, which oocured in some rare situations while record updating.
 
-2004-01-13 09:35 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+2005-01-13 09:35 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * xharbour/source/rtl/mod.c
     ! fixed mod() function to be Clipper/DBASE III compatible
       (not the % operator) for combination of psitive and negative
       numbers
 
 
-2004-01-13 08:15 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+2005-01-13 08:15 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   + harbour/include/hbfixdj.h
     + I missed to add this file in my last commit - it's borrowed from
       xHarbour.
@@ -35,7 +113,7 @@
     ! fixed DJGPP compilation I broke
 
 
-2004-01-12 18:25 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+2005-01-12 18:25 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/hbgtmk.sh
   * harbour/make_rpm.sh
   * harbour/harbour.spec

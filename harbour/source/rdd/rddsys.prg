@@ -66,4 +66,3 @@ PROCEDURE RddInit
    __rddSetDefault( "DBFNTX" )
 
 return
-

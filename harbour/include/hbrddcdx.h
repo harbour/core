@@ -360,11 +360,11 @@ typedef CDXINDEX * LPCDXINDEX;
 /* for index creation */
 typedef struct
 {
-   ULONG    nOffset;    /* offset in temporary file */
-   ULONG    ulKeys;     /* number of keys in page */
-   ULONG    ulKeyBuf;   /* number of keys in memory buffer */
-   ULONG    ulCurKey;   /* current key in memory buffer */
-   BYTE *   pKeyPool;   /* memory buffer */
+   HB_FOFFSET  nOffset;    /* offset in temporary file */
+   ULONG       ulKeys;     /* number of keys in page */
+   ULONG       ulKeyBuf;   /* number of keys in memory buffer */
+   ULONG       ulCurKey;   /* current key in memory buffer */
+   BYTE *      pKeyPool;   /* memory buffer */
 } CDXSWAPPAGE;
 typedef CDXSWAPPAGE * LPCDXSWAPPAGE;
 
@@ -386,6 +386,8 @@ typedef struct
    BYTE *   pKeyPool;         /* memory buffer for current page then for pages */
    LPCDXSWAPPAGE pSwapPage;   /* list of pages */
    LPCDXPAGE NodeList[ CDX_STACKSIZE ];   /* Stack of pages */
+   ULONG    ulFirst;
+   ULONG *  pSortedPages;
    BYTE     pLastKey[ CDX_MAXKEY ]; /* last key val */
    ULONG    ulLastRec;
    BYTE *   pRecBuff;

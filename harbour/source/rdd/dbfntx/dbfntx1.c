@@ -619,7 +619,7 @@ static ERRCODE hb_ntxGoEof( NTXAREAP pArea )
    LPTAGINFO lpCurTag = pArea->lpCurTag;
 
    pArea->lpCurTag = NULL;
-   retvalue = SUPER_GOTO( ( AREAP ) pArea, pArea->ulRecCount+1000 );
+   retvalue = SUPER_GOTO( ( AREAP ) pArea, 0 );
    if( pArea->ulRecCount )
       pArea->fBof = lpCurTag->TagBOF = FALSE;
    pArea->fEof = lpCurTag->TagEOF = TRUE;
@@ -2465,8 +2465,10 @@ static BOOL hb_ntxReadBuf( NTXAREAP pArea, BYTE* readBuffer, SHORT* numRecinBuf,
       if( *numRecinBuf == 0 )
       {
          ULONG ulBufLen = pArea->uiRecordLen  * 10;
-         hb_fsSeek( pArea->hDataFile,
-             pArea->uiHeaderLen + pArea->uiRecordLen * ( ulRecNo - 1 ), FS_SET );
+         hb_fsSeekLarge( pArea->hDataFile,
+                         ( HB_FOFFSET ) pArea->uiHeaderLen + 
+                         ( HB_FOFFSET ) pArea->uiRecordLen * 
+                         ( HB_FOFFSET ) ( ulRecNo - 1 ), FS_SET );
          hb_fsReadLarge( pArea->hDataFile, readBuffer, ulBufLen );
       }
       pArea->pRecord = readBuffer + (*numRecinBuf) * pArea->uiRecordLen;

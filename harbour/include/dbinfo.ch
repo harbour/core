@@ -130,6 +130,9 @@
 #define DBRI_RECSIZE              3
 #define DBRI_RECNO                4
 #define DBRI_UPDATED              5
+#define DBRI_RAWRECORD            6
+#define DBRI_RAWMEMOS             7
+#define DBRI_RAWDATA              8
 
 /* constants for some SCOPED DBOI_* parameter */
 #define DBRMI_FUNCTION  1

@@ -125,6 +125,8 @@ extern USHORT   hb_fsIsDrv      ( BYTE nDrive ); /* determine if a drive number 
 extern BOOL     hb_fsIsDevice   ( FHANDLE hFileHandle ); /* determine if a file is attached to a device (console?) */
 extern BOOL     hb_fsLock       ( FHANDLE hFileHandle, ULONG ulStart,
                                   ULONG ulLength, USHORT uiMode ); /* request a lock on a portion of a file */
+extern BOOL     hb_fsLockLarge  ( FHANDLE hFileHandle, HB_FOFFSET ulStart,
+                                  HB_FOFFSET ulLength, USHORT uiMode ); /* request a lock on a portion of a file using 64bit API */
 extern BOOL     hb_fsMkDir      ( BYTE * pszDirName ); /* create a directory */
 extern FHANDLE  hb_fsOpen       ( BYTE * pszFileName, USHORT uiFlags ); /* open a file */
 extern USHORT   hb_fsRead       ( FHANDLE hFileHandle, BYTE * pBuff, USHORT ulCount ); /* read contents of a file into a buffer (<=64K) */
@@ -132,6 +134,7 @@ extern ULONG    hb_fsReadLarge  ( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCou
 extern BOOL     hb_fsRmDir      ( BYTE * pszDirName ); /* remove a directory */
 extern BOOL     hb_fsRename     ( BYTE * pszOldName, BYTE * pszNewName ); /* rename a file */
 extern ULONG    hb_fsSeek       ( FHANDLE hFileHandle, LONG lOffset, USHORT uiMode ); /* reposition an open file */
+extern HB_FOFFSET hb_fsSeekLarge( FHANDLE hFileHandle, HB_FOFFSET llOffset, USHORT uiFlags ); /* reposition an open file using 64bit API */
 extern ULONG    hb_fsTell       ( FHANDLE hFileHandle ); /* retrieve the current position of a file */
 extern BOOL     hb_fsSetDevMode ( FHANDLE hFileHandle, USHORT uiDevMode ); /* change the device mode of a file (text/binary) */
 extern void     hb_fsSetError   ( USHORT uiError ); /* set the file system error number */

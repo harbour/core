@@ -55,7 +55,7 @@
 
 ANNOUNCE DBFNTX
 
-init procedure DBFNTXInit
+procedure DBFNTXInit
 
    REQUEST _DBFNTX
 

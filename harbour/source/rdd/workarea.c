@@ -956,9 +956,11 @@ ERRCODE hb_waRelEval( AREAP pArea, LPDBRELINFO pRelInfo )
 
          sInfo.scopeValue = pResult;
          sInfo.nScope = 0;
-         SELF_SETSCOPE( pArea, (LPDBORDSCOPEINFO) &sInfo );
+         if ( SELF_SETSCOPE( pArea, (LPDBORDSCOPEINFO) &sInfo ) == FAILURE )
+            return FAILURE;
          sInfo.nScope = 1;
-         SELF_SETSCOPE( pArea, (LPDBORDSCOPEINFO) &sInfo );
+         if ( SELF_SETSCOPE( pArea, (LPDBORDSCOPEINFO) &sInfo ) == FAILURE )
+            return FAILURE;
       }
       if( SELF_SEEK( pArea, 0, pResult, 0 ) == SUCCESS )
          return SUCCESS;
@@ -1230,11 +1232,23 @@ ERRCODE hb_waError( AREAP pArea, PHB_ITEM pError )
  */
 ERRCODE hb_waEvalBlock( AREAP pArea, PHB_ITEM pBlock )
 {
+   int iCurrArea;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_waEvalBlock(%p, %p)", pArea, pBlock));
 
    if( ! pArea->valResult )
       pArea->valResult = hb_itemNew( NULL );
 
+   iCurrArea = hb_rddGetCurrentWorkAreaNumber();
+   if ( iCurrArea != pArea->uiArea )
+      hb_rddSelectWorkAreaNumber( pArea->uiArea );
+   else
+      iCurrArea = 0;
+
    hb_itemCopy( pArea->valResult, hb_vmEvalBlock( pBlock ) );
+
+   if ( iCurrArea )
+      hb_rddSelectWorkAreaNumber( iCurrArea );
+
    return SUCCESS;
 }

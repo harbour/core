@@ -250,7 +250,7 @@ static ULONG hb_dbfCalcRecCount( DBFAREAP pArea )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfCalcRecCount(%p)", pArea));
 
-   return ( hb_fsSeek( pArea->hDataFile, 0, FS_END ) - pArea->uiHeaderLen ) /
+   return ( hb_fsSeekLarge( pArea->hDataFile, 0, FS_END ) - pArea->uiHeaderLen ) /
             pArea->uiRecordLen;
 }
 
@@ -715,7 +715,7 @@ BOOL HB_EXPORT hb_dbfLockIdxFile( FHANDLE hFile, BYTE bScheme, USHORT usMode, UL
       }
       fRet = hb_fsLock( hFile, ulPos + *pPoolPos, ulSize, usMode );
       fWait = ( !fRet && ( usMode & FLX_WAIT ) != 0 && ( usMode & FL_MASK ) == FL_LOCK );
-      /* TODO: call special error handler (LOCKHANDLER) hiere if fWait */
+      /* TODO: call special error handler (LOCKHANDLER) here if fWait */
 
    } while ( fWait );
 
@@ -799,10 +799,13 @@ static ERRCODE hb_dbfGoTo( DBFAREAP pArea, ULONG ulRecNo )
    if( SELF_GOCOLD( ( AREAP ) pArea ) == FAILURE )
       return FAILURE;
 
-   if( pArea->lpdbPendingRel && pArea->lpdbPendingRel->isScoped )
-      SELF_FORCEREL( ( AREAP ) pArea );
-   /* Reset parent rel struct */
-   pArea->lpdbPendingRel = NULL;
+   if( pArea->lpdbPendingRel )
+   {
+      if ( pArea->lpdbPendingRel->isScoped )
+         SELF_FORCEREL( ( AREAP ) pArea );
+      else /* Reset parent rel struct */
+         pArea->lpdbPendingRel = NULL;
+   }
 
    /* Update record count */
    if( ulRecNo > pArea->ulRecCount && pArea->fShared )
@@ -973,8 +976,13 @@ static ERRCODE hb_dbfAppend( DBFAREAP pArea, BOOL bUnLockAll )
    if( SELF_GOCOLD( ( AREAP ) pArea ) == FAILURE )
       return FAILURE;
 
-   /* Reset parent rel struct */
-   pArea->lpdbPendingRel = NULL;
+   if( pArea->lpdbPendingRel )
+   {
+      if ( pArea->lpdbPendingRel->isScoped )
+         SELF_FORCEREL( ( AREAP ) pArea );
+      else /* Reset parent rel struct */
+         pArea->lpdbPendingRel = NULL;
+   }
 
    if( pArea->fShared )
    {
@@ -1111,8 +1119,9 @@ static ERRCODE hb_dbfGetRec( DBFAREAP pArea, BYTE ** pBuffer )
    else
    {
       /* Read data from file */
-      hb_fsSeek( pArea->hDataFile, pArea->uiHeaderLen + ( pArea->ulRecNo - 1 ) *
-                 pArea->uiRecordLen, FS_SET );
+      hb_fsSeekLarge( pArea->hDataFile, ( HB_FOFFSET ) pArea->uiHeaderLen + 
+                      ( HB_FOFFSET ) ( pArea->ulRecNo - 1 ) * 
+                      ( HB_FOFFSET ) pArea->uiRecordLen, FS_SET );
       if( hb_fsRead( pArea->hDataFile, pArea->pRecord, pArea->uiRecordLen ) !=
           pArea->uiRecordLen )
       {
@@ -1369,8 +1378,9 @@ static ERRCODE hb_dbfPutRec( DBFAREAP pArea, BYTE * pBuffer )
    else /* if( pArea->fRecordChanged ) */
    {
       /* Write data to file */
-      hb_fsSeek( pArea->hDataFile, pArea->uiHeaderLen + ( pArea->ulRecNo - 1 ) *
-                 pArea->uiRecordLen, FS_SET );
+      hb_fsSeekLarge( pArea->hDataFile, ( HB_FOFFSET ) pArea->uiHeaderLen + 
+                      ( HB_FOFFSET ) ( pArea->ulRecNo - 1 ) * 
+                      ( HB_FOFFSET ) pArea->uiRecordLen, FS_SET );
       if( hb_fsWrite( pArea->hDataFile, pArea->pRecord, pArea->uiRecordLen ) !=
           pArea->uiRecordLen )
       {
@@ -2089,6 +2099,70 @@ static ERRCODE hb_dbfRecInfo( DBFAREAP pArea, PHB_ITEM pRecID, USHORT uiInfoType
       case DBRI_UPDATED:
          hb_itemPutL( pInfo, ulRecNo == pArea->ulRecNo && pArea->fRecordChanged );
          break;
+
+      case DBRI_RAWRECORD:
+      case DBRI_RAWMEMOS:
+      case DBRI_RAWDATA:
+         {
+            USHORT uiFields;
+            BYTE *pResult ;
+            HB_ITEM itItem = HB_ITEM_NIL ;
+            ULONG ulLength;
+            ULONG ulPrevRec = 0;
+            BOOL bDeleted;
+            if( pArea->ulRecNo != ulRecNo )
+            {
+               ulPrevRec = pArea->ulRecNo;
+               SELF_GOTO( ( AREAP ) pArea, ulRecNo );
+            }
+            SELF_DELETED( ( AREAP ) pArea, &bDeleted );  /* No need to allow for == FAILURE here */
+
+            if ( uiInfoType == DBRI_RAWRECORD || uiInfoType == DBRI_RAWDATA )
+            {
+               ulLength = pArea->uiRecordLen;
+               pResult = (BYTE *) hb_xgrab( ulLength + 1 ) ;  /* Allow final '\0' placed by hb_itemPutCPtr */
+                                                              /* Assume xgrab ok - no memory checking */
+               memcpy( pResult, pArea->pRecord, ulLength ) ;
+            }
+            else
+            {
+               pResult = NULL;
+               ulLength = 0;
+            }
+
+            if ( uiInfoType == DBRI_RAWMEMOS || uiInfoType == DBRI_RAWDATA )
+            {
+               for ( uiFields = 0; uiFields < pArea->uiFieldCount ; uiFields++ )
+               {
+                  if ( pArea->lpFields[ uiFields ].uiType == HB_IT_MEMO )
+                  {
+                     /* uiFields in SELF_GETVALUE() 1 based */
+                     if ( SELF_GETVALUE( ( AREAP ) pArea, uiFields + 1, &itItem ) == SUCCESS &&
+                          HB_IS_STRING( &itItem ) && itItem.item.asString.length > 0 )
+                     {
+                        if ( pResult )
+                        {
+                           pResult = (BYTE *) hb_xrealloc( pResult, ulLength + 1 + itItem.item.asString.length ); /* Assume xgrab ok - no memory checking */
+                        }
+                        else
+                        {
+                           pResult = (BYTE *) hb_xgrab( itItem.item.asString.length + 1 );  /* Assume xgrab ok - no memory checking */
+                        }
+                        memcpy( pResult + ulLength, itItem.item.asString.value, itItem.item.asString.length );
+                        ulLength += itItem.item.asString.length;
+                     }
+                  }
+               }
+            }
+            hb_itemClear( &itItem );
+            hb_itemPutCPtr( pInfo, (char *) pResult, ulLength );
+
+            if( ulPrevRec != 0 )
+            {
+               SELF_GOTO( ( AREAP ) pArea, ulPrevRec );
+            }
+            break;
+         }
 
       default:
          return SUPER_RECINFO( ( AREAP ) pArea, pRecID, uiInfoType, pInfo );
@@ -2821,9 +2895,27 @@ static ERRCODE hb_dbfChildSync( DBFAREAP pArea, LPDBRELINFO pRelInfo )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfChildSync(%p, %p)", pArea, pRelInfo));
 
-   SELF_GOCOLD( ( AREAP ) pArea );
+   /*
+    * !!! The side effect of calling GOCOLD() inside CHILDSYNC() is
+    * evaluation of index expressions (index KEY and FOR condition)
+    * when the pArea is not the current one - it means that the
+    * used RDD has to set proper work area before eval, DBFCDX does
+    * but DBFNTX not yet - it should be changed.
+    * IMHO GOCOLD() could be safely removed from this place but I'm not
+    * sure it's Clipper compatible - I will have to check it, Druzus.
+    */
+   /*
+    * I've checked in CL5.3 Technical Reference Guide that only
+    * FORCEREL() should ensure that the work area buffer is not hot
+    * and then call RELEVAL() - I hope it describes the CL5.3 DBF* RDDs
+    * behavior so I replicate it - the GOCOLD() is moved from CHILDSYNC()
+    * to FORCEREL(), Druzus.
+    */
+   /* SELF_GOCOLD( ( AREAP ) pArea ); */
+
    pArea->lpdbPendingRel = pRelInfo;
-   SELF_SYNCCHILDREN( ( AREAP ) pArea );
+   if( pArea->lpdbRelations )
+      SELF_SYNCCHILDREN( ( AREAP ) pArea );
    return SUCCESS;
 }
 
@@ -2842,6 +2934,9 @@ static ERRCODE hb_dbfForceRel( DBFAREAP pArea )
 
    if( pArea->lpdbPendingRel )
    {
+      /* update buffers */
+      SELF_GOCOLD( ( AREAP ) pArea );
+
       lpdbPendingRel = pArea->lpdbPendingRel;
       pArea->lpdbPendingRel = NULL;
       uiError = SELF_RELEVAL( ( AREAP ) pArea, lpdbPendingRel );
@@ -3215,8 +3310,9 @@ static ERRCODE hb_dbfWriteDBHeader( DBFAREAP pArea )
    {
       /* Exclusive mode */
       /* Seek to logical eof and write eof mark */
-      hb_fsSeek( pArea->hDataFile, pArea->uiHeaderLen +
-                 pArea->uiRecordLen * pArea->ulRecCount, FS_SET );
+      hb_fsSeekLarge( pArea->hDataFile, ( HB_FOFFSET ) pArea->uiHeaderLen +
+                      ( HB_FOFFSET ) pArea->uiRecordLen * 
+                      ( HB_FOFFSET ) pArea->ulRecCount, FS_SET );
       hb_fsWrite( pArea->hDataFile, ( BYTE * ) "\032", 1 );
       hb_fsWrite( pArea->hDataFile, NULL, 0 );
    }
