@@ -31,7 +31,7 @@ function Main()
 
    Pause()
 
-   Second( 241, "Hello" )
+   FuncSecond( 241, "Hello" )
 
 return nil
 
@@ -40,7 +40,7 @@ function Pause()
 return __Accept("")
 
 
-function Second( nParam, cParam, uParam )
+function FuncSecond( nParam, cParam, uParam )
 
    local cWhat   := "Something"
    local nNumber := 2
