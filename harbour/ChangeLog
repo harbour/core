@@ -1,3 +1,10 @@
+2001-08-30 19:00 GMT+1 Ignacio Ortiz <ignacio@fivetech.com>
+   * source/rtl/memoline.c
+   * source/rtl/mlcount.c
+   * source/rtl/tget.prg
+   * source/rtl/transfrm.c
+     * Return to previous revision due a mistake in last CVS process
+
 2001-08-30 15:38 GMT Dave Pearson <davep@davep.org>
    * source/rtl/Makefile
      * Added mlctopos.c and mpostolc.c to C_SOURCES.
