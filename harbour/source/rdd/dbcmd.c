@@ -91,6 +91,7 @@ HARBOUR HB_DBGOBOTTOM( void );
 HARBOUR HB_DBGOTO( void );
 HARBOUR HB_DBGOTOP( void );
 HARBOUR HB___DBLOCATE( void );
+HARBOUR HB___DBPACK( void );
 HARBOUR HB_DBRECALL( void );
 HARBOUR HB_DBRLOCK( void );
 HARBOUR HB_DBRLOCKLIST( void );
@@ -734,6 +735,7 @@ static RDDFUNCS defTable = { defBof,
                              defRelease,
                              defStructSize,
                              defSysName,
+                             defUnSupported,
                              defUnSupported,
                              defClearFilter,
                              defClearLocate,
@@ -1991,6 +1993,14 @@ HARBOUR HB___DBSETLOCATE( void )
          SELF_SETLOCATE( ( AREAP ) pCurrArea->pArea, &pScopeInfo );
       }
    }
+}
+
+HARBOUR HB___DBPACK( void )
+{
+   if( pCurrArea )
+      SELF_PACK( ( AREAP ) pCurrArea->pArea );
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "__DBPACK" );
 }
 
 HARBOUR HB_DBRECALL( void )

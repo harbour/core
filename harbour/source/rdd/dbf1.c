@@ -295,6 +295,7 @@ static BOOL hb_dbfUpdateRecord( AREAP pArea, ULONG lRecNo )
    ULONG lRecCount;
    USHORT uiCount;
    LPFIELD pField;
+   BYTE pBuffer[ 1 ];
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfUpdateRecord(%p, %lu)", pArea, lRecNo));
 
@@ -318,9 +319,20 @@ static BOOL hb_dbfUpdateRecord( AREAP pArea, ULONG lRecNo )
          }
       }
       if( hb_fsWrite( pArea->lpFileInfo->hFile, pArea->lpExtendInfo->bRecord,
-                      pArea->lpExtendInfo->uiRecordLen ) != pArea->lpExtendInfo->uiRecordLen ||
-         !hb_dbfUpdateHeader( pArea, lRecCount ) )
+                      pArea->lpExtendInfo->uiRecordLen ) != pArea->lpExtendInfo->uiRecordLen )
          return FALSE;
+
+      /* Write EOF */
+      if( pArea->lpFileInfo->fAppend )
+      {
+         pBuffer[ 0 ] = 0x1A;
+         if( hb_fsWrite( pArea->lpFileInfo->hFile, pBuffer, 1 ) != 1 )
+            return FALSE;
+      }
+
+      if( !hb_dbfUpdateHeader( pArea, lRecCount ) )
+         return FALSE;
+
    }
    return TRUE;
 }
@@ -1335,6 +1347,64 @@ static ERRCODE dbfOpenMemFile( AREAP pArea, LPDBOPENINFO pOpenInfo )
    return SUCCESS;
 }
 
+static ERRCODE dbfPack( AREAP pArea )
+{
+   ULONG lRecCount, lRecIn, lRecOut;
+   BOOL bDeleted;
+   PHB_ITEM pError;
+   BYTE pBuffer[ 1 ];
+
+   HB_TRACE(HB_TR_DEBUG, ("dbfPack(%p)", pArea));
+
+   if( !pArea->lpExtendInfo->fExclusive )
+   {
+      pError = hb_errNew();
+      hb_errPutGenCode( pError, EG_SHARED );
+      hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_SHARED ) );
+      hb_errPutSubCode( pError, 1023 );
+      SELF_ERROR( pArea, pError );
+      hb_errRelease( pError );
+      return FAILURE;
+   }
+
+   if( SELF_GOCOLD( pArea ) == FAILURE || pArea->lpExtendInfo->fReadOnly ||
+       SELF_RECCOUNT( pArea, &lRecCount ) == FAILURE )
+      return FAILURE;
+
+   lRecOut = 0;
+   lRecIn = 1;
+   while ( lRecIn <= lRecCount )
+   {
+      SELF_GOTO( pArea, lRecIn );
+      SELF_DELETED( pArea, &bDeleted );
+
+      if( !bDeleted )
+      {
+         lRecOut++;
+         if( lRecIn != lRecOut )            /* Copy record */
+         {
+            hb_fsSeek( pArea->lpFileInfo->hFile, pArea->lpExtendInfo->uiHeaderLen +
+                       ( lRecOut - 1 ) * pArea->lpExtendInfo->uiRecordLen, FS_SET );
+            hb_fsWrite( pArea->lpFileInfo->hFile, pArea->lpExtendInfo->bRecord,
+                        pArea->lpExtendInfo->uiRecordLen );
+         }
+      }
+      lRecIn++;
+   }
+   hb_dbfUpdateHeader( pArea, lRecOut );
+
+   /* Write EOF */
+   pBuffer[ 0 ] = 0x1A;
+   hb_fsSeek( pArea->lpFileInfo->hFile, pArea->lpExtendInfo->uiHeaderLen +
+              lRecOut * pArea->lpExtendInfo->uiRecordLen, FS_SET );
+   hb_fsWrite( pArea->lpFileInfo->hFile, pBuffer, 1 );
+
+   /* Truncate the file */
+   hb_fsWrite( pArea->lpFileInfo->hFile, NULL, 0 );
+
+   return SELF_GOTOP( pArea );
+}
+
 static ERRCODE dbfPutRec( AREAP pArea, BYTE * pBuffer )
 {
    HB_TRACE(HB_TR_DEBUG, ("dbfPutRec(%p, %p)", pArea, pBuffer));
@@ -1904,6 +1974,7 @@ static RDDFUNCS dbfTable = { dbfBof,
                              dbfRelease,
                              dbfStructSize,
                              dbfSysName,
+                             dbfPack,
                              dbfZap,
                              dbfClearFilter,
                              dbfClearLocate,

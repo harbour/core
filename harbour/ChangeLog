@@ -1,3 +1,16 @@
+19991110-11:08 GMT+1 Bruno Cantero <bruno@issnet.net>
+  * include/rddapi.h
+    source/rdd/dbcmd.c
+    source/rdd/dbf1.c
+    source/rdd/dbfcdx/dbfcdx1.c
+    * Added __dbPack() function
+
+  * tests/testdbf.prg
+    * Added a test for __dbPack() function
+
+  * source/rtl/dummy.prg
+    * Removed __dbPack() function
+
 19991109-17:20 EDT David G. Holm <dholm@jsd-llc.com>
 
    * source/rtl/filesys.c

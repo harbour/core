@@ -55,13 +55,13 @@ function main()
                         "/" + Chr( 13 ) + Chr( 10 ) + "[;-)" + Chr( 13 ) + Chr( 10 )+ ;
                         "\"
    next
-   dbCommit()
+   MYALIAS->( dbCommit() )
 
    ? "Records before ZAP:", MYALIAS->( LastRec() )
    ? "Size of files (data and memo):", Directory( "testdbf.dbf" )[1][2], ;
       Directory( "testdbf.fpt" )[1][2]
    MYALIAS->( __dbZap() )
-   dbCommit()
+   MYALIAS->( dbCommit() )
    ? "Records after ZAP:", MYALIAS->( LastRec() )
    ? "Size of files (data and memo):", Directory( "testdbf.dbf" )[1][2], ;
       Directory( "testdbf.fpt" )[1][2]
@@ -74,7 +74,7 @@ function main()
    InKey( 0 )
    dbCloseAll()
 
-   dbCreate( "testdbf", aStruct, "DBFCDX", .t., "MYALIAS" )
+   dbCreate( "testdbf", aStruct,, .t., "MYALIAS" )
 
    for nI := 1 to 10
       MYALIAS->( dbAppend() )
@@ -85,6 +85,7 @@ function main()
          ? "Deleting record", nI
       endif
    next
+   MYALIAS->( dbCommit() )
 
    ? ""
    ? "With SET DELETED OFF"
@@ -139,6 +140,26 @@ function main()
    enddo
 
    ? "dbFilter() => " + dbFilter()
+   ? ""
+
+   ? "Testing __dbPack()"
+   ? "Records before PACK:", MYALIAS->( LastRec() )
+   ? "Size of files (data and memo):", Directory( "testdbf.dbf" )[1][2], ;
+      Directory( "testdbf.dbt" )[1][2]
+   SET FILTER TO
+   MYALIAS->( __dbPack() )
+   MYALIAS->( dbCommit() )
+   ? "Records after PACK:", MYALIAS->( LastRec() )
+   ? "Size of files (data and memo):", Directory( "testdbf.dbf" )[1][2], ;
+      Directory( "testdbf.dbt" )[1][2]
+   ? "Press any key..."
+   InKey( 0 )
+   ? "Value of fields:"
+   MYALIAS->( dbGoTop() )
+   do while !MYALIAS->( Eof() )
+      ? MYALIAS->NUMERIC
+      MYALIAS->( dbSkip() )
+   enddo
    ? ""
 
    ? "Open test.dbf and LOCATE FOR TESTDBF->SALARY > 145000"

@@ -71,7 +71,6 @@ FUNCTION __dbCopy()        ; RETURN NIL
 FUNCTION __dbDelim()       ; RETURN NIL
 FUNCTION __dbJoin()        ; RETURN NIL
 FUNCTION __dbList()        ; RETURN NIL
-FUNCTION __dbPack()        ; RETURN NIL
 FUNCTION __dbSDF()         ; RETURN NIL
 FUNCTION __dbSort()        ; RETURN NIL
 FUNCTION __dbTotal()       ; RETURN NIL

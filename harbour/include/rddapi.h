@@ -660,7 +660,9 @@ typedef struct _RDDFUNCS
    DBENTRYP_P    sysName;
 #if 0
    DBENTRYP_VP   dbEval;
+#endif
    DBENTRYP_V    pack;
+#if 0
    DBENTRYP_LSP  packRec;
    DBENTRYP_VP   sort;
    DBENTRYP_VP   trans;
