@@ -1,0 +1,2 @@
+..\..\bin\harbour %1 /n
+cl -Fd..\..\bin\harbour -w -Zi -TP -GZ -GA -DDEBUG -DHARBOUR_USE_GTAPI -DHARBOUR_USE_WIN_GTAPI -I..\..\include %1.c /link /subsystem:WINDOWS /NODEFAULTLIB:libcd.lib ..\..\obj\symbols.obj ..\..\libs\vc\harbour.lib ..\..\libs\vc\terminal.lib libc.lib user32.lib ..\..\Contrib\DirectX\directx\release\directx.lib ..\..\libs\win32\directx\lib\vc\ddraw.lib gdi32.lib
