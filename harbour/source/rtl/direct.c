@@ -69,14 +69,12 @@
  * "V" is a special case - you will get back the entry that describes the
  * volume label for the drive implied by the filemask.
  *
- * Differences from the 'standard':
- * - Where supported, filenames will be returned in the same case as they
- *   are stored in the directory.  Clipper (and VO too) will convert the
- *   names to upper case.
- * - Where supported, filenames will be the full filename as supported by
- *   the OS in use.
- * - Where supported, there are a number of additional file attributes
- *   returned.  They are:
+ * Differences from the 'standard' (where supported):
+ * - Filenames will be returned in the same case as they are stored in the
+ *   directory.  Clipper (and VO too) will convert the names to upper case
+ * - Filenames will be the full filename as supported by the OS in use.
+ * - There are a number of additional file attributes returned.
+ *   They are:
  *       'I' - DEVICE      File is a device
  *       'T' - TEMPORARY   File is a Temporary file
  *       'P' - SPARSE      File is Sparse
@@ -86,6 +84,8 @@
  *       'X' - NOTINDEXED  Exclude File/Dir from Indexing Service
  *       'E' - ENCRYPTED   File/Dir is Encrypted
  *       'M' - VOLCOMP     Volume Supports Compression
+ * - Clipper can sometimes drop the ReadOnly indication of directories.
+ *   Harbour detects this correctly.
  *
  * TODO: - Under an MS Windows implimentation, an optional 3rd parameter to
  *         Directory to allow you to receive the compatible '8.3' filename.
