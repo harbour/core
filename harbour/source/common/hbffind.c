@@ -251,8 +251,7 @@ ULONG hb_fsAttrToRaw( USHORT uiAttr )
    if( uiAttr & HB_FA_REPARSE )    raw_attr |= FILE_ATTRIBUTE_REPARSE_POINT;
    if( uiAttr & HB_FA_COMPRESSED ) raw_attr |= FILE_ATTRIBUTE_COMPRESSED;
    if( uiAttr & HB_FA_OFFLINE )    raw_attr |= FILE_ATTRIBUTE_OFFLINE;
-   if( uiAttr & HB_FA_NOTINDEXED ) raw_attr |= FILE_ATTRIBUTE_NOT_CONTENT_INDEXED;
-   if( uiAttr & HB_FA_NOTINDEXED ) raw_attr |= 0x00002000; /* FILE_ATTRIBUTE_NOT_CONTENT_INDEXED */
+   if( uiAttr & HB_FA_NOTINDEXED ) raw_attr |= 0x00002000; /* FILE_ATTRIBUTE_NOT_CONTENT_INDEXED not defined in some older winnt.h */
    if( uiAttr & HB_FA_VOLCOMP )    raw_attr |= 0x00008000;
 #endif
 
@@ -666,7 +665,7 @@ PHB_FFIND hb_fsFindFirst( const char * pszFileName, USHORT uiAttr )
             strcpy( info->pattern, string );
             strcpy( dirname, ".X" );
             dirname[ 1 ] = OS_PATH_DELIMITER;
-	    dirname[ 2 ] = '\0';
+            dirname[ 2 ] = '\0';
          }
       }
       if( !*info->pattern )

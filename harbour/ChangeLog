@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-09-09 16:48 UTC+0300 Chen Kedem <niki@actcom.co.il>
+  * source/common/hbffind.c
+    - Remove redundant line which used FILE_ATTRIBUTE_NOT_CONTENT_INDEXED
+      from hb_fsAttToRaw(). The next line already use the explicit
+      value 0x00002000. Now Harbour complie with Borland BCB 3.0
+
 2002-09-09 14:25 UTC+0100 Tomaz Zupan <tomaz.zupan@orpo.si>
   * contrib/odbc/todbc.prg
     + Added recordset caching.
