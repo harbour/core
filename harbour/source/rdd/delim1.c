@@ -47,8 +47,8 @@ HB_INIT_SYMBOLS_BEGIN( delim1__InitSymbols )
 { "_DELIMC",            FS_PUBLIC, HB__DELIMC,            0 },
 { "DELIM_GETFUNCTABLE", FS_PUBLIC, HB_DELIM_GETFUNCTABLE, 0 }
 HB_INIT_SYMBOLS_END( delim1__InitSymbols )
-#if ! defined(__GNUC__)
-#pragma startup delim1__InitSymbols
+#if ! defined(__GNUC__) && ! defined(_MSC_VER)
+   #pragma startup delim1__InitSymbols
 #endif
 
 static RDDFUNCS delimSuper = { 0 };

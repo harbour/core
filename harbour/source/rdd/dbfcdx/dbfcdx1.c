@@ -102,8 +102,8 @@ HB_INIT_SYMBOLS_BEGIN( dbfcdx1__InitSymbols )
 { "_DBFCDX",             FS_PUBLIC, HB__DBFCDX,             0 },
 { "DBFCDX_GETFUNCTABLE", FS_PUBLIC, HB_DBFCDX_GETFUNCTABLE, 0 }
 HB_INIT_SYMBOLS_END( dbfcdx1__InitSymbols )
-#if ! defined(__GNUC__)
-#pragma startup dbfcdx1__InitSymbols
+#if ! defined(__GNUC__) && ! defined(_MSC_VER)
+   #pragma startup dbfcdx1__InitSymbols
 #endif
 
 #define LOCK_START                          0x40000000L
