@@ -1,3 +1,14 @@
+2000-06-04 09:20 GMT -3 Luiz Rafael Culik<culik@sl.conex.net>
+*utils/hbdoc/hbdoc.prg
+        *Added code to support .CHM source code generation
+*utils/hbdoc/html.prg
+        +Newchm(),Addobject(),addparam(),Newcontent(),Endobject() method
+for .chm support
++utils/hbdoc/genchm.prg
+        *Source code to generate .CHM source files
+*makefile.bc
+        +genchm.prg entry added to the make file
+
 2000-06-04 17:52 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
    * tests/setkeys.prg
