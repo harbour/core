@@ -14,7 +14,6 @@ extern ITEM  aStatics;
 
 PITEM ArrayClone( PITEM );
 
-
 /* $Doc$
  * $FuncName$     <aStat> __aStatic()
  * $Description$  Return the statics array
@@ -23,7 +22,7 @@ PITEM ArrayClone( PITEM );
  * $End$ */
 HARBOUR __ASTATIC()
 {
-   _itemReturn( &aStatics );
+   hb_itemReturn( &aStatics );
 }
 
 
@@ -39,7 +38,7 @@ HARBOUR __STATIC()
    wStatic = _parni(1);
    pStatic = ( ( PBASEARRAY ) aStatics.value.pBaseArray )->pItems +
              stack.iStatics + wStatic - 1;
-   _itemReturn( pStatic );
+   hb_itemReturn( pStatic );
 }
 
 
@@ -53,19 +52,19 @@ void AddToArray( PITEM pItem, PITEM pReturn, WORD wPos )
 
    if( pItem->wType == IT_SYMBOL)
    {                                            /* Symbol is pushed as text */
-      pTemp = _itemNew(NULL);                   /* Create temporary string  */
+      pTemp = hb_itemNew(NULL);                 /* Create temporary string  */
       pTemp->wType   = IT_STRING;
       pTemp->wLength = strlen( pItem->value.pSymbol->szName )+2;
       pTemp->value.szText = (char *) _xgrab( pTemp->wLength+1 );
 
       sprintf( pTemp->value.szText, "[%s]", pItem->value.pSymbol->szName );
 
-      _itemArrayPut( pReturn, wPos, pTemp );
+      hb_itemArrayPut( pReturn, wPos, pTemp );
       ItemRelease( pTemp );                     /* Get rid of temporary str.*/
       _xfree( pTemp );
    }
    else                                         /* Normal types             */
-      _itemArrayPut( pReturn, wPos, pItem );
+      hb_itemArrayPut( pReturn, wPos, pItem );
 }
 
 
@@ -73,7 +72,7 @@ void AddToArray( PITEM pItem, PITEM pReturn, WORD wPos )
  * $FuncName$     <nVars> __GlobalStackLen()
  * $Description$  Returns the length of the global stack
  * $End$ */
-WORD GlobalStackLen()
+WORD GlobalStackLen( void )
 {
    PITEM pItem;
    WORD  nCount = 0;
@@ -99,10 +98,10 @@ HARBOUR __AGLOBALSTACK()
    WORD  wLen = GlobalStackLen();
    WORD  wPos = 1;
 
-   pReturn = _itemArrayNew( wLen );             /* Create a transfer array  */
+   pReturn = hb_itemArrayNew( wLen );           /* Create a transfer array  */
    for( pItem = stack.pItems; pItem <= stack.pPos; pItem++ )
       AddToArray( pItem, pReturn, wPos++ );
-   _itemReturn( pReturn );
+   hb_itemReturn( pReturn );
    ItemRelease( pReturn );
    _xfree( pReturn );
 }
@@ -112,7 +111,7 @@ HARBOUR __AGLOBALSTACK()
  * $FuncName$     <nVars> __StackLen()
  * $Description$  Returns the length of the stack of the calling function
  * $End$ */
-WORD StackLen()
+WORD StackLen( void )
 {
    PITEM pItem;
    PITEM pBase = stack.pItems + stack.pBase->wBase;
@@ -148,10 +147,10 @@ HARBOUR __ASTACK()
    WORD  wLen  = StackLen();
    WORD  wPos  = 1;
 
-   pReturn = _itemArrayNew( wLen );             /* Create a transfer array  */
+   pReturn = hb_itemArrayNew( wLen );           /* Create a transfer array  */
    for( pItem = pBase; pItem < stack.pBase; pItem++ )
       AddToArray( pItem, pReturn, wPos++ );
-   _itemReturn( pReturn );
+   hb_itemReturn( pReturn );
    ItemRelease( pReturn );
    _xfree( pReturn );
 }
@@ -173,10 +172,10 @@ HARBOUR __APARAM()
    WORD  wLen  = pBase->wParams;
    WORD  wPos  = 1;
 
-   pReturn = _itemArrayNew( wLen );             /* Create a transfer array  */
+   pReturn = hb_itemArrayNew( wLen );           /* Create a transfer array  */
    for( pItem = pBase+2; wLen--; pItem++ )
       AddToArray( pItem, pReturn, wPos++ );
-   _itemReturn( pReturn );
+   hb_itemReturn( pReturn );
    ItemRelease( pReturn );
    _xfree( pReturn );
 }

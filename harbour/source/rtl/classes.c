@@ -253,7 +253,7 @@ static HARBOUR ClassSel()
    WORD    wPos = 0;
    PCLASS  pClass;
    PDYNSYM pMessage;
-   PITEM   pReturn = _itemNew( NULL );
+   PITEM   pReturn = hb_itemNew( NULL );
    PITEM   pItem;
    PITEM   pItemRef;
 
@@ -271,22 +271,22 @@ static HARBOUR ClassSel()
       wLimit   = pClass->wHashKey * BUCKET;
       ItemRelease( pReturn );
       _xfree( pReturn );
-      pReturn = _itemArrayNew( pClass->wMethods );
+      pReturn = hb_itemArrayNew( pClass->wMethods );
                                                 /* Create a transfer array  */
       for( wAt = 0; wAt < wLimit ; wAt++ )
       {
          pMessage = (PDYNSYM) pClass->pMethods[ wAt ].pMessage;
          if( pMessage )                         /* Hash Entry used ?        */
          {
-            pItem  = _itemNew(  NULL );         /* Add to array             */
-            pItem  = _itemPutC( pItem, pMessage->pSymbol->szName );
-            _itemArrayPut( pReturn, ++wPos, pItem );
+            pItem  = hb_itemNew(  NULL );       /* Add to array             */
+            pItem  = hb_itemPutC( pItem, pMessage->pSymbol->szName );
+            hb_itemArrayPut( pReturn, ++wPos, pItem );
             ItemRelease( pItem );
             _xfree( pItem );
          }
       }
    }
-   _itemReturn( pReturn );
+   hb_itemReturn( pReturn );
    ItemRelease( pReturn );
    _xfree( pReturn );
 }

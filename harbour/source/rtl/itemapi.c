@@ -6,24 +6,33 @@
 #include <itemapi.h>
 #include <ctoharb.h>
 
+/* TODO: Remove these when the extend system has been modified */
+#define hb_xgrab _xgrab
+#define hb_xfree _xfree
+#define hb_param _param
+
 extern STACK stack;
 extern PSYMBOL symEval;
 
-BOOL _evalNew( PEVALINFO pEvalInfo, PITEM pItem )
+/* TODO: Someone make a dates.h so this isn't necessary! */
+//long greg2julian( long lDay, long lMonth, long lYear );
+//extern void julian2greg( long julian, long * plDay, long * plMonth, long * plYear );
+
+BOOL hb_evalNew( PEVALINFO pEvalInfo, PITEM pItem )
 {
    BOOL bResult = FALSE;
 
    if( pEvalInfo )
    {
       memset( pEvalInfo, 0, sizeof( EVALINFO ) );
-      pEvalInfo->pItems[ 0 ] = _itemNew( 0 );
+      pEvalInfo->pItems[ 0 ] = hb_itemNew( 0 );
       ItemCopy( pEvalInfo->pItems[ 0 ], pItem );
       bResult = TRUE;
    }
    return bResult;
 }
 
-BOOL _evalPutParam( PEVALINFO pEvalInfo, PITEM pItem )
+BOOL hb_evalPutParam( PEVALINFO pEvalInfo, PITEM pItem )
 {
    BOOL bResult = FALSE;
    WORD w;
@@ -34,7 +43,7 @@ BOOL _evalPutParam( PEVALINFO pEvalInfo, PITEM pItem )
       {
          if( ! pEvalInfo->pItems[ w ] )
          {
-            pEvalInfo->pItems[ w ] = _itemNew( 0 );
+            pEvalInfo->pItems[ w ] = hb_itemNew( 0 );
             ItemCopy( pEvalInfo->pItems[ w ], pItem );
             bResult = TRUE;
             break;
@@ -44,7 +53,7 @@ BOOL _evalPutParam( PEVALINFO pEvalInfo, PITEM pItem )
    return bResult;
 }
 
-BOOL _evalRelease( PEVALINFO pEvalInfo )
+BOOL hb_evalRelease( PEVALINFO pEvalInfo )
 {
    BOOL bResult = FALSE;
    WORD w;
@@ -52,13 +61,13 @@ BOOL _evalRelease( PEVALINFO pEvalInfo )
    if( pEvalInfo )
    {
       for( w = 0; w < 10; w++ )
-         _itemRelease( pEvalInfo->pItems[ w ] );
+         hb_itemRelease( pEvalInfo->pItems[ w ] );
       bResult = TRUE;
    }
    return bResult;
 }
 
-PITEM _evalLaunch( PEVALINFO pEvalInfo )
+PITEM hb_evalLaunch( PEVALINFO pEvalInfo )
 {
    WORD w = 1;
    PITEM pResult = 0;
@@ -67,12 +76,12 @@ PITEM _evalLaunch( PEVALINFO pEvalInfo )
    {
       if( IS_STRING( pEvalInfo->pItems[ 0 ] ) )
       {
-         PushSymbol( GetDynSym( _itemGetC( pEvalInfo->pItems[ 0 ] ) )->pSymbol );
+         PushSymbol( GetDynSym( hb_itemGetC( pEvalInfo->pItems[ 0 ] ) )->pSymbol );
          PushNil();
          while( w < 10 && pEvalInfo->pItems[ w ] )
             Push( pEvalInfo->pItems[ w++ ] );
          Do( w - 1 );
-         pResult = _itemNew( 0 );
+         pResult = hb_itemNew( 0 );
          ItemCopy( pResult, &stack.Return );
       }
       else if( IS_BLOCK( pEvalInfo->pItems[ 0 ] ) )
@@ -82,16 +91,16 @@ PITEM _evalLaunch( PEVALINFO pEvalInfo )
          while( w < 10 && pEvalInfo->pItems[ w ] )
             Push( pEvalInfo->pItems[ w++ ] );
          Do( w - 1 );
-         pResult = _itemNew( 0 );
+         pResult = hb_itemNew( 0 );
          ItemCopy( pResult, &stack.Return );
       }
    }
    return pResult;
 }
 
-PITEM _itemNew( PITEM pNull )
+PITEM hb_itemNew( PITEM pNull )
 {
-   PITEM pItem = ( PITEM ) _xgrab( sizeof( ITEM ) );
+   PITEM pItem = ( PITEM ) hb_xgrab( sizeof( ITEM ) );
 
    if( pNull )       /* keep the C compiler silent */
       pNull->wType = 0;   /* keep the C compiler silent */
@@ -102,84 +111,84 @@ PITEM _itemNew( PITEM pNull )
    return pItem;
 }
 
-PITEM _itemParam( WORD wParam )
+PITEM hb_itemParam( WORD wParam )
 {
-   PITEM pNew = _itemNew( 0 );
+   PITEM pNew = hb_itemNew( 0 );
 
-   if( _param( wParam, IT_ANY ) )
-      ItemCopy(pNew, _param( wParam, IT_ANY ));
+   if( hb_param( wParam, IT_ANY ) )
+      ItemCopy(pNew, hb_param( wParam, IT_ANY ));
 
    return pNew;
 }
 
-BOOL _itemRelease( PITEM pItem )
+BOOL hb_itemRelease( PITEM pItem )
 {
    BOOL bResult = FALSE;
 
    if( pItem )
    {
       ItemRelease(pItem);
-      _xfree( pItem );
+      hb_xfree( pItem );
       bResult = TRUE;
    }
    return bResult;
 }
 
-PITEM _itemArrayNew( ULONG ulLen )
+PITEM hb_itemArrayNew( ULONG ulLen )
 {
-   PITEM pItem = _itemNew(0);
+   PITEM pItem = hb_itemNew(0);
 
    Array(pItem, ulLen);
 
    return pItem;
 }
 
-PITEM _itemArrayGet( PITEM pArray, ULONG ulIndex )
+PITEM hb_itemArrayGet( PITEM pArray, ULONG ulIndex )
 {
-   PITEM pItem = _itemNew(0);
+   PITEM pItem = hb_itemNew(0);
 
    ArrayGet(pArray, ulIndex, pItem);
 
    return pItem;
 }
 
-PITEM _itemArrayPut( PITEM pArray, ULONG ulIndex, PITEM pItem )
+PITEM hb_itemArrayPut( PITEM pArray, ULONG ulIndex, PITEM pItem )
 {
    ArraySet(pArray, ulIndex, pItem);
    return pArray;
 }
 
-PITEM _itemPutC( PITEM pItem, char * szText )
+PITEM hb_itemPutC( PITEM pItem, char * szText )
 {
    if( pItem )
       ItemRelease( pItem );  /* warning: this is hvm.c one not this one */
    else
-      pItem = _itemNew(0);
+      pItem = hb_itemNew(0);
 
    pItem->wType = IT_STRING;
    pItem->wLength = strlen( szText );
-   pItem->value.szText = ( char * ) _xgrab( pItem->wLength + 1 );
+   pItem->value.szText = ( char * ) hb_xgrab( pItem->wLength + 1 );
    strcpy( pItem->value.szText, szText );
    return pItem;
 }
 
-PITEM _itemPutCL( PITEM pItem, char * nszText, ULONG ulLen )
+PITEM hb_itemPutCL( PITEM pItem, char * nszText, ULONG ulLen )
 {
    if( pItem )
       ItemRelease( pItem );  /* warning: this is hvm.c one not this one */
    else
-      pItem = _itemNew(0);
+      pItem = hb_itemNew(0);
 
    pItem->wType = IT_STRING;
    pItem->wLength = ulLen;
-   pItem->value.szText = ( char * ) _xgrab( ulLen + 1 );
+   pItem->value.szText = ( char * ) hb_xgrab( ulLen + 1 );
    memcpy( pItem->value.szText, nszText, ulLen );
    pItem->value.szText[ ulLen ] = 0;
 
    return pItem;
 }
 
-char *_itemGetC( PITEM pItem )
+char *hb_itemGetC( PITEM pItem )
 {
    if( pItem && IS_STRING( pItem ) )
    {
@@ -193,7 +202,7 @@ char *_itemGetC( PITEM pItem )
       return NULL;
 }
 
-ULONG _itemCopyC( PITEM pItem, char *szBuffer, ULONG ulLen )
+ULONG hb_itemCopyC( PITEM pItem, char *szBuffer, ULONG ulLen )
 {
    if( pItem && IS_STRING(pItem) )
    {
@@ -207,19 +216,19 @@ ULONG _itemCopyC( PITEM pItem, char *szBuffer, ULONG ulLen )
       return 0;
 }
 
-BOOL _itemFreeC( char *szText )
+BOOL hb_itemFreeC( char *szText )
 {
    BOOL bResult = FALSE;
 
    if( szText )
    {
-      _xfree(szText);
+      hb_xfree(szText);
       bResult = TRUE;
    }
    return bResult;
 }
 
-char *_itemGetDS( PITEM pItem, char *szDate )
+char *hb_itemGetDS( PITEM pItem, char *szDate )
 {
    if( pItem && IS_DATE(pItem) )
    {
@@ -244,7 +253,7 @@ char *_itemGetDS( PITEM pItem, char *szDate )
       return "00000000";
 }
 
-BOOL _itemGetL( PITEM pItem )
+BOOL hb_itemGetL( PITEM pItem )
 {
    if( pItem && IS_LOGICAL(pItem) )
    {
@@ -254,7 +263,7 @@ BOOL _itemGetL( PITEM pItem )
       return FALSE;
 }
 
-double _itemGetND( PITEM pItem )
+double hb_itemGetND( PITEM pItem )
 {
    if( pItem )
    {
@@ -270,7 +279,7 @@ double _itemGetND( PITEM pItem )
       return 0;
 }
 
-long _itemGetNL( PITEM pItem )
+long hb_itemGetNL( PITEM pItem )
 {
    if( pItem )
    {
@@ -286,7 +295,7 @@ long _itemGetNL( PITEM pItem )
       return 0;
 }
 
-PITEM _itemReturn( PITEM pItem )
+PITEM hb_itemReturn( PITEM pItem )
 {
    if( pItem )
       ItemCopy(&stack.Return, pItem);
@@ -294,14 +303,14 @@ PITEM _itemReturn( PITEM pItem )
    return pItem;
 }
 
-PITEM _itemPutDS( PITEM pItem, char *szDate )
+PITEM hb_itemPutDS( PITEM pItem, char *szDate )
 {
    long lDay, lMonth, lYear;
 
    if( pItem )
       ItemRelease( pItem );  /* warning: this is hvm.c one not this one */
    else
-      pItem = _itemNew(0);
+      pItem = hb_itemNew(0);
 
    lDay   = ((szDate[ 6 ] - '0') * 10) + (szDate[ 7 ] - '0');
    lMonth = ((szDate[ 4 ] - '0') * 10) + (szDate[ 5 ] - '0');
@@ -319,12 +328,12 @@ PITEM _itemPutDS( PITEM pItem, char *szDate )
    return pItem;
 }
 
-PITEM _itemPutL( PITEM pItem, BOOL bValue )
+PITEM hb_itemPutL( PITEM pItem, BOOL bValue )
 {
    if( pItem )
       ItemRelease( pItem );  /* warning: this is hvm.c one not this one */
    else
-      pItem = _itemNew(0);
+      pItem = hb_itemNew(0);
 
    pItem->wType = IT_LOGICAL;
    pItem->wLength = 1;
@@ -332,12 +341,12 @@ PITEM _itemPutL( PITEM pItem, BOOL bValue )
    return pItem;
 }
 
-PITEM _itemPutND( PITEM pItem, double dNumber )
+PITEM hb_itemPutND( PITEM pItem, double dNumber )
 {
    if( pItem )
       ItemRelease( pItem );  /* warning: this is hvm.c one not this one */
    else
-      pItem = _itemNew(0);
+      pItem = hb_itemNew(0);
 
    pItem->wType = IT_DOUBLE;
    pItem->wLength = sizeof( double );
@@ -345,12 +354,12 @@ PITEM _itemPutND( PITEM pItem, double dNumber )
    return pItem;
 }
 
-PITEM _itemPutNL( PITEM pItem, long lNumber )
+PITEM hb_itemPutNL( PITEM pItem, long lNumber )
 {
    if( pItem )
       ItemRelease( pItem );  /* warning: this is hvm.c one not this one */
    else
-      pItem = _itemNew(0);
+      pItem = hb_itemNew(0);
 
    pItem->wType = IT_DOUBLE;
    pItem->wLength = sizeof( double );
@@ -358,28 +367,20 @@ PITEM _itemPutNL( PITEM pItem, long lNumber )
    return pItem;
 }
 
-
-ULONG _itemSize( PITEM pItem )
+ULONG hb_itemSize( PITEM pItem )
 {
-   ULONG ulSize = 0;
-
    if( pItem )
    {
       switch( pItem->wType )
       {
-         case IT_ARRAY:
-              ulSize = ArrayLen( pItem );
-              break;
-
-         case IT_STRING:
-              ulSize = pItem->wLength;
-              break;
+         case IT_ARRAY:    return ArrayLen(pItem);
+         case IT_STRING:   return pItem->wLength;
       }
    }
-   return ulSize;
+   return 0;
 }
 
-WORD _itemType( PITEM pItem )
+WORD hb_itemType( PITEM pItem )
 {
    return pItem->wType;
 }

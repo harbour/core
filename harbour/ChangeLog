@@ -1,3 +1,9 @@
+19990510-09:10 Eddie Runia
+    * source/rtl/itemapi.c, include/itemapi.h
+      - new version installed
+    * source/tools/debug.c, source/rtl/classes.c
+      - _item changed to hb_item
+
 19990510-08:32 Eddie Runia
     * include/harbclip.h grabbed
 
