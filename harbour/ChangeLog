@@ -1,3 +1,19 @@
+20000121-12:50 GMT+1 Ignacio Ortiz <ignacio@fivetech.com>
+   + source/rtl/mlpos.c
+     * Added function MlPos()
+
+   * source/rtl/memoline.c
+     * Fixed little bug on empty lines
+
+   * source/rtl/tget.prg
+     * Multiple enhancements, class Tget is completed
+
+   * source/rtl/tgetlist.prg
+     * Fixed bug on date management reported by Kwon OhChul
+
+   * makefile.b32
+     * mlpos.c included (Please update other make files)
+
 20000121-09:40 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/debug/debugger.com
      * Improved monitored variables containt support
