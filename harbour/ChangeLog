@@ -1,3 +1,13 @@
+2000-11-23 10:00 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * source/rtl/idle.c
+   * source/rtl/inkey.c
+     ! Improved granularity of Idle Processing:
+         - GC is called only once per Wait Session.
+	 - Single Idle Task is performed for each itteration of hb_idleState() but never more than once per Wait Session.
+	 - ReleaseCPU() is guaranteed to be the only code executing for the remainder of every Wait Session.
+
+   /* Maurilio, Ryszard, Victor, could you please review and comment... */
+
 2000-11-23 13:32 GMT+1 Maurilio Longo <maurilio.longo@libero.it>
    * source/rtl/teditor.prg
       ! fixed K_DEL handling
