@@ -1,3 +1,7 @@
+2001-02-09 17:01 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * harbour/source/rtl/gtapi.c
+     + hb_gtColorToN() fixed (?).
+
 2001-02-09 16:44 GMT+1 Antonio Linares <alinares@fivetech.com>
 
    * harbour/include/hbapigt.h
