@@ -849,7 +849,7 @@ ERRCODE hb_waSetRel( AREAP pArea, LPDBRELINFO lpdbRelInf )
    lpdbRelations->abKey = lpdbRelInf->abKey;
    lpdbRelations->lpdbriNext = lpdbRelInf->lpdbriNext;
 
-   hb_waChildStart( lpdbRelInf->lpaChild,lpdbRelInf );
+   SELF_CHILDSTART( ( AREAP ) lpdbRelInf->lpaChild,lpdbRelations );
 
    return SUCCESS;
 }
