@@ -441,6 +441,7 @@ BOOL _bShortCuts = TRUE;             /* .and. & .or. expressions shortcuts */
 BOOL _bWarnings = FALSE;             /* enable parse warnings */
 BOOL _bAutoMemvarAssume = FALSE;     /* holds if undeclared variables are automatically assumed MEMVAR */
 BOOL _bForceMemvars = FALSE;         /* holds if memvars are assumed when accesing undeclared variable */
+BOOL _bDebugInfo = FALSE;            /* holds if generate debugger required info */
 
 /* This variable is used to flag if variables have to be passed by reference
  * - it is required in DO <proc> WITH <params> statement
@@ -609,7 +610,7 @@ Statement  : ExecFlow Crlf        {}
            | VarAssign Crlf       { GenPCode1( HB_P_POP ); _bRValue =FALSE; }
 
            | IDENTIFIER '=' Expression Crlf            { PopId( $1 ); }
-           | AliasVar '=' Expression Crlf              { PopId( $1 ); AliasRemove(); }
+           | AliasVar '=' { $<pVoid>$=(void*)pAliasId; pAliasId=NULL; } Expression Crlf  { pAliasId=(ALIASID_PTR) $<pVoid>3; PopId( $1 ); AliasRemove(); }
            | AliasFunc '=' Expression Crlf             { --iLine; GenError( _szCErrors, 'E', ERR_INVALID_LVALUE, NULL, NULL ); }
            | VarAt '=' Expression Crlf                 { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); }
            | FunCallArray '=' Expression Crlf          { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); }
@@ -1276,6 +1277,12 @@ int harbour_main( int argc, char * argv[] )
                     _bAutoMemvarAssume = TRUE;
                     break;
 
+               case 'b':
+               case 'B':
+                    _bDebugInfo = TRUE;
+                    _bLineNumbers = TRUE;
+                    break;
+
                case 'd':
                case 'D':   /* defines a Lex #define from the command line */
                     {
@@ -1563,6 +1570,7 @@ void PrintUsage( char * szSelf )
   printf( "Syntax: %s <file.prg> [options]\n"
           "\nOptions: \n"
           "\t/a\t\tautomatic memvar declaration\n"
+          "\t/b\t\tdebug info\n"
           "\t/d<id>[=<val>]\t#define <id>\n"
 #ifdef HARBOUR_OBJ_GENERATION
           "\t/f\t\tgenerated object file\n"
@@ -1899,17 +1907,29 @@ void AddVar( char * szVarName )
       {
           case VS_LOCAL:
           case VS_PARAMETER:
-              if( ! pFunc->pLocals )
-                  pFunc->pLocals = pVar;
-              else
-              {
-                  pLastVar = pFunc->pLocals;
-                  while( pLastVar->pNext )
-                    pLastVar = pLastVar->pNext;
-                  pLastVar->pNext = pVar;
+              { WORD wLocal = 1;
+
+                 if( ! pFunc->pLocals )
+                    pFunc->pLocals = pVar;
+                 else
+                 {
+                    pLastVar = pFunc->pLocals;
+                    while( pLastVar->pNext )
+                    {
+                       pLastVar = pLastVar->pNext;
+                       wLocal++;
+                    }
+                    pLastVar->pNext = pVar;
+                 }
+                 if( iVarScope == VS_PARAMETER )
+                    ++functions.pLast->wParamCount;
+                 if( _bDebugInfo )
+                 {
+                    GenPCode3( HB_P_LOCALNAME, LOBYTE( wLocal ), HIBYTE( wLocal ) );
+                    GenPCodeN( szVarName, strlen( szVarName ) );
+                    GenPCode1( 0 );
+                 }
               }
-              if( iVarScope == VS_PARAMETER )
-                  ++functions.pLast->wParamCount;
               break;
 
           case VS_STATIC:
@@ -2260,6 +2280,15 @@ void FunDef( char * szFunName, SYMBOLSCOPE cScope, int iType )
 
    GenPCode3( HB_P_FRAME, 0, 0 );   /* frame for locals and parameters */
    GenPCode3( HB_P_SFRAME, 0, 0 );     /* frame for statics variables */
+
+   if( _bDebugInfo )
+   {
+      GenPCode1( HB_P_MODULENAME );
+      GenPCodeN( files.pLast->szFileName, strlen( files.pLast->szFileName ) );
+      GenPCode1( ':' );
+      GenPCodeN( szFunName, strlen( szFunName ) );
+      GenPCode1( 0 );
+   }
 }
 
 void GenJava( char *szFileName, char *szName )
@@ -2600,6 +2629,25 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
                  lPCodePos += 3;
                  break;
 
+            case HB_P_LOCALNAME:
+                 fprintf( yyc, "                HB_P_LOCALNAME, %i, %i,\t/* %s */\n",
+                          pFunc->pCode[ lPCodePos + 1 ],
+                          pFunc->pCode[ lPCodePos + 2 ],
+                          ( char * ) pFunc->pCode + lPCodePos + 3 );
+                 lPCodePos += 3;
+                 while( pFunc->pCode[ lPCodePos ] )
+                 {
+                    chr = pFunc->pCode[ lPCodePos++ ];
+                    if( chr == '\'' || chr == '\\')
+                      fprintf( yyc, " \'\\%c\',", chr );
+                    else
+                      fprintf( yyc, " \'%c\',", chr );
+                 }
+                 fprintf( yyc, " 0,\n" );
+                 lPCodePos++;
+                 break;
+                 break;
+
             case HB_P_MESSAGE:
                  {
                   WORD wFixPos;
@@ -2616,6 +2664,21 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
 
             case HB_P_MINUS:
                  fprintf( yyc, "                HB_P_MINUS,\n" );
+                 lPCodePos++;
+                 break;
+
+            case HB_P_MODULENAME:
+                 fprintf( yyc, "                HB_P_MODULENAME, /* %s */\n",
+                          ( char * ) pFunc->pCode + lPCodePos++ + 1 );
+                 while( pFunc->pCode[ lPCodePos ] )
+                 {
+                    chr = pFunc->pCode[ lPCodePos++ ];
+                    if( chr == '\'' || chr == '\\')
+                      fprintf( yyc, " \'\\%c\',", chr );
+                    else
+                      fprintf( yyc, " \'%c\',", chr );
+                 }
+                 fprintf( yyc, " 0,\n" );
                  lPCodePos++;
                  break;
 
@@ -3189,6 +3252,9 @@ void GenExterns( void ) /* generates the symbols for the EXTERN names */
 {
   PEXTERN pDelete;
 
+  if( _bDebugInfo )
+     AddExtern( yy_strdup( "DEBUGGER" ) );
+
   while( pExterns )
   {
     if( GetSymbol( pExterns->szName, NULL ) )
@@ -3739,7 +3805,7 @@ void VariablePCode( BYTE bPCode, char * szVarName )
          else
             /* pushing fields by reference is not allowed */
             GenError( _szCErrors, 'E', ERR_INVALID_REFER, szVarName, NULL );
-         PushSymbol( yy_strdup(pField->szAlias), 0 );
+         PushSymbol( yy_strdup( pField->szAlias ), 0 );
       }
       else
       {  /* this is unaliased field */
@@ -3878,7 +3944,7 @@ void PopId( char * szVarName ) /* generates the pcode to pop a value from the vi
                }
                else
                {  /* database alias */
-                  PushSymbol( yy_strdup(pAliasId->alias.szAlias), 0 );
+                  PushSymbol( yy_strdup( pAliasId->alias.szAlias ), 0 );
                   FieldPCode( HB_P_POPALIASEDFIELD, szVarName );
                }
             }
@@ -4006,7 +4072,7 @@ void PushId( char * szVarName ) /* generates the pcode to push a variable value 
                }
                else
                {  /* database alias */
-                  PushSymbol( yy_strdup(pAliasId->alias.szAlias), 0 );
+                  PushSymbol( yy_strdup( pAliasId->alias.szAlias ), 0 );
                   FieldPCode( HB_P_PUSHALIASEDFIELD, szVarName );
                }
             }
