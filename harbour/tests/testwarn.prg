@@ -7,24 +7,24 @@
    #pragma -es0
 #else
 
-   #TRANSLATE AS CHAR ARRAY =>
-   #TRANSLATE AS CHARACTER ARRAY  =>
-   #TRANSLATE AS STRING ARRAY  =>
+   #TRANSLATE AS ARRAY OF CHAR =>
+   #TRANSLATE AS ARRAY OF CHARACTER =>
+   #TRANSLATE AS ARRAY OF STRING =>
 
-   #TRANSLATE AS NUM ARRAY  =>
-   #TRANSLATE AS NUMERIC ARRAY  =>
+   #TRANSLATE AS ARRAY OF NUM =>
+   #TRANSLATE AS ARRAY OF NUMERIC =>
 
-   #TRANSLATE AS DATE ARRAY  =>
-   #TRANSLATE AS ARRAY ARRAY  =>
-   #TRANSLATE AS BLOCK ARRAY  =>
-   #TRANSLATE AS OBJECT ARRAY  =>
+   #TRANSLATE AS ARRAY OF DATE =>
+   #TRANSLATE AS ARRAY OF ARRAY  =>
+   #TRANSLATE AS ARRAY OF BLOCK =>
+   #TRANSLATE AS ARRAY OF OBJECT =>
 
-   #TRANSLATE AS BOOL ARRAY  =>
-   #TRANSLATE AS BOOLEAN ARRAY  =>
-   #TRANSLATE AS LOGICAL ARRAY  =>
+   #TRANSLATE AS ARRAY OF BOOL =>
+   #TRANSLATE AS ARRAY OF BOOLEAN =>
+   #TRANSLATE AS ARRAY OF LOGICAL =>
 
-   #TRANSLATE AS VAR ARRAY =>
-   #TRANSLATE AS VARIANT ARRAY =>
+   #TRANSLATE AS ARRAY OF VAR =>
+   #TRANSLATE AS ARRAY OF VARIANT =>
 
 
    #TRANSLATE AS CHAR =>
@@ -61,7 +61,7 @@ DECLARE FUNCTION int( n AS NUMERIC ) AS NUMERIC
 
 DECLARE FUNCTION TEST AS NUMERIC
 
-DECLARE CLASS    MyClass                       ;
+DECLARE CLASS MyClass                              ;
         Has METHOD   nMyFunc( nVal As Num ) As Num ;
         Has METHOD   nMyFunc( nVal As Num ) As Num ;
         Has Data     cMyData    ;
@@ -76,7 +76,7 @@ STATIC lGlobal AS LOGICAL
 
 PROCEDURE THEMAIN( optional )
 
-  STATIC lStatic := 0, oMyObj As Object From WrongClass
+  STATIC lStatic := 0, oMyObj As Object From CLASS WrongClass
   LOCAL cVar AS CHAR := [declare function]
 
   oMyObj:MyMethod( 2, 3, 4 )
@@ -89,9 +89,11 @@ PROCEDURE THEMAIN( optional )
 
   PRIVATE TEST AS CHAR
 
+  DO Optional WITH cVar
+
   FOR Conter := 1 TO 10
     ? "For with End"
-  NEXT
+  End
 
   IF optional
      ? 'Ok'
@@ -129,7 +131,7 @@ PROCEDURE SOMEPROC()
 
   REPLACE a WITH 1
 
-  M->public_var := 0 	//core dumps (GPF) on Linux
+  //M->public_var := 0    //core dumps (GPF) on Linux
 
   b := 0
 
@@ -172,7 +174,7 @@ Return( NIL )
 
 FUNCTION Main3()
 
-   LOCAL n AS NUMERIC, cVar AS CHARACTER, a[5,5,5] AS CHARACTER ARRAY
+   LOCAL n AS NUMERIC, cVar AS CHARACTER, a[5,5,5] AS ARRAY OF Char
 
    cVar := a[1]
 
