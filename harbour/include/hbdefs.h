@@ -65,16 +65,6 @@ typedef unsigned long DWORD;
 #define FALSE  0
 #define TRUE   1
 
-#ifndef LOBYTE
-#define LOBYTE( w )             ( ( BYTE )( w ) )
-#endif
-#ifndef HIBYTE
-#define HIBYTE( w )             ( ( BYTE )( ( ( WORD )( w ) >> 8 ) & 0xFF ) )
-#endif
-#ifndef LOWORD
-#define LOWORD( l )             ( ( WORD )( l ) )
-#endif
-
 #endif /* HB_DONT_DEFINE_BASIC_TYPES */
 #endif /* __IBMCPP__ */
 
@@ -84,6 +74,26 @@ typedef unsigned long DWORD;
 #ifndef MIN
 #define MIN( a, b )             ( ( ( a ) < ( b ) ) ? ( a ) : ( b ) )
 #endif
+
+#ifndef LOBYTE
+#define LOBYTE( w )             ( ( BYTE )( w ) )
+#endif
+#ifndef HIBYTE
+#define HIBYTE( w )             ( ( BYTE )( ( ( WORD )( w ) >> 8 ) & 0xFF ) )
+#endif
+#ifndef LOWORD
+#define LOWORD( l )             ( ( WORD )( l ) )
+#endif
+#ifndef MKINT
+#define MKINT( b1, b2 )         ( ( ( long ) b2 ) <<  8 ) | b1
+#endif
+#ifndef MKLONG
+#define MKLONG( b1, b2, b3, b4 ) ( ( ( long ) b4 ) << 24 ) | \
+                                 ( ( ( long ) b3 ) << 16 ) | \
+                                 ( ( ( long ) b2 ) <<  8 ) | b1
+#endif
+
+#define HB_SYMBOL_UNUSED( symbol ) ( void ) symbol
 
 #ifdef __GNUC__
    #define pascal __attribute__ ((stdcall))
@@ -105,13 +115,7 @@ typedef unsigned long DWORD;
 typedef HARBOUR ( * PHB_FUNC )( void );
 typedef PHB_FUNC HB_FUNC_PTR;
 
-#ifndef _POSIX_PATH_MAX
-   #define _POSIX_PATH_MAX    255
-#endif
-
 typedef LONG HB_HANDLE;     /* handle to memvar value */
 typedef char SYMBOLSCOPE;   /* stores symbol's scope */
-
-#define HB_SYMBOL_UNUSED( symbol ) ( void ) symbol
 
 #endif /* HB_DEFS_H_ */

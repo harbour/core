@@ -42,6 +42,7 @@
 #include <limits.h>
 #include <malloc.h>     /* required for allocating and freeing memory */
 #include <ctype.h>
+#include <time.h>
 #include "extend.h"
 #include "pcode.h"      /* pcode values */
 #include "compiler.h"
@@ -129,6 +130,8 @@ typedef struct _ALIASID
 #define  ALIAS_NUMBER   1
 #define  ALIAS_NAME     2
 #define  ALIAS_EVAL     3
+
+static DWORD PackDateTime( void );
 
 void AliasAddInt( int );
 void AliasAddExp( void );
@@ -2302,9 +2305,9 @@ void ExpListPop( int iExpCount )
       else
       {
          /* exprN, , exprN1
-          * in this context empty expression is not allowed 
+          * in this context empty expression is not allowed
           *
-          * NOTE: 
+          * NOTE:
           * We don't have to generate this error - it is safe to continue
           * pcode generation - in this case an empty expression will not
           * generate any opcode
@@ -2463,6 +2466,8 @@ void GenCCode( char * szFileName, char * szName )       /* generates the C langu
    char chr;
    BOOL bEndProcRequired;
 
+   DWORD dwDateTime;
+
    FILE * yyc;             /* file handle for C output */
 
    HB_SYMBOL_UNUSED( szName );
@@ -2506,11 +2511,13 @@ void GenCCode( char * szFileName, char * szName )       /* generates the C langu
       pFunc = pFunc->pNext;
    }
 
+   dwDateTime = PackDateTime();
+
    /* writes the symbol table */
    /* Generate the wrapper that will initialize local symbol table
     */
    yy_strupr( _pFileName->szName );
-   fprintf( yyc, "\n\nHB_INIT_SYMBOLS_BEGIN( hb_vm_SymbolInit_%s )\n", _pFileName->szName );
+   fprintf( yyc, "\n\nHB_INIT_SYMBOLS_BEGIN( hb_vm_SymbolInit_%s_%08lX )\n", _pFileName->szName, dwDateTime );
 
    if( ! _bStartProc )
       pSym = pSym->pNext; /* starting procedure is always the first symbol */
@@ -2564,8 +2571,8 @@ void GenCCode( char * szFileName, char * szName )       /* generates the C langu
 
       pSym = pSym->pNext;
    }
-   fprintf( yyc, "\nHB_INIT_SYMBOLS_END( hb_vm_SymbolInit_%s )\n", _pFileName->szName );
-   fprintf( yyc, "#if ! defined(__GNUC__)\n#pragma startup hb_vm_SymbolInit_%s\n#endif\n\n\n", _pFileName->szName );
+   fprintf( yyc, "\nHB_INIT_SYMBOLS_END( hb_vm_SymbolInit_%s_%08lX )\n", _pFileName->szName, dwDateTime );
+   fprintf( yyc, "#if ! defined(__GNUC__)\n#pragma startup hb_vm_SymbolInit_%s_%08lX\n#endif\n\n\n", _pFileName->szName, dwDateTime );
 
    /* Generate functions data
     */
@@ -3529,7 +3536,7 @@ void GenIfInline( void )
    }
 
    if( bGenPCode )
-   {  
+   {
       /* generate pcodes for all expressions
        */
       LONG lPosFalse, lPosEnd;
@@ -6266,3 +6273,52 @@ void CheckArgs( char * szFuncCall, int iArgs )
       }
    }
 }
+
+/* NOTE: Making the date and time info to fit into 32 bits can only be done
+         in a "lossy" way, in practice that means it's not possible to unpack
+         the exact date/time info from the resulting DWORD. Since the year
+         is only stored in 6 bits, 1980 will result in the same bit pattern
+         as 2044. The purpose of this value is only used to *differenciate* 
+         between to dates ( the exact dates are not significant ), so this can
+         be used here without problems. */
+
+/* 76543210765432107654321076543210
+   |.......|.......|.......|.......
+   |____|                               Year    6 bits
+         |__|                           Month   4 bits
+             |___|                      Day     5 bits
+                  |___|                 Hour    5 bits
+                       |____|           Minute  6 bits
+                             |____|     Second  6 bits */
+
+static DWORD PackDateTime( void )
+{
+   BYTE szString[ 4 ];
+   BYTE nValue;
+
+   time_t t;
+   struct tm * oTime;
+
+   time( &t );
+   oTime = localtime( &t );
+
+   nValue = ( BYTE ) ( ( ( oTime->tm_year + 1900 ) - 1980 ) & ( 2 ^ 6 ) ) ; /* 6 bits */
+   szString[ 0 ]  = nValue << 2;
+   nValue = ( BYTE ) ( oTime->tm_mon + 1 ); /* 4 bits */
+   szString[ 0 ] |= nValue >> 2;
+   szString[ 1 ]  = nValue << 6;
+   nValue = ( BYTE ) ( oTime->tm_mday ); /* 5 bits */
+   szString[ 1 ] |= nValue << 1;
+
+   nValue = ( BYTE ) oTime->tm_hour; /* 5 bits */
+   szString[ 1 ]  = nValue >> 4;
+   szString[ 2 ]  = nValue << 4;
+   nValue = ( BYTE ) oTime->tm_min; /* 6 bits */
+   szString[ 2 ] |= nValue >> 2;
+   szString[ 3 ]  = nValue << 6;
+   nValue = ( BYTE ) oTime->tm_sec; /* 6 bits */
+   szString[ 3 ] |= nValue;
+
+   return MKLONG( szString[ 3 ], szString[ 2 ], szString[ 1 ], szString[ 0 ] );
+}
+

@@ -78,18 +78,18 @@ double hb_secondsToday( void )
 #endif
 }
 
-char * hb_cmonth( int month )
+char * hb_cmonth( int iMonth )
 {
-   if( month >= 1 && month <= 12 )
-      return hb_monthsname[ month - 1 ];
+   if( iMonth >= 1 && iMonth <= 12 )
+      return hb_monthsname[ iMonth - 1 ];
    else
       return "";
 }
 
-char * hb_cdow( int day )
+char * hb_cdow( int iDay )
 {
-   if( day >= 1 && day <= 7 )
-      return hb_daysname[ day - 1 ];
+   if( iDay >= 1 && iDay <= 7 )
+      return hb_daysname[ iDay - 1 ];
    else
       return "";
 }
@@ -237,17 +237,11 @@ HARBOUR HB_CTOD( void )
             if( isdigit( digit ) )
             {
                if( d_pos == 1 )
-               {
                   d_value = ( d_value * 10 ) + digit - '0';
-               }
                else if( m_pos == 1 )
-               {
                   m_value = ( m_value * 10 ) + digit - '0';
-               }
                else if( y_pos == 1 )
-               {
                   y_value = ( y_value * 10 ) + digit - '0';
-               }
             }
             else if( digit != ' ' )
             {
@@ -424,6 +418,7 @@ char * hb_dtoc( const char * szDate, char * szFormattedDate, const char * szDate
       strncpy( szFormattedDate, szDateFormat, size );
 
       for( digit_count = 0; digit_count < size; digit_count++ )
+      {
          switch( szFormattedDate[ digit_count ] )
          {
             case 'D':
@@ -434,6 +429,7 @@ char * hb_dtoc( const char * szDate, char * szFormattedDate, const char * szDate
             case 'y':
                szFormattedDate[ digit_count ] = ' ';
          }
+      }
    }
 
    szFormattedDate[ format_count ] = '\0';
@@ -558,12 +554,12 @@ HARBOUR HB_TIME( void )
    {
       time_t t;
       struct tm * oTime;
-      char szTime[ 9 ];
+      char szResult[ 9 ];
 
       time( &t );
       oTime = localtime( &t );
-      sprintf( szTime, "%02d:%02d:%02d", oTime->tm_hour, oTime->tm_min, oTime->tm_sec );
-      hb_retclen( szTime, 8 );
+      sprintf( szResult, "%02d:%02d:%02d", oTime->tm_hour, oTime->tm_min, oTime->tm_sec );
+      hb_retclen( szResult, 8 );
    }
    else
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "TIME" );
@@ -575,12 +571,12 @@ HARBOUR HB_DATE( void )
    {
       time_t t;
       struct tm * oTime;
-      char szTime[ 9 ];
+      char szResult[ 9 ];
 
       time( &t );
       oTime = localtime( &t );
-      sprintf( szTime, "%04d%02d%02d", oTime->tm_year + 1900, oTime->tm_mon + 1, oTime->tm_mday );
-      hb_retds( szTime );
+      sprintf( szResult, "%04d%02d%02d", oTime->tm_year + 1900, oTime->tm_mon + 1, oTime->tm_mday );
+      hb_retds( szResult );
    }
    else
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "DATE" ); /* NOTE: Clipper catches this at compile time! */

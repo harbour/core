@@ -620,7 +620,7 @@ STATIC FUNCTION Main_MATH()
    TEST_LINE( Str(Sqrt(@snIntP))              , "         3.16"                        ) /* Bug in CA-Cl*pper, it returns: "E BASE 1097 Argument error SQRT F:S" */
 #endif
    TEST_LINE( Str(Sqrt(4),21,18)              , " 2.000000000000000000"                )
-   TEST_LINE( Str(Sqrt(3),21,18)              , " 1.732050807568877000"                )
+   TEST_LINE( Str(Sqrt(3),21,18)              , " 1.732050807568877193"                ) /* Bug in CA-Cl*pper 5.2e, it returns: " 1.732050807568877000" */
 
    /* ABS() */
 
@@ -829,6 +829,10 @@ STATIC FUNCTION Main_MATH()
    TEST_LINE( Str(Min(100000, 10)         )   , "        10"                   )
    TEST_LINE( Str(Min(20.50, 20.670)      )   , "        20.50"                )
    TEST_LINE( Str(Min(20.5125, 20.670)    )   , "        20.5125"              )
+   TEST_LINE( Str(Val("A")                )   , "0"                            )
+   TEST_LINE( Str(Val("AAA0")             )   , "   0"                         )
+   TEST_LINE( Str(Val("AAA2")             )   , "   0"                         )
+   TEST_LINE( Str(Val("")                 )   , "         0"                   )
    TEST_LINE( Str(Val("0")                )   , "0"                            )
    TEST_LINE( Str(Val(" 0")               )   , " 0"                           )
    TEST_LINE( Str(Val("-0")               )   , " 0"                           )
@@ -871,7 +875,7 @@ STATIC FUNCTION Main_MATH()
    TEST_LINE( Str(100.00 / 10.0           )   , "        10.00"                )
    TEST_LINE( Str(sdDate - sdDateE        )   , "   2444240"                   )
    TEST_LINE( Str(sdDate - sdDate         )   , "         0"                   )
-   TEST_LINE( Str(1234567890 * 1234567890 )   , " 1524157875019052000"         )
+   TEST_LINE( Str(1234567890 * 1234567890 )   , " 1524157875019052100"         ) /* Bug in CA-Cl*pper, it returns: " 1524157875019052000" */
 
    RETURN NIL
 
@@ -879,6 +883,11 @@ STATIC FUNCTION Main_STRINGS()
 
    /* ALLTRIM() */
 
+/* These lines will cause CA-Cl*pper 5.2e to trash memory and later crash, it was fixed in 5.3 */
+#ifdef __HARBOUR__
+   TEST_LINE( AllTrim( NIL )                  , ""               ) /* CA-Cl*pper 5.2e/5.3 is not giving the same result for this one. */
+   TEST_LINE( AllTrim( 100 )                  , ""               ) /* CA-Cl*pper 5.2e/5.3 is not giving the same result for this one. */
+#endif
    TEST_LINE( AllTrim("HELLO")                , "HELLO"          )
 #ifdef __HARBOUR__
    TEST_LINE( AllTrim(@scString)              , "HELLO"          ) /* CA-Cl*pper bug, it will terminate the program on this line. */
@@ -1905,7 +1914,7 @@ STATIC FUNCTION SToD( cDate )
    LOCAL cOldDateFormat
    LOCAL dDate
 
-   IF ValType( cDate ) == "C"
+   IF ValType( cDate ) == "C" .AND. !Empty( cDate )
       cOldDateFormat := Set( _SET_DATEFORMAT, "yyyy/mm/dd" )
 
       dDate := CToD( SubStr( cDate, 1, 4 ) + "/" +;

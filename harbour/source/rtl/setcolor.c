@@ -58,13 +58,13 @@ char * hb_setColor( char * sColor )
 
 HARBOUR HB_SETCOLOR( void )
 {
-    hb_retc( hb_setColor( hb_pcount() ? hb_parc( 1 ) : NULL ) );
+   hb_retc( hb_setColor( hb_pcount() ? hb_parc( 1 ) : NULL ) );
 }
 
 HARBOUR HB_COLORSELECT( void )
 {
 #ifdef HARBOUR_USE_GTAPI
-    if( ISNUM( 1 ) )
-        hb_gtColorSelect( hb_parni( 1 ) );
+   if( ISNUM( 1 ) )
+      hb_gtColorSelect( hb_parni( 1 ) );
 #endif
 }

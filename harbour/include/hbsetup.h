@@ -161,6 +161,10 @@
    #define OS_OPT_DELIMITER_LIST     "/-"
 #endif
 
+#ifndef _POSIX_PATH_MAX
+   #define _POSIX_PATH_MAX    255
+#endif
+
 /* ***********************************************************************
  * Platform detection
  */

@@ -1,3 +1,36 @@
+19990909-01:10 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/compiler/harbour.y
+    + Modified to add the current date and time (in a packed form as a
+      hexadecimal DWORD value) to the generated symbol init function name, in
+      order to lessen the possibility of name collisions.
+  * source/rtl/inkey.c
+    % hb_inkeyPoll() optimized, so that if no key press could be detected,
+      the function will immediately return.
+    ! hb_inkeyPut() fixed to check the parameter and not allow to mistakenly
+      stuff a zero key code to the buffer.
+  * tests/working/rtl_test.prg
+    ! Fixed the expected results of two math functions to the mathematically
+      correct ones.
+    + Added some AllTrim() tests which brings CA-Clipper 5.2e to it's knees.
+      Harbour handles them fine.
+  * include/hbdefs.h
+    source/rtl/filesys.c
+    source/compiler/harbour.y
+    * MKLONG() and MKINT() moved to hbdefs.h
+    * LOBYTE(), HIBYTE(), LOWORD() moved outside the 
+      HB_DONT_DEFINE_BASIC_TYPES guard, since they are guarded one-by-one 
+      anyway. (all this in hbdefs.h)
+  * include/hbdefs.h
+    include/hbsetup.h
+    * _POSIX_PATH_MAX moved to hbsetup.h, where it belongs.
+  * include/dates.h
+    + Added some missing global functions.
+  * source/rtl/dates.c
+    * Small variable name corrections.
+  * source/rtl/setcolor.c
+    source/rtl/gtapi.c
+    ! Fixed indentantion and some small formatting errors.
+
 19990908-11:56 EDT Paul Tucker <ptucker@sympatico.ca>
   * source/rtl/gtapi.c
     * modified SetColor to accept a null pointer, and do nothing
@@ -101,7 +134,7 @@
 19990908-04:52 GMT+1 Victor Szel <info@szelvesz.hu>
   * tests/working/rtl_test.prg
     + Some tests now are only included when compiled with Harbour, to skip
-      obvious bugs to show up in Clipper.
+      obvious bugs in Clipper.
   * source/hbpp/table.c
     + _SET_COUNT added.
   * include/clipdefs.h
@@ -158,7 +191,7 @@
       After this fix the IS????() macros are Clipper compatible.
   * source/rtl/tbcolumn.prg
     ! TBColumnNew() fixed not to throw an error when a block is not passed.
-    + TBColumnNew() TOFIX added about possibly different behviour than Clipper.
+    + TBColumnNew() TOFIX added about possibly different behaviour than Clipper.
   * source/rtl/math.c
     ! hb_numRound() fixed for negative values.
     % hb_numRound() is not using sprintf(), atof(), hb_x*() calls, so it should

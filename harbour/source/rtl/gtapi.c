@@ -221,7 +221,7 @@ int hb_gtBoxS( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight )
    return hb_gtBox( uiTop, uiLeft, uiBottom, uiRight, B_SINGLE );
 }
 
-int hb_gtColorSelect(USHORT uiColorIndex)
+int hb_gtColorSelect( USHORT uiColorIndex )
 {
    if( uiColorIndex > s_ColorCount )
       return 1;
@@ -397,11 +397,11 @@ int hb_gtSetColorStr( char * fpColorString )
       return 1;
    if( ! *fpColorString )
    {
-      s_Color[0] = 0x7;
-      s_Color[1] = 0x70;
-      s_Color[2] = 0;
-      s_Color[3] = 0;
-      s_Color[4] = 0x7;
+      s_Color[ 0 ] = 0x07;
+      s_Color[ 1 ] = 0x70;
+      s_Color[ 2 ] = 0;
+      s_Color[ 3 ] = 0;
+      s_Color[ 4 ] = 0x07;
    }
         
    do
@@ -852,7 +852,7 @@ int hb_gtWriteCon( char * fpStr, ULONG length )
             uiCol = 0;
          }
          tmpRow = uiRow; tmpCol = uiCol;
-         hb_gtSetPos( uiRow, uiCol);
+         hb_gtSetPos( uiRow, uiCol );
          ldisp = FALSE;
       }
       if( rc )

@@ -260,8 +260,8 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
          ch = _read_kbd( 0, 0, 0 );
          if( ch != -1 ) ch += 256;      /* If it's really a scan code, offset it */
       }
-      /* _read_kbd() returns -1 for no key, but Harbour expects 0 */
-      if( ch == -1 ) ch = 0;
+      /* _read_kbd() returns -1 for no key, the switch statement will handle 
+         this. */
    #else
       if( kbhit() )
       {
@@ -293,9 +293,8 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
       /* Perform key translations */
       switch( ch )
       {
-         case - 1:  /* No key available */
-            ch = 0;
-            break;
+         case -1:  /* No key available */
+            return;
          case 328:  /* Up arrow */
             ch = 5;
             break;
@@ -403,16 +402,14 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
 #elif defined(OS_UNIX_COMPATIBLE)
       /* TODO: */
       if( ! read( STDIN_FILENO, &ch, 1 ) )
-         ch = 0;
+         return;
 #else
       /* TODO: Support for other platforms, such as Mac */
 #endif
-      if( ch )
-      {
-         if( ch == 302 ) /* K_ALT_C */
-            hb_vmRequestCancel( );  /* Alt-C was pressed */
-         hb_inkeyPut( ch );
-      }
+      if( ch == 302 ) /* K_ALT_C */
+         hb_vmRequestCancel( );  /* Alt-C was pressed */
+
+      hb_inkeyPut( ch );
    }
 }
 
@@ -614,17 +611,15 @@ HARBOUR HB___KEYBOARD( void )
          }
 
          while( size-- )
-         {
-            if( *fPtr )
-               hb_inkeyPut( *fPtr );
-            ++fPtr;
-         }
+            hb_inkeyPut( *fPtr++ );
       }
    }
 }
 
 void hb_inkeyPut( int ch )
 {
+   if( ch )
+   {
       if( hb_set.HB_SET_TYPEAHEAD )
       {
          /* Proper typeahead support is set */
@@ -634,7 +629,9 @@ void hb_inkeyPut( int ch )
          if( head != s_inkeyTail ) s_inkeyHead = head;
          else /* TODO: Add error sound */ ;
       }
-      else s_inkeyForce = ch; /* Typeahead support is disabled */
+      else
+         s_inkeyForce = ch; /* Typeahead support is disabled */
+   }
 }
 
 /*  $DOC$
@@ -675,11 +672,7 @@ void hb_inkeyPut( int ch )
 HARBOUR HB___KEYPUT( void )
 {
    if( ISNUM( 1 ) )
-   {
-      int ch = hb_parni( 1 );
-      if( ch )
-         hb_inkeyPut( ch );
-   }
+      hb_inkeyPut( hb_parni( 1 ) );
 }
 
 /*  $DOC$
