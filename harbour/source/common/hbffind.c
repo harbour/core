@@ -295,7 +295,6 @@ USHORT hb_fsAttrEncode( const char * szAttr )
          case 'D': uiAttr |= HB_FA_DIRECTORY;  break;
          case 'A': uiAttr |= HB_FA_ARCHIVE;    break;
 #ifdef HB_EXTENSION
-//         case 'N': uiAttr |= HB_FA_NORMAL;     break;
          case 'I': uiAttr |= HB_FA_DEVICE;     break;
          case 'T': uiAttr |= HB_FA_TEMPORARY;  break;
          case 'P': uiAttr |= HB_FA_SPARSE;     break;
@@ -335,7 +334,6 @@ char * hb_fsAttrDecode( USHORT uiAttr, char * szAttr )
    if( uiAttr & HB_FA_NORMAL     ) *ptr++ = ' ';
 #ifdef HB_EXTENSION
    if( uiAttr & HB_FA_DEVICE     ) *ptr++ = 'I';
-//   if( uiAttr & HB_FA_NORMAL     ) *ptr++ = 'N';
    if( uiAttr & HB_FA_TEMPORARY  ) *ptr++ = 'T';
    if( uiAttr & HB_FA_SPARSE     ) *ptr++ = 'P';
    if( uiAttr & HB_FA_REPARSE    ) *ptr++ = 'L';
