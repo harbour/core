@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+      From Horacio Roldán <harbour_ar@yahoo.com.ar>
+
+2002-01-10 22:10 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
+  * source/common/hbffind.c
     * Now works properly on linux
   * utils/hbmake/hbmake.prg
     utils/hbmake/hbmutils.prg
