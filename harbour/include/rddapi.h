@@ -221,15 +221,17 @@ typedef struct
    USHORT   uiHeaderLen;     /* Size of header */
    USHORT   uiRecordLen;     /* Size of record */
    BYTE *   bRecord;         /* Buffer of the data */
+   BOOL     fValidBuffer;    /* State of buffer */
    BOOL     fHasMemo;        /* Work Area with Memo fields */
-   ULONG    lRecNo;          /* Current record */
-   ULONG    lNextBlock;      /* Next block for memos */
+   ULONG    ulRecNo;         /* Current record */
+   ULONG    ulNextBlock;     /* Next block for memos */
    BOOL     fExclusive;      /* Share the file */
    BOOL     fReadOnly;       /* Read only file */
    BYTE     bYear;           /* Last update */
    BYTE     bMonth;
    BYTE     bDay;
    BOOL     fRecordChanged;  /* Record changed */
+   ULONG    ulRecCount;      /* Total records */
 } DBEXTENDINFO;
 
 typedef DBEXTENDINFO * LPDBEXTENDINFO;

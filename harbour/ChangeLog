@@ -1,3 +1,9 @@
+19991121-16:10 GMT+1 Bruno Cantero <bruno@issnet.net>
+  * include/rddapi.h
+    source/rdd/dbcmd.c
+    source/rdd/dbf1.c
+    * Optimization of RDD, mentioned by Matteo and Victor.
+
 19991121-03:19 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/compiler/harbour.c
     source/compiler/harbour.y

@@ -398,14 +398,6 @@ static ERRCODE defFound( AREAP pArea, BOOL * pFound )
    return SUCCESS;
 }
 
-static ERRCODE defGetRec( AREAP pArea, BYTE ** pBuffer )
-{
-   HB_TRACE(HB_TR_DEBUG, ("defGetRec(%p, %p)", pArea, pBuffer));
-
-   * pBuffer = pArea->lpExtendInfo->bRecord;
-   return SUCCESS;
-}
-
 static ERRCODE defNewArea( AREAP pArea )
 {
    HB_TRACE(HB_TR_DEBUG, ("defNewArea(%p)", pArea));
@@ -565,6 +557,7 @@ static ERRCODE defSkip( AREAP pArea, LONG lToSkip )
             return SUCCESS;
       }
    }
+   
    return SELF_SKIPRAW( pArea, lToSkip );
 }
 
@@ -651,7 +644,7 @@ static ERRCODE defSkipRaw( AREAP pArea, LONG lToSkip )
 {
    HB_TRACE(HB_TR_DEBUG, ("defSkipRaw(%p, %ld)", pArea, lToSkip));
 
-   return SELF_GOTO( pArea, pArea->lpExtendInfo->lRecNo + lToSkip );
+   return SELF_GOTO( pArea, pArea->lpExtendInfo->ulRecNo + lToSkip );
 }
 
 static ERRCODE defStructSize( AREAP pArea, USHORT * uiSize )
@@ -714,7 +707,7 @@ static RDDFUNCS defTable = { defBof,
                              defFieldInfo,
                              defFieldName,
                              defUnSupported,
-                             defGetRec,
+                             ( DBENTRYP_PP ) defUnSupported,
                              ( DBENTRYP_SI ) defUnSupported,
                              ( DBENTRYP_SVL ) defUnSupported,
                              defUnSupported,
@@ -1455,6 +1448,7 @@ HARBOUR HB_DBCREATE( void )
 {
    char * szDriver, * szFileName;
    USHORT uiSize, uiLen, uiRddID;
+   ULONG ulRecCount;
    LPRDDNODE pRddNode;
    LPAREANODE pAreaNode;
    DBOPENINFO pInfo;
@@ -1719,6 +1713,8 @@ HARBOUR HB_DBCREATE( void )
          hb_xfree( pCurrArea );
          pCurrArea = NULL;
       }
+      SELF_RECCOUNT( ( AREAP ) pCurrArea->pArea, &ulRecCount );
+      ( ( AREAP ) pCurrArea->pArea )->lpExtendInfo->ulRecCount = ulRecCount;
    }
 }
 
@@ -2466,6 +2462,8 @@ HARBOUR HB_DBUSEAREA( void )
       pCurrArea = NULL;
       return;
    }
+   SELF_RECCOUNT( ( AREAP ) pCurrArea->pArea, &ulLen );
+   ( ( AREAP ) pCurrArea->pArea )->lpExtendInfo->ulRecCount = ulLen;
 }
 
 HARBOUR HB___DBZAP( void )
@@ -2756,7 +2754,10 @@ HARBOUR HB_RECCOUNT( void )
    ULONG ulRecCount = 0;
 
    if( pCurrArea )
+   {
       SELF_RECCOUNT( ( AREAP ) pCurrArea->pArea, &ulRecCount );
+      ( ( AREAP ) pCurrArea->pArea )->lpExtendInfo->ulRecCount = ulRecCount;
+   }
    hb_retnl( ulRecCount );
 }
 
