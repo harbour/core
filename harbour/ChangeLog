@@ -1,3 +1,11 @@
+2001-08-23 22:51 GMT Dave Pearson <davep@davep.org>
+   * doc/readme.txt
+     * Cut down to a bare minimum. Most of the information in there was
+       out of date. The document now simply states the aim of harbour,
+       points the reader at the web site and the FAQ and reminds them that
+       they'll find copious documentation in the same place that they
+       found the README file.
+	
 2001-08-23 23:13 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
    * source/vm/Makefile
      + if HB_GT_LIB == os2pm then compiles mainpm.c instead of main.c
