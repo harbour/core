@@ -582,6 +582,8 @@ FUNCTION ProcStatusWww( nWriteHandle, cBuffer )
       nWriteHandle:WritePar( "   Ready" )
    ELSEIF SUBSTR( ALLTRIM( cBuffer ), 1 ) == "S"
       nWriteHandle:WritePar( "   Started" )
+   ELSEIF SUBSTR( ALLTRIM( cBuffer ), 1 ) == "C"
+      nWriteHandle:WritePar( "   Clipper" )
    ELSE
       nWriteHandle:WritePar( "   Not Started" )
    ENDIF

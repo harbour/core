@@ -84,6 +84,7 @@
  *      ? 'New value for the field "name" :', EVAL( bField )
  *  $TESTS$
  *  $STATUS$
+ *      R
  *  $COMPLIANCE$
  *      If the block is evaluate and there is no field with the name
  *      <cFieldName> in the current work area, the code block return NIL.
@@ -150,6 +151,7 @@ FUNCTION FIELDBLOCK( cFieldName )
  *      ? "and now: ", One->name, Two->name
  *  $TESTS$
  *  $STATUS$
+ *      R
  *  $COMPLIANCE$
  *      If the block is evaluate and there is no field with the name
  *      <cFieldName> in the given work area, the code block return NIL.

@@ -126,7 +126,7 @@
  *      TONE( -1 )                             // 1/18.2 second delay
  *      TONE( )                                // 1/18.2 second delay
  *  $STATUS$
- *
+ *      S
  *  $COMPLIANCE$
  *      TONE() works exactly like CA-Clipper's TONE().
  *  $SEEALSO$

@@ -1787,7 +1787,7 @@ HARBOUR HB_DBF( void )
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
- *       <lBegin> Logical true (.T.) or false (.F.)
+ *      Logical true (.T.) or false (.F.)
  *  $DESCRIPTION$
  *        This function determines if the beggining of the file
  *      marker has been reached. If so, the function will return
@@ -1797,23 +1797,13 @@ HARBOUR HB_DBF( void )
  *      database unless the function is preceded by an alias
  *  $EXAMPLES$
  *      FUNCTION Main()
- *         
- *         USE Test
- *
- *         qOut( BOF(),Recno())
- *         qOut(Test->(BOF()),Test->(Recno()))
- *         skip -1
- *         qOut( BOF(),Recno())
- *         qOut(Test->(BOF()),Test->(Recno()))
- *         dbGoBottom()
- *         qOut( EOF(),Recno())
- *         qOut(Test->(BOF()),Test->(Recno()),Test->(BOF()))
- *         skip
- *         Test->(dbGoBottom(),LastRec())
- *         qOut( EOF(),Recno())
- *         Test->(qOut(BOF(),Recno(),BOF()))
- *
- *         RETURN NIL
+ *        USE Tests NEW
+ *        DBGOTOP()
+ *        ? "Is Eof()",EOF()
+ *        DBGOBOTTOM()
+ *        ? "Is Eof()",EOF()
+ *        USE
+ *     RETURN NIL 
  *  $TESTS$
  *  $STATUS$
  *      R
@@ -4376,78 +4366,26 @@ HARBOUR HB_DELETED( void )
  *  $CATEGORY$
  *      DATA BASE
  *  $ONELINER$
- *      Determine when end of file is encountered
+ *      Test for end-of-file condition
  *  $SYNTAX$
  *      EOF() --> <lEnd>
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
- * 
- *   EOF() returns true (.T.) when an attempt is made to move the record
- *   pointer beyond the last logical record in a database file; otherwise, it
- *   returns false (.F.).  If there is no database file open in the current
- *   work area, EOF() returns false (.F.).  If the current database file
- *   contains no records, EOF() returns true (.T.).
- *
+ *      Logical true (.T.) or false (.F.)
  *  $DESCRIPTION$
- *
- *      EOF() is a database function used to test for an end of file boundary
- *   condition when the record pointer is moving forward through a database
- *   file.  Any command that can move the record pointer can set EOF().
- *
- *      The most typical application is as a part of the <lCondition> argument
- *   of a DO WHILE construct that sequentially processes records in a
- *   database file.  Here <lCondition> would include a test for .NOT. EOF(),
- *   forcing the DO WHILE loop to terminate when EOF() returns true (.T.).
- *
- *      EOF() and FOUND() are often used interchangeably to test whether a SEEK,
- *   FIND, or LOCATE command failed.  With these commands, however, FOUND()
- *   is preferred.
- *
- *      When EOF() returns true (.T.), the record pointer is positioned at
- *   LASTREC() + 1 regardless of whether there is an active SET FILTER or SET
- *   DELETED is ON.  Further attempts to move the record pointer forward
- *   return the same result without error.  Once EOF() is set to true (.T.),
- *   it retains its value until there is another attempt to move the record
- *   pointer.
- *
- *      By default, EOF() operates on the currently selected work area.  It can
- *   be made to operate on an unselected work area by specifying it within an
- *   aliased expression (see example below).
- *
+ *      This function determines if the end-of-file marker has been reached.
+ *      If it has, the function will return a logical true (.T.); otherwise
+ *      a logical false (.F.) will be returnd
  *  $EXAMPLES$
- *      This example demonstrates EOF() by deliberately moving the
- *      record pointer beyond the last record:
- *
- *      USE Sales
- *      GO BOTTOM
- *      ? EOF()            // Result: .F.
- *      SKIP
- *      ? EOF()            // Result: .T.
- *
- *      This example uses aliased expressions to query the value of
- *      EOF() in unselected work areas:
- *
- *      USE Sales NEW
- *      USE Customer NEW
- *      ? Sales->(EOF())
- *      ? Customer->(EOF())
- *
- *      This example illustrates how EOF() can be used as part of a
- *      condition for sequential database file operations:
- *
- *      USE Sales INDEX CustNum NEW
- *      DO WHILE !EOF()
- *         nOldCust := Sales->CustNum
- *         nTotalAmount := 0
- *         DO WHILE nOldCust = Sales->CustNum .AND. (!EOF())
- *            ? Sales->CustNum, Sales->Description, ;
- *                  Sales->SaleAmount
- *            nTotalAmount += Sales->SaleAmount
- *            SKIP
- *         ENDDO
- *         ? "Total amount: ", nTotalAmount
- *      ENDDO
+ *      FUNCTION Main()
+ *        USE Tests NEW
+ *        DBGOTOP()
+ *        ? "Is Eof()",EOF()
+ *        DBGOBOTTOM()
+ *        ? "Is Eof()",EOF()
+ *        USE
+ *     RETURN NIL 
  *  $TESTS$
  *  $STATUS$
  *      R
@@ -4473,53 +4411,28 @@ HARBOUR HB_EOF( void )
  *  $CATEGORY$
  *      Data Base
  *  $ONELINER$
- *      Return the number of fields in the current (.dbf) file
+ *      Counts the number of fields in an active database.
  *  $SYNTAX$
  *      FCOUNT() --> nFields
  *  $ARGUMENTS$
  *      
  *  $RETURNS$
- *      FCOUNT() returns the number of fields in the database file in the
- *   current work area as an integer numeric value.  If there is no database
- *   file open, FCOUNT() returns zero.   
+ *      FCOUNT() Return the number of fields
  *  $DESCRIPTION$
- *      FCOUNT() is a database function.  It is useful in applications
- *   containing data-independent programs that can operate on any database
- *   file.  These include generalized import/export and reporting programs.
- *   Typically, you use FCOUNT() to establish the upper limit of a FOR...NEXT
- *   or DO WHILE loop that processes a single field at a time.
- *
- *      By default, FCOUNT() operates on the currently selected work area.     
+ *      This function returns the number of fields in the current or designated
+ *      work area.If no database is open in this work area, the function will
+ *      return 0.
  *  $EXAMPLES$
- *      This example illustrates FCOUNT(), returning the number of
- *      fields in the current and an unselected work area:
- *
- *      USE Sales NEW
- *      USE Customer NEW
- *      ? FCOUNT()                     // Result: 5
- *      ? Sales->(FCOUNT())            // Result: 8
- *
- *      This example uses FCOUNT() to DECLARE an array with field
- *      information:
- *
- *      LOCAL aFields := ARRAY(FCOUNT())
- *      AFIELDS(aFields)
- *
- *      This example uses FCOUNT() as the upper boundary of a FOR loop
- *      that processes the list of current work area fields:
- *
- *      LOCAL nField
- *      USE Sales NEW
- *      FOR nField := 1 TO FCOUNT()
- *         ? FIELD(nField)
- *      NEXT
- *
+ *      FUNCTION Main()
+ *        USE Tests NEW
+ *        ? "This database have ",Tests->(FCOUNT()),"Fields"
+ *        USE
+ *      RETURN Nil
  *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *
+ *      This function is CA-Clipper compliant
  *  $SEEALSO$
  *      FIELDNAME(),TYPE()
  *  $INCLUDE$
@@ -4542,7 +4455,7 @@ HARBOUR HB_FCOUNT( void )
  *  $CATEGORY$
  *      Data Base
  *  $ONELINER$
- *      Retrieve the value of a field variable
+ *      Obtains the value 
  *  $SYNTAX$
  *      FIELDGET(<nField>) --> ValueField
  *  $ARGUMENTS$
@@ -4604,70 +4517,32 @@ HARBOUR HB_FIELDGET( void )
  *  $CATEGORY$
  *      Data Base
  *  $ONELINER$
- *      Return a field name from the current (.dbf) file
+ *      Return the name of a field at a numeric field location.
  *  $SYNTAX$
  *      FIELDNAME/FIELD(<nPosition>) --> cFieldName
  *  $ARGUMENTS$
- *      <nPosition> is the position of a field in the database file
- *   structure.
+ *      <nPosition> Field order in the database.
  *  $RETURNS$
- *      FIELDNAME() returns the name of the specified field as a character
- *   string.  If <nPosition> does not correspond to an existing field in the
- *   current database file or if no database file is open in the current work
- *   area, FIELDNAME() returns a null string ("").     
+ *      FIELDNAME() returns the field name.
  *  $DESCRIPTION$
- *      FIELDNAME() is a database function that returns a field name using an
- *   index to the position of the field name in the database structure.  Use
- *   it in data-independent applications where the field name is unknown.  If
- *   information for more than one field is required, use AFIELDS() to create
- *   an array of field information or COPY STRUCTURE EXTENDED to create a
- *   database of field information.
- *
- *      If you need additional database file structure information, use TYPE()
- *   and LEN().  To obtain the number of decimal places for a numeric field,
- *   use the following expression:
- *
- *   LEN(SUBSTR(STR(<idField>), RAT(".", ;
- *          STR(<idField>)) + 1))
- *
- *      By default, FIELDNAME() operates on the currently selected work area as
- *   shown in the example below.
- *      
+ *      This function return the name of the field at the <nPosition>th position.
+ *      If the numeric value passed to this function does not correspond to an
+ *      existing field in the designated or selected work area,this function
+ *      will return a NULL byte.  
  *  $EXAMPLES$
- *      These examples illustrate FIELDNAME() used with several other
- *      functions:
- *
- *      USE Sales
- *      ? FIELDNAME(1)       // Result: BRANCH
- *      ? FCOUNT()                // Result: 5
- *      ? LEN(FIELDNAME(0))        // Result: 0
- *      ? LEN(FIELDNAME(40))       // Result: 0
- *
- *      This example uses FIELDNAME() to list the name and type of
- *      each field in Customer.dbf:
- *
- *      USE Customer NEW
- *      FOR nField := 1 TO FCOUNT()
- *         ? PADR(FIELDNAME(nField), 10),;
- *          VALTYPE(&(FIELDNAME(nField)))
- *      NEXT
- *
- *      This example accesses fields in unselected work areas using
- *      aliased expressions:
- *
- *      USE Sales NEW
- *      USE Customer NEW
- *      USE Invoices NEW
- *      //
- *      ? Sales->(FIELDNAME(1))            // Result: SALENUM
- *      ? Customer->(FIELDNAME(1))         // Result: CUSTNUM
- *
+ *      FUNCTION Main()
+ *        LOCAL x
+ *        USE Tests NEW
+ *        FOR x := 1 to Tests->(FCOUNT())
+ *          ? "Field Name",FieldName(x)
+ *        NEXT
+ *        USE
+ *      RETURN Nil         
  *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *
+ *      This function is CA-Clipper compatible.
  *  $SEEALSO$
  *    DBSTRUCT(),FCOUNT(),LEN(),VALTYPE()
  *      

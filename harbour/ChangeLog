@@ -1,3 +1,15 @@
+20000212-22:50 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
+  *source/rdd/dbcmd.c
+    *Some docs changed
+  *source/rtl/fieldbl.prg
+  *source/rtl/memvars.c
+  *source/rtl/tone.c
+  *source/tools/fileread.prg
+    *Added status to the Doc
+  *Makefile.b32
+    *Added obj\b32 to the include dir
+  *source/rtl/strings.c
+    *Fixed VAL() function provided by Jose Lanin
 20000212-14:00 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/macro/macro.l

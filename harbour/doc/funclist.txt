@@ -401,8 +401,8 @@ GetNew                  ;S;
 ; TBROWSE OBJECT
 TBrowseNew              ;S;
 TBrowseDB               ;S;
-:AutoLite               ;N;
-:Cargo                  ;N;
+:AutoLite               ;S;
+:Cargo                  ;S;
 :ColCount               ;N;
 :ColorSpec              ;N;
 :ColPos                 ;N;

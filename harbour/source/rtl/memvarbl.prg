@@ -69,11 +69,9 @@
  *
  *	RETURN
  *  $TESTS$
- *
  *  $STATUS$
- *
+ *      R
  *  $COMPLIANCE$
- *
  *  $SEEALSO$
  *      __MVGET(),__MVPUT()
  *  $END$

@@ -932,13 +932,10 @@ static HB_DYNS_PTR hb_memvarFindSymbol( HB_ITEM_PTR pName )
  *       initialized with .T. value.
  *
  *  $EXAMPLES$
- *
  *  $TESTS$
- *
  *  $STATUS$
- *
+ *      R
  *  $COMPLIANCE$
- *
  *  $SEEALSO$
  *
  *  $END$
@@ -1017,7 +1014,7 @@ HARBOUR HB___QQPUB( void )
  *  $TESTS$
  *
  *  $STATUS$
- *
+ *      R
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
@@ -1113,7 +1110,7 @@ HARBOUR HB___MVPRIVATE( void )
  *  $TESTS$
  *
  *  $STATUS$
- *
+ *      R
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
@@ -1188,7 +1185,7 @@ HARBOUR HB___MVXRELEASE( void )
  *  $TESTS$
  *
  *  $STATUS$
- *
+ *      R
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
@@ -1274,7 +1271,7 @@ HARBOUR HB___MVRELEASE( void )
  *  $TESTS$
  *
  *  $STATUS$
- *
+ *      R
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
@@ -1318,7 +1315,7 @@ HARBOUR HB___MVSCOPE( void )
  *    You have to reuse PRIVATE or PUBLIC statement to create again
  *    the variable that was cleared by this function.
  *  $STATUS$
- *
+ *      R
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
@@ -1439,7 +1436,7 @@ HARBOUR HB___MVCLEAR( void )
  *  RETURN
  *
  *  $STATUS$
- *
+ *      R
  *  $COMPLIANCE$
  *     This function should be called from the debugger only.
  *  $SEEALSO$
@@ -1520,7 +1517,7 @@ HARBOUR HB___MVDBGINFO( void )
  *    RETURN {|x| IIF( PCOUNT()==0, __MVGET( cMemvar ),;
  *    __MVPUT( cMemvar, x ) ) }
  *  $STATUS$
- *
+ *      R
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
@@ -1618,7 +1615,7 @@ HARBOUR HB___MVGET( void )
  *    RETURN {|x| IIF( PCOUNT()==0, __MVGET( cMemvar ),;
  *     __MVPUT( cMemvar, x ) ) }
  *  $STATUS$
- *
+ *      R
  *  $COMPLIANCE$
  *
  *  $SEEALSO$

@@ -1537,7 +1537,7 @@ HARBOUR HB_VAL( void )
          iDec = 0;
       }
 
-      hb_retnlen( hb_strVal( pText->item.asString.value ), iWidth, iDec );
+      hb_retndlen( hb_strVal( pText->item.asString.value ), iWidth, iDec );
    }
    else
    {

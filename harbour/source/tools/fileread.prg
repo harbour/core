@@ -116,7 +116,7 @@
  *  $TESTS$
  *      See Examples
  *  $STATUS$
- *      C
+ *      R
  *  $COMPLIANCE$
  *      This is a new Harbour Tools class
  *  $SEEALSO$
