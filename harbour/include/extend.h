@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <types.h>
+#include <hbsetup.h>
 
 typedef struct          /* symbol support structure */
 {

@@ -1,3 +1,16 @@
+19990619-14:00 Ryszard Glab <rglab@imid.med.pl>
+
+* tests/working/testcgi.prg
+* tests/working/testinc.prg
+ * changed the names of included files into lowercase
+ 
+* include/extend.h
+ + added include <hbsetup.h>
+ 
+* source/rtl/set.c
+ + files created by SET PRINTER TO or SET ALTERNATE TO have now 
+   changed permissions to write/read by user on UNIX like OS
+  
 19990619-12:22 Ryszard Glab <rglab@imid.med.pl>
 
 * include/hbsetup.h

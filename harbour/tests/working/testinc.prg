@@ -1,6 +1,6 @@
 // Testing #includes
 
-#include "Test.ch"
+#include "test.ch"
 
 function Main()
 

@@ -20,7 +20,7 @@
 *
 **/
 
-#include "CGI.ch"
+#include "cgi.ch"
 #define IF_BUFFER 65535
 #define NewLine   chr(10)+chr(13)
 

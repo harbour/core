@@ -91,10 +91,22 @@ static char * set_string (PHB_ITEM pItem, char * old_str)
    return (string);
 }
 
+static void close_binary( int handle )
+{   
+#if defined(OS_UNIX_COMPATIBLE)
+   fchmod( handle, S_IRUSR|S_IWUSR );
+#endif
+   close( handle );
+}
+
 static void close_text (int handle)
 {
+#if defined(OS_UNIX_COMPATIBLE)
+   fchmod( handle, S_IRUSR|S_IWUSR );
+#else
    write (handle, "\x1A", 1);
-   close (handle);
+#endif   
+   close( handle );
 }
 
 static int open_handle (char * file_name, BOOL bMode, char * def_ext)
@@ -641,7 +653,7 @@ HARBOUR HB_SET (void)
          else bFlag = FALSE;
          if (args > 1)
          {
-            if (hb_set_printhan >= 0) close (hb_set_printhan);
+            if (hb_set_printhan >= 0) close_binary (hb_set_printhan);
             if (hb_set.HB_SET_PRINTFILE && strlen (hb_set.HB_SET_PRINTFILE) > 0)
                hb_set_printhan = open_handle (hb_set.HB_SET_PRINTFILE, bFlag, ".prn");
          }
@@ -736,7 +748,7 @@ void InitializeSets (void)
 void ReleaseSets (void)
 {
    if (hb_set_althan != -1) close_text (hb_set_althan);
-   if (hb_set_printhan != -1) close (hb_set_printhan);
+   if (hb_set_printhan != -1) close_binary (hb_set_printhan);
 
    if (hb_set.HB_SET_ALTFILE)
       hb_xfree (hb_set.HB_SET_ALTFILE);
