@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * DBF RDD module
+ * SORT RDD module
  *
  * Copyright 1999 Bruno Cantero <bruno@issnet.net>
  * www - http://www.harbour-project.org
@@ -33,14 +33,48 @@
  *
  */
 
-#include "rddsys.ch"
+#ifndef HB_DBSORT_H_
+#define HB_DBSORT_H_
 
-ANNOUNCE _DBF
+#include "hbrdddbf.h"
 
-init procedure DBFInit
+#if defined(HB_EXTERN_C)
+extern "C" {
+#endif
 
-   REQUEST _DBFC
+/*
+ *  DBQUICKSORT
+ *  -----------
+ *  The Quick Sort Item Structure
+ */
 
-   rddRegister( "DBF", RDT_FULL )
+typedef struct _DBQUICKSORT
+{
+   FHANDLE hFile;
+   BYTE szTempName[ _POSIX_PATH_MAX + 1 ];
+   BYTE * pBuffer;
+   BYTE * pSwapBufferA;
+   BYTE * pSwapBufferB;
+   BYTE * pCmpBufferA;
+   BYTE * pCmpBufferB;
+   USHORT uiRecordLen;
+   USHORT uiMaxRecords;
+   LPDBSORTINFO pSortInfo;
+} DBQUICKSORT;
 
-return
+typedef DBQUICKSORT * LPDBQUICKSORT;
+
+/*
+ *  PROTOTYPES
+ *  ----------
+ */
+extern BOOL hb_dbQSortInit( LPDBQUICKSORT pQuickSort, LPDBSORTINFO pSortInfo, USHORT uiRecordLen );
+extern void hb_dbQSortExit( LPDBQUICKSORT pQuickSort );
+extern BOOL hb_dbQSortAdvance( LPDBQUICKSORT pQuickSort, USHORT uiCount );
+extern void hb_dbQSortComplete( LPDBQUICKSORT pQuickSort );
+
+#if defined(HB_EXTERN_C)
+}
+#endif
+
+#endif /* HB_DBSORT_H_ */

@@ -33,13 +33,12 @@
  *
  */
 
-#define SUPERTABLE ( &delimSuper )
-
 #include "hbapi.h"
 #include "hbinit.h"
-#include "hbapiitm.h"
+#include "hbvm.h"
 #include "hbapirdd.h"
-#include "rddsys.ch"
+#include "hbapiitm.h"
+#include "hbrdddel.h"
 
 HB_FUNC( _DELIMC );
 HB_FUNC( DELIM_GETFUNCTABLE );
@@ -61,13 +60,107 @@ HB_INIT_SYMBOLS_END( delim1__InitSymbols )
    #pragma startup delim1__InitSymbols
 #endif
 
-static RDDFUNCS delimSuper = { 0 };
+static RDDFUNCS delimSuper = { NULL };
+
+static RDDFUNCS delimTable = { hb_delimBof,
+                               hb_delimEof,
+                               hb_delimFound,
+                               hb_delimGoBottom,
+                               hb_delimGoTo,
+                               hb_delimGoToId,
+                               hb_delimGoTop,
+                               hb_delimSeek,
+                               hb_delimSkip,
+                               hb_delimSkipFilter,
+                               hb_delimSkipRaw,
+                               hb_delimAddField,
+                               hb_delimAppend,
+                               hb_delimCreateFields,
+                               hb_delimDeleteRec,
+                               hb_delimDeleted,
+                               hb_delimFieldCount,
+                               hb_delimFieldDisplay,
+                               hb_delimFieldInfo,
+                               hb_delimFieldName,
+                               hb_delimFlush,
+                               hb_delimGetRec,
+                               hb_delimGetValue,
+                               hb_delimGetVarLen,
+                               hb_delimGoCold,
+                               hb_delimGoHot,
+                               hb_delimPutRec,
+                               hb_delimPutValue,
+                               hb_delimRecAll,
+                               hb_delimRecCount,
+                               hb_delimRecInfo,
+                               hb_delimRecNo,
+                               hb_delimSetFieldExtent,
+                               hb_delimAlias,
+                               hb_delimClose,
+                               hb_delimCreate,
+                               hb_delimInfo,
+                               hb_delimNewArea,
+                               hb_delimOpen,
+                               hb_delimRelease,
+                               hb_delimStructSize,
+                               hb_delimSysName,
+                               hb_delimEval,
+                               hb_delimPack,
+                               hb_delimPackRec,
+                               hb_delimSort,
+                               hb_delimTrans,
+                               hb_delimTransRec,
+                               hb_delimZap,
+                               hb_delimChildEnd,
+                               hb_delimChildStart,
+                               hb_delimChildSync,
+                               hb_delimSyncChildren,
+                               hb_delimClearRel,
+                               hb_delimForceRel,
+                               hb_delimRelArea,
+                               hb_delimRelEval,
+                               hb_delimRelText,
+                               hb_delimSetRel,
+                               hb_delimOrderListAdd,
+                               hb_delimOrderListClear,
+                               hb_delimOrderListDelete,
+                               hb_delimOrderListFocus,
+                               hb_delimOrderListRebuild,
+                               hb_delimOrderCondition,
+                               hb_delimOrderCreate,
+                               hb_delimOrderDestroy,
+                               hb_delimOrderInfo,
+                               hb_delimClearFilter,
+                               hb_delimClearLocate,
+                               hb_delimClearScope,
+                               hb_delimCountScope,
+                               hb_delimFilterText,
+                               hb_delimScopeInfo,
+                               hb_delimSetFilter,
+                               hb_delimSetLocate,
+                               hb_delimSetScope,
+                               hb_delimSkipScope,
+                               hb_delimCompile,
+                               hb_delimError,
+                               hb_delimEvalBlock,
+                               hb_delimRawLock,
+                               hb_delimLock,
+                               hb_delimUnLock,
+                               hb_delimCloseMemFile,
+                               hb_delimCreateMemFile,
+                               hb_delimGetValueFile,
+                               hb_delimOpenMemFile,
+                               hb_delimPutValueFile,
+                               hb_delimReadDBHeader,
+                               hb_delimWriteDBHeader,
+                               hb_delimWhoCares
+                             };
+
 
 /*
  * -- DELIM METHODS --
  */
 
-static RDDFUNCS delimTable = { 0 };
 
 HB_FUNC( _DELIMC )
 {
@@ -81,9 +174,11 @@ HB_FUNC( DELIM_GETFUNCTABLE )
    uiCount = ( USHORT * ) hb_itemGetPtr( hb_param( 1, HB_IT_POINTER ) );
    * uiCount = RDDFUNCSCOUNT;
    pTable = ( RDDFUNCS * ) hb_itemGetPtr( hb_param( 2, HB_IT_POINTER ) );
+
+   HB_TRACE(HB_TR_DEBUG, ("DELIM_GETFUNCTABLE(%i, %p)", uiCount, pTable));
+
    if( pTable )
       hb_retni( hb_rddInherit( pTable, &delimTable, &delimSuper, 0 ) );
    else
       hb_retni( FAILURE );
 }
-

@@ -6,14 +6,17 @@ ROOT = ../../
 
 C_SOURCES=\
 	dbcmd.c \
+	workarea.c \
 	dbf1.c \
 	dbnubs.c \
 	sdf1.c \
 	delim1.c \
+	hbdbsort.c \
 
 PRG_SOURCES=\
 	dbf0.prg \
 	dblist.prg \
+	dbsort.prg \
 	dbstrux.prg \
 	dbupdat.prg \
 	sdf0.prg \

@@ -44,4 +44,3 @@ init procedure SDFInit
    rddRegister( "SDF", RDT_TRANSFER )
 
 return
-

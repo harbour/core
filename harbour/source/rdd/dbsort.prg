@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * DBF RDD module
+ * __DBSORT() function
  *
- * Copyright 1999 Bruno Cantero <bruno@issnet.net>
+ * Copyright 2000 Bruno Cantero <bruno@issnet.net>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -33,14 +33,42 @@
  *
  */
 
-#include "rddsys.ch"
+FUNCTION __dbSort( cToFileName, aFields, bFor, bWhile, nNext, nRecord, lRest )
+   LOCAL nArea
+   LOCAL nToArea
+   LOCAL aStruct
+   LOCAL oError
+   LOCAL lError := .F.
 
-ANNOUNCE _DBF
+   nArea := Select()
 
-init procedure DBFInit
+   aStruct := dbStruct()
+   IF Empty( aStruct )
+      RETURN .F.
+   ENDIF
 
-   REQUEST _DBFC
+   BEGIN SEQUENCE
 
-   rddRegister( "DBF", RDT_FULL )
+      dbCreate( cToFileName, aStruct,, .T., "" )
+      nToArea := Select()
+      dbSelectArea( nArea )
+      __dbArrange( nToArea, aStruct, bFor, bWhile, nNext, nRecord, lRest, aFields )
 
-return
+   RECOVER USING oError
+
+      lError := .T.
+
+   END SEQUENCE
+
+   IF nToArea != NIL
+      dbSelectArea( nToArea )
+      dbCloseArea()
+   ENDIF
+
+   dbSelectArea( nArea )
+
+   IF lError
+      Break( oError )
+   ENDIF
+
+   RETURN .T.

@@ -1,3 +1,57 @@
+3000-08-29 22:00 GMT+1 Bruno Cantero <bruno@issnet.net>
+  * include/hbapirdd.h
+    * Changed WORKAREA structure, 100% Clipper compatible.
+    ! Uncommented disabled RDD methods.
+
+  + include/hbrddwrk.h
+  + source/rdd/workarea.c
+    + Basic RDD (waNew, waOpen, ...) like Clipper.
+
+  * source/rdd/dbcmd.c
+    + Added __dbArrange(), dbInfo(), dbFieldInfo(), dbRecordInfo(),
+      dbFileGet() and dbFilePut() functions.
+    ! Removed default RDD functions.
+
+  * source/rtl/dummy.prg
+    ! Removed __dbArrange(), dbSort(), dbInfo(), dbFieldInfo(), dbRecordInfo(),
+      dbFileGet() and dbFilePut() functions.
+
+  + include/hbdbsort.h
+  + source/rdd/dbsort.prg
+  + source/rdd/hbdbsort.c
+    + Added dbSort() function.
+
+  + include/hbrdddbf.h
+  + include/hbrdddel.h
+  + include/hbrddsdf.h
+  * source/rdd/dbf0.prg
+  * source/rdd/dbf1.c
+  * source/rdd/delim0.prg
+  * source/rdd/delim1.c
+  * source/rdd/sdf0.prg
+  * source/rdd/sdf1.c
+    * Changed and added functions, now 100% Clipper compatible.
+
+  * source/rdd/dbfntx/dbfntx0.prg
+    * Disabled RDD (broken).
+
+  * source/rdd/Makefile
+    + Added new files.
+
+  * source/rdd/dbfntx/Makefile
+  * source/rdd/dbfcdx/Makefile
+    * Disabled DBFNTX and DBFCDX RDD's.
+
+  * makefile.bc
+  * makefile.vc
+    * Disabled DBFNTX and DBFCDX RDD's.
+    + Added new files.
+
+  + tests/Makefile
+  + tests/newrdd.prg
+    + Test file for new DBF RDD.
+
+
 2000-08-28 17:00 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/harbour.y
      - Removed 1 un-needed hb_comp_szDeclaredFun = NULL
@@ -80,6 +134,7 @@
    * source/compiler/simplex.c
      * Corrected Reset at <EOF>
 
+>>>>>>> 1.2574
 2000-08-22 10:40 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/simplex.c
    * source/compiler/harbour.slx

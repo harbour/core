@@ -114,9 +114,7 @@ PRG_SOURCES=\
 	test_all.prg \
 	testbrdb.prg \
 	testbrw.prg \
-	testcdx.prg \
 	testcgi.prg \
-	testdbf.prg \
 	testdecl.prg \
 	testerro.prg \
 	testfor.prg \
@@ -125,7 +123,6 @@ PRG_SOURCES=\
 	teststr.prg \
 	testpre.prg \
 	testread.prg \
-	testrdd.prg \
 	testvars.prg \
 	testwarn.prg \
 	tstalias.prg \
@@ -136,6 +133,7 @@ PRG_SOURCES=\
 	version.prg \
 	vmasort.prg \
 	while.prg \
+	newrdd.prg \
 
 PRG_HEADERS=\
 	db_brows.ch \
@@ -179,6 +177,9 @@ BAD_PRG_SOURCES=\
 	testtok.prg \
 	tstprag.prg \
 	vec1.prg \
+	testrdd.prg \
+	testcdx.prg \
+	testdbf.prg \
 
 C_SOURCES=\
 

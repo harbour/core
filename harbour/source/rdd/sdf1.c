@@ -33,13 +33,12 @@
  *
  */
 
-#define SUPERTABLE ( &sdfSuper )
-
 #include "hbapi.h"
 #include "hbinit.h"
-#include "hbapiitm.h"
+#include "hbvm.h"
 #include "hbapirdd.h"
-#include "rddsys.ch"
+#include "hbapiitm.h"
+#include "hbrddsdf.h"
 
 HB_FUNC( _SDFC );
 HB_FUNC( SDF_GETFUNCTABLE );
@@ -61,13 +60,108 @@ HB_INIT_SYMBOLS_END( sdf1__InitSymbols )
    #pragma startup sdf1__InitSymbols
 #endif
 
-static RDDFUNCS sdfSuper = { 0 };
+static RDDFUNCS sdfSuper = { NULL };
+
+static RDDFUNCS sdfTable = { hb_sdfBof,
+                             hb_sdfEof,
+                             hb_sdfFound,
+                             hb_sdfGoBottom,
+                             hb_sdfGoTo,
+                             hb_sdfGoToId,
+                             hb_sdfGoTop,
+                             hb_sdfSeek,
+                             hb_sdfSkip,
+                             hb_sdfSkipFilter,
+                             hb_sdfSkipRaw,
+                             hb_sdfAddField,
+                             hb_sdfAppend,
+                             hb_sdfCreateFields,
+                             hb_sdfDeleteRec,
+                             hb_sdfDeleted,
+                             hb_sdfFieldCount,
+                             hb_sdfFieldDisplay,
+                             hb_sdfFieldInfo,
+                             hb_sdfFieldName,
+                             hb_sdfFlush,
+                             hb_sdfGetRec,
+                             hb_sdfGetValue,
+                             hb_sdfGetVarLen,
+                             hb_sdfGoCold,
+                             hb_sdfGoHot,
+                             hb_sdfPutRec,
+                             hb_sdfPutValue,
+                             hb_sdfRecAll,
+                             hb_sdfRecCount,
+                             hb_sdfRecInfo,
+                             hb_sdfRecNo,
+                             hb_sdfSetFieldExtent,
+                             hb_sdfAlias,
+                             hb_sdfClose,
+                             hb_sdfCreate,
+                             hb_sdfInfo,
+                             hb_sdfNewArea,
+                             hb_sdfOpen,
+                             hb_sdfRelease,
+                             hb_sdfStructSize,
+                             hb_sdfSysName,
+                             hb_sdfEval,
+                             hb_sdfPack,
+                             hb_sdfPackRec,
+                             hb_sdfSort,
+                             hb_sdfTrans,
+                             hb_sdfTransRec,
+                             hb_sdfZap,
+                             hb_sdfChildEnd,
+                             hb_sdfChildStart,
+                             hb_sdfChildSync,
+                             hb_sdfSyncChildren,
+                             hb_sdfClearRel,
+                             hb_sdfForceRel,
+                             hb_sdfRelArea,
+                             hb_sdfRelEval,
+                             hb_sdfRelText,
+                             hb_sdfSetRel,
+                             hb_sdfOrderListAdd,
+                             hb_sdfOrderListClear,
+                             hb_sdfOrderListDelete,
+                             hb_sdfOrderListFocus,
+                             hb_sdfOrderListRebuild,
+                             hb_sdfOrderCondition,
+                             hb_sdfOrderCreate,
+                             hb_sdfOrderDestroy,
+                             hb_sdfOrderInfo,
+                             hb_sdfClearFilter,
+                             hb_sdfClearLocate,
+                             hb_sdfClearScope,
+                             hb_sdfCountScope,
+                             hb_sdfFilterText,
+                             hb_sdfScopeInfo,
+                             hb_sdfSetFilter,
+                             hb_sdfSetLocate,
+                             hb_sdfSetScope,
+                             hb_sdfSkipScope,
+                             hb_sdfCompile,
+                             hb_sdfError,
+                             hb_sdfEvalBlock,
+                             hb_sdfRawLock,
+                             hb_sdfLock,
+                             hb_sdfUnLock,
+                             hb_sdfCloseMemFile,
+                             hb_sdfCreateMemFile,
+                             hb_sdfGetValueFile,
+                             hb_sdfOpenMemFile,
+                             hb_sdfPutValueFile,
+                             hb_sdfReadDBHeader,
+                             hb_sdfWriteDBHeader,
+                             hb_sdfWhoCares
+                           };
+
 
 /*
  * -- SDF METHODS --
  */
 
-static RDDFUNCS sdfTable = { 0 };
+
 
 HB_FUNC( _SDFC )
 {
@@ -81,9 +175,11 @@ HB_FUNC( SDF_GETFUNCTABLE )
    uiCount = ( USHORT * ) hb_itemGetPtr( hb_param( 1, HB_IT_POINTER ) );
    * uiCount = RDDFUNCSCOUNT;
    pTable = ( RDDFUNCS * ) hb_itemGetPtr( hb_param( 2, HB_IT_POINTER ) );
+
+   HB_TRACE(HB_TR_DEBUG, ("SDF_GETFUNCTABLE(%i, %p)", uiCount, pTable));
+
    if( pTable )
       hb_retni( hb_rddInherit( pTable, &sdfTable, &sdfSuper, 0 ) );
    else
       hb_retni( FAILURE );
 }
-

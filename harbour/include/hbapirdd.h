@@ -36,17 +36,21 @@
 #ifndef HB_APIRDD_H_
 #define HB_APIRDD_H_
 
-#include "hbapi.h"
 #include "hbapifs.h"
 
 #if defined(HB_EXTERN_C)
 extern "C" {
 #endif
 
+#define HARBOUR_MAX_RDD_DRIVERNAME_LENGTH       32
+#define HARBOUR_MAX_RDD_ALIAS_LENGTH            32
+#define HARBOUR_MAX_RDD_FIELDNAME_LENGTH        32
+
+
+
 /* RDD virtual machine integration functions */
 
 extern int     hb_rddGetCurrentWorkAreaNumber( void );
-extern void *  hb_rddGetCurrentWorkAreaPointer( void );
 extern ERRCODE hb_rddSelectWorkAreaAlias( char * szAlias );
 extern ERRCODE hb_rddSelectWorkAreaNumber( int iArea );
 extern ERRCODE hb_rddSelectWorkAreaSymbol( PHB_SYMB pSymAlias );
@@ -57,10 +61,32 @@ extern ERRCODE hb_rddFieldPut( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol );
 extern void    hb_rddShutDown( void );
 
 
+
+/* DBCMD errors */
+
+#define EDBCMD_SEEK_BADPARAMETER          1001
+#define EDBCMD_NOALIAS                    1002
+#define EDBCMD_NOVAR                      1003
+#define EDBCMD_USE_BADPARAMETER           1005
+#define EDBCMD_REL_BADPARAMETER           1006
+#define EDBCMD_FIELDNAME_BADPARAMETER     1009
+#define EDBCMD_DUPALIAS                   1011
+#define EDBCMD_DBCMDBADPARAMETER          1014
+#define EDBCMD_BADPARAMETER               1015
+#define EDBCMD_INFOBADPARAMETER           1032
+#define EDBCMD_DBINFOBADPARAMETER         1034
+#define EDBCMD_DBFILEPUTBADPARAMETER      1041
+#define EDBCMD_DBFILEGETBADPARAMETER      1042
+#define EDBCMD_NOTABLE                    2001
+#define EDBCMD_EVAL_BADPARAMETER          2019
+
+
+
 /* Flags for DBTRANSINFO */
 
 #define DBTF_MATCH         0x0001
 #define DBTF_PUTREC        0x0002
+
 
 
 /* Codes for Locking methods */
@@ -68,6 +94,7 @@ extern void    hb_rddShutDown( void );
 #define DBLM_EXCLUSIVE     1
 #define DBLM_MULTIPLE      2
 #define DBLM_FILE          3
+
 
 
 /* Codes for SELF_ORDINFO() */
@@ -89,6 +116,7 @@ extern void    hb_rddShutDown( void );
 #define DBOI_UNIQUE        13   /* Get the flag if the order has the unique attribute set */
 
 
+
 /* Codes for SELF_INFO() */
 
 #define DBI_ISDBF          1    /* Logical: RDD support DBF file format? */
@@ -101,12 +129,9 @@ extern void    hb_rddShutDown( void );
 #define DBI_GETLOCKARRAY   8    /* Array: Get an array of locked records */
 #define DBI_TABLEEXT       9    /* String:  Get table file extension */
 #define DBI_FULLPATH       10   /* String: Full path name of opened file */
-
 #define DBI_ISFLOCK        20   /* Get file lock status */
-
 #define DBI_CHILDCOUNT     22   /* Number of opened relations */
 #define DBI_FILEHANDLE     23   /* Handle of opened file */
-
 #define DBI_BOF            26   /* BOF flag - alternate to bof() */
 #define DBI_EOF            27   /* EOF flag - alternate to eof() */
 #define DBI_DBFILTER       28   /* Filter expression */
@@ -118,15 +143,13 @@ extern void    hb_rddShutDown( void );
 #define DBI_GETSCOPE       34   /* Locate codeblock */
 #define DBI_LOCKOFFSET     35   /* New locking offset */
 #define DBI_SHARED         36   /* Gets/Sets the shared flag */
-
 #define DBI_MEMOEXT        37   /* String:  Get memo file extension */
 #define DBI_MEMOHANDLE     38   /* Dos handle for memo file */
 #define DBI_MEMOBLOCKSIZE  39   /* Blocksize in memo files */
-
 #define DBI_DB_VERSION     101  /* HOST driver Version */
 #define DBI_RDD_VERSION    102  /* RDD version (current RDD) */
-
 #define DBI_USER           1000 /* Start of user definable DBI_ values */
+
 
 
 /* Codes for SELF_RECINFO() */
@@ -138,12 +161,14 @@ extern void    hb_rddShutDown( void );
 #define DBRI_UPDATED       5
 
 
+
 /* Codes for SELF_FIELDINFO() */
 
 #define DBS_NAME           1
 #define DBS_TYPE           2
 #define DBS_LEN            3
 #define DBS_DEC            4
+
 
 
 /* Codes for RawLock types */
@@ -157,113 +182,14 @@ extern void    hb_rddShutDown( void );
 #define APPEND_LOCK        7
 #define APPEND_UNLOCK      8
 
-/* forward declarations
+
+
+/*
+ * Forward declarations
  */
 struct _RDDFUNCS;
 struct _AREA;
-struct _TAGINFO;
-struct _INDEXINFO;
 
-
-typedef struct _FILEINFO
-{
-   FHANDLE hFile;
-   char *  szFileName;         /* Name of file */
-   ULONG * pLocksPos;          /* List of records locked */
-   ULONG   lNumLocksPos;       /* Number of records locked */
-   BOOL    fFileLocked;        /* TRUE if entire file is locked */
-   BOOL    fAppend;            /* TRUE if new record is added */
-   struct _FILEINFO * pNext;   /* The next file in the list */
-} FILEINFO;
-
-typedef FILEINFO * LPFILEINFO;
-
-
-typedef struct _KEYINFO
-{
-   PHB_ITEM pItem;
-   LONG     Tag;
-   LONG     Xtra;
-   struct  _KEYINFO * pNext;
-} KEYINFO;
-
-typedef KEYINFO * LPKEYINFO;
-
-
-typedef struct HB_PAGEINFO_STRU
-{
-   LONG      Page;
-   LONG      Left;
-   LONG      Right;
-   BOOL      Changed;
-   BOOL      NewRoot;
-   BOOL      LastEntry;
-   BOOL      Reload;
-   BOOL      ChkBOF;
-   BOOL      ChkEOF;
-   BYTE      PageType;
-   LONG      RNMask;
-   BYTE      ReqByte;
-   BYTE      RNBits;
-   BYTE      DCBits;
-   BYTE      TCBits;
-   BYTE      DCMask;
-   BYTE      TCMask;
-   USHORT    Space;
-   LPKEYINFO pKeys;
-   USHORT    uiKeys;
-   SHORT     CurKey;
-   struct   HB_PAGEINFO_STRU * Owner;
-   struct   HB_PAGEINFO_STRU * Child;
-   struct   _TAGINFO * TagParent;
-} HB_PAGEINFO;
-
-typedef HB_PAGEINFO * LPPAGEINFO;
-
-
-typedef struct _TAGINFO
-{
-   char *     TagName;
-   char *     KeyExpr;
-   char *     ForExpr;
-   PHB_ITEM   pKeyItem;
-   PHB_ITEM   pForItem;
-   BOOL       AscendKey;
-   BOOL       UniqueKey;
-   BOOL       TagChanged;
-   BOOL       TagBOF;
-   BOOL       TagEOF;
-   BYTE       KeyType;
-   BYTE       OptFlags;
-   LONG       TagBlock;
-   LONG       RootBlock;
-   USHORT     KeyLength;
-   USHORT     MaxKeys;
-   LPKEYINFO  CurKeyInfo;
-   LPPAGEINFO RootPage;
-   struct    _INDEXINFO * Owner;
-   struct    _TAGINFO * pNext;
-} TAGINFO;
-
-typedef TAGINFO * LPTAGINFO;
-
-
-
-typedef struct _INDEXINFO
-{
-   char *    IndexName;
-   BOOL      Exact;
-   BOOL      Corrupted;
-   LONG      TagRoot;
-   LONG      NextAvail;
-   struct   _AREA * Owner;
-   FHANDLE   DiskFile;
-   LPTAGINFO CompoundTag;
-   LPTAGINFO TagList;
-   struct   _INDEXINFO * pNext;   /* The next index in the list */
-} INDEXINFO;
-
-typedef INDEXINFO * LPINDEXINFO;
 
 
 /*
@@ -276,7 +202,7 @@ typedef struct
 {
    BYTE * atomName;        /* FIELD (symbol) name */
    USHORT uiType;          /* FIELD type */
-   USHORT typeExtended;    /* FIELD type extended */
+   USHORT uiTypeExtended;  /* FIELD type extended */
    USHORT uiLen;           /* Overall FIELD length */
    USHORT uiDec;           /* Decimal places of numeric FIELD */
 } DBFIELDINFO;
@@ -286,10 +212,10 @@ typedef DBFIELDINFO * LPDBFIELDINFO;
 
 
 /*
-*  DBOPENINFO
-*  ----------
-*  The Open Info structure
-*/
+ *  DBOPENINFO
+ *  ----------
+ *  The Open Info structure
+ */
 
 typedef struct
 {
@@ -306,41 +232,10 @@ typedef DBOPENINFO * LPDBOPENINFO;
 
 
 /*
-*  DBEXTENDINFO
-*  ------------
-*  Additional properties
-*/
-
-typedef struct
-{
-   USHORT   uiHeaderLen;     /* Size of header */
-   USHORT   uiRecordLen;     /* Size of record */
-   BYTE *   bRecord;         /* Buffer of the data */
-   BOOL     fValidBuffer;    /* State of buffer */
-   BOOL     fHasMemo;        /* Work Area with Memo fields */
-   BOOL     fHasMDX;         /* MDX or CDX indexes */
-   ULONG    ulRecNo;         /* Current record */
-   ULONG    ulNextBlock;     /* Next block for memos */
-   BOOL     fExclusive;      /* Share the file */
-   BOOL     fReadOnly;       /* Read only file */
-   BYTE     bYear;           /* Last update */
-   BYTE     bMonth;
-   BYTE     bDay;
-   BOOL     fRecordChanged;  /* Record changed */
-   ULONG    ulRecCount;      /* Total records */
-   PHB_ITEM itmEval;         /* EVAL expression for __dbPack() */
-   ULONG    ulEvery;         /* Every records for eval itmEval */
-} DBEXTENDINFO;
-
-typedef DBEXTENDINFO * LPDBEXTENDINFO;
-
-
-
-/*
-*  DBORDERCONDINFO
-*  ---------------
-*  The Create Order conditional Info structure
-*/
+ *  DBORDERCONDINFO
+ *  ---------------
+ *  The Create Order conditional Info structure
+ */
 
 typedef struct _DBORDERCONDINFO
 {
@@ -369,10 +264,10 @@ typedef DBORDERCONDINFO * LPDBORDERCONDINFO;
 
 
 /*
-*  DBORDERCREATE
-*  -------------
-*  The Create Order Info structure
-*/
+ *  DBORDERCREATE
+ *  -------------
+ *  The Create Order Info structure
+ */
 
 typedef struct
 {
@@ -390,10 +285,10 @@ typedef DBORDERCREATEINFO * LPDBORDERCREATEINFO;
 
 
 /*
-*  DBORDERINFO
-*  -----------
-*  The Set Index Info structure
-*/
+ *  DBORDERINFO
+ *  -----------
+ *  The Set Index Info structure
+ */
 
 typedef struct
 {
@@ -409,10 +304,10 @@ typedef DBORDERINFO * LPDBORDERINFO;
 
 
 /*
-*  DBSCOPEINFO
-*  -----------
-*  The Scope Info structure
-*/
+ *  DBSCOPEINFO
+ *  -----------
+ *  The Scope Info structure
+ */
 
 typedef struct
 {
@@ -431,11 +326,13 @@ typedef struct
 
 typedef DBSCOPEINFO * LPDBSCOPEINFO;
 
+
+
 /*
-*  DBORDSCOPEINFO
-*  -----------
-*  The Order Scope Info structure
-*/
+ *  DBORDSCOPEINFO
+ *  --------------
+ *  The Order Scope Info structure
+ */
 
 typedef struct
 {
@@ -445,11 +342,13 @@ typedef struct
 
 typedef DBORDSCOPEINFO * LPDBORDSCOPEINFO;
 
+
+
 /*
-*  DBFILTERINFO
-*  ------------
-*  The Filter Info structure
-*/
+ *  DBFILTERINFO
+ *  ------------
+ *  The Filter Info structure
+ */
 
 typedef struct
 {
@@ -463,19 +362,19 @@ typedef DBFILTERINFO * LPDBFILTERINFO;
 
 
 /*
-*  DBRELINFO
-*  ------------
-*  The Relationship Info structure
-*/
+ *  DBRELINFO
+ *  ---------
+ *  The Relationship Info structure
+ */
 
 typedef struct _DBRELINFO
 {
-   PHB_ITEM           itmCobExpr;   /* Block representation of the relational SEEK key */
-   PHB_ITEM           abKey;        /* String representation of the relational SEEK key */
-   BOOL               isScoped;     /* Is this relation scoped */
-   struct _AREA      *lpaParent;    /* The parent of this relation */
-   struct _AREA      *lpaChild;     /* The parents children */
-   struct _DBRELINFO *lpdbriNext;   /* Next child or parent */
+   PHB_ITEM            itmCobExpr;   /* Block representation of the relational SEEK key */
+   PHB_ITEM            abKey;        /* String representation of the relational SEEK key */
+   BOOL                isScoped;     /* Is this relation scoped */
+   struct _AREA      * lpaParent;    /* The parent of this relation */
+   struct _AREA      * lpaChild;     /* The parents children */
+   struct _DBRELINFO * lpdbriNext;   /* Next child or parent */
 } DBRELINFO;
 
 typedef DBRELINFO * LPDBRELINFO;
@@ -483,13 +382,13 @@ typedef DBRELINFO * LPDBRELINFO;
 
 
 /*
-*  DBEVALINFO
-*  ------------
-*  The Evaluation Info structure
-*
-*  Contains information necessary for a block evaluation
-*  on each record of the workarea
-*/
+ *  DBEVALINFO
+ *  ----------
+ *  The Evaluation Info structure
+ *
+ *  Contains information necessary for a block evaluation
+ *  on each record of the workarea
+ */
 
 typedef struct
 {
@@ -502,13 +401,13 @@ typedef DBEVALINFO * LPDBEVALINFO;
 
 
 /*
-*  DBTRANSITEM
-*  ------------
-*  The Transfer Item structure
-*
-*  Defines a single transfer item (usually a field) from
-*  one database to another; used by DBTRANSINFO
-*/
+ *  DBTRANSITEM
+ *  -----------
+ *  The Transfer Item structure
+ *
+ *  Defines a single transfer item (usually a field) from
+ *  one database to another; used by DBTRANSINFO
+ */
 
 typedef struct
 {
@@ -521,22 +420,22 @@ typedef DBTRANSITEM * LPDBTRANSITEM;
 
 
 /*
-*  DBTRANSINFO
-*  ------------
-*  The Transfer Info structure
-*
-*  Defines a global transfer of data items from on workarea
-*  to another
-*/
+ *  DBTRANSINFO
+ *  -----------
+ *  The Transfer Info structure
+ *
+ *  Defines a global transfer of data items from on workarea
+ *  to another
+ */
 
 typedef struct
 {
-   struct _AREA *lpaSource;     /* Pointer to source work area */
-   struct _AREA *lpaDest;       /* Pointer to dest work area */
-   DBSCOPEINFO   dbsci;         /* Scope to limit transfer */
-   USHORT        uiFlags;       /* Transfer attributes */
-   USHORT        uiItemCount;   /* Number of items below */
-   LPDBTRANSITEM lpTransItems;  /* Array of items */
+   struct _AREA * lpaSource;     /* Pointer to source work area */
+   struct _AREA * lpaDest;       /* Pointer to dest work area */
+   DBSCOPEINFO    dbsci;         /* Scope to limit transfer */
+   USHORT         uiFlags;       /* Transfer attributes */
+   USHORT         uiItemCount;   /* Number of items below */
+   LPDBTRANSITEM  lpTransItems;  /* Array of items */
 } DBTRANSINFO;
 
 typedef DBTRANSINFO * LPDBTRANSINFO;
@@ -544,14 +443,14 @@ typedef DBTRANSINFO * LPDBTRANSINFO;
 
 
 /*
-*  DBSORTITEM
-*  ----------
-*  The Sort Item Structure
-*
-*  An array of items that, together, indicate the key value to
-*  use while sorting data. The order of the array determines the
-*  order of the sorting.
-*/
+ *  DBSORTITEM
+ *  ----------
+ *  The Sort Item Structure
+ *
+ *  An array of items that, together, indicate the key value to
+ *  use while sorting data. The order of the array determines the
+ *  order of the sorting.
+ */
 
 typedef struct
 {
@@ -573,12 +472,12 @@ typedef DBSORTITEM * LPDBSORTITEM;
 
 
 /*
-*  DBSORTINFO
-*  ----------
-*  The Sort Info Structure
-*
-*  Information for a physical sort on the workarea
-*/
+ *  DBSORTINFO
+ *  ----------
+ *  The Sort Info Structure
+ *
+ *  Information for a physical sort on the workarea
+ */
 
 typedef struct
 {
@@ -592,18 +491,18 @@ typedef DBSORTINFO * LPDBSORTINFO;
 
 
 /*
-*  DBLOCKINFO
-*  ----------
-*  The Lock Info Structure
-*
-*  Information for a record or file lock
-*/
+ *  DBLOCKINFO
+ *  ----------
+ *  The Lock Info Structure
+ *
+ *  Information for a record or file lock
+ */
 
 typedef struct
 {
-   ULONG  itmRecID;
-   USHORT uiMethod;
-   BOOL   fResult;
+   PHB_ITEM itmRecID;
+   USHORT   uiMethod;
+   BOOL     fResult;
 } DBLOCKINFO;
 
 typedef DBLOCKINFO * LPDBLOCKINFO;
@@ -611,12 +510,12 @@ typedef DBLOCKINFO * LPDBLOCKINFO;
 
 
 /*
-*  FIELD
-*  -----
-*  The Field structure
-*
-*  This is the basic unit of access for a workarea
-*/
+ *  FIELD
+ *  -----
+ *  The Field structure
+ *
+ *  This is the basic unit of access for a workarea
+ */
 
 typedef struct _FIELD
 {
@@ -625,10 +524,8 @@ typedef struct _FIELD
    USHORT  uiLen;            /* Field length */
    USHORT  uiDec;            /* Decimal length */
    USHORT  uiArea;           /* Area this field resides in */
-   USHORT  uiOffset;         /* Offset for this field */
    void *  sym;              /* Symbol that represents the field */
-   void *  memo;             /* Pointer to memo data */
-   struct _FIELD *lpfNext;   /* The next field in the list */
+   struct _FIELD * lpfNext;  /* The next field in the list */
 } FIELD;
 
 typedef FIELD * LPFIELD;
@@ -638,40 +535,36 @@ typedef FIELD * LPFIELD;
 /*--------------------* WORKAREA structure *----------------------*/
 
 /*
-*  WORKAREA
-*  --------
-*  The Workarea Structure
-*
-*  Information to administrate the workarea
-*/
-
+ *  WORKAREA
+ *  --------
+ *  The Workarea Structure
+ *
+ *  Information to administrate the workarea
+ */
 
 typedef struct _AREA
 {
    struct _RDDFUNCS * lprfsHost; /* Virtual method table for this workarea */
-   USHORT   uiArea;              /* The number assigned to this workarea */
-   void *   atomAlias;           /* Pointer to the alias symbol for this workarea */
-   USHORT   uiFieldExtent;       /* Total number of fields allocated */
-   USHORT   uiFieldCount;        /* Total number of fields used */
-   LPFIELD  lpFields;            /* Pointer to an array of fields */
-   void *   lpFieldExtents;      /* Void ptr for additional field properties */
+   USHORT uiArea;                /* The number assigned to this workarea */
+   void * atomAlias;             /* Pointer to the alias symbol for this workarea */
+   USHORT uiFieldExtent;         /* Total number of fields allocated */
+   USHORT uiFieldCount;          /* Total number of fields used */
+   LPFIELD lpFields;             /* Pointer to an array of fields */
+   void * lpFieldExtents;        /* Void ptr for additional field properties */
    PHB_ITEM valResult;           /* All purpose result holder */
    BOOL fTop;                    /* TRUE if "top" */
    BOOL fBottom;                 /* TRUE if "bottom" */
    BOOL fBof;                    /* TRUE if "bof" */
    BOOL fEof;                    /* TRUE if "eof" */
    BOOL fFound;                  /* TRUE if "found" */
-   DBSCOPEINFO  dbsi;            /* Info regarding last LOCATE */
+   DBSCOPEINFO dbsi;             /* Info regarding last LOCATE */
    DBFILTERINFO dbfi;            /* Filter in effect */
    LPDBORDERCONDINFO lpdbOrdCondInfo;
-   LPDBRELINFO  lpdbRelations;   /* Parent/Child relationships used */
-   USHORT       uiParents;       /* Number of parents for this area */
-   USHORT   heap;
-   USHORT   heapSize;
-   USHORT   rddID;
-   LPFILEINFO lpDataInfo;        /* Data files used by this workarea */
-   LPINDEXINFO lpIndexInfo;      /* Indexes used by this workarea */
-   LPDBEXTENDINFO lpExtendInfo;  /* Additional properties */
+   LPDBRELINFO lpdbRelations;    /* Parent/Child relationships used */
+   USHORT uiParents;             /* Number of parents for this area */
+   USHORT heap;
+   USHORT heapSize;
+   USHORT rddID;
 } AREA;
 
 typedef AREA * LPAREA;
@@ -679,6 +572,8 @@ typedef AREA * LPAREA;
 #ifndef AREAP
 #define AREAP LPAREA
 #endif
+
+
 
 /*--------------------* Virtual Method Table *----------------------*/
 
@@ -690,8 +585,11 @@ typedef USHORT ( * DBENTRYP_UL   )( AREAP area, ULONG param );
 typedef USHORT ( * DBENTRYP_I    )( AREAP area, PHB_ITEM param );
 typedef USHORT ( * DBENTRYP_SI   )( AREAP area, USHORT index, PHB_ITEM param );
 typedef USHORT ( * DBENTRYP_VP   )( AREAP area, LPDBOPENINFO param );
+typedef USHORT ( * DBENTRYP_VT   )( AREAP area, LPDBTRANSINFO param );
 typedef USHORT ( * DBENTRYP_VF   )( AREAP area, LPDBFIELDINFO param );
 typedef USHORT ( * DBENTRYP_VL   )( AREAP area, LPDBLOCKINFO param );
+typedef USHORT ( * DBENTRYP_VR   )( AREAP area, LPDBRELINFO param );
+typedef USHORT ( * DBENTRYP_VS   )( AREAP area, LPDBSORTINFO param );
 typedef USHORT ( * DBENTRYP_VFI  )( AREAP area, LPDBFILTERINFO param );
 typedef USHORT ( * DBENTRYP_VEI  )( AREAP area, LPDBEVALINFO param );
 typedef USHORT ( * DBENTRYP_VLO  )( AREAP area, LPDBSCOPEINFO param );
@@ -706,6 +604,7 @@ typedef USHORT ( * DBENTRYP_S    )( AREAP area, USHORT param );
 typedef USHORT ( * DBENTRYP_LP   )( AREAP area, LONG * param );
 typedef USHORT ( * DBENTRYP_ULP  )( AREAP area, ULONG * param );
 typedef USHORT ( * DBENTRYP_SVP  )( AREAP area, USHORT index, void * param );
+typedef USHORT ( * DBENTRYP_SVPB )( AREAP area, USHORT index, void * param, BOOL p3 );
 typedef USHORT ( * DBENTRYP_VSP  )( AREAP area, USHORT action, ULONG lRecord );
 typedef USHORT ( * DBENTRYP_SVL  )( AREAP area, USHORT index, ULONG * param );
 typedef USHORT ( * DBENTRYP_SSI  )( AREAP area, USHORT p1, USHORT p2, PHB_ITEM p3 );
@@ -714,7 +613,6 @@ typedef USHORT ( * DBENTRYP_BIB  )( AREAP area, BOOL p1, PHB_ITEM p2, BOOL p3 );
 typedef USHORT ( * DBENTRYP_VPL  )( AREAP area, void * p1, LONG p2);
 typedef USHORT ( * DBENTRYP_VPLP )( AREAP area, void * p1, LONG * p2);
 typedef USHORT ( * DBENTRYP_LSP  )( AREAP area, LONG p1, USHORT * p2);
-
 
 /*--------------------* Virtual Method Table *----------------------*/
 
@@ -775,36 +673,32 @@ typedef struct _RDDFUNCS
    DBENTRYP_P    sysName;
    DBENTRYP_VEI  dbEval;
    DBENTRYP_V    pack;
-#if 0
    DBENTRYP_LSP  packRec;
-   DBENTRYP_VP   sort;
-   DBENTRYP_VP   trans;
-   DBENTRYP_VP   transRec;
-#endif
+   DBENTRYP_VS   sort;
+   DBENTRYP_VT   trans;
+   DBENTRYP_VT   transRec;
    DBENTRYP_V    zap;
 
 
    /* Relational Methods */
 
-   DBENTRYP_VP   childEnd;
-   DBENTRYP_VP   childStart;
-   DBENTRYP_VP   childSync;
+   DBENTRYP_VR   childEnd;
+   DBENTRYP_VR   childStart;
+   DBENTRYP_VR   childSync;
    DBENTRYP_V    syncChildren;
    DBENTRYP_V    clearRel;
    DBENTRYP_V    forceRel;
    DBENTRYP_SVP  relArea;
-   DBENTRYP_VP   relEval;
+   DBENTRYP_VR   relEval;
    DBENTRYP_SVP  relText;
-   DBENTRYP_VP   setRel;
+   DBENTRYP_VR   setRel;
 
 
    /* Order Management */
 
    DBENTRYP_OI   orderListAdd;
    DBENTRYP_V    orderListClear;
-#if 0
    DBENTRYP_VP   orderListDelete;
-#endif
    DBENTRYP_OI   orderListFocus;
    DBENTRYP_V    orderListRebuild;
    DBENTRYP_VOI  orderCondition;
@@ -845,7 +739,7 @@ typedef struct _RDDFUNCS
 
    DBENTRYP_V    closeMemFile;
    DBENTRYP_VP   createMemFile;
-   DBENTRYP_SVP  getValueFile;
+   DBENTRYP_SVPB getValueFile;
    DBENTRYP_VP   openMemFile;
    DBENTRYP_SVP  putValueFile;
 
@@ -865,6 +759,8 @@ typedef struct _RDDFUNCS
 typedef RDDFUNCS * PRDDFUNCS;
 
 #define RDDFUNCSCOUNT   ( sizeof( RDDFUNCS ) / sizeof( DBENTRYP_V ) )
+
+
 
 /*--------------------* SELF Methods *------------------------*/
 
@@ -950,7 +846,6 @@ typedef RDDFUNCS * PRDDFUNCS;
 #define SELF_ORDLSTFOCUS(w, lp)         ((*(w)->lprfsHost->orderListFocus)(w,lp))
 #define SELF_ORDLSTREBUILD(w)           ((*(w)->lprfsHost->orderListRebuild)(w))
 #define SELF_ORDLSTCLEAR(w)             ((*(w)->lprfsHost->orderListClear)(w))
-
 #define SELF_ORDSETCOND(w, ip)          ((*(w)->lprfsHost->orderCondition)(w, ip))
 #define SELF_ORDCREATE(w, ip)           ((*(w)->lprfsHost->orderCreate)(w, ip))
 #define SELF_ORDDESTROY(w, p)           ((*(w)->lprfsHost->orderDestroy)(w, p))
@@ -998,7 +893,7 @@ typedef RDDFUNCS * PRDDFUNCS;
 
 #define SELF_CLOSEMEMFILE(w)            ((*(w)->lprfsHost->closeMemFile)(w))
 #define SELF_CREATEMEMFILE(w,bp)        ((*(w)->lprfsHost->createMemFile)(w,bp))
-#define SELF_GETVALUEFILE(w,i,bp)       ((*(w)->lprfsHost->getValueFile)(w,i,bp))
+#define SELF_GETVALUEFILE(w,i,bp,b)     ((*(w)->lprfsHost->getValueFile)(w,i,bp,b))
 #define SELF_OPENMEMFILE(w,bp)          ((*(w)->lprfsHost->openMemFile)(w,bp))
 #define SELF_PUTVALUEFILE(w,i,bp)       ((*(w)->lprfsHost->putValueFile)(w,i,bp))
 
@@ -1104,7 +999,6 @@ typedef RDDFUNCS * PRDDFUNCS;
 #define SUPER_ORDLSTFOCUS(w, lp)        ((*(SUPERTABLE)->orderListFocus)(w, lp))
 #define SUPER_ORDLSTREBUILD(w)          ((*(SUPERTABLE)->orderListRebuild)(w))
 #define SUPER_ORDLSTCLEAR(w)            ((*(SUPERTABLE)->orderListClear)(w))
-
 #define SUPER_ORDSETCOND(w,ip)          ((*(SUPERTABLE)->orderCondition)(w, ip))
 #define SUPER_ORDCREATE(w, ip)          ((*(SUPERTABLE)->orderCreate)(w, ip))
 #define SUPER_ORDDELETE(w, ip)          ((*(SUPERTABLE)->orderDelete)(w, ip))
@@ -1152,7 +1046,7 @@ typedef RDDFUNCS * PRDDFUNCS;
 
 #define SUPER_CLOSEMEMFILE(w)           ((*(SUPERTABLE)->closeMemFile)(w))
 #define SUPER_CREATEMEMFILE(w,bp)       ((*(SUPERTABLE)->createMemFile)(w,bp))
-#define SUPER_GETVALUEFILE(w,i,bp)      ((*(SUPERTABLE)->getValueFile)(w,i,bp))
+#define SUPER_GETVALUEFILE(w,i,bp,b)    ((*(SUPERTABLE)->getValueFile)(w,i,bp,b))
 #define SUPER_OPENMEMFILE(w,bp)         ((*(SUPERTABLE)->openMemFile)(w,bp))
 #define SUPER_PUTVALUEFILE(w,i,bp)      ((*(SUPERTABLE)->putValueFile)(w,i,bp))
 
@@ -1173,10 +1067,11 @@ typedef RDDFUNCS * PRDDFUNCS;
 #define SUPER_TABLEEXT(w, fp)         ((*(SUPERTABLE)->info)(w, DBI_TABLEEXT, fp))
 
 
+
 /*
-*  PROTOTYPES
-*  ----------
-*/
+ *  PROTOTYPES
+ *  ----------
+ */
 extern ERRCODE hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS pSuperTable, BYTE * szDrvName );
 extern ERRCODE hb_rddDisinherit( BYTE * drvName );
 extern USHORT  hb_rddExtendType( USHORT fieldType );

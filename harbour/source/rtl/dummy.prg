@@ -52,12 +52,7 @@ FUNCTION ordSkipUnique()   ; RETURN .F.
 #endif
 
 #ifdef HB_COMPAT_C53
-FUNCTION dbFileGet()       ; RETURN .F.
-FUNCTION dbFilePut()       ; RETURN .F.
-FUNCTION dbInfo()          ; RETURN NIL
 FUNCTION dbOrderInfo()     ; RETURN NIL
-FUNCTION dbRecordInfo()    ; RETURN NIL
-FUNCTION dbFieldInfo()     ; RETURN NIL
 #endif
 
 FUNCTION MLCToPos()        ; RETURN 0
@@ -68,13 +63,10 @@ FUNCTION __dbCopy()        ; RETURN NIL
 FUNCTION __dbDelim()       ; RETURN NIL
 FUNCTION __dbJoin()        ; RETURN NIL
 FUNCTION __dbSDF()         ; RETURN NIL
-FUNCTION __dbSort()        ; RETURN NIL
 FUNCTION __dbTotal()       ; RETURN NIL
 
 /* NOTE: Internal functions */
-FUNCTION __dbArrange()     ; RETURN NIL
 FUNCTION __dbFList()       ; RETURN {}
 FUNCTION __dbOpenSDF()     ; RETURN NIL
 FUNCTION __dbTrans()       ; RETURN NIL
 FUNCTION __dbTransRec()    ; RETURN NIL
-

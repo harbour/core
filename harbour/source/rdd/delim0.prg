@@ -44,4 +44,3 @@ init procedure DELIMInit
    rddRegister( "DELIM", RDT_TRANSFER )
 
 return
-
