@@ -90,7 +90,10 @@ HB_FUNC( FILEEXT )
    if( ISCHAR( 1 ) )
    {
       PHB_FNAME pFileName = hb_fsFNameSplit( hb_parc( 1 ) );
-      hb_retc( ( pFileName->szExtension ) + 1 ); /* Skip the dot */
+      if( pFileName->szExtension != NULL )
+         hb_retc( ( pFileName->szExtension ) + 1 ); /* Skip the dot */
+      else
+         hb_retc( "" );
       hb_xfree( pFileName );
    }
    else
