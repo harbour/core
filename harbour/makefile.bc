@@ -322,6 +322,7 @@ LANG_LIB_OBJS = \
    $(OBJ_DIR)\msgcsiso.obj \
    $(OBJ_DIR)\msgcskam.obj \
    $(OBJ_DIR)\msgcswin.obj \
+   $(OBJ_DIR)\msgde.obj \
    $(OBJ_DIR)\msgen.obj \
    $(OBJ_DIR)\msges.obj \
    $(OBJ_DIR)\msgeu.obj \
@@ -335,6 +336,7 @@ LANG_LIB_OBJS = \
    $(OBJ_DIR)\msghucwi.obj \
    $(OBJ_DIR)\msghuwin.obj \
    $(OBJ_DIR)\msgis850.obj \
+   $(OBJ_DIR)\msgit.obj \
    $(OBJ_DIR)\msgpt.obj \
    $(OBJ_DIR)\msgro.obj \
    $(OBJ_DIR)\msgsr852.obj \
@@ -1692,6 +1694,10 @@ $(OBJ_DIR)\msgcswin.obj : $(LANG_DIR)\msgcswin.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\msgde.obj : $(LANG_DIR)\msgde.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\msgen.obj : $(LANG_DIR)\msgen.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
@@ -1741,6 +1747,10 @@ $(OBJ_DIR)\msghuwin.obj : $(LANG_DIR)\msghuwin.c
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\msgis850.obj : $(LANG_DIR)\msgis850.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\msgit.obj : $(LANG_DIR)\msgit.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 

@@ -10,6 +10,7 @@ C_SOURCES=\
 	msgcsiso.c   \
 	msgcskam.c   \
 	msgcswin.c   \
+	msgde.c      \
 	msgen.c      \
 	msges.c      \
 	msgeu.c      \
@@ -23,6 +24,7 @@ C_SOURCES=\
 	msghucwi.c   \
 	msghuwin.c   \
 	msgis850.c   \
+	msgit.c      \
 	msgpt.c      \
 	msgro.c      \
 	msgsr852.c   \

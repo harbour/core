@@ -1,3 +1,10 @@
+2000-06-25 21:52 UTC+0100 Victor Szakats <info@szelvesz.hu>
+
+   * source/lang/Makefile
+   * makefile.vc
+   * makefile.bc
+     + MSGIT and MSGDE language modules added.
+
 2000-06-25 14:53 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
    * source/rtl/tget.prg
