@@ -8,14 +8,7 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version, with one exception:
- *
- * The exception is that if you link the Harbour Runtime Library (HRL)
- * and/or the Harbour Virtual Machine (HVM) with other files to produce
- * an executable, this does not by itself cause the resulting executable
- * to be covered by the GNU General Public License. Your use of that
- * executable is in no way restricted on account of linking the HRL
- * and/or HVM code into it.
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -27,6 +20,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
  * their web site at http://www.gnu.org/).
  */
+
+#DEFINE MAX_CICLES 64
 
 #ifdef __HARBOUR__
    #include "hbextern.ch"
@@ -200,7 +195,7 @@ PROCEDURE Main( sSource, sSwitch )
    ENDIF
 
    #ifdef __HARBOUR__
-      ProcessLine( "#DEFINE __HARBOUR__  1", {}, {}, {}, 0, '' )
+      ProcessLine( "#DEFINE __HARBOUR__  1", 0, '' )
    #endif
 
    IF bLoadRules
@@ -241,7 +236,7 @@ PROCEDURE RP_Dot()
       SET CURSOR ON
       READ
 
-      sPPed := ProcessLine( DropTrailingWS( sLine ), {}, {}, {}, 1, '' )
+      sPPed := ProcessLine( DropTrailingWS( sLine ), 1, '' )
 
       ExtractLeadingWS( @sPPed )
       DropTrailingWS( @sPPed )
@@ -499,7 +494,7 @@ FUNCTION ProcessFile( sSource, sSwitch )
                                FWrite( hPP, Chr(13) + Chr(10) )
                             ENDIF
                          ELSE
-                            sLine := ProcessLine( sLine, {}, {}, {}, nLine, sSource )
+                            sLine := ProcessLine( sLine, nLine, sSource )
                             IF bBlanks .OR. ! ( sLine == '' )
                                FWrite( hPP, sLine + Chr(13) + Chr(10) )
                             ENDIF
@@ -539,7 +534,7 @@ FUNCTION ProcessFile( sSource, sSwitch )
                             FWrite( hPP, Chr(13) + Chr(10) )
                          ENDIF
                       ELSE
-                         sLine := ProcessLine( sLine, {}, {}, {}, nLine, sSource )
+                         sLine := ProcessLine( sLine, nLine, sSource )
                          IF bBlanks .OR. ! ( sLine == '' )
                             FWrite( hPP, sLine + Chr(13) + Chr(10) )
                          ENDIF
@@ -721,7 +716,7 @@ FUNCTION ProcessFile( sSource, sSwitch )
                       ENDIF
                    ELSE
                       //sLine += sRight
-                      sLine := ProcessLine( sLine, {}, {}, {}, nLine, sSource )
+                      sLine := ProcessLine( sLine, nLine, sSource )
                       IF bBlanks .OR. ! ( sLine == '' )
                          FWrite( hPP, sLine + Chr(13) + Chr(10) )
                       ENDIF
@@ -744,7 +739,7 @@ FUNCTION ProcessFile( sSource, sSwitch )
                       FWrite( hPP, Chr(13) + Chr(10) )
                    ENDIF
                 ELSE
-                   sLine := ProcessLine( sLine, {}, {}, {}, nLine, sSource )
+                   sLine := ProcessLine( sLine, nLine, sSource )
                    IF bBlanks .OR. ! ( sLine == '' )
                       FWrite( hPP, sLine + Chr(13) + Chr(10) )
                    ENDIF
@@ -797,7 +792,7 @@ FUNCTION ProcessFile( sSource, sSwitch )
          FWrite( hPP, sLine )
       ENDIF
    ELSE
-      sLine := ProcessLine( sLine, {}, {}, {}, nLine, sSource )
+      sLine := ProcessLine( sLine, nLine, sSource )
       IF bBlanks .OR. ! ( sLine == '' )
          FWrite( hPP, sLine )
       ENDIF
@@ -816,15 +811,21 @@ FUNCTION ProcessFile( sSource, sSwitch )
 
 RETURN .T.
 
-FUNCTION ProcessLine( sLine, aDefined, aTranslated, aCommanded, nLine, sSource )
+FUNCTION ProcessLine( sLine, nLine, sSource )
 
-   LOCAL nNext, sDirective, bX, sToken, bNewLine, nRule
+   LOCAL nNext, sDirective, bX, sToken, nRule
    LOCAL nNewLineAt, aLines, nLines, Counter
    LOCAL sLeft, sPassed := '', asOutLines := {}, sOut := ''
    LOCAL cChar, sLastToken, sTemp, cFirstChar, cLastChar
-   LOCAL bString, nLen
+   LOCAL bString, nLen, iCicles := 0, aDefined := {}, aTranslated := {}, aCommanded := {}
 
    WHILE .T.
+      IF iCicles < MAX_CICLES
+         iCicles++
+      ELSE
+         Alert( "ERROR! Circularity detected [" + sSource + "(" + LTrim( Str( nLine ) ) + ")]"  )
+         BREAK
+      ENDIF
 
       //? "Raw Processing: '", sLine, "'"
       //? nPendingLines, nIfDef, IIF( nIfDef > 0, abIfDef[nIfDef] , )
@@ -848,6 +849,7 @@ FUNCTION ProcessLine( sLine, aDefined, aTranslated, aCommanded, nLine, sSource )
             sLine := aPendingLines[1]
             aDel( aPendingLines, 1 )
             nPendingLines--
+
             LOOP
          ENDIF
 
@@ -1005,8 +1007,6 @@ FUNCTION ProcessLine( sLine, aDefined, aTranslated, aCommanded, nLine, sSource )
 
       ENDIF
 
-      aCommanded := {}
-
       WHILE .T.
 
          IF nIfDef > 0 .AND. ! abIfDef[nIfDef]
@@ -1018,17 +1018,6 @@ FUNCTION ProcessLine( sLine, aDefined, aTranslated, aCommanded, nLine, sSource )
          IF ( sToken := NextToken( @sLine, .F. ) /* bCheckRules */  ) == NIL
             /* EOL */
             EXIT
-         ELSE
-            /* Reset Cyclic history. */
-            aDefined    := {}
-            aTranslated := {}
-            /*aCommanded  := {}*/
-
-            IF sPassed == ''
-               bNewLine    := .T.
-            ELSE
-               bNewLine    := .F.
-            ENDIF
          ENDIF
 
          //? "Token = '"  + sToken + "'"
@@ -1042,12 +1031,15 @@ FUNCTION ProcessLine( sLine, aDefined, aTranslated, aCommanded, nLine, sSource )
          ELSE
 
             IF ( nRule := MatchRule( sToken, @sLine, aDefRules, aDefResults, .F., .F. ) ) > 0
-               IF aScan( aDefined, nRule ) > 0
-                  Alert( "ERROR! Circularity detected in #define " + sLine )
-                  EXIT
-               ENDIF
+               //? "DEFINED: " + sLine
+               //WAIT
 
-               aAdd( aDefined, nRule )
+               IF sPassed == '' .AND. aScan( aDefined, nRule ) > 0
+                  Alert( "Ciclic directive: #define " + sToken )
+                  BREAK
+               ELSE
+                  aAdd( aDefined, nRule )
+               ENDIF
 
                sLine   := sLeft + sPassed + sLine
                sPassed := ''
@@ -1073,7 +1065,10 @@ FUNCTION ProcessLine( sLine, aDefined, aTranslated, aCommanded, nLine, sSource )
                   ENDI
 
                   //? "Pending #", nPendingLines, sLine, aPendingLines[nPendingLines]
-                  sLine := ''
+                  //sLine := ''
+                  sLine := aPendingLines[1]
+                  aDel( aPendingLines, 1 )
+                  nPendingLines--
                ENDIF
 
                //? "Lines Pending:", nPendingLines
@@ -1087,12 +1082,12 @@ FUNCTION ProcessLine( sLine, aDefined, aTranslated, aCommanded, nLine, sSource )
                //? "TRANSLATED: " + sLine
                //WAIT
 
-               IF aScan( aTranslated, nRule ) > 0
-                  Alert( "ERROR! Circularity detected in #translate " + sToken )
-                  EXIT
+               IF sPassed == '' .AND. aScan( aTranslated, nRule ) > 0
+                  Alert( "Ciclic directive: #translate " + sToken )
+                  BREAK
+               ELSE
+                  aAdd( aTranslated, nRule )
                ENDIF
-
-               aAdd( aTranslated, nRule )
 
                sLine   := sLeft + sPassed + sLine
                sPassed := ''
@@ -1118,7 +1113,10 @@ FUNCTION ProcessLine( sLine, aDefined, aTranslated, aCommanded, nLine, sSource )
                   ENDI
 
                   //? "Pending #", nPendingLines,  sLine, aPendingLines[nPendingLines]
-                  sLine := ''
+                  //sLine := ''
+                  sLine := aPendingLines[1]
+                  aDel( aPendingLines, 1 )
+                  nPendingLines--
                ENDIF
 
                //? "Lines Pending:", nPendingLines
@@ -1127,18 +1125,18 @@ FUNCTION ProcessLine( sLine, aDefined, aTranslated, aCommanded, nLine, sSource )
 
             ENDIF
 
-            IF bNewLine .AND. ( nRule := MatchRule( sToken, @sLine, aCommRules, aCommResults, .T., .T. ) ) > 0
+            IF sPassed == '' .AND. ( nRule := MatchRule( sToken, @sLine, aCommRules, aCommResults, .T., .T. ) ) > 0
 
                //? "COMMANDED: " + sLine
                //? '"' + sLeft +'"', '"' + sPassed + '"'
                //WAIT
 
-               IF aScan( aCommanded, nRule ) > 0
-                  Alert( "ERROR! Circularity detected in #command " + sLine )
-                  EXIT
+               IF sPassed == '' .AND. aScan( aCommanded, nRule ) > 0
+                  Alert( "Ciclic directive: #command " + sToken )
+                  BREAK
+               ELSE
+                  aAdd( aCommanded, nRule )
                ENDIF
-
-               aAdd( aCommanded, nRule )
 
                sLine := sLeft /*+ sPassed */ + sLine // Can't have sPassed for #COMMAND
 
@@ -1163,7 +1161,10 @@ FUNCTION ProcessLine( sLine, aDefined, aTranslated, aCommanded, nLine, sSource )
                   ENDI
 
                   //? "Pending #", nPendingLines,  sLine, aPendingLines[nPendingLines]
-                  sLine := ''
+                  //sLine := ''
+                  sLine := aPendingLines[1]
+                  aDel( aPendingLines, 1 )
+                  nPendingLines--
                ENDIF
 
                //? "Lines Pending:", nPendingLines
