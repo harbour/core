@@ -1188,6 +1188,7 @@ static int WorkMarkers( char ** ptrmp, char ** ptri, char * ptro, int * lenres, 
                     {
                       return 0;
                     }
+                    else lenreal = 0;
                 }
             }
         }
@@ -1386,9 +1387,11 @@ static int getExpReal( char * expreal, char ** ptri, BOOL prlist, int maxrez )
 
 static BOOL isExpres( char * stroka )
 {
+  int l1,l2;
   HB_TRACE(HB_TR_DEBUG, ("isExpres(%s)", stroka));
-
-  return strlen( stroka ) <= getExpReal( NULL, &stroka, FALSE, HB_PP_STR_SIZE );
+  l1 = strlen( stroka );
+  l2 = getExpReal( NULL, &stroka, FALSE, HB_PP_STR_SIZE );
+  return ( l1 <= l2 );
 }
 
 static BOOL TestOptional( char *ptr1, char *ptr2 )
@@ -2387,7 +2390,7 @@ static int ParsePragma( char * sLine )
                    pragma[ strlen( pragma ) - 1 ] == '-' )
                   hb_comp_iWarnings = IsOnOffSwitch( pragma, hb_comp_iWarnings != 0 ) ? 1 : 0;
                else
-               {  
+               {
                   /* There is -w<0,1,2,3> probably */
                   hb_comp_iWarnings = pragma[ 2 ] - '0';
                   if( hb_comp_iWarnings < 0 || hb_comp_iWarnings > 3 )

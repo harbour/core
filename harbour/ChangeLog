@@ -1,7 +1,11 @@
+19991207-20:25 GMT+3 Alexander Kresin
+  * source/pp/hbpp.c
+    * some changes, related to '@ ... clear to ...' problem
+
 Tue Dec 07 12:42:30 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* source/rdd/dbcmd.c: 
-	Got rid of two warnings about unused variables.
+        * source/rdd/dbcmd.c:
+        Got rid of two warnings about unused variables.
 
 19991207-16:29 GMT+1 Victor Szel <info@szelvesz.hu>
   * tests/regress/*
@@ -231,23 +235,23 @@ Tue Dec 07 12:42:30 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 Mon Nov 29 12:45:05 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* include/hbtrace.h: 
-	* source/common/hbtrace.c: 
-	* source/rtl/trace.c: 
-	* doc/tracing.txt: 
-	Modified the run-time trace interface functions, to simplify this
-	interface. Now there are just two C functions:
-	
-	  current_state = hb_tracestate(new_state);
-	  current_level = hb_tracelevel(new_level);
+        * include/hbtrace.h:
+        * source/common/hbtrace.c:
+        * source/rtl/trace.c:
+        * doc/tracing.txt:
+        Modified the run-time trace interface functions, to simplify this
+        interface. Now there are just two C functions:
 
-	and just two Clipper functions:
-	
-	  current_state := HB_TRACESTATE( [new_state] )
-	  current_level := HB_TRACELEVEL( [new_level] )
+          current_state = hb_tracestate(new_state);
+          current_level = hb_tracelevel(new_level);
 
-	Both check their argument, so passing a -1 to any of them will
-	return the appropriate current setting without modifying it.
+        and just two Clipper functions:
+
+          current_state := HB_TRACESTATE( [new_state] )
+          current_level := HB_TRACELEVEL( [new_level] )
+
+        Both check their argument, so passing a -1 to any of them will
+        return the appropriate current setting without modifying it.
 
 19991128-22:24 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/asort.prg
