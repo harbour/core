@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+     * Removed unused szTemp variable from hb_vmPushStringPcode.
+
+2002-01-28 22:52 UTC-0800 Brian Hays <bhays@abacuslaw.com>
+   * contrib/hbzlib/makefile2.bc
       * minor cleanup of paths.
 
    * source/rtl/persist.prg
