@@ -256,6 +256,7 @@ static ERRCODE adsGoTo( ADSAREAP pArea, ULONG ulRecNo )
    pArea->fValidBuffer = FALSE;
    AdsGotoRecord( pArea->hTable, ulRecNo );
    hb_adsCheckBofEof( pArea );
+HB_TRACE(HB_TR_ALWAYS, ("afterCheckBE: %lu %lu ", pArea->ulRecNo, ulRecNo  ));
 
    return SUCCESS;
 }
@@ -513,10 +514,10 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          break;
 
       case HB_IT_LOGICAL:
-         hb_itemPutL( pItem, pArea->pRecord[ pArea->pFieldOffset[ uiIndex ] ] == 'T' ||
-                      pArea->pRecord[ pArea->pFieldOffset[ uiIndex ] ] == 't' ||
-                      pArea->pRecord[ pArea->pFieldOffset[ uiIndex ] ] == 'Y' ||
-                      pArea->pRecord[ pArea->pFieldOffset[ uiIndex ] ] == 'y' );
+         hb_itemPutL( pItem, pArea->pRecord[ pArea->pFieldOffset[ uiIndex - 1 ] ] == 'T' ||
+                      pArea->pRecord[ pArea->pFieldOffset[ uiIndex - 1 ] ] == 't' ||
+                      pArea->pRecord[ pArea->pFieldOffset[ uiIndex - 1 ] ] == 'Y' ||
+                      pArea->pRecord[ pArea->pFieldOffset[ uiIndex - 1 ] ] == 'y' );
          break;
 
       case HB_IT_MEMO:
@@ -589,6 +590,7 @@ static ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 //      AdsGetRecordNum( pArea->hTable, ADS_IGNOREFILTERS,
 //         (UNSIGNED32 *)&(pArea->ulRecNo) );
       hb_adsCheckBofEof( pArea );
+// xxx can't call this here-- it may skip!!!
    }
 
    if( uiIndex > pArea->uiFieldCount || pArea->fEof )
@@ -598,6 +600,7 @@ static ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
    szText = pArea->pRecord + pArea->pFieldOffset[ uiIndex - 1 ];
    bError = TRUE;
    AdsGetFieldName( pArea->hTable, uiIndex, szName, &pusBufLen );
+
    switch( pField->uiType )
    {
       case HB_IT_STRING:
@@ -1151,7 +1154,7 @@ static ERRCODE adsOrderCreate( ADSAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
    }
 
    ulRetVal = AdsCreateIndex( pArea->hTable, pOrderInfo->abBagName,
-           pOrderInfo->atomBagName, (UCHAR*)hb_itemGetCPtr( pItem ), 
+           pOrderInfo->atomBagName, (UCHAR*)hb_itemGetCPtr( pItem ),
            ( pArea->lpdbOrdCondInfo && pArea->lpdbOrdCondInfo->abFor )? (UCHAR*)pArea->lpdbOrdCondInfo->abFor:(UCHAR*)"",
            (UCHAR*)"", ulOptions, &phIndex);
    if ( ulRetVal != AE_SUCCESS )

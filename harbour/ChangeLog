@@ -1,3 +1,8 @@
+2000-09-24 21:24 UTC+0800 Brian Hays <bhays@abacuslaw.com>
+   * contrib/rdd_ads/ads1.c
+      ! Fixed retrieval of logical fields
+         NOTICE!! before, logical fields returned incorrect values!
+
 2000-09-23 10:10 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/harbour.l
      * Removed TODO 4 Char abbreviation (done few weeks back).
