@@ -1,3 +1,7 @@
+19990718-20:45 CET Eddie Runia <eddie@runia.com>
+  - source/rdd/rdd.api
+    And removed again
+
 19990718-20:35 CET Jose Lalin
   * source/compiler/harbour.y; include/hberrors.h
     Argument checking for standard functions added. Thanks to Ryszard
