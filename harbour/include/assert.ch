@@ -45,7 +45,7 @@
 #else
 
 #command ASSERT( <exp> [, <msg>] )      =>                              ;
-         IF !(<exp>)                                                    ;
+         IF !( <exp> )                                                  ;
        ;    OutStd(                                                     ;
                     hb_OSNewLine() + ProcName( 0 ) +                    ;
                     "(" + LTrim( Str( ProcLine() ) ) + ")" +            ;
