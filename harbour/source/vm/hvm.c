@@ -75,6 +75,7 @@
 #endif
 
 #include <math.h>
+#include <time.h>
 
 #include "hbapi.h"
 #include "hbstack.h"
@@ -218,6 +219,9 @@ extern "C" POBJSYMBOLS hb_firstsymbol, hb_lastsymbol;
 extern POBJSYMBOLS hb_firstsymbol, hb_lastsymbol;
 #endif
 #endif
+
+extern void * hb_mthRequested( void ); /* profiler from classes.c */
+extern void hb_mthAddTime( void *, ULONG ); /* profiler from classes.c */
 
 /* virtual machine state */
 
@@ -2824,6 +2828,8 @@ void hb_vmDo( USHORT uiParams )
    PHB_ITEM pSelf;
    PHB_FUNC pFunc;
    BOOL bDebugPrevState;
+   ULONG ulClock = ( ULONG ) clock();
+   void * pMethod;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmDo(%hu)", uiParams));
 
@@ -2855,7 +2861,11 @@ void hb_vmDo( USHORT uiParams )
       }
 
       if( pFunc )
+      {
+         pMethod = hb_mthRequested();
          pFunc();
+         hb_mthAddTime( pMethod, clock() - ulClock );
+      }
       else if( pSym->szName[ 0 ] == '_' )
       {
          PHB_ITEM pArgsArray = hb_arrayFromStack( uiParams );
@@ -2901,6 +2911,8 @@ void hb_vmSend( USHORT uiParams )
    PHB_ITEM pSelf;
    PHB_FUNC pFunc;
    BOOL bDebugPrevState;
+   ULONG ulClock = ( ULONG ) clock();
+   void * pMethod;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmSend(%hu)", uiParams));
 
@@ -2928,7 +2940,9 @@ void hb_vmSend( USHORT uiParams )
 
             if( pFunc )
             {
+               pMethod = hb_mthRequested();
                pFunc();
+               hb_mthAddTime( pMethod, clock() - ulClock );
             }
             else if( pSym->szName[ 0 ] == '_' )
             {
