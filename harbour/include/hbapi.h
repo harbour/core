@@ -421,6 +421,7 @@ extern ULONG    hb_memvarGetPrivatesBase( void );
 extern void     hb_memvarSetPrivatesBase( ULONG );
 extern void     hb_memvarNewParameter( PHB_SYMB, HB_ITEM_PTR );
 extern char   * hb_memvarGetStrValuePtr( char *, ULONG * );
+extern void     hb_memvarCreateFromItem( PHB_ITEM pMemvar, BYTE bScope, PHB_ITEM pValue );
 
 /* console I/O subsystem */
 extern void     hb_conInit( void );

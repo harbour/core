@@ -1,3 +1,29 @@
+20000402-15:59 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   - source/macro/macro.c
+   * source/macro/Makefile
+   + source/vm/macro.c
+   * source/vm/Makefile
+   * makefile.bc
+   * makefile.vc
+     + Base macro support modul moved to the HVM
+
+   * source/vm/memvars.c
+   * include/hbapi.h
+     ! Uses hbcomp.h instead of the repeated VS_ macro definitions.
+     + hb_memvarCreateFromItem() made global.
+
+   * source/vm/memvars.c
+   + source/vm/memvclip.c
+   * source/vm/Makefile
+   * makefile.bc
+   * makefile.vc
+     * CA-Cl*pper compatbility internal and undocumented functions moved
+       to a separate file.  
+
+   * source/debug/debugger.prg
+     % static scope adjusted.
+
 20000402-14:35 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * makefile.vc

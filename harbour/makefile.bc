@@ -327,8 +327,7 @@ MACRO_LIB_OBJS = \
    $(OBJ_DIR)\macrol.obj \
    $(OBJ_DIR)\macroa.obj \
    $(OBJ_DIR)\macrob.obj \
-   $(OBJ_DIR)\macroc.obj \
-   $(OBJ_DIR)\macro.obj
+   $(OBJ_DIR)\macroc.obj
 
 #
 # RDD.LIB rules
@@ -414,10 +413,12 @@ VM_LIB_OBJS = \
    $(OBJ_DIR)\initexit.obj \
    $(OBJ_DIR)\initsymb.obj \
    $(OBJ_DIR)\itemapi.obj \
+   $(OBJ_DIR)\macro.obj \
    $(OBJ_DIR)\maindll.obj \
    $(OBJ_DIR)\mainstd.obj \
    $(OBJ_DIR)\mainwin.obj \
    $(OBJ_DIR)\memvars.obj \
+   $(OBJ_DIR)\memvclip.obj \
    $(OBJ_DIR)\pcount.obj \
    $(OBJ_DIR)\proc.obj \
    $(OBJ_DIR)\pvalue.obj \
@@ -841,6 +842,10 @@ $(OBJ_DIR)\itemapi.obj : $(VM_DIR)\itemapi.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(VM_LIB) -+$@,,
 
+$(OBJ_DIR)\macro.obj : $(VM_DIR)\macro.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(VM_LIB) -+$@,,
+
 $(OBJ_DIR)\maindll.obj : $(VM_DIR)\maindll.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(VM_LIB) -+$@,,
@@ -854,6 +859,10 @@ $(OBJ_DIR)\mainwin.obj : $(VM_DIR)\mainwin.c
    tlib $(VM_LIB) -+$@,,
 
 $(OBJ_DIR)\memvars.obj : $(VM_DIR)\memvars.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(VM_LIB) -+$@,,
+
+$(OBJ_DIR)\memvclip.obj : $(VM_DIR)\memvclip.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(VM_LIB) -+$@,,
 
@@ -1663,10 +1672,6 @@ $(OBJ_DIR)\macroy.obj : $(OBJ_DIR)\macroy.c
 
 $(OBJ_DIR)\macrol.obj : $(OBJ_DIR)\macrol.c
    $(CC) $(CLIBFLAGS) -I$(OBJ_DIR) -o$@ $**
-   tlib $(MACRO_LIB) -+$@,,
-
-$(OBJ_DIR)\macro.obj : $(MACRO_DIR)\macro.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(MACRO_LIB) -+$@,,
 
 $(OBJ_DIR)\macroa.obj : $(MACRO_DIR)\macroa.c

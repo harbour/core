@@ -33,7 +33,7 @@ LEX_HEADERS=\
 	hbdefs.h \
 	hbmacro.h \
 
-C_SOURCES=macro.c \
+C_SOURCES=\
 	macroa.c \
 	macrob.c \
 	macroc.c \

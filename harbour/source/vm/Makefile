@@ -19,8 +19,10 @@ C_SOURCES=\
         initexit.c   \
 	initsymb.c   \
         itemapi.c    \
+        macro.c      \
         main.c       \
         memvars.c    \
+        memvclip.c   \
         pcount.c     \
         proc.c       \
         pvalue.c     \

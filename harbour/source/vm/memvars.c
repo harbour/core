@@ -40,10 +40,7 @@
  * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  *    __MVSAVE()
  *    __MVRESTORE() (Thanks to Dave Pearson and Jo French for the original
- *                   Clipper function (FReadMem()) to read .MEM files)
- *    __MSAVE()
- *    __MRESTORE()
- *    __QQPUB()
+ *                   Clipper function (FReadMem()) to read .mem files)
  *
  * See doc/license.txt for licensing terms.
  *
@@ -56,11 +53,9 @@
 #include "hbapierr.h"
 #include "hbapifs.h" /* for __MVSAVE()/__MVRESTORE() */
 #include "hbdate.h" /* for __MVSAVE()/__MVRESTORE() */
+#include "hbcomp.h" /* for VS_* macros */
 #include "error.ch"
 #include "hbmemvar.ch"
-
-#define VS_PRIVATE     64
-#define VS_PUBLIC     128
 
 static PHB_DYNS * s_privateStack  = NULL;
 static ULONG s_privateStackSize = 0;
@@ -83,11 +78,10 @@ struct mv_PUBLIC_var_info
    HB_DYNS_PTR pDynSym;
 };
 
-
-static void hb_memvarCreateFromItem( PHB_ITEM, BYTE, PHB_ITEM );
 static void hb_memvarCreateFromDynSymbol( PHB_DYNS, BYTE, PHB_ITEM );
 static void hb_memvarAddPrivate( PHB_DYNS );
 static HB_DYNS_PTR hb_memvarFindSymbol( HB_ITEM_PTR );
+
 void hb_memvarsInit( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_memvarsInit()"));
@@ -101,7 +95,6 @@ void hb_memvarsInit( void )
    s_privateStackSize = TABLE_INITHB_VALUE;
    s_privateStackCnt  = s_privateStackBase = 0;
 }
-
 
 void hb_memvarsRelease( void )
 {
@@ -135,7 +128,6 @@ HB_VALUE_PTR *hb_memvarValueBaseAddress( void )
 {
    return &s_globalTable;
 }
-
 
 /*
  * This function creates new global value.
@@ -572,7 +564,7 @@ char * hb_memvarGetStrValuePtr( char * szVarName, ULONG *pulLen )
  *          or NULL
  *
  */
-static void hb_memvarCreateFromItem( PHB_ITEM pMemvar, BYTE bScope, PHB_ITEM pValue )
+void hb_memvarCreateFromItem( PHB_ITEM pMemvar, BYTE bScope, PHB_ITEM pValue )
 {
    PHB_DYNS pDynVar = NULL;
 
@@ -939,16 +931,6 @@ HB_FUNC( __MVPUBLIC )
          }
       }
    }
-}
-
-/* NOTE: Undocumented Clipper internal function */
-
-HB_FUNC( __QQPUB )
-{
-   PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
-
-   if( pItem )
-      hb_memvarCreateFromItem( pItem, VS_PUBLIC, NULL );
 }
 
 HB_FUNC( __MVPRIVATE )
@@ -1504,32 +1486,5 @@ HB_FUNC( __MVRESTORE )
    }
    else
       hb_errRT_BASE( EG_ARG, 2007, NULL, "__MRESTORE" );
-}
-
-/* CA-Clipper 5.2e compatibility functions. */
-
-HB_FUNC( __MCLEAR )
-{
-   HB_FUNCNAME( __MVCLEAR )();
-}
-
-HB_FUNC( __MRELEASE )
-{
-   HB_FUNCNAME( __MVRELEASE )();
-}
-
-HB_FUNC( __MXRELEASE )
-{
-   HB_FUNCNAME( __MVXRELEASE )();
-}
-
-HB_FUNC( __MSAVE )
-{
-   HB_FUNCNAME( __MVSAVE )();
-}
-
-HB_FUNC( __MRESTORE )
-{
-   HB_FUNCNAME( __MVRESTORE )();
 }
 

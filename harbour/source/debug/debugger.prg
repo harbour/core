@@ -49,9 +49,9 @@
 
 static s_oDebugger
 static s_lExit := .F.
-static s_lEnabled := .t.
 
 function AltD( nAction )
+   static s_lEnabled := .t.
 
    do case
       case nAction == nil
