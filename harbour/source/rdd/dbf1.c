@@ -138,7 +138,7 @@ static BOOL hb_ndtoa( double dValue, char * szBuffer, USHORT uiLen, USHORT uiDec
    if( uiDec > 15 )
       uiDec = 15;
    dAbsNumber = ( dValue > 0 ) ? dValue : - dValue;
-   iCount = uiLen - uiDec - 1;
+   iCount = uiLen - uiDec - ( ( dValue < 0 ) ? 2 : 1 );
    while( iCount-- > 0 )
       dAbsNumber /= 10;
 
@@ -148,7 +148,7 @@ static BOOL hb_ndtoa( double dValue, char * szBuffer, USHORT uiLen, USHORT uiDec
       return FALSE;
    }   
    szEndChar = szBuffer[ uiLen ];
-   sprintf( szBuffer, "%*.*f", uiLen - uiDec - 1, uiDec, dValue );
+   sprintf( szBuffer, "%*.*f", uiLen, uiDec, dValue );
    szBuffer[ uiLen ] = szEndChar;
    return TRUE;
 }
@@ -211,9 +211,10 @@ static ERRCODE hb_dbfReadBuffer( AREAP pArea, ULONG lRecNo )
        !hb_dbfUpdateRecord( pArea, pArea->lpExtendInfo->lRecNo ) )
       return FAILURE;
 
-   hb_fsSeek( pArea->lpFileInfo->hFile, pArea->lpExtendInfo->uiHeaderLen +
-              ( lRecNo - 1 ) * pArea->lpExtendInfo->uiRecordLen, FS_SET );
-   if( hb_fsRead( pArea->lpFileInfo->hFile, pArea->lpExtendInfo->bRecord,
+   if( hb_fsSeek( pArea->lpFileInfo->hFile, pArea->lpExtendInfo->uiHeaderLen +
+                  ( lRecNo - 1 ) * pArea->lpExtendInfo->uiRecordLen, FS_SET ) !=
+       pArea->lpExtendInfo->uiHeaderLen + ( lRecNo - 1 ) * pArea->lpExtendInfo->uiRecordLen ||
+       hb_fsRead( pArea->lpFileInfo->hFile, pArea->lpExtendInfo->bRecord,
                   pArea->lpExtendInfo->uiRecordLen ) != pArea->lpExtendInfo->uiRecordLen )
    {
       memset( pArea->lpExtendInfo->bRecord, ' ', pArea->lpExtendInfo->uiRecordLen );
@@ -605,10 +606,26 @@ static ERRCODE GoTo( AREAP pArea, ULONG lRecNo )
 
 static ERRCODE GoToId( AREAP pArea, PHB_ITEM pItem )
 {
-   HB_SYMBOL_UNUSED( pArea );
-   HB_SYMBOL_UNUSED( pItem );
-   printf( "Calling DBF: GoToId()\n" );
-   return SUCCESS;
+   PHB_ITEM pError;
+   ULONG lRecNo;
+
+   if( pItem->type & IT_NUMERIC )
+   {
+      lRecNo = hb_itemGetNL( pItem );
+      if( lRecNo == 0 )
+         lRecNo = pArea->lpExtendInfo->lRecNo;
+      return SELF_GOTO( pArea, lRecNo );
+   }
+   else
+   {
+      pError = hb_errNew();
+      hb_errPutGenCode( pError, EG_DATATYPE );
+      hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_DATATYPE ) );
+      hb_errPutSubCode( pError, 1020 );
+      SELF_ERROR( pArea, pError );
+      hb_errRelease( pError );
+      return FAILURE;
+   }
 }
 
 static ERRCODE GoTop( AREAP pArea )

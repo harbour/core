@@ -765,7 +765,7 @@ static void hb_vmAliasPop( void )
       case IT_SYMBOL:
          /* Alias was specified using alias identifier, for example: al->field
           */
-         hb_rddSelectWorkAreaNumber( pItem->item.asSymbol.value->pDynSym->hArea );
+         hb_rddSelectWorkAreaSymbol( pItem->item.asSymbol.value );
          pItem->type = IT_NIL;
          break;
 
@@ -819,7 +819,7 @@ static void hb_vmAliasSwap( void )
       case IT_SYMBOL:
          /* Alias was specified using alias identifier, for example: al->field
           */
-         hb_rddSelectWorkAreaNumber( pWorkArea->item.asSymbol.value->pDynSym->hArea );
+         hb_rddSelectWorkAreaSymbol( pItem->item.asSymbol.value );
          break;
 
       case IT_STRING:
@@ -1735,7 +1735,7 @@ static void hb_vmPopAliasedField( PHB_SYMB pSym )
       case IT_SYMBOL:
          /* Alias was specified using alias identifier, for example: al->field
           */
-         hb_rddSelectWorkAreaNumber( pAlias->item.asSymbol.value->pDynSym->hArea );
+         hb_rddSelectWorkAreaSymbol( pAlias->item.asSymbol.value );
          pAlias->type = IT_NIL;
          break;
 
@@ -1937,7 +1937,7 @@ static void hb_vmPushAliasedField( PHB_SYMB pSym )
       case IT_SYMBOL:
          /* Alias was specified using alias identifier, for example: al->field
           */
-         hb_rddSelectWorkAreaNumber( pAlias->item.asSymbol.value->pDynSym->hArea );
+         hb_rddSelectWorkAreaSymbol( pAlias->item.asSymbol.value );
          pAlias->type = IT_NIL;
          break;
 

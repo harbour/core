@@ -13,6 +13,7 @@ typedef USHORT ERRCODE;
 
 extern int  hb_rddGetCurrentWorkAreaNumber( void );
 extern void hb_rddSelectWorkAreaNumber( int iArea );
+extern void hb_rddSelectWorkAreaSymbol( PHB_SYMB pSymAlias );
 extern void hb_rddGetFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol );
 extern void hb_rddPutFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol );
 

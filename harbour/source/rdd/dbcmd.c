@@ -641,6 +641,14 @@ void hb_rddSelectWorkAreaNumber( int iArea )
    pCurrArea = 0;               /* Selected WorkArea is closed */
 }
 
+void hb_rddSelectWorkAreaSymbol( PHB_SYMB pSymAlias )
+{
+   if( pSymAlias->pDynSym->hArea )
+      hb_rddSelectWorkAreaNumber( pSymAlias->pDynSym->hArea );
+   else
+      hb_errRT_BASE( EG_NOALIAS, 1002, 0, pSymAlias->szName );
+}
+
 void hb_rddSelectWorkAreaAlias( char * szName )
 {
    PHB_DYNS pSymArea;
@@ -671,7 +679,7 @@ void hb_rddGetFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
       pField = ( ( AREAP ) pCurrArea->pArea )->lpFields;
       while( pField )
       {
-         if( ( ( PHB_DYNS ) pField->sym )->pSymbol == pFieldSymbol )
+         if( ( PHB_DYNS ) pField->sym == pFieldSymbol->pDynSym )
          {
             SELF_GETVALUE( ( AREAP ) pCurrArea->pArea, uiField, pItem );
             return;
@@ -694,7 +702,7 @@ void hb_rddPutFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
       pField = ( ( AREAP ) pCurrArea->pArea )->lpFields;
       while( pField )
       {
-         if( ( ( PHB_DYNS ) pField->sym )->pSymbol == pFieldSymbol )
+         if( ( PHB_DYNS ) pField->sym == pFieldSymbol->pDynSym )
          {
             SELF_PUTVALUE( ( AREAP ) pCurrArea->pArea, uiField, pItem );
             return;
