@@ -51,9 +51,10 @@ typedef struct
 
 typedef DBFHEADER * LPDBFHEADER;
 
+
 typedef struct
 {
-   LONG  lNextBlock;
+   ULONG  lNextBlock;
 } MEMOHEADER;
 
 typedef MEMOHEADER * LPMEMOHEADER;
@@ -73,6 +74,16 @@ typedef struct
 typedef DBFFIELD * LPDBFFIELD;
 
 
+typedef struct _DBFMEMO
+{
+   BOOL   fChanged;             /* Memo status */
+   BYTE * pData;                /* Memo data */
+   USHORT uiLen;                /* Len of data */
+} DBFMEMO;
+
+typedef DBFMEMO * LPDBFMEMO;
+
+
 HARBOUR HB__DBF( void );
 HARBOUR HB_DBF_GETFUNCTABLE( void );
 
@@ -87,6 +98,7 @@ HB_INIT_SYMBOLS_END( dbf1__InitSymbols )
 #define LOCK_START   0x40000000L
 #define LOCK_FILE    0x3FFFFFFFL
 #define MEMO_BLOCK   512
+
 
 static BOOL hb_nltoa( LONG lValue, char * szBuffer, USHORT uiLen )
 {
@@ -190,9 +202,63 @@ static BOOL hb_dbfUpdateHeader( AREAP pArea, ULONG lRecCount )
    return TRUE;
 }
 
+static BOOL hb_dbfWriteMemo( AREAP pArea, LPDBFMEMO pMemo, ULONG * lNewRecNo )
+{
+   USHORT uiNumBlocks, uiBytesRead, uiRead, uiCount;
+   BYTE szBuffer[ MEMO_BLOCK ];
+   MEMOHEADER pMemoHeader;
+
+   uiNumBlocks = ( pMemo->uiLen + MEMO_BLOCK - 1 ) / MEMO_BLOCK;
+   if( * lNewRecNo > 0 )
+   {
+      uiBytesRead = 0;
+      hb_fsSeek( pArea->lpFileInfo->pNext->hFile, * lNewRecNo * MEMO_BLOCK, FS_SET );
+      do
+      {
+         uiBytesRead += MEMO_BLOCK;
+         uiRead = hb_fsRead( pArea->lpFileInfo->pNext->hFile, szBuffer, MEMO_BLOCK );
+         if( !uiRead )
+            return FALSE;
+         for( uiCount = 0; uiCount < uiRead; uiCount++ )
+            if( szBuffer[ uiCount ] == 0x1A )
+               break;
+      } while( uiCount >= MEMO_BLOCK && szBuffer[ uiCount ] != 0x1A );
+      if( uiBytesRead <= pMemo->uiLen )        /* Not room for data */
+         * lNewRecNo = 0;
+   }
+
+   if( * lNewRecNo == 0 )                    /* Add an entry at eof */
+   {
+      hb_fsSeek( pArea->lpFileInfo->pNext->hFile, 0, FS_SET );
+      if( hb_fsRead( pArea->lpFileInfo->pNext->hFile, ( BYTE * ) &pMemoHeader,
+                     sizeof( MEMOHEADER ) ) != sizeof( MEMOHEADER ) )
+         return FALSE;
+      
+      * lNewRecNo = pMemoHeader.lNextBlock;
+      pMemoHeader.lNextBlock = * lNewRecNo + uiNumBlocks;
+      hb_fsSeek( pArea->lpFileInfo->pNext->hFile, 0, FS_SET );
+      hb_fsWrite( pArea->lpFileInfo->pNext->hFile, ( BYTE * ) &pMemoHeader,
+                  sizeof( MEMOHEADER ) );
+   }
+
+   hb_fsSeek( pArea->lpFileInfo->pNext->hFile, * lNewRecNo * MEMO_BLOCK, FS_SET );
+   if( hb_fsWrite( pArea->lpFileInfo->pNext->hFile, pMemo->pData,
+                  pMemo->uiLen ) != pMemo->uiLen )
+      return FALSE;
+
+   szBuffer[ 0 ] = 0x1A;
+   if( hb_fsWrite( pArea->lpFileInfo->pNext->hFile, szBuffer, 1 ) != 1 )
+      return FALSE;
+
+   return TRUE;
+}
+
 static BOOL hb_dbfUpdateRecord( AREAP pArea, ULONG lRecNo )
 {
-   ULONG lRecCount;
+   ULONG lRecCount, lNewRecNo;
+   USHORT uiCount, uiOffset;
+   LPFIELD pField;
+   BYTE * szText, szEndChar;
 
    if( SELF_RECCOUNT( pArea, &lRecCount ) == FAILURE )
       return FALSE;
@@ -203,6 +269,39 @@ static BOOL hb_dbfUpdateRecord( AREAP pArea, ULONG lRecNo )
                  ( lRecNo - 1 ) * pArea->lpExtendInfo->uiRecordLen, FS_SET );
       if( pArea->lpFileInfo->fAppend )
          lRecCount = lRecNo;
+      if( pArea->lpExtendInfo->fHasMemo )
+      {
+         uiOffset = 1;
+         for( uiCount = 0; uiCount < pArea->uiFieldCount; uiCount++ )
+         {
+            pField = pArea->lpFields + uiCount;
+            if( pField->uiType == 'C' )
+               uiOffset += pField->uiLen + ( ( USHORT ) pField->uiDec << 8 );
+            else
+            {
+               if( pField->uiType == 'M' && ( ( LPDBFMEMO ) pField->memo )->fChanged )
+               {
+                  szText = pArea->lpExtendInfo->bRecord + uiOffset;
+                  if( !( ( LPDBFMEMO ) pField->memo )->pData )
+                     memset( szText, ' ', pField->uiLen );
+                  else
+                  {
+                     szEndChar = * ( szText + pField->uiLen );
+                     * ( szText + pField->uiLen ) = 0;
+                     lRecNo = atol( ( char * ) szText );
+                     lNewRecNo = lRecNo;
+                     if( !hb_dbfWriteMemo( pArea, ( LPDBFMEMO ) pField->memo, &lNewRecNo ) )
+                        return FALSE;
+                     if( lNewRecNo != lRecNo )
+                        hb_nltoa( lNewRecNo, ( char * ) szText, pField->uiLen );
+                     * ( szText + pField->uiLen ) = szEndChar;
+                  }
+                  ( ( LPDBFMEMO ) pField->memo )->fChanged = FALSE;
+               }
+               uiOffset += pField->uiLen;
+            }
+         }
+      }
       if( hb_fsWrite( pArea->lpFileInfo->hFile, pArea->lpExtendInfo->bRecord,
                       pArea->lpExtendInfo->uiRecordLen ) != pArea->lpExtendInfo->uiRecordLen ||
          !hb_dbfUpdateHeader( pArea, lRecCount ) )
@@ -212,8 +311,86 @@ static BOOL hb_dbfUpdateRecord( AREAP pArea, ULONG lRecNo )
    return TRUE;
 }
 
+static void hb_dbfClearBuffer( AREAP pArea )
+{
+   LPFIELD pField;
+   USHORT uiCount;
+
+   memset( pArea->lpExtendInfo->bRecord, ' ', pArea->lpExtendInfo->uiRecordLen );
+
+   if( pArea->lpExtendInfo->fHasMemo )
+   {
+      for( uiCount = 0; uiCount < pArea->uiFieldCount; uiCount++ )
+      {
+         pField = pArea->lpFields + uiCount;
+         if( pField->memo )
+         {
+            if( ( ( LPDBFMEMO ) pField->memo )->pData )
+            {
+               hb_xfree( ( ( LPDBFMEMO ) pField->memo )->pData );
+               memset( pField->memo, 0, sizeof( DBFMEMO ) );
+            }
+         }
+      }
+   }
+}
+
+static void hb_dbfReadMemo( AREAP pArea, LPDBFMEMO pMemo, ULONG lMemoBlock )
+{
+   USHORT uiBytesRead, uiMaxRead, uiRead;
+   BYTE * pData;
+
+   hb_fsSeek( pArea->lpFileInfo->pNext->hFile, lMemoBlock, FS_SET );
+   uiBytesRead = 0;
+   uiMaxRead = pMemo->uiLen;
+   for(;;)
+   {
+      if( uiMaxRead < MEMO_BLOCK )
+      {
+         pData = ( BYTE * ) hb_xgrab( uiBytesRead + MEMO_BLOCK + 1 );
+         if( pMemo->uiLen > 0 )
+         {
+            memcpy( pData, pMemo->pData, pMemo->uiLen );
+            hb_xfree( pMemo->pData );
+         }
+         pMemo->pData = pData;
+         pMemo->uiLen = uiBytesRead + MEMO_BLOCK + 1;
+         uiMaxRead = MEMO_BLOCK;
+      }
+      uiRead = hb_fsRead( pArea->lpFileInfo->pNext->hFile,
+                          pMemo->pData + uiBytesRead, uiMaxRead );
+      if( !uiRead )
+         return;
+
+      for(; uiRead > 0; uiBytesRead++, uiRead-- )
+      {
+         if( pMemo->pData[ uiBytesRead ] == 0x1A )
+         {
+            if( uiBytesRead > 0 )
+            {
+               pData = ( BYTE * ) hb_xgrab( uiBytesRead + 1 );
+               memcpy( pData, pMemo->pData, uiBytesRead );
+               pData[ uiBytesRead ] = 0;
+            }
+            else
+               pData = 0;
+            hb_xfree( pMemo->pData );
+            pMemo->pData = pData;
+            pMemo->uiLen = uiBytesRead;
+            return;
+         }
+      }
+      uiMaxRead = 0;
+   }
+}
+
 static ERRCODE hb_dbfReadBuffer( AREAP pArea, ULONG lRecNo )
 {
+   LPFIELD pField;
+   USHORT uiCount, uiOffset;
+   BYTE * szText, szEndChar;
+   ULONG lMemoBlock;
+
    if( pArea->lpExtendInfo->fRecordChanged &&
        !hb_dbfUpdateRecord( pArea, pArea->lpExtendInfo->lRecNo ) )
       return FAILURE;
@@ -224,10 +401,43 @@ static ERRCODE hb_dbfReadBuffer( AREAP pArea, ULONG lRecNo )
        hb_fsRead( pArea->lpFileInfo->hFile, pArea->lpExtendInfo->bRecord,
                   pArea->lpExtendInfo->uiRecordLen ) != pArea->lpExtendInfo->uiRecordLen )
    {
+      hb_dbfClearBuffer( pArea );
       memset( pArea->lpExtendInfo->bRecord, ' ', pArea->lpExtendInfo->uiRecordLen );
       pArea->lpExtendInfo->bRecord[ pArea->lpExtendInfo->uiRecordLen ] = 0;
       return FAILURE;
    }
+
+   if( pArea->lpExtendInfo->fHasMemo && pArea->lpFileInfo->pNext )
+   {
+      pField = pArea->lpFields;
+      uiOffset = 1;
+      for( uiCount = 0; uiCount < pArea->uiFieldCount; uiCount++ )
+      {
+         if( pField->uiType == 'C' )
+            uiOffset += pField->uiLen + ( ( USHORT ) pField->uiDec << 8 );
+         else
+         {
+            if( pField->uiType == 'M' )
+            {
+               szText = pArea->lpExtendInfo->bRecord + uiOffset;
+               szEndChar = * ( szText + pField->uiLen );
+               * ( szText + pField->uiLen ) = 0;
+               lMemoBlock = atol( ( char * ) szText ) * MEMO_BLOCK;
+               * ( szText + pField->uiLen ) = szEndChar;
+               if( lMemoBlock > 0 )
+                  hb_dbfReadMemo( pArea, ( LPDBFMEMO ) pField->memo, lMemoBlock );
+               else if( ( ( LPDBFMEMO ) pField->memo )->pData )
+               {
+                  hb_xfree( ( ( LPDBFMEMO ) pField->memo )->pData );
+                  memset( pField->memo, 0, sizeof( DBFMEMO ) );
+               }
+            }
+            uiOffset += pField->uiLen;
+         }
+         pField = pField->lpfNext;
+      }
+   }
+
    return SUCCESS;
 }
 
@@ -399,6 +609,24 @@ static RDDFUNCS dbfSuper = { 0 };
  * -- DBF METHODS --
  */
 
+static ERRCODE AddField( AREAP pArea, LPDBFIELDINFO pFieldInfo )
+{
+   LPFIELD pField;
+
+   if( SUPER_ADDFIELD( pArea, pFieldInfo ) == SUCCESS )
+   {
+      if( pArea->lpExtendInfo->fHasMemo )
+      {
+         pField = pArea->lpFields + pArea->uiFieldCount - 1;
+         pField->memo = ( void * ) hb_xgrab( sizeof( DBFMEMO ) );
+         memset( pField->memo, 0, sizeof( DBFMEMO ) );
+      }
+      return SUCCESS;
+   }
+
+   return FAILURE;
+}
+
 static ERRCODE Append( AREAP pArea, BOOL bUnLockAll )
 {
    ULONG lRecCount, lRecNo;
@@ -421,7 +649,7 @@ static ERRCODE Append( AREAP pArea, BOOL bUnLockAll )
    lRecCount++;
    lRecNo = lRecCount;
    pArea->fEof = FALSE;
-   memset( pArea->lpExtendInfo->bRecord, ' ', pArea->lpExtendInfo->uiRecordLen );
+   hb_dbfClearBuffer( pArea );
    pArea->lpExtendInfo->fRecordChanged = TRUE;
    pArea->lpFileInfo->fAppend = TRUE;
    if( !hb_dbfUpdateRecord( pArea, lRecNo ) )
@@ -598,6 +826,14 @@ static ERRCODE GetValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          else
             hb_itemPutL( pItem, 0 );
          break;
+
+      case 'M':
+         if( ( ( LPDBFMEMO ) pField->memo )->pData )
+            hb_itemPutCL( pItem, ( char * ) ( ( LPDBFMEMO ) pField->memo )->pData,
+                          ( ( LPDBFMEMO ) pField->memo )->uiLen );
+         else
+            hb_itemPutC( pItem, "" );
+         break;
    }
    
    return SUCCESS;
@@ -759,6 +995,37 @@ static ERRCODE Open( AREAP pArea, LPDBOPENINFO pOpenInfo )
    return SELF_GOTOP( pArea );
 }
 
+static ERRCODE OpenMemFile( AREAP pArea, LPDBOPENINFO pOpenInfo )
+{
+   LPFILEINFO lpMemInfo;
+   LPMEMOHEADER pMemoHeader;
+   USHORT uiFlags;
+
+   lpMemInfo = ( LPFILEINFO ) hb_xgrab( sizeof( FILEINFO ) );
+   memset( lpMemInfo, 0, sizeof( FILEINFO ) );
+   lpMemInfo->hFile = FS_ERROR;
+   pArea->lpFileInfo->pNext = lpMemInfo;
+
+   uiFlags = pOpenInfo->fReadonly ? FO_READ : FO_READWRITE;
+   uiFlags |= pOpenInfo->fShared ? FO_DENYNONE : FO_EXCLUSIVE;
+   lpMemInfo->hFile = hb_fsOpen( pOpenInfo->abName, uiFlags );
+
+   if( lpMemInfo->hFile == FS_ERROR )
+      return FAILURE;
+
+   pMemoHeader = ( LPMEMOHEADER ) hb_xgrab( MEMO_BLOCK + 1 );
+   if( hb_fsRead( lpMemInfo->hFile, ( BYTE * ) pMemoHeader,
+                  MEMO_BLOCK + 1 ) != MEMO_BLOCK + 1 )
+   {
+      hb_xfree( pMemoHeader );
+      return FAILURE;
+   }
+   pArea->lpExtendInfo->lNextBlock = pMemoHeader->lNextBlock;
+   hb_xfree( pMemoHeader );
+
+   return SELF_GOTOP( pArea );
+}
+
 static ERRCODE PutValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 {
    LPFIELD pField;
@@ -853,6 +1120,35 @@ static ERRCODE PutValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
                *szText = 'T';
             else
                *szText = 'F';
+            bError = FALSE;
+         }
+         break;
+
+      case 'M':
+         if( pItem->type & IT_STRING )
+         {
+            uiCount = pItem->item.asString.length;
+            if( ( ( LPDBFMEMO ) pField->memo )->uiLen < uiCount )
+            {
+               if( ( ( LPDBFMEMO ) pField->memo )->pData )
+                  hb_xfree( ( ( LPDBFMEMO ) pField->memo )->pData );
+               ( ( LPDBFMEMO ) pField->memo )->pData = ( BYTE * ) hb_xgrab( uiCount + 1 );
+            }
+            ( ( LPDBFMEMO ) pField->memo )->uiLen = uiCount;
+            if( uiCount > 0 )
+            {
+               memcpy( ( ( LPDBFMEMO ) pField->memo )->pData, pItem->item.asString.value, uiCount );
+               ( ( LPDBFMEMO ) pField->memo )->pData[ uiCount ] = 0;
+            }
+            else
+            {
+               if( ( ( LPDBFMEMO ) pField->memo )->pData )
+               {
+                  hb_xfree( ( ( LPDBFMEMO ) pField->memo )->pData );
+                  memset( pField->memo, 0, sizeof( DBFMEMO ) );
+               }
+            }
+            ( ( LPDBFMEMO ) pField->memo )->fChanged = TRUE;
             bError = FALSE;
          }
          break;
@@ -975,7 +1271,7 @@ static ERRCODE ReadDBHeader( AREAP pArea )
    }
    hb_xfree( szBuffer );
    pArea->lpExtendInfo->bRecord = ( BYTE * ) hb_xgrab( pArea->lpExtendInfo->uiRecordLen + 1 );
-   memset( pArea->lpExtendInfo->bRecord, ' ', pArea->lpExtendInfo->uiRecordLen );
+   hb_dbfClearBuffer( pArea );
    pArea->lpExtendInfo->bRecord[ pArea->lpExtendInfo->uiRecordLen ] = 0;
    return SUCCESS;
 }
@@ -1023,6 +1319,27 @@ static ERRCODE RecNo( AREAP pArea, PHB_ITEM pRecNo )
 {
    hb_itemPutNL( pRecNo, pArea->lpExtendInfo->lRecNo );
    return SUCCESS;
+}
+
+static ERRCODE Release( AREAP pArea )
+{
+   USHORT  uiCount;
+   LPFIELD pField;
+
+   if( pArea->lpExtendInfo->fHasMemo )
+   {
+      for( uiCount = 0; uiCount < pArea->uiFieldCount; uiCount++ )
+      {
+         pField = pArea->lpFields + uiCount;
+         if( pField->memo )
+         {
+            if( ( ( LPDBFMEMO ) pField->memo )->pData )
+               hb_xfree( ( ( LPDBFMEMO ) pField->memo )->pData );
+            hb_xfree( pField->memo );
+         }
+      }
+   }
+   return SUPER_RELEASE( pArea );
 }
 
 static ERRCODE SkipRaw( AREAP pArea, LONG lToSkip )
@@ -1144,7 +1461,7 @@ static RDDFUNCS dbfTable = { 0,               /* Super Bof */
                              0,               /* Super Skip */
                              0,               /* Super SkipFilter */
                              SkipRaw,
-                             0,               /* Super AddField */
+                             AddField,
                              Append,
                              0,               /* Super CreateFields */
                              DeleteRec,
@@ -1167,7 +1484,7 @@ static RDDFUNCS dbfTable = { 0,               /* Super Bof */
                              Info,
                              0,               /* Super NewArea */
                              Open,
-                             0,               /* Super Release */
+                             Release,
                              0,               /* Super StructSize */
                              0,               /* Super SysName */
                              0,               /* Super Error */
@@ -1175,7 +1492,7 @@ static RDDFUNCS dbfTable = { 0,               /* Super Bof */
                              Lock,
                              UnLock,
                              CreateMemFile,
-                             /*0, */              /* Super OpenMemFile */
+                             OpenMemFile,
                              ReadDBHeader,
                              WriteDBHeader
                            };

@@ -1,3 +1,10 @@
+19990831-02:37 GMT+1 Bruno Cantero <bruno@issnet.net>
+   * include/rddapi.h
+     source/rdd/dbcmd.c
+     source/rdd/dbf1.c
+     tests/working/testdbf.prg
+     * Full support for memo fields.
+
 19990830-19:00 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/filesys.c

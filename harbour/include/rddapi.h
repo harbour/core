@@ -195,6 +195,7 @@ typedef struct
    BYTE *   bRecord;         /* Buffer of the data */
    BOOL     fHasMemo;        /* Work Area with Memo fields */
    ULONG    lRecNo;          /* Current record */
+   ULONG    lNextBlock;      /* Next block for memos */
    BOOL     fExclusive;      /* Share the file */
    BOOL     fReadOnly;       /* Read only file */
    BYTE     bYear;           /* Last update */
@@ -484,6 +485,7 @@ typedef struct _FIELD
    USHORT  uiDec;            /* Decimal length */
    USHORT  uiArea;           /* Area this field resides in */
    void *  sym;              /* Symbol that represents the field */
+   void *  memo;             /* Pointer to memo data */
    struct _FIELD *lpfNext;   /* The next field in the list */
 } FIELD;
 
@@ -712,7 +714,9 @@ typedef struct _RDDFUNCS
    DBENTRYP_VP   createMemFile;
 #if 0
    DBENTRYP_SVPB getValueFile;
+#endif
    DBENTRYP_VP   openMemFile;
+#if 0
    DBENTRYP_SVP  putValueFile;
 #endif
 

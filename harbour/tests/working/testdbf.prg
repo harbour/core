@@ -8,14 +8,23 @@ function main()
 		      { "NUMERIC",   "N",  8, 0 }, ;
 		      { "DOUBLE",    "N",  8, 2 }, ;
 		      { "DATE",      "D",  8, 0 }, ;
-		      { "LOGICAL",   "L",  1, 0 } }
+                      { "LOGICAL",   "L",  1, 0 }, ;
+                      { "MEMO1",     "M", 10, 0 }, ;
+                      { "MEMO2",     "M", 10, 0 } }
 
-   local aRdd := rddList()
-
-   QOut( "Registered RDD's:", LTrim( Str( Len( aRdd ) ) ), "=>" )
-   aEval( aRdd, { | cDriver | QQOut( "", cDriver ) } )
-   QOut()
-   QOut( "Creating a DBF file" )
-   dbCreate( "testdbf.dbf", aStruct )
+   dbCreate( "testdbf", aStruct )
+   dbUseArea(,, "testdbf" )
+   ? "[" + FIELD->MEMO1 + "]"
+   ? "[" + FIELD->MEMO2 + "]"
+   ? "-"
+   FIELD->MEMO1 := "Hello world!"
+   FIELD->MEMO2 := "Harbour power"
+   ? "[" + FIELD->MEMO1 + "]"
+   ? "[" + FIELD->MEMO2 + "]"
+   dbAppend()
+   FIELD->MEMO1 := "111"
+   FIELD->MEMO2 := "222"
+   ? "[" + FIELD->MEMO1 + "]"
+   ? "[" + FIELD->MEMO2 + "]"
 
 return nil
