@@ -130,7 +130,7 @@ char *hb_comp_buffer; /* yacc input buffer */
 static PTR_LOOPEXIT hb_comp_pLoops = NULL;
 static HB_RTVAR_PTR hb_comp_rtvars = NULL;
 
-static char * hb_comp_szAnnounce = NULL;    /* ANNOUNCEd procedure */
+char * hb_comp_szAnnounce = NULL;    /* ANNOUNCEd procedure */
 
 %}
 

@@ -113,6 +113,7 @@ BOOL        hb_comp_bLogo = TRUE;                      /* print logo */
 BOOL        hb_comp_bSyntaxCheckOnly = FALSE;          /* syntax check only */
 int         hb_comp_iLanguage = LANG_C;                /* default Harbour generated output language */
 
+extern      char * hb_comp_szAnnounce;
 typedef struct __EXTERN
 {
    char * szName;
@@ -2231,7 +2232,7 @@ static void hb_compInitVars( void )
    hb_comp_symbols.iCount   = 0;
    hb_comp_symbols.pFirst   = NULL;
    hb_comp_symbols.pLast    = NULL;
-
+   hb_comp_szAnnounce       = NULL;
    hb_comp_pInitFunc = NULL;
    hb_comp_bAnyWarning = FALSE;
 
