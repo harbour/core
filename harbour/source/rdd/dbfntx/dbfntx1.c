@@ -2986,12 +2986,14 @@ static ERRCODE ntxGoTop( NTXAREAP pArea )
      LPTAGINFO pTag = pArea->lpCurTag;
 
      if( pTag->topScope )
+     {
         ntxSeek( pArea, 1, pTag->topScope, 0 );
         if( pTag->TagEOF )
         {
            hb_ntxGoEof( pArea );
            return SUCCESS;
         }
+     }
      else
         hb_ntxTagKeyGoTo( pTag, TOP_RECORD, NULL );
      SELF_GOTO( ( AREAP ) pArea, pTag->CurKeyInfo->Xtra );
