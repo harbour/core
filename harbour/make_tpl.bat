@@ -57,8 +57,9 @@ set HB_COMPILER=djgpp
 rem ---------------------------------------------------------------
 rem Fine tuning the compiler parameters for "all" command:
 
-set C_USR= 
 set PRG_USR= 
+set C_USR= 
+set L_USR=
 
 rem ---------------------------------------------------------------
 rem Start the GNU make system

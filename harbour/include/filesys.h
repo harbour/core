@@ -77,12 +77,14 @@ extern BOOL     hb_fsLock       ( FHANDLE hFileHandle, ULONG ulStart,
                                   ULONG ulLength, USHORT uiMode );
 extern BOOL     hb_fsMkDir      ( BYTE * pDirName );
 extern FHANDLE  hb_fsOpen       ( BYTE * pFilename, USHORT uiFlags );
-extern ULONG    hb_fsRead       ( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount );
+extern USHORT   hb_fsRead       ( FHANDLE hFileHandle, BYTE * pBuff, USHORT ulCount );
+extern ULONG    hb_fsReadLarge  ( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount );
 extern BOOL     hb_fsRmDir      ( BYTE * pDirName );
 extern int      hb_fsRename     ( BYTE * pOldName, BYTE * pNewName );
 extern ULONG    hb_fsSeek       ( FHANDLE hFileHandle, LONG lOffset, USHORT uiMode );
 extern void     hb_fsSetMode    ( FHANDLE hFileHandle, USHORT uiMode );
-extern ULONG    hb_fsWrite      ( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount );
+extern USHORT   hb_fsWrite      ( FHANDLE hFileHandle, BYTE * pBuff, USHORT ulCount );
+extern ULONG    hb_fsWriteLarge ( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount );
 
 extern PHB_FNAME hb_fsFNameSplit ( char * szFilename ); /* Split given filename into path, name and extension */
 extern char *    hb_fsFNameMerge ( char * szFileName, PHB_FNAME pFileName ); /* This function joins path, name and extension into a string with a filename */

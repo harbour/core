@@ -57,8 +57,9 @@ export HB_COMPILER=gcc
 # ---------------------------------------------------------------
 # Fine tuning the compiler parameters for "all" command:
 
-export C_USR=
 export PRG_USR= 
+export C_USR=
+export L_USR=
 
 # ---------------------------------------------------------------
 # Start the GNU make system

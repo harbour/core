@@ -248,7 +248,7 @@ ULONG hb_itemCopyC( PHB_ITEM pItem, char * szBuffer, ULONG ulLen )
       return 0;
 }
 
-BOOL hb_itemFreeC( char *szText )
+BOOL hb_itemFreeC( char * szText )
 {
    BOOL bResult = FALSE;
 
@@ -261,7 +261,7 @@ BOOL hb_itemFreeC( char *szText )
    return bResult;
 }
 
-char *hb_itemGetDS( PHB_ITEM pItem, char *szDate )
+char * hb_itemGetDS( PHB_ITEM pItem, char * szDate )
 {
    if( pItem && IS_DATE( pItem ) )
    {
@@ -271,9 +271,7 @@ char *hb_itemGetDS( PHB_ITEM pItem, char *szDate )
       hb_dateStrPut( szDate, lDay, lMonth, lYear );
    }
    else
-   {
       memset( szDate, ' ', 8 );
-   }
 
    return szDate;
 }
@@ -284,10 +282,17 @@ BOOL hb_itemGetL( PHB_ITEM pItem )
    {
       switch( pItem->type )
       {
-         case IT_LOGICAL:  return pItem->item.asLogical.value;
-         case IT_INTEGER:  return pItem->item.asInteger.value != 0;
-         case IT_LONG:     return pItem->item.asLong.value != 0;
-         case IT_DOUBLE:   return pItem->item.asDouble.value != 0.0;
+         case IT_LOGICAL:
+            return pItem->item.asLogical.value;
+
+         case IT_INTEGER:
+            return pItem->item.asInteger.value != 0;
+
+         case IT_LONG:
+            return pItem->item.asLong.value != 0;
+
+         case IT_DOUBLE:
+            return pItem->item.asDouble.value != 0.0;
       }
    }
 
@@ -300,9 +305,14 @@ double hb_itemGetND( PHB_ITEM pItem )
    {
       switch( pItem->type )
       {
-         case IT_DOUBLE:   return pItem->item.asDouble.value;
-         case IT_INTEGER:  return ( double ) pItem->item.asInteger.value;
-         case IT_LONG:     return ( double ) pItem->item.asLong.value;
+         case IT_DOUBLE:
+            return pItem->item.asDouble.value;
+
+         case IT_INTEGER:
+            return ( double ) pItem->item.asInteger.value;
+
+         case IT_LONG:
+            return ( double ) pItem->item.asLong.value;
       }
    }
 
@@ -315,10 +325,17 @@ long hb_itemGetNL( PHB_ITEM pItem )
    {
       switch( pItem->type )
       {
-         case IT_LONG:     return pItem->item.asLong.value;
-         case IT_INTEGER:  return ( long ) pItem->item.asInteger.value;
-         case IT_DOUBLE:   return ( long ) pItem->item.asDouble.value;
-         case IT_DATE:     return pItem->item.asDate.value;
+         case IT_LONG:
+            return pItem->item.asLong.value;
+
+         case IT_INTEGER:
+            return ( long ) pItem->item.asInteger.value;
+
+         case IT_DOUBLE:
+            return ( long ) pItem->item.asDouble.value;
+
+         case IT_DATE:
+            return pItem->item.asDate.value;
       }
    }
 
@@ -333,7 +350,7 @@ PHB_ITEM hb_itemReturn( PHB_ITEM pItem )
    return pItem;
 }
 
-PHB_ITEM hb_itemPutDS( PHB_ITEM pItem, char *szDate )
+PHB_ITEM hb_itemPutDS( PHB_ITEM pItem, char * szDate )
 {
    long lDay, lMonth, lYear;
 
@@ -389,7 +406,7 @@ PHB_ITEM hb_itemPutNL( PHB_ITEM pItem, long lNumber )
 
    pItem->type = IT_LONG;
    pItem->item.asLong.length = 10;
-   pItem->item.asLong.value  = lNumber;
+   pItem->item.asLong.value = lNumber;
 
    return pItem;
 }
@@ -401,23 +418,23 @@ void hb_itemGetNLen( PHB_ITEM pItem, WORD * pwWidth, WORD * pwDecimal )
       switch( pItem->type )
       {
          case IT_DOUBLE:
-            if( pwWidth ) * pwWidth = pItem->item.asDouble.length;
-            if( pwDecimal ) * pwDecimal = pItem->item.asDouble.decimal;
+            if( pwWidth ) *pwWidth = pItem->item.asDouble.length;
+            if( pwDecimal ) *pwDecimal = pItem->item.asDouble.decimal;
             break;
 
          case IT_LONG:
-            if( pwWidth ) * pwWidth = pItem->item.asLong.length;
-            if( pwDecimal ) * pwDecimal = 0;
+            if( pwWidth ) *pwWidth = pItem->item.asLong.length;
+            if( pwDecimal ) *pwDecimal = 0;
             break;
 
          case IT_INTEGER:
-            if( pwWidth ) * pwWidth = pItem->item.asInteger.length;
-            if( pwDecimal ) * pwDecimal = 0;
+            if( pwWidth ) *pwWidth = pItem->item.asInteger.length;
+            if( pwDecimal ) *pwDecimal = 0;
             break;
 
          default:
-            if( pwWidth ) * pwWidth = 0;
-            if( pwDecimal ) * pwDecimal = 0;
+            if( pwWidth ) *pwWidth = 0;
+            if( pwDecimal ) *pwDecimal = 0;
             break;
       }
    }
@@ -453,8 +470,11 @@ ULONG hb_itemSize( PHB_ITEM pItem )
    {
       switch( pItem->type )
       {
-         case IT_ARRAY:    return hb_arrayLen( pItem );
-         case IT_STRING:   return pItem->item.asString.length;
+         case IT_ARRAY:
+            return hb_arrayLen( pItem );
+
+         case IT_STRING:
+            return pItem->item.asString.length;
       }
    }
 
@@ -576,41 +596,46 @@ int hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact )
    char * szSecond  = pSecond->item.asString.value;
    ULONG lLenFirst  = pFirst->item.asString.length;
    ULONG lLenSecond = pSecond->item.asString.length;
-   long  lMinLen;
-   long  lCounter;
-   int   iRet = 0;                      /* Current status               */
+   LONG  lMinLen;
+   LONG  lCounter;
+   int   iRet = 0; /* Current status */
 
-   if( hb_set.HB_SET_EXACT && ! bForceExact )
-   {                                    /* SET EXACT ON and not using == */
-                                        /* Don't include trailing spaces */
-      while( lLenFirst > 0 && szFirst[ lLenFirst - 1 ] == ' ') lLenFirst--;
-      while( lLenSecond > 0 && szSecond[ lLenSecond - 1 ] == ' ') lLenSecond--;
+   if( hb_set.HB_SET_EXACT && !bForceExact )
+   {
+      /* SET EXACT ON and not using == */
+      /* Don't include trailing spaces */
+      while( lLenFirst > 0 && szFirst[ lLenFirst - 1 ] == ' ' ) lLenFirst--;
+      while( lLenSecond > 0 && szSecond[ lLenSecond - 1 ] == ' ' ) lLenSecond--;
    }
 
    lMinLen = lLenFirst < lLenSecond ? lLenFirst : lLenSecond;
 
-   if( lMinLen )                        /* One of the strings is empty  */
+   /* One of the strings is empty */
+   if( lMinLen )
    {
       for( lCounter = 0; lCounter < lMinLen && !iRet; lCounter++ )
       {
-         if( *szFirst != *szSecond )    /* Difference found             */
+         /* Difference found */
+         if( *szFirst != *szSecond )
             iRet = ( *szFirst < *szSecond ) ? -1 : 1;
-         else                           /* TODO : #define some constants*/
+         else /* TODO : #define some constants */
          {
-           szFirst++;
-           szSecond++;
+            szFirst++;
+            szSecond++;
          }
       }
       if( hb_set.HB_SET_EXACT || bForceExact || lLenSecond > lCounter )
-      {  /* Force an exact comparison */
-         if( ! iRet && lLenFirst != lLenSecond )
-                                        /* If length is different !     */
-               iRet = ( lLenFirst < lLenSecond ) ? -1 : 1;
+      {
+         /* Force an exact comparison */
+         if( !iRet && lLenFirst != lLenSecond )
+            /* If length is different ! */
+            iRet = ( lLenFirst < lLenSecond ) ? -1 : 1;
       }
    }
    else
    {
-      if( lLenFirst != lLenSecond )     /* Both empty ?                 */
+      /* Both empty ? */
+      if( lLenFirst != lLenSecond )
       {
          if( hb_set.HB_SET_EXACT || bForceExact )
             iRet = ( lLenFirst < lLenSecond ) ? -1 : 1;
@@ -618,7 +643,8 @@ int hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact )
             iRet = ( lLenSecond == 0 ) ? 0 : -1;
       }
       else
-         iRet = 0;                      /* Both empty => Equal !        */
+         /* Both empty => Equal ! */
+         iRet = 0;
    }
 
    return iRet;

@@ -1,3 +1,34 @@
+19990902--01:44 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/filesys.c
+    include/filesys.h
+    - For speed reasons the hb_fsRead/Write() functions were set back to use
+      USHORT, they are again Clipper compatible, and don't have the overhead
+      of the long buffer support, since for most cases it's not needed.
+    + hb_fsReadLarge() and hb_fsWriteLarge() API functions added, which support
+      the very long buffer lengths (ULONG_MAX). FREADSTR() is using the large
+      read right now.
+    ! hb_fsWriteLarge() infinite loop on error fixed (?) Paul ?
+    + TOFIX: added to hb_fsFNameMerge() (related to buffer overrun).
+  * source/rtl/console.c
+    source/rtl/set.c
+    include/set.h
+    + Changed to use the Filesys API instead of calling the platform dependent
+      file handling functions.
+    ! hb_err*() caller now expect E_BREAK, too.
+    ! hb_setRelease() called close_binary() instead of close_text() for
+      hb_set_extrahan. Fixed.
+    - Removed a bunch of (now) unneeded include files and OS branched. 
+      Source look kind of clean now.
+  * config/rules.cf
+    make_tpl.*
+    + Added the L_USR variable, to make it possible to pass custom parameters
+      to the linker. Some platform/compiler combinations need to add support
+      for this manually: DOS/BCC31, DOS/WATCOM, WIN32/BCC32, WIN32/ICC
+  * source/rtl/itemapi.c
+    ! Some formatting errors removed.
+  * tests/working/rtl_test.prg
+    * Small corrections.
+
 19990901-20:34 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/vm/initsymb.c
     + HB_LOCK pointer added.

@@ -327,7 +327,7 @@ static void hb_altout( char * pStr, ULONG len )
             write_len = count;
             count = 0;
          }
-         write( hb_set_althan, pPtr, write_len );
+         hb_fsWrite( hb_set_althan, pPtr, write_len );
          pPtr += write_len;
       }
    }
@@ -349,7 +349,7 @@ static void hb_altout( char * pStr, ULONG len )
             write_len = count;
             count = 0;
          }
-         write( hb_set_extrahan, pPtr, write_len );
+         hb_fsWrite( hb_set_extrahan, pPtr, write_len );
          pPtr += write_len;
       }
    }
@@ -371,7 +371,7 @@ static void hb_altout( char * pStr, ULONG len )
             write_len = count;
             count = 0;
          }
-         write( hb_set_printhan, pPtr, write_len );
+         hb_fsWrite( hb_set_printhan, pPtr, write_len );
          pPtr += write_len;
       }
       if( len + s_uiPCol > USHRT_MAX ) s_uiPCol = USHRT_MAX;
@@ -400,7 +400,7 @@ static void hb_devout( char * pStr, ULONG len )
             write_len = count;
             count = 0;
          }
-         write( hb_set_printhan, pPtr, write_len );
+         hb_fsWrite( hb_set_printhan, pPtr, write_len );
          pPtr += write_len;
       }
       if( len + s_uiPCol > USHRT_MAX ) s_uiPCol = USHRT_MAX;
@@ -473,13 +473,19 @@ void hb_devpos( WORD row, WORD col )
    {
       if( row < s_uiPRow )
       {
-         write( hb_set_printhan, "\x0C", 1 );
+         hb_fsWrite( hb_set_printhan, "\x0C", 1 );
          s_uiPRow = s_uiPCol = 0;
       }
-      for( count = s_uiPRow; count < row; count++ ) write( hb_set_printhan, s_szCrLf, CRLF_BUFFER_LEN-1 );
+
+      for( count = s_uiPRow; count < row; count++ )
+         hb_fsWrite( hb_set_printhan, s_szCrLf, CRLF_BUFFER_LEN-1 );
+
       if( row > s_uiPRow ) s_uiPCol = 0;
       col += hb_set.HB_SET_MARGIN;
-      for( count = s_uiPCol; count < col; count++ ) write( hb_set_printhan, " ", 1 );
+
+      for( count = s_uiPCol; count < col; count++ )
+         hb_fsWrite( hb_set_printhan, " ", 1 );
+
       s_uiPRow = row;
       s_uiPCol = col;
    }
@@ -533,7 +539,8 @@ HARBOUR HB_QOUT( void )
       s_uiPRow++;
       s_uiPCol = hb_set.HB_SET_MARGIN;
       count = s_uiPCol;
-      while( count-- > 0 ) write( hb_set_printhan, " ", 1 );
+      while( count-- > 0 )
+         hb_fsWrite( hb_set_printhan, " ", 1 );
    }
 
    HB_QQOUT();
@@ -647,7 +654,7 @@ HARBOUR HB___EJECT( void ) /* Ejects the current page from the printer */
 {
    if( hb_stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 && hb_set_printhan >= 0 )
    {
-      write( hb_set_printhan, "\x0C\x0D", 2 );
+      hb_fsWrite( hb_set_printhan, "\x0C\x0D", 2 );
       s_uiPRow = s_uiPCol = 0;
    }
 }

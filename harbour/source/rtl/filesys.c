@@ -5,6 +5,9 @@
 /* Harbour Project source code
    http://www.Harbour-Project.org/
    The following functions are Copyright 1999 Victor Szel <info@szelvesz.hu>:
+      hb_fsSetMode()
+      hb_fsReadLarge()
+      hb_fsWriteLarge()
       HB_CURDIR()
       HB_DIRCHANGE()
       HB_MAKEDIR()
@@ -386,9 +389,51 @@ void    hb_fsSetMode( FHANDLE hFileHandle, USHORT uiMode )
 
 }
 
-/* NOTE: CA-Clipper uses USHORT instead of ULONG here. */
+USHORT  hb_fsRead( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
+{
+   USHORT uiRead;
 
-ULONG   hb_fsRead( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
+#if defined(HAVE_POSIX_IO) || defined(_MSC_VER)
+
+   errno = 0;
+   uiRead = read( hFileHandle, pBuff, uiCount );
+   s_uiErrorLast = errno;
+   if( uiRead == ( USHORT )-1 )
+      uiRead = 0;
+
+#else
+
+   uiRead = 0;
+   s_uiErrorLast = FS_ERROR;
+
+#endif
+
+   return uiRead;
+}
+
+USHORT  hb_fsWrite( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
+{
+   USHORT uiWritten;
+
+#if defined(HAVE_POSIX_IO) || defined(_MSC_VER)
+
+   errno = 0;
+   uiWritten = write( hFileHandle, pBuff, uiCount );
+   s_uiErrorLast = errno;
+   if( uiWritten == ( USHORT )-1 )
+      uiWritten = 0;
+
+#else
+
+   uiWritten = 0;
+   s_uiErrorLast = FS_ERROR;
+
+#endif
+
+   return uiWritten;
+}
+
+ULONG   hb_fsReadLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
 {
    ULONG ulReadTotal = 0;
 
@@ -404,9 +449,8 @@ ULONG   hb_fsRead( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
 
       ulReadTotal += ( ULONG ) uiRead;
 
-      if( uiRead < ulCount - ulReadTotal )
+      if( uiRead < ( USHORT ) ( ulCount - ulReadTotal ) )
          break;
-
    }
    s_uiErrorLast = errno;
 
@@ -419,9 +463,7 @@ ULONG   hb_fsRead( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
    return ulReadTotal;
 }
 
-/* NOTE: CA-Clipper uses USHORT instead of ULONG here. */
-
-ULONG   hb_fsWrite( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
+ULONG   hb_fsWriteLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
 {
    ULONG ulWrittenTotal = 0;
 
@@ -436,6 +478,9 @@ ULONG   hb_fsWrite( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
          break;
 
       ulWrittenTotal += ( ULONG ) uiWritten;
+
+      if( uiWritten < ( USHORT ) ( ulCount - ulWrittenTotal ) )
+         break;
    }
    s_uiErrorLast = errno;
 
@@ -995,7 +1040,7 @@ HARBOUR HB_FREADSTR( void )
          BYTE * buffer = ( BYTE * ) hb_xgrab( ulToRead + 1 );
          ULONG ulRead;
 
-         ulRead = hb_fsRead( ( FHANDLE ) hb_parni( 1 ), buffer, ulToRead );
+         ulRead = hb_fsReadLarge( ( FHANDLE ) hb_parni( 1 ), buffer, ulToRead );
 
          buffer[ ulRead ] = '\0';
 
@@ -1319,6 +1364,8 @@ PHB_FNAME hb_fsFNameSplit( char * szFilename )
    return pName;
 }
 
+/* TOFIX: Check not to overrun the _POSIX_PATH_MAX buffer size. */
+
 /* This function joins path, name and extension into a string with a filename */
 char * hb_fsFNameMerge( char * szFileName, PHB_FNAME pFileName )
 {
@@ -1351,7 +1398,7 @@ char * hb_fsFNameMerge( char * szFileName, PHB_FNAME pFileName )
    {
       int iLen = strlen( szFileName );
 
-      if( !( pFileName->szExtension[ 0 ] == '.' || szFileName[ iLen-1 ] == '.') )
+      if( !( pFileName->szExtension[ 0 ] == '.' || szFileName[ iLen - 1 ] == '.') )
       {
          /* add extension separator only when extansion doesn't contain it */
          szFileName[ iLen++ ] = '.';

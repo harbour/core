@@ -77,6 +77,7 @@
 #define HB_SET_H_
 
 #include "hbdefs.h"
+#include "filesys.h"
 
 typedef enum
 {
@@ -194,10 +195,10 @@ typedef struct
 }  HB_set_struct;
 
 extern HB_set_struct hb_set;
-extern BOOL hb_set_century;
-extern int  hb_set_althan;
-extern int  hb_set_extrahan;
-extern int  hb_set_printhan;
+extern BOOL    hb_set_century;
+extern FHANDLE hb_set_althan;
+extern FHANDLE hb_set_extrahan;
+extern FHANDLE hb_set_printhan;
 
 extern void hb_setInitialize( void );
 extern void hb_setRelease( void );

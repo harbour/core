@@ -25,7 +25,7 @@ HB_FLAGS = -n -q -I$(TOP) -I$(HB_INC_COMPILE)
 # The rule to link an executable.
 ifeq ($(LD_RULE),)
 # Use default rule if architecture/compiler specific rule is not defined
-LD_RULE = $(LD) $(CFLAGS) $(LD_OUT)$@ $^ $(LDFLAGS) $(LINKLIBS)
+LD_RULE = $(LD) $(CFLAGS) $(LD_OUT)$@ $^ $(LDFLAGS) $(L_USR) $(LINKLIBS)
 endif
 
 # Eliminate these rules.

@@ -29,6 +29,9 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
    their web site at http://www.gnu.org/).
 
+   V 1.64   Victor Szel                 Converted to use the FS API.
+                                        hb_err*() handles E_BREAK.
+                                        extrahan closing mode on exit fixed.
    V 1.62   Paul Tucker                 Converted HB_SET_DEBUG back to Logical.
                                         Clipper 5.3 docs are incorrect on this.
    V 1.51   Victor Szel                 #include <x> changed to #include "x".
@@ -150,40 +153,18 @@
    V 1.0    David G. Holm               Initial version.
 */
 
-#if defined(__GNUC__)
-   #include <unistd.h>
-   #include <sys/types.h>
-   #if defined(__DJGPP__)
-      #include <io.h>
-   #endif
-#else
-   #ifndef __MPW__
-     #include <io.h>
-   #endif
-#endif
-
-#include <fcntl.h>
-#ifndef __MPW__
-   #include <sys/stat.h>
-#endif
-#include <errno.h>
-
 #include <ctype.h>
 #include "extend.h"
 #include "errorapi.h"
+#include "filesys.h"
 #include "set.h"
 #include "inkey.h"
 
-#ifndef O_BINARY
-   #define O_BINARY 0   /* O_BINARY not defined on Linux */
-#endif
-
 HB_set_struct hb_set;
-
-BOOL hb_set_century;
-int hb_set_althan;
-int hb_set_extrahan;
-int hb_set_printhan;
+BOOL    hb_set_century;
+FHANDLE hb_set_althan;
+FHANDLE hb_set_extrahan;
+FHANDLE hb_set_printhan;
 
 static BOOL set_logical( PHB_ITEM pItem )
 {
@@ -227,103 +208,86 @@ static char * set_string( PHB_ITEM pItem, char * old_str )
    {
       /* Limit size of SET strings to 64K, truncating if source is longer */
       ULONG size = pItem->item.asString.length;
+
       if( size > USHRT_MAX ) size = USHRT_MAX;
+
       if( old_str ) string = ( char * ) hb_xrealloc( old_str, size + 1 );
       else string = ( char * ) hb_xgrab( size + 1 );
+
       memcpy( string, pItem->item.asString.value, size );
       string[ size ] = '\0';
    }
-   else string = old_str;
+   else
+      string = old_str;
 
    return string;
 }
 
-static void close_binary( int handle )
+static void close_binary( FHANDLE handle )
 {
-#if defined(OS_UNIX_COMPATIBLE)
-   fchmod( handle, S_IRUSR | S_IWUSR );
-#endif
-   close( handle );
+   if( handle != FS_ERROR )
+      hb_fsClose( handle );
 }
 
-static void close_text( int handle )
+static void close_text( FHANDLE handle )
 {
-#if defined(OS_UNIX_COMPATIBLE)
-   fchmod( handle, S_IRUSR | S_IWUSR );
-#else
-   write( handle, "\x1A", 1 );
-#endif
-   close( handle );
+   if( handle != FS_ERROR )
+   {
+      #if ! defined(OS_UNIX_COMPATIBLE)
+         hb_fsWrite( handle, "\x1A", 1 );
+      #endif
+      hb_fsClose( handle );
+   }
 }
 
-static int open_handle( char * file_name, BOOL bMode, char * def_ext, HB_set_enum set_specifier )
+static FHANDLE open_handle( char * file_name, BOOL bMode, char * def_ext, HB_set_enum set_specifier )
 {
-#ifdef __MPW__
-/* TODO: not implemented yet */
-   return -1;
-#else
-   int handle;
-   BOOL bExt = FALSE, bSep = FALSE;
-   ULONG index;
+   FHANDLE handle;
+   PHB_FNAME pFilename;
    char path[ _POSIX_PATH_MAX + 1 ];
 
-   /* Check to see if the file name has an extension? */
-   for( index = strlen( file_name ); index; index-- )
-   {
-      switch ( file_name[ index ] )
-      {
-         case '.':
-            if( ! bSep ) bExt = TRUE; /* Extension found before separator */
-            break;
-         case '\\':
-         case '/':
-         case ':':
-            bSep = TRUE;            /* Path or drive separator found */
-      }
-   }
-   /* Note: strlen (path) is guaranteed to be <= _POSIX_PATH_MAX from this point */
-   if( bSep ) path[ 0 ] = '\0';       /* File name includes a drive letter or path */
-   else if( hb_set.HB_SET_DEFAULT )
-   {
-      /* If no path in file name, use default path */
-      strncpy( path, hb_set.HB_SET_DEFAULT, _POSIX_PATH_MAX );
-      path[ _POSIX_PATH_MAX ] = '\0';
-   }
-   /* Add the file name */
-   strncat( path, file_name, _POSIX_PATH_MAX - strlen( path ) );
-   path[ _POSIX_PATH_MAX ] = '\0';
-   if( def_ext && ! bExt )
-   {
-      /* If the file name does not have an extension (no period following the last
-         path or drive separator), add the default file extension */
-      strncat( path, def_ext, _POSIX_PATH_MAX - strlen( path ) );
-      path[ _POSIX_PATH_MAX ] = '\0';
-   }
+   /* Create full filename */
+
+   pFilename = hb_fsFNameSplit( file_name );
+
+   if( ! pFilename->szPath && hb_set.HB_SET_DEFAULT )
+      pFilename->szPath = hb_set.HB_SET_DEFAULT;
+   if( ! pFilename->szExtension && def_ext )
+      pFilename->szExtension = def_ext;
+
+   hb_fsFNameMerge( path, pFilename );
+   hb_xfree( pFilename );
 
    /* Open the file either in append (bMode) or truncate mode (!bMode), but
       always use binary mode */
-   while( ( handle = open( path, O_BINARY | O_WRONLY | O_CREAT | ( bMode ? O_APPEND : O_TRUNC ), S_IWRITE ) ) == -1 )
+
+   /* QUESTION: What sharing mode does Clipper use ? [vszel] */
+
+   while( ( handle = ( bMode ? hb_fsOpen( path, FO_WRITE | FO_DENYWRITE ) :
+                               hb_fsCreate( path, FC_NORMAL ) ) ) == FS_ERROR )
    {
+      WORD wResult;
+
+      /* NOTE: using switch() here will result in a compiler warning */
 
       if( set_specifier == HB_SET_ALTFILE )
-      {
-         if( hb_errRT_TERM( EG_CREATE, 2013, NULL, path, errno, EF_CANDEFAULT | EF_CANRETRY ) == E_DEFAULT )
-            break;
-      }
+         wResult = hb_errRT_TERM( EG_CREATE, 2013, NULL, path, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY );
       else if( set_specifier == HB_SET_PRINTFILE )
-      {
-         if( hb_errRT_TERM( EG_CREATE, 2014, NULL, path, errno, EF_CANDEFAULT | EF_CANRETRY ) == E_DEFAULT )
-            break;
-      }
+         wResult = hb_errRT_TERM( EG_CREATE, 2014, NULL, path, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY );
       else if( set_specifier == HB_SET_EXTRAFILE )
-      {
-         if( hb_errRT_TERM( EG_CREATE, 2015, NULL, path, errno, EF_CANDEFAULT | EF_CANRETRY ) == E_DEFAULT )
-            break;
-      }
+         wResult = hb_errRT_TERM( EG_CREATE, 2015, NULL, path, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY );
+      else
+         wResult = E_DEFAULT;
+
+      if( wResult == E_DEFAULT || wResult == E_BREAK )
+         break;
    }
 
+   /* If append mode, set the file pointer to EOF */
+   if( handle != FS_ERROR )
+      hb_fsSeek( handle, 0, FS_END );
+
    return handle;
-#endif
 }
 
 HARBOUR HB_SETCANCEL( void )
@@ -682,7 +646,7 @@ HARBOUR HB_SET( void )
          else bFlag = FALSE;
          if( args > 1 )
          {
-            if( hb_set_althan >= 0 ) close_text( hb_set_althan );
+            close_text( hb_set_althan );
             if( hb_set.HB_SET_ALTFILE && strlen( hb_set.HB_SET_ALTFILE ) > 0 )
                hb_set_althan = open_handle( hb_set.HB_SET_ALTFILE, bFlag, ".txt", HB_SET_ALTFILE );
          }
@@ -801,7 +765,7 @@ HARBOUR HB_SET( void )
          else bFlag = FALSE;
          if( args > 1 )
          {
-            if( hb_set_extrahan >= 0 ) close_text( hb_set_extrahan );
+            close_text( hb_set_extrahan );
             if( hb_set.HB_SET_EXTRAFILE && strlen( hb_set.HB_SET_EXTRAFILE ) > 0 )
                hb_set_extrahan = open_handle( hb_set.HB_SET_EXTRAFILE, bFlag, ".prn", HB_SET_EXTRAFILE );
          }
@@ -859,7 +823,7 @@ HARBOUR HB_SET( void )
          else bFlag = FALSE;
          if( args > 1 )
          {
-            if( hb_set_printhan >= 0 ) close_binary( hb_set_printhan );
+            close_binary( hb_set_printhan );
             if( hb_set.HB_SET_PRINTFILE && strlen( hb_set.HB_SET_PRINTFILE ) > 0 )
                hb_set_printhan = open_handle( hb_set.HB_SET_PRINTFILE, bFlag, ".prn", HB_SET_PRINTFILE );
          }
@@ -907,9 +871,9 @@ HARBOUR HB_SET( void )
 void hb_setInitialize( void )
 {
    hb_set_century = FALSE;
-   hb_set_althan = -1;
-   hb_set_extrahan = -1;
-   hb_set_printhan = -1;
+   hb_set_althan = FS_ERROR;
+   hb_set_extrahan = FS_ERROR;
+   hb_set_printhan = FS_ERROR;
    hb_set.HB_SET_ALTERNATE = FALSE;
    hb_set.HB_SET_ALTFILE = NULL;
    hb_set.HB_SET_BELL = FALSE;
@@ -960,9 +924,9 @@ void hb_setInitialize( void )
 
 void hb_setRelease( void )
 {
-   if( hb_set_althan != -1 ) close_text( hb_set_althan );
-   if( hb_set_extrahan != -1 ) close_binary( hb_set_extrahan );
-   if( hb_set_printhan != -1 ) close_binary( hb_set_printhan );
+   close_text( hb_set_althan );
+   close_text( hb_set_extrahan );
+   close_binary( hb_set_printhan );
 
    if( hb_set.HB_SET_ALTFILE )    hb_xfree( hb_set.HB_SET_ALTFILE );
    if( hb_set.HB_SET_DATEFORMAT ) hb_xfree( hb_set.HB_SET_DATEFORMAT );

@@ -325,7 +325,7 @@ FUNCTION Main( cPar1 )
 #ifndef __HARBOUR__
    TEST_LINE( "AA" $ 1                        , "E BASE 1109 Argument error $ F:S" )
 #endif
-   TEST_LINE( lcString $ 1                     , "E BASE 1109 Argument error $ F:S" )
+   TEST_LINE( lcString $ 1                    , "E BASE 1109 Argument error $ F:S" )
    TEST_LINE( 1 $ "AA"                        , "E BASE 1109 Argument error $ F:S" )
 
    IF TEST_OPT_Z()
