@@ -314,7 +314,7 @@ char *MakeFilename( char *szFileName, FILENAME *pFileName )
   {
     int iLen =strlen(szFileName);
 
-    if( !(pFileName->extension[ 0 ] == '.' || pFileName->name[ iLen-1 ] == '.') )
+    if( !(pFileName->extension[ 0 ] == '.' || szFileName[ iLen-1 ] == '.') )
     {
       /* add extension separator only when extansion doesn't contain it */
       szFileName[ iLen++ ] ='.';

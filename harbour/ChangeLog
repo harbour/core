@@ -1,3 +1,12 @@
+19990728-13:10 CET Victor Szel <info@szelvesz.hu>
+  ! source/hbpp/hbppmain.c - MakeFilename() bug fixed here, too.
+    (see 19990728-05:40)
+  ! source/hbpp/harb.h - Include Harbour header files, instead of
+    repeating part of their content explicitly. Some warnings
+    about re-#defines fixed.
+  ! source/hbpp/preproc.c - #pragma Preprocess__InitSymbols
+    excluded when __GNUC__. So no more compiler warning with Win32/GCC.
+
 19990728-13:13 GMT+1 Bruno Cantero <bruno@issnet.net>
    * source/rdd/rddsys.prg, source/rdd/dbcmd.c, source/rdd/dbfntx0.prg
      source/rdd/dbfntx1.c, include/rdd.api, tests/working/testrdd.prg
@@ -13,7 +22,6 @@
      Symbols with both INIT and EXIT raised are not EXIT symbols.
   * include/extend.h
      FS_INITEXIT added as a mask to check the above
-
 
 19990728-11:31 Alexander Kresin
   * source\hbpp\hbpp.c

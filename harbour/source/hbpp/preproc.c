@@ -34,6 +34,7 @@
 
 */
 
+#include <hbsetup.h>
 #include <extend.h>
 #include <itemapi.h>
 #include <ctype.h>
@@ -53,7 +54,9 @@ HARBOUR HB_PREPROCESS(void);
 HB_INIT_SYMBOLS_BEGIN( Preprocess__InitSymbols )
 { "PREPROCESS",     FS_PUBLIC, HB_PREPROCESS    , 0 }
 HB_INIT_SYMBOLS_END( Preprocess__InitSymbols );
+#if ! defined(__GNUC__)
 #pragma Preprocess__InitSymbols
+#endif
 
 /* TODO: Extend the function to allow directives
          and external include files              */
