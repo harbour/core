@@ -3420,7 +3420,7 @@ static LPAREANODE GetTheOtherArea( char *szDriver, char * szFileName, BOOL creat
   pInfo.abName = ( BYTE * )  hb_xgrab( _POSIX_PATH_MAX + 1 );
   strcpy( ( char * ) pInfo.abName, szFileName );
   pInfo.atomAlias = ( BYTE * ) "__TMPAREA";
-  pInfo.fShared = !hb_set.HB_SET_EXCLUSIVE;
+  pInfo.fShared = FALSE;
   pInfo.fReadonly = FALSE;
 
 /* get the new area node */
