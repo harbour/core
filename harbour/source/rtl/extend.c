@@ -6,6 +6,7 @@
 #include <set.h>
 #include <stdlib.h>
 #include <extend.h>
+#include <dates.h>
 
 extern STACK stack;
 

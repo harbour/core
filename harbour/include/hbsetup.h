@@ -2,8 +2,8 @@
  * $Id$
  */
 
-#ifndef HBSETUP_H_
-#define HBSETUP_H_
+#ifndef HB_SETUP_H_
+#define HB_SETUP_H_
 
 /*
  * Harbour compiler and runtime configuration file
@@ -65,4 +65,4 @@
   #define OS_DOS_COMPATIBLE
 #endif
 
-#endif  /* HBSETUP_H_ */
+#endif /* HB_SETUP_H_ */

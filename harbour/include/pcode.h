@@ -2,8 +2,8 @@
  * $Id$
  */
 
-#ifndef PCODE_H_
-#define PCODE_H_
+#ifndef HB_PCODE_H_
+#define HB_PCODE_H_
 
 #include <extend.h>
 
@@ -76,4 +76,4 @@ typedef enum
    HB_P_ZERO            /* places a zero on the virtual machine stack */
 } HB_PCODE;
 
-#endif  /* PCODE_H_ */
+#endif /* HB_PCODE_H_ */

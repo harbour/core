@@ -254,7 +254,7 @@ PHB_ITEM hb_errPutFlags( PHB_ITEM pError, USHORT uiFlags )
 
 /* Wrappers for hb_errLaunch() */
 
-void hb_errorRT_BASE( ULONG ulGenCode, ULONG ulSubCode, char* szDescription, char* szOperation )
+WORD hb_errorRT_BASE( ULONG ulGenCode, ULONG ulSubCode, char* szDescription, char* szOperation )
 {
    PHB_ITEM pError = hb_errNew();
 
@@ -266,6 +266,6 @@ void hb_errorRT_BASE( ULONG ulGenCode, ULONG ulSubCode, char* szDescription, cha
    hb_errPutOperation( pError, szOperation );
    hb_errLaunch( pError );
 
-   hb_errRelease( pError );
+   return hb_errRelease( pError );
 }
 

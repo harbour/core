@@ -30,10 +30,12 @@ char *hb_memotran( char *string, char *hardcr, char *softcr )
    if( string )
    {
       for( s = string; *s; ++s )
+      {
          if( *s == CHR_HARD1 && *(s+1) == CHR_HARD2 )
             *s++ = *hardcr;
          if( *s == CHR_SOFT1 && *(s+1) == CHR_SOFT2 )
             *s++ = *softcr;
+      }
 
       *s = '\0';
    }
@@ -42,22 +44,13 @@ char *hb_memotran( char *string, char *hardcr, char *softcr )
 
 HARBOUR HB_MEMOTRAN( void )
 {
-   if( hb_pcount() == 1 )
+   if( ISCHAR( 1 ) )
    {
-      PHB_ITEM pItem = hb_param(1, IT_STRING );
+      char *hardcr  = ISCHAR( 2 ) ? hb_parc( 2 ):";";
+      char *softcr  = ISCHAR( 3 ) ? hb_parc( 3 ):" ";
 
-      if( pItem )
-      {
-         if( IS_STRING( pItem ) )
-         {
-            PHB_ITEM pItem2 = hb_param(2, IT_STRING );
-            PHB_ITEM pItem3 = hb_param(3, IT_STRING );
-
-            char *hardcr  = ( pItem2 ) ? pItem2->value.szText:";";
-            char *softcr  = ( pItem3 ) ? pItem3->value.szText:" ";
-
-            hb_retc( hb_memotran( pItem->value.szText, hardcr, softcr ) );
-         }
-      }
+      hb_retc( hb_memotran( hb_parc( 1 ), hardcr, softcr ) );
    }
+   else
+     hb_retc( "" );
 }

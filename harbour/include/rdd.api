@@ -1,7 +1,9 @@
-//	rdd.api
-//
-#ifndef  _RDD_API
-#define _RDD_API
+/*
+ * $Id$
+ */
+
+#ifndef HB_RDD_API_
+#define HB_RDD_API_
 
 //+
 //	Harbour project 	The free Clipper(tm) compatible xbase compiler
@@ -960,6 +962,5 @@ BOOL		 is_inUse( AREAP p);
 void		 AttachRDDtoThisWorkarea( AREAP workarea, char *cRDD);
 ULONG		 LookupAliasName( char *cAlias );
 
-
 #endif
-#endif
+#endif /* HB_RDD_API_ */

@@ -4,7 +4,7 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <types.h>
+#include <hbdefs.h>
 #include <compiler.h>
 #include <extend.h>
 #include <pcode.h>

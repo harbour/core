@@ -8,7 +8,7 @@
 #include <ctoharb.h>
 #include <filesys.h>
 
-#define BUFFER_SIZE 8096
+#define BUFFER_SIZE 8192
 
 static long hb_fsCopy(BYTEP ,BYTEP ) ;
 

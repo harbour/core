@@ -1,3 +1,6 @@
+/*
+ * $Id$
+ */
 
 #define _SET_ALTERNATE    1
 #define _SET_ALTFILE      2

@@ -36,14 +36,8 @@ char *hb_hardcr( char *string )
 
 HARBOUR HB_HARDCR( void )
 {
-   if( hb_pcount() == 1 )
-   {
-      PHB_ITEM pItem = hb_param(1, IT_STRING );
-
-      if( pItem )
-      {
-         if( IS_STRING( pItem ) )
-            hb_retc( hb_hardcr( pItem->value.szText ) );
-      }
-   }
+   if( ISCHAR( 1 ) )
+      hb_retc( hb_hardcr( hb_parc( 1 ) ) );
+   else
+      hb_retc( "" );
 }

@@ -6,6 +6,7 @@
 #include <extend.h>
 #include <errorapi.h>
 #include <set.h>
+#include <dates.h>
 #include <ctype.h>
 #include <time.h>
 #if defined(__TURBOC__) || defined(__BORLANDC__)  || defined(__DJGPP__)

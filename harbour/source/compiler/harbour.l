@@ -17,7 +17,7 @@
 #include "harboury.h"
 #include "hbsetup.h"    /* main configuration file */
 #include "hberrors.h"
-#include "types.h"
+#include "hbdefs.h"
 
 /* Functions defined in harbour.y */
 char *yy_strupr( char * );

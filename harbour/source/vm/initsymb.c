@@ -8,7 +8,7 @@
 
 #include "hbsetup.h"
 #include "extend.h"
-#include "types.h"
+#include "hbdefs.h"
 
 extern void Arrays__InitSymbols( void );
 extern void Classes__InitSymbols( void );

@@ -2,14 +2,14 @@
  * $Id$
  */
 
-#ifndef EXTEND_H_
-#define EXTEND_H_
+#ifndef HB_EXTEND_H_
+#define HB_EXTEND_H_
 
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <types.h>
+#include <hbdefs.h>
 #include <hbsetup.h>
 
 typedef struct          /* symbol support structure */
@@ -144,6 +144,7 @@ void     hb_stornl( long lValue, WORD wParam, ... ); /* stores a long on a varia
 void *   hb_xgrab( ULONG lSize );   /* allocates memory */
 void *   hb_xrealloc( void * pMem, ULONG lSize );   /* reallocates memory */
 void     hb_xfree( void * pMem );    /* frees memory */
+
 void     ItemCopy( PHB_ITEM pDest, PHB_ITEM pSource );
 void     ItemRelease( PHB_ITEM pItem );
 
@@ -164,8 +165,6 @@ int      hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact ); /
 char *   hb_str( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec ); /* convert number to string */
 int      hb_stricmp( const char *s1, const char *s2 );
 BOOL     hb_strempty( char * szText, ULONG ulLen );
-long     hb_dateEncode( long lDay, long lMonth, long lYear );
-void     hb_dateDecode( long julian, long * plDay, long * plMonth, long * plYear );
 
 HARBOURFUNC GetMethod( PHB_ITEM pObject, PSYMBOL pSymMsg ); /* returns the method pointer of a object class */
 char *   hb_GetClassName( PHB_ITEM pObject ); /* retrieves an object class name */
@@ -175,4 +174,4 @@ PDYNSYM  GetDynSym( char * szName );   /* finds and creates a dynamic symbol if 
 PDYNSYM  NewDynSym( PSYMBOL pSymbol ); /* creates a new dynamic symbol based on a local one */
 PDYNSYM  FindDynSym( char * szName );  /* finds a dynamic symbol */
 
-#endif /* EXTEND_H_ */
+#endif /* HB_EXTEND_H_ */

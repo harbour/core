@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 #define INKEY_MOVE      1
 #define INKEY_LDOWN     2
 #define INKEY_LUP       4

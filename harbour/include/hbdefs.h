@@ -2,8 +2,8 @@
  * $Id$
  */
 
-#ifndef TYPES_H_
-#define TYPES_H_
+#ifndef HB_DEFS_H_
+#define HB_DEFS_H_
 
 #include <limits.h>
 
@@ -71,7 +71,7 @@ typedef HARBOUR ( * HARBOURFUNC )( void );
    #define _POSIX_PATH_MAX    255
 #endif
 
-#define SYMBOL_UNUSED(symbol)   (void)symbol
+#define HB_SYMBOL_UNUSED(symbol) (void)symbol
 
 #define IS_BYREF( p )      ( ( p )->wType & IT_BYREF )
 #define IS_OF_TYPE( p, t ) ( ( ( p )->wType & ~IT_BYREF ) == t )
@@ -99,4 +99,4 @@ typedef HARBOUR ( * HARBOURFUNC )( void );
 #define ISARRAY( n )       hb_param( n, IT_ARRAY )
 #define ALENGTH( n )       hb_parinfa( n, 0 ) /* TODO! */
 
-#endif  /* TYPES_H_ */
+#endif /* HB_DEFS_H_ */

@@ -1,11 +1,11 @@
 /*
  * $Id$
- *
- * Definitions shared by  harbour.y and preprocessor
  */
 
-#ifndef HBPP_H_
-#define HBPP_H_
+/* Definitions shared by  harbour.y and preprocessor */
+
+#ifndef HB_PP_H_
+#define HB_PP_H_
 
 /* ------------------------------------------ */
 typedef struct
@@ -24,4 +24,4 @@ typedef struct
   char *value;
 } COMMANDS, TRANSLATES;
 
-#endif  /* HBPP_H_ */
+#endif /* HB_PP_H_ */

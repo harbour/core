@@ -2,8 +2,8 @@
  * $Id$
  */
 
-#ifndef ITEMAPI_H_
-#define ITEMAPI_H_
+#ifndef HB_ITEMAPI_H_
+#define HB_ITEMAPI_H_
 
 #include <extend.h>
 
@@ -44,4 +44,4 @@ PHB_ITEM hb_itemReturn( PHB_ITEM pItem );
 ULONG    hb_itemSize( PHB_ITEM pItem );
 WORD     hb_itemType( PHB_ITEM pItem );
 
-#endif  /* ITEMAPI_H_ */
+#endif /* HB_ITEMAPI_H_ */

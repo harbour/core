@@ -2,8 +2,8 @@
  * $Id$
  */
 
-#ifndef _FILESYS_API
-#define _FILESYS_API
+#ifndef HB_FILESYS_API_
+#define HB_FILESYS_API_
 
 #include <filesys.h>
 
@@ -27,4 +27,4 @@
 #define _fsSeek    hb_fsSeek
 #define _fsWrite   hb_fsWrite
 
-#endif
+#endif /* HB_FILESYS_API_ */

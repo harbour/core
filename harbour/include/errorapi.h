@@ -1,5 +1,8 @@
-/* $Id$
+/* 
+ * $Id$
+ */
 
+/*
    Harbour Project source code
 
    This file contains the Harbour internal error handling definitions
@@ -24,11 +27,11 @@
    V 1.0    1999-04-25 - Initial posting.
 */
 
-#ifndef ERRORAPI_H_
-#define ERRORAPI_H_
+#ifndef HB_ERRORAPI_H_
+#define HB_ERRORAPI_H_
 
 #include <extend.h>
-#include "error.ch"
+#include <error.ch>
 
 /* Error codes (returned from hb_errLaunch()) */
 
@@ -93,10 +96,10 @@ PHB_ITEM hb_errPutFileName( PHB_ITEM pError, char * szFileName );
 
 /* Error launchers */
 
-void     hb_errorRT_BASE( ULONG ulGenCode, ULONG ulSubCode, char* szDescription, char* szOperation );
+WORD     hb_errorRT_BASE( ULONG ulGenCode, ULONG ulSubCode, char* szDescription, char* szOperation );
 /* TODO: Enable this:
 void     hb_errorInternal( ULONG ulCode );
 */
 
-#endif  /* ERRORAPI_H_ */
+#endif /* HB_ERRORAPI_H_ */
 

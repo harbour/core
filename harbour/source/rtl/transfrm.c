@@ -6,6 +6,7 @@
 #include <errorapi.h>
 #include <ctoharb.h>
 #include <ctype.h>
+#include <dates.h>
 #include <set.h>
 
 /*                                                                          */

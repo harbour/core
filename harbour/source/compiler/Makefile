@@ -10,7 +10,7 @@ YACC_HEADERS=\
 	compiler.h \
 	hbsetup.h \
 	pcode.h \
-	types.h \
+	hbdefs.h \
 	hberrors.h \
 	hbpp.h
 
@@ -19,7 +19,7 @@ LEX_SOURCE=harbour.l
 LEX_HEADERS=\
 	hbsetup.h \
 	hberrors.h \
-	types.h
+	hbdefs.h
 
 C_SOURCES=\
 	genobj32.c \

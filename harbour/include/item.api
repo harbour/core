@@ -1,7 +1,11 @@
-#ifndef __ITEM_API
-#define __ITEM_API
+/*
+ * $Id$
+ */
 
-#include <extend.h>
+#ifndef HB_ITEM_API_
+#define HB_ITEM_API_
+
+#include <itemapi.h>
 
 #define _arrayNew       hb_arrayNew
 #define _arrayLen       hb_arrayLen
@@ -39,4 +43,4 @@
 #define _itemSize       hb_itemSize
 #define _itemType       hb_itemType
 
-#endif
+#endif /* HB_ITEM_API_ */

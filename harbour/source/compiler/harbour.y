@@ -20,7 +20,7 @@
 #include <ctype.h>
 #include "hbsetup.h"    /* main configuration file */
 #include "pcode.h"      /* pcode values */
-#include "types.h"      /* our defined types */
+#include "hbdefs.h"     /* our defined types */
 #include "compiler.h"
 #include "hberrors.h"
 #include "hbpp.h"

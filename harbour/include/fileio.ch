@@ -47,4 +47,4 @@
 #define FXO_DEFAULTS  0x1000   /* Use SET command defaults    */
 #define FXO_DEVICERAW 0x2000   /* Open devices in raw mode    */
 
-#endif
+#endif /* _FILEIO_CH */

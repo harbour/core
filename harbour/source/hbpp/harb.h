@@ -6,7 +6,7 @@
 #define HARB_H_
 
 /*  ---------------------------------------------
-   Definitions, copied from Harbour.y and types.h    */
+   Definitions, copied from Harbour.y and hbdefs.h    */
 
 /*
  * Note: I don't think it is such a great idea to undef LONG...

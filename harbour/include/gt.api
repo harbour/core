@@ -2,8 +2,8 @@
  * $Id$
  */
 
-#ifndef _GT_API
-#define _GT_API
+#ifndef HB_GT_API_
+#define HB_GT_API_
 
 #include <gtapi.h>
 
@@ -39,4 +39,4 @@
 #define _gtWriteAt      hb_gtWriteAt
 #define _gtWriteCon     hb_gtWriteCon
 
-#endif /* _GT_API */
+#endif /* HB_GT_API_ */

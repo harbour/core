@@ -5,17 +5,11 @@
 #include <extend.h>
 #include <itemapi.h>
 #include <ctoharb.h>
+#include <dates.h>
 #include <set.h>
 
 extern STACK stack;
 extern SYMBOL symEval;
-
-#if 0
-/* TODO: Someone make a dates.h so this isn't necessary! */
-long greg2julian( long lDay, long lMonth, long lYear );
-extern void julian2greg( long julian,
-			 long * plDay, long * plMonth, long * plYear );
-#endif
 
 BOOL hb_evalNew( PEVALINFO pEvalInfo, PHB_ITEM pItem )
 {

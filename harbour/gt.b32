@@ -12,23 +12,23 @@ libs\b32\hbgt.lib : \
    strasint.obj strcount.obj strcspn.obj strdiff.obj strexpan.obj \
    strleft.obj strpbrk.obj strright.obj
 
-ascpos.obj   : ascpos.c    extend.h types.h
-atdiff.obj   : atdiff.c    extend.h types.h
-chareven.obj : chareven.c  extend.h types.h
-charodd.obj  : charodd.c   extend.h types.h
-chrcount.obj : chrcount.c  extend.h types.h
-chrtotal.obj : chrtotal.c  extend.h types.h
-charmix.obj  : charmix.c   extend.h types.h
-asciisum.obj : asciisum.c  extend.h types.h
-chrfirst.obj : chrfirst.c  extend.h types.h
-strasint.obj : strasint.c  extend.h types.h
-strcount.obj : strcount.c  extend.h types.h
-strcspn.obj  : strcspn.c   extend.h types.h
-strdiff.obj  : strdiff.c   extend.h types.h
-strexpan.obj : strexpan.c  extend.h types.h
-strleft.obj  : strleft.c   extend.h types.h
-strpbrk.obj  : strpbrk.c   extend.h types.h
-strright.obj : strright.c  extend.h types.h
+ascpos.obj   : ascpos.c    extend.h hbdefs.h
+atdiff.obj   : atdiff.c    extend.h hbdefs.h
+chareven.obj : chareven.c  extend.h hbdefs.h
+charodd.obj  : charodd.c   extend.h hbdefs.h
+chrcount.obj : chrcount.c  extend.h hbdefs.h
+chrtotal.obj : chrtotal.c  extend.h hbdefs.h
+charmix.obj  : charmix.c   extend.h hbdefs.h
+asciisum.obj : asciisum.c  extend.h hbdefs.h
+chrfirst.obj : chrfirst.c  extend.h hbdefs.h
+strasint.obj : strasint.c  extend.h hbdefs.h
+strcount.obj : strcount.c  extend.h hbdefs.h
+strcspn.obj  : strcspn.c   extend.h hbdefs.h
+strdiff.obj  : strdiff.c   extend.h hbdefs.h
+strexpan.obj : strexpan.c  extend.h hbdefs.h
+strleft.obj  : strleft.c   extend.h hbdefs.h
+strpbrk.obj  : strpbrk.c   extend.h hbdefs.h
+strright.obj : strright.c  extend.h hbdefs.h
 
 .prg.c:
   bin\b32\harbour $< /n

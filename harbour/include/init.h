@@ -2,8 +2,8 @@
  * $Id$
  */
 
-#ifndef INIT_H_
-#define INIT_H_
+#ifndef HB_INIT_H_
+#define HB_INIT_H_
 
 /* Harbour local symbols initialization */
 
@@ -44,4 +44,4 @@ static int InitSymbols( void )
 static int _STATIC_INT_INIT_SYMBOLS = InitSymbols();
 #endif
 
-#endif  /* INIT_H_ */
+#endif /* HB_INIT_H_ */

@@ -1,15 +1,9 @@
-//      error.ch
+/*
+ * $Id$
+ */
 
-//+
-//      Harbour project
-//
-//
-//      99.04.25        initial posting.
-//                      no prototypes yet
-//
-//
-//-
-
+#ifndef _ERROR_CH
+#define _ERROR_CH
 
 // Severity levels     (oError:severity)
 #define ES_WHOCARES       0
@@ -58,6 +52,4 @@
 #define EG_APPENDLOCK     40
 #define EG_LOCK           41
 
-#define _ERROR_CH
-
-
+#endif /* _ERROR_CH */

@@ -2,8 +2,8 @@
  * $Id$
  */
 
-#ifndef FILESYS_H_
-#define FILESYS_H_
+#ifndef HB_FILESYS_H_
+#define HB_FILESYS_H_
 
 #include <extend.h>
 #include <fileio.ch>
@@ -34,4 +34,4 @@ void    hb_fsRename ( BYTEP fpOldName, BYTEP fpNewName );
 ULONG   hb_fsSeek   ( FHANDLE hFileHandle, LONG lOffset, USHORT uiMode );
 USHORT  hb_fsWrite  ( FHANDLE hFileHandle, BYTEP fpBuff, USHORT uiCount );
 
-#endif /* FILESYS_H_ */
+#endif /* HB_FILESYS_H_ */

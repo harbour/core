@@ -10,10 +10,10 @@ libs\b32\terminal.lib : console.obj gtapi.obj gtdos.obj
 
 libs\win32\terminal.lib : console.obj gtapi.obj gtwin.obj
 
-console.obj  : console.c  extend.h types.h
-gtapi.obj    : gtapi.c    extend.h types.h
-gtdos.obj    : gtdos.c    extend.h types.h
-gtwin.obj    : gtwin.c    extend.h types.h
+console.obj  : console.c  extend.h hbdefs.h
+gtapi.obj    : gtapi.c    extend.h hbdefs.h
+gtdos.obj    : gtdos.c    extend.h hbdefs.h
+gtwin.obj    : gtwin.c    extend.h hbdefs.h
 
 .c.obj:
   bcc32 -wmsg -c -O2 -I.\include -o$@ $<

@@ -1,5 +1,9 @@
-#ifndef __FM_API
-#define __FM_API
+/*
+ * $Id$
+ */
+
+#ifndef HB_FM_API_
+#define HB_FM_API_
 
 #include <extend.h>
 
@@ -7,4 +11,4 @@
 #define _xrealloc hb_xrealloc
 #define _xfree    hb_xfree
 
-#endif
+#endif /* HB_FM_API_ */

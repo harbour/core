@@ -1,5 +1,9 @@
-#ifndef __EXTEND_API
-#define __EXTEND_API
+/*
+ * $Id$
+ */
+
+#ifndef HB_EXTEND_API_
+#define HB_EXTEND_API_
 
 #include <extend.h>
 
@@ -30,4 +34,4 @@
 #define _storni   hb_storni
 #define _stornl   hb_stornl
 
-#endif
+#endif /* HB_EXTEND_API_ */

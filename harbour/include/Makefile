@@ -15,6 +15,7 @@ C_HEADERS=\
 	extra.h \
 	filesys.h \
 	gtapi.h \
+	hbdefs.h \
 	hberrors.h \
 	hbpp.h \
 	hbsetup.h \
@@ -23,7 +24,6 @@ C_HEADERS=\
 	pcode.h \
 	set.h \
 	super.h \
-	types.h \
 	version.h \
 
 PRG_HEADERS=\

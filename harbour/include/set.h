@@ -2,16 +2,16 @@
  * $Id$
  */
 
-#ifndef SET_H_
-#define SET_H_
+#ifndef HB_SET_H_
+#define HB_SET_H_
 
-#include <types.h>
+#include <hbdefs.h>
 
 HARBOUR HB_SET (void);
 HARBOUR HB_SETCENTURY (void);
 HARBOUR HB_SETFIXED (void);
-void InitializeSets (void);
-void ReleaseSets (void);
+void hb_setInitialize (void);
+void hb_setRelease (void);
 
 typedef enum
 {
@@ -125,4 +125,4 @@ extern BOOL hb_set_fixed;
 extern int hb_set_althan;
 extern int hb_set_printhan;
 
-#endif  /* SET_H_ */
+#endif /* HB_SET_H_ */

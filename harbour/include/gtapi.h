@@ -2,8 +2,8 @@
  * $Id$
  */
 
-#ifndef GTAPI_H_
-#define GTAPI_H_
+#ifndef HB_GTAPI_H_
+#define HB_GTAPI_H_
 
 #include <color.ch>
 #include <setcurs.ch>
@@ -119,4 +119,4 @@ void gtPuts(char x, char y, char attr, char *str, int len);
 void gtGetText(char x1, char y1, char x2, char y2, char *dest);
 void gtPutText(char x1, char y1, char x2, char y2, char *srce);
 
-#endif /* GTAPI_H_ */
+#endif /* HB_GTAPI_H_ */

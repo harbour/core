@@ -2,8 +2,8 @@
  * $Id$
  */
 
-#ifndef COMPILER_H_
-#define COMPILER_H_
+#ifndef HB_COMPILER_H_
+#define HB_COMPILER_H_
 
 /* compiler related declarations */
 
@@ -69,4 +69,4 @@ void * OurMalloc( LONG lSize ); /* our malloc with error control */
 void * OurRealloc( void * p, LONG lSize ); /* our malloc with error control */
 void OurFree( void * p ); /* releases allocated memory */
 
-#endif  /* COMPILER_H_ */
+#endif /* HB_COMPILER_H_ */

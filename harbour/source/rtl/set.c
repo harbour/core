@@ -693,7 +693,7 @@ HARBOUR HB_SET (void)
    }
 }
 
-void InitializeSets (void)
+void hb_setInitialize (void)
 {
    hb_set_century  = FALSE;
    hb_set_fixed    = FALSE;
@@ -747,7 +747,7 @@ void InitializeSets (void)
    hb_set.HB_SET_WRAP = FALSE;
 }
 
-void ReleaseSets (void)
+void hb_setRelease (void)
 {
    if (hb_set_althan != -1) close_text (hb_set_althan);
    if (hb_set_printhan != -1) close_binary (hb_set_printhan);

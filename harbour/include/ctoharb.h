@@ -2,8 +2,8 @@
  * $Id$
  */
 
-#ifndef CTOHARB_H_
-#define CTOHARB_H_
+#ifndef HB_CTOHARB_H_
+#define HB_CTOHARB_H_
 
 /* Calling Harbour from C code */
 
@@ -23,4 +23,4 @@ void Do( WORD wParams );         /* invokes the virtual machine */
 void Function( WORD wParams );         /* invokes the virtual machine */
 void StackShow( void );
 
-#endif  /* CTOHARB_H_ */
+#endif /* HB_CTOHARB_H_ */

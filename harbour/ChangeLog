@@ -1,3 +1,50 @@
+19990625-01:05 CET Victor Szel <info@szelvesz.hu>
+  * include/extend.h
+    include/dates.h
+    source/rtl/extend.c
+    source/rtl/itemapi.c
+    source/rtl/transfrm.c
+    source/rtl/dates.c
+    makefile.b31
+    makefile.icc
+    hb_date*() function definitions moved to
+    dates.h, all required changed made in sources.
+  ! source/rtl/copyfile.c
+    buffer size 8096 -> 8192
+  * source/rtl/types.h
+    SYMBOL_UNUSED() -> HB_SYMBOL_UNUSED()
+  + source/rtl/errorapi.c, include/errorapi.h
+    Added return value to hb_errorRT_BASE()
+  ! test.ch removed again from /include
+  ! cgi.ch added again to tests/working/hscript
+  * source/rtl/mtran.c
+    source/rtl/hardcr.c (fixed)
+    changes by Jose Lalin.
+  * include/*.h, include/*.api
+    Clean-ups, headers added, HB_ prefixes,
+    minor fixes.
+  * include/set.h
+    source/rtl/set.c
+    InitializeSets() -> hb_setInitialize()
+    ReleaseSets() -> hb_setRelease()
+  * types.h -> hb_types.h
+    include\extend.h
+    include\hbtypes.h
+    include\makefile
+    include\set.h
+    source\compiler\genobj32.c
+    source\compiler\harbour.l
+    source\compiler\harbour.y
+    source\compiler\makefile
+    source\hbpp\harb.h
+    source\vm\initsymb.c
+    gt.b32
+    makefile.b16
+    makefile.b31
+    makefile.b32
+    makefile.icc
+    terminal.b32
+
 19990624-19:30 EDT David G. Holm <dholm@jsd-llc.com>
   * makefile.icc
     - environ.c needs to be dependent upon version.h
