@@ -155,6 +155,7 @@ typedef struct _CDXTAG
    USHORT     MaxKeys;
    LPKEYINFO  CurKeyInfo;    /* current value of key expression */
    LPPAGEINFO RootPage;
+   LPKEYINFO  HotKey;        /* value of hot key expression */
 } CDXTAG;
 typedef CDXTAG * LPCDXTAG;
 
@@ -168,6 +169,7 @@ typedef struct _CDXINDEX
    // review this...
    LPCDXTAG  TagList;
    struct   _CDXINDEX * pNext;   /* The next index in the list */
+   USHORT    uiTag;              /* current tag focus          */
 } CDXINDEX;
 typedef CDXINDEX * LPCDXINDEX;
 
@@ -346,7 +348,8 @@ typedef CDXAREA * LPCDXAREA;
 #define hb_cdxEof                                  NULL
 #define hb_cdxFound                                NULL
 extern ERRCODE hb_cdxGoBottom( CDXAREAP pArea );
-#define hb_cdxGoTo                                 NULL
+//#define hb_cdxGoTo                                 NULL
+extern ERRCODE hb_cdxGoTo( CDXAREAP pArea, ULONG ulRecNo );
 #define hb_cdxGoToId                               NULL
 extern ERRCODE hb_cdxGoTop( CDXAREAP pArea );
 extern ERRCODE hb_cdxSeek( CDXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFindLast );
@@ -366,8 +369,10 @@ extern ERRCODE hb_cdxSkipRaw( CDXAREAP pArea, LONG lToSkip );
 #define hb_cdxGetRec                               NULL
 extern ERRCODE hb_cdxGetValue( CDXAREAP pArea, USHORT uiIndex, PHB_ITEM pItem );
 extern ERRCODE hb_cdxGetVarLen( CDXAREAP pArea, USHORT uiIndex, ULONG * pLength );
-#define hb_cdxGoCold                               NULL
-#define hb_cdxGoHot                                NULL
+//#define hb_cdxGoCold                               NULL
+extern ERRCODE hb_cdxGoCold( CDXAREAP pArea );
+//#define hb_cdxGoHot                                NULL
+extern ERRCODE hb_cdxGoHot( CDXAREAP pArea );
 #define hb_cdxPutRec                               NULL
 extern ERRCODE hb_cdxPutValue( CDXAREAP pArea, USHORT uiIndex, PHB_ITEM pItem );
 #define hb_cdxRecall                               NULL

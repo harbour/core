@@ -46,6 +46,8 @@ static void hb_cdxPageAddNodeKey( LPPAGEINFO pPage, LPKEYINFO pKey );
 static int hb_cdxPageSeekNodeTag( LPPAGEINFO pPage, LONG Tag );
 static BOOL hb_cdxPageGetChild( LPPAGEINFO pPage, LONG Tag );
 static void hb_cdxPageDeleteKey( LPPAGEINFO pPage );
+static void hb_cdxPageReplaceNodeKey( LPPAGEINFO pPage, LPKEYINFO pKey );
+static void hb_cdxPageDeleteNodeKey( LPPAGEINFO pPage );
 
 static LPCDXINDEX hb_cdxIndexNew( AREAP pArea );
 static void hb_cdxIndexFree( LPCDXINDEX pIndex );
@@ -61,17 +63,22 @@ static LPSORTINFO hb_cdxSortNew( LPCDXTAG pTag, BOOL bUnique );
 static void hb_cdxSortFree( LPSORTINFO pSort );
 static void hb_cdxSortLinkNew( LPSORTINFO pSort, LONG * NewLink );
 static void hb_cdxSortGetNewChunk( LPSORTINFO pSort );
-static void hb_cdxSortInsertWord( LPSORTINFO pSort, LONG Tag, char * Value );
-static void hb_cdxSortStuffKey( LPSORTINFO pSort, LPSORTDATA * wx );
-static void hb_cdxSortGetNode( LPSORTINFO pSort, char Character, LONG * NewLink );
+static void hb_cdxSortInsertWord( LPSORTINFO pSort, LONG Tag, char * Value,
+                                  USHORT uiLen );
+static void hb_cdxSortStuffKey( LPSORTINFO pSort, LPSORTDATA * wx, BOOL fTag );
+static void hb_cdxSortGetNode( LPSORTINFO pSort, BYTE Character,
+                               LONG * NewLink, BOOL fTag );
 static LPSORTDATA hb_cdxSortLinkGet( LPSORTINFO pSort, LONG Value );
 static void hb_cdxSortDisplayWord( LPSORTINFO pSort );
 static void hb_cdxSortRecurseDict( LPSORTINFO pSort, LONG WPtr, LONG WBgn );
-static void hb_cdxSortSendWord( LPSORTINFO pSort, char * Value );
-static void hb_cdxSortOutputWord( LPSORTINFO pSort, LONG Tag, char * Value );
+static void hb_cdxSortSendWord( LPSORTINFO pSort, BYTE * Value );
+static void hb_cdxSortOutputWord( LPSORTINFO pSort, LONG Tag, BYTE * Value,
+                                  USHORT uiLen );
 static void hb_cdxSortAddToNode( LPSORTINFO pSort, USHORT Lvl, LONG Tag, LONG Link,
                                  LPKEYINFO Value );
 static void hb_cdxSortAddExternal( LPSORTINFO pSort, USHORT Lvl, LONG Tag, LONG Link,
                                    LPKEYINFO Value );
 static void hb_cdxSortAddInternal( LPSORTINFO pSort, USHORT Lvl, LONG Tag, LONG Link,
                                    LPKEYINFO Value );
+static LPCDXTAG hb_cdxGetActiveTag( LPCDXINDEX PIF );
+static USHORT hb_cdxFindTag( CDXAREAP pArea, LPDBORDERINFO pOrderInfo );

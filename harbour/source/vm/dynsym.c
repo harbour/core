@@ -88,8 +88,10 @@ PHB_DYNS hb_dynsymNew( PHB_SYMB pSymbol )    /* creates a new dynamic symbol */
       if( ! ( pSymbol->cScope & ( HB_FS_STATIC | HB_FS_INIT | HB_FS_EXIT ) ) ) /* only for HB_FS_PUBLIC */
       {
          if( ( ! pDynSym->pFunPtr ) && pSymbol->pFunPtr ) /* The DynSym existed */
+         {
             pDynSym->pFunPtr = pSymbol->pFunPtr;  /* but had no function ptr assigned */
-         pDynSym->pSymbol = pSymbol;
+            pDynSym->pSymbol = pSymbol;
+         }
       }
       pSymbol->pDynSym = pDynSym;    /* place a pointer to DynSym */
       return pDynSym;                /* Return pointer to DynSym */

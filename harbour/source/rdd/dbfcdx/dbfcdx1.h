@@ -22,6 +22,7 @@
 #define SORT_END_OF_KEY                                                 1
 #define SORT_END_OF_WORD                                                2
 #define SORT_STACK_OF_CHAR                                              3
+#define SORT_NOT_KEY                                                 0x10
 
 
 #if (__BORLANDC__ > 1040) /* Use this only above Borland C++ 3.1 */
@@ -29,6 +30,9 @@
 #endif
 #if defined(__GNUC__)
    #pragma pack(1)
+#endif
+#if defined(__WATCOMC__)
+   #pragma pack(push, 1);
 #endif
 
 typedef struct
@@ -65,11 +69,16 @@ typedef struct _CDXDATA
 #if defined(__GNUC__)
    #pragma pack()
 #endif
+#if defined(__WATCOMC__)
+   #pragma pack(pop);
+#endif
 typedef CDXDATA * LPCDXDATA;
 
 typedef struct _KEYINFO
 {
-   PHB_ITEM pItem;
+   char   * Value;
+   ULONG    length;
+   BOOL     fString;
    LONG     Tag;
    LONG     Xtra;
    struct  _KEYINFO * pNext;
@@ -111,7 +120,7 @@ typedef HB_PAGEINFO * LPPAGEINFO;
 /*SORT stuff*/
 typedef struct
 {
-   char   Character;
+   BYTE   Character;
    BYTE   NUse;
    USHORT WordArray;
    USHORT Fill02;
@@ -122,7 +131,7 @@ typedef struct
 typedef struct
 {
    BYTE Fill03[ 4 ];
-   char ChrStack[ 4 ];
+   BYTE ChrStack[ 4 ];
 } SORT_B;
 
 
@@ -132,6 +141,10 @@ typedef struct
    LONG ChrFill;
 } SORT_C;
 
+#define SORT_GET_NUSE(w)          (w & 0x07)
+#define SORT_SET_NUSE(w,n)        (w = (w & 0xF8) | n )
+#define SORT_GET_STACK_LEN(w)     (w >> 6)
+#define SORT_SET_STACK_LEN(w,n)   (w = (w & 0x3f) | n << 6)
 
 typedef struct
 {
@@ -169,7 +182,7 @@ typedef struct
    BOOL       Unique;
    BOOL       Ascend;
    BOOL       Closing;
-   char       WPch[ 256 ];
+   BYTE       WPch[ 256 ];
    SORTDATA * WAdr;
    struct _CDXTAG * CurTag;
    LPCDXDATA  NodeList[ 32 ];

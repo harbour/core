@@ -1,3 +1,20 @@
+2001-02-24 12:45 UTC+0300 Alex Shashkov <shashkov@ostu.ru>
+   * harbour/source/vm/dynsym.c
+     ! Fixed
+   * harbour/include/hbrddcdx.h
+     + Added support ORDSETFOCUS() and update keys
+   * harbour/source/rdd/dbfcdx1.c
+     + Added support ORDSETFOCUS(), update keys, keys any type
+     - remove hb_cdxltoa()
+   * harbour/source/rdd/dbfcdx1.h
+     ! Fixed support for Watcom C 11.0
+     + Added support keys any type
+   * harbour/source/rdd/dbfcdx2.h
+     + Added some new functions
+     * Changed the declaration of some functions
+
+   Not finished yet.
+
 2001-02-23 17:20 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/vm/hvm.c
      ! Added logic to clear items of extraneous parameters in hb_vmFrame().
