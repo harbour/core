@@ -444,10 +444,12 @@ void hb_compStrongType( int iSize )
            /*printf( "\nMethod: %s of Class: %s Parameters: %i\n", pSym->szName, pFunc->pStackClasses[ pFunc->iStackClasses - 1 ]->szName, pFunc->pStackFunctions[ pFunc->iStackFunctions - 1 ]->iParamCount );*/
 
            if ( pFunc->pStackFunctions[ pFunc->iStackFunctions - 1 ] == NULL )
+           {
              if ( pSym->szName[0] == '_' )
                 hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_MESSAGE_NOT_FOUND, &( pSym->szName[1] ), pFunc->pStackClasses[ pFunc->iStackClasses - 1 ]->szName );
              else
                 hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_MESSAGE_NOT_FOUND, pSym->szName, pFunc->pStackClasses[ pFunc->iStackClasses - 1 ]->szName );
+           }
          }
          else
          {
