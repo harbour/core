@@ -22,6 +22,7 @@
 
 #include "hbsetup.h"    /* main configuration file */
 #include <extend.h>
+#include <errorapi.h>
 #include <pcode.h>
 #include <set.h>
 
@@ -596,10 +597,10 @@ void And( void )
    }
    else
    {
-      pError = _errNew();
-      _errPutDescription( pError, "Argument error: conditional" );
-      _errLaunch( pError );
-      _errRelease( pError );
+      pError = hb_errNew();
+      hb_errPutDescription( pError, "Argument error: conditional" );
+      hb_errLaunch( pError );
+      hb_errRelease( pError );
    }
 }
 
@@ -1044,10 +1045,10 @@ void Inc( void )
    }
    else
    {
-      pError = _errNew();
-      _errPutDescription( pError, "Error BASE/1086  Argument error: ++" );
-      _errLaunch( pError );
-      _errRelease( pError );
+      pError = hb_errNew();
+      hb_errPutDescription( pError, "Error BASE/1086  Argument error: ++" );
+      hb_errLaunch( pError );
+      hb_errRelease( pError );
    }
 }
 
@@ -1092,11 +1093,11 @@ void Instring( void )
    }
    else
    {
-      PHB_ITEM pError = _errNew();
+      PHB_ITEM pError = hb_errNew();
 
-      _errPutDescription( pError, "Error BASE/1109  Argument error: $" );
-      _errLaunch( pError );
-      _errRelease( pError );
+      hb_errPutDescription( pError, "Error BASE/1109  Argument error: $" );
+      hb_errLaunch( pError );
+      hb_errRelease( pError );
    }
 }
 
@@ -1384,10 +1385,10 @@ void Or( void )
    }
    else
    {
-      pError = _errNew();
-      _errPutDescription( pError, "Argument error: conditional" );
-      _errLaunch( pError );
-      _errRelease( pError );
+      pError = hb_errNew();
+      hb_errPutDescription( pError, "Argument error: conditional" );
+      hb_errLaunch( pError );
+      hb_errRelease( pError );
    }
 }
 
@@ -1550,10 +1551,10 @@ int PopLogical( void )
       return stack.pPos->value.iLogical;
    else
    {
-      pError = _errNew();
-      _errPutDescription( pError, "Argument error: conditional" );
-      _errLaunch( pError );
-      _errRelease( pError );
+      pError = hb_errNew();
+      hb_errPutDescription( pError, "Argument error: conditional" );
+      hb_errLaunch( pError );
+      hb_errRelease( pError );
       return 0;
    }
 }
@@ -2255,11 +2256,11 @@ HARBOUR HB_PVALUE(void)                                /* PValue( <nArg> )      
       hb_itemReturn( pBase + 1 + wParam );
    else
    {
-      PHB_ITEM pError = _errNew();
+      PHB_ITEM pError = hb_errNew();
 
-      _errPutDescription(pError, "Argument error: PVALUE");
-      _errLaunch(pError);
-      _errRelease(pError);
+      hb_errPutDescription(pError, "Argument error: PVALUE");
+      hb_errLaunch(pError);
+      hb_errRelease(pError);
       _ret();
    }
 }

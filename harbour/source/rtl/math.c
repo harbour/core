@@ -3,6 +3,7 @@
  */
 
 #include <extend.h>
+#include <errorapi.h>
 #include <math.h>
 
 extern STACK stack;
@@ -39,7 +40,7 @@ HARBOUR HB_ABS( void )
    if( _pcount() == 1 )
    {
       PHB_ITEM pNumber = _param(1, IT_NUMERIC);
-      
+
       if( pNumber ) switch( pNumber->wType )
       {
          case IT_INTEGER:
@@ -48,14 +49,14 @@ HARBOUR HB_ABS( void )
             else
                _retni( -pNumber->value.iNumber );
             break;
-         
+
          case IT_LONG:
             if( pNumber->value.lNumber >= 0 )
                _retnl( pNumber->value.lNumber );
             else
                _retnl( -pNumber->value.lNumber );
             break;
-         
+
          case IT_DOUBLE:
             if( pNumber->value.dNumber >= 0.0 )
                _retnd( pNumber->value.dNumber );
@@ -64,19 +65,19 @@ HARBOUR HB_ABS( void )
       }
       else
       {
-         PHB_ITEM pError = _errNew();
-         _errPutDescription(pError, "Argument error: ABS");
-         _errLaunch(pError);
-         _errRelease(pError);
+         PHB_ITEM pError = hb_errNew();
+         hb_errPutDescription(pError, "Argument error: ABS");
+         hb_errLaunch(pError);
+         hb_errRelease(pError);
       }
    }
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PHB_ITEM pError = _errNew();
-      _errPutDescription(pError, "Incorrect number of arguments: ABS");
-      _errLaunch(pError);
-      _errRelease(pError);
+      PHB_ITEM pError = hb_errNew();
+      hb_errPutDescription(pError, "Incorrect number of arguments: ABS");
+      hb_errLaunch(pError);
+      hb_errRelease(pError);
    }
 }
 
@@ -92,19 +93,19 @@ HARBOUR HB_EXP( void )
       }
       else
       {
-         PHB_ITEM pError = _errNew();
-         _errPutDescription(pError, "Argument error: EXP");
-         _errLaunch(pError);
-         _errRelease(pError);
+         PHB_ITEM pError = hb_errNew();
+         hb_errPutDescription(pError, "Argument error: EXP");
+         hb_errLaunch(pError);
+         hb_errRelease(pError);
       }
    }
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PHB_ITEM pError = _errNew();
-      _errPutDescription(pError, "Incorrect number of arguments: EXP");
-      _errLaunch(pError);
-      _errRelease(pError);
+      PHB_ITEM pError = hb_errNew();
+      hb_errPutDescription(pError, "Incorrect number of arguments: EXP");
+      hb_errLaunch(pError);
+      hb_errRelease(pError);
    }
 }
 
@@ -116,19 +117,19 @@ HARBOUR HB_INT( void )
          _retnl( _parnd( 1 ) );
       else
       {
-         PHB_ITEM pError = _errNew();
-         _errPutDescription(pError, "Argument error: INT");
-         _errLaunch(pError);
-         _errRelease(pError);
+         PHB_ITEM pError = hb_errNew();
+         hb_errPutDescription(pError, "Argument error: INT");
+         hb_errLaunch(pError);
+         hb_errRelease(pError);
       }
    }
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PHB_ITEM pError = _errNew();
-      _errPutDescription(pError, "Incorrect number of arguments: INT");
-      _errLaunch(pError);
-      _errRelease(pError);
+      PHB_ITEM pError = hb_errNew();
+      hb_errPutDescription(pError, "Incorrect number of arguments: INT");
+      hb_errLaunch(pError);
+      hb_errRelease(pError);
    }
 }
 
@@ -149,19 +150,19 @@ HARBOUR HB_LOG( void )
       }
       else
       {
-         PHB_ITEM pError = _errNew();
-         _errPutDescription(pError, "Argument error: LOG");
-         _errLaunch(pError);
-         _errRelease(pError);
+         PHB_ITEM pError = hb_errNew();
+         hb_errPutDescription(pError, "Argument error: LOG");
+         hb_errLaunch(pError);
+         hb_errRelease(pError);
       }
    }
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PHB_ITEM pError = _errNew();
-      _errPutDescription(pError, "Incorrect number of arguments: LOG");
-      _errLaunch(pError);
-      _errRelease(pError);
+      PHB_ITEM pError = hb_errNew();
+      hb_errPutDescription(pError, "Incorrect number of arguments: LOG");
+      hb_errLaunch(pError);
+      hb_errRelease(pError);
    }
 }
 
@@ -187,19 +188,19 @@ HARBOUR HB_MAX( void )
       }
       else
       {
-         PHB_ITEM pError = _errNew();
-         _errPutDescription(pError, "Argument error: MAX");
-         _errLaunch(pError);
-         _errRelease(pError);
+         PHB_ITEM pError = hb_errNew();
+         hb_errPutDescription(pError, "Argument error: MAX");
+         hb_errLaunch(pError);
+         hb_errRelease(pError);
       }
    }
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PHB_ITEM pError = _errNew();
-      _errPutDescription(pError, "Incorrect number of arguments: MAX");
-      _errLaunch(pError);
-      _errRelease(pError);
+      PHB_ITEM pError = hb_errNew();
+      hb_errPutDescription(pError, "Incorrect number of arguments: MAX");
+      hb_errLaunch(pError);
+      hb_errRelease(pError);
    }
 }
 
@@ -225,19 +226,19 @@ HARBOUR HB_MIN( void )
       }
       else
       {
-         PHB_ITEM pError = _errNew();
-         _errPutDescription(pError, "Argument error: MIN");
-         _errLaunch(pError);
-         _errRelease(pError);
+         PHB_ITEM pError = hb_errNew();
+         hb_errPutDescription(pError, "Argument error: MIN");
+         hb_errLaunch(pError);
+         hb_errRelease(pError);
       }
    }
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PHB_ITEM pError = _errNew();
-      _errPutDescription(pError, "Incorrect number of arguments: MIN");
-      _errLaunch(pError);
-      _errRelease(pError);
+      PHB_ITEM pError = hb_errNew();
+      hb_errPutDescription(pError, "Incorrect number of arguments: MIN");
+      hb_errLaunch(pError);
+      hb_errRelease(pError);
    }
 }
 
@@ -245,14 +246,14 @@ HARBOUR HB_MOD( void )
 {
 /*
 FUNCTION MOD(cl_num, cl_base)
-   
+
    LOCAL cl_result
 
-	cl_result = cl_num % cl_base
+        cl_result = cl_num % cl_base
 
-	RETURN IF( cl_base = 0, ;
-			   cl_num,;
-			   IF(cl_result * cl_base < 0, cl_result + cl_base, cl_result) )
+        RETURN IF( cl_base = 0, ;
+                           cl_num,;
+                           IF(cl_result * cl_base < 0, cl_result + cl_base, cl_result) )
 */
    PHB_ITEM pNumber = _param(1, IT_NUMERIC);
    PHB_ITEM pBase = _param(2, IT_NUMERIC);
@@ -266,7 +267,7 @@ FUNCTION MOD(cl_num, cl_base)
       if( dBase )
       {
          dResult = dNumber - ((long)(dNumber / dBase) * dBase);
-  
+
          if( dResult * dBase < 0 )
             _retnd(dResult + dBase);
          else
@@ -301,7 +302,7 @@ HARBOUR HB_ROUND( void )
             dResult = floor( dResult * dAdjust + 0.5 );
             dResult = dResult / dAdjust;
          }
-         szResult = _xgrab( iSize + iDec );
+         szResult = ( char * )_xgrab( iSize + iDec );
          if( szResult )
          {
             sprintf( szResult, "%*.*f", iSize, iDec, dResult );
@@ -313,19 +314,19 @@ HARBOUR HB_ROUND( void )
       }
       else
       {
-         PHB_ITEM pError = _errNew();
-         _errPutDescription(pError, "Argument error: ROUND");
-         _errLaunch(pError);
-         _errRelease(pError);
+         PHB_ITEM pError = hb_errNew();
+         hb_errPutDescription(pError, "Argument error: ROUND");
+         hb_errLaunch(pError);
+         hb_errRelease(pError);
       }
    }
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PHB_ITEM pError = _errNew();
-      _errPutDescription(pError, "Incorrect number of arguments: INT");
-      _errLaunch(pError);
-      _errRelease(pError);
+      PHB_ITEM pError = hb_errNew();
+      hb_errPutDescription(pError, "Incorrect number of arguments: INT");
+      hb_errLaunch(pError);
+      hb_errRelease(pError);
    }
 }
 
@@ -347,19 +348,19 @@ HARBOUR HB_SQRT( void )
       }
       else
       {
-         PHB_ITEM pError = _errNew();
-         _errPutDescription(pError, "Argument error: SQRT");
-         _errLaunch(pError);
-         _errRelease(pError);
+         PHB_ITEM pError = hb_errNew();
+         hb_errPutDescription(pError, "Argument error: SQRT");
+         hb_errLaunch(pError);
+         hb_errRelease(pError);
       }
    }
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PHB_ITEM pError = _errNew();
-      _errPutDescription(pError, "Incorrect number of arguments: SQRT");
-      _errLaunch(pError);
-      _errRelease(pError);
+      PHB_ITEM pError = hb_errNew();
+      hb_errPutDescription(pError, "Incorrect number of arguments: SQRT");
+      hb_errLaunch(pError);
+      hb_errRelease(pError);
    }
 }
 

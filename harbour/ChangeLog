@@ -1,3 +1,33 @@
+19990616-23:30 EDT David G. Holm <dholm@jsd-llc.com>
+  * makefile.icc
+    - Added or corrected various include file dependencies
+  * include/error.api
+    - Moved all #defines to errorapi.h
+    - Added "#include <errorapi.h>"
+    - Added #defines to convert all _errFunctions to hb_errFunctions
+  + include/errorapi.h
+    - Added function declarations for all hb_errFunctions
+    - Moved all #defines from error.api and errorapi.c
+  * source/rtl/arrays.c
+    - Convert all _errFunctions to hb_errFunctions
+  * source/rtl/classes.c
+    - Convert all _errFunctions to hb_errFunctions
+  * source/rtl/dates.c
+    - Convert all _errFunctions to hb_errFunctions
+  * source/rtl/errorapi.c
+    - Convert all _errFunctions to hb_errFunctions
+  * source/rtl/math.c
+    - Convert all _errFunctions to hb_errFunctions
+    - Added ( char * ) override to _xgrab() call in HB_ROUND()
+  * source/rtl/set.c
+    - Convert all _errFunctions to hb_errFunctions
+  * source/rtl/strings.c
+    - Convert all _errFunctions to hb_errFunctions
+  * source/rtl/transfrm.c
+    - Convert all _errFunctions to hb_errFunctions
+  * source/vm/hvm.c
+    - Convert all _errFunctions to hb_errFunctions
+
 19990616-22:50 EDT David G. Holm <dholm@jsd-llc.com>
   * source/hbpp/hbppint.c
     - Added ParseDefine( "__HARBOUR__" ) to Hbpp_init()

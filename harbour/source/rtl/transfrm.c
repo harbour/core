@@ -3,6 +3,7 @@
  */
 
 #include <extend.h>
+#include <errorapi.h>
 #include <ctoharb.h>
 #include <ctype.h>
 #include <set.h>
@@ -536,7 +537,7 @@ HARBOUR HB_TRANSFORM( void )
                {
                   for( n = lPic; n; n--)
                      szResult[lResultPos++] = *szPic; /* Export remainder   */
-               }                                
+               }
                _retclen(szResult, lResultPos);
                _xfree(szResult);
                break;
@@ -623,22 +624,22 @@ HARBOUR HB_TRANSFORM( void )
             }
             default:
             {
-               PHB_ITEM pError = _errNew();
+               PHB_ITEM pError = hb_errNew();
 
-               _errPutDescription(pError, "Argument error: TRANSFORM");
-               _errLaunch(pError);
-               _errRelease(pError);
+               hb_errPutDescription(pError, "Argument error: TRANSFORM");
+               hb_errLaunch(pError);
+               hb_errRelease(pError);
                _retc("");
             }
          }
       }
       else
       {
-         PHB_ITEM pError = _errNew();
+         PHB_ITEM pError = hb_errNew();
 
-         _errPutDescription(pError, "Argument error: TRANSFORM");
-         _errLaunch(pError);
-         _errRelease(pError);
+         hb_errPutDescription(pError, "Argument error: TRANSFORM");
+         hb_errLaunch(pError);
+         hb_errRelease(pError);
          _retc("");
       }
    }
@@ -686,11 +687,11 @@ HARBOUR HB_TRANSFORM( void )
          }
          default:
          {
-           PHB_ITEM pError = _errNew();
+           PHB_ITEM pError = hb_errNew();
 
-           _errPutDescription(pError, "Argument error: TRANSFORM");
-           _errLaunch(pError);
-           _errRelease(pError);
+           hb_errPutDescription(pError, "Argument error: TRANSFORM");
+           hb_errLaunch(pError);
+           hb_errRelease(pError);
            _retc("");
          }
       }

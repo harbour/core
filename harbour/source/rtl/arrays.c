@@ -4,6 +4,7 @@
 
 #include <itemapi.h>
 #include <extend.h>
+#include <errorapi.h>
 #include <ctoharb.h>
 
 HARBOUR HB_AADD(void);
@@ -95,18 +96,18 @@ void hb_arrayGet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem )
         ItemCopy( pItem, ( ( PBASEARRAY ) pArray->value.pBaseArray )->pItems + ( ulIndex - 1 ) );
       else
         {
-          PHB_ITEM pError = _errNew();
-          _errPutDescription( pError, szBoundError );
-          _errLaunch( pError );
-          _errRelease( pError );
+          PHB_ITEM pError = hb_errNew();
+          hb_errPutDescription( pError, szBoundError );
+          hb_errLaunch( pError );
+          hb_errRelease( pError );
         }
     }
   else
     {
-      PHB_ITEM pError = _errNew();
-      _errPutDescription( pError, szArgumentError );
-      _errLaunch( pError );
-      _errRelease( pError );
+      PHB_ITEM pError = hb_errNew();
+      hb_errPutDescription( pError, szArgumentError );
+      hb_errLaunch( pError );
+      hb_errRelease( pError );
     }
 }
 
@@ -125,18 +126,18 @@ char *hb_arrayGetString( PHB_ITEM pArray, ULONG ulIndex )
         }
       else
         {
-          PHB_ITEM pError = _errNew();
-          _errPutDescription( pError, szBoundError );
-          _errLaunch( pError );
-          _errRelease( pError );
+          PHB_ITEM pError = hb_errNew();
+          hb_errPutDescription( pError, szBoundError );
+          hb_errLaunch( pError );
+          hb_errRelease( pError );
         }
     }
   else
     {
-      PHB_ITEM pError = _errNew();
-      _errPutDescription( pError, szArgumentError );
-      _errLaunch( pError );
-      _errRelease( pError );
+      PHB_ITEM pError = hb_errNew();
+      hb_errPutDescription( pError, szArgumentError );
+      hb_errLaunch( pError );
+      hb_errRelease( pError );
     }
   return "";
 }
@@ -156,18 +157,18 @@ ULONG hb_arrayGetStringLen( PHB_ITEM pArray, ULONG ulIndex )
         }
       else
         {
-          PHB_ITEM pError = _errNew();
-          _errPutDescription( pError, szBoundError );
-          _errLaunch( pError );
-          _errRelease( pError );
+          PHB_ITEM pError = hb_errNew();
+          hb_errPutDescription( pError, szBoundError );
+          hb_errLaunch( pError );
+          hb_errRelease( pError );
         }
     }
   else
     {
-      PHB_ITEM pError = _errNew();
-      _errPutDescription( pError, szArgumentError );
-      _errLaunch( pError );
-      _errRelease( pError );
+      PHB_ITEM pError = hb_errNew();
+      hb_errPutDescription( pError, szArgumentError );
+      hb_errLaunch( pError );
+      hb_errRelease( pError );
     }
   return 0;
 }
@@ -183,10 +184,10 @@ int hb_arrayGetType( PHB_ITEM pArray, ULONG ulIndex )
         }
       else
         {
-          PHB_ITEM pError = _errNew();
-          _errPutDescription( pError, "Bound error: Array access" );
-          _errLaunch( pError );
-          _errRelease( pError );
+          PHB_ITEM pError = hb_errNew();
+          hb_errPutDescription( pError, "Bound error: Array access" );
+          hb_errLaunch( pError );
+          hb_errRelease( pError );
         }
     }
   return 0;
@@ -207,10 +208,10 @@ ULONG hb_arrayLen( PHB_ITEM pArray )
     return ( ( PBASEARRAY ) pArray->value.pBaseArray )->ulLen;
   else
     {
-      PHB_ITEM pError = _errNew();
-      _errPutDescription( pError, szArgumentError );
-      _errLaunch( pError );
-      _errRelease( pError );
+      PHB_ITEM pError = hb_errNew();
+      hb_errPutDescription( pError, szArgumentError );
+      hb_errLaunch( pError );
+      hb_errRelease( pError );
     }
   return 0;
 }
@@ -223,18 +224,18 @@ void hb_arraySet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem )
         ItemCopy( ( ( PBASEARRAY ) pArray->value.pBaseArray )->pItems + ( ulIndex - 1 ), pItem );
       else
         {
-          PHB_ITEM pError = _errNew();
-          _errPutDescription( pError, szBoundError );
-          _errLaunch( pError );
-          _errRelease( pError );
+          PHB_ITEM pError = hb_errNew();
+          hb_errPutDescription( pError, szBoundError );
+          hb_errLaunch( pError );
+          hb_errRelease( pError );
         }
     }
   else
     {
-      PHB_ITEM pError = _errNew();
-      _errPutDescription( pError, szArgumentError );
-      _errLaunch( pError );
-      _errRelease( pError );
+      PHB_ITEM pError = hb_errNew();
+      hb_errPutDescription( pError, szArgumentError );
+      hb_errLaunch( pError );
+      hb_errRelease( pError );
     }
 }
 
@@ -274,10 +275,10 @@ void hb_arraySize( PHB_ITEM pArray, ULONG ulLen )
     }
   else
     {
-      PHB_ITEM pError = _errNew();
-      _errPutDescription( pError, szArgumentError );
-      _errLaunch( pError );
-      _errRelease( pError );
+      PHB_ITEM pError = hb_errNew();
+      hb_errPutDescription( pError, szArgumentError );
+      hb_errLaunch( pError );
+      hb_errRelease( pError );
     }
 }
 
@@ -304,10 +305,10 @@ void hb_arrayFill( PHB_ITEM pArray, PHB_ITEM pValue, ULONG ulStart, ULONG ulCoun
     }
   else
     {
-      PHB_ITEM pError = _errNew();
-      _errPutDescription( pError, szArgumentError );
-      _errLaunch( pError );
-      _errRelease( pError );
+      PHB_ITEM pError = hb_errNew();
+      hb_errPutDescription( pError, szArgumentError );
+      hb_errLaunch( pError );
+      hb_errRelease( pError );
     }
 }
 
@@ -330,18 +331,18 @@ void hb_arrayDel( PHB_ITEM pArray, ULONG ulIndex )
         }
       else
         {
-          PHB_ITEM pError = _errNew();
-          _errPutDescription( pError, szBoundError );
-          _errLaunch( pError );
-          _errRelease( pError );
+          PHB_ITEM pError = hb_errNew();
+          hb_errPutDescription( pError, szBoundError );
+          hb_errLaunch( pError );
+          hb_errRelease( pError );
         }
     }
   else
     {
-      PHB_ITEM pError = _errNew();
-      _errPutDescription( pError, szArgumentError );
-      _errLaunch( pError );
-      _errRelease( pError );
+      PHB_ITEM pError = hb_errNew();
+      hb_errPutDescription( pError, szArgumentError );
+      hb_errLaunch( pError );
+      hb_errRelease( pError );
     }
 }
 
@@ -364,18 +365,18 @@ void hb_arrayIns( PHB_ITEM pArray, ULONG ulIndex )
         }
       else
         {
-          PHB_ITEM pError = _errNew();
-          _errPutDescription( pError, szBoundError );
-          _errLaunch( pError );
-          _errRelease( pError );
+          PHB_ITEM pError = hb_errNew();
+          hb_errPutDescription( pError, szBoundError );
+          hb_errLaunch( pError );
+          hb_errRelease( pError );
         }
     }
   else
     {
-      PHB_ITEM pError = _errNew();
-      _errPutDescription( pError, szArgumentError );
-      _errLaunch( pError );
-      _errRelease( pError );
+      PHB_ITEM pError = hb_errNew();
+      hb_errPutDescription( pError, szArgumentError );
+      hb_errLaunch( pError );
+      hb_errRelease( pError );
     }
 }
 
@@ -449,10 +450,10 @@ int hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG ulStart, ULONG ulCount
     }
   else
     {
-      PHB_ITEM pError = _errNew();
-      _errPutDescription( pError, szArgumentError );
-      _errLaunch( pError );
-      _errRelease( pError );
+      PHB_ITEM pError = hb_errNew();
+      hb_errPutDescription( pError, szArgumentError );
+      hb_errLaunch( pError );
+      hb_errRelease( pError );
     }
   return 0;
 }
@@ -487,10 +488,10 @@ void hb_arrayEval( PHB_ITEM pArray, PHB_ITEM bBlock, ULONG ulStart, ULONG ulCoun
     }
   else
     {
-      PHB_ITEM pError = _errNew();
-      _errPutDescription( pError, szArgumentError );
-      _errLaunch( pError );
-      _errRelease( pError );
+      PHB_ITEM pError = hb_errNew();
+      hb_errPutDescription( pError, szArgumentError );
+      hb_errLaunch( pError );
+      hb_errRelease( pError );
     }
 }
 
@@ -516,10 +517,10 @@ void hb_arrayRelease( PHB_ITEM pArray )
     }
   else
     {
-      PHB_ITEM pError = _errNew();
-      _errPutDescription( pError, szArgumentError );
-      _errLaunch( pError );
-      _errRelease( pError );
+      PHB_ITEM pError = hb_errNew();
+      hb_errPutDescription( pError, szArgumentError );
+      hb_errLaunch( pError );
+      hb_errRelease( pError );
     }
 }
 
@@ -557,10 +558,10 @@ void hb_arrayCopy( PHB_ITEM pSrcArray, PHB_ITEM pDstArray, ULONG ulStart,
     }
   else
     {
-      PHB_ITEM pError = _errNew();
-      _errPutDescription( pError, szArgumentError );
-      _errLaunch( pError );
-      _errRelease( pError );
+      PHB_ITEM pError = hb_errNew();
+      hb_errPutDescription( pError, szArgumentError );
+      hb_errLaunch( pError );
+      hb_errRelease( pError );
     }
 }
 
@@ -597,10 +598,10 @@ PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray )
    }
    else
    {
-      PHB_ITEM pError = _errNew();
-      _errPutDescription( pError, szArgumentError );
-      _errLaunch( pError );
-      _errRelease( pError );
+      PHB_ITEM pError = hb_errNew();
+      hb_errPutDescription( pError, szArgumentError );
+      hb_errLaunch( pError );
+      hb_errRelease( pError );
    }
    return pDstArray;
 }

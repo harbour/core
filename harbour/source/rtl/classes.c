@@ -3,6 +3,7 @@
  */
 
 #include <extend.h>
+#include <errorapi.h>
 #include <itemapi.h>
 #include <ctoharb.h>
 
@@ -438,10 +439,10 @@ HARBOUR HB_CLASSMOD(void)
                          _param( 3, IT_BLOCK ) );
          else if( ( pFunc == SetData ) || ( pFunc == GetData ) )
          {                                      /* Not allowed for DATA     */
-            PHB_ITEM pError = _errNew();
-            _errPutDescription(pError, "CLASSMOD: Cannot modify a DATA item");
-            _errLaunch(pError);
-            _errRelease(pError);
+            PHB_ITEM pError = hb_errNew();
+            hb_errPutDescription(pError, "CLASSMOD: Cannot modify a DATA item");
+            hb_errLaunch(pError);
+            hb_errRelease(pError);
          }
          else                                   /* Modify METHOD            */
             pClass->pMethods[ wAt ].pFunction = ( HARBOURFUNC ) _parnl( 3 );
@@ -762,10 +763,10 @@ HARBOUR HB_ISMESSAGE(void)
       _retl( hb_isMessage( pObject, pString->value.szText ) != 0 );
    else
    {
-      PHB_ITEM pError = _errNew();
-      _errPutDescription(pError, "Argument error: ISMESSAGE");
-      _errLaunch(pError);
-      _errRelease(pError);
+      PHB_ITEM pError = hb_errNew();
+      hb_errPutDescription(pError, "Argument error: ISMESSAGE");
+      hb_errLaunch(pError);
+      hb_errRelease(pError);
    }
 }
 
@@ -788,10 +789,10 @@ HARBOUR HB_OCLONE( void )
    }
    else
    {
-      PHB_ITEM pError = _errNew();
-      _errPutDescription(pError, "Argument error: OCLONE");
-      _errLaunch(pError);
-      _errRelease(pError);
+      PHB_ITEM pError = hb_errNew();
+      hb_errPutDescription(pError, "Argument error: OCLONE");
+      hb_errLaunch(pError);
+      hb_errRelease(pError);
    }
 }
 
@@ -818,10 +819,10 @@ HARBOUR HB_OSEND(void)
    }
    else
    {
-      PHB_ITEM pError = _errNew();
-      _errPutDescription(pError, "Argument error: OSEND");
-      _errLaunch(pError);
-      _errRelease(pError);
+      PHB_ITEM pError = hb_errNew();
+      hb_errPutDescription(pError, "Argument error: OSEND");
+      hb_errLaunch(pError);
+      hb_errRelease(pError);
    }
 }
 
@@ -962,10 +963,10 @@ HARBOUR HB___INSTSUPER( void )
 
          if( !IS_OBJECT( &stack.Return ) )
          {
-            PHB_ITEM pError = _errNew();
-            _errPutDescription(pError, "INSTSUPER : Super class does not return an object");
-            _errLaunch(pError);
-            _errRelease(pError);
+            PHB_ITEM pError = hb_errNew();
+            hb_errPutDescription(pError, "INSTSUPER : Super class does not return an object");
+            hb_errLaunch(pError);
+            hb_errRelease(pError);
          }
 
          for( w = 0; !bFound && w < wClasses; w++ )
@@ -979,10 +980,10 @@ HARBOUR HB___INSTSUPER( void )
       }
       else
       {
-         PHB_ITEM pError = _errNew();
-         _errPutDescription(pError, "INSTSUPER : Cannot find super class");
-         _errLaunch(pError);
-         _errRelease(pError);
+         PHB_ITEM pError = hb_errNew();
+         hb_errPutDescription(pError, "INSTSUPER : Cannot find super class");
+         hb_errLaunch(pError);
+         hb_errRelease(pError);
       }
    }
    if( !bFound )

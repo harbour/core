@@ -86,16 +86,16 @@ $(path_obj)\gtos2.obj  : {$(path_c)}gtos2.c  $(path_h)\extend.h $(path_h)\types.
   icc /C+ $(c_opt) /Fo$@ /Tpsource\rtl\gt\gtos2.c
   ilib .\libs\icc\terminal.lib -+$@,,
 
-$(path_obj)\arrays.obj   : {$(path_c)}arrays.c   $(path_h)\extend.h $(path_h)\types.h $(path_h)\itemapi.h $(path_h)\ctoharb.h
-$(path_obj)\classes.obj  : {$(path_c)}classes.c  $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\arrays.obj   : {$(path_c)}arrays.c   $(path_h)\extend.h $(path_h)\types.h $(path_h)\itemapi.h $(path_h)\errorapi.h $(path_h)\ctoharb.h $(path_h)\error.ch
+$(path_obj)\classes.obj  : {$(path_c)}classes.c  $(path_h)\extend.h $(path_h)\types.h $(path_h)\errorapi.h $(path_h)\ctoharb.h $(path_h)\error.ch
 $(path_obj)\codebloc.obj : {$(path_c)}codebloc.c $(path_h)\extend.h $(path_h)\types.h $(path_h)\itemapi.h
-$(path_obj)\dates.obj    : {$(path_c)}dates.c    $(path_h)\extend.h $(path_h)\types.h $(path_h)\dates.h $(path_h)\set.h
+$(path_obj)\dates.obj    : {$(path_c)}dates.c    $(path_h)\extend.h $(path_h)\types.h $(path_h)\dates.h $(path_h)\set.h $(path_h)\errorapi.h $(path_h)\error.ch
 $(path_obj)\datesx.obj   : {$(path_c)}datesx.c   $(path_h)\extend.h $(path_h)\types.h
-$(path_obj)\debug.obj    : {$(path_c)}debug.c    $(path_h)\extend.h $(path_h)\types.h $(path_h)\ctoharb.h $(path_h)\itemapi.h
+$(path_obj)\debug.obj    : {$(path_c)}debug.c    $(path_h)\extend.h $(path_h)\types.h $(path_h)\itemapi.h $(path_h)\ctoharb.h
 $(path_obj)\descend.obj  : {$(path_c)}descend.c  $(path_h)\extend.h $(path_h)\types.h
-$(path_obj)\dir.obj      : {$(path_c)}dir.c      $(path_h)\extend.h $(path_h)\types.h $(path_h)\ctoharb.h $(path_h)\itemapi.h
+$(path_obj)\dir.obj      : {$(path_c)}dir.c      $(path_h)\extend.h $(path_h)\types.h $(path_h)\itemapi.h
 $(path_obj)\environ.obj  : {$(path_c)}environ.c  $(path_h)\extend.h $(path_h)\types.h
-$(path_obj)\errorapi.obj : {$(path_c)}errorapi.c $(path_h)\extend.h $(path_h)\types.h $(path_h)\ctoharb.h
+$(path_obj)\errorapi.obj : {$(path_c)}errorapi.c $(path_h)\extend.h $(path_h)\types.h $(path_h)\errorapi.h $(path_h)\error.ch $(path_h)\ctoharb.h
 $(path_obj)\extend.obj   : {$(path_c)}extend.c   $(path_h)\extend.h $(path_h)\types.h $(path_h)\set.h
 $(path_obj)\files.obj    : {$(path_c)}files.c    $(path_h)\extend.h $(path_h)\types.h
 $(path_obj)\gtapi.obj    : {$(path_c)}gtapi.c    $(path_h)\extend.h $(path_h)\types.h $(path_h)\gtapi.h
@@ -103,15 +103,15 @@ $(path_obj)\hardcr.obj   : {$(path_c)}hardcr.c   $(path_h)\extend.h $(path_h)\ty
 $(path_obj)\hb_f.obj     : {$(path_c)}hb_f.c     $(path_h)\extend.h $(path_h)\types.h $(path_h)\filesys.h
 $(path_obj)\io.obj       : {$(path_c)}io.c       $(path_h)\extend.h $(path_h)\types.h $(path_h)\filesys.h
 $(path_obj)\initsymb.obj : {$(path_c)}initsymb.c $(path_h)\extend.h $(path_h)\types.h
-$(path_obj)\itemapi.obj  : {$(path_c)}itemapi.c  $(path_h)\extend.h $(path_h)\types.h $(path_h)\ctoharb.h $(path_h)\itemapi.h $(path_h)\set.h
-$(path_obj)\math.obj     : {$(path_c)}math.c     $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\itemapi.obj  : {$(path_c)}itemapi.c  $(path_h)\extend.h $(path_h)\types.h $(path_h)\itemapi.h $(path_h)\set.h $(path_h)\ctoharb.h
+$(path_obj)\math.obj     : {$(path_c)}math.c     $(path_h)\extend.h $(path_h)\types.h $(path_h)\errorapi.h $(path_h)\error.ch
 $(path_obj)\mathx.obj    : {$(path_c)}mathx.c    $(path_h)\extend.h $(path_h)\types.h
 $(path_obj)\mtran.obj    : {$(path_c)}mtran.c    $(path_h)\extend.h $(path_h)\types.h
-$(path_obj)\set.obj      : {$(path_c)}set.c      $(path_h)\extend.h $(path_h)\types.h $(path_h)\set.h
+$(path_obj)\set.obj      : {$(path_c)}set.c      $(path_h)\extend.h $(path_h)\types.h $(path_h)\set.h $(path_h)\errorapi.h $(path_h)\error.ch
 $(path_obj)\strcmp.obj   : {$(path_c)}strcmp.c   $(path_h)\extend.h $(path_h)\types.h $(path_h)\set.h
-$(path_obj)\strings.obj  : {$(path_c)}strings.c  $(path_h)\extend.h $(path_h)\types.h $(path_h)\set.h
+$(path_obj)\strings.obj  : {$(path_c)}strings.c  $(path_h)\extend.h $(path_h)\types.h $(path_h)\set.h $(path_h)\errorapi.h $(path_h)\error.ch
 $(path_obj)\stringsx.obj : {$(path_c)}stringsx.c $(path_h)\extend.h $(path_h)\types.h
-$(path_obj)\transfrm.obj : {$(path_c)}transfrm.c $(path_h)\extend.h $(path_h)\types.h $(path_h)\ctoharb.h $(path_h)\set.h
+$(path_obj)\transfrm.obj : {$(path_c)}transfrm.c $(path_h)\extend.h $(path_h)\types.h $(path_h)\set.h $(path_h)\errorapi.h $(path_h)\ctoharb.h $(path_h)\error.ch
 
 $(path_obj)\asciisum.obj : {$(path_c)}asciisum.c  $(path_h)\extend.h $(path_h)\types.h
 $(path_obj)\ascpos.obj   : {$(path_c)}ascpos.c    $(path_h)\extend.h $(path_h)\types.h

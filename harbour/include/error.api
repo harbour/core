@@ -1,31 +1,32 @@
-//	error.api
+//      error.api
 //
 #ifndef _ERROR_API
 #define _ERROR_API
 //+
 //      Harbour project
 //
-//	99.04.25	initial posting.
-//			compatible
+//      99.04.25        initial posting.
+//                      compatible
 //-
 
-#include "error.ch"
+#include "errorapi.h"
 
-
-//
-//  error flag definations
-//
-
-#define EF_CANRETRY	1
-#define EF_CANDEFAULT	4
-
-//
-//  error codes (returned from _errLaunch())
-//
-
-#define E_BREAK 	0xffff
-#define E_RETRY 	1
-#define E_DEFAULT	0
+#define _errNew            hb_errNew
+#define _errGetDescription hb_errGetDescription
+#define _errPutDescription hb_errPutDescription
+#define _errGetFileName    hb_errGetFileName
+#define _errPutFileNaem    hb_errPutFileName
+#define _errGetGenCode     hb_errGetGenCode
+#define _errPutGenCode     hb_errPutGenCode
+#define _errGetOperation   hb_errGetOperation
+#define _errPutOperation   hb_errPutOperation
+#define _errGetOsCode      hb_errGetOsCode
+#define _errPutOsCode      hb_errPutOsCode
+#define _errPutSeverity    hb_errPutSeverity
+#define _errPutSubCode     hb_errPutSubCode
+#define _errPutSubSystem   hb_errPutSubSystem
+#define _errPutTries       hb_errPutTries
+#define _errLaunch         hb_errLaunch
+#define _errRelease        hb_errRelease
 
 #endif
-

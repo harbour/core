@@ -8,6 +8,7 @@
 
 #include <ctype.h>
 #include <extend.h>
+#include <errorapi.h>
 #include <fcntl.h>
 #include <io.h>
 #include <sys/stat.h>
@@ -15,7 +16,7 @@
 #include <errno.h>
 
 #ifndef O_BINARY
-   #define O_BINARY 0	/* O_BINARY not defined on Linux */
+   #define O_BINARY 0   /* O_BINARY not defined on Linux */
 #endif
 
 HB_set_struct hb_set;
@@ -100,7 +101,7 @@ static int open_handle (char * file_name, BOOL bMode, char * def_ext)
    BOOL bExt = FALSE, bSep = FALSE;
    long index;
    char path [_POSIX_PATH_MAX + 1];
-   
+
    /* Check to see if the file name has an extension? */
    for (index = strlen (file_name); index; index--)
    {
@@ -139,16 +140,16 @@ static int open_handle (char * file_name, BOOL bMode, char * def_ext)
    /* Open the file either in append (bMode) or truncate mode (!bMode), but
       always use binary mode */
    handle = open (path,
-		  O_BINARY|O_WRONLY|O_CREAT|(bMode?O_APPEND:O_TRUNC),
-		  S_IWRITE );
+                  O_BINARY|O_WRONLY|O_CREAT|(bMode?O_APPEND:O_TRUNC),
+                  S_IWRITE );
    if (handle < 0)
    {
       char error_message [32];
-      PHB_ITEM pError = _errNew();
+      PHB_ITEM pError = hb_errNew();
       sprintf( error_message, "create error %d: SET", errno );
-      _errPutDescription(pError, error_message);
-      _errLaunch(pError);
-      _errRelease(pError);
+      hb_errPutDescription(pError, error_message);
+      hb_errLaunch(pError);
+      hb_errRelease(pError);
    }
    return handle;
 }
@@ -162,7 +163,7 @@ HARBOUR HB_SETCENTURY (void)
 
    /* Start by returning the current setting */
    _retl (hb_set_century);
-   /* 
+   /*
     * Then change the setting if the parameter is a logical value, or is
     * either "ON" or "OFF" (regardless of case)
     */
@@ -196,7 +197,7 @@ HARBOUR HB_SETCENTURY (void)
       for (count = 0; count < size; count++)
       {
          digit = toupper (szDateFormat [count]);
-         if (digit == 'Y') 
+         if (digit == 'Y')
          {
             if (y_start == -1) y_start = count;
          }
@@ -236,7 +237,7 @@ HARBOUR HB_SETFIXED (void)
 
    /* Start by returning the current setting */
    _retl (hb_set_fixed);
-   /* 
+   /*
     * Then change the setting if the parameter is a logical value, or is
     * either "ON" or "OFF" (regardless of case)
     */
@@ -507,7 +508,7 @@ void InitializeSets (void)
    *hb_set.HB_SET_PATH = 0;
    hb_set.HB_SET_PRINTER = FALSE;
    hb_set.HB_SET_PRINTFILE = (char*)_xgrab (4);
-   memcpy (hb_set.HB_SET_PRINTFILE, "PRN", 4);	/* Default printer device */
+   memcpy (hb_set.HB_SET_PRINTFILE, "PRN", 4);  /* Default printer device */
    hb_set.HB_SET_SCOREBOARD = TRUE;
    hb_set.HB_SET_SCROLLBREAK = TRUE;
    hb_set.HB_SET_SOFTSEEK = FALSE;

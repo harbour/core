@@ -3,6 +3,7 @@
  */
 
 #include <extend.h>
+#include <errorapi.h>
 #include <set.h>
 #include <ctype.h>
 #include <time.h>
@@ -392,19 +393,19 @@ HARBOUR HB_DTOS( void )
       }
       else
       {
-         PHB_ITEM pError = _errNew();
-         _errPutDescription(pError, "Argument error: DTOS");
-         _errLaunch(pError);
-         _errRelease(pError);
+         PHB_ITEM pError = hb_errNew();
+         hb_errPutDescription(pError, "Argument error: DTOS");
+         hb_errLaunch(pError);
+         hb_errRelease(pError);
       }
    }
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PHB_ITEM pError = _errNew();
-      _errPutDescription(pError, "Incorrect number of arguments: DTOS");
-      _errLaunch(pError);
-      _errRelease(pError);
+      PHB_ITEM pError = hb_errNew();
+      hb_errPutDescription(pError, "Incorrect number of arguments: DTOS");
+      hb_errLaunch(pError);
+      hb_errRelease(pError);
    }
 #endif
 }
@@ -427,10 +428,10 @@ HARBOUR HB_DAY( void )
    }
    else
    {
-      PHB_ITEM pError = _errNew();
-      _errPutDescription(pError, "Error BASE/1114  Argument error: DAY");
-      _errLaunch(pError);
-      _errRelease(pError);
+      PHB_ITEM pError = hb_errNew();
+      hb_errPutDescription(pError, "Error BASE/1114  Argument error: DAY");
+      hb_errLaunch(pError);
+      hb_errRelease(pError);
    }
 }
 
@@ -447,10 +448,10 @@ HARBOUR HB_MONTH( void )
    }
    else
    {
-      PHB_ITEM pError = _errNew();
-      _errPutDescription(pError, "Error BASE/1113  Argument error: MONTH");
-      _errLaunch(pError);
-      _errRelease(pError);
+      PHB_ITEM pError = hb_errNew();
+      hb_errPutDescription(pError, "Error BASE/1113  Argument error: MONTH");
+      hb_errLaunch(pError);
+      hb_errRelease(pError);
    }
 }
 
@@ -467,10 +468,10 @@ HARBOUR HB_YEAR( void )
    }
    else
    {
-      PHB_ITEM pError = _errNew();
-      _errPutDescription(pError, "Error BASE/1112  Argument error: YEAR");
-      _errLaunch(pError);
-      _errRelease(pError);
+      PHB_ITEM pError = hb_errNew();
+      hb_errPutDescription(pError, "Error BASE/1112  Argument error: YEAR");
+      hb_errLaunch(pError);
+      hb_errRelease(pError);
    }
 }
 
@@ -491,10 +492,10 @@ oTime->tm_sec);
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PHB_ITEM pError = _errNew();
-      _errPutDescription(pError, "Incorrect number of arguments: TIME");
-      _errLaunch(pError);
-      _errRelease(pError);
+      PHB_ITEM pError = hb_errNew();
+      hb_errPutDescription(pError, "Incorrect number of arguments: TIME");
+      hb_errLaunch(pError);
+      hb_errRelease(pError);
    }
 }
 
@@ -515,10 +516,10 @@ oTime->tm_mday);
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PHB_ITEM pError = _errNew();
-      _errPutDescription(pError, "Incorrect number of arguments: DATE");
-      _errLaunch(pError);
-      _errRelease(pError);
+      PHB_ITEM pError = hb_errNew();
+      hb_errPutDescription(pError, "Incorrect number of arguments: DATE");
+      hb_errLaunch(pError);
+      hb_errRelease(pError);
    }
 }
 long hb_dow( long d, long m, long y )
@@ -553,10 +554,10 @@ HARBOUR HB_DOW( void )
    }
    else
    {
-      PHB_ITEM pError = _errNew();
-      _errPutDescription(pError, "Error BASE/1115  Argument error: DOW");
-      _errLaunch(pError);
-      _errRelease(pError);
+      PHB_ITEM pError = hb_errNew();
+      hb_errPutDescription(pError, "Error BASE/1115  Argument error: DOW");
+      hb_errLaunch(pError);
+      hb_errRelease(pError);
    }
 }
 
@@ -574,19 +575,19 @@ HARBOUR HB_CMONTH( void )
      }
      else
      {
-        PHB_ITEM pError = _errNew();
-        _errPutDescription(pError, "Error BASE/1116  Argument error: CMONTH");
-        _errLaunch(pError);
-        _errRelease(pError);
+        PHB_ITEM pError = hb_errNew();
+        hb_errPutDescription(pError, "Error BASE/1116  Argument error: CMONTH");
+        hb_errLaunch(pError);
+        hb_errRelease(pError);
      }
    }
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PHB_ITEM pError = _errNew();
-      _errPutDescription(pError, "Incorrect number of arguments: CMONTH");
-      _errLaunch(pError);
-      _errRelease(pError);
+      PHB_ITEM pError = hb_errNew();
+      hb_errPutDescription(pError, "Incorrect number of arguments: CMONTH");
+      hb_errLaunch(pError);
+      hb_errRelease(pError);
    }
 }
 
@@ -604,19 +605,19 @@ HARBOUR HB_CDOW( void )
      }
      else
      {
-        PHB_ITEM pError = _errNew();
-        _errPutDescription(pError, "Error BASE/1117  Argument error: CDOW");
-        _errLaunch(pError);
-        _errRelease(pError);
+        PHB_ITEM pError = hb_errNew();
+        hb_errPutDescription(pError, "Error BASE/1117  Argument error: CDOW");
+        hb_errLaunch(pError);
+        hb_errRelease(pError);
      }
    }
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PHB_ITEM pError = _errNew();
-      _errPutDescription(pError, "Incorrect number of arguments: CDOW");
-      _errLaunch(pError);
-      _errRelease(pError);
+      PHB_ITEM pError = hb_errNew();
+      hb_errPutDescription(pError, "Incorrect number of arguments: CDOW");
+      hb_errLaunch(pError);
+      hb_errRelease(pError);
    }
 }
 
@@ -627,9 +628,9 @@ HARBOUR HB_SECONDS( void )
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PHB_ITEM pError = _errNew();
-      _errPutDescription(pError, "Incorrect number of arguments: SECONDS");
-      _errLaunch(pError);
-      _errRelease(pError);
+      PHB_ITEM pError = hb_errNew();
+      hb_errPutDescription(pError, "Incorrect number of arguments: SECONDS");
+      hb_errLaunch(pError);
+      hb_errRelease(pError);
    }
 }
