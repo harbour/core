@@ -63,6 +63,11 @@
 #define _reta           hb_reta
 #define _pcount         hb_pcount
 
+/* Undocumented CA-Cl*pper _cEval...() functions */
+
+#define _cEval0         hb_evalBlock0
+#define _cEval1         hb_evalBlock1
+
 /* Undocumented CA-Cl*pper TSupport API */
 
 #define _tchdir         hb_fsChDir
