@@ -129,7 +129,7 @@ void hb_gtAdjustPos( int iHandle, char * pStr, ULONG ulLen )
       then there is no need to adjust the cursor position. */
    if( isatty( iHandle ) )
    #endif
-      if( hb_gt_AdjustPos( ( BYTE * ) pStr, ulLen ) );
+      if( hb_gt_AdjustPos( ( BYTE * ) pStr, ulLen ) )
       {
          /* Adjust the console cursor position to match the device driver */
          s_iCurrentRow = hb_gt_Row();
