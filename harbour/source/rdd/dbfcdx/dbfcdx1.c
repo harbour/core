@@ -985,8 +985,8 @@ ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrderInf
          hb_itemPutNI( pOrderInfo->itmResult, uiTag );
          break;
 
-      default:
-         return SUPER_ORDINFO( ( AREAP ) pArea, uiIndex, pOrderInfo );
+      //default:
+      //   return SUPER_ORDINFO( ( AREAP ) pArea, uiIndex, pOrderInfo );
 
    }
    return SUCCESS;
