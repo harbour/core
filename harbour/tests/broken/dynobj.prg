@@ -20,32 +20,45 @@ function Main()
 
    local oForm := TForm():New()
 
-   QOut( "What methods are in the class :")
-   HBDebug( aoMethod(oForm) )
+   QOut( "What methods are in the class :" )
+   HBDebug( aoMethod( oForm ) )
 
 /* Let's add an inline at run-time. Should already be possible */
 
    QOut( "Let's add inline 'CalcArea' at run-time to an already instanced class" )
 
    ClassAdd( oForm:ClassH, "CalcArea", ;
-        {|self| (::nRight  - ::nLeft) * (::nBottom - ::nTop) }, MET_INLINE )
+      {|self| ( ::nRight  - ::nLeft ) * ( ::nBottom - ::nTop ) }, MET_INLINE )
 
-   QOut( "What methods are in the class :")
+   QOut( "What methods are in the class :" )
    HBDebug( aoMethod( oForm ) )
 
-   QOut( "What is the Form area ?")
+   QOut( "What is the Form area ?" )
    QOut( oForm:CalcArea() )
 
    QOut( "Let's add method 'Smile' at run-time to an already instanced class" )
 
    ClassAdd( oForm:ClassH, "Smile", @Smile(), MET_METHOD )
 
-   QOut( "What methods are in the class :")
+   QOut( "What methods are in the class :" )
    HBDebug( aoMethod( oForm ) )
 
    QOut( "Smile please " )
    oForm:Smile()
+
+/* The next code can _not_ be used in the offical classes.c */
+
+   QOut( "Let's add an additional data item" )
+
+   ClassAdd( oForm:ClassH, "cHelp" , 6, MET_DATA )   // 6th item !
+   ClassAdd( oForm:ClassH, "_cHelp", 6, MET_DATA )
+   HBDebug( aoData( oForm ) )
+
+   oForm:cHelp := "This is a real tricky test"
+   HBDebug( oForm )
+
 return nil
+
 
 function TForm()
 
@@ -68,14 +81,15 @@ function TForm()
 
 return oClass:Instance()                  // builds an object of this class
 
+
 static function New()
 
    local Self := QSelf()
 
-   ::nTop    = 10
-   ::nLeft   = 10
-   ::nBottom = 20
-   ::nRight  = 40
+   ::nTop    := 10
+   ::nLeft   := 10
+   ::nBottom := 20
+   ::nRight  := 40
 
 return Self
 

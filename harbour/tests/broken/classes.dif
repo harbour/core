@@ -1,0 +1,27 @@
+--- \source\tcpp\cvstest\harbour\source\rtl\classes.c	Tue May 11 20:23:38 1999
++++ \source\tcpp\harb21-2\source\rtl\classes.c	Wed May 12 22:40:40 1999
+@@ -136,12 +136,22 @@
+ 
+ static HARBOUR GetData( void )
+ {
+-   ArrayGet( stack.pBase + 1, pMethod->wData, &stack.Return );
++   PITEM pObject = stack.pBase + 1;
++   WORD  wIndex  = pMethod->wData;
++
++   if( wIndex > ArrayLen ( pObject ) )          /* Resize needed            */
++      ArraySize( pObject, wIndex );             /* Make large enough        */
++   ArrayGet( pObject, wIndex, &stack.Return );
+ }
+ 
+ static HARBOUR SetData( void )
+ {
+-   ArraySet( stack.pBase + 1, pMethod->wData, stack.pBase + 2 );
++   PITEM pObject = stack.pBase + 1;
++   WORD  wIndex  = pMethod->wData;
++
++   if( wIndex > ArrayLen( pObject ) )           /* Resize needed            */
++      ArraySize( pObject, wIndex );             /* Make large enough        */
++   ArraySet( pObject, wIndex, stack.pBase + 2 );
+ }
+ 
+ static HARBOUR GetClassData( void )
