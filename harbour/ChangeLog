@@ -1,9 +1,17 @@
+19991001-05:40 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  + source/rtl/dircmd.prg
+    source/rtl/Makefile
+    funclist.txt
+    + __DIR() function added, so the DIR command is working now.
+      ( Please add this file to the non-GNU make files )
+
 19991001-05:30 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/rtl/filesys.c
     ! BIN2I(), BIN2L() made Clipper compatible, for strings shorter than
-      the expected length. One test call still fails, probable because of 
-      different int size.
+      the expected length. One test call still fails, probably because of 
+      different int size on 32 bit platforms.
   * include/hbdefs.h
     ! MKINT() casted to long instead of int.
   * include/external.ch
@@ -11,6 +19,7 @@
     + W2BIN removed.
   + tests/working/rtl_test.prg
     + BIN2W(), BIN2I(), BIN2L(), L2BIN(), I2BIN() regression tests added.
+    + FNAME*() tests enabled.
   - doc/*.nfo (removed)
   + doc/depend.txt (added)
     + The long filename files converted to one file with short name, the

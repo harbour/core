@@ -280,7 +280,7 @@ __dbSort                ;N;
 __dbTotal               ;N;
 __dbUpdate              ;N;
 __dbZap                 ;N;
-__Dir                   ;N;
+__Dir                   ;R;
 __Eject                 ;R;
 __Keyboard              ;R;
 __LabelForm             ;N;

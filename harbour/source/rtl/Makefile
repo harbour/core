@@ -46,6 +46,7 @@ PRG_SOURCES=\
         asort.prg \
         browdb.prg \
         devoutp.prg \
+        dircmd.prg \
         errorsys.prg \
         fieldbl.prg \
         harbinit.prg \
