@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+     + New hb_itemPutCConst() prototype added
+
+2002-01-29 08:48 UTC+0000 Dave Pearson <davep@davep.org>
+   * source/vm/hvm.c
      * Removed unused szTemp variable from hb_vmPushStringPcode.
 
 2002-01-28 22:52 UTC-0800 Brian Hays <bhays@abacuslaw.com>
