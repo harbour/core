@@ -84,6 +84,7 @@ PRG_SOURCES=\
 	memory.prg \
 	memvar.prg \
 	menutest.prg \
+	mousetst.prg \
 	multiarg.prg \
 	nums.prg \
 	objects.prg \
