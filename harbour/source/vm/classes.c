@@ -617,7 +617,7 @@ PHB_FUNC hb_objGetMthd( PHB_ITEM pObject, PHB_SYMB pMessage, BOOL lAllowErrFunc 
    USHORT uiClass;
    PHB_DYNS pMsg = pMessage->pDynSym;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_objGetMethod(%p, %p)", pObject, pMessage));
+   HB_TRACE(HB_TR_DEBUG, ("hb_objGetMthd(%p, %p)", pObject, pMessage));
 
    if( pObject->type == HB_IT_ARRAY )
       uiClass = pObject->item.asArray.value->uiClass;
@@ -687,7 +687,6 @@ PHB_FUNC hb_objGetMthd( PHB_ITEM pObject, PHB_SYMB pMessage, BOOL lAllowErrFunc 
 
    return NULL;
 }
-
 
 /*
  * <uPtr> = hb_objHasMsg( <pObject>, <szString> )
@@ -1940,6 +1939,15 @@ static HARBOUR hb___msgClsSel( void )
                                                 /* Get class word           */
    PHB_ITEM pReturn = hb_itemNew( NULL );
 
+
+   BOOL   lParam=0;
+   USHORT uiPCount=hb_pcount();
+
+   if( uiPCount>=1 )
+    {
+       lParam = hb_parl( 1 );
+    }
+
    if( ( ! uiClass ) && HB_IS_BYREF( pSelf ) )
    {                                            /* Variables by reference   */
       PHB_ITEM pItemRef = hb_itemUnRef( pSelf );
@@ -1961,12 +1969,25 @@ static HARBOUR hb___msgClsSel( void )
       {
          PHB_DYNS pMessage = ( PHB_DYNS ) pClass->pMethods[ uiAt ].pMessage;
 
+         s_pMethod = NULL;                            /* Current method pointer   */
+
          if( pMessage )                         /* Hash Entry used ?        */
          {
-            PHB_ITEM pItem = hb_itemPutC( NULL, pMessage->pSymbol->szName );
+            s_pMethod = pClass->pMethods + uiAt;
+
+            if (  (! lParam) ||
+                  s_pMethod->pFunction == hb___msgSetClsData ||
+                  s_pMethod->pFunction == hb___msgGetClsData ||
+                  s_pMethod->pFunction == hb___msgSetShrData ||
+                  s_pMethod->pFunction == hb___msgGetShrData
+               )
+             {
+
+               PHB_ITEM pItem = hb_itemPutC( NULL, pMessage->pSymbol->szName );
                                                 /* Add to array             */
-            hb_itemArrayPut( pReturn, ++uiPos, pItem );
-            hb_itemRelease( pItem );
+               hb_itemArrayPut( pReturn, ++uiPos, pItem );
+               hb_itemRelease( pItem );
+             }
          }
       }
    }

@@ -43,6 +43,8 @@
  * Copyright 2000 Jf. Lefebvre <jfl@mafact.com> and Ra. Cuylen <rac@mafact.com>
  *    __objDerivedFrom
  *
+ * New Param for Method :ClassSel() to allow it to return only ClassData array
+ *
  * See doc/license.txt for licensing terms.
  *
  */
@@ -69,7 +71,7 @@ FUNCTION __objHasMethod( oObject, cSymbol )
    RETURN __objHasMsg( oObject, cSymbol ) .AND. ;
           !__objHasMsg( oObject, "_" + cSymbol )
 
-FUNCTION __objGetMsgList( oObject, lDataMethod )
+FUNCTION __objGetMsgList( oObject, lDataMethod, lClassOnly )
    LOCAL aInfo
    LOCAL aData
    LOCAL n
@@ -83,7 +85,11 @@ FUNCTION __objGetMsgList( oObject, lDataMethod )
       lDataMethod := .T.
    ENDIF
 
-   aInfo := ASort( oObject:ClassSel() )
+   IF !ISLOGICAL( lClassOnly  )
+      lClassOnly  := .F.
+   ENDIF
+
+   aInfo := ASort( oObject:ClassSel(lClassOnly) )
    aData := {}
    n     := 1
    nLen  := Len( aInfo )
