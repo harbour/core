@@ -1,3 +1,16 @@
+2000-11-04 11:17 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * makefile.bc
+     Added missing dependancy of source/rtl/tgetint.prg
+
+   * source/rtl/tgetint.prg
+     ! Improved __GETA() - No longer uses slow function calls to traverse array.
+       bSetGet much faster because it no longer traverses base array every time bSetGet is evaluated,
+       because final array dimension is now compiled into the bSetGet :-)
+     - Removed no longer needed __GetAValue(
+
+   * tests/testread.prg
+     + Added multi dimension GET test.
+
 2000-11-04 13:35 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     +source/rtl/tgetint.prg
@@ -8,12 +21,12 @@
     *source/rtl/Makefile
         + tgetint.prg a new file with GetNew(), __GET() and __GETA()
          functions moved here from tget.prg
-        * __GET() and __GETA() both create a set/get codeblock on the 
+        * __GET() and __GETA() both create a set/get codeblock on the
          fly with no macro compilation and with no memvar variables
         * the first argument of __GET() have to be passed by a reference
          if simple variable is used and set/get codeblock is not
          specified
-        
+
     *include/hbapi.h
     *include/hbapiitm.h
         * added hb_itemIncRef/hb_itemDecRef declarations
@@ -32,7 +45,7 @@
     *source/compiler/harbour.l
     *source/compiler/harbour.y
         *removed the latest Ron's changes
-        
+
     *source/compiler/expropta.c
     *source/macro/macroa.c
     *include/hbexpra.c
@@ -40,16 +53,16 @@
         NOTE: The variable name passed to __GETA can be buggy in some
         cases, for example:
         @ 0,0 GET var(other[ i ]):name[ i, 1 ]
-        will pass "var(other" as a variable name (Clipper and Harbour 
+        will pass "var(other" as a variable name (Clipper and Harbour
         bug) - the correct behaviour will require some more work -
         there is no simple workaround for this currently
-        
+
     *source/pp/pptable.c
         * removed a hard-coded set/get codeblock from _GET_() arguments
           list - it is created in __GET/__GETA now
           NOTE: This is how Clipper works (no variable names conflicts)
           This will break current Simplex implementation !!!
-          
+
 
 2000-11-03 16:05 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/pp/pptable.c

@@ -60,22 +60,19 @@ FUNCTION __GET( uVar, cVarName, cPicture, bValid, bWhen, bSetGet )
 
 
 FUNCTION __GETA( aVar, cVarName, cPicture, bValid, bWhen, aIndex )
-   LOCAL oGet
 
-   oGet := Get():New(,, {|xValue| __GetAValue( aVar, aIndex, 1, xValue )}, ;
-                        cVarName, cPicture )
+   LOCAL oGet, nDim := Len( aIndex ), bSetGet, aGetVar, Counter
+
+   aGetVar := aVar
+   FOR Counter := 1 TO nDim - 1
+      aGetVar := aGetVar[aIndex[Counter]]
+   NEXT
+   bSetGet := {|xValue| IIF( PCOUNT() == 0, aGetVar[aIndex[Counter]], aGetVar[aIndex[Counter]] := xValue )}
+
+   oGet := Get():New(,, bSetGet, cVarName, cPicture )
    oGet:SubScript := aIndex
 
    oGet:PreBlock := bWhen
    oGet:PostBlock := bValid
 
 RETURN oGet
-
-STATIC FUNCTION __GetAValue( aVar, aIndex, nIndex, xValue )
-
-   IF( nIndex == LEN(aIndex) )
-      RETURN IIF( xValue==NIL, aVar[ aIndex[ nIndex ] ], ;
-                    aVar[ aIndex[ nIndex ] ] := xValue )
-   ENDIF
-
-RETURN __GetAValue( aVar[ aIndex[ nIndex ] ], aIndex, nIndex + 1, xValue )

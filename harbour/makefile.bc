@@ -98,7 +98,7 @@ CFLAGS         = -I$(INCLUDE_DIR) -d $(C_USR) $(CFLAGS)
 CLIBFLAGS      = -c $(CFLAGS) $(CLIBFLAGS)
 CLIBFLAGSDEBUG = -v $(CLIBFLAGS)
 !if $d(PDF)
-HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS) -dPDF 
+HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS) -dPDF
 !else
 HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS)
 !endif
@@ -313,6 +313,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\terror.obj \
    $(OBJ_DIR)\text.obj \
    $(OBJ_DIR)\tget.obj \
+   $(OBJ_DIR)\tgetint.obj \
    $(OBJ_DIR)\tgetlist.obj \
    $(OBJ_DIR)\tlabel.obj \
    $(OBJ_DIR)\tmenuitm.obj \
@@ -604,7 +605,7 @@ HBDOC_EXE_OBJS = \
 !if $d(PDF)
    HBDOC_EXE_OBJS = $(HBDOC_EXE_OBJS) \
    $(OBJ_DIR)\pdfhbdoc.obj \
-   $(OBJ_DIR)\genpdf1.obj 
+   $(OBJ_DIR)\genpdf1.obj
 !endif
 
 #
