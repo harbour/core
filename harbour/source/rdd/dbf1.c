@@ -200,8 +200,7 @@ static BOOL hb_dbfUpdateRecord( AREAP pArea, ULONG lRecNo )
          !hb_dbfUpdateHeader( pArea, lRecCount ) )
          return FALSE;
    }
-   pArea->lpExtendInfo->fRecordChanged = FALSE;
-   pArea->lpFileInfo->fAppend = FALSE;
+   SELF_GOHOT( pArea );
    return TRUE;
 }
 
@@ -334,12 +333,9 @@ static BOOL hb_dbfUnLockAllRecords( AREAP pArea )
 
    pFileInfo = pArea->lpFileInfo;
    for( lPosLocked = 0; lPosLocked < pFileInfo->lNumLocksPos; lPosLocked++ )
-   {
-      printf("UnLock record %ld\n",pFileInfo->pLocksPos[ lPosLocked ]);
       if( !hb_fsLock( pArea->lpFileInfo->hFile, LOCK_START +
                       pFileInfo->pLocksPos[ lPosLocked ], 1, FL_UNLOCK ) )
          bUnLocked = FALSE;
-   }
 
    if( pFileInfo->lNumLocksPos > 1 )
       hb_xfree( pFileInfo->pLocksPos );
@@ -443,6 +439,7 @@ static ERRCODE Close( AREAP pArea )
 {
    if( pArea->lpFileInfo->hFile != FS_ERROR )
    {
+      SELF_FLUSH( pArea );
       SELF_RAWLOCK( pArea, FILE_UNLOCK, 0 );
       hb_fsClose( pArea->lpFileInfo->hFile );
       pArea->lpFileInfo->hFile = FS_ERROR;
@@ -480,6 +477,9 @@ static ERRCODE DeleteRec( AREAP pArea )
 {
    PHB_ITEM pError;
 
+   if( SELF_GOCOLD( pArea ) == FAILURE )
+      return FAILURE;
+
    if( pArea->lpExtendInfo->bRecord[ 0 ] ==  '*' )
       return SUCCESS;
 
@@ -498,6 +498,17 @@ static ERRCODE DeleteRec( AREAP pArea )
    pArea->lpExtendInfo->bRecord[ 0 ] =  '*';
    pArea->lpExtendInfo->fRecordChanged = TRUE;
    return SUCCESS;
+}
+
+static ERRCODE Flush( AREAP pArea )
+{
+   if( pArea->lpFileInfo->hFile != FS_ERROR )
+   {
+      hb_fsCommit( pArea->lpFileInfo->hFile );
+      return SUCCESS;
+   }
+   else
+      return FAILURE;
 }
 
 static ERRCODE GetValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
@@ -720,6 +731,9 @@ static ERRCODE PutValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
    if( uiIndex > pArea->uiFieldCount )
       return FAILURE;
 
+   if( SELF_GOCOLD( pArea ) == FAILURE )
+      return FAILURE;
+
    if( !pArea->lpExtendInfo->fExclusive && !pArea->lpFileInfo->fFileLocked &&
        !hb_dbfIsLocked( pArea, pArea->lpExtendInfo->lRecNo ) )
    {
@@ -732,17 +746,6 @@ static ERRCODE PutValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
       return FAILURE;
    }
 
-   if( pArea->lpExtendInfo->fReadOnly )
-   {
-      pError = hb_errNew();
-      hb_errPutGenCode( pError, EG_READONLY );
-      hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_READONLY ) );
-      hb_errPutSubCode( pError, 1025 );
-      SELF_ERROR( pArea, pError );
-      hb_errRelease( pError );
-      return FAILURE;
-   }
-   
    pField = pArea->lpFields;
    uiOffset = 1;
    for( uiCount = 1; uiCount < uiIndex; uiCount++ )
@@ -941,6 +944,9 @@ static ERRCODE RecAll( AREAP pArea )
 {
    PHB_ITEM pError;
 
+   if( SELF_GOCOLD( pArea ) == FAILURE )
+      return FAILURE;
+
    if( pArea->lpExtendInfo->bRecord[ 0 ] !=  '*' )
       return SUCCESS;
 
@@ -1105,8 +1111,10 @@ static RDDFUNCS dbfTable = { 0,               /* Super Bof */
                              0,               /* Super FieldCount */
                              0,               /* Super FieldInfo */
                              0,               /* Super FieldName */
-                             0,               /* Super Flush */
+                             Flush,           /* Super Flush */
                              GetValue,
+                             0,               /* Super GoCold */
+                             0,               /* Super GoHot */
                              PutValue,
                              RecAll,
                              RecCount,

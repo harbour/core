@@ -608,8 +608,10 @@ typedef struct _RDDFUNCS
    DBENTRYP_SI   getValue;
 #if 0
    DBENTRYP_SVP  getVarLen;
+#endif
    DBENTRYP_V    goCold;
    DBENTRYP_V    goHot;
+#if 0
    DBENTRYP_VP   putRec;
 #endif
    DBENTRYP_SI   putValue;

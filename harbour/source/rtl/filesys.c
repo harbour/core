@@ -548,8 +548,25 @@ void    hb_fsCommit ( FHANDLE hFileHandle )
    }
 
 #else
+   #if defined(_MSC_VER)
 
-   s_uiErrorLast = FS_ERROR;
+      int dup_handle;
+
+      errno = 0;
+      dup_handle = _dup( hFileHandle );
+      s_uiErrorLast = errno;
+
+      if( dup_handle != -1 )
+      {
+         _close( dup_handle );
+         s_uiErrorLast = errno;
+      }
+
+   #else
+
+      s_uiErrorLast = FS_ERROR;
+
+   #endif
 
 #endif
 }

@@ -1,3 +1,13 @@
+19990827-18:46 GMT+1 Bruno Cantero <bruno@issnet.net>
+   * source/rtl/filesys.c
+     * Now hb_fsCommit() work with MSVC
+
+   * funclist.txt
+     include/rddapi.h
+     source/rdd/dbcmd.c
+     source/rdd/dbf1.c
+     * Added dbCommit() and dbCommitAll() functions
+
 19990827-14:19 GMT+1 Bruno Cantero <bruno@issnet.net>
    * include/rddapi.h
      source/vm/hvm.c

@@ -69,6 +69,7 @@ HARBOUR HB_DBAPPEND( void );
 HARBOUR HB_DBCLOSEALL( void );
 HARBOUR HB_DBCLOSEAREA( void );
 HARBOUR HB_DBCOMMIT( void );
+HARBOUR HB_DBCOMMITALL( void );
 HARBOUR HB_DBCREATE( void );
 HARBOUR HB_DBDELETE( void );
 HARBOUR HB_DBGOBOTTOM( void );
@@ -264,27 +265,34 @@ static ERRCODE FieldName( AREAP pArea, USHORT uiIndex, void * szName )
    return FAILURE;
 }
 
-static ERRCODE Flush( AREAP pArea )
-{
-   HB_SYMBOL_UNUSED( pArea );
-
-   printf( "Calling default: Flush()\n" );
-   return SUCCESS;
-}
-
 static ERRCODE Found( AREAP pArea, BOOL * pFound )
 {
    * pFound = pArea->fFound;
    return SUCCESS;
 }
 
-static ERRCODE Info( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
+static ERRCODE GoCold( AREAP pArea )
 {
-   HB_SYMBOL_UNUSED( pArea );
-   HB_SYMBOL_UNUSED( uiIndex );
-   HB_SYMBOL_UNUSED( pItem );
+   PHB_ITEM pError;
 
-   printf( "Calling default: Info()\n" );
+   if( pArea->lpExtendInfo->fReadOnly )
+   {
+      pError = hb_errNew();
+      hb_errPutGenCode( pError, EG_READONLY );
+      hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_READONLY ) );
+      hb_errPutSubCode( pError, 1025 );
+      SELF_ERROR( ( AREAP ) pCurrArea->pArea, pError );
+      hb_errRelease( pError );
+      return FAILURE;
+   }
+   else
+      return SUCCESS;
+}
+
+static ERRCODE GoHot( AREAP pArea )
+{
+   pArea->lpExtendInfo->fRecordChanged = FALSE;
+   pArea->lpFileInfo->fAppend = FALSE;
    return SUCCESS;
 }
 
@@ -354,15 +362,6 @@ static ERRCODE Skip( AREAP pArea, LONG lToSkip )
       return SELF_SKIPRAW( pArea, lToSkip );
 }
 
-static ERRCODE SkipFilter( AREAP pArea, LONG lToSkip )
-{
-   HB_SYMBOL_UNUSED( pArea );
-   HB_SYMBOL_UNUSED( lToSkip );
-
-   printf( "Calling default: SkipFilter()\n" );
-   return SUCCESS;
-}
-
 static ERRCODE StructSize( AREAP pArea, USHORT * uiSize )
 {
    HB_SYMBOL_UNUSED( pArea );
@@ -405,7 +404,7 @@ static RDDFUNCS defTable = { Bof,
                              ( DBENTRYP_I ) UnSupported,
                              UnSupported,
                              Skip,
-                             SkipFilter,
+                             ( DBENTRYP_L ) UnSupported,
                              ( DBENTRYP_L ) UnSupported,
                              AddField,
                              ( DBENTRYP_B ) UnSupported,
@@ -415,8 +414,10 @@ static RDDFUNCS defTable = { Bof,
                              FieldCount,
                              FieldInfo,
                              FieldName,
-                             Flush,
+                             UnSupported,
                              ( DBENTRYP_SI ) UnSupported,
+                             GoCold,
+                             GoHot,
                              ( DBENTRYP_SI ) UnSupported,
                              UnSupported,
                              ( DBENTRYP_ULP ) UnSupported,
@@ -425,7 +426,7 @@ static RDDFUNCS defTable = { Bof,
                              Alias,
                              Close,
                              ( DBENTRYP_VP ) UnSupported,
-                             Info,
+                             ( DBENTRYP_SI ) UnSupported,
                              NewArea,
                              Open,
                              Release,
@@ -831,21 +832,12 @@ HARBOUR HB_BOF( void )
 HARBOUR HB_DBAPPEND( void )
 {
    BOOL bUnLockAll = TRUE;
-   PHB_ITEM pError;
 
    if( pCurrArea )
    {
       bNetError = FALSE;
-      if( ( ( AREAP ) pCurrArea->pArea )->lpExtendInfo->fReadOnly )
-      {
-         pError = hb_errNew();
-         hb_errPutGenCode( pError, EG_READONLY );
-         hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_READONLY ) );
-         hb_errPutSubCode( pError, 1025 );
-         SELF_ERROR( ( AREAP ) pCurrArea->pArea, pError );
-         hb_errRelease( pError );
+      if( SELF_GOCOLD( ( AREAP ) pCurrArea->pArea ) == FAILURE )
          return;
-      }
       if( ISLOG( 1 ) )
          bUnLockAll = hb_parl( 1 );
       bNetError = ( SELF_APPEND( ( AREAP ) pCurrArea->pArea, bUnLockAll ) == FAILURE );
@@ -888,6 +880,18 @@ HARBOUR HB_DBCOMMIT( void )
       SELF_FLUSH( ( AREAP ) pCurrArea->pArea );
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, 0, "DBCOMMIT" );
+}
+
+HARBOUR HB_DBCOMMITALL( void )
+{
+   LPAREANODE pAreaNode;
+
+   pAreaNode = pWorkAreas;
+   while( pAreaNode )
+   {
+      SELF_FLUSH( ( AREAP ) pAreaNode->pArea );
+      pAreaNode = pAreaNode->pNext;
+   }
 }
 
 HARBOUR HB_DBCREATE( void )
