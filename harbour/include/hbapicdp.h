@@ -65,7 +65,18 @@
                                            HB_FUNCNAME( HB_CODEPAGE_##id )(); \
                                         }
 
-#define HB_CODEPAGE_ANNOUNCE( id )          HB_FUNC( HB_CODEPAGE_##id ) {}
+//------------------------------------------------------------------------------
+
+#define HB_CODEPAGE_ANNOUNCE( id )                  \
+  HB_FUNC( HB_CODEPAGE_##id ) {}
+	                            
+#define HB_CODEPAGE_INIT( id )                      \
+  HB_CODEPAGE_ANNOUNCE( id );                       \
+  HB_CALL_ON_STARTUP_BEGIN( hb_codepage_Init_##id ) \
+  hb_cdpRegister( &s_codepage );                    \
+  HB_CALL_ON_STARTUP_END( hb_codepage_Init_##id )   
+
+//------------------------------------------------------------------------------
 
 typedef struct _HB_MULTICHAR
 {
