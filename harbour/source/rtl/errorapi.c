@@ -665,7 +665,7 @@ PHB_ITEM hb_errRT_New(
    hb_errPutSubSystem( pError, szSubSystem ? szSubSystem : HB_ERR_SS_BASE );
    hb_errPutGenCode( pError, ( USHORT ) ulGenCode );
    hb_errPutSubCode( pError, ( USHORT ) ulSubCode );
-   hb_errPutDescription( pError, szDescription ? szDescription : hb_langDGetErrorDesc( ulGenCode ) );
+   hb_errPutDescription( pError, szDescription ? szDescription : ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ERRDESC + ulGenCode ) );
    hb_errPutOperation( pError, szOperation ? szOperation : "" );
    hb_errPutOsCode( pError, uiOsCode );
    hb_errPutFlags( pError, uiFlags );
@@ -689,7 +689,7 @@ PHB_ITEM hb_errRT_New_Subst(
    hb_errPutSubSystem( pError, szSubSystem ? szSubSystem : HB_ERR_SS_BASE );
    hb_errPutGenCode( pError, ( USHORT ) ulGenCode );
    hb_errPutSubCode( pError, ( USHORT ) ulSubCode );
-   hb_errPutDescription( pError, szDescription ? szDescription : hb_langDGetErrorDesc( ulGenCode ) );
+   hb_errPutDescription( pError, szDescription ? szDescription : ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ERRDESC + ulGenCode ) );
    hb_errPutOperation( pError, szOperation ? szOperation : "" );
    hb_errPutOsCode( pError, uiOsCode );
    hb_errPutFlags( pError, uiFlags | EF_CANSUBSTITUTE );
@@ -795,7 +795,7 @@ void hb_errInternal( ULONG ulIntCode, char * szText, char * szPar1, char * szPar
    hb_conOutErr( hb_conNewLine(), 0 );
    sprintf( buffer, "Unrecoverable error %lu: ", ulIntCode );
    hb_conOutErr( buffer, 0 );
-   sprintf( buffer, szText != NULL ? szText : hb_langDGetErrorIntr( ulIntCode ), szPar1, szPar2 );
+   sprintf( buffer, szText != NULL ? szText : ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ERRINTR + ulIntCode ), szPar1, szPar2 );
    hb_conOutErr( buffer, 0 );
    hb_conOutErr( hb_conNewLine(), 0 );
 

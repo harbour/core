@@ -36,179 +36,141 @@
 #include "hbapi.h"
 #include "hbapilng.h"
 
-static HB_LANG langEN =
+/* Always link in the default language */
+
+/* This hack is needed */
+#define HB_LANG_REQUEST( id )           HB_LANG_REQUEST_( id )
+#define HB_LANG_REQUEST_( id )          extern HB_FUNC( HB_LANG_##id ); \
+                                        void hb_lang_ForceLink( void ) \
+                                        { \
+                                           HB_FUNCNAME( HB_LANG_##id )(); \
+                                        }
+
+HB_LANG_REQUEST( HB_LANG_DEFAULT );
+
+/* NOTE: This is the maximum number of registered languages, later this can be 
+         made dynamic. */
+#define HB_LANG_MAX_ 64
+
+static PHB_LANG s_langList[ HB_LANG_MAX_ ];
+static PHB_LANG s_lang = NULL;
+
+static int hb_langFindPos( char * pszID )
 {
-   "English",                   /* Name */
-   "EN",                        /* RFC ID */
-   "437",                       /* Codepage */
+   int iPos;
 
-   /* Texts */
-
+   if( pszID != NULL )
    {
-      "YYYY/MM/DD",
-      "Y",
-      "N",
-   },
-
-   /* Month names */
-
-   {
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December"
-   },
-
-   /* Day names */
-
-   {
-      "Sunday",
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday"
-   },
-
-   /* Error description names */
-
-   {
-      "Unknown error",
-      "Argument error",
-      "Bound error",
-      "String overflow",
-      "Numeric overflow",
-      "Zero divisor",
-      "Numeric error",
-      "Syntax error",
-      "Operation too complex",
-      "",
-      "",
-      "Memory low",
-      "Undefined function",
-      "No exported method",
-      "Variable does not exist",
-      "Alias does not exist",
-      "No exported variable",
-      "Illegal characters in alias",
-      "Alias already in use",
-      "",
-      "Create error",
-      "Open error",
-      "Close error",
-      "Read error",
-      "Write error",
-      "Print error",
-      "",
-      "",
-      "",
-      "",
-      "Operation not supported",
-      "Limit exceeded",
-      "Corruption detected",
-      "Data type error",
-      "Data width error",
-      "Workarea not in use",
-      "Workarea not indexed",
-      "Exclusive required",
-      "Lock required",
-      "Write not allowed",
-      "Append lock failed",
-      "Lock Failure",
-      "",
-      "",
-      "",
-      "Incorrect number of arguments",
-      "array access",
-      "array assign",
-      "array dimension",
-      "not an array",
-      "conditional"
-   },
-
-   /* Internal error names */
-
-   {
-      "Can't locate starting procedure",
-      "Can't allocate memory (%s)",
-      "Can't reallocate memory (%s)",
-      "Free called with null pointer", /* DEBUG */
-      "Not implemented opcode (%s)",
-      "Not implemented (%s)"
+      for( iPos = 0; iPos < HB_LANG_MAX_; iPos++ )
+      {
+         if( s_langList[ iPos ] != NULL && strcmp( ( char * ) s_langList[ iPos ]->pItemList[ 0 ], pszID ) == 0 )
+            return iPos;
+      }
    }
-};
 
-static PHB_LANG s_langDef = &langEN;
+   return -1;
+}
 
-void     hb_langDSet             ( PHB_LANG lang )
+BOOL hb_langRegister( PHB_LANG lang )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_langDSet(%p)", lang));
+   HB_TRACE(HB_TR_DEBUG, ("hb_langRegister(%p)", lang));
 
    if( lang )
-      s_langDef = lang;
+   {
+      int iPos = hb_langFindPos( ( char * ) lang->pItemList[ HB_LANG_ITEM_BASE_ID + 0 ] );
+
+      if( iPos == -1 )
+      {
+         for( iPos = 0; iPos < HB_LANG_MAX_; iPos++ )
+         {
+            if( s_langList[ iPos ] == NULL )
+            {
+               s_langList[ iPos ] = lang;
+               return TRUE;
+            }
+         }
+      }
+      else
+      {
+         s_langList[ iPos ] = lang;
+         return TRUE;
+      }
+   }
+
+   return FALSE;
 }
 
-PHB_LANG hb_langDGet             ( void )
+BOOL hb_langDeRegister( char * pszID )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_langDGet()"));
+   int iPos;
 
-   return s_langDef;
+   HB_TRACE(HB_TR_DEBUG, ("hb_langDeRegister(%s)", pszID));
+
+   iPos = hb_langFindPos( pszID );
+
+   if( iPos != -1 )
+   {
+      s_langList[ iPos ] = NULL;
+      return TRUE;
+   }
+   else
+      return FALSE;
 }
 
-char *   hb_langDGetName         ( void )
+PHB_LANG hb_langFind( char * pszID )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_langDGetName()"));
+   int iPos;
 
-   return s_langDef->szName;
+   HB_TRACE(HB_TR_DEBUG, ("hb_langFind(%s)", pszID));
+
+   iPos = hb_langFindPos( pszID );
+
+   return iPos != -1 ? s_langList[ iPos ] : NULL;
 }
 
-char *   hb_langDGetID           ( void )
+PHB_LANG hb_langSelect( PHB_LANG lang )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_langDGetID()"));
+   PHB_LANG langOld = s_lang;
 
-   return s_langDef->szID;
+   HB_TRACE(HB_TR_DEBUG, ("hb_langSelect(%p)", lang));
+
+   if( lang )
+      s_lang = lang;
+
+   return langOld;
 }
 
-char *   hb_langDGetText         ( ULONG ulIndex )
+void * hb_langDGetItem( int iIndex )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_langDGetText(%lu)", ulIndex));
+   HB_TRACE(HB_TR_DEBUG, ("hb_langDGetItem(%i)", iIndex));
 
-   return s_langDef->szTextList[ ( ulIndex < sizeof( s_langDef->szTextList ) / sizeof( s_langDef->szTextList[ 0 ] ) ) ? ulIndex : 0 ];
+   if( s_lang && iIndex >= 0 && iIndex < HB_LANG_ITEM_MAX_ )
+      return s_lang->pItemList[ iIndex ];
+   else
+      return NULL;
 }
 
-char *   hb_langDGetDayName      ( ULONG ulIndex )
+HB_FUNC( HB_LANGSELECT )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_langDGetDayName(%lu)", ulIndex));
+   hb_retc( ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ID + 0 ) );
 
-   return s_langDef->szDayNameList[ ( ulIndex < sizeof( s_langDef->szDayNameList ) / sizeof( s_langDef->szDayNameList[ 0 ] ) ) ? ulIndex : 0 ];
+   if( ISCHAR( 1 ) )
+      hb_langSelect( hb_langFind( hb_parc( 1 ) ) );
 }
 
-char *   hb_langDGetMonthName    ( ULONG ulIndex )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_langDGetMonthName(%lu)", ulIndex));
-
-   return s_langDef->szMonthNameList[ ( ulIndex < sizeof( s_langDef->szMonthNameList ) / sizeof( s_langDef->szMonthNameList[ 0 ] ) ) ? ulIndex : 0 ];
-}
+/* Compatibility interface */
 
 char *   hb_langDGetErrorDesc    ( ULONG ulIndex )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_langDGetErrorDesc(%lu)", ulIndex));
 
-   return s_langDef->szErrorDescList[ ( ulIndex < sizeof( s_langDef->szErrorDescList ) / sizeof( s_langDef->szErrorDescList[ 0 ] ) ) ? ulIndex : 0 ];
+   return ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ERRDESC + ulIndex );
 }
 
 char *   hb_langDGetErrorIntr    ( ULONG ulIndex )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_langDGetErrorIntr(%lu)", ulIndex));
 
-   return s_langDef->szErrorIntrList[ ( ulIndex < sizeof( s_langDef->szErrorIntrList ) / sizeof( s_langDef->szErrorIntrList[ 0 ] ) ) ? ulIndex : 0 ];
+   return ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ERRINTR + ulIndex - 1 );
 }
+

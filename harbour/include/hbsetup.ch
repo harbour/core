@@ -38,6 +38,13 @@
 #ifndef HB_SETUP_CH_
 #define HB_SETUP_CH_
 
+/* NOTE: You can select the default language modul used by Harbour, by
+         defining this to a valid language modul identifier. */
+
+#ifndef HB_LANG_DEFAULT
+   #define HB_LANG_DEFAULT      EN
+#endif
+
 /* NOTE: You can select here, which features you to include of the different 
          Clipper implementations. */
 

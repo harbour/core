@@ -36,6 +36,9 @@
 #include "hbapi.h"
 #include "hbapierr.h"
 
+/* TOFIX: The screen buffer handling is not right for all platforms (Win32) 
+          The output of the launched (DOS?) app is not visible. */
+
 HB_FUNC( __RUN )
 {
 #if defined(__TURBOC__) || defined(__BORLANDC__) || defined(_MSC_VER) || defined(__IBMCPP__) || defined(__GNUC__)

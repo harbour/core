@@ -11,6 +11,7 @@ echo debug.lib >> build.tmp
 echo vm.lib >> build.tmp
 echo rtl.lib >> build.tmp
 echo gtdos.lib >> build.tmp
+echo lang.lib >> build.tmp
 echo rdd.lib >> build.tmp
 echo macro.lib >> build.tmp
 echo pp.lib >> build.tmp

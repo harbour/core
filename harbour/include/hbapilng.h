@@ -36,81 +36,51 @@
 #ifndef HB_APILNG_H_
 #define HB_APILNG_H_
 
-#include "hbsetup.h"
+#include "hbdefs.h"
+#include "hbvmpub.h"
+#include "hbinit.h"
 
 #if defined(HB_EXTERN_C)
 extern "C" {
 #endif
 
-#define HB_LANG_TEXT_DATEFMT    0
-#define HB_LANG_TEXT_YESCHAR    1
-#define HB_LANG_TEXT_NOCHAR     2
-#define HB_LANG_TEXT_MAX_       3
+/* Macro to publish a specific language module, for both C and Harbour level */
+#define HB_LANG_ANNOUNCE( id )          HB_FUNC( HB_LANG_##id ) {}
 
-#define HB_LANG_ED_MAX_         51
-#define HB_LANG_EI_MAX_         6
+/* Base values for the unified language item table */
+#define HB_LANG_ITEM_BASE_ID            0
+#define HB_LANG_ITEM_BASE_MONTH         6
+#define HB_LANG_ITEM_BASE_DAY           18
+#define HB_LANG_ITEM_BASE_NATMSG        25
+#define HB_LANG_ITEM_BASE_ERRDESC       38
+#define HB_LANG_ITEM_BASE_ERRINTR       89
+#define HB_LANG_ITEM_BASE_TEXT          95
+#define HB_LANG_ITEM_MAX_               98
 
-/* ; */
-
-typedef struct
+typedef struct _HB_LANG
 {
-   BYTE nWeight;
-   BYTE nFlags;
-} HB_LANGCHAR;
-
-typedef struct
-{
-   char * szName;
-   char * szID;
-   char * szCodepage;
-   char * szTextList [ HB_LANG_TEXT_MAX_ ];
-   char * szMonthNameList [ 12 ];
-   char * szDayNameList [ 7 ];
-   char * szErrorDescList [ HB_LANG_ED_MAX_ ];
-   char * szErrorIntrList [ HB_LANG_EI_MAX_ ];
-   HB_LANGCHAR * langcharList [ 256 ];
+   void * pItemList[ HB_LANG_ITEM_MAX_ ];
 } HB_LANG, * PHB_LANG, * HB_LANG_PTR;
-
-typedef struct _HB_LANGNODE
-{
-   PHB_LANG pLang;
-   struct _HB_LANGNODE * pNext;
-} HB_LANGNODE, * PHB_LANGNODE;
-
-/* TODO: check if it have to be visible outside of langapi.c
- * It it is required then there is a conflict:
- * it is declared here as 'extern' and in langapi.c it is declared as
- * 'static' - Watcom compiler reports error for this conflict
- */
-/* extern PHB_LANG langDef; */
-extern PHB_LANGNODE langList;
 
 /* Supported language list management */
 
-extern void     hb_langListAdd          ( PHB_LANG lang );
-extern PHB_LANG hb_langListFind         ( char * szName );
-extern void     hb_langListRelease      ( void );
+extern BOOL     hb_langRegister         ( PHB_LANG lang );
+extern BOOL     hb_langDeRegister       ( char * pszID );
+extern PHB_LANG hb_langFind             ( char * pszID );
 
 /* Default language selection and data query */
 
-extern void     hb_langDSet             ( PHB_LANG lang );
-extern PHB_LANG hb_langDGet             ( void );
+extern PHB_LANG hb_langSelect           ( PHB_LANG lang );
+extern void *   hb_langDGetItem         ( int iIndex );
 
-extern char *   hb_langDGetName         ( void );
-extern char *   hb_langDGetID           ( void );
-extern char *   hb_langDGetText         ( ULONG ulIndex );
-extern char *   hb_langDGetDayName      ( ULONG ulIndex );
-extern char *   hb_langDGetMonthName    ( ULONG ulIndex );
+/* Compatibility interface */
+
 extern char *   hb_langDGetErrorDesc    ( ULONG ulIndex );
 extern char *   hb_langDGetErrorIntr    ( ULONG ulIndex );
-
-/* Single language */
-
-extern PHB_LANG hb_langNew              ( void );
-extern void     hb_langDelete           ( PHB_LANG lang );
 
 #if defined(HB_EXTERN_C)
 }
 #endif
 
 #endif /* HB_APILNG_H_ */
+

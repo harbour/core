@@ -56,6 +56,13 @@ INIT PROCEDURE ClipInit
 
    PUBLIC GetList := {}
 
+   /* Set the language to the default */
+
+   /* This is needed to stringify the language ID */
+   #translate HB_LANG_SELECT_DEFAULT( <id> ) => hb_langSelect( #<id> )
+
+   HB_LANG_SELECT_DEFAULT( HB_LANG_DEFAULT )
+
    ErrorSys()
 
    /* TOFIX: In Clipper this function is not called from here CLIPINIT(). */

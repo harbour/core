@@ -10,8 +10,9 @@ DIRS=\
 	compiler \
 	rtl \
 	vm \
-	rdd \
 	macro \
+	lang \
+	rdd \
 	debug \
 	tools \
 

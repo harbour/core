@@ -49,8 +49,8 @@
 
 #include "hbapi.h"
 #include "hbapiitm.h"
+#include "hbapilng.h"
 
-/* TODO: Use the Language API to retrieve these strings. */
 /* NOTE: Ad-hoc names mostly taken from various Clipper source files. 
          These should be named properly if exported outside this file. 
          [vszakats] */
@@ -69,42 +69,25 @@
 #define _LF_YN                  12      /* "Y/N" */ /* NOTE: This must be in uppercase. [vszakats] */
 #define _INVALID_EXPR           13      /* "INVALID EXPRESSION" */
 
-static char * s_szMessages[] =
-{
-   "Database Files    # Records    Last Update     Size",
-   "Do you want more samples?",
-   "Page No.",
-   "** Subtotal **",
-   "* Subsubtotal *",
-   "*** Total ***",
-   "Ins",
-   "   ",
-   "Invalid date",
-   "Range: ",
-   " - ",
-   "Y/N",
-   "INVALID EXPRESSION"
-};
-
 char * hb_nationGetMsg( USHORT uiMsg )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_nationGetMsg(%hu)", uiMsg));
 
-   return ( uiMsg >= 1 && uiMsg <= ( sizeof( s_szMessages ) / sizeof( char * ) ) ) ? s_szMessages[ uiMsg - 1 ] : "";
+   return ( uiMsg >= 1 && uiMsg <= 13 ) ? ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_NATMSG + uiMsg - 1 ) : "";
 }
 
 HB_FUNC( ISAFFIRM )
 {
    PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
 
-   hb_retl( pItem && hb_itemGetCLen( pItem ) >= 1 && toupper( hb_itemGetCPtr( pItem )[ 0 ] ) == s_szMessages[ _LF_YN - 1 ][ 0 ] );
+   hb_retl( pItem && hb_itemGetCLen( pItem ) >= 1 && toupper( hb_itemGetCPtr( pItem )[ 0 ] ) == ( ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_NATMSG + _LF_YN - 1 ) )[ 0 ] );
 }
 
 HB_FUNC( ISNEGATIVE )
 {
    PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
 
-   hb_retl( pItem && hb_itemGetCLen( pItem ) >= 1 && toupper( hb_itemGetCPtr( pItem )[ 0 ] ) == s_szMessages[ _LF_YN - 1 ][ 2 ] );
+   hb_retl( pItem && hb_itemGetCLen( pItem ) >= 1 && toupper( hb_itemGetCPtr( pItem )[ 0 ] ) == ( ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_NATMSG + _LF_YN - 1 ) )[ 2 ] );
 }
 
 HB_FUNC( NATIONMSG )

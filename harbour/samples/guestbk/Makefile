@@ -15,6 +15,7 @@ LIBS=\
 	debug \
 	vm \
 	rtl \
+	lang \
 	rdd \
 	rtl \
 	vm \

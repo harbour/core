@@ -101,6 +101,6 @@ else
    # ---------------------------------------------------------------
    # Start the GNU make system
 
-   make $*
+   make $* > make_gnu.log
 
 fi

@@ -64,6 +64,7 @@ INCLUDE_DIR  = include
 COMMON_DIR   = source\common
 COMPILER_DIR = source\compiler
 DEBUG_DIR    = source\debug
+LANG_DIR     = source\lang
 MACRO_DIR    = source\macro
 PP_DIR       = source\pp
 RDD_DIR      = source\rdd
@@ -93,6 +94,7 @@ COMMON_LIB   = $(LIB_DIR)\common.lib
 DBFCDX_LIB   = $(LIB_DIR)\dbfcdx.lib
 DBFNTX_LIB   = $(LIB_DIR)\dbfntx.lib
 DEBUG_LIB    = $(LIB_DIR)\debug.lib
+LANG_LIB     = $(LIB_DIR)\lang.lib
 MACRO_LIB    = $(LIB_DIR)\macro.lib
 NULSYS_LIB   = $(LIB_DIR)\nulsys.lib
 PP_LIB       = $(LIB_DIR)\pp.lib
@@ -138,6 +140,7 @@ LIBLIST = \
    $(DEBUG_LIB) \
    $(MACRO_LIB) \
    $(PP_LIB) \
+   $(LANG_LIB) \
    $(RDD_LIB) \
    $(DBFCDX_LIB) \
    $(DBFNTX_LIB) \
@@ -288,8 +291,6 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\word.obj \
    $(OBJ_DIR)\xhelp.obj \
    \
-   $(OBJ_DIR)\msgxxx.obj \
-   \
    $(OBJ_DIR)\achoice.obj \
    $(OBJ_DIR)\adir.obj \
    $(OBJ_DIR)\alert.obj \
@@ -326,6 +327,19 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\typefile.obj \
    $(OBJ_DIR)\wait.obj \
    $(OBJ_DIR)\xsavescr.obj
+
+#
+# LANG.LIB rules
+#
+
+{$(LANG_DIR)}.c{$(OBJ_DIR)}.obj::
+   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+
+LANG_LIB_OBJS = \
+   $(OBJ_DIR)\msgen.obj \
+   $(OBJ_DIR)\msghu852.obj \
+   $(OBJ_DIR)\msghucwi.obj \
+   $(OBJ_DIR)\msghuwin.obj 
 
 #
 # TOOLS.LIB rules
@@ -603,6 +617,7 @@ all: zot \
    $(TOOLS_LIB) \
    $(MACRO_LIB) \
    $(DEBUG_LIB) \
+   $(LANG_LIB) \
    $(RDD_LIB) \
    $(NULSYS_LIB) \
    $(DBFNTX_LIB) \
@@ -635,6 +650,7 @@ all: \
    $(TOOLS_LIB) \
    $(MACRO_LIB) \
    $(DEBUG_LIB) \
+   $(LANG_LIB) \
    $(RDD_LIB) \
    $(NULSYS_LIB) \
    $(DBFNTX_LIB) \
@@ -750,6 +766,9 @@ $(MACRO_LIB) : $(MACRO_LIB_OBJS)
    lib /out:$@ $**
 
 $(PP_LIB) : $(PP_LIB_OBJS)
+   lib /out:$@ $**
+
+$(LANG_LIB) : $(LANG_LIB_OBJS)
    lib /out:$@ $**
 
 $(RDD_LIB) : $(RDD_LIB_OBJS)

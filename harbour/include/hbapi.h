@@ -41,7 +41,6 @@
 #ifndef HB_APIEXT_H_
 #define HB_APIEXT_H_
 
-#include "hbdefs.h"
 #include "hbvmpub.h"
 
 #if defined(HB_EXTERN_C)

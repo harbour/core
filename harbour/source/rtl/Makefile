@@ -105,8 +105,6 @@ C_SOURCES=\
 	version.c    \
 	word.c       \
 	xhelp.c      \
-	\
-	msgxxx.c     \
 
 PRG_SOURCES=\
 	achoice.prg  \

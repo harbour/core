@@ -78,6 +78,10 @@ STATIC s_aSkipList
 STATIC s_nStartTime
 STATIC s_nEndTime
 
+#ifdef __HARBOUR__
+   REQUEST HB_LANG_EN
+#endif
+
 FUNCTION Main( cPar1, cPar2 )
 
    OutStd( "Harbour Regression Test Suite" + HB_OSNewLine() +;
@@ -205,10 +209,9 @@ STATIC FUNCTION TEST_BEGIN( cParam )
 
    /* Set up the initial state */
 
-/* TODO: Need to add this, when multi language support will be available
-         to make sure all error messages comes in the original English
-         language. */
-/* SET LANGID TO EN */
+#ifdef __HARBOUR__
+   hb_langSelect( "EN" )
+#endif
    SET DATE ANSI
    SET CENTURY ON
    SET EXACT OFF

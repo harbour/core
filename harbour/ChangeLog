@@ -1,3 +1,73 @@
+20000414-22:03 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * make_gnu.*
+     + make output redirected to make_gnu.log by default.
+
+   * include/hbapilng.h
+   * include/hbsetup.ch
+   * include/hbsetup.h
+   * include/hbextern.ch
+   * include/hbdate.h
+   * utils/hbtest/hbtest.prg
+   * source/tools/dates.c
+   * source/vm/harbinit.prg
+   * source/rtl/datec.c
+   * source/rtl/natmsg.c
+   * source/rtl/langapi.c
+   * source/rtl/Makefile
+   * source/rtl/errorsys.c
+   - source/rtl/natmsg/*
+   + source/lang/msg_tpl.c
+   + source/lang/msgen.c
+   + source/lang/msghu852.c
+   + source/lang/msg*.c
+   - source/rtl/msgxxx.c
+   * source/Makefile
+   * makefile.bc
+   * makefile.vc
+   * bin/bld*.*
+   * tests/Makefile
+   * samples/guestbk/makefile
+   * samples/guestbk/bld_b32.bat
+   * samples/hscript/makefile
+   * samples/hscript/bld_b32.bat
+   * samples/misc/makefile
+   * samples/pe/makefile
+   * utils/hbdoc/makefile
+   * utils/hbextern/makefile
+   * utils/hbrun/makefile
+   * utils/hbtest/makefile
+     ! runner lib removed from the GNU-make system
+     + New dynamic Language API added. Runtime selection of language, compile
+       time selection of the default language, multiple language support in 
+       the same executable.
+     + NATMSG API now uses the Language API.
+     + HBTEST is now setting the language to EN before doing the tests.
+     * English and Hungarian 852 message modules converted to the new format,
+       and added to the makefiles.
+
+     ; ! WARNING ! Please convert your language to the new format. Follow 
+       MSG_TPL.C as a template. There are also some new items which should 
+       be translated or adapted to your language.
+       (Don't forget to add a comma after each string item)
+
+     ; Use -DHB_LANG_DEFAULT=<langID> (for example -DHB_LANG_DEFAULT=EN)
+       to specify the default language for your build.
+
+     ; Use REQUEST HB_LANG_<langID> to request the linkage of additional
+       language modules.
+
+     ; Use hb_langSelect( "<langID>" ) to change the language at runtime.
+
+     ; TODO: Startup code for MSC8 in language modules.
+     ; TODO: Convert the rest of the language modules to the new format.
+
+   * source/rtl/run.c
+     ! TOFIX added.
+
+   * include/hbapi.h
+     % Removed #include "hbdefs.h", because it was also included by hbvmpub.h.
+
 20000413-19:30 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
    * source/compiler/hvm.c

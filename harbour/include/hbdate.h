@@ -42,10 +42,6 @@
 extern "C" {
 #endif
 
-/* In msgxxx.c modules */
-extern char *   hb_dateMonthsName [];
-extern char *   hb_dateDaysName [];
-
 extern double   hb_dateSeconds( void );
 extern char *   hb_dateCMonth( int iMonth );
 extern char *   hb_dateCDOW( int iDay );
