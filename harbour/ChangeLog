@@ -8,6 +8,35 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-08-22 12:10 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+   + source/rtl/color53.prg
+   + source/rtl/mssgline.prg
+     ! modules borrowed from xharbour (required for recent ttopbar.prg changes)
+
+   * makefile.bc
+   * makefile.nt
+   * makefile.vc
+   * source/rtl/Makefile
+     + added modules mssgline.prg and color53.prg
+
+   * include/hbapicdp.h
+     + Added hb_cdpchrcmp() prototype
+
+   * include/hbdefs.h
+     + Added support for ULONLONG
+
+   * include/hbrddcdx.h
+   * source/rdd/dbfcdx/dbfcdx1.c
+   * source/rdd/dbfcdx/dbfcdx2.h
+     + Freeing pages implemented
+     + redistributing keys implemented
+     * small speed improvement
+     ! And many bug fixes
+     (changes borrowed from xharbour - developed by Przemyslaw Czerpak <druzus@polbox.com>)
+
+   * source/rtl/cdpapi.c
+     ! sync with xharbour (changes required for DBFCDX improvements)
+
 2003-08-22 11:26 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
    * source/rtl/ttopbar.prg
      ! some required formating
