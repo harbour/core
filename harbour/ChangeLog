@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+2002-02-18 23:41 UTC-0300 Luiz Rafael Culik <culikr@uol.com.br>
+  * utils/hbmake/hbmake.prg
+    utils/hbmake/hbmtuils.prg
     * Fixed minor bugs reported bu Chen
 
 2002-02-19 00:05 UTC+0100 Martin Vogel <vogel@inttec.de>
