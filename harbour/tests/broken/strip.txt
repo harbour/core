@@ -1,22 +1,18 @@
-There are four strip files here :
+Strip
 
-#1 : strip.prg          This one is broken
-#2 : strip2.prg         This one works
-#3 : strip3.prg         Broken as well
-#4 : strip4.prg         Works. Includes TClass()
+Strip is a program which copies the infile to the outfile.
 
-You'll need to the latest FILES.C for this + my harbour.y patch.
+The reason why this program is still broken is because there is still a
+discussion about the file format
 
-The first one uses the TClass().
+Newline     = chr(10) or chr(13)+chr(10)
+End of file = chr(0) or chr(26)
 
-The second one uses the Class functions.
+Another reason is that the fRead does not work properly yet.
 
-The third one uses the TClass() but store ClassH in the static.
+The program now uses fReadStr, which reads a single character at a time
 
-The fourth one has TClass() in the .PRG.
-
-The STATIC which is used, is removed (set to NIL) once you are done.
-
+The TextFile class has been designed to allow to read (large) blocks.
 
 Good luck
 

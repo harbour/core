@@ -18,13 +18,11 @@ function Main( cFrom, cTo )
    local oTo
    local cOut
 
-   static oTrick1, oTrick2                      // Dirty trick
-
    cFrom := Default( cFrom, "strip.prg" )
    cTo   := Default( cTo,   "strip.out" )
 
-   oFrom := TDosFile(oTrick1):Stew( cFrom, "R" )
-   oTo   := TDosFile(oTrick2):Stew( cTo  , "W" )
+   oFrom := TTextFile():New( cFrom, "R" )
+   oTo   := TTextFile():New( cTo  , "W" )
 
    do while !oFrom:lEoF
       cOut := oFrom:Run()
@@ -41,13 +39,11 @@ return nil
 //
 // Generic DOS file handler
 //
-function TDosFile( oGoneFile )                      // Parameter = dirty
+function TTextFile()                            // Parameter = dirty
 
    static oFile
-   local oRet
 
-   if oFile == NIL                              // Second instance not correct
-      QOut("Here")
+   if oFile == NIL
       oFile := TClass():New( "TDosFile" )       // Create a new class def
 
       oFile:AddData( "cFileName"  )             // Filename spec. by user
@@ -60,7 +56,7 @@ function TDosFile( oGoneFile )                      // Parameter = dirty
       oFile:AddData( "cMode"      )             // Mode of file use
                                                 // R = read, W = write
 
-      oFile:AddMethod( "Stew"    , @Stew()     )  // Constructor
+      oFile:AddMethod( "New"    , @New()     )  // Constructor
       oFile:AddMethod( "Run"    , @Run()     )  // Get/set data
       oFile:AddMethod( "Dispose", @Dispose() )  // Clean up code
       oFile:AddMethod( "Read"   , @Read()    )  // Read line
@@ -71,19 +67,17 @@ function TDosFile( oGoneFile )                      // Parameter = dirty
 
       oFile:Create()
    endif
-   oRet := oFile:Instance()
-
-return oRet
+return  oFile:Instance()
 
 
 //
-// Method DosFile:Stew -> Create a new dosfile
+// Method TextFile:New -> Create a new text file
 //
 // <cFile>      file name. No wild characters
 // <cMode>      mode for opening. Default "R"
 // <nBlockSize> Optional maximum blocksize
 //
-function Stew( cFileName, cMode, nBlock )
+function New( cFileName, cMode, nBlock )
 
    local self := QSelf()                        // Get self
 
