@@ -62,10 +62,11 @@
 # ---------------------------------------------------------------
 
 !ifndef ECHO
-   ECHO = echo.
+# don't indent definitions
+ECHO = echo.
 !endif
 !ifndef DEL
-   DEL = del
+DEL = del
 !endif
 
 MK_FILE      = makefile.vc
@@ -96,7 +97,7 @@ HBPP_DIR     = utils\hbpp
 HBMAKE_DIR   = utils\hbmake
 
 !ifdef PDF
-   HBPDF_DIR   = contrib\pdflib
+HBPDF_DIR   = contrib\pdflib
 !endif
 
 #
@@ -111,7 +112,7 @@ HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS)
 LDFLAGS        = $(LDFLAGS)
 
 !ifdef PDF
-   HARBOURFLAGS   = $(HARBOURFLAGS) -dPDF
+HARBOURFLAGS   = $(HARBOURFLAGS) -dPDF
 !endif
 
 #

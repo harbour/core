@@ -1,3 +1,7 @@
+2001-10-22 01:10 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
+   * makefile.vc
+     * corrected ECHO and PDF definition.
+
 2001-10-21 19:10 GMT -3 Luiz Rafael Culik<culik@sl.conex.net>
    * source/compiler/harbour.c
       * Fixed alingment on the _DECL section
