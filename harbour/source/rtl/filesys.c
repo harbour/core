@@ -49,7 +49,9 @@
     #include <dir.h>
   #endif
 
-  #if !defined(_MSC_VER)
+  #if defined(_MSC_VER)
+    #include <sys\locking.h>
+  #else
     #if !defined(HAVE_POSIX_IO)
     #define HAVE_POSIX_IO
     #endif
@@ -410,6 +412,7 @@ BOOL    hb_fsLock   ( FHANDLE handle, ULONG start,
                       ULONG length, USHORT mode )
 {
         int result=0;
+        long pos;
 
 #if defined(HAVE_POSIX_IO) && !defined(__GNUC__) && !defined(__IBMCPP__)
         errno = 0;
@@ -424,10 +427,15 @@ BOOL    hb_fsLock   ( FHANDLE handle, ULONG start,
         }
         last_error = errno;
 #else
+#if defined(_MSC_VER)
+        pos = hb_fsSeek( handle, start, 0 );
+        result = locking( handle, mode?_LK_UNLCK:_LK_LOCK,length );
+        hb_fsSeek( handle, pos, 0 );
+#else        
         result = 1;
         last_error = FS_ERROR;
 #endif
-
+#endif
         return (result ? FALSE : TRUE );
 }
 

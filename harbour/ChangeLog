@@ -1,3 +1,7 @@
+19990809-03:23 EDT Paul Tucker <ptucker@sympatico.ca>
+   * source/rtl/filesys.c
+     * hb_fsLock implimented for msvc
+
 19990809-07:40 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/odbc moved to contrib/odbc
    * source/rtl/console.c
