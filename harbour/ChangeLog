@@ -1,3 +1,10 @@
+19991007-17:55 GMT+2 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/coompiler/expropt.c
+	* added RCS Id header
+	* added Ron Pinkas as copyright holder because he is the 
+	initial creator of this code
+
 19991007-11:30 EDT Paul Tucker <ptucker@sympatico.ca>
    * makefile.vc
      * removed symbols.obj from compiler - I thought it needed it, but not so.
