@@ -1,3 +1,19 @@
+2000-10-03 231:45 UTC+0100 JFL <jfl@mafact.com>
+   * source/compiler/hbpcode.c
+     * uprated kolpas limit counter from 3 to 20
+       to allow more neested #command to be matched
+   * include/hbclass.ch
+     * Added two compatibility #define allowing somebody to
+       disable either the autoInherit of tObject (HB_CLS_NOTOBJECT)
+       or to not auto initiate logical and Numerical var by default
+       (HB_CLS_NOAUTOINIT)
+   * source/rtl/tclass.prg
+     * Added optional param to addmultidata and aadmulticlsdata
+       to control the autoinit (see previous addons)
+   * source/vm/classes.c
+     * Scoping error when scoped var where used from inline
+
+
 2000-10-02 13:00 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/hbpcode.c
      * Corrected 1 compiler warning.

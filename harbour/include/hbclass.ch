@@ -78,6 +78,30 @@ DECLARE TClass ;
 /* it seem actually impossible to completely separate it without creating */
 /* four differents include file (what I would not see in fact ) */
 
+/* There is also two compatibility define you can use */
+/* HB_CLS_NOTOBJECT wich IF DEFINED, disable the auto inherit of tobject */
+/* (wich in fact also disable the classy compatibility :new(...) => :Init(...)  */
+/* HB_CLS_NOAUTOINIT wich disable the (VO like) AutoInit for Logical and Numeric */
+/* when not specifically initiated */
+/* These two are disabled by default */
+/* So Each class _inherit_ of tObject by default and */
+/*    Each type logical or numerical is initiated to .F. and 0 by default */
+
+/* #define HB_CLS_NOTOBJECT  */ /* Should be included in some compatibility include files as needed */
+/* #define HB_CLS_NOAUTOINIT */ /* Idem */
+
+#ifdef HB_CLS_NOTOBJECT
+ #define __HB_CLS_PAR  __CLS_PAR00
+#else
+ #define __HB_CLS_PAR  __CLS_PARAM
+#endif
+
+#ifdef HB_CLS_NOAUTOINIT
+ #define __HB_CLS_NOINI .T.
+#else
+ #define __HB_CLS_NOINI .F.
+#endif
+
 #ifndef HB_CLS_FWO
 #ifndef HB_CLS_CSY
 #ifndef HB_CLS_VO
@@ -109,7 +133,7 @@ DECLARE TClass ;
       static s_oClass AS CLASS TClass;;
       local nScope := HB_OO_CLSTP_EXPORTED ;;
       if s_oClass == NIL ;;
-         s_oClass := TClass():New( <(ClassName)>, __CLS_PARAM([ <(SuperClass1)> ] [ ,<(SuperClassN)> ] ) ) ;;
+         s_oClass := TClass():New( <(ClassName)>, __HB_CLS_PAR ([ <(SuperClass1)> ] [ ,<(SuperClassN)> ] ) ) ;;
      #undef _CLASS_NAME_ ;;
      #define _CLASS_NAME_ <ClassName> ;;
      #translate CLSMETH <ClassName> <MethodName>() => @<ClassName>_<MethodName>() ;
@@ -127,7 +151,7 @@ DECLARE TClass ;
       static s_oClass AS CLASS TClass;;
       local nScope := HB_OO_CLSTP_EXPORTED ;;
       if s_oClass == NIL ;;
-         s_oClass := TClass():New( <(ClassName)>, __CLS_PARAM([ <(SuperClass1)> ] [ ,<(SuperClassN)> ] ) ) ;;
+         s_oClass := TClass():New( <(ClassName)>, __HB_CLS_PAR ([ <(SuperClass1)> ] [ ,<(SuperClassN)> ] ) ) ;;
      #undef _CLASS_NAME_ ;;
      #define _CLASS_NAME_ <ClassName> ;;
      #translate CLSMETH <ClassName> <MethodName>() => @<MethodName>() ;
@@ -148,11 +172,11 @@ DECLARE TClass ;
 
 #xcommand VAR <DataNames,...> [ TYPE <type> ] [ ASSIGN <uValue> ] [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<ro: READONLY, RO>] => ;
    _HB_MEMBER \{[AS <type>] <DataNames>\} ;;
-   s_oClass:AddMultiData( <(type)>, <uValue>, HBCLSCHOICE( <.export.>, <.protect.>, <.hidde.> ) + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ), \{<(DataNames)>\} ) ;
+   s_oClass:AddMultiData( <(type)>, <uValue>, HBCLSCHOICE( <.export.>, <.protect.>, <.hidde.> ) + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ), \{<(DataNames)>\}, __HB_CLS_NOINI ) ;
 
 #xcommand VAR <DataNames,...> [ AS <type> ] [ INIT <uValue> ] [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<ro: READONLY, RO>] => ;
    _HB_MEMBER \{[AS <type>] <DataNames>\} ;;
-   s_oClass:AddMultiData( <(type)>, <uValue>, HBCLSCHOICE( <.export.>, <.protect.>, <.hidde.> ) + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ), \{<(DataNames)>\} ) ;
+   s_oClass:AddMultiData( <(type)>, <uValue>, HBCLSCHOICE( <.export.>, <.protect.>, <.hidde.> ) + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ), \{<(DataNames)>\}, __HB_CLS_NOINI ) ;
 
 #xcommand VAR <DataName> [ AS <type> ] IN <SuperClass> => ;
    _HB_MEMBER \{[AS <type>] <DataName>\} ;;
@@ -202,38 +226,38 @@ DECLARE TClass ;
 
 #xcommand EXPORT <DataNames,...> [ AS <type> ] [ INIT <uValue> ] [<ro: READONLY, RO>] => ;
    _HB_MEMBER \{[AS <type>] <DataNames>\} ;;
-   s_oClass:AddMultiData( <(type)>, <uValue>, HB_OO_CLSTP_EXPORTED + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ), \{<(DataNames)>\} ) ;
+   s_oClass:AddMultiData( <(type)>, <uValue>, HB_OO_CLSTP_EXPORTED + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ), \{<(DataNames)>\}, __HB_CLS_NOINI ) ;
 
 #xcommand EXPORT <DataNames,...> [ TYPE <type> ] [ ASSIGN <uValue> ] [<ro: READONLY, RO>] => ;
    _HB_MEMBER \{[AS <type>] <DataNames>\} ;;
-   s_oClass:AddMultiData( <(type)>, <uValue>, HB_OO_CLSTP_EXPORTED + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ), \{<(DataNames)>\} ) ;
+   s_oClass:AddMultiData( <(type)>, <uValue>, HB_OO_CLSTP_EXPORTED + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ), \{<(DataNames)>\}, __HB_CLS_NOINI ) ;
 
 #xcommand PROTECT <DataNames,...> [ AS <type> ] [ INIT <uValue> ] [<ro: READONLY, RO>] => ;
    _HB_MEMBER \{[AS <type>] <DataNames>\} ;;
-   s_oClass:AddMultiData( <(type)>, <uValue>, HB_OO_CLSTP_PROTECTED + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ), \{<(DataNames)>\} ) ;
+   s_oClass:AddMultiData( <(type)>, <uValue>, HB_OO_CLSTP_PROTECTED + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ), \{<(DataNames)>\}, __HB_CLS_NOINI ) ;
 
 #xcommand PROTECT <DataNames,...> [ TYPE <type> ] [ ASSIGN <uValue> ] [<ro: READONLY, RO>] => ;
    _HB_MEMBER \{[AS <type>] <DataNames>\} ;;
-   s_oClass:AddMultiData( <(type)>, <uValue>, HB_OO_CLSTP_PROTECTED + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ), \{<(DataNames)>\} ) ;
+   s_oClass:AddMultiData( <(type)>, <uValue>, HB_OO_CLSTP_PROTECTED + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ), \{<(DataNames)>\}, __HB_CLS_NOINI ) ;
 
 #xcommand HIDDE <DataNames,...> [ AS <type> ] [ INIT <uValue> ] [<ro: READONLY, RO>] => ;
    _HB_MEMBER \{[AS <type>] <DataNames>\} ;;
-   s_oClass:AddMultiData( <(type)>, <uValue>, HB_OO_CLSTP_HIDDEN + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ), \{<(DataNames)>\} ) ;
+   s_oClass:AddMultiData( <(type)>, <uValue>, HB_OO_CLSTP_HIDDEN + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ), \{<(DataNames)>\}, __HB_CLS_NOINI ) ;
 
 #xcommand HIDDE <DataNames,...> [ TYPE <type> ] [ ASSIGN <uValue> ] [<ro: READONLY, RO>] => ;
    _HB_MEMBER \{[AS <type>] <DataNames>\} ;;
-   s_oClass:AddMultiData( <(type)>, <uValue>, HB_OO_CLSTP_HIDDEN + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ), \{<(DataNames)>\} ) ;
+   s_oClass:AddMultiData( <(type)>, <uValue>, HB_OO_CLSTP_HIDDEN + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ), \{<(DataNames)>\}, __HB_CLS_NOINI ) ;
 
 #ENDIF
 
 
 #xcommand CLASSVAR <DataNames,...> [ TYPE <type> ] [ ASSIGN <uValue> ] [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<ro: READONLY, RO>] [<share: SHARED>] => ;
    _HB_MEMBER \{[AS <type>] <DataNames>\} ;;
-   s_oClass:AddMultiClsData(<(type)>, <uValue>, HBCLSCHOICE( <.export.>, <.protect.>, <.hidde.> ) + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ) + iif( <.share.>, HB_OO_CLSTP_SHARED, 0 ), \{<(DataNames)>\} ) ;
+   s_oClass:AddMultiClsData(<(type)>, <uValue>, HBCLSCHOICE( <.export.>, <.protect.>, <.hidde.> ) + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ) + iif( <.share.>, HB_OO_CLSTP_SHARED, 0 ), \{<(DataNames)>\}, __HB_CLS_NOINI ) ;
 
 #xcommand CLASSVAR <DataNames,...> [ AS <type> ] [ INIT <uValue> ] [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<ro: READONLY, RO>] [<share: SHARED>] => ;
    _HB_MEMBER \{[AS <type>] <DataNames>\} ;;
-   s_oClass:AddMultiClsData(<(type)>, <uValue>, HBCLSCHOICE( <.export.>, <.protect.>, <.hidde.> ) + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ) + iif( <.share.>, HB_OO_CLSTP_SHARED, 0 ), \{<(DataNames)>\} ) ;
+   s_oClass:AddMultiClsData(<(type)>, <uValue>, HBCLSCHOICE( <.export.>, <.protect.>, <.hidde.> ) + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ) + iif( <.share.>, HB_OO_CLSTP_SHARED, 0 ), \{<(DataNames)>\}, __HB_CLS_NOINI ) ;
 
 
 /* FWOBJECT SYNTAX */
@@ -241,12 +265,12 @@ DECLARE TClass ;
 
 #xcommand DATA <DataNames,...> [ AS <type> ] [ INIT <uValue> ] [ <export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<ro: READONLY, RO>] => ;
    _HB_MEMBER \{[AS <type>] <DataNames>\} ;;
-   s_oClass:AddMultiData( <(type)>, <uValue>, HBCLSCHOICE( <.export.>, <.protect.>, <.hidde.> ) + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ), \{<(DataNames)>\} ) ;
+   s_oClass:AddMultiData( <(type)>, <uValue>, HBCLSCHOICE( <.export.>, <.protect.>, <.hidde.> ) + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ), \{<(DataNames)>\}, __HB_CLS_NOINI ) ;
 
 
 #xcommand CLASSDATA <DataNames,...> [ AS <type> ] [ INIT <uValue> ] [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<ro: READONLY, RO>] [<share: SHARED>] => ;
    _HB_MEMBER \{[AS <type>] <DataNames>\} ;;
-   s_oClass:AddMultiClsData(<(type)>, <uValue>, HBCLSCHOICE( <.export.>, <.protect.>, <.hidde.> ) + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ) + HB_OO_CLSTP_SHARED, \{<(DataNames)>\} ) ;
+   s_oClass:AddMultiClsData(<(type)>, <uValue>, HBCLSCHOICE( <.export.>, <.protect.>, <.hidde.> ) + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ) + HB_OO_CLSTP_SHARED, \{<(DataNames)>\}, __HB_CLS_NOINI ) ;
 
 #endif
 
