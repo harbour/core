@@ -14,6 +14,9 @@ PROCEDURE MAIN( cLine, cDelim )
       ? '"' + a[ i ] + '"'
    NEXT i
 
+   QOut( HB_INLINE() )
+         { hb_retc( "\na C String, including { and \" \n" ); }
+
 RETURN
 
 FUNCTION aTokens( cLine, cDelimiter )
@@ -27,12 +30,13 @@ FUNCTION aTokens( cLine, cDelimiter )
       ENDIF
 
       HB_INLINE( aTokens, cLine, Asc( cDelimiter ) )
-      {
+      {  // Note including {
          PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
          PHB_ITEM pLine  = hb_param( 2, HB_IT_STRING );
          char cDelimiter = (char) hb_parni(3);
          size_t i, iOffset = 0, iIndex = 1;
 
+         /* Comment including { */
          for( i = 0; i < pLine->item.asString.length; i++ )
          {
             if( pLine->item.asString.value[i] == cDelimiter )

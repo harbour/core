@@ -1002,7 +1002,12 @@ int hb_comp_SLX_CustomAction( int x, int aiHold[], int *ptr_iHold, BOOL *ptr_bIg
 
       case HB_INLINE :
 	 {
-	    char sBuffer[ YY_BUF_SIZE ], *pBuffer, sInlineSym[] = "HB_INLINE_0";
+	    #define INLINE_NORMAL 0
+	    #define INLINE_SINGLE_QUOT 1
+	    #define INLINE_DOUBLE_QUOT 2
+	    #define INLINE_COMMENT 3
+
+	    char sBuffer[ YY_BUF_SIZE ], *pBuffer, sInlineSym[] = "HB_INLINE_0", cMode = INLINE_NORMAL;
 	    int iSize, iBraces = 0;
 	    extern BOOL hb_pp_bInline;
             PINLINE pInline;
@@ -1035,23 +1040,78 @@ int hb_comp_SLX_CustomAction( int x, int aiHold[], int *ptr_iHold, BOOL *ptr_bIg
 	    }
 	    pBuffer = (char*) sBuffer;
 
-	    while( *pBuffer /* && ( *pBuffer == ' ' || *pBuffer == '\t' ) */ )
+	    while( *pBuffer )
 	    {
-	       if( *pBuffer == '{' )
+	       switch( cMode )
 	       {
-	          iBraces++;
-	       }
-	       else if( *pBuffer == '}' && iBraces > 1 )
-	       {
-	          iBraces--;
-	       }
-	       else if( *pBuffer == '}' )
-	       {
-	          hb_pp_bInline = FALSE;
+		  case INLINE_NORMAL :
+	             if( *pBuffer == '{' )
+	             {
+	                iBraces++;
+	             }
+	             else if( *pBuffer == '}' && iBraces > 1 )
+	             {
+	                iBraces--;
+	             }
+	             else if( *pBuffer == '}' )
+	             {
+	                hb_pp_bInline = FALSE;
+			break;
+	             }
+	             else if( *pBuffer == '\'' )
+	             {
+		        cMode = INLINE_SINGLE_QUOT;
+	             }
+	             else if( *pBuffer == '"' )
+	             {
+		        cMode = INLINE_DOUBLE_QUOT;
+	             }
+	             else if( *pBuffer == '/' && *(pBuffer+1) == '/' )
+	             {
+		        goto SaveInline;
+	             }
+	             else if( *pBuffer == '/' && *(pBuffer+1) == '*' )
+	             {
+		        pBuffer++;
+		        cMode = INLINE_COMMENT;
+	             }
+		     break;
+
+		  case INLINE_SINGLE_QUOT :
+		     if( *pBuffer == '\\' )
+		     {
+		        pBuffer++;
+		     }
+		     else if( *pBuffer == '\'' )
+		     {
+			cMode = INLINE_NORMAL;
+		     }
+		     break;
+
+		  case INLINE_DOUBLE_QUOT :
+		     if( *pBuffer == '\\' )
+		     {
+		        pBuffer++;
+		     }
+		     else if( *pBuffer == '"' )
+		     {
+			cMode = INLINE_NORMAL;
+		     }
+		     break;
+
+		  case INLINE_COMMENT :
+		     if( *pBuffer == '*' && *(pBuffer+1) == '/' )
+		     {
+		        pBuffer++;
+			cMode = INLINE_NORMAL;
+		     }
+		     break;
 	       }
 
                pBuffer++;
 	    }
+
+          SaveInline :
 
 	    if( pInline->pCode == NULL )
 	    {
