@@ -373,7 +373,7 @@ void hb_pp_Table( void )
    static COMMANDS sC___213 = {0,"COUNT","[TO \1A00] [FOR \1B00] [WHILE \1C00] [NEXT \1D00] [RECORD \1E00] [\1F20REST>] [ALL]",
        "\1A00 := 0 ; DBEval( {|| \1A00++}, \1B40, \1C40, \1D00, \1E00, \1F50 )",&sC___212 };
    static COMMANDS sC___214 = {0,"SUM","[ \1A00 [, \1B00]  TO  \1C00 [, \1D00] ] [FOR \1E00] [WHILE \1F00] [NEXT \1G00] [RECORD \1H00] [\1I20REST>] [ALL]",
-       "\1C00 := [ \1D00 := ] 0 ; DBEval( {|| \1C00 += \1A00 [, \1D00 += \1B00 ]\}, \1E40, \1F40, \1G00, \1H00, \1I50 )",&sC___213 };
+       "\1C00 := [ \1D00 := ] 0 ; DBEval( {|| \1C00 += \1A00 [, \1D00 += \1B00 ]}, \1E40, \1F40, \1G00, \1H00, \1I50 )",&sC___213 };
    static COMMANDS sC___215 = {0,"AVERAGE","[ \1A00 [, \1B00]  TO  \1C00 [, \1D00] ] [FOR \1E00] [WHILE \1F00] [NEXT \1G00] [RECORD \1H00] [\1I20REST>] [ALL]",
        "M->__Avg := \1C00 := [ \1D00 := ] 0 ; DBEval( {|| M->__Avg := M->__Avg + 1, \1C00 := \1C00 + \1A00 [, \1D00 := \1D00 + \1B00] }, \1E40, \1F40, \1G00, \1H00, \1I50 ) ; \1C00 := \1C00 / M->__Avg [; \1D00 := \1D00 / M->__Avg ]",&sC___214 };
    static COMMANDS sC___216 = {0,"LIST","[\1A10] [\1B20OFF>] [\1C20 TO PRINTER>] [TO FILE \1D40] [FOR \1E00] [WHILE \1F00] [NEXT \1G00] [RECORD \1H00] [\1I20REST>] [ALL]",

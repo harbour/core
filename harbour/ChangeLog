@@ -1,3 +1,7 @@
+2001-10-15 09:15 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+  ! source/pp/pptable.c
+     * Warning fixed
+
 2001-10-12 12:44 GMT-3 Horacio Roldan <harbour_ar@yahoo.com.ar>
    * source/rdd/dbfcdx/dbfcdx1.c
      ! fixed updating keys with trailing spaces
