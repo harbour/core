@@ -19,7 +19,7 @@ PROCEDURE MAIN( cLine, cDelim )
 
    QOut( C_Func() )
 
-   QOut( PostDumpTest() )
+   QOut( EndDumpTest() )
 
 RETURN
 
@@ -87,5 +87,5 @@ HB_FUNC( C_FUNC )
 }
 #pragma ENDDUMP
 
-Function PostDumpTest()
-RETURN "Post Dump Test"
+Function EndDumpTest()
+RETURN "End Dump Test"
