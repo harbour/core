@@ -7,6 +7,12 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+  * contrib/libct/files.c
+  * contrib/libct/pos1.c
+  * contrib/libct/posdiff.c
+  * contrib/libct/strswap.c
+    * Add some values for default to eliminate warnings when compiling
+      with gcc -O2.
   * contrib/libct/ctflist.txt
     * state of CSETCENT() and UNSELECTED(): started.
 
