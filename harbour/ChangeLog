@@ -1,3 +1,12 @@
+2001-05-11 09:00 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * include/hbclass.ch
+     ! Fixed declaration support for OnError() METHODS
+     ! Fixed support for Methods having space prefixing the "( ... )" in the method implementation.
+     + Refined #error messages to report the Class Name .
+
+   * source/pp/ppcore.c
+     * Removed recently added but not required support of #define expansion in #error directive.
+
 2001-05-10 22:10 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/rtl/tclass.prg
      + Added logic to dispose of posibble "(...)" suffix to Method Name in AddInline()
