@@ -4,10 +4,11 @@
 
 /*
  * Harbour Project source code:
- * National Collation Support Module (HU852)
+ * National Collation Support Module ( Greek WIN )
  *
- * Copyright 1999-2004 Viktor Szakats <viktor.szakats@syenar.hu>
+ * Copyright 2004 Pete Dionisopoulos <pete_westg@yahoo.gr>
  * www - http://www.harbour-project.org
+ * v1.0 2004 Panayotis (Pete) Dionysopoulos <pete_westg@yahoo.gr>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,20 +51,20 @@
  *
  */
 
-/* Language name: <Your language> */
-/* ISO language code (2 chars): (please look it up in /doc/lang_id.txt) */
-/* Codepage: <Your codepage> */
+/* Language name: Greek WIN*/
+/* ISO language code (2 chars): EL */
+/* Codepage: ANSI (1253) */
 
 #include <ctype.h>
 #include "hbapi.h"
 #include "hbapicdp.h"
 
-#define NUMBER_OF_CHARACTERS  35    /* The number of single characters in the
+#define NUMBER_OF_CHARACTERS  32    /* The number of single characters in the
                                        alphabet, two-as-one aren't considered
                                        here, accented - are considered. */
-#define IS_LATIN               1    /* Should be 1, if the national alphabet
+#define IS_LATIN               0    /* Should be 1, if the national alphabet
                                        is based on Latin */
-#define ACCENTED_EQUAL         0    /* Should be 1, if accented character 
+#define ACCENTED_EQUAL         1    /* Should be 1, if accented character 
                                        has the same weight as appropriate
                                        unaccented. */
 #define ACCENTED_INTERLEAVED   0    /* Should be 1, if accented characters
@@ -74,7 +75,7 @@
 
 /* If ACCENTED_EQUAL or ACCENTED_INTERLEAVED is 1, you need to mark the
    accented characters with the symbol '~' before each of them, for example:
-      a~Ä
+    a~Ä
    If there is two-character sequence, which is considered as one, it should
    be marked with '.' before and after it, for example:
       ... h.ch.i ...
@@ -83,13 +84,12 @@
    same excepting the characters case, of course.
  */
 
-static HB_CODEPAGE s_codepage = { "HU852", NUMBER_OF_CHARACTERS,
-    "AµBCDEêFGHI÷JKLMNO‡ôäPQRSTUÈöÎVWXYZ","a†bcdeÇfghi°jklmno¢îãpqrstu£Å˚vwxyz",
+static HB_CODEPAGE s_codepage = { "ELWIN",NUMBER_OF_CHARACTERS,
+    "¡~¢¬√ƒ≈∏∆«~π»…~∫ ÀÃÕŒœ~º–—””‘’~æ÷◊ÿŸ~ø","·~‹‚„‰Â~›ÊÁ~ﬁËÈ~ﬂÍÎÏÌÓÔ~¸ÒÛÚÙı~˝ˆ˜¯˘~˛",
     IS_LATIN,ACCENTED_EQUAL,ACCENTED_INTERLEAVED,0,NULL,NULL,NULL,NULL,0,NULL };
 
-HB_CODEPAGE_INIT( HU852 );
+HB_CODEPAGE_INIT( ELWIN );
 
 #if ! defined(__GNUC__) && ! defined(_MSC_VER)
-   #pragma startup hb_codepage_Init_HU852
+   #pragma startup hb_codepage_Init_ELWIN
 #endif
-

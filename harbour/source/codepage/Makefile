@@ -5,6 +5,8 @@
 ROOT = ../../
 
 C_SOURCES=\
+	cdpeldos.c    \
+	cdpelwin.c    \
 	cdpesdos.c    \
 	cdpeswin.c    \
 	cdpgedos.c    \

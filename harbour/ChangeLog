@@ -8,6 +8,52 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-05-21 13:30 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/rdd/dbf1.c
+  * source/rdd/dbfdbt/dbfdbt1.c
+    * Calls of hb_cdpTranslate() are changed to hb_cdpnTranslate()
+  + source/codepage/cdpeldos.c
+  + source/codepage/cdpelwin.c
+    + Greek language codepage files added - provided by Pete Dionisopoulos.
+  * source/lang/msgel.c
+  * source/lang/msgelwin.c
+    + Greek language files added - provided by Pete Dionisopoulos.
+  * source/codepage/Makefile
+  * source/lang/Makefile
+  * hrbdll.bc
+  * hrbdll.vc
+  * makefile.bc
+  * makefile.nt
+  * makefile.vc
+    * Makefiles has been updated due to new codepage and lang files.
+  * source/codepage/cdp_tpl.c
+  * source/codepage/cdpesdos.c
+  * source/codepage/cdpeswin.c
+  * source/codepage/cdpgedos.c
+  * source/codepage/cdpgewin.c
+  * source/codepage/cdphu852.c
+  * source/codepage/cdphuwin.c
+  * source/codepage/cdpla850.c
+  * source/codepage/cdppl852.c
+  * source/codepage/cdppliso.c
+  * source/codepage/cdpplmaz.c
+  * source/codepage/cdpplwin.c
+  * source/codepage/cdppt850.c
+  * source/codepage/cdpptiso.c
+  * source/codepage/cdpru866.c
+  * source/codepage/cdprukoi.c
+  * source/codepage/cdpruwin.c
+  * source/codepage/cdpsk852.c
+  * source/codepage/cdpskiso.c
+  * source/codepage/cdpsl437.c
+  * source/codepage/cdpsl852.c
+  * source/codepage/cdpsliso.c
+  * source/codepage/cdpslwin.c
+  * source/codepage/cdpsrwin.c
+    * Few lines are replaced with HB_CODEPAGE_INIT( <id> ), as was suggested by
+      Ilias Lazaridis
+
+
 2004-05-19 13:25 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
    * source/codepage/cdpsrwin.c

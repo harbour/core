@@ -88,11 +88,8 @@ static HB_CODEPAGE s_codepage = { "DE",NUMBER_OF_CHARACTERS,
     "AéBCDEFGHIJKLMNOôPQRS·TUöVWXYZ","aÑbcdefghijklmnoîpqrs·tuÅvwxyz",
     IS_LATIN,ACCENTED_EQUAL,ACCENTED_INTERLEAVED,0,NULL,NULL,NULL,NULL,0,NULL };
 
-HB_CODEPAGE_ANNOUNCE( DE );
+HB_CODEPAGE_INIT( DE );
 
-HB_CALL_ON_STARTUP_BEGIN( hb_codepage_Init_DE )
-   hb_cdpRegister( &s_codepage );
-HB_CALL_ON_STARTUP_END( hb_codepage_Init_DE )
 #if ! defined(__GNUC__) && ! defined(_MSC_VER)
    #pragma startup hb_codepage_Init_DE
 #endif

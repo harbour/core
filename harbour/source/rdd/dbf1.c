@@ -1069,7 +1069,7 @@ static ERRCODE hb_dbfGetValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
       case HB_IT_STRING:
          hb_itemPutCL( pItem, ( char * ) pArea->pRecord + pArea->pFieldOffset[ uiIndex ],
                        pField->uiLen );
-         hb_cdpTranslate( pItem->item.asString.value, pArea->cdPage, hb_cdp_page );
+         hb_cdpnTranslate( pItem->item.asString.value, pArea->cdPage, hb_cdp_page, pField->uiLen );
          break;
 
       case HB_IT_LOGICAL:

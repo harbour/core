@@ -322,6 +322,8 @@ HARBOUR_DLL_OBJS = \
   $(OBJ_DIR)\msgcskam.obj \
   $(OBJ_DIR)\msgcswin.obj \
   $(OBJ_DIR)\msgde.obj \
+  $(OBJ_DIR)\msgel.obj \
+  $(OBJ_DIR)\msgelwin.obj \
   $(OBJ_DIR)\msgen.obj \
   $(OBJ_DIR)\msgeo.obj \
   $(OBJ_DIR)\msges.obj \
@@ -1485,6 +1487,12 @@ $(OBJ_DIR)\msgcswin.obj : $(LANG_DIR)\msgcswin.c
    $(CC) $(CLIBFLAGS) /Fo$@ $**
 
 $(OBJ_DIR)\msgde.obj : $(LANG_DIR)\msgde.c
+   $(CC) $(CLIBFLAGS) /Fo$@ $**
+
+$(OBJ_DIR)\msgel.obj : $(LANG_DIR)\msgel.c
+   $(CC) $(CLIBFLAGS) /Fo$@ $**
+
+$(OBJ_DIR)\msgelwin.obj : $(LANG_DIR)\msgelwin.c
    $(CC) $(CLIBFLAGS) /Fo$@ $**
 
 $(OBJ_DIR)\msgen.obj : $(LANG_DIR)\msgen.c

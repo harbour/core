@@ -89,11 +89,8 @@ static HB_CODEPAGE s_codepage = { "PT850",NUMBER_OF_CHARACTERS,
     "Aµ∑∂«éBCÄDEê‘“FGHI÷ﬁ◊ÿJKLMN•O‡„‚ÂôPQRSTUÈÎÍöVWXYZ","a†ÖÉ∆ÑbcádeÇäàfghi°çåãjklmn§o¢ïì‰îpqrstu£óñÅvwxyz",
     IS_LATIN,ACCENTED_EQUAL,ACCENTED_INTERLEAVED,0,NULL,NULL,NULL,NULL,0,NULL };
 
-HB_CODEPAGE_ANNOUNCE( PT850 );
+HB_CODEPAGE_INIT( PT850 );
 
-HB_CALL_ON_STARTUP_BEGIN( hb_codepage_Init_PT850 )
-   hb_cdpRegister( &s_codepage );
-HB_CALL_ON_STARTUP_END( hb_codepage_Init_PT850 )
 #if ! defined(__GNUC__) && ! defined(_MSC_VER)
    #pragma startup hb_codepage_Init_PT850
 #endif

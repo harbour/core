@@ -88,11 +88,8 @@ static HB_CODEPAGE s_codepage = { "SLISO",NUMBER_OF_CHARACTERS,
     "ABCÈÆDÐEFGHIJKLMNOPQRS©TUVWZ®XY","abcèædðefghijklmnopqrs¹tuvwz¾xy",
     IS_LATIN,ACCENTED_EQUAL,ACCENTED_INTERLEAVED,0,NULL,NULL,NULL,NULL,0,NULL };
 
-HB_CODEPAGE_ANNOUNCE( SLISO );
+HB_CODEPAGE_INIT( SLISO );
 
-HB_CALL_ON_STARTUP_BEGIN( hb_codepage_Init_SLISO )
-   hb_cdpRegister( &s_codepage );
-HB_CALL_ON_STARTUP_END( hb_codepage_Init_SLISO )
 #if ! defined(__GNUC__) && ! defined(_MSC_VER)
    #pragma startup hb_codepage_Init_SLISO
 #endif

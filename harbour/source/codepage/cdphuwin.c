@@ -87,11 +87,8 @@ static HB_CODEPAGE s_codepage = { "HUWIN", NUMBER_OF_CHARACTERS,
     "AÁBCDEÉFGHIÍJKLMNOÓÖÕPQRSTUÚÜÛVWXYZ","aábcdeéfghiíjklmnoóöõpqrstuúüûvwxyz",
     IS_LATIN,ACCENTED_EQUAL,ACCENTED_INTERLEAVED,0,NULL,NULL,NULL,NULL,0,NULL };
 
-HB_CODEPAGE_ANNOUNCE( HUWIN );
+HB_CODEPAGE_INIT( HUWIN );
 
-HB_CALL_ON_STARTUP_BEGIN( hb_codepage_Init_HUWIN )
-   hb_cdpRegister( &s_codepage );
-HB_CALL_ON_STARTUP_END( hb_codepage_Init_HUWIN )
 #if ! defined(__GNUC__) && ! defined(_MSC_VER)
    #pragma startup hb_codepage_Init_HUWIN
 #endif

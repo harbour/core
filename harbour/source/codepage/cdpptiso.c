@@ -89,11 +89,8 @@ static HB_CODEPAGE s_codepage = { "PTISO",NUMBER_OF_CHARACTERS,
     "AÁÀÂÃÄBCÇDEÉÈÊFGHIÍÌÎÏJKLMNÑOÓÒÔÕÖPQRSTUÚÙÛÜVWXYZ","aáàâãäbcçdeéèêfghiíìîïjklmnñoóòôõöpqrstuúùûüvwxyz",
     IS_LATIN,ACCENTED_EQUAL,ACCENTED_INTERLEAVED,0,NULL,NULL,NULL,NULL,0,NULL };
 
-HB_CODEPAGE_ANNOUNCE( PTISO );
+HB_CODEPAGE_INIT( PTISO );
 
-HB_CALL_ON_STARTUP_BEGIN( hb_codepage_Init_PTISO )
-   hb_cdpRegister( &s_codepage );
-HB_CALL_ON_STARTUP_END( hb_codepage_Init_PTISO )
 #if ! defined(__GNUC__) && ! defined(_MSC_VER)
    #pragma startup hb_codepage_Init_PTISO
 #endif

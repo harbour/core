@@ -62,11 +62,8 @@ static HB_CODEPAGE s_codepage = { "RU1251",32,
     "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞ‗","אבגדהוזחטיךכלםמןנסעףפץצקרשתûü‎‏ÿ",
     0,0,0,0,NULL,NULL,NULL,NULL,0,NULL };
 
-HB_CODEPAGE_ANNOUNCE( RU1251 );
+HB_CODEPAGE_INIT( RU1251 );
 
-HB_CALL_ON_STARTUP_BEGIN( hb_codepage_Init_RU1251 )
-   hb_cdpRegister( &s_codepage );
-HB_CALL_ON_STARTUP_END( hb_codepage_Init_RU1251 )
 #if ! defined(__GNUC__) && ! defined(_MSC_VER)
    #pragma startup hb_codepage_Init_RU1251
 #endif

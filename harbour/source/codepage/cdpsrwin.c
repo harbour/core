@@ -99,11 +99,8 @@ static HB_CODEPAGE s_codepage = { "SRWIN",
    0,
    NULL };
 
-HB_CODEPAGE_ANNOUNCE( SRWIN );
+HB_CODEPAGE_INIT( SRWIN );
 
-HB_CALL_ON_STARTUP_BEGIN( hb_codepage_Init_SRWIN )
-   hb_cdpRegister( &s_codepage );
-HB_CALL_ON_STARTUP_END( hb_codepage_Init_SRWIN )
 #if ! defined(__GNUC__) && ! defined(_MSC_VER)
    #pragma startup hb_codepage_Init_SRWIN
 #endif

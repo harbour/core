@@ -457,6 +457,8 @@ LANG_LIB_OBJS = \
    $(OBJ_DIR)\msgcswin.obj \
    $(OBJ_DIR)\msgde.obj \
    $(OBJ_DIR)\msgdewin.obj \
+   $(OBJ_DIR)\msgel.obj \
+   $(OBJ_DIR)\msgelwin.obj \
    $(OBJ_DIR)\msgen.obj \
    $(OBJ_DIR)\msgeo.obj \
    $(OBJ_DIR)\msges.obj \
@@ -501,6 +503,8 @@ LANG_LIB_OBJS = \
    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 
 CODEPAGE_LIB_OBJS = \
+   $(OBJ_DIR)\cdpeldos.obj \
+   $(OBJ_DIR)\cdpelwin.obj \
    $(OBJ_DIR)\cdpesdos.obj \
    $(OBJ_DIR)\cdpeswin.obj \
    $(OBJ_DIR)\cdpgedos.obj \

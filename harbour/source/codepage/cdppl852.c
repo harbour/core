@@ -88,11 +88,8 @@ static HB_CODEPAGE s_codepage = { "PL852",NUMBER_OF_CHARACTERS,
     "A§BCèDE®FGHIJKLùMN„O‡PQRSóTUVWXYZçΩ","a•bcÜde©fghijklàmn‰o¢pqrsòtuvwxyz´æ",
     IS_LATIN,ACCENTED_EQUAL,ACCENTED_INTERLEAVED,0,NULL,NULL,NULL,NULL,0,NULL };
 
-HB_CODEPAGE_ANNOUNCE( PL852 );
+HB_CODEPAGE_INIT( PL852 );
 
-HB_CALL_ON_STARTUP_BEGIN( hb_codepage_Init_PL852 )
-   hb_cdpRegister( &s_codepage );
-HB_CALL_ON_STARTUP_END( hb_codepage_Init_PL852 )
 #if ! defined(__GNUC__) && ! defined(_MSC_VER)
    #pragma startup hb_codepage_Init_PL852
 #endif

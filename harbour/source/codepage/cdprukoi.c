@@ -62,11 +62,8 @@ static HB_CODEPAGE s_codepage = { "RUKOI8",32,
     "бвчздецъйклмнопртуфхжигюыэящшьас","БВЧЗДЕЦЪЙКЛМНОПРТУФХЖИГЮЫЭЯЩШЬАС",
     0,0,0,0,NULL,NULL,NULL,NULL,0,NULL };
 
-HB_CODEPAGE_ANNOUNCE( RUKOI8 );
+HB_CODEPAGE_INIT( RUKOI8 );
 
-HB_CALL_ON_STARTUP_BEGIN( hb_codepage_Init_RUKOI8 )
-   hb_cdpRegister( &s_codepage );
-HB_CALL_ON_STARTUP_END( hb_codepage_Init_RUKOI8 )
 #if ! defined(__GNUC__) && ! defined(_MSC_VER)
    #pragma startup hb_codepage_Init_RUKOI8
 #endif

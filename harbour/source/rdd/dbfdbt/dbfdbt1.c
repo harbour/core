@@ -346,7 +346,7 @@ static void hb_dbtGetMemo( DBTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 
    hb_itemPutCPtr( pItem, ( char * ) pBuffer, ulSize );
 #ifndef HB_CDP_SUPPORT_OFF
-   hb_cdpTranslate( pItem->item.asString.value, pArea->cdPage, hb_cdp_page );
+   hb_cdpnTranslate( pItem->item.asString.value, pArea->cdPage, hb_cdp_page, pItem->item.asString.length );
 #endif
    hb_itemSetCMemo( pItem );
 }
@@ -382,13 +382,13 @@ static void hb_dbtWriteMemo( DBTAREAP pArea, ULONG ulBlock, PHB_ITEM pItem, ULON
    * ulStoredBlock = ulNewBlock;
 
 #ifndef HB_CDP_SUPPORT_OFF
-   hb_cdpTranslate( pItem->item.asString.value, hb_cdp_page, pArea->cdPage );
+   hb_cdpnTranslate( pItem->item.asString.value, hb_cdp_page, pArea->cdPage, pItem->item.asString.length );
 #endif
    /* Write memo data and eof mark */
    hb_fsWriteLarge( pArea->hMemoFile, ( BYTE * ) hb_itemGetCPtr( pItem ), ulLen );
    hb_fsWrite( pArea->hMemoFile, pBlock, ( DBT_BLOCKSIZE - ( USHORT ) ( ulLen % DBT_BLOCKSIZE ) ) );
 #ifndef HB_CDP_SUPPORT_OFF
-   hb_cdpTranslate( pItem->item.asString.value, pArea->cdPage, hb_cdp_page );
+   hb_cdpnTranslate( pItem->item.asString.value, pArea->cdPage, hb_cdp_page, pItem->item.asString.length );
 #endif
 
    if( bNewBlock )

@@ -88,11 +88,8 @@ static HB_CODEPAGE s_codepage = { "SL437",NUMBER_OF_CHARACTERS,
     "ABC^]D\EFGHIJKLMNOPQRS[TUVWZ@XY","abc~}d|efghijklmnopqrs{tuvwz`xy",
     IS_LATIN,ACCENTED_EQUAL,ACCENTED_INTERLEAVED,0,NULL,NULL,NULL,NULL,0,NULL };
 
-HB_CODEPAGE_ANNOUNCE( SL437 );
+HB_CODEPAGE_INIT( SL437 );
 
-HB_CALL_ON_STARTUP_BEGIN( hb_codepage_Init_SL437 )
-   hb_cdpRegister( &s_codepage );
-HB_CALL_ON_STARTUP_END( hb_codepage_Init_SL437 )
 #if ! defined(__GNUC__) && ! defined(_MSC_VER)
    #pragma startup hb_codepage_Init_SL437
 #endif
