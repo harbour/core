@@ -59,7 +59,7 @@ CC = bcc
 AS = tasm
 
 # Borland C/C++ (DOS 16 bits)
-CFLAGS = -mh $(CFLAGS)
+CFLAGS = -mh $(CFLAGS) -v -y
 
 BIN_DIR = bin\b16
 OBJ_DIR = obj\b16
@@ -118,7 +118,7 @@ HBMAKE_DIR   = utils\hbmake
 # C compiler definition and C flags. These should never have to change.
 #
 
-CFLAGS         = -I$(INCLUDE_DIR) -d $(C_USR) $(CFLAGS)
+CFLAGS         = -I$(INCLUDE_DIR) -d $(C_USR) $(CFLAGS) -v -y
 CLIBFLAGS      = -c $(CFLAGS) $(CLIBFLAGS)
 CLIBFLAGSDEBUG = -v $(CLIBFLAGS)
 HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS)
@@ -498,6 +498,7 @@ DEBUG_LIB_OBJS = \
 
 COMMON_LIB_OBJS = \
    $(OBJ_DIR)\hbfsapi.obj \
+   $(OBJ_DIR)\hbgete.obj \
    $(OBJ_DIR)\hbstr.obj \
    $(OBJ_DIR)\hbtrace.obj \
    $(OBJ_DIR)\hbver.obj \
@@ -737,6 +738,10 @@ $(GTWIN_LIB)  : $(GTWIN_LIB_OBJS)
 #
 
 $(OBJ_DIR)\hbfsapi.obj : $(COMMON_DIR)\hbfsapi.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(COMMON_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\hbgete.obj : $(COMMON_DIR)\hbgete.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(COMMON_LIB) $(ARFLAGS) -+$@,,
 
