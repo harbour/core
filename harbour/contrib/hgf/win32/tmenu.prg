@@ -53,7 +53,7 @@
 
 #include "hbclass.ch"
 
-CLASS TMenu FROM TPersistent
+CLASS TMenu FROM HBPersistent
 
    DATA   nHandle
    DATA   Items    PROPERTY

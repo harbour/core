@@ -62,7 +62,7 @@
 
 static aForms := {}
 
-CLASS TForm FROM TPersistent
+CLASS TForm FROM HBPersistent
 
    DATA      hWnd
    DATA      oMainMenu
