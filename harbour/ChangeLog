@@ -8,11 +8,15 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-04-14 19:05 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
+   * harbour/contrib/rdd_ads/adsfunc.c
+     Added adsGetConnectionType() provided by Randy Portnoff
+
 2004-04-14 12:20 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/tests/bldtest/Makefile
     * fixed typo in file name
 
-  * xharbour/include/hbdefs.h
+  * harbour/include/hbdefs.h
     + added HB_COUNTER and HB_PTRDIFF types - first for reference
       counters and second for any pointer differences and pointer to
       integer conversions - this modification is synced with xHarbour
@@ -162,10 +166,10 @@
      * Updated
 
 2004-03-31 21:45 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
-   * xharbour/source/rdd/workarea.c
+   * harbour/source/rdd/workarea.c
      + added scopped relations. Now OrdSetRelation() works with DBFCDX like it
        does with Clipper 5.3b
-   * xharbour/contrib/rdd_ads/ads1.c
+   * harbour/contrib/rdd_ads/ads1.c
      + adsClearScope() method added to avoid r/t error with ADS and scoped relations
      Thanks to Przemyslaw Czerpak for the fix (borrowed from xHarbour)
 

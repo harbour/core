@@ -161,27 +161,31 @@ HB_FUNC( ADSISSERVERLOADED )
    hb_retnl( pbLoaded );
 }
 
-/* HB_FUNC( ADSGETCONNECTIONTYPE )
+HB_FUNC( ADSGETCONNECTIONTYPE )
 {
    UNSIGNED16 pusConnectType = 0;
    UNSIGNED32 ulRetVal;
-   ADSHANDLE  nConnToCheck = hb_parnl(1) ; // caller can specify a connection
+   ADSAREAP   pArea;
+   ADSHANDLE  pTableConnectHandle = 0;
 
-   if ( !nConnToCheck )
-      nConnToCheck = adsConnectHandle;
+   pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
 
-   if ( !nConnToCheck )
+   if( pArea )
    {
-      nConnToCheck = adsConnectHandle;
+      AdsGetTableConnection( pArea->hTable, &pTableConnectHandle );
 
+      if ( pTableConnectHandle )
+      {
+         ulRetVal = AdsGetConnectionType( pTableConnectHandle, &pusConnectType );
+
+         if ( ulRetVal != AE_SUCCESS )
+            pusConnectType = 0;
+      }
    }
-   ulRetVal = AdsGetConnectionType (adsConnectHandle, &pusConnectType) ;
-
-   if ( ulRetVal != AE_SUCCESS )
-      pusConnectType = 0;
 
    hb_retnl( pusConnectType );
-} */
+
+}
 
 HB_FUNC( ADSGETSERVERTIME )
 {
