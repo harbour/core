@@ -1,3 +1,9 @@
+2000-07-27 19:50 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+    *include/hbexpra.c
+    *source/compiler/expropta.c
+        *fixed GPF/core dump after some syntax errors
+
 2000-07-27 03:50 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/harbour.slx
      * Removed rule for ignoring empty lines, to fix incorrect line numbers in warnigs and errors.

@@ -483,6 +483,7 @@ HB_EXPR_PTR hb_compExprSetOperand( HB_EXPR_PTR pExpr, HB_EXPR_PTR pItem )
        *    a := 1 + b += 2
        */
       hb_compErrorSyntax( pItem );
+      pExpr->value.asOperator.pRight = pItem; /* set it anyway */
    }
    else
    {
