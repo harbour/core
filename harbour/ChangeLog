@@ -2,8 +2,8 @@
 
    source/compiler/harbour.c
      * hb_compCompile() Added Clipper like message showing how many parse errors found.
-     * hb_compAutoOpen() added 2nd paramter pointer to bSkipGen of caller (hb_compCompile()).
-       Added logic to not "remember" hb_comp_bAnyWarning and hb_comp_iErrorCount from previous parsings.
+     * hb_compAutoOpen() added 2nd parameter pointer to bSkipGen of caller (hb_compCompile()).
+       Added logic to "remember" hb_comp_bAnyWarning and hb_comp_iErrorCount from previous parsings.
 
 2000-06-11 21:30 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
 
