@@ -8,6 +8,35 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-02-18 22:05 UTC+0100 Tomaz Zupan <tomaz.zupan@orpo.si>
+  * include/hbdbf.h
+  * include/hbdbsort.h
+  * include/hbexprc.c
+  * include/hboo.ch
+  * source/common/hbfhnd.c
+  * source/compiler/genc.c
+  * source/compiler/harbour.c
+  * source/compiler/hbfix.c
+  * source/compiler/hbpcode.c
+  * source/pp/ppcomp.c
+  * source/rdd/hbdbsort.c
+  * source/rtl/at.c
+  * source/rtl/descend.c
+  * source/rtl/memoline.c
+  * source/rtl/philes.c
+  * source/rtl/philesx.c
+  * source/rtl/strings.c
+  * source/rtl/gtcrs/gtcrs.c
+  * source/rtl/gtcrs/kbdcrs.c
+  * source/vm/debug.c
+  * source/vm/dynsym.c
+  * source/vm/eval.c
+  * source/vm/extend.c
+  * source/vm/macro.c
+  * source/vm/memvars.c
+  * source/vm/runner.c
+    ! Added newline to the end of file, to avoid annoying warning
+
 2003-02-18 23:05 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rdd/dbfntx/dbfntx1.c
     ! Stupid bug is fixed, which was introduced recently
@@ -24,12 +53,12 @@
 
 2003-02-15 11:00 UTC+0100 Tomaz Zupan <tomaz.zupan@orpo.si>
   * config/linux/global.cf
-    - removed PRG_USR directive, because it is no longer needed  
+    - removed PRG_USR directive, because it is no longer needed
       to compile dbfsdf.prg
   * source/rtl/dbsdf.prg
     + Automatic EOL recognition. FindEOL() recognises LF,CR+LF and CR
       as newline delimiters
-    
+
 2003-02-14 22:05 UTC+0100 Tomaz Zupan <tomaz.zupan@orpo.si>
   * include/hbapi.h
   * include/hbcomp.h
