@@ -1,9 +1,9 @@
 PROCEDURE Main
 
-   PRIVATE cName
    LOCAL   cLocal
+   PRIVATE cName
 
-   CLS
+   CLEAR SCREEN
 
    Alert( "Testinf PP as Interpreter... " )
 

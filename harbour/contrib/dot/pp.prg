@@ -709,6 +709,12 @@ PROCEDURE PP_Run( cFile )
 
    bCompile := .F.
 
+   aSize( aProcedures, 0 )
+
+   #ifdef __CLIPPER__
+      Memory(-1)
+   #endif
+
 RETURN
 
 //--------------------------------------------------------------//
@@ -866,16 +872,14 @@ FUNCTION RP_Run_Err( oErr )
       sArgs := Left( sArgs, Len( sArgs ) -2 )
    ENDIF
 
-   #ifdef __CLIPPER__
-      IF oErr:SubCode == 1001
-         nProc := aScan( aProcedures, {|aProc| aProc[1] == ProcName(2 + 2) } )
-         IF nProc > 0
-            s_xRet := NIL
-            ExecuteProcedure( aProcedures[nProc] )
-            RETURN ( s_xRet )
-         ENDIF
+   IF oErr:SubCode == 1001
+      nProc := aScan( aProcedures, {|aProc| aProc[1] == ProcName(2 + 2) } )
+      IF nProc > 0
+         s_xRet := NIL
+         ExecuteProcedure( aProcedures[nProc] )
+         RETURN ( s_xRet )
       ENDIF
-   #endif
+   ENDIF
 
    Alert( "Sorry, R/T Error: '" + oErr:Operation + "' " + oErr:Description + sArgs + " " + PP_ProcName() + '(' + LTrim( Str( PP_ProcLine() ) ) + ')')
 
