@@ -100,15 +100,61 @@ static jmp_buf s_env;
 /* TODO: This function should return an error code. The preprocessed sting
  * should be returned  by a reference.
  */
+
+static void AddSearchPath( char * szPath, PATHNAMES * * pSearchList )
+{
+  PATHNAMES * pPath = *pSearchList;
+
+  HB_TRACE(HB_TR_DEBUG, ("AddSearchPath(%s, %p)", szPath, pSearchList));
+
+  if( pPath )
+    {
+      while( pPath->pNext )
+        pPath = pPath->pNext;
+      pPath->pNext = ( PATHNAMES * ) hb_xgrab( sizeof( PATHNAMES ) );
+      pPath = pPath->pNext;
+    }
+  else
+    {
+      *pSearchList = pPath = ( PATHNAMES * ) hb_xgrab( sizeof( PATHNAMES ) );
+    }
+  pPath->pNext  = NULL;
+  pPath->szPath = hb_strdup( szPath );
+}
+
 HB_FUNC( __PP_INIT )
 {
    hb_pp_Table();
    hb_pp_Init();
    hb_comp_files.iFiles = 0;
+
+   if( ISCHAR( 1 ) )
+   {
+      char * pPath = hb_parc( 1 );
+      char * pDelim;
+
+      while( ( pDelim = strchr( pPath, OS_PATH_LIST_SEPARATOR ) ) != NULL )
+        {
+          *pDelim = '\0';
+          AddSearchPath( pPath, &hb_comp_pIncludePath );
+          pPath = pDelim + 1;
+        }
+      AddSearchPath( pPath, &hb_comp_pIncludePath );
+   }
 }
 
 HB_FUNC( __PP_FREE )
 {
+  PATHNAMES * pPath = hb_comp_pIncludePath, * pPathNext;
+
+   while( pPath )
+   {
+      pPathNext = pPath->pNext;
+      hb_xfree( pPath->szPath );
+      hb_xfree( pPath );
+      pPath = pPathNext;
+   }
+
    hb_pp_Free();
    if( hb_pp_aCondCompile )
       hb_xfree( hb_pp_aCondCompile );

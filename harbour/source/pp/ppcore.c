@@ -1008,6 +1008,7 @@ static COMMANDS* AddTranslate( char * traname )
   sttra->last = hb_pp_topTranslate;
   hb_pp_topTranslate = sttra;
   sttra->name = hb_strdup( traname );
+  s_kolAddTras++;
   return sttra;
 }
 
@@ -3726,7 +3727,7 @@ static BOOL OpenInclude( char * szFileName, PATHNAMES * pSearch, PHB_FNAME pMain
   {
      pFileName = hb_fsFNameSplit( szFileName );
 
-     if( pFileName->szPath == NULL || *(pFileName->szPath) == '\0' )
+     if( ( pFileName->szPath == NULL || *(pFileName->szPath) == '\0' ) && pMainFileName )
         pFileName->szPath = pMainFileName->szPath;
 
      hb_fsFNameMerge( szInclude, pFileName );
@@ -3759,7 +3760,8 @@ static BOOL OpenInclude( char * szFileName, PATHNAMES * pSearch, PHB_FNAME pMain
      pFile->szFileName = ( char * ) hb_xgrab( strlen( szFileName ) + 1 );
      hb_pp_strocpy( pFile->szFileName, szFileName );
 
-     hb_comp_files.pLast->iLine = hb_comp_iLine;
+     if( hb_comp_files.pLast )
+        hb_comp_files.pLast->iLine = hb_comp_iLine;
      hb_comp_iLine = 1;
 
      pFile->iLine = 1;
@@ -3784,6 +3786,7 @@ void CloseInclude( void )
    pFile = ( PFILE ) ( ( PFILE ) hb_comp_files.pLast )->pPrev;
    hb_xfree( hb_comp_files.pLast );
    hb_comp_files.pLast = pFile;
-   hb_comp_iLine = hb_comp_files.pLast->iLine;
+   if( hb_comp_files.pLast )
+      hb_comp_iLine = hb_comp_files.pLast->iLine;
    hb_comp_files.iFiles--;
 }

@@ -1,3 +1,10 @@
+2001-06-07 13:05 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   * source/pp/ppcore.c
+   * source/pp/pplib.c
+     * Sorry, last time I've uploaded wrong copy ...
+     * Added new parameter to __PP_INIT( cPaths ) - the string with paths for
+       #include files.
+
 2001-06-07 10:15 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * include/hbpp.h
    * source/pp/ppcore.c
