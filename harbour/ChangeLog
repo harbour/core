@@ -15,7 +15,7 @@
 
 2001-12-18 06:36 UTC+0100 Antonio Linares <alinares@fivetech.com>
    + source/vm/maindllh.c
-     Harbour DLL entry point
+     Windows Harbour DLL entry point
 
 2001-12-18 01:03 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
