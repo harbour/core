@@ -425,13 +425,13 @@ extern void     hb_memvarNewParameter( PHB_SYMB, HB_ITEM_PTR );
 extern char   * hb_memvarGetStrValuePtr( char *, ULONG * );
 
 /* console I/O subsystem */
-extern void     hb_consoleInitialize( void );
-extern void     hb_consoleRelease( void );
-extern char *   hb_consoleGetNewLine( void );
-extern void     hb_outstd( char * pStr, ULONG ulLen );
-extern void     hb_outerr( char * pStr, ULONG ulLen );
-extern USHORT   hb_setCursor( BOOL bSetCursor, USHORT usNewCursor );
-extern char *   hb_setColor( char * );
+extern void     hb_conInit( void );
+extern void     hb_conRelease( void );
+extern char *   hb_conNewLine( void );
+extern void     hb_conOutStd( char * pStr, ULONG ulLen );
+extern void     hb_conOutErr( char * pStr, ULONG ulLen );
+extern USHORT   hb_conSetCursor( BOOL bSetCursor, USHORT usNewCursor );
+extern char *   hb_conSetColor( char * szColor );
 
 /* compiler and macro compiler */
 extern char * hb_compReservedName( char * );

@@ -38,18 +38,18 @@
 #include "hbapierr.h"
 #include "hbdate.h"
 
-char * hb_cmonth( int iMonth )
+char * hb_dateCMonth( int iMonth )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_cmonth(%d)", iMonth));
+   HB_TRACE(HB_TR_DEBUG, ("hb_dateCMonth(%d)", iMonth));
 
-   return ( iMonth >= 1 && iMonth <= 12 ) ? hb_monthsname[ iMonth - 1 ] : "";
+   return ( iMonth >= 1 && iMonth <= 12 ) ? hb_dateMonthsName[ iMonth - 1 ] : "";
 }
 
-char * hb_cdow( int iDay )
+char * hb_dateCDOW( int iDay )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_cdow(%d)", iDay));
+   HB_TRACE(HB_TR_DEBUG, ("hb_dateCDOW(%d)", iDay));
 
-   return ( iDay >= 1 && iDay <= 7 ) ? hb_daysname[ iDay - 1 ] : "";
+   return ( iDay >= 1 && iDay <= 7 ) ? hb_dateDaysName[ iDay - 1 ] : "";
 }
 
 HB_FUNC( CMONTH )
@@ -61,7 +61,7 @@ HB_FUNC( CMONTH )
       long lDay, lMonth, lYear;
 
       hb_dateDecode( hb_itemGetDL( pDate ), &lDay, &lMonth, &lYear );
-      hb_retc( hb_cmonth( lMonth ) );
+      hb_retc( hb_dateCMonth( lMonth ) );
    }
    else
    {
@@ -88,7 +88,7 @@ HB_FUNC( CDOW )
          long lDay, lMonth, lYear;
 
          hb_dateDecode( lDate, &lDay, &lMonth, &lYear );
-         hb_retc( hb_cdow( hb_dow( lDay, lMonth, lYear ) ) );
+         hb_retc( hb_dateCDOW( hb_dateDOW( lDay, lMonth, lYear ) ) );
       }
       else
          hb_retc( "" );

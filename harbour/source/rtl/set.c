@@ -515,7 +515,7 @@ HB_FUNC( SET )
          if( args > 1 ) hb_set.HB_SET_CANCEL = set_logical( pArg2 );
          break;
       case HB_SET_COLOR      :
-         hb_retc( hb_setColor( args >= 2 && IS_STRING( pArg2 ) ? hb_itemGetCPtr( pArg2 ) : ( char * ) NULL ) );
+         hb_retc( hb_conSetColor( args >= 2 && IS_STRING( pArg2 ) ? hb_itemGetCPtr( pArg2 ) : ( char * ) NULL ) );
          break;
       case HB_SET_CONFIRM    :
          hb_retl( hb_set.HB_SET_CONFIRM );
@@ -527,9 +527,9 @@ HB_FUNC( SET )
          break;
       case HB_SET_CURSOR     :
          if( args >= 2 && IS_NUMERIC( pArg2 ) )
-            hb_retni( hb_setCursor( TRUE, hb_itemGetNI( pArg2 ) ) );
+            hb_retni( hb_conSetCursor( TRUE, hb_itemGetNI( pArg2 ) ) );
          else
-            hb_retni( hb_setCursor( FALSE, 0 ) );
+            hb_retni( hb_conSetCursor( FALSE, 0 ) );
          break;
       case HB_SET_DATEFORMAT :
          if( hb_set.HB_SET_DATEFORMAT ) hb_retc( hb_set.HB_SET_DATEFORMAT );

@@ -178,7 +178,7 @@ void hb_gt_SetPos( SHORT iRow, SHORT iCol )
    SHORT iDevRow = s_iRow;
    SHORT iDevCol = s_iCol;
 
-   char * szCrLf = hb_consoleGetNewLine();
+   char * szCrLf = hb_conNewLine();
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetPos(%hd, %hd)", iRow, iCol));
 
@@ -294,7 +294,7 @@ void hb_gt_Scroll( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight,
        iCols == 0 )
    {
       for( ; uiBottom; uiBottom-- )
-        fputs( hb_consoleGetNewLine(), stdout );
+        fputs( hb_conNewLine(), stdout );
 
       fflush( stdout );
 

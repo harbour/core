@@ -38,10 +38,10 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 1999 Jose Lalin <dezac@corevia.com>
- *    hb_dow()
+ *    hb_dateDOW()
  *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    hb_dtoc()
+ *    hb_dateFormat()
  *
  * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  *    hb_dateEncStr()
@@ -189,7 +189,7 @@ long hb_dateEncStr( char * szDate )
 
 /* NOTE: szFormattedDate must be an at least 11 chars wide buffer */
 
-char * hb_dtoc( const char * szDate, char * szFormattedDate, const char * szDateFormat )
+char * hb_dateFormat( const char * szDate, char * szFormattedDate, const char * szDateFormat )
 {
    /*
     * NOTE: szFormattedDate must point to a buffer of at least 11 bytes.
@@ -197,7 +197,7 @@ char * hb_dtoc( const char * szDate, char * szFormattedDate, const char * szDate
     */
    int format_count, digit_count, size;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_dtoc(%s, %p, %s)", szDate, szFormattedDate, szDateFormat));
+   HB_TRACE(HB_TR_DEBUG, ("hb_dateFormat(%s, %p, %s)", szDate, szFormattedDate, szDateFormat));
 
    /*
     * Determine the maximum size of the formatted date string
@@ -357,9 +357,9 @@ char * hb_dtoc( const char * szDate, char * szFormattedDate, const char * szDate
    return szFormattedDate;
 }
 
-long hb_dow( long lDay, long lMonth, long lYear )
+long hb_dateDOW( long lDay, long lMonth, long lYear )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_dow(%ld, %ld, %ld)", lDay, lMonth, lYear));
+   HB_TRACE(HB_TR_DEBUG, ("hb_dateDOW(%ld, %ld, %ld)", lDay, lMonth, lYear));
 
    if( lMonth < 3 )
    {

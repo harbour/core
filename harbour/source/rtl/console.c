@@ -38,14 +38,14 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    hb_altout(), hb_devout(), DEVOUT(), hb_devpos(),
- *    DEVPOS(), hb_dispout(), __EJECT(), 
- *    hb_out(), hb_outerr(), OUTERR(),
- *    hb_outstd(), OUTSTD(), PCOL(), PROW(),
- *    SETPRC(), and hb_consoleInitialize()
+ *    hb_conOutAlt(), hb_conOutDev(), DEVOUT(), hb_conDevPos(),
+ *    DEVPOS(), hb_conOutDisp(), __EJECT(), 
+ *    hb_conOut(), hb_conOutErr(), OUTERR(),
+ *    hb_conOutStd(), OUTSTD(), PCOL(), PROW(),
+ *    SETPRC(), and hb_conInit()
  *
  * Copyright 1999 Victor Szakats <info@szelvesz.hu>
- *    hb_consoleGetNewLine()
+ *    hb_conNewLine()
  *    DISPOUTAT()
  *
  * See doc/license.txt for licensing terms.
@@ -80,9 +80,9 @@ static int    s_iFilenoStdin;
 static int    s_iFilenoStdout;
 static int    s_iFilenoStderr;
 
-void hb_consoleInitialize( void )
+void hb_conInit( void )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_consoleInitialize()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_conInit()"));
 
 #if defined(OS_UNIX_COMPATIBLE)
    s_szCrLf[ 0 ] = HB_CHAR_LF;
@@ -121,9 +121,9 @@ void hb_consoleInitialize( void )
    hb_gtInit( s_iFilenoStdin, s_iFilenoStdout, s_iFilenoStderr );
 }
 
-void hb_consoleRelease( void )
+void hb_conRelease( void )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_consoleRelease()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_conRelease()"));
 
    hb_fsSetDevMode( s_iFilenoStdout, FD_TEXT );
    hb_fsSetDevMode( s_iFilenoStderr, FD_TEXT );
@@ -138,9 +138,9 @@ void hb_consoleRelease( void )
    s_bInit = FALSE;
 }
 
-char * hb_consoleGetNewLine( void )
+char * hb_conNewLine( void )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_consoleGetNewLine()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_conNewLine()"));
 
    return s_szCrLf;
 }
@@ -153,14 +153,14 @@ HB_FUNC( HB_OSNEWLINE )
 typedef void hb_out_func_typedef( char *, ULONG );
 
 /* Format items for output, then call specified output function */
-static void hb_out( USHORT uiParam, hb_out_func_typedef * pOutFunc )
+static void hb_conOut( USHORT uiParam, hb_out_func_typedef * pOutFunc )
 {
    PHB_ITEM pItem;
    char * pszString;
    ULONG ulLen;
    BOOL bFreeReq;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_out(%hu, %p)", uiParam, hb_out_func));
+   HB_TRACE(HB_TR_DEBUG, ("hb_conOut(%hu, %p)", uiParam, hb_out_func));
 
    pItem = hb_param( uiParam, IT_ANY );
    pszString = hb_itemString( pItem, &ulLen, &bFreeReq );
@@ -172,11 +172,11 @@ static void hb_out( USHORT uiParam, hb_out_func_typedef * pOutFunc )
 }
 
 /* Output an item to STDOUT */
-void hb_outstd( char * pStr, ULONG ulLen )
+void hb_conOutStd( char * pStr, ULONG ulLen )
 {
    USHORT uiErrorOld;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_outstd(%s, %lu)", pStr, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_conOutStd(%s, %lu)", pStr, ulLen));
 
    if( ulLen == 0 )
       ulLen = strlen( pStr );
@@ -196,11 +196,11 @@ void hb_outstd( char * pStr, ULONG ulLen )
 }
 
 /* Output an item to STDERR */
-void hb_outerr( char * pStr, ULONG ulLen )
+void hb_conOutErr( char * pStr, ULONG ulLen )
 {
    USHORT uiErrorOld;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_outerr(%s, %lu)", pStr, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_conOutErr(%s, %lu)", pStr, ulLen));
 
    if( ulLen == 0 )
       ulLen = strlen( pStr );
@@ -220,9 +220,9 @@ void hb_outerr( char * pStr, ULONG ulLen )
 }
 
 /* Output an item to the screen and/or printer and/or alternate */
-static void hb_altout( char * pStr, ULONG ulLen )
+static void hb_conOutAlt( char * pStr, ULONG ulLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_altout(%s, %lu)", pStr, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_conOutAlt(%s, %lu)", pStr, ulLen));
 
    if( hb_set.HB_SET_CONSOLE )
       hb_gtWriteCon( ( BYTE * ) pStr, ulLen );
@@ -254,9 +254,9 @@ static void hb_altout( char * pStr, ULONG ulLen )
 }
 
 /* Output an item to the screen and/or printer */
-static void hb_devout( char * pStr, ULONG ulLen )
+static void hb_conOutDev( char * pStr, ULONG ulLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_devout(%s, %lu)", pStr, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_conOutDev(%s, %lu)", pStr, ulLen));
 
    if( hb_set.hb_set_printhan != FS_ERROR && hb_stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 )
    {
@@ -274,9 +274,9 @@ static void hb_devout( char * pStr, ULONG ulLen )
 }
 
 /* Output an item to the screen */
-static void hb_dispout( char * pStr, ULONG ulLen )
+static void hb_conOutDisp( char * pStr, ULONG ulLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_dispout(%s, %lu)", pStr, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_conOutDisp(%s, %lu)", pStr, ulLen));
 
    hb_gtWrite( ( BYTE * ) pStr, ulLen );
 }
@@ -288,9 +288,9 @@ HB_FUNC( OUTSTD ) /* writes a list of values to the standard output device */
 
    for( uiParam = 1; uiParam <= uiPCount; uiParam++ )
    {
-      hb_out( uiParam, hb_outstd );
+      hb_conOut( uiParam, hb_conOutStd );
       if( uiParam < uiPCount )
-         hb_outstd( " ", 1 );
+         hb_conOutStd( " ", 1 );
    }
 }
 
@@ -301,9 +301,9 @@ HB_FUNC( OUTERR ) /* writes a list of values to the standard error device */
 
    for( uiParam = 1; uiParam <= uiPCount; uiParam++ )
    {
-      hb_out( uiParam, hb_outerr );
+      hb_conOut( uiParam, hb_conOutErr );
       if( uiParam < uiPCount )
-         hb_outerr( " ", 1 );
+         hb_conOutErr( " ", 1 );
    }
 }
 
@@ -314,15 +314,15 @@ HB_FUNC( QQOUT ) /* writes a list of values to the current device (screen or pri
 
    for( uiParam = 1; uiParam <= uiPCount; uiParam++ )
    {
-      hb_out( uiParam, hb_altout );
+      hb_conOut( uiParam, hb_conOutAlt );
       if( uiParam < uiPCount )
-         hb_altout( " ", 1 );
+         hb_conOutAlt( " ", 1 );
    }
 }
 
 HB_FUNC( QOUT )
 {
-   hb_altout( s_szCrLf, CRLF_BUFFER_LEN - 1 );
+   hb_conOutAlt( s_szCrLf, CRLF_BUFFER_LEN - 1 );
 
    if( hb_set.HB_SET_PRINTER && hb_set.hb_set_printhan != FS_ERROR )
    {
@@ -365,9 +365,9 @@ HB_FUNC( PCOL ) /* Returns the current printer row position */
    hb_retni( ( int ) s_uiPCol );
 }
 
-void hb_devpos( SHORT iRow, SHORT iCol )
+static void hb_conDevPos( SHORT iRow, SHORT iCol )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_devpos(%hd, %hd)", row, col));
+   HB_TRACE(HB_TR_DEBUG, ("hb_conDevPos(%hd, %hd)", row, col));
 
    /* Position printer if SET DEVICE TO PRINTER and valid printer file
       otherwise position console */
@@ -410,7 +410,7 @@ void hb_devpos( SHORT iRow, SHORT iCol )
 HB_FUNC( DEVPOS ) /* Sets the screen and/or printer position */
 {
    if( ISNUM( 1 ) && ISNUM( 2 ) )
-      hb_devpos( hb_parni( 1 ), hb_parni( 2 ) );
+      hb_conDevPos( hb_parni( 1 ), hb_parni( 2 ) );
 }
 
 HB_FUNC( SETPRC ) /* Sets the current printer row and column positions */
@@ -431,12 +431,12 @@ HB_FUNC( DEVOUT ) /* writes a single value to the current device (screen or prin
       hb_gtGetColorStr( szOldColor );
       hb_gtSetColorStr( hb_parc( 2 ) );
 
-      hb_out( 1, hb_devout );
+      hb_conOut( 1, hb_conOutDev );
 
       hb_gtSetColorStr( szOldColor );
    }
    else if( hb_pcount() >= 1 )
-      hb_out( 1, hb_devout );
+      hb_conOut( 1, hb_conOutDev );
 }
 
 HB_FUNC( DISPOUT ) /* writes a single value to the screen, but is not affected by SET ALTERNATE */
@@ -448,12 +448,12 @@ HB_FUNC( DISPOUT ) /* writes a single value to the screen, but is not affected b
       hb_gtGetColorStr( szOldColor );
       hb_gtSetColorStr( hb_parc( 2 ) );
 
-      hb_out( 1, hb_dispout );
+      hb_conOut( 1, hb_conOutDisp );
 
       hb_gtSetColorStr( szOldColor );
    }
    else if( hb_pcount() >= 1 )
-      hb_out( 1, hb_dispout );
+      hb_conOut( 1, hb_conOutDisp );
 }
 
 /* Undocumented Clipper function */
@@ -470,11 +470,11 @@ HB_FUNC( DISPOUTAT ) /* writes a single value to the screen at speficic position
       hb_gtGetColorStr( szOldColor );
       hb_gtSetColorStr( hb_parc( 4 ) );
 
-      hb_out( 3, hb_dispout );
+      hb_conOut( 3, hb_conOutDisp );
 
       hb_gtSetColorStr( szOldColor );
    }
    else if( hb_pcount() >= 3 )
-      hb_out( 3, hb_dispout );
+      hb_conOut( 3, hb_conOutDisp );
 }
 

@@ -1269,7 +1269,7 @@ char * hb_itemString( PHB_ITEM pItem, ULONG * ulLen, BOOL * bFreeReq )
             hb_dateDecStr( szDate, pItem->item.asDate.value );
 
             buffer = ( char * ) hb_xgrab( 11 );
-            hb_dtoc( szDate, buffer, hb_set.HB_SET_DATEFORMAT );
+            hb_dateFormat( szDate, buffer, hb_set.HB_SET_DATEFORMAT );
             * ulLen = strlen( buffer );
             * bFreeReq = TRUE;
          }

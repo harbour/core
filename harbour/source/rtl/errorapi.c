@@ -792,12 +792,12 @@ void hb_errInternal( ULONG ulIntCode, char * szText, char * szPar1, char * szPar
 
    HB_TRACE(HB_TR_DEBUG, ("hb_errInternal(%lu, %s, %s, %s)", ulIntCode, szText, szPar1, szPar2));
 
-   hb_outerr( hb_consoleGetNewLine(), 0 );
+   hb_conOutErr( hb_conNewLine(), 0 );
    sprintf( buffer, "Unrecoverable error %lu: ", ulIntCode );
-   hb_outerr( buffer, 0 );
+   hb_conOutErr( buffer, 0 );
    sprintf( buffer, szText != NULL ? szText : hb_langDGetErrorIntr( ulIntCode ), szPar1, szPar2 );
-   hb_outerr( buffer, 0 );
-   hb_outerr( hb_consoleGetNewLine(), 0 );
+   hb_conOutErr( buffer, 0 );
+   hb_conOutErr( hb_conNewLine(), 0 );
 
    hb_stackDispCall();
 

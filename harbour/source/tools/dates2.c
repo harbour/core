@@ -83,9 +83,9 @@ long hb_wom( long lDay, long lMonth, long lYear )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_wom(%ld, %ld, %ld)", lDay, lMonth, lYear));
 
-   iWom = lDay + hb_dow( 1, lMonth, lYear) - 1;
+   iWom = lDay + hb_dateDOW( 1, lMonth, lYear) - 1;
    if( iWom > 0 )
-      return ( iWom - hb_dow( lDay, lMonth, lYear ) ) / 7 + 1 ;
+      return ( iWom - hb_dateDOW( lDay, lMonth, lYear ) ) / 7 + 1 ;
    else
       return 0;
 }
@@ -117,7 +117,7 @@ HB_FUNC( AMONTHS )
    for( i = 0; i < 12; i++ )
    {
       pString = hb_itemNew( NULL );
-      hb_itemPutC( pString, hb_monthsname[ i ] );
+      hb_itemPutC( pString, hb_dateMonthsName[ i ] );
       hb_itemArrayPut( pReturn, i+1, pString );
       hb_itemRelease ( pString );
    }
@@ -134,7 +134,7 @@ HB_FUNC( ADAYS )
    for( i = 0; i < 7; i++ )
    {
       pString = hb_itemNew( NULL );
-      hb_itemPutC( pString, hb_daysname[ i ] );
+      hb_itemPutC( pString, hb_dateDaysName[ i ] );
       hb_itemArrayPut( pReturn, i+1, pString );
       hb_itemRelease ( pString );
    }

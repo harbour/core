@@ -10,7 +10,7 @@
 
 #include "hbdefs.h"
 
-char *hb_monthsname[ 12 ] =
+char *hb_dateMonthsName[ 12 ] =
 {
    "ינואר",
    "פברואר",
@@ -26,7 +26,7 @@ char *hb_monthsname[ 12 ] =
    "דצמבר"
 };
 
-char *hb_daysname[ 7 ] =
+char *hb_dateDaysName[ 7 ] =
 {
    "ראשון",
    "שני",

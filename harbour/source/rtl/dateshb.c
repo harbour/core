@@ -176,7 +176,7 @@ HB_FUNC( DTOC )
       char szDate[ 9 ];
       char szFormatted[ 11 ];
 
-      hb_retc( hb_dtoc( hb_pardsbuff( szDate, 1 ), szFormatted, hb_set.HB_SET_DATEFORMAT ) );
+      hb_retc( hb_dateFormat( hb_pardsbuff( szDate, 1 ), szFormatted, hb_set.HB_SET_DATEFORMAT ) );
    }
    else
    {
@@ -343,7 +343,7 @@ HB_FUNC( DOW )
 
          hb_dateDecode( lDate, &lDay, &lMonth, &lYear );
 
-         hb_retnllen( hb_dow( lDay, lMonth, lYear ), 3 );
+         hb_retnllen( hb_dateDOW( lDay, lMonth, lYear ), 3 );
       }
       else
          hb_retnllen( 0, 3 );

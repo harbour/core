@@ -239,7 +239,7 @@ void hb_vmInit( BOOL bStartMainProc )
    hb_stackInit();
    hb_dynsymNew( &hb_symEval );  /* initialize dynamic symbol for evaluating codeblocks */
    hb_setInitialize();        /* initialize Sets */
-   hb_consoleInitialize();    /* initialize Console */
+   hb_conInit();    /* initialize Console */
    hb_memvarsInit();
 #ifdef HARBOUR_OBJ_GENERATION
    hb_vmProcessObjSymbols();  /* initialize Harbour generated OBJs symbols */
@@ -323,7 +323,7 @@ void hb_vmQuit( void )
    hb_clsReleaseAll();
    hb_vmReleaseLocalSymbols();  /* releases the local modules linked list */
    hb_dynsymRelease();          /* releases the dynamic symbol table */
-   hb_consoleRelease();         /* releases Console */
+   hb_conRelease();             /* releases Console */
    hb_setRelease();             /* releases Sets */
    hb_memvarsRelease();
    hb_stackFree();
@@ -3444,14 +3444,14 @@ static void hb_stackDispLocal( void )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_stackDispLocal()"));
 
-   printf( hb_consoleGetNewLine() );
+   printf( hb_conNewLine() );
    printf( "Virtual Machine Stack Dump at %s(%i):", hb_stack.pBase->item.asSymbol.value->szName, hb_stack.pBase->item.asSymbol.lineno );
-   printf( hb_consoleGetNewLine() );
+   printf( hb_conNewLine() );
    printf( "--------------------------" );
 
    for( pBase = hb_stack.pBase; pBase <= hb_stack.pPos; pBase++ )
    {
-      printf( hb_consoleGetNewLine() );
+      printf( hb_conNewLine() );
 
       switch( hb_itemType( pBase ) )
       {
@@ -3529,8 +3529,8 @@ void hb_stackDispCall( void )
             pBase->item.asSymbol.value->szName,
             pBase->item.asSymbol.lineno );
 
-      hb_outerr( buffer, 0 );
-      hb_outerr( hb_consoleGetNewLine(), 0 );
+      hb_conOutErr( buffer, 0 );
+      hb_conOutErr( hb_conNewLine(), 0 );
    }
 }
 
@@ -3806,10 +3806,10 @@ void hb_vmRequestCancel( void )
    {
       char buffer[ HB_SYMBOL_NAME_LEN + 32 ];
 
-      hb_outerr( hb_consoleGetNewLine(), 0 );
+      hb_conOutErr( hb_conNewLine(), 0 );
       sprintf( buffer, "Cancelled at: %s (%i)", hb_stack.pBase->item.asSymbol.value->szName, hb_stack.pBase->item.asSymbol.lineno );
-      hb_outerr( buffer, 0 );
-      hb_outerr( hb_consoleGetNewLine(), 0 );
+      hb_conOutErr( buffer, 0 );
+      hb_conOutErr( hb_conNewLine(), 0 );
 
       s_uiActionRequest = HB_QUIT_REQUESTED;
    }

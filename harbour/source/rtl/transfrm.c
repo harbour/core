@@ -363,7 +363,7 @@ HB_FUNC( TRANSFORM )
          /* Support date function for strings */
          if( uiPicFlags & PF_DATE )
          {
-            hb_dtoc( "XXXXXXXX", szPicDate,
+            hb_dateFormat( "XXXXXXXX", szPicDate,
                ( uiPicFlags & PF_BRITISH ) ?
                  ( hb_set.hb_set_century ? "DD/MM/YYYY" : "DD/MM/YY" ) :
                  hb_set.HB_SET_DATEFORMAT );
@@ -470,7 +470,7 @@ HB_FUNC( TRANSFORM )
 
          szResult = ( char * ) hb_xgrab( 11 );
 
-         hb_dtoc( hb_itemGetDS( pExp, szDate ), szResult,
+         hb_dateFormat( hb_itemGetDS( pExp, szDate ), szResult,
             ( uiPicFlags & PF_BRITISH ) ?
               ( hb_set.hb_set_century ? "DD/MM/YYYY" : "DD/MM/YY" ) :
               hb_set.HB_SET_DATEFORMAT );
@@ -582,7 +582,7 @@ HB_FUNC( TRANSFORM )
          char szDate[ 9 ];
          char szResult[ 11 ];
 
-         hb_retc( hb_dtoc( hb_itemGetDS( pExp, szDate ), szResult, hb_set.HB_SET_DATEFORMAT ) );
+         hb_retc( hb_dateFormat( hb_itemGetDS( pExp, szDate ), szResult, hb_set.HB_SET_DATEFORMAT ) );
       }
       else if( IS_LOGICAL( pExp ) )
       {

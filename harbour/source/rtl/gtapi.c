@@ -112,8 +112,8 @@ void hb_gtInit( int s_iFilenoStdin, int s_iFilenoStdout, int s_iFilenoStderr )
 
    if( hb_cmdargCheck( "INFO" ) )
    {
-      hb_outerr( hb_gtVersion(), 0 );
-      hb_outerr( hb_consoleGetNewLine(), 0 );
+      hb_conOutErr( hb_gtVersion(), 0 );
+      hb_conOutErr( hb_conNewLine(), 0 );
    }
 }
 

@@ -378,20 +378,20 @@ void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
       USHORT ui;
       char buffer[ 100 ];
 
-      hb_outerr( hb_consoleGetNewLine(), 0 );
-      hb_outerr( "----------------------------------------", 0 );
-      hb_outerr( hb_consoleGetNewLine(), 0 );
+      hb_conOutErr( hb_conNewLine(), 0 );
+      hb_conOutErr( "----------------------------------------", 0 );
+      hb_conOutErr( hb_conNewLine(), 0 );
       sprintf( buffer, "Total memory allocated: %li bytes (%li blocks)", s_lMemoryMaxConsumed, s_lMemoryMaxBlocks );
-      hb_outerr( buffer, 0 );
+      hb_conOutErr( buffer, 0 );
 
       if( s_lMemoryBlocks )
       {
-         hb_outerr( hb_consoleGetNewLine(), 0 );
+         hb_conOutErr( hb_conNewLine(), 0 );
          sprintf( buffer, "WARNING! Memory allocated but not released: %li bytes (%li blocks)", s_lMemoryConsumed, s_lMemoryBlocks );
-         hb_outerr( buffer, 0 );
+         hb_conOutErr( buffer, 0 );
       }
 
-      hb_outerr( hb_consoleGetNewLine(), 0 );
+      hb_conOutErr( hb_conNewLine(), 0 );
 
       for( ui = 1, pMemBlock = s_pFirstBlock; pMemBlock; pMemBlock = pMemBlock->pNextBlock )
          HB_TRACE( HB_TR_ERROR, ( "Block %i (size %lu) %s(%i)",

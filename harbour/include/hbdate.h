@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Header file for the Date API
  *
- * Copyright 1999 {list of individual authors and e-mail addresses}
+ * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -43,14 +43,14 @@ extern "C" {
 #endif
 
 /* In msgxxx.c modules */
-extern char *   hb_monthsname [];
-extern char *   hb_daysname [];
+extern char *   hb_dateMonthsName [];
+extern char *   hb_dateDaysName [];
 
-extern double   hb_seconds( void );
-extern char *   hb_cmonth( int iMonth );
-extern char *   hb_cdow( int iDay );
-extern long     hb_dow( long lDay, long lMonth, long lYear );
-extern char *   hb_dtoc( const char * szDate, char * szFormattedDate, const char * szDateFormat );
+extern double   hb_dateSeconds( void );
+extern char *   hb_dateCMonth( int iMonth );
+extern char *   hb_dateCDOW( int iDay );
+extern long     hb_dateDOW( long lDay, long lMonth, long lYear );
+extern char *   hb_dateFormat( const char * szDate, char * szFormattedDate, const char * szDateFormat );
 extern long     hb_dateEncode( long lDay, long lMonth, long lYear );
 extern void     hb_dateDecode( long julian, long * plDay, long * plMonth, long * plYear );
 extern void     hb_dateStrPut( char * szDate, long lDay, long lMonth, long lYear );

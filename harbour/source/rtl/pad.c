@@ -40,7 +40,7 @@
 #include "hbdate.h"
 
 /* This function is used by all of the PAD functions to prepare the argument
-   being padded. If date, convert to string using hb_dtoc(). If numeric,
+   being padded. If date, convert to string using hb_dateFormat(). If numeric,
    convert to unpadded string. Return pointer to string and set string length */
 
 static char * hb_itemPadConv( PHB_ITEM pItem, char * buffer, ULONG * pulSize )
@@ -60,7 +60,7 @@ static char * hb_itemPadConv( PHB_ITEM pItem, char * buffer, ULONG * pulSize )
       {
          char szDate[ 9 ];
 
-         szText = hb_dtoc( hb_pardsbuff( szDate, 1 ), buffer, hb_set.HB_SET_DATEFORMAT );
+         szText = hb_dateFormat( hb_pardsbuff( szDate, 1 ), buffer, hb_set.HB_SET_DATEFORMAT );
          *pulSize = strlen( szText );
       }
       else if( IS_INTEGER( pItem ) )

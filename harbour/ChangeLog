@@ -1,3 +1,52 @@
+20000331-19:06 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * include/hbapi.h
+   * source/rtl/console.c
+   * source/rtl/setcolor.c
+   * source/rtl/setcurs.c
+   * source/rtl/errorapi.c
+   * source/rtl/gtapi.c
+   * source/rtl/set.c
+   * source/vm/hvm.c
+   * source/vm/cmdarg.c
+   * source/vm/fm.c
+   * source/rtl/gtstd/gtstd.c
+     * Console related functions all prefixed with hb_con
+       
+       hb_consoleInitialize -> hb_conInit
+       hb_consoleRelease    -> hb_conRelease
+       hb_consoleGetNewLine -> hb_conNewLine
+       hb_out               -> hb_conOut
+       hb_altout            -> hb_conOutAlt
+       hb_devout            -> hb_conOutDev
+       hb_dispout           -> hb_conOutDisp
+       hb_outstd            -> hb_conOutStd
+       hb_outerr            -> hb_conOutErr
+       hb_setCursor         -> hb_conSetCursor
+       hb_setColor          -> hb_conSetColor
+       hb_devpos            -> hb_conDevPos
+
+   * include/hbdate.h
+   * source/rtl/natmsg/*.c
+   * source/rtl/dates.c
+   * source/rtl/dateshb.c
+   * source/rtl/datec.c
+   * source/rtl/pad.c
+   * source/rtl/transfrm.c
+   * source/vm/itemapi.c
+   * source/tools/dates2.c
+     * Date related globals all prefixed with hb_date
+
+       hb_monthsname -> hb_dateMonthsName
+       hb_daysname   -> hb_dateDaysName
+       hb_seconds    -> hb_dateSeconds
+       hb_cmonth     -> hb_dateCMonth
+       hb_cdow       -> hb_dateCDOW
+       hb_dow        -> hb_dateDOW
+       hb_dtoc       -> hb_dateFormat
+
+   ; Renaming of globals is basically over now.
+
 20000331-20:27 GMT+3 Alexander Kresin
   * source/rdd/dbstrux.prg
     * some changes, provided by Chen Kedem
@@ -40,7 +89,7 @@
      ! Typo
 
    * source/pp/pplib.c
-     ! One global compiler variable declaraion removed, because the same
+     ! One global compiler variable declaration removed, because the same
        variable was also declared in macro.lib.
 
 20000330-23:04 GMT+1 Maurilio Longo <maurilio.longo@libero.it>

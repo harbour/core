@@ -281,84 +281,84 @@ void hb_cmdargProcessVM( void )
       char * pszVersion = hb_version( 1 );
       char buffer[ 128 ];
 
-      hb_outerr( pszVersion, 0 );
-      hb_outerr( hb_consoleGetNewLine(), 0 );
+      hb_conOutErr( pszVersion, 0 );
+      hb_conOutErr( hb_conNewLine(), 0 );
       sprintf( buffer, "DS avail=%luKB  OS avail=%luKB  EMM avail=%luKB", hb_xquery( HB_MEM_BLOCK ), hb_xquery( HB_MEM_VM ), hb_xquery( HB_MEM_EMS ) );
-      hb_outerr( buffer, 0 );
-      hb_outerr( hb_consoleGetNewLine(), 0 );
+      hb_conOutErr( buffer, 0 );
+      hb_conOutErr( hb_conNewLine(), 0 );
 
       hb_xfree( pszVersion );
    }
 
    if( hb_cmdargCheck( "BUILD" ) )
    {
-      hb_outerr( "Harbour Compiler Build Info", 0 );
-      hb_outerr( hb_consoleGetNewLine(), 0 );
-      hb_outerr( "---------------------------", 0 );
-      hb_outerr( hb_consoleGetNewLine(), 0 );
+      hb_conOutErr( "Harbour Compiler Build Info", 0 );
+      hb_conOutErr( hb_conNewLine(), 0 );
+      hb_conOutErr( "---------------------------", 0 );
+      hb_conOutErr( hb_conNewLine(), 0 );
 
-      hb_outerr( "Strict CA-Clipper compatibility: ", 0 );
+      hb_conOutErr( "Strict CA-Clipper compatibility: ", 0 );
 #if defined( HARBOUR_STRICT_CLIPPER_COMPATIBILITY )
-      hb_outerr( "Yes", 0 );
+      hb_conOutErr( "Yes", 0 );
 #else
-      hb_outerr( "No", 0 );
+      hb_conOutErr( "No", 0 );
 #endif
-      hb_outerr( hb_consoleGetNewLine(), 0 );
+      hb_conOutErr( hb_conNewLine(), 0 );
 
-      hb_outerr( "CA-Clipper 5.3x extensions: ", 0 );
+      hb_conOutErr( "CA-Clipper 5.3x extensions: ", 0 );
 #if defined( HB_COMPAT_C53 )
-      hb_outerr( "Yes", 0 );
+      hb_conOutErr( "Yes", 0 );
 #else
-      hb_outerr( "No", 0 );
+      hb_conOutErr( "No", 0 );
 #endif
-      hb_outerr( hb_consoleGetNewLine(), 0 );
+      hb_conOutErr( hb_conNewLine(), 0 );
 
-      hb_outerr( "Alaska XBase++ extensions: ", 0 );
+      hb_conOutErr( "Alaska XBase++ extensions: ", 0 );
 #if defined( HB_COMPAT_XPP )
-      hb_outerr( "Yes", 0 );
+      hb_conOutErr( "Yes", 0 );
 #else
-      hb_outerr( "No", 0 );
+      hb_conOutErr( "No", 0 );
 #endif
-      hb_outerr( hb_consoleGetNewLine(), 0 );
+      hb_conOutErr( hb_conNewLine(), 0 );
 
-      hb_outerr( "CA-Visual Objects extensions: ", 0 );
+      hb_conOutErr( "CA-Visual Objects extensions: ", 0 );
 #if defined( HB_COMPAT_VO )
-      hb_outerr( "Yes", 0 );
+      hb_conOutErr( "Yes", 0 );
 #else
-      hb_outerr( "No", 0 );
+      hb_conOutErr( "No", 0 );
 #endif
-      hb_outerr( hb_consoleGetNewLine(), 0 );
+      hb_conOutErr( hb_conNewLine(), 0 );
 
-      hb_outerr( "Object file generation support: ", 0 );
+      hb_conOutErr( "Object file generation support: ", 0 );
 #if defined( HARBOUR_OBJ_GENERATION )
-      hb_outerr( "Yes", 0 );
+      hb_conOutErr( "Yes", 0 );
 #else
-      hb_outerr( "No", 0 );
+      hb_conOutErr( "No", 0 );
 #endif
-      hb_outerr( hb_consoleGetNewLine(), 0 );
+      hb_conOutErr( hb_conNewLine(), 0 );
 
-      hb_outerr( "ANSI C usage: ", 0 );
+      hb_conOutErr( "ANSI C usage: ", 0 );
 #if defined( HARBOUR_STRICT_ANSI_C )
-      hb_outerr( "Strict", 0 );
+      hb_conOutErr( "Strict", 0 );
 #else
-      hb_outerr( "Non strict", 0 );
+      hb_conOutErr( "Non strict", 0 );
 #endif
-      hb_outerr( hb_consoleGetNewLine(), 0 );
+      hb_conOutErr( hb_conNewLine(), 0 );
 
-      hb_outerr( "Compiler YACC debug mode: ", 0 );
+      hb_conOutErr( "Compiler YACC debug mode: ", 0 );
 #if defined( HARBOUR_YYDEBUG )
-      hb_outerr( "On", 0 );
+      hb_conOutErr( "On", 0 );
 #else
-      hb_outerr( "Off", 0 );
+      hb_conOutErr( "Off", 0 );
 #endif
-      hb_outerr( hb_consoleGetNewLine(), 0 );
+      hb_conOutErr( hb_conNewLine(), 0 );
 
       {
          char buffer[ 64 ];
                            
          sprintf( buffer, "Maximum symbol name length: %i", HB_SYMBOL_NAME_LEN );
-         hb_outerr( buffer, 0 );
-         hb_outerr( hb_consoleGetNewLine(), 0 );
+         hb_conOutErr( buffer, 0 );
+         hb_conOutErr( hb_conNewLine(), 0 );
       }
    }
 }

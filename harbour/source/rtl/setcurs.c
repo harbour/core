@@ -36,11 +36,11 @@
 #include "hbapi.h"
 #include "hbapigt.h"
 
-USHORT hb_setCursor( BOOL bSetCursor, USHORT usNewCursor )
+USHORT hb_conSetCursor( BOOL bSetCursor, USHORT usNewCursor )
 {
    USHORT usPreviousCursor;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_setCursor(%d, %hu)", (int) bSetCursor, usNewCursor));
+   HB_TRACE(HB_TR_DEBUG, ("hb_conSetCursor(%d, %hu)", (int) bSetCursor, usNewCursor));
 
    hb_gtGetCursor( &usPreviousCursor );
    if( bSetCursor )
@@ -51,5 +51,5 @@ USHORT hb_setCursor( BOOL bSetCursor, USHORT usNewCursor )
 
 HB_FUNC( SETCURSOR )
 {
-   hb_retni( hb_setCursor( ISNUM( 1 ), hb_parni( 1 ) ) );
+   hb_retni( hb_conSetCursor( ISNUM( 1 ), hb_parni( 1 ) ) );
 }

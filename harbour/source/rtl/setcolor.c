@@ -37,9 +37,9 @@
 #include "hbapigt.h"
 #include "hbset.h"
 
-char * hb_setColor( char * szColor )
+char * hb_conSetColor( char * szColor )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_setColor(%s)", szColor));
+   HB_TRACE(HB_TR_DEBUG, ("hb_conSetColor(%s)", szColor));
 
    hb_gtGetColorStr( hb_set.HB_SET_COLOR );
 
@@ -51,7 +51,7 @@ char * hb_setColor( char * szColor )
 
 HB_FUNC( SETCOLOR )
 {
-   hb_retc( hb_setColor( ISCHAR( 1 ) ? hb_parc( 1 ) : NULL ) );
+   hb_retc( hb_conSetColor( ISCHAR( 1 ) ? hb_parc( 1 ) : NULL ) );
 }
 
 HB_FUNC( COLORSELECT )
