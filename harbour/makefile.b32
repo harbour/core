@@ -14,7 +14,7 @@ PROJECT: harbour.exe harbour.lib libs\b32\terminal.lib libs\win32\terminal.lib
 
 harbour.lib : arrays.obj asort.obj classes.obj codebloc.obj alert.obj \
               dates.obj dates2.obj datesx.obj debug.obj descend.obj devoutp.obj \
-              dir.obj dynsym.obj environ.obj error.obj menu.obj \
+              dir.obj do.obj dynsym.obj environ.obj error.obj menu.obj \
               errorapi.obj errorsys.obj extend.obj files.obj fm.obj \
               hardcr.obj hb_f.obj initsymb.obj inkey.obj itemapi.obj memvars.obj \
               math.obj mathx.obj msgxxx.obj mtran.obj objfunc.obj \
@@ -35,6 +35,7 @@ debug.obj    : debug.c    extend.h hbdefs.h
 descend.obj  : descend.c  extend.h hbdefs.h
 devout.obj   : devout.c   extend.h hbdefs.h
 dir.obj      : dir.c      extend.h hbdefs.h
+do.obj       : do.c       extend.h hbdefs.h
 dynsym.obj   : dynsym.c   extend.h hbdefs.h
 environ.obj  : environ.c  extend.h hbdefs.h
 error.obj    : error.c    extend.h hbdefs.h
