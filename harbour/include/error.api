@@ -16,21 +16,27 @@
 #include "errorapi.h"
 
 #define _errNew            hb_errNew
-#define _errGetDescription hb_errGetDescription
-#define _errPutDescription hb_errPutDescription
-#define _errGetFileName    hb_errGetFileName
-#define _errPutFileNaem    hb_errPutFileName
-#define _errGetGenCode     hb_errGetGenCode
-#define _errPutGenCode     hb_errPutGenCode
-#define _errGetOperation   hb_errGetOperation
-#define _errPutOperation   hb_errPutOperation
-#define _errGetOsCode      hb_errGetOsCode
-#define _errPutOsCode      hb_errPutOsCode
-#define _errPutSeverity    hb_errPutSeverity
-#define _errPutSubCode     hb_errPutSubCode
-#define _errPutSubSystem   hb_errPutSubSystem
-#define _errPutTries       hb_errPutTries
 #define _errLaunch         hb_errLaunch
 #define _errRelease        hb_errRelease
 
-#endif
+#define _errGetSeverity    hb_errGetSeverity
+#define _errPutSeverity    hb_errPutSeverity
+#define _errGetGenCode     hb_errGetGenCode
+#define _errPutGenCode     hb_errPutGenCode
+#define _errGetOsCode      hb_errGetOsCode
+#define _errPutOsCode      hb_errPutOsCode
+#define _errGetFlags       hb_errGetFlags
+#define _errPutFlags       hb_errPutFlags
+#define _errGetTries       hb_errGetTries
+#define _errPutTries       hb_errPutTries
+#define _errGetSubCode     hb_errGetSubCode
+#define _errPutSubCode     hb_errPutSubCode
+#define _errGetSubSystem   hb_errGetSubSystem
+#define _errPutSubSystem   hb_errPutSubSystem
+#define _errGetDescription hb_errGetDescription
+#define _errPutDescription hb_errPutDescription
+#define _errGetOperation   hb_errGetOperation
+#define _errPutOperation   hb_errPutOperation
+#define _errGetFileName    hb_errGetFileName
+#define _errPutFileNaem    hb_errPutFileName
+

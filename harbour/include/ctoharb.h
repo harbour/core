@@ -17,6 +17,7 @@ void PushInteger( int iNumber );
 void PushLong( long lNumber );
 void PushDouble( double dNumber, WORD wDec );
 void PushString( char * szText, WORD wLength );  /* pushes a string on to the stack */
+void PushLogical( int iTrueFalse ); /* pushes a logical value onto the stack */
 void PushSymbol( PSYMBOL );
 void Do( WORD wParams );         /* invokes the virtual machine */
 void Function( WORD wParams );         /* invokes the virtual machine */

@@ -30,11 +30,11 @@
 #define ERR_SYNTAX2             20
 #define ERR_INCOMPLETE_STMT     21
 
-#define WARN_AMBIGUOUS_VAR       1
-#define WARN_VAR_NOT_USED        2
-#define WARN_BLOCKVAR_NOT_USED   3
-#define WARN_ASSIGN_TYPE         4
-#define WARN_ASSIGN_SUSPECTED    5
+#define WARN_AMBIGUOUS_VAR      1
+#define WARN_VAR_NOT_USED       2
+#define WARN_BLOCKVAR_NOT_USED  3
+#define WARN_ASSIGN_TYPE        4
+#define WARN_ASSIGN_SUSPECTED   5
 
 void GenError( int, char*, char * );      /* generic parsing error management function */
 void GenWarning( int, char*, char * );      /* generic parsing warning management function */

@@ -7,9 +7,6 @@
 #include <itemapi.h>
 #include <errorapi.h>
 
-/* error codes ( returned from hb_errLaunch() ) */
-
-
 extern HB_ITEM errorBlock;
 extern STACK stack;
 extern SYMBOL symEval;
@@ -25,6 +22,21 @@ PHB_ITEM hb_errNew( void )
    ItemCopy( pReturn, &stack.Return );
 
    return pReturn;
+}
+
+WORD hb_errLaunch( PHB_ITEM pError )
+{
+   PushSymbol( &symEval );
+   Push( &errorBlock );
+   Push( pError );
+   Do( 1 );
+
+   return stack.Return.value.iNumber;  /* TODO: hb_parnl( -1 ) */
+}
+
+void hb_errRelease( PHB_ITEM pError )
+{
+   hb_itemRelease( pError );
 }
 
 char * hb_errGetDescription( PHB_ITEM pError )
@@ -113,6 +125,14 @@ PHB_ITEM hb_errPutOsCode( PHB_ITEM pError, USHORT uiOsCode )
    return pError;
 }
 
+USHORT hb_errGetSeverity( PHB_ITEM pError )
+{
+   PushSymbol( GetDynSym( "SEVERITY" )->pSymbol );
+   Push( pError );
+   Do( 0 );
+   return stack.Return.value.iNumber;
+}
+
 PHB_ITEM hb_errPutSeverity( PHB_ITEM pError, USHORT uiSeverity )
 {
    PushSymbol( GetDynSym( "_SEVERITY" )->pSymbol );
@@ -120,6 +140,14 @@ PHB_ITEM hb_errPutSeverity( PHB_ITEM pError, USHORT uiSeverity )
    PushInteger( uiSeverity );
    Do( 1 );
    return pError;
+}
+
+USHORT hb_errGetSubCode( PHB_ITEM pError )
+{
+   PushSymbol( GetDynSym( "SUBCODE" )->pSymbol );
+   Push( pError );
+   Do( 0 );
+   return stack.Return.value.iNumber;
 }
 
 PHB_ITEM hb_errPutSubCode( PHB_ITEM pError, USHORT uiSubCode )
@@ -131,6 +159,14 @@ PHB_ITEM hb_errPutSubCode( PHB_ITEM pError, USHORT uiSubCode )
    return pError;
 }
 
+char * hb_errGetSubSystem( PHB_ITEM pError )
+{
+   PushSymbol( GetDynSym( "SUBSYSTEM" )->pSymbol );
+   Push( pError );
+   Do( 0 );
+   return stack.Return.value.szText;
+}
+
 PHB_ITEM hb_errPutSubSystem( PHB_ITEM pError, char * szSubSystem )
 {
    PushSymbol( GetDynSym( "_SUBSYSTEM" )->pSymbol );
@@ -138,6 +174,14 @@ PHB_ITEM hb_errPutSubSystem( PHB_ITEM pError, char * szSubSystem )
    PushString( szSubSystem, strlen( szSubSystem ) );
    Do( 1 );
    return pError;
+}
+
+USHORT hb_errGetTries( PHB_ITEM pError )
+{
+   PushSymbol( GetDynSym( "TRIES" )->pSymbol );
+   Push( pError );
+   Do( 0 );
+   return stack.Return.value.iNumber;
 }
 
 PHB_ITEM hb_errPutTries( PHB_ITEM pError, USHORT uiTries )
@@ -149,18 +193,79 @@ PHB_ITEM hb_errPutTries( PHB_ITEM pError, USHORT uiTries )
    return pError;
 }
 
-WORD hb_errLaunch( PHB_ITEM pError )
+USHORT hb_errGetFlags( PHB_ITEM pError )
 {
-   PushSymbol( &symEval );
-   Push( &errorBlock );
-   Push( pError );
-   Do( 1 );
+   USHORT uiFlags = EF_NONE;
 
-   return stack.Return.value.iNumber;  /* TODO: hb_parnl( -1 ) */
+   /* ; */
+
+   PushSymbol( GetDynSym( "CANRETRY" )->pSymbol );
+   Push( pError );
+   Do( 0 );
+
+   if (stack.Return.value.iLogical) uiFlags |= EF_CANRETRY;
+
+   /* ; */
+
+   PushSymbol( GetDynSym( "CANSUBSTITUTE" )->pSymbol );
+   Push( pError );
+   Do( 0 );
+
+   if (stack.Return.value.iLogical) uiFlags |= EF_CANSUBSTITUTE;
+
+   /* ; */
+
+   PushSymbol( GetDynSym( "CANDEFAULT" )->pSymbol );
+   Push( pError );
+   Do( 0 );
+
+   if (stack.Return.value.iLogical) uiFlags |= EF_CANDEFAULT;
+
+   /* ; */
+
+   return uiFlags;
 }
 
-void hb_errRelease( PHB_ITEM pError )
+PHB_ITEM hb_errPutFlags( PHB_ITEM pError, USHORT uiFlags )
 {
-   hb_itemRelease( pError );
+   PushSymbol( GetDynSym( "_CANRETRY" )->pSymbol );
+   Push( pError );
+   PushLogical( uiFlags & EF_CANRETRY );
+   Do( 1 );
+
+   /* ; */
+
+   PushSymbol( GetDynSym( "_CANSUBSTITUTE" )->pSymbol );
+   Push( pError );
+   PushLogical( uiFlags & EF_CANSUBSTITUTE );
+   Do( 1 );
+
+   /* ; */
+
+   PushSymbol( GetDynSym( "_CANDEFAULT" )->pSymbol );
+   Push( pError );
+   PushLogical( uiFlags & EF_CANDEFAULT );
+   Do( 1 );
+
+   /* ; */
+
+   return pError;
+}
+
+/* Wrappers for hb_errLaunch() */
+
+void hb_errorRT_BASE( ULONG ulGenCode, ULONG ulSubCode, char* szDescription, char* szOperation )
+{
+   PHB_ITEM pError = hb_errNew();
+
+   hb_errPutSeverity( pError, ES_ERROR );
+   hb_errPutSubSystem( pError, HB_ERR_SS_BASE );
+   hb_errPutGenCode( pError, ulGenCode );
+   hb_errPutSubCode( pError, ulSubCode );
+   hb_errPutDescription( pError, szDescription );
+   hb_errPutOperation( pError, szOperation );
+   hb_errLaunch( pError );
+
+   hb_errRelease( pError );
 }
 

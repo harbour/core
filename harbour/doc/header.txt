@@ -1,0 +1,74 @@
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *
+ *  $CATEGORY$
+ *
+ *  $ONELINER$
+ *
+ *  $SYNTAX$
+ *
+ *  $ARGUMENTS$
+ *
+ *  $RETURNS$
+ *
+ *  $DESCRIPTION$
+ *
+ *  $EXAMPLES$
+ *
+ *  $TESTS$
+ *
+ *  $STATUS$
+ *
+ *  $COMPLIANCE$
+ *
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+Example:
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      IsLeapYr()
+ *  $CATEGORY$
+ *      Dates
+ *  $ONELINER$
+ *      Test if a date falls in a leap year.
+ *  $SYNTAX$
+ *      IsLeapYr( [<dDate>] ) --> lIsLeap
+ *  $ARGUMENTS$
+ *      <dDate> is an optional date. If not supplied is defaults to the
+ *      value returned from date().
+ *  $RETURNS$
+ *      TRUE if <dDate> falls in a leap year, FALSE if not.
+ *  $DESCRIPTION$
+ *      IsLeapYr() can be used to check if a given year is a leap year.
+ *  $EXAMPLES$
+ *      // Check if it's a leap year.
+ *
+ *      If IsLeapYr()
+ *         ? "One extra day before you get paid this Feb!!"
+ *      Else
+ *         ? "A normal year"
+ *      EndIf
+ *  $TESTS$
+ *      valtype( IsLeapYr( date() ) ) == "L"
+ *      valtype( IsLeapYr( ctod( "" ) ) ) == "L"
+ *      valtype( IsLeapYr() ) == "L"
+ *      IsLeapYr( SToD( "20000101" ) )
+ *      !IsLeapYr( SToD( "19000101" ) )
+ *      IsLeapYr( SToD( "19841231" ) )
+ *      !IsLeapYr()
+ *  $STATUS$
+ *      C
+ *  $COMPLIANCE$
+ *      IsLeapYr() works exactly like CA-Clipper's IsLeapYr(), if your
+ *      CA-Clipper doesn't have such a function you're probably in a
+ *      different universe from the author of this function.
+ *  $SEEALSO$
+ *      Date() IsWeekend() IsHarbourFinished() IsApocalypse()
+ *  $END$
+ */
+

@@ -37,7 +37,7 @@
  *
  * By default it is disabled (symbol is not defined)
 */
-#define USE_GTAPI
+/*#define USE_GTAPI*/
 
 /* Operating system specific definitions
  */

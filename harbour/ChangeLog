@@ -1,3 +1,19 @@
+19990621-04:04 CET Victor Szel <info@szelvesz.hu>
+  * include/errorapi.h - Some additions, note
+    the copyright message at the beginning, as the
+    final text gets done, we should put similar header
+    to each file.
+  ! include/hbsetup.h - USE_GTAPI was mistakenly 
+    left defined.
+  + include/errorapi.h
+    include/error.api
+    source/rtl/errorapi.c
+    The rest of the ERROR API functions
+    implemented.
+.   hb_errorRT_BASE() implemented.
+  + doc/header.txt - added as a function header
+    template.
+
 19990621-01:30 CET Victor Szel <info@szelvesz.hu>
   * whatsnew.txt moved to doc/ directory.
   * doc/hrb.faq renamed to hrb_faq.txt
