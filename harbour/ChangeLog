@@ -3,6 +3,8 @@
    + source/hbpp/preproc.c
    + doc/hbpplib.txt
    + tests/working/testpre.prg
+   + Hbpplib.b32
+   + Bldhbpp.bat
    * changed tests/working/bld32exe.bat (to include hbpp.lib)
 
 19990715-16:30 Ryszard Glab <rglab@imid.med.pl>
