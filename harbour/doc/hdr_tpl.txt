@@ -35,20 +35,21 @@ FILE HEADER TEMPLATE
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
    their web site at http://www.gnu.org/).
 
+   V 1.5    Victor Szel                 Small name correction.
    V 1.4    David G. Holm               Removed "(C)" from Copyright notice
                                         Put author's name rather than date
                                         next to each version number, because
                                         the RCS tracks dates, but only tracks
                                         CVS user names, not author names.
-   V 1.3    Victor Sezl                 Description line changed to be a
+   V 1.3    Victor Szel                 Description line changed to be a
                                         template, too.
    V 1.2    David G. Holm               Added HRL/HVM license exception for
                                         executables. Added GNU web site.
                                         Replaced "?" in copyright statement
                                         with "(list of individual authors)".
-   V 1.1    Victor Sezl                 Added templates for file and function
+   V 1.1    Victor Szel                 Added templates for file and function
                                         headers. Committed to CVS.
-   V 1.0    Victor Sezl                 Initial version.
+   V 1.0    Victor Szel                 Initial version.
 */
 
 FUNCTION HEADER TEMPLATE
