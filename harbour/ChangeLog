@@ -1,7 +1,8 @@
 2000-09-05 14:45 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
    * config/dos/bcc16.cf
-     + Include L_USR flags in LD_USR flags for temporary link scripts.
+     + Include L_USR in LDFLAGS, so that the user flags will be placed
+       into the temporary link scripts.
 
    * config/dos/global.cf
      + Added support for HB_COMPILER being set to "emx".
