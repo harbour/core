@@ -3259,37 +3259,67 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
          ELSE
             sTemp := NextExp( @sLine, cType, NIL, NIL, sNextAnchor ) // Content
             IF sTemp == NIL
+               Alert( "ERROR! Invalid '&'" )
+            ELSE
+               sExp +=  sTemp
+            ENDIF
+         ENDIF
+
+         IF Left( sLine, 1 ) == '.'
+            // Get the macro terminator.
+            IF cType == 'A'
+               sExp  += NextExp( @sLine, '<', NIL, NIL, sNextAnchor )
+            ELSE
+               sTemp := NextExp( @sLine, cType, NIL, NIL, sNextAnchor ) // Content
+               IF sTemp == NIL
+                  Alert( "ERROR! Invalid '&'" )
+               ELSE
+                  sExp +=  sTemp
+               ENDIF
+            ENDIF
+
+            IF ( IsAlpha( SubStr( sLine, 2, 1 ) ) .OR. IsDigit( SubStr( sLine, 2, 1 ) ) )
+               // Get the macro sufix.
+               IF cType == 'A'
+                  sExp  += NextExp( @sLine, '<', NIL, NIL, sNextAnchor )
+               ELSE
+                  sTemp := NextExp( @sLine, cType, NIL, NIL, sNextAnchor ) // Content
+                  IF sTemp == NIL
+                     Alert( "ERROR! Invalid '&'" )
+                  ELSE
+                     sExp +=  sTemp
+                  ENDIF
+               ENDIF
+            ENDIF
+         ENDIF
+
+         LOOP // Might need other checks, like cType ',' or 'A'
+
+      ELSEIF Right( sExp, 1 ) $ "}])." .AND. Left( sLine, 1 ) == '[' .AND. ( sNextAnchor != "[" ) /*.AND. At( ']', sLine ) < At( '[', SubStr( sLine, 2 ) ) */
+
+         sExp  += Left( sLine, 1 ) // Open
+         sLine := SubStr( sLine, 2 )
+         sExp  += ExtractLeadingWS( @sLine )
+
+         IF cType == 'A'
+            sExp  += NextExp( @sLine, '<', NIL, NIL, sNextAnchor )
+         ELSE
+            sTemp := NextExp( @sLine, cType, NIL, NIL, sNextAnchor ) // Content
+            IF sTemp == NIL
                Alert( "ERROR! Unbalanced '['" )
             ELSE
                sExp +=  sTemp
             ENDIF
          ENDIF
 
-      ELSEIF Right( sExp, 1 ) $ "}])." .AND. Left( sLine, 1 ) == '[' .AND. ( sNextAnchor != "[" ) /*.AND. At( ']', sLine ) < At( '[', SubStr( sLine, 2 ) ) */
+         sToken := NextToken( @sLine, .T. ) /* bCheckRules */ // Close
+         IF sToken == NIL .OR. Left( sToken, 1 ) != ']'
+            Alert( "ERROR! Unbalanced '['" )
+         ELSE
+            sExp += sToken
+         ENDIF
 
-            sExp  += Left( sLine, 1 ) // Open
-            sLine := SubStr( sLine, 2 )
-            sExp  += ExtractLeadingWS( @sLine )
-
-            IF cType == 'A'
-               sExp  += NextExp( @sLine, '<', NIL, NIL, sNextAnchor )
-            ELSE
-               sTemp := NextExp( @sLine, cType, NIL, NIL, sNextAnchor ) // Content
-               IF sTemp == NIL
-                  Alert( "ERROR! Unbalanced '['" )
-               ELSE
-                  sExp +=  sTemp
-               ENDIF
-            ENDIF
-
-            sToken := NextToken( @sLine, .T. ) /* bCheckRules */ // Close
-            IF sToken == NIL .OR. Left( sToken, 1 ) != ']'
-               Alert( "ERROR! Unbalanced '['" )
-            ELSE
-               sExp += sToken
-            ENDIF
-
-            LOOP // Might need other checks, like cType ',' or 'A'
+         LOOP // Might need other checks, like cType ',' or 'A'
 
       ELSEIF cType == 'A' .AND. Left( sLine, 1 ) == ',' //.AND. ( sNextAnchor != "," )
 
@@ -3646,7 +3676,11 @@ FUNCTION PPOut( aResults, aMarkers )
               nMatches := Len( xValue )
               FOR nMatch := 1 TO nMatches
                  IF Left( xValue[nMatch], 1 ) == '&'
-                    sResult += RTrim( SubStr( xValue[nMatch], 2 ) )
+                    IF Right( xValue[nMatch], 1 ) == '.'
+                       sResult += SubStr( xValue[nMatch], 2, Len( xValue[nMatch] ) - 2 )
+                    ELSE
+                       sResult += SubStr( xValue[nMatch], 2 )
+                    ENDIF
                  ELSEIF '"' $ xValue[nMatch] .AND. "'" $ xValue[nMatch] .AND. ']' $ xValue[nMatch] .AND. Left( xValue[nMatch], 1 ) != '['
                     sResult += "[[" + RTrim( xValue[nMatch] ) + "]]"
                  ELSEIF '"' $ xValue[nMatch] .AND. ['] $ xValue[nMatch]
@@ -3664,7 +3698,11 @@ FUNCTION PPOut( aResults, aMarkers )
            ELSE
               IF ! ( xValue == NIL )
                  IF Left( xValue, 1 ) == '&'
-                    sResult += RTrim( SubStr( xValue, 2 ) )
+                    IF Right( xValue, 1 ) == '.'
+                       sResult += SubStr( xValue, 2, Len( xValue ) - 2 )
+                    ELSE
+                       sResult += SubStr( xValue, 2 )
+                    ENDIF
                  ELSEIF '"' $ xValue .AND. "'" $ xValue .AND. ']' $ xValue .AND. Left( xValue, 1 ) != '['
                     sResult += "[[" + xValue + "]]"
                  ELSEIF '"' $ xValue .AND. ['] $ xValue
@@ -3686,7 +3724,11 @@ FUNCTION PPOut( aResults, aMarkers )
                     sResult += xValue[nMatch]
                  ELSE
                     IF Left( xValue[nMatch], 1 ) == '&'
-                       sResult += RTrim( SubStr( xValue[nMatch], 2 ) )
+                       IF Right( xValue[nMatch], 1 ) == '.'
+                          sResult += SubStr( xValue[nMatch], 2, Len( xValue[nMatch] ) - 2 )
+                       ELSE
+                          sResult += SubStr( xValue[nMatch], 2 )
+                       ENDIF
                     ELSE
                        sResult += '"' + RTrim( xValue[nMatch] ) + '"'
                     ENDIF
@@ -3702,7 +3744,11 @@ FUNCTION PPOut( aResults, aMarkers )
                     sResult += xValue
                  ELSE
                     IF Left( xValue, 1 ) == '&'
-                       sResult += RTrim( SubStr( xValue, 2 ) )
+                       IF Right( xValue, 1 ) == '.'
+                          sResult += SubStr( xValue, 2, Len( xValue ) - 2 )
+                       ELSE
+                          sResult += SubStr( xValue, 2 )
+                       ENDIF
                     ELSE
                        sResult += '"' + RTrim( xValue ) + '"'
                     ENDIF

@@ -1,3 +1,7 @@
+2001-03-02 22:50 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * contrib/dot/pp.prg
+     ! Fixed handling of [Smart] Stringify of a period terminated macro.
+
 2001-03-02 09:10 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/pp/ppcore.c
      ! Fixed handling of [Smart] Stringify of a period terminated macro.
