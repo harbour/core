@@ -166,7 +166,9 @@ BOOL hb_evalRelease( PEVALINFO pEvalInfo )
          enough to initiate a call, the number of parameters is not limited.
 
    NOTE: When calling hb_itemDo() with no arguments for the Harbour item being
-         evaluated, you must use '(PHB_ITEM *) 0' as the third parameter. */
+         evaluated, you must use '(PHB_ITEM *) 0' as the third parameter. 
+
+   NOTE: pItemArg1 is needed to workaround a bug in OS2/GCC. */
 
 PHB_ITEM hb_itemDo( PHB_ITEM pItem, USHORT uiPCount, PHB_ITEM pItemArg1, ... )
 {
@@ -243,7 +245,9 @@ PHB_ITEM hb_itemDo( PHB_ITEM pItem, USHORT uiPCount, PHB_ITEM pItemArg1, ... )
          directly passed as a zero terminated string.
 
    NOTE: When calling hb_itemDoC() with no arguments for the Harbour function
-         being called, you must use '(PHB_ITEM *) 0' as the third parameter. */
+         being called, you must use '(PHB_ITEM *) 0' as the third parameter.
+
+   NOTE: pItemArg1 is needed to workaround a bug in OS2/GCC. */
 
 PHB_ITEM hb_itemDoC( char * szFunc, USHORT uiPCount, PHB_ITEM pItemArg1, ... )
 {

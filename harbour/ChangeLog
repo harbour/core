@@ -1,3 +1,10 @@
+19990916-05:50 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/itemapi.c
+    + Added NOTE why pItemArg1 is needed.
+  * tests/working/transdef.prg
+    tests/broken/parexpr.prg
+    - Removed (now for sure)
+
 19990915-23:35 EDT Paul Tucker <ptucker@sympatico.ca>
   * source/rtl/gt/gtos2.c
     source/rtl/gt/gtwin.c
@@ -24,6 +31,7 @@
     tests/working/transdef.prg (removed)
     tests/working/Makefile
     * Tests from transdef.prg moved to rtl_test.prg (2 failures more now)
+    tests/working/transdef.prg (removed)
   * tests/broken/parexpr.prg
     - Removed, since it's in working now.
   ; The bugs above were reported by Jose Lalin.
