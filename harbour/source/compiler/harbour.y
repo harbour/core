@@ -265,6 +265,9 @@ char * _szErrors[] = { "Statement not allowed outside of procedure or function",
                        "Syntax error: \'%s\' in: \'%s\'"
                      };
 
+/* Table with parse warnings */
+char * _szWarnings[] = { "Ambiguous reference, assuming memvar: \'%s\'" };
+
 /* Table with reserved functions names
  * NOTE: THIS TABLE MUST BE SORTED ALPHABETICALLY
 */
@@ -364,13 +367,15 @@ FILES files;
 FUNCTIONS functions, funcalls;
 PFUNCTION _pInitFunc;
 SYMBOLS symbols;
-int _iStartProc = 1;       /* holds if we need to create the starting procedure */
-int _iLineNumbers = 1;     /* holds if we need pcodes with line numbers */
-int _iQuiet = 0;           /* quiet mode */
-int _iSyntaxCheckOnly = 0; /* syntax check only */
-int _iLanguage = LANG_C;   /* default Harbour generated output language */
+int _iStartProc = 1;            /* holds if we need to create the starting procedure */
+int _iLineNumbers = 1;          /* holds if we need pcodes with line numbers */
+int _iQuiet = 0;                /* quiet mode */
+int _iSyntaxCheckOnly = 0;      /* syntax check only */
+int _iLanguage = LANG_C;        /* default Harbour generated output language */
 int _iRestrictSymbolLength = 0; /* generate 10 chars max symbols length */
-int _iShortCuts = 1;       /* .and. & .or. expressions shortcuts */
+int _iShortCuts = 1;            /* .and. & .or. expressions shortcuts */
+int _iWarnings = 0;             /* enable parse warnings */
+
 short int _iAltSymbolTableInit = 0; /* alternative method of symbol table initialization */
 WORD _wSeqCounter   = 0;
 WORD _wForCounter   = 0;
@@ -987,10 +992,22 @@ void GenError( int iError, char * szError1, char * szError2 )
 {
   char * szLine = ( char * ) OurMalloc( 160 );      /*2 lines of text */
   printf( "\r%s(%i) ", files.pLast->szFileName, iLine );
-  printf( "Error C%i  ", iError );
+  printf( "Error E%i  ", iError );
   sprintf( szLine, _szErrors[ iError - 1 ], szError1, szError2 );
   printf( "%s\n\n", szLine );
   exit( 1 );
+}
+
+void GenWarning( int iWarning, char * szWarning1, char * szWarning2 )
+{
+    if ( _iWarnings )
+    {
+        char * szLine = ( char * ) OurMalloc( 160 );      /*2 lines of text */
+        printf( "\r%s(%i) ", files.pLast->szFileName, iLine );
+        printf( "Warning W%i  ", iWarning );
+        sprintf( szLine, _szWarnings[ iWarning - 1 ], szWarning1, szWarning2 );
+        printf( "%s\n", szLine );
+    }
 }
 
 void EXTERNAL_LINKAGE close_on_exit( void )
@@ -1122,6 +1139,11 @@ int harbour_main( int argc, char * argv[] )
                case 't':
                case 'T':
                     _iAltSymbolTableInit = 1;
+                    break;
+
+               case 'w':
+               case 'W':
+                    _iWarnings = 1;
                     break;
 
                case 'y':
@@ -1307,6 +1329,7 @@ void PrintUsage( char * szSelf )
           "\t/y\t\ttrace lex & yacc activity\n"
           "\t/z\t\tsupress .and. & .or. shortcutting\n"
           "\t/10\t\trestrict symbol length to 10 characters\n"
+          "\t/w\t\tenable warnings\n"
           , szSelf );
 }
 
@@ -2909,14 +2932,19 @@ void PopId( char * szVarName ) /* generates the pcode to pop a value from the vi
    else if( ( wVar = GetStaticVarPos( szVarName ) ) )
       GenPCode3( _POPSTATIC, LOBYTE( wVar ), HIBYTE( wVar ) );
 
-   else if( ( wVar = GetSymbolPos( szVarName ) - _iStartProc ? 1: 2 ) )
-      GenPCode3( _POPMEMVAR, LOBYTE( wVar ), HIBYTE( wVar ) );
-
    else
    {
-      AddSymbol( szVarName );
-      wVar = GetSymbolPos( szVarName ) - _iStartProc ? 1: 2;
-      GenPCode3( _POPMEMVAR, LOBYTE( wVar ), HIBYTE( wVar ) );
+      GenWarning( WARN_AMBIGUOUS_VAR, szVarName, NULL );
+
+      if( ( wVar = GetSymbolPos( szVarName ) - _iStartProc ? 1: 2 ) )
+         GenPCode3( _POPMEMVAR, LOBYTE( wVar ), HIBYTE( wVar ) );
+
+      else
+      {
+         AddSymbol( szVarName );
+         wVar = GetSymbolPos( szVarName ) - _iStartProc ? 1: 2;
+         GenPCode3( _POPMEMVAR, LOBYTE( wVar ), HIBYTE( wVar ) );
+      }
    }
 }
 
@@ -2938,14 +2966,19 @@ void PushId( char * szVarName ) /* generates the pcode to push a variable value 
    else if( ( wVar = GetStaticVarPos( szVarName ) ) )
       GenPCode3( _PUSHSTATIC, LOBYTE( wVar ), HIBYTE( wVar ) );
 
-   else if( ( wVar = GetSymbolPos( szVarName ) - _iStartProc ? 1: 2 ) )
-      GenPCode3( _PUSHMEMVAR, LOBYTE( wVar ), HIBYTE( wVar ) );
-
    else
    {
-      AddSymbol( szVarName );
-      wVar = GetSymbolPos( szVarName ) - _iStartProc ? 1: 2;
-      GenPCode3( _PUSHMEMVAR, LOBYTE( wVar ), HIBYTE( wVar ) );
+      GenWarning( WARN_AMBIGUOUS_VAR, szVarName, NULL );
+
+      if( ( wVar = GetSymbolPos( szVarName ) - _iStartProc ? 1: 2 ) )
+         GenPCode3( _PUSHMEMVAR, LOBYTE( wVar ), HIBYTE( wVar ) );
+
+      else
+      {
+         AddSymbol( szVarName );
+         wVar = GetSymbolPos( szVarName ) - _iStartProc ? 1: 2;
+         GenPCode3( _PUSHMEMVAR, LOBYTE( wVar ), HIBYTE( wVar ) );
+      }
    }
 }
 
@@ -2967,14 +3000,19 @@ void PushIdByRef( char * szVarName ) /* generates the pcode to push a variable b
    else if( ( wVar = GetStaticVarPos( szVarName ) ) )
       GenPCode3( _PUSHSTATICREF, LOBYTE( wVar ), HIBYTE( wVar ) );
 
-   else if( ( wVar = GetSymbolPos( szVarName ) - _iStartProc ? 1: 2) )
-      GenPCode3( _PUSHMEMVARREF, LOBYTE( wVar ), HIBYTE( wVar ) );
-
    else
    {
-      AddSymbol( szVarName );
-      wVar = GetSymbolPos( szVarName ) - _iStartProc ? 1: 2;
-      GenPCode3( _PUSHMEMVARREF, LOBYTE( wVar ), HIBYTE( wVar ) );
+      GenWarning( WARN_AMBIGUOUS_VAR, szVarName, NULL );
+
+      if( ( wVar = GetSymbolPos( szVarName ) - _iStartProc ? 1: 2) )
+         GenPCode3( _PUSHMEMVARREF, LOBYTE( wVar ), HIBYTE( wVar ) );
+
+      else
+      {
+         AddSymbol( szVarName );
+         wVar = GetSymbolPos( szVarName ) - _iStartProc ? 1: 2;
+         GenPCode3( _PUSHMEMVARREF, LOBYTE( wVar ), HIBYTE( wVar ) );
+      }
    }
 }
 

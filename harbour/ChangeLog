@@ -1,6 +1,16 @@
+19990606-16:42 PST Ron Pinkas
+  * include/hberrors.h
+    added define WARN_AMBIGUOUS_VAR 1
+    added declaration for new function GenWarning()
+  * source/compiler/harbour.y
+    added _szWarnings[] to include parse warning messages
+    added function GenWarning()
+    added /w compiler switch to enable warnings
+    added warning message for ambiguous vars
+
 19990606-20:20 CET Victor Szel
 
-  * source/rtl/dir.c - 
+  * source/rtl/dir.c -
     HB_CHARUPPER() parameters were wrong.
     HB_CHARUPPER() converted to toupper()
     The attribute parameter conversion to uppercase was buggy.

@@ -24,4 +24,8 @@
 #define ERR_UNMATCHED_EXIT      19
 #define ERR_SYNTAX2             20
 
+#define WARN_AMBIGUOUS_VAR       1
+
 void GenError( int, char*, char * );      /* generic parsing error management function */
+
+void GenWarning( int, char*, char * );      /* generic parsing warning management function */
