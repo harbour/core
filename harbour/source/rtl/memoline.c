@@ -95,17 +95,17 @@ HB_FUNC( MEMOLINE )
             break;
 
          case HB_CHAR_LF:
-            if( !pszString[ ulPos - 1 ] == HB_CHAR_SOFT1 )
+            if( !( pszString[ ulPos - 1 ] == HB_CHAR_SOFT1 ) )
             {
-            ulCurLength = 0;
-            ulLastSpace = 0;
-            ulLineEnd = ( ulPos >= OS_EOL_LEN ) ? ( ulPos - OS_EOL_LEN ) : ulLineBegin;
-            ulLines++;
-            if( ulLines < ulLineNumber )
-            {
-               ulLineBegin = ulPos + 1;
-               ulLineEnd   = 0;
-            }
+               ulCurLength = 0;
+               ulLastSpace = 0;
+               ulLineEnd = ( ulPos >= OS_EOL_LEN ) ? ( ulPos - OS_EOL_LEN ) : ulLineBegin;
+               ulLines++;
+               if( ulLines < ulLineNumber )
+               {
+                  ulLineBegin = ulPos + 1;
+                  ulLineEnd   = 0;
+               }
             }
             break;
 
