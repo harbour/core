@@ -261,7 +261,7 @@ BOOL hb_arraySort( PHB_ITEM pArray, ULONG * pulStart, ULONG * pulCount, PHB_ITEM
       return FALSE;
 }
 
-HB_FUNC( HB_ASORT )
+HB_FUNC( ASORT )
 {
    PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
 
