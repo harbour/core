@@ -8,6 +8,15 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-09-29 15:20 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+   *source/rtl/strcase.c
+     ! hb_strncpyUpper() is fixed ( borrowed from xHarbour ).
+   * make_tgz.sh
+   * bin/pack_src.sh
+     * release info changed
+   * include/hbver.h
+     * Release info has been corrected again :).
+
 2003-09-29 11:47 UTC+0300 Chen Kedem <niki@actcom.co.il>
   * doc/whatsnew.txt
     + Added information about builds 10..25, 43 based on information

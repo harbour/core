@@ -4,7 +4,7 @@
 #
 # This script requires "TAR" utilities for compression.
 
-hb_ver="0.42.0"
+hb_ver="0.43.0"
 
 hb_archbin="tar"
 hb_archopt="-cz --ignore-failed-read -f"
