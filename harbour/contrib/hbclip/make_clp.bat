@@ -3,10 +3,10 @@ rem
 rem $Id$
 rem
 
-clipper hbclip.prg   /n
-clipper hbkeyput.prg /n
-clipper hbshadow.prg /n
-clipper hbvaltoc.prg /n
+clipper hbclip.prg   /n /w
+clipper hbkeyput.prg /n /w
+clipper hbshadow.prg /n /w
+clipper hbvaltoc.prg /n /w
 
 cl /c /AL /Zl /Oalt /Gs /W3 hbarg.c
 cl /c /AL /Zl /Oalt /Gs /W3 hbcolind.c

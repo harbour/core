@@ -33,6 +33,18 @@
  *
  */
 
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2000 Felipe Coury <fcoury@creation.com.br>
+ *    Small fixes
+ *    Internal error names
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
+
 /* Language name: Portuguese */
 /* ISO language code (2 chars): PT */
 /* Codepage: 850 */
@@ -86,8 +98,8 @@ static HB_LANG s_lang =
       "*** Total ***",
       "Ins",
       "   ",
-      "Data invalida",
-      "Range: ",
+      "Data inv lida",
+      "Faixa: ",
       " - ",
       "S/N",
       "EXPRESSÇO INVALIDA",
@@ -148,28 +160,28 @@ static HB_LANG s_lang =
 
       /* Internal error names */
  
-      "Unrecoverable error %lu: ",
-      "Error recovery failure",
-      "No ERRORBLOCK() for error", 
-      "Too many recursive error handler calls", 
-      "RDD invalid or failed to load",
-      "Invalid method type from %s", 
-      "hb_xgrab can't allocate memory", 
-      "hb_xrealloc called with a NULL pointer", 
-      "hb_xrealloc called with an invalid pointer", 
-      "hb_xrealloc can't reallocate memory", 
-      "hb_xfree called with an invalid pointer", 
-      "hb_xfree called with a NULL pointer", 
-      "Can\'t locate the starting procedure: \'%s\'",
-      "No starting procedure", 
-      "Unsupported VM opcode", 
-      "Symbol item expected from %s",
-      "Invalid symbol type for self from %s", 
-      "Codeblock expected from %s",
-      "Incorrect item type on the stack trying to pop from %s",
+      "Erro irrecuper vel %lu: ",
+      "Erro na recupera‡ao do erro",
+      "ERRORBLOCK() para erro ausente",
+      "Muitas chamadas recursivas ao manipulador de erros",
+      "Falha ao carregar ou RDD inv lido",
+      "M‚todo de %s inv lido",
+      "hb_xgrab nao pode alocar mem¢ria",
+      "hb_xrealloc chamado com ponteiro NULL",
+      "hb_xrealloc chamado com ponteiro inv lido",
+      "hb_xrealloc nao pode realocar mem¢ria",
+      "hb_xfree chamado com ponteiro inv lido",
+      "hb_xfree chamado com ponteiro NULL",
+      "Impossivel localizar procedure de in¡cializa‡ao: \'%s\'",
+      "Nao ha procedure de inicializa‡ao",
+      "VM opcode nao suportado",
+      "Item de s¡mbolo esperado de %s",
+      "Tipo de s¡mbolo inv lido para self em %s",
+      "Codeblock esperado em %s",
+      "Tipo incorreto de item na pilha tentando executar um pop de %s",
       "Stack underflow",
-      "An item was going to be copied to itself from %s", 
-      "Invalid symbol item passed as memvar %s",
+      "Um item iria ser copiado para ele mesmo em %s",
+      "Symbol item inv lido passado como memvar  %s",
 
       /* Texts */
    

@@ -1,3 +1,33 @@
+2000-05-31 23:43 UTC+0100 Victor Szakats <info@szelvesz.hu>
+
+   * contrib/hbclip/make_clp.bat 
+     * Minor enh.
+
+   * source/lang/msgpt.c
+     ! Updated by Felipe
+
+   + contrib/sample/Makefile
+     + GNU-Makefile for samples
+
+   by Jose Lalin:
+
+   + contrib/sample/test*.prg
+     + Tests added.
+   + contrib/sample/date.c
+     + Mdy, Dmy(), DateAsAge(), AddMonth()
+     + DateAsArray(), ArrayAsDate(), DateIsLeap(), NToD()
+   + contrib/sample/dbf.c
+     + Dbf()
+   + contrib/sample/environ.c
+     + FilePath(), FileBase(), FileExt(), FileDrive()
+   + contrib/sample/gauge.c
+   + contrib/sample/stack.c
+   + contrib/sample/status.c
+   + contrib/sample/num.c
+     + Ceiling(), DToR(), Floor()
+     + NumAsLog10(), NumGetDecimals(), NumGetLen()
+     + RToD(), Sign(), NumAsCurrency()
+
 20000531-22:15 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
 
    * contrib/msql/tmsql.prg
