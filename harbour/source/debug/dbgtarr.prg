@@ -79,7 +79,7 @@ Method addWindows(aArray,nRow) Class TDBGArray
 local oBrwSets,nSize:=Len(AArray)
 local n:=1
 Local owndsets
-   local nWidth
+   local nWidth, nColWidth
    local oCol
    if (nsize<maxrow()-2)
       if nRow <> nil
@@ -103,14 +103,15 @@ Local owndsets
    oBrwSets:AddColumn( ocol:=     TBColumnNew("", { || ::arrayName+"["+alltrim(str(oBrwSets:cargo[ 1 ],6))+"]"} ) )
    ocol:width:=len(::arrayName+"["+alltrim(str(len(aarray),6))+"]" )
    oCol:DefColor:={1,2}
-   oBrwSets:AddColumn( ocol:=TBColumnNew( "" ,{ || PadR( ValToStr( aArray[oBrwSets:cargo[ 1 ] ] ), nWidth - oCol:Width - 1 ) } ) )
+   nColWidth = oCol:Width
+   oBrwSets:AddColumn( ocol:=TBColumnNew( "" ,{ || PadR( ValToStr( aArray[oBrwSets:cargo[ 1 ] ] ), nWidth - nColWidth - 1 ) } ) )
    aadd(oBrwSets:Cargo[2],aarray)
    oCol:width:=50
    ocol:DefColor:={1,3}
-   oBrwSets:GOTOPBLOCK := { || oBrwSets:cargo[ 1 ]:= 1 } 
-   oBrwSets:GoBottomBlock := { || oBrwSets:cargo[ 1 ]:= Len(oBrwSets:cargo[ 2 ][ 1 ])} 
+   oBrwSets:GOTOPBLOCK := { || oBrwSets:cargo[ 1 ]:= 1 }
+   oBrwSets:GoBottomBlock := { || oBrwSets:cargo[ 1 ]:= Len(oBrwSets:cargo[ 2 ][ 1 ])}
    oBrwSets:SKIPBLOCK := { |nPos| ( nPos:= ArrayBrowseSkip(nPos, oBrwSets), oBrwSets:cargo[ 1 ]:= ;
-   oBrwSets:cargo[ 1 ] + nPos,nPos ) } 
+   oBrwSets:cargo[ 1 ] + nPos,nPos ) }
 
    ::aWindows[::nCurWindow]:bPainted    := { || (oBrwSets:forcestable(),RefreshVarsS(oBrwSets))}
    ::aWindows[::nCurWindow]:bKeyPressed := { | nKey | ::SetsKeyPressed( nKey, oBrwSets, Len( aArray ),;
@@ -269,7 +270,7 @@ static procedure RefreshVarsS( oBrowse )
    if ( nLen == 2 )
       oBrowse:hilite():colpos:=1
    endif
-   oBrowse:hilite()  
+   oBrowse:hilite()
    return
 static function ArrayBrowseSkip( nPos, oBrwSets,n )
 
