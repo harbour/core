@@ -1,3 +1,13 @@
+2001-10-30 21:15 GMT -3 Luiz Rafael Culik<culik@sl.conex.net>
+   * bin/bld.bat
+      * Added Required winspool.lib for msvc builds
+   * source/vm/pvalue.c
+     include/hbextern.ch
+      * Renamed __pvalue to hb_pvalue
+   * utils/hbmake/hbmake.prg
+     utils/hbmake/hbmake.prg
+      * Fix some small problem with hbmake under linux
+
 2001-10-30 20:05 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * contrib/rdd_ads/ads1.c
      * Added support for creating custom indexes

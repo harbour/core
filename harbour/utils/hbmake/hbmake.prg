@@ -1208,6 +1208,10 @@ ATTENTION( "Harbour Options", 5 )
 @  8,  1 Get lGenppo checkbox "Generate pre-processed output"
 @  8, 43 Get lCompMod checkbox "compile module only"
 Read
+lBcc := If( At( "BCC", cCompiler ) > 0, .t., .f. )
+lVcc := If( At( "MSVC", cCompiler ) > 0, .t., .f. )
+lGcc := If( At( "GCC", cCompiler ) > 0, .t., .f. )
+cObjDir:=alltrim(cObjDir)
 if !empty(cobjDir)
    if dirchange(cobjDir)!=0
       makedir(cobjDir)
@@ -1233,9 +1237,6 @@ endif
 
 aeval(amacros,{|x,y|cItem:=substr(x[2],1,len(x[2])),if(at(citem,cTest)>0,(amacros[y,1]:='OBJ',amacros[y,2]:=cObjDir),)})
 
-lBcc := If( At( "BCC", cCompiler ) > 0, .t., .f. )
-lVcc := If( At( "MSVC", cCompiler ) > 0, .t., .f. )
-lGcc := If( At( "GCC", cCompiler ) > 0, .t., .f. )
 if lAutomemvar
 cDefHarOpts+=" -a "
 endif
@@ -1893,6 +1894,10 @@ ATTENTION( "Harbour Options", 5 )
 @  8,  1 Get lGenppo checkbox "Generate pre-processed output"
 @  8, 43 Get lCompMod checkbox "compile module only"
 Read
+lBcc := If( At( "BCC", cCompiler ) > 0, .t., .f. )
+lVcc := If( At( "MSVC", cCompiler ) > 0, .t., .f. )
+lGcc := If( At( "GCC", cCompiler ) > 0, .t., .f. )
+cObjDir:=Alltrim(cObjDir)
 if !empty(cobjDir)
    if dirchange(cobjDir)!=0
       makedir(cobjDir)
@@ -1900,6 +1905,7 @@ if !empty(cobjDir)
       dirchange('..')
    endif
 endif
+
 amacros:=GetSourceDirMacros()
 if lGcc
    cObjDir:=alltrim(cObjDir)
@@ -1917,9 +1923,6 @@ endif
 
 aeval(amacros,{|x,y|cItem:=substr(x[2],1,len(x[2])),if(at(citem,cTest)>0,(amacros[y,1]:='OBJ',amacros[y,2]:=cObjDir),)})
 
-lBcc := If( At( "BCC", cCompiler ) > 0, .t., .f. )
-lVcc := If( At( "MSVC", cCompiler ) > 0, .t., .f. )
-lGcc := If( At( "GCC", cCompiler ) > 0, .t., .f. )
 if lAutomemvar
 cDefHarOpts+=" -a "
 endif

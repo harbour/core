@@ -176,7 +176,7 @@ EXTERNAL PROCFILE
 //
 //symbols from file: vm\pvalue.c
 //
-EXTERNAL __PVALUE
+EXTERNAL HB_PVALUE
 //
 //symbols from file: vm\harbinit.prg
 //

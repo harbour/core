@@ -54,7 +54,7 @@
 #include "hbapiitm.h"
 #include "hbstack.h"
 
-HB_FUNC( __PVALUE )
+HB_FUNC( HB_PVALUE )
 {
    USHORT uiParam = hb_parni( 1 );
    PHB_ITEM *pBase = hb_stack.pItems + ( hb_stackBaseItem() )->item.asSymbol.stackbase; /* Skip function + self */
