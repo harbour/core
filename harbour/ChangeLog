@@ -14,9 +14,9 @@
        (exm: "1") and single character workarea aliases ("A"-"K")
      ! hb_rddSelectWorkAreaSymbol() fixed to handle the single character
        workarea aliases ("A"-"K")
-       Bruno, please review these.
      ! SELECT(), DBSELECTAREA() fixed handling of workarea numbers passed as
        strings, and workarea numbers passed as single characters ("A"-"K")
+       Bruno, please review these.
    * include/gtapi.h
      source/rtl/console.c
      source/rtl/gtapi.c
