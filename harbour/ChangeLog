@@ -1,3 +1,11 @@
+Tue Oct 26 13:11:19 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* source/tools/dates2.c: 
+	* source/tools/hb_f.c: 
+	* source/tools/strasint.c: 
+	* source/tools/stringsx.c: 
+	Added HB_TRACE() calls to the TOOLS library.
+
 Tue Oct 26 12:55:49 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* source/rdd/dbcmd.c: 

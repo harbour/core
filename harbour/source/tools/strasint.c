@@ -9,21 +9,25 @@
 * By......: David A Pearson                                                  *
 *****************************************************************************/
 
+#include "hbtrace.h"
+
 #define ISDIGIT(c)      ((c) >= '0' && (c) <= '9')
 
 int _GT_Internal_StringAsInt(char *String, int Start, int End)
 {
-        int  Decimal = 1;
-        int  Digit   = End;
-        int  Value   = 0;
+   int  Decimal = 1;
+   int  Digit   = End;
+   int  Value   = 0;
 
-        for (Digit = End; Digit >= Start; Digit--)
-        {
-                if (ISDIGIT(String[Digit]))
-                {
-                        Value   += (String[Digit] - 0x30) * Decimal;
-                        Decimal *= 0xA;
-                }
-        }
-        return(Value);
+   HB_TRACE(("_GT_Internal_StringAsInt(%s, %d, %d)", String, Start, End));
+   
+   for (Digit = End; Digit >= Start; Digit--)
+     {
+       if (ISDIGIT(String[Digit]))
+	 {
+	   Value   += (String[Digit] - 0x30) * Decimal;
+	   Decimal *= 0xA;
+	 }
+     }
+   return(Value);
 }

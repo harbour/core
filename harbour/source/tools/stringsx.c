@@ -12,8 +12,12 @@ char *hb_strtoken(char *szText,
 		  char cDelimiter,
 		  long *lLen)
 {
-  long wStart, wEnd = 0, wCounter = 0;
+  long wStart;
+  long wEnd = 0;
+  long wCounter = 0;
 
+  HB_TRACE(("hb_strtoken(%s, %ld, %ld, %d, %p)", szText, lText, lIndex, (int) cDelimiter, lLen));
+   
   do
     {
       wStart = wEnd;

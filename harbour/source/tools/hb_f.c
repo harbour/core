@@ -125,6 +125,8 @@ static long hb_hbfskip( int recs )
    long x, y;
 
 
+   HB_TRACE(("hb_hbskip(%d)", recs));
+
    if ( recs > 0 ) {
       for (y = 0; y < recs; y++ ) {
          hb_fsSeek( handles[area], offset[area], SEEK_SET );
