@@ -966,22 +966,22 @@ lBcc := If( At( "BCC", cCompiler ) > 0, .t., .f. )
 lVcc := If( At( "MSVC", cCompiler ) > 0, .t., .f. )
 lGcc := If( At( "GCC", cCompiler ) > 0, .t., .f. )
 if lAutomemvar
-cDefHarOpts+="-a "
+cDefHarOpts+=" -a "
 endif
 if lvarismemvar
-cDefHarOpts+="-v "
+cDefHarOpts+=" -v "
 endif
 if ldebug
-cDefHarOpts+="-b "
+cDefHarOpts+=" -b "
 endif
 if lSupressline
-cDefHarOpts+="-l "
+cDefHarOpts+=" -l "
 endif
 if lGenppo
-cDefHarOpts+="-p "
+cDefHarOpts+=" -p "
 endif
 if lCompmod
-cDefHarOpts+="-m "
+cDefHarOpts+=" -m "
 endif
 
 
@@ -1083,35 +1083,36 @@ if lGcc
    if at("linux",Getenv("HB_ARCHITECTURE"))>0 .or.  cOs=="Linux"
         Fwrite( nLinkHandle, "PROJECT = " + if(isupper(cTopfile),Strtran( cTopfile, ".PRG", "" ),Strtran( cTopfile, ".prg", "" )) + " $(PR) "+CRLF )
    else
-
         Fwrite( nLinkHandle, "PROJECT = " + if(isupper(cTopfile),Strtran( cTopfile, ".PRG", ".EXE" ),Strtran( cTopfile, ".prg", ".exe" )) +" $(PR) "+ CRLF )
    endif     
 else
 
 Fwrite( nLinkHandle, "PROJECT = " + if(isupper(cTopfile),Strtran( cTopfile, ".PRG", ".EXE" ),Strtran( cTopfile, ".prg", ".exe" )) + " $(PR) "+CRLF )
 endif
-if len(aObjs)<2
 
-Fwrite( nLinkHandle, "OBJFILES =  " + if(isupper(cTopfile),Strtran( cTopfile, ".PRG", ".OBJ" ),Strtran( cTopfile, ".prg", ".obj" )) +" $(OB) "+ CRLF )
+Fwrite( nLinkHandle, "OBJFILES =  " + if(isupper(cTopfile),Strtran( cTopfile, ".PRG", ".OBJ" ),Strtran( cTopfile, ".prg", ".obj" )) )
+if len(aObjs)<1
+
+Fwrite( nLinkHandle,  +" $(OB) "+ CRLF )
 else
 
-Fwrite( nLinkHandle, "OBJFILES = " + if(isupper(cTopfile),Strtran( cTopfile, ".PRG", ".OBJ" ),Strtran( cTopfile, ".prg", ".obj" )))
+//Fwrite( nLinkHandle, "OBJFILES = " + if(isupper(cTopfile),Strtran( cTopfile, ".PRG", ".OBJ" ),Strtran( cTopfile, ".prg", ".obj" )))
 
 For x := 1 To Len( aobjs )
    If x <> Len( aobjs ) .and. aObjs[x]<>cTopfile
-
       Fwrite( nLinkHandle, " " + aobjs[ x ] )
    Else
       Fwrite( nLinkHandle, " " + aobjs[ x ] +" $(OB) "+ CRLF )
    Endif
 Next
 endif
-if len(aCs)<2
-
-Fwrite( nLinkHandle, "CFILES = " + if(isupper(cTopfile),Strtran( cTopfile, ".PRG", ".C" ),Strtran( cTopfile, ".prg", ".c" ))+" $(CF) "+CRLF)
+Fwrite( nLinkHandle, "CFILES = " + if(isupper(cTopfile),Strtran( cTopfile, ".PRG", ".C" ),Strtran( cTopfile, ".prg", ".c" )))
+if len(aCs)<1
+Fwrite( nLinkHandle,  +" $(CF)"+ CRLF )
+//
 else
 
-Fwrite( nLinkHandle, "CFILES = " + if(isupper(cTopfile),Strtran( cTopfile, ".PRG", ".C" ),Strtran( cTopfile, ".prg", ".c" )))
+//Fwrite( nLinkHandle, "CFILES = " + if(isupper(cTopfile),Strtran( cTopfile, ".PRG", ".C" ),Strtran( cTopfile, ".prg", ".c" )))
 For x := 1 To Len( acs )
    If x <> Len( acs ) .and. aCs[x]<>cTopfile
       Fwrite( nLinkHandle, " " + aCs[ x ] )
@@ -1124,7 +1125,7 @@ endif
 Fwrite( nLinkHandle, "RESFILES = " + CRLF )
 Fwrite( nLinkHandle, "RESDEPEN = $(RESFILES)" + CRLF )
 if lRddads
-    cDefBccLibs+=" rddads.lib ace2.lib"
+    cDefBccLibs+=" rddads.lib ace32.lib"
 endif
 if lBcc .or. lVcc
     If lFwh 
@@ -1138,7 +1139,7 @@ elseif lGcc
         Fwrite( nLinkHandle, "LIBFILES = " +cDefgccLibs + CRLF )
 endif
  Fwrite( nLinkHandle, "DEFFILE = "+CRLF)
- fWrite( nLinkHandle, "HARBOURFLAGS =" +cDefHarOpts+CRLF)
+ fWrite( nLinkHandle, "HARBOURFLAGS = " +cDefHarOpts+CRLF)
 if lBcc
  Fwrite( nLinkHandle, "CFLAG1 =  -OS $(CFLAGS) -d -L$(BHC)\lib;$(FWH)\lib -c"+CRLF)
  Fwrite( nLinkHandle, "CFLAG2 =  -I$(BHC)\include;$(BCB)\include" +CRLF)
@@ -1357,7 +1358,7 @@ local aFile
 local aobj
 local lReturn:=.f.
 local nDate,nTime
-if !file(strtran(cFile,".prg",".c"))
+if !file(strtran(cFile,".prg",".c")) .or.  !file(strtran(cFile,".PRG",".C"))
    return .t.
 endif
 aFile:=directory(cFile)
