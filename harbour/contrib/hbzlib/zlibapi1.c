@@ -34,6 +34,7 @@
  */
 
 
+#include <hbsetup.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -42,7 +43,7 @@
 #include <errno.h>
 #include <fcntl.h>
 
-#ifdef HB_OS_UNIX
+#if defined(HB_OS_UNIX) || defined(HARBOUR_GCC_OS2)
 # include <unistd.h>
 # include <utime.h>
 # include <sys/types.h>
@@ -91,7 +92,7 @@ uLong hb___filetime(char *f, tm_zip *tmzip, uLong *dt)
   struct stat s;        /* results of stat() */
   struct tm* filedate;
   time_t tm_t=0;
-  
+
   if (strcmp(f,"-")!=0)
   {
     char name[MAXFILENAME];
@@ -221,7 +222,7 @@ int hb___CompressOneFile(char *szFile,char *szFiletoCompress,int iCompLevel,PHB_
 /*                                printf("error in writing %s in the zipfile\n",
                                                  filenameinzip);*/
                             }
-                                
+
                         }
                     } while ((err == ZIP_OK) && (size_read>0));
 
@@ -229,7 +230,7 @@ int hb___CompressOneFile(char *szFile,char *szFiletoCompress,int iCompLevel,PHB_
                 if (err<0)
                     err=ZIP_ERRNO;
                 else
-                {                    
+                {
                     err = zipCloseFileInZip(szZipFile);
                     if (err!=ZIP_OK)
                     return err;
@@ -238,7 +239,7 @@ int hb___CompressOneFile(char *szFile,char *szFiletoCompress,int iCompLevel,PHB_
         errclose = zipClose(szZipFile,NULL);
         if (errclose != ZIP_OK)
             return errclose;
-    
+
  }
 }
 
@@ -275,7 +276,7 @@ int   hb___CompressMultipleFile(char *szFile,PHB_ITEM pArray,int iCompLevel,PHB_
 
         for (uiCount=1;(uiCount<= hb_arrayLen(pArray)) && (err==ZIP_OK);uiCount++)
         {
-              
+
                 FHANDLE nFileHandle;
                 int size_read;
                 zip_fileinfo szZipFileInfo;
@@ -305,7 +306,7 @@ int   hb___CompressMultipleFile(char *szFile,PHB_ITEM pArray,int iCompLevel,PHB_
                 if (err == ZIP_OK)                {
 
                 nFileHandle = hb_fsOpen((char*)  filenameinzip,FO_READ+FO_COMPAT);
-                                    
+
                     if (nFileHandle==NULL)
                     {
                         err=ZIP_ERRNO;
@@ -334,7 +335,7 @@ int   hb___CompressMultipleFile(char *szFile,PHB_ITEM pArray,int iCompLevel,PHB_
                             if (err<0)
                             {
                             }
-                                
+
                         }
                     } while ((err == ZIP_OK) && (size_read>0));
 
@@ -343,7 +344,7 @@ int   hb___CompressMultipleFile(char *szFile,PHB_ITEM pArray,int iCompLevel,PHB_
                 {
                     err=ZIP_ERRNO;
                     }
-                else                {                    
+                else                {
                     err = zipCloseFileInZip(szZipFile);
                     if (err!=ZIP_OK){
 /*                        printf("error in closing %s in the zipfile\n",

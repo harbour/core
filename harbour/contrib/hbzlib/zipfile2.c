@@ -33,6 +33,8 @@
  *
  */
 
+#include <hbsetup.h>
+
 #include "hbzip.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -40,7 +42,8 @@
 #include <time.h>
 #include <errno.h>
 #include <fcntl.h>
-#ifdef HB_OS_UNIX
+
+#if defined(HB_OS_UNIX) || defined(HARBOUR_GCC_OS2)
 # include <unistd.h>
 # include <utime.h>
 # include <sys/types.h>
@@ -63,7 +66,7 @@ void hb____ChangeFileDate(char *filename,uLong dosdate,tm_unz tmu_date)
 #if defined(HB_OS_WIN_32)
   HANDLE hFile;
   FILETIME ftm,ftLocal,ftCreate,ftLastAcc,ftLastWrite;
-  HB_SYMBOL_UNUSED(tmu_date);        
+  HB_SYMBOL_UNUSED(tmu_date);
   hFile = CreateFile(filename,GENERIC_READ | GENERIC_WRITE,
                       0,NULL,OPEN_EXISTING,0,NULL);
   GetFileTime(hFile,&ftCreate,&ftLastAcc,&ftLastWrite);
@@ -71,7 +74,7 @@ void hb____ChangeFileDate(char *filename,uLong dosdate,tm_unz tmu_date)
   LocalFileTimeToFileTime(&ftLocal,&ftm);
   SetFileTime(hFile,&ftm,&ftLastAcc,&ftm);
   CloseHandle(hFile);
-#elif defined(HB_OS_UNIX)
+#elif defined(HB_OS_UNIX) || defined(HARBOUR_GCC_OS2)
   struct utimbuf ut;
   struct tm newdate;
   newdate.tm_sec = tmu_date.tm_sec;
@@ -98,14 +101,14 @@ int hb___MakeDir(char *szNewDirectory)
 {
   char *szBuffer ;
   char *szTemp;
-  int  uiLen = strlen(szNewDirectory);  
+  int  uiLen = strlen(szNewDirectory);
 
-  if (uiLen <= 0) 
+  if (uiLen <= 0)
     return 0;
 
   szBuffer = (void*)hb_xalloc(uiLen+1);
   strcpy(szBuffer,szNewDirectory);
-  
+
   if (szBuffer[uiLen-1] == '/') {
     szBuffer[uiLen-1] = '\0';
   }
@@ -294,12 +297,12 @@ int hb___ExtractCurrentFile(unzFile szUnzipFile,BOOL popt_extract_without_path,B
                 if ((popt_extract_without_path)) {
 
 			write_filename = filename_inzip;
-                        
+
                         }
                 else     {
- 
+
 			write_filename = filename_withoutpath;
-                        
+
                         }
                 if(pBlock !=NULL){
 
@@ -324,7 +327,7 @@ int hb___ExtractCurrentFile(unzFile szUnzipFile,BOOL popt_extract_without_path,B
 
 
             /* some zipfile don't contain directory alone before file */
-            if ((nFileHandle==-1) && ((popt_extract_without_path)) && 
+            if ((nFileHandle==-1) && ((popt_extract_without_path)) &&
                                 (filename_withoutpath!=(char*)filename_inzip))
             {
                 char c=*(filename_withoutpath-1);
@@ -360,7 +363,7 @@ int hb___ExtractCurrentFile(unzFile szUnzipFile,BOOL popt_extract_without_path,B
 			while (err>0);
 
                         hb_fsClose(nFileHandle);
-			if (err==0) 
+			if (err==0)
                                 hb____ChangeFileDate(write_filename,file_info.dosDate,
 					             file_info.tmu_date);
 		}
@@ -374,7 +377,7 @@ int hb___ExtractCurrentFile(unzFile szUnzipFile,BOOL popt_extract_without_path,B
 		    }
         }
         else
-            unzCloseCurrentFile(szUnzipFile); /* don't lose the error */       
+            unzCloseCurrentFile(szUnzipFile); /* don't lose the error */
 	}
 
     hb_xfree((void*)szBuffer);
@@ -449,7 +452,7 @@ PHB_ITEM hb___GetFilesNamesFromZip(char *szFile,BOOL iMode)
                         szUnzipFile = unzOpen(szFilename_Try);
 		}
 	}
-                                
+
         if (szUnzipFile==NULL)
 	{
                 exit(1);
@@ -539,7 +542,7 @@ PHB_ITEM hb___GetFilesNamesFromZip(char *szFile,BOOL iMode)
                         hb_itemArrayPut(pTempArray,Crc32,pItem);
                         hb_itemRelease(pItem);
                         pItem=hb_itemPutD(NULL, (long)file_info.tmu_date.tm_year  ,(long)file_info.tmu_date.tm_mon + 1,(long)file_info.tmu_date.tm_mday);
-                        hb_itemArrayPut(pTempArray,Date,pItem);                       
+                        hb_itemArrayPut(pTempArray,Date,pItem);
                         hb_itemRelease(pItem);
                         hb_____GetTime(file_info);
                       iLen=strlen(szTempTime);
@@ -584,14 +587,14 @@ void   hb_____GetTime(unz_file_info file_info)
 
   struct tm t;
 
-  t.tm_sec    = file_info.tmu_date.tm_sec;     
-  t.tm_min    = file_info.tmu_date.tm_min;    
-  t.tm_hour   = file_info.tmu_date.tm_hour;  
-  t.tm_mday   = file_info.tmu_date.tm_mday; 
-  t.tm_mon    = file_info.tmu_date.tm_mon;  
-  t.tm_year   = file_info.tmu_date.tm_year; 
-  t.tm_wday   = 4; 
-  t.tm_yday   = 0; 
-  t.tm_isdst  = 0;  
+  t.tm_sec    = file_info.tmu_date.tm_sec;
+  t.tm_min    = file_info.tmu_date.tm_min;
+  t.tm_hour   = file_info.tmu_date.tm_hour;
+  t.tm_mday   = file_info.tmu_date.tm_mday;
+  t.tm_mon    = file_info.tmu_date.tm_mon;
+  t.tm_year   = file_info.tmu_date.tm_year;
+  t.tm_wday   = 4;
+  t.tm_yday   = 0;
+  t.tm_isdst  = 0;
   strcpy(szTempTime, asctime(&t));
 }
