@@ -85,6 +85,7 @@
   #include <dir.h>
   #include <dos.h>
   #include <time.h>
+  #include <errno.h>
 
   #if !defined(HAVE_POSIX_IO)
   #define HAVE_POSIX_IO

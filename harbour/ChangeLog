@@ -1,3 +1,7 @@
+19990729-14:30 CET Eddie Runia <eddie@runia.com>
+  * source/rtl/dir.c
+    #include <errno.h> added
+
 19990728-14:15 CET Eddie Runia <eddie@runia.com>
   * source/rtl/dir.c
     FA_ENCRYPTED etc. only available if USE_NT has been defined
