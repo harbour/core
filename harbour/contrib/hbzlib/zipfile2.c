@@ -368,10 +368,51 @@ int hb___ExtractCurrentFile(unzFile szUnzipFile,BOOL popt_extract_without_path,B
 
 int hb___GetNumbersofFilestoUnzip(char *szFile)
 {
-int iNumbersOfFiles;
+/*int iNumbersOfFiles;*/
 
         const char *szZipFileName=NULL;
         char szFilename_Try[512];
+        unz_global_info szGlobalUnzipInfo;
+       szZipFileName = szFile;
+/*                if (szZipFileName == NULL)
+                {
+                    szZipFileName = szFile;
+                }
+  */
+        if (szZipFileName!=NULL)
+	{
+                strcpy(szFilename_Try,szZipFileName);
+                szUnzipFile = unzOpen(szZipFileName);
+                if (szUnzipFile==NULL)
+		{
+                        strcat(szFilename_Try,".zip");
+                        szUnzipFile = unzOpen(szFilename_Try);
+		}
+	}
+
+        if (szUnzipFile==NULL)
+	{
+		exit (1);
+	}
+        err = unzGetGlobalInfo (szUnzipFile,&szGlobalUnzipInfo);
+/*        if (err==ZIP_OK)                                {
+        iNumbersOfFiles=szGlobalUnzipInfo.number_entry;
+}
+*/
+        unzCloseCurrentFile(szUnzipFile);
+
+/*        return iNumbersOfFiles;   to avoid warning */
+        return szGlobalUnzipInfo.number_entry;
+}
+PHB_ITEM hb___GetFilesNamesFromZip(char *szFile)
+{
+        const char *szZipFileName=NULL;
+        char szFilename_Try[512];
+        char szFileNameinZip[256];
+        int iNumbersOfFiles;
+        PHB_ITEM pItem=NULL;
+        PHB_ITEM pArray=NULL;
+        uLong uiCount;
         unz_global_info szGlobalUnzipInfo;
                 if (szZipFileName == NULL)
                 {
@@ -391,13 +432,36 @@ int iNumbersOfFiles;
 
         if (szUnzipFile==NULL)
 	{
-		exit (1);
+                exit(1);
 	}
         err = unzGetGlobalInfo (szUnzipFile,&szGlobalUnzipInfo);
         if (err==ZIP_OK)                                {
-        iNumbersOfFiles=szGlobalUnzipInfo.number_entry;;
+        iNumbersOfFiles=szGlobalUnzipInfo.number_entry;
+        pArray=hb_itemArrayNew( iNumbersOfFiles );
+}
+ for(uiCount=0;uiCount<iNumbersOfFiles;uiCount++) {
+                 unz_file_info file_info;
+                err = unzGetCurrentFileInfo(szUnzipFile,&file_info,szFileNameinZip,sizeof(szFileNameinZip),NULL,0,NULL,0);
+		if (err!=UNZ_OK)
+		{
+			break;
+		}
+                pItem=hb_itemPutC(NULL,szFileNameinZip);
+                hb_itemArrayPut(pArray,uiCount+1,pItem);
+                hb_itemRelease(pItem);
+                if ((uiCount+1)<iNumbersOfFiles)
+		{
+                        err = unzGoToNextFile(szUnzipFile);
+			if (err!=UNZ_OK)
+			{
+				break;
+			}
+
+                }
+
 }
         unzCloseCurrentFile(szUnzipFile);
+        hb_itemReturn(pArray);
 
-        return iNumbersOfFiles;  /* to avoid warning */
 }
+

@@ -58,6 +58,7 @@ extern int hb___ExtractCurrentFile(unzFile uf,BOOL popt_extract_without_path,BOO
 extern void hb____ChangeFileDate(char *filename,uLong dosdate,tm_unz tmu_date);
 extern int hb___MakeDir(char *szNewDirectory);
 extern int hb___GetNumbersofFilestoUnzip(char *szFile);
+extern PHB_ITEM hb___GetFilesNamesFromZip(char *szFile);
 #if defined(HB_EXTERN_C)
 }
 #endif
