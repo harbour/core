@@ -1,3 +1,10 @@
+2001-07-31 10:10 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * source/vm/arrayshb.c
+     + Added HB_FUNC( HB_AEXPRESSION )
+
+   * source/rdd/dblist.prg
+     - Removed FUNCTION HB_aExpressions()
+
 2001-07-30 10:15 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/rdd/dblist.prg
      - Removed HB_aTokens()

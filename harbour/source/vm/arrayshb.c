@@ -50,6 +50,8 @@
  *
  */
 
+#include <ctype.h>
+
 #include "hbapi.h"
 #include "hbstack.h"
 #include "hbapiitm.h"
@@ -311,5 +313,101 @@ HB_FUNC( HB_APARAMS )
    pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackbase;
 
    hb_itemRelease( hb_itemReturn( hb_arrayFromParams( pBase ) ) );
+}
+
+HB_FUNC( HB_AEXPRESSIONS )
+{
+   PHB_ITEM pArray = &hb_stack.Return;
+   PHB_ITEM pLine  = hb_param( 1, HB_IT_STRING );
+   size_t i, iOffset = 0;
+   int iParans = 0, iArrays = 0, iIndexs = 0;
+   BOOL bArray = FALSE;
+
+   if( pLine == NULL )
+   {
+      hb_errRT_BASE_SubstR( EG_ARG, 1123, NULL, "HB_AEXPRESSIONS", 1, hb_paramError(1) );
+      return;
+   }
+
+   hb_arrayNew( pArray, 0 );
+
+   for( i = 0; i < pLine->item.asString.length; i++ )
+   {
+      switch( pLine->item.asString.value[i] )
+      {
+         case '(' :
+            iParans++;
+            bArray = FALSE;
+            break;
+
+         case ')' :
+            iParans--;
+            bArray = TRUE;
+            break;
+
+         case '{' :
+            iArrays++;
+            bArray = FALSE;
+            break;
+
+         case '}' :
+            iArrays--;
+            bArray = TRUE;
+            break;
+
+         case '[' :
+            if( bArray || ( i && isalnum( pLine->item.asString.value[i - 1] ) ) )
+            {
+               iIndexs++;
+            }
+            else
+            {
+               while( ++i < pLine->item.asString.length  && pLine->item.asString.value[i] != ']'  );
+            }
+            bArray = FALSE;
+            break;
+
+         case ']' :
+            iIndexs--;
+            bArray = TRUE;
+            break;
+
+         case '"' :
+            while( ++i < pLine->item.asString.length && pLine->item.asString.value[i] != '"'  );
+            bArray = FALSE;
+            break;
+
+         case '\'' :
+            while( ++i < pLine->item.asString.length && pLine->item.asString.value[i] != '\''  );
+            bArray = FALSE;
+            break;
+
+         case ',' :
+            if( iParans == 0 && iArrays == 0 && iIndexs == 0 )
+            {
+               PHB_ITEM pExp = hb_itemNew( NULL );
+
+               hb_arrayAdd( pArray, hb_itemPutCL( pExp, pLine->item.asString.value + iOffset, i - iOffset ) );
+               iOffset = i + 1;
+
+               hb_itemRelease( pExp );
+            }
+            bArray = FALSE;
+            break;
+
+         default :
+            bArray = FALSE;
+            break;
+      }
+   }
+
+   if( iOffset < pLine->item.asString.length - 1 )
+   {
+      PHB_ITEM pExp = hb_itemNew( NULL );
+
+      hb_arrayAdd( pArray, hb_itemPutCL( pExp, pLine->item.asString.value + iOffset, pLine->item.asString.length - iOffset ) );
+
+      hb_itemRelease( pExp );
+   }
 }
 
