@@ -3187,13 +3187,13 @@ static ERRCODE ntxGoCold( NTXAREAP pArea )
       {
          lpTagTmp = pArea->lpCurTag;
          pTag = pArea->lpNtxTag;
-         while( pTag )
+         if( fAppend && pArea->fShared )
          {
-            if( fAppend && pArea->fShared )
-            {
-               pArea->fNtxAppend = 1;
-            }
-            else
+            pArea->fNtxAppend = 1;
+         }
+         else
+         {
+            while( pTag )
             {
                pKey = hb_ntxKeyNew( NULL,pTag->KeyLength );
                hb_ntxGetCurrentKey( pTag, pKey );
@@ -3246,11 +3246,11 @@ static ERRCODE ntxGoCold( NTXAREAP pArea )
                      hb_ntxPageFree( pTag,FALSE );
                      hb_fsLock( pTag->Owner->DiskFile, NTX_LOCK_OFFSET, 1, FL_UNLOCK );
                   }
-                  pArea->fNtxAppend = 0;
                }
                hb_ntxKeyFree( pKey );
+               pTag = pTag->pNext;
             }
-            pTag = pTag->pNext;
+            pArea->fNtxAppend = 0;
          }
          pArea->lpCurTag = lpTagTmp;
       }
