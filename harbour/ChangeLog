@@ -1,3 +1,8 @@
+19991028-14:12 GMT+1 Bruno Cantero <bruno@issnet.net>
+  * source/rdd/dbcmd.c
+    source/rdd/dbf1.c
+    * dbCreate(), fixed a bug (mentioned by Victor).
+
 19991027-17:24 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/strings.c
     source/rtl/descend.c

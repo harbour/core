@@ -651,6 +651,16 @@ static ERRCODE dbfAddField( AREAP pArea, LPDBFIELDINFO pFieldInfo )
 
    if( SUPER_ADDFIELD( pArea, pFieldInfo ) == SUCCESS )
    {
+      /* Validate the type */
+      if( pFieldInfo->uiType != 'C' && pFieldInfo->uiType != 'N' &&
+          pFieldInfo->uiType != 'M' && pFieldInfo->uiType != 'D' &&
+          pFieldInfo->uiType != 'L' )
+         return FAILURE;
+
+      /* Validate the size */
+      if( !pFieldInfo->uiLen )
+         return FAILURE;
+
       if( pArea->lpExtendInfo->fHasMemo )
       {
          pField = pArea->lpFields + pArea->uiFieldCount - 1;

@@ -148,8 +148,15 @@ static LPAREANODE pCurrArea = NULL;  /* Pointer to a selectd and valid area */
 static ERRCODE defAddField( AREAP pArea, LPDBFIELDINFO pFieldInfo )
 {
    LPFIELD pField;
+   ULONG ulLen;
 
    HB_TRACE(("defAddField(%p, %p)", pArea, pFieldInfo));
+
+   /* Validate the name of field */
+   ulLen = strlen( ( char * ) pFieldInfo->atomName );
+   hb_strLTrim( ( char * ) pFieldInfo->atomName, &ulLen );
+   if( !ulLen )
+      return FAILURE;
 
    pField = pArea->lpFields + pArea->uiFieldCount;
    if( pArea->uiFieldCount > 0 )
@@ -263,6 +270,7 @@ static ERRCODE defCreateFields( AREAP pArea, PHB_ITEM pStruct )
    USHORT uiCount, uiItems;
    PHB_ITEM pFieldDesc;
    DBFIELDINFO pFieldInfo;
+   long lLong;
 
    HB_TRACE(("defCreateFields(%p, %p)", pArea, pStruct));
 
@@ -274,9 +282,16 @@ static ERRCODE defCreateFields( AREAP pArea, PHB_ITEM pStruct )
       pFieldDesc = hb_arrayGetItemPtr( pStruct, uiCount + 1 );
       pFieldInfo.uiType = toupper( hb_arrayGetCPtr( pFieldDesc, 2 )[ 0 ] );
       pFieldInfo.atomName = ( BYTE * ) hb_arrayGetCPtr( pFieldDesc, 1 );
-      pFieldInfo.uiLen = ( USHORT ) hb_arrayGetND( pFieldDesc, 3 );
-      pFieldInfo.uiDec = ( USHORT ) hb_arrayGetND( pFieldDesc, 4 );
-      SELF_ADDFIELD( pArea, &pFieldInfo );
+      lLong = hb_arrayGetNL( pFieldDesc, 3 );
+      if( lLong < 0 )
+         lLong = 0;
+      pFieldInfo.uiLen = ( USHORT ) lLong;
+      lLong = hb_arrayGetNL( pFieldDesc, 4 );
+      if( lLong < 0 )
+         lLong = 0;
+      pFieldInfo.uiDec = ( USHORT ) lLong;
+      if( SELF_ADDFIELD( pArea, &pFieldInfo ) == FAILURE )
+         return FAILURE;
    }
    return SUCCESS;
 }
@@ -1464,7 +1479,11 @@ HARBOUR HB_DBCREATE( void )
          return;
       }
 
-      if( strlen( hb_arrayGetCPtr( pFieldDesc, 1 ) ) == 0 )
+      /* Validate items type, name, size and decimals of field */
+      if( hb_arrayGetType( pFieldDesc, 1 ) != IT_STRING ||
+          hb_arrayGetType( pFieldDesc, 2 ) != IT_STRING ||
+          hb_arrayGetType( pFieldDesc, 3 ) != IT_INTEGER ||
+          hb_arrayGetType( pFieldDesc, 4 ) != IT_INTEGER )
       {
          hb_errRT_DBCMD( EG_ARG, 1014, NULL, "DBCREATE" );
          return;
@@ -1551,7 +1570,15 @@ HARBOUR HB_DBCREATE( void )
    pCurrArea->pNext = NULL;
 
    SELF_NEW( ( AREAP ) pCurrArea->pArea );
-   SELF_CREATEFIELDS( ( AREAP ) pCurrArea->pArea, pStruct );
+   if( SELF_CREATEFIELDS( ( AREAP ) pCurrArea->pArea, pStruct ) == FAILURE )
+   {
+      SELF_RELEASE( ( AREAP ) pCurrArea->pArea );
+      hb_xfree( pCurrArea->pArea );
+      hb_xfree( pCurrArea );
+      pCurrArea = NULL;
+      hb_errRT_DBCMD( EG_ARG, 1014, NULL, "DBCREATE" );
+      return;
+   }
 
    pFileName = hb_fsFNameSplit( szFileName );
    szFileName = ( char * ) hb_xgrab( _POSIX_PATH_MAX + 3 );
