@@ -703,10 +703,11 @@ ERRCODE hb_dbfGoTo( DBFAREAP pArea, ULONG ulRecNo )
    else /* Out of space */
    {
       pArea->ulRecNo = pArea->ulRecCount + 1;
-      if( pArea->ulRecCount == 0 )
+      /* pArea->fBof = pArea->fEof = pArea->fValidBuffer = TRUE; */
+      if ( pArea->ulRecCount == 0 )
       {
          pArea->fBof = pArea->fEof = pArea->fValidBuffer = TRUE;
-      } else if(ulRecNo == 0)
+      } else if (ulRecNo <= 0)
       {
          pArea->fBof = pArea->fValidBuffer = TRUE;
          pArea->fEof = FALSE;
@@ -715,7 +716,6 @@ ERRCODE hb_dbfGoTo( DBFAREAP pArea, ULONG ulRecNo )
          pArea->fBof = FALSE;
          pArea->fEof = pArea->fValidBuffer = TRUE;
       }
-
       pArea->fPositioned = pArea->fDeleted = FALSE;
 
       /* Clear buffer */
@@ -826,7 +826,8 @@ ERRCODE hb_dbfSkipRaw( DBFAREAP pArea, LONG lToSkip )
       return SUCCESS;
    }
    else
-      return SELF_GOTO( ( AREAP ) pArea, pArea->ulRecNo + lToSkip );
+      /* return SELF_GOTO( ( AREAP ) pArea, pArea->ulRecNo + lToSkip ); */
+      return SELF_GOTO( ( AREAP ) pArea, ((LONG)pArea->ulRecNo + lToSkip) <= 0 ? 0 : (pArea->ulRecNo + lToSkip));
 }
 
 /*
