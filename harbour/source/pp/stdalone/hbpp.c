@@ -59,7 +59,6 @@
 #include "hberrors.h"
 #include "hbver.h"
 
-static int Hp_Parse( FILE * handl_i, FILE * handl_o, char * szSource );
 static void AddSearchPath( char * szPath, PATHNAMES * * pSearchList );
 static void OutTable( DEFINES * endDefine, COMMANDS * endCommand );
 
