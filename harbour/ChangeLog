@@ -1,3 +1,11 @@
+2001-06-19 16:00 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+  * doc/license.txt
+  * doc/en/license.txt
+    * This rewrite includes the compiler license, the new exception license,
+      and the old exception license (and a list of all files to which the old
+      one applies).
+
 2001-06-19 17:40 UTC-0800 Ron Pinkas <ron@profit-master.com>
    ! contrib/rdd_ads/ads1.c
    ! contrib/rdd_ads/adsfunc.c
