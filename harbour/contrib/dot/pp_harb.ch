@@ -96,17 +96,25 @@ RETURN nProcId > 0
 
 #ifdef USE_C_BOOST
 
+#ifdef __XHARBOUR__
+   #pragma BEGINDUMP
+      #define __XHARBOUR__
+   #pragma ENDDUMP
+#endif
+
 #pragma BEGINDUMP
 
 #include <ctype.h>
-
 #include "hbapi.h"
-#include "hbfast.h"
 #include "hbstack.h"
 #include "hbapierr.h"
 #include "hbapiitm.h"
 #include "hbvm.h"
 #include "hboo.ch"
+
+#ifdef __XHARBOUR__
+  #include "hbfast.h"
+#endif
 
 static BOOL s_bArrayPrefix = FALSE;
 
@@ -576,8 +584,12 @@ static HB_FUNC( NEXTIDENTIFIER )
 
        //printf( "\nIdentifier: '%s'\n", sIdentifier );
 
-       hb_retcAdopt( sIdentifier );
-       //hb_xfree( sIdentifier );
+       #ifdef __XHARBOUR__
+          hb_retcAdopt( sIdentifier );
+       #else
+          hb_retc( sIdentifier );
+          hb_xfree( sIdentifier );
+       #endif
     }
     else
     {
@@ -622,7 +634,12 @@ HB_FUNC( EXTRACTLEADINGWS )
       hb_itemPutCL( pWS, pTmp, i );
    }
 
-   hb_retclenAdopt( pTmp, i );
+   #ifdef __XHARBOUR__
+      hb_retclenAdopt( pTmp, i );
+   #else
+      hb_retclen( pTmp, i );
+      hb_xfree( pTmp );
+   #endif
 }
 
 //----------------------------------------------------------------------------//
@@ -667,8 +684,12 @@ HB_FUNC( DROPTRAILINGWS )
       hb_itemPutCPtr( pWS, pTmp, iLen - i );
    }
 
-   hb_retclenAdopt( pString, i );
-   //hb_xfree( pString );
+   #ifdef __XHARBOUR__
+      hb_retclenAdopt( pString, i );
+   #else
+      hb_retclen( pString, i );
+      hb_xfree( pString );
+   #endif
 }
 
 //----------------------------------------------------------------------------//
@@ -704,8 +725,12 @@ HB_FUNC( DROPEXTRATRAILINGWS )
       hb_itemPutCL( pLine, pString, i );
    }
 
-   hb_retclenAdopt( pString, i );
-   //hb_xfree( pString );
+   #ifdef __XHARBOUR__
+      hb_retclenAdopt( pString, i );
+   #else
+      hb_retclen( pString, i );
+      hb_xfree( pString );
+   #endif
 }
 
 #pragma ENDDUMP
