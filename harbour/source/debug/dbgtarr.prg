@@ -112,7 +112,7 @@ Local owndsets
    oBrwSets:SKIPBLOCK := { |nPos| ( nPos:= ArrayBrowseSkip(nPos, oBrwSets), oBrwSets:cargo[ 1 ]:= ;
    oBrwSets:cargo[ 1 ] + nPos,nPos ) } 
 
-   ::aWindows[::nCurWindow]:bPainted    := { || RefreshVarsS(oBrwSets)}
+   ::aWindows[::nCurWindow]:bPainted    := { || (oBrwSets:forcestable(),RefreshVarsS(oBrwSets))}
    ::aWindows[::nCurWindow]:bKeyPressed := { | nKey | ::SetsKeyPressed( nKey, oBrwSets, Len( aArray ),;
                            ::aWindows[::nCurWindow],::arrayName ,Len(aArray),aArray)}
 

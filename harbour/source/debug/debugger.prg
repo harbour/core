@@ -508,7 +508,7 @@ METHOD Colors() CLASS TDebugger
    ocol:width:=50
    oBrwColors:autolite:=.f.   
 
-   oWndColors:bPainted    := { || RefreshVarsS(oBrwColors)}
+   oWndColors:bPainted    := { || oBrwColors:ForceStable(),RefreshVarsS(oBrwColors)}
 
    oWndColors:bKeyPressed := { | nKey | SetsKeyPressed( nKey, oBrwColors,;
                                Len( aColors ), oWndColors, "Debugger Colors",;
@@ -1123,7 +1123,7 @@ METHOD ShowVars() CLASS TDebugger
       AAdd( ::aWindows, ::oWndVars )
       ::oWndVars:bLButtonDown = { | nMRow, nMCol | ::WndVarsLButtonDown( nMRow, nMCol ) }
       ::oWndVars:bLDblClick = { | nMRow, nMCol | ::EditVar( n ) }
-      ::oWndVars:bPainted    := { || if(Len( ::aVars ) > 0, ( RefreshVarsS(::oBrwVars) ),) }
+      ::oWndVars:bPainted    := { || if(Len( ::aVars ) > 0, ( ::obrwVars:ForceStable(),RefreshVarsS(::oBrwVars) ),) }
 
       ::oBrwVars := TBrowseNew( 2, 1, ::oWndVars:nBottom - 1, MaxCol() - iif( ::oWndStack != nil,;
                                ::oWndStack:nWidth(), 0 ) - 1 )
@@ -1549,7 +1549,7 @@ METHOD ViewSets() CLASS TDebugger
                        { || PadR( ValToStr( Set( oBrwSets:cargo[ 1 ]  ) ), nWidth - 13 ) } ) )
    ocol:defcolor:={1,3}
    ocol:width:=40
-   oWndSets:bPainted    := { || RefreshVarsS(oBrwSets)}
+   oWndSets:bPainted    := { || oBrwSets:ForceStable(),RefreshVarsS(oBrwSets)}
    oWndSets:bKeyPressed := { | nKey | SetsKeyPressed( nKey, oBrwSets, Len( aSets ),;
                             oWndSets, "System Settings",;
                             { || ::EditSet( n, oBrwSets ) } ) }

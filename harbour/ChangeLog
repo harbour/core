@@ -1,3 +1,8 @@
+2001-11-21 09:15 GMT -3 Luiz Rafael Culik<culik@sl.conex.net>
+   * source/debug/debugger.prg
+   * sorce/debug/dbgtarr.prg
+      * Fixed an small bug that was forget to fix on previus upload
+
 2001-11-21 06:35 GMT -3 Luiz Rafael Culik<culik@sl.conex.net>
    * source/debug/debugger.prg
       * Some enhacements, now you can use the Pgup/pgdown keys.
