@@ -106,7 +106,7 @@ typedef struct _LEX_PAIR
 #define LEX_ABBREVIATE_WORDS
 */
 
-#include "harbour.slx"
+#include SLX_RULES
 
 /* Declarations. */
 
