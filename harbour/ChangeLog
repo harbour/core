@@ -1,3 +1,17 @@
+19991112-01:35 GMT+1 Victor Szel <info@szelvesz.hu>
+   * config/w32/mingw32.cf
+     - "-g" switch removed, so now no debug info will be included by default.
+       This makes the generated binaries to be much smaller, and the make 
+       process mych faster. 
+       WARNING! If you need the debug functionality please use the C_USR=-g 
+       envvar.
+     ! Fixed comment explaining why the USER32 lib is needed.
+   + source/rtl/natmsg/msgzhbig.c 
+   + source/rtl/natmsg/msgzhgb.c 
+   * source/rtl/msgxxx.c
+     + Chinese-GB and Chinese-BIG5 Language Modules added
+       Thanks to Dongming Wang <dongming@km169.net>
+
 19991111-22:52 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/vm/dymsym.c
      % hb_dynsymGet(), hb_dynsymFindName() - Further optimized, toupper() calls

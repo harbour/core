@@ -13,7 +13,7 @@ CC = gcc
 CC_IN = -c
 CC_OUT = -o
 CPPFLAGS = -DDEBUG -I. -I$(HB_INC_COMPILE) -mno-cygwin
-CFLAGS = -Wall -g
+CFLAGS = -Wall
 
 LD = gcc
 LD_OUT = -o
@@ -32,7 +32,7 @@ endif
 
 LINKLIBS += $(foreach lib, $(LIBS), -l$(lib))
 
-# This library is needed for kbhit() and getch() support.
+# This library is needed for CharToOemBuff() and OemToCharBuff() support.
 LINKLIBS += -luser32
 
 # If LIBS specifies the rdd library, add all DB drivers.

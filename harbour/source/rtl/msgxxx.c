@@ -83,6 +83,10 @@
    #include "natmsg/msghe862.c"
 #elif defined(HARBOUR_LANGUAGE_HEWIN)
    #include "natmsg/msghewin.c"
+#elif defined(HARBOUR_LANGUAGE_ZHGB)
+   #include "natmsg/msgzhgb.c"
+#elif defined(HARBOUR_LANGUAGE_ZHBIG)
+   #include "natmsg/msgzhbig.c"
 #else
    #include "natmsg/msgen.c"
 #endif
