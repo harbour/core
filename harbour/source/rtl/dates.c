@@ -160,7 +160,7 @@ char * hb_dtoc (char * szDate, char * szDateFormat)
    *szDateFormat = 0;
    for (count = 0; count < 3; count++)
    {
-      // Insert a converted date element.
+      /* Insert a converted date element. */
       add_sep = 0;
       if (d_pos == 1 && d_digits > 0)
       {
@@ -240,7 +240,7 @@ char * hb_dtoc (char * szDate, char * szDateFormat)
          }
          strcat (szDateFormat, szTemp);
       }
-      // Insert a date field separator.
+      /* Insert a date field separator. */
       if (add_sep && delim_1)
       {
          szTemp [0] = delim_1;
@@ -255,7 +255,7 @@ char * hb_dtoc (char * szDate, char * szDateFormat)
          strcat (szDateFormat, szTemp);
          delim_2 = 0;
       }
-      // Get ready for the next date element.
+      /* Get ready for the next date element. */
       d_pos--;
       m_pos--;
       y_pos--;
