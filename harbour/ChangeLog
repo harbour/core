@@ -7,6 +7,15 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+    source/rtl/tget.prg
+    source/rtl/pushbtn.prg
+    source/rtl/tbrowse.prg
+    source/rtl/getsys.prg
+    source/rtl/tgetsys.prg
+    * Added the missing Clip53 Methods and Functions
+    % minor fix to Clip53 classes
+
+2002-03-18 18:52 UTC+0100 Antonio Linares <alinares@fivetech.com>
    * source/vm/extend.c
      ! Now all hb_ret...() and hb_pcount() functions are always exported
 
