@@ -156,6 +156,7 @@ typedef struct _TAGINFO
    USHORT     keyNext;
    LPKEYINFO  CurKeyInfo;
    LPPAGEINFO RootPage;
+   BOOL       InIndex;
    struct    _NTXINDEX * Owner;
    struct    _TAGINFO * pNext;
 } TAGINFO;
@@ -192,6 +193,8 @@ typedef struct _NTXHEADER    /* Header of NTX file */
    USHORT   half_page;
    char     key_expr[ NTX_MAX_KEY ];
    char     unique;
+   char     reserve[9];
+   char     for_expr[ NTX_MAX_KEY ];
 } NTXHEADER;
 
 typedef NTXHEADER * LPNTXHEADER;
@@ -322,7 +325,8 @@ static ERRCODE ntxSeek( NTXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
 #define ntxSkipFilter            NULL
 static ERRCODE ntxSkipRaw( NTXAREAP pArea, LONG lToSkip );
 #define ntxAddField              NULL
-static ERRCODE ntxAppend( NTXAREAP pArea, BOOL bUnLockAll );
+// static ERRCODE ntxAppend( NTXAREAP pArea, BOOL bUnLockAll );
+#define ntxAppend                NULL
 #define ntxCreateFields          NULL
 #define ntxDeleteRec             NULL
 #define ntxDeleted               NULL
