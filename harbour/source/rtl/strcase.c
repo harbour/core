@@ -71,7 +71,7 @@ char * hb_strLower( char * szText, ULONG ulLen )
          szText[ i ] = (char) s_cdpage->s_lower[szText[i]&255];
    else
       for( i = 0; i < ulLen; i++ )
-         szText[ i ] = tolower( szText[ i ] );
+         szText[ i ] = tolower( (unsigned char) szText[ i ] );
 
    return szText;
 }
@@ -88,7 +88,7 @@ char * hb_strUpper( char * szText, ULONG ulLen )
          szText[ i ] = (char) s_cdpage->s_upper[szText[i]&255];
    else
       for( i = 0; i < ulLen; i++ )
-         szText[ i ] = toupper( szText[ i ] );
+         szText[ i ] = toupper( (unsigned char) szText[ i ] );
 
    return szText;
 }
@@ -104,7 +104,7 @@ char * hb_strncpyUpper( char * pDest, const char * pSource, ULONG ulLen )
    {
       /* some compilers impliment toupper as a macro, and this has side effects! */
       /* *pDest++ = toupper( *pSource++ ); */
-      pDest[ ulLen ] = toupper( pSource[ ulLen ] );
+      pDest[ ulLen ] = toupper( (unsigned char) pSource[ ulLen ] );
    }
 
    return pDest;
@@ -126,7 +126,7 @@ char * hb_strncpyUpperTrim( char * pDest, const char * pSource, ULONG ulLen )
    {
       /* some compilers impliment toupper as a macro, and this has side effects! */
       /* *pDest++ = toupper( *pSource++ ); */
-      pDest[ ulLen ] = toupper( pSource[ ulLen ] );
+      pDest[ ulLen ] = toupper( (unsigned char) pSource[ ulLen ] );
    }
 
    return pDest;
