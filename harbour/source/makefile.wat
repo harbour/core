@@ -1,7 +1,12 @@
 # $Id$
 # Makefile for Watcom C/C++
 #
-all : compiler vm rtl tools
+all : hbpp compiler vm rtl tools
+
+hbpp : .SYMBOLIC
+   cd hbpp
+   wmake $(__MAKEOPTS__) /f makefile.wat all
+   cd ..
 
 compiler : .SYMBOLIC
    cd compiler

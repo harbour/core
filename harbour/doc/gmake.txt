@@ -144,6 +144,10 @@ For MSVC on Win95/WinNT:
   HB_ARCHITECTURE   win32
   HB_COMPILER       msvc
 
+For GCC on Linux:
+  HB_ARCHITECTURE   linux
+  HB_COMPILER       gcc
+  
 These are the only two supported compilers right now (guess which ones
 I own).
 

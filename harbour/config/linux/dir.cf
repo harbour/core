@@ -1,0 +1,10 @@
+#
+# $Id$
+#
+
+DIR_RULE =\
+	@for d in $(DIRS); do \
+	  if [ -d $$d ]; then \
+	    $(MAKE) -C $$d $@; \
+	  fi \
+	done

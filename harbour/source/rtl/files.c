@@ -2,6 +2,7 @@
  * $Id$
  */
 
+#include <hbsetup.h>
 #include <filesys.h>
 #include <string.h>
 
@@ -19,8 +20,6 @@
   #if !defined(HAVE_POSIX_IO)
   #define HAVE_POSIX_IO
   #endif
-
-  #define PATH_SEPARATOR '/'
 #endif
 
 #if defined(__WATCOMC__)
@@ -34,8 +33,6 @@
   #if !defined(HAVE_POSIX_IO)
   #define HAVE_POSIX_IO
   #endif
-
-  #define PATH_SEPARATOR '\\'
 #endif
 
 #if defined(__BORLANDC__) || defined(__IBMCPP__)
@@ -52,8 +49,6 @@
   #if !defined(HAVE_POSIX_IO)
   #define HAVE_POSIX_IO
   #endif
-
-  #define PATH_SEPARATOR '\\'
 #endif
 
 #ifndef O_BINARY
@@ -242,7 +237,7 @@ FHANDLE hb_fsOpen   ( BYTEP name, USHORT flags )
         FHANDLE handle;
 #if defined(HAVE_POSIX_IO)
         errno = 0;
-        handle = open(name,convert_open_flags(flags));
+        handle = open((char *)name,convert_open_flags(flags));
         last_error = errno;
 #else
         handle = FS_ERROR;
@@ -260,7 +255,7 @@ FHANDLE hb_fsCreate ( BYTEP name, USHORT flags )
 #if defined(HAVE_POSIX_IO)
         errno = 0;
         convert_create_flags( flags, &oflag, &pmode );
-        handle = open(name,oflag,pmode);
+        handle = open((char *)name,oflag,pmode);
         last_error = errno;
 #else
         handle = FS_ERROR;
@@ -328,7 +323,7 @@ void    hb_fsDelete ( BYTEP name )
 {
 #if defined(HAVE_POSIX_IO)
         errno = 0;
-        unlink(name);
+        unlink(( char *)name );
         last_error = errno;
         return;
 #endif
@@ -338,7 +333,7 @@ void    hb_fsRename ( BYTEP older, BYTEP newer )
 {
 #if defined(HAVE_POSIX_IO)
         errno = 0;
-        rename(older,newer);
+        rename( (char *)older, (char *)newer );
         last_error = errno;
         return;
 #endif
@@ -393,9 +388,9 @@ BOOL    hb_fsMkDir  ( BYTEP name )
 #if defined(HAVE_POSIX_IO)
         errno = 0;
   #if !defined(__WATCOMC__) && !defined(__BORLANDC__) && !defined(__IBMCPP__)
-        result = mkdir(name,S_IWUSR|S_IRUSR);
+        result = mkdir( (char *)name, S_IWUSR|S_IRUSR);
   #else
-        result = mkdir( name );
+        result = mkdir( (char *)name );
   #endif
         last_error = errno;
 #else
@@ -410,7 +405,7 @@ BOOL    hb_fsChDir  ( BYTEP name )
         int result;
 #if defined(HAVE_POSIX_IO)
         errno = 0;
-        result = chdir(name);
+        result = chdir( (char *)name );
         last_error = errno;
 #else
         result = 1;
@@ -424,7 +419,7 @@ BOOL    hb_fsRmDir  ( BYTEP name )
         int result;
 #if defined(HAVE_POSIX_IO)
         errno = 0;
-        result = rmdir(name);
+        result = rmdir( (char *)name );
         last_error = errno;
 #else
         result = 1;
@@ -444,7 +439,7 @@ BYTEP   hb_fsCurDir ( USHORT uiDrive )
         cwd_buff[0] = 0;
         last_error = FS_ERROR;
 #endif
-        return cwd_buff;
+        return (BYTEP)cwd_buff;
 }
 
 USHORT  hb_fsChDrv  ( BYTEP nDrive )
@@ -518,7 +513,7 @@ HARBOUR HB_FOPEN( void )
             else
                 open_flags = 0;
 
-            file_handle = hb_fsOpen(hb_parc(1),open_flags);
+            file_handle = hb_fsOpen( (BYTEP)_parc(1), open_flags );
         }
 
         hb_retni(file_handle);
@@ -540,7 +535,7 @@ HARBOUR HB_FCREATE( void )
             else
                 create_flags = 0;
 
-            file_handle = hb_fsCreate(hb_parc(1),create_flags);
+            file_handle = hb_fsCreate( (BYTEP)_parc(1), create_flags );
         }
 
         hb_retni(file_handle);
@@ -557,7 +552,7 @@ HARBOUR HB_FREAD( void )
 
         if( arg1_it && arg2_it && arg3_it )
         {
-            bytes = hb_fsRead(hb_parni(1),hb_parc(2),hb_parnl(3));
+            bytes = hb_fsRead(_parni(1), (BYTEP)_parc(2), _parnl(3) );
         }
 
         hb_retnl(bytes);
@@ -574,8 +569,8 @@ HARBOUR HB_FWRITE( void )
 
         if( arg1_it && arg2_it )
         {
-            bytes = (arg3_it ? hb_parnl(3) : arg2_it->wLength );
-            bytes = hb_fsWrite(hb_parni(1),hb_parc(2),bytes);
+            bytes = (arg3_it ? _parnl(3) : arg2_it->wLength );
+            bytes = hb_fsWrite( _parni(1), (BYTEP)_parc(2), bytes);
         }
 
         hb_retnl(bytes);
@@ -607,7 +602,7 @@ HARBOUR HB_FERASE( void )
 
         if( arg1_it )
         {
-           hb_fsDelete(hb_parc(1));
+           hb_fsDelete( (BYTEP)_parc(1) );
         }
 
         hb_retni(last_error=0);
@@ -621,7 +616,7 @@ HARBOUR HB_FRENAME( void )
 
         if( arg1_it && arg2_it )
         {
-            hb_fsRename(hb_parc(1),hb_parc(2));
+            hb_fsRename( (BYTEP)_parc(1), (BYTEP)_parc(2) );
         }
 
         hb_retni(last_error);

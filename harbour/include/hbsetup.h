@@ -38,6 +38,20 @@
 
 /* Operating system specific definitions
  */
-#define OS_PATH_LIST_SEPARATOR   ';'
+#ifdef __GNUC__
+  /* The GNU C compiler is used */
+  #ifdef __DJGPP__
+    /* The DJGPP port of GNU C is used - for DOS platform */
+    #define OS_PATH_LIST_SEPARATOR   ';'
+    #define OS_PATH_DELIMITER '\\'
+  #else
+    #define OS_PATH_LIST_SEPARATOR   ':'
+    #define OS_PATH_DELIMITER '/'
+  #endif
+#else
+  /* we are assuming here the DOS compatible OS */
+  #define OS_PATH_LIST_SEPARATOR    ';'
+  #define OS_PATH_DELIMITER '\\'
+#endif
 
 #endif  /* HBSETUP_H_ */

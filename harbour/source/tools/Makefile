@@ -16,7 +16,6 @@ C_SOURCES=\
 	chrtotal.c \
 	datesx.c \
 	debug.c \
-	genobj.c \
 	hb_f.c \
 	io.c \
 	mathx.c \

@@ -6,7 +6,7 @@
  #include <string.h>
  #include <stdlib.h>
 #else
- #if defined(__IBMCPP__)
+ #if defined(__IBMCPP__) || defined(__WATCOMC__)
   #include <memory.h>
   #include <stdlib.h>
  #else

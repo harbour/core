@@ -6,13 +6,17 @@
    #include <windows.h>
 #endif
 
-#include <io.h>
 #include <extend.h>
 #include <ctoharb.h>
 #include <dates.h>
 #include <set.h>
-#if defined(__DJGPP__) || defined(__GNUC__)
-   #include <unistd.h>
+#if defined(__GNUC__)
+  #include <unistd.h>
+  #if defined(__DJGPP__)
+    #include <io.h>   
+  #endif
+#else
+   #include <io.h>   
 #endif
 #ifdef USE_GTAPI
    #include <gtapi.h>

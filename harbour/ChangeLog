@@ -1,3 +1,51 @@
+19990618-07:50 Ryszard Glab <rglab@imid.med.pl>
+
+* source/compiler/harbour.y
+ + added deallocation of used structures
+ + added yy_strupr and yy_strdup functions to make sure that memory is 
+   properly allocated
+
+* source/compiler/harbour.l
+ + added declaration of yy_strupr and yy_strdup functions and changed
+   calls for strupr and strdup to yy_strupr and yy_strdup respectively
+
+* include/hbsetup.h
+ + added operating system dependand settings
+
++ config/linux/
+ + added new directory with GNU MAKE files for GCC on Linux
+   You have to define:
+   HB_ARCHITECTURE = linux
+   HB_COMPILER = gcc
+   
+* source/hbpp/hbppint.c
+ * added support for Watcom C/C++ compiler
+    
++ source/hbpp/makefile.wat
+ + makefile for Watcom C/C++ compiler
+ 
++ source/compiler/makefile.wat
+ * changes to link hbpp library into Harbour executable
+ 
+* source/rtl/console.c
+* source/rtl/dir.c
+* source/rtl/files.c
+* source/rtl/set.c
+ * changed files to make them compile with Watcom C/C++ and GCC on Linux
+ * removed PATH_SEPARATOR and replaced it with OS_PATH_DELIMITER
+   defined in hbsetup.h
+ 
+* source/contrib/genobj.c
+ * moved this file from source/tools since this is DOS specific code and
+   it is not needed for Harbour
+
+* source/tools/Makefile
+ - removed reference to genobj.c file
+
+* Harbour compiles fine on Linux now. However there is still some
+  suspicious code in source/rtl/dir.c and source/rtl/files.c files.
+  The runner.c is unsupported since it generates DOS specific code.
+  
 19990617-20:49 PST Ron Pinkas <Ron@Profit-Master.com>
   * compiler.h
     added member cType to struct VAR

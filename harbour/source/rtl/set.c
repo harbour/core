@@ -4,13 +4,17 @@
 
 #if defined(__GNUC__)
  #include <unistd.h>
+ #if defined(__DJGPP__)
+   #include <io.h>
+ #endif
+#else
+ #include <io.h>
 #endif
 
 #include <ctype.h>
 #include <extend.h>
 #include <errorapi.h>
 #include <fcntl.h>
-#include <io.h>
 #include <sys/stat.h>
 #include <set.h>
 #include <errno.h>

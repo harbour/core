@@ -17,20 +17,16 @@
 #include <string.h>
 #include <limits.h>
 #include <malloc.h>     /* required for allocating and freeing memory */
+#include <ctype.h>
 #include "hbsetup.h"    /* main configuration file */
 #include "pcode.h"      /* pcode values */
 #include "types.h"      /* our defined types */
 #include "compiler.h"
 #include "hberrors.h"
 
-#ifdef __BORLANDC__
-   #define HAVE_STRUPR
-#endif
 
-#ifndef HAVE_STRUPR
-   #include <ctype.h>
-   char *strupr( char *p );
-#endif
+#undef OurFree
+#define OurFree( p ) if( p ) free(p); else {printf( "ERROR FREE" ); exit(4);}
 
 /* TODO: #define this for various platforms */
 #define PATH_DELIMITER "/\\"
@@ -98,7 +94,7 @@ typedef struct _LOOPEXIT
   struct _LOOPEXIT *pLoopList;
   struct _LOOPEXIT *pExitList;
   struct _LOOPEXIT *pNext;
-} LOOPEXIT, * PLOOPEXIT;  /* support structure for EXIT and LOOP statements */
+} LOOPEXIT, * PTR_LOOPEXIT;  /* support structure for EXIT and LOOP statements */
 static void LoopStart( void );
 static void LoopEnd( void );
 static void LoopLoop( void );
@@ -146,6 +142,9 @@ void yy_switch_to_buffer( void * ); /* yacc functions to manage multiple files *
 void yy_delete_buffer( void * ); /* yacc functions to manage multiple files */
 #endif
 
+char * yy_strdup( char *p );  /* this will exit if there is not enough memory */
+char *yy_strupr( char *p );
+
 #if 0
 static void __yy_memcpy( char * from, char * to, int count ); /* Bison prototype */
 #endif
@@ -184,6 +183,8 @@ WORD JumpFalse( int iOffset );          /* generates the pcode to jump if false 
 void JumpHere( int iOffset );           /* returns the pcode pos where to set a jump offset */
 void JumpThere( int iOffset, WORD wTo ); /* sets a jump offset */
 WORD JumpTrue( int iOffset );           /* generates the pcode to jump if true */
+PFUNCTION KillFunction( PFUNCTION );    /* releases all memory allocated by function and returns the next one */
+PCOMSYMBOL KillSymbol( PCOMSYMBOL );    /* releases all memory allocated by symbol and returns the next one */
 void Line( void );                      /* generates the pcode with the currently compiled source code line */
 void LineBody( void );                  /* generates the pcode with the currently compiled source code line */
 void Message( char * szMsgName );       /* sends a message to an object */
@@ -401,7 +402,7 @@ int _iObj32 = 0;           /* generate OBJ 32 bits */
 WORD _wStatics = 0;        /* number of defined statics variables on the PRG */
 PRETURN pReturns = 0;      /* list of multiple returns from a function */
 PEXTERN pExterns = 0;
-PLOOPEXIT pLoops = 0;
+PTR_LOOPEXIT pLoops = 0;
 PATHNAMES *_pIncludePath = NULL;
 
 %}
@@ -964,7 +965,7 @@ RecoverSeq : /* no recover */
 
 DoProc     : DO IDENTIFIER { PushSymbol( $2, 1 ); PushNil(); Do( 0 ); }
            | DO IDENTIFIER { PushSymbol( $2, 1 ); PushNil(); } WITH ArgList { Do( $5 ); }
-           | WHILE { PushSymbol( "WHILE", 1 ); PushNil(); } WITH ArgList { Do( $4 ); }
+           | WHILE { PushSymbol( yy_strdup("WHILE"), 1 ); PushNil(); } WITH ArgList { Do( $4 ); }
            ;
 
 Crlf       : '\n'
@@ -1061,7 +1062,7 @@ int harbour_main( int argc, char * argv[] )
                case 'D':   /* defines a Lex #define from the command line */
                     {
                        unsigned int i = 0;
-                       char * szDefText = strdup( argv[ iArg ] + 2 );
+                       char * szDefText = yy_strdup( argv[ iArg ] + 2 );
                        while( i < strlen( szDefText ) && szDefText[ i ] != '=' )
                           i++;
                        if( szDefText[ i ] != '=' )
@@ -1078,7 +1079,7 @@ int harbour_main( int argc, char * argv[] )
                case 'f':
                case 'F':
                     {
-                       char * szUpper = strupr( strdup( &argv[ iArg ][ 2 ] ) );
+                       char * szUpper = yy_strupr( yy_strdup( &argv[ iArg ][ 2 ] ) );
                        if( ! strcmp( szUpper, "OBJ32" ) )
                           _iObj32 = 1;
                        free( szUpper );
@@ -1233,7 +1234,7 @@ int harbour_main( int argc, char * argv[] )
           char * pPath;
           char * pDelim;
 
-          pPath = szInclude = strdup( szInclude );
+          pPath = szInclude = yy_strdup( szInclude );
           while( (pDelim = strchr( pPath, OS_PATH_LIST_SEPARATOR )) != NULL )
           {
             *pDelim = '\0';
@@ -1242,7 +1243,7 @@ int harbour_main( int argc, char * argv[] )
           }
           AddSearchPath( pPath, &_pIncludePath );
          }
-         FunDef( strupr( strdup( pFileName->name ) ), FS_PUBLIC, FUN_PROCEDURE );
+         FunDef( yy_strupr( yy_strdup( pFileName->name ) ), FS_PUBLIC, FUN_PROCEDURE );
          yyparse();
          FixReturns();       /* fix all previous function returns offsets */
          GenExterns();       /* generates EXTERN symbols names */
@@ -1502,13 +1503,14 @@ void AddSearchPath( char *szPath, PATHNAMES * *pSearchList )
 }
 
 
+/*
+ * This function adds the name of called function into the list
+ * as they have to be placed on the symbol table later than the first
+ * public symbol
+ */
 PFUNCTION AddFunCall( char * szFunctionName )
 {
-   PFUNCTION pFunc = ( PFUNCTION ) OurMalloc( sizeof( _FUNC ) );
-
-   pFunc->szName = szFunctionName;
-   pFunc->cScope = 0;
-   pFunc->pNext  = 0;
+   PFUNCTION pFunc = FunctionNew( szFunctionName, 0 );
 
    if( ! funcalls.iCount )
    {
@@ -1525,6 +1527,11 @@ PFUNCTION AddFunCall( char * szFunctionName )
    return pFunc;
 }
 
+/*
+ * This function adds the name of external symbol into the list of externals
+ * as they have to be placed on the symbol table later than the first
+ * public symbol
+ */
 void AddExtern( char * szExternName ) /* defines a new extern name */
 {
    PEXTERN pExtern = ( PEXTERN ) OurMalloc( sizeof( _EXTERN ) ), pLast;
@@ -1595,7 +1602,6 @@ void AddVar( char * szVarName )
    pVar = ( PVAR ) OurMalloc( sizeof( VAR ) );
    pVar->szName = szVarName;
    pVar->szAlias = NULL;
-   pVar->cType = 'U';
    pVar->iUsed = 0;
    pVar->pNext = NULL;
 
@@ -2534,9 +2540,78 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
 
    fclose( yyc );
 
+   pFunc =functions.pFirst;
+   while( pFunc )
+     pFunc = KillFunction( pFunc );
+
+   pFunc =funcalls.pFirst;
+   while( pFunc )
+   {
+     funcalls.pFirst =pFunc->pNext;
+     OurFree( pFunc );  /*NOTE: szName will be released by KillSymbol() */
+     pFunc =funcalls.pFirst;
+   }
+
+   pSym =symbols.pFirst;
+   while( pSym )
+      pSym = KillSymbol( pSym );
+
    if( ! _iQuiet )
       printf( "%s -> done!\n", szFileName );
 }
+
+PFUNCTION KillFunction( PFUNCTION pFunc )
+{
+  PFUNCTION pNext = pFunc->pNext;
+  PVAR pVar;
+
+  while( pFunc->pLocals )
+  {
+    pVar =pFunc->pLocals;
+    pFunc->pLocals =pVar->pNext;
+
+    OurFree( pVar->szName );
+    OurFree( pVar );
+  }
+
+  while( pFunc->pStatics )
+  {
+    pVar =pFunc->pStatics;
+    pFunc->pStatics =pVar->pNext;
+
+    OurFree( pVar->szName );
+    OurFree( pVar );
+  }
+
+  while( pFunc->pFields )
+  {
+    pVar =pFunc->pFields;
+    pFunc->pFields =pVar->pNext;
+
+    OurFree( pVar->szName );
+    if( pVar->szAlias )
+      OurFree( pVar->szAlias );
+    OurFree( pVar );
+  }
+
+  OurFree( pFunc->pCode );
+/*  OurFree( pFunc->szName ); The name will be released in KillSymbol() */
+  OurFree( pFunc );
+
+  return pNext;
+}
+
+
+PCOMSYMBOL KillSymbol( PCOMSYMBOL pSym )
+{
+  PCOMSYMBOL pNext = pSym->pNext;
+
+  OurFree( pSym->szName );
+  OurFree( pSym );
+
+  return pNext;
+}
+
 
 void GenExterns( void ) /* generates the symbols for the EXTERN names */
 {
@@ -2665,7 +2740,7 @@ int GetLocalVarPos( char * szVarName ) /* returns the order + 1 of a variable if
   {
     /* we are in a codeblock */
     if( (iVar = GetVarPos( pFunc->pLocals, szVarName ) ) )
-      /* this a current codeblock parameter */
+      /* this is a current codeblock parameter */
       return iVar;
     else
     {
@@ -2703,7 +2778,6 @@ int GetLocalVarPos( char * szVarName ) /* returns the order + 1 of a variable if
 
               pVar = (PVAR) OurMalloc( sizeof(VAR) );
               pVar->szName = szVarName;
-              pVar->cType = 'U';
               pVar->iUsed = 0;
               pVar->pNext  = NULL;
               iVar = 1;  /* first variable */
@@ -3110,8 +3184,13 @@ void PushSymbol( char * szSymbolName, int iIsFunction )
    if( iIsFunction )
    {
       char * *pName = (char * *)RESERVED_FUNC( szSymbolName );
+      /* If it is reserved function name then we should truncate
+       * the requested name.
+       * We have to use passed szSymbolName so we can latter deallocate it
+       * (pName points to static data)
+       */
       if( pName )
-        szSymbolName =*pName;
+        szSymbolName[ strlen( *pName ) ] ='\0';
    }
 
    wSym = GetSymbolPos( szSymbolName ); /* returns 1, 2, ... */
@@ -3227,7 +3306,7 @@ void FixReturns( void ) /* fixes all last defined function returns jumps offsets
 /* TODO: check why it triggers this error in keywords.prg
    if( pLoops )
    {
-     PLOOPEXIT pLoop = pLoops;
+     PTR_LOOPEXIT pLoop = pLoops;
      char cLine[ 64 ];
 
      while( pLoop->pNext )
@@ -3398,7 +3477,7 @@ void CodeBlockEnd()
     GenPCode1( HIBYTE(wPos) );
 
     pFree = pVar;
-    pFree->szName = NULL;
+    OurFree( pFree->szName );
     pVar = pVar->pNext;
     OurFree( pFree );
   }
@@ -3416,7 +3495,7 @@ void CodeBlockEnd()
 
     /* free used variables */
     pFree = pVar;
-    pFree->szName = NULL;
+    OurFree( pFree->szName );
     pVar = pVar->pNext;
     OurFree( pFree );
   }
@@ -3476,7 +3555,7 @@ void StaticDefStart( void )
   functions.pLast->bFlags |= FUN_USES_STATICS;
   if( ! _pInitFunc )
   {
-      _pInitFunc =FunctionNew( "_INITSTATICS", FS_INIT );
+      _pInitFunc =FunctionNew( yy_strdup("_INITSTATICS"), FS_INIT );
       _pInitFunc->pOwner =functions.pLast;
       _pInitFunc->bFlags =FUN_USES_STATICS | FUN_PROCEDURE;
       functions.pLast =_pInitFunc;
@@ -3521,11 +3600,11 @@ void StaticAssign( void )
  */
 static void LoopStart( void )
 {
-  PLOOPEXIT pLoop = ( PLOOPEXIT ) OurMalloc( sizeof(LOOPEXIT) );
+  PTR_LOOPEXIT pLoop = ( PTR_LOOPEXIT ) OurMalloc( sizeof(LOOPEXIT) );
 
   if( pLoops )
   {
-    PLOOPEXIT pLast =pLoops;
+    PTR_LOOPEXIT pLast =pLoops;
 
     while( pLast->pNext )
       pLast =pLast->pNext;
@@ -3546,7 +3625,7 @@ static void LoopStart( void )
  */
 static void LoopLoop( void )
 {
-  PLOOPEXIT pLast, pLoop = (PLOOPEXIT) OurMalloc( sizeof( LOOPEXIT ) );
+  PTR_LOOPEXIT pLast, pLoop = (PTR_LOOPEXIT) OurMalloc( sizeof( LOOPEXIT ) );
 
   pLoop->pLoopList =NULL;
   pLoop->wOffset =functions.pLast->lPCodePos;  /* store the position to fix */
@@ -3568,7 +3647,7 @@ static void LoopLoop( void )
  */
 static void LoopExit( void )
 {
-  PLOOPEXIT pLast, pLoop = (PLOOPEXIT) OurMalloc( sizeof( LOOPEXIT ) );
+  PTR_LOOPEXIT pLast, pLoop = (PTR_LOOPEXIT) OurMalloc( sizeof( LOOPEXIT ) );
 
   pLoop->pExitList =NULL;
   pLoop->wOffset =functions.pLast->lPCodePos;  /* store the position to fix */
@@ -3590,7 +3669,7 @@ static void LoopExit( void )
  */
 static void LoopHere( void )
 {
-  PLOOPEXIT pLoop = pLoops, pFree;
+  PTR_LOOPEXIT pLoop = pLoops, pFree;
 
   while( pLoop->pNext )
     pLoop = pLoop->pNext;
@@ -3610,7 +3689,7 @@ static void LoopHere( void )
  */
 static void LoopEnd( void )
 {
-  PLOOPEXIT pExit, pLoop = pLoops, pLast = pLoops, pFree;
+  PTR_LOOPEXIT pExit, pLoop = pLoops, pLast = pLoops, pFree;
 
   while( pLoop->pNext )
   {
@@ -3654,8 +3733,7 @@ void * OurRealloc( void * p, LONG lSize )
    return pMem;
 }
 
-#ifndef HAVE_STRUPR
-char * strupr( char * p )
+char * yy_strupr( char * p )
 {
    char * p1;
 
@@ -3663,7 +3741,19 @@ char * strupr( char * p )
       * p1 = toupper( * p1 );
    return( p );
 }
-#endif
+
+char * yy_strdup( char *p )
+{
+  char *pDup;
+  int iLen;
+
+  iLen = strlen( p ) +1;
+  pDup = (char *) OurMalloc( iLen );
+  memcpy( pDup, p, iLen );
+
+  return pDup;
+}
+
 
 #define SYM_NOLINK  0              /* Symbol does not have to be linked */
 #define SYM_FUNC    1              /* Defined function                  */

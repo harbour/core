@@ -13,6 +13,7 @@ $(TARGET) : harboury.obj harbourl.obj harbour.obj
   %append link.tmp FI harboury
   %append link.tmp FI harbourl
   %append link.tmp FI harbour
+  %append link.tmp LIB $(HARBOURDIR)\libs\hbpp
   %append link.tmp NAME $(TARGET)
   %append link.tmp $(WLOPTIONS)
   %append link.tmp $(WLSTACK)

@@ -20,6 +20,8 @@
 #include "types.h"
 
 void yyerror( char * );
+char *yy_strupr( char * );
+char * yy_strdup( char *p );
 static void yyunput( int, char * );
 #undef yywrap        /* to implement our own yywrap() funtion to handle EOFs */
 #ifdef __cplusplus
@@ -160,7 +162,7 @@ Separator     {SpaceTab}|{Comment}
 
                     yyleng--;
                     yytext[yyleng] = 0;
-                    yylval.string = strdup( yytext );
+                    yylval.string = yy_strdup( yytext );
                     /*printf( "\nLITERAL = %s\n", yylval.string );*/
                     return LITERAL;
                   }
@@ -172,7 +174,7 @@ Separator     {SpaceTab}|{Comment}
 
                     yyleng--;
                     yytext[yyleng] = 0;
-                    yylval.string = strdup( yytext );
+                    yylval.string = yy_strdup( yytext );
                     /*printf( "\nLITERAL = %s\n", yylval.string );*/
                     return LITERAL;
                   }
@@ -184,7 +186,7 @@ Separator     {SpaceTab}|{Comment}
 
                     yyleng--;
                     yytext[yyleng] = 0;
-                    yylval.string = strdup( yytext );
+                    yylval.string = yy_strdup( yytext );
                     /*printf( "\nLITERAL = %s\n", yylval.string );*/
                     return LITERAL;
                   }
@@ -226,10 +228,10 @@ Separator     {SpaceTab}|{Comment}
 <DEFINE>{Identifier}/{SpaceTab}+   Define( yytext );
 <DEFINE>{Identifier}/{SpaceTab}*\n Define( yytext ); BEGIN 0;
 <DEFINE>{SpaceTab}          ;
-<DEFINE>{Identifier}        LastDef( pDefs )->szValue = strdup( yytext ); BEGIN 0;
-<DEFINE>{PseudoFunc}        LastDef( pDefs )->szValue = strdup( yytext ); BEGIN 0;
-<DEFINE>-?{Number}          LastDef( pDefs )->szValue = strdup( yytext ); BEGIN 0;
-<DEFINE>{HexNumber}         LastDef( pDefs )->szValue = strdup( yytext ); BEGIN 0;
+<DEFINE>{Identifier}        LastDef( pDefs )->szValue = yy_strdup( yytext ); BEGIN 0;
+<DEFINE>{PseudoFunc}        LastDef( pDefs )->szValue = yy_strdup( yytext ); BEGIN 0;
+<DEFINE>-?{Number}          LastDef( pDefs )->szValue = yy_strdup( yytext ); BEGIN 0;
+<DEFINE>{HexNumber}         LastDef( pDefs )->szValue = yy_strdup( yytext ); BEGIN 0;
 <DEFINE>"/*".*"*/"          ;
 <DEFINE>{Number}{SpaceTab}*[\(]    yyerror( "Syntax error in #define" );
 
@@ -238,7 +240,7 @@ Separator     {SpaceTab}|{Comment}
 <DEFINE_PARAMS>{Identifier} DefineKey( yytext );
 <DEFINE_PARAMS>[\,]         ;
 <DEFINE_PARAMS>[\)]         BEGIN DEFINE_EXPR;
-<DEFINE_EXPR>.*/\n          LastDef( pDefs )->szValue = strdup( yytext ); BEGIN 0;
+<DEFINE_EXPR>.*/\n          LastDef( pDefs )->szValue = yy_strdup( yytext ); BEGIN 0;
 
 "#"{SpaceTab}*"ifdef"          BEGIN IFDEF;
 <IFDEF>{Identifier}            if( FindDef( yytext ) ) BEGIN 0;
@@ -305,7 +307,7 @@ Separator     {SpaceTab}|{Comment}
                }
                else
                { /* there is another item in line already */
-                 yylval.string = strdup("BREAK");
+                 yylval.string = yy_strdup("BREAK");
                  return IDENTIFIER;
                }
              }
@@ -319,7 +321,7 @@ Separator     {SpaceTab}|{Comment}
 <BREAK_>{Separator}*[^_a-zA-Z\[] { /* there is no identifier after "break" */
                yy_lex_count_lf();
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
-               yylval.string = strdup( "BREAK" );
+               yylval.string = yy_strdup( "BREAK" );
                _iState =IDENTIFIER;
                unput( yytext[ yyleng-1 ] );
                return IDENTIFIER;
@@ -335,7 +337,7 @@ Separator     {SpaceTab}|{Comment}
                }
                else
                {
-                 yylval.string = strdup( "BREAK" );
+                 yylval.string = yy_strdup( "BREAK" );
                  _iState =IDENTIFIER;
                  return IDENTIFIER;
                }
@@ -348,7 +350,7 @@ Separator     {SpaceTab}|{Comment}
 <CASE_>{Separator}*[\:\=\|\$\%\*\,\/\]\)\}\^] { /* there is an operator after "case" */
                yy_lex_count_lf();
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
-               yylval.string = strdup( "CASE" );
+               yylval.string = yy_strdup( "CASE" );
                _iState =IDENTIFIER;
                unput( yytext[ yyleng-1 ] );
                return IDENTIFIER;
@@ -362,7 +364,7 @@ Separator     {SpaceTab}|{Comment}
 <CASE_>{Separator}*("+="|"-="|"->") { /* operators */
                yy_lex_count_lf();
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
-               yylval.string = strdup( "CASE" );
+               yylval.string = yy_strdup( "CASE" );
                _iState =IDENTIFIER;
                unput( yytext[ yyleng-1 ] );
                unput( yytext[ yyleng-2 ] );
@@ -382,7 +384,7 @@ Separator     {SpaceTab}|{Comment}
                }
                else
                { /* there is another item in line already */
-                 yylval.string = strdup( "CASE" );
+                 yylval.string = yy_strdup( "CASE" );
                  _iState =IDENTIFIER;
                  return IDENTIFIER;
                }
@@ -417,7 +419,7 @@ Separator     {SpaceTab}|{Comment}
                 }
                 else
                 { /* there is another item in line already */
-                  yylval.string = strdup( "DO" );
+                  yylval.string = yy_strdup( "DO" );
                   _iState =IDENTIFIER;
                   return IDENTIFIER;
                 }
@@ -429,7 +431,7 @@ Separator     {SpaceTab}|{Comment}
                 if( yytext[ yyleng-1 ] == '\n' )
                   --iLine;
                 unput( yytext[ yyleng-1 ] );
-                yylval.string = strdup( "DO" );
+                yylval.string = yy_strdup( "DO" );
                 _iState =IDENTIFIER;
                 return IDENTIFIER;
               }
@@ -464,7 +466,7 @@ Separator     {SpaceTab}|{Comment}
                { /* Clipper does not like end[] & end() at the begining of line */
                  GenError( ERR_ENDIF, NULL, NULL );
                }
-               yylval.string = strdup( "END" );
+               yylval.string = yy_strdup( "END" );
                _iState =IDENTIFIER;
                unput( yytext[ yyleng-1 ] );
                return IDENTIFIER;
@@ -476,7 +478,7 @@ Separator     {SpaceTab}|{Comment}
                { /* Clipper does not like end-> & end++ at the begining of line */
                  GenError( ERR_ENDIF, NULL, NULL );
                }
-               yylval.string = strdup( "END" );
+               yylval.string = yy_strdup( "END" );
                _iState =IDENTIFIER;
                unput( yytext[ yyleng-1 ] );
                unput( yytext[ yyleng-2 ] );
@@ -485,7 +487,7 @@ Separator     {SpaceTab}|{Comment}
 <END_>{Separator}*[\+\-\:\=\|\$\%\*\,\/\[\]\)\}\^] { /* there is an operator after "end" */
                yy_lex_count_lf();
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
-               yylval.string = strdup( "END" );
+               yylval.string = yy_strdup( "END" );
                _iState =IDENTIFIER;
                unput( yytext[ yyleng-1 ] );
                return IDENTIFIER;
@@ -504,7 +506,7 @@ Separator     {SpaceTab}|{Comment}
                }
                else
                { /* there is another item in line already */
-                 yylval.string = strdup( "END" );
+                 yylval.string = yy_strdup( "END" );
                  _iState =IDENTIFIER;
                  return IDENTIFIER;
                }
@@ -545,7 +547,7 @@ Separator     {SpaceTab}|{Comment}
                  }
                  else
                  { /* there is another item in line already */
-                   yylval.string = strdup( "EXIT" );
+                   yylval.string = yy_strdup( "EXIT" );
                    _iState =IDENTIFIER;
                    return IDENTIFIER;
                  }
@@ -561,7 +563,7 @@ Separator     {SpaceTab}|{Comment}
                  }
                  else
                  { /* there is another item in line already */
-                   yylval.string = strdup( "EXIT" );
+                   yylval.string = yy_strdup( "EXIT" );
                    _iState =IDENTIFIER;
                    return IDENTIFIER;
                  }
@@ -570,7 +572,7 @@ Separator     {SpaceTab}|{Comment}
 <EXIT_>{Separator}*. { /* any character (not identifier) after EXIT */
                  yy_lex_count_lf();
                  unput( yytext[ yyleng-1 ] );
-                 yylval.string = strdup( "EXIT" );
+                 yylval.string = yy_strdup( "EXIT" );
                  if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                  _iState =IDENTIFIER;
                  return IDENTIFIER;
@@ -579,7 +581,7 @@ Separator     {SpaceTab}|{Comment}
 /* ************************************************************************ */
 %}
 "exte"|"exter"|"extern"|"externa"|"external" { BEGIN EXTERNAL_;
-                   yylval.string = strupr( strdup( yytext ) );
+                   yylval.string = yy_strupr( yy_strdup( yytext ) );
                  }
 <EXTERNAL_>{Separator}+[_a-zA-Z] { /* an identifier after the EXTERNAL */
                  yy_lex_count_lf();
@@ -612,7 +614,7 @@ Separator     {SpaceTab}|{Comment}
 /* ************************************************************************ */
 %}
 "fiel"|"field"   { BEGIN FIELD_;
-                   yylval.string = strupr( strdup( yytext ) );
+                   yylval.string = yy_strupr( yy_strdup( yytext ) );
                  }
 <FIELD_>{Separator}+[_a-zA-Z] { /* an identifier after the FIELD */
                  yy_lex_count_lf();
@@ -656,7 +658,7 @@ Separator     {SpaceTab}|{Comment}
                  }
                  else
                  { /* for example: DO for WITH variable */
-                   yylval.string = strdup( "FOR" );
+                   yylval.string = yy_strdup( "FOR" );
                    _iState =IDENTIFIER;
                    return IDENTIFIER;
                  }
@@ -668,7 +670,7 @@ Separator     {SpaceTab}|{Comment}
                { /* Clipper does not like FOR() at the begining of line */
                  GenError( ERR_SYNTAX, yytext, NULL );
                }
-               yylval.string = strdup( "FOR" );
+               yylval.string = yy_strdup( "FOR" );
                _iState =IDENTIFIER;
                unput( yytext[ yyleng-1 ] );
                return IDENTIFIER;
@@ -679,7 +681,7 @@ Separator     {SpaceTab}|{Comment}
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                if( yytext[ yyleng-1 ] == '\n' )
                  --iLine;
-               yylval.string = strdup( "FOR" );
+               yylval.string = yy_strdup( "FOR" );
                unput( yytext[ yyleng-1 ] );
                _iState =IDENTIFIER;
                return IDENTIFIER;
@@ -776,7 +778,7 @@ Separator     {SpaceTab}|{Comment}
                    return IN;
                  else
                  {
-                   yylval.string =strdup( "IN" );
+                   yylval.string =yy_strdup( "IN" );
                    _iState =IDENTIFIER;
                    return IDENTIFIER;
                  }
@@ -786,7 +788,7 @@ Separator     {SpaceTab}|{Comment}
                --iLine;
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                unput( yytext[ yyleng-1 ] );
-               yylval.string =strdup( "IN" );
+               yylval.string =yy_strdup( "IN" );
                _iState =IDENTIFIER;
                return IDENTIFIER;
              }
@@ -798,7 +800,7 @@ Separator     {SpaceTab}|{Comment}
                yy_lex_count_lf();
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                unput( yytext[ yyleng-1 ] );
-               yylval.string =strdup( "IN" );
+               yylval.string =yy_strdup( "IN" );
                _iState =IDENTIFIER;
                return IDENTIFIER;
              }
@@ -820,7 +822,7 @@ Separator     {SpaceTab}|{Comment}
                  --iLine;
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                unput( yytext[ yyleng-1 ] );
-               yylval.string =strdup( "INCLUDE" );
+               yylval.string =yy_strdup( "INCLUDE" );
                _iState =IDENTIFIER;
                return IDENTIFIER;
              }
@@ -839,7 +841,7 @@ Separator     {SpaceTab}|{Comment}
                  }
                  else
                  { /* there is another item in line already */
-                   yylval.string = strdup( "INIT" );
+                   yylval.string = yy_strdup( "INIT" );
                    _iState =IDENTIFIER;
                    return IDENTIFIER;
                  }
@@ -850,7 +852,7 @@ Separator     {SpaceTab}|{Comment}
                  if( yytext[ yyleng-1 ] == '\n' )
                    --iLine;
                  unput( yytext[ yyleng-1 ] );
-                 yylval.string = strdup( "INIT" );
+                 yylval.string = yy_strdup( "INIT" );
                  if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                  _iState =IDENTIFIER;
                  return IDENTIFIER;
@@ -870,7 +872,7 @@ Separator     {SpaceTab}|{Comment}
                  }
                  else
                  { /* there is another item in line already */
-                   yylval.string = strdup( "LOCAL" );
+                   yylval.string = yy_strdup( "LOCAL" );
                    _iState =IDENTIFIER;
                    return IDENTIFIER;
                  }
@@ -881,7 +883,7 @@ Separator     {SpaceTab}|{Comment}
                  if( yytext[ yyleng-1 ] == '\n' )
                    --iLine;
                  unput( yytext[ yyleng-1 ] );
-                 yylval.string = strdup( "LOCAL" );
+                 yylval.string = yy_strdup( "LOCAL" );
                  if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                  _iState =IDENTIFIER;
                  return IDENTIFIER;
@@ -904,7 +906,7 @@ Separator     {SpaceTab}|{Comment}
                  }
                  else
                  { /* there is another item in line already */
-                   yylval.string = strdup( "LOOP" );
+                   yylval.string = yy_strdup( "LOOP" );
                    _iState =IDENTIFIER;
                    return IDENTIFIER;
                  }
@@ -912,7 +914,7 @@ Separator     {SpaceTab}|{Comment}
 <LOOP_>{Separator}*. { /* any character (not LF) after LOOP */
                  yy_lex_count_lf();
                  unput( yytext[ yyleng-1 ] );
-                 yylval.string = strdup( "LOOP" );
+                 yylval.string = yy_strdup( "LOOP" );
                  if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                  _iState =IDENTIFIER;
                  return IDENTIFIER;
@@ -940,7 +942,7 @@ Separator     {SpaceTab}|{Comment}
                else
                { /* there is another item in line already */
                  unput( yytext[ yyleng-1 ] );
-                 yylval.string = strdup( "NEXT" );
+                 yylval.string = yy_strdup( "NEXT" );
                  _iState =IDENTIFIER;
                  return IDENTIFIER;
                }
@@ -952,7 +954,7 @@ Separator     {SpaceTab}|{Comment}
                { /* Clipper does not like NEXT[] & NEXT() at the begining of line */
                  GenError( ERR_NEXTFOR, NULL, NULL );
                }
-               yylval.string = strdup( "NEXT" );
+               yylval.string = yy_strdup( "NEXT" );
                _iState =IDENTIFIER;
                unput( yytext[ yyleng-1 ] );
                return IDENTIFIER;
@@ -964,7 +966,7 @@ Separator     {SpaceTab}|{Comment}
                { /* Clipper does not like next-> & next++ at the begining of line */
                  GenError( ERR_NEXTFOR, NULL, NULL );
                }
-               yylval.string = strdup( "NEXT" );
+               yylval.string = yy_strdup( "NEXT" );
                _iState =IDENTIFIER;
                unput( yytext[ yyleng-1 ] );
                unput( yytext[ yyleng-2 ] );
@@ -973,7 +975,7 @@ Separator     {SpaceTab}|{Comment}
 <NEXT_>{Separator}*[^_a-zA-Z] { /* there is no identifier after "next" */
                yy_lex_count_lf();
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
-               yylval.string = strdup( "NEXT" );
+               yylval.string = yy_strdup( "NEXT" );
                unput( yytext[ yyleng-1 ] );
                return IDENTIFIER;
              }
@@ -990,7 +992,7 @@ Separator     {SpaceTab}|{Comment}
                }
                else
                {
-                 yylval.string = strdup( "NEXT" );
+                 yylval.string = yy_strdup( "NEXT" );
                  _iState =IDENTIFIER;
                  return IDENTIFIER;
                }
@@ -1024,7 +1026,7 @@ Separator     {SpaceTab}|{Comment}
                 { /* we have DO while - replace it with while() */
                   unput( ')' ); unput( '(' );
                 }
-                yylval.string = strdup( "WHILE" );
+                yylval.string = yy_strdup( "WHILE" );
                 return IDENTIFIER;
               }
 <WHILE_>{Separator}*[\[] { /* array */
@@ -1036,14 +1038,14 @@ Separator     {SpaceTab}|{Comment}
 <WHILE_>{Separator}*[\:\=\|\$\%\*\,\/\]\)\}\^] { /* there is an operator after "case" */
                yy_lex_count_lf();
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
-               yylval.string = strdup( "WHILE" );
+               yylval.string = yy_strdup( "WHILE" );
                unput( yytext[ yyleng-1 ] );
                return IDENTIFIER;
              }
 <WHILE_>{Separator}*("+="|"-="|"->") { /* operators */
                yy_lex_count_lf();
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
-               yylval.string = strdup( "WHILE" );
+               yylval.string = yy_strdup( "WHILE" );
                unput( yytext[ yyleng-1 ] );
                unput( yytext[ yyleng-2 ] );
                return IDENTIFIER;
@@ -1060,7 +1062,7 @@ Separator     {SpaceTab}|{Comment}
                 }
                 else
                 { /* there is another item in line already */
-                  yylval.string = strdup( "WHILE" );
+                  yylval.string = yy_strdup( "WHILE" );
                   _iState =IDENTIFIER;
                   return IDENTIFIER;
                 }
@@ -1074,7 +1076,7 @@ Separator     {SpaceTab}|{Comment}
                 --iLine;
                 if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                 unput( '\n' );
-                yylval.string = strdup( "WITH" );
+                yylval.string = yy_strdup( "WITH" );
                 return IDENTIFIER;
               }
 <WITH_>{Separator}*"with"       {
@@ -1084,7 +1086,7 @@ Separator     {SpaceTab}|{Comment}
                 if( _iState == DO )
                 { /* DO with */
                   _iState =IDENTIFIER;
-                  yylval.string = strdup( "WITH" );
+                  yylval.string = yy_strdup( "WITH" );
                   return IDENTIFIER;
                 }
                 else
@@ -1110,7 +1112,7 @@ Separator     {SpaceTab}|{Comment}
                 }
                 else
                 {
-                  yylval.string = strdup( "WITH" );
+                  yylval.string = yy_strdup( "WITH" );
                   _iState =IDENTIFIER;
                   return IDENTIFIER;
                 }
@@ -1239,8 +1241,8 @@ Separator     {SpaceTab}|{Comment}
                         yytext[ 10 ] = 0;
                         yyleng = 10;
                      }
-                     yylval.string = strupr( strdup( yytext ) );
-                     /*printf( "\nIdentifier = '%s'\n", strupr( strdup( yytext ) ) );*/
+                     yylval.string = yy_strupr( yy_strdup( yytext ) );
+                     /*printf( "\nIdentifier = '%s'\n", yy_strupr( yy_strdup( yytext ) ) );*/
                      _iState = IDENTIFIER;
                      return IDENTIFIER;
                   }
@@ -1259,7 +1261,7 @@ Separator     {SpaceTab}|{Comment}
 /*
                yyleng = 1;
                yytext[1] = 0;
-               yylval.string = strdup( ")" );
+               yylval.string = yy_strdup( ")" );
 */
                _iState = OPERATOR;
                --_iOpenBracket;
@@ -1280,7 +1282,7 @@ Separator     {SpaceTab}|{Comment}
 /*
                yyleng = 1;
                yytext[1] = 0;
-               yylval.string = strdup( "]" );
+               yylval.string = yy_strdup( "]" );
 */
                _iState = OPERATOR;
                return ']';
@@ -1304,7 +1306,7 @@ Separator     {SpaceTab}|{Comment}
                                     yytext[ 10 ] = 0;
                                     yyleng = 10;
                                  }
-                                 yylval.string = strupr( strdup( yytext ) );
+                                 yylval.string = yy_strupr( yy_strdup( yytext ) );
                                  return IDENTIFIER;
                               }
                            }
@@ -1328,7 +1330,7 @@ void Define( char * szDefine )
    else
       LastDef( pDefs )->pNext = pDef;
 
-   pDef->szDefine = strdup( szDefine );
+   pDef->szDefine = yy_strdup( szDefine );
    pDef->szValue  = 0;
    pDef->pKeys    = 0;
    pDef->pNext    = 0;
@@ -1344,7 +1346,7 @@ void DefineKey( char * szKey )
    else
      pLast->pKeys = pDef;
 
-   pDef->szDefine = strdup( szKey );
+   pDef->szDefine = yy_strdup( szKey );
    pDef->szValue  = 0;
    pDef->pKeys    = 0;
    pDef->pNext    = 0;
@@ -1382,13 +1384,13 @@ void AddDefine( char * szId, char * szValue )
          pDefine->szValue = 0;
       }
       if( szValue )
-         pDefine->szValue = strdup( szValue );
+         pDefine->szValue = yy_strdup( szValue );
    }
    else
    {
       Define( szId );
       if( szValue )
-         LastDef( pDefs )->szValue = strdup( szValue );
+         LastDef( pDefs )->szValue = yy_strdup( szValue );
    }
 }
 

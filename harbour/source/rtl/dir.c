@@ -6,32 +6,27 @@
 #include <string.h>
 #include <ctype.h>
 #include <itemapi.h>
+#include <hbsetup.h>
 
-#if defined(__GNUC__) || defined(__DJGPP__)
+#if defined(__GNUC__)
   #include <sys/types.h>
   #include <sys/stat.h>
   #include <fcntl.h>
   #include <errno.h>
   #include <dirent.h>
-  #include <io.h>
   #include <time.h>
 
   #include <unistd.h>
+  #if defined(__DJGPP__)
+    #include <io.h>
+  #else
+    #define _chmod chmod
+  #endif
 
   #if !defined(HAVE_POSIX_IO)
   #define HAVE_POSIX_IO
   #endif
 
-  #if !defined(FA_RDONLY)
-    #define FA_RDONLY       1
-    #define FA_HIDDEN       2
-    #define FA_SYSTEM       4
-    #define FA_LABEL        8
-    #define FA_DIREC        16
-    #define FA_ARCH         32
-  #endif
-
-  #define PATH_SEPARATOR '/'
 #endif
 
 #if defined(__WATCOMC__)
@@ -41,12 +36,13 @@
   #include <io.h>
   #include <errno.h>
   #include <direct.h>
+  #include <time.h>
 
   #if !defined(HAVE_POSIX_IO)
   #define HAVE_POSIX_IO
   #endif
 
-  #define PATH_SEPARATOR '\\'
+  #define _chmod chmod
 #endif
 
 #if defined(__BORLANDC__)
@@ -77,8 +73,15 @@
       #define S_IXUSR  0x0040 /* owner may execute <directory search> */
     #endif
   #endif
+#endif
 
-  #define PATH_SEPARATOR '\\'
+#if !defined(FA_RDONLY)
+    #define FA_RDONLY       1
+    #define FA_HIDDEN       2
+    #define FA_SYSTEM       4
+    #define FA_LABEL        8
+    #define FA_DIREC        16
+    #define FA_ARCH         32
 #endif
 
 HARBOUR HB_DIRECTORY(void);
@@ -140,8 +143,8 @@ HARBOUR HB_DIRECTORY( void )
 
    if( arg1_it )
    {
-      strcpy(string, hb_parc(1));
-      pos = strrchr(string,PATH_SEPARATOR);
+      strcpy(string, _parc(1));
+      pos = strrchr(string,OS_PATH_DELIMITER);
       if( pos )
       {
          strcpy(pattern,(pos+1));
@@ -152,7 +155,7 @@ HARBOUR HB_DIRECTORY( void )
       {
          strcpy(pattern,string);
          strcpy(dirname,".X");
-         dirname[1] = PATH_SEPARATOR;
+         dirname[1] = OS_PATH_DELIMITER;
       }
    }
    if (strlen(pattern) < 1)
@@ -160,7 +163,7 @@ HARBOUR HB_DIRECTORY( void )
    if (strlen(dirname) < 1)
    {
       strcpy(dirname,".X");
-      dirname[1] = PATH_SEPARATOR;
+      dirname[1] = OS_PATH_DELIMITER;
    }
 
    if (strlen(pattern) > 0)
