@@ -305,25 +305,25 @@ int ct_matherr (HB_MATH_EXCEPTION * pexc)
 
     switch (pexc->type)
     {
-      case DOMAIN:
+      case HB_MATHERR_DOMAIN:
         /* a domain error has occured, such as sqrt( -1 ) */
         ulSubCode = CT_ERROR_MATHLIB_DOMAIN; break;
-      case SING:
+      case HB_MATHERR_SING:
         /* a singularity will result, such as pow( 0, -2 ) */
         ulSubCode = CT_ERROR_MATHLIB_SING; break;
-      case OVERFLOW:
+      case HB_MATHERR_OVERFLOW:
         /* an overflow will result, such as pow( 10, 100 ) */
         ulSubCode = CT_ERROR_MATHLIB_OVERFLOW; break;
-      case UNDERFLOW:
+      case HB_MATHERR_UNDERFLOW:
         /* an underflow will result, such as pow( 10, -100 ) */
         ulSubCode = CT_ERROR_MATHLIB_UNDERFLOW; break;
-      case TLOSS:
+      case HB_MATHERR_TLOSS:
         /* total loss of significance will result, such as exp( 1000 ) */
         ulSubCode = CT_ERROR_MATHLIB_TLOSS; break;
-      case PLOSS:
+      case HB_MATHERR_PLOSS:
         /* partial loss of significance will result, such as sin( 10e70 ) */
         ulSubCode = CT_ERROR_MATHLIB_PLOSS; break;
-      default:
+      default: /* HB_MATHERR_UNKNOWN */
         /* unknown math lib error */
         ulSubCode = CT_ERROR_MATHLIB; break;
     }
@@ -351,12 +351,12 @@ int ct_matherr (HB_MATH_EXCEPTION * pexc)
     /* find some appropiate return values */
     switch (pexc->type)
     {
-      case DOMAIN:
+      case HB_MATHERR_DOMAIN:
         /* a domain error has occured, such as sqrt( -1 ) */
         pexc->retval = 0.0;
         retval = 1;
         break;
-      case SING:
+      case HB_MATHERR_SING:
         /* a singularity will result, such as pow( 0, -2 ) */
         if (pexc->arg1 < 0)  /* it is just a guess that the resulting singularity
                                 has the same sign as the first argument */
@@ -365,7 +365,7 @@ int ct_matherr (HB_MATH_EXCEPTION * pexc)
           pexc->retval = DBL_MAX;
         retval = 1;
         break;
-      case OVERFLOW:
+      case HB_MATHERR_OVERFLOW:
         /* an overflow will result, such as pow( 10, 100 ) */
         if (pexc->arg1 < 0)  /* it is just a guess that the resulting singularity
                                 has the same sign as the first argument */
@@ -374,7 +374,7 @@ int ct_matherr (HB_MATH_EXCEPTION * pexc)
           pexc->retval = DBL_MAX;
         retval = 1;
         break;
-      case UNDERFLOW:
+      case HB_MATHERR_UNDERFLOW:
         /* an underflow will result, such as pow( 10, -100 ) */
         if (pexc->arg1 < 0)  /* it is just a guess that the resulting singularity
                                 has the same sign as the first argument */
@@ -383,17 +383,17 @@ int ct_matherr (HB_MATH_EXCEPTION * pexc)
           pexc->retval = DBL_MIN;
         retval = 1;
         break;
-      case TLOSS:
+      case HB_MATHERR_TLOSS:
         /* total loss of significance will result, such as exp( 1000 ) */
         pexc->retval = 1.0;
         retval = 1;
         break;
-      case PLOSS:
+      case HB_MATHERR_PLOSS:
         /* partial loss of significance will result, such as sin( 10e70 ) */
         pexc->retval = 1.0;
         retval = 1;
         break;
-      default:
+      default: /* HB_MATHERR_UNKNOWN */
         /* unknown math lib error */
         pexc->retval = 0.0;
         retval = 1;

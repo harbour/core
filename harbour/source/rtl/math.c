@@ -197,7 +197,30 @@ int matherr( struct exception * err )
    HB_TRACE(HB_TR_DEBUG, ("matherr(%p)", err));
 
    /* call custom math handlers */
-   exc.type = err->type;
+   switch( err->type )
+   {
+      case DOMAIN:
+         exc.type = HB_MATHERR_DOMAIN;
+         break;
+      case SING:
+         exc.type = HB_MATHERR_SING;
+         break;
+      case OVERFLOW:
+         exc.type = HB_MATHERR_OVERFLOW;
+         break;
+      case UNDERFLOW:
+         exc.type = HB_MATHERR_UNDERFLOW;
+         break;
+      case TLOSS:
+         exc.type = HB_MATHERR_TLOSS;
+         break;
+      case PLOSS:
+         exc.type = HB_MATHERR_PLOSS;
+         break;
+      default:
+         exc.type = HB_MATHERR_UNKNOWN;
+         break;
+   }
    exc.name = err->name;
    exc.arg1 = err->arg1;
    exc.arg2 = err->arg2;

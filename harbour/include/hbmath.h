@@ -115,6 +115,14 @@ extern int hb_getMathHandlerStatus (HB_MATH_HANDLERHANDLE handle);
 #define HB_MATH_HANDLER_STATUS_INACTIVE   ((int)0)
 #define HB_MATH_HANDLER_STATUS_ACTIVE     ((int)1)
 
+#define HB_MATHERR_UNKNOWN   ((int)0)
+#define HB_MATHERR_DOMAIN    ((int)1)
+#define HB_MATHERR_SING      ((int)2)
+#define HB_MATHERR_OVERFLOW  ((int)3)
+#define HB_MATHERR_UNDERFLOW ((int)4)
+#define HB_MATHERR_TLOSS     ((int)5)
+#define HB_MATHERR_PLOSS     ((int)6)
+
 
 #if defined(HB_EXTERN_C)
 }
