@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+   * doc/en/terminal.txt
+   * doc/en/tlabel.txt
+   * doc/en/treport.txt
+     *Added newline at the end to clear gcc warning 
 
 2002-02-16 20:25 UTC+0500 Jorge A. Giraldo <jgiraldo@col2.telecom.com.co>
    * source/vm/itemapi.c
