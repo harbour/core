@@ -1,3 +1,8 @@
+2001-08-27 20:50 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
+   *utils/hbmake/hbmake.prg
+     * Fixes related to path finding to Apps(C compiler and harbour.exe)
+     * Small fix for hbmake library mode for linux(the generated make file)
+
 2001-08-27 18:10 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    + contrib/hgf/win32
      * New directory added
