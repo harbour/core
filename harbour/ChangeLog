@@ -1,3 +1,16 @@
+2001-02-05 16:15 UTC-0500 David G. Holm <dholm@jsd-llc.com>
+  * source/compiler/harbour.l
+  * source/pp/pragma.c
+    ! Corrected hb_xalloc and hb_xrealloc type overrides for
+      pItem->pCode to be (BYTE *).
+  * tests/Makefile
+    * Only program modules that fail to compile and link are supposed
+      to be listed under BAD_PRG_SOURCES, so I've moved the following
+      to PRG_SOURCES: clasname, lnlenli2, setkeys, testcdx, testdbf,
+      testhtml, testid, testrdd, and teststr.
+  * tests/testid.prg
+    * Documented how to set /dTEST if using the GNU Make System.
+
 2001-02-05 21:05 GMT+1 Maurilio Longo <maurilio.longo@libero.it>
    * source/debug/debugger.prg
      + Added LineNumbers() method

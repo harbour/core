@@ -43,6 +43,7 @@ PRG_SOURCES=\
 	byref.prg \
 	calling.prg \
 	cdow.prg \
+	clasname.prg \
 	classch.prg \
 	classes.prg \
 	clsdata.prg \
@@ -77,6 +78,7 @@ PRG_SOURCES=\
 	iotest.prg \
 	iotest2.prg \
 	langapi.prg \
+	lnlenli2.prg \
 	longdev.prg \
 	longstr.prg \
 	longstr2.prg \
@@ -103,6 +105,7 @@ PRG_SOURCES=\
 	say.prg \
 	scroll.prg \
 	seconds.prg \
+	setkeys.prg \
 	set_num.prg \
 	set_test.prg \
 	sound.prg \
@@ -114,15 +117,20 @@ PRG_SOURCES=\
 	test_all.prg \
 	testbrdb.prg \
 	testbrw.prg \
+	testcdx.prg \
 	testcgi.prg \
+	testdbf.prg \
 	testdecl.prg \
 	testerro.prg \
 	testfor.prg \
+	testhtml.prg \
+	testid.prg \
 	testinc.prg \
 	testmem.prg \
-	teststr.prg \
 	testpre.prg \
+	testrdd.prg \
 	testread.prg \
+	teststr.prg \
 	testvars.prg \
 	testwarn.prg \
 	tstalias.prg \
@@ -143,7 +151,6 @@ PRG_HEADERS=\
 
 BAD_PRG_SOURCES=\
 	alias.prg \
-	clasname.prg \
 	clasinit.prg \
 	dates4.prg \
 	debugtst.prg \
@@ -156,13 +163,11 @@ BAD_PRG_SOURCES=\
 	keywords.prg \
 	linecont.prg \
 	lnlenli1.prg \
-	lnlenli2.prg \
 	mathtest.prg \
 	objarr.prg \
 	objasign.prg \
 	readfile.prg \
 	rtfclass.prg \
-	setkeys.prg \
 	spawn.prg \
 	spawn2.prg \
 	statics1.prg \
@@ -171,15 +176,10 @@ BAD_PRG_SOURCES=\
 	test.prg \
 	test10.prg \
 	testgt.prg \
-	testid.prg \
 	testhbf.prg \
-	testhtml.prg \
 	testtok.prg \
 	tstprag.prg \
 	vec1.prg \
-	testrdd.prg \
-	testcdx.prg \
-	testdbf.prg \
 
 C_SOURCES=\
 

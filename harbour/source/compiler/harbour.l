@@ -885,12 +885,12 @@ Separator     {SpaceTab}
 
 	    if( pInline->pCode == NULL )
 	    {
-               pInline->pCode = (unsigned char *) hb_xgrab( ( iSize = strlen( (char*) sBuffer ) ) + 1 );
+               pInline->pCode = (BYTE *) hb_xgrab( ( iSize = strlen( (char*) sBuffer ) ) + 1 );
                strcpy( (char *) pInline->pCode, (char*) sBuffer );
 	    }
 	    else
 	    {
-               pInline->pCode = (unsigned char *) hb_xrealloc( pInline->pCode, pInline->lPCodeSize + ( iSize = strlen( (char*) sBuffer ) ) + 1 );
+               pInline->pCode = (BYTE *) hb_xrealloc( pInline->pCode, pInline->lPCodeSize + ( iSize = strlen( (char*) sBuffer ) ) + 1 );
                strcpy( (char *) (pInline->pCode + pInline->lPCodeSize), (char*) sBuffer );
 	    }
 	    pInline->lPCodeSize += iSize;
