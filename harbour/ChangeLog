@@ -8,6 +8,17 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2001-12-20 11:35 UTC+0100 Antonio Linares <alinares@fivetech.com>
+   * source/vm/maindll.c
+   * source/vm/maindllh.c
+   * source/vm/maindllp.c
+     * HB_EXPORT used
+
+   * include/hbapi.h
+   * source/vm/cmdarg.c
+     * hb_cmdargInit() declared as HB_EXPORT
+
+
 2001-12-20 11:20 UTC+0100 Antonio Linares <alinares@fivetech.com>
    * include/hbdefs.h
      + HB_EXPORT definition added. All public functions are HB_EXPORT now
