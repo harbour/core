@@ -1,3 +1,9 @@
+20000731-09:00 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+   * source/macro/Makefile
+     + added macroslx.c compilation instead of flex lexer if HB_LEX is set to SIMPLEX
+   * source/macro/macroslx.c
+     + added relative path in include commands to let gcc find correct files
+
 2000-07-30 22:50 UTC+0800 Ron Pinkas <ron@profit-master.com>
   * source/macro/macro.slx
     ! Corrected unreleased memory block.

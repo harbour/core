@@ -13,6 +13,8 @@
 #include "hberrors.h"
 #include "hbdefs.h"
 
-#define SLX_RULES "macro.slx"
+/* this is relative to position of simplex.c in harbour source tree */
+#define SLX_RULES "../macro/macro.slx"
 
-#include "simplex.c"
+/* this is relative to position of macroslx.c in harbour source tree */
+#include "../compiler/simplex.c"
