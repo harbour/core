@@ -126,7 +126,8 @@ struct hb_struSymbol
 typedef struct        /* items hold at the virtual machine stack */
 {
   WORD type;
-  union {
+  union
+  {
         struct hb_struArray   asArray;
         struct hb_struBlock   asBlock;
         struct hb_struDate    asDate;
@@ -225,6 +226,8 @@ void     hb_arraySize( PHB_ITEM pArray, ULONG ulLen ); /* sets the array total l
 void     hb_arrayRelease( PHB_ITEM pArray ); /* releases an array - don't call it - use ItemRelease() !!! */
 char *   hb_arrayGetString( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the string contained on an array element */
 ULONG    hb_arrayGetStringLen( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the string length contained on an array element */
+BOOL     hb_arrayGetBool( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the logical value contained on an array element */
+double   hb_arrayGetDouble( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the double value contained on an array element */
 int      hb_arrayGetType( PHB_ITEM pArray, ULONG ulIndex );
 void     hb_arrayDel( PHB_ITEM pArray, ULONG ulIndex );
 PHB_ITEM hb_arrayClone( PHB_ITEM pArray );
@@ -234,8 +237,6 @@ int      hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact ); /
 char *   hb_str( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec ); /* convert number to string */
 int      hb_stricmp( const char *s1, const char *s2 );
 BOOL     hb_strempty( char * szText, ULONG ulLen );
-BOOL     hb_arrayGetBool( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the logical value contained on an array element */
-double   hb_arrayGetDouble( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the double value contained on an array element */
 
 HARBOURFUNC GetMethod( PHB_ITEM pObject, PSYMBOL pSymMsg ); /* returns the method pointer of a object class */
 char *   hb_GetClassName( PHB_ITEM pObject ); /* retrieves an object class name */

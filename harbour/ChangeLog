@@ -1,3 +1,10 @@
+19990707-03:48 CET Victor Szel <info@szelvesz.hu>
+ * doc/hdr_tpl.txt
+   * Description line changed to be a template, too.
+ * source/rtl/natmsg/msghu.c
+   tests/working/rtl_test.prg
+   + Copyright notice added.
+
 19990707-22:25:59 Bruno Cantero <bruno@issnet.net>
 CVSed by Andi Jahja <andij@aonlippo.co.id>
 
