@@ -1,3 +1,7 @@
+19990716-20:43 Alexander Kresin
+  * source\hbpp\hbpp.c
+    * Problem with C++ Builder resolved
+    
 19990716-18:10 CET Eddie Runia <eddie@runia.com>
   + tests/working/clasname.prg
     Test program for clasname implemented. Warning : Just a partial
@@ -36,27 +40,27 @@
 
 19990716-06:45 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
-	*source/compiler/harbour.y
-	 * corrected generation of proper static frame for functions
-	   (the values of static variables defined in different modules
-	   are no longer overlapped)
+        *source/compiler/harbour.y
+         * corrected generation of proper static frame for functions
+           (the values of static variables defined in different modules
+           are no longer overlapped)
 
-	*tests/broken/statics1.prg
-	*tests/broken/statics2.prg
-	 -moved to tests/working directory
+        *tests/broken/statics1.prg
+        *tests/broken/statics2.prg
+         -moved to tests/working directory
 
-	*config/dos/watcom.cf
-	 * corrected to support HB_*_COMPILE variables
+        *config/dos/watcom.cf
+         * corrected to support HB_*_COMPILE variables
 
-	*config/global.cf
-	*config/rules.cf
-	 * removed duplicated definition of HB variable
-	 * HB_*_COMPILE variables are defined now before architecture
-	   and compiler specific config file is included (it allows to change
-	   these variables for specific architecture/compiler requirements)
+        *config/global.cf
+        *config/rules.cf
+         * removed duplicated definition of HB variable
+         * HB_*_COMPILE variables are defined now before architecture
+           and compiler specific config file is included (it allows to change
+           these variables for specific architecture/compiler requirements)
 
-	*doc/codebloc.txt
-	 + added description of an incompatibility with Clipper
+        *doc/codebloc.txt
+         + added description of an incompatibility with Clipper
 
 19990715-23:40 CET Eddie Runia <eddie@runia.com>
    * tests/working/arrays.prg;
@@ -84,39 +88,39 @@
 
 Thu Jul 15 17:32:29 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* config/rules.cf: 
-	Added support for a couple of environment variables for the user
-	to specify additional flags for compilation. They are C_USR and
-	PRG_USR. An example using bash:
+        * config/rules.cf:
+        Added support for a couple of environment variables for the user
+        to specify additional flags for compilation. They are C_USR and
+        PRG_USR. An example using bash:
 
-	  export C_USR='-DHARBOUR_USE_GTAPI -DHARBOUR_USE_WIN_GTAPI'
-	  make -w
-	
-	* include/hbdefs.h: 
-	* source/rtl/gt/gtwin.c: 
-	Modified these files to be able to compile gtwin.c with gcc. It
-	compiles and links, but it dumps core on execution...
+          export C_USR='-DHARBOUR_USE_GTAPI -DHARBOUR_USE_WIN_GTAPI'
+          make -w
+
+        * include/hbdefs.h:
+        * source/rtl/gt/gtwin.c:
+        Modified these files to be able to compile gtwin.c with gcc. It
+        compiles and links, but it dumps core on execution...
 
 19990715-16:30 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.l
-     * added support for 
+     * added support for
          case ::variable
-	 while ::variable
+         while ::variable
      * corrected line numbering in NEXT and END keywords
      * changed ';' (line continuation logic)
 
     *source/compiler/harbour.y
      * corrected line numbering (opcode for line number is no longer placed
        inside an expression)
-       
+
     *tests/working/procline.prg
      * corrected line numbering
-     
-    *config/linux/gcc.cf       
+
+    *config/linux/gcc.cf
     *config/linux/global.cf
      * corrected to support the latest changes in GNU make system
-     
+
 19990715-09:50 CET Patrick Mast <harbour@PatrickMast.com>
    *makefile.vc
     * Changed output for PRG's that needed to be compiled with Harbour
@@ -197,39 +201,39 @@ Thu Jul 15 17:32:29 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 Wed Jul 14 20:02:55 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* config/bin.cf: 
-	* config/c.cf: 
-	* config/global.cf: 
-	* config/header.cf: 
-	* config/lib.cf: 
-	* config/rules.cf: 
-	* config/win32/bcc32.cf: 
-	* config/win32/gcc.cf: 
-	* config/win32/icc.cf: 
-	* config/win32/msvc.cf: 
-	Now there are two sets of variables to control compilation and
-	installation: HB_*_COMPILE points to where to get all the files
-	(binaries, includes, etc.); if not defined, it will pick them off
-	the working repository. HB_*_INSTALL points to where you want to
-	install the files (binaries, includes, etc.) when you issue a
-	"make install".
+        * config/bin.cf:
+        * config/c.cf:
+        * config/global.cf:
+        * config/header.cf:
+        * config/lib.cf:
+        * config/rules.cf:
+        * config/win32/bcc32.cf:
+        * config/win32/gcc.cf:
+        * config/win32/icc.cf:
+        * config/win32/msvc.cf:
+        Now there are two sets of variables to control compilation and
+        installation: HB_*_COMPILE points to where to get all the files
+        (binaries, includes, etc.); if not defined, it will pick them off
+        the working repository. HB_*_INSTALL points to where you want to
+        install the files (binaries, includes, etc.) when you issue a
+        "make install".
 
 Wed Jul 14 18:20:24 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* config/global.cf: 
-	* config/rules.cf: 
-	* config/dos/djgpp.cf: 
-	* config/linux/gcc.cf: 
-	* config/win32/gcc.cf: 
-	* config/win32/msvc.cf: 
-	Now it is not necessary to "install" harbour anywhere.
-	If you do NOT define HB_BIN_DIR, HB_INC_DIR and HB_LIB_DIR, it
-	uses all the files (binaries, headers, libraries, etc.) right off
-	the working repository.
+        * config/global.cf:
+        * config/rules.cf:
+        * config/dos/djgpp.cf:
+        * config/linux/gcc.cf:
+        * config/win32/gcc.cf:
+        * config/win32/msvc.cf:
+        Now it is not necessary to "install" harbour anywhere.
+        If you do NOT define HB_BIN_DIR, HB_INC_DIR and HB_LIB_DIR, it
+        uses all the files (binaries, headers, libraries, etc.) right off
+        the working repository.
 
-	* include/Makefile: 
-	Updated list of files.
-	
+        * include/Makefile:
+        Updated list of files.
+
 19990714-12:01 Alexander Kresin
   * source\hbpp\hbpp.c
   * source\hbpp\hbppint.c
@@ -251,164 +255,164 @@ Wed Jul 14 18:20:24 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 Tue Jul 13 14:06:03 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* include/classes.ch: 
-	* include/compat.h: 
-	* include/extra.h: 
-	* include/super.h: 
-	* source/rtl/natmsg/msgbas.c: 
-	* source/runner/run_exp.h: 
-	* source/runner/runner.c: 
-	* tests/broken/clasname.prg: 
-	* tests/broken/parexpr.prg: 
-	* tests/broken/statics1.prg: 
-	* tests/broken/statics2.prg: 
-	* tests/broken/vec1.prg: 
-	* tests/working/ainstest.prg: 
-	* tests/working/and_or.prg: 
-	* tests/working/array16.prg: 
-	* tests/working/arrayidx.prg: 
-	* tests/working/arrays.prg: 
-	* tests/working/arrindex.prg: 
-	* tests/working/atest.prg: 
-	* tests/working/box.prg: 
-	* tests/working/byref.prg: 
-	* tests/working/calling.prg: 
-	* tests/working/cdow.prg: 
-	* tests/working/clasinit.prg: 
-	* tests/working/classch.prg: 
-	* tests/working/classes.prg: 
-	* tests/working/clsdata.prg: 
-	* tests/working/cmphello.prg: 
-	* tests/working/codebl.prg: 
-	* tests/working/codebloc.prg: 
-	* tests/working/comments.prg: 
-	* tests/working/copyfile.prg: 
-	* tests/working/dates.prg: 
-	* tests/working/dates2.prg: 
-	* tests/working/dates3.prg: 
-	* tests/working/debugtst.prg: 
-	* tests/working/descend.prg: 
-	* tests/working/dirtest.prg: 
-	* tests/working/docase.prg: 
-	* tests/working/dosshell.prg: 
-	* tests/working/dupvars.prg: 
-	* tests/working/dynobj.prg: 
-	* tests/working/empty.prg: 
-	* tests/working/exittest.prg: 
-	* tests/working/extend1.prg: 
-	* tests/working/extend2.c: 
-	* tests/working/fib.prg: 
-	* tests/working/fileio.prg: 
-	* tests/working/filexist.prg: 
-	* tests/working/fornext.prg: 
-	* tests/working/fornext2.prg: 
-	* tests/working/funcarr.prg: 
-	* tests/working/guess.prg: 
-	* tests/working/hardcr.prg: 
-	* tests/working/hello.prg: 
-	* tests/working/ifelse.prg: 
-	* tests/working/ifinline.prg: 
-	* tests/working/inherit.prg: 
-	* tests/working/inifiles.prg: 
-	* tests/working/initexit.prg: 
-	* tests/working/inline.prg: 
-	* tests/working/instr.prg: 
-	* tests/working/iotest.prg: 
-	* tests/working/iotest2.prg: 
-	* tests/working/keywords.prg: 
-	* tests/working/linecont.prg: 
-	* tests/working/longstr.prg: 
-	* tests/working/longstr2.prg: 
-	* tests/working/mankala.prg: 
-	* tests/working/mathtest.prg: 
-	* tests/working/mtran.prg: 
-	* tests/working/multiarg.prg: 
-	* tests/working/nums.prg: 
-	* tests/working/objarr.prg: 
-	* tests/working/objasign.prg: 
-	* tests/working/objects.prg: 
-	* tests/working/operat.prg: 
-	* tests/working/os.prg: 
-	* tests/working/output.prg: 
-	* tests/working/overload.prg: 
-	* tests/working/passref.prg: 
-	* tests/working/procline.prg: 
-	* tests/working/procname.prg: 
-	* tests/working/readhrb.prg: 
-	* tests/working/recursiv.prg: 
-	* tests/working/returns.prg: 
-	* tests/working/round.prg: 
-	* tests/working/rtfclass.prg: 
-	* tests/working/rtl_test.prg: 
-	* tests/working/say.prg: 
-	* tests/working/scroll.prg: 
-	* tests/working/seconds.prg: 
-	* tests/working/set_num.prg: 
-	* tests/working/set_test.prg: 
-	* tests/working/spawn.prg: 
-	* tests/working/spawn2.prg: 
-	* tests/working/statfun.prg: 
-	* tests/working/statics.prg: 
-	* tests/working/strcmp.prg: 
-	* tests/working/strdelim.prg: 
-	* tests/working/strings.prg: 
-	* tests/working/strings2.prg: 
-	* tests/working/strings3.prg: 
-	* tests/working/strings4.prg: 
-	* tests/working/strip.prg: 
-	* tests/working/syserror.prg: 
-	* tests/working/t1.prg: 
-	* tests/working/test.prg: 
-	* tests/working/test10.prg: 
-	* tests/working/test_all.prg: 
-	* tests/working/testcgi.prg: 
-	* tests/working/testcopy.prg: 
-	* tests/working/testerro.prg: 
-	* tests/working/testfor.prg: 
-	* tests/working/testgt.prg: 
-	* tests/working/testhbf.prg: 
-	* tests/working/testhtml.prg: 
-	* tests/working/testid.prg: 
-	* tests/working/testinc.prg: 
-	* tests/working/testmem.prg: 
-	* tests/working/teststr.prg: 
-	* tests/working/testtok.prg: 
-	* tests/working/testvars.prg: 
-	* tests/working/testwarn.prg: 
-	* tests/working/transfrm.prg: 
-	* tests/working/val.prg: 
-	* tests/working/version.prg: 
-	* tests/working/while.prg: 
-	Added RCS Id keywords to all these files.
-	Got rid of a few '//' comments in C/H files.
-	Added include guards to a few H files.
+        * include/classes.ch:
+        * include/compat.h:
+        * include/extra.h:
+        * include/super.h:
+        * source/rtl/natmsg/msgbas.c:
+        * source/runner/run_exp.h:
+        * source/runner/runner.c:
+        * tests/broken/clasname.prg:
+        * tests/broken/parexpr.prg:
+        * tests/broken/statics1.prg:
+        * tests/broken/statics2.prg:
+        * tests/broken/vec1.prg:
+        * tests/working/ainstest.prg:
+        * tests/working/and_or.prg:
+        * tests/working/array16.prg:
+        * tests/working/arrayidx.prg:
+        * tests/working/arrays.prg:
+        * tests/working/arrindex.prg:
+        * tests/working/atest.prg:
+        * tests/working/box.prg:
+        * tests/working/byref.prg:
+        * tests/working/calling.prg:
+        * tests/working/cdow.prg:
+        * tests/working/clasinit.prg:
+        * tests/working/classch.prg:
+        * tests/working/classes.prg:
+        * tests/working/clsdata.prg:
+        * tests/working/cmphello.prg:
+        * tests/working/codebl.prg:
+        * tests/working/codebloc.prg:
+        * tests/working/comments.prg:
+        * tests/working/copyfile.prg:
+        * tests/working/dates.prg:
+        * tests/working/dates2.prg:
+        * tests/working/dates3.prg:
+        * tests/working/debugtst.prg:
+        * tests/working/descend.prg:
+        * tests/working/dirtest.prg:
+        * tests/working/docase.prg:
+        * tests/working/dosshell.prg:
+        * tests/working/dupvars.prg:
+        * tests/working/dynobj.prg:
+        * tests/working/empty.prg:
+        * tests/working/exittest.prg:
+        * tests/working/extend1.prg:
+        * tests/working/extend2.c:
+        * tests/working/fib.prg:
+        * tests/working/fileio.prg:
+        * tests/working/filexist.prg:
+        * tests/working/fornext.prg:
+        * tests/working/fornext2.prg:
+        * tests/working/funcarr.prg:
+        * tests/working/guess.prg:
+        * tests/working/hardcr.prg:
+        * tests/working/hello.prg:
+        * tests/working/ifelse.prg:
+        * tests/working/ifinline.prg:
+        * tests/working/inherit.prg:
+        * tests/working/inifiles.prg:
+        * tests/working/initexit.prg:
+        * tests/working/inline.prg:
+        * tests/working/instr.prg:
+        * tests/working/iotest.prg:
+        * tests/working/iotest2.prg:
+        * tests/working/keywords.prg:
+        * tests/working/linecont.prg:
+        * tests/working/longstr.prg:
+        * tests/working/longstr2.prg:
+        * tests/working/mankala.prg:
+        * tests/working/mathtest.prg:
+        * tests/working/mtran.prg:
+        * tests/working/multiarg.prg:
+        * tests/working/nums.prg:
+        * tests/working/objarr.prg:
+        * tests/working/objasign.prg:
+        * tests/working/objects.prg:
+        * tests/working/operat.prg:
+        * tests/working/os.prg:
+        * tests/working/output.prg:
+        * tests/working/overload.prg:
+        * tests/working/passref.prg:
+        * tests/working/procline.prg:
+        * tests/working/procname.prg:
+        * tests/working/readhrb.prg:
+        * tests/working/recursiv.prg:
+        * tests/working/returns.prg:
+        * tests/working/round.prg:
+        * tests/working/rtfclass.prg:
+        * tests/working/rtl_test.prg:
+        * tests/working/say.prg:
+        * tests/working/scroll.prg:
+        * tests/working/seconds.prg:
+        * tests/working/set_num.prg:
+        * tests/working/set_test.prg:
+        * tests/working/spawn.prg:
+        * tests/working/spawn2.prg:
+        * tests/working/statfun.prg:
+        * tests/working/statics.prg:
+        * tests/working/strcmp.prg:
+        * tests/working/strdelim.prg:
+        * tests/working/strings.prg:
+        * tests/working/strings2.prg:
+        * tests/working/strings3.prg:
+        * tests/working/strings4.prg:
+        * tests/working/strip.prg:
+        * tests/working/syserror.prg:
+        * tests/working/t1.prg:
+        * tests/working/test.prg:
+        * tests/working/test10.prg:
+        * tests/working/test_all.prg:
+        * tests/working/testcgi.prg:
+        * tests/working/testcopy.prg:
+        * tests/working/testerro.prg:
+        * tests/working/testfor.prg:
+        * tests/working/testgt.prg:
+        * tests/working/testhbf.prg:
+        * tests/working/testhtml.prg:
+        * tests/working/testid.prg:
+        * tests/working/testinc.prg:
+        * tests/working/testmem.prg:
+        * tests/working/teststr.prg:
+        * tests/working/testtok.prg:
+        * tests/working/testvars.prg:
+        * tests/working/testwarn.prg:
+        * tests/working/transfrm.prg:
+        * tests/working/val.prg:
+        * tests/working/version.prg:
+        * tests/working/while.prg:
+        Added RCS Id keywords to all these files.
+        Got rid of a few '//' comments in C/H files.
+        Added include guards to a few H files.
 
 Tue Jul 13 13:44:04 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* include/Makefile: 
-	* source/rtl/Makefile: 
-	* tests/working/Makefile: 
-	Updated list of files.
-	
-	* source/rtl/arrays.c: 
-	* source/rtl/classes.c: 
-	* source/rtl/console.c: 
-	* source/rtl/dates.c: 
-	* source/rtl/descend.c: 
-	* source/rtl/dir.c: 
-	* source/rtl/environ.c: 
-	* source/rtl/files.c: 
-	* source/rtl/hardcr.c: 
-	* source/rtl/math.c: 
-	* source/rtl/mtran.c: 
-	* source/rtl/set.c: 
-	* source/rtl/strings.c: 
-	* source/rtl/transfrm.c: 
-	Protected all uses of #pragma startup so they won't trigger a
-	warning with gcc.
-	
-	* tests/working/inifiles.prg: 
-	Fixed a typo.
+        * include/Makefile:
+        * source/rtl/Makefile:
+        * tests/working/Makefile:
+        Updated list of files.
+
+        * source/rtl/arrays.c:
+        * source/rtl/classes.c:
+        * source/rtl/console.c:
+        * source/rtl/dates.c:
+        * source/rtl/descend.c:
+        * source/rtl/dir.c:
+        * source/rtl/environ.c:
+        * source/rtl/files.c:
+        * source/rtl/hardcr.c:
+        * source/rtl/math.c:
+        * source/rtl/mtran.c:
+        * source/rtl/set.c:
+        * source/rtl/strings.c:
+        * source/rtl/transfrm.c:
+        Protected all uses of #pragma startup so they won't trigger a
+        warning with gcc.
+
+        * tests/working/inifiles.prg:
+        Fixed a typo.
 
 19990712-23:40 EDT David G. Holm <dholm@jsd-llc.com>
   * include/hbdefs.h

@@ -230,7 +230,7 @@ int ParseDirective( char* sLine )
 int ParseDefine( char* sLine)
 {
  char defname[MAX_NAME], pars[MAX_NAME];
- int i = 0, npars = -1;
+ int i, npars = -1;
  DEFINES *lastdef;
 
  NextName( &sLine, defname, NULL );
@@ -621,7 +621,7 @@ int ParseExpression( char* sLine, char* sOutLine )
 
 int WorkDefine ( char** ptri, char** ptro, DEFINES *stdef, int lenToken )
 {
- int rezDef = 0, npars, i;
+ int rezDef = 0, npars;
  char *ptr;
     if ( stdef->npars < 0 )
     {
@@ -767,7 +767,7 @@ int WorkTranslate ( char* sToken, char** ptri, char* ptro, int ndef )
 
 int CommandStuff ( char *ptrmp, char *inputLine, char * ptro, int *lenres, int com_or_tra )
 {
- int nbr = 0, endTranslation = FALSE, rez;
+ int nbr = 0, endTranslation = FALSE;
  char *lastopti[2];
  char *ptri = inputLine, *ptr;
 
@@ -800,7 +800,7 @@ int CommandStuff ( char *ptrmp, char *inputLine, char * ptro, int *lenres, int c
        }
        break;
       case '\1':  /*  Match marker */
-       if ( (rez = WorkMarkers( &ptrmp, &ptri, ptro, lenres, nbr )) == 0 )
+       if ( !WorkMarkers( &ptrmp, &ptri, ptro, lenres, nbr ) )
        {
          if ( nbr )
          {
@@ -1204,10 +1204,10 @@ void SearnRep( char *exppatt,char *expreal,int lenreal,char *ptro, int *lenres)
        {
          if ( lastchar == '0' ) lastchar = *(ptrOut + ifou + 2);
          if ( lastchar != *(ptrOut + ifou + 2) )
-         { 
+         {
            isdvig += ifou + 3;
            ptrOut = ptro + isdvig;
-           continue; 
+           continue;
          }
        }
        *lenres += ReplacePattern ( exppatt[2], expreal, lenreal,
@@ -1608,7 +1608,7 @@ int NextParm ( char** sSource, char* sDest )
      lenName++;
    }
 
-   *sDest = '\0';
+   if ( sDest != NULL ) *sDest = '\0';
    return lenName;
 }
 
