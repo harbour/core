@@ -3552,6 +3552,7 @@ static LPAREANODE GetTheOtherArea( char *szDriver, char * szFileName, BOOL creat
   USHORT     uiRddID;
   PHB_FNAME  pFileName;
   DBOPENINFO pInfo;
+  char * szDbfName;
 
   pRDDNode = hb_rddFindNode( szDriver, &uiRddID );  // find the RDD
 
@@ -3564,7 +3565,8 @@ static LPAREANODE GetTheOtherArea( char *szDriver, char * szFileName, BOOL creat
 /* Fill pInfo structure */
   memset( &pInfo, 0, sizeof(DBOPENINFO) );
   pInfo.uiArea = uiRddID;
-  pInfo.abName = ( BYTE * )  hb_xgrab( _POSIX_PATH_MAX + 1 );
+  szDbfName = ( BYTE * )  hb_xgrab( _POSIX_PATH_MAX + 1 );
+  pInfo.abName = szDbfName;
   strcpy( ( char * ) pInfo.abName, szFileName );
   pInfo.atomAlias = ( BYTE * ) "__TMPAREA";
   pInfo.fShared = FALSE;
@@ -3674,7 +3676,7 @@ static LPAREANODE GetTheOtherArea( char *szDriver, char * szFileName, BOOL creat
     hb_errRT_DBCMD( EG_OPEN, 0, NULL, "DBAPP" ); // Could not open it
     return NULL;
   }
-  hb_xfree( pInfo.abName );
+  hb_xfree( szDbfName );
   return pAreaNode;
 }
 
