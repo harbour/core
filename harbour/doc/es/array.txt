@@ -1,0 +1,656 @@
+
+/*
+ * Las siguientes partes son derechos adquiridos de sus autores individuales.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2000 Alejandro de Gárate <alex_degarate@hotmail.com>
+ * Documentación en Español de: ARRAY(), AADD(), ASIZE(), ATAIL(), ASIZE(),
+ *				AINS(), ADEL(), ADEL(), AFILL(), ASCAN()
+ *				AEVAL(), ACOPY(), ACLONE(), ASORT()
+ *
+ * Vea doc/license.txt por los términos de la licencia.
+ *
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      ARRAY()
+ *  $CATEGORY$
+ *      ARRAY
+ *  $ONELINER$
+ *      Crea un array sin inicializar de la longitud especificada
+ *  $SYNTAX$
+ *      ARRAY( <nElementos> [, <nElementos>...] ) --> aArray
+ *  $ARGUMENTS$
+ *      <nElementos> es el número de elementos de la dimensión especificada.
+ *  $RETURNS$
+ *      Un array con las dimensiones especificadas.
+ *  $DESCRIPTION$
+ *      Esta función retorna un array sin inicializar de longitud <nElementos>.
+ *      Si parámetros <nElementos> adicionales son especificados se crea
+ *      un array anidado multidimensional sin inicializar dentro de la misma
+ *      referencia del array.
+ *      Crear una variable de memoria con el mismo nombre que el array puede
+ *      destruir el array original y liberar el contenido entero del array.
+ *      Esto depende, por supuesto del tipo de almacenamiento de ambos: del
+ *      array y la variable con el mismo nombre que el array.
+ *  $EXAMPLES$
+ *      *  El siguiente ejemplo crea un array de diez elementos iniciales,
+ *         luego en cada elemento de ese array, va creando submatrices
+ *         lineales con la función ARRAY(). Cada una con la misma cantidad
+ *         de items que la posición que ocupa en aArray. Finalmente lo muestra.
+ *
+ *         LOCAL aArray := Array(10)
+ *         LOCAL i := 1, j
+ *
+ *         FOR i = 1 to LEN( aArray )
+ *           aArray [i] := Array(i)
+ *         NEXT
+ *
+ *         FOR i = 1 to LEN( aArray )
+ *            ? i
+ *            FOR j = 1 to LEN( aArray [i] )
+ *                ?? " ", aArray [i][j]
+ *            NEXT
+ *         NEXT
+ *
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta función es CA-CLIPPER Compatible en todos los casos, excepto que
+ *      los arrays en Harbour pueden tener un número ilimitado de elementos
+ *      mientras que Clipper tiene un límite de 4096 elementos por dimensión.
+ *      Los arrays en Harbour pueden tener un número ilimitado de dimensiones.
+ *  $FILES$
+ *      El código fuente está en arrays.c
+ *      La librería asociada es vm
+ *  $SEEALSO$
+ *      AADD(),ADEL(),AFILL(),AINS()
+ *  $END$
+ */
+
+
+ *  $DOC$
+ *  $FUNCNAME$
+ *     AADD()
+ *  $CATEGORY$
+ *     ARRAY
+ *  $ONELINER$
+ *     Agrega dinámicamente un nuevo elemento al final de un array
+ *  $SYNTAX$
+ *     AADD(<aDestino>, <xValor>) --> Valor
+ *  $ARGUMENTS$
+ *    <aDestino> es el array al cual se agrega un nuevo elemento.
+ *
+ *    <xValor> es el valor asignado al nuevo elemento.
+ *  $RETURNS$
+ *    AADD() evalúa <xValor> y retorna su valor.  Si <xValor> no esta
+ *    especificado, AADD() retorna NIL.
+ *  $DESCRIPTION$
+ *    AADD() es una función que dinámicamente incrementa la longitud actual del
+ *    array destino en un elemento y asigna el valor <xValor> al recién creado
+ *    elemento del array.
+ *    <xValor> puede ser un puntero de referencia a otro array, el cual puede
+ *    ser asignado a la posicion subindice.
+ *
+ *    Es útil para construir listas dinámicas o colas (queues).
+ *    Cada vez que se ejecuta un comando @...GET, el sistema usa AADD() para
+ *    agregar un nuevo elemento al final del array GetList, y entonces asignar
+ *    un nuevo objeto Get al nuevo elemento.
+ *  $EXAMPLES$
+ *   *  Este ejemplo muestra el efecto de múltiples llamadas de la función
+ *      AADD() a un array, donde va agrgando un nuevo elemento cada vez.
+ *
+ *      LOCAL aArray := {}
+ *      FOR x:= 1 to 10
+ *          AADD( aArray, x)
+ *      NEXT
+ *
+ *   *  Este ejemplo crea un array multidemensional
+ *      LOCAL aArray := {}              // Resultado: aArray es un array vacío
+ *      AADD( aArray, {10, 10122734 })  // Resultado: aArray es {10, 10122734}
+ *      AADD( aArray, {11, 13173645 })  // Resultado: aArray es
+ *                                     { { 10, 10122734 }, { 11, 13173645 } }
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta función es totalmente compatible con CA-Clipper.
+ *  $PLATFORMS$
+ *     Todas las plataformas
+ *  $FILES$
+ *     El código fuente está en arrays.c
+ *     La librería asociada es vm
+ *  $SEEALSO$
+ *     AINS(), ASIZE()
+ * $END$
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      ASIZE()
+ *  $CATEGORY$
+ *      ARRAY
+ *  $ONELINER$
+ *      Ajusta (aumenta ó decrementa) el tamaño de un array
+ *  $SYNTAX$
+ *      ASIZE(<aDestino>, <nLongitud>) --> aDestino
+ *  $ARGUMENTS$
+ *      <aDestino> es el nombre del array a ser dinámicamente alterado
+ *
+ *      <nLongitud> es el valor Numérico del nuevo tamaño de <aDestino>
+ *  $RETURNS$
+ *      ASIZE() retorna una referencia al array <aDestino>.
+ *  $DESCRIPTION$
+ *      Esta función dinámicamente incrementa ó decrementa el tamaño del array
+ *      <aDestino> ajustando la longitud del array a <nLongitud> posiciones.
+ *
+ *      Si la longitud del array <aDestino> is acortada, aquellos elementos
+ *      al final se pierden. Si la longitud del array es alargada un valor NIL
+ *      es asignado a los elementos en las nuevas posiciones.
+ *  $EXAMPLES$
+ *      *  El siguiente ejemplo crea un array con un sólo elemento, luego lo
+ *         agranda y luego lo vuelve al tamaño original.
+ *
+ *         aArray := { 1 }           // Resultado: aArray es { 1 }
+ *         ASIZE( aArray, 3)         // Resultado: aArray es { 1, NIL, NIL }
+ *         ASIZE( aArray, 1)         // Resultado: aArray es { 1 }
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Si HB_COMPAT_C53 es definido, la función genera un Error, de otro
+ *      modo retornará el mismo array.
+ *  $FILES$
+ *      El código fuente está en arrays.c
+ *      La librería asociada es vm
+ *  $SEEALSO$
+ *      AADD(), ADEL(), AFILL(), AINS()
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      ATAIL()
+ *  $CATEGORY$
+ *      ARRAY
+ *  $ONELINER$
+ *      Retorna el último elemento de un array
+ *  $SYNTAX$
+ *      ATAIL( <aArray> ) --> Elemento
+ *  $ARGUMENTS$
+ *      <aArray> es el nombre del array a usar
+ *  $RETURNS$
+ *      ATAIL() retorna <Elemento> que puede ser un valor ó una referencia
+ *      contenida en el último elemento en el array.
+ *  $DESCRIPTION$
+ *      Esta función devuelve el último elemento en el array llamado <aArray>.
+ *      No modifica el tamaño del array ni el valor de ningún subíndice.
+ *  $EXAMPLES$
+ *      *  El siguiente ejemplo crea un array unidimensional y devuelve el
+ *         último elemento.
+ *
+ *         aArray := { "Cuál", "es el", "futuro", "de xBase ?", "Harbour!" }
+ *         ? ATAIL( aArray )
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta función es totalmente compatible con CA-Clipper.
+ *  $FILES$
+ *      El código fuente está en arrays.c
+ *      La librería asociada es vm
+ *  $SEEALSO$
+ *      LEN(),ARRAY(),ASIZE(),AADD()
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      AINS()
+ *  $CATEGORY$
+ *      ARRAY
+ *  $ONELINER$
+ *      Inserta un elemento NIL en una posición del array
+ *  $SYNTAX$
+ *      AINS( <aArray>, <nPos> ) --> aDestino
+ *  $ARGUMENTS$
+ *      <aArray> es el nombre del array al que se va a insertar un item
+ *
+ *      <nPos> es la posición en el <aArray>
+ *  $RETURNS$
+ *      AINS() retorna una referencia al array destino, <aDestino>
+ *  $DESCRIPTION$
+ *      Esta función inserta un valor NIL en el array llamado <aArray>
+ *      en la posicion <nPos>.
+ *
+ *      Todos los elementos del array comenzando con la <nPos> serán
+ *      desplazados hacia arriba una posición y el último item en el array
+ *      será removido completamente. En otras palabras, si se va a insertar un
+ *      item en la quinta posición de un array de diez elementos, el elemento
+ *      que previamente estaba en la quinta posición ahora será reubicado a
+ *      la sexta posición. El elemento recién agregado será de tipo NIL y el
+ *      último elemento es descartado. La longitud del array <aArray>
+ *      permanece sin cambios.
+ *  $EXAMPLES$
+ *      *  El siguiente ejemplo crea un array lineal, al cual se inserta un
+ *         elemento en la quinta posición, perdiéndose el último.
+ *
+ *         LOCAL aArray:= { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }
+ *         AINS( aArray, 5)
+ *
+ *         Resultado: aArray es { 1, 2, 3, 4, NIL, 5, 6, 7, 8, 9 }
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta función es totalmente compatible con CA-Clipper.
+ *  $FILES$
+ *      El código fuente está en arrays.c
+ *      La librería asociada es vm
+ *  $SEEALSO$
+ *      AADD(), ACOPY(), ADEL(), AEVAL(), AFILL(), ASIZE()
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      ADEL()
+ *  $CATEGORY$
+ *      ARRAY
+ *  $ONELINER$
+ *      Borra un elemento del array
+ *  $SYNTAX$
+ *      ADEL(<aDestino>, <nPos>) --> aDestino
+ *  $ARGUMENTS$
+ *      <aDestino> es el nombre del array cuyo elemento será removido.
+ *
+ *      <nPos>  es la posición del elemento a borrar
+ *  $RETURNS$
+ *      ADEL() retorna una referencia al array destino, <aDestino>
+ *  $DESCRIPTION$
+ *      Esta función borra el elemento que se encuentra en la posición <nPos>
+ *      en el array <aDestino>. Todos los elementos en el array <aDestino>
+ *      más allá de la posición dada <nPos> serán movidos hacia abajo una
+ *      posición en el array.
+ *      En otras palabras, si se borra un item de la quinta posición de un
+ *      array de diez elementos, el elemento que estaba en la sexta posición
+ *      ahora será reubicado a la quinta posición.
+ *      La longitud del array <aDestino> permanece sin cambios y el último
+ *      elemento en el array toma el valor NIL.
+ *  $EXAMPLES$
+ *      *  El siguiente ejemplo crea un array lineal, del cual se borra el
+ *         elemento en la quinta posición.
+ *
+ *         LOCAL aArray:= { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }
+ *         ADEL( aArray, 5)
+ *
+ *         Resultado: aArray es { 1, 2, 3, 4, 6, 7, 8, 9, NIL }
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta función es totalmente compatible con CA-Clipper.
+ *  $FILES$
+ *      El código fuente está en arrays.c
+ *      La librería asociada es vm
+ *  $SEEALSO$
+ *      ACOPY(), AINS(), AFILL()
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      AFILL()
+ *  $CATEGORY$
+ *      ARRAY
+ *  $ONELINER$
+ *      Rellena un array con un valor especificado
+ *  $SYNTAX$
+ *      AFILL( <aDestino>, <xValor>, [<nInicio>], [<nContador>] ) --> aDestino
+ *  $ARGUMENTS$
+ *      <aDestino> es el nombre del array a rellenar
+ *
+ *      <xValor> es la expresión con la que será rellenado <aDestino>
+ *
+ *      <nInicio> es la posición de comienzo, subíndice del array
+ *
+ *      <nContador> es el número de elementos que se van a rellenar
+ *  $RETURNS$
+ *      AFILL() retorna una referencia al array destino, <aDestino>
+ *  $DESCRIPTION$
+ *      Esta función rellena cada elemento del array llamado <aDestino> con
+ *      el valor <xValor>. Si es especificado, <nInicio> marca el elemento
+ *      de inicio para continuar rellenando por <nContador> posiciones.
+ *      Si no es especificado, el valor de  <nInicio> será 1, y el valor de
+ *      <nContador> será el valor de LEN(<aDestino>); y todos las posiciones
+ *      del array <aDestino> serán llenadas con la expresión de <xValor>.
+ *
+ *      Advertencia !:
+ *      Esta función sólo trabaja en una sola dimensión de <aDestino>.
+ *      Si hay punteros de referencia a otros arrays dentro de un subíndice
+ *      de <aDestino> estos valores se perderán, porque esta función los
+ *      sobreescribe con los nuevos valores.
+ *  $EXAMPLES$
+ *      *  El siguiente ejemplo crea un array con valores asignados, luego
+ *         lo rellena con el valor cinco.
+ *
+ *         LOCAL aTest := { NIL, 0, 1, 2 }
+ *         Afill( aTest, 5)               // Resultado aTest es { 5, 5, 5, 5 }
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta función es totalmente compatible con CA-Clipper.
+ *  $FILES$
+ *      El código fuente está en arrays.c
+ *      La librería asociada es vm
+ *  $SEEALSO$
+ *      AADD(), AEVAL(), DBSTRUCT(), DIRECTORY()
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      ASCAN()
+ *  $CATEGORY$
+ *      ARRAY
+ *  $ONELINER$
+ *      Busca en un array por un valor o hasta que el block devuelva .T.
+ *  $SYNTAX$
+ *      ASCAN( <aDestino>, <xBuscar>,
+ *             [<nInicio>], [<nContador>] ) --> nParadoEn
+ *  $ARGUMENTS$
+ *      <aDestino> es el nombre del array a examinar
+ *
+ *      <xBuscar> es la expresión a encontrar en <aDestino>
+ *
+ *      <nInicio> es la posición a la cual comenzar la búsqueda
+ *
+ *      <nContador> es el número de elementos a examinar
+ *  $RETURNS$
+ *      ASCAN() retorna un valor numérico <nParadoEn>, de la posición donde
+ *      <xBuscar> fué encontrada.
+ *  $DESCRIPTION$
+ *      Esta función examina el contenido de un array llamado <aDestino> en
+ *      busca del valor de <xBuscar>. El valor devuelto es la posición en el
+ *      array <aDestino> en el cual <xBuscar> fue encontrada.
+ *      Si esta expresión no es encontrada el valor retornado es cero.
+ *
+ *      Si es especificada, la posición de inicio al cual comenzar la búsqueda
+ *      puede ser establecida con el valor pasado en <nInicio>. Por defecto
+ *      es uno.
+ *
+ *      Si es especificado, el número de elementos del array a examinar puede
+ *      ser establecido con el valor pasado en <nContador>. Por defecto es el
+ *      número total de elementos en el array <aDestino>.
+ *
+ *      Si <xBuscar> es un bloque de código, la operación de la función es
+ *      ligeramente diferente. Cada referencia del subindice del array es
+ *      pasada al bloque de código para ser evaluada. La rutina de búsqueda
+ *      continuará hasta que el valor obtenido del bloque de código sea
+ *      verdadero (.T.) ó hasta que el final del array haya sido alcanzado.
+ *  $EXAMPLES$
+ *      *  El siguiente ejemplo utiliza una función de biblioteca para llenar
+ *         el array aDir con los nombres de archivos en el directorio actual.
+ *         Posteriormente, busca si entre ellos esta presente el archivo
+ *         test.prg, devuelve cero si no esta, ó mayor de cero si está.
+ *
+ *         LOCAL aDir := DIRECTORY( "*.*")
+ *         ? ASCAN( aDir,,,{|x,y| x[1] == "test.prg" } )
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta función no es compatible con CA-Clipper . La función ASCAN() de
+ *      Clipper es afectada por la condición  SET EXACT ON/OFF
+ *  $FILES$
+ *      El código fuente está en arrays.c
+ *      La librería asociada es vm
+ *  $SEEALSO$
+ *      AEVAL(), EVAL()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      AEVAL()
+ *  $CATEGORY$
+ *      ARRAY
+ *  $ONELINER$
+ *      Ejecuta un bloque de código por cada elemento en el array
+ *  $SYNTAX$
+ *      AEVAL(<aArray>, <bBlock>, [<nInicio>], [<nContador>]) --> aArray
+ *  $ARGUMENTS$
+ *      <aArray> es el array a ser evaluado.
+ *
+ *      <bBloque> es el bloque de código a evaluar para cada elemento
+ *                procesado
+ *      <nInicio> es el elemento de inicio del array a evaluar.
+ *
+ *      <nContador> es el número de elementos a procesar desde <nInicio>
+ *                  hasta el final del array <aArray>
+ *  $RETURNS$
+ *      AEVAL() retorna una referencia a <aArray>
+ *  $DESCRIPTION$
+ *      Esta función evalúa y procesa los elementos en <aArray>.
+ *      Un bloque de código pasado como <bBloque> define la operacion a ser
+ *      ejecutada sobre cada elemento del array. Todos los elementos en
+ *      <aArray> serán evaluados a menos que sea especificada la posición de
+ *      comienzo en <nInicio> por <nContador> elementos.
+ *      Por defecto <nInicio> es uno.
+ *
+ *      Dos parámetros son pasados al bloque de código <bBloque>. Los elementos
+ *      individuales en el array son el primer parámetro y su posición en el
+ *      array es el segundo.
+ *
+ *      AEVAL() no reemplaza al bucle FOR...NEXT para procesar arrays.
+ *      Si un array es una unidad autónoma, AEVAL() es apropiado. Si el array
+ *      va a ser alterado ó si los elementos van a ser reevaluados, un
+ *      bucle FOR...NEXT es más apropiado.
+ *  $EXAMPLES$
+ *
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta función es totalmente compatible con CA-Clipper.
+ *  $FILES$
+ *      El código fuente está en arrays.c
+ *      La librería asociada es vm
+ *  $SEEALSO$
+ *      EVAL(),DBEVAL()
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      ACOPY()
+ *  $CATEGORY$
+ *      ARRAY
+ *  $ONELINER$
+ *      Copia elementos de un array a otro
+ *  $SYNTAX$
+ *      ACOPY( <aOrigen>, <aDestino>, [<nInicio>], [<nContador>],
+ *             [<nPosDestino>] )--> aDestino
+ *  $ARGUMENTS$
+ *      <aOrigen> es el array desde el que se copian los elementos.
+ *
+ *      <aDestino> es el array al que se copian los elementos.
+ *
+ *      <nInicio>  es la posición desde donde se inicia la copia en <aOrigen>.
+ *                 Por defecto es uno.
+ *      <nContador> es el número de elementos a copiar comenzando en la
+ *                  posición <nInicio>
+ *
+ *      <nPosDestino> es la posición de inicio en el array <aDestino> hacia
+ *                  donde se copian los elementos. Por defecto es uno.
+ *  $RETURNS$
+ *      ACOPY() retorna una referencia al array <aDestino>
+ *  $DESCRIPTION$
+ *      ACOPY() copia elementos desde el array <aOrigen> hacia el array
+ *      <aDestino>. Esta función copia todo tipo de datos.
+ *
+ *      Si un elemento en el array <aOrigen> es un puntero de referencia a
+ *      otro array (submatriz), esa referencia será copiada al array
+ *      <aDestino> pero no todas las dimensiones serán copiadas de un array
+ *      al otro. Esto debe ser realizado via función ACLONE().
+ *
+ *      Note
+ *      Si el array <aOrigen> es mayor que <aDestino>, los elementos en el
+ *      array comienzan a ser copiados en <nPosDestino> y continuan copiandose
+ *      hasta que el final del array <aDestino> es alcanzado, los elementos
+ *      que sobran en <aOrigen> se descartan.
+ *      La función ACOPY() no agrega posiciones al array destino, el tamaño
+ *      del array <aDestino> permanece constante.
+ *  $EXAMPLES$
+ *      * El ejemplo siguiente copia un array sobre otro.
+ *
+ *      LOCAL nContador := 2, nInicio := 1, aUltimo, aPrimero
+ *      aUltimo  := { "HARBOUR", " es el ", "Heredero" }
+ *      aPrimero := { "CLIPPER", " fue el ", "Pionero" }
+ *      ACOPY( aUltimo, aPrimero, nInicio, nContador)
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta función es totalmente compatible con CA-Clipper.
+ *  $FILES$
+ *      El código fuente está en arrays.c
+ *      La librería asociada es vm
+ *  $SEEALSO$
+ *      ACLONE(),ADEL(),AEVAL(),AFILL(),AINS(),ASORT()
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      ACLONE()
+ *  $CATEGORY$
+ *      ARRAY
+ *  $ONELINER$
+ *      Duplica un array anidado ó multidimensional
+ *  $SYNTAX$
+ *      ACLONE( <aOrigen> ) --> aDuplicado
+ *  $ARGUMENTS$
+ *      <aOrigen> es el nombre del array a ser clonado.
+ *  $RETURNS$
+ *      ACLONE() retorna <aDuplicate> un nueva referencia a otro array
+ *      exactamente igual al original.
+ *  $DESCRIPTION$
+ *      Esta función realiza una copia completa del array llamado <aOrigen>.
+ *      Crea todas las dimensiones en el array <aDestino> que existen en el
+ *      array original y luego llena cada dimensión con los mismos valores
+ *      de los elementos en el original.
+ *      Ambos arrays coexisten como entidades distintas.
+ *  $EXAMPLES$
+ *      * El ejemplo siguiente crea un array bidimensional y lo duplica.
+ *        Se muestra que son copiadas ambas dimensiones.
+ *
+ *        LOCAL aOrigen, aDestino
+ *        aOrigen  := { {1, 2}, {3, 4}, {5, 6}, {7, 8}, {9, 10} }
+ *        aDestino := ACLONE( aOrigen )
+ *
+ *        * primera dimensión
+ *        ? "Impares son: "                // Resultado: es {1, 3, 5, 7, 9}
+ *        FOR n := 1 TO LEN( aDestino)
+ *            ?? aDestino [n][1]
+ *        NEXT
+ *
+ *        * segunda dimensión
+ *        ? "Pares   son: "                // Resultado: es {2, 4, 6, 8, 10}
+ *        FOR n := 1 TO LEN( aDestino)
+ *            ?? aDestino [n][2]
+ *        NEXT
+ *
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Clipper retorna NIL si el parámetro no es un array.
+ *  $FILES$
+ *      El código fuente está en arrays.c
+ *      La librería asociada es vm
+ *  $SEEALSO$
+ *      ACOPY(),ADEL(),AINS(),ASIZE()
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      ASORT()
+ *  $CATEGORY$
+ *      Array
+ *  $ONELINER$
+ *      Ordena un array
+ *  $SYNTAX$
+ *      ASORT( <aDestino>, [<nInicio>], [<nContador>],
+ *             [<bOrden>] ) --> aDestino
+ *  $ARGUMENTS$
+ *      <aDestino> es el nombre del array a ser ordenado.
+ *
+ *      <nInicio> es el primer elemento para comenzar el ordenamiento.
+ *                Por defecto es uno.
+ *
+ *      <nContador> es el número de elementos a ordenar comenzando en la
+ *                 posición <nInicio>. Por defecto son todos los elementos.
+ *
+ *      <bOrden> es el bloque de código para el orden de ordenamiento, por
+ *              defecto es en orden ascendente {| x, y | x < y }.
+ *              El bloque de código debe recibir dos elementos del array como
+ *              parametros y debe retornar .T. si el orden es el correcto,
+ *              .F. en caso contrario.
+ *  $RETURNS$
+ *      ASORT() retorna una referencia al reciente array ordenado <aDestino>
+ *      ó NIL si el parámetro <aDestino> no es un array.
+ *  $DESCRIPTION$
+ *      Esta funcion ordena todo ó parte de un array dado. Si <bOrden> es
+ *      omitido, la función espera que <aDestino> sea un array unidimensional
+ *      conteniendo un solo tipo de datos (uno de: Character, Date, Logical,
+ *      Numeric) y ordena este array en orden ascendente: los caracteres son
+ *      ordenados por su valor ASCII, las fechas son ordenadas cronologicamente
+ *      el valor lógico .F. va antes de .T. y los valores numéricos son
+ *      ordenados por su valor.
+ *
+ *      Si <bOrden> es especificado este es usado para manejar la forma de
+ *      ordenamiento. Cada vez que el bloque es evaluado, dos elementos del
+ *      array son pasados al bloque de código, y el bloque debe retornar un
+ *      valor lógico que define si esos elementos estan en orden (.T.) ó no
+ *      (.F.). Usando este bloque se puede ordenar arrays multidimensionales
+ *      hacer un ordenamiento descendente ó aún (pero para que querria Ud.
+ *      hacerlo) ordenar un array que contenga diferentes tipo de datos.
+ *  $EXAMPLES$
+ *      * El siguiente ejemplo ordena valores numericos en orden ascendente
+ *
+ *        ASORT( { 3, 1, 4, 42, 5, 9 } )   // Resultado: { 1, 3, 4, 5, 9, 42 }
+ *
+ *      * El siguiente ejemplo ordena cadenas en orden descendente
+ *        LOCAL aKeys := { "Ctrl", "Alt", "Delete" }, n
+ *        LOCAL bOrden := {| x, y | UPPER( x ) > UPPER( y ) }
+ *        ASORT( aKeys,,, bOrden )
+ *        FOR n = 1 TO LEN( aKeys )
+ *            ? aKeys [n]          // Resultado: { "Delete", "Ctrl", "Alt"}
+ *        NEXT
+ *
+ *      * El siguiente ejemplo ordena dos arrays bidimensionales de acuerdo
+ *        al segundo elemento de cada par.
+ *
+ *        LOCAL aPair := { {"Sun",8}, {"Mon",1}, {"Tue",57}, {"Wed",-6} }
+ *        ASORT( aPair,,, {| x, y | x[2] < y[2] } )
+ *
+ *        FOR n = 1 TO LEN( aPair )
+ *            ? aPair [n][1],  aPair [n][2]
+ *        NEXT
+ *        // Resultado: { {"Wed",-6}, {"Mon",1}, {"Sun",8}, {"Tue",57} }
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      La frecuencia de llamada al bloque de código y el orden difiere de
+ *      Clipper debido a que Harbour usa un algoritmo distinto (más rápido)
+ *      de ordenamiento (quicksort).
+ *  $FILES$
+ *      El código fuente está en arrays.c
+ *      La librería asociada es vm
+ *  $SEEALSO$
+ *      ASCAN(),EVAL(),SORT
+ *  $END$
+ */
+

@@ -1,0 +1,450 @@
+/*
+ * Las siguientes partes son derechos adquiridos de sus autores individuales.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2000 Alejandro de Gárate <alex_degarate@hotmail.com>
+ * Documentación en Español de los comandos OOP
+ *
+ * Copyright 2000 Brian Hays <bhays@abacuslaw.com>
+ *    Documentation for the commands
+ *
+ * Vea doc/license.txt por los términos de la licencia.
+ *
+ */
+
+
+/*  $DOC$
+ *  $COMMANDNAME$
+ *      CLASS
+ *  $CATEGORY$
+ *      Comando OOP
+ *  $ONELINER$
+ *      Define una Clase para la Programación Orientada a Objetos (OOP).
+ *  $SYNTAX$
+ *      CLASS <NombreClase> [ <FROM, INHERIT> <SuperClase> ]
+ *  $ARGUMENTS$
+ *      <NombreClase> Nombre de la clase a definir. Por tradición, las clases
+ *                  en Harbour comienzan con "T" (algo común en el mundo OOP)
+ *                  para evitar colisiones con clases creadas por el usuario.
+ *      <SuperClase> La clase padre para usar la herencia.
+ *  $DESCRIPTION$
+ *      CLASS crea una clase desde la cual se pueden crear objetos.
+ *      Cada clase es definida en un archivo.PRG separado para este propósito
+ *      No se puede crear más de una clase en un archivo.PRG
+ *      Después del mandato CLASS comienza la definición, luego los elementos 
+ *      DATA (tambien conocidos como variables de instancia) y luego 
+ *      los METHODS de la clase (el equivalente a las funciones en la 
+ *      programación tradicional)
+ *
+ *      Las Clases pueden heredar desde una clase sola <SuperClass>, pero la 
+ *      cadena de herencia puede extenderse a muchos niveles
+ *
+ *      Un program usa una clase llamando al Constructor de la clase, el
+ *      método New() para crear el objeto. Ese objeto es usualmente asignado 
+ *      a una variable, la cual es usada para acceder a los elementos DATA y
+ *      a los métodos
+ *  $EXAMPLES$
+    <fixed>
+ *      CLASS TBColumn
+ *
+ *         DATA Block      // Codeblock para recuperar datos para la Columna
+ *         DATA Cargo      // Variable definida por el usuario
+ *         DATA ColorBlock // Codeblock que determina el color de los items
+ *         DATA ColSep     // Caracter separador de la Columna
+ *         DATA DefColor   // Array de índices numéricos a la tabla de color 
+ *         DATA Footing    // Pie de Columna
+ *         DATA FootSep    // Caracter separador del Pie 
+ *         DATA Heading    // Encabezado de la Columna
+ *         DATA HeadSep    // Caracter separador de la cabecera
+ *         DATA Width      // Ancho de la Columna
+ *         DATA ColPos     // Posición temporaria de la columna en pantalla
+ *
+ *         METHOD New()    // Constructor
+ *
+ *      ENDCLASS
+    </fixed>
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      CLASS es una extensión de Harbour.  
+ *  $PLATFORMS$
+ *      Todas
+ *  $SEEALSO$
+ *      TClass(),Programación Orientada a Objeto,DATA,METHOD
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $COMMANDNAME$
+ *      DATA
+ *  $CATEGORY$
+ *      Comando OOP
+ *  $ONELINER$
+ *      Define una variable de instance DATA, para los objetos de una clase
+ *  $SYNTAX$
+ *      DATA <NombreDato1> [,<NombreDatoN>] [ AS <tipo> ] [ INIT <uValor> ]
+ *  $ARGUMENTS$
+ *      <NombreDato1> Nombre de DATA  
+ *
+ *      <tipo>        Especificación Opcional del tipo de datos, de uno de 
+ *                    los siguientes (especificación en inglés):
+ *                    Character, Numeric, Date, Logical, Codeblock, Nil  
+ *
+ *      <uValor>      Valor opcional inicial cuando se crea un nuevo objeto
+ *  $DESCRIPTION$
+ *      Los elementos DATA tambien pueden ser pensados como "propiedades"
+ *       ó "atributos" de un objeto. ellos pueden ser de cualquier tipo 
+ *      incluyendo bloques de codigo.
+ *      Una vez que el objeto ha sido creado, los elementos DATA son referen-
+ *      ciados con dos puntos (:) como en MyObject:Heading := "Nombre".
+ *      Usualmente una clase también define métodos para manipular los DATA.  
+ *
+ *      Se puede usar la clausula "AS <type>" para reforzar que DATA es 
+ *      perteneciente a un cierto tipo. De otra manera este tomará el tipo
+ *      de cualquier valor que le sea asignado.
+ *
+ *      Use la clausula "INIT <uValue>" para inicializar ese DATA a <uValue>
+ *      siempre que un nuevo objeto es creado. 
+ *  $EXAMPLES$
+    <fixed>
+ *      CLASS TBColumn
+ *
+ *         DATA Block      // Codeblock para recuperar datos para la Columna
+ *         DATA Cargo      // Variable definida por el usuario
+ *         DATA ColorBlock // Codeblock que determina el color de los items
+ *         DATA ColSep     // Caracter separador de la Columna
+ *         DATA DefColor   // Array de índices numéricos a la tabla de color 
+ *         DATA Footing    // Pie de Columna
+ *         DATA FootSep    // Caracter separador del Pie 
+ *         DATA Heading    // Encabezado de la Columna
+ *         DATA HeadSep    // Caracter separador de la cabecera
+ *         DATA Width      // Ancho de la Columna
+ *         DATA ColPos     // Posición temporaria de la columna en pantalla
+ *
+ *         METHOD New()    // Constructor
+ *
+ *      ENDCLASS
+    </fixed>
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      DATA es una extensión de Harbour.  
+ *  $PLATFORMS$
+ *      Todas
+ *  $SEEALSO$
+ *      Programación Orientada a Objeto,CLASS,METHOD,CLASSDATA
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $COMMANDNAME$
+ *      CLASSDATA
+ *  $CATEGORY$
+ *      Comando OOP
+ *  $ONELINER$
+ *      Define una variable CLASSDATA para una clase (NO para un Objeto !)
+ *  $SYNTAX$
+ *      CLASSDATA <DataName1> [,<DataNameN>] [ AS <type> ] [ INIT <uValue> ]  
+ *  $ARGUMENTS$
+ *      <NombreDato1> Nombre de DATA  
+ *
+ *      <tipo>        Especificación opcional del tipo de datos de uno de 
+ *                    los siguientes (Original en inglés):
+ *                    Character, Numeric, Date, Logical, Codeblock, Nil  
+ *
+ *      <uValor>      Valor opcional inicial cuando se inicia el programa
+ *  $DESCRIPTION$
+ *      Las variables CLASSDATA pueden se pensadas como "propiedades" de un 
+ *      clase entera. Cada CLASSDATA existe sólo una vez, no importa cuántos
+ *      objetos sean creados. Un uso comun es para un contador que es 
+ *      incrementado siempre que un objeto es creado y decrementado cuando
+ *      alguno es destruido, así se puede monitorear el número de objetos en 
+ *      existencia para esta clase.
+ *
+ *      Se puede usar la clausula "AS <type>" para reforzar que CLASSDATA es 
+ *      perteneciente a un cierto tipo. De otra manera este tomará el tipo
+ *      de cualquier valor que le sea asignado.
+ *      Use la clausula "INIT <uValue>" para inicializar ese DATA a <uValue>
+ *      siempre que un nuevo objeto es creado. 
+ *  $EXAMPLES$
+       <fixed>
+ *      CLASS TWindow
+ *         DATA   hWnd, nOldProc
+ *         CLASSDATA lRegistered AS LOGICAL
+ *      ENDCLASS
+        </fixed>
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      CLASSDATA es una extensión de Harbour.  
+ *  $PLATFORMS$
+ *      Todas                                
+ *  $SEEALSO$
+ *      Programación Orientada a Objeto,CLASS,METHOD,DATA
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $COMMANDNAME$
+ *      METHOD
+ *  $CATEGORY$
+ *      Comando OOP
+ *  $ONELINER$
+ *      Declara un METHOD (método) para una clase en la cabecera de la clase
+ *  $SYNTAX$
+ *      METHOD <NombreMétodo>( [<params,...>] ) [ CONSTRUCTOR ]
+ *      METHOD <NombreMétodo>( [<params,...>] ) INLINE <Code,...>
+ *      METHOD <NombreMétodo>( [<params,...>] ) BLOCK  <CodeBlock>
+ *      METHOD <NombreMétodo>( [<params,...>] ) EXTERN <FuncName>([<args,...>])
+ *      METHOD <NombreMétodo>( [<params,...>] ) SETGET
+ *      METHOD <NombreMétodo>( [<params,...>] ) VIRTUAL
+ *      METHOD <NombreMétodo>( [<param>] )      OPERATOR <op>
+ *      METHOD <NombreMétodo>( [<params,...>] ) CLASS <ClassName>
+ *  $ARGUMENTS$
+ *      <NombreMétodo>  Nombre del método a definir
+ *
+ *      <params,...>    Lista opcional de parametros 
+ *  $DESCRIPTION$
+ *      Los Métodos son "funciones de clase" y hacen el trabajo de la clase.
+ *      Todos los métodos pueden ser definidos en la cabecera entre los 
+ *      comandos CLASS y ENDCLASS. Si el cuerpo de un método no esta totalmente
+ *      definido aqui, el cuerpo completo es escrito debajo del comando 
+ *      ENDCLASS usando esta sintaxis:
+ *
+ *         METHOD <NombreMétodo>( [<params,...>] ) CLASS <NombreClase>  
+ *
+ *      Los Métodos pueden referenciar al objeto actual usando la palabra
+ *      clave "Self:" ó su versión más corta "::"
+ *                                   
+ *      CLAUSULAS:  
+ *
+ *      CONSTRUCTOR  Define un método especial de la clase: el método 
+ *                   Constructor, usado para crear objetos. Este es 
+ *                   usualmente el método New(). 
+ *                   Los constructores siempre retornan el objeto New().
+ *
+ *      INLINE       Rápido y fácil de codificar, INLINE le permite definir 
+ *                   el código para el método inmediatamente después de la 
+ *                   definición de la clase. Cualquier método no declarado 
+ *                   INLINE ó BLOCK debe ser completamente definido después 
+ *                   del comando ENDCLASS.
+ *                   El <Codigo,...> siguiente a INLINE recibe un parametro
+ *                   de Self. Si se necesita recibir más parámetros, use
+ *                   la cláusula BLOCK en su lugar.
+ *
+ *      BLOCK        Use esta cláusula cuando desee declarar rápidos métodos
+ *                   'inline' que necesiten parámetros. El primer parámetro 
+ *                    a <CodeBlock> debe ser Self, como en:
+ *
+ *          METHOD <NombreMétodo> BLOCK {|Self,<arg1>,<arg2>,...,<argN>|...}
+ *
+ *      EXTERN       Si una función externa hace lo que el método necesita,
+ *                   use esta cláusula para hacer una llamada optimizada a
+ *                   esa función directamente.
+ * 
+ *      SETGET       Para datos calculados. El nombre del método puede ser 
+ *                   manipulado como un elemento de DATA para establecer 
+ *                   (Set) u obtener (Get) un valor.
+ *
+ *      VIRTUAL      Métodos que no hacen nada. Utiles para Clases de Base 
+ *                   donde la Clase hija definirá el comportamiento del método,
+ *                   ó cuando Ud. esta creando y probando una Clase.
+ *
+ *      OPERATOR     Operador de Sobrecarga para las Clases.
+ *                   Vea el ejemplo ../Tests/TestOp.prg para detalles
+ *
+ *      CLASS <ClassName>   
+ *                   Use esta sintaxis solamente para definir un método 
+ *                   completo después del comando ENDCLASS.
+ *  $EXAMPLES$
+        <fixed>
+ *      CLASS TWindow
+ *         DATA   hWnd, nOldProc
+ *         METHOD New( ) CONSTRUCTOR
+ *         METHOD Capture() INLINE  SetCapture( ::hWnd )
+ *         METHOD End() BLOCK  { | Self, lEnd | If( lEnd := ::lValid(),;
+ *                                 ::PostMsg( WM_CLOSE ),), lEnd }
+ *         METHOD EraseBkGnd( hDC )
+ *         METHOD cTitle( cNewTitle ) SETGET
+ *         METHOD Close() VIRTUAL
+ *      ENDCLASS
+ *
+ *      METHOD New( ) CLASS TWindow
+ *         local nVar, cStr
+ *         ... <codigo> ...
+ *         ... <codigo> ...
+ *      RETURN Self
+        </fixed>
+ *  $TESTS$
+        <fixed>
+ *      TestOp.prg
+         </fixed>
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      METHOD es una extensión de Harbour.  
+ *  $PLATFORMS$
+ *      Todas  
+ *  $SEEALSO$
+ *      TClass(),Programación Orientada a Objeto,DATA,CLASS
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $COMMANDNAME$
+ *      MESSAGE
+ *  $CATEGORY$
+ *      Comando OOP
+ *  $ONELINER$
+ *      Reenvía la llamada a un método a otro método.
+ *  $SYNTAX$
+ *      MESSAGE <NombreMensaje>   METHOD <NombreMétodo>( [<params,...>] )
+ *      MESSAGE <NombreMensaje>() METHOD <NombreMétodo>( [<params,...>] )
+ *  $ARGUMENTS$
+ *      <NombreMensaje>  El nombre del pseudo-método a definir.
+ *
+ *      <NombreMétodo>   El método a crear y llamar cuando <NombreMensaje>
+ *                       es invocado.
+ *      <params,...>     Lista de parámetros opcionales para el método
+ *  $DESCRIPTION$
+ *      El comando MESSAGE es una característica rara vez usada, que permite
+ *      re-enviar una llamada a un método con un nombre diferente. Esto puede 
+ *      ser necesario si el nombre de un método entra en conflicto con una
+ *      función pública que necesita ser llamada desde adentro de un método 
+ *      de la Clase.
+ *
+ *      Por ejemplo, se puede tener una función pública llamda BeginPaint()
+ *      que es usada para pintar las ventanas. Podría ser natural también 
+ *      tener un método de la Clase Ventana, llamado :BeginPaint() que la 
+ *      aplicación pueda llamar.
+ *      Pero dentro del método de la Clase uno podría no estar habilitado 
+ *      para llamar a la función pública porque, los métodos internos están
+ *      basados en funciones estáticas (las que ocultan funciones públicas 
+ *      con el mismo nombre)
+ *
+ *      El comando MESSAGE permite crear el verdadero método con un nombre 
+ *      diferente (::xBeginPaint()), y aún permitir la sintaxis ::BeginPaint()
+ *      para llamar a ::xBeginPaint(). Este entonces es libre de llamar a 
+ *      a la función publica BeginPaint().
+ *  $EXAMPLES$
+    <fixed>
+ *      CLASS TWindow
+ *         DATA   hWnd, nOldProc
+ *         METHOD New( )  CONSTRUCTOR
+ *         MESSAGE BeginPaint METHOD xBeginPaint()
+ *      ENDCLASS
+    </fixed>
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      MESSAGE es una extensión de Harbour.  
+ *  $PLATFORMS$
+ *      Todas  
+ *  $SEEALSO$
+ *      METHOD,DATA,CLASS,Programación Orientada a Objeto
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $COMMANDNAME$
+ *      ERROR HANDLER
+ *  $CATEGORY$
+ *      Comando OOP
+ *  $ONELINER$
+ *      Designa un método como manejador de error para la Clase.
+ *  $SYNTAX$
+ *      ERROR HANDLER <NombreMétodo>( [<params,...>] )
+ *  $ARGUMENTS$
+ *      <NombreMétodo>  Nombre del método a definir
+ *
+ *      <params,...>    Lista de parametros opcionales 
+ *  $DESCRIPTION$
+ *      ERROR HANDLER nombra al método que deberia manejar los errores para 
+ *      la Clase que esta siendo definida.
+ *  $EXAMPLES$
+    <fixed>
+ *      CLASS TWindow
+ *         ERROR HANDLER  MyErrHandler()
+ *      ENDCLASS
+    </fixed>
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      ERROR HANDLER es una extensión de Harbour.  
+ *  $PLATFORMS$
+ *      Todas      
+ *  $SEEALSO$
+ *      Object Oriented Programming,ON ERROR,CLASS,METHOD,DATA
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $COMMANDNAME$
+ *      ON ERROR
+ *  $CATEGORY$
+ *      Comando OOP
+ *  $ONELINER$
+ *      Designa un método como manejador de error para la Clase.
+ *  $SYNTAX$
+ *      ON ERROR <NombreMétodo>( [<params,...>] )
+ *  $ARGUMENTS$
+ *      <NombreMétodo>  Nombre del método a definir
+ *
+ *      <params,...>    Lista de parametros opcionales 
+ *  $DESCRIPTION$
+ *      ON ERROR es un sinónimo para ERROR HANDLER.
+ *      Este nombra al método que debería manejar los errores para la 
+ *      Clase que esta siendo definida.
+ *  $EXAMPLES$
+    <fixed>
+ *      CLASS TWindow
+ *         ON ERROR  MyErrHandler()
+ *      ENDCLASS
+    </fixed>
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      ON ERROR es una extensión de Harbour.  
+ *  $PLATFORMS$
+ *      Todas  
+ *  $SEEALSO$
+ *      Programación Orientada a Objeto,ERROR HANDLER,CLASS,METHOD,DATA
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $COMMANDNAME$
+ *      ENDCLASS
+ *  $CATEGORY$
+ *      Comando OOP
+ *  $ONELINER$
+ *      Termina la declaración de una Clase.
+ *  $SYNTAX$
+ *      ENDCLASS 
+ *  $DESCRIPTION$
+ *      ENDCLASS marca el fin de la declaración de una Clase.
+ *      Este es usualmente seguido por el método de la Clase que no es INLINE.  
+ *  $EXAMPLES$
+     <fixed>
+ *      CLASS TWindow
+ *         DATA   hWnd, nOldProc
+ *      ENDCLASS
+     </fixed>
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      ON ERROR es una extensión de Harbour.  
+ *  $PLATFORMS$
+ *      Todas  
+ *  $SEEALSO$
+ *      Programación Orientada a Objeto,CLASS,METHOD,DATA
+ *  $END$
+ */
+

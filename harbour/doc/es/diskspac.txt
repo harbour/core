@@ -1,0 +1,79 @@
+
+/*
+ * Las siguientes partes son derechos adquiridos de sus autores individuales.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2000 Alejandro de Gárate <alex_degarate@hotmail.com>
+ * Documentación en Español de: DISKSPACE()
+ *
+ * Vea doc/license.txt por los términos de la licencia.
+ *
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      DISKSPACE()
+ *  $CATEGORY$
+ *      Bajo Nivel
+ *  $ONELINER$
+ *      Obtiene la cantidad de espacio disponible en el disco
+ *  $SYNTAX$
+ *      DISKSPACE( [<nDisco>] [, <nTipo>] ) --> nDiskbytes
+ *  $ARGUMENTS$
+ *      <nDrive> es el número de disco del que esta solicitando información
+ *               donde 1 = A, 2 = B, etc, Si se especifica cero ó ningún
+ *               parametro DISKPACE() trabaja sobre la unidad actual de disco
+ *               Por defecto es cero.
+ *
+ *      <nTipo> es el tipo de espacio que está siendo requerido.  Por defecto
+ *              es HB_DISK_AVAIL.
+ *  $RETURNS$
+ *      <nDiskBytes> es el número de bytes en la unidad especificada que
+ *                   coincide con el tipo requerido.
+ *  $DESCRIPTION$
+ *      Por defecto esta función retorna el número de bytes de espacio libre
+ *      en el disco actual que esta disponible para el usuario que solicita
+ *      la información.
+ *
+ *      Hay 4 tipos de información disponible:
+ *
+ *      HB_FS_AVAIL   La cantidad de espacio disponible para el usuario que
+ *                    hace la solicitud. Este valor podría ser menor que
+ *                    HB_FS_FREE si las asignaciones de espacio en disco 
+ *                    (quotas) son soportadas por el sistema operativo al 
+ *                    tiempo de ejecución y estas quotas están asignadas.
+ *                    De otro modo el valor será igual al retornado por
+ *                    HB_FS_FREE.
+ *
+ *      HB_FS_FREE    La cantidad actual de espacio libre en el disco.
+ *
+ *      HB_FS_USED    El número de bytes en uso en el en el disco.
+ *
+ *      HB_FS_TOTAL   La cantidad total de espacio asignado para el usuario
+ *                    si las quotas estan asignadas. De otro modo el tamaño
+ *                    actual del disco.
+ *
+ *      Si la información es requerida sobre un disco que no esta disponible
+ *      un error de ejecución 2018 será establecido.
+ *  $EXAMPLES$
+ *      ? "Ud. tiene diponible: " + STR( DISKSPACE() ) + " bytes " +;
+ *        "sobre un total de " + STR( DISKSPACE( 0, HB_FS_TOTAL) )
+ *
+ *      Note: Ver ..\tests\tstdspac.prg por otros ejemplos.
+ *  $STATUS$
+ *      S
+ *  $COMPLIANCE$
+ *      CA-Clipper retorna un valor entero cuya utilidad esta limitada a
+ *      discos menores de 2 gigabytes. La versión de Harbour retorna un valor
+ *      de punto flotante con 0 decimales si el disco es > 2 gigabytes.
+ *      <nTipo> es una extensión de Harbour.
+ *  $PLATFORMS$
+ *      Dos, Win32, OS/2, Unix
+ *  $FILES$
+ *      El código fuente está en diskspac.c
+ *      La librería asociada es rtl
+ *      El archivo de cabecera es fileio.ch
+ *  $END$
+ */
+
+

@@ -1,0 +1,44 @@
+
+/*
+ * Las siguientes partes son derechos adquiridos de sus autores individuales.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2000 Alejandro de Gárate <alex_degarate@hotmail.com>
+ * Documentación en Español de: ERRORSYS()
+ *
+ * Vea doc/license.txt por los términos de la licencia.
+ *
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *     ERRORSYS()
+ *  $CATEGORY$
+ *     Recuperacion de Errores
+ *  $ONELINER$
+ *     Instala el manejador de errores por defecto
+ *  $SYNTAX$
+ *     ERRORSYS() --> NIL
+ *  $ARGUMENTS$
+ *     Ninguno.
+ *  $RETURNS$
+ *     ERRORSYS() siempre retorna NIL.
+ *  $DESCRIPTION$
+ *     ERRORSYS() es llamado en el inicio por Harbour e instala el manejador
+ *     de errores por defecto. Normalmente no se debe llamar a esta función
+ *     directamente. En su lugar use ERRORBLOCK() para instalar su propio
+ *     manejador de errores.
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Esta función es 100 % Clipper compatible
+ *  $FILES$
+ *     El código fuente está en errorsys.c
+ *     La librería asociada es rtl
+ *  $SEEALSO$
+ *      ERRORBLOCK(),Error class
+ *  $END$
+ */
+
+

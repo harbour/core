@@ -1,0 +1,441 @@
+
+/*
+ * Las siguientes partes son derechos adquiridos de sus autores individuales.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2000 Alejandro de Gárate <alex_degarate@hotmail.com>
+ * Documentación en Español de: 
+ *         Readme, hb_gcAlloc(), hb_gcFree(), hb_gcLockItem(), 
+ *	   hb_gcUnlockItem(), hb_gcCollectAll(), hb_gcItemRef(), HB_GCALL()
+ *
+ * Copyright 2000 brian Brian Hays <bhays@abacuslaw.com>
+ * Documentación en Inglés de: 
+ *         Readme, hb_gcAlloc(), hb_gcFree(), hb_gcLockItem(), 
+ *	   hb_gcUnlockItem(), hb_gcCollectAll(), hb_gcItemRef(), HB_GCALL()
+ *
+ * Vea doc/license.txt por los términos de la licencia.
+ *
+ */
+
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      Recolector de memoria 
+ *  $CATEGORY$
+ *      Documentación - Recolector de memoria 
+ *  $ONELINER$
+ *      Léame con las características de la recoleccion de memoria en Harbour.
+ *  $DESCRIPTION$
+ *      El recolector de memoria (garbage collector) usa la siguiente lógica:
+ *      - primero recolectar todas las ubicaciones de memoria que puedan 
+ *        constituirse en "basura"
+ *      - luego inspeccionar todas las variables, por si esos bloques están 
+ *        todavía referenciados.
+ *
+ *      Note que sólo arrays, objetos y bloques de código son recolectados
+ *      porque esos son los únicos tipos de datos que pueden causar:
+ *      auto-referencias 
+ *            (a[1]:=a) 
+ *      ó referencias circulares:
+ *            (a[1]:=b; b[1]:=c; c[1]:=a) 
+ *      que no pueden ser apropiadamente desasignadas por un simple conteo
+ *      de referencia.
+ *
+ *      Como todas las variables en Harbour son almacenadas dentro de algunas
+ *      tablas disponibles (eval stack, tabla de memvars y array de variables
+ *      estáticas), entonces chequear si la referencia es todavía activa es 
+ *      bastante fácil y no requiere ningún tratamiento especial durante la
+ *      la asignación de memoria. Adicionalmente el recolector de memoria
+ *	inspecciona algunos datos internos usados por la implementación de 
+ *      objetos de Harbour que también almacena algunos valores que pueden
+ *      contener referencias de memoria. Estos datos son usados para inicia-
+ *      lizar variables de instancia de la clase, y son almacenadas en 
+ *      variables compartidas por la clase.
+ *
+ *      En casos especiales cuando el valor de una variable de Harbour es
+ *      almacenada internamente en algún area estática (a nivel de lenguaje C
+ *      ó asembler), por ejemplo SETKEY() almacena bloques de código que 
+ *      serán evaluados caundo se presione una tecla, el recolector de 
+ *      memoria no será capaz de inspecionar esos valores porque este no 
+ *      conoce su ubicación. Esto podría ocasionar que algunos bloques de 
+ *      memoria sean liberados prematuramente. Para prevenir la prematura 
+ *      desasignación de esos bloques ellos deben ser bloqueados para el 
+ *      recolector de memoria.
+ *      Para ello se definen distintos estados del bloque de memoria:
+ *      #define HB_GC_UNLOCKED    0  /* desbloqueado    */
+ *      #define HB_GC_LOCKED      1  /* No recolectar el bloque de memoria */
+ *      #define HB_GC_USED_FLAG   2  /* bit para la bandera usado/sin uso  */
+ *
+ *      El bloque de memoria puede ser bloqueado con hb_gcLockItem(), método
+ *      recomendado si un ítem de estructura es usado ó la función hb_gcLock() 
+ *      un puntero directo a memoria es usado.
+ *      El bloque de memoria puede ser desbloqueado por hb_gcUnlockItem() ó
+ *      hb_gcUnlock(). 
+ *
+ *      Nótese sin embargo que todas las variables pasadas a una función de 
+ *      bajo nivel son pasadas mediante la pila de evaluación (eval stack), 
+ *      así ellas no necesitan bloquearse durante la llamada a la función.
+ *      El bloque puede ser requerido, si un valor pasado es copiado dentro
+ *      de algún area estática para hacerla disponible para otras funciones
+ *      de bajo nivel, llamadas después de la salida de la función que 
+ *      almacena el valor. Esto es requerido porque el valor es removido de 
+ *      la pila de evaluación después de la llamada a la función y esta no 
+ *	puede seguir siendo referenciada por otras variables.
+ *
+ *      Sin embargo la inspección de todas las variables puede ser una 
+ *      operación de un gran consumo de tiempo. Esto requiere que todos los
+ *      arrays asignados tengan que ser recorridos a través de todos sus  
+ *      elementos para encontrar más arrays. 
+ *      También todos los bloques de código son inspecionados, en busca de
+ *      variables locales separadas que ellos estan referenciando. Por esta
+ *      esta razón, la busqueda por bloques de memoria no referenciados es
+ *      realizada durante los estados inactivos.
+ *
+ *      El estado inactivo es el estado cuando no hay un código real de la 
+ *      aplicación ejecutándose. Por ejemplo, el código del usuario es 
+ *      detenido durante 0.1 segundo por INKEY(0.1) - Harbour esta chequeando
+ *      sólo el teclado durante este tiempo. Esto deja sin embargo suficiente
+ *      tiempo para muchas otras tareas en segundo plano. Una de esas tareas 
+ *      en segundo plano, puede ser la búsqueda de bloques de memoria no 
+ *      referenciados.
+ *
+ *      Asignando memoria </par>
+ *      -----------------
+ *
+ *      El recolector de memoria, recoge bloques de memoria asignados con
+ *      llamadas a la función hb_gcAlloc().   La memoria asignada por 
+ *      hb_gcAlloc() debería ser liberada con la función hb_gcFree().
+ *
+ *
+ *      Bloqueando memoria  </par>
+ *      ------------------
+ *
+ *      La memoria asignada con hb_gcAlloc() debería ser bloqueada para 
+ *      prevenir una automática liberación como un puntero de memoria si no
+ *      es almacenado dentro de una variable a nivel de Harbour. Todos los 
+ *      valores de Harbour (items), almacenados internamente en áreas 
+ *      estáticas de lenguaje C deben ser bloqueadas.
+ *      Vea hb_gcLockItem() y hb_gcUnlockItem() para más información.
+ *
+ *
+ *      La recoleción de memoria  </par>
+ *      ------------------------
+ *
+ *      Durante la búsqueda de memoria no referenciada, el recolector de 
+ *      memoria (RM) está usando un algoritmo llamado "mark & sweep", marcar 
+ *      y barrer. Este es realizado en tres etapas:
+ *
+ *      1) Marcar todos los bloques asignados por el RM con un bandera:
+ *      "sin uso"
+ *
+ *      2) barrer (buscar) todos los lugares conocidos y limpiar las banderas
+*       sin uso por los bloques de memoria que son referenciados allí;
+ *
+ *      3) finalizar recolectando por desasignación de todos los bloques de
+ *      memoria que aún estan marcados como sin uso y que no están bloqueados.
+ *
+ *      Para acelerar las cosas un poco, la etapa de marca es simplificada
+ *      por la inversión del significado de la bandera "sin uso". Después de 
+ *      la desasignación de los bloques sin uso, todos los bloques todavía 
+ *      activos son marcados con la bandera "usado" así nosotros podemos
+ *      invertir el significado de esta bandera al estado "sin uso" en la
+ *      próxima recoleción
+ *      Todos los bloques de memoria nuevos ó sin bloquear son automáticamente
+ *      marcados como "sin uso" usando la bandera actual, lo cual asegura que
+ *      todos los bloques de memoria son marcados con la misma bandera antes 
+ *      de que la etapa de barrido comience.
+ *     
+ *      Ver hb_gcCollectAll() y hb_gcItemRef()
+ *
+ *
+ *      Llamando al recolector de memoria desde código Harbour  </par>
+ *      ------------------------------------------------------
+ *
+ *      El RM puede ser llamado directamente desde un programa en Harbour.
+ *      Esto es útil en situaciones donde no hay estados inactivos disponibles
+ *      ó la aplicación esta trabajando en un bucle sin interacción con el
+ *      usuario y hay muchas asignaciones de memoria.
+ *      Vea HB_GCALL() por una explicación de como llamar a esta función
+ *      desde el código de Harbour.
+ *  $SEEALSO$
+ *      hb_gcAlloc(),hb_gcFree(),hb_gcLockItem(),hb_gcUnlockItem(),hb_gcCollectAll(),hb_gcItemRef(),HB_GCALL(),HB_IDLESTATE()
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gcAlloc()
+ *  $CATEGORY$
+ *      Recolector de memoria 
+ *  $ONELINER$
+ *      Asigna memoria que será recolectada por el recolector de memoria.
+ *  $SYNTAX$
+ *      #include <hbapi.h>
+ *      void *hb_gcAlloc( ULONG ulSize, HB_GARBAGE_FUNC_PTR pCleanupFunc );
+ *  $ARGUMENTS$
+ *      <ulSize> es el tamaño solicitado del bloque de memoria.
+ *
+ *      <pCleanupFunc> es un Puntero a la función HB_GARBAGE_FUNC que será
+ *      llamada directamente antes de la liberación del bloque de memoria 
+ *      sin uso ó NULL. Esta función debería liberar toda otra memoria 
+ *      asignada y almacenada dentro del bloque de memoria. 
+ *      Por ejemplo, esta libera todos los items almacenados dentro del array.
+ *      La función recibe un sólo parámetro: el puntero a la memoria asignada
+ *      por hb_gcAlloc().
+ *  $RETURNS$
+ *      Devuelve un puntero a la memoria asignada ó esta generará un error 
+ *      interno irrecuperable.
+ *  $DESCRIPTION$
+ *      hb_gcAlloc() es usada para asignar la memoria que será rastreada por 
+ *      el RM. Este permite una apropiada liberación de memoria en el caso
+ *      de variables auto-referenciadas ó con referencias cruzadas a nivel de
+ *      Harbour.
+ *      La memoria asignada con esta función debería ser liberada con la 
+ *      función hb_gcFree() ó esta será automáticamente desasignada por el
+ *      RM si no esta bloqueada ó si no esta referenciada por alguna
+ *      variable a nivel de Harbour.
+ *  $EXAMPLES$
+ *      Vea  ../source/vm/arrays.c
+ *
+ *     PHB_BASEARRAY pArr = (PHB_BASEARRAY) hb_gcAlloc( sizeof( HB_BASEARRAY),
+ *                                                  hb_arrayReleaseGarbage );                                       
+ *  $STATUS$
+ *      C
+ *  $COMPLIANCE$
+ *      Esta función es una extensión de Harbour.
+ *  $PLATFORMS$
+ *      Todas
+ *  $FILES$
+ *      Archivo fuente: ../source/vm/garbage.c
+ *  $SEEALSO$
+ *      hb_gcFree(),hb_gcLockItem(),hb_gcUnlockItem()
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gcFree()
+ *  $CATEGORY$
+ *      Recolector de memoria 
+ *  $ONELINER$
+ *      Libera la memoria que fué asignada con hb_gcAlloc().
+ *  $SYNTAX$
+ *      void hb_gcFree( void *pMemoryPtr );
+ *  $ARGUMENTS$
+ *      <pMemoryPtr> es el puntero a la memoria a liberar. Este puntero de 
+ *                   memoria debe ser asignado con la función hb_gcAlloc().
+ *  $RETURNS$
+ *      Nada.
+ *  $DESCRIPTION$
+ *      La función hb_gcFree() es usada para liberar la memoria que fué
+ *      asignada con la función hb_gcAlloc().
+ *  $EXAMPLES$
+ *      Vea ../source/vm/arrays.c
+ *      hb_gcFree( (void *) pBaseArray );  // puntero al array a liberar
+ *  $STATUS$
+ *      C
+ *  $COMPLIANCE$
+ *      Esta función es una extensión de Harbour.
+ *  $PLATFORMS$
+ *      Todas
+ *  $FILES$
+ *      Archivo fuente: ../source/vm/garbage.c
+ *  $SEEALSO$
+ *      hb_gcAlloc(),hb_gcLockItem(),hb_gcUnlockItem()
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gcLockItem()
+ *  $CATEGORY$
+ *      Recolector de memoria 
+ *  $ONELINER$
+ *      Bloquea la memoria para prevenir la desasignación por el RM.
+ *  $SYNTAX$
+ *      void hb_gcLockItem( HB_ITEM_PTR pItem );
+ *  $ARGUMENTS$
+ *      <pItem> es el puntero a la estructura item que será bloqueada.
+ *      El item pasado puede ser de cualquier tipo de datos, aunque arrays
+ *      objetos y bloques de códigos son bloqueados solamente. Otros tipos de
+ *      datos no necesitan bloqueo así que ellos son simplemente ignorados.
+ *  $RETURNS$
+ *      Nada.
+ *  $DESCRIPTION$
+ *      La función hb_gcLockItem() es usada para bloquear el puntero de memoria
+ *      almacenado en la estructura item pasada. Este suprime la liberación
+ *      de memoria si el RM no encuentra alguna referencia a este puntero
+ *      El RM almacena un contador de bloqueo y cada llamada a esta función 
+ *      incrementa el contador. El item es bloqueado si el contador es mayor
+ *      que cero.
+ *  $EXAMPLES$
+ *      Vea ../source/rtl/setkey.c
+ *      // bloquea un codeblock para prevenir la liberación por el RM
+ *      hb_gcLockItem( sk_list_tmp-> pAction );
+ *  $STATUS$
+ *      C
+ *  $COMPLIANCE$
+ *      Esta función es una extensión de Harbour.
+ *  $PLATFORMS$
+ *      Todas
+ *  $FILES$
+ *      Archivo fuente: ../source/vm/garbage.c
+ *  $SEEALSO$
+ *      hb_gcAlloc(),hb_gcFree(),hb_gcUnlockItem()
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gcUnlockItem()
+ *  $CATEGORY$
+ *      Recolector de memoria 
+ *  $ONELINER$
+ *      Desbloquea la memmoria para prevenir la liberación por el RM
+ *  $SYNTAX$
+ *      void hb_gcUnlockItem( HB_ITEM_PTR pItem );
+ *  $ARGUMENTS$
+ *      <pItem> es el puntero a la estructura item que será bloqueada.
+ *      El item pasado puede ser de cualquier tipo de datos, aunque arrays
+ *      objetos y bloques de códigos son bloqueados solamente. Otros tipos de
+ *      datos no necesitan bloqueo así que ellos son simplemente ignorados.
+ *  $RETURNS$
+ *      Nada.
+ *  $DESCRIPTION$
+ *      La función hb_gcUnlockItem() es usada para desbloquear el puntero de
+ *      memoria almacenado en la estructura item pasada, que fué previamente
+ *      bloqueada con una llamada a hb_gcLockItem(). Esto permite liberar la
+ *      memoria durante la recolección de memoria sin uso si el RM no encuentra
+ *      ninguna referencia a este puntero. El RM almacena el contador de 
+ *      bloqueo, cada llamda a esta función decrementa el contador.
+ *      Esta función no libera la memoria almacenada dentro del item, la 
+ *      memoria debe ser desasignada sin embargo durante la recoleción de
+ *      memoria sin uso más cercana si el contador de bloqueo es igual a cero
+ *      y el puntero de memoria no es referenciado por ninguna variable a 
+ *      nivel de Harbour.
+ *  $EXAMPLES$
+ *      Vea ../source/rtl/setkey.c
+ *      hb_gcUnlockItem( sk_list_tmp-> pAction );  // libera el item
+ *  $STATUS$
+ *      C
+ *  $COMPLIANCE$
+ *      Esta función es una extensión de Harbour.
+ *  $PLATFORMS$
+ *      Todas
+ *  $FILES$
+ *      Archivo fuente: ../source/vm/garbage.c
+ *  $SEEALSO$
+ *      hb_gcAlloc(),hb_gcFree(),hb_gcLockItem()
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gcCollectAll()
+ *  $CATEGORY$
+ *      Recolector de memoria 
+ *  $ONELINER$
+ *      Examina todos los bloques de memoria y libera la memoria sin uso.
+ *  $SYNTAX$
+ *      void hb_gcCollectAll( void );
+ *  $ARGUMENTS$
+ *      Ninguno.
+ *  $RETURNS$
+ *      Nada.
+ *  $DESCRIPTION$
+ *      Esta función examina la pila de evaluación, las tablas de memvars,
+ *      el array de variables estáticas y las tablas de clases creadas en
+ *      busca de bloques de memoria referenciados. Después de examinar todos
+ *      los bloques de memoria sin uso y los bloques que no estan bloqueados, 
+ *      son liberados.
+ *  $STATUS$
+ *      C
+ *  $COMPLIANCE$
+ *      Esta función es una extensión de Harbour.
+ *  $PLATFORMS$
+ *      Todas
+ *  $FILES$
+ *      Archivo fuente: ../source/vm/garbage.c
+ *  $SEEALSO$
+ *      hb_gcAlloc(),hb_gcFree(),hb_gcLockItem(),hb_gcUnlockItem()
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gcItemRef()
+ *  $CATEGORY$
+ *      Recolector de memoria 
+ *  $ONELINER$
+ *      Marca la memoria para prevenir la desasignación por el RM.
+ *  $SYNTAX$
+ *      void hb_gcItemRef( HB_ITEM_PTR pItem );
+ *  $ARGUMENTS$
+ *      <pItem> es el puntero a la estructura item que será examinada.
+ *      El item pasado puede ser de cualquier tipo de datos, aunque arrays
+ *      objetos y bloques de códigos son bloqueados solamente. Otros tipos de
+ *      datos no necesitan bloqueo así que ellos son simplemente ignorados.
+ *  $RETURNS$
+ *      Nada.
+ *  $DESCRIPTION$
+ *      El recolector de memoria usa la función hb_gcItemRef() durante la
+ *      inspección de punteros de memoria referenciados. Esta función chequea
+ *      el tipo del item pasado y examina recursivamente todos los otros
+ *      bloques de memoria referenciados por este item, si éste es un array
+ *      un objeto ó un bloque de código
+ *
+ *      NOTA: Esta función es reservada para el recolector de memoria (RM)
+ *            solamente. Esta NO debe ser llamada desde el código del usuario
+ *            llamarla puede causar resultados impredecibles (bloques de 
+ *            memoria referenciados por el item pasado pueden ser liberados
+ *            prematuramente durante la recoleción de memoria más cercana).
+ *  $STATUS$
+ *      C
+ *  $COMPLIANCE$
+ *      Esta función es una extensión de Harbour.
+ *  $PLATFORMS$
+ *      Todas
+ *  $FILES$
+ *      Archivo fuente: ../source/vm/garbage.c
+ *  $SEEALSO$
+ *      hb_gcAlloc(),hb_gcFree(),hb_gcLockItem(),hb_gcUnlockItem()
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      HB_GCALL()
+ *  $CATEGORY$
+ *      Recolector de memoria 
+ *  $ONELINER$
+ *      Inspeciona la memoria y libera todos los bloques de memoria sin uso.
+ *  $SYNTAX$
+ *      HB_GCALL()
+ *  $ARGUMENTS$
+ *      Ninguno
+ *  $RETURNS$
+ *      NIL
+ *  $DESCRIPTION$
+ *      Esta función libera todos los bloques de memoria que son considerados
+ *      como "basura".
+ *  $STATUS$
+ *      Harbour
+ *  $COMPLIANCE$
+ *      Esta función es una extensión de Harbour.
+ *  $PLATFORMS$
+ *      Todas
+ *  $FILES$
+ *      Archivo fuente: ../source/vm/garbage.c
+ *  $SEEALSO$
+ *      hb_gcCollectAll()
+ *  $END$
+ */
+

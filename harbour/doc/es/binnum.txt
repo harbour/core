@@ -1,0 +1,489 @@
+
+/*
+ * Las siguientes partes son derechos adquiridos de sus autores individuales.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2000 Alejandro de Gárate <alex_degarate@hotmail.com>
+ * Documentación en Español de: BIN2W(), BIN2I(), BIN2L(), BIN2U(), I2BIN(), 
+ *                             W2BIN(), L2BIN(), U2BIN()
+ * 
+ * Copyright 2000 Chen Kedem <niki@actcom.co.il>
+ * Documentación en Inglés de: BIN2W(), BIN2I(), BIN2L(), BIN2U(), I2BIN(), 
+ *                             W2BIN(), L2BIN(), U2BIN()
+ *
+ * Vea doc/license.txt por los términos de la licencia.
+ *
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      BIN2W()
+ *  $CATEGORY$
+ *      Conversión binaria 
+ *  $ONELINER$
+ *      Convierte 2 bytes de un entero corto sin signo en un número en Harbour 
+ *  $SYNTAX$
+ *      BIN2W( <cBuffer> ) --> nNumero
+ *  $ARGUMENTS$
+ *      <cBuffer> es una cadena de caracteres que contiene un entero corto 
+ *      sin signo codificado en 16 bits (byte menos significativo primero). 
+ *      Los primeros dos bytes son tenidos en cuenta, si hay más son 
+ *      ignorados.  
+ *  $RETURNS$
+ *      BIN2W() retorna un número entero (ó cero si <cBuffer> no es una cadena).  
+ *  $DESCRIPTION$
+ *      BIN2W() es una de las funciones de conversión binaria, de bajo nivel.
+ *      Estas funciones convierten entre un valor numérico en Harbour y una
+ *      representación de cadena de un valor numérico dado.
+ *      BIN2W() toma dos bytes de un entero corto sin signo codificado en 16
+ *      bits y los convierte en un valor numérico estandar de Harbour.
+ *
+ *      Ud podría preguntarse cual es la necesidad de este tipo de funciones,
+ *      bueno, primero de todo esta permite leer/escribir información desde/
+ *	hacia un archivo binario (como extraer información de la cabecera de
+ *      un archivo DBF), es también una forma útil de compartir información
+ *      desde otra fuente distinta a Harbour (lenguaje C por ejemplo).
+ *      BIN2W() es la inversa de W2BIN()  
+ *  $EXAMPLES$
+   <fixed>
+ *      // Muestra la longitud de la cabecera de un DBF
+ *      FUNCTION main()
+ *      LOCAL nHandle, cBuffer := SPACE( 2 )
+ *      nHandle := FOPEN( "test.dbf" )
+ *
+ *      IF nHandle > 0
+ *         FSEEK( nHandle, 8 )
+ *         FREAD( nHandle, @cBuffer, 2 )
+ *         ? "Longitud de la cabecera del DBF en bytes:", BIN2W( cBuffer )
+ *         FCLOSE( nHandle )
+ *      ELSE
+ *         ? "No puedo abrir el archivo..."
+ *      ENDIF
+ *      RETURN NIL
+   </fixed>
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      BIN2W() funciona exactamente como la función de CA-Clipper, BIN2W()  
+ *  $FILES$
+ *      La librería es rtl
+ *  $SEEALSO$
+ *      BIN2I(),BIN2L(),BIN2U(),I2BIN(),L2BIN(),W2BIN(),WORD(),U2BIN(),FREAD()
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      BIN2I()
+ *  $CATEGORY$
+ *      Conversión binaria
+ *  $ONELINER$
+ *      Convierte 2 bytes de un entero corto con signo en un número en Harbour 
+ *  $SYNTAX$
+ *      BIN2I( <cBuffer> ) --> nNumero
+ *  $ARGUMENTS$
+ *      <cBuffer> es una cadena de caracteres que contiene un entero corto 
+ *      con signo codificado en 16 bits (byte menos significativo primero). 
+ *      Los primeros dos bytes son tenidos en cuenta, si hay más son 
+ *      ignorados.  
+ *  $RETURNS$
+ *      BIN2I() retorna un número entero (ó cero si <cBuffer> no es una cadena).  
+ *  $DESCRIPTION$
+ *      BIN2I() es una de las funciones de conversión binaria, de bajo nivel.
+ *      Estas funciones convierten entre un valor numérico en Harbour y una
+ *      representación de cadena de un valor numérico dado.
+ *      BIN2I() toma dos bytes de un entero corto con signo codificado en 16
+ *      bits y los convierte en un valor numérico estándar de Harbour.
+ *
+ *      Ud podría preguntarse cual es la necesidad de este tipo de funciones,
+ *      bueno, primero de todo esta permite leer/escribir información desde/
+ *	hacia un archivo binario (como extraer información de la cabecera de
+ *      un archivo DBF), es tambien una forma útil de compartir información
+ *      desde otra fuente distinta a Harbour (lenguaje C por ejemplo).
+ *      BIN2I() es la inversa de I2BIN()  
+ *  $EXAMPLES$
+   <fixed>
+ *      // Muestra la fecha de la última actualización del DBF 
+ *      FUNCTION main()
+ *      LOCAL nHandle, cAno, cMes, cDia
+ *      nHandle := FOPEN( "test.dbf" )
+ *
+ *      IF nHandle > 0
+ *         FSEEK( nHandle, 1 )
+ *         cAno := cMes := cDia := " "
+ *         FREAD( nHandle, @cAno, 1 )
+ *         FREAD( nHandle, @cMes, 1 )
+ *         FREAD( nHandle, @cDia, 1 )
+ *         ? "Fecha de actualización:", BIN2I( cAno ), BIN2I( cMes ), ;
+ *                                      BIN2I( cDia )
+ *         FCLOSE( nHandle )
+ *      ELSE
+ *         ? "No puedo abrir el archivo..."
+ *      ENDIF
+ *      RETURN NIL
+   </fixed>
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      BIN2I() funciona exactamente como la función de CA-Clipper, BIN2I()  
+ *  $FILES$
+ *      La librería es rtl
+ *  $SEEALSO$
+ *      BIN2L(),BIN2U(),BIN2W(),I2BIN(),L2BIN(),W2BIN(),WORD(),U2BIN(),FREAD()
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      BIN2L()
+ *  $CATEGORY$
+ *      Conversión binaria
+ *  $ONELINER$
+ *      Convierte 4 bytes de un entero largo con signo en un número en Harbour 
+ *  $SYNTAX$
+ *      BIN2L( <cBuffer> ) --> nNumero
+ *  $ARGUMENTS$
+ *      <cBuffer> es una cadena de caracteres que contiene un entero largo
+ *      con signo codificado en 32 bits (byte menos significativo primero). 
+ *      Los primeros cuatro bytes son tenidos en cuenta, si hay más son 
+ *      ignorados.  
+ *  $RETURNS$
+ *      BIN2L() retorna un número entero (ó cero si <cBuffer> no es una cadena).  
+ *  $DESCRIPTION$
+ *      BIN2L() es una de las funciones de conversión binaria, de bajo nivel.
+ *      Estas funciones convierten entre un valor numérico en Harbour y una
+ *      representación de cadena de un valor numérico dado.
+ *      BIN2L() toma cuatro bytes de un entero largo con signo codificado en 
+ *      32 bits y los convierte en un valor numérico estándar de Harbour.
+ *
+ *      Ud podría preguntarse cual es la necesidad de este tipo de funciones,
+ *      bueno, primero de todo esta permite leer/escribir información desde/
+ *	hacia un archivo binario (como extraer información de la cabecera de
+ *      un archivo DBF), es tambien una forma útil de compartir información
+ *      desde otra fuente distinta a Harbour (lenguaje C por ejemplo).
+ *      BIN2L() es la inversa de L2BIN()  
+ *  $EXAMPLES$
+   <fixed>
+ *      // Muestra el número de registros en el DBF
+ *      FUNCTION main()
+ *      LOCAL nHandle, cBuffer := SPACE( 4 )
+ *      nHandle := FOPEN( "test.dbf" )
+ *
+ *      IF nHandle > 0
+ *         FSEEK( nHandle, 4 )
+ *         FREAD( nHandle, @cBuffer, 4 )
+ *         ? "número de registros en el archivo:", BIN2L( cBuffer )
+ *         FCLOSE( nHandle )
+ *      ELSE
+ *         ? "No puedo abrir el archivo..."
+ *      ENDIF
+ *      RETURN NIL
+   </fixed>
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      BIN2L() funciona exactamente como la función de CA-Clipper, BIN2L()  
+ *  $FILES$
+ *      La librería es rtl
+ *  $SEEALSO$
+ *      BIN2I(),BIN2U(),BIN2W(),I2BIN(),L2BIN(),W2BIN(),WORD(),U2BIN(),FREAD()
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      BIN2U()
+ *  $CATEGORY$
+ *      Conversión binaria
+ *  $ONELINER$
+ *      Convierte 4 bytes de un entero largo sin signo en un número en Harbour 
+ *  $SYNTAX$
+ *      BIN2U( <cBuffer> ) --> nNumero
+ *  $ARGUMENTS$
+ *      <cBuffer> es una cadena de caracteres que contiene un entero largo
+ *      sin signo codificado en 32 bits (byte menos significativo primero). 
+ *      Los primeros cuatro bytes son tenidos en cuenta, si hay más son 
+ *      ignorados.  
+ *  $RETURNS$
+ *      BIN2U() retorna un número entero (ó cero si <cBuffer> no es una cadena).   
+ *  $DESCRIPTION$
+ *      BIN2U() es una de las funciones de conversión binaria, de bajo nivel.
+ *      Estas funciones convierten entre un valor numérico en Harbour y una
+ *      representación de cadena de un valor numérico dado.
+ *      BIN2U() toma cuatro bytes de un entero largo sin signo codificado en 
+ *      32 bits y los convierte en un valor numérico estándar de Harbour.
+ *
+ *      Ud podría preguntarse cual es la necesidad de este tipo de funciones,
+ *      bueno, primero de todo esta permite leer/escribir información desde/
+ *	hacia un archivo binario (como extraer información de la cabecera de
+ *      un archivo DBF), es tambien una forma util de compartir información
+ *      desde otra fuente distinta a Harbour (lenguaje C por ejemplo).
+ *      BIN2U() es la inversa de U2BIN()  
+ *  $EXAMPLES$
+   <fixed>
+ *      // Muestra el número de registros en el DBF
+ *      FUNCTION main()
+ *      LOCAL nHandle, cBuffer := SPACE( 4 )
+ *      nHandle := FOPEN( "test.dbf" )
+ *
+ *      IF nHandle > 0
+ *         FSEEK( nHandle, 4 )
+ *         FREAD( nHandle, @cBuffer, 4 )
+ *         ? "Número de registros en el archivo:", BIN2U( cBuffer )
+ *         FCLOSE( nHandle )
+ *      ELSE
+ *         ? "No puedo abrir el archivo..."
+ *      ENDIF
+ *      RETURN NIL
+   </fixed>
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      BIN2U() es una función de compatibilidad con XBase++ y no existe como
+ *      una función estándar en CA-Clipper 5.x 
+ *      Esta función es solamente visible si el archivo source/rtl/binnum.c 
+ *      fue compilado con la bandera HB_COMPAT_XPP.
+ *  $FILES$
+ *      La librería es rtl
+ *  $SEEALSO$
+ *      BIN2I(),BIN2L(),BIN2W(),I2BIN(),L2BIN(),W2BIN(),WORD(),U2BIN(),FREAD()
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      I2BIN()
+ *  $CATEGORY$
+ *      Conversión binaria
+ *  $ONELINER$
+ *      Convierte un número en Harbour en 2 bytes de un entero corto con signo en 
+ *  $SYNTAX$
+ *      I2BIN( <nNumero> ) --> cBuffer
+ *  $ARGUMENTS$
+ *      <nNumero> es un valor numérico a convertir (los digitos decimales 
+ *      son ignorados).
+ *  $RETURNS$
+ *      I2BIN() retorna una cadena de caracteres de dos bytes que 
+ *      contienen un entero corto con signo, codificado en 16 bits (byte 
+ *      menos significativo primero). 
+ *  $DESCRIPTION$
+ *      I2BIN() es una de las funciones de conversión binaria, de bajo nivel.
+ *      Estas funciones convierten entre un valor numérico en Harbour y una
+ *      representación de cadena de un valor numérico dado.
+ *      I2BIN() toma un valor numérico y lo convierte en dos bytes de 
+ *      un entero corto con signo, codificado en 16 bits.
+ *
+ *      Ud podría preguntarse cual es la necesidad de este tipo de funciones,
+ *      bueno, primero de todo esta permite leer/escribir información desde/
+ *	hacia un archivo binario (como extraer información de la cabecera de
+ *      un archivo DBF), es tambien una forma util de compartir información
+ *      desde otra fuente distinta a Harbour (lenguaje C por ejemplo).
+ *      I2BIN() es la inversa de BIN2I()  
+ *  $EXAMPLES$
+   <fixed>
+ *      // El ejemplo cambia la "fecha de ultima actualización" del DBF
+ *      #include "fileio.ch"
+ *      FUNCTION main()
+ *      LOCAL nHandle, cAno, cMes, cDia
+ *
+ *      USE test
+ *      ? "La fecha original de actualización es:", LUPDATE()
+ *      CLOSE
+ *      nHandle := FOPEN( "test.dbf", FO_READWRITE )
+ *
+ *      IF nHandle > 0
+ *         FSEEK( nHandle, 1, )
+ *         cAno := I2BIN( 68 )
+ *         cMes := I2BIN(  8 )
+ *         cDia := I2BIN(  1 )
+ *         FWRITE( nHandle, cAno , 1 )   // escribe solo el primer byte
+ *         FWRITE( nHandle, cMes, 1 )
+ *         FWRITE( nHandle, cDia, 1 )
+ *         FCLOSE( nHandle )
+ *         USE test
+ *         ? "La nueva fecha de actualización es:", LUPDATE()
+ *         CLOSE
+ *      ELSE
+ *         ? "No puedo abrir el archivo..."
+ *      ENDIF
+ *      RETURN NIL
+   </fixed>
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      I2BIN() funciona exactamente como la función de CA-Clipper, I2BIN()  
+ *  $FILES$
+ *      La librería es rtl
+ *  $SEEALSO$
+ *      BIN2I(),BIN2L(),BIN2U(),BIN2W(),L2BIN(),W2BIN(),WORD(),U2BIN(),FWRITE()
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      W2BIN()
+ *  $CATEGORY$
+ *      Conversión binaria
+ *  $ONELINER$
+ *      Convierte un número en Harbour en 2 bytes de un entero corto sin signo en 
+ *  $SYNTAX$
+ *      W2BIN( <nNumero> ) --> cBuffer
+ *  $ARGUMENTS$
+ *      <nNumero> es un valor numérico a convertir (los digitos decimales 
+ *      son ignorados).
+ *  $RETURNS$
+ *      W2BIN() retorna una cadena de caracteres de dos bytes que 
+ *      contienen un entero corto sin signo, codificado en 16 bits (byte 
+ *      menos significativo primero). 
+ *  $DESCRIPTION$
+ *      W2BIN() es una de las funciones de conversión binaria, de bajo nivel.
+ *      Estas funciones convierten entre un valor numérico en Harbour y una
+ *      representación de cadena de un valor numérico dado.
+ *      W2BIN() toma un valor numérico y lo convierte en dos bytes de 
+ *      un entero corto sin signo, codificado en 16 bits.
+ *
+ *      Ud podría preguntarse cual es la necesidad de este tipo de funciones,
+ *      bueno, primero de todo esta permite leer/escribir información desde/
+ *	hacia un archivo binario (como extraer información de la cabecera de
+ *      un archivo DBF), es tambien una forma util de compartir información
+ *      desde otra fuente distinta a Harbour (lenguaje C por ejemplo).
+ *      W2BIN() es la inversa de BIN2W()  
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      W2BIN() es una función de compatibilidad con XBase++ y no existe como
+ *      una función estandar en CA-Clipper 5.x 
+ *      Esta función es solamente visible si el archivo source/rtl/binnum.c 
+ *      fue compilado con la bandera HB_COMPAT_XPP.
+ *  $FILES$
+ *      La librería es rtl
+ *  $SEEALSO$
+ *      BIN2I(),BIN2L(),BIN2U(),BIN2W(),I2BIN(),L2BIN(),WORD(),U2BIN(),FWRITE()
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      L2BIN()
+ *  $CATEGORY$
+ *      Conversión binaria
+ *  $ONELINER$
+ *      Convierte un número en Harbour en 4 bytes de un entero largo con signo en 
+ *  $SYNTAX$
+ *      L2BIN( <nNumero> ) --> cBuffer
+ *  $ARGUMENTS$
+ *      <nNumero> es un valor numérico a convertir (los digitos decimales 
+ *      son ignorados).
+ *  $RETURNS$
+ *      L2BIN() retorna una cadena de caracteres de cuatro bytes que 
+ *      contienen un entero largo con signo, codificado en 32 bits (byte 
+ *      menos significativo primero). 
+ *  $DESCRIPTION$
+ *      L2BIN() es una de las funciones de conversión binaria, de bajo nivel.
+ *      Estas funciones convierten entre un valor numérico en Harbour y una
+ *      representación de cadena de un valor numérico dado.
+ *      L2BIN() toma un valor numérico y lo convierte en cuatro bytes de 
+ *      un entero largo con signo, codificado en 32 bits.
+ *
+ *      Ud podría preguntarse cual es la necesidad de este tipo de funciones,
+ *      bueno, primero de todo esta permite leer/escribir información desde/
+ *	hacia un archivo binario (como extraer información de la cabecera de
+ *      un archivo DBF), es tambien una forma útil de compartir información
+ *      desde otra fuente distinta a Harbour (lenguaje C por ejemplo).
+ *      L2BIN() es la inversa de BIN2L()  
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      L2BIN() funciona exactamente como la función de CA-Clipper, L2BIN()  
+ *  $FILES$
+ *      La librería es rtl
+ *  $SEEALSO$
+ *      BIN2I(),BIN2L(),BIN2U(),BIN2W(),I2BIN(),W2BIN(),WORD(),U2BIN(),FWRITE()
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      U2BIN()
+ *  $CATEGORY$
+ *      Conversión binaria
+ *  $ONELINER$
+ *      Convierte un número en Harbour en 4 bytes de un entero largo sin signo en 
+ *  $SYNTAX$
+ *      U2BIN( <nNumero> ) --> cBuffer
+ *  $ARGUMENTS$
+ *      <nNumero> es un valor numérico a convertir (los digitos decimales 
+ *      son ignorados).
+ *  $RETURNS$
+ *      U2BIN() retorna una cadena de caracteres de cuatro bytes que 
+ *      contienen un entero largo sin signo, codificado en 32 bits (byte 
+ *      menos significativo primero). 
+ *  $DESCRIPTION$
+ *      U2BIN() es una de las funciones de conversión binaria, de bajo nivel.
+ *      Estas funciones convierten entre un valor numérico en Harbour y una
+ *      representación de cadena de un valor numérico dado.
+ *      U2BIN() toma un valor numérico y lo convierte en cuatro bytes de 
+ *      un entero largo sin signo, codificado en 32 bits.
+ *
+ *      Ud podría preguntarse cual es la necesidad de este tipo de funciones,
+ *      bueno, primero de todo esta permite leer/escribir información desde/
+ *	hacia un archivo binario (como extraer información de la cabecera de
+ *      un archivo DBF), es tambien una forma útil de compartir información
+ *      desde otra fuente distinta a Harbour (lenguaje C por ejemplo).
+ *      U2BIN() es la inversa de BIN2U()  
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      U2BIN() es una función de compatibilidad con XBase++ y no existe como
+ *      una función estándar en CA-Clipper 5.x 
+ *      Esta función es solamente visible si el archivo source/rtl/binnum.c 
+ *      fue compilado con la bandera HB_COMPAT_XPP.
+ *  $FILES$
+ *      La librería es rtl
+ *  $SEEALSO$
+ *      BIN2I(),BIN2L(),BIN2U(),BIN2W(),I2BIN(),L2BIN(),W2BIN(),WORD(),FWRITE()
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      WORD()
+ *  $CATEGORY$
+ *      Conversión
+ *  $ONELINER$
+ *      Convierte parámetros de doble precisión del mandato CALL a enteros.
+ *  $SYNTAX$
+ *      WORD( <nDoble> ) --> <nEntero>
+ *  $ARGUMENTS$
+ *      <nDoble> es un valor numérico de doble precisión.
+ *  $RETURNS$
+ *      WORD() retorna un entero en el rango: -32767 a +32767  
+ *  $DESCRIPTION$
+ *      Esta función convierte valores de doble precisión a enteros, para
+ *      ser usados con el mandato CALL.
+ *  $EXAMPLES$
+   <fixed>
+ *      // Utiliza WORD() como argumento del mandato CALL
+ *      CALL INVENT WITH WORD(75300)
+ *  
+   </fixed>
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      La NG de Clipper NG establece que WORD() funcionará solamente cuando
+ *      sea usada en la lista de parámetros del comando CALL, de otra manera
+ *      devolverá NIL, en Harbour esta funcionará donde sea.
+ *  $FILES$
+ *      La librería es rtl
+ *  $SEEALSO$
+ *       CALL
+ *  $END$
+ */

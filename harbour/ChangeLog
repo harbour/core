@@ -1,3 +1,20 @@
+2000-10-06 23:00 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
++doc\es\binnum.txt
+ doc\es\browse.txt
+ doc\es\command.txt
+ doc\es\compiler.txt
+ doc\es\datetime.txt
+ doc\es\array.txt
+ doc\es\diskspac.txt
+ doc\es\error.txt
+ doc\es\eval.txt
+ doc\es\garbage.txt
+ doc\es\lang.txt
+ doc\es\memo.txt
+ doc\es\dir.txt
+ doc\es\hb_set.txt
+    *Spanish translations of the docs provided by Alejandro de Garate and Edison Suarez
+
 2000-10-05 16:00 UTC-0400 David G. Holm <dholm@jsd-llc.com>
    * source/compiler/cmdcheck.c
      ! Corrected new bug in my earlier "fix" of handling the -g option

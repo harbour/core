@@ -1,0 +1,84 @@
+/*
+ * $Id$
+ */
+
+
+/*
+ * Las partes siguientes son la Propiedad de los autores individuales.
+ * www - http:  / / www.harbour - project.org
+ *
+ * Copyright 1999 David G.  Holm < dholm@jsd-llc.com >
+ *   El archivo de Cabecera para el Set API
+ *
+ * Copyright 2000 Edison Suarez <edison@directo.cl>
+ *    La traducci¢n de fichero hb_set.txt al espa¤ol.
+ *
+ * Vea doc/license.txt para los t‚rminos de la licencia.
+ *
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_setInitialize ()
+ *  $CATEGORY$
+ *      Set API
+ *  $ONELINER$
+ *
+ *  $SYNTAX$
+ *      Prototipo C
+ *
+ *      #include <hbset.h>
+ *      hb_setInitialize( void ) --> void
+ *  $ARGUMENTS$
+ *
+ *  $RETURNS$
+ *
+ *  $DESCRIPTION$
+ *
+ *  $EXAMPLES$
+ *
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      El cumplimiento no es aplicable a las llamadas de API.
+ *  $FILES$
+ *      La biblioteca es rtl
+ *  $PLATFORMS$
+ *      Todas
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_setRelease()
+ *  $CATEGORY$
+ *      Set API
+ *  $ONELINER$
+ *
+ *  $SYNTAX$
+ *      Prototipo C
+ *
+ *      #include <hbset.h>
+ *      hb_setRelease( void ) --> void
+ *  $ARGUMENTS$
+ *
+ *  $RETURNS$
+ *
+ *  $DESCRIPTION$
+ *
+ *  $EXAMPLES$
+ *
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      El cumplimiento no es aplicable a las llamadas de API.
+ *  $FILES$
+ *      La biblioteca es rtl
+ *  $PLATFORMS$
+ *      Todas
+ *  $SEEALSO$
+ *
+ *  $END$
+ */

@@ -1,0 +1,559 @@
+
+/*
+ * Las siguientes partes son derechos adquiridos de sus autores individuales.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2000 Alejandro de Gárate <alex_degarate@hotmail.com>
+ * Documentación en Español de: 
+ *      CDOW(),CMONTH(),DATE(),CTOD(),DAY(),DAYS(), DOW(),DTOS(),
+ *      DTOC(),ELAPTIME(),MONTH(),SECONDS(),SECS(),TIME(),YEAR()
+ *
+ * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
+ * Documentation en Inglés de:
+ *      CDOW(),CMONTH(),DATE(),CTOD(),DAY(),DAYS(), DOW(),DTOS(),
+ *      DTOC(),ELAPTIME(),MONTH(),SECONDS(),SECS(),TIME(),YEAR()
+ *
+ * Vea doc/license.txt por los términos de la licencia.
+ *
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      CDOW()
+ *  $CATEGORY$
+ *      Fecha
+ *  $ONELINER$
+ *      Convierte una fecha al Nombre del día de la semana 
+ *  $SYNTAX$
+ *      CDOW(<dFecha>)  --> cDia
+ *  $ARGUMENTS$
+ *      <dFecha>  Cualquier expresión de fecha.
+ *  $RETURNS$
+ *      <cDia>  El día actual de la semana.
+ *  $DESCRIPTION$
+ *      Esta función devuelve una cadena de caracteres con el día de la semana
+ *      de una expresión de fecha <dFecha> pasada (DOW=day of week en inglés).
+ *      Si una fecha NULL es pasada a la función, el valor de la función será
+ *      un byte NULL.
+ *  $EXAMPLES$
+ *      ? CDOW(DATE())
+ *
+ *      IF CDOW( DATE() + 10) == "SUNDAY"
+ *         ? "Este es un día para el descanso."
+ *      ENDIF
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta función es totalmente compatible con CA-Clipper.
+ *  $PLATFORMS$
+ *      Todas
+ *  $FILES$
+ *      La librería es rtl
+ *  $SEEALSO$
+ *      DAY(),DOW(),DATE(),CMONTH()
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      CMONTH()
+ *  $CATEGORY$
+ *      Fecha
+ *  $ONELINER$
+ *      Retorna una cadena de caracteres con el nombre del mes 
+ *  $SYNTAX$
+ *      CMONTH(<dFecha>)  --> cMes
+ *  $ARGUMENTS$
+ *      <dFecha>  Cualquier expresión de fecha.
+ *  $RETURNS$
+ *      <cMes>  el nombre actual del mes
+ *  $DESCRIPTION$
+ *      Esta función retorna el nombre del mes (Enero, Febrero, etc.) de una
+ *      expresión de fecha <dFecha> pasada a ella.
+ *      Si una fecha NULL es pasada a la función, el valor de la función sera 
+ *      un byte NULL.
+ *      Nota: El valor devuelto depende del módulo de lenguaje en uso.
+ *  $EXAMPLES$
+ *      ? CMONTH( DATE())          // resultado: Noviembre
+ *
+ *      IF CMONTH( DATE() + 35) =="Diciembre"
+ *         ? "Ha hecho compras para las fiestas ?"
+ *      ENDIF
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta función es totalmente compatible con CA-Clipper.
+ *  $PLATFORMS$
+ *      Todas
+ *  $FILES$
+ *      La librería es rtl
+ *  $SEEALSO$
+ *      CDOW(),DATE(),MONTH(),YEAR(),DOW(),DTOC()
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      DATE()
+ *  $CATEGORY$
+ *      Fecha
+ *  $ONELINER$
+ *      Retorna la fecha actual del sistema operativo
+ *  $SYNTAX$
+ *      DATE() --> dFechaActual
+ *  $ARGUMENTS$
+ *      Ninguno
+ *  $RETURNS$
+ *      <dFechaActual>, la fecha actual del sistema.
+ *  $DESCRIPTION$
+ *      Esta función devuelve la fecha actual del sistema.
+ *  $EXAMPLES$
+ *      ? DATE()
+ *  $TESTS$
+ *      ? "Hoy es ",DAY( DATE())," de ",CMONTH( DATE())," de ",YEAR( DATE())
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta función es totalmente compatible con CA-Clipper.
+ *  $PLATFORMS$
+ *      Todas
+ *  $FILES$
+ *      La librería es rtl
+ *  $SEEALSO$
+ *      CTOD(),DTOS(),DTOC(),DAY(),MONTH(),CMONTH()
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      CTOD()
+ *  $CATEGORY$
+ *      Fecha
+ *  $ONELINER$
+ *      Convierte una cadena de caracteres a una expresión de fecha
+ *  $SYNTAX$
+ *      CTOD(<cCadenaFecha>)  --> dFecha
+ *  $ARGUMENTS$
+ *      <cCadenaFecha> Un fecha en el formato 'mm/dd/yy'
+ *  $RETURNS$
+ *      <dFecha> Una expresión de fecha.
+ *  $DESCRIPTION$
+ *      Esta función convierte una fecha que ha sido aportada como una 
+ *      expresión de caracteres a una expresión de fecha. La expresión de
+ *      caracteres sera en la forma MM/DD/YY" (basada en el valor por defecto
+ *      en SET DATE) o en el formato apropiado especificado por el comado 
+ *	SET DATE TO. Si una impropia cadena de caracteres es pasada a la 
+ *      función, un valor de fecha vacía será retornado.
+ *  $EXAMPLES$
+ *      ? CTOD('12/21/00')
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta función es totalmente compatible con CA-Clipper.
+ *  $PLATFORMS$
+ *      Todas
+ *  $FILES$
+ *      La librería es rtl
+ *  $SEEALSO$
+ *      SET DATE,DATE(),DTOS()
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      DAY()
+ *  $CATEGORY$
+ *      Fecha
+ *  $ONELINER$
+ *      Retorna el número de día del mes en el rango de 0 a 31
+ *  $SYNTAX$
+ *      DAY(<cFecha>) --> nMes
+ *  $ARGUMENTS$
+ *      <cFecha> Cualquier expresión válida de fecha.
+ *  $RETURNS$
+ *     Retorna <nMes>, el valor numérico del día del mes.
+ *  $DESCRIPTION$
+ *      Esta función retorna el valor numérico del día del mes de una fecha.
+ *  $EXAMPLES$
+ *      ? DAY( CTOD("06/06/1944") )     // Resultado: 6
+ *      ? DAY( DATE() + 6325)
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta función es totalmente compatible con CA-Clipper.
+ *  $PLATFORMS$
+ *      Todas
+ *  $FILES$
+ *      La librería es rtl
+ *  $SEEALSO$
+ *      CTOD(),DTOS(),DTOC(),DATE(),MONTH(),CMONTH()
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      DAYS()
+ *  $CATEGORY$
+ *      Fecha
+ *  $ONELINER$
+ *      Convierte los segundos transcurridos a días.
+ *  $SYNTAX$
+ *      DAYS(<nSegundos> ) --> nDia
+ *  $ARGUMENTS$
+ *      <nSegundos> el número de segundos.
+ *  $RETURNS$
+ *      Retorna el número de días transcurridos
+ *  $DESCRIPTION$
+ *      Esta función convierte <nSegundos> al número equivalente de días;
+ *      86399 segundos representan un día, cero segundos es medianoche.
+ *  $EXAMPLES$
+ *      ? DAYS( 2434234)
+ *      ? "Han transcurrido ", DAYS(63251)
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta función es totalmente compatible con CA-Clipper.
+ *      Nota: No esta documentada en las NG, ni en el manual en español de
+ *            CA-Clipper
+ *  $PLATFORMS$
+ *      Todas
+ *  $FILES$
+ *      La librería es rtl
+ *  $SEEALSO$
+ *      SECONDS(),SECS(),ELAPTIME()
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      DOW()
+ *  $CATEGORY$
+ *      Fecha
+ *  $ONELINER$
+ *      Convierte una fecha al número del dia de la semana (1-7)
+ *  $SYNTAX$
+ *      DOW(<dFecha>) --> nDia
+ *  $ARGUMENTS$
+ *      <dFecha>  Cualquier expresión válida de fecha.
+ *  $RETURNS$
+ *      DOW() retorna el dia de la semana en la forma numérica <nDay>  
+ *  $DESCRIPTION$
+ *      Esta función convierte un valor de fecha en un número representando
+ *      el dia de la semana. En el rango de 1 al 7, siendo 1 el dia Domingo  
+ *      y 7 el dia Sábado.
+ *  $EXAMPLES$
+ *      ? DOW( DATE())
+ *      ? DOW( DATE() - 6584)
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta función es totalmente compatible con CA-Clipper.
+ *  $PLATFORMS$
+ *      Todas
+ *  $FILES$
+ *      La librería es rtl
+ *  $SEEALSO$
+ *      DTOC(),CDOW(),DATE(),DTOS(),DAY()
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      DTOC()
+ *  $CATEGORY$
+ *      Fecha
+ *  $ONELINER$
+ *      Convierte un valor de fecha a una cadena de caracteres
+ *  $SYNTAX$
+ *      DTOC(<dFecha>)  --> cFecha
+ *  $ARGUMENTS$
+ *      <dFechaString> Cualquier expresión válida de fecha.
+ *  $RETURNS$
+ *      Retorna la cadena de caracteres <cFecha> representando la fecha
+ *  $DESCRIPTION$
+ *      Esta función convierte una expresión de fecha (sea un campo ó una 
+ *      variable) expresada como <dFecha> a una expresión de caracteres en el
+ *      formato por defecto "MM/DD/YY". El formato de fecha devuelto por esta
+ *      función es controlado por el formato especificado por el comando 
+ *      SET DATE y es variable a diferencia del devuelto por la función DTOS().
+ *  $EXAMPLES$
+ *      ? DTOC( DATE())
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta función es totalmente compatible con CA-Clipper.
+ *  $PLATFORMS$
+ *      Todas
+ *  $FILES$
+ *      La librería es rtl
+ *  $SEEALSO$
+ *      SET DATE,DATE(),DTOS()
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      DTOS()
+ *  $CATEGORY$
+ *      Fecha
+ *  $ONELINER$
+ *      Convierte un valor de fecha a una cadena en el formato AAAAMMDD
+ *  $SYNTAX$
+ *      DTOS(<dFecha>)  --> cFecha
+ *  $ARGUMENTS$
+ *      <dFecha> Cualquier expresión válida de fecha.
+ *  $RETURNS$
+ *      DTOS() retorna <cFecha> 
+ *  $DESCRIPTION$
+ *      Esta función convierte un valor de fecha a una cadena de 8 caracteres
+ *      en el formato AAAAMMDD (no contiene separadores). Si el valor de
+ *      <dFecha> es una fecha vacía, esta función retorna una cadena de 
+ *      caracteres de 8 espacios en blanco.
+ *  $EXAMPLES$
+ *      ? DTOS( DATE())
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta función es totalmente compatible con CA-Clipper.
+ *  $PLATFORMS$
+ *      Todas
+ *  $FILES$
+ *      La librería es rtl
+ *  $SEEALSO$
+ *      DTOC(),DATE(),DTOS()
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      ELAPTIME()
+ *  $CATEGORY$
+ *      Hora
+ *  $ONELINER$
+ *      Calcula el tiempo transcurrido.
+ *  $SYNTAX$
+ *      ELAPTIME(<cHoraInicial>,<cHoraFinal>) --> cTranscurrido
+ *  $ARGUMENTS$
+ *      <cHoraInicial> Hora de inicio en el formato de cadena HH:MM:SS
+ *      <cHoraFinal>   Hora de finalización en el formato de cadena HH:MM:SS
+ *  $RETURNS$
+ *      <cTranscurrido>  Diferencia entre tiempos
+ *  $DESCRIPTION$
+ *      Esta función devuelve una cadena que muestra la diferencia entre la
+ *      hora inicial representada por <cHoraInicial> y la hora final
+ *      representada por <cHoraFinal>. Si la hora de inicio es mayor que la 
+ *      de finalización, la función asume que la fecha a cambiado una vez.
+ *  $EXAMPLES$
+ *      // Muestra el tiempo que se uso el programa parecido a como lo 
+ *      // hacía el viejo Norton Utilities
+ *      STATIC cHoraIni       // al inicio del programa
+ *      cHoraIni := TIME()
+ *
+ *      // A la salida del programa
+ *      ? "Ud. ha usado el programa durante: ", ELAPTIME( cHoraIni, TIME())
+ *      QUIT
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta función es totalmente compatible con CA-Clipper.
+ *  $PLATFORMS$
+ *      Todas
+ *  $FILES$
+ *	La librería es rtl
+ *  $SEEALSO$
+ *      SECS(),SECONDS(),TIME(),DAY()
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      MONTH()
+ *  $CATEGORY$
+ *      Fecha
+ *  $ONELINER$
+ *      Extrae el mes como valor numérico de un valor de fecha dado
+ *  $SYNTAX$
+ *      MONTH(<dFecha>) --> nMes
+ *  $ARGUMENTS$
+ *      <dFecha> Cualquier expresión válida de fecha.
+ *  $RETURNS$
+ *      MONTH() retorna <nMes>, número correspondiente al mes del año, en el
+ *      rango de 0 a 12.
+ *  $DESCRIPTION$
+ *      Esta función devuelve el valor numérico del mes contenido en <dFecha>.
+ *      Este valor esta en el formato de cuatro dígitos y no es afectado
+ *      por el seteo de los comandos SET CENTURY y SET DATE.
+ *      Si se pasa una fecha vacía CTOD("") a esta función devuelve el valor 
+ *      cero.
+ *  $EXAMPLES$
+ *      ? Month(DATE())
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta función es totalmente compatible con CA-Clipper.
+ *  $PLATFORMS$
+ *      Todas
+ *  $FILES$
+ *      La librería es rtl
+ *  $SEEALSO$
+ *      CDOW(),DOW(),YEAR(),CMONTH()
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SECONDS()
+ *  $CATEGORY$
+ *      Hora
+ *  $ONELINER$
+ *      Retorna el número de segundos transcurridos desde medianoche.
+ *  $SYNTAX$
+ *      SECONDS() --> nSegundos
+ *  $ARGUMENTS$
+ *      Ninguno
+ *  $RETURNS$
+ *      SECONDS() retorna <nSegundos> desde la medianoche.
+ *  $DESCRIPTION$
+ *      Esta función devuelve un valor numérico representando el número de
+ *      segundos transcurridos desde la medianoche del día actual, basado en
+ *      la hora actual del sistema operativo.
+ *      SECONDS() se inicializa en cero (medianoche) y continua hasta 86399
+ *      segundos (23:59:59). El valor que devuelve es expresado como segundos
+ *      y centésimas de segundo.
+ *  $EXAMPLES$
+ *      // Muestra el tiempo que estuvo en ejecución una rutina
+ *      nArranque = SECONDS()
+ *
+ *      // Aca va la llamada a la rutina 
+ *      //  : :
+ *      ? "Tardó: ", SECONDS()- nArranque  ," segundos"
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta función es totalmente compatible con CA-Clipper.
+ *  $PLATFORMS$
+ *      Todas
+ *  $FILES$
+ *      La librería es rtl
+ *  $SEEALSO$
+ *      TIME()
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SECS()
+ *  $CATEGORY$
+ *      Hora
+ *  $ONELINER$
+ *      Retorna el número de segundos de la hora del sistema.
+ *  $SYNTAX$
+ *      SECS( <cHora> ) --> nSegundos
+ *  $ARGUMENTS$
+ *      <cHora> Expresión de caracteres en el formato de tiempo HH:MM:SS
+ *  $RETURNS$
+ *      SECS() retorna <nsegundos> Numbero de segundos
+ *  $DESCRIPTION$
+ *      Esta función devuelve un valor numérico que es el número de segundos
+ *      transcurridos desde medianoche, basados en una cadena de hora dado
+ *      como <cHora>.
+ *  $EXAMPLES$
+ *      ? SECS( TIME())
+ *      ? SECS( TIME() - 10)
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta función es totalmente compatible con CA-Clipper.
+ *      Nota: No esta documentada en las NG, ni en el manual en español de
+ *	      CA-Clipper.
+ *  $PLATFORMS$
+ *      Todas
+ *  $FILES$
+ *      La librería es rtl
+ *  $SEEALSO$
+ *      SECONDS(),ELAPTIME(),TIME()
+ *  $END$
+ */
+ 
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      TIME()
+ *  $CATEGORY$
+ *      Hora
+ *  $ONELINER$
+ *      Retorna la hora del sistema como una cadena de caracteres
+ *  $SYNTAX$
+ *      TIME() --> cHora
+ *  $ARGUMENTS$
+ *      Ninguno
+ *  $RETURNS$
+ *      TIME() retorna la cadena de caracteres <cHora> representando la hora
+ *  $DESCRIPTION$
+ *      Esta función devuelve la hora del sistema representada como una 
+ *      expresión de caracteres en el formato HH:MM:SS, para calculos de
+ *      tiempo conviene usar SECONDS().
+ *  $EXAMPLES$
+ *      ? TIME()   // Resultado: 21:34:12
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta función es totalmente compatible con CA-Clipper.
+ *  $PLATFORMS$
+ *      Todas
+ *  $FILES$
+ *      La librería es rtl
+ *  $SEEALSO$
+ *      DATE(),SECONDS()
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      YEAR()
+ *  $CATEGORY$
+ *      Fecha
+ *  $ONELINER$
+ *      Extrae el año como valor numérico de un valor de fecha dado
+ *  $SYNTAX$
+ *      YEAR(<dFecha>) --> nAno
+ *  $ARGUMENTS$
+ *      <dFecha> Cualquier expresión válida de fecha.
+ *  $RETURNS$
+ *      YEAR() retorna <nAno> la porción de año de una fecha.
+ *  $DESCRIPTION$
+ *      Esta función devuelve el valor numérico del año contenido en <dFecha>
+ *      Este valor esta en el formato de cuatro dígitos y no es afectado
+ *      por el seteo de los comandos SET CENTURY y SET DATE.
+ *      Si se pasa una fecha vacía CTOD("") a esta función devuelve el valor 
+ *      cero.
+ *  $EXAMPLES$
+ *      ? YEAR( DATE())                // Resultado: 2000
+ *      ? YEAR( CTOD("01/31/1982"))    // Resultado: 1982
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta función es totalmente compatible con CA-Clipper.
+ *  $PLATFORMS$
+ *      Todas
+ *  $FILES$
+ *      La librería es rtl
+ *  $SEEALSO$
+ *      DAY(),MONTH()
+ *  $END$
+ */
+

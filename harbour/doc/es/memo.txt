@@ -1,0 +1,95 @@
+
+/*
+ * Las siguientes partes son derechos adquiridos de sus autores individuales.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2000 Alejandro de Gárate <alex_degarate@hotmail.com>
+ * Documentación en Español de: MEMOTRAN(), HARDCR()
+ *
+ * Vea doc/license.txt por los términos de la licencia.
+ *
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      MEMOTRAN()
+ *  $CATEGORY$
+ *      Cadenas
+ *  $ONELINER$
+ *      Reemplaza los retornos del carro/nueva linea de una cadena
+ *  $SYNTAX$
+ *      MEMOTRAN( <cCadena>, <cDuro>, <cBlando> ) --> <cCadenaConvertida>
+ *  $ARGUMENTS$
+ *      <cCadena> es la cadena de caracteres a convertir.
+ *
+ *      <cDuro> es el carácter para reemplazar los retornos de carro "duro".
+ *              Si no es especificado por defecto es el punto y coma.
+ *
+ *      <cBlando> es el cáracter para reemplazar los retornos de carro "blandos"
+ *              Si no es especificado, por defecto es un espacio en blanco.
+ *  $RETURNS$
+ *      MEMOTRAN() retorna <cCadenaConvertida>, la cadena transformada.
+ *  $DESCRIPTION$
+ *      Esta función retorna una cadena donde los caracteres de retorno de
+ *      carro han sido convertidos a los caracteres especificados.
+ *  $EXAMPLES$
+ *      * El siguiente ejemplo formatea un campo memo conteniendo un mensaje
+ *        de error en una cadena adecuada para ser enviada a la función ALERT()
+ *
+ *        cMensaje = MEMOTRAN( Errores->MENSAJE )
+ *        ALERT( cMensaje, aOpciones )
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta función es totalmente compatible con CA-Clipper.
+ *  $FILES$
+ *      La librería asociada es rtl
+ *  $SEEALSO$
+ *      HARDCR(),STRTRAN()
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      HARDCR()
+ *  $CATEGORY$
+ *      Strings
+ *  $ONELINER$
+ *       Reemplaza los CHR(141) por retornos de carro normal CHR(13)
+ *  $SYNTAX$
+ *      HARDCR( <cCadena> ) --> <cCadenaConvertida>
+ *  $ARGUMENTS$
+ *      <cCadena> es la cadena de caracteres a convertir.
+ *  $RETURNS$
+ *      HARDCR() retorna <cCadenaConvertida>, la cadena transformada.
+ *  $DESCRIPTION$
+ *      Esta función retorna una cadena/memo donde los caracteres de retorno de
+ *      carro automaticos ó "blandos" ( CHR(141) ) son convertidos a caracteres
+ *      de retorno de carro forzado ó "duro" CHR(13).
+ *  $EXAMPLES$
+ *      * El siguiente ejemplo asigna a una variable de cadena, el campo memo
+ *        NOTAS existente en la base Clientes, transformado para mostrarlo por
+ *        pantalla.
+ *        cNotas = HARDCR( Clientes->NOTAS )
+ *        ? cNotas
+ *
+ *      * El siguiente ejemplo envia a la impresora el contenido de un campo
+ *        memo.
+ *
+ *        SET DEVICE TO PRINTER
+ *        DEVPOS( nFil, nCol)
+ *        DEVOUT( HARDCR( Clientes->NOTAS ) )
+ *
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Esta función es totalmente compatible con CA-Clipper.
+ *  $FILES$
+ *      La librería asociada es rtl
+ *  $SEEALSO$
+ *      MEMOTRAN(),STRTRAN()
+ *  $END$
+ */
+
+
