@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-11-05 23:35 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+   * makefile.bc
+   * makefile.nt
+   * makefile.vc
+     * Makefiles has been updated due to RDD changes
+
 2003-11-05 22:50 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
    * config/global.cf
    * include/hbapirdd.h

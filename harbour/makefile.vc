@@ -126,6 +126,8 @@ CODEPAGE_LIB = $(LIB_DIR)\codepage.lib
 COMMON_LIB   = $(LIB_DIR)\common.lib
 DBFCDX_LIB   = $(LIB_DIR)\dbfcdx.lib
 DBFNTX_LIB   = $(LIB_DIR)\dbfntx.lib
+DBFDBT_LIB   = $(LIB_DIR)\dbfdbt.lib
+DBFFPT_LIB   = $(LIB_DIR)\dbffpt.lib
 DEBUG_LIB    = $(LIB_DIR)\debug.lib
 LANG_LIB     = $(LIB_DIR)\lang.lib
 MACRO_LIB    = $(LIB_DIR)\macro.lib
@@ -196,6 +198,8 @@ LIBLIST = \
    $(RDD_LIB) \
    $(DBFCDX_LIB) \
    $(DBFNTX_LIB) \
+   $(DBFDBT_LIB) \
+   $(DBFFPT_LIB) \
    $(NULSYS_LIB) \
    $(VM_LIB) \
    $(HB_GT_LIB)
@@ -577,6 +581,38 @@ DBFCDX_LIB_OBJS = \
    $(OBJ_DIR)\dbfcdx0.obj
 
 #
+# DBFDBT.LIB rules
+#
+
+{$(RDD_DIR)\dbfdbt}.c{$(OBJ_DIR)}.obj:
+   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+
+{$(RDD_DIR)\dbfdbt}.prg{$(OBJ_DIR)}.obj:
+   $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $*.c
+
+DBFDBT_LIB_OBJS = \
+   $(OBJ_DIR)\dbfdbt1.obj \
+   \
+   $(OBJ_DIR)\dbfdbt0.obj
+
+#
+# DBFFPT.LIB rules
+#
+
+{$(RDD_DIR)\dbffpt}.c{$(OBJ_DIR)}.obj:
+   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+
+{$(RDD_DIR)\dbffpt}.prg{$(OBJ_DIR)}.obj:
+   $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $*.c
+
+DBFFPT_LIB_OBJS = \
+   $(OBJ_DIR)\dbffpt1.obj \
+   \
+   $(OBJ_DIR)\dbffpt0.obj
+
+#
 # PP.LIB rules
 #
 
@@ -753,6 +789,8 @@ all: \
    $(NULSYS_LIB) \
    $(DBFNTX_LIB) \
    $(DBFCDX_LIB) \
+   $(DBFDBT_LIB) \
+   $(DBFFPT_LIB) \
    $(HB_GT_LIBS) \
    $(HBRUN_EXE) \
    $(HBPP_EXE) \
@@ -778,6 +816,8 @@ all: \
    $(NULSYS_LIB) \
    $(DBFNTX_LIB) \
    $(DBFCDX_LIB) \
+   $(DBFDBT_LIB) \
+   $(DBFFPT_LIB) \
    $(HB_GT_LIBS) \
    $(HBRUN_EXE) \
    $(HBPP_EXE) \
@@ -1003,6 +1043,12 @@ $(DBFCDX_LIB) : $(DBFCDX_LIB_OBJS)
    lib /out:$@ $**
 
 $(DBFNTX_LIB) : $(DBFNTX_LIB_OBJS)
+   lib /out:$@ $**
+
+$(DBFDBT_LIB) : $(DBFDBT_LIB_OBJS)
+   lib /out:$@ $**
+
+$(DBFFPT_LIB) : $(DBFFPT_LIB_OBJS)
    lib /out:$@ $**
 
 $(NULSYS_LIB) : $(NULSYS_LIB_OBJS)
