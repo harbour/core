@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-08-03 11:10 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+   * source/rtl/tget.prg
+      * GetNew() no longer evaluates passed set/get codeblock
+      
+
 2004-08-01 14:38 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * source/rtl/filesys.c

@@ -186,7 +186,8 @@ METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) CLASS Get
    ::HasFocus   := .f.
    ::lEdit      := .f.
    ::BadDate    := .f.
-   ::Block      := bVarBlock
+   ::bBlock     := bVarBlock
+//   ::Block      := bVarBlock
    ::Changed    := .f.
    ::Clear      := .f.
    ::Col        := nCol
@@ -203,7 +204,7 @@ METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) CLASS Get
    ::Rejected   := .f.
    ::Row        := nRow
    ::SubScript  := NIL
-   ::Type       := ValType( ::Original )
+//   ::Type       := ValType( ::Original )
    ::TypeOut    := .f.
    ::nDispPos   := 1
    ::nOldPos    := 0
@@ -282,6 +283,11 @@ METHOD ParsePict( cPicture ) CLASS Get
       ::cPicFunc   := ""
       ::cPicMask   := cPicture
       ::lCleanZero := .f.
+   endif
+
+   if( ::type == nil )
+      ::Original := ::VarGet()
+      ::Type     := ValType( ::Original )
    endif
 
    if ::type == "D"
@@ -370,6 +376,8 @@ METHOD Display( lForced ) CLASS Get
    DEFAULT lForced TO .t.
 
    if ::buffer == nil
+      ::Original := ::VarGet()
+      ::Type     := ValType( ::Original )
       ::picture := ::cPicture    //this sets also ::buffer
    endif
 
@@ -1198,9 +1206,12 @@ METHOD PutMask( xValue, lEdit ) CLASS Get
    local nAt
    local nNoEditable := 0
 
+
    if ::Type == NIL
-      ::Type := ValType( ::VarGet() )
-      ::Picture := ::cPicture
+      //not initialized yet
+      ::Original := ::VarGet()
+      ::Type     := ValType( ::Original )
+      ::Picture  := ::cPicture
    endif
 
    cPicFunc := ::cPicFunc
