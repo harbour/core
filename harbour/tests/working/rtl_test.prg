@@ -125,13 +125,15 @@ FUNCTION Main()
 
      /* TODO: These could be more complete */
 
-     TEST_LINE( SubStr("ab" + Chr(0) + "def", 2, 3) , "b" + Chr(0) + "d" )
-     TEST_LINE( Left("ab" + Chr(0) + "def", 5)      , "ab" + Chr(0) + "de")
-     TEST_LINE( Right("ab" + Chr(0) + "def", 5)     , "b" + Chr(0) + "def")
+     TEST_LINE( SubStr("ab" + Chr(0) + "def", 2, 3) , "b" + Chr(0) + "d"   )
+     TEST_LINE( Left("ab" + Chr(0) + "def", 5)      , "ab" + Chr(0) + "de" )
+     TEST_LINE( Right("ab" + Chr(0) + "def", 5)     , "b" + Chr(0) + "def" )
 
-     /* Show result, return ERRORLEVEL and exit */
+     /* Show results, return ERRORLEVEL and exit */
 
-     RETURN TEST_STAT()
+     TEST_STAT()
+
+     RETURN NIL
 
 STATIC FUNCTION TEST_CALL(cBlock, bBlock, xResultExpected)
      LOCAL xResult := Eval(bBlock)
@@ -157,7 +159,9 @@ STATIC FUNCTION TEST_STAT()
                "Test calls passed: " + Str(snPass) + Chr(13) + Chr(10) +;
                "Test calls failed: " + Str(snFail) + Chr(13) + Chr(10))
 
-     RETURN iif(snFail > 0, 1, 0)
+     ErrorLevel(iif(snFail != 0, 1, 0))
+
+     RETURN NIL
 
 STATIC FUNCTION XToStr(xValue)
      LOCAL cType := ValType(xValue)

@@ -1,3 +1,8 @@
+19990729-11:20 CET Victor Szel <info@szelvesz.hu>
+  ! tests/working/rtl_test.prg - Now returns errorlevel 1
+    if anything fails, and 0 if OK. Now for sure.
+  * source/vm/hvm.c - Get rid of a few low level ITEM access.
+
 19990729-10:40 CET Victor Szel <info@szelvesz.hu>
   ! source/vm/hvm.c - #include "itemapi.h" added
     to fix a warning.

@@ -209,9 +209,11 @@ BYTE bErrorLevel = 0;  /* application exit errorlevel */
       iHB_DEBUG += ( int ) DontDiscardForceLink; /* just to avoid warnings from the C compiler */
 
    HB_DEBUG( "main\n" );
-   aStatics.type     = IT_NIL;
-   errorBlock.type   = IT_NIL;
-   stack.Return.type = IT_NIL;
+
+   hb_itemClear( &aStatics );
+   hb_itemClear( &errorBlock );
+   hb_itemClear( &stack.Return );
+
    StackInit();
    hb_NewDynSym( &symEval );  /* initialize dynamic symbol for evaluating codeblocks */
    hb_setInitialize();        /* initialize Sets */
