@@ -1,3 +1,21 @@
+20000427-15:34 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/compiler/harbour.c
+     ! hb_xgrab() casts added for ICC/OS2.
+
+   * doc/howtocws.txt
+     ! onelist -> egroups
+
+   * doc/genhtm.lnk
+     - Removed build number.
+
+   - utils/hbdoc/genhtm.bat
+   - utils/hbdoc/alpha.lnk
+   - utils/hbdoc/categ.lnk
+   - utils/hbdoc/hrb.rsp
+   - utils/hbdoc/hrbtools.rsp
+     - Removed files no more needed.
+
 20000427-20:40 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.c

@@ -560,7 +560,7 @@ void hb_compVariableAdd( char * szVarName, char cValueType )
                {
                   BYTE * pBuffer;
 
-                  pBuffer = hb_xgrab( strlen( szVarName ) + 4 );
+                  pBuffer = ( BYTE * ) hb_xgrab( strlen( szVarName ) + 4 );
 
                   pBuffer[0] = HB_P_LOCALNAME;
                   pBuffer[1] = HB_LOBYTE( wLocal );
@@ -776,7 +776,7 @@ void hb_compFunctionAdd( char * szFunName, HB_SYMBOLSCOPE cScope, int iType )
    {
       BYTE * pBuffer;
 
-      pBuffer = hb_xgrab( 3 + strlen( hb_comp_files.pLast->szFileName ) + strlen( szFunName ) );
+      pBuffer = ( BYTE * ) hb_xgrab( 3 + strlen( hb_comp_files.pLast->szFileName ) + strlen( szFunName ) );
 
       pBuffer[0] = HB_P_MODULENAME;
 
@@ -2273,7 +2273,7 @@ void hb_compGenPushString( char * szText, ULONG ulStrLen )
 
    if( ulStrLen > 255 )
    {
-      pBuffer = hb_xgrab( ulStrLen + 3 );
+      pBuffer = ( BYTE * ) hb_xgrab( ulStrLen + 3 );
 
       pBuffer[0] = HB_P_PUSHSTR;
       pBuffer[1] = HB_LOBYTE( ulStrLen );
@@ -2285,7 +2285,7 @@ void hb_compGenPushString( char * szText, ULONG ulStrLen )
    }
    else
    {
-      pBuffer = hb_xgrab( ulStrLen + 3 );
+      pBuffer = ( BYTE * ) hb_xgrab( ulStrLen + 3 );
 
       pBuffer[0] = HB_P_PUSHSTRSHORT;
       pBuffer[1] = ( BYTE ) ulStrLen;

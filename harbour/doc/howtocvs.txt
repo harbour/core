@@ -9,7 +9,7 @@ Here's how to prepare for uploading to the CVS server
 =====================================================
 
  1) Read the Harbour FAQ (www.harbour-project.org), monitor the 
-    mailing-list (Harbour at www.onelist.com), consult with the
+    mailing-list (Harbour at www.egroups.com), consult with the
     developers, make contributions. This way your chances are high
     to get a RW access to the CVS.
  2) Before uploading anything you'll need Developer (RW) status for the 

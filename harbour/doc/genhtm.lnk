@@ -1,8 +1,8 @@
-!name: Harbour build 33 reference Guide
+!name: Harbour Reference Guide
 !credits: Harbour (c) http://www.harbour-project.org
-        2000/04/09 build By Luiz Rafael Culik
+        2000/04/09 build by Luiz Rafael Culik
         Functions Documented by:
-        Chen Kedem, Luiz Rafael Culik,Brian Hays
+        Chen Kedem, Luiz Rafael Culik, Brian Hays
 !menu: Reference
 Functions A-M     funcam.ngo
 Functions N-_     funcn_.ngo
