@@ -40,36 +40,6 @@
 #include "mysql.ch"
 
 
-// Returns an SQL string with clipper value converted ie. Date() -> "'YYYY-MM-DD'"
-static function ClipValue2SQL(Value)
-
-   local cValue := ""
-
-   do case
-      case Valtype(Value) == "N"
-         cValue := AllTrim(Str(Value))
-
-      case Valtype(Value) == "D"
-         if !Empty(Value)
-            // MySQL dates are like YYYY-MM-DD
-            cValue := "'" + Str(Year(Value), 4) + "-" + PadL(Month(Value), 2, "0") + "-" + PadL(Day(Value), 2, "0") + "'"
-         else
-            cValue := "''"
-         endif
-
-      case Valtype(Value) == "C"
-         cValue := "'" + StrTran(Value, "'", "\'") + "'"
-
-      case Valtype(Value) == "L"
-         cValue := AllTrim(Str(iif(Value == .F., 0, 1)))
-
-      otherwise
-         cValue := "''"       // NOTE: Here we lose values we cannot convert
-
-   endcase
-
-return cValue
-
 
 // Every single row of an answer
 CLASS TMySQLRow
@@ -421,7 +391,12 @@ METHOD GetRow(nRow) CLASS TMySQLQuery
                   // Date format YYYY-MM-DD
                   aRow[i] := CToD(__StrToken(aRow[i], 2, ",") + "-" + __StrToken(aRow[i], 3, ",") + "-" + __StrToken(aRow[i], 1, ","))
                endif
+
+             case ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_BLOB_TYPE
+               // Memo field
+
              otherwise
+
              endcase
          next
 
@@ -714,6 +689,9 @@ METHOD CreateTable(cTable, aStruct) CLASS TMySQLServer
       case aStruct[i][DBS_TYPE] == "C"
          cCreateQuery += aStruct[i][DBS_NAME] + " char(" + AllTrim(Str(aStruct[i][DBS_LEN])) + ")" + Eval(cNN, aStruct[i]) + ","
 
+      case aStruct[i][DBS_TYPE] == "M"
+         cCreateQuery += aStruct[i][DBS_NAME] + " text" + Eval(cNN, aStruct[i]) + ","
+
       case aStruct[i][DBS_TYPE] == "N"
          if aStruct[i][DBS_DEC] == 0
             cCreateQuery += aStruct[i][DBS_NAME] + " int(" + AllTrim(Str(aStruct[i][DBS_LEN])) + ")" + Eval(cNN, aStruct[i]) + ","
@@ -827,7 +805,7 @@ METHOD Query(cQuery) CLASS TMySQLServer
       oQuery := TMySQLQuery():New(::nSocket, cQuery)
    endif
 
-   if oQuery:nNumRows < 0
+   if oQuery:NetErr()
       ::lError := .T.
    endif
 
@@ -917,3 +895,35 @@ METHOD TableStruct(cTable) CLASS TMySQLServer
    endif*/
 
 return aStruct
+
+
+// Returns an SQL string with clipper value converted ie. Date() -> "'YYYY-MM-DD'"
+static function ClipValue2SQL(Value)
+
+   local cValue := ""
+
+   do case
+      case Valtype(Value) == "N"
+         cValue := AllTrim(Str(Value))
+
+      case Valtype(Value) == "D"
+         if !Empty(Value)
+            // MySQL dates are like YYYY-MM-DD
+            cValue := "'" + Str(Year(Value), 4) + "-" + PadL(Month(Value), 2, "0") + "-" + PadL(Day(Value), 2, "0") + "'"
+         else
+            cValue := "''"
+         endif
+
+      case Valtype(Value) $ "CM"
+         cValue := "'" + StrTran(Value, "'", "\'") + "'"
+
+      case Valtype(Value) == "L"
+         cValue := AllTrim(Str(iif(Value == .F., 0, 1)))
+
+      otherwise
+         cValue := "''"       // NOTE: Here we lose values we cannot convert
+
+   endcase
+
+return cValue
+

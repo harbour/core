@@ -95,14 +95,18 @@ METHOD Block(xNewValue) CLASS TBColumnSQL
    case ValType(xValue) == "L"
       xValue := iif(xValue, ".T.", ".F.")
 
-   case ValType(xValue) $ "CM"
+   case ValType(xValue) == "C"
       // Chr(34) is a double quote
       // That is: if there is a double quote inside text substitute it with a string
       // which gets converted back to a double quote by macro operator. If not it would
       // give an error because of unbalanced double quotes.
       xValue := Chr(34) + StrTran(xValue, Chr(34), Chr(34) + "+Chr(34)+" + Chr(34)) + Chr(34)
 
+   case ValType(xValue) == "M"
+      xValue := "'<MEMO>'"
+
    otherwise
+
    endcase
 
 return &("{||" + xValue + "}")

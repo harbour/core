@@ -49,6 +49,10 @@ procedure main(c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14)
    SET CENTURY ON
    SET EPOCH TO 1960
 
+   // At present time (23/10/00) DBFCDX is default RDD and DBFNTX is
+   // now DBF (I mean the one able to handle .DBTs :-))
+   rddSetDefault( "DBF" )
+
    if PCount() < 6
       help()
       quit

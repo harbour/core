@@ -38,6 +38,12 @@
 
 #include "hbapirdd.h"
 
+/* 23/10/00 - maurilio.longo@libero.it
+   When using GCC under OS/2 pack(1) byte aligns every structure */
+#if defined(__EMX__) && ! defined(__RSXNT__)
+   #pragma pack(1)
+#endif
+
 #if defined(HB_EXTERN_C)
 extern "C" {
 #endif
@@ -80,5 +86,10 @@ typedef DBFFIELD * LPDBFFIELD;
 #if defined(HB_EXTERN_C)
 }
 #endif
+
+#if defined(__EMX__) && ! defined(__RSXNT__)
+   #pragma pack()
+#endif
+
 
 #endif /* HB_DBF_H_ */
