@@ -72,12 +72,12 @@ static USHORT s_uiColorIndex = 0;
 static USHORT s_uiMaxCol=80;
 static USHORT s_uiMaxRow=24;
 
-int *_Color;           /* masks: 0x0007     Background
-                                 0x0070     Foreground
-                                 0x0008     Blink
-                                 0x0080     Bright
-                                 0x0800     Underline background
-                                 0x8000     Underline foreground
+int *_Color;           /* masks: 0x0007     Foreground
+                                 0x0070     Background
+                                 0x0008     Bright
+                                 0x0080     Blink
+                                 0x0800     Underline foreground
+                                 0x8000     Underline background
                         */
 int _ColorCount;
 
@@ -88,13 +88,14 @@ ULONG *_ScrnBuffer;
 void hb_gtInit(void)
 {
 /* ptucker */
-    _Color = (int *)hb_xgrab(5*sizeof(int));
-    _ColorCount = 5;
     _ScrnBuffer = (ULONG *)hb_xgrab( sizeof( ULONG ) );
+    _Color      = (int *)hb_xgrab(5*sizeof( int ) );
+    _ColorCount = 5;
     hb_gt_Init();
     hb_gtSetColorStr( hb_set.HB_SET_COLOR );
     hb_gtSetMode( hb_gtMaxRow()+1, hb_gtMaxCol()+1 );
     hb_gtSetPos( hb_gt_Row(), hb_gt_Col() );
+    hb_gtSetCursor(1);
 }
 
 void hb_gtExit(void)
@@ -172,7 +173,7 @@ int hb_gtBox (USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char
     /* Draw the box or line as specified */
     height = uiBottom - uiTop + 1;
     width  = uiRight - uiLeft + 1;
-/*    hb_gtDispBegin(); */
+    hb_gtDispBegin();
 
     if( height > 1 && width > 1 )
     {
@@ -212,7 +213,7 @@ int hb_gtBox (USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char
     }
 
 /*    speed issue for now */
-/*    hb_gtDispEnd(); */
+    hb_gtDispEnd();
 
     hb_gtSetPos(uiTopBak + 1, uiLeftBak + 1);
 
@@ -530,13 +531,18 @@ int hb_gtRectSize(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, 
     USHORT uiMRow = s_uiMaxRow;
     USHORT uiMCol = s_uiMaxCol;
 
+    if( uiBottom > uiMRow )
+        uiBottom = uiMRow;
+    if( uiRight > uiMCol )
+        uiRight = uiMCol;
+
     if( uiTop  > uiMRow   || uiBottom > uiMRow ||
         uiLeft > uiMCol   || uiRight  > uiMCol ||
         uiTop  > uiBottom || uiLeft   > uiRight )
     {
         return(1);
     }
-
+   
     *uipBuffSize = (uiBottom - uiTop+1) * (uiRight - uiLeft+1) * 2;
 
     return(0);

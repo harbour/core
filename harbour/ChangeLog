@@ -1,3 +1,11 @@
+19990804-00:40 EDT Paul Tucker <ptucker@sympatico.ca>
+  * source/rtl/gt/gtwin.c
+    * corrected screen buffer size for dispbegin
+  * makefile.vc
+    + adir.prg
+    * Corrections to Achoice, filesys
+  * re-enabled gtDispbegin/end calls in gtBox
+
 19990804-00:20 EDT David G. Holm <dholm@jsd-llc.com>
   + tests/working/build.bat
     + New batch file to build and run individual PRG files

@@ -137,7 +137,6 @@ void hb_gt_SetCursorStyle(int style)
                           cursor state is erratic  - doesn't turn off, etc. */
       break;
 
-
     }
    SetConsoleCursorInfo(HCursor, &cci);
 
@@ -191,7 +190,7 @@ void hb_gt_Puts(char cRow, char cCol, char attr, char *str, int len)
   coord.X = (DWORD) (cCol);
   coord.Y = (DWORD) (cRow);
   WriteConsoleOutputCharacterA(HOutput, str, (DWORD)len, coord, &dwlen);
-  FillConsoleOutputAttribute(HOutput, (WORD)((unsigned char)attr&0xff), (DWORD)len, coord, &dwlen);
+  FillConsoleOutputAttribute(HOutput, (WORD)((unsigned char)attr&0xff)|0x8000, (DWORD)len, coord, &dwlen);
 }
 
 void hb_gt_GetText(char cTop, char cLeft, char cBottom, char cRight, char *dest)
@@ -258,7 +257,7 @@ void hb_gt_PutText(char cTop, char cLeft, char cBottom, char cRight, char *srce)
         {
           *(pstr + i) = *srce;
           srce++;
-          *(pwattr + i) = (WORD)((unsigned char)*srce)&0xff;
+          *(pwattr + i) = (WORD)((unsigned char)*srce)&0xff | 0x8000;
           *pwattr |= 0x8000;
           srce++;
         }
@@ -390,6 +389,8 @@ void hb_gt_DispBegin(void)
                NULL,                               /* Security attribute ptr */
                CONSOLE_TEXTMODE_BUFFER,            /* Type of buffer         */
                NULL);                              /* reserved               */
+
+  SetConsoleScreenBufferSize(HOutput, coBuf);
 
   WriteConsoleOutput(HOutput,                               /* output handle */
                pCharInfo,                                   /* data to write */

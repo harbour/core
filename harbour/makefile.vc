@@ -51,6 +51,8 @@ HARBOURFLAGS=-iinclude -n
 #
 
 HARBOUR_LIB_OBJS = \
+    $(OBJ_DIR)\achoice.obj \
+    $(OBJ_DIR)\adir.obj \
     $(OBJ_DIR)\alert.obj \
     $(OBJ_DIR)\arrays.obj \
     $(OBJ_DIR)\asort.obj \
@@ -69,7 +71,7 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\errorapi.obj \
     $(OBJ_DIR)\errorsys.obj \
     $(OBJ_DIR)\extend.obj \
-    $(OBJ_DIR)\files.obj \
+    $(OBJ_DIR)\filesys.obj \
     $(OBJ_DIR)\fm.obj \
     $(OBJ_DIR)\gtapi.obj \
     $(OBJ_DIR)\hardcr.obj \
@@ -259,6 +261,12 @@ $(RTL_DIR)\achoice.c : $(RTL_DIR)\achoice.prg
 $(OBJ_DIR)\achoice.obj : $(RTL_DIR)\achoice.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
+$(RTL_DIR)\adir.c : $(RTL_DIR)\adir.prg
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
+
+$(OBJ_DIR)\adir.obj : $(RTL_DIR)\adir.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
 $(RTL_DIR)\alert.c : $(RTL_DIR)\alert.prg
     $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
 
@@ -325,7 +333,7 @@ $(OBJ_DIR)\error.obj : $(RTL_DIR)\error.c
 $(OBJ_DIR)\extend.obj : $(RTL_DIR)\extend.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
-$(OBJ_DIR)\files.obj : $(RTL_DIR)\filesys.c
+$(OBJ_DIR)\filesys.obj : $(RTL_DIR)\filesys.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\fm.obj    : $(RTL_DIR)\fm.c
