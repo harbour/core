@@ -241,7 +241,7 @@ extern BOOL   hb_gt_Suspend( void ); /* suspend the terminal before the shell ca
 extern BOOL   hb_gt_Resume( void ); /* resume the terminal after the shell call */
 extern void   hb_gt_Puts( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE * pbyStr, ULONG ulLen );
 extern void   hb_gt_PutText( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbySrc );
-extern int    hb_gt_ExtendedKeySupport();
+extern int    hb_gt_ExtendedKeySupport( void );
 extern int    hb_gt_ReadKey( HB_inkey_enum eventmask );
 extern int    hb_gt_RectSize( USHORT rows, USHORT cols );
 extern void   hb_gt_Replicate( USHORT uiTop, USHORT uiLeft, BYTE byAttr, BYTE byChar, ULONG ulLen );
