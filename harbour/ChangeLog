@@ -1,3 +1,9 @@
+20000404-12:13 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/pp/ppcore.c
+     % Some variables optimized out in pragma related code.
+     % DebugPragma() simplified.
+
 20000404-11:06 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/rtl/dircmd.prg
