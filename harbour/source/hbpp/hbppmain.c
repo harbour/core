@@ -33,33 +33,74 @@ extern DEFINES *aDefnew ;
 extern COMMANDS *aCommnew ;
 extern TRANSLATES *aTranslates ;
 
+PATHNAMES *_pIncludePath = NULL;
+void AddSearchPath( char *, PATHNAMES * * ); /* add pathname to a search list */
+
 int main (int argc,char* argv[])
 {
 FILE *handl_i,*handl_o;
 char szFileName[ _POSIX_PATH_MAX ];
 FILENAME *pFileName =NULL;
+int iArg = 1;
 
- if(argc<2) { printf("File name absent"); return 1; }
- pFileName =SplitFilename( argv[1] );
- if( !pFileName->extension )
-   pFileName->extension =".prg";
- MakeFilename( szFileName, pFileName );
+   while( iArg < argc )
+   {
+     if( IS_OPT_SEP(argv[ iArg ][ 0 ]))
+     {
+       switch( argv[ iArg ][ 1 ] )
+       {
+         case 'd':
+         case 'D':   /* defines a Lex #define from the command line */
+           {
+             unsigned int i = 0;
+             char * szDefText = strdup( argv[ iArg ] + 2 );
+             while( i < strolen( szDefText ) && szDefText[ i ] != '=' )
+             i++;
+             if( szDefText[ i ] != '=' )
+             AddDefine( szDefText, 0 );
+             else
+             {
+               szDefText[ i ] = 0;
+               AddDefine( szDefText, szDefText + i + 1 );
+             }
+             free( szDefText );
+           }
+           break;
+         case 'i':
+         case 'I':
+           AddSearchPath( argv[ iArg ]+2, &_pIncludePath );
+           break;
+         default:
+            printf( "Invalid command line option: %s\n", &argv[ iArg ][ 1 ] );
+            break;
+       }
+     }
+     else  pFileName =SplitFilename( argv[ iArg ] );
+     iArg++;
+   }
+   if( pFileName )
+   {
+     if( !pFileName->extension )   pFileName->extension =".prg";
+      MakeFilename( szFileName, pFileName );
 
- if ((handl_i = fopen(szFileName, "r")) == NULL)
- { printf("Can't open %s",szFileName); return 1; }
+      if ((handl_i = fopen(szFileName, "r")) == NULL)
+         { printf("Can't open %s",szFileName); return 1; }
+   }
+   else { printf("File name absent"); return 1; }
 
- pFileName->extension =".ppo";
- MakeFilename( szFileName, pFileName );
- if ((handl_o = fopen(szFileName, "wt" )) == NULL)
- { printf("Can't open %s",szFileName); return 1; }
+   pFileName->extension =".ppo";
+   MakeFilename( szFileName, pFileName );
 
- aCondCompile = (int*) _xgrab( sizeof(int) * 5 );
- aDefnew = ( DEFINES * ) _xgrab( sizeof(DEFINES) * 50 );
- aCommnew = ( COMMANDS * ) _xgrab( sizeof(COMMANDS) * INITIAL_ACOM_SIZE );
- aTranslates = ( TRANSLATES * ) _xgrab( sizeof(TRANSLATES) * 50 );
+   if ((handl_o = fopen(szFileName, "wt" )) == NULL)
+        { printf("Can't open %s",szFileName); return 1; }
 
- Hp_Parse(handl_i,handl_o );
- fclose(handl_i); fclose(handl_o);
+    aCondCompile = (int*) _xgrab( sizeof(int) * 5 );
+    aDefnew = ( DEFINES * ) _xgrab( sizeof(DEFINES) * 50 );
+    aCommnew = ( COMMANDS * ) _xgrab( sizeof(COMMANDS) * INITIAL_ACOM_SIZE );
+    aTranslates = ( TRANSLATES * ) _xgrab( sizeof(TRANSLATES) * 50 );
+
+    Hp_Parse(handl_i,handl_o );
+    fclose(handl_i); fclose(handl_o);
 /*
  for (int i=0;i<kolcommands;i++)
  {
@@ -242,6 +283,28 @@ char *MakeFilename( char *szFileName, FILENAME *pFileName )
   }
 
   return szFileName;
+}
+
+/*
+ * Function that adds specified path to the list of pathnames to search
+ */
+void AddSearchPath( char *szPath, PATHNAMES * *pSearchList )
+{
+  PATHNAMES *pPath = *pSearchList;
+
+  if( pPath )
+  {
+    while( pPath->pNext )
+      pPath = pPath->pNext;
+    pPath->pNext = ( PATHNAMES * ) OurMalloc( sizeof( PATHNAMES ) );
+    pPath = pPath->pNext;
+  }
+  else
+  {
+    *pSearchList =pPath =(PATHNAMES *)OurMalloc( sizeof(PATHNAMES) );
+  }
+  pPath->pNext  = NULL;
+  pPath->szPath = szPath;
 }
 
 void * OurMalloc( LONG lSize )

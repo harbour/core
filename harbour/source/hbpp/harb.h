@@ -16,6 +16,12 @@ typedef long LONG;
 typedef unsigned long ULONG;
 #define PATH_DELIMITER  "/\\"
 #define IS_PATH_SEP( c ) (strchr(PATH_DELIMITER, (c))!=NULL)
+#define OPT_DELIMITER  "/-"
+#define IS_OPT_SEP( c ) (strchr(OPT_DELIMITER, (c))!=NULL)
+typedef struct _PATHNAMES { /* the list of pathnames to search with #include */
+  char *szPath;
+  struct _PATHNAMES *pNext;
+} PATHNAMES;
 #ifndef _POSIX_PATH_MAX
    #define _POSIX_PATH_MAX    255
 #endif

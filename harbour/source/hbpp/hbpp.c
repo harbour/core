@@ -58,6 +58,7 @@ int strotrim ( char* );
 char* strodup ( char * );
 int NextWord ( char**, char*, int);
 int NextName ( char**, char*, char**);
+int Include( char *, PATHNAMES *, FILE** );
 
 #define isname(c)  (isalnum(c) || c=='_' || (c) > 0x7e)
 #define SKIPTABSPACES(sptr) while ( *sptr == ' ' || *sptr == '\t' ) (sptr)++
@@ -90,6 +91,7 @@ int nline=0;
 int Repeate;
 char groupchar;
 
+extern PATHNAMES *_pIncludePath;
 extern DEFINES aDefines[] ;
 extern int koldef;
 DEFINES *aDefnew ;
@@ -134,9 +136,9 @@ int ParseDirective( char* sLine )
    if ( *(sLine+i) != '\"' ) return 1000;
    *(sLine+i) = '\0';
 
-   if ((handl_i = fopen(sLine, "r")) == NULL)
+//   if ((handl_i = fopen(sLine, "r")) == NULL)
+   if ( !OpenInclude( sLine, _pIncludePath, &handl_i ) )
     { printf("\nCan't open %s",sLine); return 1001; }
-
    lInclude++;
    Hp_Parse(handl_i, 0 );
    lInclude--;
@@ -1399,4 +1401,34 @@ int NextName ( char** sSource, char* sDest, char **sOut )
   }
  *sDest = '\0';
  return i;
+}
+
+int OpenInclude( char * szFileName, PATHNAMES *pSearch, FILE** fptr )
+{
+  if( ! ( *fptr = fopen( szFileName, "r" ) ) )
+  {
+    if( pSearch )
+    {
+      FILENAME *pFileName =SplitFilename( szFileName );
+      char szFName[ _POSIX_PATH_MAX ];    /* filename to parse */
+
+      pFileName->name =szFileName;
+      pFileName->extension =NULL;
+      while( pSearch && !*fptr )
+      {
+        pFileName->path =pSearch->szPath;
+        MakeFilename( szFName, pFileName );
+        if( ! ( *fptr = fopen( szFName, "r" ) ) )
+        {
+            pSearch = pSearch->pNext;
+            if( ! pSearch )
+              return 0;
+        }
+      }
+      _xfree( pFileName );
+    }
+    else
+      return 0;
+  }
+  return 1;
 }
