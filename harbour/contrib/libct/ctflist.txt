@@ -176,7 +176,7 @@ CHARLIST      ;N;
 CHARMIRR      ;N; 
 CHARMIX       ;R;
 CHARNOLIST    ;N; 
-CHARNOT       ;N; 
+CHARNOT       ;R; 
 CHARODD       ;R;
 CHARONE       ;N; 
 CHARONLY      ;N; 
