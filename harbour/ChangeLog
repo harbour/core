@@ -8,6 +8,16 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-04-16 19:05 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+   * hrbdll.bc
+     * Makefile for the harbour.dll is changed
+   + mkbcdll.bat
+     + Bat file is added to build the Harbour.dll. Changing appropriate
+       environment variables inside it, you may include/exclude from the dll
+       RDD ADS, CT, Libmisc, Debug libraries.
+   + tests/bld4dll.bat
+     + Bat file is added to build sample applications, which uses harbour.dll
+
 2004-04-16 13:55 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
    * include/hbstack.h
    * source/vm/hvm.c
