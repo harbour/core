@@ -112,8 +112,11 @@ void hb_gt_Init( void )
 
    if( ( hb_gtHInput = GetStdHandle( STD_INPUT_HANDLE ) ) == INVALID_HANDLE_VALUE )
    {
-      AllocConsole(); /* It is a Windows app without a console, so we create one */
-      hb_gtHInput = GetStdHandle( STD_INPUT_HANDLE );
+      if( hb_dynsymFindName( "__DBGENTRY" ) ) /* the debugger is linked */
+      {
+         AllocConsole(); /* It is a Windows app without a console, so we create one */
+         hb_gtHInput = GetStdHandle( STD_INPUT_HANDLE );
+      }
    }
 
    SetConsoleMode( hb_gtHInput, 0 );
