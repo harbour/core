@@ -1,3 +1,10 @@
+2000-12-18 16:55 GMT+1 Maurilio Longo <maurilio.longo@libero.it>
+   * source/rtl/memoedit.prg
+      + Added all missing functionalities. Should be 100% compatible (tested very little)
+   * source/rtl/teditor.prg
+      * little changes to make it work better with memoedit.prg. Removed cUdF parameter from
+        ::New() method.
+
 2000-12-15 22:10 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
 *utils/hbmake/radios.prg
  utils/hbmake/checks.prg

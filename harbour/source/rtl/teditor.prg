@@ -74,13 +74,13 @@ CLASS TEditor
    DATA  lSaved         INIT .F.    // True if user exited editor with K_CTRL_W
    DATA  lWordWrap      INIT .F.    // True if word wrapping is active
    DATA  nWordWrapCol   INIT 0      // At which column word wrapping occurs
+   DATA  lDirty                     // .T. if there are changes not saved
 
    DATA  cColorSpec     INIT SetColor()     // Color string used for screen writes
 
 
    METHOD New(cString, nTop, nLeft, nBottom,;            // Converts a string to an array of strings splitting input string at EOL boundaries
-              nRight, lEditMode, cUdF, nLineLength,;
-              nTabSize)
+              nRight, lEditMode, nLineLength, nTabSize)
 
    METHOD LoadFile(cFileName)                            // Load cFileName into active editor
    METHOD LoadText(cString)                              // Load cString into active editor
@@ -227,7 +227,7 @@ METHOD GetText() CLASS TEditor
 return cString
 
 
-METHOD New(cString, nTop, nLeft, nBottom, nRight, lEditMode, cUdF, nLineLength, nTabSize) CLASS TEditor
+METHOD New(cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabSize) CLASS TEditor
 
    default  cString     to ""
    default  nTop        to 0
@@ -235,7 +235,6 @@ METHOD New(cString, nTop, nLeft, nBottom, nRight, lEditMode, cUdF, nLineLength, 
    default  nBottom     to MaxRow()
    default  nRight      to MaxCol()
    default  lEditMode   to .T.
-   default  cUdF        to nil
    default  nLineLength to nil
    default  nTabSize    to nil
 
@@ -265,6 +264,9 @@ METHOD New(cString, nTop, nLeft, nBottom, nRight, lEditMode, cUdF, nLineLength, 
    if ::lEditAllow
       ::InsertState(::lInsert)
    endif
+
+   // No need to save
+   ::lDirty := .F.
 
    // is word wrap required?
    if nLineLength != NIL
@@ -336,6 +338,7 @@ METHOD LoadFile(cFileName) CLASS TEditor
       ::naTextLen++
    endif
 
+   ::lDirty := .F.
    ::MoveCursor(K_CTRL_PGUP)
 
 return Self
@@ -351,6 +354,7 @@ METHOD LoadText(cString) CLASS TEditor
       ::naTextLen++
    endif
 
+   ::lDirty := .F.
    ::MoveCursor(K_CTRL_PGUP)
 
 return Self
@@ -363,7 +367,9 @@ METHOD SaveFile() CLASS TEditor
 
    if !Empty(::cFile)
       cString := ::GetText()
-      return MemoWrit(::cFile, cString)
+      ::lDirty := !MemoWrit(::cFile, cString)
+      return !::lDirty
+
    endif
 
 return .F.
@@ -817,6 +823,7 @@ METHOD Edit(nPassedKey) CLASS TEditor
 
          do case
             case nKey >= K_SPACE .AND. nKey < 256
+               ::lDirty := .T.
                // If I'm past EOL I need to add as much spaces as I need to reach ::nCol
                if ::nCol > ::LineLen(::nRow)
                   ::aText[::nRow]:cText += Space(::nCol - ::LineLen(::nRow))
@@ -832,6 +839,7 @@ METHOD Edit(nPassedKey) CLASS TEditor
                ::SplitLine(::nRow)
 
             case nKey == K_RETURN
+               ::lDirty := .T.
                if ::lInsert .OR. ::nRow == ::naTextLen
                   if ::LineLen(::nRow) > 0
                      // Split current line at cursor position
@@ -851,6 +859,7 @@ METHOD Edit(nPassedKey) CLASS TEditor
                ::InsertState(!::lInsert)
 
             case nKey == K_DEL
+               ::lDirty := .T.
                // If I'm on last char of a line and there are more lines, append next line to current one
                lDelAppend := ::nCol > ::LineLen(::nRow)
                ::aText[::nRow]:cText := Stuff(::aText[::nRow]:cText, ::nCol, 1, "")
@@ -870,6 +879,7 @@ METHOD Edit(nPassedKey) CLASS TEditor
                // insert char if in insert mode or at end of current line
                if ::lInsert .OR. (::nCol == ::LineLen(::nRow))
                   ::aText[::nRow]:cText := Stuff(::aText[::nRow]:cText, ::nCol, 0, Space(::nTabWidth))
+                  ::lDirty := .T.
                endif
                for i := 1 to ::nTabWidth
                   ::MoveCursor(K_RIGHT)
@@ -877,6 +887,7 @@ METHOD Edit(nPassedKey) CLASS TEditor
                ::RefreshLine()
 
             case nKey == K_BS
+               ::lDirty := .T.
                // delete previous character
                ::aText[::nRow]:cText := Stuff(::aText[::nRow]:cText, --::nCol, 1, "")
                // correct column position for next call to MoveCursor()
@@ -885,6 +896,7 @@ METHOD Edit(nPassedKey) CLASS TEditor
                ::RefreshLine()
 
             case nKey == K_CTRL_Y
+               ::lDirty := .T.
                if ::naTextLen > 1
                   ::RemoveLine(::nRow)
                   // if we have less lines of text than our current position, up one line

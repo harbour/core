@@ -313,9 +313,8 @@ METHOD BrowseTable(lCanEdit, aExitKeys) CLASS TBrowseSQL
 
    while lKeepGoing
 
-      if !::Stable
-         ::ForceStable()
-      endif
+      while !::Stabilize() .and. NextKey() == 0
+      enddo
 
       nKey := Inkey(0)
 
