@@ -1,3 +1,10 @@
+2000-07-29 03:00 UTC+0500 April White <awhite@user.rose.com>
+   + doc/en/
+     + (re)added hbvm.txt, hbapiitm.txt, hbapirdd.txt, hbmacro.txt,
+       hbapigt.txt, hbapilng.txt, hbdate.txt, hbapifs.txt, hbapierr.txt
+   * doc/en/
+     * replaced hbapi.txt, hbcompat.txt, hbset.txt
+
 2000-08-11 11:25 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * source/pp/ppcore.c
      * Bug fixed, noted by Victor Szel
@@ -485,6 +492,7 @@ NOTE:
    * source/compiler/hbgenerr.c
      Bug fixes as reported by Andi Jahja
 
+>>>>>>> 1.2544
 2000-07-31 09:00 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/simplex.c
    * source/macro/macro.slx
