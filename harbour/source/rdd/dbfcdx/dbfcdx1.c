@@ -3282,11 +3282,11 @@ static RDDFUNCS cdxTable = { cdxBof,
                              cdxWhoCares
                            };
 
-HARBOUR HB__DBFCDX( void )
+HB_FUNC(_DBFCDX)
 {
 }
 
-HARBOUR HB_DBFCDX_GETFUNCTABLE( void )
+HB_FUNC(DBFCDX_GETFUNCTABLE)
 {
    RDDFUNCS * pTable;
    USHORT * uiCount;

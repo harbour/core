@@ -1,3 +1,17 @@
+20000415-18:37 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+
+   * source/rdd/dbfcdx/dbfcdx1.c
+     ! fixed a couple of declarations HB_FUNC instead of HARBOUR ...
+   * include/hbapigt.h
+     ! CLR_BACKGROUND definition from color.ch conflicts with os2.h (os2emx.h) definition,
+       but OS/2 defition is needed only if you use GPIxxx calls, so we can undef it.
+   * config/os2/gcc.cf
+     + added -O2 switch to gcc switches (optimize for speed), I will put -O3 as soon as
+       I install gcc 2.95.3 at home.
+   * make_gnu.cmd
+     - removed redirection to file, I need to see errors as they appear (an my editor
+       needs them as well :-))
+
 20000415-18:23 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * include/hbapilng.h
@@ -15,13 +29,13 @@
 
 20000415-17:47 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
 
-   * changelog
+   * ChangeLog
      ! Sorry Bruno, I mistyped your name, fixed.
 
 20000415-17:38 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
 
    * source/rdd/dbfcdx/dbfcdx1.c
-     % added Bruno Cantero's file (from message on Harblour list), quick and dirty hack to make it
+     % added Bruno Cantero's file (from message on Harbour list), quick and dirty hack to make it
        compile (at least) lots of warnings and no tests made
    * include/hbapirdd.h
      % added Bruno Cantero's changes to make dbfcdx1.c happy.

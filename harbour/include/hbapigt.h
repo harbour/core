@@ -52,14 +52,22 @@
 #define HB_APIGT_H_
 
 #include "hbapi.h"
+
+/* 15/04/2000 - maurilio.longo@libero.it
+   CLR_BACKGROUND from os2.h (os2emx.h) conflicts with color.ch definition,
+   but we can undef it while we stay a VIO only program */
+#if defined(HB_OS_OS2) && !defined(INCL_GPI)
+   #undef CLR_BACKGROUND
+#endif
+
 #include "color.ch"
 
 #if defined(HB_EXTERN_C)
 extern "C" {
 #endif
 
-/* NOTE: The declaration of hb_gtSetPos(), hb_gtGetPos(), hb_gtWrite(), 
-         hb_gtWriteAt(), hb_gtRepChar() differs in parameter types from the 
+/* NOTE: The declaration of hb_gtSetPos(), hb_gtGetPos(), hb_gtWrite(),
+         hb_gtWriteAt(), hb_gtRepChar() differs in parameter types from the
          original CA-Cl*pper versions. [vszakats] */
 
 /* maximum length of color string */
