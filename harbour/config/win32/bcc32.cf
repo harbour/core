@@ -41,7 +41,7 @@ $(COMSPEC) /E:2048 /Cecho $(LINKLIBS) >> __link__.tmp
 -$(LD) @__link__.tmp
 endef
 
-LD = bcc
+LD = bcc32
 LDFLAGS = -O2
 ifeq ($(HB_LIB_COMPILE),)
 LINKLIBS = $(foreach lib, $(LIBS), $(TOP)$(ROOT)source/$(lib)/$(ARCH)/$(lib)$(LIB_EXT))

@@ -60,8 +60,8 @@ void AddCommand ( char * );                     /* Add new #command to an array 
 void AddTranslate ( char * );                   /* Add new #translate to an array  */
 COMMANDS* getCommand ( int );
 int ParseExpression( char*, char* );            /* Parsing a line ( without preprocessor directive ) */
-int WorkDefine ( char**, char**, DEFINES *, int ); /* Replace fragment of code with a #defined result text */
-void WorkPseudoF ( char**, char**, DEFINES*);   /* Replace pseudofunction with a #defined result text */
+int WorkDefine ( char**, char*, DEFINES * );    /* Replace fragment of code with a #defined result text */
+int WorkPseudoF ( char**, char*, DEFINES*);     /* Replace pseudofunction with a #defined result text */
 int WorkCommand ( char*, char*, char*, int);
 int WorkTranslate ( char*, char*, char*, int, int* );
 int CommandStuff ( char *, char *, char *, int*, int );
@@ -221,7 +221,7 @@ int ParseDirective( char* sLine )
    ParseCommand ( sLine, (i==9)? FALSE:TRUE, FALSE );
 
   else if ( i == 6 && memcmp ( sDirective, "STDOUT", 6 ) == 0 )
-   printf ( "%s", sLine ); /* --- #stdout  --- */
+   printf ( "%s\n", sLine ); /* --- #stdout  --- */
 
   else if ( i == 5 && memcmp ( sDirective, "ERROR", 5 ) == 0 )
   {                        /* --- #error  --- */
@@ -544,17 +544,15 @@ COMMANDS* getCommand ( int ndef )
 int ParseExpression( char* sLine, char* sOutLine )
 {
   char sToken[MAX_NAME];
-  char *ptri, *ptro;
+  char *ptri, *ptro, *ptrb;
   int lenToken, i, ndef, ipos, isdvig, lens;
-  int rezDef, rezDefsub, rezTra, rezCom, kolpass = 0;
-  int kolused = 0, lastused;
-  DEFINES *aUsed[100], *stdef;
+  int rezDef, rezTra, rezCom, kolpass = 0;
+  DEFINES *stdef;
 
   do
   {
     strotrim ( sLine );
     rezDef = 0; rezTra = 0; rezCom = 0;
-    lastused = kolused;
     isdvig = 0;
     do
     {
@@ -572,42 +570,27 @@ int ParseExpression( char* sLine, char* sOutLine )
       else
       {
          /* Look for macros from #define      */
-        rezDefsub = 0;
-        while ( ( lenToken = NextName(&ptri, sToken, &ptro) ) > 0 )
+        while ( ( lenToken = NextName( &ptri, sToken, NULL ) ) > 0 )
         if ( (stdef=DefSearch(sToken)) != NULL )
         {
-          for(i=0;i<kolused;i++) if ( aUsed[i] == stdef ) break;
-          if ( i < kolused )
+          ptrb = ptri - lenToken;
+          if ( ( i = WorkDefine ( &ptri, ptro, stdef ) ) >= 0 )
           {
-            if ( i < lastused ) GenError( _szPErrors, 'P', ERR_RECURSE, NULL, NULL );
-          }
-          if ( WorkDefine ( &ptri, &ptro, stdef, lenToken ) )
-          {
-            aUsed[kolused++] = stdef;
-            rezDef++; rezDefsub++;
-          }
-        }
-        if ( rezDefsub )  /* if some defines was processed */
-        {
-          *ptro = '\0';
-          ptri = sLine + isdvig;
-          if ( isdvig + ipos > 0 )
-          {
-            lens = strolen( ptri );
+            rezDef++;
+            lens = strolen( ptrb );
             if ( ipos > 0 )
             {
-              *(ptri+lens) = ';';
-              lens += strolen( ptri+ipos ) + 1;
+              *(ptrb+lens) = ';';
+              lens += strolen( ptrb+lens+1 );
             }
-            pp_Stuff ( sOutLine, ptri, ptro - sOutLine, (ipos)? ipos-1:lens, lens );
+            pp_Stuff ( ptro, ptrb, i, ptri-ptrb, lens+1 );
             if ( ipos > 0 )
             {
-              ipos = ptro - sOutLine + 1;
-              *(ptri + ipos - 1) = '\0';
+              ipos += i - (ptri-ptrb);
+              *(sLine + isdvig + ipos - 1) = '\0';
             }
+            ptri += i - (ptri-ptrb);
           }
-          else
-            memcpy ( sLine, sOutLine, ptro - sOutLine + 1);
         }
 
           /* Look for definitions from #translate    */
@@ -680,101 +663,90 @@ int ParseExpression( char* sLine, char* sOutLine )
     }
     while ( ipos != 0 );
     kolpass++;
+    if( kolpass > 20 && rezDef )
+       GenError( _szPErrors, 'P', ERR_RECURSE, NULL, NULL );
   }
   while ( rezDef || rezTra || rezCom );
 
  return 0;
 }
 
-int WorkDefine ( char** ptri, char** ptro, DEFINES *stdef, int lenToken )
+int WorkDefine ( char** ptri, char* ptro, DEFINES *stdef )
 {
- int rezDef = 0, npars;
- char *ptr;
-    if ( stdef->npars < 0 )
-    {
-     rezDef = 1;
-     *ptro -= lenToken;
-     lenToken = 0;
-     while ( *(stdef->value+lenToken) != '\0' )
-      *(*ptro)++ = *(stdef->value+lenToken++);
-    }
-    else
-    {
-     SKIPTABSPACES( *ptri );
-     if ( **ptri == '(' )
-     {
-      npars = 0; ptr = *ptri;
-      do
+   int npars, lens;
+   char *ptr;
+
+   if ( stdef->npars < 0 )
+      lens = strocpy( ptro,stdef->value );
+   else
+   {
+      SKIPTABSPACES( *ptri );
+      if ( **ptri == '(' )
       {
-        ptr++;
-        if ( NextParm( &ptr, NULL ) > 0 ) npars++;
+         npars = 0; ptr = *ptri;
+         do
+         {
+            ptr++;
+            if ( NextParm( &ptr, NULL ) > 0 ) npars++;
+         }
+         while ( *ptr != ')' && *ptr != '\0' );
+         if ( *ptr == ')' && stdef->npars == npars )
+            lens = WorkPseudoF( ptri, ptro, stdef );
+         else return -1;
       }
-      while ( *ptr != ')' && *ptr != '\0' );
-      if ( *ptr == ')' && stdef->npars == npars )
-      {
-       rezDef = 1;
-       *ptro -= lenToken;
-       WorkPseudoF( ptri, ptro, stdef );
-      }
-     }
-     else *(*ptro)++ = ' ';
-    }
-    return rezDef;
+      else return -1;
+   }
+   return lens;
 }
 
-void WorkPseudoF ( char** ptri, char** ptro, DEFINES *stdef )
+int WorkPseudoF ( char** ptri, char* ptro, DEFINES *stdef )
 {
    char parfict[MAX_NAME], parreal[MAX_NAME];
    char *ptrb;
-   int ipos = 0, ifou, ibeg;
+   int ipos, ifou, ibeg;
    int lenfict, lenreal, lenres;
 
-   while ( *(stdef->value+ipos) != '\0' ) /* Copying value of macro */
-   {                                              /* to destination string  */
-     *(*ptro+ipos) = *(stdef->value+ipos);
-    ipos++;
-   }
-   *(*ptro+ipos) = '\0';
-   lenres = ipos;
+   lenres = strocpy( ptro, stdef->value );  /* Copying value of macro to destination string  */
 
    if ( stdef->pars )
    {
-     ipos = 0; ibeg = 0;
-     do                               /* Parsing through parameters */
-     {                                /* in macro definition        */
-       if ( *(stdef->pars+ipos)==',' || *(stdef->pars+ipos)=='\0' )
-       {
-         *(parfict+ipos-ibeg) = '\0';
-         lenfict = ipos - ibeg;
-
-         if ( **ptri != ')' )
+      ipos = 0; ibeg = 0;
+      do                               /* Parsing through parameters */
+      {                                /* in macro definition        */
+         if ( *(stdef->pars+ipos) == ',' || *(stdef->pars+ipos) == '\0' )
          {
-           (*ptri)++;                 /* Parsing through real parameters */
-           lenreal = NextParm( ptri, parreal );
+            *(parfict+ipos-ibeg) = '\0';
+            lenfict = ipos - ibeg;
 
-           ptrb = *ptro;
-           while ( (ifou = pp_strAt( parfict, lenfict, ptrb, lenres-(ptrb-*ptro) )) > 0 )
-           {
-             ptrb = ptrb+ifou-1;
-             if ( !ISNAME(*(ptrb-1)) && !ISNAME(*(ptrb+lenfict)) )
-             {
-               pp_Stuff ( parreal, ptrb, lenreal, lenfict, lenres );
-               lenres += lenreal - lenfict;
-             }
-             else ptrb++;
-           }
-           ibeg = ipos+1;
+            if ( **ptri != ')' )
+            {
+               (*ptri)++;             /* Get next real parameter */
+               lenreal = NextParm( ptri, parreal );
+
+               ptrb = ptro;
+               while ( (ifou = pp_strAt( parfict, lenfict, ptrb, lenres-(ptrb-ptro) )) > 0 )
+               {
+                  ptrb = ptrb+ifou-1;
+                  if ( !ISNAME(*(ptrb-1)) && !ISNAME(*(ptrb+lenfict)) )
+                  {
+                     pp_Stuff ( parreal, ptrb, lenreal, lenfict, lenres );
+                     lenres += lenreal - lenfict;
+                     ptrb += lenreal;
+                  }
+                  else ptrb++;
+               }
+               ibeg = ipos+1;
+            }
          }
-       }
-       else *(parfict+ipos-ibeg) = *(stdef->pars+ipos);
-       if ( *(stdef->pars+ipos) == '\0' ) break;
-       ipos++;
-     }
-     while ( 1 );
+         else *(parfict+ipos-ibeg) = *(stdef->pars+ipos);
+         if ( *(stdef->pars+ipos) == '\0' ) break;
+         ipos++;
+      }
+      while ( 1 );
    }
    else  while ( **ptri != ')' ) (*ptri)++;
    (*ptri)++;
-   *ptro += lenres;
+   return lenres;
 }
 
 int WorkCommand ( char* sToken, char* ptri, char* ptro, int ndef )
@@ -1113,7 +1085,7 @@ int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, int nbr )
 int getExpReal ( char *expreal, char **ptri, int prlist, int maxrez )
 {
  int lens = 0;
- char *sZnaki = "+-=><*/$.&:#";
+ char *sZnaki = "+-=><*/$.&:#%";
  int State;
  int StBr1 = 0, StBr2 = 0, StBr3 = 0;
  int rez = 0;

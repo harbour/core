@@ -1,3 +1,11 @@
+199908.04-11:35 GMT+3 Alexander Kresin
+  * source/hbpp/hbpp.c
+    * Some bugs fixed,mentioned by Victor Szel, Matteo Baccan and David G. Holm
+  * makefile.b32
+    * msgxxx.c replaced with msguk.c
+  * config/win32/bcc32.cf
+    * LD = bcc32
+
 19990804-00:40 EDT Paul Tucker <ptucker@sympatico.ca>
   * source/rtl/gt/gtwin.c
    * better selection of default screen size reported by MaxRow/Col
