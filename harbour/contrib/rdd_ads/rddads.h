@@ -113,6 +113,7 @@ typedef struct _ADSAREA_
    ADSHANDLE hTable;
    ADSHANDLE hOrdCurrent;
    ADSHANDLE hStatement;
+   int iFileType;                /* adt/cdx/ntx */
 } ADSAREA;
 
 typedef ADSAREA * ADSAREAP;

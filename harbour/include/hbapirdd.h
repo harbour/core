@@ -54,7 +54,8 @@
 #define HB_APIRDD_H_
 
 #include "hbapifs.h"
-//#include "ord.ch"
+#include "dbinfo.ch"   /* Constants for SELF_ORDINFO, SELF_INFO(), SELF_RECINFO() */
+#include "dbstruct.ch" /* Constants for SELF_FIELDINFO() */
 
 #if defined(HB_EXTERN_C)
 extern "C" {
@@ -62,8 +63,6 @@ extern "C" {
 
 #define HARBOUR_MAX_RDD_DRIVERNAME_LENGTH       32
 #define HARBOUR_MAX_RDD_ALIAS_LENGTH            32
-/* #define HARBOUR_MAX_RDD_FIELDNAME_LENGTH        32 */
-
 
 
 /* RDD virtual machine integration functions */
@@ -114,120 +113,6 @@ extern void    hb_rddShutDown( void );
 #define DBLM_EXCLUSIVE     1
 #define DBLM_MULTIPLE      2
 #define DBLM_FILE          3
-
-
-/* Constants for SELF_ORDINFO()
-   Be sure these stay in sync with the same ones in ord.ch
- */
-
-#define DBOI_CONDITION     1    /* Get the order condition */
-#define DBOI_EXPRESSION    2    /* Get the order expression */
-#define DBOI_POSITION      3    /* Get the order position */
-#define DBOI_RECNO         4    /* Get the order record number */
-#define DBOI_NAME          5    /* Get the order list name */
-#define DBOI_NUMBER        6    /* Get the order list position */
-#define DBOI_BAGNAME       7    /* Get the order Bag name */
-#define DBOI_BAGEXT        8    /* Get the order Bag Extension */
-#define DBOI_INDEXEXT      DBOI_BAGEXT
-#define DBOI_INDEXNAME     DBOI_BAGNAME
-#define DBOI_ORDERCOUNT    9    /* Get the number of orders in the index file */
-#define DBOI_FILEHANDLE    10   /* Get the handle of the index file */
-#define DBOI_ISCOND        11   /* Get the flag if the order has a for condition */
-#define DBOI_ISDESC        12   /* Get the flag if the order is descending */
-#define DBOI_UNIQUE        13   /* Get the flag if the order has the unique attribute set */
-
-/* 53-level constants */
-#define DBOI_FULLPATH           20  /* Get the order Bag Full Path              */
-#define DBOI_KEYTYPE            24  /* Get the keytype of order                 */
-#define DBOI_KEYSIZE            25  /* Get the keysize of order                 */
-#define DBOI_KEYCOUNT           26  /* Get the number of keys                   */
-#define DBOI_SETCODEBLOCK       27  /* Set codeblock for order key              */
-#define DBOI_KEYDEC             28  /* Get decimals of order key                */
-#define DBOI_HPLOCKING          29  /* High performance index locking           */
-#define DBOI_LOCKOFFSET         35  /* New locking offset                       */
-
-#define DBOI_KEYADD             36  /* Gets/Sets the Key to be added            */
-#define DBOI_KEYDELETE          37  /* Gets/Sets the Key to be deleted          */
-#define DBOI_KEYVAL             38  /* Get current key value                    */
-#define DBOI_SCOPETOP           39  /* Gets/Sets top of scope                   */
-#define DBOI_SCOPEBOTTOM        40  /* Gets/Sets bottom of scope                */
-#define DBOI_SCOPETOPCLEAR      41  /* Clears top scope setting                 */
-#define DBOI_SCOPEBOTTOMCLEAR   42  /* Clears bottom scope setting              */
-
-#define DBOI_CUSTOM             45  /* Custom created order                     */
-#define DBOI_SKIPUNIQUE         46  /* Flag for skip unique                     */
-
-#define DBOI_KEYSINCLUDED       50  /* # of keys included while indexing        */
-/* keyno */
-#define DBOI_KEYGOTO            DBOI_POSITION
-#define DBOI_KEYNORAW           51  /* keyno ignoring any filter                */
-#define DBOI_KEYCOUNTRAW        52  /* keycount ignoring any filter             */
-#define DBOI_OPTLEVEL           53  /* Optimization achieved for last query     */
-
-// Ideally shoud be an entry point that doesn't require an open table
-#define DBOI_STRICTREAD         60  /* Get/set read thru RDD when indexing      */
-#define DBOI_OPTIMIZE           61  /* Get/set use of query optimization        */
-#define DBOI_AUTOOPEN           62  /* Get/set auto open of production index    */
-#define DBOI_AUTOORDER          63  /* Get/set default order: production index  */
-#define DBOI_AUTOSHARE          64  /* Get/set automatic sharing control        */
-
-/* Return values for DBOI_OPTLEVEL */
-#define DBOI_OPTIMIZED_NONE     0
-#define DBOI_OPTIMIZED_PART     1
-#define DBOI_OPTIMIZED_FULL     2
-
-/* Codes for SELF_INFO() */
-
-#define DBI_ISDBF          1    /* Logical: RDD support DBF file format? */
-#define DBI_CANPUTREC      2    /* Logical: RDD support Putting Records? */
-#define DBI_GETHEADERSIZE  3    /* Numeric: Get header size of the file */
-#define DBI_LASTUPDATE     4    /* Date:    Last date RDD file updated */
-#define DBI_GETDELIMITER   5    /* String:  Get default delimiter */
-#define DBI_SETDELIMITER   6    /* String:  Set default delimiter */
-#define DBI_GETRECSIZE     7    /* Numeric: Get record size of the file */
-#define DBI_GETLOCKARRAY   8    /* Array: Get an array of locked records */
-#define DBI_TABLEEXT       9    /* String:  Get table file extension */
-#define DBI_FULLPATH       10   /* String: Full path name of opened file */
-#define DBI_ISFLOCK        20   /* Get file lock status */
-#define DBI_CHILDCOUNT     22   /* Number of opened relations */
-#define DBI_FILEHANDLE     23   /* Handle of opened file */
-#define DBI_BOF            26   /* BOF flag - alternate to bof() */
-#define DBI_EOF            27   /* EOF flag - alternate to eof() */
-#define DBI_DBFILTER       28   /* Filter expression */
-#define DBI_FOUND          29   /* FOUND flag - alternate to found */
-#define DBI_FCOUNT         30   /* Number of fields */
-#define DBI_LOCKCOUNT      31   /* Locked records */
-#define DBI_VALIDBUFFER    32   /* Is the current buffer valid */
-#define DBI_ALIAS          33   /* Alias name of workarea */
-#define DBI_GETSCOPE       34   /* Locate codeblock */
-#define DBI_LOCKOFFSET     35   /* New locking offset */
-#define DBI_SHARED         36   /* Gets/Sets the shared flag */
-#define DBI_MEMOEXT        37   /* String:  Get memo file extension */
-#define DBI_MEMOHANDLE     38   /* Dos handle for memo file */
-#define DBI_MEMOBLOCKSIZE  39   /* Blocksize in memo files */
-#define DBI_DB_VERSION     101  /* HOST driver Version */
-#define DBI_RDD_VERSION    102  /* RDD version (current RDD) */
-#define DBI_USER           1000 /* Start of user definable DBI_ values */
-
-
-
-/* Codes for SELF_RECINFO() */
-
-#define DBRI_DELETED       1
-#define DBRI_LOCKED        2
-#define DBRI_RECSIZE       3
-#define DBRI_RECNO         4
-#define DBRI_UPDATED       5
-
-
-
-/* Codes for SELF_FIELDINFO() */
-
-#define DBS_NAME           1
-#define DBS_TYPE           2
-#define DBS_LEN            3
-#define DBS_DEC            4
-
 
 
 /* Codes for RawLock types */

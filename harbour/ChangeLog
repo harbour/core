@@ -8,6 +8,25 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-10-14 0:10 UTC-0800 Brian Hays <bhays@abacuslaw.com>
+   * contrib/rdd_ads/rddads.h
+   * contrib/rdd_ads/ads1.c
+      * created iFileType to pArea so each workarea knows
+           whether it's ADT or CDX or NTX
+   * contrib/rdd_ads/adsfunc.c
+      - removed the 'far' from a char far *  added in last post
+
+   * include/dbstruct.ch
+      Added a note that it's also used by C code
+         #included it in hbapirdd.h (where I removed redundancies)
+   * include/ord.ch
+   + include/dbInfo.ch
+      * moved all the DBI_*, DBRI_* and DBOI_* constants to the
+         new dbInfo.ch, and included this in ord.ch and hbapirdd.h
+   * include/hbapirdd.h
+      * removed the redundancies, included dbinfo.ch and dbstruct.ch
+
+
 2002-10-12 19:00 UTC-0300 Luiz Rafael Culik <culikr@uol.com.br>
    * contrib/mysql/mysql.c
         ! Fixed Buffer sizes on DATATOSQL() and FILETOSQLBINARY() It was leading to GPF due buffer underflow.

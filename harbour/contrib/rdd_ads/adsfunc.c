@@ -1244,7 +1244,7 @@ HB_FUNC( ADSGETLASTERROR )
    AdsGetLastError( &ulLastErr, aucError, &usLength );
 
    if ( hb_pcount() > 0 )
-      hb_storclen( ( char far * ) aucError, usLength, 1 );
+      hb_storclen( ( char * ) aucError, usLength, 1 );
 
    hb_retnl( ulLastErr );
 }

@@ -73,7 +73,7 @@ static ERRCODE adsSetScope(  ADSAREAP pArea, LPDBORDSCOPEINFO sInfo );
 HB_FUNC( _ADS );
 HB_FUNC( ADS_GETFUNCTABLE );
 
-extern int adsFileType;
+extern int adsFileType;                 /* current global setting */
 extern int adsLockType;
 extern int adsRights;
 extern int adsCharType;
@@ -1508,7 +1508,7 @@ static ERRCODE adsInfo( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
       }
 
       case DBI_TABLEEXT:
-         hb_itemPutC( pItem, ((adsFileType==ADS_ADT) ? ".adt" : ".dbf") );
+         hb_itemPutC( pItem, ((pArea->iFileType==ADS_ADT) ? ".adt" : ".dbf") );
          break;
 
       case DBI_FULLPATH :
@@ -1531,8 +1531,8 @@ static ERRCODE adsInfo( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          break;
 
       case DBI_MEMOEXT:
-         hb_itemPutC( pItem, ((adsFileType==ADS_ADT) ? ".adm" :
-                                (adsFileType==ADS_CDX) ? ".fpt" : ".dbt") );
+         hb_itemPutC( pItem, ((pArea->iFileType==ADS_ADT) ? ".adm" :
+                                (pArea->iFileType==ADS_CDX) ? ".fpt" : ".dbt") );
          break;
 
 /* TODO ... */
@@ -1571,7 +1571,9 @@ static ERRCODE adsNewArea( ADSAREAP pArea )
    /* Size for deleted records flag */
    pArea->uiRecordLen = 1;
 
-   pArea->uiMaxFieldNameLength = (adsFileType == ADS_ADT) ? ADS_MAX_FIELD_NAME : ADS_MAX_DBF_FIELD_NAME;
+   pArea->uiMaxFieldNameLength = (pArea->iFileType == ADS_ADT) ? ADS_MAX_FIELD_NAME : ADS_MAX_DBF_FIELD_NAME;
+   pArea->iFileType = adsFileType;
+
    return SUCCESS;
 }
 
@@ -1602,7 +1604,7 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
       pArea->hOrdCurrent = 0;
 
       ulRetVal = AdsOpenTable  ( 0, pOpenInfo->abName, pOpenInfo->atomAlias,
-                  adsFileType, adsCharType, adsLockType, adsRights,
+                  pArea->iFileType, adsCharType, adsLockType, adsRights,
                   ( (pOpenInfo->fShared) ? ADS_SHARED : ADS_EXCLUSIVE ) |
                   ( (pOpenInfo->fReadonly) ? ADS_READONLY : ADS_DEFAULT ),
                    &hTable);
@@ -2154,14 +2156,17 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
                   break;
 
                case ADS_NUMERIC:
-                  if ( adsFileType == ADS_NTX )  /* TODO: This should be a table-specific switch */
+                  if ( pArea->iFileType == ADS_NTX )
                   {
                      if ( aucBuffer[0] == '-' || aucBuffer[0] == ',')      /* negative number encoding */
                      {
                         pus16 = 0;
                         while ( pus16 < pusLen && aucBuffer[pus16] == ',') /* leading zeros were set as commas for sorting */
                            aucBuffer[pus16++] = '0';
-                        if ( aucBuffer[pus16] == '-' ) pus16++;            /* skip past the minus */
+
+                        if ( aucBuffer[pus16] == '-' )
+                           pus16++;            /* skip past the minus */
+
                         while ( pus16 < pusLen )
                            aucBuffer[pus16] = (SIGNED8) 0x5C - aucBuffer[pus16++];
 
@@ -2246,7 +2251,7 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
 
       case DBOI_BAGEXT:
          hb_itemPutC( pOrderInfo->itmResult,
-                ((adsFileType==ADS_ADT) ? ".adi" : (adsFileType==ADS_CDX) ? ".cdx" : ".ntx") );
+                ((pArea->iFileType==ADS_ADT) ? ".adi" : (pArea->iFileType==ADS_CDX) ? ".cdx" : ".ntx") );
          break;
 
       case DBOI_ORDERCOUNT:

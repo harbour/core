@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Header file for DBSTRUCT() function
+ * Header file for DBSTRUCT() function.   >> Also used by C code <<
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
  * www - http://www.harbour-project.org
