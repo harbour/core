@@ -2227,7 +2227,7 @@ static void hb_compRTVariableGen( char * szCreateFun )
    HB_RTVAR_PTR pDel;
 
    /* generate the function call frame */
-   hb_compGenPushSymbol( hb_strdup( szCreateFun ), 1);
+   hb_compGenPushSymbol( hb_strdup( szCreateFun ), TRUE, FALSE );
    hb_compGenPushNil();
 
    /* push variable names to create */
