@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+2002-04-02 20:42 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * include/hbrddntx.h
+  * source/rdd/dbfntx/dbfntx1.c
+    * OrdKeyNo() implemented for DBFNTX, both OrdKeyNo() and OrdKeyCount()
       now respects scopes.
     * Some fixes and cleanup
 
