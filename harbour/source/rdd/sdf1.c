@@ -38,63 +38,15 @@ HB_INIT_SYMBOLS_END( sdf1__InitSymbols )
 #pragma startup sdf1__InitSymbols
 #endif
 
-static ERRCODE Bof( AREAP pArea, BOOL * pBof )
-{
-   printf( "Calling SDF: Bof()\n" );
-   return SUCCESS;
-}
-
-static ERRCODE Eof( AREAP pArea, BOOL * pEof )
-{
-   printf( "Calling SDF: Eof()\n" );
-   return SUCCESS;
-}
-
-static ERRCODE Found( AREAP pArea, BOOL * pFound )
-{
-   printf( "Calling SDF: Found()\n" );
-   return SUCCESS;
-}
-
-static ERRCODE GoBottom( AREAP pArea )
-{
-   printf( "Calling SDF: GoBottom()\n" );
-   return SUCCESS;
-}
-
-static ERRCODE GoTo( AREAP pArea, LONG lRecNo )
-{
-   printf( "Calling SDF: GoTo()\n" );
-   return SUCCESS;
-}
-
-static ERRCODE GoTop( AREAP pArea )
-{
-   printf( "Calling SDF: GoTop()\n" );
-   return SUCCESS;
-}
-
-static ERRCODE Skip( AREAP pArea, LONG lToSkip )
-{
-   printf( "Calling SDF: Skip()\n" );
-   return SUCCESS;
-}
-
-static ERRCODE Close( AREAP pArea )
-{
-   printf( "Calling SDF: Close()\n" );
-   return SUCCESS;
-}
-
 static ERRCODE Info( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 {
    printf( "Calling SDF: Info()\n" );
    return SUCCESS;
 }
 
-static ERRCODE Open( AREAP pArea, LPDBOPENINFO pOpenInfo )
+static ERRCODE ReadDBHeader( AREAP pArea )
 {
-   printf( "Calling SDF: Open()\n" );
+   printf( "Calling SDF: ReadDBHeader()\n" );
    return SUCCESS;
 }
 
@@ -106,26 +58,32 @@ static ERRCODE WriteDBHeader( AREAP pArea )
 
 static RDDFUNCS sdfSuper = { 0 };
 
-static RDDFUNCS sdfTable = { Bof,
-                             Eof,
-                             Found,
-                             GoBottom,
-                             GoTo,
-                             GoTop,
-                             Skip,
+static RDDFUNCS sdfTable = { 0,                 /* Super Bof */
+                             0,                 /* Super Eof */
+                             0,                 /* Super Found */
+                             0,                 /* Super GoBottom */
+                             0,                 /* Super GoTo */
+                             0,                 /* Super GoTop */
+                             0,                 /* Super Skip */
                              0,                 /* Super AddField */
                              0,                 /* Super CreateFields */
+                             0,                 /* Super FieldCount */
+                             0,                 /* Super FieldName */
+                             0,                 /* Super GetValue */
+                             0,                 /* Super RecCount */
+                             0,                 /* Super RecNo */
                              0,                 /* Super SetFieldExtent */
-                             Close,
+                             0,                 /* Super Close */
                              0,                 /* Super Create */
                              Info,
                              0,                 /* Super NewArea */
-                             Open,
+                             0,                 /* Super Open */
                              0,                 /* Super Release */
                              0,                 /* Super StructSize */
                              0,                 /* Super SysName */
+                             ReadDBHeader,
                              WriteDBHeader
-			   };
+                           };
 
 HARBOUR HB__SDF( void )
 {

@@ -39,54 +39,6 @@ HB_INIT_SYMBOLS_END( dbfntx1__InitSymbols )
 #pragma startup dbfntx1__InitSymbols
 #endif
 
-static ERRCODE Bof( AREAP pArea, BOOL * pBof )
-{
-   printf( "Calling DBFNTX: Bof()\n" );
-   return SUCCESS;
-}
-
-static ERRCODE Eof( AREAP pArea, BOOL * pEof )
-{
-   printf( "Calling DBFNTX: Eof()\n" );
-   return SUCCESS;
-}
-
-static ERRCODE Found( AREAP pArea, BOOL * pFound )
-{
-   printf( "Calling DBFNTX: Found()\n" );
-   return SUCCESS;
-}
-
-static ERRCODE GoBottom( AREAP pArea )
-{
-   printf( "Calling DBFNTX: GoBottom()\n" );
-   return SUCCESS;
-}
-
-static ERRCODE GoTo( AREAP pArea, LONG lRecNo )
-{
-   printf( "Calling DBFNTX: GoTo()\n" );
-   return SUCCESS;
-}
-
-static ERRCODE GoTop( AREAP pArea )
-{
-   printf( "Calling DBFNTX: GoTop()\n" );
-   return SUCCESS;
-}
-
-static ERRCODE Skip( AREAP pArea, LONG lToSkip )
-{
-   printf( "Calling DBFNTX: Skip()\n" );
-   return SUCCESS;
-}
-
-static ERRCODE Close( AREAP pArea )
-{
-   printf( "Calling DBFNTX: Close()\n" );
-   return SUCCESS;
-}
-
 static ERRCODE Info( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 {
    switch( uiIndex )
@@ -98,29 +50,28 @@ static ERRCODE Info( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
    return SUCCESS;
 }
 
-static ERRCODE Open( AREAP pArea, LPDBOPENINFO pOpenInfo )
-{
-   printf( "Calling DBFNTX: Open()\n" );
-   return SUCCESS;
-}
-
 static RDDFUNCS ntxSuper = { 0 };
 
-static RDDFUNCS ntxTable = { Bof,
-                             Eof,
-                             Found,
-                             GoBottom,
-                             GoTo,
-                             GoTop,
-                             Skip,
+static RDDFUNCS ntxTable = { 0,                    /* Super Bof */
+                             0,                    /* Super Eof */
+                             0,                    /* Super Found */
+                             0,                    /* Super GoBottom */
+                             0,                    /* Super GoTo */
+                             0,                    /* Super GoTop */
+                             0,                    /* Super Skip */
                              0,                    /* Super AddField */
                              0,                    /* Super CreateFields */
+                             0,                    /* Super FieldCount */
+                             0,                    /* Super FieldName */
+                             0,                    /* Super GetValue */
+                             0,                    /* Super RecCount */
                              0,                    /* Super SetFieldExtent */
-                             Close,
+                             0,                    /* Super RecNo */
+                             0,                    /* Super Close */
                              0,                    /* Super Create */
                              Info,
                              0,                    /* Super NewArea */
-                             Open,
+                             0,                    /* Super Open */
                              0,                    /* Super Release */
                              0,                    /* Super StructSize */
                              0,                    /* Super SysName */

@@ -157,6 +157,25 @@ typedef DBOPENINFO * LPDBOPENINFO;
 
 
 /*
+*  DBEXTENDINFO
+*  ------------
+*  Additional properties
+*/
+
+typedef struct
+{
+   USHORT   uiHeaderLen;     /* Size of header */
+   USHORT   uiRecordLen;     /* Size of record */
+   BYTE *   bRecord;         /* Buffer of the data */
+   BYTE *   bOldRecord;      /* Buffer of the data for undelete */
+   BOOL     fHasMemo;        /* Work Area with Memo fields */
+   PHB_ITEM pRecNo;          /* Current record */
+} DBEXTENDINFO;
+
+typedef DBEXTENDINFO * LPDBEXTENDINFO;
+
+
+/*
 *  DBORDERCONDINFO
 *  ---------------
 *  The Create Order conditional Info structure
@@ -509,10 +528,12 @@ typedef struct _AREA
 
    BOOL fTop;                    /* TRUE if "top" */
    BOOL fBottom;                 /* TRUE if "bottom" */
+#endif
    BOOL fBof;                    /* TRUE if "bof" */
    BOOL fEof;                    /* TRUE if "eof" */
    BOOL fFound;                  /* TRUE if "found" */
 
+#if 0
    DBSCOPEINFO  dbsi;            /* Info regarding last LOCATE */
    DBFILTERINFO dbfi;            /* Filter in effect */
 
@@ -528,6 +549,7 @@ typedef struct _AREA
    USHORT   rddID;
 
    LPFILEINFO lpFileInfo;        /* Files used by this workarea */
+   LPDBEXTENDINFO lpExtendInfo;  /* Additional properties */
 
 } AREA;
 
@@ -549,11 +571,11 @@ typedef USHORT ( * DBENTRYP_VF   )( AREAP area, LPDBFIELDINFO param );
 typedef USHORT ( * DBENTRYP_SP   )( AREAP area, USHORT * param );
 typedef USHORT ( * DBENTRYP_P    )( AREAP area, BYTE * param );
 typedef USHORT ( * DBENTRYP_S    )( AREAP area, USHORT param );
+typedef USHORT ( * DBENTRYP_LP   )( AREAP area, LONG * param );
+typedef USHORT ( * DBENTRYP_SVP  )( AREAP area, USHORT index, void * param );
 
 #if 0
-typedef USHORT ( * DBENTRYP_LP   )( AREAP area, LONGP param);
 typedef USHORT ( * DBENTRYP_PP   )( AREAP area, void ** param);
-typedef USHORT ( * DBENTRYP_SVP  )( AREAP area, USHORT index, void * param);
 typedef USHORT ( * DBENTRYP_SVPB )( AREAP area, USHORT index, void * param, USHORT mode);
 typedef USHORT ( * DBENTRYP_VPL  )( AREAP area, void * p1, LONG p2);
 typedef USHORT ( * DBENTRYP_VPLP )( AREAP area, void * p1, LONGP p2);
@@ -600,23 +622,31 @@ typedef struct _RDDFUNCS
 #if 0
    DBENTRYP_V    deleterec;
    DBENTRYP_SP   deleted;
+#endif
    DBENTRYP_SP   fieldCount;
+#if 0
    DBENTRYP_VP   fieldDisplay;
    DBENTRYP_SSI  fieldInfo;
+#endif
    DBENTRYP_SVP  fieldName;
+#if 0
    DBENTRYP_V    flush;
    DBENTRYP_PP   getRec;
+#endif
    DBENTRYP_SI   getValue;
+#if 0
    DBENTRYP_SVP  getVarLen;
    DBENTRYP_V    goCold;
    DBENTRYP_V    goHot;
    DBENTRYP_VP   putRec;
    DBENTRYP_SI   putValue;
    DBENTRYP_V    recall;
-   DBENTRYP_LP   reccount;
-   DBENTRYP_ISI  recInfo;
-   DBENTRYP_I    recno;
 #endif
+   DBENTRYP_LP   reccount;
+#if 0
+   DBENTRYP_ISI  recInfo;
+#endif
+   DBENTRYP_I    recno;
    DBENTRYP_S    setFieldExtent;
 
    /* WorkArea/Database management */
@@ -703,12 +733,12 @@ typedef struct _RDDFUNCS
    DBENTRYP_SVPB getValueFile;
    DBENTRYP_VP   openMemFile;
    DBENTRYP_SVP  putValueFile;
+#endif
 
 
    /* Database file header handling */
 
    DBENTRYP_V    readDBHeader;
-#endif
    DBENTRYP_V    writeDBHeader;
 
 

@@ -72,46 +72,71 @@ HB_INIT_SYMBOLS_END( dbf1__InitSymbols )
 #pragma startup dbf1__InitSymbols
 #endif
 
-static ERRCODE Bof( AREAP pArea, BOOL * pBof )
+static ERRCODE ReadBuffer( AREAP pArea, LONG lRecNo )
 {
-   printf( "Calling DBF: Bof()\n" );
-   return SUCCESS;
-}
-
-static ERRCODE Eof( AREAP pArea, BOOL * pEof )
-{
-   printf( "Calling DBF: Eof()\n" );
-   return SUCCESS;
-}
-
-static ERRCODE Found( AREAP pArea, BOOL * pFound )
-{
-   printf( "Calling DBF: Found()\n" );
+   hb_fsSeek( pArea->lpFileInfo->hFile, pArea->lpExtendInfo->uiHeaderLen +
+              ( lRecNo - 1 ) * pArea->lpExtendInfo->uiRecordLen, FS_SET );
+   if( hb_fsRead( pArea->lpFileInfo->hFile, pArea->lpExtendInfo->bRecord,
+                  pArea->lpExtendInfo->uiRecordLen ) != pArea->lpExtendInfo->uiRecordLen )
+   {
+      memset( pArea->lpExtendInfo->bRecord, ' ', pArea->lpExtendInfo->uiRecordLen );
+      pArea->lpExtendInfo->bRecord[ pArea->lpExtendInfo->uiRecordLen ] = 0;
+      return FAILURE;
+   }
    return SUCCESS;
 }
 
 static ERRCODE GoBottom( AREAP pArea )
 {
-   printf( "Calling DBF: GoBottom()\n" );
-   return SUCCESS;
+   LONG lRecCount;
+   
+   if( SELF_RECCOUNT( pArea, &lRecCount ) == FAILURE )
+      return FAILURE;
+
+   return SELF_GOTO( pArea, lRecCount );
 }
 
 static ERRCODE GoTo( AREAP pArea, LONG lRecNo )
 {
-   printf( "Calling DBF: GoTo()\n" );
-   return SUCCESS;
+   LONG lRecCount;
+   
+   if( SELF_RECCOUNT( pArea, &lRecCount ) == FAILURE )
+      return FAILURE;
+
+   if( lRecCount < 1 )
+   {
+      pArea->fBof = 1;
+      pArea->fEof = 1;
+      lRecNo = 1;
+   }
+   else
+   {
+      if( lRecNo > lRecCount + 1 )
+         lRecNo = lRecCount + 1;
+      if( lRecNo == 1 )
+         pArea->fBof = 1;
+      else
+         pArea->fBof = 0;
+      if( lRecNo == lRecCount + 1 )
+         pArea->fEof = 1;
+      else
+         pArea->fEof = 0;
+   }
+   hb_itemPutNL( pArea->lpExtendInfo->pRecNo, lRecNo );
+   if( lRecCount > 0 )
+      return ReadBuffer( pArea, lRecNo );
+   else
+      return SUCCESS;
 }
 
 static ERRCODE GoTop( AREAP pArea )
 {
-   printf( "Calling DBF: GoTop()\n" );
-   return SUCCESS;
+   return SELF_GOTO( pArea, 1 );
 }
 
 static ERRCODE Skip( AREAP pArea, LONG lToSkip )
 {
-   printf( "Calling DBF: Skip()\n" );
-   return SUCCESS;
+   return SELF_GOTO( pArea, hb_itemGetNL( pArea->lpExtendInfo->pRecNo ) + lToSkip );
 }
 
 static ERRCODE CreateFields( AREAP pArea, PHB_ITEM pStruct )
@@ -150,9 +175,73 @@ static ERRCODE CreateFields( AREAP pArea, PHB_ITEM pStruct )
    return SUCCESS;
 }
 
-static ERRCODE Close( AREAP pArea )
+static ERRCODE GetValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 {
-   printf( "Calling DBF: Close()\n" );
+   LPFIELD pField;
+   USHORT uiCount, uiOffset;
+   BYTE * szText, * szOldChar, szEndChar;
+
+   if( uiIndex > pArea->uiFieldCount )
+      return FAILURE;
+
+   pField = pArea->lpFields;
+   uiOffset = 1;
+   for( uiCount = 1; uiCount < uiIndex; uiCount++ )
+   {
+      if( pField->uiType == 'C' )
+         uiOffset += pField->uiLen + ( ( USHORT ) pField->uiDec << 8 );
+      else
+         uiOffset += pField->uiLen;
+      pField = pField->lpfNext;
+   }
+
+   szText = pArea->lpExtendInfo->bRecord + uiOffset;
+   switch( pField->uiType )
+   {
+      case 'C':
+         hb_itemPutCL( pItem, ( char * ) szText,
+                       pField->uiLen + ( ( USHORT ) pField->uiDec << 8 ) );
+         break;
+
+      case 'N':
+         szOldChar = szText + pField->uiLen;
+         szEndChar = * szOldChar;
+         * szOldChar = 0;
+         if( pField->uiDec )
+            hb_itemPutND( pItem, atof( ( char * ) szText ) );
+         else
+            hb_itemPutNL( pItem, atof( ( char * ) szText ) );
+         * szOldChar = szEndChar;
+         break;
+
+      case 'D':
+         szOldChar = szText + pField->uiLen;
+         szEndChar = * szOldChar;
+         * szOldChar = 0;
+         hb_itemPutDS( pItem, ( char * ) szText );
+         * szOldChar = szEndChar;
+         break;
+
+      case 'L':
+         if( * szText == 'T' )
+            hb_itemPutL( pItem, 1 );
+         else
+            hb_itemPutL( pItem, 0 );
+         break;
+   }
+   
+   return SUCCESS;
+}
+
+static ERRCODE RecCount( AREAP pArea, LONG * pRecCount )
+{
+   DBFHEADER pHeader;
+
+   hb_fsSeek( pArea->lpFileInfo->hFile, 0, FS_SET );
+   if( hb_fsRead( pArea->lpFileInfo->hFile, ( BYTE * ) &pHeader,
+                  sizeof( DBFHEADER ) ) != sizeof( DBFHEADER ) )
+      return FAILURE;
+   * pRecCount = pHeader.ulRecords;
    return SUCCESS;
 }
 
@@ -167,9 +256,82 @@ static ERRCODE Info( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
    return SUCCESS;
 }
 
-static ERRCODE Open( AREAP pArea, LPDBOPENINFO pOpenInfo )
+static ERRCODE ReadDBHeader( AREAP pArea )
 {
-   printf( "Calling DBF: Open()\n" );
+   DBFHEADER pHeader;
+   DBFIELDINFO pFieldInfo;
+   LPDBFFIELD pDBField;
+   USHORT uiDataLen;
+   char * szBuffer;
+   USHORT uiFields, uiCount;
+
+   hb_fsSeek( pArea->lpFileInfo->hFile, 0, FS_SET );
+   if( hb_fsRead( pArea->lpFileInfo->hFile, ( BYTE * ) &pHeader,
+                  sizeof( DBFHEADER ) ) != sizeof( DBFHEADER ) )
+      return FAILURE;
+
+   pArea->lpExtendInfo->uiHeaderLen = pHeader.uiHeaderLen;
+   uiDataLen = pHeader.uiHeaderLen - sizeof( DBFHEADER );
+   szBuffer = ( char * ) hb_xgrab( uiDataLen );
+   if( hb_fsRead( pArea->lpFileInfo->hFile, ( BYTE * ) szBuffer,
+                  uiDataLen ) != uiDataLen )
+   {
+      hb_xfree( szBuffer );
+      return FAILURE;
+   }
+
+   for( uiFields = 0; uiFields < uiDataLen; uiFields += 32 )
+      if( szBuffer[ uiFields ] == 0xD )
+         break;
+         
+   uiFields /= 32;
+   if( ( uiDataLen / 32 ) < uiFields )
+   {
+      hb_xfree( szBuffer );
+      return FAILURE;
+   }
+   
+   pArea->lpExtendInfo->uiRecordLen = 1;
+   SELF_SETFIELDEXTENT( pArea, uiFields );
+   pFieldInfo.typeExtended = 0;
+   pDBField = ( LPDBFFIELD ) szBuffer;
+   for( uiCount = 0; uiCount < uiFields; uiCount++ )
+   {
+      pFieldInfo.atomName = ( BYTE * ) pDBField->bName;
+      pFieldInfo.uiType = toupper( pDBField->bType );
+
+      if( pFieldInfo.uiType == 'N' )
+      {
+         pFieldInfo.uiLen = ( USHORT ) pDBField->bLen;
+         pFieldInfo.uiDec = ( USHORT ) pDBField->bDec;
+      }
+      else
+      {
+         if( pFieldInfo.uiType == 'L' || pFieldInfo.uiType == 'D' ||
+             pFieldInfo.uiType == 'M' )
+         {
+            pFieldInfo.uiLen = ( USHORT ) pDBField->bLen;
+            if( pFieldInfo.uiType == 'M' )
+               pArea->lpExtendInfo->fHasMemo = 1;
+         }
+         else if( pFieldInfo.uiType == 'C' )
+         {
+            pFieldInfo.uiLen = ( USHORT ) pDBField->bLen +
+                               ( ( USHORT ) pDBField->bDec << 8 );
+         }
+         pFieldInfo.uiDec = 0;
+      }
+      pArea->lpExtendInfo->uiRecordLen += pFieldInfo.uiLen;
+      SELF_ADDFIELD( pArea, &pFieldInfo );
+      pDBField++;
+   }
+   hb_xfree( szBuffer );
+   pArea->lpExtendInfo->bRecord = ( BYTE * ) hb_xgrab( pArea->lpExtendInfo->uiRecordLen + 1 );
+   memset( pArea->lpExtendInfo->bRecord, ' ', pArea->lpExtendInfo->uiRecordLen );
+   pArea->lpExtendInfo->bRecord[ pArea->lpExtendInfo->uiRecordLen ] = 0;
+   pArea->lpExtendInfo->bOldRecord = ( BYTE * ) hb_xgrab( pArea->lpExtendInfo->uiRecordLen + 1 );
+   memset( pArea->lpExtendInfo->bOldRecord, ' ', pArea->lpExtendInfo->uiRecordLen );
+   pArea->lpExtendInfo->bOldRecord[ pArea->lpExtendInfo->uiRecordLen ] = 0;
    return SUCCESS;
 }
 
@@ -269,24 +431,30 @@ static ERRCODE WriteDBHeader( AREAP pArea )
 
 static RDDFUNCS dbfSuper = { 0 };
 
-static RDDFUNCS dbfTable = { Bof,
-                             Eof,
-                             Found,
+static RDDFUNCS dbfTable = { 0,               /* Super Bof */
+                             0,               /* Super Eof */
+                             0,               /* Super Found */
                              GoBottom,
                              GoTo,
                              GoTop,
                              Skip,
                              0,               /* Super AddField */
                              CreateFields,
+                             0,               /* Super FieldCount */
+                             0,               /* Super FieldName */
+                             GetValue,
+                             RecCount,
+                             0,               /* Super RecNo */
                              0,               /* Super SetFieldsExtent */
-                             Close,
+                             0,               /* Super Close */
                              0,               /* Super Create */
                              Info,
                              0,               /* Super NewArea */
-                             Open,
+                             0,               /* Super Open */
                              0,               /* Super Release */
                              0,               /* Super StructSize */
                              0,               /* Super SysName */
+                             ReadDBHeader,
                              WriteDBHeader
                            };
 

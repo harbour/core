@@ -24,8 +24,8 @@
 
 #include <ctype.h>
 #include "extend.h"
-#include "init.h"
 #include "itemapi.h"
+#include "init.h"
 #include "errorapi.h"
 #include "rddapi.h"
 #include "set.h"
@@ -34,6 +34,7 @@
 #include "set.ch"
 
 #define HARBOUR_MAX_RDD_DRIVERNAME_LENGTH       32
+#define HARBOUR_MAX_RDD_FIELDNAME_LENGTH        32
 
 typedef struct _RDDNODE
 {
@@ -77,13 +78,19 @@ HARBOUR HB_DBSKIP( void );
 HARBOUR HB_DBUSEAREA( void );
 HARBOUR HB_DELIM( void );
 HARBOUR HB_EOF( void );
+HARBOUR HB_FIELDCOUNT( void );
+HARBOUR HB_FIELDGET( void );
+HARBOUR HB_FIELDNAME( void );
 HARBOUR HB_FOUND( void );
+HARBOUR HB_LASTREC( void );
 HARBOUR HB_RDDLIST( void );
 HARBOUR HB_RDDNAME( void );
 HARBOUR HB_RDDREGISTER( void );
 HARBOUR HB_RDDSETDEFAULT( void );
 HARBOUR HB_RDDSHUTDOWN( void );
 HARBOUR HB_RDDSYS( void );
+HARBOUR HB_RECCOUNT( void );
+HARBOUR HB_RECNO( void );
 HARBOUR HB_SDF( void );
 
 HB_INIT_SYMBOLS_BEGIN( dbCmd__InitSymbols )
@@ -100,12 +107,18 @@ HB_INIT_SYMBOLS_BEGIN( dbCmd__InitSymbols )
 { "DBSKIP",        FS_PUBLIC, HB_DBSKIP,        0 },
 { "DBUSEAREA",     FS_PUBLIC, HB_DBUSEAREA,     0 },
 { "EOF",           FS_PUBLIC, HB_EOF,           0 },
+{ "FIELDCOUNT",    FS_PUBLIC, HB_FIELDCOUNT,    0 },
+{ "FIELDGET",      FS_PUBLIC, HB_FIELDGET,      0 },
+{ "FIELDNAME",     FS_PUBLIC, HB_FIELDNAME,     0 },
 { "FOUND",         FS_PUBLIC, HB_FOUND,         0 },
+{ "LASTREC",       FS_PUBLIC, HB_LASTREC,       0 },
 { "RDDLIST",       FS_PUBLIC, HB_RDDLIST,       0 },
 { "RDDNAME",       FS_PUBLIC, HB_RDDNAME,       0 },
 { "RDDREGISTER",   FS_PUBLIC, HB_RDDREGISTER,   0 },
 { "RDDSETDEFAULT", FS_PUBLIC, HB_RDDSETDEFAULT, 0 },
-{ "RDDSHUTDOWN",   FS_PUBLIC, HB_RDDSHUTDOWN,   0 }
+{ "RDDSHUTDOWN",   FS_PUBLIC, HB_RDDSHUTDOWN,   0 },
+{ "RECCOUNT",      FS_PUBLIC, HB_RECCOUNT,      0 },
+{ "RECNO",         FS_PUBLIC, HB_RECNO,         0 }
 HB_INIT_SYMBOLS_END( dbCmd__InitSymbols )
 #if ! defined(__GNUC__)
 #pragma startup dbCmd__InitSymbols
@@ -212,10 +225,10 @@ static int hb_rddRegister( char * szDriver, USHORT uiType )
    if ( hb_parni( -1 ) != SUCCESS )
    {
       hb_xfree( pRddNewNode );         /* Delete de new RDD node */
-      return 3;                     /* Invalid FUNCTABLE */
+      return 3;                        /* Invalid FUNCTABLE */
    }
 
-   if( !pRddList )                  /* First RDD node */
+   if( !pRddList )                     /* First RDD node */
       pRddList = pRddNewNode;
    else
    {
@@ -263,19 +276,19 @@ static ERRCODE UnSupported_L( AREAP pArea, LONG lLong )
 
 static ERRCODE Bof( AREAP pArea, BOOL * pBof )
 {
-   printf( "Calling default: Bof()\n" );
+   * pBof = pArea->fBof;
    return SUCCESS;
 }
 
 static ERRCODE Eof( AREAP pArea, BOOL * pEof )
 {
-   printf( "Calling default: Eof()\n" );
+   * pEof = pArea->fEof;
    return SUCCESS;
 }
 
 static ERRCODE Found( AREAP pArea, BOOL * pFound )
 {
-   printf( "Calling default: Found()\n" );
+   * pFound = pArea->fFound;
    return SUCCESS;
 }
 
@@ -292,7 +305,10 @@ static ERRCODE AddField( AREAP pArea, LPDBFIELDINFO pFieldInfo )
    pField = pArea->lpFields + pArea->uiFieldCount;
    if( pArea->uiFieldCount > 0 )
       ( ( LPFIELD ) ( pField - 1 ) )->lpfNext = pField;
-   pField->sym = ( void * ) pFieldInfo->atomName;
+   pField->sym = ( void * ) hb_xgrab( HARBOUR_MAX_RDD_FIELDNAME_LENGTH + 1 );
+   memset( pField->sym, 0, HARBOUR_MAX_RDD_FIELDNAME_LENGTH + 1 );
+   strncpy( ( char * ) pField->sym, ( char * ) pFieldInfo->atomName,
+            HARBOUR_MAX_RDD_FIELDNAME_LENGTH );
    pField->uiType = pFieldInfo->uiType;
    pField->uiTypeExtended = pFieldInfo->typeExtended;
    pField->uiLen = pFieldInfo->uiLen;
@@ -302,9 +318,52 @@ static ERRCODE AddField( AREAP pArea, LPDBFIELDINFO pFieldInfo )
    return SUCCESS;
 }
 
+static ERRCODE FieldCount( AREAP pArea, USHORT * uiFields )
+{
+   * uiFields = pArea->uiFieldCount;
+   return SUCCESS;
+}
+
+static ERRCODE FieldName( AREAP pArea, USHORT uiIndex, void * szName )
+{
+   LPFIELD pField;
+
+   pField = pArea->lpFields;
+   while( pField && uiIndex > 1 )
+   {
+      pField = pField->lpfNext;
+      uiIndex--;
+   }
+   if( pField )
+   {
+      strncpy( ( char * ) szName, ( char * ) pField->sym,
+               HARBOUR_MAX_RDD_FIELDNAME_LENGTH );
+      return SUCCESS;
+   }
+   else
+      return FAILURE;
+}
+
 static ERRCODE CreateFields( AREAP pArea, PHB_ITEM pStruct )
 {
    printf( "Calling default: CreateFields()\n" );
+   return SUCCESS;
+}
+
+static ERRCODE GetValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
+{
+   printf( "Calling default: GetValue()\n" );
+   return SUCCESS;
+}
+
+static ERRCODE RecCount( AREAP pArea, LONG * pRecCount )
+{
+   printf( "Calling default: RecCount()\n" );
+   return SUCCESS;
+}
+
+static ERRCODE RecNo( AREAP pArea, PHB_ITEM pRecNo )
+{
    return SUCCESS;
 }
 
@@ -319,7 +378,9 @@ static ERRCODE SetFieldExtent( AREAP pArea, USHORT uiFieldExtent )
 
 static ERRCODE Close( AREAP pArea )
 {
-   printf( "Calling default: Close()\n" );
+   if( pArea->lpFileInfo->hFile != FS_ERROR )
+      hb_fsClose( pArea->lpFileInfo->hFile );
+   pArea->lpFileInfo->hFile = FS_ERROR;
    return SUCCESS;
 }
 
@@ -332,11 +393,12 @@ static ERRCODE Create( AREAP pArea, LPDBOPENINFO pCreateInfo )
    if( SELF_WRITEDBHEADER( pArea ) == FAILURE )
    {
       hb_fsClose( pArea->lpFileInfo->hFile );
+      pArea->lpFileInfo->hFile = FS_ERROR;
       return FAILURE;
    }
 
    hb_fsClose( pArea->lpFileInfo->hFile );
-   pArea->lpFileInfo->hFile = 0;
+   pArea->lpFileInfo->hFile = FS_ERROR;
    return SUCCESS;
 }
 
@@ -349,29 +411,70 @@ static ERRCODE Info( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 static ERRCODE NewArea( AREAP pArea )
 {
    pArea->lpFileInfo = ( LPFILEINFO ) hb_xgrab( sizeof( FILEINFO ) );
-   pArea->lpFileInfo->hFile = 0;
+   pArea->lpFileInfo->hFile = FS_ERROR;
    pArea->lpFileInfo->pNext = 0;
+   pArea->lpExtendInfo = ( LPDBEXTENDINFO ) hb_xgrab( sizeof( DBEXTENDINFO ) );
+   memset( pArea->lpExtendInfo, 0, sizeof( DBEXTENDINFO ) );
+   pArea->lpExtendInfo->pRecNo = hb_itemNew( NULL );
    return SUCCESS;
 }
 
 static ERRCODE Open( AREAP pArea, LPDBOPENINFO pOpenInfo )
 {
-   printf( "Calling default: Open()\n" );
-   return SUCCESS;
+   USHORT uiFlags;
+   
+   uiFlags = pOpenInfo->fReadonly ? FO_READ : FO_READWRITE;
+   uiFlags |= pOpenInfo->fShared ? FO_DENYNONE : FO_EXCLUSIVE;
+   pArea->lpFileInfo->hFile = hb_fsOpen( pOpenInfo->abName, uiFlags );
+   
+
+   if( pArea->lpFileInfo->hFile == FS_ERROR )
+      return FAILURE;
+
+   if( SELF_READDBHEADER( pArea ) == FAILURE )
+   {
+      hb_fsClose( pArea->lpFileInfo->hFile );
+      pArea->lpFileInfo->hFile = FS_ERROR;
+      return FAILURE;
+   }
+
+   return SELF_GOTOP( pArea );
 }
 
 static ERRCODE Release( AREAP pArea )
 {
    LPFILEINFO pFileInfo;
+   LPFIELD pField;
 
    if( pArea->lpFields )
+   {
+      pField = pArea->lpFields;
+      while( pField )
+      {
+         if( pField->sym )
+            hb_xfree( pField->sym );
+         pField = pField->lpfNext;
+      }
       hb_xfree( pArea->lpFields );
+   }
+
    while( pArea->lpFileInfo )
    {
       pFileInfo = pArea->lpFileInfo;
       pArea->lpFileInfo = pArea->lpFileInfo->pNext;
       hb_xfree( pFileInfo );
    }
+
+   if( pArea->lpExtendInfo )
+   {
+      if( pArea->lpExtendInfo->bRecord )
+         hb_xfree( pArea->lpExtendInfo->bRecord );
+      if( pArea->lpExtendInfo->bOldRecord )
+         hb_xfree( pArea->lpExtendInfo->bOldRecord );
+      hb_itemRelease( pArea->lpExtendInfo->pRecNo );
+      hb_xfree( pArea->lpExtendInfo );
+   }
+
    return SUCCESS;
 }
 
@@ -404,6 +507,11 @@ static RDDFUNCS defTable = { Bof,
                              Skip,
                              AddField,
                              CreateFields,
+                             FieldCount,
+                             FieldName,
+                             GetValue,
+                             RecCount,
+                             RecNo,
                              SetFieldExtent,
                              Close,
                              Create,
@@ -413,6 +521,7 @@ static RDDFUNCS defTable = { Bof,
                              Release,
                              StructSize,
                              SysName,
+                             UnSupported_V,
                              UnSupported_V
                            };
 
@@ -788,7 +897,7 @@ HARBOUR HB_DBUSEAREA( void )
    uiRddID = 0;
    if( !( pRddNode = hb_FindRddNode( szDriver, &uiRddID ) ) )
    {
-      MyError( "DBCMD/1015 Argument error", "DBCREATE" );
+      MyError( "DBCMD/1015 Argument error", "DBUSEAREA" );
       return;
    }
 
@@ -908,6 +1017,64 @@ HARBOUR HB_EOF( void )
    hb_retl( bEof );
 }
 
+HARBOUR HB_FIELDCOUNT( void )
+{
+   USHORT uiFields;
+   
+   if( pCurrArea )
+   {
+      if( !( ( AREAP ) pCurrArea->pArea )->lprfsHost )
+         MyError( "No table error ", "9xxxx" );
+      else
+         SELF_FIELDCOUNT( ( AREAP ) pCurrArea->pArea, &uiFields );
+   }
+   hb_retni( uiFields );
+}
+
+HARBOUR HB_FIELDGET( void )
+{
+   PHB_ITEM pItem;
+   USHORT uiField;
+   
+   pItem = hb_itemNew( 0 );
+   uiField = hb_parni( 1 );
+
+   if( pCurrArea && uiField )
+      SELF_GETVALUE( ( AREAP ) pCurrArea->pArea, uiField, pItem );
+
+   hb_itemReturn( pItem );
+   hb_itemRelease( pItem );
+}
+
+HARBOUR HB_FIELDNAME( void )
+{
+   USHORT uiFields, uiIndex;
+   char * szName;
+   
+   if( pCurrArea )
+   {
+      if( !( ( AREAP ) pCurrArea->pArea )->lprfsHost )
+         MyError( "No table error ", "9xxxx" );
+      else
+      {
+         uiIndex = hb_parni( 1 );
+         if( SELF_FIELDCOUNT( ( AREAP ) pCurrArea->pArea, &uiFields ) != SUCCESS )
+            hb_retc( "" );
+         if( uiIndex > 0 && uiIndex <= uiFields )
+         {
+            szName = ( char * ) hb_xgrab( HARBOUR_MAX_RDD_FIELDNAME_LENGTH + 1 );
+
+            SELF_FIELDNAME( ( AREAP ) pCurrArea->pArea, hb_parni( 1 ), szName );
+            
+            hb_retc( szName );
+            hb_xfree( szName );
+            return;
+         }
+      }
+   }
+   hb_retc( "" );
+}
+
 HARBOUR HB_FOUND( void )
 {
    BOOL bFound = FALSE;
@@ -920,6 +1087,11 @@ HARBOUR HB_FOUND( void )
          SELF_FOUND( ( AREAP ) pCurrArea->pArea, &bFound );
    }
    hb_retl( bFound );
+}
+
+HARBOUR HB_LASTREC( void )
+{
+   HB_RECCOUNT();
 }
 
 HARBOUR HB_RDDLIST( void )
@@ -1018,3 +1190,33 @@ HARBOUR HB_RDDSHUTDOWN( void )
       hb_xfree( pRddNode );
    }
 }
+
+HARBOUR HB_RECNO( void )
+{
+   if( pCurrArea )
+   {
+      if( !( ( AREAP ) pCurrArea->pArea )->lprfsHost )
+         MyError( "No table error ", "9xxxx" );
+      else
+      {
+         SELF_RECNO( ( AREAP ) pCurrArea->pArea,
+                     ( ( AREAP ) pCurrArea->pArea )->lpExtendInfo->pRecNo );
+         hb_itemReturn( ( ( AREAP ) pCurrArea->pArea )->lpExtendInfo->pRecNo );
+      }
+   }
+}
+
+HARBOUR HB_RECCOUNT( void )
+{
+   LONG ulRecCount = 0;
+
+   if( pCurrArea )
+   {
+      if( !( ( AREAP ) pCurrArea->pArea )->lprfsHost )
+         MyError( "No table error ", "9xxxx" );
+      else
+         SELF_RECCOUNT( ( AREAP ) pCurrArea->pArea, &ulRecCount );
+   }
+   hb_retnl( ulRecCount );
+}
+
