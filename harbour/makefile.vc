@@ -43,6 +43,7 @@ TOOLS_LIB=$(LIB_DIR)\hbtools.lib
 RDD_LIB=$(LIB_DIR)\rdd.lib
 DBFNTX_LIB=$(LIB_DIR)\dbfntx.lib
 HARBOUR_EXE=$(BIN_DIR)\harbour.exe
+HARBOURFLAGS=-iinclude
 
 #
 # OBJ list for harbour.lib. Add new ones as needed
@@ -128,6 +129,10 @@ RDD_LIB_OBJS = \
     $(OBJ_DIR)\dbcmd.obj \
     $(OBJ_DIR)\dbf0.obj \
     $(OBJ_DIR)\dbf1.obj \
+    $(OBJ_DIR)\sdf0.obj \
+    $(OBJ_DIR)\sdf1.obj \
+    $(OBJ_DIR)\delim0.obj \
+    $(OBJ_DIR)\delim1.obj \
     $(OBJ_DIR)\rddsys.obj
 
 DBFNTX_LIB_OBJS = \
@@ -424,6 +429,24 @@ $(OBJ_DIR)\dbf0.obj : $(RDD_DIR)\dbf0.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\dbf1.obj : $(RDD_DIR)\dbf1.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(RDD_DIR)\sdf0.c : $(RDD_DIR)\sdf0.prg
+    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(**D) $** -n
+
+$(OBJ_DIR)\sdf0.obj : $(RDD_DIR)\sdf0.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\sdf1.obj : $(RDD_DIR)\sdf1.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(RDD_DIR)\delim0.c : $(RDD_DIR)\delim0.prg
+    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(**D) $** -n
+
+$(OBJ_DIR)\delim0.obj : $(RDD_DIR)\delim0.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\delim1.obj : $(RDD_DIR)\delim1.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(RDD_DIR)\dbfntx\dbfntx0.c : $(RDD_DIR)\dbfntx\dbfntx0.prg
