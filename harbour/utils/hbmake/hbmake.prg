@@ -119,7 +119,6 @@ If Pcount() == 0
    ShowHelp()
    Return NIL
 Endif
-
 //__traceprgcalls(.t.)
 //Local oProfile := HBProfile():new()
 //   __setProfiler( .T. )
@@ -185,6 +184,7 @@ if lEditMode
 Return nil
 endif
 cls
+
 parsemakfi( cFile )
 If lPrint
    PrintMacros()
@@ -937,6 +937,7 @@ Local aLibs,aLibsin:={},aLibsout:={}
 local lExternalLib:=.f.
 Local cOldLib:=""
 Local cHtmlLib:=""
+local lLinux:=at('linux',lower(os()))>0
 
 nLinkHandle := Fcreate( cFile )
 WriteMakeFileHeader()
@@ -992,18 +993,18 @@ if !empty(cobjDir)
 endif
 amacros:=GetSourceDirMacros(lGcc,cos)
 if lLinux
-cObjDir:=alltrim(cObjDir)
-if !empty(cObjDir)
-cObjDir+='/'
-endif
-cTest:=cObjDir+'/'
+    cObjDir:=alltrim(cObjDir)
+    if !empty(cObjDir)
+        cObjDir+='/'
+    endif
+    cTest:=cObjDir
+    
 else
-cObjDir:=alltrim(cObjDir)
-if !empty(cObjDir)
-cObjDir+='\'
-endif
-
-cTest:=upper(cObjDir)+'\'
+    cObjDir:=alltrim(cObjDir)
+    if !empty(cObjDir)
+	cObjDir+='\'
+    endif
+    cTest:=upper(cObjDir)+'\'
 endif
 
 aeval(amacros,{|x,y|cItem:=substr(x[2],1,len(x[2])),if(at(citem,cTest)>0,(amacros[y,1]:='OBJ',amacros[y,2]:=cObjDir),)})
@@ -2243,7 +2244,7 @@ Local cPath AS STRING := ''
 Local lFound AS LOGICAL := .f.
 Local cEnv  AS STRING 
 Local aEnv as Array of String
-
+local lLinux := at('linux',lower(os()))>0
 Local nPos
 if !lLinux .or. lOs2
    cEnv:= Gete( "PATH" )+";"+curdir()
@@ -2261,13 +2262,15 @@ else
       lFound:=.t.
       cPath='/etc/harbour.cfg'
    endif
-   if file('/usr/local/etc/harbour.cfg')
-      lFound:=.t.
-      cPath='/usr/local/etc/harbour.cfg'
+   if !lfound
+       if file('/usr/local/etc/harbour.cfg')
+          lFound:=.t.
+          cPath:='/usr/local/etc/harbour.cfg'
+       endif
    endif
 endif
 cCfg:=cPath
-?' findHarbourcfg',ccfg,lfound
+
 Return lFound
 
 function TestforPrg(cFile)
