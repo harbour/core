@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-02-14 19:14 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * source/rtl/tbrowse.prg
+     ! SetColumnWidth() fixed for multi-line headers.
+
 2004-02-14 05:33 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * include/hbapigt.h

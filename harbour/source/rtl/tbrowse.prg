@@ -519,7 +519,7 @@ METHOD SetColumnWidth( oCol ) CLASS TBrowse
                nLen := Len( xRes )
 
             case cType == "D"
-                nLen := Len(DToC( xRes ) )
+               nLen := Len(DToC( xRes ) )
 
             otherwise
                nLen := 0
@@ -528,7 +528,7 @@ METHOD SetColumnWidth( oCol ) CLASS TBrowse
 
          cHeading := oCol:Heading + ";"
          while (nL := Len(__StrTkPtr(@cHeading, @nTokenPos, ";"))) > 0
-               nColWidth += nL
+            nColWidth := Max(nL, nColWidth)
          enddo
       endif
 
