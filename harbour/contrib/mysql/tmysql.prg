@@ -218,8 +218,8 @@ CLASS TMySQLQuery
 
    METHOD   Skip(nRows)                // Same as clipper ones
 
-   METHOD   Bof() INLINE ::nCurRow < 1
-   METHOD   Eof() INLINE ::nCurRow > ::nNumRows
+   METHOD   Bof() INLINE ::nCurRow == 1
+   METHOD   Eof() INLINE ::nCurRow == ::nNumRows
    METHOD   RecNo() INLINE ::nCurRow
    METHOD   LastRec() INLINE ::nNumRows
 

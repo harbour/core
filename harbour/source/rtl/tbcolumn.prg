@@ -51,7 +51,7 @@ CLASS TBColumn
    DATA Width      // Column display width
    DATA ColPos     // Temporary column position on screen
 
-   METHOD New()    // Constructor
+   METHOD New( cHeading, bBlock )    // Constructor
 
 #ifdef HB_COMPAT_C53
    METHOD SetStyle()
@@ -59,13 +59,47 @@ CLASS TBColumn
 
 ENDCLASS
 
-METHOD New() CLASS TBColumn
+METHOD New( cHeading, bBlock ) CLASS TBColumn
+
+   local cType
 
    ::DefColor := { 1, 2 }
    ::FootSep  := ""
    ::ColPos   := 1
 
+   ::Width    := 0
+   ::Heading  := iif(!Empty(cHeading), cHeading, "")
+
+   /* TOFIX: In Clipper the column widths are not determined at this point.
+          [vszakats] */
+   if ISBLOCK( bBlock )
+
+      ::block := bBlock
+
+      cType := Valtype( Eval( bBlock ) )
+
+      do case
+         case cType == "N"
+            ::Width := Len( Str( Eval( bBlock ) ) )
+
+         case cType == "L"
+            ::Width := 1
+
+         case cType == "C"
+            ::Width := Len( Eval( bBlock ) )
+
+         case cType == "D"
+            ::Width := Len( DToC( Eval( bBlock ) ) )
+
+         otherwise
+            ::Width := 0
+      endcase
+
+      ::Width := iif( cHeading != NIL, Max( Len( cHeading ), ::Width ), ::Width )
+   endif
+
 return Self
+
 
 #ifdef HB_COMPAT_C53
 METHOD SetStyle() CLASS TBColumn
@@ -75,42 +109,11 @@ METHOD SetStyle() CLASS TBColumn
 return Self
 #endif
 
-/* TOFIX: In Clipper the column widths are not determined at this point. 
-          [vszakats] */
 
 function TBColumnNew( cHeading, bBlock )
 
-   local oCol := TBColumn():New()
-   local nWidth, cType
+return TBColumn():New(cHeading, bBlock)
 
-   oCol:Heading := cHeading
 
-   if ISBLOCK( bBlock )
 
-      oCol:block := bBlock
-
-      cType := Valtype( Eval( bBlock ) )
-
-      do case
-         case cType == "N"
-            nWidth := Len( Str( Eval( bBlock ) ) )
-
-         case cType == "L"
-            nWidth := 1
-
-         case cType == "C"
-            nWidth := Len( Eval( bBlock ) )
-
-         case cType == "D"
-            nWidth := Len( DToC( Eval( bBlock ) ) )
-
-         otherwise
-            nWidth := 0
-      endcase
-
-      oCol:Width := iif( cHeading != NIL, Max( Len( cHeading ), nWidth ), nWidth )
-
-   endif
-
-return oCol
 
