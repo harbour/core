@@ -809,6 +809,13 @@ ERRCODE hb_cdxInfo( CDXAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
  */
 ERRCODE hb_cdxOpen( CDXAREAP pArea, LPDBOPENINFO pOpenInfo )
 {
+   char * szFileName;
+   DBORDERINFO pExtInfo;
+   PHB_FNAME pFileName;
+   DBORDERINFO pOrderInfo;
+   USHORT uiFlags;
+   FHANDLE hFile;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_cdxOpen(%p, %p)", pArea, pOpenInfo));
 
    /* Force exclusive mode */
@@ -840,7 +847,45 @@ ERRCODE hb_cdxOpen( CDXAREAP pArea, LPDBOPENINFO pOpenInfo )
    /* If SET_AUTOPEN open index */
    if( pArea->fHasTags && hb_set.HB_SET_AUTOPEN )
    {
-      printf("TODO: hb_cdxOpen()\n");
+      /* printf("TODO: hb_cdxOpen()\n"); */
+      pFileName = hb_fsFNameSplit( pArea->szDataFileName );
+      szFileName = ( char * ) hb_xgrab( _POSIX_PATH_MAX + 3 );
+      szFileName[ 0 ] = '\0';
+      strcpy ( szFileName, pFileName->szPath );
+      strncat( szFileName, pFileName->szName, _POSIX_PATH_MAX -
+               strlen( szFileName ) );
+
+      pExtInfo.itmResult = hb_itemPutC( NULL, "" );
+      SELF_ORDINFO( ( AREAP ) pArea, DBOI_BAGEXT, &pExtInfo );
+      strncat( szFileName, pExtInfo.itmResult->item.asString.value, _POSIX_PATH_MAX -
+               strlen( szFileName ) );
+      hb_itemRelease( pExtInfo.itmResult );
+      hb_xfree( pFileName );
+
+      /* ---------- */
+
+      uiFlags =  pArea->fReadonly  ? FO_READ : FO_READWRITE;
+      uiFlags |= pArea->fShared ? FO_DENYNONE : FO_EXCLUSIVE;
+      hFile = hb_fsOpen( ( BYTE * ) szFileName, uiFlags );
+
+      if( hFile != FS_ERROR ) {
+         hb_fsClose( hFile );
+
+         pOrderInfo.itmResult = hb_itemPutNI( NULL, 0 );
+         pOrderInfo.atomBagName = hb_itemPutC( NULL, szFileName );
+         pOrderInfo.itmOrder  = NULL;
+         SELF_ORDLSTADD( ( AREAP ) pArea, &pOrderInfo );
+
+         pOrderInfo.itmOrder  = hb_itemPutNI( NULL, 1 );
+         SELF_ORDLSTFOCUS( ( AREAP ) pArea, &pOrderInfo );
+         hb_itemRelease( pOrderInfo.itmOrder );
+
+         SELF_GOTOP( ( AREAP ) pArea );
+
+         hb_itemRelease( pOrderInfo.atomBagName );
+         hb_itemRelease( pOrderInfo.itmResult );
+      }
+      hb_xfree( szFileName );
    }
    return SUCCESS;
 }
@@ -913,7 +958,8 @@ ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrderInf
                }
          }
          if ( pTag )
-            hb_itemPutC( pOrderInfo->itmResult, pTag->pIndex->pCompound->szName );
+            /* hb_itemPutC( pOrderInfo->itmResult, pTag->pIndex->pCompound->szName ); */
+            hb_itemPutC( pOrderInfo->itmResult, pTag->pIndex->szFileName );
          break;
 
 
@@ -3156,6 +3202,8 @@ static void hb_cdxIndexFree( LPCDXINDEX pIndex )
    if( pIndex->hFile != FS_ERROR )
       hb_fsClose( pIndex->hFile );
 
+   if ( pIndex->szFileName != NULL )
+      hb_xfree( pIndex->szFileName );
    hb_xfree( pIndex );
 }
 
@@ -4169,7 +4217,7 @@ ERRCODE hb_cdxOrderCreate( CDXAREAP pAreaCdx, LPDBORDERCREATEINFO pOrderInfo )
 ERRCODE hb_cdxOrderListAdd( CDXAREAP pAreaCdx, LPDBORDERINFO pOrderInfo )
 {
    USHORT uiFlags;
-   char * szFileName;
+   char * szFileName, * szFileNameDbfPath = NULL;
    AREAP pArea = (AREAP) pAreaCdx;
    LPCDXINDEX pIndex;
    DBORDERINFO pExtInfo;
@@ -4213,6 +4261,20 @@ ERRCODE hb_cdxOrderListAdd( CDXAREAP pAreaCdx, LPDBORDERINFO pOrderInfo )
          strcat( szFileName, pExtInfo.itmResult->item.asString.value );
          hb_itemRelease( pExtInfo.itmResult );
       }
+      if ( !pFileName->szPath )
+      {
+         hb_xfree( pFileName );
+         pFileName = hb_fsFNameSplit( pAreaCdx->szDataFileName );
+         if ( pFileName->szPath )
+         {
+            szFileNameDbfPath = ( char * ) hb_xgrab( _POSIX_PATH_MAX + 3 );
+            szFileNameDbfPath[ 0 ] = '\0';
+            strcpy( szFileNameDbfPath, pFileName->szPath );
+            strncat( szFileNameDbfPath, szFileName, _POSIX_PATH_MAX -
+               strlen( szFileNameDbfPath ) );
+         }
+      //pArea->szDataFileName = (char *) hb_xgrab( strlen( (char * ) pOpenInfo->abName)+1 );
+      }
       hb_xfree( pFileName );
    }
    uiFlags =  pAreaCdx->fReadonly  ? FO_READ : FO_READWRITE;
@@ -4220,7 +4282,19 @@ ERRCODE hb_cdxOrderListAdd( CDXAREAP pAreaCdx, LPDBORDERINFO pOrderInfo )
 
    do
    {
-     pIndex->hFile = hb_fsOpen( ( BYTE * ) szFileName, uiFlags );
+      pIndex->hFile = FS_ERROR;
+      if ( szFileNameDbfPath )
+         pIndex->hFile = hb_fsOpen( ( BYTE * ) szFileNameDbfPath, uiFlags );
+      if ( pIndex->hFile != FS_ERROR ) {
+         pIndex->szFileName = ( char * ) hb_xgrab( strlen( szFileNameDbfPath ) + 1 );
+         strcpy( pIndex->szFileName, szFileNameDbfPath);
+      } else {
+         pIndex->hFile = hb_fsOpen( ( BYTE * ) szFileName, uiFlags );
+         if ( pIndex->hFile != FS_ERROR ) {
+            pIndex->szFileName = ( char * ) hb_xgrab( strlen( szFileName ) + 1 );
+            strcpy( pIndex->szFileName, szFileName);
+         }
+      }
      if( pIndex->hFile == FS_ERROR )
      {
        if( !pError )
@@ -4243,6 +4317,8 @@ ERRCODE hb_cdxOrderListAdd( CDXAREAP pAreaCdx, LPDBORDERINFO pOrderInfo )
    if( pIndex->hFile == FS_ERROR )
    {
       hb_cdxOrderListClear( (CDXAREAP)  pArea );
+      if ( szFileNameDbfPath != NULL )
+         hb_xfree( szFileNameDbfPath );
       hb_xfree( szFileName );
       return FAILURE;
    }
@@ -4312,6 +4388,8 @@ ERRCODE hb_cdxOrderListAdd( CDXAREAP pAreaCdx, LPDBORDERINFO pOrderInfo )
    pIndex->uiTag = 1;
    SELF_GOTOP( ( AREAP ) pArea );
 
+   if ( szFileNameDbfPath != NULL )
+      hb_xfree( szFileNameDbfPath );
    hb_xfree( szFileName );
    return SUCCESS;
 }
