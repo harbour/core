@@ -42,12 +42,18 @@ typedef struct HB_stru_genc_info
    USHORT iNestedCodeblock;
 } HB_GENC_INFO, * HB_GENC_INFO_PTR;
 
+typedef struct HB_stru_funcalls
+{
+   char * szName;
+   BOOL bFirstParam;
+   void * pNext;
+} HB_FUNCALLS, * HB_FUNCALLS_PTR;
+
+static HB_FUNCALLS_PTR pFunCalls = NULL;
+
 #define HB_GENC_FUNC( func ) HB_PCODE_FUNC( func, HB_GENC_INFO_PTR )
 typedef HB_GENC_FUNC( HB_GENC_FUNC_ );
 typedef HB_GENC_FUNC_ * HB_GENC_FUNC_PTR;
-
-static char * szSymbol = NULL;
-static BOOL bFirstSymbolParam = FALSE;
 
 void hb_compGenILCode( PHB_FNAME pFileName )  /* generates the IL output */
 {
@@ -386,7 +392,11 @@ static HB_GENC_FUNC( hb_p_arraypush )
    HB_SYMBOL_UNUSED( pFunc );
    HB_SYMBOL_UNUSED( lPCodePos );
 
-   fprintf( cargo->yyc, "\tHB_P_ARRAYPUSH,\n" );
+   fprintf( cargo->yyc, "  IL_%04lX:  ", lPCodePos );
+   fprintf( cargo->yyc, "call object ObjArrayPush( object, object )\n" );
+
+   // fprintf( cargo->yyc, "\tHB_P_ARRAYPUSH,\n" );
+
    return 1;
 }
 
@@ -437,19 +447,29 @@ static HB_GENC_FUNC( hb_p_do )
 
 static HB_GENC_FUNC( hb_p_doshort )
 {
+   HB_FUNCALLS_PTR pTemp = pFunCalls, pPrev = NULL;
+   char * szFunName;
+
+   while( pTemp->pNext != NULL )
+   {
+      pPrev = pTemp;
+      pTemp = ( HB_FUNCALLS_PTR ) pTemp->pNext;
+   }
+
+   szFunName = pTemp->szName;
+   pTemp->bFirstParam = FALSE;
+   hb_xfree( pTemp );
+
+   if( pTemp == pFunCalls )
+      pFunCalls = NULL;
+   else if( pPrev != NULL )
+      pPrev->pNext = NULL;
+
    fprintf( cargo->yyc, "  IL_%04lX:  ", lPCodePos );
+   fprintf( cargo->yyc, "call object %s( object )\n", szFunName );
+   fprintf( cargo->yyc, "            pop\n" );
 
    // fprintf( cargo->yyc, "\tHB_P_DOSHORT, %i,\n", pFunc->pCode[ lPCodePos + 1 ] );
-   if( strcmp( szSymbol, "QOUT" ) == 0 )
-   {
-     fprintf( cargo->yyc, "call object QOUT( object )\n" );
-     fprintf( cargo->yyc, "            pop\n" );
-   }
-   else
-     fprintf( cargo->yyc, "call void %s()\n", szSymbol );
-
-   szSymbol = NULL;
-   bFirstSymbolParam = FALSE;
 
    return 2;
 }
@@ -582,20 +602,51 @@ static HB_GENC_FUNC( hb_p_function )
 
 static HB_GENC_FUNC( hb_p_functionshort )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-   HB_SYMBOL_UNUSED( lPCodePos );
+   HB_FUNCALLS_PTR pTemp = pFunCalls, pPrev = NULL;
+   char * szFunName;
 
-   fprintf( cargo->yyc, "\tHB_P_FUNCTIONSHORT, %i,\n", pFunc->pCode[ lPCodePos + 1 ] );
-   return 1;
+   while( pTemp->pNext != NULL )
+   {
+      pPrev = pTemp;
+      pTemp = ( HB_FUNCALLS_PTR ) pTemp->pNext;
+   }
+
+   szFunName = pTemp->szName;
+   pTemp->bFirstParam = FALSE;
+   hb_xfree( pTemp );
+
+   if( pTemp == pFunCalls )
+      pFunCalls = NULL;
+   else if( pPrev != NULL )
+      pPrev->pNext = NULL;
+
+   fprintf( cargo->yyc, "  IL_%04lX:  ", lPCodePos );
+   fprintf( cargo->yyc, "call object %s( object )\n", szFunName );
+
+   // fprintf( cargo->yyc, "\tHB_P_FUNCTIONHORT, %i,\n", pFunc->pCode[ lPCodePos + 1 ] );
+
+   return 2;
 }
 
 static HB_GENC_FUNC( hb_p_arraygen )
 {
-   fprintf( cargo->yyc, "\tHB_P_ARRAYGEN, %i, %i,",
-            pFunc->pCode[ lPCodePos + 1 ],
-            pFunc->pCode[ lPCodePos + 2 ] );
-   if( cargo->bVerbose ) fprintf( cargo->yyc, "\t/* %i */", pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 );
-   fprintf( cargo->yyc, "\n" );
+   int i;
+
+   fprintf( cargo->yyc, "  IL_%04lX:  ", lPCodePos );
+   fprintf( cargo->yyc, "call vararg object ObjArrayGen( ..." );
+
+   for( i = 0; i < pFunc->pCode[ lPCodePos + 1 ] +
+                 ( pFunc->pCode[ lPCodePos + 2 ] * 256 ); i++ )
+      fprintf( cargo->yyc, ",object" );
+
+   fprintf( cargo->yyc, ")\n" );
+
+   // fprintf( cargo->yyc, "\tHB_P_ARRAYGEN, %i, %i,",
+   //          pFunc->pCode[ lPCodePos + 1 ],
+   //          pFunc->pCode[ lPCodePos + 2 ] );
+   // if( cargo->bVerbose ) fprintf( cargo->yyc, "\t/* %i */", pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 );
+   // fprintf( cargo->yyc, "\n" );
+
    return 3;
 }
 
@@ -1552,11 +1603,24 @@ static HB_GENC_FUNC( hb_p_pushmemvarref )
 
 static HB_GENC_FUNC( hb_p_pushnil )
 {
+   HB_FUNCALLS_PTR pTemp = pFunCalls;
+
    HB_SYMBOL_UNUSED( pFunc );
    HB_SYMBOL_UNUSED( lPCodePos );
 
-   if( bFirstSymbolParam )
-      bFirstSymbolParam = FALSE;
+   if( pTemp )
+   {
+      while( pTemp->pNext )
+         pTemp = ( HB_FUNCALLS_PTR ) pTemp->pNext;
+
+      if( pTemp->bFirstParam )
+         pTemp->bFirstParam = FALSE;
+      else
+      {
+         // fprintf( cargo->yyc, "  IL_%04lX:  ", lPCodePos );
+         // fprintf( cargo->yyc, "ldnull\n" );
+      }
+   }
    else
    {
       // fprintf( cargo->yyc, "  IL_%04lX:  ", lPCodePos );
@@ -1709,17 +1773,37 @@ static HB_GENC_FUNC( hb_p_pushsym )
 
 static HB_GENC_FUNC( hb_p_pushsymnear )
 {
+   HB_FUNCALLS_PTR pTemp = pFunCalls;
+
+   if( pTemp != NULL )
+   {
+      while( pTemp->pNext != NULL )
+         pTemp = ( HB_FUNCALLS_PTR ) pTemp->pNext;
+
+      pTemp->pNext = ( struct HB_FUNCALLS * ) hb_xgrab( sizeof( HB_FUNCALLS ) );
+      pTemp = pTemp->pNext;
+   }
+   else
+   {
+      pFunCalls = ( HB_FUNCALLS_PTR ) hb_xgrab( sizeof( HB_FUNCALLS ) );
+      pTemp = pFunCalls;
+   }
+
+   pTemp->szName = hb_compSymbolGetPos( pFunc->pCode[ lPCodePos + 1 ] )->szName;
+   pTemp->bFirstParam = TRUE;
+   pTemp->pNext  = NULL;
+
    // fprintf( cargo->yyc, "\tHB_P_PUSHSYMNEAR, %i,",
    //         pFunc->pCode[ lPCodePos + 1 ] );
    // if( cargo->bVerbose )
    //    fprintf( cargo->yyc, "\t/* %s */", hb_compSymbolGetPos( pFunc->pCode[ lPCodePos + 1 ] )->szName );
+
    fprintf( cargo->yyc, "  IL_%04lX:  ", lPCodePos );
    fprintf( cargo->yyc, "nop\n" );
 
-   szSymbol = hb_compSymbolGetPos( pFunc->pCode[ lPCodePos + 1 ] )->szName;
-   bFirstSymbolParam = TRUE;
    // fprintf( cargo->yyc, "   call void %s()\n", hb_compSymbolGetPos( pFunc->pCode[ lPCodePos + 1 ] )->szName );
    // fprintf( cargo->yyc, "\n" );
+
    return 2;
 }
 
@@ -2245,6 +2329,72 @@ static void hb_genNetFunctions( FILE * yyc )
 "  IL_0078:  ret",
 "}", 0 };
 
+   // public static object ObjArrayGen( __arglist )
+   // {
+   //    ArrayList a    = new ArrayList();
+   //    ArgIterator ai = new ArgIterator( __arglist );
+   //
+   //    while( ai.GetRemainingCount() > 0 )
+   //       a.Add( __refvalue( ai.GetNextArg(), object ) );
+   //
+   //    return a;
+   // }
+
+   char * ObjArrayGen[] = {
+"\n.method public static vararg object ObjArrayGen()",
+"{",
+"  .maxstack  2",
+"  .locals init (class [mscorlib]System.Collections.ArrayList V_0,",
+"                valuetype [mscorlib]System.ArgIterator V_1,",
+"                object V_2)",
+"  IL_0000:  newobj     instance void [mscorlib]System.Collections.ArrayList::.ctor()",
+"  IL_0005:  stloc.0",
+"  IL_0006:  ldloca.s   V_1",
+"  IL_0008:  arglist",
+"  IL_000a:  call       instance void [mscorlib]System.ArgIterator::.ctor(valuetype [mscorlib]System.RuntimeArgumentHandle)",
+"  IL_000f:  br.s       IL_0025",
+"  IL_0011:  ldloc.0",
+"  IL_0012:  ldloca.s   V_1",
+"  IL_0014:  call       instance typedref [mscorlib]System.ArgIterator::GetNextArg()",
+"  IL_0019:  refanyval  [mscorlib]System.Object",
+"  IL_001e:  ldind.ref",
+"  IL_001f:  callvirt   instance int32 [mscorlib]System.Collections.ArrayList::Add(object)",
+"  IL_0024:  pop",
+"  IL_0025:  ldloca.s   V_1",
+"  IL_0027:  call       instance int32 [mscorlib]System.ArgIterator::GetRemainingCount()",
+"  IL_002c:  ldc.i4.0",
+"  IL_002d:  bgt.s      IL_0011",
+"  IL_002f:  ldloc.0",
+"  IL_0030:  stloc.2",
+"  IL_0031:  br.s       IL_0033",
+"  IL_0033:  ldloc.2",
+"  IL_0034:  ret",
+"}", 0 };
+
+   // public static object ObjArrayPush( object array, object index )
+   // {
+   //    return ( ( ArrayList ) array )[ ( ( int ) index ) - 1 ];
+   // }
+
+   char * ObjArrayPush[] = {
+"\n.method public static object ObjArrayPush(object 'array', object index)",
+"{",
+"  .maxstack  3",
+"  .locals init (object V_0)",
+"  IL_0000:  ldarg.0",
+"  IL_0001:  castclass  [mscorlib]System.Collections.ArrayList",
+"  IL_0006:  ldarg.1",
+"  IL_0007:  unbox      [mscorlib]System.Int32",
+"  IL_000c:  ldind.i4",
+"  IL_000d:  ldc.i4.1",
+"  IL_000e:  sub",
+"  IL_000f:  callvirt   instance object [mscorlib]System.Collections.ArrayList::get_Item(int32)",
+"  IL_0014:  stloc.0",
+"  IL_0015:  br.s       IL_0017",
+"  IL_0017:  ldloc.0",
+"  IL_0018:  ret",
+"}", 0 };
+
    // public static bool ObjLessEqual( object a, object b )
    // {
    //    if( a.GetType() == typeof( int ) && b.GetType() == typeof( int ) )
@@ -2411,6 +2561,26 @@ static void hb_genNetFunctions( FILE * yyc )
 "  IL_0013:  ret",
 "}", 0 };
 
+   // public static object LEN( object o )
+   // {
+   //    return ( ( ArrayList ) o ).Count;
+   // }
+
+   char * LEN[] = {
+"\n.method public static object LEN(object o)",
+"{",
+"  .maxstack  2",
+"  .locals init (object V_0)",
+"  IL_0000:  ldarg.0",
+"  IL_0001:  castclass  [mscorlib]System.Collections.ArrayList",
+"  IL_0006:  callvirt   instance int32 [mscorlib]System.Collections.ArrayList::get_Count()",
+"  IL_000b:  box        [mscorlib]System.Int32",
+"  IL_0010:  stloc.0",
+"  IL_0011:  br.s       IL_0013",
+"  IL_0013:  ldloc.0",
+"  IL_0014:  ret",
+"}", 0 };
+
    // public static object QOUT( object o )
    // {
    //    if( o == null )
@@ -2464,6 +2634,14 @@ static void hb_genNetFunctions( FILE * yyc )
       fprintf( yyc, "%s\n", ObjAdd[ i++ ] );
 
    i = 0;
+   while( ObjArrayGen[ i ] != 0 )
+      fprintf( yyc, "%s\n", ObjArrayGen[ i++ ] );
+
+   i = 0;
+   while( ObjArrayPush[ i ] != 0 )
+      fprintf( yyc, "%s\n", ObjArrayPush[ i++ ] );
+
+   i = 0;
    while( ObjLessEqual[ i ] != 0 )
       fprintf( yyc, "%s\n", ObjLessEqual[ i++ ] );
 
@@ -2478,6 +2656,10 @@ static void hb_genNetFunctions( FILE * yyc )
    i = 0;
    while( ObjNot[ i ] != 0 )
       fprintf( yyc, "%s\n", ObjNot[ i++ ] );
+
+   i = 0;
+   while( LEN[ i ] != 0 )
+      fprintf( yyc, "%s\n", LEN[ i++ ] );
 
    i = 0;
    while( QOUT[ i ] != 0 )
