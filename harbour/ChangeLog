@@ -1,3 +1,14 @@
+2000-06-22 03:23 UTC+0100 Victor Szakats <info@szelvesz.hu>
+
+   * source/rtl/filesys.c
+     * Some formatting and cleanups.
+
+   * contrib/hbclip/hbclip.ch
+     + Some HB_ constants added.
+
+   * include/inkey.ch
+     * K_HB_KEYCODES -> HB_K_MULTICODE
+
 2000-06-21 10:58 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
    * source/pp/ppcore.c
      ! getExpReal() to not return invalid Clipper Expression like unterminated '([{'. This will solve many PP problems.

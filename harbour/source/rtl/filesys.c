@@ -700,7 +700,7 @@ ULONG   hb_fsSeek( FHANDLE hFileHandle, LONG lOffset, USHORT uiFlags )
    #if defined(HB_OS_OS2)
 
       {
-         APIRET ret = DosSetFilePtr(hFileHandle, 0, SEEK_CUR, &ulPos);
+         APIRET ret = DosSetFilePtr( hFileHandle, 0, SEEK_CUR, &ulPos );
       
          if( ret != 0 )
          {
@@ -736,7 +736,7 @@ ULONG   hb_fsSeek( FHANDLE hFileHandle, LONG lOffset, USHORT uiFlags )
    #if defined(HB_OS_OS2)
 
       {
-         APIRET ret = DosSetFilePtr(hFileHandle, lOffset, Flags, &ulPos);
+         APIRET ret = DosSetFilePtr( hFileHandle, lOffset, Flags, &ulPos );
       
          if( ret != 0 )
          {
@@ -881,38 +881,39 @@ BOOL    hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
 
 #elif defined(HB_OS_OS2)
 
-        {
-                /* 08/04/2000 - maurilio.longo@libero.it */
-                struct _FILELOCK fl, ful;
+   {
+      struct _FILELOCK fl, ful;
 
       errno = 0;
 
-        switch(uiMode)  {
-        case FL_LOCK:
+      switch( uiMode )
+      {
+      case FL_LOCK:
 
-                fl.lOffset = ulStart;
-                fl.lRange = ulLength;
-                ful.lOffset = 0;
-                ful.lRange = 0;
+         fl.lOffset = ulStart;
+         fl.lRange = ulLength;
+         ful.lOffset = 0;
+         ful.lRange = 0;
 
-                /* lock region, 2 seconds timeout, exclusive access - no atomic */
-                iResult = (int) DosSetFileLocks(hFileHandle, &ful, &fl, 2000L, 0L);
-                break;
+         /* lock region, 2 seconds timeout, exclusive access - no atomic */
+         iResult = ( int ) DosSetFileLocks( hFileHandle, &ful, &fl, 2000L, 0L );
+         break;
 
-        case FL_UNLOCK:
+      case FL_UNLOCK:
 
-                fl.lOffset = 0;
-                fl.lRange = 0;
-                ful.lOffset = ulStart;
-                ful.lRange = ulLength;
+         fl.lOffset = 0;
+         fl.lRange = 0;
+         ful.lOffset = ulStart;
+         ful.lRange = ulLength;
 
-                /* unlock region, 2 seconds timeout, exclusive access - no atomic */
-                iResult = (int) DosSetFileLocks(hFileHandle, &ful, &fl, 2000L, 0L);
-                break;
+         /* unlock region, 2 seconds timeout, exclusive access - no atomic */
+         iResult = ( int ) DosSetFileLocks( hFileHandle, &ful, &fl, 2000L, 0L );
+         break;
 
-        default:
-                iResult = 0;
-        }
+      default:
+         iResult = 0;
+      }
+
       s_uiErrorLast = errno;
    }
 
@@ -965,11 +966,13 @@ BOOL    hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
    }
 
 #elif defined(__GNUC__) && defined(HB_OS_UNIX)
-   errno = 0;
+
    {
       /* TODO: check for append locks (SEEK_END)
        */
       struct flock lock_info;
+
+      errno = 0;
 
       switch( uiMode )
       {
@@ -980,11 +983,13 @@ BOOL    hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
                lock_info.l_len    = ulLength;
                lock_info.l_whence = SEEK_SET;   /* start from the beginning of the file */
                lock_info.l_pid    = getpid();
+
                iResult = fcntl( hFileHandle, F_SETLK, &lock_info );
+
                if( iResult < 0 )
-                  iResult = FALSE;      /* lock failed */
+                  iResult = 1;         /* lock failed */
                else
-                  iResult = TRUE;      /* lock was successful */
+                  iResult = 0;         /* lock was successful */
             }
             break;
 
@@ -995,7 +1000,9 @@ BOOL    hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
                lock_info.l_len    = ulLength;
                lock_info.l_whence = SEEK_SET;
                lock_info.l_pid    = getpid();
+
                iResult = fcntl( hFileHandle, F_SETLK, &lock_info );
+
                if( iResult < 0 )
                   iResult = 0;      /* lock failed */
             }
@@ -1004,8 +1011,10 @@ BOOL    hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
          default:
             iResult = 0;
       }
+
+      s_uiErrorLast = errno;
    }
-   s_uiErrorLast = errno;
+
 #else
 
    iResult = 1;
@@ -1013,7 +1022,7 @@ BOOL    hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
 
 #endif
 
-   return ( iResult ? FALSE : TRUE );
+   return iResult == 0;
 }
 
 void    hb_fsCommit( FHANDLE hFileHandle )
@@ -1040,32 +1049,29 @@ void    hb_fsCommit( FHANDLE hFileHandle )
 
 #elif defined(HB_OS_OS2)
 
-        {
+   {
       errno = 0;
 
-                /* 08/04/2000 - maurilio.longo@libero.it
-                        TODO: what about error code from DosResetBuffer() call? */
-      DosResetBuffer(hFileHandle);
+      /* TODO: what about error code from DosResetBuffer() call? */
+      DosResetBuffer( hFileHandle );
 
       s_uiErrorLast = errno;
    }
 
 #elif defined(HB_OS_UNIX)
+
    /* NOTE: close() functions releases all lock regardles if it is an
     * original or duplicated file handle
    */
    #if defined(_POSIX_SYNCHRONIZED_IO)
-     /* faster - flushes data buffers only, without updating directory info
-     */
-     if( fdatasync( hFileHandle ) < -1 )
+      /* faster - flushes data buffers only, without updating directory info
+      */
+      s_uiErrorLast = ( fdatasync( hFileHandle ) < -1 ) ? FS_ERROR : 0;
    #else
-     /* slower - flushes all file data buffers and i-node info
-     */
-     if( fsync( hFileHandle ) < -1 )
+      /* slower - flushes all file data buffers and i-node info
+      */
+      s_uiErrorLast = ( fsync( hFileHandle ) < -1 ) ? FS_ERROR : 0;
    #endif
-       s_uiErrorLast = FS_ERROR;        /* failure */
-   else
-       s_uiErrorLast = 0;
 
 #else
 
@@ -1099,7 +1105,7 @@ BOOL    hb_fsMkDir( BYTE * pDirname )
 
 #endif
 
-   return ( iResult ? FALSE : TRUE );
+   return iResult == 0;
 }
 
 BOOL    hb_fsChDir( BYTE * pDirname )
@@ -1121,7 +1127,7 @@ BOOL    hb_fsChDir( BYTE * pDirname )
 
 #endif
 
-   return ( iResult ? FALSE : TRUE );
+   return iResult == 0;
 }
 
 BOOL    hb_fsRmDir( BYTE * pDirname )
@@ -1143,7 +1149,7 @@ BOOL    hb_fsRmDir( BYTE * pDirname )
 
 #endif
 
-   return ( iResult ? FALSE : TRUE );
+   return iResult == 0;
 }
 
 /* NOTE: This is not thread safe function, it's there for compatibility. */

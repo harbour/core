@@ -65,7 +65,7 @@
 /* Harbour extension - this marks that multi-characters keycode will be
    returned - call INKEY() until ZERO will be returned
 */
-#define K_HB_KEYCODES           4096
+#define HB_K_MULTICODE          4096
 
 /* Cursor movement keys */
 

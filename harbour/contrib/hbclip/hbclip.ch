@@ -48,7 +48,7 @@
 #ifndef HB_CLIP_CH_
 #define HB_CLIP_CH_
 
-/* TODO: Rewrite as much of these in C or Clipper */
+/* TODO: Rewrite as much of these in C or Clipper as possible */
 
 #xtranslate HB_ARGCHECK( <s> )                            => ( .F. )
 #xtranslate HB_ARGSTRING( <s> )                           => ""
@@ -59,6 +59,12 @@
 #xtranslate HB_SETKEYSAVE( [<a>] )                        => ( {} )
 #xtranslate HB_SETKEYCHECK( <n>[, <x1>[, <x2>[, <x3>]]] ) => ( .F. )
 #xtranslate HB_SETKEYARRAY( <a>[, <b> ] )                 => AEval( <a>, {| tmp | SetKey( tmp, <b> ) } )
+
+/* HB_DISKSPACE() types */
+#define HB_DISK_AVAIL 0
+#define HB_DISK_FREE  1
+#define HB_DISK_USED  2
+#define HB_DISK_TOTAL 3
 
 /* Strong typing */
 
