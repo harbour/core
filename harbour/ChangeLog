@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-09-04 17:56 UTC+0200 Maurilio Longo <maurilio.longo@libero.it>
+   * harbour/source/rtl/tbrowse.prg
+     ! Fixed cell padding inside ::DispCell(). Character or memo fields have to be
+       padded right. Number fields have to be padded left.
+
 2002-09-03 19:10 UTC+0200 Maurilio Longo <maurilio.longo@libero.it>
    * harbour/source/rtl/teditor.prg
      ! fixed line splitting when a character is deleted from a line and there is a

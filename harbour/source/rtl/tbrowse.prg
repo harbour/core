@@ -1306,10 +1306,10 @@ METHOD DispCell( nColumn, nColor ) CLASS TBrowse
 
    do case
    case cType $ "CM"
-      DispOut( PadL(Transform(ftmp, cPict), nWidth ), cColor )
+      DispOut( PadR(Transform(ftmp, cPict), nWidth ), cColor )
 
    case cType == "N"
-      DispOut( PadR(Transform(ftmp, cPict), nWidth ), cColor )
+      DispOut( PadL(Transform(ftmp, cPict), nWidth ), cColor )
 
    case cType == "D"
       cPict := iif(cPict == "", "@D", cPict)
