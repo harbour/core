@@ -1,3 +1,11 @@
+2000-12-28 20:50 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * source/vm/eval.c
+     * Minor formatting.
+
+   * source/vm/hvm.c
+     * Added derefferncing of Block Vars in hb_vmPushLocal()
+     /* Ryszard can you please review this change. */
+
 2000-12-29 9:18 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * utils/hbpp/hbpp.c
      * Now it creates exactly the same .ppo as Harbour, without extra empty

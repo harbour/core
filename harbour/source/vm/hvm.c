@@ -2789,7 +2789,7 @@ void hb_vmDo( USHORT uiParams )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmDo(%hu)", uiParams));
 
-   pItem = hb_stackNewFrame( &sStackState, uiParams );  
+   pItem = hb_stackNewFrame( &sStackState, uiParams );
    pSym = pItem->item.asSymbol.value;
    pSelf = hb_stackSelfItem();   /* NIL, OBJECT or BLOCK */
    bDebugPrevState = s_bDebugging;
@@ -2924,6 +2924,7 @@ static HARBOUR hb_vmDoBlock( void )
 
    /* Check for valid count of parameters */
    iParam = pBlock->item.asBlock.paramcnt - hb_pcount();
+
    /* add missing parameters */
    while( iParam-- > 0 )
       hb_vmPushNil();
@@ -3477,24 +3478,31 @@ static void hb_vmPushAliasedVar( PHB_SYMB pSym )
 
 static void hb_vmPushLocal( SHORT iLocal )
 {
+   PHB_ITEM pLocal;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_vmPushLocal(%hd)", iLocal));
 
    if( iLocal >= 0 )
    {
-      PHB_ITEM pLocal;
-
       /* local variable or local parameter */
       pLocal = hb_stackItemFromBase( iLocal );
-      if( HB_IS_BYREF( pLocal ) )
-         hb_itemCopy( ( hb_stackTopItem() ), hb_itemUnRef( pLocal ) );
-      else
-         hb_itemCopy( ( hb_stackTopItem() ), pLocal );
    }
    else
+   {
       /* local variable referenced in a codeblock
        * hb_stackSelfItem() points to a codeblock that is currently evaluated
        */
-      hb_itemCopy( ( hb_stackTopItem() ), hb_codeblockGetVar( hb_stackSelfItem(), ( LONG ) iLocal ) );
+      pLocal = hb_codeblockGetVar( hb_stackSelfItem(), ( LONG ) iLocal );
+   }
+
+   if( HB_IS_BYREF( pLocal ) )
+   {
+      hb_itemCopy( ( hb_stackTopItem() ), hb_itemUnRef( pLocal ) );
+   }
+   else
+   {
+      hb_itemCopy( ( hb_stackTopItem() ), pLocal );
+   }
 
    hb_stackPush();
 }

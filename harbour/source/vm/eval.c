@@ -55,10 +55,15 @@ HB_FUNC( EVAL )
        * hb_param() is dereferencing the passed parameters
       */
       for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
-        hb_vmPush( hb_stackItemFromBase( uiParam ) );
+      {
+         hb_vmPush( hb_stackItemFromBase( uiParam ) );
+      }
+
       hb_vmDo( uiPCount - 1 );
    }
    else
+   {
       hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, NULL, "EVAL" );
+   }
 }
 
