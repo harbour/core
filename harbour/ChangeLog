@@ -1,3 +1,10 @@
+2000-08-02 15:55 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+   * config/os2/global.cf
+     ! Restored to version 1.2, because 1.3 had no tab
+       characters, then reapplied the changes from 1.3
+       to the restored 1.2 and committed it as 1.4.
+
 2000-08-02 21:10 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *doc/whatsnew.txt
