@@ -3,7 +3,7 @@
  */
 
 ----------------------------------------------------------------------
-Version 0.43 Alpha Build 43 (2003-09-??)
+Version 0.43 Alpha Build 43 (2003-10-01)
 
 - DBFCDX is significantly improved
 - New national codepages are added

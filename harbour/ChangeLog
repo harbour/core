@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-10-07 12:06 UTC+0200 Chen Kedem <niki@actcom.co.il>
+  * doc/whatsnew.txt
+    * Update build 43 release date
+
 2003-10-04 20:18 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * contrib/ole/ole2.c
     * Some changes needed for Mingw.
