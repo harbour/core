@@ -282,6 +282,22 @@ static ERRCODE defClose( AREAP pArea )
    return SUCCESS;
 }
 
+static ERRCODE defCompile( AREAP pArea, BYTE * szExpr )
+{
+   HB_MACRO_PTR pMacro;
+
+   HB_TRACE(HB_TR_DEBUG, ("defCompile(%p, %p)", pArea, szExpr));
+
+   pMacro = hb_macroCompile( ( char * ) szExpr );
+   if( pMacro )
+   {
+      pArea->valResult = hb_itemPutPtr( pArea->valResult, ( void * ) pMacro );
+      return SUCCESS;
+   }
+   else
+      return FAILURE;
+}
+
 static ERRCODE defCreateFields( AREAP pArea, PHB_ITEM pStruct )
 {
    USHORT uiCount, uiItems;
@@ -344,16 +360,16 @@ static ERRCODE defEval( AREAP pArea, LPDBEVALINFO pEvalInfo )
 
    if( pEvalInfo->dbsci.itmRecID )
    {
-      SELF_GOTOID( ( AREAP ) pCurrArea->pArea, pEvalInfo->dbsci.itmRecID );
-      SELF_EOF( ( AREAP ) pCurrArea->pArea, &bEof );
+      SELF_GOTOID( pArea, pEvalInfo->dbsci.itmRecID );
+      SELF_EOF( pArea, &bEof );
       if( !bEof )
       {
          if( pEvalInfo->dbsci.itmCobWhile )
          {
-            hb_vmPushSymbol( &hb_symEval ); 
+            hb_vmPushSymbol( &hb_symEval );
             hb_vmPush( pEvalInfo->dbsci.itmCobWhile );
-            hb_vmDo( 0 ); 
-            bWhile = hb_itemGetL( &hb_stack.Return ); 
+            hb_vmDo( 0 );
+            bWhile = hb_itemGetL( &hb_stack.Return );
          }
          else
             bWhile = TRUE;
@@ -379,12 +395,12 @@ static ERRCODE defEval( AREAP pArea, LPDBEVALINFO pEvalInfo )
    }
       
    if( !pEvalInfo->dbsci.fRest || !hb_itemGetL( pEvalInfo->dbsci.fRest ) )
-      SELF_GOTOP( ( AREAP ) pCurrArea->pArea );
+      SELF_GOTOP( pArea );
 
    if( pEvalInfo->dbsci.lNext )
       ulNext = hb_itemGetNL( pEvalInfo->dbsci.lNext );
 
-   SELF_EOF( ( AREAP ) pCurrArea->pArea, &bEof );
+   SELF_EOF( pArea, &bEof );
    while( !bEof )
    {
       if( pEvalInfo->dbsci.lNext && ulNext-- < 1 )
@@ -392,10 +408,10 @@ static ERRCODE defEval( AREAP pArea, LPDBEVALINFO pEvalInfo )
 
       if( pEvalInfo->dbsci.itmCobWhile )
       {
-         hb_vmPushSymbol( &hb_symEval ); 
+         hb_vmPushSymbol( &hb_symEval );
          hb_vmPush( pEvalInfo->dbsci.itmCobWhile );
-         hb_vmDo( 0 ); 
-         bWhile = hb_itemGetL( &hb_stack.Return ); 
+         hb_vmDo( 0 );
+         bWhile = hb_itemGetL( &hb_stack.Return );
          if( !bWhile )
             break;
       }
@@ -418,9 +434,35 @@ static ERRCODE defEval( AREAP pArea, LPDBEVALINFO pEvalInfo )
          hb_vmPush( pEvalInfo->itmBlock );
          hb_vmDo( 0 );
       }
-      SELF_SKIP( ( AREAP ) pCurrArea->pArea, 1 );
-      SELF_EOF( ( AREAP ) pCurrArea->pArea, &bEof );
+      SELF_SKIP( pArea, 1 );
+      SELF_EOF( pArea, &bEof );
    }
+
+   return SUCCESS;
+}
+
+static ERRCODE defEvalBlock( AREAP pArea, PHB_ITEM pBlock )
+{
+   PHB_ITEM pError;
+
+   HB_TRACE(HB_TR_DEBUG, ("defEvalBlock(%p, %p)", pArea, pBlock));
+
+   if( !pBlock && !IS_BLOCK( pBlock ) )
+   {
+      pError = hb_errNew();
+      hb_errPutGenCode( pError, EG_NOMETHOD );
+      hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_NOMETHOD ) );
+      SELF_ERROR( pArea, pError );
+      hb_errRelease( pError );
+      return FAILURE;
+   }
+
+   hb_vmPushSymbol( &hb_symEval ); 
+   hb_vmPush( pBlock );
+   hb_vmDo( 0 ); 
+   if( !pArea->valResult )
+      pArea->valResult = hb_itemNew( NULL );
+   hb_itemCopy( pArea->valResult, &hb_stack.Return );
 
    return SUCCESS;
 }
@@ -508,9 +550,9 @@ static ERRCODE defNewArea( AREAP pArea )
 {
    HB_TRACE(HB_TR_DEBUG, ("defNewArea(%p)", pArea));
 
-   pArea->lpFileInfo = ( LPFILEINFO ) hb_xgrab( sizeof( FILEINFO ) );
-   memset( pArea->lpFileInfo, 0, sizeof( FILEINFO ) );
-   pArea->lpFileInfo->hFile = FS_ERROR;
+   pArea->lpDataInfo = ( LPFILEINFO ) hb_xgrab( sizeof( FILEINFO ) );
+   memset( pArea->lpDataInfo, 0, sizeof( FILEINFO ) );
+   pArea->lpDataInfo->hFile = FS_ERROR;
    pArea->lpExtendInfo = ( LPDBEXTENDINFO ) hb_xgrab( sizeof( DBEXTENDINFO ) );
    memset( pArea->lpExtendInfo, 0, sizeof( DBEXTENDINFO ) );
    return SUCCESS;
@@ -556,20 +598,25 @@ static ERRCODE defOrderCondition( AREAP pArea, LPDBORDERCONDINFO pOrderInfo )
 static ERRCODE defRelease( AREAP pArea )
 {
    LPFILEINFO pFileInfo;
+   HB_MACRO_PTR pMacro;
 
    HB_TRACE(HB_TR_DEBUG, ("defRelease(%p)", pArea));
 
    SELF_ORDSETCOND( pArea, NULL );
+
+   if( pArea->valResult )
+      hb_itemRelease( pArea->valResult );
+
    if( pArea->lpFields )
    {
       hb_xfree( pArea->lpFields );
       pArea->uiFieldCount = 0;
    }
 
-   while( pArea->lpFileInfo )
+   while( pArea->lpDataInfo )
    {
-      pFileInfo = pArea->lpFileInfo;
-      pArea->lpFileInfo = pArea->lpFileInfo->pNext;
+      pFileInfo = pArea->lpDataInfo;
+      pArea->lpDataInfo = pArea->lpDataInfo->pNext;
       if( pFileInfo->szFileName )
          hb_xfree( pFileInfo->szFileName );
       hb_xfree( pFileInfo );
@@ -871,7 +918,9 @@ static RDDFUNCS defTable = { defBof,
                              defFilterText,
                              defSetFilter,
                              defSetLocate,
+                             defCompile,
                              defError,
+                             defEvalBlock,
                              ( DBENTRYP_VSP ) defUnSupported,
                              ( DBENTRYP_VL ) defUnSupported,
                              ( DBENTRYP_UL ) defUnSupported,
@@ -1874,7 +1923,7 @@ HARBOUR HB_DBCREATE( void )
       }
    }
 
-   ( ( AREAP ) pCurrArea->pArea )->lpFileInfo->szFileName = szFileName;
+   ( ( AREAP ) pCurrArea->pArea )->lpDataInfo->szFileName = szFileName;
    ( ( AREAP ) pCurrArea->pArea )->atomAlias = hb_dynsymGet( ( char * ) pInfo.atomAlias );
    if( ( ( PHB_DYNS ) ( ( AREAP ) pCurrArea->pArea )->atomAlias )->hArea )
    {
@@ -1895,6 +1944,8 @@ HARBOUR HB_DBCREATE( void )
       pFileName = hb_fsFNameSplit( ( char * ) pInfo.abName );
       szFileName = ( char * ) hb_xgrab( _POSIX_PATH_MAX + 3 );
       szFileName[ 0 ] = '\0';
+      if( pFileName->szDrive )
+         strcat( szFileName, pFileName->szDrive );
       if( pFileName->szPath )
          strcat( szFileName, pFileName->szPath );
       strcat( szFileName, pFileName->szName );
@@ -1902,12 +1953,12 @@ HARBOUR HB_DBCREATE( void )
       pInfo.abName = ( BYTE * ) szFileName;
       hb_xfree( pFileName );
       hb_itemRelease( pFileExt );
-      ( ( AREAP ) pCurrArea->pArea )->lpFileInfo->pNext =
+      ( ( AREAP ) pCurrArea->pArea )->lpDataInfo->pNext =
                               ( LPFILEINFO ) hb_xgrab( sizeof( FILEINFO ) );
-      memset( ( ( AREAP ) pCurrArea->pArea )->lpFileInfo->pNext, 0,
+      memset( ( ( AREAP ) pCurrArea->pArea )->lpDataInfo->pNext, 0,
               sizeof( FILEINFO ) );
-      ( ( AREAP ) pCurrArea->pArea )->lpFileInfo->pNext->hFile = FS_ERROR;
-      ( ( AREAP ) pCurrArea->pArea )->lpFileInfo->pNext->szFileName = szFileName;
+      ( ( AREAP ) pCurrArea->pArea )->lpDataInfo->pNext->hFile = FS_ERROR;
+      ( ( AREAP ) pCurrArea->pArea )->lpDataInfo->pNext->szFileName = szFileName;
       bError = ( SELF_CREATEMEMFILE( ( AREAP ) pCurrArea->pArea, &pInfo ) == FAILURE );
    }
 
@@ -1952,7 +2003,7 @@ HARBOUR HB_DBCREATE( void )
       pInfo.fShared = !hb_set.HB_SET_EXCLUSIVE;
       pInfo.fReadonly = FALSE;
       ( ( AREAP ) pCurrArea->pArea )->uiArea = uiCurrArea;
-      ( ( AREAP ) pCurrArea->pArea )->lpFileInfo->szFileName = szFileName;
+      ( ( AREAP ) pCurrArea->pArea )->lpDataInfo->szFileName = szFileName;
       if( SELF_OPEN( ( AREAP ) pCurrArea->pArea, &pInfo ) == FAILURE )
       {
          SELF_RELEASE( ( AREAP ) pCurrArea->pArea );
@@ -2720,7 +2771,7 @@ HARBOUR HB_DBUSEAREA( void )
       }
    }
 
-   ( ( AREAP ) pCurrArea->pArea )->lpFileInfo->szFileName = szFileName;
+   ( ( AREAP ) pCurrArea->pArea )->lpDataInfo->szFileName = szFileName;
    if( SELF_OPEN( ( AREAP ) pCurrArea->pArea, &pInfo ) == FAILURE )
    {
       SELF_RELEASE( ( AREAP ) pCurrArea->pArea );
@@ -3027,7 +3078,7 @@ HARBOUR HB_ORDBAGNAME( void )
       }
       pOrderInfo.itmResult = hb_itemPutC( NULL, "" );
       SELF_ORDINFO( ( AREAP ) pCurrArea->pArea, DBOI_BAGNAME, &pOrderInfo );
-      hb_retc( hb_itemGetC( pOrderInfo.itmResult ) );
+      hb_retc( pOrderInfo.itmResult->item.asString.value );
       hb_itemRelease( pOrderInfo.itmResult );
    }
    else
@@ -3159,7 +3210,7 @@ HARBOUR HB_ORDFOR( void )
       }
       pOrderInfo.itmResult = hb_itemPutC( NULL, "" );
       SELF_ORDINFO( ( AREAP ) pCurrArea->pArea, DBOI_CONDITION, &pOrderInfo );
-      hb_retc( hb_itemGetC( pOrderInfo.itmResult ) );
+      hb_retc( pOrderInfo.itmResult->item.asString.value );
       hb_itemRelease( pOrderInfo.itmResult );
    }
    else
@@ -3183,7 +3234,7 @@ HARBOUR HB_ORDKEY( void )
       }
       pOrderInfo.itmResult = hb_itemPutC( NULL, "" );
       SELF_ORDINFO( ( AREAP ) pCurrArea->pArea, DBOI_EXPRESSION, &pOrderInfo );
-      hb_retc( hb_itemGetC( pOrderInfo.itmResult ) );
+      hb_retc( pOrderInfo.itmResult->item.asString.value );
       hb_itemRelease( pOrderInfo.itmResult );
    }
    else
@@ -3240,7 +3291,7 @@ HARBOUR HB_ORDNAME( void )
       }
       pOrderInfo.itmResult = hb_itemPutC( NULL, "" );
       SELF_ORDINFO( ( AREAP ) pCurrArea->pArea, DBOI_NAME, &pOrderInfo );
-      hb_retc( hb_itemGetC( pOrderInfo.itmResult ) );
+      hb_retc( pOrderInfo.itmResult->item.asString.value );
       hb_itemRelease( pOrderInfo.itmResult );
    }
    else
@@ -3281,7 +3332,7 @@ HARBOUR HB_ORDSETFOCUS( void )
       pInfo.atomBagName = hb_param( 2, IT_STRING );
       pInfo.itmResult = hb_itemPutC( NULL, "" );
       SELF_ORDLSTFOCUS( ( AREAP ) pCurrArea->pArea, &pInfo );
-      hb_retc( hb_itemGetC( pInfo.itmResult ) );
+      hb_retc( pInfo.itmResult->item.asString.value );
       hb_itemRelease( pInfo.itmResult );
    }
    else

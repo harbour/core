@@ -198,8 +198,8 @@ static BOOL hb_dbfUpdateHeader( AREAP pArea, ULONG lRecCount )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfUpdateHeader(%p, %lu)", pArea, lRecCount));
 
-   hb_fsSeek( pArea->lpFileInfo->hFile, 0, FS_SET );
-   if( hb_fsRead( pArea->lpFileInfo->hFile, ( BYTE * ) &pHeader,
+   hb_fsSeek( pArea->lpDataInfo->hFile, 0, FS_SET );
+   if( hb_fsRead( pArea->lpDataInfo->hFile, ( BYTE * ) &pHeader,
                   sizeof( DBFHEADER ) ) != sizeof( DBFHEADER ) )
       return FALSE;
 
@@ -210,8 +210,8 @@ static BOOL hb_dbfUpdateHeader( AREAP pArea, ULONG lRecCount )
    pHeader.bDay = ( BYTE ) pTime->tm_mday;
    pHeader.ulRecords = lRecCount;
 
-   hb_fsSeek( pArea->lpFileInfo->hFile, 0, FS_SET );
-   if( hb_fsWrite( pArea->lpFileInfo->hFile, ( BYTE * ) &pHeader,
+   hb_fsSeek( pArea->lpDataInfo->hFile, 0, FS_SET );
+   if( hb_fsWrite( pArea->lpDataInfo->hFile, ( BYTE * ) &pHeader,
                    sizeof( DBFHEADER ) ) != sizeof( DBFHEADER ) )
       return FALSE;
 
@@ -230,23 +230,23 @@ static BOOL hb_dbfWriteMemo( AREAP pArea, LPDBFMEMO pMemo, ULONG * lNewRecNo )
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfWriteMemo(%p, %p, %p)",
 			  pArea, pMemo, lNewRecNo));
 
-   if( !pArea->lpExtendInfo->fExclusive && !pArea->lpFileInfo->fFileLocked &&
-       !hb_fsLock( pArea->lpFileInfo->pNext->hFile, LOCK_APPEND - 1, 1, FL_LOCK ) )
+   if( !pArea->lpExtendInfo->fExclusive && !pArea->lpDataInfo->fFileLocked &&
+       !hb_fsLock( pArea->lpDataInfo->pNext->hFile, LOCK_APPEND - 1, 1, FL_LOCK ) )
       return FALSE;
 
    uiNumBlocks = ( pMemo->uiLen + MEMO_BLOCK - 1 ) / MEMO_BLOCK;
    if( * lNewRecNo > 0 )
    {
       uiBytesRead = 0;
-      hb_fsSeek( pArea->lpFileInfo->pNext->hFile, * lNewRecNo * MEMO_BLOCK, FS_SET );
+      hb_fsSeek( pArea->lpDataInfo->pNext->hFile, * lNewRecNo * MEMO_BLOCK, FS_SET );
       do
       {
          uiBytesRead += MEMO_BLOCK;
-         uiRead = hb_fsRead( pArea->lpFileInfo->pNext->hFile, szBuffer, MEMO_BLOCK );
+         uiRead = hb_fsRead( pArea->lpDataInfo->pNext->hFile, szBuffer, MEMO_BLOCK );
          if( !uiRead )
          {
-            if( !pArea->lpExtendInfo->fExclusive && !pArea->lpFileInfo->fFileLocked )
-               hb_fsLock( pArea->lpFileInfo->pNext->hFile, LOCK_APPEND - 1, 1, FL_UNLOCK );
+            if( !pArea->lpExtendInfo->fExclusive && !pArea->lpDataInfo->fFileLocked )
+               hb_fsLock( pArea->lpDataInfo->pNext->hFile, LOCK_APPEND - 1, 1, FL_UNLOCK );
             return FALSE;
          }
          for( uiCount = 0; uiCount < uiRead; uiCount++ )
@@ -259,35 +259,35 @@ static BOOL hb_dbfWriteMemo( AREAP pArea, LPDBFMEMO pMemo, ULONG * lNewRecNo )
 
    if( * lNewRecNo == 0 )                    /* Add an entry at eof */
    {
-      hb_fsSeek( pArea->lpFileInfo->pNext->hFile, 0, FS_SET );
-      hb_fsRead( pArea->lpFileInfo->pNext->hFile, ( BYTE * ) &pMemoHeader,
+      hb_fsSeek( pArea->lpDataInfo->pNext->hFile, 0, FS_SET );
+      hb_fsRead( pArea->lpDataInfo->pNext->hFile, ( BYTE * ) &pMemoHeader,
                  sizeof( MEMOHEADER ) );
       * lNewRecNo = pMemoHeader.lNextBlock;
       pMemoHeader.lNextBlock = * lNewRecNo + uiNumBlocks;
-      hb_fsSeek( pArea->lpFileInfo->pNext->hFile, 0, FS_SET );
-      hb_fsWrite( pArea->lpFileInfo->pNext->hFile, ( BYTE * ) &pMemoHeader,
+      hb_fsSeek( pArea->lpDataInfo->pNext->hFile, 0, FS_SET );
+      hb_fsWrite( pArea->lpDataInfo->pNext->hFile, ( BYTE * ) &pMemoHeader,
                   sizeof( MEMOHEADER ) );
    }
 
-   hb_fsSeek( pArea->lpFileInfo->pNext->hFile, * lNewRecNo * MEMO_BLOCK, FS_SET );
-   if( hb_fsWrite( pArea->lpFileInfo->pNext->hFile, pMemo->pData,
+   hb_fsSeek( pArea->lpDataInfo->pNext->hFile, * lNewRecNo * MEMO_BLOCK, FS_SET );
+   if( hb_fsWrite( pArea->lpDataInfo->pNext->hFile, pMemo->pData,
                   pMemo->uiLen ) != pMemo->uiLen )
    {
-      if( !pArea->lpExtendInfo->fExclusive && !pArea->lpFileInfo->fFileLocked )
-         hb_fsLock( pArea->lpFileInfo->pNext->hFile, LOCK_APPEND - 1, 1, FL_UNLOCK );
+      if( !pArea->lpExtendInfo->fExclusive && !pArea->lpDataInfo->fFileLocked )
+         hb_fsLock( pArea->lpDataInfo->pNext->hFile, LOCK_APPEND - 1, 1, FL_UNLOCK );
       return FALSE;
    }
 
    szBuffer[ 0 ] = 0x1A;
-   if( hb_fsWrite( pArea->lpFileInfo->pNext->hFile, szBuffer, 1 ) != 1 )
+   if( hb_fsWrite( pArea->lpDataInfo->pNext->hFile, szBuffer, 1 ) != 1 )
    {
-      if( !pArea->lpExtendInfo->fExclusive && !pArea->lpFileInfo->fFileLocked )
-         hb_fsLock( pArea->lpFileInfo->pNext->hFile, LOCK_APPEND - 1, 1, FL_UNLOCK );
+      if( !pArea->lpExtendInfo->fExclusive && !pArea->lpDataInfo->fFileLocked )
+         hb_fsLock( pArea->lpDataInfo->pNext->hFile, LOCK_APPEND - 1, 1, FL_UNLOCK );
       return FALSE;
    }
 
-   if( !pArea->lpExtendInfo->fExclusive && !pArea->lpFileInfo->fFileLocked )
-      hb_fsLock( pArea->lpFileInfo->pNext->hFile, LOCK_APPEND - 1, 1, FL_UNLOCK );
+   if( !pArea->lpExtendInfo->fExclusive && !pArea->lpDataInfo->fFileLocked )
+      hb_fsLock( pArea->lpDataInfo->pNext->hFile, LOCK_APPEND - 1, 1, FL_UNLOCK );
    return TRUE;
 }
 
@@ -307,11 +307,11 @@ static BOOL hb_dbfUpdateRecord( AREAP pArea, ULONG ulRecNo )
       pArea->lpExtendInfo->ulRecCount = ulRecCount;
    }
 
-   if( ulRecNo > 0 && ( ulRecNo <= ulRecCount || pArea->lpFileInfo->fAppend ) )
+   if( ulRecNo > 0 && ( ulRecNo <= ulRecCount || pArea->lpDataInfo->fAppend ) )
    {
-      hb_fsSeek( pArea->lpFileInfo->hFile, pArea->lpExtendInfo->uiHeaderLen +
+      hb_fsSeek( pArea->lpDataInfo->hFile, pArea->lpExtendInfo->uiHeaderLen +
                  ( ulRecNo - 1 ) * pArea->lpExtendInfo->uiRecordLen, FS_SET );
-      if( pArea->lpFileInfo->fAppend )
+      if( pArea->lpDataInfo->fAppend )
          pArea->lpExtendInfo->ulRecCount = ulRecNo;
       if( pArea->lpExtendInfo->fHasMemo )
       {
@@ -323,15 +323,15 @@ static BOOL hb_dbfUpdateRecord( AREAP pArea, ULONG ulRecNo )
                   return FALSE;
          }
       }
-      if( hb_fsWrite( pArea->lpFileInfo->hFile, pArea->lpExtendInfo->bRecord,
+      if( hb_fsWrite( pArea->lpDataInfo->hFile, pArea->lpExtendInfo->bRecord,
                       pArea->lpExtendInfo->uiRecordLen ) != pArea->lpExtendInfo->uiRecordLen )
          return FALSE;
 
       /* Write EOF */
-      if( pArea->lpFileInfo->fAppend )
+      if( pArea->lpDataInfo->fAppend )
       {
          pBuffer[ 0 ] = 0x1A;
-         if( hb_fsWrite( pArea->lpFileInfo->hFile, pBuffer, 1 ) != 1 )
+         if( hb_fsWrite( pArea->lpDataInfo->hFile, pBuffer, 1 ) != 1 )
             return FALSE;
       }
 
@@ -377,7 +377,7 @@ static void hb_dbfReadMemo( AREAP pArea, LPDBFMEMO pMemo, ULONG lMemoBlock )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfReadMemo(%p, %p, %lu)", pArea, pMemo, lMemoBlock));
 
-   hb_fsSeek( pArea->lpFileInfo->pNext->hFile, lMemoBlock, FS_SET );
+   hb_fsSeek( pArea->lpDataInfo->pNext->hFile, lMemoBlock, FS_SET );
    uiBytesRead = 0;
    uiMaxRead = pMemo->uiLen;
    for(;;)
@@ -394,7 +394,7 @@ static void hb_dbfReadMemo( AREAP pArea, LPDBFMEMO pMemo, ULONG lMemoBlock )
          pMemo->uiLen = uiBytesRead + MEMO_BLOCK + 1;
          uiMaxRead = MEMO_BLOCK;
       }
-      uiRead = hb_fsRead( pArea->lpFileInfo->pNext->hFile,
+      uiRead = hb_fsRead( pArea->lpDataInfo->pNext->hFile,
                           pMemo->pData + uiBytesRead, uiMaxRead );
       if( !uiRead )
          return;
@@ -432,17 +432,17 @@ static void hb_dbfReadBuffer( AREAP pArea, ULONG lRecNo )
       return;
 
    pArea->lpExtendInfo->fValidBuffer = TRUE;
-   if( hb_fsSeek( pArea->lpFileInfo->hFile, pArea->lpExtendInfo->uiHeaderLen +
+   if( hb_fsSeek( pArea->lpDataInfo->hFile, pArea->lpExtendInfo->uiHeaderLen +
                   ( lRecNo - 1 ) * pArea->lpExtendInfo->uiRecordLen, FS_SET ) !=
        pArea->lpExtendInfo->uiHeaderLen + ( lRecNo - 1 ) * pArea->lpExtendInfo->uiRecordLen ||
-       hb_fsRead( pArea->lpFileInfo->hFile, pArea->lpExtendInfo->bRecord,
+       hb_fsRead( pArea->lpDataInfo->hFile, pArea->lpExtendInfo->bRecord,
                   pArea->lpExtendInfo->uiRecordLen ) != pArea->lpExtendInfo->uiRecordLen )
    {
       hb_dbfClearBuffer( pArea );
       return;
    }
 
-   if( pArea->lpExtendInfo->fHasMemo && pArea->lpFileInfo->pNext )
+   if( pArea->lpExtendInfo->fHasMemo && pArea->lpDataInfo->pNext )
    {
       pField = pArea->lpFields;
       for( uiCount = 0; uiCount < pArea->uiFieldCount; uiCount++ )
@@ -460,10 +460,10 @@ static BOOL hb_dbfIsLocked( AREAP pArea, ULONG lLockPos )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfIsLocked(%p, %lu)", pArea, lLockPos));
 
-   lNumLocksPos = pArea->lpFileInfo->lNumLocksPos;
+   lNumLocksPos = pArea->lpDataInfo->lNumLocksPos;
    while( lNumLocksPos > 0 )
    {
-      if( pArea->lpFileInfo->pLocksPos[ lNumLocksPos - 1 ] == lLockPos )
+      if( pArea->lpDataInfo->pLocksPos[ lNumLocksPos - 1 ] == lLockPos )
          return TRUE;
       lNumLocksPos--;
    }
@@ -477,14 +477,14 @@ static BOOL hb_dbfLockRecord( AREAP pArea, ULONG lRecNum )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfLockRecord(%p, %lu)", pArea, lRecNum));
 
-   if( pArea->lpExtendInfo->fExclusive || pArea->lpFileInfo->fFileLocked )
+   if( pArea->lpExtendInfo->fExclusive || pArea->lpDataInfo->fFileLocked )
       return TRUE;
 
-   pFileInfo = pArea->lpFileInfo;
+   pFileInfo = pArea->lpDataInfo;
    if( hb_dbfIsLocked( pArea, lRecNum ) )
       return TRUE;
 
-   if( !hb_fsLock( pArea->lpFileInfo->hFile, LOCK_START +
+   if( !hb_fsLock( pArea->lpDataInfo->hFile, LOCK_START +
                    pArea->lpExtendInfo->uiHeaderLen +
                    ( lRecNum - 1 ) * pArea->lpExtendInfo->uiRecordLen, 1, FL_LOCK ) )
       return FALSE;
@@ -514,14 +514,14 @@ static BOOL hb_dbfUnLockRecord( AREAP pArea, ULONG lRecNum )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfUnLockRecord(%p, %lu)", pArea, lRecNum));
 
-   if( pArea->lpExtendInfo->fExclusive || pArea->lpFileInfo->fFileLocked )
+   if( pArea->lpExtendInfo->fExclusive || pArea->lpDataInfo->fFileLocked )
       return TRUE;
 
-   pFileInfo = pArea->lpFileInfo;
+   pFileInfo = pArea->lpDataInfo;
    if( !hb_dbfIsLocked( pArea, lRecNum ) )
       return TRUE;
 
-   if( !hb_fsLock( pArea->lpFileInfo->hFile, LOCK_START +
+   if( !hb_fsLock( pArea->lpDataInfo->hFile, LOCK_START +
                    pArea->lpExtendInfo->uiHeaderLen +
                    ( lRecNum - 1 ) * pArea->lpExtendInfo->uiRecordLen, 1, FL_UNLOCK ) )
       return FALSE;
@@ -569,9 +569,9 @@ static BOOL hb_dbfUnLockAllRecords( AREAP pArea )
    if( pArea->lpExtendInfo->fExclusive )
       return TRUE;
 
-   pFileInfo = pArea->lpFileInfo;
+   pFileInfo = pArea->lpDataInfo;
    for( lPosLocked = 0; lPosLocked < pFileInfo->lNumLocksPos; lPosLocked++ )
-      if( !hb_fsLock( pArea->lpFileInfo->hFile, LOCK_START +
+      if( !hb_fsLock( pArea->lpDataInfo->hFile, LOCK_START +
                    pArea->lpExtendInfo->uiHeaderLen +
                    ( pFileInfo->pLocksPos[ lPosLocked ] - 1 ) *
                    pArea->lpExtendInfo->uiRecordLen, 1, FL_UNLOCK ) )
@@ -589,12 +589,12 @@ static BOOL hb_dbfLockFile( AREAP pArea )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfLockFile(%p)", pArea));
 
-   if( pArea->lpExtendInfo->fExclusive || pArea->lpFileInfo->fFileLocked )
+   if( pArea->lpExtendInfo->fExclusive || pArea->lpDataInfo->fFileLocked )
       return TRUE;
 
-   if( !hb_fsLock( pArea->lpFileInfo->hFile, LOCK_START, LOCK_FILE, FL_LOCK ) )
+   if( !hb_fsLock( pArea->lpDataInfo->hFile, LOCK_START, LOCK_FILE, FL_LOCK ) )
       return FALSE;
-   pArea->lpFileInfo->fFileLocked = TRUE;
+   pArea->lpDataInfo->fFileLocked = TRUE;
    return TRUE;
 }
 
@@ -609,11 +609,11 @@ static BOOL hb_dbfUnLockFile( AREAP pArea )
       return TRUE;
 
    hb_dbfUnLockAllRecords( pArea );
-   if( pArea->lpFileInfo->fFileLocked )
+   if( pArea->lpDataInfo->fFileLocked )
    {
-     if( !hb_fsLock( pArea->lpFileInfo->hFile, LOCK_START, LOCK_FILE, FL_UNLOCK ) )
+     if( !hb_fsLock( pArea->lpDataInfo->hFile, LOCK_START, LOCK_FILE, FL_UNLOCK ) )
         return FALSE;
-      pArea->lpFileInfo->fFileLocked = FALSE;
+      pArea->lpDataInfo->fFileLocked = FALSE;
    }
    return TRUE;
 }
@@ -624,9 +624,9 @@ static void hb_dbfGetLockArray( AREAP pArea, PHB_ITEM pItem )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_GetLockArray(%p, %p)", pArea, pItem));
 
-   for( lLockPos = 1; lLockPos <= pArea->lpFileInfo->lNumLocksPos; lLockPos++ )
+   for( lLockPos = 1; lLockPos <= pArea->lpDataInfo->lNumLocksPos; lLockPos++ )
       hb_arrayAdd( pItem,
-         hb_itemPutNL( NULL, pArea->lpFileInfo->pLocksPos[ lLockPos - 1 ] ) );
+         hb_itemPutNL( NULL, pArea->lpDataInfo->pLocksPos[ lLockPos - 1 ] ) );
 }
 
 static RDDFUNCS dbfSuper = { 0 };
@@ -667,7 +667,9 @@ static RDDFUNCS dbfSuper = { 0 };
 #define dbfFilterText                           NULL
 #define dbfSetFilter                            NULL
 #define dbfSetLocate                            NULL
+#define dbfCompile                              NULL
 #define dbfError                                NULL
+#define dbfEvalBlock                            NULL
 #define dbfWhoCares                             NULL
 
 static ERRCODE dbfAddField( AREAP pArea, LPDBFIELDINFO pFieldInfo )
@@ -724,12 +726,12 @@ static ERRCODE dbfAppend( AREAP pArea, BOOL bUnLockAll )
       return FAILURE;
    pArea->lpExtendInfo->ulRecCount = ulRecCount;
 
-   if( !pArea->lpExtendInfo->fExclusive && !pArea->lpFileInfo->fFileLocked )
+   if( !pArea->lpExtendInfo->fExclusive && !pArea->lpDataInfo->fFileLocked )
    {
       if( bUnLockAll && !hb_dbfUnLockAllRecords( pArea ) )
          return FAILURE;
 
-      if( !hb_fsLock( pArea->lpFileInfo->hFile, LOCK_START, 1, FL_LOCK ) )
+      if( !hb_fsLock( pArea->lpDataInfo->hFile, LOCK_START, 1, FL_LOCK ) )
          return FAILURE;
    }
 
@@ -738,23 +740,23 @@ static ERRCODE dbfAppend( AREAP pArea, BOOL bUnLockAll )
    pArea->fEof = FALSE;
    hb_dbfClearBuffer( pArea );
    pArea->lpExtendInfo->fRecordChanged = TRUE;
-   pArea->lpFileInfo->fAppend = TRUE;
+   pArea->lpDataInfo->fAppend = TRUE;
    if( !hb_dbfUpdateRecord( pArea, ulRecNo ) )
    {
-      if( !pArea->lpExtendInfo->fExclusive && !pArea->lpFileInfo->fFileLocked )
-         hb_fsLock( pArea->lpFileInfo->hFile, LOCK_START, 1, FL_UNLOCK );
+      if( !pArea->lpExtendInfo->fExclusive && !pArea->lpDataInfo->fFileLocked )
+         hb_fsLock( pArea->lpDataInfo->hFile, LOCK_START, 1, FL_UNLOCK );
       return FAILURE;
    }
 
    if( !hb_dbfLockRecord( pArea, ulRecNo ) )
    {
-      if( !pArea->lpExtendInfo->fExclusive && !pArea->lpFileInfo->fFileLocked )
-         hb_fsLock( pArea->lpFileInfo->hFile, LOCK_START, 1, FL_UNLOCK );
+      if( !pArea->lpExtendInfo->fExclusive && !pArea->lpDataInfo->fFileLocked )
+         hb_fsLock( pArea->lpDataInfo->hFile, LOCK_START, 1, FL_UNLOCK );
       return FAILURE;
    }
 
-   if( !pArea->lpExtendInfo->fExclusive && !pArea->lpFileInfo->fFileLocked &&
-       !hb_fsLock( pArea->lpFileInfo->hFile, LOCK_START, 1, FL_UNLOCK ) )
+   if( !pArea->lpExtendInfo->fExclusive && !pArea->lpDataInfo->fFileLocked &&
+       !hb_fsLock( pArea->lpDataInfo->hFile, LOCK_START, 1, FL_UNLOCK ) )
       return FAILURE;
 
    return SUCCESS;
@@ -764,13 +766,13 @@ static ERRCODE dbfClose( AREAP pArea )
 {
    HB_TRACE(HB_TR_DEBUG, ("dbfClose(%p)", pArea));
 
-   if( pArea->lpFileInfo->hFile != FS_ERROR )
+   if( pArea->lpDataInfo->hFile != FS_ERROR )
    {
       SELF_GOCOLD( pArea );
       SELF_RAWLOCK( pArea, FILE_UNLOCK, 0 );
       SELF_FLUSH( pArea );
-      hb_fsClose( pArea->lpFileInfo->hFile );
-      pArea->lpFileInfo->hFile = FS_ERROR;
+      hb_fsClose( pArea->lpDataInfo->hFile );
+      pArea->lpDataInfo->hFile = FS_ERROR;
    }
    if( pArea->lpExtendInfo->fHasMemo )
       SELF_CLOSEMEMFILE( pArea );
@@ -782,11 +784,11 @@ static ERRCODE dbfCloseMemFile( AREAP pArea )
 {
    HB_TRACE(HB_TR_DEBUG, ("dbfCloseMemFile(%p)", pArea));
 
-   if( pArea->lpFileInfo->pNext->hFile != FS_ERROR )
+   if( pArea->lpDataInfo->pNext->hFile != FS_ERROR )
    {
       SELF_FLUSH( pArea );
-      hb_fsClose( pArea->lpFileInfo->pNext->hFile );
-      pArea->lpFileInfo->pNext->hFile = FS_ERROR;
+      hb_fsClose( pArea->lpDataInfo->pNext->hFile );
+      pArea->lpDataInfo->pNext->hFile = FS_ERROR;
    }
 
    return SUCCESS;
@@ -801,8 +803,8 @@ static ERRCODE dbfCreate( AREAP pArea, LPDBOPENINFO pCreateInfo )
 
    do
    {
-      pArea->lpFileInfo->hFile = hb_fsCreate( pCreateInfo->abName, FC_NORMAL );
-      if( pArea->lpFileInfo->hFile == FS_ERROR )
+      pArea->lpDataInfo->hFile = hb_fsCreate( pCreateInfo->abName, FC_NORMAL );
+      if( pArea->lpDataInfo->hFile == FS_ERROR )
       {
          if( !pError )
          {
@@ -821,18 +823,18 @@ static ERRCODE dbfCreate( AREAP pArea, LPDBOPENINFO pCreateInfo )
    if( pError )
       hb_errRelease( pError );
 
-   if( pArea->lpFileInfo->hFile == FS_ERROR )
+   if( pArea->lpDataInfo->hFile == FS_ERROR )
       return FAILURE;
 
    if( SELF_WRITEDBHEADER( pArea ) == FAILURE )
    {
-      hb_fsClose( pArea->lpFileInfo->hFile );
-      pArea->lpFileInfo->hFile = FS_ERROR;
+      hb_fsClose( pArea->lpDataInfo->hFile );
+      pArea->lpDataInfo->hFile = FS_ERROR;
       return FAILURE;
    }
 
-   hb_fsClose( pArea->lpFileInfo->hFile );
-   pArea->lpFileInfo->hFile = FS_ERROR;
+   hb_fsClose( pArea->lpDataInfo->hFile );
+   pArea->lpDataInfo->hFile = FS_ERROR;
    return SUCCESS;
 }
 
@@ -846,7 +848,7 @@ static ERRCODE dbfCreateMemFile( AREAP pArea, LPDBOPENINFO pCreateInfo )
 
    HB_TRACE(HB_TR_DEBUG, ("dbfCreateMemFile(%p, %p)", pArea, pCreateInfo));
 
-   lpMemInfo = pArea->lpFileInfo->pNext;
+   lpMemInfo = pArea->lpDataInfo->pNext;
    do
    {
       lpMemInfo->hFile = hb_fsCreate( pCreateInfo->abName, FC_NORMAL );
@@ -927,10 +929,10 @@ static ERRCODE dbfFlush( AREAP pArea )
    if( SELF_GOCOLD( pArea ) == FAILURE )
       return FAILURE;
 
-   if( pArea->lpFileInfo->hFile != FS_ERROR )
-      hb_fsCommit( pArea->lpFileInfo->hFile );
-   if( pArea->lpExtendInfo->fHasMemo && pArea->lpFileInfo->pNext->hFile != FS_ERROR )
-      hb_fsCommit( pArea->lpFileInfo->pNext->hFile );
+   if( pArea->lpDataInfo->hFile != FS_ERROR )
+      hb_fsCommit( pArea->lpDataInfo->hFile );
+   if( pArea->lpExtendInfo->fHasMemo && pArea->lpDataInfo->pNext->hFile != FS_ERROR )
+      hb_fsCommit( pArea->lpDataInfo->pNext->hFile );
    return FAILURE;
 }
 
@@ -1074,7 +1076,7 @@ static ERRCODE dbfGoCold( AREAP pArea )
       return FAILURE;
 
    pArea->lpExtendInfo->fRecordChanged = FALSE;
-   pArea->lpFileInfo->fAppend = FALSE;
+   pArea->lpDataInfo->fAppend = FALSE;
    return SUCCESS;
 }
 
@@ -1084,7 +1086,7 @@ static ERRCODE dbfGoHot( AREAP pArea )
 
    HB_TRACE(HB_TR_DEBUG, ("dbfGoHot(%p)", pArea));
 
-   if( !pArea->lpExtendInfo->fExclusive && !pArea->lpFileInfo->fFileLocked &&
+   if( !pArea->lpExtendInfo->fExclusive && !pArea->lpDataInfo->fFileLocked &&
        !hb_dbfIsLocked( pArea, pArea->lpExtendInfo->ulRecNo ) )
    {
       pError = hb_errNew();
@@ -1275,8 +1277,8 @@ static ERRCODE dbfOpen( AREAP pArea, LPDBOPENINFO pOpenInfo )
    uiFlags |= pOpenInfo->fShared ? FO_DENYNONE : FO_EXCLUSIVE;
    do
    {
-      pArea->lpFileInfo->hFile = hb_fsOpen( pOpenInfo->abName, uiFlags );
-      if( pArea->lpFileInfo->hFile == FS_ERROR )
+      pArea->lpDataInfo->hFile = hb_fsOpen( pOpenInfo->abName, uiFlags );
+      if( pArea->lpDataInfo->hFile == FS_ERROR )
       {
          if( !pError )
          {
@@ -1295,7 +1297,7 @@ static ERRCODE dbfOpen( AREAP pArea, LPDBOPENINFO pOpenInfo )
    if( pError )
       hb_errRelease( pError );
 
-   if( pArea->lpFileInfo->hFile == FS_ERROR )
+   if( pArea->lpDataInfo->hFile == FS_ERROR )
    {
       SELF_CLOSE( pArea );
       return FAILURE;
@@ -1322,10 +1324,10 @@ static ERRCODE dbfOpen( AREAP pArea, LPDBOPENINFO pOpenInfo )
       hb_itemRelease( pFileExt );
       hb_xfree( pFileName );
 
-      pArea->lpFileInfo->pNext = ( LPFILEINFO ) hb_xgrab( sizeof( FILEINFO ) );
-      memset( pArea->lpFileInfo->pNext, 0, sizeof( FILEINFO ) );
-      pArea->lpFileInfo->pNext->hFile = FS_ERROR;
-      pArea->lpFileInfo->pNext->szFileName = szFileName;
+      pArea->lpDataInfo->pNext = ( LPFILEINFO ) hb_xgrab( sizeof( FILEINFO ) );
+      memset( pArea->lpDataInfo->pNext, 0, sizeof( FILEINFO ) );
+      pArea->lpDataInfo->pNext->hFile = FS_ERROR;
+      pArea->lpDataInfo->pNext->szFileName = szFileName;
 
       if( SELF_OPENMEMFILE( pArea, pOpenInfo ) == FAILURE )
       {
@@ -1346,7 +1348,7 @@ static ERRCODE dbfOpenMemFile( AREAP pArea, LPDBOPENINFO pOpenInfo )
 
    HB_TRACE(HB_TR_DEBUG, ("dbfOpenMemFile(%p, %p)", pArea, pOpenInfo));
 
-   lpMemInfo = pArea->lpFileInfo->pNext;
+   lpMemInfo = pArea->lpDataInfo->pNext;
    uiFlags = pOpenInfo->fReadonly ? FO_READ : FO_READWRITE;
    uiFlags |= pOpenInfo->fShared ? FO_DENYNONE : FO_EXCLUSIVE;
    do
@@ -1438,9 +1440,9 @@ static ERRCODE dbfPack( AREAP pArea )
          if( ulRecIn != ulRecOut )            /* Copy record */
          {
             SELF_GETREC( pArea, &pBuffer );
-            hb_fsSeek( pArea->lpFileInfo->hFile, pArea->lpExtendInfo->uiHeaderLen +
+            hb_fsSeek( pArea->lpDataInfo->hFile, pArea->lpExtendInfo->uiHeaderLen +
                        ( ulRecOut - 1 ) * pArea->lpExtendInfo->uiRecordLen, FS_SET );
-            hb_fsWrite( pArea->lpFileInfo->hFile, pBuffer, pArea->lpExtendInfo->uiRecordLen );
+            hb_fsWrite( pArea->lpDataInfo->hFile, pBuffer, pArea->lpExtendInfo->uiRecordLen );
          }
       }
       ulRecIn++;
@@ -1458,12 +1460,12 @@ static ERRCODE dbfPack( AREAP pArea )
 
    /* Write EOF */
    pEOF[ 0 ] = 0x1A;
-   hb_fsSeek( pArea->lpFileInfo->hFile, pArea->lpExtendInfo->uiHeaderLen +
+   hb_fsSeek( pArea->lpDataInfo->hFile, pArea->lpExtendInfo->uiHeaderLen +
               ulRecOut * pArea->lpExtendInfo->uiRecordLen, FS_SET );
-   hb_fsWrite( pArea->lpFileInfo->hFile, pEOF, 1 );
+   hb_fsWrite( pArea->lpDataInfo->hFile, pEOF, 1 );
 
    /* Truncate the file */
-   hb_fsWrite( pArea->lpFileInfo->hFile, NULL, 0 );
+   hb_fsWrite( pArea->lpDataInfo->hFile, NULL, 0 );
 
    return SELF_GOTOP( pArea );
 }
@@ -1680,8 +1682,8 @@ static ERRCODE dbfReadDBHeader( AREAP pArea )
 
    HB_TRACE(HB_TR_DEBUG, ("dbfReadHeader(%p)", pArea));
 
-   hb_fsSeek( pArea->lpFileInfo->hFile, 0, FS_SET );
-   if( hb_fsRead( pArea->lpFileInfo->hFile, ( BYTE * ) &pHeader,
+   hb_fsSeek( pArea->lpDataInfo->hFile, 0, FS_SET );
+   if( hb_fsRead( pArea->lpDataInfo->hFile, ( BYTE * ) &pHeader,
                   sizeof( DBFHEADER ) ) != sizeof( DBFHEADER ) )
       return FAILURE;
 
@@ -1691,7 +1693,7 @@ static ERRCODE dbfReadDBHeader( AREAP pArea )
    pArea->lpExtendInfo->bDay = pHeader.bDay;
    uiDataLen = pHeader.uiHeaderLen - sizeof( DBFHEADER );
    szBuffer = ( char * ) hb_xgrab( uiDataLen );
-   if( hb_fsRead( pArea->lpFileInfo->hFile, ( BYTE * ) szBuffer,
+   if( hb_fsRead( pArea->lpDataInfo->hFile, ( BYTE * ) szBuffer,
                   uiDataLen ) != uiDataLen )
    {
       hb_xfree( szBuffer );
@@ -1776,8 +1778,8 @@ static ERRCODE dbfRecCount( AREAP pArea, ULONG * pRecCount )
 
    HB_TRACE(HB_TR_DEBUG, ("dbfRecCount(%p, %p)", pArea, pRecCount));
 
-   hb_fsSeek( pArea->lpFileInfo->hFile, 0, FS_SET );
-   if( hb_fsRead( pArea->lpFileInfo->hFile, ( BYTE * ) &pHeader,
+   hb_fsSeek( pArea->lpDataInfo->hFile, 0, FS_SET );
+   if( hb_fsRead( pArea->lpDataInfo->hFile, ( BYTE * ) &pHeader,
                   sizeof( DBFHEADER ) ) != sizeof( DBFHEADER ) )
       return FAILURE;
    * pRecCount = pHeader.ulRecords;
@@ -1914,7 +1916,7 @@ static ERRCODE dbfWriteDBHeader( AREAP pArea )
    pHeader.uiHeaderLen = ( USHORT ) ( 32 * ( pArea->uiFieldCount + 1 ) + 1 );
    pHeader.bHasTag = 0;
    pHeader.ulRecords = 0;
-   if( hb_fsWrite( pArea->lpFileInfo->hFile, ( BYTE * ) &pHeader,
+   if( hb_fsWrite( pArea->lpDataInfo->hFile, ( BYTE * ) &pHeader,
                    sizeof( DBFHEADER ) ) != sizeof( DBFHEADER ) )
       return FAILURE;
 
@@ -1952,12 +1954,12 @@ static ERRCODE dbfWriteDBHeader( AREAP pArea )
             pDBField.bDec = pField->uiDec;
             break;
       }
-      if( hb_fsWrite( pArea->lpFileInfo->hFile, ( BYTE * ) &pDBField,
+      if( hb_fsWrite( pArea->lpDataInfo->hFile, ( BYTE * ) &pDBField,
                       sizeof( DBFFIELD ) ) != sizeof( DBFFIELD ) )
          return FAILURE;
       pField++;
    }
-   if( hb_fsWrite( pArea->lpFileInfo->hFile, ( BYTE * ) "\15\32", 2 ) != 2 )
+   if( hb_fsWrite( pArea->lpDataInfo->hFile, ( BYTE * ) "\15\32", 2 ) != 2 )
       return FAILURE;
    return SUCCESS;
 }
@@ -1991,18 +1993,18 @@ static ERRCODE dbfZap( AREAP pArea )
       return FAILURE;
 
    hb_dbfUnLockAllRecords( pArea );
-   hb_fsClose( pArea->lpFileInfo->hFile );
-   pInfo.abName = ( BYTE * ) pArea->lpFileInfo->szFileName;
+   hb_fsClose( pArea->lpDataInfo->hFile );
+   pInfo.abName = ( BYTE * ) pArea->lpDataInfo->szFileName;
    SELF_CREATE( pArea, &pInfo );
-   hb_fsClose( pArea->lpFileInfo->hFile );
-   pArea->lpFileInfo->hFile = hb_fsOpen( pInfo.abName, FO_READWRITE | FO_EXCLUSIVE );
+   hb_fsClose( pArea->lpDataInfo->hFile );
+   pArea->lpDataInfo->hFile = hb_fsOpen( pInfo.abName, FO_READWRITE | FO_EXCLUSIVE );
    if( pArea->lpExtendInfo->fHasMemo )
    {
-      hb_fsClose( pArea->lpFileInfo->pNext->hFile );
-      pInfo.abName = ( BYTE * ) pArea->lpFileInfo->pNext->szFileName;
+      hb_fsClose( pArea->lpDataInfo->pNext->hFile );
+      pInfo.abName = ( BYTE * ) pArea->lpDataInfo->pNext->szFileName;
       SELF_CREATEMEMFILE( pArea, &pInfo );
-      hb_fsClose( pArea->lpFileInfo->pNext->hFile );
-      pArea->lpFileInfo->pNext->hFile = hb_fsOpen( pInfo.abName, FO_READWRITE | FO_EXCLUSIVE );
+      hb_fsClose( pArea->lpDataInfo->pNext->hFile );
+      pArea->lpDataInfo->pNext->hFile = hb_fsOpen( pInfo.abName, FO_READWRITE | FO_EXCLUSIVE );
    }
    return SELF_GOTOP( pArea );
 }
@@ -2065,7 +2067,9 @@ static RDDFUNCS dbfTable = { dbfBof,
                              dbfFilterText,
                              dbfSetFilter,
                              dbfSetLocate,
+                             dbfCompile,
                              dbfError,
+                             dbfEvalBlock,
                              dbfRawLock,
                              dbfLock,
                              dbfUnLock,

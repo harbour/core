@@ -171,6 +171,15 @@ typedef FILEINFO * LPFILEINFO;
 
 
 
+typedef struct _INDEXINFO
+{
+   struct _INDEXINFO * pNext;   /* The next index in the list */
+} INDEXINFO;
+
+typedef INDEXINFO * LPINDEXINFO;
+
+
+
 /*
 *  DBFIELDINFO
 *  -----------
@@ -560,7 +569,8 @@ typedef struct _AREA
    USHORT   heap;
    USHORT   heapSize;
    USHORT   rddID;
-   LPFILEINFO lpFileInfo;        /* Files used by this workarea */
+   LPFILEINFO lpDataInfo;        /* Data files used by this workarea */
+   LPINDEXINFO lpIndexInfo;      /* Indexes used by this workarea */
    LPDBEXTENDINFO lpExtendInfo;  /* Additional properties */
 } AREA;
 
@@ -725,16 +735,14 @@ typedef struct _RDDFUNCS
 #if 0
    DBENTRYP_VP   setScope;
    DBENTRYP_VPL  skipScope;
+#endif
 
 
    /* Miscellaneous */
 
-   DBENTRYP_VP   compile;
-#endif
+   DBENTRYP_P    compile;
    DBENTRYP_I    error;
-#if 0
    DBENTRYP_I    evalBlock;
-#endif
 
 
    /* Network operations */

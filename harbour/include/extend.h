@@ -41,6 +41,7 @@
 
 /* items types and type checking macros */
 #define IT_NIL          ( ( USHORT ) 0x0000 )
+#define IT_POINTER      ( ( USHORT ) 0x0001 )
 #define IT_INTEGER      ( ( USHORT ) 0x0002 )
 #define IT_LONG         ( ( USHORT ) 0x0008 )
 #define IT_DOUBLE       ( ( USHORT ) 0x0010 )
@@ -75,6 +76,7 @@
 #define IS_MEMO( p )       IS_OF_TYPE( p, IT_MEMO )
 #define IS_SYMBOL( p )     IS_OF_TYPE( p, IT_SYMBOL )
 #define IS_MEMVAR( p )     IS_OF_TYPE( p, IT_MEMVAR )
+#define IS_POINTER( p )    IS_OF_TYPE( p, IT_POINTER )
 
 #define ISNIL( n )         ( hb_param( n, IT_ANY ) == NULL || IS_NIL( hb_param( n, IT_ANY ) ) ) /* NOTE: Intentionally using a different method */
 #define ISCHAR( n )        ( hb_param( n, IT_STRING ) != NULL )
@@ -85,6 +87,7 @@
 #define ISBYREF( n )       ( hb_parinfo( n ) & IT_BYREF ) /* NOTE: Intentionally using a different method */
 #define ISARRAY( n )       ( hb_param( n, IT_ARRAY ) != NULL )
 #define ISBLOCK( n )       ( hb_param( n, IT_BLOCK ) != NULL ) /* Not available in CA-Cl*pper. */
+#define ISPOINTER( n )     ( hb_param( n, IT_POINTER ) != NULL ) /* Not available in CA-Cl*pper. */
 
 #define PCOUNT             hb_pcount()
 #define ALENGTH( n )       hb_parinfa( n, 0 )
@@ -454,6 +457,8 @@ extern void hb_macroGetValue( HB_ITEM_PTR );
 extern void hb_macroSetValue( HB_ITEM_PTR );
 extern void hb_macroPushSymbol( HB_ITEM_PTR );
 extern void hb_macroRun( HB_MACRO_PTR );
+extern HB_MACRO_PTR hb_macroCompile( char * );
+extern void hb_macroDelete( HB_MACRO_PTR );
 
 /* misc */
 extern char *   hb_version( USHORT uiMode );

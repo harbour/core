@@ -1,3 +1,32 @@
+19991216-15:50 GMT+1 Bruno Cantero <bruno@issnet.net>
+  * include/extend.h
+    + Added a new item type: IT_POINTER ( USHORT ) 0x0001
+    + Added two defines:
+      #define IS_POINTER( p )    IS_OF_TYPE( p, IT_POINTER )
+      #define ISPOINTER( n )     ( hb_param( n, IT_POINTER ) != NULL )
+    + Added two prototypes:
+      extern HB_MACRO_PTR hb_macroCompile( char * )
+      extern void hb_macroDelete( HB_MACRO_PTR )
+
+  * include/itemapi.h
+    + Added two prototypes for manipulate items (IT_POINTER):
+      extern void * hb_itemGetPtr( PHB_ITEM );
+      extern PHB_ITEM hb_itemPutPtr( PHB_ITEM pItem, void * pValue )
+
+  * source/rtl/itemapi.c
+    + Added two functions for manipulate items (IT_POINTER):
+      void * hb_itemGetPtr( PHB_ITEM );
+      PHB_ITEM hb_itemPutPtr( PHB_ITEM pItem, void * pValue )
+
+  * source/macro.c
+    * Removed static declaration from static void hb_macroDelete( HB_MACRO_PTR )
+
+  * include/rddapi.h
+    source/rdd/dbcmd.c
+    source/rdd/dbf1.c
+    source/rdd/dbfcdx/dbfcdx1.c
+    + Added code to OrdCreate() function.
+
 19991215-19:46 GMT+1 Antonio Linares <alinares@fivetech.com>
   * source/rtl/classes.c
     * Fixed inheritance of error handlers

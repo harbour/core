@@ -645,6 +645,16 @@ long hb_itemGetNL( PHB_ITEM pItem )
    return 0;
 }
 
+void * hb_itemGetPtr( PHB_ITEM pItem )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemGetPtr(%p)", pItem));
+
+   if( pItem )
+      return pItem->item.asPointer.value;
+   else
+      return NULL;
+}
+
 PHB_ITEM hb_itemReturn( PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemReturn(%p)", pItem));
@@ -837,6 +847,21 @@ PHB_ITEM hb_itemPutNLLen( PHB_ITEM pItem, long lNumber, int iWidth )
    pItem->type = IT_LONG;
    pItem->item.asLong.length = iWidth;
    pItem->item.asLong.value = lNumber;
+
+   return pItem;
+}
+
+PHB_ITEM hb_itemPutPtr( PHB_ITEM pItem, void * pValue )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemPutPtr(%p, %p)", pItem, pValue));
+
+   if( pItem )
+      hb_itemClear( pItem );
+   else
+      pItem = hb_itemNew( NULL );
+
+   pItem->type = IT_POINTER;
+   pItem->item.asPointer.value = pValue;
 
    return pItem;
 }

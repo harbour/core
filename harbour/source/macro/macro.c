@@ -75,7 +75,7 @@ static int hb_macroParse( HB_MACRO_PTR pMacro, char * szString, int iFlag )
    return hb_compParse( pMacro );
 }
 
-static void hb_macroDelete( HB_MACRO_PTR pMacro )
+void hb_macroDelete( HB_MACRO_PTR pMacro )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_macroDelete(%p)", pMacro));
 

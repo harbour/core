@@ -68,6 +68,7 @@ extern double   hb_itemGetND    ( PHB_ITEM pItem );
 extern int      hb_itemGetNI    ( PHB_ITEM pItem );
 extern long     hb_itemGetNL    ( PHB_ITEM pItem );
 extern void     hb_itemGetNLen  ( PHB_ITEM pItem, int * piWidth, int * piDec );
+extern void *   hb_itemGetPtr   ( PHB_ITEM pItem );
 extern PHB_ITEM hb_itemNew      ( PHB_ITEM pNull );
 extern USHORT   hb_itemPCount   ( void );
 extern PHB_ITEM hb_itemParam    ( USHORT uiParam );
@@ -84,6 +85,7 @@ extern PHB_ITEM hb_itemPutNLen  ( PHB_ITEM pItem, double dNumber, int iWidth, in
 extern PHB_ITEM hb_itemPutNDLen ( PHB_ITEM pItem, double dNumber, int iWidth, int iDec );
 extern PHB_ITEM hb_itemPutNILen ( PHB_ITEM pItem, int iNumber, int iWidth );
 extern PHB_ITEM hb_itemPutNLLen ( PHB_ITEM pItem, long lNumber, int iWidth );
+extern PHB_ITEM hb_itemPutPtr   ( PHB_ITEM pItem, void * pValue );
 extern BOOL     hb_itemRelease  ( PHB_ITEM pItem );
 extern PHB_ITEM hb_itemReturn   ( PHB_ITEM pItem );
 extern ULONG    hb_itemSize     ( PHB_ITEM pItem );
