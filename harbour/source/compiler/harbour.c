@@ -488,7 +488,7 @@ void hb_compVariableAdd( char * szVarName, BYTE cValueType )
 
             if ( toupper( cValueType ) == 'S' )
             {
-               pDeclared->pParamClasses[ pDeclared->iParamCount - 1 ] = hb_compClassFind( hb_strdup( hb_comp_szFromClass ) );
+               pDeclared->pParamClasses[ pDeclared->iParamCount - 1 ] = hb_compClassFind( hb_comp_szFromClass );
 
                /* Resetting */
                hb_comp_szFromClass = NULL;
@@ -526,7 +526,7 @@ void hb_compVariableAdd( char * szVarName, BYTE cValueType )
 
       if ( toupper( cValueType ) == 'S' )
       {
-         hb_comp_pLastMethod->pParamClasses[ hb_comp_pLastMethod->iParamCount - 1 ] = hb_compClassFind( hb_strdup( hb_comp_szFromClass ) );
+         hb_comp_pLastMethod->pParamClasses[ hb_comp_pLastMethod->iParamCount - 1 ] = hb_compClassFind( hb_comp_szFromClass );
 
          /*
          printf( "\nParameter: %s FROM CLASS: %s\n", szVarName, hb_comp_pLastMethod->pParamClasses[ hb_comp_pLastMethod->iParamCount - 1 ]->szName );
@@ -590,7 +590,7 @@ void hb_compVariableAdd( char * szVarName, BYTE cValueType )
       printf( "\nVariable %s is of Class: %s\n", szVarName, hb_comp_szFromClass );
       */
 
-      pVar->pClass = hb_compClassFind( hb_strdup( hb_comp_szFromClass ) );
+      pVar->pClass = hb_compClassFind( hb_comp_szFromClass );
       if( ! pVar->pClass )
       {
          hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, hb_comp_szFromClass, szVarName );

@@ -1,3 +1,12 @@
+20000521-21:50 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+   * source/compiler/harbour.y
+     - Removed few unneeded hb_strdup() from calls to hb_compClassFind()
+     + Added auto addition of Method Declaration for the SET Function of a declared Var of a declared class.
+
+   * source/compiler/harbour.c
+     - Removed few unneeded hb_strdup() from calls to hb_compClassFind()
+
 20000521-14:42 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
    * tests/testwarn.prg

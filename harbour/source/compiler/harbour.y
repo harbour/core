@@ -1158,7 +1158,7 @@ DecMethod  : IdentName '(' { hb_comp_pLastMethod = hb_compMethodAdd( hb_comp_pLa
                                                                                                                         hb_comp_pLastMethod->cType = hb_comp_cVarType;
 															if ( toupper( hb_comp_cVarType ) == 'S' )
 															{
-      															  hb_comp_pLastMethod->pClass = hb_compClassFind( hb_strdup( hb_comp_szFromClass ) );
+      															  hb_comp_pLastMethod->pClass = hb_compClassFind( hb_comp_szFromClass );
       															  if( ! hb_comp_pLastMethod->pClass )
       															  {
          														    hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, hb_comp_szFromClass, hb_comp_pLastMethod->szName );
@@ -1176,15 +1176,36 @@ DecMethod  : IdentName '(' { hb_comp_pLastMethod = hb_compMethodAdd( hb_comp_pLa
 
 DecData    : IdentName { hb_comp_pLastMethod = hb_compMethodAdd( hb_comp_pLastClass, $1 ); } AsType { if ( hb_comp_pLastMethod )
 												      {
+													PCOMCLASS pClass;
+													char * szSetData = hb_xgrab( strlen( $1 ) + 2 );
+
                                                                                                         hb_comp_pLastMethod->cType = hb_comp_cVarType;
 													if ( toupper( hb_comp_cVarType ) == 'S' )
 													{
-      													  hb_comp_pLastMethod->pClass = hb_compClassFind( hb_strdup( hb_comp_szFromClass ) );
+      													  pClass = hb_compClassFind( hb_comp_szFromClass );
+													  hb_comp_pLastMethod->pClass = pClass;
       													  if( ! hb_comp_pLastMethod->pClass )
       													  {
          												    hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, hb_comp_szFromClass, hb_comp_pLastMethod->szName );
          												    hb_comp_pLastMethod->cType = ( isupper( hb_comp_cVarType ) ? 'O' :'o' );
 													  }
+
+      													}
+													sprintf( szSetData, "_%s", $1 );
+
+													hb_comp_pLastMethod = hb_compMethodAdd( hb_comp_pLastClass, szSetData );
+                                                                                                        hb_comp_pLastMethod->cType = hb_comp_cVarType;
+													hb_comp_pLastMethod->iParamCount = 1;
+
+													hb_comp_pLastMethod->cParamTypes = ( BYTE * ) hb_xgrab( 1 );
+													hb_comp_pLastMethod->cParamTypes[0] = hb_comp_cVarType;
+
+													hb_comp_pLastMethod->pParamClasses = ( PCOMCLASS * ) hb_xgrab( sizeof( COMCLASS ) );
+													hb_comp_pLastMethod->pParamClasses[0] = pClass;
+
+													if ( toupper( hb_comp_cVarType ) == 'S' )
+													{
+      													  hb_comp_pLastMethod->pClass = pClass;
 
          												  /* Resetting */
          												  hb_comp_szFromClass = NULL;
