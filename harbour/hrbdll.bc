@@ -1,0 +1,3210 @@
+#
+# $Id$
+#
+#
+# This make file is for creating harbour.dll with Borland C++ 5.5.1
+# Envars should be modified to fit one's environment
+#
+
+# ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+# ³ general definition  ³Û
+# ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙÛ
+#  ßßßßßßßßßßßßßßßßßßßßßßß
+
+HARBOUR_EXE = $(BIN_DIR)\harbour.exe
+BCC_DIR     = c:\compiler\bcc55
+CC          = bcc32
+
+# ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+# ³ source directory ³Û
+# ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙÛ
+#  ßßßßßßßßßßßßßßßßßßßß
+
+COMMON_DIR        = source\common
+COMPILER_DIR      = source\compiler
+DEBUG_DIR         = source\debug
+LANG_DIR          = source\lang
+MACRO_DIR         = source\macro
+PP_DIR            = source\pp
+RDD_DIR           = source\rdd
+RTL_DIR           = source\rtl
+VM_DIR            = source\vm
+LIBMISC_SRC       = contrib\libmisc
+CT_DIR            = contrib\libct
+NANFOR_SRC_DIR    = contrib\libnf
+SAMPLES_SRC_DIR   = contrib\samples
+HTMLLIB_DIR       = contrib\htmllib
+MYSQL_LIB_SRC_DIR = contrib\mysql
+RDDADS_DIR        = contrib\rdd_ads
+HBDOC_DIR         = utils\hbdoc
+HBPP_DIR          = utils\hbpp
+HBMAKE_DIR        = utils\hbmake
+HBRUN_DIR         = utils\hbrun
+
+# ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+# ³ obj file output directory ³Û
+# ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙÛ
+#  ßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+
+# Since these DLL covers almost all available functions in the CVS tree,
+# it might happen that some files have the same name, thus cause a "too
+# many defined error" in makefile. To overcome this, it is reasonable to
+# create a separate sub-directory to hold obj files.
+
+OBJ_DIR           = dll\55\harbour
+LIBMISC_OBJ       = dll\55\libmisc
+CT_OBJ_DIR        = dll\55\ct
+NANFOR_OBJ_DIR    = dll\55\nanfor
+SAMPLES_OBJ_DIR   = dll\55\samples
+HTMLLIB_OBJ       = dll\55\htmllib
+MYSQL_LIB_OBJ_DIR = dll\55\mysql
+HBDOC_OBJ         = dll\55\hbdoc
+HBMAKE_OBJ        = dll\55\hbmake
+HBRUN_OBJ         = dll\55\hbrun
+
+# ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+# ³ include directory ³Û
+# ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙÛ
+#  ßßßßßßßßßßßßßßßßßßßßß
+
+INCLUDE_DIR  = include;contrib\rdd_ads
+
+# ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+# ³ compiler flags ³Û
+# ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙÛ
+#  ßßßßßßßßßßßßßßßßßß
+
+C_USR          = -tWM -DHB_FM_STATISTICS_OFF -D__WIN32__ -D__EXPORT__
+CFLAGS         = -I$(INCLUDE_DIR) -d $(C_USR) $(CFLAGS) -w3
+CLIBFLAGS      = -a8 -OS -O2 -5 -6 -c $(CFLAGS) $(CLIBFLAGS)
+CLIBFLAGSDEBUG = $(CLIBFLAGS)
+HARBOURFLAGS   = -D__EXPORT__ -DHB_FM_STATISTICS_OFF -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0
+HTMLFLAGS      = -iinclude;contrib\htmllib -n -q0 -w -es2 -gc0
+
+# ÚÄÄÄÄÄÄÄÄ¿
+# ³ output ³Û
+# ÀÄÄÄÄÄÄÄÄÙÛ
+#  ßßßßßßßßßß
+
+HARBOUR_DLL = lib\55\harbour.dll
+
+# ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+# ³ HARBOUR_DLL rules ³Û
+# ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙÛ
+#  ßßßßßßßßßßßßßßßßßßßßß
+
+HARBOUR_DLL_OBJS = \
+  $(OBJ_DIR)\abs.obj \
+  $(OBJ_DIR)\accept.obj \
+  $(OBJ_DIR)\ampm.obj \
+  $(OBJ_DIR)\at.obj \
+  $(OBJ_DIR)\binnum.obj \
+  $(OBJ_DIR)\binnumx.obj \
+  $(OBJ_DIR)\box.obj \
+  $(OBJ_DIR)\chrasc.obj \
+  $(OBJ_DIR)\colorind.obj \
+  $(OBJ_DIR)\console.obj \
+  $(OBJ_DIR)\copyfile.obj \
+  $(OBJ_DIR)\datec.obj \
+  $(OBJ_DIR)\dates.obj \
+  $(OBJ_DIR)\dateshb.obj \
+  $(OBJ_DIR)\datesx.obj \
+  $(OBJ_DIR)\defpath.obj \
+  $(OBJ_DIR)\dbdelim.obj \
+  $(OBJ_DIR)\dbsdf.obj \
+  $(OBJ_DIR)\descend.obj \
+  $(OBJ_DIR)\direct.obj \
+  $(OBJ_DIR)\dirdrive.obj \
+  $(OBJ_DIR)\diskspac.obj \
+  $(OBJ_DIR)\disksphb.obj \
+  $(OBJ_DIR)\do.obj \
+  $(OBJ_DIR)\empty.obj \
+  $(OBJ_DIR)\errorapi.obj \
+  $(OBJ_DIR)\file.obj \
+  $(OBJ_DIR)\filehb.obj \
+  $(OBJ_DIR)\filesys.obj \
+  $(OBJ_DIR)\fkmax.obj \
+  $(OBJ_DIR)\fnsplit.obj \
+  $(OBJ_DIR)\fssize.obj \
+  $(OBJ_DIR)\fstemp.obj \
+  $(OBJ_DIR)\gete.obj \
+  $(OBJ_DIR)\gt.obj \
+  $(OBJ_DIR)\gtapi.obj \
+  $(OBJ_DIR)\gtapiu.obj \
+  $(OBJ_DIR)\gx.obj \
+  $(OBJ_DIR)\hardcr.obj \
+  $(OBJ_DIR)\hbffind.obj \
+  $(OBJ_DIR)\idle.obj \
+  $(OBJ_DIR)\inkey.obj \
+  $(OBJ_DIR)\is.obj \
+  $(OBJ_DIR)\isprint.obj \
+  $(OBJ_DIR)\langapi.obj \
+  $(OBJ_DIR)\left.obj \
+  $(OBJ_DIR)\len.obj \
+  $(OBJ_DIR)\lennum.obj \
+  $(OBJ_DIR)\listbox.obj \
+  $(OBJ_DIR)\math.obj \
+  $(OBJ_DIR)\maxrow.obj \
+  $(OBJ_DIR)\memofile.obj \
+  $(OBJ_DIR)\menuto.obj \
+  $(OBJ_DIR)\memoline.obj \
+  $(OBJ_DIR)\minmax.obj \
+  $(OBJ_DIR)\mlcount.obj \
+  $(OBJ_DIR)\mlctopos.obj \
+  $(OBJ_DIR)\mlpos.obj \
+  $(OBJ_DIR)\mpostolc.obj \
+  $(OBJ_DIR)\mod.obj \
+  $(OBJ_DIR)\mouseapi.obj \
+  $(OBJ_DIR)\mousex.obj \
+  $(OBJ_DIR)\mtran.obj \
+  $(OBJ_DIR)\natmsg.obj \
+  $(OBJ_DIR)\net.obj \
+  $(OBJ_DIR)\oemansi.obj \
+  $(OBJ_DIR)\oldbox.obj \
+  $(OBJ_DIR)\oldclear.obj \
+  $(OBJ_DIR)\pad.obj \
+  $(OBJ_DIR)\padc.obj \
+  $(OBJ_DIR)\padl.obj \
+  $(OBJ_DIR)\padr.obj \
+  $(OBJ_DIR)\perfuncs.obj \
+  $(OBJ_DIR)\persist.obj \
+  $(OBJ_DIR)\philes.obj \
+  $(OBJ_DIR)\philes53.obj \
+  $(OBJ_DIR)\philesx.obj \
+  $(OBJ_DIR)\profiler.obj \
+  $(OBJ_DIR)\pushbtn.obj \
+  $(OBJ_DIR)\radiobtn.obj \
+  $(OBJ_DIR)\radiogrp.obj \
+  $(OBJ_DIR)\rat.obj \
+  $(OBJ_DIR)\replic.obj \
+  $(OBJ_DIR)\right.obj \
+  $(OBJ_DIR)\round.obj \
+  $(OBJ_DIR)\run.obj \
+  $(OBJ_DIR)\samples.obj \
+  $(OBJ_DIR)\saverest.obj \
+  $(OBJ_DIR)\scroll.obj \
+  $(OBJ_DIR)\scrollbr.obj \
+  $(OBJ_DIR)\seconds.obj \
+  $(OBJ_DIR)\set.obj \
+  $(OBJ_DIR)\setcolor.obj \
+  $(OBJ_DIR)\setcurs.obj \
+  $(OBJ_DIR)\setkey.obj \
+  $(OBJ_DIR)\setpos.obj \
+  $(OBJ_DIR)\setposbs.obj \
+  $(OBJ_DIR)\shadow.obj \
+  $(OBJ_DIR)\soundex.obj \
+  $(OBJ_DIR)\space.obj \
+  $(OBJ_DIR)\spfiles.obj \
+  $(OBJ_DIR)\str.obj \
+  $(OBJ_DIR)\strcase.obj \
+  $(OBJ_DIR)\strings.obj \
+  $(OBJ_DIR)\strmatch.obj \
+  $(OBJ_DIR)\strtran.obj \
+  $(OBJ_DIR)\strzero.obj \
+  $(OBJ_DIR)\stuff.obj \
+  $(OBJ_DIR)\substr.obj \
+  $(OBJ_DIR)\teditorl.obj \
+  $(OBJ_DIR)\tone.obj \
+  $(OBJ_DIR)\trace.obj \
+  $(OBJ_DIR)\transfrm.obj \
+  $(OBJ_DIR)\trim.obj \
+  $(OBJ_DIR)\type.obj \
+  $(OBJ_DIR)\val.obj \
+  $(OBJ_DIR)\valtostr.obj \
+  $(OBJ_DIR)\valtype.obj \
+  $(OBJ_DIR)\version.obj \
+  $(OBJ_DIR)\word.obj \
+  $(OBJ_DIR)\xhelp.obj \
+  $(OBJ_DIR)\xsavescr.obj \
+  $(OBJ_DIR)\achoice.obj \
+  $(OBJ_DIR)\adir.obj \
+  $(OBJ_DIR)\alert.obj \
+  $(OBJ_DIR)\browdb.obj \
+  $(OBJ_DIR)\browdbx.obj \
+  $(OBJ_DIR)\browse.obj \
+  $(OBJ_DIR)\checkbox.obj \
+  $(OBJ_DIR)\dbedit.obj \
+  $(OBJ_DIR)\devoutp.obj \
+  $(OBJ_DIR)\dircmd.obj \
+  $(OBJ_DIR)\dummy.obj \
+  $(OBJ_DIR)\errorsys.obj \
+  $(OBJ_DIR)\fieldbl.obj \
+  $(OBJ_DIR)\getlist.obj \
+  $(OBJ_DIR)\getsys.obj \
+  $(OBJ_DIR)\input.obj \
+  $(OBJ_DIR)\memoedit.obj \
+  $(OBJ_DIR)\memvarbl.obj \
+  $(OBJ_DIR)\objfunc.obj \
+  $(OBJ_DIR)\readkey.obj \
+  $(OBJ_DIR)\readvar.obj \
+  $(OBJ_DIR)\setfunc.obj \
+  $(OBJ_DIR)\setta.obj \
+  $(OBJ_DIR)\tbcolumn.obj \
+  $(OBJ_DIR)\tbrowse.obj \
+  $(OBJ_DIR)\tclass.obj \
+  $(OBJ_DIR)\teditor.obj \
+  $(OBJ_DIR)\terror.obj \
+  $(OBJ_DIR)\text.obj \
+  $(OBJ_DIR)\tget.obj \
+  $(OBJ_DIR)\tgetint.obj \
+  $(OBJ_DIR)\tgetlist.obj \
+  $(OBJ_DIR)\tlabel.obj \
+  $(OBJ_DIR)\tmenuitm.obj \
+  $(OBJ_DIR)\tobject.obj \
+  $(OBJ_DIR)\tpopup.obj \
+  $(OBJ_DIR)\treport.obj \
+  $(OBJ_DIR)\ttextlin.obj \
+  $(OBJ_DIR)\ttopbar.obj \
+  $(OBJ_DIR)\typefile.obj \
+  $(OBJ_DIR)\wait.obj \
+  $(OBJ_DIR)\arrays.obj \
+  $(OBJ_DIR)\arrayshb.obj \
+  $(OBJ_DIR)\asort.obj \
+  $(OBJ_DIR)\break.obj \
+  $(OBJ_DIR)\classes.obj \
+  $(OBJ_DIR)\cmdarg.obj \
+  $(OBJ_DIR)\codebloc.obj \
+  $(OBJ_DIR)\debug.obj \
+  $(OBJ_DIR)\dynlibhb.obj \
+  $(OBJ_DIR)\dynsym.obj \
+  $(OBJ_DIR)\estack.obj \
+  $(OBJ_DIR)\eval.obj \
+  $(OBJ_DIR)\evalhb.obj \
+  $(OBJ_DIR)\extend.obj \
+  $(OBJ_DIR)\fm.obj \
+  $(OBJ_DIR)\garbage.obj \
+  $(OBJ_DIR)\initexit.obj \
+  $(OBJ_DIR)\initsymb.obj \
+  $(OBJ_DIR)\itemapi.obj \
+  $(OBJ_DIR)\macro.obj \
+  $(OBJ_DIR)\memvars.obj \
+  $(OBJ_DIR)\memvclip.obj \
+  $(OBJ_DIR)\pcount.obj \
+  $(OBJ_DIR)\proc.obj \
+  $(OBJ_DIR)\pvalue.obj \
+  $(OBJ_DIR)\runner.obj \
+  $(OBJ_DIR)\harbinit.obj \
+  $(OBJ_DIR)\macroy.obj \
+  $(OBJ_DIR)\macrol.obj \
+  $(OBJ_DIR)\macroa.obj \
+  $(OBJ_DIR)\macrob.obj \
+  $(OBJ_DIR)\macroc.obj \
+  $(OBJ_DIR)\dbcmd.obj \
+  $(OBJ_DIR)\workarea.obj \
+  $(OBJ_DIR)\dbf1.obj \
+  $(OBJ_DIR)\dbnubs.obj \
+  $(OBJ_DIR)\delim1.obj \
+  $(OBJ_DIR)\sdf1.obj \
+  $(OBJ_DIR)\dbf0.obj \
+  $(OBJ_DIR)\dblist.obj \
+  $(OBJ_DIR)\dbsort.obj \
+  $(OBJ_DIR)\hbdbsort.obj \
+  $(OBJ_DIR)\dbstrux.obj \
+  $(OBJ_DIR)\dbupdat.obj \
+  $(OBJ_DIR)\delim0.obj \
+  $(OBJ_DIR)\rddord.obj \
+  $(OBJ_DIR)\rddsys.obj \
+  $(OBJ_DIR)\sdf0.obj \
+  $(OBJ_DIR)\hbfsapi.obj \
+  $(OBJ_DIR)\hbgete.obj \
+  $(OBJ_DIR)\hbstr.obj \
+  $(OBJ_DIR)\hbtrace.obj \
+  $(OBJ_DIR)\hbver.obj \
+  $(OBJ_DIR)\hbhash.obj \
+  $(OBJ_DIR)\hbfhnd.obj \
+  $(OBJ_DIR)\expropt1.obj \
+  $(OBJ_DIR)\expropt2.obj \
+  $(OBJ_DIR)\reserved.obj \
+  $(OBJ_DIR)\dbfntx0.obj \
+  $(OBJ_DIR)\dbfntx1.obj \
+  $(OBJ_DIR)\dbfcdx1.obj \
+  $(OBJ_DIR)\dbfcdx0.obj \
+  $(OBJ_DIR)\msgca.obj \
+  $(OBJ_DIR)\msgcs852.obj \
+  $(OBJ_DIR)\msgcsiso.obj \
+  $(OBJ_DIR)\msgcskam.obj \
+  $(OBJ_DIR)\msgcswin.obj \
+  $(OBJ_DIR)\msgde.obj \
+  $(OBJ_DIR)\msgen.obj \
+  $(OBJ_DIR)\msgeo.obj \
+  $(OBJ_DIR)\msges.obj \
+  $(OBJ_DIR)\msgeu.obj \
+  $(OBJ_DIR)\msgfr.obj \
+  $(OBJ_DIR)\msggl.obj \
+  $(OBJ_DIR)\msghe862.obj \
+  $(OBJ_DIR)\msghewin.obj \
+  $(OBJ_DIR)\msghr852.obj \
+  $(OBJ_DIR)\msghriso.obj \
+  $(OBJ_DIR)\msghu852.obj \
+  $(OBJ_DIR)\msghucwi.obj \
+  $(OBJ_DIR)\msghuwin.obj \
+  $(OBJ_DIR)\msgid.obj \
+  $(OBJ_DIR)\msgis850.obj \
+  $(OBJ_DIR)\msgit.obj \
+  $(OBJ_DIR)\msgko.obj \
+  $(OBJ_DIR)\msgpl852.obj \
+  $(OBJ_DIR)\msgpliso.obj \
+  $(OBJ_DIR)\msgplmaz.obj \
+  $(OBJ_DIR)\msgpt.obj \
+  $(OBJ_DIR)\msgro.obj \
+  $(OBJ_DIR)\msgru866.obj \
+  $(OBJ_DIR)\msgruwin.obj \
+  $(OBJ_DIR)\msgsr852.obj \
+  $(OBJ_DIR)\msgsriso.obj \
+  $(OBJ_DIR)\msgzhgb.obj \
+  $(OBJ_DIR)\msgzhb5.obj \
+  $(OBJ_DIR)\gtwin.obj \
+  $(OBJ_DIR)\mousewin.obj \
+  $(OBJ_DIR)\dbgmenu.obj \
+  $(OBJ_DIR)\dbgtmenu.obj \
+  $(OBJ_DIR)\dbgtmitm.obj \
+  $(OBJ_DIR)\dbgtwin.obj \
+  $(OBJ_DIR)\debugger.obj \
+  $(OBJ_DIR)\dbgtarr.obj \
+  $(OBJ_DIR)\dbgtobj.obj \
+  $(OBJ_DIR)\tbrwtext.obj \
+  $(OBJ_DIR)\dbgwa.obj \
+  $(OBJ_DIR)\maindll.obj \
+  $(OBJ_DIR)\hvm.obj \
+  \
+  $(LIBMISC_OBJ)\hb_f.obj \
+  $(LIBMISC_OBJ)\stringsx.obj \
+  $(LIBMISC_OBJ)\dbftools.obj \
+  $(LIBMISC_OBJ)\strfmt.obj \
+  $(LIBMISC_OBJ)\nconvert.obj \
+  $(LIBMISC_OBJ)\numtxten.obj \
+  $(LIBMISC_OBJ)\numtxthu.obj \
+  $(LIBMISC_OBJ)\stringp.obj \
+  $(LIBMISC_OBJ)\fileread.obj \
+  \
+  $(CT_OBJ_DIR)\addascii.obj \
+  $(CT_OBJ_DIR)\asciisum.obj \
+  $(CT_OBJ_DIR)\ascpos.obj \
+  $(CT_OBJ_DIR)\atadjust.obj \
+  $(CT_OBJ_DIR)\atnum.obj \
+  $(CT_OBJ_DIR)\atrepl.obj \
+  $(CT_OBJ_DIR)\bit2.obj \
+  $(CT_OBJ_DIR)\charevod.obj \
+  $(CT_OBJ_DIR)\charlist.obj \
+  $(CT_OBJ_DIR)\charmirr.obj \
+  $(CT_OBJ_DIR)\charmix.obj \
+  $(CT_OBJ_DIR)\charone.obj \
+  $(CT_OBJ_DIR)\charonly.obj \
+  $(CT_OBJ_DIR)\charop.obj \
+  $(CT_OBJ_DIR)\charrepl.obj \
+  $(CT_OBJ_DIR)\charsort.obj \
+  $(CT_OBJ_DIR)\charswap.obj \
+  $(CT_OBJ_DIR)\count.obj \
+  $(CT_OBJ_DIR)\ctc.obj \
+  $(CT_OBJ_DIR)\ctmath.obj \
+  $(CT_OBJ_DIR)\ctset.obj \
+  $(CT_OBJ_DIR)\ctstr.obj \
+  $(CT_OBJ_DIR)\ctchksum.obj \
+  $(CT_OBJ_DIR)\ctcolton.obj \
+  $(CT_OBJ_DIR)\ctcrypt.obj \
+  $(CT_OBJ_DIR)\datetime.obj \
+  $(CT_OBJ_DIR)\files.obj \
+  $(CT_OBJ_DIR)\finan.obj \
+  $(CT_OBJ_DIR)\justify.obj \
+  $(CT_OBJ_DIR)\num1.obj \
+  $(CT_OBJ_DIR)\numat.obj \
+  $(CT_OBJ_DIR)\pad1.obj \
+  $(CT_OBJ_DIR)\pos1.obj \
+  $(CT_OBJ_DIR)\pos2.obj \
+  $(CT_OBJ_DIR)\posdiff.obj \
+  $(CT_OBJ_DIR)\range.obj \
+  $(CT_OBJ_DIR)\relation.obj \
+  $(CT_OBJ_DIR)\remove.obj \
+  $(CT_OBJ_DIR)\replace.obj \
+  $(CT_OBJ_DIR)\strswap.obj \
+  $(CT_OBJ_DIR)\token1.obj \
+  $(CT_OBJ_DIR)\token2.obj \
+  $(CT_OBJ_DIR)\trig.obj \
+  $(CT_OBJ_DIR)\wordrepl.obj \
+  $(CT_OBJ_DIR)\wordtoch.obj \
+  $(CT_OBJ_DIR)\ctmisc.obj \
+  $(CT_OBJ_DIR)\keyset.obj \
+  $(CT_OBJ_DIR)\print.obj \
+  $(CT_OBJ_DIR)\numconv.obj \
+  \
+  $(OBJ_DIR)\ads0.obj \
+  $(OBJ_DIR)\ads1.obj \
+  $(OBJ_DIR)\adsfunc.obj \
+  $(OBJ_DIR)\adsmgmnt.obj \
+  \
+  $(NANFOR_OBJ_DIR)\aading.obj \
+  $(NANFOR_OBJ_DIR)\aavg.obj \
+  $(NANFOR_OBJ_DIR)\acctadj.obj \
+  $(NANFOR_OBJ_DIR)\acctmnth.obj \
+  $(NANFOR_OBJ_DIR)\acctqtr.obj \
+  $(NANFOR_OBJ_DIR)\acctweek.obj \
+  $(NANFOR_OBJ_DIR)\acctyear.obj \
+  $(NANFOR_OBJ_DIR)\adessort.obj \
+  $(NANFOR_OBJ_DIR)\aemaxlen.obj \
+  $(NANFOR_OBJ_DIR)\aeminlen.obj \
+  $(NANFOR_OBJ_DIR)\amedian.obj \
+  $(NANFOR_OBJ_DIR)\anomatch.obj \
+  $(NANFOR_OBJ_DIR)\any2any.obj \
+  $(NANFOR_OBJ_DIR)\aredit.obj \
+  $(NANFOR_OBJ_DIR)\asum.obj \
+  $(NANFOR_OBJ_DIR)\at2.obj \
+  $(NANFOR_OBJ_DIR)\bitclr.obj \
+  $(NANFOR_OBJ_DIR)\bitset.obj \
+  $(NANFOR_OBJ_DIR)\blink.obj \
+  $(NANFOR_OBJ_DIR)\byt2bit.obj \
+  $(NANFOR_OBJ_DIR)\byt2hex.obj \
+  $(NANFOR_OBJ_DIR)\byteand.obj \
+  $(NANFOR_OBJ_DIR)\byteneg.obj \
+  $(NANFOR_OBJ_DIR)\bytenot.obj \
+  $(NANFOR_OBJ_DIR)\byteor.obj \
+  $(NANFOR_OBJ_DIR)\bytexor.obj \
+  $(NANFOR_OBJ_DIR)\cntryset.obj \
+  $(NANFOR_OBJ_DIR)\d2e.obj \
+  $(NANFOR_OBJ_DIR)\datecnfg.obj \
+  $(NANFOR_OBJ_DIR)\dayofyr.obj \
+  $(NANFOR_OBJ_DIR)\daytobow.obj \
+  $(NANFOR_OBJ_DIR)\dectobin.obj \
+  $(NANFOR_OBJ_DIR)\diskfunc.obj \
+  $(NANFOR_OBJ_DIR)\dosver.obj \
+  $(NANFOR_OBJ_DIR)\e2d.obj \
+  $(NANFOR_OBJ_DIR)\easter.obj \
+  $(NANFOR_OBJ_DIR)\elapmil.obj \
+  $(NANFOR_OBJ_DIR)\elapsed.obj \
+  $(NANFOR_OBJ_DIR)\eltime.obj \
+  $(NANFOR_OBJ_DIR)\findith.obj \
+  $(NANFOR_OBJ_DIR)\firstday.obj \
+  $(NANFOR_OBJ_DIR)\gcd.obj \
+  $(NANFOR_OBJ_DIR)\hex2dec.obj \
+  $(NANFOR_OBJ_DIR)\invclr.obj \
+  $(NANFOR_OBJ_DIR)\isbit.obj \
+  $(NANFOR_OBJ_DIR)\isbiton.obj \
+  $(NANFOR_OBJ_DIR)\isshare.obj \
+  $(NANFOR_OBJ_DIR)\lastday.obj \
+  $(NANFOR_OBJ_DIR)\linked.obj \
+  $(NANFOR_OBJ_DIR)\madd.obj \
+  $(NANFOR_OBJ_DIR)\metaph.obj \
+  $(NANFOR_OBJ_DIR)\miltime.obj \
+  $(NANFOR_OBJ_DIR)\min2dhm.obj \
+  $(NANFOR_OBJ_DIR)\month.obj \
+  $(NANFOR_OBJ_DIR)\netpv.obj \
+  $(NANFOR_OBJ_DIR)\nooccur.obj \
+  $(NANFOR_OBJ_DIR)\ntow.obj \
+  $(NANFOR_OBJ_DIR)\nwlstat.obj \
+  $(NANFOR_OBJ_DIR)\pchr.obj \
+  $(NANFOR_OBJ_DIR)\pegs.obj \
+  $(NANFOR_OBJ_DIR)\pending.obj \
+  $(NANFOR_OBJ_DIR)\pickday.obj \
+  $(NANFOR_OBJ_DIR)\popadder.obj \
+  $(NANFOR_OBJ_DIR)\prtesc.obj \
+  $(NANFOR_OBJ_DIR)\pvid.obj \
+  $(NANFOR_OBJ_DIR)\qtr.obj \
+  $(NANFOR_OBJ_DIR)\rand1.obj \
+  $(NANFOR_OBJ_DIR)\restsets.obj \
+  $(NANFOR_OBJ_DIR)\round.obj \
+  $(NANFOR_OBJ_DIR)\savearr.obj \
+  $(NANFOR_OBJ_DIR)\savesets.obj \
+  $(NANFOR_OBJ_DIR)\scregion.obj \
+  $(NANFOR_OBJ_DIR)\sinkey.obj \
+  $(NANFOR_OBJ_DIR)\sleep.obj \
+  $(NANFOR_OBJ_DIR)\sqzn.obj \
+  $(NANFOR_OBJ_DIR)\tbwhile.obj \
+  $(NANFOR_OBJ_DIR)\wda.obj \
+  $(NANFOR_OBJ_DIR)\week.obj \
+  $(NANFOR_OBJ_DIR)\workdays.obj \
+  $(NANFOR_OBJ_DIR)\woy.obj \
+  $(NANFOR_OBJ_DIR)\year.obj \
+  $(NANFOR_OBJ_DIR)\vidmode.obj \
+  $(NANFOR_OBJ_DIR)\tempfile.obj \
+  $(NANFOR_OBJ_DIR)\caplock.obj \
+  $(NANFOR_OBJ_DIR)\color2n.obj \
+  $(NANFOR_OBJ_DIR)\descend.obj \
+  $(NANFOR_OBJ_DIR)\numlock.obj \
+  $(NANFOR_OBJ_DIR)\proper.obj \
+  $(NANFOR_OBJ_DIR)\shift.obj \
+  $(NANFOR_OBJ_DIR)\mouse.obj \
+  $(NANFOR_OBJ_DIR)\getvid.obj \
+  $(NANFOR_OBJ_DIR)\chdir.obj \
+  $(NANFOR_OBJ_DIR)\rmdir.obj \
+  $(NANFOR_OBJ_DIR)\alt.obj \
+  $(NANFOR_OBJ_DIR)\ctrl.obj \
+  $(NANFOR_OBJ_DIR)\getenvrn.obj \
+  $(NANFOR_OBJ_DIR)\n2color.obj \
+  $(NANFOR_OBJ_DIR)\prtscr.obj \
+  $(NANFOR_OBJ_DIR)\stod.obj \
+  $(NANFOR_OBJ_DIR)\kspeed.obj \
+  $(NANFOR_OBJ_DIR)\mkdir.obj \
+  $(NANFOR_OBJ_DIR)\getver.obj \
+  \
+  $(SAMPLES_OBJ_DIR)\environ.obj \
+  $(SAMPLES_OBJ_DIR)\date.obj   \
+  $(SAMPLES_OBJ_DIR)\gauge.obj  \
+  $(SAMPLES_OBJ_DIR)\num.obj    \
+  $(SAMPLES_OBJ_DIR)\stack.obj   \
+  $(SAMPLES_OBJ_DIR)\status.obj \
+  $(SAMPLES_OBJ_DIR)\time.obj \
+  \
+  $(HTMLLIB_OBJ)\ohtm.obj \
+  $(HTMLLIB_OBJ)\htmbrows.obj \
+  $(HTMLLIB_OBJ)\oedit.obj \
+  $(HTMLLIB_OBJ)\ofile.obj \
+  $(HTMLLIB_OBJ)\jlist.obj   \
+  $(HTMLLIB_OBJ)\oini.obj \
+  $(HTMLLIB_OBJ)\jwindow.obj \
+  $(HTMLLIB_OBJ)\ocgi.obj \
+  $(HTMLLIB_OBJ)\oframe.obj \
+  $(HTMLLIB_OBJ)\counter.obj \
+  $(HTMLLIB_OBJ)\htmutil.obj \
+  \
+  $(HBDOC_OBJ)\docfunc.obj \
+  $(HBDOC_OBJ)\genasc.obj \
+  $(HBDOC_OBJ)\genhpc.obj \
+  $(HBDOC_OBJ)\genhtm.obj \
+  $(HBDOC_OBJ)\genchm.obj \
+  $(HBDOC_OBJ)\genng.obj \
+  $(HBDOC_OBJ)\genos2.obj \
+  $(HBDOC_OBJ)\genrtf.obj \
+  $(HBDOC_OBJ)\gentrf.obj \
+  $(HBDOC_OBJ)\html.obj \
+  $(HBDOC_OBJ)\ng.obj \
+  $(HBDOC_OBJ)\os2.obj \
+  $(HBDOC_OBJ)\rtf.obj \
+  $(HBDOC_OBJ)\troff.obj \
+  $(HBDOC_OBJ)\fclass1.obj \
+  $(HBDOC_OBJ)\ffile1.obj \
+  $(HBDOC_OBJ)\ft_funcs.obj \
+  \
+  $(HBMAKE_OBJ)\hbmutils.obj \
+  $(HBMAKE_OBJ)\checks.obj \
+  $(HBMAKE_OBJ)\pickarry.obj \
+  $(HBMAKE_OBJ)\pickfile.obj \
+  $(HBMAKE_OBJ)\prb_stak.obj \
+  $(HBMAKE_OBJ)\radios.obj \
+  \
+  $(HBRUN_OBJ)\external.obj
+
+# ÚÄÄÄÄÄÄÄÄÄ¿
+# ³ project ³Û
+# ÀÄÄÄÄÄÄÄÄÄÙÛ
+#  ßßßßßßßßßßß
+
+all: \
+   $(HARBOUR_DLL)
+
+# ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+# ³ Library dependencies and build rules ³Û
+# ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙÛ
+#  ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+
+$(HARBOUR_DLL)  : \
+   $(HARBOUR_DLL_OBJS)
+
+# ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+# ³ HARBOUR_DLL linking ³Û
+# ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙÛ
+#  ßßßßßßßßßßßßßßßßßßßßßßß
+
+  echo. $(OBJ_DIR)\abs.obj               +  > hdll.tmp
+  echo. $(OBJ_DIR)\accept.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\ampm.obj              + >> hdll.tmp
+  echo. $(OBJ_DIR)\at.obj                + >> hdll.tmp
+  echo. $(OBJ_DIR)\binnum.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\binnumx.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\box.obj               + >> hdll.tmp
+  echo. $(OBJ_DIR)\chrasc.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\colorind.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\console.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\copyfile.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\datec.obj             + >> hdll.tmp
+  echo. $(OBJ_DIR)\dates.obj             + >> hdll.tmp
+  echo. $(OBJ_DIR)\dateshb.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\datesx.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\defpath.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\dbdelim.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\dbsdf.obj             + >> hdll.tmp
+  echo. $(OBJ_DIR)\descend.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\direct.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\dirdrive.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\diskspac.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\disksphb.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\do.obj                + >> hdll.tmp
+  echo. $(OBJ_DIR)\empty.obj             + >> hdll.tmp
+  echo. $(OBJ_DIR)\errorapi.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\file.obj              + >> hdll.tmp
+  echo. $(OBJ_DIR)\filehb.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\filesys.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\fkmax.obj             + >> hdll.tmp
+  echo. $(OBJ_DIR)\fnsplit.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\fssize.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\fstemp.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\gete.obj              + >> hdll.tmp
+  echo. $(OBJ_DIR)\gt.obj                + >> hdll.tmp
+  echo. $(OBJ_DIR)\gtapi.obj             + >> hdll.tmp
+  echo. $(OBJ_DIR)\gtapiu.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\gx.obj                + >> hdll.tmp
+  echo. $(OBJ_DIR)\hardcr.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\hbffind.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\idle.obj              + >> hdll.tmp
+  echo. $(OBJ_DIR)\inkey.obj             + >> hdll.tmp
+  echo. $(OBJ_DIR)\is.obj                + >> hdll.tmp
+  echo. $(OBJ_DIR)\isprint.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\langapi.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\left.obj              + >> hdll.tmp
+  echo. $(OBJ_DIR)\len.obj               + >> hdll.tmp
+  echo. $(OBJ_DIR)\lennum.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\listbox.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\math.obj              + >> hdll.tmp
+  echo. $(OBJ_DIR)\maxrow.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\memofile.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\menuto.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\memoline.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\minmax.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\mlcount.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\mlctopos.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\mlpos.obj             + >> hdll.tmp
+  echo. $(OBJ_DIR)\mpostolc.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\mod.obj               + >> hdll.tmp
+  echo. $(OBJ_DIR)\mouseapi.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\mousex.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\mtran.obj             + >> hdll.tmp
+  echo. $(OBJ_DIR)\natmsg.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\net.obj               + >> hdll.tmp
+  echo. $(OBJ_DIR)\oemansi.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\oldbox.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\oldclear.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\pad.obj               + >> hdll.tmp
+  echo. $(OBJ_DIR)\padc.obj              + >> hdll.tmp
+  echo. $(OBJ_DIR)\padl.obj              + >> hdll.tmp
+  echo. $(OBJ_DIR)\padr.obj              + >> hdll.tmp
+  echo. $(OBJ_DIR)\perfuncs.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\persist.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\philes.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\philes53.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\philesx.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\profiler.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\pushbtn.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\radiobtn.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\radiogrp.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\rat.obj               + >> hdll.tmp
+  echo. $(OBJ_DIR)\replic.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\right.obj             + >> hdll.tmp
+  echo. $(OBJ_DIR)\round.obj             + >> hdll.tmp
+  echo. $(OBJ_DIR)\run.obj               + >> hdll.tmp
+  echo. $(OBJ_DIR)\samples.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\saverest.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\scroll.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\scrollbr.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\seconds.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\set.obj               + >> hdll.tmp
+  echo. $(OBJ_DIR)\setcolor.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\setcurs.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\setkey.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\setpos.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\setposbs.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\shadow.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\soundex.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\space.obj             + >> hdll.tmp
+  echo. $(OBJ_DIR)\spfiles.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\str.obj               + >> hdll.tmp
+  echo. $(OBJ_DIR)\strcase.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\strings.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\strmatch.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\strtran.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\strzero.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\stuff.obj             + >> hdll.tmp
+  echo. $(OBJ_DIR)\substr.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\teditorl.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\tone.obj              + >> hdll.tmp
+  echo. $(OBJ_DIR)\trace.obj             + >> hdll.tmp
+  echo. $(OBJ_DIR)\transfrm.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\trim.obj              + >> hdll.tmp
+  echo. $(OBJ_DIR)\type.obj              + >> hdll.tmp
+  echo. $(OBJ_DIR)\val.obj               + >> hdll.tmp
+  echo. $(OBJ_DIR)\valtostr.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\valtype.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\version.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\word.obj              + >> hdll.tmp
+  echo. $(OBJ_DIR)\xhelp.obj             + >> hdll.tmp
+  echo. $(OBJ_DIR)\xsavescr.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\achoice.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\adir.obj              + >> hdll.tmp
+  echo. $(OBJ_DIR)\alert.obj             + >> hdll.tmp
+  echo. $(OBJ_DIR)\browdb.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\browdbx.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\browse.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\checkbox.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\dbedit.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\devoutp.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\dircmd.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\dummy.obj             + >> hdll.tmp
+  echo. $(OBJ_DIR)\errorsys.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\fieldbl.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\getlist.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\getsys.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\input.obj             + >> hdll.tmp
+  echo. $(OBJ_DIR)\memoedit.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\memvarbl.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\objfunc.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\readkey.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\readvar.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\setfunc.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\setta.obj             + >> hdll.tmp
+  echo. $(OBJ_DIR)\tbcolumn.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\tbrowse.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\tclass.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\teditor.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\terror.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\text.obj              + >> hdll.tmp
+  echo. $(OBJ_DIR)\tget.obj              + >> hdll.tmp
+  echo. $(OBJ_DIR)\tgetint.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\tgetlist.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\tlabel.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\tmenuitm.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\tobject.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\tpopup.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\treport.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\ttextlin.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\ttopbar.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\typefile.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\wait.obj              + >> hdll.tmp
+  echo. $(OBJ_DIR)\arrays.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\arrayshb.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\asort.obj             + >> hdll.tmp
+  echo. $(OBJ_DIR)\break.obj             + >> hdll.tmp
+  echo. $(OBJ_DIR)\classes.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\cmdarg.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\codebloc.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\debug.obj             + >> hdll.tmp
+  echo. $(OBJ_DIR)\dynlibhb.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\dynsym.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\estack.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\eval.obj              + >> hdll.tmp
+  echo. $(OBJ_DIR)\evalhb.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\extend.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\fm.obj                + >> hdll.tmp
+  echo. $(OBJ_DIR)\garbage.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\initexit.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\initsymb.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\itemapi.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\macro.obj             + >> hdll.tmp
+  echo. $(OBJ_DIR)\memvars.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\memvclip.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\pcount.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\proc.obj              + >> hdll.tmp
+  echo. $(OBJ_DIR)\pvalue.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\runner.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\harbinit.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\macroy.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\macrol.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\macroa.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\macrob.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\macroc.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\dbcmd.obj             + >> hdll.tmp
+  echo. $(OBJ_DIR)\workarea.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\dbf1.obj              + >> hdll.tmp
+  echo. $(OBJ_DIR)\dbnubs.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\delim1.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\sdf1.obj              + >> hdll.tmp
+  echo. $(OBJ_DIR)\dbf0.obj              + >> hdll.tmp
+  echo. $(OBJ_DIR)\dblist.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\dbsort.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\hbdbsort.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\dbstrux.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\dbupdat.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\delim0.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\rddord.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\rddsys.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\sdf0.obj              + >> hdll.tmp
+  echo. $(OBJ_DIR)\hbfsapi.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\hbgete.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\hbstr.obj             + >> hdll.tmp
+  echo. $(OBJ_DIR)\hbtrace.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\hbver.obj             + >> hdll.tmp
+  echo. $(OBJ_DIR)\hbhash.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\hbfhnd.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\expropt1.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\expropt2.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\reserved.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\dbfntx0.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\dbfntx1.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\dbfcdx1.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\dbfcdx0.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\msgca.obj             + >> hdll.tmp
+  echo. $(OBJ_DIR)\msgcs852.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\msgcsiso.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\msgcskam.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\msgcswin.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\msgde.obj             + >> hdll.tmp
+  echo. $(OBJ_DIR)\msgen.obj             + >> hdll.tmp
+  echo. $(OBJ_DIR)\msgeo.obj             + >> hdll.tmp
+  echo. $(OBJ_DIR)\msges.obj             + >> hdll.tmp
+  echo. $(OBJ_DIR)\msgeu.obj             + >> hdll.tmp
+  echo. $(OBJ_DIR)\msgfr.obj             + >> hdll.tmp
+  echo. $(OBJ_DIR)\msggl.obj             + >> hdll.tmp
+  echo. $(OBJ_DIR)\msghe862.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\msghewin.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\msghr852.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\msghriso.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\msghu852.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\msghucwi.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\msghuwin.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\msgid.obj             + >> hdll.tmp
+  echo. $(OBJ_DIR)\msgis850.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\msgit.obj             + >> hdll.tmp
+  echo. $(OBJ_DIR)\msgko.obj             + >> hdll.tmp
+  echo. $(OBJ_DIR)\msgpl852.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\msgpliso.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\msgplmaz.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\msgpt.obj             + >> hdll.tmp
+  echo. $(OBJ_DIR)\msgro.obj             + >> hdll.tmp
+  echo. $(OBJ_DIR)\msgru866.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\msgruwin.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\msgsr852.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\msgsriso.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\msgzhgb.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\msgzhb5.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\gtwin.obj             + >> hdll.tmp
+  echo. $(OBJ_DIR)\mousewin.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\dbgmenu.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\dbgtmenu.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\dbgtmitm.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\dbgtwin.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\debugger.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\dbgtarr.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\dbgtobj.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\tbrwtext.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\dbgwa.obj             + >> hdll.tmp
+  echo. $(OBJ_DIR)\maindll.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\hvm.obj               + >> hdll.tmp
+
+  echo. $(LIBMISC_OBJ)\hb_f.obj          + >> hdll.tmp
+  echo. $(LIBMISC_OBJ)\stringsx.obj      + >> hdll.tmp
+  echo. $(LIBMISC_OBJ)\dbftools.obj      + >> hdll.tmp
+  echo. $(LIBMISC_OBJ)\strfmt.obj        + >> hdll.tmp
+  echo. $(LIBMISC_OBJ)\nconvert.obj      + >> hdll.tmp
+  echo. $(LIBMISC_OBJ)\numtxten.obj      + >> hdll.tmp
+  echo. $(LIBMISC_OBJ)\numtxthu.obj      + >> hdll.tmp
+  echo. $(LIBMISC_OBJ)\stringp.obj       + >> hdll.tmp
+  echo. $(LIBMISC_OBJ)\fileread.obj      + >> hdll.tmp
+
+  echo. $(CT_OBJ_DIR)\addascii.obj       + >> hdll.tmp
+  echo. $(CT_OBJ_DIR)\asciisum.obj       + >> hdll.tmp
+  echo. $(CT_OBJ_DIR)\ascpos.obj         + >> hdll.tmp
+  echo. $(CT_OBJ_DIR)\atadjust.obj       + >> hdll.tmp
+  echo. $(CT_OBJ_DIR)\atnum.obj          + >> hdll.tmp
+  echo. $(CT_OBJ_DIR)\atrepl.obj         + >> hdll.tmp
+  echo. $(CT_OBJ_DIR)\bit2.obj           + >> hdll.tmp
+  echo. $(CT_OBJ_DIR)\charevod.obj       + >> hdll.tmp
+  echo. $(CT_OBJ_DIR)\charlist.obj       + >> hdll.tmp
+  echo. $(CT_OBJ_DIR)\charmirr.obj       + >> hdll.tmp
+  echo. $(CT_OBJ_DIR)\charmix.obj        + >> hdll.tmp
+  echo. $(CT_OBJ_DIR)\charone.obj        + >> hdll.tmp
+  echo. $(CT_OBJ_DIR)\charonly.obj       + >> hdll.tmp
+  echo. $(CT_OBJ_DIR)\charop.obj         + >> hdll.tmp
+  echo. $(CT_OBJ_DIR)\charrepl.obj       + >> hdll.tmp
+  echo. $(CT_OBJ_DIR)\charsort.obj       + >> hdll.tmp
+  echo. $(CT_OBJ_DIR)\charswap.obj       + >> hdll.tmp
+  echo. $(CT_OBJ_DIR)\count.obj          + >> hdll.tmp
+  echo. $(CT_OBJ_DIR)\ctc.obj            + >> hdll.tmp
+  echo. $(CT_OBJ_DIR)\ctmath.obj         + >> hdll.tmp
+  echo. $(CT_OBJ_DIR)\ctset.obj          + >> hdll.tmp
+  echo. $(CT_OBJ_DIR)\ctstr.obj          + >> hdll.tmp
+  echo. $(CT_OBJ_DIR)\ctchksum.obj       + >> hdll.tmp
+  echo. $(CT_OBJ_DIR)\ctcolton.obj       + >> hdll.tmp
+  echo. $(CT_OBJ_DIR)\ctcrypt.obj        + >> hdll.tmp
+  echo. $(CT_OBJ_DIR)\datetime.obj       + >> hdll.tmp
+  echo. $(CT_OBJ_DIR)\files.obj          + >> hdll.tmp
+  echo. $(CT_OBJ_DIR)\finan.obj          + >> hdll.tmp
+  echo. $(CT_OBJ_DIR)\justify.obj        + >> hdll.tmp
+  echo. $(CT_OBJ_DIR)\num1.obj           + >> hdll.tmp
+  echo. $(CT_OBJ_DIR)\numat.obj          + >> hdll.tmp
+  echo. $(CT_OBJ_DIR)\pad1.obj           + >> hdll.tmp
+  echo. $(CT_OBJ_DIR)\pos1.obj           + >> hdll.tmp
+  echo. $(CT_OBJ_DIR)\pos2.obj           + >> hdll.tmp
+  echo. $(CT_OBJ_DIR)\posdiff.obj        + >> hdll.tmp
+  echo. $(CT_OBJ_DIR)\range.obj          + >> hdll.tmp
+  echo. $(CT_OBJ_DIR)\relation.obj       + >> hdll.tmp
+  echo. $(CT_OBJ_DIR)\remove.obj         + >> hdll.tmp
+  echo. $(CT_OBJ_DIR)\replace.obj        + >> hdll.tmp
+  echo. $(CT_OBJ_DIR)\strswap.obj        + >> hdll.tmp
+  echo. $(CT_OBJ_DIR)\token1.obj         + >> hdll.tmp
+  echo. $(CT_OBJ_DIR)\token2.obj         + >> hdll.tmp
+  echo. $(CT_OBJ_DIR)\trig.obj           + >> hdll.tmp
+  echo. $(CT_OBJ_DIR)\wordrepl.obj       + >> hdll.tmp
+  echo. $(CT_OBJ_DIR)\wordtoch.obj       + >> hdll.tmp
+  echo. $(CT_OBJ_DIR)\ctmisc.obj         + >> hdll.tmp
+  echo. $(CT_OBJ_DIR)\keyset.obj         + >> hdll.tmp
+  echo. $(CT_OBJ_DIR)\print.obj          + >> hdll.tmp
+  echo. $(CT_OBJ_DIR)\numconv.obj        + >> hdll.tmp
+
+  echo. $(OBJ_DIR)\ads0.obj              + >> hdll.tmp
+  echo. $(OBJ_DIR)\ads1.obj              + >> hdll.tmp
+  echo. $(OBJ_DIR)\adsfunc.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\adsmgmnt.obj          + >> hdll.tmp
+
+  echo. $(NANFOR_OBJ_DIR)\aading.obj     + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\aavg.obj       + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\acctadj.obj    + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\acctmnth.obj   + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\acctqtr.obj    + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\acctweek.obj   + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\acctyear.obj   + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\adessort.obj   + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\aemaxlen.obj   + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\aeminlen.obj   + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\amedian.obj    + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\anomatch.obj   + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\any2any.obj    + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\aredit.obj     + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\asum.obj       + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\at2.obj        + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\bitclr.obj     + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\bitset.obj     + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\blink.obj      + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\byt2bit.obj    + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\byt2hex.obj    + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\byteand.obj    + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\byteneg.obj    + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\bytenot.obj    + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\byteor.obj     + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\bytexor.obj    + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\cntryset.obj   + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\d2e.obj        + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\datecnfg.obj   + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\dayofyr.obj    + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\daytobow.obj   + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\dectobin.obj   + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\diskfunc.obj   + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\dosver.obj     + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\e2d.obj        + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\easter.obj     + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\elapmil.obj    + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\elapsed.obj    + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\eltime.obj     + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\findith.obj    + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\firstday.obj   + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\gcd.obj        + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\hex2dec.obj    + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\invclr.obj     + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\isbit.obj      + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\isbiton.obj    + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\isshare.obj    + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\lastday.obj    + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\linked.obj     + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\madd.obj       + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\metaph.obj     + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\miltime.obj    + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\min2dhm.obj    + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\month.obj      + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\netpv.obj      + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\nooccur.obj    + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\ntow.obj       + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\nwlstat.obj    + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\pchr.obj       + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\pegs.obj       + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\pending.obj    + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\pickday.obj    + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\popadder.obj   + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\prtesc.obj     + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\pvid.obj       + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\qtr.obj        + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\rand1.obj      + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\restsets.obj   + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\round.obj      + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\savearr.obj    + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\savesets.obj   + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\scregion.obj   + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\sinkey.obj     + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\sleep.obj      + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\sqzn.obj       + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\tbwhile.obj    + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\wda.obj        + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\week.obj       + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\workdays.obj   + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\woy.obj        + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\year.obj       + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\vidmode.obj    + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\tempfile.obj   + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\caplock.obj    + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\color2n.obj    + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\descend.obj    + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\numlock.obj    + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\proper.obj     + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\shift.obj      + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\mouse.obj      + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\getvid.obj     + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\chdir.obj      + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\rmdir.obj      + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\alt.obj        + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\ctrl.obj       + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\getenvrn.obj   + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\n2color.obj    + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\prtscr.obj     + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\stod.obj       + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\kspeed.obj     + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\mkdir.obj      + >> hdll.tmp
+  echo. $(NANFOR_OBJ_DIR)\getver.obj     + >> hdll.tmp
+
+  echo. $(SAMPLES_OBJ_DIR)\environ.obj   + >> hdll.tmp
+  echo. $(SAMPLES_OBJ_DIR)\date.obj      + >> hdll.tmp
+  echo. $(SAMPLES_OBJ_DIR)\gauge.obj     + >> hdll.tmp
+  echo. $(SAMPLES_OBJ_DIR)\num.obj       + >> hdll.tmp
+  echo. $(SAMPLES_OBJ_DIR)\stack.obj     + >> hdll.tmp
+  echo. $(SAMPLES_OBJ_DIR)\status.obj    + >> hdll.tmp
+  echo. $(SAMPLES_OBJ_DIR)\time.obj      + >> hdll.tmp
+
+  echo. $(HTMLLIB_OBJ)\ohtm.obj          + >> hdll.tmp
+  echo. $(HTMLLIB_OBJ)\htmbrows.obj      + >> hdll.tmp
+  echo. $(HTMLLIB_OBJ)\oedit.obj         + >> hdll.tmp
+  echo. $(HTMLLIB_OBJ)\ofile.obj         + >> hdll.tmp
+  echo. $(HTMLLIB_OBJ)\jlist.obj         + >> hdll.tmp
+  echo. $(HTMLLIB_OBJ)\oini.obj          + >> hdll.tmp
+  echo. $(HTMLLIB_OBJ)\jwindow.obj       + >> hdll.tmp
+  echo. $(HTMLLIB_OBJ)\ocgi.obj          + >> hdll.tmp
+  echo. $(HTMLLIB_OBJ)\oframe.obj        + >> hdll.tmp
+  echo. $(HTMLLIB_OBJ)\counter.obj       + >> hdll.tmp
+  echo. $(HTMLLIB_OBJ)\htmutil.obj       + >> hdll.tmp
+
+  echo. $(HBDOC_OBJ)\docfunc.obj         + >> hdll.tmp
+  echo. $(HBDOC_OBJ)\genasc.obj          + >> hdll.tmp
+  echo. $(HBDOC_OBJ)\genhpc.obj          + >> hdll.tmp
+  echo. $(HBDOC_OBJ)\genhtm.obj          + >> hdll.tmp
+  echo. $(HBDOC_OBJ)\genchm.obj          + >> hdll.tmp
+  echo. $(HBDOC_OBJ)\genng.obj           + >> hdll.tmp
+  echo. $(HBDOC_OBJ)\genos2.obj          + >> hdll.tmp
+  echo. $(HBDOC_OBJ)\genrtf.obj          + >> hdll.tmp
+  echo. $(HBDOC_OBJ)\gentrf.obj          + >> hdll.tmp
+  echo. $(HBDOC_OBJ)\html.obj            + >> hdll.tmp
+  echo. $(HBDOC_OBJ)\ng.obj              + >> hdll.tmp
+  echo. $(HBDOC_OBJ)\os2.obj             + >> hdll.tmp
+  echo. $(HBDOC_OBJ)\rtf.obj             + >> hdll.tmp
+  echo. $(HBDOC_OBJ)\troff.obj           + >> hdll.tmp
+  echo. $(HBDOC_OBJ)\fclass1.obj         + >> hdll.tmp
+  echo. $(HBDOC_OBJ)\ffile1.obj          + >> hdll.tmp
+  echo. $(HBDOC_OBJ)\ft_funcs.obj        + >> hdll.tmp
+
+  echo. $(HBMAKE_OBJ)\hbmutils.obj       + >> hdll.tmp
+  echo. $(HBMAKE_OBJ)\checks.obj         + >> hdll.tmp
+  echo. $(HBMAKE_OBJ)\pickarry.obj       + >> hdll.tmp
+  echo. $(HBMAKE_OBJ)\pickfile.obj       + >> hdll.tmp
+  echo. $(HBMAKE_OBJ)\prb_stak.obj       + >> hdll.tmp
+  echo. $(HBMAKE_OBJ)\radios.obj         + >> hdll.tmp
+
+  echo. $(HBRUN_OBJ)\external.obj        + >> hdll.tmp
+
+  echo. $(BCC_DIR)\lib\c0d32w.obj,      + >> hdll.tmp
+  echo. $(HARBOUR_DLL),                 + >> hdll.tmp
+  echo. ,                               + >> hdll.tmp
+  echo. lib\55\ace32.lib                + >> hdll.tmp
+  echo. $(BCC_DIR)\lib\cw32.lib         + >> hdll.tmp
+  echo. $(BCC_DIR)\lib\import32.lib,      >> hdll.tmp
+  $(BCC_DIR)\BIN\ILINK32 -aa -Tpd -Gn @hdll.tmp
+
+# ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+# ³ object file creation ³Û
+# ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙÛ
+#  ßßßßßßßßßßßßßßßßßßßßßßßß
+
+$(OBJ_DIR)\hbfsapi.obj : $(COMMON_DIR)\hbfsapi.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\hbffind.obj : $(COMMON_DIR)\hbffind.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\hbgete.obj : $(COMMON_DIR)\hbgete.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\hbstr.obj : $(COMMON_DIR)\hbstr.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\hbtrace.obj : $(COMMON_DIR)\hbtrace.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\hbver.obj : $(COMMON_DIR)\hbver.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\hbhash.obj : $(COMMON_DIR)\hbhash.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\hbfhnd.obj : $(COMMON_DIR)\hbfhnd.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\expropt1.obj : $(COMMON_DIR)\expropt1.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\expropt2.obj : $(COMMON_DIR)\expropt2.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\reserved.obj : $(COMMON_DIR)\reserved.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\dbcmd.obj : $(RDD_DIR)\dbcmd.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\workarea.obj : $(RDD_DIR)\workarea.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\dbf0.c : $(RDD_DIR)\dbf0.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\dbf0.obj : $(OBJ_DIR)\dbf0.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\dbf1.obj : $(RDD_DIR)\dbf1.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\dblist.c : $(RDD_DIR)\dblist.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\dblist.obj : $(OBJ_DIR)\dblist.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\dbsort.c : $(RDD_DIR)\dbsort.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\dbsort.obj : $(OBJ_DIR)\dbsort.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\hbdbsort.obj : $(RDD_DIR)\hbdbsort.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\dbnubs.obj : $(RDD_DIR)\dbnubs.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\dbstrux.c : $(RDD_DIR)\dbstrux.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\dbstrux.obj : $(OBJ_DIR)\dbstrux.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\dbupdat.c : $(RDD_DIR)\dbupdat.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\dbupdat.obj : $(OBJ_DIR)\dbupdat.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\sdf0.c : $(RDD_DIR)\sdf0.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\sdf0.obj : $(OBJ_DIR)\sdf0.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\sdf1.obj : $(RDD_DIR)\sdf1.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\delim0.c : $(RDD_DIR)\delim0.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\delim0.obj : $(OBJ_DIR)\delim0.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\delim1.obj : $(RDD_DIR)\delim1.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\rddord.c : $(RDD_DIR)\rddord.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\rddord.obj : $(OBJ_DIR)\rddord.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\rddsys.c : $(RDD_DIR)\rddsys.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\rddsys.obj : $(OBJ_DIR)\rddsys.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\arrays.obj : $(VM_DIR)\arrays.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\arrayshb.obj : $(VM_DIR)\arrayshb.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\asort.obj : $(VM_DIR)\asort.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\break.obj : $(VM_DIR)\break.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\classes.obj : $(VM_DIR)\classes.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\cmdarg.obj : $(VM_DIR)\cmdarg.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\codebloc.obj : $(VM_DIR)\codebloc.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\debug.obj : $(VM_DIR)\debug.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\dynlibhb.obj : $(VM_DIR)\dynlibhb.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\dynsym.obj : $(VM_DIR)\dynsym.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\eval.obj : $(VM_DIR)\eval.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\evalhb.obj : $(VM_DIR)\evalhb.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\estack.obj : $(VM_DIR)\estack.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\extend.obj : $(VM_DIR)\extend.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\fm.obj : $(VM_DIR)\fm.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\garbage.obj : $(VM_DIR)\garbage.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\harbinit.c : $(VM_DIR)\harbinit.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\harbinit.obj : $(OBJ_DIR)\harbinit.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\hvm.obj : $(VM_DIR)\hvm.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\initexit.obj : $(VM_DIR)\initexit.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\initsymb.obj : $(VM_DIR)\initsymb.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\itemapi.obj : $(VM_DIR)\itemapi.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\macro.obj : $(VM_DIR)\macro.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\maindll.obj : $(VM_DIR)\maindll.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\maindllh.obj : $(VM_DIR)\maindllh.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\memvars.obj : $(VM_DIR)\memvars.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\memvclip.obj : $(VM_DIR)\memvclip.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\pcount.obj : $(VM_DIR)\pcount.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\proc.obj : $(VM_DIR)\proc.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\pvalue.obj : $(VM_DIR)\pvalue.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\runner.obj : $(VM_DIR)\runner.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\borinit.obj : $(VM_DIR)\borinit.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\borsym.obj : $(VM_DIR)\borsym.asm
+   $(AS) -ml $**, $@
+
+$(OBJ_DIR)\symbols.obj : $(VM_DIR)\symbols.asm
+   $(AS) -ml $**, $@
+
+$(OBJ_DIR)\abs.obj : $(RTL_DIR)\abs.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\accept.obj : $(RTL_DIR)\accept.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\achoice.c : $(RTL_DIR)\achoice.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\achoice.obj : $(OBJ_DIR)\achoice.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\adir.c : $(RTL_DIR)\adir.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\adir.obj : $(OBJ_DIR)\adir.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\alert.c : $(RTL_DIR)\alert.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\alert.obj : $(OBJ_DIR)\alert.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\ampm.obj : $(RTL_DIR)\ampm.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\at.obj : $(RTL_DIR)\at.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\binnum.obj : $(RTL_DIR)\binnum.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\binnumx.obj : $(RTL_DIR)\binnumx.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\box.obj : $(RTL_DIR)\box.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\browdb.c : $(RTL_DIR)\browdb.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\browdb.obj : $(OBJ_DIR)\browdb.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\browdbx.c : $(RTL_DIR)\browdbx.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\browdbx.obj : $(OBJ_DIR)\browdbx.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\browse.c : $(RTL_DIR)\browse.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\browse.obj : $(OBJ_DIR)\browse.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\checkbox.c : $(RTL_DIR)\checkbox.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\checkbox.obj : $(OBJ_DIR)\checkbox.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\chrasc.obj : $(RTL_DIR)\chrasc.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\colorind.obj : $(RTL_DIR)\colorind.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\console.obj : $(RTL_DIR)\console.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\copyfile.obj : $(RTL_DIR)\copyfile.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\datec.obj : $(RTL_DIR)\datec.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\datehb.obj : $(RTL_DIR)\datehb.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\dates.obj : $(RTL_DIR)\dates.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\dateshb.obj : $(RTL_DIR)\dateshb.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\datesx.obj : $(RTL_DIR)\datesx.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\dbdelim.c : $(RTL_DIR)\dbdelim.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\dbdelim.obj : $(OBJ_DIR)\dbdelim.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\dbsdf.c : $(RTL_DIR)\dbsdf.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\dbsdf.obj : $(OBJ_DIR)\dbsdf.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\dbedit.c : $(RTL_DIR)\dbedit.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\dbedit.obj : $(OBJ_DIR)\dbedit.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\defpath.obj : $(RTL_DIR)\defpath.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\descend.obj : $(RTL_DIR)\descend.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\devoutp.c : $(RTL_DIR)\devoutp.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\devoutp.obj : $(OBJ_DIR)\devoutp.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\direct.obj : $(RTL_DIR)\direct.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\dirdrive.obj : $(RTL_DIR)\dirdrive.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\diskspac.obj : $(RTL_DIR)\diskspac.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\disksphb.obj : $(RTL_DIR)\disksphb.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\dircmd.c : $(RTL_DIR)\dircmd.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\dircmd.obj : $(OBJ_DIR)\dircmd.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\do.obj : $(RTL_DIR)\do.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\dummy.c : $(RTL_DIR)\dummy.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\dummy.obj : $(OBJ_DIR)\dummy.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\empty.obj : $(RTL_DIR)\empty.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\errorapi.obj : $(RTL_DIR)\errorapi.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\errorsys.c : $(RTL_DIR)\errorsys.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\errorsys.obj : $(OBJ_DIR)\errorsys.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\fieldbl.c : $(RTL_DIR)\fieldbl.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\fieldbl.obj : $(OBJ_DIR)\fieldbl.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\getlist.c : $(RTL_DIR)\getlist.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\getlist.obj : $(OBJ_DIR)\getlist.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\getsys.c : $(RTL_DIR)\getsys.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\getsys.obj : $(OBJ_DIR)\getsys.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\filesys.obj : $(RTL_DIR)\filesys.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\file.obj : $(RTL_DIR)\file.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\filehb.obj : $(RTL_DIR)\filehb.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\fkmax.obj : $(RTL_DIR)\fkmax.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\fnsplit.obj : $(RTL_DIR)\fnsplit.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\fssize.obj : $(RTL_DIR)\fssize.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\fstemp.obj : $(RTL_DIR)\fstemp.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\gete.obj : $(RTL_DIR)\gete.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\gt.obj : $(RTL_DIR)\gt.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\gtapi.obj : $(RTL_DIR)\gtapi.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\gtapiu.obj : $(RTL_DIR)\gtapiu.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\gx.obj : $(RTL_DIR)\gx.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\hardcr.obj : $(RTL_DIR)\hardcr.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\idle.obj : $(RTL_DIR)\idle.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\inkey.obj : $(RTL_DIR)\inkey.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\input.c : $(RTL_DIR)\input.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\input.obj : $(OBJ_DIR)\input.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\is.obj : $(RTL_DIR)\is.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\isprint.obj : $(RTL_DIR)\isprint.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\langapi.obj : $(RTL_DIR)\langapi.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\left.obj : $(RTL_DIR)\left.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\len.obj : $(RTL_DIR)\len.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\listbox.c : $(RTL_DIR)\listbox.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\listbox.obj : $(OBJ_DIR)\listbox.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\lennum.obj : $(RTL_DIR)\lennum.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\math.obj : $(RTL_DIR)\math.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\maxrow.obj : $(RTL_DIR)\maxrow.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\minmax.obj : $(RTL_DIR)\minmax.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\memofile.obj : $(RTL_DIR)\memofile.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\memoline.obj : $(RTL_DIR)\memoline.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\memoedit.c : $(RTL_DIR)\memoedit.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\memoedit.obj : $(OBJ_DIR)\memoedit.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\memvarbl.c : $(RTL_DIR)\memvarbl.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\memvarbl.obj : $(OBJ_DIR)\memvarbl.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\menuto.c : $(RTL_DIR)\menuto.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\menuto.obj : $(OBJ_DIR)\menuto.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\mpostolc.obj : $(RTL_DIR)\mpostolc.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\mlctopos.obj : $(RTL_DIR)\mlctopos.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\mlcount.obj : $(RTL_DIR)\mlcount.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\mlpos.obj : $(RTL_DIR)\mlpos.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\mod.obj : $(RTL_DIR)\mod.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\mouseapi.obj : $(RTL_DIR)\mouseapi.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\mousex.obj : $(RTL_DIR)\mousex.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\mtran.obj : $(RTL_DIR)\mtran.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\natmsg.obj : $(RTL_DIR)\natmsg.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\net.obj : $(RTL_DIR)\net.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\objfunc.c : $(RTL_DIR)\objfunc.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\objfunc.obj : $(OBJ_DIR)\objfunc.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\oemansi.obj : $(RTL_DIR)\oemansi.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\oldbox.obj : $(RTL_DIR)\oldbox.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\oldclear.obj : $(RTL_DIR)\oldclear.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\pad.obj : $(RTL_DIR)\pad.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\padc.obj : $(RTL_DIR)\padc.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\padl.obj : $(RTL_DIR)\padl.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\padr.obj : $(RTL_DIR)\padr.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\perfuncs.c : $(RTL_DIR)\perfuncs.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\perfuncs.obj : $(OBJ_DIR)\perfuncs.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\persist.c : $(RTL_DIR)\persist.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\persist.obj : $(OBJ_DIR)\persist.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\philes.obj : $(RTL_DIR)\philes.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\philes53.obj : $(RTL_DIR)\philes53.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\philesx.obj : $(RTL_DIR)\philesx.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\profiler.c : $(RTL_DIR)\profiler.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\profiler.obj : $(OBJ_DIR)\profiler.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\pushbtn.c : $(RTL_DIR)\pushbtn.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\pushbtn.obj : $(OBJ_DIR)\pushbtn.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\radiobtn.c : $(RTL_DIR)\radiobtn.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\radiobtn.obj : $(OBJ_DIR)\radiobtn.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\radiogrp.c : $(RTL_DIR)\radiogrp.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\radiogrp.obj : $(OBJ_DIR)\radiogrp.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\rat.obj : $(RTL_DIR)\rat.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\readkey.c : $(RTL_DIR)\readkey.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\readkey.obj : $(OBJ_DIR)\readkey.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\readvar.c : $(RTL_DIR)\readvar.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\readvar.obj : $(OBJ_DIR)\readvar.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\replic.obj : $(RTL_DIR)\replic.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\right.obj : $(RTL_DIR)\right.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\round.obj : $(RTL_DIR)\round.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\run.obj : $(RTL_DIR)\run.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\samples.obj : $(RTL_DIR)\samples.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\saverest.obj : $(RTL_DIR)\saverest.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\scroll.obj : $(RTL_DIR)\scroll.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\seconds.obj : $(RTL_DIR)\seconds.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\set.obj : $(RTL_DIR)\set.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\setcolor.obj : $(RTL_DIR)\setcolor.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\setcurs.obj : $(RTL_DIR)\setcurs.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\scrollbr.c : $(RTL_DIR)\scrollbr.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\scrollbr.obj : $(OBJ_DIR)\scrollbr.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\setfunc.c : $(RTL_DIR)\setfunc.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\setfunc.obj : $(OBJ_DIR)\setfunc.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\setkey.obj : $(RTL_DIR)\setkey.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\setpos.obj : $(RTL_DIR)\setpos.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\setposbs.obj : $(RTL_DIR)\setposbs.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\setta.c : $(RTL_DIR)\setta.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\setta.obj : $(OBJ_DIR)\setta.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\shadow.obj : $(RTL_DIR)\shadow.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\soundex.obj : $(RTL_DIR)\soundex.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\space.obj : $(RTL_DIR)\space.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\spfiles.obj : $(RTL_DIR)\spfiles.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\str.obj : $(RTL_DIR)\str.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\strcase.obj : $(RTL_DIR)\strcase.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\strings.obj : $(RTL_DIR)\strings.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\strmatch.obj : $(RTL_DIR)\strmatch.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\strtran.obj : $(RTL_DIR)\strtran.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\strzero.obj : $(RTL_DIR)\strzero.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\stuff.obj : $(RTL_DIR)\stuff.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\substr.obj : $(RTL_DIR)\substr.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\tbcolumn.c : $(RTL_DIR)\tbcolumn.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\tbcolumn.obj : $(OBJ_DIR)\tbcolumn.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\tbrowse.c : $(RTL_DIR)\tbrowse.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\tbrowse.obj : $(OBJ_DIR)\tbrowse.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\tclass.c : $(RTL_DIR)\tclass.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\tclass.obj : $(OBJ_DIR)\tclass.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\teditor.c : $(RTL_DIR)\teditor.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\teditor.obj : $(OBJ_DIR)\teditor.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\teditorl.obj : $(RTL_DIR)\teditorl.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\terror.c : $(RTL_DIR)\terror.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\terror.obj : $(OBJ_DIR)\terror.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\text.c : $(RTL_DIR)\text.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\text.obj : $(OBJ_DIR)\text.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\tget.c : $(RTL_DIR)\tget.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\tget.obj : $(OBJ_DIR)\tget.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\tgetint.c : $(RTL_DIR)\tgetint.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\tgetint.obj : $(OBJ_DIR)\tgetint.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\tgetlist.c : $(RTL_DIR)\tgetlist.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\tgetlist.obj : $(OBJ_DIR)\tgetlist.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\tlabel.c : $(RTL_DIR)\tlabel.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\tlabel.obj : $(OBJ_DIR)\tlabel.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\tmenuitm.c : $(RTL_DIR)\tmenuitm.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\tmenuitm.obj : $(OBJ_DIR)\tmenuitm.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\tobject.c : $(RTL_DIR)\tobject.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\tobject.obj : $(OBJ_DIR)\tobject.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\tone.obj : $(RTL_DIR)\tone.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\tpopup.c : $(RTL_DIR)\tpopup.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\tpopup.obj : $(OBJ_DIR)\tpopup.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\trace.obj : $(RTL_DIR)\trace.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\transfrm.obj : $(RTL_DIR)\transfrm.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\treport.c : $(RTL_DIR)\treport.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\treport.obj : $(OBJ_DIR)\treport.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\trim.obj : $(RTL_DIR)\trim.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\ttextlin.c : $(RTL_DIR)\ttextlin.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\ttextlin.obj : $(OBJ_DIR)\ttextlin.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\ttopbar.c : $(RTL_DIR)\ttopbar.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\ttopbar.obj : $(OBJ_DIR)\ttopbar.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\type.obj : $(RTL_DIR)\type.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\typefile.c : $(RTL_DIR)\typefile.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\typefile.obj : $(OBJ_DIR)\typefile.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\val.obj : $(RTL_DIR)\val.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\valtostr.obj : $(RTL_DIR)\valtostr.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\valtype.obj : $(RTL_DIR)\valtype.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\version.obj : $(RTL_DIR)\version.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\wait.c : $(RTL_DIR)\wait.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\wait.obj : $(OBJ_DIR)\wait.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\word.obj : $(RTL_DIR)\word.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\xhelp.obj : $(RTL_DIR)\xhelp.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\xsavescr.obj : $(RTL_DIR)\xsavescr.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\msgca.obj : $(LANG_DIR)\msgca.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\msgcs852.obj : $(LANG_DIR)\msgcs852.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\msgcsiso.obj : $(LANG_DIR)\msgcsiso.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\msgcskam.obj : $(LANG_DIR)\msgcskam.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\msgcswin.obj : $(LANG_DIR)\msgcswin.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\msgde.obj : $(LANG_DIR)\msgde.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\msgen.obj : $(LANG_DIR)\msgen.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\msgeo.obj : $(LANG_DIR)\msgeo.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\msges.obj : $(LANG_DIR)\msges.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\msgeu.obj : $(LANG_DIR)\msgeu.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\msgfr.obj : $(LANG_DIR)\msgfr.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\msggl.obj : $(LANG_DIR)\msggl.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\msghe862.obj : $(LANG_DIR)\msghe862.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\msghewin.obj : $(LANG_DIR)\msghewin.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\msghr852.obj : $(LANG_DIR)\msghr852.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\msghriso.obj : $(LANG_DIR)\msghriso.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\msghu852.obj : $(LANG_DIR)\msghu852.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\msghucwi.obj : $(LANG_DIR)\msghucwi.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\msghuwin.obj : $(LANG_DIR)\msghuwin.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\msgis850.obj : $(LANG_DIR)\msgis850.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\msgid.obj : $(LANG_DIR)\msgid.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\msgit.obj : $(LANG_DIR)\msgit.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\msgko.obj : $(LANG_DIR)\msgko.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\msgpl852.obj : $(LANG_DIR)\msgpl852.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\msgpliso.obj : $(LANG_DIR)\msgpliso.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\msgplmaz.obj : $(LANG_DIR)\msgplmaz.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\msgpt.obj : $(LANG_DIR)\msgpt.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\msgro.obj : $(LANG_DIR)\msgro.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\msgru866.obj : $(LANG_DIR)\msgru866.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\msgruwin.obj : $(LANG_DIR)\msgruwin.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\msgsr852.obj : $(LANG_DIR)\msgsr852.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\msgsriso.obj : $(LANG_DIR)\msgsriso.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\msgzhb5.obj : $(LANG_DIR)\msgzhb5.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\msgzhgb.obj : $(LANG_DIR)\msgzhgb.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\macroy.c : $(MACRO_DIR)\macro.y
+   bison -d --no-line $** -o$@
+
+$(OBJ_DIR)\macrol.c : $(MACRO_DIR)\macro.l
+   flex -i -8 -o$@ $**
+
+$(OBJ_DIR)\macroy.obj : $(OBJ_DIR)\macroy.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\macrol.obj : $(OBJ_DIR)\macrol.c
+   -echo. > $(OBJ_DIR)\unistd.h
+   $(CC) $(CLIBFLAGS) -I$(OBJ_DIR) -o$@ $**
+   -del $(OBJ_DIR)\unistd.h
+
+$(OBJ_DIR)\macroa.obj : $(MACRO_DIR)\macroa.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\macrob.obj : $(MACRO_DIR)\macrob.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\macroc.obj : $(MACRO_DIR)\macroc.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\nulsys.c : $(RDD_DIR)\nulsys\nulsys.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\nulsys.obj : $(OBJ_DIR)\nulsys.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\dbfntx0.c : $(RDD_DIR)\dbfntx\dbfntx0.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\dbfntx0.obj : $(OBJ_DIR)\dbfntx0.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\dbfntx1.obj : $(RDD_DIR)\dbfntx\dbfntx1.c
+  $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\dbfcdx0.c : $(RDD_DIR)\dbfcdx\dbfcdx0.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\dbfcdx0.obj : $(OBJ_DIR)\dbfcdx0.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\dbfcdx1.obj : $(RDD_DIR)\dbfcdx\dbfcdx1.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\dbgmenu.c : $(DEBUG_DIR)\dbgmenu.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\dbgmenu.obj : $(OBJ_DIR)\dbgmenu.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\dbgtmenu.c : $(DEBUG_DIR)\dbgtmenu.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\dbgtmenu.obj : $(OBJ_DIR)\dbgtmenu.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\dbgtmitm.c : $(DEBUG_DIR)\dbgtmitm.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\dbgtmitm.obj : $(OBJ_DIR)\dbgtmitm.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\dbgwa.c : $(DEBUG_DIR)\dbgwa.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\dbgwa.obj : $(OBJ_DIR)\dbgwa.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\dbgtarr.c : $(DEBUG_DIR)\dbgtarr.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\dbgtarr.obj : $(OBJ_DIR)\dbgtarr.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\dbgtobj.c : $(DEBUG_DIR)\dbgtobj.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\dbgtobj.obj : $(OBJ_DIR)\dbgtobj.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\dbgtwin.c : $(DEBUG_DIR)\dbgtwin.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\dbgtwin.obj : $(OBJ_DIR)\dbgtwin.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\debugger.c : $(DEBUG_DIR)\debugger.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\debugger.obj : $(OBJ_DIR)\debugger.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\tbrwtext.c : $(DEBUG_DIR)\tbrwtext.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\tbrwtext.obj : $(OBJ_DIR)\tbrwtext.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\gtwin.obj : $(RTL_DIR)\gtwin\gtwin.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\mousewin.obj : $(RTL_DIR)\gtwin\mousewin.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(LIBMISC_OBJ)\hb_f.obj : $(LIBMISC_SRC)\hb_f.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(LIBMISC_OBJ)\stringsx.obj : $(LIBMISC_SRC)\stringsx.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(LIBMISC_OBJ)\dbftools.obj : $(LIBMISC_SRC)\dbftools.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(LIBMISC_OBJ)\fileread.c : $(LIBMISC_SRC)\fileread.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(LIBMISC_OBJ)\fileread.obj : $(LIBMISC_OBJ)\fileread.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(LIBMISC_OBJ)\nconvert.c : $(LIBMISC_SRC)\nconvert.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(LIBMISC_OBJ)\nconvert.obj : $(LIBMISC_OBJ)\nconvert.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(LIBMISC_OBJ)\numtxten.c : $(LIBMISC_SRC)\numtxten.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(LIBMISC_OBJ)\numtxten.obj : $(LIBMISC_OBJ)\numtxten.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(LIBMISC_OBJ)\numtxthu.c : $(LIBMISC_SRC)\numtxthu.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(LIBMISC_OBJ)\numtxthu.obj : $(LIBMISC_OBJ)\numtxthu.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(LIBMISC_OBJ)\strfmt.obj : $(LIBMISC_SRC)\strfmt.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(LIBMISC_OBJ)\stringp.c : $(LIBMISC_SRC)\stringp.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(LIBMISC_OBJ)\stringp.obj : $(LIBMISC_OBJ)\stringp.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(CT_OBJ_DIR)\addascii.obj : $(CT_DIR)\addascii.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(CT_OBJ_DIR)\asciisum.obj : $(CT_DIR)\asciisum.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(CT_OBJ_DIR)\ascpos.obj : $(CT_DIR)\ascpos.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(CT_OBJ_DIR)\atadjust.obj : $(CT_DIR)\atadjust.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(CT_OBJ_DIR)\atnum.obj : $(CT_DIR)\atnum.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(CT_OBJ_DIR)\atrepl.obj : $(CT_DIR)\atrepl.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(CT_OBJ_DIR)\bit2.obj : $(CT_DIR)\bit2.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(CT_OBJ_DIR)\charevod.obj : $(CT_DIR)\charevod.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(CT_OBJ_DIR)\charlist.obj : $(CT_DIR)\charlist.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(CT_OBJ_DIR)\charmirr.obj : $(CT_DIR)\charmirr.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(CT_OBJ_DIR)\charmix.obj : $(CT_DIR)\charmix.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(CT_OBJ_DIR)\charone.obj : $(CT_DIR)\charone.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(CT_OBJ_DIR)\charonly.obj : $(CT_DIR)\charonly.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(CT_OBJ_DIR)\charop.obj : $(CT_DIR)\charop.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(CT_OBJ_DIR)\charrepl.obj : $(CT_DIR)\charrepl.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(CT_OBJ_DIR)\charsort.obj : $(CT_DIR)\charsort.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(CT_OBJ_DIR)\charswap.obj : $(CT_DIR)\charswap.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(CT_OBJ_DIR)\count.obj : $(CT_DIR)\count.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(CT_OBJ_DIR)\ctc.obj : $(CT_DIR)\ctc.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(CT_OBJ_DIR)\ctmath.obj : $(CT_DIR)\ctmath.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(CT_OBJ_DIR)\ctset.obj : $(CT_DIR)\ctset.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(CT_OBJ_DIR)\ctstr.obj : $(CT_DIR)\ctstr.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(CT_OBJ_DIR)\ctchksum.obj : $(CT_DIR)\ctchksum.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(CT_OBJ_DIR)\ctcolton.obj : $(CT_DIR)\ctcolton.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(CT_OBJ_DIR)\ctcrypt.obj : $(CT_DIR)\ctcrypt.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(CT_OBJ_DIR)\files.obj : $(CT_DIR)\files.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(CT_OBJ_DIR)\finan.obj : $(CT_DIR)\finan.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(CT_OBJ_DIR)\justify.obj : $(CT_DIR)\justify.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(CT_OBJ_DIR)\num1.obj : $(CT_DIR)\num1.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(CT_OBJ_DIR)\numat.obj : $(CT_DIR)\numat.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(CT_OBJ_DIR)\pad1.obj : $(CT_DIR)\pad1.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(CT_OBJ_DIR)\pos1.obj : $(CT_DIR)\pos1.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(CT_OBJ_DIR)\pos2.obj : $(CT_DIR)\pos2.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(CT_OBJ_DIR)\posdiff.obj : $(CT_DIR)\posdiff.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(CT_OBJ_DIR)\range.obj : $(CT_DIR)\range.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(CT_OBJ_DIR)\relation.obj : $(CT_DIR)\relation.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(CT_OBJ_DIR)\remove.obj : $(CT_DIR)\remove.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(CT_OBJ_DIR)\replace.obj : $(CT_DIR)\replace.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(CT_OBJ_DIR)\strswap.obj : $(CT_DIR)\strswap.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(CT_OBJ_DIR)\token1.obj : $(CT_DIR)\token1.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(CT_OBJ_DIR)\token2.obj : $(CT_DIR)\token2.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(CT_OBJ_DIR)\trig.obj : $(CT_DIR)\trig.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(CT_OBJ_DIR)\wordrepl.obj : $(CT_DIR)\wordrepl.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(CT_OBJ_DIR)\wordtoch.obj : $(CT_DIR)\wordtoch.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(CT_OBJ_DIR)\ct.c : $(CT_DIR)\ct.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(CT_OBJ_DIR)\ct.obj : $(CT_OBJ_DIR)\ct.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(CT_OBJ_DIR)\ctmisc.c : $(CT_DIR)\ctmisc.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(CT_OBJ_DIR)\ctmisc.obj : $(CT_OBJ_DIR)\ctmisc.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(CT_OBJ_DIR)\datetime.c : $(CT_DIR)\datetime.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(CT_OBJ_DIR)\datetime.obj : $(CT_OBJ_DIR)\datetime.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(CT_OBJ_DIR)\numconv.c : $(CT_DIR)\numconv.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(CT_OBJ_DIR)\numconv.obj : $(CT_OBJ_DIR)\numconv.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(CT_OBJ_DIR)\keyset.obj : $(CT_DIR)\keyset.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(CT_OBJ_DIR)\print.obj : $(CT_DIR)\print.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\ads0.c : $(RDDADS_DIR)\ads0.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\ads0.obj : $(OBJ_DIR)\ads0.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\ads1.obj : $(RDDADS_DIR)\ads1.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\adsfunc.obj : $(RDDADS_DIR)\adsfunc.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\adsmgmnt.obj : $(RDDADS_DIR)\adsmgmnt.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\isbiton.c : $(NANFOR_SRC_DIR)\isbiton.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\isbiton.obj : $(NANFOR_OBJ_DIR)\isbiton.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\mouse1.c : $(NANFOR_SRC_DIR)\mouse1.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\acctadj.c : $(NANFOR_SRC_DIR)\acctadj.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\aeminlen.c : $(NANFOR_SRC_DIR)\aeminlen.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\lastday.c : $(NANFOR_SRC_DIR)\lastday.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\restsets.c : $(NANFOR_SRC_DIR)\restsets.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\acctyear.c : $(NANFOR_SRC_DIR)\acctyear.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\datecnfg.c : $(NANFOR_SRC_DIR)\datecnfg.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\adessort.c : $(NANFOR_SRC_DIR)\adessort.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\anomatch.c : $(NANFOR_SRC_DIR)\anomatch.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\any2any.c : $(NANFOR_SRC_DIR)\any2any.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\asum.c  : $(NANFOR_SRC_DIR)\asum.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\bitclr.c : $(NANFOR_SRC_DIR)\bitclr.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\bitset.c : $(NANFOR_SRC_DIR)\bitset.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\tbwhile.c : $(NANFOR_SRC_DIR)\tbwhile.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\blink.c : $(NANFOR_SRC_DIR)\blink.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\byt2bit.c : $(NANFOR_SRC_DIR)\byt2bit.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\byt2hex.c : $(NANFOR_SRC_DIR)\byt2hex.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\byteand.c : $(NANFOR_SRC_DIR)\byteand.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\byteneg.c : $(NANFOR_SRC_DIR)\byteneg.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\byteor.c : $(NANFOR_SRC_DIR)\byteor.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\daytobow.c : $(NANFOR_SRC_DIR)\daytobow.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\cntryset.c : $(NANFOR_SRC_DIR)\cntryset.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\elapsed.c : $(NANFOR_SRC_DIR)\elapsed.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\woy.c  : $(NANFOR_SRC_DIR)\woy.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\dectobin.c : $(NANFOR_SRC_DIR)\dectobin.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\hex2dec.c : $(NANFOR_SRC_DIR)\hex2dec.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\e2d.c : $(NANFOR_SRC_DIR)\e2d.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\vidcur.c : $(NANFOR_SRC_DIR)\vidcur.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\elapmil.c : $(NANFOR_SRC_DIR)\elapmil.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\dosver.c : $(NANFOR_SRC_DIR)\dosver.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\findith.c : $(NANFOR_SRC_DIR)\findith.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\firstday.c : $(NANFOR_SRC_DIR)\firstday.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\gcd.c : $(NANFOR_SRC_DIR)\gcd.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\min2dhm.c : $(NANFOR_SRC_DIR)\min2dhm.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\invclr.c : $(NANFOR_SRC_DIR)\invclr.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\isbit.c : $(NANFOR_SRC_DIR)\isbit.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\isshare.c : $(NANFOR_SRC_DIR)\isshare.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\popadder.c : $(NANFOR_SRC_DIR)\popadder.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\month.c : $(NANFOR_SRC_DIR)\month.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\metaph.c : $(NANFOR_SRC_DIR)\metaph.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\miltime.c : $(NANFOR_SRC_DIR)\miltime.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\netpv.c : $(NANFOR_SRC_DIR)\netpv.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\nooccur.c : $(NANFOR_SRC_DIR)\nooccur.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\pickday.c : $(NANFOR_SRC_DIR)\pickday.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\prtesc.c : $(NANFOR_SRC_DIR)\prtesc.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\week.c : $(NANFOR_SRC_DIR)\week.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\rand1.c : $(NANFOR_SRC_DIR)\rand1.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\wda.c : $(NANFOR_SRC_DIR)\wda.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\sqzn.c : $(NANFOR_SRC_DIR)\sqzn.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\aavg.c : $(NANFOR_SRC_DIR)\aavg.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\acctweek.c : $(NANFOR_SRC_DIR)\acctweek.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\bytenot.c : $(NANFOR_SRC_DIR)\bytenot.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\pchr.c : $(NANFOR_SRC_DIR)\pchr.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\d2e.c : $(NANFOR_SRC_DIR)\d2e.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\acctqtr.c : $(NANFOR_SRC_DIR)\acctqtr.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\savesets.c : $(NANFOR_SRC_DIR)\savesets.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\dayofyr.c : $(NANFOR_SRC_DIR)\dayofyr.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\pending.c : $(NANFOR_SRC_DIR)\pending.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\amedian.c : $(NANFOR_SRC_DIR)\amedian.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\year.c : $(NANFOR_SRC_DIR)\year.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\easter.c : $(NANFOR_SRC_DIR)\easter.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\round.c : $(NANFOR_SRC_DIR)\round.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\aemaxlen.c : $(NANFOR_SRC_DIR)\aemaxlen.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\aading.c : $(NANFOR_SRC_DIR)\aading.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\qtr.c : $(NANFOR_SRC_DIR)\qtr.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\madd.c : $(NANFOR_SRC_DIR)\madd.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\scregion.c : $(NANFOR_SRC_DIR)\scregion.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\linked.c : $(NANFOR_SRC_DIR)\linked.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\sleep.c : $(NANFOR_SRC_DIR)\sleep.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\ntow.c : $(NANFOR_SRC_DIR)\ntow.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\aredit.c : $(NANFOR_SRC_DIR)\aredit.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\at2.c : $(NANFOR_SRC_DIR)\at2.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\nwlstat.c : $(NANFOR_SRC_DIR)\nwlstat.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\tempfile.c : $(NANFOR_SRC_DIR)\tempfile.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\sinkey.c : $(NANFOR_SRC_DIR)\sinkey.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\vidmode.c : $(NANFOR_SRC_DIR)\vidmode.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\eltime.c : $(NANFOR_SRC_DIR)\eltime.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\diskfunc.c : $(NANFOR_SRC_DIR)\diskfunc.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\pvid.c : $(NANFOR_SRC_DIR)\pvid.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\bytexor.c : $(NANFOR_SRC_DIR)\bytexor.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\acctmnth.c : $(NANFOR_SRC_DIR)\acctmnth.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\pegs.c : $(NANFOR_SRC_DIR)\pegs.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\workdays.c : $(NANFOR_SRC_DIR)\workdays.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\savearr.c : $(NANFOR_SRC_DIR)\savearr.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(NANFOR_OBJ_DIR)\mouse1.obj : $(NANFOR_OBJ_DIR)\mouse1.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\acctadj.obj : $(NANFOR_OBJ_DIR)\acctadj.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\aeminlen.obj : $(NANFOR_OBJ_DIR)\aeminlen.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\lastday.obj : $(NANFOR_OBJ_DIR)\lastday.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\restsets.obj : $(NANFOR_OBJ_DIR)\restsets.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\acctyear.obj : $(NANFOR_OBJ_DIR)\acctyear.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\datecnfg.obj : $(NANFOR_OBJ_DIR)\datecnfg.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\adessort.obj : $(NANFOR_OBJ_DIR)\adessort.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\anomatch.obj : $(NANFOR_OBJ_DIR)\anomatch.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\any2any.obj : $(NANFOR_OBJ_DIR)\any2any.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\asum.obj : $(NANFOR_OBJ_DIR)\asum.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\bitclr.obj : $(NANFOR_OBJ_DIR)\bitclr.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\bitset.obj : $(NANFOR_OBJ_DIR)\bitset.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\tbwhile.obj : $(NANFOR_OBJ_DIR)\tbwhile.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\blink.obj : $(NANFOR_OBJ_DIR)\blink.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\byt2bit.obj : $(NANFOR_OBJ_DIR)\byt2bit.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\byt2hex.obj : $(NANFOR_OBJ_DIR)\byt2hex.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\byteand.obj : $(NANFOR_OBJ_DIR)\byteand.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\byteneg.obj : $(NANFOR_OBJ_DIR)\byteneg.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\byteor.obj : $(NANFOR_OBJ_DIR)\byteor.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\daytobow.obj : $(NANFOR_OBJ_DIR)\daytobow.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\clrsel.obj : $(NANFOR_OBJ_DIR)\clrsel.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\cntryset.obj : $(NANFOR_OBJ_DIR)\cntryset.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\elapsed.obj : $(NANFOR_OBJ_DIR)\elapsed.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\woy.obj : $(NANFOR_OBJ_DIR)\woy.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\dectobin.obj : $(NANFOR_OBJ_DIR)\dectobin.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\hex2dec.obj : $(NANFOR_OBJ_DIR)\hex2dec.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\e2d.obj : $(NANFOR_OBJ_DIR)\e2d.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\elapmil.obj : $(NANFOR_OBJ_DIR)\elapmil.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\dosver.obj : $(NANFOR_OBJ_DIR)\dosver.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\findith.obj : $(NANFOR_OBJ_DIR)\findith.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\firstday.obj : $(NANFOR_OBJ_DIR)\firstday.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\gcd.obj : $(NANFOR_OBJ_DIR)\gcd.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\min2dhm.obj : $(NANFOR_OBJ_DIR)\min2dhm.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\invclr.obj : $(NANFOR_OBJ_DIR)\invclr.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\isbit.obj : $(NANFOR_OBJ_DIR)\isbit.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\isshare.obj : $(NANFOR_OBJ_DIR)\isshare.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\popadder.obj : $(NANFOR_OBJ_DIR)\popadder.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\month.obj : $(NANFOR_OBJ_DIR)\month.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\metaph.obj : $(NANFOR_OBJ_DIR)\metaph.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\miltime.obj : $(NANFOR_OBJ_DIR)\miltime.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\netpv.obj : $(NANFOR_OBJ_DIR)\netpv.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\nooccur.obj : $(NANFOR_OBJ_DIR)\nooccur.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\pickday.obj : $(NANFOR_OBJ_DIR)\pickday.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\prtesc.obj : $(NANFOR_OBJ_DIR)\prtesc.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\week.obj : $(NANFOR_OBJ_DIR)\week.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\rand1.obj : $(NANFOR_OBJ_DIR)\rand1.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\wda.obj : $(NANFOR_OBJ_DIR)\wda.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\sqzn.obj : $(NANFOR_OBJ_DIR)\sqzn.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\menu1.obj : $(NANFOR_OBJ_DIR)\menu1.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\vertmenu.obj : $(NANFOR_OBJ_DIR)\vertmenu.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\aavg.obj : $(NANFOR_OBJ_DIR)\aavg.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\acctweek.obj : $(NANFOR_OBJ_DIR)\acctweek.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\bytenot.obj : $(NANFOR_OBJ_DIR)\bytenot.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\pchr.obj : $(NANFOR_OBJ_DIR)\pchr.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\d2e.obj : $(NANFOR_OBJ_DIR)\d2e.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\xbox.obj : $(NANFOR_OBJ_DIR)\xbox.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\acctqtr.obj : $(NANFOR_OBJ_DIR)\acctqtr.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\savesets.obj : $(NANFOR_OBJ_DIR)\savesets.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\dayofyr.obj : $(NANFOR_OBJ_DIR)\dayofyr.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\dispmsg.obj : $(NANFOR_OBJ_DIR)\dispmsg.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\pending.obj : $(NANFOR_OBJ_DIR)\pending.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\amedian.obj : $(NANFOR_OBJ_DIR)\amedian.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\calendar.obj : $(NANFOR_OBJ_DIR)\calendar.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\year.obj : $(NANFOR_OBJ_DIR)\year.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\easter.obj : $(NANFOR_OBJ_DIR)\easter.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\round.obj : $(NANFOR_OBJ_DIR)\round.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\aemaxlen.obj : $(NANFOR_OBJ_DIR)\aemaxlen.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\aading.obj : $(NANFOR_OBJ_DIR)\aading.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\qtr.obj : $(NANFOR_OBJ_DIR)\qtr.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\madd.obj : $(NANFOR_OBJ_DIR)\madd.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\scregion.obj : $(NANFOR_OBJ_DIR)\scregion.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\linked.obj : $(NANFOR_OBJ_DIR)\linked.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\sleep.obj : $(NANFOR_OBJ_DIR)\sleep.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\ntow.obj : $(NANFOR_OBJ_DIR)\ntow.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\aredit.obj : $(NANFOR_OBJ_DIR)\aredit.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\at2.obj : $(NANFOR_OBJ_DIR)\at2.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\nwlstat.obj : $(NANFOR_OBJ_DIR)\nwlstat.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\tempfile.obj : $(NANFOR_OBJ_DIR)\tempfile.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\settime.obj : $(NANFOR_OBJ_DIR)\settime.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\sinkey.obj : $(NANFOR_OBJ_DIR)\sinkey.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\vidmode.obj : $(NANFOR_OBJ_DIR)\vidmode.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\eltime.obj : $(NANFOR_OBJ_DIR)\eltime.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\diskfunc.obj : $(NANFOR_OBJ_DIR)\diskfunc.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\pvid.obj : $(NANFOR_OBJ_DIR)\pvid.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\bytexor.obj : $(NANFOR_OBJ_DIR)\bytexor.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\dfile.obj : $(NANFOR_OBJ_DIR)\dfile.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\acctmnth.obj : $(NANFOR_OBJ_DIR)\acctmnth.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\pegs.obj : $(NANFOR_OBJ_DIR)\pegs.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\workdays.obj : $(NANFOR_OBJ_DIR)\workdays.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\savearr.obj : $(NANFOR_OBJ_DIR)\savearr.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\caplock.obj : $(NANFOR_SRC_DIR)\caplock.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\shift.obj : $(NANFOR_SRC_DIR)\shift.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\color2n.obj : $(NANFOR_SRC_DIR)\color2n.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\descend.obj : $(NANFOR_SRC_DIR)\descend.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\numlock.obj : $(NANFOR_SRC_DIR)\numlock.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\proper.obj : $(NANFOR_SRC_DIR)\proper.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\mouse.obj : $(NANFOR_SRC_DIR)\mouse.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\getvid.obj : $(NANFOR_SRC_DIR)\getvid.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\chdir.obj : $(NANFOR_SRC_DIR)\chdir.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\rmdir.obj : $(NANFOR_SRC_DIR)\rmdir.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\alt.obj : $(NANFOR_SRC_DIR)\alt.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\ctrl.obj : $(NANFOR_SRC_DIR)\ctrl.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\getenvrn.obj : $(NANFOR_SRC_DIR)\getenvrn.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\n2color.obj : $(NANFOR_SRC_DIR)\n2color.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\origin.obj : $(NANFOR_SRC_DIR)\origin.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\prtscr.obj : $(NANFOR_SRC_DIR)\prtscr.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\stod.obj : $(NANFOR_SRC_DIR)\stod.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\kspeed.obj : $(NANFOR_SRC_DIR)\kspeed.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\mkdir.obj : $(NANFOR_SRC_DIR)\mkdir.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(NANFOR_OBJ_DIR)\getver.obj : $(NANFOR_SRC_DIR)\getver.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(SAMPLES_OBJ_DIR)\environ.obj : $(SAMPLES_SRC_DIR)\environ.c
+   $(CC) -c $(CLIBFLAGS) -o$@ $**
+
+$(SAMPLES_OBJ_DIR)\date.obj : $(SAMPLES_SRC_DIR)\date.c
+   $(CC) -c $(CLIBFLAGS) -o$@ $**
+
+$(SAMPLES_OBJ_DIR)\gauge.obj : $(SAMPLES_SRC_DIR)\gauge.c
+   $(CC) -c $(CLIBFLAGS) -o$@ $**
+
+$(SAMPLES_OBJ_DIR)\num.obj : $(SAMPLES_SRC_DIR)\num.c
+   $(CC) -c $(CLIBFLAGS) -o$@ $**
+
+$(SAMPLES_OBJ_DIR)\stack.obj : $(SAMPLES_SRC_DIR)\stack.c
+   $(CC) -c $(CLIBFLAGS) -o$@ $**
+
+$(SAMPLES_OBJ_DIR)\status.obj : $(SAMPLES_SRC_DIR)\status.c
+   $(CC) -c $(CLIBFLAGS) -o$@ $**
+
+$(SAMPLES_OBJ_DIR)\time.obj : $(SAMPLES_SRC_DIR)\time.c
+   $(CC) -c $(CLIBFLAGS) -o$@ $**
+
+$(HTMLLIB_OBJ)\ohtm.c : $(HTMLLIB_DIR)\ohtm.prg
+   $(HARBOUR_EXE) $(HTMLFLAGS) $** -o$@
+
+$(HTMLLIB_OBJ)\ohtm.obj : $(HTMLLIB_OBJ)\ohtm.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(HTMLLIB_OBJ)\htmbrows.c : $(HTMLLIB_DIR)\htmbrows.prg
+   $(HARBOUR_EXE) $(HTMLFLAGS) $** -o$@
+
+$(HTMLLIB_OBJ)\htmbrows.obj : $(HTMLLIB_OBJ)\htmbrows.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(HTMLLIB_OBJ)\oedit.c : $(HTMLLIB_DIR)\oedit.prg
+   $(HARBOUR_EXE) $(HTMLFLAGS) $** -o$@
+
+$(HTMLLIB_OBJ)\oedit.obj : $(HTMLLIB_OBJ)\oedit.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(HTMLLIB_OBJ)\ofile.c : $(HTMLLIB_DIR)\ofile.prg
+   $(HARBOUR_EXE) $(HTMLFLAGS) $** -o$@
+
+$(HTMLLIB_OBJ)\ofile.obj : $(HTMLLIB_OBJ)\ofile.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(HTMLLIB_OBJ)\jlist.c : $(HTMLLIB_DIR)\jlist.prg
+   $(HARBOUR_EXE) $(HTMLFLAGS) $** -o$@
+
+$(HTMLLIB_OBJ)\jlist.obj : $(HTMLLIB_OBJ)\jlist.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(HTMLLIB_OBJ)\oini.c : $(HTMLLIB_DIR)\oini.prg
+   $(HARBOUR_EXE) $(HTMLFLAGS) $** -o$@
+
+$(HTMLLIB_OBJ)\oini.obj : $(HTMLLIB_OBJ)\oini.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(HTMLLIB_OBJ)\jwindow.c : $(HTMLLIB_DIR)\jwindow.prg
+   $(HARBOUR_EXE) $(HTMLFLAGS) $** -o$@
+
+$(HTMLLIB_OBJ)\jwindow.obj : $(HTMLLIB_OBJ)\jwindow.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(HTMLLIB_OBJ)\ocgi.c : $(HTMLLIB_DIR)\ocgi.prg
+   $(HARBOUR_EXE) $(HTMLFLAGS) $** -o$@
+
+$(HTMLLIB_OBJ)\ocgi.obj : $(HTMLLIB_OBJ)\ocgi.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(HTMLLIB_OBJ)\oframe.c : $(HTMLLIB_DIR)\oframe.prg
+   $(HARBOUR_EXE) $(HTMLFLAGS) $** -o$@
+
+$(HTMLLIB_OBJ)\oframe.obj : $(HTMLLIB_OBJ)\oframe.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(HTMLLIB_OBJ)\counter.c : $(HTMLLIB_DIR)\counter.prg
+   $(HARBOUR_EXE) $(HTMLFLAGS) $** -o$@
+
+$(HTMLLIB_OBJ)\counter.obj : $(HTMLLIB_OBJ)\counter.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(HTMLLIB_OBJ)\htmutil.c : $(HTMLLIB_DIR)\htmutil.prg
+   $(HARBOUR_EXE) $(HTMLFLAGS) $** -o$@
+
+$(HTMLLIB_OBJ)\htmutil.obj : $(HTMLLIB_OBJ)\htmutil.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(HBRUN_OBJ)\external.c : $(HBRUN_DIR)\external.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(HBRUN_OBJ)\external.obj : $(HBRUN_OBJ)\external.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(HBDOC_OBJ)\docfunc.c : $(HBDOC_DIR)\docfunc.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(HBDOC_OBJ)\docfunc.obj : $(HBDOC_OBJ)\docfunc.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(HBDOC_OBJ)\genasc.c : $(HBDOC_DIR)\genasc.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(HBDOC_OBJ)\genasc.obj : $(HBDOC_OBJ)\genasc.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(HBDOC_OBJ)\genhpc.c : $(HBDOC_DIR)\genhpc.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(HBDOC_OBJ)\genhpc.obj : $(HBDOC_OBJ)\genhpc.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(HBDOC_OBJ)\genhtm.c : $(HBDOC_DIR)\genhtm.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(HBDOC_OBJ)\genhtm.obj : $(HBDOC_OBJ)\genhtm.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(HBDOC_OBJ)\genchm.c : $(HBDOC_DIR)\genchm.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(HBDOC_OBJ)\genchm.obj : $(HBDOC_OBJ)\genchm.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(HBDOC_OBJ)\genng.c : $(HBDOC_DIR)\genng.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(HBDOC_OBJ)\genng.obj : $(HBDOC_OBJ)\genng.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(HBDOC_OBJ)\genos2.c : $(HBDOC_DIR)\genos2.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(HBDOC_OBJ)\genos2.obj : $(HBDOC_OBJ)\genos2.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(HBDOC_OBJ)\genrtf.c : $(HBDOC_DIR)\genrtf.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(HBDOC_OBJ)\genrtf.obj : $(HBDOC_OBJ)\genrtf.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(HBDOC_OBJ)\gentrf.c : $(HBDOC_DIR)\gentrf.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(HBDOC_OBJ)\gentrf.obj : $(HBDOC_OBJ)\gentrf.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(HBDOC_OBJ)\html.c : $(HBDOC_DIR)\html.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(HBDOC_OBJ)\html.obj : $(HBDOC_OBJ)\html.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(HBDOC_OBJ)\ng.c : $(HBDOC_DIR)\ng.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(HBDOC_OBJ)\ng.obj : $(HBDOC_OBJ)\ng.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(HBDOC_OBJ)\os2.c : $(HBDOC_DIR)\os2.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(HBDOC_OBJ)\os2.obj : $(HBDOC_OBJ)\os2.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(HBDOC_OBJ)\rtf.c : $(HBDOC_DIR)\rtf.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(HBDOC_OBJ)\rtf.obj : $(HBDOC_OBJ)\rtf.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(HBDOC_OBJ)\troff.c : $(HBDOC_DIR)\troff.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(HBDOC_OBJ)\troff.obj : $(HBDOC_OBJ)\troff.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(HBDOC_OBJ)\fclass1.c : $(HBDOC_DIR)\fclass1.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(HBDOC_OBJ)\fclass1.obj : $(HBDOC_OBJ)\fclass1.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(HBDOC_OBJ)\ffile1.c : $(HBDOC_DIR)\ffile1.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(HBDOC_OBJ)\ffile1.obj : $(HBDOC_OBJ)\ffile1.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(HBDOC_OBJ)\ft_funcs.c : $(HBDOC_DIR)\ft_funcs.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(HBDOC_OBJ)\ft_funcs.obj : $(HBDOC_OBJ)\ft_funcs.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(HBMAKE_OBJ)\hbmutils.c : $(HBMAKE_DIR)\hbmutils.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(HBMAKE_OBJ)\hbmutils.obj : $(HBMAKE_OBJ)\hbmutils.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(HBMAKE_OBJ)\radios.c : $(HBMAKE_DIR)\radios.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(HBMAKE_OBJ)\radios.obj : $(HBMAKE_OBJ)\radios.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(HBMAKE_OBJ)\checks.c : $(HBMAKE_DIR)\checks.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(HBMAKE_OBJ)\checks.obj : $(HBMAKE_OBJ)\checks.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(HBMAKE_OBJ)\pickarry.c : $(HBMAKE_DIR)\pickarry.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(HBMAKE_OBJ)\pickarry.obj : $(HBMAKE_OBJ)\pickarry.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(HBMAKE_OBJ)\pickfile.c : $(HBMAKE_DIR)\pickfile.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(HBMAKE_OBJ)\pickfile.obj : $(HBMAKE_OBJ)\pickfile.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(HBMAKE_OBJ)\prb_stak.c : $(HBMAKE_DIR)\prb_stak.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(HBMAKE_OBJ)\prb_stak.obj : $(HBMAKE_OBJ)\prb_stak.c
+   $(CC) $(CLIBFLAGS) -o$@ $**

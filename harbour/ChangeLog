@@ -7,6 +7,34 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+            must not (e.g., LIBNAME=misc).
+
+  * contrib/libmisc/Makefile
+  + contrib/libmisc/tests/Makefile
+  + contrib/libmisc/tests/readfile.prg
+  * tests/Makefile
+  - tests/readfile.prg
+    * Moved tests/readfile.prg to contrib/libmisc/tests/readfile.prg
+      (hence the need to fix the GNU Make System).
+
+  * source/vm/dynlibhb.c
+    ! Only include extern declaration from _hInstance if using Borland.
+
+2001-12-26 09:08 UTC+0000 Dave Pearson <davep@davep.org>
+   * source/vm/Makefile
+     * Added dynlibhb.c.
+   * include/hbvmpub.h
+     * Added final EOL.
+
+2001-12-26 04:30 UTC+0700 Andi Jahja <harbour@cbn.net.id>
+   makefile for creating harbour.dll with BCC & MsVC
+
+   This is an initial template subject to further modification to make
+   it more flexible for any environment. Tweak might have to be done on
+   some files for:
+
+     . function rename-ing since some files bear public functions with
+       the same name. Example : filebase() in samples/environ.c,
        utils/hbdoc/ffile1.prg and contrib/htmllib/ofile.prg
 
      . phisically extract public functions to a separate file since they

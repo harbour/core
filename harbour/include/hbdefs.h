@@ -191,29 +191,33 @@
 typedef HARBOUR ( * PHB_FUNC )( void );
 typedef PHB_FUNC HB_FUNC_PTR;
 
-#if defined( __RSXNT__ )
-   /* RSXNT does not support any type of export keyword.
-      Exported (i.e., public) names can be obtained via
-      the emxexp utility and the output can be used for
-      input to a module definition file. See emxdev.doc
-      in the RSXNT doc/ directory for more information. */
-   #define HB_EXPORT
+#if defined( __EXPORT__ )
+   #if defined( __RSXNT__ )
+      /* RSXNT does not support any type of export keyword.
+         Exported (i.e., public) names can be obtained via
+         the emxexp utility and the output can be used for
+         input to a module definition file. See emxdev.doc
+         in the RSXNT doc/ directory for more information. */
+      #define HB_EXPORT
 
-#elif defined( __GNUC__ ) && defined( HB_OS_WIN_32 )
-   #define HB_EXPORT __attribute__ (( dllexport ))
+   #elif defined( __GNUC__ ) && defined( HB_OS_WIN_32 )
+      #define HB_EXPORT __attribute__ (( dllexport ))
 
-#elif defined( __BORLANDC__ )
-   #define HB_EXPORT _declspec( dllexport )
+   #elif defined( __BORLANDC__ )
+      #define HB_EXPORT _declspec( dllexport )
 
-#elif defined( WIN32 ) && !defined( ASANT )
-   #define HB_EXPORT _declspec( dllexport )
+   #elif defined( WIN32 ) && !defined( ASANT )
+      #define HB_EXPORT _declspec( dllexport )
 
-#elif defined( ASANLM ) || defined( ASANT )
-   #define HB_EXPORT
+   #elif defined( ASANLM ) || defined( ASANT )
+      #define HB_EXPORT
 
+   #else
+      #define HB_EXPORT
+
+   #endif
 #else
    #define HB_EXPORT
-
 #endif
 
 /* Function declaration macros */
