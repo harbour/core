@@ -1,3 +1,9 @@
+19990524-21:05 CET Eddie Runia
+  * source/rtl/strings.c
+    PAD* didn't work correctly with negative numbers
+  * source/rtl/extend.c
+    _parnl needed casting
+
 19990524-17:10 CET Eddie Runia
   * tests/working/test_all
     Fully automated the test bench.

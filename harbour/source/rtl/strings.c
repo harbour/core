@@ -168,12 +168,12 @@ HARBOUR PADR( void )
 
    if( _pcount() > 1 )
    {
-      ULONG lLen = _parnl(2);
+      long lLen = _parnl(2);
 
-      if( lLen > (ULONG)_parclen(1) )
+      if( lLen > (long)_parclen(1) )
       {
          char *szResult = (char *)_xgrab(lLen + 1);
-         ULONG lPos;
+         long lPos;
          char cPad;
 
          memcpy(szResult, szText, _parclen(1));
@@ -187,7 +187,7 @@ HARBOUR PADR( void )
          _xfree(szResult);
       }
       else
-         _retclen(szText, lLen);
+         _retclen(szText, (long)_parclen(1) );
    }
    else
       _retc("");
@@ -207,12 +207,12 @@ HARBOUR PADL( void )
 
    if( _pcount() > 1 )
    {
-      ULONG lLen = _parnl(2);
+      long lLen = _parnl(2);
 
-      if( lLen > (ULONG)_parclen(1) )
+      if( lLen > (long) _parclen(1) )
       {
          char *szResult = (char *)_xgrab(lLen + 1);
-         ULONG lPos = lLen - _parclen(1);
+         long lPos = lLen - _parclen(1);
          char cPad;
 
          memcpy(szResult + lPos, szText, _parclen(1));
@@ -228,7 +228,7 @@ HARBOUR PADL( void )
          _xfree(szResult);
       }
       else
-         _retclen(szText, lLen);
+         _retclen(szText, (long)_parclen(1) );
    }
    else
       _retc("");
@@ -242,13 +242,13 @@ HARBOUR PADC( void )
 
    if( _pcount() > 1 )
    {
-      ULONG lLen = _parnl(2);
+      long lLen = _parnl(2);
 
-      if( lLen > (ULONG)_parclen(1) )
+      if( lLen > (long) _parclen(1) )
       {
          char *szResult = (char *)_xgrab(lLen + 1);
          char cPad;
-         ULONG w, lPos = (lLen - _parclen(1)) / 2;
+         long w, lPos = (lLen - _parclen(1)) / 2;
 
          memcpy(szResult + lPos, szText, _parclen(1) + 1);
 
@@ -266,7 +266,7 @@ HARBOUR PADC( void )
          _xfree(szResult);
       }
       else
-         _retclen(szText, lLen);
+         _retclen(szText, (long)_parclen(1) );
    }
    else
       _retc("");

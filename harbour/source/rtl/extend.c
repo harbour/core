@@ -245,13 +245,13 @@ long _parnl( WORD wParam, ... )
          return 0;
 
       else if( IS_INTEGER( pItem ) )
-         return pItem->value.iNumber;
+         return (long) pItem->value.iNumber;
 
       else if( IS_LONG( pItem ) )
          return pItem->value.lNumber;
 
       else if( IS_DOUBLE( pItem ) )
-         return pItem->value.dNumber;
+         return (long) pItem->value.dNumber;
 
       else
          return 0;
