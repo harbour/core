@@ -838,7 +838,7 @@ static void hb_arrayNewRagged( PHB_ITEM pArray, int iDimension )
         aArray := ARRAY(3, {NIL,NIL})
 
  *  $SEEALSO$
- *     AADD(),     ADEL(),     AFILL(),     AINS()
+ *     AADD(),ADEL(),AFILL(),AINS()
  *  $INCLUDE$
  *     
  *  $END$
@@ -926,7 +926,7 @@ HARBOUR HB_ARRAY( void )
                                    // { 5, 10, { 12, 10 } }
  *     
  *  $SEEALSO$
- *     AINS(),     ASIZE()
+ *     AINS(),ASIZE()
  *  $INCLUDE$
  *     
  *  $END$
@@ -1519,7 +1519,7 @@ HARBOUR HB_AEVAL( void )
  *   subdimensions will be copied from one array to the next. This must
  *   be accomplished via the ACLONE() function.
  *
- *    ^bNote
+ *    ^b note
  *     If array <aSource> is larger then <aTarget>, array elements will
  *   start copying at <nTargetPos> and continue copying until the end of
  *   array <aTarget> is reached. The ACOPY() function doesn't append
@@ -1612,7 +1612,7 @@ HARBOUR HB_ACOPY( void )
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     ACOPY() ADEL(),AINS(),ASIZE()
+ *     ACOPY(),ADEL(),AINS(),ASIZE()
  *  $INCLUDE$
  *     
  *  $END$

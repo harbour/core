@@ -55,7 +55,7 @@
  *  $EXAMPLES$
  *
  *  $SEEALSO$
- *    ISOCTAL() ISDEC() ISHEXA()
+ *    ISOCTAL(), ISDEC(), ISHEXA()
  *  $INCLUDE$
  *
  *  $END$
@@ -95,7 +95,7 @@ FUNCTION IsBin(cString)
  *  $EXAMPLES$
  *
  *  $SEEALSO$
- *  ISBIN() ISDEC() ISHEXA()
+ *  ISBIN(), ISDEC(), ISHEXA()
  *  $INCLUDE$
  *
  *  $END$
@@ -133,7 +133,7 @@ FUNCTION IsOctal(cString)
  *  $EXAMPLES$
  *
  *  $SEEALSO$
- *  ISOCTAL() ISBIN() ISHEXA()
+ *  ISOCTAL(), ISBIN(), ISHEXA()
  *  $INCLUDE$
  *
  *  $END$
@@ -171,7 +171,7 @@ FUNCTION IsDec(cString)
  *  $EXAMPLES$
  *
  *  $SEEALSO$
- *  ISOCTAL() ISDEC() ISBIN()
+ *  ISOCTAL(), ISDEC(), ISBIN()
  *  $INCLUDE$
  *
  *  $END$

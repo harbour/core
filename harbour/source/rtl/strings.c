@@ -244,6 +244,38 @@ char * hb_strLTrim( const char * szText, ULONG * ulLen )
 
 /* trims leading spaces from a string */
 /* TEST: QOUT( "ltrim( '  hello world  ' ) = '" + ltrim( '  hello world  ' ) + "'" ) */
+/*  $DOC$
+ *  $FUNCNAME$
+ *     LTRIM()
+ *  $CATEGORY$
+ *     Strings   
+ *  $ONELINER$
+ *     Removes leading spaces from a string 
+ *  $SYNTAX$
+ *     LTRIM(<cString>)   --> <cReturn>
+ *  $ARGUMENTS$
+ *     <cString>  Character expression with leading spaces
+ *  $RETURNS$
+ *     <cReturn>  The same character expression with leading spaces removed
+ *  $DESCRIPTION$
+ *     This function trims the leading space blanl
+ *  $EXAMPLES$
+ *     ? QOUT( LTRIM("HELLO     "))
+ *  $TESTS$
+ *
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     This functions is CA-CLIPPER compatible
+ *  $PLATFORMS$
+ *
+ *  $FILES$
+ *
+ *  $SEEALSO$
+ *     TRIM(),RTRIM(),ALLTRIM()
+ *  $END$
+ */
+
 HARBOUR HB_LTRIM( void )
 {
    PHB_ITEM pText = hb_param( 1, IT_STRING );
@@ -648,6 +680,41 @@ HARBOUR HB_ASC( void )
 }
 
 /* returns the left-most n characters in string */
+/*  $DOC$
+ *  $FUNCNAME$
+ *     LEFT()
+ *  $CATEGORY$
+ *     Strings
+ *  $ONELINER$
+ *     Extract the leftmost substring of a character expression
+ *  $SYNTAX$
+ *     LEFT(<cString>,<nPos>) --> <cReturn>
+ *  $ARGUMENTS$
+ *      <cString> Main character to be parsed
+ *      <nPos>    Number of bytes to return beggining at the leftmost position
+ *  $RETURNS$
+ *      <cReturn>  Substring of evaluation
+ *  $DESCRIPTION$
+ *      This functions returns the leftmost <nPos> characters of <cString>.
+ *      It is equivalent to the following programing expression:
+ *          SUBSTR(<cString>,1,<nPos>
+ *  $EXAMPLES$
+ *    ? QOUT(LEFT('HELLO HARBOUR',5)
+ *  $TESTS$
+ *
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     This functions is CA CLIPPER compatible
+ *  $PLATFORMS$
+ *
+ *  $FILES$
+ *
+ *  $SEEALSO$
+ *     SUBSTR(),RIGHT(),AT(),RAT()
+ *  $END$
+ */
+
 HARBOUR HB_LEFT( void )
 {
    PHB_ITEM pText = hb_param( 1, IT_STRING );
@@ -677,6 +744,40 @@ HARBOUR HB_LEFT( void )
 }
 
 /* returns the right-most n characters in string */
+/*  $DOC$
+ *  $FUNCNAME$
+ *     RIGHT()
+ *  $CATEGORY$
+ *     Strings
+ *  $ONELINER$
+ *     Extract the rightmost substring of a character expression
+ *  $SYNTAX$
+ *     SUBSTR(<cString>,<nPos>) --> <cReturn>
+ *  $ARGUMENTS$
+ *      <cString> Character expression to be parsed
+ *      <nPos>    Number of bytes to return beggining at the rightmost position
+ *  $RETURNS$
+ *      <cReturn>  Substring of evaluation
+ *  $DESCRIPTION$
+ *      This functions returns the rightmost <nPos> characters of <cString>.
+ *
+ *  $EXAMPLES$
+ *    ? QOUT(RIGHT('HELLO HARBOUR',5)
+ *  $TESTS$
+ *
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     This functions is CA CLIPPER compatible
+ *  $PLATFORMS$
+ *
+ *  $FILES$
+ *
+ *  $SEEALSO$
+ *     SUBSTR(),LEFT(),AT(),RAT()
+ *  $END$
+ */
+
 HARBOUR HB_RIGHT( void )
 {
    PHB_ITEM pText = hb_param( 1, IT_STRING );
@@ -701,6 +802,55 @@ HARBOUR HB_RIGHT( void )
 }
 
 /* returns l characters from n characters into string */
+/*  $DOC$
+ *  $FUNCNAME$
+ *     SUBSTR()
+ *  $CATEGORY$
+ *     Strings
+ *  $ONELINER$
+ *     Returns a substring from a main string
+ *  $SYNTAX$
+ *     SUBSTR(<cString>,<nStart>[,<nLen>)] --> <cReturn>
+ *  $ARGUMENTS$
+ *     <cString> Character expression to be parsed
+ *     <nStart>  Start position
+ *     <nLen>    Number of characters to return 
+ *  $RETURNS$
+ *     <cReturn>  Substring of evaluation
+ *  $DESCRIPTION$
+ *     This functions returns a character string formed from <cString>,
+ *     starting at the position of <nStart> and continuing on for a
+ *     lenght of <nLen> characters. If <nLen> is not specified, the value
+ *     will be all remaining characters from the position of <nStart>.
+ *     The value of <nStart> may be negative. If it is, the direction of
+ *     operation is reversed from a default of left-to-right to right-to-left
+ *     for the number of characters specified in <nStart>.
+ *     
+ *
+ *  $EXAMPLES$
+ *     FUNCTION MAIN()
+ *     LOCAL X:=REPLICATE('ABCD',70000)
+ *
+ *     ? QOUT(SUBSTR(X,65519,200)
+ *
+ *     RETURN NIL
+ *  $TESTS$
+ *     ? QOUT(SUBSTR('HELLO HARBOUR',5)
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     This functions is CA CLIPPER compatible with the execption that
+ *     CA CLIPPER will generate an error if the passed string is >65519 bytes.
+ *     Harbour Not.
+ *  $PLATFORMS$
+ *
+ *  $FILES$
+ *
+ *  $SEEALSO$
+ *     LEFT(),AT(),RIGHT()
+ *  $END$
+ */
+
 HARBOUR HB_SUBSTR( void )
 {
    PHB_ITEM pText = hb_param( 1, IT_STRING );

@@ -142,7 +142,7 @@ HARBOUR HB_PROCNAME( void )
  *  $COMPLIANCE$
  *      PROCLINE() is fully CA-Clipper compliant.
  *  $SEEALSO$
- *      PROCNAME() PROCFILE()
+ *      PROCNAME(),PROCFILE()
  *  $END$
  */
 
@@ -189,7 +189,7 @@ HARBOUR HB_PROCLINE( void )
  *  $COMPLIANCE$
  *      PROCFILE() is fully CA-Clipper compliant.
  *  $SEEALSO$
- *      PROCNAME() PROCLINE()
+ *      PROCNAME(),PROCLINE()
  *  $END$
  */
 

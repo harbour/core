@@ -33,6 +33,9 @@
  *              Output files names are in lower case to Linux Compatibility
  *
  *    1/13/2000  Added the link for the  HARBOUR GPL LICENSE
+ *    1/14/2000  Fixed a bug on generating the HTML file
+ *    1/15/2000  Strip out the  for Norton guides controls characters
+ *               when generating HTML and RTF output 
  */
 
 /*
@@ -918,8 +921,6 @@ FOR i=1 TO nFiles
 							FWRITE(nWriteHandle,CRLF)
 							lAddBlank=.F.
 						ENDIF
-						nNonBlank:=FirstNB(cBuffer)
-						cBuffer=STUFF(cBuffer,nNonBlank,0,"^a1f ")
 						FWRITE(nWriteHandle,cBuffer+CRLF)
 					ELSEIF nMode=D_ARG
 						IF LEN(cBuffer)>LONGLINE
@@ -944,7 +945,7 @@ FOR i=1 TO nFiles
 							FWRITE(nWriteHandle,CRLF)
 							lAddBlank=.F.
 						ENDIF
-						FWRITE(nWriteHandle,cBuffer+CRLF)
+                  FWRITE(nWriteHandle,StripNgControls(cBuffer)+CRLF)
 					ELSEIF nMode=D_SEEALSO
 						IF .NOT.EMPTY(cBuffer)
                                    cSeeAlso=StripFiles(ALLTRIM(cBuffer))
@@ -964,7 +965,7 @@ FOR i=1 TO nFiles
                          FWRITE(nWriteHandle," Status"+CRLF)
                          fwrite(nWriteHandle,".endpar"+CRLF)
                          Endif
-                         ProcStatus(nWriteHandle,cBuffer)
+                         ProcStatus(nWriteHandle,StripNgControls(cBuffer))
                                           
 
 					ELSE
@@ -2231,9 +2232,9 @@ FOR i=1 TO nFiles
                                    oRtf:WritePar(""):EndPar()
 							lAddBlank=.F.
 						ENDIF
-						nNonBlank:=FirstNB(cBuffer)
+              /*    nNonBlank:=FirstNB(cBuffer)
 						cBuffer=STUFF(cBuffer,nNonBlank,0,"^a1f ")
-                              oRtf:WritePar(cBuffer):EndPar()
+                              oRtf:WritePar(cBuffer):EndPar()*/
 					ELSEIF nMode=D_ARG
 						IF LEN(cBuffer)>LONGLINE
 							write_error("Arguments",cBuffer,nLineCnt,;
@@ -2246,7 +2247,7 @@ FOR i=1 TO nFiles
 						ENDIF
                               cBuffer=STRTRAN(cBuffer,"<","<",1)
                               cBuffer=STRTRAN(cBuffer,">",">",1)
-                              oRtf:WritePar(cBuffer):EndPar()
+                              oRtf:WritePar( StripNgControls(cBuffer) ):EndPar()
 					ELSEIF nMode=D_NORMAL
 						IF LEN(cBuffer)>LONGLINE
 							write_error("General",cBuffer,nLineCnt,;
@@ -2257,7 +2258,7 @@ FOR i=1 TO nFiles
                                    oRtf:WritePar(""):EndPar()
 							lAddBlank=.F.
 						ENDIF
-                              oRtf:WritePar(cBuffer):EndPar()
+                              oRtf:WritePar(StripNgControls(cBuffer)):EndPar()
 					ELSEIF nMode=D_SEEALSO
 						IF .NOT.EMPTY(cBuffer)
                                    cSeeAlso=StripFiles(ALLTRIM(cBuffer))
@@ -2731,7 +2732,7 @@ FOR i=1 TO nFiles
                                    oHtm:WritePar("")
 							lAddBlank=.F.
 						ENDIF
-                              oHtm:WritePar(cBuffer)
+                              oHtm:WritePar(StripNgControls(cBuffer))
 					ELSEIF nMode=D_SEEALSO
 						IF .NOT.EMPTY(cBuffer)
                                    cSeeAlso=StripFiles(ALLTRIM(cBuffer))
@@ -2785,7 +2786,6 @@ RETURN ctemp
 *           cSeeAlso   String of all see alsos
 * Return    NIL
 */
-
 
 FUNCTION ProcWwwAlso(nWriteHandle,cSeeAlso)
 LOCAL nPos,cTemp:='',nLen,xPos,tPos
@@ -2857,3 +2857,50 @@ ELse
      nWriteHandle:WritePar("   Not Started")
 endif
 return nil
+
+
+
+FUNCTION StripNgControls(cString)
+LOCAL nPos,lStriped:=.f.
+
+nPos:=AT("^b",cString)
+IF nPos>0
+   cString:=substr(cString,nPos+3)
+   lStriped:=.t.
+ELSE
+   IF !lStriped
+      cString:=cString
+   ENDIF     
+ENDIF
+
+nPos:=AT("^b^",cString)
+IF nPos>0
+   cString:=substr(cString,1,nPos-1)
+   lStriped:=.t.
+ELSE
+   IF !lStriped
+      cString:=cString
+   ENDIF    
+ENDIF
+
+nPos:=AT("^CFE",cString)
+IF nPos>0
+   cString:=substr(cString,nPos+5)
+   lStriped:=.t.
+ELSE  
+   IF !lStriped
+      cString:=cString
+   ENDIF
+ENDIF
+
+nPos:=AT("^a1f",cString)
+IF nPos>0
+   cString:=substr(cString,nPos+5)
+   lStriped:=.t.
+ELSE
+   IF !lStriped
+      cString:=cString
+   ENDIF
+ENDIF
+
+RETURN cString

@@ -285,7 +285,7 @@ return aReturn
  *  $COMPLIANCE$
  *      HB_SETKEYCHECK() is new.
  *  $SEEALSO$
- *      SETKEY()  HB_SETKEYSAVE()
+ *      SETKEY(),HB_SETKEYSAVE()
  *  $END$
  */
 Function HB_SetKeyCheck( nKey, p1, p2, p3 )

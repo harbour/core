@@ -114,6 +114,7 @@
  *      ENDIF
  *  $TESTS$
  *  $STATUS$
+ *     R     
  *  $COMPLIANCE$
  *      <aName> is going to be fill with long file name and not necessarily
  *      the 8.3 uppercase name.

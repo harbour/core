@@ -106,9 +106,9 @@
  *  $ARGUMENTS$
  *
  *  $RETURNS$
-       <cOperatinSystem>  -> The Current operating system
+ *     <cOperatinSystem>  -> The Current operating system
  *  $DESCRIPTION$
-        This function will return the current operating system
+ *      This function will return the current operating system
  *  $EXAMPLES$
  *      ? OS()
  *
@@ -527,12 +527,91 @@ char * hb_version( USHORT uiMode )
    return pszVersion;
 }
 
+/*  $DOC$
+ *  $FUNCNAME$
+ *     VERSION()
+ *  $CATEGORY$
+ *     Environment
+ *  $ONELINER$
+ *     Returns the HARBOUR Version or the Harbour/Compiler Version
+ *  $SYNTAX$
+ *     VERSION([<nMode>]  --> <cReturn>
+ *  $ARGUMENTS$
+ *     [<nMode>]   Optional Parameter that toggle to the display
+ *     of the C compiler version that HARBOUR was Build. Default is 0
+ *
+ *    [<nMode>]              Returns
+ *        0                  Harbour Version
+ *        1                  Harbour Version+C compiler Version
+ *  $RETURNS$
+ *    <cReturn>   String contining the Harbour Version or the
+ *     Harbour Version+C compiler Version when the <nMode> parameter is defined
+ *  $DESCRIPTION$
+ *     This function returns the HARBOUR Version or the Harbour Version+C compiler Version
+ *     used to create the Harbour runtime library 
+ *  $EXAMPLES$
+ *     ? QOUT(VERSION())
+ *     ? OOUT(VERSION(1))
+ *  $TESTS$
+ *
+ *  $STATUS$
+ *     S
+ *  $COMPLIANCE$
+ *     This function isn't compatible with CA CLIPPER.
+ *     CA  Clipper only returns the Version of the Clipper Compiler
+ *     Harbour returns the Harbour Version or the Harbour Version+C compiler Version
+ *     when the <nMode> parameter is set to 1
+ *  $PLATFORMS$
+ *
+ *  $FILES$
+ *    source/rtl/environ.c
+ *  $SEEALSO$
+ *    OS()
+ *  $END$
+ */
+
 HARBOUR HB_VERSION( void )
 {
    char * pszVersion = hb_version( hb_pcount() > 0 ? 1 : 0 );
    hb_retc( pszVersion );
    hb_xfree( pszVersion );
 }
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *     GETENV()
+ *  $CATEGORY$
+ *      Environment
+ *  $ONELINER$
+ *      Obtains DOS system environmental settings
+ *  $SYNTAX$
+ *      GETENV(<cEnviroment>)  --> <cReturn>
+ *  $ARGUMENTS$
+ *      <cEnviroment> Enviromental variable to obtain
+ *  $RETURNS$
+ *      <cReturn>     Value of the Variable
+ *  $DESCRIPTION$
+ *      This function yields a string that is the value of the
+ *      environmental variable <cEnviroment>, witch is stored at the
+ *      level with the Set command. If no environmental variable
+ *      can be found, the value of the function will be a empty string.
+ *  $EXAMPLES$
+ *      ? QOUT(GETENV('PATH'))
+        ? QOUT(GETENV('CONFIG'))
+ *  $TESTS$
+ *
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This functions is CA-CLIPPER compilant
+ *  $PLATFORMS$
+ *
+ *  $FILES$
+ *     source/rtl/environ.c
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
 
 HARBOUR HB_GETENV( void )
 {
@@ -573,7 +652,6 @@ HARBOUR HB_GETE( void )
  *      __RUN( <cCommand> )
  *  $CATEGORY$
  *      DOS
- *
  *  $ARGUMENTS$
  *      <cCommand> Command to execute
  *  $DESCRIPTION$

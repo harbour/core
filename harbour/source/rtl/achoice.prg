@@ -23,7 +23,6 @@
  *      ACHOICE()
  *  $CATEGORY$
  *      Array
- *
  *  $ONELINER$
  *      Allows selection of an element from an array
  *  $SYNTAX$

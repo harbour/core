@@ -40,7 +40,7 @@ harbour.lib : achoice.obj adir.obj alert.obj arrays.obj \
               maindll.obj mainstd.obj mainwin.obj math.obj \
               mathx.obj memofile.obj memoline.obj memvars.obj \
               memvarbl.obj menuto.obj mlcount.obj mtran.obj msgen.obj \
-              natmsg.obj net.obj objfunc.obj oldbox.obj oldclear.obj \
+              natmsg.obj net.obj objfunc.obj oldbox.obj oldclear.obj oemansi.obj\
               pcount.obj proc.obj pvalue.obj readvar.obj readkey.obj \
               samples.obj set.obj setta.obj setcolor.obj \
               setkey.obj setta.obj soundex.obj strfmt.obj \
@@ -123,6 +123,7 @@ mtran.obj    : mtran.c    extend.h hbdefs.h
 natmsg.obj   : natmsg.c   extend.h hbdefs.h
 net.obj      : net.c      extend.h hbdefs.h
 objfunc.obj  : objfunc.c  extend.h hbdefs.h
+oemansi.obj  : oemansi.c  extend.h hbdefs.h
 oldbox.obj   : oldbox.c   extend.h hbdefs.h
 oldclear.obj : oldclear.c extend.h hbdefs.h
 pcount.obj   : pcount.c   extend.h hbdefs.h
@@ -199,7 +200,7 @@ xsavescr.c   : xsavescr.prg  harbour.exe
   bin\harbour $< /n /osource\rtl\ /iinclude
 
 .c.obj:
-  bcc32 $(BCC_OPT) -c -Iinclude;source\macro -o$@ -DHARBOUR_USE_WIN_GTAPI $<
+  bcc32 $(BCC_OPT) -c -Iinclude;source\macro -o$@ -DHARBOUR_USE_WIN_GTAPI -DHB_COMPAT_C53 $<
   tlib lib\b32\harbour.lib -+$@,,
 
 harbour.exe : cmdcheck.c harboury.c harbourl.c hbfunchk.c hbgenerr.c hbpcode.c \

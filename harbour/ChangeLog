@@ -1,3 +1,28 @@
+20000115-20:3  GMT+3 Luiz Rafael Culik <culik@sl.conex.net>
+    *source/rtl/arrays.c
+    *source/rtl/type.c
+    *source/rtl/text.prg
+    *source/rtl/inkey.c
+    *source/rtl/setkey.prg
+    *source/rtl/proc.c
+    *source/rtl/adir.prg
+    *source/rtl/dircmd.prg
+    *source/rtl/asort.prg
+    *source/rtl/achoice.prg
+    *source/rtl/alert.prg
+    *source/rtl/Objfunc.prg
+    *source/rdd/dbcmd.c
+        *Fixed some seealso's reference that was missing the comma separator
+    *Source/rtl/strings.c
+        *Added document to : SUBSTR(),LEFT(),RIGHT(),LTRIM functions
+   *Source/rtl/Environ.c
+        *Added document to : VERSION() and GETENV() function
+   *ngdoc/ft_helpc.prg
+        *Fixed a bug on  generating see alsos for HTML output
+   *Source/tools/rtf.prg
+        *All topics now start with the 'IDH_' prefix
+
+
 20000115-19:35 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/macro/macro.l

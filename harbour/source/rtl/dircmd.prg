@@ -153,7 +153,7 @@
  *      CA-Clipper use 8.3 file name, with Harbour it would probably cut
  *      long file names to feet this template.
  *  $SEEALSO$
- *      ADIR(),DIRECTORY(),SET DEFAULT,__DIR()
+ *      ADIR(),DIRECTORY(),SET DEFAULT,__DIR()*
  *  $END$
  */
 

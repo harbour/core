@@ -79,7 +79,7 @@ STATIC s_cOldExtraFile
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
- *      envirom.ngo:SET()  'SET ALTERNATE' 'SET PRINTER' 'TEXT' __TextRestore()
+ *      SET(),SET ALTERNATE,SET PRINTER,TEXT,__TextRestore()
  *  $END$
  */
 
@@ -121,7 +121,7 @@ PROCEDURE __TextSave( cFile )
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
- *      envirom.ngo:SET()  'SET ALTERNATE' 'SET PRINTER' 'TEXT' __TextSave()
+ *      SET(),SET ALTERNATE,SET PRINTER,TEXT,__TextSave()
  *  $END$
  */
 

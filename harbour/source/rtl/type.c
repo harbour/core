@@ -57,7 +57,7 @@
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
- *      TYPE() is 
+ *      
  *  $SEEALSO$
  *      VALTYPE()
  *  $END$

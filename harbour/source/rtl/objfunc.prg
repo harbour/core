@@ -82,7 +82,7 @@
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
- *      __ObjGetMethodLis,__objGetMsgList(),__objHasMethod()
+ *      __ObjGetMethodList(),__objGetMsgList(),__objHasMethod()
  *  $END$
  */
 
@@ -127,7 +127,7 @@ return __objHasMsg( oObject, cSymbol ) .and. ;
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
- *      __ObjGetMethodLis,__objGetMsgList(),__objHasData()
+ *      __ObjGetMethodList(),__objGetMsgList(),__objHasData()
  *  $END$
  */
 
@@ -184,7 +184,7 @@ return __objHasMsg( oObject, cSymbol ) .and. ;
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
- *      __ObjGetMethodLis,__ObjGetValueList,__objHasData(),__objHasMethod()
+ *      __ObjGetMethodList(),__ObjGetValueList,__objHasData(),__objHasMethod()
  *  $END$
  */
 
@@ -260,7 +260,7 @@ return aData
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
- *      __objGetMsgList(),__ObjGetValueList,__objHasData(),__objHasMethod()
+ *      __objGetMsgList(),__ObjGetValueList(),__objHasData(),__objHasMethod()
  *  $END$
  */
 
@@ -312,7 +312,7 @@ return __objGetMsgList( oObject, .F. )
  *  $FILES$
  *      Header file is hboo.ch
  *  $SEEALSO$
- *      __ObjGetMethodLis,__objGetMsgList(),__objHasData(),__objHasMethod(),__ObjSetValueList
+ *      __ObjGetMethodList(),__objGetMsgList(),__objHasData(),__objHasMethod(),__ObjSetValueList()
  *  $END$
  */
 
@@ -392,7 +392,7 @@ return aData
  *  $FILES$
  *      Header file is hboo.ch
  *  $SEEALSO$
- *      __ObjGetValueList
+ *      __ObjGetValueList()
  *  $END$
  */
 
@@ -457,7 +457,7 @@ return oObject
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
- *      __objAddInline(),__objAddData(),__objDelMethod(),__ObjGetMethodLis,__objGetMsgList(),__objHasMethod(),__objModMethod()
+ *      __objAddInline(),__objAddData(),__objDelMethod(),__ObjGetMethodList(),__objGetMsgList(),__objHasMethod(),__objModMethod()
  *  $END$
  */
 
@@ -514,7 +514,7 @@ return oObject
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
- *      __objAddData(),__objAddMethod(),__objDelInline(),__ObjGetMethodLis,__objGetMsgList(),__objHasMethod() ,__objModInline()
+ *      __objAddData(),__objAddMethod(),__objDelInline(),__ObjGetMethodList(),__objGetMsgList(),__objHasMethod() ,__objModInline()
  *  $END$
  */
 
@@ -569,7 +569,7 @@ return oObject
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
- *      __objAddInline(),__objAddMethod(),__objDelData(),__objGetMsgList(),__ObjGetValueList,__objHasData()   ,__ObjSetValueList
+ *      __objAddInline(),__objAddMethod(),__objDelData(),__objGetMsgList(),__ObjGetValueList(),__objHasData()   ,__ObjSetValueList()
  *  $END$
  */
 
@@ -658,7 +658,7 @@ return oObject
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
- *      __objAddMethod(),__objDelMethod(),__ObjGetMethodLis,__objGetMsgList(),__objHasMethod()
+ *      __objAddMethod(),__objDelMethod(),__ObjGetMethodList(),__objGetMsgList(),__objHasMethod()
  *  $END$
  */
 
@@ -720,7 +720,7 @@ return oObject
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
- *      __objAddInline(),__objDelInline(),__ObjGetMethodLis,__objGetMsgList(),__objHasMethod()
+ *      __objAddInline(),__objDelInline(),__ObjGetMethodList(),__objGetMsgList(),__objHasMethod()
  *  $END$
  */
 
@@ -789,7 +789,7 @@ return oObject
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
- *      __objAddInline()  __objAddMethod()  __ObjGetMethodLis  __objGetMsgList()  __objHasMethod()  __objModInline() __objModMethod()
+ *      __objAddInline(),__objAddMethod(),__ObjGetMethodList(),__objGetMsgList(),__objHasMethod(),__objModInline(),__objModMethod()
  *  $END$
  */
 
@@ -854,7 +854,7 @@ return oObject
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
- *      __objAddInline(),__objAddMethod(),__ObjGetMethodLis,__objGetMsgList(),__objHasMethod(),__objModInline() __objModMethod()
+ *      __objAddInline(),__objAddMethod(),__ObjGetMethodList(),__objGetMsgList(),__objHasMethod(),__objModInline(),__objModMethod()
  *  $END$
  */
 
@@ -896,7 +896,7 @@ return __objDelMethod( oObject, cSymbol )              // Same story
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
- *    __objAddData(),__objGetMsgList(),__ObjGetValueList,__objHasData(),__ObjSetValueList
+ *    __objAddData(),__objGetMsgList(),__ObjGetValueList(),__objHasData(),__ObjSetValueList()
  *  $END$
  */
 

@@ -99,6 +99,7 @@
  *     // result: { {"Wed",-6}, {"Mon",1}, {"Sun",8}, {"Tue",57} }
  *  $TESTS$
  *  $STATUS$
+ *     R
  *  $COMPLIANCE$
  *      For speed we are checking the return type of the passed code block.
  *      This will result in a small incompatibility since the code block

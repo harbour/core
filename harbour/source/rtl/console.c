@@ -215,7 +215,7 @@ char * hb_consoleGetNewLine( void )
  *  $COMPLIANCE$
  *      This is an add-on Operating System Tool function.
  *  $SEEALSO$
- *      dos.ngo:OS()  OUTSTD()  OUTERR()
+ *      dos.ngo:OS(),OUTSTD(),OUTERR()
  *  $END$
  */
 

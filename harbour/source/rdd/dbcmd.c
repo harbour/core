@@ -5815,7 +5815,7 @@ HARBOUR HB_LUPDATE( void )
  *  $COMPLIANCE$
  *
  *  $SEEALSO$
- *     FLOCK() RLOCK()
+ *     FLOCK(),RLOCK()
  *  $INCLUDE$
  *     
  *  $END$
