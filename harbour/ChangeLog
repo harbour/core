@@ -1546,11 +1546,11 @@ May 31, 1999 Ron Pinkas
         Added "Sysntax error :" message for the macro operator (&)
         when followed by a string delimiter.
 
+June 1st. 1999 00:30 Ron Pinkas
+        Harbour.y -> modified pcode generation to move the push of the counter variable to the NEXT rather than the FOR
+        so loop code may manipulate the counter vaiable.
 
-
-
-
-
+        TEST/WORKING/TestFor.prg -> added this file
    * source/pp/pragma.c
    * contrib/dot/pp_harb.ch
    * tests/inline_c.prg

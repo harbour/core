@@ -181,7 +181,7 @@ static procedure Commit()
                fwrite(hFile, ::Contents[i][2][j][1] + '=' +;
                       ::Contents[i][2][j][2] + Chr(13) + Chr(10))
             endif
-         next j
+         next //j
          fwrite(hFile, Chr(13) + Chr(10))
 
       elseif ValType(::Contents[i][2]) == 'C'
@@ -189,8 +189,8 @@ static procedure Commit()
                        Chr(10))
 
       endif
-   next i
+   next //i
    fclose(hFile)
 return
 
- 
+

@@ -842,7 +842,7 @@ EndCase    : ENDCASE              { --_wCaseCounter; }
            | END                  { --_wCaseCounter; }
            ;
 
-DoCaseBegin : DOCASE { ++_wCaseCounter; } Crlf         
+DoCaseBegin : DOCASE { ++_wCaseCounter; } Crlf
            ;
 
 Cases      : CASE Expression Crlf { $<iNumber>$ = JumpFalse( 0 ); Line(); } CaseStmts { $$ = GenElseIf( 0, Jump( 0 ) ); JumpHere( $<iNumber>4 ); Line(); }
@@ -878,8 +878,8 @@ EndWhile   : END
 
 ForNext    : FOR IDENTIFIER ForAssign Expression { PopId( $2 ); $<iNumber>$ = functions.pLast->lPCodePos; ++_wForCounter; }
              TO Expression                       { PushId( $2 ); }
-             StepExpr Crlf                       { GenPCode1( _FORTEST ); $<iNumber>$ = JumpTrue( 0 ); PushId( $2 ); }
-             ForStatements                       { GenPCode1( _PLUS ); PopId( $2 ); Jump( $<iNumber>5 - functions.pLast->lPCodePos ); JumpHere( $<iNumber>11 ); }
+             StepExpr Crlf                       { GenPCode1( _FORTEST ); $<iNumber>$ = JumpTrue( 0 ); /*PushId( $2 )*/; }
+             ForStatements                       { PushId( $2 ); GenPCode1( _PLUS ); PopId( $2 ); Jump( $<iNumber>5 - functions.pLast->lPCodePos ); JumpHere( $<iNumber>11 ); }
            ;
 
 ForAssign  : '='
