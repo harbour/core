@@ -32,6 +32,8 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
    their web site at http://www.gnu.org/).
 
+   V 1.5    David G. Holm               Bumped revision code to "b" and
+                                        changed date for public release.
    V 1.4    David G. Holm               Bumped revision code to "a" and
                                         set date for public OS/2 build.
    V 1.3    ?
@@ -77,10 +79,10 @@ extern int    hb_day;
 
 #define hb_major     0       /* Major version number */
 #define hb_minor     0       /* Minor version number */
-#define hb_revision  "a"     /* Revision letter */
+#define hb_revision  "b"     /* Revision letter */
 #define hb_build     29      /* Build number */
 #define hb_year      1999    /* Build year */
-#define hb_month     8       /* Build month */
-#define hb_day       12      /* Build day */
+#define hb_month     9       /* Build month */
+#define hb_day       04      /* Build day */
 
 #endif /* HB_VER_H_ */

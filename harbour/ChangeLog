@@ -1,3 +1,10 @@
+19990904-23:35 EDT David G. Holm <dholm@jsd-llc.com>
+  * include/hbver.h
+    * Bumped revision from "a" to "b".
+    * Changed date to 1999.09.04
+  * source/rtl/filesys.c
+    ! Borland needs "direct.h".
+
 19990904-20:35 EDT David G. Holm <dholm@jsd-llc.com>
   * include/filesys.h
     + Added hb_fsFile().

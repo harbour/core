@@ -87,9 +87,8 @@
    #include <io.h>
    #include <fcntl.h>
    #include <share.h>
-   #if defined(__IBMCPP__) || defined(_MSC_VER)
-      #include <direct.h>
-   #else
+   #include <direct.h>
+   #if defined(__BORLANDC__)
       #include <dir.h>
    #endif
 
