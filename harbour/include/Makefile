@@ -23,7 +23,6 @@ C_HEADERS=\
 	version.h \
 
 PRG_HEADERS=\
-	cgi.ch \
 	error.ch \
 	fileio.ch \
 	inkey.ch \

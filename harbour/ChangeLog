@@ -1,3 +1,11 @@
+Mon Jun 21 12:14:15 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* include/Makefile: 
+	Got rid of cgi.ch.
+	
+	* source/compiler/Makefile: 
+	Got rid of all ^M characters.
+
 19990621-13:27 CET Victor Szel <info@szelvesz.hu>
   * source/compiler/harbour.y
     GCC warning fixed.
