@@ -276,13 +276,11 @@ void hb_xfree( void * pMem )            /* frees fixed memory */
 {
 #ifdef HB_FM_STATISTICS
 
-   PHB_MEMINFO pMemBlock;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_xfree(%p)", pMem));
 
    if( pMem )
    {
-      pMemBlock = ( PHB_MEMINFO ) ( ( char * ) pMem - sizeof( HB_MEMINFO ) );
+      PHB_MEMINFO pMemBlock = ( PHB_MEMINFO ) ( ( char * ) pMem - sizeof( HB_MEMINFO ) );
 
       if( pMemBlock->ulSignature != HB_MEMINFO_SIGNATURE )
          hb_errInternal( 9999, "hb_xfree called with an invalid pointer", NULL, NULL );
