@@ -1,3 +1,8 @@
+20000303-02:06 GMT+1 Victor Szakats <info@szelvesz.hu>
+   + tests/regress/rt_init.ch
+   + tests/regress/rt_vars.ch
+     + Added.
+
 2000-03-02 15:10 GMT-5 David G. Holm <dholm@ sd-llc.com>
    * compiler/Makefile
    * macro/Makefile
