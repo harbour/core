@@ -315,6 +315,8 @@ static ULONG hb_hrbFindSymbol( char * szName, PHB_DYNF pDynFunc, ULONG ulLoaded 
 {
    ULONG ulRet;
 
+   HB_TRACE(("hb_hrbFindSymbol(%s, %p, %lu)", szName, pDynFunc, ulLoaded));
+   
    if( ( s_ulSymEntry < ulLoaded ) &&             /* Is it a normal list ?    */
        !strcmp( szName, pDynFunc[ s_ulSymEntry ].szName ) )
       ulRet = s_ulSymEntry++;
@@ -344,9 +346,10 @@ static char * hb_hrbFileReadId( FILE * file, char * szFileName )
    char * szTemp;                                /* Temporary buffer         */
    char * szIdx;
    char * szRet;
-
    BOOL  bCont = TRUE;
 
+   HB_TRACE(("hb_hrbFileReadId(%p, %s)", file, szFileName));
+   
    szTemp = ( char * ) hb_xgrab( 256 );
    szIdx  = szTemp;
    do
@@ -370,6 +373,8 @@ static BYTE hb_hrbFileReadByte( FILE * file, char * szFileName )
 {
    BYTE bRet;
 
+   HB_TRACE(("hb_hrbFileReadByte(%p, %s)", file, szFileName));
+   
    hb_hrbFileRead( file, szFileName, ( char * ) &bRet, 1, 1 );
 
    return bRet;
@@ -380,6 +385,8 @@ static long hb_hrbFileReadLong( FILE * file, char * szFileName )
 {
    char cLong[ 4 ];                               /* Temporary long           */
 
+   HB_TRACE(("hb_hrbFileReadLong(%p, %s)", file, szFileName));
+   
    hb_hrbFileRead( file, szFileName, cLong, 4, 1 );
 
    if( cLong[ 3 ] )                             /* Convert to long if ok    */
@@ -399,6 +406,8 @@ static long hb_hrbFileReadLong( FILE * file, char * szFileName )
     Controlled read from file. If errornous -> Break */
 static void hb_hrbFileRead( FILE * file, char * szFileName, char * cBuffer, int iSize, int iCount )
 {
+   HB_TRACE(("hb_hrbFileRead(%p, %s, %p, %d, %d)", file, szFileName, cBuffer, iSize, iCount));
+   
    if( iCount != ( int ) fread( cBuffer, iSize, iCount, file ) )
       hb_errRT_BASE_Ext1( EG_READ, 9999, NULL, szFileName, 0, EF_NONE );
 }
@@ -408,6 +417,8 @@ static void hb_hrbFileRead( FILE * file, char * szFileName, char * cBuffer, int 
     Open an .HRB file  */
 static FILE * hb_hrbFileOpen( char * szFileName )
 {
+   HB_TRACE(("hb_hrbFileOpen(%s)", szFileName));
+   
    return fopen( szFileName, "rb" );
 }
 
@@ -416,6 +427,8 @@ static FILE * hb_hrbFileOpen( char * szFileName )
     Close an .HRB file  */
 static void hb_hrbFileClose( FILE * file )
 {
+   HB_TRACE(("hb_hrbFileClose(%p)", file));
+   
    fclose( file );
 }
 
@@ -437,8 +450,11 @@ static void hb_hrbFileClose( FILE * file )
 */
 static PASM_CALL hb_hrbAsmCreateFun( PHB_SYMB pSymbols, BYTE * pCode )
 {
-   PASM_CALL asmRet = ( PASM_CALL ) hb_xgrab( sizeof( ASM_CALL ) );
+   PASM_CALL asmRet;
 
+   HB_TRACE(("hb_hrbAsmCreateFun(%p, %p)", pSymbols, pCode));
+   
+   asmRet = ( PASM_CALL ) hb_xgrab( sizeof( ASM_CALL ) );
    asmRet->pAsmData = ( BYTE * ) hb_xgrab( sizeof( prgFunction ) );
    memcpy( asmRet->pAsmData, prgFunction, sizeof( prgFunction ) );
                                               /* Copy new assembler code in */
@@ -459,6 +475,8 @@ static PASM_CALL hb_hrbAsmCreateFun( PHB_SYMB pSymbols, BYTE * pCode )
 /* Patch an address of the dynamic function */
 static void hb_hrbAsmPatch( BYTE * pCode, ULONG ulOffset, void * Address )
 {
+   HB_TRACE(("hb_hrbAsmPatch(%p, %lu, %p)", pCode, ulOffset, Address));
+   
 /* #if 32 bits and low byte first */
 
    pCode[ ulOffset     ] = ( ( ULONG ) Address       ) & 0xFF;
@@ -477,10 +495,15 @@ static void hb_hrbAsmPatch( BYTE * pCode, ULONG ulOffset, void * Address )
 static void hb_hrbAsmPatchRelative( BYTE * pCode, ULONG ulOffset,
                                     void * Address, ULONG ulNext )
 {
+   ULONG ulBase;
+   ULONG ulRelative;
+
+   HB_TRACE(("hb_hrbAsmPatchRelative(%p, %lu, %p, %lu)", pCode, ulOffset, Address, ulNext));
+   
 /* #if 32 bits and low byte first */
-   ULONG ulBase = ( ULONG ) pCode + ulNext;
+   ulBase = ( ULONG ) pCode + ulNext;
                                 /* Relative to next instruction */
-   ULONG ulRelative = ( ULONG ) Address - ulBase;
+   ulRelative = ( ULONG ) Address - ulBase;
 
    pCode[ ulOffset     ] = ( ulRelative       ) & 0xFF;
    pCode[ ulOffset + 1 ] = ( ulRelative >>  8 ) & 0xFF;

@@ -1,3 +1,8 @@
+Tue Oct 26 13:20:46 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* source/runner/runlib.c: 
+	Added HB_TRACE() calls to the RUNNER library.
+
 19991026-18:10 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/gt/gtwin.c
     + Ctrl+Break handler added for Win32 console mode, now Ctrl+Break will not
