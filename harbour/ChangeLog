@@ -7,6 +7,22 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+       utils/hbdoc/ffile1.prg and contrib/htmllib/ofile.prg
+
+     . phisically extract public functions to a separate file since they
+       are written in the body of the main function but required by other
+       functions. Example: WRITE_ERROR in utils/hbdoc/hbdoc.prg which is
+       required by utils/hbdoc/genasc.prg. Consequently, I have locally
+       created docfunc.prg which contains WRITE_ERROR(), StripFiles() and
+       StripNgControls() extracted from utils/hbdoc/hbdoc.prg.
+
+   + hrbdll.bc
+
+   + hrbdll.vc
+
+   * include/hbdefs.h
+     ! Add argument to HB_EXPORT definition so that public functions will
+       be exported upon explicit request only. Examples:
         BCC  : makefile.bc => C_USR = __EXPORT__
         MsVC : makefile.vc =>    --ditto--
 

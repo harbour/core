@@ -20,6 +20,6 @@ PRG_SOURCES=\
 	stringp.prg \
 	twirler.prg \
 
-LIBNAME=libmisc
+LIBNAME=misc
 
 include $(TOP)$(ROOT)config/lib.cf
