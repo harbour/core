@@ -149,7 +149,6 @@ return cResult
 
 
 
-
 METHOD TranslateFile( cFile, lWritePPO, cPPOExt, lWasteNoSpace ) CLASS TPreprocessor
 
    local cStr, cByte, hPPO, cExt, cPP
@@ -206,14 +205,10 @@ METHOD TranslateFile( cFile, lWritePPO, cPPOExt, lWasteNoSpace ) CLASS TPreproce
 
       if lWasteNoSpace
          if !Empty( cPP )
-            cResult+= LTrim( cPP )
+            cResult+= LTrim( cPP ) + Replicate(CRLF,nPuntComma)
          endif
       else
-         if Empty( cPP )
-            cResult+= Replicate(CRLF,nPuntComma)
-         else
-            cResult+=cPP + Replicate(CRLF,nPuntComma)
-         endif
+         cResult+=cPP + Replicate(CRLF,nPuntComma)
       endif
 
    enddo
@@ -238,7 +233,5 @@ METHOD TranslateFile( cFile, lWritePPO, cPPOExt, lWasteNoSpace ) CLASS TPreproce
       endif
 
    endif
-
-   ::cPreProcessed := cResult
 
 return cResult
