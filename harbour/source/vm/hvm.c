@@ -959,7 +959,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_NOOP:
             /* Intentionally do nothing */
-            w += 1;
+            w++;
             break;
 
          default:

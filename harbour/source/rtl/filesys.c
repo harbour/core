@@ -57,6 +57,7 @@
  *    hb_fsChDrv()
  *    hb_fsCurDrv()
  *    hb_fsIsDrv()
+ *    hb_fsIsDevice()
  *
  * See doc/license.txt for licensing terms.
  *
@@ -473,6 +474,16 @@ void    hb_fsSetDevMode( FHANDLE hFileHandle, USHORT uiDevMode )
 
 #endif
 
+}
+
+void    hb_fsSetDevRaw( FHANDLE hFileHandle )
+{
+   hb_fsSetDevMode( hFileHandle, FD_BINARY );
+}
+
+void    hb_fsSetDevText( FHANDLE hFileHandle )
+{
+   hb_fsSetDevMode( hFileHandle, FD_TEXT );
 }
 
 USHORT  hb_fsRead( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
@@ -894,6 +905,7 @@ BOOL    hb_fsRmDir( BYTE * pDirname )
 }
 
 /* TODO: Make it thread safe */
+/* NOTE: 0 = current drive, 1 = A, 2 = B, 3 = C, etc. */
 
 BYTE *  hb_fsCurDir( USHORT uiDrive )
 {
@@ -917,8 +929,8 @@ BYTE *  hb_fsCurDir( USHORT uiDrive )
    return ( BYTE * ) cwd_buff;
 }
 
-/* TODO: add documentation
- */
+/* NOTE: 0=A:, 1=B:, 2=C:, 3=D:, ... */
+/* TODO: add documentation */
 
 USHORT  hb_fsChDrv( BYTE nDrive )
 {
@@ -929,8 +941,8 @@ USHORT  hb_fsChDrv( BYTE nDrive )
    USHORT uiSave = _getdrive();
 
    errno = 0;
-   _chdrive( nDrive );
-   if( nDrive == _getdrive() )
+   _chdrive( nDrive + 1 );
+   if( ( nDrive + 1 ) == _getdrive() )
    {
       uiResult = 0;
       s_uiErrorLast = errno;
@@ -952,9 +964,9 @@ USHORT  hb_fsChDrv( BYTE nDrive )
     */
    _dos_getdrive( &uiSave );
 
-   _dos_setdrive( nDrive, &uiTotal );
+   _dos_setdrive( nDrive + 1, &uiTotal );
    _dos_getdrive( &uiTotal );
-   if( nDrive == uiTotal )
+   if( ( nDrive + 1 ) == uiTotal )
    {
       uiResult = 0;
       s_uiErrorLast = 0;
@@ -976,6 +988,9 @@ USHORT  hb_fsChDrv( BYTE nDrive )
    return uiResult;
 }
 
+/* NOTE: 0=A:, 1=B:, 2=C:, 3=D:, ... */
+/* TODO: add documentation */
+
 USHORT  hb_fsIsDrv( BYTE nDrive )
 {
    USHORT uiResult;
@@ -985,8 +1000,8 @@ USHORT  hb_fsIsDrv( BYTE nDrive )
    USHORT uiSave = _getdrive();
 
    errno = 0;
-   _chdrive( nDrive );
-   if( nDrive == _getdrive() )
+   _chdrive( nDrive + 1 );
+   if( ( nDrive + 1 ) == _getdrive() )
    {
       uiResult = 0;
       s_uiErrorLast = errno;
@@ -1011,9 +1026,9 @@ USHORT  hb_fsIsDrv( BYTE nDrive )
 
    s_uiErrorLast = 0;
    uiResult = 0;
-   _dos_setdrive( nDrive, &uiTotal );
+   _dos_setdrive( nDrive + 1, &uiTotal );
    _dos_getdrive( &uiTotal );
-   if( nDrive != uiTotal )
+   if( ( nDrive + 1 ) != uiTotal )
    {
       s_uiErrorLast = FS_ERROR;
       uiResult = FS_ERROR;
@@ -1030,9 +1045,29 @@ USHORT  hb_fsIsDrv( BYTE nDrive )
    return uiResult;
 }
 
-/* TODO: add documentation
- * QUESTION: Is A: drive numbered as 0 or as 1 ?
- */
+BOOL    hb_fsIsDevice( FHANDLE hFileHandle )
+{
+   BOOL bResult;
+
+#if defined(HAVE_POSIX_IO) && ( defined(OS2) || defined(DOS) || defined(_Windows) || defined(__MINGW32__) ) && ! defined(__CYGWIN__)
+
+   errno = 0;
+   bResult = ( isatty( hFileHandle ) == 0 );
+   s_uiErrorLast = errno;
+
+#else
+
+   bResult = FALSE;
+   s_uiErrorLast = FS_ERROR;
+
+#endif
+
+   return bResult;
+}
+
+/* NOTE: 0=A:, 1=B:, 2=C:, 3=D:, ... */
+/* TODO: add documentation */
+
 BYTE    hb_fsCurDrv( void )
 {
    USHORT uiResult;
@@ -1738,16 +1773,6 @@ HARBOUR HB_HB_FNAMEMERGE( void )
    hb_retc( hb_fsFNameMerge( szFileName, &pFileName ) );
 }
 
-void    hb_fsSetDevRaw( FHANDLE hFileHandle )
-{
-   hb_fsSetDevMode( hFileHandle, FD_BINARY );
-}
-
-void    hb_fsSetDevText( FHANDLE hFileHandle )
-{
-   hb_fsSetDevMode( hFileHandle, FD_TEXT );
-}
-
 /* NOTE: Clipper 5.3 undocumented */
 
 HARBOUR HB_FSETDEVMOD( void )
@@ -1755,4 +1780,3 @@ HARBOUR HB_FSETDEVMOD( void )
    if( ISNUM( 1 ) && ISNUM( 2 ) )
       hb_fsSetDevMode( hb_parni( 1 ), hb_parni( 2 ) );
 }
-

@@ -1,3 +1,20 @@
+19991012-02:30 GMT+1 Victor Szel <info@szelvesz.hu>
+   * source/rtl/filesys.c
+     + Added some info about driver numbering to hb_fsChDrv(), hb_fsIsDrv(),
+       hb_fsCurDrv(), hb_fsCurDir()
+     + hb_fsIsDevice() added. (by Jose Lalin), return value type changed to
+       BOOL to match Clipper.
+     ! hb_fsIsDrv(), hb_fsChDrv() fixed to call the OS functions with the 
+       right drive number. (Please test this!)
+   * include/ctoharb.h
+     + More undocumented file functions added. (by Jose Lalin)
+   * include/filesys.h
+     ! Missing hb_fsSetDev*() prototypes added.
+   * include/ctoharb.h
+     ! Double copyright header fixed.
+   * source/vm/hvm.c
+     % w += 1 -> w++
+
 19991011-23:54 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/rtl/fm.c
      + Newline readded to the closing //INFO message ;)

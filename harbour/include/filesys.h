@@ -94,6 +94,7 @@ extern BOOL     hb_fsFile       ( BYTE * pFilename );
 extern FHANDLE  hb_fsExtOpen    ( BYTE * pFilename, BYTE * pDefExt,
                                   USHORT uiFlags, BYTE * pPaths, PHB_ITEM pError );
 extern USHORT   hb_fsIsDrv      ( BYTE nDrive );
+extern BOOL     hb_fsIsDevice   ( FHANDLE hFileHandle );
 extern BOOL     hb_fsLock       ( FHANDLE hFileHandle, ULONG ulStart,
                                   ULONG ulLength, USHORT uiMode );
 extern BOOL     hb_fsMkDir      ( BYTE * pDirName );
@@ -104,6 +105,8 @@ extern int      hb_fsRename     ( BYTE * pOldName, BYTE * pNewName );
 extern ULONG    hb_fsSeek       ( FHANDLE hFileHandle, LONG lOffset, USHORT uiMode );
 extern ULONG    hb_fsTell       ( FHANDLE hFileHandle );
 extern void     hb_fsSetDevMode ( FHANDLE hFileHandle, USHORT uiDevMode );
+extern void     hb_fsSetDevRaw  ( FHANDLE hFileHandle );
+extern void     hb_fsSetDevText ( FHANDLE hFileHandle );
 extern void     hb_fsSetError   ( USHORT uiError );
 extern USHORT   hb_fsWrite      ( FHANDLE hFileHandle, BYTE * pBuff, USHORT ulCount );
 
