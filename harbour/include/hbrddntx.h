@@ -100,10 +100,10 @@ struct _NTXINDEX;
 
 typedef struct _KEYINFO
 {
-   PHB_ITEM pItem;
+   // PHB_ITEM pItem;
    LONG     Tag;
    LONG     Xtra;
-   // struct  _KEYINFO * pNext;
+   char     key[ 1 ]; /* value of key */
 } KEYINFO;
 
 typedef KEYINFO * LPKEYINFO;
@@ -116,9 +116,10 @@ typedef struct HB_PAGEINFO_STRU
    BOOL      NewRoot;
    BOOL      lBusy;
    BYTE      PageType;
-   LPKEYINFO pKeys;
+   // LPKEYINFO pKeys;
    USHORT    uiKeys;
    SHORT     CurKey;
+   char*     buffer;
    struct   HB_PAGEINFO_STRU * pPrev;
    struct   HB_PAGEINFO_STRU * pNext;
    struct   _TAGINFO * TagParent;
