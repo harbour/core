@@ -2884,7 +2884,15 @@ void hb_vmDo( USHORT uiParams )
       pFunc = pSym->pFunPtr;
 
       if( pFunc )
+      {
          pFunc();
+
+         if( pSym->pDynSym )
+         {
+            pSym->pDynSym->ulCalls++;                   /* profiler support */
+            pSym->pDynSym->ulTime += clock() - ulClock; /* profiler support */
+         }
+      }
       else
       {
          /* Attempt to call an undefined function
@@ -3012,7 +3020,15 @@ void hb_vmSend( USHORT uiParams )
       pFunc = pSym->pFunPtr;
 
       if( pFunc )
+      {
          pFunc();
+
+         if( pSym->pDynSym )
+         {
+            pSym->pDynSym->ulCalls++;                   /* profiler support */
+            pSym->pDynSym->ulTime += clock() - ulClock; /* profiler support */
+         }
+      }
       else
       {
          /* Attempt to call an undefined function
