@@ -1,3 +1,7 @@
+20000408-14:11 DST Paul Tucker <ptucker@sympatico.ca>
+   * source/rtl/dir.c
+     * correct MING 8.3 support (which I broke)
+
 20000408-15:28 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
 
    * source/rtl/tbrowse.prg

@@ -623,7 +623,7 @@ HB_FUNC( DIRECTORY )
                attrib = entry.attrFile;
             #elif defined(__MINGW32__) || defined(_MSC_VER)
                attrib = entry.attrib;
-               #if defined(_MSC_VER ) && _MSC_VER >= 1000
+               #if defined(__MINGW32__) || ( defined(_MSC_VER) && _MSC_VER >= 1000 )
                if( bEightDotThree )
                {
                    /* need to strip off the path */
