@@ -636,6 +636,7 @@ int ParseExpression( char* sLine, char* sOutLine )
         if ( kolpass < 3 )
         {
           ptri = sLine + isdvig;
+          SKIPTABSPACES( ptri );
           if ( ISNAME(*ptri) )
             NextName( &ptri, sToken, NULL);
           else
@@ -1748,18 +1749,27 @@ int NextName ( char** sSource, char* sDest, char **sOut )
 
 int NextParm ( char** sSource, char* sDest )
 {
-   int lenName = 0, State = STATE_NORMAL;
+   int lenName = 0, State = STATE_NORMAL, StBr = 0;
 
    SKIPTABSPACES( (*sSource) );
    while ( **sSource != '\0' )
    {
      if ( State == STATE_QUOTE1 )
-     { if ( **sSource == '\'' ) State = STATE_NORMAL; }
+     {
+       if ( **sSource == '\'' ) State = STATE_NORMAL;
+     }
      else if ( State == STATE_QUOTE2 )
-     { if ( **sSource == '\"' ) State = STATE_NORMAL; }
+     {
+       if ( **sSource == '\"' ) State = STATE_NORMAL;
+     }
      else if ( **sSource == '\"' ) State = STATE_QUOTE2;
      else if ( **sSource == '\'' ) State = STATE_QUOTE1;
-     else if ( **sSource == ',' || **sSource == ')' ) break;
+     else if ( **sSource == '(' ) StBr++;
+     else if ( **sSource == ')' || **sSource == ',' )
+     {
+       if( !StBr ) break;
+       if( **sSource == ')' ) StBr--;
+     }
 
      if ( sDest != NULL ) *sDest++ = **sSource;
      (*sSource)++;
