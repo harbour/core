@@ -440,7 +440,7 @@ HARBOUR HB_DIRECTORY( void )
             pos = strchr( string, *aatrib );
          }
 
-         if( pos )
+         if( pos || !attrib)
          {
             /* array  cname, csize, ddate, ctime, cattributes */
             pfilename = hb_itemPutC( NULL, filename );

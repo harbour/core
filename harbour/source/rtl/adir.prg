@@ -60,7 +60,7 @@ FUNCTION aDir( cFileMask, aName, aSize, aDate, aTime, aAttr )
    // ;
 
    IF ValType( aAttr ) == "A"
-      aDir := Directory( cFileMask, "HSD" )
+      aDir := Directory( cFileMask, "AHSD" )
    ELSE
       aDir := Directory( cFileMask )
    ENDIF

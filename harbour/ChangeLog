@@ -1,3 +1,11 @@
+19990912-01:29 EDT Paul Tucker <ptucker@sympatico.ca>
+  * source/rtl/dir.c
+    ! Changed selection criteria to include files that do not have
+      any attribute set.  This particularly affected the results
+      returned by tests/working/adirtest.prg
+  * source/rtl/adir.prg
+    ! Changed default attributes passed to Directory to include "A"
+
 19990912-00:45 EDT David G. Holm <dholm@jsd-llc.com>
   * source/rtl/dir.c
     ! Changed file size array element to numeric to match CA-Clipper.
