@@ -580,6 +580,10 @@ void hb_compChkEnvironVar( char * szSwitch )
                       hb_comp_iLanguage = LANG_PORT_OBJ;
                       break;
 
+                   case 'i':
+                   case 'I':
+                      hb_comp_iLanguage = LANG_CLI;
+                      break;
 
                    case 'o':
                    case 'O':

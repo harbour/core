@@ -72,6 +72,7 @@ void hb_compPrintUsage( char * szSelf )
            "\n          %cgw              output type: Windows/DOS OBJ32 (.obj)",
            "\n          %cgh              output type: Harbour Portable Object (.hrb)",
            "\n          %cgj              output type: Java source (.java)",
+           "\n          %cgi              output type: .NET platform (.il)",
            "\n          %ci<path>         #include file search path",
            "\n          %ck               compilation mode (type -k? for more data)",
            "\n          %cl               suppress line number information",
@@ -142,7 +143,7 @@ void hb_compPrintCredits( void )
            "April White <awhite@mail.rosecom.ca>\n"
            "Alejandro de Garate <alex_degarate@hotmail.com>\n"
            "Alexander S. Kresin <alex@belacy.belgorod.su>\n"
-           "Antonio Linares <alinares@fivetech.com>\n"
+           "Antonio Linares <alinares@fivetechsoft.com>\n"
            "Bil Simser <bsimser@home.com>\n"
            "Brian Hays <bhays@abacuslaw.com>\n"
            "Bruno Cantero <bruno@issnet.net>\n"

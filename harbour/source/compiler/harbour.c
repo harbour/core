@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Compiler main file
  *
- * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * Copyright 1999 Antonio Linares <alinares@fivetechsoft.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -3830,6 +3830,10 @@ static void hb_compGenOutput( int iLanguage )
    {
       case LANG_C:
          hb_compGenCCode( hb_comp_pFileName );
+         break;
+
+      case LANG_CLI:
+         hb_compGenILCode( hb_comp_pFileName );
          break;
 
       case LANG_OBJ32:

@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Header file for the Harbour Compiler
  *
- * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * Copyright 1999 Antonio Linares <alinares@fivetechsoft.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -77,6 +77,7 @@ extern "C" {
 typedef enum
 {
    LANG_C,                      /* C language (by default) <file.c> */
+   LANG_CLI,                    /* .NET IL language */
    LANG_OBJ32,                  /* DOS/Windows 32 bits <file.obj> */
    LANG_JAVA,                   /* Java <file.java> */
    LANG_PORT_OBJ,               /* Portable objects <file.hrb> */
