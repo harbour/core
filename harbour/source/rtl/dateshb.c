@@ -323,13 +323,11 @@ HB_FUNC( TIME )
 
 HB_FUNC( DATE )
 {
-   char szResult[ 9 ];
-
 #if defined(HB_OS_WIN_32)
    {
       SYSTEMTIME st;
       GetLocalTime( &st );
-      sprintf( szResult, "%04d%02d%02d", st.wYear, st.wMonth, st.wDay );
+      hb_retd( st.wYear, st.wMonth, st.wDay );
    }
 #else
    {
@@ -338,11 +336,9 @@ HB_FUNC( DATE )
 
       time( &t );
       oTime = localtime( &t );
-      sprintf( szResult, "%04d%02d%02d", oTime->tm_year + 1900, oTime->tm_mon + 1, oTime->tm_mday );
+      hb_retd( oTime->tm_year + 1900, oTime->tm_mon + 1, oTime->tm_mday );
    }
 #endif
-
-   hb_retds( szResult );
 }
 
 HB_FUNC( DOW )

@@ -297,7 +297,7 @@ void hb_gt_SetCursorStyle( USHORT style )
    HB_SYMBOL_UNUSED( style );
 }
 
-void hb_gt_xPutch( USHORT usRow, USHORT usCol, BYTE attr, BYTE byChar )
+static void hb_gt_xPutch( USHORT usRow, USHORT usCol, BYTE attr, BYTE byChar )
 {
    char tmp[ 2 ];
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_xPutch(%hu, %hu, %d, %i)", usRow, usCol, (int) attr, byChar));

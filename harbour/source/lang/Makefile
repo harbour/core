@@ -11,6 +11,8 @@ C_SOURCES=\
 	msgeu.c      \
 	msgfr.c      \
 	msggl.c      \
+	msghe862.c   \
+	msghewin.c   \
 	msghu852.c   \
 	msghucwi.c   \
 	msghuwin.c   \

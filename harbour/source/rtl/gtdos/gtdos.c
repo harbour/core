@@ -606,7 +606,7 @@ static void hb_gt_xGetXY( USHORT cRow, USHORT cCol, BYTE * attr, BYTE * ch )
 #endif
 }
 
-void hb_gt_xPutch( USHORT cRow, USHORT cCol, BYTE attr, BYTE ch )
+static void hb_gt_xPutch( USHORT cRow, USHORT cCol, BYTE attr, BYTE ch )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_xPutch(%hu, %hu, %d, %d", cRow, cCol, (int) attr, (int) ch));
 

@@ -802,7 +802,7 @@ void hb_gt_SetCursorStyle( USHORT style )
    SetConsoleCursorInfo( s_HActive, &cci );
 }
 
-void hb_gt_xPutch( USHORT uiRow, USHORT uiCol, BYTE attr, BYTE byChar )
+static void hb_gt_xPutch( USHORT uiRow, USHORT uiCol, BYTE attr, BYTE byChar )
 {
    DWORD dwWritten;
    COORD coord;

@@ -127,6 +127,7 @@ PRG_SOURCES=\
 	test_all.prg \
 	testbrdb.prg \
 	testbrw.prg \
+	testcdx.prg \
 	testcgi.prg \
 	testdbf.prg \
 	testerro.prg \
@@ -144,10 +145,12 @@ PRG_SOURCES=\
 	testvars.prg \
 	testwarn.prg \
 	tstalias.prg \
+	tstasort.prg \
 	tstcolor.prg \
         tstdbi.prg \
 	tstdspac.prg \
 	version.prg \
+	vmasort.prg \
 	while.prg \
 
 PRG_HEADERS=\

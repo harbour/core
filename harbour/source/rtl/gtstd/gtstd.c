@@ -230,7 +230,7 @@ void hb_gt_SetCursorStyle( USHORT uiCursorStyle )
    s_uiCursorStyle = uiCursorStyle;
 }
 
-void hb_gt_xPutch( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE byChar )
+static void hb_gt_xPutch( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE byChar )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_xPutch(%hu, %hu, %d, %i)", uiRow, uiCol, (int) byAttr, byAttr));
 

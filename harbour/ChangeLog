@@ -1,9 +1,55 @@
+20000419-00:28 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/rtl/gtcrs/gtcrs.c
+     ! Removed "Linux" from the version string.
+
+   * source/rtl/dateshb.c
+     % Local variables removed, non-standard string conversion, slow sprintf()
+       call removed. Now using hb_retd() to return the value. It's faster and
+       smaller now.
+
+   * source/lang/Makefile
+   * makefile.bc
+     + New languages added.
+
+   * include/hbver.h
+     * Date bumped.
+
+   * include/set.ch
+     * __SET_COUNT_HB -> HB_SET_COUNT
+
+   * bin/bld.*
+     ! Redone some undocumented changes in the build batch files.
+
+   + tests/testcdx.prg
+   * tests/Makefile
+     + New test file added.
+
+   * source/rtl/gt*/gt*.c
+     ! All hb_gt_xPutch() functions made static.
+
+   * source/rtl/gtapi.c
+     - Removed obsolete #define (hb_gtRepChar() related)
+
+   ; by Jose Lalin
+   * source/vm/asort.c
+     % hb_itemLess fixed to handle LOGICAL values that were missed from
+       first implementation
+   * tests/
+     + tstasort.prg
+       little test which gives the same results when asorting without
+       codeblock and shows an error with codeblock.
+     + vmasort.prg
+       massive VM and aSort test
+       C53 fails when executed with a value greater than 5.
+
 20000418-19:30 GMT-3 Luiz Rafael Culik <culik@sl.conex.net)
   *doc/en/diskspac.txt
    doc/en/file.txt
    doc/en/set.txt
       *Fixed doc by fixing the errors reported by chen
 
+>>>>>>> 1.1996
 2000-04-18 14:55 GMT-4 David G. Holm <dholm@jsd-llc.com>
   * source/rtl/gtwin/gtwin.c
     ! Don't generate a key code for Caps Lock.

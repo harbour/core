@@ -68,7 +68,7 @@ static BOOL hb_itemIsLess( PHB_ITEM pItem1, PHB_ITEM pItem2 )
    else
    {
       /* NOTE: For non-matching types CA-Cl*pper sorts always like this:
-               Array/Object Block String Date Numeric NIL [jlalin] */
+               Array/Object Block String Logical Date Numeric NIL [jlalin] */
 
       int iWeight1;
       int iWeight2;
@@ -76,16 +76,18 @@ static BOOL hb_itemIsLess( PHB_ITEM pItem1, PHB_ITEM pItem2 )
       if( HB_IS_ARRAY( pItem1 ) ) iWeight1 = 1;
       else if( HB_IS_BLOCK( pItem1 ) ) iWeight1 = 2;
       else if( HB_IS_STRING( pItem1 ) ) iWeight1 = 3;
-      else if( HB_IS_DATE( pItem1 ) ) iWeight1 = 4;
-      else if( HB_IS_NUMERIC( pItem1 ) ) iWeight1 = 5;
-      else iWeight1 = 6;
+      else if( HB_IS_LOGICAL( pItem1 ) ) iWeight1 = 4;
+      else if( HB_IS_DATE( pItem1 ) ) iWeight1 = 5;
+      else if( HB_IS_NUMERIC( pItem1 ) ) iWeight1 = 6;
+      else iWeight1 = 7;
 
       if( HB_IS_ARRAY( pItem2 ) ) iWeight2 = 1;
       else if( HB_IS_BLOCK( pItem2 ) ) iWeight2 = 2;
       else if( HB_IS_STRING( pItem2 ) ) iWeight2 = 3;
-      else if( HB_IS_DATE( pItem2 ) ) iWeight2 = 4;
-      else if( HB_IS_NUMERIC( pItem2 ) ) iWeight2 = 5;
-      else iWeight2 = 6;
+      else if( HB_IS_LOGICAL( pItem2 ) ) iWeight2 = 4;
+      else if( HB_IS_DATE( pItem2 ) ) iWeight2 = 5;
+      else if( HB_IS_NUMERIC( pItem2 ) ) iWeight2 = 6;
+      else iWeight2 = 7;
 
       return iWeight1 < iWeight2;
    }

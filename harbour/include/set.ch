@@ -97,8 +97,9 @@
 
 #define _SET_COUNT        47
 
-#define _SET_LANGUAGE    100
+#define _SET_LANGUAGE     100
 
-#define __SET_COUNT_HB     1
+#define HB_SET_BASE       100
+#define HB_SET_COUNT      1
 
 #endif /* _SET_CH */

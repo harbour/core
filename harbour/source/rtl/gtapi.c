@@ -190,7 +190,9 @@ USHORT hb_gtBox( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, B
       }
       else
          hb_gt_HorizLine( uiTop, uiLeft, uiRight, szBox[ 1 ], ( BYTE ) s_pColor[ s_uiColorIndex ] );
+
       hb_gtSetPos( uiTop + 1, uiLeft + 1 );
+
       return 0;
    }
    else
@@ -217,6 +219,7 @@ USHORT hb_gtBoxD( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight )
       }
       else
          hb_gt_HorizLine( uiTop, uiLeft, uiRight, _B_DOUBLE_V, ( BYTE ) s_pColor[ s_uiColorIndex ] );
+
       hb_gtSetPos( uiTop + 1, uiLeft + 1 );
 
       return 0;
@@ -245,6 +248,7 @@ USHORT hb_gtBoxS( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight )
       }
       else
          hb_gt_HorizLine( uiTop, uiLeft, uiRight, _B_SINGLE_H, ( BYTE ) s_pColor[ s_uiColorIndex ] );
+
       hb_gtSetPos( uiTop + 1, uiLeft + 1 );
 
       return 0;
@@ -694,11 +698,6 @@ USHORT hb_gtRectSize( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRig
 
    return 0;
 }
-
-/* NOTE: Above this buffer size the function will allocate dynamic memory and
-         will be slower. [vszakats] */
-
-#define REPCHAR_BUFFER_SIZE 255
 
 USHORT hb_gtRepChar( USHORT uiRow, USHORT uiCol, BYTE byChar, USHORT uiCount )
 {

@@ -474,7 +474,7 @@ void hb_gt_SetCursorStyle( USHORT uiStyle )
       curs_set( 1 );
 }
 
-void hb_gt_xPutch( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE byChar )
+static void hb_gt_xPutch( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE byChar )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_xPutch(%hu, %hu, %d, %i)", uiRow, uiCol, (int) byAttr, byChar));
 
@@ -748,7 +748,7 @@ static void gt_SetRC(int r, int c)
 
 char * hb_gt_Version( void )
 {
-   return "Harbour Terminal: ncurses (Linux console)";
+   return "Harbour Terminal: ncurses";
 }
 
 USHORT hb_gt_DispCount()
