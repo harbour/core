@@ -144,7 +144,7 @@ int ParseDirective( char* sLine )
 
    /*   if ((handl_i = fopen(sLine, "r")) == NULL) */
    if ( !OpenInclude( sLine, _pIncludePath, &handl_i ) )
-    { printf("\nCan't open %s",sLine); return 1001; }
+    { printf("\nCan't open %s\n",sLine); return 1001; }
    lInclude++;
    Hp_Parse(handl_i, 0 );
    lInclude--;
@@ -178,7 +178,7 @@ int ParseDirective( char* sLine )
 
   else if ( i == 5 && memcmp ( sDirective, "error", 5 ) == 0 )
   {                        /* --- #error  --- */
-   printf ( " #error: %s", sLine );
+   printf ( "\n#error: %s\n", sLine );
    return 2000;
   }
   else return 1;

@@ -425,7 +425,7 @@ PATHNAMES *_pIncludePath = NULL;
 %token INC DEC ALIAS DOCASE CASE OTHERWISE ENDCASE ENDDO MEMVAR
 %token WHILE EXIT LOOP END FOR NEXT TO STEP LE GE FIELD IN PARAMETERS
 %token PLUSEQ MINUSEQ MULTEQ DIVEQ POWER EXPEQ MODEQ EXITLOOP
-%token PRIVATE BEGINSEQ BREAK RECOVER USING DO WITH SELF
+%token PRIVATE BEGINSEQ BREAK RECOVER USING DO WITH SELF MEMVAR
 
 /*the lowest precedence*/
 /*postincrement and postdecrement*/
@@ -527,6 +527,7 @@ Statement  : ExecFlow Crlf                             {}
            | VarAssign Crlf                            { GenPCode1( _POP ); }
 
            | IDENTIFIER '=' Expression Crlf            { PopId( $1 ); }
+	   | AliasExp '=' Expression Crlf              { /* TODO */ GenPCode1( _POP ); }
            | VarId ArrayIndex '=' Expression Crlf      { GenPCode1( _ARRAYPUT ); GenPCode1( _POP ); }
            | FunArrayCall '=' Expression Crlf          { GenPCode1( _ARRAYPUT ); GenPCode1( _POP ); }
            | IdSend IDENTIFIER '='      { Message( SetData( $2 ) ); } Expression Crlf  { Function( 1 ); }
@@ -537,9 +538,9 @@ Statement  : ExecFlow Crlf                             {}
            | BREAK Expression Crlf
            | RETURN Crlf              { GenReturn( Jump( 0 ) ); }
            | RETURN Expression Crlf   { GenPCode1( _RETVALUE ); GenReturn( Jump ( 0 ) ); }
-           | PUBLIC VarList Crlf
-           | PRIVATE VarList Crlf
-           | PARAMETERS IdentList Crlf
+           | PUBLIC { iVarScope = VS_MEMVAR; } VarList Crlf
+           | PRIVATE { iVarScope = VS_MEMVAR; } VarList Crlf
+           | PARAMETERS { iVarScope = VS_MEMVAR; } IdentList Crlf
            | EXITLOOP Crlf            { LoopExit(); }
            | LOOP Crlf                { LoopLoop(); }
            | DoProc Crlf
@@ -976,7 +977,7 @@ Crlf       : '\n'
 
 void yyerror( char * s )
 {
-   printf( "\n%s at line %i\n", s, --iLine );
+   printf( "\n%s at line %i\n", s, iLine );
    exit( 1 );
 }
 
@@ -1594,7 +1595,7 @@ void AddVar( char * szVarName )
    pVar = ( PVAR ) OurMalloc( sizeof( VAR ) );
    pVar->szName = szVarName;
    pVar->szAlias = NULL;
-   /* pVar->cType = 'U'; */
+   pVar->cType = 'U';
    pVar->iUsed = 0;
    pVar->pNext = NULL;
 
@@ -2631,7 +2632,7 @@ WORD GetVarPos( PVAR pVars, char * szVarName ) /* returns the order + 1 of a var
 
    while( pVars )
    {
-      if( ! strcmp( pVars->szName, szVarName ) )
+      if( pVars->szName && ! strcmp( pVars->szName, szVarName ) )
       {
          if( _iWarnings )
             pVars->iUsed = 1;
@@ -2702,7 +2703,7 @@ int GetLocalVarPos( char * szVarName ) /* returns the order + 1 of a variable if
 
               pVar = (PVAR) OurMalloc( sizeof(VAR) );
               pVar->szName = szVarName;
-              /* pVar->cType = 'U'; */
+              pVar->cType = 'U';
               pVar->iUsed = 0;
               pVar->pNext  = NULL;
               iVar = 1;  /* first variable */
@@ -3190,7 +3191,7 @@ void FixReturns( void ) /* fixes all last defined function returns jumps offsets
       pVar = functions.pLast->pLocals;
       while ( pVar )
       {
-         if( pVar->szName && ! pVar->iUsed )
+         if( pVar->szName && functions.pLast->szName && ! pVar->iUsed )
             GenWarning( WARN_VAR_NOT_USED, pVar->szName, functions.pLast->szName );
 
          pVar = pVar->pNext;
@@ -3199,7 +3200,7 @@ void FixReturns( void ) /* fixes all last defined function returns jumps offsets
       pVar = functions.pLast->pStatics;
       while ( pVar )
       {
-         if( pVar->szName && ! pVar->iUsed )
+         if( pVar->szName && functions.pLast->szName && ! pVar->iUsed )
             GenWarning( WARN_VAR_NOT_USED, pVar->szName, functions.pLast->szName );
 
          pVar = pVar->pNext;

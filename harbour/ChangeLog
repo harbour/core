@@ -1,3 +1,18 @@
+19990615-23:20 PST Ron Pinkas <Ron@Profit-Master.com>
+  * compiler.h
+    added member cType to struct VAR
+  * harbour.y
+    added { iVarScope = VS_MEMVAR; } to PRIVATE, PUBLIC, and PARAMETERS statements to avoid errounous error:
+    "declaration follows executable statement"
+    added: AliasExp '=' Expression Crlf { /* TODO */ GenPCode1( _POP ); }
+    to statement definition to avoid parse error on M->Var = "Value" statments.
+    the _POP will balance the stack but the assignment is not implemented yet.
+    changed --iLine to iLine in yyerror() to correct errornous line numbers in parase error messages.
+    added check for null pointer on few references to pVars->szName
+
+  * hbpp.c, hbpmain.c, hbpint.c
+    prefixed messages in all printf() with \n and postfixed with \n until modification to GenWarning() and GenError()
+
 19990617-18:55 EDT David G. Holm <dholm@jsd-llc.com>
   * include/set.h
     - SET DEBUG is numeric, not logical
@@ -45,70 +60,70 @@
 
 Thu Jun 17 11:34:35 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* source/Makefile: 
-	* source/compiler/Makefile: 
-	* source/hbpp/Makefile: 
+	* source/Makefile:
+	* source/compiler/Makefile:
+	* source/hbpp/Makefile:
 	Now the hbpp preprocessor is compiled before the compiler, and it
 	generates a library. No stand-alone preprocessor is generated. The
 	compiler links against the new preprocessor library.
 
-	* include/Makefile: 
-	* tests/working/Makefile: 
+	* include/Makefile:
+	* tests/working/Makefile:
 	Updated the list of files.
 
-	* include/compiler.h: 
-	* include/ctoharb.h: 
-	* include/dates.h: 
-	* include/error.api: 
-	* include/errorapi.h: 
-	* include/extend.h: 
-	* include/filesys.h: 
-	* include/gtapi.h: 
-	* include/hberrors.h: 
-	* include/hbsetup.h: 
-	* include/init.h: 
-	* include/itemapi.h: 
-	* include/pcode.h: 
-	* include/set.h: 
-	* include/types.h: 
-	* include/version.h: 
-	* source/compiler/fixflex.c: 
-	* source/compiler/genobj32.c: 
-	* source/compiler/harbour.l: 
-	* source/compiler/harbour.y: 
-	* source/hbpp/harb.h: 
-	* source/hbpp/hbpp.c: 
-	* source/rtl/asort.prg: 
-	* source/rtl/descend.c: 
-	* source/rtl/error.prg: 
-	* source/rtl/errorsys.prg: 
-	* source/rtl/hardcr.c: 
-	* source/rtl/itemapi.c: 
-	* source/rtl/mtran.c: 
-	* source/rtl/objfunc.prg: 
-	* source/rtl/tclass.prg: 
-	* source/tools/asciisum.c: 
-	* source/tools/ascpos.c: 
-	* source/tools/atdiff.c: 
-	* source/tools/chareven.c: 
-	* source/tools/charmix.c: 
-	* source/tools/charodd.c: 
-	* source/tools/chrcount.c: 
-	* source/tools/chrfirst.c: 
-	* source/tools/chrtotal.c: 
-	* source/tools/debug.c: 
-	* source/tools/hb_f.c: 
-	* source/tools/strasint.c: 
-	* source/tools/strcount.c: 
-	* source/tools/strcspn.c: 
-	* source/tools/strdiff.c: 
-	* source/tools/strexpan.c: 
-	* source/tools/stringp.prg: 
-	* source/tools/strleft.c: 
-	* source/tools/strpbrk.c: 
-	* source/tools/strright.c: 
-	* source/vm/hvm.c: 
-	* source/vm/initsymb.c: 
+	* include/compiler.h:
+	* include/ctoharb.h:
+	* include/dates.h:
+	* include/error.api:
+	* include/errorapi.h:
+	* include/extend.h:
+	* include/filesys.h:
+	* include/gtapi.h:
+	* include/hberrors.h:
+	* include/hbsetup.h:
+	* include/init.h:
+	* include/itemapi.h:
+	* include/pcode.h:
+	* include/set.h:
+	* include/types.h:
+	* include/version.h:
+	* source/compiler/fixflex.c:
+	* source/compiler/genobj32.c:
+	* source/compiler/harbour.l:
+	* source/compiler/harbour.y:
+	* source/hbpp/harb.h:
+	* source/hbpp/hbpp.c:
+	* source/rtl/asort.prg:
+	* source/rtl/descend.c:
+	* source/rtl/error.prg:
+	* source/rtl/errorsys.prg:
+	* source/rtl/hardcr.c:
+	* source/rtl/itemapi.c:
+	* source/rtl/mtran.c:
+	* source/rtl/objfunc.prg:
+	* source/rtl/tclass.prg:
+	* source/tools/asciisum.c:
+	* source/tools/ascpos.c:
+	* source/tools/atdiff.c:
+	* source/tools/chareven.c:
+	* source/tools/charmix.c:
+	* source/tools/charodd.c:
+	* source/tools/chrcount.c:
+	* source/tools/chrfirst.c:
+	* source/tools/chrtotal.c:
+	* source/tools/debug.c:
+	* source/tools/hb_f.c:
+	* source/tools/strasint.c:
+	* source/tools/strcount.c:
+	* source/tools/strcspn.c:
+	* source/tools/strdiff.c:
+	* source/tools/strexpan.c:
+	* source/tools/stringp.prg:
+	* source/tools/strleft.c:
+	* source/tools/strpbrk.c:
+	* source/tools/strright.c:
+	* source/vm/hvm.c:
+	* source/vm/initsymb.c:
 	Made sure all *.{h,c,ch,api,prg,l,y} files under include/ and
 	source/ have an RCS Id keyword.
 	Got rid of the RCS Log keyword on several files; this keyword

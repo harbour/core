@@ -40,14 +40,14 @@ FUNCTION Main()
    // Builds dynamic table replacement
    WHILE (nPos := fRead( hFile, @cString, IF_BUFFER )) > 0
       i := 1
-      DO WHILE i <= nPos 
+      DO WHILE i <= nPos
 
 	 IF substr( cString, i, 1 ) = chr( 13 )
             i := i + 1
             cLine := cBuf
   	    cBuf  := ""
 
-  	    IF left( cLine, 1 ) <> ';' 
+  	    IF left( cLine, 1 ) <> ';'
                cTable += '<TR>' + chr(10)+chr(13) + ;
                  '<TD WIDTH="50%"><FONT SIZE="2" FACE="Tahoma">' +                 ;
                  ParseString( cLine, ';', 1 ) + '</FONT></TD>' + chr(10)+chr(13) + ;
@@ -104,14 +104,14 @@ FUNCTION ParseString( cString, cDelim, nRet )
    FOR i := 1 TO nSize
       nPosFim := at( cDelim, cBuf )
 
-      IF nPosFim > 0 
+      IF nPosFim > 0
          aElem[i] := substr( cBuf, 1, nPosFim - 1 )
       ELSE
          aElem[i] := cBuf
       ENDIF
 
       cBuf := substr( cBuf, nPosFim + 1, len( cBuf ) )
-         
+
    NEXT i
 
    RETURN( aElem[ nRet ] )

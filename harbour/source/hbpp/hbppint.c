@@ -89,7 +89,7 @@ int PreProcess( FILE* handl_i, FILE* handl_o, char *sOut )
       if ( (rezParse=ParseDirective( ptr+1 )) > 0 )
       {
        if ( !lInclude )
-         printf ( "\nError number %u in line %u", rezParse, nline );
+         printf ( "\nError number %u in line %u\n", rezParse, nline );
       }
       *sLine = '\0';
      }
@@ -99,7 +99,7 @@ int PreProcess( FILE* handl_i, FILE* handl_o, char *sOut )
       {
         if ( (rezParse = ParseExpression( ptr, sOutLine)) > 0 )
         {
-         printf ( "\nError number %u in line %u", rezParse, nline );
+         printf ( "\nError number %u in line %u\n", rezParse, nline );
         }
       }
       else *sLine = '\0';
@@ -153,7 +153,7 @@ int Hp_Parse( FILE* handl_i, FILE* handl_o )
       *sLine = '\0';
      }
      else
-      printf ( "\nNon directive in include file");
+      printf ( "\nNon directive in include file\n");
    }
   }
  }

@@ -71,7 +71,7 @@ int iArg = 1;
            AddSearchPath( argv[ iArg ]+2, &_pIncludePath );
            break;
          default:
-            printf( "Invalid command line option: %s\n", &argv[ iArg ][ 1 ] );
+            printf( "\nInvalid command line option: %s\n", &argv[ iArg ][ 1 ] );
             break;
        }
      }
@@ -84,15 +84,15 @@ int iArg = 1;
       MakeFilename( szFileName, pFileName );
 
       if ((handl_i = fopen(szFileName, "r")) == NULL)
-         { printf("Can't open %s",szFileName); return 1; }
+         { printf("\nCan't open %s\n",szFileName); return 1; }
    }
-   else { printf("File name absent"); return 1; }
+   else { printf("\nFile name absent\n"); return 1; }
 
    pFileName->extension =".ppo";
    MakeFilename( szFileName, pFileName );
 
    if ((handl_o = fopen(szFileName, "wt" )) == NULL)
-        { printf("Can't open %s",szFileName); return 1; }
+        { printf("\nCan't open %s\n",szFileName); return 1; }
 
     aCondCompile = (int*) _xgrab( sizeof(int) * 5 );
     aDefnew = ( DEFINES * ) _xgrab( sizeof(DEFINES) * 50 );
@@ -147,7 +147,7 @@ int Hp_Parse( FILE* handl_i, FILE* handl_o )
     if ( (rezParse=ParseDirective( ptr+1 )) > 0 )
     {
      if ( !lInclude )
-       printf ( "\nError number %u in line %u", rezParse, nline );
+       printf ( "\nError number %u in line %u\n", rezParse, nline );
      return rezParse;
     }
     *sLine = '\0';
@@ -158,7 +158,7 @@ int Hp_Parse( FILE* handl_i, FILE* handl_o )
     {
       if ( (rezParse = ParseExpression( ptr, sOutLine)) > 0 )
       {
-       printf ( "\nError number %u in line %u", rezParse, nline );
+       printf ( "\nError number %u in line %u\n", rezParse, nline );
        return rezParse;
       }
     }
