@@ -113,7 +113,7 @@ FUNCTION ProcessRtf()
    LOCAL xAddBlank
    LOCAL nNumTopics     := 0
    LOCAL nCurTopics     := 1
-   LOCAL cBar           := " " + Replicate(( ')', 80 )
+   LOCAL cBar           := " " + Replicate( ')', 80 )
    LOCAL nMode
    LOCAL cFuncName
    LOCAL cOneLine
@@ -1087,11 +1087,11 @@ FUNCTION GenRtfTable( oRtf )
    nPos  := maxrtfelem( afitable )
    nPos2 := ASCAN( alensfitem, { | x | x == nPos } )
 
-   oRtf:WriteParBox( "       " + Replicate(( CHR( 196 ), 80 ) )
+   oRtf:WriteParBox( "       " + Replicate( CHR( 196 ), 80 ) )
    FOR x := 1 TO LEN( afiTable )
       ortf:WriteParFixed( IF( AT( "|", afiTable[ x ] ) > 0, STRTRAN( afiTable[ x ], "|", " " ), afiTable[ x ] ), '\fi-426\li426' )
    NEXT
-   oRtf:WriteParBox( "       " + Replicate(( CHR( 196 ), 80 ) )
+   oRtf:WriteParBox( "       " + Replicate( CHR( 196 ), 80 ) )
 //   oRtf:WritePar( "" )
    afiTable := {}
 
