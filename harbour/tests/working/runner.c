@@ -53,7 +53,7 @@ HARBOUR   HB_RUN();
 void      HRB_FileClose( _FILE * );
 void      HRB_FileRead ( char *, int, int, _FILE * );
 _FILE    *HRB_FileOpen ( char * );
-void      Push( PITEM );
+void      Push( PHB_ITEM );
 void      PushNil( void );
 void      PushSymbol( PSYMBOL );
 BYTE      ReadByte( _FILE * );
@@ -305,7 +305,7 @@ long ReadLong( FILE *file )
 
    if( cLong[3] )                               /* Convert to long if ok    */
    {
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
       _errPutDescription(pError, "Error reading .HRB file");
       _errLaunch(pError);
       _errRelease(pError);
@@ -325,7 +325,7 @@ static void HRB_FileRead( char *cBuffer, int iSize, int iCount, FILE *fStream )
 {
    if( iCount != (int) fread( cBuffer, iSize, iCount, fStream ) )
    {                                            /* Read error               */
-      PITEM pError = _errNew();
+      PHB_ITEM pError = _errNew();
       _errPutDescription(pError, "Error reading .HRB file");
       _errLaunch(pError);
       _errRelease(pError);
