@@ -7,6 +7,11 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+2001-12-20 09:36 UTC+0000 Dave Pearson <davep@davep.org>
+   + ERRATA
+     + Added the ERRATA list.
+	
 2001-12-19 20:00 UTC+0700 Andi Jahja <harbour@cbn.net.id>
    * source/compiler/genc.c
      ! Change C Outputs so one can freely export the public function
