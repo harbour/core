@@ -177,7 +177,7 @@ CLASS TBrowse
    HIDDEN:         /* H I D D E N */
 
    METHOD LeftDetermine()                 // Determine leftmost unfrozen column in display
-   METHOD DispCell(nColumn, nColor)       // Displays a single cell
+   METHOD DispCell(nColumn, nColor)       // Displays a single cell and returns cell type as a single letter like Valtype()
    METHOD HowManyCol(nWidth)              // Counts how many cols can be displayed
    METHOD RedrawHeaders(nWidth)           // Repaints TBrowse Headers
    METHOD Moved()                         // Every time a movement key is issued I need to reset certain properties
@@ -609,9 +609,13 @@ return Self
 METHOD DeHilite() CLASS TBrowse
 
    local nRow := ::nTop + ::RowPos + iif(::lHeaders, ::nHeaderHeight, 0 ) + iif(Empty(::HeadSep), 0, 1) - 1
+   local cType
 
    SetPos( nRow, ::aColumns[ ::ColPos ]:ColPos )
-   ::DispCell(::ColPos, CLR_STANDARD)
+
+   cType := ::DispCell(::ColPos, CLR_STANDARD)
+
+   SetPos(nRow, ::aColumns[ ::ColPos ]:ColPos + iif(cType == "L", ::aColumns[::ColPos]:Width / 2, 0 ))
 
 return Self
 
@@ -626,23 +630,27 @@ return Self
 
 METHOD Hilite() CLASS TBrowse
 
-   local nColor
-   local cColor
    local nRow
+   local cType
 
    nRow := ::nTop + ::RowPos + iif(::lHeaders, ::nHeaderHeight, 1) + iif(Empty(::HeadSep), 0, 1) - 1
 
+   // Start of cell
    SetPos( nRow, ::aColumns[ ::ColPos ]:ColPos )
 
    if ::AutoLite
-      ::DispCell(::ColPos, CLR_ENHANCED)
+      cType := ::DispCell(::ColPos, CLR_ENHANCED)
 
    else
-      ::DispCell(::ColPos, CLR_STANDARD)
+      cType := ::DispCell(::ColPos, CLR_STANDARD)
 
    endif
 
+   // Put cursor back on first char of cell value
+   SetPos(nRow, ::aColumns[ ::ColPos ]:ColPos + iif(cType == "L", ::aColumns[::ColPos]:Width / 2, 0 ))
+
 return Self
+
 
 // Calculate how many columns fit on the browse width including ColSeps
 METHOD HowManyCol(nWidth) CLASS TBrowse
@@ -707,11 +715,14 @@ METHOD HowManyCol(nWidth) CLASS TBrowse
 
 return Self
 
+
 // Gets TBrowse width and width of displayed columns plus colsep
 METHOD RedrawHeaders(nWidth) CLASS TBrowse
 
-   local n, iW
+   local n, nTPos, nBPos
    local cBlankBox := Space(9)
+   local nScreenRowT, nScreenRowB
+   local nLCS             // Len(ColSep)
 
    if ::lHeaders          // Drawing headers
 
@@ -736,47 +747,39 @@ METHOD RedrawHeaders(nWidth) CLASS TBrowse
       next
    endif
 
-   if ! Empty( ::HeadSep )  //Drawing heading separator
-      DispOutAt( ::nTop + iif(::lHeaders, ::nHeaderHeight , 0 ), ::nLeft, Replicate( Right( ::HeadSep, 1 ), ( nWidth - ::nColsWidth ) / 2 ), ::ColorSpec )
-      if Len( ::HeadSep ) > 1
-         iW := 0
-         for n := iif( ::Freeze > 0, 1, ::leftVisible ) to ::rightVisible
-            if ::Freeze > 0 .and. n == ::Freeze + 1
-               n := ::leftVisible
-            endif
-            DispOut( Replicate( Right( ::HeadSep, 1 ), ::aColumns[ n ]:Width - iW ), ::ColorSpec )
-            if n < ::rightVisible
-               DispOut( Left( ::HeadSep, Len( ::HeadSep ) - 1 ), ::ColorSpec )
-               iW := Len( ::HeadSep ) - 1 - iif( ::aColumns[ n + 1 ]:ColSep != NIL, ;
-                     Len( ::aColumns[ n + 1 ]:ColSep ), Len( ::ColSep ) )
-            endif
-         next
-      else
-         DispOut( Replicate( ::HeadSep, ::nColsWidth ), ::ColorSpec )
-      endif
-      DispOut( Replicate( Right( ::HeadSep, 1 ), Int(Round((nWidth - ::nColsWidth) / 2, 0)) ), ::ColorSpec )
+   if ! Empty( ::HeadSep )  //Drawing heading separator line
+      DispOutAt((nScreenRowT := ::nTop + iif(::lHeaders, ::nHeaderHeight , 0 )), ::nLeft,;
+                Replicate( Right( ::HeadSep, 1 ), nWidth), ::ColorSpec)
    endif
 
-   if ! Empty( ::FootSep ) // Drawing footing separator
-      DispOutAt(::nBottom - iif(::lFooters, ::nFooterHeight, 0), ::nLeft, Replicate(Right(::FootSep, 1), (nWidth - ::nColsWidth ) / 2 ), ::ColorSpec)
-      if Len( ::FootSep ) > 1
-         iW := 0
-         for n := iif( ::Freeze > 0, 1, ::leftVisible ) to ::rightVisible
-            if ::Freeze > 0 .and. n == ::Freeze + 1
-               n := ::leftVisible
-            endif
-            DispOut( Replicate( Right( ::FootSep, 1 ), ::aColumns[ n ]:Width - iW ), ::ColorSpec )
-            if n < ::rightVisible
-               DispOut( Left( ::FootSep, Len( ::FootSep ) - 1 ), ::ColorSpec )
-               iW := Len( ::FootSep ) - 1 - iif( ::aColumns[ n + 1 ]:ColSep != NIL, ;
-                     Len( ::aColumns[ n + 1 ]:ColSep ), Len( ::ColSep ) )
-            endif
-         next
-      else
-         DispOut( Replicate( ::FootSep, ::nColsWidth ), ::ColorSpec )
-      endif
-      DispOut( Replicate( Right( ::FootSep, 1 ), Int(Round((nWidth - ::nColsWidth) / 2, 0)) ), ::ColorSpec )
+   if ! Empty( ::FootSep )  //Drawing footing separator line
+      DispOutAt((nScreenRowB := ::nBottom - iif(::lFooters, ::nFooterHeight, 0)), ::nLeft,;
+                Replicate(Right(::FootSep, 1), nWidth), ::ColorSpec)
    endif
+
+   nTPos := nBPos := ::nLeft + (( nWidth - ::nColsWidth ) / 2 )
+
+   // Draw headin/footing column separator
+   for n := iif(::Freeze > 0, 1, ::leftVisible) to ::rightVisible
+      if ::Freeze > 0 .and. n == ::Freeze + 1
+         n := ::leftVisible
+      endif
+
+      if n < ::rightVisible
+         nLCS := iif(::aColumns[n + 1]:ColSep != NIL, Len(::aColumns[n + 1]:ColSep), Len(::ColSep))
+
+         if ! Empty( ::HeadSep )
+            DispOutAT(nScreenRowT, (nTPos += ::aColumns[ n ]:Width), ::HeadSep, ::ColorSpec )
+            nTPos += Len(::HeadSep) + (nLCS - Len(::HeadSep))
+         endif
+
+         if ! Empty( ::FootSep )
+            DispOutAT(nScreenRowB, (nBPos += ::aColumns[ n ]:Width), ::FootSep, ::ColorSpec )
+            nBPos += Len(::FootSep) + (nLCS - Len(::FootSep))
+         endif
+
+      endif
+   next
 
    if ::lFooters                // Drawing footers
 
@@ -806,7 +809,7 @@ return Self
 
 METHOD Stabilize() CLASS TBrowse
 
-   local nRow, nCol, n
+   local nRow, n
    local nWidth := ::nRight - ::nLeft + 1 // Visible width of the browse
    local cColColor                        // Column color to use
    local oStartCol, oEndCol
@@ -965,11 +968,10 @@ METHOD Stabilize() CLASS TBrowse
                if ::Freeze > 0 .and. n == ::Freeze + 1
                   n := ::leftVisible
                endif
+
                if nRow == 1
                   ::aColumns[ n ]:ColPos := Col()
                endif
-
-               nCol := Col()
 
                // NOTE: If my TBrowse has 20 rows but I have only 3 recs, clipper clears
                //       remaining 17 rows in a single operation, I will, instead, try to skip
@@ -984,7 +986,6 @@ METHOD Stabilize() CLASS TBrowse
 
                if lDisplay
                   ::DispCell(n, CLR_STANDARD)
-                  SetPos( Row(), nCol + ::aColumns[ n ]:Width )
 
                else
                   // Clear cell
@@ -995,8 +996,10 @@ METHOD Stabilize() CLASS TBrowse
                if n < ::rightVisible
                   if ::aColumns[ n + 1 ]:ColSep != NIL
                      DispOut( ::aColumns[ n + 1 ]:ColSep, ::ColorSpec )
+
                   elseif ::ColSep != NIL
                      DispOut( ::ColSep, ::ColorSpec )
+
                   endif
                endif
             next
@@ -1076,14 +1079,12 @@ METHOD ColorRect( aRect, aRectColor ) CLASS TBrowse
 return Self
 
 
-
 METHOD DispCell( nColumn, nColor ) CLASS TBrowse
 
    LOCAL oCol   := ::aColumns[nColumn]
    LOCAL ftmp   := Eval(oCol:block)
-   LOCAL nCol   := Col()
    LOCAL cType  := ValType( ftmp )
-   LOCAL cPict  := iif( !empty( oCol:Picture ), oCol:Picture, "@" )
+   LOCAL cPict  := iif(empty(oCol:Picture), "", oCol:Picture)
    LOCAL cDisp
    // NOTE: When nColor is used as an array index we need to increment it by one since CLR_STANDARD is 0
    LOCAL cColor := iif(oCol:ColorBlock != NIL,;
@@ -1092,32 +1093,27 @@ METHOD DispCell( nColumn, nColor ) CLASS TBrowse
 
    do case
       case cType $ "CM"
-         cDisp := transform( Left( ftmp, ::aColumns[ nColumn ]:Width ), cPict )
+         cDisp := PadL(Transform(ftmp, cPict), oCol:Width)
 
       case cType == "N"
-         cDisp := Right( transform(  ftmp, cPict ), ::aColumns[ nColumn ]:Width )
+         cDisp := PadR(Transform(ftmp, cPict), oCol:Width)
 
       case cType == "D"
-         cPict := iif( cPict == "@", "@D", cPict )
-         cDisp := Right( transform(  ftmp, cPict ), ::aColumns[ nColumn ]:Width )
+         cPict := iif(cPict == "", "@D", cPict)
+         cDisp := PadR(Transform(ftmp, cPict), oCol:Width)
 
       case cType == "L"
-         cDisp := Space( ::aColumns[ nColumn ]:Width / 2 ) + iif( ftmp, "T","F" )
+         cDisp := PadC(iif(ftmp, "T", "F"), oCol:Width)
 
       otherwise
-         cDisp := ""
+         cDisp := Space(oCol:Width)
 
    endcase
 
-   DispOut( cDisp, cColor )
-   DispOut( Space( nCol + ::aColumns[ nColumn ]:Width - Col() ), cColor)
+   // Display cell value
+   DispOut(cDisp, cColor)
 
-   // Logical fields are centered on column width
-   // NOTE: DO NOT REMOVE THIS LINE It is needed to have cursor on correct screen column
-   //       inside each TBrowse column
-   SetPos( Row(), nCol + iif( cType == "L", ::aColumns[::ColPos]:Width / 2, 0 ) )
-
-return Self
+return cType
 
 
 #ifdef HB_COMPAT_C53
