@@ -54,6 +54,7 @@ extern int pp_WrStr(FILE*,char *);
 extern int strolen ( char* );
 extern int strocpy (char*, char* );
 
+void Hbpp_init ( void );
 int PreProcess( FILE*, FILE*, char *);
 int Hp_Parse( FILE*, FILE* );
 

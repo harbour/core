@@ -1,3 +1,20 @@
+19990730-05:00 CET Victor Szel <info@szelvesz.hu>
+   ! source/rtl/inkey.c -
+     #elif defined(__GNUC__) -> #elif defined(__CYGNUS__)
+   ! source/hbpp/preproc.c - MakeFilename() bug fixed here, too.
+     It's quite strange that we have three copies of MakeFilename()
+     in various source files.
+   + source/hbpp/hbppint.c - Added hbpp_init() prototype.
+   ! source/hbpp/hbpp.c - Fix: #include directive will search for
+     the header file in the directory of the compiled .PRG file,
+     not in the current directory as before.
+   + source/hbpp/hbpp.c - Added support for 
+     #include 'x' and #include <x>, the latter searches only in
+     the include directories, like in C.
+   ! source/hbpp/hbpp.c - Added patch to fix the GPF in RTL_TEST
+     when using Win32/GCC (and some others). 
+     Posted by Dave Pearson <davep@hagbard.demon.co.uk>
+
 19990729-22:00 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/inkey.c
       + added comments and example for implimenting ReleaseCPU

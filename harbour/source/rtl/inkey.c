@@ -48,7 +48,7 @@
   #include <stdlib.h>
 #elif defined(__IBMCPP__)
   #include <conio.h>
-#elif defined(__GNUC__)
+#elif defined(__CYGNUS__)
   #include <mingw32/conio.h>
 #endif
 

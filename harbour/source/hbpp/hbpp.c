@@ -75,7 +75,7 @@ int ComSearch(char *,int);
 int TraSearch(char *,int);
 void SearnRep( char*,char*,int,char*,int*);
 int ReplacePattern ( char, char*, int, char*, int );
-void pp_rQuotes( char *, char ** );
+void pp_rQuotes( char *, char * );
 int pp_RdStr(FILE*,char *,int,int,char*,int*,int*);
 int pp_WrStr(FILE*,char *);
 int pp_strAt(char *, int, char*, int);
@@ -94,7 +94,7 @@ int NextWord ( char**, char*, int);
 int NextName ( char**, char*, char**);
 int NextParm ( char**, char* );
 int Include( char *, PATHNAMES *, FILE** );
-int OpenInclude( char *, PATHNAMES *, FILE** );
+BOOL OpenInclude( char *, PATHNAMES *, FILE**, BOOL bStandardOnly );
 
 #define isname(c)  (isalnum(c) || (c)=='_' || (c) > 0x7e)
 #define SKIPTABSPACES(sptr) while ( *sptr == ' ' || *sptr == '\t' ) (sptr)++
@@ -129,6 +129,7 @@ int Repeate;
 char groupchar;
 
 extern PATHNAMES *_pIncludePath;
+extern FILENAME *_pFileName;
 
 extern DEFINES *topDefine;
 
@@ -187,16 +188,23 @@ int ParseDirective( char* sLine )
  {
   if ( i == 7 && memcmp ( sDirective, "include", 7 ) == 0 )
   {    /* --- #include --- */
-   if ( *sLine != '\"' )
+   char cDelimChar;
+
+   if ( *sLine != '\"' && *sLine != '\'' && *sLine != '<' )
      GenError( _szPErrors, 'P', ERR_WRONG_NAME, NULL, NULL );
+
+   cDelimChar = *sLine;
+   if (cDelimChar == '<')
+     cDelimChar = '>';
+
    sLine++; i = 0;
-   while ( *(sLine+i) != '\0' && *(sLine+i) != '\"' ) i++;
-   if ( *(sLine+i) != '\"' )
+   while ( *(sLine+i) != '\0' && *(sLine+i) != cDelimChar ) i++;
+   if ( *(sLine+i) != cDelimChar )
      GenError( _szPErrors, 'P', ERR_WRONG_NAME, NULL, NULL );
    *(sLine+i) = '\0';
 
    /*   if ((handl_i = fopen(sLine, "r")) == NULL) */
-   if ( !OpenInclude( sLine, _pIncludePath, &handl_i ) )
+   if ( !OpenInclude( sLine, _pIncludePath, &handl_i, (cDelimChar == '>') ) )
      GenError( _szPErrors, 'P', ERR_CANNOT_OPEN, sLine, NULL );
    lInclude++;
    Hp_Parse(handl_i, 0 );
@@ -585,7 +593,7 @@ int ParseExpression( char* sLine, char* sOutLine )
               lens += strolen( ptri+ipos ) + 1;
             }
             pp_Stuff ( sOutLine, ptri, ptro - sOutLine, (ipos)? ipos-1:lens, lens );
-	    if ( ipos > 0 )
+            if ( ipos > 0 )
             {
               ipos = ptro - sOutLine + 1;
               *(ptri + ipos - 1) = '\0';
@@ -1264,15 +1272,15 @@ void SearnRep( char *exppatt,char *expreal,int lenreal,char *ptro, int *lenres)
 
 int ReplacePattern ( char patttype, char *expreal, int lenreal, char *ptro, int lenres )
 {
- int rmlen = lenreal;
- char *sQuotes = "\"\"";
+   int rmlen = lenreal;
+   char sQuotes[ 3 ] = "\"\"";
 
      switch ( *(ptro+2) ) {
       case '0':  /* Regular result marker  */
          pp_Stuff ( expreal, ptro, lenreal, 4, lenres );
          break;
       case '1':  /* Dumb stringify result marker  */
-         pp_rQuotes( expreal, &sQuotes );
+         pp_rQuotes( expreal, sQuotes );
          pp_Stuff ( sQuotes, ptro, 2, 4, lenres );
          if ( lenreal )
           pp_Stuff ( expreal, ptro+1, lenreal, 0, lenres );
@@ -1286,7 +1294,7 @@ int ReplacePattern ( char patttype, char *expreal, int lenreal, char *ptro, int 
          }
          else
          {
-          pp_rQuotes( expreal, &sQuotes );
+          pp_rQuotes( expreal, sQuotes );
           pp_Stuff ( sQuotes, ptro, 2, 4, lenres );
           pp_Stuff ( expreal, ptro+1, lenreal, 0, lenres );
           rmlen = lenreal + 2;
@@ -1302,7 +1310,7 @@ int ReplacePattern ( char patttype, char *expreal, int lenreal, char *ptro, int 
                    (*expreal=='&')? lenreal-1:lenreal, 4, lenres );
          else
          {
-          pp_rQuotes( expreal, &sQuotes );
+          pp_rQuotes( expreal, sQuotes );
           pp_Stuff ( sQuotes, ptro, 2, 4, lenres );
           pp_Stuff ( expreal, ptro+1, lenreal, 0, lenres );
           rmlen = lenreal + 2;
@@ -1334,7 +1342,7 @@ int ReplacePattern ( char patttype, char *expreal, int lenreal, char *ptro, int 
      return rmlen - 4;
 }
 
-void pp_rQuotes( char *expreal, char **sQuotes )
+void pp_rQuotes( char *expreal, char *sQuotes )
 {
    int lQuote1 = 0, lQuote2 = 0;
 
@@ -1347,9 +1355,15 @@ void pp_rQuotes( char *expreal, char **sQuotes )
    if( lQuote2 )
    {
      if( lQuote1 )
-       { **sQuotes = '['; *(*sQuotes+1) = ']'; }
+     {
+        *sQuotes = '[';
+        *(sQuotes+1) = ']';
+     }
      else
-       { **sQuotes = '\''; *(*sQuotes+1) = '\''; }
+     {
+        *sQuotes = '\'';
+        *(sQuotes+1) = '\'';
+     }
    }
 }
 
@@ -1480,10 +1494,10 @@ int md_strAt(char *szSub, int lSubLen, char *szText, int checkPrth)
        else if ( *(szText+lPos) == ')' )
          kolPrth--;
        if( !lSubPos && checkPrth && ( (kolPrth > 1) ||
-	   (kolPrth == 1 && *(szText+lPos) != '(') || (kolPrth == 0 && *(szText+lPos) == ')')) )
+           (kolPrth == 1 && *(szText+lPos) != '(') || (kolPrth == 0 && *(szText+lPos) == ')')) )
        {
-	 lPos++;
-	 continue;
+         lPos++;
+         continue;
        }
 
        if( toupper(*(szText + lPos)) == toupper(*(szSub + lSubPos)) )
@@ -1691,32 +1705,38 @@ int NextParm ( char** sSource, char* sDest )
    return lenName;
 }
 
-int OpenInclude( char * szFileName, PATHNAMES *pSearch, FILE** fptr )
+BOOL OpenInclude( char * szFileName, PATHNAMES *pSearch, FILE** fptr, BOOL bStandardOnly )
 {
-  if( ! ( *fptr = fopen( szFileName, "r" ) ) )
-  {
-    if( pSearch )
-    {
-      FILENAME *pFileName =SplitFilename( szFileName );
-      char szFName[ _POSIX_PATH_MAX ];    /* filename to parse */
+  FILENAME *pFileName;
+  char szFName[ _POSIX_PATH_MAX ]; /* filename to parse */
 
-      pFileName->name =szFileName;
-      pFileName->extension =NULL;
-      while( pSearch && !*fptr )
-      {
-        pFileName->path =pSearch->szPath;
-        MakeFilename( szFName, pFileName );
-        if( ! ( *fptr = fopen( szFName, "r" ) ) )
-        {
-            pSearch = pSearch->pNext;
-            if( ! pSearch )
-              return 0;
-        }
-      }
-      _xfree( pFileName );
-    }
-    else
-      return 0;
+  if ( bStandardOnly )
+  {
+    *fptr = 0;
   }
-  return 1;
+  else
+  {
+    pFileName = SplitFilename( szFileName );
+    pFileName->path = _pFileName->path;
+    MakeFilename( szFName, pFileName );
+    *fptr = fopen( szFName, "r" );
+    _xfree( pFileName );
+  }
+
+  if ( !*fptr && pSearch )
+  {
+    pFileName = SplitFilename( szFileName );
+    pFileName->name = szFileName;
+    pFileName->extension = NULL;
+    while ( pSearch && !*fptr )
+    {
+      pFileName->path = pSearch->szPath;
+      MakeFilename( szFName, pFileName );
+      *fptr = fopen( szFName, "r" );
+      pSearch = pSearch->pNext;
+    }
+    _xfree( pFileName );
+  }
+
+  return ( *fptr ? TRUE : FALSE );
 }
