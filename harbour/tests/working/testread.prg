@@ -27,6 +27,7 @@ function Main()
    @ 4, 2 SAY "Enter your wish:" GET cWish
    READ
 
+   @ 6, 2
    ? cName
    ? cWish
 
