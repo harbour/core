@@ -1474,7 +1474,6 @@ static ERRCODE hb_ntxHeaderLoad( LPNTXINDEX pIndex , char *ITN)
    ULONG ulPos;
       
    ulPos = hb_fsSeek( pIndex->DiskFile, 0, SEEK_END );
-   pTag->TagBlock = ulPos/1024;
 
    hb_fsSeek( pIndex->DiskFile , 0 , 0 );
    if( hb_fsRead( pIndex->DiskFile,(BYTE*)&Header,sizeof(NTXHEADER)) != sizeof(NTXHEADER) )
@@ -1488,6 +1487,7 @@ static ERRCODE hb_ntxHeaderLoad( LPNTXINDEX pIndex , char *ITN)
    memset( pTag, 0, sizeof( TAGINFO ) );
    pIndex->CompoundTag = pTag;
    pIndex->NextAvail = Header.next_page;
+   pTag->TagBlock = ulPos/1024;
    pTag->RootBlock = Header.root;
    pTag->TagName = (char *) hb_xgrab( strlen( ITN ) + 1 );
    hb_strncpyUpper( pTag->TagName, ITN, strlen( ITN ) );
