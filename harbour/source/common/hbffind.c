@@ -161,7 +161,7 @@ USHORT hb_fsAttrFromRaw( ULONG raw_attr )
    if( raw_attr & FILE_ATTRIBUTE_HIDDEN )    uiAttr |= HB_FA_HIDDEN;
    if( raw_attr & FILE_ATTRIBUTE_READONLY )  uiAttr |= HB_FA_READONLY;
    if( raw_attr & FILE_ATTRIBUTE_SYSTEM )    uiAttr |= HB_FA_SYSTEM;
-
+   if( raw_attr & FILE_ATTRIBUTE_NORMAL )    uiAttr |= HB_FA_NORMAL;
 #elif defined(HB_OS_UNIX)
 
    uiAttr = 0;
@@ -216,7 +216,7 @@ ULONG hb_fsAttrToRaw( USHORT uiAttr )
    if( uiAttr & HB_FA_HIDDEN )    raw_attr |= FILE_ATTRIBUTE_HIDDEN;
    if( uiAttr & HB_FA_READONLY )  raw_attr |= FILE_ATTRIBUTE_READONLY;
    if( uiAttr & HB_FA_SYSTEM )    raw_attr |= FILE_ATTRIBUTE_SYSTEM;
-
+   if( uiAttr & HB_FA_NORMAL )    raw_attr |= FILE_ATTRIBUTE_NORMAL;
 #elif defined(HB_OS_UNIX)
 
    raw_attr = 0;

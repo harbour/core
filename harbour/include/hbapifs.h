@@ -96,6 +96,7 @@ typedef int    FHANDLE;
 #define HB_FA_NOTINDEXED        4096
 #define HB_FA_ENCRYPTED         8192
 #define HB_FA_VOLCOMP           16384   /* volume supports compression. */
+#define HB_FA_NORMAL            HB_FA_ALL
 
 extern BOOL     hb_fsChDir      ( BYTE * pszDirName ); /* change working directory */
 extern USHORT   hb_fsChDrv      ( BYTE nDrive ); /* change working drive */

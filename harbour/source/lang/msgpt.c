@@ -201,8 +201,8 @@ static HB_LANG s_lang =
       "Symbol item inv lido passado como memvar  %s",
       "Memory buffer overflow",
       "hb_xgrab requisitou para alocar zero bytes",
-      "hb_xrealloc requisitor para redimensiorar para zero byte",
-      "hb_xalloc requested to allocate zero bytes"
+      "hb_xrealloc requisitou para redimensiorar para zero byte",
+      "hb_xalloc requisitou para alocar zero bytes"
 
       /* Texts */
 
