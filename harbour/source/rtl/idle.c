@@ -168,6 +168,12 @@ void hb_idleShutDown( void )
 HB_FUNC( HB_IDLESTATE )
 {
    hb_idleState();
+
+   if( hb_vm_uiIdleTask == hb_vm_uiIdleMaxTask )
+   {
+      hb_vm_uiIdleTask = 0;
+      hb_vm_bCollectGarbage = TRUE;
+   }
 }
 
 /* add a new background task and return its handle */
