@@ -1,3 +1,10 @@
+19990624-19:17 CET Felipe Coury
+   + tests/working/hscript/ugly.hs
+     additional test file
+   * tests/working/hscript/hscript.prg
+   * tests/working/hscript/readme.txt
+     new version
+
 Thu Jun 24 12:25:30 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* include/Makefile: 

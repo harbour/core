@@ -1,9 +1,10 @@
 /*
 *
 *  HScript.PRG
-*  HarbourScript translator
+*  HarbourScript translation engine
 *
 *  1999/06/13  First implementation.
+*  1999/06/24  Enhanced tag matching routines.
 *
 **/
 
@@ -16,11 +17,11 @@ FUNCTION Main( cScript )
    LOCAL aHRSHandle  := {}                         // Handle for script lines
    LOCAL aResult     := {}                         // Handle for transl'd lines
    LOCAL cLocation   := {}                         // Location of scripts
-   LOCAL cHarbourDir := GetEnv( "HARBOUR_DIR" )    // Harbour.exe dir with '\'
+   LOCAL cHarbourDir := GetEnv( "HARBOURDIR" )     // Harbour.exe dir with '\'
    LOCAL cHost       := strtran( alltrim( ;        // Random (not et al)
       str( seconds() ) ), '.' )                    // file name
-   LOCAL cScriptName, cFile, cRes, cLine
-   LOCAL hFile, nStartPos, nPos, i, lScriptFlag
+   LOCAL cScriptName, cFile, cLine, cTrans, c
+   LOCAL hFile, i, lOpen, nLen
 
    WHILE .t.
 
@@ -64,81 +65,74 @@ FUNCTION Main( cScript )
          EXIT
       ENDIF
 
-      // Reads all lines from script -> aHRBHandle
-      hFile := fOpen( cScriptName, 0 )
-      cFile := space( IF_BUFFER )
+      lOpen := .f.
+      hb_fUse( cScriptName )
+      WHILE !hb_fEof()
 
-      cRes := ""
-      DO WHILE (nPos := fRead( hFile, @cFile, IF_BUFFER )) > 0
+         cLine  := alltrim( hb_fReadLn() )
+         cTrans := ""
+         nLen   := len( cLine )
 
-         cFile := left( cFile, nPos )
-         cRes  += cFile
-         cFile := space( IF_BUFFER )
+         IF lOpen
+            cTrans += "qOut( '"
+         ENDIF
+
+         FOR i := 1 TO nLen
+
+            c := substr( cLine, i, 1 )
+
+            IF c = "%" .AND. substr( cLine, i + 1, 1 ) = ">"
+               IF lOpen
+                  // Error - Already in htm mode
+
+               ELSE
+                  // Abre script
+                  IF i > 1
+                     //cTrans += " ; "
+                     cTrans += NewLine
+                  ENDIF
+                  IF i + 1 < nLen
+                     cTrans += "qOut( '"
+                  ENDIF
+                  lOpen  := .t.
+
+               ENDIF
+               i++
+
+            ELSEIF c = "<" .AND. substr( cLine, i + 1, 1 ) = "%"
+               IF !lOpen
+                  // Error - Not in htm mode
+
+               ELSE
+                  // Fecha script
+                  cTrans += "' )"
+                  lOpen  := .f.
+                  IF i < nLen
+                     // cTrans += " ; "
+                     cTrans += NewLine
+                  ENDIF
+
+               ENDIF
+               i++
+
+            ELSE
+               cTrans += c
+
+            ENDIF
+
+         NEXT
+
+         IF lOpen .AND. substr( cLine, nLen - 1, 2 ) <> "%>"
+            cTrans += "' )"
+         ENDIF
+
+         aadd( aResult, cTrans )
+
+         hb_fSkip()
 
       ENDDO
+      hb_fUse()
 
-      fClose( cFile )
-
-      // "Break" infile into lines
-      nStartPos := 1
-      FOR i := 1 TO len( cRes )
-
-         IF substr( cRes, i, 1 ) == chr(13)
-
-            IF i = (nStartPos + 1)
-               aAdd( aHRSHandle, "" )
-            ELSE
-               aAdd( aHRSHandle, strtran( ;
-                  substr( cRes, nStartPos, i - nStartPos ), chr(10), "" ) )
-            ENDIF
-
-            nStartPos := i + 1
-         ENDIF
-
-      NEXT
-
-      // Translate script to pure HTML
-      /* TODO: Add support for lines like "<% something" and "something %>" */
-      nStartPos := 1
-      lScriptFlag := .f.
-
-      FOR i := 1 TO len( aHRSHandle )
-         cLine := aHRSHandle[i]
-
-         IF !lScriptFlag
-            nPos := at( "<%", cLine )                     // Are we in script?
-
-            IF nPos == 0                                  // No, use qout to
-               aadd( aResult, "qOut( '" + cLine + "' )" ) // write HTML code
-
-            ELSE                                          // Yes.
-               IF at( "%>", cLine ) != 0                  // Is it inline?
-                                // Yes, translate only HTML to qOut <hmtl>
-                  aadd( aResult, "qOut( '" +            ;
-                     substr( cLine, 1, nPos-1 )       + ;
-                     "' ) " +                 NewLine + ;
-                     substr( cLine,  nPos + 2,          ;
-                        at( "%>", cLine ) -             ;
-                        (nPos + 2) )                  + ;
-                     NewLine + "qOut( '"              + ;
-                     substr( cLine, at( "%>", cLine ) + ;
-                        2 ) + "' )" )
-               ELSE                                       // No.
-                  lScriptFlag := .t.                      // Change the flag
-                  aadd( aResult, "" )                     // Add blank line
-               ENDIF
-            ENDIF
-         ELSE
-            IF at( "%>", cLine ) == 0                     // Is this line EOS? - End of Script<g>
-               aadd( aResult, cLine )                     // No, add
-            ELSE                                          // Yes,
-               lScriptFlag := .f.                         // Change the flag
-               aadd( aResult, "" )                        // Add blank line
-            ENDIF
-         ENDIF
-      NEXT
-
-      // Creates the temporary PRG
       cFile := cLocation + cHost + ".prg"                 // Output file name
       hFile := fCreate( cFile )
       FOR i := 1 TO len( aResult )
@@ -153,7 +147,7 @@ FUNCTION Main( cScript )
       // Runs using Tugboat
       cFile := strtran( upper( cFile ), ".PRG", ".HRB" )
       HB_Run( cFile )
-      // Erases the HRB
+      // Erases the HRB file
       fErase( cFile )
 
       // That's all, folks!

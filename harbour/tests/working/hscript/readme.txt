@@ -66,17 +66,6 @@ Known bugs
 
 - Web Server hanging some times (see above);
 
-- No support for <% and %> tags on the same line without its
-corresponding tag, eg.:
-<% FUNCTION Main()
-%><H1><% qOut( "Hello world!" ) %></H1><%
-   RETURN( NIL )%>
-
-- No support for multiple <% %> tags in the same line, eg.:
-...
-<TD><% qOut( aArr[1] ) %></TD><TD><% qOut( aArr[2] ) %></TD>
-...
-
 
 Open questions
 --------------
