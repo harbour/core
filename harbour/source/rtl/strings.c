@@ -535,32 +535,6 @@ HARBOUR HB_PADC( void )
       hb_retc( "" );
 }
 
-ULONG hb_strAt( const char * szSub, ULONG ulSubLen, const char * szText, ULONG ulLen )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_strAt(%s, %lu, %s, %lu)", szSub, ulSubLen, szText, ulLen));
-
-   if( ulSubLen > 0 && ulLen >= ulSubLen )
-   {
-      ULONG ulPos = 0, ulSubPos = 0;
-
-      while( ulPos < ulLen && ulSubPos < ulSubLen )
-      {
-         if( *( szText + ulPos ) == *( szSub + ulSubPos ) )
-         {
-            ulSubPos++;
-            ulPos++;
-         }
-         else if( ulSubPos )
-            ulSubPos = 0;
-         else
-            ulPos++;
-      }
-      return ( ulSubPos < ulSubLen ) ? 0 : ( ulPos - ulSubLen + 1 );
-   }
-   else
-      return 0;
-}
-
 /* locates a substring in a string */
 /* TEST: QOUT( "at( 'cde', 'abcdefgfedcba' ) = '" + at( 'cde', 'abcsefgfedcba' ) + "'" ) */
 HARBOUR HB_AT( void )

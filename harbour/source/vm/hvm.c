@@ -1794,11 +1794,11 @@ static void hb_vmInstring( void )
    pItem2 = hb_stack.pPos - 1;
    if( IS_STRING( pItem1 ) && IS_STRING( pItem2 ) )
    {
-      int iResult = hb_strAt( pItem1->item.asString.value, pItem1->item.asString.length,
-                              pItem2->item.asString.value, pItem2->item.asString.length );
+      BOOL bResult = ( hb_strAt( pItem1->item.asString.value, pItem1->item.asString.length,
+                                 pItem2->item.asString.value, pItem2->item.asString.length ) != 0 );
       hb_stackPop();
       hb_stackPop();
-      hb_vmPushLogical( iResult == 0 ? FALSE : TRUE );
+      hb_vmPushLogical( bResult );
    }
    else if( IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem1, "$" ) )
       hb_vmOperatorCall( pItem1, pItem2, "$" );

@@ -592,6 +592,11 @@ HB_EXPR_PTR hb_compExprNewFunCall( char *szFunName, HB_EXPR_PTR pParms )
 
    hb_compFunCallCheck( szFunName, iCount );
 
+   /* TODO: AT() (also done by Clipper, already mentioned)
+            LEN() (also done by Clipper)
+            ASC() (not done by Clipper)
+            EMPTY() (not done by Clipper) */
+
    if( ( strcmp( "CHR", szFunName ) == 0 ) && iCount )
    {
       /* try to change it into a string */
@@ -599,15 +604,36 @@ HB_EXPR_PTR hb_compExprNewFunCall( char *szFunName, HB_EXPR_PTR pParms )
 
       if( pArg->ExprType == HB_ET_NUMERIC )
       {
+         /* NOTE: CA-Cl*pper's compiler optimizer will be wrong for those
+                  CHR() cases where the passed parameter is a constant which
+                  can be divided by 256 but it's not zero, in this case it
+                  will return an empty string instead of a Chr(0). [vszel] */
+
          pExpr = hb_compExprNew( HB_ET_STRING );
-         pExpr->ulLength = 1;
-         pExpr->ValType  = HB_EV_STRING;
-         pExpr->value.asString = ( char * ) HB_XGRAB( 2 );
+         pExpr->ValType = HB_EV_STRING;
          if( pArg->value.asNum.NumType == HB_ET_LONG )
-            pExpr->value.asString[ 0 ] = ( pArg->value.asNum.lVal % 256 );
+         {
+            if( ( pArg->value.asNum.lVal % 256 ) == 0 && pArg->value.asNum.lVal != 0 )
+            {
+               pExpr->value.asString = ( char * ) HB_XGRAB( 1 );
+               pExpr->value.asString[ 0 ] = '\0';
+               pExpr->ulLength = 0;
+            }
+            else
+            {
+               pExpr->value.asString = ( char * ) HB_XGRAB( 2 );
+               pExpr->value.asString[ 0 ] = ( pArg->value.asNum.lVal % 256 );
+               pExpr->value.asString[ 1 ] = '\0';
+               pExpr->ulLength = 1;
+            }
+         }
          else
-            pExpr->value.asString[ 0 ] = ( (long) pArg->value.asNum.dVal % 256 );
-         pExpr->value.asString[ 1 ] = '\x0';
+         {
+            pExpr->value.asString = ( char * ) HB_XGRAB( 2 );
+            pExpr->value.asString[ 0 ] = ( ( long ) pArg->value.asNum.dVal % 256 );
+            pExpr->value.asString[ 1 ] = '\0';
+            pExpr->ulLength = 1;
+         }
          hb_compExprDelete( pParms );
       }
    }
@@ -4003,7 +4029,15 @@ static HB_EXPR_FUNC( hb_compExprUseIN )
                 */
                BOOL bResult;
 
-               bResult = ( strstr( pSelf->value.asOperator.pRight->value.asString, pSelf->value.asOperator.pLeft->value.asString ) != NULL );
+               /* NOTE: CA-Cl*pper has a bug where the $ operator returns .T.
+                        when an empty string is searched [vszel] */
+
+               if( pSelf->value.asOperator.pLeft->ulLength == 0 )
+                  bResult = TRUE;
+               else
+                  bResult = ( hb_strAt( pSelf->value.asOperator.pLeft->value.asString, pSelf->value.asOperator.pLeft->ulLength,
+                                        pSelf->value.asOperator.pRight->value.asString, pSelf->value.asOperator.pRight->ulLength ) != 0 );
+
                /* NOTE:
                 * "" $ "XXX" = .T.
                 * "" $ "" = .T.

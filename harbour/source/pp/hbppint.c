@@ -38,7 +38,7 @@
  */
 #if ! defined(HB_TRACE_UTILS)
 #if defined(HB_TRACE_LEVEL)
-#undef HB_TRACE_LEVEL)
+#undef HB_TRACE_LEVEL
 #endif
 #endif
 

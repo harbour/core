@@ -1,3 +1,25 @@
+19991121-17:33 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/compiler/expropt.c
+    ! $ optimization fixed for strings containing Chr(0), now 4 more RTL_TESTs
+      pass.
+    ! "Fixed" CHR() to be bug compatible with Clipper for cases where param
+       % 256 = 0 but param != 0.
+    ! "Fixed" $ to be bug compatible with Clipper when an empty string is
+       searched in a string.
+  * tests/rtl_test.prg (not yet committed)
+    + Some failing VAL() tests added.
+    ! Corrected result for compiler optimized AT(), CHR() and $ operations.
+      They now test for bug compatibility.
+  + source/common/hbstr.c (added)
+    source/common/Makefile
+    source/rtl/strings.c
+    * hb_strAt() moved to the common library.
+      ! WARNING ! Please modify non-GNU make systems.
+  * source/vm/hvm.c
+    % Minor optimization in hb_vmInString()
+  * source/pp/*
+    ! Fixed some mistyped #undef statements related to tracing.
+
 19991121-16:10 GMT+1 Bruno Cantero <bruno@issnet.net>
   * include/rddapi.h
     source/rdd/dbcmd.c
