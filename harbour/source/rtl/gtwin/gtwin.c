@@ -314,6 +314,9 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
             /* Save the keyboard state and ASCII key code */
             DWORD dwState = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.dwControlKeyState;
             ch = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.uChar.AsciiChar;
+printf( "\n\nhb_gt_ReadKey: The keyboard state is 0x%04X, the character code is %d", dwState, ch );
+printf( ", the virtual key code is %d", s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualKeyCode );
+printf( ", the virtual scan code is %d", s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualScanCode );
             if( ch == 224 )
             {
                /* Strip extended key lead-in codes */
@@ -327,17 +330,18 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
             else if( ch == 0 || ( dwState & ( ENHANCED_KEY | LEFT_ALT_PRESSED | LEFT_CTRL_PRESSED | RIGHT_ALT_PRESSED | RIGHT_CTRL_PRESSED | SHIFT_PRESSED ) ) )
             {
                /* Process non-ASCII key codes */
-               WORD wKey;
-               if( eventmask & INKEY_RAW )
-                  wKey = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualKeyCode;
-               else
-                  wKey = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualScanCode;
+               WORD wChar = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualKeyCode;
+               WORD wKey = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualScanCode;
+               if( eventmask & INKEY_RAW ) wKey = wChar;
                /* Discard standalone state key presses for normal mode only */
                if( ( eventmask & INKEY_RAW ) == 0 ) switch( wKey )
                {
                   /* Virtual scan codes to ignore */
                   case 29: /* Ctrl */
+                  case 40: /* Circle Accent */
+                  case 41: /* Tick Accent */
                   case 42: /* Left Shift */
+                  case 43: /* Reverse Tick Accent */
                   case 54: /* Right Shift */
                   case 56: /* Alt */
                   case 58: /* Caps Lock */
@@ -374,21 +378,25 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
                      if( bAlt )
                      {
                         /* Alt key held */
-                        if( wKey == 1 ) ch = K_ALT_ESC; /* Esc */
-                        else if( wKey == 15 ) ch = K_ALT_TAB; /* Tab */
-                        else if( wKey <= 12 ) ch = wKey + 374; /* Numeric row */
-                        else if( wKey == 28 ) ch = KP_ALT_ENTER; /* Num Pad Enter */
-                        else if( wKey <= 52 ) ch = wKey + 256; /* Alpha rows */
-                        else if( wKey == 53 && bEnhanced ) ch = KP_ALT_SLASH; /* Num Pad / */
-                        else if( wKey == 55 ) ch = KP_ALT_ASTERISK; /* Num Pad * */
-                        else if( wKey <= 58 ) ch = wKey + 367; /* ? */
-                        else if( wKey <= 68 ) ch = 29 - wKey; /* F1 - F10 */
-                        else if( wKey == 74 ) ch = KP_ALT_MINUS; /* Num Pad - */
-                        else if( wKey == 76 ) ch = KP_ALT_5; /* Num Pad 5 */
-                        else if( wKey == 78 ) ch = KP_ALT_PLUS; /* Num Pad + */
-                        else if( wKey <= 86 ) ch = wKey + 336; /* Cursor */
-                        else if( wKey <= 88 ) ch = 41 - wKey; /* F11, F12 */
-                        else ch = wKey + 384;
+                        if( ch == 0 || ch == wChar || tolower( ch ) == tolower( wChar ) )
+                        {
+                           /* Only translate if not AltGr */
+                           if( wKey == 1 ) ch = K_ALT_ESC; /* Esc */
+                           else if( wKey == 15 ) ch = K_ALT_TAB; /* Tab */
+                           else if( wKey <= 12 ) ch = wKey + 374; /* Numeric row */
+                           else if( wKey == 28 ) ch = KP_ALT_ENTER; /* Num Pad Enter */
+                           else if( wKey <= 52 ) ch = wKey + 256; /* Alpha rows */
+                           else if( wKey == 53 && bEnhanced ) ch = KP_ALT_SLASH; /* Num Pad / */
+                           else if( wKey == 55 ) ch = KP_ALT_ASTERISK; /* Num Pad * */
+                           else if( wKey <= 58 ) ch = wKey + 367; /* ? */
+                           else if( wKey <= 68 ) ch = 29 - wKey; /* F1 - F10 */
+                           else if( wKey == 74 ) ch = KP_ALT_MINUS; /* Num Pad - */
+                           else if( wKey == 76 ) ch = KP_ALT_5; /* Num Pad 5 */
+                           else if( wKey == 78 ) ch = KP_ALT_PLUS; /* Num Pad + */
+                           else if( wKey <= 86 ) ch = wKey + 336; /* Cursor */
+                           else if( wKey <= 88 ) ch = 41 - wKey; /* F11, F12 */
+                           else ch = wKey + 384;
+                        }
                      }
                      else if( bCtrl )
                      {
@@ -533,10 +541,10 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
                            case 75: /* Left */
                               ch = K_LEFT;
                               break;
-                           default: /* Any thing not explicitly translated */
+                           default:
+                              /* Only provide a translation for those key
+                                 codes that don't have a character code. */
                               if( ch == 0 )
-                                 /* Only provide a translation for those key
-                                    codes that don't have a default one. */
                                  ch = wKey + 128;
                         }
                      }
@@ -591,7 +599,7 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
                               ch = 332;
                               break;
                            default:
-                              ch = wKey + 128;
+                                 ch = wKey;
                         }
                      }
                   }
@@ -655,6 +663,7 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
       s_cNumIndex++;
    }
 
+if( ch ) printf( ", and the return code is %d", ch );
    return ch;
 }
 

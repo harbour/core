@@ -1,3 +1,8 @@
+2000-06-12 20:25 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+   * source/rtl/gtwin/gtwin.c
+     ! Partial fix for international keyboard AltGr handling.
+
 20000612-23:10 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
 
    * source/rtl/tedior.prg
