@@ -424,7 +424,6 @@ extern BOOL          hb_comp_bBuildInfo;
 extern BOOL          hb_comp_bLogo;
 extern BOOL          hb_comp_bSyntaxCheckOnly;
 extern int           hb_comp_iLanguage;
-extern int           hb_comp_iJumpOptimize;
 
 extern USHORT        hb_comp_wSeqCounter;
 extern USHORT        hb_comp_wForCounter;

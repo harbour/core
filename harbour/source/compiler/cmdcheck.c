@@ -344,20 +344,6 @@ void hb_compChkEnvironVar( char * szSwitch )
                 }
                 break;
 
-             case 'j':
-             case 'J':
-                switch( *( s + 1 ) )
-                {
-                   case '0':
-                      hb_comp_iJumpOptimize = 0;
-                      break;
-
-                   case '1':
-                      hb_comp_iJumpOptimize = 1;
-                      break;
-                }
-                break;
-
              case 'l':
              case 'L':
                 hb_comp_bLineNumbers = FALSE;

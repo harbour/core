@@ -53,7 +53,6 @@ void hb_compPrintUsage( char * szSelf )
            "\n          %cgh              output type: Harbour Portable Object (.hrb)",
            "\n          %cgj              output type: Java source (.java)",
            "\n          %ci<path>         add #include file search path",
-           "\n          %cj[0|1]          Jump optimizer 0=disabled 1=enabled (default)",
            "\n          %cl               suppress line number information",
            "\n          %cm               compile module only",
            "\n          %cn               no implicit starting procedure",

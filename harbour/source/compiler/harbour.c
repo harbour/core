@@ -124,7 +124,6 @@ BOOL          hb_comp_bBuildInfo = FALSE;                /* print build info */
 BOOL          hb_comp_bLogo = TRUE;                      /* print logo */
 BOOL          hb_comp_bSyntaxCheckOnly = FALSE;          /* syntax check only */
 int           hb_comp_iLanguage = LANG_C;                /* default Harbour generated output language */
-int           hb_comp_iJumpOptimize = 1;
 BOOL          hb_comp_EOL;
 char *        hb_comp_szDeclaredFun = NULL;
 
@@ -1604,16 +1603,15 @@ void hb_compNOOPadd( PFUNCTION pFunc, ULONG ulPos )
    }
 }
 
+/* NOTE: To disable jump optimization, just make this function a dummy one.
+         [vszakats] */
+
 static void hb_compPrepareOptimize()
 {
-   if( ! hb_comp_iJumpOptimize )
-      return;
-
    hb_comp_functions.pLast->iJumps++;
 
    if( hb_comp_functions.pLast->pJumps )
    {
-
       hb_comp_functions.pLast->pJumps = ( ULONG * ) hb_xrealloc( hb_comp_functions.pLast->pJumps, sizeof( ULONG ) * hb_comp_functions.pLast->iJumps );
       hb_comp_functions.pLast->pJumps[ hb_comp_functions.pLast->iJumps - 1 ] = ( ULONG ) ( hb_comp_functions.pLast->lPCodePos - 4 );
    }
@@ -1731,9 +1729,9 @@ ULONG hb_compGenJumpTrue( LONG lOffset )
 
 void hb_compGenJumpThere( ULONG ulFrom, ULONG ulTo )
 {
-   BYTE * pCode  = hb_comp_functions.pLast->pCode;
-   LONG lOffset  = ulTo - ulFrom + 1;
-   int iOptimize = hb_comp_iJumpOptimize;
+   BYTE * pCode = hb_comp_functions.pLast->pCode;
+   LONG lOffset = ulTo - ulFrom + 1;
+   BOOL bOptimize = TRUE;
 
    if( lOffset >= -128 && lOffset <= 127 )
    {
@@ -1787,11 +1785,11 @@ void hb_compGenJumpThere( ULONG ulFrom, ULONG ulTo )
             break;
 
          case HB_P_SEQBEGIN :
-            iOptimize = 0;
+            bOptimize = FALSE;
             break;
 
          case HB_P_SEQEND :
-            iOptimize = 0;
+            bOptimize = FALSE;
             break;
 
          default:
@@ -1802,7 +1800,7 @@ void hb_compGenJumpThere( ULONG ulFrom, ULONG ulTo )
 
       pCode[ ( ULONG ) ulFrom ] = HB_LOBYTE( lOffset );
 
-      if( ! iOptimize  )
+      if( ! bOptimize  )
          return;
 
       /* Check if 3rd. Byte not used. */
@@ -1812,9 +1810,7 @@ void hb_compGenJumpThere( ULONG ulFrom, ULONG ulTo )
 
          /* Check if 2nd. Byte not used. */
          if( pCode[ ( ULONG ) ulFrom + 1 ] == HB_P_NOOP )
-         {
             hb_compNOOPadd( hb_comp_functions.pLast, ulFrom + 1 );
-         }
       }
    }
    else if( lOffset >= SHRT_MIN && lOffset <= SHRT_MAX )
@@ -1863,11 +1859,11 @@ void hb_compGenJumpThere( ULONG ulFrom, ULONG ulTo )
             break;
 
          case HB_P_SEQBEGIN :
-            iOptimize = 0;
+            bOptimize = FALSE;
             break;
 
          case HB_P_SEQEND :
-            iOptimize = 0;
+            bOptimize = FALSE;
             break;
 
          default:
@@ -1879,14 +1875,12 @@ void hb_compGenJumpThere( ULONG ulFrom, ULONG ulTo )
       pCode[ ulFrom ] = HB_LOBYTE( lOffset );
       pCode[ ( ULONG ) ( ulFrom + 1 ) ] = HB_HIBYTE( lOffset );
 
-      if( ! iOptimize )
+      if( ! bOptimize )
          return;
 
       /* Check if 3rd. Byte not used. */
       if( pCode[ ( ULONG ) ulFrom + 2 ] == HB_P_NOOP )
-      {
          hb_compNOOPadd( hb_comp_functions.pLast, ulFrom + 2 );
-      }
    }
    else if( lOffset >= ( -8388608L ) && lOffset <= 8388607L )
    {
@@ -2681,7 +2675,7 @@ void hb_compFinalizeFunction( void ) /* fixes all last defined function returns 
       else
          hb_compFixFuncPCode( pFunc );
 
-      if( hb_comp_iJumpOptimize && pFunc->iNOOPs )
+      if( pFunc->iNOOPs )
          hb_compOptimizeJumps();
 
       if( hb_comp_iWarnings )
@@ -3157,8 +3151,7 @@ void hb_compCodeBlockEnd( void )
    USHORT wPos;
    PVAR pVar, pFree;
 
-   if( hb_comp_iJumpOptimize &&
-       hb_comp_functions.pLast &&
+   if( hb_comp_functions.pLast &&
        hb_comp_functions.pLast->iNOOPs )
       hb_compOptimizeJumps();
 

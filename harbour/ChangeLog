@@ -1,3 +1,19 @@
+2000-07-29 03:28 UTC+0100 Victor Szakats <info@szelvesz.hu>
+
+   * include/hbcomp.h
+   * source/compiler/hbusage.c
+   * source/compiler/harbour.c
+   * source/compiler/cmdcheck.c
+     - Removed the command line option to disable jump optimizing. The reason 
+       is that this option has an internal debugging purpose, which doesn't 
+       cause any practical change to the generated code, at least from a 
+       Harbour users POV. If disabling of this pcode generation phase is 
+       needed by anyone, we could add a compile-time disabling macro for it.
+       The only reason I can think of disabling this as a user is compiling 
+       speed, which may increase by using it, if this is important I think 
+       we should rather add a pcode optimization level option, which would be 
+       more generic solution for this.
+
 2000-07-29 03:16 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
    * source/rtl/gt*/gt*.c

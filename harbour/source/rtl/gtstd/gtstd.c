@@ -188,7 +188,12 @@ void hb_gt_SetPos( SHORT iRow, SHORT iCol, SHORT iMethod )
          out_newline();
          s_iCol = 0;
       }
-      if( s_iCol < iCol ) while( ++s_iCol < iCol ) out_stdout( " ", 1 );
+
+      if( s_iCol < iCol )
+      {
+         while( ++s_iCol < iCol )
+            out_stdout( " ", 1 );
+      }
    }
 
    s_iRow = iRow;
