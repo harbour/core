@@ -1,3 +1,27 @@
+19990901-14:40 GMT+2 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/compiler/harbour.l
+        * corrected handling of BREAK statement
+
+    *source/compiler/harbour.y
+        * corrected generation of line number opcodes
+        * corrected the support for local variables when nested
+        codeblocks are used
+
+    *source/rtl/codebloc.c
+        * corrected the support for local variables when nested
+        codeblocks are used
+
+    *source/vm/hvm.c
+    *include/ctoharb.h
+        * added hb_vmRequestCancel() function
+
+    *source/rtl/inkey.c
+        * signals the virtual machine that Alt-C was pressed
+
+    *doc/codebloc.txt
+        * updated information
+
 19990831-22:49 EDT Paul Tucker <ptucker@sympatico.ca>
   * include/set.h
     source/rtl/set.c

@@ -1023,6 +1023,7 @@ HARBOUR hb_vmDoBlock( void )
 {
    PHB_ITEM pBlock = stack.pBase + 1;
    WORD wStackBase = stack.pBase - stack.pItems; /* as the stack memory block could change */
+   WORD wLine;
    int iParam;
 
    if( ! IS_BLOCK( pBlock ) )
@@ -1034,15 +1035,16 @@ HARBOUR hb_vmDoBlock( void )
    while( iParam-- > 0 )
      hb_vmPushNil();
 
-   /* set pBaseCB to point to local variables of a function where
-    * the codeblock was defined
+   /* set the current line number to a line where the codeblock was defined
     */
+   wLine =stack.pBase->item.asSymbol.lineno;
    stack.pBase->item.asSymbol.lineno = pBlock->item.asBlock.lineno;
 
    hb_codeblockEvaluate( pBlock );
 
    /* restore stack pointers */
    stack.pBase = stack.pItems + wStackBase;
+   stack.pBase->item.asSymbol.lineno =wLine;
 
    HB_DEBUG( "End of DoBlock\n" );
 }
@@ -2965,4 +2967,13 @@ WORD hb_vmRequestQuery( void )
 HARBOUR HB_BREAK( void )
 {
    hb_vmRequestBreak( hb_param( 1, IT_ANY ) );
+}
+
+void hb_vmRequestCancel( void )
+{
+   if( hb_set.HB_SET_CANCEL )
+   {
+      printf( "\nCancelled at: %s (%i)\n", stack.pBase->item.asSymbol.value->szName, stack.pBase->item.asSymbol.lineno );
+      wActionRequest = HB_QUIT_REQUESTED;
+   }
 }

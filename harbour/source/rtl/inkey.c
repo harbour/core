@@ -47,6 +47,7 @@
 #endif
 
 #include "extend.h"
+#include "ctoharb.h"
 #include "errorapi.h"
 #include "inkey.h"
 #include "init.h"
@@ -397,8 +398,12 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
 #else
       /* TODO: Support for other platforms, such as Mac */
 #endif
-
-      hb_inkeyPut( ch );
+      if( ch )
+      {
+         if( ch == 302 )
+            hb_vmRequestCancel( );  /* Alt-C was pressed */
+         hb_inkeyPut( ch );
+      }
    }
 }
 
@@ -600,15 +605,17 @@ HARBOUR HB___KEYBOARD( void )
          }
 
          while( size-- )
-            hb_inkeyPut( *fPtr++ );
+	 {
+	    if( *fPtr )
+               hb_inkeyPut( *fPtr );
+            ++fPtr;
+         }
       }
    }
 }
 
 void hb_inkeyPut( int ch )
 {
-   if( ch )
-   {
       if( hb_set.HB_SET_TYPEAHEAD )
       {
          /* Proper typeahead support is set */
@@ -619,7 +626,6 @@ void hb_inkeyPut( int ch )
          else /* TODO: Add error sound */ ;
       }
       else s_inkeyForce = ch; /* Typeahead support is disabled */
-   }
 }
 
 /*  $DOC$
@@ -660,7 +666,11 @@ void hb_inkeyPut( int ch )
 HARBOUR HB___KEYPUT( void )
 {
    if( ISNUM( 1 ) )
-      hb_inkeyPut( hb_parni( 1 ) );
+   {
+      int ch = hb_parni( 1 );
+      if( ch )
+         hb_inkeyPut( ch );
+   }
 }
 
 /*  $DOC$

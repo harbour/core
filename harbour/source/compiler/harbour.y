@@ -474,6 +474,7 @@ PATHNAMES *_pIncludePath = NULL;
 PHB_FNAME _pFileName = NULL;
 ALIASID_PTR pAliasId = NULL;
 WORD _wLastLinePos = 0;    /* position of last opcode with line number */
+BOOL _bDontGenLineNum = FALSE;   /* suppress line number generation */
 
 PSTACK_VAL_TYPE pStackValType = 0; /* compile time stack values linked list */
 char cVarType = ' ';               /* current declared variable type */
@@ -699,25 +700,34 @@ FunCallArray : FunCall { Function( $1 ); } ArrayIndex
 ObjFunArray : FunCallArray ':' { GenPCode1( HB_P_ARRAYAT ); }
            ;
 
-Expression : NIL                              { PushNil(); }
-           | DOUBLE                           { PushDouble( $1.dNumber,$1.bDec ); }
+NumExpression : DOUBLE                        { PushDouble( $1.dNumber,$1.bDec ); }
            | INTEGER                          { PushInteger( $1 ); }
            | INTLONG                          { PushLong( $1 ); }
+           ;
+
+ConExpression : NIL                           { PushNil(); }
            | LITERAL                          { PushString( $1 ); }
-           | Variable
+           | CodeBlock                        {}
+           ;
+
+DynExpression : Variable
            | VarUnary
            | Logical                          { PushLogical( $1 ); }
            | Operators                        {}
            | FunCall                          { Function( $1 ); }
            | IfInline                         {}
            | Array                            {}
-           | CodeBlock                        {}
            | ObjectMethod                     {}
            | Macro                            {}
            | AliasVar                         { PushId( $1 ); AliasRemove(); }
            | AliasFunc                        {}
            | PareExpList                      {}
            | SELF                             { GenPCode1( HB_P_PUSHSELF ); }
+           ;
+
+Expression : NumExpression
+           | ConExpression
+           | DynExpression
            ;
 
 IfInline   : IIF '(' Expression ',' { $<iNumber>$ = JumpFalse( 0 ); }
@@ -1047,18 +1057,18 @@ IfEndif    : IfBegin EndIf                    { JumpHere( $1 ); }
            | IfBegin IfElseIf IfElse EndIf    { JumpHere( $1 ); FixElseIfs( $2 ); }
            ;
 
-IfBegin    : IF Expression { ++_wIfCounter; } Crlf { $$ = JumpFalse( 0 ); }
+IfBegin    : IF Expression { ++_wIfCounter; } Crlf { $$ = JumpFalse( 0 ); Line(); }
                 IfStats
                 { $$ = Jump( 0 ); JumpHere( $<iNumber>5 ); }
            ;
 
-IfElse     : ELSE Crlf IfStats
+IfElse     : ELSE Crlf { Line(); } IfStats
            ;
 
-IfElseIf   : ELSEIF Expression Crlf { $<iNumber>$ = JumpFalse( 0 ); }
+IfElseIf   : ELSEIF Expression Crlf { $<iNumber>$ = JumpFalse( 0 ); Line(); }
                 IfStats { $$ = GenElseIf( 0, Jump( 0 ) ); JumpHere( $<iNumber>4 ); }
 
-           | IfElseIf ELSEIF Expression Crlf { $<iNumber>$ = JumpFalse( 0 ); }
+           | IfElseIf ELSEIF Expression Crlf { $<iNumber>$ = JumpFalse( 0 ); Line(); }
                 IfStats { $$ = GenElseIf( $1, Jump( 0 ) ); JumpHere( $<iNumber>5 ); }
            ;
 
@@ -1091,21 +1101,21 @@ EndCase    : ENDCASE              { --_wCaseCounter; }
            | END                  { --_wCaseCounter; }
            ;
 
-DoCaseBegin : DOCASE { ++_wCaseCounter; } Crlf
+DoCaseBegin : DOCASE { ++_wCaseCounter; } Crlf { Line(); }
            ;
 
 Cases      : CASE Expression Crlf { $<iNumber>$ = JumpFalse( 0 ); Line(); } CaseStmts { $$ = GenElseIf( 0, Jump( 0 ) ); JumpHere( $<iNumber>4 ); Line(); }
            | Cases CASE Expression Crlf { $<iNumber>$ = JumpFalse( 0 ); Line(); } CaseStmts { $$ = GenElseIf( $1, Jump( 0 ) ); JumpHere( $<iNumber>5 ); Line(); }
            ;
 
-Otherwise  : OTHERWISE Crlf CaseStmts
+Otherwise  : OTHERWISE Crlf { Line(); } CaseStmts
            ;
 
 CaseStmts  : /* no statements */
            | Statements
            ;
 
-DoWhile    : WhileBegin Expression Crlf { $<lNumber>$ = JumpFalse( 0 ); }
+DoWhile    : WhileBegin Expression Crlf { $<lNumber>$ = JumpFalse( 0 ); Line(); }
                 { Jump( $1 - functions.pLast->lPCodePos ); }
              EndWhile { JumpHere( $<lNumber>4 ); --_wWhileCounter; }
 
@@ -1127,16 +1137,34 @@ EndWhile   : END
 
 ForNext    : FOR IDENTIFIER ForAssign Expression { PopId( $2 ); $<iNumber>$ = functions.pLast->lPCodePos; ++_wForCounter; LoopStart(); }
              TO Expression                       { PushId( $2 ); }
-             StepExpr Crlf                       { GenPCode1( HB_P_FORTEST ); $<iNumber>$ = JumpTrue( 0 ); }
-             ForStatements                       { LoopHere(); PushId( $2 ); GenPCode1( HB_P_PLUS ); PopId( $2 ); Jump( $<iNumber>5 - functions.pLast->lPCodePos ); JumpHere( $<iNumber>11 ); LoopEnd(); }
+             StepExpr Crlf                       { if( $<lNumber>9 )
+	                                              GenPCode1( HB_P_FORTEST ); 
+						   else
+						      GenPCode1( HB_P_LESS ); 
+						   $<iNumber>$ = JumpTrue( 0 ); 
+						   Line(); 
+						 }
+             ForStatements                       { LoopHere(); 
+                                                   PushId( $2 ); 
+						   if( $<lNumber>9 )
+						      GenPCode1( HB_P_PLUS ); 
+						   else
+						      Inc();
+						   PopId( $2 ); 
+						   Jump( $<iNumber>5 - functions.pLast->lPCodePos ); 
+						   JumpHere( $<iNumber>11 ); 
+						   LoopEnd(); 
+						   if( $<lNumber>9 )
+						      GenPCode1( HB_P_POP );
+						 }
            ;
 
 ForAssign  : '='
            | INASSIGN
            ;
 
-StepExpr   : /* default step expression */       { PushInteger( 1 ); }
-           | STEP Expression
+StepExpr   : /* default step expression */       { $<lNumber>$ =0; }
+           | STEP Expression                     { $<lNumber>$ =1; }
            ;
 
 ForStatements : ForStat NEXT                     { --_wForCounter; }
@@ -1232,9 +1260,9 @@ DoExpression: Expression         { _bForceByRefer=TRUE; }
            ;
 
 Crlf       : '\n'
-           | ';'
+           | ';'           { _bDontGenLineNum =TRUE; }
            | '\n' Crlf
-           | ';' Crlf
+           | ';' Crlf      { _bDontGenLineNum =TRUE; }
            ;
 
 %%
@@ -1270,7 +1298,7 @@ void GenError( char* _szErrors[], char cPrefix, int iError, char * szError1, cha
   else
      printf( "\rLine %i ", iLine );
   printf( "Error %c%i  ", cPrefix, iError );
-  printf( _szCErrors[ iError - 1 ], szError1, szError2 );
+  printf( _szErrors[ iError - 1 ], szError1, szError2 );
   printf( "\n\n" );
 
   exit( EXIT_FAILURE );
@@ -3364,86 +3392,95 @@ WORD GetVarPos( PVAR pVars, char * szVarName ) /* returns the order + 1 of a var
 
 int GetLocalVarPos( char * szVarName ) /* returns the order + 1 of a variable if defined or zero */
 {
-  int iVar;
-  PFUNCTION pFunc =functions.pLast;
+   int iVar = 0;
+   PFUNCTION pFunc =functions.pLast;
 
-  if( pFunc->szName )
-    /* we are in a function/procedure -we don't need any tricks */
-    return GetVarPos( pFunc->pLocals, szVarName );
-  else
-  {
-    /* we are in a codeblock */
-    iVar = GetVarPos( pFunc->pLocals, szVarName );
-    if( iVar )
-      /* this is a current codeblock parameter */
-      return iVar;
-    else
-    {
-      /* we have to check the list of nested codeblock up to a function
-      * where the codeblock is defined
-      */
-      pFunc =pFunc->pOwner;
-      while( pFunc )
+   if( pFunc->szName )
+      /* we are in a function/procedure -we don't need any tricks */
+      return GetVarPos( pFunc->pLocals, szVarName );
+   else
+   {
+      /* we are in a codeblock */
+      iVar = GetVarPos( pFunc->pLocals, szVarName );
+      if( iVar == 0 )
       {
-        iVar =GetVarPos( pFunc->pLocals, szVarName );
-        if( iVar )
-        {
-          if( pFunc->pOwner )
-            /* this variable is defined in a parent codeblock
-            * It is not possible to access a parameter of a codeblock in which
-            * the current codeblock is defined
-            */
-            GenError( _szCErrors, 'E', ERR_OUTER_VAR, szVarName, NULL );
-          else
-          {
-            /* We want to access a local variable defined in a function that
-             * owns this codeblock. We cannot access this variable in a normal
-             * way because at runtime the stack base will point to local
-             * variables of EVAL function.
-             *  The codeblock cannot have static variables then we can use this
-             * structure to store temporarily all referenced local variables
-             */
-            pFunc =functions.pLast;
+         /* this is not a current codeblock parameter
+         * we have to check the list of nested codeblocks up to a function
+         * where the codeblock is defined
+         */
+         PFUNCTION pOutBlock =pFunc;   /* the outermost codeblock */
 
-            iVar =GetVarPos( pFunc->pStatics, szVarName );
-            if( !iVar )
+         pFunc =pFunc->pOwner;
+         while( pFunc )
+         {
+            iVar =GetVarPos( pFunc->pLocals, szVarName );
+            if( iVar )
             {
-              /* this variable was not referenced yet - add it to the list */
-              PVAR pVar;
+               if( pFunc->pOwner )
+               {
+                  /* this variable is defined in a parent codeblock
+                  * It is not possible to access a parameter of a codeblock in which
+                  * the current codeblock is defined
+                  */
+                  GenError( _szCErrors, 'E', ERR_OUTER_VAR, szVarName, NULL );
+               }
+               else
+               {
+                  /* We want to access a local variable defined in a function
+                   * that owns this codeblock. We cannot access this variable in
+                   * a normal way because at runtime the stack base will point
+                   * to local variables of EVAL function.
+                   *  The codeblock cannot have static variables then we can
+                   * use this structure to store temporarily all referenced
+                   * local variables
+                   */
+                  /* NOTE: The list of local variables defined in a function
+                   * and referenced in a codeblock will be stored in a outer
+                   * codeblock only. This makes sure that all variables will be
+                   * detached properly - the inner codeblock can be created
+                   * outside of a function where it was defined when the local
+                   * variables are not accessible.
+                   */
+                  iVar = -GetVarPos( pOutBlock->pStatics, szVarName );
+                  if( iVar == 0 )
+                  {
+                     /* this variable was not referenced yet - add it to the list */
+                     PVAR pVar;
 
-              pVar = (PVAR) hb_xgrab( sizeof(VAR) );
-              pVar->szName = szVarName;
-              pVar->cType = ' ';
-              pVar->iUsed = 0;
-              pVar->pNext  = NULL;
+                     pVar = (PVAR) hb_xgrab( sizeof(VAR) );
+                     pVar->szName = szVarName;
+                     pVar->cType = ' ';
+                     pVar->iUsed = 0;
+                     pVar->pNext  = NULL;
 
-              iVar = 1;  /* first variable */
-              if( ! pFunc->pStatics )
-                pFunc->pStatics = pVar;
-              else
-              {
-                PVAR pLastVar = pFunc->pStatics;
+                     /* Use negative order to signal that we are accessing a local
+                     * variable from a codeblock
+                     */
+                     iVar = -1;  /* first variable */
+                     if( ! pOutBlock->pStatics )
+                        pOutBlock->pStatics = pVar;
+                     else
+                     {
+                        PVAR pLastVar = pOutBlock->pStatics;
 
-                ++iVar;   /* this will be at least second variable */
-                while( pLastVar->pNext )
-                {
-                  pLastVar = pLastVar->pNext;
-                  ++iVar;
-                }
-                pLastVar->pNext = pVar;
-              }
+                        --iVar;   /* this will be at least second variable */
+                        while( pLastVar->pNext )
+                        {
+                           pLastVar = pLastVar->pNext;
+                           --iVar;
+                        }
+                        pLastVar->pNext = pVar;
+                     }
+                  }
+                  return iVar;
+               }
             }
-            /* Use negative order to signal that we are accessing a local
-            * variable from a codeblock
-            */
-            return (-iVar);
-          }
-        }
-        pFunc =pFunc->pOwner;
+            pOutBlock =pFunc;
+            pFunc =pFunc->pOwner;
+         }
       }
-    }
-  }
-  return 0;
+   }
+   return iVar;
 }
 
 /*
@@ -3745,7 +3782,7 @@ WORD JumpTrue( int iOffset )
 
 void Line( void ) /* generates the pcode with the currently compiled source code line */
 {
-   if( _bLineNumbers )
+   if( _bLineNumbers && ! _bDontGenLineNum )
    {
       if( ((functions.pLast->lPCodePos - _wLastLinePos) > 3) || _bDebugInfo )
       {
@@ -3758,6 +3795,7 @@ void Line( void ) /* generates the pcode with the currently compiled source code
          functions.pLast->pCode[ _wLastLinePos +2 ] =HIBYTE( iLine );
       }
    }
+   _bDontGenLineNum =FALSE;
 }
 
 /* Generates the pcode with the currently compiled source code line
@@ -4944,6 +4982,7 @@ void CodeBlockStart()
    pFunc->wStaticsBase = functions.pLast->wStaticsBase;
 
    functions.pLast = pFunc;
+   LineDebug();
 }
 
 void CodeBlockEnd()

@@ -60,24 +60,28 @@ HB_CODEBLOCK_PTR hb_codeblockNew( BYTE * pBuffer,
 {
    HB_CODEBLOCK_PTR pCBlock;
 
-   pCBlock = ( HB_CODEBLOCK_PTR ) hb_xgrab( sizeof( HB_CODEBLOCK ) );
+   pCBlock =( HB_CODEBLOCK_PTR ) hb_xgrab( sizeof(HB_CODEBLOCK) );
 
    /* Store the number of referenced local variables
     */
-   pCBlock->wLocals = wLocals;
+   pCBlock->wLocals =wLocals;
    if( wLocals )
    {
       /* NOTE: if a codeblock will be created by macro compiler then
        * wLocal have to be ZERO
+       * wLocal will be also ZERO if it is a nested codeblock
        */
-      WORD w = 0;
+      WORD w = 1;
       PHB_ITEM pLocal;
       HB_HANDLE hMemvar;
 
       /* Create a table that will store the values of local variables
        * accessed in a codeblock
+       * The element 0 is used as the counter of references to this table
        */
-      pCBlock->pLocals = ( PHB_ITEM ) hb_xgrab( wLocals * sizeof( HB_ITEM ) );
+      pCBlock->pLocals =(PHB_ITEM) hb_xgrab( (wLocals +1) * sizeof(HB_ITEM) );
+      pCBlock->pLocals[ 0 ].type =IT_LONG;
+      pCBlock->pLocals[ 0 ].item.asLong.value =1;
 
       while( wLocals-- )
       {
@@ -96,15 +100,15 @@ HB_CODEBLOCK_PTR hb_codeblockNew( BYTE * pBuffer,
              * pool so it can be shared by codeblocks
              */
 
-            hMemvar = hb_memvarValueNew( pLocal, FALSE );
+            hMemvar =hb_memvarValueNew( pLocal, FALSE );
 
-            pLocal->type = IT_BYREF | IT_MEMVAR;
-            pLocal->item.asMemvar.itemsbase = hb_memvarValueBaseAddress();
-            pLocal->item.asMemvar.offset    = 0;
-            pLocal->item.asMemvar.value     = hMemvar;
+            pLocal->type =IT_BYREF | IT_MEMVAR;
+            pLocal->item.asMemvar.itemsbase =hb_memvarValueBaseAddress();
+            pLocal->item.asMemvar.offset    =0;
+            pLocal->item.asMemvar.value     =hMemvar;
 
             hb_memvarValueIncRef( pLocal->item.asMemvar.value );
-            memcpy( pCBlock->pLocals + w, pLocal, sizeof( HB_ITEM ) );
+            memcpy( pCBlock->pLocals + w, pLocal, sizeof(HB_ITEM) );
          }
          else
          {
@@ -115,15 +119,38 @@ HB_CODEBLOCK_PTR hb_codeblockNew( BYTE * pBuffer,
              * released if other codeblock will be deleted
              */
             hb_memvarValueIncRef( pLocal->item.asMemvar.value );
-            memcpy( pCBlock->pLocals + w, pLocal, sizeof( HB_ITEM ) );
-
+            memcpy( pCBlock->pLocals + w, pLocal, sizeof(HB_ITEM) );
          }
-
          ++w;
       }
    }
    else
-      pCBlock->pLocals = NULL;
+   {
+      /* Check if this codeblock is created during evaluation of another
+       * codeblock - all inner codeblocks use the local variables table
+       * created during creation of the outermost codeblock
+       */
+      PHB_ITEM pLocal;
+
+      pLocal =stack.pBase +1;
+      if( IS_BLOCK( pLocal ) )
+      {
+         HB_CODEBLOCK_PTR pOwner =pLocal->item.asBlock.value;
+
+         pCBlock->pLocals =pOwner->pLocals;
+         pCBlock->wLocals =wLocals =pOwner->wLocals;
+         while( wLocals )
+         {
+            hb_memvarValueIncRef( pCBlock->pLocals[ wLocals ].item.asMemvar.value );
+            --wLocals;
+         }
+         /* increment a reference counter for the table of local references
+          */
+         pCBlock->pLocals[ 0 ].item.asLong.value++;
+      }
+      else
+         pCBlock->pLocals =NULL;
+   }
 
    /*
     * The codeblock pcode is stored in static segment.
@@ -132,8 +159,8 @@ HB_CODEBLOCK_PTR hb_codeblockNew( BYTE * pBuffer,
     */
    pCBlock->pCode = pBuffer;
 
-   pCBlock->pSymbols  = pSymbols;
-   pCBlock->lCounter  = 1;
+   pCBlock->pSymbols  =pSymbols;
+   pCBlock->lCounter  =1;
 
 #ifdef CODEBLOCKDEBUG
    printf( "\ncodeblock created (%li) %lx", pCBlock->lCounter, pCBlock );
@@ -155,13 +182,17 @@ void  hb_codeblockDelete( HB_ITEM_PTR pItem )
       */
       if( pCBlock->pLocals )
       {
-         WORD w = 0;
+         WORD w = 1;
          while( w < pCBlock->wLocals )
          {
             hb_memvarValueDecRef( pCBlock->pLocals[ w ].item.asMemvar.value );
             ++w;
          }
-         hb_xfree( pCBlock->pLocals );
+         /* decrement the table reference counter and release memory if
+          * it was the last reference
+          */
+         if( --pCBlock->pLocals[ 0 ].item.asLong.value == 0 )
+            hb_xfree( pCBlock->pLocals );
       }
 
       /* free space allocated for a CODEBLOCK structure
@@ -194,7 +225,7 @@ PHB_ITEM  hb_codeblockGetVar( PHB_ITEM pItem, LONG iItemPos )
 {
    HB_CODEBLOCK_PTR pCBlock = pItem->item.asBlock.value;
    /* local variables accessed in a codeblock are always stored as reference */
-   return hb_itemUnRef( pCBlock->pLocals - iItemPos - 1 );
+   return hb_itemUnRef( pCBlock->pLocals - iItemPos );
 }
 
 /* Get local variable passed by reference
@@ -203,7 +234,7 @@ PHB_ITEM  hb_codeblockGetRef( PHB_ITEM pItem, PHB_ITEM pRefer )
 {
    HB_CODEBLOCK_PTR pCBlock = pItem->item.asBlock.value;
 
-   return pCBlock->pLocals - pRefer->item.asRefer.value - 1;
+  return pCBlock->pLocals - pRefer->item.asRefer.value;
 }
 
 /* Copy the codeblock

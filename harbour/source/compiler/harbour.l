@@ -225,46 +225,65 @@ Separator     {SpaceTab}
 %{
 /* ************************************************************************ */
 %}
-"break"        BEGIN BREAK_;
+"break"        { if( _iState == LOOKUP )
+                    BEGIN BREAK_;
+                 else
+                 {
+		    yylval.string = yy_strdup( yytext );
+                    _iState =IDENTIFIER;
+                    return IDENTIFIER;
+                 }
+               }
 <BREAK_>{Separator}*[\n;] { /* at the end of line */
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                unput( yytext[ yyleng-1 ] );
-               if( _iState == LOOKUP )
-               { /* it is first item in the line */
-                 return BREAK;
-               }
-               else
-               { /* there is another item in line already */
-                 yylval.string = yy_strdup("BREAK");
-                 return IDENTIFIER;
-               }
+               return BREAK;
              }
-<BREAK_>{Separator}*[\[] { /* array */
+%{
+/* NOTE: Clipper does not like break[] in any context
+ *       There are no resons to limit this use in Harbour.
+ */
+/*
+<BREAK_>{Separator}*[\[] { 
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
-               /* Clipper does not like break[] at all */
                GenError( _szCErrors, 'E', ERR_SYNTAX, yytext, NULL );
              }
-<BREAK_>{Separator}*[^_a-zA-Z\[] { /* there is no identifier after "break" */
+*/
+%}
+<BREAK_>{Separator}*(":="|"+="|"-="|"->"|"*="|"/="|"^="|"==") { /* operators */
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                yylval.string = yy_strdup( "BREAK" );
-               _iState =IDENTIFIER;
                unput( yytext[ yyleng-1 ] );
+               unput( yytext[ yyleng-2 ] );
+               _iState =IDENTIFIER;
                return IDENTIFIER;
              }
-<BREAK_>{Separator}*. { /* an identifier follows BREAK statement */
+<BREAK_>{Separator}*("++"|"--") { /* operators */
+               /* NOTE: It is not possible to distinguish between
+                * break++ and break ++i
+                * For this reason we are allowing the BREAK statement only
+                */
+               if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
+               yylval.string = yy_strdup( "BREAK" );
+               unput( yytext[ yyleng-1 ] );
+               unput( yytext[ yyleng-2 ] );
+               _iState =BREAK;
+               return BREAK;
+             }
+<BREAK_>{Separator}*[\=\(] { /* operators = ( */
+               if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
+               yylval.string = yy_strdup( "BREAK" );
+               unput( yytext[ yyleng-1 ] );
+               _iState =IDENTIFIER;
+               return IDENTIFIER;
+             }
+<BREAK_>{Separator}*. { /* all other cases */
+               /* NOTE: This state includes break&var
+                */
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                unput( yytext[ yyleng-1 ] );
-               if( _iState == LOOKUP )
-               {
-                 _iState =BREAK;
-                 return BREAK;
-               }
-               else
-               {
-                 yylval.string = yy_strdup( "BREAK" );
-                 _iState =IDENTIFIER;
-                 return IDENTIFIER;
-               }
+               _iState =BREAK;
+               return BREAK;
              }
 %{
 /* ************************************************************************ */

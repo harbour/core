@@ -33,6 +33,7 @@
 extern void    hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols );  /* invokes the virtual machine */
 extern void    hb_vmProcessSymbols( PHB_SYMB pSymbols, WORD wSymbols ); /* statics symbols initialization */
 extern void    hb_vmRequestQuit( void );
+extern void    hb_vmRequestCancel( void );
 extern void    hb_vmRequestBreak( PHB_ITEM pItem );
 extern WORD    hb_vmRequestQuery( void );
 extern void    hb_vmQuit( void );            /* Immediately quits the virtual machine */
