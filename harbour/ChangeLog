@@ -8,6 +8,22 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2001-12-11 19:20 UTC-0300 Luiz Rafael Culik <culik@sl.conex.net>
+  * contrib/hbzlib/zipnew.cpp
+    contrib/hbzlib/zipcomp.cpp
+    * Fixed some unreleased block reported by Sid Saylors
+  + contrib/hbzlib/strcomp.c
+    * CompressString() and UncompressString Functions
+  * contrib/hbzlib/doc/zipnew.txt
+    * Added the docs for the two new functions
+  * utils/hbmake/hbmake.prg
+    % Some cleanup
+    * Common items moved to functions
+    + WriteMakeFileHeader(),ProcessParameters(),ShowHelp(),ConvertParams(cParam) functions for
+      task that was double coded for some parts
+    * The Main Functions is now cleaner
+    * Fixed the problem on checkbox that the user down know on witch one he is
+
 2001-12-11 18:57 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
    * source/common/hbgete.c
      % Made it more fail-safe and compact.
