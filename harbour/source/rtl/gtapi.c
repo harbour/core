@@ -69,11 +69,11 @@ int _gtBox(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char * 
     /* left and right sides */
     for(iCount = uiTop + 1; iCount<uiBottom; iCount++)
     {
-	_gtSetPos(iCount, uiLeft);
-	_gtWrite(&fpBoxString[3], 1);
+        _gtSetPos(iCount, uiLeft);
+        _gtWrite(&fpBoxString[3], 1);
 
-	_gtSetPos(iCount, uiRight);
-	_gtWrite(&fpBoxString[3], 1);
+        _gtSetPos(iCount, uiRight);
+        _gtWrite(&fpBoxString[3], 1);
     }
 
     /* left bottom corner */
@@ -110,7 +110,7 @@ int _gtColorSelect(USHORT uiColorIndex)
     }
     else
     {
-	s_uiColorIndex = uiColorIndex;
+        s_uiColorIndex = uiColorIndex;
     }
 
     return(0);
@@ -206,10 +206,10 @@ int _gtPreExt(void)
 int _gtRectSize(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, USHORT * uipBuffSize)
 {
     if(uiTop > _gtMaxRow() || uiBottom > _gtMaxRow() ||
-	uiLeft > _gtMaxCol() || uiRight > _gtMaxCol() ||
-	uiTop > uiBottom || uiLeft > uiRight)
+        uiLeft > _gtMaxCol() || uiRight > _gtMaxCol() ||
+        uiTop > uiBottom || uiLeft > uiRight)
     {
-	return(1);
+        return(1);
     }
 
     *uipBuffSize = (uiBottom - uiTop) * (uiRight - uiLeft) * 2;
@@ -226,7 +226,7 @@ int _gtRepChar(USHORT uiRow, USHORT uiCol, USHORT uiChar, USHORT uiCount)
     buff[uiCount] = 0x0;
     rc=_gtSetPos(uiRow, uiCol);
     if(rc != 0)
-	return(rc);
+        return(rc);
     rc=_gtWrite(buff, uiCount);
 
     return(rc);
@@ -297,7 +297,7 @@ int _gtSetMode(USHORT uiRows, USHORT uiCols)
 int _gtSetPos(USHORT uiRow, USHORT uiCol)
 {
     if(uiRow > _gtMaxRow() || uiCol > _gtMaxCol())
-	return(1);
+        return(1);
 
     s_uiCurrentRow = uiRow;
     s_uiCurrentCol = uiCol;
@@ -492,12 +492,12 @@ int _gtScroll(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, SHOR
    return(0);
 }
 
-HARBOUR MaxRow( void ) /* Return the maximum screen row number (zero origin) */
+HARBOUR MAXROW( void ) /* Return the maximum screen row number (zero origin) */
 {
    _retni( _gtMaxRow () );
 }
 
-HARBOUR MaxCol( void ) /* Return the maximum screen column number (zero origin) */
+HARBOUR MAXCOL( void ) /* Return the maximum screen column number (zero origin) */
 {
    _retni( _gtMaxCol () );
 }
@@ -540,6 +540,7 @@ void main(void)
     _gtSetPos(22, 62);
     _gtColorSelect(_CLR_ENHANCED);
     _gtWrite( "Standard Color (W+/B)", 21 );
+    */
 
     /* boxes */
     _gtBoxS(10, 10, 20, 20);

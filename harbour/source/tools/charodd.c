@@ -16,6 +16,9 @@
  * ---------------------
  *
  * $Log$
+ * Revision 1.2  1999/06/02 19:53:28  dholm
+ * See ChangeLog entry 19990602-14:50 EDT David G. Holm <dholm@jsd-llc.com>
+ *
  * Revision 1.1  1999/06/02 06:32:42  ajahja
  * Adding GT Library
  *
@@ -61,7 +64,7 @@ GT_charOdd()
     s1  = _parc(1);
     len = _parclen(1);
 
-    s2  = _xgrab(len / 2);          // grab us some mem to work with
+    s2  = (char *)_xgrab(len / 2);  // grab us some mem to work with
 
     for (i = 0; i <= len; i += 2)
       s2[i/2] = s1[i] & 0x7f;

@@ -16,6 +16,9 @@
  * ---------------------
  *
  * $Log$
+ * Revision 1.2  1999/06/02 19:53:28  dholm
+ * See ChangeLog entry 19990602-14:50 EDT David G. Holm <dholm@jsd-llc.com>
+ *
  * Revision 1.1  1999/06/02 06:49:38  ajahja
  * Adding GT Library
  *
@@ -68,7 +71,7 @@ gt_charMix()
     l2  = _parclen(2);
     pos = 0;
 
-    s3  = _xgrab(l1 + l2);              // grab us some mem to work with
+    s3  = (char*)_xgrab(l1 + l2);   // grab us some mem to work with
 
     for (i = 0; i < l1; i++) {
       s3[pos++] = s1[i];

@@ -40,8 +40,8 @@ console.obj  : console.c  extend.h types.h ctoharb.h dates.h gtapi.h set.h
   tlib .\libs\b16\terminal.lib -+$@,,
 #  bcc -c -DWINDOWS $(c_opt) -o$@ source\rtl\console.c
 #  tlib .\libs\win16\terminal.lib -+$@,,
-   
-arrays.obj   : arrays.c     extend.h types.h ctoharb.h
+
+arrays.obj   : arrays.c     extend.h types.h itemapi.h ctoharb.h
 asort.obj    : asort.prg    extend.h types.h init.h pcode.h harbour.exe
 classes.obj  : classes.c    extend.h types.h itemapi.h
 codebloc.obj : codebloc.c   extend.h types.h

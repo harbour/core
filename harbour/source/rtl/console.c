@@ -118,7 +118,7 @@ static void hb_outstd( char * fpStr, WORD uiLen )
       dev_col = gtWhereX();
       _gtSetPos( dev_row, dev_col );
    }
-#endif;
+#endif
 }
 
 /* Output an item to STDERR */
@@ -135,7 +135,7 @@ static void hb_outerr( char * fpStr, WORD uiLen )
       dev_col = gtWhereX();
       _gtSetPos( dev_row, dev_col );
    }
-#endif;
+#endif
 }
 
 /* Output an item to the screen and/or printer and/or alternate */
@@ -325,9 +325,9 @@ HARBOUR SETPRC( void ) /* Sets the current printer row and column positions */
 HARBOUR SCROLL( void ) /* Scrolls a screen region (requires the GT API) */
 {
 #ifdef USE_GTAPI
-    int top = 0, left = 0, bottom = _gtMaxRow(), right = _gtMaxCol(), 
+    int top = 0, left = 0, bottom = _gtMaxRow(), right = _gtMaxCol(),
         v_scroll = 0, h_scroll = 0;
-    
+
     if( _pcount() > 0 && _param( 1, IT_NUMERIC ) )
        top = _parni( 1 );
     if( _pcount() > 1 && _param( 2, IT_NUMERIC ) )

@@ -42,14 +42,30 @@ $(path_lib)\hbtools.lib: \
                 $(path_obj)\genobj.obj \
                 $(path_obj)\mathx.obj \
                 $(path_obj)\stringsx.obj \
-                #(path_obj)\datesx.obj
+                $(path_obj)\asciisum.obj \
+                $(path_obj)\ascpos.obj \
+                $(path_obj)\atdiff.obj \
+                $(path_obj)\chareven.obj \
+                $(path_obj)\charmix.obj \
+                $(path_obj)\charodd.obj \
+                $(path_obj)\chrcount.obj \
+                $(path_obj)\chrfirst.obj \
+                $(path_obj)\chrtotal.obj \
+                $(path_obj)\strasint.obj \
+                $(path_obj)\strcount.obj \
+                $(path_obj)\strcspn.obj \
+                $(path_obj)\strdiff.obj \
+                $(path_obj)\strexpan.obj \
+                $(path_obj)\strleft.obj \
+                $(path_obj)\strpbrk.obj \
+                $(path_obj)\strright.obj
         @echo HBtools.lib
 
 $(path_lib)\terminal.lib :$(path_obj)\console.obj \
                 $(path_obj)\gtos2.obj
         @echo terminal.lib
 
-$(path_obj)\console.obj  : {$(path_c)}console.c  $(path_h)\extend.h $(path_h)\types.h $(path_h)\gtapi.h
+$(path_obj)\console.obj  : {$(path_c)}console.c  $(path_h)\extend.h $(path_h)\types.h $(path_h)\gtapi.h $(path_h)\ctoharb.h $(path_h)\dates.h $(path_h)\set.h
   icc /C+ $(c_opt) /Fo$@ /Tpsource\rtl\console.c
   ilib .\libs\icc\terminal.lib -+$@,,
 
@@ -57,41 +73,59 @@ $(path_obj)\gtos2.obj  : {$(path_c)}gtos2.c  $(path_h)\extend.h $(path_h)\types.
   icc /C+ $(c_opt) /Fo$@ /Tpsource\rtl\gt\gtos2.c
   ilib .\libs\icc\terminal.lib -+$@,,
 
-$(path_obj)\arrays.obj   : {$(path_c)}arrays.c   $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\arrays.obj   : {$(path_c)}arrays.c   $(path_h)\extend.h $(path_h)\types.h $(path_h)\itemapi.h $(path_h)\ctoharb.h
 $(path_obj)\classes.obj  : {$(path_c)}classes.c  $(path_h)\extend.h $(path_h)\types.h
-$(path_obj)\codebloc.obj : {$(path_c)}codebloc.c $(path_h)\extend.h $(path_h)\types.h
-$(path_obj)\dates.obj    : {$(path_c)}dates.c    $(path_h)\extend.h $(path_h)\types.h
-$(path_obj)\datesx.obj   : {$(path_c)}datesx.c   $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\codebloc.obj : {$(path_c)}codebloc.c $(path_h)\extend.h $(path_h)\types.h $(path_h)\itemapi.h
+$(path_obj)\dates.obj    : {$(path_c)}dates.c    $(path_h)\extend.h $(path_h)\types.h $(path_h)\dates.h $(path_h)\set.h
+$(path_obj)\debug.obj    : {$(path_c)}debug.c    $(path_h)\extend.h $(path_h)\types.h $(path_h)\ctoharb.h $(path_h)\itemapi.h
 $(path_obj)\environ.obj  : {$(path_c)}environ.c  $(path_h)\extend.h $(path_h)\types.h
-$(path_obj)\errorapi.obj : {$(path_c)}errorapi.c $(path_h)\extend.h $(path_h)\types.h
-$(path_obj)\extend.obj   : {$(path_c)}extend.c   $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\errorapi.obj : {$(path_c)}errorapi.c $(path_h)\extend.h $(path_h)\types.h $(path_h)\ctoharb.h
+$(path_obj)\extend.obj   : {$(path_c)}extend.c   $(path_h)\extend.h $(path_h)\types.h $(path_h)\set.h
 $(path_obj)\files.obj    : {$(path_c)}extend.c   $(path_h)\extend.h $(path_h)\types.h
 $(path_obj)\gtapi.obj    : {$(path_c)}gtapi.c    $(path_h)\extend.h $(path_h)\types.h $(path_h)\gtapi.h
 $(path_obj)\initsymb.obj : {$(path_c)}initsymb.c $(path_h)\extend.h $(path_h)\types.h
-$(path_obj)\itemapi.obj  : {$(path_c)}itemapi.c  $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\itemapi.obj  : {$(path_c)}itemapi.c  $(path_h)\extend.h $(path_h)\types.h $(path_h)\ctoharb.h $(path_h)\itemapi.h $(path_h)\set.h
 $(path_obj)\math.obj     : {$(path_c)}math.c     $(path_h)\extend.h $(path_h)\types.h
 $(path_obj)\mathx.obj    : {$(path_c)}mathx.c    $(path_h)\extend.h $(path_h)\types.h
-$(path_obj)\set.obj      : {$(path_c)}set.c      $(path_h)\extend.h $(path_h)\types.h
-$(path_obj)\strcmp.obj   : {$(path_c)}strcmp.c   $(path_h)\extend.h $(path_h)\types.h
-$(path_obj)\strings.obj  : {$(path_c)}strings.c  $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\set.obj      : {$(path_c)}set.c      $(path_h)\extend.h $(path_h)\types.h $(path_h)\set.h
+$(path_obj)\strcmp.obj   : {$(path_c)}strcmp.c   $(path_h)\extend.h $(path_h)\types.h $(path_h)\set.h
+$(path_obj)\strings.obj  : {$(path_c)}strings.c  $(path_h)\extend.h $(path_h)\types.h $(path_h)\set.h
 $(path_obj)\stringsx.obj : {$(path_c)}stringsx.c $(path_h)\extend.h $(path_h)\types.h
-$(path_obj)\transfrm.obj : {$(path_c)}transfrm.c $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\transfrm.obj : {$(path_c)}transfrm.c $(path_h)\extend.h $(path_h)\types.h $(path_h)\ctoharb.h $(path_h)\set.h
+
+$(path_obj)\asciisum.obj : {$(path_c)}asciisum.c  $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\ascpos.obj   : {$(path_c)}ascpos.c    $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\atdiff.obj   : {$(path_c)}atdiff.c    $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\chareven.obj : {$(path_c)}chareven.c  $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\charmix.obj  : {$(path_c)}charmix.c   $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\charodd.obj  : {$(path_c)}charodd.c   $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\chrcount.obj : {$(path_c)}chrcount.c  $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\chrfirst.obj : {$(path_c)}chrfirst.c  $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\chrtotal.obj : {$(path_c)}chrtotal.c  $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\strasint.obj : {$(path_c)}strasint.c  $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\strcount.obj : {$(path_c)}strcount.c  $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\strcspn.obj  : {$(path_c)}strcspn.c   $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\strdiff.obj  : {$(path_c)}strdiff.c   $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\strexpan.obj : {$(path_c)}strexpan.c  $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\strleft.obj  : {$(path_c)}strleft.c   $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\strpbrk.obj  : {$(path_c)}strpbrk.c   $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\strright.obj : {$(path_c)}strright.c  $(path_h)\extend.h $(path_h)\types.h
 
 $(path_obj)\dynsym.obj   : source\vm\dynsym.c   $(path_h)\extend.h $(path_h)\types.h
-  icc /C+ $(c_opt) /Fo$@ /Tpsource\vm\dynsym.c
+ icc /C+ $(c_opt) /Fo$@ /Tpsource\vm\dynsym.c
   ilib .\libs\icc\harbour.lib -+$@,,
 
-$(path_obj)\error.obj    : $(path_prg)\error.prg $(path_h)\init.h $(path_h)\extend.h  $(path_h)\types.h {$(path_exe)}harbour.exe
+$(path_obj)\error.obj    : $(path_prg)\error.prg $(path_h)\pcode.h $(path_h)\init.h $(path_h)\extend.h $(path_h)\types.h {$(path_exe)}harbour.exe
  $(path_exe)\harbour $(path_prg)\error /n /osource\rtl
  icc /C+ $(c_opt) /Fo$@ /Tp$(path_prg)\error.c
  ilib .\libs\icc\harbour.lib -+$@,,
 
-$(path_obj)\errorsys.obj : $(path_prg)\errorsys.prg $(path_h)\init.h  $(path_h)\extend.h $(path_h)\types.h {$(path_exe)}harbour.exe
+$(path_obj)\errorsys.obj : $(path_prg)\errorsys.prg $(path_h)\pcode.h $(path_h)\init.h  $(path_h)\extend.h $(path_h)\types.h {$(path_exe)}harbour.exe
  $(path_exe)\harbour $(path_prg)\errorsys /n /osource\rtl
  icc /C+ $(c_opt) /Fo$@ /Tp$(path_prg)\errorsys.c
  ilib .\libs\icc\harbour.lib -+$@,,
 
-$(path_obj)\tclass.obj   : $(path_prg)\tclass.prg $(path_h)\init.h  $(path_h)\extend.h $(path_h)\types.h {$(path_exe)}harbour.exe
+$(path_obj)\tclass.obj   : $(path_prg)\tclass.prg $(path_h)\pcode.h $(path_h)\init.h $(path_h)\extend.h $(path_h)\types.h {$(path_exe)}harbour.exe
  $(path_exe)\harbour $(path_prg)\tclass /n /osource\rtl
  icc /C+ $(c_opt) /Fo$@ /Tp$(path_prg)\tclass.c
  ilib .\libs\icc\harbour.lib -+$@,,

@@ -16,6 +16,9 @@
  * ---------------------
  *
  * $Log$
+ * Revision 1.2  1999/06/02 19:53:28  dholm
+ * See ChangeLog entry 19990602-14:50 EDT David G. Holm <dholm@jsd-llc.com>
+ *
  * Revision 1.1  1999/06/02 06:49:39  ajahja
  * Adding GT Library
  *
@@ -75,7 +78,7 @@ gt_strexpand()
     if (ISCHAR(3))
       insert = _parc(3);
 
-    out = _xgrab(len * (nIns + 1));    // alloc us some memory
+    out = (char *)_xgrab(len * (nIns + 1));    // alloc us some memory
 
     for (i = 0, p = 0; i < len; i++) { // loop thru input
       out[p++] = in[i];                // insert a character from input

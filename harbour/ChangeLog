@@ -1,3 +1,28 @@
+19990602-14:50 EDT David G. Holm <dholm@jsd-llc.com>
+  * makefile.b31
+    - Added itemapi.h as dependancy for arrays.obj
+  * makefile.icc
+    - Added new GT string modules
+    - Added Harbour include file dependencies to library sources
+  * source/rtl/arrays.c
+    - Added #include <itemapi.h>, which is needed by C++ compilers
+  * source/rtl/console.c
+    - Removed two trailing semicolons from #endif directives
+  * source/rtl/gtapi.c
+    - When adding HARBOUR MaxRow() and MaxCol() earlier, I forgot the
+      rule that Harbour functions may not use any lower case letters
+    - Added end comment for comment block around color tests in order
+      to avoid having nested comments
+  * source/tools/chareven.c
+    - Added (char *) type conversion to _xgrab() function call
+  * source/tools/charmix.c
+    - Added (char *) type conversion to _xgrab() function call
+  * source/tools/charodd.c
+    - Added (char *) type conversion to _xgrab() function call
+  * source/tools/strexpan.c
+    - Added (char *) type conversion to _xgrab() function call
+
+
 19990602-13:05 EDT David G. Holm <dholm@jsd-llc.com>
   * makefile.b31
     - Added the new gt functions (which have nothing to do with the GT API)
@@ -45,7 +70,7 @@
     - source\tools\strpbrk.c
     - source\tools\strright.c
   + doc\vm.txt - description of Harbour Virtual Machine
-  
+
 19990602-12:30 CET Eddie Runia
    * source/rtl/arrays.c
      memory leakage in arrayClone plugged
