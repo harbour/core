@@ -1,3 +1,16 @@
+20000521-14:15 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+   * source/compiler/harbour.l
+     + Added "as class"
+
+   * source/compiler/harbour.y
+     ! Fixed shift conflicts and reduce conflicts.
+     * Modified rules for syntax "AS Object ClassName" to "As Class ClassName"
+
+   * tests/testwarn.prg
+     ! Corrected the #translate to reflect latest syntax
+     ! Corrected syntax to use AS CLASS ClassName instead of AS OBJECT ClassName.
+
 20000520-21:30 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
    * include/hbvmpub.h

@@ -161,8 +161,8 @@ char * hb_comp_szAnnounce = NULL;    /* ANNOUNCEd procedure */
 %token PLUSEQ MINUSEQ MULTEQ DIVEQ POWER EXPEQ MODEQ EXITLOOP
 %token PRIVATE BEGINSEQ BREAK RECOVER RECOVERUSING DO WITH SELF LINE
 %token MACROVAR MACROTEXT
-%token AS_ARRAY AS_BLOCK AS_CHARACTER AS_DATE AS_LOGICAL AS_NUMERIC AS_OBJECT AS_VARIANT DECLARE OPTIONAL
-%token AS_ARRAY_ARRAY AS_BLOCK_ARRAY AS_CHARACTER_ARRAY AS_DATE_ARRAY AS_LOGICAL_ARRAY AS_NUMERIC_ARRAY AS_OBJECT_ARRAY
+%token AS_ARRAY AS_BLOCK AS_CHARACTER AS_CLASS AS_DATE AS_LOGICAL AS_NUMERIC AS_OBJECT AS_VARIANT DECLARE OPTIONAL
+%token AS_ARRAY_ARRAY AS_BLOCK_ARRAY AS_CHARACTER_ARRAY AS_CLASS_ARRAY AS_DATE_ARRAY AS_LOGICAL_ARRAY AS_NUMERIC_ARRAY AS_OBJECT_ARRAY
 
 /*the lowest precedence*/
 /*postincrement and postdecrement*/
@@ -194,7 +194,7 @@ char * hb_comp_szAnnounce = NULL;    /* ANNOUNCEd procedure */
 %type <valDouble>  NUM_DOUBLE
 %type <valInteger> NUM_INTEGER
 %type <valLong>    NUM_LONG
-%type <iNumber> FunScope AsType AsArray
+%type <iNumber> FunScope
 %type <iNumber> Params ParamList
 %type <iNumber> IfBegin VarList ExtVarList
 %type <iNumber> FieldList
@@ -284,9 +284,16 @@ AsType     : /* not specified */           { hb_comp_cVarType = ' '; }
            | AS_ARRAY                      { hb_comp_cVarType = 'A'; }
            | AS_BLOCK                      { hb_comp_cVarType = 'B'; }
            | AS_OBJECT                     { hb_comp_cVarType = 'O'; }
-           | AS_OBJECT IdentName 	   { hb_comp_cVarType = 'S'; hb_comp_szFromClass = $2 }
+	   | AS_CLASS IdentName            { hb_comp_cVarType = 'S'; hb_comp_szFromClass = $2 }
            | AS_VARIANT                    { hb_comp_cVarType = ' '; }
-	   | AsArray
+           | AS_NUMERIC_ARRAY              { hb_comp_cVarType = 'n'; }
+           | AS_CHARACTER_ARRAY            { hb_comp_cVarType = 'c'; }
+           | AS_DATE_ARRAY                 { hb_comp_cVarType = 'd'; }
+           | AS_LOGICAL_ARRAY              { hb_comp_cVarType = 'l'; }
+           | AS_ARRAY_ARRAY                { hb_comp_cVarType = 'a'; }
+           | AS_BLOCK_ARRAY                { hb_comp_cVarType = 'b'; }
+           | AS_OBJECT_ARRAY               { hb_comp_cVarType = 'o'; }
+	   | AS_CLASS_ARRAY IdentName      { hb_comp_cVarType = 's'; hb_comp_szFromClass = $2 }
            ;
 
 AsArray    : AS_ARRAY                      { hb_comp_cVarType = 'A'; }
@@ -297,8 +304,8 @@ AsArray    : AS_ARRAY                      { hb_comp_cVarType = 'A'; }
            | AS_ARRAY_ARRAY                { hb_comp_cVarType = 'a'; }
            | AS_BLOCK_ARRAY                { hb_comp_cVarType = 'b'; }
            | AS_OBJECT_ARRAY               { hb_comp_cVarType = 'o'; }
-           | AS_OBJECT_ARRAY IdentName     { hb_comp_cVarType = 's'; hb_comp_szFromClass = $2 }
-           ;
+	   | AS_CLASS_ARRAY IdentName      { hb_comp_cVarType = 's'; hb_comp_szFromClass = $2 }
+	   ;
 
 ParamList  : IdentName AsType                { hb_compVariableAdd( $1, hb_comp_cVarType ); $$ = 1; }
            | ParamList ',' IdentName AsType  { hb_compVariableAdd( $3, hb_comp_cVarType ); $$++; }
@@ -1155,7 +1162,7 @@ DecMethod  : IdentName '(' { hb_comp_pLastMethod = hb_compMethodAdd( hb_comp_pLa
       															  if( ! hb_comp_pLastMethod->pClass )
       															  {
          														    hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, hb_comp_szFromClass, hb_comp_pLastMethod->szName );
-         														    hb_comp_pLastMethod->cType = ( isupper( hb_comp_cVarType ) ? 'O' :'o' );
+         														    hb_comp_pLastMethod->cType = ( isupper( hb_comp_cVarType ) ? 'O' : 'o' );
 															  }
 
          														  /* Resetting */

@@ -11,6 +11,8 @@
    #TRANSLATE AS ARRAY OF CHARACTER =>
    #TRANSLATE AS ARRAY OF STRING =>
 
+   #TRANSLATE AS ARRAY OF CLASS <ClassName> =>
+
    #TRANSLATE AS ARRAY OF NUM =>
    #TRANSLATE AS ARRAY OF NUMERIC =>
 
@@ -30,6 +32,8 @@
    #TRANSLATE AS CHAR =>
    #TRANSLATE AS CHARACTER =>
    #TRANSLATE AS STRING =>
+
+   #TRANSLATE AS CLASS <ClassName> =>
 
    #TRANSLATE AS NUM =>
    #TRANSLATE AS NUMERIC =>
@@ -52,8 +56,6 @@
    #COMMAND DECLARE <*x*> =>
 #endif
 
-//DECLARE Function nMyFunc AS NUMERIC
-
 DECLARE nMyFunc( cVar AS STRING, @nVar AS NUMERIC ) AS NUMERIC
 
 DECLARE cOtherFunc( ) AS CHAR
@@ -74,14 +76,14 @@ DECLARE MyClass                              ;
         nMyFunc( nVal As Num ) As Num ;
         cMyData    ;
         aInstances AS Array Of Object MyClass ;
-        oNext( oInstance AS Object MyClass ) As Object MyClass
+        oNext( oInstance AS Class MyClass ) As Class MyClass
 
 DECLARE OtherClass                              ;
         nMyFunc( nVal As Num ) As Num ;
         nMyFunc( nVal As Num ) As Num ;
         cMyData    ;
         aInstances AS Array Of Object MyClass ;
-        oNext( oInstance AS Object OtherClass ) As Object MyClass
+        oNext( oInstance AS Class OtherClass ) As Class MyClass
 
 FIELD a AS CHAR
 FIELD b AS CHAR
@@ -92,11 +94,11 @@ STATIC lGlobal AS LOGICAL
 
 PROCEDURE THEMAIN( optional )
 
-  STATIC lStatic := 0, oMyObj As Object WrongClass
+  STATIC lStatic := 0, oMyObj As Class WrongClass
 
   LOCAL cVar AS CHAR := [declare function]
 
-  LOCAL a As Char, ob AS Object MyClass, c AS Char, d AS Object OtherClass
+  LOCAL a As Char, oB AS Class MyClass, c AS Char, oD AS Class OtherClass
 
   FIELD b AS NUM
   USE TEMP
@@ -111,13 +113,13 @@ PROCEDURE THEMAIN( optional )
   a := b:nMyFunc(2,3)
   a := b:nMyFunc(2)
 
-  a := b:oNext( 1 ):cMyData
-  a := b:oNext( c ):cMyData2
-  a := b:oNext( d ):cMyData
-  a := b:oNext( ob ):cMyData
+  a := oB:oNext( 1 ):cMyData
+  a := oB:oNext( c ):cMyData2
+  a := oB:oNext( d ):cMyData
+  a := oB:oNext( oD ):cMyData
 
-  a := b:aInstances[1]:oNext:cMyData2
-  a := b:aInstances[1]:oNext:cMyData
+  a := oB:aInstances[1]:oNext:cMyData2
+  a := oB:aInstances[1]:oNext:cMyData
 
   DO Optional WITH Var1
   DO Optional WITH 1
@@ -139,7 +141,7 @@ PROCEDURE THEMAIN( optional )
 
   a := 'A'
 
-  b := 'a'
+  oB := 'a'
 
   if lStatic
      Var1 := .F.
