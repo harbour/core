@@ -45,7 +45,7 @@ case Left( cRDDType := Upper( AllTrim( cRDDType ) ), 3 ) == "ADS"
 
     // Do not include ADS.CH as don't want unintended affects when not using
     // ADS - If need behavior from ADS.CH, include defines and undefs in
-    // thise areas.
+    // these areas.
 
     #define ADS_LOCAL_SERVER  1
     #define ADS_REMOTE_SERVER 2
@@ -87,13 +87,10 @@ case Left( cRDDType := Upper( AllTrim( cRDDType ) ), 3 ) == "ADS"
     #undef ADS_CDX
     #undef ADS_ADT
 
-case cRDDType == "DBFCDX"
+case cRDDType == "DBFCDX" .or. ;
+     cRDDType == "DBFNTX"
 
-    RDDSetDefault( cRDD := "DBFCDX" )
-
-case cRDDType == "DBFNTX"
-
-    RDDSetDefault( cRDD := "DBFNTX" )
+    RDDSetDefault( cRDD := cRDDType )
 
 otherwise
 
@@ -141,6 +138,8 @@ endif
 if .not. CompareArray( aStruct, DBStruct() )
     NotifyUser( "Resulting table structure is not what we asked for" )
 endif
+
+// TEST: Header()
 
 if .not. Header() == 194
     NotifyUser( "Header() returned wrong size (" + LTrim( Str( Header() ) ) + " bytes)" )
@@ -241,6 +240,11 @@ if .not. DbOrderInfo( DBOI_KEYCOUNT ) == MAX_TEST_RECS
     NotifyUser( "Bad DBOI_KEYCOUNT/3" )
 endif
 
+set order to 4
+if .not. DbOrderInfo( DBOI_KEYCOUNT ) == MAX_TEST_RECS
+    NotifyUser( "Bad DBOI_KEYCOUNT/4" )
+endif
+
 // TEST: Character index
 set order to 1
 go top
@@ -296,27 +300,23 @@ if EOF()
     NotifyUser( "LOCATE with EXACT OFF failed" )
 endif
 
-// TEST: EXACT with a index (also tests COUNT)
+// TEST: EXACT with an index (also tests COUNT)
 
 set exact on
 set order to 0
 count for Trim( FIELD->CHAR ) = "A RECORD 1" to xTemp  // Get proper count
 index on CHAR to TESTE for Trim( FIELD->CHAR ) = "A RECORD 1" additive
-set order to 4
 if .not. DbOrderInfo( DBOI_KEYCOUNT ) == xTemp
     NotifyUser( "Bad conditional index count with EXACT ON" )
 endif
-set index to
 
 set exact off
 set order to 0
 count for Trim( FIELD->CHAR ) = "A RECORD 1" to xTemp  // Get proper count
 index on CHAR to TESTE for Trim( FIELD->CHAR ) = "A RECORD 1" additive
-set order to 4
 if .not. DbOrderInfo( DBOI_KEYCOUNT ) == xTemp
     NotifyUser( "Bad conditional index count with EXACT OFF" )
 endif
-set index to
 
 //
 //
@@ -394,7 +394,6 @@ static procedure NotifyUser( cErr, lNotError )
 
 ? cErr
 
-Quit
+Quit  // If remove this, will display all error without stopping
 
 return
-
