@@ -54,6 +54,10 @@
    #define HB_OS_WIN_32_USED
 #endif
 
+#ifdef HB_STACK_MACROS
+   #undef HB_STACK_MACROS
+#endif
+
 #include "hbapi.h"
 #include "hbdefs.h"
 #include "hbstack.h"
