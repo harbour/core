@@ -34,7 +34,7 @@ void ProcessSymbols( SYMBOL * pSymbols, WORD wSymbols );
 #define HB_INIT_SYMBOLS_BEGIN( func ) \
   static SYMBOL symbols[] = {
 
-#define HB_INIT_SYMBOLS_END( func ) }; }; \
+#define HB_INIT_SYMBOLS_END( func ) }; \
   void func( void ) \
   { \
     ProcessSymbols( symbols, sizeof( symbols ) / sizeof( SYMBOL ) ); \
