@@ -107,10 +107,10 @@ void hb_gtExit( void )
    hb_xfree( s_Color );
 }
 
-int hb_gtBox( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char * pbyFrame )
+int hb_gtBox( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyFrame )
 {
-   char pszBox[ 10 ];
-   char cPadChar;
+   BYTE pszBox[ 10 ];
+   BYTE cPadChar;
 
    USHORT uiRow;
    USHORT uiCol;
@@ -604,13 +604,16 @@ int hb_gtRectSize( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight,
    return 0;
 }
 
-int hb_gtRepChar( USHORT uiRow, USHORT uiCol, USHORT uiChar, USHORT uiCount )
+int hb_gtRepChar( USHORT uiRow, USHORT uiCol, BYTE byChar, USHORT uiCount )
 {
    int rc;
-   char buff[ 255 ];
+   BYTE buff[ 255 ];
 
-   memset( buff, uiChar, uiCount );
-   buff[ uiCount ] = 0;
+   if( uiCount > sizeof( buff ) )
+      return 1;
+
+   memset( buff, byChar, uiCount );
+   buff[ uiCount ] = '\0';
    rc = hb_gtSetPos( uiRow, uiCol );
    if( rc != 0 )
       return rc;
@@ -619,16 +622,16 @@ int hb_gtRepChar( USHORT uiRow, USHORT uiCol, USHORT uiChar, USHORT uiCount )
    return rc;
 }
 
-int hb_gtRest( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char * vlpScrBuff )
+int hb_gtRest( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, void * vlpScrBuff )
 {
-   hb_gt_PutText( uiTop, uiLeft, uiBottom, uiRight, vlpScrBuff );
+   hb_gt_PutText( uiTop, uiLeft, uiBottom, uiRight, ( BYTE * ) vlpScrBuff );
 
    return 0;
 }
 
-int hb_gtSave( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char * vlpScrBuff )
+int hb_gtSave( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, void * vlpScrBuff )
 {
-   hb_gt_GetText( uiTop, uiLeft, uiBottom, uiRight, vlpScrBuff );
+   hb_gt_GetText( uiTop, uiLeft, uiBottom, uiRight, ( BYTE * ) vlpScrBuff );
 
    return 0;
 }
@@ -674,14 +677,14 @@ int hb_gtSetSnowFlag( BOOL bNoSnow )
    return 0;
 }
 
-int hb_gtWrite( char * fpStr, ULONG length )
+int hb_gtWrite( BYTE * fpStr, ULONG length )
 {
    int iRow, iCol, iMaxCol, iMaxRow;
    ULONG size = length;
-   char attr = s_Color[ s_uiColorIndex ] & 0xFF;
+   BYTE attr = s_Color[ s_uiColorIndex ] & 0xFF;
    char *fpPointer = fpStr;
 
-  /* TODO: this is doing more work than needed */
+   /* TODO: this is doing more work than needed */
 
    /* Determine where the cursor is going to end up */
    iRow = s_uiCurrentRow;
@@ -689,7 +692,7 @@ int hb_gtWrite( char * fpStr, ULONG length )
    iMaxRow = hb_gtMaxRow();
    iMaxCol = hb_gtMaxCol();
 
-   length = ( length < iMaxCol-iCol+1 ) ? length : iMaxCol - iCol + 1;
+   length = ( length < iMaxCol - iCol + 1 ) ? length : iMaxCol - iCol + 1;
 
    size = length;
 
@@ -743,7 +746,7 @@ int hb_gtWrite( char * fpStr, ULONG length )
    return 0;
 }
 
-int hb_gtWriteAt( USHORT uiRow, USHORT uiCol, char * fpStr, ULONG length )
+int hb_gtWriteAt( USHORT uiRow, USHORT uiCol, BYTE * fpStr, ULONG length )
 {
    int rc;
 
@@ -753,7 +756,7 @@ int hb_gtWriteAt( USHORT uiRow, USHORT uiCol, char * fpStr, ULONG length )
    return hb_gtWrite( fpStr, length );
 }
 
-int hb_gtWriteCon( char * fpStr, ULONG length )
+int hb_gtWriteCon( BYTE * fpStr, ULONG length )
 {
    int rc = 0, nLen = 0;
    BOOL ldisp = FALSE;

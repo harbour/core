@@ -1,3 +1,46 @@
+19990916-14:20 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * source/rtl/mouse/*.*
+    * Copyright text format change.
+  * source/rtl/gt/*.c
+    ! Indentations, formatting errors corrected.
+    ! // comments change to /**/
+    + Copyright headers added.
+  * source/rtl/inkey.c
+    ! // comments change to /**/
+  * source/rtl/gt/gt_tpl.c
+    ! Fixed hb_gt_SetMode() return value type.
+  * source/rtl/gtapi.c
+    ! hb_gtRepChar() will check for buffer overflow.
+  * include/gtapi.h
+    ! Added hb_gt_Replicate() to GTAPI.H
+    * Variable names revised, standardized.
+  * source/rtl/errorapi.c
+    * hb_errPutArgs() Now using Item API instead of Array API.
+
+  * source/rtl/console.c 
+    source/rtl/gtapi.c
+    source/rtl/gt/*.c
+    include/gtapi.h
+    + API functions made more Clipper compatible with some arg type changes:
+      hb_gtBox() - Character parameter: char * -> BYTE *
+      hb_gtRepChar() - USHORT character changed to BYTE, this is not completely
+           Clipper compatible, but I've considered a bug to accept a character 
+           in an USHORT.
+      hb_gtRest() - Buffer parameter: char * -> void *
+      hb_gtSave() - Buffer parameter: char * -> void *
+      hb_gtWrite*() - Character parameter: char * -> BYTE *
+    * Some types changed in the low-level API.
+      hb_gt_IsColor() - retval: int -> BOOL
+      hb_gt_Get/SetCursorStyle() - int -> USHORT to match the high level API
+      hb_gt_Puts() - char * -> BYTE *, int -> ULONG for the length.
+      hb_gt_GetText() - char * -> BYTE *
+      hb_gt_PutText() - char * -> BYTE *
+      hb_gt_Replicate() - char -> BYTE, DWORD -> ULONG
+    ; IMHO later we should change all unsigned coordinate types to signed ones,
+      so that we can have a better "virtual screen" support. All attribute
+      types to a generic HB_ATTR, all characters to HB_CHAR.
+
 19990916-11:15 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/vm/hvm.c

@@ -1019,7 +1019,7 @@ HARBOUR HB_SAVESCREEN( void )
 #ifdef HARBOUR_USE_GTAPI
    USHORT uiX;
    USHORT uiCoords[ 4 ];
-   char * pBuffer;
+   void * pBuffer;
 
    uiCoords[ 0 ] = 0;
    uiCoords[ 1 ] = 0;
@@ -1031,10 +1031,10 @@ HARBOUR HB_SAVESCREEN( void )
          uiCoords[ uiX - 1 ] = hb_parni( uiX );
 
    hb_gtRectSize( uiCoords[ 0 ], uiCoords[ 1 ], uiCoords[ 2 ], uiCoords[ 3 ], &uiX );
-   pBuffer = ( char * ) hb_xgrab( uiX );
+   pBuffer = hb_xgrab( uiX );
    hb_gtSave( uiCoords[ 0 ], uiCoords[ 1 ], uiCoords[ 2 ], uiCoords[ 3 ], pBuffer );
    hb_retclen( pBuffer, uiX );
-   hb_xfree( ( void * ) pBuffer );
+   hb_xfree( pBuffer );
 #else
    hb_retc( "" );
 #endif
@@ -1058,7 +1058,7 @@ HARBOUR HB_RESTSCREEN( void )
             uiCoords[ uiX - 1 ] = hb_parni( uiX );
 
       hb_gtRest( uiCoords[ 0 ], uiCoords[ 1 ], uiCoords[ 2 ], uiCoords[ 3 ],
-                 hb_parc( 5 ) );
+                 ( void * ) hb_parc( 5 ) );
    }
 #endif
 }

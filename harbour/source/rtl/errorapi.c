@@ -504,17 +504,15 @@ PHB_ITEM hb_errPutFlags( PHB_ITEM pError, USHORT uiFlags )
 
 PHB_ITEM hb_errPutArgs( PHB_ITEM pError, USHORT uiArgCount, ... )
 {
-   PHB_ITEM pArray = hb_itemNew( NULL );
+   PHB_ITEM pArray = hb_itemArrayNew( uiArgCount );
    USHORT uiArgPos;
    va_list va;
 
    /* Build the array from the passed arguments. */
 
-   hb_arrayNew( pArray, uiArgCount );
-
    va_start( va, uiArgCount );
    for( uiArgPos = 1; uiArgPos <= uiArgCount; uiArgPos++ )
-      hb_arraySet( pArray, uiArgPos, va_arg( va, PHB_ITEM ) );
+      hb_itemArrayPut( pArray, uiArgPos, va_arg( va, PHB_ITEM ) );
    va_end( va );
 
    /* Assign the new array to the object data item. */
@@ -523,6 +521,8 @@ PHB_ITEM hb_errPutArgs( PHB_ITEM pError, USHORT uiArgCount, ... )
    hb_vmPush( pError );
    hb_vmPush( pArray );
    hb_vmDo( 1 );
+
+   hb_itemRelease( pArray );
 
    return pError;
 }

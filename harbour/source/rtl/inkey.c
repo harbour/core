@@ -550,8 +550,8 @@ HARBOUR HB_INKEY( void )
       /* When not using the GT API, flush both stdout and stderr,
          because we are waiting for input and want to ensure that
          any user prompts are visible. */
-//      fflush( stdout );
-//      fflush( stderr );
+/*    fflush( stdout ); */
+/*    fflush( stderr ); */
    #endif
    }
 
