@@ -56,42 +56,42 @@
 #ifdef HB_COMPAT_C53
 
 CLASS HBCHECKBOX
-Data Buffer  init .f. 
-Data Caption   
-Data CapRow    
-Data CapCol    
-Data Cargo 
+Data Buffer  init .f.
+Data Caption
+Data CapRow
+Data CapCol
+Data Cargo
 Data Col
 Data colorspec
 Data FBlock
-Data HasFocus  init  .f. 
-Data Message   init "" 
-Data Row       
-Data SBlock    
-Data Style     init "[û ]" 
-Data lCursor 
+Data HasFocus  init  .f.
+Data Message   init ""
+Data Row
+Data SBlock
+Data Style     init "[û ]"
+Data lCursor
 Data Typeout init   .f.
 DATA ClassName init "CHECKBOX"
 METHOD New(nRow,nCol,cCaption)
-METHOD SetFocus() 
-MESSAGE Select()    METHOD _Select() 
-METHOD KillFocus() 
-METHOD DisPlay() 
+METHOD SetFocus()
+MESSAGE Select()    METHOD _Select()
+METHOD KillFocus()
+METHOD DisPlay()
 
 endclass
 
-METHOD  New(nRow,nCol,cCaption) 
+METHOD  New(nRow,nCol,cCaption)
 Local cColor:=''
 Local oCheck
-      
-::Buffer    := .f. 
-::Caption   := cCaption 
-::CapRow    := nRow 
-::CapCol    := nCol+3+1 
 
-::Col       := nCol 
+::Buffer    := .f.
+::Caption   := cCaption
+::CapRow    := nRow
+::CapCol    := nCol+3+1
+
+::Col       := nCol
    if ( isdefcolor() )
-      ::ColorSpec:="W/N,W+/N,W/N,W+/N" 
+      ::ColorSpec:="W/N,W+/N,W/N,W+/N"
    else
       cColor := SetColor()
      ::ColorSpec:= __guicolor(cColor, 5) + "," + ;
@@ -99,13 +99,13 @@ Local oCheck
      "," + __guicolor(cColor, 4)
    endif
 
-::HasFocus  := .f. 
-::Message   := "" 
-::Row       := nRow 
+::HasFocus  := .f.
+::Message   := ""
+::Row       := nRow
 
-::Style     := "[û ]" 
+::Style     := "[û ]"
 
-::Typeout   := .f. 
+::Typeout   := .f.
 
 
 return Self
@@ -145,12 +145,12 @@ Method KillFocus() CLASS HBCHECKBOX
    endif
    RETURN Self
 
-   
+
 Method Display()   CLASS HBCHECKBOX
 
 
    local cColor := SetColor(), nCurRow:= Row(), nCurCol:= Col(), ;
-      cOldStyle := ::Style, cCaption, nPos 
+      cOldStyle := ::Style, cCaption, nPos
 
    dispbegin()
    if ( ::HasFocus )
@@ -223,6 +223,6 @@ function IsDefColor()
    local cColor:=SETCOLOR()
    Return ( ccolor== "W/N,N/W,N/N,N/N,N/W")
 function Checkbox(nr,ncol,cCaption)
-return HBCHECKBOX():new(nt, nCol, cCaption)
+return HBCHECKBOX():new(nr, nCol, cCaption)
 
 #endif
