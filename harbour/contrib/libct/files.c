@@ -68,9 +68,9 @@ static struct ffblk fsOldFiles;
 
    #define MAXGETHOSTNAME 256      /* should be enough for a host name */
 
-#elif defined(HB_OS_DOS)
+#elif defined(HB_OS_DOS) && !defined(__RSX32__)
 
-   #if defined(__DJGPP__) || defined(__RSX32__)
+   #if defined(__DJGPP__)
       #include <sys/param.h>
    #endif
       #include "hb_io.h"
@@ -94,7 +94,7 @@ static       HANDLE hLastFind;
 static       WIN32_FIND_DATA  Lastff32;
 LPTSTR GetDate(FILETIME *rTime);
 LPTSTR GetTime(FILETIME *rTime);
-#if !defined(_MSC_VER)
+#if !defined(_MSC_VER) && !defined(__RSXNT__)
    #include <dir.h>
 #endif
 #endif
@@ -705,7 +705,7 @@ HB_FUNC(FILETIME)
 
 }
 
-#if (defined(HB_OS_WIN_32) || defined(__MINGW32__)) && !defined(__CYGWIN__)
+#if (defined(HB_OS_WIN_32) || defined(__MINGW32__)) && !defined(__CYGWIN__) && !defined(__RSXNT__)
 
 #include <tchar.h>
 

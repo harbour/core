@@ -63,6 +63,10 @@
     #include "sys\farptr.h"
 #elif defined(__MSC_VER)
     #include "signal.h"
+#elif defined(__BORLANDC__)
+   #ifndef FAR
+      #define FAR far /* Because FAR is not defined for Borland C 3.x */
+   #endif
 #endif
 
 static void SetGet( char cKey );
@@ -239,7 +243,7 @@ static void SetGet( char cKey )
 
    #else
 
-      *( ( char FAR * ) MK_FP( 0x0040, 0x0017 ) ) = ( *( ( char FAR * ) MK_FP( 0x0040, 0x0017 ) ) & ( !cKey ) ) | cKey );
+      *( ( char FAR * ) MK_FP( 0x0040, 0x0017 ) ) = ( *( ( char FAR * ) MK_FP( 0x0040, 0x0017 ) ) & ( !cKey ) ) | cKey;
 
    #endif
    }   

@@ -25,6 +25,6 @@ C_SOURCES=\
 
 PRG_SOURCES=\
 
-LIBNAME=libgt
+LIBNAME=gt
 
 include $(TOP)$(ROOT)config/lib.cf

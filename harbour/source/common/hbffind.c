@@ -71,6 +71,8 @@ HB_FILE_VER( "$Id$" )
 
    #if defined(__DJGPP__) || defined(__RSX32__)
       #include <sys/param.h>
+   #endif
+   #if defined(__DJGPP__) || defined(__RSX32__) || defined(__BORLANDC__)
       #include <sys/stat.h>
    #endif
    #include <dos.h>
@@ -866,7 +868,7 @@ void hb_fsFindClose( PHB_FFIND ffind )
 
 #if defined(HB_OS_DOS)
 
-         #if defined(__DJGPP__)
+         #if defined(__DJGPP__) || defined(__BORLANDC__)
          {
             HB_SYMBOL_UNUSED( info );
          }
