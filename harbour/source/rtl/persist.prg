@@ -94,9 +94,12 @@ METHOD LoadFromText( cObjectText ) CLASS HBPersistent
               endif
 
          case Upper( LTrim( __StrToken( cLine, 1 ) ) ) == "ARRAY"
-              if Left( cToken := LTrim( __StrToken( cLine, 2 ) ), 2 ) == "::"
-                 __ObjSendMsg( Self, "_" + SubStr( cToken, 3 ), Array( Val( __StrToken( cLine, 4 ) ) ) )
-              endif
+              cLine = SubStr( cLine, At( "::", cLine ) )
+              M->oSelf := Self
+              cLine := StrTran( cLine, "::", "oSelf:" )
+              cLine := StrTran( cLine, " LEN ", " = Array( " )
+              cLine := RTrim( StrTran( cLine, "=", ":=", , 1 ) ) + " )"
+              &( cLine )
 
          case Left( cToken := LTrim( __StrToken( cLine, 1, "=" ) ), 2 ) == "::"
               M->oSelf := Self
