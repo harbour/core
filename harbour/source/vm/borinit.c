@@ -1,3 +1,5 @@
+#pragma option -a1 /* byte alignment */
+
 /*
  * $Id$
  *
@@ -33,8 +35,9 @@
 
 typedef struct
 {
-   char c1, c2;
-   void ( * pInitFunc )( void );
+   char calltype;
+   char priority;
+   void ( * pFunc )( void );
 } HB_BORINITSYMBOL, * HB_PBORINITSYMBOL;
 
 extern HB_BORINITSYMBOL hb_BorFirstSymbol, hb_BorLastSymbol;
@@ -44,5 +47,11 @@ void hb_vmProcessBorlandInitSegment( void )
    HB_PBORINITSYMBOL pFirst = &hb_BorFirstSymbol;
 
    while( pFirst < ( &hb_BorLastSymbol - 1 ) )
-      ( pFirst++ )->pInitFunc();
+   {
+      ( pFirst++ )->pFunc();
+
+      while( * ( ( char * ) pFirst ) == 0 )  /* specially for Borland _INIT_ */
+         ( ( char * ) pFirst )++;            /* segment alignment */
+      ( ( char * ) pFirst )--;
+   }
 }
