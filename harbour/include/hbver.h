@@ -36,6 +36,7 @@
 /*
  * ChangeLog:
  *
+ * V 1.61   Patrick Mast                Changed day on build date to 27
  * V 1.6    Patrick Mast                Bumped build to 31 and updated date
  * V 1.5    David G. Holm               Bumped revision code to "b" and
  *                                      changed date for public release.
@@ -89,6 +90,6 @@ extern int    hb_day;
 #define hb_build     31      /* Build number */
 #define hb_year      2000    /* Build year */
 #define hb_month     01      /* Build month */
-#define hb_day       26      /* Build day */
+#define hb_day       27      /* Build day */
 
 #endif /* HB_VER_H_ */

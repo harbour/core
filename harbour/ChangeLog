@@ -1,3 +1,9 @@
+20000127-12:54 GMT+1 Patrick Mast <harbour@PatrickMast.com>
+   * doc/whatsnew.txt
+     * updated for build 31
+   * include/hbver.c
+     * Changed day in date to 27
+
 20000126-23:59 EST Paul Tucker <ptucker@sympatico.ca>
   * makefile.vc
     + source/tools/ng.prg

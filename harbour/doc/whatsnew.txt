@@ -1,3 +1,63 @@
+Build #31 2000-01-27
+- Added macro support
+- Many changes, fixes, and enhancements to compiler internals
+- Many changes, fixes, and enhancements to RDD system
+- Many changes, fixes, and enhancements to the GT API system
+- Improved SETCURSOR() and SET( _SET_CURSOR )
+- Added FIELDBLOCK() and FIELDWBLOCK()
+- The Harbour '-w' command line option can set the maximal level of reported warnings. The following levels are supported currently:
+   '-w0'         - no warnings
+   '-w' or '-w1' - Clipper compatible warnings
+   '-w2'         - some useful warnings missed in Clipper
+   '-w3'         - warnings generated for Harbour language extensions
+- The 'libs' directory is now named 'lib'.
+- The 'runner' program is now named 'hbrun'.
+- Some include files now have an 'hb' prefix in the name.
+- db_brows significantly enhanced.
+- Regression testing enhanced and expanded, replacing several standalone test modules. Now in tests/regress directory.
+- Added FSETDEVMOD()
+- Added READINSERT()
+- Added MEMOLINE()
+- Added undocumented DISPOUTAT()
+- Added DEFPATH() and __DEFPATH()
+- Enhanced VERSION() to optionally include the compiler version used to create Harbour
+- Enhanced OS() to include more Windows version details
+- Added __INPUT(), __WAIT(), and SETTYPEAHEAD()
+- Added several undocumented __BOX*() functions
+- Added HB_VALTOSTR()
+- Improved Windows INKEY() support
+- Added missing Clipper 5.3 SETs:
+  _SET_VIDEOMODE
+  _SET_MBLOCKSIZE
+  _SET_MFILEEXT
+  _SET_STRICTREAD
+  _SET_OPTIMIZE
+  _SET_AUTOPEN
+  _SET_AUTORDER
+- Added undocumented GETE()
+- Compatibility functions added:
+  __CLASSNEW()
+  __CLASSINSTANCE()
+  __CLASSADD()
+  __CLASSNAME()
+  __CLASSSEL()
+  __CLEAR()
+  __ATCLEAR()
+- Added ANNOUNCE CLIPPER520 and ANNOUNCE CLIPPER530
+- Added PROCFILE()
+- Added national message related functions:
+  ISAFFIRM(), ISNEGATIVE(), NATIONMSG(), _NATSORTVER(), _NATMSGVER()
+- Added Harbour compiler tracing (i.e., debug output)
+- Many changes, fixes, and enhancements to documentation
+- Program added to extract documentation from source code and create NG and HLP files
+- Compile time expression optimizer.
+- Some preprocessor fixes
+- Added ADS RDD
+- Added TYPE() function
+- MlCount() and MlPos() functions
+- Get system completally finished
+
+
 Build #30 September 30 1999
 - RDD support
 - Support for MEM files
