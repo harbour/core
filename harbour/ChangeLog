@@ -1,3 +1,16 @@
+2001-06-15 13:55 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+  * source/rdd/dbstrux.prg
+  * source/rdd/rddord.prg
+  * source/rtl/dbedit.prg
+  * source/rtl/dircmd.prg
+  * source/rtl/filesys.c
+  * source/rtl/setfunc.prg
+  * source/rtl/text.prg
+  * source/rtl/version.c
+  * source/vm/initsymb.c
+    * Updated from the old Harbour Exception to the new Harbour Exception.
+
 2001-06-15 13:40 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * source/common/hbver.c
