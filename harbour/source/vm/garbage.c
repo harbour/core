@@ -226,10 +226,10 @@ void hb_gcCollect( void )
 */
 void hb_gcCollectAll( void )
 {
-   HB_GARBAGE_PTR pBlock = s_pCurrBlock;
-
    if( s_pCurrBlock )
    {
+      HB_GARBAGE_PTR pBlock = s_pCurrBlock;
+      
       do
       {
          pBlock->status |= HB_GC_NOTCHECKED;

@@ -351,14 +351,15 @@ void hb_vmQuit( void )
    hb_conRelease();             /* releases Console */
    hb_setRelease();             /* releases Sets */
    
+   /* release all known garbage */
+   hb_gcCollectAll();
+   
    /* release all remaining items */
    while( hb_stack.pPos > hb_stack.pItems )
       hb_stackPop();
    hb_itemClear( &hb_stack.Return );
    hb_arrayRelease( &s_aStatics );
    hb_memvarsRelease();
-   /* release all known garbage */
-   hb_gcCollectAll();    
    hb_stackFree();
 /* hb_dynsymLog(); */
    hb_xexit();

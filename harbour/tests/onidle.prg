@@ -16,33 +16,47 @@ LOCAL nPrev:=SECONDS()
   ? "Can you see it ??? :) Press ESC or wait 5 seconds"
   ?
   ?
+  @ 10,2 SAY "Memory before TEST() call" + STR( MEMORY(HB_MEM_USED) )
+  TEST()
+  @ 11,2 SAY "Memory after TEST() and before collecting" + STR( MEMORY(HB_MEM_USED) )
+  HB_GCALL()
+  @ 12,2 SAY "Memory after collecting" + STR( MEMORY(HB_MEM_USED) )
   nH1 = HB_IDLEADD( {|| DEVPOS(0,01), DEVOUT( TIME() )} )
   nH2 = HB_IDLEADD( {|| DEVPOS(0,21), TEST(), DEVOUT( MEMORY(HB_MEM_USED) )} )
   nH3 = HB_IDLEADD( {|| DEVPOS(0,41), IIF(n=4,n:=1,n++),DEVOUT(aSign[n]) } )
   nH4 = HB_IDLEADD( {|| DEVPOS(0,61), DEVOUT( 1000*(SECONDS()-nPrev) ), nPrev:=SECONDS()} )
   
-  INKEY( 5 )
+  INKEY( 30 )
   HB_IDLEDEL( nH3 )
   HB_IDLEDEL( nH2 )
   HB_IDLEDEL( nH1 )
   HB_IDLEDEL( nH4 )
+
+  @ 13,2 SAY "Memory after idle states" + STR( MEMORY(HB_MEM_USED) )
+  HB_GCALL()
+  @ 14,2 SAY "Memory after collecting" + STR( MEMORY(HB_MEM_USED) )
   
 RETURN 1
 
 PROC TEST()
-LOCAL a, b
+LOCAL a, b, c
 LOCAL cb
 
-  a := ARRAY( 2 )
-  b := ARRAY( 2 )
+  a := ARRAY( 3 )
+  b := ARRAY( 3 )
+  c := ARRAY( 3 )
   a[1] :=a
   a[2] :=b
-  b[1] :=b
-  b[2] :=a
+  a[3] :=c
+  b[1] :=a
+  b[2] :=b
+  b[3] :=c
+  c[1] :=a
+  c[2] :=b
+  c[3] :=c
   
-//  cb := {|x| IIF( x>10, IIF(x=0,0,EVAL(cb,x-1)), DEVOUT(x))}
-//  EVAL( cb, 20 )
-//  INKEY( .5 )
+  cb := {|x| x:=cb}
+  EVAL( cb )
   
 RETURN
 
