@@ -1,3 +1,8 @@
+19991105-23:30 EDT David G. Holm <dholm@jsd-llc.com>
+
+   * source/rtl/filesys.c
+     ! Only truncate the file when the size of the write is zero bytes.
+
 19991105-21:20 EDT David G. Holm <dholm@jsd-llc.com>
 
    * config/os2/icc.cf

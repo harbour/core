@@ -535,16 +535,16 @@ USHORT  hb_fsRead( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
 
 USHORT  hb_fsWrite( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
 {
-   USHORT uiWritten;
+   USHORT uiWritten = 0;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsWrite(%p, %p, %hu)", hFileHandle, pBuff, uiCount));
 
 #if defined(HAVE_POSIX_IO) || defined(_MSC_VER) || defined(__MINGW32__)
 
    errno = 0;
-   uiWritten = write( hFileHandle, pBuff, uiCount );
+   if( uiCount ) uiWritten = write( hFileHandle, pBuff, uiCount );
+   else ftruncate( hFileHandle, tell( hFileHandle ) );
    s_uiErrorLast = errno;
-   ftruncate( hFileHandle, tell( hFileHandle ) );
    if( uiWritten == ( USHORT ) -1 )
       uiWritten = 0;
 
@@ -622,7 +622,7 @@ ULONG   hb_fsWriteLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
 #if defined(HAVE_POSIX_IO) || defined(_MSC_VER) || defined(__MINGW32__)
 
    errno = 0;
-   while( ulLeftToWrite )
+   if( ulCount ) while( ulLeftToWrite )
    {
       /* Determine how much to write this time */
       if( ulLeftToWrite > ( ULONG ) INT_MAX )
@@ -645,8 +645,8 @@ ULONG   hb_fsWriteLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
       ulWritten += ( ULONG ) uiWritten;
       pPtr += uiWritten;
    }
+   else ftruncate( hFileHandle, tell( hFileHandle ) );
    s_uiErrorLast = errno;
-   ftruncate( hFileHandle, tell( hFileHandle ) );
 
 #else
 
