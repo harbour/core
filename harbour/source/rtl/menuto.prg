@@ -48,8 +48,7 @@ function __AtPrompt( nCol, nRow, cPrompt, cMsg )
    aadd( s_aLevel[ s_nPointer ], { nCol, nRow, cPrompt, cMsg } )
 
    // put this prompt on the screen right now
-   setpos( nCol, nRow )
-   dispout( cPrompt )
+   DispOutAt( nCol, nRow, cPrompt )
 
    return .f.
 
@@ -120,8 +119,7 @@ function __MenuTo( bBlock, cVariable )
          if nMsgRow > 0
 
             if ! Empty( xMsg )
-               setpos( nMsgRow, nMsgCol )
-               dispout( space( len( xMsg ) ) )
+               DispOutAt( nMsgRow, nMsgCol, Space( Len( xMsg ) ) )
             endif
 
             xMsg := s_aLevel[ s_nPointer - 1, n, 4 ]
@@ -139,8 +137,7 @@ function __MenuTo( bBlock, cVariable )
                nMsgCol := int( ( maxcol() - len( xMsg ) ) / 2 )
             endif
 
-            setpos( nMsgRow, nMsgCol )
-            dispout( xMsg )
+            DispOutAt( nMsgRow, nMsgCol, xMsg )
 
          endif
 
@@ -152,8 +149,9 @@ function __MenuTo( bBlock, cVariable )
          endif
 
          // highlight the prompt
-         setpos( s_aLevel[ s_nPointer - 1, n, 1 ], s_aLevel[ s_nPointer - 1, n, 2 ] )
-         dispout( s_aLevel[ s_nPointer - 1, n, 3 ] )
+         DispOutAt( s_aLevel[ s_nPointer - 1, n, 1 ],;
+                    s_aLevel[ s_nPointer - 1, n, 2 ],;
+                    s_aLevel[ s_nPointer - 1, n, 3 ] )
 
          if Set( _SET_INTENSITY )
             ColorSelect( CLR_STANDARD )
@@ -216,8 +214,9 @@ function __MenuTo( bBlock, cVariable )
          endcase
 
          if n <> 0
-            setpos( s_aLevel[ s_nPointer - 1, q, 1 ], s_aLevel[ s_nPointer - 1, q, 2 ] )
-            dispout( s_aLevel[ s_nPointer - 1, q, 3 ] )
+            DispOutAt( s_aLevel[ s_nPointer - 1, q, 1 ],;
+                       s_aLevel[ s_nPointer - 1, q, 2 ],;
+                       s_aLevel[ s_nPointer - 1, q, 3 ] )
          endif
 
       enddo

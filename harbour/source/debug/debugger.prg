@@ -298,18 +298,17 @@ METHOD Show() CLASS TDebugger
    SET COLOR TO "N/BG"
    @ MaxRow(), 0 CLEAR TO MaxRow(), MaxCol()
 
-   @ MaxRow(), 0 SAY ;
-   "F1-Help F2-Zoom F3-Repeat F4-User F5-Go F6-WA F7-Here F8-Step F9-BkPt F10-Trace" COLOR "N/BG"
-   @ MaxRow(),  0 SAY "F1" COLOR "GR+/BG"
-   @ MaxRow(),  8 SAY "F2" COLOR "GR+/BG"
-   @ MaxRow(), 16 SAY "F3" COLOR "GR+/BG"
-   @ MaxRow(), 26 SAY "F4" COLOR "GR+/BG"
-   @ MaxRow(), 34 SAY "F5" COLOR "GR+/BG"
-   @ MaxRow(), 40 SAY "F6" COLOR "GR+/BG"
-   @ MaxRow(), 46 SAY "F7" COLOR "GR+/BG"
-   @ MaxRow(), 54 SAY "F8" COLOR "GR+/BG"
-   @ MaxRow(), 62 SAY "F9" COLOR "GR+/BG"
-   @ MaxRow(), 70 SAY "F10" COLOR "GR+/BG"
+   DispOutAt( MaxRow(),  0, "F1-Help F2-Zoom F3-Repeat F4-User F5-Go F6-WA F7-Here F8-Step F9-BkPt F10-Trace", "N/BG" )
+   DispOutAt( MaxRow(),  0, "F1", "GR+/BG" )
+   DispOutAt( MaxRow(),  8, "F2", "GR+/BG" )
+   DispOutAt( MaxRow(), 16, "F3", "GR+/BG" )
+   DispOutAt( MaxRow(), 26, "F4", "GR+/BG" )
+   DispOutAt( MaxRow(), 34, "F5", "GR+/BG" )
+   DispOutAt( MaxRow(), 40, "F6", "GR+/BG" )
+   DispOutAt( MaxRow(), 46, "F7", "GR+/BG" )
+   DispOutAt( MaxRow(), 54, "F8", "GR+/BG" )
+   DispOutAt( MaxRow(), 62, "F9", "GR+/BG" )
+   DispOutAt( MaxRow(), 70, "F10", "GR+/BG" )
 
 return nil
 
@@ -341,7 +340,7 @@ METHOD ShowCallStack() CLASS TDebugger
       ::oBrwStack:GoBottomBlock = { || n := Len( ::aCallStack ) }
       ::oBrwStack:SkipBlock = { | nSkip, nPos | nPos := n,;
                              n := If( nSkip > 0, Min( Len( ::aCallStack ), n + nSkip ),;
-                             Max( 1, n + nSkip )), n - nPos }
+                             Max( 1, n + nSkip ) ), n - nPos }
 
       ::oBrwStack:AddColumn( TBColumnNew( "",  { || PadC( ::aCallStack[ n ], 14 ) } ) )
       ::oBrwStack:ForceStable()
@@ -387,7 +386,7 @@ METHOD ShowVars() CLASS TDebugger
       ::oBrwVars:GoBottomBlock = { || n := Len( ::aVars ) }
       ::oBrwVars:SkipBlock = { | nSkip, nPos | nPos := n,;
                              n := If( nSkip > 0, Min( Len( ::aVars ), n + nSkip ),;
-                             Max( 1, n + nSkip )), n - nPos }
+                             Max( 1, n + nSkip ) ), n - nPos }
 
       nWidth = ::oWndVars:nWidth() - 1
       ::oBrwVars:AddColumn( TBColumnNew( "",  { || AllTrim( Str( n ) ) + ") " + ;
@@ -455,8 +454,8 @@ METHOD InputBox( cMsg, uValue ) CLASS TDebugger
    local lScoreBoard := Set( _SET_SCOREBOARD, .f. )
 
    @ nTop, nLeft, nBottom, nRight BOX B_SINGLE COLOR ::oPullDown:cClrPopup
-   @ nTop, nLeft + ( ( nRight - nLeft ) ) / 2 - Len( cMsg ) / 2 SAY ;
-      cMsg COLOR ::oPullDown:cClrPopup
+   DispOutAt( nTop, nLeft + ( ( nRight - nLeft ) ) / 2 - Len( cMsg ) / 2,;
+      cMsg, ::oPullDown:cClrPopup )
    __Shadow( nTop, nLeft, nBottom, nRight )
 
    @ nTop + 1, nLeft + 1 GET uTemp
@@ -561,8 +560,8 @@ METHOD SetCaption( cCaption ) CLASS TDbWindow
    ::cCaption = cCaption
 
    if ! Empty( cCaption )
-      @ ::nTop, ( ( ::nRight - ::nLeft ) / 2 ) - ;
-     ( Len( cCaption ) + 2 ) / 2 SAY " " + cCaption + " " COLOR ::cColor
+      DispOutAt( ::nTop, ( ( ::nRight - ::nLeft ) / 2 ) - ;
+         ( Len( cCaption ) + 2 ) / 2, " " + cCaption + " ", ::cColor )
    endif
 
 return nil
@@ -577,8 +576,8 @@ METHOD SetFocus( lOnOff ) CLASS TDbWindow
       COLOR ::cColor
 
    if ! Empty( ::cCaption )
-      @ ::nTop, ::nLeft + ( ::nRight - ::nLeft ) / 2 - Len( ::cCaption ) / 2 ;
-         SAY " " + ::cCaption + " " COLOR ::cColor
+      DispOutAt( ::nTop, ::nLeft + ( ::nRight - ::nLeft ) / 2 - Len( ::cCaption ) / 2 ,;
+         " " + ::cCaption + " ", ::cColor )
    endif
 
    DispEnd()
@@ -606,44 +605,56 @@ Copyright Luiz Rafael Culik 1999
 */
 METHOD Move() Class TDbWindow
 
-#define pbar1 replicate(chr(176),8)+chr(32)
-
-   local noldtop  := ::nTop
-   local noldleft := ::nLeft
-   local noldbottom := ::nbottom
-   local noldright := ::nright
-   local nkey
+   local nOldTop    := ::nTop
+   local nOldLeft   := ::nLeft
+   local nOldBottom := ::nbottom
+   local nOldRight  := ::nright
+   local nKey
 
    while .t.
-      restscreen(,,,, ::cbackimage)
-      dispbox(::ntop,::nleft,::nright,::nbottom,pbar1)
-      nkey=inkey(0)
+      RestScreen( ,,,, ::cbackimage )
+      DispBox( ::nTop, ::nLeft, ::nRight, ::nBottom, Replicate( Chr( 176 ), 8 ) + " " )
+
+      nKey := Inkey( 0 )
+
       do case
-         case nkey==K_UP
-              if(::ntop != 0,(::ntop--,::nbottom--),nil)
+         case nkey == K_UP
+              if ::ntop != 0
+                 ::ntop--
+                 ::nbottom--
+              endif
 
-         case nkey==K_DOWN
-              if(::nbottom != maxrow(),(::ntop++,::nbottom++),nil)
+         case nKey == K_DOWN
+              if ::nBottom != MaxRow()
+                 ::nTop++
+                 ::nBottom++
+              endif
 
-         case nkey==K_LEFT
-              if(::nleft != 0,(::nleft--,::nright--),nil)
+         case nKey == K_LEFT
+              if ::nLeft != 0
+                 ::nLeft--
+                 ::nRight--
+              endif
 
-         case nkey==K_RIGHT
-              if(::nbottom != maxrow(),(::nleft++,::nright++),nil)
+         case nKey == K_RIGHT
+              if ::nBottom != MaxRow()
+                 ::nLeft++
+                 ::nRight++
+              endif
 
-         case nkey==K_ESC
-              ::ntop := noldtop
-              ::nleft := noldleft
-              ::nbottom := noldbottom
-              ::nright := noldright
+         case nKey == K_ESC
+              ::nTop    := nOldTop
+              ::nLeft   := nOldLeft
+              ::nBottom := nOldBottom
+              ::nRight  := nOldRight
       endcase
 
-      if ( nkey==K_ESC .or. nkey==K_ENTER)
+      if nKey == K_ESC .or. nKey == K_ENTER
          exit
       end
    end
 
-   // __keyboard(chr(0)),inkey())
+   // __keyboard( chr( 0 ) ), inkey() )
 
 return nil
 
@@ -725,7 +736,7 @@ METHOD AddItem( oMenuItem ) CLASS TDbMenu
       if Len( oLastMenu:aItems ) > 0
          oLastMenuItem = ATail( oLastMenu:aItems )
          oMenuItem:nCol = oLastMenuItem:nCol + ;
-                          Len( StrTran( oLastMenuItem:cPrompt, "&", "" ) )
+                          Len( StrTran( oLastMenuItem:cPrompt, "~", "" ) )
       else
          oMenuItem:nCol = 0
       endif
@@ -743,7 +754,7 @@ METHOD Build() CLASS TDbMenu
       for n = 1 to Len( ::aItems )
          ::aItems[ n ]:nRow = 0
          ::aItems[ n ]:nCol = nPos
-         nPos += Len( StrTran( ::aItems[ n ]:cPrompt, "&", "" ) )
+         nPos += Len( StrTran( ::aItems[ n ]:cPrompt, "~", "" ) )
       next
    else
       oMenuItem = ATail( ::aMenus[ Len( ::aMenus ) - 1 ]:aItems )
@@ -753,7 +764,7 @@ METHOD Build() CLASS TDbMenu
       for n = 1 to Len( ::aItems )
          ::aItems[ n ]:nRow = ::nTop + n
          ::aItems[ n ]:nCol = ::nLeft + 1
-         nPos = Max( nPos, ::nLeft + Len( StrTran( ::aItems[ n ]:cPrompt, "&", "" ) ) + 1 )
+         nPos = Max( nPos, ::nLeft + Len( StrTran( ::aItems[ n ]:cPrompt, "~", "" ) ) + 1 )
       next
       ::nRight  = nPos
       ::nBottom = ::nTop + Len( ::aItems ) + 1
@@ -779,11 +790,11 @@ METHOD ClosePopup( nPopup ) CLASS TDbMenu
       RestScreen( oPopup:nTop, oPopup:nLeft, oPopup:nBottom + 1, oPopup:nRight + 1,;
                   oPopup:cBackImage )
       oPopup:cBackImage = nil
-      @ 0, ::aItems[ nPopup ]:nCol SAY ;
-        StrTran( ::aItems[ nPopup ]:cPrompt, "&", "" ) COLOR ::cClrPopup
+      DispOutAt( 0, ::aItems[ nPopup ]:nCol,;
+         StrTran( ::aItems[ nPopup ]:cPrompt, "~", "" ), ::cClrPopup )
 
-      @ 0, ::aItems[ nPopup ]:nCol + nAt := At( "&", ::aItems[ nPopup ]:cPrompt ) - 1 SAY ;
-        SubStr( ::aItems[ nPopup ]:cPrompt, nAt + 2, 1 ) COLOR ::cClrHotKey
+      DispOutAt( 0, ::aItems[ nPopup ]:nCol + nAt := At( "~", ::aItems[ nPopup ]:cPrompt ) - 1,;
+         SubStr( ::aItems[ nPopup ]:cPrompt, nAt + 2, 1 ), ::cClrHotKey )
    endif
    // dispend()
 
@@ -805,8 +816,8 @@ METHOD Display() CLASS TDbMenu
 
    // DispBegin()
    if ! ::lPopup
-      @ 0, 0 SAY Space( MaxCol() + 1 ) COLOR ::cClrPopup
-      DevPos( 0, 0 )
+      DispOutAt( 0, 0, Space( MaxCol() + 1 ), ::cClrPopup )
+      SetPos( 0, 0 )
    else
       ::cBackImage = SaveScreen( ::nTop, ::nLeft, ::nBottom + 1, ::nRight + 1 )
       @ ::nTop, ::nLeft, ::nBottom, ::nRight BOX B_SINGLE
@@ -815,15 +826,15 @@ METHOD Display() CLASS TDbMenu
 
    for n = 1 to Len( ::aItems )
       if ::aItems[ n ]:cPrompt == "-"  // Separator
-         @ ::aItems[ n ]:nRow, ::nLeft SAY ;
-            Chr( 195 ) + Replicate( Chr( 196 ), ::nRight - ::nLeft - 1 ) + Chr( 180 )
+         DispOutAt( ::aItems[ n ]:nRow, ::nLeft,;
+            Chr( 195 ) + Replicate( Chr( 196 ), ::nRight - ::nLeft - 1 ) + Chr( 180 ) )
       else
-         @ ::aItems[ n ]:nRow, ::aItems[ n ]:nCol SAY ;
-            StrTran( ::aItems[ n ]:cPrompt, "&", "" )
+         DispOutAt( ::aItems[ n ]:nRow, ::aItems[ n ]:nCol,;
+            StrTran( ::aItems[ n ]:cPrompt, "~", "" ) )
 
-         @ ::aItems[ n ]:nRow, ::aItems[ n ]:nCol + nAt := ;
-            At( "&", ::aItems[ n ]:cPrompt ) - 1 SAY ;
-            SubStr( ::aItems[ n ]:cPrompt, nAt + 2, 1 ) COLOR ::cClrHotKey
+         DispOutAt( ::aItems[ n ]:nRow, ::aItems[ n ]:nCol + nAt := ;
+            At( "~", ::aItems[ n ]:cPrompt ) - 1 ,;
+            SubStr( ::aItems[ n ]:cPrompt, nAt + 2, 1 ), ::cClrHotKey )
       endif
    next
    // DispEnd()
@@ -850,7 +861,7 @@ METHOD GetHotKeyPos( cKey ) CLASS TDbMenu
 
    for n = 1 to Len( ::aItems )
       if Upper( SubStr( ::aItems[ n ]:cPrompt,;
-         At( "&", ::aItems[ n ]:cPrompt ) + 1, 1 ) ) == cKey
+         At( "~", ::aItems[ n ]:cPrompt ) + 1, 1 ) ) == cKey
          return n
       endif
    next
@@ -882,12 +893,12 @@ METHOD GoLeft() CLASS TDbMenu
          ::ClosePopup( ::nOpenPopup )
       else
          SetColor( ::cClrPopup )
-         @ oMenuItem:nRow, oMenuItem:nCol SAY ;
-            StrTran( oMenuItem:cPrompt, "&", "" )
+         DispOutAt( oMenuItem:nRow, oMenuItem:nCol,;
+            StrTran( oMenuItem:cPrompt, "~", "" ) )
 
-         @ oMenuItem:nRow, oMenuItem:nCol + nAt := ;
-            At( "&", oMenuItem:cPrompt ) - 1 SAY ;
-            SubStr( oMenuItem:cPrompt, nAt + 2, 1 ) COLOR ::cClrHotKey
+         DispOutAt( oMenuItem:nRow, oMenuItem:nCol + nAt := ;
+            At( "~", oMenuItem:cPrompt ) - 1 ,;
+            SubStr( oMenuItem:cPrompt, nAt + 2, 1 ), ::cClrHotKey )
       endif
       if ::nOpenPopup > 1
          --::nOpenPopup
@@ -915,12 +926,12 @@ METHOD GoRight() CLASS TDbMenu
          ::ClosePopup( ::nOpenPopup )
       else
          SetColor( ::cClrPopup )
-         @ oMenuItem:nRow, oMenuItem:nCol SAY ;
-            StrTran( oMenuItem:cPrompt, "&", "" )
+         DispOutAt( oMenuItem:nRow, oMenuItem:nCol ,;
+            StrTran( oMenuItem:cPrompt, "~", "" ) )
 
-         @ oMenuItem:nRow, oMenuItem:nCol + nAt := ;
-            At( "&", oMenuItem:cPrompt ) - 1 SAY ;
-            SubStr( oMenuItem:cPrompt, nAt + 2, 1 ) COLOR ::cClrHotKey
+         DispOutAt( oMenuItem:nRow, oMenuItem:nCol + nAt := ;
+            At( "~", oMenuItem:cPrompt ) - 1 ,;
+            SubStr( oMenuItem:cPrompt, nAt + 2, 1 ), ::cClrHotKey )
       endif
       if ::nOpenPopup < Len( ::aItems )
          ++::nOpenPopup
@@ -954,19 +965,19 @@ METHOD ShowPopup( nPopup ) CLASS TDbMenu
    local nAt, oMenuItem
 
    if ! ::lPopup
-      @ 0, ::aItems[ nPopup ]:nCol SAY ;
-        StrTran( ::aItems[ nPopup ]:cPrompt, "&", "" ) COLOR ::cClrHilite
+      DispOutAt( 0, ::aItems[ nPopup ]:nCol ,;
+        StrTran( ::aItems[ nPopup ]:cPrompt, "~", "" ), ::cClrHilite )
 
-      @ 0, ::aItems[ nPopup ]:nCol + nAt := At( "&", ::aItems[ nPopup ]:cPrompt ) - 1 SAY ;
-        SubStr( ::aItems[ nPopup ]:cPrompt, nAt + 2, 1 ) COLOR ::cClrHotFocus
+      DispOutAt( 0, ::aItems[ nPopup ]:nCol + nAt := At( "~", ::aItems[ nPopup ]:cPrompt ) - 1 ,;
+        SubStr( ::aItems[ nPopup ]:cPrompt, nAt + 2, 1 ), ::cClrHotFocus )
    else
       oMenuItem = ::aItems[ nPopup ]
-      @ oMenuItem:nRow, oMenuItem:nCol SAY ;
-        StrTran( oMenuItem:cPrompt, "&", "" ) COLOR ::cClrHilite
+      DispOutAt( oMenuItem:nRow, oMenuItem:nCol ,;
+        StrTran( oMenuItem:cPrompt, "~", "" ), ::cClrHilite )
 
-      @ oMenuItem:nRow, oMenuItem:nCol + nAt := ;
-        At( "&", oMenuItem:cPrompt ) - 1 SAY ;
-        SubStr( oMenuItem:cPrompt, nAt + 2, 1 ) COLOR ::cClrHotFocus
+      DispOutAt( oMenuItem:nRow, oMenuItem:nCol + nAt := ;
+        At( "~", oMenuItem:cPrompt ) - 1 ,;
+        SubStr( oMenuItem:cPrompt, nAt + 2, 1 ), ::cClrHotFocus )
    endif
 
    ::nOpenPopup = nPopup
@@ -1038,12 +1049,12 @@ METHOD Display( cClrText, cClrHotKey ) CLASS TDbMenuItem
 
    local nAt
 
-   @ ::nRow, ::nCol SAY ;
-      StrTran( ::cPrompt, "&", "" ) COLOR cClrText
+   DispOutAt(  ::nRow, ::nCol ,;
+      StrTran( ::cPrompt, "~", "" ), cClrText )
 
-   @ ::nRow, ::nCol + nAt := ;
-      At( "&", ::cPrompt ) - 1 SAY ;
-      SubStr( ::cPrompt, nAt + 2, 1 ) COLOR cClrHotKey
+   DispOutAt( ::nRow, ::nCol + nAt := ;
+      At( "~", ::cPrompt ) - 1 ,;
+      SubStr( ::cPrompt, nAt + 2, 1 ), cClrHotKey )
 
 return nil
 
@@ -1069,103 +1080,103 @@ function BuildMenu( oDebugger )  // Builds the debugger pulldown menu
    local oMenu
 
    MENU oMenu
-      MENUITEM " &File "
+      MENUITEM " ~File "
       MENU
-         MENUITEM " &Open..."        ACTION oDebugger:Open()
-         MENUITEM " &Resume"         ACTION Alert( "Not implemented yet!" )
-         MENUITEM " &Shell"          ACTION Alert( "Not implemented yet!" )
+         MENUITEM " ~Open..."         ACTION oDebugger:Open()
+         MENUITEM " ~Resume"          ACTION Alert( "Not implemented yet!" )
+         MENUITEM " ~OS Shell"        ACTION Alert( "Not implemented yet!" )
          SEPARATOR
-         MENUITEM " &Exit  Alt-X  "  ACTION oDebugger:Exit(), oDebugger:Hide()
+         MENUITEM " e~Xit    Alt-X "  ACTION oDebugger:Exit(), oDebugger:Hide()
       ENDMENU
 
-      MENUITEM " &Locate "
+      MENUITEM " ~Locate "
       MENU
-         MENUITEM " &Find"       ACTION Alert( "Not implemented yet!" )
-         MENUITEM " &Next"       ACTION Alert( "Not implemented yet!" )
-         MENUITEM " &Previous"   ACTION Alert( "Not implemented yet!" )
-         MENUITEM " &Goto line..."  ACTION Alert( "Not implemented yet!" )
+         MENUITEM " ~Find"            ACTION Alert( "Not implemented yet!" )
+         MENUITEM " ~Next"            ACTION Alert( "Not implemented yet!" )
+         MENUITEM " ~Previous"        ACTION Alert( "Not implemented yet!" )
+         MENUITEM " ~Goto line..."    ACTION Alert( "Not implemented yet!" )
          SEPARATOR
-         MENUITEM " &Case sensitive " ACTION Alert( "Not implemented yet!" )
+         MENUITEM " ~Case sensitive " ACTION Alert( "Not implemented yet!" )
       ENDMENU
 
-      MENUITEM " &View "
+      MENUITEM " ~View "
       MENU
-         MENUITEM " &Sets"            ACTION Alert( "Not implemented yet!" )
-         MENUITEM " &WorkAreas  F6"   ACTION Alert( "Not implemented yet!" )
-         MENUITEM " &App screen F4 "  ACTION oDebugger:ShowAppScreen()
+         MENUITEM " ~Sets"            ACTION Alert( "Not implemented yet!" )
+         MENUITEM " ~WorkAreas   F6"  ACTION Alert( "Not implemented yet!" )
+         MENUITEM " ~App Screen  F4 " ACTION oDebugger:ShowAppScreen()
          SEPARATOR
-         MENUITEM " &CallStack"       ACTION oDebugger:ShowCallStack()
+         MENUITEM " ~CallStack"       ACTION oDebugger:ShowCallStack()
       ENDMENU
 
-      MENUITEM " &Run "
+      MENUITEM " ~Run "
       MENU
-         MENUITEM " &Restart"         ACTION Alert( "Not implemented yet!" )
-         MENUITEM " &Animate"         ACTION Alert( "Not implemented yet!" )
-         MENUITEM " &Step              F8 " ACTION Alert( "Not implemented yet!" )
-         MENUITEM " &Trace            F10"  ACTION Alert( "Not implemented yet!" )
-         MENUITEM " &Go                F5"  ACTION oDebugger:Go()
-         MENUITEM " to &Cursor         F7"  ACTION Alert( "Not implemented yet!" )
-         MENUITEM " &Next routine Ctrl-F5"  ACTION Alert( "Not implemented yet!" )
+         MENUITEM " ~Restart"               ACTION Alert( "Not implemented yet!" )
+         MENUITEM " ~Animate"               ACTION Alert( "Not implemented yet!" )
+         MENUITEM " ~Step              F8 " ACTION Alert( "Not implemented yet!" )
+         MENUITEM " ~Trace            F10"  ACTION Alert( "Not implemented yet!" )
+         MENUITEM " ~Go                F5"  ACTION oDebugger:Go()
+         MENUITEM " to ~Cursor         F7"  ACTION Alert( "Not implemented yet!" )
+         MENUITEM " ~Next routine Ctrl-F5"  ACTION Alert( "Not implemented yet!" )
          SEPARATOR
-         MENUITEM " S&peed..."              ACTION Alert( "Not implemented yet!" )
+         MENUITEM " s~Peed..."              ACTION Alert( "Not implemented yet!" )
       ENDMENU
 
-      MENUITEM " &Point "
+      MENUITEM " ~Point "
       MENU
-         MENUITEM " &Watchpoint..."         ACTION Alert( "Not implemented yet!" )
-         MENUITEM " &Tracepoint..."         ACTION Alert( "Not implemented yet!" )
-         MENUITEM " &Breakpoint F9 "        ACTION oDebugger:ToggleBreakPoint()
-         MENUITEM " &Delete..."             ACTION Alert( "Not implemented yet!" )
+         MENUITEM " ~Watchpoint..."         ACTION Alert( "Not implemented yet!" )
+         MENUITEM " ~Tracepoint..."         ACTION Alert( "Not implemented yet!" )
+         MENUITEM " ~Breakpoint   F9 "      ACTION oDebugger:ToggleBreakPoint()
+         MENUITEM " ~Delete..."             ACTION Alert( "Not implemented yet!" )
       ENDMENU
 
-      MENUITEM " &Monitor "
+      MENUITEM " ~Monitor "
       MENU
-         MENUITEM " &Public"                ACTION oDebugger:ShowVars()
-         MENUITEM " Pri&vate "              ACTION oDebugger:ShowVars()
-         MENUITEM " &Static"                ACTION oDebugger:ShowVars()
-         MENUITEM " &Local"                 ACTION oDebugger:ShowVars()
+         MENUITEM " ~Public"                ACTION oDebugger:ShowVars()
+         MENUITEM " pri~Vate "              ACTION oDebugger:ShowVars()
+         MENUITEM " ~Static"                ACTION oDebugger:ShowVars()
+         MENUITEM " ~Local"                 ACTION oDebugger:ShowVars()
          SEPARATOR
-         MENUITEM " &All"                   ACTION Alert( "Not implemented yet!" )
-         MENUITEM " S&ort"                  ACTION Alert( "Not implemented yet!" )
+         MENUITEM " ~All"                   ACTION Alert( "Not implemented yet!" )
+         MENUITEM " s~Ort"                  ACTION Alert( "Not implemented yet!" )
       ENDMENU
 
-      MENUITEM " &Options "
+      MENUITEM " ~Options "
       MENU
-         MENUITEM " &Preprocessed code"     ACTION Alert( "Not implemented yet!" )
-         MENUITEM " &Line numbers"          ACTION Alert( "Not implemented yet!" )
-         MENUITEM " &Exchange screens"      ACTION Alert( "Not implemented yet!" )
-         MENUITEM " swap on &Input"         ACTION Alert( "Not implemented yet!" )
-         MENUITEM " code&block trace"       ACTION Alert( "Not implemented yet!" )
-         MENUITEM " &Menu Bar"              ACTION Alert( "Not implemented yet!" )
-         MENUITEM " Mono &display"          ACTION Alert( "Not implemented yet!" )
-         MENUITEM " &Colors..."             ACTION Alert( "Not implemented yet!" )
-         MENUITEM " &Tab width..."          ACTION Alert( "Not implemented yet!" )
-         MENUITEM " path for &files..."     ACTION Alert( "Not implemented yet!" )
+         MENUITEM " ~Preprocessed Code"     ACTION Alert( "Not implemented yet!" )
+         MENUITEM " ~Line Numbers"          ACTION Alert( "Not implemented yet!" )
+         MENUITEM " ~Exchange Screens"      ACTION Alert( "Not implemented yet!" )
+         MENUITEM " swap on ~Input"         ACTION Alert( "Not implemented yet!" )
+         MENUITEM " code~Block Trace"       ACTION Alert( "Not implemented yet!" )
+         MENUITEM " ~Menu Bar"              ACTION Alert( "Not implemented yet!" )
+         MENUITEM " mono ~Display"          ACTION Alert( "Not implemented yet!" )
+         MENUITEM " ~Colors..."             ACTION Alert( "Not implemented yet!" )
+         MENUITEM " ~Tab Width..."          ACTION Alert( "Not implemented yet!" )
+         MENUITEM " path for ~Files..."     ACTION Alert( "Not implemented yet!" )
          SEPARATOR
-         MENUITEM " &Save settings..."      ACTION Alert( "Not implemented yet!" )
-         MENUITEM " &Restore settings... "  ACTION Alert( "Not implemented yet!" )
+         MENUITEM " ~Save Settings..."      ACTION Alert( "Not implemented yet!" )
+         MENUITEM " ~Restore Settings... "  ACTION Alert( "Not implemented yet!" )
       ENDMENU
 
-      MENUITEM " &Window "
+      MENUITEM " ~Window "
       MENU
-         MENUITEM " &Next     Tab "         ACTION oDebugger:NextWindow()
-         MENUITEM " &Prev  Sh-Tab"          ACTION oDebugger:PrevWindow()
-         MENUITEM " &Move"                  ACTION Alert( "Not implemented yet!" )
-         MENUITEM " &Size"                  ACTION Alert( "Not implemented yet!" )
-         MENUITEM " &Zoom      F2"          ACTION Alert( "Not implemented yet!" )
-         MENUITEM " &Iconize"               ACTION Alert( "Not implemented yet!" )
+         MENUITEM " ~Next      Tab "        ACTION oDebugger:NextWindow()
+         MENUITEM " ~Prev   Sh-Tab"         ACTION oDebugger:PrevWindow()
+         MENUITEM " ~Move"                  ACTION Alert( "Not implemented yet!" )
+         MENUITEM " ~Size"                  ACTION Alert( "Not implemented yet!" )
+         MENUITEM " ~Zoom       F2"         ACTION Alert( "Not implemented yet!" )
+         MENUITEM " ~Iconize"               ACTION Alert( "Not implemented yet!" )
          SEPARATOR
-         MENUITEM " &Tile"                  ACTION Alert( "Not implemented yet!" )
+         MENUITEM " ~Tile"                  ACTION Alert( "Not implemented yet!" )
       ENDMENU
 
-      MENUITEM " &Help "
+      MENUITEM " ~Help "
       MENU
-         MENUITEM " &About Help "           ACTION Alert( "Not implemented yet!" )
+         MENUITEM " ~About Help "           ACTION Alert( "Not implemented yet!" )
          SEPARATOR
-         MENUITEM " &Keys"                  ACTION Alert( "Not implemented yet!" )
-         MENUITEM " &Windows"               ACTION Alert( "Not implemented yet!" )
-         MENUITEM " &Menus"                 ACTION Alert( "Not implemented yet!" )
-         MENUITEM " &Commands"              ACTION Alert( "Not implemented yet!" )
+         MENUITEM " ~Keys"                  ACTION Alert( "Not implemented yet!" )
+         MENUITEM " ~Windows"               ACTION Alert( "Not implemented yet!" )
+         MENUITEM " ~Menus"                 ACTION Alert( "Not implemented yet!" )
+         MENUITEM " ~Commands"              ACTION Alert( "Not implemented yet!" )
       ENDMENU
 
    ENDMENU

@@ -549,8 +549,7 @@ STATIC PROCEDURE DispPage( acCopy, alSelect, nTop, nLeft, nNumRows, nPos, nAtTop
          DispLine( acCopy[ nIndex ], nRow, nLeft, alSelect[ nIndex ], nIndex == nPos )
       ELSE
          ColorSelect( CLR_STANDARD )
-         SetPos( nRow, nLeft )
-         DispOut( Space( Len( acCopy[ 1 ] ) ) )
+         DispOutAt( nRow, nLeft, Space( Len( acCopy[ 1 ] ) ) )
       ENDIF
    NEXT
 
@@ -565,8 +564,7 @@ STATIC PROCEDURE DispLine( cLine, nRow, nCol, lSelect, lHiLite )
    ColorSelect( iif( lSelect, ;
                 iif( lHiLite, CLR_ENHANCED, CLR_STANDARD ), CLR_UNSELECTED ) )
 
-   SetPos( nRow, nCol )
-   DispOut( cLine )
+   DispOutAt( nRow, nCol, cLine )
 
    ColorSelect( CLR_STANDARD )
 

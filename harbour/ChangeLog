@@ -1,3 +1,27 @@
+19991021-23:33 GMT+1 Victor Szel <info@szelvesz.hu>
+   * config/rules.cf
+     + /w switch added to the default Harbour switches in the GNU make system.
+       Be warned that some new warnings may arise in some test programs.
+       The core Harbour .PRG files compile without any warnings, though.
+       The only exception is HBRUN.PRG, but in that case either the compiler
+       or the PP should be modified, until then just ignore these.
+   * tests/fortest.prg
+     tests/memfile.prg
+     ! /w warnings fixed.
+   * source/rtl/achoice.prg
+     source/rtl/menuto.prg
+     source/rtl/tgetlist.prg
+     % SetPos() + DispOut() -> DispOutAt()
+   * source/debug/debugger.prg
+     % Now all screen output is done using SetPos()/DispOutAt() so it's faster
+       and it's not fooled by output redirection or SET DEVICE TO PRINTER.
+     * Menu made more exactly Clipper like.
+     % "&" hotkey marker char changed to "~" to avoid any macro expansion
+       in the future.
+     * Some formatting (Move() method).
+   * source/debug/tbrwtext.prg 
+     * Formatted.
+
 19991021-22:18 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/rtl/gtapi.c
      ! hb_gtSetColorStr() now resets the ColorSelect() value to STANDARD,

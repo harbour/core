@@ -18,6 +18,7 @@ static snStep
 
 function Main()
    local array
+   local tmp, n
 
    QOut( "Testing Harbour For Next loops." )
 

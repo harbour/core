@@ -479,8 +479,7 @@ METHOD ShowScoreboard() CLASS TGetList
       nOldCursor = SetCursor( 0 )
       nRow = Row()
       nCol = Col()
-      SetPos( SCORE_ROW, SCORE_COL )
-      DispOut( If( Set( _SET_INSERT ), "Ins", "   " ) )
+      DispOutAt( SCORE_ROW, SCORE_COL, If( Set( _SET_INSERT ), "Ins", "   " ) )
       SetPos( nRow, nCol )
       SetCursor( nOldCursor )
    endif
@@ -497,15 +496,13 @@ METHOD DateMsg() CLASS TGetList
       nRow := Row()
       nCol := Col()
 
-      SetPos( SCORE_ROW, SCORE_COL )
-      DispOut( "Invalid date" )
+      DispOutAt( SCORE_ROW, SCORE_COL, "Invalid date" )
       SetPos( nRow, nCol )
 
       do while NextKey() == 0
       enddo
 
-      SetPos( SCORE_ROW, SCORE_COL )
-      DispOut( Space( Len( "Invalid date" ) ) )
+      DispOutAt( SCORE_ROW, SCORE_COL, Space( Len( "Invalid date" ) ) )
       SetPos( nRow, nCol )
 
    endif

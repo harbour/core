@@ -55,182 +55,190 @@ ENDCLASS
 
 METHOD New( nTop, nLeft, nBottom, nRight, cFileName, cColors ) CLASS TBrwText
 
-   DEFAULT nTop TO 0, nLeft TO 0, nRight TO MaxCol(), nBottom TO MaxRow(),;
-           cColors TO SetColor()
+   DEFAULT nTop    TO 0
+   DEFAULT nLeft   TO 0
+   DEFAULT nRight  TO MaxCol()
+   DEFAULT nBottom TO MaxRow()
+   DEFAULT cColors TO SetColor()
 
    Super:New()
 
-   ::nTop      = nTop
-   ::nLeft     = nLeft
-   ::nBottom   = nBottom
-   ::nRight    = nRight
-   ::ColorSpec = cColors
-   ::cFileName = cFileName
-   ::nHandle   = FOpen( cFileName, FO_READ )
-   ::nFileSize = FSeek( ::nHandle, 0, FS_RELATIVE )
-   ::cLine     = Space( ::nRight - ::nLeft - 2 )
-   ::nLine     = 1
-   ::Autolite  = .t.
+   ::nTop      := nTop
+   ::nLeft     := nLeft
+   ::nBottom   := nBottom
+   ::nRight    := nRight
+   ::ColorSpec := cColors
+   ::cFileName := cFileName
+   ::nHandle   := FOpen( cFileName, FO_READ )
+   ::nFileSize := FSeek( ::nHandle, 0, FS_RELATIVE )
+   ::cLine     := Space( ::nRight - ::nLeft - 2 )
+   ::nLine     := 1
+   ::Autolite  := .T.
 
    ::AddColumn( TbColumnNew( "", { || Alltrim( Str( ::nLine ) ) + ": " + ::cLine } ) )
-   ::GoTopBlock    = { || GoFirstLine( Self ) }
-   ::GoBottomBlock = { || GoLastLine( Self ) }
-   ::SkipBlock     = { | nLines | Skipper( Self, nLines ) }
+   ::GoTopBlock    := {|| GoFirstLine( Self ) }
+   ::GoBottomBlock := {|| GoLastLine( Self ) }
+   ::SkipBlock     := {| nLines | Skipper( Self, nLines ) }
 
    ::GoTop()
 
-return Self
+   return Self
 
 METHOD GotoLine( nLine ) CLASS TBrwText
 
-   if nLine > ::nLine
-      while ::nLine < nLine
+   IF nLine > ::nLine
+      DO WHILE ::nLine < nLine
          ::Down()
-      end
+      ENDDO
       ::ForceStable()
-   else
-      while ::nLine > nLine
+   ELSE
+      DO WHILE ::nLine > nLine
          ::Up()
-      end
+      ENDDO
       ::ForceStable()
-   endif
+   ENDIF
 
-return nil
+   RETURN NIL
 
-static function GoFirstLine( oBrw )
+STATIC FUNCTION GoFirstLine( oBrw )
 
-   local cLine
+   LOCAL cLine
 
    FSeek( oBrw:nHandle, 0, FS_SET )
    FReadLn( oBrw:nHandle, @cLine )
-   oBrw:cLine = cLine
-   oBrw:nLine = 1
+   oBrw:cLine := cLine
+   oBrw:nLine := 1
    FSeek( oBrw:nHandle, 0, FS_SET )
 
-return nil
+   RETURN NIL
 
-static function GoLastLine( oBrw )
+STATIC FUNCTION GoLastLine( oBrw )
 
-   local cLine := oBrw:cLine
+   LOCAL cLine := oBrw:cLine
 
    FSeek( oBrw:nHandle, -1, FS_END )
    GoPrevLine( oBrw:nHandle, @cLine, oBrw:nFileSize )
-   oBrw:cLine = cLine
+   oBrw:cLine := cLine
 
-return nil
+   RETURN NIL
 
-static function Skipper( oBrw, nLines )
+STATIC FUNCTION Skipper( oBrw, nLines )
 
-   local nSkipped := 0
-   local cLine := oBrw:cLine
+   LOCAL nSkipped := 0
+   LOCAL cLine := oBrw:cLine
 
    // Skip down
-   if nLines > 0
-      while nSkipped != nLines .and. GoNextLine( oBrw:nHandle, @cLine )
+   IF nLines > 0
+      DO WHILE nSkipped != nLines .AND. GoNextLine( oBrw:nHandle, @cLine )
          nSkipped++
-      end
-      oBrw:cLine = cLine
+      ENDDO
+      oBrw:cLine := cLine
    // Skip Up
-   else
-      while nSkipped != nLines .and. GoPrevLine( oBrw:nHandle, @cLine, oBrw:nFileSize )
+   ELSE
+      DO WHILE nSkipped != nLines .AND. GoPrevLine( oBrw:nHandle, @cLine, oBrw:nFileSize )
          nSkipped--
-      end
-      oBrw:cLine = cLine
-   endif
+      ENDDO
+      oBrw:cLine := cLine
+   ENDIF
 
    oBrw:nLine += nSkipped
 
-return nSkipped
+   RETURN nSkipped
 
-static function FReadLn( nHandle, cBuffer )
+STATIC FUNCTION FReadLn( nHandle, cBuffer )
 
-   local nEOL,   ; // End Of Line Postion
-         nRead,  ; // Number of characters read
-         nSaveFPos // Saved File Postion
+   LOCAL nEOL      // End Of Line Postion
+   LOCAL nRead     // Number of characters read
+   LOCAL nSaveFPos // Saved File Postion
 
-   cBuffer = Space( MAX_LINE_LEN )
+   cBuffer := Space( MAX_LINE_LEN )
 
    // First save current file pointer
-   nSaveFPos = FSeek( nHandle, 0, FS_RELATIVE )
-   nRead     = FRead( nHandle, @cBuffer, MAX_LINE_LEN )
+   nSaveFPos := FSeek( nHandle, 0, FS_RELATIVE )
+   nRead     := FRead( nHandle, @cBuffer, MAX_LINE_LEN )
 
-   if ( nEOL := At( Chr( 13 ) + Chr( 10 ), SubStr( cBuffer, 1, nRead ) ) ) == 0 .and. ;
+   IF ( nEOL := At( Chr( 13 ) + Chr( 10 ), SubStr( cBuffer, 1, nRead ) ) ) == 0 .AND. ;
       ( nEOL := At( Chr( 10 ), SubStr( cBuffer, 1, nRead ) ) ) == 0
       // Line overflow or eof
       // ::cLine has the line we need
-   else
+   ELSE
       // Copy up to EOL
-      cBuffer = SubStr( cBuffer, 1, nEOL - 1 )
+      cBuffer := SubStr( cBuffer, 1, nEOL - 1 )
       // Position file pointer to next line
       FSeek( nHandle, nSaveFPos + nEOL + 1, FS_SET )
-   endif
+   ENDIF
 
-return nRead != 0
+   RETURN nRead != 0
 
-static function GoPrevLine( nHandle, cLine, nFileSize )
+STATIC FUNCTION GoPrevLine( nHandle, cLine, nFileSize )
 
-   local nOrigPos, ; // Original File Pointer Position
-         nMaxRead, ; // Maximum Line Length
-         nNewPos,  ; // New File Pointer Position
-         lMoved,   ; // Pointer Moved
-         cBuff,    ; // Line buffer
-         nWhereCrLf, ; // Position of CRLF
-         nPrev       // Previous File Pointer Position
+   LOCAL nOrigPos    // Original File Pointer Position
+   LOCAL nMaxRead    // Maximum Line Length
+   LOCAL nNewPos     // New File Pointer Position
+   LOCAL lMoved      // Pointer Moved
+   LOCAL cBuff       // Line buffer
+   LOCAL nWhereCrLf  // Position of CRLF
+   LOCAL nPrev       // Previous File Pointer Position
 
    // Save Original file position
    nOrigPos := FSEEK( nHandle, 0, FS_RELATIVE )
 
-   if nOrigPos == 0
+   IF nOrigPos == 0
       lMoved := FALSE
-   else
+   ELSE
       lMoved := TRUE
-      if nOrigPos != nFileSize
+
+      IF nOrigPos != nFileSize
          // Skip over preceeding CR / LF
          FSeek( nHandle, -2, FS_RELATIVE )
-      endif
+      ENDIF
       nMaxRead := Min( MAX_LINE_LEN, FTELL( nHandle ) )
 
       // Capture the line into a buffer, strip off the CRLF
       cBuff := Space( nMaxRead )
+
       nNewPos := FSeek( nHandle, -nMaxRead, FS_RELATIVE )
       FRead( nHandle, @cBuff, nMaxRead )
-      if (nWhereCrLf := RAt( Chr( 13 ) + Chr( 10 ), cBuff ) ) == 0 .and. ;
-         (nWhereCrLf := RAt( Chr( 10 ), cBuff ) ) == 0
+
+      IF ( nWhereCrLf := RAt( Chr( 13 ) + Chr( 10 ), cBuff ) ) == 0 .AND. ;
+         ( nWhereCrLf := RAt( Chr( 10 ), cBuff ) ) == 0
          nPrev := nNewPos
-         cLine = cBuff
-      else
+         cLine := cBuff
+      ELSE
          nPrev := nNewPos + nWhereCrLf + 1
          cLine := SubStr( cBuff, nWhereCrLf + 2 )
-      endif
+      ENDIF
 
       // Move to the beginning of the line
       FSeek( nHandle, nPrev, FS_SET )
-   endif
+   ENDIF
 
-return lMoved
+   RETURN lMoved
 
-static function GoNextLine( nHandle, cLine )
+STATIC FUNCTION GoNextLine( nHandle, cLine )
 
-   local nSavePos,;    // Save File pointer position
-         cBuff := "",; // Line Buffer
-         lMoved,;      // Pointer Moved
-         nNewPos       // New File Pointer Position
+   LOCAL nSavePos      // Save File pointer position
+   LOCAL cBuff := ""   // Line Buffer
+   LOCAL lMoved        // Pointer Moved
+   LOCAL nNewPos       // New File Pointer Position
 
    // Save the file pointer position
    nSavePos := FTELL( nHandle )
 
    // Find the end of the current line
    FSeek( nHandle, Len( cLine ) + 2, FS_RELATIVE )
+
    nNewPos := FTELL( nHandle )
+
    // Read in the next line
-   if FReadLn( nHandle, @cBuff )
-      lMoved := .t.
+   IF FReadLn( nHandle, @cBuff )
+      lMoved := .T.
       cLine := cBuff
       FSeek( nHandle, nNewPos, FS_SET )
-   else
-      lMoved := .f.
+   ELSE
+      lMoved := .F.
       FSeek( nHandle, nSavePos, FS_SET )
-   endif
+   ENDIF
 
-return lMoved
+   RETURN lMoved
 

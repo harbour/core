@@ -4,6 +4,16 @@
 
 /* ; Donated to the public domain by Victor Szel <info@szelvesz.hu> */
 
+MEMVAR mcString
+MEMVAR mnDouble
+MEMVAR mnDoubleH
+MEMVAR mnInt
+MEMVAR mnLong
+MEMVAR mdDate
+MEMVAR mlLogicalT
+MEMVAR mlLogicalF
+MEMVAR mxStayHere
+
 FUNCTION Main()
    PRIVATE mcString   := "This is a" + Chr(0) + "string to save."
    PRIVATE mnDouble   := 100.0000
