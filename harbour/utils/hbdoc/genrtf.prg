@@ -41,7 +41,8 @@
 #include "directry.ch"
 #include "fileio.ch"
 #include "inkey.ch"
-
+#include 'hbdocdef.ch'
+#include 'common.ch'
 //  output lines on the screen
 
 #define INFILELINE   10
@@ -50,15 +51,14 @@
 #define ERRORLINE    20
 #define LONGLINE     100
 #define LONGONELINE  86
-#define CRLF HB_OSNewLine()
-//  The delimiter
-#define DELIM   "$"                 // keyword delimiter
-
-#xtranslate UPPERLOWER(<exp>) => (UPPER(SUBSTR(<exp>,1,1))+LOWER(SUBSTR(<exp>,2)))
-MEMVAR aDirList,aDocInfo
-STATIC aTable := {}
+MEMVAR aDirList,aDocinfo
+STATIC aFiTable := {}
 STATIC lIsTable :=.F.
-Static myh
+STATIC nCommentLen
+STATIC lEof
+
+STATIC aColorTable:={{'aqua','\cf2 '},{'black','\cf1 '},{'fuchia','\cf3 '},{'grey','\cf4 '},{'green','\cf5 '},{'lime','\cf6 '},{'maroon','\cf7 '},{'navy','\cf8 '},{'olive','\cf9 '},{'purple','\cf10 '},{'red','\cf11 '},{'silver','\cf12 '},{'teal','\cf13 '},{'white','\cf14 '},{'yellow','\cf15 '}}
+
 FUNCTION ProcessRtf()
 
    //
@@ -76,22 +76,10 @@ FUNCTION ProcessRtf()
    // -
    //  LOCAL variables:
 
-#define D_NORMAL  1
-#define D_ARG     2
-#define D_SYNTAX  3
-#define D_IGNORE  4
-#define D_SEEALSO 5
-#define D_INCLUDE 6
-#define D_ONELINE 7
-#define D_STATUS  8
-#define D_DATALINK 10
-#define D_METHODLINK 11
-#define D_EXAMPLE 12
+
    LOCAL i
    LOCAL j
-   LOCAL nFiles      := LEN( aDirList )
-   LOCAL nCommentLen
-   LOCAL lEof
+   LOCAL nFiles := LEN( aDirList )
    LOCAL lDoc
    LOCAL cBuffer
    LOCAL nEnd
@@ -99,7 +87,7 @@ FUNCTION ProcessRtf()
    LOCAL xAddBlank
    LOCAL nNumTopics :=0
    LOCAL nCurTopics :=1
-   LOCAL cBar       := "컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴�"
+   LOCAL cBar       := " "+ repl(')',80)
    LOCAL nMode
    LOCAL cFuncName
    LOCAL cOneLine
@@ -120,7 +108,7 @@ FUNCTION ProcessRtf()
    LOCAL lPar
    LOCAL lWrite :=.f.
    LOCAL lWasLine := .F.
-   LOCAL nPos,nEpos
+   LOCAL nPos,nEpos,nPosend,cBuffEnd
    LOCAL lIsDataLink := .F. 
    LOCAL lIsMethodLink := .F.
    LOCAL cName
@@ -158,7 +146,7 @@ FUNCTION ProcessRtf()
    lMethod := .F.
    lIsDataLink := .F.
    lIsMethodLink := .F.
-    myh:=fcreate('error.txt')
+
    lWrite:=.f.
    cTempx:=''
    //
@@ -358,20 +346,30 @@ FUNCTION ProcessRtf()
                Else
                oRtf:WriteTitle( PAD( cFuncName, 21 ), cFuncName )
                oRtf:WriteParBold( cOneLine,.t. )
-               oRtf:WriteParBold(  cBar,.t.  )
+               oRtf:WriteParBox(  cBar  )
                ENDIF
                //  4) all other stuff
 
             ELSE
 
                IF AT( cSyn, cBuffer ) > 0
+                  IF !lBlankLine
+
+                     oRtf:WritePar( "" )
+
+                  ENDIF
 
                   oRtf:WriteParBold( " Syntax" )
-
+                  oRtf:WritePar('') //:endpar()
                   nMode     := D_SYNTAX
-
+//                  oRtf:WritePar('') //:endpar()
                   lAddBlank := .T.
                ELSEIF AT( cConstruct, cBuffer ) > 0
+                  IF !lBlankLine
+
+                     oRtf:WritePar( "" )
+
+                  ENDIF
 
                      oRtf:WriteParBold( " Constructor syntax" )
 
@@ -384,10 +382,11 @@ FUNCTION ProcessRtf()
 
                   IF !lBlankLine
 
-                     oRtf:WriteParBold( " Arguments" )
+                     oRtf:WritePar( "" )
 
                   ENDIF
-
+                     oRtf:WriteParBold( " Arguments" )
+                                       oRtf:WritePar('') //:endpar()
                   nMode     := D_ARG
                   lAddBlank := .T.
                   lPar:=.t.
@@ -398,15 +397,15 @@ FUNCTION ProcessRtf()
                   ENDIF
 
                   oRtf:WriteParBold( " Returns" )
-
-                  nMode     := D_ARG
+                  oRtf:WritePar( "" ) //:endpar()
+                  nMode     := D_RETURN
                   lAddBlank := .T.
                            lPar:=.t.
                ELSEIF AT( cDesc, cBuffer ) > 0
                   oRtf:WritePar('') //:endpar()
                   oRtf:WriteParBold( " Description" )
                   oRtf:WritePar('') //:endpar()
-                  nMode     := D_NORMAL
+                  nMode     := D_DESCRIPTION
                   lAddBlank := .T.
                   lPar:= .T.
                ELSEIF AT( cTable, cBuffer ) > 0
@@ -432,7 +431,7 @@ FUNCTION ProcessRtf()
                   endif
                   nMode     := D_NORMAL
                   lAddBlank := .T.
-//                  lEndDatalink:=.T.
+
                   lPar:= .T.
                ELSEIF AT(  cMethodslink, cBuffer ) > 0
 
@@ -488,7 +487,7 @@ FUNCTION ProcessRtf()
                     oRtf:WritePar('') //:endpar()   
                   ENDIF
 
-                  nMode     := D_NORMAL
+                  nMode     := D_COMPLIANCE
                   lAddBlank := .T.
                   lPar:= .T.
                ELSEIF AT( cPlat, cBuffer ) > 0
@@ -544,58 +543,39 @@ FUNCTION ProcessRtf()
                                      LONGLINE, aDirList[ i, F_NAME ] )
                      ENDIF
                      lBlankLine := EMPTY( cBuffer )
-                     IF lAddBlank
-                        oRtf:WritePar( "" ) //:endpar()
-                        lAddBlank := .F.
-                     ENDIF
-                     /*    nNonBlank:=FirstNB(cBuffer)
-                        cBuffer=STUFF(cBuffer,nNonBlank,0,"^a1f ")*/
-                     oRtf:WritePar( cBuffer ) //:endpar()
-                     oRtf:WritePar("") //:endpar()
+                     if At("<par>",cBuffer)>0
+                      nPos:=At("->",cBuffer)
+                      if nPos>0
+                      nPosend:=AT("</par>",cBuffer)
+                              
+                      cBuffend:=Substr(cBuffer,nPos+2,nPosend-2)
+                      cBuffEnd:=Strtran(cBuffend,"</par>","")
+                      cBuffer:=SubStr(cBuffer,1,nPos+2)
 
-                  ELSEIF nMode = D_ARG
+                      cBuffer:=cBuffer+'<b><color:navy>'+cBuffend+'</b></color> </par>'
+                      endif
+                      endif
+                      procrtfdesc(cbuffer,oRtf,"Syntax")  
+//                      oRtf:WritePar('') //:endpar()
+                  ELSEIF nMode = D_RETURN
+
                      IF LEN( cBuffer ) > LONGLINE
                         write_error( "Arguments", cBuffer, nLineCnt, ;
                                      LONGLINE, aDirList[ i, F_NAME ] )
                      ENDIF
                      lBlankLine := EMPTY( cBuffer )
-                     IF lAddBlank
-                        oRtf:WritePar( "" ) //:endpar()
-                        lAddBlank := .F.
 
+                  procrtfdesc(cbuffer,oRtf,"Arguments")
+
+                  ELSEIF nMode = D_ARG
+
+                     IF LEN( cBuffer ) > LONGLINE
+                        write_error( "Arguments", cBuffer, nLineCnt, ;
+                                     LONGLINE, aDirList[ i, F_NAME ] )
                      ENDIF
-                     IF AT("_SET_",cBuffer)>0
-                            nPos:=AT("_SET_",cBuffer)
-                            if nPos<23
-                              oRtf:WritePar("\line "+cBuffer+ " \line ")
-                            Else
-                              oRtf:WriteParText(  " "+ ALLTRIM(cBuffer) +" ")                             
-                            endif
-                     ELSEIF AT("<",cBuffer)> 0
-                        nPos := AT("<",cBuffer)
-                        if  nPos>0   .and. nPos<12
-                            nEpos:=AT(">",cBuffer)
-                            oRtf:WriteParBoldText( substr(cBuffer,1,nEpos ),substr(cBuffer,nEpos+1)+" ")
-                        else
-                        oRtf:WriteParText(  " "+ ALLTRIM(cBuffer) )
-                       endif
-                     ELSEIF AT("()",Cbuffer)>0
-                        nPos:=AT("()",Cbuffer)
-                        nEpos:=AT(")",cBuffer)
-                        if nPos>0 .and. nPos<22                       
-                            oRtf:WriteParBoldText( substr(cBuffer,1,nEpos ),substr(cBuffer,nEpos+1)+" ")
-                        ELSE
-                            oRtf:WriteParText(  " "+ ALLTRIM(cBuffer) +" ")
-                        Endif
-                     ELSEIF at("===",cBuffer)>0 .or. at("---",cBuffer)>0
-                            oRtf:WritePar(cBuffer+" ")
-                     ELSEIF !lBlankline
-                                oRtf:WriteParText(  ALLTRIM(cBuffer) +" " )
-                     ELSE 
-                        //ortf:endpar()
-                        ortf:writepar('') //:endpar()
+                     lBlankLine := EMPTY( cBuffer )
 
-                     ENDIF 
+                  procrtfdesc(cbuffer,oRtf,"Arguments")
                   ELSEIF nMode = D_DATALINK
                      IF LEN( cBuffer ) > LONGLINE
                         write_error( "General", cBuffer, nLineCnt, ;
@@ -628,8 +608,24 @@ FUNCTION ProcessRtf()
                                      LONGLINE, aDirList[ i, F_NAME ] )
                      ENDIF
                      lBlankLine := EMPTY( cBuffer )
+                             procrtfdesc(cBuffer,oRtf)
+                  ELSEIF nMode = D_COMPLIANCE
+                     IF LEN( cBuffer ) > LONGLINE
+                        write_error( "General", cBuffer, nLineCnt, ;
+                                     LONGLINE, aDirList[ i, F_NAME ] )
+                     ENDIF
+                     lBlankLine := EMPTY( cBuffer )
+                     procrtfdesc(cBuffer,oRtf,"Compliance")
 
-                     ProcRtfDesc(cBuffer,lBlankLine,oRtf,@lPar)
+
+                  ELSEIF nMode = D_DESCRIPTION
+                     IF LEN( cBuffer ) > LONGLINE
+                        write_error( "General", cBuffer, nLineCnt, ;
+                                     LONGLINE, aDirList[ i, F_NAME ] )
+                     ENDIF
+                     lBlankLine := EMPTY( cBuffer )
+                     procrtfdesc(cBuffer,oRtf,"Description")
+        
 
                   ELSEIF nMode = D_EXAMPLE
                      IF LEN( cBuffer ) > LONGLINE
@@ -642,8 +638,8 @@ FUNCTION ProcessRtf()
                         oRtf:WritePar( "" ) //:endpar()
                         lAddBlank := .F.
                      ENDIF
-                     oRtf:WriteParNoIndent(  cBuffer  ) //:endpar()
 
+                     procrtfdesc(cBuffer,oRtf,"Example")
                   ELSEIF nMode = D_SEEALSO
                      IF .NOT. EMPTY( cBuffer )
                         cSeeAlso := StripFiles( ALLTRIM( cBuffer ) )
@@ -665,7 +661,7 @@ FUNCTION ProcessRtf()
                         oRtf:WritePar("") //:endpar()
                         xAddBlank:=.T.
                      ENDIF
-                     ProcStatusRtf( oRtf, cBuffer )
+                     procrtfstatus( oRtf, cBuffer )
                   ELSE
 
                      //  unknown data from somewhere
@@ -687,7 +683,7 @@ FUNCTION ProcessRtf()
       FT_FUSE()
    NEXT
                     ortf:close()
-                    fclose(myh)
+
 RETURN NIL
 
 FUNCTION ProcRtfAlso( nWriteHandle, cSeeAlso )
@@ -755,7 +751,7 @@ FUNCTION ProcRtfAlso( nWriteHandle, cSeeAlso )
    ENDDO
 RETURN nil
 
-FUNCTION ProcStatusRTF( nWriteHandle, cBuffer )
+FUNCTION procrtfstatus( nWriteHandle, cBuffer )
    IF LEN( ALLTRIM(cBuffer) ) >1
       nWriteHandle:WritePar( cBuffer ) //:endpar()
    ELSEIF SUBSTR( ALLTRIM( cBuffer ), 1 ) == "R"
@@ -766,40 +762,225 @@ FUNCTION ProcStatusRTF( nWriteHandle, cBuffer )
       nWriteHandle:WritePar( "      Not Started" ) //:endpar()
    ENDIF
 RETURN nil
-/*
-func filesize(cfile)
-  
-  nretval := fseek(cfile,0,2)
-  
+FUNCTION  ProcRTFDesc(cBuffer,oRtf,cStyle)
+LOCAL cLine:=''
+LOCAL npos,CurPos:=0
+LOCAL nColorPos,ccolor:='',creturn:='',ncolorend,NIDENTLEVEL
+LOCAL lEndPar:= .F.
 
-return nretval
-*/
-FUNCTION  ProcRtfDesc(cBuffer,lBlankLine,oRtf,lPar)
-          cBuffer:=StrTran(cBuffer,"\","\\")
-          IF   StrPos(cBuffer)=8
-              lIsTable:=.T.
-              ProcRtfTable(cBuffer)
-              lPar:=.f.
-          ELSEIF !lIsTable .and. len(aTable)>0
-              GenRtfTable(oRtf)
-          ELSEIF lPar
-              oRtf:WritePar(cBuffer+" ")
-              lPar:=.F.
-          ELSEIF  AT("==",cBuffer)>0 .or. at("--",cBuffer)>0
-              lPar:=.T.
-              oRtf:WritePar(cBuffer+" ")
-          ELSEIF lBlankLine
-              lIsTable:=.F.
-              oRtf:WritePar("")
-              lPar:=.T.
-          ELSE              
-              oRtf:WriteParText(" "+alltrim(cBuffer))
-          ENDIF
+LOCAL lEndFixed:=.F.
+LOCAL lEndTable:=.F.
+default cStyle to "Default"
 
-RETURN lPar
+if cStyle<>"Example" .and. at("<table>",cBuffer)==0 .and. AT("<fixed>",cBuffer)=0
+   if AT("<par>",cBuffer)>=0 .or. AT("</par>",cBuffer)=0   .and. !empty(cbuffer) 
+      If AT("<par>",cBuffer)>0 .and. AT("</par>",cBuffer)>0
+      
+         if cStyle=="Arguments"
+            cBuffer:= strtran(cBuffer,"<par>","<par><b>")
+//            ? cBuffer
+         if at(") ",cBuffer)>0
+            cBuffer:= strtran(cBuffer,") ",")</b>")
+         elseif at("> ",cBuffer)>0
+            cBuffer:= strtran(cBuffer,"> ","></b>")
+         endif
+         endif
+ 
+      else
+      cBuffer:=FormatrtfBuff(cBuffer,cStyle,ortf)
+      endif
+endif
+endif
 
+
+If AT('<par>',cBuffer)>0 .and. AT('</par>',cBuffer)>0
+      cBuffer:=Strtran(cBuffer,'<par>','')
+      cBuffer:=StrTran(cBuffer,'<b>','\b ')
+      cBuffer:=StrTran(cBuffer,'</b>','\b0 ')
+      cBuffer:=StrTran(cBuffer,'<em>','\b\i ')
+      cBuffer:=StrTran(cBuffer,'</em>','\b0\i0 ')
+      cBuffer:=StrTran(cBuffer,'<i>','\i ')
+      cBuffer:=StrTran(cBuffer,'</i>','\i0 ')
+      cBuffer:=Strtran(cBuffer,'</color>','\cf1 ')
+      nColorPos:=at('<color:',cBuffer)
+      if ncolorpos>0
+      checkrtfcolor(@cbuffer,ncolorpos)
+      endif
+
+      If cStyle=="Description" .or. cStyle=="Compliance"
+          nIdentLevel:=6
+          nPos:=0
+          if AT('</par>',cBuffer)>0
+             cBuffer:=strtran(cBuffer,"</par>","")
+          endif
+          if  !empty(cBuffer)
+             cBuffer:=SUBSTR(cBuffer,2)
+             oRtf:WritePar(cBuffer,'\fi-710\li710 ')
+          endif
+
+      ELSEIf cStyle=="Arguments"
+
+         if AT('</par>',cBuffer)>0
+            cBuffer:=strtran(cBuffer,"</par>","")
+         endif
+         if  !empty(cBuffer)
+                   cBuffer:=SUBSTR(cBuffer,2)
+            oRtf:WritePar(cBuffer,'\fi-2272\li2272 ')
+         endif
+
+      ELSEIf cStyle=="Syntax"
+          if AT('</par>',cBuffer)>0
+             cBuffer:=strtran(cBuffer,"</par>","")
+          endif
+          if  !empty(cBuffer)
+                    cBuffer:=SUBSTR(cBuffer,2)
+             oRtf:WritePar(cBuffer,'\fi-710\li710 ')
+          endif
+
+Elseif cStyle=="Default"
+          if AT('</par>',cBuffer)>0
+             cBuffer:=strtran(cBuffer,"</par>","")
+          endif
+          if  !empty(cBuffer)
+                    cBuffer:=SUBSTR(cBuffer,2)
+             oRtf:WritePar(cBuffer,'\fi-710\li710 ')
+          endif
+
+
+endif
+endif
+If AT('<fixed>',cBuffer)>0
+    do while !lendFixed
+                cBuffer :=  TRIM(SUBSTR( ReadLN( @lEof ), nCommentLen ) )
+        if at("</fixed>",cBuffer)>0
+          lendfixed:=.t.
+        else
+
+        oRtf:WritePar(cBuffer)
+    endif
+    enddo
+end
+if AT('<table>',cBuffer)>0
+    do while !lendTable
+        cBuffer :=  TRIM(SUBSTR( ReadLN( @lEof ), nCommentLen ) )
+        if  at("</table>",cBuffer)>0
+          lendTable:=.t.
+        else
+          procrtftable(cBuffer)
+    endif
+    enddo
+    if lEndTable
+      GenrtfTable(oRtf)
+    endif
+endif
+if empty(cBuffer)
+oRtf:WritePar("")
+endif
+
+//      If cStyle=="Description" .or. cStyle=="Compliance"
+//         oRtf:Writepar('')
+//      endif
+
+return nil
+
+
+Function ProcRtfTable(cBuffer)
+
+LOCAL nPos,cItem,cItem2,cItem3,xtype,nColorpos,cColor
+      if AT("<color:",cBuffer)>0
+         nColorPos:=AT(":",cBuffer)
+         cColor:=SubStr(cBuffer,nColorpos+1)
+         nPos:=at(">",ccolor)
+            cColor:=substr(ccolor,1,nPos-1)
+
+         cBuffer:=strtran(cbuffer,"</color>","\cf1")
+         cBuffer:=STRTRAn(cbuffer,"<color:","")
+         cBuffer:=STRTRAn(cbuffer,">","")
+         cBuffer:=Strtran(cBuffer,ccolor,'')
+         nColorpos:=ASCAn(aColorTable,{|x,y| upper(x[1])==upper(ccolor)})
+         cColor:=aColortable[nColorPos,2]
+      Endif
+      cItem:=cBuffer
+      if ccolor<>NIL
+        AADD(afiTable,ccolor+cItem)
+      else
+        AADD(afiTable,cItem)
+      endif
+
+Return Nil          
+
+Function GenRtfTable(oRtf)
+LOCAL y,nLen2,x,nMax,nSpace,lCar:=.f.,nMax2,nSpace2,nPos1,nPos2,LColor,nPos
+LOCAL aLensFItem:={}
+LOCAL aLensSItem:={}
+
+  FOR X:=1 to LEN(afitable)
+  if AT("\cf",afitable[x])>0
+      aadd(aLensfItem,len(Substr(strtran(afitable[x],"\cf1",""),at(" ",afitable[x]))))  
+  else
+     AADD(aLensFItem,Len(afiTable[x]))
+     endif
+  NEXT
+  ASORT(aLensFItem,,,{|x,y| x > y})
+
+
+
+        oRtf:WritePar("")
+//  nMax2:=checkcar(aTable,1)+1
+ nMax2:=alensfitem[1]
+ nPos:=maxrtfelem(afitable)
+ nPos2:=ascan(alensfitem,{|x| x==nPos})  
+
+
+oRtf:WriteParBox(" "+repl('4',80))
+FOR x:=1 to len(afiTable)
+  ortf:WritePar(IF(at("|",afiTable[x])>0,Strtran(afiTable[x],"|"," "),afiTable[x]),'\fi-710\li710')
+Next
+oRtf:WriteParBox(" "+repl('4',80))
+ oRtf:WritePar("")
+afiTable:={}
+
+Return Nil
+
+func checkrtfcolor(cbuffer,ncolorpos)
+LOCAL ncolorend,nreturn,cOldColorString,cReturn,ccolor
+
+do while at("<color:",cbuffer)>0
+          nColorPos:=AT("<color:",cBuffer)
+          ccolor:=substr(cbuffer,ncolorpos+7)
+          nColorend:=AT(">",ccolor)
+          ccolor:=substr(ccolor,1,nColorend-1)
+          cOldColorString:=Substr(cbuffer,ncolorpos)
+          nColorend:=AT(">",cOldColorString)
+          cOldColorString:=Substr(cOldColorString,1,nColorEnd)
+nreturn:=ascan(acolortable,{|x,y| upper(x[1])==upper(ccolor)})
+if nreturn >0
+  creturn:="\cf"+acolortable[nreturn,2]
+endif
+cBuffer:=strtran(cBuffer,cOldColorString,cReturn)
+enddo
+return cbuffer
+func maxrtfelem(a)
+LOCAL nsize:=len(a)
+LOCAL max:=0
+LOCAL tam:=0,max2:=0
+LOCAL nPos:=1
+LOCAL cString
+LOCAL ncount
+for ncount:=1 to nsize
+    if  AT("\cf",a[ncount])>0
+      cString:=Substr(strtran(a[ncount],"\cf1",""),6)
+      tam:=len(cString)
+    else
+      tam:=len(a[ncount])
+    endif
+    max:=if(tam>max,tam,max)
+next
+nPos:=ascan(a,{|x| Len(x)==max})
+return max
 FUNCTION StrPos(cBuffer)
 LOCAL nPos,x,cChar
+default nPos to 0
       FOR x:=1 to LEN(cBuffer)
           cChar:=SubStr(cBuffer,x,1)
           if cChar>=chr(64) .and. cChar <=Chr(90) .or. cChar>=chr(97) ;
@@ -809,50 +990,76 @@ LOCAL nPos,x,cChar
           cchar==chr(asc('.')) .or. cchar==chr(asc('*')) .or. ;
           cchar==chr(asc('#')) .or. cchar==chr(asc('"')) .or. ;
           cchar==chr(asc('/')) .or. cchar==chr(asc("@")) ;
-          .or. cchar==chr(asc("="))
+          .or. cchar==chr(asc("=")) .or. cchar==chr(asc('�')) ;
+          .or. cchar==chr(asc('?')) .or. cchar==chr(asc('!')) ;
+          .or. cchar==chr(asc("<")) .or. cchar==chr(asc('>')) ;
+          .or. cchar==chr(asc('!')) .or. cchar==chr(asc('+'))
+          
              nPos=x
+
              Exit
           ENDIF
       NEXT
-return nPos
 
-Function ProcRtfTable(cBuffer)
+Return nPos
+FUNCTION FormatrtfBuff(cBuffer,cStyle,ongi)
 
-Local nPos,cItem,cItem2,cItem3
+LOCAL cReturn:=''
+LOCAL cLine:=''
+LOCAL cBuffend:=''
+LOCAL cEnd,cStart ,coline:=''
+LOCAL lEndBuff:=.f.
+LOCAL nPos,nPosEnd
+      cReturn :=cBuffer+' '
+      IF AT('</par>',cReturn)>0 .OR. EMPTY(cBuffer)
+         IF EMPTY(cbuffer)
+         cReturn:=''
+         ENDIF
+         Return cReturn
+      ENDIF
+   IF cStyle != "Syntax" .AND. cStyle !="Arguments"
+       DO WHILE !lEndBuff
+                cLine :=  TRIM(SUBSTR( ReadLN( @lEof ), nCommentLen ) )
+      IF AT('</par>',cLine)>0 .OR. EMPTY(cLine)
+         lEndBuff:=.t.
+      ENDIF
+      cReturn+=alltrim(cLine)+ ' '
+    enddo                      
+    cReturn:='<par>'+cReturn+' </par>'
+  ELSEIF cStyle=='Syntax'
+      nPos:=AT("-->",cBuffer)
 
-      cItem:=SubStr(cBuffer,1,22)
-      fwrite(myh,citem+hb_osnewline())
-      cBuffer:=StrTran(cBuffer,cItem,Space(len(cItem)))
-      nPos:=STRPos(cBuffer)
-      IF nPos=23
-          cItem2:=SubStr(cBuffer,nPos)
-      Endif
-        fwrite(myh,citem2+hb_osnewline())
-      AADD(aTable,{ltrim(cItem),cItem2})
-Return Nil          
+      IF nPos>0
+         cBuffend:=Substr(cReturn,nPos+3)
+         cReturn:=SubStr(cReturn,1,nPos+3)
+         cReturn:=cReturn+'<color:navy>'+cBuffend+' </color>'
+         cReturn:='<par>'+cReturn+' </par>'
+    ELSE
+         cReturn:='<par>'+cReturn+' </par>'
+      ENDIF
+  ELSEIF cStyle=='Arguments'
+  nPos:=0
+    if at("<par>",cReturn)>0
+            cReturn:=STRTRAN(cReturn,"<par>","")
+            cReturn:=STRTRAN(cReturn,"</par>","")
+            cReturn:=alltrim(cReturn)
+            nPos:=AT(" ",cReturn)
+            cOLine:=left(cReturn,nPos-1)
+            cReturn:=STRTRAN(cReturn,coLine,"")
+            cReturn:=STRTRAN(cReturn,">","></b>  ")         
+            cReturn:=STRTRAN(cReturn," <","<b> <")
 
-Function GenRtfTable(oRtf)
+    endif
+       DO WHILE !lEndBuff
+                cLine :=  TRIM(SUBSTR( ReadLN( @lEof ), nCommentLen ) )
+      IF AT('</par>',cLine)>0 .OR. EMPTY(cLine)
+         lEndBuff:=.t.
+      ENDIF
+      cReturn+=alltrim(cLine)+ ' '
+    enddo
+      cReturn:='       <par><b>'+cOLine+'</b> '+cReturn+'</par>'
 
-LOCAL y,nLen2,x,nMax,nSpace
-LOCAL aLensFItem:={}
-LOCAL aLensSItem:={}
-  FOR X:=1 to LEN(aTable)
-     AADD(aLensFItem,Len(aTable[x,1]))
-  NEXT
-  FOR X:=1 to LEN(aTable)
-     AADD(aLensSItem,Len(aTable[x,2]))
-  NEXT
-  ASORT(aLensFItem,,,{|x,y| x < y})
-  ASORT(aLensSItem,,,{|x,y| x > y})
-    nMax:=aLensSItem[1]+1
-oRtf:WriteParBox("       6"+REPL("4",aLensFitem[1]+1)+"="+REPL("4",nMax)+"7")
-FOR x:=1 to len(aTable)
-    nSpace:=nMax-Len(atable[x,2])-1
-    oRtf:WriteParText( "\par"+HB_OSNEWLINE()+"\pard\f14\fs20"+"       5"+" \cf1\f8\fs20\b0\i0 "+ aTable[x,1]+"\f14\fs20 " + "5 "+"\cf1\f8\fs20\b0\i0 "+ aTable[x,2] +space(nspace)+"\f14\fs20 5" +HB_OSNEWLINE(),.F.)
-Next
-oRtf:WriteParBox("       9"+REPL("4",aLensFitem[1]+1)+";"+REPL("4",nMax)+"8")
-oRtf:WritePar("")
-aTable:={}
-lIsTable:=.T.
-Return Nil
+   ENDIF
+Return cReturn
 
+*/

@@ -87,7 +87,7 @@
  *
  *    V1.07
  *    Added back the "<" and ">" symbols
- *    Fixed the links on the Harbour.htm file
+ *    Fixed the links on the Harbour.htm file           
  *    Fixed the help text when hbdoc is called with out any parameter
  */
 
@@ -98,7 +98,7 @@
 #include "directry.ch"
 #include "fileio.ch"
 #include "inkey.ch"
-
+#include 'hbdocdef.ch'
 //  output lines on the screen
 
 #define INFILELINE   10
@@ -107,11 +107,8 @@
 #define ERRORLINE    20
 #define LONGLINE     78
 #define LONGONELINE  66
-#define CRLF HB_OSNewLine()
-//  The delimiter
-#define DELIM   "$"                 // keyword delimiter
 
-#xtranslate UPPERLOWER(<exp>) => (UPPER(SUBSTR(<exp>,1,1))+LOWER(SUBSTR(<exp>,2)))
+//  The delimiter
    memvar aDirList
    memvar aDocInfo  
    memvar aLinkInfo 
@@ -178,7 +175,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
    //  Entry Point
    //
 
-
+   mHIDE()
    //  Delete log file if present
 
    IF FILE( "hbdocerr.log" )
@@ -531,7 +528,6 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
          ? 'ngxl harbour.lnk'
          ? 'del ngi\*.*'
          ? 'del *.ngo'
-         ? 'del *.txt'
       ENDIF
 
       @ INFILELINE,  0 CLEAR TO INFILELINE, MAXCOL()
@@ -625,7 +621,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
    SET CONSOLE ON
    SET ALTERNATE OFF
    SET ALTERNATE TO
-
+    mShow()
    @ MAXROW(), 0 SAY "Execute ASSEMBL.BAT to compile and link Guides"
 
    //  Return to caller
