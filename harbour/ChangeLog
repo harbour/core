@@ -1,3 +1,11 @@
+19990522-15:10 CET Eddie Runia
+  * include/test.ch
+    added
+  * source/rtl/environ.c
+    Crash resolved for C++ Builder
+  * tests/working/testtok.prg
+    set exact added
+
 19990522-14:40 CET Eddie Runia
   * tests/working/*.bat
     -i..\..\include added
