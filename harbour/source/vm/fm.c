@@ -62,6 +62,7 @@
 #endif
 
 #include "hbapi.h"
+#include "hbstack.h"
 #include "hbapierr.h"
 #include "hbmemory.ch"
 
@@ -143,9 +144,9 @@ void * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, returns NULL
    {
       if( hb_stack.pItems && ( hb_stack.pBase != hb_stack.pItems ) )
       {
-         ( ( PHB_MEMINFO ) pMem )->uiProcLine = hb_stack.pBase->item.asSymbol.lineno; /* PRG line number */
+         ( ( PHB_MEMINFO ) pMem )->uiProcLine = ( hb_stackBaseItem() )->item.asSymbol.lineno; /* PRG line number */
          strcpy( ( ( PHB_MEMINFO ) pMem )->szProcName,
-               hb_stack.pBase->item.asSymbol.value->szName ); /* PRG ProcName */
+               ( hb_stackBaseItem() )->item.asSymbol.value->szName ); /* PRG ProcName */
       }
       else
       {
@@ -222,9 +223,9 @@ void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exits on fail
    {
       if( hb_stack.pItems && ( hb_stack.pBase != hb_stack.pItems ) )
       {
-         ( ( PHB_MEMINFO ) pMem )->uiProcLine = hb_stack.pBase->item.asSymbol.lineno; /* PRG line number */
+         ( ( PHB_MEMINFO ) pMem )->uiProcLine = ( hb_stackBaseItem() )->item.asSymbol.lineno; /* PRG line number */
          strcpy( ( ( PHB_MEMINFO ) pMem )->szProcName,
-               hb_stack.pBase->item.asSymbol.value->szName ); /* PRG ProcName */
+               ( hb_stackBaseItem() )->item.asSymbol.value->szName ); /* PRG ProcName */
       }
       else
       {

@@ -35,16 +35,15 @@
 
 #include "hbapi.h"
 #include "hbapiitm.h"
+#include "hbstack.h"
 
-#ifdef HB_EXTENSION
-
-HB_FUNC( HB_PVALUE )
+HB_FUNC( __PVALUE )
 {
    USHORT uiParam = hb_parni( 1 );
-   PHB_ITEM pBase = hb_stack.pItems + hb_stack.pBase->item.asSymbol.stackbase; /* Skip function + self */
+   PHB_ITEM *pBase = hb_stack.pItems + ( hb_stackBaseItem() )->item.asSymbol.stackbase; /* Skip function + self */
 
-   if( uiParam && uiParam <= pBase->item.asSymbol.paramcnt ) /* Valid number */
-      hb_itemReturn( pBase + 1 + uiParam );
+   if( uiParam && uiParam <= (*pBase)->item.asSymbol.paramcnt ) /* Valid number */
+      hb_itemReturn( *(pBase + 1 + uiParam) );
+   else
+      hb_ret();    /* return NIL */
 }
-
-#endif

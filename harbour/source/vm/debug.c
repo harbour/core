@@ -35,6 +35,7 @@
 
 #include "hbapi.h"
 #include "hbapiitm.h"
+#include "hbstack.h"
 
 /* $Doc$
  * $FuncName$     AddToArray( <pItem>, <pReturn>, <uiPos> )
@@ -68,7 +69,7 @@ static void AddToArray( PHB_ITEM pItem, PHB_ITEM pReturn, ULONG ulPos )
  * $End$ */
 static USHORT hb_stackLenGlobal( void )
 {
-   PHB_ITEM pItem;
+   PHB_ITEM * pItem;
    USHORT uiCount = 0;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_stackLenGlobal()"));
@@ -90,7 +91,7 @@ HB_FUNC( __VMSTKGCOUNT )
 HB_FUNC( __VMSTKGLIST )
 {
    PHB_ITEM pReturn;
-   PHB_ITEM pItem;
+   PHB_ITEM * pItem;
 
    USHORT uiLen = hb_stackLenGlobal();
    USHORT uiPos = 1;
@@ -98,7 +99,7 @@ HB_FUNC( __VMSTKGLIST )
    pReturn = hb_itemArrayNew( uiLen );           /* Create a transfer array  */
 
    for( pItem = hb_stack.pItems; pItem <= hb_stack.pPos; pItem++ )
-      AddToArray( pItem, pReturn, uiPos++ );
+      AddToArray( *pItem, pReturn, uiPos++ );
 
    hb_itemRelease( hb_itemReturn( pReturn ) );
 }
@@ -109,13 +110,13 @@ HB_FUNC( __VMSTKGLIST )
  * $End$ */
 static USHORT hb_stackLen( void )
 {
-   PHB_ITEM pItem;
-   PHB_ITEM pBase;
+   PHB_ITEM * pItem;
+   PHB_ITEM * pBase;
    USHORT uiCount = 0;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_stackLen()"));
 
-   pBase = hb_stack.pItems + hb_stack.pBase->item.asSymbol.stackbase;
+   pBase = hb_stack.pItems + ( *(hb_stack.pBase) )->item.asSymbol.stackbase;
    for( pItem = pBase; pItem < hb_stack.pBase; pItem++, uiCount++ );
 
    return uiCount;
@@ -140,8 +141,8 @@ HB_FUNC( __VMSTKLCOUNT )
 HB_FUNC( __VMSTKLLIST )
 {
    PHB_ITEM pReturn;
-   PHB_ITEM pItem;
-   PHB_ITEM pBase = hb_stack.pItems + hb_stack.pBase->item.asSymbol.stackbase;
+   PHB_ITEM * pItem;
+   PHB_ITEM * pBase = hb_stack.pItems + ( *(hb_stack.pBase) )->item.asSymbol.stackbase;
 
    USHORT uiLen = hb_stackLen();
    USHORT uiPos = 1;
@@ -149,7 +150,7 @@ HB_FUNC( __VMSTKLLIST )
    pReturn = hb_itemArrayNew( uiLen );           /* Create a transfer array  */
 
    for( pItem = pBase; pItem < hb_stack.pBase; pItem++ )
-      AddToArray( pItem, pReturn, uiPos++ );
+      AddToArray( *pItem, pReturn, uiPos++ );
 
    hb_itemRelease( hb_itemReturn( pReturn ) );
 }
@@ -164,16 +165,16 @@ HB_FUNC( __VMSTKLLIST )
 HB_FUNC( __VMPARLLIST )
 {
    PHB_ITEM pReturn;
-   PHB_ITEM pItem;
-   PHB_ITEM pBase = hb_stack.pItems + hb_stack.pBase->item.asSymbol.stackbase;
+   PHB_ITEM * pItem;
+   PHB_ITEM * pBase = hb_stack.pItems + ( *(hb_stack.pBase) )->item.asSymbol.stackbase;
                                                 /* Skip function + self     */
-   USHORT uiLen = pBase->item.asSymbol.paramcnt;
+   USHORT uiLen = ( *pBase )->item.asSymbol.paramcnt;
    USHORT uiPos = 1;
 
    pReturn = hb_itemArrayNew( uiLen );           /* Create a transfer array  */
 
    for( pItem = pBase + 2; uiLen--; pItem++ )
-      AddToArray( pItem, pReturn, uiPos++ );
+      AddToArray( *pItem, pReturn, uiPos++ );
 
    hb_itemRelease( hb_itemReturn( pReturn ) );
 }
@@ -181,11 +182,11 @@ HB_FUNC( __VMPARLLIST )
 HB_FUNC( __VMVARLGET )
 {
    int iLevel = hb_parni( 1 ) + 1;
-   PHB_ITEM pBase = hb_stack.pBase;
+   PHB_ITEM * pBase = hb_stack.pBase;
 
    while( ( iLevel-- > 0 ) && pBase != hb_stack.pItems )
-      pBase = hb_stack.pItems + pBase->item.asSymbol.stackbase;
+      pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackbase;
 
-   hb_itemReturn( pBase + 1 + hb_parni( 2 ) );
+   hb_itemReturn( *(pBase + 1 + hb_parni( 2 )) );
 }
 

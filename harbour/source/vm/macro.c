@@ -39,6 +39,7 @@
 
 #include "hbmacro.h"
 #include "hbcomp.h"
+#include "hbstack.h"
 #include "hbmemvar.ch"   /* for values returned by hb_memvarScope() */
 
 /* TODO:
@@ -716,7 +717,7 @@ char * hb_macroGetType( HB_ITEM_PTR pItem )
                 * Now the value of expression is placed on the eval stack -
                 * check its type and pop it from the stack
                 */
-               szType = hb_itemTypeStr( hb_stack.pPos - 1 );
+               szType = hb_itemTypeStr( hb_stackItemFromTop( -1 ) );
                hb_stackPop();
             }
             else

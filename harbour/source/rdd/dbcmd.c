@@ -35,13 +35,13 @@ l *
 
 #include <ctype.h>
 #include "hbvm.h"
+#include "hbstack.h"
 #include "hbapifs.h"
 #include "hbset.h"
 #include "hbapierr.h"
 #include "hbapilng.h"
 #include "hbapiitm.h"
 #include "hbrddwrk.h"
-
 
 
 typedef struct _RDDNODE

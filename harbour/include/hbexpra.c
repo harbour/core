@@ -348,6 +348,12 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms )
                pVar = pVar->value.asList.pExprList;
             }
 
+            /* create a set/get codeblock */
+#ifdef HB_MACRO_SUPPORT
+            pVar = hb_compExprSetGetBlock( pVar, HB_MACRO_PARAM );
+#else
+            pVar = hb_compExprSetGetBlock( pVar );
+#endif
             /* pVar will be the first argument now
              */
             pParms->value.asList.pExprList = pVar;
@@ -840,10 +846,10 @@ HB_EXPR_PTR hb_compExprSetGetBlock( HB_EXPR_PTR pExpr )
    pIIF = hb_compExprAddListExpr( pIIF, pExpr );
    /* create HB_PCOUNT(1) */
 #ifdef HB_MACRO_SUPPORT
-   pSet = hb_compExprNewFunCall( hb_compExprNewFunName( hb_strdup("HB_PVALUE") ), 
+   pSet = hb_compExprNewFunCall( hb_compExprNewFunName( hb_strdup("__PVALUE") ), 
               hb_compExprNewArgList( hb_compExprNewLong( 1 ) ), HB_MACRO_PARAM );
 #else
-   pSet = hb_compExprNewFunCall( hb_compExprNewFunName( hb_strdup("HB_PVALUE") ), 
+   pSet = hb_compExprNewFunCall( hb_compExprNewFunName( hb_strdup("__PVALUE") ), 
               hb_compExprNewArgList( hb_compExprNewLong( 1 ) ) );
 #endif
    /* create <pExpr>:=HB_PCOUNT(1) */

@@ -45,6 +45,7 @@
  */
 
 #include "hbapi.h"
+#include "hbstack.h"
 
 HB_FUNC( PROCNAME )
 {
@@ -56,13 +57,13 @@ HB_FUNC( PROCNAME )
 HB_FUNC( PROCLINE )
 {
    int iLevel = hb_parni( 1 ) + 1;  /* we are already inside ProcName() */
-   PHB_ITEM pBase = hb_stack.pBase;
+   PHB_ITEM * pBase = hb_stack.pBase;
 
    while( ( iLevel-- > 0 ) && pBase != hb_stack.pItems )
-      pBase = hb_stack.pItems + pBase->item.asSymbol.stackbase;
+      pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackbase;
 
    if( iLevel == -1 )
-      hb_retni( pBase->item.asSymbol.lineno );
+      hb_retni( ( *pBase )->item.asSymbol.lineno );
    else
       hb_retni( 0 );
 }
@@ -84,21 +85,21 @@ HB_FUNC( PROCFILE )
 
 char * hb_procname( int iLevel, char * szName )
 {
-   PHB_ITEM pBase = hb_stack.pBase;
+   PHB_ITEM * pBase = hb_stack.pBase;
 
    while( ( iLevel-- > 0 ) && pBase != hb_stack.pItems )
-      pBase = hb_stack.pItems + pBase->item.asSymbol.stackbase;
+      pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackbase;
 
    if( iLevel == -1 )
    {
-      if( ( pBase + 1 )->type == HB_IT_ARRAY )  /* it is a method name */
+      if( ( *( pBase + 1 ) )->type == HB_IT_ARRAY )  /* it is a method name */
       {
-         strcpy( szName, hb_objGetClsName( pBase + 1 ) );
+         strcpy( szName, hb_objGetClsName( *( pBase + 1 ) ) );
          strcat( szName, ":" );
-         strcat( szName, pBase->item.asSymbol.value->szName );
+         strcat( szName, ( *pBase )->item.asSymbol.value->szName );
       }
       else
-         strcpy( szName, pBase->item.asSymbol.value->szName );
+         strcpy( szName, ( *pBase )->item.asSymbol.value->szName );
    }
    else
       strcpy( szName, "" );

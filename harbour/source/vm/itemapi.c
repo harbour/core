@@ -70,6 +70,7 @@
 #include <math.h> /* For log() */
 
 #include "hbapi.h"
+#include "hbstack.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbvm.h"
@@ -1123,14 +1124,28 @@ PHB_ITEM hb_itemUnRef( PHB_ITEM pItem )
       else
       {
          if( pItem->item.asRefer.value >= 0 )
-            pItem = *( pItem->item.asRefer.itemsbase ) + pItem->item.asRefer.offset +
+         {
+            if( pItem->item.asRefer.offset == 0 )
+            {
+               /* a reference to a static variable */
+               pItem = *( pItem->item.asRefer.BasePtr.itemsbase ) +
                        pItem->item.asRefer.value;
+            }
+            else
+            {
+               /* a reference to a local variable */
+               HB_ITEM_PTR *pLocal;
+               pLocal = *( pItem->item.asRefer.BasePtr.itemsbasePtr ) + pItem->item.asRefer.offset + pItem->item.asRefer.value;
+               pItem = *pLocal;
+            }
+         }
          else
          {
             /* local variable referenced in a codeblock
             */
-            pItem = hb_codeblockGetRef( *( pItem->item.asRefer.itemsbase ) + pItem->item.asRefer.offset,
-                                           pItem );
+            HB_ITEM_PTR *pLocal;
+            pLocal = *( pItem->item.asRefer.BasePtr.itemsbasePtr ) + pItem->item.asRefer.offset;
+            pItem = hb_codeblockGetRef( *pLocal, pItem );
          }
       }
    }

@@ -43,6 +43,7 @@
 
 #include "hbapiitm.h"
 #include "hbvm.h"
+#include "hbstack.h"
 
 /* NOTE: If this is defined the item copying is optimized, in a way that 
          instead of calling the official hb_itemCopy(), the item structures

@@ -167,8 +167,11 @@ struct hb_struPointer
 
 struct hb_struRefer
 {
-   struct _HB_ITEM ** itemsbase;
-   LONG offset;
+   union {
+      struct _HB_ITEM ** itemsbase;    /* static variables */
+      struct _HB_ITEM ** *itemsbasePtr; /* local variables */
+   } BasePtr;
+   LONG offset;    /* 0 for static variables */
    LONG value;
 };
 
@@ -216,19 +219,6 @@ typedef struct _HB_BASEARRAY
    USHORT   uiPrevCls;    /* for fixing after access super */
 } HB_BASEARRAY, * PHB_BASEARRAY, * HB_BASEARRAY_PTR;
 
-/* stack managed by the virtual machine */
-typedef struct
-{
-   PHB_ITEM pItems;       /* pointer to the stack items */
-   PHB_ITEM pPos;         /* pointer to the latest used item */
-   LONG     wItems;       /* total items that may be holded on the stack */
-   HB_ITEM  Return;       /* latest returned value */
-   PHB_ITEM pBase;        /* stack frame position for the current function call */
-   PHB_ITEM pEvalBase;    /* stack frame position for the evaluated codeblock */
-   int      iStatics;     /* statics base for the current function call */
-   char     szDate[ 9 ];  /* last returned date from _pards() yyyymmdd format */
-} HB_STACK;
-
 /* internal structure for codeblocks */
 typedef struct _HB_CODEBLOCK
 {
@@ -252,7 +242,6 @@ typedef USHORT ERRCODE;
 #define SUCCESS            0
 #define FAILURE            1
 
-extern HB_STACK hb_stack;
 extern HB_SYMB  hb_symEval;
 
 /* Extend API */

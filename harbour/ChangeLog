@@ -1,3 +1,56 @@
+2000-12-12 21:25 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+TAGged all files with 'old-eval-stack' tag before commiting changes
+
+    *include/hbstack.h
+    *source/vm/estack.c
+        *new files with the eval stack code
+
+    *include/hbapi.h
+    *include/hbvm.h
+    *source/rdd/dbcmd.c
+    *source/rdd/dbfcdx/dbfcdx1.c
+    *source/rdd/dbfntx/dbfntx1.c
+    *source/rtl/errorapi.c
+    *source/vm/arrays.c
+    *source/vm/arrayshb.c
+    *source/vm/asort.c
+    *source/vm/classes.c
+    *source/vm/codebloc.c
+    *source/vm/debug.c
+    *source/vm/eval.c
+    *source/vm/extend.c
+    *source/vm/fm.c
+    *source/vm/garbage.c
+    *source/vm/hvm.c
+    *source/vm/itemapi.c
+    *source/vm/macro.c
+    *source/vm/pcount.c
+    *source/vm/proc.c
+        *changed to support the new eval stack code
+        *added #include "hbstack.h" when hb_stack.Return was used
+        
+NOTE! some modules still use a direct access to the eval stack
+      internal architecture (hb_stack.pItems) - mostly in 
+      function/messages names lookup code      
+
+    *source/vm/Makefile
+        *added estack.c
+
+    *source/rdd/dbfntx/Makefile
+        *added dbfntx1.c
+
+    *source/vm/pvalue.c
+    *tests/multiarg.prg
+        *renamed HB_PVALUE to __PVALUE
+        * __PVALUE is no longer an HB_EXTENSION - it is an internal 
+        function now
+
+    *include/hbexpra.c
+        *renamed HB_PVALUE to __PVALUE
+        *fixed support for __GETA to be compatible with the latest
+        Ron's changes in tgetint.prg       
+
 2000-12-12 00:50 UTC-0800 Brian Hays <bhays@abacuslaw.com>
    * source/rtl/memoline.c
       Fixed "" returned only when reading past the end of the source

@@ -38,6 +38,7 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbvm.h"
+#include "hbstack.h"
 
 /* Creates the codeblock structure
  *
@@ -90,7 +91,7 @@ HB_CODEBLOCK_PTR hb_codeblockNew( BYTE * pBuffer,
           * TODO: If Harbour will support threads in the future then we need
           * to implement some kind of semaphores here.
           */
-         pLocal = hb_stack.pBase + 1 + ( *pLocalPosTable++ );
+         pLocal = hb_stackItemFromBase( *pLocalPosTable++ );
 
          if( ! HB_IS_MEMVAR( pLocal ) )
          {
@@ -131,7 +132,7 @@ HB_CODEBLOCK_PTR hb_codeblockNew( BYTE * pBuffer,
        */
       PHB_ITEM pLocal;
 
-      pLocal = hb_stack.pBase + 1;
+      pLocal = hb_stackSelfItem();
       if( HB_IS_BLOCK( pLocal ) )
       {
          HB_CODEBLOCK_PTR pOwner = pLocal->item.asBlock.value;

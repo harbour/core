@@ -148,6 +148,7 @@
  */
 
 #include "hbapi.h"
+#include "hbstack.h"
 #include "hbapierr.h"
 #include "hbapiitm.h"
 #include "hbvm.h"
@@ -383,7 +384,7 @@ void hb_clsIsClassRef( void )
 
 void hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod )
 {
-   PHB_ITEM pBase = hb_stack.pBase;
+   PHB_ITEM * pBase = hb_stack.pBase;
    LONG iLevel = 1;
    BOOL bRetVal ;
    USHORT uiScope = pMethod->uiScope;
@@ -399,21 +400,21 @@ void hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod )
     {
 
      while( ( iLevel-- > 0 ) && pBase != hb_stack.pItems )
-      pBase = hb_stack.pItems + pBase->item.asSymbol.stackbase;
+        pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackbase;
 
-     szNameBase = hb_objGetClsName( pBase + 1 );
+     szNameBase = hb_objGetClsName( *(pBase + 1) );
      szNameObject = hb_objGetClsName( pObject );
 
      /* Huumm probably an inline so back one ... */
      if ( ( strcmp( szNameBase, "__EVAL" ) != 0 ) && pBase != hb_stack.pItems)
       {
-        pBase = hb_stack.pItems + pBase->item.asSymbol.stackbase;
-        szNameBase = hb_objGetClsName( pBase + 1 );
+        pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackbase;
+        szNameBase = hb_objGetClsName( *(pBase + 1) );
       }
 
      if( iLevel == -1 )
      {
-      if( ( pBase + 1 )->type == HB_IT_ARRAY )  /* it is a message */
+      if( ( *( pBase + 1 ) )->type == HB_IT_ARRAY )  /* it is a message */
       {
          if( ( uiScope & HB_OO_CLSTP_PROTECTED ) == HB_OO_CLSTP_PROTECTED )
          {
@@ -1246,8 +1247,6 @@ HB_FUNC( __CLSINST )
 static PHB_ITEM hb_clsInst( USHORT uiClass, PHB_ITEM * * ppObjects, USHORT * puiSize )
 {
    PHB_ITEM pSelf = NULL;
-   LONG wStackBase;
-   LONG wItemIndex;
 
    if( uiClass <= s_uiClasses )
    {
@@ -1574,8 +1573,6 @@ HB_FUNC( __OBJSENDMSG )
 
    if( uiPCount>=2 && pObject )    /* Object & message passed      */
    {
-      USHORT uiParam;
-
       PHB_DYNS pMsg = hb_dynsymFindName( hb_parc(2) );
 
       if( pMsg )
@@ -1767,11 +1764,11 @@ HB_FUNC( __CLASSSEL )
 /* to be used from Classes ERROR HANDLER method */
 HB_FUNC( __GETMESSAGE )
 {
-   PHB_ITEM pBase = hb_stack.pBase;
+   PHB_ITEM * pBase = hb_stack.pBase;
 
-   pBase = hb_stack.pItems + pBase->item.asSymbol.stackbase;
+   pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackbase;
 
-   hb_retc( pBase->item.asSymbol.value->szName );
+   hb_retc( ( *pBase )->item.asSymbol.value->szName );
 }
 
 HB_FUNC( __CLSPARENT )
@@ -1781,16 +1778,16 @@ HB_FUNC( __CLSPARENT )
 
 HB_FUNC( __SENDER )
 {
-   PHB_ITEM pBase = hb_stack.pBase;
+   PHB_ITEM * pBase = hb_stack.pBase;
    PHB_ITEM oSender = NULL;
    USHORT iLevel = 3;
 
    while( iLevel > 0 && pBase != hb_stack.pItems )
    {
-      pBase = hb_stack.pItems + pBase->item.asSymbol.stackbase;
-      oSender = pBase + 1;
+      pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackbase;
+      oSender = *( pBase + 1 );
 
-      if( ( iLevel-- == 2 && oSender->type != HB_IT_BLOCK ) || ( oSender )->type == HB_IT_NIL )
+      if( ( iLevel-- == 2 && oSender->type != HB_IT_BLOCK ) || oSender->type == HB_IT_NIL )
          break;
    }
 
@@ -1847,8 +1844,8 @@ HB_FUNC( __EVAL )
  */
 static HARBOUR hb___msgClsH( void )
 {
-   if( HB_IS_ARRAY( hb_stack.pBase + 1 ) )
-      hb_retni( ( hb_stack.pBase + 1 )->item.asArray.value->uiClass );
+   if( HB_IS_ARRAY( hb_stackSelfItem() ) )
+      hb_retni( ( hb_stackSelfItem() )->item.asArray.value->uiClass );
    else
       hb_retni( 0 );
 }
@@ -1869,16 +1866,16 @@ static HARBOUR hb___msgClsParent( void )
    USHORT uiClass, i;
    BOOL lClass=FALSE;
 
-   if( HB_IS_BYREF( hb_stack.pBase + 1 ) )            /* Variables by reference   */
-      pItemRef = hb_itemUnRef( hb_stack.pBase + 1 );
+   if( HB_IS_BYREF( hb_stackSelfItem() ) )            /* Variables by reference   */
+      pItemRef = hb_itemUnRef( hb_stackSelfItem() );
    else
-      pItemRef = hb_stack.pBase + 1;
+      pItemRef = hb_stackSelfItem();
 
    uiClass = pItemRef->item.asArray.value->uiClass;
 
    pClass = s_pClasses + ( uiClass - 1 );
 
-   pItemParam = hb_stack.pBase + 2;
+   pItemParam = hb_stackItemFromBase( 1 );
 
    if( HB_IS_OBJECT( pItemParam ) )
       szParentName = hb_objGetClsName( pItemParam );
@@ -1905,12 +1902,10 @@ static HARBOUR hb___msgClsParent( void )
  */
 static HARBOUR hb___msgClsName( void )
 {
-   PHB_ITEM pItemRef;
+   PHB_ITEM pItemRef = hb_stackSelfItem();
 
-   if( HB_IS_BYREF( hb_stack.pBase + 1 ) )            /* Variables by reference   */
-      pItemRef = hb_itemUnRef( hb_stack.pBase + 1 );
-   else
-      pItemRef = hb_stack.pBase + 1;
+   if( HB_IS_BYREF( pItemRef ) )            /* Variables by reference   */
+      pItemRef = hb_itemUnRef( pItemRef );
 
    hb_retc( hb_objGetClsName( pItemRef ) );
 }
@@ -1923,14 +1918,15 @@ static HARBOUR hb___msgClsName( void )
  */
 static HARBOUR hb___msgClsSel( void )
 {
-   USHORT uiClass = ( USHORT ) ( HB_IS_ARRAY( hb_stack.pBase + 1 )
-                                 ? ( hb_stack.pBase + 1 )->item.asArray.value->uiClass : 0 );
+   HB_ITEM_PTR pSelf = hb_stackSelfItem();
+   USHORT uiClass = ( USHORT ) ( HB_IS_ARRAY( pSelf )
+                                 ? pSelf->item.asArray.value->uiClass : 0 );
                                                 /* Get class word           */
    PHB_ITEM pReturn = hb_itemNew( NULL );
 
-   if( ( ! uiClass ) && HB_IS_BYREF( hb_stack.pBase + 1 ) )
+   if( ( ! uiClass ) && HB_IS_BYREF( pSelf ) )
    {                                            /* Variables by reference   */
-      PHB_ITEM pItemRef = hb_itemUnRef( hb_stack.pBase + 1 );
+      PHB_ITEM pItemRef = hb_itemUnRef( pSelf );
       if( HB_IS_ARRAY( pItemRef ) )
          uiClass = pItemRef->item.asArray.value->uiClass;
    }
@@ -1971,7 +1967,7 @@ static HARBOUR hb___msgClsSel( void )
 static HARBOUR hb___msgEvalInline( void )
 {
    HB_ITEM block;
-   USHORT uiClass = ( hb_stack.pBase + 1 )->item.asArray.value->uiClass;
+   USHORT uiClass = ( hb_stackSelfItem() )->item.asArray.value->uiClass;
    USHORT uiParam;
    USHORT uiPCount=hb_pcount();
 
@@ -1980,7 +1976,7 @@ static HARBOUR hb___msgEvalInline( void )
 
    hb_vmPushSymbol( &hb_symEval );
    hb_vmPush( &block );
-   hb_vmPush( hb_stack.pBase + 1 );                     /* Push self                */
+   hb_vmPush( hb_stackSelfItem() );                     /* Push self                */
    for( uiParam = 1; uiParam <= uiPCount; uiParam++ )
       hb_vmPush( hb_param( uiParam, HB_IT_ANY ) );
 
@@ -1997,13 +1993,14 @@ static HARBOUR hb___msgEvalInline( void )
  */
 static HARBOUR hb___msgEval( void )
 {
-   if( HB_IS_BLOCK( hb_stack.pBase + 1 ) )
+   HB_ITEM_PTR pSelf = hb_stackSelfItem();
+   if( HB_IS_BLOCK( pSelf ) )
    {
       USHORT uiParam;
       USHORT uiPCount=hb_pcount();
 
       hb_vmPushSymbol( &hb_symEval );
-      hb_vmPush( hb_stack.pBase + 1 );                     /* Push block               */
+      hb_vmPush( pSelf );                     /* Push block               */
       for( uiParam = 1; uiParam <= uiPCount; uiParam++ )
          hb_vmPush( hb_param( uiParam, HB_IT_ANY ) );
 
@@ -2020,7 +2017,7 @@ static HARBOUR hb___msgEval( void )
  */
 static HARBOUR hb___msgSuper( void )
 {
-   PHB_ITEM pObject = hb_stack.pBase + 1;
+   PHB_ITEM pObject = hb_stackSelfItem();
 /* USHORT uiIndex = s_pMethod->uiData; */
 
    pObject->item.asArray.value->uiPrevCls = pObject->item.asArray.value->uiClass; /* backup of actual handel */
@@ -2046,7 +2043,7 @@ static HARBOUR hb___msgSuper( void )
 /*
 static HARBOUR hb___msgClass( void )
 {
-   hb_itemReturn( hb_stack.pBase + 1 );
+   hb_itemReturn( hb_stackSelfItem() );
 }
 */
 
@@ -2057,7 +2054,7 @@ static HARBOUR hb___msgClass( void )
  */
 static HARBOUR hb___msgGetClsData( void )
 {
-   USHORT uiClass = ( hb_stack.pBase + 1 )->item.asArray.value->uiClass;
+   USHORT uiClass = ( hb_stackSelfItem() )->item.asArray.value->uiClass;
 
    if( uiClass && uiClass <= s_uiClasses )
       hb_arrayGet( s_pClasses[ uiClass - 1 ].pClassDatas, s_pMethod->uiData, &hb_stack.Return );
@@ -2071,9 +2068,9 @@ static HARBOUR hb___msgGetClsData( void )
  */
 static HARBOUR hb___msgSetClsData( void )
 {
-   USHORT uiClass = ( hb_stack.pBase + 1 )->item.asArray.value->uiClass;
+   USHORT uiClass = ( hb_stackSelfItem() )->item.asArray.value->uiClass;
 
-   PHB_ITEM pReturn = hb_stack.pBase + 2;
+   PHB_ITEM pReturn = hb_stackItemFromBase( 1 );
 
    if( uiClass && uiClass <= s_uiClasses )
       hb_arraySet( s_pClasses[ uiClass - 1 ].pClassDatas,
@@ -2104,7 +2101,7 @@ static HARBOUR hb___msgSetShrData( void )
 {
    USHORT uiSprCls = s_pMethod->uiSprClass;
 
-   PHB_ITEM pReturn = hb_stack.pBase + 2;
+   PHB_ITEM pReturn = hb_stackItemFromBase( 1 );
 
    if( uiSprCls && uiSprCls <= s_uiClasses )
       hb_arraySet( s_pClasses[ uiSprCls - 1 ].pClassDatas,
@@ -2120,7 +2117,7 @@ static HARBOUR hb___msgSetShrData( void )
  */
 static HARBOUR hb___msgGetData( void )
 {
-   PHB_ITEM pObject = hb_stack.pBase + 1;
+   PHB_ITEM pObject = hb_stackSelfItem();
    USHORT uiIndex = s_pMethod->uiData;
 
    /* will arise only if the class has been modified after first instance */
@@ -2137,8 +2134,8 @@ static HARBOUR hb___msgGetData( void )
  */
 static HARBOUR hb___msgSetData( void )
 {
-   PHB_ITEM pObject = hb_stack.pBase + 1;
-   PHB_ITEM pReturn = hb_stack.pBase + 2;
+   PHB_ITEM pObject = hb_stackSelfItem();
+   PHB_ITEM pReturn = hb_stackItemFromBase( 1 );
    USHORT uiIndex = s_pMethod->uiData;
 
    /* will arise only if the class has been modified after first instance */

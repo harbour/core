@@ -4,8 +4,8 @@
 
 ROOT = ../../../
 
-#C_SOURCES=\
-#	dbfntx1.c \
+C_SOURCES=\
+	dbfntx1.c \
 
 PRG_SOURCES=\
 	dbfntx0.prg \

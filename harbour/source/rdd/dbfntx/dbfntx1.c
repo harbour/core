@@ -37,6 +37,7 @@
 #include "hbinit.h"
 #include "hbapiitm.h"
 #include "hbvm.h"
+#include "hbstack.h"
 #include "rddsys.ch"
 #include "hbapierr.h"
 #include "hbapilng.h"

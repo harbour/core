@@ -36,6 +36,7 @@
 #include "hbapi.h"
 #include "hbinit.h"
 #include "hbvm.h"
+#include "hbstack.h"
 #include "hbapiitm.h"
 #include "hbdbf.h"
 #include "hbapierr.h"
@@ -1288,7 +1289,7 @@ static void hb_cdxTagDoIndex( LPCDXTAG pTag )
             {
                pMacro = ( HB_MACRO_PTR ) hb_itemGetPtr( pTag->pKeyItem );
                hb_macroRun( pMacro );
-               hb_itemCopy( pKey->pItem, hb_stack.pPos - 1 );
+               hb_itemCopy( pKey->pItem, hb_stackItemFromTop( - 1 ) );
                hb_stackPop();
           }
             switch( hb_itemType( pKey->pItem ) )
@@ -1853,7 +1854,7 @@ static void hb_cdxTagTagLoad( LPCDXTAG pTag )
 
    switch( hb_itemType( &hb_stack.Return ) )
     */
-   switch( hb_itemType( hb_stack.pPos - 1 ) )
+   switch( hb_itemType( hb_stackItemFromTop( -1 ) ) )
    //switch( HB_IT_STRING )
    {
       case HB_IT_INTEGER:
@@ -1879,8 +1880,8 @@ static void hb_cdxTagTagLoad( LPCDXTAG pTag )
          pTag->uiLen = hb_stack.Return.item.asString.length > CDX_MAXKEY ? CDX_MAXKEY :
                            hb_stack.Return.item.asString.length;
           */
-         pTag->uiLen = (hb_stack.pPos - 1)->item.asString.length > CDX_MAXKEY ? CDX_MAXKEY :
-                           (hb_stack.pPos - 1)->item.asString.length;
+         pTag->uiLen = ( hb_stackItemFromTop( -1 ) )->item.asString.length > CDX_MAXKEY ? CDX_MAXKEY :
+                           ( hb_stackItemFromTop( -1 ) )->item.asString.length;
          break;
    }
    hb_stackPop();    /* pop macro evaluated value */
@@ -1896,7 +1897,7 @@ static void hb_cdxTagTagLoad( LPCDXTAG pTag )
    pTag->pIndex->pArea->valResult = NULL;
    pMacro = ( HB_MACRO_PTR ) hb_itemGetPtr( pTag->pForItem );
    hb_macroRun( pMacro );
-   if( hb_itemType( hb_stack.pPos - 1 ) != HB_IT_LOGICAL )
+   if( hb_itemType( hb_stackItemFromTop( -1 ) ) != HB_IT_LOGICAL )
    {
       hb_macroDelete( pMacro );
       hb_itemRelease( pTag->pForItem );

@@ -51,6 +51,7 @@
 #include "hbapierr.h"
 #include "hbapilng.h"
 #include "hbvm.h"
+#include "hbstack.h"
 
 BOOL hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ) /* creates a new array */
 {

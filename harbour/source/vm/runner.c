@@ -34,6 +34,7 @@
  */
 
 #include "hbapi.h"
+#include "hbstack.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbapifs.h"

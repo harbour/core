@@ -20,6 +20,7 @@ C_SOURCES=\
 	debug.c      \
 	dynsym.c     \
 	codebloc.c   \
+	estack.c     \
 	eval.c       \
 	extend.c     \
 	fm.c         \

@@ -89,10 +89,6 @@ extern void    hb_vmPushDate( long lDate );   /* pushes a long date onto the sta
 extern void    hb_vmPushSymbol( PHB_SYMB pSym ); /* pushes a function pointer onto the stack */
 extern void    hb_vmPushPointer( void * ); /* push an item of HB_IT_POINTER type */
 
-/* stack management functions */
-extern void    hb_stackDispCall( void );
-extern void    hb_stackPop( void );        /* pops an item from the stack */
-
 #if defined(HB_EXTERN_C)
 }
 #endif

@@ -34,11 +34,12 @@
  */
 
 #include "hbapi.h"
+#include "hbstack.h"
 
 HB_FUNC( PCOUNT )
 {
    /* Skip current function */
-   PHB_ITEM pBase = hb_stack.pItems + hb_stack.pBase->item.asSymbol.stackbase;
+   PHB_ITEM pBase = hb_stackItem( ( hb_stackBaseItem() )->item.asSymbol.stackbase );
 
    hb_retni( pBase->item.asSymbol.paramcnt );
 }

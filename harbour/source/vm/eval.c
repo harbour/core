@@ -37,6 +37,7 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbvm.h"
+#include "hbstack.h"
 
 HB_FUNC( EVAL )
 {
@@ -48,13 +49,13 @@ HB_FUNC( EVAL )
       USHORT uiParam;
 
       hb_vmPushSymbol( &hb_symEval );
-      hb_vmPush( hb_stack.pBase + 2 );
-      /* NOTE: hb_param(0 function cannot be used for parameter access
+      hb_vmPush( hb_stackItemFromBase( 1 ) );
+      /* NOTE: hb_param() function cannot be used for parameter access
        * because we need to pass the references too.
        * hb_param() is dereferencing the passed parameters
       */
       for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
-        hb_vmPush( hb_stack.pBase + 1 + uiParam );
+        hb_vmPush( hb_stackItemFromBase( uiParam ) );
       hb_vmDo( uiPCount - 1 );
    }
    else

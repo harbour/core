@@ -34,6 +34,7 @@
  */
 
 #include "hbapi.h"
+#include "hbstack.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbapilng.h"
@@ -232,7 +233,7 @@ HB_FUNC( AEVAL )
                     ISNUM( 3 ) ? &ulStart : NULL,
                     ISNUM( 4 ) ? &ulCount : NULL );
 
-      hb_itemReturn( hb_stack.pBase + 2 ); /* AEval() returns the array itself */
+      hb_itemReturn( hb_stackItemFromBase( 1 ) ); /* AEval() returns the array itself */
    }
    else
       hb_errRT_BASE( EG_ARG, 2017, NULL, "AEVAL" );
@@ -259,7 +260,7 @@ HB_FUNC( ACOPY )
                        ISNUM( 5 ) ? &ulTarget : NULL );
       }
 
-      hb_itemReturn( hb_stack.pBase + 3 ); /* ACopy() returns the target array */
+      hb_itemReturn( hb_stackItemFromBase( 2 ) ); /* ACopy() returns the target array */
    }
 }
 
