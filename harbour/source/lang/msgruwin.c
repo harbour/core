@@ -2,7 +2,36 @@
  * $Id$
  */
 
-/* Language Support Module */
+/*
+ * Harbour Project source code:
+ * Language Support Module (RU1251)
+ *
+ * Copyright 2000 Alexander S.Kresin <alex@belacy.belgorod.su>
+ * www - http://www.harbour-project.org
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version, with one exception:
+ *
+ * The exception is that if you link the Harbour Runtime Library (HRL)
+ * and/or the Harbour Virtual Machine (HVM) with other files to produce
+ * an executable, this does not by itself cause the resulting executable
+ * to be covered by the GNU General Public License. Your use of that
+ * executable is in no way restricted on account of linking the HRL
+ * and/or HVM code into it.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
+ * their web site at http://www.gnu.org/).
+ *
+ */
 
 /* Language name: Russian */
 /* ISO language code (2 chars): RU */
@@ -39,54 +68,54 @@ char *hb_dateDaysName[ 7 ] =
 
 char *hb_errorsGeneric[] =
 {
-   "Unknown error",
-   "Argument error",
-   "Bound error",
-   "String overflow",
-   "Numeric overflow",
-   "Zero divisor",
-   "Numeric error",
-   "Syntax error",
-   "Operation too complex",
+   "Неизвестная ошибка",
+   "Неверный аргумент",
+   "Переполнение массива",
+   "Переполнение строки",
+   "Переполнение числа",
+   "Деление на ноль",
+   "Численная ошибка",
+   "Синтаксическая ошибка",
+   "Слишком сложная операция",
    "",
    "",
-   "Memory low",
-   "Undefined function",
-   "No exported method",
-   "Variable does not exist",
-   "Alias does not exist",
-   "No exported variable",
-   "Illegal characters in alias",
-   "Alias already in use",
+   "Не хватает памяти",
+   "Неизвестная функция",
+   "Метод не экспортирован",
+   "Переменная не существует",
+   "Алиас не существует",
+   "Переменная не экспортирована",
+   "Недопустимые символы в имени алиаса",
+   "Алиас уже используется",
    "",
-   "Create error",
-   "Open error",
-   "Close error",
-   "Read error",
-   "Write error",
-   "Print error",
-   "",
-   "",
-   "",
-   "",
-   "Operation not supported",
-   "Limit exceeded",
-   "Corruption detected",
-   "Data type error",
-   "Data width error",
-   "Workarea not in use",
-   "Workarea not indexed",
-   "Exclusive required",
-   "Lock required",
-   "Write not allowed",
-   "Append lock failed",
-   "Lock Failure",
+   "Ошибка создания",
+   "Ошибка открытия",
+   "Ошибка закрытия",
+   "Ошибка чтения",
+   "Ошибка записи",
+   "Ошибка печати",
    "",
    "",
    "",
-   "Incorrect number of arguments",
-   "array access",
-   "array assign",
-   "not an array",
-   "conditional"
+   "",
+   "Операция не поддерживается",
+   "Лимит превышен",
+   "Обнаружено повреждение",
+   "Ошибка типа данных",
+   "Ошибка размера данных",
+   "Файл не открыт",
+   "Файл не индексирован",
+   "Требуется эксклюзивный доступ",
+   "Требуется блокировка",
+   "Запись не разрешена",
+   "Сбой блокировки при добавлении",
+   "Блокировка не удалась",
+   "",
+   "",
+   "",
+   "Неверное количество аргументов",
+   "доступ к массиву",
+   "присвоение массива",
+   "не массив",
+   "сравнение"
 };
