@@ -439,11 +439,7 @@ USHORT hb_gtColorToN( char * szColorString )
 {
    char c;
    USHORT nColor = 0;
-   int nFore = 0;
-   BOOL bHasI = FALSE;
-   BOOL bHasU = FALSE;
-   BOOL bHasX = FALSE;
-   BOOL bSlash = FALSE;
+   BOOL bFore = TRUE;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gtColorToN(%s)", szColorString));
 
@@ -453,65 +449,51 @@ USHORT hb_gtColorToN( char * szColorString )
 
       switch( c )
       {
-         case 'B':
-            nColor |= 1;
-            break;
-
-         case 'G':
-            nColor |= 2;
-            break;
-
-         case 'I':
-            bHasI   = TRUE;
-            break;
-
-         case 'N':
-            nColor  = 0;
-            break;
-
-         case 'R':
-            nColor |= 4;
-            break;
-
-         case 'U':
-            bHasU   = TRUE;
-            break;
-
-         case 'W':
-            nColor  = 7;
-            break;
-
-         case 'X':                   /* always sets forground to 'N' */
-            bHasX   = TRUE;
-            break;
-
          case '*':
-            nFore  |= 128;
+            nColor |= 0x80;
             break;
 
          case '+':
-            nFore  |= 8;
+            nColor |= 0x08;
             break;
 
          case '/':
-            if( bHasU )
-            {
-               bHasU = FALSE;
-               nFore |= 0x0800;  /* foreground underline bit */
-            }
-            else if( bHasX )
-            {
-               nColor = 0;
-               bHasX = FALSE;
-            }
-            else if( bHasI )
-            {
-               nColor = 7;
-               bHasI = FALSE;
-            }
-            nFore |= nColor;
-            bSlash = TRUE;
+            bFore = FALSE;
             break;
+
+         case 'B':
+            if( * szColorString == 'G' || * szColorString == 'g' )
+            {
+               nColor |= bFore ? 0x03: 0x30;
+               szColorString++;
+            }
+            else
+               nColor |= bFore ? 0x01: 0x10;
+            break;
+
+         case 'G':
+            if( * szColorString == 'R' || * szColorString == 'r' )
+            {
+               nColor |= bFore ? 0x06: 0x60;
+               szColorString++;
+            }
+            else
+               nColor |= bFore ? 0x02: 0x20;
+            break;
+
+            case 'W':
+               nColor |= bFore ? 0x07: 0x70;
+               break;
+
+            case 'R':
+               if( * szColorString == 'B' || * szColorString == 'b' )
+               {
+                  nColor |= bFore ? 0x05: 0x50;
+                  szColorString++;
+               }
+               else
+                  nColor |= bFore ? 0x04: 0x40;
+               break;
       }
    }
 
