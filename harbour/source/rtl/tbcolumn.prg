@@ -66,10 +66,10 @@ CLASS TBColumn
    DATA  FootSep              // Footing separator character
    DATA  HeadSep              // Heading separator character
    DATA  Picture              // Column picture string
-   
-   ACCESS Width INLINE ::nWidth           // Column display width 
-   ASSIGN Width(n) INLINE ::SetWidth(n)     
-  
+
+   ACCESS Width INLINE ::nWidth           // Column display width
+   ASSIGN Width(n) INLINE ::SetWidth(n)
+
    // NOTE: 17/08/01 - <maurilio.longo@libero.it>
    //       It is not correct in my opinion that this instance variable be exported
    DATA  ColPos               // Temporary column position on screen needed by TBrowse class
@@ -81,9 +81,9 @@ CLASS TBColumn
 #endif
 
    HIDDEN:     /* H I D D E N */
-   
+
    DATA  nWidth
-   METHOD SetWidth(n)  
+   METHOD SetWidth(n)
 
 ENDCLASS
 
@@ -97,8 +97,13 @@ METHOD New( cHeading, bBlock ) CLASS TBColumn
    ::FootSep  := ""
    ::ColPos   := 1
 
-   ::nWidth   := nil 
+   ::nWidth   := nil
    ::Heading  := cHeading
+
+   /* NOTE: needs to be initialized to an empty string or TBrowse()::WriteMLineText() does not work
+            if there are columns which have a footing and others which don't
+   */
+   ::Footing  := ""
    ::block    := bBlock
 
 return Self
@@ -107,10 +112,10 @@ return Self
 METHOD SetWidth(n) CLASS TBColumn
 
    // From a TOFIX inside TBrowse.prg:
-   // "Also Clipper will not allow the user to assign a NIL to the :width variable." 
+   // "Also Clipper will not allow the user to assign a NIL to the :width variable."
    if n <> nil
       ::nWidth := n
-   endif      
+   endif
 
 return n
 

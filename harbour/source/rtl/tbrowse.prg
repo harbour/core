@@ -834,12 +834,12 @@ METHOD RedrawHeaders(nWidth) CLASS TBrowse
       next
    endif
 
-   if ! Empty( ::HeadSep )  //Drawing heading separator line
+   if ! Empty( ::HeadSep )  //Draw horizontal heading separator line
       DispOutAt((nScreenRowT := ::nTop + iif(::lHeaders, ::nHeaderHeight , 0 )), ::nLeft,;
                 Replicate( Right( ::HeadSep, 1 ), nWidth), ::ColorSpec)
    endif
 
-   if ! Empty( ::FootSep )  //Drawing footing separator line
+   if ! Empty( ::FootSep )  //Draw horizontal footing separator line
       DispOutAt((nScreenRowB := ::nBottom - iif(::lFooters, ::nFooterHeight, 0)), ::nLeft,;
                 Replicate(Right(::FootSep, 1), nWidth), ::ColorSpec)
    endif

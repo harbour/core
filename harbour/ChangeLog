@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
     * Fixed minor bugs reported bu Chen
+
+2002-02-19 00:05 UTC+0100 Martin Vogel <vogel@inttec.de>
+
+  + contrib/libct/ftoc.c
+    + FTOC() and CTOF() functions, implemented by Walter
+  + contrib/libct/misc1.c
     + XTOC() function, implemented by Walter
   + contrib/libct/tab.c
   + contrib/libct/tests/tab.prg
@@ -29,19 +35,19 @@
 
 2002-02-18 10:42 UTC+0200 Chen Kedem <niki@actcom.co.il>
 
-       Ex: 
+   * doc/en/string.txt
      + AT() : Add note about Harbour extension in the $COMPLIANCE$ section
      ! Minor samples corrections
      * Line formating
 
    * doc/en/dir.txt
-       This allows that the string-number conversions are same for program 
+   * doc/en/file.txt
    * doc/en/misc.txt
    * doc/en/rdddb.txt
    * doc/en/terminal.txt
    * doc/en/tlabel.txt
    * doc/en/treport.txt
-     *Added newline at the end to clear gcc warning 
+     * Mostly line formating
 
 2002-02-16 20:25 UTC+0500 Jorge A. Giraldo <jgiraldo@col2.telecom.com.co>
    * source/vm/itemapi.c
