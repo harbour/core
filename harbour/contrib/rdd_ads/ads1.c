@@ -1068,7 +1068,7 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
                              ( int ) pField->uiLen - ( ( int ) pField->uiDec + 1 ),
                              ( int ) pField->uiDec );
          else
-            hb_itemPutNDLen( pItem, atol( (char *) pBuffer ), ( int ) pField->uiLen );
+            hb_itemPutNDLen( pItem, atol( (char *) pBuffer ), ( int ) pField->uiLen ,0);
          break;
 
       case HB_IT_DATE:
