@@ -432,8 +432,9 @@ PHB_ITEM hb_itemPutCL( PHB_ITEM pItem, char * szText, ULONG ulLen )
    else
       pItem = hb_itemNew( NULL );
 
-   /* CA-Clipper seems to be buggy here, it will return ulLen bytes of
-      trash if the szText buffer is NULL, at least with hb_retclen(). */
+   /* NOTE: CA-Clipper seems to be buggy here, it will return ulLen bytes of
+            trash if the szText buffer is NULL, at least with hb_retclen(). 
+            [vszakats] */
 
    if( szText == NULL )
    {
@@ -467,7 +468,7 @@ PHB_ITEM hb_itemPutCPtr( PHB_ITEM pItem, char * szText, ULONG ulLen )
    return pItem;
 }
 
-/* NOTE: The caller should free the pointer if it's not NULL */
+/* NOTE: The caller should free the pointer if it's not NULL. [vszakats] */
 
 char * hb_itemGetC( PHB_ITEM pItem )
 {

@@ -1,3 +1,23 @@
+20000216-04:17 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * source/rtl/tbrowse.prg
+     ! SAY -> DispOutAt()
+     ! Value is better converted before displayed, now it's completely like
+       CA-Cl*pper 5.2.
+     ! Fixed calculating of the columns fitting on the screen.
+       ::LeftDetermine(), ::Stabilize()
+     + Added a bunch of NOTEs and TOFIXes.
+     % Optimization in Hilite()
+   * source/rtl/tbcolumn.prg
+     ! Fixed column width calculations. (still not perfect, but better)
+   * makefile.bc
+     makefile.vc
+     * Harbour options changed to -q0 and -w
+   * source/vm/hvm.c
+     + Added the Win32 exception handler rountine experimentally, it's
+       commented out.
+   * source/rtl/itemapi.c
+     * Some minor change in comments.
+
 20000215-20:53 GMT+1 Victor Szakats <info@szelvesz.hu>
    * source/rtl/tgetlist.prg
      source/rtl/dummy.prg

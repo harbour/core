@@ -69,7 +69,7 @@ RUNNER_DLL=$(BIN_DIR)\runjava.dll
 MACRO_LIB=$(LIB_DIR)\macro.lib
 REGRESS_EXE=$(BIN_DIR)\rt_main.exe
 HBDOC_EXE=$(BIN_DIR)\hbdoc.exe
-HARBOURFLAGS=-iinclude -n -q
+HARBOURFLAGS=-iinclude -n -q0 -w
 
 LIBS=$(HARBOUR_LIB) $(MACRO_LIB) $(TERMINAL_LIB) $(TOOLS_LIB) $(DEBUG_LIB) $(PP_LIB) $(DBFNTX_LIB) $(DBFCDX_LIB) $(RUNNER_LIB) $(MACRO_LIB)
 

@@ -80,13 +80,16 @@ function TBColumnNew( cHeading, bBlock )
 
       do case
          case cType == "N"
-            nWidth := 10
+            nWidth := Len( Str( Eval( bBlock ) ) )
 
          case cType == "L"
-            nWidth := 3
+            nWidth := 1
 
          case cType == "C"
             nWidth := Len( Eval( bBlock ) )
+
+         case cType == "D"
+            nWidth := Len( DToC( Eval( bBlock ) ) )
 
          otherwise
             nWidth := 0

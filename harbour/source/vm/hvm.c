@@ -3747,7 +3747,6 @@ void hb_vmForceLink( void )
 }
 
 /* ----------------------------- */
-/* TODO: Put these to /source/rtl/?.c */
 
 HARBOUR HB_ERRORLEVEL( void )
 {
@@ -3835,3 +3834,45 @@ HARBOUR HB___VMVARSGET( void )
    hb_itemReturn( s_aStatics.item.asArray.value->pItems +
                   hb_stack.iStatics + hb_parni( 1 ) - 1 );
 }
+
+#if 0
+
+#include "windows.h"
+
+WINBASEAPI LONG WINAPI UnhandledExceptionFilter(
+   struct _EXCEPTION_POINTERS * ExceptionInfo )
+{
+   PHB_ITEM pBase = hb_stack.pBase;
+
+   char buffer[ 128 ];
+   char msg[ 1024 ];
+
+   HB_SYMBOL_UNUSED( ExceptionInfo );
+
+   msg[ 0 ] = '\0';
+
+   while( pBase != hb_stack.pItems )
+   {
+      char buffer[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 32 ];
+
+      pBase = hb_stack.pItems + pBase->item.asSymbol.stackbase;
+
+      if( ( pBase + 1 )->type == IT_ARRAY )
+         sprintf( buffer, "Called from %s:%s(%i)", hb_objGetClsName( pBase + 1 ),
+            pBase->item.asSymbol.value->szName,
+            pBase->item.asSymbol.lineno );
+      else
+         sprintf( buffer, "Called from %s(%i)",
+            pBase->item.asSymbol.value->szName,
+            pBase->item.asSymbol.lineno );
+
+      strcat( msg, buffer );
+      strcat( msg, "\n" );
+   }
+
+   MessageBox( NULL, msg, "Harbour Exception", MB_ICONSTOP );
+
+   return EXCEPTION_EXECUTE_HANDLER; /* EXCEPTION_CONTINUE_SEARCH; */
+}
+
+#endif
