@@ -484,20 +484,22 @@ void hb_setpos( SHORT row, SHORT col )
 #ifdef HARBOUR_USE_GTAPI
    hb_gtSetPos( row, col );
 #else
-   SHORT iCount;
-
-   if( row < s_iDevRow || col < s_iDevCol )
    {
-      fputs( s_szCrLf, stdout );
-      s_iDevCol = 0;
-      s_iDevRow++;
+      SHORT iCount;
+
+      if( row < s_iDevRow || col < s_iDevCol )
+      {
+         fputs( s_szCrLf, stdout );
+         s_iDevCol = 0;
+         s_iDevRow++;
+      }
+      else if( row > s_iDevRow ) s_iDevCol = 0;
+      for( iCount = s_iDevRow; iCount < row; iCount++ )
+         fputs( s_szCrLf, stdout );
+      for( iCount = s_iDevCol; iCount < col; iCount++ )
+         fputc( ' ', stdout );
+      fflush( stdout );
    }
-   else if( row > s_iDevRow ) s_iDevCol = 0;
-   for( iCount = s_iDevRow; iCount < row; iCount++ )
-      fputs( s_szCrLf, stdout );
-   for( iCount = s_iDevCol; iCount < col; iCount++ )
-      fputc( ' ', stdout );
-   fflush( stdout );
 #endif
 
    s_iDevRow = row;

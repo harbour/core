@@ -213,8 +213,8 @@ HARBOUR HB_NATIONMSG( void )
 
 HARBOUR HB__NATSORTVER( void )
 {
-   /* NOTE: CA-Cl*pper 5.2e will return: "NATSORT v1.2i x14 19/Mar/93" */
-   /* NOTE: CA-Cl*pper 5.3  will return: "NATSORT v1.3i x19 06/Mar/95" */
+   /* NOTE: CA-Cl*pper 5.2e Intl. will return: "NATSORT v1.2i x14 19/Mar/93" */
+   /* NOTE: CA-Cl*pper 5.3  Intl. will return: "NATSORT v1.3i x19 06/Mar/95" */
 
    hb_retc( "NATSORT (Harbour)" );
 }
@@ -223,8 +223,8 @@ HARBOUR HB__NATSORTVER( void )
 
 HARBOUR HB__NATMSGVER( void )
 {
-   /* NOTE: CA-Cl*pper 5.2e will return: "NATMSGS v1.2i x14 19/Mar/93" */
-   /* NOTE: CA-Cl*pper 5.3  will return: "NATMSGS v1.3i x19 06/Mar/95" */
+   /* NOTE: CA-Cl*pper 5.2e Intl. will return: "NATMSGS v1.2i x14 19/Mar/93" */
+   /* NOTE: CA-Cl*pper 5.3  Intl. will return: "NATMSGS v1.3i x19 06/Mar/95" */
 
    hb_retc( "NATMSGS (Harbour)" );
 }
