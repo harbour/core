@@ -1,3 +1,12 @@
+2000-02-02 14:39 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/vm/hvm.c
+     * function hb_vmLocalName() properly implemented.
+
+   * source/debug/debugger.prg
+     * proper support for hb_vmLocalName()
+
+   ! Warning: HB_P_LOCALNAME is working wrong! It has to be revised!
+
 2000-02-02 11:46 GMT+1 Antonio Linares <alinares@fivetech.com>
    * makefile.bc
      - removed an empty blank line (was causing a make error)
