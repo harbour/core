@@ -1,3 +1,9 @@
+20000202-12:05 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/compiler/harbour.y
+	* fixed to properly compile EXTERNAL directive if placed outside
+	  of a function body
+	  
 2000-02-01 20:40 GMT-5 David G. Holm <dholm@ sd-llc.com>
 
    * bin/bld_tpl.bat

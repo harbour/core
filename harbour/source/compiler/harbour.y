@@ -349,7 +349,7 @@ Statement  : ExecFlow   CrlfStmnt   { }
 
            | EXITLOOP  CrlfStmnt            { hb_compLoopExit(); hb_comp_functions.pLast->bFlags |= FUN_BREAK_CODE; }
            | LOOP  CrlfStmnt                { hb_compLoopLoop(); hb_comp_functions.pLast->bFlags |= FUN_BREAK_CODE; }
-           | EXTERN ExtList CrlfStmnt
+           | EXTERN ExtList Crlf
            | ANNOUNCE IdentName {
                if( hb_comp_szAnnounce == NULL )
                {
