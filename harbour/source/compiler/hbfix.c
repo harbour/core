@@ -41,12 +41,11 @@
 typedef struct HB_stru_fix_info
 {
    USHORT iNestedCodeblock;
-}
-HB_FIX_INFO, *HB_FIX_INFO_PTR;
+} HB_FIX_INFO, * HB_FIX_INFO_PTR;
 
 #define HB_FIX_FUNC( func ) HB_PCODE_FUNC( func, HB_FIX_INFO_PTR )
-typedef  HB_FIX_FUNC( HB_FIX_FUNC_ );
-typedef  HB_FIX_FUNC_ *HB_FIX_FUNC_PTR;
+typedef HB_FIX_FUNC( HB_FIX_FUNC_ );
+typedef HB_FIX_FUNC_ * HB_FIX_FUNC_PTR;
 
 
 static HB_FIX_FUNC( hb_p_pushstr )
@@ -74,7 +73,7 @@ static HB_FIX_FUNC( hb_p_endblock )
 static HB_FIX_FUNC( hb_p_pushblock )
 {
    USHORT wVar;
-   USHORT *pLocal;
+   USHORT * pLocal;
    ULONG ulStart = lPCodePos;
 
    ++cargo->iNestedCodeblock;
@@ -124,7 +123,7 @@ static HB_FIX_FUNC( hb_p_poplocal )
    {
       /* only local variables used outside of a codeblock need fixing
        */
-      SHORT *pVar = ( SHORT * ) &( pFunc->pCode )[ lPCodePos + 1 ];
+      SHORT * pVar = ( SHORT * ) &( pFunc->pCode )[ lPCodePos + 1 ];
 
       *pVar += pFunc->wParamCount;
    }
@@ -138,7 +137,7 @@ static HB_FIX_FUNC( hb_p_pushlocal )
    {
       /* only local variables used outside of a codeblock need fixing
        */
-      SHORT *pVar = ( SHORT * ) &( pFunc->pCode )[ lPCodePos + 1 ];
+      SHORT * pVar = ( SHORT * ) &( pFunc->pCode )[ lPCodePos + 1 ];
 
       *pVar += pFunc->wParamCount;
    }
@@ -152,7 +151,7 @@ static HB_FIX_FUNC( hb_p_pushlocalref )
    {
       /* only local variables used outside of a codeblock need fixing
        */
-      SHORT *pVar = ( SHORT * ) &( pFunc->pCode )[ lPCodePos + 1 ];
+      SHORT * pVar = ( SHORT * ) &( pFunc->pCode )[ lPCodePos + 1 ];
 
       *pVar += pFunc->wParamCount;
    }
@@ -166,7 +165,7 @@ static HB_FIX_FUNC( hb_p_poplocalnear )
    {
       /* only local variables used outside of a codeblock need fixing
        */
-      SHORT *pVar = ( SHORT * ) &( pFunc->pCode )[ lPCodePos + 1 ];
+      SHORT * pVar = ( SHORT * ) &( pFunc->pCode )[ lPCodePos + 1 ];
 
       *pVar += pFunc->wParamCount;
       if( !( *pVar >= -128 && *pVar <= 127 ) )
@@ -186,7 +185,7 @@ static HB_FIX_FUNC( hb_p_pushlocalnear )
    {
       /* only local variables used outside of a codeblock need fixing
        */
-      SHORT *pVar = ( SHORT * ) &( pFunc->pCode )[ lPCodePos + 1 ];
+      SHORT * pVar = ( SHORT * ) &( pFunc->pCode )[ lPCodePos + 1 ];
 
       *pVar += pFunc->wParamCount;
       if( !( *pVar >= -128 && *pVar <= 127 ) )
@@ -203,7 +202,8 @@ static HB_FIX_FUNC( hb_p_pushlocalnear )
 /* NOTE: The  order of functions have to match the order of opcodes
  *       mnemonics
  */
-static HB_FIX_FUNC_PTR s_fixlocals_table[] = {
+static HB_FIX_FUNC_PTR s_fixlocals_table[] =
+{
    NULL,                       /* HB_P_AND,                  */
    NULL,                       /* HB_P_ARRAYPUSH,            */
    NULL,                       /* HB_P_ARRAYPOP,             */
@@ -229,15 +229,15 @@ static HB_FIX_FUNC_PTR s_fixlocals_table[] = {
    NULL,                       /* HB_P_DUPLTWO,              */
    NULL,                       /* HB_P_INC,                  */
    NULL,                       /* HB_P_INSTRING,             */
-   NULL,                       /* HB_P_JUMPSHORT,            */
+   NULL,                       /* HB_P_JUMPNEAR,             */
    NULL,                       /* HB_P_JUMP,                 */
    NULL,                       /* HB_P_JUMPFAR,              */
-   NULL,                       /* HB_P_JUMPSHORTFALSE,       */
+   NULL,                       /* HB_P_JUMPFALSENEAR,        */
    NULL,                       /* HB_P_JUMPFALSE,            */
-   NULL,                       /* HB_P_JUMPFARFALSE,         */
-   NULL,                       /* HB_P_JUMPSHORTTRUE,        */
+   NULL,                       /* HB_P_JUMPFALSEFAR,         */
+   NULL,                       /* HB_P_JUMPTRUENEAR,         */
    NULL,                       /* HB_P_JUMPTRUE,             */
-   NULL,                       /* HB_P_JUMPFARTRUE,          */
+   NULL,                       /* HB_P_JUMPTRUEFAR,          */
    NULL,                       /* HB_P_LESSEQUAL,            */
    NULL,                       /* HB_P_LESS,                 */
    NULL,                       /* HB_P_LINE,                 */
@@ -326,7 +326,8 @@ void hb_compFixFuncPCode( PFUNCTION pFunc )
    HB_FIX_INFO fix_info;
 
    fix_info.iNestedCodeblock = 0;
-   assert( HB_P_LAST_PCODE == sizeof(s_fixlocals_table)/sizeof(HB_FIX_FUNC_PTR) );
 
-   hb_compPCodeEval( pFunc, (HB_PCODE_FUNC_PTR *)s_fixlocals_table, (void *)&fix_info );
+   assert( HB_P_LAST_PCODE == sizeof( s_fixlocals_table ) / sizeof( HB_FIX_FUNC_PTR ) );
+
+   hb_compPCodeEval( pFunc, ( HB_PCODE_FUNC_PTR * ) s_fixlocals_table, ( void * ) &fix_info );
 }

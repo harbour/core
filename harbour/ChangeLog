@@ -1,3 +1,8 @@
+20000425-05:42 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/compiler/hbfix.c
+     * pcode name changes applied.
+
 20000425-04:37 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/vm/arrays.c
