@@ -315,7 +315,7 @@ METHOD End() CLASS Get
 
    local nLastCharPos
 
-   if ::HasFocus
+   if ::HasFocus != nil .and. ::HasFocus
       nLastCharPos := Min( Len( RTrim( ::buffer ) ) + 1, ::nMaxLen )
       if ::Pos != nLastCharPos
          ::Pos := nLastCharPos
@@ -413,7 +413,9 @@ return Self
 
 METHOD VarPut( xValue ) CLASS Get
 
-   Eval( ::block, xValue )
+   if ::block != nil
+      Eval( ::block, xValue )
+   endif
 
 return xValue
 
