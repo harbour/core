@@ -37,6 +37,7 @@
 
 #include <string.h>
 #include "extend.h"
+#include "itemapi.h"
 
 /* Uncomment this to trace codeblocks activity
 #define CODEBLOCKDEBUG

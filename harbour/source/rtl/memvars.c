@@ -37,6 +37,7 @@
 #include "extend.h"
 #include "errorapi.h"
 #include "error.ch"
+#include "itemapi.h"
 
 #define VS_PRIVATE     64
 #define VS_PUBLIC     128
