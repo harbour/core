@@ -1,3 +1,13 @@
+2000-06-08-07:50 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
+
+ *utils/hbdoc/genhtm.prg
+ utils/hbdoc/genchm.prg
+ utils/hbdoc/genos2.prg
+ utils/hbdoc/hbdoc.prg
+ utils/hbdoc/genrtf.prg
+ utils/hbdoc/genng.prg
+   *Same changes suggested by April white
+
 2000-06-10 17:06 UTC-0500 April White <awhite@user.rose.com>
 
   * source/rtl/makefile
