@@ -1,3 +1,17 @@
+19990730-10:21 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * buildrdd.bat
+     * removed PRGs building from there
+   * rdd.b32
+     * Added PRGs building
+   * makefile.b32
+     * Added Alert.prg building (note: I have not updated all makefiles!)
+   * source/compiler/harbour.y
+     * Added support for a:b[ c ]:d = e statements
+   + source/rtl/alert.prg
+   * tests/working/classch.prg
+     * added Super:New() test
+   + tests/working/debugger.prg
+
 19990730-05:55 CET Victor Szel <info@szelvesz.hu>
    + source/hbpp/hbppint.c - Added "Warning" to the
      message "non directive in include file"
@@ -14,11 +28,11 @@
    ! source/hbpp/hbpp.c - Fix: #include directive will search for
      the header file in the directory of the compiled .PRG file,
      not in the current directory as before.
-   + source/hbpp/hbpp.c - Added support for 
+   + source/hbpp/hbpp.c - Added support for
      #include 'x' and #include <x>, the latter searches only in
      the include directories, like in C.
    ! source/hbpp/hbpp.c - Added patch to fix the GPF in RTL_TEST
-     when using Win32/GCC (and some others). 
+     when using Win32/GCC (and some others).
      Posted by Dave Pearson <davep@hagbard.demon.co.uk>
 
 19990729-22:00 EDT Paul Tucker <ptucker@sympatico.ca>
@@ -55,11 +69,11 @@
 
 Thu Jul 29 16:17:09 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* config/dos/djgpp.cf: 
-	* config/linux/gcc.cf: 
-	* config/os2/gcc.cf: 
-	* config/win32/gcc.cf: 
-	* config/win32/msvc.cf: 
+	* config/dos/djgpp.cf:
+	* config/linux/gcc.cf:
+	* config/os2/gcc.cf:
+	* config/win32/gcc.cf:
+	* config/win32/msvc.cf:
 	One more modification: the DB drivers must be linked against only
 	when the Makefile specifies linking against the rdd
 	library. Otherwise, other binaries such as the Harbour compiler
@@ -67,49 +81,49 @@ Thu Jul 29 16:17:09 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 Thu Jul 29 15:58:44 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* source/rdd/Makefile: 
-	* source/rdd/nulsys/Makefile: 
+	* source/rdd/Makefile:
+	* source/rdd/nulsys/Makefile:
 	Bruno Cantero pointed out that a user may use all of the DB
 	drivers simultaneously, so I got rid of the environment variable
 	and made sure all of the valid DB drivers are linked against the
 	application. On of the valid drivers is nulsys.
 
-	* config/global.cf: 
+	* config/global.cf:
 	Now a list of all the valid DB drivers is stored in
 	HB_DB_DRIVERS.
-	
-	* config/dos/djgpp.cf: 
-	* config/linux/gcc.cf: 
-	* config/os2/gcc.cf: 
-	* config/win32/gcc.cf: 
-	* config/win32/msvc.cf: 
+
+	* config/dos/djgpp.cf:
+	* config/linux/gcc.cf:
+	* config/os2/gcc.cf:
+	* config/win32/gcc.cf:
+	* config/win32/msvc.cf:
 	Deleted support for environment variable HB_DB_DRIVER.
 	Added support for make variable HB_DB_DRIVERS.
 
 Thu Jul 29 14:46:51 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* source/rdd/Makefile: 
-	* source/rdd/dbfntx/Makefile: 
+	* source/rdd/Makefile:
+	* source/rdd/dbfntx/Makefile:
 	Now there is a subdirectory for each database driver. For now,
 	only dbfntx/ is supported. The Makefile in rdd/ walks into each
 	subdirectory.
-	
-	* source/rdd/dbfntx0.prg: 
-	* source/rdd/dbfntx1.c: 
-	* source/rdd/dbfntx/dbfntx0.prg: 
-	* source/rdd/dbfntx/dbfntx1.c: 
+
+	* source/rdd/dbfntx0.prg:
+	* source/rdd/dbfntx1.c:
+	* source/rdd/dbfntx/dbfntx0.prg:
+	* source/rdd/dbfntx/dbfntx1.c:
 	Moved these files from rdd/ to rdd/dbfntx/.
 
-	* config/bin.cf: 
-	* config/dir.cf: 
-	* config/header.cf: 
-	* config/lib.cf: 
-	* config/test.cf: 
-	* config/dos/djgpp.cf: 
-	* config/linux/gcc.cf: 
-	* config/os2/gcc.cf: 
-	* config/win32/gcc.cf: 
-	* config/win32/msvc.cf: 
+	* config/bin.cf:
+	* config/dir.cf:
+	* config/header.cf:
+	* config/lib.cf:
+	* config/test.cf:
+	* config/dos/djgpp.cf:
+	* config/linux/gcc.cf:
+	* config/os2/gcc.cf:
+	* config/win32/gcc.cf:
+	* config/win32/msvc.cf:
 	Added support for the new separate directories for the database
 	driver. The user must define an environment variable HB_DB_DRIVER
 	with the appropriate driver he wants to use. For example, defining
