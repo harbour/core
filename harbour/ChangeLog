@@ -1,3 +1,9 @@
+20000218-10:02 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
+    *doc/compiler.txt
+     doc/readme.txt
+        Small formating by Brian Hays
+    *source/rtl/typefile.prg
+        *Fixed to use the Habour RTL
 20000218-00:04 GMT+1 Victor Szakats <info@szelvesz.hu>
    - source/runner/stdalone/external.prg
    * makefile.bc

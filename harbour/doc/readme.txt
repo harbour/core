@@ -4,7 +4,7 @@
 
 
 
-								 The Harbour Project
+                         The Harbour Project
 
 ************************************************************************
 *  This file contains information on obtaining, installing, and using  *
@@ -54,7 +54,7 @@ Installation
    directories.
 
 2. Compile Harbour using your C compiler. Make files for different
-   platforms are included in the HARBOUR\HARBOUR directory.
+   platforms are included in the main Harbour directory.
 
 
 --- COPYRIGHT ---

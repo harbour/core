@@ -33,18 +33,18 @@
  *
  */
 
-/* TOFIX: The usage of non-standard Harbour functionality (TFileRead()) should 
-          be replaced with plain RTL function calls. Now it requires TOOLS to 
-          link at all. [vszakats] */
 
 #include 'common.ch'
 #include 'error.ch'
+#include 'fileio.ch'
+#define pBUFFER_LENGTH 4096
+#define CRLF HB_OSNEWLINE()
 
-STATIC theHandle
+#xtranslate FTELL(<nhandle>) => FSEEK(<nhandle>,0,FS_RELATIVE)
+Static TheHandle
 #ifdef TEST
 function main
-type alpha.lnk
-type x.lnk
+type treport.prg
 return nil
 #endif
 
@@ -83,8 +83,8 @@ IF  nHandle <0
     err:OsCode := 2
     Eval(ErrorBlock(), err)
 ENDIF
-DO WHILE !lEof
-       cBuffer := TRIM(ReadLN( @lEof ))
+
+DO WHILE Freadln(thehandle,@cbuffer,pBUFFER_LENGTH)
        ? cBuffer
 ENDDO
 
@@ -97,7 +97,7 @@ ENDIF
 
 RETURN NIL
 
-#define xReadBuffer 4096
+
    /****
 *   FT_FUSE(cFile,nMode)   ---> nHandle
 *   Open a File
@@ -115,94 +115,26 @@ STATIC FUNCTION ft_fuse( cFile, nMode )
       nMode := 2
    ENDIF
    IF cFile == Nil
-      theHandle:close()
+      fclose(theHandle)
    ENDIF
    IF cFile <> Nil
       IF nMode <> 0
-         theHandle := TFileRead():new( cFile ):open( nMode )
+         theHandle := FOPEN( cFile , nMode )
       ELSE
-         theHandle := TFileRead():new( cFile ):open()
+         theHandle := FOPEN( cFile)
       ENDIF
    ENDIF
-RETURN theHandle:nHan
-
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
-*+
-*+    STATIC FUNCTION ft_FEOF()
-*+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
-*+
-STATIC FUNCTION ft_FEOF()
-
-   LOCAL lRETURN := theHandle:lEOF
-
-RETURN lRETURN
-
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
-*+
-*+    STATIC FUNCTION FReadLn()
-*+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
-*+
-STATIC FUNCTION FReadLn( nH, cLine )
-
-   //     cline:= thehandle:readline()
-   // ENDIF
-   IF theHandle:MoreToRead()
-      cLine := theHandle:ReadLine()
-   ELSE
-      FSEEK( theHandle:nHan, 0, 0 )
-      theHandle:lEOF := .f.
-
-      cLine := theHandle:ReadLine()
-   ENDIF
-RETURN cLine
-
-STATIC FUNCTION ReadLN( leof )
-
-   LOCAL cBuffer := ""
-
-   cBuffer := FT_FREADLN()
-   FT_FSKIP( 1 )
-   lEof := FT_FEOF()
-
-RETURN cBuffer
-//  End of ReadLN
-
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
-*+
-*+    STATIC FUNCTION FT_FReadLn()
-*+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
-*+
-STATIC FUNCTION FT_FReadLn()
-
-   LOCAL cBuffer := ''
-
-   cBuffer := FReadLn( theHandle:nHan, @cBuffer )
-
-RETURN cBuffer
-
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
-*+
-*+    STATIC FUNCTION FT_FGotop()
-*+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
-*+
-STATIC FUNCTION FT_FGotop()
-
-   FSEEK( theHandle:nHan, 0, 0 )
-
-RETURN        NIL
-
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
-*+
-*+    STATIC FUNCTION ft_fskip()
-*+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
-*+
-STATIC FUNCTION ft_fskip( )
-
-RETURN nil
-
-
+RETURN theHandle
+Static function Freadln(nh,cb,nmaxline)
+local cline,nsavepos,neol,nnumread
+cline:=space(nmaxline)
+cb:=''
+nsavepos:=FTELL(nh)
+nnumread:=fread(nh,@cline,nmaxline)
+if (neol:= at(CRLF,substr(cline,1,nnumread)))==0
+    cb:=cline
+else
+    cb:=substr(cline,1,neol-1)
+    fseek(nh,nsavepos+neol+1,FS_SET)
+endif
+return nnumread != 0
