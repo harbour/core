@@ -74,6 +74,8 @@
 #include "hbinkey.ch"
 #include "inkey.ch"
 
+extern double   hb_dateSeconds( void );
+
 #include <time.h>
 #if defined( HB_OS_UNIX )
   #include <sys/times.h>
@@ -197,36 +199,43 @@ int hb_inkeyNext( HB_inkey_enum event_mask )      /* Return the next key without
    return hb_inkeyTranslate( key, event_mask );
 }
 
+
 void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour buffer */
 {
+   static double dbLast;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_inkeyPoll()"));
 
-   if( hb_set.HB_SET_TYPEAHEAD || s_inkeyPoll )
+   if( dbLast != hb_dateSeconds() )
    {
-      int ch = hb_gtReadKey( s_eventmask );
-
-      switch( ch )
+      if( hb_set.HB_SET_TYPEAHEAD || s_inkeyPoll )
       {
-         case HB_BREAK_FLAG:        /* Check for Ctrl+Break */
-            if( !hb_set.HB_SET_CANCEL ) ch = 0; /* Ignore if cancel disabled */
-         case HB_K_ALT_C:           /* Check for extended Alt+C */
-         case K_ALT_C:              /* Check for normal Alt+C */
-            if( hb_set.HB_SET_CANCEL )
-            {
-               ch = 3;              /* Pretend it's a Ctrl+C */
-               hb_vmRequestCancel();/* Request cancellation */
-            }
-            break;
-         case HB_K_ALT_D:           /* Check for extended Alt+D */
-         case K_ALT_D:              /* Check for normal Alt+D */
-            if( hb_set.HB_SET_DEBUG )
-            {
-               ch = 0;              /* Make the keystroke disappear */
-               hb_vmRequestDebug(); /* Request the debugger */
-            }
-      }
+         int ch = hb_gt_ReadKey( s_eventmask );
 
-      hb_inkeyPut( ch );
+         switch( ch )
+         {
+            case HB_BREAK_FLAG:        /* Check for Ctrl+Break */
+               if( !hb_set.HB_SET_CANCEL ) ch = 0; /* Ignore if cancel disabled */
+            case HB_K_ALT_C:           /* Check for extended Alt+C */
+            case K_ALT_C:              /* Check for normal Alt+C */
+               if( hb_set.HB_SET_CANCEL )
+               {
+                  ch = 3;              /* Pretend it's a Ctrl+C */
+                  hb_vmRequestCancel();/* Request cancellation */
+               }
+               break;
+            case HB_K_ALT_D:           /* Check for extended Alt+D */
+            case K_ALT_D:              /* Check for normal Alt+D */
+               if( hb_set.HB_SET_DEBUG )
+               {
+                  ch = 0;              /* Make the keystroke disappear */
+                  hb_vmRequestDebug(); /* Request the debugger */
+               }
+         }
+
+         hb_inkeyPut( ch );
+      }
+      dbLast = hb_dateSeconds();
    }
 }
 

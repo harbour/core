@@ -8,6 +8,13 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-10-20 22:50 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
+  * source/rtl/inkey.c
+    ! reduce keyboard polling to <= once per tick.
+    ! Screen updating flies.
+  * source/rtl/philes.c
+    ! comparison to TRUE is not consistant with bool type in FREAD
+
 2002-10-20 16:18 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
   * source/rdd/dbfntx/dbfntx1.c
     ! removed unused pLastPages
