@@ -1,3 +1,12 @@
+19990906-11:25 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/rtl/tbrowse.prg
+      * Fixes on Stabilize() method
+   * source/rtl/tbcolumn.prg
+      * Small fix on New() method
+   * source/debug/debugger.prg
+      * First outline for monitoring variables
+        (it is left open for testing purposing)
+
 19990906-01:27 EDT Paul Tucker <ptucker@sympatico.ca>
   * source/rtl/set.c
     * added a cast in open_handle to fsRead()
@@ -22,7 +31,7 @@
     % Uses hb_itemPutN?Len() instead of hb_itemSetNLen(), so it's a bit
       faster now.
   * source/rtl/errorapi.c
-    % Now uses hb_itemDo() instead of the Eval API. Eight function calls 
+    % Now uses hb_itemDo() instead of the Eval API. Eight function calls
       substituted with a single one.
   * source/rtl/extend.c
     + hb_retn?len() functions now make simple calls to hb_itemPutN?Len()
@@ -103,11 +112,11 @@
       would generated a bunch of compiler warnings, so I didn't add it.
     ! hb_itemGetDS() made compliant with the Clipper NG, it now terminates
       the date with a zero character, so the buffer needs to be 9 characters
-      long. Although Clipper itself is buggy in this respect and doesn't 
-      append a trailing zero, even the example in the NG is buggy. 
+      long. Although Clipper itself is buggy in this respect and doesn't
+      append a trailing zero, even the example in the NG is buggy.
       NOTE added about this.
   * source/vm/hvm.c
-    * LEN(), EMPTY(), VALTYPE(), hb_stackDispLocal() (almost) now use no 
+    * LEN(), EMPTY(), VALTYPE(), hb_stackDispLocal() (almost) now use no
       internals, or uses Item API instead of Extend API, since it's faster
       in their case.
   * source/rtl/arrays.c
@@ -126,12 +135,12 @@
     * hb_ret*() functions now uses Item API calls, this way a huge amount
       or sensitive redundant code has been eliminated. Since these functions
       are always called only once in Harbour callable function, the speed hit
-      should not be noticable (There's one more NULL check and a function 
+      should not be noticable (There's one more NULL check and a function
       call). hb_retn?len() functions were not converted. We could make these
       functions inline to speed it up. Notice that the size of extend.c has
       been reduced from 23K to 17K.
-    ; hb_par*() functions also have many redundant code, but it would be more 
-      of a speed hit to convert them, since these are generally called several 
+    ; hb_par*() functions also have many redundant code, but it would be more
+      of a speed hit to convert them, since these are generally called several
       times in a function, and two additional if()s would be also executed.
   * source/compiler/harbour.y
     + The parameter count checking now shows the expected *range* in the
@@ -155,7 +164,7 @@
       hb_arrayGetDouble().
     % Array index validation removed from hb_par*() functions, since the
       called Array API is doing this.
-    + hb_stor*() function group now using Item API instead of duplicating 
+    + hb_stor*() function group now using Item API instead of duplicating
       the same code. These function looks much simpler now.
     ! hb_stor*() functions were suboptimal in handling the -1 parameter, they
       were assigning a new value to it, then checking IS_BYREF()/IS_ARRAY().
@@ -164,10 +173,10 @@
   * source/rtl/array.c
     include/extend.h
     + Missing prototypes added to extend.h
-    ! hb_arrayAdd() will not throw a runtime error anymore, instead it 
+    ! hb_arrayAdd() will not throw a runtime error anymore, instead it
       returns a BOOL to signal error. Error launching moved to AADD().
     ! hb_arrayClone() will not throw error. ACLONE() is more compatible now.
-    ! hb_arrayCopy() will not throw error, but return BOOL. 
+    ! hb_arrayCopy() will not throw error, but return BOOL.
       ACOPY() is more compatible now.
     ! hb_arrayRelease(), hb_arrayEval() will not throw error. They will return
       BOOL.
@@ -175,8 +184,8 @@
       error anymore.
     ! hb_arrayGetType() will return WORD instead of int.
     ! hb_arrayIns(), hb_arrayDel() will return BOOL, and not throw an error.
-    ! hb_arrayFill() will not throw an error, but will return BOOL, AFILL() 
-      will check if the second parameter is not NIL. 
+    ! hb_arrayFill() will not throw an error, but will return BOOL, AFILL()
+      will check if the second parameter is not NIL.
     ! hb_arrayAdd(), hb_arrayLast() checks if the passed item is an array, like
       the other hb_array*() functions.
     + hb_arrayNew() now returns BOOL. Actually a constant TRUE right now.
@@ -184,7 +193,7 @@
       was not an array.
     ! hb_arraySize() now return BOOL.
     ! hb_arrayClone() fixed bug which caused a GPF. (Thanks Paul!)
-      This was introduced around yesterday. 
+      This was introduced around yesterday.
     ! hb_arrayLen() will not throw a runtime error anymore.
     ! hb_arrayGet*()/hb_arraySet() will no longer throw runtime errors.
     + hb_arrayGet(), hb_arraySet() now return BOOL.
