@@ -480,7 +480,7 @@ FUNCTION ProcessRtf()
 
                      IF !lBlankLine
                         //ortf:endpar()
-                        //                                  oRtf:WritePar('') //:endpar()
+                        oRtf:WritePar('') //:endpar()
                         oRtf:WriteParBold( " Examples" )
                      ENDIF
 
@@ -490,7 +490,7 @@ FUNCTION ProcessRtf()
                ELSEIF AT( cTest, cBuffer ) > 0
                   IF GetItem( cBuffer, nCurdoc )
                      IF !lBlankLine
-                        //                                      oRtf:WritePar('') //:endpar()
+                                                              oRtf:WritePar('') //:endpar()
                         oRtf:WriteParBold( " Tests" )
                         oRtf:WritePar( '' )                 //:endpar()
                      ENDIF
@@ -1050,7 +1050,7 @@ FUNCTION GenRtfTable( oRtf )
    NEXT
    ASORT( aLensFItem,,, { | x, y | x > y } )
 
-   oRtf:WritePar( "" )
+//   oRtf:WritePar( "" )
    //  nMax2:=checkcar(aTable,1)+1
    nMax2 := alensfitem[ 1 ]
    nPos  := maxrtfelem( afitable )
@@ -1061,7 +1061,7 @@ FUNCTION GenRtfTable( oRtf )
       ortf:WriteParFixed( IF( AT( "|", afiTable[ x ] ) > 0, STRTRAN( afiTable[ x ], "|", " " ), afiTable[ x ] ), '\fi-426\li426' )
    NEXT
    oRtf:WriteParBox( "       " + REPL( CHR( 196 ), 80 ) )
-   oRtf:WritePar( "" )
+//   oRtf:WritePar( "" )
    afiTable := {}
 
 RETURN Nil

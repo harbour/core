@@ -79,31 +79,29 @@
  *      SET SCOREBOARD command or SET() function appropriately toggled.
  *
  *      NOTE       GET functions/formatting rules:
- *      
- *      @A         Allows only alphabetic characters.
- *      @B         Numbers will be left justified
- *      @C         All positive numbers will be followes by CR.
- *      @D         All dates will be in the SET DATE format.
- *      @E         Dates will be in British formal: numbers in European
- *                 format.
- *      @K         Allows a suggested value to be seen within the GET
- *                 area but clears It if any noncu sor key is pressed when
- *                 the cursor is in the first Position in the GET area.
- *      @R         Nontemplate characters will be inserted.
- *      @S<nSize>  Allows horizontal scrolling of a field or variable that
- *                 is <nSize> characters wide.
- *      @X         All negative numbers will be followed by DB
- *      @Z         Displays zero values as blanks.
- *      
- *      @!         Forces uppercase lettering
- *      
- *      @(         Displays negative numbers in parentheses with leading
- *                 spaces.
- *      @)         Displays negative numbers in parentheses without leading
- *                 spaces.
- *      
+
+ *      <table>
+ *      @A          Allows only alphabetic characters.
+ *      @B          Numbers will be left justified
+ *      @C          All positive numbers will be followes by CR.
+ *      @D          All dates will be in the SET DATE format.
+ *      @E          Dates will be in British formal: numbers in European format.
+ *      @K          Allows a suggested value to be seen within the GET
+ *                  area but clears It if any noncu sor key is pressed when
+ *                  the cursor is in the first Position in the GET area.
+ *      @R          Nontemplate characters will be inserted.
+ *      @S<nSize>   Allows horizontal scrolling of a field or variable that
+ *                  is <nSize> characters wide.
+ *      @X          All negative numbers will be followed by DB
+ *      @Z          Displays zero values as blanks.      
+ *      @!          Forces uppercase lettering     
+ *      @(          Displays negative numbers in parentheses with leading spaces.
+ *      @)          Displays negative numbers in parentheses without leading spaces.
+ *      </table>
+
  *      GET templates/formatting rules:
- *      
+
+ *      <table>    
  *      A   Only alphabetic characters allowed.
  *      N   Only alphabetic and numeric characters allowed
  *      X   Any character allowed.
@@ -118,12 +116,11 @@
  *          for numeric data types.
  *      .   Position of decimal point.
  *      ,   Position of comma.
- *      
+ *      </table>
  *      Format PICTURE functions may he grouped together as well as used
  *      in Conjunction with a PICTURE templates;however, a blank space must
  *      be included in the PICTURE string if there are both functions and
  *      templates.
-
  *  $EXAMPLES$
  *      Function Main()
  *      Local cVar:=Space(50)
@@ -147,6 +144,7 @@
  *      @...SAY,READ,TRANSFORM()
  *  $END$
  */
+
 /*  $DOC$
  *  $COMMANDNAME$
  *      @...SAY

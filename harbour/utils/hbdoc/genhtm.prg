@@ -160,6 +160,8 @@ FUNCTION ProcessWww()
    LOCAL cData          := DELIM + "DATA" + DELIM
    LOCAL cMethod        := DELIM + 'METHOD' + DELIM
    LOCAL cClassDoc      := DELIM + "CLASSDOC" + DELIM
+   Local aGauge,agauge1
+   LOCAL nDocs:=0
    //
    //  Entry Point
    //
@@ -176,11 +178,20 @@ FUNCTION ProcessWww()
 
       nCommentLen := IIF( AT( ".ASM", UPPER( aDirList[ i, F_NAME ] ) ) > 0, 2, 4 )
       nReadHandle := FT_FUSE( aDirList[ i, F_NAME ] )
+      #ifdef GAUGE
+      if i == 1
+        aGauge1:= Gauge():New( 5, 5, 7, MaxCol() - 5)
+       Endif
+     #endif
+     #ifdef GAUGE
+     aGauge1:Update(i/nFiles, "Current file: "+PAD(aDirList[ i, F_NAME ], 47))
+     #else
+
       @ INFILELINE, 33 CLEAR TO INFILELINE, MAXCOL()
       @ INFILELINE, 33 SAY PAD( aDirList[ i, F_NAME ], 47 )         
       @ MODULELINE, 33 CLEAR TO LINELINE, MAXCOL()
       @ LINELINE, 27   SAY "Line:"                                  
-
+      #endif  
       nLineCnt := 0
 
       IF nReadHandle < 0
@@ -193,7 +204,17 @@ FUNCTION ProcessWww()
       lDoc      := .F.
       lClassDoc := .F.
       //  First find the author
-      ReadFromTop( nReadHandle )
+      #ifdef GAUGE
+      if nDocs == 0
+
+        aGauge:= Gauge():New( 8, 5, 10, MaxCol() - 5)
+
+       Endif
+       ReadFromTop( nReadHandle )
+       nDocs:=CountDocs(aCurDoc)
+      #else
+            ReadFromTop( nReadHandle )
+      #endif  
       DO WHILE .NOT. lEof
 
          //  Read a line
@@ -201,6 +222,7 @@ FUNCTION ProcessWww()
          cBuffer := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
          cBuffer := STRTRAN( cBuffer, CHR( 10 ), '' )
          nLineCnt ++
+
          IF nLineCnt % 10 = 0
             @ LINELINE, 33 SAY STR( nLineCnt, 5, 0 )         
          ENDIF
@@ -231,6 +253,7 @@ FUNCTION ProcessWww()
 
          ELSEIF AT( cEnd, cBuffer ) > 0
                      nCurDoc ++
+/*                     nDocs:=0*/
             IF .NOT. lDoc .AND. !lClassDoc
 //               WRITE_ERROR( cEnd + " encountered outside of Doc area at line" ;
   //                          + STR( nLinecnt, 5, 0 ),,,, aDirList[ i, F_NAME ] )
@@ -289,10 +312,14 @@ FUNCTION ProcessWww()
                cBuffer := ReadLN( @lEof )
                nLineCnt ++
                //  Save the function name
-               cFuncName :=  ALLTRIM( SUBSTR( cBuffer, nCommentLen ) ) 
+               cFuncName :=  ALLTRIM( SUBSTR( cBuffer, nCommentLen ) )
+               #ifdef GAUGE
+                  aGauge:update(nCurdoc/nDocs,"Current Doc:"+cFuncName )
+#else
+
                @ MODULELINE, 33 CLEAR TO MODULELINE, MAXCOL()
                @ MODULELINE, 33 SAY cFuncName         
-
+#endif
                nMode := D_NORMAL
 
                //  Open a new file
@@ -311,7 +338,7 @@ FUNCTION ProcessWww()
                FOR j := 1 TO LEN( cTemp )
                   cChar := SUBSTR( cTemp, j, 1 )
                   IF ( cChar >= "0" .AND. cChar <= "9" ) .OR. ;
-                       ( cChar >= "A" .AND. cChar <= "Z" ) .OR. cChar = "_" .or. cchar ="@"
+                       ( cChar >= "A" .AND. cChar <= "Z" ) .OR. cChar = "_" 
                      cFileName += cChar
                   ENDIF
                NEXT
@@ -682,6 +709,7 @@ end
       //  Close down the input file
 
       FT_FUSE()
+        nDocs:=0
       IF lClassDoc
          oHtm:Close()
       ENDIF
@@ -1336,5 +1364,8 @@ STATIC FUNCTION GetItem( cItem, nCurdoc )
 
    ENDIF
 RETURN lReturn
-
+#ifdef GAUGE
+function CountDocs(aCurDoc)
+return len(aCurdoc)
+#endif
 *+ EOF: GENNG.PRG

@@ -11,7 +11,9 @@
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
  *    Documentation for: FOPEN(), FCLOSE(), FWRITE(), FSEEK(), FREAD(), FILE(),
- *                       FREADSTR(), FRENAME(), FERROR(), RENAME, ERASE, CURDIR()
+ *                       FREADSTR(), FRENAME(), FERROR(), RENAME, ERASE, CURDIR(),
+ *                       DIRMAKE(),DIRCHANGE(),ISDISK(),DIRREMOVE(),DISKCHANGE(),
+ *                       DIRCHANGE()
  *
  * Copyright 2000 David G. Holm <Harbour@SpaceMoose.com>
  *    Documentation for: HB_FEOF()
@@ -24,7 +26,7 @@
  *  $FUNCNAME$
  *      FOPEN()
  *  $CATEGORY$
- *      Low level
+ *      Low Level
  *  $ONELINER$
  *      Open a file.
  *  $SYNTAX$
@@ -82,7 +84,7 @@
  *  $FUNCNAME$
  *      FCREATE()
  *  $CATEGORY$
- *      Low level
+ *      Low Level
  *  $ONELINER$
  *      Creates a file.
  *  $SYNTAX$
@@ -138,7 +140,7 @@
  *  $FUNCNAME$
  *      FREAD()
  *  $CATEGORY$
- *      Low level
+ *      Low Level
  *  $ONELINER$
  *      Reads a specified number of bytes from a file.
  *  $SYNTAX$
@@ -198,7 +200,7 @@
  *  $FUNCNAME$
  *      FWRITE()
  *  $CATEGORY$
- *      Low level
+ *      Low Level
  *  $ONELINER$
  *      Writes characters to a file.
  *  $SYNTAX$
@@ -252,7 +254,7 @@
  *  $FUNCNAME$
  *      FERROR()
  *  $CATEGORY$
- *      Low level
+ *      Low Level
  *  $ONELINER$
  *      Reports the error status of low-level file functions
  *  $SYNTAX$
@@ -311,7 +313,7 @@
  *  $FUNCNAME$
  *     FCLOSE()
  *  $CATEGORY$
- *     Low level
+ *     Low Level
  *  $ONELINER$
  *     Closes an open file
  *  $SYNTAX$
@@ -345,7 +347,7 @@
  *  $FUNCNAME$
  *      FERASE()
  *  $CATEGORY$
- *      Low level
+ *      Low Level
  *  $ONELINER$
  *      Erase a file from disk
  *  $SYNTAX$
@@ -445,7 +447,7 @@
  *  $FUNCNAME$
  *      FSEEK()
  *  $CATEGORY$
- *      Low level
+ *      Low Level
  *  $ONELINER$
  *      Positions the file pointer in a file.
  *  $SYNTAX$
@@ -561,7 +563,7 @@
  *  $FUNCNAME$
  *      FREADSTR()
  *  $CATEGORY$
- *      Low level
+ *      Low Level
  *  $ONELINER$
  *      Reads a string from a file.
  *  $SYNTAX$
@@ -908,7 +910,7 @@
  *  $FUNCNAME$
  *      HB_FEOF()
  *  $CATEGORY$
- *      Low level
+ *      Low Level
  *  $ONELINER$
  *      Check for end-of-file.
  *  $SYNTAX$
@@ -924,7 +926,6 @@
  *      function returns .T. and sets the value returned by FERROR() to -1
  *      (FS_ERROR) or a C-compiler dependent errno value (EBADF or EINVAL).
  *  $EXAMPLES$
-
  *      nH:=FOPEN('FILE.TXT')
  *      ? FREADSTR(nH,80)
  *      IF HB_FEOF(nH)
@@ -932,7 +933,6 @@
  *      ELSE
  *         ? FREADSTR(nH,80)
  *      ENDIF
- *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -941,5 +941,157 @@
  *      Library is rtl
  *  $SEEALSO$
  *      FERROR()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      DIRREMOVE()
+ *  $CATEGORY$
+ *      Low Level
+ *  $ONELINER$
+ *      Attempt to remove an directory
+ *  $SYNTAX$
+ *      DIRCHANGE( <cDirectory> ) --> nError
+ *  $ARGUMENTS$
+ *      <cDirectory>  The name of the directory you want to remove.
+ *  $RETURNS$
+ *      <nError> 0 if directory was successfully removed, otherwise 
+ *      the number of the last error. 
+ *  $DESCRIPTION$
+ *      This function attempt to remove the specified directory in <cDirectory>
+ *      If this function fail, the it will return the last OS error code number.
+ *      See FERROR() function for the description of the error.
+ *  $EXAMPLES$
+ *      cDir:= ".\Backup"
+ *      if (DIRREMOVE(cDir)==0)
+ *          ? "Remove of directory",cDir, "was successfull"
+ *      endif
+ *  $TESTS$
+ *      See examples
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is CA Clipper 5.3 compliant
+ *  $PLATFORMS$
+ *      All
+ *  $FILES$
+ *      Library is rtl
+ *  $SEEALSO$
+ *      MAKEDIR(),DIRCHANGE(),ISDISK(),DISKCHANGE(),DISKNAME(),FERROR()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      DIRCHANGE()
+ *  $CATEGORY$
+ *      Low Level
+ *  $ONELINER$
+ *      Changes the directory
+ *  $SYNTAX$
+ *      DIRCHANGE( <cDirectory> ) --> nError
+ *  $ARGUMENTS$
+ *      <cDirectory>  The name of the directory you want do change into.
+ *  $RETURNS$
+ *      <nError> 0 if directory was successfully changed, otherwise 
+ *      the number of the last error. 
+ *  $DESCRIPTION$
+ *      This function attempt to change the current directory to the one
+ *      specidied in <cDirectory>.If this function fail, the it will return
+ *      the last OS error code number.See FERROR() function for the
+ *      description of the error.
+ *  $EXAMPLES$
+ *      if (DIRCHANGE("\temp")==0)
+ *          ? "Change to diretory was successfull"
+ *      endif
+ *  $TESTS$
+ *      See examples
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is CA Clipper 5.3 compliant
+ *  $PLATFORMS$
+ *      All
+ *  $FILES$
+ *      Library is rtl
+ *  $SEEALSO$
+ *      MAKEDIR(),DIRREMOVE(),ISDISK(),DISKCHANGE(),DISKNAME(),FERROR()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      MAKEDIR()
+ *  $CATEGORY$
+ *      Low Level
+ *  $ONELINER$
+ *      Create a new directory
+ *  $SYNTAX$
+ *      MAKEDIR( <cDirectory> ) --> nError
+ *  $ARGUMENTS$
+ *      <cDirectory>  The name of the directory you want to create.
+ *  $RETURNS$
+ *      <nError> 0 if directory was successfully changed, otherwise
+ *      the number of the last error. 
+ *  $DESCRIPTION$
+ *      This function attempt to create a new directory with the name contained
+ *      in <cDirectory>.If this function fail, the it will return the last OS
+ *      error code number.See FERROR() function for the description of the
+ *      error
+ *  $EXAMPLES$
+ *      cDir:= "Temp"
+ *      If (MAKEDIR( cDir)==0)
+ *          ? "Directory ",cDir," successfully created
+ *      Endif
+ *  $TESTS$
+ *      See examples
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is CA Clipper 5.3 compliant
+ *  $PLATFORMS$
+ *      All
+ *  $FILES$
+ *      Library is rtl
+ *  $SEEALSO$
+ *      DIRCHANGE(),DIRREMOVE(),ISDISK(),DISKCHANGE(),DISKNAME(),FERROR()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      ISDISK()
+ *  $CATEGORY$
+ *      Low Level
+ *  $ONELINER$
+ *      Verify if a drive is ready
+ *  $SYNTAX$
+ *      ISDISK( <cDrive> ) --> lSuccess
+ *  $ARGUMENTS$
+ *      <cDrive>  An valid Drive letter
+ *  $RETURNS$
+ *      <lSuccess>  .T. is the drive is ready, otherwise .F.
+ *  $DESCRIPTION$
+ *      This function attempts to access a drive. If the access to the drive
+ *      was successfull, it will return true (.T.), otherwise false(.F.).This
+ *      function is usefull for backup function, so you can determine if the
+ *      drive that will recieve the backup data is ready or not.
+ *  $EXAMPLES$
+ *      IF ISDISK("A")
+ *          ? "Drive is ready "
+ *      Endif
+ *  $TESTS$
+ *      See Examples
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is CA Clipper 5.3 compliant
+ *  $PLATFORMS$
+ *      All
+ *  $FILES$
+ *      Library is rtl
+ *  $SEEALSO$
+ *      DIRCHANGE(),MAKEDIR(),DIRREMOVE(),DISKCHANGE(),DISKNAME()
  *  $END$
  */

@@ -255,9 +255,6 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
    CLEAR SCREEN
    SET CURSOR OFF
 
-   if lNgi
-   cCompiler := fill_Link_info( cLinkName )
-   endif        
    //  See if ngi subdirectory is present
    IF lNorton
       IF EMPTY( DIRECTORY( "hdf.*", "D" ) )
@@ -291,6 +288,10 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
          FT_MKDIR( "ipf" )
       ENDIF
    ENDIF
+   if lNgi .or. lRtf
+   cCompiler := fill_Link_info( cLinkName )
+   endif        
+
    IF cAtFile = NIL                     // use all files in directory
 
       //  Loop through each of the types of files
@@ -497,6 +498,8 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
       oHtm1:WriteLink( "http://www.gnu.org/copyleft/gpl.html", "GNU License" )
       oHtm1:WriteLink( "compileroptions.htm", "Compiler Options" )
       oHtm1:WriteLink( "harbourextension.htm", "Harbour Extensions" )
+      oHtm1:WriteLink( "thegarbagecollector.htm", "The Garbage Collector" )
+      oHtm1:WriteLink( "theidlestates.htm", "The Idle States" )
       oHtm1:WriteText( "</UL>" )
       oHtm1:WriteText( "<H2>Alphabetical list of functions by Categorie</H2>" )
       ohtm1:writetext('<ul>')
@@ -590,6 +593,19 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
           oHtm:AddParam("Local","harbourextensions.htm")
           oHtm:EndObject()
           OHTM:WriteChmLink('harbourextensions.htm',"Harbour Extensions")
+          oHtm:ListItem()
+          oHtm:AddObject("text/sitemap")
+          oHtm:AddParam("Name","The Garbage Collector")
+          oHtm:AddParam("Local","thegarbagecollector.htm")
+          oHtm:EndObject()
+          oHtm:WriteChmLink( "thegarbagecollector.htm", "The Garbage Collector" )
+          oHtm:ListItem()
+          oHtm:AddObject("text/sitemap")
+          oHtm:AddParam("Name","The Idle States")
+          oHtm:AddParam("Local","theidlestates.htm")
+          oHtm:EndObject()
+          oHtm:WriteChmLink( "theidlestates.htm", "The Idle States" )
+
           endif
       oHtm:WriteText( "</UL>" )
       ohtm:ListItem()

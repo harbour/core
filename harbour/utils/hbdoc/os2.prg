@@ -142,21 +142,15 @@ METHOD WritePar2( cBuffer,cTag,cStyle ) CLASS TOs2
    LOCAL nPos,cLine:=''
    Default cStyle to "Default"
 if at("-",cBuffer)>0
-?cBuffer
+
 Endif
       cBuffer   := STRTRAN( cBuffer, '<b>', ':hp2.' )
       cBuffer   := STRTRAN( cBuffer, '</b>', ':ehp2.' )
       cBuffer   := STRTRAN( cBuffer, '<par>', '' )
       cBuffer   := STRTRAN( cBuffer, '</par>', '' )
       cBuffer   := self:DostoOs2Text(cBuffer)
-if at("&minus.",cBuffer)>0
-    ?cBuffer
-Endif
 
       aLines:=FormatStringBuffer(cBuffer)
-if at("&minus.",cBuffer)>0
-    ?cBuffer
-Endif
 
       For nPos:=1 to LEN(aLines)
         cLine:=aLines[nPos]
@@ -431,7 +425,7 @@ Static FUNCTION FormatStringBuffer(cBuffer)
 Local nLen,nPos,aLine:={}
 Local cLine:=''
 nLen:=Len(cBuffer)
-? nLen
+
 WHILE nLen>230
     If nLen>230
         cLine:=Substr(cBuffer,1,230)
@@ -442,7 +436,7 @@ WHILE nLen>230
             AADD(aLine,alltrim(cLine))
             nLen:=Len(cBuffer)
         Endif
-       if at('&minus.',cLine)>0
+       if at('&minus.',cLine)>0 .or. at('&eq.',cLine)>0
         nPos:=RAT(".",cLine)
         IF nPos>0
             cLine:=Substr(cBuffer,1,nPos)
