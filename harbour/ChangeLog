@@ -506,11 +506,7 @@ NOTE: All sources HAVE TO be recompiled!!!
 
    * ngdoc/ft_helpc.prg
      ! Renamed to lower case for Linux compatibility.
-<<<<<<< ChangeLog
-     + Added CVS $Id$ header.
-=======
-     + Added CVS $Id$ header.
->>>>>>> 1.1537
+     + Added CVS Id
 
    * ngdoc/ha.lnk
      ! Renamed to lower case for Linux compatibility.
@@ -525,11 +521,7 @@ NOTE: All sources HAVE TO be recompiled!!!
 
    * source/tools/rtf.prg
      ! Renamed to lower case for Linux compatibility.
-<<<<<<< ChangeLog
-     + Added CVS $Id$ header.
-=======
-     + Added CVS $Id$ header.
->>>>>>> 1.1537
+     + Added CVS Id
 
 20000109-14:25 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
