@@ -81,6 +81,7 @@ static void hb_out( WORD wParam, void_func_int * hb_out_func )
            break;
 
       case IT_NIL:
+           hb_out_func( "NIL", 3 );
            break;
 
       case IT_LOGICAL:
@@ -106,6 +107,13 @@ static void hb_outstd( char * fpStr, WORD uiLen )
    char * fpPtr = fpStr;
    while( uiCount-- )
       printf( "%c", *fpPtr++ );
+#ifdef USE_GTAPI
+   if( isatty( fileno( stdout ) ) )
+   {
+      dev_col += uiLen;
+      _gtSetPos( dev_row, dev_col );
+   }
+#endif;
 }
 
 /* Output an item to STDERR */
@@ -115,6 +123,13 @@ static void hb_outerr( char * fpStr, WORD uiLen )
    char * fpPtr = fpStr;
    while( uiCount-- )
       fprintf( stderr, "%c", *fpPtr++ );
+#ifdef USE_GTAPI
+   if( isatty( fileno( stdout ) ) )
+   {
+      dev_col += uiLen;
+      _gtSetPos( dev_row, dev_col );
+   }
+#endif;
 }
 
 /* Output an item to the screen and/or printer and/or alternate */
@@ -125,7 +140,10 @@ static void hb_altout( char * fpStr, WORD uiLen )
    #ifdef USE_GTAPI
       _gtWriteCon( fpStr, uiLen );
       if( stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) || hb_set_printhan < 0 )
+      {
          _gtGetPos( &dev_row, &dev_col );
+         _gtSetPos( dev_row, dev_col );
+      }
    #else
       WORD uiCount;
       for( uiCount = 0; uiCount < uiLen; uiCount++ )
@@ -155,7 +173,10 @@ static void hb_devout( char * fpStr, WORD uiLen )
       /* Otherwise, display to console */
       _gtWrite( fpStr, uiLen );
       if( stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) || hb_set_printhan < 0 )
+      {
          _gtGetPos( &dev_row, &dev_col );
+         _gtSetPos( dev_row, dev_col );
+      }
    #else
       WORD uiCount;
       for( uiCount = 0; uiCount < uiLen; uiCount++ )

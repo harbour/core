@@ -1,3 +1,10 @@
+19990528-14:30 EST David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/console.c
+    - NIL ouptuts "NIL", just like it used to before I removed it after
+      running some tests with Clipper, which turned out to be flawed.
+    - Improved link between GT API screen position and stdout/stderr
+      screen position.
+
 19990528-23:15 WIB Andi Jahja <andij@aonlippo.co.id>
   * source/tools/hb_f.c
     - add hb_fselect
