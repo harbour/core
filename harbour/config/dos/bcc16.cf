@@ -42,7 +42,7 @@ $(foreach file, $(LINKLIBS), $(link_file))
 endef
 
 LD = bcc
-LDFLAGS = -O2 -mh
+LDFLAGS = -O2 -mh $(L_USR)
 ifeq ($(HB_LIB_COMPILE),)
 LINKLIBS = $(foreach lib, $(LIBS), $(TOP)$(ROOT)source/$(lib)/$(ARCH)/$(lib)$(LIB_EXT))
 ifeq ($(findstring rdd,$(LIBS)),rdd)

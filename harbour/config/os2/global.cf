@@ -20,7 +20,13 @@ ARCH_DIR = $(ARCH)
 OS2_ARCH_DIR = $(subst /,\,$(ARCH))
 MK = $(subst /,\,$(subst \~,~,$(MAKE)))
 
-RM = del /n
+ifeq ($(OS2_SHELL),)
+   # Not running on OS/2 (which comes in handy for 'make -r clean')
+   RM = del /q
+else
+   # Running on OS/2
+   RM = del /n
+endif
 RD = rmdir
 CP = copy
 MV = move

@@ -40,7 +40,11 @@ else
         ifeq ($(HB_COMPILER),djgpp)
           #Use standard dos path, which is already set up.
         else
-          COMSPEC := $(subst \,/,$(COMSPEC))
+          ifeq ($(HB_COMPILER),emx)
+            #Use standard dos path, which is already set up.
+          else
+            COMSPEC := $(subst \,/,$(COMSPEC))
+          endif
         endif
       endif
     endif
