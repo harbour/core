@@ -99,7 +99,7 @@
          The latter is mainly an issue in DOS, where the host OS can be OS/2
          WinNT/2K, Win3x, Win9x, DOSEMU, Desqview, etc. [vszakats] */
 
-#define HB_OS_BUFFER_LEN 80
+#define HB_OS_BUFFER_LEN 128
 
 char * hb_os( void )
 {

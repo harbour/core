@@ -2,13 +2,14 @@
 
    * source/rtl/environ.c
    * include/hbapi.h
-     % Reorganized. Now the motto is that each target platform should first 
-       detect the version of the native platform version, then if applicable
-       (only in DOS currently) detect the host OS.
+     % OS() function reorganized. Now the motto is that each target platform 
+       should first detect the version of the native platform version, then if 
+       applicable (only in DOS currently) detect the host OS.
        This way the source is *far* more clean, and consistent between
        platforms and compilers.
      + Added WinNT detection for the DOS platform.
      * #ifdef mess removed.
+     % Win32 version detection optimized.
      + C callable version added (hb_os())
      * Some variables renamed.
      ; Tested with BCC55, BCC31, CYGWIN, MINGW32, MSC8 (compile only),
