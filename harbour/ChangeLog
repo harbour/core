@@ -1,3 +1,7 @@
+20000217-10:08 GMT+3 Alexander Kresin
+   * source/pp/hbpplib.c
+     * added hb_comp_files declaration to fix error while hbrun compiling
+
 20000217-00:39 GMT+1 Victor Szakats <info@szelvesz.hu>
    * source/rtl/Makefile
      + typefile.prg
