@@ -8,10 +8,16 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
-2002-11-04 12:20 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
-  * source/rtl/gtwin/gtwin.c
-    * reduced calls to gt_ScreenWidth
-    + missed include Conio.h for msvc
+2002-11-04 15:18 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
+  * makefile.vc
+    * no more recursive nmake calls
+  * makefile.nt
+    * corrected on batch mode call
+  * make_vc.bat
+    * if building Harbour under NT, use the alternate makefile.nt
+    * for faster builds.
+    * if you would prefer not to use batch mode, 
+    *  run make_vc /y (just like nmake)
 
 2002-11-03 20:28 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rdd/dbcmd.c

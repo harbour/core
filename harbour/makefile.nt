@@ -170,6 +170,7 @@ HBRUN_EXE    = $(BIN_DIR)\hbrun.exe
 HBTEST_EXE   = $(BIN_DIR)\hbtest.exe
 HBDOC_EXE    = $(BIN_DIR)\hbdoc.exe
 HBMAKE_EXE   = $(BIN_DIR)\hbmake.exe
+
 #
 # GT driver list
 #
@@ -198,7 +199,7 @@ HB_GT_LIB = $(LIB_DIR)\$(HB_GT_LIB).lib
 
 # override builtin
 
-.c.obj:
+.c.obj::
    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 
 #
@@ -477,7 +478,7 @@ LANG_LIB_OBJS = \
 # CODEPAGE.LIB rules
 #
 
-{$(CODEPAGE_DIR)}.c{$(OBJ_DIR)}.obj:
+{$(CODEPAGE_DIR)}.c{$(OBJ_DIR)}.obj::
    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\  $<
 
 CODEPAGE_LIB_OBJS = \
@@ -1108,3 +1109,4 @@ $(GTCGI_LIB)2  : $(GTCGI_LIB_OBJS)
 $(GTPCA_LIB)2  : $(GTPCA_LIB_OBJS)
 $(GTSTD_LIB)2  : $(GTSTD_LIB_OBJS)
 $(GTWIN_LIB)2  : $(GTWIN_LIB_OBJS)
+

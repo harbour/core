@@ -39,24 +39,6 @@
 #    OBJ lists for the appropriate library.
 #    NOTE: put .prg related obj's last in the lib list.
 #
-# 2. This is a recursive script.  If you change the name of this file,
-#    be sure to change MK_FILE (a few lines down) to the new name as well.
-#
-# 3. Recurrsion rules are quite simple:
-#     If you specifiy /a on the command line, files in the obj\vc dir
-#     will be deleted, and when nmake recurses, it's without the /a flag
-#
-#     If a .prg.obj rule is fired, nmake will execute this script with
-#     a specific target as a parameter immediatley after compiling a given
-#     set of prg files.
-#      ie: Harbour $<
-#          nmake /fmakefile.vc obj\vc\rtl.lib2
-#     which will simply get make to re-evaluate the dependancy list for the
-#     lib, and as a result, it will execute the C compiler using the .c.obj
-#     rule below to create the obj's for the prg's that were created just
-#     prior to the recurrsive call. Once the obj's are created, the
-#     recurrsion is complete.
-#     See additional notes under RTL.LIB below.
 #
 
 # ---------------------------------------------------------------
@@ -164,6 +146,7 @@ HBRUN_EXE    = $(BIN_DIR)\hbrun.exe
 HBTEST_EXE   = $(BIN_DIR)\hbtest.exe
 HBDOC_EXE    = $(BIN_DIR)\hbdoc.exe
 HBMAKE_EXE   = $(BIN_DIR)\hbmake.exe
+
 #
 # GT driver list
 #
@@ -236,26 +219,14 @@ LIBS2 = \
 #
 # RTL.LIB rules
 #
-# how this works:
-#
-#  {target>.prg{objdir}.obj
-#  Harbour (flags) -oobjdir\ $<
-#    The list of dependant prgs is sent to the harbour compiler
-#    Since the rule is .prg to .obj and the compiler spits out
-#    C code (as we use it), we need to get those into obj format.
-#    Since $(<:.prg=.c) doesn't work, we execute this script again
-#    with a specific target via:
-#  nMake /fmakefile.vc target.lib2
-#    If you view that target at the bottom of this file, all it does
-#    is cause make to evaluate the obj list of dependants which then
-#    causes the .c.obj rule above to fire. (by inference)
 
 {$(RTL_DIR)}.c{$(OBJ_DIR)}.obj:
    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 
 {$(RTL_DIR)}.prg{$(OBJ_DIR)}.obj:
    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-   $(MAKE) -nologo /$(MK_FLAGS) /f$(MK_FILE) $(RTL_LIB)2
+   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $*.c
+
 
 RTL_LIB_OBJS = \
    $(OBJ_DIR)\abs.obj \
@@ -479,7 +450,6 @@ CODEPAGE_LIB_OBJS = \
    $(OBJ_DIR)\cdprukoi.obj \
    $(OBJ_DIR)\cdpruwin.obj
 
-
 #
 # MACRO.LIB rules
 #
@@ -512,7 +482,7 @@ MACRO_LIB_OBJS = \
 
 {$(RDD_DIR)}.prg{$(OBJ_DIR)}.obj:
    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-   $(MAKE) -nologo /$(MK_FLAGS) /f$(MK_FILE) $(RDD_LIB)2
+   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $*.c
 
 RDD_LIB_OBJS = \
    $(OBJ_DIR)\dbcmd.obj \
@@ -544,7 +514,7 @@ RDD_LIB_OBJS = \
 
 {$(RDD_DIR)\nulsys}.prg{$(OBJ_DIR)}.obj:
    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-   $(MAKE) -nologo /$(MK_FLAGS) /f$(MK_FILE) $(NULSYS_LIB)2
+   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $*.c
 
 NULSYS_LIB_OBJS = \
    $(OBJ_DIR)\nulsys.obj
@@ -558,7 +528,7 @@ NULSYS_LIB_OBJS = \
 
 {$(RDD_DIR)\dbfntx}.prg{$(OBJ_DIR)}.obj:
    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-   $(MAKE) -nologo /$(MK_FLAGS) /f$(MK_FILE) $(DBFNTX_LIB)2
+   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $*.c
 
 DBFNTX_LIB_OBJS = \
    $(OBJ_DIR)\dbfntx1.obj \
@@ -574,7 +544,7 @@ DBFNTX_LIB_OBJS = \
 
 {$(RDD_DIR)\dbfcdx}.prg{$(OBJ_DIR)}.obj:
    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-   $(MAKE) -nologo /$(MK_FLAGS) /f$(MK_FILE) $(DBFCDX_LIB)2
+   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $*.c
 
 DBFCDX_LIB_OBJS = \
    $(OBJ_DIR)\dbfcdx1.obj \
@@ -604,7 +574,7 @@ PP_LIB_OBJS = \
 
 {$(DEBUG_DIR)}.prg{$(OBJ_DIR)}.obj:
    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-   $(MAKE) -nologo /$(MK_FLAGS) /f$(MK_FILE) $(DEBUG_LIB)2
+   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $*.c
 
 DEBUG_LIB_OBJS = \
    $(OBJ_DIR)\dbgmenu.obj \
@@ -647,7 +617,7 @@ COMMON_LIB_OBJS = \
 
 {$(VM_DIR)}.prg{$(OBJ_DIR)}.obj:
    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-   $(MAKE) -nologo /$(MK_FLAGS) /f$(MK_FILE) $(VM_LIB)2
+   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $*.c
 
 VM_LIB_OBJS = \
    $(OBJ_DIR)\arrays.obj \
@@ -1084,21 +1054,3 @@ $(OBJ_DIR)\macrol.obj : $(OBJ_DIR)\macrol.c
    -$(DEL) $(OBJ_DIR)\unistd.h
 
 !endif
-
-# dummy targets used for prg to c creation
-
-$(RTL_LIB)2    : $(RTL_LIB_OBJS)
-$(CODEPAGE_LIB)2 : $(CODEPAGE_LIB_OBJS)
-$(COMMON_LIB)2 : $(COMMON_LIB_OBJS)
-$(DEBUG_LIB)2  : $(DEBUG_LIB_OBJS)
-$(MACRO_LIB)2  : $(MACRO_LIB_OBJS)
-$(PP_LIB)2     : $(PP_LIB_OBJS)
-$(RDD_LIB)2    : $(RDD_LIB_OBJS)
-$(DBFCDX_LIB)2 : $(DBFCDX_LIB_OBJS)
-$(DBFNTX_LIB)2 : $(DBFNTX_LIB_OBJS)
-$(NULSYS_LIB)2 : $(NULSYS_LIB_OBJS)
-$(VM_LIB)2     : $(VM_LIB_OBJS)
-$(GTCGI_LIB)2  : $(GTCGI_LIB_OBJS)
-$(GTPCA_LIB)2  : $(GTPCA_LIB_OBJS)
-$(GTSTD_LIB)2  : $(GTSTD_LIB_OBJS)
-$(GTWIN_LIB)2  : $(GTWIN_LIB_OBJS)

@@ -11,15 +11,23 @@ rem Instead, make a local copy and modify that one, or make a call to
 rem this batch file from your customized one. [vszakats]
 rem ---------------------------------------------------------------
 
+if not exist obj md obj
+if not exist obj\vc md obj\vc
+if not exist lib md lib
+if not exist lib\vc md lib\vc
+if not exist bin md bin
+if not exist bin\vc md bin\vc
+
 if "%1" == "clean" goto CLEAN
 if "%1" == "CLEAN" goto CLEAN
 set MK_FILE=makefile.vc
 if "%OS%" == "Windows_NT" set MK_FILE=makefile.nt
-
+if "%1" == "/Y" set MK_FILE=makefile.vc
+if "%1" == "/y" set MK_FILE=makefile.vc
 
 :BUILD
 
-   nmake /f %MK_FILE% %1 %2 %3 > make_vc.log
+   nmake /f%MK_FILE% %1 %2 %3 > make_vc.log
    if errorlevel 1 goto BUILD_ERR
 
 :BUILD_OK
