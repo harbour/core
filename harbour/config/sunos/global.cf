@@ -8,8 +8,22 @@ HB_GT_LIBS=\
         gtcgi \
         gtcrs \
         gtpca \
-#        gtsln \
         gtstd \
+
+ifeq ($(HB_COMMERCE),yes)
+   HB_GPM_MOUSE = no
+else
+ifneq ($(HB_WITHOUT_GTSLN),yes)
+   HB_GT_LIBS += gtsln
+endif
+endif
+ifneq ($(HB_WITHOUT_X11),yes)
+#   HB_GT_LIBS += gtxvt
+#   HB_GT_LIBS += gtxwc
+endif
+ifeq ($(HB_GTALLEG),yes)
+   HB_GT_LIBS += gtalleg
+endif
 
 ifeq ($(HB_GT_LIB),)
    HB_GT_LIB = gtstd
