@@ -102,6 +102,8 @@ CLASS Get
    DATA Message
    DATA Caption
    DATA nLastExitState
+   DATA CapRow
+   DATA CapCol
    #endif
 
    DATA cColorSpec   HIDDEN   // Used only for METHOD ColorSpec
@@ -212,6 +214,8 @@ METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) CLASS Get
    ::cPicture   := cPicture
    #ifdef HB_COMPAT_C53
    ::Caption    := ""
+   ::CapRow     := 0
+   ::CapCol     := 0
    #endif
 return Self
 
