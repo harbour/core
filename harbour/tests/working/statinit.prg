@@ -6,3 +6,9 @@
 
 STATIC bBlock1 := {|| Hello() }
 STATIC bBlock2 := {|| cMyPubVar }
+
+FUNCTION Main()
+
+   ? "This is a compiler test, so if you see this, the test was successful."
+
+   RETURN NIL

@@ -1,3 +1,26 @@
+19990909-18:22 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/arrays.c
+    ! ARRAY() fixed to parse the dimension list in the right order.
+  * source/rtl/extend.c
+    ! hb_stornd() fixed byref method, it stored INTEGER instead of DOUBLE.
+  * tests/working/rtl_test.prg
+    + Some new ARRAY() tests added.
+  * tests/working/extend2.c
+    ; Compiled/linked successfully with Cygwin. There's still incompatibility 
+      since Harbour needs all the C functions to be prefixed with "HB_".
+    * Changed HARBOUR function types to CLIPPER.
+  * include/clipdefs.h
+    + Added #include "caundoc.api".
+  * include/hbdefs.h
+    + Added a __HARBOUR__ define, to make it possible to detect Harbour
+      from C code.
+  * include/caundoc.api
+    + Added _reta() and _pcount().
+  * tests/broken/vec2.prg
+    tests/working/statinit.prg
+    tests/working/Makefile
+    ! Moved to the working dir.
+
 19990909-16:35 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/memvarbl.prg
     ! MEMVARBLOCK() now returns NIL if the passed parameter was not a string,

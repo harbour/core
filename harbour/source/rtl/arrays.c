@@ -37,7 +37,6 @@
 #include "errorapi.h"
 #include "langapi.h"
 #include "ctoharb.h"
-#include "dates.h"
 
 /*
  * Internal
@@ -256,9 +255,7 @@ BOOL hb_arrayGet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem )
 char * hb_arrayGetDS( PHB_ITEM pArray, ULONG ulIndex, char * szDate )
 {
    if( IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
-   {
       hb_itemGetDS( pArray->item.asArray.value->pItems + ulIndex - 1, szDate );
-   }
    else
    {
       memset( szDate, ' ', 8 );
@@ -393,14 +390,14 @@ BOOL hb_arrayFill( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * p
       ULONG ulStart;
       ULONG ulCount;
 
-      if( pulStart != NULL && ( *pulStart >= 1 ) )
+      if( pulStart && ( *pulStart >= 1 ) )
          ulStart = *pulStart;
       else
          ulStart = 1;
 
       if( ulStart <= ulLen )
       {
-         if( pulCount != NULL && ( *pulCount <= ulLen - ulStart ) )
+         if( pulCount && ( *pulCount <= ulLen - ulStart ) )
             ulCount = *pulCount;
          else
             ulCount = ulLen - ulStart + 1;
@@ -427,14 +424,14 @@ ULONG hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * 
       ULONG ulStart;
       ULONG ulCount;
 
-      if( pulStart != NULL && ( *pulStart >= 1 ) )
+      if( pulStart && ( *pulStart >= 1 ) )
          ulStart = *pulStart;
       else
          ulStart = 1;
 
       if( ulStart <= ulLen )
       {
-         if( pulCount != NULL && ( *pulCount <= ulLen - ulStart ) )
+         if( pulCount && ( *pulCount <= ulLen - ulStart ) )
             ulCount = *pulCount;
          else
             ulCount = ulLen - ulStart + 1;
@@ -530,14 +527,14 @@ BOOL hb_arrayEval( PHB_ITEM pArray, PHB_ITEM bBlock, ULONG * pulStart, ULONG * p
       ULONG ulStart;
       ULONG ulCount;
 
-      if( pulStart != NULL && ( *pulStart >= 1 ) )
+      if( pulStart && ( *pulStart >= 1 ) )
          ulStart = *pulStart;
       else
          ulStart = 1;
 
       if( ulStart <= ulLen )
       {
-         if( pulCount != NULL && ( *pulCount <= ulLen - ulStart ) )
+         if( pulCount && ( *pulCount <= ulLen - ulStart ) )
             ulCount = *pulCount;
          else
             ulCount = ulLen - ulStart + 1;
@@ -603,19 +600,19 @@ BOOL hb_arrayCopy( PHB_ITEM pSrcArray, PHB_ITEM pDstArray, ULONG * pulStart,
       ULONG ulCount;
       ULONG ulTarget;
 
-      if( pulStart != NULL && ( *pulStart >= 1 ) )
+      if( pulStart && ( *pulStart >= 1 ) )
          ulStart = *pulStart;
       else
          ulStart = 1;
 
-      if( pulTarget != NULL && ( *pulTarget >= 1 ) )
+      if( pulTarget && ( *pulTarget >= 1 ) )
          ulTarget = *pulTarget;
       else
          ulTarget = 1;
 
       if( ulStart <= ulSrcLen )
       {
-         if( pulCount != NULL && ( *pulCount <= ulSrcLen - ulStart ) )
+         if( pulCount && ( *pulCount <= ulSrcLen - ulStart ) )
             ulCount = *pulCount;
          else
             ulCount = ulSrcLen - ulStart + 1;
@@ -685,7 +682,7 @@ static void hb_arrayNewRagged( PHB_ITEM pArray, int iDimension )
    /* create an array */
    hb_arrayNew( pArray, ulElements );
 
-   if( --iDimension )
+   if( ++iDimension <= hb_pcount() )
    {
       /* call self recursively to create next dimensions
        */
@@ -696,30 +693,31 @@ static void hb_arrayNewRagged( PHB_ITEM pArray, int iDimension )
 
 HARBOUR HB_ARRAY( void )
 {
-   int iPCount = ( USHORT ) hb_pcount();
+   int iPCount = hb_pcount();
 
    if( iPCount > 0 )
    {
-      int tmp;
       BOOL bError = FALSE;
+      int iParam;
 
-      for( tmp = 1; tmp <= iPCount; tmp++ )
+      for( iParam = 1; iParam <= iPCount; iParam++ )
       {
-         if( ! ISNUM( tmp ) )
+         if( ! ISNUM( iParam ) )
          {
             bError = TRUE;
             break;
          }
 
-         if( hb_parnl( tmp ) < 0 )
+         if( hb_parnl( iParam ) < 0 ) /* || hb_parnl( iParam ) <= 4096 */
          {
-            bError = TRUE;
             hb_errRT_BASE( EG_BOUND, 1131, NULL, hb_langDGetErrorDesc( EG_ARRDIMENSION ) );
+            bError = TRUE;
+            break;
          }
       }
 
       if( ! bError )
-         hb_arrayNewRagged( &stack.Return, iPCount );
+         hb_arrayNewRagged( &stack.Return, 1 );
    }
 }
 
@@ -871,7 +869,7 @@ HARBOUR HB_ACOPY( void )
 
    if( pSrcArray && pDstArray )
    {
-      /* CA-Cl*pper works that way. */
+      /* CA-Cl*pper works this way. */
       if( ! hb_arrayIsObject( pSrcArray ) && ! hb_arrayIsObject( pDstArray ) )
       {
          ULONG ulStart = hb_parnl( 3 );

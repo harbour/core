@@ -1661,11 +1661,19 @@ STATIC FUNCTION Main_MISC()
    TEST_LINE( aAdd( ErrorNew(), NIL )         , NIL                                        )
    TEST_LINE( aAdd( ErrorNew(), "A" )         , "A"                                        )
    TEST_LINE( Array()                         , NIL                                        )
+   TEST_LINE( Array( 0 )                      , "{.[0].}"                                  )
+#ifdef __HARBOUR__
+   TEST_LINE( Array( 5000 )                   , "{.[5000].}"                               )
+#else
+   TEST_LINE( Array( 5000 )                   , "E BASE 1131 Bound error array dimension " )
+#endif
    TEST_LINE( Array( 1 )                      , "{.[1].}"                                  )
    TEST_LINE( Array( -1 )                     , "E BASE 1131 Bound error array dimension " )
    TEST_LINE( Array( 1, 0, -10 )              , "E BASE 1131 Bound error array dimension " )
    TEST_LINE( Array( 1, 0, "A" )              , NIL                                        )
    TEST_LINE( Array( 1, 0, 2 )                , "{.[1].}"                                  )
+   TEST_LINE( Array( 4, 3, 2 )                , "{.[4].}"                                  )
+   TEST_LINE( Array( 0, 3, 2 )                , "{.[0].}"                                  )
 
    /* AFILL() */
 

@@ -112,6 +112,8 @@ typedef unsigned long DWORD;
    #endif
 #endif
 
+#define __HARBOUR__
+
 typedef HARBOUR ( * PHB_FUNC )( void );
 typedef PHB_FUNC HB_FUNC_PTR;
 

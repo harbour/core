@@ -12,6 +12,7 @@
 #define HB_CLIPDEFS_H_
 
 #include "extend.h"
+#include "caundoc.api"
 
 /* Old types */
 

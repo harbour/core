@@ -13,6 +13,11 @@
 #include "clipdefs.h"
 #include "filesys.h"
 
+/* Undocumented Extend API calls */
+
+#define _reta           hb_reta
+#define _pcount         hb_pcount
+
 /* Undocumented TSUPPORT API */
 
 #define _tcreat         hb_fsCreate

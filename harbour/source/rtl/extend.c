@@ -633,7 +633,7 @@ void hb_stornd( double dNumber, int iParam, ... )
       PHB_ITEM pItem = stack.pBase + 1 + iParam;
 
       if( IS_BYREF( pItem ) )
-         hb_itemPutNI( hb_itemUnRef( pItem ), dNumber );
+         hb_itemPutND( hb_itemUnRef( pItem ), dNumber );
 
       else if( IS_ARRAY( pItem ) )
       {

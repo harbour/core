@@ -113,6 +113,7 @@ PRG_SOURCES=\
         sound.prg \
         statfun.prg \
         statics.prg \
+        statinit.prg \
         strcmp.prg \
         strdelim.prg \
         strings.prg \
