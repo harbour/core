@@ -1,3 +1,22 @@
+Thu Oct 21 14:02:53 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* config/linux/gcc.cf: 
+	Added linking against ncurses.
+	
+	* include/gtapi.h: 
+	Added hb_gtReadKey() and hb_gt_ReadKey() functions.
+	
+	* include/hbsetup.h: 
+	* source/rtl/gtxxx.c: 
+	Made sure LIN_GTAPI is taken into account.
+	
+	* source/rtl/console.c: 
+	* source/rtl/filesys.c: 
+	* source/rtl/gtapi.c: 
+	* source/rtl/inkey.c: 
+	* source/rtl/gt/gtwin.c: 
+	Fixed several warnings.
+
 Thu Oct 21 11:56:55 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* source/common/hbtrace.c: 

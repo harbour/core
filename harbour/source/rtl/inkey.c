@@ -778,9 +778,13 @@ printf("\nhb_inkeyPoll: wKey is %d", wKey);
             ch = 349 - ch;
       }
 #elif defined(OS_UNIX_COMPATIBLE)
+#if 1
+      ch = hb_gtReadKey();
+#else
       /* TODO: */
       if( ! read( STDIN_FILENO, &ch, 1 ) )
          ch = 0;
+#endif
 #else
       /* TODO: Support for other platforms, such as Mac */
 #endif

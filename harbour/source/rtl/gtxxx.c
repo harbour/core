@@ -41,4 +41,6 @@
    #include "gt/gtos2.c"
 #elif defined(HARBOUR_USE_WIN_GTAPI)
    #include "gt/gtwin.c"
+#elif defined(HARBOUR_USE_LIN_GTAPI)
+   #include "gt/gtlin.c"
 #endif

@@ -342,10 +342,11 @@ FHANDLE hb_fsOpen( BYTE * pFilename, USHORT uiFlags )
    errno = 0;
    hFileHandle = open( ( char * ) pFilename, convert_open_flags( uiFlags ) );
    s_uiErrorLast = errno;
+   HB_SYMBOL_UNUSED( iShare );
 
 #elif defined(_MSC_VER)
 
-      int iShare = _SH_DENYNO;
+      iShare = _SH_DENYNO;
 
       if( ( uiFlags & FO_DENYREAD ) == FO_DENYREAD )
          iShare = _SH_DENYRD;
@@ -387,6 +388,7 @@ FHANDLE hb_fsOpen( BYTE * pFilename, USHORT uiFlags )
 
       hFileHandle = FS_ERROR;
       s_uiErrorLast = FS_ERROR;
+      HB_SYMBOL_UNUSED( iShare );
 
 #endif
 

@@ -460,14 +460,17 @@ static void hb_devout( char * pStr, ULONG ulLen )
 /* Output an item to the screen */
 static void hb_dispout( char * pStr, ULONG ulLen )
 {
+   USHORT user_ferror;
+
    HB_TRACE(("hb_dispout(%s, %lu)", pStr, ulLen));
 
 #ifdef HARBOUR_USE_GTAPI
    /* Display to console */
    hb_gtWriteAt( s_iDevRow, s_iDevCol, ( BYTE * ) pStr, ulLen );
    hb_gtGetPos( &s_iDevRow, &s_iDevCol );
+   HB_SYMBOL_UNUSED( user_ferror );
 #else
-   USHORT user_ferror = hb_fsError(); /* Save current user file error code */
+   user_ferror = hb_fsError(); /* Save current user file error code */
    hb_fsWriteLarge( s_iFilenoStdout, ( BYTE * ) pStr, ulLen );
    hb_fsSetError( user_ferror ); /* Restore last user file error code */
    adjust_pos( pStr, ulLen, &s_iDevRow, &s_iDevCol, hb_max_row(), hb_max_col() );

@@ -148,6 +148,17 @@ void hb_gtExit( void )
    hb_xfree( s_Color );
 }
 
+int hb_gtReadKey( void )
+{
+   HB_TRACE(("hb_gtReadKey()")); 
+
+#if defined(OS_UNIX_COMPATIBLE)
+   return hb_gt_ReadKey();
+#else
+   return 0;
+#endif
+}
+
 USHORT hb_gtBox( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyFrame )
 {
    BYTE pszBox[ 10 ];

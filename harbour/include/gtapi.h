@@ -48,6 +48,7 @@
 
 extern void   hb_gtInit( void );
 extern void   hb_gtExit( void );
+extern int    hb_gtReadKey( void );
 extern USHORT hb_gtBox( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyBoxString );
 extern USHORT hb_gtBoxD( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight );
 extern USHORT hb_gtBoxS( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight );
@@ -85,6 +86,7 @@ extern USHORT hb_gtWriteCon( BYTE * pbyStr, ULONG ulLen );
 extern void   hb_gt_Init( void );
 extern BOOL   hb_gt_IsColor( void );
 extern void   hb_gt_Done( void );
+extern int    hb_gt_ReadKey( void );
 extern USHORT hb_gt_GetScreenWidth( void );
 extern USHORT hb_gt_GetScreenHeight( void );
 extern void   hb_gt_SetPos( USHORT uiRow, USHORT uiCol );
