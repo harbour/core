@@ -1,3 +1,8 @@
+19991121-03:19 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/compiler/harbour.c
+    source/compiler/harbour.y
+    ! hb_fsName*() functions and declarations removed (again).
+
 19991121-01:20 GMT+1 Bruno Cantero <bruno@issnet.net>
   * source/rdd/dbcmd.c
     * dbUseArea(), fixed two bugs mentioned by Victor.

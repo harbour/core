@@ -80,8 +80,6 @@ static void * hb_compElseIfGen( void * pFirstElseIf, ULONG ulOffset ); /* genera
 static void hb_compElseIfFix( void * pIfElseIfs ); /* implements the ElseIfs pcode fixups */
 
 /* Misc functions defined in harbour.c */
-extern PHB_FNAME hb_fsFNameSplit( char * szFileName );
-extern char * hb_fsFNameMerge( char * szFileName, PHB_FNAME pFileName );
 extern void * hb_xgrab( ULONG ulSize );         /* allocates fixed memory, exits on failure */
 extern void * hb_xrealloc( void * pMem, ULONG ulSize );       /* reallocates memory */
 extern void hb_xfree( void * pMem );            /* frees fixed memory */
