@@ -13,6 +13,7 @@ PRG_SOURCES=\
    dbgtarr.prg \
    dbgtobj.prg \
 	tbrwtext.prg \
+	dbgwa.prg
 
 LIBNAME=debug
 
