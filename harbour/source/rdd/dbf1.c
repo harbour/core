@@ -1687,12 +1687,24 @@ ERRCODE hb_dbfInfo( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          hb_itemPutC( pItem, DBF_MEMOEXT );
          break;
 
+      case DBI_MEMOBLOCKSIZE:
+         hb_itemPutNI( pItem, DBT_BLOCKSIZE );
+         break;
+
       case DBI_FULLPATH:
          hb_itemPutC( pItem, pArea->szDataFileName);
          break;
 
       case DBI_SHARED:
          hb_itemPutL( pItem, pArea->fShared );
+         break;
+
+      case DBI_FILEHANDLE:
+         hb_itemPutNL( pItem, (LONG)pArea->hDataFile );
+         break;
+
+      case DBI_MEMOHANDLE:
+         hb_itemPutNL( pItem, (LONG)pArea->hMemoFile );
          break;
    }
 

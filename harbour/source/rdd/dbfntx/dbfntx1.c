@@ -568,7 +568,7 @@ static ERRCODE hb_ntxGoEof( NTXAREAP pArea )
    LPTAGINFO lpCurTag = pArea->lpCurTag;
 
    pArea->lpCurTag = NULL;
-   retvalue = SUPER_GOTO( ( AREAP ) pArea, pArea->ulRecCount+1 );
+   retvalue = SUPER_GOTO( ( AREAP ) pArea, pArea->ulRecCount+1000 );
    if( pArea->ulRecCount )
       pArea->fBof = lpCurTag->TagBOF = FALSE;
    pArea->fEof = lpCurTag->TagEOF = TRUE;
