@@ -117,7 +117,6 @@ PRG_SOURCES=\
         statfun.prg \
         statics.prg \
         strdelim.prg \
-        strings3.prg \
         strip.prg \
         t1.prg \
         test.prg \
