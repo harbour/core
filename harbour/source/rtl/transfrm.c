@@ -448,6 +448,8 @@ HB_FUNC( TRANSFORM )
       
             hb_xfree( szStr );
          }
+         else
+            ulResultPos = 0;
       }
 
       /* ======================================================= */
