@@ -100,7 +100,6 @@
 /* NOTE: For OS/2. Must be ahead of any and all #include statements */
 #define INCL_DOSFILEMGR
 #define INCL_DOSERRORS
-
 #define HB_OS_WIN_32_USED
 
 #include <ctype.h>
@@ -394,6 +393,8 @@ HB_FUNC( DIRECTORY )
    ULONG        fileTypes = FILE_ARCHIVED | FILE_DIRECTORY | FILE_SYSTEM | FILE_HIDDEN | FILE_READONLY;
    ULONG        findSize = sizeof( entry );
    ULONG        findCount = 1;
+#elif defined (__BORLANDC__)
+    struct ffblk entry;
 #else
    struct dirent * entry;
    DIR  * dir;
@@ -529,6 +530,15 @@ HB_FUNC( DIRECTORY )
       do
       {
          strcpy( string, entry.achName );
+#elif defined(__BORLANDC__)
+   strcpy( string, dirname );
+   strcat( string, pattern );
+   if( findfirst( string,  &entry, ushbMask ) == 0 )
+   {
+      do
+      {
+         strcpy( string, entry.ff_name );
+
 #else
 
    #if defined(__WATCOMC__)
@@ -613,6 +623,9 @@ HB_FUNC( DIRECTORY )
 #elif defined(HB_OS_OS2)
          strcpy( filename, entry.achName );
          strcpy( fullfile, dirname );
+#elif defined (__BORLANDC__)
+         strcpy( filename, entry.ff_name );
+         strcpy( fullfile, dirname );
 #else
          strcpy( filename, entry->d_name );
          strcpy( fullfile, dirname );
@@ -622,8 +635,12 @@ HB_FUNC( DIRECTORY )
 
          if( stat( fullfile, &statbuf ) != -1 )
          {
-            fsize = statbuf.st_size;
-            ftime = statbuf.st_mtime;
+            #if defined(__BORLANDC__)
+               fsize = entry.ff_fsize;
+            #else
+               fsize = statbuf.st_size;
+               ftime = statbuf.st_mtime;
+            #endif
 
             #if defined(OS_UNIX_COMPATIBLE)
                /* GNU C on Linux or on other UNIX */
@@ -645,9 +662,9 @@ HB_FUNC( DIRECTORY )
                /* NOTE: _chmod( f, 0 ) => Get attribs
                         _chmod( f, 1, n ) => Set attribs
                         chmod() though, _will_ change the attributes */
-               attrib = ( USHORT ) _rtl_chmod( fullfile, 0, 0 );
+               attrib = ( USHORT ) entry.ff_attrib;
             #elif defined(__BORLANDC__)
-               attrib = ( USHORT ) _chmod( fullfile, 0, 0 );
+               attrib = ( USHORT ) entry.ff_attrib;
             #elif defined(__DJGPP__)
                attrib = ( USHORT ) _chmod( fullfile, 0 );
             #else
@@ -663,14 +680,17 @@ HB_FUNC( DIRECTORY )
                 */
                fsize = 0;
             }
+            #if defined(__BORLANDC__)
+                sprintf(ddate , "%04d%02d%02d",(long) (entry.ff_fdate >> 9) +1980 ,(long)  ((entry.ff_fdate & ~0xFE00) >> 5) ,(long)entry.ff_fdate & ~0xFFE0);
+                sprintf(ttime,"%2.2u:%2.2u",(entry.ff_ftime >> 11) & 0x1f,(entry.ff_ftime>> 5) & 0x3f);
+            #else
+                ft = localtime( &ftime );
+                sprintf( ddate, "%04d%02d%02d",
+                   ft->tm_year + 1900, ft->tm_mon + 1, ft->tm_mday );
 
-            ft = localtime( &ftime );
-            sprintf( ddate, "%04d%02d%02d",
-               ft->tm_year + 1900, ft->tm_mon + 1, ft->tm_mday );
-
-            sprintf( ttime, "%02d:%02d:%02d",
-               ft->tm_hour, ft->tm_min, ft->tm_sec );
-
+                sprintf( ttime, "%02d:%02d:%02d",
+                   ft->tm_hour, ft->tm_min, ft->tm_sec );
+            #endif
             HB_TRACE(HB_TR_INFO, ("name: |%s|, date: |%s|, time: |%s|\n", filename, ddate, ttime));
          }
          else
@@ -716,11 +736,14 @@ HB_FUNC( DIRECTORY )
 #elif defined(HB_OS_OS2)
    while( DosFindNext( hFind, &entry, findSize, &findCount ) == NO_ERROR && findCount > 0 );
    DosFindClose( hFind );
+#elif defined(__BORLANDC__)
+   while( findnext( &entry ) == 0 );
+   findclose( &entry );
 #else
    closedir( dir );
 #endif
 
-#if defined(_MSC_VER) || defined(__MINGW32__) || defined(HB_OS_OS2)
+#if defined(_MSC_VER) || defined(__MINGW32__) || defined(HB_OS_OS2) || defined(__BORLANDC__)
    }
 #endif
 

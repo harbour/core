@@ -6,7 +6,7 @@
 
 Version 0.38 Build 38 (2001-12-15)
 
-...
+(see http://www.harbour-project.org)
 
 Version 0.37 Build 37 (2001-06-26)
 
