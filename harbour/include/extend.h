@@ -205,15 +205,23 @@ typedef struct _HB_CODEBLOCK
   long lCounter;      /* numer of references to this codeblock */
 } HB_CODEBLOCK, * HB_CODEBLOCK_PTR;
 
-PHB_ITEM hb_param( WORD wParam, WORD wType ); /* retrieve a generic parameter */
-char *   hb_parc( WORD wParam, ... );  /* retrieve a string parameter */
-ULONG    hb_parclen( WORD wParam, ... );  /* retrieve a string parameter length */
-char *   hb_pards( WORD wParam, ... ); /* retrieve a date as a string yyyymmdd */
-int      hb_parl( WORD wParam, ... );     /* retrieve a logical parameter as an int */
-double   hb_parnd( WORD wParam, ... ); /* retrieve a numeric parameter as a double */
-int      hb_parni( WORD wParam, ... );    /* retrieve a numeric parameter as a integer */
-long     hb_parnl( WORD wParam, ... );   /* retrieve a numeric parameter as a long */
-WORD     hb_parinfo( WORD wParam );  /* Determine the param count or data type */
+
+PHB_ITEM hb_param( int iParam, WORD wType ); /* retrieve a generic parameter */
+char *   hb_parc( int iParam, ... );  /* retrieve a string parameter */
+ULONG    hb_parclen( int iParam, ... ); /* retrieve a string parameter length */
+char *   hb_pards( int iParam, ... ); /* retrieve a date as a string yyyymmdd */
+int      hb_parl( int iParam, ... ); /* retrieve a logical parameter as an int */
+double   hb_parnd( int iParam, ... ); /* retrieve a numeric parameter as a double */
+int      hb_parni( int iParam, ... ); /* retrieve a numeric parameter as a integer */
+long     hb_parnl( int iParam, ... ); /* retrieve a numeric parameter as a long */
+WORD     hb_parinfo( int iParam ); /* Determine the param count or data type */
+void     hb_storc( char * szText, int iParam, ... ); /* stores a szString on a variable by reference */
+void     hb_storclen( char * fixText, WORD wLength, int iParam, ... ); /* stores a fixed length string on a variable by reference */
+void     hb_stords( char * szDate, int iParam, ... );   /* szDate must have yyyymmdd format */
+void     hb_storl( int iLogical, int iParam, ... ); /* stores a logical integer on a variable by reference */
+void     hb_storni( int iValue, int iParam, ... ); /* stores an integer on a variable by reference */
+void     hb_stornl( long lValue, int iParam, ... ); /* stores a long on a variable by reference */
+void     hb_stornd( double dValue, int iParam, ... ); /* stores a double on a variable by reference */
 WORD     hb_pcount( void );          /* returns the number of suplied parameters */
 void     hb_ret( void );             /* post a NIL return value */
 void     hb_retc( char * szText );   /* returns a string */
@@ -223,22 +231,12 @@ void     hb_retl( int iTrueFalse );  /* returns a logical integer */
 void     hb_retni( int iNumber );    /* returns a integer number */
 void     hb_retnl( long lNumber );   /* returns a long number */
 void     hb_retnd( double dNumber ); /* returns a double */
-void     hb_storc( char * szText, WORD wParam, ... ); /* stores a szString on a variable by reference */
-void     hb_storclen( char * fixText, WORD wLength, WORD wParam, ... ); /* stores a fixed length string on a variable by reference */
-void     hb_stords( char * szDate, WORD wParam, ... ); /* szDate must have yyyymmdd format */
-void     hb_storl( int iLogical, WORD wParam, ... ); /* stores a logical integer on a variable by reference */
-void     hb_storni( int iValue, WORD wParam, ... ); /* stores an integer on a variable by reference */
-void     hb_stornd( double dValue, WORD wParam, ... ); /* stores a double on a variable by reference */
-void     hb_stornl( long lValue, WORD wParam, ... ); /* stores a long on a variable by reference */
 void     hb_reta( ULONG ulLen );  /* returns an array with a specific length */
-
 void *   hb_xgrab( ULONG lSize );   /* allocates memory */
 void *   hb_xrealloc( void * pMem, ULONG lSize );   /* reallocates memory */
 void     hb_xfree( void * pMem );    /* frees memory */
-
 void     ItemCopy( PHB_ITEM pDest, PHB_ITEM pSource );
 void     ItemRelease( PHB_ITEM pItem );
-
 void     hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ); /* creates a new array */
 void     hb_arrayGet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ); /* retrieves an item */
 ULONG    hb_arrayLen( PHB_ITEM pArray ); /* retrives the array len */

@@ -1,3 +1,48 @@
+19990708-22:00 Bruno Cantero <bruno@issnet.net>
+CVSed by Andi Jahja <andij@aonlippo.co.id>
+
+   Applying undocumented calling to _par*() and _stor*()
+   providing a -1 as the first parameter will access the item
+   located at stack.Return instead of accessing the stack parameters
+
+include/extend.h:
+   * hb_param
+   * hb_parc
+   * hb_parclen
+   * hb_pards
+   * hb_parl
+   * hb_parnd
+   * hb_parni
+   * hb_parnl
+   * hb_parinfo
+   * hb_storc
+   * hb_storclen
+   * hb_stords
+   * hb_storl
+   * hb_storni
+   * hb_stornl
+   * hb_stornd
+source/rtl/extend.c:
+   * hb_param
+   * hb_parc
+   * hb_parclen
+   * hb_pards
+   * hb_parl
+   * hb_parnd
+   * hb_parni
+   * hb_parnl
+   * hb_parinfo
+   * hb_storc
+   * hb_storclen
+   * hb_stords
+   * hb_storl
+   * hb_storni
+   * hb_stornl
+   * hb_stornd
+source/working :
+   * extend1.prg - undocumented feature included
+   * extend2.c   - undocumented feature included
+
 19990808-12:18 Antonio Linares <alinares@fivetech.com>
 
    * source/vm/hvm.c
