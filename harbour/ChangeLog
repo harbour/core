@@ -1,3 +1,17 @@
+19990916-03:17 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * source/debug/*.*
+    source/hbpp/*.*
+    source/hbpp/stdalone/hbpp.c
+    + Copyright text changed to the newer version.
+    + Missing copyright headers added.
+  * source/runner/runlib.c
+    + TODO: added about default extension handling.
+  * source/hbpp/stdalone/hbpp.c
+    source/hbpp/hbppint.c
+    source/hbpp/hbpplib.c
+    ! Formatting error corrected.
+
 19990914-20:45 EDT David G. Holm <dholm@jsd-llc.com>
   + config/win32/mingw32.cf
   * source/hbpp/hbpp.c
