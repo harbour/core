@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-07-01 16:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+  * doc/howtocvs.txt
+    * Corrected references to cvs_ssh.txt to refer to section 1.7.
+
 2002-07-01 02:10 UTC-0300 Walter Negro <anegro@overnet.com.ar>
   * source/rtl/transfrm.c
     + Add @) template.
