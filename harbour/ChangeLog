@@ -1,3 +1,29 @@
+20000223-18:36 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * source/rtl/tbrowse.prg
+     ! Fixed return values of methods to be Clipper compatible.
+   * source/vm/hvm.c
+     + HB_INCLUDE_WINEXCHANDLER #ifdef added to control the inclusion of
+       the Windows specific exception handler. Temporary solution.
+   * contrib/rdd_ads/ads1.c
+     ! Extentions converted to lower case.
+     ! Some small fixes.
+   * include/set.h
+     source/rtl/set.c
+     source/rtl/setcolor.c
+     source/rtl/console.c
+     source/rtl/gt/gtstd.c
+     % Reduced the GT vs. non-GT branches. Heading in the direction where 
+       there's no non-GT API mode, just a Standard/Stream GT API mode.
+       In other words the point is to eliminate *all* HARBOUR_USE_GTAPI
+       checks.
+   * source/rtl/inkey.c    
+     ! __KEYBOARD() fix by Matteo.
+   * source/rtl/strings.c
+     source/rtl/dummy.prg
+     source/rtl/filesys.c
+     source/rtl/oemansi.c
+     ! Minor formatting fixes.
+
 20000222-07:30 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
    *doc/harbext.txt
      *Small changes

@@ -3835,17 +3835,16 @@ HARBOUR HB___VMVARSGET( void )
                   hb_stack.iStatics + hb_parni( 1 ) - 1 );
 }
 
-#if 0
+/* NOTE: Temporary name [vszakats] */
+#ifdef HB_INCLUDE_WINEXCHANDLER
 
 #include "windows.h"
 
-WINBASEAPI LONG WINAPI UnhandledExceptionFilter(
-   struct _EXCEPTION_POINTERS * ExceptionInfo )
+WINBASEAPI LONG WINAPI UnhandledExceptionFilter( struct _EXCEPTION_POINTERS * ExceptionInfo )
 {
    PHB_ITEM pBase = hb_stack.pBase;
 
-   char buffer[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 32 ];
-   char msg[ 2048 ];
+   char msg[ ( HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 32 ) * 32 ];
 
    HB_SYMBOL_UNUSED( ExceptionInfo );
 
@@ -3858,16 +3857,15 @@ WINBASEAPI LONG WINAPI UnhandledExceptionFilter(
       pBase = hb_stack.pItems + pBase->item.asSymbol.stackbase;
 
       if( ( pBase + 1 )->type == IT_ARRAY )
-         sprintf( buffer, "Called from %s:%s(%i)", hb_objGetClsName( pBase + 1 ),
+         sprintf( buffer, "Called from %s:%s(%i)\n", hb_objGetClsName( pBase + 1 ),
             pBase->item.asSymbol.value->szName,
             pBase->item.asSymbol.lineno );
       else
-         sprintf( buffer, "Called from %s(%i)",
+         sprintf( buffer, "Called from %s(%i)\n",
             pBase->item.asSymbol.value->szName,
             pBase->item.asSymbol.lineno );
 
       strcat( msg, buffer );
-      strcat( msg, "\n" );
    }
 
    MessageBox( NULL, msg, "Harbour Exception", MB_ICONSTOP );

@@ -613,7 +613,8 @@ HARBOUR HB_SETPOSBS( void )
 #ifdef HARBOUR_USE_GTAPI
    SHORT iRow, iCol;
 
-   /* NOTE: Clipper does no checks about reaching the border or anything */
+   /* NOTE: Clipper does no checks about reaching the border or anything.
+            [vszakats] */
    hb_gtGetPos( &iRow, &iCol );
    hb_gtSetPos( iRow, iCol + 1 );
 #endif
@@ -679,7 +680,7 @@ HARBOUR HB_DISPOUTAT( void ) /* writes a single value to the screen at speficic 
 {
    if( hb_pcount() >= 3 )
    {
-      /* NOTE: Clipper does no checks here. */
+      /* NOTE: Clipper does no checks here. [vszakats] */
       hb_setpos( hb_parni( 1 ), hb_parni( 2 ) );
 
 #ifdef HARBOUR_USE_GTAPI
@@ -841,11 +842,11 @@ HARBOUR HB_DISPBOX( void )
       /* Set limits on the box coordinates to (0,0) and (max_row(),max_col()) */
       if( i_top < 0 ) top = 0; else top = ( USHORT ) i_top;
       if( i_left < 0 ) left = 0; else left = ( USHORT ) i_left;
-      if( i_bottom < 0 ) bottom  = 0; else bottom = ( USHORT ) i_bottom;
+      if( i_bottom < 0 ) bottom = 0; else bottom = ( USHORT ) i_bottom;
       if( i_right < 0 ) right = 0; else right = ( USHORT ) i_right;
       if( top > hb_max_row() ) top = hb_max_row();
       if( left > hb_max_col() ) left = hb_max_col();
-      if( bottom > hb_max_row() ) bottom  = hb_max_row();
+      if( bottom > hb_max_row() ) bottom = hb_max_row();
       if( right > hb_max_col() ) right = hb_max_col();
 
       /* Force the box to be drawn from top left to bottom right */
@@ -945,47 +946,32 @@ HARBOUR HB_DISPBOX( void )
 
 HARBOUR HB_DISPBEGIN( void )
 {
-#ifdef HARBOUR_USE_GTAPI
    hb_gtDispBegin();
-#endif
 }
 
 HARBOUR HB_DISPEND( void )
 {
-#ifdef HARBOUR_USE_GTAPI
    hb_gtDispEnd();
-#endif
 }
 
 HARBOUR HB_DISPCOUNT( void )
 {
-#ifdef HARBOUR_USE_GTAPI
    hb_retni( hb_gtDispCount() );
-#else
-   hb_retni( 0 );
-#endif
 }
 
 HARBOUR HB_ISCOLOR( void )
 {
-#ifdef HARBOUR_USE_GTAPI
    hb_retl( hb_gtIsColor() );
-#else
-   hb_retl( FALSE );
-#endif
 }
 
 HARBOUR HB_NOSNOW( void )
 {
-#ifdef HARBOUR_USE_GTAPI
    if( ISLOG( 1 ) )
       hb_gtSetSnowFlag( hb_parl( 1 ) );
-#endif
 }
 
 HARBOUR HB___SHADOW( void )
 {
-#ifdef HARBOUR_USE_GTAPI
    if( hb_pcount() >= 4 )
    {
       hb_gtDrawShadow( hb_parni( 1 ),
@@ -994,7 +980,6 @@ HARBOUR HB___SHADOW( void )
                        hb_parni( 4 ),
                        ISNUM( 5 ) ? hb_parni( 5 ) : 7 );
    }
-#endif
 }
 
 HARBOUR HB_DBGSHADOW( void )
@@ -1004,7 +989,6 @@ HARBOUR HB_DBGSHADOW( void )
 
 HARBOUR HB_SAVESCREEN( void )
 {
-#ifdef HARBOUR_USE_GTAPI
    USHORT uiX;
    USHORT uiCoords[ 4 ];
    void * pBuffer;
@@ -1023,14 +1007,10 @@ HARBOUR HB_SAVESCREEN( void )
    hb_gtSave( uiCoords[ 0 ], uiCoords[ 1 ], uiCoords[ 2 ], uiCoords[ 3 ], pBuffer );
    hb_retclen( ( char * ) pBuffer, uiX );
    hb_xfree( ( char * ) pBuffer );
-#else
-   hb_retc( "" );
-#endif
 }
 
 HARBOUR HB_RESTSCREEN( void )
 {
-#ifdef HARBOUR_USE_GTAPI
    if( hb_pcount() == 5 )
    {
       USHORT uiX;
@@ -1048,7 +1028,6 @@ HARBOUR HB_RESTSCREEN( void )
       hb_gtRest( uiCoords[ 0 ], uiCoords[ 1 ], uiCoords[ 2 ], uiCoords[ 3 ],
                  ( void * ) hb_parc( 5 ) );
    }
-#endif
 }
 
 USHORT hb_setCursor( BOOL bSetCursor, USHORT usNewCursor )
@@ -1057,16 +1036,10 @@ USHORT hb_setCursor( BOOL bSetCursor, USHORT usNewCursor )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_setCursor(%d, %hu)", (int) bSetCursor, usNewCursor));
 
-#ifdef HARBOUR_USE_GTAPI
    hb_gtGetCursor( &usPreviousCursor );
    if( bSetCursor )
       hb_gtSetCursor( usNewCursor );
 
-#else
-   usPreviousCursor = hb_set.HB_SET_CURSOR;
-   if( bSetCursor )
-      hb_set.HB_SET_CURSOR = ( HB_cursor_enum ) usNewCursor;
-#endif
    return usPreviousCursor;
 }
 
@@ -1080,7 +1053,6 @@ HARBOUR HB_SETCURSOR( void )
 
 HARBOUR HB_SETBLINK( void )
 {
-#ifdef HARBOUR_USE_GTAPI
    BOOL bPreviousBlink;
 
    hb_gtGetBlink( &bPreviousBlink );
@@ -1088,19 +1060,12 @@ HARBOUR HB_SETBLINK( void )
       hb_gtSetBlink( hb_parl( 1 ) );
 
    hb_retl( bPreviousBlink );
-#else
-   hb_retl( FALSE );
-#endif
 }
 
 HARBOUR HB_SETMODE( void )
 {
-#ifdef HARBOUR_USE_GTAPI
    hb_retl( hb_gtSetMode( ISNUM( 1 ) ? hb_parni( 1 ) : ( hb_gtMaxRow() + 1 ),
                           ISNUM( 2 ) ? hb_parni( 2 ) : ( hb_gtMaxCol() + 1 ) ) == 0 );
-#else
-   hb_retl( FALSE );
-#endif
 }
 
 HARBOUR HB___ACCEPT( void ) /* Internal Clipper function used in ACCEPT command  */

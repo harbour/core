@@ -751,7 +751,6 @@ HARBOUR HB___SETCENTURY( void )
  * $END$
  */
 
-
 HARBOUR HB_SET( void )
 {
    BOOL bFlag;
@@ -1064,7 +1063,6 @@ void hb_setInitialize( void )
    hb_set.HB_SET_COLOR[ sizeof( hb_set.HB_SET_COLOR ) - 1 ] = '\0';
    hb_set.HB_SET_CONFIRM = FALSE;
    hb_set.HB_SET_CONSOLE = TRUE;
-   hb_set.HB_SET_CURSOR = SC_NORMAL;    /* Only needed for non-GTAPI */
    hb_set.HB_SET_DATEFORMAT = ( char * ) hb_xgrab( 9 );
    memcpy( hb_set.HB_SET_DATEFORMAT, "mm/dd/yy", 9 );
    hb_set.HB_SET_DEBUG = FALSE;

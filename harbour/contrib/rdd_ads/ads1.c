@@ -703,12 +703,12 @@ static ERRCODE adsInfo( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          break;
 
       case DBI_TABLEEXT:
-         hb_itemPutC( pItem, ((adsFileType==ADS_ADT) ? ".ADT" : ".DBF") );
+         hb_itemPutC( pItem, ((adsFileType==ADS_ADT) ? ".adt" : ".dbf") );
          break;
 
       case DBI_MEMOEXT:
-         hb_itemPutC( pItem, ((adsFileType==ADS_ADT) ? ".ADM" :
-                                (adsFileType==ADS_CDX) ? ".FPT" : ".DBT") );
+         hb_itemPutC( pItem, ((adsFileType==ADS_ADT) ? ".adm" :
+                                (adsFileType==ADS_CDX) ? ".fpt" : ".dbt") );
          break;
 
       case DBI_GETLOCKARRAY:
@@ -945,7 +945,7 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
 
    HB_TRACE(HB_TR_DEBUG, ("adsOrderInfo(%p, %hu, %p)", pArea, uiIndex, pInfo));
 
-   if( !IS_NIL(pOrderInfo->itmOrder) )
+   if( pOrderInfo->itmOrder && !IS_NIL(pOrderInfo->itmOrder) )
    {
       if( IS_NUMERIC( pOrderInfo->itmOrder ) )
          ulRetVal = AdsGetIndexHandleByOrder( pArea->hTable,
@@ -959,8 +959,8 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
    switch( uiIndex )
    {
       case DBOI_BAGEXT:
-         pOrderInfo->itmResult = hb_itemPutC( pOrderInfo->itmResult,
-                ((adsFileType==ADS_ADT) ? ".ADI" : (adsFileType==ADS_CDX)? ".CDX" : ".NTX") );
+         hb_itemPutC( pOrderInfo->itmResult,
+                ((adsFileType==ADS_ADT) ? ".adi" : (adsFileType==ADS_CDX)? ".cdx" : ".ntx") );
          break;
       case DBOI_EXPRESSION:
          AdsGetIndexExpr( phIndex, aucBuffer, &pusLen);

@@ -35,38 +35,18 @@
 
 #include "extend.h"
 #include "set.h"
-#ifdef HARBOUR_USE_GTAPI
-   #include "gtapi.h"
-#else
-   static char s_old_string[ sizeof( hb_set.HB_SET_COLOR ) ];
-#endif
+#include "gtapi.h"
 
-char * hb_setColor( char * sColor )
+char * hb_setColor( char * szColor )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_setColor(%s)", sColor));
 
-#ifdef HARBOUR_USE_GTAPI
    hb_gtGetColorStr( hb_set.HB_SET_COLOR );
-#else
-   strncpy( s_old_string, hb_set.HB_SET_COLOR, sizeof( hb_set.HB_SET_COLOR ) );
-   s_old_string[ sizeof( hb_set.HB_SET_COLOR ) - 1 ] = '\0';
-#endif
 
-   if( sColor != ( char * ) NULL )
-   {
-   #ifdef HARBOUR_USE_GTAPI
-      hb_gtSetColorStr( sColor );
-   #else
-      strncpy( hb_set.HB_SET_COLOR, sColor, sizeof( hb_set.HB_SET_COLOR ) );
-      hb_set.HB_SET_COLOR[ sizeof( hb_set.HB_SET_COLOR ) - 1 ] = 0;
-      hb_strUpper( hb_set.HB_SET_COLOR, strlen( hb_set.HB_SET_COLOR ) );
-   #endif
-  }
-#ifdef HARBOUR_USE_GTAPI
+   if( szColor != ( char * ) NULL )
+      hb_gtSetColorStr( szColor );
+
    return hb_set.HB_SET_COLOR;
-#else
-   return s_old_string;
-#endif
 }
 
 HARBOUR HB_SETCOLOR( void )
@@ -76,8 +56,6 @@ HARBOUR HB_SETCOLOR( void )
 
 HARBOUR HB_COLORSELECT( void )
 {
-#ifdef HARBOUR_USE_GTAPI
    if( ISNUM( 1 ) )
       hb_gtColorSelect( hb_parni( 1 ) );
-#endif
 }

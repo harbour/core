@@ -58,7 +58,7 @@ void hb_gt_Init( void )
    s_uiMaxRow = 25;
 #endif
    s_uiMaxCol = 80;
-   s_uiCursorStyle = SC_NONE;
+   s_uiCursorStyle = SC_NORMAL;
    s_bBlink = FALSE;
 }
 
@@ -241,3 +241,4 @@ int hb_gt_ReadKey( void )
    return 0;
 }
 #endif
+

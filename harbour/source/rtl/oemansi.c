@@ -38,11 +38,13 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
- *
  *    HB_OEMTOANSI() Documentation
  *    HB_ANSITOOEM() Documentation
  *
+ * See doc/license.txt for licensing terms.
+ *
  */
+
 /* NOTE: These are Win32 specific, for other platforms it will return the
          passed parameter unchanged. */
 

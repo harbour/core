@@ -133,7 +133,7 @@ CLASS TBrowse
 
    METHOD Invalidate()             // Forces entire redraw during next stabilization
    METHOD RefreshAll()     INLINE ::Invalidate() // Causes all data to be recalculated during the next stabilize
-   METHOD RefreshCurrent() INLINE ::aRedraw[ ::RowPos ] := .f., ::Stable := .f. // Causes the current row to be refilled and repainted on next stabilize
+   METHOD RefreshCurrent() INLINE ::aRedraw[ ::RowPos ] := .f., ::Stable := .f., Self // Causes the current row to be refilled and repainted on next stabilize
 
    METHOD SetColumn( nColumn, oCol ) INLINE If( 0 < nColumn .and. nColumn <= Len( ::aColumns ),;
                                                 ::aColumns[ nColumn ] := oCol, nil ), oCol // Replaces one TBColumn object with another
@@ -267,7 +267,7 @@ METHOD Invalidate() CLASS TBrowse
    AFill( ::aRedraw, .f. )
    ::Stable := .f.
 
-return nil
+return Self
 
 METHOD Left() CLASS TBrowse
 
@@ -454,14 +454,14 @@ METHOD DeHilite() CLASS TBrowse
    ::DispCell( ::ColPos, cColor )
    SetPos( nRow, nCol )
 
-return nil
+return Self
 
 METHOD ForceStable() CLASS TBrowse
 
    while !::Stabilize()
    end
 
-return nil
+return Self
 
 METHOD Hilite() CLASS TBrowse
 
@@ -484,7 +484,7 @@ METHOD Hilite() CLASS TBrowse
       SetPos( nRow, nCol )
    endif
 
-return nil
+return Self
 
 METHOD Stabilize() CLASS TBrowse
 

@@ -1076,7 +1076,7 @@ HARBOUR HB___KEYBOARD( void )
       if( size != 0 )
       {
          /* Stuff the string */
-         char *fPtr = hb_parc( 1 );
+         BYTE * fPtr = ( BYTE * ) hb_parc( 1 );
 
          if( size >= hb_set.HB_SET_TYPEAHEAD )
          {

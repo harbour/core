@@ -85,7 +85,6 @@
 #include "hbdefs.h"
 #include "filesys.h"
 #include "gtapi.h"
-#include "setcurs.h"
 #include "inkey.h"
 
 typedef enum
@@ -168,7 +167,6 @@ typedef struct
    BOOL    HB_SET_DEBUG;
    int     HB_SET_TYPEAHEAD;
    char    HB_SET_COLOR[ CLR_STRLEN ];
-   HB_cursor_enum HB_SET_CURSOR;
    BOOL    HB_SET_CONSOLE;
    BOOL    HB_SET_ALTERNATE;
    char *  HB_SET_ALTFILE;
