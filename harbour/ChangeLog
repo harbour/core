@@ -1,3 +1,12 @@
+19990613 23:00 CET Eddie Runia
+  * source/rtl/environ.c
+    __Run() added for Borland and DJGPP
+  + tests/working/dosshell.prg
+    Only for DOS, OS/2 & Windows
+  + tests/working/cmphello.prg
+    This file compiles hello. Also usuable for Linux / Unix, if the system()
+    command functions on their compilers :-)
+
 19990613 16:35 CET Eddie Runia
   * tests/working/strip.prg; tests/working/inherit.prg;
     tests/working/dynobj.prg

@@ -11,6 +11,7 @@
 
 #if defined(__TURBOC__) || defined(__BORLANDC__)  || defined(__DJGPP__)
   #include <dos.h>
+  #include <stdlib.h>
 #endif
 
 #ifdef __WATCOMC__
@@ -28,11 +29,13 @@
   #endif
 #endif
 
+HARBOUR HB___RUN(void);
 HARBOUR HB_GETENV(void);
 HARBOUR HB_OS(void);
 HARBOUR HB_VERSION(void);
 
 static SYMBOL symbols[] = {
+{ "__RUN"  , FS_PUBLIC, HB___RUN  , 0 },
 { "GETENV" , FS_PUBLIC, HB_GETENV , 0 },
 { "OS"     , FS_PUBLIC, HB_OS     , 0 },
 { "VERSION", FS_PUBLIC, HB_VERSION, 0 }
@@ -211,4 +214,42 @@ HARBOUR HB_GETENV(void)
    }
    else
       _retc("");
+}
+
+/*
+ * $FunctionName$
+ *    __RUN
+ * $Syntax$
+ *    __RUN( <cCommand> )
+ * $Argument$
+ *    <cCommand> Command to execute
+ * $Description$
+ *    This command runs an external program. Please make sure that you have
+ *    enough free memory to be able to run the external program.
+ *    Do not use it to run Terminate and Stay Resident programs (in case of DOS)
+ *    since it cause several problems
+ * $Examples$
+ *    __Run( "edit "+cMyTextFile )      // Runs an external editor
+ *    __Run( "command" )                // Gives a DOS shell (DOS only)
+ * $Files$
+ *    source/rtl/environ.c
+ *    Run an external program
+ * $See also$
+ *    ErrorLevel() ??   // TO DO : Is this correct ?
+ */
+HARBOUR HB___RUN( void )
+{
+#if defined(__TURBOC__) || defined(__BORLANDC__)  || defined(__DJGPP__)
+   if( _pcount() == 1 )                         /* Parameter passed         */
+   {
+      system( _parc( 1 ) );
+   }
+   else
+   {
+      PHB_ITEM pError = _errNew();
+      _errPutDescription( pError, "RUN: Incorrect number of arguments" );
+      _errLaunch( pError );
+      _errRelease( pError );
+   }
+#endif
 }
