@@ -1,3 +1,7 @@
+19990726-12:50 CET Victor Szel <info@szelvesz.hu>
+   + source/rtl/natmsg/msghu.c
+     Error descriptions translated.
+
 19990726-06:05 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/gtapi.c
      * position cursor inside top-left corner of box - compatibility
