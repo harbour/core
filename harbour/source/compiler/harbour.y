@@ -437,12 +437,15 @@ static const char * _szReservedFun[] = {
  */
 int EXTERNAL_LINKAGE sz_compare4( const void * pLookup, const void * pReserved )
 {
-   int iCmp;
+   int iCmp, iSlen;
 
-   iCmp = strncmp( ( const char * ) pLookup, * ( ( const char * * ) pReserved ), 4 );
+   iSlen = strlen( ( const char * ) pLookup );
+
+   iCmp = strncmp( ( const char * ) pLookup, * ( ( const char * * ) pReserved ),
+                   ( iSlen && iSlen < 4 ) ? iSlen : 4 );
    if( iCmp == 0 )
       iCmp = strncmp( ( const char * ) pLookup, * ( ( const char * * ) pReserved ),
-                      strlen( ( const char * ) pLookup ) );
+                      iSlen + 1);
    return iCmp;
 }
 

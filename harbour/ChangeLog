@@ -1,3 +1,10 @@
+19990911-01:42 EDT Paul Tucker <ptucker@sympatico.ca>
+  * source/compiler/harbour.y
+    sz_Compare4() Change the length of the first compare to
+      Min( 4, len(string)) to account for strings shorter than 4.
+      Add 1 to the length in the second compare to include the trailing
+      null so that (ie:) SetPos and SetPosBS can be detected as unique.
+
 19990910-18:45 EDT David G. Holm <dholm@jsd-llc.com>
   * tests/working/rtl_test.prg
     ! Changed smart stringify token marker in TEST_LINE to regular
