@@ -98,7 +98,9 @@ HB_FUNC( FREAD )
 
       if( pItem->item.asString.bStatic ||
           ( * pItem->item.asString.u.puiHolders ) > 1 )
-         hb_itemPutC( pItem, hb_parc( 2 ) );
+         // Warning: Don't use hb_itemPutC() here, as it fails if 1 byte buffer used
+         // cause 1 byte length strings optimization
+         hb_itemPutCPtr( pItem, hb_strdup( hb_parc( 2 ) ), hb_parclen( 2 ) );
 
       ulRead = hb_parnl( 3 );
 
