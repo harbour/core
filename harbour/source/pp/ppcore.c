@@ -1186,6 +1186,7 @@ static int CommandStuff( char * ptrmp, char * inputLine, char * ptro, int * lenr
   int ipos;
   char * lastopti[ 3 ], * strtopti = NULL, * strtptri = NULL;
   char * ptri = inputLine, * ptr, tmpname[ MAX_NAME ];
+  int isWordInside = 0;
 
   /*
   printf( "MP: >%s<\nIn: >%s<\n", ptrmp, ptri );
@@ -1272,6 +1273,7 @@ static int CommandStuff( char * ptrmp, char * inputLine, char * ptro, int * lenr
           }
         switch( *ptrmp ) {
         case '[':
+          isWordInside = 0;
           s_numBrackets++;
           s_aIsRepeate[ s_Repeate ] = 0;
           lastopti[s_Repeate++] = ptrmp;
@@ -1312,12 +1314,21 @@ static int CommandStuff( char * ptrmp, char * inputLine, char * ptro, int * lenr
                   else
                     ptrmp = lastopti[s_Repeate];
                 }
-              else ptrmp++;
+              else
+                {
+                 if( !isWordInside ) strtopti = NULL;
+                 ptrmp++;
+                }
               s_numBrackets--;
             }
-          else { s_numBrackets--; ptrmp++; }
+          else 
+            {
+             if( !isWordInside ) strtopti = NULL;
+             s_numBrackets--; ptrmp++;
+            }
           break;
         case ',':
+          isWordInside = 1;
           if( !s_numBrackets ) strtopti = NULL;
           if( *ptri == ',' ) { ptrmp++; ptri++; }
           else
@@ -1331,6 +1342,7 @@ static int CommandStuff( char * ptrmp, char * inputLine, char * ptro, int * lenr
           break;
         case '\1':  /*  Match marker */
           if( !s_numBrackets ) strtopti = NULL;
+          if( *(ptrmp+2) == '2' ) isWordInside = 1; /*  restricted match marker  */
           if( !WorkMarkers( &ptrmp, &ptri, ptro, lenres, com_or_xcom ) )
             {
               if( s_numBrackets )
@@ -1346,6 +1358,7 @@ static int CommandStuff( char * ptrmp, char * inputLine, char * ptro, int * lenr
           else endTranslation = TRUE;
           break;
         default:    /*   Key word    */
+          isWordInside = 1;
           if( !s_numBrackets ) strtopti = NULL;
           ptr = ptri;
           if( *ptri == ',' || truncmp( &ptri, &ptrmp, !com_or_xcom ) )
@@ -1471,6 +1484,12 @@ static int WorkMarkers( char ** ptrmp, char ** ptri, char * ptro, int * lenres, 
     {
       ptrtemp++;
       HB_SKIPTABSPACES( ptrtemp );
+      while( *ptrtemp == '[' )
+      {
+         while( *ptrtemp != ']' ) ptrtemp++;
+         ptrtemp++;
+         HB_SKIPTABSPACES( ptrtemp );
+      }
     }
   if( *(exppatt+2) != '2' && *ptrtemp != '\1' && *ptrtemp != ',' &&
        *ptrtemp != '[' && *ptrtemp != ']' && *ptrtemp != '\0' )
