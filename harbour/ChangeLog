@@ -1,3 +1,7 @@
+199908.09-13:12 GMT+3 Alexander Kresin
+  * source/hbpp/hbpp.c
+    * added support for list match patterns
+
 19990809-03:47 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/compiler/harbour.l
      + added DECLARE statement - treated as PRIVATE

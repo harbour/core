@@ -376,7 +376,7 @@ void ParseCommand( char* sLine, int com_or_xcom, int com_or_tra )
    char cmdname[MAX_NAME];
    COMMANDS *stcmd;
    int mlen,rlen;
-   int ipos;
+   int ipos, rez;
 
    NextWord( &sLine, cmdname, FALSE );
    stroupper( cmdname );
@@ -1287,8 +1287,8 @@ void SearnRep( char *exppatt,char *expreal,int lenreal,char *ptro, int *lenres)
 
 int ReplacePattern ( char patttype, char *expreal, int lenreal, char *ptro, int lenres )
 {
-   int rmlen = lenreal;
-   char sQuotes[ 3 ] = "\"\"";
+   int rmlen = lenreal, ifou, lenitem, i;
+   char sQuotes[ 4 ] = "\"\",";
 
      switch ( *(ptro+2) ) {
       case '0':  /* Regular result marker  */
@@ -1306,6 +1306,26 @@ int ReplacePattern ( char patttype, char *expreal, int lenreal, char *ptro, int 
           pp_Stuff ( "", ptro, 0, 4, lenres );
          else if ( patttype == '1' )          /* list match marker */
          {
+            pp_Stuff ( "", ptro, 0, 4, lenres );
+            lenres -= 4;
+            rmlen = 0;
+            do
+            {
+               ifou = pp_strAt( ",", 1, expreal, lenreal );
+               lenitem = (ifou)? ifou-1:lenreal;
+               if( *expreal != '\0' )
+               {
+                  i = (ifou)? 3:2;
+                  pp_rQuotes( expreal, sQuotes );
+                  pp_Stuff ( sQuotes, ptro, i, 0, lenres );
+                  pp_Stuff ( expreal, ptro+1, lenitem, 0, lenres+i );
+                  ptro += i + lenitem;
+                  rmlen += i + lenitem;
+               }
+               expreal += ifou;
+               lenreal -= ifou;
+            }
+            while ( ifou > 0 );
          }
          else
          {
@@ -1318,6 +1338,38 @@ int ReplacePattern ( char patttype, char *expreal, int lenreal, char *ptro, int 
       case '3':  /* Smart stringify result marker  */
          if ( patttype == '1' )          /* list match marker */
          {
+            pp_Stuff ( "", ptro, 0, 4, lenres );
+            lenres -= 4;
+            rmlen = 0;
+            do
+            {
+               ifou = pp_strAt( ",", 1, expreal, lenreal );
+               lenitem = (ifou)? ifou-1:lenreal;
+               if( *expreal != '\0' )
+               {
+                  if ( !lenitem || *expreal == '(' || *expreal == '&' ||
+                                     *expreal == '\"' || *expreal == '\'' )
+                  {
+                     if( ifou ) lenitem++;
+                     pp_Stuff ( (*expreal=='&')? expreal+1:expreal, ptro,
+                             (*expreal=='&')? lenitem-1:lenitem, 4, lenres );
+                  }
+                  else
+                  {
+                     i = (ifou)? 3:2;
+                     pp_rQuotes( expreal, sQuotes );
+                     pp_Stuff ( sQuotes, ptro, i, 0, lenres );
+                     pp_Stuff ( expreal, ptro+1, lenitem, 0, lenres+i );
+                     ptro += i;
+                     rmlen += i;
+                  }
+                  ptro += lenitem;
+                  rmlen += lenitem;
+               }
+               expreal += ifou;
+               lenreal -= ifou;
+            }
+            while ( ifou > 0 );
          }
          else if ( !lenreal || *expreal == '(' || *expreal == '&' ||
                                   *expreal == '\"' || *expreal == '\'' )
@@ -1336,6 +1388,25 @@ int ReplacePattern ( char patttype, char *expreal, int lenreal, char *ptro, int 
            pp_Stuff ( expreal, ptro, lenreal, 4, lenres );
          else if ( patttype == '1' )          /* list match marker */
          {
+            pp_Stuff ( "", ptro, 0, 4, lenres );
+            lenres -= 4;
+            rmlen = 0;
+            do
+            {
+               ifou = pp_strAt( ",", 1, expreal, lenreal );
+               lenitem = (ifou)? ifou-1:lenreal;
+               if( *expreal != '\0' )
+               {
+                  i = (ifou)? 5:4;
+                  pp_Stuff ( "{||},", ptro, i, 0, lenres );
+                  pp_Stuff ( expreal, ptro+3, lenitem, 0, lenres+i );
+                  ptro += i + lenitem;
+                  rmlen += i + lenitem;
+               }
+               expreal += ifou;
+               lenreal -= ifou;
+            }
+            while ( ifou > 0 );
          }
          else
          {
@@ -1379,6 +1450,11 @@ void pp_rQuotes( char *expreal, char *sQuotes )
         *sQuotes = '\'';
         *(sQuotes+1) = '\'';
      }
+   }
+   else
+   {
+      *sQuotes = '\"';
+      *(sQuotes+1) = '\"';
    }
 }
 
