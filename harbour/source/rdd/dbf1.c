@@ -31,6 +31,7 @@
 #include "rddsys.ch"
 #include "errorapi.h"
 #include "dates.h"
+#include "langapi.h"
 
 typedef struct
 {
@@ -223,6 +224,20 @@ static ERRCODE Info( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
    return SUCCESS;
 }
 
+static ERRCODE Lock( AREAP pArea, LPDBLOCKINFO pLockInfo )
+{
+   if( SELF_RAWLOCK( pArea, pLockInfo->uiMethod, pLockInfo->itmRecID ) == SUCCESS )
+   {
+      pLockInfo->fResult = TRUE;
+      return SUCCESS;
+   }
+   else
+   {
+      pLockInfo->fResult = FALSE;
+      return FAILURE;
+   }
+}
+
 static ERRCODE PutValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 {
    LPFIELD pField;
@@ -233,7 +248,7 @@ static ERRCODE PutValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 
    if( uiIndex > pArea->uiFieldCount )
       return FAILURE;
-
+   
    pField = pArea->lpFields;
    uiOffset = 1;
    for( uiCount = 1; uiCount < uiIndex; uiCount++ )
@@ -255,18 +270,34 @@ static ERRCODE PutValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          {
             szOldChar = szText + pField->uiLen + ( ( USHORT ) pField->uiDec << 8 );
             szEndChar = * szOldChar;
-            sprintf( (char *)szText, "%-*s", pField->uiLen, pItem->item.asString.value );
+            sprintf( ( char * ) szText, "%-*s", pField->uiLen, pItem->item.asString.value );
             bError = FALSE;
          }
          break;
 
       case 'N':
-         if( pItem->type & IT_NUMERIC )
+         if( pItem->type & IT_INTEGER )
          {
             if( pField->uiDec )
-               sprintf( (char *)szText, "%*.*f", pField->uiLen, pField->uiDec, pItem->item.asDouble.value );
+               sprintf( ( char * ) szText, "%*.*f", pField->uiLen, pField->uiDec, pItem->item.asInteger.value );
             else
-               sprintf( (char *)szText, "%*ld", pField->uiLen, pItem->item.asInteger.value );
+               sprintf( ( char * ) szText, "%*i", pField->uiLen, pItem->item.asInteger.value );
+            bError = FALSE;
+         }
+         else if( pItem->type & IT_LONG )
+         {
+            if( pField->uiDec )
+               sprintf( ( char * ) szText, "%*.*f", pField->uiLen, pField->uiDec, pItem->item.asLong.value );
+            else
+               sprintf( ( char * ) szText, "%*l", pField->uiLen, pItem->item.asLong.value );
+            bError = FALSE;
+         }
+         else if( pItem->type & IT_DOUBLE )
+         {
+            if( pField->uiDec )
+               sprintf( ( char * ) szText, "%*.*f", pField->uiLen, pField->uiDec, pItem->item.asDouble.value );
+            else
+               sprintf( ( char * ) szText, "%*l", pField->uiLen, pItem->item.asDouble.value );
             bError = FALSE;
          }
          break;
@@ -275,7 +306,7 @@ static ERRCODE PutValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          if( pItem->type & IT_DATE )
          {
             hb_dateDecode( pItem->item.asDate.value, &lDay, &lMonth, &lYear );
-            hb_dateStrPut( (char *)szText, lDay, lMonth, lYear );
+            hb_dateStrPut( ( char * ) szText, lDay, lMonth, lYear );
             bError = FALSE;
          }
          break;
@@ -297,6 +328,14 @@ static ERRCODE PutValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
    {
       printf( "Error 1020 EG_DATATYPE\n" );
       return FAILURE;
+   }
+   return SUCCESS;
+}
+
+static ERRCODE RawLock( AREAP pArea, USHORT uiAction, LONG lRecNo )
+{
+   switch( uiAction )
+   {
    }
    return SUCCESS;
 }
@@ -388,9 +427,6 @@ static ERRCODE ReadDBHeader( AREAP pArea )
    pArea->lpExtendInfo->bRecord = ( BYTE * ) hb_xgrab( pArea->lpExtendInfo->uiRecordLen + 1 );
    memset( pArea->lpExtendInfo->bRecord, ' ', pArea->lpExtendInfo->uiRecordLen );
    pArea->lpExtendInfo->bRecord[ pArea->lpExtendInfo->uiRecordLen ] = 0;
-   pArea->lpExtendInfo->bOldRecord = ( BYTE * ) hb_xgrab( pArea->lpExtendInfo->uiRecordLen + 1 );
-   memset( pArea->lpExtendInfo->bOldRecord, ' ', pArea->lpExtendInfo->uiRecordLen );
-   pArea->lpExtendInfo->bOldRecord[ pArea->lpExtendInfo->uiRecordLen ] = 0;
    return SUCCESS;
 }
 
@@ -415,6 +451,11 @@ static ERRCODE RecNo( AREAP pArea, PHB_ITEM pRecNo )
 static ERRCODE SkipRaw( AREAP pArea, LONG lToSkip )
 {
    return SELF_GOTO( pArea, hb_itemGetNL( pArea->lpExtendInfo->pRecNo ) + lToSkip );
+}
+
+static ERRCODE UnLock( AREAP pArea, LONG lRecNo )
+{
+   return SELF_RAWLOCK( pArea, REC_UNLOCK, lRecNo );
 }
 
 static ERRCODE WriteDBHeader( AREAP pArea )
@@ -544,6 +585,10 @@ static RDDFUNCS dbfTable = { 0,               /* Super Bof */
                              0,               /* Super Release */
                              0,               /* Super StructSize */
                              0,               /* Super SysName */
+                             0,               /* Super Error */
+                             RawLock,
+                             Lock,
+                             UnLock,
                              ReadDBHeader,
                              WriteDBHeader
                            };
@@ -565,3 +610,4 @@ HARBOUR HB_DBF_GETFUNCTABLE( void )
    else
       hb_retni( FAILURE );
 }
+

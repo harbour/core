@@ -230,6 +230,17 @@ static ERRCODE Eof( AREAP pArea, BOOL * pEof )
    return SUCCESS;
 }
 
+static ERRCODE Error( AREAP pArea, PHB_ITEM pError )
+{
+   char * szRddName;
+
+   szRddName = ( char * ) hb_xgrab( HARBOUR_MAX_RDD_DRIVERNAME_LENGTH + 1 );
+   SELF_SYSNAME( pArea, ( BYTE * ) szRddName );
+   hb_errPutSubSystem( pError, szRddName );
+   hb_xfree( szRddName );
+   return hb_errLaunch( pError );
+}
+
 static ERRCODE FieldCount( AREAP pArea, USHORT * uiFields )
 {
    * uiFields = pArea->uiFieldCount;
@@ -321,6 +332,7 @@ static ERRCODE Open( AREAP pArea, LPDBOPENINFO pOpenInfo )
       ( ( PHB_DYNS ) pArea->atomAlias )->hArea = 0;
       return FAILURE;
    }
+   pArea->lpExtendInfo->fExclusive = !pOpenInfo->fShared;
 
    return SELF_GOTOP( pArea );
 }
@@ -353,8 +365,6 @@ static ERRCODE Release( AREAP pArea )
    {
       if( pArea->lpExtendInfo->bRecord )
          hb_xfree( pArea->lpExtendInfo->bRecord );
-      if( pArea->lpExtendInfo->bOldRecord )
-         hb_xfree( pArea->lpExtendInfo->bOldRecord );
       hb_itemRelease( pArea->lpExtendInfo->pRecNo );
       hb_xfree( pArea->lpExtendInfo );
    }
@@ -446,6 +456,10 @@ static RDDFUNCS defTable = { Bof,
                              Release,
                              StructSize,
                              SysName,
+                             Error,
+                             ( DBENTRYP_VSP ) UnSupported,
+                             ( DBENTRYP_VL ) UnSupported,
+                             ( DBENTRYP_L ) UnSupported,
                              UnSupported,
                              UnSupported
                            };

@@ -177,9 +177,10 @@ typedef struct
    USHORT   uiHeaderLen;     /* Size of header */
    USHORT   uiRecordLen;     /* Size of record */
    BYTE *   bRecord;         /* Buffer of the data */
-   BYTE *   bOldRecord;      /* Buffer of the data for undelete */
    BOOL     fHasMemo;        /* Work Area with Memo fields */
    PHB_ITEM pRecNo;          /* Current record */
+   BOOL     fExclusive;      /* Share the Work Area */
+   BOOL     fFileLocked;     /* File Locked */
 } DBEXTENDINFO;
 
 typedef DBEXTENDINFO * LPDBEXTENDINFO;
@@ -554,11 +555,13 @@ typedef USHORT ( * DBENTRYP_I    )( AREAP area, PHB_ITEM param );
 typedef USHORT ( * DBENTRYP_SI   )( AREAP area, USHORT index, PHB_ITEM param );
 typedef USHORT ( * DBENTRYP_VP   )( AREAP area, LPDBOPENINFO param );
 typedef USHORT ( * DBENTRYP_VF   )( AREAP area, LPDBFIELDINFO param );
+typedef USHORT ( * DBENTRYP_VL   )( AREAP area, LPDBLOCKINFO param );
 typedef USHORT ( * DBENTRYP_SP   )( AREAP area, USHORT * param );
 typedef USHORT ( * DBENTRYP_P    )( AREAP area, BYTE * param );
 typedef USHORT ( * DBENTRYP_S    )( AREAP area, USHORT param );
 typedef USHORT ( * DBENTRYP_LP   )( AREAP area, LONG * param );
 typedef USHORT ( * DBENTRYP_SVP  )( AREAP area, USHORT index, void * param );
+typedef USHORT ( * DBENTRYP_VSP  )( AREAP area, USHORT action, LONG lRecord );
 
 #if 0
 typedef USHORT ( * DBENTRYP_PP   )( AREAP area, void ** param);
@@ -568,7 +571,6 @@ typedef USHORT ( * DBENTRYP_VPLP )( AREAP area, void * p1, LONGP p2);
 typedef USHORT ( * DBENTRYP_LSP  )( AREAP area, LONG p1, USHORTP p2);
 typedef USHORT ( * DBENTRYP_SSI  )( AREAP area, USHORT p1, USHORT p2, PHB_ITEM p3);
 typedef USHORT ( * DBENTRYP_ISI  )( AREAP area, PHB_ITEM p1, USHORT p2, PHB_ITEM p3);
-typedef USHORT ( * DBENTRYP_VSP  )( AREAP area, USHORT action, LONG lRecord);
 #endif
 
 
@@ -698,19 +700,23 @@ typedef struct _RDDFUNCS
    /* Miscellaneous */
 
    DBENTRYP_VP   compile;
-   DBENTRYP_VP   error;
+#endif
+   DBENTRYP_I    error;
+#if 0
    DBENTRYP_I    evalBlock;
+#endif
 
 
    /* Network operations */
 
    DBENTRYP_VSP  rawlock;
-   DBENTRYP_VP   lock;
+   DBENTRYP_VL   lock;
    DBENTRYP_L    unlock;
 
 
    /* Memofile functions */
 
+#if 0
    DBENTRYP_V    closeMemFile;
    DBENTRYP_VP   createMemFile;
    DBENTRYP_SVPB getValueFile;

@@ -1,3 +1,9 @@
+19990822-18:20 GMT+1 Bruno Cantero <bruno@issnet.net>
+   * include/rddapi.h
+     source/rdd/dbcmd.c
+     source/rdd/dbf1.c
+     * Bug in PutValue removed
+
 19990822-14:12 GMT+1 Victor Szel <info@szelvesz.hu>
   * config/win32/gcc.cf
     + -( -) parameters temporarly readded, to make it work, new circular 
