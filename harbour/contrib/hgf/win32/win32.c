@@ -81,11 +81,11 @@ HB_FUNC( WINCREATESTDWINDOW )
 {
    hb_retnl( ( LONG ) CreateWindow( TEXT( hb_parc( 4 ) ),   /* cClassName */
                         TEXT (hb_parc( 5 )),                /* cCaption */
-                        WS_OVERLAPPEDWINDOW,   // hb_parnl( 2 ),           /* style */
+                        hb_parnl( 2 ),                      /* style */
                         CW_USEDEFAULT, CW_USEDEFAULT,
                         CW_USEDEFAULT, CW_USEDEFAULT,
-                        NULL,    /* hWndParent */
-                        (HMENU) hb_parnl( 8 ),   /* nId */
+                        ( HWND ) hb_parnl( 7 ),  /* hWndParent */
+                        ( HMENU ) hb_parnl( 8 ), /* hMenu or nId */
                         GetModuleHandle( NULL ), NULL) );
 }
 
@@ -255,11 +255,22 @@ HB_FUNC( WINSETWIDTH )
 {
    HWND hWnd = ( HWND ) hb_parnl( 1 );
    RECT rct;
+   POINT pt;
+   WORD wHeight;
 
    GetWindowRect( hWnd, &rct );
+   wHeight = rct.bottom - rct.top;
 
-   MoveWindow( hWnd, rct.left, rct.top, hb_parnl( 2 ),
-               rct.bottom - rct.top, TRUE );
+   if( GetWindowLong( hWnd, GWL_STYLE ) && WS_CHILD )
+   {
+      pt.x = rct.left;
+      pt.y = rct.top;
+      ScreenToClient( GetParent( hWnd ), &pt );
+      rct.left = pt.x;
+      rct.top  = pt.y;
+   }
+
+   MoveWindow( hWnd, rct.left, rct.top, hb_parnl( 2 ), wHeight, TRUE );
 }
 
 HB_FUNC( WINGETHEIGHT )
@@ -276,19 +287,40 @@ HB_FUNC( WINSETHEIGHT )
 {
    HWND hWnd = ( HWND ) hb_parnl( 1 );
    RECT rct;
+   POINT pt;
+   WORD wWidth;
 
    GetWindowRect( hWnd, &rct );
+   wWidth = rct.right - rct.left;
 
-   MoveWindow( hWnd, rct.left, rct.top, rct.right - rct.left,
-               hb_parnl( 2 ), TRUE );
+   if( GetWindowLong( hWnd, GWL_STYLE ) && WS_CHILD )
+   {
+      pt.x = rct.left;
+      pt.y = rct.top;
+      ScreenToClient( GetParent( hWnd ), &pt );
+      rct.left = pt.x;
+      rct.top  = pt.y;
+   }
+
+   MoveWindow( hWnd, rct.left, rct.top, wWidth, hb_parnl( 2 ), TRUE );
 }
 
 HB_FUNC( WINGETTOP )
 {
    HWND hWnd = ( HWND ) hb_parnl( 1 );
    RECT rct;
+   POINT pt;
 
    GetWindowRect( hWnd, &rct );
+
+   if( GetWindowLong( hWnd, GWL_STYLE ) && WS_CHILD )
+   {
+      pt.x = rct.left;
+      pt.y = rct.top;
+      ScreenToClient( GetParent( hWnd ), &pt );
+      rct.left = pt.x;
+      rct.top  = pt.y;
+   }
 
    hb_retnl( rct.top );
 }
@@ -297,20 +329,41 @@ HB_FUNC( WINSETTOP )
 {
    HWND hWnd = ( HWND ) hb_parnl( 1 );
    RECT rct;
+   POINT pt;
+   WORD wHeight, wWidth;
 
    GetWindowRect( hWnd, &rct );
+   wHeight = rct.bottom - rct.top;
+   wWidth  = rct.right - rct.left;
 
-   MoveWindow( hWnd, rct.left, hb_parnl( 2 ), rct.right - rct.left,
-               rct.bottom - rct.top, TRUE );
+   if( GetWindowLong( hWnd, GWL_STYLE ) && WS_CHILD )
+   {
+      pt.x = rct.left;
+      pt.y = hb_parnl( 2 );
+      ScreenToClient( GetParent( hWnd ), &pt );
+      rct.left = pt.x;
+      rct.top  = pt.y;
+   }
+
+   MoveWindow( hWnd, rct.left, hb_parnl( 2 ), wWidth, wHeight, TRUE );
 }
-
 
 HB_FUNC( WINGETLEFT )
 {
    HWND hWnd = ( HWND ) hb_parnl( 1 );
    RECT rct;
+   POINT pt;
 
    GetWindowRect( hWnd, &rct );
+
+   if( GetWindowLong( hWnd, GWL_STYLE ) && WS_CHILD )
+   {
+      pt.x = rct.left;
+      pt.y = rct.top;
+      ScreenToClient( GetParent( hWnd ), &pt );
+      rct.left = pt.x;
+      rct.top  = pt.y;
+   }
 
    hb_retnl( rct.left );
 }
@@ -319,9 +372,26 @@ HB_FUNC( WINSETLEFT )
 {
    HWND hWnd = ( HWND ) hb_parnl( 1 );
    RECT rct;
+   POINT pt;
+   WORD wHeight, wWidth;
 
    GetWindowRect( hWnd, &rct );
+   wHeight = rct.bottom - rct.top;
+   wWidth  = rct.right - rct.left;
 
-   MoveWindow( hWnd, hb_parnl( 2 ), rct.top, rct.right - rct.left,
-               rct.bottom - rct.top, TRUE );
+   if( GetWindowLong( hWnd, GWL_STYLE ) && WS_CHILD )
+   {
+      pt.x = hb_parnl( 2 );
+      pt.y = rct.top;
+      ScreenToClient( GetParent( hWnd ), &pt );
+      rct.left = pt.x;
+      rct.top  = pt.y;
+   }
+
+   MoveWindow( hWnd, hb_parnl( 2 ), rct.top, wWidth, wHeight, TRUE );
+}
+
+HB_FUNC( SHOWWINDOW )
+{
+   hb_retl( ShowWindow( ( HWND ) hb_parnl( 1 ), hb_parl( 2 ) ) );
 }
