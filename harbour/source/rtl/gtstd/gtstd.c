@@ -76,9 +76,9 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
    hb_fsSetDevMode( s_iFilenoStdout, FD_BINARY );
 }
 
-void hb_gt_Done( void )
+void hb_gt_Exit( void )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Done()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Exit()"));
 }
 
 int hb_gt_ReadKey( HB_inkey_enum eventmask )

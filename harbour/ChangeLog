@@ -1,3 +1,22 @@
+20000412-01:17 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/rtl/gtapi.c
+     % hb_gtWrite() one more variable removed.
+     % hb_gtRepChar() the terminating zero was superfluous.
+     % hb_gtWriteAt() is now native instead of calling the high-level
+       functions, so it's faster, because of that hb_gtBox() is also faster.
+     % hb_gtRepChar() uses WriteAt() instead of Write(), so it's faster.
+     % Many functions calls low-level hb_gt_() functions instead of the same
+       level, this way some calls could be eliminated and gain some speed.
+       (hb_gtMaxRow(), hb_gtMaxCol(), hb_gtVersion(), hb_gtColorSelect(), ...)
+       The number of same level calls has been reduced by 20.
+     ! hb_gtInit() fixed the order of some init steps.
+
+   * include/hbapigt.h
+   * source/rtl/gtapi.c
+   * source/rtl/gt*/gt*.c
+     * hb_gt_Done() renamed to hb_gt_Exit()
+
 20000411-23:09 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/rtl/gtapi.c

@@ -231,9 +231,9 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
    keypad( stdscr, FALSE );
 }
 
-void hb_gt_Done( void )
+void hb_gt_Exit( void )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Done()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Exit()"));
 
    noraw();
    refresh();

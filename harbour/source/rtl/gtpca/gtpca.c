@@ -86,9 +86,9 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
    fprintf( stdout, "\x1B[=7h" ); /* Enable line wrap (for OUTSTD() and OUTERR()) */
 }
 
-void hb_gt_Done( void )
+void hb_gt_Exit( void )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Done()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Exit()"));
    /* TODO: */
 }
 
