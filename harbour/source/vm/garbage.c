@@ -290,6 +290,7 @@ void hb_gcCollectAll( void )
       hb_vmIsLocalRef();
       hb_vmIsStaticRef();
       hb_memvarsIsMemvarRef();
+      hb_gcItemRef( &hb_stack.Return );
       hb_clsIsClassRef();
 
       /* check list of locked block for blocks referenced from 

@@ -1,3 +1,8 @@
+2000-07-14 20:25 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/vm/garbage.c
+        * the garbage collector scans now hb_stack.Return values
+        
 2000-07-14 09:40 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/simplex.c
      ! Minor correction, to accept a match, if all rule's tokens used.
