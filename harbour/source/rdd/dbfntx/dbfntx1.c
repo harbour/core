@@ -1659,7 +1659,7 @@ static void hb_ntxRootPage( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo, LPSORTITEM 
 
 static BOOL hb_ntxGetSortedKey( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo, LPSORTITEM* ppKey, LPSORTITEM pKeyRoot )
 {
-   BYTE *key1, *key2;
+   char *key1, *key2;
    short int nPage, iPage;
    USHORT itemLength = sizeof( ULONG ) + pTag->KeyLength;
    LPSORTITEM pKey = *ppKey;
@@ -1678,14 +1678,14 @@ static BOOL hb_ntxGetSortedKey( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo, LPSORTI
       {
          key2 = ( (LPPAGEITEM) ( pSwapPage->page +
                        itemLength*pSwapPage->curkey ) )->key;
-         if( !key1 || memcmp( key1,key2,pTag->KeyLength ) > 0 )
+         if( !key1 || memcmp( (BYTE*)key1,(BYTE*)key2,pTag->KeyLength ) > 0 )
          {
             nPage = iPage;
             key1 = key2;
          }
       }         
    }
-   if( ( pKey && !key1 ) || ( pKey && memcmp( key1,pKey->key,pTag->KeyLength ) > 0 ) )
+   if( ( pKey && !key1 ) || ( pKey && memcmp( (BYTE*)key1,(BYTE*)pKey->key,pTag->KeyLength ) > 0 ) )
    {
       pKeyRoot->rec_no = pKey->rec_no;
       memcpy( pKeyRoot->key, pKey->key, pTag->KeyLength );
@@ -1711,7 +1711,7 @@ static BOOL hb_ntxGetSortedKey( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo, LPSORTI
          {
             hb_fsSeek( pSortInfo->tempHandle, pSwapPage->offset +
                  pageItemLength*pSwapPage->numReadkeys , SEEK_SET );
-            nRead = hb_fsRead( pSortInfo->tempHandle, pSwapPage->page,
+            nRead = hb_fsRead( pSortInfo->tempHandle, (BYTE*)pSwapPage->page,
                  ( (pSwapPage->numAllkeys-pSwapPage->numReadkeys < maxKeys)? 
                     pSwapPage->numAllkeys-pSwapPage->numReadkeys:maxKeys ) * pageItemLength );
             pSwapPage->numkeys = nRead/pageItemLength;
@@ -1769,7 +1769,7 @@ static void hb_ntxBufferSave( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo )
       {
          pSwapPage = (LPSWAPPAGE) ( pSortInfo->swappages + sizeof(SWAPPAGE)*i );
          hb_fsSeek( pSortInfo->tempHandle, pSwapPage->offset, SEEK_SET );
-         nRead = hb_fsRead( pSortInfo->tempHandle, pSwapPage->page,
+         nRead = hb_fsRead( pSortInfo->tempHandle, (BYTE*)pSwapPage->page,
             ( (pSwapPage->numAllkeys-pSwapPage->numReadkeys < maxKeysSwapPage)? 
                pSwapPage->numAllkeys-pSwapPage->numReadkeys:maxKeysSwapPage ) * pageItemLength );
          pSwapPage->numkeys = nRead/pageItemLength;
@@ -1995,7 +1995,7 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
                while( --nAttemptLeft )
                {
                   tmpnam( pszTempName );
-                  sortInfo.tempHandle = hb_fsCreate( pszTempName,FC_NORMAL );
+                  sortInfo.tempHandle = hb_fsCreate( (BYTE*)pszTempName,FC_NORMAL );
                   if( sortInfo.tempHandle != FS_ERROR )
                      break;
                }

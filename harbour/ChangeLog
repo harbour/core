@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+   Based on an original idea from Ron Pinkas. Some little portions
+   are borrowed from xHarbour.
+
 2002-01-26 13:03 UTC+0100 Patrick Mast <email@patrickmast.com>
    * Changed enttry in Changelog 2002-01-25 22:30 from Alexander to Luiz
 
