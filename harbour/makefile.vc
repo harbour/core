@@ -283,7 +283,6 @@ $(HARBOUR_EXE) : \
     $(COMPILER_DIR)\genhrb.c \
     $(COMPILER_DIR)\genrc.c \
     $(COMPILER_DIR)\genjava.c \
-    $(COMMON_DIR)\hbfsapi.c \
     $(COMPILER_DIR)\genpas.c \
     $(COMPILER_DIR)\expropt.c \
     $(PP_DIR)\hbpp.c \
@@ -303,7 +302,6 @@ $(HARBOUR_EXE) : \
     -del hbpp.obj
     -del hbppint.obj
     -del table.obj
-    -del hbfsapi.obj
 
 #
 # Library dependencies and build rules
