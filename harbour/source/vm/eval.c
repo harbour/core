@@ -301,3 +301,24 @@ PHB_ITEM hb_itemDoC( char * szFunc, ULONG ulPCount, ... )
    return pResult;
 }
 
+/*
+ * Notice that these two functions place the result at hb_stack.Return,
+ * that you may access its value using a _par...( -1 ).
+ */
+
+/* undocumented Clipper _cEval0() */
+void hb_evalBlock0( PHB_ITEM pCodeBlock )
+{
+   hb_vmPushSymbol( &hb_symEval );
+   hb_vmPush( pCodeBlock );
+   hb_vmFunction( 0 );
+}
+
+/* undocumented Clipper _cEval1() */
+void hb_evalBlock1( PHB_ITEM pCodeBlock, PHB_ITEM pParam )
+{
+   hb_vmPushSymbol( &hb_symEval );
+   hb_vmPush( pCodeBlock );
+   hb_vmPush( pParam );
+   hb_vmFunction( 1 );
+}
