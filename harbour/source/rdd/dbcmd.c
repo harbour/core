@@ -37,7 +37,7 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 1999 Luiz Rafael Culik <culik@sl.conex.net>
- *    DB*() documentation
+ *    DB* () documentation
  *    ORD*() documentation
  *    RDD*() documentation
  * See doc/license.txt for licensing terms.

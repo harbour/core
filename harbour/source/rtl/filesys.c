@@ -2197,7 +2197,7 @@ HARBOUR HB_FILE( void )
  *     This function is not CA-Clipper compilant since can read
  *    strings greather the 65K
  *  $SEEALSO$
- *     BIN2I() BIN2L() BIN2W() FERROR() FREAD() FSEEK()
+ *     BIN2I(),BIN2L(),BIN2W(),FERROR(),FREAD(),FSEEK()
  *  $INCLUDE$
  *     
  *  $END$
