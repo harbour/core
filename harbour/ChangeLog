@@ -1,3 +1,7 @@
+2001-07-20 13:35 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/rtl/memofile.c
+    ! A bug fixed, which appeared while reading an empty file
+
 2001-07-19 20:30 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * include/hbapi.h
      + Added #define HB_MAX_MACRO_ARGS 16

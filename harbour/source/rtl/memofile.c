@@ -68,30 +68,35 @@ HB_FUNC( MEMOREAD )
 
       if( fhnd != FS_ERROR )
       {
-         ULONG ulSize = hb_fsSeek( fhnd, -( ( LONG ) sizeof( BYTE ) ), FS_END ) + sizeof( BYTE );
-         BYTE * pbyBuffer;
-
-         /* Don't read the file terminating EOF character */
-
-         #if ! defined(OS_UNIX_COMPATIBLE)
+         ULONG ulSize = hb_fsSeek( fhnd, 0, FS_END );
+         if( ulSize != 0 )
          {
-            BYTE byEOF = HB_CHAR_NUL;
+            BYTE * pbyBuffer;
 
-            hb_fsRead( fhnd, &byEOF, sizeof( BYTE ) );
+            /* Don't read the file terminating EOF character */
 
-            if( byEOF == HB_CHAR_EOF )
-               ulSize--;
+            #if ! defined(OS_UNIX_COMPATIBLE)
+            {
+               BYTE byEOF = HB_CHAR_NUL;
+
+               hb_fsRead( fhnd, &byEOF, sizeof( BYTE ) );
+
+               if( byEOF == HB_CHAR_EOF )
+                  ulSize--;
+            }
+            #endif
+
+            pbyBuffer = ( BYTE * ) hb_xgrab( ulSize + sizeof( char ) );
+
+            hb_fsSeek( fhnd, 0, FS_SET );
+            hb_fsReadLarge( fhnd, pbyBuffer, ulSize );
+
+            hb_fsClose( fhnd );
+
+            hb_itemPutCPtr( hb_itemReturnPtr(), ( char * ) pbyBuffer, ulSize );
          }
-         #endif
-
-         pbyBuffer = ( BYTE * ) hb_xgrab( ulSize + sizeof( char ) );
-
-         hb_fsSeek( fhnd, 0, FS_SET );
-         hb_fsReadLarge( fhnd, pbyBuffer, ulSize );
-
-         hb_fsClose( fhnd );
-
-         hb_itemPutCPtr( hb_itemReturnPtr(), ( char * ) pbyBuffer, ulSize );
+         else
+            hb_retc( "" );
       }
       else
          hb_retc( "" );
