@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
     * bug fixed, reported by Lorenzo Fiorini
+
+2002-02-26 11:53 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/pp/ppcore.c
+    * bug fixed, reported by Walter Negro
+
 2002-02-24 09:36 UTC+0100 Antonio Linares <alinares@fivetech.com>
    * source/debug/debugger.prg
      * Fixed bug when browsing vars
@@ -27,27 +32,27 @@
      * Fixed bug when browsing vars
        reported by Jorge A. Giraldo
 
-    * METHOD ::ParsePict() - The change is because if ::Original it is not 
+2002-02-21 18:10 UTC-0500 Jorge A. Giraldo <jorgeagiraldo@emtelsa.multi.net.co>
 
   * contrib\delphi\hbdll\start.bat
-    - METHOD ::Undo() - Delete assignment to ::buffer because 
+    * a small typo
   * contrib\delphi\hbdll\errorsys.prg
     * For a DLL there is not main procedure, there seems to be something
-    - METHOD ::VarPut() - Delete ::nDispLen := NIL line, because 
+      to be fixed to avoid and invalid "+" operation when showing the
       called stack.  A specific workaround is provided to fix the problem.
-                      - Revert changes of Ignacio Ortiz because the 
+  * contrib\delphi\hbdll\EasyPath.dpr
     * Id included
   * contrib\delphi\hbdll\Main.pas
     * Id included
     + In case of an error, the QUIT from the DLL has been moved to Delphi.
     + Other small changes
   * contrib\delphi\hbdll\MyProg.prg
-          Only ::ParsePict() can load a value that can differ of 
+    * small changes
 
 2002-02-21 06:00 UTC-0300 Walter Negro <anegro@overnet.com.ar>
-    ! METHOD ::KillFocus() - Change position of lines, hasfocus should be 
+  * source/rtl/tget.prg
     * METHOD ::ParsePict() - The change is because if ::Original it is not
-          This makes that in numeric fields, points or comas are not 
+          numeric, it would generate an error.
 
     - METHOD ::Undo() - Delete assignment to ::buffer because
           ::VarPut( ::Original, .t. ) makes this assignment.
