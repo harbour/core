@@ -120,7 +120,8 @@ char * hb_comp_szWarnings[] =
    "3Message \'%s\' not known in class \'%s\'",
    "0Meaningless use of expression: \'%s\'",
    "2Unreachable code",
-   "1Redundant \'ANNOUNCE %s\' statement ignored"
+   "1Redundant \'ANNOUNCE %s\' statement ignored",
+   "4Suspecious return type: \'%s\' expected: \'%s\'"
 };
 
 void hb_compGenError( char * szErrors[], char cPrefix, int iError, char * szError1, char * szError2 )

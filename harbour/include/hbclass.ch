@@ -48,6 +48,17 @@
  *
  */
 
+DECLARE TClass ;
+	New( cName AS STRING, OPTIONAL SuperParams ) AS CLASS TClass ;
+	Create() AS OBJECT;
+	Instance() AS OBJECT ;
+	AddClsMthds( cName AS STRING, @Method(), nScope AS NUMERIC, n2 AS NUMERIC, n3 AS NUMERIC );
+	AddMultiClsData( cType AS STRING, uVal, nScope AS NUMERIC, aDatas AS ARRAY OF STRING );
+	AddMultiData( cType AS STRING, uVal, nScope AS NUMERIC, aDatas AS ARRAY OF STRING );
+	AddMethod( cName AS STRING, @Method(), nScope AS NUMERIC );
+	AddInLine( cName AS STRING, bBlock AS CODEBLOCK, nScope AS NUMERIC );
+	AddVirtual( cName AS STRING )
+
 #ifndef HB_CLASS_CH_
 #define HB_CLASS_CH_
 
@@ -94,7 +105,7 @@
 
 #xcommand CLASS <ClassName> [ <frm: FROM, INHERIT> <SuperClass1> [,<SuperClassN>] ] [<static: STATIC>] => ;
    <static> function <ClassName>() ;;
-      static s_oClass ;;
+      static s_oClass AS CLASS TClass;;
       local nScope := HB_OO_CLSTP_EXPORTED ;;
       if s_oClass == NIL ;;
          s_oClass := TClass():New( <(ClassName)>, __CLS_PARAM([ <(SuperClass1)> ] [ ,<(SuperClassN)> ] ) ) ;;
@@ -111,7 +122,7 @@
 
 #xcommand CLASS <ClassName> [ <frm: FROM, INHERIT> <SuperClass1> [,<SuperClassN>] ] [<static: STATIC>] => ;
    <static> function <ClassName>() ;;
-      static s_oClass ;;
+      static s_oClass AS CLASS TClass;;
       local nScope := HB_OO_CLSTP_EXPORTED ;;
       if s_oClass == NIL ;;
          s_oClass := TClass():New( <(ClassName)>, __CLS_PARAM([ <(SuperClass1)> ] [ ,<(SuperClassN)> ] ) ) ;;

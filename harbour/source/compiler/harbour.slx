@@ -91,11 +91,9 @@
 
 static int iTexts = 0, iCloseSquare = 0;
 static char * aTexts[ NUMERALS_PER_LINE ];
-static char* sIdOnHold;
 
-/*
-static int iIdentifier = 0;
-*/
+static unsigned char iIdentifier = 0;
+static char* sIdOnHold;
 
 long hb_lex_Hex2L( char* sHex );
 
@@ -179,9 +177,7 @@ SELF_CONTAINED_WORDS_ARE {
 #define HB_OPTIONAL  -1015
 
 /* When 2 identifiers are correct syntax like in class declaration, we have to temporarily store the 2nd identifier. */
-/*
 #define HB_ID_ON_HOLD -1016
-*/
 
 #define HB_MACRO_ERR -1017
 
@@ -789,11 +785,13 @@ LANGUAGE_RULES_ARE {
    	#define INTERCEPT_ACTION(x) \
 	\
 	yytext = sToken; \
-	/*\
       	if( x == IDENTIFIER ) \
 	{ \
-	   iIdentifier--; \
-	} */\
+	   if( iIdentifier == 0 ) \
+              printf( "harbour.slx - Internal Error, iIdentifier underflow!\n" ); \
+	   else \
+	      iIdentifier--; \
+	} \
         \
       	if( x == IDENTIFIER ) \
            printf( "   IDENTIFIER = \"%s\"\n", yylval.string  ); \
@@ -826,11 +824,13 @@ LANGUAGE_RULES_ARE {
    	#define INTERCEPT_ACTION(x) \
 	\
 	yytext = sToken; \
-	/*\
       	if( x == IDENTIFIER ) \
 	{ \
-	   iIdentifier--; \
-	}*/ \
+	   if( iIdentifier == 0 ) \
+              printf( "harbour.slx - Internal Error, iIdentifier underflow!\n" ); \
+	   else \
+	      iIdentifier--; \
+	} \
 	\
       	if( x < 256 ) \
 	{ \
@@ -914,15 +914,17 @@ LANGUAGE_RULES_ARE {
                yytext[ HB_SYMBOL_NAME_LEN ] = '\0';\
                yyleng = HB_SYMBOL_NAME_LEN;\
             }\
-            /*\
+            \
 	    if( iIdentifier )\
 	    {\
+	       DEBUG_INFO( printf( "*** iDentifier = %i - Holding %s\n", iIdentifier, yytext ) );\
 	       sIdOnHold = hb_compIdentifierNew( yytext, TRUE );\
 	       iRet = HB_ID_ON_HOLD;\
 	    }\
-	    else */\
+	    else \
 	    {\
-	       /* iIdentifier++; */\
+	       iIdentifier++; \
+	       DEBUG_INFO( printf( "Primary Identifier %s Increased to: %i\n", yytext, iIdentifier ) );\
                yylval.string = hb_compIdentifierNew( yytext, TRUE );\
       	       iRet = IDENTIFIER;\
 	    }\
@@ -1094,7 +1096,8 @@ int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], int *ptr_iHold, BOOL
          break;
       }
       case HB_QOUT_ACT :
-	 /* iIdentifier++; */
+	 iIdentifier++;
+	 DEBUG_INFO( printf( "HB_QOUT_ACT, Primary Identifier %s Increased to: %i\n", "QOUT", iIdentifier ) );
          yylval.string = hb_compIdentifierNew( "QOUT", TRUE );
          aiReturn[ (*ptr_iReturn)++ ] = '(';
          aiReturn[ (*ptr_iReturn)++ ] = IDENTIFIER;
@@ -1236,7 +1239,7 @@ int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], int *ptr_iHold, BOOL
          break;
 
       case HB_RET_FUNID :
-	 /* iIdentifier++; */
+	 DEBUG_INFO( printf( "HB_RET_FUNID, Primary Identifier %s preset : %i\n", yylval.string, iIdentifier ) );
          aiReturn[ (*ptr_iReturn)++ ] = IDENTIFIER;
          aiReturn[ (*ptr_iReturn)++ ] = FUNCTION;
          x = 0;
@@ -1513,14 +1516,13 @@ int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], int *ptr_iHold, BOOL
          x = 0;
          break;
 
-      /*
       case HB_ID_ON_HOLD :
 	 bRestored = TRUE;
          yylval.string = sIdOnHold;
 	 iIdentifier++;
+	 DEBUG_INFO( printf( "RELEASED ID_ON_HOLD: %s - Increased to: %i\n", sIdOnHold, iIdentifier ) );
          x = IDENTIFIER;
          break;
-      */
 
       default:
          printf( "WARNING! No Handler for Custom Action %i\n", x );
@@ -1529,7 +1531,8 @@ int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], int *ptr_iHold, BOOL
    if( x == IDENTIFIER && ! bRestored )
    {
       yylval.string = hb_compIdentifierNew( (char*) sIdentifier, TRUE );
-      /* iIdentifier++; */
+      iIdentifier++;
+      DEBUG_INFO( printf( "Primary Identifier %s Increased to: %i\n", sIdentifier, iIdentifier ) );
       aiHold[ (int)(*ptr_iHold)++ ] = x;
       x = 0;
    }

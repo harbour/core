@@ -1,3 +1,42 @@
+2000-08-28 10:35 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * source/compiler/harbour.c
+   * source/compiler/harbour.y
+     + Added support for DECLARE FunName(...) AS CLASS ClassName
+     + Added support for DECLARE FunName( ... @SomeFun() ... ) - Function Pointer declared parameter.
+
+   * source/compiler/simplex.c
+     * Corrected some compiler warnings.
+
+   * source/compiler/harbour.slx
+     * Reenabled support for ID_ON_HOLD.
+
+   * include/hberror.h
+     + Added: #define HB_COMP_WARN_RETURN_SUSPECT             28
+
+   * source/compiler/hbgenerr.c
+     + Added: "4Suspecious return type: \'%s\' expected: \'%s\'"
+
+   * source/compiler/hbpcode.c
+     + Completed support for Strong Typed variables as declared classes, as well as Adaptive Typed usage with declared classes.
+     * Few other corrections and enhancements.
+
+   * include/hbclass.ch
+     + Added TClass declaration:
+	DECLARE TClass ;
+		New( cName AS STRING, OPTIONAL SuperParams ) AS CLASS TClass ;
+		Create() AS OBJECT;
+		Instance() AS OBJECT ;
+		AddClsMthds( cName AS STRING, @Method(), nScope AS NUMERIC, n2 AS NUMERIC, n3 AS NUMERIC );
+		AddMultiClsData( cType AS STRING, uVal, nScope AS NUMERIC, aDatas AS ARRAY OF STRING );
+		AddMultiData( cType AS STRING, uVal, nScope AS NUMERIC, aDatas AS ARRAY OF STRING );
+		AddMethod( cName AS STRING, @Method(), nScope AS NUMERIC );
+		AddInLine( cName AS STRING, bBlock AS CODEBLOCK, nScope AS NUMERIC );
+		AddVirtual( cName AS STRING )
+     + Added declaration to s_oClass  AS CLASS TClass
+
+   * tests/testdecl.prg
+     * Minor refinement.
+
 2000-08-27 20:10 UTC+0500 April White <awhite@user.rose.com>
    * source/rtl/setkey.c
      * bug in setkey() - was not adding hotkey to internal list

@@ -1238,8 +1238,8 @@ YY_DECL
                   }
                #endif
 
-               i = aKeyNodes[ sToken[0] ].iMin;
-               iMax = aKeyNodes[ sToken[0] ].iMax + 1;
+               i = aKeyNodes[ (int) sToken[0] ].iMin;
+               iMax = aKeyNodes[ (int) sToken[0] ].iMax + 1;
                DEBUG_INFO( printf(  "Scanning Keys for Token: %s at Positions: %i-%i\n", (char*) sToken, i, iMax -1 ) );
 
                while ( i < iMax )
@@ -1298,8 +1298,8 @@ YY_DECL
                   }
                #endif
 
-               i = aWordNodes[ sToken[0] ].iMin;
-               iMax = aWordNodes[ sToken[0] ].iMax + 1;
+               i = aWordNodes[ (int) sToken[0] ].iMin;
+               iMax = aWordNodes[ (int) sToken[0] ].iMax + 1;
                DEBUG_INFO( printf(  "Scanning Words for Token: %s at Positions: %i-%i\n", (char*) sToken, i, iMax - 1 ) );
 
                while ( i < iMax )

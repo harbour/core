@@ -435,7 +435,7 @@ IdentName  : IDENTIFIER       { $$ = $1; }
            | PRIVATE          { $$ = $<string>1; }
            | PUBLIC           { $$ = $<string>1; }
            | PARAMETERS       { $$ = $<string>1; }
-           | PROCREQ          { $$ = $<string>1; }          
+           | PROCREQ          { $$ = $<string>1; }
            ;
 
 /* Numeric values
@@ -1170,13 +1170,27 @@ MemvarList : IdentName AsType                     { hb_compVariableAdd( $1, hb_c
 Declaration: DECLARE IdentName '(' { hb_compDeclaredAdd( $2 ); hb_comp_szDeclaredFun = $2; } DecList ')' AsType Crlf
              {
                if( hb_comp_pLastDeclared )
+	       {
                  hb_comp_pLastDeclared->cType = hb_comp_cVarType;
 
+                 if ( toupper( hb_comp_cVarType ) == 'S' )
+                 {
+                   hb_comp_pLastDeclared->pClass = hb_compClassFind( hb_comp_szFromClass );
+                   if( ! hb_comp_pLastDeclared->pClass )
+                   {
+                     hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, hb_comp_szFromClass, hb_comp_pLastDeclared->szName );
+                     hb_comp_pLastDeclared->cType = ( isupper(  ( int ) hb_comp_cVarType ) ? 'O' : 'o' );
+                   }
+
+                   /* Resetting */
+                   hb_comp_szFromClass = NULL;
+                 }
+	       }
                hb_comp_szDeclaredFun = NULL;
                hb_comp_cVarType = ' ';
                hb_comp_iVarScope = VS_NONE;
              }
-           | DECLARE IdentName { hb_comp_pLastClass = hb_compClassAdd( $2 ); } ClassInfo Crlf { hb_comp_iVarScope = VS_NONE; }
+           | DECLARE IdentName { hb_comp_pLastClass = hb_compClassAdd( $2 ); } ClassInfo Crlf { hb_comp_iVarScope = VS_NONE; hb_comp_szDeclaredFun == NULL }
            ;
 
 ClassInfo  : DecMethod
@@ -1262,20 +1276,26 @@ DecList    :                  {}
 
 FormalList : IdentName AsType                    { hb_compVariableAdd( $1, hb_comp_cVarType ); }
            | '@' IdentName AsType                { hb_compVariableAdd( $2, hb_comp_cVarType + VT_OFFSET_BYREF ); }
+           | '@' IdentName '(' ')'               { hb_compVariableAdd( $2, 'F' ); }
            | FormalList ',' IdentName AsType     { hb_compVariableAdd( $3, hb_comp_cVarType ); }
            | FormalList ',' '@' IdentName AsType { hb_compVariableAdd( $4, hb_comp_cVarType + VT_OFFSET_BYREF ); }
+           | FormalList ',' '@' IdentName '(' ')'{ hb_compVariableAdd( $4, 'F' ); }
            ;
 
 OptListOnly: OPTIONAL IdentName AsType                     { hb_compVariableAdd( $2, hb_comp_cVarType + VT_OFFSET_OPTIONAL ); }
            | OPTIONAL '@' IdentName AsType                 { hb_compVariableAdd( $3, hb_comp_cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ); }
+           | OPTIONAL '@' IdentName '(' ')'                { hb_compVariableAdd( $3, hb_comp_cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ); }
            | OptListOnly ',' OPTIONAL IdentName AsType     { hb_compVariableAdd( $4, hb_comp_cVarType + VT_OFFSET_OPTIONAL ); }
            | OptListOnly ',' OPTIONAL '@' IdentName AsType { hb_compVariableAdd( $5, hb_comp_cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ); }
+           | OptListOnly ',' OPTIONAL '@' IdentName '(' ')'{ hb_compVariableAdd( $5, hb_comp_cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ); }
 	   ;
 
 OptList    : ',' OPTIONAL IdentName AsType             { hb_compVariableAdd( $3, hb_comp_cVarType + VT_OFFSET_OPTIONAL ); }
            | ',' OPTIONAL '@' IdentName AsType         { hb_compVariableAdd( $4, hb_comp_cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ); }
+           | ',' OPTIONAL '@' IdentName '(' ')'        { hb_compVariableAdd( $4, 'F' ); }
            | OptList ',' OPTIONAL IdentName AsType     { hb_compVariableAdd( $4, hb_comp_cVarType + VT_OFFSET_OPTIONAL ); }
            | OptList ',' OPTIONAL '@' IdentName AsType { hb_compVariableAdd( $5, hb_comp_cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ); }
+           | OptList ',' OPTIONAL '@' IdentName '(' ')'{ hb_compVariableAdd( $5, 'F' ); }
            ;
 
 ExecFlow   : IfEndif

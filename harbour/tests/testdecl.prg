@@ -7,7 +7,10 @@
 
 DECLARE nMyFun() AS NUMERIC
 
-DECLARE MyClass While AS String
+DECLARE MyClass ;
+        NEW AS CLASS MyClass ;
+        While AS String ;
+        cVar AS String
 
 DECLARE MyFun( Var1 AS STRING, OPTIONAL Var1 ) AS LOGICAL
 
@@ -49,8 +52,13 @@ Function Main()
 RETURN NIL
 
 CLASS MyClass
+   METHOD New() Constructor
+   VAR WHile
    VAR cVar
-ENDCLASS
+END CLASS
+
+METHOD New() CLASS MyClass
+RETURN Self
 
 Function nMyFun()
 RETURN 1

@@ -441,6 +441,8 @@ void hb_compVariableAdd( char * szVarName, BYTE cValueType )
 
    if( ! hb_comp_bStartProc && hb_comp_functions.iCount <= 1 && hb_comp_iVarScope == VS_LOCAL )
    {
+      printf( "OOPS %s\n", szVarName );
+
       /* Variable declaration is outside of function/procedure body.
          In this case only STATIC and PARAMETERS variables are allowed. */
       hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_OUTSIDE, NULL, NULL );
@@ -743,6 +745,7 @@ BOOL hb_compVariableMacroCheck( char * szVarName )
 PCOMCLASS hb_compClassAdd( char * szClassName )
 {
    PCOMCLASS pClass;
+   PCOMDECLARED pDeclared;
 
    /*printf( "\nDeclaring Class: %s\n", szClassName );*/
 
@@ -767,6 +770,11 @@ PCOMCLASS hb_compClassAdd( char * szClassName )
       hb_comp_pLastClass->pNext = pClass;
 
    hb_comp_pLastClass = pClass;
+
+   /* Auto declaration for the Class Function. */
+   pDeclared = hb_compDeclaredAdd( szClassName );
+   pDeclared->cType = 'S';
+   pDeclared->pClass = pClass;
 
    return pClass;
 }
@@ -800,7 +808,12 @@ PCOMDECLARED hb_compMethodAdd( PCOMCLASS pClass, char * szMethodName )
    /*printf( "\nDeclaring Method: %s of Class: %s Pointer: %li\n", szMethodName, pClass->szName, pClass );*/
 
    if ( hb_comp_iWarnings < 3 )
+   {
+      /* So hb_compAddVariable() will know this is a fictitious Var. */
+      hb_comp_szDeclaredFun = szMethodName;
+
       return NULL;
+   }
 
    if ( ( pMethod = hb_compMethodFind( pClass, szMethodName ) ) != NULL )
    {
