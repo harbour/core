@@ -1,3 +1,10 @@
+2001-07-23 22:35 UTC+0100 Lubos Janica <janicalubos@yahoo.com>
+   * classes.c
+       Fixed function __CLSNEW. 
+       Changed variable USHORT uiSize to ULONG ulSize
+       This fix random GPFs in function hb_clsDictRealloc by creating 
+       classes.
+
 2001-07-23 21:29 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * source/rtl/tbrowse.prg

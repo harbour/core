@@ -1079,7 +1079,9 @@ HB_FUNC( __CLSADDMSG )
 HB_FUNC( __CLSNEW )
 {
    PCLASS pNewCls;
-   USHORT uiSize;
+   ULONG ulSize;	/* USHORT is small. Maximum 409 methods. In some
+                           cases it is enough. This eliminate random GPFs 
+                           in this function for big classes */
 
    PHB_ITEM pahSuper;
    USHORT i, uiSuper;
@@ -1183,9 +1185,9 @@ HB_FUNC( __CLSNEW )
 
          if( i == 1 )
          {
-            uiSize = ( USHORT ) ( pNewCls->uiHashKey * BUCKET * sizeof( METHOD ) );
-            pNewCls->pMethods = ( PMETHOD ) hb_xgrab( uiSize );
-            memset( pNewCls->pMethods, 0, uiSize );
+            ulSize = pNewCls->uiHashKey * BUCKET * sizeof( METHOD );
+            pNewCls->pMethods = ( PMETHOD ) hb_xgrab( ulSize );
+            memset( pNewCls->pMethods, 0, ulSize );
             pNewCls->pFunError = pSprCls->pFunError;
          }
 
