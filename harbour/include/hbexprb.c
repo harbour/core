@@ -1081,7 +1081,7 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
                    * all components should be placed as a string that will
                    * be compiled after text susbstitution
                    */
-                  HB_EXPR_PCODE2( hb_compGenPushString, pSelf->value.asMacro.szMacro, strlen(pSelf->value.asMacro.szMacro) );
+                  HB_EXPR_PCODE2( hb_compGenPushString, pSelf->value.asMacro.szMacro, strlen(pSelf->value.asMacro.szMacro) + 1 );
                }
             }
             /* compile & run - leave a result on the eval stack
@@ -1187,7 +1187,7 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
                    * all components should be placed as a string that will
                    * be compiled after text susbstitution
                    */
-                  HB_EXPR_PCODE2( hb_compGenPushString, pSelf->value.asMacro.szMacro, strlen(pSelf->value.asMacro.szMacro) );
+                  HB_EXPR_PCODE2( hb_compGenPushString, pSelf->value.asMacro.szMacro, strlen(pSelf->value.asMacro.szMacro) + 1 );
                }
             }
             /* compile & run - macro compiler will generate pcode to pop a value
