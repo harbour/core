@@ -113,3 +113,111 @@ HARBOUR HB_ADSSETDEFAULT( void )
 {
    AdsSetDefault  ( (UNSIGNED8*) hb_parc( 1 ) );
 }
+
+HARBOUR HB_ADSBLOB2FILE( void )
+{
+   char * szFileName, *szFieldName;
+   ADSAREAP pArea;
+   UNSIGNED32 ulRetVal;
+
+   szFileName = hb_parc( 1 );
+   szFieldName = hb_parc( 2 );
+   if( ( strlen( szFileName ) == 0 ) || ( strlen( szFieldName ) == 0 ) )
+   {
+      hb_errRT_DBCMD( EG_ARG, 1014, NULL, "ADSBLOB2FILE" );
+      return;
+   }
+
+   pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
+   ulRetVal = AdsBinaryToFile(  pArea->hTable, szFieldName, szFileName);
+   if ( ulRetVal == AE_SUCCESS )
+     hb_retl( 1 );
+   else
+     hb_retl( 0 );
+}
+
+HARBOUR HB_ADSFILE2BLOB( void )
+{
+   char * szFileName, *szFieldName;
+   UNSIGNED16 usBinaryType;
+   ADSAREAP pArea;
+   UNSIGNED32 ulRetVal;
+
+   szFileName = hb_parc( 1 );
+   szFieldName = hb_parc( 2 );
+   if( ( strlen( szFileName ) == 0 ) || ( strlen( szFieldName ) == 0 ) )
+   {
+      hb_errRT_DBCMD( EG_ARG, 1014, NULL, "ADSFILE2BLOB" );
+      return;
+   }
+
+   if( hb_pcount() > 2 )
+      usBinaryType = hb_parni( 3 );
+   else
+      usBinaryType = ADS_BINARY;
+
+   pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
+   ulRetVal = AdsFileToBinary(  pArea->hTable, szFieldName, usBinaryType, szFileName);
+   if ( ulRetVal == AE_SUCCESS )
+     hb_retl( 1 );
+   else
+     hb_retl( 0 );
+}
+
+HARBOUR HB_ADSKEYNO( void )
+{
+   ADSAREAP pArea;
+   UNSIGNED8* ordName;
+   UNSIGNED8 ordNum;
+   UNSIGNED32 pulKey;
+   ADSHANDLE hIndex;
+
+   pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
+   if( pArea )
+   {
+      if( ISNUM( 1 ) )
+      {
+         ordNum = hb_parni( 1 );
+         AdsGetIndexHandleByOrder( pArea->hTable, ordNum, &hIndex );
+      }
+      else
+      {
+         ordName = hb_parc( 1 );
+         AdsGetIndexHandle( pArea->hTable, ordName, &hIndex );
+      }
+
+      AdsGetKeyNum  ( hIndex, ADS_IGNOREFILTERS, &pulKey);
+      hb_retnl( pulKey );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSKEYNO" );
+}
+
+HARBOUR HB_ADSKEYCOUNT( void )
+{
+   ADSAREAP pArea;
+   UNSIGNED8* ordName;
+   UNSIGNED8 ordNum;
+   UNSIGNED32 pulKey;
+   ADSHANDLE hIndex;
+
+   pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
+   if( pArea )
+   {
+      if( ISNUM( 1 ) )
+      {
+         ordNum = hb_parni( 1 );
+         AdsGetIndexHandleByOrder( pArea->hTable, ordNum, &hIndex );
+      }
+      else
+      {
+         ordName = hb_parc( 1 );
+         AdsGetIndexHandle( pArea->hTable, ordName, &hIndex );
+      }
+
+      AdsGetKeyCount  ( hIndex, ADS_IGNOREFILTERS, &pulKey);
+      hb_retnl( pulKey );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSKEYCOUNT" );
+}
