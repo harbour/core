@@ -13,18 +13,9 @@ PP has 3 personalities which are tied tightly together.
      -DP  = Show tracing information into the Output Generator.
      -CCH = Generate a .cch file (compiled command header).
 
-   At this point all switches must *not* be separated by any spaces!
+2. DOT prompt, which suppose to allow most of Harbour syntax. Please
+   report any syntax you expect to work, but is not supported.
 
-2. DOT prompt, which suppose to allow most of Harbour syntax, with few
-   exceptions:
-
-     It does *not* support LOCAL/STATIC/PRIVATE/PUBLIC, but any refference
-     to a variable will create it as PRIVATE.
-
-     It does not (yet) support creation of FUNCTIONs/PROCEDUREs but will
-     execute any built-in, or linked, prodecure/function.
-
-     It does not (yet) support WHILE and FOR loops.
 
    Executing PP with no source filename will start the DOT prompt mode. In
    this mode you can execute a single line at a time, by typing the line
@@ -34,16 +25,38 @@ PP has 3 personalities which are tied tightly together.
 
      DO filename.prg [Enter]
 
-   So that DOT will "run" the specified source file.
+   So that DOT will "run" the specified source file. This interpreter
+   mode is subject to few limitations:
+
+     a. It does support LOCAL/STATIC/PRIVATE/PUBLIC, but:
+
+       - STATICs are actually implemented as publics.
+
+       - LOCALS have scoping of locals but are implemented as privates
+         so you can't have a LOCAL and a PRIVATE with the same name.
+
+       - Inline assignment is not supported in the declaration. 
+
+     b. Non declared variable are not auto-created on assignment (yet).
+
+     c. It does support definition and execution of prg defined
+        FUNCTIONs/PROCEDUREs but does *not* support PARAMETERs (yet).
+
+     d. It does not (yet) support WHILE and FOR loops.
+
+     e. The executed module is compiled with -n option (for now).
+
+  This will create rp_dot.pp$ compilation tace file.
+
 
 3. Finally, PP is a limited Harbour Interpreter. Subject to those same few
    limitations it can execute most of Harbour syntax. Executing PP followed
    by a source file name and the -R switch, will "RUN" that source (it will
-   also create the .pp$ file).
+   also create the rp_run.pp$ compilation trace file).
 
    This final syntax is:
 
      PP filename[.ext] -R
 
-I intend to add support for UDFs, LOOPs, and Variable scoping, so that the
+I intend to add support for, LOOPs, and Parameter passing soon, so that the
 Interpreter will be as complete as possible.

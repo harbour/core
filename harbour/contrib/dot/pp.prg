@@ -162,7 +162,7 @@ STATIC aCommRules    := {}, aCommResults  := {}
 STATIC nPendingLines := 0, aPendingLines  := {}
 
 STATIC bDbgMatch := .F., bDbgExp := .F., bDbgPPO := .F., bLoadRules := .T., ;
-       bCount := .T., bCCH := .F., bPP := .F., bRun := .F.
+       bCount := .T., bCCH := .F., bPP := .F., bCompile := .F.
 
 STATIC nIfDef := 0, abIfDef := {}, nIf := 0, abIf := {}
 
@@ -176,11 +176,44 @@ STATIC s_sIncludeFile := NIL
 
 STATIC nRow, nCol
 
+STATIC nProcId := 0, aProcedures := {}, s_xRet, nIfLevel := 0, ;
+       aProcStack := {}, s_nProcStack := 0
+
+STATIC s_asPrivates := {}, s_asPublics := {}, s_asLocals := {}, s_asStatics := {}
+
 //--------------------------------------------------------------//
 
-PROCEDURE Main( sSource, sSwitch )
+PROCEDURE Main( sSource, p1, p2, p3, p4, p5, p6, p7, p8, p9 )
 
-   LOCAL sIncludePath, nNext, sPath
+   LOCAL sIncludePath, nNext, sPath, nBlock, nBlocks, sSwitch := ""
+
+   IF p1 != NIL
+      sSwitch += p1
+   ENDIF
+   IF p2 != NIL
+      sSwitch += p2
+   ENDIF
+   IF p3 != NIL
+      sSwitch += p3
+   ENDIF
+   IF p4 != NIL
+      sSwitch += p4
+   ENDIF
+   IF p5 != NIL
+      sSwitch += p5
+   ENDIF
+   IF p6 != NIL
+      sSwitch += p6
+   ENDIF
+   IF p7 != NIL
+      sSwitch += p7
+   ENDIF
+   IF p8 != NIL
+      sSwitch += p8
+   ENDIF
+   IF p9 != NIL
+      sSwitch += p9
+   ENDIF
 
    sIncludePath := GetE( "INCLUDE" )
 
@@ -199,10 +232,9 @@ PROCEDURE Main( sSource, sSwitch )
       aAdd( s_asPaths, sIncludePath )
    ENDIF
 
-   IF sSwitch == NIL
-      sSwitch := ''
-   ELSE
+   IF ! Empty( sSwitch )
       sSwitch := Upper( sSwitch )
+
       IF "-P" $ sSwitch
          bPP := .T.
       ENDIF
@@ -210,7 +242,19 @@ PROCEDURE Main( sSource, sSwitch )
          bLoadRules := .F.
       ENDIF
       IF "-R" $ sSwitch
-         bRun := .T.
+         bCompile := .T.
+      ENDIF
+      IF "-CCH" $ sSwitch
+         bCCH := .T.
+      ENDIF
+      IF "-DE" $ sSwitch
+         bDbgExp := .T.
+      ENDIF
+      IF "-DM" $ sSwitch
+         bDbgMatch := .T.
+      ENDIF
+      IF "-DP" $ sSwitch
+         bDbgPPO := .T.
       ENDIF
    ENDIF
 
@@ -228,7 +272,12 @@ PROCEDURE Main( sSource, sSwitch )
    IF sSource != NIL //bPP
       nRow := Row()
       nCol := Col()
-      ProcessFile( sSource, sSwitch )
+
+      IF bCompile
+         PP_Run( sSource )
+      ELSE
+         ProcessFile( sSource )
+      ENDIF
    ELSE
       nRow := 1
       nCol := 0
@@ -236,6 +285,48 @@ PROCEDURE Main( sSource, sSwitch )
    ENDIF
 
    DevPos( nRow, nCol )
+
+RETURN
+
+//------------------------------- *** RP DOT Functions *** -------------------------------//
+
+PROCEDURE ExecuteProcedure( aProc )
+
+   LOCAL nBlock, nBlocks := Len( aProc[2] ), oErr
+   LOCAL nVar, nVars
+
+   /* Releasing Locals of upper level. */
+   nVars := Len( s_asLocals )
+   FOR nVar := 1 TO nVars
+       RELEASE &( s_asLocals[nVar] )
+   NEXT
+   aSize( s_asLocals, 0 )
+
+   aAdd( aProcStack, { aProc[1], 0, {} } )
+   s_nProcStack++
+
+   FOR nBlock := 1 TO nBlocks
+      IF aProc[2][nBlock][1] == 0 .OR. ;
+         ( aProc[2][nBlock][1] == ( nIf - 1 ) .AND. abIf[ nIf -1 ] ) .OR. ;
+         ( aProc[2][nBlock][1] == nIf .AND. abIf[ nIf ] )
+
+         BEGIN SEQUENCE
+            aProcStack[ Len( aProcStack ) ][2] := aProc[2][nBlock][3] // Line No.
+            Eval( aProc[2][nBlock][2] )
+         RECOVER USING oErr
+         END SEQUENCE
+      ENDIF
+   NEXT
+
+   /* Releasing Privates created by the Procedure */
+   nVars := Len( aProcStack[s_nProcStack][3] )
+   FOR nVar := 1 TO nVars
+      RELEASE &( aProcStack[s_nProcStack][3][nVar] )
+   NEXT
+   aSize( aProcStack[s_nProcStack][3], 0 )
+
+   s_nProcStack--
+   aSize( aProcStack, s_nProcStack )
 
 RETURN
 
@@ -249,7 +340,7 @@ PROCEDURE RP_Dot()
 
    ProcessFile( "rp_dot.ch" )
 
-   ErrorBlock( {|| RP_Dot_Err() } )
+   ErrorBlock( {|oError| RP_Dot_Err( oError ) } )
 
    CLEAR SCREEN
    SET SCOREBOARD OFF
@@ -283,10 +374,8 @@ PROCEDURE ExecuteLine( sPPed )
    DropTrailingWS( @sPPed )
    sTemp := sPPed
 
-   IF ! bRun
-      @ 0,0 SAY "PP: "
-      @ 0,4 SAY Pad( sPPed, 76 ) COLOR "N/R"
-   ENDIF
+   @ 0,0 SAY "PP: "
+   @ 0,4 SAY Pad( sPPed, 76 ) COLOR "N/R"
    DevPos( nRow, nCol )
 
    BEGIN SEQUENCE
@@ -334,10 +423,8 @@ PROCEDURE ExecuteLine( sPPed )
                CompileNestedBlocks( sBlock, @sBlock )
             #endif
 
-            IF ! bRun
-               @ 0,0 SAY "PP: "
-               @ 0,4 SAY Pad( sBlock, 76 ) COLOR "N/R"
-            ENDIF
+            @ 0,0 SAY "PP: "
+            @ 0,4 SAY Pad( sBlock, 76 ) COLOR "N/R"
             DevPos( nRow, nCol )
 
             Eval( &( "{|| " + sBlock + " }" ) )
@@ -345,10 +432,8 @@ PROCEDURE ExecuteLine( sPPed )
             nCol := Col()
 
             #ifdef __CLIPPER__
-               IF ! bRun
-                  nBlockID := 0
-                  aSize( s_abBlocks, 0 )
-               ENDIF
+               nBlockID := 0
+               aSize( s_abBlocks, 0 )
             #endif
          ENDIF
 
@@ -398,19 +483,15 @@ PROCEDURE ExecuteLine( sPPed )
                 CompileNestedBlocks( sBlock, @sBlock )
             #endif
 
-            IF ! bRun
-               @ 0,0 SAY "PP: "
-               @ 0,4 SAY Pad( sBlock, 76 ) COLOR "N/R"
-            ENDIF
+            @ 0,0 SAY "PP: "
+            @ 0,4 SAY Pad( sBlock, 76 ) COLOR "N/R"
             DevPos( nRow, nCol )
 
             Eval( &( "{|| " + sBlock + " }" ) )
 
             #ifdef __CLIPPER__
-               IF ! bRun
-                  nBlockID := 0
-                  aSize( s_abBlocks, 0 )
-               ENDIF
+               nBlockID := 0
+               aSize( s_abBlocks, 0 )
             #endif
          ENDIF
       ENDIF
@@ -418,9 +499,96 @@ PROCEDURE ExecuteLine( sPPed )
       nRow := Row()
       nCol := Col()
 
-      IF ! bRun
-         @ 0,0 SAY "PP: "
-         @ 0,4 SAY Pad( sPPed, 76 ) COLOR "N/R"
+      @ 0,0 SAY "PP: "
+      @ 0,4 SAY Pad( sPPed, 76 ) COLOR "N/R"
+
+   END SEQUENCE
+
+RETURN
+
+//--------------------------------------------------------------//
+
+PROCEDURE CompileLine( sPPed, nLine )
+
+   LOCAL nNext, sBlock, sTemp
+   LOCAL nLen, sLeft, sSymbol
+   LOCAL nIncrease := 0, nOffset := 0
+
+   ExtractLeadingWS( @sPPed )
+   DropTrailingWS( @sPPed )
+   sTemp := sPPed
+
+   BEGIN SEQUENCE
+
+      WHILE ( nNext := At( ';', sTemp ) ) > 0
+         sBlock := Left( sTemp, nNext - 1 )
+         ExtractLeadingWS( @sBlock )
+         DropTrailingWS( @sBlock )
+
+         #ifdef __CLIPPER__
+            /* Clipper Macro Compiler can't compile nested blocks! */
+            CompileNestedBlocks( sBlock, @sBlock )
+         #endif
+
+         IF sBlock = "__"
+            sSymbol := Upper( SubStr( sBlock, 3, 12 ) )
+
+            IF sSymbol = "SETIF" .OR. sSymbol = "SETDOCASE"
+               nIncrease := 1
+            ELSEIF sSymbol = "SETEND"
+               nOffset := 1
+               nIncrease := -1
+            ELSEIF sSymbol = "SETELSEIF" .OR. sSymbol = "SETCASE"
+               nOffset := 1
+            ELSEIF sSymbol = "SETELSE" .OR. sSymbol = "OTHERWISE"
+               nOffset := 1
+            ENDIF
+         ELSE
+            sSymbol := SubStr( sBlock, 1, 12 )
+         ENDIF
+
+         aAdd( aProcedures[ nProcId ][2], { nIfLevel - nOffset, &( "{|| " + sBlock + " }" ), nLine } )
+
+         nIfLevel += nIncrease
+
+         sTemp  := RTrim( SubStr( sTemp, nNext + 1 ) )
+         ExtractLeadingWS( @sTemp )
+      ENDDO
+
+      sBlock := sTemp
+      DropTrailingWS( @sBlock )
+
+      IF ! ( sBlock == '' )
+         #ifdef __CLIPPER__
+             /* Clipper Macro Compiler can't compile nested blocks! */
+             CompileNestedBlocks( sBlock, @sBlock )
+         #endif
+
+         IF sBlock = "PROC"
+            sSymbol := Upper( LTrim( SubStr( sBlock, At( ' ', sBlock ) ) ) )
+            aSize( aProcedures, ++nProcId )
+            aProcedures[nProcId] := { sSymbol, {} }
+         ELSE
+            IF sBlock = "__"
+               sSymbol := Upper( SubStr( sBlock, 3, 12 ) )
+               IF sSymbol = "SETIF" .OR. sSymbol = "SETDOCASE"
+                  nIncrease := 1
+               ELSEIF sSymbol = "SETEND"
+                  nOffset := 1
+                  nIncrease := -1
+               ELSEIF sSymbol = "SETELSEIF" .OR. sSymbol = "SETCASE"
+                  nOffset := 1
+               ELSEIF sSymbol = "SETELSE" .OR. sSymbol = "OTHERWISE"
+                  nOffset := 1
+               ENDIF
+            ELSE
+               sSymbol := SubStr( sBlock, 1, 12 )
+            ENDIF
+
+            aAdd( aProcedures[ nProcId ][2], { nIfLevel - nOffset, &( "{|| " + sBlock + " }" ), nLine } )
+
+            nIfLevel += nIncrease
+         ENDIF
       ENDIF
 
    END SEQUENCE
@@ -429,20 +597,291 @@ RETURN
 
 //--------------------------------------------------------------//
 
-PROCEDURE PP_SetRun( bOn )
+FUNCTION PP_ProcName( nLevel )
 
-   bRun := bOn
+   IF nLevel == NIL
+      nLevel := 0
+   ENDIF
+
+   IF nLevel >= 0 .AND. nLevel < s_nProcStack
+      RETURN aProcStack[ s_nProcStack - nLevel ][1]
+   ENDIF
+
+RETURN ""
+
+//--------------------------------------------------------------//
+
+FUNCTION PP_ProcLine( nLevel )
+
+   IF nLevel == NIL
+      nLevel := 0
+   ENDIF
+
+   IF nLevel >= 0 .AND. nLevel < s_nProcStack
+      RETURN aProcStack[ s_nProcStack - nLevel ][2]
+   ENDIF
+
+RETURN ""
+
+//--------------------------------------------------------------//
+
+PROCEDURE PP_Privates( aVars )
+
+   LOCAL nVar, nVars := Len( aVars )
+
+   FOR nVar := 1 TO nVars
+      IF Type( aVars[nVar] ) = 'U'
+         __QQPUB( aVars[nVar] )
+         &( aVars[nVar] ) := NIL
+         aAdd( s_asPrivates, aVars[nVar] )
+         aAdd( aProcStack[ Len(aProcStack ) ][3], aVars[nVar] )
+      ELSE
+         /* Save upper level val */
+         &( aVars[nVar] ) := NIL
+      ENDIF
+   NEXT
 
 RETURN
 
 //--------------------------------------------------------------//
 
-PROCEDURE RP_Dot_Err()
+PROCEDURE PP_Locals( aVars )
 
-   Alert( "Sorry, could not execute last request." )
+   LOCAL nVar, nVars := Len( aVars )
+
+   FOR nVar := 1 TO nVars
+      IF Type( aVars[nVar] ) = 'U'
+         __QQPUB( aVars[nVar] )
+         &( aVars[nVar] ) := NIL
+         aAdd( s_asLocals, aVars[nVar] )
+      ELSE
+         Alert( "Local redeclaration: " + aVars[nVar] )
+      ENDIF
+   NEXT
+
+RETURN
+//--------------------------------------------------------------//
+
+PROCEDURE PP_Publics( aVars )
+
+   LOCAL nVar, nVars := Len( aVars )
+
+   FOR nVar := 1 TO nVars
+      IF Type( aVars[nVar] ) = 'U'
+         __QQPUB( aVars[nVar] )
+         aAdd( s_asPublics, aVars[nVar] )
+      ELSE
+         Alert( "Public redeclaration: " + aVars[nVar] )
+      ENDIF
+   NEXT
+
+RETURN
+
+//--------------------------------------------------------------//
+
+PROCEDURE PP_Statics( aVars )
+
+   LOCAL nVar, nVars := Len( aVars )
+
+   FOR nVar := 1 TO nVars
+      IF Type( aVars[nVar] ) = 'U'
+         __QQPUB( aVars[nVar] )
+         aAdd( s_asStatics, aVars[nVar] )
+      ELSE
+         Alert( "Static redeclaration: " + aVars[nVar] )
+      ENDIF
+   NEXT
+
+RETURN
+
+//--------------------------------------------------------------//
+
+PROCEDURE PP_Run( cFile )
+
+   bCompile := .T.
+
+   ErrorBlock( {|oError| RP_Comp_Err( oError ) } )
+   ProcessFile( "rp_run.ch" )
+   ProcessFile( cFile )
+
+   ErrorBlock( {|oError| RP_Run_Err( oError ) } )
+   ExecuteProcedure( aProcedures[1] )
+
+   bCompile := .F.
+
+RETURN
+
+//--------------------------------------------------------------//
+
+PROCEDURE PP_SetReturn( xRet )
+
+   s_xRet := xRet
+
+RETURN
+
+//--------------------------------------------------------------//
+
+PROCEDURE RP_Dot_Err( oError )
+
+   LOCAL Counter, xArg, sArgs := ""
+
+   IF oError:Args != NIL
+      sArgs := " - Arguments: "
+
+      FOR Counter := 1 TO Len( oError:Args )
+         xArg := oError:Args[Counter]
+
+         DO CASE
+            CASE xArg == NIL
+               sArgs += "NIL; "
+
+            CASE ValType( xArg ) == 'A'
+               sArgs += "{}; "
+
+            CASE ValType( xArg ) == 'B'
+               sArgs += "{|| }; "
+
+            CASE ValType( xArg ) == 'C'
+               sArgs += '"' + xArg + '"; '
+
+            CASE ValType( xArg ) == 'D'
+               sArgs +=  dtoc( xArg ) + "; "
+
+            CASE ValType( xArg ) == 'L'
+               sArgs += IIF( xArg, ".T.; ", ".F.; " )
+
+            CASE ValType( xArg ) == 'N'
+               sArgs +=  Str( xArg ) + "; "
+
+            CASE ValType( xArg ) == 'O'
+               sArgs +=  "{o}"
+
+            OTHERWISE
+               sArgs +=  '[' + ValType( xArg ) + "]; "
+         ENDCASE
+      NEXT
+
+      sArgs := Left( sArgs, Len( sArgs ) -2 )
+   ENDIF
+
+   Alert( "Sorry, could not execute: " + oError:Description + sArgs + " " + ProcName(2) + '[' + Str( ProcLine(2) ) + ']')
+
    BREAK
 
 //RETURN // Unreacable code
+
+//--------------------------------------------------------------//
+
+PROCEDURE RP_Comp_Err( oError )
+
+   LOCAL Counter, xArg, sArgs := ""
+
+   IF oError:Args != NIL
+      sArgs := " - Arguments: "
+
+      FOR Counter := 1 TO Len( oError:Args )
+         xArg := oError:Args[Counter]
+
+         DO CASE
+            CASE xArg == NIL
+               sArgs += "NIL; "
+
+            CASE ValType( xArg ) == 'A'
+               sArgs += "{}; "
+
+            CASE ValType( xArg ) == 'B'
+               sArgs += "{|| }; "
+
+            CASE ValType( xArg ) == 'C'
+               sArgs += '"' + xArg + '"; '
+
+            CASE ValType( xArg ) == 'D'
+               sArgs +=  dtoc( xArg ) + "; "
+
+            CASE ValType( xArg ) == 'L'
+               sArgs += IIF( xArg, ".T.; ", ".F.; " )
+
+            CASE ValType( xArg ) == 'N'
+               sArgs +=  Str( xArg ) + "; "
+
+            CASE ValType( xArg ) == 'O'
+               sArgs +=  "{o}"
+
+            OTHERWISE
+               sArgs +=  '[' + ValType( xArg ) + "]; "
+         ENDCASE
+      NEXT
+
+      sArgs := Left( sArgs, Len( sArgs ) -2 )
+   ENDIF
+
+   Alert( "Sorry, could not compile: " + oError:Description + sArgs + " " + ProcName(2) + '[' + Str( ProcLine(2) ) + ']')
+
+   BREAK
+
+//RETURN // Unreacable code
+
+//--------------------------------------------------------------//
+
+FUNCTION RP_Run_Err( oErr )
+
+   LOCAL Counter, xArg, sArgs := "", nProc
+
+   IF oErr:Args != NIL
+      sArgs := " - Arguments: "
+
+      FOR Counter := 1 TO Len( oErr:Args )
+         xArg := oErr:Args[Counter]
+
+         DO CASE
+            CASE xArg == NIL
+               sArgs += "NIL; "
+
+            CASE ValType( xArg ) == 'A'
+               sArgs += "{}; "
+
+            CASE ValType( xArg ) == 'B'
+               sArgs += "{|| }; "
+
+            CASE ValType( xArg ) == 'C'
+               sArgs += '"' + xArg + '"; '
+
+            CASE ValType( xArg ) == 'D'
+               sArgs +=  dtoc( xArg ) + "; "
+
+            CASE ValType( xArg ) == 'L'
+               sArgs += IIF( xArg, ".T.; ", ".F.; " )
+
+            CASE ValType( xArg ) == 'N'
+               sArgs +=  Str( xArg ) + "; "
+
+            CASE ValType( xArg ) == 'O'
+               sArgs +=  "{o}"
+
+            OTHERWISE
+               sArgs +=  '[' + ValType( xArg ) + "]; "
+         ENDCASE
+      NEXT
+
+      sArgs := Left( sArgs, Len( sArgs ) -2 )
+   ENDIF
+
+   #ifdef __CLIPPER__
+      IF oErr:SubCode == 1001
+         nProc := aScan( aProcedures, {|aProc| aProc[1] == ProcName(2 + 2) } )
+         IF nProc > 0
+            s_xRet := NIL
+            ExecuteProcedure( aProcedures[nProc] )
+            RETURN ( s_xRet )
+         ENDIF
+      ENDIF
+   #endif
+
+   Alert( "Sorry, R/T Error: '" + oErr:Operation + "' " + oErr:Description + sArgs + " " + PP_ProcName() + '(' + LTrim( Str( PP_ProcLine() ) ) + ')')
+
+   BREAK oErr
+
+RETURN NIL // Unreacable code
 
 //--------------------------------------------------------------//
 
@@ -649,7 +1088,7 @@ RETURN nIf
 
 //------------------------------- *** END - RP DOT Functions *** -------------------------------//
 
-FUNCTION ProcessFile( sSource, sSwitch )
+FUNCTION ProcessFile( sSource )
 
    LOCAL hSource, sBuffer, sLine, nPosition, sExt, cPrev
    LOCAL nLen, nMaxPos, cChar := '', nClose, nBase, nNext, nLine := 0
@@ -678,7 +1117,7 @@ FUNCTION ProcessFile( sSource, sSwitch )
       sPath := s_asPaths[ nPath - 1 ]
    ENDIF
 
-   IF hPP == NIL .AND. ProcName(1) == "MAIN"
+   IF hPP == NIL
       sExt := SubStr( sSource, RAt( '.', sSource ) )
       IF ! ( sExt == '' )
          hPP := FCreate( StrTran( sSource, sExt, ".pp$" ) )
@@ -689,28 +1128,9 @@ FUNCTION ProcessFile( sSource, sSwitch )
          Alert( "ERROR! creating '.pp$' file, O/S Error: " + Str( FError(), 2 ) )
          RETURN .F.
       ENDIF
-
-      IF "-CCH" $ sSwitch
-         bCCH := .T.
-      ENDIF
-      IF "-DE" $ sSwitch
-         bDbgExp := .T.
-      ENDIF
-      IF "-DM" $ sSwitch
-         bDbgMatch := .T.
-      ENDIF
-      IF "-DP" $ sSwitch
-         bDbgPPO := .T.
-      ENDIF
    ELSE
       FWrite( hPP, '#line 1 "' + sPath + Upper( sSource ) + '"' + CRLF )
       bBlanks := .F.
-   ENDIF
-
-   IF bRun .AND. ProcName(1) == "MAIN"
-      bCount := .F.
-      ErrorBlock( {|| RP_Dot_Err() } )
-      ProcessFile( "rp_dot.ch" )
    ENDIF
 
    sBuffer   := Space( PP_BUFFER_SIZE )
@@ -1540,8 +1960,8 @@ FUNCTION ProcessLine( sLine, nLine, sSource )
       //WAIT
    ENDIF
 
-   IF bRun
-      ExecuteLine( sOut )
+   IF bCompile
+      CompileLine( sOut, nLine )
    ENDIF
 
 RETURN sOut

@@ -1,4 +1,17 @@
-2001-02-24 13:20 UTC-0800 Ron Pinkas <ron@profit-master.com>
+2001-02-26 03:30 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * contrib/dot/pp.prg
+     + Added support for UDFs, PRIVATEs, PUBLICs, LOCALs, and STATICs
+
+   + contrib/dot/rp_run.ch
+     * Command Header for PP Interpreter Mode.
+
+   * contrib/dot/test.prg
+     * Sample prg runable by PP.
+
+   * contrib/dot/pp.txt
+     * Updated documentation.
+
+2001-02-25 13:20 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * contrib/dot/pp.prg
      * Minor optimization.
 
