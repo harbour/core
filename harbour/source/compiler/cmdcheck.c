@@ -373,13 +373,9 @@ void hb_compChkEnvironVar( char * szSwitch )
              case 'q':
              case 'Q':
                 if( *( s + 1 ) == '0' )
-                {
                    hb_comp_bLogo = FALSE;
-                }
-                else
-                {
-                   hb_comp_bQuiet = TRUE;
-                }
+
+                hb_comp_bQuiet = TRUE;
                 break;
 
              case 'r':

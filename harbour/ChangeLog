@@ -1,3 +1,10 @@
+19991218-10:35 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/objfunc.prg
+    source/rtl/readkey.prg
+    + Added documentation by Chen Kedem.
+  * source/compiler/cmdcheck.c
+    ! Fixed handling of the /q0 switch. (Provided by Jose)
+
 19991217-16:40 EDT David G. Holm <dholm@jsd-llc.com>
 
    * config/os2/icc.cf

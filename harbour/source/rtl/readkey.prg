@@ -33,7 +33,69 @@
  *
  */
 
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 1999 Chen Kedem <niki@actcom.co.il>
+ *    READKEY() documentation
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
+
 #include "inkey.ch"
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      READKEY()*
+ *  $CATEGORY$
+ *      Data input and output
+ *  $ONELINER$
+ *      Find out which key terminate a READ
+ *  $SYNTAX$
+ *      READKEY() --> nKeyCode
+ *  $ARGUMENTS$
+ *      none.
+ *  $RETURNS$
+ *      READKEY() return a numeric code representing the key that cause READ
+ *      to terminate.
+ *  $DESCRIPTION$
+ *      READKEY() is used after a READ was terminated to determine the exit
+ *      key pressed. If the get buffer was updated during READ, 256 is added
+ *      to the return code.
+ *
+ *      Exit key        Return code    Return code
+ *                      (not updated)  (updated)
+ *      --------------  -------------  -----------
+ *      Up                    4            260
+ *      Down                  5            261
+ *      Page-Up               6            262
+ *      Page-Down             7            263
+ *      Ctrl Page-Up         34            290
+ *      Ctrl Page-Down       35            291
+ *      Esc                  12            268
+ *      Ctrl End             14            270
+ *      Enter                15            271
+ *
+ *      Key >= 32            15            271
+ *      otherwise             0              0
+ *
+ *      READKEY() is a compatibility function so try not use it. READKEY()
+ *      is superseded by LASTKEY() which return INKEY() code for that key,
+ *      UPDATED() could be use to find if the get buffer was changed during
+ *      READ.
+ *  $EXAMPLES$
+ *  $TESTS$
+ *  $STATUS$
+ *  $COMPLIANCE$
+ *      READKEY() works exactly like CA-Clipper's READKEY().
+ *  $PLATFORMS$
+ *  $FILES$
+ *  $SEEALSO$
+ *      @...GET, INKEY(), LASTKEY(), READ, READEXIT(), UPDATED()
+ *  $END$
+ */
 
 FUNCTION ReadKey()
    LOCAL nKey := LastKey()
