@@ -1,3 +1,27 @@
+20000522-09:20 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+   * source/compiler/harbour.c
+     + Added code to main() to process symbols and look for the first symbol in the prg and give it scope HB_FS_FIRST
+
+   * source/compiler/genc.c
+     + Added check for HB_FS_FIRST in the symbol processing loop, and output to the symbol table.
+
+   * source/vm/hvm.c
+     ! Fixed bug where if first symbol was an init symbol, it got executed twice.
+
+   * source/vm/runner.c
+     + Added logic to look for first symbol, to provide correct startup.
+     ! Fixed bug where if first symbol was an init symbol, it got executed twice.
+
+   * source/rtl/tclass.prg
+     ! Corrected minor typo in HB_Structure()
+
+   * tests/teststru.prg
+     ! Corrected minor typo.
+
+   + tests/testinit.prg
+     + Added file to test proper startup processing.
+
 20000522-06:15 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
    * source/compiler/harbour.l

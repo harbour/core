@@ -296,7 +296,7 @@ Function HB_Structure( cStructureName AS Char, aMembers AS Array OF Char )
   STRUCTURE HB_Structure cName AS Char, hId As Num
 
   DECLARE __ClsNew( ClassName AS Char, N As Num ) AS Num
-  DECLARE __ClsAddMsg( H AS Num, Data AS Char, Type As Num, ID As Num ) AS Num
+  DECLARE __ClsAddMsg( H AS Num, Data AS Char, ID As Num, Type As Num ) AS Num
   DECLARE __ClsInst( H AS Num ) AS Structure HB_Structure
 
   LOCAL hStructure AS Num, nCounter AS Num, nMembers AS Num

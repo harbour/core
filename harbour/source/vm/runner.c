@@ -166,6 +166,8 @@ HB_FUNC( __HRBRUN )
          PHB_DYNF pDynFunc;                           /* Functions read           */
          PHB_DYNS pDynSym;
 
+         ULONG ulSymStart;                            /* Startup Symbol           */
+
          int i;
 
          ulSymbols = hb_hrbFileReadLong( file, szFileName );
@@ -177,6 +179,9 @@ HB_FUNC( __HRBRUN )
             pSymRead[ ul ].cScope  = hb_hrbFileReadByte( file, szFileName );
             pSymRead[ ul ].pFunPtr = ( PHB_FUNC ) ( ULONG ) hb_hrbFileReadByte( file, szFileName );
             pSymRead[ ul ].pDynSym = NULL;
+
+            if ( pSymRead[ ul ].cScope & HB_FS_FIRST && ! ( pSymRead[ ul ].cScope & HB_FS_INITEXIT ) )
+                ulSymStart = ul;
          }
 
          ulFuncs = hb_hrbFileReadLong( file, szFileName );            /* Read number of functions */
@@ -264,14 +269,18 @@ HB_FUNC( __HRBRUN )
                }
             }
 
-            hb_vmPushSymbol( pSymRead );
-            hb_vmPushNil();
-            for( i = 0; i < ( hb_pcount() - 1 ); i++ )
-               hb_vmPush( hb_param( i + 2, HB_IT_ANY ) );    /* Push other cmdline params*/
-            hb_vmDo( hb_pcount() - 1 );                   /* Run the thing !!!        */
+            /* May not have a startup symbol, if first symbol was an INIT Symbol (was executed already).*/
+            if ( ulSymStart )
+            {
+                hb_vmPushSymbol( &( pSymRead[ ulSymStart ] ) );
+                hb_vmPushNil();
+                for( i = 0; i < ( hb_pcount() - 1 ); i++ )
+                hb_vmPush( hb_param( i + 2, HB_IT_ANY ) );    /* Push other cmdline params*/
+                hb_vmDo( hb_pcount() - 1 );                   /* Run the thing !!!        */
 
-            pRetVal = hb_itemNew( NULL );
-            hb_itemCopy( pRetVal, &hb_stack.Return );
+                pRetVal = hb_itemNew( NULL );
+                hb_itemCopy( pRetVal, &hb_stack.Return );
+            }
 
             for( ul = 0; ul < ulSymbols; ul++ )    /* Check EXIT functions     */
             {
@@ -316,7 +325,7 @@ static ULONG hb_hrbFindSymbol( char * szName, PHB_DYNF pDynFunc, ULONG ulLoaded 
    ULONG ulRet;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_hrbFindSymbol(%s, %p, %lu)", szName, pDynFunc, ulLoaded));
-   
+
    if( ( s_ulSymEntry < ulLoaded ) &&             /* Is it a normal list ?    */
        !strcmp( szName, pDynFunc[ s_ulSymEntry ].szName ) )
       ulRet = s_ulSymEntry++;
@@ -349,7 +358,7 @@ static char * hb_hrbFileReadId( FILE * file, char * szFileName )
    BOOL  bCont = TRUE;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_hrbFileReadId(%p, %s)", file, szFileName));
-   
+
    szTemp = ( char * ) hb_xgrab( 256 );
    szIdx  = szTemp;
    do
@@ -374,7 +383,7 @@ static BYTE hb_hrbFileReadByte( FILE * file, char * szFileName )
    BYTE bRet;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_hrbFileReadByte(%p, %s)", file, szFileName));
-   
+
    hb_hrbFileRead( file, szFileName, ( char * ) &bRet, 1, 1 );
 
    return bRet;
@@ -386,7 +395,7 @@ static long hb_hrbFileReadLong( FILE * file, char * szFileName )
    char cLong[ 4 ];                               /* Temporary long           */
 
    HB_TRACE(HB_TR_DEBUG, ("hb_hrbFileReadLong(%p, %s)", file, szFileName));
-   
+
    hb_hrbFileRead( file, szFileName, cLong, 4, 1 );
 
    if( cLong[ 3 ] )                             /* Convert to long if ok    */
@@ -407,7 +416,7 @@ static long hb_hrbFileReadLong( FILE * file, char * szFileName )
 static void hb_hrbFileRead( FILE * file, char * szFileName, char * cBuffer, int iSize, int iCount )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_hrbFileRead(%p, %s, %p, %d, %d)", file, szFileName, cBuffer, iSize, iCount));
-   
+
    if( iCount != ( int ) fread( cBuffer, iSize, iCount, file ) )
       hb_errRT_BASE_Ext1( EG_READ, 9999, NULL, szFileName, 0, EF_NONE );
 }
@@ -418,7 +427,7 @@ static void hb_hrbFileRead( FILE * file, char * szFileName, char * cBuffer, int 
 static FILE * hb_hrbFileOpen( char * szFileName )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_hrbFileOpen(%s)", szFileName));
-   
+
    return fopen( szFileName, "rb" );
 }
 
@@ -428,7 +437,7 @@ static FILE * hb_hrbFileOpen( char * szFileName )
 static void hb_hrbFileClose( FILE * file )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_hrbFileClose(%p)", file));
-   
+
    fclose( file );
 }
 
@@ -453,7 +462,7 @@ static PASM_CALL hb_hrbAsmCreateFun( PHB_SYMB pSymbols, BYTE * pCode )
    PASM_CALL asmRet;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_hrbAsmCreateFun(%p, %p)", pSymbols, pCode));
-   
+
    asmRet = ( PASM_CALL ) hb_xgrab( sizeof( ASM_CALL ) );
    asmRet->pAsmData = ( BYTE * ) hb_xgrab( sizeof( prgFunction ) );
    memcpy( asmRet->pAsmData, prgFunction, sizeof( prgFunction ) );
@@ -476,7 +485,7 @@ static PASM_CALL hb_hrbAsmCreateFun( PHB_SYMB pSymbols, BYTE * pCode )
 static void hb_hrbAsmPatch( BYTE * pCode, ULONG ulOffset, void * Address )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_hrbAsmPatch(%p, %lu, %p)", pCode, ulOffset, Address));
-   
+
 /* #if 32 bits and low byte first */
 
    pCode[ ulOffset     ] = ( BYTE ) ( ( ( ULONG ) Address       ) & 0xFF );
@@ -499,7 +508,7 @@ static void hb_hrbAsmPatchRelative( BYTE * pCode, ULONG ulOffset,
    ULONG ulRelative;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_hrbAsmPatchRelative(%p, %lu, %p, %lu)", pCode, ulOffset, Address, ulNext));
-   
+
 /* #if 32 bits and low byte first */
    ulBase = ( ULONG ) pCode + ulNext;
                                 /* Relative to next instruction */

@@ -270,6 +270,31 @@ int main( int argc, char * argv[] )
                         pFunc = pFunc->pNext;
                      }
 
+                     {
+                        PCOMSYMBOL pSym = hb_comp_symbols.pFirst;
+                        while( pSym )
+                        {
+                           if( hb_comp_bStartProc )
+                           {
+                              if( strcmp( pSym->szName, hb_comp_functions.pFirst->szName ) == 0 )
+                              {
+                                 pSym->cScope |= HB_FS_FIRST;
+                                 break;
+                              }
+                           }
+                           else if( hb_comp_functions.pFirst->pNext )
+                           {
+                              if( strcmp( pSym->szName, hb_comp_functions.pFirst->pNext->szName ) == 0 )
+                              {
+                                 pSym->cScope |= HB_FS_FIRST;
+                                 break;
+                              }
+                           }
+
+                           pSym = pSym->pNext;
+                        }
+                     }
+
                      if( ! hb_comp_bQuiet )
                         printf( "\rLines %i, Functions/Procedures %i\n", hb_comp_iLine, hb_comp_iFunctionCnt );
 
