@@ -7,6 +7,11 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+  * contrib/rdd_ads/adsmgmt.c
+    ! UINT, which is not defined in gcc system, is changed to unsigned int,
+      fixed one warning
+
+2002-05-15 12:00 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * contrib/rdd_ads/ads1.c
     ! fixed a bug in adsSeek() for date indexes, changes was posted
       by Carlos Mora.
