@@ -34,6 +34,7 @@
  */
 
 #include "inkey.ch"
+#include "common.ch"
 /*  $DOC$
  *  $FUNCNAME$
  *      __SetFunction() 

@@ -1,3 +1,9 @@
+20000210-15:15 GMT+3 Alexander Kresin
+   * source/rtl/setfunc.prg
+     * minor bug fixed:
+       #include "common.ch" was missed, so ISCHARACTER() 
+       caused 'unresolved external' message while app linking
+
 20000210-13:20 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.l
