@@ -119,7 +119,7 @@ METHOD WriteParBold( cPar, lEndDl, lPar ) CLASS THTML
    ELSEIF !lPar .AND. !lEnddl
       FWRITE( Self:nHandle, '<DL>' + CRLF + "<dt><b>" + ALLTRIM( cPar ) + '</b></dt><p>' + CRLF )
    ELSEIF !lPar .AND. lEnddl
-      FWRITE( Self:nHandle, "</PRE></dd>" + CRLF + "</DL>" + CRLF + "<DL>" + CRLF + "<dt><b>" + ALLTRIM( cPar ) + '</b></dt><p>' + CRLF )
+      FWRITE( Self:nHandle, "</PRE>" + CRLF + "</DL>" + CRLF + "<DL>" + CRLF + "<dt><b>" + ALLTRIM( cPar ) + '</b></dt><p>' + CRLF )
    ELSEIF lPar .AND. !lEnddl
       FWRITE( Self:nHandle, "</P></dd>" + CRLF + "<DL>" + CRLF + "<dt><b>" + ALLTRIM( cPar ) + '</b></dt><p>' + CRLF )
 
