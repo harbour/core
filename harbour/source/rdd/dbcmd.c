@@ -59,7 +59,7 @@ typedef AREANODE * LPAREANODE;
 /* TODO: must be changed to a hb_errorRT... */
 static void MyError( char * szError, char * szParam )
 {
-   printf( "\n%s %s\n\7", szError, szParam );
+   printf( "\n%s %s\n", szError, szParam );
 }
 
 HARBOUR HB_BOF( void );
@@ -165,14 +165,14 @@ static LPRDDNODE hb_FindRddNode( char * szDriver )
    return 0;
 }
 
-static BOOL hb_rddRegister( char * szDriver, USHORT uiType )
+static int hb_rddRegister( char * szDriver, USHORT uiType )
 {
    LPRDDNODE pRddNode, pRddNewNode;
    PDYNSYM pGetFuncTable;
    char * szGetFuncTable;
 
    if( hb_FindRddNode( szDriver ) )    /* Duplicated RDD */
-      return FALSE;
+      return 1;
 
    szGetFuncTable = ( char * ) hb_xgrab( strlen( szDriver ) + 14 );
    strcpy( szGetFuncTable, szDriver );
@@ -180,7 +180,7 @@ static BOOL hb_rddRegister( char * szDriver, USHORT uiType )
    pGetFuncTable = hb_FindDynSym( szGetFuncTable );
    hb_xfree( szGetFuncTable );
    if( !pGetFuncTable )
-      return FALSE;              /* Not valid RDD */
+      return 2;              /* Not valid RDD */
 
    /* Create a new RDD node */
    pRddNewNode = ( LPRDDNODE ) hb_xgrab( sizeof( RDDNODE ) );
@@ -199,7 +199,7 @@ static BOOL hb_rddRegister( char * szDriver, USHORT uiType )
    if ( hb_parni( -1 ) != SUCCESS )
    {
       hb_xfree( pRddNewNode );         /* Delete de new RDD node */
-      return FALSE;
+      return 3;                     /* Invalid FUNCTABLE */
    }
 
    if( !pRddList )                  /* First RDD node */
@@ -211,7 +211,7 @@ static BOOL hb_rddRegister( char * szDriver, USHORT uiType )
 	 pRddNode = pRddNode->pNext;   /* Locate the last RDD node */
       pRddNode->pNext = pRddNewNode;   /* Add the new RDD node */
    }
-   return TRUE;
+   return 0;  /* Ok */
 }
 
 static USHORT hb_FindAlias( char * szAlias )
@@ -333,7 +333,9 @@ ERRCODE hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS pSuperTa
       pRddNode = hb_FindRddNode( szSuperName );
       hb_xfree( szSuperName );
       if( !pRddNode )
-         return FAILURE;
+	{
+	  return FAILURE;
+	}
       memcpy( pTable, &pRddNode->pTable, sizeof( RDDFUNCS ) );
    }
 
@@ -815,7 +817,14 @@ HARBOUR HB_RDDREGISTER( void )
    if( ( wLen = strlen( szDriver ) ) > 0 )
    {
       szDriver = hb_strUpper( szDriver, wLen );
-      if( hb_rddRegister( szDriver, hb_parni( 2 ) ) )
+      /*
+       * hb_rddRegister returns:
+       *
+       * 0: Ok, RDD registered
+       * 1: RDD already registerd
+       * > 1: error
+       */
+      if( hb_rddRegister( szDriver, hb_parni( 2 ) ) <= 1 )
 	 return;
    }
    MyError( "Internal error", "RDDREGISTER" );

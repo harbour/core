@@ -32,6 +32,7 @@ init procedure DBFNTXInit
 
    REQUEST _DBFNTX
 
+   rddRegister( "DBF", RDT_FULL )
    rddRegister( "DBFNTX", RDT_FULL )
 
 return

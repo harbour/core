@@ -1,3 +1,18 @@
+Wed Aug 04 12:25:12 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* source/rdd/dbcmd.c: 
+	Got rid of the bell (0x07) character printed in error messages; it
+	tends to screw up in some consoles.
+	Changed hb_rddRegister() to return an int rather than a bool, so
+	now it is possible to return different status values.
+	Now trying to register the same RDD more than once is a NOOP.
+	
+	* source/rdd/dbfntx/dbfntx0.prg: 
+	KLUDGE ALARM: since the DBFNTX driver depends on the DBF driver,
+	and the order of INIT procedures is not guaranteed (and is
+	actually the wrong order under gcc/Win32), I forced the
+	initialization of DBF before DBFNTX.
+
 19990804-17:30 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/msgxxx.c
     - __TURBOC__ branch deleted.
