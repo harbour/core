@@ -1,3 +1,13 @@
+2001-09-05 06:42 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * harbour/contrib/hgf/win32/tform.prg
+     Added new properties Top, Left, Height and Width.
+
+   * harbour/contrib/hgf/win32/win32.c
+     Added new functions WinGetTop(), WinSetTop(), WinGetLeft(), WinSetLeft(),
+     WinGetHeight(), WinSetHeight(), WinGetWidth(), WinSetWidth().
+
+     HB_PM_SHOWMODAL renamed as HB_FORMSHOWMODAL.
+
 2001-09-02 16:15 GMT -3 Luiz Rafael Culik<culik@sl.conex.net>
     * source/rtl/isprint.c
       * Replaced HB_OS_WIN_32_USED with HB_OS_WIN_32
