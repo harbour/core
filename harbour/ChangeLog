@@ -1,3 +1,14 @@
+2000-10-22 09:05 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * source/compiler/simplex.c
+     ! Corrrected bug reported by Luiz regarding menuto.prg
+
+   * source/compiler/harbour.slx
+     ! Corrected 1 debug trace message.
+
+   * contrib/dot/pp.prg
+     ! Corrected "Unbalanced '{'" warning reported by John.
+     ! Corrected 2 typos in variable names reported by John.
+
 2000-10-21 23:02 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
    * source/vm/hvm.c
       + Added an exception handler to be able to print a full harbour level stack trace upon

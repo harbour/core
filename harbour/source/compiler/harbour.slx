@@ -397,7 +397,7 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( '&'         , '"'         , 0      , 0          ) REDUCE_TO( HB_MACRO_ERR      , 0             ),
                     IF_SEQUENCE_IS( '&'         , '['         , 0      , 0          ) REDUCE_TO( HB_MACRO_ERR      , 0             ),
 
-                    IF_SEQUENCE_IS( _QOUT_LIT , 0           , 0      , 0          ) REDUCE_TO( HB_RET_QOUT_LIT   , 0             )
+                    IF_SEQUENCE_IS( _QOUT_LIT   , 0           , 0      , 0          ) REDUCE_TO( HB_RET_QOUT_LIT   , 0             )
                    };
 
 /* -------------------------------------------------  End of Language Definitions. ------------------------------------------------ */
@@ -706,7 +706,7 @@ static int hb_comp_SLX_ElementToken( char* szToken, unsigned int iTokenLen )
       iRet += DONT_REDUCE;
    }
 
-   DEBUG_INFO( printf(  "Element \"%s\" is %i\n", sToken, iRet ) );
+   DEBUG_INFO( printf(  "Element \"%s\" is %i\n", szToken, iRet ) );
    return iRet;
 }
 

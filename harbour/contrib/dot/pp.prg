@@ -1193,7 +1193,7 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
                nOptional := aMP[2]
 
                sPreStoppers := sWorkLine
-               sPrimaryStoper := NextToken( @sWorkLine, .F. )
+               sPrimaryStopper := NextToken( @sWorkLine, .F. )
 
                IF sPrimaryStopper == NIL
 
@@ -1318,9 +1318,9 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
 
          IF bDbgMatch
             IF sAnchor == NIL
-               ? nMatch, 'of', nMatches, "NO Anchore!", nMarkerId, nOptional, aMP[2], sMultiStoppers
+               ? nMatch, 'of', nMatches, "NO Anchore!", nMarkerId, nOptional, aMP[2], sMultiStopper
             ELSE
-               ? nMatch, 'of', nMatches, "Searching for Anchore: '" + sAnchor + "'", nMarkerId, nOptional, aMP[2], sMultiStoppers
+               ? nMatch, 'of', nMatches, "Searching for Anchore: '" + sAnchor + "'", nMarkerId, nOptional, aMP[2], sMultiStopper
             ENDIF
             WAIT
          ENDIF
@@ -1897,7 +1897,7 @@ FUNCTION NextToken( sLine, bCheckRules )
      FOR Counter := 1 TO nLen
         cChar := SubStr( sLine, Counter, 1 )
 
-        IF cChar $ "+-*/:=^!&()[]{}@,"
+        IF cChar $ "+-*/:=^!&()[]{}@,|"
 
            sReturn := Left( sLine, Counter - 1 )
            EXIT
@@ -2115,7 +2115,7 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
            ELSE
               sTemp := NextExp( @sLine, ',', NIL, NIL, sNextAnchor ) // Content
               IF sTemp == NIL
-                 Alert( "ERROR! Unbalanced '{|'" )
+                 Alert( "ERROR! Unbalanced '{|...'" )
               ELSE
                  sExp +=  sTemp
               ENDIF
@@ -2124,7 +2124,7 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
                  sLine := SubStr( sLine, 2 )
                  sExp  += ExtractLeadingWS( @sLine )
               ELSE
-                 Alert( "ERROR! Unbalanced '{|'" )
+                 Alert( "ERROR! Unbalanced '{|...|'" )
               ENDIF
            ENDIF
 

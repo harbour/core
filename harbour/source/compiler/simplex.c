@@ -1017,6 +1017,13 @@ int Reduce( int iToken )
       {
          DEBUG_INFO( printf( "Processing Tentative: %i\n", iTentative ) );
 
+         while( iMatched > 1 && aiRules[i][iMatched - 1] && aiRules[iTentative][iMatched - 1] == 0 )
+         {
+            DEBUG_INFO( printf( "Reclaimed Token: %i\n", aiRules[i][iMatched - 1] ) );
+            aiHold[iHold++] = aiRules[i][iMatched - 1];
+            iMatched--;
+         }
+
          if( aiRules[iTentative][MAX_MATCH] )
          {
             DEBUG_INFO( printf( "Reducing Rule: %i Found %i Tokens\n", iTentative, iMatched ) );
