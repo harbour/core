@@ -63,6 +63,8 @@ int    hb_tr_line_ = 0;
 int    hb_tr_level_ = 0;
 
 static int s_enabled = 1;
+static int s_flush   = 0;
+
 static FILE * s_fp = NULL;
 static char * s_slevel[ HB_TR_LAST ] =
 {
@@ -135,6 +137,13 @@ int hb_tr_level( void )
             }
          }
       }
+
+      env = getenv( "HB_TR_FLUSH" );
+      if( env != NULL && env[ 0 ] != '\0' )
+         s_flush = 1;
+      else
+         s_flush = 0;
+
    }
 
    return s_level;
@@ -189,7 +198,7 @@ void hb_tr_trace( char * fmt, ... )
        * Reset file and line.
        */
       hb_tr_level_ = -1;
-      /* NOTE: resetting file name/line numer will cause that we will unable
+      /* NOTE: resetting file name/line number will cause that we will unable
        * to report the location of code that allocated unreleased memory blocks
        * See hb_xalloc/hb_xgrab in source/rtl/fm.c
        */
@@ -198,6 +207,12 @@ void hb_tr_trace( char * fmt, ... )
          hb_tr_file_ = "";
          hb_tr_line_ = -1;
       }
+      if ( s_flush )
+      {
+         fflush( s_fp ) ;
+         close( dup( fileno( s_fp ))) ;
+      }
+
    }
 }
 

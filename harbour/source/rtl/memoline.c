@@ -140,7 +140,7 @@ HB_FUNC( MEMOLINE )
 
       memset( pszLine, ' ', ulLineLength );
 
-      if ( ulLineEnd >= ulLineBegin )
+      if ( ulLineEnd >= ulLineBegin && ulLen > 0 )
       {
          for( ulPos = 0; ulPos <= ( ulLineEnd - ulLineBegin ); ulPos++ )
          {

@@ -1,3 +1,22 @@
+2001-04-19 01:30 UTC-0800 Brian Hays <bhays@abacuslaw.com>
+   * source/rdd/dbcmd.c
+      * Harrier's latest fix for __dbCopy, plus my HB_TRACE addition
+
+   * contrib/rdd_ads/adsfunc.c
+      + added AdsIsServerLoaded(), AdsApplicationExit ()
+
+   * source/rtl/memoline.c
+      * fixed bug where chr(0) was returned if source was
+         an empty string.
+
+   * source/common/hbtrace.c
+      * added support for HB_TR_FLUSH Environment variable per
+         David's guidance.  (Thanks, David!)
+            SET HB_TR_FLUSH=1
+         ...Will cause all HB_TRACE calls to flush to disk (when
+         redirecting to file) so you can trace right up to a line
+         that gpfs and not lose buffered output.
+
 2001-04-18 21:15 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * source/rtl/dbdelim.prg

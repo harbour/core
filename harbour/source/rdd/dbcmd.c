@@ -3271,7 +3271,7 @@ static BOOL IsFieldIn( char * fieldName, PHB_ITEM pFields )
   return FALSE;
 }
 
-/* Create a new AREANODE and open its Area.
+/*   create a new AREANODE and open its Area
    If the file exists it will be deleted & a new one created
 */
 static LPAREANODE GetTheOtherArea( char *szDriver, char * szFileName, BOOL createIt, PHB_ITEM pFields )
@@ -3428,6 +3428,8 @@ static ERRCODE rddMoveRecords( char *cAreaFrom, char *cAreaTo, PHB_ITEM pFields,
   LPAREANODE s_pCurrAreaSaved=s_pCurrArea;
 
   HB_SYMBOL_UNUSED( bRest );
+  HB_TRACE(HB_TR_DEBUG, ("rddMoveRecords(%s, %s, %p, %p, %p, %d, %lu, %d, %s )",
+         cAreaFrom, cAreaTo, pFields, pFor, pWhile, lNext, lRec, bRest, cDriver));
 
   if ( !s_pCurrArea )  // We need a current Area to APPEND TO or FROM
   {
@@ -3447,7 +3449,7 @@ static ERRCODE rddMoveRecords( char *cAreaFrom, char *cAreaTo, PHB_ITEM pFields,
      return EG_ARG;
   }
 
-  if ( hb_arrayLen( pFields ) == 0 ) // no field clause?
+  if ( pFields && hb_arrayLen( pFields ) == 0 ) // no field clause?
     pFields = NULL;
 
   if ( cAreaTo ) // it's a COPY TO
@@ -3500,9 +3502,8 @@ static ERRCODE rddMoveRecords( char *cAreaFrom, char *cAreaTo, PHB_ITEM pFields,
 
       if( bWhile && bFor && (!lNext || toGo > 0 )) // candidate?
       {
-        PHB_ITEM lpFields = pFields ? pFields->item.asArray.value->ulLen ? pFields : NULL : NULL;
         SELF_APPEND( ( AREAP ) pAreaTo, FALSE );   // put a new one on TO Area
-        rddMoveFields( pAreaFrom, pAreaTo, lpFields ); // move the data
+        rddMoveFields( pAreaFrom, pAreaTo, pFields ); // move the data
         if ( lRec == 0 ) // only one record?
           keepGoing = TRUE;
         else

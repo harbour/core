@@ -79,6 +79,49 @@ HB_FUNC( ADSSETSERVERTYPE )
    }
 }
 
+HB_FUNC( ADSAPPLICATIONEXIT )
+{
+   AdsApplicationExit( );
+}
+
+
+HB_FUNC( ADSISSERVERLOADED )
+{
+   UNSIGNED16 pbLoaded = 0;
+   UNSIGNED32 ulRetVal;
+
+   hb_retnl( 0 );
+   if( ISCHAR( 1 ) )
+   {
+      ulRetVal = AdsIsServerLoaded( (UNSIGNED8*) hb_parc(1), &pbLoaded);
+      if ( ulRetVal == AE_SUCCESS )
+         hb_retnl( pbLoaded );
+   }
+}
+
+//HB_FUNC( ADSGETCONNECTIONTYPE )
+//{
+//   UNSIGNED16 pusConnectType = 0;
+//   UNSIGNED32 ulRetVal;
+//   ADSHANDLE  nConnToCheck = hb_parnl(1) ;   /* caller can specify a connection */
+
+//   if ( !nConnToCheck )
+//      nConnToCheck = adsConnectHandle;
+
+//   if ( !nConnToCheck )
+//   {
+//      nConnToCheck = adsConnectHandle;
+
+//   }
+//   ulRetVal = AdsGetConnectionType (adsConnectHandle, &pusConnectType) ;
+
+//   if ( ulRetVal != AE_SUCCESS )
+//      pusConnectType = 0;
+
+//   hb_retnl( pusConnectType );
+//}
+
+
 HB_FUNC( ADSLOCKING )
 {
    int oldType = adsLockType;
