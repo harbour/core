@@ -170,7 +170,7 @@ DECLARE TClass ;
 #IFDEF HB_CLS_CSY
 #xtranslate  :CLASS  =>
 #xtranslate  :CLASS: => :
-endif
+#endif
 #endif
 
 /* CLASSY SYNTAX */
