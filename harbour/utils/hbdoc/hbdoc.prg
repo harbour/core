@@ -112,52 +112,24 @@
 #define DELIM   "$"                 // keyword delimiter
 
 #xtranslate UPPERLOWER(<exp>) => (UPPER(SUBSTR(<exp>,1,1))+LOWER(SUBSTR(<exp>,2)))
-STATIC nReadHandle
-STATIC nWriteHandle
-STATIC aDirList
-STATIC aDocInfo     := {}
-STATIC aLinkInfo    := {}
-STATIC aAuthorList  := {}
-STATIC lAscii       := .F.              // Create ascii output instead of NG/EH input
-STATIC lContinuous  := .F.              // Create continuous ascii output instead of
-// NG/EH input
-STATIC lAuthor := .T.                   // Include author in output of ascii output
-STATIC lRtf    := .F.
-STATIC oRtf
-STATIC oHtm
-STATIC oOs2,oTroff,oNgi,xTemp
-STATIC lNgi    := .F.
-STATIC lOs2    := .F.
-STATIC lWww    := .F.
-STATIC lNorton := .F.
-STATIC aWWW    := {}
-STATIC lTroff  := .f.
-STATIC aAlso   := {}
-//  The following variables are used to allow one to change the delimiter
-//  around the keywords.
+   memvar aDirList
+   memvar aDocInfo  
+   memvar aLinkInfo 
+   memvar aAuthorList  
+   memvar lAscii       
+   memvar lContinuous  
+   memvar lAuthor 
+   memvar lRtf    
+   memvar lNgi    
+   memvar lOs2    
+   memvar lWww    
+   memvar lNorton 
+   memvar aWWW    
+   memvar lTroff  
 
-STATIC cDoc      := DELIM + "DOC" + DELIM                   // DOC keyword
-STATIC cEnd      := DELIM + "END" + DELIM                   // END keyword
-STATIC cFunc     := DELIM + "FUNCNAME" + DELIM              // FUNCNAME keyword
-STATIC cCat      := DELIM + "CATEGORY" + DELIM              // CATEGORY keyword
-STATIC cOne      := DELIM + "ONELINER" + DELIM              // ONELINER keyword
-STATIC cSyn      := DELIM + "SYNTAX" + DELIM                // SYNTAX keyword
-STATIC cArg      := DELIM + "ARGUMENTS" + DELIM             // ARGUMENTS keyword
-STATIC cRet      := DELIM + "RETURNS" + DELIM               // RETURNS keyword
-STATIC cDesc     := DELIM + "DESCRIPTION" + DELIM           // DESCRIPTION keyword
-STATIC cExam     := DELIM + "EXAMPLES" + DELIM              // EXAMPLES keyword
-STATIC cSee      := DELIM + "SEEALSO" + DELIM               // SEEALSO keyword
-STATIC cInc      := DELIM + "INCLUDE" + DELIM               // INCLUDE keyword
-STATIC cComm     := DELIM + "COMMANDNAME" + DELIM           // COMMAND keyword
-STATIC cCompl    := DELIM + "COMPLIANCE" + DELIM
-STATIC cTest     := DELIM + 'TESTS' + DELIM
-STATIC cStatus   := DELIM + 'STATUS' + DELIM
-STATIC cPlat     := DELIM + 'PLATFORMS' + DELIM
-STATIC cFiles    := DELIM + 'FILES' + DELIM
-STATIC cSubCode  := DELIM + 'SUBCODE' + DELIM
-STATIC cFunction := DELIM + 'FUNCTION' +DELIM
 STATIC theHandle
-
+/*
+*/
 *+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 *+
 *+    Function MAIN()
@@ -167,27 +139,46 @@ STATIC theHandle
 FUNCTION MAIN( cFlags, cLinkName, cAtFile )
 
    //  LOCAL variables:
+   // NG/EH input
+
    LOCAL aExtensions := { "*.prg", "*.c", "*.asm", "*.ch" , "*.txt" }
    LOCAL i
    LOCAL j
-   LOCAL nItem,nHpj,nPos,nAlso
-   LOCAL cBatName
-   LOCAL nSec1
+   LOCAL nItem,nHpj,nPos
    LOCAL cCompiler     // Compiler type
    // Include norton compatable switch for EH
-   LOCAL cCompileString                    // Compiler switches string
    LOCAL lDone         // Done with a loop
    LOCAL cMi           // Name params
    LOCAL cLName        // Name params
    LOCAL cFName        // Name params
    LOCAL aName         // Tokenized name
    LOCAL nLen          // Length of the token array
+   LOCAL oHtm
    LOCAL cTemp
+   PUBLIC aDirList
+   PUBLIC aDocInfo     := {}
+   PUBLIC aLinkInfo    := {}
+   PUBLIC aAuthorList  := {}
+   PUBLIC lAscii       := .F.              // Create ascii output instead of NG/EH input
+   PUBLIC lContinuous  := .F.              // Create continuous ascii output instead of
+   PUBLIC lAuthor := .T.                   // Include author in output of ascii output
+   PUBLIC lRtf    := .F.
+   PUBLIC lNgi    := .F.
+   PUBLIC lOs2    := .F.
+   PUBLIC lWww    := .F.
+   PUBLIC lNorton := .F.
+   PUBLIC aWWW    := {}
+   PUBLIC lTroff  := .f.
+
+
+//  The following variables are used to allow one to change the delimiter
+//  around the keywords.
+
    //
    //  Entry Point
    //
 
-   // nSec1=SECONDS()
+
    //  Delete log file if present
 
    IF FILE( "hbdocerr.log" )
@@ -316,7 +307,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
             ELSEIF lWww
                ProcessWww()
             ELSEIF lNgi
-               ProcessNgi()
+               ProcessiNg()
             ELSEIF lTroff
                ProcessTroff()
             ELSEIF lOs2
@@ -342,7 +333,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
          ELSEIF lWww
             ProcessWww()
          ELSEIF lNgi
-            ProcessNgi()
+            ProcessiNg()
          ELSEIF lTroff
             ProcessTroff()
          ELSEIF lOs2
@@ -662,1174 +653,177 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
 RETURN NIL
 
 //  End of MAIN()
+FUNCTION ListAsArray2( cList, cDelimiter )
 
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-*+    Static Function ProcessFiles()
-*+
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-STATIC FUNCTION ProcessFiles
+   LOCAL nPos
+   LOCAL aList := {}   // Define an empty array
 
+   IF cDelimiter = NIL
+      cDelimiter := ","
+   ENDIF
    //
-   //  This routine and all accompaning database structures are
-   //  Copyright (C) 1992 Leo J. Letendre. Modified to generate
-   //   HELPC Source code By Luiz Rafael Culik
-   //
-   //  Purpose: Process each of the files in the directory
-   //
-   //  Modification History:
-   //         Version    Date      Who       Notes
-   //          V1.00     1/19/92   LJL       Initial Version
-   //          V1.01     2/25/92   LJL       Trimmed spaces from see also and header
-   //          V1.02     10/17/92  LJL       Added multi-line one-liner check
-   //          V1.03     10/22/92  LJL       Insured that there was a blank line
-   //                                        before and after each catagory header
-   //          V1.04     10/30/93  LJL       added changable delimiter support and
-   //                                        COMMANDNAME keyword
-   //
-   //  Calling parameters: None
-   //
-   //  Notes: None
-   // -
-   //  LOCAL variables:
-
-#define D_NORMAL     1
-#define D_ARG        2
-#define D_SYNTAX     3
-#define D_IGNORE     4
-#define D_SEEALSO    5
-#define D_INCLUDE    6
-#define D_ONELINE    7
-#define D_STATUS     8
-#define D_TESTS      9
-#define D_FUNCTIONS 10
-
-   LOCAL i
-   LOCAL j
-   LOCAL nFiles      := LEN( aDirList )
-   LOCAL nCommentLen
-   LOCAL lEof
-   LOCAL lDoc
-   LOCAL lDone
-   LOCAL cBuffer
-   LOCAL nEnd
-   LOCAL nCount
-
-   LOCAL cBar       := "ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ" + CRLF
-   LOCAL nMode
-   LOCAL cAuthor
-   LOCAL cCISID
-   LOCAL cFuncName
-   LOCAL cOneLine
-   LOCAL cCategory
-   LOCAL cFileName
-   LOCAL nLineCnt
-   LOCAL cSeeAlso
-   LOCAL cTemp
-   LOCAL cChar
-   LOCAL nNonBlank
-   LOCAL lBlankLine := .F.                 // Blank line encountered and sent out
-   LOCAL lAddBlank  := .F.                 // Need to add a blank line if next line is not blank
-
-   //
-   //  Entry Point
-   //
-   //  Put up information labels
-   @ INFILELINE, 20 SAY "Extracting: "
-
-   @ MODULELINE, 20 SAY "Documenting: "
-   //  loop through all of the files
-
-   FOR i := 1 TO nFiles
-
-      //  Open file for input
-
-      nCommentLen := IIF( AT( ".ASM", UPPER( aDirList[ i, F_NAME ] ) ) > 0, 2, 3 )
-      nReadHandle := FT_FUSE( aDirList[ i, F_NAME ] )
-      @ INFILELINE, 33 CLEAR TO INFILELINE, MAXCOL()
-      @ INFILELINE, 33 SAY PAD( aDirList[ i, F_NAME ], 47 )
-      @ MODULELINE, 33 CLEAR TO LINELINE, MAXCOL()
-      @ LINELINE, 27   SAY "Line:"
-
-      nLineCnt := 0
-
-      IF nReadHandle < 0
-         write_error( "Can't open file: (Dos Error " + STR( FERROR() ) + ")",,,, aDirList[ i, F_NAME ] )
-         @ ERRORLINE,  0 CLEAR TO ERRORLINE, MAXCOL()
-         @ ERRORLINE, 20 SAY "Can't open file: (Dos Error " + STR( FERROR() ) + ") File=" + aDirList[ i, F_NAME ]
-         LOOP
-      ENDIF
-      lEof := .F.
-      lDoc := .F.
-      //  First find the author
-
-      //  loop to go through file
-
-      DO WHILE .NOT. lEof
-
-         //  Read a line
-
-         cBuffer := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
-         nLineCnt ++
-         IF nLineCnt % 10 = 0
-            @ LINELINE, 33 SAY STR( nLineCnt, 5, 0 )
-         ENDIF
-         //  check to see if we are in doc mode or getting out of doc mode
-
-         IF AT( cDoc, cBuffer ) > 0
-            IF lDoc
-               write_error( cDoc + " encountered during extraction of Doc" ;
-                            + " at line" + STR( nLinecnt, 5, 0 ),,,, aDirList[ i, F_NAME ] )
-            ENDIF
-            lDoc    := .T.
-            cBuffer := TRIM( SUBSTR( ReadLN( @lEof ), ;
-                             nCommentLen ) )
-            nLineCnt ++
-            cCategory := cFuncName := cSeeAlso := ""
-            nMode     := D_IGNORE
-         ELSEIF AT( cEnd, cBuffer ) > 0
-            IF .NOT. lDoc
-               write_error( cEnd + " encountered outside of Doc area at line" ;
-                            + STR( nLinecnt, 5, 0 ),,,, aDirList[ i, F_NAME ] )
-            ELSE
-               //  Add a new entry to our list of files
-
-               IF EMPTY( cCategory )
-                  write_error( "Blank Category",,,, aDirList[ i, F_NAME ] )
-                  cCategory := "Unknown"
-               ENDIF
-               IF EMPTY( cFuncName )
-                  write_error( "Blank Function Name",,,, aDirList[ i, F_NAME ] )
-                  cFuncName := "Unknown"
-               ENDIF
-               AADD( aDocInfo, { cCategory, cFuncName, cOneLine, cFileName } )
-               //  Now close down this little piece
-               lDoc := .F.
-               IF .NOT. EMPTY( cSeeAlso )
-                  FWRITE( nWriteHandle, "See Also " )
-                  Proccalso( nWriteHandle, cSeealso )
-               ENDIF
-               FWRITE( nWriteHandle, ".end-topic" + CRLF )
-               FCLOSE( nWriteHandle )
-               nMode := D_IGNORE
-            ENDIF
-
-            @ MODULELINE, 33 CLEAR TO MODULELINE, MAXCOL()
-         ENDIF
-
-         //  Act on the input
-         IF lDoc
-            //  1) function name
-
-            IF AT( cFunc, cBuffer ) > 0 .OR. AT( cComm, cBuffer ) > 0 .OR. AT(cSubCode,cBuffer) > 0
-               cBuffer := ReadLN( @lEof )
-               nLineCnt ++
-               //  Save the function name
-               cFuncName := UPPER( ALLTRIM( SUBSTR( cBuffer, nCommentLen ) ) )
-               @ MODULELINE, 33 CLEAR TO MODULELINE, MAXCOL()
-               @ MODULELINE, 33 SAY cFuncName
-
-               nMode := D_NORMAL
-
-               //  Open a new file
-               IF AT( "FT_", cFuncName ) > 0
-                  cTemp := SUBSTR( cFuncName, 4 )
-               ELSE
-                  cTemp := cFuncName
-               ENDIF
-
-               IF ( nEnd := AT( "(", cTemp ) ) > 0
-                  cTemp := LEFT( cTemp, nEnd - 1 )
-               ENDIF
-               cFileName := ""
-
-               //  Strip off any other non-alphabetic/numeric characters
-               FOR j := 1 TO LEN( cTemp )
-                  cChar := SUBSTR( cTemp, j, 1 )
-                  IF ( cChar >= "0" .AND. cChar <= "9" ) .OR. ;
-                       ( cChar >= "A" .AND. cChar <= "Z" ) .OR. cChar = "_"
-                     cFileName += cChar
-                  ENDIF
-               NEXT
-
-               //  See if file name is present already. If so then modify
-
-               cFileName := LEFT( cFileName, 8 )
-               nEnd      := 1
-               nCount    := 0
-               DO WHILE nEnd > 0
-                  nEnd := ASCAN( aDocInfo, { | a | a[ 4 ] == cFileName + ".hdf" } )
-                  IF nEnd > 0
-
-                     //  This will break if there are more than 10 files with the same first
-                     //  seven characters. We take our chances.
-
-                     IF LEN( cFileName ) = 8
-                        cFileName := STUFF( cFileName, 8, 1, STR( nCount, 1, 0 ) )
-                     ELSE
-                        cFileName += STR( nCount, 1, 0 )
-                     ENDIF
-                     nCount ++
-                  ENDIF
-               ENDDO
-               //  Add on the extension
-
-               cFileName := LEFT( cFileName, 8 ) + ".hdf"
-
-               nWriteHandle := FCREATE( "hdf\" + cFileName )
-               IF nWriteHandle < 1
-                  ? "Error creating", cFileName, ".hdf"
-                  write_error( "Error creating",,,, cFileName + ".hdf" )
-               ENDIF
-               //  2) Category
-            ELSEIF AT( cCat, cBuffer ) > 0
-               cBuffer := ReadLN( @lEof )
-               nLineCnt ++
-               //  get the category
-               cCategory := UPPER( ALLTRIM( SUBSTR( cBuffer, nCommentLen ) ) )
-
-               //  3) One line description
-
-            ELSEIF AT( cOne, cBuffer ) > 0
-               cBuffer := ReadLN( @lEof )
-               nLineCnt ++
-               cOneLine := ALLTRIM( SUBSTR( cBuffer, nCommentLen ) )
-               IF LEN( cOneLine ) > LONGONELINE
-                  write_error( "OneLine", cOneLine, nLineCnt, LONGONELINE, ;
-                               aDirList[ i, F_NAME ] )
-               ENDIF
-
-               nMode := D_ONELINE
-               //  Now start writing out what we know
-               FWRITE( nWriteHandle, '.topic ' + CheckTop( PAD( cFuncName, 20 ) ) + CRLF )
-               //                    FWRITE(nWriteHandle,"!short: "+PAD(cFuncName,17)+cOneLine+CRLF)
-               FWRITE( nWriteHandle, '.title ' + cFuncName + CRLF )
-               //                  FWRITE(nWriteHandle," "+cFuncName+CRLF)
-               FWRITE( nWriteHandle, ".par font 6 size 12 align center " + CRLF + cOneLine + CRLF + ".endpar" + CRLF )
-               FWRITE( nWriteHandle, HB_OEMTOANSI( cBar ) )
-               //  4) all other stuff
-
-            ELSE
-
-               IF AT( cSyn, cBuffer ) > 0
-                  FWRITE( nWriteHandle, ".par bold on" + CRLF )
-                  FWRITE( nWriteHandle, " Syntax" + CRLF )
-                  FWRITE( nWriteHandle, ".endpar" + CRLF )
-                  nMode     := D_SYNTAX
-                  lAddBlank := .T.
-
-               ELSEIF AT( cArg, cBuffer ) > 0
-
-                  IF !lBlankLine
-                     FWRITE( nWriteHandle, ".par bold on" + CRLF )
-                     FWRITE( nWriteHandle, " Arguments" + CRLF )
-                     FWRITE( nWriteHandle, ".endpar" + CRLF )
-                  ENDIF
-
-                  nMode     := D_ARG
-                  lAddBlank := .T.
-
-               ELSEIF AT( cRet, cBuffer ) > 0
-
-                  IF !lBlankLine
-                     FWRITE( nWriteHandle, CRLF )
-                  ENDIF
-                  FWRITE( nWriteHandle, ".par bold on" + CRLF )
-                  FWRITE( nWriteHandle, " Returns" + CRLF )
-                  FWRITE( nWriteHandle, ".endpar" + CRLF )
-                  nMode     := D_ARG
-                  lAddBlank := .T.
-
-               ELSEIF AT( cDesc, cBuffer ) > 0
-
-                  IF !lBlankLine
-                     FWRITE( nWriteHandle, CRLF )
-                  ENDIF
-                  FWRITE( nWriteHandle, ".par bold on" + CRLF )
-
-                  FWRITE( nWriteHandle, " Description" + CRLF )
-                  FWRITE( nWriteHandle, ".endpar" + CRLF )
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-
-               ELSEIF AT( cExam, cBuffer ) > 0
-
-                  IF !lBlankLine
-                     FWRITE( nWriteHandle, CRLF )
-                  ENDIF
-
-                  FWRITE( nWriteHandle, ".par bold on" + CRLF )
-                  FWRITE( nWriteHandle, " Examples" + CRLF )
-                  FWRITE( nWriteHandle, ".endpar" + CRLF )
-
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-               ELSEIF AT( cTest, cBuffer ) > 0
-                      nMode=D_TESTS
-               ELSEIF AT( cCompl, cBuffer ) > 0
-
-                  IF !lBlankLine
-                     FWRITE( nWriteHandle, CRLF )
-                  ENDIF
-                  FWRITE( nWriteHandle, ".par bold on" + CRLF )
-                  FWRITE( nWriteHandle, " Compliance" + CRLF )
-
-                  FWRITE( nWriteHandle, ".endpar" + CRLF )
-
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-               ELSEIF AT( cPlat, cBuffer ) > 0
-
-                  IF !lBlankLine
-                     FWRITE( nWriteHandle, CRLF )
-                  ENDIF
-                  FWRITE( nWriteHandle, ".par bold on" + CRLF )
-                  FWRITE( nWriteHandle, " Platforms" + CRLF )
-                  FWRITE( nWriteHandle, ".endpar" + CRLF )
-
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-               ELSEIF AT( cFiles, cBuffer ) > 0
-
-                  IF !lBlankLine
-                     FWRITE( nWriteHandle, CRLF )
-                  ENDIF
-                  FWRITE( nWriteHandle, ".par bold on" + CRLF )
-                  FWRITE( nWriteHandle, " Files" + CRLF )
-                  FWRITE( nWriteHandle, ".endpar" + CRLF )
-
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-               ELSEIF AT( cFunction, cBuffer ) > 0
-
-                  IF !lBlankLine
-                     FWRITE( nWriteHandle, CRLF )
-                  ENDIF
-                  FWRITE( nWriteHandle, ".par bold on" + CRLF )
-                  FWRITE( nWriteHandle, " Function" + CRLF )
-                  FWRITE( nWriteHandle, ".endpar" + CRLF )
-
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-
-               ELSEIF AT( cStatus, cBuffer ) > 0
-                  nMode := D_STATUS
-               ELSEIF AT( cSee, cBuffer ) > 0
-                  nMode := D_SEEALSO
-               ELSEIF AT( cInc, cBuffer ) > 0
-                  nMode := D_INCLUDE
-
-                  //  All other input is trimmed of comments and sent out
-
-               ELSE
-                  //  translate any \$ into $
-                  cBuffer := STRTRAN( cBuffer, "\" + DELIM, DELIM )
-                  IF nMode = D_SYNTAX
-                     IF LEN( cBuffer ) > LONGLINE
-                        write_error( "Syntax", cBuffer, nLineCnt, ;
-                                     LONGLINE, aDirList[ i, F_NAME ] )
-                     ENDIF
-                     lBlankLine := EMPTY( cBuffer )
-                     IF lAddBlank
-                        FWRITE( nWriteHandle, CRLF )
-                        lAddBlank := .F.
-                     ENDIF
-                     FWRITE( nWriteHandle, cBuffer + CRLF )
-                  ELSEIF nMode = D_ARG
-                     IF LEN( cBuffer ) > LONGLINE
-                        write_error( "Arguments", cBuffer, nLineCnt, ;
-                                     LONGLINE, aDirList[ i, F_NAME ] )
-                     ENDIF
-                     lBlankLine := EMPTY( cBuffer )
-                     IF lAddBlank
-                        FWRITE( nWriteHandle, CRLF )
-                        lAddBlank := .F.
-                     ENDIF
-                     cBuffer := STRTRAN( cBuffer, "<", "<", 1 )
-                     cBuffer := STRTRAN( cBuffer, ">", ">", 1 )
-                     FWRITE( nWriteHandle, cBuffer + CRLF )
-                  ELSEIF nMode = D_NORMAL
-                     IF LEN( cBuffer ) > LONGLINE
-                        write_error( "General", cBuffer, nLineCnt, ;
-                                     LONGLINE, aDirList[ i, F_NAME ] )
-                     ENDIF
-                     lBlankLine := EMPTY( cBuffer )
-                     IF lAddBlank
-                        FWRITE( nWriteHandle, CRLF )
-                        lAddBlank := .F.
-                     ENDIF
-                     FWRITE( nWriteHandle, StripNgControls( cBuffer ) + CRLF )
-                  ELSEIF nMode = D_SEEALSO
-                     IF .NOT. EMPTY( cBuffer )
-                        cSeeAlso := StripFiles( ALLTRIM( cBuffer ) )
-                     ENDIF
-                  ELSEIF nMode = D_INCLUDE
-                     //  read next line
-                     IF .NOT. EMPTY( cBuffer )
-                        IF !lBlankLine
-                           FWRITE( nWriteHandle, CRLF )
-                        ENDIF
-                        FWRITE( nWriteHandle, " Header File: " ;
-                                + ALLTRIM( cBuffer ) + CRLF )
-                     ENDIF
-                  ELSEIF nMode = D_STATUS
-                     IF !EMPTY( cBuffer )
-                        FWRITE( nWriteHandle, ".par bold on" + CRLF )
-                        FWRITE( nWriteHandle, " Status" + CRLF )
-                        FWRITE( nWriteHandle, ".endpar" + CRLF )
-                     ENDIF
-                     ProcStatus( nWriteHandle, StripNgControls( cBuffer ) )
-                  ELSEIF    nMode=D_TESTS
-                     IF !EMPTY(cBuffer)
-                          FWRITE( nWriteHandle, ".par bold on" + CRLF )
-                          FWRITE( nWriteHandle, " Tests" + CRLF )
-                          FWRITE( nWriteHandle, ".endpar" + CRLF )
-                          FWRITE( nWriteHandle, CRLF )
-
-                  ENDIF
-                          FWRITE( nWriteHandle,StripNgControls( cBuffer ) +CRLF)
-                  ELSE
-
-                     //  unknown data from somewhere
-
-                     write_error( "Unknown Data Type " + cBuffer,, ;
-                                  nLineCnt, ;
-                                  LONGONELINE, aDirList[ i, F_NAME ] )
-
-                  ENDIF
-               ENDIF
-            ENDIF
-         ENDIF
-      ENDDO
-      //  Close down the input file
-
-      FT_FUSE()
-   NEXT
-
-RETURN NIL
-
-//  End of file process files
-
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-*+    Function fill_link_info()
-*+
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-FUNCTION fill_link_info( cLinkName )
-
-   //
-   //  This routine and all accompaning database structures are
-   //  Copyright (C) 1992 Leo J. Letendre.
-   //
-   //  Purpose: read the link information to learn how to assemble database files
-   //
-   //  Modification History:
-   //         Version    Date      Who       Notes
-   //          V1.00     1/22/92   LJL       Initial Version
-   //          V1.01     4/25/92   LJL       Get the compiler type based upon
-   //                                        "object" file extension
-   //
-   //  Calling parameters: cLinkName - The name of the link file
-   //
-   //  Returns: cCompiler - The name of the compiler to use
-   //
-   //  Notes: looks for the !menu command and then reads the lines after it to
-   //         get the catagories and filenames associated with each.
-   // -
-   //  LOCAL variables:
-   LOCAL cBuffer
-   LOCAL lEof
-   LOCAL cSpace
-   LOCAL cCategory
-   LOCAL cFile
-   LOCAL lMenuMode := .F.                  // Menu infomation being read
-   LOCAL lGetType  := .T.                  // Get the compiled file type to determine complier
-   LOCAL cCompiler     // Compiler Type
-   //
-   //  Entry Point
-   //
-   nReadHandle := FT_FUSE( cLinkName )
-   lEof        := .F.
-
-   DO WHILE .NOT. lEof
-
-      //  Read a line
-      cBuffer := UPPER( ReadLN( @lEof ) )
-
-      //  Does it have a !menu?
-
-      IF AT( "!MENU", cBuffer ) > 0
-         lMenuMode := .T.
-         cBuffer   := UPPER( ReadLN( @lEof ) )
-      ELSEIF LEFT( cBuffer, 1 ) = "!"
-         lMenuMode := .F.
-      ENDIF
-
-      //  If we are in menu mode and the line has information on it then parse it
-
-      cBuffer := ALLTRIM( cBuffer )
-
-      IF .NOT. EMPTY( cBuffer ) .AND. lMenuMode
-         cSpace    := AT( "  ", cBuffer )
-         cCategory := UPPER( RTRIM( LEFT( cBuffer, cSpace - 1 ) ) )
-         cFile     := UPPER( LTRIM( SUBSTR( cBuffer, cSpace ) ) )
-         IF lGetType
-            cCompiler := IIF( ".NGO" $ cFile, "NGXC", "EHC" )
-            lGetType  := .NOT. ( ".NGO" $ cFile .OR. "EHO" $ cFile )
-         ENDIF
-         cFile := STRTRAN( cFile, IIF( cCompiler = "NGXC", ".NGO", ".EHO" ), ".TXT" )
-         AADD( aLinkInfo, { cCategory, cFile, .F. } )
-      ENDIF
-
+   DO WHILE ( nPos := AT( cDelimiter, cList ) ) != 0
+      AADD( aList, SUBSTR( cList, 1, nPos - 1 ) )           // Add a new element
+      cList := SUBSTR( cList, nPos + 1 )
    ENDDO
-
-   //  Close the file
-
-   FT_FUSE()
-   //  Return to caller
-
-RETURN cCompiler
-
-//  End of fill_link_info8
-
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-*+    Static Function ReadAtFile()
-*+
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-STATIC FUNCTION ReadAtFile( cAtFile )
-
+   AADD( aList, cList )                 // Add final element
    //
-   //  This routine and all accompaning database structures are
-   //  Copyright (C) 1992 Leo J. Letendre.
-   //
-   //  Purpose: read in the users list of files to act on
-   //
-   //  Modification History:
-   //         Version    Date      Who       Notes
-   //          V1.00     1/1/92   LJL       Initial Version
-   //
-   //  Calling parameters: cAtFile - The name of the file containing a list of
-   //                               files to be processed
-   //
-   //  Returns: an array containing information that looks like it came
-   //           from DIRECTORY() but only has the name present.
-   //
-   //  Notes:
-   // -
-   //  LOCAL variables:
-   LOCAL aDirList := {}
-   LOCAL cBuffer
-   LOCAL lEof
-   LOCAL nCount   := 0
+RETURN aList        // Return the array
+FUNCTION StripNgControls( cString )
 
-   //
-   //  Entry Point
-   //
-   IF FT_FUSE( cAtFile ) <> NIL
+   LOCAL nPos
+   LOCAL lStriped := .f.
 
-      //  Read each line
-      lEof := .F.
-      DO WHILE .NOT. lEof
-
-         cBuffer := ALLTRIM( ReadLN( @lEof ) )
-         IF .NOT. EMPTY( cBuffer )
-            AADD( aDirList, ARRAY( F_LEN ) )
-            nCount ++
-            aDirList[ nCount, F_NAME ] = UPPER( cBuffer )
-         ENDIF
-      ENDDO
-   ENDIF
-
-   FT_FUSE()
-
-RETURN aDirList
-
-//  End of ReadAtFile
-
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-*+    Static Function write_error()
-*+
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-STATIC FUNCTION write_error( cDescrip, cBadLine, nLineCnt, nMax, cFile )
-
-   //  This routine will send error messages to the error log - hbdocerr.log
-   //
-   //  Calling parameters: cDesc - Description of info being written
-   //                      cBadLine - The offending line - IF NIL then just
-   //                                 output cDesc and filename
-   //                      nLineCnt - The line number of the bad line
-   //                      nMax - The maximum length of the bad line
-   //                      cFile - The file currently being processed
-   //
-   //  Returns: NIL
-   //
-   //  Entry point
-   //
-   //  Point output to the log file
-   SET ALTERNATE TO "hbdocerr.log" ADDITIVE
-   SET CONSOLE OFF
-   SET ALTERNATE ON
-
-   //  Send out the output
-   IF cBadLine = NIL
-      ? cDescrip, "in file", cFile
-      ? " "
+   nPos := AT( "^b", cString )
+   IF nPos > 0
+      cString  := SUBSTR( cString, nPos + 3 )
+      lStriped := .t.
    ELSE
-      ? "Line too long in file", cFile, "at line", ALLTRIM( STR( nLineCnt, 10, 0 ) )
-      ? "Reading", cDescrip, "information when line greater than", STR( nMax, 2, 0 ), "encountered:"
-      ? cBadLine
-      ? " "
+      IF !lStriped
+         cString := cString
+      ENDIF
    ENDIF
 
-   //  Turn off the log file and return
+   nPos := AT( "^b^", cString )
+   IF nPos > 0
+      cString  := SUBSTR( cString, 1, nPos - 1 )
+      lStriped := .t.
+   ELSE
+      IF !lStriped
+         cString := cString
+      ENDIF
+   ENDIF
 
-   SET ALTERNATE OFF
-   SET CONSOLE ON
-   SET ALTERNATE TO
+   nPos := AT( "^CFE", cString )
+   IF nPos > 0
+      cString  := SUBSTR( cString, nPos + 5 )
+      lStriped := .t.
+   ELSE
+      IF !lStriped
+         cString := cString
+      ENDIF
+   ENDIF
 
-RETURN NIL
+   nPos := AT( "^a1f", cString )
+   IF nPos > 0
+      cString  := SUBSTR( cString, nPos + 5 )
+      lStriped := .t.
+   ELSE
+      IF !lStriped
+         cString := cString
+      ENDIF
+   ENDIF
 
-//  End of Write_Error
+RETURN cString
+#ifdef NANFOR
 
-/***
-*  ReadLn( lEof ) --> cBuffer
-*
-* Read a line from the currently open file
-*
-* Parameters: lEof - Passed by reference - Logical indicating end of file
-*
-* Returns: The next line in the file without delimiters
-*
+#define xReadBuffer 4096
+   /****
+*   FT_FUSE(cFile,nMode)   ---> nHandle
+*   Open a File
 */
 
 *+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 *+
-*+    Function ReadLN()
+*+    Function ft_fuse()
 *+
 *+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 *+
-FUNCTION ReadLN( leof )
+FUNCTION ft_fuse( cFile, nMode )
 
-   LOCAL cBuffer := ""
+   IF nMode == nil
+      nMode := 2
+   ENDIF
+   IF cFile == Nil
+      theHandle:close()
+   ENDIF
+   IF cFile <> Nil
+      IF nMode <> 0
+         theHandle := TFileRead():new( cFile ):open( nMode )
+      ELSE
+         theHandle := TFileRead():new( cFile ):open()
+      ENDIF
+   ENDIF
+RETURN theHandle:nHan
 
-   cBuffer := FT_FREADLN()
-   FT_FSKIP( 1 )
-   lEof := FT_FEOF()
+*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+*+
+*+    Function ft_FEOF()
+*+
+*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+*+
+FUNCTION ft_FEOF()
+
+   LOCAL lRETURN := theHandle:lEOF
+RETURN lRETURN
+
+*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+*+
+*+    Function FReadLn()
+*+
+*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+*+
+FUNCTION FReadLn( nH, cLine )
+
+   //     cline:= thehandle:readline()
+   // ENDIF
+   IF theHandle:MoreToRead()
+      cLine := theHandle:ReadLine()
+   ELSE
+
+      FSEEK( theHandle:nHan, 0, 0 )
+      theHandle:lEOF := .f.
+
+      cLine := theHandle:ReadLine()
+   ENDIF
+RETURN cLine
+
+*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+*+
+*+    Function FT_FReadLn()
+*+
+*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+*+
+FUNCTION FT_FReadLn()
+
+   LOCAL cBuffer := ''
+
+   cBuffer := FReadLn( theHandle:nHan, @cBuffer )
 
 RETURN cBuffer
-//  End of ReadLN
 
 *+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 *+
-*+    Static Function ASCIIFiles()
+*+    Function FT_FGotop()
 *+
 *+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 *+
-STATIC FUNCTION ASCIIFiles
+FUNCTION FT_FGotop()
 
-   //
-   //  This routine and all accompaning database structures are
-   //  Copyright (C) 1992 Leo J. Letendre.
-   //
-   //  Purpose: Process each of the files in the directory making an ascii file
-   //
-   //  Modification History:
-   //         Version    Date      Who       Notes
-   //          V1.00     1/19/92   LJL       Initial Version
-   //          V1.01     2/25/92   LJL       Trimmed spaces from see also and header
-   //          V1.02     10/30/92  LJL       Added multi-line one liner check and
-   //                                        insured blank line prior to and after
-   //                                        category headers
-   //          V1.03     10/30/93  LJL       added changable delimiter support,
-   //                                        COMMANDNAME keyword and removed
-   //                                        filename references in see alsos
-   //
-   //  Calling parameters: None
-   //
-   //  Notes: None
-   // -
-   //  LOCAL variables:
-
-   LOCAL i
-   LOCAL j
-   LOCAL nFiles      := LEN( aDirList )
-   LOCAL nCommentLen
-   LOCAL lEof
-   LOCAL lDoc
-   LOCAL lDone
-   LOCAL cBuffer
-   LOCAL nEnd
-   LOCAL nCount
-
-   LOCAL cBar       := "ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ" + CRLF
-   LOCAL nMode
-   LOCAL cAuthor
-   LOCAL cCISID
-   LOCAL cFuncName
-   LOCAL cOneLine
-   LOCAL cCategory
-   LOCAL cFileName
-   LOCAL nLineCnt
-   LOCAL cSeeAlso
-   LOCAL cTemp
-   LOCAL cChar
-   LOCAL nDocCnt
-   LOCAL lBlankLine := .F.                 // Blank line encountered and sent out
-   LOCAL lAddBlank  := .F.                 // Need to add a blank line if next line is not blank
-   LOCAL lFunc      := .T.                 // currently a function rather than a command
-   //
-   //  Entry Point
-   //
-   //  Put up information labels
-   @ INFILELINE, 20 SAY "Extracting: "
-   @ MODULELINE, 20 SAY "Documenting: "
-   //  loop through all of the files
-
-   FOR i := 1 TO nFiles
-
-      //  Open file for input
-
-      nCommentLen := IIF( AT( ".ASM", UPPER( aDirList[ i, F_NAME ] ) ) > 0, 2, 3 )
-      nReadHandle := FT_FUSE( aDirList[ i, F_NAME ] )
-      @ INFILELINE, 33 CLEAR TO INFILELINE, MAXCOL()
-      @ INFILELINE, 33 SAY PAD( aDirList[ i, F_NAME ], 47 )
-      @ MODULELINE, 33 CLEAR TO LINELINE, MAXCOL()
-      @ LINELINE, 27   SAY "Line:"
-
-      nLineCnt := 0
-
-      IF nReadHandle < 0
-         write_error( "Can't open file: (Dos Error " + STR( FERROR() ) + ")",,,, aDirList[ i, F_NAME ] )
-         @ ERRORLINE,  0 CLEAR TO ERRORLINE, MAXCOL()
-         @ ERRORLINE, 20 SAY "Can't open file: (Dos Error " + STR( FERROR() ) + ") File=" + aDirList[ i, F_NAME ]
-         LOOP
-      ENDIF
-      lEof := .F.
-      lDoc := .F.
-      //  First find the author
-
-      DO WHILE .NOT. lEof
-
-         //  Read a line
-
-         cBuffer := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
-         nLineCnt ++
-         IF nLineCnt % 10 = 0
-            @ LINELINE, 33 SAY STR( nLineCnt, 5, 0 )
-         ENDIF
-
-         //  check to see if we are in doc mode or getting out of doc mode
-
-         IF AT( cDoc, cBuffer ) > 0
-            IF lDoc
-               write_error( cDoc + " encountered during extraction of Doc" ;
-                            + " at line" + STR( nLinecnt, 5, 0 ),,,, aDirList[ i, F_NAME ] )
-            ENDIF
-            lDoc    := .T.
-            cBuffer := TRIM( SUBSTR( ReadLN( @lEof ), ;
-                             nCommentLen ) )
-            nLineCnt ++
-            cCategory := cFuncName := cSeeAlso := ""
-            nMode     := D_IGNORE
-         ELSEIF AT( cEnd, cBuffer ) > 0
-            IF .NOT. lDoc
-               write_error( cEnd + " encountered outside of Doc area at line" ;
-                            + STR( nLinecnt, 5, 0 ),,,, aDirList[ i, F_NAME ] )
-
-            ELSE
-               //  Add a new entry to our list of files
-
-               IF EMPTY( cCategory )
-                  write_error( "Blank Category",,,, aDirList[ i, F_NAME ] )
-                  cCategory := "Unknown"
-               ENDIF
-               IF EMPTY( cFuncName )
-                  write_error( "Blank Function Name",,,, aDirList[ i, F_NAME ] )
-                  cFuncName := "Unknown"
-               ENDIF
-               AADD( aDocInfo, { cCategory, cFuncName, cOneLine, cFileName } )
-               //  Now close down this little piece
-               lDoc := .F.
-               IF nDocCnt > 60 .AND. .NOT. lContinuous
-                  FWRITE( nWriteHandle, CHR( K_CTRL_L ) + CRLF )
-                  nDocCnt := 0
-               ENDIF
-               FWRITE( nWriteHandle, CRLF )
-               FWRITE( nWriteHandle, " Source: " + aDirList[ i, F_NAME ] + CRLF + CRLF )
-               IF lAuthor
-                  FWRITE( nWriteHandle, " Author: " + cAuthor + CRLF )
-               ENDIF
-               IF .NOT. EMPTY( cSeeAlso )
-                  FWRITE( nWriteHandle, "See also: " + cSeeAlso + CRLF )
-               ENDIF
-               IF .NOT. lContinuous
-                  FWRITE( nWriteHandle, CHR( K_CTRL_L ) + CRLF )
-               ELSE
-                  FWRITE( nWriteHandle, CRLF + CRLF )
-               ENDIF
-               nDocCnt := 0
-               FCLOSE( nWriteHandle )
-            ENDIF
-            nMode := D_IGNORE
-            @ MODULELINE, 33 CLEAR TO MODULELINE, MAXCOL()
-         ENDIF
-
-         //  Act on the input
-         IF lDoc
-            //  1) function name
-
-            IF AT( cFunc, cBuffer ) > 0 .OR. AT( cComm, cBuffer ) > 0
-               lFunc   := AT( cFunc, cBuffer ) > 0
-               cBuffer := ReadLN( @lEof )
-               nLineCnt ++
-               //  Save the function name
-               cFuncName := UPPER( ALLTRIM( SUBSTR( cBuffer, nCommentLen ) ) )
-               @ MODULELINE, 33 CLEAR TO MODULELINE, MAXCOL()
-               @ MODULELINE, 33 SAY cFuncName
-
-               nMode := D_NORMAL
-
-               //  Open a new file
-               IF AT( "FT_", cFuncName ) > 0
-                  cTemp := SUBSTR( cFuncName, 4 )
-               ELSE
-                  cTemp := cFuncName
-               ENDIF
-
-               IF ( nEnd := AT( "(", cTemp ) ) > 0
-                  cTemp := LEFT( cTemp, nEnd - 1 )
-               ENDIF
-               cFileName := ""
-
-               //  Strip off any other non-alphabetic/numeric characters
-               FOR j := 1 TO LEN( cTemp )
-                  cChar := SUBSTR( cTemp, j, 1 )
-                  IF ( cChar >= "0" .AND. cChar <= "9" ) .OR. ;
-                       ( cChar >= "A" .AND. cChar <= "Z" ) .OR. cChar = "_"
-                     cFileName += cChar
-                  ENDIF
-               NEXT
-
-               //  See if file name is present already. If so then modify
-
-               cFileName := LEFT( cFileName, 8 )
-               nEnd      := 1
-               nCount    := 0
-               DO WHILE nEnd > 0
-                  nEnd := ASCAN( aDocInfo, { | a | a[ 4 ] == cFileName + ".hdf" } )
-                  IF nEnd > 0
-
-                     //  This will break if there are more than 10 files with the same first
-                     //  seven characters. We take our chances.
-
-                     IF LEN( cFileName ) = 8
-                        cFileName := STUFF( cFileName, 8, 1, STR( nCount, 1, 0 ) )
-                     ELSE
-                        cFileName += STR( nCount, 1, 0 )
-                     ENDIF
-                     nCount ++
-                  ENDIF
-               ENDDO
-               //  Add on the extension
-
-               cFileName := LEFT( cFileName, 8 ) + ".hdf"
-
-               nWriteHandle := FCREATE( "hdf\" + cFileName )
-               IF nWriteHandle < 1
-                  ? "Error creating", cFileName, ".hdf"
-                  write_error( "Error creating",,,, cFileName + ".hdf" )
-               ENDIF
-               //  2) Category
-            ELSEIF AT( cCat, cBuffer ) > 0
-               cBuffer := ReadLN( @lEof )
-               nLineCnt ++
-               //  get the category
-               cCategory := UPPER( ALLTRIM( SUBSTR( cBuffer, nCommentLen ) ) )
-
-               //  3) One line description
-
-            ELSEIF AT( cOne, cBuffer ) > 0
-               cBuffer := ReadLN( @lEof )
-               nLineCnt ++
-               cOneLine := ALLTRIM( SUBSTR( cBuffer, nCommentLen ) )
-               IF LEN( cOneLine ) > LONGONELINE
-                  write_error( "OneLine", cOneLine, nLineCnt, LONGONELINE, ;
-                               aDirList[ i, F_NAME ] )
-               ENDIF
-               nMode := D_ONELINE
-
-               //  Now start writing out what we know
-               IF nDocCnt > 60 .AND. .NOT. lContinuous
-                  FWRITE( nWriteHandle, CHR( K_CTRL_L ) + CRLF )
-                  nDocCnt := 0
-               ENDIF
-
-               FWRITE( nWriteHandle, IIF( lFunc, "FUNCTION: ", "COMMAND: " ) ;
-                       + cFuncName + CRLF )
-               FWRITE( nWriteHandle, " " + cOneLine + CRLF )
-               FWRITE( nWriteHandle, cBar )
-               nDocCnt += 3
-               //  4) all other stuff
-
-            ELSE
-
-               IF AT( cSyn, cBuffer ) > 0
-
-                  IF nDocCnt > 62 .AND. .NOT. lContinuous
-                     FWRITE( nWriteHandle, CHR( K_CTRL_L ) + CRLF )
-                     nDocCnt := 0
-                  ENDIF
-                  FWRITE( nWriteHandle, " Syntax:" + CRLF )
-                  nDocCnt ++
-                  nMode := D_SYNTAX
-
-               ELSEIF AT( cArg, cBuffer ) > 0
-
-                  IF nDocCnt > 62 .AND. .NOT. lContinuous
-                     FWRITE( nWriteHandle, CHR( K_CTRL_L ) + CRLF )
-                     nDocCnt := 0
-                  ELSEIF !lBlankLine
-                     FWRITE( nWriteHandle, CRLF )
-                     nDocCnt ++
-                  ENDIF
-                  FWRITE( nWriteHandle, " Arguments:" + CRLF )
-                  nDocCnt ++
-                  nMode     := D_ARG
-                  lAddBlank := .T.
-
-               ELSEIF AT( cRet, cBuffer ) > 0
-
-                  IF nDocCnt > 62 .AND. .NOT. lContinuous
-                     FWRITE( nWriteHandle, CHR( K_CTRL_L ) + CRLF )
-                     nDocCnt := 0
-                  ELSEIF !lBlankLine
-                     FWRITE( nWriteHandle, CRLF )
-                     nDocCnt ++
-                  ENDIF
-                  FWRITE( nWriteHandle, " Returns:" + CRLF )
-                  nDocCnt ++
-                  nMode     := D_ARG
-                  lAddBlank := .T.
-
-               ELSEIF AT( cDesc, cBuffer ) > 0
-
-                  IF nDocCnt > 62 .AND. .NOT. lContinuous
-                     FWRITE( nWriteHandle, CHR( K_CTRL_L ) + CRLF )
-                     nDocCnt := 0
-                  ELSEIF !lBlankLine
-                     FWRITE( nWriteHandle, CRLF )
-                     nDocCnt ++
-                  ENDIF
-
-                  FWRITE( nWriteHandle, " Description:" + CRLF )
-                  nDocCnt ++
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-
-               ELSEIF AT( cExam, cBuffer ) > 0
-
-                  IF nDocCnt > 62 .AND. .NOT. lContinuous
-                     FWRITE( nWriteHandle, CHR( K_CTRL_L ) + CRLF )
-                     nDocCnt := 0
-                  ELSEIF !lBlankLine
-                     FWRITE( nWriteHandle, CRLF )
-                     nDocCnt ++
-                  ENDIF
-
-                  FWRITE( nWriteHandle, " Examples:" + CRLF )
-                  nDocCnt ++
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-               ELSEIF AT( cTest, cBuffer ) > 0
-
-                  IF nDocCnt > 62 .AND. .NOT. lContinuous
-                     FWRITE( nWriteHandle, CHR( K_CTRL_L ) + CRLF )
-                     nDocCnt := 0
-                  ELSEIF !lBlankLine
-                     FWRITE( nWriteHandle, CRLF )
-                     nDocCnt ++
-                  ENDIF
-
-                  FWRITE( nWriteHandle, " Tests:" + CRLF )
-                  nDocCnt ++
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-
-               ELSEIF AT( cStatus, cBuffer ) > 0
-                  IF nDocCnt > 62 .AND. .NOT. lContinuous
-                     FWRITE( nWriteHandle, CHR( K_CTRL_L ) + CRLF )
-                     nDocCnt := 0
-                  ELSEIF !lBlankLine
-                     FWRITE( nWriteHandle, CRLF )
-                     nDocCnt ++
-                  ENDIF
-
-                  FWRITE( nWriteHandle, " Status:" + CRLF )
-                  nDocCnt ++
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-
-               ELSEIF AT( cCompl, cBuffer ) > 0
-                  IF nDocCnt > 62 .AND. .NOT. lContinuous
-                     FWRITE( nWriteHandle, CHR( K_CTRL_L ) + CRLF )
-                     nDocCnt := 0
-                  ELSEIF !lBlankLine
-                     FWRITE( nWriteHandle, CRLF )
-                     nDocCnt ++
-                  ENDIF
-
-                  FWRITE( nWriteHandle, " Compliance:" + CRLF )
-                  nDocCnt ++
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-
-               ELSEIF AT( cPlat, cBuffer ) > 0
-                  IF nDocCnt > 62 .AND. .NOT. lContinuous
-                     FWRITE( nWriteHandle, CHR( K_CTRL_L ) + CRLF )
-                     nDocCnt := 0
-                  ELSEIF !lBlankLine
-                     FWRITE( nWriteHandle, CRLF )
-                     nDocCnt ++
-                  ENDIF
-
-                  FWRITE( nWriteHandle, " Platforms:" + CRLF )
-                  nDocCnt ++
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-               ELSEIF AT( cFiles, cBuffer ) > 0
-                  IF nDocCnt > 62 .AND. .NOT. lContinuous
-                     FWRITE( nWriteHandle, CHR( K_CTRL_L ) + CRLF )
-                     nDocCnt := 0
-                  ELSEIF !lBlankLine
-                     FWRITE( nWriteHandle, CRLF )
-                     nDocCnt ++
-                  ENDIF
-
-                  FWRITE( nWriteHandle, " Files:" + CRLF )
-                  nDocCnt ++
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-
-               ELSEIF AT( cSee, cBuffer ) > 0
-                  nMode := D_SEEALSO
-               ELSEIF AT( cInc, cBuffer ) > 0
-                  nMode := D_INCLUDE
-
-                  //  All other input is trimmed of comments and sent out
-
-               ELSE
-                  //  translate any \$ into $
-                  cBuffer := STRTRAN( cBuffer, "\" + DELIM, DELIM )
-                  IF nMode = D_SYNTAX
-                     IF LEN( cBuffer ) > LONGLINE
-                        write_error( "Syntax", cBuffer, nLineCnt, ;
-                                     LONGLINE, aDirList[ i, F_NAME ] )
-                     ENDIF
-                     IF nDocCnt > 62 .AND. .NOT. lContinuous
-                        FWRITE( nWriteHandle, CHR( K_CTRL_L ) + CRLF )
-                        nDocCnt   := 0
-                        lAddBlank := .F.
-                     ELSEIF lAddBlank
-                        FWRITE( nWriteHandle, CRLF )
-                        lAddBlank := .F.
-                        nDocCnt ++
-                     ENDIF
-
-                     lBlankLine := EMPTY( cBuffer )
-                     FWRITE( nWriteHandle, " " + cBuffer + CRLF )
-                     nDocCnt ++
-                  ELSEIF nMode = D_ARG
-                     IF LEN( cBuffer ) > LONGLINE
-                        write_error( "Arguments", cBuffer, nLineCnt, ;
-                                     LONGLINE, aDirList[ i, F_NAME ] )
-                     ENDIF
-                     IF nDocCnt > 62 .AND. .NOT. lContinuous
-                        FWRITE( nWriteHandle, CHR( K_CTRL_L ) + CRLF )
-                        nDocCnt   := 0
-                        lAddBlank := .F.
-                     ELSEIF lAddBlank
-                        FWRITE( nWriteHandle, CRLF )
-                        lAddBlank := .F.
-                        nDocCnt ++
-                     ENDIF
-                     lBlankLine := EMPTY( cBuffer )
-                     FWRITE( nWriteHandle, cBuffer + CRLF )
-                     nDocCnt ++
-                  ELSEIF nMode = D_NORMAL
-                     IF LEN( cBuffer ) > LONGLINE
-                        write_error( "General", cBuffer, nLineCnt, ;
-                                     LONGLINE, aDirList[ i, F_NAME ] )
-                     ENDIF
-                     IF nDocCnt > 62 .AND. .NOT. lContinuous
-                        FWRITE( nWriteHandle, CHR( K_CTRL_L ) + CRLF )
-                        nDocCnt   := 0
-                        lAddBlank := .F.
-                     ELSEIF lAddBlank
-                        FWRITE( nWriteHandle, CRLF )
-                        lAddBlank := .F.
-                        nDocCnt ++
-                     ENDIF
-                     FWRITE( nWriteHandle, cBuffer + CRLF )
-                     nDocCnt ++
-                  ELSEIF nMode = D_SEEALSO
-                     IF .NOT. EMPTY( cBuffer )
-                        cSeeAlso := StripFiles( ALLTRIM( cBuffer ) )
-                     ENDIF
-                  ELSEIF nMode = D_INCLUDE
-                     IF .NOT. EMPTY( cBuffer )
-                        IF nDocCnt > 62 .AND. .NOT. lContinuous
-                           FWRITE( nWriteHandle, CHR( K_CTRL_L ) + CRLF )
-                           nDocCnt := 0
-                        ELSEIF !lBlankLine
-                           FWRITE( nWriteHandle, CRLF )
-                           lAddBlank := .F.
-                           nDocCnt ++
-                        ENDIF
-                        FWRITE( nWriteHandle, " Header File: " ;
-                                + ALLTRIM( cBuffer ) + CRLF )
-                        nDocCnt ++
-                     ENDIF
-                  ELSEIF nMode = D_STATUS
-                     IF !EMPTY( cBuffer )
-                        FWRITE( nWriteHandle, ".par bold on" + CRLF )
-                        FWRITE( nWriteHandle, " Status" + CRLF )
-                        FWRITE( nWriteHandle, ".endpar" + CRLF )
-                     ENDIF
-                     ProcStatus( nWriteHandle, cBuffer )
-
-                  ELSE
-                     //  unknown data from somewhere
-
-                     write_error( "Unknown Data Type " + cBuffer,, ;
-                                  nLineCnt, ;
-                                  LONGONELINE, aDirList[ i, F_NAME ] )
-
-                  ENDIF
-               ENDIF
-            ENDIF
-         ENDIF
-      ENDDO
-      //  Close down the input file
-
-      FT_FUSE()
-   NEXT
-
-RETURN NIL
-
-//  End of ASCIIfiles
+   FSEEK( theHandle:nHan, 0, 0 )
+RETURN        NIL
 
 *+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 *+
-*+    Function StripFiles()
+*+    Function ft_fskip()
 *+
 *+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 *+
+FUNCTION ft_fskip( )
+
+RETURN nil
+
+*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+*+
+*+    Function FT_MKDIR()
+*+
+*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+*+
+FUNCTION FT_MKDIR( CDIR )
+
+   MAKEDIR( cdir )
+   RETURN nil
+#ENDIF
 FUNCTION StripFiles( cString )
 
    //
@@ -1944,2857 +938,195 @@ FUNCTION ListAsArray( cList, cDelimiter )
    AADD( aList, '"' + cList + '"' )     // Add final element
    //
    RETURN aList     // Return the array
-
-   //  End of ListAsArray
-   /****
-*  Proccalso(nWriteHandle,cSeealso)  --->NIL
-*  Get Each See Also and Convert to The HelpC See Also Format
-*/
-#define CRLF chr(13)+chr(10)
-
 *+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 *+
-*+    Function Proccalso()
+*+    Function ReadLN()
 *+
 *+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 *+
-FUNCTION Proccalso( nWriteHandle, cSeeAlso )
+FUNCTION ReadLN( leof )
 
-   LOCAL nPos
-   LOCAL cTemp := ''
-   LOCAL nLen
-   LOCAL xPos
-   LOCAL tPos
-   nLen := LEN( cSeeAlso )
-   WHILE .t.
-      nPos := AT( ",", cSeeAlso )
+   LOCAL cBuffer := ""
 
-      IF nPos > 0
-         xTemp := SUBSTR( ALLTRIM( cSeeAlso ), 1, nPos - 1 )
-         tPos  := AT( "()", xTemp )
-         IF tPos > 0
-            nLen -= LEN( xTemp ) + 1
-
-            xTemp += "~" + xTemp + "~ "
-            cTemp := "~" + xTemp
-         ELSE
-            xPos := AT( " ", xTemp )
-            IF xPos > 0
-               nLen  -= LEN( xTemp ) + 3
-               xTemp += "~" + SUBSTR( xTemp, 1, xPos - 1 ) + '_' + SUBSTR( xTemp, xPos + 1 ) + "~ "
-               cTemp := "~" + xTemp
-            ELSE
-               nLen  -= LEN( xTemp ) + 2
-               xTemp += "~" + xTemp + "~ "
-               cTemp := "~" + xTemp
-            END
-
-         END
-      ELSE
-         xTemp := SUBSTR( cSeeAlso, 1 )
-         tPos  := AT( "()", xTemp )
-
-         IF tPos > 0
-            nLen -= LEN( xTemp ) + 1
-
-            xTemp += "~" + xTemp + "~ "
-            cTemp := "~" + xTemp
-         ELSE
-
-            xPos := AT( " ", xTemp )
-            IF xPos > 0
-               nLen  -= LEN( xTemp ) + 3
-               xTemp += "~" + SUBSTR( xTemp, 1, xPos - 1 ) + '_' + SUBSTR( xTemp, xPos + 1 ) + "~"
-               cTemp := "~" + xTemp
-            ELSE
-               nLen  -= LEN( xTemp ) + 2
-               xTemp += "~" + xTemp + "~ "
-               cTemp := "~" + xTemp
-            END
-         END
-
-      ENDIF
-      FWRITE( nWriteHandle, ALLTRIM( cTemp ) + CRLF )
-      cSeeAlso := SUBSTR( cSeeAlso, nPos + 1 )
-
-      IF nLen == 0 .OR. nLen < 0
-         EXIT
-      END
-   ENDDO
-   RETURN nil
-
-#ifdef NANFOR
-
-#define xReadBuffer 4096
-   /****
-*   FT_FUSE(cFile,nMode)   ---> nHandle
-*   Open a File
-*/
-
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-*+    Function ft_fuse()
-*+
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-FUNCTION ft_fuse( cFile, nMode )
-
-   IF nMode == nil
-      nMode := 2
-   ENDIF
-   IF cFile == Nil
-      theHandle:close()
-   ENDIF
-   IF cFile <> Nil
-      IF nMode <> 0
-         theHandle := TFileRead():new( cFile ):open( nMode )
-      ELSE
-         theHandle := TFileRead():new( cFile ):open()
-      ENDIF
-   ENDIF
-RETURN theHandle:nHan
-
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-*+    Function ft_FEOF()
-*+
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-FUNCTION ft_FEOF()
-
-   LOCAL lRETURN := theHandle:lEOF
-RETURN lRETURN
-
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-*+    Function FReadLn()
-*+
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-FUNCTION FReadLn( nH, cLine )
-
-   //     cline:= thehandle:readline()
-   // ENDIF
-   IF theHandle:MoreToRead()
-      cLine := theHandle:ReadLine()
-   ELSE
-
-      FSEEK( theHandle:nHan, 0, 0 )
-      theHandle:lEOF := .f.
-
-      cLine := theHandle:ReadLine()
-   ENDIF
-RETURN cLine
-
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-*+    Function FT_FReadLn()
-*+
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-FUNCTION FT_FReadLn()
-
-   LOCAL cBuffer := ''
-
-   cBuffer := FReadLn( theHandle:nHan, @cBuffer )
+   cBuffer := FT_FREADLN()
+   FT_FSKIP( 1 )
+   lEof := FT_FEOF()
 
 RETURN cBuffer
-
+//  End of ReadLN
 *+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 *+
-*+    Function FT_FGotop()
-*+
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-FUNCTION FT_FGotop()
-
-   FSEEK( theHandle:nHan, 0, 0 )
-RETURN        NIL
-
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-*+    Function ft_fskip()
+*+    Static Function ReadAtFile()
 *+
 *+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 *+
-FUNCTION ft_fskip( nPos )
-
-RETURN nil
-
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-*+    Function FT_MKDIR()
-*+
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-FUNCTION FT_MKDIR( CDIR )
-
-   MAKEDIR( cdir )
-   RETURN nil
-#ENDIF
-
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-*+    Function CheckTop()
-*+
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-FUNCTION CheckTop( cTop )
-
-   LOCAL nPos
-   LOCAL cTemp
-   cTop := RTRIM( cTop )
-   nPos := AT( " ", cTop )
-   IF nPos > 0
-      cTemp := SUBSTR( cTop, 1, nPos - 1 ) + '_' + SUBSTR( cTop, nPos + 1 )
-   ELSE
-      cTemp := cTop
-   ENDIF
-RETURN cTemp
-
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-*+    Static Function ProcessRtf()
-*+
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-STATIC FUNCTION ProcessRtf
+FUNCTION ReadAtFile( cAtFile )
 
    //
-
-   //  Copyright (C) 2000 Luiz Rafael Culik
+   //  This routine and all accompaning database structures are
+   //  Copyright (C) 1992 Leo J. Letendre.
    //
-   //  Purpose: Process each of the files in the directory
+   //  Purpose: read in the users list of files to act on
    //
    //  Modification History:
-   //         Version    Date        Who       Notes
-   //          V1.00     1/08/2000   LRC       Initial Version
+   //         Version    Date      Who       Notes
+   //          V1.00     1/1/92   LJL       Initial Version
    //
-   //  Calling parameters: None
+   //  Calling parameters: cAtFile - The name of the file containing a list of
+   //                               files to be processed
    //
-   //  Notes: None
+   //  Returns: an array containing information that looks like it came
+   //           from DIRECTORY() but only has the name present.
+   //
+   //  Notes:
    // -
    //  LOCAL variables:
-
-#define D_NORMAL  1
-#define D_ARG     2
-#define D_SYNTAX  3
-#define D_IGNORE  4
-#define D_SEEALSO 5
-#define D_INCLUDE 6
-#define D_ONELINE 7
-#define D_STATUS  8
-   LOCAL i
-   LOCAL j
-   LOCAL nFiles      := LEN( aDirList )
-   LOCAL nCommentLen
-   LOCAL lEof
-   LOCAL lDoc
-   LOCAL lDone
+   LOCAL aDirList := {}
    LOCAL cBuffer
-   LOCAL nEnd
-   LOCAL nCount
-   LOCAL xAddBlank
-
-   LOCAL cBar       := "ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ"
-   LOCAL nMode
-   LOCAL cAuthor
-   LOCAL cCISID
-   LOCAL cFuncName
-   LOCAL cOneLine
-   LOCAL cCategory
-   LOCAL cFileName
-   LOCAL nLineCnt
-   LOCAL cSeeAlso
-   LOCAL cTemp
-   LOCAL cChar
-   LOCAL nNonBlank
-   LOCAL lBlankLine := .F.                 // Blank line encountered and sent out
-   LOCAL lAddBlank  := .F.                 // Need to add a blank line if next line is not blank
+   LOCAL lEof
+   LOCAL nCount   := 0
 
    //
    //  Entry Point
    //
-   //  Put up information labels
-   @ INFILELINE, 20 SAY "Extracting: "
-   @ MODULELINE, 20 SAY "Documenting: "
-   //  loop through all of the files
+   IF FT_FUSE( cAtFile ) <> NIL
 
-   FOR i := 1 TO nFiles
-
-      //  Open file for input
-
-      nCommentLen := IIF( AT( ".ASM", UPPER( aDirList[ i, F_NAME ] ) ) > 0, 2, 3 )
-      nReadHandle := FT_FUSE( aDirList[ i, F_NAME ] )
-      @ INFILELINE, 33 CLEAR TO INFILELINE, MAXCOL()
-      @ INFILELINE, 33 SAY PAD( aDirList[ i, F_NAME ], 47 )
-      @ MODULELINE, 33 CLEAR TO LINELINE, MAXCOL()
-      @ LINELINE, 27   SAY "Line:"
-
-      nLineCnt := 0
-
-      IF nReadHandle < 0
-         write_error( "Can't open file: (Dos Error " + STR( FERROR() ) + ")",,,, aDirList[ i, F_NAME ] )
-         @ ERRORLINE,  0 CLEAR TO ERRORLINE, MAXCOL()
-         @ ERRORLINE, 20 SAY "Can't open file: (Dos Error " + STR( FERROR() ) + ") File=" + aDirList[ i, F_NAME ]
-         LOOP
-      ENDIF
+      //  Read each line
       lEof := .F.
-      lDoc := .F.
-      //  First find the author
-
       DO WHILE .NOT. lEof
 
-         //  Read a line
-
-         cBuffer := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
-         nLineCnt ++
-         IF nLineCnt % 10 = 0
-            @ LINELINE, 33 SAY STR( nLineCnt, 5, 0 )
-         ENDIF
-         //  check to see if we are in doc mode or getting out of doc mode
-
-         IF AT( cDoc, cBuffer ) > 0
-            IF lDoc
-               write_error( cDoc + " encountered during extraction of Doc" ;
-                            + " at line" + STR( nLinecnt, 5, 0 ),,,, aDirList[ i, F_NAME ] )
-            ENDIF
-            lDoc    := .T.
-            cBuffer := TRIM( SUBSTR( ReadLN( @lEof ), ;
-                             nCommentLen ) )
-            nLineCnt ++
-            cCategory := cFuncName := cSeeAlso := ""
-            nMode     := D_IGNORE
-         ELSEIF AT( cEnd, cBuffer ) > 0
-            IF .NOT. lDoc
-               write_error( cEnd + " encountered outside of Doc area at line" ;
-                            + STR( nLinecnt, 5, 0 ),,,, aDirList[ i, F_NAME ] )
-            ELSE
-               //  Add a new entry to our list of files
-
-               IF EMPTY( cCategory )
-                  write_error( "Blank Category",,,, aDirList[ i, F_NAME ] )
-                  cCategory := "Unknown"
-               ENDIF
-               IF EMPTY( cFuncName )
-                  write_error( "Blank Function Name",,,, aDirList[ i, F_NAME ] )
-                  cFuncName := "Unknown"
-               ENDIF
-               AADD( aDocInfo, { cCategory, cFuncName, cOneLine, cFileName } )
-               //  Now close down this little piece
-               lDoc := .F.
-               IF .NOT. EMPTY( cSeeAlso )
-                  oRtf:WritePar(""):EndPar()
-                  oRtf:WriteParBold( "See Also" )
-                  ProcRtfalso( oRtf, cSeealso )
-               ENDIF
-
-               oRtf:Close()
-               nMode := D_IGNORE
-            ENDIF
-
-            @ MODULELINE, 33 CLEAR TO MODULELINE, MAXCOL()
-         ENDIF
-
-         //  Act on the input
-         IF lDoc
-            //  1) function name
-
-            IF AT( cFunc, cBuffer ) > 0 .OR. AT( cComm, cBuffer ) > 0 .OR. AT( cSubCode, cBuffer ) >0
-               cBuffer := ReadLN( @lEof )
-               nLineCnt ++
-               //  Save the function name
-               cFuncName := UPPER( ALLTRIM( SUBSTR( cBuffer, nCommentLen ) ) )
-               @ MODULELINE, 33 CLEAR TO MODULELINE, MAXCOL()
-               @ MODULELINE, 33 SAY cFuncName
-
-               nMode := D_NORMAL
-
-               //  Open a new file
-               IF AT( "FT_", cFuncName ) > 0
-                  cTemp := SUBSTR( cFuncName, 4 )
-               ELSE
-                  cTemp := cFuncName
-               ENDIF
-
-               IF ( nEnd := AT( "(", cTemp ) ) > 0
-                  cTemp := LEFT( cTemp, nEnd - 1 )
-               ENDIF
-               cFileName := ""
-
-               //  Strip off any other non-alphabetic/numeric characters
-               FOR j := 1 TO LEN( cTemp )
-                  cChar := SUBSTR( cTemp, j, 1 )
-                  IF ( cChar >= "0" .AND. cChar <= "9" ) .OR. ;
-                       ( cChar >= "A" .AND. cChar <= "Z" ) .OR. cChar = "_"
-                     cFileName += cChar
-                  ENDIF
-               NEXT
-
-               //  See if file name is present already. If so then modify
-
-               cFileName := LEFT( cFileName, 21 )
-               nEnd      := 1
-               nCount    := 0
-               DO WHILE nEnd > 0
-                  nEnd := ASCAN( aDocInfo, { | a | a[ 4 ] == cFileName + ".rtf" } )
-                  IF nEnd > 0
-
-                     //  This will break if there are more than 10 files with the same first
-                     //  seven characters. We take our chances.
-
-                     IF LEN( cFileName ) = 21
-                        cFileName := STUFF( cFileName, 21, 1, STR( nCount, 1, 0 ) )
-                     ELSE
-                        cFileName += STR( nCount, 1, 0 )
-                     ENDIF
-                     nCount ++
-                  ENDIF
-               ENDDO
-               //  Add on the extension
-
-               cFileName := LEFT( cFileName, 21 ) + ".rtf"
-
-               oRtf := TRTF():new( "rtf\" + cFileName ):WriteHeader()
-               IF oRtf:nHandle < 1
-                  ? "Error creating", cFileName, ".rtf"
-                  write_error( "Error creating",,,, cFileName + ".rtf" )
-               ENDIF
-               //  2) Category
-            ELSEIF AT( cCat, cBuffer ) > 0
-               cBuffer := ReadLN( @lEof )
-               nLineCnt ++
-               //  get the category
-               cCategory := UPPER( ALLTRIM( SUBSTR( cBuffer, nCommentLen ) ) )
-
-               //  3) One line description
-
-            ELSEIF AT( cOne, cBuffer ) > 0
-               cBuffer := ReadLN( @lEof )
-               nLineCnt ++
-               cOneLine := ALLTRIM( SUBSTR( cBuffer, nCommentLen ) )
-               IF LEN( cOneLine ) > LONGONELINE
-                  write_error( "OneLine", cOneLine, nLineCnt, LONGONELINE, ;
-                               aDirList[ i, F_NAME ] )
-               ENDIF
-
-               nMode := D_ONELINE
-               //  Now start writing out what we know
-               oRtf:WriteTitle( PAD( cFuncName, 21 ), cFuncName )
-               oRtf:WriteParBold( cOneLine )
-               oRtf:WritePar(  cBar  ):EndPar()
-               //  4) all other stuff
-
-            ELSE
-
-               IF AT( cSyn, cBuffer ) > 0
-
-                  oRtf:WriteParBold( " Syntax" )
-
-                  nMode     := D_SYNTAX
-                  lAddBlank := .T.
-
-               ELSEIF AT( cArg, cBuffer ) > 0
-
-                  IF !lBlankLine
-
-                     oRtf:WriteParBold( " Arguments" )
-
-                  ENDIF
-
-                  nMode     := D_ARG
-                  lAddBlank := .T.
-
-               ELSEIF AT( cRet, cBuffer ) > 0
-
-                  IF !lBlankLine
-                     oRtf:WritePar( "" ):EndPar()
-                  ENDIF
-
-                  oRtf:WriteParBold( " Returns" )
-
-                  nMode     := D_ARG
-                  lAddBlank := .T.
-
-               ELSEIF AT( cDesc, cBuffer ) > 0
-
-                  IF !lBlankLine
-                     oRtf:WritePar( "" ):EndPar()
-                  ENDIF
-                  oRtf:WriteParBold( " Description" )
-
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-
-               ELSEIF AT( cExam, cBuffer ) > 0
-
-                  IF !lBlankLine
-                     oRtf:WritePar( "" ):EndPar()
-                  ENDIF
-                  oRtf:WriteParBold( " Examples" )
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-               ELSEIF AT( cTest, cBuffer ) > 0
-
-                  IF !lBlankLine
-                     oRtf:WritePar( "" ):EndPar()
-                  ENDIF
-
-                  oRtf:WriteParBold( " Tests" )
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-
-               ELSEIF AT( cStatus, cBuffer ) > 0
-
-                  nMode := D_STATUS
-
-               ELSEIF AT( cCompl, cBuffer ) > 0
-
-                  IF !lBlankLine
-                     oRtf:WritePar( "" ):EndPar()
-                  ENDIF
-                  oRtf:WritePar( "" ):EndPar()
-                  oRtf:WriteParBold( " Compliance" )
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-               ELSEIF AT( cPlat, cBuffer ) > 0
-
-                  IF !lBlankLine
-                     oRtf:WritePar( "" ):EndPar()
-                  ENDIF
-                  oRtf:WriteParBold( " Platforms" )
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-               ELSEIF AT( cFiles, cBuffer ) > 0
-
-                  IF !lBlankLine
-                     oRtf:WritePar( "" ):EndPar()
-                  ENDIF
-                  oRtf:WriteParBold( " Files" )
-
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-
-               ELSEIF AT( cFunction, cBuffer ) > 0
-
-                  IF !lBlankLine
-                     oRtf:WritePar( "" ):EndPar()
-                  ENDIF
-                  oRtf:WriteParBold( " Functions" )
-
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-
-               ELSEIF AT( cSee, cBuffer ) > 0
-                  nMode := D_SEEALSO
-               ELSEIF AT( cInc, cBuffer ) > 0
-                  nMode := D_INCLUDE
-
-                  //  All other input is trimmed of comments and sent out
-
-               ELSE
-                  //  translate any \$ into $
-                  cBuffer := STRTRAN( cBuffer, "\" + DELIM, DELIM )
-                  IF nMode = D_SYNTAX
-                     IF LEN( cBuffer ) > LONGLINE
-                        write_error( "Syntax", cBuffer, nLineCnt, ;
-                                     LONGLINE, aDirList[ i, F_NAME ] )
-                     ENDIF
-                     lBlankLine := EMPTY( cBuffer )
-                     IF lAddBlank
-                        oRtf:WritePar( "" ):EndPar()
-                        lAddBlank := .F.
-                     ENDIF
-                     /*    nNonBlank:=FirstNB(cBuffer)
-                        cBuffer=STUFF(cBuffer,nNonBlank,0,"^a1f ")*/
-                     oRtf:WritePar( cBuffer ):EndPar()
-                     oRtf:WritePar(""):EndPar()
-
-                  ELSEIF nMode = D_ARG
-                     IF LEN( cBuffer ) > LONGLINE
-                        write_error( "Arguments", cBuffer, nLineCnt, ;
-                                     LONGLINE, aDirList[ i, F_NAME ] )
-                     ENDIF
-                     lBlankLine := EMPTY( cBuffer )
-                     IF lAddBlank
-                        oRtf:WritePar( "" ):EndPar()
-                        lAddBlank := .F.
-                     ENDIF
-                     cBuffer := STRTRAN( cBuffer, "<", "<", 1 )
-                     cBuffer := STRTRAN( cBuffer, ">", ">", 1 )
-                     oRtf:WritePar( StripNgControls( cBuffer ) ):EndPar()
-                  ELSEIF nMode = D_NORMAL
-                     IF LEN( cBuffer ) > LONGLINE
-                        write_error( "General", cBuffer, nLineCnt, ;
-                                     LONGLINE, aDirList[ i, F_NAME ] )
-                     ENDIF
-                     lBlankLine := EMPTY( cBuffer )
-                     IF lAddBlank
-                        oRtf:WritePar( "" ):EndPar()
-                        lAddBlank := .F.
-                     ENDIF
-                     oRtf:WritePar( StripNgControls( cBuffer ) ):EndPar()
-
-                  ELSEIF nMode = D_SEEALSO
-                     IF .NOT. EMPTY( cBuffer )
-                        cSeeAlso := StripFiles( ALLTRIM( cBuffer ) )
-                     ENDIF
-                  ELSEIF nMode = D_INCLUDE
-                     //  read next line
-                     IF .NOT. EMPTY( cBuffer )
-                        IF !lBlankLine
-                           oRtf:WritePar( "" ):EndPar()
-                        ENDIF
-                        oRtf:WritePar( " Header File: " ;
-                                       + ALLTRIM( cBuffer ) ):EndPar()
-                     ENDIF
-                  ELSEIF nMode = D_STATUS
-                     IF !EMPTY( cBuffer )
-                        oRtf:WritePar(""):EndPar()
-                        oRtf:WriteParBold( "Status" )
-                        oRtf:WritePar(""):EndPar()
-                        xaddblank:=.T.
-                     ELSE
-                        oRtf:WritePar(""):EndPar()
-                        xAddBlank:=.T.
-                     ENDIF
-                     ProcStatusRtf( oRtf, cBuffer )
-                     IF !xAddBlank
-                         oRtf:WritePar(""):EndPar()
-                         xaddblank:=.T.
-                     ENDIF
-                     xAddBlank:=.F.
-                  ELSE
-
-                     //  unknown data from somewhere
-
-                     write_error( "Unknown Data Type " + cBuffer,, ;
-                                  nLineCnt, ;
-                                  LONGONELINE, aDirList[ i, F_NAME ] )
-
-                  ENDIF
-               ENDIF
-            ENDIF
+         cBuffer := ALLTRIM( ReadLN( @lEof ) )
+         IF .NOT. EMPTY( cBuffer )
+            AADD( aDirList, ARRAY( F_LEN ) )
+            nCount ++
+            aDirList[ nCount, F_NAME ] = UPPER( cBuffer )
          ENDIF
       ENDDO
-      //  Close down the input file
-
-      FT_FUSE()
-   NEXT
-
-RETURN NIL
-
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-*+    Function ProcRtfAlso()
-*+
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-FUNCTION ProcRtfAlso( nWriteHandle, cSeeAlso )
-
-   LOCAL nPos
-   LOCAL cTemp := ''
-   LOCAL nLen
-   LOCAL xPos
-   LOCAL tPos
-   nLen := LEN( cSeeAlso )
-   WHILE .t.
-      nPos := AT( ",", cSeeAlso )
-
-      IF nPos > 0
-         xTemp := SUBSTR( ALLTRIM( cSeeAlso ), 1, nPos - 1 )
-         tPos  := AT( "()", xTemp )
-         IF tPos > 0
-            nLen -= LEN( xTemp ) + 1
-
-            cTemp := xTemp
-         ELSE
-            xPos := AT( " ", xTemp )
-            IF xPos > 0
-               nLen -= LEN( xTemp ) + 3
-
-               cTemp := xTemp
-            ELSE
-               nLen -= LEN( xTemp ) + 2
-
-               cTemp := xTemp
-            END
-
-         END
-      ELSE
-         xTemp := SUBSTR( cSeeAlso, 1 )
-         tPos  := AT( "()", xTemp )
-
-         IF tPos > 0
-            nLen -= LEN( xTemp ) + 1
-
-            cTemp := xTemp
-         ELSE
-
-            xPos := AT( " ", xTemp )
-            IF xPos > 0
-               nLen -= LEN( xTemp ) + 3
-
-               cTemp := xTemp
-            ELSE
-               nLen -= LEN( xTemp ) + 2
-
-               cTemp := xTemp
-            END
-         END
-
-      ENDIF
-
-      nWriteHandle:WriteLink( ALLTRIM( cTemp ) )
-      cSeeAlso := SUBSTR( cSeeAlso, nPos + 1 )
-
-      IF nLen == 0 .OR. nLen < 0
-         EXIT
-      END
-   ENDDO
-RETURN nil
-
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-*+    Function ProcStatus()
-*+
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-FUNCTION ProcStatus( nWriteHandle, cBuffer )
-   IF LEN( ALLTRIM( cBuffer ) ) > 1
-      FWRITE( nWriteHandle, cBuffer + CRLF )
-   ELSEIF SUBSTR( ALLTRIM( cBuffer ), 1 ) == "R"
-      FWRITE( nWriteHandle, "   Ready" + CRLF )
-   ELSEIF SUBSTR( ALLTRIM( cBuffer ), 1 ) == "S"
-      FWRITE( nWriteHandle, "   Started" + CRLF )
-   ELSE
-      FWRITE( nWriteHandle, "   Not Started" + CRLF )
-   ENDIF
-RETURN nil
-
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-*+    Function ProcStatusRTF()
-*+
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-FUNCTION ProcStatusRTF( nWriteHandle, cBuffer )
-   IF LEN( ALLTRIM(cBuffer) ) >1
-      nWriteHandle:WritePar( cBuffer ):EndPar()
-   ELSEIF SUBSTR( ALLTRIM( cBuffer ), 1 ) == "R"
-      nWriteHandle:WritePar( "   Ready" ):EndPar()
-   ELSEIF SUBSTR( ALLTRIM( cBuffer ), 1 ) == "S"
-      nWriteHandle:WritePar( "   Started" ):EndPar()
-   ELSE
-      nWriteHandle:WritePar( "   Not Started" ):EndPar()
-   ENDIF
-RETURN nil
-
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-*+    Static Function ProcessWww()
-*+
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-STATIC FUNCTION ProcessWww
-
-   //  Copyright (C) 2000 Luiz Rafael Culik
-   //
-   //  Purpose: Process each of the files in the directory
-   //
-   //  Modification History:
-   //         Version    Date        Who       Notes
-   //          V1.00     1/12/2000   LRC       Initial Version
-   //
-   //  Calling parameters: None
-   //
-   //  Notes: None
-   // -
-   //  LOCAL variables:
-
-#define D_NORMAL  1
-#define D_ARG     2
-#define D_SYNTAX  3
-#define D_IGNORE  4
-#define D_SEEALSO 5
-#define D_INCLUDE 6
-#define D_ONELINE 7
-#define D_STATUS  8
-   LOCAL i
-   LOCAL j
-   LOCAL nFiles      := LEN( aDirList )
-   LOCAL nCommentLen
-   LOCAL lEof
-   LOCAL lDoc
-   LOCAL lDone
-   LOCAL cBuffer
-   LOCAL nEnd
-   LOCAL nCount
-
-   LOCAL cBar       := REPLICATE( "-", 80 ) + CRLF
-   LOCAL nMode
-   LOCAL cAuthor
-   LOCAL cCISID
-   LOCAL cFuncName
-   LOCAL cOneLine
-   LOCAL cCategory
-   LOCAL cFileName
-   LOCAL nLineCnt
-   LOCAL cSeeAlso
-   LOCAL cTemp
-   LOCAL cChar
-   LOCAL nNonBlank
-   LOCAL lBlankLine := .F.                 // Blank line encountered and sent out
-   LOCAL lAddBlank  := .F.                 // Need to add a blank line if next line is not blank
-
-   //
-   //  Entry Point
-   //
-   //  Put up information labels
-   @ INFILELINE, 20 SAY "Extracting: "
-   @ MODULELINE, 20 SAY "Documenting: "
-   //  loop through all of the files
-
-   FOR i := 1 TO nFiles
-
-      //  Open file for input
-
-      nCommentLen := IIF( AT( ".ASM", UPPER( aDirList[ i, F_NAME ] ) ) > 0, 2, 3 )
-      nReadHandle := FT_FUSE( aDirList[ i, F_NAME ] )
-      @ INFILELINE, 33 CLEAR TO INFILELINE, MAXCOL()
-      @ INFILELINE, 33 SAY PAD( aDirList[ i, F_NAME ], 47 )
-      @ MODULELINE, 33 CLEAR TO LINELINE, MAXCOL()
-      @ LINELINE, 27   SAY "Line:"
-
-      nLineCnt := 0
-
-      IF nReadHandle < 0
-         write_error( "Can't open file: (Dos Error " + STR( FERROR() ) + ")",,,, aDirList[ i, F_NAME ] )
-         @ ERRORLINE,  0 CLEAR TO ERRORLINE, MAXCOL()
-         @ ERRORLINE, 20 SAY "Can't open file: (Dos Error " + STR( FERROR() ) + ") File=" + aDirList[ i, F_NAME ]
-         LOOP
-      ENDIF
-      lEof := .F.
-      lDoc := .F.
-      //  First find the author
-
-      DO WHILE .NOT. lEof
-
-         //  Read a line
-
-         cBuffer := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
-         nLineCnt ++
-         IF nLineCnt % 10 = 0
-            @ LINELINE, 33 SAY STR( nLineCnt, 5, 0 )
-         ENDIF
-         //  check to see if we are in doc mode or getting out of doc mode
-
-         IF AT( cDoc, cBuffer ) > 0
-            IF lDoc
-               write_error( cDoc + " encountered during extraction of Doc" ;
-                            + " at line" + STR( nLinecnt, 5, 0 ),,,, aDirList[ i, F_NAME ] )
-            ENDIF
-            lDoc    := .T.
-            cBuffer := TRIM( SUBSTR( ReadLN( @lEof ), ;
-                             nCommentLen ) )
-            nLineCnt ++
-            cCategory := cFuncName := cSeeAlso := ""
-            nMode     := D_IGNORE
-         ELSEIF AT( cEnd, cBuffer ) > 0
-            IF .NOT. lDoc
-               write_error( cEnd + " encountered outside of Doc area at line" ;
-                            + STR( nLinecnt, 5, 0 ),,,, aDirList[ i, F_NAME ] )
-            ELSE
-               //  Add a new entry to our list of files
-
-               IF EMPTY( cCategory )
-                  write_error( "Blank Category",,,, aDirList[ i, F_NAME ] )
-                  cCategory := "Unknown"
-               ENDIF
-               IF EMPTY( cFuncName )
-                  write_error( "Blank Function Name",,,, aDirList[ i, F_NAME ] )
-                  cFuncName := "Unknown"
-               ENDIF
-               AADD( aDocInfo, { cCategory, cFuncName, cOneLine, cFileName } )
-               //  Now close down this little piece
-               lDoc := .F.
-               IF .NOT. EMPTY( cSeeAlso )
-                  oHtm:WritePar( "See Also " )
-                  ProcWwwalso( oHtm, cSeealso )
-               ENDIF
-
-               oHtm:Close()
-               nMode := D_IGNORE
-            ENDIF
-
-            @ MODULELINE, 33 CLEAR TO MODULELINE, MAXCOL()
-         ENDIF
-
-         //  Act on the input
-         IF lDoc
-            //  1) function name
-
-            IF AT( cFunc, cBuffer ) > 0 .OR. AT( cComm, cBuffer ) > 0 .OR. AT( cSubCode, cBuffer ) >0
-               cBuffer := ReadLN( @lEof )
-               nLineCnt ++
-               //  Save the function name
-               cFuncName := UPPER( ALLTRIM( SUBSTR( cBuffer, nCommentLen ) ) )
-               @ MODULELINE, 33 CLEAR TO MODULELINE, MAXCOL()
-               @ MODULELINE, 33 SAY cFuncName
-
-               nMode := D_NORMAL
-
-               //  Open a new file
-               IF AT( "FT_", cFuncName ) > 0
-                  cTemp := SUBSTR( cFuncName, 4 )
-               ELSE
-                  cTemp := cFuncName
-               ENDIF
-
-               IF ( nEnd := AT( "(", cTemp ) ) > 0
-                  cTemp := LEFT( cTemp, nEnd - 1 )
-               ENDIF
-               cFileName := ""
-
-               //  Strip off any other non-alphabetic/numeric characters
-               FOR j := 1 TO LEN( cTemp )
-                  cChar := SUBSTR( cTemp, j, 1 )
-                  IF ( cChar >= "0" .AND. cChar <= "9" ) .OR. ;
-                       ( cChar >= "A" .AND. cChar <= "Z" ) .OR. cChar = "_"
-                     cFileName += cChar
-                  ENDIF
-               NEXT
-
-               //  See if file name is present already. If so then modify
-
-               cFileName := LEFT( cFileName, 21 )
-               nEnd      := 1
-               nCount    := 0
-               DO WHILE nEnd > 0
-                  nEnd := ASCAN( aDocInfo, { | a | a[ 4 ] == cFileName + ".htm" } )
-                  IF nEnd > 0
-
-                     //  This will break if there are more than 10 files with the same first
-                     //  seven characters. We take our chances.
-
-                     IF LEN( cFileName ) = 21
-                        cFileName := STUFF( cFileName, 21, 1, STR( nCount, 1, 0 ) )
-                     ELSE
-                        cFileName += STR( nCount, 1, 0 )
-                     ENDIF
-                     nCount ++
-                  ENDIF
-               ENDDO
-               //  Add on the extension
-
-               cFileName := LEFT( cFileName, 21 ) + ".htm"
-
-               oHTM := THTML():new( "htm\" + LOWER( cFileName ) )
-               IF oHtm:nHandle < 1
-                  ? "Error creating", cFileName, ".htm"
-                  write_error( "Error creating",,,, cFileName + ".htm" )
-               ENDIF
-               //  2) Category
-            ELSEIF AT( cCat, cBuffer ) > 0
-               cBuffer := ReadLN( @lEof )
-               nLineCnt ++
-               //  get the category
-               cCategory := UPPER( ALLTRIM( SUBSTR( cBuffer, nCommentLen ) ) )
-
-               //  3) One line description
-
-            ELSEIF AT( cOne, cBuffer ) > 0
-               cBuffer := ReadLN( @lEof )
-               nLineCnt ++
-               cOneLine := ALLTRIM( SUBSTR( cBuffer, nCommentLen ) )
-               IF LEN( cOneLine ) > LONGONELINE
-                  write_error( "OneLine", cOneLine, nLineCnt, LONGONELINE, ;
-                               aDirList[ i, F_NAME ] )
-               ENDIF
-
-               nMode := D_ONELINE
-               //  Now start writing out what we know
-               oHtm:WriteTitle( PAD( cFuncName, 21 ) )
-               AADD( aWWW,{ cFuncName,LEFT(cFileName,AT(".",cFileName)-1)} )
-               oHtm:WriteParBold( cOneLine )
-               oHtm:WritePar( cBar )
-               //  4) all other stuff
-
-            ELSE
-
-               IF AT( cSyn, cBuffer ) > 0
-
-                  oHtm:WriteParBold( " Syntax" )
-
-                  nMode     := D_SYNTAX
-                  lAddBlank := .T.
-
-               ELSEIF AT( cArg, cBuffer ) > 0
-
-                  IF !lBlankLine
-
-                     oHtm:WriteParBold( " Arguments" )
-
-                  ENDIF
-
-                  nMode     := D_ARG
-                  lAddBlank := .T.
-
-               ELSEIF AT( cRet, cBuffer ) > 0
-
-                  IF !lBlankLine
-                     oHtm:WritePar( "" )
-                  ENDIF
-
-                  oHtm:WriteParBold( " Returns" )
-
-                  nMode     := D_ARG
-                  lAddBlank := .T.
-
-               ELSEIF AT( cDesc, cBuffer ) > 0
-
-                  IF !lBlankLine
-                     oHtm:WritePar( "" )
-                  ENDIF
-                  oHtm:WriteParBold( " Description" )
-
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-
-               ELSEIF AT( cExam, cBuffer ) > 0
-
-                  IF !lBlankLine
-                     oHtm:WritePar( "" )
-                  ENDIF
-                  oHtm:WriteParBold( " Examples" )
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-               ELSEIF AT( cTest, cBuffer ) > 0
-
-                  IF !lBlankLine
-                     oHtm:WritePar( "" )
-                  ENDIF
-
-                  oHtm:WriteParBold( " Tests" )
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-
-               ELSEIF AT( cStatus, cBuffer ) > 0
-
-                  nMode := D_STATUS
-
-               ELSEIF AT( cCompl, cBuffer ) > 0
-
-                  IF !lBlankLine
-                     oHtm:WritePar( "" )
-                  ENDIF
-                  oHtm:WriteParBold( " Compliance" )
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-               ELSEIF AT( cPlat, cBuffer ) > 0
-
-                  IF !lBlankLine
-                     oHtm:WritePar( "" )
-                  ENDIF
-                  oHtm:WriteParBold( " Platforms" )
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-               ELSEIF AT( cFiles, cBuffer ) > 0
-
-                  IF !lBlankLine
-                     oHtm:WritePar( "" )
-                  ENDIF
-                  oHtm:WriteParBold( " Files" )
-
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-               ELSEIF AT( cFunction, cBuffer ) > 0
-
-                  IF !lBlankLine
-                     oHtm:WritePar( "" )
-                  ENDIF
-                  oHtm:WriteParBold( " Functions" )
-
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-
-               ELSEIF AT( cSee, cBuffer ) > 0
-                  nMode := D_SEEALSO
-               ELSEIF AT( cInc, cBuffer ) > 0
-                  nMode := D_INCLUDE
-
-                  //  All other input is trimmed of comments and sent out
-
-               ELSE
-                  //  translate any \$ into $
-                  cBuffer := STRTRAN( cBuffer, "\" + DELIM, DELIM )
-                  IF nMode = D_SYNTAX
-                     IF LEN( cBuffer ) > LONGLINE
-                        write_error( "Syntax", cBuffer, nLineCnt, ;
-                                     LONGLINE, aDirList[ i, F_NAME ] )
-                     ENDIF
-                     lBlankLine := EMPTY( cBuffer )
-                     IF lAddBlank
-                        oHtm:WritePar( "" )
-                        lAddBlank := .F.
-                     ENDIF
-                     cBuffer := ProcwwwBuf( cBuffer )
-
-                     oHtm:WritePar( cBuffer )
-                  ELSEIF nMode = D_ARG
-                     IF LEN( cBuffer ) > LONGLINE
-                        write_error( "Arguments", cBuffer, nLineCnt, ;
-                                     LONGLINE, aDirList[ i, F_NAME ] )
-                     ENDIF
-                     lBlankLine := EMPTY( cBuffer )
-                     IF lAddBlank
-                        oHtm:WritePar( "" )
-                        lAddBlank := .F.
-                     ENDIF
-                     cBuffer := STRTRAN( cBuffer, "<", "<", 1 )
-                     cBuffer := STRTRAN( cBuffer, ">", ">", 1 )
-                     oHtm:WritePar( cBuffer )
-                  ELSEIF nMode = D_NORMAL
-                     IF LEN( cBuffer ) > LONGLINE
-                        write_error( "General", cBuffer, nLineCnt, ;
-                                     LONGLINE, aDirList[ i, F_NAME ] )
-                     ENDIF
-                     lBlankLine := EMPTY( cBuffer )
-                     IF lAddBlank
-                        oHtm:WritePar( "" )
-                        lAddBlank := .F.
-                     ENDIF
-                     oHtm:WritePar( StripNgControls( cBuffer ) )
-                  ELSEIF nMode = D_SEEALSO
-                     IF .NOT. EMPTY( cBuffer )
-                        cSeeAlso := StripFiles( ALLTRIM( cBuffer ) )
-                     ENDIF
-                  ELSEIF nMode = D_INCLUDE
-                     //  read next line
-                     IF .NOT. EMPTY( cBuffer )
-                        IF !lBlankLine
-                           oHtm:WritePar( "" )
-                        ENDIF
-                        oHtm:WritePar( " Header File: " ;
-                                       + ALLTRIM( cBuffer ) )
-                     ENDIF
-                  ELSEIF nMode = D_STATUS
-                     IF !EMPTY( cBuffer )
-                        oHtm:WriteParBold( "Status" )
-                     ENDIF
-                     ProcStatusWww( oHtm, cBuffer )
-
-                  ELSE
-
-                     //  unknown data from somewhere
-
-                     write_error( "Unknown Data Type " + cBuffer,, ;
-                                  nLineCnt, ;
-                                  LONGONELINE, aDirList[ i, F_NAME ] )
-
-                  ENDIF
-               ENDIF
-            ENDIF
-         ENDIF
-      ENDDO
-      //  Close down the input file
-
-      FT_FUSE()
-   NEXT
-RETURN nil
-/***********************************
-* Function ProcWwwBuf(cBuffer)   -> cTemp
-* Parameter cBuffer  -> Strip the "<" and ">" symbols from the imput String
-* Return    cTemp  Formated String to WWW output
-*/
-
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-*+    Function ProcWwwBuf()
-*+
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-FUNCTION ProcWwwBuf( cPar )
-
-
-   cPar:=STRTRAN(cPar,"<","&lt;")
-   cPar:=STRTRAN(cPar,">","&gt;")
-
-RETURN cPar
-/***********************************
-* Function ProcWwwAlso(nWriteHandle,cSeeAlso)  -> NIL
-* Parameter nWriteHandle Handle of the output file
-*           cSeeAlso   String of all see alsos
-* Return    NIL
-*/
-
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-*+    Function ProcWwwAlso()
-*+
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-FUNCTION ProcWwwAlso( nWriteHandle, cSeeAlso )
-
-   LOCAL nPos
-   LOCAL cTemp := ''
-   LOCAL nLen
-   LOCAL xPos
-   LOCAL tPos
-   nLen := LEN( cSeeAlso )
-   WHILE .t.
-      nPos := AT( ",", cSeeAlso )
-      IF nPos > 0
-         xTemp := SUBSTR( ALLTRIM( cSeeAlso ), 1, nPos - 1 )
-         tPos  := AT( "()", xTemp )
-         IF tPos > 0
-            nLen -= LEN( xTemp ) + 1
-
-            cTemp := xTemp
-         ELSE
-            xPos := AT( " ", xTemp )
-            IF xPos > 0
-               nLen -= LEN( xTemp ) + 3
-
-               cTemp := xTemp
-            ELSE
-               nLen -= LEN( xTemp ) + 2
-
-               cTemp := xTemp
-            END
-
-         END
-      ELSE
-         xTemp := SUBSTR( cSeeAlso, 1 )
-         tPos  := AT( "()", xTemp )
-
-         IF tPos > 0
-            nLen -= LEN( xTemp ) + 1
-
-            cTemp := xTemp
-         ELSE
-
-            xPos := AT( " ", xTemp )
-            IF xPos > 0
-               nLen -= LEN( xTemp ) + 3
-
-               cTemp := xTemp
-            ELSE
-               nLen -= LEN( xTemp ) + 2
-
-               cTemp := xTemp
-            END
-         END
-
-      ENDIF
-
-      nWriteHandle:WriteLink( ALLTRIM( cTemp ) )
-      cSeeAlso := SUBSTR( cSeeAlso, nPos + 1 )
-
-      IF nLen == 0 .OR. nLen < 0
-         EXIT
-      END
-   ENDDO
-RETURN nil
-
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-*+    Function ProcStatusWww()
-*+
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-FUNCTION ProcStatusWww( nWriteHandle, cBuffer )
-   IF LEN( ALLTRIM( cBuffer ) ) >1
-      nWriteHandle:WritePar( cBuffer)
-   ELSEIF SUBSTR( ALLTRIM( cBuffer ), 1 ) == "R"
-      nWriteHandle:WritePar( "   Ready" )
-   ELSEIF SUBSTR( ALLTRIM( cBuffer ), 1 ) == "S"
-      nWriteHandle:WritePar( "   Started" )
-   ELSE
-      nWriteHandle:WritePar( "   Not Started" )
-   ENDIF
-RETURN nil
-
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-*+    Function StripNgControls()
-*+
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-FUNCTION StripNgControls( cString )
-
-   LOCAL nPos
-   LOCAL lStriped := .f.
-
-   nPos := AT( "^b", cString )
-   IF nPos > 0
-      cString  := SUBSTR( cString, nPos + 3 )
-      lStriped := .t.
-   ELSE
-      IF !lStriped
-         cString := cString
-      ENDIF
    ENDIF
 
-   nPos := AT( "^b^", cString )
-   IF nPos > 0
-      cString  := SUBSTR( cString, 1, nPos - 1 )
-      lStriped := .t.
+   FT_FUSE()
+
+RETURN aDirList
+
+//  End of ReadAtFile
+
+*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+*+
+*+    Static Function write_error()
+*+
+*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+*+
+FUNCTION write_error( cDescrip, cBadLine, nLineCnt, nMax, cFile )
+
+   //  This routine will send error messages to the error log - hbdocerr.log
+   //
+   //  Calling parameters: cDesc - Description of info being written
+   //                      cBadLine - The offending line - IF NIL then just
+   //                                 output cDesc and filename
+   //                      nLineCnt - The line number of the bad line
+   //                      nMax - The maximum length of the bad line
+   //                      cFile - The file currently being processed
+   //
+   //  Returns: NIL
+   //
+   //  Entry point
+   //
+   //  Point output to the log file
+   SET ALTERNATE TO "hbdocerr.log" ADDITIVE
+   SET CONSOLE OFF
+   SET ALTERNATE ON
+
+   //  Send out the output
+   IF cBadLine = NIL
+      ? cDescrip, "in file", cFile
+      ? " "
    ELSE
-      IF !lStriped
-         cString := cString
-      ENDIF
+      ? "Line too long in file", cFile, "at line", ALLTRIM( STR( nLineCnt, 10, 0 ) )
+      ? "Reading", cDescrip, "information when line greater than", STR( nMax, 2, 0 ), "encountered:"
+      ? cBadLine
+      ? " "
    ENDIF
 
-   nPos := AT( "^CFE", cString )
-   IF nPos > 0
-      cString  := SUBSTR( cString, nPos + 5 )
-      lStriped := .t.
-   ELSE
-      IF !lStriped
-         cString := cString
-      ENDIF
-   ENDIF
+   //  Turn off the log file and return
 
-   nPos := AT( "^a1f", cString )
-   IF nPos > 0
-      cString  := SUBSTR( cString, nPos + 5 )
-      lStriped := .t.
-   ELSE
-      IF !lStriped
-         cString := cString
-      ENDIF
-   ENDIF
-
-RETURN cString
-
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-*+    Static Function ProcessNgi()
-*+
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-STATIC FUNCTION ProcessNgi
-
-   //
-
-   //  Copyright (C) 2000 Luiz Rafael Culik
-   //
-   //  Purpose: Process each of the files in the directory
-   //  and Gerenate norton guide source code
-   //  Modification History:
-   //         Version    Date        Who       Notes
-   //          V1.00     1/16/2000   LRC       Initial Version
-   //
-   //  Calling parameters: None
-   //
-   //  Notes: None
-   // -
-   //  LOCAL variables:
-
-#define D_NORMAL  1
-#define D_ARG     2
-#define D_SYNTAX  3
-#define D_IGNORE  4
-#define D_SEEALSO 5
-#define D_INCLUDE 6
-#define D_ONELINE 7
-#define D_STATUS  8
-   LOCAL i
-   LOCAL j
-   LOCAL nFiles      := LEN( aDirList )
-   LOCAL nCommentLen
-   LOCAL lEof
-   LOCAL lDoc
-   LOCAL lDone
-   LOCAL cBuffer
-   LOCAL nEnd
-   LOCAL nCount   ,nAlso
-
-   LOCAL cBar       := "ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ"
-   LOCAL nMode
-   LOCAL cAuthor
-   LOCAL cCISID
-   LOCAL cFuncName
-   LOCAL cOneLine
-   LOCAL cCategory
-   LOCAL cFileName
-   LOCAL nLineCnt
-   LOCAL cSeeAlso
-   LOCAL cTemp
-   LOCAL cChar
-   LOCAL nNonBlank
-   LOCAL lBlankLine := .F.                 // Blank line encountered and sent out
-   LOCAL lAddBlank  := .F.                 // Need to add a blank line if next line is not blank
-
-   //
-   //  Entry Point
-   //
-   //  Put up information labels
-   @ INFILELINE, 20 SAY "Extracting: "
-   @ MODULELINE, 20 SAY "Documenting: "
-   //  loop through all of the files
-
-   FOR i := 1 TO nFiles
-
-      //  Open file for input
-
-      nCommentLen := IIF( AT( ".ASM", UPPER( aDirList[ i, F_NAME ] ) ) > 0, 2, 3 )
-      nReadHandle := FT_FUSE( aDirList[ i, F_NAME ] )
-      @ INFILELINE, 33 CLEAR TO INFILELINE, MAXCOL()
-      @ INFILELINE, 33 SAY PAD( aDirList[ i, F_NAME ], 47 )
-      @ MODULELINE, 33 CLEAR TO LINELINE, MAXCOL()
-      @ LINELINE, 27   SAY "Line:"
-
-      nLineCnt := 0
-
-      IF nReadHandle < 0
-         write_error( "Can't open file: (Dos Error " + STR( FERROR() ) + ")",,,, aDirList[ i, F_NAME ] )
-         @ ERRORLINE,  0 CLEAR TO ERRORLINE, MAXCOL()
-         @ ERRORLINE, 20 SAY "Can't open file: (Dos Error " + STR( FERROR() ) + ") File=" + aDirList[ i, F_NAME ]
-         LOOP
-      ENDIF
-      lEof := .F.
-      lDoc := .F.
-      //  First find the author
-
-      DO WHILE .NOT. lEof
-
-         //  Read a line
-
-         cBuffer := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
-         nLineCnt ++
-         IF nLineCnt % 10 = 0
-            @ LINELINE, 33 SAY STR( nLineCnt, 5, 0 )
-         ENDIF
-         //  check to see if we are in doc mode or getting out of doc mode
-
-         IF AT( cDoc, cBuffer ) > 0
-            IF lDoc
-               write_error( cDoc + " encountered during extraction of Doc" ;
-                            + " at line" + STR( nLinecnt, 5, 0 ),,,, aDirList[ i, F_NAME ] )
-            ENDIF
-            lDoc    := .T.
-            cBuffer := TRIM( SUBSTR( ReadLN( @lEof ), ;
-                             nCommentLen ) )
-            nLineCnt ++
-            cCategory := cFuncName := cSeeAlso := ""
-            nMode     := D_IGNORE
-         ELSEIF AT( cEnd, cBuffer ) > 0
-            IF .NOT. lDoc
-               write_error( cEnd + " encountered outside of Doc area at line" ;
-                            + STR( nLinecnt, 5, 0 ),,,, aDirList[ i, F_NAME ] )
-            ELSE
-               //  Add a new entry to our list of files
-
-               IF EMPTY( cCategory )
-                  write_error( "Blank Category",,,, aDirList[ i, F_NAME ] )
-                  cCategory := "Unknown"
-               ENDIF
-               IF EMPTY( cFuncName )
-                  write_error( "Blank Function Name",,,, aDirList[ i, F_NAME ] )
-                  cFuncName := "Unknown"
-               ENDIF
-               AADD( aDocInfo, { cCategory, cFuncName, cOneLine, cFileName } )
-               //  Now close down this little piece
-               lDoc := .F.
-               IF .NOT. EMPTY( cSeeAlso )
-
-                  FOR nAlso := 1 TO LEN( aalso )
-                     IF nAlso == 1
-                        oNgi:WriteLink( "!seealso: " + aalso[ nAlso ] )
-                     ELSE
-                        oNgi:WriteLink( "," + aalso[ nAlso ] )
-                     ENDIF
-                  NEXT
-
-                  oNgi:WritePar( CRLF )
-               ENDIF
-
-               oNgi:Close()
-               nMode := D_IGNORE
-            ENDIF
-
-            @ MODULELINE, 33 CLEAR TO MODULELINE, MAXCOL()
-         ENDIF
-
-         //  Act on the input
-         IF lDoc
-            //  1) function name
-
-            IF AT( cFunc, cBuffer ) > 0 .OR. AT( cComm, cBuffer ) > 0 .OR. AT( cSubCode, cBuffer ) >0
-               cBuffer := ReadLN( @lEof )
-               nLineCnt ++
-               //  Save the function name
-               cFuncName := UPPER( ALLTRIM( SUBSTR( cBuffer, nCommentLen ) ) )
-               @ MODULELINE, 33 CLEAR TO MODULELINE, MAXCOL()
-               @ MODULELINE, 33 SAY cFuncName
-
-               nMode := D_NORMAL
-
-               //  Open a new file
-               IF AT( "FT_", cFuncName ) > 0
-                  cTemp := SUBSTR( cFuncName, 4 )
-               ELSE
-                  cTemp := cFuncName
-               ENDIF
-
-               IF ( nEnd := AT( "(", cTemp ) ) > 0
-                  cTemp := LEFT( cTemp, nEnd - 1 )
-               ENDIF
-               cFileName := ""
-
-               //  Strip off any other non-alphabetic/numeric characters
-               FOR j := 1 TO LEN( cTemp )
-                  cChar := SUBSTR( cTemp, j, 1 )
-                  IF ( cChar >= "0" .AND. cChar <= "9" ) .OR. ;
-                       ( cChar >= "A" .AND. cChar <= "Z" ) .OR. cChar = "_"
-                     cFileName += cChar
-                  ENDIF
-               NEXT
-
-               //  See if file name is present already. If so then modify
-
-               cFileName := LEFT( cFileName, 21 )
-               nEnd      := 1
-               nCount    := 0
-               DO WHILE nEnd > 0
-                  nEnd := ASCAN( aDocInfo, { | a | a[ 4 ] == cFileName + ".ngi" } )
-                  IF nEnd > 0
-
-                     //  This will break if there are more than 10 files with the same first
-                     //  seven characters. We take our chances.
-
-                     IF LEN( cFileName ) = 21
-                        cFileName := STUFF( cFileName, 21, 1, STR( nCount, 1, 0 ) )
-                     ELSE
-                        cFileName += STR( nCount, 1, 0 )
-                     ENDIF
-                     nCount ++
-                  ENDIF
-               ENDDO
-               //  Add on the extension
-
-               cFileName := LEFT( cFileName, 21 ) + ".ngi"
-
-               oNgi := TNortonGuide():new( "ngi\" + cFileName )
-               IF oNgi:nHandle < 1
-                  ? "Error creating", cFileName, ".ngi"
-                  write_error( "Error creating",,,, cFileName + ".ngi" )
-               ENDIF
-               //  2) Category
-            ELSEIF AT( cCat, cBuffer ) > 0
-               cBuffer := ReadLN( @lEof )
-               nLineCnt ++
-               //  get the category
-               cCategory := UPPER( ALLTRIM( SUBSTR( cBuffer, nCommentLen ) ) )
-
-               //  3) One line description
-
-            ELSEIF AT( cOne, cBuffer ) > 0
-               cBuffer := ReadLN( @lEof )
-               nLineCnt ++
-               cOneLine := ALLTRIM( SUBSTR( cBuffer, nCommentLen ) )
-               IF LEN( cOneLine ) > LONGONELINE
-                  write_error( "OneLine", cOneLine, nLineCnt, LONGONELINE, ;
-                               aDirList[ i, F_NAME ] )
-               ENDIF
-
-               nMode := D_ONELINE
-               //  Now start writing out what we know
-               oNgi:WriteTitle( PAD( cFuncName, 21 ) + cOneLine, cFuncName )
-               oNgi:WritePar( cOneLine )
-               oNgi:WritePar(  cBar )
-               //  4) all other stuff
-
-            ELSE
-
-               IF AT( cSyn, cBuffer ) > 0
-
-                  oNgi:WriteParBold( " Syntax" )
-
-                  nMode     := D_SYNTAX
-                  lAddBlank := .T.
-
-               ELSEIF AT( cArg, cBuffer ) > 0
-
-                  IF !lBlankLine
-
-                     oNgi:WriteParBold( " Arguments" )
-
-                  ENDIF
-
-                  nMode     := D_ARG
-                  lAddBlank := .T.
-
-               ELSEIF AT( cRet, cBuffer ) > 0
-
-                  IF !lBlankLine
-                     oNgi:WritePar( "" )
-                  ENDIF
-
-                  oNgi:WriteParBold( " Returns" )
-
-                  nMode     := D_ARG
-                  lAddBlank := .T.
-
-               ELSEIF AT( cDesc, cBuffer ) > 0
-
-                  IF !lBlankLine
-                     oNgi:WritePar( "" )
-                  ENDIF
-                  oNgi:WriteParBold( " Description" )
-
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-
-               ELSEIF AT( cExam, cBuffer ) > 0
-
-                  IF !lBlankLine
-                     oNgi:WritePar( "" )
-                  ENDIF
-                  oNgi:WriteParBold( " Examples" )
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-               ELSEIF AT( cTest, cBuffer ) > 0
-
-                  IF !lBlankLine
-                     oNgi:WritePar( "" )
-                  ENDIF
-
-                  oNgi:WriteParBold( " Tests" )
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-
-               ELSEIF AT( cStatus, cBuffer ) > 0
-
-                  nMode := D_STATUS
-
-               ELSEIF AT( cCompl, cBuffer ) > 0
-
-                  IF !lBlankLine
-                     oNgi:WritePar( "" )
-                  ENDIF
-                  oNgi:WriteParBold( " Compliance" )
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-               ELSEIF AT( cPlat, cBuffer ) > 0
-
-                  IF !lBlankLine
-                     oNgi:WritePar( "" )
-                  ENDIF
-                  oNgi:WriteParBold( " Platforms" )
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-               ELSEIF AT( cFiles, cBuffer ) > 0
-
-                  IF !lBlankLine
-                     oNgi:WritePar( "" )
-                  ENDIF
-                  oNgi:WriteParBold( " Files" )
-
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-
-               ELSEIF AT( cFunction, cBuffer ) > 0
-
-                  IF !lBlankLine
-                     oNgi:WritePar( "" )
-                  ENDIF
-                  oNgi:WriteParBold( " Functions" )
-
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-               ELSEIF AT( cSee, cBuffer ) > 0
-                  nMode := D_SEEALSO
-               ELSEIF AT( cInc, cBuffer ) > 0
-                  nMode := D_INCLUDE
-
-                  //  All other input is trimmed of comments and sent out
-
-               ELSE
-                  //  translate any \$ into $
-                  cBuffer := STRTRAN( cBuffer, "\" + DELIM, DELIM )
-                  IF nMode = D_SYNTAX
-                     IF LEN( cBuffer ) > LONGLINE
-                        write_error( "Syntax", cBuffer, nLineCnt, ;
-                                     LONGLINE, aDirList[ i, F_NAME ] )
-                     ENDIF
-                     lBlankLine := EMPTY( cBuffer )
-                     IF lAddBlank
-                        oNgi:WritePar( "" )
-                        lAddBlank := .F.
-                     ENDIF
-                     oNgi:WritePar( cBuffer )
-                  ELSEIF nMode = D_ARG
-                     IF LEN( cBuffer ) > LONGLINE
-                        write_error( "Arguments", cBuffer, nLineCnt, ;
-                                     LONGLINE, aDirList[ i, F_NAME ] )
-                     ENDIF
-                     lBlankLine := EMPTY( cBuffer )
-                     IF lAddBlank
-                        oNgi:WritePar( "" )
-                        lAddBlank := .F.
-                     ENDIF
-                     cBuffer := STRTRAN( cBuffer, "<", "<", 1 )
-                     cBuffer := STRTRAN( cBuffer, ">", ">", 1 )
-                     oNgi:WritePar( StripNgControls( cBuffer ) )
-                  ELSEIF nMode = D_NORMAL
-                     IF LEN( cBuffer ) > LONGLINE
-                        write_error( "General", cBuffer, nLineCnt, ;
-                                     LONGLINE, aDirList[ i, F_NAME ] )
-                     ENDIF
-                     lBlankLine := EMPTY( cBuffer )
-                     IF lAddBlank
-                        oNgi:WritePar( "" )
-                        lAddBlank := .F.
-                     ENDIF
-                     oNgi:WritePar( StripNgControls( cBuffer ) )
-                  ELSEIF nMode = D_SEEALSO
-                     IF .NOT. EMPTY( cBuffer )
-                        cSeeAlso := ProcNgiAlso( StripFiles( ALLTRIM( cBuffer ) ) )
-                     ENDIF
-                  ELSEIF nMode = D_INCLUDE
-                     //  read next line
-                     IF .NOT. EMPTY( cBuffer )
-                        IF !lBlankLine
-                           oNgi:WritePar( "" )
-                        ENDIF
-                        oNgi:WritePar( " Header File: " ;
-                                       + ALLTRIM( cBuffer ) )
-                     ENDIF
-                  ELSEIF nMode = D_STATUS
-                     IF !EMPTY( cBuffer )
-                        oNgi:WriteParBold( "Status" )
-                     ENDIF
-                     ProcStatusWww( oNgi, cBuffer )
-
-                  ELSE
-
-                     //  unknown data from somewhere
-
-                     write_error( "Unknown Data Type " + cBuffer,, ;
-                                  nLineCnt, ;
-                                  LONGONELINE, aDirList[ i, F_NAME ] )
-
-                  ENDIF
-               ENDIF
-            ENDIF
-         ENDIF
-      ENDDO
-      //  Close down the input file
-
-      FT_FUSE()
-   NEXT
-
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-*+    Function ProcNgiAlso()
-*+
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-FUNCTION ProcNgiAlso( cSeealso )
-
-   aAlso := {}
-   aAlso := ListAsArray( cSeealso, "," )
-RETURN aAlso
-
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-*+    Function ProcNgiInput()
-*+
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-FUNCTION ProcNgiInput()
-
-   LOCAL aFiles   := {}
-   LOCAL aFuncs   := {}
-   LOCAL aFuncsam := {}
-   LOCAL aFuncsn_ := {}
-   LOCAL acfiles  := {}
-   LOCAL aComms   := {}
-   LOCAL cName,cT,cTs,cFile
-   LOCAL x,nPos,nAlso,y
-
-   LOCAL nXhandle := FCREATE( 'ngi\funcam.txt' )
-   LOCAL nYhandle := FCREATE( 'ngi\funcn_.txt' )
-   LOCAL xY       := "!Short:"
-   LOCAL cSee     := "!seealso:"
-   LOCAL lEof     := .f.
-   LOCAL cBuffer
+   SET ALTERNATE OFF
    SET CONSOLE ON
-   afiles := DIRECTORY( "ngi\*.*" )
-   ASORT( aFiles,,, { | x, y | UPPER( x[ 1 ] ) < UPPER( y[ 1 ] ) } )
+   SET ALTERNATE TO
 
-   FOR x := 1 TO LEN( aFiles )
-      Ft_FUse( "ngi\" + aFiles[ x, 1 ] )
-      WHILE !lEof
-         cBuffer := ReadLn( @lEof )
-         cT      := LEFT( cBuffer, 7 )
-         IF xY == cT
-            cName := SUBSTR( cBuffer, 9 )
-            cName := SUBSTR( cName, 1, 21 )
-            nPos  := AT( "()", cName )
-            IF nPoS > 0
-               AADD( aFuncs, cName )
-               IF LEFT( cname, 1 ) < "N"
-                  AADD( afuncsam, aFiles[ x, 1 ] )
-               ELSE
-                  AADD( afuncsn_, aFiles[ x, 1 ] )
-               ENDIF
-            ELSE
-               AADD( aComms, cName )
-               AADD( aCfiles, aFiles[ x, 1 ] )
-
-            ENDIF
-         ENDIF
-      END
-      lEof := .f.
-      Ft_FUse()
-   NEXT
-
-   @ INFILELINE, 21 SAY "Extracting: "
-
-   FOR x := 1 TO LEN( afuncsam )
-      cFile := afuncsam[ x ]
-
-      @ INFILELINE, 33 SAY PAD( cfile, 47 )
-
-      Ft_FUse( "ngi\" + cFile )
-      aAlso := {}
-      WHILE !lEof
-         cBuffer := ReadLn( @lEof )
-         cT      := LEFT( cBuffer, 7 )
-         IF xY == cT
-            cName := SUBSTR( cBuffer, 9 )
-            cName := SUBSTR( cName, 1, AT( ' ', cName ) - 1 )
-         ENDIF
-         cTs := SUBSTR( cBuffer, 1, 9 )
-         IF UPPER( cSee ) == UPPER( cTs )
-            cTs := SUBSTR( cBuffer, 11 )
-
-            aAlso   := ProcNgiAlso2( cTs )
-            cBuffer := ''
-         ENDIF
-
-         FWRITE( nXhandle, cBuffer + CRLF )
-
-      ENDDO
-      IF LEN( aAlso ) > 0
-         cBuffer := "!SeeAlso: "
-         FOR nAlso := 1 TO LEN( aAlso )
-            cBuffer += aAlso[ nalso ] + " "
-         NEXT
-      ENDIF
-
-      FWRITE( nXhandle, cBuffer + CRLF )
-
-      lEof  := .f.
-      aalso := {}
-      FT_fuse()
-   NEXT
-   FCLOSE( nXhandle )
-   FOR x := 1 TO LEN( AFUNCSN_ )
-      cFile := afuncsn_[ x ]
-
-      @ INFILELINE, 33 SAY PAD( cfile, 47 )
-
-      Ft_FUse( "ngi\" + cFile )
-      aAlso := {}
-      WHILE !lEof
-         cBuffer := ReadLn( @lEof )
-         cT      := LEFT( cBuffer, 7 )
-         IF xY == cT
-            cName := SUBSTR( cBuffer, 9 )
-            cName := SUBSTR( cName, 1, AT( ' ', cName ) - 1 )
-         ENDIF
-         cTs := SUBSTR( cBuffer, 1, 9 )
-         IF UPPER( cSee ) == UPPER( cTs )
-            cTs := SUBSTR( cBuffer, 11 )
-
-            aAlso   := ProcNgiAlso2( cTs )
-            cBuffer := ''
-         ENDIF
-
-         FWRITE( nYhandle, cBuffer + CRLF )
-
-      ENDDO
-
-      IF LEN( aAlso ) > 0
-         cBuffer := "!SeeAlso: "
-         FOR nAlso := 1 TO LEN( aAlso )
-            cBuffer += aAlso[ nalso ] + " "
-         NEXT
-      ENDIF
-
-      FWRITE( nYhandle, cBuffer + CRLF )
-
-      lEof  := .f.
-      aAlso := {}
-
-      lEof := .f.
-      Ft_FUse()
-   NEXT
-
-   FCLOSE( nYhandle )
-   lEof := .f.
-
-   y := FCREATE( 'ngi\comm.txt' )
-   ASORT( acfiles )
-   FOR x := 1 TO LEN( acfiles )
-      cFile := acfiles[ x ]
-      IF LEFT( cFile, AT( '.', cFile ) - 1 ) <> "LICENSE" .AND. LEFT( cFile, AT( '.', cFile ) - 1 ) <> "OVERVIEW"
-
-         @ INFILELINE, 33 SAY PAD( cfile, 47 )
-
-         Ft_FUse( "ngi\" + acfiles[ x ] )
-         aAlso := {}
-         WHILE !lEof
-            cBuffer := ReadLn( @lEof )
-            cT      := LEFT( cBuffer, 7 )
-            IF xY == cT
-               cName := SUBSTR( cBuffer, 9 )
-               cName := SUBSTR( cName, 1, AT( ' ', cName ) - 1 )
-            ENDIF
-            cTs := SUBSTR( cBuffer, 1, 9 )
-            IF UPPER( cSee ) == UPPER( cTs )
-               cTs := SUBSTR( cBuffer, 11 )
-
-               aAlso   := ProcNgiAlso2( cTs )
-               cBuffer := ''
-            ENDIF
-
-            FWRITE( y, cBuffer + CRLF )
-
-         ENDDO
-
-         IF LEN( aAlso ) > 0
-            cBuffer := "!SeeAlso: "
-            FOR nAlso := 1 TO LEN( aAlso )
-               cBuffer += aAlso[ nalso ]
-            NEXT
-            FWRITE( y, cBuffer + CRLF )
-
-         ENDIF
-      ENDIF
-      lEof  := .f.
-      aAlso := {}
-      Ft_FUse()
-   NEXT
-   lEof := .f.
-   FCLOSE( y )
 RETURN NIL
-
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 *+
-*+    Function ProcNgiAlso2()
-*+
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-FUNCTION ProcNgiAlso2( cSeealso )
+FUNCTION fill_link_info( cLinkName )
 
-   LOCAL nPos
-   LOCAL cTemp   := ''
-   LOCAL c
-   LOCAL nLEN,nAlso
-   LOCAL cReturn
-   LOCAL xAlso   := {}
-   LOCAL hPos    := 0
-   aAlso := {}
-   xAlso := ListAsArray2( cSeeAlso )
-   FOR hPos := 1 TO LEN( xAlso )
-
-      cTemp := SUBSTR( xAlso[ hPos ], 2, 1 )
-
-      IF cTemp >= "A" .AND. cTemp < "N"
-         nPos := AT( "()", xAlso[ hPos ] )
-         IF nPos > 0
-            AADD( aAlso, "funcam.ngo:" + ALLTRIM( xAlso[ hPos ] ) + ' ' )
-         ELSEIF nPos = 0 .AND. xAlso[ hPos ] <> "LICENSE" .AND. xAlso[ hPos ] <> "OVERVIEW" .AND. !EMPTY( xAlso[ hPos ] )
-            AADD( aAlso, "Comm.ngo:" + ALLTRIM( xAlso[ hPos ] ) + ' ' )
-         ENDIF
-      ELSE
-         nPos := AT( "()", xAlso[ hPos ] )
-         IF nPos > 0
-            AADD( aAlso, "funcn_.ngo:" + ALLTRIM( xAlso[ hPos ] ) + ' ' )
-         ELSEIF nPos = 0 .AND. xAlso[ hPos ] <> "LICENSE" .AND. xAlso[ hPos ] <> "OVERVIEW" .AND. !EMPTY( xAlso[ hPos ] )
-            AADD( aAlso, "Comm.ngo:" + ALLTRIM( xAlso[ hPos ] ) + ' ' )
-         ENDIF
-      ENDIF
-   NEXT
-RETURN aAlso
-/***
-*  ListAsArray2( <cList>, <cDelimiter> ) --> aList
-*  Convert a delimited string to an array
-* Taken from Clipper supplied routines 1/2/90
-*
-*/
-
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-*+    Function ListAsArray2()
-*+
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-FUNCTION ListAsArray2( cList, cDelimiter )
-
-   LOCAL nPos
-   LOCAL aList := {}   // Define an empty array
-
-   IF cDelimiter = NIL
-      cDelimiter := ","
-   ENDIF
    //
-   DO WHILE ( nPos := AT( cDelimiter, cList ) ) != 0
-      AADD( aList, SUBSTR( cList, 1, nPos - 1 ) )           // Add a new element
-      cList := SUBSTR( cList, nPos + 1 )
+   //  This routine and all accompaning database structures are
+   //  Copyright (C) 1992 Leo J. Letendre.
+   //
+   //  Purpose: read the link information to learn how to assemble database files
+   //
+   //  Modification History:
+   //         Version    Date      Who       Notes
+   //          V1.00     1/22/92   LJL       Initial Version
+   //          V1.01     4/25/92   LJL       Get the compiler type based upon
+   //                                        "object" file extension
+   //
+   //  Calling parameters: cLinkName - The name of the link file
+   //
+   //  Returns: cCompiler - The name of the compiler to use
+   //
+   //  Notes: looks for the !menu command and then reads the lines after it to
+   //         get the catagories and filenames associated with each.
+   // -
+   //  LOCAL variables:
+   LOCAL cBuffer
+   LOCAL lEof
+   LOCAL cSpace
+   LOCAL cCategory
+   LOCAL cFile
+   LOCAL nReadHandle
+   LOCAL lMenuMode := .F.                  // Menu infomation being read
+   LOCAL lGetType  := .T.                  // Get the compiled file type to determine complier
+   LOCAL cCompiler     // Compiler Type
+   //
+   //  Entry Point
+   //
+   nReadHandle := FT_FUSE( cLinkName )
+   lEof        := .F.
+
+   DO WHILE .NOT. lEof
+
+      //  Read a line
+      cBuffer := UPPER( ReadLN( @lEof ) )
+
+      //  Does it have a !menu?
+
+      IF AT( "!MENU", cBuffer ) > 0
+         lMenuMode := .T.
+         cBuffer   := UPPER( ReadLN( @lEof ) )
+      ELSEIF LEFT( cBuffer, 1 ) = "!"
+         lMenuMode := .F.
+      ENDIF
+
+      //  If we are in menu mode and the line has information on it then parse it
+
+      cBuffer := ALLTRIM( cBuffer )
+
+      IF .NOT. EMPTY( cBuffer ) .AND. lMenuMode
+         cSpace    := AT( "  ", cBuffer )
+         cCategory := UPPER( RTRIM( LEFT( cBuffer, cSpace - 1 ) ) )
+         cFile     := UPPER( LTRIM( SUBSTR( cBuffer, cSpace ) ) )
+         IF lGetType
+            cCompiler := IIF( ".NGO" $ cFile, "NGXC", "EHC" )
+            lGetType  := .NOT. ( ".NGO" $ cFile .OR. "EHO" $ cFile )
+         ENDIF
+         cFile := STRTRAN( cFile, IIF( cCompiler = "NGXC", ".NGO", ".EHO" ), ".TXT" )
+         AADD( aLinkInfo, { cCategory, cFile, .F. } )
+      ENDIF
+
    ENDDO
-   AADD( aList, cList )                 // Add final element
-   //
-RETURN aList        // Return the array
 
-//  End of ListAsArray
+   //  Close the file
 
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-*+    Static Function ProcessTroff()
-*+
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-STATIC FUNCTION ProcessTroff
+   FT_FUSE()
+   //  Return to caller
 
-   //
-
-   //  Copyright (C) 2000 Luiz Rafael Culik
-   //
-   //  Purpose: Process each of the files in the directory
-   //  and generate .tr file format output
-   //  Modification History:
-   //         Version    Date        Who       Notes
-   //          V1.00     1/06/2000   LRC       Initial Version
-   //
-   //  Calling parameters: None
-   //
-   //  Notes: None
-   // -
-   //  LOCAL variables:
-
-#define D_NORMAL  1
-#define D_ARG     2
-#define D_SYNTAX  3
-#define D_IGNORE  4
-#define D_SEEALSO 5
-#define D_INCLUDE 6
-#define D_ONELINE 7
-#define D_STATUS  8
-   LOCAL i
-   LOCAL j
-   LOCAL nFiles      := LEN( aDirList )
-   LOCAL nCommentLen
-   LOCAL lEof
-   LOCAL lDoc
-   LOCAL lDone
-   LOCAL cBuffer
-   LOCAL nEnd
-   LOCAL nCount
-
-   LOCAL cBar       := "ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ"
-   LOCAL nMode
-   LOCAL cAuthor
-   LOCAL cCISID
-   LOCAL cFuncName
-   LOCAL cOneLine
-   LOCAL cCategory
-   LOCAL cFileName
-   LOCAL nLineCnt
-   LOCAL cSeeAlso
-   LOCAL cTemp
-   LOCAL cChar
-   LOCAL nNonBlank
-   LOCAL lBlankLine := .F.                 // Blank line encountered and sent out
-   LOCAL lAddBlank  := .F.                 // Need to add a blank line if next line is not blank
-
-   //
-   //  Entry Point
-   //
-   //  Put up information labels
-   @ INFILELINE, 20 SAY "Extracting: "
-   @ MODULELINE, 20 SAY "Documenting: "
-   //  loop through all of the files
-
-   FOR i := 1 TO nFiles
-
-      //  Open file for input
-
-      nCommentLen := IIF( AT( ".ASM", UPPER( aDirList[ i, F_NAME ] ) ) > 0, 2, 3 )
-      nReadHandle := FT_FUSE( aDirList[ i, F_NAME ] )
-      @ INFILELINE, 33 CLEAR TO INFILELINE, MAXCOL()
-      @ INFILELINE, 33 SAY PAD( aDirList[ i, F_NAME ], 47 )
-      @ MODULELINE, 33 CLEAR TO LINELINE, MAXCOL()
-      @ LINELINE, 27   SAY "Line:"
-
-      nLineCnt := 0
-
-      IF nReadHandle < 0
-         write_error( "Can't open file: (Dos Error " + STR( FERROR() ) + ")",,,, aDirList[ i, F_NAME ] )
-         @ ERRORLINE,  0 CLEAR TO ERRORLINE, MAXCOL()
-         @ ERRORLINE, 20 SAY "Can't open file: (Dos Error " + STR( FERROR() ) + ") File=" + aDirList[ i, F_NAME ]
-         LOOP
-      ENDIF
-      lEof := .F.
-      lDoc := .F.
-      //  First find the author
-
-      DO WHILE .NOT. lEof
-
-         //  Read a line
-
-         cBuffer := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
-         nLineCnt ++
-         IF nLineCnt % 10 = 0
-            @ LINELINE, 33 SAY STR( nLineCnt, 5, 0 )
-         ENDIF
-         //  check to see if we are in doc mode or getting out of doc mode
-
-         IF AT( cDoc, cBuffer ) > 0
-            IF lDoc
-               write_error( cDoc + " encountered during extraction of Doc" ;
-                            + " at line" + STR( nLinecnt, 5, 0 ),,,, aDirList[ i, F_NAME ] )
-            ENDIF
-            lDoc    := .T.
-            cBuffer := TRIM( SUBSTR( ReadLN( @lEof ), ;
-                             nCommentLen ) )
-            nLineCnt ++
-            cCategory := cFuncName := cSeeAlso := ""
-            nMode     := D_IGNORE
-         ELSEIF AT( cEnd, cBuffer ) > 0
-            IF .NOT. lDoc
-               write_error( cEnd + " encountered outside of Doc area at line" ;
-                            + STR( nLinecnt, 5, 0 ),,,, aDirList[ i, F_NAME ] )
-            ELSE
-               //  Add a new entry to our list of files
-
-               IF EMPTY( cCategory )
-                  write_error( "Blank Category",,,, aDirList[ i, F_NAME ] )
-                  cCategory := "Unknown"
-               ENDIF
-               IF EMPTY( cFuncName )
-                  write_error( "Blank Function Name",,,, aDirList[ i, F_NAME ] )
-                  cFuncName := "Unknown"
-               ENDIF
-               AADD( aDocInfo, { cCategory, cFuncName, cOneLine, cFileName } )
-               //  Now close down this little piece
-               lDoc := .F.
-               IF .NOT. EMPTY( cSeeAlso )
-                  oTroff:WriteText( '.ft B' + CRLF + "See Also:" + CRLF + '.ft R' )
-                  FOR nAlso := 1 TO LEN( aalso )
-
-                     IF nAlso == 1
-                        oTroff:WriteLink( aalso[ nAlso ] )
-                     ELSE
-                        oTroff:WriteLink( "," + aalso[ nAlso ] )
-                     ENDIF
-                  NEXT
-
-               ENDIF
-
-               otroff:Close()
-               nMode := D_IGNORE
-            ENDIF
-
-            @ MODULELINE, 33 CLEAR TO MODULELINE, MAXCOL()
-         ENDIF
-
-         //  Act on the input
-         IF lDoc
-            //  1) function name
-
-            IF AT( cFunc, cBuffer ) > 0 .OR. AT( cComm, cBuffer ) > 0 .OR. AT( cSubCode, cBuffer ) >0
-               cBuffer := ReadLN( @lEof )
-               nLineCnt ++
-               //  Save the function name
-               cFuncName := UPPER( ALLTRIM( SUBSTR( cBuffer, nCommentLen ) ) )
-               @ MODULELINE, 33 CLEAR TO MODULELINE, MAXCOL()
-               @ MODULELINE, 33 SAY cFuncName
-
-               nMode := D_NORMAL
-
-               //  Open a new file
-               IF AT( "FT_", cFuncName ) > 0
-                  cTemp := SUBSTR( cFuncName, 4 )
-               ELSE
-                  cTemp := cFuncName
-               ENDIF
-
-               IF ( nEnd := AT( "(", cTemp ) ) > 0
-                  cTemp := LEFT( cTemp, nEnd - 1 )
-               ENDIF
-               cFileName := ""
-
-               //  Strip off any other non-alphabetic/numeric characters
-               FOR j := 1 TO LEN( cTemp )
-                  cChar := SUBSTR( cTemp, j, 1 )
-                  IF ( cChar >= "0" .AND. cChar <= "9" ) .OR. ;
-                       ( cChar >= "A" .AND. cChar <= "Z" ) .OR. cChar = "_"
-                     cFileName += cChar
-                  ENDIF
-               NEXT
-
-               //  See if file name is present already. If so then modify
-
-               cFileName := LEFT( cFileName, 21 )
-               nEnd      := 1
-               nCount    := 0
-               DO WHILE nEnd > 0
-                  nEnd := ASCAN( aDocInfo, { | a | a[ 4 ] == cFileName + ".tr" } )
-                  IF nEnd > 0
-
-                     //  This will break if there are more than 10 files with the same first
-                     //  seven characters. We take our chances.
-
-                     IF LEN( cFileName ) = 21
-                        cFileName := STUFF( cFileName, 21, 1, STR( nCount, 1, 0 ) )
-                     ELSE
-                        cFileName += STR( nCount, 1, 0 )
-                     ENDIF
-                     nCount ++
-                  ENDIF
-               ENDDO
-               //  Add on the extension
-
-               cFileName := LEFT( cFileName, 21 ) + ".tr"
-
-               otroff := tTroff():new( "tr\" + cFileName )
-               IF otroff:nHandle < 1
-                  ? "Error creating", cFileName, ".tr"
-                  write_error( "Error creating",,,, cFileName + ".tr" )
-               ENDIF
-               //  2) Category
-            ELSEIF AT( cCat, cBuffer ) > 0
-               cBuffer := ReadLN( @lEof )
-               nLineCnt ++
-               //  get the category
-               cCategory := UPPER( ALLTRIM( SUBSTR( cBuffer, nCommentLen ) ) )
-
-               //  3) One line description
-
-            ELSEIF AT( cOne, cBuffer ) > 0
-               cBuffer := ReadLN( @lEof )
-               nLineCnt ++
-               cOneLine := ALLTRIM( SUBSTR( cBuffer, nCommentLen ) )
-               IF LEN( cOneLine ) > LONGONELINE
-                  write_error( "OneLine", cOneLine, nLineCnt, LONGONELINE, ;
-                               aDirList[ i, F_NAME ] )
-               ENDIF
-
-               nMode := D_ONELINE
-               //  Now start writing out what we know
-               otroff:WriteTitle( PAD( cFuncName, 21 ), cFuncName )
-               otroff:WriteParBold( cOneLine )
-               //  4) all other stuff
-
-            ELSE
-
-               IF AT( cSyn, cBuffer ) > 0
-
-                  otroff:WriteParBold( " Syntax" )
-
-                  nMode     := D_SYNTAX
-                  lAddBlank := .T.
-
-               ELSEIF AT( cArg, cBuffer ) > 0
-
-                  IF !lBlankLine
-
-                     otroff:WriteParBold( " Arguments" )
-
-                  ENDIF
-
-                  nMode     := D_ARG
-                  lAddBlank := .T.
-
-               ELSEIF AT( cRet, cBuffer ) > 0
-
-                  IF !lBlankLine
-                     oTroff:WriteText( ".sp" + CRLF + ".in 0.4i" )
-                  ENDIF
-
-                  otroff:WriteParBold( " Returns" )
-
-                  nMode     := D_ARG
-                  lAddBlank := .T.
-
-               ELSEIF AT( cDesc, cBuffer ) > 0
-
-                  IF !lBlankLine
-                     oTroff:WriteText( ".sp" + CRLF + ".in 0.4i" )
-                  ENDIF
-                  otroff:WriteParBold( " Description" )
-
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-
-               ELSEIF AT( cExam, cBuffer ) > 0
-
-                  IF !lBlankLine
-                     oTroff:WriteText( ".sp" + CRLF + ".in 0.4i" )
-                  ENDIF
-                  otroff:WriteParBold( " Examples" )
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-               ELSEIF AT( cTest, cBuffer ) > 0
-
-                  IF !lBlankLine
-                     oTroff:WriteText( ".sp" + CRLF + ".in 0.4i" )
-                  ENDIF
-
-                  otroff:WriteParBold( " Tests" )
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-
-               ELSEIF AT( cStatus, cBuffer ) > 0
-
-                  nMode := D_STATUS
-
-               ELSEIF AT( cCompl, cBuffer ) > 0
-
-                  IF !lBlankLine
-                     oTroff:WriteText( ".sp" + CRLF + ".in 0.4i" )
-                  ENDIF
-                  otroff:WriteParBold( " Compliance" )
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-               ELSEIF AT( cPlat, cBuffer ) > 0
-
-                  IF !lBlankLine
-                     oTroff:WriteText( ".sp" + CRLF + ".in 0.4i" )
-                  ENDIF
-                  otroff:WriteParBold( " Platforms" )
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-               ELSEIF AT( cFiles, cBuffer ) > 0
-
-                  IF !lBlankLine
-                     oTroff:WriteText( ".sp" + CRLF + ".in 0.4i" )
-                  ENDIF
-                  otroff:WriteParBold( " Files" )
-
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-
-               ELSEIF AT( cSee, cBuffer ) > 0
-                  nMode := D_SEEALSO
-               ELSEIF AT( cInc, cBuffer ) > 0
-                  nMode := D_INCLUDE
-
-                  //  All other input is trimmed of comments and sent out
-
-               ELSE
-                  //  translate any \$ into $
-                  cBuffer := STRTRAN( cBuffer, "\" + DELIM, DELIM )
-                  IF nMode = D_SYNTAX
-                     IF LEN( cBuffer ) > LONGLINE
-                        write_error( "Syntax", cBuffer, nLineCnt, ;
-                                     LONGLINE, aDirList[ i, F_NAME ] )
-                     ENDIF
-                     lBlankLine := EMPTY( cBuffer )
-                     IF lAddBlank
-                        oTroff:WriteText( ".sp" + CRLF + ".in 0.4i" )
-                        lAddBlank := .F.
-                     ENDIF
-                     /*    nNonBlank:=FirstNB(cBuffer)
-                        cBuffer=STUFF(cBuffer,nNonBlank,0,"^a1f ")*/
-                     otroff:WritePar( cBuffer )
-                  ELSEIF nMode = D_ARG
-                     IF LEN( cBuffer ) > LONGLINE
-                        write_error( "Arguments", cBuffer, nLineCnt, ;
-                                     LONGLINE, aDirList[ i, F_NAME ] )
-                     ENDIF
-                     lBlankLine := EMPTY( cBuffer )
-                     IF lAddBlank
-                        oTroff:WriteText( ".sp" + CRLF + ".in 0.4i" )
-                        lAddBlank := .F.
-                     ENDIF
-                     cBuffer := STRTRAN( cBuffer, "<", "<", 1 )
-                     cBuffer := STRTRAN( cBuffer, ">", ">", 1 )
-                     otroff:WritePar( StripNgControls( cBuffer ) )
-                  ELSEIF nMode = D_NORMAL
-                     IF LEN( cBuffer ) > LONGLINE
-                        write_error( "General", cBuffer, nLineCnt, ;
-                                     LONGLINE, aDirList[ i, F_NAME ] )
-                     ENDIF
-                     lBlankLine := EMPTY( cBuffer )
-                     IF lAddBlank
-                        oTroff:WriteText( ".sp" + CRLF + ".in 0.4i" )
-                        lAddBlank := .F.
-                     ENDIF
-                     otroff:WritePar( StripNgControls( cBuffer ) )
-                  ELSEIF nMode = D_SEEALSO
-                     IF .NOT. EMPTY( cBuffer )
-                        cSeeAlso := ProcTroffAlso( StripFiles( ALLTRIM( cBuffer ) ) )
-                     ENDIF
-                  ELSEIF nMode = D_INCLUDE
-                     //  read next line
-                     IF .NOT. EMPTY( cBuffer )
-                        IF !lBlankLine
-                           oTroff:WriteText( ".sp" + CRLF + ".in 0.4i" )
-                        ENDIF
-                        otroff:WritePar( " Header File: " ;
-                                         + ALLTRIM( cBuffer ) )
-                     ENDIF
-                  ELSEIF nMode = D_STATUS
-                     IF !EMPTY( cBuffer )
-                        otroff:WriteParBold( "Status" )
-                     ENDIF
-                     ProcStatuswww( otroff, cBuffer )
-
-                  ELSE
-
-                     //  unknown data from somewhere
-
-                     write_error( "Unknown Data Type " + cBuffer,, ;
-                                  nLineCnt, ;
-                                  LONGONELINE, aDirList[ i, F_NAME ] )
-
-                  ENDIF
-               ENDIF
-            ENDIF
-         ENDIF
-      ENDDO
-      //  Close down the input file
-
-      FT_FUSE()
-   NEXT
-RETURN NIL
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-*+    Function ProcTroffAlso()
-*+
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-FUNCTION ProcTroffAlso( cSeealso )
-
-   aAlso := {}
-   aAlso := ListAsArray2( cSeealso, "," )
-RETURN aAlso
-
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-*+    Static Function ProcessOs2()
-*+
-*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-*+
-STATIC FUNCTION ProcessOs2
-
-   //
-
-   //  Copyright (C) 2000 Luiz Rafael Culik
-   //
-   //  Purpose: Process each of the files in the directory
-   //  and generate .tr file format output
-   //  Modification History:
-   //         Version    Date        Who       Notes
-   //          V1.00     1/20/2000   LRC       Initial Version
-   //
-   //  Calling parameters: None
-   //
-   //  Notes: None
-   // -
-   //  LOCAL variables:
-
-#define D_NORMAL  1
-#define D_ARG     2
-#define D_SYNTAX  3
-#define D_IGNORE  4
-#define D_SEEALSO 5
-#define D_INCLUDE 6
-#define D_ONELINE 7
-#define D_STATUS  8
-   LOCAL i
-   LOCAL j
-   LOCAL nFiles
-   LOCAL nCommentLen
-   LOCAL lEof
-   LOCAL lDoc
-   LOCAL lDone
-   LOCAL cBuffer
-   LOCAL nEnd
-   LOCAL nCount,nAlso
-
-   LOCAL cBar       := "ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ"
-   LOCAL nMode
-   LOCAL cAuthor
-   LOCAL cCISID
-   LOCAL cFuncName
-   LOCAL cOneLine
-   LOCAL cCategory
-   LOCAL cFileName
-   LOCAL nLineCnt
-   LOCAL cSeeAlso
-   LOCAL cTemp
-   LOCAL cChar
-   LOCAL nNonBlank
-   LOCAL lBlankLine := .F.                 // Blank line encountered and sent out
-   LOCAL lAddBlank  := .F.                 // Need to add a blank line if next line is not blank
-   adirlist := DIRECTORY( '*.prg' )
-   nFiles   := LEN( aDirList )
-   //
-   //  Entry Point
-   //
-   //  Put up information labels
-   @ INFILELINE, 20 SAY "Extracting: "
-   @ MODULELINE, 20 SAY "Documenting: "
-   //  loop through all of the files
-   oOs2 := tOS2():new( "ipf\Harbour.ipf" )
-   FOR i := 1 TO nFiles
-
-      //  Open file for input
-
-      nCommentLen := IIF( AT( ".ASM", UPPER( aDirList[ i, F_NAME ] ) ) > 0, 2, 3 )
-      nReadHandle := FT_FUSE( aDirList[ i, F_NAME ] )
-      @ INFILELINE, 33 CLEAR TO INFILELINE, MAXCOL()
-      @ INFILELINE, 33 SAY PAD( aDirList[ i, F_NAME ], 47 )
-      @ MODULELINE, 33 CLEAR TO LINELINE, MAXCOL()
-      @ LINELINE, 27   SAY "Line:"
-
-      nLineCnt := 0
-
-      IF nReadHandle < 0
-         write_error( "Can't open file: (Dos Error " + STR( FERROR() ) + ")",,,, aDirList[ i, F_NAME ] )
-         @ ERRORLINE,  0 CLEAR TO ERRORLINE, MAXCOL()
-         @ ERRORLINE, 20 SAY "Can't open file: (Dos Error " + STR( FERROR() ) + ") File=" + aDirList[ i, F_NAME ]
-         LOOP
-      ENDIF
-      lEof := .F.
-      lDoc := .F.
-      //  First find the author
-
-      DO WHILE .NOT. lEof
-
-         //  Read a line
-
-         cBuffer := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
-         nLineCnt ++
-         IF nLineCnt % 10 = 0
-            @ LINELINE, 33 SAY STR( nLineCnt, 5, 0 )
-         ENDIF
-         //  check to see if we are in doc mode or getting out of doc mode
-
-         IF AT( cDoc, cBuffer ) > 0
-            IF lDoc
-               write_error( cDoc + " encountered during extraction of Doc" ;
-                            + " at line" + STR( nLinecnt, 5, 0 ),,,, aDirList[ i, F_NAME ] )
-            ENDIF
-            lDoc    := .T.
-            cBuffer := TRIM( SUBSTR( ReadLN( @lEof ), ;
-                             nCommentLen ) )
-            nLineCnt ++
-            cCategory := cFuncName := cSeeAlso := ""
-            nMode     := D_IGNORE
-         ELSEIF AT( cEnd, cBuffer ) > 0
-            IF .NOT. lDoc
-               write_error( cEnd + " encountered outside of Doc area at line" ;
-                            + STR( nLinecnt, 5, 0 ),,,, aDirList[ i, F_NAME ] )
-            ELSE
-               //  Add a new entry to our list of files
-
-               IF EMPTY( cCategory )
-                  write_error( "Blank Category",,,, aDirList[ i, F_NAME ] )
-                  cCategory := "Unknown"
-               ENDIF
-               IF EMPTY( cFuncName )
-                  write_error( "Blank Function Name",,,, aDirList[ i, F_NAME ] )
-                  cFuncName := "Unknown"
-               ENDIF
-               AADD( aDocInfo, { cCategory, cFuncName, cOneLine, cFileName } )
-               //  Now close down this little piece
-               lDoc := .F.
-               IF .NOT. EMPTY( cSeeAlso )
-                  oOs2:WritePar( ".br" + CRLF + "See Also:" )
-                  FOR nAlso := 1 TO LEN( aalso )
-
-                     IF nAlso == 1
-                        oOs2:WriteLink( aalso[ nAlso ] )
-                     ELSE
-                        oOs2:WriteLink( aalso[ nAlso ] )
-                     ENDIF
-                  NEXT
-
-               ENDIF
-
-               nMode := D_IGNORE
-            ENDIF
-
-            @ MODULELINE, 33 CLEAR TO MODULELINE, MAXCOL()
-         ENDIF
-
-         //  Act on the input
-         IF lDoc
-            //  1) function name
-
-            IF AT( cFunc, cBuffer ) > 0 .OR. AT( cComm, cBuffer ) > 0 .OR. AT( cSubCode, cBuffer ) >0
-               cBuffer := ReadLN( @lEof )
-               nLineCnt ++
-               //  Save the function name
-               cFuncName := UPPER( ALLTRIM( SUBSTR( cBuffer, nCommentLen ) ) )
-               @ MODULELINE, 33 CLEAR TO MODULELINE, MAXCOL()
-               @ MODULELINE, 33 SAY cFuncName
-
-               nMode := D_NORMAL
-
-               //  Open a new file
-               IF AT( "FT_", cFuncName ) > 0
-                  cTemp := SUBSTR( cFuncName, 4 )
-               ELSE
-                  cTemp := cFuncName
-               ENDIF
-
-               IF ( nEnd := AT( "(", cTemp ) ) > 0
-                  cTemp := LEFT( cTemp, nEnd - 1 )
-               ENDIF
-               cFileName := ""
-
-               //  Strip off any other non-alphabetic/numeric characters
-               FOR j := 1 TO LEN( cTemp )
-                  cChar := SUBSTR( cTemp, j, 1 )
-                  IF ( cChar >= "0" .AND. cChar <= "9" ) .OR. ;
-                       ( cChar >= "A" .AND. cChar <= "Z" ) .OR. cChar = "_"
-                     cFileName += cChar
-                  ENDIF
-               NEXT
-
-               //  See if file name is present already. If so then modify
-
-               cFileName := LEFT( cFileName, 21 )
-               nEnd      := 1
-               nCount    := 0
-               DO WHILE nEnd > 0
-                  nEnd := ASCAN( aDocInfo, { | a | a[ 4 ] == cFileName + ".ipf" } )
-                  IF nEnd > 0
-
-                     //  This will break if there are more than 10 files with the same first
-                     //  seven characters. We take our chances.
-
-                     IF LEN( cFileName ) = 21
-                        cFileName := STUFF( cFileName, 21, 1, STR( nCount, 1, 0 ) )
-                     ELSE
-                        cFileName += STR( nCount, 1, 0 )
-                     ENDIF
-                     nCount ++
-                  ENDIF
-               ENDDO
-               //  Add on the extension
-
-               IF oOs2:nHandle < 1
-                  ? "Error creating", cFileName, ".ipf"
-                  write_error( "Error creating",,,, cFileName + ".ipf" )
-               ENDIF
-               //  2) Category
-            ELSEIF AT( cCat, cBuffer ) > 0
-               cBuffer := ReadLN( @lEof )
-               nLineCnt ++
-               //  get the category
-               cCategory := UPPER( ALLTRIM( SUBSTR( cBuffer, nCommentLen ) ) )
-
-               //  3) One line description
-
-            ELSEIF AT( cOne, cBuffer ) > 0
-               cBuffer := ReadLN( @lEof )
-               nLineCnt ++
-               cOneLine := ALLTRIM( SUBSTR( cBuffer, nCommentLen ) )
-               IF LEN( cOneLine ) > LONGONELINE
-                  write_error( "OneLine", cOneLine, nLineCnt, LONGONELINE, ;
-                               aDirList[ i, F_NAME ] )
-               ENDIF
-
-               nMode := D_ONELINE
-               //  Now start writing out what we know
-               oOs2:WriteTitle( PAD( cFuncName, 21 ), cFuncName )
-               oOs2:WriteParBold( cOneLine )
-               //  4) all other stuff
-
-            ELSE
-
-               IF AT( cSyn, cBuffer ) > 0
-
-                  oOs2:WriteParBold( " Syntax" )
-
-                  nMode     := D_SYNTAX
-                  lAddBlank := .T.
-
-               ELSEIF AT( cArg, cBuffer ) > 0
-
-                  IF !lBlankLine
-
-                     oOs2:WriteParBold( " Arguments" )
-
-                  ENDIF
-
-                  nMode     := D_ARG
-                  lAddBlank := .T.
-
-               ELSEIF AT( cRet, cBuffer ) > 0
-
-                  IF !lBlankLine
-                     oOs2:WritePar( "" )
-                  ENDIF
-
-                  oOs2:WriteParBold( " Returns" )
-
-                  nMode     := D_ARG
-                  lAddBlank := .T.
-
-               ELSEIF AT( cDesc, cBuffer ) > 0
-
-                  IF !lBlankLine
-                     oOs2:WritePar( "" )
-                  ENDIF
-                  oOs2:WriteParBold( " Description" )
-
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-
-               ELSEIF AT( cExam, cBuffer ) > 0
-
-                  IF !lBlankLine
-                     oOs2:WritePar( "" )
-                  ENDIF
-                  oOs2:WriteParBold( " Examples" )
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-               ELSEIF AT( cTest, cBuffer ) > 0
-
-                  IF !lBlankLine
-                     oOs2:WritePar( "" )
-                  ENDIF
-
-                  oOs2:WriteParBold( " Tests" )
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-
-               ELSEIF AT( cStatus, cBuffer ) > 0
-
-                  nMode := D_STATUS
-
-               ELSEIF AT( cCompl, cBuffer ) > 0
-
-                  IF !lBlankLine
-                     oOs2:WritePar( "" )
-                  ENDIF
-                  oOs2:WriteParBold( " Compliance" )
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-               ELSEIF AT( cPlat, cBuffer ) > 0
-
-                  IF !lBlankLine
-                     oOs2:WritePar( "" )
-                  ENDIF
-                  oOs2:WriteParBold( " Platforms" )
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-               ELSEIF AT( cFiles, cBuffer ) > 0
-
-                  IF !lBlankLine
-                     oOs2:WritePar( "" )
-                  ENDIF
-                  oOs2:WriteParBold( " Files" )
-
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-               ELSEIF AT( cFunction, cBuffer ) > 0
-
-                  IF !lBlankLine
-                     oOs2:WritePar( "" )
-                  ENDIF
-                  oOs2:WriteParBold( " Function" )
-
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-
-               ELSEIF AT( cSee, cBuffer ) > 0
-                  nMode := D_SEEALSO
-               ELSEIF AT( cInc, cBuffer ) > 0
-                  nMode := D_INCLUDE
-
-                  //  All other input is trimmed of comments and sent out
-
-               ELSE
-                  //  translate any \$ into $
-                  cBuffer := STRTRAN( cBuffer, "\" + DELIM, DELIM )
-                  IF nMode = D_SYNTAX
-                     IF LEN( cBuffer ) > LONGLINE
-                        write_error( "Syntax", cBuffer, nLineCnt, ;
-                                     LONGLINE, aDirList[ i, F_NAME ] )
-                     ENDIF
-                     lBlankLine := EMPTY( cBuffer )
-                     IF lAddBlank
-                        oOs2:WritePar( "" )
-                        lAddBlank := .F.
-                     ENDIF
-                     /*    nNonBlank:=FirstNB(cBuffer)
-                        cBuffer=STUFF(cBuffer,nNonBlank,0,"^a1f ")*/
-                     oOs2:WritePar( cBuffer )
-                  ELSEIF nMode = D_ARG
-                     IF LEN( cBuffer ) > LONGLINE
-                        write_error( "Arguments", cBuffer, nLineCnt, ;
-                                     LONGLINE, aDirList[ i, F_NAME ] )
-                     ENDIF
-                     lBlankLine := EMPTY( cBuffer )
-                     IF lAddBlank
-                        oOs2:WritePar( "" )
-                        lAddBlank := .F.
-                     ENDIF
-                     cBuffer := STRTRAN( cBuffer, "<", "<", 1 )
-                     cBuffer := STRTRAN( cBuffer, ">", ">", 1 )
-                     oOs2:WritePar( StripNgControls( cBuffer ) )
-                  ELSEIF nMode = D_NORMAL
-                     IF LEN( cBuffer ) > LONGLINE
-                        write_error( "General", cBuffer, nLineCnt, ;
-                                     LONGLINE, aDirList[ i, F_NAME ] )
-                     ENDIF
-                     lBlankLine := EMPTY( cBuffer )
-                     IF lAddBlank
-                        oOs2:WritePar( "" )
-                        lAddBlank := .F.
-                     ENDIF
-                     oOs2:WritePar( StripNgControls( cBuffer ) )
-                  ELSEIF nMode = D_SEEALSO
-                     IF .NOT. EMPTY( cBuffer )
-                        cSeeAlso := ProcTroffAlso( StripFiles( ALLTRIM( cBuffer ) ) )
-                     ENDIF
-                  ELSEIF nMode = D_INCLUDE
-                     //  read next line
-                     IF .NOT. EMPTY( cBuffer )
-                        IF !lBlankLine
-                           oOs2:WritePar( "" )
-                        ENDIF
-                        oOs2:WritePar( " Header File: " ;
-                                       + ALLTRIM( cBuffer ) )
-                     ENDIF
-                  ELSEIF nMode = D_STATUS
-                     IF !EMPTY( cBuffer )
-                        oOs2:WriteParBold( "Status" )
-                     ENDIF
-                     ProcStatuswww( oOs2, cBuffer )
-
-                  ELSE
-
-                     //  unknown data from somewhere
-
-                     write_error( "Unknown Data Type " + cBuffer,, ;
-                                  nLineCnt, ;
-                                  LONGONELINE, aDirList[ i, F_NAME ] )
-
-                  ENDIF
-               ENDIF
-            ENDIF
-         ENDIF
-      ENDDO
-      //  Close down the input file
-
-      FT_FUSE()
-   NEXT
-   oOs2:Close()
-RETURN NIL
-
-*+ EOF: HBDOC.PRG
+RETURN cCompiler
