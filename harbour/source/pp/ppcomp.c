@@ -49,8 +49,7 @@
 #include "hbpp.h"
 #include "hbcomp.h"
 
-extern FILES       hb_comp_files;
-extern int         hb_comp_iLine; /* currently parsed file line number */
+extern int nEmptyStrings;
 
 static char s_szLine[ HB_PP_STR_SIZE ];
 static char s_szOutLine[ HB_PP_STR_SIZE ];
@@ -61,10 +60,11 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
   char * ptr, * ptrOut;
   int lContinue;
   int lens, rdlen;
-  int nEmptyStrings = 0, lLine = 0, i;
+  int lLine = 0, i;
 
   HB_TRACE(HB_TR_DEBUG, ("PreProcess(%p, %p, %s)", handl_o, sOut));
 
+  nEmptyStrings = 0;
   while( TRUE )
   {
      pFile = hb_comp_files.pLast;

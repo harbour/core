@@ -143,7 +143,9 @@ static BOOL s_bTracePragma = FALSE;
 #define IT_COMMA      3
 #define IT_ID_OR_EXPR 4
 
-static int  s_kolAddDefs;
+static int  s_kolAddDefs = 0;
+static int  s_kolAddComs = 0;
+static int  s_kolAddTras = 0;
 static int  s_ParseState;
 static int  s_maxCondCompile;
 static int  s_aIsRepeate[ 5 ];
@@ -153,8 +155,8 @@ static int  s_numBrackets;
 static char s_groupchar;
 static char s_prevchar;
 
-extern int hb_comp_iLine;       /* currently parsed file line number */
-int *      hb_pp_aCondCompile;
+int        nEmptyStrings;
+int *      hb_pp_aCondCompile = NULL;
 int        hb_pp_nCondCompile = 0;
 
 /* Table with parse errors */
@@ -184,17 +186,50 @@ char * hb_pp_szWarnings[] =
 
 void hb_pp_Init( void )
 {
+   DEFINES * stdef;
+   COMMANDS * stcmd;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_pp_Init()"));
 
-   /* TOFIX: The tables in PPTABLE.C should also be reinitialized */
+   while( s_kolAddDefs )
+   {
+      stdef = hb_pp_topDefine;
+      if( stdef->pars ) hb_xfree( stdef->pars );
+      if( stdef->value ) hb_xfree( stdef->value );
+      hb_xfree( stdef->name );
+      hb_pp_topDefine = stdef->last;
+      hb_xfree( stdef );
+      s_kolAddDefs--;
+   }
+   while( s_kolAddComs )
+   {
+      stcmd = hb_pp_topCommand;
+      if( stcmd->mpatt ) hb_xfree( stcmd->mpatt );
+      if( stcmd->value ) hb_xfree( stcmd->value );
+      hb_xfree( stcmd->name );
+      hb_pp_topCommand = stcmd->last;
+      hb_xfree( stcmd );
+      s_kolAddComs--;
+   }
+   while( s_kolAddTras )
+   {
+      stcmd = hb_pp_topTranslate;
+      if( stcmd->mpatt ) hb_xfree( stcmd->mpatt );
+      if( stcmd->value ) hb_xfree( stcmd->value );
+      hb_xfree( stcmd->name );
+      hb_pp_topTranslate = stcmd->last;
+      hb_xfree( stcmd );
+      s_kolAddTras--;
+   }
 
-   s_kolAddDefs = 0;
    s_ParseState = 0;
    s_maxCondCompile = 5;
    s_bReplacePat = TRUE;
    s_prevchar = 'A';
 
-   hb_pp_aCondCompile = ( int * ) hb_xgrab( sizeof( int ) * 5 );
+   if( !hb_pp_aCondCompile )
+       hb_pp_aCondCompile = ( int * ) hb_xgrab( sizeof( int ) * 5 );
+
    hb_pp_nCondCompile = 0;
 
    {
@@ -378,9 +413,7 @@ DEFINES * hb_pp_AddDefine( char * defname, char * value )
 
   if( stdef != NULL )
   {
-/*
     hb_compGenWarning( hb_pp_szWarnings, 'I', HB_PP_WARN_DEFINE_REDEF, defname, NULL );
-*/
 
     if( isNew )
     {
@@ -400,6 +433,7 @@ DEFINES * hb_pp_AddDefine( char * defname, char * value )
   }
 
   stdef->value = ( value == NULL ) ? NULL : hb_strdup( value );
+  stdef->pars = NULL;
 
   return stdef;
 }
@@ -683,6 +717,7 @@ static COMMANDS * AddCommand( char * cmdname )
   stcmd->last = hb_pp_topCommand;
   hb_pp_topCommand = stcmd;
   stcmd->name = hb_strdup( cmdname );
+  s_kolAddComs++;
   return stcmd;
 }
 

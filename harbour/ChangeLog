@@ -1,3 +1,15 @@
+20000317-09:56 GMT+3 Alexander Kresin
+   * source/pp/stdalone/hbpp.c
+   * source/pp/ppcomp.c
+   * source/pp/ppcore.c
+   * source/pp/pplib.c
+   * source/compiler/hbgenerr.c
+     * fixed line number output for errors and warnings
+     * hb_pp_init() changed for supporting multiply files compiling
+     * warning in addDefine about duplicate define uncommented
+   * contrib/rdd_ads/adsfunc.c
+     * typo fixed ( HB_ADCUSTOMIZEAOF -> HB_ADSCUSTOMIZEAOF )
+
 20000317-01:09 GMT+1 Victor Szakats <info@szelvesz.hu>
    * source/rtl/console.c
      - Removed the non-GT branch from __ACCEPT().
