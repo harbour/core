@@ -264,7 +264,7 @@
 
 Tue Oct 05 14:44:16 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* source/rtl/filesys.c (hb_fsTell): 
+	* source/rtl/filesys.c (hb_fsTell):
 	Replaced use of tell() with an equivalent call to lseek(), so that
 	this is supported under gcc.
 
@@ -312,7 +312,7 @@ Tue Oct 05 14:44:16 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
     source/compiler/harbour.y
     * HB_P_GENARRAY -> HB_P_ARRAYGEN
     * HB_P_DIMARRAY -> HB_P_ARRAYDIM
-      !! WARNING !! Please rebuild all .PRG files, since the pcode values have 
+      !! WARNING !! Please rebuild all .PRG files, since the pcode values have
       changed.
   * include/hbver.h
     + Revision set to "a"
@@ -330,17 +330,17 @@ Tue Oct 05 14:44:16 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
     make_tpl.*
     config/win32/* moved to config/w32/*
     * The GNU platform name for Windows 32bit has changed to "w32" from
-      "win32", the only reason is that the new one is shorter. This way all the 
-      paths will be shorter, and the binary release filenames will be also 
+      "win32", the only reason is that the new one is shorter. This way all the
+      paths will be shorter, and the binary release filenames will be also
       shorter.
 
-      Please update your GNU make starter batch files to use w32 instead of 
+      Please update your GNU make starter batch files to use w32 instead of
       win32 in HB_ARCHITECTURE.
 
 19991005-13:59 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/compiler/harbour.y
     source/pp/stdalone/hbpp.c
-    + Added closing \n to the help text, to make it appear OK under some 
+    + Added closing \n to the help text, to make it appear OK under some
       shells. (Thanks to Dave Pearson)
   * source/compiler/harbour.c
     - isatty() removed. (Thanks to Dave Pearson)
@@ -370,7 +370,7 @@ Tue Oct 05 14:44:16 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
     *source/compiler/harbour.y
 	* changed some rules to correctly handle the following syntax:
 	LOCAL cbVar:={|| cbVar}
-	(the cbVar inside a codeblock is correctly considered a local 
+	(the cbVar inside a codeblock is correctly considered a local
 	variable instead of memvar variable)
 	* corrected usage info to print LF at the end of message
 
@@ -379,8 +379,8 @@ Tue Oct 05 14:44:16 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
     source/vm/Makefile
     include/ctoharb.h
     ! Some cleanup on the new main() functions.
-      (using header file, fixed CVS headers, added copyright header, removed a TODO, 
-      TO DO -> TODO, Hungarian notation, global var name, 0 -> NULL, 
+      (using header file, fixed CVS headers, added copyright header, removed a TODO,
+      TO DO -> TODO, Hungarian notation, global var name, 0 -> NULL,
       added to GNU makefile, std main return value missing.)
   * makefile.b40 (removed)
     makefile.b32
@@ -391,7 +391,7 @@ Tue Oct 05 14:44:16 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
     *.b??
     hbpplib.b32 (removed)
     + Further uniformized.
-    + hbpp.exe make process uncommented from make_b16.bat. 
+    + hbpp.exe make process uncommented from make_b16.bat.
       We will see how it works.
     + hbpplib.b32 incorporated into hbpp.b32
   - hbpp.b16 (removed)
@@ -542,19 +542,16 @@ source/rtl/tgetlist.prg
 19991005-12:30 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.y
-<<<<<<< ChangeLog
-	* changed some rules to correctly handle the following syntax:
+        * changed some rules to correctly handle the following syntax:
 	LOCAL cbVar:={|| cbVar}
 	(the cbVar inside a codeblock is correctly considered a local
 	variable instead of memvar variable)
 	* corrected usage info to print LF at the end of message
-=======
         * changed some rules to correctly handle the following syntax:
         LOCAL cbVar:={|| cbVar}
         (the cbVar inside a codeblock is correctly considered a local
         variable instead of memvar variable)
         * corrected usage info to print LF at the end of message
->>>>>>> 1.1131
 
 19991005-08:36 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/vm/main*.c
