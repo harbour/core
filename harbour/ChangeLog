@@ -1,3 +1,13 @@
+20000608-22:10 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+
+   * source/rtl/teditorl.c
+     + added __StrTkPtr() function to scan a string starting from a defined position instead
+     of restarting every time from beginning and scanning it completely till next token.
+   * source/rtl/tedior.prg
+     * changed to use __StrTkPtr() instead of __StrToken(). It is a LOT faster loading big files.
+   * contrib/msql/dbf2msql.prg
+     ! fixed memory leak due to resources not released
+
 2000-06-07 22:50 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
 
    * source/compiler/harbour.c

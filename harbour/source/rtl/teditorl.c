@@ -34,7 +34,12 @@
  *
  */
 
+/* NOTE: we need this to prevent base types redefinition */
+#define _CLIPDEFS_H
+
 #include "hbapi.h"
+#include "extend.api"
+#include "item.api"
 
 static char * hb_strToken( char * szText, long lText,
                            long lIndex,
@@ -44,13 +49,13 @@ static char * hb_strToken( char * szText, long lText,
    long lStart;
    long lEnd = 0;
    long lCounter = 0;
-  
+
    HB_TRACE(HB_TR_DEBUG, ("hb_strToken(%s, %ld, %ld, %d, %p)", szText, lText, lIndex, (int) cDelimiter, plLen));
-  
+
    do
    {
       lStart = lEnd;
-  
+
       if( cDelimiter != ' ' )
       {
          if( szText[ lStart ] == cDelimiter )
@@ -61,11 +66,11 @@ static char * hb_strToken( char * szText, long lText,
          while( lStart < lText && szText[ lStart ] == cDelimiter )
             lStart++;
       }
-  
+
       if( lStart < lText && szText[ lStart ] != cDelimiter )
       {
          lEnd = lStart + 1;
-  
+
          while( lEnd < lText && szText[lEnd] != cDelimiter )
             lEnd++;
       }
@@ -74,7 +79,7 @@ static char * hb_strToken( char * szText, long lText,
 
    }
    while( lCounter++ < lIndex - 1 && lEnd < lText );
-  
+
    if( lCounter < lIndex )
    {
       *plLen = 0;
@@ -92,12 +97,37 @@ HB_FUNC( __STRTOKEN )
 {
    char * pszText;
    long lLen;
-  
-   pszText = hb_strToken( hb_parc( 1 ), hb_parclen( 1 ), 
-                          hb_parnl( 2 ), 
-                          ISCHAR( 3 ) ? *hb_parc( 3 ) : ' ', 
+
+   pszText = hb_strToken( hb_parc( 1 ), hb_parclen( 1 ),
+                          hb_parnl( 2 ),
+                          ISCHAR( 3 ) ? *hb_parc( 3 ) : ' ',
                           &lLen );
-  
+
    hb_retclen( pszText, lLen );
 }
 
+
+/* like __STRTOKEN but returns next token starting from passed position (0 based) inside string
+   StrTkPtr(cString, @nTokPos, Chr(9))
+*/
+HB_FUNC(__STRTKPTR)
+{
+   char * pszString = hb_parc(1);
+   long lLen, lStrLen = hb_parclen(1);
+   long lPos = hb_parnl(2);
+   char * pszText;
+
+   /* move start of string past last returned token */
+   pszString = (char *) ((ULONG) pszString + (ULONG) lPos);
+
+   /* decrease length of string consequently */
+   lStrLen -= lPos + 1;
+
+   pszText = hb_strToken(pszString, lStrLen, 1, ISCHAR(3) ? *hb_parc(3) : ' ', &lLen);
+
+   /* return position to start next search from */
+   _stornl((ULONG) lPos + ((ULONG) pszText - (ULONG) pszString + lLen + 1), 2);
+
+   /* return token */
+   hb_retclen(pszText, lLen);
+}

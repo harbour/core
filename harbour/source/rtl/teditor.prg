@@ -97,7 +97,7 @@ ENDCLASS
 STATIC function Text2Array(cString, nWordWrapCol)
 
    LOCAL cLine, nTokNum, aArray, cEOL, nEOLLen, nRetLen, ncSLen
-   LOCAL nFirstSpace, cSplittedLine
+   LOCAL nFirstSpace, cSplittedLine, nTokPos := 0
 
    nTokNum := 1
    aArray := {}
@@ -112,9 +112,9 @@ STATIC function Text2Array(cString, nWordWrapCol)
       /* TOFIX: Note that __StrToken is not able to cope with delimiters longer than one char */
       // Dos - OS/2 - Windows have CRLF as EOL
       if nEOLLen > 1
-         cLine := StrTran(__StrToken(cString, nTokNum++, cEOL), SubStr(cEOL, 2), "")
+         cLine := StrTran(__StrTkPtr(cString, @nTokPos, cEOL), SubStr(cEOL, 2), "")
       else
-         cLine := __StrToken(cString, nTokNum++, cEOL)
+         cLine := __StrTkPtr(cString, @nTokPos, cEOL)
       endif
       nRetLen += Len(cLine) + nEOLLen
 
