@@ -174,12 +174,12 @@ function __dbgBuildMenu( oDebugger )  // Builds the debugger pulldown menu
 
       MENUITEM " ~Help "
       MENU
-         MENUITEM " ~About Help "           ACTION Alert( "Not implemented yet!" )
+         MENUITEM " ~About Help "           ACTION oDebugger:ShowHelp( 0 )
          SEPARATOR
-         MENUITEM " ~Keys"                  ACTION Alert( "Not implemented yet!" )
-         MENUITEM " ~Windows"               ACTION Alert( "Not implemented yet!" )
-         MENUITEM " ~Menus"                 ACTION Alert( "Not implemented yet!" )
-         MENUITEM " ~Commands"              ACTION Alert( "Not implemented yet!" )
+         MENUITEM " ~Keys"                  ACTION oDebugger:ShowHelp( 2 )
+         MENUITEM " ~Windows"               ACTION oDebugger:ShowHelp( 6 )
+         MENUITEM " ~Menus"                 ACTION oDebugger:ShowHelp( 12 )
+         MENUITEM " ~Commands"              ACTION oDebugger:ShowHelp( 21 )
       ENDMENU
 
    ENDMENU

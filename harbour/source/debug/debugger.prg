@@ -267,6 +267,7 @@ CLASS TDebugger
    METHOD ShowAppScreen()
    METHOD ShowCallStack()
    METHOD ShowCode( cModuleName )
+   METHOD ShowHelp( nTopic ) INLINE __dbgHelp( nTopic )
    METHOD ShowVars()
 
 /*   METHOD Sort() INLINE ASort( ::aVars,,, {|x,y| x[1] < y[1] } ),;
@@ -490,7 +491,7 @@ METHOD Colors() CLASS TDebugger
    oBrwColors:ColorSpec := ::ClrModal()
    oBrwColors:GOTOPBLOCK := { || oBrwColors:cargo[ 1 ]:= 1 }
    oBrwColors:GoBottomBlock := { || oBrwColors:cargo[ 1 ]:= Len(oBrwColors:cargo[ 2 ][ 1 ])}
-   oBrwColors:SKIPBLOCK := { |nPos| ( nPos:= ArrayBrowseSkip(nPos, oBrwColors), oBrwColors:cargo[ 1 ]:= ;
+   oBrwColors:SkipBlock := { |nPos| ( nPos:= ArrayBrowseSkip(nPos, oBrwColors), oBrwColors:cargo[ 1 ]:= ;
    oBrwColors:cargo[ 1 ] + nPos,nPos ) }
 
    oBrwColors:AddColumn( ocol := TBColumnNew( "", { || PadR( aColors[ oBrwColors:Cargo[1] ], 14 ) } ) )
@@ -831,6 +832,9 @@ METHOD HandleEvent() CLASS TDebugger
               oWnd := ::aWindows[ ::nCurrentWindow ]
               oWnd:KeyPressed( nKey )
 
+
+         case nKey == K_F1
+              ::ShowHelp()
 
          case nKey == K_F4
               ::ShowAppScreen()
@@ -1834,7 +1838,8 @@ static procedure RefreshVarsS( oBrowse )
    endif
    oBrowse:hilite()
    return
-static function ArrayBrowseSkip( nPos, oBrwSets,n )
+
+static function ArrayBrowseSkip( nPos, oBrwSets, n )
 
    return iif( oBrwSets:cargo[ 1 ] + nPos < 1, 0 - oBrwSets:cargo[ 1 ] + 1 , ;
       iif( oBrwSets:cargo[ 1 ] + nPos > Len(oBrwSets:cargo[ 2 ][ 1 ]), ;
