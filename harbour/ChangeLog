@@ -8,6 +8,27 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-07-14 12:35 UTC+0100 Antonio Linares <alinares@fivetech.com>
+  * source/debug/debugger.prg
+    * Changes from Davor Siklic
+      * BreakPoints status saving and restoring supported
+      * SortVars status saving and restoring supported
+      * Anim and Animate command supported in comand window
+        Note: I can't stop started animation, is this work for You, Or this
+        is problem on Linux with NextKey() ?
+      * CallStack window switchig ON/OFF from menu
+        Note: Modified by A.Linares
+      * METHOD RemoveWindow()
+        Note: Modified by A.Linares
+      * Saving and restoring status of CallStack
+
+    * Changes from A.Linares
+      * Added Help Window mouse support
+      * Improved cursor management on code window
+
+  * source/debug/dbgmenu.prg
+    * minor fix on View CallStack
+
 2002-07-12 18:58 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/debug/debugger.prg
     ! A bug fixed in commands evaluation
