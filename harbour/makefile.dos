@@ -1,0 +1,24 @@
+# makefile for djgpp dos enviroment
+# Tell emacs that this is a -*- makefile -*-
+
+.PHONY: COMPILER VM RTL TESTS
+
+all: COMPILER VM RTL TESTS
+
+COMPILER:
+	make -w --directory=SOURCE/COMPILER -f MAKEFILE.DOS
+
+VM:
+	make -w --directory=SOURCE/VM -f MAKEFILE.DOS
+
+RTL:
+	make -w --directory=SOURCE/RTL -f MAKEFILE.DOS
+
+TESTS:
+	make -w --directory=TESTS/WORKING -f MAKEFILE.DOS
+
+clean:
+	make -w --directory=SOURCE/COMPILER -f MAKEFILE.DOS clean
+	make -w --directory=SOURCE/VM -f MAKEFILE.DOS clean
+	make -w --directory=SOURCE/RTL -f MAKEFILE.DOS clean
+	make -w --directory=TESTS -f MAKEFILE.DOS clean
