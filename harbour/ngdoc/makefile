@@ -9,9 +9,9 @@ endif
 ROOT = ../
 
 PRG_SOURCES=\
-        ft_helpc.prg 
+        hbdoc.prg 
 
-PRG_MAIN=ft_helpc.prg
+PRG_MAIN=hbdoc.prg
 
 LIBS=\
         tools \

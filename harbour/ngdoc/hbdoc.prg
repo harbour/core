@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Ft_helpC document Extractoy
+ * HBDOC document Extractoy
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
  * www - http://www.harbour-project.org
@@ -34,7 +34,7 @@
  */
 
 /*
- * File......: FT_HELPC.PRG
+ * File......: HBDOC.PRG
  * Author....: Luiz Rafael Culik
  * Date......: $Date$
  * Revision..: $Revision$
@@ -89,7 +89,7 @@
  *    V1.07
  *    Added back the "<" and ">" symbols
  *    Fixed the links on the Harbour.htm file
- *    Fixed the help text when ft_helpc is called with out any parameter
+ *    Fixed the help text when hbdoc is called with out any parameter
  */
 
 #ifdef __HARBOUR__
@@ -160,11 +160,11 @@ STATIC theHandle
 
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
-*+    Function FT_HELPC()
+*+    Function MAIN()
 *+
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
-FUNCTION FT_HELPC( cFlags, cLinkName, cAtFile )
+FUNCTION MAIN( cFlags, cLinkName, cAtFile )
 
    //  LOCAL variables:
    LOCAL aExtensions := { "*.PRG", "*.C", "*.ASM", "*.CH" , "*.TXT" }
@@ -226,7 +226,7 @@ FUNCTION FT_HELPC( cFlags, cLinkName, cAtFile )
    //  Get the linkfile name and get the info in it
 
    IF cLinkName = NIL
-      ? "Syntax: FT_HELPC -txt|-con|-ngi|-doc|-HPC|-RTF|-HTM|-OS2|-TRF <linkname> [<ifile>]"
+      ? "Syntax: HBDOC -txt|-con|-ngi|-doc|-HPC|-RTF|-HTM|-OS2|-TRF <linkname> [<ifile>]"
       ? "        Where -txt creates an ascii file instead of a Norton Guide"
       ? "              -con creates an ascii file without formfeeds"
       ? "              -HPC Helpc source file"
@@ -4788,4 +4788,4 @@ STATIC FUNCTION ProcessOs2
    oOs2:Close()
 RETURN NIL
 
-*+ EOF: FT_HELPC.PRG
+*+ EOF: HBDOC.PRG

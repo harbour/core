@@ -1,3 +1,29 @@
+20000207-20:40 GMT+1 Victor Szakats <info@szelvesz.hu>
+   - common.b32
+     ft_helpc.b32
+     gt.b32
+     hbpp.b32
+     rdd.b32
+     regress.b32
+     runner.b32
+     terminal.b32
+     - Removed.
+   * makefile.b32
+     make_b32.bat
+     make_b40.bat
+     * Changed to include all functionality previously implemented using
+       several separate make files. New makefile almost completely based on 
+       the work of Bruno Cantero.
+   * ngdoc/ft_helpc.prg
+   + ngdoc/hbdoc.prg
+     ngdoc/makewww.bat 
+     * FT_HELPC renamed to HBDOC
+     * FT_HELPC() main function renamed to MAIN()
+   * ngdoc/bldfthe.bat 
+     - Removed since it's now built in the mainstream build process.
+   * ngdoc/Makefile
+     * Changed to reflect new utility name.
+
 20000207-20:10 GMT+3 Alexander Kresin
    * source/rtl/tools/dbftools.c
      + Documentation added
