@@ -1,3 +1,7 @@
+19990823-17:00 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/debug/debugger.prg
+      * improved application colors and cursor management.
+
 19990823-12:40 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
    *source/compiler/harbour.y
@@ -17,9 +21,9 @@
          debug code is not requested
         * some internal variables declared 'static'
         * EXIT functions are called on exit when QUIT is requested
-	
+
 QUESTION: How to handle the call to QUIT function inside of
-	EXIT procedure? Should we continue execution of the rest of 
+	EXIT procedure? Should we continue execution of the rest of
 	procedures or immediatelly quit to OS?
 
     *include/pcode.h
@@ -95,7 +99,7 @@ NOTE: You have to recompile all PRG code!
   * source/rtl/alert.prg
     + PreExt() and PostExt()
       These allow alert to display if dispbegin is in effect.
-      
+
 19990822-20:02 GMT+1 Bruno Cantero <bruno@issnet.net>
    * source/rdd/dbcmd.c
      source/rdd/dbf1.c
@@ -109,7 +113,7 @@ NOTE: You have to recompile all PRG code!
 
 19990822-14:12 GMT+1 Victor Szel <info@szelvesz.hu>
   * config/win32/gcc.cf
-    + -( -) parameters temporarly readded, to make it work, new circular 
+    + -( -) parameters temporarly readded, to make it work, new circular
       dependencies has been introduced, since HVM.C is calling RDD functions.
   * include/extend.h
     source/rtl/strings.c

@@ -78,6 +78,7 @@ CLASS TDebugger
    METHOD New()
    METHOD Activate( cModuleName )
    METHOD Show()
+   METHOD ShowAppScreen()
    METHOD ShowCode( cModuleName )
    METHOD HandleEvent()
    METHOD Hide()
@@ -153,10 +154,7 @@ METHOD HandleEvent() CLASS TDebugger
               ::oBrwText:ForceStable()
 
          case nKey == K_F4
-              ::cImage = SaveScreen()
-              RestScreen( 0, 0, MaxRow(), MaxCol(), ::cAppImage )
-              InKey( 0 )
-              RestScreen( 0, 0, MaxRow(), MaxCol(), ::cImage )
+              ::ShowAppScreen()
 
          case nKey == K_F8
               ::cImage = SaveScreen()
@@ -209,6 +207,15 @@ METHOD Show() CLASS TDebugger
    @ MaxRow(), 54 SAY "F8" COLOR "GR+/BG"
    @ MaxRow(), 62 SAY "F9" COLOR "GR+/BG"
    @ MaxRow(), 70 SAY "F10" COLOR "GR+/BG"
+
+return nil
+
+METHOD ShowAppScreen() CLASS TDebugger
+
+   ::cImage = SaveScreen()
+   RestScreen( 0, 0, MaxRow(), MaxCol(), ::cAppImage )
+   InKey( 0 )
+   RestScreen( 0, 0, MaxRow(), MaxCol(), ::cImage )
 
 return nil
 
@@ -783,7 +790,7 @@ function BuildMenu( oDebugger )  // Builds the debugger pulldown menu
       MENU
          MENUITEM " &Sets"            ACTION Alert( "Not implemented yet!" )
          MENUITEM " &WorkAreas  F6"   ACTION Alert( "Not implemented yet!" )
-         MENUITEM " &App screen F4 "  ACTION Alert( "Not implemented yet!" )
+         MENUITEM " &App screen F4 "  ACTION oDebugger:ShowAppScreen()
          SEPARATOR
          MENUITEM " &CallStack"       ACTION Alert( "Not implemented yet!" )
       ENDMENU
