@@ -478,6 +478,8 @@ PP_LIB_OBJS = \
 
 DEBUG_LIB_OBJS = \
    $(OBJ_DIR)\dbgmenu.obj \
+   $(OBJ_DIR)\dbgtmenu.obj \
+   $(OBJ_DIR)\dbgtwin.obj \
    $(OBJ_DIR)\debugger.obj \
    $(OBJ_DIR)\tbrwtext.obj
 

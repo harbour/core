@@ -1,3 +1,8 @@
+2000-03-31 18:30 GMT-5 David G. Holm <dholm@jsd-llc.com>
+  * makefile.bc
+  * makefile.vc
+    + Added dbgtmenu.obj and dbgtwin.obj to the debug library rules.
+
 2000-03-31 18:25 GMT-5 David G. Holm <dholm@jsd-llc.com>
   * source/debug/Makefile
   + source/debug/dbgtmenu.prg
