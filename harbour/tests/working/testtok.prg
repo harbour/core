@@ -1,7 +1,12 @@
+#include "set.ch"
+
 procedure main()
-   local a := strtoarray("this is a great big test of strtoken")
+   local a
    local i
 
+   set( _SET_EXACT, .T. )               /* Stupid command !!!!
+                                           Always causing bugs !!*/
+   a := strtoarray("this is a great big test of strtoken")
    for i := 1 to len(a)
       qout( a[i] )
    next i
@@ -11,7 +16,9 @@ function strtoarray(s)
    local aResult := {}
    local t, l
 
+   QOut( "Here" )
    while( s <> "" )
+      QOut( "This" )
       t := strtoken(s, 1,, @l)
 
 
