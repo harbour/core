@@ -1,3 +1,9 @@
+19990909-21:40 EDT Paul Tucker <ptucker@sympatico.ca>
+  * makefile.vc
+    + source/rtl/memvarbl.prg
+    + /q to Harbour flags
+    + /nologo to C flags
+
 19990909-20:55 EDT David G. Holm <dholm@jsd-llc.com>
   * include/filesys.api
     ! Added FS_ERROR (defined using '#define FS_ERROR F_ERROR'

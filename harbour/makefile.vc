@@ -31,7 +31,7 @@ OBJ_DIR=obj
 #
 
 CC=cl
-CFLAGS=-w -I$(INCLUDE_DIR) -DHARBOUR_USE_WIN_GTAPI
+CFLAGS=-w -nologo -I$(INCLUDE_DIR) -DHARBOUR_USE_WIN_GTAPI
 CLIBFLAGS=$(CFLAGS) -c /TP
 CLIBFLAGSDEBUG=$(CFLAGS) -c -Zi /TP
 
@@ -46,7 +46,7 @@ HBPP_LIB=$(LIB_DIR)\hbpp.lib
 DEBUG_LIB=$(LIB_DIR)\debug.lib
 DBFNTX_LIB=$(LIB_DIR)\dbfntx.lib
 HARBOUR_EXE=$(BIN_DIR)\harbour.exe
-HARBOURFLAGS=-iinclude -n
+HARBOURFLAGS=-iinclude -n -q
 
 #
 # OBJ list for harbour.lib. Add new ones as needed
@@ -84,6 +84,7 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\itemapi.obj \
     $(OBJ_DIR)\langapi.obj \
     $(OBJ_DIR)\math.obj \
+    $(OBJ_DIR)\memvarbl.obj \
     $(OBJ_DIR)\memvars.obj \
     $(OBJ_DIR)\menuto.obj \
     $(OBJ_DIR)\msgxxx.obj \
@@ -386,6 +387,12 @@ $(OBJ_DIR)\langapi.obj : $(RTL_DIR)\langapi.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\math.obj : $(RTL_DIR)\math.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(RTL_DIR)\memvarbl.c : $(RTL_DIR)\memvarbl.prg
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
+
+$(OBJ_DIR)\memvarbl.obj : $(RTL_DIR)\memvarbl.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\memvars.obj : $(RTL_DIR)\memvars.c
