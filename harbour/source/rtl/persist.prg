@@ -102,7 +102,7 @@ METHOD LoadFromText( cObjectText ) CLASS HBPersistent
          case Left( cToken := LTrim( __StrToken( cLine, 1, "=" ) ), 2 ) == "::"
               M->oSelf := Self
               cLine := StrTran( cLine, "::", "oSelf:" )
-              cLine := StrTran( cLine, "=", ":=" )
+              cLine := StrTran( cLine, "=", ":=", , 1 )
               &( cLine )
 
       endcase
@@ -210,11 +210,20 @@ return cArray
 static function ValToText( uValue )
 
    local cType := ValType( uValue )
-   local cText
+   local cText, cQuote := '"'
 
    do case
       case cType == "C"
-           cText := '"' + uValue + '"'
+           if cQuote $ uValue
+              cQuote := "'"
+              if cQuote $ uValue
+                 cText := "["+ uValue + "]"
+              else
+                 cText := cQuote + uValue + cQuote
+              endif
+           else
+              cText := cQuote + uValue + cQuote
+           endif
 
       case cType == "N"
            cText := AllTrim( Str( uValue ) )

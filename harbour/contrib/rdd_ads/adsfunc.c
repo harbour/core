@@ -858,12 +858,28 @@ HB_FUNC( ADSCONNECT )
    {
       ulRetVal = AdsConnect ( (UNSIGNED8*) hb_parc( 1 ), &adsConnectHandle );
       if ( ulRetVal == AE_SUCCESS )
-        hb_retl( 1 );
+         hb_retl( 1 );
       else
-        hb_retl( 0 );
+         hb_retl( 0 );
    }
    else
       hb_retl( 0 );
+}
+
+HB_FUNC( ADSDISCONNECT )
+{
+   UNSIGNED32 ulRetVal;
+
+   ulRetVal = AdsDisconnect( hb_parnl(1) );
+
+   if ( ulRetVal == AE_SUCCESS )
+   {
+      hb_retl( 1 );
+   }
+   else
+   {
+      hb_retl( 0 );
+   }
 }
 
 HB_FUNC( ADSCREATESQLSTATEMENT )
@@ -1183,5 +1199,4 @@ HB_FUNC( ADSGETCONNECTIONHANDLE )
 {
    hb_retni( adsConnectHandle );
 }
-
 

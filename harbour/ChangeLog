@@ -8,24 +8,38 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
    * tests/testpers.prg
+     - Removed the use of cName, it hasn't been supported for a long time
+       and it was stopping this test from working.
+
+2002-01-25 14:35 UTC+0100 Antonio Linares <alinares@fivetech.com>
+   * include/hbexprb.c
+   * include/hbexprc.c
+      * proper generation (placement) of HB_P_SEND opcode
+      <with thanks to Ron Pinkas>
+
+   * include/hbvm.h
+      - hb_vmMessage() prototype removed
+
+   * source/vm/classes.c
+      - hb_vmMessage() use removed
 
    * source/vm/hvm.c
       * HB_P_SEND now invokes hb_vmPushSymbol()
-	
+      - function hb_vmMessage() completely removed
 
 2002-01-25 00:40 UTC-0800 Brian Hays <bhays@abacuslaw.com>
-     * HBProfileLowLevel:gatherOPCodes() wasn't making a call to 
+   * source/rtl/persist.prg
       * added arg to StrTran in LoadFromText() to limit conversion of
            "=" to ":=" to only the first instance, so data containing
            a "=" doesn't get changed
       * fixed ValToText() so data containing embedded quotes doesn't
-	
+         blow up (because it gets wrapped in quotes to save it).
          Tests if the string contains a " and uses single quotes
          instead, or use [] if it contains both.
          Future enhancement should cover if contains all 3....
 
    * contrib/rdd_ads/adsfunc.c
-	
+      * Added wrapper for  AdsDisconnect( ) (from Charles Kwon)
 
 2002-01-24 17:53 UTC+0000 Dave Pearson <davep@davep.org>
    * include/hbpcode.h
