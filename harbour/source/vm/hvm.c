@@ -169,134 +169,6 @@ BYTE bErrorLevel = 0;  /* application exit errorlevel */
 #define HBDEBUG( x )     if( iHBDEBUG ) printf( x )
 #define HBDEBUG2( x, y ) if( iHBDEBUG ) printf( x, y )
 
-void PCode_AND( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__ARRAYAT( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__ARRAYPUT( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__EQUAL( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__ENDBLOCK( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__ENDPROC( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__EXACTLYEQUAL( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__FALSE( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__FORTEST( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__FUNCTION( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__FRAME( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__FUNCPTR( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__GENARRAY( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__GREATER( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__GREATEREQUAL( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__DEC( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__DIMARRAY( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__DIVIDE( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__DO( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__DUPLICATE( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__INC( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__INSTRING( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__JUMP( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__JUMPFALSE( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__JUMPTRUE( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__LESSEQUAL( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__LESS( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__LINE( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__MESSAGE( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__MINUS( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__MODULUS( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__MULT( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__NEGATE( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__NOT( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__NOTEQUAL( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode_OR_( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__PLUS( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__POP( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__POPDEFSTAT( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__POPLOCAL( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__POPMEMVAR( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__POPSTATIC( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__POWER( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__PUSHBLOCK( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__PUSHINT( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__PUSHLOCAL( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__PUSHLOCALREF( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__PUSHLONG( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__PUSHMEMVAR( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__PUSHMEMVARREF( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__PUSHNIL( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__PUSHDOUBLE( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__PUSHSELF( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__PUSHSTATIC( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__PUSHSTATICREF( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__PUSHSTR( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__PUSHSYM( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__PUSHWORD( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__RETVALUE( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__SFRAME( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__STATICS( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__TRUE( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-void PCode__ZERO( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize );
-
-void  (*pPCode_Handlers[])( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize ) = { &PCode_AND,
-                                                                                                                  &PCode__ARRAYAT,
-                                                                                                                  &PCode__ARRAYPUT,
-                                                                                                                  &PCode__EQUAL,
-                                                                                                                  &PCode__ENDBLOCK,
-                                                                                                                  &PCode__ENDPROC,
-                                                                                                                  &PCode__EXACTLYEQUAL,
-                                                                                                                  &PCode__FALSE,
-                                                                                                                  &PCode__FORTEST,
-                                                                                                                  &PCode__FUNCTION,
-                                                                                                                  &PCode__FRAME,
-                                                                                                                  &PCode__FUNCPTR,
-                                                                                                                  &PCode__GENARRAY,
-                                                                                                                  &PCode__GREATER,
-                                                                                                                  &PCode__GREATEREQUAL,
-                                                                                                                  &PCode__DEC,
-                                                                                                                  &PCode__DIMARRAY,
-                                                                                                                  &PCode__DIVIDE,
-                                                                                                                  &PCode__DO,
-                                                                                                                  &PCode__DUPLICATE,
-                                                                                                                  &PCode__INC,
-                                                                                                                  &PCode__INSTRING,
-                                                                                                                  &PCode__JUMP,
-                                                                                                                  &PCode__JUMPFALSE,
-                                                                                                                  &PCode__JUMPTRUE,
-                                                                                                                  &PCode__LESSEQUAL,
-                                                                                                                  &PCode__LESS,
-                                                                                                                  &PCode__LINE,
-                                                                                                                  &PCode__MESSAGE,
-                                                                                                                  &PCode__MINUS,
-                                                                                                                  &PCode__MODULUS,
-                                                                                                                  &PCode__MULT,
-                                                                                                                  &PCode__NEGATE,
-                                                                                                                  &PCode__NOT,
-                                                                                                                  &PCode__NOTEQUAL,
-                                                                                                                  &PCode_OR_,
-                                                                                                                  &PCode__PLUS,
-                                                                                                                  &PCode__POP,
-                                                                                                                  &PCode__POPDEFSTAT,
-                                                                                                                  &PCode__POPLOCAL,
-                                                                                                                  &PCode__POPMEMVAR,
-                                                                                                                  &PCode__POPSTATIC,
-                                                                                                                  &PCode__POWER,
-                                                                                                                  &PCode__PUSHBLOCK,
-                                                                                                                  &PCode__PUSHINT,
-                                                                                                                  &PCode__PUSHLOCAL,
-                                                                                                                  &PCode__PUSHLOCALREF,
-                                                                                                                  &PCode__PUSHLONG,
-                                                                                                                  &PCode__PUSHMEMVAR,
-                                                                                                                  &PCode__PUSHMEMVARREF,
-                                                                                                                  &PCode__PUSHNIL,
-                                                                                                                  &PCode__PUSHDOUBLE,
-                                                                                                                  &PCode__PUSHSELF,
-                                                                                                                  &PCode__PUSHSTATIC,
-                                                                                                                  &PCode__PUSHSTATICREF,
-                                                                                                                  &PCode__PUSHSTR,
-                                                                                                                  &PCode__PUSHSYM,
-                                                                                                                  &PCode__PUSHWORD,
-                                                                                                                  &PCode__RETVALUE,
-                                                                                                                  &PCode__SFRAME,
-                                                                                                                  &PCode__STATICS,
-                                                                                                                  &PCode__TRUE,
-                                                                                                                  &PCode__ZERO };
-
 /* application entry point */
 
 #ifdef WINDOWS
@@ -386,7 +258,316 @@ void VirtualMachine( PBYTE pCode, PSYMBOL pSymbols )
 
    while( ( bCode = pCode[ w ] ) != _ENDPROC && ! bQuit )
    {
-      pPCode_Handlers[bCode]( pCode, pSymbols, &bCode, &w, &wParams, &wSize  );
+      switch( bCode )
+      {
+         case AND_:
+              And();
+              w++;
+              break;
+
+         case _ARRAYAT:
+              ArrayAt();
+              w++;
+              break;
+
+         case _ARRAYPUT:
+              ArrayPut();
+              w++;
+              break;
+
+         case _DEC:
+              Dec();
+              w++;
+              break;
+
+         case _DIVIDE:
+              Div();
+              w++;
+              break;
+
+         case _DO:
+              Do( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
+              w += 3;
+              break;
+
+         case _DUPLICATE:
+              Duplicate();
+              w++;
+              break;
+
+         case _ENDBLOCK:
+              EndBlock();
+              HBDEBUG( "EndProc\n" );
+              return;   /* end of a codeblock - stop evaluation */
+
+         case _EQUAL:
+              Equal( FALSE );
+              w++;
+              break;
+
+         case _EXACTLYEQUAL:
+              Equal( TRUE );
+              w++;
+              break;
+
+         case _FALSE:
+              PushLogical( 0 );
+              w++;
+              break;
+
+         case _FORTEST:
+              ForTest();
+              w++;
+              break;
+
+         case _FRAME:
+              Frame( pCode[ w + 1 ], pCode[ w + 2 ] );
+              w += 3;
+              break;
+
+         case _FUNCPTR:
+              FuncPtr();
+              w++;
+              break;
+
+         case _FUNCTION:
+              Function( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
+              w += 3;
+              break;
+
+         case _GENARRAY:
+              GenArray( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
+              w += 3;
+              break;
+
+         case _GREATER:
+              Greater();
+              w++;
+              break;
+
+         case _GREATEREQUAL:
+              GreaterEqual();
+              w++;
+              break;
+
+         case _INC:
+              Inc();
+              w++;
+              break;
+
+         case _INSTRING:
+              Instring();
+              w++;
+              break;
+
+         case _JUMP:
+              wParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
+              if( wParams )
+                 w += wParams;
+              else
+                 w += 3;
+              break;
+
+         case _JUMPFALSE:
+              if( ! PopLogical() )
+                 w += pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
+              else
+                 w += 3;
+              break;
+
+         case _JUMPTRUE:
+              if( PopLogical() )
+                 w += pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
+              else
+                 w += 3;
+              break;
+
+         case _LESS:
+              Less();
+              w++;
+              break;
+
+         case _LESSEQUAL:
+              LessEqual();
+              w++;
+              break;
+
+         case _LINE:
+              Line( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
+              w += 3;
+              break;
+
+         case _MESSAGE:
+              wParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
+              Message( pSymbols + wParams );
+              w += 3;
+              break;
+
+         case _MINUS:
+              Minus();
+              w++;
+              break;
+
+         case _MODULUS:
+              Modulus();
+              w++;
+              break;
+
+         case _MULT:
+              Mult();
+              w++;
+              break;
+
+         case _NEGATE:
+              Negate();
+              w++;
+              break;
+
+         case _NOT:
+              Not();
+              w++;
+              break;
+
+         case _NOTEQUAL:
+              NotEqual();
+              w++;
+              break;
+
+         case OR_:
+              Or();
+              w++;
+              break;
+
+         case _PLUS:
+              Plus();
+              w++;
+              break;
+
+         case _POP:
+              StackPop();
+              w++;
+              break;
+
+         case _POPDEFSTAT:
+              PopDefStat( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
+              w += 3;
+              break;
+
+         case _POPLOCAL:
+              PopLocal( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
+              w += 3;
+              break;
+
+         case _POPSTATIC:
+              PopStatic( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
+              w += 3;
+              break;
+
+         case _POWER:
+              Power();
+              w++;
+              break;
+
+         case _PUSHBLOCK:
+              /* +0    -> _pushblock
+               * +1 +2 -> size of codeblock
+               * +3 +4 -> number of expected parameters
+               * +5 +6 -> number of referenced local variables
+               * +7 -> start of table with referenced local variables
+               */
+              wSize = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
+              PushBlock( pCode + w + 5,
+                         wSize - 5,
+                         pCode[ w + 3 ] + ( pCode[ w + 4 ] * 256 ),
+                         pSymbols );
+              w += wSize;
+              break;
+
+         case _PUSHDOUBLE:
+              PushDouble( * ( double * ) ( &pCode[ w + 1 ] ), ( WORD ) * ( BYTE * ) &pCode[ w + 1 + sizeof( double ) ] );
+              w += 1 + sizeof( double ) + 1;
+              break;
+
+         case _PUSHINT:
+              PushInteger( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
+              w += 3;
+              break;
+
+         case _PUSHLOCAL:
+              PushLocal( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
+              w += 3;
+              break;
+
+         case _PUSHLOCALREF:
+              PushLocalByRef( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
+              w += 3;
+              break;
+
+         case _PUSHLONG:
+              PushLong( * ( long * ) ( &pCode[ w + 1 ] ) );
+              w += 5;
+              break;
+
+         case _PUSHNIL:
+              PushNil();
+              w++;
+              break;
+
+         case _PUSHSELF:
+              Push( stack.pBase + 1 );
+              w++;
+              break;
+
+         case _PUSHSTATIC:
+              PushStatic( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
+              w += 3;
+              break;
+
+         case _PUSHSTR:
+              wSize =*( (WORD *) &( pCode[ w + 1 ] ) );
+              PushString( (char*)pCode + w + 3, wSize );
+              w += ( wSize + 3 );
+              break;
+
+         case _PUSHSYM:
+              wParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
+              PushSymbol( pSymbols + wParams );
+              w += 3;
+              break;
+
+         case _RETVALUE:
+              RetValue();
+              w++;
+              break;
+
+         case _SFRAME:
+              wParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
+              SFrame( pSymbols + wParams );
+              w += 3;
+              break;
+
+         case _STATICS:
+              wParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
+              Statics( pSymbols + wParams );
+              w += 3;
+              break;
+
+         case _TRUE:
+              PushLogical( 1 );
+              w++;
+              break;
+
+         case _ZERO:
+              PushInteger( 0 );
+              w++;
+              break;
+
+         default:
+              printf( "The Harbour virtual machine can't run yet this PRG\n(unsuported pcode opcode: %i)\n", bCode );
+              printf( "Line number %i in %s", stack.pBase->wLine, stack.pBase->value.pSymbol->szName );
+              exit( 1 );
+              break;
+      }
    }
    HBDEBUG( "EndProc\n" );
 }
@@ -2063,705 +2244,3 @@ HARBOUR PVALUE()                                /* PValue( <nArg> )         */
       _ret();
    }
 }
-
-void PCode_AND( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   And();
-   (*w)++;
-}
-
-void PCode__ARRAYAT( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   ArrayAt();
-   (*w)++;
-}
-
-void PCode__ARRAYPUT( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   ArrayPut();
-   (*w)++;
-}
-
-void PCode__EQUAL( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   Equal( FALSE );
-   (*w)++;
-}
-
-void PCode__ENDBLOCK( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   EndBlock();
-   HBDEBUG( "EndProc\n" );
-}
-
-void PCode__ENDPROC( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-}
-
-void PCode__EXACTLYEQUAL( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   Equal( TRUE );
-   (*w)++;
-}
-
-void PCode__FALSE( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   PushLogical( 0 );
-   (*w)++;
-}
-
-void PCode__FORTEST( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   ForTest();
-   (*w)++;
-}
-
-void PCode__FUNCTION( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   Function( pCode[ (*w) + 1 ] + ( pCode[ (*w) + 2 ] * 256 ) );
-   (*w) += 3;
-}
-
-void PCode__FRAME( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   Frame( pCode[ (*w) + 1 ], pCode[ (*w) + 2 ] );
-   (*w) += 3;
-}
-
-void PCode__FUNCPTR( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   FuncPtr();
-   (*w)++;
-}
-
-void PCode__GENARRAY( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   GenArray( pCode[ (*w) + 1 ] + ( pCode[ (*w) + 2 ] * 256 ) );
-   (*w) += 3;
-}
-
-void PCode__GREATER( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   Greater();
-   (*w)++;
-}
-
-void PCode__GREATEREQUAL( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   GreaterEqual();
-   (*w)++;
-}
-
-void PCode__DEC( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   Dec();
-   (*w)++;
-}
-
-void PCode__DIMARRAY( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-}
-
-void PCode__DIVIDE( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   Div();
-   (*w)++;
-}
-
-void PCode__DO( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   Do( pCode[ (*w) + 1 ] + ( pCode[ (*w) + 2 ] * 256 ) );
-   (*w) += 3;
-}
-
-void PCode__DUPLICATE( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   Duplicate();
-   (*w)++;
-}
-
-void PCode__INC( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   Inc();
-   (*w)++;
-}
-
-void PCode__INSTRING( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   Instring();
-   (*w)++;
-}
-
-void PCode__JUMP( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   (*wParams) = pCode[ (*w) + 1 ] + ( pCode[ (*w) + 2 ] * 256 );
-   if( (*wParams) )
-      (*w) += (*wParams);
-   else
-      (*w) += 3;
-}
-
-void PCode__JUMPFALSE( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   if( ! PopLogical() )
-      (*w) += pCode[ (*w) + 1 ] + ( pCode[ (*w) + 2 ] * 256 );
-   else
-      (*w) += 3;
-}
-
-void PCode__JUMPTRUE( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   if( PopLogical() )
-      (*w) += pCode[ (*w) + 1 ] + ( pCode[ (*w) + 2 ] * 256 );
-   else
-      (*w) += 3;
-}
-
-void PCode__LESSEQUAL( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   LessEqual();
-   (*w)++;
-}
-
-void PCode__LESS( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   Less();
-   (*w)++;
-}
-
-void PCode__LINE( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   Line( pCode[ (*w) + 1 ] + ( pCode[ (*w) + 2 ] * 256 ) );
-   (*w) += 3;
-}
-
-void PCode__MESSAGE( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   (*wParams) = pCode[ (*w) + 1 ] + ( pCode[ (*w) + 2 ] * 256 );
-   Message( pSymbols + (*wParams) );
-   (*w) += 3;
-}
-
-void PCode__MINUS( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   Minus();
-   (*w)++;
-}
-
-void PCode__MODULUS( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   Modulus();
-   (*w)++;
-}
-
-void PCode__MULT( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   Mult();
-   (*w)++;
-}
-
-void PCode__NEGATE( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   Negate();
-   (*w)++;
-}
-
-void PCode__NOT( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   Not();
-   (*w)++;
-}
-
-void PCode__NOTEQUAL( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   NotEqual();
-   (*w)++;
-}
-
-void PCode_OR_( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   Or();
-   (*w)++;
-}
-
-void PCode__PLUS( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   Plus();
-   (*w)++;
-}
-
-void PCode__POP( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   StackPop();
-   (*w)++;
-}
-
-void PCode__POPDEFSTAT( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   PopDefStat( pCode[ (*w) + 1 ] + ( pCode[ (*w) + 2 ] * 256 ) );
-   (*w) += 3;
-}
-
-void PCode__POPLOCAL( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   PopLocal( pCode[ (*w) + 1 ] + ( pCode[ (*w) + 2 ] * 256 ) );
-   (*w) += 3;
-}
-
-void PCode__POPMEMVAR( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-}
-
-void PCode__POPSTATIC( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   PopStatic( pCode[ (*w) + 1 ] + ( pCode[ (*w) + 2 ] * 256 ) );
-   (*w) += 3;
-}
-
-void PCode__POWER( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   Power();
-   (*w)++;
-}
-
-void PCode__PUSHBLOCK( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   /* +0    -> _pushblock
-    * +1 +2 -> size of codeblock
-    * +3 +4 -> number of expected parameters
-    * +5 +6 -> number of referenced local variables
-    * +7 -> start of table with referenced local variables
-    */
-   (*wSize) = pCode[ (*w) + 1 ] + ( pCode[ (*w) + 2 ] * 256 );
-   PushBlock( pCode + (*w) + 5,
-              (*wSize) - 5,
-              pCode[ (*w) + 3 ] + ( pCode[ (*w) + 4 ] * 256 ),
-              pSymbols );
-   (*w) += (*wSize);
-}
-
-void PCode__PUSHINT( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   PushInteger( pCode[ (*w) + 1 ] + ( pCode[ (*w) + 2 ] * 256 ) );
-   (*w) += 3;
-}
-
-void PCode__PUSHLOCAL( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   PushLocal( pCode[ (*w) + 1 ] + ( pCode[ (*w) + 2 ] * 256 ) );
-   (*w) += 3;
-}
-
-void PCode__PUSHLOCALREF( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   PushLocalByRef( pCode[ (*w) + 1 ] + ( pCode[ (*w) + 2 ] * 256 ) );
-   (*w) += 3;
-}
-
-void PCode__PUSHLONG( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   PushLong( * ( long * ) ( &pCode[ (*w) + 1 ] ) );
-   (*w) += 5;
-}
-
-void PCode__PUSHMEMVAR( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-}
-
-void PCode__PUSHMEMVARREF( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-}
-
-void PCode__PUSHNIL( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   PushNil();
-   (*w)++;
-}
-
-void PCode__PUSHDOUBLE( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   PushDouble( * ( double * ) ( &pCode[ (*w) + 1 ] ), ( WORD ) * ( BYTE * ) &pCode[ (*w) + 1 + sizeof( double ) ] );
-   (*w) += 1 + sizeof( double ) + 1;
-}
-
-void PCode__PUSHSELF( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   Push( stack.pBase + 1 );
-   (*w)++;
-}
-
-void PCode__PUSHSTATIC( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   PushStatic( pCode[ (*w) + 1 ] + ( pCode[ (*w) + 2 ] * 256 ) );
-   (*w) += 3;
-}
-
-void PCode__PUSHSTATICREF( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-}
-
-void PCode__PUSHSTR( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   (*wSize) =*( (WORD *) &( pCode[ (*w) + 1 ] ) );
-   PushString( (char*)pCode + (*w) + 3, (*wSize) );
-   (*w) += ( (*wSize) + 3 );
-}
-
-void PCode__PUSHSYM( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   (*wParams) = pCode[ (*w) + 1 ] + ( pCode[ (*w) + 2 ] * 256 );
-   PushSymbol( pSymbols + (*wParams) );
-   (*w) += 3;
-}
-
-void PCode__PUSHWORD( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-}
-
-void PCode__RETVALUE( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   RetValue();
-   (*w)++;
-}
-
-void PCode__SFRAME( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   (*wParams) = pCode[ (*w) + 1 ] + ( pCode[ (*w) + 2 ] * 256 );
-   SFrame( pSymbols + (*wParams) );
-   (*w) += 3;
-}
-
-void PCode__STATICS( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   (*wParams) = pCode[ (*w) + 1 ] + ( pCode[ (*w) + 2 ] * 256 );
-   Statics( pSymbols + (*wParams) );
-   (*w) += 3;
-}
-
-void PCode__TRUE( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   PushLogical( 1 );
-   (*w)++;
-}
-
-void PCode__ZERO( PBYTE pCode, PSYMBOL pSymbols, BYTE *bCode, WORD *w, WORD *wParams, WORD *wSize )
-{
-   /*-----------------6/2/99 8:38PM--------------------
-    * To avoide possible warning about non used parameters
-    * --------------------------------------------------*/
-   if( ! pCode ){ if( pSymbols ){}; if( (*bCode) ){}; if( w ){}; if( (*wParams) ){}; if( (*wSize) ){}; }
-
-   PushInteger( 0 );
-   (*w)++;
-}
-

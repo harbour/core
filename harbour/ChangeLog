@@ -1,3 +1,8 @@
+19990603-00:00 PST Ron Pinkas
+  * hvm.c
+    - Reverted VitualMachine() to use case switch rather than direct dynamic call for processing pcodes,
+      since such optimization already done by c compiler.
+
 19990604-02:22 Ryszard Glab <rglab@imid.med.pl>
 
 * source/compiler/harbour.y
@@ -11,7 +16,7 @@
 
 * source/vm/hvm.c
  local variables passed by reference in a codeblock are handled
- correctly now 
+ correctly now
 
 * include/hberrors.h
  + added new error message
