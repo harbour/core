@@ -3,7 +3,7 @@
 //
 
 // Testing Harbour classes and objects management
-// be aware Harbour provides a much simpler way using Class TClass (source\rtl\class.prg)
+// be aware Harbour provides a much simpler way using Class HBClass (source\rtl\class.prg)
 
 #include "hboo.ch"
 

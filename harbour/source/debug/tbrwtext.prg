@@ -63,7 +63,7 @@
 #define  CLR_HIBKPT     3        // color of hilighted breakpoint line
 
 
-CLASS TBrwText FROM TEditor
+CLASS TBrwText FROM HBEditor
 
    DATA  cFileName      // the name of the browsed file
    DATA  nActiveLine    // Active line inside Code Window (last executed one)
@@ -74,7 +74,7 @@ CLASS TBrwText FROM TEditor
 
    METHOD   New(nTop, nLeft, nBottom, nRight, cFileName, cColor)
 
-   METHOD   GoTop()           // Methods available on a standard TBrowse, needed to handle a TEditor like a TBrowse
+   METHOD   GoTop()           // Methods available on a standard TBrowse, needed to handle a HBEditor like a TBrowse
    METHOD   GoBottom()
    METHOD   Up()
    METHOD   Down()
@@ -87,8 +87,8 @@ CLASS TBrwText FROM TEditor
 
    METHOD   GotoLine(n)                      // Moves active line cursor, that is it hilights last executed line of code
 
-   METHOD   GetLine(nRow)                    // Redefine TEditor method to add line number
-   METHOD   LineColor(nRow)                  // Redefine TEditor method to handle line coloring
+   METHOD   GetLine(nRow)                    // Redefine HBEditor method to add line number
+   METHOD   LineColor(nRow)                  // Redefine HBEditor method to handle line coloring
 
    METHOD   ToggleBreakPoint(nRow, lSet)     // if lSet is .T. there is a BreakPoint active at nRow,
                                              // if lSet is .F. BreakPoint at nRow has to be removed
@@ -174,7 +174,7 @@ METHOD GotoLine(n) CLASS TBrwText
    ::RefreshLine()
 
    Super:GotoLine(n)
-   // I need to call ::RefreshLine() here because TEditor does not repaint current line
+   // I need to call ::RefreshLine() here because HBEditor does not repaint current line
    // if it needs not to and without this explicit call I don't see ActiveLine cursor movement
    ::RefreshLine()
 

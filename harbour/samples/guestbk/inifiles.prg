@@ -7,7 +7,7 @@ function TIniFile()
    static oClass
 
    if oClass == nil
-      oClass := TClass():New( 'TINIFILE' ) // starts a new class definition
+      oClass := HBClass():New( 'TINIFILE' ) // starts a new class definition
 
       oClass:AddData( 'FileName' )           // define this class objects datas
       oClass:AddData( 'Contents' )

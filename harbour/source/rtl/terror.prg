@@ -58,7 +58,7 @@ FUNCTION ErrorNew()
    STATIC s_oClass
 
    IF s_oClass == NIL
-      s_oClass := TClass():New( "ERROR" )
+      s_oClass := HBClass():New( "ERROR" )
 
       s_oClass:AddData( "Args"         , 0 )
       s_oClass:AddData( "CanDefault"   , .F. )

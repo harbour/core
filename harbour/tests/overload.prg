@@ -45,7 +45,7 @@ function TString()
    static oClass
 
    if oClass == nil
-      oClass = TClass():New( "TSTRING" )  // starts a new class definition
+      oClass = HBClass():New( "TSTRING" )  // starts a new class definition
 
       oClass:AddData( "cValue" )          // define this class objects datas
 

@@ -68,7 +68,7 @@ function TEmpty()
    static oEmpty
 
    if oEmpty == NIL
-      oEmpty := TClass():New( "TEmpty" )             // Create a new class def
+      oEmpty := HBClass():New( "TEmpty" )             // Create a new class def
 
       oEmpty:AddInline( "New", {|self|self} )
 
@@ -90,7 +90,7 @@ function TOnTop()
    static oOnTop
 
    if oOnTop == NIL
-      oOnTop := TClass():New( "TOnTop", "TTextFile" )
+      oOnTop := HBClass():New( "TOnTop", "TTextFile" )
       oOnTop:AddInline( "Say", {|self, cArg| QOut( __objSendMsg(self, cArg) ) } )
       oOnTop:Create()
    endif
@@ -105,7 +105,7 @@ function TTextFile()
    static oFile
 
    if oFile == NIL
-      oFile := TClass():New( "TTextFile", "TEmpty" )
+      oFile := HBClass():New( "TTextFile", "TEmpty" )
                                                 // Create a new class def
                                                 // from TEmpty class
 

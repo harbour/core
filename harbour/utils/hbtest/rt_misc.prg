@@ -748,7 +748,7 @@ STATIC FUNCTION HB_TString()
    STATIC oClass
 
    IF oClass == NIL
-      oClass = TClass():New( "HB_TSTRING" )
+      oClass = HBClass():New( "HB_TSTRING" )
 
       oClass:AddData( "cValue" )
 

@@ -298,7 +298,7 @@ $(OBJ_DIR)\remove.obj : $(TOOLS_DIR)\remove.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
-$(OBJ_DIR)\replace.obj : $(TOOLS_DIR)\replce.c
+$(OBJ_DIR)\replace.obj : $(TOOLS_DIR)\replace.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 

@@ -75,14 +75,14 @@
 #include "hboo.ch"
 #include "error.ch"
 
-FUNCTION TObject()
+FUNCTION HBObject()
    STATIC s_oClass
    LOCAL nScope := HB_OO_CLSTP_EXPORTED
    Local oInstance
 
    IF s_oClass == NIL
 
-      s_oClass := TClass():New( "TObject",  )
+      s_oClass := HBClass():New( "HBObject",  )
 
       /* Those Five worked fine but their C version from classes.c are probably better in term of speed */
       /*s_oClass:AddInline( "CLASSNAME"      , {| Self | __OBJGETCLSNAME( Self )     }, nScope ) */
@@ -94,13 +94,13 @@ FUNCTION TObject()
       s_oClass:AddInline( "ISDERIVEDFROM"  , {| Self, xPar1 | __ObjDerivedFrom( Self, xPar1 ) }, nScope )
       /* Class(y) */
       s_oClass:AddInline( "ISKINDOF"       , {| Self, xPar1 | __ObjDerivedFrom( Self, xPar1 ) }, nScope )
+                                    
+      s_oClass:AddMethod( "NEW"  , @HBObject_New()  , nScope )
+      s_oClass:AddMethod( "INIT" , @HBObject_Init() , nScope )
 
-      s_oClass:AddMethod( "NEW"  , @TObject_New()  , nScope )
-      s_oClass:AddMethod( "INIT" , @TObject_Init() , nScope )
+      s_oClass:AddMethod( "ERROR", @HBObject_Error() , nScope )
 
-      s_oClass:AddMethod( "ERROR", @TOBJECT_ERROR() , nScope )
-
-      s_oClass:SetOnError( @TObject_DftonError() )
+      s_oClass:SetOnError( @HBObject_DftonError() )
 
       s_oClass:AddInline( "MSGNOTFOUND" , {| Self, cMsg | ::Error( "Message not found", __OBJGETCLSNAME( Self ), cMsg, iif(substr(cMsg,1,1)=="_",1005,1004) ) }, nScope )
 
@@ -154,21 +154,21 @@ FUNCTION TObject()
 /* Currently limited to 20 param */
 /* Will be re-written in C later to avoid this */
 
-static function TObject_New(xPar0, xPar1, xPar2, xPar3, xPar4, xPar5, xPar6, xPar7, xPar8, xPar9, ;
+static function HBObject_New(xPar0, xPar1, xPar2, xPar3, xPar4, xPar5, xPar6, xPar7, xPar8, xPar9, ;
                             xPar10,xPar11,xPar12,xPar13,xPar14,xPar15,xPar16,xPar17,xPar18,xPar19 )
 
 return QSelf():Init(xPar0, xPar1, xPar2, xPar3, xPar4, xPar5, xPar6, xPar7, xPar8, xPar9, ;
                  xPar10,xPar11,xPar12,xPar13,xPar14,xPar15,xPar16,xPar17,xPar18,xPar19 )
 
-static function TObject_Init()
+static function HBObject_Init()
 return QSelf()
 
-static function TObject_Dftonerror(xPar0, xPar1, xPar2, xPar3, xPar4, xPar5, xPar6, xPar7, xPar8, xPar9, ;
+static function HBObject_Dftonerror(xPar0, xPar1, xPar2, xPar3, xPar4, xPar5, xPar6, xPar7, xPar8, xPar9, ;
                                    xPar10,xPar11,xPar12,xPar13,xPar14,xPar15,xPar16,xPar17,xPar18,xPar19 )
 return QSelf():MSGNOTFOUND( __GetMessage(), xPar0, xPar1, xPar2, xPar3, xPar4, xPar5, xPar6, xPar7, xPar8, xPar9, ;
                                             xPar10,xPar11,xPar12,xPar13,xPar14,xPar15,xPar16,xPar17,xPar18,xPar19 )
 
-static function TObject_Error( cDesc, cClass, cMsg, nCode )
+static function HBObject_Error( cDesc, cClass, cMsg, nCode )
 
    DEFAULT nCode TO 1004
 

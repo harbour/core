@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * TTextLine Class (used by TEditor class)
+ * HBTextLine Class (used by HBEditor class)
  *
  * Copyright 2000 Maurilio Longo <maurilio.longo@libero.it>
  * www - http://www.harbour-project.org
@@ -52,7 +52,7 @@
 
 #include "hbclass.ch"
 
-CLASS TTextLine
+CLASS HBTextLine
 
    DATA cText       // A line of text
    DATA lSoftCR     // true if line doesn't end with a HB_OSNewLine() char (word wrapping)
@@ -62,7 +62,7 @@ CLASS TTextLine
 ENDCLASS
 
 // Creates a new line of text
-METHOD New( cLine, lSoftCR ) CLASS TTextLine
+METHOD New( cLine, lSoftCR ) CLASS HBTextLine
 
    ::cText := iif( Empty( cLine ), "", cLine )
    ::lSoftCR := iif( Empty( lSoftCR ), .F., lSoftCR )

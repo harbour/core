@@ -115,7 +115,7 @@ function TForm()
    static oClass
 
    if oClass == nil
-      oClass = TClass():New( "TFORM" )    // starts a new class definition
+      oClass = HBClass():New( "TFORM" )    // starts a new class definition
 
       oClass:AddData( "cName" )           // define this class objects datas
       oClass:AddData( "nTop" )

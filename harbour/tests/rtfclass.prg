@@ -49,7 +49,7 @@ function trtf()
 static oclass
 
 if oclass == nil
-   oclass = tclass():new( "trtf" )
+   oclass = HBClass():new( "trtf" )
    oclass:adddata( "nhandle" )
    oclass:addmethod( "new",  @new() )
    oclass:addmethod( "write", @write() )

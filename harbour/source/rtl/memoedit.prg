@@ -57,14 +57,14 @@
 #include "inkey.ch"
 
 
-// A specialized TEditor which can simulate MemoEdit() behaviour
-CLASS TMemoEditor FROM TEditor
+// A specialized HBEditor which can simulate MemoEdit() behaviour
+CLASS TMemoEditor FROM HBEditor
 
    DATA  xUserFunction                    // User Function called to change default MemoEdit() behaviour
 
    METHOD MemoInit(cUserFunction)         // This method is called after ::New() returns to perform ME_INIT actions
    METHOD Edit()                          // Calls super:Edit(nKey) but is needed to handle configurable keys
-   METHOD KeyboardHook(nKey)              // Gets called every time there is a key not handled directly by TEditor
+   METHOD KeyboardHook(nKey)              // Gets called every time there is a key not handled directly by HBEditor
    METHOD IdleHook()                      // Gets called every time there are no more keys to hanlde
 
    METHOD HandleUserKey(nKey, nUserKey)   // Handles keys returned to MemoEdit() by user function
@@ -111,7 +111,7 @@ METHOD Edit() CLASS TMemoEditor
 
       while ! ::lExitEdit
 
-         // I need to test this condition here since I never block inside TEditor:Edit()
+         // I need to test this condition here since I never block inside HBEditor:Edit()
          // if there is an user function
          if NextKey() == 0
             ::IdleHook()
@@ -132,7 +132,7 @@ METHOD Edit() CLASS TMemoEditor
       enddo
 
    else
-      // If I can't edit text buffer or there is not a user function enter standard TEditor
+      // If I can't edit text buffer or there is not a user function enter standard HBEditor
       // ::Edit() method which is able to handle everything
       super:Edit()
 
@@ -169,14 +169,14 @@ return Self
 
 METHOD HandleUserKey(nKey, nUserKey) CLASS TMemoEditor
 
-   // TEditor does not handle these keys and would call ::KeyboardHook() causing infinite loop
+   // HBEditor does not handle these keys and would call ::KeyboardHook() causing infinite loop
    local aUnHandledKeys := {K_CTRL_J, K_CTRL_K, K_CTRL_L, K_CTRL_N, K_CTRL_O, K_CTRL_P, K_CTRL_Q, K_CTRL_T,;
                             K_CTRL_U, K_F1 }
 
    do case
       // I won't reach this point during ME_INIT since ME_DEFAULT ends initialization phase of MemoEdit()
       case nUserKey == ME_DEFAULT
-         // TEditor is not able to handle keys with a value higher than 256
+         // HBEditor is not able to handle keys with a value higher than 256
          if nKey <= 256 .AND. AScan(aUnHandledKeys, nKey) == 0
             super:Edit(nKey)
          endif
@@ -196,7 +196,7 @@ METHOD HandleUserKey(nKey, nUserKey) CLASS TMemoEditor
          ::lWordWrap := !::lWordWrap
 
       case nUserKey == ME_TOGGLESCROLL
-         // TODO: TEditor does not support vertical scrolling of text inside window without moving cursor position
+         // TODO: HBEditor does not support vertical scrolling of text inside window without moving cursor position
 
       case nUserKey == ME_WORDRIGHT
          ::MoveCursor(K_CTRL_RIGHT)

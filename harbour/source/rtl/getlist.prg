@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * GET system active getlist handler for default TGETLIST/GETSYS/READVAR
+ * GET system active getlist handler for default HBGETLIST/GETSYS/READVAR
  *
  * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
  * www - http://www.harbour-project.org

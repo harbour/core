@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * TreportForm class and __ReportForm()
+ * HBreportForm class and __ReportForm()
  *
  * Copyright 2000 Luiz Rafael Culik <Culik@sl.conex.net>
  * www - http://www.harbour-project.org
@@ -148,7 +148,7 @@
 #define PE_OFFSET               23
 #define OPTION_OFFSET           24
 
-CLASS TReportForm
+CLASS HBReportForm
 
    DATA aReportData AS ARRAY init {}
    DATA aReportTotals AS ARRAY init {}
@@ -176,7 +176,7 @@ CLASS TReportForm
 ENDCLASS
 
 METHOD NEW(cFrmName,lPrinter,cAltFile,lNoConsole,bFor,bWhile,nNext,nRecord,;
-           lRest,lPlain,cHeading,lBEject,lSummary) CLASS TReportForm
+           lRest,lPlain,cHeading,lBEject,lSummary) CLASS HBReportForm
 
    LOCAL lPrintOn, lConsoleOn // Status of PRINTER and CONSOLE
    LOCAL cExtraFile, lExtraState // Status of EXTRA
@@ -427,7 +427,7 @@ METHOD NEW(cFrmName,lPrinter,cAltFile,lNoConsole,bFor,bWhile,nNext,nRecord,;
 
    RETURN NIL
 
-METHOD PrintIt(cString) CLASS TReportForm
+METHOD PrintIt(cString) CLASS HBReportForm
 
    IF cString == NIL
       cString := ""
@@ -438,7 +438,7 @@ METHOD PrintIt(cString) CLASS TReportForm
 
    RETURN Self
 
-METHOD EjectPage() CLASS TReportForm
+METHOD EjectPage() CLASS HBReportForm
 
    IF ::lFormFeeds
       EJECT
@@ -446,7 +446,7 @@ METHOD EjectPage() CLASS TReportForm
 
    RETURN Self
 
-METHOD ReportHeader() CLASS TReportForm
+METHOD ReportHeader() CLASS HBReportForm
 
    LOCAL nLinesInHeader := 0
    LOCAL aPageHeader    := {}
@@ -550,7 +550,7 @@ METHOD ReportHeader() CLASS TReportForm
 
    RETURN SELF
 
-METHOD ExecuteReport() CLASS TReportForm
+METHOD ExecuteReport() CLASS HBReportForm
 
    LOCAL aRecordHeader  := {}          // Header for the current record
    LOCAL aRecordToPrint := {}          // Current record to print
@@ -864,7 +864,7 @@ METHOD ExecuteReport() CLASS TReportForm
 
    RETURN NIL
 
-METHOD LoadReportFile(cFrmFile) CLASS TReportForm
+METHOD LoadReportFile(cFrmFile) CLASS HBReportForm
    LOCAL cFieldsBuff
    LOCAL cParamsBuff
    LOCAL nFieldOffset   := 0
@@ -1137,7 +1137,7 @@ METHOD LoadReportFile(cFrmFile) CLASS TReportForm
 *
 */
 
-METHOD GetExpr( nPointer ) CLASS TReportForm
+METHOD GetExpr( nPointer ) CLASS HBReportForm
    LOCAL nExprOffset   := 0
    LOCAL nExprLength   := 0
    LOCAL nOffsetOffset := 0
@@ -1269,7 +1269,7 @@ STATIC FUNCTION ParseHeader( cHeaderString, nFields )
 *        b. Character following character pointed to by pointer is CHR(0)
 *
 */
-METHOD GetColumn( cFieldsBuffer, nOffset ) CLASS TReportForm
+METHOD GetColumn( cFieldsBuffer, nOffset ) CLASS HBReportForm
    LOCAL nPointer := 0, nNumber := 0, aColumn[ RCT_COUNT ], cType,cExpr
 
    // Column width
@@ -1392,5 +1392,5 @@ STATIC FUNCTION MakeAStr( uVar, cType )
 FUNCTION __ReportForm( cFRMName, lPrinter, cAltFile, lNoConsole, bFor, ;
                        bWhile, nNext, nRecord, lRest, lPlain, cHeading, ;
                        lBEject, lSummary )
-   RETURN TReportForm():New(cFrmName,lPrinter,cAltFile,lNoConsole,bFor,bWhile,nNext,nRecord,;
+   RETURN HBReportForm():New(cFrmName,lPrinter,cAltFile,lNoConsole,bFor,bWhile,nNext,nRecord,;
               lRest,lPlain,cHeading,lBEject,lSummary)

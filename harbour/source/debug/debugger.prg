@@ -434,7 +434,7 @@ METHOD BuildCommandWindow() CLASS TDebugger
    AAdd( GetList, oGet := Get():New( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 3,;
          { | u | iif( PCount() > 0, cCommand := u, cCommand ) }, "cCommand" ) )
    oGet:ColorSpec := Replicate( __DbgColors()[ 2 ] + ",", 5 )
-   ::oGetListCommand := TGetList():New( GetList )
+   ::oGetListCommand := HBGetList():New( GetList )
 
 return nil
 

@@ -28,7 +28,7 @@ function TIniFile()
    static oClass
 
    if oClass == nil
-      oClass := TClass():New( 'TINIFILE' ) // starts a new class definition
+      oClass := HBClass():New( 'TINIFILE' ) // starts a new class definition
 
       oClass:AddData( 'FileName' )           // define this class objects datas
       oClass:AddData( 'Contents' )
@@ -194,7 +194,7 @@ static procedure WriteString(cSection, cIdent, cString)
          AAdd( ::Contents, {cSection, {{cIdent, cString}}} )
       endif
    endif
-return 
+return
 
 static function ReadNumber(cSection, cIdent, nDefault)
    local Self := QSelf()
@@ -234,7 +234,7 @@ static procedure DeleteKey(cSection, cIdent)
 
    cSection := lower(cSection)
    i := AScan( ::Contents, {|x| valtype(x[1]) == 'C' .and. lower(x[1]) == cSection} )
-   
+
    if i > 0
       cIdent := lower(cIdent)
       j := AScan( ::Contents[i][2], {|x| valtype(x[1]) == 'C' .and. lower(x[1]) == cIdent} )

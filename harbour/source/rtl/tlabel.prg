@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * TLabelForm class and __LabelForm()
+ * HBLabelForm class and __LabelForm()
  *
  * Copyright 2000 Luiz Rafael Culik <Culik@sl.conex.net>
  * www - http://www.harbour-project.org
@@ -97,7 +97,7 @@
 #define ACROSSOFFSET    72
 #define ACROSSSIZE      2
 
-CLASS TLabelForm
+CLASS HBLabelForm
 
    DATA aLabelData AS ARRAY init {}
    DATA aBandToPrint AS ARRAY
@@ -113,7 +113,7 @@ CLASS TLabelForm
 ENDCLASS
 
 METHOD New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
-                       bWhile, nNext, nRecord, lRest, lSample ) CLASS TLabelForm
+                       bWhile, nNext, nRecord, lRest, lSample ) CLASS HBLabelForm
 
    LOCAL lPrintOn := .F.               // PRINTER status
    LOCAL lConsoleOn                    // CONSOLE status
@@ -225,7 +225,7 @@ METHOD New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
 
    RETURN Self
 
-   METHOD ExecuteLabel() CLASS TLabelForm
+   METHOD ExecuteLabel() CLASS HBLabelForm
    LOCAL nField, nMoreLines, aBuffer := {}, cBuffer
    LOCAL v
 
@@ -304,7 +304,7 @@ METHOD New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
 
    RETURN Self
 
-METHOD SampleLabels() CLASS TLabelForm
+METHOD SampleLabels() CLASS HBLabelForm
    LOCAL nGetKey, lMoreSamples := .T., nField
    LOCAL aBand := {}
 
@@ -346,7 +346,7 @@ METHOD SampleLabels() CLASS TLabelForm
 
    RETURN Self
 
-METHOD LoadLabel( cLblFile ) CLASS TLabelForm
+METHOD LoadLabel( cLblFile ) CLASS HBLabelForm
    LOCAL i, j       := 0                  // Counters
    LOCAL cBuff      := SPACE(BUFFSIZE)    // File buffer
    LOCAL nHandle    := 0                  // File handle
@@ -466,7 +466,7 @@ METHOD LoadLabel( cLblFile ) CLASS TLabelForm
 FUNCTION __LabelForm( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
                        bWhile, nNext, nRecord, lRest, lSample )
 
-   RETURN TLabelForm():New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
+   RETURN HBLabelForm():New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
                           bWhile, nNext, nRecord, lRest, lSample )
 
 STATIC PROCEDURE PrintIt( cString )

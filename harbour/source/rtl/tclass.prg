@@ -71,20 +71,20 @@
  *
  */
 
-// Harbour Class TClass to build classes
+// Harbour Class HBClass to build classes
 
 #include "common.ch"
 #include "hboo.ch"
 
-REQUEST TObject
+REQUEST HBObject
 
-FUNCTION TClass()
+FUNCTION HBClass()
 
    STATIC s_hClass /* NOTE: Automatically default to NIL */
 
    IF s_hClass == NIL
-      s_hClass := __clsNew( "TCLASS", 10)
-/*    s_hClass := __clsNew( "TCLASS", 11)  */
+      s_hClass := __clsNew( "HBCLASS", 10)
+/*    s_hClass := __clsNew( "HBCLASS", 11)  */
 
       __clsAddMsg( s_hClass, "New"            , @New()            , HB_OO_MSG_METHOD )
       __clsAddMsg( s_hClass, "Create"         , @Create()         , HB_OO_MSG_METHOD )

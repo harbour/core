@@ -550,11 +550,11 @@ void hb_gt_Tone( double dFrequency, double dDuration )
    /* succession leading to BEL hell on the terminal */
 
    iNow = gtstd_get_seconds();
-   if ( (iNow = gtstd_get_seconds()) != iSinceBell )
+
+   if ( iNow != iSinceBell )
       out_stdout( szBell, 1 );
    
    iSinceBell = iNow;
-   
 }
 
 char * hb_gt_Version( void )

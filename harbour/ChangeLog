@@ -1,3 +1,104 @@
+2001-09-10 23:53 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * source/rtl/dummy.prg
+     - Removed commented out functions.
+     ! Added CRLF to EOF
+
+   * source/vm/classes.c
+     ! Small correction to CVS header.
+
+   * contrib/libmisc/fileread.prg 
+     contrib/odbc/todbc.prg
+     include/hbclass.ch 
+     include/hbextern.ch 
+     samples/guestbk/inifiles.prg 
+     samples/guestbk/testcgi.prg 
+     source/debug/debugger.prg 
+     source/debug/tbrwtext.prg 
+     source/rtl/checkbox.prg
+     source/rtl/dummy.prg 
+     source/rtl/getlist.prg
+     source/rtl/getsys.prg 
+     source/rtl/listbox.prg
+     source/rtl/memoedit.prg 
+     source/rtl/pushbtn.prg
+     source/rtl/radiobtn.prg 
+     source/rtl/radiogrp.prg 
+     source/rtl/scrollbr.prg
+     source/rtl/strings.c
+     source/rtl/tclass.prg
+     source/rtl/teditor.prg 
+     source/rtl/terror.prg
+     source/rtl/tget.prg 
+     source/rtl/tgetlist.prg
+     source/rtl/tlabel.prg 
+     source/rtl/tmenuitm.prg
+     source/rtl/tobject.prg 
+     source/rtl/tpopup.prg
+     source/rtl/treport.prg 
+     source/rtl/ttextlin.prg
+     source/rtl/ttopbar.prg 
+     tests/clasinit.prg
+     tests/classes.prg 
+     tests/clsdata.prg
+     tests/debugtst.prg 
+     tests/dynobj.prg
+     tests/inherit.prg 
+     tests/inifiles.prg
+     tests/inline.prg 
+     tests/objarr.prg
+     tests/objasign.prg 
+     tests/objects.prg
+     tests/overload.prg 
+     tests/rtfclass.prg
+     tests/stripem.prg 
+     tests/testcgi.prg
+     tests/testhtml.prg 
+     tests/tstmacro.prg
+     utils/hbtest/rt_misc.prg 
+     * Changed class names to avoid possible namespace collisions.
+       TClass      -> HBClass
+       TObject     -> HBObject
+       TGetList    -> HBGetList
+       TEditor     -> HBEditor
+       TTextLine   -> HBTextLine
+       TLabelForm  -> HBLabelForm
+       TReportForm -> HBReportForm
+       TGet        -> removed (If someone used it anywhere please change 
+                               it to "Get")
+       TRadioGroup -> HBRadioGroup
+       TScrollBar  -> HBScrollBar
+       TRadioBtn   -> HBRadioButton
+       TListBox    -> HBListBox
+       TPushButton -> HBPushButton
+
+       The debugger classes were not renamed this time.
+
+   * contrib/libct/makefile.bc
+     ! Corrected typo in make file (could not compile).
+
+   * source/rtl/radiobtn.prg
+     ! Fixed class name.
+
+   * source/rtl/listbox.prg
+     ! Fixed two errors in class declaration
+     ! Fixed one syntax error
+
+   * source/rtl/scrollbr.prg
+     ! Fixed incorrect #include "class.ch".
+     ! Public variable (is it really needed ?) prefixed with "hb_p_" 
+       and MEMVAR declaration added.
+
+   * source/rtl/strings.c
+     * Updated copyright since all copyright was held by the one (me;)
+       in the partial copyright section.
+
+   * source/rtl/gtstd/gtstd.c
+     ! C compiler warning fixed.
+
+   * source/compiler/hbusage.c
+     ! Typo fixed.
+
 2001-09-09 17:30 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
 *makefile.bc
  makefile.vc

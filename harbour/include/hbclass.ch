@@ -87,12 +87,12 @@
 /* four differents include file (what I would not see in fact ) */
 
 /* There is also two compatibility define you can use */
-/* HB_CLS_NOTOBJECT wich IF DEFINED, disable the auto inherit of tobject */
+/* HB_CLS_NOTOBJECT wich IF DEFINED, disable the auto inherit of HBObject */
 /* (wich in fact also disable the classy compatibility :new(...) => :Init(...)  */
 /* HB_CLS_NOAUTOINIT wich disable the (VO like) AutoInit for Logical and Numeric */
 /* when not specifically initiated */
 /* These two are disabled by default */
-/* So Each class _inherit_ of tObject by default and */
+/* So Each class _inherit_ of HBObject by default and */
 /*    Each type logical or numerical is initiated to .F. and 0 by default */
 
 /* #define HB_CLS_NOTOBJECT  */ /* Should be included in some compatibility include files as needed */
@@ -101,8 +101,8 @@
 /* #define HB_CLS_ENFORCERO FLAG to disable Write access to RO VAR outside */
 /*         of Constructors /!\ Could be related to some incompatibility */
 
-DECLARE TClass ;
-        New( cName AS String, OPTIONAL SuperParams ) AS CLASS TClass ;
+DECLARE HBClass ;
+        New( cName AS String, OPTIONAL SuperParams ) AS CLASS HBClass ;
         Create() AS Object ;
         Instance() AS Object ;
         AddClsMthds( cName AS String, @MethodName(), nScope AS Numeric, n2 AS Numeric, n3 AS Numeric ) ;
@@ -160,7 +160,7 @@ DECLARE TClass ;
       static s_oClass ;;
       local MetaClass,nScope := HB_OO_CLSTP_EXPORTED ;;
       if s_oClass == NIL ;;
-         s_oClass := IIF(<.metaClass.>, <(metaClass)> ,TClass():new( <(ClassName)> , __HB_CLS_PAR ( [ <(SuperClass1)> ] [ ,<(SuperClassN)> ] ) ) ) ;;
+         s_oClass := IIF(<.metaClass.>, <(metaClass)>, HBClass():new( <(ClassName)> , __HB_CLS_PAR ( [ <(SuperClass1)> ] [ ,<(SuperClassN)> ] ) ) ) ;;
      #undef  _CLASS_NAME_ ;;
      #define _CLASS_NAME_ <ClassName> ;;
      #undef  _CLASS_MODE_ ;;
@@ -182,7 +182,7 @@ DECLARE TClass ;
       static s_oClass  ;;
       local MetaClass,nScope := HB_OO_CLSTP_EXPORTED ;;
       if s_oClass == NIL ;;
-         s_oClass := IIF(<.metaClass.>,<(metaClass)>,TClass():new(<(ClassName)>, __HB_CLS_PAR ( [ <(SuperClass1)> ] [ ,<(SuperClassN)> ] ) ) ) ;;
+         s_oClass := IIF(<.metaClass.>,<(metaClass)>, HBClass():new(<(ClassName)>, __HB_CLS_PAR ( [ <(SuperClass1)> ] [ ,<(SuperClassN)> ] ) ) ) ;;
      #undef  _CLASS_NAME_ ;;
      #define _CLASS_NAME_ <ClassName> ;;
      #undef  _CLASS_MODE_ ;;

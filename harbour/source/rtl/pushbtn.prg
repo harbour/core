@@ -55,7 +55,7 @@
 #include "common.ch"
 
 #ifdef HB_COMPAT_C53
-CLASS TPushButton
+CLASS HBPushButton
 
 export:
    DATA CLASSNAME init "PUSHBUTTON"
@@ -93,7 +93,7 @@ Hidden:
    METHOD GetStyle(xStyle)
 ENDCLASS
 
-METHOD GetColor(xColor)  CLASS TPushButton
+METHOD GetColor(xColor)  CLASS HBPushButton
    if ( !( ISNIL( xColor ) ) )
       ::Color := iif( Valtype(xColor)=="C" .and. !Empty(__guicolor(xColor, 4)) .AND. ;
       Empty(__guicolor(xColor, 6)),xColor,)
@@ -101,14 +101,14 @@ METHOD GetColor(xColor)  CLASS TPushButton
    endif
    return ::Color
 
-METHOD GetStyle(cStyle)  CLASS TPushButton
+METHOD GetStyle(cStyle)  CLASS HBPushButton
    if ( !( ISNIL( cStyle ) ) )
       ::curStyle := iif( Valtype(cStyle)=="C" .and. LTrim(Str(Len(cStyle))) $ "0�2�8",cStyle,)
 
    endif
    return ::curStyle
 
-METHOD New(nRow,nCol,cCaption) CLASS TPushButton
+METHOD New(nRow,nCol,cCaption) CLASS HBPushButton
    Local cColor
    Default cCaption to ""
    ::Buffer := .F.
@@ -133,7 +133,7 @@ METHOD New(nRow,nCol,cCaption) CLASS TPushButton
 
 Return Self
 
-METHOD SetFocus() CLASS TPushButton
+METHOD SetFocus() CLASS HBPushButton
 
    if ( !::hasfocus .AND. ISBLOCK( ( ::lCursor := setcursor(0), ;
          ::hasfocus := .T., ::display(), ::fBlock ) ) )
@@ -141,7 +141,7 @@ METHOD SetFocus() CLASS TPushButton
    endif
 RETURN Self
 
-METHOD  _Select( nPos ) CLASS TPushButton
+METHOD  _Select( nPos ) CLASS HBPushButton
    local  nCurPos := nPos
    if ( ::hasfocus )
       ::Buffer := .T.
@@ -165,7 +165,7 @@ METHOD  _Select( nPos ) CLASS TPushButton
    endif
 RETURN Self
 
-METHOD KillFocus() CLASS TPushButton
+METHOD KillFocus() CLASS HBPushButton
 
    if ( ::hasfocus )
       ::hasfocus := .F.
@@ -177,7 +177,7 @@ METHOD KillFocus() CLASS TPushButton
    endif
    RETURN Self
 
-METHOD HitTest( nRow, nCol ) CLASS TPushButton
+METHOD HitTest( nRow, nCol ) CLASS HBPushButton
 
    local nCurrentPos := 1, nLen:= Len(::Caption), cStyle, nAmpPos
 
@@ -200,7 +200,7 @@ METHOD HitTest( nRow, nCol ) CLASS TPushButton
    endcase
    return 0
 
-METHOD Display() CLASS TPushButton
+METHOD Display() CLASS HBPushButton
 
    local cOldColor := SetColor(), cStyle, nCurCol, ;
       cCaption, nRow := Row(), nCol:= Col(), nCurRow, nAmpPos, ;
@@ -279,7 +279,7 @@ METHOD Display() CLASS TPushButton
 Function PushButton(nRow,nCol,cCaption)
       if ( ( ISNUMBER( nRow ) ) ) .and. ( ( ISNUMBER( nCol ) ) )
          Default cCaption to ""
-         Return TPushButton():New(nRow,nCol,cCaption)
+         Return HBPushButton():New(nRow,nCol,cCaption)
       endif
 return Nil
 

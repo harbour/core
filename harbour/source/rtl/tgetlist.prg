@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * TGetList Class
+ * HBGetList Class
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * www - http://www.harbour-project.org
@@ -77,7 +77,7 @@
 
 #define K_UNDO          K_CTRL_U
 
-CLASS TGetList
+CLASS HBGetList
 
    DATA aGetList
    DATA oGet, nPos
@@ -119,7 +119,7 @@ CLASS TGetList
    #endif
 ENDCLASS
 
-METHOD New( GetList ) CLASS TGetList
+METHOD New( GetList ) CLASS HBGetList
 
    ::aGetList       := GetList
    ::lKillRead      := .f.
@@ -135,13 +135,13 @@ METHOD New( GetList ) CLASS TGetList
 
 return Self
 
-METHOD SetFocus() CLASS TGetList
+METHOD SetFocus() CLASS HBGetList
 
    __GetListSetActive( Self )
    ::aGetList[ ::nPos ]:SetFocus()
 
    return Self
-METHOD Reader() CLASS TGetList
+METHOD Reader() CLASS HBGetList
 
    local oGet := ::oGet
 
@@ -168,7 +168,7 @@ METHOD Reader() CLASS TGetList
 
 return Self
 
-METHOD GetApplyKey( nKey ) CLASS TGetList
+METHOD GetApplyKey( nKey ) CLASS HBGetList
 
    local cKey, bKeyBlock, oGet := ::oGet
 
@@ -284,7 +284,7 @@ METHOD GetApplyKey( nKey ) CLASS TGetList
 
 return Self
 
-METHOD GetPreValidate() CLASS TGetList
+METHOD GetPreValidate() CLASS HBGetList
 
    local oGet := ::oGet
    local lUpdated, lWhen := .t.
@@ -308,7 +308,7 @@ METHOD GetPreValidate() CLASS TGetList
 
 return lWhen
 
-METHOD GetPostValidate() CLASS TGetList
+METHOD GetPostValidate() CLASS HBGetList
 
    local oGet := ::oGet
    local lUpdated, lValid := .t.
@@ -349,7 +349,7 @@ METHOD GetPostValidate() CLASS TGetList
 
 return lValid
 
-METHOD GetDoSetKey( bKeyBlock ) CLASS TGetList
+METHOD GetDoSetKey( bKeyBlock ) CLASS HBGetList
 
    local oGet := ::oGet, lUpdated
 
@@ -373,7 +373,7 @@ METHOD GetDoSetKey( bKeyBlock ) CLASS TGetList
 
 return Self
 
-METHOD Settle( nPos ) CLASS TGetList
+METHOD Settle( nPos ) CLASS HBGetList
 
    local nExitState
 
@@ -445,7 +445,7 @@ METHOD Settle( nPos ) CLASS TGetList
 
 return nPos
 
-METHOD PostActiveGet() CLASS TGetList
+METHOD PostActiveGet() CLASS HBGetList
 
    ::GetActive( ::oGet )
    ::ReadVar( ::GetReadVar() )
@@ -453,7 +453,7 @@ METHOD PostActiveGet() CLASS TGetList
 
 return Self
 
-METHOD GetReadVar() CLASS TGetList
+METHOD GetReadVar() CLASS HBGetList
 
    local oGet := ::oGet
    local cName := Upper( oGet:Name )
@@ -467,7 +467,7 @@ METHOD GetReadVar() CLASS TGetList
 
 return cName
 
-METHOD SetFormat( bFormat ) CLASS TGetList
+METHOD SetFormat( bFormat ) CLASS HBGetList
 
    local bSavFormat := ::bFormat
 
@@ -475,7 +475,7 @@ METHOD SetFormat( bFormat ) CLASS TGetList
 
 return bSavFormat
 
-METHOD KillRead( lKill ) CLASS TGetList
+METHOD KillRead( lKill ) CLASS HBGetList
 
    local lSavKill := ::lKillRead
 
@@ -485,7 +485,7 @@ METHOD KillRead( lKill ) CLASS TGetList
 
 return lSavKill
 
-METHOD GetActive( oGet ) CLASS TGetList
+METHOD GetActive( oGet ) CLASS HBGetList
 
    local oOldGet := ::oActiveGet
 
@@ -495,7 +495,7 @@ METHOD GetActive( oGet ) CLASS TGetList
 
 return oOldGet
 
-METHOD ShowScoreboard() CLASS TGetList
+METHOD ShowScoreboard() CLASS HBGetList
 
    local nRow, nCol, nOldCursor
 
@@ -515,7 +515,7 @@ METHOD ShowScoreboard() CLASS TGetList
 
 return Self
 
-METHOD DateMsg() CLASS TGetList
+METHOD DateMsg() CLASS HBGetList
 
    local nRow
    local nCol
@@ -538,7 +538,7 @@ METHOD DateMsg() CLASS TGetList
 
 return Self
 
-METHOD ReadVar( cNewVarName ) CLASS TGetList
+METHOD ReadVar( cNewVarName ) CLASS HBGetList
 
    local cOldName := ::cVarName
 
@@ -548,7 +548,7 @@ METHOD ReadVar( cNewVarName ) CLASS TGetList
 
 return cOldName
 
-METHOD ReadUpdated( lUpdated ) CLASS TGetList
+METHOD ReadUpdated( lUpdated ) CLASS HBGetList
 
    local lSavUpdated := ::lUpdated
 
@@ -559,7 +559,7 @@ METHOD ReadUpdated( lUpdated ) CLASS TGetList
 return lSavUpdated
 
 #ifdef HB_COMPAT_C53
-METHOD GuiReader(oget,getsys,a,b) CLASS TGetList
+METHOD GuiReader(oget,getsys,a,b) CLASS HBGetList
 //Local oGet := ::oGet
    Local oGui
    IF ( ! ::GUIPreValidate( oGet , oGet:Control ) )
@@ -604,7 +604,7 @@ METHOD GuiReader(oget,getsys,a,b) CLASS TGetList
 
    RETURN Self
 
-METHOD GUIApplyKey(  oGUI, nKey ) CLASS TGetList
+METHOD GUIApplyKey(  oGUI, nKey ) CLASS HBGetList
    Local oGet:= ::oGet
    LOCAL cKey
    LOCAL bKeyBlock
@@ -731,7 +731,7 @@ METHOD GUIApplyKey(  oGUI, nKey ) CLASS TGetList
 
 
 
-METHOD GUIPostValidate( oGUI ) CLASS TGetList
+METHOD GUIPostValidate( oGUI ) CLASS HBGetList
    Local oGet := ::oGet
    LOCAL lSavUpdated
    LOCAL lValid := .T.
@@ -775,7 +775,7 @@ METHOD GUIPostValidate( oGUI ) CLASS TGetList
 
    RETURN ( lValid )
 
-METHOD GUIPreValidate(  oGUI ) CLASS TGetList
+METHOD GUIPreValidate(  oGUI ) CLASS HBGetList
    Local oGet := ::oGet
    LOCAL lSavUpdated
    LOCAL lWhen := .T.

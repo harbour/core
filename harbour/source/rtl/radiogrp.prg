@@ -56,7 +56,7 @@
 #include "hbsetup.ch"
 
 #ifdef HB_COMPAT_C53
-CLASS TRadioGroup
+CLASS HBRadioGroup
 
    export:
 
@@ -119,7 +119,7 @@ CLASS TRadioGroup
 
 ENDCLASS
 
-METHOD New(nTop, nLeft, nBottom, nRight ) CLASS TRadioGroup
+METHOD New(nTop, nLeft, nBottom, nRight ) CLASS HBRadioGroup
 
 Local cColor
       if ( isdefcolor() )
@@ -137,7 +137,7 @@ Local cColor
       ::top:=nTop
 return Self
 
-METHOD  ADDITEM( xItem ) CLASS TRadioGroup
+METHOD  ADDITEM( xItem ) CLASS HBRadioGroup
 
 
    if ( !( ISOBJECT( xItem ) ) )
@@ -147,7 +147,7 @@ METHOD  ADDITEM( xItem ) CLASS TRadioGroup
    endif
    return Self
 
-METHOD  SETSTYLE( xStyle ) CLASS TRadioGroup
+METHOD  SETSTYLE( xStyle ) CLASS HBRadioGroup
    
    local nPos, nLen, aItems := ::aItems
    nLen := ::ItemCount
@@ -155,7 +155,7 @@ METHOD  SETSTYLE( xStyle ) CLASS TRadioGroup
       aItems[ nPos ]:style(xStyle)
    next
    return Self
-METHOD  SETFOCus() CLASS TRadioGroup
+METHOD  SETFOCus() CLASS HBRadioGroup
 
 
    local nPos, nLen, aItems
@@ -177,7 +177,7 @@ METHOD  SETFOCus() CLASS TRadioGroup
    endif
    return self
 
-METHOD  _SETCOLor( Arg1 ) CLASS TRadioGroup
+METHOD  _SETCOLor( Arg1 ) CLASS HBRadioGroup
 
 
    local nPos, nLen, aItems := ::aItems
@@ -186,7 +186,7 @@ METHOD  _SETCOLor( Arg1 ) CLASS TRadioGroup
       aItems[ nPos ]:colorspec :=Arg1
    next
    return Self
-METHOD  _SELECT( xValue ) CLASS TRadioGroup
+METHOD  _SELECT( xValue ) CLASS HBRadioGroup
 
    local nPos, nLen, cType := ValType(xValue)
    if ( cType == "C" )
@@ -207,7 +207,7 @@ METHOD  _SELECT( xValue ) CLASS TRadioGroup
       changebutt(self, ::Value, xValue)
    endif
    return qself()
-METHOD  PREVITem()        CLASS TRadioGroup
+METHOD  PREVITem()        CLASS HBRadioGroup
 
 
    local xValue, nPos
@@ -223,7 +223,7 @@ METHOD  PREVITem()        CLASS TRadioGroup
       changebutt(self, xValue, nPos)
    endif
    return self
-METHOD  NEXTITem()        CLASS TRadioGroup
+METHOD  NEXTITem()        CLASS HBRadioGroup
 
 
    local xValue, nPos
@@ -237,7 +237,7 @@ METHOD  NEXTITem()        CLASS TRadioGroup
       changebutt(self, xValue, nPos)
    endif
    return Self
-METHOD  KILLFOcus()       CLASS TRadioGroup
+METHOD  KILLFOcus()       CLASS HBRadioGroup
 
    local nPos, nCount, aItems
    if ( ::HasFocus )
@@ -258,7 +258,7 @@ METHOD  KILLFOcus()       CLASS TRadioGroup
       setcursor(::lCursor)
    endif
    return self
-METHOD  INSITEM( nPos, oButtom ) CLASS TRadioGroup
+METHOD  INSITEM( nPos, oButtom ) CLASS HBRadioGroup
 
 
    if ( !( ISOBJECT( oButtom ) ) )
@@ -269,7 +269,7 @@ METHOD  INSITEM( nPos, oButtom ) CLASS TRadioGroup
       ::aItems[ nPos ] := oButtom
    endif
    return ::aItems[ nPos ]
-METHOD  HITTEST( nRow, nCol )    CLASS TRadioGroup
+METHOD  HITTEST( nRow, nCol )    CLASS HBRadioGroup
 
    local nPos, nCount, aItem := ::aItems, nLen, nPosition
    nCount := ::ItemCount
@@ -329,14 +329,14 @@ METHOD  HITTEST( nRow, nCol )    CLASS TRadioGroup
       return -2049
    endcase
    return 0
-METHOD  GETITEm( xValue )        CLASS TRadioGroup
+METHOD  GETITEm( xValue )        CLASS HBRadioGroup
    local xReturn := Nil
    if ( xValue < 1 )
    elseif ( xValue <= ::ItemCount )
       xReturn := ::aItems[ xValue ]
    endif
    return xReturn
-METHOD  GetAccel( xValue )       CLASS TRadioGroup
+METHOD  GetAccel( xValue )       CLASS HBRadioGroup
 
    local nPos, nLen, aItem
    if ( ISNUMBER( xValue ) )
@@ -354,7 +354,7 @@ METHOD  GetAccel( xValue )       CLASS TRadioGroup
    next
    return 0
 
-METHOD  DISPLAY() CLASS TRadioGroup
+METHOD  DISPLAY() CLASS HBRadioGroup
 
 
    local nPos, nCount, aItem, cColor := SetColor(), nCurRow:= ;
@@ -403,7 +403,7 @@ METHOD  DISPLAY() CLASS TRadioGroup
    SetPos(nCurRow, nCurCol)
    return self
 
-METHOD  DELITEm( xItem ) CLASS TRadioGroup
+METHOD  DELITEm( xItem ) CLASS HBRadioGroup
 
    if ( xItem < 1 )
    elseif ( xItem <= ::ItemCount )
@@ -422,7 +422,7 @@ METHOD  DELITEm( xItem ) CLASS TRadioGroup
    endif
    return self
 
-METHOD GetColor(xColor)  CLASS TRadioGroup
+METHOD GetColor(xColor)  CLASS HBRadioGroup
    if ( !( ISNIL( xColor ) ) )
       ::Color := iif( Valtype(xColor)=="C" .and. !Empty(__guicolor(xColor, 3)) .AND. ;
       Empty(__guicolor(xColor, 4)),xColor,)
@@ -458,7 +458,7 @@ static function  CHANGEBUTT( oItems, xVal, nPos )
 // Radio Group Class Constructor Function
 function RADIOGROUP( nTop, nLeft, nBottom, nRight )
       if ( ( ISNUMBER( nTop ) ) ) .and. ( ( ISNUMBER( nLeft ) ) ) .and. ( ( ISNUMBER( nBottom ) ) ) .and. ( ( ISNUMBER( nright ) ) )
-         Return TRadioGroup():New(nTop, nLeft, nBottom, nRight )
+         Return HBRadioGroup():New(nTop, nLeft, nBottom, nRight )
       endif
    Return Nil
 

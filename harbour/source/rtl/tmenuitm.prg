@@ -71,7 +71,7 @@ function MenuItem( cCaption, boData, nShortcut, cMsg, nID )
    DEFAULT cMsg      TO ""
    DEFAULT nID       TO 0
 
-   oClass := TClass():New( "MENUITEM" )
+   oClass := HBClass():New( "MENUITEM" )
 
    oClass:AddData( "caption"  ,  cCaption )
    oClass:AddData( "cargo" )

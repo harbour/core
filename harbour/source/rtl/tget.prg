@@ -1128,10 +1128,3 @@ METHOD DelWordRight() CLASS Get
 
 return Self
 
-
-/* Here for compatibility reason with previous version   */
-/* Not sure it should be keeped here ... (JFL)           */
-/* But does'nt annoy me                                  */
-CLASS TGet Inherit GET
-ENDCLASS
-

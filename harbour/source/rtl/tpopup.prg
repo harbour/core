@@ -82,7 +82,7 @@ function PopUp( nTop, nLeft, nBottom, nRight )
    DEFAULT nBottom TO  0
    DEFAULT nRight  TO  0
 
-   oClass := TClass():New( "POPUPMENU" )
+   oClass := HBClass():New( "POPUPMENU" )
 
    oClass:AddData( "aItems"      ,  {} )
    oClass:AddData( "border"      ,  B_SINGLE + SEPARATOR_SINGLE )

@@ -696,10 +696,10 @@ EXTERNAL TBROWSENEW
 //
 //symbols from file: rtl\tclass.prg
 //
-EXTERNAL TCLASS
+EXTERNAL HBCLASS
 //symbols from file:rtl\tobject.prg
 //
-EXTERNAL TOBJECT
+EXTERNAL HBOBJECT
 //
 //symbols from file: rtl\text.prg
 //

@@ -59,7 +59,7 @@
 #include "setcurs.ch"
 #include "color.ch"
 
-CLASS TEditor
+CLASS HBEditor
 
    DATA  cFile          INIT ""     // name of file being edited
 
@@ -121,8 +121,8 @@ CLASS TEditor
    METHOD InsertState(lInsState)                         // Changes lInsert value and insertion / overstrike mode of editor
    METHOD Edit(nPassedKey)                               // Handles input (can receive a key in which case handles only this key and then exits)
 
-   METHOD KeyboardHook(nKey)                             // Gets called every time there is a key not handled directly by TEditor
-   METHOD IdleHook()                                     // Gets called every time there are no more keys to hanlde just before TEditor blocks itself waiting for a char
+   METHOD KeyboardHook(nKey)                             // Gets called every time there is a key not handled directly by HBEditor
+   METHOD IdleHook()                                     // Gets called every time there are no more keys to hanlde just before HBEditor blocks itself waiting for a char
 
    METHOD Resize(nTop, nLeft, nBottom, nRight)           // Redefines editor window size and refreshes it
    METHOD SetColor(cColorString)                         // Sets/retrieves color used for screen writes
@@ -187,7 +187,7 @@ STATIC function Text2Array(cString, nWordWrapCol)
    // If cString starts with an EOL delimiter I have to add an empty line since __StrTkPtr
    // gives back _next_ token and would skip this first EOL delimiter
    if Left(cString, nEOLLen) == cEOL
-      AAdd(aArray, TTextLine():New(cLine, .F.))
+      AAdd(aArray, HBTextLine():New(cLine, .F.))
       nTokPos += nEOLLen
       nRetLen += nEOLLen
    endif
@@ -219,13 +219,13 @@ STATIC function Text2Array(cString, nWordWrapCol)
                   cSplittedLine := Left(cLine, nWordWrapCol)
                endif
 
-               AAdd(aArray, TTextLine():New(cSplittedLine, .T.))
+               AAdd(aArray, HBTextLine():New(cSplittedLine, .T.))
 
             else
 
                // remainder of line is shorter than split point
                cSplittedLine := cLine
-               AAdd(aArray, TTextLine():New(cSplittedLine, .F.))
+               AAdd(aArray, HBTextLine():New(cSplittedLine, .F.))
 
             endif
 
@@ -233,7 +233,7 @@ STATIC function Text2Array(cString, nWordWrapCol)
          enddo
 
       else
-         AAdd(aArray, TTextLine():New(cLine, .F.))
+         AAdd(aArray, HBTextLine():New(cLine, .F.))
 
       endif
 
@@ -243,7 +243,7 @@ return aArray
 
 
 // Converts an array of text lines to a String
-METHOD GetText() CLASS TEditor
+METHOD GetText() CLASS HBEditor
 
    LOCAL cString := ""
    LOCAL cEOL := HB_OSNewLine()
@@ -260,7 +260,7 @@ METHOD GetText() CLASS TEditor
 return cString
 
 
-METHOD New(cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabSize) CLASS TEditor
+METHOD New(cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabSize) CLASS HBEditor
 
    default  cString     to ""
    default  nTop        to 0
@@ -275,7 +275,7 @@ METHOD New(cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabSi
    ::naTextLen := Len(::aText)
 
    if ::naTextLen == 0
-      AAdd(::aText, TTextLine():New())
+      AAdd(::aText, HBTextLine():New())
       ::naTextLen++
    endif
 
@@ -322,7 +322,7 @@ return Self
 
 
 // Redefines editor window size and refreshes it
-METHOD Resize(nTop, nLeft, nBottom, nRight) CLASS TEditor
+METHOD Resize(nTop, nLeft, nBottom, nRight) CLASS HBEditor
 
    // don't change coordinates not given
    default nTop to ::nTop
@@ -354,7 +354,7 @@ METHOD Resize(nTop, nLeft, nBottom, nRight) CLASS TEditor
 return Self
 
 
-METHOD LoadFile(cFileName) CLASS TEditor
+METHOD LoadFile(cFileName) CLASS HBEditor
 
    local cString := ""
 
@@ -367,7 +367,7 @@ METHOD LoadFile(cFileName) CLASS TEditor
    ::naTextLen := Len(::aText)
 
    if ::naTextLen == 0
-      AAdd(::aText, TTextLine():New())
+      AAdd(::aText, HBTextLine():New())
       ::naTextLen++
    endif
 
@@ -377,13 +377,13 @@ METHOD LoadFile(cFileName) CLASS TEditor
 return Self
 
 
-METHOD LoadText(cString) CLASS TEditor
+METHOD LoadText(cString) CLASS HBEditor
 
    ::aText := Text2Array(cString, iif(::lWordWrap, ::nNumCols, nil))
    ::naTextLen := Len(::aText)
 
    if ::naTextLen == 0
-      AAdd(::aText, TTextLine():New())
+      AAdd(::aText, HBTextLine():New())
       ::naTextLen++
    endif
 
@@ -394,7 +394,7 @@ return Self
 
 
 // Saves file being edited, if there is no file name does nothing, returns .T. if OK
-METHOD SaveFile() CLASS TEditor
+METHOD SaveFile() CLASS HBEditor
 
    local cString
 
@@ -409,26 +409,26 @@ return .F.
 
 
 // Add a new Line of text at end of current text
-METHOD AddLine(cLine, lSoftCR) CLASS TEditor
+METHOD AddLine(cLine, lSoftCR) CLASS HBEditor
 
-   AAdd(::aText, TTextLine():New(cLine, lSoftCR))
+   AAdd(::aText, HBTextLine():New(cLine, lSoftCR))
    ::naTextLen++
 
 return Self
 
 
 // Insert a line of text at a defined row
-METHOD InsertLine(cLine, lSoftCR, nRow) CLASS TEditor
+METHOD InsertLine(cLine, lSoftCR, nRow) CLASS HBEditor
 
    ::AddLine()
    AIns(::aText, nRow)
-   ::aText[nRow] := TTextLine():New(cLine, lSoftCR)
+   ::aText[nRow] := HBTextLine():New(cLine, lSoftCR)
 
 return Self
 
 
 // Remove a line of text
-METHOD RemoveLine(nRow) CLASS TEditor
+METHOD RemoveLine(nRow) CLASS HBEditor
 
    ADel(::aText, nRow)
    ASize(::aText, --::naTextLen)
@@ -437,7 +437,7 @@ return Self
 
 
 // Return line n of text
-METHOD GetLine(nRow) CLASS TEditor
+METHOD GetLine(nRow) CLASS HBEditor
 
    if nRow <= ::naTextLen .AND. nRow > 0
       return ::aText[nRow]:cText
@@ -448,7 +448,7 @@ METHOD GetLine(nRow) CLASS TEditor
 return Self
 
 
-METHOD GotoLine(nRow) CLASS TEditor
+METHOD GotoLine(nRow) CLASS HBEditor
 
    if nRow <= ::naTextLen .AND. nRow > 0
 
@@ -496,7 +496,7 @@ return cLine
 
 // If a line of text is longer than nWordWrapCol divides it into multiple lines,
 // Used during text editing to reflow a paragraph
-METHOD SplitLine(nRow) CLASS TEditor
+METHOD SplitLine(nRow) CLASS HBEditor
 
    LOCAL nFirstSpace
    LOCAL cLine
@@ -570,7 +570,7 @@ return Self
 
 
 // Redraws a screenfull of text
-METHOD RefreshWindow() CLASS TEditor
+METHOD RefreshWindow() CLASS HBEditor
 
    LOCAL i
    LOCAL nOCol
@@ -597,7 +597,7 @@ return Self
 
 
 // Redraws current screen line
-METHOD RefreshLine() CLASS TEditor
+METHOD RefreshLine() CLASS HBEditor
 
    LOCAL nOCol
    LOCAL nORow
@@ -613,7 +613,7 @@ return Self
 
 
 // Refreshes only one screen column of text (for Left() and Right() movements)
-METHOD RefreshColumn() CLASS TEditor
+METHOD RefreshColumn() CLASS HBEditor
 
    LOCAL i
    LOCAL nOCol
@@ -635,7 +635,7 @@ return Self
 
 
 // Handles cursor movements inside text array
-METHOD MoveCursor(nKey) CLASS TEditor
+METHOD MoveCursor(nKey) CLASS HBEditor
 
    LOCAL lMoveKey := .T.
 
@@ -806,7 +806,7 @@ return lMoveKey
 
 
 // Changes lInsert value and insertion / overstrike mode of editor
-METHOD InsertState(lInsState) CLASS TEditor
+METHOD InsertState(lInsState) CLASS HBEditor
 
    ::lInsert := lInsState
    SET(_SET_INSERT, lInsState)
@@ -828,7 +828,7 @@ return
 
 
 // Edits text
-METHOD Edit(nPassedKey) CLASS TEditor
+METHOD Edit(nPassedKey) CLASS HBEditor
 
    LOCAL i
    LOCAL nKey
@@ -974,20 +974,20 @@ METHOD Edit(nPassedKey) CLASS TEditor
 return Self
 
 
-// This in an empty method which can be used by classes subclassing TEditor to be able
+// This in an empty method which can be used by classes subclassing HBEditor to be able
 // to handle particular keys.
-METHOD KeyboardHook(nKey)  CLASS TEditor
+METHOD KeyboardHook(nKey)  CLASS HBEditor
 
 return Self
 
 
 // There are no more keys to handle. Can I do something for you?
-METHOD IdleHook()  CLASS TEditor
+METHOD IdleHook()  CLASS HBEditor
 
 return Self
 
 
-METHOD SetColor(cColorString) CLASS TEditor
+METHOD SetColor(cColorString) CLASS HBEditor
 
    local cOldColor := ::cColorSpec
 
@@ -998,7 +998,7 @@ METHOD SetColor(cColorString) CLASS TEditor
 return cOldColor
 
 
-METHOD Hilite() CLASS TEditor
+METHOD Hilite() CLASS HBEditor
 
    local cEnhanced := ""
 
@@ -1011,7 +1011,7 @@ METHOD Hilite() CLASS TEditor
 return Self
 
 
-METHOD DeHilite() CLASS TEditor
+METHOD DeHilite() CLASS HBEditor
 
    local cStandard := ""
 
@@ -1024,7 +1024,7 @@ METHOD DeHilite() CLASS TEditor
 return Self
 
 
-METHOD SetPos(nRow, nCol) CLASS TEditor
+METHOD SetPos(nRow, nCol) CLASS HBEditor
 
    default nRow to ::nPhysRow
    default nCol to ::nPhysCol
@@ -1037,6 +1037,6 @@ METHOD SetPos(nRow, nCol) CLASS TEditor
 return ::nPhysRow
 
 
-/*METHOD LineColor(nRow) CLASS TEditor
+/*METHOD LineColor(nRow) CLASS HBEditor
 
 return ::cColorSpec*/

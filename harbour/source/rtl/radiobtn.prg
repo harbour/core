@@ -1,4 +1,3 @@
-
 /*
  * $Id$
  */
@@ -55,8 +54,9 @@
 #include "common.ch"
 #include "hbclass.ch"
 #include "hbsetup.ch"
+
 #ifdef HB_COMPAT_C53
-CLASS TRadioBtn
+CLASS HBRadioButton
 
    EXPORT:
 
@@ -68,7 +68,7 @@ CLASS TRadioBtn
    DATA Col
    DATA pData
    DATA ColorSpec
-   DATA Classname init "RADIOBUTTN"   
+   DATA Classname init "RADIOBUTTO"   
    DATA fBlock
    DATA HasFocus
    DATA Row
@@ -87,7 +87,7 @@ CLASS TRadioBtn
    METHOD New(nRow,nCol,cCaption,xData)
 ENDCLASS
 
-METHOD New(nRow,nCol,cCaption,xData) CLASS TRadioBtn
+METHOD New(nRow,nCol,cCaption,xData) CLASS HBRadioButton
    Local cColor
    ::Buffer:= .f.
    ::CapRow:= nRow
@@ -117,7 +117,7 @@ METHOD New(nRow,nCol,cCaption,xData) CLASS TRadioBtn
    ::Data := xData
 return Self
 
-METHOD SETFOCus()  CLASS TRadioBtn
+METHOD SETFOCus()  CLASS HBRadioButton
 
    if ( !::hasfocus .AND. ISBLOCK( ( ::hasfocus := .T., ;
       ::display(), ::fblock ) ) )
@@ -125,7 +125,7 @@ METHOD SETFOCus()  CLASS TRadioBtn
    endif
    return Self
 
-METHOD _SELECT(lStatus)  CLASS TRadioBtn
+METHOD _SELECT(lStatus)  CLASS HBRadioButton
 
    local lOldBuffer := ::Buffer
    if ( ISLOGICAL( lStatus ) )
@@ -139,7 +139,7 @@ METHOD _SELECT(lStatus)  CLASS TRadioBtn
    endif
    return self
 
-METHOD kILLFOcus()  CLASS TRadioBtn
+METHOD kILLFOcus()  CLASS HBRadioButton
    
    if ( ::HasFocus )
       ::HasFocus := .F.
@@ -149,7 +149,7 @@ METHOD kILLFOcus()  CLASS TRadioBtn
       ::display()
    endif
    return Self
-METHOD DISPLAy()  CLASS TRadioBtn
+METHOD DISPLAy()  CLASS HBRadioButton
    
    local cColor := SetColor(), cCurStyle, nCurRow:= Row(), nCurCol:= ;
    Col(), cPairs, cPairs3, nPos, cPairs4, cOldCaption 
@@ -198,7 +198,7 @@ METHOD DISPLAy()  CLASS TRadioBtn
    set color to (cColor)
    SetPos(nCurRow, nCurCol)
    return Self
-METHOD IsAccel( xValue )  CLASS TRadioBtn
+METHOD IsAccel( xValue )  CLASS HBRadioButton
    
    local nPos, cCaption, xResult
    if ( ISNUMBER( xValue ) )
@@ -215,7 +215,7 @@ METHOD IsAccel( xValue )  CLASS TRadioBtn
    endif
    return .F.
 
-METHOD HITTESt( nRow, nCol )  CLASS TRadioBtn
+METHOD HITTESt( nRow, nCol )  CLASS HBRadioButton
 
    local nPos, nLen
    if ( nRow != ::Row )
@@ -235,7 +235,7 @@ METHOD HITTESt( nRow, nCol )  CLASS TRadioBtn
    endif
    return 0
 
-METHOD SetData(Arg1) CLASS TRadioBtn
+METHOD SetData(Arg1) CLASS HBRadioButton
    
    if ( PCount() == 0 )
    elseif ( ISNIL( Arg1 ) )
@@ -252,7 +252,7 @@ function RADIOBUTTO( nRow, nCol,cCaption,xData)
 
    default cCaption to ""
    if ( ( ISNUMBER( nRow ) ) ) .and. ( ( ISNUMBER( nCol ) ) )
-     Return  TRadioBtn():New(nRow, nCol,cCaption,xData)
+     Return  HBRadioButton():New(nRow, nCol,cCaption,xData)
    endif
 return nil
 

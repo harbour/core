@@ -65,7 +65,7 @@ Function TNumber()                              // Very simple class
    static oNumber
 
    if oNumber == NIL
-      oNumber := TClass():New( "TNumber" )
+      oNumber := HBClass():New( "TNumber" )
 
       oNumber:AddData  ( "x"   )
       oNumber:AddMethod( "Get", @Get() )

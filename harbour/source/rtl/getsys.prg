@@ -81,7 +81,7 @@ FUNCTION ReadModal( GetList, nPos, nMsgRow, nMsgLeft, nMsgRight, cMsgColor )
       RETURN .F.
    ENDIF
 
-   oGetList := TGetList():New( GetList )
+   oGetList := HBGetList():New( GetList )
    oGetList:cReadProcName := ProcName( 1 )
    oGetList:nReadProcLine := ProcLine( 1 )
 

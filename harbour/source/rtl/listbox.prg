@@ -1,4 +1,3 @@
-
 /*
  * $Id$
  */
@@ -51,11 +50,11 @@
  *
  */
 
-
 #include 'hbclass.ch'
 #include 'common.ch'
+
 #ifdef HB_COMPAT_C53
-CLASS TListBox
+CLASS HBListBox
 
 Method New(nTop,nLeft,nBottom,nRigth,lDrop)
 
@@ -108,11 +107,11 @@ Data right init 0
 data bottom init 0
 Data TopItem init 1
 Data dropdown init .f.
-ACCESS nTop  inline ::SetTop(xData)
+ACCESS nTop  inline ::SetTop()
 ASSIGN nTop(xData)  inline ::SetTop(xData)
 ACCESS vScroll inline ::vScrolls
 ASSIGN vScroll(xData) inline ::SetScroll(xData)
-ACCESS NRight  inline ::SetRight(xData)
+ACCESS NRight  inline ::SetRight()
 ASSIGN nRight(xData)  inline ::SetRight(xData)
 ACCESS lDropDown inline ::SetDropDown()
 ASSIGN lDropDown(xData) inline ::SetDropDown(xData)
@@ -198,27 +197,27 @@ Method New(nTop,nLeft,nBottom,nRigth,lDrop)
 
 return Self
 /**** Get/Set Datas ****/
-METHOD SetScroll(xData) CLASS TListBox
+METHOD SetScroll(xData) CLASS HBListBox
    if (ISOBJECT(xData) )/*.and. xData:Classname=="SCROLLBAR" .and. xData:orient==1)*/
       ::vScrolls := xData
       xData:total:=::iTemCount
    endif
    return ::vScrolls
 
-METHOD SetTop(xData) CLASS TListBox
+METHOD SetTop(xData) CLASS HBListBox
    Local nTop
 
    if ( !( ISNIL( xData ) .and. ISNUMBER(xData) ) .and. ISNUMBER((::xTop := xData)) .and. ISOBJECT(::vScroll) )
       ::vScroll:start:=xData + 1
    endif
    return ::xTop
-METHOD SetRight(xData)  CLASS TListBox
+METHOD SetRight(xData)  CLASS HBListBox
 
    if ( ! (ISNIL( xData  ) ) .and. ISOBJECT( ( ::xRight:=xData,::vScroll)))
       ::vScroll:offset:=xData
    endif
    return ::xRight
-METHOD SetDropDown( xData ) CLASS TListBox
+METHOD SetDropDown( xData ) CLASS HBListBox
 
    if ( !( ISNIL( xData ) ) ) .and. ISLOGICAL(xData)
       ::xDropDown := xData
@@ -230,7 +229,7 @@ METHOD SetDropDown( xData ) CLASS TListBox
    endif
    return ::xDropDown
 
-METHOD SetCaption(xData) CLASS TListBox
+METHOD SetCaption(xData) CLASS HBListBox
    if ( ISCHARACTER(xData) .AND. ISNIL( ::Capcol) )
       ::cCaption := xData
       ::Caprow := ::top
@@ -238,7 +237,7 @@ METHOD SetCaption(xData) CLASS TListBox
    endif
    return ::cCaption
 
-METHOD SetBottom(xData)  CLASS TListBox
+METHOD SetBottom(xData)  CLASS HBListBox
     local nBottom
    if ( ! (ISNIL( xData  ) .and. ISNUMBER(xData)) .and. ISNUMBER((::xBottom := xData)) .and. ISOBJECT( (::vScroll)))    
    nBottom:=::xBottom
@@ -247,7 +246,7 @@ METHOD SetBottom(xData)  CLASS TListBox
    return ::xBottom
  /*** Class Methods ***/
 
-METHOD ADDITEM( cText, xValue )  CLASS TListBox
+METHOD ADDITEM( cText, xValue )  CLASS HBListBox
    if ( !( ISCHARACTER( cText ) ) )
    elseif ( ValType(xValue) $ "CU" )
       AAdd(::aItems, {cText, xValue})
@@ -261,7 +260,7 @@ METHOD ADDITEM( cText, xValue )  CLASS TListBox
 
 
 
-METHOD CLOSE() CLASS TListBox
+METHOD CLOSE() CLASS HBListBox
 
    local Local1, Local2, Local3, cColor, Local5
    if ( ::isOpen )
@@ -306,7 +305,7 @@ METHOD DELITEM( xitem)
    endif
    return self
 
-METHOD Getdata( xData ) CLASS TListBox
+METHOD Getdata( xData ) CLASS HBListBox
 
    local xRet := Nil
    if ( xData < 1 )
@@ -315,7 +314,7 @@ METHOD Getdata( xData ) CLASS TListBox
    endif
    return xRet
 
-Method FindData( cText, nPos, lCaseSensitive, lExact ) CLASS TListBox
+Method FindData( cText, nPos, lCaseSensitive, lExact ) CLASS HBListBox
 
    local nPosFound, lOldExact, nStart, nEnd, nSize
    if ( ISLOGICAL( lExact ) )
@@ -358,7 +357,7 @@ Method FindData( cText, nPos, lCaseSensitive, lExact ) CLASS TListBox
    endif
    return nPosFound
 
-Method FindText( cText, nPos, lCaseSensitive, lExact ) CLASS TListBox
+Method FindText( cText, nPos, lCaseSensitive, lExact ) CLASS HBListBox
 
    local nPosFound, lOldExact, nStart, nEnd, nSize
    if ( ISLOGICAL( lExact ) )
@@ -403,7 +402,7 @@ Method FindText( cText, nPos, lCaseSensitive, lExact ) CLASS TListBox
    return nPosFound
 
 
-METHOD NEXTITEM() CLASS TListBox
+METHOD NEXTITEM() CLASS HBListBox
 
    local nCurValue, nValue
    if ( !::hasfocus )
@@ -416,7 +415,7 @@ METHOD NEXTITEM() CLASS TListBox
       changeitem(self, nCurValue, nValue)
    endif
    return self
-METHOD PREVITEM()  CLASS TListBox
+METHOD PREVITEM()  CLASS HBListBox
 
    local nCurValue, nValue
    if ( !::hasfocus )
@@ -432,7 +431,7 @@ METHOD PREVITEM()  CLASS TListBox
    endif
    return self
 
-METHOD _SCROLL( nMethod ) CLASS TListBox
+METHOD _SCROLL( nMethod ) CLASS HBListBox
 
    LOCAl nPos, nTopItem, nCount, nThumbPos, nCurrent, nBarLength, nTotal, ;
       nSize, nMouRow, nMouseRow, nKey, nStart
@@ -517,7 +516,7 @@ METHOD _SCROLL( nMethod ) CLASS TListBox
    endcase
    return Self
 
-METHOD SELECTS( nPosition ) CLASS TListBox
+METHOD SELECTS( nPosition ) CLASS HBListBox
 
    local nValue, nPos, xType
    do case
@@ -576,7 +575,7 @@ METHOD SELECTS( nPosition ) CLASS TListBox
       eval(::sBlock)
    endif
    return ::value
-Method SetTOPITEM( xData ) CLASS TListBox
+Method SetTOPITEM( xData ) CLASS HBListBox
 
    local nSize, nPos
    if ( !( ISNIL( xData ) )) .and. xData>0  .and. xData <= ::itemCount
@@ -601,7 +600,7 @@ Method SetTOPITEM( xData ) CLASS TListBox
    endif
    return ::xtopitem
 
-METHOD DISPLAY() CLASS TListBox
+METHOD DISPLAY() CLASS HBListBox
 
    local nCurRow := Row(), nCurCol:= Col(), cCurrentColor:= SetColor(), ;
       nStart, nEnd, cColor4, cColor3, nTop := ::top, ;
@@ -686,7 +685,7 @@ METHOD DISPLAY() CLASS TListBox
    SetPos(nCurRow, nCurCol)
    return Self
 
-METHOD GETITEM( xItem ) CLASS TListBox
+METHOD GETITEM( xItem ) CLASS HBListBox
 
    local xRet := Nil
    if ( xItem < 1 )
@@ -694,7 +693,7 @@ METHOD GETITEM( xItem ) CLASS TListBox
       xRet := ::aitems[ xItem ]
    endif
    return xRet
-METHOD GETTEXT( xItem ) CLASS TListBox
+METHOD GETTEXT( xItem ) CLASS HBListBox
 
    local xRet := Nil
    if ( xItem < 1 )
@@ -721,7 +720,7 @@ METHOD INSITEM( nPosition, cText, xExp )
    endif
    return self
 
-METHOD HITTEST( nMouseRow, nMouseCol ) CLASS TListBox
+METHOD HITTEST( nMouseRow, nMouseCol ) CLASS HBListBox
 
    local Local1, Local2 := 0, Local3, cColor
    if ( !::isopen )
@@ -793,7 +792,7 @@ METHOD HITTEST( nMouseRow, nMouseCol ) CLASS TListBox
       return -1025
    endcase
    return 0
-method KillFocus() CLASS TListBox
+method KillFocus() CLASS HBListBox
    local Local1
    if ( ::hasfocus )
       ::hasfocus := .F.
@@ -812,7 +811,7 @@ method KillFocus() CLASS TListBox
    endif
    return self
 
-   METHOD Open() CLASS TListBox
+   METHOD Open() CLASS HBListBox
    if ( !::isopen )
 
          ::ascreen := Str(::top + 1, 2) + ;
@@ -825,7 +824,7 @@ method KillFocus() CLASS TListBox
    return self
 
 
-METHOD SetText(nPos,cText) CLASS TListBox
+METHOD SetText(nPos,cText) CLASS HBListBox
    if ( nPos < 1 )
    elseif ( nPos <= ::itemCount )
       ::aitems[ nPos ][ 1 ] := cText
@@ -833,7 +832,7 @@ METHOD SetText(nPos,cText) CLASS TListBox
    return self
 
 
-Method SetItem( nPos, cText ) CLASS TListBox
+Method SetItem( nPos, cText ) CLASS HBListBox
 
    do case
    case nPos < 1
@@ -843,7 +842,7 @@ Method SetItem( nPos, cText ) CLASS TListBox
       ::aitems[ nPos ] := cText
    endcase
    return self
-method SETFOCUS() CLASS TListBox
+method SETFOCUS() CLASS HBListBox
 
    if ( !::hasfocus )
       ::nCursor := setcursor(0)
@@ -858,7 +857,7 @@ method SETFOCUS() CLASS TListBox
    endif
    return self
 
-METHOD SetDAta(nPos,xData)       CLASS TListBox
+METHOD SetDAta(nPos,xData)       CLASS HBListBox
    if ( !( nPos < 1 ) )
    elseif ( nPos <= ::itemCount )
       ::aitems[ nPos ][ 2 ] := xData
@@ -922,7 +921,8 @@ function LISTBOX( nTop,nLeft,nBottom,nRigth,lDrop)
     if !( ISNUMBER( nTop ) ) .or.  !( ISNUMBER( nleft ) ) .or. !( ISNUMBER( nBottom ) ) .or. !( ISNUMBER( nRigth ) )
      return  nil
    endif
-   return TListBox():New(nTop,nLeft,nBottom,nRigth,lDrop)
+   return HBListBox():New(nTop,nLeft,nBottom,nRigth,lDrop)
+
 static function _Getdata( xItem ) 
 
    if ( ISNIL( xItem[ 2 ] ) )
@@ -938,7 +938,7 @@ function _LISTBOX_( Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7, Arg8, ;
    if ( !( ISNIL( oScroll ) ) )
       if ( ISCHARACTER( Arg7 ) )
          oScroll:caption:=Arg7
-         oScroll:capcol:=Arg2 - __caplengt(Arg7))
+         oScroll:capcol:=Arg2 - __caplengt(Arg7)
       endif
       oScroll:colorspec:=Arg9
       oScroll:message:=Arg8

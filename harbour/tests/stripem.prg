@@ -63,7 +63,7 @@ function TTextFile()                            // Parameter = dirty
    static oFile := NIL
 
    if oFile == NIL
-      oFile := TClass():New( "TTEXTFILE" )      // Create a new class def
+      oFile := HBClass():New( "TTEXTFILE" )      // Create a new class def
 
       oFile:AddData( "cFileName"  )             // Filename spec. by user
       oFile:AddData( "hFile"      )             // File handle

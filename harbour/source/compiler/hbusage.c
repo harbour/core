@@ -104,7 +104,7 @@ void hb_compPrintUsage( char * szSelf )
 }
 
 /*
- * List of compatybility/features modes 
+ * List of compatibility/features modes 
  */
 void hb_compPrintModes( void )
 {
@@ -120,7 +120,7 @@ void hb_compPrintModes( void )
    };
    int iLine;
 
-   printf( "\nCompatybility flags (lowercase/uppercase significant): -k[options]\n" );
+   printf( "\nCompatibility flags (lowercase/uppercase significant): -k[options]\n" );
 
    for( iLine = 0; iLine < ( sizeof( szOptions ) / sizeof( char * ) ); iLine++ )
       printf( szOptions[ iLine ] );

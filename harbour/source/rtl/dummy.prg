@@ -66,14 +66,7 @@ FUNCTION ordSetRelation()  ; RETURN NIL
 FUNCTION ordSkipUnique()   ; RETURN .F.
 #endif
 
-//FUNCTION MLCToPos()        ; RETURN 0
-//FUNCTION MPosToLC()        ; RETURN 0
-
-//FUNCTION __dbApp()         ; RETURN NIL
-//FUNCTION __dbCopy()        ; RETURN NIL
-//FUNCTION __dbDelim()       ; RETURN NIL
 FUNCTION __dbJoin()        ; RETURN NIL
-//FUNCTION __dbSDF()         ; RETURN NIL
 FUNCTION __dbTotal()       ; RETURN NIL
 
 /* NOTE: Internal functions */
@@ -81,3 +74,4 @@ FUNCTION __dbFList()       ; RETURN {}
 FUNCTION __dbOpenSDF()     ; RETURN NIL
 FUNCTION __dbTrans()       ; RETURN NIL
 FUNCTION __dbTransRec()    ; RETURN NIL
+

@@ -78,7 +78,7 @@ function TopBar( nRow, nLeft, nRight )
 
    if ISNUMBER( 1 ) .and. ISNUMBER( 2 ) .and. ISNUMBER( 3 )
 
-      oClass := TClass():New( "TOPBARMENU" )
+      oClass := HBClass():New( "TOPBARMENU" )
       oClass:AddData( "cargo" )
       oClass:AddData( "colorSpec"   ,  "N/W,W/N,W+/W,W+/N,N+/W,W/N" )
       oClass:AddData( "current"     ,  0 )

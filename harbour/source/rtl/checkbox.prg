@@ -1,4 +1,3 @@
-
 /*
  * $Id$
  */
@@ -59,7 +58,7 @@ FUNCTION CHECKBOX(nRow,nCol,cCaption)
 Local cColor:=''
 Local oClass
    if ( ( ISNUMBER( nRow ) ) ) .and. ( ( ISNUMBER( nCol ) ) )
-      oClass:=TClass():New("CHECKBOX")
+      oClass:=HBClass():New("CHECKBOX")
       if(!( ISCHARACTER( cCaption ) ) )
          cCaption := ""
      endif

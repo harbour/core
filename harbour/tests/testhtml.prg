@@ -48,7 +48,7 @@ FUNCTION THTML
    STATIC oClass
 
    IF oClass == NIL
-      oClass = TClass():New( "THTML" )
+      oClass = HBClass():New( "THTML" )
 
       oClass:AddData( "cTitle" )                       // Page Title
       oClass:AddData( "cBody" )                        // HTML Body Handler

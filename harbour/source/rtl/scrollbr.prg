@@ -51,10 +51,14 @@
  */
 
 
-#include "class.ch"
+#include "hbclass.ch"
 #include "common.ch"
+
 #ifdef HB_COMPAT_C53
-CLASS TScrollBar
+
+MEMVAR hb_p_lShow
+
+CLASS HBScrollBar
 Data BarLength
 Data Cargo
 Data Sblock
@@ -97,7 +101,7 @@ METHOD GetTotal(nTotal)
 METHOD GetOffSet(nOffset)
 METHOD GetOrient(nOrient)
 ENDCLASS
-Method New(nStart,nEnd,nOffSet,bSblock,nOrient) CLASS TScrollBar
+Method New(nStart,nEnd,nOffSet,bSblock,nOrient) CLASS HBScrollBar
    Local cStyle,cColor
    
    if ( nOrient == 1 )
@@ -121,7 +125,7 @@ Method New(nStart,nEnd,nOffSet,bSblock,nOrient) CLASS TScrollBar
    return Self
 
 
-METHOD DISPLAY() CLASS TScrollBar
+METHOD DISPLAY() CLASS HBScrollBar
 
    local nCurRow, nCurCol, cCurColor, cStyle, cOffSet, cColor2, cColor1, ;
       nStart, nEnd, nPos, lDisplay := .F.
@@ -179,7 +183,7 @@ METHOD DISPLAY() CLASS TScrollBar
    endif
    return lDisplay
 
-METHOD HitTest(nRow,nCol) CLASS TScrollBar
+METHOD HitTest(nRow,nCol) CLASS HBScrollBar
 
 
    local Local1, Local2
@@ -236,7 +240,7 @@ METHOD HitTest(nRow,nCol) CLASS TScrollBar
    endif
    return 0
 
-METHOD Update() CLASS TScrollBar
+METHOD Update() CLASS HBScrollBar
 
 
    local nCurRow, nCurCol, cCurColor, lUpdated := .F., nThumbPos:= ;
@@ -272,7 +276,7 @@ METHOD Update() CLASS TScrollBar
    return lUpdated
 
 /*
-METHOD GetColor(xColor) CLASS TScrollBar
+METHOD GetColor(xColor) CLASS HBScrollBar
 
    if ( !( ISCHARACTER( xColor ) ) )
    elseif ( Empty(__guicolor(xColor, 2)) )
@@ -281,7 +285,7 @@ METHOD GetColor(xColor) CLASS TScrollBar
    endif
    return ::Color
 */
-METHOD GETCURRENT( nCurrent) CLASS TScrollBar
+METHOD GETCURRENT( nCurrent) CLASS HBScrollBar
 
    if ( !( ISNUMBER( nCurrent ) ) )
    elseif ( nCurrent > ::nTotal )
@@ -291,7 +295,7 @@ METHOD GETCURRENT( nCurrent) CLASS TScrollBar
    return ::nCurrent
 
 
-METHOD GETEND( nEnd ) CLASS TScrollBar
+METHOD GETEND( nEnd ) CLASS HBScrollBar
 
    if ( !( ISNUMBER( nEnd ) ) )
    elseif ( nEnd < ::nStart )
@@ -301,7 +305,7 @@ METHOD GETEND( nEnd ) CLASS TScrollBar
    endif
    return ::nEnd
 
-METHOD GETOFFSET( nOffSet ) CLASS TScrollBar
+METHOD GETOFFSET( nOffSet ) CLASS HBScrollBar
 
    if ( !( ISNUMBER( nOffSet ) ) )
    elseif ( nOffSet != ::nOffset )
@@ -309,7 +313,7 @@ METHOD GETOFFSET( nOffSet ) CLASS TScrollBar
    endif
    return ::nOffset
 
-METHOD GETORIENT( nOrient ) CLASS TScrollBar
+METHOD GETORIENT( nOrient ) CLASS HBScrollBar
 
    if ( !( ISNUMBER( nOrient ) ) )
    elseif ( nOrient == 1 .OR. nOrient == 2 )
@@ -317,7 +321,7 @@ METHOD GETORIENT( nOrient ) CLASS TScrollBar
    endif
    return ::nOrient
 
-METHOD GETSTART( nStart ) CLASS TScrollBar
+METHOD GETSTART( nStart ) CLASS HBScrollBar
 
    if ( !( ISNUMBER( nStart ) ) )
    elseif ( nStart > ::End )
@@ -326,7 +330,7 @@ METHOD GETSTART( nStart ) CLASS TScrollBar
       ::barlength := ::nEnd - nStart - 1
    endif
    return ::nStart
-METHOD GETTHUMBPOs( nPos ) CLASS TScrollBar
+METHOD GETTHUMBPOs( nPos ) CLASS HBScrollBar
 
    if ( ISNUMBER( nPos ) )
       if ( nPos < 1 )
@@ -339,14 +343,16 @@ METHOD GETTHUMBPOs( nPos ) CLASS TScrollBar
       else
          ::nThumbPos := nPos
       endif
+
       if ( nPos == 0 )
-         lShow := .F.
+         hb_p_lShow := .F.
       else
-         lShow := .T.
+         hb_p_lShow := .T.
       endif
+
    endif
    return ::nThumbPos
-METHOD GetTOTAL( nTotal ) CLASS TScrollBar
+METHOD GetTOTAL( nTotal ) CLASS HBScrollBar
 
    if ( !( ISNUMBER( nTotal ) ) )
    elseif ( nTotal < 2 )
@@ -364,7 +370,7 @@ static function THUMBPOS( oScroll )
    if ( oScroll:total < 2 )
       return .F.
    endif
-   if ( lShow )
+   if ( hb_p_lShow )
       return .T.
    endif
    nCurrent := oScroll:Current
@@ -384,8 +390,8 @@ static function THUMBPOS( oScroll )
 
 function Scrollbar(nStart,nEnd,nOffSet,bSblock,nOrient)
    Local oScroll,cStyle
-   Public lShow 
-   lShow:=.f.
+   Public hb_p_lShow := .F.
+
    if  !( ISNUMBER( nStart ) ) .or. !( ISNUMBER( nEnd ) ) .or.    !( ISNUMBER( nOffSet ) )  .or. !( ISNUMBER( nOrient ) ) 
       Return Nil
    endif
@@ -400,7 +406,7 @@ function Scrollbar(nStart,nEnd,nOffSet,bSblock,nOrient)
       return Nil
    endif
 
-   oScroll:=TScrollBar():New(nStart,nEnd,nOffSet,bSblock,nOrient)
+   oScroll:=HBScrollBar():New(nStart,nEnd,nOffSet,bSblock,nOrient)
    oScroll:Barlength:=nEnd-nStart-1
    oScroll:Cargo:=NIL
    oScroll:end:=nEnd

@@ -4,7 +4,7 @@
 
 Function Main()
 
-   local o := TObject():New()
+   local o := HBObject():New()
    QOut( "o:Data1 => ", o:Data1 )
    QOut( "o:ClassData1 => ", o:ClassData1 )
    QOut( "o:Data2 => ", o:Data2 )
@@ -18,7 +18,7 @@ Function TBaseObject()
    static oClass
 
    if oClass == NIL
-      oClass := TClass():New( "TBaseObject" )
+      oClass := HBClass():New( "TBaseObject" )
       oClass:AddData( "Data1" )
       oClass:AddClassData( "ClassData1" )
       oClass:AddMethod( "NewBase", @NewBase() )
@@ -61,12 +61,12 @@ static function Method2Base()
    QOut( "I am Method2 from TBaseObject" )
 return self
 
-Function TObject()
+Function HBObject()
 
    static oClass
 
    if oClass == NIL
-      oClass := TClass():New( "TObject", "TBaseObject" )
+      oClass := HBClass():New( "HBObject", "TBaseObject" )
       oClass:AddData( "Data2" )
       oClass:AddClassData( "ClassData2" )
       oClass:AddMethod( "New", @New() )
@@ -92,7 +92,7 @@ static function Method1()
 
    local self := QSelf()
 
-   QOut( "I am Method1 from TObject" )
+   QOut( "I am Method1 from HBObject" )
    ::TBaseObject:Method1()
 return self
 
@@ -100,5 +100,5 @@ static function Method2()
 
    local self := QSelf()
 
-   QOut( "I am Method2 from TObject" )
+   QOut( "I am Method2 from HBObject" )
 return self

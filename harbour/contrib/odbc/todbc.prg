@@ -61,7 +61,7 @@
 *+
 *+--------------------------------------------------------------------
 *+
-CLASS TODBCField FROM TClass
+CLASS TODBCField FROM HBClass
 
    DATA FieldID
    DATA FieldName
@@ -98,7 +98,7 @@ RETURN ( Self )
 *+
 *+--------------------------------------------------------------------
 *+
-CLASS TODBC FROM TClass
+CLASS TODBC FROM HBClass
 
    DATA hEnv
    DATA hDbc

@@ -22,7 +22,7 @@ FUNCTION TFileRead()
    STATIC s_oClass
 
    IF s_oClass == NIL
-      s_oClass := TClass():New( "TFile" )  // New class
+      s_oClass := HBClass():New( "TFile" )  // New class
       s_oClass:AddClassData( "cFile" )     // The filename
       s_oClass:AddClassData( "nHan" )      // The open file handle
       s_oClass:AddClassData( "lEOF" )      // The end of file reached flag
