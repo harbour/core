@@ -51,43 +51,36 @@
  *
  */
 
-/* Language name: Spanish */
-/* ISO language code (2 chars): ES */
-/* Codepage: 850 */
+// Language name: Spanish 
+// ISO language code (2 chars): ES 
+// Codepage: 850 
 
 #include <ctype.h>
 #include "hbapi.h"
 #include "hbapicdp.h"
 
-#define NUMBER_OF_CHARACTERS  33    /* The number of single characters in the
-                                       alphabet, two-as-one aren't considered
-                                       here, accented - are considered. */
-#define IS_LATIN               1    /* Should be 1, if the national alphabet
-                                       is based on Latin */
-#define ACCENTED_EQUAL         0    /* Should be 1, if accented character
-                                       has the same weight as appropriate
-                                       unaccented. */
-#define ACCENTED_INTERLEAVED   0    /* Should be 1, if accented characters
-                                       sort after their unaccented counterparts
-                                       only if the unaccented versions of all
-                                       characters being compared are the same
-                                       ( interleaving ) */
+#define NUMBER_OF_CHARACTERS  33    
+#define IS_LATIN               1    
+#define ACCENTED_EQUAL         0    
+#define ACCENTED_INTERLEAVED   0    
 
-/* If ACCENTED_EQUAL or ACCENTED_INTERLEAVED is 1, you need to mark the
-   accented characters with the symbol '~' before each of them, for example:
-    a~Ä
-   If there is two-character sequence, which is considered as one, it should
-   be marked with '.' before and after it, for example:
-      ... h.ch.i ...
-
-   The Upper case string and the Lower case string should be absolutely the
-   same excepting the characters case, of course.
- */
-
-static HB_CODEPAGE s_codepage = { "ES", NUMBER_OF_CHARACTERS,
-    "AµBCDEêFGHI÷JKLMN•O‡PQRSTUÈöVWXYZ", "a†bcdeÇfghi°jklmn§o¢pqrstu£Åvwxyz",
-    IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0,NULL, NULL,NULL,NULL,0,NULL };
-
+static HB_CODEPAGE s_codepage = 
+{ 
+  "ES", 
+  NUMBER_OF_CHARACTERS,
+  "AµBCDEêFGHI÷JKLMN•O‡PQRSTUÈöVWXYZ", 
+  "a†bcdeÇfghi°jklmn§o¢pqrstu£Åvwxyz",
+  IS_LATIN, 
+  ACCENTED_EQUAL, 
+  ACCENTED_INTERLEAVED, 
+  0,
+  NULL, 
+  NULL,
+  NULL,
+  NULL,
+  0,
+  NULL 
+};
 
 HB_CODEPAGE_INIT( ES );
 
