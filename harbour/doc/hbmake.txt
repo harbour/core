@@ -49,3 +49,10 @@ then the new make file is create.
 then call hbmake <filename>.bc
 
 If you have compiler errors use hbmake <filename>.bc -f
+
+Linux user need to create the harbour.cfg file in /etc or /usr/local/etc with the follow lines
+CC=gcc
+CFLAGS=-c -I/usr/include/harbour (this line must match your harbour include directory)
+VERBOSE=YES
+DELTMP=YES
+
