@@ -2643,7 +2643,7 @@ HB_FUNC( ORDKEYNO )
          pOrderInfo.itmOrder = hb_param( 1, HB_IT_NUMERIC );
       pOrderInfo.atomBagName = hb_param( 2, HB_IT_STRING );
       /* Either or both may be NIL */
-
+      pOrderInfo.itmNewVal = NULL;
       pOrderInfo.itmResult = hb_itemPutNL( NULL, 0 );
       SELF_ORDINFO( ( AREAP ) s_pCurrArea->pArea, DBOI_POSITION, &pOrderInfo );
       hb_retnl( hb_itemGetNL( pOrderInfo.itmResult ) );

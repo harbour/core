@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-12-03 17:28 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
+  * source/rdd/dbcmd.c
+    ! Fixed OrdKeyNo() bug that set RecNo() to LastRec() + 1
+      reported by Roberto López - borrowed from xharbour
+
 2003-12-03 14:24 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
   * include/hbapirdd.h
   * source/rdd/dbcmd.c
