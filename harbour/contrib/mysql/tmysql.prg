@@ -494,6 +494,9 @@ METHOD GetRow(nRow) CLASS TMySQLQuery
 
          // Convert answer from text field to correct clipper types
          for i := 1 to ::nNumFields
+
+          if aRow[i] != NIL
+
             do case
                case ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_TINY_TYPE
                   aRow[i] := iif(Val(aRow[i]) == 0, .F., .T.)
@@ -558,6 +561,9 @@ METHOD GetRow(nRow) CLASS TMySQLQuery
 
             endcase
             __objsetValuelist(Self,{{::aFieldStruct[i][MYSQL_FS_NAME],aRow[i]}})
+           
+           endif
+
          next
             
          oRow := TMySQLRow():New(aRow, ::aFieldStruct)

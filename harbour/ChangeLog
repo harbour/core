@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+
+2004-07-17 21:58 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * contrib/mysql/tmysql.prg
+    ! Small fix, provided by Mitja Podgornik
+
 2004-07-17 04:14 UTC-0500 David Arturo Macias Corona <dmacias@mail.udg.mx>
   * source/rtl/tget.prg
     + Added DATA CapRow and DATA CapCol values
