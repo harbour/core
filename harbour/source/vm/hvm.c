@@ -4300,7 +4300,7 @@ void hb_vmRequestCancel( void )
  * $End$ */
 HB_FUNC( __VMVARSLIST )
 {
-   PHB_ITEM pStatics = hb_arrayClone( &s_aStatics, NULL );
+   PHB_ITEM pStatics = hb_arrayClone( &s_aStatics );
 
    hb_itemCopy( &hb_stack.Return, pStatics );
    hb_itemRelease( pStatics );

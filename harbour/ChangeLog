@@ -1,3 +1,15 @@
+2001-04-28 02:10 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * include/hbapi.h
+     - Removed 2nd parameter from hb_arrayClone() declaration
+
+   * source/vm/arrays.c
+     - Removed 2nd parameter from definition of hb_arrayClone(), added a static s_pClonedList instead.
+
+   * source/vm/arrayshb.c
+   * source/vm/classes.c
+   * source/vm/hvm.c
+     - Removed 2nd parameter from calls to hb_arrayClone()
+
 2001-04-28 23:15 CET Martin Vogel <vogel@inttec.de>
 
    + contrib/libct/atrepl.c

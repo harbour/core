@@ -288,6 +288,6 @@ HB_FUNC( ACLONE )
    PHB_ITEM pSrcArray = hb_param( 1, HB_IT_ARRAY );
 
    if( pSrcArray && ! hb_arrayIsObject( pSrcArray ) )
-      hb_itemRelease( hb_itemReturn( hb_arrayClone( pSrcArray, NULL ) ) ); /* AClone() returns the new array */
+      hb_itemRelease( hb_itemReturn( hb_arrayClone( pSrcArray ) ) ); /* AClone() returns the new array */
 }
 
