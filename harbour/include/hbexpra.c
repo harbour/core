@@ -331,7 +331,9 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms )
       else if( ( strcmp( "EVAL", pName->value.asSymbol ) == 0 ) && iCount )
       {
          /* Optimize Eval( bBlock, [ArgList] ) to: bBlock:Eval( [ArgList] ) */
-         return hb_compExprNewMethodCall( hb_compExprNewSend( pParms->value.asList.pExprList, "EVAL" ), hb_compExprNewArgList( pParms->value.asList.pExprList->pNext ) );
+         return hb_compExprNewMethodCall( hb_compExprNewSend( pParms->value.asList.pExprList,
+                hb_strdup( "EVAL" ) ),
+                hb_compExprNewArgList( pParms->value.asList.pExprList->pNext ) );
       }
       else if( HB_COMP_ISSUPPORTED( HB_COMPFLAG_XBASE ) &&
           (( strcmp( "__DBLIST", pName->value.asSymbol ) == 0 ) && iCount >= 10) )
