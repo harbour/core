@@ -675,7 +675,7 @@ BOOL hb_gt_AdjustPos( BYTE * pStr, ULONG ulLen )
 
    GetConsoleScreenBufferInfo( s_HActive, &csbi );
 
-   hb_gtSetPos( csbi.dwCursorPosition.Y, csbi.dwCursorPosition.X, HB_GT_SET_POS_AFTER );
+   hb_gt_SetPos( csbi.dwCursorPosition.Y, csbi.dwCursorPosition.X, HB_GT_SET_POS_AFTER );
 
    return TRUE;
 }
