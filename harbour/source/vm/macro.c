@@ -1137,6 +1137,17 @@ void hb_compGenPCode1( BYTE byte, HB_MACRO_DECL )
    pFunc->pCode[ pFunc->lPCodePos++ ] = byte;
 }
 
+void hb_compGenPCode2( BYTE byte1, BYTE byte2, HB_MACRO_DECL )
+{
+   HB_PCODE_INFO_PTR pFunc = HB_PCODE_DATA;
+
+   if( ( pFunc->lPCodeSize - pFunc->lPCodePos ) < 2 )
+      pFunc->pCode = ( BYTE * ) hb_xrealloc( pFunc->pCode, pFunc->lPCodeSize += HB_PCODE_SIZE );
+
+   pFunc->pCode[ pFunc->lPCodePos++ ] = byte1;
+   pFunc->pCode[ pFunc->lPCodePos++ ] = byte2;
+}
+
 void hb_compGenPCode3( BYTE byte1, BYTE byte2, BYTE byte3, HB_MACRO_DECL )
 {
    HB_PCODE_INFO_PTR pFunc = HB_PCODE_DATA;

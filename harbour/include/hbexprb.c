@@ -1085,7 +1085,11 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
             }
             else
                usCount = 0;
-            HB_EXPR_PCODE3( hb_compGenPCode3, HB_P_FUNCTION, HB_LOBYTE( usCount ), HB_HIBYTE( usCount ) );
+
+            if( usCount > 255 )
+               HB_EXPR_PCODE3( hb_compGenPCode3, HB_P_FUNCTION, HB_LOBYTE( usCount ), HB_HIBYTE( usCount ) );
+            else
+               HB_EXPR_PCODE2( hb_compGenPCode2, HB_P_FUNCTIONSHORT, ( BYTE ) usCount );
          }
          break;
 
@@ -1110,7 +1114,11 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
             }
             else
                usCount = 0;
-            HB_EXPR_PCODE3( hb_compGenPCode3, HB_P_DO, HB_LOBYTE( usCount ), HB_HIBYTE( usCount ) );
+
+            if( usCount > 255 )
+               HB_EXPR_PCODE3( hb_compGenPCode3, HB_P_DO, HB_LOBYTE( usCount ), HB_HIBYTE( usCount ) );
+            else
+               HB_EXPR_PCODE2( hb_compGenPCode2, HB_P_DOSHORT, ( BYTE ) usCount );
          }
          break;
 
@@ -1516,14 +1524,18 @@ static HB_EXPR_FUNC( hb_compExprUseSend )
                   --iParms;
                if( iParms )
                   HB_EXPR_USE( pSelf->value.asMessage.pParms, HB_EA_PUSH_PCODE );
-               HB_EXPR_PCODE3( hb_compGenPCode3, HB_P_FUNCTION, HB_LOBYTE( iParms ), HB_HIBYTE( iParms ) );
+
+               if( iParms > 255 )
+                  HB_EXPR_PCODE3( hb_compGenPCode3, HB_P_FUNCTION, HB_LOBYTE( iParms ), HB_HIBYTE( iParms ) );
+               else
+                  HB_EXPR_PCODE2( hb_compGenPCode2, HB_P_FUNCTIONSHORT, ( BYTE ) iParms );
             }
             else
             {
                /* acces to instance variable */
                HB_EXPR_USE( pSelf->value.asMessage.pObject, HB_EA_PUSH_PCODE );
                HB_EXPR_PCODE1( hb_compGenMessage, pSelf->value.asMessage.szMessage );
-               HB_EXPR_PCODE3( hb_compGenPCode3, HB_P_FUNCTION, 0, 0 );
+               HB_EXPR_PCODE2( hb_compGenPCode2, HB_P_FUNCTIONSHORT, 0 );
             }
          }
          break;
@@ -1536,7 +1548,7 @@ static HB_EXPR_FUNC( hb_compExprUseSend )
             HB_EXPR_USE( pSelf->value.asMessage.pObject, HB_EA_PUSH_PCODE );
             HB_EXPR_PCODE1( hb_compGenMessageData, pSelf->value.asMessage.szMessage );
             HB_EXPR_USE( pSelf->value.asMessage.pParms, HB_EA_PUSH_PCODE );
-            HB_EXPR_PCODE3( hb_compGenPCode3, HB_P_FUNCTION, 1, 0 );
+            HB_EXPR_PCODE2( hb_compGenPCode2, HB_P_FUNCTIONSHORT, 1 );
          }
          break;
 

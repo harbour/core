@@ -95,7 +95,7 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
 #endif
       /* now send the message */
       HB_EXPR_PCODE1( hb_compGenMessage, pObj->value.asMessage.szMessage );
-      HB_EXPR_PCODE3( hb_compGenPCode3, HB_P_FUNCTION, 0, 0 );
+      HB_EXPR_PCODE2( hb_compGenPCode2, HB_P_FUNCTIONSHORT, 0 );
 
 /* NOTE: COMPATIBILITY ISSUE:
  *  The above HB_C52_STRICT setting determines
@@ -128,7 +128,7 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
       HB_EXPR_PCODE1( hb_compGenPCode1, bOpEq );
 
       /* call pop message with one argument */
-      HB_EXPR_PCODE3( hb_compGenPCode3, HB_P_FUNCTION, 1, 0 );
+      HB_EXPR_PCODE2( hb_compGenPCode2, HB_P_FUNCTIONSHORT, 1 );
    }
    /* TODO: add a special code for arrays to correctly handle a[ i++ ]++
     */
@@ -176,7 +176,7 @@ void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
 #endif
       /* now send the message */
       HB_EXPR_PCODE1( hb_compGenMessage, pObj->value.asMessage.szMessage );
-      HB_EXPR_PCODE3( hb_compGenPCode3, HB_P_FUNCTION, 0, 0 );
+      HB_EXPR_PCODE2( hb_compGenPCode2, HB_P_FUNCTIONSHORT, 0 );
 
       /* push increment value */
       HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
@@ -184,7 +184,7 @@ void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
       HB_EXPR_PCODE1( hb_compGenPCode1, bOpEq );
 
       /* call pop message with one argument */
-      HB_EXPR_PCODE3( hb_compGenPCode3, HB_P_FUNCTION, 1, 0 );
+      HB_EXPR_PCODE2( hb_compGenPCode2, HB_P_FUNCTIONSHORT, 1 );
       /* pop the value from the stack */
       HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
    }
@@ -230,13 +230,13 @@ void hb_compExprPushPreOp( HB_EXPR_PTR pSelf, BYTE bOper )
 #endif
       /* now send the message */
       HB_EXPR_PCODE1( hb_compGenMessage, pObj->value.asMessage.szMessage );
-      HB_EXPR_PCODE3( hb_compGenPCode3, HB_P_FUNCTION, 0, 0 );
+      HB_EXPR_PCODE2( hb_compGenPCode2, HB_P_FUNCTIONSHORT, 0 );
 
       /* increase/decrease operation */
       HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
 
       /* call pop message with one argument - it leaves the value on the stack */
-      HB_EXPR_PCODE3( hb_compGenPCode3, HB_P_FUNCTION, 1, 0 );
+      HB_EXPR_PCODE2( hb_compGenPCode2, HB_P_FUNCTIONSHORT, 1 );
    }
    else
    {

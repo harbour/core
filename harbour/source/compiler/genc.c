@@ -280,7 +280,7 @@ static void hb_compGenCReadable( PFUNCTION pFunc, FILE * yyc )
             break;
 
          case HB_P_DOSHORT:
-            fprintf( yyc, "\tHB_P_DO, %i,\n", pFunc->pCode[ lPCodePos + 1 ] );
+            fprintf( yyc, "\tHB_P_DOSHORT, %i,\n", pFunc->pCode[ lPCodePos + 1 ] );
             lPCodePos += 2;
             break;
 
@@ -1158,7 +1158,7 @@ static void hb_compGenCReadable( PFUNCTION pFunc, FILE * yyc )
             break;
 
          case HB_P_PUSHSYMNEAR:
-            fprintf( yyc, "\tHB_P_PUSHSYMNEAR, %i, %i,",
+            fprintf( yyc, "\tHB_P_PUSHSYMNEAR, %i,",
                      pFunc->pCode[ lPCodePos + 1 ] );
             if( bVerbose ) fprintf( yyc, "\t/* %s */", hb_compSymbolGetPos( pFunc->pCode[ lPCodePos + 1 ] )->szName );
             fprintf( yyc, "\n" );

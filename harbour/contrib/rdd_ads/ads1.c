@@ -985,7 +985,7 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
    UNSIGNED8  aucBuffer[MAX_STR_LEN + 1];
    UNSIGNED16 pusLen = MAX_STR_LEN;
 
-   HB_TRACE(HB_TR_DEBUG, ("adsOrderInfo(%p, %hu, %p)", pArea, uiIndex, pInfo));
+   HB_TRACE(HB_TR_DEBUG, ("adsOrderInfo(%p, %hu, %p)", pArea, uiIndex, pOrderInfo));
 
    if( pOrderInfo->itmOrder && !HB_IS_NIL(pOrderInfo->itmOrder) )
    {

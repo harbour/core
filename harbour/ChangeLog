@@ -1,3 +1,23 @@
+20000422-22:47 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * include/hbexprb.c
+   * include/hbexprc.c
+   * include/hbmacro.h
+   * source/compiler/harbour.y
+   * source/vm/macro.c
+     % Compiler now generates HB_P_DOSHORT and HB_P_FUNCTIONSHORT pcodes where
+       possible.
+
+   * source/compiler/genc.c
+     ! Fixed pcode generation (-gc1/2) for PUSHSYMNEAR
+
+   * source/rtl/gtpca/gtpca.c
+   * contrib/rdd_ads/ads1.c
+     ! Fixed broken trace calls.
+
+   * source/compiler/harbour.c
+     ! GCC -O2 warning fixed.
+
 20000422-21:36 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * include/hbpcode.h

@@ -305,10 +305,10 @@ Statement  : ExecFlow   CrlfStmnt   { }
            | ExprEqual CrlfStmnt    { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
            | ExprAssign CrlfStmnt   { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
            | DoProc CrlfStmnt       { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
-           | BREAK CrlfStmnt        { hb_compGenBreak(); hb_compGenPCode3( HB_P_DO, 0, 0 );
+           | BREAK CrlfStmnt        { hb_compGenBreak(); hb_compGenPCode2( HB_P_DOSHORT, 0 );
                                       hb_comp_functions.pLast->bFlags |= FUN_BREAK_CODE; }
            | BREAK { hb_compLinePushIfInside(); } Expression Crlf  { hb_compGenBreak(); hb_compExprDelete( hb_compExprGenPush( $3 ) );
-                                           hb_compGenPCode3( HB_P_DO, 1, 0 );
+                                           hb_compGenPCode2( HB_P_DOSHORT, 1 );
                                            hb_comp_functions.pLast->bFlags |= FUN_BREAK_CODE;
                                          }
            | RETURN CrlfStmnt {
@@ -1827,7 +1827,10 @@ static void hb_compRTVariableGen( char * szCreateFun )
    ++usCount;
 
    /* call function that will create either PUBLIC or PRIVATE variables */
-   hb_compGenPCode3( HB_P_DO, HB_LOBYTE( usCount ), HB_HIBYTE( usCount ) );
+   if( usCount > 255 )
+      hb_compGenPCode3( HB_P_DO, HB_LOBYTE( usCount ), HB_HIBYTE( usCount ) );
+   else
+      hb_compGenPCode2( HB_P_DOSHORT, ( BYTE ) usCount );
 
    /* pop initial values */
    while( pVar )

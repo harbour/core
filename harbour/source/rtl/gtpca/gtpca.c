@@ -357,7 +357,7 @@ void hb_gt_GetText( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight
 
 void hb_gt_PutText( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight, BYTE *src )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_PutText(%hu, %hu, %hu, %hu, %p)", usTop, usLeft, usBottom, usRight, srce) );
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_PutText(%hu, %hu, %hu, %hu, %p)", usTop, usLeft, usBottom, usRight, src) );
    HB_SYMBOL_UNUSED( usTop );
    HB_SYMBOL_UNUSED( usLeft );
    HB_SYMBOL_UNUSED( usBottom );

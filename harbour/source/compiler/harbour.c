@@ -2237,11 +2237,11 @@ void hb_compGenPushInteger( int iNumber )
 {
    if( lNumber == 0 )
       hb_compGenPCode1( HB_P_ZERO );
-   else if ( lNumber == 1 )
+   else if( lNumber == 1 )
       hb_compGenPCode1( HB_P_ONE );
-   else if ( ( ( char * ) &lNumber )[ 2 ] == 0 && ( ( char * ) &lNumber )[ 3 ] == 0 )
+   else if( ( ( char * ) &lNumber )[ 2 ] == 0 && ( ( char * ) &lNumber )[ 3 ] == 0 )
    {
-      if ( ( ( char * ) &lNumber )[ 1 ] == 0 )
+      if( ( ( char * ) &lNumber )[ 1 ] == 0 )
          hb_compGenPCode2( HB_P_PUSHBYTE, ( ( char * ) &lNumber )[ 0 ] );
       else
          hb_compGenPCode3( HB_P_PUSHINT, ( ( char * ) &lNumber )[ 0 ], ( ( char * ) &lNumber )[ 1 ] );
@@ -2260,11 +2260,11 @@ void hb_compGenPushLong( long lNumber )
 {
    if( lNumber == 0 )
       hb_compGenPCode1( HB_P_ZERO );
-   else if ( lNumber == 1 )
+   else if( lNumber == 1 )
       hb_compGenPCode1( HB_P_ONE );
-   else if ( ( ( char * ) &lNumber )[ 2 ] == 0 && ( ( char * ) &lNumber )[ 3 ] == 0 )
+   else if( ( ( char * ) &lNumber )[ 2 ] == 0 && ( ( char * ) &lNumber )[ 3 ] == 0 )
    {
-      if ( ( ( char * ) &lNumber )[ 1 ] == 0 )
+      if( ( ( char * ) &lNumber )[ 1 ] == 0 )
          hb_compGenPCode2( HB_P_PUSHBYTE, ( ( char * ) &lNumber )[ 0 ] );
       else
          hb_compGenPCode3( HB_P_PUSHINT, ( ( char * ) &lNumber )[ 0 ], ( ( char * ) &lNumber )[ 1 ] );
@@ -2399,7 +2399,7 @@ void hb_compOptimizeFrames()
       bLocals++;
    }
 
-   if ( bLocals || pFunc->wParamCount )
+   if( bLocals || pFunc->wParamCount )
    {
       pFunc->pCode[ 1 ] = ( BYTE )( bLocals - pFunc->wParamCount );
       pFunc->pCode[ 2 ] = ( BYTE )( pFunc->wParamCount );
@@ -2423,22 +2423,22 @@ void hb_compOptimizeFrames()
          pOptimized = ( BYTE * ) hb_xgrab( pFunc->lPCodePos - 6 );
 
          ulNextByte = 6;
-         while ( ulNextByte < pFunc->lPCodePos )
+         while( ulNextByte < pFunc->lPCodePos )
             pOptimized[ ulOptimized++ ] = pFunc->pCode[ ulNextByte++ ];
 
          pFunc->lPCodePos -= 6;
       }
-      else if ( bSkipFRAME )
+      else if( bSkipFRAME )
       {
          pOptimized = ( BYTE * ) hb_xgrab( hb_comp_functions.pLast->lPCodePos - 3 );
 
          ulNextByte = 3;
-         while ( ulNextByte < pFunc->lPCodePos )
-             pOptimized[ ulOptimized++ ] = pFunc->pCode[ ulNextByte++ ];
+         while( ulNextByte < pFunc->lPCodePos )
+            pOptimized[ ulOptimized++ ] = pFunc->pCode[ ulNextByte++ ];
 
          pFunc->lPCodePos -= 3;
       }
-      else if ( bSkipSFRAME )
+      else if( bSkipSFRAME )
       {
          pOptimized = ( BYTE * ) hb_xgrab( hb_comp_functions.pLast->lPCodePos - 3 );
 
@@ -2454,6 +2454,8 @@ void hb_compOptimizeFrames()
 
          pFunc->lPCodePos -= 3;
       }
+      else
+         pOptimized = NULL; /* To avoid GCC -O2 warning */
 
       hb_xfree( ( void * ) pFunc->pCode );
       pFunc->pCode = pOptimized;
@@ -2680,7 +2682,7 @@ void hb_compOptimizeJumps( void )
    {
       ulBytes2Copy = ( pNOOPs[ iNOOP ] - ulNextByte ) ;
 
-      while ( ulBytes2Copy-- > 0 )
+      while( ulBytes2Copy-- > 0 )
          pOptimized[ ulOptimized++ ] = pCode[ ulNextByte++ ];
 
       /* Skip the NOOP and point to next valid byte */
@@ -2691,8 +2693,8 @@ void hb_compOptimizeJumps( void )
    //getchar();
 
    /* Copy remainder beyond the last NOOP. */
-   while ( ulNextByte < hb_comp_functions.pLast->lPCodePos )
-       pOptimized[ ulOptimized++ ] = pCode[ ulNextByte++ ];
+   while( ulNextByte < hb_comp_functions.pLast->lPCodePos )
+      pOptimized[ ulOptimized++ ] = pCode[ ulNextByte++ ];
 
    //printf( "\rCopied" );
    //getchar();

@@ -541,9 +541,20 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             w += 3;
             break;
 
+         case HB_P_DOSHORT:
+            hb_inkeyPoll();           /* Poll the console keyboard */
+            hb_vmDo( pCode[ w + 1 ] );
+            w += 2;
+            break;
+
          case HB_P_FUNCTION:
             hb_vmFunction( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
             w += 3;
+            break;
+
+         case HB_P_FUNCTIONSHORT:
+            hb_vmFunction( pCode[ w + 1 ] );
+            w += 2;
             break;
 
          case HB_P_LINE:
@@ -907,8 +918,13 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             {
                USHORT uiSize = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
                hb_vmPushString( ( char * ) pCode + w + 3, ( ULONG ) uiSize );
-               w += ( uiSize + 3 );
+               w += ( 3 + uiSize );
             }
+            break;
+
+         case HB_P_PUSHSTRSHORT:
+            hb_vmPushString( ( char * ) pCode + w + 2, ( ULONG ) pCode[ w + 1 ] );
+            w += ( 2 + pCode[ w + 1 ] );
             break;
 
          case HB_P_PUSHBLOCK:
@@ -930,6 +946,11 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          case HB_P_PUSHSYM:
             hb_vmPushSymbol( pSymbols + ( USHORT ) ( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) ) );
             w += 3;
+            break;
+
+         case HB_P_PUSHSYMNEAR:
+            hb_vmPushSymbol( pSymbols + ( USHORT ) pCode[ w + 1 ] );
+            w += 2;
             break;
 
          case HB_P_PUSHALIAS:
