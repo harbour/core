@@ -3,7 +3,7 @@
  *  $FUNCNAME$
  *      TBROWSENew()
  *  $CATEGORY$
- *      Class
+ *      TBrowse class
  *  $ONELINER$
  *      Create a Browse Object
  *  $CONSTRUCTOR$
@@ -23,7 +23,6 @@
  *      <nTop>,<nLeft> to bottom-right coordinates of <nBottom>,<nRight>.
  *      To browse Database files use TBROWSEDB() function insted.
  *  $DATANOLINK$
- *                  
  *      :aColumns       Array to hold all browse columns
 
  *      :autoLite       Logical value to control highlighting
@@ -92,9 +91,11 @@
 
  *      :aKeys        Holds the Default movement keys
  *  $METHODSLINK$
- *      SetKey()    Add an New key to the Keyboard dictionary
+ *      AddColumn() Adds an new TBColumn object to the current Browse
  *
  *      Applykey()  Perform the Browse Key movement
+ *
+ *      SetKey()    Add an New key to the Keyboard dictionary
  *  $METHODSNOLINK$
  *      New(nTop, nLeft, nBottom, nRight) Create an new Browse class and set the
  *      default values
@@ -126,8 +127,6 @@
  *      Right()      Moves the cursor right one column
  *  
  *      Up()         Moves the cursor up one row
- *  
- *      AddColumn( oCol ) Adds an new TBColumn object to the current Browse
  *  
  *      ColCount()    Return the Current number of Columns
  *  
@@ -188,7 +187,7 @@
  *  $METHOD$
  *      SetKey()
  *  $CATEGORY$
- *      Class methods
+ *      TBrowse Method
  *  $ONELINER$
  *      Get an optionaly Set an new Code block associated to a inkey value
  *  $SYNTAX$
@@ -250,7 +249,7 @@
  *  $METHOD$
  *      Applykey()
  *  $CATEGORY$
- *      Class Method
+ *      TBrowse Method
  *  $ONELINER$
  *      Evaluates an code block associated with an specific key    
  *  $SYNTAX$
@@ -280,3 +279,21 @@
  *  $END$           
  */
 
+/*  $CLASSDOC$     
+ *  $METHOD$
+ *      AddColumn()
+ *  $CATEGORY$
+ *      TBrowse Method
+ *  $ONELINER$
+ *      Add an New Column to an TBrowse Object
+ *  $SYNTAX$
+ *      AddColumn(oCol) --> Self
+ *  $ARGUMENTS$
+ *      <oCol>  Is an TbColumn object
+ *  $RETURNS$
+ *      <Self>  The Current object
+ *  $DESCRIPTION$
+ *      This method add an new column object specified as <oCol> to the
+ *      assigned browsing object.
+ *  $END$           
+ */

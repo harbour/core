@@ -21,7 +21,7 @@
  *    Documentation for: DEVOUTPICT()
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
- *    Documentation for: EJECT
+ *    Documentation for: EJECT,MAXROW(),MAXCOL(),ROW(),COL(),PROW(),PCOL()
  *
  * See doc/license.txt for licensing terms.
  *
@@ -725,3 +725,134 @@
  *  $END$
  */
 
+/*  $DOC$
+ *  $FUNCNAME$
+ *      COL()
+ *  $CATEGORY$
+ *      GT
+ *  $ONELINER$
+ *      Returns the current screen column position
+ *  $SYNTAX$
+ *      COL()  --> nPosition
+ *  $ARGUMENTS$
+ *      None.
+ *  $RETURNS$
+ *      <nPosition>  Current column position
+ *  $DESCRIPTION$
+ *      This function returns the current cursor column position.The value
+ *      for this function can range between 0 and MAXCOL().
+ *  $EXAMPLES$
+ *      ? Col()
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This Functions is Ca-Clipper compliant
+ *  $PLATFORMS$
+ *      All
+ *  $FILES$
+ *      Library is rtl
+ *  $SEEALSO$
+ *      ROW(),MAXROW(),MAXCOL()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      ROW()
+ *  $CATEGORY$
+ *      GT
+ *  $ONELINER$
+ *      Returns the current screen row position
+ *  $SYNTAX$
+ *      ROW()  --> nPosition
+ *  $ARGUMENTS$
+ *      None.
+ *  $RETURNS$
+ *      <nPosition>  Current screen row position
+ *  $DESCRIPTION$
+ *      This function returns the current cursor row location.The value
+ *      for this function can range between 0 and MAXCOL().
+ *  $EXAMPLES$
+ *      ? Row()
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This Functions is Ca-Clipper compliant
+ *  $PLATFORMS$
+ *      All
+ *  $FILES$
+ *      Library is rtl
+ *  $SEEALSO$
+ *      COL(),MAXROW(),MAXCOL()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      MAXCOL()
+ *  $CATEGORY$
+ *      GT
+ *  $ONELINER$
+ *      Returns the maximun number of columns in the current video mode
+ *  $SYNTAX$
+ *      MAXCOL()  --> nPosition
+ *  $ARGUMENTS$
+ *      None.
+ *  $RETURNS$
+ *      <nPosition>  The maximun number of columns possible in current video
+ *      mode
+ *  $DESCRIPTION$
+ *      This function returns the current cursor column position.The value
+ *      for this function can range between 0 and MAXCOL().
+ *  $EXAMPLES$
+ *      ? MAXCol()
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This Functions is Ca-Clipper compliant.
+ *  $PLATFORMS$
+ *      It works in all platform with some remarks:Under Linux and OS/2 the
+ *      number of columns avaliable depends of the current Terminal screen
+ *      size.Under Win32, the return value of MAXCOL() function is only
+ *      affected if called after an SETMODE() function
+ *  $FILES$
+ *      Library is rtl
+ *  $SEEALSO$
+ *      ROW(),MAXROW(),COL()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      MAXROW()
+ *  $CATEGORY$
+ *      GT
+ *  $ONELINER$
+ *      Returns the current screen row position
+ *  $SYNTAX$
+ *      MAXROW()  --> nPosition
+ *  $ARGUMENTS$
+ *      None.
+ *  $RETURNS$
+ *      <nPosition>  The maximun number of rows possible in current video
+ *      mode
+ *  $DESCRIPTION$
+ *      This function returns the current cursor row location.The value
+ *      for this function can range between 0 and MAXCOL().
+ *  $EXAMPLES$
+ *      ? MAXROW()
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This Functions is Ca-Clipper compliant
+ *  $PLATFORMS$
+ *      It works in all platform with some remarks:Under Linux and OS/2 the
+ *      number of columns avaliable depends of the current Terminal screen
+ *      size.Under Win32, the return value of MAXCOL() function is only
+ *      affected if called after an SETMODE() function
+ *  $FILES$
+ *      Library is rtl
+ *  $SEEALSO$
+ *      COL(),ROW(),MAXCOL()
+ *  $END$
+ */

@@ -458,10 +458,11 @@
  *      <cDriver>   Name of the RDD
  *
  *      <lOpenNew>  3-way toggle to Open the file in New or Current workarea:
+ *
  *                       <table>
- *                       NIL    The file is not opened.
- *                       True   It is opened in a New area.
- *                       False  It is opened in the current area.
+ *                       NIL     The file is not opened.
+ *                       True    It is opened in a New area.
+ *                       False   It is opened in the current area.
  *                  </table>
  *      <cAlias>    Name of database Alias
  *  $RETURNS$

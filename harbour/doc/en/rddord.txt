@@ -1,6 +1,11 @@
 /*
  * $Id$
  */
+         ordKey
+         ordFor
+         ordBagName
+         ordName
+         ordNumber
 
 /*
  * The following parts are Copyright of the individual authors.
@@ -75,14 +80,17 @@
  *      work area. If <nOrder> is specidied,it will represent the position
  *      in the order list of the target order.If <cOrderName> is specified,
  *      it will represent the name of the target order.In essence,it will
- *      tell the name of the database (if That Rddis in use) for a given
- *      index name or index order number.
+ *      tell the name of the database (if That Rdd is in use) for a given
+ *      index name or index order number.If <cOrderName> is not specified
+ *      or <nOrder> is 0, the Current active order will be used.
  *  $EXAMPLES$
  *      USE Tests VIA "DBFCDX" NEW
  *      Set index to TESTs
  *      ORDBAGNAME( "TeName" )        // Returns: Customer
  *      ORDBAGNAME( "TeLast" )        // Returns: Customer
  *      ORDBAGNAME( "teZip" )         // Returns: Customer
+ *      Set Order to Tag TeName
+ *      ? OrderBagName() //Return Custumer
  *  $TESTS$
  *      See Examples
  *  $STATUS$
@@ -273,29 +281,24 @@
  *  $ONELINER$
  *      Return the FOR expression of an Order
  *  $SYNTAX$
- *      ORDFOR(<cOrderName> | <nOrder>[, <cOrderBagName>]) --> cForExp
+ *      ORDFOR(<xOrder>[, <cOrderBagName>]) --> cForExp
  *
  *  $ARGUMENTS$
- *      <cOrderName> is the name of the target Order, whose cForExp is
- *   sought.
+ *      <xOrder>  It the name of the target order,or the numeric position
+ *      of the order.
  *
- *      <nOrder> is an integer that identifies the position in the Order
- *   List of the target Order whose cForExp is sought.
- *
- *     <cOrderBagName> is the name of an Order Bag containing one or more
- *   Orders.  You may specify <cOrderBagName> as the filename with or without
- *   the pathname or appropriate extension.  If you do not include the
- *   extension as part of <cOrderBagName> HARBOUR uses the default
- *   extension of the current RDD.
+ *      <cOrderBagName> Name of the order bag.
  *  $RETURNS$
  *      ORDFOR() returns a expression containing the FOR condition for
- *      an order
+ *      an order.
  *  $DESCRIPTION$
- *     ORDFOR() is an Order management function that returns the character
- *   string, cForExp, that represents the logical FOR condition of the Order,
- *   <cOrderName> or <nOrder>.
+ *      This function returns a character string that is the expression for
+ *      the FOR condition for the specified order.The order may be specified
+ *      if <xOrder> is the name of the order.However,<xOrder> may be an
+ *      numeric which represent the position in the order list of the desired
+ *      Order.
  *  $EXAMPLES$
- *      USE Tests NEW
+ *      USE Tests NEW via _DBFCDX
  *      INDEX ON  Tests->Id ;
  *         TO  TESTS          ;
  *         FOR Tests->Id > 100
@@ -306,7 +309,9 @@
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
- *      This function is Ca-Clipper compliant
+ *      This function is Ca-Clipper compliant with one exception.
+ *      If the <xOrder> paramter is not specified or <xOrder> is 0, the current
+ *      active order is used.
  *  $PLATFORMS$
  *      All   
  *  $FILES$
@@ -324,22 +329,14 @@
  *  $ONELINER$
  *      Return the key expression of an Order
  *  $SYNTAX$
- *     ORDKEY(<cOrderName> | <nOrder>
- *      [, <cOrderBagName>]) --> cExpKey
+ *      ORDKEY(<cOrderName> | <nOrder> [, <cOrderBagName>]) --> cExpKey
  *  $ARGUMENTS$
- *     <cOrderName> is the name of an Order, a logical ordering of a
- *   database.
+ *      <xOrder>  It the name of the target order,or the numeric position
+ *      of the order.
  *
- *     <nOrder> is an integer that identifies the position in the Order
- *   List of the target Order whose cExpKey is sought.
- *
- *     <cOrderBagName> is the name of a disk file containing one or more
- *   Orders.  You may specify <cOrderBagName> as the filename with or without
- *   the pathname or appropriate extension.  If you do not include the
- *   extension as part of <cOrderBagName> HARBOUR uses the default
- *   extension of the current RDD.
+ *      <cOrderBagName> Name of the order bag.
  *  $RETURNS$
- *      Returns a character string, cExpKey.
+ *      <cExpKey> Returns a character string, cExpKey.
  *  $DESCRIPTION$
  *     ORDKEY() is an Order management function that returns a character
  *   expression, cExpKey, that represents the key expression of the specified
@@ -354,26 +351,28 @@
  *   while other RDDs may support multiple-Order Bags (e.g., the DBFCDX and
  *   DBFMDX drivers).
  *  $EXAMPLES$
- *     This example retrieves the index expression from an Order:
- *
- *      USE Customer NEW
+ *      USE Customer NEW via _DBFCDX
  *      INDEX ON  Customer->Acct  ;
  *         TO  Customer           ;
  *         FOR Customer->Acct > "AZZZZZ"
- *
+ *      Index on Custumer->Id to Cusid
+ *      
  *      ORDKEY( "Customer" )      // Returns: Customer->Acct
- *  $TESTS$
- *
+ *      Set order to 2
+ *      ORDKEY()                  // Returns: Custumer->Id
+ *      
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
- *
+ *      This function is Ca-Clipper compliant with one exception.
+ *      If the <xOrder> paramter is not specified or <xOrder> is 0, the current
+ *      active order is used.
  *  $PLATFORMS$
  *      All   
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
- *      ORDFOR(),ORDNAME(),ORDNUMBER()
+ *      ORDFOR(),ORDNAME(),ORDNUMBER(),ORDKEY()
  *  $END$
  */
 
@@ -543,8 +542,7 @@
  *  $ONELINER$
  *      Return the name of an Order in the Order List
  *  $SYNTAX$
- *      ORDNAME(<nOrder>[,<cOrderBagName>])
- *      --> cOrderName
+ *      ORDNAME(<nOrder>[,<cOrderBagName> --> cOrderName
  *  $ARGUMENTS$
  *     <nOrder> is an integer that identifies the position in the Order
  *   List of the target Order whose database name is sought.
@@ -555,8 +553,8 @@
  *   extension as part of <xcOrderBagName> HARBOUR uses the default
  *   extension of the current RDD.
  *  $RETURNS$
- *     ORDNAME() returns the name of the specified Order in the current Order
- *   List or the specified Order Bag if opened in the Current Order list.
+ *      ORDNAME() returns the name of the specified Order in the current Order
+ *      List or the specified Order Bag if opened in the Current Order list.
  *  $DESCRIPTION$
  *     ORDNAME() is an Order management function that returns the name of the
  *   specified Order in the current Order List.
@@ -607,17 +605,16 @@
  *  $ONELINER$
  *      Return the position of an Order in the current Order List
  *  $SYNTAX$
- *     ORDNUMBER(<cOrderName>
- *      [, <cOrderBagName>]) --> nOrderNo
+ *      ORDNUMBER(<cOrderName> [, <cOrderBagName>]) --> nOrderNo
  *  $ARGUMENTS$
- *     <cOrderName> the name of the specific Order whose position in the
- *   Order List is sought.
+ *      <cOrderName> the name of the specific Order whose position in the
+ *      Order List is sought.
  *
- *     <cOrderBagName> is the name of a disk file containing one or more
- *   Orders.  You may specify <cOrderBagName> as the filename with or without
- *   the pathname or appropriate extension.  If you do not include the
- *   extension as part of <cOrderBagName> HARBOUR uses the default
- *   extension of the current RDD.
+ *      <cOrderBagName> is the name of a disk file containing one or more
+ *      Orders.  You may specify <cOrderBagName> as the filename with or without
+ *      the pathname or appropriate extension.  If you do not include the
+ *      extension as part of <cOrderBagName> HARBOUR uses the default
+ *      extension of the current RDD.
  *  $RETURNS$
  *     Returns nOrderNo, an integer that represents the position of the
  *   specified Order in the Order List.
@@ -743,7 +740,6 @@
  *      IF INDEXEXT()==".NTX"
  *          ? "Current driver being used is DBFNTX"
  *      Endif
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -782,7 +778,6 @@
  *  $EXAMPLES$
  *      USE TESTS NEW INDEX TEST1
  *      ? INDEXKEY(1)
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -819,7 +814,6 @@
  *      IF INDEXORD()>0
  *          ? "Current order is ",INDEXORD()
  *      Endif
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
