@@ -82,6 +82,16 @@
 
 static int s_internal_math_error = 0; /* TOFIX: This is not thread safe. */
 
+int hb_getMathError( void )
+{
+   return( s_internal_math_error );
+}
+
+void hb_resetMathError( void )
+{
+   s_internal_math_error = 0;
+}
+
 /* define harbour specific error handler for math errors
  */
 int matherr( struct exception * err )

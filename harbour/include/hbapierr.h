@@ -75,7 +75,7 @@ extern "C" {
 
 /* oError:Severity */
 
-/* ... defined in extend.ch */
+/* ... defined in error.ch */
 
 /* oError:SubSystem (commonly used) */
 
