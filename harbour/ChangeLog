@@ -8,6 +8,16 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-07-07 01:10 UTC-0300 Walter Negro <anegro@overnet.com.ar>
+  * source/rtl/transfrm.c
+    ! Fix with numeric values and pictures with spaces and pictures with
+      severals dot.
+      The return values are compliant with Clipper.
+      eg: Transform( 1234, "9 999" )
+      eg: Transform( 123.123456, "999.99.99.99" )
+
+      Reported by Richard Chidiak
+
 2002-07-06 17:18 UTC+0100 Antonio Linares <alinares@fivetech.com>
    * harbour/source/debug/debugger.prg
      * Chr( 13 ) + Chr( 10 ) changed into HB_OsNewLine()
