@@ -37,6 +37,9 @@ del *.ngi
 del *.ngo
 del ngi\*.txt
 del ngi\*.ngi
+del libmisc.lnk
+ren libmisc.old libmisc.lnk
+
 GOTO END
 :OS2
    hbdoc /OS2 libmisc.lnk libmisc.rsp
@@ -44,6 +47,9 @@ GOTO END
 :RTF
    hbdoc /RTF libmisc.lnk libmisc.rsp
    HCW HARBOUR.HPJ
+del libmisc.lnk
+ren libmisc.old libmisc.lnk
+
 GOTO END
 :HTM
     hbdoc /HTM libmisc.lnk libmisc.rsp
@@ -51,6 +57,4 @@ GOTO END
 :END
 del ass*.bat
 
-del libmisc.lnk
-ren libmisc.old libmisc.lnk
 

@@ -11,6 +11,7 @@ if "%1" =="/RTF" goto RTF
 if "%1" =="/rtf" goto RTF
 if "%1" =="/HTM" goto HTM
 if "%1" =="/htm" goto HTM
+if "%1" == ""    goto help
 ECHO Assembling input files
 :help
     echo.
@@ -36,6 +37,9 @@ del *.ngi
 del *.ngo
 del ngi\*.txt
 del ngi\*.ngi
+del libmisc.lnk
+ren libmisc.old libmisc.lnk
+
 GOTO END
 :OS2
    hbdoc /OS2 libmisc.lnk libmisc.rsp
@@ -43,6 +47,9 @@ GOTO END
 :RTF
    hbdoc /RTF libmisc.lnk libmisc.rsp
    HCW HARBOUR.HPJ
+del libmisc.lnk
+ren libmisc.old libmisc.lnk
+
 GOTO END
 :HTM
     hbdoc /HTM libmisc.lnk libmisc.rsp
@@ -50,5 +57,3 @@ GOTO END
 :END
 del ass*.bat
 
-del libmisc.lnk
-ren libmisc.old libmisc.lnk
