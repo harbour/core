@@ -939,8 +939,6 @@ int hb_pp_ParseExpression( char * sLine, char * sOutLine )
                     {
                       ptri += ifou -1;
 
-                      //if( *stcmd->mpatt == '\1')
-
                       if( (i = WorkTranslate( ptri+lenToken, ptro, stcmd, &lens )) >= 0 )
                         {
                           lens += lenToken;

@@ -1,3 +1,7 @@
+2000-06-16 10:55 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
+   * source/pp/ppcore.c
+     ! Removed 1 // comment.
+
 2000-06-16 18:45 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
    * source/rtl/classes.c
@@ -10,7 +14,7 @@
    -------------------------------------------------------------------------
    ; Please DON'T use non-ANSI comment (//) in the code. Use /**/ instead.
 
-     I haven't corrected the new // comments this time, but I would kindly 
+     I haven't corrected the new // comments this time, but I would kindly
      ask the original uploaders to do so. Thanks.
 
      These files contain // comments:
@@ -32,12 +36,12 @@
      ! Ambiguous nested if()s fixed.
 
    * source/rtl/transfrm.c
-     ! Fixed handling of "S" picture function, now it works for every 
+     ! Fixed handling of "S" picture function, now it works for every
        data types, and doesn't need to be the first function to work.
-     * "0" picture function renamed to "L", some steps made towards the 
-       optional filling char support. In the meantime the filling char is 
+     * "0" picture function renamed to "L", some steps made towards the
+       optional filling char support. In the meantime the filling char is
        always "0".
-     % Some optimizations made (two static function calls eliminated, since 
+     % Some optimizations made (two static function calls eliminated, since
        parameter passing was getting messy). Comments added instead.
 
    * source/rtl/teditorl.c
@@ -61,8 +65,8 @@
 
    * source/rtl/Makefile
    * source/rdd/Makefile
-     ! Fixed tabs for recently added files (TOBJECT, DBLIST). 
-       PLEASE pay attention to the tabs when adding new files to the GNU-make 
+     ! Fixed tabs for recently added files (TOBJECT, DBLIST).
+       PLEASE pay attention to the tabs when adding new files to the GNU-make
        files.
 
    * source/rtl/tclass.prg
@@ -83,12 +87,12 @@
 
    * bin/bld.cmd
    * bin/bld.bat
-     + Small modification to ease the addition of multiple source files 
+     + Small modification to ease the addition of multiple source files
        locally.
 
 2000-06-16 01:42 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
    * makefile.bc
-     - Removed redundant -I from echo into make.tmp (Harbour.exe)
+     - Removed redundant -Iinclude from echo into make.tmp (Harbour.exe)
 
    * source/compiler/hbgenerr.c
      - Removed no longer needed int iLine
