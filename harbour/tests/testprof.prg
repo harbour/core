@@ -2,7 +2,7 @@
 
 function Main()
 
-   local dummy := __SetProfiler( .t. )  // First of all, we activate the profiler
+   local lPrevProf := __SetProfiler( .t. )  // First of all, we activate the profiler
    local oGet  := GetNew()
    local oBrw  := TBrowseNew()
    local n
