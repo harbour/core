@@ -147,28 +147,27 @@ HB_FUNC( ADSISSERVERLOADED )
    hb_retnl( pbLoaded );
 }
 
-//HB_FUNC( ADSGETCONNECTIONTYPE )
-//{
-//   UNSIGNED16 pusConnectType = 0;
-//   UNSIGNED32 ulRetVal;
-//   ADSHANDLE  nConnToCheck = hb_parnl(1) ;   /* caller can specify a connection */
+/* HB_FUNC( ADSGETCONNECTIONTYPE )
+{
+   UNSIGNED16 pusConnectType = 0;
+   UNSIGNED32 ulRetVal;
+   ADSHANDLE  nConnToCheck = hb_parnl(1) ; // caller can specify a connection
 
-//   if ( !nConnToCheck )
-//      nConnToCheck = adsConnectHandle;
+   if ( !nConnToCheck )
+      nConnToCheck = adsConnectHandle;
 
-//   if ( !nConnToCheck )
-//   {
-//      nConnToCheck = adsConnectHandle;
+   if ( !nConnToCheck )
+   { 
+      nConnToCheck = adsConnectHandle; 
 
-//   }
-//   ulRetVal = AdsGetConnectionType (adsConnectHandle, &pusConnectType) ;
+   } 
+   ulRetVal = AdsGetConnectionType (adsConnectHandle, &pusConnectType) ; 
 
-//   if ( ulRetVal != AE_SUCCESS )
-//      pusConnectType = 0;
+   if ( ulRetVal != AE_SUCCESS ) 
+      pusConnectType = 0; 
 
-//   hb_retnl( pusConnectType );
-//}
-
+   hb_retnl( pusConnectType );
+} */
 
 HB_FUNC( ADSISTABLELOCKED )
 {
@@ -647,7 +646,7 @@ HB_FUNC( ADSSETAOF )
 {
    ADSAREAP pArea;
    char * pucFilter;
-   UNSIGNED16 usResolve = ADS_RESOLVE_DYNAMIC ;  //ADS_RESOLVE_IMMEDIATE
+   UNSIGNED16 usResolve = ADS_RESOLVE_DYNAMIC ;  /* ADS_RESOLVE_IMMEDIATE */
    UNSIGNED32 ulRetVal;
 
    pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
@@ -702,7 +701,7 @@ HB_FUNC( ADSGETFILTER )
       {
          HB_TRACE(HB_TR_DEBUG, ("adsGetFilter Error %lu", ulRetVal));
 /*         sprintf((char*)pucFilter,"Error in AdsGetFilter: %lu", ulRetVal );
-//         hb_retc( pucFilter );
+           hb_retc( pucFilter );
 */
       }
    }

@@ -417,9 +417,10 @@ static ERRCODE adsGoBottom( ADSAREAP pArea )
 
 static ERRCODE adsGoTo( ADSAREAP pArea, ULONG ulRecNo )
 {
-//// TODO: bh: Note  Explicitly moving to a deleted record when using the Advantage proprietary
-////   table format (ADT) is an illegal operation and will return the
-////   error 5022 (AE_INVALID_RECORD_NUMBER), invalid record number.
+/* TODO: bh: Note  Explicitly moving to a deleted record when using the Advantage proprietary
+   table format (ADT) is an illegal operation and will return the
+   error 5022 (AE_INVALID_RECORD_NUMBER), invalid record number.
+*/
    UNSIGNED32 ulRetVal = 0;
 
    ULONG ulRecCount;
@@ -456,7 +457,7 @@ static ERRCODE adsGoTo( ADSAREAP pArea, ULONG ulRecNo )
       pArea->ulRecNo = ulRecNo;
       pArea->fBof = pArea->fEof = FALSE;
       ulRetVal = AdsGotoRecord( pArea->hTable, ulRecNo );
-      //hb_adsCheckBofEof( pArea );        // bh: GoTo should never do the skipfilter that may happen in hb_adsCheckBofEof
+      /* hb_adsCheckBofEof( pArea );        // bh: GoTo should never do the skipfilter that may happen in hb_adsCheckBofEof */
    }
    else /* GoTo Phantom record */
    {
@@ -464,9 +465,9 @@ static ERRCODE adsGoTo( ADSAREAP pArea, ULONG ulRecNo )
       AdsAtEOF( pArea->hTable, (UNSIGNED16 *)&(pArea->fEof) );
       if ( !pArea->fEof )
          ulRetVal = AdsGotoRecord( pArea->hTable, ulRecNo );
-         // don't do a GO 0 if already at EOF because we can't skip -1 off of it if you do
+         /* don't do a GO 0 if already at EOF because we can't skip -1 off of it if you do */
       pArea->ulRecNo = pArea->ulRecCount + 1;
-      //pArea->fBof = TRUE;
+      /* pArea->fBof = TRUE; */
       pArea->fEof = TRUE;
    }
 
@@ -843,7 +844,7 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
            {
               if( pulLen > 0 )
               {
-                 pulLen++;                 // make room for NULL
+                 pulLen++;                 /* make room for NULL */
                  pucBuf = (UNSIGNED8*) hb_xgrab( pulLen );
                  AdsGetString( pArea->hTable, szName, pucBuf, &pulLen, ADS_NONE );
                  hb_itemPutCL( pItem, ( char * ) pucBuf, pulLen );
@@ -869,9 +870,11 @@ static ERRCODE adsGetVarLen( ADSAREAP pArea, USHORT uiIndex, ULONG * ulLen )
       return FAILURE;
 
    pField = pArea->lpFields + uiIndex - 1;
-//   if( pField->uiType == 'M' )
-//      * ulLen = ( ( LPDBFMEMO ) pField->memo )->uiLen;
-//   else
+/*
+   if( pField->uiType == 'M' )
+      * ulLen = ( ( LPDBFMEMO ) pField->memo )->uiLen;
+   else
+*/
       * ulLen = pField->uiLen;
    return SUCCESS;
 }
@@ -1123,7 +1126,7 @@ static ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo)
       AdsShowError( (UNSIGNED8 *) "Error" );
       return FAILURE;
    }
-   AdsCloseTable(hTable);  // TODO: it would be nice if a parameter could be passed in to allow this to stay open to support the 4th parameter of dbCreate. As is, we have to close it here, then re-open it.
+   AdsCloseTable(hTable);  /* TODO: it would be nice if a parameter could be passed in to allow this to stay open to support the 4th parameter of dbCreate. As is, we have to close it here, then re-open it. */
 
    return SUCCESS;
 }
@@ -1135,7 +1138,7 @@ static ERRCODE adsInfo( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
    switch( uiIndex )
    {
       case DBI_DBFILTER:
-//  XXX must have locally unless server can't handle it...   adsFilterText( pArea, pItem );
+/*  XXX must have locally unless server can't handle it...   adsFilterText( pArea, pItem ); */
          break;
 
       case DBI_ISDBF:
@@ -2116,8 +2119,9 @@ static ERRCODE adsSetScope( ADSAREAP pArea, LPDBORDSCOPEINFO sInfo )
             case ADS_DATE:
                if ( sInfo->scopeValue->type == HB_IT_DATE )
                   hb_itemGetDS(  sInfo->scopeValue, (char *) pucScope );
-//                  bTypeError = FALSE;
-// TODO: needs adsDateFormat, confirm it's DTOS if possible, else convert
+/*                  bTypeError = FALSE;
+  TODO: needs adsDateFormat, confirm it's DTOS if possible, else convert
+*/
                break;
 
             case ADS_LOGICAL:
@@ -2133,11 +2137,11 @@ static ERRCODE adsSetScope( ADSAREAP pArea, LPDBORDSCOPEINFO sInfo )
                break;
 
          }
-//         if ( bTypeError  )
-//         {
-///*  TODO       Error in type !!  */
+/*          if ( bTypeError  ) */
+/*          { */
+/*   TODO       Error in type !!  */
 
-//         }
+/*          } */
 
       }
       else

@@ -1,3 +1,11 @@
+2001-11-17 08:20 GMT+0700 Andi Jahja <harbour@cbn.net.id>
+   Non-ANSI comments fixed.
+   * source/rdd/dbf1.c
+   * source/rdd/dbfntx/dbfntx1.c
+   * contrib/rdd_ads/ads1.c
+   * contrib/rdd_ads/adsfunc.c
+   * contrib/rdd_ads/adsmgmnt.c
+
 2001-11-16 21:31 GMT-3 Horacio Roldan <harbour_ar@yahoo.com.ar>
    * source/rdd/dbfcdx/dbfcdx1.c
      ! fixed bug opening empty files with set delete on

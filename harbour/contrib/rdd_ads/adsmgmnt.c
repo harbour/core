@@ -89,9 +89,11 @@ HB_FUNC( ADSMGGETINSTALLINFO )
    usStructSize = sizeof( ADS_MGMT_INSTALL_INFO );
    ulRetVal = AdsMgGetInstallInfo( hMgmtHandle, &stInstallInfo, &usStructSize );
 
+   /*
    //if ( sizeof( ADS_MGMT_INSTALL_INFO ) < usStructSize )
    //   printf( "\nInstallation Information structure on server is larger." );
    //   printf( "\nMore possible info available." );
+   */
 
    if ( ulRetVal == AE_SUCCESS )
    {
@@ -118,10 +120,11 @@ HB_FUNC( ADSMGGETACTIVITYINFO )
 
    usStructSize = sizeof( ADS_MGMT_ACTIVITY_INFO );
    ulRetVal = AdsMgGetActivityInfo( hMgmtHandle, &stActivityInfo, &usStructSize );
+      /*
       //   if ( sizeof( ADS_MGMT_ACTIVITY_INFO ) < usStructSize )
       //      printf( "\nActivity Information structure on server is larger." );
       //      printf( "\nMore possible info available." );
-
+      */
    hb_ret();                            /* default to NIL */
 
    if ( iOption && ulRetVal == AE_SUCCESS )
@@ -238,11 +241,13 @@ HB_FUNC( ADSMGGETCOMMSTATS )
 
    usStructSize = sizeof( ADS_MGMT_COMM_STATS );
    ulRetVal = AdsMgGetCommStats( hMgmtHandle, &stCommStats, &usStructSize );
+      /*
       //   if ( sizeof( ADS_MGMT_COMM_STATS ) < usStructSize )
       //   {
       //      HB_TRACE(HB_TR_INFO, ("The Communication Statistics structure on the server is larger.
       //         \nMore info is available with the current ACE.H." ));
       //   }
+      */
    if ( ulRetVal == AE_SUCCESS )
    {
       hb_reta( 11 );
@@ -291,10 +296,12 @@ HB_FUNC( ADSMGGETCONFIGINFO )
                                  &usConfigValuesStructSize,
                                  &stConfigMemory, &usConfigMemoryStructSize );
 
+      /*
       //   if ( sizeof( ADS_MGMT_CONFIG_PARAMS ) < usConfigValuesStructSize )
       //      printf( "\nConfiguration Values structure on server is larger." );
       //   if ( sizeof( ADS_MGMT_CONFIG_MEMORY ) < usConfigMemoryStructSize )
       //      printf( "\nConfiguration Memory structure on server is larger." );
+      */
    if ( ulRetVal == AE_SUCCESS )
    {
       if ( iOption == 0 )
@@ -360,29 +367,32 @@ HB_FUNC( ADSMGGETUSERNAMES )   /* Return array of connected users */
    UNSIGNED32  ulCount;
    UNSIGNED16  usStructSize = sizeof( ADS_MGMT_USER_INFO );
    ADS_MGMT_USER_INFO*  pastUserInfo;
+/*
 //   ADS_MGMT_USER_INFO  astUserInfo[MAX_NUM_USERS];
 // bh:  Enhancement:  Get # of tables from ADS_MGMT_ACTIVITY_INFO.stUsers instead of set size
-
+*/
    if ( ISNUM( 2 ) )
       ulMaxUsers = (UNSIGNED16) hb_parnl( 2 );
 
    pastUserInfo = (ADS_MGMT_USER_INFO *) hb_xgrab( sizeof( ADS_MGMT_USER_INFO ) * ulMaxUsers );
+      /*
       //   AdsMgGetUserNames ( ADSHANDLE hMgmtConnect,
       //                      UNSIGNED8 *pucFileName,
       //                      ADS_MGMT_USER_INFO astUserInfo[],
       //                      UNSIGNED16 *pusArrayLen,
       //                      UNSIGNED16 *pusStructSize );
-
+      */
    ulRetVal = AdsMgGetUserNames( hMgmtHandle, ISCHAR( 1 ) ? (UNSIGNED8 *) hb_parc( 1 ) : NULL,
                                  pastUserInfo,
                                  &ulMaxUsers,
                                  &usStructSize );
+      /*
       //if ( sizeof( ADS_MGMT_USER_INFO ) < usStructSize )
       //   {
       //      HB_TRACE(HB_TR_INFO, ("The \nUser Information structure on the server is larger.
       //         \nMore info is available with the current ACE.H." ));
       //   }
-
+      */
    if ( ulRetVal == AE_SUCCESS )
    {
       hb_reta( ulMaxUsers );
