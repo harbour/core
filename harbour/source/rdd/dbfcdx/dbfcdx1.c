@@ -184,6 +184,11 @@ static RDDFUNCS cdxTable = { ( DBENTRYP_BP )    hb_cdxBof,
                           /* ( DBENTRYP_SVP )   hb_cdxWhoCares */
                            };
 
+
+static long hb_cdxDBOIKeyCount( CDXAREAP pArea );
+static long hb_cdxDBOIKeyNo( CDXAREAP pArea );
+
+
 /*
  * Common functions.
  */
@@ -1118,6 +1123,14 @@ ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrderInf
             if( uiAux != HB_IT_NIL )
               hb_cdxKeyGetItem( pTag->CurKeyInfo, pOrderInfo->itmResult, uiAux );
          }
+         break;
+
+      case DBOI_KEYCOUNT :
+         hb_itemPutNL( pOrderInfo->itmResult, hb_cdxDBOIKeyCount(pArea) );
+         break;
+
+      case DBOI_POSITION :
+         hb_itemPutNL( pOrderInfo->itmResult, hb_cdxDBOIKeyNo(pArea) );
          break;
 
       /*
@@ -2616,18 +2629,23 @@ static LONG hb_cdxTagKeyFind( LPCDXTAG pTag, LPKEYINFO pKey )
    if( K == 0 )
    {
       hb_cdxPageRetrieveKey( pTag->RootPage, &pTag->CurKeyInfo );
+      /*
       if( pTag->pForItem == NULL )
          return pTag->CurKeyInfo->Tag;
       else
-         /* TODO: test for expression */
+         / * TODO: test for expression * /
          pTag->TagEOF = TRUE;
+      */
+      return pTag->CurKeyInfo->Tag;
    }
    else if( K < 0 )
    {
       hb_cdxPageRetrieveKey( pTag->RootPage, &pTag->CurKeyInfo );
+      /*
       if( pTag->pForItem != NULL )
-         /* TODO: test for expression */
+         / * TODO: test for expression * /
          pTag->TagEOF = TRUE;
+      */
    }
    else
       pTag->TagEOF = TRUE;
@@ -2960,8 +2978,10 @@ static BOOL hb_cdxPageReadPrevKey( LPPAGEINFO pPage )
          {
             if( pPage->Child->CurKey == -1 )
             {
-               /* if( pPage->Child->PageType < PAGE_LEAF ) */
-               pPage->Child->CurKey = pPage->Child->uiKeys;
+               if( pPage->Child->PageType < PAGE_LEAF )
+                  pPage->Child->CurKey = pPage->Child->uiKeys - 1;
+               else
+                  pPage->Child->CurKey = pPage->Child->uiKeys;
             }
             b = hb_cdxPageReadPrevKey( pPage->Child );
          }
@@ -4976,4 +4996,52 @@ extern ERRCODE hb_cdxPack( CDXAREAP pArea )
    }
    else
       return FAILURE;
+}
+
+static long hb_cdxDBOIKeyCount( CDXAREAP pArea )
+{
+   LPKEYINFO pNewKey;
+   LPCDXTAG pTag;
+   long lKeyCount = 0;
+
+   pTag = hb_cdxGetActiveTag( pArea->lpIndexes );
+   pNewKey = hb_cdxKeyNew();
+   pNewKey = hb_cdxKeyCopy( pNewKey, pTag->CurKeyInfo );
+   hb_cdxTagTagOpen( pTag, 0 );
+   hb_cdxTagKeyRead( pTag, TOP_RECORD );
+   while( !pTag->TagEOF )
+   {
+      lKeyCount++;
+      hb_cdxTagKeyRead( pTag, NEXT_RECORD );
+   }
+   hb_cdxTagKeyFind( pTag, pNewKey );
+   hb_cdxTagTagClose( pTag );
+   hb_cdxKeyFree( pNewKey );
+   return lKeyCount;
+}
+
+static long hb_cdxDBOIKeyNo( CDXAREAP pArea )
+{
+   LPKEYINFO pNewKey;
+   LPCDXTAG pTag;
+   long lKeyNo = 0;
+
+   pTag = hb_cdxGetActiveTag( pArea->lpIndexes );
+
+   if( pTag && !pArea->fEof && pTag->CurKeyInfo && ((ULONG) pTag->CurKeyInfo->Tag == pArea->ulRecNo) )
+   {
+      pNewKey = hb_cdxKeyNew();
+      pNewKey = hb_cdxKeyCopy( pNewKey, pTag->CurKeyInfo );
+      hb_cdxTagTagOpen( pTag, 0 );
+      hb_cdxTagKeyFind( pTag, pNewKey );
+      while( !pTag->TagBOF && !pTag->TagEOF)
+      {
+         lKeyNo++;
+         hb_cdxTagKeyRead( pTag, PREV_RECORD );
+      }
+      hb_cdxTagKeyFind( pTag, pNewKey );
+      hb_cdxTagTagClose( pTag );
+      hb_cdxKeyFree( pNewKey );
+   }
+   return lKeyNo;
 }
