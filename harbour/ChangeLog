@@ -1,3 +1,8 @@
+2000-05-23 16:45 GMT-4 David G. Holm <dholm@jsd-llc.com>
+
+  * source/rtl/tgetlist.prg
+    ! Corrected the name of the TGetList class creation function.
+
 2000-05-23 13:40 GMT-4 David G. Holm <dholm@jsd-llc.com>
 
   + doc/cvs_tips.txt

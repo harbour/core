@@ -58,7 +58,7 @@
 
 #define K_UNDO          K_CTRL_U
 
-function TGetListNew( GetList )
+function TGetList( GetList )
 
    LOCAL oClass := TClass():New( "TGETLIST" )
 
