@@ -60,15 +60,11 @@ FUNCTION aDir( cFileMask, aName, aSize, aDate, aTime, aAttr )
 
    // ;
 
-#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
    IF ISARRAY( aAttr )
       aDir := Directory( cFileMask, "HSD" )
    ELSE
       aDir := Directory( cFileMask )
    ENDIF
-#else
-   aDir := Directory( cFileMask, "HSD" )
-#endif
 
    IF ISARRAY( aName )
       nNameLen := Len( aName )
