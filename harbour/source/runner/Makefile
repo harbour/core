@@ -5,8 +5,12 @@
 ROOT = ../../
 
 C_SOURCES=\
+	runhrb.c
 
-C_MAIN=runner.c
+PRG_SOURCES=\
+	external.prg
+	
+PRG_MAIN=runmain.prg
 
 LIBS=\
 	tools \

@@ -73,11 +73,7 @@ typedef struct
 #define SYM_NOT_FOUND 0xFFFFFFFF                /* Symbol not found.
                                                    FindSymbol               */
 
-#ifndef HARBOUR_START_PROCEDURE
        HARBOUR   HB_HB_RUN();
-#else
-       HARBOUR   HB_MAIN();
-#endif       
 static PASM_CALL CreateFun( PHB_SYMB, BYTE * ); /* Create a dynamic function*/
 static ULONG     FindSymbol( char *, PDYNFUNC, ULONG );
 static void      HRB_FileClose( FILE * );
@@ -86,24 +82,6 @@ static FILE     *HRB_FileOpen ( char * );
        BYTE      ReadByte( FILE * );
        char     *ReadId  ( FILE * );
        long      ReadLong( FILE * );
-
-/*
- * This file contains the extra exportable functions available to the Harbour
- * program
- */
-#include "run_exp.h"
-
-#if !defined( __GNUC__ )
-static void InitRunnerTable( void )
-{
-#include "initsymc.h"                           /* Include default symbols  */
-}
-#pragma startup InitRunnerTable
-#else
-HB_CALL_ON_STARTUP_BEGIN( InitRunnerTable )
-#include "initsymc.h"
-HB_CALL_ON_STARTUP_END( InitRunnerTable );
-#endif
 
 
 ULONG ulSymEntry = 0;                           /* Link enhancement         */
@@ -117,11 +95,7 @@ ULONG ulSymEntry = 0;                           /* Link enhancement         */
    In due time it should also be able to collect the data from the
    binary/executable itself
 */
-#ifndef HARBOUR_START_PROCEDURE
 HARBOUR HB_HB_RUN( void )
-#else
-HARBOUR HB_MAIN( void )
-#endif
 {
    char *szFileName;
 

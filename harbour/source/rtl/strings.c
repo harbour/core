@@ -1322,7 +1322,7 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
 
             default:
                  iBytes = 0;
-                 *szResult = NULL;
+                 szResult[ 0 ] = '\0';  /* null string */
                  break;
          }
          /* Set to asterisks in case of overflow */

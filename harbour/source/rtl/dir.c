@@ -179,6 +179,7 @@ HARBOUR HB_DIRECTORY( void )
    long   fsize;
    time_t ftime;
    char * pos;
+   int    iDirnamelen;
 
    PHB_ITEM  pdir;
    PHB_ITEM  psubarray;
@@ -210,10 +211,12 @@ HARBOUR HB_DIRECTORY( void )
    }
    if (strlen(pattern) < 1)
       strcpy(pattern,"*.*");
-   if (strlen(dirname) < 1)
+   iDirnameLen =strlen(dirname);
+   if( iDirnameLen < 1 )
    {
       strcpy(dirname,".X");
       dirname[1] = OS_PATH_DELIMITER;
+      iDirnamelen =2;
    }
 
    if (strlen(pattern) > 0)
@@ -270,7 +273,15 @@ HARBOUR HB_DIRECTORY( void )
     {
       strcpy(string,entry.achName);
 #else
+   #if defined( __WATCOMC__ )
+   /* opendir in Watcom doesn't like the path delimiter at the end of a string */
+     dirname[ iDirnameLen   ] ='.';
+     dirname[ iDirnameLen+1 ] ='\x0';
+   #endif
    dir = opendir( dirname );
+   #if defined( __WATCOMC__ )
+     dirname[ iDirnameLen ] ='\x0';
+   #endif   
    if (NULL == dir)
    {
       /* TODO: proper error handling */
