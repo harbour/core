@@ -869,8 +869,8 @@ METHOD PutMask( xValue, lEdit ) CLASS TGet
             cBuffer := SubStr( cBuffer, 1, nFor - 1 ) + cChar + SubStr( cBuffer, nFor + 1 )
          endif
       next
-      if ( nAt := At( " ", cBuffer ) ) > 0
-         cBuffer := StrTran( cBuffer, "0", " ", nAt )
+      if cBuffer ==  Space( len( cBuffer ) - 1 ) + "0"
+         cBuffer := Space( len( cBuffer ) )
       endif
       if ::lDecRev
          cBuffer := StrTran( cBuffer, ",", Chr( 1 ) )

@@ -1,3 +1,7 @@
+20000126-12:50 GMT+1 Ignacio Ortiz <ignacio@fivetech.com>
+   * source/rtl/tget.prg
+     * Bug fixed on numeric gets with zero digits in his value
+
 2000-01-25 16:20 GMT-5 David G. Holm <dholm@ sd-llc.com>
 
    * source/rtl/itemapi.c
