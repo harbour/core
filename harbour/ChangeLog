@@ -1,3 +1,9 @@
+19991027-02:25 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/fm.c
+    ! Fixed to display negative unreleased memory properly.
+  * source/rtl/codebloc.c
+    * Removed newline chars from HB_TRACE() calls.
+
 19991026-19:55 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/gt/gtwin.c
      * Added WINAPI to the handler func def.
@@ -40,7 +46,7 @@ Tue Oct 26 13:20:46 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
       David, could you check this ?
   * source/rtl/gt/gtdos.c
     + Ctrl+Break handler added for DOS character mode.
-      Please test this, since I could only test if it compile.
+      Please test this, since I could only test if it compiles.
   * tests/tstalias.prg
     + New alias related tests added.
 

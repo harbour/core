@@ -163,7 +163,7 @@ HB_CODEBLOCK_PTR hb_codeblockNew( BYTE * pBuffer,
    pCBlock->pSymbols  = pSymbols;
    pCBlock->ulCounter = 1;
 
-   HB_TRACE(("codeblock created (%li) %lx\n", pCBlock->ulCounter, pCBlock));
+   HB_TRACE(("codeblock created (%li) %lx", pCBlock->ulCounter, pCBlock));
 
    return pCBlock;
 }
@@ -176,7 +176,7 @@ void  hb_codeblockDelete( HB_ITEM_PTR pItem )
 
    HB_TRACE(("hb_codeblockDelete(%p)", pItem));
 
-   HB_TRACE(("deleting a codeblock (%li) %lx\n", pCBlock->ulCounter, pCBlock));
+   HB_TRACE(("deleting a codeblock (%li) %lx", pCBlock->ulCounter, pCBlock));
 
    if( --pCBlock->ulCounter == 0 )
    {
@@ -201,7 +201,7 @@ void  hb_codeblockDelete( HB_ITEM_PTR pItem )
       */
       hb_xfree( pCBlock );
 
-      HB_TRACE(("codeblock deleted (%li) %lx\n", pCBlock->ulCounter, pCBlock));
+      HB_TRACE(("codeblock deleted (%li) %lx", pCBlock->ulCounter, pCBlock));
    }
 }
 
@@ -256,5 +256,5 @@ void  hb_codeblockCopy( PHB_ITEM pDest, PHB_ITEM pSource )
    pDest->item.asBlock.value = pSource->item.asBlock.value;
    pDest->item.asBlock.value->ulCounter++;
 
-   HB_TRACE(("copied a codeblock (%li) %lx\n", pSource->item.asBlock.value->ulCounter, pSource->item.asBlock.value));
+   HB_TRACE(("copied a codeblock (%li) %lx", pSource->item.asBlock.value->ulCounter, pSource->item.asBlock.value));
 }

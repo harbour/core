@@ -68,10 +68,10 @@
 #include "hbmemory.ch"
 
 #ifdef HB_FM_STATISTICS
-static ULONG s_ulMemoryBlocks = 0;      /* memory blocks used */
-static ULONG s_ulMemoryMaxBlocks = 0;   /* maximum number of used memory blocks */
-static ULONG s_ulMemoryMaxConsumed = 0; /* memory size consumed */
-static ULONG s_ulMemoryConsumed = 0;    /* memory max size consumed */
+static LONG s_lMemoryBlocks = 0;      /* memory blocks used */
+static LONG s_lMemoryMaxBlocks = 0;   /* maximum number of used memory blocks */
+static LONG s_lMemoryMaxConsumed = 0; /* memory size consumed */
+static LONG s_lMemoryConsumed = 0;    /* memory max size consumed */
 #endif
 
 void * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, returns NULL on failure */
@@ -88,12 +88,12 @@ void * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, returns NULL
    * ( ( ULONG * ) pMem ) = ulSize;  /* we store the block size into it */
 
 #ifdef HB_FM_STATISTICS
-   s_ulMemoryConsumed    += ulSize;
-   if( s_ulMemoryMaxConsumed < s_ulMemoryConsumed )
-      s_ulMemoryMaxConsumed = s_ulMemoryConsumed;
-   s_ulMemoryBlocks++;
-   if( s_ulMemoryMaxBlocks < s_ulMemoryBlocks )
-      s_ulMemoryMaxBlocks = s_ulMemoryBlocks;
+   s_lMemoryConsumed    += ulSize;
+   if( s_lMemoryMaxConsumed < s_lMemoryConsumed )
+      s_lMemoryMaxConsumed = s_lMemoryConsumed;
+   s_lMemoryBlocks++;
+   if( s_lMemoryMaxBlocks < s_lMemoryBlocks )
+      s_lMemoryMaxBlocks = s_lMemoryBlocks;
 #endif
 
    return ( char * ) pMem + sizeof( ULONG );
@@ -113,12 +113,12 @@ void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exits on fail
    * ( ( ULONG * ) pMem ) = ulSize;  /* we store the block size into it */
 
 #ifdef HB_FM_STATISTICS
-   s_ulMemoryConsumed    += ulSize;
-   if( s_ulMemoryMaxConsumed < s_ulMemoryConsumed )
-      s_ulMemoryMaxConsumed = s_ulMemoryConsumed;
-   s_ulMemoryBlocks++;
-   if( s_ulMemoryMaxBlocks < s_ulMemoryBlocks )
-      s_ulMemoryMaxBlocks = s_ulMemoryBlocks;
+   s_lMemoryConsumed    += ulSize;
+   if( s_lMemoryMaxConsumed < s_lMemoryConsumed )
+      s_lMemoryMaxConsumed = s_lMemoryConsumed;
+   s_lMemoryBlocks++;
+   if( s_lMemoryMaxBlocks < s_lMemoryBlocks )
+      s_lMemoryMaxBlocks = s_lMemoryBlocks;
 #endif
 
    return ( char * ) pMem + sizeof( ULONG );
@@ -145,11 +145,11 @@ void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
 
 #ifdef HB_FM_STATISTICS
    if( ! ulSize )
-      s_ulMemoryBlocks--;
+      s_lMemoryBlocks--;
 
-   s_ulMemoryConsumed += ( ulSize - ulMemSize );
-   if( s_ulMemoryMaxConsumed < s_ulMemoryConsumed )
-      s_ulMemoryMaxConsumed = s_ulMemoryConsumed;
+   s_lMemoryConsumed += ( ulSize - ulMemSize );
+   if( s_lMemoryMaxConsumed < s_lMemoryConsumed )
+      s_lMemoryMaxConsumed = s_lMemoryConsumed;
 #endif
 
    return ( char * ) pResult + sizeof( ULONG );
@@ -162,8 +162,8 @@ void hb_xfree( void * pMem )            /* frees fixed memory */
    if( pMem )
    {
 #ifdef HB_FM_STATISTICS
-      s_ulMemoryConsumed -= * ( ULONG * ) ( ( char * ) pMem - sizeof( ULONG ) );
-      s_ulMemoryBlocks--;
+      s_lMemoryConsumed -= * ( ULONG * ) ( ( char * ) pMem - sizeof( ULONG ) );
+      s_lMemoryBlocks--;
 #endif
 
       free( ( char * ) pMem - sizeof( ULONG ) );
@@ -189,20 +189,20 @@ void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
    HB_TRACE(("hb_xexit()"));
 
 #ifdef HB_FM_STATISTICS
-   if( s_ulMemoryBlocks || hb_cmdargCheck( "INFO" ) )
+   if( s_lMemoryBlocks || hb_cmdargCheck( "INFO" ) )
    {
       char buffer[ 100 ];
 
       hb_outerr( hb_consoleGetNewLine(), 0 );
       hb_outerr( "----------------------------------------", 0 );
       hb_outerr( hb_consoleGetNewLine(), 0 );
-      sprintf( buffer, "Total memory allocated: %lu bytes (%lu blocks)", s_ulMemoryMaxConsumed, s_ulMemoryMaxBlocks );
+      sprintf( buffer, "Total memory allocated: %li bytes (%li blocks)", s_lMemoryMaxConsumed, s_lMemoryMaxBlocks );
       hb_outerr( buffer, 0 );
 
-      if( s_ulMemoryBlocks )
+      if( s_lMemoryBlocks )
       {
          hb_outerr( hb_consoleGetNewLine(), 0 );
-         sprintf( buffer, "WARNING! Memory allocated but not released: %lu bytes (%lu blocks)", s_ulMemoryConsumed, s_ulMemoryBlocks );
+         sprintf( buffer, "WARNING! Memory allocated but not released: %li bytes (%li blocks)", s_lMemoryConsumed, s_lMemoryBlocks );
          hb_outerr( buffer, 0 );
       }
    }
@@ -391,7 +391,7 @@ ULONG hb_xquery( USHORT uiMode )
 
    case HB_MEM_USED:       /* Harbour extension (Memory used [bytes])           */
 #ifdef HB_FM_STATISTICS
-      ulResult = s_ulMemoryConsumed;
+      ulResult = s_lMemoryConsumed;
 #else
       ulResult = 0;
 #endif
@@ -399,7 +399,7 @@ ULONG hb_xquery( USHORT uiMode )
 
    case HB_MEM_USEDMAX:    /* Harbour extension (Maximum memory used [bytes])   */
 #ifdef HB_FM_STATISTICS
-      ulResult = s_ulMemoryMaxConsumed;
+      ulResult = s_lMemoryMaxConsumed;
 #else
       ulResult = 0;
 #endif
