@@ -7,24 +7,36 @@ all : first
 
 ifeq ($(SHLVL),) # COMMAND.COM
 
-ARCH_DIR = $(subst /,\,$(ARCH)\)
-MK = $(subst /,\,$(subst \~,~,$(MAKE)))
+# There is a conflict with the use of '\' and '/' characters
+# The MAKE requires '/' in filenames (ARCH_DIR) however some compilers
+# and some DOS commands require '\' (ARCH_DOS)
+ARCH_DIR = $(subst \,/,$(ARCH))
+ARCH_DOS = $(subst /,\,$(ARCH))
+MK := $(subst \,/,$(subst \~,~,$(MAKE)))
 
-RM = del /q
+ifeq ($(COMSPEC),) #location of command.com
+  COMSPEC := command.com
+endif
+
+RM = del
 RD = rmdir
 CP = copy
 MV = move
 MD = md
 
 dirbase::
-	-$(MD) $(HB_ARCHITECTURE) >NUL
-	-$(MD) $(ARCH_DIR) >NUL
-
+	-if not exist $(HB_ARCHITECTURE) $(MD) $(HB_ARCHITECTURE)
+	-if not exist $(ARCH_DOS)        $(MD) $(ARCH_DOS)
 
 clean::
-	-$(RM) $(ARCH_DIR)\*.*
-	-$(RD) $(ARCH_DIR)
-
+	-for %f in ($(ARCH_DOS)\*.*) do @$(RM) %f
+	-if exist *.bak $(RM) *.bak
+	-if exist *.obj $(RM) *.obj
+	-if exist core $(RM) core
+	-if exist *.o $(RM) *.o
+	-if exist *.tds $(RM) *.tds
+	-$(RD) $(ARCH_DOS)
+	-$(RD) $(HB_ARCHITECTURE)
 else  # bash
 
 ARCH_DIR = $(ARCH)/

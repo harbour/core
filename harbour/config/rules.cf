@@ -69,6 +69,10 @@ endif
 %.c : $(GRANDP)%.prg
 	$(HB) $? $(PRG_USR) $(HB_FLAGS)
 
+ifeq ($(SHLVL),) # COMMAND.COM
+# Do nothing. the $(hb_architecture)/global.cf will handle clean up.
+else
 # Generic rule to clean up.
 clean::
 	-$(RM) *.bak *.obj core *.core *~ *.o
+endif

@@ -1,3 +1,9 @@
+2000-02-21 15:45 GMT-5 David G. Holm <dholm@ sd-llc.com>
+   * config/rules.cf
+   * config/w32/bcc32.cf
+   * config/w32/global.cf
+     % Changes to make more compatible with all Windows 32-bit platforms
+
 20000221-14:58 GMT+3 Alexander Kresin
    * source/pp/stdalone/hbpp.c
    * source/pp/hbppint.c
