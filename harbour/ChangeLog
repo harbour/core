@@ -1,3 +1,8 @@
+20000418-18:35 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+   * source/compiler/harbour.c
+     * Modified hb_compCodeBlockEnd() to call hb_compOptimizeJumps() and release pNOOPs and pJumps pointers.
+
 20000419-00:28 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/rtl/gtcrs/gtcrs.c
@@ -49,7 +54,6 @@
    doc/en/set.txt
       *Fixed doc by fixing the errors reported by chen
 
->>>>>>> 1.1996
 2000-04-18 14:55 GMT-4 David G. Holm <dholm@jsd-llc.com>
   * source/rtl/gtwin/gtwin.c
     ! Don't generate a key code for Caps Lock.
@@ -61,7 +65,7 @@
    * source/compiler/genobj32.c
      * Progressive fixes to support genc.c latest changes.
 
-20000419-05:30 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+20000418-05:30 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
    * source/compiler/hvm.c
      + Added PCodes HB_P_JAMPSHORT, HB_P_JAMPSHORTFALSE and HB_P_JAMPSHORTTRUE

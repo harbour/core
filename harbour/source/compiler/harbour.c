@@ -2718,6 +2718,10 @@ void hb_compCodeBlockEnd( void )
    USHORT wPos;
    PVAR pVar, pFree;
 
+   if ( hb_comp_iJumpOptimize )
+      if ( hb_comp_functions.pLast && hb_comp_functions.pLast->iNOOPs )
+         hb_compOptimizeJumps();
+
    pCodeblock = hb_comp_functions.pLast;
 
    /* return to pcode buffer of function/codeblock in which the current
@@ -2786,6 +2790,15 @@ void hb_compCodeBlockEnd( void )
       pVar = pVar->pNext;
       hb_xfree( ( void * ) pFree );
    }
+
+   /* Release the NOOP array. */
+   if ( pCodeblock->pNOOPs )
+      hb_xfree( ( void * ) pCodeblock->pNOOPs );
+
+   /* Release the Jumps array. */
+   if ( pCodeblock->pJumps )
+      hb_xfree( ( void * ) pCodeblock->pJumps );
+
    hb_xfree( ( void * ) pCodeblock );
 }
 
