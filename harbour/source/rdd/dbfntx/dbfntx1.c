@@ -3691,6 +3691,8 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
          }
          pTagNext->pNext = pTag;
       }
+      else
+         pArea->lpNtxTag = pTag;
    }
    else
       pArea->lpNtxTag = pTag;

@@ -52,9 +52,9 @@
  *
  */
 
-/* Language name: Portuguese
-/* ISO language code (2 chars): PT
-/* Codepage: iso-8859-1 */
+/* Language name: Portuguese       */
+/* ISO language code (2 chars): PT */
+/* Codepage: iso-8859-1            */
 
 #include <ctype.h>
 #include "hbapi.h"
