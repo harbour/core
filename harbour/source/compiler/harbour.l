@@ -369,7 +369,7 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
                  return ENDIF;
                }
 "endc"("ase"|"as"|"a")? { /* ENDCASE can be used in one context only */
-                 if( _wWhileCounter == 0 )
+                 if( _wCaseCounter == 0 )
                    GenError( ERR_ENDCASE, NULL, NULL );
                  return ENDCASE;
                }

@@ -1,3 +1,12 @@
+19990518-03:05 Ryszard Glab <rglab@imid.med.pl>
+
+    * source/compiler/harbour.l
+	-corrected misspelled wCaseCounter
+	
+    * include/hberrors.h
+	-new errors definition added (it should be uploaded in previous
+	commit -sorry my fault
+	
 19990518-01:45 Ryszard Glab <rglab@imid.med.pl>
 
 	* source/compiler/harbour.l, source/compiler/harbour.y

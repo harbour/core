@@ -17,6 +17,9 @@
 #define ERR_ENDDO               12
 #define ERR_ENDCASE             13
 #define ERR_NEXTFOR             14
-#define ERR_SYNTAX              15
+#define ERR_UNMATCHED_ELSE      15
+#define ERR_UNMATCHED_ELSEIF    16
+#define ERR_SYNTAX              17
+#define ERR_UNCLOSED_STRU       18
 
 void GenError( int, char*, char * );      /* generic parsing error management function */
