@@ -609,7 +609,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
                bFound = TRUE;
          }
 
-         if( ! bFound )
+         if( ! bFound && info->hFindFile != INVALID_HANDLE_VALUE )
          {
             while( FindNextFile( info->hFindFile, &info->pFindFileData ) )
             {

@@ -8,6 +8,14 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-04-01 09:09 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * source/common/hbffind.c
+     ! Fix for NT4
+
+   * source/rdd/dbsort.prg
+     * Fix by Mitja Podgornik
+
 2004-04-01 08:49 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * bin/bld.bat
