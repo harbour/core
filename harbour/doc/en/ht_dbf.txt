@@ -25,16 +25,20 @@
  *  $SYNTAX$
  *      FIELDTYPE(<nFieldNum>) --> cFieldType
  *  $ARGUMENTS$
- *      <nFieldNum> Data field , which type need to be determined.   </par>
+ *      <nFieldNum> Data field , which type need to be determined.   
  *  $RETURNS$
- *      FIELDTYPE() returns the character that designates the type of a given field:   </par>
- *      'C' - character string;   </par>
- *      'N' - numeric;   </par>
- *      'L' - logical;   </par>
- *      'D' - date;   </par>
- *      'M' - memo.   </par>
+ *      FIELDTYPE() returns the character that designates the type of
+ *      a given field:</par>
+ *      <table> 
+ *      'C'   character string;   
+ *      'N'   numeric;   
+ *      'L'   logical;   
+ *      'D'   date;   
+ *      'M'   memo.
+ *      </table>
  *  $DESCRIPTION$
- *      This function determines the type of a field, designated by its number.   </par>
+ *      This function determines the type of a field, designated by its
+ *      number.
  *  $EXAMPLES$
  *      FUNCTION Main()
  *      LOCAL i
@@ -48,9 +52,11 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-CLIPPER TOOLS compatible   </par>
+ *      This function is CA-CLIPPER TOOLS compatible   
+ *  $FILES$
+ *      Library is Tools.lib
  *  $SEEALSO$
- *    FIELDSIZE(),FIELDDECI()
+ *      FIELDSIZE(),FIELDDECI()
  *  $END$
  */
 
@@ -64,11 +70,12 @@
  *  $SYNTAX$
  *      FIELDSIZE(<nFieldNum>) --> nFieldSize
  *  $ARGUMENTS$
- *      <nFieldNum> Data field , which size need to be determined.   </par>
+ *      <nFieldNum> Data field , which size need to be determined.   
  *  $RETURNS$
- *      FIELDSIZE() returns the number that designates the size of a given field.   </par>
+ *      FIELDSIZE() returns the number that designates the size of a given
+ *      field.
  *  $DESCRIPTION$
- *      This function determines the size of a field, designated by its number.   </par>
+ *      This function determines the size of a field, designated by its number.   
  *  $EXAMPLES$
  *      FUNCTION Main()
  *      LOCAL i
@@ -82,9 +89,11 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-CLIPPER TOOLS compatible   </par>
+ *      This function is CA-CLIPPER TOOLS compatible   
+ *  $FILES$
+ *      Library is Tools.lib
  *  $SEEALSO$
- *    FIELDTYPE(),FIELDDECI()
+ *      FIELDTYPE(),FIELDDECI()
  *  $END$
  */
 
@@ -99,12 +108,12 @@
  *      FIELDDECI(<nFieldNum>) --> nFieldDeci
  *  $ARGUMENTS$
  *      <nFieldNum> Numeric data field , for which number of decimal
- *                  places need to be determined.   </par>
+ *                  places need to be determined.   
  *  $RETURNS$
  *      FIELDDECI() returns the numeric value that designates the number
- *                  of decimal places of a given field.   </par>
+ *                  of decimal places of a given field.   
  *  $DESCRIPTION$
- *      This function determines the number of decimal places of a given numeric field.   </par>
+ *      This function determines the number of decimal places of a given numeric field.   
  *  $EXAMPLES$
  *      FUNCTION Main()
  *      LOCAL i
@@ -118,8 +127,10 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-CLIPPER TOOLS compatible   </par>
+ *      This function is CA-CLIPPER TOOLS compatible
+ *  $FILES$
+ *      Library is Tools.lib
  *  $SEEALSO$
- *    FIELDTYPE(),FIELDSIZE()
+ *      FIELDTYPE(),FIELDSIZE()
  *  $END$
  */

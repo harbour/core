@@ -23,15 +23,15 @@
  *  $SYNTAX$
  *      ISBIN(<cN>) -><cNr>
  *  $ARGUMENTS$
- *      <cN> STRING TO BE CHECKED   </par>
+ *      <cN> STRING TO BE CHECKED   
  *  $RETURNS$
- *      <cNr> .T. IF THE STRING IS BYNARY,otherwise .F.   </par>
+ *      <cNr> .T. IF THE STRING IS BYNARY,otherwise .F.   
  *  $DESCRIPTION$
- *      check if the passed string is a bynary number or not   </par>
+ *      check if the passed string is a bynary number or not   
  *  $SEEALSO$
  *      ISOCTAL(),ISDEC(),ISHEXA()
- *  $INCLUDE$
- *
+ *  $Files$
+ *      Library is Tools.lib
  *  $END$
  */
 
@@ -45,15 +45,15 @@
  *  $SYNTAX$
  *      ISOCTAL(<cN>) -><cNr>
  *  $ARGUMENTS$
- *      <cN> STRING TO BE CHECKED   </par>
+ *      <cN> STRING TO BE CHECKED   
  *  $RETURNS$
- *   <cNr> .T. IF THE STRING IS OCTAL;otherwise .F.   </par>
+ *   <cNr> .T. IF THE STRING IS OCTAL;otherwise .F.   
  *  $DESCRIPTION$
- *      check if the passed string is a octal number or not   </par>
+ *      check if the passed string is a octal number or not   
  *  $SEEALSO$
  *      ISBIN(),ISDEC(),ISHEXA()
- *  $INCLUDE$
- *
+ *  $Files$
+ *      Library is Tools.lib
  *  $END$
  */
 
@@ -67,15 +67,15 @@
  *  $SYNTAX$
  *      ISDEC(<cN>) -><cNr>
  *  $ARGUMENTS$
- *      <cN> STRING TO BE CHECKED   </par>
+ *      <cN> STRING TO BE CHECKED   
  *  $RETURNS$
- *      <cNr> .T. IF THE STRING IS DECIMAL;otherwise .F.   </par>
+ *      <cNr> .T. IF THE STRING IS DECIMAL;otherwise .F.   
  *  $DESCRIPTION$
- *      check if the passed string is a decimal number or not   </par>
+ *      check if the passed string is a decimal number or not   
  *  $SEEALSO$
  *      ISOCTAL(),ISBIN(),ISHEXA()
- *  $INCLUDE$
- *
+ *  $Files$
+ *      Library is Tools.lib
  *  $END$
  */
 
@@ -89,15 +89,15 @@
  *  $SYNTAX$
  *      ISHEXA(<cN>) -><cNr>
  *  $ARGUMENTS$
- *      <cN> STRING TO BE CHECKED   </par>
+ *      <cN> STRING TO BE CHECKED   
  *  $RETURNS$
- *      <cNr> .T. IF THE STRING IS HEXA;otherwise .F.   </par>
+ *      <cNr> .T. IF THE STRING IS HEXA;otherwise .F.   
  *  $DESCRIPTION$
- *      check if the passed string is a hexa number or not   </par>
+ *      check if the passed string is a hexa number or not   
  *  $SEEALSO$
  *      ISOCTAL(),ISDEC(),ISBIN()
- *  $INCLUDE$
- *
+ *  $Files$
+ *      Library is Tools.lib
  *  $END$
  */
 
@@ -111,16 +111,16 @@
  *  $SYNTAX$
  *      DECTOBIN(<cN>) -><cNr>
  *  $ARGUMENTS$
- *      <cN> NUMBER TO BE CONVERTED   </par>
+ *      <cN> NUMBER TO BE CONVERTED   
  *  $RETURNS$
- *      <cNr>  NUMBER CONVERTED   </par>
+ *      <cNr>  NUMBER CONVERTED   
  *  $DESCRIPTION$
  *      This function converts a string <cN> from an decimal value
- *      to an binary value.   </par>
+ *      to an binary value.   
  *  $SEEALSO$
  *      Dectohexa(),dectooctal()
- *  $INCLUDE$
- *
+ *  $Files$
+ *      Library is Tools.lib
  *  $END$
  */
 
@@ -134,16 +134,16 @@
  *  $SYNTAX$
  *      DECTOOCTAL(<cN>) -><cNr>
  *  $ARGUMENTS$
- *      <cN> NUMBER TO BE CONVERTED   </par>
+ *      <cN> NUMBER TO BE CONVERTED   
  *  $RETURNS$
- *      <cNr>  NUMBER CONVERTED   </par>
+ *      <cNr>  NUMBER CONVERTED   
  *  $DESCRIPTION$
  *      This function converts a string <cN> from an decimal value
- *      to an octal value.   </par>
+ *      to an octal value.   
  *  $SEEALSO$
  *      Dectohexa(),dectobin()
- *  $INCLUDE$
- *
+ *  $Files$
+ *      Library is Tools.lib
  *  $END$
  */
 
@@ -157,16 +157,16 @@
  *  $SYNTAX$
  *      DECTOHEXA(<cN>) -><cNr>
  *  $ARGUMENTS$
- *      <cN> NUMBER TO BE CONVERTED   </par>
+ *      <cN> NUMBER TO BE CONVERTED   
  *  $RETURNS$
- *      <cNr>  NUMBER CONVERTED   </par>
+ *      <cNr>  NUMBER CONVERTED   
  *  $DESCRIPTION$
  *      This function converts a string <cN> from an decimal value
- *      to an hexadecimal value.   </par>
+ *      to an hexadecimal value.   
  *  $SEEALSO$
  *      Dectobin(),dectooctal()
- *  $INCLUDE$
- *
+ *  $Files$
+ *      Library is Tools.lib
  *  $END$
  */
 
@@ -180,16 +180,16 @@
  *  $SYNTAX$
  *      BIntODEC(<cN>) -><cNr>
  *  $ARGUMENTS$
- *      <cN> NUMBER TO BE CONVERTED   </par>
+ *      <cN> NUMBER TO BE CONVERTED   
  *  $RETURNS$
- *      <cNr>  NUMBER CONVERTED   </par>
+ *      <cNr>  NUMBER CONVERTED   
  *  $DESCRIPTION$
  *      This function converts a string <cN> from an binary value
- *      to a numeric decimal value.   </par>
+ *      to a numeric decimal value.   
  *  $SEEALSO$
  *      OctaltoDec(),HexatoDec()
- *  $INCLUDE$
- *
+ *  $Files$
+ *      Library is Tools.lib
  *  $END$
  */
 
@@ -203,16 +203,16 @@
  *  $SYNTAX$
  *      OCTALTODEC(<cN>) -><cNr>
  *  $ARGUMENTS$
- *      <cN> NUMBER TO BE CONVERTED   </par>
+ *      <cN> NUMBER TO BE CONVERTED   
  *  $RETURNS$
- *      <cNr>  NUMBER CONVERTED   </par>
+ *      <cNr>  NUMBER CONVERTED   
  *  $DESCRIPTION$
  *      This function converts a string <cN> from an octal value
- *      to a numeric decimal value.   </par>
+ *      to a numeric decimal value.   
  *  $SEEALSO$
  *      BintoDec(),HexatoDec()
- *  $INCLUDE$
- *
+ *  $Files$
+ *      Library is Tools.lib
  *  $END$
  */
 
@@ -226,16 +226,16 @@
  *  $SYNTAX$
  *      HEXATODEC(<cN>) -><cNr>
  *  $ARGUMENTS$
- *      <cN> NUMBER TO BE CONVERTED   </par>
+ *      <cN> NUMBER TO BE CONVERTED   
  *  $RETURNS$
- *      <cNr>  NUMBER CONVERTED   </par>
+ *      <cNr>  NUMBER CONVERTED   
  *  $DESCRIPTION$
  *      This function converts a string <cN> from an hexadecimal value
- *      to a numeric decimal value.   </par>
+ *      to a numeric decimal value.   
  *  $SEEALSO$
  *      OctaltoDec(),BintoDec()
- *  $INCLUDE$
- *
+ *  $Files$
+ *      Library is Tools.lib
  *  $END$
  */
 

@@ -57,6 +57,7 @@
  *  $PLATFORMS$
  *      All   </par>
  *  $FILES$
+ *      Library is Rtl.lib
  *  $SEEALSO$
  *      @...GET,@...PROMPT,MENU TO,READ,SET KEY,__AtPrompt(),__MenuTo()
  *  $END$

@@ -931,7 +931,11 @@ LOCAL nPos,cItem,cItem2,cItem3,xtype,nColorpos,cColor
          nColorpos:=ASCAn(aColorTable,{|x,y| upper(x[1])==upper(ccolor)})
          cColor:=aColortable[nColorPos,2]
       Endif
+      if !empty(cBuffer)
       cItem:=cBuffer
+      else
+      cItem:=''
+      endif
       if ccolor<>NIL
         AADD(afiTable,ccolor+cItem)
       else

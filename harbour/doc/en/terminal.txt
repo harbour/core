@@ -34,22 +34,22 @@
  *  $SYNTAX$
  *      __XSaveScreen() --> NIL
  *  $ARGUMENTS$
- *      none.   </par>
+ *      none.   
  *  $RETURNS$
- *      __XSaveScreen() always return NIL.   </par>
+ *      __XSaveScreen() always return NIL.   
  *  $DESCRIPTION$
  *      __XSaveScreen() save the image of the whole screen into an internal
  *      buffer, it also save current cursor position. The information could
  *      later be restored by __XRestScreen(). Each call to __XSaveScreen()
- *      overwrite the internal buffer.   </par>
+ *      overwrite the internal buffer.   
  *
  *      SAVE SCREEN command is preprocessed into __XSaveScreen() function
  *      during compile time. Note that SAVE SCREEN TO is preprocessed into
- *      SAVESCREEN() function.   </par>
+ *      SAVESCREEN() function.   
  *
  *      __XSaveScreen() is a compatibility function, it is superseded by
  *      SAVESCREEN() which allow you to save part or all the screen into a
- *      variable.   </par>
+ *      variable.   
  *  $EXAMPLES$
  *      // save the screen, display list of files than restore the screen
  *      SAVE SCREEN
@@ -60,10 +60,12 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __XSaveScreen() works exactly like CA-Clipper's __XSaveScreen()   </par>
+ *      __XSaveScreen() works exactly like CA-Clipper's __XSaveScreen()   
  *  $PLATFORMS$
  *      __XSaveScreen() is part of the GT API, and supported only by some
- *      platforms.   </par>
+ *      platforms.   
+ *  $FILES$
+ *      Library is Rtl.lib
  *  $SEEALSO$
  *       RESTORE SCREEN,RESTSCREEN(),SAVESCREEN()
  *  $END$
@@ -79,18 +81,18 @@
  *  $SYNTAX$
  *      SAVE SCREEN
  *  $ARGUMENTS$
- *      none.   </par>
+ *      none.   
  *  $RETURNS$
- *      SAVE SCREEN always return NIL.   </par>
+ *      SAVE SCREEN always return NIL.   
  *  $DESCRIPTION$
  *      SAVE SCREEN save the image of the whole screen into an internal
  *      buffer, it also save current cursor position. The information could
  *      later be restored by REST SCREEN. Each call to SAVE SCREEN
- *      overwrite the internal buffer.   </par>
+ *      overwrite the internal buffer.   
  *
  *      SAVE SCREEN command is preprocessed into __XSaveScreen() function
  *      during compile time. Note that SAVE SCREEN TO is preprocessed into
- *      SAVESCREEN() function.   </par>
+ *      SAVESCREEN() function.   
  *
  *  $EXAMPLES$
  *      // save the screen, display list of files than restore the screen
@@ -102,10 +104,10 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __XSaveScreen() works exactly like CA-Clipper's __XSaveScreen()   </par>
+ *      __XSaveScreen() works exactly like CA-Clipper's __XSaveScreen()   
  *  $PLATFORMS$
  *      __XSaveScreen() is part of the GT API, and supported only by some
- *      platforms.   </par>
+ *      platforms.   
  *  $SEEALSO$
  *      RESTORE SCREEN,__XRESTSCREEN(),__XSAVESCREEN()
  *  $END$
@@ -123,19 +125,19 @@
  *  $ARGUMENTS$
  *      none.
  *  $RETURNS$
- *      __XRestScreen() always return NIL.   </par>
+ *      __XRestScreen() always return NIL.   
  *  $DESCRIPTION$
  *      __XRestScreen() restore saved image of the whole screen from an
  *      internal buffer that was saved by __XSaveScreen(), it also restore
  *      cursor position. After a call to __XRestScreen() the internal buffer
- *      is cleared.   </par>
+ *      is cleared.   
  *
  *      RESTORE SCREEN command is preprocessed into __XRestScreen() function
  *      during compile time. Note that RESTORE SCREEN FROM is preprocessed
- *      into RESTSCREEN() function.   </par>
+ *      into RESTSCREEN() function.   
  *
  *      __XRestScreen() is a compatibility function, it is superseded by
- *      RESTSCREEN() which allow you to restore the screen from a variable.   </par>
+ *      RESTSCREEN() which allow you to restore the screen from a variable.   
  *  $EXAMPLES$
  *      // save the screen, display list of files than restore the screen
  *      SAVE SCREEN
@@ -146,10 +148,12 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __XRestScreen() works exactly like CA-Clipper's __XRestScreen()   </par>
+ *      __XRestScreen() works exactly like CA-Clipper's __XRestScreen()   
  *  $PLATFORMS$
  *      __XRestScreen() is part of the GT API, and supported only by some
- *      platforms.   </par>
+ *      platforms.   
+ *  $FILES$
+ *      Library is Rtl.lib
  *  $SEEALSO$
  *      __XRESTSCREEN(),SAVE SCREEN,__XSAVESCREEN()
  *  $END$
@@ -165,18 +169,18 @@
  *  $SYNTAX$
  *      RESTORE SCREEN
  *  $ARGUMENTS$
- *      none.   </par>
+ *      none.   
  *  $RETURNS$
- *      REST SCREEN always return NIL.   </par>
+ *      REST SCREEN always return NIL.   
  *  $DESCRIPTION$
  *      Rest Screen restore saved image of the whole screen from an
  *      internal buffer that was saved by Save Screen, it also restore
  *      cursor position. After a call to Rest Screen the internal buffer
- *      is cleared.   </par>
+ *      is cleared.   
  *
  *      RESTORE SCREEN command is preprocessed into __XRestScreen() function
  *      during compile time. Note that RESTORE SCREEN FROM is preprocessed
- *      into RESTSCREEN() function.   </par>
+ *      into RESTSCREEN() function.   
  *
  *  $EXAMPLES$
  *      // save the screen, display list of files than restore the screen
@@ -188,10 +192,10 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Rest Screen() works exactly like CA-Clipper's Rest Screen   </par>
+ *      Rest Screen() works exactly like CA-Clipper's Rest Screen   
  *  $PLATFORMS$
  *      Rest Screen is part of the GT API, and supported only by some
- *      platforms.   </par>
+ *      platforms.   
  *  $SEEALSO$
  *      __XRESTSCREEN(),SAVE SCREEN,__XSAVESCREEN()
  *  $END$
@@ -208,40 +212,40 @@
  *      ALERT( <xMessage>, [<aOptions>], [<cColorNorm>], [<nDelay>] ) --> nChoice or NIL
  *  $ARGUMENTS$
  *      <xMessage> Message to display in the dialog box. <xMessage> can be
- *      of any Harbour type.   </par>
+ *      of any Harbour type.   
  *      If <xMessage> is an array of Character strings, each element would
  *      be displayed in a new line. If <xMessage> is a Character
  *      string, you could split the message to several lines by placing
- *      a semicolon (;) in the desired places.   </par>
+ *      a semicolon (;) in the desired places.   
  *
  *      <aOptions> Array with available response. Each element should be
- *      Character string. If omitted, default is { "Ok" }.   </par>
+ *      Character string. If omitted, default is { "Ok" }.   
  *
  *      <cColorNorm> Color string to paint the dialog box with.
- *      If omitted, default color is "W+/R".     </par>
+ *      If omitted, default color is "W+/R".     
  *
  *      <nDelay> Number of seconds to wait to user response before abort.
- *      Default value is 0, that wait forever.   </par>
+ *      Default value is 0, that wait forever.   
  *  $RETURNS$
  *      ALERT() return Numeric value representing option number chosen.
  *      If ESC was pressed, return value is zero. The return value is NIL
  *      if ALERT() is called with no parameters, or if <xMessage> type is
  *      not Character and HARBOUR_STRICT_CLIPPER_COMPATIBILITY option was
  *      used. If <nDelay> seconds had passed without user response, the
- *      return value is 1.   </par>
+ *      return value is 1.   
  *  $DESCRIPTION$
  *      ALERT() display simple dialog box on screen and let the user select
  *      one option. The user can move the highlight bar using arrow keys or
  *      TAB key. To select an option the user can press ENTER, SPACE or the
- *      first letter of the option.   </par>
+ *      first letter of the option.   
  *
  *      If the program is executed with the //NOALERT command line switch,
  *      nothing is displayed and it simply returns NIL. This switch could
- *      be overridden with __NONOALERT().     </par>
+ *      be overridden with __NONOALERT().     
  *
  *      If the GT system is linked in, ALERT() display the message using
  *      the full screen I/O system, if not, the information is printed to
- *      the standard output using OUTSTD().   </par>
+ *      the standard output using OUTSTD().   
  *  $EXAMPLES$
  *      LOCAL cMessage, aOptions, nChoice
  *
@@ -270,21 +274,23 @@
  *      R
  *  $COMPLIANCE$
  *      This function is sensitive to HARBOUR_STRICT_CLIPPER_COMPATIBILITY
- *      settings.   </par>
+ *      settings.   
  *
  *      ON:  <xMessage> accept Character values only and return NIL if other
- *           types are passed,   </par>
+ *           types are passed,   
  *      OFF: <xMessage> could be any type, and internally converted to
  *           Character string. If type is Array, multi-line message is
- *           displayed.   </par>
+ *           displayed.   
  *
- *      ON:  Only the first four valid <aOptions> are taken.       </par>
+ *      ON:  Only the first four valid <aOptions> are taken.       
  *      OFF: <aOptions> could contain as many as needed options.   
  *
  *      <cColorNorm> is a Harbour extension, or at least un-documented
  *      in Clipper 5.2 NG.                  
  *
  *      <nDelay> is a Harbour extension.    
+ *  $FILES$
+ *      Library is Rtl.lib
  *  $SEEALSO$
  *       @...PROMPT,MENU TO,STDOUT(),__NONOALERT()
  *  $END$
@@ -300,21 +306,23 @@
  *  $SYNTAX$
  *      __NONOALERT() --> NIL
  *  $ARGUMENTS$
- *      This function takes no arguments.   </par>
+ *      This function takes no arguments.   
  *  $RETURNS$
- *      __NONOALERT() always return NIL.   </par>
+ *      __NONOALERT() always return NIL.   
  *  $DESCRIPTION$
  *      The //NOALERT command line switch cause Clipper to ignore calls to
  *      the ALERT() function, this function override this behavior
- *      and always display ALERT() dialog box.   </par>
+ *      and always display ALERT() dialog box.   
  *  $EXAMPLES$
  *      // make sure alert are been displayed
  *      __NONOALERT()
  *    </fixed>
  *  $STATUS$
  *      R
+ *  $FILES$
+ *      Library is Rtl.lib
  *  $COMPLIANCE$
- *      __NONOALERT() is an undocumented CA-Clipper function   </par>
+ *      __NONOALERT() is an undocumented CA-Clipper function   
  *  $END$
  */
 
@@ -330,12 +338,12 @@
  *  $RETURNS$
  *      <cString> A character string containing the character or characters required
  *      to move the screen cursor or print head to the start of a new line.
- *      The string will hold either CHR( 10 ) or CHR( 13 ) + CHR( 10 ).   </par>
+ *      The string will hold either CHR( 10 ) or CHR( 13 ) + CHR( 10 ).   
  *  $DESCRIPTION$
  *      Returns a character string containing the character or characters
  *      required to move the screen cursor or print head to the start of a
  *      new line for the operating system that the program is running on
- *      (or thinks it is running on, if an OS emulator is being used).   </par>
+ *      (or thinks it is running on, if an OS emulator is being used).   
  *  $EXAMPLES$
  *      // Get the newline character(s) for the current OS using defaults.
  *      STATIC s_cNewLine
@@ -352,7 +360,9 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This is an add-on Operating System Tool function.   </par>
+ *      This is an add-on Operating System Tool function.   
+ *  $FILES$
+ *      Library is Rtl.lib
  *  $SEEALSO$
  *      OS(),OUTSTD(),OUTERR()
  *  $END$
@@ -368,17 +378,18 @@
  *  $SYNTAX$
  *      hb_ColorIndex( <cColorSpec>, <nIndex> )  
  *  $ARGUMENTS$
- *      <cColorSpec> is a Clipper color list   </par>
+ *      <cColorSpec> is a Clipper color list
+ *
  *      <nIndex> is the position of the color item to be extracted, the first
- *               position is the zero.   </par>
+ *               position is the zero.   
  *  $RETURNS$
  *      The selected color string, or if anything goes wrong, and empty
- *      string    </par>
+ *      string    
  *  $DESCRIPTION$
  *      Clipper has a color spec string, which has more than one
  *      color in it, separated with commas. This function is able to extract
  *      a given item from this list. You may use the manifest constants
- *      defined in color.ch to extract common Clipper colors.   </par>
+ *      defined in color.ch to extract common Clipper colors.   
  *  $EXAMPLES$
  *      ? hb_ColorIndex( "W/N, N/W", CLR_ENHANCED ) // "N/W"
  *      </fixed>
@@ -388,7 +399,9 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Was not part of CA-Clipper.   </par>
+ *      Was not part of CA-Clipper.   
+ *  $FILES$
+ *      Library is Rtl.lib
  *  $SEEALSO$
  *      ColorSelect()
  *  $END$
@@ -404,15 +417,17 @@
  *  $SYNTAX$
  *      DEVOUTPICT(<xExp>,<cPicture>[,<cColorString>]) --> NIL
  *  $ARGUMENTS$
- *      <xExp> is any valid expression.   </par>
- *      <cPicture> is any picture transformation that TRANSFORM() can use.   </par>
+ *      <xExp> is any valid expression.
+ *
+ *      <cPicture> is any picture transformation that TRANSFORM() can use.
+ *
  *      <cColorString> is an optional string that specifies a screen color to
- *      use in place of the default color when the output goes to the screen.   </par>
+ *      use in place of the default color when the output goes to the screen.   
  *  $RETURNS$
- *      NIL   </par>
+ *      NIL   
  *  $DESCRIPTION$
  *      Outputs any expression using a picture transformation instead of
- *      using the default transformation for the type of expression.   </par>
+ *      using the default transformation for the type of expression.   
  *  $EXAMPLES$
  *      // Output a negative dollar amount using debit notation.
  *      DEVOUTPICT( -1.25, "@D$ 99,999.99 )
@@ -426,7 +441,9 @@
  *      R
  *  $COMPLIANCE$
  *      DEVOUTPICT() is mostly CA-Clipper compliant. Any differences are due
- *      to enhancements in the Harbour TRANSFORM() over CA-Clipper.   </par>
+ *      to enhancements in the Harbour TRANSFORM() over CA-Clipper.   
+ *  $FILES$
+ *      Library is Rtl.lib
  *  $SEEALSO$
  *      DEVOUT(),TRANSFORM()
  *  $END$
@@ -442,16 +459,18 @@
  *  $SYNTAX$
  *      __INPUT( <cMessage> ) --> <cString>
  *  $ARGUMENTS$
- *      <cMessage> is any valid expression.   </par>
+ *      <cMessage> is any valid expression.   
  *  $RETURNS$
- *      Macroed <cString>   </par>
+ *      Macroed <cString>   
  *  $DESCRIPTION$
  *      This function waits for a console input and returns macroed
- *      expression entered.   </par>
+ *      expression entered.   
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
- *      __INPUT() is fully CA-Clipper compliant.   </par>
+ *      __INPUT() is fully CA-Clipper compliant.   
+ *  $FILES$
+ *      Library is Rtl.lib
  *  $SEEALSO$
  *      __WAIT(),__ACCEPT()
  *  $END$
@@ -469,19 +488,21 @@
  *  $ARGUMENTS$
  *      <cFile> is either "PRINTER" (note the uppercase) in which console
  *      output is SET to PRINTER, or a name of a text file with a default
- *      ".txt" extension, that is used to redirect console output.   </par>
+ *      ".txt" extension, that is used to redirect console output.   
  *  $RETURNS$
- *      __TextSave() always return NIL.      </par>
+ *      __TextSave() always return NIL.      
  *  $DESCRIPTION$
  *      __TextSave() is used in the preprocessing of the TEXT TO command to
  *      redirect the console output while saving old settings that can be
- *      restored later by __TextRestore().   </par>
+ *      restored later by __TextRestore().   
  *  $STATUS$
  *      R   
  *  $COMPLIANCE$
- *      __TextSave() is an Undocumented CA-Clipper function   </par>
+ *      __TextSave() is an Undocumented CA-Clipper function   
  *  $PLATFORMS$
- *      ALL   </par>
+ *      ALL   
+ *  $FILES$
+ *      Library is Rtl.lib
  *  $SEEALSO$
  *      SET(),SET ALTERNATE,SET PRINTER,TEXT,__TextRestore()
  *  $END$
@@ -497,19 +518,21 @@
  *  $SYNTAX$
  *      __TextRestore() --> NIL
  *  $ARGUMENTS$
- *      none.                                </par>
+ *      none.                                
  *  $RETURNS$
- *      __TextRestore() always return NIL.   </par>
+ *      __TextRestore() always return NIL.   
  *  $DESCRIPTION$
  *      __TextRestore() is used in the preprocessing of the TEXT TO command
  *      to restore console output settings that were previously saved by
- *      __TextSave().   </par>
+ *      __TextSave().   
  *  $STATUS$
-        R
+ *       R
  *  $COMPLIANCE$
- *      __TextRestore() is an Undocumented CA-Clipper function   </par>
+ *      __TextRestore() is an Undocumented CA-Clipper function   
  *  $PLATFORMS$
-        All   </par>
+ *       All   
+ *  $FILES$
+ *      Library is Rtl.lib
  *  $SEEALSO$
  *      SET(),SET ALTERNATE,SET PRINTER,TEXT,__TextSave()
  *  $END$
@@ -525,12 +548,12 @@
  *  $SYNTAX$
  *      __WAIT( <cMessage> ) --> <cKey>
  *  $ARGUMENTS$
- *      <cMessage> is a string.   </par>
+ *      <cMessage> is a string.   
  *  $RETURNS$
- *      Pressed key.   </par>
+ *      Pressed key.   
  *  $DESCRIPTION$
  *      This function stops the application until a key is pressed. The key
- *      must be in the range 32..255. Control keys are not processed.   </par>
+ *      must be in the range 32..255. Control keys are not processed.   
  *  $EXAMPLES$
  *      // Wait for a key stroke
  *      __Wait( "Press a key to continue" )
@@ -543,7 +566,9 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __WAIT() is fully CA-Clipper compliant.    </par>
+ *      __WAIT() is fully CA-Clipper compliant.    
+ *  $FILES$
+ *      Library is Rtl.lib
  *  $SEEALSO$
  *      __ACCEPT(),__INPUT()
  *  $END$

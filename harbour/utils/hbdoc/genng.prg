@@ -897,6 +897,7 @@ FUNCTION GenNgTable( oNgi )
    LOCAL nPos
    LOCAL aLensFItem  := {}
    LOCAL aLensSItem  := {}
+   LOCAL cMaxItem := ''
    LOCAL nmax3
    LOCAL nmax4
    LOCAL npos3
@@ -905,49 +906,48 @@ FUNCTION GenNgTable( oNgi )
    LOCAL nSpace4
    LOCAL aLensTItem  := {}
    LOCAL aLensfoItem := {}
-
+   LOCAL nLen
    FOR X := 1 TO LEN( afitable )
-      IF AT( "^", afitable[ x ] ) > 0
-         AADD( aLenssItem, LEN( SUBSTR( STRTRAN( afitable[ x ], "^n", "" ), 5 ) ) )
-      ELSE
+   if !empty(afiTable[ x ] ) 
          AADD( aLensFItem, LEN( afiTable[ x ] ) )
-      ENDIF
+         end
    NEXT
    FOR X := 1 TO LEN( asiTable )
-      IF AT( "^", asitable[ x ] ) > 0
-         AADD( aLenssItem, LEN( SUBSTR( STRTRAN( asitable[ x ], "^n", "" ), 5 ) ) )
-      ELSE
+   if !empty(asiTable[ x ] ) 
          AADD( aLensSItem, LEN( asiTable[ x ] ) )
-      ENDIF
+         end
    NEXT
    IF LEN( afoitable ) > 0
+   
       FOR X := 1 TO LEN( afoitable )
-         IF AT( "^", afoitable[ x ] ) > 0
-            AADD( aLensfoItem, LEN( SUBSTR( STRTRAN( afoitable[ x ], "^n", "" ), 5 ) ) )
-         ELSE
+      if !empty(afoiTable[ x ] ) 
             AADD( aLensfoItem, LEN( afoiTable[ x ] ) )
-         ENDIF
+            end
       NEXT
    ENDIF
    IF LEN( atitable ) > 0
       FOR X := 1 TO LEN( atitable )
-         IF AT( "^", atitable[ x ] ) > 0
-            AADD( aLenstItem, LEN( SUBSTR( STRTRAN( atitable[ x ], "^n", "" ), 5 ) ) )
-         ELSE
+      if !empty( atiTable[ x ] ) 
             AADD( aLenstItem, LEN( atiTable[ x ] ) )
-         ENDIF
+            end
       NEXT
    ENDIF
 
    ASORT( aLensFItem,,, { | x, y | x > y } )
    ASORT( aLensSItem,,, { | x, y | x > y } )
-   IF LEN( afoitable ) > 0
+   IF LEN( afoitable ) > 0  .and. nNumTableItems == 4
+      ASORT( alenstitem,,, { | x, y | x > y } )
+      nmax3 := alenstitem[ 1 ]
+      npos  := maxelem( atitable )
+      nPos3 := ASCAN( alenstitem, { | x | x == nPos } )
+
+
       ASORT( aLensFoItem,,, { | x, y | x > y } )
       nmax4 := alensfoitem[ 1 ]
       nPos  := maxelem( afoitable )
       nPos4 := ASCAN( alensfoitem, { | x | x == nPos } )
    ENDIF
-   IF LEN( atitable ) > 0
+   IF LEN( atitable ) > 0 .and. nNumTableItems == 3
       ASORT( alenstitem,,, { | x, y | x > y } )
       nmax3 := alenstitem[ 1 ]
       npos  := maxelem( atitable )
@@ -955,53 +955,113 @@ FUNCTION GenNgTable( oNgi )
 
    ENDIF
 
-   nMax  := alenssitem[ 1 ]
+   nMax:=aLenssItem[1]
    nPos  := maxelem( asitable )
    nPos1 := ASCAN( aLenssItem, { | x | x == nPos } )
+
    oNgi:WritePar( "" )
    //  nMax2:=checkcar(aTable,1)+1
    nMax2 := alensfitem[ 1 ]
    nPos  := maxelem( afitable )
    nPos2 := ASCAN( alensfitem, { | x | x == nPos } )
-
    IF nNumTableItems == 2
-      oNgi:WritePar( "É" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "»", .F. )                //-4
+      cMaxItem:='      '+"É" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "»"
+      if LEN(cMaxItem)<76
+         oNgi:WritePar("      É" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "»", .F. )                //-4
+      Else
+            oNgi:WritePar( "É" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "»", .F. )                //-4
+      Endif
    ELSEIF nNumTableItems == 3
+      cMaxItem:='      '+"É" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ë" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "»"
+      if LEN(cMaxItem)<76
+         oNgi:WritePar( "      É"+ REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ë" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "»", .F. )           //-4
+      else
       oNgi:WritePar( "É" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ë" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "»", .F. )           //-4
+      endif
    ELSEIF nNumTableItems == 4
-      oNgi:WritePar( "É" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ë" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "Ë" + REPL( "Í", alensfoitem[ nPos4 ] + 2 ) + "»", .F. )     //-4
+      cMaxItem:='      '+"É" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ë" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "Ë" + REPL( "Í", alensfoitem[ nPos4 ] + 2 ) + "»"
+      if LEN(cMaxItem)<76
+         oNgi:WritePar( "      É" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ë" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "Ë" + REPL( "Í", alensfoitem[ nPos4 ] + 2 ) + "»", .F. )     //-4      
+      else
+         oNgi:WritePar( "É" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ë" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "Ë" + REPL( "Í", alensfoitem[ nPos4 ] + 2 ) + "»", .F. )     //-4
+   endif
    ENDIF
    FOR x := 1 TO LEN( asitable )
+   if !empty(asitable[x])
       nSpace  := nMax - LEN( asitable[ x ] )
       nSpace2 := nMax2 - LEN( afitable[ x ] )
+
       IF nNumTableItems == 2
+         if len(cMaxItem)<76
+          oNgi:WriteParBox( "      º " + afiTable[ x ] + SPACE( nSpace2 ) + " º " + IF( asiTable[ x ] == "|", STRTRAN( asiTable[ x ], "|", " " ), asiTable[ x ] ) + SPACE( nspace ) + " º" + HB_OSNEWLINE() )
+         else
          oNgi:WriteParBox( "º " + afiTable[ x ] + SPACE( nSpace2 ) + " º " + IF( asiTable[ x ] == "|", STRTRAN( asiTable[ x ], "|", " " ), asiTable[ x ] ) + SPACE( nspace ) + " º" + HB_OSNEWLINE() )
-         if x<> len(aSiTable)
-             oNgi:WritePar( "Ì" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Î" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "¹")
-         Endif
+         endif
       ELSEIF nNumTableItems == 3
          nSpace3 := nMax3 - LEN( atitable[ x ] )
+         if len(cMaxItem)<76
+         oNgi:WriteParBox( "      º " + afiTable[ x ] + SPACE( nSpace2 ) + " º " + IF( asiTable[ x ] == "|", STRTRAN( asiTable[ x ], "|", " " ), asiTable[ x ] ) + SPACE( nspace ) + " º " + atiTable[ x ] + SPACE( nspace3 ) + " º" + HB_OSNEWLINE() )
+         else
          oNgi:WriteParBox( "º " + afiTable[ x ] + SPACE( nSpace2 ) + " º " + IF( asiTable[ x ] == "|", STRTRAN( asiTable[ x ], "|", " " ), asiTable[ x ] ) + SPACE( nspace ) + " º " + atiTable[ x ] + SPACE( nspace3 ) + " º" + HB_OSNEWLINE() )
-         if x<> len(aSiTable)
-             oNgi:WritePar( "Ì" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Î" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Î" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "¹", .F. )           //-4
          endif
       ELSEIF nNumTableItems == 4
          nSpace3 := nMax3 - LEN( atitable[ x ] )
          nSpace4 := nMax4 - LEN( afoitable[ x ] )
+         if len(cMaxItem)<76
+                  oNgi:WriteParBox( "      º " + afiTable[ x ] + SPACE( nSpace2 ) + " º " + IF( asiTable[ x ] == "|", STRTRAN( asiTable[ x ], "|", " " ), asiTable[ x ] ) + SPACE( nspace ) + " º " + atiTable[ x ] + SPACE( nspace3 ) + " º " + afoiTable[ x ] + SPACE( nspace4 ) + " º" + HB_OSNEWLINE() )
+         else
          oNgi:WriteParBox( "º " + afiTable[ x ] + SPACE( nSpace2 ) + " º " + IF( asiTable[ x ] == "|", STRTRAN( asiTable[ x ], "|", " " ), asiTable[ x ] ) + SPACE( nspace ) + " º " + atiTable[ x ] + SPACE( nspace3 ) + " º " + afoiTable[ x ] + SPACE( nspace4 ) + " º" + HB_OSNEWLINE() )
-         if x<> len(aSiTable)    
-              oNgi:WritePar( "Ì" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Î" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Î" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "Î" + REPL( "Í", alensfoitem[ nPos4 ] + 2 ) + "¹", .F. )     //-4
          endif
       ENDIF
+      ELSE
+      IF nNumTableItems == 2
+      if len(cMaxItem)<76
+             oNgi:WritePar( "      Ì" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Î" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "¹", .F. )
+      else
+             oNgi:WritePar( "Ì" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Î" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "¹", .F. )
+      endif
+      ELSEIF nNumTableItems == 3
+      if len(cMaxItem)<76
+             oNgi:WritePar( "      Ì" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Î" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Î" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "¹", .F. )           //-4
+      else
+                   oNgi:WritePar( "Ì" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Î" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Î" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "¹", .F. )           //-4
+      endif
+
+      ELSEIF nNumTableItems == 4
+      if len(cMaxItem)<76
+              oNgi:WritePar( "      Ì" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Î" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Î" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "Î" + REPL( "Í", alensfoitem[ nPos4 ] + 2 ) + "¹", .F. )     //-4
+      else
+              oNgi:WritePar( "Ì" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Î" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Î" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "Î" + REPL( "Í", alensfoitem[ nPos4 ] + 2 ) + "¹", .F. )     //-4
+      endif
+
+      ENDIF
+
+      Endif
    NEXT
 
    IF nNumTableItems == 2
+   if len(cMaxItem)<76   
+      oNgi:WritePar( "      È" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ê" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "¼", .F. )                //-4
+      else
       oNgi:WritePar( "È" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ê" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "¼", .F. )                //-4
+      endif
+
    ELSEIF nNumTableItems == 3
-      oNgi:WritePar( "È" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ê" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ê" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "¼", .F. )           //-4
+      if len(cMaxItem)<76
+
+      oNgi:WritePar( "      È" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ê" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ê" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) +"¼", .F. )     //-4
+      else
+            oNgi:WritePar( "      È" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ê" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ê" + REPL( "Í", alensTitem[ nPos3 ] + 2 )+ "¼", .F. )     //-4
+      endif
+
    ELSEIF nNumTableItems == 4
+      if len(cMaxItem)<76
+      oNgi:WritePar( "      È" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ê" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ê" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "Ê" + REPL( "Í", alensfoitem[ nPos4 ] + 2 ) + "¼", .F. )     //-4
+      else
       oNgi:WritePar( "È" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ê" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ê" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "Ê" + REPL( "Í", alensfoitem[ nPos4 ] + 2 ) + "¼", .F. )     //-4
+      endif
    ENDIF
+
 
    oNgi:WritePar( "" )
    afiTable  := {}
@@ -1044,16 +1104,32 @@ FUNCTION ProcNgTable( cBuffer, nNum )
       nColorpos := ASCAN( aColorTable, { | x, y | UPPER( x[ 1 ] ) == UPPER( ccolor ) } )
       cColor    := aColortable[ nColorPos, 2 ]
    ENDIF
-   cItem   := SUBSTR( cBuffer, 1, AT( SPACE( 3 ), cBuffer ) - 1 )
-   cBuffer := ALLTRIM( STRTRAN( cBuffer, cItem, "" ) )
+/*
+   If !empty(cBuffer)
+       cItem   := SUBSTR( cBuffer, 1, AT( SPACE( 3 ), cBuffer ) - 1 )
+       cBuffer := ALLTRIM( STRTRAN( cBuffer, cItem, "" ) )
+   else
+       citem:=''
+   endif
 
    if nNum==2
+       If !empty(cBuffer)
        cItem2 := SUBSTR( cBuffer, 1 )
+       else
+        citem2:=''
+       endif
    elseif nNum ==3
+          If !empty(cBuffer)
         cItem2  := SUBSTR( cBuffer, 1, AT( SPACE( 3 ), cBuffer ) - 1 )
         cBuffer := ALLTRIM( STRTRAN( cBuffer, cItem2, "" ) )
         cItem3 := SUBSTR( cBuffer, 1 )
+       else
+        citem2:=''
+        citem3:=''
+       endif
+
   ELSEIF nNum > 3
+         If !empty(cBuffer)
         cItem2  := SUBSTR( cBuffer, 1, AT( SPACE( 3 ), cBuffer ) - 1 )
         cBuffer := ALLTRIM( STRTRAN( cBuffer, cItem2, "" ) )
 
@@ -1061,17 +1137,68 @@ FUNCTION ProcNgTable( cBuffer, nNum )
         cBuffer := ALLTRIM( STRTRAN( cBuffer, cItem3, "" ) )
         
         cItem4  := SUBSTR( cBuffer, 1 )
+       else
+        citem2:=''
+        citem3:=''
+        citem4:=''
+       endif
         
    ENDIF
-
    AADD( afiTable, RTRIM( LTRIM( cItem ) ) )
    AADD( asiTable, cItem2 )
-   IF !EMPTY( cItem3 )
       AADD( atiTable, cItem3 )
-   ENDIF
-   IF !EMPTY( cItem4 )
       AADD( afoiTable, cItem4 )
+
+  */
+   If !empty(cBuffer)
+       cItem   := SUBSTR( cBuffer, 1, AT( SPACE( 3 ), cBuffer ) - 1 )
+       cBuffer := ALLTRIM( STRTRAN( cBuffer, cItem, "" ) )
+   else
+       citem:=''
+   endif
+
+   if nNum==2
+       If !empty(cBuffer)
+       cItem2 := SUBSTR( cBuffer, 1 )
+       else
+        citem2:=''
+       endif
+   elseif nNum ==3
+          If !empty(cBuffer)
+        cItem2  := SUBSTR( cBuffer, 1, AT( SPACE( 3 ), cBuffer ) - 1 )
+        cBuffer := ALLTRIM( STRTRAN( cBuffer, cItem2, "" ) )
+        cItem3 := SUBSTR( cBuffer, 1 )
+       else
+        citem2:=''
+        citem3:=''
+       endif
+
+  ELSEIF nNum > 3
+         If !empty(cBuffer)
+        cItem2  := SUBSTR( cBuffer, 1, AT( SPACE( 3 ), cBuffer ) - 1 )
+        cBuffer := ALLTRIM( STRTRAN( cBuffer, cItem2, "" ) )
+
+        cItem3  := SUBSTR( cBuffer, 1, AT( SPACE( 3 ), cBuffer ) - 1 )
+        cBuffer := ALLTRIM( STRTRAN( cBuffer, cItem3, "" ) )
+        
+        cItem4  := SUBSTR( cBuffer, 1 )
+       else
+        citem2:=''
+        citem3:=''
+        citem4:=''
+       endif
+        
    ENDIF
+   AADD( afiTable, RTRIM( LTRIM( cItem ) ) )
+   AADD( asiTable, cItem2 )
+//   IF !EMPTY( cItem3 )
+      AADD( atiTable, cItem3 )
+//   ENDIF
+//   IF !EMPTY( cItem4 )
+      AADD( afoiTable, cItem4 )
+ //  ENDIF
+
+
 
 RETURN Nil
 
@@ -1343,8 +1470,7 @@ FUNCTION ProcNGDesc( cBuffer, oNgi, cStyle )
             lendTable := .t.
          ELSE
             IF LFstTableItem
-               nNumTableItems := GetNumberofTableItems( cLine )
-               
+               nNumTableItems := GetNumberofTableItems( cLine )              
                procngtable( cline, nNumTableItems )
                LFstTableItem := .f.
             ELSE
@@ -1413,7 +1539,8 @@ FUNC maxelem( a )
 
    LOCAL nCount
    FOR nCount := 1 TO nSize
-      tam := LEN( a[ nCount ] )
+
+        tam := LEN( a[ nCount ] )
       max := IF( tam > max, tam, max )
    NEXT
    nPos := ASCAN( a, { | x | LEN( x ) == max } )
@@ -1471,7 +1598,7 @@ FUNCTION FormatNgBuff( cBuffer, cStyle, ongi )
 
       cReturn := '<par>' + cReturn + '    </par>'
    ELSEIF cStyle == 'Syntax'
-      cReturn := strtran(cReturn,space(6),"")
+      cReturn := strtran(cReturn,space(4),"")
       cReturn := '<par><b>' + cReturn + ' </b></par>'
 
    ELSEIF cStyle == 'Arguments' .OR. cStyle == "Return"

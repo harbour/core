@@ -30,7 +30,7 @@
  *      ? OS()
  *  </fixed>
  *  $FILES$
- *      source/rtl/environ.c   </par>
+ *      source/rtl/version.c   </par>
  *  $END$
  */
 
@@ -53,28 +53,29 @@
  *      This function returns the HARBOUR Version or the Harbour Version+C
  *      compiler Version used to create the Harbour runtime library   </par>
  *  $EXAMPLES$
- *     ? QOUT(VERSION())    // Displays Harbour version only
- *     ? QOUT(VERSION(NIL)) // Displays Harbour and C Compiler versions
+ *      ? QOUT(VERSION())    // Displays Harbour version only
+ *      ? QOUT(VERSION(NIL)) // Displays Harbour and C Compiler versions
  *  </fixed>
  *  $STATUS$
- *     S
+ *      S
  *  $COMPLIANCE$
- *     This function is an enhanced version of the CA-Clipper VERSION function.
- *     The CA-Clipper version does not have a parameter and it only returns
- *     the Version of the CA-Clipper Compiler. The Harbour version returns
- *     only the Harbour Version if called without the <nMode> parameter, but
- *     returns both the Harbour Version and the Version of the C compiler used
- *     to build Harbour when the <nMode> parameter is present.   </par>
+ *      This function is an enhanced version of the CA-Clipper VERSION function.
+ *      The CA-Clipper version does not have a parameter and it only returns
+ *      the Version of the CA-Clipper Compiler. The Harbour version returns
+ *      only the Harbour Version if called without the <nMode> parameter, but
+ *      returns both the Harbour Version and the Version of the C compiler used
+ *      to build Harbour when the <nMode> parameter is present.   </par>
  *  $FILES$
- *    source/rtl/environ.c   </par>
+ *      source/rtl/version.c   </par>
+ *      Library is Rtl.lib
  *  $SEEALSO$
- *    OS()
+ *      OS()
  *  $END$
  */
 
 /*  $DOC$
  *  $FUNCNAME$
- *     GETENV()
+ *      GETENV()
  *  $CATEGORY$
  *      Environment
  *  $ONELINER$
@@ -83,6 +84,7 @@
  *      GETENV(<cEnviroment>, <cDefaultValue> )  --> <cReturn>
  *  $ARGUMENTS$
  *      <cEnviroment> Enviromental variable to obtain   </par>
+ *
  *      <cDefaultValue> Optional value to return if <cEnvironment> is not found   </par>
  *  $RETURNS$
  *      <cReturn>     Value of the Variable   </par>
@@ -101,7 +103,8 @@
  *  $COMPLIANCE$
  *      This functions is CA-CLIPPER compliant   </par>
  *  $FILES$
- *     source/rtl/environ.c   </par>
+ *     source/rtl/gete.c   </par>
+ *      Library is Rtl.lib
  *  $END$
  */
 
@@ -130,7 +133,8 @@
  *      __Run( "command" )                // Gives a DOS shell (DOS only)
  *  </fixed>
  *  $FILES$
- *      source/rtl/environ.c   </par>
+ *      source/rtl/run.c   </par>
+ *      Library is Rtl.lib
  *  $SEEALSO$
  *      RUN
  *  $END$
@@ -148,6 +152,7 @@
  *  $ARGUMENTS$
  *      <nFrequency> is a non-negative numeric value that specifies the
  *      frequency of the tone in hertz.   </par>
+
  *      <nDuration> is a positive numeric value which specifies the duration
  *      of the tone in 1/18 of a second units.   </par>
  *  $RETURNS$
@@ -181,6 +186,8 @@
  *      S
  *  $COMPLIANCE$
  *      TONE() works exactly like CA-Clipper's TONE().   </par>
+ *  $FILES$
+ *      Library is Rtl.lib
  *  $SEEALSO$
  *      CHR(),SET BELL
  *  $END$

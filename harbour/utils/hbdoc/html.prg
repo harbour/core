@@ -127,7 +127,7 @@ METHOD WriteLink( cLink ,cName ) CLASS THTML
    IF cName!=Nil
       cLink:=cName
    ENDIF
-
+   cTemp:=Strtran(cTemp," ","")
    FWRITE( Self:nHandle, "<LI><a href=" + Lower(cTemp) + ">" + cLink + "</a></LI>" + CRLF )
 
 

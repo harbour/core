@@ -54,13 +54,14 @@
  *      USE TEST
  *      aList := { "NAME" }
  *      __dbCopyStruct( "OnlyName.DBF", aList )
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      __dbCopyStruct() works exactly like CA-Clipper's __dbCopyStruct()
  *  $PLATFORMS$
+ *      All
  *  $FILES$
+ *      Library is Rdd.lib
  *  $SEEALSO$
  *      COPY STRUCTURE,COPY STRUCTURE EXTENDED,DBCREATE(),DBSTRUCT(),__dbCopyXStruct(),__dbCreate(),__dbStructFilter()
  *  $END$
@@ -101,13 +102,12 @@
  *      // Create a new file that contain part of the original structure
  *      USE TEST
  *      COPY STRUCTURE TO SomePart FIELDS name, address
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      COPY STRUCTURE works exactly as in CA-Clipper
  *  $PLATFORMS$
- *  $FILES$
+ *      All
  *  $SEEALSO$
  *      COPY STRUCTURE EXTENDED,DBCREATE(),DBSTRUCT(),__dbCopyStruct(),__dbCopyXStruct(),__dbCreate(),__dbStructFilter()
  *  $END$
@@ -134,7 +134,8 @@
  *      pre-defined structure (also called "structure extended file"):
  *
  *       <table>
- *       <color:red>Field name   Type   Length   Decimals </color>
+ *       Field name   Type   Length   Decimals
+ *
  *       FIELD_NAME   C      10       0
  *       FIELD_TYPE   C      1        0
  *       FIELD_LEN    N      3        0
@@ -179,7 +180,9 @@
  *  $COMPLIANCE$
  *      __dbCopyXStruct() works exactly like CA-Clipper's __dbCopyXStruct()
  *  $PLATFORMS$
+ *      All
  *  $FILES$
+ *      Library is Rdd.lib
  *  $SEEALSO$
  *      COPY STRUCTURE,COPY STRUCTURE EXTENDED,CREATE,CREATE FROM,DBCREATE(),DBSTRUCT(),__dbCopyStruct(),__dbCreate()
  *  $END$
@@ -204,7 +207,8 @@
  *      a pre-defined structure (also called "structure extended file"):
  *
  *       <table>
- *       <color:red>Field name   Type   Length   Decimals </color>
+ *       Field name   Type   Length   Decimals
+ *
  *       FIELD_NAME   C      10       0
  *       FIELD_TYPE   C      1        0
  *       FIELD_LEN    N      3        0
@@ -243,13 +247,12 @@
  *      COPY STRUCTURE EXTENDED TO TestStru
  *      USE TestStru
  *      LIST
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      COPY STRUCTURE EXTENDED works exactly as in CA-Clipper
  *  $PLATFORMS$
- *  $FILES$
+ *      All
  *  $SEEALSO$
  *      COPY STRUCTURE,CREATE,CREATE FROM,DBCREATE(),DBSTRUCT(),__dbCopyStruct(),__dbCopyXStruct(),__dbCreate()
  *  $END$
@@ -299,8 +302,9 @@
  *      then opened in the current work-area (<lNew> is ignored). The new
  *      file has the following structure:
  *
- *       <table:4>
- *       <color:red>Field name   Type   Length   Decimals </color>
+ *       <table>
+ *       Field name   Type   Length   Decimals
+ *
  *       FIELD_NAME   C      10       0
  *       FIELD_TYPE   C      1        0
  *       FIELD_LEN    N      3        0
@@ -352,13 +356,14 @@
  *      FIELD->FIELD_DEC  := 3        // 1000 / 256 = 3
  *      DBCLOSEAREA()
  *      __dbCreate( "TV_Guide", "template" )
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      __dbCreate() works exactly as in CA-Clipper
  *  $PLATFORMS$
+ *      All
  *  $FILES$
+ *      Library is Rdd.lib
  *  $SEEALSO$
  *      COPY STRUCTURE,COPY STRUCTURE EXTENDED,CREATE,CREATE FROM,DBCREATE(),DBSTRUCT(),__dbCopyStruct(),__dbCopyXStruct()
  *  $END$
@@ -390,9 +395,9 @@
  *      and then open it in the current work-area. The new file has the
  *      following structure:
  *
- *       <table:4>
- *       <color:red>Field name   Type   Length   Decimals</color>
- *       
+ *       <table>
+ *       Field name   Type   Length   Decimals
+ *
  *       FIELD_NAME   C      10       0
  *       FIELD_TYPE   C      1        0
  *       FIELD_LEN    N      3        0
@@ -423,13 +428,12 @@
  *      FIELD->FIELD_DEC  := 3        // 1000 / 256 = 3
  *      CLOSE
  *      CREATE TV_Guide FROM template
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      CREATE works exactly as in CA-Clipper
  *  $PLATFORMS$
- *  $FILES$
+ *      All
  *  $SEEALSO$
  *      COPY STRUCTURE,COPY STRUCTURE EXTENDED,CREATE FROM,DBCREATE(),DBSTRUCT(),__dbCopyStruct(),__dbCopyXStruct(),__dbCreate()
  *  $END$
@@ -488,13 +492,12 @@
  *      during compile time and use this mode.
  *  $EXAMPLES$
  *      See example in the CREATE command
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      CREATE FROM works exactly as in CA-Clipper
  *  $PLATFORMS$
- *  $FILES$
+ *      All
  *  $SEEALSO$
  *      COPY STRUCTURE,COPY STRUCTURE EXTENDED,CREATE,DBCREATE(),DBSTRUCT(),__dbCopyStruct(),__dbCopyXStruct(),__dbCreate()
  *  $END$
@@ -514,8 +517,9 @@
  *      structure, which is usually the output from DBSTRUCT(), where each
  *      array element has the following structure:
  *
- *       <table:3>
- *       <color:red>Position   Description    dbstruct.ch </color>
+ *       <table>
+ *       Position   Description    dbstruct.ch
+ *
  *       1          cFieldName     DBS_NAME
  *       2          cFieldType     DBS_TYPE
  *       3          nFieldLength   DBS_LEN
@@ -568,7 +572,6 @@
  *      aStruct := DBSTRUCT()
  *      aList := { "NAME" }
  *      DBCREATE( "OnlyName.DBF", __FLEDIT( aStruct, aList ) )
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -581,8 +584,10 @@
  *      This function is only visible if source/rdd/dbstrux.prg was compiled
  *      with the HARBOUR_STRICT_CLIPPER_COMPATIBILITY flag.
  *  $PLATFORMS$
+ *       All
  *  $FILES$
  *      Header file is dbstruct.ch
+ *      Library is Rdd.lib
  *  $SEEALSO$
  *      DBCREATE(),DBSTRUCT(),__dbCopyStruct(),__dbStructFilter()
  *  $END$
@@ -602,8 +607,9 @@
  *      structure, which is usually the output from DBSTRUCT(), where each
  *      array element has the following structure:
  *
- *       <table:3>
- *       <color:red>Position   Description    dbstruct.ch </color>
+ *       <table>
+ *       Position   Description    dbstruct.ch
+ *
  *       1          cFieldName     DBS_NAME
  *       2          cFieldType     DBS_TYPE
  *       3          nFieldLength   DBS_LEN
@@ -653,7 +659,6 @@
  *      aStruct := DBSTRUCT()
  *      aList := { "NAME" }
  *      DBCREATE( "OnlyName.DBF", __dbStructFilter( aStruct, aList ) )
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -661,8 +666,10 @@
  *      undocumented function named __FLEDIT() that does exactly the same.
  *      The new name give better description of what this function do.
  *  $PLATFORMS$
+ *      All
  *  $FILES$
  *      Header file is dbstruct.ch
+ *      Library is Rdd.lib
  *  $SEEALSO$
  *      DBCREATE(),DBSTRUCT(),__dbCopyStruct(),__FLEDIT()*
  *  $END$

@@ -23,10 +23,10 @@
  *      ELSE
  *         RETURN(.F.)
  *      ENDIF
+ *  $FILES$
+ *      Header is Fileio.ch
  *  $SEEALSO$
  *      MD(),RD()
- *  $INCLUDE$
- *      extend.h dos.h dir.h bios.h
  *  $END$
  */
 
@@ -51,6 +51,8 @@
  *      ELSE
  *        RETURN(.F.)
  *      ENDIF
+ *  $FILES$
+ *      Header is Fileio.ch
  *  $SEEALSO$
  *      CD(),MD()
  *  $END$
@@ -77,6 +79,8 @@
  *     ELSE
  *       RETURN(.F.)
  *     ENDIF
+ *  $FILES$
+ *      Header is Fileio.ch
  *  $SEEALSO$
  *     CD(),MD()
  *  $END$

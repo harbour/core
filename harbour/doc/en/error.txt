@@ -23,17 +23,19 @@
  *  $SYNTAX$
  *      ERRORSYS() --> NIL 
  *  $ARGUMENTS$
- *      None.   </par>
+ *      None.   
  *  $RETURNS$
- *      ERRORSYS() always return NIL.   </par>
+ *      ERRORSYS() always return NIL.   
  *  $DESCRIPTION$
  *      ERRORSYS() is called upon startup by Harbour and install the default
  *      error handler. Normally you should not call this function directly,
- *      instead use ERRORBLOCK() to install your own error handler.   </par>
+ *      instead use ERRORBLOCK() to install your own error handler.   
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      ERRORSYS() works exactly like CA-Clipper's ERRORSYS().   </par>
+ *      ERRORSYS() works exactly like CA-Clipper's ERRORSYS().   
+ *  $FILES$
+ *      Library is Rtl.lib
  *  $SEEALSO$
  *      ERRORBLOCK(),Error class
  *  $END$

@@ -462,7 +462,7 @@ FUNCTION ProcessWww()
 *                     oHtm:WritePar( "" )
                   ENDIF
                   oHtm:WriteParBold( " Examples" )
-                  oHtm:WriteText("<DD><PRE>")
+                  oHtm:WriteText("<PRE>")
                   nMode     := D_EXAMPLE
                   lAddBlank := .T.
                   lAddEndPreTag:=.T.                     
@@ -835,6 +835,8 @@ local npos,nposend
          cOldLine := LEFT( cReturn, nPos - 1 )
          cReturn  := STRTRAN( cReturn, cOldLine, "" )
          IF AT( "@", cOldLine ) > 0 .OR. AT( "()", cOldLine ) > 0 .OR. AT( "<", cOldLine ) > 0 .OR. AT( "_", cOldLine ) > 0
+             cOldLine:=STRTRAN(cOldLine,"<","&lt;")
+             cOldLine:=STRTRAN(cOldLine,">","&gt;")
             lArgBold := .T.
          ENDIF
       ENDIF
@@ -918,7 +920,7 @@ if at('<par>',cBuffer)==0 .and. !empty(cBuffer) .and. cstyle<>"Example"
 endif
 
 if empty(cBuffer)
-oHtm:WriteText("<br>")
+oHtm:WriteText("<dd><br></dd>")
 endif
 
 if cStyle<>"Example" .and. at("<table>",cBuffer)==0 .and. AT("<fixed>",cBuffer)=0
@@ -937,6 +939,10 @@ if cStyle<>"Example" .and. at("<table>",cBuffer)==0 .and. AT("<fixed>",cBuffer)=
             cReturn:=STRTRAN(cReturn,cOldLine,"")
              IF AT( "@", cOldLine ) > 0 .OR. AT( "()", cOldLine ) > 0 .OR. AT( "<", cOldLine ) > 0 .OR. AT( "_", cOldLine ) > 0
                 lArgBold := .T.
+                cOldLine:=STRTRAN(cOldLine,"<","&lt;")
+                cOldLine:=STRTRAN(cOldLine,">","&gt;")
+         
+
              ENDIF
     if lArgBold
         cReturn:='       <par><b>'+cOldLine+'</b> '+cReturn+'    </par>'
@@ -1011,7 +1017,8 @@ If AT('<fixed>',cBuffer)>0 .or. cStyle="Example"
       IF AT( '<fixed>', cBuffer ) = 0 .OR. !EMPTY( cBuffer )
          cBuffer := STRTRAN( cBuffer, "<par>", "" )
          cBuffer := STRTRAN( cBuffer, "<fixed>", "" )
-
+        
+        oHtm:WriteText("<br>")
          oHtm:WritePar( cBuffer )
       ENDIF
       DO WHILE !lendFixed
@@ -1032,7 +1039,7 @@ If AT('<fixed>',cBuffer)>0 .or. cStyle="Example"
             oHtm:WritePar( cOldLine )
          ENDIF
       ENDDO
-
+        oHtm:WriteText( "</pre><br>")
 end
 if AT('<table>',cBuffer)>0
     do while !lendTable
@@ -1074,6 +1081,16 @@ Local nPos,cItem,cItem2,cItem3,nColorpos,cColor,cItem4
          nColorpos:=ASCAn(aColorTable,{|x,y| upper(x)==upper(ccolor)})
          cColor:=aColortable[nColorPos]
       Endif
+      if empty(cBuffer)
+      citem:=''
+      citem2:=''
+      citem3:=''
+      citem4:=''
+   else
+                cBuffer:=STRTRAN(cBuffer,"<","&lt;")
+                cBuffer:=STRTRAN(cBuffer,">","&gt;")
+         
+
    cItem   := SUBSTR( cBuffer, 1, AT( SPACE( 3 ), cBuffer ) - 1 )
    cBuffer := ALLTRIM( STRTRAN( cBuffer, cItem, "" ) )
    if nNum==2
@@ -1090,7 +1107,7 @@ Local nPos,cItem,cItem2,cItem3,nColorpos,cColor,cItem4
       cBuffer := ALLTRIM( STRTRAN( cBuffer, cItem3, "" ) )
       cItem4  := SUBSTR( cBuffer, 1 )
    ENDIF
-
+endif
         if cColor<>NIL
         AADD(afiTable,"<Font color="+ccolor+">"+rtrim(ltrim(cItem))+'</font>')
         AADD(asiTable,"<Font color="+ccolor+">"+cItem2+'</font>')
@@ -1099,21 +1116,19 @@ Local nPos,cItem,cItem2,cItem3,nColorpos,cColor,cItem4
         AADD(asiTable,cItem2)
         endif
 
-   IF !EMPTY( cItem3 )
+
       if cColor <>NIL
           AADD(atiTable,"<Font color="+ccolor+">"+cItem3+'</font>')
       ELSE  
       AADD( atiTable, cItem3 )
       Endif
-   ENDIF
-   IF !EMPTY( cItem4 )
          if cColor <>NIL
                 AADD(afoiTable,"<Font color="+ccolor+">"+cItem4+'</font>')
          ELSE
           AADD( afoiTable, cItem4 )
       Endif
 
-   ENDIF
+
 
 Return Nil
 Function GenhtmTable(oHtm)
@@ -1123,13 +1138,17 @@ LOCAL x
         oHtm:WriteText('<table border=1>') //-4
 
 FOR x:=1 to len(asitable)
-        if nNumTableItems ==2
-        oHtm:WriteText('<tr><td><pre>'+afitable[x]+'</td><td><pre>' +asitable[x]+'</td></tr> ')
-        elseif nNumTableItems ==3
-       oHtm:WriteText('<tr><td><pre>'+afitable[x]+'</td><td><pre>' +asitable[x]+'</td><td><pre>'+atitable[x]+'</td></tr> ')
-                elseif nNumTableItems ==4
-       oHtm:WriteText('<tr><td><pre>'+afitable[x]+'</td><td><pre>' +asitable[x]+'</td><td><pre>'+atitable[x]+'</td><td><pre>'+afoitable[x]+'</td></tr> ')
-        Endif
+        If !empty(asitable[x])
+            if nNumTableItems ==2
+                oHtm:WriteText('<tr><td>'+afitable[x]+'</td><td>' +asitable[x]+'</td></tr> ')
+            elseif nNumTableItems ==3
+               oHtm:WriteText('<tr><td>'+afitable[x]+'</td><td>' +asitable[x]+'</td><td>'+atitable[x]+'</td></tr> ')
+            elseif nNumTableItems ==4
+                oHtm:WriteText('<tr><td>'+afitable[x]+'</td><td>' +asitable[x]+'</td><td>'+atitable[x]+'</td><td>'+afoitable[x]+'</td></tr> ')
+            Endif
+        Else
+            oHtm:WriteText('<tr><td></td></tr> ')
+        endif
 Next
 
   oHtm:Writetext("</table>")
@@ -1137,6 +1156,9 @@ Next
 oHtm:WriteText("<br>")
 afiTable:={}
 asitable:={}
+atitable  := {}
+afoitable := {}
+
 Return Nil
 
 

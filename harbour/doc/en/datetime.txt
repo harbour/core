@@ -43,6 +43,8 @@
  *      This function is Ca-Clipper compliant.
  *  $PLATFORMS$
  *      All
+ *  $FILES$
+ *      Library is rtl.lib
  *  $SEEALSO$
  *      DAY(),DOW(),DATE(),CMONTH()
  *  $END$
@@ -77,6 +79,8 @@
  *      This function is Ca-Clipper compliant
  *  $PLATFORMS$
  *      All
+ *  $FILES$
+ *      Library is rtl.lib
  *  $SEEALSO$
  *      CDOW(),DATE(),MONTH(),YEAR(),DOW(),DTOC()
  *  $END$
@@ -107,6 +111,8 @@
  *      This function is Ca-Clipper Compliant
  *  $PLATFORMS$
  *      All
+ *  $FILES$
+ *      Library is rtl.lib
  *  $SEEALSO$   
  *      CTOD(),DTOS(),DTOC(),DAY(),MONTH(),CMONTH()
  *  $END$
@@ -140,6 +146,8 @@
  *      This function is Ca-Clipper compliant
  *  $PLATFORMS$
  *      All
+ *  $FILES$
+ *      Library is rtl.lib
  *  $SEEALSO$
  *      SET DATE,DATE(),DTOS()
  *  $END$
@@ -170,6 +178,8 @@
  *      This function is Ca-Clipper compliant
  *  $PLATFORMS$
  *      All
+ *  $FILES$
+ *      Library is rtl.lib
  *  $SEEALSO$
  *      CTOD(),DTOS(),DTOC(),DATE(),MONTH(),CMONTH()
  *  $END$
@@ -200,6 +210,8 @@
  *      This function is Ca-Clipper compliant
  *  $PLATFORMS$
  *      All
+ *  $FILES$
+ *      Library is rtl.lib
  *  $SEEALSO$
  *      SECONDS(),SECS(),ELAPTIME()
  *  $END$
@@ -230,6 +242,8 @@
  *      This function is Ca-Clipper compliant
  *  $PLATFORMS$
  *      All
+ *  $FILES$
+ *      Library is rtl.lib
  *  $SEEALSO$
  *      DTOC(),CDOW(),DATE(),DTOS(),DAY()
  *  $END$
@@ -262,6 +276,8 @@
  *      This function is Ca-Clipper compliant
  *  $PLATFORMS$
  *      All
+ *  $FILES$
+ *      Library is rtl.lib
  *  $SEEALSO$
  *      SET DATE,DATE(),DTOS()
  *  $END$
@@ -292,6 +308,8 @@
  *      This function is Ca-Clipper compliant
  *  $PLATFORMS$
  *      All
+ *  $FILES$
+ *      Library is rtl.lib
  *  $SEEALSO$
  *      DTOC(),DATE(),DTOS()
  *  $END$
@@ -329,6 +347,8 @@
  *      This function is Ca-Clipper compliant
  *  $PLATFORMS$
  *      All
+ *  $FILES$
+ *      Library is rtl.lib
  *  $SEEALSO$
  *      SECS(),SECONDS(),TIME(),DAY()
  *  $END$
@@ -360,6 +380,8 @@
  *      This function is Ca-Clipper compliant
  *  $PLATFORMS$
  *      All
+ *  $FILES$
+ *      Library is rtl.lib
  *  $SEEALSO$
  *      CDOW(),DOW(),YEAR(),CMONTH()
  *  $END$
@@ -392,6 +414,8 @@
  *      This function is Ca-Clipper compliant
  *  $PLATFORMS$
  *      All
+ *  $FILES$
+ *      Library is rtl.lib
  *  $SEEALSO$
  *      TIME()
  *  $END$
@@ -422,6 +446,8 @@
  *      This function is Ca-Clipper compliant
  *  $PLATFORMS$
  *      All
+ *  $FILES$
+ *      Library is rtl.lib
  *  $SEEALSO$
  *      SECONDS(),ELAPTIME(),TIME()
  *  $END$
@@ -451,6 +477,8 @@
  *      This function is Ca-Clipper compliant
  *  $PLATFORMS$
  *      All
+ *  $FILES$
+ *      Library is rtl.lib
  *  $SEEALSO$
  *      DATE(),SECONDS()
  *  $END$
@@ -485,6 +513,8 @@
  *      This function is Ca-Clipper compliant
  *  $PLATFORMS$
  *      All
+ *  $FILES$
+ *      Library is rtl.lib
  *  $SEEALSO$
  *      DAY(),MONTH()
  *  $END$

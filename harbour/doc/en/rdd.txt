@@ -62,7 +62,9 @@
  *      R
  *  $COMPLIANCE$
  *      AFIELDS() is fully CA-Clipper compliant.
-  *  $END$
+ *  $FILES$
+ *      Library is Rdd.lib
+ *  $END$
  */
 
 /*  $DOC$
@@ -96,7 +98,10 @@
  *      R
  *  $COMPLIANCE$
  *      ALIAS() is fully CA-Clipper compliant.
+ *  $FILES$
+ *      Library is Rdd.lib
  *  $SEEALSO$
+ *      DBF()
  *  $END$
  */
 
@@ -146,7 +151,10 @@
  *      S
  *  $COMPLIANCE$
  *      DBEVAL is fully CA-Clipper compliant.
+ *  $FILES$
+ *      Library is Rdd.lib
  *  $SEEALSO$
+ *      EVAL()
  *  $END$
  */
 
@@ -179,7 +187,10 @@
  *      R
  *  $COMPLIANCE$
  *      DBF() is fully CA-Clipper compliant.
+ *  $FILES$
+ *      Library is Rdd.lib
  *  $SEEALSO$
+ *      ALIAS()
  *  $END$
  */
 
@@ -213,6 +224,8 @@
  *      R
  *  $COMPLIANCE$
  *      BOF() is fully CA-Clipper compliant.
+ *  $FILES$
+ *      Library is Rdd.lib
  *  $SEEALSO$
  *    EOF(),FOUND(),LASTREC()
  *  $END$
@@ -240,12 +253,14 @@
  *     with NULL bytes.The header of the database is not updated until
  *     the record is flushed from the buffer and the contents are
  *     written to the disk.
+ *
  *     Under a networking enviroment, DBAPPEND() performs an additional
  *     operation: It attrmps to lock the newly added record. If
  *     the database file is currently locked or if a locking assignment
  *     if made to LASTREC()+1,NETERR() will return a logical true (.T.)
  *     immediately after the DBAPPEND() function. This function does
  *     not unlock the locked records.
+ *
  *     If <lLock> is passed a logical true (.T.) value, it will
  *     release the record locks, which allows the application to main-
  *     tain multiple record locks during an appending operation. The
@@ -263,6 +278,8 @@
  *      R
  *  $COMPLIANCE$
  *      DBAPPEND() is fully CA-Clipper compliant.
+ *  $FILES$
+ *      Library is Rdd.lib
  *  $SEEALSO$
  *      DBUNLOCK(0,DBUNLOCKALL()
  *  $END$
@@ -300,6 +317,8 @@
  *      R
  *  $COMPLIANCE$
  *      DBCLEARFILTER() is fully CA-Clipper compliant.
+ *  $FILES$
+ *      Library is Rdd.lib
  *  $SEEALSO$
  *      DBSETFILTER(),DBFILTER()
  *  $END$
@@ -340,6 +359,8 @@
  *      R
  *  $COMPLIANCE$
  *      DBCLOSEALL() is fully CA-Clipper compliant.
+ *  $FILES$
+ *      Library is Rdd.lib
  *  $SEEALSO$
  *      DBUSEAREA(),DBCLOSEAREA()
  *  $END$
@@ -375,6 +396,8 @@
  *      R
  *  $COMPLIANCE$
  *      DBCLOSEAREA() is fully CA-Clipper compliant.
+ *  $FILES$
+ *      Library is Rdd.lib
  *  $SEEALSO$
  *      DBUSEAREA(),DBCLOSEALL()
  *  $END$
@@ -417,6 +440,8 @@
  *      R
  *  $COMPLIANCE$
  *      This function is CA-Clipper compliant
+ *  $FILES$
+ *      Library is Rdd.lib
  *  $SEEALSO$
  *      DBCLOSEALL(),DBCOMMITALL(),DBUNLOCK()
  *  $END$
@@ -463,6 +488,8 @@
  *      R
  *  $COMPLIANCE$
  *      This function is CA-Clipper compliant.
+ *  $FILES$
+ *      Library is Rdd.lib
  *  $SEEALSO$
  *     DBCLOSEALL(),DBCOMMIT(),DBUNLOCK()
  *  $END$
@@ -531,6 +558,8 @@
  *      R
  *  $COMPLIANCE$
  *      This function is CA-Clipper compliant.
+ *  $FILES$
+ *      Library is Rdd.lib
  *  $SEEALSO$
  *      EOF(),FOUND()
  *  $END$
@@ -548,14 +577,14 @@
  *      [<cAlias>]) --> NIL
  *  $ARGUMENTS$
  *      <cDatabase> Name of database to be create
-
+ *
  *      <aStruct>   Name of a multidimensional array that contains the a database
  *                  structure
-
+ *
  *      <cDriver>   Name of the RDD
-
+ *
  *      <lOpen>     Toggle to Open the create File
-
+ *
  *      <cAlias>    Name of database Alias
  *  $RETURNS$
  *      DBCREATE() always returns NIL.
@@ -609,10 +638,11 @@
  *      R
  *  $COMPLIANCE$
  *      This function is Not CA-Clipper compliant
+ *  $FILES$
+ *      Library is Rdd.lib
+ *      Header  is Dbstruct.ch
  *  $SEEALSO$
  *      AFIELDS(),DBSTRUCT()
- *  $INCLUDE$
- *      "Dbstruct.ch"
  *  $END$
  */
 
@@ -632,6 +662,7 @@
  *      or aliased work area.If the DELETED setting is on, the record
  *      will still be visible until the record pointer in that work area
  *      is moved to another record.
+ *
  *      In a networking situation, this function requires that the record
  *      be locked prior to issuing the DBDELETE() function.
  *  $EXAMPLES$
@@ -647,6 +678,8 @@
  *      R
  *  $COMPLIANCE$
  *      This function is CA-Clipper compliant
+ *  $FILES$
+ *      Library is Rdd.lib
  *  $SEEALSO$
  *      DBRECALL()
  *  $END$
@@ -680,6 +713,8 @@
  *      R
  *  $COMPLIANCE$
  *      This function is CA-Clipper compliant
+ *  $FILES$
+ *      Library is Rdd.lib
  *  $SEEALSO$
  *      DBRELATION(),DBRSELECT()
  *  $END$
@@ -713,6 +748,8 @@
  *      R
  *  $COMPLIANCE$
  *      This function is CA-Clipper compliant
+ *  $FILES$
+ *      Library is Rdd.lib
  *  $SEEALSO$
  *      BOF(),EOF(),DBSKIP(),DBSEEK(),DBGOTOP()
  *  $END$
@@ -736,6 +773,7 @@
  *      in selected or aliased work area at the record number specified by
  *      <xRecordNumber>.The position if not affected by an active index or
  *      by any enviromental SET condiction.
+ *
  *      Issuing a DBGOTO(RECNO()) call in a network enviroment will refresh
  *      the database and index buffers.This is the same as a DBSKIP(0) call.
  *      The parameter <xRecordNumber> may be something other than a record
@@ -759,6 +797,8 @@
  *      R
  *  $COMPLIANCE$
  *      This function is CA-Clipper compliant.
+ *  $FILES$
+ *      Library is Rdd.lib
  *  $SEEALSO$
  *      BOF(),EOF(),DBGOTOP(),DBGOBOTTOM(),DBSEEK(),DBSKIP()
  *  $END$
@@ -792,6 +832,8 @@
  *      R
  *  $COMPLIANCE$
  *      This function is CA-Clipper compliant
+ *  $FILES$
+ *      Library is Rdd.lib
  *  $SEEALSO$
  *      BOF(),EOF(),DBSKIP(),DBSEEK(),DBGOBOTTOM()
  *  $END$
@@ -827,6 +869,8 @@
  *      R
  *  $COMPLIANCE$
  *      This function is CA-Clipper compliant
+ *  $FILES$
+ *      Library is Rdd.lib
  *  $SEEALSO$
  *      DBDELETE()
  *  $END$
@@ -865,6 +909,8 @@
  *      R
  *  $COMPLIANCE$
  *      This function is CA-Clipper compliant
+ *  $FILES$
+ *      Library is Rdd.lib
  *  $SEEALSO$
  *      DBUNLOCK(),DBUNLOCKALL(),FLOCK(),RLOCK()
  *  $END$
@@ -905,6 +951,8 @@
  *      R
  *  $COMPLIANCE$
  *      This function is CA-Clipper compliant
+ *  $FILES$
+ *      Library is Rdd.lib
  *  $SEEALSO$
  *      RLOCK(),DBRLOCK(),DBRUNLOCK()
  *  $END$
@@ -942,6 +990,8 @@
  *      R
  *  $COMPLIANCE$
  *      This function is CA-Clipper compliant
+ *  $FILES$
+ *      Library is Rdd.lib
  *  $SEEALSO$
  *      RLOCK(),DBRLOCK(),DBRLOCKLIST()
  *  $END$
@@ -958,9 +1008,9 @@
  *      DBSEEK(<expKey>, [<lSoftSeek>],[<lFindLast>]) --> lFound
  *  $ARGUMENTS$
  *      <expKey> Any expression
-
+ *
  *      <lSoftSeek> Toggle SOFTSEEK condition
-
+ *
  *      <lFindLast> is an optional logical value that set the current
  *      record position to the last record if successful
  *  $RETURNS$
@@ -972,8 +1022,10 @@
  *      EOF() wilI be a logical false (.F.). If no item is found. then the function will
  *      return a logical false, the value of FOUND( ) will be a logical false (.F.), and
  *      the value of EOF( ) will be a logical true (.T.).
+ *
  *      This function always "rewinds" the database pointer and starts the search from
  *      the top of the file.
+ *
  *      If the SOFTSEEK flag is on or if <lSoftSeek> is set to a logical true (.T.)
  *      the value of FOUND() wilI be a logical false and EOF() will he a logical
  *      false if there is an item in the index key with a greater value than the key
@@ -982,7 +1034,6 @@
  *      logical true (.T.) value. If <lSoftSeek> is not passed, the function will look
  *      to the internal status of SOFTSEEK before performing the operation. The default
  *      of <lSoftSeek> is a logical false (.F.)
- *
  *  $EXAMPLES$
  *      FUNCTION Main()
  *      USE Tests New INDEX Tests
@@ -1008,6 +1059,8 @@
  *      S
  *  $COMPLIANCE$
  *      DBSEEK() is  Compatible with CA-Clipper 5.3
+ *  $FILES$
+ *      Library is Rdd.lib
  *  $SEEALSO$
  *      DBGOBOTTOM(),DBGOTOP(),DBSKIP(),EOF(),BOF(),FOUND()
  *  $END$
@@ -1031,6 +1084,7 @@
  *      area designated by <xArea>. If <xArea> is numeric, them it will
  *      select the numeric work area;if <xArea> is character,then it will
  *      select the work area with the alias name.
+ *
  *      DBSELECTAREA(0) will select the next avaliable and unused work area.
  *      Up to 255 work areas are supported.Each work area has its own alias
  *      and record pointer, as well as its own FOUND(),DBFILTER(),DBRSELECT(),
@@ -1052,6 +1106,8 @@
  *      R
  *  $COMPLIANCE$
  *      This function is CA-CLIPPER compatible.
+ *  $FILES$
+ *      Library is Rdd.lib
  *  $SEEALSO$
  *      DBUSEAREA(),SELECT()
  *  $END$
@@ -1082,6 +1138,8 @@
  *      R
  *  $COMPLIANCE$
  *      This function is CA-Clipper compatible
+ *  $FILES$
+ *      Library is Rdd.lib
  *  $SEEALSO$
  *      DBUSEAREA()
  *  $END$
@@ -1120,6 +1178,8 @@
  *      R
  *  $COMPLIANCE$
  *      This function is CA-CLIPPER compatible
+ *  $FILES$
+ *      Library is Rdd.lib
  *  $SEEALSO$
  *    BOF(),DBGOBOTTOM(),DBGOTOP(),DBSEEK(),EOF()
  *  $END$
@@ -1136,7 +1196,7 @@
  *      DBSETFILTER(<bCondition>, [<cCondition>]) --> NIL
  *  $ARGUMENTS$
  *      <bCondition> Code block expression for filtered evaluation.
-
+ *
  *      <cCondition> Optional character expression of code block.
  *  $RETURNS$
  *      DBSETFILTER() always returns NIL.
@@ -1157,6 +1217,8 @@
  *      R
  *  $COMPLIANCE$
  *      This function is CA-Clipper compliant.
+ *  $FILES$
+ *      Library is Rdd.lib
  *  $SEEALSO$
  *      DBFILTER(),DBCLEARFILTER()
  *  $END$
@@ -1194,10 +1256,11 @@
  *      R
  *  $COMPLIANCE$
  *      This function is CA-Clipper compliant
+ *  $FILES$
+ *      Library is Rdd.lib
+ *      Header is  DbStruct.ch
  *  $SEEALSO$
  *      AFIELDS()
- *  $INCLUDE$
- *      DbStruct.ch
  *  $END$
  */
 
@@ -1231,6 +1294,8 @@
  *      R
  *  $COMPLIANCE$
  *      This function is CA-Clipper compatible.
+ *  $FILES$
+ *      Library is Rdd.lib
  *  $SEEALSO$
  *      DBUNLOCKALL(),FLOCK(),RLOCK()
  *  $END$
@@ -1267,6 +1332,8 @@
  *      R
  *  $COMPLIANCE$
  *      This function is CA Clipper compliant
+ *  $FILES$
+ *      Library is Rdd.lib
  *  $SEEALSO$
  *      DBUNLOCK(),FLOCK(),RLOCK()
  *  $END$
@@ -1284,15 +1351,15 @@
  *      [<lShared>], [<lReadonly>]) --> NIL
  *  $ARGUMENTS$
  *     <lNewArea>  A optional logical expression for the new work area
-
+ *
  *     <cDriver>   Database driver name
-
+ *
  *     <cName>     File Name
-
+ *
  *     <xcAlias>   Alias name
-
+ *
  *     <lShared>   Shared/exclusive status flag
-
+ *
  *     <lReadonly> Read-write status flag.
  *  $RETURNS$
  *      DBUSEAREA() always returns NIL.
@@ -1304,15 +1371,18 @@
  *      If used, <cDriver> is the name of the database driver associated with
  *      the file <cName> that is opened. The default for this will be the value
  *      of DBSETDRlVER().
+ *
  *      IF used, <xcAlias> contains the alias name for that work area, If not
  *      specified, the root name of the database specified in <cName> will be
  *      used.
+ *
  *      If <lShared> is set to a logical true (.T.) value, the database that
  *      is specified in <cName> will be opened by the user EXCLUSIVELY. Thus
  *      locking it from all other nodes or users on the network. If <lShared> is
  *      set to a logical false (.F.) value, then the database will be in SHARED
  *      mode. If <lShared> is not passed, then the function will turn to the
  *      internal setting of SET EXCLUSIVE to determine a setting.
+ *
  *      If <lReadOnly> is specified, the file will be set to READ ONLY mode.
  *      If it is not specified, the file will he opened in normal read-write
  *      mode.
@@ -1322,6 +1392,8 @@
  *      R
  *  $COMPLIANCE$
  *      This function is CA-Clipper compliant
+ *  $FILES$
+ *      Library is Rdd.lib
  *  $SEEALSO$
  *      DBCLOSEAREA(),DBSETDRIVER(),SELECT(),SET()
  *  $END$
@@ -1366,6 +1438,8 @@
  *      R
  *  $COMPLIANCE$
  *      This function is CA Clipper compliant
+ *  $FILES$
+ *      Library is Rdd.lib
  *  $END$
  */
 
@@ -1426,6 +1500,8 @@
  *      R
  *  $COMPLIANCE$
  *      This function is CA-Clipper compliant
+ *  $FILES$
+ *      Library is Rdd.lib
  *  $SEEALSO$
  *      DBDELETE()
  *  $END$
@@ -1459,6 +1535,8 @@
  *      R
  *  $COMPLIANCE$
  *      EOF() is fully CA-Clipper compliant.
+ *  $FILES$
+ *      Library is Rdd.lib
  *  $SEEALSO$
  *    BOF(),FOUND(),LASTREC()
  *  $END$
@@ -1489,6 +1567,8 @@
  *      R
  *  $COMPLIANCE$
  *      This function is CA-Clipper compliant
+ *  $FILES$
+ *      Library is Rdd.lib
  *  $SEEALSO$
  *      FIELDNAME(),TYPE()
  *  $END$
@@ -1522,6 +1602,8 @@
  *      R
  *  $COMPLIANCE$
  *      This function is CA-Clipper Compliant.
+ *  $FILES$
+ *      Library is Rdd.lib
  *  $SEEALSO$
  *      FIELDPUT()
  *  $END$
@@ -1558,6 +1640,8 @@
  *      R
  *  $COMPLIANCE$
  *      This function is CA-Clipper compatible.
+ *  $FILES$
+ *      Library is Rdd.lib
  *  $SEEALSO$
  *    DBSTRUCT(),FCOUNT(),LEN(),VALTYPE()
  *  $END$
@@ -1591,6 +1675,8 @@
  *      R
  *  $COMPLIANCE$
  *      This function is CA-Clipper compliant.
+ *  $FILES$
+ *      Library is Rdd.lib
  *  $SEEALSO$
  *      FIELDGET(),FIELDPUT()
  *  $END$
@@ -1625,6 +1711,8 @@
  *      R
  *  $COMPLIANCE$
  *      This function is CA-Clipper compatible.
+ *  $FILES$
+ *      Library is Rdd.lib
  *  $SEEALSO$
  *      FIELDGET()
  *  $END$
@@ -1657,6 +1745,8 @@
  *      R
  *  $COMPLIANCE$
  *      This function is CA-Clipper compatible
+ *  $FILES$
+ *      Library is Rdd.lib
  *  $SEEALSO$
  *      RLOCK()
  *  $END$
@@ -1692,6 +1782,8 @@
  *      R
  *  $COMPLIANCE$
  *      This function is CA-Clipper compatible
+ *  $FILES$
+ *      Library is Rdd.lib
  *  $SEEALSO$
  *      EOF()
  *  $END$
@@ -1722,6 +1814,8 @@
  *      R
  *  $COMPLIANCE$
  *      This function is CA-Clipper compatible
+ *  $FILES$
+ *      Library is Rdd.lib
  *  $SEEALSO$
  *      DISKSPACE(),LASTREC(),RECSIZE()
  *  $END$
@@ -1773,6 +1867,8 @@
  *      S
  *  $COMPLIANCE$
  *      This function is CA Clipper compliant
+ *  $FILES$
+ *      Library is Rdd.lib
  *  $SEEALSO$
  *      INDEXKEY()
  *  $END$
@@ -1821,6 +1917,8 @@
  *      R
  *  $COMPLIANCE$
  *      This function is CA Clipper compatible
+ *  $FILES$
+ *      Library is Rdd.lib
  *  $SEEALSO$
  *      EOF()
  *  $END$

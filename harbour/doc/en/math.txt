@@ -23,12 +23,12 @@
  *  $SYNTAX$
  *      ABS(<nNumber>) --> <nAbsNumber>
  *  $ARGUMENTS$
- *      <nNumber> Any number   </par>
+ *      <nNumber> Any number   
  *  $RETURNS$
- *      <nAbsNumber> The absolute numeric value    </par>
+ *      <nAbsNumber> The absolute numeric value    
  *  $DESCRIPTION$
  *      This function yeilds the absolute value of the numeric value or
- *      expression <nNumber>   </par>
+ *      expression <nNumber>   
  *  $EXAMPLES$
  *      Proc Main()
  *
@@ -45,11 +45,13 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compliant       </par>
+ *      This function is CA-Clipper compliant       
  *  $PLATFORMS$
- *      All    </par>
+ *      All
+ *  $FILES$
+ *      Library is Rtl.lib
  *  $SEEALSO$
- *      
+ *      EXP()
  *  $END$
  */
 
@@ -63,21 +65,23 @@
  *  $SYNTAX$
  *      EXP( <nNumber> ) --> <nExpoent>
  *  $ARGUMENTS$
- *      <nNumber> Any  real number   </par>
+ *      <nNumber> Any  real number   
  *  $RETURNS$
- *      <nExpoent> The expoent number of <nNumber>   </par>
+ *      <nExpoent> The expoent number of <nNumber>   
  *  $DESCRIPTION$
  *      This function returns the exponential of any given real number
- *      <nNumber>          </par>
+ *      <nNumber>          
  *  $EXAMPLES$
  *      ? EXP(632512)
  *      </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compliant.   </par>
+ *      This function is CA-Clipper compliant.   
  *  $PLATFORMS$
- *      All   </par>
+ *      All   
+ *  $FILES$
+ *      Library is Rtl.lib
  *  $SEEALSO$
  *      LOG()
  *  $END$
@@ -93,13 +97,13 @@
  *  $SYNTAX$
  *      INT( <nNumber> ) --> <nIntNumber>
  *  $ARGUMENTS$
- *      <nNumber> Any  numeric value </par>
+ *      <nNumber> Any  numeric value 
  *  $RETURNS$
- *      <nIntNumber> The integer portion of the numeric value   </par>
+ *      <nIntNumber> The integer portion of the numeric value   
  *  $DESCRIPTION$
  *      This function convert a numeric expression to an integer. all decimals
  *      digit are truncated.This function does not round a value upward or
- *      downward;it merely truncated a numeric expression.  </par>
+ *      downward;it merely truncated a numeric expression.  
  *  $EXAMPLES$
  *      SET Decimal to 5   
  *      ? INT(632512.62541)
@@ -108,9 +112,11 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compliant.   </par>
+ *      This function is CA-Clipper compliant.   
  *  $PLATFORMS$
- *      All   </par>
+ *      All   
+ *  $FILES$
+ *      Library is Rtl.lib
  *  $SEEALSO$
  *      ROUND(),STRZERO()
  *  $END$
@@ -126,23 +132,25 @@
  *  $SYNTAX$
  *      LOG( <nNumber> ) --> <nLog>
  *  $ARGUMENTS$
- *      <nNumber> Any numeric expression  </par>
+ *      <nNumber> Any numeric expression  
  *  $RETURNS$
- *      <nExpoent> The natural logaritmh of <nNumber>   </par>
+ *      <nExpoent> The natural logaritmh of <nNumber>   
  *  $DESCRIPTION$
- *      This function will return the natural logarithm of the number <nNumber>.  </par>
+ *      This function will return the natural logarithm of the number <nNumber>.  
  *      If <nNumber> is 0 or is less them 0,a numeric overflow condition exist,
- *      witch is depicted on the display device as a series of asterisks.   </par>
- *      This functions is the inverse of EXP() function.   </par>
+ *      witch is depicted on the display device as a series of asterisks.   
+ *      This functions is the inverse of EXP() function.   
  *  $EXAMPLES$
  *      ? LOG(632512)
  *      </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compliant.   </par>
+ *      This function is CA-Clipper compliant.   
  *  $PLATFORMS$
- *      All   </par>
+ *      All   
+ *  $FILES$
+ *      Library is Rtl.lib
  *  $SEEALSO$
  *      EXP()
  *  $END$
@@ -159,17 +167,18 @@
  *  $SYNTAX$
  *      MAX(<xValue>,<xValue1>)  --> <xMax>
  *  $ARGUMENTS$
- *      <xValue> Any date or numeric value.   </par>
- *      <xValue1> Any date or numeric value.   </par>
+ *      <xValue> Any date or numeric value.   
+ *
+ *      <xValue1> Any date or numeric value.   
  *  $RETURNS$
- *      <xMax> Eighter a numeric or date value   </par>
+ *      <xMax> Eighter a numeric or date value   
  *  $DESCRIPTION$
  *      This function returns the larger of the two passed espressions. If
  *      <xValue> and <xValue1> are numeric data types,the value returned by
  *      this function will be a numeric data type as well and will be the
  *      larger of the two numbers passed to it.If <xValue> and <xValue1> are
  *      date data types,the return value for this function will be a date
- *      data type as well;it will be the latest of the two dates passed to it.  </par>
+ *      data type as well;it will be the latest of the two dates passed to it.  
  *  $EXAMPLES$
  *      ? MAX(214514214,6251242142)
  *      ? MAX(CTOD('11/11/2000'),CTOD('21/06/2014')  
@@ -177,9 +186,11 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is Ca-Clipper compliant   </par>
+ *      This function is Ca-Clipper compliant   
  *  $PLATFORMS$
- *      All    </par>
+ *      All    
+ *  $FILES$
+ *      Library is Rtl.lib
  *  $SEEALSO$
  *      Min()
  *  $END$
@@ -195,15 +206,16 @@
  *  $SYNTAX$
  *      MIN(<xValue>,<xValue1>)  --> <xMin>
  *  $ARGUMENTS$
- *      <xValue> Any date or numeric value.   </par>
- *      <xValue1> Any date or numeric value.   </par>
+ *      <xValue> Any date or numeric value.   
+ *
+ *      <xValue1> Any date or numeric value.   
  *  $RETURNS$
- *      <xMin> Eighter a numeric or date value   </par>
+ *      <xMin> Eighter a numeric or date value   
  *  $DESCRIPTION$
  *      This function returns the smaller of the two passed espressions. The
  *      value of this function will be the result of this comparasion.If <xValue>
  *      is a numeric data type,<xValue1> must so be a numeric data type.The
- *      same may be said if <xValue> is a date data type.   </par>
+ *      same may be said if <xValue> is a date data type.   
  *  $EXAMPLES$
  *      ? MIN(214514214,6251242142)
  *      ? MIN(CTOD('11/11/2000'),CTOD('21/06/2014')  
@@ -211,9 +223,11 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is Ca-Clipper compliant   </par>
+ *      This function is Ca-Clipper compliant   
  *  $PLATFORMS$
- *      All    </par>
+ *      All    
+ *  $FILES$
+ *      Library is Rtl.lib
  *  $SEEALSO$
  *      MAX()
  *  $END$
@@ -229,13 +243,14 @@
  *  $SYNTAX$
  *      MOD( <nNumber>,<nNumber1>) -->  <nReturn>
  *  $ARGUMENTS$
- *      <nNumber>  Numerator in a divisional expression   </par>
- *      <nNumber1> Denominator in a divisional expression     </par>
+ *      <nNumber>  Numerator in a divisional expression   
+ *
+ *      <nNumber1> Denominator in a divisional expression     
  *  $RETURNS$
- *      <nReturn>  Remind from the division   </par>
+ *      <nReturn>  Remind from the division   
  *  $DESCRIPTION$
  *      This functuion will return a value that is correspondent to the
- *      reminder of one number divided by another   </par>
+ *      reminder of one number divided by another   
  *  $EXAMPLES$
  *      ? MOD(12,8.521)
  *      ? Mod(12,0)
@@ -244,9 +259,11 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This Function is Ca-Clipper compliant   </par>
+ *      This Function is Ca-Clipper compliant   
  *  $PLATFORMS$
- *      All   </par>
+ *      All   
+ *  $FILES$
+ *      Library is Rtl.lib
  *  $SEEALSO$
  *      %
  *  $END$
@@ -279,6 +296,8 @@
  *      This function is CA-Clipper compliant.   
  *  $PLATFORMS$
  *      All   
+ *  $FILES$
+ *      Library is Rtl.lib
  *  $SEEALSO$
  *      ROUND()
  *  $END$

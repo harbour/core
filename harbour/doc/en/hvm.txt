@@ -50,6 +50,8 @@
  *      R
  *  $COMPLIANCE$
  *      PROCNAME() is fully CA-Clipper compliant.   </par>
+ *  $FILES$
+ *      Library is Vm.lib
  *  $SEEALSO$
  *      PROCLINE(),PROCFILE()
  *  $END$
@@ -86,6 +88,8 @@
  *      R
  *  $COMPLIANCE$
  *      PROCLINE() is fully CA-Clipper compliant.   </par>
+ *  $FILES$
+ *      Library is Vm.lib
  *  $SEEALSO$
  *      PROCNAME(),PROCFILE()
  *  $END$
@@ -121,6 +125,8 @@
  *      R
  *  $COMPLIANCE$
  *      PROCFILE() is fully CA-Clipper compliant.   </par>
+ *  $FILES$
+ *      Library is Vm.lib
  *  $SEEALSO$
  *      PROCNAME(),PROCLINE()
  *  $END$
@@ -156,6 +162,8 @@
  *      R
  *  $COMPLIANCE$
  *      HB_PVALUE() is a new function and hence not CA-Clipper compliant.   </par>
+ *  $FILES$
+ *      Library is Vm.lib
  *  $SEEALSO$
  *      PCOUNT()
  *  $END$
@@ -169,7 +177,7 @@
  *  $ONELINER$
  *      Retrieves the number of arguments passed to a function.
  *  $SYNTAX$
- *      PCOUNT() --> <nArgs>   </par>
+ *      PCOUNT() --> <nArgs>   
  *  $ARGUMENTS$
  *      None   </par>
  *  $RETURNS$
@@ -194,6 +202,8 @@
  *      R
  *  $COMPLIANCE$
  *      PCOUNT() is fully CA-Clipper compliant.   </par>
+ *  $FILES$
+ *      Library is Vm.lib
  *  $SEEALSO$
  *      HB_PVALUE()
  *  $END$
@@ -229,6 +239,8 @@
  *      R
  *  $COMPLIANCE$
  *      __QUIT() is fully CA-Clipper compliant.   </par>
+ *  $FILES$
+ *      Library is Vm.lib
  *  $SEEALSO$
  *      QUIT
  *  $END$
@@ -285,6 +297,8 @@
  *      R
  *  $COMPLIANCE$
  *      __SetHelpK() works exactly like CA-Clipper's __SetHelpK()   </par>
+ *  $FILES$
+ *      Library is Vm.lib
  *  $SEEALSO$
  *      __XHelp(),SET KEY,SETKEY()
  *  $END$
@@ -314,6 +328,8 @@
  *      R
  *  $COMPLIANCE$
  *      BREAK() is fully CA-Clipper compliant.   </par>
+ *  $FILES$
+ *      Library is Vm.lib
  *  $SEEALSO$
  *      BEGIN SEQUENCE
  *  $END$
@@ -354,6 +370,8 @@
  *      Old style (slower):
  *      DO &cFunction WITH 3
  *  </fixed>
+ *  $FILES$
+ *      Library is Rtl.lib
  *  $END$
  */
 
@@ -375,5 +393,7 @@
  *      The containts of a specific local variable   </par>
  *  $DESCRIPTION$
  *      This function is used from the debugger   </par>
+ *  $FILES$
+ *      Library is Vm.lib
  *  $END$
  */

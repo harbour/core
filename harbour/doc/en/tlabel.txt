@@ -24,9 +24,13 @@
  *      LABEL FORM <cLabelName> [TO PRINTER] [TO FILE <cFile>] [<cScope>] [WHILE <bWhile> ] [FOR <bFor> ] [SAMPLE] [NOCONSOLE]
  *  $ARGUMENTS$
  *        <cLabelName>   Name of label file   </par>
+ *
  *        <cFile>        Name of an alternate file   </par>
+ *
  *        <cScope>       Expression of a scoping condition   </par>
+ *
  *        <bWhile>       WHILE condition   </par>
+ *
  *        <bFor>         FOR condition   </par>      
  *  $DESCRIPTION$
  *      This command allows labels to be printed based on the format outlined in
@@ -65,11 +69,15 @@
  *      USE
  *      RETURN NIL
  *
- *  </fixed>
+ *  
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      This command is CA-Clipper compliant.   </par>
+ *  $PLATFORMS$
+ *      ALL   </par>
+ *  $FILES$
+ *      Library is Rtl.lib
  *  $SEEALSO$
  *      REPORT FORM
  *  $END$

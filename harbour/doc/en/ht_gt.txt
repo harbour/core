@@ -42,6 +42,8 @@
  *      I process contain embedded NULs.
  *  $EXAMPLES$
  *       ? gt_ascpos("the cat sat on the mat", 3) // prints e
+ *  $FILES$
+ *      Library is Tools.lib
  *  $END$
  */
 
@@ -63,6 +65,8 @@
  *      Sum the ascii value of every character in the passed string
  *      and return the result.
  *  $EXAMPLES$
+ *  $FILES$
+ *      Library is Tools.lib
  *  $END$
  */
 
@@ -92,7 +96,8 @@
  *  $EXAMPLES$
  *      ? gt_atDiff("the cat", "the rat")          // prints 5
  *      ? gt_atDiff("the cat", "the ")             // prints 0
- *
+ *  $FILES$
+ *      Library is Tools.lib
  *  $END$
  */
 
@@ -119,7 +124,8 @@
  *  $EXAMPLES$
  *
  *      ? gt_CharEven("abcdefghijklm")             // prints "bdfhjl"
- *
+ *  $FILES$
+ *      Library is Tools.lib
  *  $END$
  */
 
@@ -150,7 +156,8 @@
  *      ? gt_CharMix("abc", "123")               // prints "a1b2c3"
  *      ? gt_CharMix("abcde", "123")             // prints "a1b2c3de"
  *      ? gt_CharMix("abc", "12345")             // prints "a1b2c345"
- *
+ *  $FILES$
+ *      Library is Tools.lib
  *  $END$
  */
 
@@ -177,7 +184,8 @@
  *  $EXAMPLES$
  *
  *      ? gt_CharOdd("abcdefghijklm")             // prints "acegikm"
- *
+ *  $FILES$
+ *      Library is Tools.lib
  *  $END$
  */
 
@@ -205,7 +213,8 @@
  *  $EXAMPLES$
  *
  *      ? GT_ChrCount("t", "the cat sat on the mat")      // prints 4
- *
+ *  $FILES$
+ *      Library is Tools.lib
  *  $END$
  */
 
@@ -232,7 +241,8 @@
  *
  *      ? chr(GT_ChrFirst("sa ", "This is a test"))  // prints "s"
  *      ? chr(GT_ChrFirst("et",  "This is a test"))   // prints "t"
- *
+ *  $FILES$
+ *      Library is Tools.lib
  *  $END$
  */
 
@@ -265,6 +275,8 @@
  *
  *       ? GT_ChrTotal("tae", cStr1)            // prints 10
  *       ? GT_ChrTotal("zqw", cStr1)            // prints  0
+ *  $FILES$
+ *      Library is Tools.lib
  *  $END$
  */
 
@@ -296,7 +308,8 @@
  *  $EXAMPLES$
  *
  *      ? GT_StrCount("the", "the cat sat on the mat")      // prints 2
- *
+ *  $FILES$
+ *      Library is Tools.lib
  *  $END$
  */
 
@@ -322,7 +335,8 @@
  *
  *      ? GT_strcspn("this is a test", "as ")      // prints 3
  *      ? GT_strcspn("this is a test", "elnjpq")   // prints 11
- *
+ *  $FILES$
+ *      Library is Tools.lib
  *  $END$
  */
 
@@ -353,7 +367,8 @@
  *  $EXAMPLES$
  *      ? gt_strDiff("the cat", "the rat")          // prints "rat"
  *      ? gt_strDiff("the cat", "the ")             // prints ""
- *
+ *  $FILES$
+ *      Library is Tools.lib
  *  $END$
  */
 
@@ -384,7 +399,8 @@
  *      ? gt_strexpand("abc")                    // prints "a b c"
  *      ? gt_strexpand("abc", 2)                 // prints "a  b  c"
  *      ? gt_strexpand("abc", 2, 'þ')            // prints "aþþbþþc"
- *
+ *  $FILES$
+ *      Library is Tools.lib
  *  $END$
  */
 
@@ -415,7 +431,8 @@
  *      ? GT_StrLeft("this is a test", "hsit ")       // prints 8
  *      ? GT_StrLeft("this is a test", "hit a")       // prints 3
  *      ? GT_StrLeft("this is a test", "zxy")         // prints 0
- *
+ *  $FILES$
+ *      Library is Tools.lib
  *  $END$
  */
 
@@ -442,7 +459,8 @@
  *
  *      ? GT_Strpbrk("This is a test", "sa ")  // prints "s is a test"
  *      ? GT_Strpbrk("This is a test", "et")   // prints "test"
- *
+ *  $FILES$
+ *      Library is Tools.lib
  *  $END$
  */
 
@@ -473,7 +491,8 @@
  *      ? GT_StrRight("this is a test", "teas ")       // prints 8
  *      ? GT_StrRight("this is a test", "tes h")       // prints 5
  *      ? GT_StrRight("this is a test", "zxy")         // prints 0
- *
+ *  $FILES$
+ *      Library is Tools.lib
  *  $END$
  */
 

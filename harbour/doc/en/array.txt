@@ -47,12 +47,14 @@
  *        Return Nil    
  *  $STATUS$
  *      R
- *  $SEEALSO$
- *      AADD(),ADEL(),AFILL(),AINS()
  *  $COMPLIANCE$
  *      This function is CA-CLIPPER Compliant in all Cases, except that
  *      arrays in Harbour can have an unlimited number of dimensions, while
- *      Clipper has a limit of 4096 array elements.   
+ *      Clipper has a limit of 4096 array elements.
+ *  $FILES$
+ *      Library is Vm.lib
+ *  $SEEALSO$
+ *      AADD(),ADEL(),AFILL(),AINS()
  *  $END$
  */
 
@@ -87,6 +89,8 @@
  *      NEXT   
  *  $STATUS$
  *      R
+ *  $FILES$
+ *      Library is Vm.lib
  *  $SEEALSO$
  *      AINS(),ASIZE()
  *  $END$
@@ -123,11 +127,11 @@
  *      R
  *  $COMPLIANCE$
  *      If HB_COMPAT_C53 is defined, the function generates an Error,
- *      else it will return the array itself.   
+ *      else it will return the array itself.
+ *  $FILES$
+ *      Library is Vm.lib
  *  $SEEALSO$
  *      AADD(),ADEL(),AFILL(),AINS()
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -154,7 +158,9 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA Clipper compliant   
+ *      This function is CA Clipper compliant
+ *  $FILES$
+ *      Library is Vm.lib
  *  $SEEALSO$
  *      LEN(),ARRAY(),ASIZE(),AADD()
  *  $END$
@@ -193,10 +199,10 @@
  *      R
  *  $COMPLIANCE$
  *      This function is CA Clipper compliant   
+ *  $FILES$
+ *      Library is Vm.lib
  *  $SEEALSO$
  *      AADD(),ACOPY(),ADEL(),AEVAL(),AFILL(),ASIZE()
- *  $INCLUDE$
- *
  *  $END$
  */
 
@@ -223,20 +229,19 @@
  *      will become the fifth subscript position. The length of the array
  *      <aArray> will remain unchanged,as the last element in the array will
  *      become a NIL data type.   
- *  $EXAMPLES$
-    
+ *  $EXAMPLES$  
  *     LOCAL aArray
  *      aArray := { "Harbour","is","Power" }      // Result: aArray is
  *
- *      ADEL(aArray, 2)            // Result: aArray is
-    
+ *      ADEL(aArray, 2)            // Result: aArray is    
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      This function is CA Clipper compliant   
+ *  $FILES$
+ *      Library is Vm.lib
  *  $SEEALSO$
  *      ACOPY(),AINS(),AFILL()
- *
  *  $END$
  */
 
@@ -279,6 +284,8 @@
  *      R
  *  $COMPLIANCE$
  *      This function is CA Clipper compliant   
+ *  $FILES$
+ *      Library is Vm.lib
  *  $SEEALSO$
  *      AADD(),AEVAL(),DBSTRUCT(),DIRECTORY()
  *  $END$
@@ -329,6 +336,8 @@
  *      R
  *  $COMPLIANCE$
  *      This function is not CA-Clipper compatible. Clipper ASCAN() is affected by the SET EXACT ON/OFF Condition   
+ *  $FILES$
+ *      Library is Vm.lib
  *  $SEEALSO$
  *      AEVAL()
  *  $END$
@@ -372,6 +381,8 @@
  *      R
  *  $COMPLIANCE$
  *      This function is CA Clipper compliant   
+ *  $FILES$
+ *      Library is Vm.lib
  *  $SEEALSO$
  *      EVAL(),DBEVAL()
  *  $END$
@@ -431,6 +442,8 @@
  *      R
  *  $COMPLIANCE$
  *      This function is CA Clipper compliant   
+ *  $FILES$
+ *      Library is Vm.lib
  *  $SEEALSO$
  *      ACLONE(),ADEL(),AEVAL(),AFILL(),AINS(),ASORT()
  *  $END$
@@ -465,6 +478,8 @@
  *      R
  *  $COMPLIANCE$
  *      Clipper will return NIL if the parameter is not an array.   
+ *  $FILES$
+ *      Library is Vm.lib
  *  $SEEALSO$
  *      ACOPY(),ADEL(),AINS(),ASIZE()
  *  $END$
@@ -529,6 +544,8 @@
  *      will be called one more time for the first logical element than
  *      in Clipper. But this is block calling frequency and order differs
  *      from Clipper anyway, since they use different sorting algorithm.   
+ *  $FILES$
+ *      Library is rtl.lib
  *  $SEEALSO$
  *      ASCAN(),EVAL(),SORT
  *  $END$

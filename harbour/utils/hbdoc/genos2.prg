@@ -511,7 +511,7 @@ FUNCTION ProcessOs2()
                          strtran(cBuffer,"<par>",'')
                          strtran(cBuffer,"</par>",'')
                          cBuffer:=Alltrim(cBuffer)
-                         cbuFfer:='<par><b>'+cBuffer+'</b></par>'
+                         cbuFfer:='<par>'+cBuffer+'</par>'
                      endif
 
                       procos2desc(cbuffer,oOs2,"Syntax")  
@@ -707,7 +707,7 @@ LOCAL nPos,nPosEnd,lArgBold:=.f.
     cReturn:='<par>'+creturn+'    </par>'
 
   ELSEIF cStyle=='Syntax'
-           cReturn:='<par><b>'+cReturn+' </b></par>'
+           cReturn:='<par>'+cReturn+' </par>'
   ELSEIF cStyle=='Arguments'
   nPos:=0
     if at("<par>",cReturn)>0
@@ -787,7 +787,11 @@ LOCAL nPos,cItem,cItem2,cItem3,xtype,nColorpos,cColor
          nColorpos:=ASCAn(aColorTable,{|x,y| upper(x[1])==upper(ccolor)})
          cColor:=aColortable[nColorPos,2]
       Endif
+      if !empty(cBuffer)
       cItem:=cBuffer
+      else
+      citem:=''
+      endif
         AADD(afiTable,cItem)
 
 
@@ -941,7 +945,7 @@ If AT('<par>',cBuffer)>0 .and. AT('</par>',cBuffer)>0
           endif
           if  !empty(cBuffer)
                     cBuffer:=SUBSTR(cBuffer,2)
-             oOs2:WritePar(cBuffer)
+             oOs2:WriteParBold(cBuffer)
           endif
 
 Elseif cStyle=="Default"

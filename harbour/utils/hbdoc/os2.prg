@@ -16,7 +16,7 @@
  *
  * The exception is that if you link the Harbour Runtime Library (HRL)
  * and/or the Harbour Virtual Machine (HVM) with other files to produce
- * an executable, this does not by itself cause the resulting executable
+ * an executable, this does not by itself cause the resulting executable                     
  * to be covered by the GNU General Public License. Your use of that
  * executable is in no way restricted on account of linking the HRL
  * and/or HVM code into it.
@@ -80,9 +80,9 @@ METHOD New( cFile ) CLASS TOs2
    FWRITE( Self:nHandle, ':docprof toc=123456.'+CRLF)
    fWrite(Self:nHandle,':title.'+"Harbour Reference Guide"+CRLF)
 
-   fWrite(Self:nHandle,'.* FT_HelpC generated IPF Source File.'+CRLF)
+   fWrite(Self:nHandle,'.* HBDOC generated IPF Source File.'+CRLF)
 
-   fWrite(Self:nHandle,'.* FT_HELPC Document Source Extractor, (c)2000 Luiz Rafael Culik.'+CRLF)
+   fWrite(Self:nHandle,'.* HBDOC Document Source Extractor, (c)1999-2000 Luiz Rafael Culik.'+CRLF)
 
 RETURN Self
 
