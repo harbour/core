@@ -34,11 +34,15 @@
  *    partial copyright with regards to string handling
  */
 
+/* TODO: Getting rid of calling back HARBOUR HB_STR() function */
+/*       and #include "ctohard.h" */
+
+#include <ctype.h>
 #include "extend.h"
 #include "init.h"
-#include "errorapi.h"
 #include "ctoharb.h"
-#include <ctype.h>
+#include "itemapi.h"
+#include "errorapi.h"
 #include "dates.h"
 #include "set.h"
 
@@ -353,34 +357,6 @@ char *NumPicture( char *szPic, long lPic, int iPicFlags, double dValue,
    return(szRet);
 }
 
-
-/*
-    NumDefault -> Handle default numerics.
-
-    dValue      : Number to picture
-    lRetSize    : The size of the returned string is passed here !
-*/
-
-void StackPop( void );                          /* TOFIX: Should go away    */
-
-PHB_ITEM NumDefault( double dValue )
-{                                               /* Default number           */
-   PushSymbol ( hb_GetDynSym( "STR" )->pSymbol );  /* Push STR function        */
-   PushNil    ();                               /* Function call. No object */
-
-   PushDouble ( dValue, hb_set.HB_SET_DECIMALS );
-                                                /* Push value to transform  */
-   Function   ( 1 );                            /* 1 Parameter              */
-   StackPop   ();                               /* Pop return value         */
-   if( stack.pPos->type != IT_STRING )          /* Is it a string           */
-   {
-      printf( "\nNUMDEFAULT: STR does not return string" );
-      _exit(1);
-   }
-   return( stack.pPos );
-}
-
-
 /*
     DatePicture -> Handle dates.
 
@@ -409,7 +385,6 @@ HARBOUR HB_TRANSFORM( void )
 {
    PHB_ITEM pPic      = hb_param( 2, IT_STRING);/* Picture string           */
    PHB_ITEM pExp      = hb_param( 1, IT_ANY );  /* Input parameter          */
-   PHB_ITEM pItem;
 
    char    *szPic     = pPic->item.asString.value;
    char    *szTemp;
@@ -617,24 +592,19 @@ HARBOUR HB_TRANSFORM( void )
             break;
          }
          case IT_INTEGER:
-         {
-            pItem = NumDefault( (double) pExp->item.asInteger.value );
-            hb_retclen( pItem->item.asString.value, pItem->item.asInteger.length );
-            hb_itemClear( pItem );
-            break;
-         }
          case IT_LONG:
-         {
-            pItem = NumDefault( (double) pExp->item.asLong.value );
-            hb_retclen( pItem->item.asString.value, pItem->item.asLong.length );
-            hb_itemClear( pItem );
-            break;
-         }
          case IT_DOUBLE:
          {
-            pItem = NumDefault( (double) pExp->item.asDouble.value );
-            hb_retclen( pItem->item.asString.value, pItem->item.asDouble.length );
-            hb_itemClear( pItem );
+            char * szStr = hb_itemStr(pExp, 0, 0);
+
+            if (szStr)
+            {
+               hb_retc( szStr );
+               hb_xfree( szStr );
+            }
+            else
+               hb_retc("");
+
             break;
          }
          case IT_DATE:

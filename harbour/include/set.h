@@ -190,8 +190,6 @@ extern int hb_set_althan;
 extern int hb_set_extrahan;
 extern int hb_set_printhan;
 
-extern HARBOUR HB_SET( void );
-extern HARBOUR HB_SETCENTURY( void );
 extern void hb_setInitialize( void );
 extern void hb_setRelease( void );
 

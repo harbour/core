@@ -44,6 +44,7 @@
 
 #include "hbsetup.h"
 #include "extend.h"
+#include "itemapi.h"
 #include "ctoharb.h"
 #include "init.h"
 #include "dates.h"
@@ -268,7 +269,7 @@ static void hb_out( WORD wParam, hb_out_func_typedef * hb_out_func )
       case IT_DOUBLE:
       case IT_INTEGER:
       case IT_LONG:
-           szText = hb_str( pItem, 0, 0 ); /* Let hb_str() do the hard work */
+           szText = hb_itemStr( pItem, 0, 0 ); /* Let hb_itemStr() do the hard work */
            if( szText )
            {
               hb_out_func( szText, strlen( szText ) );
@@ -989,7 +990,7 @@ HARBOUR HB_SHADOW (void)
       uiAttr = 7;
    else if( hb_pcount() == 5 )
       uiAttr = hb_parni(5);
-   
+
    if( hb_pcount() > 3 )
       hb_gt_DrawShadow(hb_parni(1)+1,hb_parni(2)+1,hb_parni(3)+1,hb_parni(4)+1,uiAttr);
 #endif

@@ -1215,7 +1215,8 @@ HARBOUR HB_VAL( void )
    Note: The caller is responsible for calling hb_xfree to free the results buffer,
          but ONLY if the return value is not a NULL pointer!
 */
-char * hb_str( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
+/* TODO: Move it to itemapi.c */
+char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
 {
    char * szResult = 0;
 
@@ -1309,7 +1310,7 @@ char * hb_str( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
 }
 
 /* converts a numeric to a string with optional width & precision.
-   calls hb_str() after validating parameters
+   calls hb_itemStr() after validating parameters
 */
 HARBOUR HB_STR( void )
 {
@@ -1339,7 +1340,7 @@ HARBOUR HB_STR( void )
       }
       if( bValid )
       {
-         char * szResult = hb_str( pNumber, pWidth, pDec );
+         char * szResult = hb_itemStr( pNumber, pWidth, pDec );
 
          if( szResult )
          {

@@ -1,3 +1,21 @@
+19990802-19:45 GMT+1 Victor Szel <info@szelvesz.hu>
+   + include/dates.h
+     source/rtl/dates.c - const keyword added.
+   - include/ctoharb.h - extern StackShow() removed.
+   - include/set.h - HARBOUR externs removed.
+   * include/extend.h hb_item*() moved to 
+     include/itemapi.h
+     source/rtl/console.c
+     source/rtl/transfrm.c
+   * source/rtl/console.c
+     source/rtl/strings.c
+     include/itemapi.h - hb_str() -> hb_itemStr()
+  %! source/rtl/transfrm.c - Fixed the case when no picture is passed.
+     Got rid of NUMDEFAULT(). Now using hb_itemStr() instead of
+     HARBOUR function callback to HB_STR(), some callbacks are still
+     left though.
+   * include/*.h - Some more cleanup.
+
 19990802-18:23 GMT+1 Victor Szel <info@szelvesz.hu>
    + source/tools/mathx.c - Added PI()
      Posted by Matteo Baccan (baccan@isanet.it)
@@ -65,8 +83,8 @@
      include/dates.h
      hb_dateStrPut(), hb_dateStrGet() added. Redundant code converted
      to calls for these.
-   * include/set.h 
-     source/vm/hvm.c- Extern decls moved to source/rtl/set.c and to
+   * include/set.h - Extern decls moved to source/rtl/set.c and to
+     source/vm/hvm.c
    * source/rtl/codebloc.c - Extern decls moved to include/extend.h
    * source/vm/initsymb.c - Extern decl moved to include/extend.h
    + include/*.h - extern keyword added to all extern declarations.

@@ -301,16 +301,10 @@ extern void     hb_arrayDel( PHB_ITEM pArray, ULONG ulIndex );
 extern PHB_ITEM hb_arrayClone( PHB_ITEM pArray );
 extern void     hb_arrayAdd( PHB_ITEM pArray, PHB_ITEM pItemValue );
 
-extern int      hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact ); /* our string compare */
-extern void     hb_itemCopy( PHB_ITEM pDest, PHB_ITEM pSource ); /* copies an item to one place to another respecting its containts */
-extern void     hb_itemClear( PHB_ITEM pItem );
-extern PHB_ITEM hb_itemUnRef( PHB_ITEM pItem ); /* de-references passed variable */
-
 #define HB_STRGREATER_EQUAL     0
 #define HB_STRGREATER_LEFT      1
 #define HB_STRGREATER_RIGHT     2
 
-extern char *   hb_str( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec ); /* convert number to string */
 extern int      hb_stricmp( const char *s1, const char *s2 );
 extern BOOL     hb_strempty( char * szText, ULONG ulLen );
 extern WORD     hb_strgreater( char * sz1, char * sz2 );

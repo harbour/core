@@ -44,6 +44,5 @@ extern void PushLogical( int iTrueFalse ); /* pushes a logical value onto the st
 extern void PushSymbol( PSYMBOL );
 extern void Do( WORD wParams );         /* invokes the virtual machine */
 extern void Function( WORD wParams );         /* invokes the virtual machine */
-extern void StackShow( void );
 
 #endif /* HB_CTOHARB_H_ */

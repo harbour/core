@@ -181,7 +181,7 @@ void hb_dateStrPut( char * szDate, long lDay, long lMonth, long lYear )
    szDate[ 7 ] = ( lDay % 10 ) + '0';
 }
 
-void hb_dateStrGet( char * szDate, long * plDay, long * plMonth, long * plYear )
+void hb_dateStrGet( const char * szDate, long * plDay, long * plMonth, long * plYear )
 {
    if( szDate && strlen( szDate ) == 8 )
    {
