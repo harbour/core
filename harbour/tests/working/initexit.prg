@@ -6,7 +6,7 @@ function Main()
 
 return nil
 
-init function Second()
+init function SecondOne()
 
    QOut( "Hello from Second()" )
 

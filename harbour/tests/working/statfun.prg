@@ -4,13 +4,13 @@ function Main()
 
    QOut( "From Main()" )
 
-   Second()
+   SecondOne()
 
    QOut( "From Main() again" )
 
 return nil
 
-static function Second()
+static function SecondOne()
 
    QOut( "From Second()" )
 

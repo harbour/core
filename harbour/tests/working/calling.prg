@@ -2,7 +2,7 @@
 
 function Main()
 
-   Second()
+   SecondOne()
 
    DO Fourth WITH "from Fourth() function"    // Testing the old fashion DO ...
 
@@ -10,7 +10,7 @@ function Main()
 
 return nil
 
-function Second()
+function SecondOne()
 
    QOut( "Ok, this is from Second() function call" )
 

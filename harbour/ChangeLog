@@ -1,3 +1,12 @@
+19900509-18:10 Eddie Runia
+   * tests/working/calling
+     Function Second changed to SecondOne()
+   * tests/working/initexit
+   * tests/working/statfun
+     See above
+   * tests/working/testtok
+     i was required in next (??)
+
 19990509-18:00 CET Victor Szel <info@szelvesz.hu>
 
    * source/rtl/strings.c:
