@@ -96,7 +96,9 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\atadjust.obj \
    $(OBJ_DIR)\atnum.obj \
    $(OBJ_DIR)\atrepl.obj \
+   $(OBJ_DIR)\bit1.obj \
    $(OBJ_DIR)\bit2.obj \
+   $(OBJ_DIR)\bit3.obj \
    $(OBJ_DIR)\charevod.obj \
    $(OBJ_DIR)\charlist.obj \
    $(OBJ_DIR)\charmirr.obj \
@@ -184,7 +186,15 @@ $(OBJ_DIR)\atrepl.obj : $(TOOLS_DIR)\atrepl.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\bit1.obj : $(TOOLS_DIR)\bit1.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\bit2.obj : $(TOOLS_DIR)\bit2.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\bit3.obj : $(TOOLS_DIR)\bit3.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 

@@ -270,10 +270,10 @@ WORDTOCHAR    ;S;
 ;2.1 number and bit manipulation
 ;===============================
 ;
-BITTOC        ;N; 
+BITTOC        ;S; 
 CELSIUS       ;R; 
 CLEARBIT      ;S; 
-CTOBIT        ;N; 
+CTOBIT        ;S; 
 CTOF          ;N; 
 CTON          ;S; 
 EXPONENT      ;N; 
@@ -286,15 +286,21 @@ ISBIT         ;S;
 LTON          ;N; 
 MANTISSA      ;N; 
 NTOC          ;S; 
-NUMAND        ;N; 
+NUMAND        ;S; 
+NUMANDX       ;S;   !NEW!
 NUMCOUNT      ;N; 
 NUMHIGH       ;N; 
 NUMLOW        ;N; 
-NUMMIRR       ;N; 
-NUMNOT        ;N; 
-NUMOR         ;N; 
-NUMROL        ;N; 
-NUMXOR        ;N; 
+NUMMIRR       ;S; 
+NUMMIRRX      ;S;   !NEW!
+NUMNOT        ;S; 
+NUMNOTX       ;S;   !NEW!
+NUMOR         ;S; 
+NUMORX        ;S;   !NEW!
+NUMROL        ;S; 
+NUMROLX       ;S;   !NEW!
+NUMXOR        ;S; 
+NUMXORX       ;S;   !NEW!
 RAND          ;N; 
 RANDOM        ;N; 
 SETBIT        ;S; 

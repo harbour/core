@@ -7,6 +7,28 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+     + defines for function sx_SysProp
+   * contrib/apollo/test/apollo.prg
+     Added define "Apollo.ch"
+   * contrib/apollo/apollo1.prg
+     + Added function sx_GetVal()
+   * contrib/apollo/apollo.c
+     + Added function sx_SetOrder()
+     + Added function sx_Select()
+     + Added function sx_SysProp()
+
+2002-01-20 08:50 UTC-0800 Ron Pinkas <ron@ronpinkas.com>
+  * contrib/dot/pp.prg
+  * contrib/dot/pp.txt
+  * contrib/dot/pp_harb.ch
+    * Synched with source of RC-2 of xBaseScript ( http://SourceForge.net/Projects/xBase-Script )
+
+2002-01-19 06:11 UTC-0800 Ron Pinkas <ron@ronpinkas.com>
+  * source/compiler/harbour.slx
+    ! Minor bug correction.
+
+2002-01-20 13:00 UTC+0100 Martin Vogel <vogel@inttec.de>
+
    + contrib/libct/bit1.c
      + number and bit manipulation functions NUMAND(), NUMOR(), NUMXOR()
                                              NUMNOT(), NUMROL(), NUMMIRR()
