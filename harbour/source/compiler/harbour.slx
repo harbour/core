@@ -1176,7 +1176,7 @@ int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], int *ptr_iHold, BOOL
          if( hb_comp_wForCounter == 0 && hb_comp_wWhileCounter == 0 )
             hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_UNMATCHED_EXIT, "EXIT", NULL );
 
-	 x = EXITLOOP;
+	 x = EXIT;
 	 break;
 
       case HB_CHK_LOOP :
@@ -1440,6 +1440,66 @@ int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], int *ptr_iHold, BOOL
          strncpy( (char*) sIdentifier, "OPTIONAL" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
+         break;
+         
+      case OPTIONAL :
+         strncpy( (char*) sIdentifier, "OPTIONAL" , iWordLen );
+	 sIdentifier[iWordLen] = '\0';
+      yylval.string = hb_compIdentifierNew( (char*) sIdentifier, TRUE );
+         break;
+
+      case EXTERN :
+         strncpy( (char*) sIdentifier, "EXTERNAL" , iWordLen );
+	 sIdentifier[iWordLen] = '\0';
+      yylval.string = hb_compIdentifierNew( (char*) sIdentifier, TRUE );
+         break;
+
+      case ANNOUNCE :
+         strncpy( (char*) sIdentifier, "ANNOUNCE" , iWordLen );
+	 sIdentifier[iWordLen] = '\0';
+      yylval.string = hb_compIdentifierNew( (char*) sIdentifier, TRUE );
+         break;
+
+      case LOCAL :
+         strncpy( (char*) sIdentifier, "LOCAL" , iWordLen );
+	 sIdentifier[iWordLen] = '\0';
+      yylval.string = hb_compIdentifierNew( (char*) sIdentifier, TRUE );
+         break;
+
+      case MEMVAR :
+         strncpy( (char*) sIdentifier, "MEMVAR" , iWordLen );
+	 sIdentifier[iWordLen] = '\0';
+      yylval.string = hb_compIdentifierNew( (char*) sIdentifier, TRUE );
+         break;
+
+      case STATIC :
+         strncpy( (char*) sIdentifier, "STATIC" , iWordLen );
+	 sIdentifier[iWordLen] = '\0';
+      yylval.string = hb_compIdentifierNew( (char*) sIdentifier, TRUE );
+         break;
+
+      case PRIVATE :
+         strncpy( (char*) sIdentifier, "PRIVATE" , iWordLen );
+	 sIdentifier[iWordLen] = '\0';
+      yylval.string = hb_compIdentifierNew( (char*) sIdentifier, TRUE );
+         break;
+
+      case PUBLIC :
+         strncpy( (char*) sIdentifier, "PUBLIC" , iWordLen );
+	 sIdentifier[iWordLen] = '\0';
+      yylval.string = hb_compIdentifierNew( (char*) sIdentifier, TRUE );
+         break;
+
+      case PARAMETERS :
+         strncpy( (char*) sIdentifier, "PARAMETERS" , iWordLen );
+	 sIdentifier[iWordLen] = '\0';
+      yylval.string = hb_compIdentifierNew( (char*) sIdentifier, TRUE );
+         break;
+
+      case PROCREQ :
+         strncpy( (char*) sIdentifier, "PROCREQ" , iWordLen );
+	 sIdentifier[iWordLen] = '\0';
+      yylval.string = hb_compIdentifierNew( (char*) sIdentifier, TRUE );
          break;
 
       case HB_IN_ID :
