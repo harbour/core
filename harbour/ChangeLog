@@ -1,3 +1,10 @@
+19990602-16:00 EDT David G. Holm <dholm@jsd-llc.com>
+  + tests/broken/codebloc.prg
+    - Output doesn't match Clipper. Clipper outputs NIL and 42, 
+      (both 5.2e and 5.3b), but Harbour outputs NIL and NIL (as
+      tested with Harbour built using Borland C++ 3.1 using the
+      build31.bat and makefile.b31 files)
+
 19990602-22:10 CET Eddie Runia
   * tests/working/run_exp.h
     gtApi and new console functions added
