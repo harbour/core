@@ -1,7 +1,14 @@
+2001-11-01 15:15 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/vm/classes.c
+     type cast to avoid a msvc error
+
+   * source/vm/itemapi.c
+     some type casts to avoid some msvc errors and warnings
+
 2001-11-01 08:16 GMT Dave Pearson <davep@davep.org>
    * tests/multiarg.prg
       * __PValue() --> HB_PValue().
-	
+
 2001-10-30 00:20 GMT +0700 Andi Jahja <harbour@cb.net.id>
    * include/hbexpra.c
      ! rename __PVALUE to HB_PVALUE
@@ -36,7 +43,7 @@
      * Fixed the Un*x oriented code in hb_fsMkDir so that it sets
        S_IXUSR as well as S_IWUSR and S_IRUSR when making the directory.
        Without it the directory can't be entered or used.
-	
+
 2001-10-29 14:14 GMT+1 Maurilio Longo <maurilio.longo@libero.it>
    * contrib/mysql/readme.txt
      * updated
