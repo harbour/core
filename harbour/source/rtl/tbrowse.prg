@@ -371,43 +371,43 @@ return Self
 
 
 // Insert a column object in a browse
-METHOD InsColumn( nPos, oCol )                           
-   
+METHOD InsColumn( nPos, oCol )
+
    ASize( ::aColumns, ++::nColumns)
    AIns( ::aColumns, nPos )
    ASize( ::aColsWidth, ::nColumns)
    AIns( ::aColsWidth, nPos )
-   
+
    ::aColumns[ nPos ] := oCol
-   ::aColsWidth[ nPos ] := ::SetColumnWidth(oCol)   
+   ::aColsWidth[ nPos ] := ::SetColumnWidth(oCol)
    ::Configure( 2 )
 
 return oCol
 
 
 // Gets a specific TBColumn object
-METHOD GetColumn( nColumn ) 
-          
+METHOD GetColumn( nColumn )
+
 return iif( 0 < nColumn .AND. nColumn <= ::nColumns, ::aColumns[ nColumn ], NIL )
-          
+
 
 // Replaces one TBColumn object with another
 METHOD SetColumn( nColumn, oCol )
 
-   LOCAL oOldCol  
-          
+   LOCAL oOldCol
+
    if  0 < nColumn .AND. nColumn <= ::nColumns
-       oOldCol := ::aColumns[ nColumn ] 
+       oOldCol := ::aColumns[ nColumn ]
        ::aColumns[ nColumn ] := oCol
-       ::aColsWidth[nColumn] := ::SetColumnWidth(oCol)    
+       ::aColsWidth[nColumn] := ::SetColumnWidth(oCol)
        ::Configure( 2 )
-   endif       
-                             
-return oOldCol          
+   endif
+
+return oOldCol
 
 
-// Returns the display width of a particular column          
-METHOD ColWidth( nColumn ) 
+// Returns the display width of a particular column
+METHOD ColWidth( nColumn )
 
 return iif( 0 < nColumn .AND. nColumn <= ::nColumns, ::aColsWidth[ nColumn ], NIL )
 
@@ -421,7 +421,7 @@ METHOD DelColumn( nPos ) CLASS TBrowse
    ADel( ::aColsWidth, nPos)
    ASize( ::aColumns, --::nColumns)
    ASize( ::aColsWidth, ::nColumns)
-   
+
    ::Configure( 2 )
 
 return oCol
@@ -461,7 +461,7 @@ METHOD SetFrozenCols(nHowMany) CLASS TBrowse
 
          else
             // Reset column widths
-            ::aColsWidth[ nCol ] := ::SetColumnWidth(::aColumns[ nCol ])           
+            ::aColsWidth[ nCol ] := ::SetColumnWidth(::aColumns[ nCol ])
          endif
       next
    endif
@@ -472,11 +472,12 @@ return nHowMany
 METHOD SetColumnWidth( oCol ) CLASS TBrowse
 
    LOCAL xRes, cType, nTokenPos := 0, nL, cHeading
-   LOCAL nWidthMax := ::nRight - ::nLeft+1    // Visible width of TBrowse
-   LOCAL nWidth := 0,nColWidth:=0
+   LOCAL nWidthMax := ::nRight - ::nLeft +1    // Visible width of TBrowse
+   LOCAL nWidth := 0,nColWidth:=0,nLen:=0
 
+   tracelog('nWidthMax : ',nWidthMax)
    // if oCol has :Width property set I use it
-   if oCol:Width <> nil .AND. oCol:Width < (nWidthMax - 4)
+   if oCol:Width <> nil //.AND. oCol:Width < (nWidthMax - 4)
       nWidth := oCol:Width
 
    else
@@ -486,38 +487,38 @@ METHOD SetColumnWidth( oCol ) CLASS TBrowse
 
          do case
             case cType == "N"
-               nWidth := Len( Str( xRes ) )
+               nLen := Len( Str( xRes ) )
 
             case cType == "L"
-               nWidth := 1
+               nLen:=1
 
             case cType == "C"
-               nWidth := Len( xRes )
+               nLen := Len( xRes )
 
             case cType == "D"
-               nWidth := Len( DToC( xRes ) )
+                nLen=  len(DToC( xRes ) )
 
             otherwise
-               nWidth := 0
+               nLen := 0
          endcase
+         
 
          cHeading := oCol:Heading + ";"
          while (nL := Len(__StrTkPtr(@cHeading, @nTokenPos, ";"))) > 0
-            if nL > nWidth
-               nColWidth := nL
-            endif
+               nColWidth += nL
          enddo
-       if nColWidth> nWidth
-          nColWidth:=nWidth
-       endif
-
-         if nWidth > nWidthMax
-            // with values lower than -4 it SIGSEVs here and there :-(
-            nWidth := nWidthMax - 4
-         endif
-
       endif
    endif
+    if nColWidth>nWidthMax
+        nColWidth:=nWidthMax
+    endif
+    if nlen>nWidthMax
+        nLen:=nWidthMax
+    endif
+    nWidth:= if(nColwidth>nLen,nColwidth,nLen)
+    tracelog('nColwidth : ',nColwidth)
+    tracelog('nLen : ',nLen)
+    tracelog('nwidth : ',nWidth)
 
 return nWidth
 
@@ -1491,52 +1492,63 @@ function TBMOUSE( oBrowse, nMouseRow, nMouseCol )
 
    local Local1
    if ( oBrowse:hittest(nMouseRow, nMouseCol) == -5121 )
-// tracelog('mouse row ',oBrowse:mrowpos)
-// tracelog('mouse col ',oBrowse:mcolpos)
+      //tracelog('mouse row ',oBrowse:mrowpos)
+      //tracelog('mouse col ',oBrowse:mcolpos)
 
       Local1 := oBrowse:mrowpos - oBrowse:rowpos
-//    tracelog('local1 ',local1)
+      //tracelog('local1 ',local1)
+
       do while ( Local1 < 0 )
          Local1++
          oBrowse:up()
       enddo
+
       do while ( Local1 > 0 )
          Local1--
          oBrowse:down()
       enddo
+
       Local1 := oBrowse:mcolpos - oBrowse:colpos
+
       do while ( Local1 < 0 )
          Local1++
          oBrowse:left()
       enddo
+
       do while ( Local1 > 0 )
          Local1--
          oBrowse:right()
       enddo
+
       return 0
    endif
-   return 1
 
+   return 1
 
 Method hitTest(mrow,mcol) CLASS TBROWSE
 	local i
-//      tracelog('mrow',mrow)
-//      tracelog('mcol',mrow)
-        ::mRowPos := ::rowPos
-        ::mColPos := ::colPos
-//      tracelog(::mrowPos)
-        if mRow< ::rect[1] .or. mRow > ::rect[3]
-		return HTNOWHERE
-        endif
-        if mCol < ::rect[2] .or. mCol > ::rect[4]
-		return HTNOWHERE
-        endif
-        ::mRowPos := mRow - ::rect[1]+1
-        for i = 1 to len(::aVisibleCols)
-            if ::aVisibleCols[i] > mcol
-                        exit
-                endif
-        next
-        ::mColpos := ::aVisibleCols[i]
+        //tracelog('mrow',mrow)
+        //tracelog('mcol',mrow)
+  ::mRowPos := ::rowPos
+  ::mColPos := ::colPos
+  //tracelog(::mrowPos)
+
+  if mRow< ::rect[1] .or. mRow > ::rect[3]
+     return HTNOWHERE
+  endif
+
+  if mCol < ::rect[2] .or. mCol > ::rect[4]
+     return HTNOWHERE
+  endif
+
+  ::mRowPos := mRow - ::rect[1]+1
+  for i = 1 to len(::aVisibleCols)
+      if ::aVisibleCols[i] > mcol
+         exit
+      endif
+  next
+
+  ::mColpos := ::aVisibleCols[i]
+
 return HTCELL
 #endif

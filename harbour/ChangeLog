@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+     aCol[1]:={"Name"+" "+"AddRess"+" "+"phone"}
+
+2002-04-27 00:10 UTC-0300 Luiz Rafael Culik <culikr@uol.com.br>
+  * source/rtl/Listbox.prg
     source/rtl/tbrowse.prg
     * Code CleanUP
 
