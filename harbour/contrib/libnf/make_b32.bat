@@ -8,12 +8,12 @@ if "%1" == "CLEAN" goto CLEAN
 
 :BUILD
 
-   make -fmakefile.bc %1 %2 %3 > make_b32.log
+   make -fnanfor.bc %1 %2 %3 > make_b32.log
    if errorlevel 1 goto BUILD_ERR
 
 :BUILD_OK
 
-   copy ..\..\lib\b32\libct.lib ..\..\lib\*.* > nul
+   copy ..\..\lib\b32\nf.lib ..\..\lib\*.* > nul
    goto EXIT
 
 :BUILD_ERR

@@ -809,7 +809,7 @@ For nCount := 1 To Len( aOrder )
             cComm := Strtran( cComm, "o$*", "o" + aCs[ nPos ] )
             cComm := Strtran( cComm, "$**", aPrgs[ nFiles ] )
 	    if !lLinux
-            cComm += " > test.out"
+          cComm += " > test.out"
 	    else
 	    cComm += " 2>test.out"
 	    endif
@@ -863,7 +863,7 @@ For nCount := 1 To Len( aOrder )
             cComm := Strtran( cComm, "$**", acs[ nFiles ] )
             outstd( " ")
             // ? cComm
-outstd(cComm)
+            outstd(cComm)
             ! ( cComm )
             ccomm := cold
          Endif
@@ -1131,7 +1131,7 @@ ATTENTION( "Enviroment options", 0 )
 @  2, 64 Get lcw checkbox "Use C4W"          when Cos=="Win32"
 @  3, 64 Get lRddads checkbox "Use RddAds"   when Cos=="Win32"
 Read
-
+set cursor on
 If lFwh
    @  4,  1 Say "FWH path" Get cfwhpath
 Elseif lCw
@@ -1838,6 +1838,7 @@ ATTENTION( "Enviroment options", 0 )
 @  1, 23 Say "Select C Compiler"
 @  1, 40 Get cCompiler radio { "BCC", "MSVC", "GCC" }
 Read
+set cursor on
    @  4,  1 Say "Library name with our extention" Get cfwhpath pict "@s15"
    @  4,55   Say "Obj Files Dir" get cObjDir
 ATTENTION( "Harbour Options", 5 )
@@ -1886,7 +1887,7 @@ else
    cTest:=cObjDir+'\'
 endif
 
-aeval(amacros,{|x,y|cItem:=substr(x[2],1,len(x[2])),qout(citem),if(at(citem,cTest)>0,(amacros[y,1]:='OBJ',amacros[y,2]:=cObjDir),)})
+aeval(amacros,{|x,y|cItem:=substr(x[2],1,len(x[2])),if(at(citem,cTest)>0,(amacros[y,1]:='OBJ',amacros[y,2]:=cObjDir),)})
 
 if lAutomemvar
 cDefHarOpts+=" -a "

@@ -1199,6 +1199,7 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          case HB_P_POPVARIABLE:
          {
             USHORT uiParams;
+            PHB_DYNS pDyn;
 
             /* Pops a value from the eval stack and uses it to set
              * a new value of a variable of unknown type.
@@ -1209,8 +1210,18 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
              * then try the memvar variable (it will create PRIVATE
              * variable if this variable doesn't exist)
              */
-            if( hb_rddFieldPut( ( hb_stackItemFromTop(-1) ), pSymbols + uiParams ) == FAILURE )
+
+            /* memvars.c 417 */
+            pDyn = ( PHB_DYNS ) (pSymbols + uiParams)->pDynSym;
+            if( pDyn && pDyn->hMemvar )
+            {
+               /* If exist a memory symbol with this name use it */
                hb_memvarSetValue( pSymbols + uiParams, ( hb_stackItemFromTop(-1) ) );
+            } else {
+               /* Try with a field and after create a memvar */
+               if( hb_rddFieldPut( ( hb_stackItemFromTop(-1) ), pSymbols + uiParams ) == FAILURE )
+                  hb_memvarSetValue( pSymbols + uiParams, ( hb_stackItemFromTop(-1) ) );
+            }
             hb_stackDec();
             hb_itemClear( ( hb_stackTopItem() ) );
             HB_TRACE(HB_TR_INFO, ("(hb_vmPopVariable)"));

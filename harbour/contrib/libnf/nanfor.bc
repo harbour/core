@@ -10,9 +10,9 @@
 # NOTE: You can use these envvars to configure the make process:
 #       (note that these are all optional)
 #
-#       CFLAGS       - Extra C compiler options for libraries and for 
+#       CFLAGS       - Extra C compiler options for libraries and for
 #                      executables
-#       C_USR        - Extra C compiler options for libraries and for 
+#       C_USR        - Extra C compiler options for libraries and for
 #                      executables (GNU make compatible envvar)
 #       CLIBFLAGS    - Extra C compiler options for the libraries
 #       HARBOURFLAGS - Extra Harbour compiler options
@@ -48,7 +48,7 @@ BIN_DIR = ..\..\bin\b32
 OBJ_DIR = ..\..\obj\b32
 LIB_DIR = ..\..\lib\b32
 
-# This is needed, otherwise the libs may overflow when 
+# This is needed, otherwise the libs may overflow when
 # debug info is requested with -v -y
 ARFLAGS = /P32
 
@@ -83,7 +83,7 @@ LDFLAGS        = $(LDFLAGS)
 #
 
 
-NANFOR_LIB  = $(LIB_DIR)\nanfor.lib
+NANFOR_LIB  = $(LIB_DIR)\nf.lib
 NANFOR_LIB_OBJ = \
    $(OBJ_DIR)\aading.obj \
    $(OBJ_DIR)\aavg.obj \
@@ -197,7 +197,7 @@ NANFOR_LIB_OBJ = \
    $(OBJ_DIR)\stod.obj \
    $(OBJ_DIR)\kspeed.obj \
    $(OBJ_DIR)\mkdir.obj \
-   $(OBJ_DIR)\getver.obj 
+   $(OBJ_DIR)\getver.obj
 
 
 #   $(OBJ_DIR)\sysmem.obj \
@@ -261,7 +261,7 @@ $(OBJ_DIR)\byt2hex.c  : byt2hex.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 $(OBJ_DIR)\byteand.c  : byteand.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
-  
+
 $(OBJ_DIR)\byteneg.c  : byteneg.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 $(OBJ_DIR)\byteor.c   : byteor.prg
@@ -334,7 +334,7 @@ $(OBJ_DIR)\wda.c      : wda.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 #$(OBJ_DIR)\setdate.c  : setdate.prg
 #  $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
-   
+
 $(OBJ_DIR)\sqzn.c     : sqzn.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 $(OBJ_DIR)\menu1.c    : menu1.prg

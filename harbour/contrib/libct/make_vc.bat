@@ -1,7 +1,7 @@
 @echo off
-rem 
+rem
 rem $Id$
-rem 
+rem
 
 :BUILD
 
@@ -10,7 +10,7 @@ rem
 
 :BUILD_OK
 
-   copy ..\..\lib\vc\ct3.lib ..\..\lib\*.* >nul
+   copy ..\..\lib\vc\libct.lib ..\..\lib\*.* >nul
    goto EXIT
 
 :BUILD_ERR

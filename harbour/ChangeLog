@@ -1,3 +1,16 @@
+2001-11-12 21:25 GMT -3 Luiz Rafael Culik<culik@sl.conex.net>
+   * utils/hbmake/hbmake.prg
+      * Fixed an small bug that remain in previus update
+    The fixed Bellow was provided by Matteo Baccan
+   *source/rtl/hvm.c
+      * fixed problem in the way of variable search on harbour
+   *contrib/libct/make_b32.bat
+    contrib/libct/make_vc.bat
+      * Fixed the name of the library
+   +contrib/libnf/make_b32.bat
+   *contrib/libnf/nanfor.bc
+      * Fixed the name of the library
+
 2001-13-11 04:45 GMT+0700 Andi Jahja <harbour@cbn.net.id>
    * contrib/libnf/descend.c
      ! added type casts for MsVC
