@@ -1,3 +1,10 @@
+2001-05-30 13:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+  * source/rtl/gtsln/gtsln.c
+  * source/rtl/gtsln/kbsln.c
+  * source/rtl/gtsln/keytrans.c
+    % Changed to the new Harbour License, per request from Marek Paliwoda
+
 2001-05-30 09:05 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * contrib/dot/pp.prg
      + PP_ResetRules()
