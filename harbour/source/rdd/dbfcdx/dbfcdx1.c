@@ -1454,8 +1454,8 @@ static LPPAGEINFO hb_cdxPageNew( LPTAGINFO PIT, LPPAGEINFO PIK, LONG FilePosn )
 {
    LPPAGEINFO pPage;
 
-   pPage = ( LPPAGEINFO ) hb_xgrab( sizeof( PAGEINFO ) );
-   memset( pPage, 0, sizeof( PAGEINFO ) );
+   pPage = ( LPPAGEINFO ) hb_xgrab( sizeof( HB_PAGEINFO ) );
+   memset( pPage, 0, sizeof( HB_PAGEINFO ) );
    pPage->Page = FilePosn;
    pPage->Left = pPage->Right = -1;
    pPage->Owner = PIK;

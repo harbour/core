@@ -190,7 +190,7 @@ typedef struct _KEYINFO
 typedef KEYINFO * LPKEYINFO;
 
 
-typedef struct _PAGEINFO
+typedef struct HB_PAGEINFO_STRU
 {
    LONG      Page;
    LONG      Left;
@@ -213,12 +213,12 @@ typedef struct _PAGEINFO
    LPKEYINFO pKeys;
    USHORT    uiKeys;
    SHORT     CurKey;
-   struct   _PAGEINFO * Owner;
-   struct   _PAGEINFO * Child;
+   struct   HB_PAGEINFO_STRU * Owner;
+   struct   HB_PAGEINFO_STRU * Child;
    struct   _TAGINFO * TagParent;
-} PAGEINFO;
+} HB_PAGEINFO;
 
-typedef PAGEINFO * LPPAGEINFO;
+typedef HB_PAGEINFO * LPPAGEINFO;
 
 
 typedef struct _TAGINFO
