@@ -1083,8 +1083,8 @@ static ERRCODE adsOrderListClear( ADSAREAP pArea )
 static ERRCODE adsOrderListFocus( ADSAREAP pArea, LPDBORDERINFO pOrderInfo )
 {
    ADSHANDLE phIndex;
-   UNSIGNED8 pucName[11];
-   UNSIGNED16 pusLen = 10;
+   UNSIGNED8 pucName[ADS_MAX_TAG_NAME];
+   UNSIGNED16 pusLen = ADS_MAX_TAG_NAME;
    UNSIGNED16 usOrder;
    UNSIGNED32 ulRetVal;
    HB_TRACE(HB_TR_DEBUG, ("adsOrderListFocus(%p, %p)", pArea, pOrderInfo));
@@ -1093,7 +1093,8 @@ static ERRCODE adsOrderListFocus( ADSAREAP pArea, LPDBORDERINFO pOrderInfo )
      *pucName = '\0';
    else
      AdsGetIndexName( pArea->hOrdCurrent, pucName, &pusLen);
-   pOrderInfo->itmResult = hb_itemPutC( pOrderInfo->itmResult, (char*)pucName );
+
+   pOrderInfo->itmResult = hb_itemPutCL( pOrderInfo->itmResult, (char*)pucName, pusLen );
 
    if( pOrderInfo->itmOrder )
    {
