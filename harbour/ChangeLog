@@ -1,3 +1,8 @@
+2001-03-07 21:31 GMT-3 Horacio Roldan <horacioroldan@usa.net>
+   * harbour/source/rdd/dbfcdx1.h
+   * harbour/source/rdd/dbfcdx2.h
+     + Added harbour license
+
 2001-03-07 16:15 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * contrib/dot/pp.prg
      * Corrcted typos oError -> oErr
