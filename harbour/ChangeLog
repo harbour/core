@@ -1,3 +1,11 @@
+19990507-09:55 Ryszard Glab <rglab@imid.med.pl>
+    * source/rtl/files.c
+    * source/rtl/set.c
+    * source/rtl/transfrm.c
+    * source/tools/stringsx.c
+	-added compatibility with Watcom C/C++ compiler
+	 (char *) type castings
+
 19990507-07:25 Ryszard Glab <rglab@imid.med.pl>
 
     * source/compiler/harbour.y, source/compiler/harbour.l
