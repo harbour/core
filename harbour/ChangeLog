@@ -1,3 +1,16 @@
+2000-05-28 21:50 GMT -3 Luiz Rafaek Culik <culik@sl.conex.net>
+ 
+  *contrib\hbzlib\zlibapi.c
+    *Small changes
+  *contrib\hbzlib\test.prg
+     *test program for the library
+  *contrib\hbzlib\hbzip.h
+    *small chages
+  *doc/genhtm.rsp
+     +added setmode.txt  to response file
+  *doc/en/lang.txt
+     *small changes
+
 20000529-00:01 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
 
    * tests/testwarn.prg
